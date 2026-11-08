@@ -48,6 +48,7 @@ public:
     bool UsesKernel(const o::Kernel* kernel) const; // raw legacy 입력이 이미 pin한 같은 실제 장치인지 조회한다.
     bool HasDevices() const; // 명시 장기 외부 장치가 연결됐는지 읽는다.
     o::Kernel& Kernel(); // 외부 장치가 없으면 같은 Storage의 독립 Kernel을 한 번만 만든다.
+    void BindFormTransmissionDefaults(o::ProcessFormTransmission transmit,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion); //첫Host앞에실제장기기본writer만보관하며외부Kernel/시각연결을앞당기지않는다.
     o::SquidProcessHost& Host(); // 첫 사용에 안정된 Host를 만들고 같은 주소를 유지한다.
     o::SquidProcessState& State(); // 전체 World/Regular가 같은 실제 스칼라 저장소를 빌린다.
     void ReclaimForAllocation(o::Sid sid); //현재가상삭제대여를호출끝까지pin하고SID소진의flags0삭제를실행한다.
@@ -59,6 +60,8 @@ private:
     o::SquidProcessState state_; // now fallback/typeRotation/pollType와 실제 외부 참조를 한 번 소유한다.
     std::weak_ptr<o::ProcessHostRuntimeBindings> current_; // 현재 짧은 대여만 조회하며 World를 숨겨서 붙잡지 않는다.
     std::weak_ptr<const std::function<void(o::Sid)>> legacyAllocationReclaim_; // 외부 raw Kernel의 World를 장기 소유하지 않고 현재 가상 회수 경계만 조회한다.
+    o::ProcessFormTransmission formTransmission_; //실제장기기본writer이며Host생성전에는callback을실행하지않는다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> formAssertion_; //현재실제Client진단을Host생성때같은State에결합한다.
     std::unique_ptr<o::SquidProcessHost> host_; // Kernel의 최종 소멸보다 오래 살아 있어야 한다.
     std::shared_ptr<o::FrameTime> clock_;std::shared_ptr<std::uint32_t> pollType_; // 스칼라 포인터의 실제 소유자를 pin한다.
     std::shared_ptr<o::RawGameAuxState> gameAux_; // 일반/공유/상한 참조가 Host의 최종 반납까지 유효하도록 소유자를 유지한다.

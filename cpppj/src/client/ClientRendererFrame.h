@@ -21,6 +21,7 @@ class ClientRendererFrame {
 public:
     explicit ClientRendererFrame(Client& client); //같은 Client만 저장하고 BSS0 owner를 전체 Client 수명 동안 유지한다.
     ~ClientRendererFrame(); //빌린 collector를 실제 Pool/해시의 공유 소유권보다 먼저 반납한다.
+    void BindSurfaceDisplay(); //같은Client의현재Renderer/카메라/Root지도영역을장기표시에연결한다. World는요구하지않는다.
     void ReadOptions(); //Interpret Options 위치에서 showSoftAsserts의 현재 성공한 값만 저장한다.
     bool Prepare(); //실제10.78 메뉴가 있을 때4994b0 앞단을 실행하며 독립 표시/10.72는 false다.
     RendererWorldDrawing Drawing(); //같은 실제 dirty의 지형 수집/배경 장치이며 별도 장면/난수를 만들지 않는다.

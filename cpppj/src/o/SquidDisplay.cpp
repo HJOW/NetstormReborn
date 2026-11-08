@@ -9,6 +9,7 @@
 #include <limits>
 #include <optional>
 #include <stdexcept>
+#include <utility> //현재view장치의함수소유권만이동한다.
 
 namespace netstorm::o {
 namespace {
@@ -74,6 +75,8 @@ SquidDisplay::SquidDisplay(OriginalEdition edition,std::span<const RiftTypeRecor
     SetView(view);
 }
 // 역전 viewport와 양수 아닌 확대율을 장치 호출 전에 거부한다.
+void SquidDisplay::BindView(std::function<SquidDisplayView()> view) { currentView_=std::move(view); } //생성시값형view는독립호환이며실제부모는같은장기getter를쓴다.
+SquidDisplayView SquidDisplay::CurrentView() const { return currentView_ ? currentView_():view_; } //진단/갱신효과뒤의다음좌표읽기도현재Client에서구한다.
 void SquidDisplay::SetView(SquidDisplayView view) {
     if (view.zoom<=0 || view.viewport.left>view.viewport.right || view.viewport.top>view.viewport.bottom)
         throw std::invalid_argument("표시 카메라/viewport 오류");
@@ -156,10 +159,10 @@ SquidDisplayRect SquidDisplay::Bounds(std::size_t type,int frame,float x,float y
     if (!shape.loaded) return {};
     if (frame<0 || static_cast<std::size_t>(frame)>=shape.frames.size()) throw std::out_of_range("표시 프레임 범위 오류");
     const auto& header=shape.frames[static_cast<std::size_t>(frame)];
-    const auto left=Coordinate(static_cast<std::int64_t>(Project(x,16,view_.cameraX))-Scale(header.hotspotX,view_.zoom));
-    const auto top=Coordinate(static_cast<std::int64_t>(Project(y,11,view_.cameraY))-Scale(header.hotspotY,view_.zoom));
-    return {left,top,Coordinate(static_cast<std::int64_t>(left)+Scale(header.width,view_.zoom)+1),
-        Coordinate(static_cast<std::int64_t>(top)+Scale(header.height,view_.zoom)+1)};
+    const auto left=Coordinate(static_cast<std::int64_t>(Project(x,16,CurrentView().cameraX))-Scale(header.hotspotX,CurrentView().zoom));
+    const auto top=Coordinate(static_cast<std::int64_t>(Project(y,11,CurrentView().cameraY))-Scale(header.hotspotY,CurrentView().zoom));
+    return {left,top,Coordinate(static_cast<std::int64_t>(left)+Scale(header.width,CurrentView().zoom)+1),
+        Coordinate(static_cast<std::int64_t>(top)+Scale(header.height,CurrentView().zoom)+1)};
 }
 // 현재 VT의 특수8c를 먼저 분배하고 나머지 확인된 가상 경로만 공통 표시 부모에 전달한다.
 void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flags) {
@@ -171,7 +174,7 @@ void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flag
         auto rect=Bounds(type,frame,std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18)));
         rect.top=Coordinate(static_cast<std::int64_t>(rect.top)+kGeyserVerticalInset);
         rect.bottom=Coordinate(static_cast<std::int64_t>(rect.bottom)-kGeyserVerticalInset);
-        rect=Clip(rect,view_.viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);
+        rect=Clip(rect,CurrentView().viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);
         return; // 원문의 유일한 cache 소비자/작성자가 고정한 (0,50,0,50)을 같은 픽셀 순서로 적용한다.
     }
     const auto table=Read(bytes,0);const bool patchParent=edition_==OriginalEdition::Patch1078 && table!=kPatchManaVtable && table!=0x509810; // 파생 마나/볼트 부분 표시는 기존 몸체다.
@@ -192,7 +195,7 @@ void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flag
         const bool bolt=Read(bytes,0)==0x509810; // 45ac90은 WORD와 무관하다. 499240이 음수 여백을 빼므로 오른쪽/아래가10픽셀 늘어난다.
         if ((!bolt && !Read(bytes,12,2)) || sink_.Suppressed()) return;
         auto rect=Bounds(Read(bytes,10,1),std::bit_cast<std::int32_t>(Read(bytes,36)),std::bit_cast<float>(Read(bytes,14)),std::bit_cast<float>(Read(bytes,18)));
-        const auto extra=10;rect.right=Coordinate(static_cast<std::int64_t>(rect.right)+extra);rect.bottom=Coordinate(static_cast<std::int64_t>(rect.bottom)+extra);rect=Clip(rect,view_.viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);return;
+        const auto extra=10;rect.right=Coordinate(static_cast<std::int64_t>(rect.right)+extra);rect.bottom=Coordinate(static_cast<std::int64_t>(rect.bottom)+extra);rect=Clip(rect,CurrentView().viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);return;
     }
     const bool patch=edition_==OriginalEdition::Patch1078; const auto type=Read(bytes,10,1);
     const auto frame=patch ? std::bit_cast<std::int32_t>(Read(bytes,36)) : static_cast<int>(Read(bytes,34,1));
@@ -205,7 +208,7 @@ void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flag
             rect.top=Coordinate(static_cast<std::int64_t>(rect.top)+(*insets)[1]);
             rect.right=Coordinate(static_cast<std::int64_t>(rect.right)-(*insets)[2]);
             rect.bottom=Coordinate(static_cast<std::int64_t>(rect.bottom)-(*insets)[3]);
-            rect=Clip(rect,view_.viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);return;
+            rect=Clip(rect,CurrentView().viewport);if (Nonempty(rect)) sink_.Invalidate(rect,0);return;
         }
     }
     if (patch && !PatchFrameValid(type,frame)) return;
@@ -214,7 +217,7 @@ void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flag
 // 기존4990d0 본문을 현재 인자로 실행한다. 진단 앞의 공간 preflight와 실제 표시 효과를 구별한다.
 void SquidDisplay::Mark(std::size_t type,int frame,float x,float y,std::uint32_t marker) {
     if (sink_.Suppressed()) return;const bool patch=edition_==OriginalEdition::Patch1078; // 실제 표시 억제는 부모 진단 이후 자식 진입에서 평가한다.
-    auto main=Clip(Bounds(type,frame,x,y),view_.viewport);
+    auto main=Clip(Bounds(type,frame,x,y),CurrentView().viewport);
     if (marker) {
         if (static_cast<std::int64_t>(main.right)-main.left<19) { main.left=Coordinate(static_cast<std::int64_t>(main.left)-9); main.right=Coordinate(static_cast<std::int64_t>(main.right)+9); }
         main.top=Coordinate(static_cast<std::int64_t>(main.top)-(patch ? 15 : 9));
@@ -223,7 +226,7 @@ void SquidDisplay::Mark(std::size_t type,int frame,float x,float y,std::uint32_t
     // clamp 뒤 확장한 범위는 다시 viewport로 자르지 않는다. Dirty/Draw 단계가 화면을 처리한다.
     if (Nonempty(main)) sink_.Invalidate(main,marker);
     if ((types_[type].flags1&kShadow)!=0) {
-        const auto shadow=Clip(Bounds(type,frame+shapes_[type].frameCount,x,y),view_.viewport);
+        const auto shadow=Clip(Bounds(type,frame+shapes_[type].frameCount,x,y),CurrentView().viewport);
         if (Nonempty(shadow)) sink_.Invalidate(shadow,marker);
     }
 }

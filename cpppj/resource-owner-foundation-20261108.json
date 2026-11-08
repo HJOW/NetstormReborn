@@ -1,0 +1,450 @@
+{
+  "unit": 1175,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCppCommit": "a76499e3 / 20261108-165 CP",
+  "summary": "M6-l/n선행자원owner기반n1~n7·실제전체World pin·n8a장기공통전송/일부Form기본writer 부분접합",
+  "builds": [
+    {
+      "suffix": "",
+      "exitCode": 1,
+      "errors": 18,
+      "warnings": 0
+    },
+    {
+      "suffix": "-final",
+      "exitCode": 1,
+      "errors": 5,
+      "warnings": 0
+    },
+    {
+      "suffix": "-corrected",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13426176,
+      "sha256": "7ee1089e73cdf0df4a1df1db5ebef3601eace211adbdc622a86b094ca406b5a8"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "c75609282a517daabef4cda51227f35818f711002fd00688160de4102c1c364e"
+    }
+  },
+  "sourceSha256": {
+    "cpppj/src/client/CampaignTemplateStorage.cpp": "1b11f2b2a9ab6528177eb95ef73698a7b41b96fe8c036de22e5ec6eeec3935c0",
+    "cpppj/src/client/CampaignTemplateStorage.h": "b611a4aa9051d1c8dc78e5db65678ce9fb4d892832730912ae5c877865a5223e",
+    "cpppj/src/client/ClientMain.cpp": "731c826dcd9a98655520fb432780819889436fbf8b96fabfe76aeae36960e453",
+    "cpppj/src/client/ClientRendererFrame.cpp": "80a628fb775ac2d8049d6d77e253b44790b680eee26cfe1894d4fbbbef65e84e",
+    "cpppj/src/client/ClientRendererFrame.h": "bab3710d8af9afa9db960b0868a25b22c343d715ad2fe8e832a808d2a3c9efa2",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "1a1d4ec6d727ce980780171fcaa7dee7b0dcce9f5df6058bac0cd65398fde768",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "3161cb9af3f7ea27083a7696bb5477f46d4f2df5d10c18a6cfd2744de8caf389",
+    "cpppj/src/client/RawCampaignSession.cpp": "90f74050f00f528b2b10ff9c44d71d2a072ac01a3d38775607b3edef84c0f615",
+    "cpppj/src/client/RawCampaignSession.h": "b7ac3f9a4ddb644a078324a0855382e1d1c615777d13f911e8ed1a1e9a87a1a5",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "4c5843b35d47b8afa9f032d2283314f401b61d7e5fb5b510fd3ffa4d63d01949",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "713fff1d277dbdc7ff2abeb4113939287266f40819f901de79bc6d28aa7a74ef",
+    "cpppj/src/client/RawSurfaceWorld.h": "ae62a253fd797d9316cfa8fcb01e911147d63a6b360a905bd9d426f28335c5be",
+    "cpppj/src/client/UberGump.cpp": "be31138fe2e675166d4ec8b5b9506841cadbe7b90e2e25fd0267d57594160b70",
+    "cpppj/src/o/RawAssetPostPop.cpp": "1f518f7f5c575e3b44f296765a959eee0220ffcb4f8750836c5a1d6c65848993",
+    "cpppj/src/o/RawAssetPostPop.h": "be9b1e17aea68eef247afb79c71e08d33fe7d8d546c54c9563ed2bf9e9dc460b",
+    "cpppj/src/o/RawBuildingSpace.cpp": "d2dd7515f5b12a9be9038e09360a6e2280207e796f8008ea9693b0823cf959b2",
+    "cpppj/src/o/RawBuildingSpace.h": "0ee79658cbf89a612c7eb4d914ea3a16aeecb67a3214acd8447379eff4f777d1",
+    "cpppj/src/o/RawIslandPostPop.cpp": "2b753701a8033394630b55266780c41f421300d07bf509b8adaaf42f7f95d064",
+    "cpppj/src/o/RawIslandPostPop.h": "4816f33bc1f4a41d3b16bbc421083892fc608bed2282022a45b728a10d8415b1",
+    "cpppj/src/o/RawSquidContainedUnpop.h": "c0f65b321a5c71582cbe48c4cb58d9a635fb087b218a2c911b3d00365e700884",
+    "cpppj/src/o/SquidDisplay.cpp": "ca7cf8196d8f9b131332b60957d9cba91b2c2170d3293a6a982c9ed8b96e0ae1",
+    "cpppj/src/o/SquidDisplay.h": "324981782b29d4275cfcd5e6c5e4b6f6c46de473e7daa7301dfa8afd40b8d348",
+    "cpppj/src/o/SquidFactory.cpp": "f01745a0b366f7020eb35b05c4120896384f83b73109e470f0b744844de9074d",
+    "cpppj/src/o/SquidFactory.h": "d2518b0d8ed76a72ed47408770506433627d941593a3c4bb69e5788293a42f91",
+    "cpppj/src/o/SquidFrame.cpp": "9c9e5fbaca0d903019a50b4ab1db4cd33d1fa32e6869a7e539b254563bd3c551",
+    "cpppj/src/o/SquidFrame.h": "9b45bbf60d50f5fff89a3410639c8758e7bd399b24a36b26da117d263bfa9144",
+    "cpppj/src/o/SquidPostPop.cpp": "3be806cf85dd7b044739bd841acc206feb509b77235b2285832a6008acd29080",
+    "cpppj/src/o/SquidPostPop.h": "4ac365cfd16e4a3e9f55c0e4710f1b44f7ff82f316bd1f813fea878a91c3226f",
+    "cpppj/src/o/SquidPostPopPatch.cpp": "91be7cc35c2b284ede7149d096b14e23c4657dff790304c4718d26561ff3306e",
+    "cpppj/src/client/ClientGameplayGlobals.cpp": "392b569ea6acf83cdb2b94f7648eb5dec146c4bc2bc4e3c9118ecfa2e5edb41a",
+    "cpppj/src/client/RawProcessHostStorage.cpp": "763c5626e48f2b0ef432bb843d5da7940653dc30f7d2a161c8d8744f857337c8",
+    "cpppj/src/o/RawSquidContainedUnpop.cpp": "252f2862f535e42016aa00a6c792af17bef75fa2e8eb5d065ec76296a6095aa8",
+    "cpppj/src/o/SquidProcess.cpp": "a97c27afe86ea098201a45ac1703b59a98c295176dcbde9e2fe60d107c83bc30",
+    "cpppj/src/o/SquidProcess.h": "80f85f76134530d7bf3d82100f3f9783dce91b5d07aea6c54d0010d900a0e5bc",
+    "cpppj/src/client/RawProcessHostStorage.h": "25a91c6f5f755dc58621b849c49e4f4be01a02b5795b19664ba9c6d86b521579",
+    "cpppj/src/o/RawSquidTransmission.cpp": "a6b2301089a1a622ddf140a8d8e24de93a10f7448b942f1a4ca79a8523bd2265",
+    "cpppj/src/o/RawSquidTransmission.h": "e535f9b0b95a008617bd029f5e0fce84e3ac0202053400c1a8f54d0f99105c08"
+  },
+  "nativeEvidence": {
+    "extracted/cpp-m6-resource-owner-prep/foundation-manifest.json": "0f9b2f4fec66e75a65b34863a3de97348dfd3c54109f744cbbf9a87fca949e1f",
+    "extracted/cpp-m6-resource-owner-prep/cpe-hashes.json": "c9e074989b54c6fc8fb1f1d01203a7aa5bff8d1f88522c78b90bba949780fec8",
+    "extracted/cpp-m6-resource-binding-pin-prep/manifest.json": "27a5b963bcc3a225c24d1a0ba5db0d7b0362fcd303656f0cd120a92539e1005d",
+    "extracted/cpp-m6-resource-transmission-prep/manifest.json": "2cd48c013f7a513ffd230d77f62538fae153782eba646cb9afd6f3e0fac47038",
+    "extracted/cpp-m6-resource-transmission-prep/cpe-hashes.json": "8768520294893f17c0d1b8582819e4a75a5a182c5b23af315398334930016181"
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "live": {
+    "tutorial1": {
+      "passed": true,
+      "unit": 1175,
+      "mission": "tutorial1",
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1175\\live-tutorial1-02\\game",
+        "--mcp",
+        "--window",
+        "--no-audio",
+        "--set",
+        "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+      ],
+      "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "exeSha256Before": "7ee1089e73cdf0df4a1df1db5ebef3601eace211adbdc622a86b094ca406b5a8",
+      "exeSha256After": "7ee1089e73cdf0df4a1df1db5ebef3601eace211adbdc622a86b094ca406b5a8",
+      "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1175\\live-tutorial1-02\\game",
+      "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1175\\live-tutorial1-02\\user-data",
+      "entryConfirmed": true,
+      "quitRequested": true,
+      "exitCode": 0,
+      "dataUnchanged": true,
+      "protectedUnchanged": true,
+      "protectedDifferences": [],
+      "events": [
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "click",
+          "arg": "Main Menu"
+        },
+        {
+          "op": "click",
+          "arg": "MORE"
+        },
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "key",
+          "arg": "f4"
+        },
+        {
+          "op": "click",
+          "arg": "production:82"
+        },
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "pointer",
+          "arg": "0x80010000,1015,540"
+        },
+        {
+          "op": "click",
+          "arg": "screen:1015,540"
+        }
+      ],
+      "observations": [
+        "main-0",
+        "main-1",
+        "main-2",
+        "entry-0",
+        "entry-1",
+        "entry-2",
+        "ready",
+        "home",
+        "bridge-instruction-trigger",
+        "await-bridge-guide",
+        "bridge-instructions-closed",
+        "candidate-east",
+        "before-place",
+        "after-click",
+        "after-place",
+        "settled",
+        "before-close"
+      ],
+      "checks": [
+        {
+          "before": "before-place",
+          "after": "after-place",
+          "type": 82,
+          "owner": 1,
+          "newLiveServerObjects": [
+            [
+              "15003",
+              "82",
+              "1",
+              "35",
+              "63",
+              "49"
+            ]
+          ],
+          "constructionRequestsBefore": 0,
+          "constructionRequestsAfter": 1,
+          "passed": true
+        }
+      ],
+      "commandErrors": [],
+      "failure": null,
+      "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+    },
+    "tutorial4": {
+      "passed": true,
+      "unit": 1175,
+      "mission": "tutorial4",
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1175\\live-tutorial4\\game",
+        "--mcp",
+        "--window",
+        "--no-audio",
+        "--set",
+        "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+      ],
+      "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "exeSha256Before": "7ee1089e73cdf0df4a1df1db5ebef3601eace211adbdc622a86b094ca406b5a8",
+      "exeSha256After": "7ee1089e73cdf0df4a1df1db5ebef3601eace211adbdc622a86b094ca406b5a8",
+      "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1175\\live-tutorial4\\game",
+      "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1175\\live-tutorial4\\user-data",
+      "entryConfirmed": true,
+      "quitRequested": true,
+      "exitCode": 0,
+      "dataUnchanged": true,
+      "protectedUnchanged": true,
+      "protectedDifferences": [],
+      "events": [
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "click",
+          "arg": "Main Menu"
+        },
+        {
+          "op": "click",
+          "arg": "MORE"
+        },
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "right",
+          "arg": "world:sunFactory"
+        },
+        {
+          "op": "click",
+          "arg": "Put Knowledge into Production"
+        },
+        {
+          "op": "click",
+          "arg": "Wind Generator"
+        },
+        {
+          "op": "click",
+          "arg": "production:75"
+        },
+        {
+          "op": "pointer",
+          "arg": "0x80010000,960,635"
+        },
+        {
+          "op": "click",
+          "arg": "screen:960,635"
+        }
+      ],
+      "observations": [
+        "main-0",
+        "main-1",
+        "main-2",
+        "entry-0",
+        "entry-1",
+        "entry-2",
+        "ready",
+        "workshop-menu",
+        "knowledge-menu",
+        "generator-production",
+        "generator-picked",
+        "generator-candidate",
+        "before-generator",
+        "after-generator-click",
+        "after-generator",
+        "generator-settled",
+        "before-close"
+      ],
+      "checks": [
+        {
+          "before": "before-generator",
+          "after": "after-generator",
+          "type": 75,
+          "owner": 1,
+          "newLiveServerObjects": [
+            [
+              "15074",
+              "75",
+              "1",
+              "0",
+              "125",
+              "85"
+            ]
+          ],
+          "constructionRequestsBefore": 0,
+          "constructionRequestsAfter": 1,
+          "passed": true
+        }
+      ],
+      "commandErrors": [],
+      "failure": null,
+      "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+    },
+    "thewarbegins": {
+      "passed": true,
+      "unit": 1175,
+      "mission": "thewarbegins",
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1175\\live-thewarbegins\\game",
+        "--mcp",
+        "--window",
+        "--no-audio",
+        "--set",
+        "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+      ],
+      "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "exeSha256Before": "7ee1089e73cdf0df4a1df1db5ebef3601eace211adbdc622a86b094ca406b5a8",
+      "exeSha256After": "7ee1089e73cdf0df4a1df1db5ebef3601eace211adbdc622a86b094ca406b5a8",
+      "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1175\\live-thewarbegins\\game",
+      "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1175\\live-thewarbegins\\user-data",
+      "entryConfirmed": true,
+      "quitRequested": true,
+      "exitCode": 0,
+      "dataUnchanged": true,
+      "protectedUnchanged": true,
+      "protectedDifferences": [],
+      "events": [
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "click",
+          "arg": "Main Menu"
+        },
+        {
+          "op": "click",
+          "arg": "Play Mission"
+        }
+      ],
+      "observations": [
+        "main-0",
+        "main-1",
+        "main-2",
+        "entry-0",
+        "entry-1",
+        "ready",
+        "entry-waited",
+        "before-close"
+      ],
+      "checks": [
+        {
+          "kind": "normal-entry-and-wait",
+          "before": "ready",
+          "after": "entry-waited",
+          "gameTimeBefore": 11.041,
+          "gameTimeAfter": 50.829,
+          "mission": "thewarbegins",
+          "passed": true
+        }
+      ],
+      "commandErrors": [],
+      "failure": null,
+      "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+    }
+  },
+  "liveAttempts": [
+    {
+      "path": "extracted/cpp-resume-1175/live-tutorial1/summary.json",
+      "passed": false,
+      "mission": "tutorial1",
+      "exitCode": 0,
+      "failure": null
+    },
+    {
+      "path": "extracted/cpp-resume-1175/live-tutorial1-02/summary.json",
+      "passed": true,
+      "mission": "tutorial1",
+      "exitCode": 0,
+      "failure": null
+    },
+    {
+      "path": "extracted/cpp-resume-1175/live-tutorial4/summary.json",
+      "passed": true,
+      "mission": "tutorial4",
+      "exitCode": 0,
+      "failure": null
+    },
+    {
+      "path": "extracted/cpp-resume-1175/live-thewarbegins/summary.json",
+      "passed": true,
+      "mission": "thewarbegins",
+      "exitCode": 0,
+      "failure": null
+    }
+  ],
+  "firstTutorialAttempt": {
+    "path": "extracted/cpp-resume-1175/live-tutorial1/summary.json",
+    "constructionChecks": 0,
+    "normalExit": 0,
+    "reason": "안내 뒤 이미 선택된 다리를 생산 클릭으로 다시 해제하여 건설 확인 미완료. 동일 EXE에서 현재 선택을 관측해 재실행했고 제품 교정은 하지 않음"
+  },
+  "audit": {
+    "sharedPoolFactoryDisplayGraphSpaceAndPop": true,
+    "sameSerializationLoadingDepth": true,
+    "currentGeyserSpacing": true,
+    "sharedRecentGeysersAndDirections": true,
+    "actualRuntimePinAtBindings": true,
+    "clientAiAndSelectionActualPin": true,
+    "clearCallReleasedBeforeRetirement": true,
+    "commonTransmissionMutableActualSourcePin": true,
+    "defaultFormWriterOnly": [
+      "Dais",
+      "Construction",
+      "sharedRegular전체"
+    ],
+    "noPrematurePrivateKernel": true,
+    "canonicalTags": 11,
+    "originalNativeInventory": 89,
+    "retiredValidationNative": 1,
+    "activeNativeTarget": 88,
+    "canonicalTagCountIsNotScopeCompletion": true,
+    "allBaselineScopesClosed": false,
+    "delayedQueueActivated": false,
+    "m6nComplete": false
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "multiplayer": 0,
+    "network": 0,
+    "zip": 0,
+    "nonMp": 4
+  },
+  "remaining": {
+    "next": "M6-l 기존태그의기본scope보완·잔여F/각연결queue",
+    "n": "잔여ProcessForm기본writer·Host실행/Regular/자원파생·실제NoWorld frame caller",
+    "m7": 5,
+    "stage3Groups": 3
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

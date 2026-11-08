@@ -9,6 +9,7 @@
 #include "o/RawBattleBroadcast.h" // 같은현재연결표를사용하는Squid패킷송신경계다.
 #include "o/RawCheckingFlag.h" // Editor/Session이같은Client진단owner를빌린다.
 #include "o/RawGameAuxState.h"
+#include "o/FortSerializationGlobals.h" //실제 Template/Core/객체의005c89b8 owner를같이pin한다.
 #include "o/RawBoardTarget.h"
 #include "o/RawPathSearch.h" //원문거리표의한소유자를Client물리에보존한다.
 #include "o/RawGraph.h"
@@ -37,12 +38,42 @@
 
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
+struct RawSurfaceTransmissionDevices { //실제Client의현재Registry/Player장치만Storage수명으로보관한다.
+    std::function<void(std::span<std::uint8_t>)> broadcast; //현재Player/NULL/로컬선택뒤대상별같은버퍼를실제가상+4에넘긴다.
+    std::function<bool(std::int32_t)> connected; //writer뒤현재Player+50bit1만읽는48f4b0이다.
+    std::function<void(std::int32_t,std::span<std::uint8_t>)> send; //현재4e2dc0관문과선택된실제Registry송신이다.
+};
+struct RawSurfacePopBindings { //현재실제Pop writer만짧게빌리며해제뒤죽은World를호출하지않는다.
+    std::function<void(o::Sid,std::uint32_t)> transmit; //원문Activate뒤의같은Squid전송/방송부모다.
+    o::BattlePacketSend broadcast; //기존독립fixture가관측하는writer반환크기의const계약이다.
+    std::function<bool(std::int32_t)> connected; //기존독립World가명시연결한현재Player관문이다.
+    std::function<void(std::int32_t,std::span<const std::uint8_t>)> send; //기존독립대상전송의const관측계약이다.
+    std::function<std::int32_t(o::Sid,std::span<std::uint8_t>,std::uint32_t)> processPacket; //외부rawKernel을쓰는현재World는자기실제Host를사용한다.
+    std::function<std::shared_ptr<void>()> pin; //실제현재전체Runtime의선택호출수명이며binding자체의shared소유권과구별한다.
+};
+struct RawSurfaceDisplayBindings { //같은장기표시의현재카메라/Renderer장치또는짧은World대여다.
+    std::function<void()> changed; //현재World의기존호스트표시갱신관찰이며World없는경로에는이짧은관찰자가없다.
+    std::function<o::SquidDisplayView()> view; //현재카메라snapshot/실제Root지도영역이며새기본viewport를만들지않는다.
+    std::function<bool()> suppressed; //현재Renderer의원문전체갱신억제전역이다.
+    std::function<void(o::SquidDisplayRect,std::uint32_t)> invalidate; //계산된실제그림/그림자범위를같은dirty표에기록한다.
+    std::function<void(std::span<const std::uint8_t>)> metaRefresh; //선택된메타VT만실제파생88장치를요구한다.
+    std::function<std::shared_ptr<void>()> pin; //현재World의실제전체owner를dirty/카메라callback반환까지보유한다.장기Client장치는비워둔다.
+};
 // Session보다 오래 사는 실제 Pool/공간/자산 배열이다. Runtime 모듈의 수명과 구별한다.
-class RawSurfaceStorage {
+class RawSurfaceStorage : private o::SquidDisplaySink {
 private:
     std::shared_ptr<o::RawAuthorityState> authority_; // Pool의 현재 서버 포인터와 World 실행기보다 먼저 만들고 마지막에 반납한다.
+    std::shared_ptr<o::FortSerializationGlobals> serializationGlobals_; //실제Client의장기판본/깊이owner이며World/Sessioncallback을소유하지않는다.
+    std::uint32_t localLoadingDepth_{1}; //독립SurfaceWorld의기존초기깊이1 fallback만보존한다. 실제Client는공유owner를필수연결한다.
     std::shared_ptr<o::RawGameAuxState> gameAux_; // 실제 장부/게임 TYPE 참조보다 먼저 구성한다.
     o::RawCheckingFlag checking_; // 대여/World반납뒤에도같은현재Client진단DWORD를읽는다.독립저장소기본값은0이다.
+    o::SquidPostPopDevices postPopDevices_; //현재실제Client AI/로컬owner/선택의장기장치다.
+    std::weak_ptr<const RawSurfacePopBindings> popRuntime_; //현재typed장치/외부Kernel만짧게빌리고반납뒤장기기본전송을사용한다.
+    RawSurfaceTransmissionDevices transmissionDevices_; //실제Client만명시연결하며Source포인터로Native정책을추정하지않는다.
+    std::weak_ptr<o::RawSquidContainedUnpop> currentContainedUnpop_; //현재Session의파생종단만약하게빌린다.
+    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> contentCommand_; //같은Client입력큐의실제452fe0장치다.
+    RawSurfaceDisplayBindings displayDevices_; //실제Client장치만장기보관하며Frame/UI객체를소유하지않는다.
+    std::weak_ptr<const RawSurfaceDisplayBindings> displayRuntime_; //현재World의표시변화관찰/기존view는짧은대여만빌린다.
     std::optional<std::string>* displayAssertionDetail_{}; // 같은 Client의005e4798 소유자를 빌리며 Storage보다 오래 살아야 한다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> displayAssertion_; // 현재 표시 진단 장치이며 World/Session callback을 보관하지 않는다.
     std::function<double()> graphClock_; // Client 수명 동안 현재 게임 시각을 읽는 장치다. World 대여/반납은 교체하지 않는다.
@@ -62,6 +93,31 @@ public:
         RawSurfaceStorage& storage_; // 실제 물리 소유자는 대여보다 오래 살아야 한다.
     };
     ~RawSurfaceStorage(); // 최종 ProcessHost/Kernel을 실제 Pool/TYPE보다 먼저 반납한다.
+    bool UsesNativePostPopDevices() const { return static_cast<bool>(postPopDevices_.aiNotice); } //실제Client장치의결합수명만조회하며게임상태/ACK를생성하지않는다.
+    void BindPostPopDevices(o::SquidPostPopDevices devices); //현재Client큰하위와원문자연관문을연결만한다.
+    o::SquidPop& Pop(); //같은공간/장부/표시와현재전송경계를사용하는실제Pop부모다.
+    o::SquidUnpop& Unpop(); //같은void/Hash/spot/건물옆면/현재종속종단을실행한다.
+    o::SquidPostPop& PostPop(); //공통장부와실제표면접두를장기소유하며파생대여는반납한다.
+    o::SquidFrame& Frame(); //같은현재Pop/Unpop/표시로일반프레임변경을실행한다.
+    o::RawBridgeConnect& Connections(); //현재연결생성/색/소유자전파의동일실제몸체다.
+    o::RawIslandPostPop& Surface(); //현재noIsland의실제프레임/받침/소유자전파접두다.
+    o::RawSquidContainedUnpop& ContainedUnpop(); //현재공통종속/부모통지/UI입력의장기종단이다.
+    void BindContainedUnpop(const std::shared_ptr<o::RawSquidContainedUnpop>& binding); //현재동일Pool의Session파생종단만약하게결합한다.
+    void BindContentCommand(std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> command); //실제Client입력getter를연결만한다.
+    void BindSavedGame(bool& savedGame); //실제Client의현재005c85d4를첫World전부터같이읽는다.
+    void BindPopRuntime(const std::shared_ptr<const RawSurfacePopBindings>& runtime); //현재실제writer만weak로빌린다.
+    void BindTransmissionDevices(RawSurfaceTransmissionDevices devices); //첫Factory/Host/World앞에현재Client장치만연결한다.
+    o::RawSquidTransmission& Transmission(); //공통2048BYTE/헤더/압축전역과실제현재FormHost를장기로공유한다.
+    o::RawPopResult PopAsset(o::Sid sid,float x,float y,std::uint32_t flags); //원문PATCH는좌표/spot뒤현재TYPE/SHP를읽으며CD의기존사전크기계약은유지한다.
+    void RepopAsset(o::Sid sid,std::uint32_t flags); //현재같은슬롯의float좌표로실제가상Pop을다시실행한다.
+    o::RawGraph& Graph(); //같은현재장부/Graph물리와TYPE/진단/시계를World없이빌린다.
+    o::RawSquidNeighbors& Neighbors(); //같은Pool/Hash/spot/현재발자국을읽는장기조회기다.
+    o::RawBuildingSpace& Building(); //현재isle/다리TYPE와같은공간을Pop/Unpop이공유한다.
+    o::SquidOwner& Owner(); //같은현재모드/장부/PlayerFactory의공통가상owner몸체다.
+    o::SquidDisplay& Display(); //같은TYPE/SHP/진단과현재Renderer로실제표시부모를World없이제공한다.
+    void BindDisplayDevices(RawSurfaceDisplayBindings devices); //첫실제Client물리준비뒤현재Renderer/카메라getter만결합하며조회/난수/그리기는실행하지않는다.
+    void BindDisplayRuntime(const std::shared_ptr<const RawSurfaceDisplayBindings>& runtime); //같은현재World대여만weak로공개하고만료뒤장기Client장치를쓴다.
+    o::SquidFactory& Factory(); //같은Pool/현재TYPE/HP·깊이/진단으로실제Create를World없이실행하며Acquire/reset/Host대여를추가하지않는다.
     RawProcessHostStorage& Processes(); // 같은 Storage의 장기 Host/상태와 현재 World 대여를 제공한다.
     RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source=nullptr,std::shared_ptr<o::RawAuthorityState> authority={},std::shared_ptr<o::RawGameAuxState> gameAux={}); // 배열은 최초 한 번만 확보한다.
     RawSurfaceStorage(const RawSurfaceStorage&)=delete;RawSurfaceStorage& operator=(const RawSurfaceStorage&)=delete; // 현재 모든 실행기가 빌리는 실제 물리를 복제하지 않는다.
@@ -72,8 +128,11 @@ public:
     std::uint64_t Generation() const; // 성공한 월드 대여 횟수이며 원본 게임 값으로 쓰지 않는다.
     const std::shared_ptr<o::RawAuthorityState>& Authority() const { return authority_; } // Client 전역/Session과 같은 실제 서버·권한 주소의 정체성이다.
     const std::shared_ptr<o::RawGameAuxState>& GameAux() const { return gameAux_; } // 같은 Gameplay/Host가 pin하는 실제 게임 보조 owner다.
-    void BindChecking(o::RawCheckingFlag checking) { checking_=checking; } // 비소유현재뷰또는독립자체값을수명안전하게복사하며bool사본을동기화하지않는다.
-    o::RawCheckingFlag Checking() const { return checking_; } // 호출위치에서현재owner를읽을수있는같은뷰다.
+    void BindSerializationGlobals(std::shared_ptr<o::FortSerializationGlobals> globals); //실제같은깊이owner를대여전한번연결하며값/reset/권한은쓰지않는다.
+    std::uint32_t& LoadingDepth(); //실제Template/Core와같은현재깊이를읽고쓴다. 독립Surface만기존1fallback을쓴다.
+    const std::uint32_t& LoadingDepth() const; //Pop진입마다동일주소를빌리고시점별사본을동기화하지않는다.
+    void BindChecking(o::RawCheckingFlag checking); // 비소유현재뷰또는독립자체값을수명안전하게복사하며bool사본을동기화하지않는다.
+    o::RawCheckingFlag Checking() const override { return checking_; } // 호출위치에서현재owner를읽을수있는같은뷰다.
     void BindDisplayDiagnostics(std::optional<std::string>& detail,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion); // 첫 World 이전에 같은 Client 상세/진단 수명을 연결한다.
     void RecordDisplayFrameError(std::uint32_t type,std::int32_t frame,std::uint32_t abstract); //현재 같은 TYPE/shape로43d40의 상세를 저장한다.
     void RecordAssertionDetail(std::string_view text); // 00436d20처럼 전달된 문구를 같은 Client 상세 소유자에 복사하며 원문 포인터를 보관하지 않는다.
@@ -99,15 +158,47 @@ public:
     o::RawPathSearchStorage pathSearchWork; //59514c/595150의실제배열은World재대여때초기화하지않고진단과같이빌린다.
     o::BoardTargetState boardTargetState; //545370/545374 실패점을 Pool과 같은 장기 수명에 두고 Board/AI가 직접 빌린다.
     o::RawGraphStorage graph; // 기록255행과 flood4096DWORD만 장기 보유한다. 실행기/TYPE snapshot/복구 정책은 World 지역이다.
+    o::SquidPostPopList recentGeysers; //00595094/count와595098의고정5DWORD이며정적SID8목록과다른실제Client수명이다.
+    std::array<std::uint32_t,9> geyserPlayerDirections{16448,4,0,6,2,7,3,5,1}; //0053181c의현재9DWORD이며World대여/반납에서새표로교체하지않는다.
     o::RawStateSidLists sidLists; //실제 정적 SID8목록/count와 등록20포인터를 World/Session 전후에 보존한다.
     o::RawTotalMadeStorage totalMade; // 현재 로컬/누적 로컬/전역256DWORD만 장기 보유하며 ownerFactories/로딩 정책은 World 지역이다.
     o::RawIslandStorage islands;o::ChunkMap chunks; // 같은3204BYTE 섬과 mode/크기/256×12BYTE 청크를 Session 전후에도 유지한다. 실행기/효과는 포함하지 않는다.
     std::array<std::uint32_t,o::kPlayerCount+1> priestOwnerState{}; //00595428..00595448의9DWORD 최초BSS0이다. 실제 사제 SID목록/count는 sidLists에 있고 지갑은 포함하지 않는다.
+    o::SquidPostPopState postPopState{.sharedTotalMade=&totalMade,.sharedTotalCost=&gameAux_->TotalCost(),.sharedProviders=&sidLists.providers,.sharedFactories=&sidLists.factories}; //공통depth/생산dirty/Graph와실제장부의주소를World뒤에도유지한다.
+    o::SquidDeletionState deletionState{.sharedLostX=&gameAux_->LostX(),.sharedLostY=&gameAux_->LostY()}; //공통pre/post의현재분할/선택/억제와손실위치를같은장기owner로빌린다.
+    o::IslandPostPopState islandPostPopState{1,false}; //독립기존깊이만fallback으로보존하고실제Client는위공유깊이/저장게임주소를읽는다.
+    std::uint32_t containedType{6},containedGumpType{3},containedUiEvent{0x02000039}; //원문공통내용물/Gump/UpdateContents의같은현재장기전역이다.
+    o::BuildingSpaceState buildingSpaceState; //독립World의기존terrain인자fallback이며실제Client는현재GameAux isle TYPE를직접읽는다.
     o::SquidOwnerMode ownerMode; // 미니맵과 현재 월드가 같은 실제 세 모드 값을 읽는다.
     o::BridgeConnectState links; // 생산 UI와 현재 월드가 같은 실제 표면 종류 전역을 읽는다.
     o::BridgeDecayScanState bridgeDecayScan; //0052f96c/970·005453a8/b8의 같은 현재 스캔 범위·커서·기한을 World 반납 뒤에도 유지한다.
     float bridgeDecayPeriod{10.0F}; //0052f968의 원문 최초float10이며 Native 정리는 이 현재 값을 읽고 덮어쓰지 않는다.
 private:
+    o::SquidDisplayView CurrentDisplayView() const; //현재짧은대여또는같은Client의실제카메라/viewport만조회한다.
+    bool Suppressed() const override; //선택된현재Renderer/World의전체표시억제를읽는다.
+    void Invalidate(o::SquidDisplayRect rectangle,std::uint32_t flags) override; //현재실제dirty표또는기존World표시소비자에전달한다.
+    void FrameError(std::uint32_t type,std::int32_t frame,std::uint32_t abstract) override; //43d40의실제상세owner를사용한다.
+    void Assertion(std::string_view expression,std::string_view file,std::uint32_t line) override; //정상복귀하는실제Client진단이다.
+    void MetaRefresh(std::span<const std::uint8_t> bytes) override; //파생메타갱신은선택된실제장치가없으면명시실패한다.
+    void RefreshChecking(); //이미존재하는실행기의진단view만갱신하고새모듈/World/Native효과는만들지않는다.
+    void NoteChanged(); //현재World의기존호스트changed관찰만알리며원문게임상태를새로쓰지않는다.
+    void TransmitPop(o::Sid sid,std::uint32_t flags); //현재World가없어도같은장기writer/실제Registry를사용한다.
+    std::int32_t WriteDefaultForm(o::SquidProcess& process,bool parentChanged,std::uint32_t force); //Dais/Construction의실제writer를같은공통버퍼로분배하며다른파생누락은선택위치에서드러낸다.
+    o::BridgeConnectHooks SurfaceObjects(); //연결/받침이공유하는같은실제Factory/Owner/Pop/Frame/통지다.
+    std::unique_ptr<o::RawSquidContainedUnpop> containedUnpop_; //현재실제공통종단은Pool/현재전역보다짧고World보다길다.
+    std::unique_ptr<o::RawGraph> graph_; //Graph배열/스택과현재장부는앞의같은장기물리이며생성은재초기화하지않는다.
+    std::unique_ptr<o::RawSquidNeighbors> neighbors_; //현재이웃/finder는같은실제공간과주소고정TYPE를사용한다.
+    std::unique_ptr<o::RawBuildingSpace> building_; //건물옆면의실제WORD지도/진단을장기보유한다.
+    std::unique_ptr<o::SquidOwner> owner_; //공통소유자변경은같은장부와모드를공유한다.
+    std::unique_ptr<o::SquidDisplay> display_; //현재같은Pool/TYPE/SHP의장기표시실행기이며Host/공장보다먼저소멸하지않는다.
+    std::unique_ptr<o::SquidPostPop> postPop_; //같은공통depth/장부와현재표면접두를유지한다.
+    std::unique_ptr<o::SquidUnpop> unpop_; //현재Hash/spot/표시와종속해제를공유한다.
+    std::unique_ptr<o::SquidPop> pop_; //현재공간쓰기를실행하고실제postPop/전송을선택한다.
+    std::unique_ptr<o::SquidFrame> frame_; //장기Pop/Unpop/표시의같은인스턴스를빌린다.
+    std::unique_ptr<o::RawBridgeConnect> connections_; //현재표면연결과공통owner를실행한다.
+    std::unique_ptr<o::RawIslandPostPop> surface_; //현재깊이/저장게임과동일받침생성접두다.
+    std::unique_ptr<o::SquidFactory> factory_; //공통장부/Pool보다먼저반납하고장기Host가마지막Regular를반납할때까지실제공장을유지한다.
+    std::unique_ptr<o::RawSquidTransmission> transmission_; //같은Pool/현재TYPE/GameAux보다먼저반납하는공통실제송신기다.
     std::unique_ptr<RawProcessHostStorage> processes_; // 실제 Pool/TYPE 뒤에 선언하여 그 참조보다 먼저 최종 반납한다.
     const GameAssets* source_;bool borrowed_{};std::uint64_t generation_{}; // 최초 자산 정체성·단일 대여·호스트 관측 번호다.
 };
@@ -212,7 +303,7 @@ public:
     // 프레임/타입/SHP를 소유하여 GUI 참조와 raw 조회가 같은 판본을 사용하게 한다.
     RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
         std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,
-        o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel=nullptr,std::shared_ptr<RawSurfaceStorage> storage={},bool adoptPrepared=false,bool* sharedSavedGame=nullptr,std::shared_ptr<o::RawAuthorityState> authority={},std::shared_ptr<o::RawGameAuxState> gameAux={}); // 준비 대여는 실제 물리를 사용하며 저장 게임 관문은 첫 객체 전부터 Client의 같은 bool을 빌린다.
+        o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel=nullptr,std::shared_ptr<RawSurfaceStorage> storage={},bool adoptPrepared=false,bool* sharedSavedGame=nullptr,std::shared_ptr<o::RawAuthorityState> authority={},std::shared_ptr<o::RawGameAuxState> gameAux={},std::shared_ptr<o::FortSerializationGlobals> serialization={}); // 준비 대여는 실제 물리를 사용하며 저장 게임 관문은 첫 객체 전부터 Client의 같은 bool을 빌린다.
     // 실제 Client는 같은 전역 Kernel을 빌리고 독립 월드만 자체 Kernel을 소유한다. 빌린 Kernel은 월드보다 오래 살아야 한다.
     // 빌린 경우 호출자는 모듈 반납 전에 현재 대여의 최종 정리를 마쳐야 한다. 전체 Kernel 소멸은 장기 Storage가 소유한다.
     ~RawSurfaceWorld();
@@ -233,6 +324,7 @@ public:
     o::RawBridgeConnect& BridgeConnections();
     // 같은 저장소를 사용하는 자산/Regular/Form 전송/낙하/로딩 경계를 설치한다. 미연결 콜백을 생략하지 않는다.
     void BindRuntime(RawWorldRuntimeHooks hooks);
+    void BindRuntimePin(std::function<std::shared_ptr<void>()> pin); //실제외곽owner공개뒤현재World대여들에같은pin장치를연결한다.빈함수는최종C++소멸전반납이다.
     void BindContainedUnpop(const std::shared_ptr<o::RawSquidContainedUnpop>& binding); // 같은 풀의 Session 종단을 약한 참조로 빌린다. 반납/소멸 뒤에는 월드 기본 종단을 사용한다.
     // 첫 객체 생성 전에 공통 삭제의 관찰 경계를 실제 보상/현재 선택/선택해제·소리 소비자로 한 번 교체한다.
     void BindDeletion(o::SquidReward& reward,std::function<o::Sid()> selected,o::SquidDeletionHooks hooks);

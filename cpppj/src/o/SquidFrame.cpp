@@ -29,10 +29,12 @@ std::int32_t SquidFrame::Frame(Sid sid) const {
     if (pool_.Edition() != OriginalEdition::Patch1078) return raw[0x22];
     return std::bit_cast<std::int32_t>(Read(raw, 0x24));
 }
+void SquidFrame::BindCurrentTypes(std::span<const RiftTypeRecord> types) { if (!types.empty() && types.size()!=types_.size()) throw std::invalid_argument("Frame의현재TYPE물리길이불일치");currentTypes_=types; } //같은장기배열만빌리며기존명시독립입력은빈뷰로복귀할수있다.
 int SquidFrame::StoreLevel(Sid sid) const {
+    const auto types=currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_):currentTypes_; //실제StoreLevel의현재TYPE조회위치다.
     const std::size_t number = pool_.Slot(sid)[kType];
-    if (number >= types_.size()) throw std::out_of_range("프레임 지정 타입 범위 오류");
-    const std::uint32_t genus = types_[number].flags2;
+    if (number >= types.size()) throw std::out_of_range("프레임 지정 타입 범위 오류");
+    const std::uint32_t genus = types[number].flags2;
     int level = 0;
     // island·bridge는 프레임을 읽지 않는다. 그 밖은 현재 프레임의 크기로 정한다.
     if ((genus & (TypeFlag2::kIsland | TypeFlag2::kBridge)) == 0) {

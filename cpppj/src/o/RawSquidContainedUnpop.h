@@ -3,6 +3,7 @@
 #include "o/RawCheckingFlag.h"
 #include "o/SidPool.h"
 #include <functional>
+#include <memory> //약한Session종단이실제외곽owner를호출끝까지보유한다.
 #include <string_view>
 
 namespace netstorm::o { // Form 전용 Unpop과 구별되는 공통 종속 해제 몸체다.
@@ -32,6 +33,8 @@ void CommonContainedSetPreviousAtTable(SidPool& pool,Sid sid,std::uint32_t table
 class RawSquidContainedUnpop { // PATCH004ac6b0→004ad230/CD004ac160→004acf40의 실제 종단이다.
 public:
     RawSquidContainedUnpop(SidPool& pool,SquidContainedUnpopState state,SquidContainedUnpopHooks hooks); // 상태 참조/풀은 처리기보다 오래 살아야 한다.
+    void BindRuntimePin(std::function<std::shared_ptr<void>()> pin); //실제현재Session종단만전체owner를pin하며장기기본종단은비워둔다.
+    void BindChecking(RawCheckingFlag checking) { state_.checkingDead=checking; } //현재Storage진단view가교체되어도같은종단의다음조회에반영한다.
     void Detach(Sid sid) const; // void를 다시 쓰지 않고 종속 체인/현재 contained와 부모 통지만 처리한다.
     void NotifyUi(Sid sid) const; // 이 객체 자신의 종속 Form에 GumpForm이 있으면 현재 사건을 한 번 큐에 넣는다.
     void Unpop(Sid sid) const; // 분리가 정상 반환하면 부모 dead 여부와 무관하게 자신의 UI 종속을 조회한다.
@@ -41,6 +44,7 @@ private:
     void Assert(std::string_view expression,std::uint32_t patchLine,std::uint32_t cdLine) const; // 판본별 Squid.cpp 진단 위치를 보존한다.
     SidPool& pool_; // Form/자산/UI 종속이 함께 사용하는 현재 물리 풀이다.
     SquidContainedUnpopState state_; // 값 사본 대신 살아 있는 현재 전역을 조회한다.
+    std::function<std::shared_ptr<void>()> runtimePin_; //Formgetter/부모통지/UI가빌린현재Session의실제전체수명이다.
     SquidContainedUnpopHooks hooks_; // 진단/가상 통지 뒤 원문 재조회 순서를 보존하는 실제 장치다.
 };
 }

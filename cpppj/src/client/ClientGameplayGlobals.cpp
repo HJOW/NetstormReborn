@@ -1,6 +1,8 @@
 // 초기 HUD가 읽는 실제 전역과 Session 실행 효과의 수명을 분리한다.
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientSubscriberGlobals.h"
+#include "client/RawCampaignSession.h" //실제전체owner공개를그Session의현재World대여pin과결합한다.
+#include "client/RawSurfaceWorld.h" //같은현재World의장기전역입구대여들만갱신한다.
 #include "o/RawTerrainBitmap.h"
 #include "o/RawTerrainStamp.h"
 #include <limits> //호스트 실행 pin 호출 수의 넘침만 명시 실패시킨다.
@@ -60,6 +62,7 @@ RawCampaignSession& ClientGameplayGlobals::RequireSession() const { if (!current
 void ClientGameplayGlobals::BindRuntimeOwner(RawCampaignSession& session,const std::shared_ptr<void>& owner) {
     if (!owner || current_!=&session) throw std::invalid_argument("현재 Session과 실제 Runtime owner 공개 불일치");
     if (runtimeCalls_) throw std::logic_error("실제 Runtime 배송 중 owner 재공개");runtimeOwner_=owner;runtimeOwnerSession_=&session;
+    session.World().BindRuntimePin([this,selected=&session] { auto& current=RequireSession();if (&current!=selected) throw std::logic_error("전역대여pin의현재Session교체");return PinCurrentRuntime(current); }); //일반/Editor/Meta의기존세실제공개caller가같은현재전체owner를사용한다.직접생성중/독립fixture에는이장치를추가하지않는다.
 }
 //현재 목록/권한 분기가 실제 Session 하위를 선택한 위치에서만 실제 외곽 owner를 strong으로 빌린다.
 std::shared_ptr<void> ClientGameplayGlobals::PinCurrentRuntime(RawCampaignSession& session) {

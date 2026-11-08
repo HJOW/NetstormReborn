@@ -32,6 +32,8 @@ struct RawSquidTransmissionHooks { // 직렬화에 필요한 현재 조회와 �
     std::function<bool(std::int32_t)> connected; //0048f4b0의 현재 대상별 연결 관문이다.
     std::function<void(std::int32_t,std::span<const std::uint8_t>)> send; //004e2dc0의 같은 대상 연결 송신이다.
     std::function<std::int32_t(Sid,std::span<std::uint8_t>,std::uint32_t)> processPacket; // 실제 ProcessForm+54가 같은 Kernel 객체의 writer로 작성한 패킷을 공통 버퍼에 쓴다.
+    std::function<void(std::span<std::uint8_t>)> broadcastMutable; //Native만같은전체2048BYTE를대상별observer에넘기며기존constfixture는위broadcast를사용한다.
+    std::function<void(std::int32_t,std::span<std::uint8_t>)> sendMutable; //Native대상송신의실제Player/NULL관문뒤같은전체예약을Registry에넘긴다.
 };
 // 실제 현재 VT+54와 두 Form writer를 분배한다. 새 MP 검사는 하지 않고 원문/PE로 대조한다.
 class RawSquidTransmission {
@@ -47,6 +49,6 @@ private:
     std::int32_t Compress(std::span<const std::uint8_t> input) const; //00432fe0의16필드 인코딩과 현재 owner/누적을 실행한다.
     const SidPool& pool_; // 현재 슬롯과 현재 서버를 조회하는 같은 풀이다.
     RawSquidTransmissionState& state_; // 실제 공통 버퍼/헤더/압축 전역이다.
-    RawSquidTransmissionHooks hooks_; // 같은 World 수명 동안 유효한 현재 장치다.
+    RawSquidTransmissionHooks hooks_; //같은Storage의장기장치와현재짧은World조회만보관한다.
 };
 }

@@ -107,6 +107,7 @@ public:
     RawAssetPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPop& base,
         const RawCarrierPostPop& damageable,AssetPostPopState& state,AssetPostPopHooks hooks);
     // 실제 복원한 가상 표인지 조회한다. 타입 번호로 다른 파생 재정의를 대체하지 않는다.
+    static bool HasDedicatedVtable(OriginalEdition edition,std::uint32_t table); //원문전용+20이있는실제VT인지인스턴스없이읽는다.
     bool Handles(Sid sid) const;
     // 공간 쓰기 전에 현재 분기가 요구하는 외부 효과와 공통 장부를 확인한다.
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;

@@ -35,7 +35,7 @@ Sid CommonContainedParent(const SidPool& pool,Sid sid) { const bool form=FormLin
 Sid CommonContainedPrevious(const SidPool& pool,Sid sid) { const bool form=FormLinkLayout(pool,sid);return Sid{LinkWord(pool.Slot(sid),form ? 14U : 16U)}; } // 같은 현재 VT의 이전 WORD getter다.
 Sid CommonContainedPreviousAtTable(const SidPool& pool,Sid sid,std::uint32_t table) { const bool form=FormLinkLayoutAtTable(pool.Edition(),table);return Sid{LinkWord(pool.Slot(sid),form ? 14U : 16U)}; } // 저장한 VT의 getter WORD다.
 void CommonContainedSetParent(SidPool& pool,Sid sid,Sid parent) { const bool form=FormLinkLayout(pool,sid);PutLink(pool,sid,form ? 16U : 14U,parent.value); } // 확인한 실제 VT+8의 하위 WORD만 바꾼다.
-std::uint32_t RawSquidContainedUnpop::ContentFormType() const { return state_.contentFormType; } // 약한 Session 대여가 살아 있는 동안 현재 DWORD를 읽는다.
+std::uint32_t RawSquidContainedUnpop::ContentFormType() const { const auto pin=runtimePin_;const auto runtimeOwner=pin ? pin():std::shared_ptr<void>{}; return state_.contentFormType; } // 약한 Session 대여가 살아 있는 동안 현재 DWORD를 읽는다.
 void CommonContainedSetPrevious(SidPool& pool,Sid sid,Sid previous) { const bool form=FormLinkLayout(pool,sid);PutLink(pool,sid,form ? 14U : 16U,previous.value); } // 공통 자산의+0xe DWORD 상위WORD 쓰기와 동일한 비트 결과다.
 void CommonContainedSetPreviousAtTable(SidPool& pool,Sid sid,std::uint32_t table,Sid previous) { const bool form=FormLinkLayoutAtTable(pool.Edition(),table);PutLink(pool,sid,form ? 14U : 16U,previous.value); } // 선택한 VT+c를 실행한다.
 RawSquidContainedUnpop::RawSquidContainedUnpop(SidPool& pool,SquidContainedUnpopState state,SquidContainedUnpopHooks hooks)
@@ -43,7 +43,7 @@ RawSquidContainedUnpop::RawSquidContainedUnpop(SidPool& pool,SquidContainedUnpop
 void RawSquidContainedUnpop::Assert(std::string_view expression,std::uint32_t patchLine,std::uint32_t cdLine) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;NeedContained(hooks_.assertion)(expression,patch ? kSquidSource : "\\ns\\o\\Squid.cpp",patch ? patchLine : cdLine); // CD 원문 문자열의 소문자 디렉터리도 보존한다.
 }
-void RawSquidContainedUnpop::Detach(Sid sid) const { // getter/통지가 바꾼 현재 슬롯을 각 원문 위치에서 다시 읽는다.
+void RawSquidContainedUnpop::Detach(Sid sid) const { const auto pin=runtimePin_;const auto runtimeOwner=pin ? pin():std::shared_ptr<void>{}; // getter/통지가 바꾼 현재 슬롯을 각 원문 위치에서 다시 읽는다.
     if (!(pool_.Slot(sid)[11]&kContained)) Assert("containedFlag",0x3a3,0x39a);
     const auto parent=NeedContained(hooks_.parent)(sid);
     if (!parent.value) Assert("parentSid",0x3a5,0x39c);
@@ -64,7 +64,7 @@ void RawSquidContainedUnpop::Detach(Sid sid) const { // getter/통지가 바꾼 
     LinkRaw(pool_,sid)[11]&=static_cast<std::uint8_t>(~kContained);
     if (pool_.Slot(sid)[10]>kLastForm || pool_.Slot(sid)[10]==state_.contentFormType) NeedContained(hooks_.parentNotice)(parent,sid,2);
 }
-void RawSquidContainedUnpop::NotifyUi(Sid sid) const { // PATCH004ad230/CD004acf40은 이 객체 자신의 Form 종속을 조회한다.
+void RawSquidContainedUnpop::NotifyUi(Sid sid) const { const auto pin=runtimePin_;const auto runtimeOwner=pin ? pin():std::shared_ptr<void>{}; // PATCH004ad230/CD004acf40은 이 객체 자신의 Form 종속을 조회한다.
     if (pool_.Edition()==OriginalEdition::Patch1078 && state_.checkingDead && !NeedContained(state_.inMetamapMode)() &&
         (pool_.Slot(sid)[11]&kDead) && !NeedContained(state_.boss)())
         NeedContained(hooks_.assertion)("inMetamapMode || !cont.isDead() || boss || yesIKnowThatIShouldntLookInsideMyselfDuringADestroy",kFinderSource,0x158);
@@ -76,6 +76,7 @@ void RawSquidContainedUnpop::NotifyUi(Sid sid) const { // PATCH004ad230/CD004acf
         if (pool_.Slot(current)[10]==state_.gumpFormType) { NeedContained(hooks_.command)(state_.uiEvent,sid.value,0);return; }
     }
 }
-void RawSquidContainedUnpop::Unpop(Sid sid) const { Detach(sid);NotifyUi(sid); } // 두 실제 하위 종단을 원래 호출 순서로 실행한다.
+void RawSquidContainedUnpop::Unpop(Sid sid) const { const auto pin=runtimePin_;const auto runtimeOwner=pin ? pin():std::shared_ptr<void>{}; Detach(sid);NotifyUi(sid); } // 두 실제 하위 종단을 원래 호출 순서로 실행한다.
+void RawSquidContainedUnpop::BindRuntimePin(std::function<std::shared_ptr<void>()> pin) { runtimePin_=std::move(pin); } //실제선택호출수명만결합/반납하며종속링크나상태는쓰지않는다.
 const SidPool& RawSquidContainedUnpop::Pool() const { return pool_; } // 연결 시 다른 World/Session의 풀 혼용을 거부할 수 있게 한다.
 }

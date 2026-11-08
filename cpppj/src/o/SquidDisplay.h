@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
+#include <functional> //World없는실제표시도현재Client카메라/viewport를조회한다.
 
 namespace netstorm::o {
 // Squid 출력 요청에서 사용하는 사각형 경계이다.
@@ -58,6 +59,7 @@ public:
         std::span<const SquidDisplayShape> shapes,SquidDisplaySink& sink,SquidDisplayView view);
     // 카메라/viewport 변경은 호출자의 전체 갱신과 함께 사용한다.
     void SetView(SquidDisplayView view);
+    void BindView(std::function<SquidDisplayView()> view); //실제장기표시는현재view를읽고독립표시는기존값형SetView계약을유지한다.
     // 프레임 연결부가 같은 판본/타입 목록을 쓰는지 구성 때 확인한다.
     void ValidateFrameBinding(OriginalEdition edition,std::span<const RiftTypeRecord> types) const;
     // 00419850의 현재 프레임 검사와 실제 SHP 칸 크기 공급이다. CD의 표 밖 메모리 접근은 예외로 거부한다.
@@ -82,5 +84,7 @@ private:
     SquidDisplaySink& sink_;
     // view_: 출력 범위·원점·카메라를 공유하는 뷰.
     SquidDisplayView view_;
+    std::function<SquidDisplayView()> currentView_; //현재Client/짧은World대여의조회만보관하고카메라사본을동기화하지않는다.
+    SquidDisplayView CurrentView() const; //각원문투영/clip위치에서같은현재장치를재조회한다.
 };
 }

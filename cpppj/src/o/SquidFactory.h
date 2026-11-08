@@ -5,6 +5,7 @@
 #include "o/RawCheckingFlag.h"
 #include <functional>
 #include <string_view>
+#include <memory> //장기공장은현재World의짧은가상장치를약하게만빌린다.
 
 namespace netstorm::o {
 class SquidUnpop;
@@ -14,11 +15,20 @@ struct SquidFactoryDiagnostics { // 같은 World/Session의 현재 TYPE와 정�
     std::function<void(std::string_view)> detail; // 00436d20의 TYPE 불일치 문구를 같은 Client의005e4798 소유자에 복사한다.
     RawCheckingFlag checking{}; // TYPE HP의 선택된 진단에서 현재005e4794를 읽는다.
 };
+struct SquidFactoryRuntimeBindings { //실제 현재 World의 공간/Form 대여이며 Factory/Pool의 소유권과 구별한다.
+    SquidUnpop* unpop{}; //Take가 선택한 실제 자산+48이며 같은Pool의현재Unpop을빌린다.
+    std::function<void(Sid)> formDetach; //현재Session약한종단또는같은World의실제공통종속분리다.
+    std::function<std::uint32_t()> contentType; //현재내용물타입getter이며선택한Attach위치에서읽는다.
+    FormPopTransmit formTransmit; //실제현재Form전송장치이며빈전송성공을설치하지않는다.
+    std::function<std::shared_ptr<void>()> pin; //실제Client가공개한전체Runtime을선택된호출끝까지보유하며독립typed대여는비워둔다.
+};
 // SID 슬롯을 할당하고 타입별 생성자 필드를 초기화하는 팩토리이다.
 class SquidFactory {
 public:
     // 타입 입력은 복사하여 호출자 수명과 분리한다. 약화 mana 옵션은 원본 HP /4 분기다.
     SquidFactory(SidPool& pool,std::span<const RiftTypeRecord> types,bool weakenedMana=false,SquidUnpop* unpop=nullptr);
+    void BindUnpop(std::function<SquidUnpop&()> unpop); //선택된Take위치에서같은장기Unpop실행기를조회한다. 생성만으로공간/UI를요구하지않는다.
+    void BindRuntime(const std::shared_ptr<const SquidFactoryRuntimeBindings>& runtime); //같은현재대여만약하게기록하며실제호출은끝날때까지선택된장치를pin한다.
     // 004af530 ↔ CD 004ab390. 복원된 자산 생성자 또는 constructor=0 fallback을 호출한다.
     Sid Create(std::uint32_t type,std::uint32_t flags=0);
     // 생산 칸 contained Form(타입 6)의 전용 생성이다. 같은 SID 할당 뒤 판본별 가상 표/타입만 쓴다.
@@ -91,6 +101,8 @@ private:
     const std::uint32_t* sharedFakeSurfaceType_{}; // 같은 Client 수명의 현재 fakeThreeByThreeSurface TYPE이며 독립 미연결만162다.
     // unpop_: 객체의 공간 등록을 해제하는 Unpop 처리기.
     SquidUnpop* unpop_{};
+    std::function<SquidUnpop&()> currentUnpop_; //실제Storage의같은공간부모이며독립raw포인터계약은유지한다.
+    std::weak_ptr<const SquidFactoryRuntimeBindings> runtime_; //World반납뒤raw장치/Session주소를공장에남기지않으며독립공장은종전필드를쓴다.
     std::uint32_t* formPostPopDepth_{}; // 실제 공장보다 오래 사는 World bookkeeping의 같은 현재 깊이다.
     std::function<std::uint32_t()> formContentType_; // 약한 현재 Session 또는 World 기본 번호 getter다.
     FormPopTransmit formTransmit_; // 실제 World의 현재 Form Pop 전송이며 호출자 명시 장치가 있으면 그것을 사용한다.

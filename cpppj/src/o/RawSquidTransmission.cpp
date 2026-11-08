@@ -66,7 +66,8 @@ void RawSquidTransmission::Transmit(Sid sid,std::int32_t target,std::int32_t sel
     if (size>=2048) WireNeed(hooks_.assertion)("transmitSize < TRANSMIT_BUFFER_SIZE","\\Ns\\O\\Squid.cpp",0x2e3);
     if (size>0) {
         if (static_cast<std::size_t>(size)>state_.buffer.size()) throw std::out_of_range("Squid송신공통버퍼범위");const auto packet=std::span<const std::uint8_t>(state_.buffer).first(static_cast<std::size_t>(size));
-        if (target==-1) WireNeed(hooks_.broadcast)(packet);else if (WireNeed(hooks_.connected)(target)) WireNeed(hooks_.send)(target,packet);
+        if (target==-1) { if (hooks_.broadcastMutable) WireNeed(hooks_.broadcastMutable)(state_.buffer);else WireNeed(hooks_.broadcast)(packet); }
+        else if (WireNeed(hooks_.connected)(target)) { if (hooks_.sendMutable) WireNeed(hooks_.sendMutable)(target,state_.buffer);else WireNeed(hooks_.send)(target,packet); } //반환크기는양수관문이며Native실제observer/선언WORD재조회는같은전체예약에서실행한다.
     }
 }
 // 기존 Pop의 일반 방송/인자0 계약은 같은 공통 몸체를 사용한다.

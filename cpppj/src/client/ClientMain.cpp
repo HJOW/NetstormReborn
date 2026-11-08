@@ -56,6 +56,7 @@
 #include "client/ClientCdGlobals.h"
 #include "client/ClientConnectionActivityGlobals.h"
 #include "client/ClientConnectionGlobals.h"
+#include "client/ClientPacketSources.h" //현재선택노드의실제TCP/내부/Editor장치를송신반환까지보유한다.
 #include "o/PacketRegistrationTable.h" //현재observer표의실제판본/수명을Client가보유한다.
 #include "client/ClientFortGlobals.h"
 #include "client/ClientCoreDataGlobals.h"
@@ -407,6 +408,28 @@ int Client::Run() {
     surfaceStorage_->BindDisplayDiagnostics(gameplayGlobals_->AiDebug().AssertionDetail(),[](std::string_view expression,std::string_view file,std::uint32_t line) { std::clog<<"원본 표시 진단: "<<file<<':'<<line<<' '<<expression<<'\n'; }); // 첫 Editor/Session 이전부터 현재 상세 저장소와 복귀하는 기존 로그 진단을 연결한다.
     surfaceStorage_->BindGraphTrace([this](auto level,auto text) { WriteDiagnosticLog(level,text); }); // Graph의 원문 로그도 현재 Client 필터/들여쓰기/FILE 수명을 직접 사용한다.
     if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->EnablePatchDestroyDiagnostics(); // 실제 첫 Editor/Session 전부터 원문 공통 삭제의 정상 복귀 진단을 같은 Client에 연결한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindPostPopDevices({[this](auto owner,auto object,auto added) {
+        if (surfaceStorage_->ownerMode.challenge || std::bit_cast<std::int32_t>(owner)<1) return;const auto rows=playerRecords_->Records();const auto at=std::size_t(owner)*180U+0xb0;if (at>rows.size() || 4>rows.size()-at) throw std::out_of_range("공통AI통지의현재Player물리범위");
+        std::uint32_t brain{};for (std::size_t byte=0;byte<4;++byte) brain|=std::uint32_t(rows[at+byte])<<(byte*8); //4166e0은현재brain비영일때만실제큰AI몸체를호출한다.
+        if (brain) { auto& session=gameplayGlobals_->RequireSession();const auto runtimePin=gameplayGlobals_->PinCurrentRuntime(session);session.NotifyAiObject(owner,object,added); } //실제선택된AI호출동안전체현재World를보유하며대기중이전World를고정하지않는다.
+    },[this] { return gameplayGlobals_->player.battleOwner; },[this] {
+        const auto& selection=gameplayGlobals_->selection;if (!selection.mouseType) return;const auto found=surfaceStorage_->Connections().FindTypeAt(std::bit_cast<float>(selection.remembered[0]),std::bit_cast<float>(selection.remembered[1]),selection.mouseType);
+        if (!found.value || (selection.selected && selection.selected!=found.value)) return;auto& session=gameplayGlobals_->RequireSession();const auto runtimePin=gameplayGlobals_->PinCurrentRuntime(session);session.RecheckCurrentSelection(); //da650의실제Select필요위치만현재UI/전체World를보유하며미선택은원문그대로자연반환한다.
+    }}); //World없는메뉴도같은현재Player/기억선택을읽으며0상수/AI성공을주입하지않는다.
+    if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindTransmissionDevices({[this](auto packet) {
+        const auto registry=connectionGlobals_; //실제장기표만보유하고지난Session/새전송을만들지않는다.
+        for (std::uint32_t owner=1;owner<9;++owner) { //4e2e30의Player→현재NULL연결→현재로컬제외순서뒤같은버퍼로대상별가상+4를부른다.
+            const auto players=playerRecords_->Records();const auto offset=std::size_t(owner)*180U+0x50;if (offset>=players.size()) throw std::out_of_range("Squid방송의현재Player물리범위");if (!(players[offset]&1U)) continue;
+            const auto token=registry->Cleanup().transceivers[owner];if (!token || owner==gameplayGlobals_->player.battleOwner) continue;const auto source=registry->PacketSources()->Resolve(registry->Node(token));if (!source) throw std::logic_error("Squid방송의선택된실제Source수명미공개");registry->SendDirect(token,packet); //방송에서이미선택한가상+4이며4e2dc0관문을추가반복하지않는다.
+        }
+    },[this](auto target) { if (target<=0 || target>=9) return false;const auto players=playerRecords_->Records();const auto offset=std::size_t(target)*180U+0x50;if (offset>=players.size()) throw std::out_of_range("Squid대상의현재Player물리범위");return (players[offset]&1U)!=0; },[this](auto target,auto packet) {
+        const auto registry=connectionGlobals_;const auto token=registry->Cleanup().transceivers[static_cast<std::size_t>(target)];std::optional<NativeBattleSource> source; //직전48f4b0이통과한1..8의현재노드만보유하고새Source를만들지않는다.
+        if (token) { source=registry->PacketSources()->Resolve(registry->Node(token));if (!source) throw std::logic_error("Squid대상송신의실제Source수명미공개"); } //NULL연결은Source요구없이기존4e2dc0에서자연반환한다.
+        static_cast<void>(registry->SendMutableNative(target,packet,playerRecords_->Records(),[owner=surfaceStorage_](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); })); //선택된실제backend의observer와큐만한번실행하며수신/성공값을합성하지않는다.
+    }}); //실제Client장치만첫Factory/Host/World전에고정하며observer표는기존실제전송owner가유지한다.
+    surfaceStorage_->BindSavedGame(localStateGlobals_->SavedGame()); //현재저장게임관문도World없는받침prefix와같은주소를빌린다.
+    surfaceStorage_->BindContentCommand([this](auto code,auto x,auto y) { Input().PushCommand(code,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); }); //실제내용물UI통지는같은입력큐에예약한다.
+    rendererFrame_->BindSurfaceDisplay(); //첫World전자체Renderer/카메라의현재getter만설치하며그리기/카메라/게임진행은실행하지않는다.
     surfaceStorage_->BindGraphClock([this] { return clock_->GameSeconds(timeGetTime()); }); // 삭제 Graph의 두 시각 읽기도 같은 현재 Client 시계를 쓴다.
     surfaceStorage_->BindAllocationDiagnostics([this] { DumpObjectDiagnostics(); },[this](std::string_view name) { if (name!="BridgesKilled" || !menu_) throw std::logic_error("CD SID 회수의 현재 Tell UI 미연결");menu_->ShowSidRecoveryNotice(); }); //CD 소진의 객체/상세/대화상자는 기존 Client 부모를 공유한다.
     surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.

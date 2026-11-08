@@ -320,6 +320,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     scripts_.emplace(std::string(kProductCreditsObject),MakeProductCreditsConfig(client_.Configuration().Registry())); // 원본 파일 대신 UI 수명의 등록 Config로 추가 Credits를 제공한다.
     textClipboard_=std::make_shared<TextClipboard>(Win32TextClipboardDevices()); //API를 연결만 하며 이 생성은 OS 클립보드를 열거나 변경하지 않는다.
     serializationGlobals_=std::make_shared<o::FortSerializationGlobals>(); // 원본BSS와같은한DWORD를모든manager/객체소비자보다오래소유한다.
+    client_.SurfaceStorage()->BindSerializationGlobals(serializationGlobals_); //첫World/메뉴자원프레임전같은장기005c89b8을실제표면에연결하며값/reset/Host대여는없다.
     templateStorage_=std::make_shared<CampaignTemplateStorage>(serializationGlobals_); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
     templateStorage_->BindDiagnosticLog([client=&client_](auto level,auto text) { client->WriteDiagnosticLog(level,text); }); // 지역 Template 덤프도 원본 level29 formatter/FILE/flush/trace→Chat을 같은 Client 수명에서 사용한다.
     auto& config = client_.Configuration();

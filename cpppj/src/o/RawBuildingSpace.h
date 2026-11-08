@@ -19,6 +19,8 @@ struct BuildingSpaceState {
 class RawBuildingSpace {
 public:
     void BindChecking(const std::int32_t& value) { state_.debug.Bind(value); } // 현재 물리 실행기가 원문 진단 DWORD를 직접 빌린다.
+    void BindCurrentIslandType(const std::uint32_t& value) { currentIslandType_=&value; } //실제Client의현재isle TYPE를HasIsland비교위치에서읽는다.
+    void BindCurrentIslandType(std::uint32_t&&)=delete;void BindCurrentIslandType(const std::uint32_t&&)=delete; //임시TYPE주소를장기실행기에보관하지않는다.
     void BindCurrentBridgeType(const std::uint32_t& value) { currentBridgeType_=&value; } // 같은 World의 현재 TYPE DWORD를 빌리며 값의 owner는 처리기보다 오래 살아야 한다.
     void BindCurrentBridgeType(std::uint32_t&&)=delete;void BindCurrentBridgeType(const std::uint32_t&&)=delete; // 임시 TYPE의 주소를 보관하지 않는다.
     void BindNotifyDiagnostics(RawCheckingFlag checking,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion); // 현재 checking 뷰와 선택된 원문 진단의 정상 복귀 장치를 함께 연결한다.
@@ -47,6 +49,7 @@ private:
     std::span<const RiftTypeRecord> types_;
     // state_: 원본 타입 전역과 현재 debug 전역이다. 섬 확인은 영역 번호나 소유자를 조회하지 않는다 (BuildingSpaceState).
     BuildingSpaceState& state_;
+    const std::uint32_t* currentIslandType_{}; //실제Client만장기isle TYPE를공유하며독립입력은기존state.islandType을유지한다.
     const std::uint32_t* currentBridgeType_{}; // 미연결 독립 입력만 state의 기존 값 사본을 사용한다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> notifyAssertion_; // 같은 Client/독립 호출자의 실제 진단 장치다. 도달 시에만 요구한다.
 };

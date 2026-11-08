@@ -231,6 +231,12 @@ Sid SquidFactory::CreateContained(std::uint32_t flags) {
 Sid SquidFactory::CreateGumpForm(std::uint32_t flags) {
     return Create(kGumpFormType,flags);
 }
+// 현재 짧은 실행 장치의 Pool/필수 경계를 확인하며 새 World나 수신 성공을 만들지 않는다.
+void SquidFactory::BindUnpop(std::function<SquidUnpop&()> unpop) { if (!unpop) throw std::invalid_argument("Factory의실제Unpop조회기누락");currentUnpop_=std::move(unpop); } //실제선택위치에서만공유공간부모를구성한다.
+void SquidFactory::BindRuntime(const std::shared_ptr<const SquidFactoryRuntimeBindings>& runtime) {
+    const auto current=runtime_.lock();
+    if (!runtime || (current && current!=runtime) || !runtime->unpop || &runtime->unpop->Pool()!=&pool_ || !runtime->formDetach || !runtime->contentType || !runtime->formTransmit) throw std::invalid_argument("Factory의같은실제World대여/가상경계필요");runtime_=runtime;
+}
 void SquidFactory::BindFormDetach(std::function<void(Sid)> detach) { formDetach_=std::move(detach); } // 새 대여는 이후 선택된 Form 해제부터 사용한다.
 void SquidFactory::BindFormPopDepth(std::uint32_t& current) { if (formPostPopDepth_ && formPostPopDepth_!=&current) throw std::invalid_argument("Form Pop의 다른 공유 깊이 주소 재연결");formPostPopDepth_=&current; } // 호출 중 같은 World 저장소를 바꾸지 않는다.
 void SquidFactory::BindCurrentFormPop(SquidForms& forms) const {
@@ -238,19 +244,20 @@ void SquidFactory::BindCurrentFormPop(SquidForms& forms) const {
     if (formPostPopDepth_) { hooks.depth=[this] { return *formPostPopDepth_; };hooks.setDepth=[this](std::uint32_t value) { *formPostPopDepth_=value; }; } // 실제 동일 DWORD를 읽고 쓴다.
     forms.BindPop(std::move(hooks));
 }
-void SquidFactory::PopForm(Sid form,std::uint32_t flags,FormPopTransmit transmit) { SquidForms forms(pool_,{},transmit ? std::move(transmit) : formTransmit_);BindCurrentFormPop(forms);forms.Pop(form,flags); } // 실제 현재 진단/깊이를 같은 호출 수명으로 빌린다.
+void SquidFactory::PopForm(Sid form,std::uint32_t flags,FormPopTransmit transmit) { const auto current=runtime_.lock();const auto runtimePin=current && current->pin ? current->pin():std::shared_ptr<void>{};SquidForms forms(pool_,{},transmit ? std::move(transmit) : current ? current->formTransmit:formTransmit_);BindCurrentFormPop(forms);forms.Pop(form,flags); } // 실제 현재 진단/깊이를 같은 호출 수명으로 빌린다.
 void SquidFactory::BindFormAttach(std::function<std::uint32_t()> contentType,FormPopTransmit transmit) { formContentType_=std::move(contentType);formTransmit_=std::move(transmit); } // 죽은 Session 주소를 공장에 저장하지 않는다.
 void SquidFactory::AttachForm(Sid form,Sid parent,std::uint32_t flags,FormPopTransmit transmit) {
-    SquidForms forms(pool_,{},transmit ? std::move(transmit) : formTransmit_);BindCurrentFormPop(forms);FormAttachHooks hooks;
+    const auto current=runtime_.lock();const auto runtimePin=current && current->pin ? current->pin():std::shared_ptr<void>{};SquidForms forms(pool_,{},transmit ? std::move(transmit) : current ? current->formTransmit:formTransmit_);BindCurrentFormPop(forms);FormAttachHooks hooks; //선택한대여는부착전체의정상/예외복귀까지살아있다.
     hooks.genus=[this](std::uint8_t number) { return TypeRecord(number).flags2; }; // 각 호출에서 현재 빌린 TYPE 표를 읽는다.
-    hooks.contentType=formContentType_ ? formContentType_ : std::function<std::uint32_t()>([] { return 6U; }); // 독립 공장의 명시 초기 번호다.
+    hooks.contentType=current ? current->contentType : formContentType_ ? formContentType_ : std::function<std::uint32_t()>([] { return 6U; }); // 독립 공장의 명시 초기 번호다.
     hooks.assertion=diagnostics_.assertion;forms.BindAttach(std::move(hooks));forms.Attach(form,parent,flags);
 }
 void SquidFactory::UnpopForm(Sid sid) { // 공통 진단의 현재 장치와 같은 풀의 종속 분리만 호출한다.
-    FormUnpopHooks hooks;hooks.detach=formDetach_;hooks.assertion=diagnostics_.assertion;SquidForms(pool_,{}, {},std::move(hooks)).Unpop(sid);
+    const auto current=runtime_.lock();const auto runtimePin=current && current->pin ? current->pin():std::shared_ptr<void>{};FormUnpopHooks hooks;hooks.detach=current ? current->formDetach:formDetach_;hooks.assertion=diagnostics_.assertion;SquidForms(pool_,{}, {},std::move(hooks)).Unpop(sid);
 }
 // 두 판본 모두 실제 VT+48→현재 생성자→반환 객체→저장한 VT+2c의 원문 부모를 사용한다.
 Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
+    const auto runtime=runtime_.lock();const auto runtimePin=runtime && runtime->pin ? runtime->pin():std::shared_ptr<void>{}; //현재대여뿐아니라실제전체World/Session을Take정상/예외복귀까지유지한다.
     const auto object=[this](std::uint32_t number) { if (number>=pool_.Capacity()) throw std::out_of_range("Take의 실제 물리 SID 범위");return Sid{static_cast<std::uint16_t>(number)}; }; // DWORD 토큰을 WORD로 자르기 전에 물리 범위를 확인한다.
     const auto raw=[this,object](std::uint32_t number) { return std::span(pool_.bytes_).subspan(pool_.Offset(object(number)),pool_.layout_.stride); }; // free/dead/contained를 선행 거부하지 않는다.
     RawSquidTakeHooks hooks;hooks.capacity=[this] { return pool_.Capacity(); };hooks.slot=[object](auto number) { return std::uint32_t(object(number).value); };
@@ -261,11 +268,11 @@ Sid SquidFactory::Take(std::uint32_t type,Sid sid) {
         if (detail.size()>=256) throw std::length_error("Take 원문 상세256BYTE 범위");const auto writer=diagnostics_.detail;if (!writer) throw std::logic_error("Take의 실제 오류 상세 장치 미연결");writer(detail);
     };
     hooks.assertion=[this](auto expression,auto,auto line) { Assert(expression,line); };
-    hooks.unpop=[this,object,raw](auto number,auto table) { // 현재 VT가 선택한 Form/자산의 공통 진단 복귀와 종속 분리로 이어진다.
+    hooks.unpop=[this,object,raw,runtime](auto number,auto table) { // 현재 VT가 선택한 Form/자산의 공통 진단 복귀와 종속 분리로 이어진다.
         const SquidForms forms(pool_);
         for (const auto formType:{1U,2U,3U,6U}) { if (table==forms.Vtable(formType)) { UnpopForm(object(number));return; } } // 현재 진단/공통 종속 분리로 이어지는 실제 Form 해제다.
         if (!SupportsConstructedVtable(pool_.Edition(),table)) throw std::logic_error("Take의 선택된 실제 VT+48 미연결");
-        if (!unpop_) throw std::logic_error("Take의 선택된 실제 공간 해제 연결이 없습니다");unpop_->Unpop(object(number),TypeRecord(raw(number)[kType]),0);
+        auto* selected=runtime ? runtime->unpop:currentUnpop_ ? &currentUnpop_():unpop_;if (!selected) throw std::logic_error("Take의 선택된 실제 공간 해제 연결이 없습니다");selected->Unpop(object(number),TypeRecord(raw(number)[kType]),0);
     };
     hooks.storeState=[raw](auto number,auto value) { raw(number)[kState]=value; };hooks.storeType=[raw](auto number,auto value) { raw(number)[kType]=value; };
     hooks.constructor=[this](auto number) { return TypeRecord(number).constructorAddress; };hooks.construct=[this,object](auto address,auto number) { return std::uint32_t(ConstructRaw(address,object(number),true).value); };

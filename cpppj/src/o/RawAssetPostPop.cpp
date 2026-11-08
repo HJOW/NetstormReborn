@@ -134,6 +134,13 @@ std::uint32_t RawAssetPostPop::Kind(Sid sid) const {
 }
 // 지원 여부는 실제 표와 연결 인스턴스로 결정한다. 효과 누락은 별도의 Validate가 거부한다.
 bool RawAssetPostPop::Handles(Sid sid) const { return Kind(sid)!=0; }
+// 같은원문VT표만검사하며파생모듈부재를공통후처리성공으로가장하지않는다.
+bool RawAssetPostPop::HasDedicatedVtable(OriginalEdition edition,std::uint32_t table) {
+    const auto values=edition==OriginalEdition::Patch1078 ? std::span<const PostPopTable>(kPatchTables):std::span<const PostPopTable>(kCdTables);
+    for (const auto& item:values) if (item.vtable==table) return true; //원문목록순서로같은VT의전용몸체존재만읽는다.
+    return false;
+}
+
 // 외부 효과가 필요한 현재 입력 분기를 쓰기 전에 확인한다. callback의 후속 상태 변화도 같은 필수 경계를 사용한다.
 void RawAssetPostPop::Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop) const {
     const auto kind=Kind(sid);const auto raw=pool_.Slot(sid);const bool patch=pool_.Edition()==OriginalEdition::Patch1078;

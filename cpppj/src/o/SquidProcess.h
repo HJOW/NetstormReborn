@@ -130,6 +130,7 @@ struct ProcessHostRuntimeBindings {
     std::function<std::uint32_t()> postPopDepth; // 실제 현재 World의 공통 Pop 깊이를 생성 위치에서 읽는다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // SharedRegular의 checking 무관70 진단을 같은 Client로 전달한다.
     SquidFactory* factory{}; // 현재 World의 같은 Pool 공장이다. 장기 Host 자체에 이 주소를 저장하지 않는다.
+    std::function<std::shared_ptr<void>()> pin; //실제현재World/Session외곽owner를RuntimeCall동안보유하며binding자체의수명과구별한다.
 };
 // 현재 World 대여를 호출 위치에서 얻으며 반환된 공유 뷰는 외부 효과 호출 중 바인딩 자체의 수명을 유지한다.
 using ProcessHostRuntimeGetter=std::function<std::shared_ptr<ProcessHostRuntimeBindings>()>;
@@ -142,6 +143,7 @@ public:
         SquidProcessState& state,RegularHandler handler={},SquidDestroyHooks asset={},ProcessFormTransmission transmit={});
     // 장기 Pool/Kernel/상태를 빌리고 현재 World의 가상 처리기만 선택 위치에서 조회한다.
     SquidProcessHost(SidPool& pool,std::span<const RiftTypeRecord> types,Kernel& kernel,SquidProcessState& state,ProcessHostRuntimeGetter current);
+    void BindDefaultFormTransmission(ProcessFormTransmission transmit,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion); //장기Host의실제기본writer/진단만최초연결하며현재World대여나Kernel실행은만들지않는다.
     void BindFormFactory(SquidFactory& factory); // 같은 수명의 직접 Host에만 공장을 연결한다. 장기 Host는 현재 대여의 factory를 소비 위치에서 조회한다.
     bool Owns(const BaseProcess& process) const; // 잔류 객체가 실제로 이 Host를 빌리는지 조회하며 PID나 SID를 정규화하지 않는다.
     void DrainRuntimeBindings(const std::shared_ptr<ProcessHostRuntimeBindings>& runtime); // 독립 World의 최종 fallback만 자기 현재 대여를 정리하며 이전 Native 잔류는 보존한다.

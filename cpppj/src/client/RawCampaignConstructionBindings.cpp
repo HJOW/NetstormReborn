@@ -19,9 +19,16 @@ std::uint32_t ConstructionVtable(std::span<const std::uint8_t> raw) {
     for (std::size_t index=0;index<4;++index) value|=std::uint32_t(raw[index])<<(8*index);return value;
 }
 }
+// 기존 World adapter만 자기 짧은 실행기를 참조하며 장기 Storage에 World 포인터를 설치하지 않는다.
+RawConstructionRuntime BindConstructionRuntime(RawSurfaceWorld& world) {
+    return {world.Core(),world.Storage(),
+        [&world](auto type,auto flags) { return world.Create(type,flags); },
+        [&world](auto sid,auto x,auto y,auto flags) { world.Pop(sid,x,y,flags); },
+        [&world](auto sid,auto flags) { return world.Destroy(sid,flags); }};
+}
 // 외부의 단일 상태/월드 주소를 빌리며 실제 계산/공간/삭제 몸체만 내부에 조립한다.
 struct RawCampaignConstructionBindings::Impl {
-    RawSurfaceWorld& world; // 모든 객체의 실제 생성/가상 삭제/Pop을 소유한다.
+    RawConstructionRuntime runtime; //같은 실제 장기 물리와 현재 가상 생성/Pop/삭제 부모를 빌리며 특정 World 타입에 결합하지 않는다.
     RawWorldCore core; // 같은 Pool/TYPE/hash/spot/장부의 참조만 보관한다.
     RawCampaignConstructionState& state; // 현재 모드/타입/수량/이력을 프레임 사본 없이 읽는다.
     o::RawBattleBroadcast& broadcast; // 같은 실제 Player9/NULL 또는 연결 표의 원본 송신 분배기다.
@@ -38,11 +45,15 @@ struct RawCampaignConstructionBindings::Impl {
     std::unique_ptr<o::RawLocalGeyser> geysers; // 같은 보상 자원 pool과 전용 최근5목록을 사용한다.
 
     // 첫 생성 전에 같은 저장소/필수 서비스와 실제 일반 건설 경계를 구성한다.
-    Impl(RawSurfaceWorld& source,o::SquidReward& hp,o::ScrambledSpStore& sp,o::SquidRewardState& reward,
+    Impl(RawConstructionRuntime source,o::SquidReward& hp,o::ScrambledSpStore& sp,o::SquidRewardState& reward,
         std::span<const o::PriestPlainCanonType> frames,const o::ChunkMap& chunks,std::span<std::uint8_t> players,
         o::RawBattleBroadcast& transmission,RawCampaignConstructionState& globals,o::PlayerGeyserBoundsState currentBounds,
         o::SquidPostPopList& recent,const o::SquidPostPopList& allGeysers,RawCampaignConstructionEffects input,RawCampaignConstructionGameplay gameplay)
-        :world(source),core(source.Core()),state(globals),broadcast(transmission),effects(std::move(input)) {
+        :runtime(std::move(source)),core(runtime.core),state(globals),broadcast(transmission),effects(std::move(input)) {
+        if (!runtime.storage || &core.pool!=&runtime.storage->pool || &core.hash!=&runtime.storage->hash ||
+            core.types.data()!=runtime.storage->types.data() || core.spots.data()!=runtime.storage->spots.data() ||
+            !runtime.create || !runtime.pop || !runtime.destroy)
+            throw std::invalid_argument("건설 실행 부모의 동일 장기 물리/실제 가상 경계 누락"); //생성/reset 없이 실제 owner 정체성만 확인한다.
         if (core.pool.Edition()!=o::OriginalEdition::Patch1078 || &hp.Pool()!=&core.pool || &hp.Bookkeeping()!=&core.bookkeeping ||
             frames.size()!=core.types.size() || players.size()!=kPlayerBytes || &recent==&allGeysers || recent.entries.size()<kRecentMinimum ||
             &currentBounds.battle!=&core.ownerMode.battle || &currentBounds.metamap!=&core.ownerMode.challenge ||
@@ -51,8 +62,8 @@ struct RawCampaignConstructionBindings::Impl {
         ValidateState();
         auto placeHooks=effects.presentation; // 현재 비용/UI 소비자를 사용하며 비어 있는 선택 경계는 명시 오류다.
         placeHooks.notifySurface=[this](o::Sid sid) { core.building.NotifySurface(sid); };
-        placeHooks.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
-        placeHooks.assertion=[storage=world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; //실제 wire Place의 player/isVoid/후행 개수도 같은 Client 진단으로 정상 복귀한다.
+        placeHooks.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { runtime.pop(sid,x,y,flags); };
+        placeHooks.assertion=[storage=runtime.storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; //실제 wire Place의 player/isVoid/후행 개수도 같은 Client 진단으로 정상 복귀한다.
         if (!placeHooks.sendMoney) placeHooks.sendMoney=ConstructionMissing<void,std::uint32_t,const o::ConstructionMoneyNotice&>("SP 통지");
         if (!placeHooks.format) placeHooks.format=ConstructionMissing<std::string,std::string_view,std::string_view>("비용 안내 서식");
         if (!placeHooks.tellOthers) placeHooks.tellOthers=ConstructionMissing<void,std::uint32_t,std::string_view>("다른 Player 비용 안내");
@@ -87,7 +98,7 @@ struct RawCampaignConstructionBindings::Impl {
             packetLength=std::min(current.size(),std::size_t{27}+std::size_t(current[26])*2U); // NULL peer이면 선언WORD4를 꾸미지 않고 본문 범위만 기존 조회 계약으로 보인다.
             notice->ActualHandle(current); // 원문444717의 sender9/NULL이 사용하지 않는 값은 합성하지 않는다.
         };
-        confirmHooks.assertion=[storage=world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // SID store 이후의20개 진단도 같은 실제 Client 창/복귀 정책을 사용한다.
+        confirmHooks.assertion=[storage=runtime.storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // SID store 이후의20개 진단도 같은 실제 Client 창/복귀 정책을 사용한다.
         if (!confirmHooks.recorderActive) confirmHooks.recorderActive=ConstructionMissing<bool>("기록기 활성 조회");
         if (!confirmHooks.record) confirmHooks.record=ConstructionMissing<void,o::Sid>("기록기 첫 SID 기록");
         // 실제 Confirm은 typed handle을 붙이지 않고 같은 지역 wire의 결합 소비자로만 들어간다.
@@ -112,8 +123,8 @@ struct RawCampaignConstructionBindings::Impl {
         geyserHooks.playerBounds=[this](std::uint32_t player) { return bounds->Bounds(player); };
         geyserHooks.destroy=[this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); };
         geyserHooks.confirm=[this](const o::ConstructionConfirmRequest& request) { static_cast<void>(ConfirmSupport(request)); };
-        geyserHooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
-        geyserHooks.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+        geyserHooks.create=[this](std::uint32_t type,std::uint32_t flags) { return runtime.create(type,flags); };
+        geyserHooks.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { runtime.pop(sid,x,y,flags); };
         geysers=std::make_unique<o::RawLocalGeyser>(core.pool,core.hash,core.spots,core.types,core.frames,players,recent,state.geyser,std::move(geyserHooks));
         geysers->BindResourcePool(reward.GeyserPool());
     }
@@ -140,7 +151,7 @@ struct RawCampaignConstructionBindings::Impl {
     }
     // 가상삭제거부를성공한예측정리/empty교체로간주하지않는다.
     void Destroy(o::Sid sid,std::uint32_t flags) const {
-        if (!world.Destroy(sid,flags)) throw std::logic_error("캠페인 받침/간헐천의 실제 가상 삭제 거부");
+        if (!runtime.destroy(sid,flags)) throw std::logic_error("캠페인 받침/간헐천의 실제 가상 삭제 거부");
     }
     // 실제 표면/받침/종유석의 확인된 가상 표만 표면 수명으로 분배한다. 살아 있는 받침도DropIsland가 정리한다.
     bool Support(o::Sid sid) const {
@@ -157,7 +168,13 @@ RawCampaignConstructionBindings::RawCampaignConstructionBindings(RawSurfaceWorld
     o::SquidRewardState& reward,std::span<const o::PriestPlainCanonType> frames,const o::ChunkMap& chunks,
     std::span<std::uint8_t> players,o::RawBattleBroadcast& broadcast,RawCampaignConstructionState& state,
     o::PlayerGeyserBoundsState bounds,o::SquidPostPopList& recent,const o::SquidPostPopList& allGeysers,RawCampaignConstructionEffects effects,RawCampaignConstructionGameplay gameplay)
-    :impl_(std::make_unique<Impl>(world,hp,sp,reward,frames,chunks,players,broadcast,state,bounds,recent,allGeysers,std::move(effects),std::move(gameplay))) {}
+    :RawCampaignConstructionBindings(BindConstructionRuntime(world),hp,sp,reward,frames,chunks,players,broadcast,state,bounds,recent,allGeysers,std::move(effects),std::move(gameplay)) {}
+// 같은 실제 실행 부모만 빌리며 원문 Confirm/Notice/LocalGeyser 및 mutable 방송의 순서는 그대로 둔다.
+RawCampaignConstructionBindings::RawCampaignConstructionBindings(RawConstructionRuntime runtime,o::SquidReward& hp,o::ScrambledSpStore& sp,
+    o::SquidRewardState& reward,std::span<const o::PriestPlainCanonType> frames,const o::ChunkMap& chunks,
+    std::span<std::uint8_t> players,o::RawBattleBroadcast& broadcast,RawCampaignConstructionState& state,
+    o::PlayerGeyserBoundsState bounds,o::SquidPostPopList& recent,const o::SquidPostPopList& allGeysers,RawCampaignConstructionEffects effects,RawCampaignConstructionGameplay gameplay)
+    :impl_(std::make_unique<Impl>(std::move(runtime),hp,sp,reward,frames,chunks,players,broadcast,state,bounds,recent,allGeysers,std::move(effects),std::move(gameplay))) {}
 // 내부모듈은새Kernel프로세스를소유하지않으며현재배열보다먼저해제한다.
 RawCampaignConstructionBindings::~RawCampaignConstructionBindings()=default;
 // 일반 서버 요청도 원본 확정/통지/배치 몸체를 그대로 사용한다. 배치 가능 판정은 호출자의 선행 책임이다.
@@ -179,7 +196,7 @@ void RawCampaignConstructionBindings::ChargeShortfall(std::uint32_t type,std::ui
 // 분배기/전송 계층의 실제 수신 지점에 현재 고정 주소 몸체를 연결한다.
 void RawCampaignConstructionBindings::Register(o::RawPacketDispatch& dispatch,std::function<void()> prepare) {
     o::RegisterConstructionCommand(dispatch,*impl_->command,prepare); // 같은 현재 전역 준비 장치를 두 원문 수신 입구가 빌린다.
-    dispatch.ObservePacket(0x3f,[storage=impl_->world.Storage()](auto packet,auto sending) { o::FinalizeConstructionPacket(packet,sending!=0,[storage] { storage->AssertDisplay("sidCount != (unsigned char)-1","\\Ns\\O\\_p_packets.cpp",0x7c9); }); });
+    dispatch.ObservePacket(0x3f,[storage=impl_->runtime.storage](auto packet,auto sending) { o::FinalizeConstructionPacket(packet,sending!=0,[storage] { storage->AssertDisplay("sidCount != (unsigned char)-1","\\Ns\\O\\_p_packets.cpp",0x7c9); }); });
     dispatch.Version(0x3f,1,0);dispatch.RequireLength(0x3f,0xffff); //40b4b0/52ecbe의 실제 가변 통지 metadata다.
     dispatch.RegisterDirect(0x3f,[this,prepare=std::move(prepare)](std::uint32_t,o::PacketConnection*,std::span<const std::uint8_t> packet) { if (prepare) prepare();ReceiveNotice(packet); }); // sender/nullable 연결을 원문처럼 사용하지 않고 같은 Session 대여로 보호한다.
 }

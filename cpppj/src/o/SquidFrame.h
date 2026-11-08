@@ -32,6 +32,7 @@ public:
     // 같으면 표시 갱신 → 프레임 쓰기 → 표시 갱신(새 프레임이 현재와 같아도 한다), 다르면 새 프레임이 현재와 다를 때만
     // Unpop(flags) → 프레임 쓰기 → 현재 위치에 Pop(flags | 0x50)을 한다. 새 프레임의 범위는 원본도 검사하지 않는다.
     void Set(Sid sid,std::int32_t frame,std::uint32_t flags) const;
+    void BindCurrentTypes(std::span<const RiftTypeRecord> types); //장기실제실행기는현재TYPE를빌리고독립공장은기존snapshot을유지한다.
     // 004ace40 ↔ CD 004acb00: 객체의 현재 프레임으로 해시 단계를 구해 단계 바이트(패치 +0x21, CD +0x1f)에 쓰고 돌려준다.
     // island·bridge genus는 0, 그 밖은 프레임 크기의 큰 쪽이 2 이하면 1, 4 이하면 2, 넘으면 3이다.
     int StoreLevel(Sid sid) const;
@@ -44,6 +45,7 @@ private:
     SidPool& pool_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
+    std::span<const RiftTypeRecord> currentTypes_; //Storage가주소를고정한현재발자국/genus표이며별도사본을갱신하지않는다.
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SquidFrameHooks).
     SquidFrameHooks hooks_;
 };

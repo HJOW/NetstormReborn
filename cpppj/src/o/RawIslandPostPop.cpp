@@ -92,7 +92,7 @@ void RawIslandPostPop::Prefix(Sid surface,std::uint32_t flags) const {
     if ((flags&1U)==0) return;
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (!patch && pool_.Slot(surface)[kType]>=frames_.size()) throw std::out_of_range("noIsland postPop 타입 범위 오류");
-    if (state_.loadingDepth) {
+    if (state_.LoadingDepth()) {
         // 1을 뺀 뒤 절삭한다. 소수 좌표의 칸을 먼저 절삭한 뒤 빼지 않는다.
         const double x=Coordinate(pool_,surface,kX),y=Coordinate(pool_,surface,kY);
         const auto west=SurfaceLetter(Cell(x-1.0),Cell(y));

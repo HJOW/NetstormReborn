@@ -34,7 +34,8 @@ constexpr double kPollLimit=0.5;
 // 실제 선택 효과가 반환하기 전에 그 World 대여를 소비하지 못하게 하는 C++ 호출 수명이다.
 struct RuntimeCall {
     std::shared_ptr<ProcessHostRuntimeBindings> runtime; // 호출 중 실제 처리기 묶음을 유지한다.
-    explicit RuntimeCall(std::shared_ptr<ProcessHostRuntimeBindings> value):runtime(std::move(value)) { if (runtime) ++runtime->activeCalls; } // 같은 현재 대여만 증가시킨다.
+    std::shared_ptr<void> owner; //실제외곽World/EditorRuntime이며가짜대여토큰을만들지않는다.
+    explicit RuntimeCall(std::shared_ptr<ProcessHostRuntimeBindings> value):runtime(std::move(value)),owner(runtime && runtime->pin ? runtime->pin():std::shared_ptr<void>{}) { if (runtime) ++runtime->activeCalls; } // 같은 현재 대여만 증가시킨다.
     ~RuntimeCall() { if (runtime) --runtime->activeCalls; } // 정상/예외 모두 실제 호출이 끝난 뒤 반납한다.
 };
 }
@@ -85,7 +86,12 @@ std::size_t SquidProcessHost::TypeCount() const { return sharedTypes_.empty() ? 
 const RiftTypeRecord& SquidProcessHost::Type(std::size_t type) const { if (type>=TypeCount()) throw std::out_of_range("ProcessHost 현재 TYPE 범위");return sharedTypes_.empty() ? types_[type] : sharedTypes_[type]; } // 옵션/다음 World가 바꾼 실제 flags도 즉시 읽는다.
 RegularHandler SquidProcessHost::Regular() const { return currentRuntime_ ? Runtime()->regular : handler_; } // 현재 사건 함수만 짧게 빌린다.
 SquidDestroyHooks SquidProcessHost::Asset() const { return currentRuntime_ ? Runtime()->asset : asset_; } // 현재 자산 효과를 복사해 호출 중 수명을 지킨다.
-ProcessFormTransmission SquidProcessHost::Transmission() const { return currentRuntime_ ? Runtime()->transmit : transmit_; } // 원문 재조회 위치를 유지한다.
+ProcessFormTransmission SquidProcessHost::Transmission() const { //현재대여의실제파생writer가있으면우선하고반납뒤에는같은장기기본writer를사용한다.
+    if (currentRuntime_) { const auto current=currentRuntime_();if (current && (current->transmit.writeData || current->transmit.writeFullData || current->transmit.packet || current->transmit.transmit)) return current->transmit; }return transmit_;
+}
+void SquidProcessHost::BindDefaultFormTransmission(ProcessFormTransmission transmit,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion) { //같은장기Storage의실제직렬화와진단만최초한번보관한다.
+    if (!currentRuntime_ || transmit_.writeData || !transmit.writeData || !transmit.writeFullData || !transmit.packet || !transmit.transmit || !assertion) throw std::invalid_argument("장기ProcessForm의실제기본직렬화장치계약");transmit_=std::move(transmit);state_.assertion=std::move(assertion);
+}
 void SquidProcessHost::BindFormFactory(SquidFactory& factory) { // 장기 Host의 옛 World 주소 저장과 다른 Pool 연결을 거부한다.
     if (currentRuntime_ || &factory.Pool()!=&pool_ || (directFormFactory_ && directFormFactory_!=&factory)) throw std::invalid_argument("ProcessForm 직접 공장 연결의 같은 수명/Pool 계약");directFormFactory_=&factory;
 }
@@ -208,7 +214,7 @@ void SquidProcessHost::SetFormTransmit(ProcessFormTransmission transmit) { if (c
 std::int32_t SquidProcessHost::WriteFormPacket(Sid form,std::uint32_t argument,std::span<std::uint8_t> packet,const RawSquidTransmissionState& transmission) const {
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr);const auto parent=CommonContainedParent(pool_,form);
     if (parent.value>=5 && parent.value<15000) {
-        const auto assertion=currentRuntime_ ? Runtime()->assertion : state_.assertion;if (!assertion) throw std::logic_error("ProcessForm writer의 부모 SID 진단 미연결");assertion("!getParent().isClientSid()","\\Ns\\O\\Squid.cpp",0xac2);
+        const auto assertion=call.runtime && call.runtime->assertion ? call.runtime->assertion : state_.assertion;if (!assertion) throw std::logic_error("ProcessForm writer의 부모 SID 진단 미연결");assertion("!getParent().isClientSid()","\\Ns\\O\\Squid.cpp",0xac2);
     }
     auto* process=FromForm(form);if (!process) throw std::logic_error("ProcessForm writer의 실제 PID 객체 누락");
     if (const auto* regular=dynamic_cast<RegularProcess*>(process)) {

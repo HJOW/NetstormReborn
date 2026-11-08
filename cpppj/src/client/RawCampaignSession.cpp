@@ -899,9 +899,9 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFormPacket> formWriter; // 동일 Pool의 실제 가상+54/+58 직렬화 몸체다.
     std::array<std::uint8_t,2048>& formBuffer{world.Storage()->GameAux()->SquidTransmission().buffer}; // 감시/내용물/삭제 요청이 공유하는 원본 크기의 현재 송신 버퍼다.
     RawCampaignConstructionState constructionState; //실제 받침/로컬 수량 실행 상태이며 최근 이력만 더 긴 Client 장부를 빌린다.
-    SquidPostPopList recentGeysers; // 00595094/98의 전용 최근5목록이며 전체 assetState.Geysers()와 분리한다.
-    std::uint8_t geyserMapSize{}; // 실제0052f7e6 초기BYTE0이며 PlayerBounds가 현재 참조로 읽는다.
-    std::array<std::uint32_t,9> playerDirections{16448,4,0,6,2,7,3,5,1}; // 실제0053181c의 Player0까지 보존한 초기9DWORD다.
+    SquidPostPopList& recentGeysers{world.Storage()->recentGeysers}; //00595094/98은같은Client전용최근5목록이며전체geysers와분리한다.
+    std::uint8_t& geyserMapSize{battleOptions[6]}; //41ca10은현재0052f7e6을읽는다. Session지역0사본으로현재옵션을가리지않는다.
+    std::array<std::uint32_t,9>& playerDirections{world.Storage()->geyserPlayerDirections}; //같은현재9DWORD를PlayerBounds와World없는생성부모가공유한다.
     std::unique_ptr<RawCampaignConstructionBindings> construction; // 같은 실제 HP/SP/장부/Player/지도에 첫 객체 전 설치한다.
 
     // 현재 생성 VT의+80을 TYPE 생성자와 쌍으로 묶지 않고 공통81/제단/다이스 몸체에 분배한다.
@@ -932,7 +932,7 @@ struct RawCampaignSession::Impl {
         coreDataGlobals(input.coreDataGlobals ? input.coreDataGlobals : std::make_shared<ClientCoreDataGlobals>()),
         playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
         services(std::move(input)),missionFortName(mission),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
-        terrainType(gameplayGlobals->GameAux()->TerrainType()),world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld,&localStateGlobals->SavedGame(),gameplayGlobals->Authority(),gameplayGlobals->GameAux()),core(world.Core()),
+        terrainType(gameplayGlobals->GameAux()->TerrainType()),world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld,&localStateGlobals->SavedGame(),gameplayGlobals->Authority(),gameplayGlobals->GameAux(),templateStorage->SerializationGlobalsOwner()),core(world.Core()),
         localSp(services.spGlobals ? nullptr : std::make_unique<ScrambledSpStore>(random,[this] { return seed.Reseed(); })),
         sp(services.spGlobals ? services.spGlobals->Store() : *localSp),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{[this](Sid sid) { return RewardCount(sid); },services.refreshSp}),
         battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
@@ -2545,7 +2545,7 @@ struct RawCampaignSession::Impl {
     // 수명/자산의 실제 파생 동작을 설치한 뒤 첫 객체 생성 전에 받침/로컬 간헐천 연결을 한 번 구성한다.
     void ConnectConstruction() {
         if (construction) throw std::logic_error("실제 Session 받침/간헐천 중복 연결");
-        recentGeysers.entries.resize(5);PrepareConstruction();
+        PrepareConstruction(); //최근5물리는Client가이미소유하므로새Session설치가할당/꼬리/개수를초기화하지않는다.
         auto effects=services.construction; // 미선택 외부 경계는 실제 호출 때 오류로 드러내며 성공 관찰로 채우지 않는다.
         if (!effects.presentation.sendMoney) effects.presentation.sendMoney=[this](auto owner,const auto& value) { auto packet=WriteConstructionMoneyPacket(value);SendChatMutable(std::bit_cast<std::int32_t>(owner),packet); }; // 실제환불수신과같은6ch를보낸다.
         if (!effects.presentation.sendReject) effects.presentation.sendReject=[this](auto owner,const auto& value) { auto packet=WriteConstructionRejectPacket(value);SendChatMutable(std::bit_cast<std::int32_t>(owner),packet); }; // 좌표/타입/인자/방향을2fh로보낸다.
@@ -3787,6 +3787,7 @@ struct RawCampaignSession::Impl {
         core.postPop.SetRunePostPop(nullptr); // 같은 Rune 몸체를 해제하기 전에 공통 분배의 참조를 정리한다.
         core.postPop.SetDaisPostPop(nullptr); // 같은 다이스/제단 몸체를 해제하기 전에 공통 분배의 참조를 정리한다.
         core.postPop.SetBalloonPostPop(nullptr); //벌룬 그림자 몸체 해제 뒤 공통 분배에 포인터를 남기지 않는다.
+        core.postPop.ReleaseRuntimeBindings(); //모든나머지파생/선택/AI주소도모듈소멸전에반납하며장기표면접두/장부는그대로둔다.
     }
 
 };
@@ -4027,6 +4028,7 @@ RawCampaignSession::RawCampaignSession(const GameAssets& assets,const BaseFileSy
 }
 // Impl이 Kernel을 비운 뒤 실제 모듈을 해제한다.
 RawCampaignSession::~RawCampaignSession() {
+    impl_->world.BindRuntimePin({}); //실제외곽owner의최종소멸이시작된뒤자기Kernel/모듈정리는이미소유한직접수명을사용한다.외부pin중에는이소멸자에진입할수없다.
     DetachConnectionTransport(); // 전역 분배기의 짧은 수신기를 실제 하위 모듈 해제보다 먼저 반납한다.
     impl_->ReleaseEditorCommandReceivers();bool stateReturned{}; //같은 실제 수신기를 먼저 닫은 뒤 자식 증빙을 검사한다.
     try { stateReturned=impl_->StateChildrenReturned(); }
@@ -4378,6 +4380,12 @@ std::unique_ptr<RawProductionMaintenance> RawCampaignSession::MakeProductionMain
     return std::make_unique<RawProductionMaintenance>(current->core.pool,current->core.types.size(),current->contentFinder,globals,panel,std::move(reads),std::move(hooks));
 }
 
+void RawCampaignSession::NotifyAiObject(std::uint32_t owner,o::Sid object,bool added) { if (!impl_->aiObjects) throw std::logic_error("실제AI객체통지미설치");impl_->aiObjects->Notice(owner,object,added); } //원문선택후같은실제AI본체만소비한다.
+void RawCampaignSession::RecheckCurrentSelection() {
+    auto& s=*impl_;const auto link=s.activeSelection.lock();if (link && link->selection) { link->selection->RecheckMouse([&s](auto x,auto y,auto type) { return s.world.Find(std::bit_cast<float>(x),std::bit_cast<float>(y),type).value; });return; }
+    const auto& current=s.gameplayGlobals->selection;if (!current.mouseType) return;const auto found=s.world.Find(std::bit_cast<float>(current.remembered[0]),std::bit_cast<float>(current.remembered[1]),current.mouseType);
+    if (!found.value || (current.selected && current.selected!=found.value)) return;throw std::logic_error("공통후처리현재선택몸체수명미연결"); //실제Select가선택된위치에서만살아있는UI몸체를요구한다.
+}
 // 실제 Player 생성/현재 기술/참여가 같은 DWORD를 읽는다.
 std::uint32_t RawCampaignSession::PlayerKnown() const { return impl_->playerState.playerKnown; }
 // 원본 로더의 현재 편집 조건과 같은 저장소를 직접 읽는다.

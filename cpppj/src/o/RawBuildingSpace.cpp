@@ -31,7 +31,7 @@ Sid RawBuildingSpace::Surface(int x,int y) const {
 // 원본 boolean 섬 확인은 전달 좌표의 지면 타입만 비교한다. Pop은 건물 자체의 좌표를 전달한다.
 bool RawBuildingSpace::HasIsland(float x,float y) const {
     const auto sid=Surface(Truncate(x),Truncate(y));
-    return sid.value && pool_.Slot(sid)[kType]==state_.islandType;
+    return sid.value && pool_.Slot(sid)[kType]==(currentIslandType_ ? *currentIslandType_:state_.islandType);
 }
 // 실제 옆면 SID 범위 확인 뒤 사용하는 좁은 raw 쓰기 경계다.
 std::span<std::uint8_t> RawBuildingSpace::Bytes(Sid sid) const {

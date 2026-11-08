@@ -57,6 +57,14 @@ std::int32_t RendererCollectionRowLimit(std::int32_t width,std::int32_t height) 
 // 초기화/새 미션/해상도 전환으로 Native 전역을 다시 만들지 않는다.
 ClientRendererFrame::ClientRendererFrame(Client& client):client_(client) {}
 ClientRendererFrame::~ClientRendererFrame()=default; //collector를 실제 storage보다 먼저 반납한다.
+// 장기Storage에는짧은Frame/World를캡처하지않고같은Client의현재장치getter만보관한다.
+void ClientRendererFrame::BindSurfaceDisplay() {
+    RawSurfaceDisplayBindings devices;
+    devices.view=[client=&client_] { if (!client->menu_ || !client->menu_->rawButtons_) throw std::logic_error("표면표시의현재Root지도영역미설치");const auto& camera=client->gameplayGlobals_->Camera().Snapshot();const auto viewport=client->menu_->rawButtons_->MapViewRect();return o::SquidDisplayView{camera.pixels[0],camera.pixels[1],std::bit_cast<std::int32_t>(camera.zoom),{viewport.left,viewport.top,viewport.right,viewport.bottom}}; };
+    devices.suppressed=[client=&client_] { return client->renderer_->FullRedrawPending(); };
+    devices.invalidate=[client=&client_](auto rectangle,auto flags) { client->renderer_->Invalidate({rectangle.left,rectangle.top,rectangle.right,rectangle.bottom},flags); };
+    client_.SurfaceStorage()->BindDisplayDevices(std::move(devices)); //메타VT전용88은현재World의별도실제대여만사용하며빈성공을공급하지않는다.
+}
 void ClientRendererFrame::ReadOptions() { client_.configuration_.ReadInt("showSoftAsserts",client_.gameplayGlobals_->AiDebug().Checking());client_.gameplayGlobals_->DrawFire()=0; } //현재 Checking을 읽고 원문4356a6처럼 Fire만 끈다. 다른 진단 DWORD는 보존한다.
 
 // 현재 장기 DWORD와 실제 Screen/루트 슬롯의 주소만 빌려 callback 뒤의 읽기도 같은 물리를 사용한다.

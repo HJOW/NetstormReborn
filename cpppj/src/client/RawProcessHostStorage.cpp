@@ -9,7 +9,8 @@ namespace netstorm::client { // Client와 독립 Storage가 동일한 장기 Hos
 namespace { // 실제 Kernel.Clear의 가상 소멸 효과가 진행되는 한정 호출 수명이다.
 struct ClearCall {
     std::shared_ptr<o::ProcessHostRuntimeBindings> runtime; // 같은 대여를 실제 Clear 정상/예외 복귀까지 소유한다.
-    explicit ClearCall(std::shared_ptr<o::ProcessHostRuntimeBindings> value):runtime(std::move(value)) { ++runtime->activeCalls; } // 중첩 반납이 진행 중 호출을 소비하지 못하게 한다.
+    std::shared_ptr<void> owner; //SID소진가상삭제/실제Clear가빌린전체owner의수명을반환까지유지한다.
+    explicit ClearCall(std::shared_ptr<o::ProcessHostRuntimeBindings> value):runtime(std::move(value)),owner(runtime && runtime->pin ? runtime->pin():std::shared_ptr<void>{}) { ++runtime->activeCalls; } // 중첩 반납이 진행 중 호출을 소비하지 못하게 한다.
     ~ClearCall() { --runtime->activeCalls; } // 실제 Kernel.Clear 호출이 끝난 뒤에만 반납을 허용한다.
 };
 }
@@ -38,8 +39,11 @@ void RawProcessHostStorage::BindDevices(std::shared_ptr<o::Kernel> kernel,std::s
 bool RawProcessHostStorage::UsesKernel(const o::Kernel* kernel) const { return kernel_ && kernel_.get()==kernel; } // 현재 실제 Kernel 주소만 비교한다.
 bool RawProcessHostStorage::HasDevices() const { return external_; } // 대여를 만들거나 상태를 복사하지 않는다.
 o::Kernel& RawProcessHostStorage::Kernel() { if (!kernel_) kernel_=std::make_shared<o::Kernel>(pool_.Edition()==o::OriginalEdition::Patch1078 ? o::kProcessCapacity : o::kCdProcessCapacity);return *kernel_; } // 독립 판본의 실제 capacity를 유지한다.
+void RawProcessHostStorage::BindFormTransmissionDefaults(o::ProcessFormTransmission transmit,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion) { //Host/독립Kernel을조기구성하지않고실제장기장치만최초보관한다.
+    if (host_ || formTransmission_.writeData || !transmit.writeData || !transmit.writeFullData || !transmit.packet || !transmit.transmit || !assertion) throw std::invalid_argument("장기Host기본직렬화의최초장치계약");formTransmission_=std::move(transmit);formAssertion_=std::move(assertion);
+}
 o::SquidProcessHost& RawProcessHostStorage::Host() {
-    if (!host_) host_=std::make_unique<o::SquidProcessHost>(pool_,types_,Kernel(),state_,[this] { return current_.lock(); });return *host_;
+    if (!host_) { auto host=std::make_unique<o::SquidProcessHost>(pool_,types_,Kernel(),state_,[this] { return current_.lock(); });if (formTransmission_.writeData) host->BindDefaultFormTransmission(formTransmission_,formAssertion_);host_=std::move(host); }return *host_;
 } // 현재 World가 없어도 안정된 Host 자체를 소유할 수 있다.
 o::SquidProcessState& RawProcessHostStorage::State() { return state_; } // 같은 scalar와 현재 외부 참조다.
 // Pool이긴수명을유지해도종료된World주소는사용하지않고현재모듈반납을호출중금지한다.

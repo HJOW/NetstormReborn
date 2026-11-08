@@ -603,5 +603,16 @@
     "completeL": false,
     "report": "cpppj/packet-source-lifetime-20261108.json",
     "newMpExecutions": 0
+  },
+  "progress1175": {
+    "resourceFoundationAndActualPin": true,
+    "commonTransmissionAndPartialFormDefault": true,
+    "m6nComplete": false,
+    "canonicalTags": 11,
+    "tagIsNotFullScopeCompletion": true,
+    "allBaselineScopesClosed": false,
+    "delayedQueueActivated": false,
+    "report": "cpppj/resource-owner-foundation-20261108.json",
+    "newMpExecutions": 0
   }
 }

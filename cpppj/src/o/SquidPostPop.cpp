@@ -295,7 +295,8 @@ void SquidPostPop::ValidateBase(Sid sid,std::uint32_t flags,const RawGraphPop* p
     }
 }
 // 성공한 공간 Pop의 flags로 가상 후처리를 분배한다. 전체 사제 wrapper는 자기 공통 깊이를 감소시킨다.
-void SquidPostPop::Activate(Sid sid,std::uint32_t flags) { //독립기존fixture의가상후처리호환진입이며전체Activate부모는RawSquidActivate다.
+void SquidPostPop::Activate(Sid sid,std::uint32_t flags) {
+    const auto pin=runtimePin_;const auto runtimeOwner=pin ? pin():std::shared_ptr<void>{}; //현재실제파생포인터/AI/선택callback을전체하위호출끝까지유지한다. //독립기존fixture의가상후처리호환진입이며전체Activate부모는RawSquidActivate다.
     Validate(sid,flags);const auto before=state_.depth;++state_.depth;DispatchPostPop(sid,flags);
     if (state_.depth!=before) throw std::logic_error("독립후처리의공통깊이불일치");
 }
@@ -303,6 +304,8 @@ void SquidPostPop::PostPopVirtual(Sid sid,std::uint32_t flags) { if (pool_.Editi
 std::uint32_t& SquidPostPop::ActivationDepth() { return state_.depth; } //현재공통장부주소를빌리며사본깊이를만들지않는다.
 // 파생가상몸체가반환한뒤의깊이진단은현재실제Activate부모한곳에서수행한다.
 void SquidPostPop::DispatchPostPop(Sid sid,std::uint32_t flags) {
+    const auto pin=runtimePin_;const auto runtimeOwner=pin ? pin():std::shared_ptr<void>{}; //현재실제파생포인터/AI/선택callback을전체하위호출끝까지유지한다.
+    if (defaultDevices_.aiNotice && RawAssetPostPop::HasDedicatedVtable(pool_.Edition(),Vtable(pool_.Slot(sid))) && !HandlesAsset(sid)) throw std::logic_error("Native전용자산후처리의실제장기모듈미설치"); //Geyser/Nugget미연결을base성공으로넘기지않고실제가상호출위치에서드러낸다.
     // 벌룬의 재귀 그림자 Pop은 내부 Damageable을 통해 각 공통 깊이를 끝낸다.
     if (HandlesBalloon(sid)) { balloonPostPop_->PostPop(sid,flags);return; }
     // 맨 오 워는 자신의 그림자 재귀 Pop과 Damageable 뒤 공통 깊이를 한 번 줄인다.
@@ -395,6 +398,7 @@ void SquidPostPop::PostPop(Sid sid,std::uint32_t flags) {
 }
 // 직접 base 호출도 공통 상태·효과의 검사와 깊이 감소를 그대로 수행한다.
 void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
+    const auto pin=runtimePin_;const auto runtimeOwner=pin ? pin():std::shared_ptr<void>{}; //현재실제파생포인터/AI/선택callback을전체하위호출끝까지유지한다.
     if (pool_.Edition()==OriginalEdition::Patch1078) { PostPopPatch(sid,flags);return; }
     ValidateBase(sid,flags);
     if (state_.suppressed) { --state_.depth; return; }
@@ -426,6 +430,13 @@ void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
 // 서로 다른 SID 풀의 연결을 막는 읽기 전용 소유자다.
 const SidPool& SquidPostPop::Pool() const { return pool_; }
 // 실제 PATCH 통지와 해제만 허용한다. CD의 기존 가상 표/값형 입력은 별도로 유지한다.
+void SquidPostPop::BindDefaultPatchDevices(SquidPostPopDevices devices) { if (pool_.Edition()!=OriginalEdition::Patch1078 || !devices.aiNotice || !devices.localOwner || !devices.recheckSelection) throw std::invalid_argument("기본공통후처리의실제Client장치누락");defaultDevices_=std::move(devices); } //원문효과는호출될때만선택한다.
+void SquidPostPop::BindRuntimePin(std::function<std::shared_ptr<void>()> pin) { runtimePin_=std::move(pin); } //원문값을쓰지않고실제C++호출수명장치만결합/반납한다.
+void SquidPostPop::ReleaseRuntimeBindings() { //C++대여반납은Native전역reset이아니며이전Session주소만분리한다.
+    runtimePin_={};aiNotice_={};selectionRecheck_={};localOwner_={};teleportPrefix_={};
+    priestPostPop_=nullptr;forcefieldPostPop_=nullptr;carrierStealPostPop_=nullptr;bombPostPop_=nullptr;carrierPostPop_=nullptr;assetPostPop_=nullptr;factoryPostPop_=nullptr;
+    runePostPop_=nullptr;daisPostPop_=nullptr;dudePostPop_=nullptr;playerPostPop_=nullptr;buriedPostPop_=nullptr;flyerPostPop_=nullptr;balloonPostPop_=nullptr;
+}
 void SquidPostPop::BindPatchAiNotice(std::function<void(std::uint32_t,Sid,bool)> notice) { if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("PATCH AI 생성 통지 판본 불일치");aiNotice_=std::move(notice); }
 // 동일 SID라도 별도 해시/spot을 읽는 구성을 막는다.
 void SquidPostPop::ValidateSpace(const SquidHash& hash,std::span<const std::uint8_t> spots) const {

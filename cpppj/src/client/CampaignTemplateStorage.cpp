@@ -462,6 +462,7 @@ std::shared_ptr<ClientTemplateSectionNames> CampaignTemplateStorage::SectionName
 std::unique_ptr<CampaignTemplateStorage> CampaignTemplateStorage::CreateSibling() const { return std::make_unique<CampaignTemplateStorage>(serializationGlobals_,sectionNames_); }
 // 같은DWORD의현재값과주소를호출자에게빌린다. 조회/Storage생성자에서공유값을재초기화하지않는다.
 std::uint32_t& CampaignTemplateStorage::SerializationVersion() { return serializationGlobals_->version; }
+std::shared_ptr<o::FortSerializationGlobals> CampaignTemplateStorage::SerializationGlobalsOwner() const { return serializationGlobals_; } //기존같은owner만반환하며판본/깊이를쓰지않는다.
 std::uint32_t& CampaignTemplateStorage::LoadingDepth() { return serializationGlobals_->loadingDepth; } //생성/반납 때 리셋하지 않는 동일한 현재 중첩 깊이다.
 // 같은 Client의 현재 필터/FILE/공유 버퍼를 실제 덤프 시점에 호출하도록 장치만 보관한다.
 void CampaignTemplateStorage::BindDiagnosticLog(std::function<void(std::int32_t,std::string_view)> log) { diagnosticLog_=std::move(log); }

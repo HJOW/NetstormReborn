@@ -6,6 +6,7 @@
 #include "o/RawManaRegistration.h" // 현재 공급원 중복 진단과 같은 카운터를 연결한다.
 #include <array>
 #include <functional>
+#include <memory> //현재Session파생의실제전체owner를호출동안만보유한다.
 
 namespace netstorm::o {
 class RawPriestPostPopTail;
@@ -50,6 +51,11 @@ struct RawTotalMadeStorage {
     std::array<std::uint32_t,256> localSecondaryCounts{}; //005c98d0의 누적 로컬 생산 수이며 일반 삭제에서 줄지 않는다.
     std::array<std::uint32_t,256> globalCounts{}; //005c9cd0의 현재 전역 수이며 모든 타입의256번째 물리 칸도 보관한다.
 };
+struct SquidPostPopDevices { //장기기본장치는실제현재Client자료/원문큰하위만읽는다.
+    std::function<void(std::uint32_t,Sid,bool)> aiNotice; //현재Player/brain관문뒤실제414de0소비자로연결한다.
+    std::function<std::uint32_t()> localOwner; //AI효과뒤같은현재540c70을읽는다.
+    std::function<void()> recheckSelection; //현재mouseTYPE/기억점/selected로da650을실행한다.
+};
 // 객체 후처리 Pop 처리 중 조회·갱신하는 상태 묶음이다.
 struct SquidPostPopState {
     // suppressed: 표시·등록 후처리를 억제할지.
@@ -81,6 +87,8 @@ struct SquidPostPopState {
     SquidPostPopList& Providers() { return sharedProviders ? *sharedProviders : providers; } //그때 현재 실제 공급원을 반환하며 독립 fixture는 기존 목록을 유지한다.
     const SquidPostPopList& Providers() const { return sharedProviders ? *sharedProviders : providers; } //배치/에너지 조회도 같은 물리를 읽는다.
     SquidPostPopList& Factories() { return sharedFactories ? *sharedFactories : factories; } //공통 Pop/삭제의 현재 공장 목록이다.
+    const bool* sharedSuppressed{}; //실제Client의현재metamap관문이며독립입력은기존suppressed값을쓴다.
+    bool Suppressed() const { return sharedSuppressed ? *sharedSuppressed:suppressed; } //공통후처리진입의현재00594fc8을읽는다.
     const SquidPostPopList& Factories() const { return sharedFactories ? *sharedFactories : factories; } //생산/소유권 검색에 사본을 공급하지 않는다.
 };
 // Pop 이후 타입별 등록 목록과 표면 연결 상태를 갱신하는 처리기이다.
@@ -89,6 +97,9 @@ public:
     // 같은 판본의 풀·상태·선택적인 raw Graph를 받는다. 타입을 복사하며 상태/Graph 수명은 더 길어야 한다.
     SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& state,RawGraph* graph=nullptr,
         std::function<void(Sid)> bridgeConnector={});
+    void BindDefaultPatchDevices(SquidPostPopDevices devices); //실제Client기본장치를장기결합하며선택된누락을빈성공으로대체하지않는다.
+    void BindRuntimePin(std::function<std::shared_ptr<void>()> pin); //장기PostPop이빌린현재Session파생의실제외곽owner를선택호출동안보유한다.
+    void ReleaseRuntimeBindings(); //현재World/Session의파생포인터·AI/선택getter만반납하며장기장부/표면접두는보존한다.
     // PATCH004166e0의 실제 현재 Player/brain 통지다. 빈 함수는 수명 종료 때 분리하며 미연결 독립/CD 경로는 기존 검사를 유지한다.
     void BindPatchAiNotice(std::function<void(std::uint32_t,Sid,bool)> notice);
     void BindCurrentTypes(std::span<const RiftTypeRecord> types); //실제PATCH World의같은TYPE배열을빌리고빈span은독립소유사본으로돌린다.
@@ -185,8 +196,10 @@ public:
     // Pop과 다른 풀을 연결하지 않도록 소유자를 제공한다.
     const SidPool& Pool() const;
 private:
+    std::function<std::shared_ptr<void>()> runtimePin_; //실제현재owner공개뒤의짧은하위호출수명이며값없는독립typed경로는종전계약이다.
     void PostPopPatch(Sid sid,std::uint32_t flags); //실제004b0d30의현재조회/선행부분효과를같은장부에분배한다.
     std::function<void()> selectionRecheck_; //현재UI의같은선택몸체/기억좌표에대한대여다.
+    SquidPostPopDevices defaultDevices_; //World/Session대여반납뒤에도현재Client원문부모를사용한다.
     std::function<std::uint32_t()> localOwner_; //통지중변경될수있는현재Client owner getter다.
     void DispatchPostPop(Sid sid,std::uint32_t flags); //선택된실제파생또는공통몸체를호출하며깊이는호출자가소유한다.
     const RawFlyerPostPop* flyerPostPop_{}; // 같은 현재 server/TYPE/공통 장부를 쓰는 장기 몸체다.
