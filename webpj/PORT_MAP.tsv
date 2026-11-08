@@ -485,10 +485,10 @@ cpppj/src/o/RawAiCommandState.cpp	port	www/core/raw-ai-command-state.js	1f00a25a
 cpppj/src/o/RawAiCreate.cpp	port	www/core/raw-ai-brain.js	1f00a25a	port	[o-default] WB04-E164: AiCreate 00417e50(색 변경 → 기존 brain → NoTemple → 실제 생성/부착/초기 갱신, Native 반납 owner 선행 거부). 독립 관측 fixture 없음, cpppj 계약 시험 포함 raw-ai-brain.js 한 모듈. 남음: 실제 색 변경/신전 삭제/초기 갱신 가상 호출 연결
 cpppj/src/o/RawAiDamage.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiDeployment.cpp	port			todo	[o-default]
-cpppj/src/o/RawAiDropActions.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiDropActions.cpp	port	www/core/raw-ai-drop-actions.js	1f00a25a	port	[o-default] WB04-E174: AI 배치 행동 004162e0 전체(생산 조회·선택·스캔·기한/지갑/생산 조각/사제 관문·fake/seed·비용·공용 난수 후보 승인/배치/압축)와 생산 조각 00410580. 독립 관측 fixture 없음, cpppj 계약 시험 19건. 남음: 실제 배치/비용/로그 연결
 cpppj/src/o/RawAiDropEvaluation.cpp	port	www/core/raw-ai-drop-evaluation.js	1f00a25a	port	[o-default] WB04-E173: AI 배치 평가 00412640 부족 거리·004126c0 공급 점수·00412ab0 시설별 평가 분배·00412b90 후보 승인(+0x3e8 직접 읽기/쓰기). 독립 관측 fixture 없음, cpppj 계약 시험 17건. 남음: 실제 공급 문자열/에너지/전체 배치 연결
 cpppj/src/o/RawAiDropScan.cpp	port	www/core/raw-ai-drop-scan.js	1f00a25a	port	[o-default] WB04-E173: AI 배치 스캔 00412ce0 다리 J/K 보정·00412e10 스캔(X 선증가·예산·30개 후보)·0040f390 제거. 독립 관측 fixture 없음, cpppj 계약 시험 17건. 남음: 실제 월드 지도/동맹/후보 승인(considerStored) 연결
-cpppj/src/o/RawAiDropSelection.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiDropSelection.cpp	port	www/core/raw-ai-drop-selection.js	1f00a25a	port	[o-default] WB04-E174: AI 배치 TYPE 선택 00413100(기술 부모/개수 캐시·난수 직전 표적 반복·블로커 우선·후보 재검사/거부 제거·개수+2 회전·쿨다운)과 방향 TYPE 00425830. 독립 관측 fixture 없음, cpppj 계약 시험 16건. 남음: 실제 기술 내용물/로그 연결
 cpppj/src/o/RawAiDropTargets.cpp	port	www/core/raw-ai-drop-targets.js	1f00a25a	port	[o-default] WB04-E172: AI 배치 표적 점수 00412770·Gun/지상 검색 004128f0/00412a70·블로커 00412950·facing 0048ece0. 독립 관측 fixture 없음, cpppj 계약 시험 15건. 남음: 실제 검색/내용물/HP 하위 연결
 cpppj/src/o/RawAiDryGeometry.cpp	port	www/core/raw-ai-dry-geometry.js	1f00a25a	port	[o-default] WB04-E163: AI 가짜 부족 좌표 탐색(00415bb0 선분/수직 양방향 탐색·0041cfc0 점 거리·00414d30/00410540 디버그 표식 정리/생성). 독립 관측 fixture 없음, cpppj 계약 시험 12건. 남음: RawAiDrySpots/FakeDrySpots 연결
 cpppj/src/o/RawAiDrySpots.cpp	port	www/core/raw-ai-dry-spots.js	1f00a25a	port	[o-default] WB04-E170: AI 부족 좌표 목록 0040f1c0 추가·0040f260 제거·0040f2b0 순환 검사·00417c70 유지·004133e0 가짜 좌표 선택. 독립 관측 fixture 없음, cpppj 계약 시험 15건. 남음: 실제 에너지 판정/로그/공용 난수 연결
