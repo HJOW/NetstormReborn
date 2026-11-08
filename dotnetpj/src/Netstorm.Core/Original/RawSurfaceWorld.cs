@@ -328,7 +328,7 @@ public sealed class RawSurfaceWorld
     /// <param name="depth">쓸 로딩 중첩 깊이다.</param>
     public void SetLoadingDepth(uint depth)
     {
-        // 원본 impl_->loadState.loadingDepth 대입을 직역한다. runtimeBound 때의 runtime.loadingDepth 전달은 BindRuntime 단위에서 잇는다.
+        // 원본 impl_->loadState.loadingDepth 대입을 직역한다. runtime 연결 뒤의 전달은 BindRuntime 단위에서 잇는다.
         _loadState.LoadingDepth = depth;
     }
 

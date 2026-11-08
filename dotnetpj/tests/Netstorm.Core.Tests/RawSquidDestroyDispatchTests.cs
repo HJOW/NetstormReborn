@@ -312,4 +312,118 @@ public sealed class RawSquidDestroyDispatchTests
         Assert.Equal(0u, scene.Base.PreDepth);
         Assert.Equal(0u, scene.Base.PostDepth);
     }
+
+    /// <summary>현행 모드 묶음용 188개 타입 목록을 만든다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    private static List<OriginalTypeRecord> BoundTypes()
+    {
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord { FootX = 1, FootY = 1 }).ToList();
+        types[82].Flags1 = TypeFlag1.Surface;
+        types[82].Flags2 = TypeFlag2.Bridge;
+        return types;
+    }
+
+    /// <summary>현행 모드 묶음용 한 코드짜리 프레임 표를 만든다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    private static List<RiftTypeFrames> BoundFrames() =>
+        Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new RiftTypeFrames([])).ToList();
+
+    /// <summary>현행 모드 묶음용 분배기를 만든다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    private static (RawSquidDestroyDispatch Dispatch, RawSquidDestroy Base, RawSidPool Pool, RawSquidHash Hash) DispatchScene(BridgeDecayMode mode)
+    {
+        var pool = new RawSidPool(32768);
+        var hash = new RawSquidHash();
+        var spots = new byte[65536];
+        var types = BoundTypes();
+        var frames = BoundFrames();
+        frames[82] = new RiftTypeFrames([new RiftFrameCode((byte)'J', (byte)'P', 0, 0x40)]);
+        var neighbors = new RawSquidNeighbors(pool, hash, spots, types, new RiftFrameCodeTables(frames));
+        var unpop = new RawUnpop(pool, hash, spots);
+        var baseDestroy = new RawSquidDestroy(pool, unpop, types);
+        var records = new GraphRecord[SurfaceGraph.TableSize];
+        records[0] = new GraphRecord { Surfaces = 9, InUse = 1 };
+        var graph = new RawGraph(pool, hash, spots, types, records, new uint[SurfaceGraph.FloodSize], null, GraphRecovery.FullPool);
+        return (new RawSquidDestroyDispatch(baseDestroy, neighbors, mode, graph), baseDestroy, pool, hash);
+    }
+
+    /// <summary>현행 모드 묶음용 다리 슬롯을 만든다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    private static int DispatchSlot(RawSidPool pool, RawSquidHash hash)
+    {
+        int sid = pool.Allocate();
+        Span<byte> raw = pool.AllocatedBytes(sid);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = 82;
+        WriteSlot(raw, 0, 0x005034C8u, 4);
+        WriteSlot(raw, 36, 0u, 4);
+        WriteSlot(raw, 14, BitConverter.SingleToUInt32Bits(10f), 4);
+        WriteSlot(raw, 18, BitConverter.SingleToUInt32Bits(10f), 4);
+        WriteSlot(raw, 12, 3u * 8u, 2);
+        raw[30] = 0;
+        hash.MutableEntries(0)[10 * 256 + 10] = (ushort)sid;
+        return sid;
+    }
+
+    /// <summary>현행 모드 묶음용 삭제 훅 묶음을 만든다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    private static SquidDestroyHooks DispatchHooks(RawSquidDestroy @base) => new()
+    {
+        Selected = () => 0,
+        Emit = effect =>
+        {
+            if (effect.Effect == SquidDestroyEffect.PreDestroy)
+            {
+                @base.CompletePreDestroy();
+            }
+            else if (effect.Effect == SquidDestroyEffect.PostDestroy)
+            {
+                @base.CompletePostDestroy();
+            }
+        },
+    };
+
+    /// <summary>단단한 프레임은 편집기 없이 막히는지 검증한다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DestroyBlocksHardFrameWithoutEditor()
+    {
+        (RawSquidDestroyDispatch dispatch, RawSquidDestroy @base, RawSidPool pool, RawSquidHash hash) = DispatchScene(new BridgeDecayMode { Editor = false, Authority = true });
+        int sid = DispatchSlot(pool, hash);
+        Assert.False(dispatch.Destroy(sid, 0u, DispatchHooks(@base)));
+        Assert.Equal(0, pool.Slot(sid)[RawSidPool.StateOffset] & 2);
+    }
+
+    /// <summary>묶은 편집기가 차단을 푸는지 검증한다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BoundEditorUnblocksHardFrame()
+    {
+        (RawSquidDestroyDispatch dispatch, RawSquidDestroy @base, RawSidPool pool, RawSquidHash hash) = DispatchScene(new BridgeDecayMode { Editor = false, Authority = true });
+        dispatch.BindCurrentModes(() => new RawAuthorityState(), () => 1u);
+        int sid = DispatchSlot(pool, hash);
+        Assert.True(dispatch.Destroy(sid, 0u, DispatchHooks(@base)));
+        Assert.NotEqual(0, pool.Slot(sid)[RawSidPool.StateOffset] & 2);
+    }
+
+    /// <summary>묶은 비권한이 차단을 푸는지 검증한다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BoundNoAuthorityUnblocksHardFrame()
+    {
+        (RawSquidDestroyDispatch dispatch, RawSquidDestroy @base, RawSidPool pool, RawSquidHash hash) = DispatchScene(new BridgeDecayMode { Editor = false, Authority = true });
+        dispatch.BindCurrentModes(() => new RawAuthorityState { Boss = false });
+        int sid = DispatchSlot(pool, hash);
+        Assert.True(dispatch.Destroy(sid, 0u, DispatchHooks(@base)));
+        Assert.NotEqual(0, pool.Slot(sid)[RawSidPool.StateOffset] & 2);
+    }
+
+    /// <summary>빠진 owner를 거부하는지 검증한다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindCurrentModesRejectsNull()
+    {
+        (RawSquidDestroyDispatch dispatch, _, _, _) = DispatchScene(new BridgeDecayMode());
+        Assert.Throws<ArgumentNullException>(() => dispatch.BindCurrentModes(null!));
+    }
+
+    /// <summary>슬롯 바이트를 리틀 엔디언으로 쓰는 검사 보조다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    private static void WriteSlot(Span<byte> raw, int offset, uint value, int width)
+    {
+        for (int i = 0; i < width; i++)
+        {
+            raw[offset + i] = (byte)(value >> (8 * i));
+        }
+    }
 }
