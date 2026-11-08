@@ -7174,7 +7174,7 @@
       "bytes": 93112,
       "lines": 581,
       "fixtureCommit": "446713ea",
-      "webCommit": "worktree",
+      "webCommit": "d3543f77",
       "cpppjBasis": {
         "cpppj/src/o/RawBuriedPostPop.cpp": "eae6fd03"
       }
@@ -7203,7 +7203,7 @@
       "bytes": 1380529,
       "lines": 7346,
       "fixtureCommit": "438e749f",
-      "webCommit": "worktree",
+      "webCommit": "d3543f77",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierPostPop.cpp": "ab4fd3d2"
       }
@@ -7232,9 +7232,70 @@
       "bytes": 238650,
       "lines": 331,
       "fixtureCommit": "6b4ffe65",
-      "webCommit": "worktree",
+      "webCommit": "d3543f77",
       "cpppjBasis": {
         "cpppj/src/o/RawFencePostPop.cpp": "e7427079"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E61",
+      "id": "runepostpop",
+      "path": "cpppj/tests/fixtures/runepostpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Rune166 후처리·반경 1 Dais 조회·건설 시간 helper 의 건설 시간·Dais·효과 순서·후보 세 슬롯 이미지·시간 억제 전역(독립 pool/hash/Player 표)",
+      "consumers": [
+        "webpj/tests/rune-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-rune-post-pop.js"
+      ],
+      "doc": "docs/webpj-rune-factory-post-pop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawRunePostPop.cpp"
+      ],
+      "scope": "10.78(originals) 960행 사용(originalCD 행은 범위 밖)",
+      "text": true,
+      "sha256": "784669b8c4c20b725b3e23492bc76e4b1a4ab21042dfb9850378907bafd35e99",
+      "bytes": 598782,
+      "lines": 1921,
+      "fixtureCommit": "552656c0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawRunePostPop.cpp": "e043bb4a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E61",
+      "id": "factorypostpop",
+      "path": "cpppj/tests/fixtures/factorypostpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Factory/아웃포스트 후처리의 효과 기록·슬롯 50바이트·아웃포스트/거주 목록 전체·후보 두 개의 TYPE/상태/extra(두 판본 입력 격자)",
+      "consumers": [
+        "webpj/tests/factory-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-factory-post-pop.js",
+        "webpj/www/core/raw-asset-post-pop-state.js"
+      ],
+      "doc": "docs/webpj-rune-factory-post-pop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFactoryPostPop.cpp",
+        "cpppj/src/o/RawAssetPostPop.cpp"
+      ],
+      "scope": "10.78(originals) 498행 전부 사용(originalCD 498행은 범위 밖)",
+      "text": true,
+      "sha256": "3c03af2bf6a224449a789e86d6dbe88cb93d84bf56b85ee1e900af540f271b06",
+      "bytes": 194406,
+      "lines": 997,
+      "fixtureCommit": "1a6c408f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFactoryPostPop.cpp": "856d876b",
+        "cpppj/src/o/RawAssetPostPop.cpp": "767c7855"
       }
     }
   ]

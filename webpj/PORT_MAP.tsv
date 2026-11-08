@@ -513,7 +513,7 @@ cpppj/src/o/RawArcherAnimation.cpp	port			todo	[o-default]
 cpppj/src/o/RawArcherTypeData.cpp	port			todo	[o-default]
 cpppj/src/o/RawArcSpire.cpp	port	www/core/raw-arc-spire.js	1f00a25a	port	[o-default] WB04-E49: 아크 스파이어 최초 Regular 예약 후처리(48c080)·Regular(48c6e0)·공격(48c110)·이웃 수집(48c300)·연쇄 타격(48c410). fixture arc-spire 665행. 실제 공간 검색/빔/피해/프레임 변경은 월드 조립에서
 cpppj/src/o/RawAssetOwner.cpp	port			todo	[o-default]
-cpppj/src/o/RawAssetPostPop.cpp	port			todo	[o-default]
+cpppj/src/o/RawAssetPostPop.cpp	port	www/core/raw-asset-post-pop-state.js	1f00a25a	partial	[o-default] WB04-E61: AssetPostPopState·AssetPostPopPlayer(서버/boss 권한·거주/신전/간헐천/아웃포스트 목록·Bridge TYPE) 이식(Factory 후처리가 사용). Gun·제네레이터·거주 구역·바리케이드·간헐천·신전 분배 본체와 AssetPostPopHooks 는 남음
 cpppj/src/o/RawAssetRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawAuthorityState.h	port	www/core/raw-authority-state.js	1f00a25a	port	[o-default] WB04-D5c(server/boss 두 논리 전역, 호스트 상태가 빌림)
 cpppj/src/o/RawAuxiliaryDraw.cpp	port			todo	[o-default]
@@ -667,7 +667,7 @@ cpppj/src/o/RawEvilRayLifetime.cpp	port			todo	[o-default]
 cpppj/src/o/RawExistingEditorInstallOuter.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/o/RawFactoryDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawFactoryInput.cpp	port	www/core/raw-factory-input.js	1f00a25a	port	[o-default] WB04-E18: 004547d0 Factory 가상 입력(순환·업그레이드 자금 관문·연구/부모 위임). 원본 관측 없음, cpppj 독립 계약 검사 이식
-cpppj/src/o/RawFactoryPostPop.cpp	port			todo	[o-default] 아웃포스트 분기는 단독 도달 여부를 이식 때 확인
+cpppj/src/o/RawFactoryPostPop.cpp	port	www/core/raw-factory-post-pop.js	1f00a25a	port	[o-default] WB04-E61: Factory/아웃포스트 후처리(예약 세 개·상태 프레임 보정·중복 워크샾 경고/삭제·setState). fixture factorypostpop 10.78 498행 전부. 아웃포스트 wrapper 는 멀티플레이 전용 객체라 단독 연결은 하지 않음(분기는 대조 결과대로 보존)
 cpppj/src/o/RawFactoryResearch.cpp	port			todo	[o-default]
 cpppj/src/o/RawFactoryUpgrade.cpp	port			todo	[o-default]
 cpppj/src/o/RawFactoryUpgradeCommand.cpp	port			todo	[o-default]
@@ -875,7 +875,7 @@ cpppj/src/o/RawRiftHitPoints.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o
 cpppj/src/o/RawRiftShapeAccess.cpp	port	www/core/raw-rift-shape-access.js	1f00a25a	port	[o-default] WB04-E59: 00419850 SHP 프레임 접근(범위 밖 번호 getter→상세 writer, rifttype.h:e1 진단, 복귀 뒤 같은 프레임). SquidDisplay.frameSize 계약 검사로 대조(별도 원본 fixture 없음)
 cpppj/src/o/RawRitualChoice.cpp	port			todo	[o-default] cpppj CMake 주석상 6b 입력/수신 MP 사전 구현. 단독 의식 보상 선택 도달 여부는 WB10 에서 확인
 cpppj/src/o/RawRitualRefresh.cpp	port	www/core/raw-ritual-refresh.js	1f00a25a	port	[o-default] WB04-E11: 의식 뒤 로컬 Core/CoreData/snapshot 세 호출과 두 현재 owner 읽기. fixture ritual-refresh 10.78 54행 전부
-cpppj/src/o/RawRunePostPop.cpp	port			todo	[o-default]
+cpppj/src/o/RawRunePostPop.cpp	port	www/core/raw-rune-post-pop.js	1f00a25a	port	[o-default] WB04-E61: Rune166 후처리(304 예약·Dais/Altar finder·건설 시간 7/10/25·공통 postPopBase). fixture runepostpop 10.78 960행 전부(CD 960행은 범위 밖). 실제 Rune→Pop→Construction 완료 통합은 RawConstructionProcess 단위에서
 cpppj/src/o/RawSalvageCommand.cpp	port	www/core/raw-salvage-command.js	1f00a25a	port	[o-default] WB04-E35: 44c420 요청·4437c0 송신·4436f0 54h 수신. fixture salvage-command 3458행 전부(두 x87 정밀도). 환불/삭제 가상·송신 경계는 훅
 cpppj/src/o/RawSavedStateRead.cpp	exclude-mp			-	[mp-saved-battle]
 cpppj/src/o/RawShrapnelFrame.cpp	port			todo	[o-default]
