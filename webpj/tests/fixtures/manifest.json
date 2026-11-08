@@ -11335,9 +11335,67 @@
       "bytes": 281802,
       "lines": 1302,
       "fixtureCommit": "c0146d4d",
-      "webCommit": "worktree",
+      "webCommit": "f78148a8",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionConfirm.cpp": "77a0c3a4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E140",
+      "id": "constructionrequest",
+      "path": "cpppj/tests/fixtures/constructionrequest-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 서버 건설 요청 전체의 배치 가능 판정·충돌·밀어내기·받침 확정·실패 정리 순서와 인자(세 판본 2192행)",
+      "consumers": [
+        "webpj/tests/construction-request.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-request.js"
+      ],
+      "doc": "docs/webpj-construction-request-local-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionRequest.cpp"
+      ],
+      "scope": "10.78(originals) 816행 사용, originalCD 688행은 10.72, original1037 688행은 10.37",
+      "text": true,
+      "sha256": "e36176be5730d4dde45fc356f96e7118c0d027f2b83541e52e71e2dbd75403aa",
+      "bytes": 681220,
+      "lines": 2194,
+      "fixtureCommit": "3d568ff6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionRequest.cpp": "2a8f937e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E140",
+      "id": "constructionlocal",
+      "path": "cpppj/tests/fixtures/constructionlocal-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 로컬 건설 배치 전체의 미리보기/조각 반환/SID 생성/배치/사제 이동/서버 요청 사건 순서(세 판본 1450행)",
+      "consumers": [
+        "webpj/tests/construction-local.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-local.js"
+      ],
+      "doc": "docs/webpj-construction-request-local-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionLocal.cpp"
+      ],
+      "scope": "10.78(originals) 558행 사용, originalCD 446행은 10.72, original1037 446행은 10.37",
+      "text": true,
+      "sha256": "8674e54bdf374a06a162199bf239e8a185e8cb5227897c08592f69ded29c366b",
+      "bytes": 386120,
+      "lines": 1452,
+      "fixtureCommit": "e3df7f74",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionLocal.cpp": "2a8f937e"
       }
     }
   ]
