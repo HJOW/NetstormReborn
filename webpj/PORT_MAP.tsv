@@ -766,7 +766,7 @@ cpppj/src/o/RawLightningPath.cpp	port	www/core/raw-lightning-path.js	1f00a25a	po
 cpppj/src/o/RawLocalGeyser.cpp	port			todo	[o-default]
 cpppj/src/o/RawLocalMissionState.cpp	port			todo	[o-default]
 cpppj/src/o/RawMakeAi.cpp	port	www/core/raw-make-ai.js	1f00a25a	port	[o-default] WB04-E32: 일반 MakeAi 부모와 전체 객체 이전/삭제 순회. fixture make-ai-parent 770·make-ai-objects 2592행 전부. AI 생성(417e50)/Player 카운터/가상 삭제는 훅
-cpppj/src/o/RawManaBoltArrival.cpp	port			todo	[o-default]
+cpppj/src/o/RawManaBoltArrival.cpp	port	www/core/raw-mana-bolt-arrival.js	1f00a25a	port	[o-default] WB04-E143: 마나 볼트 건설 대상 검색(0045aab0)과 도착 분기(0045ab30: 음향·프로세스 제거·Regular 예약 또는 자기 삭제). fixture mana-bolt-arrival 101행 전부. 남음: RawManaBoltRegular(클라이언트 투영 선행)
 cpppj/src/o/RawManaBoltRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaRegistration.cpp	port	www/core/raw-mana-registration.js	1f00a25a	port	[o-default] WB04-E10: 00472f70 마나 공급원 등록(최초 개수 저장·중복 검색·checking 진단 복귀·productionDirty 감김). fixture mana-registration-hardware 10.78 542행 전부(originalCD 542행은 10.72라 제외). 실제 Client/World 통합 대조는 공통 PostPop 본체 단위에서

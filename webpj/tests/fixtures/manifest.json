@@ -11451,9 +11451,38 @@
       "bytes": 837334,
       "lines": 1112,
       "fixtureCommit": "9410a4fb",
-      "webCommit": "worktree",
+      "webCommit": "2474fbe1",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionBuilder.cpp": "33302112"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E143",
+      "id": "mana-bolt-arrival",
+      "path": "cpppj/tests/fixtures/mana-bolt-arrival-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 마나 볼트 도착의 대상 검색·반환·효과 순서(10.78 101행)",
+      "consumers": [
+        "webpj/tests/mana-bolt-arrival.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mana-bolt-arrival.js"
+      ],
+      "doc": "docs/webpj-mana-bolt-arrival-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawManaBoltArrival.cpp"
+      ],
+      "scope": "10.78 독립 101행 전부",
+      "text": true,
+      "sha256": "4ed1bc04ea15ff9cab1f9c088216337bdacbd61c48bbf6e060c9cbb3c7988239",
+      "bytes": 5616,
+      "lines": 102,
+      "fixtureCommit": "8bf76206",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawManaBoltArrival.cpp": "9dd15ef2"
       }
     }
   ]
