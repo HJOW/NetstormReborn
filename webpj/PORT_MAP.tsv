@@ -662,8 +662,8 @@ cpppj/src/o/RawDudeTask.cpp	port	www/core/raw-dude-task.js	1f00a25a	port	[o-defa
 cpppj/src/o/RawEditorPlayers.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/o/RawEditorWorldFinish.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/o/RawEnergySupply.cpp	port	www/core/raw-energy-supply.js	1f00a25a	port	[o-default] WB04-E29: Mana.cpp 4730c0/473330/4734d0/473570/474970과 41c0f0/41c170 공급 가상. fixture energy-supply 1058·energy-sort 567·energy-provider-vtables 83행 전부. 실제 AI 건조 지점/Builder/커서 연결은 소비자 단위에서
-cpppj/src/o/RawEvilRayFrame.cpp	port			todo	[o-default]
-cpppj/src/o/RawEvilRayLifetime.cpp	port			todo	[o-default]
+cpppj/src/o/RawEvilRayFrame.cpp	port	www/core/raw-evil-ray-frame.js	1f00a25a	port	[o-default] WB04-E190: EvilRay 프레임 00453290(source 진단·폭 조회 뒤 현재 좌표·전체 delta 한 번·방출 기한/시작 음향(0 이면 저장 부모)·끝 꼬리 방출·±8 영역·0 이하 끝 음향·빈 중단 kill)·출력 00453540(진단→clip→세 색 타원 반경 −2/−1/0), 정수화 signed64 하위 DWORD(범위 밖 0). fixture evilrayframe 10.78 기본 18행 전부. 남음: EvilRayVisualSystem Host 부착·실제 폭/음향 번호·타원 래스터 연결
+cpppj/src/o/RawEvilRayLifetime.cpp	port	www/core/raw-evil-ray-lifetime.js	1f00a25a	port	[o-default] WB04-E190: 생성 004530b0(TYPE 등록 전·source 등록 뒤 현재 값·1200 확보 50입자·공유 색 없을 때만 8 확보/생성/단일 3색 띠 binary64 상수)·Stop 00453240(mode 3 만 중단, 다른 mode/이미 중단 진단)·소멸(입자→등록→객체, 공유 색 보존). fixture evilraylifetime 10.78 생성 기본 12·Stop 기본 5행 전부. 남음: 실제 Host 부착/Stop 호출자·공유 색 장기 owner 연결
 cpppj/src/o/RawExistingEditorInstallOuter.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/o/RawFactoryDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawFactoryInput.cpp	port	www/core/raw-factory-input.js	1f00a25a	port	[o-default] WB04-E18: 004547d0 Factory 가상 입력(순환·업그레이드 자금 관문·연구/부모 위임). 원본 관측 없음, cpppj 독립 계약 검사 이식

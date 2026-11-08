@@ -13250,7 +13250,7 @@
       "bytes": 3099592,
       "lines": 253,
       "fixtureCommit": "5d34fc2d",
-      "webCommit": "worktree",
+      "webCommit": "bedcafc4",
       "cpppjBasis": {
         "cpppj/src/o/RawDissolveFrame.cpp": "5d34fc2d"
       }
@@ -13281,10 +13281,71 @@
       "bytes": 323235,
       "lines": 289,
       "fixtureCommit": "5d34fc2d",
-      "webCommit": "worktree",
+      "webCommit": "bedcafc4",
       "cpppjBasis": {
         "cpppj/src/o/RawDissolveLifetime.cpp": "5d34fc2d",
         "cpppj/src/o/RawDissolveFrame.cpp": "5d34fc2d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E190",
+      "id": "evilrayframe",
+      "path": "cpppj/tests/fixtures/evilray-frame-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: EvilRay 프레임/출력(source/부모 진단·방출 기한·시작/끝 음향·영역·kill·clip·세 색 타원)(10.78 기본 027f 18 + 비교 037f 18행)",
+      "consumers": [
+        "webpj/tests/evil-ray-frame.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-evil-ray-frame.js"
+      ],
+      "doc": "docs/webpj-evil-ray-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawEvilRayFrame.cpp"
+      ],
+      "scope": "10.78 기본 027f 18입력 전부(037f 비교 행은 건너뜀)",
+      "text": true,
+      "sha256": "61b89ebb871203fba624c5461bd66095ca8531fe3ebc8c12bd1dc163a789e566",
+      "bytes": 40406,
+      "lines": 37,
+      "fixtureCommit": "d4652e85",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawEvilRayFrame.cpp": "d4652e85"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E190",
+      "id": "evilraylifetime",
+      "path": "cpppj/tests/fixtures/evilray-lifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: EvilRay 생성(두 팔레트·기존 공유 색·부모 0/50·부착 중 TYPE/source/깊이 변경)·공유 3색·반납 순서와 Stop 진단(10.78 생성 12+12·Stop 5+5행)",
+      "consumers": [
+        "webpj/tests/evil-ray-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-evil-ray-lifetime.js",
+        "webpj/www/core/particle-gradient.js"
+      ],
+      "doc": "docs/webpj-evil-ray-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawEvilRayLifetime.cpp",
+        "cpppj/src/o/ParticleGradient.cpp"
+      ],
+      "scope": "10.78 기본 027f 생성 12·Stop 5입력 전부(037f 비교 행은 건너뜀)",
+      "text": true,
+      "sha256": "cbd1c9b8d9efd41ca95a04f69d25bc8a7877adb40ea0a150694c4a5f1c212b1e",
+      "bytes": 67322,
+      "lines": 35,
+      "fixtureCommit": "8eebe34b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawEvilRayLifetime.cpp": "8eebe34b",
+        "cpppj/src/o/ParticleGradient.cpp": "e6d97634"
       }
     }
   ]
