@@ -484,7 +484,7 @@ cpppj/src/o/RawAiCollectors.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiCommandState.cpp	port	www/core/raw-ai-command-state.js	1f00a25a	port	[o-default] WB04-E76: AI 직접 명령 00413c60 CrankAiMoney·004143b0 SetAiParameter(현재 Player9 +0xb0 재조회·다섯 직접 writer·0xb08 본체 외 바이트 보존). fixture ai-command-state 1940행 전부(10.78 전용 파일). AI 본체 생성/해제와 Player9 실제 연결은 RawAiBrain 단위에서
 cpppj/src/o/RawAiCreate.cpp	port	www/core/raw-ai-brain.js	1f00a25a	port	[o-default] WB04-E164: AiCreate 00417e50(색 변경 → 기존 brain → NoTemple → 실제 생성/부착/초기 갱신, Native 반납 owner 선행 거부). 독립 관측 fixture 없음, cpppj 계약 시험 포함 raw-ai-brain.js 한 모듈. 남음: 실제 색 변경/신전 삭제/초기 갱신 가상 호출 연결
 cpppj/src/o/RawAiDamage.cpp	port			todo	[o-default]
-cpppj/src/o/RawAiDeployment.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiDeployment.cpp	port	www/core/raw-ai-deployment.js	1f00a25a	port	[o-default] WB04-E175: AI 배치 실행 004106e0(생산 조각 삭제·대기 내용물/Regular·비용·서버 10인자 요청/로컬 예측·시설 20초 기한)와 비용 00410280/004102b0. 독립 관측 fixture 없음, cpppj 계약 시험 9건. 남음: 실제 생산 조회/Regular 부착/서버·로컬 건설 연결
 cpppj/src/o/RawAiDropActions.cpp	port	www/core/raw-ai-drop-actions.js	1f00a25a	port	[o-default] WB04-E174: AI 배치 행동 004162e0 전체(생산 조회·선택·스캔·기한/지갑/생산 조각/사제 관문·fake/seed·비용·공용 난수 후보 승인/배치/압축)와 생산 조각 00410580. 독립 관측 fixture 없음, cpppj 계약 시험 19건. 남음: 실제 배치/비용/로그 연결
 cpppj/src/o/RawAiDropEvaluation.cpp	port	www/core/raw-ai-drop-evaluation.js	1f00a25a	port	[o-default] WB04-E173: AI 배치 평가 00412640 부족 거리·004126c0 공급 점수·00412ab0 시설별 평가 분배·00412b90 후보 승인(+0x3e8 직접 읽기/쓰기). 독립 관측 fixture 없음, cpppj 계약 시험 17건. 남음: 실제 공급 문자열/에너지/전체 배치 연결
 cpppj/src/o/RawAiDropScan.cpp	port	www/core/raw-ai-drop-scan.js	1f00a25a	port	[o-default] WB04-E173: AI 배치 스캔 00412ce0 다리 J/K 보정·00412e10 스캔(X 선증가·예산·30개 후보)·0040f390 제거. 독립 관측 fixture 없음, cpppj 계약 시험 17건. 남음: 실제 월드 지도/동맹/후보 승인(considerStored) 연결
@@ -499,7 +499,7 @@ cpppj/src/o/RawAiMovement.cpp	port	www/core/raw-ai-movement.js	1f00a25a	port	[o-
 cpppj/src/o/RawAiObjectNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiPreparation.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiPriestActions.cpp	port	www/core/raw-ai-priest-actions.js	1f00a25a	port	[o-default] WB04-E171: 사제 AI 전체 행동 00411cd0(탐색 접두·의식/제단/다이스 거리·건설 TYPE 선택/저자금·배치 20초·완료 탐색 소비/새 탐색·다이스 회수·기한)와 헬퍼 0041d7a0/0040e800/00491b30/00448a90. 독립 관측 fixture 없음, cpppj 계약 시험 21건. 남음: 실제 수집/배치/회수 요청 하위 연결
-cpppj/src/o/RawAiResourceChoice.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiResourceChoice.cpp	port	www/core/raw-ai-resource-choice.js	1f00a25a	port	[o-default] WB04-E175: AI 자원 선택 00410a30(간헐천 거리 절삭·그래프 필터)·수집/귀환 00411900·포획 운반자 00410980/004109d0·신전 중심 004112b0·끊긴 간헐천 00411350. 독립 관측 fixture 없음, cpppj 계약 시험 13건. 남음: 실제 그래프/내용물/이동/로그 연결
 cpppj/src/o/RawAiRuntime.cpp	port	www/core/raw-ai-runtime.js	1f00a25a	port	[o-default] WB04-E165: AI 전체 행동 00417c70(float 지갑 비교 포함)·개별 Tick 00417d30(현재 timing 기한 로그)·Player 1..8 Frame 00417de0(소멸/반납/0). fixture airuntime 실제 PE 145행 전부. 남음: 초기화/준비/목표 선택/수집자/시설/부족 좌표/사제/배치/다리/운반자/경제 하위 몸체 연결
 cpppj/src/o/RawAiStrategySetup.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiWallet.cpp	port	www/core/raw-ai-wallet.js	2b048419	port	[o-default] WB04-E166: AI 지갑 가산 00413bb0·조회 00413c20(조기 반환 뒤에만 본체 소유자 선택·DWORD 감김·데모 하한 1190·저장한 brain 재조회·현재 Player base 함수). 독립 관측 fixture 없음, cpppj 계약 시험 10건. 기준선 뒤 2b048419 변경 포함. 남음: 실제 Player 표/본체/현재 모드 조회기 연결
