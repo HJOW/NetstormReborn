@@ -63,7 +63,7 @@ void UberGump::PrepareNativeFortState(bool editing) {
     auto& e=*editor_;if (e.transport) e.transport->CloseListener(); //앞선 CloseAll이 닫은 이전 양끝 뒤에 이전 listener만 반납한다.
     auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
     e.transport=std::make_shared<EditorLocalTransport>(client_.PlayerRecords()->Records(),game.Server(),e.Hooks(),client_.ConnectionGlobals());
-    std::int32_t port=6799;client_.Configuration().ReadInt("gameServerPort",port);e.transport->Open(std::bit_cast<std::uint32_t>(port)); //004e22c0은 로그인/Player 재배치 없이 client9를 연다.
+    e.transport->Open(game.GameServerPort()); //004e22c0은 같은 현재005318e8을 읽고 로그인/Player 재배치 없이 client9를 연다.
     surface.ownerMode.fort=true;game.player.fortMode=true; //같은00594fb8을 읽는 기존 Player 어댑터의 호환 별칭에도 현재 모드를 전달한다.
     if (editing) { game.world.editor=1;game.world.missionPost=true;game.FortKeepGenus()=0xffffffffU;game.FullDeck()=1; } //State3은 이 네 쓰기를 실행하지 않고 앞선 전체 cleanup의 현재값을 유지한다.
     game.Server()=true;game.Boss()=true;client_.CoreDataGlobals()->Select(game.player,0,1,1);
@@ -276,11 +276,12 @@ o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t sele
 // 미션 Login은 기존 분배기에 남기고 Edit1/2·메인3·인트로39~42과 다음4를 같은 분배기로 처리한다.
 void UberGump::PollEditorState() {
     auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];const bool fort=next==1 || next==2 || next==6; // 일반 복귀6도 같은 Fort 설치/공통 확정을 사용하며 첫 배경/결과만 전용 부모가 처리한다.
-    if (!fort && next!=3 && !(next>=19 && next<=27) && !(next>=34 && next<=38) && !(next>=39 && next<=42) && !(editor_ && next==4)) return; //메타19/연결20~27/검색34~38도같은장기분배기를사용한다.37의새서버실행은후속이다.
+    const bool metaIdle=next==0 && !world_ && editor_ && editor_->metaWorld && client_.SurfaceStorage()->ownerMode.challenge; //새 상태가 없어도 원문 Poll의 메타 표시/NSInfo 예약은 실제 현재 World에서 소비한다.
+    if (!fort && next!=3 && !(next>=19 && next<=38) && !(next>=39 && next<=42) && !(editor_ && next==4) && !metaIdle) return; //메타19~38 전체와 next0의 현재 메타 Poll을 같은 장기 분배기에 전달한다.
     if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);
     if (!editor_->state) { // 새 이름 창에서 먼저 확보한 파일 장치가 있어도 실제 State 분배기는 별도로 처음 한 번 구성한다.
         auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
-        o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.parentState=[this](auto selected) { if (selected>=39 && selected<=42) return InstallIntroNativeState(selected);if (selected==19) return InstallMetaNativeState(selected);if ((selected>=20 && selected<=27) || (selected>=34 && selected<=38)) return InstallMetaConnectionState(selected);if (selected==6) return InstallBattleReturnNativeState(selected);return selected==3 ? InstallMainMenuNativeState(selected) : InstallExistingEditorState(selected); };
+        o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.parentState=[this](auto selected) { if (selected>=39 && selected<=42) return InstallIntroNativeState(selected);if (selected==19) return InstallMetaNativeState(selected);if (selected>=20 && selected<=38) return InstallMetaConnectionState(selected);if (selected==6) return InstallBattleReturnNativeState(selected);return selected==3 ? InstallMainMenuNativeState(selected) : InstallExistingEditorState(selected); };
         hooks.invalidState=[](auto state) { throw std::logic_error("Editor/메인 분배기의 선택된 Native State 미연결:"+std::to_string(state)); };
         hooks.metaThird=[this] { rawButtons_->Menus()->RefreshMetaNsInfo(*client_.NsInfoGlobals()); }; //0047cab0은별도CS목록이아닌기존00593150 NSInfo를실제Push/Attach한다.
         hooks.metaFirst=[this] { client_.RefreshNativeMetaDisplay(false); };hooks.metaSecond=[this] { client_.RefreshNativeMetaDisplay(true); }; //원문Poll의479760/47dd60을같은현재CS/Pool/Renderer에연결한다.

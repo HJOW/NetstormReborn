@@ -5,7 +5,7 @@ void UberGump::RequestBattleReconnect(bool reloadFile) {
     hooks.takeServer=[this] { if (!world_) throw std::logic_error("현재15 서버 인수의 실제 World 없음");world_->Session().TakeServerForState(); };
     hooks.deleteSaved=[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile())); };
     hooks.setHandle=[this](auto name) { client_.Configuration().Set("fort.mySubHandle",o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(name.data()),name.size()})); }; // 설정만 UTF-8로 변환하고 Native 현재64BYTE는 표시 부호화를 유지한다.
-    hooks.gamePort=[this] { std::int32_t port=6799;client_.Configuration().ReadInt("gameServerPort",port);return std::bit_cast<std::uint32_t>(port); };
+    hooks.gamePort=[this] { return client_.GameplayGlobals()->GameServerPort(); }; //서버 이전도 설정/메타/일반 로그인의 같은 현재005318e8을 조회한다.
     hooks.localSp=[this] { const auto& player=client_.GameplayGlobals()->player;return player.playerKnown ? std::bit_cast<float>(client_.SpGlobals()->Store().Get(player.battleOwner)) : 0.0F; };
     hooks.log=[this](auto text) { client_.WriteDiagnosticLog(0x1d,text); };hooks.checking=[this] { return client_.GameplayGlobals()->AiDebug().Checking()!=0; };hooks.assertion=[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,".\\State.cpp",line); };
     hooks.serialAlive=[this](auto serial) { return rawButtons_->SerialGump(serial)!=0; };

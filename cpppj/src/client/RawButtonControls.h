@@ -86,6 +86,7 @@ public:
     std::uint32_t MainMenuToken() const; //실제로 살아 있는 메인 부모 토큰이며 phase/버튼 개수로 추정하지 않는다.
     std::string MainMenuReport() const; //현재 부모/기한/포인터와 옵션의 읽기 전용 관측이다.
     std::uint32_t SerialGump(std::uint32_t serial) const; //00464020: 등록1..999에서 같은serial·비dead의 첫 대상이다.
+    std::uint32_t GumpSerial(std::uint32_t token) const; //현재 실제 파생 노드의+2c를 조회하며 token/등록칸을 serial로 대신 쓰지 않는다.
     void KillStateGumps(); //004666d0의 등록1..999·현재 제외타입11/dead 관문으로 Kill만 예약한다.
     void RefreshStormPower(); //0043dad0의 현재 예산 serial 조회/가상 Push/Attach/깊이 복원을 실행한다.
     void KillGump(std::uint32_t token); // 같은 실제 수명으로 Kill만 하고 callback 밖 프레임 Cleanup을 유지한다.

@@ -76,6 +76,8 @@ public:
     const std::uint32_t& PatchSample() const { return patchSample_; } //Session 반납 뒤에도 마지막 실제 표본을 읽는다.
     std::int32_t& WorldCells() { return worldCells_; } //00531928의 같은 signed 세계 크기를 카메라와 마나/공급/AI가 빌린다.
     const std::int32_t& WorldCells() const { return worldCells_; } // Session 반납으로 주소나 현재값을 초기화하지 않는다.
+    std::uint32_t& GameServerPort() { return gameServerPort_; } //005318e8의 현재 DWORD를 상태/일반 로그인/메타 listener가 같은 주소에서 읽는다.
+    const std::uint32_t& GameServerPort() const { return gameServerPort_; } //설정 변경 후에도 같은 장기 주소를 빌리며 Session 생성 때 기본값으로 돌리지 않는다.
     const std::shared_ptr<o::RawGameAuxState>& GameAux() const { return gameAux_; } // Storage와 같은17필드 owner 정체성을 빌린다.
     std::uint32_t& GeyserType() { return gameAux_->GeyserType(); } // Host/옵션/게임이 같은 TYPE DWORD를 직접 사용한다.
     const std::uint32_t& GeyserType() const { return gameAux_->GeyserType(); } // 현재 타입을 복사하지 않는다.
@@ -149,6 +151,7 @@ private:
     std::uint32_t patchDiagnostic_{6}; // 보호 10.78 PE의 초기 DWORD6이며 World/Session 대여·반납으로 다시 쓰지 않는다.
     std::uint32_t patchSample_{6}; //보호10.78 PE00540cb8의 실제 초기 DWORD6이다. 표본 writer가 갱신하기 전0을 합성하지 않는다.
     std::int32_t worldCells_{256}; // 보호 PE 초기256이며 실제 startup의 명시 store와 Session 대여를 구별한다.
+    std::uint32_t gameServerPort_{6799}; //보호 PE005318e8의 최초6799이며 현재 ReadInt 누락은 이전값을 보존한다.
     ClientCameraGlobals camera_; // 전역snapshot과논리Renderer/목표를분리하고명시Native초기화외에는현재값을보존한다.
     ClientCursorGlobals cursorGlobals_; // callback/타이머없이Lifecycle/Placement/snap만장기소유한다.
     std::uint32_t mapRevision_{}; // 최초 BSS0이며 Session 대여/반납으로 초기화하지 않는 실제005949d4다.

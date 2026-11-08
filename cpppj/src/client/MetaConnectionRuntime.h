@@ -12,12 +12,14 @@ namespace netstorm::client { //같은 Client Player/CS/시계/현재 상태를 �
 class Client; //실제 Client는 이 장기 EditorRuntime 자식보다 오래 살아야 한다.
 class LocalUdpTransport; //실제UDP12의물리소유자이며구현은같은Meta부모의cpp에서결합한다.
 struct NativeMetaSailHooks; //같은 CS/현재 카메라·SHP·TCP11·Rig의 동기 장치 묶음이다.
+struct NativeMetaConnectedHooks; //같은28~33 부모에 현재 HTML serial/카메라 장치만 외부에서 공급한다.
 class MetaConnectionRuntime {
 public:
     MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo,std::shared_ptr<std::array<std::uint8_t,87>> options,std::function<void()> recreateHud); //생성은소켓을열지않고실제전역옵션·CS/NSInfo·전체HUD 장치를같은수명으로연결한다.
     MetaConnectionRuntime(const MetaConnectionRuntime&)=delete;MetaConnectionRuntime& operator=(const MetaConnectionRuntime&)=delete; //등록된 callback의 주소/실제 socket owner를 복제하지 않는다.
     ~MetaConnectionRuntime(); //Native CloseAll 뒤 남은 자기 노드만 실제 TCP owner가 반납한다.
     o::LocalMissionParentResult Run(std::uint32_t selected); //20~27/34~38의부모와37의실제새R lan실행을연결하고공통144BYTE확정은바깥분배기에남긴다.
+    o::LocalMissionParentResult RunConnected(std::uint32_t selected,const NativeMetaConnectedHooks& ui); //28~33의 같은 CS/State/포트·실제 TCP/표시/전송에 현재 HTML/카메라 장치를 결합한다.
     void Pump(); //같은 원문 slot4의 flush→수신을 World 없이 진행한다.
     bool CallbackActive() const; //동기 수신/송신 중 전체 Native 정리의 재진입을 막는다.
     void NotifyMetaMaster(); //004b2c00의 현재 자기 flags에2000h를 저장하고 같은 TCP11로1fh/12BYTE를 전송한다.

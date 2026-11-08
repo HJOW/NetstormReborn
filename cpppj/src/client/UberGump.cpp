@@ -10,6 +10,7 @@
 #include "client/NativeMetaSail.h" //의식 패킷6b와 구별되는 일반 입력6b/6c/e3/fe의 원문 항해 소비자다.
 #include "client/ClientMetaPointerInput.h" //GameWorld 없는 메타의 현재 마우스/픽셀 선택과 객체 입력 수명이다.
 #include "client/ClientMetaBattleDescription.h" //HTML 문자열과 표식된 CS 주소의 서로 다른 현재 수명을 구별한다.
+#include "client/NativeMetaConnectedState.h" //메타28~33의 실제 HTML serial/카메라 장치를 분배기에 공급한다.
 #include "client/NativeMetaObjectInput.h" //영역 클릭/메뉴의 e8 확인 Tell도 같은 일반 입력에 분배한다.
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
@@ -817,7 +818,7 @@ void UberGump::RequestMissionFort(std::string_view name) {
         auto request=std::make_shared<MissionFortLoadRequest>();MissionFortRequestHooks effects; // 원본 부모가 쓴 요청과 실제 복제 이미지를 같은 수명으로 소유한다.
         effects.selectFort=[this,request](auto value) { SelectCurrentFortName(value);const auto current=client_.FortGlobals()->Current();request->fort=o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(current.data()),current.size()}); }; // 원문00460980 전체 복귀 뒤 실제 현재 이름을 State 설치 요청에 보유한다.
         effects.duplicate=[request](auto& packet) { return CaptureMissionFortZone(*request,packet); };
-        const std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};std::int32_t configuredPort=6799;client_.Configuration().ReadInt("gameServerPort",configuredPort);const auto port=static_cast<std::uint32_t>(configuredPort); // 원본00513870의9BYTE와 현재005318e8의 Client 설정 경계다.
+        const std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};const auto& port=client_.GameplayGlobals()->GameServerPort(); //원문00513870의9BYTE와 같은 현재005318e8을 Fort 선택/설정 복귀 뒤에도 참조한다.
         auto& next=client_.LocalStateGlobals()->State().next; // 실제005c8878의144BYTE에 쓰며 캡처를 Native 전역 대신 사용하지 않는다.
         WriteMissionFortRequest(name,{next,client_.LocalStateGlobals()->ZonePending(),address,port},effects);request->next=next;request->sequence=client_.LocalStateGlobals()->ZonePending(); // 요청은 같은 State/005c85c0의 작성 결과만 관측 캡처한다.
         missionFortRequest_=std::move(request);
@@ -826,8 +827,8 @@ void UberGump::RequestMissionFort(std::string_view name) {
 void UberGump::RequestCurrentGuideFort(RawCampaignSession& session) {
     if (!missionRuntime_ || state_.Pending() || (missionFortRequest_ && !missionFortRequest_->consumed)) throw std::logic_error("현재 Guide Fort 요청의 수명/지연 큐 중복");
     // 이미 소비된 이전 이미지는 기존 Session의 공유 수명에 맡기고 새 요청 성공 뒤 교체한다. 미소비 이미지는 덮어쓰지 않는다.
-    auto request=std::make_shared<MissionFortLoadRequest>();GuideFortRequestHooks effects;std::uint32_t port{};
-    effects.subscriber=[this,&session,&port](auto id,auto name) { session.ChangeFortSubscriber(id,std::span(reinterpret_cast<const std::uint8_t*>(name.data()),name.size()+1));std::int32_t configured=6799;client_.Configuration().ReadInt("gameServerPort",configured);port=std::bit_cast<std::uint32_t>(configured); }; // 고정 Champion 리터럴의 NUL도 전달하며 큰 설정/제목 복귀 뒤 현재 포트를 읽는다.
+    auto request=std::make_shared<MissionFortLoadRequest>();GuideFortRequestHooks effects;const auto& port=client_.GameplayGlobals()->GameServerPort();
+    effects.subscriber=[&session](auto id,auto name) { session.ChangeFortSubscriber(id,std::span(reinterpret_cast<const std::uint8_t*>(name.data()),name.size()+1)); }; //고정 Champion의 NUL을 전달하며 복귀 후 writer가 같은 장기 포트의 현재값을 읽는다.
     effects.handle=[&session] { return session.CurrentHandle(); };effects.duplicate=[request](auto& packet) { return CaptureMissionFortZone(*request,packet); };
     const std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};auto& local=*client_.LocalStateGlobals(); // 원문 로컬9BYTE 주소와 기존 일반 Init의 같은 장치 경계다.
     WriteCurrentGuideFortRequest({local.State().next,local.ZonePending(),address,port},effects);request->next=local.State().next;request->sequence=local.ZonePending();

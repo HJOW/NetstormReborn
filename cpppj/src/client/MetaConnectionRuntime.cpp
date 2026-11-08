@@ -48,6 +48,7 @@
 #include "o/RawPlayerNotification.h"
 #include "o/RawFileName.h"
 #include "o/RawRootLoginReply.h"
+#include "o/RawChallengeLoginReply.h" //1dh는 현재28/12 직접 쓰기 뒤 같은 실제 Run을 동기 호출한다.
 #include "platform/Utf8Path.h"
 #include "platform/PortableStartup.h"
 #include <algorithm>
@@ -104,6 +105,11 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     }); //sender10/phase23의 실제 종료는 다음20을 예약한다.
     dispatch.ObservePacket(0x0f,[this](auto packet,auto sending) { o::ObserveRootLoginReply(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x0f,1,0);dispatch.RequireLength(0x0f,0xffff);
     dispatch.Register(0x0f,[this](auto,auto&,auto packet) { ReceiveRootReply(packet); }); //원문과같이sender/연결번호·현재phase 관문을 수신 앞에 추가하지 않는다.
+    dispatch.Observe(0x1d,{});dispatch.Version(0x1d,1,0);dispatch.RequireLength(0x1d,13); //원문0b380의 빈 관찰기/버전1과 실제13BYTE의 고정 응답이다.
+    dispatch.Register(0x1d,[this](auto,auto&,auto packet) {
+        o::ChallengeLoginReplyHooks reply;reply.log=[this](auto text) { client_.WriteDiagnosticLog(0x1d,text); };reply.version=[this](auto major,auto minor) { return CheckMetaVersion(major,minor); };reply.run=processState_;
+        o::ReceiveChallengeLoginReply(packet,client_.LocalStateGlobals()->State(),client_.GameplayGlobals()->Subscribers()->MySubscriber(),reply);
+    }); //sender/phase/known 필터나 가짜 성공을 추가하지 않고 실제 현재 Subscriber와 다섯 State 블록을 사용한다.
     dispatch.ObservePacket(0x16,[](auto packet,auto sending) {
         if (!sending) return;if (packet.size()<6) throw std::out_of_range("16h observer 필드 부족");if (packet[5]==0xffU) std::clog<<"_p_packets.cpp1112 numFriends 진단\n";
         const auto count=std::bit_cast<std::int8_t>(packet[5]);Put(packet,2,static_cast<std::uint16_t>(std::int32_t(count)*4+14),2);
@@ -303,5 +309,13 @@ o::LocalMissionParentResult MetaConnectionRuntime::Run(std::uint32_t selected) {
     }
     default:throw std::logic_error("메타 연결/검색 밖의 상태 미연결");
     }return o::LocalMissionParentResult::Commit;
+}
+//HTML/카메라의 실제 동기 장치만 바깥에서 받고 나머지는 이 owner의 같은 TCP/Client에 연결한다.
+o::LocalMissionParentResult MetaConnectionRuntime::RunConnected(std::uint32_t selected,const NativeMetaConnectedHooks& ui) {
+    auto& local=*client_.LocalStateGlobals();auto& game=*client_.GameplayGlobals();NativeMetaConnectedHooks hooks=ui;hooks.request=request_;hooks.translate=[this](auto source) { return client_.Translate(source); };hooks.progress=progress_;
+    hooks.display=[this] { client_.RefreshNativeMetaDisplay(true); };hooks.rootLogin=[this](auto connection) { SendRootLogin(connection); };hooks.listen=[this](auto port) { tcp_->Listen(port); };
+    hooks.closePending=[this] { client_.ConnectionGlobals()->ClosePending(); };hooks.closeConnection=[this](auto id) { client_.ConnectionGlobals()->Disconnect(std::bit_cast<std::int32_t>(id)); };hooks.open=[this](auto id) { return tcp_->IsOpen(std::bit_cast<std::int32_t>(id)); };hooks.status=[this](auto id) { return tcp_->Status(std::bit_cast<std::int32_t>(id)); };
+    hooks.connect=[this](auto id,auto address,auto port) { static_cast<void>(tcp_->ConnectPeerText(address,port,std::bit_cast<std::int32_t>(id))); };hooks.notifyMaster=[this] { NotifyMetaMaster(); };hooks.sendLogin=[this] { SendMetaGameLogin(); };
+    return InstallNativeMetaConnectedState(selected,{local.State(),*client_.ChallengeGlobals(),game.player,client_.NsInfoGlobals()->zone,local.MetadataMode(),local.MetaConnected(),local.ConnectionNotified(),{local.CachedPeerIndex(),local.CachedPeerValue(),local.CachedPeerFieldA4(),local.CachedPeerFieldA8()},game.GameServerPort()},hooks);
 }
 }

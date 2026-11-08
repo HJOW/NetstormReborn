@@ -38,11 +38,11 @@ void UberGump::ResumeLanChoiceAfterInput() { if (lan_ && lan_->choosing) OpenLan
 void UberGump::StartLanLobby(bool host,bool startOnly) {
     if (!world_ || !editor_ || !client_.SurfaceStorage()->ownerMode.fort || client_.GameplayGlobals()->world.editor) throw std::logic_error("로컬 LAN 대기실의 실제 일반 Fort 필요");if (!lan_) lan_=std::make_unique<LanRuntime>();
     if (lan_->lobby) { if (!host || !lan_->lobby->IsHost()) throw std::logic_error("이미 열린 다른 역할의 LAN 대기실");lan_->lobby->Start();ShowLanLobby();return; }if (startOnly) throw std::logic_error("LAN Start의 실제 열린 host 대기실 없음");
-    CloseLanLobby();auto& session=world_->Session();std::int32_t gamePort=6799,lobbyPort=6800;client_.Configuration().ReadInt("gameServerPort",gamePort);client_.Configuration().ReadInt("lanLobbyPort",lobbyPort);
+    CloseLanLobby();auto& session=world_->Session();const auto& gamePort=client_.GameplayGlobals()->GameServerPort();std::int32_t lobbyPort=6800;client_.Configuration().ReadInt("lanLobbyPort",lobbyPort); //게임 포트는 같은 장기 DWORD이며 별도 LAN 대기실 포트와 구별한다.
     auto lobby=std::make_unique<LanBattleLobby>(client_.PlayerRecords()->Records(),client_.PlayerRecords(),[this] { return client_.WallSeconds(); });
     try {
-        if (host) lobby->Host(session.CurrentSubscriber(),session.CurrentHandle(),std::bit_cast<std::uint32_t>(lobbyPort),std::bit_cast<std::uint32_t>(gamePort),ClientCurrentUnixSeconds()^session.CurrentSubscriber());
-        else lobby->Join(session.CurrentSubscriber(),session.CurrentHandle(),LanServerAddress(client_.Configuration()),std::bit_cast<std::uint32_t>(lobbyPort),std::bit_cast<std::uint32_t>(gamePort));
+        if (host) lobby->Host(session.CurrentSubscriber(),session.CurrentHandle(),std::bit_cast<std::uint32_t>(lobbyPort),gamePort,ClientCurrentUnixSeconds()^session.CurrentSubscriber());
+        else lobby->Join(session.CurrentSubscriber(),session.CurrentHandle(),LanServerAddress(client_.Configuration()),std::bit_cast<std::uint32_t>(lobbyPort),gamePort);
         lan_->lobby=std::move(lobby);ShowLanLobby();
     } catch (const std::exception& error) { CloseLanLobby();const auto body="<h2>LAN</h2><p>"+LanHtmlText(error.what())+"\n$Button="+client_.Translate("Back")+",Connect,1\n";lan_->serial=rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext(CurrentMapView()),FontBytes(body),0,440,0);popup_.clear();page_={};state_.phase=ClientPhase::Dialog;pageName_="lan";RebuildControls(); } // 실제 주소/포트/장치 실패를 창에 보여 주며 성공/연결 상태를 합성하지 않는다.
 }

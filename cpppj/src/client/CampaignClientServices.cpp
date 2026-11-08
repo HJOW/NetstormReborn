@@ -316,7 +316,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     CampaignLoginServices login; //실제Client의현재설정/시계/표시를원본로컬로그인에연결한다.
     login.requestPhase=&audio.ResultState(); //Login Timer/State3/SceneMusic이 같은005c85ac 결과 DWORD를 빌린다. 새 결과0을 만들어 덮지 않는다.
     BindCampaignLoginStateClientServices(client,controls,login); // 같은 실제 장치를 State7 앞단과 State13 모두에 공급하며10.72의 기존 어댑터를 구별한다.
-    login.configInt=[&client](std::string_view key,std::int32_t fallback) { client.Configuration().ReadInt(key,fallback);return fallback; };
+    login.configInt=[&client](std::string_view key,std::int32_t fallback) { if (key=="gameServerPort") return std::bit_cast<std::int32_t>(client.GameplayGlobals()->GameServerPort());client.Configuration().ReadInt(key,fallback);return fallback; }; //일반 Zone/listener/Serve도 메타와 같은005318e8을 읽고 다른 설정의 기존 계약은 유지한다.
     login.wallSeconds=[&client] { return client.WallSeconds(); };login.clock=[] { return static_cast<std::uint32_t>(std::clock()); };
     login.gameSeconds=[&client] { return client.GameSeconds(); }; // 서버 시간 응답은 요청 처리 순간의 같은 실제 보정/정지 시계를 읽는다.
     login.refresh=[&client] { client.GetRenderer().InvalidateAll(); };

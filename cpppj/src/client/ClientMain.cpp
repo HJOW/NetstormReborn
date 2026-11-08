@@ -234,7 +234,7 @@ Client::Client(ClientOptions options)
     }
     if (g_client) throw std::logic_error("Only one client may exist");
     // 원본00558dd0의 Set 직후 동기 시점에 현재 복원된 설정 전역을 갱신한다.
-    configuration_.onChanged = [this] { configuration_.ReadInt("cs",gameplayGlobals_->GameAux()->SquidTransmission().compress);if (languageOptionsReady_) InterpretLanguageOptions();configuration_.ReadInt("highPriorityValue",highPriority_);InterpretCursorOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretMonitorOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 우선순위/회전 방향/입력줄요청/저장/진단/메뉴/구름·tellTips·배너 현재값을 동기 반영하며 새 장치를 만들지 않는다.
+    configuration_.onChanged = [this] { configuration_.ReadInt("cs",gameplayGlobals_->GameAux()->SquidTransmission().compress);if (languageOptionsReady_) InterpretLanguageOptions();configuration_.ReadInt("highPriorityValue",highPriority_);InterpretCursorOptions();configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff);InterpretFortFileOptions();configuration_.ReadInt("tracelevel",trace_->log.level);InterpretMonitorOptions();InterpretScriptMenuOptions();kencloudGlobals_->ReadOptions(configuration_);rendererFrame_->ReadOptions();InterpretMainMenuOptions();InterpretNetworkOptions();InterpretOwnerColorOptions(); }; //같은 설정 변경에서 기존 옵션과 게임 포트의 현재값을 동기 반영하며 새 장치를 만들지 않는다.
     g_client = this;
 }
 // 월드/소리 프로세스→음악·음향→화면→GDI/창 순서로 참조 대상보다 사용자를 먼저 정리한다.
@@ -622,6 +622,9 @@ void Client::InterpretMainMenuOptions() {
     value=std::bit_cast<std::int32_t>(localStateGlobals_->TipNumber());configuration_.ReadInt("tipNumber",value);localStateGlobals_->TipNumber()=std::bit_cast<std::uint32_t>(value); //원문435220처럼 tellTips 바로 뒤에 현재 순번을 읽고 누락/상위 비트를 보존한다.
     value=std::bit_cast<std::int32_t>(localStateGlobals_->AutoDemo());configuration_.ReadInt("autoDemo",value);localStateGlobals_->AutoDemo()=std::bit_cast<std::uint32_t>(value); //원문435220의 뒤쪽 자동 데모 전역이며 false/음수/누락을 bool로 정규화하지 않는다.
 }
+void Client::InterpretNetworkOptions() {
+    auto value=std::bit_cast<std::int32_t>(gameplayGlobals_->GameServerPort());configuration_.ReadInt("gameServerPort",value);gameplayGlobals_->GameServerPort()=std::bit_cast<std::uint32_t>(value);
+} //현재 DWORD를 signed ReadInt 임시값으로 전달하고 같은 비트를 쓰며 참조 별칭이나 누락 기본값 재설정을 만들지 않는다.
 // 최초 감지는 영상 내용을 읽거나 디코더를 열지 않는다. 감지 뒤 옵션 변경이 이 값을 자동으로 덮지 않는다.
 void Client::DetectIntroAvailability() { DetectIntroMovie(localStateGlobals_->IntroAvailable(),[this] { std::string path;configuration_.ReadString("introMovie",path);return path; },[this](auto name) { return files_.Probe(name); }); }
 void Client::InterpretOwnerColorOptions() { // 준비 전의 원문 무시와 현재 DWORD·같은 전체 dirty 증가를 보존한다.
@@ -720,6 +723,7 @@ void Client::InterpretOptions() {
     configuration_.ReadInt("maxFPS", maxFps_);
     frameInterval_ = FrameIntervalSeconds(maxFps_);
     InterpretScriptMenuOptions(); // 현재 복원된 설정 순회에서 프레임 옵션 뒤의 원문 치트 관문을 연결한다.
+    InterpretNetworkOptions(); //최초/State 재해석도 같은 현재 게임 포트 ReadInt를 수행한다. 전체435220의 미복원 순서를 완료로 주장하지 않는다.
 }
 
 // 원본 00436260.

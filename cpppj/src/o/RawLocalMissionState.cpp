@@ -99,7 +99,7 @@ bool RawLocalMissionState::Step() {
     case 13: Connected();break;
     case 15: Need(hooks_.takeServer,"State15 실제 서버 인수 부모 미연결")();break;
     case 4: case 12: case 14: case 16: break; //004b874c의State4와 서버 인수 뒤16도004b86bd 공통확정으로 직행하며 다음Poll에서만 소비한다.
-    case 1: case 2: case 3: case 6: case 19: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: return Need(hooks_.parentState,"큰메뉴부모상태미연결")(state_.current[0])==LocalMissionParentResult::ReturnWithoutCommit; //메타20~27/검색34~38도같은큰부모뒤공통144BYTE확정을사용한다.37의새서버몸체는후속이다.
+    case 1: case 2: case 3: case 6: case 19: case 20: case 21: case 22: case 23: case 24: case 25: case 26: case 27: case 28: case 29: case 30: case 31: case 32: case 33: case 34: case 35: case 36: case 37: case 38: case 39: case 40: case 41: case 42: return Need(hooks_.parentState,"큰메뉴부모상태미연결")(state_.current[0])==LocalMissionParentResult::ReturnWithoutCommit; //메타19~38 전체도 같은 실제 큰 부모 뒤 공통144BYTE 확정을 사용한다.
     default: Need(hooks_.invalidState,"미복원상태진단미연결")(state_.current[0]);break;
     }
     return false;

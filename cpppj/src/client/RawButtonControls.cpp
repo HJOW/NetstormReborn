@@ -343,6 +343,7 @@ void RawButtonControls::LayoutMainMenuControls(std::span<GumpControl> controls) 
 }
 // count/visible로 대체하지 않고 원문처럼 고정 등록칸과 현재 serial/dead만 읽는다.
 std::uint32_t RawButtonControls::SerialGump(std::uint32_t serial) const { return FindCurrentGumpSerial(impl_->create.entries,serial,[this](auto token) { return impl_->Node(token); }); }
+std::uint32_t RawButtonControls::GumpSerial(std::uint32_t token) const { const auto* node=impl_->Node(token);if (!node) throw std::out_of_range("현재 Gump serial의 실제 노드 없음");return node->serial; } //원문의 직접+2c 읽기이며 visible/dead/등록 필터를 추가하지 않는다.
 // 원문은 등록 ID를 읽으며 serial이나 명령으로 다시 검색하지 않는다.
 // 채팅/현재 HUD가 같은 원문 알림 등록 ID를 조회한다.
 std::uint32_t& RawButtonControls::ChatAlertSerial() { return impl_->productionGlobals.chatAlertSerial; }

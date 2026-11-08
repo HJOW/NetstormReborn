@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <stdexcept>
 
-namespace netstorm::client { //아직 없는 메타 표시/패킷 부모는 필수 hook 경계로 남긴다.
+namespace netstorm::client { //메타 표시/패킷 부모는 현재 실제 장치에 연결하는 필수 hook 경계다.
 namespace { //현재 CS 바이트와 실제 callback만 접근한다.
 template<class F> const F& Need(const F& function) { if (!function) throw std::logic_error("메타 State28~33의 실제 장치 미연결");return function; } //선택되지 않은 하위는 미리 요구하지 않는다.
 std::uint32_t Read(std::span<const std::uint8_t> bytes,std::size_t at,std::size_t width=4) { //현재 비정렬 DWORD/BYTE의 물리만 확인한다.
@@ -47,7 +47,7 @@ o::LocalMissionParentResult InstallNativeMetaConnectedState(std::uint32_t select
             auto section=std::string_view("CSLGenericFail");switch (g.state.current[0x38/4]) { case 3:section="CSLAlreadyHere";break;case 4:section="CSLBadNameLen";break;case 5:section="CSLServerFull";break;case 6:section="CSLShutdown";break;default:break; }
             g.state.immediate[0x3c/4]=Need(h.tell)(section);Need(h.request)(32);Need(h.resetCamera)();
         }break;
-    case 29:Need(h.closeProgress)();g.metadataMode=1;g.connected=1;Need(h.display)();Need(h.rootLogin)(11);Invalidate(g);Need(h.listen)(g.gamePort);g.state.next[0]=33;break;
+    case 29: { Need(h.closeProgress)();g.metadataMode=1;g.connected=1;Need(h.display)();Need(h.rootLogin)(11);const auto port=g.gamePort;Invalidate(g);Need(h.listen)(port);g.state.next[0]=33;break; } //원문841c는 현재 포트를 네 캐시/통지 초기화 전에 캡처한다.
     case 30:Need(h.progress)(Need(h.translate)("Communicating with Challenge Server."));g.connected=0;break;
     case 31:g.connected=1;break;
     case 32: { const auto serial=Need(h.modalSerial)();if (!serial || *serial!=g.state.current[0x3c/4]) Need(h.request)(20);else g.state.next[0]=32;break; }

@@ -68,12 +68,19 @@ void UberGump::OpenMetaBattleDescription(std::uint32_t text) {
     context.battleDescription=[this](auto description) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("설명 확정의 현재 메타 전송 owner 미연결");editor_->metaTransport->SendBattleDescription(description); };
     rawButtons_->Menus()->ShowBattleDescriptionDialog(std::move(context),initial);
 }
-// 실제19의 World 정리 뒤 같은 Client 물리로만 메타 연결 owner를 처음 만든다.
+//같은 현재 Config/미션 조회와 전체 HTML 공장의 반환 serial을 메타 부모에 전달한다.
+std::uint32_t UberGump::ShowMetaTell(std::string_view section) {
+    const auto result=ShowTellInConfig(client_.HtmlWindowGlobals()->tell,section,0,client_.Configuration(),[this](auto name)->std::optional<std::string> { return mission_ ? mission_->Section(name):std::nullopt; },[this](auto body,auto mode,auto width,auto height) { return rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext(CurrentMapView()),FontBytes(body),mode,width,height); });
+    if (!result.found) client_.WriteDiagnosticLog(0x1d,"TELL cannot find \""+std::string(section)+"\".\n");rebuild_=true;return result.serial;
+} //같은 현재 HTML 공장의 실제 serial0도 보존하고 token/창 개수로 대신 쓰지 않는다.
+//실제19의 World 정리 뒤 같은 Client 물리로 메타 연결 owner를 처음 만들고 현재 큰 부모를 분배한다.
 o::LocalMissionParentResult UberGump::InstallMetaConnectionState(std::uint32_t selected) {
-    if (!editor_ || world_ || !((selected>=20 && selected<=27) || (selected>=34 && selected<=38))) throw std::logic_error("World 없는 실제 메타 연결/검색 부모 계약");
-    if (!editor_->metaTransport) editor_->metaTransport=std::make_unique<MetaConnectionRuntime>(client_,[this](auto text) { static_cast<void>(ShowLoginWaiting(FontBytes(text))); },[this](auto next) { editor_->state->Request(next); },[this] { editor_->state->Run(); },[this](auto section) {
-        const auto result=ShowTellInConfig(client_.HtmlWindowGlobals()->tell,section,0,client_.Configuration(),[this](auto name)->std::optional<std::string> { return mission_ ? mission_->Section(name):std::nullopt; },[this](auto body,auto mode,auto width,auto height) { return rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext(CurrentMapView()),FontBytes(body),mode,width,height); });
-        if (!result.found) client_.WriteDiagnosticLog(0x1d,"TELL cannot find \""+std::string(section)+"\".\n");rebuild_=true;
-    },[this] { rawButtons_->Menus()->RefreshMetaNsInfo(*client_.NsInfoGlobals()); },missionOptions_,[this] { rawButtons_->RecreateUberRoot(); }); //전체67h는일반/메타의같은87BYTE·현재NSInfo·실제004c7880을사용한다.
+    if (!editor_ || world_ || selected<20 || selected>38) throw std::logic_error("World 없는 실제 메타 연결/로그인/감시/검색 부모 계약");
+    if (!editor_->metaTransport) editor_->metaTransport=std::make_unique<MetaConnectionRuntime>(client_,[this](auto text) { static_cast<void>(ShowLoginWaiting(FontBytes(text))); },[this](auto next) { editor_->state->Request(next); },[this] { editor_->state->Run(); },[this](auto section) { static_cast<void>(ShowMetaTell(section)); },[this] { rawButtons_->Menus()->RefreshMetaNsInfo(*client_.NsInfoGlobals()); },missionOptions_,[this] { rawButtons_->RecreateUberRoot(); }); //전체67h는 같은87BYTE·현재 NSInfo·실제004c7880을 사용한다.
+    if (selected>=28 && selected<=33) {
+        NativeMetaConnectedHooks ui;ui.tell=[this](auto section) { return ShowMetaTell(section); };ui.modalSerial=[this]()->std::optional<std::uint32_t> { const auto current=rawButtons_->CurrentDialog();if (!current) return {};return rawButtons_->GumpSerial(current); };ui.closeProgress=[this] { rawButtons_->Menus()->CloseMissionLoading(); };
+        ui.resetCamera=[this] { if (!editor_->metaWorld) throw std::logic_error("메타 ResetCamera의 실제 Session 없음");auto& session=*editor_->metaWorld;const auto& camera=client_.GameplayGlobals()->Camera();CameraHomeState state;state.width=client_.GetScreen().Width();state.height=client_.GetScreen().Height();state.challengeType=client_.ChallengeGlobals()->ParticipantType();state.worldWidth=camera.Target().limits[0];state.worldHeight=camera.Target().limits[1];session.ResetCamera(state,[&session,&state](auto,auto) { session.CommitRequestedCamera(state.width,state.height); }); }; //4340d0의 현재 TYPE108/Renderer+48,+4c와 같은 로딩 깊이·497f20/497960을 사용한다.
+        return editor_->metaTransport->RunConnected(selected,ui);
+    }
     return editor_->metaTransport->Run(selected);
 }

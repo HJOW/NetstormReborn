@@ -1,0 +1,89 @@
+{
+  "unit": 1140,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "8f3195f2 / 20261108-108 CP",
+  "summary": "실제1dh/13BYTE 응답 등록과 State28~33 분배·같은 CS/표시/TCP·현재 HTML serial/카메라/일반 Run을 연결했다. next0 메타 Poll과 장기 gameServerPort6799/설정 재해석·일반/메타 공통 소비도 보완했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1140\\build.log"
+    ]
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12961792,
+      "sha256": "b7a916b97eaf13519d261c03935705ad6e742e2e02e4108dde351d0e919e9f5f"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "2317fbc758b5a936da7f2cf2da31039b6be8478c3dd42e30de1c5c2a2a54ba92"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4b8ac0/4b6dd0/4340d0/4356f1 C/PE·1dh 빈 관찰기/버전1·State28~33/현재 다섯 블록·serial+2c·TYPE108/Renderer+48,+4c·29의 포트 선캡처·같은 실제 전송/포트 owner를 대조했다.",
+  "native": {
+    "gamePortInitial": 6799,
+    "gamePortKey": "gameServerPort",
+    "registration": "  FUN_004ded70(0x1d,FUN_0040b380);\n  FUN_004ded90(0x1d,1,0);\n  FUN_004ded50(0x1d,FUN_004b8ac0);"
+  },
+  "nativeEvidenceSha256": {
+    "0040b380.asm": "526dd30051a5a617e61d5acce86a3af8dd4ff0d2c2dc57b33d3f826a663c78a7",
+    "0040b380.c": "eba1ace804484056afb89c2853d7650e511157d5ca7f553ddce1f693ae6c40a5",
+    "004340d0.asm": "dff35c527d4128d5dc979423ac90102e84e044a6400def5d866a0cd289d13f73",
+    "004340d0.c": "abfe96b68000fd8268b7fc776df0b2278647a7727ddc71228221847c294953f4",
+    "00435220.asm": "5a42b82a36b1914572d0773624d1a867bc38cab260d1e0c8ccc0b07d18f86243",
+    "00435220.c": "06e0cae8103210ca310fc8f45289d9f1e377620979bd868b7b04e0aa483c3278",
+    "004b6dd0.asm": "93c94cb5e1d0860982708fe59c466a29e5e6a51b740d3969c07ac48c5c30405f",
+    "004b6dd0.c": "57657c478577af842a6ca07e8dfab7ee580f20d0415bb313d0067cf606a4bc11",
+    "004b8ac0.asm": "af864384cd7106ab90374561c225626dcd47436e32c931cfc14941dcbacf0b0c",
+    "004b8ac0.c": "503dd16990354f6c24db3ea7a66f643798931a73dedeceeaed5360bb2a51b3c6",
+    "login-registration.c": "46bd02ac87318ec2b60dacef3999cde00a495e7123ceab65c66570ebea2ec0b1"
+  },
+  "sourceOrderAudit": {
+    "replyUsesCurrentSubscriberAndDirectRun": true,
+    "allThreeStateDispatchLayersConnected": true,
+    "sameActualHtmlSerialNotToken": true,
+    "samePreparedCsAndDisplayAndTcp": true,
+    "metaIdlePollConsumesRefreshFlags": true,
+    "cameraReadsParticipantTypeAndRendererLimits": true,
+    "state29ReadsPortBeforeInvalidation": true,
+    "sharedPortPreservesMissingAndSignedBits": true
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "assetDataQuery": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "신규 MP/단위/게임/실제 통신 검사는 제외했으며 동작/안정성을 확정하지 않았다.",
+    "메타 CS 나머지 수신·참가자/카메라/HTML/송신 caller는 잔여다.",
+    "원문 ResetCamera의 다른 참가자만 있고 자기 대상이 없는 미초기화 좌표 분기는 기존 명시 호스트 오류를 유지하며 정의된 좌표를 합성하지 않는다.",
+    "helpWord 전역 캐시 수명과 기존 강제 활성 커서·조기/원격 희생·marker 진단 경계는 잔여다.",
+    "원문 전체 옵션 해석 순서·10.72 전체·x87 전체 입력/픽셀·실제 OS/MP 실행을 입증하지 않았다."
+  ],
+  "remaining": [
+    "메타 게임 Peer의1/2 접속·종료 부모와 나머지 CS 수신/참가자 생성·카메라 caller·HTML 하강/참가 후속·1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI"
+  ]
+}
