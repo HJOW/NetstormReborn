@@ -14,15 +14,18 @@ struct GeyserLifetimeHooks {
 class RawGeyserLifetime {
 public:
     RawGeyserLifetime(SidPool& pool,SquidPostPopList& geysers,const std::uint32_t& editor,GeyserLifetimeHooks hooks); // PATCH의 같은 풀/목록/현재 편집 모드 참조를 빌린다.
+    void EnableNativeBody(); // Native의 물리 슬롯/현재 signed 목록 제거를 선택하고 typed의 선검사는 유지한다.
     bool Handles(Sid sid) const; // 실제50da88 가상 표만 허용한다.
     void PreDestroy(Sid sid,std::uint32_t flags) const; // 프레임 직접 쓰기→표시→현재extra→AI0→목록 압축→Damageable다.
     void PostDestroy(Sid sid,std::uint32_t flags) const; // 현재editor/extra의 섬 정리 뒤 Damageable를 호출한다.
     const SidPool& Pool() const; // 다른 실제 월드의 하위 혼합을 확인한다.
 private:
+    void RemoveNative(Sid sid) const; // 앞방향 현재 count/포인터 조회와 원문 DWORD 감김을 그대로 사용한다.
     void Remove(Sid sid) const; // 모든 중복을 제거하며 물리 꼬리는 지우지 않는다.
     SidPool& pool_; // 죽은 상태도 읽을 실제 raw 저장소다.
     SquidPostPopList& geysers_; //5950dc의 원래 현재 목록이다.
     const std::uint32_t& editor_; //5c85a4를 후처리 호출 시 읽는다.
+    bool nativeBody_{}; // 실제 Native owner만 켜며 일반 직접 입력은 기존false다.
     GeyserLifetimeHooks hooks_; // 선택된 효과 뒤에는 현재 raw/목록을 다시 읽는다.
 };
 }

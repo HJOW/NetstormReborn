@@ -2611,6 +2611,11 @@ target_compile_definitions(netstorm_basefile_read_key_tests PRIVATE ${_netstorm_
 target_sources(netstorm_tests PRIVATE EditorDefaultNameTests.cpp)
 set_source_files_properties(EditorDefaultNameTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_DEFAULT_NAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-default-name-x86.tsv\"")
 # 기존 비MP 공통 삭제의 독립 PE 재생과 현재 전역 관문을 작은 대상으로 검증한다.
+# 공유 삭제의 실제 Native/typed 원문 격자와 현재 전역만 검사하며 MP/패킷/통신은 실행하지 않는다.
+add_executable(netstorm_damageable_lifetime_tests FocusedTestMain.cpp DamageablePreDestroyTests.cpp DamageableReleaseTests.cpp DamageablePostDestroyTests.cpp GeyserLifetimeTests.cpp)
+target_link_libraries(netstorm_damageable_lifetime_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_damageable_lifetime_tests)
+target_compile_definitions(netstorm_damageable_lifetime_tests PRIVATE NETSTORM_DAMAGEABLEPREDESTROY_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageablepredestroy-x86.tsv" NETSTORM_DAMAGEABLERELEASE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageablerelease-x86.tsv" NETSTORM_DAMAGEABLEPOSTDESTROY_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/damageablepostdestroy-x86.tsv" NETSTORM_GEYSER_LIFETIME_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/geyser-lifetime-x86.tsv")
 add_executable(netstorm_common_deletion_tests FocusedTestMain.cpp DestroyLifecycleTests.cpp DestroyGraphTests.cpp ClientPlayerRecordsTests.cpp)
 target_link_libraries(netstorm_common_deletion_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_common_deletion_tests)

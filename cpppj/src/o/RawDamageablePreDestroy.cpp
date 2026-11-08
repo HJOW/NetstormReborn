@@ -43,7 +43,10 @@ RawDamageablePreDestroy::RawDamageablePreDestroy(SidPool& pool,std::span<const s
         throw std::invalid_argument("Damageable preDestroy 공간/하위 효과 누락");
 }
 // 기존 가상/일반 Pop 지원을 확장하지 않고 직접 자산과 하위 경계만 검사한다.
+void RawDamageablePreDestroy::EnableNativeBody() { if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("Native Damageable 전처리 판본 오류");nativeBody_=true; } // 장기 실제 owner의 구성 때만 선택하며 게임 상태/난수는 쓰지 않는다.
+// 독립 typed의 추가 선검사는 Native 원문 몸체 앞에 실행하지 않는다.
 void RawDamageablePreDestroy::Validate(Sid sid,std::uint32_t flags) const {
+    if (nativeBody_) return;
     const auto raw=pool_.AllocatedBytes(sid);
     const auto typeEnd=pool_.Edition()==OriginalEdition::Patch1078 ? 188U : 171U;
     if ((raw[kState]&kUnsupported) || raw[kType]<kFirstAssetTypeNumber || raw[kType]>=typeEnd)
@@ -67,7 +70,7 @@ void RawDamageablePreDestroy::SoundAt(Sid sid,DamageableSound sound) const {
 }
 // extra의 진입 조건은 효과 중 extra가 바뀌어도 다시 평가하지 않는다.
 void RawDamageablePreDestroy::PreDestroy(Sid sid,std::uint32_t flags) const {
-    Validate(sid,flags);RunPreDestroy(sid,flags,hooks_.releaseContained,false);
+    if (!nativeBody_) Validate(sid,flags);RunPreDestroy(sid,flags,hooks_.releaseContained,nativeBody_);
 }
 // 선택된 실제 부모는 파편/소리보다앞에서Spot이나공통장부를미리읽지않는다.
 void RawDamageablePreDestroy::PreDestroyNative(Sid sid,std::uint32_t flags,const std::function<void(Sid)>& releaseContained) const { RunPreDestroy(sid,flags,releaseContained,true); }
@@ -80,7 +83,7 @@ void RawDamageablePreDestroy::RunPreDestroy(Sid sid,std::uint32_t flags,const st
             RawContainedFinder finder(pool_,finderState_);
             // yesIKnow=1로 dead 부모도 허용한다. 소리 콜백 뒤 현재 kind/타입 전역을 다시 읽는다.
             for (Sid current=finder.Begin(sid,true);current.value;current=finder.Next()) {
-                if (Read(pool_.Slot(current),kKind,2)==state_.priestType) hooks_.sound({DamageableSound::PriestFree,0,0});
+                if (Read(pool_.Slot(current),kKind,2)==state_.PriestType()) hooks_.sound({DamageableSound::PriestFree,0,0});
             }
         }
         if (finderState_.Boss() && !(flags&kNoRelease)) { if (!releaseContained) throw std::logic_error("Damageable Native 삭제의 선택된 실제 해방 장치 미연결");releaseContained(sid); }

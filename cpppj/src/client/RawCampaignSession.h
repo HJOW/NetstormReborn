@@ -670,6 +670,11 @@ public:
     const o::CanonDecoderDiagnostics& DecoderDiagnostics() const;
     // 화면의 현재 HP/최대 HP 조회는 실제 SquidReward를 사용한다.
     const o::SquidReward& HitPoints() const;
+    void EmitDamageableCollapse(o::Sid sid); // 실제 선택된 같은 붕괴 파편 효과다. caller가 전체 Runtime을 보유한다.
+    void EmitDamageableExplosion(o::Sid sid); // 같은 실제 Impact/폭발 파편 효과를 사용한다.
+    void SpawnReleasedPriest(float x,float y,std::uint32_t type,std::uint16_t word); // 현재 실제 사제 나선 생성기에 원문 인자를 넘긴다.
+    void DropDamageableDude(o::Sid sid,std::int32_t index,bool random); // 현재 실제 Dude 드롭 몸체를 호출한다.
+    void DropDamageableIsland(float x,float y,std::uint32_t flags,std::uint32_t owner); // 현재 실제 건설의 받침 정리다.
     o::AiWalletMemoryAccess BorrowAiWalletMemory(); // 선택한 현재 brain의 실제 메모리/전체 Runtime을 이번 호출 범위로 빌린다.
     void GroundImpact(float x,float y); //470ac0의 실제 같은 Dude/공유난수/지면 시각 효과를 메타 슬롯 효과에도 제공한다.
     // 실제 사제 목록/움직임/보호막 상태의 읽기 경계를 빌린다.

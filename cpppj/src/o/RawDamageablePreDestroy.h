@@ -13,6 +13,8 @@ struct DamageableSoundEvent {
 // 피해가능객체 전처리 삭제 처리 중 조회·갱신하는 상태 묶음이다.
 struct DamageablePreDestroyState {
     std::uint32_t priestType{158}; // 005412d0 / CD 0051cbbc: 종속 kind WORD와 비교하는 DWORD다.
+    const std::uint32_t* sharedPriestType{}; // Native의 실제005412d0을 같은 Client owner에서 빌린다.
+    std::uint32_t PriestType() const { return sharedPriestType ? *sharedPriestType:priestType; } // 각 현재 내용물 비교에서 사제 TYPE를 다시 읽는다.
 };
 // 피해가능객체 전처리 삭제 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct DamageablePreDestroyHooks {
@@ -30,6 +32,7 @@ public:
     RawDamageablePreDestroy(SidPool& pool,std::span<const std::uint8_t> spots,const ContainedFinderState& finderState,
         const DamageablePreDestroyState& state,DamageablePreDestroyHooks hooks);
     // 자산 상태/타입과 연결된 공통 경계를 효과 전에 검사한다.
+    void EnableNativeBody(); // 실제 PATCH 장기 owner만 원문 위치의 검사/효과를 선택하며 typed 선검사를 추가하지 않는다.
     void Validate(Sid sid,std::uint32_t flags) const;
     // 0044b4b0 / CD 004615e0. extra&9는 첫 진입에서만 검사하고 공통 body는 항상 호출한다.
     void PreDestroy(Sid sid,std::uint32_t flags) const;
@@ -51,7 +54,8 @@ private:
     const ContainedFinderState& finderState_;
     // state_: 처리 중 조회·갱신하는 상태 (const DamageablePreDestroyState).
     const DamageablePreDestroyState& state_;
-    // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (DamageablePreDestroyHooks).
+    bool nativeBody_{}; // 명시 실제 Native owner의 선택이며 독립 typed의 기존 계약은 기본false다.
+    // hooks_: 실제 외부 효과와 같은 공통 부모이며 장기 Native 장치는 Session을 캡처하지 않는다.
     DamageablePreDestroyHooks hooks_;
 };
 // Carrier의 Damageable 경계만 같은 풀의 실제 접두/공통 호출로 교체한다.

@@ -104,20 +104,20 @@ struct DamageableScene {
     std::string Globals() const { return std::to_string(finderState.boss ? 1 : 0)+','+std::to_string(finderState.containedType)+','+std::to_string(state.priestType); }
 };
 // 직접 Damageable와 실제 Carrier 두 경로를 각각 실제 PE의 출력과 대조한다.
-void Replay(std::string_view edition) {
+void Replay(std::string_view edition,bool native=false) {
     DamageableScene scene(edition=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072);std::size_t count=0;
     CHECK(Fixture().size()==3*kRowsPerEdition);
     // 후보 상태/바뀐 next/현재 전역을 구현에서 추정하지 않고 독립 행을 재생한다.
     for (const auto& row:Fixture()) {
         if (row[0]!=edition) continue;
-        scene.Prepare(row);RawDamageablePreDestroy damageable(scene.pool,scene.spots,scene.finderState,scene.state,scene.Hooks());
+        scene.Prepare(row);RawDamageablePreDestroy damageable(scene.pool,scene.spots,scene.finderState,scene.state,scene.Hooks());if (native) damageable.EnableNativeBody();
         if (row[1]=="D") damageable.PreDestroy(kSource,Number(row[7]));
         else {
             RawCarrierPreDestroy carrier(scene.pool,scene.finderState,MakeDamageablePreDestroyHooks(scene.pool,damageable,{{},{},[&] { scene.Record("T"); }}));
             carrier.PreDestroy(kSource,Number(row[7]));
         }
         const bool same=scene.Globals()==row[14] && scene.events==row[15] && scene.Slots()==row[16];
-        CHECK(same && scene.validations==(row[1]=="D" ? 1 : 2));
+        CHECK(same && scene.validations==(native ? 0 : (row[1]=="D" ? 1 : 2)));
         if (!same) { std::printf("Damageable %s 행 %zu: 기대 %s / 실제 %s\n",std::string(edition).c_str(),count,row[15].c_str(),scene.events.c_str());break; }
         ++count;
     }
@@ -150,4 +150,14 @@ TEST_CASE(damageable_predestroy_guards_and_abstract_coordinates) {
         CHECK(Throws([&] { blocked.PreDestroy(kSource,1); }));CHECK(scene.events.empty());
         SidPool other(edition,kCapacity,false);CHECK(Throws([&] { MakeDamageablePreDestroyHooks(other,damageable,{}); }));
     }
+}
+
+// 같은1632행의 원문 출력은 Native에서 추가 C++ 선검사 없이도 동일해야 한다.
+TEST_CASE(damageable_predestroy_long_native_patch_x86) { Replay("originals",true); }
+
+// 첫 priestFree 소리가 현재 사제 TYPE를 바꾸면 다음 contained 후보 비교도 새 DWORD를 읽는다.
+TEST_CASE(damageable_predestroy_reads_current_priest_after_sound) {
+    DamageableScene scene(OriginalEdition::Patch1078);auto parent=scene.slots[0],first=scene.slots[1],second=scene.slots[2];std::fill(parent.begin(),parent.end(),std::uint8_t{});std::fill(first.begin(),first.end(),std::uint8_t{});std::fill(second.begin(),second.end(),std::uint8_t{});parent[10]=74;Put(parent,6,60,2);Put(parent,14,std::bit_cast<std::uint32_t>(1.0F));Put(parent,18,std::bit_cast<std::uint32_t>(1.0F));first[10]=second[10]=6;Put(first,4,61,2);Put(first,18,158,2);Put(second,18,159,2);scene.spots[257]=6;scene.finderState.boss=false;
+    std::uint32_t priest=158,sounds{},bases{};scene.state.priestType=999;scene.state.sharedPriestType=&priest;DamageablePreDestroyHooks hooks;hooks.collapse=[](auto) { CHECK(false); };hooks.explosion=hooks.collapse;hooks.sound=[&](const auto& event) { CHECK(event.sound==DamageableSound::PriestFree);++sounds;priest=159; };hooks.releaseContained=[](auto) { CHECK(false); };hooks.validateBase=[](auto,auto) { CHECK(false); };hooks.base=[&](auto,auto) { ++bases; };
+    RawDamageablePreDestroy body(scene.pool,scene.spots,scene.finderState,scene.state,std::move(hooks));body.EnableNativeBody();body.PreDestroy(Sid{50},0);CHECK(sounds==2 && bases==1 && scene.state.priestType==999);
 }

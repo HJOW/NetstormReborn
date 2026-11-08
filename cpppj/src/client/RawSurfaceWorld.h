@@ -9,6 +9,10 @@
 #include "o/RawBattleBroadcast.h" // 같은현재연결표를사용하는Squid패킷송신경계다.
 #include "o/RawCheckingFlag.h" // Editor/Session이같은Client진단owner를빌린다.
 #include "o/RawGameAuxState.h"
+#include "o/RawDamageablePreDestroy.h" // 같은 장기 피해가능 객체 전처리/검색 상태를 공유한다.
+#include "o/RawDamageableRelease.h" // 실제 현재 권한/TYPE/공간으로 종속을 해방한다.
+#include "o/RawDamageablePostDestroy.h" // 같은 HP/Graph/목록/Host로 후처리한다.
+#include "o/RawGeyserLifetime.h" // 실제 간헐천 고유 수명 접두를 보존한다.
 #include "o/RawAssetPostPop.h" //장기Geyser가현재TYPE/목록과같은기존원문몸체를빌린다.
 #include "o/RawNuggetRegular.h" //너겟의기존왕복/낙하/현재가상삭제를장기기본Host에연결한다.
 #include "o/RawNuggetPostPop.h" //실제두Regular확보와같은Host의기본부모다.
@@ -60,6 +64,16 @@ struct RawSurfaceDeletionBindings {
     o::SquidDeletionHooks hooks; // 현재 Session의 기존 실제 파생 forward를 그대로 사용한다.
     std::function<std::shared_ptr<void>()> pin; // 이미 공개된 실제 전체 Runtime을 선택 호출 동안만 보유한다.
 };
+// 실제 현재 finder/마스크 owner와 선택된 큰 생성/시각 효과를 Client 수명으로 빌린다.
+struct RawSurfaceDamageableDevices {
+    std::shared_ptr<o::ContainedFinderState> finder; // 같은 GameplayGlobals의 현재 검색 상태이며 값 사본이 아니다.
+    std::shared_ptr<const std::uint32_t> allowedGenus; // 실제00542640 owner를 aliasing 소유권으로 보존한다.
+    std::function<void(o::Sid)> collapse,explosion; // 선택된 실제 파편/폭발 모듈만 현재 전체 Runtime을 빌린다.
+    std::function<void(const o::DamageableSoundEvent&)> sound; // 실제 같은 Client 소리 장치로 전역/위치 소리를 재생한다.
+    std::function<void(float,float,std::uint32_t,std::uint16_t)> spawnPriest; // 실제 해방 사제 생성에 원문 type/WORD를 전달한다.
+    std::function<void(o::Sid,std::int32_t,bool)> dropDude; // 실제 같은 Dude 드롭 생성기의 현재 호출이다.
+    std::function<void(float,float,std::uint32_t,std::uint32_t)> dropIsland; // 선택된 실제 받침 정리의 좌표/flags/owner를 전달한다.
+};
 struct RawSurfaceResourceDevices { //같은Client게임난수와선택된큰자산장치만장기로빌린다.
     std::function<o::GameRandom&()> random; //새seed/snapshot없이실제현재GameRandom한개를조회한다.
     std::function<void(o::Sid)> carrierCheck; //실제가상cc의현재Carrier검사를선택위치에서호출한다.
@@ -103,6 +117,7 @@ private:
     o::RawCheckingFlag checking_; // 대여/World반납뒤에도같은현재Client진단DWORD를읽는다.독립저장소기본값은0이다.
     o::SquidPostPopDevices postPopDevices_; //현재실제Client AI/로컬owner/선택의장기장치다.
     std::weak_ptr<const RawSurfacePopBindings> popRuntime_; //현재typed장치/외부Kernel만짧게빌리고반납뒤장기기본전송을사용한다.
+    RawSurfaceDamageableDevices damageableDevices_; // 실제 Client와 장기 전역만 소유하며 Session 주소를 저장하지 않는다.
     RawSurfaceDeletionDevices deletionDevices_; // 실제 Client 장치만 장기 보관하며 Session을 소유하지 않는다.
     std::weak_ptr<const RawSurfaceDeletionBindings> deletionRuntime_; // 현재 파생 종속 효과만 weak로 빌린다.
     void RestoreDeletionGlobals(); // fresh 대여와 같은 owner 결합 뒤 현재 원문 주소만 복구하며 값은 쓰지 않는다.
@@ -152,6 +167,14 @@ public:
     std::uint32_t CurrentProcessSelection() const; //Native공통삭제의선택비교위치에서실제Client전체DWORD를현재조회한다.
     void BindResourceDevices(RawSurfaceResourceDevices devices); //첫자원파생앞에실제장기장치만연결하며난수/생성/대여는실행하지않는다.
     void BindRewardDevices(RawSurfaceRewardDevices devices); // 첫 Native 사용 전에 실제 장치만 연결하며 SP/난수/World를 초기화하지 않는다.
+    void BindDamageableDevices(RawSurfaceDamageableDevices devices); // 첫 실제 모듈 전 현재 owner/장치만 결합한다.
+    o::DamageablePreDestroyState& DamageablePreGlobals(); // 같은 사제 TYPE의 장기 전역 뷰다.
+    o::DamageableReleaseState& DamageableReleaseGlobals(); // 같은 장기 허용 genus를 실제 소비자가 공유한다.
+    o::DamageablePostDestroyState& DamageablePostGlobals(); // 현재 battle/boss/population/사건의 장기 owner다.
+    o::RawDamageablePreDestroy& DamageablePre(); // 현재 실제 전처리/해방/공통 Pre를 World 없이 제공한다.
+    o::RawDamageableRelease& DamageableRelease(); // 현재 물리의 실제 해방 몸체를 공유한다.
+    o::RawDamageablePostDestroy& DamageablePost(); // 현재 실제 후처리/공통 Post를 공유한다.
+    o::RawGeyserLifetime& GeyserLifetime(); // 같은 지면 목록/기본프레임/현재 편집 모드를 사용한다.
     void BindDeletionDevices(RawSurfaceDeletionDevices devices); // 첫 공통 삭제 전에 실제 UI/소리 장치만 연결한다.
     void BindDeletionRuntime(const std::shared_ptr<const RawSurfaceDeletionBindings>& runtime); // 현재 World의 실제 파생 종단만 짧게 빌린다.
     o::SquidDestroyLifecycle& CommonDeletion(); // 같은 장기 공통 깊이/장부/Graph/보상을 실제 Native caller가 공유한다.
@@ -272,6 +295,12 @@ private:
     o::SquidRewardState rewardState_; // Session 이후에도 같은 현재 장기 모드/TYPE/비율을 읽는다.
     std::unique_ptr<o::SquidReward> reward_; // Pool/TYPE/장부보다 먼저 반납하며 지역 Session callback을 저장하지 않는다.
     std::unique_ptr<o::SquidDestroyLifecycle> commonDeletion_; // 같은 장기 HP/Graph/장부보다 먼저 반납한다.
+    o::DamageablePreDestroyState damageablePreState_;o::DamageableReleaseState damageableReleaseState_; // 두 실제 장기 TYPE/허용 마스크 owner다.
+    o::DamageablePostDestroyState damageablePostState_; // 실제 현재 모드/목록/사건을 같은 주소에서 읽는다.
+    std::unique_ptr<o::RawDamageableRelease> damageableRelease_; // Pool/TYPE/검색 전역보다 먼저 반납한다.
+    std::unique_ptr<o::RawDamageablePreDestroy> damageablePre_; // 장기 실제 효과 장치와 같은 공통 Pre를 빌린다.
+    std::unique_ptr<o::RawDamageablePostDestroy> damageablePost_; // 같은 HP/목록/공통 Post를 빌린다.
+    std::unique_ptr<o::RawGeyserLifetime> geyserLifetime_; // 같은 피해가능 객체 수명보다 먼저 반납한다.
     std::unique_ptr<NativeFortSaveVirtual> fortSaveVirtual_; //같은 Storage/GameAux를 빌리는 실제 조회기이며 해당 소유자보다 먼저 반납한다.
     std::unique_ptr<o::RawNuggetPostPop> resourceNugget_; //같은Host/난수/확보메모리의너겟후처리다.
     std::unique_ptr<o::RegularProcess> resourceRegular_; //할당과생성사이동일new28의소유권만보존한다.

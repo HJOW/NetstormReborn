@@ -584,6 +584,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<DaisContentNoticeState> daisNoticeState; // 현재 사제/로컬/cue의 별도 포획 내용물 통지 상태다.
     std::unique_ptr<RawDaisContentNotice> daisNotice; // 내용물 부모+24에서 실제 제단O/원래 owner를 갱신한다.
     std::function<void(Sid)> ritualExplosion; // 공통 피해 전처리와 제단24가 같은 실제4605d0 폭발 효과를 사용한다.
+    std::function<void(Sid)> collapseEffect; // 같은 실제 Native 붕괴 장치의 현재 Session 소유 콜백이다.
     std::unique_ptr<RawDaisRegular> daisRegular; // 기존 원본 자격/의식 이동/단계 진행이다.
     std::unique_ptr<RawPriestSacrificeRequest> sacrificeRequest; // 사용자 입력과 서버40h가 공유하는 wrapper다.
     std::function<void(std::uint32_t)> learnNewTechnology; //고정 Session 소유자가 Impl 생성 뒤 연결하는 같은492a30 진입이다. 실제 이벤트는 생성 완료 뒤 호출한다.
@@ -756,7 +757,7 @@ struct RawCampaignSession::Impl {
     GeyserMinedState geyserMinedState; // 현재 권한/타입을 각 수신 직전 실제 전역에서 공급한다.
     FormPacketHeader miningHeader{0x5b,1,6}; //40ac20의 실제 초기 메시지/프로토콜/길이다.
     std::unique_ptr<RawGeyserMined> geyserMined; // 같은 난수/공간/가상 삭제/생성의 기존 원본 수량 몸체다.
-    std::unique_ptr<RawGeyserLifetime> geyserLifetime; // 고갈한 지면의 고유 AI/목록/기본 프레임과 공통 수명이다.
+    std::unique_ptr<RawGeyserLifetime> localGeyserLifetime;RawGeyserLifetime* geyserLifetime{}; // 고갈한 지면의 고유 AI/목록/기본 프레임과 공통 수명이다.
     std::unique_ptr<RawCarrierMining> carrierMining; // 실제 너겟 생성 뒤 송신→로컬 수신을 실행한다.
     CarrierEscapeState carrierEscapeState; // 실제 겹친 방향표17DWORD다.
     std::unique_ptr<RawCarrierEscape> carrierEscape; // 현재 경로 깊이/공간/임시BFS/새이동을 연결한다.
@@ -796,10 +797,10 @@ struct RawCampaignSession::Impl {
     FactoryInputState factoryInputState{globals.editor,playerState.battleOwner}; //현재원본editor/로컬소유자와명령토큰이다.
     std::unique_ptr<RawFactoryInput> factoryInput; //같은자금/Host그림·예약/실제요청/연구/공통부모를합성하는가상입력이다.
     std::unique_ptr<RegularProcess> factoryUpgradePending; //원본 new(0x28) 성공 뒤 현재 사건/지연으로 구성할 실제 예약 메모리다.
-    DamageablePreDestroyState damageablePreState; // 같은 사제 타입을 읽는 실제 공통 삭제 전역이다.
-    DamageableReleaseState damageableReleaseState; // 해방 요청마다 같은 현재 전투 모드를 공급한다.
-    DamageablePostDestroyState damageablePostState; // 삭제 후의 현재 전투/권한 전역이다.
-    std::unique_ptr<RawDamageableRelease> damageableRelease; // 같은 풀/내용물/사제 실제 생성으로 해방한다.
+    DamageablePreDestroyState localDamageablePreState;DamageablePreDestroyState& damageablePreState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->DamageablePreGlobals():localDamageablePreState}; // 같은 사제 타입을 읽는 실제 공통 삭제 전역이다.
+    DamageableReleaseState localDamageableReleaseState;DamageableReleaseState& damageableReleaseState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->DamageableReleaseGlobals():localDamageableReleaseState}; // 해방 요청마다 같은 현재 전투 모드를 공급한다.
+    DamageablePostDestroyState localDamageablePostState;DamageablePostDestroyState& damageablePostState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->DamageablePostGlobals():localDamageablePostState}; // 삭제 후의 현재 전투/권한 전역이다.
+    std::unique_ptr<RawDamageableRelease> localDamageableRelease;RawDamageableRelease* damageableRelease{}; // 같은 풀/내용물/사제 실제 생성으로 해방한다.
     std::unique_ptr<RawBombPreDestroy> bombPre; // 실제502370의고유41e960 전처리다.다른Bomb 파생은공통전처리다.
     BombTargetState devastationTargetState;BombBlastState devastationBlastState; // 같은 현재 권한/동맹을 각 실제 자격/효과 위치에 공급한다.
     BombRegularState devastationRegularState;BombEffectState devastationEffectState; // 주기/수신 상태와 실제 비용 누적을 같은 Session에서 소유한다.
@@ -815,9 +816,9 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<void,void(*)(void*)> pendingBombTimerStorage{nullptr,[](void* memory) { ::operator delete(memory); }}; // new40 경계의 미생성 메모리를 예외 시에도 해제한다.
     std::array<std::uint8_t,222> typedBombTimerPacket{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
     std::span<std::uint8_t> bombTimerPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedBombTimerPacket)};bool writingBombTimer{}; // 최대100개 WORD 대상의 실제7d 송신 버퍼다.
-    std::unique_ptr<RawDamageablePreDestroy> damageablePre; // 공통 삭제와 같은 깊이/Graph/장부를 사용한다.
+    std::unique_ptr<RawDamageablePreDestroy> localDamageablePre;RawDamageablePreDestroy* damageablePre{}; // 공통 삭제와 같은 깊이/Graph/장부를 사용한다.
     std::unique_ptr<RawFlyerPreDestroy> flyerPre; //144의 현재+8 WORD 대상 삭제 뒤 실제 Damageable Pre다.
-    std::unique_ptr<RawDamageablePostDestroy> damageablePost; // 같은 실제 예약/다리/공통 후처리다.
+    std::unique_ptr<RawDamageablePostDestroy> localDamageablePost;RawDamageablePostDestroy* damageablePost{}; // 같은 실제 예약/다리/공통 후처리다.
     std::unique_ptr<RawVortexPreDestroy> vortexPre; // 실제 신전의 목록/섬/Player 정리를 담당한다.
     std::unique_ptr<RawBuriedPostPop> buriedPostPop; // 같은 boss/로딩 전역과 공통 장부를 사용하는 저장 buried 후처리다.
     std::unique_ptr<RawBuriedRegular> buriedRegular; // 같은 현재 Pool/Frame/공유 난수의 오벨리스크 사건 처리다.
@@ -2460,7 +2461,7 @@ struct RawCampaignSession::Impl {
         hooks.assertion=SessionMissing<void,FortObjectSaveAssertion>();return hooks;
     }
     // 실제 PostDestroy의 세 전역은 각 호출 직전에 같은 현재 월드에서 읽는다.
-    void PrepareDamageablePost() { damageablePostState.battle=core.ownerMode.battle;damageablePostState.dudeCount=static_cast<std::int32_t>(dudePopulation.count); }
+    void PrepareDamageablePost() { if (!world.Storage()->UsesNativeTransmissionDevices()) { damageablePostState.battle=core.ownerMode.battle;damageablePostState.dudeCount=static_cast<std::int32_t>(dudePopulation.count); } } // Native는 각 원문 소비 위치의 같은 장기 getter를 사용해 사전 snapshot을 만들지 않는다.
     // 실제 Damageable 해방/공통 삭제와 신전 Pre를 같은 현재 월드에 조립한다.
     void ConnectDamageable() {
         if (dudeDrop) throw std::logic_error("실제 Dude 드롭 중복 연결");
@@ -2494,7 +2495,7 @@ struct RawCampaignSession::Impl {
         release.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
         release.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };release.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         release=MakePriestSpawnHooks(core.pool,priests->Spawn(),std::move(release));
-        damageableRelease=std::make_unique<RawDamageableRelease>(core.pool,core.types,core.spots,contentFinder,damageableReleaseState,std::move(release));
+        if (world.Storage()->UsesNativeTransmissionDevices()) damageableRelease=&world.Storage()->DamageableRelease();else { localDamageableRelease=std::make_unique<RawDamageableRelease>(core.pool,core.types,core.spots,contentFinder,damageableReleaseState,std::move(release));damageableRelease=localDamageableRelease.get(); }
         auto pre=services.damageablePre;
         if (!pre.collapse) pre.collapse=[this](Sid sid) { static_cast<void>(particles->AddShrapnel(sid,ShrapnelKind::Collapse)); };
         if (!pre.explosion) pre.explosion=[this](Sid sid) {
@@ -2512,7 +2513,7 @@ struct RawCampaignSession::Impl {
         pre.base=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PreDestroy(sid,flags); };
         pre.releaseContained=[this](Sid sid) { damageableReleaseState.battle=core.ownerMode.battle;damageableRelease->Release(sid); };
         bombPre=std::make_unique<RawBombPreDestroy>(core.pool,BombPreDestroyHooks{pre.explosion,[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("Bomb 실제폭발음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("explosion.wav"),0,0); },pre.base}); // 큰폭발과공통전처리는같은실제몸체를공유한다.
-        ritualExplosion=pre.explosion;damageablePre=std::make_unique<RawDamageablePreDestroy>(core.pool,core.spots,contentFinder,damageablePreState,std::move(pre));priests->BindDamageable(*damageablePre);
+        collapseEffect=pre.collapse;ritualExplosion=pre.explosion;if (world.Storage()->UsesNativeTransmissionDevices()) damageablePre=&world.Storage()->DamageablePre();else { localDamageablePre=std::make_unique<RawDamageablePreDestroy>(core.pool,core.spots,contentFinder,damageablePreState,std::move(pre));damageablePre=localDamageablePre.get(); }priests->BindDamageable(*damageablePre);
         flyerPre=std::make_unique<RawFlyerPreDestroy>(core.pool,FlyerPreDestroyHooks{[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); },[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); }});
         auto post=services.damageablePost;
         if (!post.dropDude) post.dropDude=[this](Sid source,std::int32_t index,bool randomPoint) { dudeDrop->Drop(source,index,randomPoint); };
@@ -2521,7 +2522,7 @@ struct RawCampaignSession::Impl {
         post.hasBridgeFall=[this](Sid sid) { return HasScheduledBridgeFall(core.processes,sid); };post.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         post.displayUpdate=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };post.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         post.base=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PostDestroy(sid,flags); };
-        damageablePost=std::make_unique<RawDamageablePostDestroy>(core.pool,core.hash,core.types,core.frames,hp,core.neighbors,damageablePostState,std::move(post));
+        if (world.Storage()->UsesNativeTransmissionDevices()) damageablePost=&world.Storage()->DamageablePost();else { localDamageablePost=std::make_unique<RawDamageablePostDestroy>(core.pool,core.hash,core.types,core.frames,hp,core.neighbors,damageablePostState,std::move(post));damageablePost=localDamageablePost.get(); }
         VortexPreDestroyHooks vortex;vortex.islandNumber=[this](float x,float y) { return ownership->IslandNumber(x,y); };vortex.islandExists=[this](std::int32_t island) { return islands->Exists(island)!=0; };
         vortex.islandTemple=[this](std::int32_t island) { return islands->Temple(island); };
         vortex.clearIslandTemple=[this](std::int32_t island) { if (!islands->Exists(island)) throw std::logic_error("신전 삭제의 실제 섬 부재 진단");islands->Temple(island,0);services.ownership.refreshProduction(); };
@@ -2536,7 +2537,7 @@ struct RawCampaignSession::Impl {
         geyser.damageablePre=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };
         geyser.damageablePost=[this](Sid sid,std::uint32_t flags) { PrepareDamageablePost();damageablePost->PostDestroy(sid,flags); };
         geyser.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.Now());buildingEffects->DropIsland(x,y,flags,owner); };
-        geyserLifetime=std::make_unique<RawGeyserLifetime>(core.pool,assetState.Geysers(),globals.editor,std::move(geyser));
+        if (world.Storage()->UsesNativeTransmissionDevices()) geyserLifetime=&world.Storage()->GeyserLifetime();else { localGeyserLifetime=std::make_unique<RawGeyserLifetime>(core.pool,assetState.Geysers(),globals.editor,std::move(geyser));geyserLifetime=localGeyserLifetime.get(); }
     }
     // 각 명시 요청의 소유자·모드·타입만 준비한다. server/boss는 원문 소비 위치에서 공유 주소를 읽는다.
     void PrepareConstruction() {
@@ -4421,6 +4422,12 @@ void RawCampaignSession::RecheckCurrentSelection() {
 std::uint32_t RawCampaignSession::PlayerKnown() const { return impl_->playerState.playerKnown; }
 // 비영 Player brain을 이미 선택한 호출만 현재 전체 Runtime을 보유하고 같은 실제 메모리를 빌린다.
 o::AiWalletMemoryAccess RawCampaignSession::BorrowAiWalletMemory() { return {&impl_->aiMemory,impl_->gameplayGlobals->PinCurrentRuntime(*this)}; }
+// 선택된 큰 효과의 실제 같은 Session 모듈만 사용한다. Client caller가 실제 Runtime pin을 보유한다.
+void RawCampaignSession::EmitDamageableCollapse(o::Sid sid) { if (!impl_->collapseEffect) throw std::logic_error("실제 붕괴 효과 미연결");impl_->collapseEffect(sid); }
+void RawCampaignSession::EmitDamageableExplosion(o::Sid sid) { if (!impl_->ritualExplosion) throw std::logic_error("실제 폭발 효과 미연결");impl_->ritualExplosion(sid); } // 실제 같은 Impact/파편 몸체다.
+void RawCampaignSession::SpawnReleasedPriest(float x,float y,std::uint32_t type,std::uint16_t word) { impl_->priests->Spawn().Spawn(x,y,type,word); } // 현재 권한/공간/원문 WORD의 실제 사제 생성이다.
+void RawCampaignSession::DropDamageableDude(o::Sid sid,std::int32_t index,bool random) { impl_->dudeDrop->Drop(sid,index,random); } // 같은 실제 생성/작업/통지 목록을 사용한다.
+void RawCampaignSession::DropDamageableIsland(float x,float y,std::uint32_t flags,std::uint32_t owner) { if (!impl_->buildingEffects) throw std::logic_error("실제 받침 정리 모듈 미연결");impl_->PrepareBuilding(impl_->core.processState.Now());impl_->buildingEffects->DropIsland(x,y,flags,owner); } // 실제 현재 건설 정리기를 같은 인자로 호출한다.
 // 원본 로더의 현재 편집 조건과 같은 저장소를 직접 읽는다.
 std::uint32_t RawCampaignSession::Editor() const { return impl_->globals.editor; }
 // Get은 같은 분산배열의 값 비트를 모으고 float로 재해석하며 금액 변환/가산을 하지 않는다.

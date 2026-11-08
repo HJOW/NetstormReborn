@@ -4,6 +4,7 @@
 #include "o/RawSquidNeighbors.h"
 #include "o/SquidReward.h"
 #include <array>
+#include <bit> // 원문 population DWORD를 같은 signed 비트로 해석한다.
 #include <functional>
 
 namespace netstorm::o {
@@ -21,6 +22,12 @@ struct DamageablePostDestroyState {
     const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 드롭·섬·주변 피해 효과 뒤 현재 권한을 재조회한다.
     const std::uint32_t* sharedSilentSurfaceType{}; // 실제005412a4는 보상과 같은 장기 Client TYPE 번호를 빌린다.
     std::uint32_t SilentSurfaceType() const { return sharedSilentSurfaceType ? *sharedSilentSurfaceType : silentSurfaceType; } // 앞선 드롭/finder 효과 뒤 현재 번호를 읽으며 독립/CD는 기존 값을 쓴다.
+    const bool* sharedBattle{}; // 원문의 같은00594fbc 현재 bool을 빌린다.
+    const SquidPostPopList* sharedDudePopulation{}; //0055a4f8의 현재 signed 개수를 같은 장기 목록에서 읽는다.
+    const std::uint32_t* sharedDamageEvent{}; // 같은 Client의 실제 피해 Regular DWORD를 빌린다.
+    bool Battle() const { return sharedBattle ? *sharedBattle:battle; } // 섬/드롭 효과 뒤 현재 전투 모드를 읽는다.
+    std::int32_t DudeCount() const { return sharedDudePopulation ? std::bit_cast<std::int32_t>(sharedDudePopulation->Count()):dudeCount; } // 수량 계산 시점의 현재 population을 사용한다.
+    std::uint32_t DamageEvent() const { return sharedDamageEvent ? *sharedDamageEvent:damageEvent; } // 각 현재 예약의 실제 사건 번호다.
 };
 // 해당 하위 몸체가 필요한 경우 성공값/noop으로 바꾸지 않는 필수 효과 연결이다.
 struct DamageablePostDestroyHooks {

@@ -154,3 +154,14 @@ TEST_CASE(DamageablePostDestroy_SharedBossRecheckedBetweenBridges) {
         if (destroyed!=2) std::printf("공유 권한 다리 입력: 판본%d, 첫 프레임%u, 최종 프레임%u/%u, 통지%zu, 삭제%zu, boss%d\n",static_cast<int>(edition),firstFrame,Get(scene.pool.Slot(Sid{63}),scene.Frame(),scene.FrameWidth()),Get(scene.pool.Slot(Sid{64}),scene.Frame(),scene.FrameWidth()),notified,destroyed,boss); // 실패한 신규 입력의 실제 프레임과 효과 횟수를 보존한다.
     }
 }
+
+// 현재 population의 signed20명 경계는 오래된 state 사본 대신 같은 장기 count를 읽는다.
+TEST_CASE(DamageablePostDestroy_CurrentPopulationControlsActualDrops) {
+    DamageablePostReplayScene scene(OriginalEdition::Patch1078);std::array<std::uint32_t,18> input{0x110000,1,1,0,89,0x10,0,0,131073,3,3,0,0,6699,5,0,std::bit_cast<std::uint32_t>(50.5F),std::bit_cast<std::uint32_t>(50.5F)};scene.Prepare(input);SquidPostPopList population;scene.state.sharedDudePopulation=&population;scene.state.dudeCount=999;
+    population.count=20;scene.post->Drops(Sid{50},0x4200,true);CHECK(scene.events.size()==5);scene.events.clear();population.count=21;scene.post->Drops(Sid{50},0x4200,true);CHECK(scene.events.size()==2);scene.events.clear();population.count=0xffffffffU;scene.post->Drops(Sid{50},0x4200,true);CHECK(scene.events.size()==5 && scene.state.dudeCount==999);
+}
+
+// 실제 Post의 현재 battle이 false면 예약하지 않고 true면 같은 현재 사건 DWORD를 각 예약에 쓴다.
+TEST_CASE(DamageablePostDestroy_CurrentBattleAndEventControlActualRegular) {
+    DamageablePostReplayScene scene(OriginalEdition::Patch1078);std::array<std::uint32_t,18> input{0x110000,1,1,0,89,0x10,0,0,131073,3,3,0,0,6699,5,0,std::bit_cast<std::uint32_t>(50.5F),std::bit_cast<std::uint32_t>(50.5F)};scene.Prepare(input);bool battle{};std::uint32_t event=0x12345678U;scene.state.sharedBattle=&battle;scene.state.sharedDamageEvent=&event;scene.post->PostDestroy(Sid{50},input[0]);CHECK(std::none_of(scene.events.begin(),scene.events.end(),[](const std::string& value){return value.starts_with("R:");}));CHECK(std::find(scene.events.begin(),scene.events.end(),"B:50:1114112")!=scene.events.end());scene.events.clear();battle=true;scene.post->PostDestroy(Sid{50},input[0]);CHECK(std::find(scene.events.begin(),scene.events.end(),"R:60:305419896:0:131073")!=scene.events.end() && scene.state.damageEvent==6699);
+}

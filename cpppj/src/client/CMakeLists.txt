@@ -167,6 +167,7 @@ target_sources(netstorm PRIVATE
     GameWorld.cpp GameWorld.h
     RawSurfaceWorld.cpp RawSurfaceWorld.h
     RawSurfaceStorage.cpp
+    RawSurfaceDamageable.cpp #같은 장기 피해가능 객체와 간헐천 전/후처리의 실제 owner다.
     RawSurfaceDeletion.cpp #같은 현재 장기 공통 삭제와 실제 UI/소리/AI를 연결한다.
     RawSurfaceReward.cpp #같은 장기 HP/보상과 실제 SP·현재 모드 장치를 공유한다.
     ClientGameplayGlobals.cpp ClientGameplayGlobals.h ProductionControlContext.h

@@ -7,7 +7,7 @@ namespace {
 std::vector<std::uint32_t> LifeNumbers(std::string_view text) { std::vector<std::uint32_t> result;/* 원문 순서로 모든 DWORD를 읽는다. */ for (const auto& part:Split(text,',')) result.push_back(Number(part));return result; }
 }
 // 현재extra/편집모드/중복과0/효과뒤변경/직접 프레임 DWORD를 두 정밀도의 원문과 대조한다.
-TEST_CASE(GeyserLifetime_NativeCurrentStateAndAllDuplicateRemoval) {
+void ReplayGeyserLifetime(bool native) {
     SidPool pool(OriginalEdition::Patch1078,24000);std::size_t count{}; // 원문의 실제 전체 대조 수다.
     // 기존 목격 자료를 한 행씩 공급하며 예상 목록이나 분기를 계산하지 않는다.
     for (const auto& row:LoadFixture(NETSTORM_GEYSER_LIFETIME_FIXTURE).rows) {
@@ -24,15 +24,32 @@ TEST_CASE(GeyserLifetime_NativeCurrentStateAndAllDuplicateRemoval) {
         hooks.registerAi=[&](Sid sid,std::uint32_t state) { event('I',{sid.value,state});if (c[5]==4) { list.entries[0]=50;list.entries[1]=77;list.entries[2]=50;list.count=3;parent[40]=8; }if (c[5]==5) { editor=1;Put(parent,36,12345); } };
         hooks.damageablePre=[&](Sid sid,std::uint32_t flags) { event('P',{sid.value,flags}); };hooks.damageablePost=[&](Sid sid,std::uint32_t flags) { event('T',{sid.value,flags}); };
         hooks.dropIsland=[&](float x,float y,std::uint32_t flags,std::uint32_t owner) { event('D',{std::bit_cast<std::uint32_t>(x),std::bit_cast<std::uint32_t>(y),flags,owner});if (c[5]==6) { Put(parent,14,0x3fc00000);Put(parent,18,0x40200000);parent[34]=9;parent[40]=9; } };
-        RawGeyserLifetime life(pool,list,editor,std::move(hooks));CHECK(life.Handles(Sid{50}) && &life.Pool()==&pool);if (c[0]) life.PostDestroy(Sid{50},c[6]);else life.PreDestroy(Sid{50},c[6]);
+        RawGeyserLifetime life(pool,list,editor,std::move(hooks));if (native) life.EnableNativeBody();CHECK(life.Handles(Sid{50}) && &life.Pool()==&pool);if (c[0]) life.PostDestroy(Sid{50},c[6]);else life.PreDestroy(Sid{50},c[6]);
         std::string values; // 미사용 물리 꼬리까지8개를 모두 대조한다.
         for (const auto value:list.entries) { if (!values.empty()) values+=',';values+=std::to_string(value); }
         CHECK(events==row[1] && std::to_string(list.count)+','+std::to_string(editor)==row[2] && Hex(parent)==row[3] && values==row[4]);CHECK(std::equal(row.begin()+1,row.begin()+5,row.begin()+5));++count;
     }
     CHECK(count==2016);
 }
+// 기존 typed 진입도 같은 원문2016행을 유지한다.
+TEST_CASE(GeyserLifetime_NativeCurrentStateAndAllDuplicateRemoval) { ReplayGeyserLifetime(false); }
+// 실제 장기 Native 진입은 같은 독립 PE2016행과 직접 프레임/꼬리를 대조한다.
+TEST_CASE(GeyserLifetime_LongNativeBodyReplaysOriginalMatrix) { ReplayGeyserLifetime(true); }
 // 현재 가상 표만 선택하고 실제 도달한 효과의 누락과 CD 혼합을 거부한다.
 TEST_CASE(GeyserLifetime_EditionAndSelectedBoundary) {
     SidPool pool(OriginalEdition::Patch1078,24000);SquidPostPopList list;std::uint32_t editor{};RawGeyserLifetime life(pool,list,editor,{});CHECK(!life.Handles(Sid{0}));CHECK(Throws([&] { life.PreDestroy(Sid{50},0); }));
     CHECK(Throws([&] { SidPool cd(OriginalEdition::Cd1072,24000);RawGeyserLifetime bad(cd,list,editor,{}); }));
+}
+
+// Native는 free 물리 슬롯의 직접 frame store와 signed 음수 count의 자연 반환을 보존한다.
+TEST_CASE(GeyserLifetime_NativePhysicalStoreAndNegativeCurrentCount) {
+    SidPool pool(OriginalEdition::Patch1078,24000);auto raw=std::span<std::uint8_t>(const_cast<std::uint8_t*>(pool.Slot(Sid{50}).data()),50);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[11]=1;std::uint32_t count=0xffffffffU,editor{},updates{},registrations{},parents{};SquidPostPopList list;
+    list.BindCurrent({[]() -> std::span<std::uint32_t> { throw std::logic_error("음수 count에서 물리 읽기 금지"); },[] { return 0U; },[&] { return count; },[&](auto value) { count=value; }});GeyserLifetimeHooks hooks;hooks.defaultFrame=[](auto) { return 123U; };hooks.update=[&](auto) { ++updates;CHECK(Get(raw,36,4)==123); };hooks.registerAi=[&](auto,auto) { ++registrations; };hooks.damageablePre=[&](auto,auto) { ++parents; };
+    RawGeyserLifetime body(pool,list,editor,std::move(hooks));body.EnableNativeBody();body.PreDestroy(Sid{50},0);CHECK(count==0xffffffffU && updates==1 && registrations==1 && parents==1 && raw[11]==1);
+}
+
+// 실제 현재 binding의 개수/물리를 압축하며 독립 count나 사용하지 않는 꼬리를 덮지 않는다.
+TEST_CASE(GeyserLifetime_NativeRemovesCurrentBoundListAndKeepsTail) {
+    SidPool pool(OriginalEdition::Patch1078,24000);auto raw=std::span<std::uint8_t>(const_cast<std::uint8_t*>(pool.Slot(Sid{50}).data()),50);std::fill(raw.begin(),raw.end(),std::uint8_t{});std::array<std::uint32_t,8> bytes{50,7,50,0,50,8,99,99};std::uint32_t count=6,editor{};SquidPostPopList list;list.BindCurrent({[&] { return std::span(bytes); },[] { return 8U; },[&] { return count; },[&](auto value) { count=value; }});GeyserLifetimeHooks hooks;hooks.defaultFrame=[](auto) { return 0U; };hooks.update=[](auto) {};hooks.registerAi=[](auto,auto) {};hooks.damageablePre=[](auto,auto) {};
+    RawGeyserLifetime body(pool,list,editor,std::move(hooks));body.EnableNativeBody();body.PreDestroy(Sid{50},0);CHECK((bytes==std::array<std::uint32_t,8>{7,0,8,0,50,8,99,99}) && count==3 && list.count==0 && list.entries.empty());
 }

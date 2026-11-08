@@ -100,7 +100,7 @@ void RawDamageablePostDestroy::Drops(Sid sid,std::uint32_t genus,bool random) co
     const auto type=raw[kType];const auto excluded=pool_.Edition()==OriginalEdition::Patch1078 ? 5U : 4U;
     // 판본별 제외 타입과 현재 특별 타입을 원본 우선순서로 검사한다.
     for (std::size_t index=0;index<excluded;++index) if (type==state_.excludedDropTypes[index]) return;
-    if (type==state_.specialDropType) count=3;if (state_.dudeCount>20) count/=2;
+    if (type==state_.specialDropType) count=3;if (state_.DudeCount()>20) count/=2;
     // 생성 뒤 부모/전역이 변해도 처음 계산한 반복 수는 다시 계산하지 않는다.
     for (std::uint32_t index=0;index<count;++index) hooks_.dropDude(sid,static_cast<std::int32_t>(index),random);
 }
@@ -115,7 +115,7 @@ void RawDamageablePostDestroy::PostDestroy(Sid sid,std::uint32_t flags) const {
                 Slot(sid)[pool_.Edition()==OriginalEdition::Patch1078 ? 34U : 32U]);
         }
     }
-    if (state_.battle && hp_.HasHitPoints(sid) && Ordinary(sid)) {
+    if (state_.Battle() && hp_.HasHitPoints(sid) && Ordinary(sid)) {
         const auto attackerOwner=(flags>>16)&15U;
         if (!(flags&0x200000U) && (Type(sid).group==0 || Type(sid).group==1 || (Genus(sid)&kVortex))) {
             auto damage=Add(hp_.MaxHitPoints(sid)/2,1);if (Genus(sid)&kVortex) damage=400;
@@ -124,7 +124,7 @@ void RawDamageablePostDestroy::PostDestroy(Sid sid,std::uint32_t flags) const {
                 // 첫후보부터현재 일반 finder의skipSurface=1 순서로 HP 대상을 처리한다.
                 for (auto current=finder.Begin(Area(sid,radius),1);current.value;current=finder.Next())
                     if (hp_.HasHitPoints(current) && !(Slot(current)[kState]&2) && !(Slot(current)[pool_.Edition()==OriginalEdition::Patch1078 ? 40U : 35U]&1))
-                        hooks_.regular(current,state_.damageEvent,0.0F,attackerOwner*65536U+static_cast<std::uint32_t>(damage));
+                        hooks_.regular(current,state_.DamageEvent(),0.0F,attackerOwner*65536U+static_cast<std::uint32_t>(damage));
             }
         }
         if (!(Genus(sid)&0x130000U)) {
