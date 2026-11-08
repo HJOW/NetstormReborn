@@ -9307,9 +9307,38 @@
       "bytes": 619466,
       "lines": 999,
       "fixtureCommit": "12614433",
-      "webCommit": "worktree",
+      "webCommit": "4872d8d3",
       "cpppjBasis": {
         "cpppj/src/client/RawCarrierDropPoint.cpp": "12614433"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E96",
+      "id": "carrier-menu",
+      "path": "cpppj/tests/fixtures/carrier-menu-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 운반물 메뉴 Open 의 번역 키·조회 인자·헤더/항목 문자열·명령·매개변수·활성·기본 메뉴 호출 순서(originals 314행 + originalCD 314행)",
+      "consumers": [
+        "webpj/tests/carrier-menu.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-menu.js"
+      ],
+      "doc": "docs/webpj-carrier-menu-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCarrierMenu.cpp"
+      ],
+      "scope": "10.78(originals) 314행만 사용, CD 10.72(originalCD) 314행은 범위 밖",
+      "text": true,
+      "sha256": "67b2b04f934fc272ec07e95da3abd8dd9c7d3935166b4376144943dc090d98b8",
+      "bytes": 213785,
+      "lines": 629,
+      "fixtureCommit": "e49f11da",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCarrierMenu.cpp": "8c10b36a"
       }
     }
   ]

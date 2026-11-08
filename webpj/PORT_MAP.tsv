@@ -280,7 +280,7 @@ cpppj/src/client/RawCampaignWorldRuntime.cpp	port			todo	[client-default]
 cpppj/src/client/RawCaptureSequence.cpp	exclude-host			-	[host-capture]
 cpppj/src/client/RawCarrierDropPoint.cpp	port	www/core/raw-carrier-drop-point.js	1f00a25a	port	[client-default] WB04-E95: 운반물 내려놓기 위치 426a70·발자국 탐색 49bfe0·snap 41d7a0(중심 플래그·즉시 허용·짝수→홀수 8방향·footX/footY 재독·signed64 하위 DWORD). fixture carrier-drop-point 998행 전부(10.78 전용 파일). 전체 배치 검사·발자국 중심·메뉴 연결(BindCarrierMenuDropPoint)은 해당 단위에서
 cpppj/src/client/RawCarrierInput.cpp	port			todo	[client-default]
-cpppj/src/client/RawCarrierMenu.cpp	port			todo	[client-default]
+cpppj/src/client/RawCarrierMenu.cpp	port	www/core/raw-carrier-menu.js	1f00a25a	port	[client-default] WB04-E96: 운반물 메뉴 부모 몸체 004288f0(contained 순회·이동 불가/비행 중·위치 활성·주문 비용 대비 SP·Carrying/Drop/Cast/About·기본 메뉴)·사제 기본 메뉴/위치 계산기 연결. fixture carrier-menu originals 314행 전부(originalCD 314행은 10.72). controlled 메뉴·기본 객체 메뉴·월드 연결(BindCarrierMenuControls/Base/World)은 해당 모듈 이식 뒤
 cpppj/src/client/RawChatChannels.cpp	port	www/core/raw-chat-channels.js	1f00a25a	port	[client-default] WB04-E6: 00444ee0 Add(자기/-1/첫 빈칸/기존 검색·이름 40·Unknown%08x)·0042b0e0 이름 정제·004437f0 갱신 두 번·Clear·00445140 ResetOccupied. fixture chat-channels 10.78 2448행 전부. Client 수명/AI 서비스 공유 대조는 client 단위에서
 cpppj/src/client/RawChatFormat.cpp	port			todo	[client-default]
 cpppj/src/client/RawChatMessage.cpp	port			todo	[client-default]
