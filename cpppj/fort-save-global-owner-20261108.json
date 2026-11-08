@@ -1,0 +1,302 @@
+{
+  "unit": 1183,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "summary": "Fort 저장 scope/두 mask·무상 기술/신전 제품 TYPE의 실제 장기 owner 접합",
+  "sourceSha256": {
+    "cpppj/src/client/RawCampaignSession.cpp": "b258ccc36b98ecde89d0337603a5265c6a06e94b75b965b6cce0f2ff75db6f88",
+    "cpppj/src/o/FortSerializationGlobals.h": "06e44ae6e1465b7abf81618a08d7016f3eaa8e09d29730b0fc8515456d637b5b",
+    "cpppj/src/o/RawFortObjectLoad.h": "6c82e7e7615950b3dd052cfb27656cf236e57224e9f28e5debf602ca8a1b38a6",
+    "cpppj/src/o/RawGameAuxState.h": "b20b847ddc1bdf86a99300b4b8fe50635debcbc7b77c6730551d95cb3a8153b4"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13529600,
+      "sha256": "50147af3dee49b1ba48719c838704f5965074dbec7637d90f5beb7c51f445c14"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "63c1134035a4ea135ced77efb9bf06046aa1e50c19fc5e25c7441608cf5f00b0"
+    }
+  },
+  "nativeEvidence": {
+    "extracted/cpp-m6-fort-save-globals-patch/m2b1-manifest.json": "50f0d702a69162274720e166f02cc00714b361629a589e2e82eb3b0b54f52c59",
+    "extracted/cpp-m6-fort-save-globals-patch/native-accesses-cpe.json": "cf771ce6a97daeff05fe0c3457c444475cc5f183a85026a1442d3c8f6ef33e38",
+    "extracted/cpp-m6-fort-save-globals-patch/native-constants.json": "9f14d81689662e79902c76b42e1c3b8762282cc1b0b8d3b830f96f374ec521d4",
+    "extracted/cpp-m6-fort-save-globals-patch/m2b1-all.patch": "17c0924e26c0c3d20ccbcab0b7c6ec9fff5d0a6a453302bb70a20b85979d34bc"
+  },
+  "build": {
+    "log": "extracted/cpp-resume-1183/build.log",
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0,
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_editor_default_name_tests"
+    ]
+  },
+  "tests": {
+    "filter": "FortObjectLoad_",
+    "exitCode": 0,
+    "passed": true,
+    "tests": 5,
+    "multiplayer": 0,
+    "packet": 0,
+    "network": 0
+  },
+  "live": {
+    "passed": true,
+    "exeSha256": "50147af3dee49b1ba48719c838704f5965074dbec7637d90f5beb7c51f445c14",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1183\\live-editor-game-fixed",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "intro=1;tellTips=0;autoDemo=0;currentLanguage=english;mayEditMissions=1;fortSpec=d/title950/{local.1}.fort;SOLOSpec=d/title950/{local.1}.fort;blankWindowName=MAIN;EditorWindowName=EDITOR:{local.1};missionWindowName=MISSION:{local.1};testBattleWindowName=TEST:{local.1};demoWindowName=DEMO:{local.1}"
+    ],
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "actions": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "Edit"
+      },
+      {
+        "op": "click",
+        "arg": "TEST01"
+      },
+      {
+        "op": "esc",
+        "arg": ""
+      },
+      {
+        "op": "click",
+        "arg": "Game"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "No"
+      }
+    ],
+    "observations": [
+      {
+        "label": "main-0",
+        "reportFile": "000-main-0.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "Welcome"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "main-1",
+        "reportFile": "001-main-1.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "Welcome2"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "main-2",
+        "reportFile": "002-main-2.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "0"
+          ]
+        ],
+        "page": [
+          [
+            "main"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "map-list",
+        "reportFile": "003-map-list.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "LoadEditable"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      },
+      {
+        "label": "editor-0",
+        "reportFile": "004-editor-0.tsv",
+        "title": "EDITOR:TEST01",
+        "phase": [
+          [
+            "4"
+          ]
+        ],
+        "page": [
+          [
+            "editor"
+          ]
+        ],
+        "mission": null,
+        "session": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "modes": [
+          [
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "leave-editor",
+        "reportFile": "005-leave-editor.tsv",
+        "title": "EDITOR:TEST01",
+        "phase": [
+          [
+            "1"
+          ]
+        ],
+        "page": [
+          [
+            "LeaveEditMode"
+          ]
+        ],
+        "mission": null,
+        "session": [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        "modes": [
+          [
+            "1",
+            "1"
+          ]
+        ]
+      },
+      {
+        "label": "main-0",
+        "reportFile": "006-main-0.tsv",
+        "title": "MAIN",
+        "phase": [
+          [
+            "0"
+          ]
+        ],
+        "page": [
+          [
+            "main"
+          ]
+        ],
+        "mission": null,
+        "session": null,
+        "modes": null
+      }
+    ]
+  },
+  "liveChecks": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0
+  },
+  "audit": {
+    "scope": "005c89b0",
+    "ownerMask": "00542644",
+    "battleMask": "0054263c",
+    "freeTechnologyType": "005412bc",
+    "templeProductType": "0054126c",
+    "sameSerializationOwner": true,
+    "sameGameAuxOwner": true,
+    "typedConstructorFallbackPreserved": true,
+    "newWorldOrResetAdded": false,
+    "fullNoWorldSnapshotConnected": false,
+    "nativeSaveVirtualCandidateApplied": false,
+    "canonicalTags": 25,
+    "untagged": 63,
+    "tagIsNotFullScopeCompletion": true,
+    "queueActivated": false,
+    "m6Complete": false
+  },
+  "planUpdate": {
+    "stage9KnownBugs": 34,
+    "source": "AGENTS.md / b5197d48",
+    "implementationStarted": false,
+    "order": "M6~M8→K1~K5→S1~S4→B1~B4→기존 별도 후순위",
+    "agentsModified": false
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "executions": {
+    "existingNonMpCppUnitCases": 5,
+    "newMpUnit": 0,
+    "multiplayer": 0,
+    "packet": 0,
+    "network": 0,
+    "testBattle": 0,
+    "nonMpGui": 1,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  },
+  "remaining": [
+    "NoWorld HP·보상·SP/자원 파생 삭제·큰 AI/Carrier owner·다른 Form",
+    "m1/m2a/m2c1/m2c2·전체 NoWorld Snapshot/JoinTestBattle 및 전역 Source/표/Poll·63잔여F·큐·M6 전수",
+    "M7·M8·K1~K5·S1~S4·B1~B4와 별도 후순위"
+  ]
+}

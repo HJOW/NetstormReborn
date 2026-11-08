@@ -3,9 +3,12 @@
 #include <cstdint>
 
 namespace netstorm::o {
-//10.78 판본005c89c0/중첩깊이005c89b8의 두 DWORD를 소유한다. Storage/Session/목록은 각 필드의 같은 주소를 빌린다.
+//10.78 판본/깊이/객체저장범위와현재두mask를소유한다. Storage/Session/NoWorld저장은각필드의같은주소를빌린다.
 struct FortSerializationGlobals {
     std::uint32_t version{}; // manager생성자는0, 전체Objects저장은2를 쓰며 각 소비자는현재값을읽는다.
     std::uint32_t loadingDepth{}; //005c89b8의 BSS0이며 Session/World 없는 메타 Core 로더가 같은 중첩 깊이를 빌린다.
+    std::uint32_t scope{}; //005c89b0의BSS0이며실제Terr1/Chaff2로더와writer가World없이도같은현재DWORD를쓴다.
+    std::uint32_t ownerSavedMask{0x5d77cf00}; //00542644의현재flags2저장마스크이며Session교체/반납이PE초기값으로덮지않는다.
+    std::uint32_t battleSavedMask{0x40480002}; //0054263c의현재전투저장마스크이며다른FortKeepGenus00542640과구별한다.
 };
 }

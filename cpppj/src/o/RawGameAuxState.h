@@ -10,6 +10,10 @@
 namespace netstorm::o { // Gameplay/Storage가 같은 주소를 pin하는 작은 게임 데이터 owner다.
 class RawGameAuxState {
 public:
+    std::uint32_t& FreeTechnologyType() { return freeTechnologyType_; } //005412bc의 현재153이며 Deck 재계산과 같은 주소를 빌린다.
+    const std::uint32_t& FreeTechnologyType() const { return freeTechnologyType_; } //Session/NoWorld의 별도 초기값으로 대체하지 않는다.
+    std::uint32_t& TempleProductType() { return templeProductType_; } //0054126c의 현재133이며 Factory의 기본 신전 제품을 선택한다.
+    const std::uint32_t& TempleProductType() const { return templeProductType_; } //World 반납 뒤에도 같은 현재 DWORD를 읽는다.
     std::array<std::uint8_t,256>& TypeUse() { return typeUse_; } //005451f8의 NUL 종료 타입 사용 목록이며 Login/69h가 같은 장기256BYTE를 직접 빌린다.
     const std::array<std::uint8_t,256>& TypeUse() const { return typeUse_; } //World/Session 대여와 반납이 현재 목록을 복사하거나 초기화하지 않는다.
     std::array<std::uint8_t,2>& Packet0cHeader() { return packet0cHeader_; } //0052ed54/55의현재0ch메시지/프로토콜이며원문버전조회/디버그burst의공용전역을보관한다.
@@ -186,6 +190,7 @@ public:
         lostY_=std::bit_cast<float>(0xc61c4000U);lostX_=std::bit_cast<float>(0xc61c4000U);
     }
 private:
+    std::uint32_t freeTechnologyType_{153},templeProductType_{133}; //PE005412bc/54126c의 최초 값이며 새 Session이 덮지 않는다.
     std::array<std::uint8_t,256> typeUse_{}; //005451f8의 최초 BSS0이며 명시 ClearTypes만 정확256BYTE를0으로 쓴다.
     std::uint8_t battleFinishFrames_{}; //0055a44c를같은Client수명으로보관하며World/Session교체로초기화하지않는다.
     std::array<std::uint8_t,2> packet0cHeader_{0x0c,1}; //보호10.78 PE0052ed54/55의초기헤더이며일반월드fresh에서도덮어쓰지않는다.

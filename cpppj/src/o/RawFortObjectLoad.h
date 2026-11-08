@@ -1,6 +1,7 @@
 // Fort의 저장 객체·내용물 적용과 Terr→Chaff 실제 순회를 같은 raw 월드에 연결한다.
 #pragma once
 #include "o/Template.h"
+#include "o/FortSerializationGlobals.h" //실제Client의현재scope/두mask를독립typed상태의fallback과분리한다.
 #include "o/RawContainedCreate.h"
 #include "o/RawSquidFinder.h"
 #include "o/SquidReward.h"
@@ -11,20 +12,24 @@ struct FortObjectStreamHooks; // 실제 현재 MemStream/변환표와 큰 하위
 struct FortObjectLoadState {
 private:
     std::uint32_t localLoadingDepth_{}; //독립 원문 대조의 깊이 fallback이며 실제 Client 대여는 사용하지 않는다.
+    std::uint32_t localScope_{}; //장기owner를명시하지않은기존독립typed로더만종전scope0을소유한다.
+    std::uint32_t localOwnerSavedMask_{0x5d77cf00},localBattleSavedMask_{0x40480002}; //기존typed생성자의두현재mask기본값을그대로보존한다.
 public:
     // 원본005c89c0은 manager 생성자와 같은 실제 DWORD를 빌린다. 호출자가 이 상태보다 오래 소유해야 한다.
     explicit FortObjectLoadState(std::uint32_t& sharedVersion):version(sharedVersion),loadingDepth(localLoadingDepth_) {} //독립 입력은 자기 깊이를 직접 빌린다.
-    FortObjectLoadState(std::uint32_t& sharedVersion,std::uint32_t& sharedDepth):version(sharedVersion),loadingDepth(sharedDepth) {} //실제 Client는 판본/깊이 모두 같은 장기 주소를 빌린다.
+    FortObjectLoadState(std::uint32_t& sharedVersion,std::uint32_t& sharedDepth):version(sharedVersion),loadingDepth(sharedDepth) {} //기존외부caller가판본/깊이만명시대여하는계약이며scope/두mask는종전local값을쓴다.
+    explicit FortObjectLoadState(FortSerializationGlobals& globals):version(globals.version),loadingDepth(globals.loadingDepth),scope(globals.scope),ownerSavedMask(globals.ownerSavedMask),battleSavedMask(globals.battleSavedMask) {} //실제Client만장기전체owner의현재다섯DWORD를빌리며값/reset/수명을복제하지않는다.
     FortObjectLoadState(const FortObjectLoadState&)=delete;FortObjectLoadState& operator=(const FortObjectLoadState&)=delete; //고정 깊이/판본 참조를 복사해 다른 생명주기에 남기지 않는다.
     FortObjectLoadState(FortObjectLoadState&&)=delete;FortObjectLoadState& operator=(FortObjectLoadState&&)=delete; //독립 fallback을 가리키는 참조를 이동하지 않는다.
     std::uint32_t& version; // 005c89c0: 같은 Client의 저장/목록/객체 로더가 읽고 쓰는 실제 판본이다.
     std::uint32_t& loadingDepth; //005c89b8의 실제 중첩 깊이며 같은 Client Core/객체 로더와 주소를 공유한다.
-    std::uint32_t scope{}; //005c89b0의Terr1/Chaff2 범위이며 중첩 깊이와 별개다.
+    std::uint32_t& scope{localScope_}; //005c89b0의Terr1/Chaff2범위이며실제Client는NoWorld저장과같은주소를쓴다.
     std::uint32_t bridgeType{82},islandType{94},largeIslandType{95},noIslandType{157}; // 실제 PE의 다리/island/islandStalag/noIsland 전역이다. 지면isle97/98과 구별한다.
-    std::uint32_t ownerSavedMask{0x5d77cf00},ownerClearedMask{0x10002000},fortKeepMask{0x40480002}; // 두 PE의 초기 mask다.
+    std::uint32_t& ownerSavedMask{localOwnerSavedMask_}; //실제Client는장기00542644를빌리고기존독립typed입력은종전local필드를빌린다.
+    std::uint32_t ownerClearedMask{0x10002000},fortKeepMask{0x40480002}; //기존두PE의로더기본mask이며별도00542640공유getter계약은그대로다.
     bool special{},mission{},fort{},chaffMode{},fortDestroyBlocked{}; // 편집/미션·Fort/Chaff 허용과 독립 raw용 Fort 삭제 억제 fallback이다.
     std::int32_t chunksX{16},chunksY{16}; // 현재 원본 청크 지도 크기다. 각 행/열에서 현재 값으로 비교한다.
-    std::uint32_t battleSavedMask{0x40480002}; //0054263c: 저장 시 현재 flags2와 비교하며 fortKeepMask와 다른 전역이다.
+    std::uint32_t& battleSavedMask{localBattleSavedMask_}; //0054263c의같은현재mask를저장시조회하며독립typed값/쓰기계약도보존한다.
     const std::uint32_t* sharedFullDeck{}; // 선택형0054db14 대여이며 실제 owner가 이 상태와 로더보다 오래 살아야 한다.
     const std::uint32_t* sharedFortKeepGenus{}; //실제 Client의00542640을 빌리며 독립 raw 검사는 기존 fortKeepMask를 쓴다.
     std::uint32_t FortKeepGenus() const { return sharedFortKeepGenus ? *sharedFortKeepGenus : fortKeepMask; } //후보마다 실제 현재 마스크를 읽는다.

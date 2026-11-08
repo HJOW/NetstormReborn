@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1182 현행:**1180 Meta8/설정·1181의41h 뒤 간헐천/너겟·Damageable14VT의 장기 Regular를 접합했다. 직접 Native 태그25/무태그63이며 전scope 완료 수가 아니다. 자원 삭제/NoWorld HP·보상·SP·큰 owner, 전역 Source/listener/표/Poll·JoinTestBattle·M6-l/m/n/큐는 미완료다. 새MP 실행0이며 빌드/허용 비MP 근거는 [1182](cpp-resource-regular-native-20261108.md)에 한정한다.
+**1183 현행:**1182 자원 Regular 뒤 m2b1 저장 scope/두 mask/생산 TYPE의 장기 owner를 접합했다. 전체 NoWorld Snapshot/JoinTestBattle·HP/보상/SP·파생 삭제/큰 owner와 Source/listener/표/Poll·63잔여F·M6-l/m/n/큐는 미완료다. 태그25/무태그63은 전scope 완료 수가 아니다. 기존 비MP Fort 로더5검사는 통과했으며 새MP 실행0이다. [1183 근거](cpp-fort-save-global-owner-20261108.md).
 
 제품 코드/LEFT_JOBS/추적 문서는 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 

@@ -779,7 +779,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawTotalMade> totalMade; // 같은 PostPop의 세 카운터와 위 금지 표를 읽는다.
     std::unique_ptr<RawProductionDeck> productionDeck; // 현재 Player+68의 실제 블록을 단독 소유한다.
     std::uint32_t& fullDeck{gameplayGlobals->FullDeck()}; // PATCH0054db14의 실제 Client DWORD를 세 생산 참조와 다른 현재 getter가 함께 빌린다.
-    std::uint32_t freeTechnologyType{153},templeProduct{133}; // PATCH005412bc/0054126c의 현재 생산 TYPE 전역이다.
+    std::uint32_t& freeTechnologyType{gameplayGlobals->GameAux()->FreeTechnologyType()}; //PATCH005412bc의같은장기현재TYPE를NoWorld/Deck과공유한다.
+    std::uint32_t& templeProduct{gameplayGlobals->GameAux()->TempleProductType()}; //PATCH0054126c의같은장기현재TYPE이며새Session에서133으로덮지않는다.
     std::unique_ptr<RawCampaignProductionBindings> production; // 같은 현재 Factory/기술 내용물/허용 표를 조합한다.
     std::unique_ptr<RawProductionSync> productionSync; // 현재Deck과 같은 기술 부모의 실제teleport 내용물을 동기화한다.
     std::uint32_t flareType{106}; // PATCH00541200의 실제 효과 TYPE다.
@@ -947,7 +948,7 @@ struct RawCampaignSession::Impl {
         aiMemory(0x20000000,[this](std::span<std::uint8_t> bytes) {
             if (!services.ai.allocationBytes) throw std::logic_error("실제 Session AI 할당 입력 바이트 미연결");services.ai.allocationBytes(bytes);
         }),
-        objectState(templateStorage->SerializationVersion(),templateStorage->LoadingDepth()),seed(random,crt,randomMode,services.unixSeconds),themes(core.types.size()),elements(core.types.size()),
+        objectState(*templateStorage->SerializationGlobalsOwner()),seed(random,crt,randomMode,services.unixSeconds),themes(core.types.size()),elements(core.types.size()), //실제Client로더/writer는판본/깊이/scope/두mask의같은장기주소를빌린다.
         gunTypes(core.types.size()),hitTypes(core.types.size()),firingIntervals(core.types.size()),dudeSpeeds(core.types.size()),
         soundNames(RequireSounds(services)),archerTypes(core.types.size()),missileTypes(core.types.size()),projectileTypes(core.types.size()),
         restrictions(services.missionRestrictions ? *services.missionRestrictions : localRestrictions),
