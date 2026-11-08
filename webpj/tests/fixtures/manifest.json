@@ -10686,7 +10686,7 @@
       "bytes": 888614,
       "lines": 1889,
       "fixtureCommit": "b76adf95",
-      "webCommit": "worktree",
+      "webCommit": "34c33f88",
       "cpppjBasis": {
         "cpppj/src/o/RawMissile.cpp": "a24cdcf4"
       }
@@ -10716,7 +10716,7 @@
       "bytes": 523608,
       "lines": 704,
       "fixtureCommit": "db13f257",
-      "webCommit": "worktree",
+      "webCommit": "34c33f88",
       "cpppjBasis": {
         "cpppj/src/o/RawMissile.cpp": "a24cdcf4"
       }
@@ -10745,7 +10745,127 @@
       "bytes": 138742,
       "lines": 297,
       "fixtureCommit": "4e532fd1",
-      "webCommit": "worktree",
+      "webCommit": "34c33f88",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissile.cpp": "a24cdcf4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E126",
+      "id": "icemissileinitial",
+      "path": "cpppj/tests/fixtures/ice-missile-initial-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 초기 아이스 129 / 130 Missile 생성자·프레임·가상 포구·사정선 끝의 효과 순서·128바이트 필드·세 슬롯·포구 8바이트(1693행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/ice-missile-initial.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-missile.js",
+        "webpj/www/core/raw-projectile-geometry.js",
+        "webpj/www/core/raw-gun-mode.js"
+      ],
+      "doc": "docs/webpj-missile-remaining-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissile.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1693행 전부 사용",
+      "text": true,
+      "sha256": "d5a4d8c851617f544bfb8139db91fec222b3b5df6a0b0bca645b6fe63b4064da",
+      "bytes": 1253941,
+      "lines": 1694,
+      "fixtureCommit": "7f6ffcd8",
+      "webCommit": "34c33f88",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissile.cpp": "a24cdcf4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E126",
+      "id": "thundermissile",
+      "path": "cpppj/tests/fixtures/thunder-missile-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬더 131 / 132 Missile 생성자·프레임·가상 포구·사정선 끝(1118행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/thunder-missile.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-missile.js",
+        "webpj/www/core/raw-projectile-geometry.js",
+        "webpj/www/core/raw-gun-mode.js"
+      ],
+      "doc": "docs/webpj-missile-remaining-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissile.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1118행 전부 사용",
+      "text": true,
+      "sha256": "803773b09acb9e67dc17c534347b5067132b7cbd4e79f97dbe534cbd31957c64",
+      "bytes": 803492,
+      "lines": 1119,
+      "fixtureCommit": "528fd909",
+      "webCommit": "34c33f88",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissile.cpp": "a24cdcf4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E126",
+      "id": "thunderhitevent",
+      "path": "cpppj/tests/fixtures/thunder-hit-event-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬더×스톤 타워 충돌의 명령 큐 알림과 효과/소리/피해/삭제 순서·전체 이미지(688행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/thunder-missile.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-missile.js"
+      ],
+      "doc": "docs/webpj-missile-remaining-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissile.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 688행 전부 사용",
+      "text": true,
+      "sha256": "64edac17dc6f25824bfed45afc6537cf120fe9f051fb47c84bceb4bfdbf85f58",
+      "bytes": 505432,
+      "lines": 689,
+      "fixtureCommit": "e963f23f",
+      "webCommit": "34c33f88",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissile.cpp": "a24cdcf4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E126",
+      "id": "missilefloater",
+      "path": "cpppj/tests/fixtures/missile-floater-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 클라우드 플로터 회피(공유 게임 난수)·일반 적중·코너·범위 종료·난수 미선택과 다섯 발사자의 전체 상태·난수 상태(481행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/thunder-missile.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-missile.js"
+      ],
+      "doc": "docs/webpj-missile-remaining-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissile.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 481행 전부 사용",
+      "text": true,
+      "sha256": "38311964487ecf6bc83cfd62b1557b9b3ccebab44ebb3ec25c6fae9c8ed328d8",
+      "bytes": 383761,
+      "lines": 482,
+      "fixtureCommit": "827cdb31",
+      "webCommit": "34c33f88",
       "cpppjBasis": {
         "cpppj/src/o/RawMissile.cpp": "a24cdcf4"
       }
