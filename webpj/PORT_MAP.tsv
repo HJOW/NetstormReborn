@@ -742,7 +742,7 @@ cpppj/src/o/RawGunAngle.h	port	www/core/raw-gun-angle.js	1f00a25a	port	[o-defaul
 cpppj/src/o/RawGunAnimation.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunBlocker.cpp	port	www/core/raw-gun-blocker.js	1f00a25a	port	[o-default] WB04-E87: 스톤 타워 표적 통지 수집 00469590·통지 0046ae80(아처 반경 finder·캐논 네 방향 ray finder·엄격한 점수 비교·타워 사각형 두 대각선 교차·signed 용량 포화 뒤 순회). fixture gun-blocker 690행+gun-blocker-boundary 6행 전부(10.78 전용 파일). 기존 Gun 의 표적/방향/포구와 setTarget 본체 연결은 RawGunProcess 단위에서
 cpppj/src/o/RawGunGroundTarget.cpp	port			todo	[o-default]
-cpppj/src/o/RawGunHit.cpp	port			todo	[o-default]
+cpppj/src/o/RawGunHit.cpp	port	www/core/raw-gun-hit.js	1f00a25a	port	[o-default] WB04-E112: 총 압축 시각 읽기 004d4da0·쓰기+공간 통지 004d4e10·표적 가상 피해 전달 004d4eb0·경과×DPS 정수 피해 004d4f00(30초 초과/음수 3초분·flyer DPS 선택)·Missile 연결. fixture gunhit originals 1029행 전부(originalCD 행은 10.72). 표적 가상 피해/공간 통지/Rain 진입은 훅 경계
 cpppj/src/o/RawGunImpact.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunMode.cpp	port	www/core/raw-gun-mode.js	1f00a25a	port	[o-default] WB04-E71: 총 공격 방향 getter 004d4d00(크로스보우 graph×2·signed 문자×2−152). cpppj 에 독립 fixture 가 없어 소스 계약 시험(gun-mode 3건)으로 대조. 소비자(캠페인 프레임·얼음/천둥 미사일)는 해당 파일 단위에서
 cpppj/src/o/RawGunProcess.cpp	port			todo	[o-default]

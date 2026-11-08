@@ -10073,9 +10073,38 @@
       "bytes": 742146,
       "lines": 443,
       "fixtureCommit": "f8d6da53",
-      "webCommit": "worktree",
+      "webCommit": "7d27d4db",
       "cpppjBasis": {
         "cpppj/src/o/RawMeltdown.cpp": "f8d6da53"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E112",
+      "id": "gunhit",
+      "path": "cpppj/tests/fixtures/gunhit-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 총 Hit·시간·피해 전달의 외부 효과 순서·발사 슬롯 50바이트 raw·helper double 결과(두 판본 2058행)",
+      "consumers": [
+        "webpj/tests/gun-hit.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-gun-hit.js"
+      ],
+      "doc": "docs/webpj-gun-hit-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGunHit.cpp"
+      ],
+      "scope": "10.78(originals) 1029행 사용, originalCD 1029행은 범위 밖",
+      "text": true,
+      "sha256": "60d9e113c0a226c94924a7f71b22a066159bef8618fbe4b9bca1df94434ba7ad",
+      "bytes": 333026,
+      "lines": 2059,
+      "fixtureCommit": "4e532fd1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGunHit.cpp": "230528e3"
       }
     }
   ]
