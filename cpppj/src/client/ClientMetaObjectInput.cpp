@@ -1,5 +1,6 @@
 // 메타 객체의 메뉴/항해 입력에 현재 실제 Client·CS·화면·설정만 공급한다.
 #include "client/ClientMetaObjectInput.h"
+#include "client/ClientMetaBattleDescription.h" //CS 주소 인자를 기존 양수 HTML 문자열 토큰과 구별한다.
 #include "client/NativeMetaObjectInput.h"
 #include "client/ClientMain.h"
 #include "client/ClientGameplayGlobals.h"
@@ -21,7 +22,7 @@ bool InputClientMetaObject(Client& client,RawMenuControls& menus,std::uint32_t s
     hooks.typeName=[&client,object] { return client.GameplayGlobals()->RequireSession().ObjectBaseName(object); };
     hooks.helpWord=[&client]()->std::optional<std::string> { const auto word=client.Configuration().Configuration().Get("helpWord");if (!word) return {};const auto bytes=o::EncodeDisplayText(*word);return std::string(bytes.begin(),bytes.end()); }; //실제 Config의 존재 조회로 ReadString의 변경 여부0과 빈 문자열을 NULL로 혼동하지 않는다.
     hooks.command=[](auto address) { const auto value=MetaObjectInputCommandValue(address);if (!value) throw std::logic_error("메타 객체 입력의 실제 명령 주소 미등록");return *value; };
-    hooks.descriptionParameter=[&client](auto battle) { return client.ChallengeGlobals()->Current()+battle*0x124U+0x101U; }; //CS 논리 주소를 유지하며 호스트 포인터를32비트로 자르지 않는다. f3 소비자는 후속이다.
+    hooks.descriptionParameter=[&client](auto battle) { return EncodeClientMetaDescriptionAddress(*client.ChallengeGlobals(),battle*0x124U+0x101U); }; //원문 CS+전투*124+101 주소를 메뉴 작성 위치에서 표식화하고 고리 문자열과 혼동하지 않는다.
     hooks.translate=[&client](auto key) { const auto bytes=o::EncodeDisplayText(client.Translate(key));return std::string(bytes.begin(),bytes.end()); };
     hooks.project=[&client](float x,float y) { const auto point=ProjectCameraView(client.GameplayGlobals()->Camera().Snapshot(),x,y);return ScreenPoint{point[0],point[1]}; };
     hooks.frameZero=[&storage](auto type) {

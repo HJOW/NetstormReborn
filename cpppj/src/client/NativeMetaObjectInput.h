@@ -19,7 +19,7 @@ struct NativeMetaObjectInputHooks { //도달한 실제 효과만 해당 원문 �
     std::function<std::optional<std::string>()> helpWord; //54db38의 NULL과 비영 빈 문자열을 구별한다.
     std::function<std::uint32_t(std::uint32_t)> command; //현재 원문 주소 식별자의 명령 DWORD다.
     std::function<void(std::string_view,std::uint32_t,std::uint32_t)> item; //77cb0의include/enabled1·force0 행이다.
-    std::function<std::uint32_t(std::uint32_t)> descriptionParameter; //현재 CS+battle*124+101의 문자열 매개변수이며 번역 전에 계산한다.
+    std::function<std::uint32_t(std::uint32_t)> descriptionParameter; //현재 CS+battle*124+101의 문자열 주소를 번역 전에 계산한다. 실제 Client는 고리 토큰과 구별하는 호스트 인자 표식을 사용한다.
     std::function<std::string(std::string_view)> translate; //Change Description만 현재 Xlat을 통과한다.
     std::function<void(std::uint32_t,ScreenPoint)> reference; //75cf0의 현재 메뉴를 실제 객체/원문좌표에 부착하고 스택을 반납한다.
     std::function<ScreenPoint(float,float)> project; //497220의 현재 snapshot 투영이며 frame0 검사보다 먼저 호출한다.

@@ -61,14 +61,9 @@ void UberGump::PrepareMetaWorldRuntime() {
     editor_->metaInput=std::make_unique<ClientMetaPointerInput>(client_,*session,*editor_->metaDisplay,*rawButtons_->Menus(),[this] { return CurrentMapView(); },[this] { return hideBuildings_; },[this](auto section) { Tell(std::string(section)); }); //같은 준비된 메타의 실제 장치만 연결하며 선택/게임 시작을 앞당기지 않는다.
 }
 RawCampaignFactoryDisplay* UberGump::MetaSpriteDisplay() const { return editor_ ? editor_->metaDisplay.get() : nullptr; } //현재owner를조회만하며출력기나Session을새로만들지않는다.
-//원문 CS의 논리 주소를 같은 실제 할당에서 읽고 호스트 포인터를32비트로 자르지 않는다.
+//원문 문자열 인자의 출처를 구별하여 현재 CS/HTML 고리 수명을 소비하고 호스트 포인터를 자르지 않는다.
 void UberGump::OpenMetaBattleDescription(std::uint32_t text) {
-    std::optional<std::string_view> initial;
-    if (text) {
-        const auto& challenge=*client_.ChallengeGlobals();const auto bytes=challenge.Bytes();const auto offset=text-challenge.Current();
-        if (offset>=bytes.size()) throw std::out_of_range("설명 창의 현재 CS 논리 문자열 물리 범위");const auto tail=bytes.subspan(offset);const auto end=std::find(tail.begin(),tail.end(),0);
-        if (end==tail.end()) throw std::out_of_range("설명 창의 현재 CS 문자열 NUL 누락");initial=std::string_view(reinterpret_cast<const char*>(tail.data()),static_cast<std::size_t>(end-tail.begin()));
-    }
+    const auto initial=ResolveClientMetaDescriptionText(*client_.ChallengeGlobals(),scriptStrings_,text); //NULL/HTML은 CS를 읽지 않으며 CS 인자는 실제 현재 본문/NUL을 조회한다.
     SaveFortNameDialogContext context;context.editor.now=[this] { return client_.WallSeconds(); };BindTextClipboard(context.editor,textClipboard_);context.translate=[this](auto source) { return FontBytes(client_.Translate(source)); };
     context.battleDescription=[this](auto description) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("설명 확정의 현재 메타 전송 owner 미연결");editor_->metaTransport->SendBattleDescription(description); };
     rawButtons_->Menus()->ShowBattleDescriptionDialog(std::move(context),initial);

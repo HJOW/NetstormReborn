@@ -1,0 +1,94 @@
+{
+  "unit": 1139,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "5c5d1ff5 / 20261108-107 CP",
+  "summary": "MetaRefresh(c6)의 현재 모드 판정·비메타 진단·실제4b40c0(11)/16h 재요청과 원문 MetaRefresh 이름을 연결했다. BattleDesc HTML 이름도 등록하고 양수 문자열 고리 토큰과 표식된 CS 주소를 구별해 같은 설명 모달에 전달했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "logs": [
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1139\\build.log"
+    ]
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12933632,
+      "sha256": "7cad8403f7d87bd76a345bb32866834329406570e352e6e5bbe49ce54f23a6df"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "e8286e2462df4abe22b7238218b2fc3fbcc46a97cc115879f5e999031e87ad23"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4d80ec~811b/4b40c0 C/PE·실제 두 이름표·18BYTE observer/현재 TCP11 caller·뗌/누름 꼬리와 NULL/양수 고리/CS 주소 출처·소비 시점 NUL/수명을 대조했다.",
+  "nativeNames": {
+    "names": {
+      "BattleDesc": [
+        {
+          "entry": "00543320",
+          "valueAddress": "00542ac0",
+          "code": 33554675
+        }
+      ],
+      "MetaRefresh": [
+        {
+          "entry": "005431b8",
+          "valueAddress": "00542a0c",
+          "code": 33554630
+        }
+      ]
+    },
+    "nonMetaRefreshMessage": "The commandMetaRefresh only works in metamap mode.\n"
+  },
+  "nativeEvidenceSha256": {
+    "004b40c0.asm": "7cc57b4b88d2c178667e5411d88eef4a92c7465b336d73d456f521326a4daa21",
+    "004b40c0.c": "d46858a0d96591a07e908eba517fcbf81a765287cfd7ff3a6fa15be7e5cc91fd",
+    "refresh-caller.asm": "67957cf584190118259ba092de38f79d5331f1532dbff4802debdc4cbab85d16"
+  },
+  "sourceOrderAudit": {
+    "sameRootLoginConnection11": true,
+    "nonMetaLevel9ExactText": true,
+    "pressKeepsGeneralTail": true,
+    "ringPositiveDomainEndsAtIntMax": true,
+    "csAddressTagHasHighBit": true,
+    "nullAndHtmlDoNotReadCs": true,
+    "csStringReadAtConsumption": true,
+    "noNewRingSlotForObjectAddress": true
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "assetDataQuery": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "신규 MP/단위/게임/실제 통신 검사는 제외했으며 동작/안정성을 확정하지 않았다.",
+    "표식된 CS 주소는 현재 제품의 기존 논리 주소/할당 모델이며 호스트 포인터나 원본 x86 주소값의 일치를 주장하지 않는다.",
+    "helpWord 원문 전역 캐시 수명은 잔여다.",
+    "기존 강제 활성 메타 커서·조기/원격 희생·marker 진단 경계는 이 단위에서 성공으로 대체하지 않았다."
+  ],
+  "remaining": [
+    "나머지 메타 CS 수신/참가자 생성과 카메라 caller/HTML→1dh/28~33 등록/1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI"
+  ]
+}

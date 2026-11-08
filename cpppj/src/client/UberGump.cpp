@@ -9,6 +9,7 @@
 #include "client/RitualChoiceInput.h" //의식선택은실제일반명령에서6b요청만작성한다.
 #include "client/NativeMetaSail.h" //의식 패킷6b와 구별되는 일반 입력6b/6c/e3/fe의 원문 항해 소비자다.
 #include "client/ClientMetaPointerInput.h" //GameWorld 없는 메타의 현재 마우스/픽셀 선택과 객체 입력 수명이다.
+#include "client/ClientMetaBattleDescription.h" //HTML 문자열과 표식된 CS 주소의 서로 다른 현재 수명을 구별한다.
 #include "client/NativeMetaObjectInput.h" //영역 클릭/메뉴의 e8 확인 Tell도 같은 일반 입력에 분배한다.
 // 원본 004d0120·004cebf0·004cf270·004ce580의 메뉴/명령 흐름을 표시 기반과 연결한다.
 // 전체 Gump/StyleText와 게임 규칙은 후속이다. 저장 미션 월드는 GameWorld에 연결한다.
@@ -1413,6 +1414,9 @@ void UberGump::Event(InputEvent event) {
     metaSail.join=[this](auto parameter) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("전투 참가 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->JoinBattle(parameter); };metaSail.sail=[this](auto position) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("항해 위치 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->SailPosition(position); };
     if (DispatchNativeMetaSailInput(event,metaSail)) { recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //누름의 효과 뒤 원문 일반 입력 꼬리를 유지하고 뗌은 장치를 읽지 않는다.
     if (DispatchNativeMetaZoneRequest(event,[this](auto section) { Tell(std::string(section)); })) { recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //e8은 일반 입력의 현재 signed 번호로 확인창만 열고 누름 꼬리를 유지한다.
+    if (transitionCode==0x020000c6U) {
+        if (event.code&InputCode::kRelease) return;if (client_.SurfaceStorage()->ownerMode.challenge) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("MetaRefresh의 현재 메타 전송 owner 없음");editor_->metaTransport->RefreshZones(); }else client_.WriteDiagnosticLog(9,"The commandMetaRefresh only works in metamap mode.\n");recentCommandHandled=true;
+    } //004d80ec은 메타에서만4b40c0(11)을 재호출하고 비메타 진단/누름 뒤에도 같은 일반 입력 꼬리를 유지한다.
     if (transitionCode==0x020000f3U) { if (!(event.code&InputCode::kRelease)) OpenMetaBattleDescription(std::bit_cast<std::uint32_t>(event.y));return; } //004d8ab5는 Guide/Gump/뗌 뒤·Console/정지 앞에서 현재param2를 설명 모달에 전달한다.
     if (transitionCode==0x020000f5U) { if (!(event.code&InputCode::kRelease)) client_.LocalStateGlobals()->Begin()=1;return; } // ServerForceBattleStart는 원문처럼 Begin만1을 쓰며 다음 타이머가 실제6e를 송신한다.
     if (transitionCode==0x020000acU) { if (!(event.code&InputCode::kRelease)) static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile()));return; } // DelStateFile은4b5880처럼 현재 경로를 작성해 unlink하고 반환을 무시한다. 새 상태 요청/월드 반납을 추가하지 않는다.

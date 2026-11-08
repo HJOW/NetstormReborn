@@ -246,6 +246,7 @@ void MetaConnectionRuntime::SendRootLogin(std::uint32_t connection) {
     client_.NsInfoGlobals()->ReadServerFields(std::bit_cast<std::int32_t>(client_.LocalStateGlobals()->State().phase[0x44/4]),{},{},&serverSubscriber);
     Put(packet,6,std::bit_cast<std::uint32_t>(serverSubscriber),4);Put(packet,5,1,1);Put(packet,14,client_.CurrentSubscriber(),4);Put(packet,10,Weight(Core()),4);static_cast<void>(tcp_->SendMutable(connection,packet));
 }
+void MetaConnectionRuntime::RefreshZones() { SendRootLogin(11); } //004d80fd의 현재 인자11이며 별도 상태 요청·known 관문·성공 ACK를 추가하지 않는다.
 // 현재 채팅 재생성→원문300BYTE 요청→Core/언어/CD/진단/이름 쓰기 순서를 유지한다.
 void MetaConnectionRuntime::SendChallengeLogin() {
     InitializeClientChatManager(client_);std::array<std::uint8_t,300> packet;CurrentAllocationBytes(packet);Header(packet,0x1c);Put(packet,4,10,2);Put(packet,6,78,2);
