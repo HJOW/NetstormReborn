@@ -1,0 +1,59 @@
+{
+  "unit": 1196,
+  "kind": "문서 정리",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "productUnit": 1195,
+  "productCommit": "0317d9eacc0ff5bde5bc75b5ee378a0ca287204b",
+  "fullGoalComplete": false,
+  "archive": {
+    "anchor": "archive-20261109-through-1195",
+    "originalPrefixBytes": 3804290,
+    "originalPrefixSha256": "cd13da794353e2e54122259422c630bf5e48989b9b54341d408f5046ee8429e9",
+    "archivedCurrentBytes": 35346,
+    "archivedCurrentSha256": "813a6725f886ccc926da809e605a2e6cd273714ac8d95680cd3e4ea3eb595aaa",
+    "prefixPreserved": true,
+    "currentBeforePreservedVerbatim": true
+  },
+  "current": {
+    "bytesBefore": 35346,
+    "bytesAfter": 28072,
+    "sha256": "cf97cec6ef3417b381aab0faaa85ceea343ec7868d090dbbe47c5059080e1a90",
+    "upperPlanIdsRemaining": 16,
+    "remainingGroups": {
+      "thirdStage": [
+        "M6",
+        "M7",
+        "M8"
+      ],
+      "korean": 5,
+      "scenarioUi": 4,
+      "knownBugs": {
+        "groups": 4,
+        "bugs": 34
+      }
+    },
+    "nextImplementationUnit": 1197,
+    "next": "M6-n 전체 건설 본체·큰 효과 수명"
+  },
+  "agentsChangesApplied": {
+    "551d27ae": "세 프로젝트를 각각 실행/플레이 가능성과 원본 동일성으로 요약",
+    "b5197d48": "9차 알려진 버그34건을 B1~B4에 유지"
+  },
+  "verification": {
+    "unchangedProductSourceTestsCandidatesAndOtherFiles": 4478,
+    "protectedFiles": 2800,
+    "candidateFilesMatchingManifest": 237,
+    "preservedInboundAnchors": [
+      "0-재개-전-확인-사항",
+      "agents-reflection-20261102",
+      "인수인계-문서-임시-분할"
+    ],
+    "buildExecutions": 0,
+    "unitTestExecutions": 0,
+    "gameExecutions": 0,
+    "multiplayerExecutions": 0,
+    "decompilations": 0
+  },
+  "limitationsPreserved": true
+}

@@ -1,197 +1,177 @@
 # LEFT_JOBS — cpppj 및 공통 인수인계
 
-**사용자2026-11-09 `/goal`로 재개했다.1195 실제 삭제 bool/장기 건설 Runtime 단위를 완료했으며 전체 목표는 미완료다.** 현재 완료 제품은1195 / 11.01이다. [1194 중지 인계](docs/exe/handoffs/cpp-pause-20261109-1194.md)의 첫 삭제 항목은1195에서 완료했고, 다음 전체 건설 body와 큰 장치 수명부터 계속한다. M6~M8 뒤 K1~K5→S1~S4→B1~B4 순서를 유지한다.
+**현재 제품: 1195 / 버전 11.01. 목표는 진행 중이며 전체 미완료다.** 사용자 2026-11-09 `/goal`의 순서는 **M6 → M7 → M8 → K1~K5 → S1~S4 → B1~B4**다. 이번 1196은 인계 문서 정리 단위이며 제품 구현 번호를 올리지 않는다.
 
-다음 **6차 한국어 후속**으로 넘어가려면 **M6~M8의3필수묶음**을마쳐야한다. M1~M5와4·5·7차는구현됐다. 이후6차잔여5묶음→8차시나리오UI4묶음→9차B1~B4 순서다. M6은전수14세부묶음이며묶음수는커밋수/소요일/완료율이아니다.
+이 문서는 현재 상태와 남은 작업의 기준이다. 완료 과정·만료된 중지/재개 안내·옛 다음 작업은 [1195까지의 정리 전 원문](LEFT_JOBS.old.md#archive-20261109-through-1195)에 보존했다. dotnetpj와 webpj의 작업 목록은 각각 [DN 인계](LEFT_JOBS.dotnetpj.md), [WB 인계](LEFT_JOBS.webpj.md)를 따른다.
 
-상세 과거 이력과 만료된 “다음 작업” 예고는 [1147까지의 정리 직전 원문](LEFT_JOBS.old.md#archive-20261108-through-1147)에 보존했다. 현재 우선순위는 **이 문서의 계획 ID와 완료 조건**만 따른다. dotnetpj와 webpj는 각각 [별도 인계](LEFT_JOBS.dotnetpj.md), [별도 인계](LEFT_JOBS.webpj.md)를 따른다.
+## 0. 현재 어느 정도인가
 
-## 0. 재개 전 확인 사항
+AGENTS.md의 최근 변경 `551d27ae`에 따라 진행 요약은 세 프로젝트를 **실행·플레이 가능 여부**와 **원본 동일성**으로 나눠 평가한다. 아래 DN/WB는 각 인계 문서의 현재 설명을 읽은 요약이며 이번에 새로 실행한 결과가 아니다.
 
-### 0.1 현재 제품과 검증
+| 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
+| --- | --- | --- |
+| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 최신 제품 1195에서 Tutorial4 생산·건설 요청, 실제 TYPE75/owner1 생성, 600프레임 대기와 정상 종료0을 확인했다. | 부품별 C/PE·fixture 대조와 제한된 실제 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 사용자 확인이다. 전체 복원 완료로 판정하지 않는다. |
+| **dotnetpj** | 기존 `Netstorm.Game`/`Netstorm.exe`는 1-1·1-2 근사 플레이가 가능하다. 새 `Netstorm.Client.Host`는 메뉴 일부까지이며 미션 플레이가 불가능하다. | 새 경로의 실제 메뉴·게임 캡처 비교는 아직0건이다. R3 진행/R4 일부 이식이며 부품 fixture 통과를 전체 게임 동일성으로 합산하지 않는다. |
+| **webpj** | 클릭하여 시작·메뉴/목록·도움말/옵션·Credits·개발용 지형 미리보기까지다. 실제 미션 플레이는 불가능하다. | 메뉴 일부와 부품을 대조했다. cpppj 오라클 M1 8장면은 기록한 원인 밖 픽셀 차이0이며 구름 등 차이는 별도로 남았다. 같은 미션 L2/L3·전체 화면/음향·자연 완주는 미검증이다. |
 
-| 항목 | 현행 기준 |
+### 0.1 cpppj 최신 근거
+
+| 항목 | 현행 값 |
 | --- | --- |
-| 진행 상태 | **사용자2026-11-09 `/goal`로 재개·진행 중.**1195 구현/검증/문서를 완료했다. M6-l/m/n→M7→M8→K1~K5→S1~S4→B1~B4 순서이며 전체 미완료다. |
-| 재개·현재 지점 | 1195에서 실제 가상 삭제 bool의 Session→Client 장치→Storage→건설 Runtime 반환 사슬을 연결했다. Native Runtime의 마지막 World 캡처를 제거했다. 전체 body는 아직 Session이며 다음은 별도 Client body/선택된 큰 Runtime pin과 큰 NoWorld/AI/Carrier·다른 Form/일반 삭제, Source/표/Poll·잔여F/큐·JoinTestBattle다. |
-| 진행 중인 실행 | 없음.1195 최종 Release 빌드/30비MP 집중 검사/Tutorial4 생산·건설·600frame 대기가 종료0이다. 새MP/패킷/통신 실행0·큐OFF다. |
-| 현재 제품 | **1195 / 표시·파일·제품11.01**. M6-a~k 완료, l/m/n 부분 접합. 전체 M6/M7~M8/한국어/시나리오UI/9차는 미완료다. |
-| 실행·플레이 | 무인자 GUI와 미션 플레이 경로가 있다. 마지막 전체34진입은 **645에서 검증한 제품644**이며 현 제품 전체 회귀 결과가 아니다. |
-| 원본과의 동일성 | 부품별 원문 대조를 누적했다. 모든 시나리오 자연 완주·전체 동일성은 사용자 확인 대상이다. |
-| 최신 빌드·정적 확인 | **1195 NetstormCpp/NetstormRoot/두 집중 대상 Release/x64 종료0·경고오류0·고정7소스 불변·보호2800 불변**. 정적9조건과 양판본4함수 PE/3함수 C를 확인했다. CD 다리 삭제449820은 정밀 C 목록에 없어 실제PE(ret4 끝)로 확인했다. [보고서](cpppj/construction-destroy-runtime-20261109.json)·[설명](docs/exe/cpp-construction-destroy-runtime-20261109.md). |
-| 최근 완료 | **1194:**별도 Client 건설 상태 owner·현재8TYPE/미션/상위 검증·충돌server. **1195:**실제 삭제 bool과 Native Runtime의 장기 Storage/현재 삭제 장치 연결. 전체 body/M6는 미완료다. [1194](docs/exe/cpp-construction-client-state-20261109.md)·[1195](docs/exe/cpp-construction-destroy-runtime-20261109.md). |
-| checking 잔여 | **현재 목록0개.** `004b02d0`/`004dc220`은1157에서 기존 전체 본체/실제 같은 DWORD 연결을 확인했다. 모든 MP 경로 완료를 뜻하지 않으며 M4~M8은 남는다. 중앙 원문 진단창은M7.5다. |
-| 마지막 C++ 실행 검사 | **1195 비MP13+명시17=30검사 실패0/신규2.** World 반납 뒤 현재 삭제 장치의 거부/수락/예외·장기 backing 반납과 장치 부재 거부를 확인했다. 최초 새 수명 검사의 Native editor/보상 장치 누락1실패를 검사 준비만 수정했고 원시 로그를 보존했다. 결합 Notice/패킷2개 제외·신규MP/패킷/통신 실행0이다. |
-| 마지막 GUI | **1195 최종 제품:**Tutorial4 정상 생산/건설 요청→실제TYPE75/owner1 생성·600frame 대기·정상 종료0.1194의 같은 Client Edit왕복2회는 이전 제품 근거다. 전체 NoWorld 삭제/Test Battle/MP/포획·희생/특정 공격/승리/공중3종 검증이 아니다. |
-| 전체 검사·ZIP | 현재 전체 솔루션 실행 통과 기록은 없다.1166은 기존 검사 코드 컴파일만 완료했다. 최신ZIP은 **1092**이며 현재1194 바이너리의ZIP이 아니다. 다음 패키지 정합성은 **M8**이다. |
-| 보호 기준 | 원본/CD/fixture2799와 AGENTS.md 포함 **2800파일 불변(1195)**. AGENTS는 개발자 커밋551d27ae 기준이며 에이전트 수정0이다. extracted/cpp-resume-1195/protected-before.json·protected-after.json에 전수 기록했다. |
-| EXE SHA-256 | Netstorm.exe 13632000바이트/SHA-256 `abc840176764fa6a997938c5ce7dd5f4743e792e8c368d3a53a357cfac16bf36` / R.exe 677376바이트/SHA-256 `f55639dc70452a4fa301646a8c59d0aae0918721cf8d60546277413c52d751b8` |
-| 마지막 정밀 디컴파일 | **클라이언트 양판본 2026-11-03 / HJOW-Athlon(192.168.0.94)**. R전용은 **2026-11-07 / 같은 호스트**. [기록](docs/exe/cpp-decompilation-20261103.md). |
+| 제품 구현 커밋 | **1195 / `0317d9ea` / `20261109-63 CP 실제 삭제 반환값과 장기 건설 실행기 연결`**. 표시·파일·제품 버전은11.01이다. |
+| 최근 완료 | **1194:** 별도 Client 건설 상태 owner, 현재8TYPE/NativeBounds 미션·상위 검증·충돌server. **1195:** 삭제 수락/거부 bool을 Session→Client/Runtime pin→Storage→건설 Runtime으로 연결하고 Native Runtime의 마지막 World 캡처를 제거했다. 전체 건설 본체는 아직 Session 소유다. |
+| 빌드·정적 확인 | 1195 NetstormCpp/NetstormRoot/두 집중 대상 Release/x64 종료0·경고오류0, 고정7소스 불변. 정적9조건과 양판본4함수 PE/3함수 C를 대조했다. CD 다리 삭제449820은 정밀 C 목록에 없어 PE(ret4 끝)로 확인했다. |
+| 집중 실행 검사 | 비MP13+명시17=**30검사 실패0/신규2**. 새 수명 검사의 최초 필수 장치 누락1실패를 검사 준비만 보완했고 최초 로그를 보존했다. 결합 Notice/패킷2개 제외, 신규 MP/패킷/통신 실행0이다. |
+| 최신 GUI | 1195 Tutorial4 정상 생산·건설 요청→TYPE75 생성→600프레임 대기→정상 종료0.1194의 같은 Client Edit TEST01 왕복2회는 이전 제품 근거다. 건물 완성·모든 삭제 분기·Test Battle 검증으로 확대하지 않는다. |
+| 전체 회귀·배포 | 마지막 전체34경로 진입은 **645에서 검증한 제품644**다. 현재 제품의 전체 솔루션 실행 통과 기록은 없다.1166은 기존 검사 컴파일만 완료했다. 최신 ZIP은 **1092**이며1195 배포물이 아니다. 최종 패키지 정합성은M8이다. |
+| checking·송신 상태 | checking 잔여 목록0개, M6 태그25/활성88/무태그63F·큐OFF. checking0은 전체 MP 완료를 뜻하지 않는다. 중앙 원문 진단창은M7.5다. |
+| 실행 중인 작업 | 없음.1195 빌드·집중 검사·GUI는 모두 종료됐다.1196 문서 정리는 제품/검사/게임을 추가 실행하지 않는다. |
+| 보호 기준 | 원본/CD/fixture2799와 개발자 커밋551d27ae의 AGENTS를 포함한 **2800파일 불변**.1195 원시는 `extracted/cpp-resume-1195/`에 있다. |
+| 실행 파일 | Netstorm.exe 13632000바이트/SHA-256 `abc840176764fa6a997938c5ce7dd5f4743e792e8c368d3a53a357cfac16bf36`. R.exe 677376바이트/SHA-256 `f55639dc70452a4fa301646a8c59d0aae0918721cf8d60546277413c52d751b8`. |
+| 마지막 정밀 디컴파일 | **Client 양판본: 2026-11-03 / HJOW-Athlon(192.168.0.94). R 전용: 2026-11-07 / 같은 호스트.** 현재 호스트도 같다. [기록](docs/exe/cpp-decompilation-20261103.md). |
 
-### 0.2 재개 순서
+1195 상세는 [설명](docs/exe/cpp-construction-destroy-runtime-20261109.md)·[검증 보고서](cpppj/construction-destroy-runtime-20261109.json),1194는 [상태 owner 설명](docs/exe/cpp-construction-client-state-20261109.md)을 본다. 전체 동일성이나 완료율을 이 집중 검사 수로 계산하지 않는다.
 
-1. AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 읽고 `git status`/`git fetch`로 다른 세션 변경을 확인한다. push는 하지 않는다.
-2. 현재 호스트가 위 마지막 디컴파일 호스트와 다르면 CPP 작업/원문 분석 전에 `tools/ghidra/refine_all.ps1`을 다시 실행하고 호스트를 갱신한다. R원문은 필요 시 `tools/ghidra/refine_root_server.ps1`도 실행한다. HJOW-X3D의2026-10-27 중단 산출물은 완성본으로 쓰지 않는다.
-3. **M6 → M7 → M8** 순서로진행하며실제의존하위를먼저복원한다. M1~M5완료분을옛예고로다시만들지않는다.
-4. `extracted/cpp-resume-1179/`는최신빌드/허용3비MP/보호해시원시이며Host/선택값/자원PostPop의C·PE/사본경로는1179문서에명시했다. [M6전수감사](docs/exe/cpp-lan-remaining-audit-20261108.md)의초기활성판정정정을읽는다. M7.1/2는 [준비](docs/exe/cpp-help-cursor-remaining-audit-20261108.md)를구현완료로세지않는다.
-5. 단위 종료마다 **0.1의 현행 값·해당 M/K/S 항목·checking 목록·최근 완료2건**을 갱신하고 단위 문서/보고서를 작성해 로컬 커밋한다. 과거 예고·완료 로그를 이 문서에 계속 누적하지 않는다.
-6. 다른세션의DN/WB변경/스테이징을수정/정리/커밋하지않는다. 1194 중지 인계의 첫 bool삭제는1195 완료이며 다음 전체 body/큰 장치와 M6-l/n/m을 계속한다.
+## 1. 남은 양과 진행 순서
 
-### 0.3 유효한 실행 제외·보류
-
-- **사용자 확인:** 전체 동일성, 모든 시나리오 자연 완주, 사제 포획/희생·특정 적 공격·승리 재현. 이들만 남으면 다음 단계로 간다. 사용자 제보는 해당 건을 AI 수정 항목으로 다시 연다.
-- **멀티플레이:** 원문을 참고해 구현·컴파일·정적 대조하되 **신규 MP 단위/패킷/게임/통신 검사는 하지 않는다**. 이 제외는 구현을 생략하거나 동작 검증 완료로 쓰라는 뜻이 아니다.
-- **공중3종:** 훨리기그·맨오워·더스트 데빌의 전용 생성/생산/행동 관측은 실행하지 않는다. 정적 분석/코드는 가능하다.
-- **사용자 보류:** 스펠 효과 도움말 그림 추가 분석(530)과 연녹색 직사각형 추가 분석. `.english` 부재 Test Battle 문제는 보류가 아니라 **S2**의 구현 대상이다.
-- **환경/사용자 확인:** 물리 입력/캡처는762의 새 부팅/RDP에서도 두 번 timeout이었다. 환경 변화 전 재시도하지 않는다. 다른 모니터/DPI·앱 전환·청취·활성 전체화면 물리 출력·실제 CD 삽입·Windows11/ARM 실기는 별도 확인이다.
-- 단순 진입/대기/생산/건설로 끝나고 변경과 직접 관련된 필요한 **비MP** 검증은 수행한다. 전체34/전체CTest/ZIP을 작은 단위마다 반복하지 않는다. 실제 게임/별도 창의 실행 확인은 AGENTS.md의 현재 호스트 예외와 명시 허용 범위를 따른다.
-
-## 1. 단계 지도와 전환 기준
+**다음 한국어 단계 전에는 큰 묶음3개(M6~M8)가 남았다.** M6 안에는 적어도5개 작업 갈래가 있고 M7은 독립5건이다. 그 뒤 한국어5묶음·시나리오UI4묶음·버그 수정4묶음, 즉 **후속13묶음**이 남는다. 전체는 **16개의 상위 계획 ID**로 관리한다. 각 묶음은 여러 구현/검증/커밋을 포함하므로 커밋 수·소요일·완료율과 같지 않다. 아직 큰 구현 작업이 남아 있으며 날짜/백분율 추정 근거는 없다.
 
 <a id="agents-reflection-20261102"></a>
 
-| AGENTS 단계 | 현재 상태 | 다음 전환을 막는 AI 작업 |
+| 순서 / AGENTS 단계 | 현재 상태 | 남은 작업 규모·전환 조건 |
 | --- | --- | --- |
-| 1차 10.78 원본 복원 | 활성 **비멀티** UI929·Edit943·미션 수명956·내부 수명/FILE980 범위 마감. MP 전용은3차에서 복원 중이다. | 새 구체적 누락/사용자 제보는 다시 연다. 전체 자연 완주·전체 픽셀 동일성은 사용자 확인이다. |
-| 2차 Win10/11 호환 | 호환 전체화면/재실행·화면비·가장자리 스크롤·저장 재시작을 구현/확인하고 다음 단계로 전환했다. 덱 결함981도 해결했다. | 다른 장치/Windows11/ARM 실기는 현재 전환 조건이 아니다. 무오류 보증과 구별한다. |
-| **3차 TCP/IP 로컬 MP·Outpost** | **진행 중. 제품1195/M6-a~k 완료·l/m/n 부분 접합.** | **M6~M8의3묶음.** 새MP 실행 테스트는 종료 조건에서 제외한다. |
-| 4차 로컬MCP·와이드 | 935~937 구현, 덱 보완981. 캡처/음향 녹화의936 후속 성공도 있다. | 물리/환경 확인은0.3절. 같은 기능을 다시 미구현으로 세지 않는다. |
-| 5차 사용자 홈 저장·맵 목록 | 932~934 이관/reader/읽기 전용 설치·Unicode 실행·무제한50행 스크롤 구현. | 현재 `CustomMaps\d\NAME.fort`, 최초 Edit의 원본433맵 복사, 이동행 클릭/휠 미구현을 유지한다. 임의 배치 변경은 하지 않으며 이동행 한국어 문구는K4다. |
-| **6차 한국어** | 938의1차: D2Coding·번역502·Language 메뉴·korean→english 대체·배포 동봉. **986 후보는 미적용**이다. | **K1~K5의5묶음.** 3차 M1~M8 뒤 착수한다. |
-| 7차 AA/FSR1.0 | 939 구현. 기본off,1440p/4K 자동FSR·논리1080p를 유지한다. | 실제4K/미션/활성 전체화면의 물리 출력·입력 역변환은 사용자 확인, 성능 최적화는 후속이다. |
-| **8차 Edit 시나리오 UI** | 원본 Edit943과 별개인 신규 기능. **986 통합 후보는 미적용**이다. | **S1~S4의4묶음.** 한국어 입력/표시 경계를 마친 뒤 착수한다. |
-| **9차 원본 알려진 버그 수정** | AGENTS의 새34건을1183에서 현행 계획에 반영했다. 구현은 미착수다. | **B1~B4.** S4 뒤 원문/현행 전수 감사→공통·비MP 수정→MP 정적 수정→허용 검증/배포 순서다. |
+| **현재: 3차 M6** | M6-a~k는1173까지 완료. l/m/n은 부분 접합 중이다.1195까지 장기 상태/공통 부품을 연결했다. | **큼.** 전체 건설 본체·큰 NoWorld/AI/Carrier/다른 Form/일반 삭제, Source/등록표/Poll/잔여F·지연큐·JoinTestBattle가 남는다(2절). |
+| **다음: 3차 M7** | 원문/차이 준비만 있으며 구현 미완료다. | 독립5건: helpWord, 메타커서, 희생 안내, marker, 중앙 assertion 창/파일(3절). |
+| **3차 M8** | 미착수 마감 관문이다. | M1~M7의 활성 Caller/실제 owner·수명과 외부 검증 비활성화 전수 감사, Release 빌드, 필요한 최종 ZIP 바이트 검증. 새 MP 실행 검사는 하지 않는다. |
+| **6차 K1~K5** | 938의 번역502·D2Coding·Language 메뉴·korean→english 대체·배포 동봉은 구현됐다.986 후보는 미적용이다. | **큼 / 5묶음.** 후보 선별 병합→부호화/IME/클립보드→미션 본문→메뉴 그림/문구→검수·배포(4절). |
+| **8차 S1~S4** | 원본 Edit943과 별개인 신규 시나리오 편집 UI는 미구현이다.986 후보도 미적용이다. | **큼 / 4묶음.** 모델→기본english/부재Test Battle→실제 UI→홈 저장/재적재(4절). |
+| **9차 B1~B4** | AGENTS `b5197d48`의 알려진 버그34건을 계획에 포함했다. 구현은 미착수다. | **큼 / 4묶음·34건 전수.** 원인/활성 Caller 분류→공통·비MP 수정→MP 정적 수정→허용 회귀/배포(4절). |
 
-**3차 → 6차 조건:** M1~M7의 활성 원문 경로가 실제 동일 저장소/장치/호출자로 연결되고, M8의 구현 마감 감사·빌드·필요한 배포 정합성이 끝나야 한다. 빈 callback·가짜 ACK·성공 상수로 닫지 않는다. 사용자 제외 MP 테스트와 자연 완주는 기다리지 않는다.
+**이미 마감한 단계:** 1차 활성 비MP UI929·Edit943·미션956·내부 수명/FILE980,2차 호환 전체화면/재실행·화면비·가장자리 스크롤·저장과 덱 결함981,4차 로컬MCP935~937·와이드,5차 사용자 홈 저장/맵 목록932~934,7차 AA/FSR1.0 939는 구현 범위를 마감했다. 새 구체적 누락/사용자 제보가 생기면 해당 건만 다시 연다.
 
-**6차 → 8차 조건:** K1~K5를 반영하고 표시 부호화/IME/클립보드가 시나리오 편집에 쓰일 수 있어야 한다. 준비본 파일 수/초안 검사를 제품 통과로 세지 않는다.
+- 5차는 현재 `CustomMaps\d\NAME.fort`, 최초 Edit의 원본433맵 복사, 항목 수 무제한·한 화면50행 스크롤을 유지한다. 이동행 클릭/휠 미구현과 현재 배치는 임의 변경하지 않으며 이동행 한국어 문구는K4다.
+- 7차는 AA/FSR 기본off,1440p/4K 자동FSR·논리1080p를 유지한다. 실제4K/활성 전체화면 물리 출력·입력 역변환과 성능 최적화는 별도 확인/후속이다.
+- 3차→6차는 M1~M7 실제 같은 저장소/장치/Caller 연결과M8 마감이 조건이다.6차→8차는 표시 부호화/IME/클립보드를 시나리오 편집에 사용할 수 있어야 한다. 빈 callback·가짜 ACK·성공 상수로 닫지 않는다.
+- 1~9차 뒤의 **별도 후순위**도 남아 있다:60/120프레임 지원, CD10.72 전체 복원/호환성. 그 뒤 세부 계획을 확정한다. dotnetpj/webpj/Linux 구현은 별도 범위다.
 
-요구 범위는 원본10.78의34경로(Early6·Training9·캠페인16·데모3), 기존 Edit/비멀티 메뉴·HUD/Chat·11.01/세 번째 Patch Credits·Windows 실행 파일 `Netstorm.exe`·외부 도메인/IP 문서화와 폐기 검증 비활성화다. 근거는 [TODO](TODO.md)·[11.01](docs/exe/cpp-product-1101-20261101.md)·[외부 접속 정책](docs/exe/cpp-external-services-20261101.md)·[주소 목록](cpppj/external-endpoints-20261101.json)이다. 버전/이름/Credits 요구를 문서 정리로 바꾸지 않는다.
+## 2. 바로 이어갈 M6
 
-## 2. 3차 잔여 — 다음 단계까지3묶음
+### 2.1 남은5갈래
 
-| ID | 남은 작업 | 종료를 판정할 근거 | 상태/규모 |
-| --- | --- | --- | --- |
-| **M1** | 메타 CS 수신20/21/22/23/24/25/26/88h·1dh와 해당 실제 하위. | [1149/22h](docs/exe/cpp-meta-participant-move-20261108.md)·[1150/25h](docs/exe/cpp-meta-sail-error-20261108.md) 및 선행 단위 원문/빌드 근거. | **완료(1150)**. 추가 Caller 감사는M8이며 이미 연결한 수신을 다시 만들지 않는다. |
-| **M2** | 로그인/진단1ah·1bh 전체 수신, 실제 기록/Zone·State7/즉시8·인계 후 재진입. | 기록1151·복제/Zone1152·첫 State7/수명1153·1ah1154·1bh1155·같은 전체 전송 재진입1156. [마감 근거](docs/exe/cpp-meta-battle-reentry-20261108.md). | **완료(1156)**. 남은 별도 직접 Caller/전송 전수 대조는M6/M8이다. |
-| **M3** | 공통 Pop/신전 Handle·Descend/참가 후속 World·카메라/HTML/진단 장치 접합. | 기존 부모1157 대조·master 주소1158 교정·State19/Core 현재 진단/실제 전환 Caller1159 마감. [근거](docs/exe/cpp-meta-transition-closure-20261108.md). | **접합 완료(1159)**. 중앙 기본 진단창/파일의 새 누락은M7.5에 명시했으며 완료로 세지 않는다. |
-| **M4** | State33 송신·NSInfo/메타 요청 UI·HTML 후속. | 실제송신1160·NSInfo5명령1161·영역확인후속1162. [마감](docs/exe/cpp-meta-zone-descend-20261108.md). | **완료(1162)**. 새수신/독립후속은M6/M7로 구별한다. |
-| **M5** | 두환경계약·세.server콘텐츠/실제reader·배포. | 1163환경계약·1164서버페이지32섹션/요청응답·빌드복사/DryRun. [근거](docs/exe/cpp-server-pages-integration-20261108.md). | **완료(1164)**. 원본서버본문미확보·새호환본문의한계를명시하며실제ZIP바이트는M8이다. |
-| **M6** | 일반LAN·Outpost 전수14세부묶음. | [현행 감사](docs/exe/cpp-lan-remaining-audit-20261108.md). **a~k1173까지 완료.** Source/Host 기반1174~1179 뒤1180은 Meta8/설정 장기F·옵션 owner(67h bool 관문 기록은1184에서 정정),1181은41h 장기 F/Editor 같은 F 반납,1182는 자원 장기 Regular,1183은 m2b1 저장 전역,1184는 m2c1 실제 가상 조회 Caller,1185는 n9c1 장기 HP/보상/SP·현재 모드/Player base·실제 Runtime,1186은 장기 공통 삭제/현재 UI·전역·실제 종단 반납과 동일 Player 목록 재진입,1187은 같은 장기 Damageable/Geyser 수명과 현재 TYPE/모드/population/사건·목록,1188은 삭제 제외/벌프 TYPE와 Native 이동·비행·전달의 같은 owner,1189는 장기 표면 수명/가상 삭제·현재 연결 TYPE와 실제 큰 종단 weak 대여/반납,1190은 건설13참조/현재 Player base·선택 this 수명,1191은 Player 미할당 단계의 지연 구성/실제 선택 시 검증,1192는 Native 장기 Canon/진단·실제 생성/Pop/방송 장치,1193은 실제 건설 전역·공유 마스크와 Request/Clear/Local/Command 현재 소비,1194는 별도 Client 건설 상태 owner·현재8TYPE/NativeBounds 미션/상위 검증·Collision현재server를 연결했다. 1195는 실제 삭제 bool과 Native Runtime의 장기 Storage/현재 삭제 장치를 연결했다. 전체 body는 Session이다.25태그 전scope/무태그63F·전역 Source/큐·m JoinTestBattle,n 전용Regular/삭제/NoWorld·큰AI/다른Form·debugBurst/전수 마감은 남는다. | **다음 M6-l/n/미완료·큼.** 기존 Pop/저장복구/78h/기록은 재작성하지 않는다. |
-| **M7** | helpWord캐시·메타커서본문/장치설치·조기/원격희생안내·marker표시/갱신·공통assertion창/파일5건. | [M7.1/2현재차이준비](docs/exe/cpp-help-cursor-remaining-audit-20261108.md): 빈Config기존cache유지/정체성·메타커서본문/상태Lock/Unlock/장치선행. M7.5는초기registry진단도같은중앙장치에통합한다. | 미완료. 준비/원문발췌는구현/실행통과가아니다. 사용자제외희생/MP테스트는하지않는다. |
-| **M8** | **3차 구현 마감 감사·배포 정합성**. | M1~M7/현재 checking 목록0/새 누락/활성 Caller·실제 owner/수명·외부 검증 비활성화 대조, Release 빌드, 필요한 최종 ZIP의 실제 Netstorm/R/에셋 바이트 검증. | 미완료 / 마지막 관문. MP 실행 테스트는 하지 않으며 ZIP/전체검사를 반복하지 않는다. |
-
-**남은 양의 해석:** M1~M5의현재Caller/환경/콘텐츠계약을마감했다. 다음M6의14세부묶음→M7독립5건→M8마감이며새활성누락은구체종료조건에추가한다.
-
-### M2 세부 계획 — 완료(1156), 다음M3
-
-1. **M2.1 완료(1151):** 같은 Client의 실제 선택적 기록 FILE/요청DWORD/현재 프레임과 메타·일반·내부·편집 송수신 연결.435220의설정 해석은 요청만0으로 초기화하며 열린FILE/enabled는 유지한다.1ah/1bh의Open은1154/1155에서연결했다.
-2. **M2.2a 완료(1152):** `004dece0` 전체(observer1/현재 WORD/할당·signed 용량/앞방향 DWORD+BYTE), Client 장기 Zone owner, 실제 접속 초기 복제 Caller와 기존 일반 LAN State7의 현재 token 설치/재조회/반납을 연결했다. 단독 미션86BYTE와 구별한다.
-3. **M2.2b 완료(1153):** 메타 next7/PollStarting·current7/동기RunStarting과 즉시8, 같은 일반 World 본체·실제 TCP/UDP/등록표/현재Player·전체callback owner를 인계했다. 같은 메타 owner만 명시 pin한 수신 중 정리를 허용하고 다른 callback 보호는 유지한다.두수신등록은1154/1155에서연결했고인계 후 재진입은1156에서 연결했다.
-4. **M2.3 완료(1154):** 전체1ah/004b4df0·40a1e0 가변observer, checking복귀→next 주소/7/현재포트→실제 Zone복제/예약증가→선택적 기록Open→10/11 정리를 실제 공유 등록표에 연결했다. [근거](docs/exe/cpp-meta-battle-zone-receive-20261108.md).
-5. **M2.4 완료(1155):** 전체1bh/004b8b20·빈observer/38BYTE, server/예약조기반환→checking복귀→현재packet+4/Subscriber 기록Open→현재주소NUL포함BYTE복사/포트/current7→같은직접Run을등록했다. [근거](docs/exe/cpp-meta-battle-peer-receive-20261108.md).
-6. **M2.5 완료(1156):** 두 수신의 실제 전체Source,1ah next7의 단일 외부Poll/1bh 동기Run, 같은 현재 World/TCP·UDP·두 표·전체Meta 확인, 내부 끝까지 같은 coordinator 재사용/현재 장치 재연결과 등록 반납→재대여를 연결했다. 다른 Session 콜백 보호는 유지한다. [근거](docs/exe/cpp-meta-battle-reentry-20261108.md).
-7. 요청 DWORD의활성writer/다른원문전송·기록진입점은M6전수대조에도포함한다. 개발자이름제한test battle의4b8be0→1bh직접Caller도M6대상이다. 새MP실행검사는하지않는다.
-
-### M3 세부 계획 — 접합 완료(1159), 다음M4
-
-1. **M3.1 완료(1157 정적 감사):** 기존 `RunSquidPopParent`/004b02d0와 같은 실제 World/Pool/TYPE·현재 checking·부분 spot/side·SHP/표시/Activate Caller를 C/PE에 대조했다. 제품 변경/새 실행 없이 기존 연결의 오래된 미완료 표시를 제거했다.
-2. **M3.2 완료(1157 정적 감사):** 004dc220은 신전 정기 Handle(event0~4/default)이다. 기존 `RawAssetRegular::Vortex`와 실제 Session의 상태/상승/이탈·Descend 장치, 현재 checking DWORD·네 가상표/풍 thunk를 대조했다. [근거](docs/exe/cpp-checking-parent-closure-20261108.md).
-3. **M3.3a 완료(1158):** 참가 master의 현재 주소44BYTE 경계만 실제 TCP에 넘겨 기존9 준비 비영 재사용이 NUL/주소 해석보다 먼저 오도록 복원했다. [근거](docs/exe/cpp-meta-master-address-order-20261108.md).
-4. **M3.3b 접합 완료(1159):** State19/Core 두 진단을 같은 Client AssertDisplay에 연결하고 실제 Descend/참가 요청→같은 준비 World·카메라/HTML serial 후속을 C/PE에 대조했다. 중앙 기본 장치의 로그 전용 차이는M7.5에서 별도로 구현한다. [근거](docs/exe/cpp-meta-transition-closure-20261108.md).
-5. M3의 현재 접합을 마쳤으며 M4의 송신 UI/State Caller를 대조한다. M6 전수 대조에서 새 범위가 발견되면 해당 현재 항목에 구체적으로 추가한다.
-
-### M4 세부 계획 — 완료(1162), 다음M5.1
-
-1. **M4.1 완료(1160):**1095의 `004b2c00`(1fh/12BYTE/11)·`004b62b0`(7ch/28BYTE/9)는1140에서 State33에 접합됐다. 현재 master/자기 CS·같은 실제 송신/observer/기록·캐시 저장의PE순서를 마감 대조했다. 제품 변경/새 빌드/MP 실행은 없다. [근거](docs/exe/cpp-meta-state-send-closure-20261108.md).
-2. **M4.2a 완료(1161):** 현재 NSInfo명령5개 공통 메뉴→실제 큐/기존 소비자를 연결했다. **M4.2b 완료(1162):** QueryDecendToChalLevel Yes의020000a4/4b8810·잠금/Tell·42bf40 송신/항해·같은QA7344 보관·current19 동기Run/복원을 연결했다. 현재 설명/옵션/참가/항해·HTML 요청 범위를 마감했다.
-3. M4/M5와M6-a전체1165~1166을마쳤다. 1167의M6-b1도마쳤다. 1168의M6-b2도마쳤다. 1169~1170의M6-c도마쳤다. 1171의M6-d도마쳤다. 1172의M6-e·f·g도마쳤다. 1173의M6-h·i·j·k도마쳤다. 다음M6-l고정함수/실제지연큐부터전수14세부묶음을계속한다. 새MP실행검사는하지않는다.
-
-### M2~M8 수행 시 유지할 원칙
-
-- 원본 R을 복사/실행해 새 R복원을 대신하지 않는다. 새 R/실제TCP·UDP·같은 등록표/시계/Config/주소·기록 owner 연결은1062~1093의 완료 근거를 사용한다.
-- 제공 R10.71의3BYTE 존과 클라이언트10.78의47BYTE 존 차이는1093의 명시 compact 호환 범위를 유지한다. 전체 프로토콜 차이가 없다고 확대하지 않는다.
-- 폐기 CD확인7f/80·온라인유효성검증·PIRATE quota는복구하지않는다. IPX/SPX는명시미지원이다.1163의명시hostname OS조회/첫LAN IPv4와기존숫자주소 TCP/UDP범위를유지한다. 원문에없는원격관리포트Open/handler를추가하지않는다.
-- 숨은 잔여가 발견되면 해당 M항목을 세분화하고 종료 근거를 추가한다. “소스가 있음”과 실제 부모 연결 완료를 구별한다.
-
-## 3. 3차 뒤의 구현 계획
-
-### 3.1 한국어 후속 — K1~K5
-
-| ID | 작업 | 종료 조건 |
+| 우선순위 / 계획 ID | 해야 할 일 | 종료 근거 |
 | --- | --- | --- |
-| K1 | 986 한국어 후보의 기준/현행 차이 검토·선별 병합 | `korean/FINAL_PLAN.md`의 코드41파일·별도44자산을 현재 소스와 병합. 옛 patch 일괄 적용/덮어쓰기는 하지 않는다. |
-| K2 | 표시 부호화·한글 입력/IME·클립보드 | `EncodeOriginalText`/표시용 부호화 경계를 유지하고 편집/입력/표시의 관련 빌드·허용 집중 확인을 마친다. 시나리오UI보다 먼저다. |
-| K3 | 미션 브리핑·팁·도움말 `.korean` 본문 | 영어의 AI/SP/시나리오 선언을 보존하며 필요한 한국어 본문/대체 경로를 제공한다. 준비 자산만 있다고 전체 번역 완료로 세지 않는다. |
-| K4 | 한글 메인 버튼 그림·목록 이동행/누락 UI 문구 | 기존 원본 스타일/크기·D2Coding·AGENTS 명칭 규칙을 유지하고 메뉴/해당 화면에서 확인한다. |
-| K5 | 번역 검수·배포/회귀 마감 | 번역502의 기존1차와 새 본문/그림/입력을 구별해 검수하고 관련 집중 검사·단순 비MP 진입 확인·배포 정합성을 마친다. 자연 완주/공격/희생 테스트는 제외한다. |
+| **1. M6-n: 장기 건설 본체** | 별도 ClientConstructionGlobals에 전체 body를 연결한다. Native의 Runtime/HP/SP/Canon/Chunks/최근·전체 목록·현재Player/Bounds 모드·방향·map/piece는 같은 장기 owner를 사용한다. | Session을 캡처한 body를 그대로 move하지 않는다. Player 조회/할당은 실제 선택 위치까지 지연한다. Builder/사제/MayPlace/Displace/DropIsland/UI/설정/진단/기록기의 큰 효과는 실제 Runtime을 선택 호출 동안만 pin한다. |
+| **2. M6-n: 큰 NoWorld·삭제** | 큰 AI/CarrierPreDestroy→ReplenishNuggets/실제 너겟 배치, 다른 Form/일반 삭제·전용 Regular 수명을 연결한다. | 같은 실제 Pool/목록/TYPE/현재 전역과 가상 부모를 사용한다.1195 bool 연결만으로 전체 NoWorld 삭제 완료라 하지 않는다. |
+| **3. M6-n: 전수 Caller·owner** | Source/listener/두 등록표/Poll/송수신·선택적 기록·25태그 전scope와 무태그63F·Snapshot/debugBurst를 대조한다. l/m 구현 뒤 최종 감사를 다시 닫는다. | 원문 등록92행/모든 실제 process VT와 현재 receiver/observer/version/길이·파일/해제 수명을 연결한다. 현재 없는 큰 장치나 빈 효과를 숨기지 않는다. |
+| **4. M6-l: 실제 지연큐** | Client 장기 분포·OS시계/CRT rand·각 노드queue·현재20BYTE 주소 복원·실제 전송/등록 수명을 연결한다. | 원문4def40/4df010/4dee60/4def20/4df5e0/4dfc00. FIFO·엄격한deadline<now·원문 난수 소비/observer/기록·닫힘/해제를 보존한다. 기본queue를false로 닫지 않는다. |
+| **5. M6-m: JoinTestBattle** | 개발자4이름 제한·현재 주소·server0/current29 뒤 기존1bh 전체 수신을 직접 호출한다. | 원문4b8be0→4b8b20, 입력0200002b의 선행4b3620을 보존한다. Edit TestBattle(c2)와 구별하며 새 수신 본문을 복제하지 않는다. |
 
-### 3.2 신규 Edit 시나리오 UI — S1~S4
+원문 주소와 세부 근거는 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)를 본다. **그 문서 본문의 초기 “없음” 판정은 당시 조사다.** 현행 첫머리·이 문서·단위 완료 근거를 함께 읽고 M6-a~k나 이미 연결한 수신을 다시 만들지 않는다.
 
-| ID | 작업 | 종료 조건 |
-| --- | --- | --- |
-| S1 | 986 시나리오 후보/모델 병합 | `scenario/PLAN.md`·`CMake-additions.txt`에 따라 모델5파일/코드·필요 자산을 현행 편집기와 병합/등록한다. |
-| S2 | 기본 english/부재 Test Battle | 새 맵의 기본 `.english`를 자동 생성하고 english가 없어도 Test Battle 진입에서 종료되지 않게 한다. 기존 수동 대본을 보존한다. |
-| S3 | 실제 전용 편집 UI | 초기 자본/테크·적·플레이어·동맹 등 시나리오 구성을 화면에서 수정하고 맵 배치 도구와 함께 동작하게 한다. |
-| S4 | 사용자 홈 저장/재적재·마감 | 실제 사용자 홈·읽기 전용 설치에서 저장/불러오기·Editor/Test Battle 진입을 확인한다. 필요한 검증은 진입/대기/기본 조작으로 마치며 승리/포획/희생을 재현하지 않는다. |
+### 2.2 다음 구현을 시작할 파일·수명 조건
 
-### 3.3 준비본과 별도 후순위
+- `RawCampaignSession::Impl::ConnectConstruction`과 `ClientConstructionGlobals`, `RawCampaignConstructionBindings`가 첫 대상이다.1195에서 Native create/pop/broadcast/destroy는 장기Storage를 쓰지만 전체 body와 큰 효과는 아직 Session이다. `extracted/cpp-resume-1195/`의 소스/검사/GUI 원시와 [1194 인계의 body 계획](docs/exe/handoffs/cpp-pause-20261109-1194.md)을 참고한다.1194의 “bool삭제가 다음”은1195에서 완료됐다.
+- body는 같은 State보다 먼저 반납한다. Storage→Gameplay alias가 있으므로 참조 순환을 만들지 않는다. 큰 하위는 기존 SurfaceDeletion/Pop/Lifetime의 weak binding·선택된 실제 Runtime pin 방식을 검토한다. 강한 Session 역참조, 새 World/reset, 임시 Player/성공 fallback은 금지한다. 실제 Host 반납 뒤 기존3지점의 장치 반납 순서를 유지한다.
+- M1~M5는 완료다: [메타22/25h](docs/exe/cpp-meta-sail-error-20261108.md)(1150), [로그인/기록/같은 전송 재진입](docs/exe/cpp-meta-battle-reentry-20261108.md)(1156), [Pop/전환](docs/exe/cpp-meta-transition-closure-20261108.md)(1159), [State33/영역 후속](docs/exe/cpp-meta-zone-descend-20261108.md)(1162), [두 환경/서버 페이지32섹션/reader](docs/exe/cpp-server-pages-integration-20261108.md)(1164). 원본 서버 본문 미확보의 한계와 새 호환 본문 계약을 유지한다.
+- 기존 Pop/저장복구/78h/선택적 기록은 재작성하지 않는다. checking의004b02d0/004dc220은1157에서 기존 본체/실제 같은DWORD 연결을 확인했다. 중앙 assertion의 새 누락은M7.5에 남긴다.
+- 실제 새R/TCP·UDP/같은 등록표/시계/Config/주소·기록 owner는1062~1093 근거를 유지한다. 제공R10.71의3BYTE 존과Client10.78의47BYTE 존은1093 compact 호환 범위다. 원본R 복사/실행으로 복원을 대신하지 않는다.
+- 요청DWORD0054dbac는 reset0/1ah·1bh read 근거만 있다. 새Config/CLI/writer를 발명하지 않는다. 폐기CD7f/80·온라인 유효성검증·PIRATE quota는 복구하지 않는다. IPX/SPX는 명시 미지원,1163 hostname OS조회/첫LAN IPv4와 숫자주소 TCP/UDP를 유지한다. 원문에 없는 원격 관리 포트를 추가하지 않는다.
 
-- 준비본의 기준은 [986 안내](docs/exe/handoffs/cpp-pause-20261106/README.md)·[MANIFEST](docs/exe/handoffs/cpp-pause-20261106/MANIFEST.json)이다. **한국어/시나리오 후보는 제품 미적용·미컴파일·미실행**이며 초안 검사 수를 현재 통과로 세지 않는다. 이번 문서 정리에서237파일의 보관 해시를 다시 확인했다.
-- [한국어 최종 계획](docs/exe/handoffs/cpp-pause-20261106/korean/FINAL_PLAN.md)은41코드/배포/검사파일·44별도자산·새 검사24개 초안이다. `final.patch`에44자산이 들어 있지 않다.
-- [시나리오 계획](docs/exe/handoffs/cpp-pause-20261106/scenario/PLAN.md)은 전체24파일(변경23)·기준18·통합9/모델10 검사 초안이다. 모델5파일은 `scenario/base`에 보존돼 있고 제품 CMake에는 아직 없다. shadow 패치의 개행 정규화 일치를 실제 컴파일 통과로 보지 않는다.
-- 986의 **원격 Fort 준비분은987에서 실제 제품으로 별도 구현**했다. 후보 보존을 이유로 다시 미적용으로 되돌리지 않는다.
-- **기존 별도 후순위도 삭제하지 않는다:** 60/120프레임 지원·CD10.72 전체 복원/호환성. 현재3차 종료 관문과 분리하며1~9차 뒤 세부 계획을 확정할 미착수 후순위다.10.72 관련 분석 근거는 계속 문서화한다. dotnetpj/webpj/Linux 구현은 별도 프로젝트/범위다.
+## 3. M7의 독립5건과 M8 마감
 
-### 3.4 AGENTS9차 알려진 버그 — B1~B4
-
-2026-11-08의 AGENTS.md 변경(b5197d48)에 있는34건 전체를 대상으로 한다. 기존1~8차 완료 상태와 혼동하지 않으며 S4 뒤에 착수한다. AGENTS.md는 수정하지 않는다.
-
-| ID | 작업 | 종료 조건 |
-| --- | --- | --- |
-| B1 |34건 전수 분류·원문/현행 Caller 대조 | 각 버그에 ID·원본 주소/근거·현행 경로·필요 수정·허용/사용자 제외 검증을 연결한다. 이미 해결된 건도 실제 근거 없이 닫지 않는다. |
-| B2 | 공통/비MP 버그 수정 | 수명·버퍼·입력·에디터·시나리오·AI·전투/간헐천 등 B1의 해당 원인과 활성 Caller를 수정하고 필요한 허용 집중 검증을 한다. 포획/희생·특정 공격·승리 등 제외 테스트는 사용자 확인으로 남긴다. |
-| B3 | MP/클라이언트 관련 버그 수정 | 기존 디컴파일·필요한 비교 판본 근거로 실제 동기화/상태/저장 수명 등을 수정하고 컴파일·정적 대조한다. MP 단위/패킷/통신/게임 검사는 하지 않는다. |
-| B4 |34건 마감 감사·허용 회귀/배포 | B1의 각 행에 구현/근거/검증·사용자 확인 범위를 기록하고 관련 빌드/비MP 허용 검증과 필요한 배포 바이트 정합성을 마친다. 제외된 직접 플레이 테스트만 남으면 다음 후순위로 간다. |
-
-## 4. 완료 근거 색인
-
-| 완료 범위 | 확인할 근거 |
+| ID | 남은 구현 |
 | --- | --- |
-| 비멀티 UI/원본 Edit/미션 수명/내부 수명 | [929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[956](docs/exe/cpp-mission-state-scope-20261106.md)·[980](docs/exe/cpp-internal-lifetime-closure-20261106.md) |
-| 디컴파일·소스 위치 | [2026-11-03](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md) |
-| LAN 일반/서버 완료 상세 | 단위982~1147의 `docs/exe/` 문서/`cpppj/*.json`·Git 이력. 긴 순차 완료 목록은 [보관 원문2.1/3.8](LEFT_JOBS.old.md#archive-20261108-through-1147)에서 찾는다. |
-| 현재 메타 수신 | [1142/88h](docs/exe/cpp-meta-participant-name-20261108.md)·[1143/26h](docs/exe/cpp-meta-geometry-receive-20261108.md)·[1146/20h](docs/exe/cpp-meta-participant-create-20261108.md)·[1147/21h](docs/exe/cpp-meta-participant-remove-20261108.md). 나머지 완료 근거는 최신 단위 보고서에서 역추적한다. |
-| 전체34/미션별 과거 증거 | [대응표](docs/gameplay/demo-campaign-map.md)·[보관 원문2.2~2.4](LEFT_JOBS.old.md#archive-20261108-through-1147). 과거 진입/일부 사용자 완주를 현재 모든 자연 완주로 합산하지 않는다. |
+| M7.1 | helpWord 캐시: 빈Config일 때 기존cache 유지·현재 정체성. |
+| M7.2 | 메타커서 실제 본문/장치 설치·상태Lock/Unlock·장치 선행 순서. |
+| M7.3 | 조기/원격 희생 안내. 구현·허용 정적 대조만 하고 사용자 제외 희생/MP 실행 검사는 하지 않는다. |
+| M7.4 | marker의 실제 표시와 갱신. |
+| M7.5 | 공통 assertion 창/파일 중앙화. 초기 registry 진단도 같은 중앙 장치에 통합한다. |
 
-## 5. 미해결 검사·환경·정밀도 경계
+[M7.1/2 차이 준비](docs/exe/cpp-help-cursor-remaining-audit-20261108.md)는 구현/실행 통과가 아니다. M8은 M1~M7의 실제 활성 Caller·같은 owner·수명·현재 checking 목록0·새 누락·외부 검증 비활성화를 감사하고 Release 빌드와 필요한 최종ZIP의 실제 Netstorm/R/에셋 바이트를 검증한다. 작은 단위마다 전체 검사/ZIP을 반복하지 않는다. 사용자 제외 MP 실행이나 자연 완주만 남으면 다음 단계로 간다.
 
-이 절은 만료 이력이 아니라 **현재 유지할 미해결/제한**이다. 관련 허용 집중 검사에서 재발하면 원인 분류·수정을 이어 가며 문서 정리로 통과 처리하지 않는다.
+## 4. 3차 뒤의13묶음
 
-- 현재 전체 솔루션의 최신 통과 결과는 없다.938의68집중 대상 중48완전 통과/20실패는 당시 결과다. `guide_release`151개와 `startup_file_names`3개(`names.Index()`)는6차 전 `1f5b4177`에서도 같은 실패를 확인했다.
-- 당시 **원인 분류 잔여:** `file_tests`5, `pop_context`29, `menu_session`3, `mission_entry`1, `guide_fort_request`1, `renderer_presentation`1, `startup_*`/`file_directory`의 경로 고리. `world_generation`은1024×768 건물 그림/장치 미연결 계열이며 기준선 개별 비교를 하지 않았다. 후속 개별 성공을 이 목록의 최신 전체 재검사로 쓰지 않는다.
-- `CampaignSaveGoMain_ActualManagerGateAndSelectedBattleStop`은 일반Battle/MP 이월이며 새 MP 검사는 제외한다. `CampaignForwardBattle_NaturalTempleAssault`549 실패는 사용자 자연 완주/별도 지원 범위이며 기존 전략/승리 단언을 약화하지 않는다. TEST02 로컬 AI/SP·자동 공략 지원은 별도 요청 전 하지 않는다. 원문 `owner!=myPlayerId || demo!=0`를 `gate.demo=1`로 우회하지 않는다.
-- 해결된 실패를 되살리지 않는다: FortObjectLoad 입력/필수Pop 관측은942, SubscriberGlobals C2607은1052의 실제 파일 컴파일/기존7검사로 교정했다.
+### 4.1 한국어 K1~K5
+
+| ID | 작업과 종료 조건 |
+| --- | --- |
+| K1 | 986 한국어 후보의 기준/현행 차이를 검토해41코드·배포·검사파일과44별도자산을 선별 병합한다. 옛 patch 일괄 적용/덮어쓰기는 하지 않는다. |
+| K2 | `EncodeOriginalText`와 표시 부호화 경계를 유지하고 한글 입력/IME/클립보드를 구현·집중 검증한다. 시나리오UI보다 먼저다. |
+| K3 | 미션 브리핑·팁·도움말 `.korean` 본문과 대체 경로를 제공한다. 영어의 AI/SP/시나리오 선언은 보존한다. 준비 자산을 전체 번역 완료로 세지 않는다. |
+| K4 | 원본 스타일/크기·D2Coding·AGENTS 명칭으로 한글 메인 버튼 그림, 맵 목록 이동행, 누락 UI 문구를 적용하고 해당 화면에서 확인한다. |
+| K5 | 기존 번역502와 새 본문/그림/입력을 구별해 검수한다. 관련 집중 검사·단순 비MP 진입·배포 정합성을 마친다. 자연 완주/공격/희생 검사는 제외한다. |
+
+### 4.2 시나리오 편집 S1~S4
+
+| ID | 작업과 종료 조건 |
+| --- | --- |
+| S1 | 986 시나리오 모델5파일·코드·필요 자산을 현재 편집기와 병합/등록한다. `scenario/PLAN.md`와`CMake-additions.txt`를 따른다. |
+| S2 | 새 맵의 기본 `.english`를 자동 생성하고 english가 없어도 Test Battle 진입에서 종료되지 않게 한다. 기존 수동 대본을 보존한다. **이 항목은 보류가 아니다.** |
+| S3 | 편집 모드 전용 UI에서 초기 자본/테크·적·플레이어·동맹 등 시나리오 구성을 수정하고 기존 맵 배치 도구와 함께 동작하게 한다. |
+| S4 | 실제 사용자 홈·읽기 전용 설치에서 저장/불러오기·Editor/Test Battle 진입을 확인한다. 진입/대기/기본 조작으로 마치며 승리/포획/희생은 재현하지 않는다. |
+
+준비본은 [986 안내](docs/exe/handoffs/cpp-pause-20261106/README.md)·[MANIFEST](docs/exe/handoffs/cpp-pause-20261106/MANIFEST.json)와 [한국어 FINAL_PLAN](docs/exe/handoffs/cpp-pause-20261106/korean/FINAL_PLAN.md)·[시나리오 PLAN](docs/exe/handoffs/cpp-pause-20261106/scenario/PLAN.md)을 본다.986 보관본은237파일이며 그중 **한국어/시나리오 후보는 제품 미적용·미컴파일·미실행**이다. 한국어 final.patch에는44자산이 없고 새 검사24개는 초안이다. 시나리오는24파일(변경23)/기준18/통합9·모델10검사 초안이며 모델5파일은scenario/base에 있다. shadow 패치 개행 일치를 컴파일 통과로 세지 않는다.986 원격Fort 준비분만은987에서 제품으로 별도 구현했으므로 다시 미적용으로 되돌리지 않는다.
+
+### 4.3 알려진 버그 B1~B4
+
+AGENTS `b5197d48`의 **34건 전체**가 대상이다. S4 뒤에 시작하며 이미 해결된 듯한 건도 원문·현행 근거 없이 닫지 않는다.
+
+| ID | 작업과 종료 조건 |
+| --- | --- |
+| B1 | 34건마다ID·원본 주소/근거·현행 활성 Caller·필요 수정·허용/사용자 제외 검증을 연결한다. |
+| B2 | 수명/버퍼/입력/에디터/시나리오/AI/전투/간헐천 등 공통·비MP 원인을 수정하고 필요한 허용 집중 검증을 한다. 포획/희생·특정 공격·승리는 사용자 확인으로 남긴다. |
+| B3 | MP/클라이언트 동기화·상태·저장 수명을 디컴파일/필요 비교 판본으로 수정하고 컴파일·정적 대조한다. MP 단위/패킷/통신/게임 검사는 하지 않는다. |
+| B4 | 34행의 구현·근거·검증·사용자 확인 범위를 마감하고 관련 빌드/비MP 허용 회귀/필요 배포 정합성을 확인한다. 제외된 직접 플레이 검사만 남으면 후순위로 간다. |
+
+## 5. 실행 제외·미해결 검사와 정밀도 경계
+
+### 5.1 현재도 유효한 제외/보류
+
+- **사용자 확인:** 전체 동일성, 모든 시나리오 자연 완주, 사제 포획/희생·특정 적 공격·승리 재현. 이들만 남으면 다음 단계로 간다. 사용자 제보는 해당 건을 AI 수정 대상으로 다시 연다.
+- **MP:** 원문을 참고해 구현·컴파일·정적 대조하되 신규 MP 단위/패킷/게임/통신/기록파일 실행 검사는 하지 않는다. 구현 생략이나 동작 검증 완료를 뜻하지 않는다.
+- **공중3종:** 훨리기그·맨오워·더스트 데빌의 전용 생성/생산/행동 관측은 실행하지 않는다. 정적 분석/코드는 가능하다.
+- **사용자 보류:** 스펠 효과 도움말 그림 추가 분석(530), 연녹색 직사각형 추가 분석. english 부재 Test Battle은 이 보류에 포함하지 않으며S2 대상이다.
+- **환경/사용자 확인:** 물리 입력/캡처는762의 새 부팅/RDP에서도 두 번timeout이었다. 환경 변화 전 재시도하지 않는다. 다른 모니터/DPI·앱 전환·청취·활성 전체화면 물리 출력·실제CD 삽입·Windows11/ARM 실기는 별도 확인이다.
+- 변경과 직접 관련된 단순 진입/대기/생산/건설로 끝나는 필요한 **비MP** 검증은 수행한다. 원본/복사본/클론·analyzeManager·별도 창 실행은 AGENTS의 현재 호스트 예외/명시 허용 범위를 따른다.
+
+### 5.2 해결했다고 처리하지 않을 기존 한계
+
+- 최신 전체 솔루션 실행 통과 결과는 없다.938의68집중 대상 중48완전 통과/20실패는 당시 결과다. `guide_release`151개와 `startup_file_names`3개(`names.Index()`)는6차 전`1f5b4177`에서도 같은 실패를 확인했다.
+- 당시 원인 분류 잔여는 `file_tests`5,`pop_context`29,`menu_session`3,`mission_entry`1,`guide_fort_request`1,`renderer_presentation`1,`startup_*`/`file_directory` 경로 고리다. `world_generation`은1024×768 건물 그림/장치 미연결 계열이며 기준선 개별 비교를 하지 않았다. 후속 집중 성공을 최신 전체 재검사로 세지 않는다.
+- `CampaignSaveGoMain_ActualManagerGateAndSelectedBattleStop`은 일반Battle/MP 이월이며 새MP 검사는 제외한다. `CampaignForwardBattle_NaturalTempleAssault`549 실패는 사용자 자연 완주/별도 지원 범위다. 기존 전략/승리 단언을 약화하지 않는다. TEST02 로컬AI/SP·자동 공략 지원은 별도 요청 전 하지 않는다. `owner!=myPlayerId || demo!=0`를`gate.demo=1`로 우회하지 않는다.
+- 해결된 FortObjectLoad 입력/필수Pop 관측942, SubscriberGlobals C2607의 실제 컴파일/기존7검사1052는 다시 실패 잔여로 올리지 않는다.
 - 원문8비트/설정·경로의 `EncodeOriginalText`와 화면용 `EncodeDisplayText`/`DecodeDisplayText`를 구별한다. MakeAi owner0 이전/삭제·전략 차이, 설치 글꼴/다른ACP·구형무BOM 설정 자동 이관은 [글꼴 경계](docs/exe/cpp-font-face-encoding-20261103.md)를 따른다.
-- 32비트 FILE/FileSpec/포인터·SEH/스택·미작성값 자체 일치, 임의 외부heap→SID, 실제 OS 고갈/물리 디스크 장애·UNC/드라이브CWD·CD 전체 dump/trace/Retype·x87 전체 입력/픽셀은 기존 호스트/후순위 경계다. 명시 부분I/O/버퍼 실패/복구966·new_handler/종료979를 모두 미착수로 되돌리지 않는다. 활성 Caller의 미연결은 이 경계로 숨기지 않는다.
-- PCM은936의HJOW-Athlon에서 프로세스 WASAPI101653프레임/비무음99726과 영상/소리 합성을 확인했다. 청취/다른 장치/실제 CD/활성 전체화면까지 검증한 것은 아니다. 덱 검은띠981과 별도의 사용자 보류 연녹색 사각형을 혼동하지 않는다.
+- 32비트 FILE/FileSpec/포인터·SEH/스택·미작성값 자체 일치, 임의 외부heap→SID, 실제OS 고갈/물리 디스크 장애·UNC/드라이브CWD·CD 전체dump/trace/Retype·x87 전체 입력/픽셀은 기존 호스트/후순위 경계다. 부분I/O/버퍼 실패/복구966·new_handler/종료979를 미착수로 되돌리지 않는다. 활성 Caller 미연결을 이 경계로 숨기지 않는다.
+- PCM936은 HJOW-Athlon의 프로세스WASAPI101653프레임/비무음99726과 영상/소리 합성을 확인했다. 청취/다른 장치/실제CD/활성 전체화면까지 검증한 것은 아니다. 덱 검은띠981과 사용자 보류 연녹색 사각형을 혼동하지 않는다.
 
-## 6. 운영 규칙과 유효한 사용자 결정
+<a id="0-재개-전-확인-사항"></a>
 
-- **최신 지시:** 사용자2026-11-09 `/goal`로 재개했다. LEFT_JOBS의 모든 CPP 작업을 계속하고 단위마다 문서/로컬 커밋을 수행하며 커밋 실패해도 계속한다. 자연 완주/전체 동일성/사용자 직접 확인/MP 테스트는0.3절대로 제외한다.
-- **검증 구분/빈도:** 정적 대조·컴파일·단위 실행·GUI·물리를 구별한다. 최초 실패/교정 원시를 보존하고 기대값을 제품에 맞춰 약화하지 않는다. 많은 기능 묶음 뒤 필요한 통합 확인을 하되 옛3~5단위 숫자를 자동 전체34/CTest/ZIP 실행 조건으로 쓰지 않는다.
-- **빌드:** 현재 HJOW-Athlon은 VS18(2026)/MSBuild18.x다. `cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --parallel 4 -- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true`로 빌드한다. 살아 있는 단일 핸들을 추적하고 종료0을 확인한 뒤 다음 작업을 한다. 빌드 중 제품 소스를 변경하지 않는다. HJOW-X3D는VS17(2022)/v143이다. [빌드 안내](docs/cpp-build.md).
-- **실행 파일/자료:** 대상NetstormCpp·OUTPUT_NAME Netstorm·ARCHIVE_OUTPUT_NAME NetstormCpp를 유지한다. 원본/클론은 전체 경로로 구별하고 EXE 옆 `game/netstorm.tarc`를 우선한다. cwd의 다른 게임/보호 원본을 자동 탐색하지 않는다. 무인자 GUI·`--help/--run`·분석CLI를 유지한다.
-- **보호/실행:** AGENTS.md·원본/CD 기존 파일·루트 README 개요를 바꾸지 않는다. 원본 실행 전후 해시/허용 설정 복원을 지킨다. 시작한 프로세스만 종료하고 이름 기반 일괄 강제 종료를 하지 않는다. CHEAT/테스트 조작은 원문 Edit 조건과 명시 검사 옵션으로 구분해 기본 적AI/프로필에 섞지 않는다.
-- **언어/편집:** 새 문서/코드는UTF-8, 응답/주석은한국어다. D2Coding/AGENTS 명칭·주석 규칙을 따른다. 이 두 인계 MD의 기존 CRLF를 보존한다. PowerShell5.1 stdin은 `$OutputEncoding = [System.Text.UTF8Encoding]::new($false)`, 필요 시Python UTF-8 모드를 사용한다. 원시 로그/fixture는 인코딩 정리로 덮지 않는다.
-- **Git:** 단위마다 인계 뒤 `YYYYMMDD-NN CP 요약`으로 로컬 커밋한다. 다른 세션과 당일 번호를 확인하고 필요한 경우 `git -c core.autocrlf=false`/`-c core.whitespace=cr-at-eol`을 쓴다. 저장소/전역 설정을 바꾸지 않고 최초 TSV의 `-text`를 지킨다. 실패해도 일을 계속하며 **push는 하지 않는다**.
-- **문서 권한:** 이 문서가 현행 CPP 상태/우선순위의 기준이다. [빌드/로드맵](docs/cpp-roadmap.md)·[플레이 계획](docs/cpp-playable-plan.md)·옛 보고서의 당시 “다음 작업”을 현행 미완료로 되살리지 않는다. 단위 보고서는 완료 범위의 근거로 사용한다.
+## 6. 다음 작업의 운영 규칙
+
+1. **착수:** AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 읽고 git status/fetch로 다른 세션 변경을 확인한다. 현재 호스트가 마지막 디컴파일 호스트와 다르면 CPP 작업/원문 분석 전에 `tools/ghidra/refine_all.ps1`을 다시 실행한다. R원문은 필요 시`tools/ghidra/refine_root_server.ps1`도 실행하고 문서/인계의 호스트를 갱신한다. HJOW-X3D의2026-10-27 중단 산출물은 완성본으로 쓰지 않는다.
+2. **단위 종료:** 0.1 현행 값·해당 M/K/S/B 완료 조건·checking/최근 완료2건을 갱신한다. 상세는 단위 문서/보고서에 쓰고 현행 인계에 완료 로그를 계속 쌓지 않는다. 실제 완료와 준비본/정적 대조/컴파일/단위 실행/GUI/물리를 구별한다.
+3. **Git:** 문서 작성 뒤 자기 파일만 `YYYYMMDD-NN CP 요약`으로 로컬 커밋한다. 당일 번호/다른 세션의 stage를 확인하고 DN/WB 파일·스테이징을 수정/정리/커밋하지 않는다. 커밋 실패해도 작업은 계속한다. **push하지 않는다.** 저장소/전역 설정과 최초TSV의`-text`를 바꾸지 않는다.
+4. **빌드:** HJOW-Athlon은 VS18(2026)/MSBuild18.x다. 아래4병렬 명령을 쓰고 단일 실행 핸들의 종료0을 확인한다. 빌드 중 제품 소스를 변경하지 않는다. HJOW-X3D는VS17(2022)/v143이다. [빌드 안내](docs/cpp-build.md).
+5. **검증:** 최초 실패/교정 원시를 보존하고 기대값을 제품에 맞춰 약화하지 않는다. 변경 관련 집중 확인을 마친 뒤 다음 작업으로 간다. 옛3~5단위 수를 자동 전체34/CTest/ZIP 반복 조건으로 쓰지 않는다. 필요한 통합/최종 배포 확인은 해당 관문에서 수행한다.
+6. **보호:** AGENTS.md·원본/CD 기존 파일·루트README 개요를 수정하지 않는다. 원본 실행 전후 해시/허용 설정 복원을 지킨다. 시작한 프로세스만 종료하고 이름 기반 일괄 종료하지 않는다. CHEAT/테스트 조작은 원문Edit 조건과 명시 검사 옵션으로 구분하고 기본AI/프로필에 섞지 않는다.
+7. **제품 계약:** 대상NetstormCpp·OUTPUT_NAME Netstorm·ARCHIVE_OUTPUT_NAME NetstormCpp, Windows실행 파일`Netstorm.exe`,11.01/세 번째Patch Credits(HJOW·AI),무인자GUI/--help/--run/분석CLI를 유지한다.34경로(Early6·Training9·캠페인16·데모3) 범위를 유지한다. EXE옆`game/netstorm.tarc`를 우선하고 cwd의 다른 게임/보호 원본을 자동 탐색하지 않는다.
+8. **외부 접속:** 로컬TCP/IP를 제외한 외부 도메인/IP 기능을 문서화하고 폐기 온라인 유효성검증은 비활성화한다. [외부 정책](docs/exe/cpp-external-services-20261101.md)·[주소 목록](cpppj/external-endpoints-20261101.json)을 기준으로 새 활성 Caller도 확인한다.
+9. **언어:** 새 문서/코드는UTF-8, 응답/새 코드의 네임스페이스·상수·함수·클래스/구조체·멤버·반복문 설명은 한국어다. D2Coding/AGENTS 명칭을 따른다. 이 두 인계MD의 기존CRLF와 원시 로그/fixture 인코딩을 보존한다. PowerShell5.1 stdin은`$OutputEncoding = [System.Text.UTF8Encoding]::new($false)`, 필요 시Python UTF-8 모드를 쓴다.
+10. **요약/권한:** 진행 요약 시 cpppj·dotnetpj·webpj 각각의 플레이 가능성과 원본 동일성을 제시한다(AGENTS551d27ae).9차34건은B1~B4에 유지한다(AGENTSb5197d48). 이 문서가 현행 CPP 우선순위 기준이며 옛 로드맵/단위 보고서의 “다음”을 다시 미완료로 되살리지 않는다.
+
+```powershell
+cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --parallel 4 -- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true
+```
+
+## 7. 근거와 보관
+
+| 확인할 범위 | 문서 |
+| --- | --- |
+| 비MP UI·Edit·미션/내부 수명 | [929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[956](docs/exe/cpp-mission-state-scope-20261106.md)·[980](docs/exe/cpp-internal-lifetime-closure-20261106.md) |
+| 디컴파일/소스 신뢰도 | [디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md) |
+| 11.01·전체34경로 | [제품 계약](docs/exe/cpp-product-1101-20261101.md)·[TODO](TODO.md)·[미션 대응표](docs/gameplay/demo-campaign-map.md) |
+| 과거 LAN 일반/서버/메타 완료 | [1147까지의 원문](LEFT_JOBS.old.md#archive-20261108-through-1147)과 각 단위의docs/exe·cpppj/JSON·Git 이력.1150~1195의 인계 요약/중지 안내는 아래1195 보관본을 본다. |
 
 <a id="인수인계-문서-임시-분할"></a>
 
-## 7. 보관과 문서 분담
-
-- cpppj/공통/디컴파일은 이 문서, DN/WB는 각 LEFT_JOBS 문서를 유지한다. 현재 다른 세션의 DN/WB 작업을 합치거나 정리하지 않는다.
-- **2026-11-08 정리1148:** 이전 원문251150바이트를 [새 보관 앵커](LEFT_JOBS.old.md#archive-20261108-through-1147)에 그대로 추가했다. 기존 보관본의 모든 바이트를 접두부로 보존했다.0.5~0.165의 순차 완료 이력·만료된 예고/긴 완료목록을 옮기고 현재 단계/8개M·5개K·4개S 계획/전환 조건으로 대체했다.
-- 1147에서 완료한 `0042bc10`을 checking 미완료에서 제외해 **5→4**로 정정했다. 미해결 검사/사용자 결정/준비본 미적용/후순위 범위는 남겼다. 구현/검증 완료 범위를 새로 부풀리지 않았다.
-- **문서 정리 검증:** 원문/기존보관 바이트 보존·현재 링크/기존 외부앵커·237후보 해시·2800보호 파일·제품1147 EXE/R 해시를 확인한다. 새 빌드/단위/게임/MP/통신/디컴파일은 실행하지 않는다. 이후 CPP 구현을 계속하며 현재 다음 항목은M6-l다.
+**2026-11-09 문서 정리1196:** 정리 전 현행 문서 전체를 [1195 보관본](LEFT_JOBS.old.md#archive-20261109-through-1195)에 바이트 그대로 추가하고 기존 LEFT_JOBS.old.md의 모든 바이트를접두부로 보존했다. 만료된 M2/M3/M4 세부 “다음” 예고·완료 나열과 중지 안내를 현행 작업 목록에서 제거했다.1195 제품·미해결 검사·실행 제외·준비본 미적용·후순위는 유지했다. AGENTS551d27ae/b5197d48 요구를 현행 요약·계획·운영 규칙에 반영했다. 제품 소스/EXE·원본/CD/fixture·AGENTS/README·DN/WB 인계·986준비본은 이 정리에서 변경하지 않았으며 새 빌드/게임/검사/MP/통신/디컴파일은 실행하지 않았다. [정리 검증 보고서](docs/exe/cpp-handoff-cleanup-20261109.json)를 참조한다. 다음 구현 단위1197은2절 M6의 장기 건설 본체다.
