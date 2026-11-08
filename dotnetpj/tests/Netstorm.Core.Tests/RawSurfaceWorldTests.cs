@@ -1751,6 +1751,28 @@ public sealed class RawSurfaceWorldTests
         Assert.True(world.ProcessBindingsReturned());
         Assert.Throws<InvalidOperationException>(() => world.ClearProcessesForState());
     }
+
+    /// <summary>껍데기 월드의 Core 조회를 프레임 미연결로 거부하는지 검증한다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐다.</summary>
+    [Fact]
+    public void CoreOnShellWorldRequiresFrame()
+    {
+        // 자동 껍데기 저장소는 셰이프 표가 없어 표시·프레임을 만들지 않으므로 Core도 같은 지점에서 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => world.Core());
+        Assert.Contains("프레임", error.Message);
+    }
+
+    /// <summary>전체 월드의 Core 조회가 수명 미연결로 멈추는지 검증한다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐다.</summary>
+    [Fact]
+    public void CoreOnFullWorldRequiresLifecycle()
+    {
+        // 프레임까지 연결된 전체 월드에서는 다음 잔여인 표면 수명에서 멈춘다.
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullStorage(types, frames), frames);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => world.Core());
+        Assert.Contains("수명", error.Message);
+    }
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
     {

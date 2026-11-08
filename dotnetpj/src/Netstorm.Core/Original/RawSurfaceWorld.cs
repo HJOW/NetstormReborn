@@ -135,6 +135,18 @@ public sealed class RawSurfaceWorld
     /// <summary>생산·표면 재정의를 현재 가상 표로 분배하는 소유자 지정이다. 원본 Impl.assetOwner에 대응한다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>
     private readonly Action<int, uint>? _assetOwner;
 
+    /// <summary>프레임 변경을 물리 프레임·통지·갱신 요청에 반영하는 처리기다. 원본 Impl.frame에 대응하며 표시 미연결 껍데기·CD 판본에서는 비워 둔다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐다.</summary>
+    private readonly SquidFrame? _frame;
+
+    /// <summary>표면 객체의 공간·연결·수명 처리 자료다. 원본 Impl.lifecycle에 대응하며 월드 본체 조립 단위에서 잇는다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐다.</summary>
+    private RawSurfaceLifecycle? _lifecycle = null;
+
+    /// <summary>다리의 연결·붕괴 변화에 따른 이벤트 처리기다. 원본 Impl.events에 대응하며 월드 본체 조립 단위에서 잇는다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐다.</summary>
+    private RawBridgeEvents? _events = null;
+
+    /// <summary>같은 삭제 분배기에 영구 등록하는 실제 감시 Form 쌍 소유자다. 원본 Impl.dependencies에 대응하며 월드 본체 조립 단위에서 잇는다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐다.</summary>
+    private RawDependFormHost? _dependencies = null;
+
     /// <summary>교체한 현재 공통 삭제 몸체다. 원본 Impl.common에 대응하며 BindDeletion 전에는 비어 있다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
     private RawSquidDestroyLifecycle? _common;
 
@@ -291,6 +303,42 @@ public sealed class RawSurfaceWorld
             _display = new SquidDisplay(_edition, _types, _storage.Shapes, new WorldDisplaySink(this), new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 65536, Viewport = new DisplayRect(0, 0, 640, 480) });
         }
 
+        // 프레임 지정은 표시·Unpop·Pop 가상 호출 순서대로 외부 효과에 연결한다. CD 판본과 표시 미연결 껍데기에서는 비워 둔다.
+        if (_edition == OriginalEdition.Patch1078 && _display is not null && _unpop is not null && _pop is not null)
+        {
+            SquidDisplay display = _display;
+            RawUnpop unpop = _unpop;
+            RawPop pop = _pop;
+            RawSidPool pool = _storage.Pool;
+            IReadOnlyList<OriginalTypeRecord> frameTypes = _types;
+            display.ValidateFrameBinding(_edition, frameTypes);
+            _frame = new SquidFrame(pool, frameTypes, new SquidFrameHooks
+            {
+                FrameSize = (sid, frame) => display.FrameSize(_edition, pool.Slot(sid), frame),
+                Update = (sid, flags) => display.Update(pool.Slot(sid), flags),
+                Unpop = (sid, flags) =>
+                {
+                    byte number = pool.Slot(sid)[10];
+                    if (number >= frameTypes.Count)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(sid), "프레임 Unpop 타입 번호 범위 오류");
+                    }
+
+                    unpop.Unpop(sid, frameTypes[number], flags);
+                },
+                Pop = (sid, x, y, flags) =>
+                {
+                    byte number = pool.Slot(sid)[10];
+                    if (number >= frameTypes.Count)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(sid), "프레임 Pop 타입 번호 범위 오류");
+                    }
+
+                    pop.Pop(sid, frameTypes[number], 0, 0, x, y, flags);
+                },
+            });
+        }
+
         _bookkeeping.LocalOwner = 1;
     }
 
@@ -326,6 +374,122 @@ public sealed class RawSurfaceWorld
     /// <summary>빌리거나 새로 만든 같은 물리 저장소다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>
     /// <returns>물리 저장소다.</returns>
     public RawSurfaceStorage Storage() => _storage;
+
+    /// <summary>같은 풀·공간 지도에서 실제 미션 모듈이 쓰는 현재 참조 묶음을 빌린다. 새 배열·풀을 만들지 않으며 월드보다 오래 살 수 없다. 필요한 모듈이 하나라도 없으면 명시 오류로 멈춘다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐다.</summary>
+    /// <returns>월드와 같은 수명의 실제 월드 자료 보기다.</returns>
+    public RawWorldCore Core()
+    {
+        // 원본 RawSurfaceWorld::Core의 참조 순서대로 확인한다. 수명·사건·감시 쌍은 월드 본체 조립 단위에서 잇는다.
+        if (_factory is null)
+        {
+            throw new InvalidOperationException("실제 공장 생성이 연결되지 않았습니다.");
+        }
+
+        if (_owner is null)
+        {
+            throw new InvalidOperationException("실제 소유자 지정이 연결되지 않았습니다.");
+        }
+
+        if (_frame is null)
+        {
+            throw new InvalidOperationException("실제 프레임 지정이 연결되지 않았습니다.");
+        }
+
+        if (_pop is null)
+        {
+            throw new InvalidOperationException("실제 Pop 등록이 연결되지 않았습니다.");
+        }
+
+        if (_unpop is null)
+        {
+            throw new InvalidOperationException("실제 Unpop 해제가 연결되지 않았습니다.");
+        }
+
+        if (_postPop is null)
+        {
+            throw new InvalidOperationException("실제 Pop 후처리가 연결되지 않았습니다.");
+        }
+
+        if (_display is null)
+        {
+            throw new InvalidOperationException("실제 화면 출력 요청이 연결되지 않았습니다.");
+        }
+
+        if (_building is null)
+        {
+            throw new InvalidOperationException("실제 건물 공간 처리가 연결되지 않았습니다.");
+        }
+
+        if (_graph is null)
+        {
+            throw new InvalidOperationException("실제 표면 Graph 처리가 연결되지 않았습니다.");
+        }
+
+        if (_neighbors is null)
+        {
+            throw new InvalidOperationException("실제 이웃 검색기가 연결되지 않았습니다.");
+        }
+
+        if (_baseDestroy is null)
+        {
+            throw new InvalidOperationException("실제 기본 삭제 처리가 연결되지 않았습니다.");
+        }
+
+        if (_virtualDestroy is null)
+        {
+            throw new InvalidOperationException("실제 가상 삭제 분배기가 연결되지 않았습니다.");
+        }
+
+        if (_lifecycle is null)
+        {
+            throw new InvalidOperationException("실제 표면 수명 분배기가 연결되지 않았습니다.");
+        }
+
+        if (_events is null)
+        {
+            throw new InvalidOperationException("실제 다리 사건 처리기가 연결되지 않았습니다.");
+        }
+
+        if (_formDispatch is null)
+        {
+            throw new InvalidOperationException("실제 Form 분배기가 연결되지 않았습니다.");
+        }
+
+        if (_dependencies is null)
+        {
+            throw new InvalidOperationException("실제 감시 Form 쌍 처리가 연결되지 않았습니다.");
+        }
+
+        return new RawWorldCore(
+            _storage.Pool,
+            _storage.Hash,
+            _storage.Spots,
+            _types,
+            _frames,
+            _storage.Shapes,
+            _bookkeeping,
+            _storage.OwnerMode,
+            _factory,
+            _owner,
+            _frame,
+            _pop,
+            _unpop,
+            _postPop,
+            _display,
+            _building,
+            _graph,
+            _neighbors,
+            _baseDestroy,
+            _virtualDestroy,
+            _lifecycle,
+            _events,
+            _formDispatch,
+            _dependencies,
+            _storage.Processes().Host(),
+            _processState,
+            _kernel,
+            _storage.Links);
+    }
 
     /// <summary>변경 요청을 한 번만 소비한다. 원본 표시가 전체 갱신으로 억제되어도 논리 변경은 남는다. 2026-11-07 F2d 월드 본체 TakeChanged 이식에서 추가됐다.</summary>
     /// <returns>소비 전에 변경이 남았으면 true, 이미 소비했으면 false다.</returns>
