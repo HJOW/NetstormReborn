@@ -99,8 +99,8 @@ void RawDamageablePostDestroy::Drops(Sid sid,std::uint32_t genus,bool random) co
     std::uint32_t count=1;if (genus&0x4200U) count=5;if (genus&0x20000U) count=2;
     const auto type=raw[kType];const auto excluded=pool_.Edition()==OriginalEdition::Patch1078 ? 5U : 4U;
     // 판본별 제외 타입과 현재 특별 타입을 원본 우선순서로 검사한다.
-    for (std::size_t index=0;index<excluded;++index) if (type==state_.excludedDropTypes[index]) return;
-    if (type==state_.specialDropType) count=3;if (state_.DudeCount()>20) count/=2;
+    for (std::size_t index=0;index<excluded;++index) if (type==state_.ExcludedDropType(index)) return;
+    if (type==state_.SpecialDropType()) count=3;if (state_.DudeCount()>20) count/=2;
     // 생성 뒤 부모/전역이 변해도 처음 계산한 반복 수는 다시 계산하지 않는다.
     for (std::uint32_t index=0;index<count;++index) hooks_.dropDude(sid,static_cast<std::int32_t>(index),random);
 }

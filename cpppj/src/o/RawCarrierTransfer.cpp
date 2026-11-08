@@ -48,7 +48,7 @@ std::uint32_t RawCarrierTransfer::Transfer(Sid parent) const {
     // 실제 finder의 현재 후보와 아직 읽지 않은 체인은 효과 뒤의 현재 raw를 사용한다.
     while (candidate.value && state_.cooldown==0) {
         const auto donor=pool_.Slot(candidate);
-        if (donor[34]==pool_.Slot(parent)[34] && donor[10]==state_.emptyType) {
+        if (donor[34]==pool_.Slot(parent)[34] && donor[10]==state_.EmptyType()) {
             const auto content=Need(hooks_.find)(candidate,0x20,0,0);
             if (content.value && Read(pool_.Slot(content),18,2)==state_.NuggetType()) {
                 state_.lastDonor=candidate.value;state_.cooldown=5;

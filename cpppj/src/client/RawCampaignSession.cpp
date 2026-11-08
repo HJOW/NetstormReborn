@@ -564,7 +564,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawMissionOutcome> outcome; // 같은 Player9/동맹/사제/HP/영역의 현재 입력을 매 조회 읽는다.
     FortFinishOwnerState finishState; // 실제 미션 chaffMode의 자연 반환 조건이다.
     AssetPostPopState assetState; // 실제 신전/거주 구역/간헐천/아웃포스트 목록이다.
-    RawPriestWorldState priestState{&gameplayGlobals->GameAux()->PriestType()}; // HP/이동/회복의 사제 번호는 World보다 오래 사는 같은 Client 전역을 빌린다.
+    RawPriestWorldState priestState{&gameplayGlobals->GameAux()->PriestType(),world.Storage()->UsesNativeTransmissionDevices() ? gameplayGlobals->GameAux().get():nullptr}; // HP/이동/회복의 사제 번호는 World보다 오래 사는 같은 Client 전역을 빌린다.
     RunePostPopState runeState; // PATCH005412e8/ec/f0의 현재Altar164/Dais165/Rune166이며 후속 실제 의식도 같은 저장소를 사용한다.
     TempleRitualState ritualState; // 같은 현재 권한/사제/룬 타입의 의식 상태다.
     std::unique_ptr<RawContainedLookup> ritualLookup; // 의식과 내용물 제거가 같은 실제 종속 체인을 읽는다.
@@ -854,14 +854,14 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFlyerTarget> flyerTarget; // 같은 현재 풀/의존/실제 공간 검색의 표적 선택·경쟁·포위다.
     std::unique_ptr<RawSquidFinder> flyerFinder; // 한 비행체 표적 검색의 같은 일반 finder 커서를 보관한다.
     const std::uint32_t& flyerProcessEnd{gameplayGlobals->GameAux()->ProcessTypeEnd()};std::uint32_t flyerDependType{1}; // PATCH의 실제 프로세스 상한/의존 타입 전역이다.
-    std::uint32_t windFlyerType{138}; // PATCH00541280의 현재 더스트 데빌 타입이다.
+    std::uint32_t localWindFlyerType{138};std::uint32_t& windFlyerType{world.Storage()->UsesNativeTransmissionDevices() ? gameplayGlobals->GameAux()->WindFlyerType():localWindFlyerType}; // PATCH00541280의 현재 더스트 데빌 타입이다.
     std::unique_ptr<RawFlyerPostPop> flyerPostPop; // 맨 오 워/훨리기그의 실제 생성·그림자·압축 시각 후처리다.
     std::uint32_t& flyerProcessType{gameplayGlobals->GameAux()->FlyerProcessType()}; // PATCH005410ec를 같은 Client의 장기 owner에서 직접 빌린다.
     std::array<std::uint8_t,64> typedFlyerPacket{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
     std::span<std::uint8_t> flyerPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedFlyerPacket)};bool writingFlyer{}; // 실제0x39 상태 writer와 송신의 단일 버퍼/선택 표식이다.
     std::unique_ptr<FlyerProcess> pendingFlyer; // 기본 생성자의 부착 경계까지 단일 프로세스 소유권을 보관한다.
     std::uint32_t& rainAviaryType{gameplayGlobals->GameAux()->RainAviaryProcessType()}; // 생성/검색/수신이 같은00541160을 직접 빌린다.
-    std::uint32_t rainFlyerType{144}; // PATCH00541298의 플라이어 TYPE다.
+    std::uint32_t localRainFlyerType{144};std::uint32_t& rainFlyerType{world.Storage()->UsesNativeTransmissionDevices() ? gameplayGlobals->GameAux()->RainFlyerType():localRainFlyerType}; // PATCH00541298의 플라이어 TYPE다.
     std::array<std::uint8_t,64> typedRainAviaryPacket{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
     std::span<std::uint8_t> rainAviaryPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedRainAviaryPacket)};bool writingRainAviary{}; // 실제0x73 writer와 송신이 공유하는 버퍼/분배 표식이다.
     std::uint32_t& sunAviaryType{gameplayGlobals->GameAux()->SunAviaryProcessType()}; // 생성/검색/수신이 같은005410f0을 직접 빌린다.
@@ -970,6 +970,7 @@ struct RawCampaignSession::Impl {
         runeState.sharedAltarType=rewardState.sharedAltarType;runeState.sharedDaisType=rewardState.sharedDaisType; // Rune/다이스·참여자·AI/메뉴가 보상과 같은 현재 두 DWORD를 빌리며 임시 getter 값의 주소를 남기지 않는다.
         rewardState.sharedSilentType=damageablePostState.sharedSilentSurfaceType=&gameplayGlobals->GameAux()->RainBlockerType(); // 보상과 일반 삭제의 같은005412a4를 연결한다.
         rewardState.sharedAliasType=&gameplayGlobals->GameAux()->GrowingRainBlockerType();rewardState.sharedNuggetType=&gameplayGlobals->GameAux()->NuggetType(); // 별칭 비용/환불의 현재 성장형·너겟 번호다.
+        if (world.Storage()->UsesNativeTransmissionDevices()) carrierTransferState.sharedEmptyType=&gameplayGlobals->GameAux()->EmptyCarrierType(); // 전달의 현재 donor 비교도 이동/삭제와 같은541344를 읽는다.
         contentLifetimeState.sharedNuggetType=carrierTransferState.sharedNuggetType=geyserMinedState.sharedNuggetType=rewardState.sharedNuggetType; // 내용물·전달·채집이 보상과 같은 현재005412c0을 빌린다.
         motionState.carrier.sharedNuggetType=motionState.cleanup.sharedNuggetType=constructionState.place.sharedNuggetType=rewardState.sharedNuggetType; // 경로·건설·덱/의식 요청의 참조도 같은 장기 owner로 연결한다.
         if (localHp) hp.BindCurrentTypes(core.types); // 실제 PATCH의 최대HP/HP 플래그가 World의 같은 현재 TYPE 표를 읽는다. 별도 정수 비용 캐시는 유지한다(단위863).

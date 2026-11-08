@@ -3767,3 +3767,7 @@ target_sources(netstorm_pop_context_tests PRIVATE AllocationFailureTests.cpp)
 # 와이드 패널 본문 반복과 기존 원문 배경/실제 픽셀을 같은 집중 대상에서 대조한다(981).
 target_sources(netstorm_tests PRIVATE GumpWidePanelTests.cpp)
 target_sources(netstorm_translated_pixels_tests PRIVATE GumpWidePanelTests.cpp GumpBackgroundDrawTests.cpp GumpBackgroundTests.cpp)
+
+# 장기 TYPE owner의 실제 이동 선택/삭제 수량만 검증하며 MP/패킷은 실행하지 않는다(1188).
+target_sources(netstorm_tests PRIVATE CurrentDamageableRoleTests.cpp)
+target_sources(netstorm_damageable_lifetime_tests PRIVATE CurrentDamageableRoleTests.cpp)

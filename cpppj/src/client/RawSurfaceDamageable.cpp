@@ -10,6 +10,7 @@ namespace netstorm::client { // 큰 선택 효과만 실제 현재 Runtime을 �
 void RawSurfaceStorage::BindDamageableDevices(RawSurfaceDamageableDevices devices) {
     if (!UsesNativeTransmissionDevices() || !deletionDevices_.unitLost || borrowed_ || damageableDevices_.finder || !devices.finder || !devices.allowedGenus || !devices.collapse || !devices.explosion || !devices.sound || !devices.spawnPriest || !devices.dropDude || !devices.dropIsland) throw std::invalid_argument("장기 Damageable의 실제 Native 최초 장치 계약");
     damageableDevices_=std::move(devices);damageablePreState_.sharedPriestType=&gameAux_->PriestType();damageableReleaseState_.sharedAllowedGenus=damageableDevices_.allowedGenus.get();
+    damageablePostState_.sharedExcludedDropTypes={&gameAux_->TempleProductType(),&gameAux_->RainWalkerType(),&gameAux_->RainFlyerType(),&gameAux_->WindFlyerType(),&gameAux_->EmptyCarrierType()};damageablePostState_.sharedSpecialDropType=&gameAux_->BulfType(); // 원문 54126c/c8/98/80/344와541274를 같은 owner에서 읽는다.
     damageablePostState_.sharedBattle=&ownerMode.battle;damageablePostState_.sharedBoss=&authority_->boss;damageablePostState_.sharedSilentSurfaceType=&gameAux_->RainBlockerType();damageablePostState_.sharedDudePopulation=&sidLists.dudes;damageablePostState_.sharedDamageEvent=&gameAux_->DamageRegularEvent();
 }
 // 현재 Native owner를 빌리며 값을 복사하거나 기본값으로 되돌리지 않는다.

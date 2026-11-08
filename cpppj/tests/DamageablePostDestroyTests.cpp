@@ -165,3 +165,16 @@ TEST_CASE(DamageablePostDestroy_CurrentPopulationControlsActualDrops) {
 TEST_CASE(DamageablePostDestroy_CurrentBattleAndEventControlActualRegular) {
     DamageablePostReplayScene scene(OriginalEdition::Patch1078);std::array<std::uint32_t,18> input{0x110000,1,1,0,89,0x10,0,0,131073,3,3,0,0,6699,5,0,std::bit_cast<std::uint32_t>(50.5F),std::bit_cast<std::uint32_t>(50.5F)};scene.Prepare(input);bool battle{};std::uint32_t event=0x12345678U;scene.state.sharedBattle=&battle;scene.state.sharedDamageEvent=&event;scene.post->PostDestroy(Sid{50},input[0]);CHECK(std::none_of(scene.events.begin(),scene.events.end(),[](const std::string& value){return value.starts_with("R:");}));CHECK(std::find(scene.events.begin(),scene.events.end(),"B:50:1114112")!=scene.events.end());scene.events.clear();battle=true;scene.post->PostDestroy(Sid{50},input[0]);CHECK(std::find(scene.events.begin(),scene.events.end(),"R:60:305419896:0:131073")!=scene.events.end() && scene.state.damageEvent==6699);
 }
+
+// 현재 다섯 제외 DWORD만 단락 판정에 쓰며 전체 DWORD가 BYTE와 다르면 제외하지 않는다.
+TEST_CASE(DamageablePostDestroy_CurrentExcludedRolesUseFullDword) {
+    DamageablePostReplayScene scene(OriginalEdition::Patch1078);std::array<std::uint32_t,18> input{0x110000,1,1,0,89,0x10,0,0,131073,3,3,0,0,6699,5,0,std::bit_cast<std::uint32_t>(50.5F),std::bit_cast<std::uint32_t>(50.5F)};scene.Prepare(input);std::array<std::uint32_t,5> roles{200,201,202,203,204};scene.state.excludedDropTypes.fill(89);
+    for (std::size_t index=0;index<roles.size();++index) scene.state.sharedExcludedDropTypes[index]=&roles[index]; // 원문 비교 순서의 서로 다른 실제 주소를 빌린다.
+    for (std::size_t index=0;index<roles.size();++index) { // 다섯 각 현재 주소와 DWORD 전체 비교를 같은 드롭 몸체에서 관측한다.
+        roles[index]=89;scene.post->Drops(Sid{50},0x4200,true);CHECK(scene.events.empty());roles[index]=0x10059;scene.post->Drops(Sid{50},0x4200,true);CHECK(scene.events.size()==5);scene.events.clear();roles[index]=200U+static_cast<std::uint32_t>(index);
+    }
+}
+// 현재 벌프 TYPE가 수량3을 선택하며 생성 효과 중 바뀐 TYPE로 반복 수를 재계산하지 않는다.
+TEST_CASE(DamageablePostDestroy_CurrentSpecialRoleKeepsChosenCount) {
+    DamageablePostReplayScene scene(OriginalEdition::Patch1078);std::array<std::uint32_t,18> input{0x110000,1,1,0,89,0x10,0,0,131073,3,3,0,0,6699,5,1,std::bit_cast<std::uint32_t>(50.5F),std::bit_cast<std::uint32_t>(50.5F)};scene.Prepare(input);std::uint32_t bulf=89;scene.state.specialDropType=999;scene.state.sharedSpecialDropType=&bulf;scene.post->Drops(Sid{50},0x4200,true);CHECK(scene.events.size()==3 && PostInputSlot(scene.pool,50)[10]==91);scene.events.clear();PostInputSlot(scene.pool,50)[10]=89;bulf=0x10059;scene.post->Drops(Sid{50},0x4200,true);CHECK(scene.events.size()==5 && scene.state.specialDropType==999);
+}

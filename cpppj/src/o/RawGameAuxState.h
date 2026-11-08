@@ -145,6 +145,16 @@ public:
     const std::uint32_t& AltarType() const { return altarType_; } // 일반 월드 준비와 Session 교체로164를 다시 쓰지 않는다.
     std::uint32_t& DaisType() { return daisType_; } //005412ec의 현재 다이스 TYPE를 비용 개수/HP 예외가 공유한다.
     const std::uint32_t& DaisType() const { return daisType_; } // 최초165를 현재 owner의 값과 구별한다.
+    std::uint32_t& BulfType() { return bulfType_; } //00541274의 현재 벌프 TYPE를 이동 선택/삭제 드롭이 공유한다.
+    const std::uint32_t& BulfType() const { return bulfType_; } // Native owner의 주소를 World 교체 때 다시 만들지 않는다.
+    std::uint32_t& WindFlyerType() { return windFlyerType_; } //00541280의 현재 더스트 데빌 TYPE를 비행/드롭 판정이 함께 읽는다.
+    const std::uint32_t& WindFlyerType() const { return windFlyerType_; } // 현재 전체 DWORD를 BYTE로 미리 줄이지 않는다.
+    std::uint32_t& RainFlyerType() { return rainFlyerType_; } //00541298의 현재 맨 오 워 TYPE를 비행/삭제가 공유한다.
+    const std::uint32_t& RainFlyerType() const { return rainFlyerType_; } // Session 이후에도 같은 현재 번호다.
+    std::uint32_t& RainWalkerType() { return rainWalkerType_; } //005412c8의 현재 크리스탈 크랩 TYPE를 이동/내용물/드롭이 공유한다.
+    const std::uint32_t& RainWalkerType() const { return rainWalkerType_; } // 현재 번호를 최초156 사본으로 덮지 않는다.
+    std::uint32_t& EmptyCarrierType() { return emptyCarrierType_; } //00541344의 추가 빈 TYPE를 이동/전달/드롭이 공유한다.
+    const std::uint32_t& EmptyCarrierType() const { return emptyCarrierType_; } // 숨은 미등록187 분기도 같은 현재 번호를 읽는다.
     std::uint32_t& PriestType() { return priestType_; } //005412d0/CD0051cbbc의 같은 현재 사제 TYPE를 HP/이동/회복이 공유한다.
     const std::uint32_t& PriestType() const { return priestType_; } // Session 교체/일반 월드 준비로158을 다시 쓰지 않는다.
     std::uint32_t& FakeSurfaceType() { return fakeSurfaceType_; } //005412e0의 현재 DWORD를 Create 입구 진단이 읽는다.
@@ -246,6 +256,7 @@ private:
     std::array<std::uint8_t,2> rotateAnimationHeader_{0x3c,1},fireAnimationHeader_{0x3b,1}; // 보호 PE의 두 현재 헤더이며 World/Session 교체에서 초기화하지 않는다.
     std::uint32_t sunAviaryProcessType_{32},windAviaryProcessType_{59},rainAviaryProcessType_{60}; // 보호 PE의 서로 다른 세 DWORD다. 생성·검색·수신이 같은 장기 주소를 쓴다.
     std::uint32_t altarType_{164},daisType_{165}; // 보호 PE005412e8/005412ec의 두 초기 DWORD이며 일반 월드 준비에서 초기화하지 않는다.
+    std::uint32_t bulfType_{135},windFlyerType_{138},rainFlyerType_{144},rainWalkerType_{156},emptyCarrierType_{187}; // 보호 PE의 다섯 장기 TYPE DWORD 초기값이다. 일반 fresh/반납에서 재초기화하지 않는다.
     std::uint32_t priestType_{158}; // 두 보호 PE의 최초158이며 실제 HP/이동 소비자가 같은 장기 주소를 빌린다.
     std::uint32_t fakeSurfaceType_{162}; // PATCH005412e0의 최초162이며 실제 생성 부모가 장기 주소를 빌린다.
     std::uint32_t rainBlockerType_{147},growingRainBlockerType_{150}; //005412a4/005412b0의 현재 두 TYPE 번호이며 TYPE 기록 표와 별개다.

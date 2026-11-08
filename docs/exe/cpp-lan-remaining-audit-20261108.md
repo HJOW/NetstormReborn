@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1187 현행:**장기 공통 삭제/HP 뒤 같은 Damageable 전처리·해방·후처리와 Geyser 수명/현재 전역·목록을 연결했다. 비MP20검사와 Tutorial4 생산/건설 요청·실제 객체/600frame 대기, Edit 진입/복귀2회를 확인했다. 큰 파편/사제/Dude/받침/가상 삭제·비영 AI/피해 Regular의 전체 NoWorld owner·ConstructionRuntime·Carrier·다른 Form, Source/listener/표/Poll·63잔여F·Snapshot/JoinTestBattle·M6-l/m/n/큐는 남는다. 태그25는 전scope 완료 수가 아니며 새MP 실행0/큐 비활성이다. [1187 근거](cpp-damageable-lifetime-owner-20261109.md).
+**1188 현행:**장기 Damageable/Geyser 뒤 삭제 제외5/벌프 TYPE와 Native 이동·비행·전달의 현재 owner를 연결했다. 비MP24검사와 Tutorial4 생산/건설·실제 객체/600frame 대기, Edit 진입/복귀2회를 확인했다. 큰 파생/비영 AI/피해 Regular의 전체 NoWorld owner·ConstructionRuntime·Carrier·다른 Form/일반 가상 삭제, Source/listener/표/Poll·63잔여F·Snapshot/JoinTestBattle·M6-l/m/n/큐는 남는다. 태그25는 전scope 완료 수가 아니며 새MP 실행0/큐 비활성이다. [1188 근거](cpp-damageable-current-roles-20261109.md).
 
 이하 본문의 초기 조사는 제품 코드/LEFT_JOBS/추적 문서를 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 
