@@ -1,4 +1,5 @@
 // 서피스 월드 껍데기의 생성·선택·저장소 공유를 검증한다.
+using Netstorm.Core.Display;
 using Netstorm.Core.Original;
 
 namespace Netstorm.Core.Tests;
@@ -961,6 +962,161 @@ public sealed class RawSurfaceWorldTests
         Assert.True(world.TakeChanged());
     }
 
+    /// <summary>표시용 전체 저장소를 만든다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    /// <param name="types">같은 전역 TYPE 표다.</param>
+    /// <param name="frames">같은 장기 프레임 표다.</param>
+    /// <returns>호스트·표시 조회까지 되는 저장소다.</returns>
+    private static RawSurfaceStorage FullDisplayStorage(List<OriginalTypeRecord> types, List<RiftTypeFrames> frames)
+    {
+        var shapes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new SquidDisplayShape()).ToList();
+        shapes[70].FrameCount = 1;
+        shapes[70].Loaded = true;
+        shapes[70].Frames.Add(new SquidDisplayFrame { Width = 10, Height = 12, HotspotX = 2, HotspotY = 3, CellWidth = 8f, CellHeight = 6f });
+        return new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes);
+    }
+
+    /// <summary>표시 장면을 만든다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    /// <param name="table">받침 슬롯의 가상 표다.</param>
+    /// <param name="invalidated">무효화 기록 목록이다.</param>
+    /// <returns>받은 월드와 번호 쌍이다.</returns>
+    private static (RawSurfaceWorld World, int Target, int Support) DisplayScene(uint table, List<(DisplayRect Rect, uint Flags)> invalidated)
+    {
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullDisplayStorage(types, frames), frames);
+        int target = world.Storage().Pool.Allocate();
+        Span<byte> targetRaw = world.Storage().Pool.AllocatedBytes(target);
+        targetRaw[RawSidPool.StateOffset] = 0;
+        targetRaw[RawSidPool.TypeOffset] = 157;
+        WriteSlot(targetRaw, 14, BitConverter.SingleToUInt32Bits(10f), 4);
+        WriteSlot(targetRaw, 18, BitConverter.SingleToUInt32Bits(10f), 4);
+        int support = world.Storage().Pool.Allocate();
+        Span<byte> supportRaw = world.Storage().Pool.AllocatedBytes(support);
+        supportRaw[RawSidPool.StateOffset] = 0;
+        supportRaw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        WriteSlot(supportRaw, 0, table, 4);
+        WriteSlot(supportRaw, 36, 0u, 4);
+        WriteSlot(supportRaw, 14, BitConverter.SingleToUInt32Bits(10f), 4);
+        WriteSlot(supportRaw, 18, BitConverter.SingleToUInt32Bits(10f), 4);
+        Span<ushort> heads = world.Storage().Hash.MutableEntries(0);
+        for (int cx = 8; cx <= 10; cx++)
+        {
+            for (int cy = 8; cy <= 10; cy++)
+            {
+                if (cx != 10 || cy != 10)
+                {
+                    heads[cy * 256 + cx] = (ushort)support;
+                }
+            }
+        }
+
+        heads[10 * 256 + 10] = (ushort)target;
+        world.SetDisplay(new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 65536, Viewport = new DisplayRect(0, 0, 2000, 2000) }, new SurfaceDisplayHooks
+        {
+            Suppressed = () => false,
+            Invalidate = (rect, flags) => invalidated.Add((rect, flags)),
+        });
+        return (world, target, support);
+    }
+
+    /// <summary>잘못된 카메라를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetDisplayRejectsBadView()
+    {
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullDisplayStorage(types, frames), frames);
+        var hooks = new SurfaceDisplayHooks();
+        Assert.Throws<ArgumentException>(() => world.SetDisplay(new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 0, Viewport = new DisplayRect(0, 0, 10, 10) }, hooks));
+        Assert.Throws<ArgumentException>(() => world.SetDisplay(new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 65536, Viewport = new DisplayRect(10, 0, 0, 10) }, hooks));
+    }
+
+    /// <summary>표시 수집이 없으면 설치를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetDisplayRejectsMissingDisplay()
+    {
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<InvalidOperationException>(() => world.SetDisplay(new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 65536, Viewport = new DisplayRect(0, 0, 640, 480) }, new SurfaceDisplayHooks()));
+    }
+
+    /// <summary>받침 표시 갱신이 실제 무효화를 전달하는지 검증한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void UpdateDisplayInvalidates()
+    {
+        var invalidated = new List<(DisplayRect Rect, uint Flags)>();
+        (RawSurfaceWorld world, _, int support) = DisplayScene(0x00501DD0u, invalidated);
+        Assert.True(world.TakeChanged());
+        // 연결 조회가 없어 멈추기 전 8칸의 표시 갱신이 전달된다.
+        Assert.Throws<InvalidOperationException>(() => world.SetSupportOwner(10f, 10f, 5u));
+        Assert.Equal(5, world.Storage().Pool.Slot(support)[34]);
+        var expected = new DisplayRect(158, 107, 169, 120);
+        Assert.Equal(8, invalidated.Count);
+        Assert.All(invalidated, entry => Assert.Equal((expected, 0u), entry));
+        Assert.True(world.TakeChanged());
+    }
+
+    /// <summary>억제 중에는 등록하지 않는지 검증한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void UpdateDisplaySkipsWhenSuppressed()
+    {
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullDisplayStorage(types, frames), frames);
+        int target = world.Storage().Pool.Allocate();
+        Span<byte> targetRaw = world.Storage().Pool.AllocatedBytes(target);
+        targetRaw[RawSidPool.StateOffset] = 0;
+        targetRaw[RawSidPool.TypeOffset] = 157;
+        int support = world.Storage().Pool.Allocate();
+        Span<byte> supportRaw = world.Storage().Pool.AllocatedBytes(support);
+        supportRaw[RawSidPool.StateOffset] = 0;
+        supportRaw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
+        WriteSlot(supportRaw, 0, 0x00501DD0u, 4);
+        Span<ushort> heads = world.Storage().Hash.MutableEntries(0);
+        heads[10 * 256 + 10] = (ushort)target;
+        heads[9 * 256 + 10] = (ushort)support;
+        var invalidated = new List<(DisplayRect Rect, uint Flags)>();
+        world.SetDisplay(new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 65536, Viewport = new DisplayRect(0, 0, 2000, 2000) }, new SurfaceDisplayHooks
+        {
+            Suppressed = () => true,
+            Invalidate = (rect, flags) => invalidated.Add((rect, flags)),
+        });
+        Assert.Throws<InvalidOperationException>(() => world.SetSupportOwner(10f, 10f, 5u));
+        Assert.Empty(invalidated);
+    }
+
+    /// <summary>메타 갱신이 장치에 전달되는지 검증한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void MetaRefreshDelivered()
+    {
+        var invalidated = new List<(DisplayRect Rect, uint Flags)>();
+        (RawSurfaceWorld world, _, int support) = DisplayScene(0x50c9f0u, invalidated);
+        var refreshed = new List<byte[]>();
+        world.BindMetaRefresh(raw => refreshed.Add(raw.ToArray()));
+        Assert.Throws<InvalidOperationException>(() => world.SetSupportOwner(10f, 10f, 5u));
+        Assert.Equal(8, refreshed.Count);
+        byte[] expected = world.Storage().Pool.Slot(support).ToArray();
+        Assert.All(refreshed, bytes => Assert.Equal(expected, bytes));
+        Assert.Empty(invalidated);
+    }
+
+    /// <summary>빠진 메타 장치를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindMetaRefreshRejectsNull()
+    {
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullDisplayStorage(types, frames), frames);
+        Assert.Throws<ArgumentException>(() => world.BindMetaRefresh(null!));
+    }
+
+    /// <summary>연결되지 않은 메타 갱신을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void MetaRefreshRejectsMissingBinding()
+    {
+        var invalidated = new List<(DisplayRect Rect, uint Flags)>();
+        (RawSurfaceWorld world, _, _) = DisplayScene(0x50c9f0u, invalidated);
+        Assert.Throws<InvalidOperationException>(() => world.SetSupportOwner(10f, 10f, 5u));
+    }
     /// <summary>188개가 아닌 TYPE 월드의 해제를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 해제 연결 이식에서 추가됐다.</summary>
     [Fact]
     public void UnpopRejectsNon188World()

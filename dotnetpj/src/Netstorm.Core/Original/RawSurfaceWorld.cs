@@ -1,5 +1,6 @@
 // 같은 풀·공간 지도에서 표면 객체의 생성·등록·수명·표시를 관리하는 월드의 껍데기를 공유한다.
 using Netstorm.Core.Bridges;
+using Netstorm.Core.Display;
 using Netstorm.Core.Simulation;
 using System.Globalization;
 using System.Text;
@@ -60,7 +61,16 @@ public sealed class RawSurfaceWorld
     /// <summary>타입에 맞는 객체를 생성하는 처리기다. 원본 Impl.factory에 대응하며 188개 TYPE가 아니면 비워 둔다. 진단·분리·전송 묶음은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 생성 연결 이식에서 추가됐다.</summary>
     private readonly RawSquidFactory? _factory;
 
-    /// <summary>무인도 최초 등록과 3×3 받침 소유자 전파를 복원한 처리기다. 원본 Impl.surface에 대응하며 188개 TYPE·같은 수 프레임이 아니면 비워 둔다. 연결 조회·표시 갱신은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐다.</summary>
+    /// <summary>타입·프레임 자료와 카메라에서 객체 출력 요청을 만드는 처리기다. 원본 Impl.display에 대응하며 같은 수의 셰이프 표가 없으면 비워 둔다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    private readonly SquidDisplay? _display;
+
+    /// <summary>해상도 변경으로 Renderer가 교체되어도 현재 장치에 전달하는 표시 콜백이다. 원본 Impl.displayHooks에 대응한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    private SurfaceDisplayHooks _displayHooks = new();
+
+    /// <summary>현재 월드의 실제 메타 표시 갱신 장치다. 원본 Impl.metaRefresh에 대응하며 설치 전에는 비어 있다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    private Action<ReadOnlySpan<byte>>? _metaRefresh;
+
+    /// <summary>무인도 최초 등록과 3×3 받침 소유자 전파를 복원한 처리기다. 원본 Impl.surface에 대응하며 188개 TYPE·같은 수 프레임이 아니면 비워 둔다. 연결 조회는 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐고 0.251에서 표시 갱신을 연결했다.</summary>
     private readonly RawIslandPostPop? _surface;
 
     private readonly RawUnpop? _unpop;
@@ -146,7 +156,11 @@ public sealed class RawSurfaceWorld
                     Objects = new BridgeConnectHooks { SetOwner = (sid, owner) => SetAssetOwner(sid, owner) },
                     Connect = _ => throw new InvalidOperationException("실제 표면 연결의 현재 생성기가 연결되지 않았습니다."),
                     FindTypeAt = (_, _, _) => throw new InvalidOperationException("실제 표면 연결의 현재 조회가 연결되지 않았습니다."),
-                    UpdateDisplay = _ => _changed = true, // 표시 갱신(display->Update)은 후속 단위에서 잇는다.
+                    UpdateDisplay = sid =>
+                    {
+                        _changed = true;
+                        _display?.Update(_storage.Pool.Slot(sid));
+                    },
                     IncompleteSupport = (_, _, _) => throw new InvalidOperationException("원본 표면 월드의 불완전한 받침 묶음입니다."),
                     Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
                     Detail = text => _storage.RecordAssertionDetail(text),
@@ -157,12 +171,17 @@ public sealed class RawSurfaceWorld
 
         // 소유자 처리는 판본에 맞는 개수(패치 188·CD 171)일 때만 둔다. 어긋난 기존 껍데기 호출은 명시 오류로 멈춘다.
         bool ownerReady = (_edition == OriginalEdition.Patch1078 && _types.Count == OriginalConstructors.TypeCount)
-            || (_edition == OriginalEdition.Cd1072 && _types.Count == 171);
-        if (ownerReady)
+            || (_edition == OriginalEdition.Cd1072 && _types.Count == 171);        if (ownerReady)
         {
             SquidOwner owner = new(_storage.Pool, _types, _bookkeeping, _storage.OwnerMode);
             _owner = owner;
             _assetOwner = RawBridgeConnect.MakeOwnerDispatch(_storage.Pool, _storage.Links, owner.Set);
+        }
+
+        // 표시 수집은 판본과 무관하게 같은 수의 셰이프 표가 있을 때만 둔다. 자동 껍데기 저장소의 빈 표에서는 비워 둔다.
+        if (_types.Count == _storage.Shapes.Count && _storage.Shapes.Count > 0)
+        {
+            _display = new SquidDisplay(_edition, _types, _storage.Shapes, new WorldDisplaySink(this), new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 65536, Viewport = new DisplayRect(0, 0, 640, 480) });
         }
 
         _bookkeeping.LocalOwner = 1;
@@ -591,6 +610,61 @@ public sealed class RawSurfaceWorld
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
+    /// <summary>같은 실제 풀·공간 지도를 쓰는 표시 요청 싱크다. 억제·무효화·진단·메타 갱신을 현재 월드에 전달한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+    private sealed class WorldDisplaySink : SquidDisplaySink
+    {
+        /// <summary>요청을 전달할 월드다. 월드보다 오래 살 수 없다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+        private readonly RawSurfaceWorld _world;
+
+        /// <summary>현재 월드에 전달하는 싱크를 만든다.</summary>
+        /// <param name="world">전달할 월드다.</param>
+        public WorldDisplaySink(RawSurfaceWorld world)
+        {
+            _world = world;
+        }
+
+        /// <summary>원본 전체 갱신·표시 억제 전역에 대응한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+        /// <returns>억제 중이면 참이다.</returns>
+        public override bool Suppressed() => _world._displayHooks?.Suppressed?.Invoke() ?? false;
+
+        /// <summary>원본 순서대로 main·shadow 영역과 플래그를 전달한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+        /// <param name="rect">변경 영역이다.</param>
+        /// <param name="flags">전달 플래그다.</param>
+        public override void Invalidate(DisplayRect rect, uint flags)
+        {
+            _world._changed = true;
+            _world._displayHooks?.Invalidate?.Invoke(rect, flags);
+        }
+
+        /// <summary>표시 뷰 교체와 무관하게 같은 Client DWORD를 다시 빌린다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+        /// <returns>현재 검사 뷰다.</returns>
+        public override RawCheckingFlag Checking() => _world._storage.Checking();
+
+        /// <summary>장치와 별도로 장기 상세 owner에 저장한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+        /// <param name="type">타입 번호다.</param>
+        /// <param name="frameNumber">프레임 번호다.</param>
+        /// <param name="abstractValue">추상 플래그다.</param>
+        public override void FrameError(uint type, int frameNumber, uint abstractValue) => _world._storage.RecordDisplayFrameError(type, frameNumber, abstractValue);
+
+        /// <summary>현재 진단 복귀를 실제 표시 부모에 돌려준다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+        /// <param name="expression">원문 식이다.</param>
+        /// <param name="file">원문 파일이다.</param>
+        /// <param name="line">원문 행이다.</param>
+        public override void Assertion(string expression, string file, uint line) => _world._storage.AssertDisplay(expression, file, line);
+
+        /// <summary>현재 월드의 실제 메타 표시 갱신 장치를 설치한다. 2026-11-07 F2d 월드 본체 표시 연결 이식에서 추가됐다.</summary>
+        /// <param name="raw">현재 슬롯 바이트다.</param>
+        public override void MetaRefresh(ReadOnlySpan<byte> raw)
+        {
+            if (_world._metaRefresh is null)
+            {
+                throw new InvalidOperationException("현재 월드의 실제 메타 표시 갱신 미연결");
+            }
+
+            _world._metaRefresh(raw);
+        }
+    }
+
     /// <summary>저장 건물의 소유자를 받침에 반영하는 기존 초기 월드 어댑터의 경계다. 연결 조회는 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐다.</summary>
     /// <param name="x">기준 가로 좌표다.</param>
     /// <param name="y">기준 세로 좌표다.</param>
@@ -618,6 +692,34 @@ public sealed class RawSurfaceWorld
 
         _unpop.Unpop(sid, _types[_storage.Pool.Slot(sid)[RawSidPool.TypeOffset]], flags);
         _changed = true;
+    }
+
+    /// <summary>현재 카메라의 원본 픽셀 기준값과 GUI 변경 표를 연결한다.</summary>
+    /// <param name="view">바꿀 카메라·화면이다.</param>
+    /// <param name="hooks">바꿀 표시 콜백 묶음이다.</param>
+    public void SetDisplay(SquidDisplayView view, SurfaceDisplayHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(view);
+        ArgumentNullException.ThrowIfNull(hooks);
+        if (_display is null)
+        {
+            throw new InvalidOperationException("실제 월드 표시 수집이 연결되지 않았습니다.");
+        }
+
+        _display.SetView(view);
+        _displayHooks = hooks.Clone();
+    }
+
+    /// <summary>현재 월드의 실제 메타 표시 갱신 장치를 설치한다.</summary>
+    /// <param name="refresh">설치할 장치다.</param>
+    public void BindMetaRefresh(Action<ReadOnlySpan<byte>> refresh)
+    {
+        if (refresh is null)
+        {
+            throw new ArgumentException("현재 메타 표시 갱신 장치 누락", nameof(refresh));
+        }
+
+        _metaRefresh = refresh;
     }
 
     /// <summary>깊이·Graph·프로세스·공간의 실제 상태를 읽기 전용으로 노출한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
