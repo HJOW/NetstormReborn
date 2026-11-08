@@ -839,7 +839,7 @@ cpppj/src/o/RawPriestHalt.cpp	port	www/core/raw-priest-halt.js	1f00a25a	port	[o-
 cpppj/src/o/RawPriestLookup.cpp	port	www/core/raw-priest-lookup.js	1f00a25a	port	[o-default] WB04-E66: 소유 사제 조회 004921f0(signed 개수·DWORD 소유자·dead 제외·첫 일치 조기 종료). fixture priestlookup 10.78 1617행 전부. 건설 확정/통지/기준점 어댑터 합성은 해당 파일 단위에서
 cpppj/src/o/RawPriestOwner.cpp	port	www/core/raw-priest-owner.js	1f00a25a	port	[o-default] WB04-E62: 사제 소유자 재정의 00491790(원래 소유자 WORD·알림·공통 지정·로컬 표식 비트)·사제 분배기. fixture priestowner 10.78 3528행·priest-owner-current-local 10.78 72행 전부(CD·1037 행은 범위 밖)
 cpppj/src/o/RawPriestPanic.cpp	port	www/core/raw-priest-panic.js	1f00a25a	port	[o-default] WB04-E66: 사제 공황 이동 00491db0(임시 두 배 속도 신전 복귀·±20 임의 같은 영역 점 경로). fixture priest-panic 600행 전부(10.78 전용 파일). RawDudeNotice 이식 때 속도 표를 같은 표에 연결
-cpppj/src/o/RawPriestParticipation.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestParticipation.cpp	port	www/core/raw-priest-participation.js	1f00a25a	port	[o-default] WB04-E68: 사제 참여 조회 00494f10/갱신 00495060(live 목록→Carrier 포획 내용물→마지막 일치 제단·소유자 상태 0/1/2). fixture priest-participation 304행 전부(10.78 전용 파일). 설치된 제단 몸체(RawAltarSacrifice) 연결은 해당 파일 단위에서
 cpppj/src/o/RawPriestPlacement.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPlacementCollision.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPlacementGeometry.cpp	port			todo	[o-default]
@@ -856,9 +856,9 @@ cpppj/src/o/RawPriestRitualActions.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestRitualFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestSacrificeRequest.cpp	port	www/core/raw-priest-sacrifice-request.js	1f00a25a	port	[o-default] WB04-E14: 4498e0/494eb0 사제 희생 요청(호출 순서·owner 재독). fixture priest-sacrifice-request 10.78 128행 전부
 cpppj/src/o/RawPriestShield.cpp	port	www/core/raw-priest-shield.js	1f00a25a	port	[o-default] WB04-E63: 사제 보호막 확보 00493d30(생성→소유자→Pop→소리→로컬 안내). fixture priestshield 10.78 832행 전부
-cpppj/src/o/RawPriestSpawn.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestSpawn.cpp	port	www/core/raw-priest-spawn.js	1f00a25a	port	[o-default] WB04-E68: 사제 해방 생성 0044b2e0(스냅·132개 나선·WORD/소유자/Pop·Carrier genus 검사)·makePriestSpawnHooks. fixture priestspawn 10.78 408행 전부. 종속 해방(RawDamageableRelease) 합성은 해당 파일 단위에서
 cpppj/src/o/RawPriestState.cpp	port	www/core/raw-priest-state.js	1f00a25a	port	[o-default] WB04-E62: 사제 이동 불가 조회 00492090/00427030과 HP setter 004942b0(PriestHitPointMode 포함). fixture prieststate 10.78 6752행 전부(Set 1312행은 Player 9 기록으로도 재생)
-cpppj/src/o/RawPriestTakenNotice.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestTakenNotice.cpp	port	www/core/raw-priest-taken-notice.js	1f00a25a	port	[o-default] WB04-E68: 사제 포획 안내 004927f0(참여 갱신·키/음향 선택·색·20초 기한). cpppj 에 독립 fixture 가 없어 소스 순서 계약 시험(priest-taken-notice 5건)으로 대조. 실제 호출(RawCampaignSession)은 세션 단위에서
 cpppj/src/o/RawProcessAttach.cpp	port	www/core/raw-process-attach.js	1f00a25a	port	[o-default] WB04-D5c: ProcessForm 파생 +74 접두. fixture process-attach-current-local 24행(10.78) + 서버 접두 계약
 cpppj/src/o/RawProcessRemoval.cpp	port	www/core/raw-process-removal.js	1f00a25a	port	[o-default] WB04-D5c: 004b27a0 일괄 제거. fixture process-removal-filter 64행(웹 입력은 raw 노드에 실제 VT 를 넣음)
 cpppj/src/o/RawProcessSummary.cpp	exclude-host			-	[host-dev-files]

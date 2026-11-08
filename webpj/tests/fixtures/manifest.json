@@ -7820,7 +7820,7 @@
       "bytes": 591278,
       "lines": 3425,
       "fixtureCommit": "5c2d0a1e",
-      "webCommit": "worktree",
+      "webCommit": "56512427",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestDamage.cpp": "752d5713",
         "cpppj/src/o/RawDamageableBurning.cpp": "a9157275"
@@ -7850,9 +7850,67 @@
       "bytes": 220882,
       "lines": 1100,
       "fixtureCommit": "a9157275",
-      "webCommit": "worktree",
+      "webCommit": "56512427",
       "cpppjBasis": {
         "cpppj/src/o/RawDamageableBurning.cpp": "a9157275"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E68",
+      "id": "priestspawn",
+      "path": "cpppj/tests/fixtures/priestspawn-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 나선/스냅/WORD/Carrier 검사 래퍼의 하위 호출 기록(Q/N/O/L/S/K)·생성 슬롯 raw·다리 타입 전역·지도 Adler-32(배치/생성/가상 효과만 대체)",
+      "consumers": [
+        "webpj/tests/priest-spawn.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-spawn.js"
+      ],
+      "doc": "docs/webpj-priest-spawn-participation-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestSpawn.cpp"
+      ],
+      "scope": "10.78(originals) 408행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "d303adced95eee52b4b5b8be520116e8c51abb4ced84413e12b9344282bcdd86",
+      "bytes": 2539162,
+      "lines": 1238,
+      "fixtureCommit": "0b9da410",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestSpawn.cpp": "0b9da410"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E68",
+      "id": "priest-participation",
+      "path": "cpppj/tests/fixtures/priest-participation-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 사제 참여 Find/Refresh 전체의 반환 SID·소유자 상태 9칸·풀 Adler-32·목록 checksum(대체 함수 없음)",
+      "consumers": [
+        "webpj/tests/priest-participation.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-participation.js"
+      ],
+      "doc": "docs/webpj-priest-spawn-participation-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestParticipation.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 304행 전부 사용",
+      "text": true,
+      "sha256": "53c28169db230311142e136cc0a3ff95f83dea99216e164cb19c77433aecda96",
+      "bytes": 93047,
+      "lines": 306,
+      "fixtureCommit": "400aaefb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestParticipation.cpp": "da6c61ae"
       }
     }
   ]
