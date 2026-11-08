@@ -34,6 +34,7 @@ public:
     // 현재 plain float 지면 getter와 실제 지역 투표를 자산/초기 로더에 공급한다.
     std::int32_t IslandNumber(float x,float y) const;
     void UpdateRegion(float x,float y) const;
+    void UpdateRegionNative(float x,float y) const; //Outpost의Native삭제는같은실제투표/도장owner의signed현재목록진입을사용한다.
     // 동일 풀/실제9기록을 상위 설치에서 확인한다.
     const o::RawVortexOwner& Vortex() const;
 private:

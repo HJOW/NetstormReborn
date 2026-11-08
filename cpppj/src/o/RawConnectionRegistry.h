@@ -3,9 +3,12 @@
 #include "o/RawConnectionRegistration.h"
 #include <map>
 #include <memory>
+#include <string_view>
 #include <vector>
 
 namespace netstorm::o { //숫자 토큰은 호스트 포인터를32비트로 절삭하지 않는다.
+// 실제 Client가 선택한 Native 경로의 복귀형 진단이다. 독립 typed 전송의 기존 throw 계약과 분리한다.
+using ConnectionRegistryAssertion=std::function<void(std::string_view,std::string_view,std::uint32_t)>;
 // 실제 Node 주소는 owner가 유지하며 표와 장치는 Session보다 오래 보관할 수 있다.
 class RawConnectionRegistry {
 public:
@@ -21,6 +24,7 @@ public:
         std::function<void(std::span<std::uint8_t>)> send={},std::function<std::int32_t()> readiness={}); // 실제 노드/수명/가상 송신과 같은 socket 준비 조회를 묶는다. 기존 수명 전용 호출은 미선택 장치를 요구하지 않는다.
     std::int32_t SocketReadiness(std::uint32_t token) const; //004e1800의 실제 socket 장치를 token으로 조회하며 Player/Packet flags로 대체하지 않는다.
     bool SendMutable(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players) const; //004e2dc0의현재슬롯/Playerflag1/NULL관문뒤같은가상송신장치를호출한다.반환은장치호출여부이며전달성공값이아니다.
+    bool SendMutableNative(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players,const ConnectionRegistryAssertion& assertion) const; //004e2dc0의1e 진단 복귀 뒤 현재 실제 슬롯만 접근하며 새 pending/Player 조건을 넣지 않는다.
     std::uint32_t TokenFor(const PacketConnection& connection) const; // 실제 고정 노드 주소의 현재 token을 찾아 ID 재배치와 구별한다.
     void SendDirect(std::uint32_t token,std::span<std::uint8_t> packet) const; // 이미 선택된 this의 가상+4를 직접 호출하며 Player/번호 관문을 반복하지 않는다.
     void StoreConnectPacket(std::int32_t id,std::span<std::uint8_t> packet,RawPacketDispatch& dispatch); //004e2620의 성공 후 기존 버퍼free/0→비NULL의 observer1·길이 재조회·복제·현재 칸 공개다. 빈 span은 NULL이다.
@@ -33,9 +37,11 @@ public:
     std::int32_t Accept(std::uint32_t token); //현재 첫 빈 pending1..31에 같은 노드를 등록하고 개수를 증가한다.
     bool CanAccept() const; //004e02d0의 현재 개수<31 관문이며 슬롯을 새로 지우지 않는다.
     void Assign(std::int32_t pending,std::int32_t target,std::uint32_t server,std::function<void(std::uint32_t)> buffered); //004e27b0 전체 현재 재배치를 실행한다.
+    void AssignNative(std::int32_t pending,std::int32_t target,std::uint32_t server,std::function<void(std::uint32_t)> buffered,const ConnectionRegistryAssertion& assertion); //원문b0/b3/b6/bb 진단 뒤 현재 pending/target token을 다시 읽는 실제 Native 경로다.
     void Destroy(std::uint32_t token); //현재 노드의 실제 소멸 장치만 호출한다.
     void Release(std::uint32_t token); //실제 free 성공 뒤 주소 장치를 반납하고 일반 분배의 현재 별칭도 해제한다.
     void Disconnect(std::int32_t id); //457의 원문 개별 종료를 같은 실제 표/장치에 실행한다.
+    void DisconnectNative(std::int32_t id,const ConnectionRegistryAssertion& assertion); //004e2940의fa 진단이 복귀하면 기존 현재슬롯/노드/버퍼 정리를 이어간다.
     void CloseAll(); //457의 양수22칸 정리이며 버퍼/pending 전체 정리를 추가하지 않는다.
     void EndPlayers(std::uint32_t server); //원문 server 관문과 owner1..8 종료다.
     void ClosePending(); //원문32pending 정리이며 개수를 임의 재계산하지 않는다.
@@ -50,6 +56,8 @@ private:
     void RemoveAliases(std::uint32_t token); //같은 token의 현재 별칭만 지우고 새 세대의 칸은 보존한다.
     ConnectionRegistrationHooks RegistrationHooks(std::function<void(std::uint32_t)> buffered={}); //같은 노드/실제 진단만 조립한다.
     ConnectionCleanupHooks CleanupHooks(); //기존457 부모가 같은 실제 수명 장치를 호출하도록 한다.
+    ConnectionRegistrationHooks NativeRegistrationHooks(std::function<void(std::uint32_t)> buffered,const ConnectionRegistryAssertion& assertion); //같은 기존 실제 node/쓰기 부모에 선택된 Client 진단만 교체한다.
+    ConnectionCleanupHooks NativeCleanupHooks(const ConnectionRegistryAssertion& assertion); //같은 기존 destroy/release 수명에 복귀형fa 진단만 제공한다.
     void RunCleanup(const std::function<void()>& operation); //Native 부모가 자신의 칸/count store를 마칠 때까지 일반 별칭 해제를 유예한다.
     std::array<std::uint32_t,kTransceiverSlots> transceivers_{},buffers_{}; //005e4a18/4a70의 서로 다른 두22칸이다.
     std::array<std::uint32_t,kPendingConnectionSlots> pending_{}; //005e46f0의 같은32칸이며0칸도 보존한다.

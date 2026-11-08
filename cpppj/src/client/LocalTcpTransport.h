@@ -28,6 +28,7 @@ public:
     bool Connect(std::span<const std::uint8_t> address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); // 재사용 관문 뒤20BYTE 주소/포트/초기 패킷을 같은 새 접속 부모에 전달한다.
     bool ConnectPeerText(std::string_view address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); // 재사용 관문 뒤IP/hostname:port 또는tcp,주소:port,cn을 해석한다. hostname의 첫IPv4도 LAN 범위만 허용한다.
     void AssignConnection(std::int32_t pending,std::int32_t owner); //004e27b0의 같은 accepted 노드를 owner1..8 또는 비서버9로 이동하고 buffered 모드로 바꾼다.
+    void AssignConnectionNative(std::int32_t pending,std::int32_t owner,const o::ConnectionRegistryAssertion& assertion); //진단 전에 pending/node를 캡처하지 않고 실제 buffered 선택 때 전달된 현재token으로 같은 TCP 노드를 찾는다.
     void Close(std::int32_t id); // 선택한 자기 연결만 closed로 표시하며 수신 depth가0일 때 실제 OS/등록표 반납을 수행한다.
     void CloseAll(); // 자기 listener와 모든 자기 노드를 닫는다. 다른 내부/외부 전송의 공유 등록표를 지우지 않는다.
 

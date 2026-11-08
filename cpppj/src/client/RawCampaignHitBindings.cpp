@@ -4,6 +4,8 @@
 #include "o/RawPathSearch.h"
 #include "o/RawSquidDefense.h"
 #include "o/RawBulwarkHit.h"
+#include "o/RawPathAnimation.h" //448b70의현재방향11/12 관문은 같은 실제 프레임 표를 사용한다.
+#include <bit>
 #include <stdexcept>
 namespace netstorm::client {
 namespace {
@@ -108,6 +110,23 @@ o::GunHitHooks RawCampaignHitBindings::DamageHooks(o::GunHitHooks hooks) const {
         if (!fallback) throw std::logic_error("캠페인 다른 실제 피해 미연결");fallback(victim,amount,owner,attacker);
     };
     auto fallback=std::move(hooks.damage);return o::MakePriestGunHitHooks(impl_->core.pool,*impl_->priestDamage,std::move(hooks),std::move(fallback));
+}
+// 기존 void 피해 hook을0/1로 추정하지 않고 현재83자산 VT의 실제 여섯+98 본체에서 반환을 받는다.
+std::uint32_t RawCampaignHitBindings::DamageResult(o::Sid victim,std::int32_t amount,o::Sid attacker) const {
+    const auto table=HitTable(impl_->core.pool.Slot(victim));const auto owner=impl_->core.pool.Slot(attacker)[34];std::uint32_t address{}; // 원문Rain은target0/live 관문 없이 현재targetVT 뒤 현재source ownerBYTE를 읽는다.
+    for (const auto& entry:kCampaignDamageHitEntries) if (entry.vtable==table) { address=entry.address;break; } // 현재VT가 가리키는+98만 선택하며TYPE번호로 가상을 대신하지 않는다.
+    switch (address) {
+    case 0x4add10U:return impl_->generalDamage->BaseHit(victim,amount,owner,attacker);
+    case 0x44c8e0U:return impl_->generalDamage->Hit(victim,amount,owner,attacker);
+    case 0x494380U:return impl_->priestDamage->Hit(victim,amount,owner,attacker);
+    case 0x4dba40U:return o::RawVortexDamage(impl_->core.pool,victim,amount,owner,attacker,impl_->vortex);
+    case 0x48ef20U:return o::RawBulwarkHit(impl_->core.pool,impl_->core.types,victim,amount,owner,attacker,[this](auto target,auto value,auto sourceOwner,auto source) { return static_cast<std::uint32_t>(impl_->generalDamage->Hit(target,value,sourceOwner,source)); });
+    case 0x448b70U: {
+        const auto direction=[this,victim] { const auto raw=impl_->core.pool.Slot(victim);if (raw[10]>=impl_->core.frames.size()) throw std::out_of_range("현재448b70 피해의TYPE 프레임 물리 부족");return o::RawPathAnimation::Direction(impl_->core.frames[raw[10]],std::bit_cast<std::int32_t>(HitTable(raw.subspan(36)))); }; // 원문의각4ad710에서현재TYPE/프레임을읽는다.
+        if (direction()==11 || direction()==12) return 1U;return impl_->generalDamage->Hit(victim,amount,owner,attacker);
+    }
+    default:throw std::logic_error("현재target+98의실제반환형피해장치미연결");
+    }
 }
 // 실제 충돌 생성/주변 통지/피해 시간 압축을 기존 Missile 몸체에 연결한다.
 o::MissileHooks RawCampaignHitBindings::MissileHooks(const o::RawGunHit& hit,const o::MissileState& clock,o::MissileHooks hooks) const {

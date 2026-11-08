@@ -35,6 +35,7 @@ public:
     void RefreshZones(); //일반 MetaRefresh(c6)의4b40c0(11)을 기존 실제16h writer/관찰기/TCP에 연결하며 접속 상태를 합성하지 않는다.
     void DescendToZone(std::int32_t zone); //004b8810/0042bf40의 실제 잠금 안내·1fh/항해·현재19 직접Run과7344BYTE 존 보관/복원을 실행한다.
 private:
+    void ReceiveMetaGameLogin(std::uint32_t sender,std::span<const std::uint8_t> packet); //004b2cc0의 요청검증·응답·현재seat 재배치와 성공통지/단일캐시무효화를 같은 실제 전송에 연결한다.
     void ReceiveParticipantAdd(std::span<const std::uint8_t> packet); //4b4710의 실제 메타/CS/자기Core 선택 뒤 전체42c180 생성/후행 표시를 실행한다.
     void ConstructParticipant(std::span<std::uint8_t> record,std::span<const std::uint8_t> packet); //현재 실제 World/Gump/Config/Core/카메라·Chat 장치를 전체42b580에 결합한다.
     void RefreshParticipantCore(); //48f190의 현재 일반 관문/같은 전투40참가자→실제1..8 Core 장부다.

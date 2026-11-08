@@ -17,6 +17,8 @@ struct GunHitHooks {
     std::function<void(Sid,std::int32_t,std::uint8_t,Sid)> damage;
     // notifySurface: 시각 WORD 쓰기 직후 원본004214a0/CD00448c10 통지다.
     std::function<void(Sid)> notifySurface;
+    // applyOverride: 실제 source+c0 전용 진입을 generic 표적 관문보다 먼저 선택한다. true는 처리완료이며 피해의 생존 반환값이 아니다.
+    std::function<bool(Sid,Sid,std::int32_t)> applyOverride;
 };
 // 총의 Q16 WORD를8분의1초 시각으로 사용하며 실제 현재 표적 피해를 계산한다.
 class RawGunHit {

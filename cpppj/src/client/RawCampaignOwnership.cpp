@@ -78,6 +78,7 @@ void RawCampaignOwnership::SetOwner(o::Sid sid,std::uint32_t owner) const {
 std::int32_t RawCampaignOwnership::IslandNumber(float x,float y) const { return impl_->IslandNumber(x,y); }
 // Factory/신전의 같은 mode0 지역 갱신을 제공한다.
 void RawCampaignOwnership::UpdateRegion(float x,float y) const { impl_->ownership->Update(x,y); }
+void RawCampaignOwnership::UpdateRegionNative(float x,float y) const { impl_->ownership->UpdateNative(x,y); } //기존Pop/typed/CD경로는UpdateRegion을유지하며새투표/도장사본을만들지않는다.
 // 같은 Player 주소/Pool과 원본 몸체를 읽기 전용으로 제공한다.
 const o::RawVortexOwner& RawCampaignOwnership::Vortex() const { return *impl_->vortex; }
 }

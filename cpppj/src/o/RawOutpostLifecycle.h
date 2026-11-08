@@ -13,6 +13,11 @@ struct OutpostLifecycleHooks {
     // Damageable preDestroy를 같은 raw 풀의 실제 모듈에 연결할 수 있다.
     std::function<void(Sid,std::uint32_t)> validatePreDestroy,preDestroy;
 };
+// 실제 PATCH 삭제에만 필요한 두 후행 장치다. 사용하지 않는 PostPop/선검사 callback을 요구하지 않는다.
+struct OutpostPreDestroyHooks {
+    std::function<void(float,float)> regionChanged; // 두 목록 압축 뒤 현재XY로 같은455380 mode0을 호출한다.
+    std::function<void(Sid,std::uint32_t)> damageablePre; // 지역 효과 정상 복귀 뒤 같은flags로 현재Damageable 부모를 호출한다.
+};
 // outpost의 배치 추가 목록/거리 후보 목록 등록과 삭제 준비 접두를 복원한다.
 class RawOutpostLifecycle {
 public:
@@ -22,6 +27,7 @@ public:
     void PostPop(Sid sid,std::uint32_t flags) const;
     // 00455840 / CD 0047b790: 일반 객체는 모든 중복을 제거하고 같은 flags로 base를 부른다.
     void PreDestroy(Sid sid,std::uint32_t flags) const;
+    static void PreDestroyNative(SidPool& pool,SquidPostPopList& additional,SquidPostPopList& nearest,Sid sid,std::uint32_t flags,const OutpostPreDestroyHooks& hooks); //455840은extra9→두현재목록→현재XY/지역→부모순서이며typed자산/부모선검사를추가하지않는다.
     // Damageable 등의 훅 연결에서 실제 풀의 동일성을 검사한다.
     const SidPool& Pool() const;
 private:

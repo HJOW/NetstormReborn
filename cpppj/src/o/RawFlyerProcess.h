@@ -47,6 +47,8 @@ public:
     void Frame(FlyerProcessFields& fields) const; // 실제 미복원 Frame은 명시 하위 오류다.
     void Notify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t info1,std::uint32_t info2) const; // 원본 notify를 명시 소비자로 전달한다.
     void ParentDying(FlyerProcessFields& fields) const; // 원본 홈의 부모 사망 통지를 전달한다.
+    static double ReturnDelay(const FlyerProcessFields& fields); // 현재 outer VT+c의 실제 leaf를 구별하며 Wind는25초, Sun은60초다.
+    void Command(FlyerProcessFields& fields,std::uint32_t command) const; //45b320/3b0/430의 현재8BYTE 기한만 쓰며 dirty/예약/즉시Frame을 추가하지 않는다.
     void Finish(FlyerProcessFields& fields) const; // 45bc30의 서버 진단→현재 파편→현재 부모 가상 삭제8 순서다.
     static std::uint16_t WriteProcess(FlyerProcessFields& fields,std::span<std::uint8_t> packet,bool includeParent,bool force=false,std::uint8_t protocol=1,std::uint8_t message=0x39); // 0045c310→0045aed0의 WORD/DWORD/double writer다.
     const SidPool& Pool() const; // 다른 Host의 필드와 혼합하지 않도록 검사한다.

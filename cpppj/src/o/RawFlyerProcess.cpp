@@ -80,6 +80,26 @@ Sid RawFlyerProcess::Home(Sid flyer) const {
 void RawFlyerProcess::Frame(FlyerProcessFields& fields) const { Need(hooks_.frame)(fields); } // 아직 미복원인 큰 Frame을 조용히 생략하지 않는다.
 void RawFlyerProcess::Notify(FlyerProcessFields& fields,std::uint32_t message,std::uint32_t info1,std::uint32_t info2) const { Need(hooks_.notify)(fields,message,info1,info2); } // 실제 선택 통지를 유지한다.
 void RawFlyerProcess::ParentDying(FlyerProcessFields& fields) const { Need(hooks_.parentDying)(fields); } // 홈 파괴 통지를 유지한다.
+// 원문 현재 outer+c의 세 FLD32 leaf만 선택한다. 테마/자산TYPE로 다른 가상을 추정하지 않는다.
+double RawFlyerProcess::ReturnDelay(const FlyerProcessFields& fields) {
+    switch (Read(fields.bytes,0)) {
+    case 0x509cc8U:case 0x509f60U:return static_cast<double>(10000000.0f); // 기본/Rain의45c2e0 leaf다.
+    case 0x509f24U:return static_cast<double>(60.0f); // Sun의45e170 leaf다.
+    case 0x509f98U:return static_cast<double>(25.0f); // Wind의45e210 leaf다.
+    default:throw std::logic_error("비행 명령의 현재 outer+c 실제 leaf 미연결");
+    }
+}
+// 같은 scheduler가 다음 자연 Frame에서 읽을 현재 기한만 변경한다.
+void RawFlyerProcess::Command(FlyerProcessFields& fields,std::uint32_t command) const {
+    if (command==1) {
+        const auto bits=std::uint64_t(Read(fields.bytes,104))|(std::uint64_t(Read(fields.bytes,108))<<32); // 원문 outer+68h의 같은binary64다.
+        const auto remaining=(std::bit_cast<double>(bits)-globals_.now)+15.0;
+        const auto limited=remaining<60.0 ? remaining:60.0; // PE의 비순서 비교도60을 선택하며 음수 하한은 없다.
+        Time(fields,104,limited+globals_.now);return;
+    }
+    if (command==2) { const auto delay=ReturnDelay(fields);Time(fields,40,delay+globals_.now);return; } // 현재 가상leaf 뒤 현재now를 읽는다.
+    if (command==3) Time(fields,40,0.0); // 원문의00500460은double0이며 현재시각/새Regular로 바꾸지 않는다.
+}
 // 파편 효과 뒤 부모가 바뀌면 원본처럼 그 현재 부모를 다시 읽어 삭제한다.
 void RawFlyerProcess::Finish(FlyerProcessFields& fields) const {
     if (!globals_.server) Need(hooks_.assertion)(0x41d);Need(hooks_.pieces)(fields.Parent());Need(hooks_.destroy)(fields.Parent(),8);

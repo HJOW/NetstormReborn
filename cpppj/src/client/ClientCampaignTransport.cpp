@@ -8,6 +8,7 @@
 #include "client/ClientPlayerRecords.h"
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientConnectionActivityGlobals.h"
+#include "client/ClientChallengeGlobals.h" //7bh는 Session/Meta raw this 대신 같은 장기 CS owner만 빌린다.
 #include "o/RawConnectionEnded.h"
 #include "client/RawSurfaceWorld.h" //기본 관찰기가 실제 storage의 AssertDisplay를 Session 없이 빌린다.
 #include "o/RawTechnologyTypesPacket.h" //69h는 같은Client의장기목록/현재Session표시와Client관찰기진단을사용한다.
@@ -83,6 +84,11 @@ void ObserveClientPacketDefault(std::uint32_t type,std::span<std::uint8_t> packe
     case 0x85:
         if (ReadClientPacketDefault(packet,5,2)==0xffffU) storage->AssertDisplay("dataLen != (unsigned short)-1","\\Ns\\O\\_p_packets.cpp",0xa2c);
         WriteClientPacketDefaultLength(packet,ReadClientPacketDefault(packet,5,2)+7U);return;
+    case 0x7b: {
+        if (ReadClientPacketDefault(packet,9,1)==0xffU) storage->AssertDisplay("addrLen != (char)-1","\\Ns\\O\\_p_packets.cpp",0xba8);
+        const auto length=std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(ReadClientPacketDefault(packet,9,1))); // 진단 정상 복귀 뒤 현재 BYTE를 MOVSX AX처럼 다시 읽는다.
+        WriteClientPacketDefaultLength(packet,static_cast<std::uint16_t>(std::int32_t(length)+10));return;
+    }
     default:throw std::invalid_argument("Client 기본 표의 미등록 mutable 관찰기 종류");
     }
 }
@@ -111,6 +117,9 @@ void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) 
     const auto game=client.GameplayGlobals(); //69h 기본 receiver는장기전역만보유하고이전Session/World를고정하지않는다.
     o::RegisterTechnologyTypesPacket(dispatch,game->GameAux()->TypeUse(),[game](auto type) { auto& session=game->RequireSession();const auto runtimePin=game->PinCurrentRuntime(session);session.IndicateTechnology(type); },
         [storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); //합집합뒤비영항목마다현재Session/실제전체owner를선택하며반환/예외까지pin한다.빈목록은World를요구하지않는다.
+    dispatch.ObservePacket(0x7b,[storage](auto packet,auto sending) { ObserveClientPacketDefault(0x7b,packet,sending,storage); }); //40b2f0은 수신 방향에서 payload를 읽지 않고 송신 진단 뒤 signed BYTE 길이를 재조회한다.
+    dispatch.Version(0x7b,1,0);dispatch.RequireLength(0x7b,0xffff);
+    dispatch.RegisterDirect(0x7b,[challenge=client.ChallengeGlobals()](std::uint32_t,o::PacketConnection*,std::span<const std::uint8_t> packet) { challenge->ReceivePeerAddress(packet); }); // sender/nullable 연결을 사용하지 않으며 같은 장기 Client CS만 보유한다.
     dispatch.ObservePacket(0x3f,[storage](auto packet,auto sending) { o::FinalizeConstructionPacket(packet,sending!=0,[storage] { storage->AssertDisplay("sidCount != (unsigned char)-1","\\Ns\\O\\_p_packets.cpp",0x7c9); }); }); //40a800의 같은 버퍼/진단 정상 복귀 뒤 현재count 재조회다.
     dispatch.Version(0x3f,1,0);dispatch.RequireLength(0x3f,0xffff); // receiver만 Session 대여에 맡기며 원문 기본 metadata/observer는 반납 뒤에도 남긴다.
     for (const auto& entry:kClientPacketDefaults) { //이18종만 version1/policy0/보호 PE 길이에 맞추고 다른 등록에는 손대지 않는다.

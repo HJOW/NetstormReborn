@@ -181,7 +181,8 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     }); //서버발견은현재36직접쓰기뒤실제Run을동기실행한다.검색토큰비교만인경우Run하지않는다.
     dispatch.Version(0x1f,1,0);dispatch.RequireLength(0x1f,12); //고정12BYTE/master 준비 통지는 앞선 비NULL 빈 관찰기를 유지하며 Client 수신기는 NULL이다.
     dispatch.Version(0x1e,1,0);dispatch.RequireLength(0x1e,14); //고정14BYTE 통지도 앞선 비NULL40b380 관찰기/NULL Client 수신기를 보존한다.
-    dispatch.Observe(0x7c,{});dispatch.Version(0x7c,1,0);dispatch.RequireLength(0x7c,28); //0040b340/0040b380의 고정28BYTE/빈 관찰기다. 게임 로그인 수신은 별도 부모다.
+    dispatch.Observe(0x7c,[](std::uint32_t) {});dispatch.Version(0x7c,1,0);dispatch.RequireLength(0x7c,28); //0040b380의 비NULL 빈 관찰기이며 원문 고정28BYTE metadata다.
+    dispatch.RegisterDirect(0x7c,[this](std::uint32_t sender,o::PacketConnection*,std::span<const std::uint8_t> packet) { ReceiveMetaGameLogin(sender,packet); }); // 둘째 연결 인자는 사용하지 않으며 SharedNetwork가 보유하는 같은 실제 Meta/TCP owner를 사용한다.
     dispatch.Version(0x67,1,0);dispatch.RequireLength(0x67,0xffff); //송신 관찰기는 앞선 공용 기본 표를 유지하고 기존 버전/길이/수신 부모만 연결한다.
     dispatch.Register(0x67,[this](auto sender,auto&,auto packet) { ReceiveBattleOptions(sender,packet); }); //원문과같이sender/phase/known 관문 없이 전체 State 부모를 호출한다.
     o::RegisterStateMetaBattleDescription(dispatch,client_.ChallengeGlobals()->Current(),[this](auto,auto packet) { ReceiveNativeMetaBattleDescription(*client_.ChallengeGlobals(),packet,MakeClientMetaBattleDescriptionHooks(client_)); },[this](auto expression) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",0xae3); }); //sender/phase/known/mode 조건을 추가하지 않는다.
@@ -302,6 +303,43 @@ void MetaConnectionRuntime::SendMetaData(std::uint32_t key,std::span<const std::
     std::uint32_t offset{};for (;offset+4U<=count;offset+=4U) { if (offset>data.size() || 4U>data.size()-offset) throw std::out_of_range("메타자료의 실제 source DWORD 부족");const std::array<std::uint8_t,4> word{data[offset],data[offset+1],data[offset+2],data[offset+3]};std::copy(word.begin(),word.end(),packet.begin()+7+offset); }
     for (;offset<count;++offset) { if (offset>=data.size()) throw std::out_of_range("메타자료의 실제 source BYTE 부족");packet[7+offset]=data[offset]; } //원문나머지0..3BYTE만추가로쓴다.
     static_cast<void>(tcp_->SendMutable(11,packet)); //같은실제sender관문을통과할때만0040ae80이WORD길이를확정한다.
+}
+// 원문7ch 수신은 응답 송신 뒤 현재seat를 두 번 다시 읽고 실제 같은 pending 노드를 재배치한다.
+void MetaConnectionRuntime::ReceiveMetaGameLogin(std::uint32_t sender,std::span<const std::uint8_t> packet) {
+    const auto lifetime=shared_from_this(); // 송신/close/진단 callback이 UI owner를 반납해도 본문과 실제 TCP/UDP를 정상 복귀까지 보존한다.
+    const auto status=PeerWord(packet,4);
+    if (status==0) {
+        auto& challenge=*client_.ChallengeGlobals();bool accepted=false; // 비교 실패 시 후행 필드를 선조회하지 않는다.
+        const auto master=FindMetaBattleMaster(challenge,client_.GameplayGlobals()->player.battleOwner);
+        if (std::bit_cast<std::uint32_t>(master)==client_.GameplayGlobals()->player.battleOwner) {
+            const auto record=challenge.Participant(PeerWord(packet,12)); // 원문은 이 요청자의 같은 CS record를 세 비교에 보관한다.
+            const auto subscriber=PeerWord(record,4);
+            if (subscriber==PeerWord(packet,16)) {
+                const auto battle=PeerWord(record,0xa4);
+                if (battle==PeerWord(packet,20)) { const auto seat=PeerWord(record,0xa8);if (seat==PeerWord(packet,24)) accepted=true; }
+            }
+        }
+        std::array<std::uint8_t,28> reply;CurrentAllocationBytes(reply); // 원문 미작성+c..1b는 기존 현재 할당 바이트를 빌리며 입력echo/0초기값/새필드로 만들지 않는다.
+        Header(reply,0x7c);Put(reply,2,28,2);Put(reply,4,accepted ? 1U:2U,4);Put(reply,8,client_.CurrentSubscriber(),4);
+        const auto assertion=[storage=client_.SurfaceStorage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // 같은 Client의 실제 복귀형 진단 장치다.
+        const auto registry=client_.ConnectionGlobals();const auto pending=std::bit_cast<std::int32_t>(sender); // 최초 수신 sender 값은 Assign이 node.sender를 바꾸어도 보존한다.
+        static_cast<void>(registry->SendMutableNative(pending,reply,client_.PlayerRecords()->Records(),assertion));
+        if (!accepted) return; // 거부 응답 송신은 master 자신의 캐시/서버/연결을 추가 변경하지 않는다.
+        const auto disconnectTarget=std::bit_cast<std::int32_t>(PeerWord(packet,24)+1U);
+        registry->DisconnectNative(disconnectTarget,assertion);
+        client_.GameplayGlobals()->Server()=true;
+        const auto assignTarget=std::bit_cast<std::int32_t>(PeerWord(packet,24)+1U); // close callback 뒤 현재seat를 다시 읽으며 signed overflow를 만들지 않는다.
+        tcp_->AssignConnectionNative(pending,assignTarget,assertion);
+        client_.GameplayGlobals()->Server()=false;return; // 정상 복귀 후0이며 이전값/예외경로를 RAII로 복원하지 않는다.
+    }
+    if (status==1) {
+        auto& challenge=*client_.ChallengeGlobals();const auto master=FindMetaBattleMaster(challenge,client_.GameplayGlobals()->player.battleOwner);
+        if (master<0) return;
+        const auto subscriber=PeerWord(challenge.Participant(std::bit_cast<std::uint32_t>(master)),4);
+        if (subscriber==PeerWord(packet,8)) NotifyMetaMaster();
+        return;
+    }
+    client_.LocalStateGlobals()->CachedPeerIndex()=0xffffffffU; // 원문 기타 응답은00542534 한DWORD만-1로 쓰며 State33/PlayerKnown/새ACK를 실행하지 않는다.
 }
 // master 진단이 복귀하면 현재 CS를 다시 읽고 같은 스냅샷의 master/자기 필드를 순서대로 전송한다.
 void MetaConnectionRuntime::SendMetaGameLogin() {

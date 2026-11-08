@@ -7,6 +7,7 @@
 namespace netstorm::client { // 실제 같은 주소의 전역/할당만 제공하며 메타 상태 성공을 합성하지 않는다.
 namespace { //CS조회/버전집계의실제필드폭과선택된진단만처리한다.
 constexpr std::array<std::uint8_t,1> kEmptyParticipantName{0}; //00503c8b의빈C문자열에대응하는실제NUL수명이다.
+constexpr std::size_t kPeerAddressOffset=0x1a0; // 참가자460BYTE 기록의 주소 꼬리44BYTE를 선택하는 원문 오프셋이다.
 std::uint32_t Read(std::span<const std::uint8_t> bytes,std::size_t at,std::size_t width=4) { if (at>bytes.size() || width>bytes.size()-at) throw std::out_of_range("CS 조회의 실제 필드 읽기 범위");std::uint32_t result{};for (std::size_t byte=0;byte<width;++byte) result|=std::uint32_t(bytes[at+byte])<<(8*byte);return result; } //원문1/2/4BYTE를낮은BYTE부터조립한다.
 void Put(std::span<std::uint8_t> bytes,std::size_t at,std::uint32_t value) { if (at>bytes.size() || 4>bytes.size()-at) throw std::out_of_range("CS 버전의 실제 DWORD 쓰기 범위");for (std::size_t byte=0;byte<4;++byte) bytes[at+byte]=static_cast<std::uint8_t>(value>>(8*byte)); } //선택한현재DWORD의네BYTE만순서대로쓴다.
 void Assert(const std::function<void(std::string_view,std::uint32_t)>& assertion,std::string_view expression,std::uint32_t line) { if (!assertion) throw std::logic_error("CS 원문 Ch.cpp 진단 장치 미연결");assertion(expression,line); } //진단이복귀하면원문처럼뒤의현재물리접근을계속한다.
@@ -52,6 +53,23 @@ std::span<std::uint8_t> ClientChallengeGlobals::Participant(std::uint32_t index)
 std::span<const std::uint8_t> ClientChallengeGlobals::Battle(std::uint32_t index) const { return const_cast<ClientChallengeGlobals*>(this)->Battle(index); }
 // const조회도같은CS포인터를다시읽으며별도스냅샷을만들지않는다.
 std::span<const std::uint8_t> ClientChallengeGlobals::Participant(std::uint32_t index) const { return const_cast<ClientChallengeGlobals*>(this)->Participant(index); }
+// 주소는 저장만 한다. 원문처럼 phase/active/subscriber0/len/접속 parser를 수신 관문에 추가하지 않는다.
+void ClientChallengeGlobals::ReceivePeerAddress(std::span<const std::uint8_t> packet) {
+    if (!current_) return; // 004b4790..97은 패킷+4보다 먼저 현재 CS0에서 반환한다.
+    const auto participant=Read(packet,4,1);
+    const auto subscriber=Read(Participant(participant),4);
+    if (subscriber!=Read(packet,5)) return;
+    std::size_t source=10; // 0040b330은 len을 읽지 않고 packet+10 포인터만 선택한다.
+    auto address=Participant(Read(packet,4,1)).subspan(kPeerAddressOffset); // 004b47bd..cd의 현재 packet 번호/현재 CS 재조회다.
+    std::size_t destination=0; // 새 문자열은 NUL까지만 덮고 기존 뒤쪽 BYTE를 유지한다.
+    // 원문 strcpy처럼 source를 먼저 읽고 같은 현재 대상에 한 BYTE씩 쓴다. 겹친 입력도 사본으로 바꾸지 않는다.
+    for (;;) {
+        const auto value=static_cast<std::uint8_t>(Read(packet,source,1));++source;
+        if (destination>=address.size()) throw std::out_of_range("참가자 주소의 실제44BYTE 꼬리 쓰기 범위");
+        address[destination]=value;++destination;
+        if (!value) return;
+    }
+}
 // 유효성비트나subscriber0은검색조건이아니며처음일치한실제0번도반환한다.
 std::optional<std::uint32_t> ClientChallengeGlobals::FindParticipantBySubscriber(std::uint32_t subscriber) const {
     for (std::uint32_t index=0;index<o::kChallengeParticipantCount;++index) if (Read(Participant(index),4)==subscriber) return index; //원문40개의현재subscriberDWORD를배열순서로비교한다.

@@ -28,6 +28,12 @@ int Cell(float coordinate) {
     if (!std::isfinite(value) || value<=-1 || value>=kSide) throw std::out_of_range("Damageable spot 좌표 범위 오류");
     return static_cast<int>(value);
 }
+// Native _ftol의signed64절삭뒤EAX하위DWORD를보존하고좌표별0..255자격관문은넣지않는다.
+std::uint32_t NativeCell(float coordinate) {
+    const double value=static_cast<double>(coordinate)+static_cast<double>(kSpotBias);
+    if (!std::isfinite(value) || value<-9223372036854775808.0 || value>=9223372036854775808.0) throw std::out_of_range("Damageable Native spot의실제CRT절삭표현범위");
+    return static_cast<std::uint32_t>(static_cast<std::int64_t>(value));
+}
 }
 // 각 미복원 효과를 명시적으로 연결하며 공간 크기를 확인한다.
 RawDamageablePreDestroy::RawDamageablePreDestroy(SidPool& pool,std::span<const std::uint8_t> spots,const ContainedFinderState& finderState,
@@ -50,24 +56,34 @@ std::uint8_t RawDamageablePreDestroy::Spot(Sid sid) const {
     const auto raw=pool_.Slot(sid);const int x=Cell(std::bit_cast<float>(Read(raw,kX,4))),y=Cell(std::bit_cast<float>(Read(raw,kY,4)));
     return spots_[static_cast<std::size_t>(y)*kSide+static_cast<std::size_t>(x)];
 }
+// 효과뒤현재좌표를선택하고원문의감긴Y*256+X가도달한공간한BYTE만확인한다.
+std::uint8_t RawDamageablePreDestroy::SpotNative(Sid sid) const {
+    const auto raw=pool_.Slot(sid);const auto y=NativeCell(std::bit_cast<float>(Read(raw,kY,4))),x=NativeCell(std::bit_cast<float>(Read(raw,kX,4)));
+    const auto index=y*static_cast<std::uint32_t>(kSide)+x;if (index>=spots_.size()) throw std::out_of_range("Damageable Native spot의현재flatBYTE물리부족");return spots_[index];
+}
 // 붕괴/폭발 효과가 raw 좌표를 바꿀 수 있어 소리 직전에 다시 읽는다.
 void RawDamageablePreDestroy::SoundAt(Sid sid,DamageableSound sound) const {
     const auto raw=pool_.Slot(sid);hooks_.sound({sound,std::bit_cast<float>(Read(raw,kX,4)),std::bit_cast<float>(Read(raw,kY,4))});
 }
 // extra의 진입 조건은 효과 중 extra가 바뀌어도 다시 평가하지 않는다.
 void RawDamageablePreDestroy::PreDestroy(Sid sid,std::uint32_t flags) const {
-    Validate(sid,flags);
+    Validate(sid,flags);RunPreDestroy(sid,flags,hooks_.releaseContained,false);
+}
+// 선택된 실제 부모는 파편/소리보다앞에서Spot이나공통장부를미리읽지않는다.
+void RawDamageablePreDestroy::PreDestroyNative(Sid sid,std::uint32_t flags,const std::function<void(Sid)>& releaseContained) const { RunPreDestroy(sid,flags,releaseContained,true); }
+// 두 진입은 현재extra의한번분기와효과뒤현재좌표/전역/종속순서를공유한다.
+void RawDamageablePreDestroy::RunPreDestroy(Sid sid,std::uint32_t flags,const std::function<void(Sid)>& releaseContained,bool native) const {
     if (!(pool_.Slot(sid)[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&kUnsupported)) {
         if (flags&kCollapse) { hooks_.collapse(sid);SoundAt(sid,DamageableSound::Collapse); }
         if (flags&kExplosion) { hooks_.explosion(sid);SoundAt(sid,DamageableSound::Explosion); }
-        if (Spot(sid)&6) {
+        if ((native ? SpotNative(sid):Spot(sid))&6) {
             RawContainedFinder finder(pool_,finderState_);
             // yesIKnow=1로 dead 부모도 허용한다. 소리 콜백 뒤 현재 kind/타입 전역을 다시 읽는다.
             for (Sid current=finder.Begin(sid,true);current.value;current=finder.Next()) {
                 if (Read(pool_.Slot(current),kKind,2)==state_.priestType) hooks_.sound({DamageableSound::PriestFree,0,0});
             }
         }
-        if (finderState_.Boss() && !(flags&kNoRelease)) hooks_.releaseContained(sid);
+        if (finderState_.Boss() && !(flags&kNoRelease)) { if (!releaseContained) throw std::logic_error("Damageable Native 삭제의 선택된 실제 해방 장치 미연결");releaseContained(sid); }
     }
     hooks_.base(sid,flags);
 }

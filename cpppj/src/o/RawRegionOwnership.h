@@ -45,12 +45,14 @@ public:
         std::span<const std::uint32_t> themes,RegionOwnershipState& state,RegionOwnershipHooks hooks);
     // 00455380 / CD 0047b3c0: 동률/중립과 패치 mode 10 누적 재투표를 처리한다.
     void Update(float x,float y,std::uint32_t mode=0) const;
+    void UpdateNative(float x,float y,std::uint32_t mode=0) const; //PATCH455380은signed현재count로배열을순차선택하며Items/capacity선검사를추가하지않는다.
     // 실제 outpost/terrain과 같은 풀을 사용하는지 검사하는 참조다.
     const SidPool& Pool() const;
 private:
     // 현재 목록 순서로 지역과 소유자를 읽고 같은 표 배열에 누적한다.
     void Vote(SquidPostPopList& list,float x,float y,std::array<std::int32_t,9>& votes,
         const std::size_t* affectedIndex) const;
+    void VoteNative(SquidPostPopList& list,float x,float y,std::array<std::int32_t,9>& votes,const std::size_t* affectedIndex) const; //실제현재포인터/음수count와지역callback뒤현재owner읽기를보존한다.
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     const SidPool& pool_;
     // additional_: 추가.

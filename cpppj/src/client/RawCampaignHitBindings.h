@@ -31,6 +31,7 @@ public:
     RawCampaignHitBindings& operator=(const RawCampaignHitBindings&)=delete; // 다른 월드의 저장소와 혼용하지 않는다.
     // 실제 사제·공통 일반 자산 피격을 분배하고 다른 파생 표적의 기존 경계를 유지한다.
     o::GunHitHooks DamageHooks(o::GunHitHooks hooks) const;
+    std::uint32_t DamageResult(o::Sid victim,std::int32_t amount,o::Sid attacker) const; // 현재targetVT 뒤 현재source ownerBYTE를 읽고 실제target+98의DWORD 반환을 Rain의 조건부 수명연장에 제공한다.
     // 실제 충돌 효과와 총의 현재 시각 피해 계산을 같은 Missile에 연결한다.
     o::MissileHooks MissileHooks(const o::RawGunHit& hit,const o::MissileState& clock,o::MissileHooks hooks) const;
     // 실제 anim160 예약 종료/프레임 처리만 추가한다.

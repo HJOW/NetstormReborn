@@ -27,6 +27,12 @@ int Cell(float coordinate,float bias) {
     if (!std::isfinite(value) || value<=-1 || value>=kSide) throw std::out_of_range("Damageable 해방 좌표 범위 오류");
     return static_cast<int>(value);
 }
+// Native의실제signed64 CRT절삭뒤하위DWORD를다시signed로해석하며축별보드범위선검사를추가하지않는다.
+std::int32_t NativeCell(float coordinate,float bias) {
+    const double value=static_cast<double>(coordinate)+static_cast<double>(bias);
+    if (!std::isfinite(value) || value<-9223372036854775808.0 || value>=9223372036854775808.0) throw std::out_of_range("Damageable Native 해방의실제CRT절삭표현범위");
+    return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::int64_t>(value)));
+}
 }
 // 실제 조회 자료와 모든 하위 효과의 연결을 확인한다.
 RawDamageableRelease::RawDamageableRelease(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const std::uint8_t> spots,
@@ -47,42 +53,50 @@ std::array<float,2> RawDamageableRelease::Position(Sid parent) const {
     return {std::bit_cast<float>(Read(raw,kX,4)),std::bit_cast<float>(Read(raw,kY,4))};
 }
 // 실제 중심 함수는 발자국의 절반을 빼고 각 좌표를 float에 저장한다.
-std::array<float,2> RawDamageableRelease::Center(Sid parent) const {
+std::array<float,2> RawDamageableRelease::Center(Sid parent,bool native) const {
     const auto& type=Type(pool_.Slot(parent)[kType]);
-    if (type.footX<1 || type.footY<1 || type.footX>kSide || type.footY>kSide) throw std::invalid_argument("Damageable 해방 발자국 범위 오류");
+    if (!native && (type.footX<1 || type.footY<1 || type.footX>kSide || type.footY>kSide)) throw std::invalid_argument("Damageable 해방 발자국 범위 오류");
     const auto point=Position(parent);
     return {static_cast<float>(static_cast<double>(point[0])-static_cast<double>(type.footX)*0.5),
         static_cast<float>(static_cast<double>(point[1])-static_cast<double>(type.footY)*0.5)};
 }
 // 공간은 각 일반 자산 후보에서 다시 읽으며 좌표는 순회 전 스냅한 값을 유지한다.
-std::uint8_t RawDamageableRelease::Spot(const std::array<float,2>& point) const {
+std::uint8_t RawDamageableRelease::Spot(const std::array<float,2>& point,bool native) const {
+    if (native) { const auto y=std::bit_cast<std::uint32_t>(NativeCell(point[1],kSpotBias)),x=std::bit_cast<std::uint32_t>(NativeCell(point[0],kSpotBias));const auto index=y*static_cast<std::uint32_t>(kSide)+x;if (index>=spots_.size()) throw std::out_of_range("Damageable Native 해방의현재flatBYTE물리부족");return spots_[index]; } //선택된감긴공간BYTE만확인한다.
     return spots_[static_cast<std::size_t>(Cell(point[1],kSpotBias))*kSide+static_cast<std::size_t>(Cell(point[0],kSpotBias))];
 }
 // 권한 해방 몸체의 조건·호출 순서·WORD 복사는 실제 코드로 수행한다.
 void RawDamageableRelease::Release(Sid parent) const {
     const auto raw=pool_.AllocatedBytes(parent);
     if ((raw[kState]&9) || raw[kType]<kFirstAssetTypeNumber) throw std::invalid_argument("Damageable 해방 부모 상태 오류");
-    auto point=Type(raw[kType]).footX==1 ? Position(parent) : Center(parent);
+    RunRelease(parent,state_.battle,state_.bridgeType,false);
+}
+// 실제44b626은진입한뒤현재TYPE를선택하며이미죽은부모의자격을새로판정하지않는다.
+void RawDamageableRelease::ReleaseNative(Sid parent,const bool& battle,const std::uint32_t& bridgeType) const { RunRelease(parent,battle,bridgeType,true); }
+// 같은후행몸체이며현재부모/후보/전역을기존원문소비위치에서읽는다.
+void RawDamageableRelease::RunRelease(Sid parent,const bool& battle,const std::uint32_t& bridgeType,bool native) const {
+    const auto raw=pool_.Slot(parent); // Native는 도달한50BYTE물리만빌리고typed의free/contained/TYPE하한선검사를추가하지않는다.
+    auto point=Type(raw[kType]).footX==1 ? Position(parent) : Center(parent,native);
     // 스냅한 정수는 float로 저장되며 이후 일반 자산의 위치로 고정된다.
-    for (auto& coordinate:point) coordinate=static_cast<float>(Cell(coordinate,kSnapBias));
+    for (auto& coordinate:point) coordinate=static_cast<float>(native ? NativeCell(coordinate,kSnapBias):Cell(coordinate,kSnapBias));
     RawContainedFinder finder(pool_,finderState_);
     // 반환 전 저장된 next를 사용하므로 현재 후보의 연결 변경에도 원래 다음 후보로 간다.
     for (Sid current=finder.Begin(parent,true);current.value;current=finder.Next()) {
         if (!(pool_.Slot(current)[kMask]&kReleasable)) continue;
         const auto kind=Read(pool_.Slot(current),kKind,2);
-        if (!state_.battle && !(Type(kind).flags2&state_.AllowedGenus())) continue;
+        if (!battle && !(Type(kind).flags2&state_.AllowedGenus())) continue;
         if (Type(kind).flags2&kPriest) {
             auto position=Position(parent);
             if (Type(pool_.Slot(parent)[kType]).flags2&kCenteredParent) {
-                position=Center(parent);position[0]+=0.5f;position[1]+=0.5f;
+                position=Center(parent,native);position[0]+=0.5f;position[1]+=0.5f;
             }
             hooks_.spawnPriest(position[0],position[1],kind,static_cast<std::uint16_t>(Read(pool_.Slot(current),kWord,2)));
         } else {
-            if ((Spot(point)&0x10) || !(Spot(point)&6)) continue;
+            if ((Spot(point,native)&0x10) || !(Spot(point,native)&6)) continue;
             const Sid created=hooks_.create(kind,0);
             const auto word=Read(pool_.Slot(current),kWord,2);auto target=pool_.AllocatedBytes(created);
             target[kWord]=static_cast<std::uint8_t>(word);target[kWord+1]=static_cast<std::uint8_t>(word>>8);
-            if (target[kType]==state_.bridgeType) hooks_.notifySurface(created);
+            if (target[kType]==bridgeType) hooks_.notifySurface(created);
             hooks_.setOwner(created,0);hooks_.pop(created,point[0],point[1],0);
         }
     }

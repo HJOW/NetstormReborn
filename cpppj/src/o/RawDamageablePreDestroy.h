@@ -33,11 +33,14 @@ public:
     void Validate(Sid sid,std::uint32_t flags) const;
     // 0044b4b0 / CD 004615e0. extra&9는 첫 진입에서만 검사하고 공통 body는 항상 호출한다.
     void PreDestroy(Sid sid,std::uint32_t flags) const;
+    void PreDestroyNative(Sid sid,std::uint32_t flags,const std::function<void(Sid)>& releaseContained) const; //44b4b0의현재extra/효과/후행Spot/해방/공통부모만실행하며typedValidate를선행하지않는다.
     // 같은 풀의 Carrier 연결에 사용한다.
     const SidPool& Pool() const;
 private:
+    void RunPreDestroy(Sid sid,std::uint32_t flags,const std::function<void(Sid)>& releaseContained,bool native) const; //typed선검사뒤또는Native진입뒤같은실제효과순서를공유한다.
     // raw 현재 좌표에 단정도 0.9999를 더한 뒤 0 방향 절삭해 spot을 읽는다.
     std::uint8_t Spot(Sid sid) const;
+    std::uint8_t SpotNative(Sid sid) const; //원문은Y절삭/왼쪽8비트감김뒤X를더한현재flatBYTE물리만선택한다.
     // 각 효과 뒤 현재 좌표 비트를 다시 읽어 위치 소리 요청을 만든다.
     void SoundAt(Sid sid,DamageableSound sound) const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.

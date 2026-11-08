@@ -34,17 +34,19 @@ public:
         const ContainedFinderState& finderState,const DamageableReleaseState& state,DamageableReleaseHooks hooks);
     // 0044b626~0044b80c / CD 0046174e~0046195a. 상위에서 확인한 boss/extra/flags를 다시 평가하지 않는다.
     void Release(Sid parent) const;
+    void ReleaseNative(Sid parent,const bool& battle,const std::uint32_t& bridgeType) const; //44b626은부모자격을재검사하지않고후보/생성효과뒤같은현재battle/BridgeTYPE를참조한다.
     // 같은 풀의 Damageable 콜백 연결을 검사할 때 쓴다.
     const SidPool& Pool() const;
 private:
+    void RunRelease(Sid parent,const bool& battle,const std::uint32_t& bridgeType,bool native) const; //typed상태필드또는Native현재전역참조로같은TYPE/좌표/종속/생성몸체를실행한다.
     // 현재 타입의 발자국 중심을 단정도 저장까지 원본 순서로 계산한다.
-    std::array<float,2> Center(Sid parent) const;
+    std::array<float,2> Center(Sid parent,bool native=false) const;
     // 현재 raw 좌표 두 개를 비트 그대로 읽는다.
     std::array<float,2> Position(Sid parent) const;
     // 발자국·genus를 조회하며 타입 표 범위를 검사한다.
     const RiftTypeRecord& Type(std::uint32_t number) const;
     // 고정 보정 좌표의 공간 바이트다. 원본의 +0.9999 절삭을 쓴다.
-    std::uint8_t Spot(const std::array<float,2>& point) const;
+    std::uint8_t Spot(const std::array<float,2>& point,bool native=false) const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.

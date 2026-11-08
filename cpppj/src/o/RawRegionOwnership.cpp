@@ -26,6 +26,10 @@ int Truncate(double value) {
         throw std::out_of_range("지역 소유 좌표 절삭 범위 오류");
     return static_cast<int>(result);
 }
+// 실제선택된DWORD의물리만검사하며capacity/전체count/다음항목을미리읽지않는다.
+std::uint32_t NativeListValue(SquidPostPopList& list,std::uint32_t index) {
+    const auto storage=list.Storage();if (index>=storage.size()) throw std::out_of_range("지역Native목록의현재DWORD물리부족");return storage[index];
+}
 }
 // 필수 경계와 서로 다른 전역 목록/테마 표를 먼저 확인한다.
 RawRegionOwnership::RawRegionOwnership(const SidPool& pool,SquidPostPopList& additional,SquidPostPopList& temples,
@@ -88,6 +92,44 @@ void RawRegionOwnership::Update(float x,float y,std::uint32_t mode) const {
     }
     hooks_.paint({paintX,paintY,owner,theme});++state_.WorldRedraw();state_.MapRevision()=1;
     if (!special && state_.affected.size()>1) Update(x,y,10);
+}
+// 원문signed현재count가0이하면배열을읽지않고각지역조회callback뒤현재owner만표에더한다.
+void RawRegionOwnership::VoteNative(SquidPostPopList& list,float x,float y,std::array<std::int32_t,9>& votes,const std::size_t* affectedIndex) const {
+    for (std::uint32_t index=0;std::bit_cast<std::int32_t>(index)<std::bit_cast<std::int32_t>(list.Count());++index) { //원문각반복의현재count/현재포인터를사용한다.
+        const auto number=NativeListValue(list,index);if (number>65535U) throw std::out_of_range("지역Native투표의실제DWORD SID물리범위");
+        const Sid sid{static_cast<std::uint16_t>(number)};const auto raw=pool_.Slot(sid);
+        const auto region=hooks_.regionAt(Coordinate(raw,kX),Coordinate(raw,kY));
+        const auto target=affectedIndex ? state_.affected.at(*affectedIndex).region:hooks_.regionAt(x,y);
+        if (region!=target) continue;
+        const auto owner=pool_.Slot(sid)[34];if (owner>=votes.size()) throw std::out_of_range("지역Native투표의현재owner물리범위");
+        votes[owner]=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(votes[owner])+1U); //원문표의DWORD감김이며동률선택은후행signed비교다.
+    }
+}
+// 같은455380의PATCH도장/재투표이며typedUpdate의unsigned전체목록선검사와분리한다.
+void RawRegionOwnership::UpdateNative(float x,float y,std::uint32_t mode) const {
+    const bool special=mode==10;std::array<std::int32_t,9> votes{}; //원문지역호출마다실제아홉표를0으로시작한다.
+    const auto paint=[this,x,y](std::uint32_t owner,std::uint32_t theme) { hooks_.paint({Truncate(x),Truncate(y),owner,theme}); }; //좌표절삭은실제도장을선택한위치에서만수행한다.
+    if (special) {
+        for (std::size_t index=0;index<state_.affected.size();++index) { VoteNative(additional_,x,y,votes,&index);VoteNative(temples_,x,y,votes,&index); } //지역별표를다시초기화하지않고현재영향목록을순회한다.
+        mode=0;
+    } else { state_.affected.clear();VoteNative(additional_,x,y,votes,nullptr);VoteNative(temples_,x,y,votes,nullptr); }
+    std::uint32_t owner{};std::int32_t best{};bool tied=false; //현재최대와동률을원문순서로선택한다.
+    for (std::uint32_t index=0;index<votes.size();++index) { if (votes[index]>best) { best=votes[index];owner=index;tied=false; }else if (votes[index]==best) tied=true; } //더큰최대가나오면앞선동률을해제한다.
+    std::uint32_t theme{};
+    if (tied || !owner) { paint(1,0);state_.affected.clear();owner=0; }
+    else {
+        if (!mode) {
+            for (std::uint32_t index=0;std::bit_cast<std::int32_t>(index)<std::bit_cast<std::int32_t>(temples_.Count());++index) { //현재신전signed개수와포인터를매항목선택한다.
+                const auto number=NativeListValue(temples_,index);if (number>65535U) throw std::out_of_range("지역Native테마의실제DWORD SID물리범위");
+                const auto raw=pool_.Slot(Sid{static_cast<std::uint16_t>(number)});if (raw[34]!=owner) continue;
+                if (raw[10]>=themes_.size()) throw std::out_of_range("지역Native테마의현재TYPE물리범위");
+                const auto kind=themes_[raw[10]];const auto enabled=hooks_.themeMode();theme=!enabled ? 0U:kind==0 ? 2U:kind==1 ? 3U:kind==2 ? 1U:0U;
+            }
+        }
+        paint(0,0);
+    }
+    paint(owner,theme);++state_.WorldRedraw();state_.MapRevision()=1;
+    if (!special && state_.affected.size()>1) UpdateNative(x,y,10); //실제후행영향목록이여러개면같은owner/모듈로누적재투표한다.
 }
 // 연결 객체들이 같은 실제 raw 슬롯을 조회하는지 확인할 수 있다.
 const SidPool& RawRegionOwnership::Pool() const { return pool_; }

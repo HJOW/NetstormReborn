@@ -39,6 +39,7 @@ void RawGunHit::SetTime(Sid firing,double now) const {
 }
 // 가상 피해 호출 직전 표적의 live/free/dead와 발사 소유자를 다시 읽는다.
 void RawGunHit::Apply(Sid firing,Sid target,std::int32_t damage) const {
+    if (hooks_.applyOverride && hooks_.applyOverride(firing,target,damage)) return; // Rain45f940은 generic4d4eb0의target0/free/dead 선관문을 거치지 않는다. 미설치 typed 경로는 기존 본문 그대로다.
     if (!target.value) return;if (target.value>=pool_.Capacity()) throw std::out_of_range("Gun hit 표적 SID 오류");if (pool_.Slot(target)[11]&3) return;
     const auto source=Firing(firing);if (!hooks_.damage) throw std::logic_error("Gun hit 실제 표적 피해 경계 누락");hooks_.damage(target,damage,source[pool_.Edition()==OriginalEdition::Patch1078 ? 34U : 32U],firing);
 }

@@ -28,6 +28,7 @@ public:
     std::span<std::uint8_t> Participant(std::uint32_t index); // 실제0..39의460BYTE 참가자 기록이다.
     std::span<const std::uint8_t> Battle(std::uint32_t index) const; //같은현재전투물리의읽기전용뷰이며별도기록을복사하지않는다.
     std::span<const std::uint8_t> Participant(std::uint32_t index) const; //같은현재참가자물리의읽기전용뷰다.
+    void ReceivePeerAddress(std::span<const std::uint8_t> packet); //004b4790/7bh는 CS0이면 무접근 반환하고 현재 참가자subscriber가 맞을 때 주소+1a0에 NUL까지 BYTE별로 쓴다.
     std::optional<std::uint32_t> FindParticipantBySubscriber(std::uint32_t subscriber) const; //0042bb70:0..39의첫subscriber일치이며active/비0관문을추가하지않는다.실제0번과미발견을구별한다.
     std::span<const std::uint8_t> ParticipantNameBytes(std::int32_t participant,const std::function<void(std::string_view,std::uint32_t)>& assertion) const; //0042bbb0:1..39진단뒤현재active면같은40BYTE이름,아니면실제NUL1BYTE뷰다.읽기/문자열복사는caller가한다.
     std::uint32_t FreeBattleSlots(std::uint32_t battle) const; //0042b350:현재8개playerIds DWORD중0인개수다.별도전투active조건은없다.

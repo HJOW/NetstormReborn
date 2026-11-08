@@ -33,6 +33,19 @@ void Remove(SquidPostPopList& list,Sid sid) {
     }
     list.count-=removed;
 }
+// 40ea00은signed현재count와매반복같은현재포인터를쓰고음수count/비활성꼬리를보존한다.
+void RemoveNative(SquidPostPopList& list,Sid sid) {
+    std::uint32_t removed{},index{}; // 실제 DWORD 압축 개수와 순회 번호다.
+    while (std::bit_cast<std::int32_t>(index)<std::bit_cast<std::int32_t>(list.Count())) { // count<=0이면 배열 포인터도 읽지 않는다.
+        const auto storage=list.Storage();if (index>=storage.size()) throw std::out_of_range("Outpost 삭제 목록의 현재DWORD 물리 부족");
+        const auto value=storage[index];if (value==sid.value) ++removed;
+        else { const auto destination=index-removed;if (destination>=storage.size()) throw std::out_of_range("Outpost 삭제 압축의 현재DWORD 물리 부족");storage[destination]=value; }
+        ++index;
+    }
+    list.SetCount(list.Count()-removed); // 현재count만감산하며capacity를선조회하거나꼬리를0으로채우지않는다.
+}
+// 선택된 callback만 복사해 수명을 보유하며 앞선 목록/지역 효과를 되돌리지 않는다.
+template<class Function> Function NeedNative(const Function& function) { if (!function) throw std::logic_error("Outpost 삭제의 선택된 실제 장치 미연결");return function; }
 }
 // 빠진 지역/부모 경계와 별도 전역 목록의 잘못된 연결을 생성 시 거부한다.
 RawOutpostLifecycle::RawOutpostLifecycle(SidPool& pool,SquidPostPopList& additional,SquidPostPopList& nearest,OutpostLifecycleHooks hooks)
@@ -67,6 +80,15 @@ void RawOutpostLifecycle::PreDestroy(Sid sid,std::uint32_t flags) const {
         hooks_.regionChanged(Coordinate(pool_.Slot(sid),kX),Coordinate(pool_.Slot(sid),kY));
     }
     hooks_.preDestroy(sid,flags);
+}
+// 실제455840은 raw자산·두번째목록·부모를 앞에서 검사하지 않고 선택된 현재 물리에 순서대로 도달한다.
+void RawOutpostLifecycle::PreDestroyNative(SidPool& pool,SquidPostPopList& additional,SquidPostPopList& nearest,Sid sid,std::uint32_t flags,const OutpostPreDestroyHooks& hooks) {
+    if (!(pool.Slot(sid)[40]&kBlocked)) {
+        RemoveNative(additional,sid);RemoveNative(nearest,sid); // 첫 목록 완료 뒤에만 둘째 목록을 읽는다.
+        const auto raw=pool.Slot(sid);const auto y=Coordinate(raw,kY),x=Coordinate(raw,kX); // 두 압축 뒤 PE가읽는Y→X의현재좌표비트다.
+        NeedNative(hooks.regionChanged)(x,y);
+    }
+    NeedNative(hooks.damageablePre)(sid,flags); // extra 분기와 무관하게 지역 효과 뒤 같은 원래flags의 부모를 호출한다.
 }
 // 외부 연결 시 동일한 실제 풀 참조를 제공한다.
 const SidPool& RawOutpostLifecycle::Pool() const { return pool_; }

@@ -6,6 +6,23 @@
 #include <utility>
 
 namespace netstorm::o { //Client 저장소와 독립 검사의 새 저장소가 같은 본체를 사용한다.
+namespace { // Native가 선택한 원문 단언만 같은 Client 장치로 전달한다.
+// 진단 callback의 재연결 중에도 선택된 callable 수명을 보유하며 정상 복귀 뒤 caller가 계속한다.
+void AssertConnectionNative(const ConnectionRegistryAssertion& assertion,std::uint32_t line) {
+    std::string_view expression; // 줄마다 실제 PE 문자열을 사용하며 임의 공통 실패로 바꾸지 않는다.
+    switch (line) {
+    case 0x1e:expression="-zaMAX_PENDING <= id && id < NUM_TRANSCEIVERS";break;
+    case 0xb0:expression="FIRST_REAL_PLAYER <= transId && transId < END_REAL_PLAYERS";break;
+    case 0xb3:expression="transId == GAME_SERVER_ID";break;
+    case 0xb6:expression="transceivers[transId] == NULL";break;
+    case 0xbb:expression="pendingId < 0";break;
+    case 0xfa:expression="id < NUM_TRANSCEIVERS";break;
+    default:throw std::invalid_argument("Native 연결의 미등록 원문 진단 행");
+    }
+    const auto diagnose=assertion;if (!diagnose) throw std::logic_error("Native 연결의 선택된 Client 진단 미연결");
+    diagnose(expression,"\\Ns\\O\\Ztrans.cpp",line);
+}
+}
 // 현재 ID를 실제 표에서 읽고 없는 연결은 DNS/소켓 없이 같은 zero IPv4 주소를 만든다.
 std::array<std::uint8_t,20> RawConnectionRegistry::Address(std::int32_t id) const {
     if (id< -32 || id>21) throw std::out_of_range("Chat 현재 주소의 원본 전송 ID 범위");const auto token=id<0 ? pending_.at(static_cast<std::size_t>(-id)) : transceivers_.at(static_cast<std::size_t>(id));
@@ -28,6 +45,14 @@ bool RawConnectionRegistry::SendMutable(std::int32_t id,std::span<std::uint8_t> 
     if (!token) return false;const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.send) throw std::logic_error("현재 살아 있는 송신기의 실제 가상+4 장치 미연결");const auto send=found->second.send;send(packet);return true;
 }
 bool RawConnectionRegistry::Owns(std::uint32_t token) const { return bindings_.contains(token); }
+// pending/양수 alias는 진단 뒤 현재 실제 표에서 선택한다. 원문의-32 허용과 실제32칸 물리 상한을 구별한다.
+bool RawConnectionRegistry::SendMutableNative(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players,const ConnectionRegistryAssertion& assertion) const {
+    if (id< -32 || id>21) AssertConnectionNative(assertion,0x1e);
+    const auto token=id<0 ? pending_.at(static_cast<std::size_t>(-std::int64_t(id))) : transceivers_.at(static_cast<std::size_t>(id));
+    if (id>=1 && id<=8) { const auto offset=static_cast<std::size_t>(id)*0xb4+0x50;if (offset>=players.size()) throw std::out_of_range("원문 송신의 현재 Player 필드 범위");if (!(players[offset]&1U)) return false; }
+    if (!token) return false;const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.send) throw std::logic_error("현재 살아 있는 송신기의 실제 가상+4 장치 미연결");
+    const auto send=found->second.send;send(packet);return true; // 실제 가상 송신 뒤 같은 노드를 다시 조회하지 않는다.
+}
 std::uint32_t RawConnectionRegistry::TokenFor(const PacketConnection& connection) const { for (const auto& entry:bindings_) if (entry.second.node==&connection) return entry.first;throw std::out_of_range("직접 송신의 현재 노드 token 누락"); } // 실제 살아 있는 동일 주소만 선택하며 sender 번호로 다른 노드를 대신하지 않는다.
 void RawConnectionRegistry::SendDirect(std::uint32_t token,std::span<std::uint8_t> packet) const { const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.send) throw std::logic_error("직접 연결의 실제 가상 송신 장치 미연결");const auto send=found->second.send;send(packet); } // callback 중 해제에도 선택한 callable의 수명을 보유한다.
 // 실제 접속 성공 뒤의 부분 효과만 수행하며 새 접속/Player 상태를 만들지 않는다.
@@ -59,6 +84,14 @@ std::int32_t RawConnectionRegistry::Accept(std::uint32_t token) {
     throw std::logic_error("pending 개수와 현재31칸의 불일치");
 }
 void RawConnectionRegistry::Assign(std::int32_t pending,std::int32_t target,std::uint32_t server,std::function<void(std::uint32_t)> buffered) { static_cast<void>(AssignPendingConnection(pending,target,server,Cleanup(),RegistrationHooks(std::move(buffered)))); }
+// typed의 기존 node/표 순서를 재사용하고 진단의 정상 복귀만 실제 Client 부모에 맡긴다.
+ConnectionRegistrationHooks RawConnectionRegistry::NativeRegistrationHooks(std::function<void(std::uint32_t)> buffered,const ConnectionRegistryAssertion& assertion) {
+    auto hooks=RegistrationHooks(std::move(buffered));hooks.assertion=[assertion](auto line) { AssertConnectionNative(assertion,line); };return hooks;
+}
+// b6 진단 뒤 현재 pending을 읽고 sender store 뒤 현재 target을 다시 읽는 기존4e27b0 본체를 그대로 사용한다.
+void RawConnectionRegistry::AssignNative(std::int32_t pending,std::int32_t target,std::uint32_t server,std::function<void(std::uint32_t)> buffered,const ConnectionRegistryAssertion& assertion) {
+    static_cast<void>(AssignPendingConnection(pending,target,server,Cleanup(),NativeRegistrationHooks(std::move(buffered),assertion)));
+}
 void RawConnectionRegistry::Destroy(std::uint32_t token) { const auto found=bindings_.find(token);if (found==bindings_.end()) throw std::out_of_range("현재 연결 소멸 장치 누락");const auto operation=found->second.destroy;operation(); }
 void RawConnectionRegistry::RemoveAliases(std::uint32_t token) {
     bool mainAlias{};for (auto& current:transceivers_) if (current==token) { current=0;mainAlias=true; } //현재 같은 양수 연결의 칸만 제거하며 새 연결은 지우지 않는다.
@@ -74,6 +107,14 @@ void RawConnectionRegistry::Forget(std::uint32_t token) { if (!token) return;Rem
 ConnectionCleanupHooks RawConnectionRegistry::CleanupHooks() { return {[this](auto token)->PacketConnection& { return Node(token); },[this](auto token) { Destroy(token); },[this](auto token) { Release(token); },[](auto line) { throw std::logic_error("원문 연결 정리 진단:"+std::to_string(line)); }}; }
 void RawConnectionRegistry::RunCleanup(const std::function<void()>& operation) { ++cleanupDepth_;try { operation(); }catch (...) { --cleanupDepth_;throw; }--cleanupDepth_; }
 void RawConnectionRegistry::Disconnect(std::int32_t id) { RunCleanup([&] { DisconnectTransceiver(id,Cleanup(),CleanupHooks()); }); }
+// 실제 free/동기화/현재칸0/초기버퍼 재조회는 기존 Cleanup 부모가 처리한다.
+ConnectionCleanupHooks RawConnectionRegistry::NativeCleanupHooks(const ConnectionRegistryAssertion& assertion) {
+    auto hooks=CleanupHooks();hooks.assertion=[assertion](auto line) { AssertConnectionNative(assertion,line); };return hooks;
+}
+// 정상 복귀 뒤 도달한 물리 범위만 보호하며 close callback이 남긴 앞 효과를 되돌리지 않는다.
+void RawConnectionRegistry::DisconnectNative(std::int32_t id,const ConnectionRegistryAssertion& assertion) {
+    RunCleanup([&] { DisconnectTransceiver(id,Cleanup(),NativeCleanupHooks(assertion)); });
+}
 void RawConnectionRegistry::CloseAll() { RunCleanup([&] { CloseAllTransceivers(Cleanup(),CleanupHooks()); }); }
 void RawConnectionRegistry::EndPlayers(std::uint32_t server) { RunCleanup([&] { EndPlayerConnections(server,Cleanup(),CleanupHooks()); }); }
 void RawConnectionRegistry::ClosePending() { RunCleanup([&] { CloseAllPendingConnections(Cleanup(),CleanupHooks()); }); }

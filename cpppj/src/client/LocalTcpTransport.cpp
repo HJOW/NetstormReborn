@@ -196,6 +196,13 @@ bool LocalTcpTransport::Connect(std::span<const std::uint8_t> address,std::uint3
 void LocalTcpTransport::AssignConnection(std::int32_t pending,std::int32_t owner) {
     auto* node=Current(pending);if (!node || pending>=0) throw std::logic_error("LAN TCP 재배치의 현재 accepted 노드 누락");registry_->Assign(pending,owner,server_ ? 1U:0U,[this,node](auto token) { if (token!=node->token || !Find(token)) throw std::logic_error("LAN TCP buffered 재배치 토큰 불일치");node->connection.flags|=kBuffered;node->aggregate.clear(); });
 }
+// 7ch의 원문 Native 재배치는 진단 뒤 바뀐 pending/target token을 실제 buffered 위치에서만 선택한다.
+void LocalTcpTransport::AssignConnectionNative(std::int32_t pending,std::int32_t owner,const o::ConnectionRegistryAssertion& assertion) {
+    registry_->AssignNative(pending,owner,server_ ? 1U:0U,[this](auto token) {
+        auto* node=Find(token);if (!node) throw std::logic_error("Native TCP buffered의 현재token에 대한 실제 노드 미연결");
+        node->connection.flags|=kBuffered;node->aggregate.clear(); //004df470의 buffered bit·현재 미확정 버퍼 cursor 초기화를 같은 실제 노드에 적용한다.
+    },assertion);
+}
 // listener의 accept 성공 때만 고정 노드와 음수 pending을 만든다.
 void LocalTcpTransport::Accept() {
     if (listener_==kInvalidSocket) return;
