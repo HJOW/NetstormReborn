@@ -31,6 +31,9 @@ public:
     void SailPosition(std::array<std::uint32_t,2> position); //0042beb0의 송신 선행·현재 자기 재조회/좌표 쓰기·실제 Rig를 실행한다.
     void RefreshZones(); //일반 MetaRefresh(c6)의4b40c0(11)을 기존 실제16h writer/관찰기/TCP에 연결하며 접속 상태를 합성하지 않는다.
 private:
+    void ReceiveParticipantAdd(std::span<const std::uint8_t> packet); //4b4710의 실제 메타/CS/자기Core 선택 뒤 전체42c180 생성/후행 표시를 실행한다.
+    void ConstructParticipant(std::span<std::uint8_t> record,std::span<const std::uint8_t> packet); //현재 실제 World/Gump/Config/Core/카메라·Chat 장치를 전체42b580에 결합한다.
+    void RefreshParticipantCore(); //48f190의 현재 일반 관문/같은 전투40참가자→실제1..8 Core 장부다.
     NativeMetaSailHooks SailDevices(); //조회만으로 효과를 실행하지 않고 같은 현재 CS/SHP/카메라·전송/프로세스를 결합한다.
     bool Connect(std::string_view endpoint,std::uint32_t port,std::uint32_t challenge); //004b3ed0의현재 해석 뒤 TCP10/11을 실제 선택한다. 공개/DNS 주소는 기존 LAN 장치가 거부한다.
     std::span<std::uint8_t> Core(); //0048f0d0의 같은 현재 Client Core와 실제 진단을 읽는다.

@@ -31,6 +31,7 @@
 #include "client/HudNsInfoMeta.h" //메타루트/참가자순서도같은CS·공통문자/트리를사용한다.
 #include "client/HudPlayerButtonDraw.h" //같은특수버튼의배경/단색/원색그림전체Draw다.
 #include "client/NativeMetaPlayerMenu.h" //같은controlled메뉴의자기/다른참가자부착을실행한다.
+#include "client/NativeMetaParticipantCreate.h" //실제 참가자 이름표도 같은 titleWidgets/StyleText를 사용한다.
 #include "client/NativeMetaObjectInput.h" //메타+ac도 같은 현재 controlled/Gump 장치를 사용한다.
 #include "client/RawCameraView.h" //빈 공간 항해 메뉴의 원문 FTOL 하위 DWORD를 공유한다.
 #include "client/NativeNsInfoInput.h" //루트 입력도 실제 정렬표/CS·공통 메뉴/카메라·송신을 사용한다.
@@ -698,6 +699,10 @@ void RawMenuControls::BindMetaSceneGumps(NativeMetaSceneHooks& hooks) {
     hooks.appendText=[this](auto token,std::string_view text,const auto& context,auto length) { const std::string bytes(text);impl_->costText->AppendText(token,{bytes.data(),bytes.size()+1},context,length); };
     hooks.fitText=[this](auto token,auto width,auto height) { impl_->costText->Fit(token,width,height); };
     hooks.reference=[this](auto token,auto sid) { impl_->widgets->Reference(token,sid);auto* node=impl_->common.node(token);if (!node) throw std::logic_error("메타존객체부착뒤실제Gump부재");node->flags|=0x2000U; }; //00464540의4644e0/GumpForm뒤world비트순서다.
+}
+// 원문42b580이 선택한 순서대로 호출하도록 생성/설정 장치만 제공한다.
+void RawMenuControls::BindMetaParticipantGumps(NativeMetaParticipantCreateHooks& hooks) {
+    hooks.createName=[this] { return CreateMetaName(0,0,0,0); };hooks.selectable=[this](auto token,auto enabled) { impl_->titleWidgets->SetSelectable(token,std::bit_cast<std::int32_t>(enabled)); };hooks.scrollable=[this](auto token,auto enabled) { impl_->titleWidgets->SetScrollable(token,enabled); };
 }
 // 부분 생성도 기존 map/공통 수명에서 추적되며 새 독립 폰트/렌더러를 만들지 않는다.
 std::uint32_t RawMenuControls::CreateMetaText(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color) {

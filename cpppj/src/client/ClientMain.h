@@ -62,6 +62,7 @@ struct ClientChatWindowGlobals; // 실제 Chat 현재 전역과 공유 로그의
 struct ClientHtmlWindowGlobals; // 같은 Client의 HTML 수/serial/종료 시각 소유자다.
 struct ClientNsInfoGlobals; // 실제 NSInfo/zone/선택 서버와 이름 버퍼의 장기 소유자다.
 class ClientChallengeGlobals; //005467d8 CS 객체/기록·최초 배치 좌표를 Client 수명에 소유한다.
+struct NativeMetaParticipantCreateHooks; //실제 참가자 World/Gump 생성 장치의 비소유 묶음이다.
 struct ClientAudioOptions;
 
 // 설정 키 "maxFPS" 의 코드 기본값. 화면 루프를 초당 몇 번까지 돌릴지 정한다.
@@ -239,6 +240,8 @@ public:
     void UpdateNativeMetaBattle(std::uint32_t battle); //현재 특정 전투만 기존00479c40/같은Renderer·CS·Gump 장치로 갱신한다.
     void UpdateNativeMetaParticipant(std::uint32_t participant,std::uint8_t mask); //0047d8c0의 지정한 참가자/마스크를 기존 실제 Frame 장치에 전달한다.
     void SetNativeMetaParticipantStatus(std::int32_t kind,std::int32_t participant,bool enabled); //004d3090의 같은20칸에 참가자 안내 생성/제거를 요청하며 매개변수0/빈 문자열을 사용한다.
+    void BindNativeMetaParticipantDevices(NativeMetaParticipantCreateHooks& hooks); //현재 실제 Frame/World/Gump 공장·객체 부착·루트만 생성 부모에 결합한다.
+    void MonitorMetaParticipantName(std::span<const std::uint8_t> name); //418200의 현재alert 포커스 뒤 monitor 문구/실제 Chat 제출이다. 입력 이름은 같은 CS 물리를 빌린다.
     void RefreshNativeMetaDisplay(bool whole); //현재메타Poll/전체존재배치를같은CS/World·Renderer·글자장치에연결한다.새수신/게임상태는합성하지않는다.
     NativeIslandRig& AcquireNativeIslandRig(std::uint32_t object,float height,std::uint32_t kill); //현재 실제 Host/Kernel에서 첫 같은 부모 Rig를 찾거나 생성한다. NULL 생성은 물리 경계 오류로 거부한다.
     void DumpDiagnostics(); // 객체 덤프가 끝난 뒤 현재 같은 Kernel의 프로세스 요약을 저장한다.

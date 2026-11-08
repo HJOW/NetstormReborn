@@ -1,0 +1,103 @@
+{
+  "unit": 1146,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "f49b3c24 / 20261108-114 CP",
+  "summary": "20h 참가자 수신의 자기 Core/예약 증가·전체 CS 기록/길드/이름/장부·실제 섬 Image/World/이름 Gump/Rig·자기 입장 카메라/모니터 Chat·캡처 CS 좌석/버전/후행 표시를 연결했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1146\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13037568,
+      "sha256": "96ca043d126e91a34426ceffb747cd335de313fc11283acbcbdd13f8e78ceb39"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "0c33f7db5f779058d337bd2febd0f5e5cc3c82a68bddc8f3ab3afae1765b233b"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4b4710/40a340/42c180/42b580/42ca20/42ca60/48f190/418200/435b00/441300/4adca0 C/PE·현재 필드/캡처 CS·실제 Frame/Session/Config/Gump/Core/Kernel/Chat·slot+1 장부 행·호출/부분 쓰기 순서를 대조했다.",
+  "nativeEvidenceSha256": {
+    "0040a340.asm": "cbaac8750e455862acc854719028c7cc81bee1ddbd2370e7d1448b42746848b0",
+    "0040a340.c": "de81901f0d813abaabc8c531ebba1067e85cf7836f69d1d0050d668c5d2f005a",
+    "0040a390.asm": "360ea56a39f4bb1b65e827d8ddd500debe3f86cd394119c2610f5251d6a2c33c",
+    "0040a390.c": "9d0451d9d112a40e45b1fc5417e0faea3c83f279f5e1c2c71013458bf8502593",
+    "00418200.asm": "cbf8392166488b84ff14e490aaa15fad33173c047a2ea86c15dc1c0a28ff7964",
+    "00418200.c": "e0166589f7479d838a708658057d23838650287d93a81ce45a057b60cbf8856d",
+    "0042b580.asm": "0d55230a2e08a35ccecb701a6ed65ca2e921e71a79581565c0f9f388a228c354",
+    "0042b580.c": "f41a941d1043a57e61831bbbbfb26d50b8c68c850c84ccd51b4377602bc10862",
+    "0042b980.asm": "b488b9b3ae5af42abb7639f19b75755730e8178f4b7afa13b19122d2a4e6536e",
+    "0042b980.c": "a8fd2d5d69360afc1f1348af5c2663fc2522924dd57afd9de68877878392ed84",
+    "0042c180.asm": "2a1ef5558e42080c309d24d8d6fee7ea5a961553ce9c2d3d7a928e74fd292cef",
+    "0042c180.c": "cea12abad97bc4b2a339e529168e6aebeae79042bf23ae89ed077cc05c1d38f9",
+    "0042c2a0.asm": "a83bd5c95a4b404f937379321c8bc599ed32f437fc8632e20f65cb9113a48b74",
+    "0042c2a0.c": "19655a5dd16f4e0c92ad88cc637fde1de69444619b82bde22369f9242daa1b75",
+    "0042ca20.asm": "f62107bf402e6b199c00920d5cedafcaf842450f3c32cd326b5919dc16bb867e",
+    "0042ca20.c": "9692ae6efd24782eef54c48c3dc6305b469c1ecaa8c887dc3e31c2c6d6ecddf3",
+    "0042ca60.asm": "a0f926af5a3234281169d700ed885784a2322cea9c1289b3d134f7988ba369cd",
+    "0042ca60.c": "93bc044721e98897940e990c9cb7c13a848ac7b19c5bef2fb08102c5523c0853",
+    "00435b00.asm": "bc5f54cd6140b733b5eab13ed052ff838f7ed1602f244acdffd4c98a30c549fe",
+    "00435b00.c": "c98b07e5e330b1bf2a848cc2604200c5243148c14acf4b8627e1f6ed9238904f",
+    "00441300.asm": "26e8fcf8071e44ae8e69ff51d42827d8cbc3fe06ff31f4bbfa3f1ace4ec6490c",
+    "00441300.c": "e7d6b69eb66b654e723bd16835cdaca11f348515310d674392f1eed9fae53a93",
+    "00445110.asm": "0343d83913814eb7c7f6101d3dfb8b6c5299a159b376557f5c42fa619ff03eb1",
+    "00445110.c": "fbc0eb644816cb44898c8e65caeebff72c3525a3dffa803b1bff093f2db58ab7",
+    "0048f190.asm": "15c2d10025e44c4164cd9480badfbd8703e1858146e5fc5802c3f2ffb91972ec",
+    "0048f190.c": "ba7647c5fd12d2f97d1810b7ecf8e2a0b0374d6afda044c23be65ea9afc00d9b",
+    "004adca0.asm": "e38c915e0d9460bb1a401c27c275a1266257369389fee185015493540913e35c",
+    "004adca0.c": "90b3fd14de38242fd4e9137cf7a68b7c6ab4f1872547218d544ade93b1ac832f",
+    "004b46d0.asm": "dbe835ce737db4405a41fba099a7bfbde4f45bd033d4c7f5e16904445e2cbc2b",
+    "004b46d0.c": "14d64b7ad208eb69fbd91e6940f90688494a58fb430e450c96b8a911e9e2c2c5",
+    "004b4710.asm": "678c4e72e93f29fb911f76ebe309a4e5a1df9336bd58e69a8a5323f784b9a73b",
+    "004b4710.c": "398909dc84d9b7158a95785d178e98601521ef31f2b0fdf5adadf6d03d732e58"
+  },
+  "sourceAudit": {
+    "nativeFieldWidthsAndOrder": true,
+    "observerNameLenReloadAfterReturningAssertion": true,
+    "sameThreeGuildReadStringEffectsAndActualDestinationBytes": true,
+    "sameCapturedCsAndParticipantDuringSeatVersionUpdate": true,
+    "coreMetadataStartsAtSlotPlusOne": true,
+    "sameImageWorldGumpReferenceKernelRigAndIntroCamera": true,
+    "originalPacketBit40GuardPreserved": true,
+    "sameAlertThenMonitorAndActualHandleCompare": true,
+    "sameRawPacketChatNameAndOwnEarlyReturn": true
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "assetDataQuery": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "신규 MP/단위/게임/실제 통신 검사는 요청대로 제외했으며 실제 접속/장면/동작/안정성 검증 완료가 아니다.",
+    "미초기화 지역60/80BYTE는 기존 CurrentAllocationBytes의 host 입력을 사용한다. 원문 스택/32비트 포인터/SEH/실제 OS 고갈·원문 전체 formatter/x87/범위 밖 메모리 훼손 자체 일치는 보장하지 않는다.",
+    "물리 packet/CS/Gump/SID/좌석/문자열 범위 밖은 명시 호스트 오류이며 선행 Core/예약/기록/객체/입장 효과를 되돌리지 않는다.",
+    "21h 제거·22h 이동·25h 항해 오류·1a/1b checking·하강/참가 후속/HTML/송신 caller와 helpWord 캐시 수명·기존 강제 활성 커서/조기·원격 희생/marker 진단 경계는 잔여다."
+  ],
+  "remaining": [
+    "메타 CS 수신21/22/25h·1a/1b checking·하강/참가 후속 카메라·HTML·1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI"
+  ]
+}

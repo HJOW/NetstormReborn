@@ -35,5 +35,5 @@ private:
 };
 void RetargetNativeCameraRig(float initial,float target,NativeCameraRigGlobals globals,const NativeCameraRigHooks& hooks); //00419730 전체:현재owner0 반환→현재TYPE/부모 검색→목표 변경 또는 생성/두번째owner 조회/flags10h 부착이다.
 void AnimateClientMetaCamera(Client& client,float initial,float target); // 실제 Client/CS/같은 Kernel·Host/Renderer·현재 게임 시각을 위 부모에 연결한다.
-void StartClientMetaIntroCamera(Client& client); //00419840의 initial-12/target0 전용 wrapper다. 참가자 생성 caller 연결은 후속이다.
+void StartClientMetaIntroCamera(Client& client); //00419840의 initial-12/target0 전용 wrapper며 실제 자기 참가자 생성에서 호출한다.
 }

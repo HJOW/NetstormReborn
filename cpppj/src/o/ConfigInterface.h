@@ -65,6 +65,7 @@ public:
     bool ReadInt(std::string_view key, std::int32_t& value);
     // 원본 FUN_00441300 ↔ CD 004a96e0: 문자열판. 키가 있고 값이 다르면 바꾸고 참.
     bool ReadString(std::string_view key, std::string& value);
+    bool ReadStringBytes(std::string_view key,std::span<std::uint8_t> value); //00441300의 실제 C문자열 목적 버퍼다. 키 부재면 목적을 읽지 않고 첫 다른 BYTE 뒤만 NUL까지 복사한다.
     // 원본 FUN_00441470 ↔ CD 004a98d0: 0에서 시작해 ReadInt가 값을 바꿨고 그 값이 expected면 참.
     // 그래서 expected가 0이면 항상 거짓이다(원본 그대로).
     bool IntEquals(std::string_view key, std::int32_t expected);

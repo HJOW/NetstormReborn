@@ -67,9 +67,14 @@ std::uint32_t ClientChallengeGlobals::FreeBattleSlots(std::uint32_t battle) cons
 }
 // Native루프의slot0..7순서/참가자active필터없음·WORD상한후하한조회와최종두쓰기순서를유지한다.
 void ClientChallengeGlobals::UpdateBattleVersionBounds(std::int32_t battle,const std::function<void(std::string_view,std::uint32_t)>& assertion) {
-    if (battle<0 || battle>=10) Assert(assertion,"bId >= 0 && bId < CL_NUM_CHAL_BATTLES",0x45a);const auto record=Battle(std::bit_cast<std::uint32_t>(battle));if (!(Read(record,0,1)&1U)) Assert(assertion,"b->isValid()",0x45d);std::uint32_t maximum=0xffffffffU,minimum=0x100U;
+    if (battle<0 || battle>=10) { Assert(assertion,"bId >= 0 && bId < CL_NUM_CHAL_BATTLES",0x45a);throw std::out_of_range("CS 버전 집계의 실제 전투10칸 범위"); } //원문 진단은 currentCS 물리 조회보다 앞이며 복귀해도 잘못된 배열 주소를 사용하지 않는다.
+    UpdateBattleVersionBounds(Bytes(),battle,assertion);
+}
+// 원문의 this 기록은 진단/표시 callback이 current를 바꿔도 같은 물리를 유지한다.
+void ClientChallengeGlobals::UpdateBattleVersionBounds(std::span<std::uint8_t> cs,std::int32_t battle,const std::function<void(std::string_view,std::uint32_t)>& assertion) {
+    if (battle<0 || battle>=10) Assert(assertion,"bId >= 0 && bId < CL_NUM_CHAL_BATTLES",0x45a);if (cs.size()!=o::kChallengeBytes || battle<0 || battle>=10) throw std::out_of_range("CS 버전 집계의 실제 캡처 기록 범위");const auto record=cs.subspan(o::kChallengeBattleOffset+std::size_t(battle)*o::kChallengeBattleBytes,o::kChallengeBattleBytes);if (!(Read(record,0,1)&1U)) Assert(assertion,"b->isValid()",0x45d);std::uint32_t maximum=0xffffffffU,minimum=0x100U;
     for (std::uint32_t slot=0;slot<8;++slot) { //원문의두묶음네슬롯을동일한현재순서로순회한다.
-        const auto participant=Read(record,0x38U+slot*4U);if (!participant) continue;const auto peer=Participant(participant);const auto upper=Read(peer,0xb4,2);if (std::bit_cast<std::int32_t>(maximum)<=static_cast<std::int32_t>(upper)) maximum=upper;const auto lower=Read(peer,0xb2,2);if (lower<=minimum) minimum=lower;
+        const auto participant=Read(record,0x38U+slot*4U);if (!participant) continue;if (participant>=o::kChallengeParticipantCount) throw std::out_of_range("CS 버전 집계의 실제 참가자40칸 범위");const auto peer=cs.subspan(o::kChallengeParticipantOffset+participant*o::kChallengeParticipantBytes,o::kChallengeParticipantBytes);const auto upper=Read(peer,0xb4,2);if (std::bit_cast<std::int32_t>(maximum)<=static_cast<std::int32_t>(upper)) maximum=upper;const auto lower=Read(peer,0xb2,2);if (lower<=minimum) minimum=lower;
     }
     Put(record,0x1c,minimum);Put(record,0x18,maximum);
 }

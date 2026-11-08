@@ -2,26 +2,26 @@
 
 cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용자 확인, 재개 절차**를 정리한다. dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다.
 
-**2026-11-08 /goal 진행·제품1145:** 20h 참가자 생성이 사용할 CS Image 변환을 같은 실제 할당/기존 crop·RLE 본문에 연결하고0042b0e0 이름 정제를 Chat/CS 공통 함수로 분리했다. NetstormCpp/NetstormRoot Release/x64 종료0·경고/오류0·보호2800파일 불변이다. 새fixture/C++ 단위/MP/게임/통신/자료조회/전체검사/34미션/ZIP 실행0이며 마지막 C++ 실행검사는1052 기존7개다. 다음은 나머지 메타 CS 수신20/21/22/25h·참가자 생성의 실제 World/Gump/Rig/입장 알림 연결·카메라 caller·HTML 하강/참가 후속·1095 송신 상태 호출이다. 기존 사용자 검사 제외와 우선순위를 유지하며 전체 목표는 진행 중이다.
+**2026-11-08 /goal 진행·제품1146:** 20h 참가자 수신의 자기 Core/예약 증가·전체 CS 기록/길드/이름/장부·실제 섬 Image/World/이름 Gump/Rig·자기 입장 카메라/모니터 Chat·캡처 CS 좌석/버전/후행 표시를 연결했다. NetstormCpp/NetstormRoot Release/x64 종료0·경고/오류0·보호2800파일 불변이다. 새fixture/C++ 단위/MP/게임/통신/자료조회/전체검사/34미션/ZIP 실행0이며 마지막 C++ 실행검사는1052 기존7개다. 다음은 메타 CS 수신21/22/25h·1a/1b checking·하강/참가 후속 카메라·HTML·1095 송신 상태 호출이다. 기존 사용자 검사 제외와 우선순위를 유지하며 전체 목표는 진행 중이다.
 
 ## 0. 재개 전 확인 사항
 
-### 0.1 현재 값 (2026-11-08, 제품1145)
+### 0.1 현재 값 (2026-11-08, 제품1146)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **사용자2026-11-08 /goal 지시로 진행 중.** 전체 목표는 미완료이며0.163/3절8번을 따른다. |
-| 현재 제품 | **1145 / 표시·파일·제품11.01.** 20h 참가자 생성이 사용할 CS Image 변환을 같은 실제 할당/기존 crop·RLE 본문에 연결하고0042b0e0 이름 정제를 Chat/CS 공통 함수로 분리했다. |
+| 진행 상태 | **사용자2026-11-08 /goal 지시로 진행 중.** 전체 목표는 미완료이며0.164/3절8번을 따른다. |
+| 현재 제품 | **1146 / 표시·파일·제품11.01.** 20h 참가자 수신의 자기 Core/예약 증가·전체 CS 기록/길드/이름/장부·실제 섬 Image/World/이름 Gump/Rig·자기 입장 카메라/모니터 Chat·캡처 CS 좌석/버전/후행 표시를 연결했다. |
 | 실행·플레이 가능 여부 | 무인자 GUI 시작과 미션 플레이 경로가 있다. 일반31+데모3의 마지막 전체 진입 검증은 **645의644 제품**이며 현재 제품의 전체 회귀 결과가 아니다. |
 | 원본과의 동일성 | 부품별 원문 대조와 집중 검사를 누적했다. **전체 동일성·모든 시나리오 자연 완주는 미확인**이며 사용자 확인 대상이다 |
-| EXE SHA-256 | Netstorm.exe 12,982,784바이트/SHA-256 `56f4a49117d4a8cc13f012b6699e13c6101ad4e74fe19190bcea09f96dfc2e85` / R.exe 669,696바이트/SHA-256 `4824c99d07d4d625ead541f5a7c7ef292e8f418e9411171ddb2029f2609f2d5f` /1145·11.01 |
-| 최신 빌드·집중 검사 | **1145 Release/x64 종료0·경고/오류0.** 46d790/46e5a0/42b580/42b0e0 C/PE·선행 Clear 없음·bitmap/shape/header/크기/free 순서·같은 RawImage 변환·기존 정제 삭제 루프 토큰/Chat 관찰·BYTE 대체를 대조했다. 보호2800 불변·새 C++/MP/게임/통신 실행0이며 마지막 C++ 실행검사는1052 기존7개다. [1145 기록](docs/exe/cpp-meta-participant-image-name-20261108.md). |
+| EXE SHA-256 | Netstorm.exe 13,037,568바이트/SHA-256 `96ca043d126e91a34426ceffb747cd335de313fc11283acbcbdd13f8e78ceb39` / R.exe 669,696바이트/SHA-256 `0c33f7db5f779058d337bd2febd0f5e5cc3c82a68bddc8f3ab3afae1765b233b` /1146·11.01 |
+| 최신 빌드·집중 검사 | **1146 Release/x64 종료0·경고/오류0.** 4b4710/40a340/42c180/42b580/42ca20/42ca60/48f190/418200/435b00/441300/4adca0 C/PE·현재 필드/캡처 CS·실제 Frame/Session/Config/Gump/Core/Kernel/Chat·slot+1 장부 행·호출/부분 쓰기 순서를 대조했다. 보호2800 불변·새 C++/MP/게임/통신 실행0이며 마지막 C++ 실행검사는1052 기존7개다. [1146 기록](docs/exe/cpp-meta-participant-create-20261108.md). |
 | checking 잔여 | **5함수=부모2+부분0+MP분류3.** 1014에서004b8cb0 전체 몸체/현재 진단·수동 입력을 연결했다. 완료부모40/부분6다. 메타맵2표/004b02d0·Descend/004b4df0/004b8b20 등은3절8번 잔여다. |
-| 최신 정적 감사 | **1145: 46d790/46e5a0/42b580/42b0e0 C/PE·선행 Clear 없음·bitmap/shape/header/크기/free 순서·같은 RawImage 변환·기존 정제 삭제 루프 토큰/Chat 관찰·BYTE 대체를 대조했다.** 실제 메타 장면/MP 실행 검증과 구별한다. |
+| 최신 정적 감사 | **1146: 4b4710/40a340/42c180/42b580/42ca20/42ca60/48f190/418200/435b00/441300/4adca0 C/PE·현재 필드/캡처 CS·실제 Frame/Session/Config/Gump/Core/Kernel/Chat·slot+1 장부 행·호출/부분 쓰기 순서를 대조했다.** 실제 메타 장면/MP 실행 검증과 구별한다. |
 | 마지막 GUI | **984 실제 단독MCP 1실행:** 격리1920×1080 tutorial1 진입·비정지100프레임 대기·WM_CLOSE 종료0, 입력5/관측7·PNG 확인·설치1351개/보호 불변. LAN/공격/포획/희생/승리/물리 입력 검증이 아니다. |
 | 전체 검사 기준 | 활성 솔루션84프로젝트: Application79(검사 이름73/게임1/서버1/probe·dump4),라이브러리2,Utility3. 디스크의잔류10프로젝트는제외한다. 현재 제품의 전체 검사 통과 기록은 없다. 과거 전체 결과는 보관본, 알려진 실패/기준선 판정은2.5절을 따른다. |
 | 전체 34·ZIP | 마지막전체34진입은645의644제품이다. 최신ZIP만1092/1384항목·게임자료1358개·202,440,265바이트·SHA-256 `33b2459cca9dcbde8b10c7e2cca2e12cc071715244868e3a60908fb085089ae7`/전체CRC·두EXE동일바이트다. 1092 ZIP추출후게임/서버실행은0이며645의전체GUI검증과구분한다. |
-| 보호 기준 | **987의 AGENTS.md·원본/CD/fixture2800파일을1145 종료 때도 모두 불변으로 확인했다.** 새fixture0, DN/WB 제외. 기준은 `extracted/cpp-resume-1145/protected-before.json`이다. |
+| 보호 기준 | **987의 AGENTS.md·원본/CD/fixture2800파일을1146 종료 때도 모두 불변으로 확인했다.** 새fixture0, DN/WB 제외. 기준은 `extracted/cpp-resume-1146/protected-before.json`이다. |
 | 마지막 전체 정밀 디컴파일 | **HJOW-Athlon (192.168.0.94) / 2026-11-03**. 양판본 정밀 산출물과 컴파일 기록은 [2026-11-03 기록](docs/exe/cpp-decompilation-20261103.md)을 따른다 |
 | R.exe 전용 정밀 디컴파일 | **HJOW-Athlon / 2026-11-07**.5308함수/실패0·미정규약184. 클라이언트양판본전체날짜와구분하며 [1057 기록](docs/exe/cpp-local-server-discovery-20261107.md)의전용스크립트로재생성한다. |
 
@@ -30,7 +30,7 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 1. 사용자 재개 요청 뒤 AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 다시 읽는다. webpj 작업이면 해당 인계도 읽는다. `git status`와 `git fetch`로 다른 PC/세션 변경을 확인하며 push는 하지 않는다.
 2. 현재 호스트가 마지막 디컴파일 호스트와 다르면 cpppj 작업/디컴파일 분석 전에 `tools/ghidra/refine_all.ps1`로 다시 디컴파일하고 완료 호스트를 이 문서와 작업 문서에 갱신한다. HJOW-X3D의 2026-10-27 중단 산출물은 불완전하므로 쓰지 않는다.
 3. 실제 게임·별도 창 실행은 AGENTS.md의 확인 규칙을 따른다. 예외는 vm-debian-codex(10.0.0.15), VM-W11-Codex(10.0.0.17), HJOW-Athlon(192.168.0.94) 및 사용자가 직접 요청한 원본 수동 컨트롤/녹화 분석의 해당 단계다. 다른 PC는 실행 목적·필요성 설명 후 명시적 확인이 필요하다.
-4. 최신 제품1145의 보고서는 `cpppj/meta-participant-image-name-20261108.json`이다. R원문이필요한새PC에서는기존클라이언트전체정밀절차와별도로`tools/ghidra/refine_root_server.ps1`을실행하고호스트를갱신한다. 986의 한국어/시나리오 후보·기준·해시는 [추적 인계](docs/exe/handoffs/cpp-pause-20261106/README.md)에 있다. `extracted/cpp-resume-996/` 등 원시는 Git 제외·작업 PC 전용이므로 다른 PC에 있다고 가정하지 않는다.
+4. 최신 제품1146의 보고서는 `cpppj/meta-participant-create-20261108.json`이다. R원문이필요한새PC에서는기존클라이언트전체정밀절차와별도로`tools/ghidra/refine_root_server.ps1`을실행하고호스트를갱신한다. 986의 한국어/시나리오 후보·기준·해시는 [추적 인계](docs/exe/handoffs/cpp-pause-20261106/README.md)에 있다. `extracted/cpp-resume-996/` 등 원시는 Git 제외·작업 PC 전용이므로 다른 PC에 있다고 가정하지 않는다.
 5. 다른 세션의 dotnetpj/webpj·staged 파일·실행 출력은 포함하지 않는다. 한 단위를 마치면 0.1절·0.4절·2.1절 완료 항목·3절 잔여·단위 문서를 갱신하고 해당 파일만 로컬 커밋한다.
 6. 완료 범위는2.1절, 잔여 우선순위는3절을 따른다. 단위986까지의 상세 인계·옛 검사 수·대체된 지시는 [정리 전 전체 원문](LEFT_JOBS.old.md#archive-20261106-through-986)과 각 단위 기록에서 확인한다. 과거의 다음 작업 예고를 현재 미완료 목록으로 되살리지 않는다.
 
@@ -720,6 +720,10 @@ cpppj와 공통 사항의 **현재 제품, 완료 범위, 남은 구현, 사용�
 
 1144는 `8d45566d / 20261108-113 CP`로 커밋됐다. 20h 참가자 생성이 사용할 CS Image 변환을 같은 실제 할당/기존 crop·RLE 본문에 연결하고0042b0e0 이름 정제를 Chat/CS 공통 함수로 분리했다. NetstormCpp/NetstormRoot Release/x64 종료0·경고/오류0·보호2800파일 불변이다. 새fixture/C++ 단위/MP/게임/통신/자료조회/전체검사/34미션/ZIP 실행0이며 마지막 C++ 실행검사는1052 기존7개다. [1145 기록](docs/exe/cpp-meta-participant-image-name-20261108.md). 다음은 나머지 메타 CS 수신20/21/22/25h·참가자 생성의 실제 World/Gump/Rig/입장 알림 연결·카메라 caller·HTML 하강/참가 후속·1095 송신 상태 호출이다. helpWord 캐시 수명도 후속이며 나머지 우선순위와 사용자 검사 제외를 유지한다.
 
+### 0.164 최근 단위 — 1146 실제 메타 참가자 생성과20h 수신 연결
+
+1145는 `f49b3c24 / 20261108-114 CP`로 커밋됐다. 20h 참가자 수신의 자기 Core/예약 증가·전체 CS 기록/길드/이름/장부·실제 섬 Image/World/이름 Gump/Rig·자기 입장 카메라/모니터 Chat·캡처 CS 좌석/버전/후행 표시를 연결했다. NetstormCpp/NetstormRoot Release/x64 종료0·경고/오류0·보호2800파일 불변이다. 새fixture/C++ 단위/MP/게임/통신/자료조회/전체검사/34미션/ZIP 실행0이며 마지막 C++ 실행검사는1052 기존7개다. [1146 기록](docs/exe/cpp-meta-participant-create-20261108.md). 다음은 메타 CS 수신21/22/25h·1a/1b checking·하강/참가 후속 카메라·HTML·1095 송신 상태 호출이다. helpWord 캐시 수명도 후속이며 나머지 우선순위와 사용자 검사 제외를 유지한다.
+
 ## 1. 현행 목표
 
 ### 1.1 cpppj 단계 (AGENTS.md 기준)
@@ -981,6 +985,7 @@ AGENTS.md는 수정하지 않는다. 단계별 요구는 1.1절이 기준이며,
 | 1143 메타 기하 배치 | 26h observer·PE float/현재 논리Screen/카메라 한계·mod/contact 위치·원점/최대두 반경·3DWORD stale 보존·mode/부분 저장 순서·C/PE 대조/컴파일. [1143](docs/exe/cpp-meta-geometry-receive-20261108.md) | 20/21/22/25h·1a/1b 및 기존 caller/helpWord 수명은 잔여. 신규MP검사0 |
 | 1144 메타 참가자 메시지 | 종류3/5·현재 메타/일반 전투·8색/음향/10초·실제 CS 이름 주소/진단·같은20칸 Status 진입점·C/PE 대조/컴파일. [1144](docs/exe/cpp-meta-participant-messages-20261108.md) | 20h/21h 실제 호출/그림·Gump 생성 등 나머지 CS/caller/helpWord 수명은 잔여. 신규MP검사0 |
 | 1145 CS 참가자 이미지/이름 | 같은 CS Image 변환·기존 crop/RLE·선행 Clear 없는 header/bitmap/shape/free 순서·공통 이름 정제/기존 Chat 관찰·C/PE/삭제 루프 토큰 대조/컴파일. [1145](docs/exe/cpp-meta-participant-image-name-20261108.md) | 20h 전체 World/Gump/Rig/입장 caller와 나머지 CS/helpWord 수명은 잔여. 신규MP검사0 |
+| 1146 실제 메타 참가자 생성 | 20h observer/State 자기 Core·전체 기록/길드/장부·같은 Image/World/이름 Gump/Rig/카메라/모니터 Chat·캡처 CS 좌석/버전/후행 표시·C/PE 대조/컴파일. [1146](docs/exe/cpp-meta-participant-create-20261108.md) | 21/22/25h·1a/1b checking·하강/HTML/송신 caller·helpWord 수명은 잔여. 신규MP검사0 |
 
 ### 2.2 미션별 확보한 증거
 
@@ -1082,7 +1087,7 @@ AI 미완료 체크 항목이 아니며 단계 전환을 막지 않는다. 부�
 
 ### 8. 멀티플레이·배포·후속 단계
 
-- **1145 최신 잔여:** 20h 참가자 생성이 사용할 CS Image 변환을 같은 실제 할당/기존 crop·RLE 본문에 연결하고0042b0e0 이름 정제를 Chat/CS 공통 함수로 분리했다. 다음은 나머지 메타 CS 수신20/21/22/25h·참가자 생성의 실제 World/Gump/Rig/입장 알림 연결·카메라 caller·HTML 하강/참가 후속·1095 송신 상태 호출 → 세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI다. helpWord 캐시 수명은 후속이다. 이전 단위 예고는 이력이며 현재 우선순위는 이 항목을 따른다. 새 MP 검사는 제외한다.
+- **1146 최신 잔여:** 20h 참가자 수신의 자기 Core/예약 증가·전체 CS 기록/길드/이름/장부·실제 섬 Image/World/이름 Gump/Rig·자기 입장 카메라/모니터 Chat·캡처 CS 좌석/버전/후행 표시를 연결했다. 다음은 메타 CS 수신21/22/25h·1a/1b checking·하강/참가 후속 카메라·HTML·1095 송신 상태 호출 → 세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI다. helpWord 캐시 수명은 후속이다. 이전 단위 예고는 이력이며 현재 우선순위는 이 항목을 따른다. 새 MP 검사는 제외한다.
 
 - [ ] **3차 TCP/IP 로컬 멀티플레이·Outpust:** 982 TCP부품/984 공유 등록표·per-ID 복합 전송·실제 단독 Client/World 수명·985 일반 Login/SP·987 원격 Fort/manager/수신 이미지 수명·988 참가자별 동기화·989 전투섬·990 중앙섬·991 자기 Fort·992 시작 세부 경로·993 시간 동기화를 접합·컴파일했다. 1000에서 실제 LAN UI/roster·일반 State7 앞단을 접합했다. 일반 타이머 완료/대기 UI와 로그인 완료 writer는1001~1003에서 연결했으며 주기 writer는1004,파일 reader/복구 일부는1005~1014,일반 자원 프레임은1018에서 연결했다. 전체 일반 전투/메타 등 잔여는 아래 목록을 따른다. 997에서 Multiplayer Options 공장을 연결했다. 998에서 일반 Login 후반/준비 대여를 작성했다. 999에서 LAN 대기실 명단/시작 합의 부품을 작성했다. 1000에서 화면/실제 호출자·World 교체/현재 이름을 연결했다. 1001에서 일반 완료 초기화/팀/간헐천/스펠 예약을 연결했다. 1002에서 대기 명단/시간·강제 시작과 별도 창 serial 수명을 연결했다. 1003에서 일반 완료의 실제 재접속 writer/두 checking을 연결했다. 1004에서 실제 Client 주기 writer를 연결했다. 1005에서 실제 startup 파일 reader/질문 표시를 연결했다. 1006에서 실제00449200 종료 선행 관문과 현재 Player 소비자를 교정했다.1007에서 질문No/DelStateFile 입력을 연결했다.1008에서 서버 이전의 동일 owner Serve backend를 보완했다. 1009에서 실제63h 수신/참가 순서·객체 정리/checking을 연결했다. 1010에서 실제 State15/63h 송신과15→16 확정을 연결했다. 1011에서 현재 handle의 Client 수명을 보완했다. 1012에서 저장 주소 문자열의 실제 backend 연결을 보완했다. 1013에서 복구State7의 실제 pending Fort 선택을 연결했다. 1014에서 실제 서버 후보 선택/두 수동 입력·State15/복구State7 요청을 연결했다. 1015에서 실제 프레임의 자동004b9010/서버 장애 저장과 타이머 위치를 연결했다. 1016에서 비미션 보충의 실제0040e050 배치를 연결했다. 1017에서6ch 주기 지급 검증/실제Message4·18을 연결했다. 1018에서 실제486bc0 전체 자원 프레임/Kernel 뒤 caller를 연결했다. 1019에서 실제70h 원격Tell송수신을연결했다. 00442b50 계산본체는기존ChargeShortfall이며Reject는00442af0임을재대조했다. 1020에서기존ChargeShortfall의실제비용안내/송금·운반caller/6ch환불·2fh취소송수신을연결했다. 1021에서433c30 전체 객체 수신/검증·PlayerNoMake와 실제2ch 수명을 연결했다. 1022에서7ah 압축 decoder/현재 owner 캐시·길이 관찰기를 연결했다. 1023에서4ah/4bh 검증 시작·이전 SID 간격/같은 두 전역을 연결했다. 1024에서2dh 내용물/2eh 삭제와 같은 부착·환불/삭제·SP 추적을 연결했다. 1025에서감시65h/공유 Regular7eh 전체 decoder와 같은 Form/Kernel을 연결했다. 1026에서3ah 총 전체 decoder/수신 생성자·같은 PID/장기 TYPE를 연결했다. 1027에서38h/73h/74h 아비어리 전체 decoder·같은 생성자/PID·장기 TYPE를 연결했다. 1028에서39h 비행 전체 decoder·임시 해석/테마별 재해석·같은 PID/명시 Form을 연결했다. 1029에서3bh/3ch 발사·회전 전체 decoder/기본 생성 공장·같은 PID/명시 Form을 연결했다. 1030에서 애니메이션 writer/현재 헤더·공통 버퍼/전송과 일반 TYPE 별칭을 통합했다. 1031에서 건설37h 실제 수신/송신·진단 복귀/현재 TYPE와 PlayerKnown binding을 연결·교정했다. 1032에서 Path30h 전체 decoder/실제 생성·부착과 송신 길이 observer·현재 boss 조회를 연결·교정했다. 1033에서33h 위치/34h 카메라 목표/35h 섬 정리와 같은 전역/진단을 연결·교정했다. 1034에서32h 현재 설정의 Client 수명과 배치/피해/친군 사격/생산 소비자를 연결·교정했다. 1035에서31h 수신/관찰·핵심16명령/현재quick 플래그·비Login/Editor32h를 연결했다. 1036에서화면 강조와6진단명령을추가해22개를접합했다. 1037에서Subscriber/스캔주기/로그수준을추가해1038에서진단5개추가해1039에서qdd/gp추가해1040에서addLabel/기록writer를추가해33개분기접합이며 1041에서직접입력/송신·cr UI 가정은해소했고1042~1043에서 기록 재생 몸체/실제 부모까지 연결했으며 1044에서 삭제 선택자/공통 송신과 재동기화 부모 잔여를 해소했으며 1045에서2번 종료 통지/선택 활동표와 기존 전체표·64h/timeout UI를 대조했으며 1046에서1번 접속 통지/별도 송신버퍼까지 연결했으며 1047에서 기존 연결 재사용/실제 준비·새 공개/실패 보존과 listener 관문을 연결했으며 1048에서 실제 수락 순서/signed31/준비·진단 반환을 교정했으며 다음은 **1050 신전51h/004dbce0·Tick/event3 연결, 1051 command/event4·ViewMeta저장/State19요청 연결, 1058 UDP/검색34·35·36·38 접합 뒤 남은37/새R서버·응답0Fh/1dh·State28~33/메타·나머지 송신→endpoint/서버·나머지 writer/decoder·메타/Outpost/checking5**이다. 원격 client buildFort는989에서 연결했다. 자기 ordinary localFort는991에서 연결했다. 신규 MP 단위/게임/통신 검사는 하지 않는다. 공식 서버 복구·구 클라이언트 유효성 검사는 연결하지 않는다. **폐기CD확인7f/80(42cd10)은965의검증비활성화정책에따라복원하지않는다.**
 - checking 전체 잔여5(1014에서004b8cb0 부모/진단 연결, 완료부모40/부분6): 부모004b02d0의 메타맵 표시0050c9f0/0050cc08·004dc220(event4/Descend), MP분류0042bc10/004b4df0/004b8b20. 기존분류이며직접inSingle관문부재를모든단독도달불가증명으로확대하지않는다. 신규MP검사없이원문구현을이어간다.

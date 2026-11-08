@@ -159,6 +159,16 @@ bool ConfigInterface::ReadString(std::string_view key, std::string& value) {
     value = *text;
     return true;
 }
+// 미초기화 scratch도 strcmp처럼 첫 불일치까지만 읽고 앞선 부분 복사를 되돌리지 않는다.
+bool ConfigInterface::ReadStringBytes(std::string_view key,std::span<std::uint8_t> value) {
+    const auto text=configuration_.Get(key);if (!text) return false;const auto bytes=EncodeOriginalText(*text); //현재 UTF-8 설정값을 기존 원문 BYTE 경계로 옮긴다.
+    for (std::size_t index=0;;++index) { //같은 BYTE가 NUL이면 동일하며 끝까지 미리 strlen하지 않는다.
+        const auto incoming=index<bytes.size() ? bytes[index]:std::uint8_t{};if (index>=value.size()) throw std::out_of_range("Config 문자열 비교의 실제 목적 물리 부족");if (value[index]!=incoming) break;if (!incoming) return false;
+    }
+    for (std::size_t index=0;;++index) { //첫 불일치 뒤 원문 strcpy의 BYTE 읽기/쓰기/NUL 종료 순서다.
+        const auto incoming=index<bytes.size() ? bytes[index]:std::uint8_t{};if (index>=value.size()) throw std::out_of_range("Config 문자열 복사의 실제 목적 물리 부족");value[index]=incoming;if (!incoming) return true;
+    }
+}
 // 원본 00441470의 지역 변수 초기값은 0이다.
 bool ConfigInterface::IntEquals(std::string_view key, std::int32_t expected) {
     std::int32_t value = 0;

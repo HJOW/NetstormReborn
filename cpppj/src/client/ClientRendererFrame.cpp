@@ -9,6 +9,7 @@
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientNsInfoGlobals.h"
 #include "client/NativeMetaScene.h" //같은현재CS/실제Pool·Gump를메타표시본체에연결한다.
+#include "client/NativeMetaParticipantCreate.h" //참가자 생성도 같은 메타 표시/World/이름표 장치를 빌린다.
 #include "client/NativeIslandRig.h" //같은 현재 Client/Kernel/ProcessForm과 실제 메타 섬 애니메이션을 연결한다.
 #include "client/WarningMessages.h" //참가자 생성/제거도 같은 현재20칸/메시지 파생과 실제 Gump 수명을 사용한다.
 #include "client/ClientMetaSpriteDraw.h" //메타 객체+a4도 현재 통합 화면/메뉴 글꼴 장치를 빌린다.
@@ -107,6 +108,8 @@ void ClientRendererFrame::UpdateMetaParticipant(std::uint32_t participant,std::u
 void Client::UpdateNativeMetaParticipant(std::uint32_t participant,std::uint8_t mask) { if (!rendererFrame_) throw std::logic_error("특정 메타 참가자의 실제 Renderer owner 미설치");rendererFrame_->UpdateMetaParticipant(participant,mask); } //기존 장기 owner로만 위임한다.
 void ClientRendererFrame::SetMetaParticipantStatus(std::int32_t kind,std::int32_t participant,bool enabled) { if (!client_.menu_ || !client_.menu_->rawButtons_ || !client_.menu_->rawButtons_->Warnings()) throw std::logic_error("메타 참가자 안내의 실제 MessageBoard owner 미설치");auto& messages=*client_.menu_->rawButtons_->Warnings();if (enabled) messages.BattleStatus(kind,participant,0);else messages.Remove(kind,participant,0); } //매 호출 현재 UI를 빌리며 안내의 별도 표/수명을 만들지 않는다.
 void Client::SetNativeMetaParticipantStatus(std::int32_t kind,std::int32_t participant,bool enabled) { if (!rendererFrame_) throw std::logic_error("메타 참가자 안내의 실제 Frame owner 미설치");rendererFrame_->SetMetaParticipantStatus(kind,participant,enabled); } //기존 표시 장치와 같은 친구 Frame을 통해 실제 UI를 빌린다.
+void ClientRendererFrame::BindMetaParticipantDevices(NativeMetaParticipantCreateHooks& hooks) { auto scene=MetaDevices();hooks.display=std::move(scene.display);hooks.create=std::move(scene.create);hooks.reference=std::move(scene.reference);client_.menu_->rawButtons_->Menus()->BindMetaParticipantGumps(hooks);hooks.root=[this] { return client_.menu_->rawButtons_->RootTokenValue(); }; } //원문 선택 전에는 실제 객체/글자/화면을 생성하지 않는다.
+void Client::BindNativeMetaParticipantDevices(NativeMetaParticipantCreateHooks& hooks) { if (!rendererFrame_) throw std::logic_error("참가자 생성의 실제 Frame owner 미설치");rendererFrame_->BindMetaParticipantDevices(hooks); } //friend Frame이 같은 현재 UI를 빌린다.
 void Client::UpdateNativeMetaBattle(std::uint32_t battle) { if (!rendererFrame_) throw std::logic_error("특정 메타 전투의 실제 Renderer owner 미설치");rendererFrame_->UpdateMetaBattle(battle); } //실제 장기 owner로만 위임하며 장치를 생성하지 않는다.
 void Client::RefreshNativeMetaDisplay(bool whole) { if (!rendererFrame_) throw std::logic_error("메타표시의실제Renderer owner미설치");rendererFrame_->RefreshMetaDisplay(whole); } //원문State Poll의두표시위치를같은실제Frame장치에전달한다.
 

@@ -1400,4 +1400,12 @@ void Client::UpdateMonitorTime() {
     hooks.submit=[this](auto format,auto line) { if (!menu_) throw std::logic_error("시간 알림의 실제 Chat 제출 소유자 없음");menu_->SubmitMonitorChat(format,line); };
     StepMonitorTime(localStateGlobals_->MonitorTime(),hooks);
 }
+// alert는 monitor 관문보다 앞이며 이름 주소는 Config 문구 조회 뒤 서식 시점까지 빌린다.
+void Client::MonitorMetaParticipantName(std::span<const std::uint8_t> name) {
+    auto& state=localStateGlobals_->MonitorTime();if (state.alert && GetFocus()!=static_cast<HWND>(window_)) SetFocus(static_cast<HWND>(window_));if (!state.monitor) return;
+    const auto text=[](std::span<const std::uint8_t> bytes) -> std::string_view { const auto end=std::find(bytes.begin(),bytes.end(),0);if (end==bytes.end()) throw std::out_of_range("입장 모니터 이름의 실제 NUL 물리 부족");return {reinterpret_cast<const char*>(bytes.data()),static_cast<std::size_t>(end-bytes.begin())}; }; //같은 실제 기록/Handle의 NUL 주소를 반환한다.
+    const auto own=text(gameplayGlobals_->Subscribers()->Handle());const bool mine=_stricmp(text(name).data(),own.data())==0;const auto source=configuration_.PathSpec("monitorMessage");const auto encoded=o::EncodeOriginalText(source);const std::string message(encoded.begin(),encoded.end());std::array<char,256> line;
+    const auto length=mine ? std::snprintf(line.data(),line.size(),"EVERYONE: %s\n",message.c_str()):std::snprintf(line.data(),line.size(),"%s: %s\n",text(name).data(),message.c_str());if (length<0 || static_cast<std::size_t>(length)>=line.size()) throw std::out_of_range("입장 모니터의 원문256BYTE 서식 범위");
+    const auto currentFormat=configuration_.PathSpec("monitorFormat");const auto formatBytes=o::EncodeOriginalText(currentFormat);if (!menu_) throw std::logic_error("입장 모니터의 실제 Chat 제출 owner 없음");menu_->SubmitMonitorChat(std::string_view(reinterpret_cast<const char*>(formatBytes.data()),formatBytes.size()),std::string_view(line.data(),static_cast<std::size_t>(length)));
+}
 }

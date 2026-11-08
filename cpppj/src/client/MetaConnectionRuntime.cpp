@@ -31,6 +31,9 @@
 #include "client/RootServerListDisk.h"
 #include "client/NativeMetaBattleOptions.h" //현재CS의실제67h수신/음향·NSInfo갱신을공통등록표에결합한다.
 #include "client/NativeMetaParticipantName.h" //88h는 현재 CS 길드 표시/실제 이름표와 지정 참가자 갱신을 사용한다.
+#include "client/NativeMetaParticipantCreate.h" //20h의 전체 실제 참가자 생성/CS 좌석·Chat/후행 표시다.
+#include "client/NativeCameraRig.h" //자기 참가자의 실제 입장 카메라를 같은 Kernel에 연결한다.
+#include "client/RawChatChannels.h" //원문 packet 이름/채널20h를 같은 실제 Chat100기록에 저장한다.
 #include "client/NativeMetaGeometry.h" //26h는 같은 Renderer 한계와 장기 CS 원점/반경을 갱신한다.
 #include "client/Screen.h" //497f80은 표시 목표 크기와 구별되는 현재 논리 화면 폭/높이를 사용한다.
 #include "o/RawStateMetaBattleDescription.h" //일반과 같은71h 전체 observer/State CS 관문이다.
@@ -112,6 +115,8 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     dispatch.Register(0x0f,[this](auto,auto&,auto packet) { ReceiveRootReply(packet); }); //원문과같이sender/연결번호·현재phase 관문을 수신 앞에 추가하지 않는다.
     dispatch.Observe(0x1d,{});dispatch.Version(0x1d,1,0);dispatch.RequireLength(0x1d,13); //원문0b380의 빈 관찰기/버전1과 실제13BYTE의 고정 응답이다.
     dispatch.Observe(0x88,{});dispatch.Version(0x88,1,0);dispatch.RequireLength(0x88,98); //0040b380 빈 관찰기와 보호 PE0052ec40의 고정98BYTE다.
+    dispatch.ObservePacket(0x20,[this](auto packet,auto sending) { ObserveNativeMetaParticipantAdd(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x20,1,0);dispatch.RequireLength(0x20,0xffff);
+    dispatch.Register(0x20,[this](auto,auto&,auto packet) { ReceiveParticipantAdd(packet); }); //원문 State의 메타 관문 뒤만 처리하며 sender/known/phase를 더 검사하지 않는다.
     dispatch.ObservePacket(0x26,[this](auto packet,auto sending) { ObserveNativeMetaGeometry(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x26,1,0);dispatch.RequireLength(0x26,0xffff);
     dispatch.Register(0x26,[this](auto,auto&,auto packet) {
         auto& challenge=*client_.ChallengeGlobals();ReceiveNativeMetaGeometry(packet,challenge.Geometry(),challenge.GeometryMode(),[this](float width,float height) { auto& screen=client_.GetScreen();client_.GameplayGlobals()->Camera().UpdateTargetLimits(screen.Width(),screen.Height(),width,height); });
@@ -158,6 +163,32 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     }); //004b4600의 원래 메타 관문/CS 진단·삭제 부분 효과를 그대로 유지한다.
 }
 MetaConnectionRuntime::~MetaConnectionRuntime()=default; //자기OS/노드수명은실제TCP/UDP소유자의소멸자가반납한다.
+// 현재 자기 전투를 한 번 캡처하고0..39의 실제 active/같은 전투 기록만 같은 장부에 쓴다.
+void MetaConnectionRuntime::RefreshParticipantCore() {
+    auto& game=*client_.GameplayGlobals();if (game.world.missionPost || !game.player.playerKnown) return;auto& challenge=*client_.ChallengeGlobals();const auto own=challenge.Participant(game.player.battleOwner);const auto battle=PeerWord(own,0xa4);if (!battle) return;
+    for (std::uint32_t index=0;index<40;++index) { //원문의8묶음×5기록을 같은 인덱스 순서로 읽는다.
+        const auto peer=challenge.Participant(index);if (!(peer[0x64]&1U) || PeerWord(peer,0xa4)!=battle) continue;std::array<std::uint8_t,10> core;std::copy_n(peer.begin()+0x54,10,core.begin());client_.CoreDataGlobals()->StoreMetadata(PeerWord(peer,0xa8)+1U,PeerWord(peer,4),core); //595370+slot*16은595360의slot+1행이며0번 장부를 덮지 않는다.
+    }
+}
+// 생성 앞의 active 진단이 끝난 뒤 현재 실제 Frame/UI 장치를 선택한다.
+void MetaConnectionRuntime::ConstructParticipant(std::span<std::uint8_t> record,std::span<const std::uint8_t> packet) {
+    NativeMetaParticipantCreateHooks h;client_.BindNativeMetaParticipantDevices(h);h.participantType=[this] { return client_.ChallengeGlobals()->ParticipantType(); };
+    h.guildChanged=[this](auto subscriber) { std::array<std::uint8_t,80> scratch;CurrentAllocationBytes(scratch);const auto key=std::string("M")+std::to_string(std::bit_cast<std::int32_t>(subscriber));return client_.Configuration().ReadStringBytes(key,scratch); };
+    h.guild=[this](auto subscriber,auto destination) { std::array<std::uint8_t,80> scratch;CurrentAllocationBytes(scratch);const auto key=std::string("M")+std::to_string(std::bit_cast<std::int32_t>(subscriber));if (client_.Configuration().ReadStringBytes(key,scratch)) static_cast<void>(client_.Configuration().ReadStringBytes(key,destination)); }; //42ca60은 두 번째 scratch 확인이 바뀐 경우에만 실제 목적을 읽는다.
+    h.refreshCore=[this] { RefreshParticipantCore(); };h.status=[this](auto kind,auto participant,auto enabled) { client_.SetNativeMetaParticipantStatus(kind,std::bit_cast<std::int32_t>(participant),enabled); };
+    h.image=[this](auto header,auto identity) { auto bitmap=client_.GameplayGlobals()->RequireSession().BuildEditorIslandChoiceImage(std::span<const std::uint8_t,6>(identity));client_.ChallengeGlobals()->ConvertImage(header,std::move(bitmap),true,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,".\\Image.cpp",line); }); };
+    h.name.translate=[this](auto text) { const auto bytes=o::EncodeDisplayText(client_.Translate(text));return std::string(bytes.begin(),bytes.end()); };h.name.weight=[this](auto core) { return Weight(core); };
+    h.enter=[this](auto object,auto self) { auto& rig=client_.AcquireNativeIslandRig(object,0,0);EnterNativeParticipantRig(rig,self,0); };h.intro=[this] { StartClientMetaIntroCamera(client_); };h.noIntro=[this] { return client_.Configuration().GetInt("noShowChalIntro"); };h.tell=tell_;h.monitor=[this](auto name) { client_.MonitorMetaParticipantName(name); };
+    ConstructNativeMetaParticipant(record,packet,client_.GameplayGlobals()->GameAux()->SubscriberMarker(),client_.GameplayGlobals()->Subscribers()->MySubscriber(),h);
+}
+// 자기Core 선택/두 예약 증가가 전체 생성 앞에 일어나며 실패해도 앞선 효과를 되돌리지 않는다.
+void MetaConnectionRuntime::ReceiveParticipantAdd(std::span<const std::uint8_t> packet) {
+    if (!client_.SurfaceStorage()->ownerMode.challenge) return;auto& challenge=*client_.ChallengeGlobals();if (!challenge.Current()) client_.SurfaceStorage()->AssertDisplay("CS",".\\State.cpp",0xd0d);
+    if (PeerWord(packet,5)==client_.CurrentSubscriber()) { if (packet.size()<5) throw std::out_of_range("20h 자기 참가자 BYTE 물리 부족");auto& game=*client_.GameplayGlobals();const std::uint32_t metamap=client_.SurfaceStorage()->ownerMode.challenge;client_.CoreDataGlobals()->Select(game.player,metamap,packet[4],1);++client_.LocalStateGlobals()->MetaPending();++client_.LocalStateGlobals()->MetaRefresh(); }
+    NativeMetaParticipantAddHooks h;h.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };h.construct=[this](auto record,auto source) { ConstructParticipant(record,source); };h.battle=[this](auto id) { client_.UpdateNativeMetaBattle(id); };h.seat=SailDevices().seat;
+    h.chat=[this](auto subscriber,auto name,auto flags) { if (subscriber==client_.CurrentSubscriber()) { static_cast<void>(client_.ChatChannels().Add(subscriber,std::nullopt,flags));return; }const auto end=std::find(name.begin(),name.end(),0);if (end==name.end()) throw std::out_of_range("20h Chat packet 이름의 실제 NUL 물리 부족");static_cast<void>(client_.ChatChannels().Add(subscriber,std::string_view(reinterpret_cast<const char*>(name.data()),static_cast<std::size_t>(end-name.begin())),flags)); }; //자기 채널의 원문 조기 반환에서는 이름을 먼저 읽지 않는다.
+    h.update=[this](auto participant,auto mask) { client_.UpdateNativeMetaParticipant(participant,mask); };h.refreshInfo=refreshInfo_;ReceiveNativeMetaParticipantAdd(challenge,packet,h);
+}
 // 장치/전역은 실제 Client 주소를 빌리며 CS가0이어도 전역 옵션과 파생값 갱신을 수행한다.
 void MetaConnectionRuntime::ReceiveBattleOptions(std::uint32_t sender,std::span<const std::uint8_t> packet) {
     auto& game=*client_.GameplayGlobals();auto& local=*client_.LocalStateGlobals();auto& storage=*client_.SurfaceStorage();

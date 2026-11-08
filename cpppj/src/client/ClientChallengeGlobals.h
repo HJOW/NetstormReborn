@@ -32,6 +32,7 @@ public:
     std::span<const std::uint8_t> ParticipantNameBytes(std::int32_t participant,const std::function<void(std::string_view,std::uint32_t)>& assertion) const; //0042bbb0:1..39진단뒤현재active면같은40BYTE이름,아니면실제NUL1BYTE뷰다.읽기/문자열복사는caller가한다.
     std::uint32_t FreeBattleSlots(std::uint32_t battle) const; //0042b350:현재8개playerIds DWORD중0인개수다.별도전투active조건은없다.
     void UpdateBattleVersionBounds(std::int32_t battle,const std::function<void(std::string_view,std::uint32_t)>& assertion); //0042ba40:현재8슬롯의WORD버전필드집계→min256/max-1·최종min/max순서저장이다.
+    void UpdateBattleVersionBounds(std::span<std::uint8_t> cs,std::int32_t battle,const std::function<void(std::string_view,std::uint32_t)>& assertion); //표시/진단 전 caller가 보유한 실제CS의 같은 전투/참가자 버전을 집계한다. current재조회와 구별한다.
     std::uint32_t AllocateArray(std::size_t bytes); // CS 가변 배열의 실제 할당을 별도32비트 토큰으로 소유한다. 실패 시0이며 기록 공개/원소 작성은 caller가 한다.
     std::span<std::uint8_t> ArrayBytes(std::uint32_t token); // 등록된 실제 배열 전체를 빌리고 임의 원본 주소를 호스트 포인터로 변환하지 않는다.
     void ClearArray(std::span<std::uint8_t> header); //0046d8a0의 두 비영 포인터 free 뒤 +0/+4/+c/+8 순서로 같은16BYTE를 지운다.
