@@ -1,0 +1,91 @@
+{
+  "unit": 1161,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "faf16ab7 / 20261108-132 CP",
+  "summary": "M4.2a: 실제 NSInfo 추방/옵션 메뉴의 다섯 현재 명령을 공통 메뉴→InputFIFO 관문에 연결했다. 영역 확인창 Yes의 DecendToChalLevel은 새 활성 잔여로 M4.2b에 남겼다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1161\\build1.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13169664,
+      "sha256": "d4788e7939c6563bf08e9961b00ab9cd39b4ccde17f5c0703f3708baf7166355"
+    },
+    "R.exe": {
+      "bytes": 670208,
+      "sha256": "77bc3835f775113dfdf4384a93a8be500a95111351b815f6027cb2ed973a1270"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "nativeEvidence": {
+    "0047c8c0": {
+      "bytes": 391,
+      "peSha256": "4e1a55a9b432eb354985e63bc2af53f5d14e8adcc7dbb007b8593883096bb3fe",
+      "cSha256": "97d0c2bef6512718efdfe8015f85a6a4eab5e0461f19240df6b4dc56e70e7d4d"
+    },
+    "0047b8f0": {
+      "bytes": 2854,
+      "peSha256": "0bba0f9272c76fc19ef421a31c393952867b6edfd314e73bd21b6b781085a677",
+      "cSha256": "be93fad0a86962d50aebc007d884077a056d47843052628b0b9c078bdd775a4f"
+    },
+    "0047b180": {
+      "bytes": 60,
+      "peSha256": "1c191259afe06bd88115abd95f03bd0d1defc98bb6841a1e51d1d1a7e91f8213",
+      "cSha256": "4aab6201ced18275b0aeddd730bd441150013b1673cdd956de5b967a1afa7f3e"
+    },
+    "004d62b0": {
+      "bytes": 16945,
+      "peSha256": "9e9cd511e4a0f74e1555ea2d93fcd17bd2e4ac3eef2b65afb656b22abe925b02",
+      "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2"
+    }
+  },
+  "sourceSha256": {
+    "cpppj/src/client/UberGump.cpp": "101dd7ef88587b761bbc85db35c3511fb81929e60463bdba9585e9ceb33293b8",
+    "cpppj/src/client/ClientNsInfoGlobals.h": "6228b1a7336e2443fea1910a33c72cee50711d273eb4037b0c9a66f5656d323e",
+    "cpppj/src/client/RawMenuControls.cpp": "81f61f2ec08c2701542676866a0af6ff10f1c8e9879aed70b29d223a210336c7",
+    "cpppj/src/client/MenuGumpInput.cpp": "7264c488409f06ab9dc7d2877ba8de1ec71573bac4421244a022e06d326dfc94",
+    "cpppj/src/client/NativeNsInfoInput.cpp": "ba9aeabe4338841dd5d544e059980de5db3545bf1dddebdeedf3dbc8c7ead7ea",
+    "cpppj/src/client/NativeBattleInfoInput.cpp": "20df36ad4c8d34ab9f06dad72b28e7248ec1048d5e4798d64b04ffd2b02ee50a",
+    "cpppj/src/client/NativeBattleInfoMenus.cpp": "88d4c3af6604ae5f0515f0fd903a9c9d79a00cdca6b2d96247db5bbddd40ee45",
+    "cpppj/src/client/UberMeta.inc": "92aef4db7a0abb259a40d1bfbc3da30125ffa517a9c6a296cf4d3ac6aeb91304",
+    "cpppj/src/client/NativeMetaSail.cpp": "91544b9ba5dbe29591891be60f12c67c3d91150dc35e51fc0e3c4f715408164f",
+    "cpppj/src/client/ClientMetaObjectInput.cpp": "1c3311ddd67df074875308750c17d2e1ce1b86c5148553cc9ef62515f6811064"
+  },
+  "audit": {
+    "fiveCurrentNsInfoCommandsReachSameInputQueue": true,
+    "sameExistingNsInfoBattleInfoConsumersAndTcpWriters": true,
+    "noExtraModeKnownOrPrivilegeGate": true,
+    "descriptionOptionsJoinSailExistingCallersReviewed": true,
+    "zoneConfirmYesMissingConsumerExplicitlyOpen": true
+  },
+  "remaining": {
+    "next": "M4.2b / DecendToChalLevel 020000a4의 실제 HTML Yes→4b8810→현재 State19 전환",
+    "m4Complete": false,
+    "m6AdditionalFindings": "Outpost 삭제와 일반 송수신/지연 장치의 활성 미연결을 별도 전수 목록화 중"
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  },
+  "sourceHashNote": "UberGump.cpp는1161만선택한Git index 바이트를해시했다.작업트리의다음1162영역하강hunk는1161빌드/커밋대상이아니다."
+}

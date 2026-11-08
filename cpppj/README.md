@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-**2026-11-08 단위1160 / 표시 버전11.01, 사용자 `/goal`로 재개·진행 중이다.** State33의 실제1fh/7ch 송신 Caller를 C/PE로 마감했으며 제품 소스·실행 파일은1159와 같다. 다음은M4.2 NSInfo/메타 요청 UI·State·HTML 마감이다. [현행 계획](../LEFT_JOBS.md)·[1160 근거](../docs/exe/cpp-meta-state-send-closure-20261108.md)를 따른다. 새 빌드/MP 실행검사는 없으며 전체 목표는 미완료다.
+**2026-11-08 현재 제품1161 / 표시 버전11.01, `/goal` 진행 중이다.** NSInfo 추방·옵션 메뉴의5명령을 실제 공통 입력 큐에 연결했다. 다음은M4.2b의 영역 확인창 Yes/DecendToChalLevel 후속이다. 두 Release 빌드 종료0·경고/오류0·보호2800 불변이며 새 MP 실행검사는 없다. [현행 계획](../LEFT_JOBS.md)·[1161 기록](../docs/exe/cpp-nsinfo-menu-command-integration-20261108.md)을 따른다. 전체 목표는 미완료다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
 

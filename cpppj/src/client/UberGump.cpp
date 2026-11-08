@@ -376,7 +376,9 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
             state_.Post(actions_[parameter-1]); // 기존 DialogAction의 임시 호스트 번호이며 원본 게임 명령 토큰과 구별한다.
         } else {
             // 실제 메뉴 항목이 선택한 미연결 명령은 여기서 거부한다. 돌 버튼의 별도 기본 클릭 통지와 구별한다.
-            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x020000f3U && command!=0x020000e8U && !IsNativeMetaSailCommand(command) && !IsScenarioObjectCommand(command) && !IsScenarioEffectCommand(command) && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command)); //실제 메타 설명/항해/영역 확인 소비자까지 연결된 명령만 같은 메뉴→큐 경계에서 허용한다.
+            const auto& nsInfo=*client_.NsInfoGlobals(); // NSInfo 메뉴 작성기와 입력 소비자가 공유하는 현재 명령 owner를 선택 시점에 읽는다.
+            const bool nsInfoCommand=command==nsInfo.kickoffCommand || command==nsInfo.sortOptionsCommand || command==nsInfo.setOptionCommand || command==nsInfo.excludeTypeCommand || command==nsInfo.restoreTypeCommand; // 추방과 정렬/설정/제외 메뉴의 실제 다섯 명령도 같은 공통 큐로 전달한다.
+            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x020000f3U && command!=0x020000e8U && !nsInfoCommand && !IsNativeMetaSailCommand(command) && !IsScenarioObjectCommand(command) && !IsScenarioEffectCommand(command) && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command)); //실제 메타 설명/항해/영역 확인 소비자까지 연결된 명령만 같은 메뉴→큐 경계에서 허용한다.
             client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter));
         }
     };
