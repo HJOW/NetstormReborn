@@ -10627,7 +10627,7 @@
       "bytes": 518486,
       "lines": 1183,
       "fixtureCommit": "1679f128",
-      "webCommit": "worktree",
+      "webCommit": "53882c8c",
       "cpppjBasis": {
         "cpppj/src/o/RawIceRicochet.cpp": "56a28270"
       }
@@ -10656,9 +10656,98 @@
       "bytes": 99848,
       "lines": 214,
       "fixtureCommit": "2eb294f0",
-      "webCommit": "worktree",
+      "webCommit": "53882c8c",
       "cpppjBasis": {
         "cpppj/src/o/RawIceRicochet.cpp": "56a28270"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E125",
+      "id": "archermissile",
+      "path": "cpppj/tests/fixtures/archermissile-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: SunArcher 71 / sunDisc 83 Missile 생성자·프레임의 외부 효과 순서·128바이트 필드 이미지·표시 슬롯(두 판본 1888행)",
+      "consumers": [
+        "webpj/tests/archer-missile.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-missile.js",
+        "webpj/www/core/raw-missile-fields.js"
+      ],
+      "doc": "docs/webpj-missile-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissile.cpp"
+      ],
+      "scope": "10.78(originals) 944행 사용, originalCD 944행은 범위 밖",
+      "text": true,
+      "sha256": "dca76f0dfcaf30463522d79931c57a8ef77712d6cc03428bffcbe033572d9b7b",
+      "bytes": 888614,
+      "lines": 1889,
+      "fixtureCommit": "b76adf95",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissile.cpp": "a24cdcf4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E125",
+      "id": "crossbowmissile",
+      "path": "cpppj/tests/fixtures/crossbow-missile-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 크로스보우 140 / arrow 81 Missile 생성자·프레임·가상 포구의 효과 순서·128바이트 필드 이미지·세 슬롯 150바이트(703행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/crossbow-missile.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-missile.js",
+        "webpj/www/core/raw-projectile-geometry.js"
+      ],
+      "doc": "docs/webpj-missile-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissile.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 703행 전부 사용",
+      "text": true,
+      "sha256": "c7962b28d0470c64ffe605ea6a2c85f2b89d2d4ef416d8293fd4effe14f9e32f",
+      "bytes": 523608,
+      "lines": 704,
+      "fixtureCommit": "db13f257",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissile.cpp": "a24cdcf4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E125",
+      "id": "gunmissile",
+      "path": "cpppj/tests/fixtures/gunmissile-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 캐논 128 기본 Missile 생성자·프레임의 효과 순서·128바이트 필드 이미지·표시 슬롯(두 판본 296행)",
+      "consumers": [
+        "webpj/tests/gun-missile.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-missile.js"
+      ],
+      "doc": "docs/webpj-missile-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissile.cpp"
+      ],
+      "scope": "10.78(originals) 148행 사용, originalCD 148행은 범위 밖",
+      "text": true,
+      "sha256": "3bf00d1918ac56c7cdfeab8ae9d1247f99f459e56d8be7aa53f75e0b778c2b67",
+      "bytes": 138742,
+      "lines": 297,
+      "fixtureCommit": "4e532fd1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissile.cpp": "a24cdcf4"
       }
     }
   ]
