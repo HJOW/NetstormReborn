@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-**2026-11-08 현재 제품1156 / 표시 버전11.01. /goal 진행 중이다.** 3차 TCP/IP 로컬 멀티플레이·Outpost의M2에서 두 전체 수신과 인계 후 실제 Source/현재 World·같은 전체 전송 재진입을 연결했다. 다음은M3.1의 공통 Squid Pop/현재 checking·실제 Caller 대조다. 3차 잔여6묶음과K/S 계획은 [현행 인수인계](../LEFT_JOBS.md), Release 종료0·경고/오류0·보호2800 불변은 [1156 기록](../docs/exe/cpp-meta-battle-reentry-20261108.md)을 따른다. 새MP 실행검사는0이며 전체 목표는 미완료다.
+**2026-11-08 제품1156 / 표시 버전11.01, 최신 작업1157 정적 감사. /goal 진행 중이다.** 기존 공통 Pop/신전 정기 Handle의 전체 부모·같은 현재 checking/실제 Caller를 대조해M3.1/M3.2를 마쳤다. 다음은M3.3의 Descend/메타전환·World/카메라/HTML 후속이다.3차 잔여6묶음은 [현행 인수인계](../LEFT_JOBS.md), 제품 변경/새 빌드·실행 없이 같은 두 EXE/보호2800 불변을 확인한 근거는 [1157 감사](../docs/exe/cpp-checking-parent-closure-20261108.md)를 따른다. 전체 목표는 미완료다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
 

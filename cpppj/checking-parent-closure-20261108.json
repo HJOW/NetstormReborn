@@ -1,0 +1,123 @@
+{
+  "unit": 1157,
+  "productUnit": 1156,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "18e3aadd / 20261108-127 CP",
+  "summary": "M3.1 공통Pop/4b02d0와 M3.2 신전 정기Handle/4dc220의 기존 전체 본체·현재 checking·실제 Caller를 C/PE에 대조해 오래된 checking잔여2개를 마감했다. 다음은M3.3의 Descend/메타전환 후속이다.",
+  "build": {
+    "reusedUnit": 1156,
+    "newBuildCount": 0,
+    "reason": "제품 소스 변경0이며1156의실제두Release종료0/경고·오류0과같은EXE를확인했다."
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13169664,
+      "sha256": "76ff76230af03c4c189d9e7de5e5bd6adfaf3f6aaf1d3a27f6f55f12f2a0722d"
+    },
+    "R.exe": {
+      "bytes": 670208,
+      "sha256": "4cfdfe3f46384090bbd9328959d3aebda4844b29556273bb0f8f4f1d7963c9be"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "nativeEvidence": {
+    "004b02d0": {
+      "bytes": 1372,
+      "peSha256": "d622fbc1d623c330f941f1bdb1ddc432ec60c8f080603a26f505ce5c319b1850",
+      "cSha256": "97a1a2569a5b1c8636893d5d245d0a23a9be5522cb42ee80c53d356525f53ff9"
+    },
+    "004dc220": {
+      "bytes": 677,
+      "peSha256": "49d784b581453e6a06f6574e17aa4bf20a5706ae5d3349f8b92ad595e421781c",
+      "cSha256": "849dc093096b32018c4a907b18213d44287e0a7f054274097c7a1d3410739e9a"
+    },
+    "0040e800": {
+      "bytes": 77,
+      "peSha256": "3ce2c4e6731e226d93de08db1a2865351b243debf27a0c8f0d9b2f96ee425ce5",
+      "cSha256": "ca6ac692f8ef252f5aa4a48e0554deca7aee2b903d54c8cb9131bd264b98c76d"
+    },
+    "004ace40": {
+      "bytes": 121,
+      "peSha256": "e2cbc767143cd49ed043a55e0935734906f0d4ed0d719dc3bd54e84af473e205",
+      "cSha256": "ea7ba4f2acf544afd17f2716ba3b69e47d1b3d61e5b67f513a0f16fd1dbe168c"
+    },
+    "004aba70": {
+      "bytes": 68,
+      "peSha256": "6e8a8ac790e99ef5a4fb78ed3cc891195a03f6bf2f09f5382deea935c7e69962",
+      "cSha256": "f826c61f69049fba7a3f2bcce663f5d1fd221907dc40640a2f2ec4542fec4f18"
+    },
+    "004acd20": {
+      "bytes": 122,
+      "peSha256": "4af647fc1277b44bd01b1aa1ba2ec6f4eab28e47a358e503602e9cf0dd140118",
+      "cSha256": "779ce488e561431b80c5b8d3d39d4e9692764feb9f62afdd779dfa7835029036"
+    },
+    "004afd30": {
+      "bytes": 288,
+      "peSha256": "671bf99e709470913502c68bb3f7c6b0e6cc29b60514573c26a34488674fabce",
+      "cSha256": "f91ad010ded96cc23658c4a306d69552c5cb9e1fa13ae05dfe58b234582c1a3b"
+    },
+    "004dcf00": {
+      "bytes": 5,
+      "peSha256": "6b2fc9ee6d6e2f0ab8ec74f1d7f734d1d2f1a885e5e0f29ea5fe9a6d43427aab",
+      "cSha256": "598fe00b89aa95da48962c5bb54d367da996abcd0592c0e9cde9be9f0872e622"
+    },
+    "0044b900": {
+      "bytes": 219,
+      "peSha256": "0e2feb426edcbfc099d59fd3cf36a12b62f658e3d3e4956015ce5c5845fe4eaf",
+      "cSha256": "1963f18288948e26eab696e3568066f500e2ecd653f399a8b725e4420285c7f6"
+    }
+  },
+  "sourceSha256": {
+    "cpppj/src/o/RawSquidPopParent.cpp": "4b14586e0784a78d8095f39a6d1f9a749fc2d509f63e6f7adb10b59faae351f2",
+    "cpppj/src/o/SquidPop.cpp": "7b1436f1658d52c9c8ab7b52c38565b3d5374f71d56625a9da99ef691548077b",
+    "cpppj/src/o/RawCheckingFlag.h": "6a047f285a8d0330dbd7c8426537032164c31070c480824208b2df60f5136c64",
+    "cpppj/src/o/RawAssetRegular.cpp": "e85cc5c740c2383bd02ec63fbaed9014100f8c6f1a841051bf2d4a4ecaa2ae22",
+    "cpppj/src/client/ClientMain.cpp": "bc2864045196cb8f459fe278997df509faca62ca6ebc781bf14dc33ee1746c17",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "67c7ed459b7ab6c804adb4c3f9822685030da73652ac0c83d0673e9d60be69cb",
+    "cpppj/src/client/RawCampaignSession.cpp": "c797d0a8757f1383c97024089549b6d806a85cdd244a19680f2da3284d39cc97",
+    "cpppj/src/client/RawCampaignAssetBindings.cpp": "1b1a8ec144dee29fdffba273f1566e79754e101d0a103150b69c4e84a5fd3b90"
+  },
+  "vortexVtableHandlePointers": {
+    "0x5196f0": "0x4dc220",
+    "0x5197a8": "0x4dcf00",
+    "0x519860": "0x4dc220",
+    "0x519918": "0x4dc220"
+  },
+  "sourceAudit": {
+    "liveSignedDwordOwnerThroughClientWorldAndSession": true,
+    "popCheckingReadAtGridReplaceBeforeReturningDiagnosticAndLog": true,
+    "popPartialSpotWritesAndCurrentTypeShapeSideDisplayActivateOrder": true,
+    "vortexAllEventsAndDefaultDamageableDispatchConnected": true,
+    "vortexEvent4ReadsSameCurrentCheckingAfterState4Write": true,
+    "vortexWindThunkResolvedToSameParent": true,
+    "sameActualRegularAndVortexStateAscendLeaveDescendDevices": true
+  },
+  "remaining": {
+    "next": "M3.3 / Descend·메타전환의 실제 요청/World·카메라/HTML 후속",
+    "checkingSourceParents": [],
+    "stage3Groups": 6
+  },
+  "executions": {
+    "newBuild": 0,
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "full34": 0,
+    "zip": 0
+  },
+  "limitations": [
+    "이번 단위는 기존 제품 코드의 정적 마감 대조이며 새로운 동작/실행 검증을 뜻하지 않는다.",
+    "기존 집중 검사 소스는 존재하지만 이번에 실행하거나 최신 통과로 합산하지 않았다.",
+    "M3전체는미완료이며전환 Caller/후속과LAN·Outpost/M4~M8 전수대조는계속한다."
+  ],
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}
