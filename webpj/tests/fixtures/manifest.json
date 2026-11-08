@@ -9046,7 +9046,7 @@
       "bytes": 1001162,
       "lines": 1373,
       "fixtureCommit": "da2b3423",
-      "webCommit": "worktree",
+      "webCommit": "13e23d69",
       "cpppjBasis": {
         "cpppj/src/o/RawFenceRegular.cpp": "bad7cf5c"
       }
@@ -9075,9 +9075,38 @@
       "bytes": 228627,
       "lines": 302,
       "fixtureCommit": "bad7cf5c",
-      "webCommit": "worktree",
+      "webCommit": "13e23d69",
       "cpppjBasis": {
         "cpppj/src/o/RawFenceRegular.cpp": "bad7cf5c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E90",
+      "id": "carrier-candidate-sort",
+      "path": "cpppj/tests/fixtures/carrier-candidate-sort-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 운반 후보 비교기 반환·CRT qsort 정렬 뒤 배열·비교 호출 주소 열·배열 Adler-32(513행; 두 x87 정밀도 동일)",
+      "consumers": [
+        "webpj/tests/carrier-candidate-sort.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-candidate-sort.js"
+      ],
+      "doc": "docs/webpj-carrier-candidate-sort-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierCandidateSort.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 513행 전부 사용(53비트 열 사용, 64비트 열은 동일 확인)",
+      "text": true,
+      "sha256": "de225ecc8a84240242f00c54fe7617bf0feb5b7475420d21660d3ad7c2dc6267",
+      "bytes": 2830201,
+      "lines": 514,
+      "fixtureCommit": "52e714fa",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierCandidateSort.cpp": "52e714fa"
       }
     }
   ]
