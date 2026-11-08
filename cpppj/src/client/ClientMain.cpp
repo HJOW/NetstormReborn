@@ -32,6 +32,7 @@
 #include "client/ClientOptionsDisk.h"
 #include "client/StartupFiles.h"
 #include "platform/Utf8Path.h"
+#include "platform/LegacyRegistryValue.h" // Config의 {&경로}를 같은 프로세스의 실제 레지스트리 기본값 조회에 연결한다.
 #include "platform/ScopedNewHandler.h" // 실제 Run 범위에서만 원문 new_handler를 등록하고 정상/예외 복귀에 이전 값을 복원한다.
 #include "client/CdDirectory.h"
 #include "client/ClientBridgeDecay.h"
@@ -223,6 +224,13 @@ Client::Client(ClientOptions options)
     trace_->buildReplay=std::make_shared<ClientBuildReplayGlobals>(); // Native BSS 재생 전역의 같은 주소를 첫 메뉴와 모든 Session에 공유한다.
     playerRecords_->BindCoreData(coreDataGlobals_); // 같은 Native Player base가 바뀌면 실제 Core의 빌린 현재 Player 슬롯도 즉시 갱신한다.
     configuration_.Registry().environment = Environment;
+    configuration_.Registry().registryValue=[this](std::string_view path) { // 최초 Config 로드부터 같은 현재 OS 기본값을 조회하며 별도 설정 사본을 만들지 않는다.
+        return platform::ReadLegacyRegistryValue(path,[this] { // 잘못된 HKEY의 원문 진단은 복귀 뒤 실제 조회를 계속하며 초기 자산 준비를 요구하지 않는다.
+            const auto file=options_.edition==o::OriginalEdition::Patch1078 ? "\\Ns\\O\\Winutil.cpp":"\\Ns\\o\\winUtil.cpp"; // 두 판본 PE의 실제 원문 진단 파일 이름이다.
+            const auto line=options_.edition==o::OriginalEdition::Patch1078 ? 0x2dbU:0x2d9U; // 10.78/CD10.72의 keyValue 진단 줄 번호다.
+            if (surfaceStorage_) surfaceStorage_->AssertDisplay("keyValue",file,line);else std::clog<<"원본 표시 진단: "<<file<<':'<<line<<" keyValue\n"; // 초기 Config는 아직 없는 SurfaceStorage를 요구하지 않고 현재 중앙 장치의 기존 복귀 로그 경계를 사용한다.
+        });
+    };
     if (options_.userData) { // 5차: 설정은 사용자 홈 Saves의 options.cfg를 먼저 읽고, 없을 때만 설치 폴더의 옛 d\options.cfg를 읽는다(기존 설정 이관, 설치 폴더는 쓰지 않는다).
         configuration_.SetUserFileOverride([this](std::string_view path) -> std::optional<std::vector<std::uint8_t>> {
             const auto cut = path.find_last_of("\\/"); // 원문 FileSpec 결과의 마지막 경로 요소만 비교한다.

@@ -26,7 +26,7 @@ public:
     void StopListening(); // 현재 accepted/등록 연결은 보존하고 신규 수락만 중단한다.
     bool Connect(std::string_view address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); //004e2620의 기존 socket 비영 재사용 또는 새 LAN 접속을 수행한다. socket 접속 실패는false이며 빈 span은NULL이다.
     bool Connect(std::span<const std::uint8_t> address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); // 재사용 관문 뒤20BYTE 주소/포트/초기 패킷을 같은 새 접속 부모에 전달한다.
-    bool ConnectPeerText(std::string_view address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); // 재사용 관문 뒤IP:port 또는tcp,IP:port,cn을 해석한다. DNS/공개주소는 기존 정책대로 허용하지 않는다.
+    bool ConnectPeerText(std::string_view address,std::uint32_t port,std::int32_t id=9,std::span<std::uint8_t> initialPacket={}); // 재사용 관문 뒤IP/hostname:port 또는tcp,주소:port,cn을 해석한다. hostname의 첫IPv4도 LAN 범위만 허용한다.
     void AssignConnection(std::int32_t pending,std::int32_t owner); //004e27b0의 같은 accepted 노드를 owner1..8 또는 비서버9로 이동하고 buffered 모드로 바꾼다.
     void Close(std::int32_t id); // 선택한 자기 연결만 closed로 표시하며 수신 depth가0일 때 실제 OS/등록표 반납을 수행한다.
     void CloseAll(); // 자기 listener와 모든 자기 노드를 닫는다. 다른 내부/외부 전송의 공유 등록표를 지우지 않는다.

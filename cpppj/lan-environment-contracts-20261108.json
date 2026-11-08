@@ -1,0 +1,124 @@
+{
+  "unit": 1163,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "2a309a87 / 20261108-134 CP",
+  "summary": "M5.1의 실제 legacy registryValue와 첫 IPv4 LAN hostname OS 장치를 클라이언트/R의 같은 Config·TCP/주소 owner에 연결했다. M5.2 세.server 콘텐츠/배포는 남는다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1163\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13179904,
+      "sha256": "b6b918135e07a77aca52bc11f4495cb6a88e6191525332a0c5cbd2760957542f"
+    },
+    "R.exe": {
+      "bytes": 675840,
+      "sha256": "bf4e46769bd9ff11b11d745355f44140971f2c26299d633c4dc8e1449887e14d"
+    }
+  },
+  "linkedImports": {
+    "Netstorm.exe": [
+      "RegCloseKey",
+      "RegOpenKeyA",
+      "RegQueryValueA",
+      "WSACleanup",
+      "WSAStartup",
+      "gethostbyname"
+    ],
+    "R.exe": [
+      "RegCloseKey",
+      "RegOpenKeyA",
+      "RegQueryValueA",
+      "WSACleanup",
+      "WSAStartup",
+      "gethostbyname"
+    ]
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "nativeEvidence": {
+    "originals-004dda10": {
+      "bytes": 419,
+      "peSha256": "fcfccbe15d11e5a15b0e45f9a2d8f9d09460fa405560d69ae8699db8cba5f901",
+      "cSha256": "41393306926254f9f5296e1642498a7bf8fe68551d90d23070d8529e76c4aa7e"
+    },
+    "originals-004e0cd0": {
+      "bytes": 871,
+      "peSha256": "44f41b5f791fbee4ac91669f82ec9ce621d7c7b97f054a3954696141abdf29dd",
+      "cSha256": "b10b362d184efb634cd2acac3d78ebd2e447a747ef2ecd795d6df1964e8c8a9e"
+    },
+    "originalCD-004bebe0": {
+      "bytes": 434,
+      "peSha256": "74588b50d80820e41adb0b7381a9dd0727478dd9f3548c33999bc27c6aa890dd",
+      "cSha256": "9586ce6ea3c464d71e48155e0d727b563512c59c8c485b6d82b422e690f61746"
+    },
+    "root-server-00481600": {
+      "bytes": 637,
+      "peSha256": "cebac0339a44e5b565d3cd26fd056a806295e63e5296dd19b349d43aa0c7326d",
+      "cSha256": "00d29fa075a6acd62cf74ead0028796b8af3e5bd1e77a6f0f2ecca2db00ac3a3"
+    },
+    "root-server-00486870": {
+      "bytes": 1538,
+      "peSha256": "ad167f0b2cb7df848e06a73ac95e7b6da7c022f81e26a30611477ec6823a00bb",
+      "cSha256": "5d791606878a61b930abb508731df15a2be55f3cb59ff5a1a8f934d27e9d0907"
+    }
+  },
+  "sourceSha256": {
+    "cpppj/src/platform/LegacyRegistryValue.cpp": "388010e8699ecf31adb1bae70ce5ec6fa2b7c42065fc1ead0d5ed7668eee469e",
+    "cpppj/src/platform/LegacyRegistryValue.h": "0963f20d1638b7e68fd632a62425174afb7f27f5e98354f92b54ac5de029e9e7",
+    "cpppj/src/platform/LanIpv4Name.cpp": "b7b79d0e03e79a49756e37b56c7efed70e2595864663d3f5d2dc143646cdf58e",
+    "cpppj/src/platform/LanIpv4Name.h": "1b2d585a225b014f68e75d8730e84fded4e23b30e8da5423d3c84254188b4de2",
+    "cpppj/src/platform/CMakeLists.txt": "49415bf297db9d3d0d06448b517e266e8b306648496012e50444d4da48316583",
+    "cpppj/src/client/ClientMain.cpp": "6a42af61ee188c7ab0746eaf866985d0f3baa122f2765abd75738f2d1a397a51",
+    "cpppj/src/client/LocalTcpTransport.cpp": "673a86fc5818b0e73649a4c31e5a0f6233dfee1a03c4d32f55842d91e0076933",
+    "cpppj/src/client/LocalTcpTransport.h": "f07ca417e0921327030bd0af238b1a7d46668ee62855ae2bfd4879187124eb3a",
+    "cpppj/src/root/Server.cpp": "7f3b5343f316275f87b988dc4989a5833dc7c55a39f18212e1f315506f7ddad3",
+    "cpppj/src/root/LocalAddressDevice.cpp": "438a7e40c1841aa929cb925ce52ebda9e1cb4bc9bb452312c1268c8e8c7a893e",
+    "cpppj/src/root/AddressCodec.h": "faec66d9ce193b7b75b2a6d66fcae9962c0be5986a334fa67640628aed7356c0"
+  },
+  "audit": {
+    "bothConfigOwnersUseSameLegacyDefaultSubkeyReader": true,
+    "rootOrderDiagnosticReturn1024And80ByteContract": true,
+    "utf8ActualAcpBoundaryAndSuccessfulKeyCleanup": true,
+    "firstIpv4OnlyAndSameLanPolicy": true,
+    "balancedIndependentWsaReferenceAndNoLookupAtConstruction": true,
+    "numericParserAndExistingConnectionReusePrecedesNameLookup": true,
+    "rootIpxGrammarAndFailedNameIpZeroPreserved": true
+  },
+  "remaining": {
+    "next": "M5.2 / Admin.server·Update.server·Guild.server 콘텐츠/배포",
+    "m5Complete": false,
+    "m7Added": "초기 Config registry 진단은 SurfaceStorage 이전의clog 복귀 경계다. M7.5 중앙장치 복원에 이 최초로드 경계도 포함한다."
+  },
+  "executions": {
+    "cppUnit": 0,
+    "registry": 0,
+    "dns": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "zip": 0
+  },
+  "limitations": [
+    "실제 레지스트리/hostname/통신 검사는 사용자 MP 제외에 따라 실행하지 않았다.",
+    "registry는 원문 A API와 x64 기본 view를 사용하며 WOW64 32bit view를 강제하지 않는다. 범위밖 NUL/인코딩 손실은 명시 오류다.",
+    "hostname은 원문의 char 바이트/첫주소 순서다. 별도 IDN/Unicode 확장·R의한점IPX문법 변경은 없다.",
+    "명시hostname 해석은 OS 설정의 DNS/hosts/LLMNR 등에 질의할 수 있다. 첫 결과가LAN범위일때만실제TCP접속하며폐기온라인검증은복구하지않는다."
+  ],
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

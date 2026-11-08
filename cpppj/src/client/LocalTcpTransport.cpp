@@ -8,6 +8,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include "client/LocalTcpTransport.h"
+#include "platform/LanIpv4Name.h" // 새 접속의 hostname만 같은 R 이름 조회/첫 IPv4 LAN 정책을 사용한다.
 #include <algorithm>
 #include <array>
 #include <bit>
@@ -171,13 +172,17 @@ void LocalTcpTransport::StopListening() {
 bool LocalTcpTransport::ReuseConnect(std::int32_t id) const { if (id<0 || id>=static_cast<std::int32_t>(o::kTransceiverSlots)) throw std::out_of_range("LAN TCP 접속 ID의 실제22칸 범위");const auto current=Token(id);return current && registry_->SocketReadiness(current)!=0; }
 // 문자열 원문은 기존 준비 조회를 주소 parser보다 먼저 한 번만 실행한다.
 bool LocalTcpTransport::Connect(std::string_view address,std::uint32_t port,std::int32_t id,std::span<std::uint8_t> initialPacket) { if (ReuseConnect(id)) return true;return ConnectNew(address,port,id,initialPacket); }
-// 현재 문자열/별도 포트도 재사용 관문 뒤에만 해석한다. DNS/외부 주소 제한은 기존 LAN 정책이다.
+// 현재 문자열/별도 포트도 재사용 관문 뒤에만 해석한다. hostname의 첫 IPv4에도 기존 LAN 범위를 적용한다.
 bool LocalTcpTransport::ConnectPeerText(std::string_view address,std::uint32_t port,std::int32_t id,std::span<std::uint8_t> initialPacket) {
     if (ReuseConnect(id)) return true;address=address.substr(0,address.find('\0'));if (address.starts_with("tcp,")) address.remove_prefix(4);address=address.substr(0,address.find(','));address=address.substr(0,address.find(':'));return ConnectNew(address,port,id,initialPacket);
 }
 // 새 socket 생성/비동기 connect 실패는 기존 노드/별도 버퍼를 보존하고 원문0을 반환한다.
 bool LocalTcpTransport::ConnectNew(std::string_view address,std::uint32_t port,std::int32_t id,std::span<std::uint8_t> initialPacket) {
-    const auto parsed=ParseAddress(address);if (!LocalAddress(parsed)) throw std::invalid_argument("LAN TCP는 loopback/사설/link-local IPv4만 접속합니다");const auto endpoint=SocketAddress(parsed,port);StartSockets();SocketOwner socket{::socket(AF_INET,SOCK_STREAM,IPPROTO_TCP)};
+    std::array<std::uint8_t,4> parsed{}; // 숫자 주소는 기존 엄격한 네 필드 parser를 유지하고 이름만 OS에 전달한다.
+    const bool numeric=std::all_of(address.begin(),address.end(),[](char value) { return (value>='0' && value<='9') || value=='.'; }); // 축약/잘못된 숫자 주소를 DNS 이름으로 재해석하지 않는다.
+    if (numeric) parsed=ParseAddress(address);
+    else { const auto resolved=platform::ResolveLanIpv4Name(address,lastError_);if (!resolved) { if (lastError_==WSAEACCES) throw std::invalid_argument("LAN TCP는 loopback/사설/link-local IPv4만 접속합니다");return false; }parsed=*resolved; }
+    if (!LocalAddress(parsed)) throw std::invalid_argument("LAN TCP는 loopback/사설/link-local IPv4만 접속합니다");const auto endpoint=SocketAddress(parsed,port);StartSockets();SocketOwner socket{::socket(AF_INET,SOCK_STREAM,IPPROTO_TCP)};
     if (socket.socket==INVALID_SOCKET) { lastError_=WSAGetLastError();return false; }u_long nonblocking=1;if (ioctlsocket(socket.socket,FIONBIO,&nonblocking)==SOCKET_ERROR) { lastError_=WSAGetLastError();return false; }
     const auto result=connect(socket.socket,reinterpret_cast<const sockaddr*>(&endpoint),sizeof(endpoint));const auto error=result==SOCKET_ERROR ? WSAGetLastError():0;
     if (error && error!=WSAEWOULDBLOCK && error!=WSAEINPROGRESS && error!=WSAEALREADY) { lastError_=error;return false; }static_cast<void>(Adopt(static_cast<std::uintptr_t>(socket.Release()),id,error!=0,true,AddressBytes(endpoint),true));registry_->StoreConnectPacket(id,initialPacket,dispatcher_.Dispatch());return true; // 새 노드 성공 뒤 칸을 직접 대체하고 별도 버퍼를 처리한다. 이전 노드를 먼저 닫지 않으며 뒤 실패를 되돌리지 않는다.

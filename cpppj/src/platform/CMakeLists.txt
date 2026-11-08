@@ -13,4 +13,8 @@ target_sources(netstorm PRIVATE
     Png.cpp Png.h
     AudioLoopback.cpp AudioLoopback.h
     FrameRecorder.cpp FrameRecorder.h
+    LegacyRegistryValue.cpp LegacyRegistryValue.h # Config의 실제 legacy 레지스트리 기본값 조회를 클라이언트/R이 공유한다.
+    LanIpv4Name.cpp LanIpv4Name.h # 명시 LAN hostname의 첫 IPv4 조회와 개별 WSA 참조를 클라이언트/R이 공유한다.
 )
+
+target_link_libraries(netstorm PUBLIC advapi32) # RegOpenKeyA/RegQueryValueA와 성공한 키 반납의 실제 Windows 장치를 연결한다.

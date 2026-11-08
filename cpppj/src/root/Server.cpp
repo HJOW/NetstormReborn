@@ -15,6 +15,7 @@
 #include "o/OriginalText.h"
 #include "o/PacketRegistrationTable.h"
 #include "platform/Utf8Path.h"
+#include "platform/LegacyRegistryValue.h" // R Config의 {&경로}도 실제 원문 legacy 기본값 조회를 사용한다.
 #include <cstdlib>
 #include <process.h>
 #include <stdexcept>
@@ -42,7 +43,9 @@ struct Server::State { // 마지막 실행 소비자부터 먼저 반납하며 �
 Server::State::State(std::filesystem::path working,platform::UserDataRoot destination)
     :root(std::filesystem::absolute(std::move(working)).lexically_normal()),user(std::move(destination)),names(std::make_shared<o::RawFileName>()),files(root,{},names),
      config([this](auto name) { return files.TryRead(name); },names,o::FileSpecDirectoryHooks(root),client::MakeConfigFileReadHooks(files)),storage(root,root/L"d",user),record(clockState,user) {
-    config.Registry().environment=Environment;config.SetUserFileOverride([this](std::string_view name)->std::optional<std::vector<std::uint8_t>> { // 5차 사용자 Options 우선 읽기만 적용하며 원문 나머지 Config파일 순서는 바꾸지 않는다.
+    config.Registry().environment=Environment;
+    config.Registry().registryValue=[this](std::string_view path) { return platform::ReadLegacyRegistryValue(path,[this] { Require(trace).Assertion("keyValue","c:\\ns\\o\\winutil.cpp",0x2db); }); }; // 실제 Load는 trace 구성 뒤 실행되며 R00481600의704+27 진단도 같은 현재 장치에서 복귀한다.
+    config.SetUserFileOverride([this](std::string_view name)->std::optional<std::vector<std::uint8_t>> { // 5차 사용자 Options 우선 읽기만 적용하며 원문 나머지 Config파일 순서는 바꾸지 않는다.
         const auto slash=name.find_last_of("\\/:");if (o::AsciiLower(slash==name.npos ? name:name.substr(slash+1))!="options.cfg") return std::nullopt;const auto path=user.OptionsFile();std::error_code error;if (!std::filesystem::is_regular_file(path,error)) return std::nullopt;return o::ReadFileBytes(path);
     });
     const ProcessLogHook forwardLog=[this](auto level,auto text) { Require(trace).Log(level,text); };const ProcessAssertionHook forwardAssertion=[this](auto expression,auto file,auto line) { Require(trace).Assertion(expression,file,line); }; // 실제 같은 Trace 생성 전에는 실행되지 않으며 구성 오류도 명시 거부한다.

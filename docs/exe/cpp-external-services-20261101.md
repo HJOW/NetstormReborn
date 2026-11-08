@@ -1,5 +1,7 @@
 # 외부 접속 기능 목록과 구 클라이언트 검증 비활성화 — 단위684
 
+**2026-11-08 / 1163 갱신:** 명시 접속요청의 hostname을 OS gethostbyname으로 해석한다. OS 설정 DNS/hosts/LLMNR 등에 이름 질의가 생길 수 있으며 첫IPv4가loopback/RFC1918/link-local일 때만 실제TCP접속한다. 뒤사설주소 재검색/공인IP접속·폐기7f/80/온라인유효성검증 복구는 없다. 과거의 DNS 미사용/숫자IPv4만 지원 표기는 당시 상태이며 현재는 이 범위로 대체한다. 레지스트리 기본값 조회는 읽기 전용 OS환경 계약이고 폐기security.dat/검증은 연결하지 않는다. [1163 근거](cpp-lan-environment-contracts-20261108.md).
+
 **2026-11-07 / 1092 갱신:** 클라이언트37에클론모듈폴더의새11.01 R.exe만선택하는파일식별과실제Unicode CreateProcessW lan/wait0을연결했다. 자식CWD는게임자료폴더/환경상속·전용콘솔·핸들반납이며원본R/공식서버실행으로대신하지않는다. 새R은기존LAN IPv4경계/외부DNS·7f/80비활성을유지한다. 배포ZIP에새R/두실행파일런타임합집합을동봉하고실제바이트/해시를확인했으나게임/서버·통신실행은0이다([1092 기록](cpp-local-server-process-package-20261107.md)).
 
 **2026-11-07 / 1091 갱신:** 원본R을실행/복사하지않고 같은실제서버모듈/환경·VFS/진단/주소·전송/수신/메인을묶은 새R.exe를 빌드했다. 진입점은현재CWD/정확한lan인자→같은Lifecycle/MainLoop호출이며기존LAN IPv4경계와외부DNS/7f·80비활성을유지한다. 기본원격포트Open/handler등록을추가하지않았다. 실제서버/통신실행0·클라이언트OSlaunch/배포는후속이다([1091 기록](cpp-root-server-entry-20261107.md)).

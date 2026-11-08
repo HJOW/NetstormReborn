@@ -2,7 +2,7 @@
 #pragma once
 #include "root/ChallengeRuntime.h"
 
-namespace netstorm::root { // 구형 주소의 바이트/문법을 유지하고 폐기 외부 DNS 조회는 추가하지 않는다.
+namespace netstorm::root { // 구형 주소의 바이트/문법을 유지하며 명시 이름의 첫IPv4도 LAN 범위로 제한한다.
 class AddressCodec final { // 같은 서식 고리와 callback owner가 R 로그인/현재 CCh보다 오래 살아야 한다.
 public:
     AddressCodec()=default; // 생성은 OS 조회·WSA 시작/소켓 열기를 수행하지 않는다.
@@ -13,6 +13,6 @@ public:
     void Bind(LoginRequestHooks& login,ChallengeRuntimeHooks& challenge); // 실제 localAddress/주소 서식·해석 hook을 같은 owner에 연결한다.
 private:
     std::array<std::array<char,30>,5> buffers_{};std::size_t next_{}; //004d8ad8의5*30BYTE와004d8d2c의 최초BSS0이다.
-    std::optional<std::uint32_t> ResolveLocalName(std::string_view name); // localhost/현재 컴퓨터의 DNS 이름만 실제 어댑터 주소로 해석한다. 외부/타LAN 호스트 DNS는 실행하지 않는다.
+    std::optional<std::uint32_t> ResolveLocalName(std::string_view name); //00486870의 OS 이름 조회가 반환한 첫IPv4를 복사한다. 조회 실패/공개주소는 빈 값이며 Parse의원문IP0효과를 유지한다.
 };
 }

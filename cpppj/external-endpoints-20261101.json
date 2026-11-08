@@ -1228,5 +1228,15 @@
     "tools/nscfg.py": "662ac47ea2d5b610c90a5879a3a4bdade7dee4bb22b0b3b35ba58dfacbd042cb",
     "tools/taff.py": "461860cdfc9451b85a8694dd30fd2c56c1cfdf5c6bb7ab8f63a4089971889795"
   },
-  "limitations": "제공된 두 판본/아카이브/느슨한 HTML·시나리오/현재소스의 정적 출처다. 현재 DNS·서비스 상태·실제 접속·간접 alias 전체 부재·모든 동적 URL의 고정값을 검증하지 않았다. 사용자 지정 URL/프로토콜 실행은 별도 명시 기능이며 로컬 서버 기능과 구분한다."
+  "limitations": "제공된 두 판본/아카이브/느슨한 HTML·시나리오/현재소스의 정적 출처다. 현재 DNS·서비스 상태·실제 접속·간접 alias 전체 부재·모든 동적 URL의 고정값을 검증하지 않았다. 사용자 지정 URL/프로토콜 실행은 별도 명시 기능이며 로컬 서버 기능과 구분한다.",
+  "currentNetworkPolicy1163": {
+    "date": "2026-11-08",
+    "host": "HJOW-Athlon",
+    "hostname": "명시접속요청의OS gethostbyname 첫IPv4만사용. OS DNS/hosts/LLMNR 조회가능. 생성시조회없음.",
+    "actualTcpAllowed": "loopback/RFC1918/link-local IPv4만허용",
+    "retiredValidation": "7f/80·클라이언트온라인유효성검증 비활성유지",
+    "runtimeProbes": 0,
+    "evidence": "docs/exe/cpp-lan-environment-contracts-20261108.md",
+    "historicalPolicyNote": "unit684의아래기존정적인벤토리/제품해시/정책은당시상태다. hostname지원은이번현재정책으로대체한다."
+  }
 }
