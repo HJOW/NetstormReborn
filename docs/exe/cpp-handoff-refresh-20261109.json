@@ -1,0 +1,84 @@
+{
+  "unit": 1199,
+  "kind": "문서 정리·AGENTS 최근 변경 반영",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "productUnit": 1198,
+  "productCommit": "ec5dcb4fd677cf2ae93a2235227233a290a6ad94",
+  "archive": {
+    "anchor": "archive-20261109-through-1198",
+    "originalPrefixBytes": 3840033,
+    "originalPrefixSha256": "e1acc2c576e3bf11045b1b8d5dec17b190f897ddfae14f47cf05fdb37f11f158",
+    "archivedCurrentBytes": 28215,
+    "archivedCurrentSha256": "fec37e84a0ba32ac3a06c7bec83e01c31121c36433e262f346cd5eeae0251a8c",
+    "prefixPreserved": true,
+    "currentBeforePreservedVerbatim": true
+  },
+  "current": {
+    "bytesBefore": 28215,
+    "bytesAfter": 27171,
+    "sha256": "88f7741257f71d6c6c77959c7d8c30a0c9b1cebf6cb53a5fa7b7afab5f6ee01a",
+    "upperPlanIdsRemaining": 16,
+    "remaining": {
+      "thirdStage": [
+        "M6",
+        "M7",
+        "M8"
+      ],
+      "korean": [
+        "K1",
+        "K2",
+        "K3",
+        "K4",
+        "K5"
+      ],
+      "scenario": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "knownBugs": [
+        "B1",
+        "B2",
+        "B3",
+        "B4"
+      ]
+    },
+    "next": "M6-n 실제 자산 가상 삭제/Pre/Post·다른 Form/Regular"
+  },
+  "agentsChangesApplied": {
+    "551d27ae": "세 프로젝트의 실행/플레이 가능성과 원본 동일성을 각각 평가",
+    "b5197d48": "9차 버그34건을 NB01~NB34로 등록하고 B1~B4에 연결; 조사·수정 완료를 뜻하지 않음"
+  },
+  "verification": {
+    "unchangedProtectedFiles": 2800,
+    "unchangedProductSourcesTestsCandidatesOtherFiles": 4479,
+    "bugRowsInAgentsAndInventory": 34,
+    "localLinksChecked": 39,
+    "preservedInboundAnchors": [
+      "0-재개-전-확인-사항",
+      "agents-reflection-20261102",
+      "인수인계-문서-임시-분할"
+    ],
+    "utf8AndExistingCrLfPreserved": true,
+    "buildExecutions": 0,
+    "unitTestExecutions": 0,
+    "gameExecutions": 0,
+    "multiplayerExecutions": 0,
+    "decompilations": 0
+  },
+  "productsUnchanged": {
+    "Netstorm.exe": {
+      "bytes": 13703168,
+      "sha256": "5f71820d43aaf3c042f3e0b10ec29f77c0c8e21058c637d1178a9ba92001fe8c"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "f24a60cd751a91a94fac3de5c8b8732b63456f2c93434478275b3698782e03d6"
+    }
+  },
+  "limitationsPreserved": true,
+  "otherSessions": "작업 중인 WB 파일과 스테이징은 이 정리의 변경/커밋 대상에서 제외"
+}
