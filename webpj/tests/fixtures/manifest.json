@@ -9571,9 +9571,38 @@
       "bytes": 1565352,
       "lines": 1808,
       "fixtureCommit": "562c41c9",
-      "webCommit": "worktree",
+      "webCommit": "4609f6e3",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierEscape.cpp": "8b467ca0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E102",
+      "id": "carrier-choice",
+      "path": "cpppj/tests/fixtures/carrier-choice-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 운반 후보 평가/귀환/간헐천 선택의 외부 효과 순서·상태 11 DWORD(선택·currentMetric·전체 풀 Adler)·정렬된 후보 배열(721행; 53/64비트 열)",
+      "consumers": [
+        "webpj/tests/carrier-choice.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-choice.js"
+      ],
+      "doc": "docs/webpj-carrier-choice-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierChoice.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 721행 전부 사용(53비트 열 사용)",
+      "text": true,
+      "sha256": "a13058b4167cd2a692cce579511e24e707f8b85a2c3fbd9c77df3de283c52af0",
+      "bytes": 1546934,
+      "lines": 722,
+      "fixtureCommit": "87c37af6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierChoice.cpp": "8b467ca0"
       }
     }
   ]
