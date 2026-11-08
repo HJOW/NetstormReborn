@@ -81,6 +81,42 @@
                        english 파일이 없는 상태에서 Test Battle 진입 시 게임이 튕기는 문제 수정
                        (새 맵 생성 시 english 파일 기본 컨텐츠로 자동 생성)
                        편집 모드 전용 별도의 UI를 마련하여, 편집 모드인 경우 시나리오 구성 (플레이어 초기 자본과 테크, 적 구성과 동맹 등) 을 화면 내에서 편집할 수 있도록 새 기능을 구현해야 함
+                 9차 - 기존 게임에서 알려져 있던 버그 수정
+                       10.78 에 다음 버그가 있다고 함. 이를 확인 및 수정.
+                          Mission Bug Where the game would suddenly crash after an hour of game play on replenishing geyser spawn maps. This bug was the result of an AI update which expanded geyser connection capability but neglected to change the parameter in all incidents.
+                          Bug that allowed players to exploit the Emboss offset System and move there text further back than it was intended.
+                          The bug where workshop production slots dint display.
+                          Bug in Even Geyser Mode such that the player in the bottom corner will no longer receive geysers last.
+                          A issue where putting too much text in the chat bar would result in a game crash.
+                          The AI bug where it would fail to see it found a temple and repeated create a temple.
+                          A Bug in the Editor that caused existing fort files to be open when in fact a new file should have been created  A message now appears relaying that the file exist. 
+                          User Made Campaign Bug that was preventing User Made Campaigns from showing up under the User Made Campaign Menu.
+                          Bug that if player guild tags exceeded maximum length right clicking them caused the client to crash.
+                          A Bug in Single Player Missions that would result in a crash because of a invalid player side.
+                          A bug in the demo where severely hurting a AI workshop would result in a crash.
+                          A bug that caused you to instantly quit out of a game if you were typing when Battlemaster launched.
+                          Fixed Floating Point Round up Issue with Cids that was causing a edge suck when it shouldn't.
+                          Bug that allowed you to load multiplayer forts in a single player editor
+                          Client Acid barricade bug that was causing barricades not to spin.
+                          Client Side Pickup bug that caused clients not to register the bulf picking up crystals correctly.
+                          Client Side Drop bug that caused the Clients not to register the bulfs dropping crystals correctly.
+                          Bulf Bug where if your bulf had a nugget he could pick up a priest and the priest would transform into another nugget.
+                          Bulf bug where if you dropped a storm crystal then went to a storm power processor you wouldn't receive 200 sp.
+                          Bug where you select the priest, yet a item you weregoing to build remains attached to the cursor.
+                          Selection Bug Where you could have a collector selected,then click on a item on the build menu and drop the item only to find the collected selected but not useable, or unselectable withoutsome forceful persuasion.
+                          Issue where pressing the P or R key and the F key caused Netstorm to crash.
+                          A rare island generation crash.
+                          Long campaign names cause game to crash.
+                          Sun Cannon range display doesn't match firing arc.
+                          Thunder cannon shoots forever at units directly in front of it.
+                          Random crash on construction caused by air targeting changes.
+                          Too many geysers when playing multiple games in a row.
+                          Adjusted starting geyser formula which was incorrect due to an error.
+                          Fort data (including stats) is lost when host crashes before all forts are loaded.
+                          Fort stays logged into zone after resetting Netstorm for resolution change.
+                          Crash caused by Ice Cannons attacking units adjacent to a Workshop or Temple.
+                          Ice Tower islands not destroyed properly in the editor. 
+                          Unit health incorrectly appearing to reset to full on client-side. Especially Whirlibases.
              cpppj 는 Windows 10/11 대상으로 개발한다. 
              (x86-64, AMD64 플랫폼 대상으로 개발하되, ARM 플랫폼용 Windows 11 지원도 고려한다.)
   dotnetpj - C# + MonoGame 기반으로 개발. cpppj 완성 후 이를 분석하여 개발.
