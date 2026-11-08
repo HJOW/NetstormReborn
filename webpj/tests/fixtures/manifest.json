@@ -13189,7 +13189,7 @@
       "bytes": 12794383,
       "lines": 981,
       "fixtureCommit": "392ab168",
-      "webCommit": "worktree",
+      "webCommit": "1fc79e50",
       "cpppjBasis": {
         "cpppj/src/o/RawShrapnelFrame.cpp": "392ab168"
       }
@@ -13220,10 +13220,71 @@
       "bytes": 303325,
       "lines": 217,
       "fixtureCommit": "954d1942",
-      "webCommit": "worktree",
+      "webCommit": "1fc79e50",
       "cpppjBasis": {
         "cpppj/src/o/RawShrapnelLifetime.cpp": "954d1942",
         "cpppj/src/o/RawShrapnelFrame.cpp": "392ab168"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E189",
+      "id": "dissolveframe",
+      "path": "cpppj/tests/fixtures/dissolve-frame-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Dissolve 직접 준비(투명/1픽셀/가로·세로·게임 난수 두 번)·캡처 뒤 초기화·프레임/출력(최초 delta 0·퇴행 시계·소진·dirty·clip·행 padding)(10.78 44+44+164행)",
+      "consumers": [
+        "webpj/tests/dissolve-frame.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dissolve-frame.js"
+      ],
+      "doc": "docs/webpj-dissolve-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDissolveFrame.cpp"
+      ],
+      "scope": "10.78 252입력 전부(직접 준비 44·초기화 44·프레임/출력 164)",
+      "text": true,
+      "sha256": "988f0b609a4bd74280ce11f803194faa85a9becad0804f0073abef34e41affad",
+      "bytes": 3099592,
+      "lines": 253,
+      "fixtureCommit": "5d34fc2d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDissolveFrame.cpp": "5d34fc2d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E189",
+      "id": "dissolvelifetime",
+      "path": "cpppj/tests/fixtures/dissolve-lifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Dissolve wrapper/생성자/같은 준비와 반납(방향·표시 목록 구멍/확장·source 깊이·callback 중 변경 3종·flags·불투명/완전 투명 캡처)(10.78 288행)",
+      "consumers": [
+        "webpj/tests/dissolve-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dissolve-lifetime.js",
+        "webpj/www/core/raw-dissolve-frame.js"
+      ],
+      "doc": "docs/webpj-dissolve-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDissolveLifetime.cpp",
+        "cpppj/src/o/RawDissolveFrame.cpp"
+      ],
+      "scope": "10.78 288입력 전부",
+      "text": true,
+      "sha256": "0a0ce44aada7aca16ee467902a15bd911c31b82053a60803a6077bf49d6dc205",
+      "bytes": 323235,
+      "lines": 289,
+      "fixtureCommit": "5d34fc2d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDissolveLifetime.cpp": "5d34fc2d",
+        "cpppj/src/o/RawDissolveFrame.cpp": "5d34fc2d"
       }
     }
   ]

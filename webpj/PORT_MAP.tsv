@@ -651,8 +651,8 @@ cpppj/src/o/RawDeckRestore.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/o/RawDependCreate.cpp	port	www/core/depend-form-host.js	1f00a25a	port	[o-default] WB04-D5a 감시 쌍 생성(004b1510). Process VT 부착은 기준선도 DependFormHost 에서 미연결(명시 오류)이며 실제 Process 부착 접두는 squid-process.js(WB04-D5c)
 cpppj/src/o/RawDestroyAt.cpp	port	www/core/raw-destroy-at.js	1f00a25a	port	[o-default] WB04-E30: 0044c540 위치 해석·0044c790 점 검색/삭제 루프. fixture destroy-at-parse 16·destroy-at-parent 804행 전부. 실제 삭제 가상/월드 연결은 소비자 단위에서
 cpppj/src/o/RawDiscRegular.cpp	port			todo	[o-default]
-cpppj/src/o/RawDissolveFrame.cpp	port			todo	[o-default]
-cpppj/src/o/RawDissolveLifetime.cpp	port			todo	[o-default]
+cpppj/src/o/RawDissolveFrame.cpp	port	www/core/raw-dissolve-frame.js	1f00a25a	port	[o-default] WB04-E189: Dissolve 캡처 뒤 초기화 00450460(현재 더미 좌표/깊이·기준점 원점)·준비 004500a0(두 폴 간격·열 바깥/행 안쪽·픽셀마다 게임 난수 두 번·투명 미소비·입자 확보 여부)·프레임 0044fe40(첫 호출 시계 시작 delta 0·무중력·영역 +1·소진 removeForm)·출력 0044ffc0, 정수화 signed64 하위 DWORD(범위 밖 0). fixture dissolveframe 10.78 252행 전부. 남음: DissolveVisualSystem Host 부착·실제 캡처/픽셀 장치·애시드 포획 호출 연결
+cpppj/src/o/RawDissolveLifetime.cpp	port	www/core/raw-dissolve-lifetime.js	1f00a25a	port	[o-default] WB04-E189: 생성 00450510/004881d0(new120·parent 0 등록 process 18→더미 TYPE 110→생성 뒤 현재 source Pop→부착→상호 감시→캡처/준비)·반납 0044fd80/00423aa0(그림→확보된 입자(용량 0 포함)→등록→객체, ShrapnelRelease 재사용). fixture dissolvelifetime 10.78 288행 전부. 남음: 실제 더미/캡처/Host 월드 연결
 cpppj/src/o/RawDudeBehavior.cpp	port	www/core/raw-dude-behavior.js	1f00a25a	port	[o-default] WB04-E122: Dude 이동 정지 450e60·지면 판정 450e80·추락 450f50·도착 450960·population 삭제 후처리 450920. fixture dude-behavior 410행 전부(10.78 전용). task 재예약/이동 삭제/부모 삭제/공통 후처리/진단은 훅 경계
 cpppj/src/o/RawDudeDrop.cpp	port			todo	[o-default]
 cpppj/src/o/RawDudeNotice.cpp	port			todo	[o-default]
