@@ -1,11 +1,16 @@
 // 지난 Login의 raw this를 장기 backend에 저장하지 않고 실제 현재 World와 장기 전역을 빌린다.
 #include "client/ClientCampaignTransport.h"
+#include "client/ClientPacketSources.h" //actual device/network는 배송 지점에서만 선택한다.
+#include "client/UberGump.h" //현재 실제 UI 분배기의 같은 State7 부모만 호출한다.
+#include "o/PacketRegistrationTable.h" //Zone 복제는 실제 현재 observer 표만 읽는다.
+#include "o/RawStateBattleStart.h" //1a/1b의 기존 원문 순수 본문을 공유한다.
 #include "o/RawConstructionPacket.h" // Session 전후에도 같은3fh 순수 길이 관찰기를 실제 기본 표에 보관한다.
 #include "client/ClientMain.h"
 #include "client/ClientPacketRecord.h" //새 World도 같은 장기 기록 FILE/현재 프레임을 빌린다.
 #include "client/ClientConnectionGlobals.h"
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientPlayerRecords.h"
+#include "client/ClientSubscriberGlobals.h" //1a/1b의 같은 현재 Subscriber DWORD를 완전한 장기 형식으로 조회한다.
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientConnectionActivityGlobals.h"
 #include "client/ClientChallengeGlobals.h" //7bh는 Session/Meta raw this 대신 같은 장기 CS owner만 빌린다.
@@ -100,6 +105,17 @@ struct TransportGlobals {
 };
 }
 // Login 없는 Editor/Meta와 Session 반납 뒤에도 같은 원문 길이 쓰기/진단을 장기 기본 표에서 실행한다.
+//원문2번의 NULL param2 비교와 전역 자연 분기를 Session 요구보다 먼저 유지한다.
+void InstallClientConnectionEndedReceiver(Client& client,o::RawPacketDispatch& dispatch) {
+    dispatch.RegisterCanonicalDirect(2,0x004b6660U,[game=client.GameplayGlobals(),players=client.PlayerRecords(),registry=client.ConnectionGlobals(),local=client.LocalStateGlobals(),activity=client.ConnectionActivityGlobals()](auto sender,o::PacketConnection* connection,auto) { //저장 F는 같은 Client 장기 저장소만 보유하며 지난 World/Meta/Session을 캡처하지 않는다.
+        o::ConnectionEndedHooks effects;
+        effects.saveServerFailure=[game] { auto& session=game->RequireSession();const auto pin=game->PinCurrentRuntime(session);session.SaveServerFailure(); }; //실제9번 장애 저장이 선택된 하위에서만 현재 전체 owner를 보유한다.
+        effects.disconnect=[registry](auto id) { registry->Disconnect(id); }; //원문 sender의 현재 가상 연결을 조회하며 Source를 sender/phase로 추정하지 않는다.
+        effects.broadcastPlayer=[game](auto owner) { auto& session=game->RequireSession();const auto pin=game->PinCurrentRuntime(session);session.BroadcastConnectionPlayer(owner); }; //선행 세 flags store 뒤 선택된 현재 방송 하위만 보유한다.
+        const auto token=connection ? registry->TokenFor(*connection):0U; //원문 param2는 비교만 하므로 실제 NULL은0으로 전달하고 가짜 노드/주소를 만들지 않는다.
+        o::ReceiveConnectionEnded(std::bit_cast<std::int32_t>(sender),token,{game->Server(),local->ClockSynchronization().connection,local->State().phase[0],local->State().next[0],activity->Frames(),[players] { return players->Records(); }},effects);
+    }); //같은4BYTE 통지의 observer/version/length 표는 이 등록 부모에서 바꾸지 않는다.
+}
 void InstallClientMissionSendObservers(Client& client,o::RawPacketDispatch& dispatch) {
     const auto storage=client.SurfaceStorage(); //실제 Client storage만 보유하고 Session/World/Meta this는 캡처하지 않는다.
     if (!storage) throw std::invalid_argument("기본 미션 송신 관찰기의 실제 Client storage 없음");
@@ -111,7 +127,34 @@ void InstallClientMissionSendObservers(Client& client,o::RawPacketDispatch& disp
     }
 }
 // 원문 C3 수신/관찰 전용 metadata와 a2 관찰기를 실제 같은 표의 비임대 기본 등록으로 묶는다.
+namespace { //고정 F의 Source만 선택하며 수신함수/type을 현재 표에서 재선택하지 않는다.
+NativeBattleSource ResolveNativePacketSource(Client& client,o::PacketConnection* connection) {
+    if (!connection) return client.Menu() ? client.Menu()->CurrentNativeBattleSource():NativeBattleSource{}; //원문 NULL 직접caller는 현재 존재하는 실제 장치만 인계하며 없으면 State8의 새 생성을 허용한다.
+    const auto source=client.ConnectionGlobals()->PacketSources()->Resolve(*connection);if (!source) throw std::logic_error("배송 connection의 실제 Source device 경로 누락");return *source; //sender/phase/마지막 생성 Source로 대체하지 않는다.
+}
+}
+//Global F는 Client 장기 데이터만 보유하고 Source는 원문의 실제 선택 지점에서만 빌린다.
+void InstallClientStateBattleStartReceivers(Client& client,o::RawPacketDispatch& dispatch) {
+    client.PublishNativePacketTable(dispatch.Registrations()); //현재Client의실제표만공개하며저장F는이포인터변경과독립이다.
+    dispatch.ObservePacket(0x1a,[client=&client](auto packet,auto sending) { o::StateBattleStartHooks hooks;hooks.assertion=[client](auto expression,auto file,auto line) { client->SurfaceStorage()->AssertDisplay(expression,file,line); };o::ObserveBattleStartZone(packet,sending,hooks); });dispatch.Version(0x1a,1,0);dispatch.RequireLength(0x1a,0xffff);
+    dispatch.RegisterCanonicalDirect(0x1a,0x004b4df0U,[client=&client](auto,o::PacketConnection* connection,auto packet) { //고정F는Client장치만보유하며과거표/Source/Session을저장하지않는다.
+        auto& local=*client->LocalStateGlobals();auto& game=*client->GameplayGlobals();const auto record=client->PacketRecordOwner();NativeBattleSource source; //실제 Source는 h.duplicate가 선택될 때만 채운다.
+        o::StateBattleStartHooks hooks;hooks.assertion=[client](auto expression,auto file,auto line) { client->SurfaceStorage()->AssertDisplay(expression,file,line); };
+        hooks.duplicate=[client,connection,&source,&local](auto bytes) { source=ResolveNativePacketSource(*client,connection);const auto current=client->NativePacketTable();return local.ZonePackets().Duplicate(bytes,*current); }; //진단/next주소·7·port 이후 원문의 observer1/현재 WORD/실제 복제를 수행한다.
+        hooks.openRecord=[record](auto name) { record->Open(name); };hooks.disconnect=[registry=client->ConnectionGlobals()](auto id) { registry->Disconnect(id); };
+        o::ReceiveBattleStartZone({const_cast<std::uint8_t*>(packet.data()),packet.size()},{local.State(),local.ZonePending(),game.GameServerPort(),game.Subscribers()->MySubscriber(),record->Requested(),client->SurfaceStorage()->Checking()},hooks);
+        if (!client->Menu()) throw std::logic_error("next7 인계의 실제 UI State 부모 미연결");client->Menu()->DispatchNativeBattleStart(std::move(source),false); //원래 next7만 companion weak Source에 연결하며 즉시 Run/새명령을 만들지 않는다.
+    });
+    dispatch.Observe(0x1b,[](std::uint32_t) {});dispatch.Version(0x1b,1,0);dispatch.RequireLength(0x1b,38); //원문40b380의 실제 비NULL 빈 observer이며 ACK/성공효과가 아니다.
+    dispatch.RegisterCanonicalDirect(0x1b,0x004b8b20U,[client=&client](auto,o::PacketConnection* connection,auto packet) { //server/pending 자연 반환 앞에 Source/Runtime을 요구하지 않는다.
+        auto& local=*client->LocalStateGlobals();auto& game=*client->GameplayGlobals();const auto record=client->PacketRecordOwner();o::StateBattleStartHooks hooks;
+        hooks.assertion=[client](auto expression,auto file,auto line) { client->SurfaceStorage()->AssertDisplay(expression,file,line); };hooks.openRecord=[record](auto name) { record->Open(name); };
+        hooks.run=[client,connection] { auto source=ResolveNativePacketSource(*client,connection);if (!client->Menu()) throw std::logic_error("current7의 실제 UI State 부모 미연결");client->Menu()->DispatchNativeBattleStart(std::move(source),true); }; //주소 NUL 포함 부분쓰기/port/current7 뒤에만 실제 Source를 선택하며 old Runtime은 보유하지 않는다.
+        o::ReceiveBattleStartPeer(packet,{local.State(),local.ZonePending(),game.GameServerPort(),game.Subscribers()->MySubscriber(),record->Requested(),client->SurfaceStorage()->Checking()},game.Server(),hooks);
+    });
+}
 void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) {
+    InstallClientStateBattleStartReceivers(client,dispatch); //같은 Client 기본 F는 Meta/일반/Editor와 lease 반납 뒤에도 존재한다.
     InstallClientMissionSendObservers(client,dispatch); //같은 네 순수 관찰기를 재사용하며 실제 기능 수신기를 추가하지 않는다.
     const auto storage=client.SurfaceStorage(); //진단의 장기 Client storage만 보유하고 Session/World/Meta this는 빌리지 않는다.
     const auto game=client.GameplayGlobals(); //69h 기본 receiver는장기전역만보유하고이전Session/World를고정하지않는다.
@@ -119,7 +162,7 @@ void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) 
         [storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); //합집합뒤비영항목마다현재Session/실제전체owner를선택하며반환/예외까지pin한다.빈목록은World를요구하지않는다.
     dispatch.ObservePacket(0x7b,[storage](auto packet,auto sending) { ObserveClientPacketDefault(0x7b,packet,sending,storage); }); //40b2f0은 수신 방향에서 payload를 읽지 않고 송신 진단 뒤 signed BYTE 길이를 재조회한다.
     dispatch.Version(0x7b,1,0);dispatch.RequireLength(0x7b,0xffff);
-    dispatch.RegisterDirect(0x7b,[challenge=client.ChallengeGlobals()](std::uint32_t,o::PacketConnection*,std::span<const std::uint8_t> packet) { challenge->ReceivePeerAddress(packet); }); // sender/nullable 연결을 사용하지 않으며 같은 장기 Client CS만 보유한다.
+    dispatch.RegisterCanonicalDirect(0x7b,0x004b4790U,[challenge=client.ChallengeGlobals()](std::uint32_t,o::PacketConnection*,std::span<const std::uint8_t> packet) { challenge->ReceivePeerAddress(packet); }); // 고정F004b4790은 같은 장기 CS만 보유하며 CS0 조기반환 앞에 Session/Source/lease pin이나 sender/nullable 연결 조회를 추가하지 않는다.
     dispatch.ObservePacket(0x3f,[storage](auto packet,auto sending) { o::FinalizeConstructionPacket(packet,sending!=0,[storage] { storage->AssertDisplay("sidCount != (unsigned char)-1","\\Ns\\O\\_p_packets.cpp",0x7c9); }); }); //40a800의 같은 버퍼/진단 정상 복귀 뒤 현재count 재조회다.
     dispatch.Version(0x3f,1,0);dispatch.RequireLength(0x3f,0xffff); // receiver만 Session 대여에 맡기며 원문 기본 metadata/observer는 반납 뒤에도 남긴다.
     for (const auto& entry:kClientPacketDefaults) { //이18종만 version1/policy0/보호 PE 길이에 맞추고 다른 등록에는 손대지 않는다.
@@ -139,7 +182,7 @@ void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) 
     }); //실제장기세owner만보유하며수신payload/connection/phase/known을읽거나별도Session을붙잡지않는다.
 }
 // 같은 Client/Session의 물리를 검증하고 소켓을 열지 않는 실제 coordinator를 만든다.
-std::shared_ptr<CompositeMissionTransport> MakeClientCampaignTransport(Client& client,CompositeTransportRole role,const std::shared_ptr<GameWorld>& world,MissionNetwork network) {
+std::shared_ptr<CompositeMissionTransport> MakeClientCampaignTransport(Client& client,CompositeTransportRole role,const std::shared_ptr<GameWorld>& world,MissionNetwork network,std::shared_ptr<MetaConnectionRuntime> meta) {
     if (!world || client.Edition()!=o::OriginalEdition::Patch1078 || !client.PlayerRecords()->Initialized() ||
         world->Session().PlayerRecords().data()!=client.PlayerRecords()->Records().data())
         throw std::invalid_argument("현재 Client/World/Player 물리의 복합 전송 수명 계약 오류");
@@ -164,12 +207,9 @@ std::shared_ptr<CompositeMissionTransport> MakeClientCampaignTransport(Client& c
     auto transport=network.composite;
     if (transport) { if (transport->Registry()!=client.ConnectionGlobals() || !transport->SharesNetwork(network)) throw std::logic_error("일반 State7 재진입의 같은 실제 전송 owner 불일치");transport->RebindWorld(role,globals->players->Records(),globals->game->Server(),std::move(hooks),globals); }
     else transport=CompositeMissionTransport::Create(role,globals->players->Records(),globals->game->Server(),std::move(hooks),client.ConnectionGlobals(),globals,std::move(network)); //첫 메타 인계와 기존 독립 경로는 원래 생성 위치를 유지한다.
+    transport->BindMetaSource(meta);client.ConnectionGlobals()->PacketSources()->Publish(transport); //실제 shared coordinator가 완성된 뒤 weak node 경로를 공개한다.
     InstallClientPacketDefaults(client,transport->Dispatch()); //호출자의 BindSession보다 먼저 같은 기본 표를 채워 임대 반납 때 원문 C3/관찰기/metadata가 복구되게 한다.
-    transport->Dispatch().Register(2,[runtime=std::weak_ptr<GameWorld>(world),globals,registry=client.ConnectionGlobals(),local=client.LocalStateGlobals(),activity=client.ConnectionActivityGlobals()](auto sender,auto& connection,auto) {
-        const auto current=runtime.lock();if (!current) throw std::logic_error("연결 종료 통지의 실제 현재 World 수명 종료");o::ConnectionEndedHooks effects;
-        effects.saveServerFailure=[current] { current->Session().SaveServerFailure(); };effects.disconnect=[registry](auto id) { registry->Disconnect(id); };effects.broadcastPlayer=[current](auto owner) { current->Session().BroadcastConnectionPlayer(owner); };
-        o::ReceiveConnectionEnded(std::bit_cast<std::int32_t>(sender),registry->TokenFor(connection),{globals->game->Server(),local->ClockSynchronization().connection,local->State().phase[0],local->State().next[0],activity->Frames(),[globals] { return globals->players->Records(); }},effects);
-    }); //004e2270의2번 수신기만 실제 Session 대여 전에 등록한다. 버전/정책/observer를 임의로 바꾸지 않는다.
+    InstallClientConnectionEndedReceiver(client,transport->Dispatch()); //004b6660의 같은 전역 본문을 실제 Session lease보다 먼저 설치한다.
     return transport;
 }
 }

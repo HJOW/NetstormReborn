@@ -6,7 +6,7 @@
 
 namespace netstorm::o { // backend의 now/close/free hooks는 공유 표 안으로 옮기지 않는다.
 class PacketRegistrationLease; // 현재 Session과 실행 중 콜백의 독립 수명 대여다.
-// 실제 원문256개 등록 슬롯의 단일 owner다. 기본 길이는 생성한 판본으로 한 번만 설정한다.
+//호스트는256슬롯을보유하지만원문실제할당/정상조회범위는0..Last다. 기본길이는판본별로한번설정한다.
 class PacketRegistrationTable final:public std::enable_shared_from_this<PacketRegistrationTable> {
 public:
     explicit PacketRegistrationTable(OriginalEdition edition); // receiver/observer/version은0, 원문 길이만 초기화한다.
@@ -14,6 +14,7 @@ public:
     PacketRegistrationTable& operator=(const PacketRegistrationTable&)=delete; // 같은 표를 빌린 backend의 고정 주소를 유지한다.
     PacketRegistrationTable(PacketRegistrationTable&&)=delete; // currentIdentity와 공유 owner의 주소를 이동하지 않는다.
     PacketRegistrationTable& operator=(PacketRegistrationTable&&)=delete; // 생존 Session 대여를 다른 표로 옮기지 않는다.
+    const PacketRegistration& Registration(std::uint32_t type) const; //원문복제의현재observer를0..Last에서읽는다.0은정상NULL슬롯이고호스트256물리폭으로범위를넓히지않는다.
     std::uint32_t LastType() const; // 다른 판본 표의 잘못된 공유를 생성 시 거부하는 한도다.
     void ResetCallbacks(); // R00482b60처럼 지원 슬롯0..last의 함수/버전을0으로 만들고 같은 길이표/owner는 보존한다. Session 대여/실행 중에는 거부한다.
     bool ConnectionCallbackActive() const noexcept; // 활성/반납 세대의 콜백 중에는 전체 Runtime 정리를 시작하지 않는다.

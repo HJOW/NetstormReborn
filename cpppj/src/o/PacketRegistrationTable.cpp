@@ -18,6 +18,7 @@ PacketRegistrationTable::PacketRegistrationTable(OriginalEdition edition):lastTy
     for (std::size_t index=0;index<=lastType_;++index) entries_[index].length=edition==OriginalEdition::Patch1078 ? kPatchPacketLengths[index]:kCdPacketLengths[index]; // 판본의 실제 지원 타입까지만 복사한다.
 }
 // 표를 공유하는 backend의 판본 검증에만 쓴다.
+const PacketRegistration& PacketRegistrationTable::Registration(std::uint32_t type) const { if (type>lastType_) throw std::out_of_range("패킷 observer 표의 실제 할당 범위 밖");return entries_[type]; } //Native4dedb0의Last+1할당/0초기화범위만읽으며0은정상슬롯이다.
 std::uint32_t PacketRegistrationTable::LastType() const { return lastType_; }
 // 원문의 새 전역 함수/버전 표 할당을 현재 공유 owner 안에서 수행하며 정적 길이표는 바꾸지 않는다.
 void PacketRegistrationTable::ResetCallbacks() {

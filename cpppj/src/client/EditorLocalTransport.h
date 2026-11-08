@@ -7,6 +7,10 @@ namespace netstorm::client { // 게임 계산은 등록된 기존 패킷 처리�
 // 원문단일listener/client9수명에실제처리기를주입하며로그인/Player번호재배치를추가하지않는다.
 class EditorLocalTransport {
 public:
+    void RebindHooks(o::PacketDispatchHooks hooks); //같은node/queue/depth를유지하며짧은EditorRuntime참조를현재장기Client장치로바꾼다.
+    void AssignConnection(std::int32_t pending,std::int32_t owner); //일반부모가실제로선택한같은pending만buffered로재배치한다.
+    void FlushOne(std::int32_t id); //실제buffered전환뒤쌓인바이트만type4로확정하며기존unbuffered경로는비어있다.
+    bool OwnsConnection(const o::PacketConnection& connection) const noexcept; //현재 번호 재배치와 별개인 고정 양끝/노드의 실제 물리 주소다.
     const std::shared_ptr<o::RawConnectionRegistry>& Registry() const; //같은 실제 Client 연결표의 정체성을 Session 설치 전에 확인한다.
     EditorLocalTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={},std::shared_ptr<o::PacketRegistrationTable> registrations={}); //같은 실제 Client 표를 빌리며 독립 검사만 별도 표를 소유한다.
     ~EditorLocalTransport(); //호스트 owner 최종 반납 전에 자기 노드의 남은 별칭/장치를 떼며 Native 정리 성공을 합성하지 않는다.
@@ -53,11 +57,13 @@ private:
     ReceiveResult Receive(bool pending); // 한 큐에서 실제 소유 프레임 하나만 꺼내 현재 등록표를 분배한다.
     bool Alive(const o::PacketConnection& connection) const; // 같은 고정 두 연결의 현재 존재를 읽는다.
     o::PacketDispatchHooks hooks_; // 상위가 제공한 실제 시계/기록/종료/반납 장치이며 이 객체보다 오래 살아야 한다.
+    const bool& serverMode_; //일반재배치시읽는같은현재서버전역이며별도성공값이아니다.
     std::span<const std::uint8_t> players_; // Session과 같은 실제 Player9인지 확인할 읽기 뷰이며 사본을 만들지 않는다.
     std::shared_ptr<o::RawConnectionRegistry> registry_; //실제 생성/수락/정리가 함께 읽는 Client 장기 표다.
     zacket::LocalMissionTransport dispatcher_; // Open/Login/자체 큐를 사용하지 않고 기존 DispatchFrame/등록표만 재사용한다.
     o::PacketConnection listener_,client_,pending_; // 원문 listener와 별개 client9/accepted-1의 실제 필드 저장소다.
     std::vector<std::uint8_t> clientReceive_,pendingReceive_; //현재수신원문을각끝이보유하며004df9f0은헤더+1/+2만덮고+0을보존한다.
+    std::vector<std::uint8_t> clientOutput_,pendingOutput_; //실제bufferedflag가선택된경우만쓰는아직flush되지않은바이트다.
     std::deque<std::vector<std::uint8_t>> toPending_,toClient_; // unbuffered 송신의 반대쪽 실제 단일 프레임 소유 큐다.
     bool listenerAlive_{},clientAlive_{},pendingAlive_{},accepted_{},polling_{}; // 존재·첫 수락·호스트 재진입 보호이며 게임 상태/로그인 성공 값이 아니다.
     bool clientPeerLost_{},pendingPeerLost_{}; //PacketConnection+34와다른원문socket의0x1000상태를각실제끝에보관한다.

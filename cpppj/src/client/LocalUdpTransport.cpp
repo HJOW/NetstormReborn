@@ -125,6 +125,7 @@ void LocalUdpTransport::EndPoll() { if (!polling_) throw std::logic_error("UDP �
 std::size_t LocalUdpTransport::Poll() {
     BeginPoll();std::size_t count{};try { for (;;) { const auto result=ReceiveOne(12);if (result.consumed) ++count;if (!result.again) break; } }catch (...) { EndPoll();throw; }EndPoll();return count; //단독 메타도 같은 per-ID 본체를 반복하며 장치/주소를 새로 만들지 않는다.
 }
+bool LocalUdpTransport::OwnsConnection(const o::PacketConnection& connection) const noexcept { return Find(connection)!=nullptr; } //번호/phase를 Source 정체성으로 대신하지 않는다.
 void LocalUdpTransport::RebindHooks(o::PacketDispatchHooks hooks) { if (!hooks.now || !hooks.record || !hooks.terminate || !hooks.close || !hooks.release) throw std::invalid_argument("UDP 인계의 실제 분배 장치 누락");hooks_=std::move(hooks); } //기존 wrapper는 현재 장치만 다시 읽고 node/socket/depth는 보존한다.
 o::PacketConnection* LocalUdpTransport::Connection(std::int32_t id) const { const auto* node=id==12 ? Current():nullptr;return node ? const_cast<o::PacketConnection*>(&node->connection):nullptr; } //같은 안정된 현재 노드의 짧은 대여이며 다른 ID를 UDP로 해석하지 않는다.
 bool LocalUdpTransport::IsOpen(std::int32_t id) const { const auto* node=id==12 ? Current():nullptr;return node && node->socket!=kInvalidSocket && !(node->connection.flags&kClosed); } //상위 closed와 실제 socket 존재를 구별한다.

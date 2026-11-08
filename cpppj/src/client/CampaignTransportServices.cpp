@@ -60,7 +60,9 @@ CampaignTransportServices BindEditorCampaignTransport(std::shared_ptr<EditorLoca
 // 하나의 실제 coordinator를 모든 writer/State/Chat/배치 부모에 공급하고 Session 수신 대여도 반납한다.
 CampaignTransportServices BindCompositeCampaignTransport(std::shared_ptr<CompositeMissionTransport> transport,const std::shared_ptr<void>& sessionOwner) {
     if (!transport) throw std::invalid_argument("복합 전송 실제 owner 누락");auto lease=transport->BindSession(sessionOwner);auto services=Basic(transport);services.composite=transport;
-    if (transport->Dispatch().Registration(2).receive) transport->Dispatch().Register(2,transport->Dispatch().Registration(2).receive); // 같은 bootstrap 몸체도 현재 Session을 사용하므로 대여의 실행 pin/정리 관문에 포함하고 detach 때 이전 전역 등록을 복원한다.
+    const auto endedCanonical=transport->Dispatch().Registration(2).canonicalReceive; //baseline의 고정 F값을 복사한 뒤 이번 lease 표식만 붙인다.
+    if (endedCanonical) transport->Dispatch().RegisterCanonical(2,endedCanonical);
+    else if (transport->Dispatch().Registration(2).receive) transport->Dispatch().Register(2,transport->Dispatch().Registration(2).receive); // 같은 bootstrap 몸체도 현재 Session을 사용하므로 대여의 실행 pin/정리 관문에 포함하고 detach 때 이전 전역 등록을 복원한다.
     const auto technologyCanonical=transport->Dispatch().Registration(0x69).canonicalReceive; //lease등록도기존불변F값을먼저복사한다.
     const auto technologyReceiver=transport->Dispatch().Registration(0x69).directReceive; //독립명시즉시등록의기존호환입구만별도로보유한다.
     if (technologyCanonical) transport->Dispatch().RegisterCanonical(0x69,technologyCanonical); //같은F의정체성과장기본문을유지한채이번leasepin만붙인다.

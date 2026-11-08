@@ -132,24 +132,11 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     chat.send=[this](auto id,auto packet) { static_cast<void>(client_.ConnectionGlobals()->SendMutable(id,packet,client_.PlayerRecords()->Records())); };chat.receive=[this](auto packet,auto) { chatReceive_(packet); };
     chat.assertion=[this](auto line) { const auto expression=line==0x81dU ? "nameLen != (short)-1":line==0x81eU ? "bufferLen != (short)-1":"addrLen != (unsigned char)-1";client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }; //현재패킷관찰기의실제식/줄번호를같은Client진단에전달하고복귀뒤길이계산을계속한다.
     RegisterChatPacket(dispatch,client_.ChatWindowGlobals()->receivedMask,std::move(chat)); //메타의같은TCP/UDP등록표에실제41h중계를설치하며일반Session인계시기존동일슬롯재등록을사용한다.
-    dispatch.Register(2,[this](auto sender,auto& connection,auto) {
-        auto& local=*client_.LocalStateGlobals();o::ConnectionEndedHooks ended;ended.disconnect=[this](auto id) { client_.ConnectionGlobals()->Disconnect(id); };
-        ended.saveServerFailure=[this] { client_.GameplayGlobals()->RequireSession().SaveServerFailure(); };ended.broadcastPlayer=[this](auto owner) { client_.GameplayGlobals()->RequireSession().BroadcastConnectionPlayer(owner); }; //현재 실제 메타/게임 Session의 flags·공유 저장 writer·접속자별 방송을 사용한다.
-        o::ReceiveConnectionEnded(std::bit_cast<std::int32_t>(sender),client_.ConnectionGlobals()->TokenFor(connection),{client_.GameplayGlobals()->Server(),local.ClockSynchronization().connection,local.State().phase[0],local.State().next[0],client_.ConnectionActivityGlobals()->Frames(),[this] { return client_.PlayerRecords()->Records(); }},ended);
-    }); //sender9의 실제 장애 저장/1..8 방송과 sender10/phase23의 다음20을 원문 같은 부모가 선택한다. type1은 TCP 생성자가 같은 Registry에 이미 등록한다.
+    InstallClientConnectionEndedReceiver(client_,dispatch); //World 없는 Meta도 같은 전역 F를 사용하며 실제 저장·방송만 현재 Session을 선택한다.
     dispatch.ObservePacket(0x0f,[this](auto packet,auto sending) { o::ObserveRootLoginReply(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x0f,1,0);dispatch.RequireLength(0x0f,0xffff);
     dispatch.Register(0x0f,[this](auto,auto&,auto packet) { ReceiveRootReply(packet); }); //원문과같이sender/연결번호·현재phase 관문을 수신 앞에 추가하지 않는다.
-    dispatch.ObservePacket(0x1a,[this](auto packet,auto sending) { o::StateBattleStartHooks h;h.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };o::ObserveBattleStartZone(packet,sending,h); });dispatch.Version(0x1a,1,0);dispatch.RequireLength(0x1a,0xffff);
-    dispatch.Register(0x1a,[this](auto,auto&,auto packet) {
-        auto& local=*client_.LocalStateGlobals();auto& game=*client_.GameplayGlobals();const auto record=client_.PacketRecordOwner();o::StateBattleStartHooks h;h.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };h.duplicate=[this,&local](auto bytes) { return local.ZonePackets().Duplicate(bytes,tcp_->Dispatch()); };h.openRecord=[record](auto name) { record->Open(name); };h.disconnect=[this](auto id) { client_.ConnectionGlobals()->Disconnect(id); };
-        o::ReceiveBattleStartZone({const_cast<std::uint8_t*>(packet.data()),packet.size()},{local.State(),local.ZonePending(),game.GameServerPort(),game.Subscribers()->MySubscriber(),record->Requested(),client_.SurfaceStorage()->Checking()},h);battleState_(shared_from_this(),false); //원문 수신이 끝난 뒤 다음7의 원래 전체Source만 빌리며 새 상태/명령은 쓰지 않는다.
-    }); //원문처럼 sender/known/메타 모드 관문 없이 checking 복귀 뒤 실제 같은 버퍼를 처리한다.
-    dispatch.Observe(0x1b,{});dispatch.Version(0x1b,1,0);dispatch.RequireLength(0x1b,38);
-    dispatch.Register(0x1b,[this](auto,auto&,auto packet) {
-        auto& local=*client_.LocalStateGlobals();auto& game=*client_.GameplayGlobals();const auto record=client_.PacketRecordOwner();o::StateBattleStartHooks h;h.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };h.openRecord=[record](auto name) { record->Open(name); };h.run=[this] { battleState_(shared_from_this(),true); };
-        o::ReceiveBattleStartPeer(packet,{local.State(),local.ZonePending(),game.GameServerPort(),game.Subscribers()->MySubscriber(),record->Requested(),client_.SurfaceStorage()->Checking()},game.Server(),h);
-    }); //실제 세 번째 packet 인자를 넘기며 sender/known/메타 모드/추가 phase 관문을 합성하지 않는다.
-    dispatch.Observe(0x1d,{});dispatch.Version(0x1d,1,0);dispatch.RequireLength(0x1d,13); //원문0b380의 빈 관찰기/버전1과 실제13BYTE의 고정 응답이다.
+    //1a/1b의 metadata와 고정 전역 수신값은 앞선 같은 InstallClientPacketDefaults에서 설치한다.
+    dispatch.Observe(0x1d,[](std::uint32_t) {});dispatch.Version(0x1d,1,0);dispatch.RequireLength(0x1d,13); //원문0b380의 빈 관찰기/버전1과 실제13BYTE의 고정 응답이다.
     dispatch.Observe(0x88,{});dispatch.Version(0x88,1,0);dispatch.RequireLength(0x88,98); //0040b380 빈 관찰기와 보호 PE0052ec40의 고정98BYTE다.
     dispatch.ObservePacket(0x20,[this](auto packet,auto sending) { ObserveNativeMetaParticipantAdd(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x20,1,0);dispatch.RequireLength(0x20,0xffff);
     dispatch.Register(0x20,[this](auto,auto&,auto packet) { ReceiveParticipantAdd(packet); }); //원문 State의 메타 관문 뒤만 처리하며 sender/known/phase를 더 검사하지 않는다.
@@ -174,7 +161,7 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     }); //sender/phase/known 필터나 가짜 성공을 추가하지 않고 실제 현재 Subscriber와 다섯 State 블록을 사용한다.
     dispatch.Version(0x16,1,0);dispatch.RequireLength(0x16,0xffff); //40a190은 앞선 공용 실제 진단/관찰기를 유지하고 Client receiver는 NULL이다.
     dispatch.Version(0x1c,1,0);dispatch.RequireLength(0x1c,0xffff); //40a270도 같은 진단 복귀/현재 BYTE 재조회 본체를 사용한다.
-    dispatch.Observe(0x66,{});dispatch.Version(0x66,1,0);dispatch.RequireLength(0x66,12);
+    dispatch.Observe(0x66,[](std::uint32_t) {});dispatch.Version(0x66,1,0);dispatch.RequireLength(0x66,12);
     dispatch.RegisterCanonicalDirect(0x66,0x004b8a10U,[client=&client_,run=processState_](auto sender,auto*,auto packet) { //고정 Native F만 보관하고 실제 sender 주소는 본문이 선택한 때 같은 현재 Registry에서 조회한다.
         o::LocalServerDiscoveryReceiveHooks receive;receive.wall=[client] { return client->WallSeconds(); };receive.peerAddress=[client](auto id) { return CampaignPeerAddressText(client->ConnectionGlobals()->Address(std::bit_cast<std::int32_t>(id))); };receive.processState=run;
         auto& local=*client->LocalStateGlobals();o::ReceiveLocalServerDiscovery(local.State(),{local.LocalServerToken(),local.LocalServerSearchEnd(),local.LocalServerRetryEnd()},sender,packet,receive);
@@ -263,6 +250,7 @@ void MetaConnectionRuntime::ReceiveRootReply(std::span<const std::uint8_t> packe
     o::ReceiveRootLoginReply(packet,{local.State(),local.MetaZones().records,local.MetaRefresh()},hooks);
 }
 bool MetaConnectionRuntime::CallbackActive() const { return pumping_; } //현재 대여 중인 이 owner를 Native cleanup이 반납하지 않게 한다.
+bool MetaConnectionRuntime::OwnsConnection(const o::PacketConnection& connection) const noexcept { return tcp_->OwnsConnection(connection) || udp_->OwnsConnection(connection); } //closed/retired도 같은 실제 node owner로 선택한다.
 MissionNetwork MetaConnectionRuntime::SharedNetwork() { return {tcp_,udp_,shared_from_this()}; } //같은 실제 owner를 pin하며 원문 연결/Player 값을 새로 쓰지 않는다.
 // 실제 C 프레임/포구와 복귀형 진단을 항해와 추방 효과가 공유한다.
 NativeMetaSeatHooks MetaConnectionRuntime::SeatShapeDevices() {
@@ -366,7 +354,7 @@ void MetaConnectionRuntime::DescendToZone(std::int32_t zone) {
     }
     auto state=local.State();state.current[0x34/4]=std::bit_cast<std::uint32_t>(zone);state.current[0]=19;state.current[0x40/4]=1;
     std::array<std::uint8_t,o::kMetaZoneCleanupBytes> saved; //원문42b1a0은 빈 생성자이며 실제7344BYTE 전체는 표시 정리가 끝난 뒤 복사한다.
-    NativeMetaDisplayHooks display;display.destroy=[this](auto sid,auto flags) { auto& session=client_.GameplayGlobals()->RequireSession();if (sid>65535U || sid>=session.Core().pool.Capacity()) throw std::out_of_range("영역 하강 표시 정리의 실제DWORD SID 범위");static_cast<void>(session.World().Destroy(o::Sid{static_cast<std::uint16_t>(sid)},flags)); };
+    NativeMetaDisplayHooks display;display.destroy=[this](auto sid,auto flags) { auto& session=client_.GameplayGlobals()->RequireSession();if (sid>65535U || sid>=session.Core().pool.Capacity()) throw std::out_of_range("영역 하강 표시 정리의 실제DWORD SID 범위");const auto runtimePin=client_.GameplayGlobals()->PinCurrentRuntime(session);static_cast<void>(session.World().Destroy(o::Sid{static_cast<std::uint16_t>(sid)},flags)); };
     LeaveMetaDisplay(*client_.ChallengeGlobals(),local.MetaZones().records,display);
     std::copy_n(local.MetaZoneRecords().begin(),saved.size(),saved.begin());processState_();
     std::copy(saved.begin(),saved.end(),local.MetaZones().records.begin()); //동기Run이 정상 복귀한 뒤에만 같은 장기 존 표에 원문 보관값을 복원한다.

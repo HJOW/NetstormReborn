@@ -19,9 +19,9 @@ struct UberGump::EditorRuntime {
     void Close() { if (metaWorld && metaWorld->ConnectionCallbackActive()) throw std::logic_error("실제 Meta Runtime 배송 중 unique 자식 종료");metaInput.reset();metaDisplay.reset();metaWorld.reset();if (transport) { client.ConnectionGlobals()->CloseAll();transport->CloseListener();transport.reset(); }metaTransport.reset(); } //호스트 종료는 입력/출력기를 먼저 닫은 뒤 실제 메타 Session/노드를 자기 owner로 반납한다.
     //큐/노드 소유권은 기존 전송의 SocketClosed/Track이 처리하고 이 경계는 실제 시각과 진단만 제공한다.
     o::PacketDispatchHooks Hooks() {
-        o::PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(client.WallSeconds()); };
+        o::PacketDispatchHooks hooks;hooks.now=[client=&client] { return static_cast<std::uint32_t>(client->WallSeconds()); };
         hooks.record=[](auto&,auto,auto) {}; //원문의 선택적 패킷 기록 장치이며 게임 처리/수신 성공값을 만들지 않는다.
-        hooks.terminate=[this](auto& connection) { transport->Disconnect(std::bit_cast<std::int32_t>(connection.sender)); };
+        hooks.terminate=[registry=client.ConnectionGlobals()](auto& connection) { registry->Disconnect(std::bit_cast<std::int32_t>(connection.sender)); }; //같은 현재 Registry 동작을 쓰되 짧은 EditorRuntime/transport 필드를 캡처하지 않는다.
         hooks.close=[](auto&) {};hooks.release=[](auto&) {}; //로컬 장치에는 별도 OS socket/할당이 없다. 실제 양끝 반납은 Track의 SocketClosed/Alive 변경이 수행한다.
         return hooks;
     }
@@ -63,6 +63,7 @@ void UberGump::PrepareNativeFortState(bool editing) {
     auto& e=*editor_;if (e.transport) e.transport->CloseListener(); //앞선 CloseAll이 닫은 이전 양끝 뒤에 이전 listener만 반납한다.
     auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
     e.transport=std::make_shared<EditorLocalTransport>(client_.PlayerRecords()->Records(),game.Server(),e.Hooks(),client_.ConnectionGlobals());
+    client_.ConnectionGlobals()->PacketSources()->Publish(e.transport); //실제 shared Editor device의 node 경로를 Open 이전에 공개한다.
     InstallClientPacketDefaults(client_,e.transport->Dispatch()); //실제 Editor 생성 뒤 Open 전에 같은 Client C3/관찰기/metadata를 설치하고 Login 없는2bh 상태 방송도 유지한다.
     e.transport->Open(game.GameServerPort()); //004e22c0은 같은 현재005318e8을 읽고 로그인/Player 재배치 없이 client9를 연다.
     surface.ownerMode.fort=true;game.player.fortMode=true; //같은00594fb8을 읽는 기존 Player 어댑터의 호환 별칭에도 현재 모드를 전달한다.
@@ -276,11 +277,9 @@ o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t sele
     return netstorm::client::InstallNativeIntroState({client_.LocalStateGlobals()->State(),surface.ownerMode.fort,game.Server(),game.Boss(),client_.FortGlobals()->PendingBytes()},hooks);
 }
 // 미션 Login은 기존 분배기에 남기고 Edit1/2·메인3·인트로39~42과 다음4를 같은 분배기로 처리한다.
-void UberGump::PollEditorState() {
-    auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];const bool fort=next==1 || next==2 || next==6; // 일반 복귀6도 같은 Fort 설치/공통 확정을 사용하며 첫 배경/결과만 전용 부모가 처리한다.
-    const auto battleSource=pendingMetaBattleSource_.lock();const bool metaBattle=next==7 && battleSource; //이미 일반 World여도1ah의같은Source가예약한현재next7을같은분배기로처리한다.
-    const bool metaIdle=next==0 && !world_ && editor_ && editor_->metaWorld && client_.SurfaceStorage()->ownerMode.challenge; //새 상태가 없어도 원문 Poll의 메타 표시/NSInfo 예약은 실제 현재 World에서 소비한다.
-    if (!fort && next!=3 && !(next>=19 && next<=38) && !(next>=39 && next<=42) && !(editor_ && next==4) && !metaIdle && !metaBattle) return; //메타19~38 전체와 next0의 현재 메타 Poll을 같은 장기 분배기에 전달한다.
+//원문 State 참조와 실제 UI 자식만 같은 분배기에 결합하며 World/Source를 생성하지 않는다.
+void UberGump::EnsureNativeStateDispatcher() {
+    auto& local=*client_.LocalStateGlobals();
     if (!editor_) editor_=std::make_shared<EditorRuntime>(client_);
     if (!editor_->state) { // 새 이름 창에서 먼저 확보한 파일 장치가 있어도 실제 State 분배기는 별도로 처음 한 번 구성한다.
         auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
@@ -291,7 +290,14 @@ void UberGump::PollEditorState() {
         hooks.metaFirst=[this] { client_.RefreshNativeMetaDisplay(false); };hooks.metaSecond=[this] { client_.RefreshNativeMetaDisplay(true); }; //원문Poll의479760/47dd60을같은현재CS/Pool/Renderer에연결한다.
         editor_->state=std::make_unique<o::RawLocalMissionState>(client_.Assets().Edition(),local.State(),o::LocalMissionStateGlobals{game.Server(),game.Boss(),surface.ownerMode.battle,game.world.missionPost,local.SavedGame(),surface.links.mission,local.Simulconnect(),surface.ownerMode.challenge,game.player,local.ZonePending(),local.GameTicks(),local.SourceType(),local.CdPresent(),local.Blocks()[2][33],local.MetaRefresh(),local.MetaRebuild(),reinterpret_cast<std::uint8_t&>(htmlGlobals_.background[0]),local.BattleByte(),local.ConnectEnd(),local.ActivityEnd(),client_.Time().game,client_.Time().wall},std::move(hooks));
     }
-    if (fort || next==3) editor_->committed=false;if (metaBattle) { pendingMetaBattleSource_.reset();editor_->state->PollStarting([this,battleSource] { LoadNativeBattleWorldBody(battleSource); }); }else editor_->state->Poll(); //소비한Source를먼저비워동기재진입의새예약을덮어지우지않는다.
+}
+void UberGump::PollEditorState() {
+    auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];const bool fort=next==1 || next==2 || next==6; // 일반 복귀6도 같은 Fort 설치/공통 확정을 사용하며 첫 배경/결과만 전용 부모가 처리한다.
+    const bool metaBattle=NativeBattleStartPending();const auto battleSource=metaBattle ? pendingNativeBattleSource_->Lock():NativeBattleSource{}; //이미 일반 World여도1ah의같은Source가예약한현재next7을같은분배기로처리한다.
+    const bool metaIdle=next==0 && !world_ && editor_ && editor_->metaWorld && client_.SurfaceStorage()->ownerMode.challenge; //새 상태가 없어도 원문 Poll의 메타 표시/NSInfo 예약은 실제 현재 World에서 소비한다.
+    if (!fort && next!=3 && !(next>=19 && next<=38) && !(next>=39 && next<=42) && !(editor_ && next==4) && !metaIdle && !metaBattle) return; //메타19~38 전체와 next0의 현재 메타 Poll을 같은 장기 분배기에 전달한다.
+    EnsureNativeStateDispatcher();
+    if (fort || next==3) editor_->committed=false;if (metaBattle) { pendingNativeBattleSource_.reset();pendingNativeBattleZone_=0;editor_->state->PollStarting([this,battleSource] { LoadNativeBattleWorldBody(battleSource); }); }else editor_->state->Poll(); //소비한Source를먼저비워동기재진입의새예약을덮어지우지않는다.
     if (next>=39 && next<=42) {
         if (local.State().phase[0]==3 && local.State().next[0]==4) PublishNativeMainMenuState();
         return; // 영상이 살아 있는 State40은 다음 Poll까지 유지하며 메인 메뉴를 먼저 공개하지 않는다.

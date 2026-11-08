@@ -545,7 +545,7 @@ void UberGump::CleanupNativeStateWorld(std::uint32_t reason,std::shared_ptr<Meta
     devices.leaveMetamap=[this] {
         NativeMetaDisplayHooks hooks;hooks.destroy=[this](auto sid,auto flags) {
             auto& session=client_.GameplayGlobals()->RequireSession();if (sid>65535U || sid>=session.Core().pool.Capacity()) throw std::out_of_range("메타 이탈의 실제 DWORD SID 범위");
-            static_cast<void>(session.World().Destroy(o::Sid{static_cast<std::uint16_t>(sid)},flags));
+            const auto runtimePin=client_.GameplayGlobals()->PinCurrentRuntime(session);static_cast<void>(session.World().Destroy(o::Sid{static_cast<std::uint16_t>(sid)},flags)); //각현재Destroy하위만보유하고이후실제Runtime반납전에끝난다.
         };LeaveMetaDisplay(*client_.ChallengeGlobals(),client_.LocalStateGlobals()->MetaZones().records,hooks);
     }; //004795a0의현재CS/존을지우고필요한가상삭제만같은실제World에위임한다.
     CleanupClientStateWorld(reason,{client_,*client_.SurfaceStorage(),*templateStorage_,*rawButtons_->Menus(),client_.WorldAudio()},client_.SurfaceStorage(),devices);
@@ -1709,7 +1709,7 @@ bool UberGump::Input() {
 // 예약 명령은 메시지/입력보다 앞서 실행한다(원본 004b88c0 자리).
 void UberGump::Tick() {
     if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaWorld && editor_->metaWorld->ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive())) return; //재진입 Tick의 State/후속 명령 전체를 현재 수신 뒤 정상 Tick까지 유지한다.
-    const auto action=state_.TakeAfterPoll([this] { if (client_.LocalStateGlobals()->State().next[0]==7 && !pendingMetaBattleSource_.expired()) PollEditorState();else if (!(world_ && world_->Session().PollLocalConnectionState())) PollEditorState(); }); //1ah의같은next7은현재World가있어도외부전체State7로처리하며Poll을두번소비하지않는다. 나머지기존미션/Guide/timeout순서는유지한다.
+    const auto action=state_.TakeAfterPoll([this] { if (client_.LocalStateGlobals()->State().next[0]==7 && NativeBattleStartPending()) PollEditorState();else if (!(world_ && world_->Session().PollLocalConnectionState())) PollEditorState(); }); //1ah의같은next7은현재World가있어도외부전체State7로처리하며Poll을두번소비하지않는다. 나머지기존미션/Guide/timeout순서는유지한다.
     const bool loading = state_.phase == ClientPhase::LoadingMission;
     if (action) Execute(*action);
     else if (!state_.Pending() && loading && world_ && !world_->Connecting() && !(missionRuntime_ && missionRuntime_->guided)) AdvanceBriefing();

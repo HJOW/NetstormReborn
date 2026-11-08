@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1173 현행:** M6-a~k완료.7bh현재CS주소/7ch실제master응답·pending재배치/86h현재Flyer명령과Rain반환/Outpost고유455840 Pre를연결했다. 다음l/m/n이며전체89고정함수와지연큐·JoinTestBattle·debugBurst/World없는자원owner는미완료다. 새MP실행0,허용비MP회귀는[근거](cpp-peer-master-flyer-outpost-integration-20261108.md)에한정한다.
+**1174 현행:** M6-a~k완료를유지하고l1의2·1a·1b/실제Source·현재observer표·State7→8/Editor9인계와7b고정F를부분접합했다. 원문89Native목록중폐기CD검증1을제외한활성대상88이며현재11적용/77잔여·17type이다. 큐미활성/전체l·m·n미완료다. 새MP실행0,허용비MP회귀는[근거](cpp-packet-source-lifetime-20261108.md)에한정한다.
 
 제품 코드/LEFT_JOBS/추적 문서는 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 

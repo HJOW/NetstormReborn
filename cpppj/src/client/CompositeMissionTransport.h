@@ -11,6 +11,10 @@ enum class CompositeTransportRole { InternalMission,Editor,LanHost,LanClient };
 // 동기 API/콜백 중 자기 owner가 사라지지 않게 shared 생성만 허용한다.
 class CompositeMissionTransport final:public std::enable_shared_from_this<CompositeMissionTransport> {
 public:
+    MissionNetwork SharedNetwork(); //실제 같은 TCP/UDP/내부 coordinator만 배송 동안 인계한다.
+    bool OwnsConnection(const o::PacketConnection& connection) const noexcept; //실제 하위 Node 주소만 선택하고 현재 번호는 Source 추정에 쓰지 않는다.
+    void BindMetaSource(const std::shared_ptr<MetaConnectionRuntime>& source); //있는 경우 실제 같은 network의 Meta owner만 weak로 식별한다.
+    std::shared_ptr<MetaConnectionRuntime> MetaSource() const; //선택적 실제 Meta owner이며 없을 때 새 객체를 만들지 않는다.
     // globalsLifetime은 players/server/hooks가 빌리는 Client 물리 전체를 실제로 유지해야 한다.
     static std::shared_ptr<CompositeMissionTransport> Create(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<void> globalsLifetime,MissionNetwork network={});
     ~CompositeMissionTransport(); // backend가 실제 자기 노드/소켓만 반납한다. Player/등록 성공을 합성하지 않는다.
@@ -54,6 +58,7 @@ private:
     std::shared_ptr<void> globalsLifetime_; // Player/server/시계·진단 hooks의 실제 장기 물리를 유지한다.
     std::shared_ptr<o::RawConnectionRegistry> registry_; // 모든 backend와 State가 함께 쓰는 고정 표다.
     std::shared_ptr<o::PacketRegistrationTable> registrations_; // 한 번만 초기화한 실제 전역 등록표다.
+    std::weak_ptr<MetaConnectionRuntime> metaSource_; //network의 선택적 typed owner이며 현재 Session/World를 소유하지 않는다.
     std::shared_ptr<void> inheritedNetwork_; //인계한 전체 메타 callback owner는 실제 backend보다 먼저 반납하지 않는다.
     std::shared_ptr<zacket::LocalMissionTransport> internal_; // 단독/LAN host 자기끝의 실제 내부 listener/client/accepted다.
     std::shared_ptr<EditorLocalTransport> editor_; // Editor 역할에서만 존재하는 실제 unbuffered 내부 owner다.

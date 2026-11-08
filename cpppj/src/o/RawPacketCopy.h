@@ -11,11 +11,13 @@ struct RawPacketCopyResult { //원문 반환 포인터의 NULL과 길이0의 소
     std::shared_ptr<std::vector<std::uint8_t>> allocation; //자동 할당 분기만 갖는 실제 전체 바이트의 소유자다.
 };
 RawPacketCopyResult DuplicateRawPacket(std::span<std::uint8_t> packet,std::int32_t capacity,std::span<std::uint8_t> destination,RawPacketDispatch& dispatch); //NULL 입력은 조기 반환하고 observer(1)→현재 WORD→선택적 할당/작은 용량 거부→앞방향 복사를 수행한다.
+RawPacketCopyResult DuplicateRawPacket(std::span<std::uint8_t> packet,std::int32_t capacity,std::span<std::uint8_t> destination,const PacketRegistrationTable& table); //실제 같은 현재 observer표로만 복제하며 필수 now/record/close hooks의 가짜 장치를 만들지 않는다.
 class RawPacketCopies final { //Client 수명의 실제 복제본과 State+80의 포인터 대용 token을 보관한다.
 public:
     RawPacketCopies()=default; //최초 token1만 준비하며 파일/소켓/할당 패킷은 만들지 않는다.
     RawPacketCopies(const RawPacketCopies&)=delete;RawPacketCopies& operator=(const RawPacketCopies&)=delete; //같은 Native 포인터의 소유권/해제 장부를 복제하지 않는다.
     std::uint32_t Duplicate(std::span<std::uint8_t> packet,RawPacketDispatch& dispatch); //원문4dece0(packet,0,NULL)의 실제 소유 할당만 장부에 넣고 NULL은0으로 반환한다.
+    std::uint32_t Duplicate(std::span<std::uint8_t> packet,const PacketRegistrationTable& table); //같은 observer1/현재WORD/실제할당/소유token 알고리즘의 표 전용 경계다.
     std::uint32_t Adopt(std::vector<std::uint8_t> packet); //이미 소유한 일반 LAN Zone의 같은 byte 할당을 이동하며 새 observer나 내용 복제를 더하지 않는다.
     std::shared_ptr<std::vector<std::uint8_t>> Acquire(std::uint32_t token) const; //현재 token의 같은 전체 바이트를 잠깐 pin한다. 실패를 빈 Zone으로 바꾸지 않는다.
     void Release(std::uint32_t token); //NULL0은 무시하고 현재 token만 반납한다. 다른 State 필드는 호출자가 원문 위치에서 지운다.

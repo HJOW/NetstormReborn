@@ -1,0 +1,230 @@
+{
+  "unit": 1174,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCppCommit": "230528e3 / 20261108-162 CP",
+  "summary": "M6-l1의고정2·1a·1b/실제Source·현재표·State7→8/Editor9인계와7b고정F 부분접합",
+  "builds": [
+    {
+      "suffix": "",
+      "exitCode": 1,
+      "errors": 9,
+      "warnings": 0
+    },
+    {
+      "suffix": "-fix",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "compilerFixes": [
+    "cpppj/src/client/ClientCampaignTransport.cpp",
+    "cpppj/src/client/EditorLocalTransport.cpp",
+    "cpppj/src/client/EditorLocalTransport.h"
+  ],
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13368832,
+      "sha256": "f8aaf91bf207ecdfad8f5e4a55bd2e061f49c08122f221cae28b1e6bd29f34a9"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "f03e5a9b8274b9e01bc82193a215e484a226d4685fe56452448df70e189e8fe6"
+    }
+  },
+  "sourceSha256": {
+    "cpppj/src/client/CampaignTransportServices.cpp": "862d398bea963c30766af2d94b70e3b4a94f44a3c95348ca3cfd42775fd963f1",
+    "cpppj/src/client/ClientCampaignTransport.cpp": "b4d5b8ec679cb2fcc9e34a1219c89d69bdc5eb43ed8c0064388f6d93549ff3b3",
+    "cpppj/src/client/ClientCampaignTransport.h": "f1974e45abd3bb47e30d5234b04b1ed39bf88f1e378a1a246fc78545fdc908e4",
+    "cpppj/src/client/ClientConnectionGlobals.cpp": "7f5747af6ee9a5688048cbb2bd42c9f6afcd87128193617ef3dc3ab13e7b636c",
+    "cpppj/src/client/ClientConnectionGlobals.h": "055834d8b1c8217cde20b6b7b91c552bb047354b932a1330811bbcb09af23b64",
+    "cpppj/src/client/ClientMain.cpp": "365fe0bd3f9b01bf9df2eccd620de86050163b30a4efaf96a4548741ec67ec6b",
+    "cpppj/src/client/ClientMain.h": "cc06272e5aa5fc7e2851417d96e167b6572aac4b26e1b720d904236ee8738866",
+    "cpppj/src/client/ClientPacketSources.cpp": "e818ae01366e2d4e2e2ef09c19f8b41d2a1a0393c332121a5de3102b73bdbf2d",
+    "cpppj/src/client/ClientPacketSources.h": "1228f9d7370f2e3319081f88e3b5918aa352a62c858ec2b46e7d04df9156f401",
+    "cpppj/src/client/CMakeLists.txt": "5aba29f3935fe89e4b6d0fd6fdf512ad3421349563907f48e7af7859d09bce95",
+    "cpppj/src/client/CompositeMissionTransport.cpp": "25b0a5eb0b5b618759037730dd51bf8d3768743fcc0f516452f0e39c97dc868f",
+    "cpppj/src/client/CompositeMissionTransport.h": "8073f73aab52b5277ab111ae587aa17d164ae297839d9f8108eb11f74de06e35",
+    "cpppj/src/client/EditorLocalTransport.cpp": "b2a808fb57459f2a5de654583439cb484f3f7b06b6fd09e8eab3c8e7860e7ec1",
+    "cpppj/src/client/EditorLocalTransport.h": "2e1dfd2f81d0e4bf238fcc3561f5e280b88447cecdc841cb1caef270b64a8b5e",
+    "cpppj/src/client/LocalTcpTransport.cpp": "e61b1007fbd49bc4e031c33290b98fb8d9c35238bffe2f778e4792eeb04b6284",
+    "cpppj/src/client/LocalTcpTransport.h": "bd30d88227f1bfba5f91892ef5ce82dea932a1a8246e5952077ebb6a80628564",
+    "cpppj/src/client/LocalUdpTransport.cpp": "2c1847925462131b07bba9d0bc0090d14c3cdd7a0391ab2e4f86c68cc3c808cb",
+    "cpppj/src/client/LocalUdpTransport.h": "387803c21edee7d1571946c0c91d2b140214bbb6096af86cdb7a1e757d871592",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "07d023bd79925dc37f2e5bf183117285297ab06dbb7ca4a7e3e661b05a1b1953",
+    "cpppj/src/client/MetaConnectionRuntime.h": "5dc059d3ef5695e48678d2ab89130a6483dfdc114a57b0545cfc6caec3681fb5",
+    "cpppj/src/client/MissionFortRequest.h": "c0ca3015d7477972ef5ab98193f792af89f16282dc5a86151a82603bea00abc8",
+    "cpppj/src/client/MissionNetwork.h": "30d08f9e802b851df51e5520802b4618ace977fcfe0b3338bbc4ca6b95c5a01f",
+    "cpppj/src/client/UberEditor.inc": "496f767fabc531215ccce8e16c796914efae46e54664dc183d2d18327dfba8bf",
+    "cpppj/src/client/UberGump.cpp": "4fa82d2bfad3891ada9a6ce716373f1ee7c3321ae2136e4cb98dfc56b2b6f90c",
+    "cpppj/src/client/UberGump.h": "b5a64f2a200f3cfbd01c74cfe653791bfe4c5451cdd58a8e045f6d5c9104338c",
+    "cpppj/src/client/UberLan.inc": "fae5c4b5a8cbed6605b7872ea6cb22aa336061c1a92d9f32d9b12dbee840f08b",
+    "cpppj/src/client/UberMeta.inc": "e1ccea5298952a86126a275ebc03a9bc67fe3889acdf8bdf2988b932d521e134",
+    "cpppj/src/o/PacketRegistrationTable.cpp": "b3fa69eebd6e359f22ce89259e75a62645ff3daa3b495f057f6e04444f675fed",
+    "cpppj/src/o/PacketRegistrationTable.h": "91f52d83d9f665c033daeb6878c495e9f5199ef5afc69c2ebbdb0f1215cf9a82",
+    "cpppj/src/o/RawPacketCopy.cpp": "7af053a5b4ab8daf1c9c21bd694a4cb03f84032d0f05241b20cc5936584d34a6",
+    "cpppj/src/o/RawPacketCopy.h": "70b4de65c7c02b59c7acb74dc0030431966f6f6a5614e84337c2f6a339d1a04b",
+    "cpppj/src/zacket/LocalMissionTransport.cpp": "c3f3d3921dffd9226a151f4a5915f7c6f613793b025875a4f6397e5e07b8c361",
+    "cpppj/src/zacket/LocalMissionTransport.h": "da2daf5cbaf1fac09ab0aec9be95267df8c9a43c5e76d21d47fd54fd95833c2d"
+  },
+  "nativeEvidence": {
+    "extracted/cpp-m6-delayed-prep/l1-bridge/source-route/README.md": "c4440c7488d36314f49a686f4fe0432dc53ae432e0b9e6c0add9b32925d1d1db",
+    "extracted/cpp-m6-delayed-prep/l1-bridge/source-route/native-evidence.json": "d1529f3c9d78fde550dfbadf43bfae588fbff1c89fd41c082fb006b00e86e56f",
+    "extracted/cpp-m6-delayed-prep/l1-bridge/source-route/rebase-1173/merge.json": "7d7cd47ea09f9894946ed65dbc3312f89dc6b5f1d1e419162c55d6bac7a0b59a",
+    "extracted/cpp-m6-client-default-canonical-patch/evidence.json": "0b835d507d51f3cfa17938a3a2e8288467f83103b7e050b9d7cde6d6675e3b6f"
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "live": {
+    "passed": true,
+    "unit": 1174,
+    "mission": "tutorial1",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1174\\live-tutorial1\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "f8aaf91bf207ecdfad8f5e4a55bd2e061f49c08122f221cae28b1e6bd29f34a9",
+    "exeSha256After": "f8aaf91bf207ecdfad8f5e4a55bd2e061f49c08122f221cae28b1e6bd29f34a9",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1174\\live-tutorial1\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1174\\live-tutorial1\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "key",
+        "arg": "f4"
+      },
+      {
+        "op": "click",
+        "arg": "production:82"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "production:82"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,1015,540"
+      },
+      {
+        "op": "click",
+        "arg": "screen:1015,540"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "home",
+      "bridge-instruction-trigger",
+      "bridge-instructions-closed",
+      "bridge-picked",
+      "candidate-east",
+      "before-place",
+      "after-click",
+      "after-place",
+      "settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-place",
+        "after": "after-place",
+        "type": 82,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15003",
+            "82",
+            "1",
+            "35",
+            "63",
+            "49"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입/관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "audit": {
+    "canonicalNativeApplied": 11,
+    "originalNativeInventory": 89,
+    "retiredCdValidationNative": 1,
+    "activeNativeTarget": 88,
+    "activeNativeRemaining": 77,
+    "canonicalTypes": 17,
+    "delayedQueueActivated": false,
+    "completeL": false,
+    "sourceSelectedOnlyAtNativeChild": true,
+    "weakPendingSourceAndActualZoneToken": true,
+    "null1bUsesCurrentActualOrEmptyNetwork": true,
+    "editorActual9AndQueueReused": true,
+    "observerUsesCurrentTableAtCopy": true,
+    "rawObserverSlots": 138,
+    "rawObserverTypeZeroAllowed": true,
+    "noLastRuntimeOrSenderSourceGuess": true,
+    "allPhysicalSourceLifetimeUnified": false
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "multiplayer": 0,
+    "network": 0,
+    "zip": 0,
+    "nonMp": 1
+  },
+  "remaining": {
+    "next": "M6-l잔여수신함수/각연결별큐/실제device수명",
+    "stage3Groups": 3,
+    "worldlessResourceOwner": "미적용n1~n7부분준비본과미완료후속",
+    "m7": 5
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

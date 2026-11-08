@@ -61,6 +61,7 @@ void InstallLocalMissionZone(std::span<const std::uint8_t> zone,std::span<std::u
 // TCP/SPX/OS 소켓 전체를 복원하는 클래스가 아니며 simulconnect 전역을 변경하지 않는다.
 class LocalMissionTransport {
 public:
+    bool OwnsConnection(const o::PacketConnection& connection) const noexcept; //현재 번호 재배치와 별개인 고정 양끝/노드의 실제 물리 주소다.
     // 같은 Player9와 서버 전역/실제 분배 효과를 빌린다. hooks의 모든 경계는 실제 소비자여야 한다.
     LocalMissionTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={},std::shared_ptr<o::PacketRegistrationTable> registrations={});
     ~LocalMissionTransport(); //현재 호스트 수명에서 없어지는 자기 양끝의 남은 별칭/장치를 반납한다.

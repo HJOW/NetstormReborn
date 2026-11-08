@@ -56,6 +56,7 @@
 #include "client/ClientCdGlobals.h"
 #include "client/ClientConnectionActivityGlobals.h"
 #include "client/ClientConnectionGlobals.h"
+#include "o/PacketRegistrationTable.h" //현재observer표의실제판본/수명을Client가보유한다.
 #include "client/ClientFortGlobals.h"
 #include "client/ClientCoreDataGlobals.h"
 #include "client/ClientPlayerRecords.h"
@@ -251,6 +252,7 @@ Client::~Client() {
     nativeStartupComplete_=0; // 호스트 최종 소멸의 부분 반납 뒤 합성 WM_DESTROY가 종료된 메뉴를 다시 정리하지 않게 한다.
     configuration_.onChanged = {}; // 부분 반납 중인 Client를 콜백으로 다시 읽지 않게 먼저 해제한다.
     menu_.reset();
+    nativePacketTable_.reset(); //실제Source/queue/Session반납뒤dataowner를해제하며Kernel/시계/표시자식보다늦게끌고가지않는다.
     titleBitmaps_.reset(); //실패로남은host픽셀도Screen/창반납전에회수하며원문정상free8/깊이감소를합성하지않는다.
     rendererFrame_.reset(); //현재 Frame의 표시 작업 배열/Pool 대여를 화면·원문 물리 소유자보다 먼저 반납한다.
     captureSequence_.reset(); //미완료 수집도 메모리를 반납하며 Stop/파일/새 안내를 강제로 실행하지 않는다.
@@ -1308,6 +1310,9 @@ const std::shared_ptr<ClientCdGlobals>& Client::CdGlobals() const { return cdGlo
 const std::shared_ptr<ClientConnectionActivityGlobals>& Client::ConnectionActivityGlobals() const { return connectionActivityGlobals_; }
 // 같은 현재 표의 소유권만 조회하며 연결 종료·등록·개수 쓰기를 실행하지 않는다.
 const std::shared_ptr<ClientConnectionGlobals>& Client::ConnectionGlobals() const { return connectionGlobals_; }
+void Client::PublishNativePacketTable(std::shared_ptr<o::PacketRegistrationTable> table) { if (!table || table->LastType()!=(Edition()==o::OriginalEdition::Patch1078 ? 137U:126U)) throw std::invalid_argument("현재 Client 패킷표의 실제 판본/owner 불일치");nativePacketTable_=std::move(table); } //새fake표를만들거나현재함수를호출하지않는다.
+const std::shared_ptr<o::PacketRegistrationTable>& Client::NativePacketTable() const { if (!nativePacketTable_) throw std::logic_error("선택한 현재 Client observer 표 미공개");return nativePacketTable_; } //진입불필요한caller에는선행요구하지않는다.
+
 const std::shared_ptr<ClientFortGlobals>& Client::FortGlobals() const { return fortGlobals_; } // 같은 실제 이름/목록의 주소를 유지한다.
 //같은 Client의 현재 Core/캐시 소유자를 조회하며 외부 Player 수명을 변경하지 않는다.
 const std::shared_ptr<ClientCoreDataGlobals>& Client::CoreDataGlobals() const { return coreDataGlobals_; }

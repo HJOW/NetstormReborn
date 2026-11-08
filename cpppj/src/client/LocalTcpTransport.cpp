@@ -20,6 +20,7 @@
 #include <utility>
 
 namespace netstorm::client { // 원문 Ztrans/Zocket의 OS 소켓과 패킷 분배를 명시적으로 나눈다.
+bool LocalTcpTransport::OwnsConnection(const o::PacketConnection& connection) const noexcept { return Find(connection)!=nullptr; } //번호/phase를 Source 정체성으로 대신하지 않는다.
 void LocalTcpTransport::RebindHooks(o::PacketDispatchHooks hooks) { if (!hooks.now || !hooks.record || !hooks.terminate || !hooks.close || !hooks.release) throw std::invalid_argument("TCP 인계의 실제 분배 장치 누락");hooks_=std::move(hooks); } //현재 wrapper가 매 효과에서 새 장치를 읽으며 socket/depth/버퍼는 보존한다.
 namespace { // TCP 주소·원문 비정렬 헤더와 오류 변환만 제공한다.
 constexpr std::size_t kHeader=4,kWireLimit=65535,kPlayerStride=180,kPlayerCount=9; // 원문 헤더/WORD 길이/Player9의 실제 폭이다.

@@ -2,6 +2,7 @@
 #include "client/EditorLocalTransport.h"
 #include "o/PacketRegistrationTable.h" // callback 중 같은 고정 노드를 새 세대로 재생성하지 않는다.
 #include "o/RawConnectionCleanup.h"
+#include <algorithm> //실제buffered바이트를type4프레임으로같은순서에복사한다.
 #include <bit>
 #include <stdexcept>
 #include <utility>
@@ -9,13 +10,14 @@
 namespace netstorm::client { // 로그인 없는 Editor의 원문 전송 수명과 기존 패킷 분배를 조립한다.
 namespace { // 원문의 고정 연결·헤더와 도달한 장치의 유효성만 처리한다.
 constexpr std::uint32_t kInitialFlags=0x24U,kConnecting=0x20U,kClosed=0x40U; //004df2c0 초기값과004dfc00/004df440의 실제 상태 비트다.
+constexpr std::uint32_t kBuffered=2U; //일반부모의실제Assign뒤원문이켜는송신집합비트다.
 constexpr std::size_t kReceiveHeaderSize=4; //004df2c0이ff로채운수신버퍼에서합성type1/2가사용하는헤더폭이다.
 template<class Function> const Function& Need(const Function& function) { // 선택된 외부 장치가 없으면 선행 효과를 보존하며 그 자리에서 중단한다.
     if (!function) throw std::logic_error("Editor 로컬 전송의 실제 장치 누락");return function;
 }
 }
 EditorLocalTransport::EditorLocalTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<o::PacketRegistrationTable> registrations)
-    :hooks_(std::move(hooks)),players_(players),registry_(registry?std::move(registry):std::make_shared<o::RawConnectionRegistry>()),dispatcher_(players_,server,WrappedHooks(),registry_,std::move(registrations)) {
+    :hooks_(std::move(hooks)),serverMode_(server),players_(players),registry_(registry?std::move(registry):std::make_shared<o::RawConnectionRegistry>()),dispatcher_(players_,server,WrappedHooks(),registry_,std::move(registrations)) {
     Need(hooks_.now);Need(hooks_.record);Need(hooks_.terminate);Need(hooks_.close);Need(hooks_.release);
     o::RegisterConnectPacketReceiver(dispatcher_.Dispatch(),registry_); // 로그인 없는 Editor의 실제1번 통지도 같은 장기 버퍼 표를 사용한다.
 }
@@ -70,7 +72,7 @@ void EditorLocalTransport::SocketClosed(o::PacketConnection& connection) {
     if (&connection==&client_) { if (accepted_ && pendingAlive_) pendingPeerLost_=true; }
     else if (&connection==&pending_) { if (clientAlive_) clientPeerLost_=true; }
     else throw std::logic_error("Editor 로컬 전송의 다른 socket 종료");
-    toPending_.clear();toClient_.clear(); //상대socket은0x1000때문에남은프레임을읽지못하고소멸한끝의자체송신버퍼도반납된다.
+    clientOutput_.clear();pendingOutput_.clear();toPending_.clear();toClient_.clear(); //상대socket은0x1000때문에남은프레임을읽지못하고소멸한끝의자체송신버퍼도반납된다.
 }
 std::vector<std::uint8_t>& EditorLocalTransport::ReceiveBuffer(o::PacketConnection& connection) {
     if (&connection==&client_) return clientReceive_;if (&connection==&pending_) return pendingReceive_;
@@ -84,7 +86,8 @@ bool EditorLocalTransport::SendMutable(std::int32_t destination,std::span<std::u
 // 전송 가능 여부를 먼저 판정하며 observer와 peer 소멸/실제 복사의 원문 순서를 유지한다.
 bool EditorLocalTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,o::PacketConnection* direct) {
     if (!direct && (destination< -32 || destination>21)) throw std::out_of_range("Editor 현재 transceiver 번호 범위");
-    const bool client=direct ? direct==&client_ : destination==9,pending=pendingAlive_ && (direct ? direct==&pending_ : destination<0 && destination==std::bit_cast<std::int32_t>(pending_.sender)); // 가상 this와 일반 현재 pending 번호를 구별하고 항상-1로 가정하지 않는다.
+    if (!direct && destination>=1 && destination<9 && !o::PacketPlayerActive(players_,hooks_.players,static_cast<std::uint32_t>(destination))) return false; //일반재배치된owner의동일현재Playergate이며기존Editor9에는영향이없다.
+    const bool client=direct ? direct==&client_ : destination==9,pending=pendingAlive_ && (direct ? direct==&pending_ : destination==std::bit_cast<std::int32_t>(pending_.sender)); // 가상 this와 일반 현재 pending 번호를 구별하고 항상-1로 가정하지 않는다.
     if ((!client && !pending) || !(client ? clientAlive_ : pendingAlive_)) return false;
     auto& connection=client ? client_ : pending_;if (connection.flags&kClosed) return false;
     if (packet.size()<4) throw std::invalid_argument("Editor 송신 실제 헤더4BYTE 부족");
@@ -94,7 +97,8 @@ bool EditorLocalTransport::SendPacket(std::int32_t destination,std::span<const s
     if (PeerLost(connection)) { Terminated(connection);return false; } //004e1c00의실패뒤가상송신은004df9f0을통해상위종료를분배한다.
     const auto length=std::size_t(packet[2])|(std::size_t(packet[3])<<8); //observer가 변경한 현재 원문 선언 길이를 읽는다.
     if (length<4 || length>packet.size()) throw std::out_of_range("Editor 송신 선언 길이의 실제 버퍼 부족");
-    (client ? toPending_ : toClient_).emplace_back(packet.begin(),packet.begin()+static_cast<std::ptrdiff_t>(length));
+    if (connection.flags&kBuffered) { auto& output=client ? clientOutput_:pendingOutput_;if (output.size()+length>65531U) throw std::out_of_range("기존 Editor buffered 송신65535BYTE 물리 범위");output.insert(output.end(),packet.begin(),packet.begin()+static_cast<std::ptrdiff_t>(length)); }
+    else (client ? toPending_ : toClient_).emplace_back(packet.begin(),packet.begin()+static_cast<std::ptrdiff_t>(length)); //실제flag가없는기존Editor경로는원래unbuffered큐그대로다.
     if (hooks_.sent) hooks_.sent(connection,packet,static_cast<std::uint16_t>(std::size_t(packet[2])|(std::size_t(packet[3])<<8))); //같은 실제 내부 가상 송신의 복사 뒤 현재 packet을 방향1로 기록한다.
     return true;
 }
@@ -159,6 +163,16 @@ void EditorLocalTransport::Disconnect(std::int32_t destination) {
 void EditorLocalTransport::CloseListener() { //listener가상소멸도실제장치에전달하며양끝의명시정리는호출자가순서대로한다.
     if (!listenerAlive_) return;listener_.flags|=kClosed;Need(hooks_.close)(listener_);Need(hooks_.release)(listener_);listenerAlive_=false;
 }
+void EditorLocalTransport::RebindHooks(o::PacketDispatchHooks hooks) { if (!hooks.now || !hooks.record || !hooks.terminate || !hooks.close || !hooks.release) throw std::invalid_argument("기존 Editor Source 인계의 실제 장치 누락");hooks_=std::move(hooks); } //현재wrapper는매효과에서새hooks를읽는다.
+void EditorLocalTransport::AssignConnection(std::int32_t pending,std::int32_t owner) {
+    if (!serverMode_ || pending>=0 || owner<1 || owner>8 || Connection(pending)!=&pending_) throw std::logic_error("기존 Editor Source의 실제 pending 재배치 계약 오류");
+    registry_->Assign(pending,owner,serverMode_ ? 1U:0U,[this](auto token) { if (token!=pendingToken_) throw std::logic_error("기존 Editor 재배치의 다른 buffered 노드");pending_.flags|=kBuffered;pendingOutput_.clear(); }); //기존LocalMissionTransport와같은현재노드/백업분기/flag쓰기순서다.
+}
+void EditorLocalTransport::FlushOne(std::int32_t id) {
+    if (id<0 || id>=static_cast<std::int32_t>(o::kTransceiverSlots)) throw std::out_of_range("기존 Editor Source flush 정상 ID 범위");const auto* node=Connection(id);if (!node || (node->flags&kClosed)) return;
+    const bool client=node==&client_;auto& output=client ? clientOutput_:pendingOutput_;if (output.empty()) return;std::vector<std::uint8_t> frame(output.size()+4,std::uint8_t{0xff});frame[1]=4;frame[2]=static_cast<std::uint8_t>(frame.size());frame[3]=static_cast<std::uint8_t>(frame.size()>>8);std::copy(output.begin(),output.end(),frame.begin()+4);output.clear();(client ? toPending_:toClient_).push_back(std::move(frame)); //동기수신없이같은반대큐로확정한다.
+}
+bool EditorLocalTransport::OwnsConnection(const o::PacketConnection& connection) const noexcept { return &connection==&listener_ || &connection==&client_ || &connection==&pending_; } //대기/반납 중에도 동일 물리 장치만 선택한다.
 o::RawPacketDispatch& EditorLocalTransport::Dispatch() { return dispatcher_.Dispatch(); } //기존등록/observer/version표의같은소유자다.
 std::span<const std::uint8_t> EditorLocalTransport::Players() const { return players_; } // 같은 물리 주소/폭만 반환하며 초기화/복사/폴링을 수행하지 않는다.
 o::PacketConnection& EditorLocalTransport::Listener() { return listener_; } //client/accepted끝과다른실제listener의고정주소다.

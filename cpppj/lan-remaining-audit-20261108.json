@@ -593,5 +593,15 @@
     "next": "M6-l/m/n",
     "report": "cpppj/peer-master-flyer-outpost-integration-20261108.json",
     "newMpExecutions": 0
+  },
+  "progress1174": {
+    "canonicalNativeApplied": 11,
+    "originalNativeInventory": 89,
+    "retiredNative": 1,
+    "activeNativeTarget": 88,
+    "delayedQueueActivated": false,
+    "completeL": false,
+    "report": "cpppj/packet-source-lifetime-20261108.json",
+    "newMpExecutions": 0
   }
 }

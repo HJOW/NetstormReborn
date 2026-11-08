@@ -1,6 +1,7 @@
 // 원본 Ubergump.cpp의 메인 메뉴·Tell·미션 진입을 현재 표시 기반과 연결한다.
 #pragma once
 #include "client/DialogExitCommand.h"
+#include "client/ClientPacketSources.h" //현재 실제 Native Source와 next7의 weak 인계값이다.
 #include "client/GumpPointerBoundary.h"
 #include "client/Gump.h"
 #include "client/RawButtonControls.h"
@@ -55,6 +56,8 @@ public:
     ~UberGump();
     // 원본 루프 시작의 State 자리에서 대기 명령을 실행하고 시간 제한을 갱신한다.
     void Tick();
+    NativeBattleSource CurrentNativeBattleSource() const; //현재 실제 Composite/Meta/Editor device만 읽으며 phase 추정/새Source 생성을 하지 않는다.
+    void DispatchNativeBattleStart(NativeBattleSource source,bool direct); //1a는 기존next7에weak로 기억하고1b는같은current7을즉시실행한다.
     void PollMissionPackets(); // 정상 루프의 메시지 처리 전에 실제 로컬 큐를 폴링하고 같은 미션의 접속 완료만 UI에 공개한다. 외부 TCP/IP 폴링을 대신하지 않는다.
     // 원본 루프8번의 Guide 자리다. 현재0..6 단계와 실제 공통 프레임을 입력보다 먼저 실행한다.
     void MissionFrame();
@@ -216,7 +219,7 @@ private:
     std::shared_ptr<CampaignTemplateStorage> templateStorage_; // 이전 Session이 사라져도 같은 Template9를 명시 정리 전까지 보유한다.
     std::shared_ptr<MissionFortLoadRequest> missionFortRequest_; //현재 Guide의 지연 요청이다. Guide/전체 종료에서 반납하며 이전 World의 State 반납은 보존한다.
     std::shared_ptr<GeneralBattleStartRequest> nativeBattleStart_; //대기실 ACK와 별개인 실제 메타 State7의 현재 Zone/설치 요청이다.
-    std::weak_ptr<MetaConnectionRuntime> pendingMetaBattleSource_; //1ah의같은다음7만실제전체Source에연결한다. 전송 owner/새 게임 요청을 소유하거나 만들지 않는다.
+    std::optional<WeakNativeBattleSource> pendingNativeBattleSource_; //1ah의같은다음7만실제전체Source에연결한다. 전송 owner/새 게임 요청을 소유하거나 만들지 않는다.
     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions_{std::make_shared<std::array<std::uint8_t,87>>()}; // 월드보다 오래 사는 실제 Init/로그인 옵션이다.
     std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions_{std::make_shared<std::array<std::uint32_t,256>>()}; // 설치 전/후가 공유하는 기술 허용 표다.
     std::uint32_t missionNumber_{},tutorialSeen_{}; // 실제5ca8e0/f0의 현재 전역이다.
@@ -245,10 +248,13 @@ private:
     void QueueReconnectBattleWorld(); // 원문 next7/문자열40BYTE/복구 표식을 보존해 다음 Tick의 같은 일반 World 설치에 인계한다.
     void LoadLanBattleWorld(); // Client 수명의 State7 공통 부모가 이전/새 World를 끝까지 소유한다.
     void LoadLanBattleWorldBody(); // 실제 cleanup/전투 prefix와 일반 Session 후반을 연결한다.
-    void LoadGeneralBattleWorldBody(const std::shared_ptr<GeneralBattleStartRequest>& request,std::shared_ptr<MetaConnectionRuntime> meta,std::optional<bool> lanHost); //기존 LAN과 메타가 같은 일반 World 본체를 사용하되 메타는 캡처 Zone 유무로 역할을 고른다.
-    void LoadNativeBattleWorldBody(std::shared_ptr<MetaConnectionRuntime> source); //현재7의 실제Source를 받아 같은 Zone/내부·TCP·UDP로 일반 World를 설치한다.
+    void LoadGeneralBattleWorldBody(const std::shared_ptr<GeneralBattleStartRequest>& request,NativeBattleSource source,std::optional<bool> lanHost); //기존 LAN과 메타가 같은 일반 World 본체를 사용하되 메타는 캡처 Zone 유무로 역할을 고른다.
+    void LoadNativeBattleWorldBody(NativeBattleSource source); //현재7의 실제Source를 받아 같은 Zone/내부·TCP·UDP로 일반 World를 설치한다.
+    std::uint32_t pendingNativeBattleZone_{}; //실제 next+80 소유 token으로 예약 출처를 대조하며 phase/성공flag를 만들지 않는다.
+    bool NativeBattleStartPending() const; //현재next7과실제Zone포인터token의동일성을확인하여오래된weak예약을다른요청에사용하지않는다.
+    void EnsureNativeStateDispatcher(); //같은 장기 State 분배기만 준비하며NativeState/접속/성공값은쓰지않는다.
     void RunMetaRequestedState(); //현재7은 같은 분배기의 RunStarting으로 동기 처리하고 다른 요청은 기존 Run으로 전달한다.
-    void RunMetaBattleState(std::shared_ptr<MetaConnectionRuntime> source); //1bh는현재Source/이전World를외곽복귀까지pin하고같은분배기의현재7을동기실행한다.
+    void RunNativeBattleState(NativeBattleSource source); //1bh는실제Source만복귀까지보유하고이전World는원래정리에서반납하여같은현재7을동기실행한다.
     void FinishLanBattleWorld(); // 실제 phase14/Player 참여 뒤에만 사용자 입력·커서·표시를 연다.
     std::uint32_t multiplayerOptionsToken_{}; // 현재 일반 옵션의 실제 Gump token이며 닫힌 창의 serial을 새 창으로 대신하지 않는다.
     std::shared_ptr<const TextClipboard> textClipboard_; //최초 Chat과 뒤 Save as의 두 callback이 같은 OS 장치 수명을 공유한다.

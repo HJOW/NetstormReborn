@@ -14,6 +14,7 @@ namespace netstorm::client { // 원문 Ztrans/Zocket의 OS 경계만 Windows TCP
 // 생성은 소켓을 열지 않는다. Listen/Connect를 명시 호출해야 하며 단독 미션/Edit의 내부 전송을 대체하지 않는다.
 class LocalTcpTransport final {
 public:
+    bool OwnsConnection(const o::PacketConnection& connection) const noexcept; //closed/retired도 외곽 수거 전의 같은 실제 Node 주소로만 식별한다.
     LocalTcpTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={},std::shared_ptr<o::PacketRegistrationTable> registrations={}); // Player9와 현재 서버 권한/실제 진단 장치는 이 owner보다 오래 살아야 한다.
     ~LocalTcpTransport(); // 최종 owner 종료에서 자기 노드의 별칭과 OS 핸들을 반드시 반납한다. 정상 State cleanup은 CloseAll로 요청한다.
     void RebindHooks(o::PacketDispatchHooks hooks); //같은 현재 노드/등록표를 유지하고 새 World의 현재 Player/기록·수명 효과만 연결한다.

@@ -29,6 +29,7 @@ namespace netstorm::o { class RawXlat; } //10.78 다중 번역 장부의 Client 
 #include <vector>
 
 namespace netstorm::o { class RawFortBadgesGlobals; } // Client 수명의 원본 Badges 장부를 고정 주소로 소유한다.
+namespace netstorm::o { class PacketRegistrationTable; } //복제/지연관찰이읽는현재실제Client표의owner다.
 namespace netstorm::client {
 struct StartupFileLocations; // 최초Native파일초기화의선택경로와설정Load까지유지할검색수명이다.
 class UberGump;
@@ -211,7 +212,9 @@ public:
     void DetectIntroAvailability(); //00435de0의 현재 introMovie/파일 존재 조회로 Intro 표시값을 갱신한다. 시작 detect intro에서 한 번 호출한다.
     const std::shared_ptr<ClientCdGlobals>& CdGlobals() const; // CDDir/난수와 별개인 실제00558dd4의 현재 캐시 소유자다.
     const std::shared_ptr<ClientConnectionActivityGlobals>& ConnectionActivityGlobals() const; // 같은 실제 활동 표/Zone DWORD의 고정 주소를 Session에 빌린다.
-    const std::shared_ptr<ClientConnectionGlobals>& ConnectionGlobals() const; //같은 Native 정리 표이며 기존 전송의 실제 등록 연결은 별도다.
+    const std::shared_ptr<ClientConnectionGlobals>& ConnectionGlobals() const;
+    void PublishNativePacketTable(std::shared_ptr<o::PacketRegistrationTable> table); //실제기본등록부모가현재표만공개하며receiver를여기서재분배하지않는다.
+    const std::shared_ptr<o::PacketRegistrationTable>& NativePacketTable() const; //선택된observer호출지점에현재실제표를빌리고필요한caller가값으로보유한다. //같은 Native 정리 표이며 기존 전송의 실제 등록 연결은 별도다.
     const std::shared_ptr<ClientFortGlobals>& FortGlobals() const; // 같은 이름/키/목록 물리를 메뉴/Native 이름 부모에 빌린다.
     const std::shared_ptr<ClientCoreDataGlobals>& CoreDataGlobals() const; //같은 현재 Core 슬롯/캐시를 빌리며 Player 자동 선택이나 해제를 실행하지 않는다.
     const std::shared_ptr<ClientPlayerRecords>& PlayerRecords() const; // 실제 세션이 같은 할당 소유자와 대여 관문을 빌린다.
@@ -353,6 +356,7 @@ private:
     std::shared_ptr<ClientLocalStateGlobals> localStateGlobals_; // Session 소멸/Editor 메뉴 재진입에서 State/기한을 초기화하지 않는 한 소유자다.
     std::shared_ptr<ClientCdGlobals> cdGlobals_; // 최초 BSS0 뒤 Scene/Session 반납으로 지우지 않는 CD 루트 캐시다.
     std::shared_ptr<ClientConnectionActivityGlobals> connectionActivityGlobals_; // 메뉴/Session보다 먼저 구성하고 소비자 반납 뒤까지 두 표와 Zone 값을 보존한다.
+    std::shared_ptr<o::PacketRegistrationTable> nativePacketTable_; //현재실제등록표를Client가소유하며Registry→표→Registry순환을만들지않는다.
     std::shared_ptr<ClientConnectionGlobals> connectionGlobals_; //최초 BSS0 이후 Session 반납으로 암묵 정리하지 않는 실제 고정표 owner다.
     std::shared_ptr<ClientFortGlobals> fortGlobals_; // 모든 메뉴/Session보다 오래 사는 같은 두 이름/목록/dirty 소유자다.
     std::shared_ptr<ClientCoreDataGlobals> coreDataGlobals_; //menu/Session보다 먼저 선언해 소비자 반납 뒤에도 현재/캐시가 살아 있게 한다.

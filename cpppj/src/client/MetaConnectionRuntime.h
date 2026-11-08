@@ -17,6 +17,7 @@ struct NativeMetaSeatHooks; //같은 실제 C프레임/포구 조회 장치의 �
 struct NativeMetaConnectedHooks; //같은28~33 부모에 현재 HTML serial/카메라 장치만 외부에서 공급한다.
 class MetaConnectionRuntime:public std::enable_shared_from_this<MetaConnectionRuntime> { //수신 중 일반 전투가 같은 callback/장치를 끝까지 pin할 수 있다.
 public:
+    bool OwnsConnection(const o::PacketConnection& connection) const noexcept; //같은 실제 TCP/UDP Node의 주소이며 sender/phase로 추정하지 않는다.
     MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo,std::shared_ptr<std::array<std::uint8_t,87>> options,std::function<void()> recreateHud,std::function<void(std::shared_ptr<MetaConnectionRuntime>,bool)> battleState,std::function<void(std::span<std::uint8_t>)> chatReceive); //생성은소켓을열지않고실제전역옵션·CS/NSInfo·전체HUD·전투전환Source·서버페이지41h수신장치를같은수명으로연결한다.
     MetaConnectionRuntime(const MetaConnectionRuntime&)=delete;MetaConnectionRuntime& operator=(const MetaConnectionRuntime&)=delete; //등록된 callback의 주소/실제 socket owner를 복제하지 않는다.
     ~MetaConnectionRuntime(); //Native CloseAll 뒤 남은 자기 노드만 실제 TCP owner가 반납한다.

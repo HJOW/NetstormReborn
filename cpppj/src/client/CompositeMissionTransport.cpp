@@ -1,5 +1,6 @@
 // 전송 별 전체 Poll을 이어 붙이지 않고 현재 전역 ID별 실제 하위 호출만 선택한다.
 #include "client/CompositeMissionTransport.h"
+#include "client/MetaConnectionRuntime.h" //같은 network인지 확인한 typed Meta owner만 weak로 공개한다.
 #include "client/LocalUdpTransport.h" //인계한 실제 UDP12도 같은 coordinator가 소유/폴링한다.
 #include <exception>
 #include <stdexcept>
@@ -12,27 +13,37 @@ std::shared_ptr<CompositeMissionTransport> CompositeMissionTransport::Create(Com
 }
 // 실제 Player9/Server/Registry owner를 확인하고 backend는 같은 표만 빌린다.
 CompositeMissionTransport::CompositeMissionTransport(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<void> globalsLifetime,MissionNetwork network)
-    :role_(role),server_(server),players_(players),dispatchHooks_(hooks),globalsLifetime_(std::move(globalsLifetime)),registry_(std::move(registry)),registrations_(network.tcp ? network.tcp->Dispatch().Registrations():std::make_shared<o::PacketRegistrationTable>(o::OriginalEdition::Patch1078)),inheritedNetwork_(std::move(network.lifetime)),tcp_(std::move(network.tcp)),udp_(std::move(network.udp)) {
+    :role_(role),server_(server),players_(players),dispatchHooks_(hooks),globalsLifetime_(std::move(globalsLifetime)),registry_(std::move(registry)),registrations_(network.tcp ? network.tcp->Dispatch().Registrations():network.editor ? network.editor->Dispatch().Registrations():std::make_shared<o::PacketRegistrationTable>(o::OriginalEdition::Patch1078)),inheritedNetwork_(std::move(network.lifetime)),editor_(std::move(network.editor)),tcp_(std::move(network.tcp)),udp_(std::move(network.udp)) {
     if (!globalsLifetime_ || !registry_ || players.size()!=9U*180U) throw std::invalid_argument("복합 전송의 실제 Client 물리/Registry/Player9 누락");
     if (role_!=CompositeTransportRole::InternalMission && role_!=CompositeTransportRole::Editor && role_!=CompositeTransportRole::LanHost && role_!=CompositeTransportRole::LanClient) throw std::invalid_argument("지원하지 않는 복합 전송 역할");
     if (tcp_ || udp_ || inheritedNetwork_) {
         if (!tcp_ || !udp_ || !inheritedNetwork_ || (role_!=CompositeTransportRole::LanHost && role_!=CompositeTransportRole::LanClient) || tcp_->Registry()!=registry_ || udp_->Registry()!=registry_ || udp_->Registrations()!=registrations_) throw std::invalid_argument("인계한 실제 TCP/UDP/두 표/전체 owner 불일치");
         tcp_->RebindHooks(hooks);udp_->RebindHooks(hooks); //기존 socket/노드/depth/등록표는 그대로 두고 현재 World 장치만 연결한다.
     }
-    if (role_==CompositeTransportRole::Editor) editor_=std::make_shared<EditorLocalTransport>(players,server_,hooks,registry_,registrations_);
+    if (editor_) { if (editor_->Registry()!=registry_ || editor_->Dispatch().Registrations()!=registrations_) throw std::invalid_argument("기존 Editor device의 실제 표/Registry 불일치");editor_->RebindHooks(hooks); } //같은node/queue/depth를현재Client장치에연결한다.
+    if (role_==CompositeTransportRole::Editor) { if (!editor_) editor_=std::make_shared<EditorLocalTransport>(players,server_,hooks,registry_,registrations_); }
     else if (role_!=CompositeTransportRole::LanClient) internal_=std::make_shared<zacket::LocalMissionTransport>(players,server_,hooks,registry_,registrations_);
     if (!tcp_ && (role_==CompositeTransportRole::LanHost || role_==CompositeTransportRole::LanClient)) tcp_=std::make_shared<LocalTcpTransport>(players,server_,std::move(hooks),registry_,registrations_);
 }
 // 노드/OS 핸들 반납은 backend의 같은 Registry 수명 장치가 수행한다.
 CompositeMissionTransport::~CompositeMissionTransport()=default;
+//actual coordinator는 Runtime을 보유하지 않으므로 정상 State7 반납 중에도 같은 node/내부 끝을 인계할 수 있다.
+MissionNetwork CompositeMissionTransport::SharedNetwork() { return {tcp_,udp_,inheritedNetwork_,shared_from_this(),editor_}; }
+bool CompositeMissionTransport::OwnsConnection(const o::PacketConnection& connection) const noexcept { return (tcp_ && tcp_->OwnsConnection(connection)) || (udp_ && udp_->OwnsConnection(connection)) || (internal_ && internal_->OwnsConnection(connection)) || (editor_ && editor_->OwnsConnection(connection)); } //retired Node도 실제 하위 owner가 외곽 수거까지 식별한다.
+void CompositeMissionTransport::BindMetaSource(const std::shared_ptr<MetaConnectionRuntime>& source) { if (source && !SharesNetwork(source->SharedNetwork())) throw std::logic_error("실제 Composite/Meta network 정체성 불일치");metaSource_=source; } //Native 경로에 없는 Meta를 만들거나 추정하지 않는다.
+std::shared_ptr<MetaConnectionRuntime> CompositeMissionTransport::MetaSource() const { return metaSource_.lock(); }
 // 원문 전역 장치의 같은 물리인지 확인하며 이름/현재 phase만으로 동일성을 추정하지 않는다.
-bool CompositeMissionTransport::SharesNetwork(const MissionNetwork& network) const { return tcp_ && udp_ && inheritedNetwork_ && tcp_==network.tcp && udp_==network.udp && inheritedNetwork_==network.lifetime && tcp_->Registry()==registry_ && udp_->Registry()==registry_ && tcp_->Dispatch().Registrations()==registrations_ && udp_->Registrations()==registrations_; }
+bool CompositeMissionTransport::SharesNetwork(const MissionNetwork& network) const {
+    if (network.composite && network.composite.get()!=this) return false;if (!network.composite && !network.tcp && !network.udp && !network.lifetime && !network.editor) return false;
+    return tcp_==network.tcp && udp_==network.udp && inheritedNetwork_==network.lifetime && editor_==network.editor && (!tcp_ || (tcp_->Registry()==registry_ && tcp_->Dispatch().Registrations()==registrations_)) && (!udp_ || (udp_->Registry()==registry_ && udp_->Registrations()==registrations_));
+}
 // 기존 내부0/listener와 정상1..8·TCP9/UDP12가 살아 있으면 같은 주소/큐를 유지한다.
 void CompositeMissionTransport::RebindWorld(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<void> globalsLifetime) {
-    if ((role!=CompositeTransportRole::LanHost && role!=CompositeTransportRole::LanClient) || (role_!=CompositeTransportRole::LanHost && role_!=CompositeTransportRole::LanClient) || !tcp_ || !udp_ || !inheritedNetwork_ || editor_ || &server!=&server_ || players.size()!=9U*180U || !globalsLifetime || !hooks.now || !hooks.record || !hooks.terminate || !hooks.close || !hooks.release) throw std::invalid_argument("재진입의 같은 실제 LAN 장치/Client/World 계약 오류");
+    if ((role!=CompositeTransportRole::LanHost && role!=CompositeTransportRole::LanClient) || &server!=&server_ || players.size()!=9U*180U || !globalsLifetime || !hooks.now || !hooks.record || !hooks.terminate || !hooks.close || !hooks.release) throw std::invalid_argument("재진입의 같은 실제 LAN 장치/Client/World 계약 오류");
     if (ConnectionCallbackActive()) throw std::logic_error("다른 Session 콜백 복귀 전 전송 재인계 금지");
-    tcp_->RebindHooks(hooks);udp_->RebindHooks(hooks);if (internal_) internal_->RebindHooks(hooks);players_=players;dispatchHooks_=hooks;globalsLifetime_=std::move(globalsLifetime);
-    if (role==CompositeTransportRole::LanHost && !internal_) internal_=std::make_shared<zacket::LocalMissionTransport>(players_,server_,hooks,registry_,registrations_);role_=role; //client→host에 필요한 내부 owner만 늦게 만들며 기존 내부 owner를 교체/반납하지 않는다.
+    if (tcp_) tcp_->RebindHooks(hooks);if (udp_) udp_->RebindHooks(hooks);if (internal_) internal_->RebindHooks(hooks);if (editor_) editor_->RebindHooks(hooks);players_=players;dispatchHooks_=hooks;globalsLifetime_=std::move(globalsLifetime);
+    if (!tcp_) tcp_=std::make_shared<LocalTcpTransport>(players_,server_,hooks,registry_,registrations_); //기존 내부 Source도 같은 표/장기 데이터로 TCP 장치만 준비하며 실제 socket은 State8/Serve에서 생성한다.
+    if (role==CompositeTransportRole::LanHost && !internal_) internal_=std::make_shared<zacket::LocalMissionTransport>(players_,server_,hooks,registry_,registrations_);role_=role; //기존 내부/정상 node를 교체하거나 성공/권한을 쓰지 않는다.
 }
 // LAN host도 실제 서버 권한과 준비된 등록만 사용하고 게임 상태를 쓰지 않는다.
 void CompositeMissionTransport::Serve(std::uint32_t port) {
@@ -42,7 +53,7 @@ void CompositeMissionTransport::Serve(std::uint32_t port) {
         ListenLan(port); // State15의 실제 TCP listener 효과를 내부 끝 생성보다 먼저 보존한다. 뒤 할당 실패가 이 성공을 되돌리지 않는다.
         internal_=std::make_shared<zacket::LocalMissionTransport>(players_,server_,dispatchHooks_,registry_,registrations_);role_=CompositeTransportRole::LanHost; // 같은 Client/World/Player/Registry/등록 대여를 유지하며 server/boss/Ready는 쓰지 않는다.
     }
-    if (editor_) { editor_->Open(port);return; }
+    if (role_==CompositeTransportRole::Editor) { editor_->Open(port);return; }
     if (!server_) throw std::logic_error("서버 권한 없는 내부/LAN host listener 요청");
     if (tcp_) ListenLan(port); // 원문 TCP listener를 먼저 만들고 실제 수락은 다음 Poll에 남긴다.
     if (!internal_->IsOpen()) internal_->Open(port,false); //004e2430의 같은 내부 listener도 기존 존재를 유지한다. 뒤 생성 실패가 앞서 열린 TCP를 되돌리지 않는다.
@@ -77,6 +88,7 @@ void CompositeMissionTransport::Assign(std::int32_t pending,std::int32_t owner) 
     const auto pin=shared_from_this();switch (Select(pending)) {
     case Backend::Tcp:tcp_->AssignConnection(pending,owner);return;
     case Backend::Internal:internal_->AssignConnection(pending,owner);return;
+    case Backend::Editor:editor_->AssignConnection(pending,owner);return;
     default:throw std::logic_error("현재 accepted 노드 없는 복합 전송 재배치");
     }
 }
@@ -113,7 +125,8 @@ void CompositeMissionTransport::Flush() {
         switch (Select(id)) {
         case Backend::Tcp:tcp_->FlushOne(id);break;
         case Backend::Internal:internal_->FlushOne(id);break;
-        case Backend::Missing:case Backend::Editor:case Backend::Udp:break; // Editor unbuffered 큐에는 확정 대기 집합이 없고 송신 때 완성 프레임을 이미 보관한다.
+        case Backend::Editor:editor_->FlushOne(id);break;
+        case Backend::Missing:case Backend::Udp:break; // Editor unbuffered 큐에는 확정 대기 집합이 없고 송신 때 완성 프레임을 이미 보관한다.
         default:throw std::logic_error("복합 전송이 소유하지 않은 현재 flush 노드");
         }
     }

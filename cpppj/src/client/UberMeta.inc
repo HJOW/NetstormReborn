@@ -77,7 +77,8 @@ std::uint32_t UberGump::ShowMetaTell(std::string_view section) {
 //실제19의 World 정리 뒤 같은 Client 물리로 메타 연결 owner를 처음 만들고 현재 큰 부모를 분배한다.
 o::LocalMissionParentResult UberGump::InstallMetaConnectionState(std::uint32_t selected) {
     if (!editor_ || world_ || selected<20 || selected>38) throw std::logic_error("World 없는 실제 메타 연결/로그인/감시/검색 부모 계약");
-    if (!editor_->metaTransport) editor_->metaTransport=std::make_shared<MetaConnectionRuntime>(client_,[this](auto text) { static_cast<void>(ShowLoginWaiting(FontBytes(text))); },[this](auto next) { editor_->state->Request(next); },[this] { RunMetaRequestedState(); },[this](auto section) { static_cast<void>(ShowMetaTell(section)); },[this] { rawButtons_->Menus()->RefreshMetaNsInfo(*client_.NsInfoGlobals()); },missionOptions_,[this] { rawButtons_->RecreateUberRoot(); },[this](auto source,bool direct) { if (direct) RunMetaBattleState(std::move(source));else pendingMetaBattleSource_=source; },[this](auto packet) { ReceiveChatMessage(packet); }); //같은87BYTE/NSInfo/HUD와1ah예약·1bh동기의실제전체Source및서버페이지41h의현재HTML수신을결합한다.
+    if (!editor_->metaTransport) editor_->metaTransport=std::make_shared<MetaConnectionRuntime>(client_,[this](auto text) { static_cast<void>(ShowLoginWaiting(FontBytes(text))); },[this](auto next) { editor_->state->Request(next); },[this] { RunMetaRequestedState(); },[this](auto section) { static_cast<void>(ShowMetaTell(section)); },[this] { rawButtons_->Menus()->RefreshMetaNsInfo(*client_.NsInfoGlobals()); },missionOptions_,[this] { rawButtons_->RecreateUberRoot(); },[this](auto source,bool direct) { DispatchNativeBattleStart({source->SharedNetwork(),source,source},direct); },[this](auto packet) { ReceiveChatMessage(packet); }); //같은87BYTE/NSInfo/HUD와1ah예약·1bh동기의실제전체Source및서버페이지41h의현재HTML수신을결합한다.
+    client_.ConnectionGlobals()->PacketSources()->Publish(editor_->metaTransport); //shared 생성이 끝난 실제 Meta만 weak로 공개하며 대기 중 Source pin을 만들지 않는다.
     if (selected>=28 && selected<=33) {
         NativeMetaConnectedHooks ui;ui.tell=[this](auto section) { return ShowMetaTell(section); };ui.modalSerial=[this]()->std::optional<std::uint32_t> { const auto current=rawButtons_->CurrentDialog();if (!current) return {};return rawButtons_->GumpSerial(current); };ui.closeProgress=[this] { rawButtons_->Menus()->CloseMissionLoading(); };
         ui.resetCamera=[this] { if (!editor_->metaWorld) throw std::logic_error("메타 ResetCamera의 실제 Session 없음");auto& session=*editor_->metaWorld;const auto& camera=client_.GameplayGlobals()->Camera();CameraHomeState state;state.width=client_.GetScreen().Width();state.height=client_.GetScreen().Height();state.challengeType=client_.ChallengeGlobals()->ParticipantType();state.worldWidth=camera.Target().limits[0];state.worldHeight=camera.Target().limits[1];session.ResetCamera(state,[&session,&state](auto,auto) { session.CommitRequestedCamera(state.width,state.height); }); }; //4340d0의 현재 TYPE108/Renderer+48,+4c와 같은 로딩 깊이·497f20/497960을 사용한다.
@@ -86,11 +87,21 @@ o::LocalMissionParentResult UberGump::InstallMetaConnectionState(std::uint32_t s
     return editor_->metaTransport->Run(selected);
 }
 
+//getter는 현재 존재하는 실제 장치만 선택하며 이전 World를 호출 전체에 보유하지 않는다.
+NativeBattleSource UberGump::CurrentNativeBattleSource() const {
+    if (world_) { if (const auto transport=world_->Session().SharedConnectionTransport()) return {transport->SharedNetwork(),transport->MetaSource(),transport}; }
+    if (editor_ && editor_->metaTransport) { const auto source=editor_->metaTransport;return {source->SharedNetwork(),source,source}; }
+    if (editor_ && editor_->transport) return {MissionNetwork{{},{},{},{},editor_->transport},{},editor_->transport};return {}; //실제 물리가 없으면 정상 State8이 새로 생성한다.
+}
+void UberGump::DispatchNativeBattleStart(NativeBattleSource source,bool direct) {
+    if (direct) RunNativeBattleState(std::move(source));else { pendingNativeBattleSource_.emplace(source);pendingNativeBattleZone_=client_.LocalStateGlobals()->State().next[32]; } //다음7의실제token과weak소유권만기억하며즉시Run이나성공flag를합성하지않는다.
+}
+bool UberGump::NativeBattleStartPending() const { const auto state=client_.LocalStateGlobals()->State();return state.next[0]==7 && pendingNativeBattleSource_.has_value() && state.next[32]==pendingNativeBattleZone_; } //할당token은재사용하지않으므로예전Source를새Guide/LAN요청으로오인하지않는다.
 // 현재7은 수신 caller의 동기Run이며 다음Tick의 호스트 command를 합성하지 않는다.
-void UberGump::RunMetaRequestedState() { if (client_.LocalStateGlobals()->State().current[0]==7) RunMetaBattleState(editor_->metaTransport);else editor_->state->Run(); }
+void UberGump::RunMetaRequestedState() { if (client_.LocalStateGlobals()->State().current[0]==7) RunNativeBattleState(CurrentNativeBattleSource());else { EnsureNativeStateDispatcher();editor_->state->Run(); } }
 //수신을 보유한 실제 Source만 동기 Run 복귀까지 유지한다. 이전 World는 원래 cleanup에서 실제 반납해야 한다.
-void UberGump::RunMetaBattleState(std::shared_ptr<MetaConnectionRuntime> source) { if (!source || !editor_ || !editor_->state) throw std::logic_error("전투 State7의 실제 Source/분배기 누락");editor_->state->RunStarting([this,source] { LoadNativeBattleWorldBody(source); }); }
+void UberGump::RunNativeBattleState(NativeBattleSource source) { EnsureNativeStateDispatcher();editor_->state->RunStarting([this,source] { LoadNativeBattleWorldBody(source); }); }
 // Native State의 현재 Zone token만 입력으로 사용하며 LAN 대기실 ACK를 요구하지 않는다.
-void UberGump::LoadNativeBattleWorldBody(std::shared_ptr<MetaConnectionRuntime> source) {
-    if (!source) throw std::logic_error("메타 State7의 실제 전송 Source 누락");nativeBattleStart_=std::make_shared<GeneralBattleStartRequest>();nativeBattleStart_->storedZone=true;nativeBattleStart_->textAddress=true;LoadGeneralBattleWorldBody(nativeBattleStart_,std::move(source),std::nullopt);
+void UberGump::LoadNativeBattleWorldBody(NativeBattleSource source) {
+    nativeBattleStart_=std::make_shared<GeneralBattleStartRequest>();nativeBattleStart_->nativeState=true;nativeBattleStart_->textAddress=true;LoadGeneralBattleWorldBody(nativeBattleStart_,std::move(source),std::nullopt);
 }

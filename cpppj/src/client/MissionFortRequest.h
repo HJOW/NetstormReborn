@@ -42,6 +42,7 @@ struct MissionFortLoadRequest {
 };
 // 일반 LAN State7은 미션용86BYTE 생성기를 사용하지 않고 실제 호스트 명단 또는 client의 Zone 부재를 인계한다.
 struct GeneralBattleStartRequest {
+    bool nativeState{}; //원문1a/1b의 동일 State7 요청이며 Source/Zone 유무와 별개로 표시한다.
     bool reconnect{}; // 실제 next+84의 저장 복구 요청이며 새 LAN과 달리 빈 현재 이름도 원문대로 보존한다.
     std::vector<std::uint8_t> zone; // 호스트가 작성한 가변 길이 Zone이며 참가자 기록은 원문71BYTE stride다. client는 비운다.
     bool storedZone{};std::uint32_t zoneToken{}; //장기 ZonePackets를 사용하는 실제 요청인지와 취소 시 반납할 최초 소유 token이다. 설치/해제는 현재 State+80을 각각 다시 읽는다.

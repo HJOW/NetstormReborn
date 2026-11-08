@@ -8,6 +8,7 @@
 namespace netstorm::client { // TCP와 별도 OS 장치를 가지며 같은 Client의 표와 실제 Player를 빌린다.
 class LocalUdpTransport final {
 public:
+    bool OwnsConnection(const o::PacketConnection& connection) const noexcept; //closed/retired도 외곽 수거 전의 같은 실제 Node 주소로만 식별한다.
     LocalUdpTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<o::PacketRegistrationTable> registrations); //생성은소켓을열지않으며같은현재표두개와원문분배효과를필수로받는다.
     ~LocalUdpTransport(); //자기UDP노드/소켓/WSA참조만반납한다.다른backend의현재슬롯을지우지않는다.
     void RebindHooks(o::PacketDispatchHooks hooks); //현재 실제12/등록표를 보존하고 새 World의 장치만 연결한다.
