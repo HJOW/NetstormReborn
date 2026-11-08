@@ -8,6 +8,7 @@ class ClientPacketSources; //실제 장치의 weak Source 경로만 Client 수�
 class ClientLocalStateGlobals; //동기화 DWORD의 실제 Client owner다.
 class ClientConnectionGlobals final:public o::RawConnectionRegistry {
 public:
+    void ShutdownDevices(); //UI/시계/장기데이터를반납하기전실제global Node와listener를명시정리하여Source순환을끊는다.
     std::shared_ptr<ClientPacketSources> PacketSources(); //필요한 최초 등록 시 장기 weak 경로 장부만 만들고 socket/State/Runtime은 생성하지 않는다.
     ClientConnectionGlobals()=default; //새 Client의 원문 고정 배열 수명이다.
     explicit ClientConnectionGlobals(std::shared_ptr<ClientLocalStateGlobals> local); //기존005c8bf4의 같은 주소와 수명을 빌린다.

@@ -153,7 +153,7 @@ LocalTcpTransport::Node& LocalTcpTransport::Adopt(std::uintptr_t socket,std::int
     const CallGuard call(activeCalls_);
     SocketOwner guard{Socket(socket)};auto node=std::make_unique<Node>();node->socket=static_cast<std::uintptr_t>(guard.Release());node->connection.sender=std::bit_cast<std::uint32_t>(id);node->connection.address=address;node->connection.flags=4U|kConnecting|(buffered ? kBuffered:0U);node->connection.received=hooks_.now();node->connection.heartbeat=hooks_.now();node->connecting=connecting;node->connected=!connecting;auto* pointer=node.get();nodes_.push_back(std::move(node));
     try {
-        pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(pointer->connection.sender),packet,packet,&pointer->connection)); },[this,pointer] { return SocketReadiness(*pointer); }); // 같은 실제 socket/가상 this이며 현재 Player/번호 gate를 반복하지 않는다.
+        pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(pointer->connection.sender),packet,packet,&pointer->connection)); },[this,pointer] { return SocketReadiness(*pointer); },[pointer] { pointer->connection.flags|=kBuffered;pointer->wire.clear();pointer->sent=0;pointer->aggregate.clear(); }); // 같은 실제 socket/가상 this이며 현재 Player/번호 gate를 반복하지 않는다.
         if (id<0) pointer->connection.sender=std::bit_cast<std::uint32_t>(registry_->Accept(pointer->token));else if (publishConnect) registry_->PublishConnect(id,pointer->token);else registry_->Register(id,pointer->token);
     } catch (...) { registry_->Forget(pointer->token);nodes_.pop_back();throw; }
     return *pointer;
@@ -199,10 +199,7 @@ void LocalTcpTransport::AssignConnection(std::int32_t pending,std::int32_t owner
 }
 // 7ch의 원문 Native 재배치는 진단 뒤 바뀐 pending/target token을 실제 buffered 위치에서만 선택한다.
 void LocalTcpTransport::AssignConnectionNative(std::int32_t pending,std::int32_t owner,const o::ConnectionRegistryAssertion& assertion) {
-    registry_->AssignNative(pending,owner,server_ ? 1U:0U,[this](auto token) {
-        auto* node=Find(token);if (!node) throw std::logic_error("Native TCP buffered의 현재token에 대한 실제 노드 미연결");
-        node->connection.flags|=kBuffered;node->aggregate.clear(); //004df470의 buffered bit·현재 미확정 버퍼 cursor 초기화를 같은 실제 노드에 적용한다.
-    },assertion);
+    registry_->AssignNative(pending,owner,server_ ? 1U:0U,assertion); //진단뒤실제현재token이바뀌면그node의공통buffered장치를선택하고과거TCP this로고정하지않는다.
 }
 // listener의 accept 성공 때만 고정 노드와 음수 pending을 만든다.
 void LocalTcpTransport::Accept() {

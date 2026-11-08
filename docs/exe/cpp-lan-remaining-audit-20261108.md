@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1177 현행:** M6-a~k완료·14태그/무태그74를유지하고n8b의현재헤더/14concretewriter·같은2048mutable예약/실제송신·장기observer3개와NativePath4895b0추가본문을접합했다. 전체Host/자원파생/NoWorld caller·l/n/큐는미완료다. 새MP실행0, 빌드/허용3비MP근거는 [현행보고](cpp-process-form-native-writers-20261108.md)에한정한다.
+**1178 현행:** M6-a~k 완료를 유지하고7ch 장기F/실제 Registry 호출범위·등록Node owner/App최종반납을 부분접합했다.15태그/무태그73은 전scope완료수가 아니다. 전역리스너/같은표/Poll·직접송신/Fail/Notify/Node큐·전체Host/자원파생/NoWorld caller·l/n/큐는 미완료다. 새MP실행0, 빌드/허용T1 근거는 [현행보고](cpp-registry-device-lifetime-20261108.md)에 한정한다.
 
 제품 코드/LEFT_JOBS/추적 문서는 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 

@@ -252,6 +252,7 @@ Client::Client(ClientOptions options)
 Client::~Client() {
     nativeStartupComplete_=0; // 호스트 최종 소멸의 부분 반납 뒤 합성 WM_DESTROY가 종료된 메뉴를 다시 정리하지 않게 한다.
     configuration_.onChanged = {}; // 부분 반납 중인 Client를 콜백으로 다시 읽지 않게 먼저 해제한다.
+    connectionGlobals_->ShutdownDevices(); //최종App경계에서actual Node/Source순환을먼저끊는다.NativeState7/19의부분정리로대체하지않는다.
     menu_.reset();
     nativePacketTable_.reset(); //실제Source/queue/Session반납뒤dataowner를해제하며Kernel/시계/표시자식보다늦게끌고가지않는다.
     titleBitmaps_.reset(); //실패로남은host픽셀도Screen/창반납전에회수하며원문정상free8/깊이감소를합성하지않는다.

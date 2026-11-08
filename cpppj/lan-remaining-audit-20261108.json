@@ -647,5 +647,17 @@
     "queueActivated": false,
     "m6nComplete": false,
     "newMpExecutions": 0
+  },
+  "progress1178": {
+    "report": "cpppj/registry-device-lifetime-20261108.json",
+    "canonicalTags": 15,
+    "untagged": 73,
+    "tagIsNotFullScopeCompletion": true,
+    "registryCurrentAndRegisteredOwner": true,
+    "nodeAppShutdown": true,
+    "listenerTablePollComplete": false,
+    "queueActivated": false,
+    "m6lComplete": false,
+    "newMpExecutions": 0
   }
 }

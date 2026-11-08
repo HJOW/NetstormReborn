@@ -118,7 +118,7 @@ std::uint32_t LocalMissionTransport::Token(const o::PacketConnection& connection
 std::uint32_t LocalMissionTransport::Track(o::PacketConnection& connection) {
     auto* node=&connection;return registry_->Track(connection,[this,node] {
         hooks_.close(*node);if (node==&client_) { serverPeerLost_=true;clientOutput_.clear(); }else { clientPeerLost_=true;serverOutput_.clear(); }toServer_.clear();toClient_.clear();
-    },[this,node] { const bool client=node==&client_;hooks_.release(*node);if (client) clientPresent_=false;else { serverPresent_=false;pending_=false;owner_=0; } },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); },[this,node] { return (node==&client_ ? clientPresent_ && !clientPeerLost_ : serverPresent_ && !serverPeerLost_) ? 1:0; }); // 같은 실제 내부 socket/가상 this를 ID 재선택/Player 재검사 없이 사용한다.
+    },[this,node] { const bool client=node==&client_;hooks_.release(*node);if (client) clientPresent_=false;else { serverPresent_=false;pending_=false;owner_=0; } },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); },[this,node] { return (node==&client_ ? clientPresent_ && !clientPeerLost_ : serverPresent_ && !serverPeerLost_) ? 1:0; },[this,node] { node->flags|=2U;if (node==&server_) serverBuffered_=true;(node==&client_ ? clientOutput_:serverOutput_).clear(); }); // 같은 실제 내부 socket/가상 this를 ID 재선택/Player 재검사 없이 사용한다.
 }
 // 실제 RawPacketDispatch와 집합 분배가 같은 노드/수명 장치를 사용한다.
 o::PacketDispatchHooks LocalMissionTransport::WrappedHooks() {
@@ -165,7 +165,7 @@ void LocalMissionTransport::AcceptPending() {
 }
 // 같은 실제 pending 객체의 sender/등록 위치만 바꾼다. 새 연결이나 연결 성공 flag를 합성하지 않는다.
 void LocalMissionTransport::AssignConnection(std::int32_t pending,std::int32_t owner) {
-    if (!serverMode_ || !open_ || !pending_ || pending!=pendingId_ || owner<1 || owner>=static_cast<std::int32_t>(kPlayers) || owner_)
+    if (!serverMode_ || !open_ || !pending_ || pending!=pendingId_ || owner<1 || owner>=static_cast<std::int32_t>(kPlayers) || Owner() || Connection(pending)!=&server_)
         throw std::logic_error("로컬 실제 pending-1 재배치 계약 오류");
     registry_->Assign(pending,owner,serverMode_?1U:0U,[this](auto token) { if (token!=serverToken_) throw std::logic_error("현재 로컬 재배치의 다른 buffered 연결");server_.flags|=2;serverBuffered_=true;serverOutput_.clear(); });owner_=static_cast<std::uint32_t>(owner);pending_=false;
 }
@@ -181,9 +181,10 @@ const std::shared_ptr<o::RawConnectionRegistry>& LocalMissionTransport::Registry
 bool LocalMissionTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,o::PacketConnection* direct) {
     if (!open_) throw std::logic_error("로컬 전송 연결을 열기 전 송신");
     if (packet.size()>=kHeader && IsRetiredCdValidationPacket(packet[1])) return false; // 폐기된 파일 검증은 observer/송신 큐까지 전달하지 않는다.
-    if ((direct ? direct==&client_ : destination==9) && (!clientPresent_ || !(client_.flags&2U) || (client_.flags&0x40U) || clientPeerLost_)) return false; //현재 실제 Client9/반대 끝 수명을 사용한다.
+    auto* selected=direct ? direct:(destination>-static_cast<std::int32_t>(o::kPendingConnectionSlots) && destination<static_cast<std::int32_t>(o::kTransceiverSlots) ? Connection(destination):nullptr);const bool client=selected==&client_; //Native전역재배치뒤에도host캐시대신현재Registry node를선택하며독립입력의범위밖자연false를보존한다.
+    if (client && (!clientPresent_ || !(client_.flags&2U) || (client_.flags&0x40U) || clientPeerLost_)) return false; //현재 실제 Client9/반대 끝 수명을 사용한다.
     if (!direct && destination>=1 && destination<static_cast<std::int32_t>(kPlayers) && !o::PacketPlayerActive(players_,hooks_.players,static_cast<std::uint32_t>(destination))) return false;
-    const bool client=direct ? direct==&client_ : destination==9,server=serverPresent_ && !serverPeerLost_ && !(server_.flags&0x40U) && (direct ? direct==&server_ : (destination==pendingId_ && pending_) || (destination>=1 && static_cast<std::uint32_t>(destination)==owner_));
+    const bool server=serverPresent_ && !serverPeerLost_ && !(server_.flags&0x40U) && selected==&server_; //같은물리server끝이현재양수/음수어느칸에있어도숫자캐시로바꾸지않는다.
     if (!client && !server) return false;if (packet.size()<4) throw std::out_of_range("로컬 송신 헤더 부족");const auto registration=dispatch_.Registration(packet[1]);const auto sessionPin=registration.Pin(); // observer 뒤 caller의 실제 패킷 저장소까지 송신 복귀 동안 유지한다.
     if (!writable.empty()) registration.NotifyObserver(writable,1);
     if ((!direct && !Connection(destination)) || (client ? !clientPresent_ || (client_.flags&0x40U) || clientPeerLost_ : !serverPresent_ || (server_.flags&0x40U) || serverPeerLost_)) return false; // 직접 this는 ID 재배치와 구별하며 실제 노드 반납/peer 상실은 같은 수명으로 확인한다.
@@ -283,7 +284,7 @@ bool LocalMissionTransport::IsOpen() const { return open_; }
 // 실제 Client9 생성 완료만 조회하므로 flags2/종료flag/서버 열림을 객체 존재로 오해하지 않는다.
 bool LocalMissionTransport::HasClientConnection() const { return clientPresent_; }
 // 현재 pending이 실제 owner로 옮겨졌는지 반환한다.
-std::uint32_t LocalMissionTransport::Owner() const { return owner_; }
+std::uint32_t LocalMissionTransport::Owner() const { const auto owner=server_.sender;return serverPresent_ && owner>0 && owner<kPlayers && o::CurrentTransportToken(*registry_,static_cast<std::int32_t>(owner))==serverToken_ ? owner:0U; } //실제현재양수칸과같은node.sender만읽으며별도성공owner를합성하지않는다.
 // 상대가 실제로 받을 수 있게 flush된 프레임 수다.
 std::size_t LocalMissionTransport::QueuedFrames() const { return toServer_.size()+toClient_.size(); }
 }

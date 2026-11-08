@@ -29,10 +29,12 @@ public:
     void Publish(const std::shared_ptr<MetaConnectionRuntime>& source); //make_shared 완료 뒤 실제 Meta와 같은 TCP/UDP의 경로만 공개한다.
     void Publish(const std::shared_ptr<CompositeMissionTransport>& source); //현재 실제 Composite/내부 device 경로를 공개한다.
     void Publish(const std::shared_ptr<EditorLocalTransport>& source); //기존 Editor device는 일반 MissionNetwork를 갖지 않아도 배송 수명은 보유한다.
+    void Shutdown(const std::function<void()>& closeNodes); //App최종Node반납뒤실제Source/listener를동기정리한다.Native상태정리부모에는사용하지않는다.
     std::optional<NativeBattleSource> Resolve(const o::PacketConnection& connection) const; //sender/phase 대신 실제 동일 node 주소가 속한 device만 선택한다.
 private:
     struct Route {
         std::weak_ptr<void> device; //오래된 경로를 정리할 수 있는 실제 device의 weak 정체성이다.
+        std::function<void()> shutdown; //실제같은Meta/Composite/Editor를닫는App장치이며weak로만보관한다.
         std::function<std::optional<NativeBattleSource>(const o::PacketConnection&)> select; //동일 node가 맞을 때만 실제 장기 전송값을 배송 scope에 반환한다.
     };
     void Add(Route route); //이미 종료된 weak 경로만 버리고 새 실제 경로를 마지막에 공개한다.

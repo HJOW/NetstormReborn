@@ -1,5 +1,7 @@
 // 지난 Login의 raw this를 장기 backend에 저장하지 않고 실제 현재 World와 장기 전역을 빌린다.
 #include "client/ClientCampaignTransport.h"
+#include "client/CurrentAllocationBytes.h" //7ch응답의미작성stacktail은기존실제할당입력을유지한다.
+#include "client/NativeMetaConnectedState.h" //현재CS의같은master검색을공유한다.
 #include "client/ClientPacketSources.h" //actual device/network는 배송 지점에서만 선택한다.
 #include "client/UberGump.h" //현재 실제 UI 분배기의 같은 State7 부모만 호출한다.
 #include "o/PacketRegistrationTable.h" //Zone 복제는 실제 현재 observer 표만 읽는다.
@@ -111,6 +113,11 @@ void ObserveClientPacketDefault(std::uint32_t type,std::span<std::uint8_t> packe
     default:throw std::invalid_argument("Client 기본 표의 미등록 mutable 관찰기 종류");
     }
 }
+//원문지정폭의현재BYTE만순서대로쓰고다른header/payloadtail을초기화하지않는다.
+void PutClientNativeMeta(std::span<std::uint8_t> bytes,std::size_t at,std::uint32_t value,std::size_t width=4) {
+    if (at>bytes.size() || width>bytes.size()-at) throw std::out_of_range("Client Native메타쓰기물리부족");
+    for (std::size_t byte=0;byte<width;++byte) bytes[at+byte]=static_cast<std::uint8_t>(value>>(8*byte)); //선택된폭의낮은BYTE부터같은현재버퍼에쓴다.
+}
 // Player/서버 권한/시계의 실제 소유권만 묶고 현재 World는 약하게 참조하게 한다.
 struct TransportGlobals {
     std::shared_ptr<ClientPlayerRecords> players; // backend가 읽는 같은 Player1620BYTE 할당의 소유자다.
@@ -218,7 +225,37 @@ void InstallClientMetaDescriptionReceiver(Client& client,o::RawPacketDispatch& d
         if (!challenge->Current()) return;ReceiveNativeMetaBattleDescription(*challenge,packet,MakeClientMetaBattleDescriptionHooks(*client));
     });
 }
+//4b2c00의현재자기CS기록을먼저캡처하고flags쓰기뒤전역11의실제가상송신만선택한다.
+void NotifyClientMetaMaster(Client& client) {
+    const auto own=client.ChallengeGlobals()->Participant(client.GameplayGlobals()->player.battleOwner);std::array<std::uint8_t,12> packet;packet[0]=1;packet[1]=0x1f;packet[2]=12;packet[3]=0;
+    PutClientNativeMeta(packet,4,client.CurrentSubscriber());const auto flags=ReadClientPacketDefault(own,0x64,4)|0x2000U;PutClientNativeMeta(own,0x64,flags);PutClientNativeMeta(packet,8,flags);
+    const auto storage=client.SurfaceStorage();static_cast<void>(client.ConnectionGlobals()->SendMutableNative(11,packet,client.PlayerRecords()->Records(),[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); })); //Source는실제11송신Binding선택뒤에만pin한다.
+}
+//7ch는원문status각분기에서선택한현재CS/Registry만쓰고Meta/Session을앞에서요구하지않는다.
+void ReceiveClientMetaGameLogin(Client& client,std::uint32_t sender,std::span<const std::uint8_t> packet) {
+    const auto status=ReadClientPacketDefault(packet,4,4);
+    if (status==0) {
+        auto& challenge=*client.ChallengeGlobals();bool accepted=false;const auto master=FindMetaBattleMaster(challenge,client.GameplayGlobals()->player.battleOwner);
+        if (std::bit_cast<std::uint32_t>(master)==client.GameplayGlobals()->player.battleOwner) {
+            const auto record=challenge.Participant(ReadClientPacketDefault(packet,12,4));const auto subscriber=ReadClientPacketDefault(record,4,4);
+            if (subscriber==ReadClientPacketDefault(packet,16,4)) { const auto battle=ReadClientPacketDefault(record,0xa4,4);if (battle==ReadClientPacketDefault(packet,20,4)) { const auto seat=ReadClientPacketDefault(record,0xa8,4);if (seat==ReadClientPacketDefault(packet,24,4)) accepted=true; } }
+        }
+        std::array<std::uint8_t,28> reply;CurrentAllocationBytes(reply);reply[0]=1;reply[1]=0x7c;reply[2]=28;reply[3]=0;PutClientNativeMeta(reply,4,accepted ? 1U:2U);PutClientNativeMeta(reply,8,client.CurrentSubscriber());
+        const auto storage=client.SurfaceStorage();const auto assertion=[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); };const auto registry=client.ConnectionGlobals();const auto pending=std::bit_cast<std::int32_t>(sender);
+        static_cast<void>(registry->SendMutableNative(pending,reply,client.PlayerRecords()->Records(),assertion));if (!accepted) return;
+        const auto disconnectTarget=std::bit_cast<std::int32_t>(ReadClientPacketDefault(packet,24,4)+1U);registry->DisconnectNative(disconnectTarget,assertion);client.GameplayGlobals()->Server()=true;
+        const auto assignTarget=std::bit_cast<std::int32_t>(ReadClientPacketDefault(packet,24,4)+1U);registry->AssignNative(pending,assignTarget,client.GameplayGlobals()->Server() ? 1U:0U,assertion);client.GameplayGlobals()->Server()=false;return; //정상뒤0이며예외때이전서버값으로RAII복원하지않는다.
+    }
+    if (status==1) { auto& challenge=*client.ChallengeGlobals();const auto master=FindMetaBattleMaster(challenge,client.GameplayGlobals()->player.battleOwner);if (master<0) return;const auto subscriber=ReadClientPacketDefault(challenge.Participant(std::bit_cast<std::uint32_t>(master)),4,4);if (subscriber==ReadClientPacketDefault(packet,8,4)) NotifyClientMetaMaster(client);return; }
+    client.LocalStateGlobals()->CachedPeerIndex()=0xffffffffU; //그외는현재캐시한DWORD만쓰고CS/Source/Session을읽지않는다.
+}
+//실제앱전역metadata/고정F를장기Client기본표에설치하고직접Meta호출도동일본문을공유한다.
+void InstallClientMetaGameLoginReceiver(Client& client,o::RawPacketDispatch& dispatch) {
+    dispatch.Observe(0x7c,[](std::uint32_t) {});dispatch.Version(0x7c,1,0);dispatch.RequireLength(0x7c,28);
+    dispatch.RegisterCanonicalDirect(0x7c,0x004b2cc0U,[client=&client](auto sender,auto*,auto packet) { ReceiveClientMetaGameLogin(*client,sender,packet); }); //NULLconnection/현재phase/known/CS0을선행검사하지않는다.
+}
 void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) {
+    InstallClientMetaGameLoginReceiver(client,dispatch); //Meta/일반/Editor및Session반납뒤에도같은전역F와비NULL40b380을보존한다.
     InstallClientMetaDescriptionReceiver(client,dispatch); //Meta/일반/Editor의같은장기기본F이며Session반납뒤에도유지한다.
     InstallClientMetaGlobalReceivers(client,dispatch); //원문 앱 전역F이므로 Meta 생성 전후/일반/Editor에 같은 baseline이 남는다.
     InstallClientConnectionEndedReceiver(client,dispatch); //Editor도 같은 전역2번 F를 Session 등록 전에 보유한다.

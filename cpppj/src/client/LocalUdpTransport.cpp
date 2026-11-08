@@ -53,6 +53,7 @@ struct LocalUdpTransport::Node {
     o::PacketConnection connection; //같은sender12/깊이/주소/닫힘을실제분배기가읽고쓴다.
     std::array<std::uint8_t,kCapacity> input; //Native초기ff뒤수신이덮은BYTE만다음오류통지에서도유지한다.
     std::uintptr_t socket{kInvalidSocket};std::uint32_t token{}; //실제소켓과현재Registry숫자식별자다.
+    std::uint32_t sendCursor{},sendFlushed{}; //4df2c0의UDP sendBuffer=NULL/+68/+6c=0이며4df470뒤논리주소4/0을보존한다.할당된빈버퍼로가장하지않는다.
     bool retired{}; //실제반납완료와아직생존하는callback물리를구별한다.
     Node() { input.fill(0xff); } //004df2c0의수신버퍼전체ff초기화를새할당에서만수행한다.
     ~Node() { if (socket!=kInvalidSocket) closesocket(Socket(socket)); } //최종owner/등록실패의남은핸들만반납한다.
@@ -82,7 +83,7 @@ bool LocalUdpTransport::Open(std::uint32_t port) {
     if (setsockopt(socket.socket,SOL_SOCKET,SO_BROADCAST,reinterpret_cast<const char*>(&enabled),sizeof(enabled))==SOCKET_ERROR || setsockopt(socket.socket,SOL_SOCKET,SO_REUSEADDR,reinterpret_cast<const char*>(&enabled),sizeof(enabled))==SOCKET_ERROR) { lastError_=WSAGetLastError();return failed(); }
     if (bind(socket.socket,reinterpret_cast<const sockaddr*>(&bindAddress),sizeof(bindAddress))==SOCKET_ERROR && (setsockopt(socket.socket,SOL_SOCKET,SO_REUSEADDR,reinterpret_cast<const char*>(&enabled),sizeof(enabled))==SOCKET_ERROR || bind(socket.socket,reinterpret_cast<const sockaddr*>(&bindAddress),sizeof(bindAddress))==SOCKET_ERROR)) { lastError_=WSAGetLastError();return failed(); } //첫bind실패뒤원문의reuse설정/재시도도보존한다.
     auto node=std::make_unique<Node>();node->socket=static_cast<std::uintptr_t>(socket.Release());node->connection.sender=12;node->connection.flags=4U|0x20U;node->connection.received=hooks_.now();node->connection.heartbeat=hooks_.now();auto* pointer=node.get();nodes_.push_back(std::move(node));
-    try { pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendNode(*pointer,packet,packet,std::nullopt)); },[] { return 0; });registry_->PublishConnect(12,pointer->token); } //실제Registry의close/free호출중에도물리노드를보존한다.UDP004e1800의현재값은0이다.
+    try { pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendNode(*pointer,packet,packet,std::nullopt)); },[] { return 0; },[pointer] { pointer->connection.flags|=2U;pointer->sendFlushed=0;pointer->sendCursor=4; });registry_->PublishConnect(12,pointer->token); } //실제Registry의close/free호출중에도물리노드를보존한다.UDP004e1800의현재값은0이다.
     catch (...) { registry_->Forget(pointer->token);nodes_.pop_back();throw; }return true;
 }
 void LocalUdpTransport::Close() { registry_->Disconnect(12); } //깊이1의같은수신노드는슬롯0뒤에도분배종료까지물리를보존한다.

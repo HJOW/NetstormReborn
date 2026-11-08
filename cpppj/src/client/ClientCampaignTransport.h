@@ -10,6 +10,10 @@ class Client;class GameWorld; // 현재 장기 물리와 실제 Session/표시 �
 void InstallClientMissionSendObservers(Client& client,o::RawPacketDispatch& dispatch);
 //004b4160의 같은 로그/Config/번역 Tell 경계를 Meta와 장기 기본1dh에서 공유한다.
 bool CheckClientMetaVersion(Client& client,const std::function<void(std::string_view)>& tell,std::uint32_t major,std::uint32_t minor);
+//4b2c00/4b2cc0의실제현재CS/전역송신·재배치를장기Client본문으로공유한다.
+void NotifyClientMetaMaster(Client& client);
+void ReceiveClientMetaGameLogin(Client& client,std::uint32_t sender,std::span<const std::uint8_t> packet);
+void InstallClientMetaGameLoginReceiver(Client& client,o::RawPacketDispatch& dispatch); //7ch의고정F와원문metadata를모든Client기본표에설치한다.
 //0fh의 기존 순수 본문과 실제 선택된 marker 삭제를 현재 Client 장기 데이터로 공유한다.
 void ReceiveClientRootReply(Client& client,std::span<const std::uint8_t> packet);
 //71h의CS0관문/장기observer/고정F를모든Client기본표에설치한다.

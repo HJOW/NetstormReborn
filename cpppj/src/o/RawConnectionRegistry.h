@@ -17,11 +17,12 @@ public:
     RawConnectionRegistry& operator=(const RawConnectionRegistry&)=delete; //생존 숫자 토큰을 다른 표로 덮지 않는다.
     RawConnectionRegistry(RawConnectionRegistry&&)=delete; //빌린 고정표 주소를 이동하지 않는다.
     RawConnectionRegistry& operator=(RawConnectionRegistry&&)=delete; //현재 연결/장치의 주소 수명을 유지한다.
+    void BindDevicePin(std::function<std::shared_ptr<void>(const PacketConnection&)> pin,bool retainNodes=false); //실제Client만현재선택node의물리device를호출동안보유한다.빈장치는기존typed/R호환이다.
     void BindSynchronization(std::uint32_t& value,std::shared_ptr<void> lifetime={}); //실제005c8bf4와 그 owner를 빌리며 현재 값은 쓰지 않는다.
     ConnectionCleanupGlobals Cleanup(); //같은 현재 동기화 토큰을 포함한 실제 표의 뷰다.
     ConnectionCleanupGlobals Cleanup(std::uint32_t& synchronization); //기존 직접 owner 검사는 동일 표에 명시 동기화를 빌릴 수 있다.
     std::uint32_t Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release,
-        std::function<void(std::span<std::uint8_t>)> send={},std::function<std::int32_t()> readiness={}); // 실제 노드/수명/가상 송신과 같은 socket 준비 조회를 묶는다. 기존 수명 전용 호출은 미선택 장치를 요구하지 않는다.
+        std::function<void(std::span<std::uint8_t>)> send={},std::function<std::int32_t()> readiness={},std::function<void()> buffered={}); // 실제 노드/수명/가상 송신과 같은 socket 준비 조회를 묶는다. 기존 수명 전용 호출은 미선택 장치를 요구하지 않는다.
     std::int32_t SocketReadiness(std::uint32_t token) const; //004e1800의 실제 socket 장치를 token으로 조회하며 Player/Packet flags로 대체하지 않는다.
     bool SendMutable(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players) const; //004e2dc0의현재슬롯/Playerflag1/NULL관문뒤같은가상송신장치를호출한다.반환은장치호출여부이며전달성공값이아니다.
     bool SendMutableNative(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players,const ConnectionRegistryAssertion& assertion) const; //004e2dc0의1e 진단 복귀 뒤 현재 실제 슬롯만 접근하며 새 pending/Player 조건을 넣지 않는다.
@@ -38,6 +39,8 @@ public:
     bool CanAccept() const; //004e02d0의 현재 개수<31 관문이며 슬롯을 새로 지우지 않는다.
     void Assign(std::int32_t pending,std::int32_t target,std::uint32_t server,std::function<void(std::uint32_t)> buffered); //004e27b0 전체 현재 재배치를 실행한다.
     void AssignNative(std::int32_t pending,std::int32_t target,std::uint32_t server,std::function<void(std::uint32_t)> buffered,const ConnectionRegistryAssertion& assertion); //원문b0/b3/b6/bb 진단 뒤 현재 pending/target token을 다시 읽는 실제 Native 경로다.
+    void AssignNative(std::int32_t pending,std::int32_t target,std::uint32_t server,const ConnectionRegistryAssertion& assertion); //진단뒤현재token의공통buffered장치를Binding에서선택하는실제Client입구다.
+    void SetBufferedNative(std::uint32_t token) const; //4df470(this,1)의flags2/현재송신커서초기화를같은실제노드에서실행한다.
     void Destroy(std::uint32_t token); //현재 노드의 실제 소멸 장치만 호출한다.
     void Release(std::uint32_t token); //실제 free 성공 뒤 주소 장치를 반납하고 일반 분배의 현재 별칭도 해제한다.
     void Disconnect(std::int32_t id); //457의 원문 개별 종료를 같은 실제 표/장치에 실행한다.
@@ -45,19 +48,28 @@ public:
     void CloseAll(); //457의 양수22칸 정리이며 버퍼/pending 전체 정리를 추가하지 않는다.
     void EndPlayers(std::uint32_t server); //원문 server 관문과 owner1..8 종료다.
     void ClosePending(); //원문32pending 정리이며 개수를 임의 재계산하지 않는다.
+    void ShutdownTrackedDevices(); //App최종종료전용이다.Native기존부모의표쓰기를마친뒤잔류Node/초기packet을명시반납한다.
     void Forget(std::uint32_t token); //호스트 owner 최종 소멸에서 같은 남은 별칭/장치만 반납한다. Native 전체 정리의 대체가 아니다.
 private:
     struct Binding {
         PacketConnection* node{}; //실제 전송이 소유하는 동일 고정 주소다.
         std::function<void()> destroy,release; //현재 노드의 실제 close/free이며 callback 뒤 표를 다시 읽는다.
         std::function<void(std::span<std::uint8_t>)> send; //실제전송owner의같은mutable observer/큐이며그노드의반납과함께해제한다.
+        std::function<void()> buffered; //실제같은node의공통4df470 비영입구이며현재ID로다른장치를고르지않는다.
+        std::shared_ptr<void> deviceOwner; //실제Client Source만전역등록Node수명까지보유한다.World/Session/명목token이아니다.
         std::function<std::int32_t()> readiness; // 같은 실제 TCP/내부 socket의0/1/-1 준비 상태이며 현재 ID를 재선택하지 않는다.
     };
+    std::shared_ptr<void> PinBinding(const Binding& binding) const; //선택된실제node의owner와함수값복사를서로구별한다.
+    std::function<std::shared_ptr<void>(const PacketConnection&)> devicePin_; //장기Client weak경로만소유하며World/Source를대기중보유하지않는다.
     void RemoveAliases(std::uint32_t token); //같은 token의 현재 별칭만 지우고 새 세대의 칸은 보존한다.
     ConnectionRegistrationHooks RegistrationHooks(std::function<void(std::uint32_t)> buffered={}); //같은 노드/실제 진단만 조립한다.
     ConnectionCleanupHooks CleanupHooks(); //기존457 부모가 같은 실제 수명 장치를 호출하도록 한다.
     ConnectionRegistrationHooks NativeRegistrationHooks(std::function<void(std::uint32_t)> buffered,const ConnectionRegistryAssertion& assertion); //같은 기존 실제 node/쓰기 부모에 선택된 Client 진단만 교체한다.
     ConnectionCleanupHooks NativeCleanupHooks(const ConnectionRegistryAssertion& assertion); //같은 기존 destroy/release 수명에 복귀형fa 진단만 제공한다.
+    void RunDeviceScope(const std::function<void()>& operation); //최외곽Native부모의마지막표쓰기까지실제선택된device만호출중보유한다.
+    void ReleaseDevicePins() noexcept; //부모후속쓰기와device깊이반납뒤실제owner목록을지역값으로반납한다.
+    std::size_t deviceCallDepth_{}; //호출범위카운터이며owner자체는아래실제shared목록이다.
+    mutable std::vector<std::shared_ptr<void>> deviceCallOwners_; //최외곽동기호출동안선택된실제controlblock만보유하고대기큐/World는담지않는다.
     void RunCleanup(const std::function<void()>& operation); //Native 부모가 자신의 칸/count store를 마칠 때까지 일반 별칭 해제를 유예한다.
     std::array<std::uint32_t,kTransceiverSlots> transceivers_{},buffers_{}; //005e4a18/4a70의 서로 다른 두22칸이다.
     std::array<std::uint32_t,kPendingConnectionSlots> pending_{}; //005e46f0의 같은32칸이며0칸도 보존한다.
@@ -66,6 +78,7 @@ private:
     std::shared_ptr<void> synchronizationOwner_; //외부 동기화 주소가 대여자보다 먼저 사라지지 않게 한다.
     std::map<std::uint32_t,Binding> bindings_; //현재 실제 연결만 보관하며 해제된 노드의 주소는 남기지 않는다.
     std::map<std::uint32_t,std::shared_ptr<std::vector<std::uint8_t>>> connectPackets_; // 노드와 별도인22칸 송신버퍼의 실제 복제 물리다. 같은 opaque 발급기를 쓰며 최종 owner가 잔류 물리를 반납한다.
+    bool retainDeviceOwners_{},deviceShutdown_{}; //실제Client만등록Node의device를보유하며App최종진입뒤새Node발급을막는다. NativeState정리와다르다.
     std::uint32_t cleanupDepth_{}; //원문 부모의 직접 슬롯/count 쓰기와 일반 free의 별칭 해제를 구별하는 호스트 경계다.
 };
 void RegisterConnectPacketReceiver(RawPacketDispatch& dispatch,const std::shared_ptr<RawConnectionRegistry>& registry); // bootstrap1의 현재 버퍼 소비자를 한 번 등록하며 버전/정책/observer와 기존 수신기를 덮지 않는다.

@@ -1,0 +1,216 @@
+{
+  "unit": 1178,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCppCommit": "2b5ee903 / 20261108-205 CP",
+  "summary": "M6-l 7ch 장기 F·실제 Registry 호출범위와 Node owner/App 최종 반납 부분 접합",
+  "sourceSha256": {
+    "cpppj/src/client/ClientCampaignTransport.cpp": "871b381e5cfd6615ade8710c63137edfb7def5326bfa653a2720707bf42bc8fa",
+    "cpppj/src/client/ClientCampaignTransport.h": "46f1d51b5547d5ae64819654ed2a2119c3849f2cf4a5d9f575f5bf4a5a31d456",
+    "cpppj/src/client/ClientConnectionGlobals.cpp": "02e1623b63b2794cf78a49889093ecdd1a5bb60185e9af1964e98d4a0df77a51",
+    "cpppj/src/client/EditorLocalTransport.cpp": "fd624f6991bb70bb1e2218b2ea47699741f8d9432c9de673e3ec7f2b89b8f309",
+    "cpppj/src/client/LocalTcpTransport.cpp": "7c6596865294388f0e04b50888f61268cbf295205fd86c45fc71f172e0ccae98",
+    "cpppj/src/client/LocalUdpTransport.cpp": "0637446365029fe33b99e2146ac639f744681cd1696ddda1d89bfc7cc49cae0a",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "74b0172840a1d84a92b65e00fd6a24d077c7761934f4c8c42762cf028f3631e9",
+    "cpppj/src/o/RawConnectionRegistry.cpp": "f36b808c900233bbb2e9bfba55904d264470574a4b7206c9ef05cd35ab3fff6f",
+    "cpppj/src/o/RawConnectionRegistry.h": "68d6825db364cf21213f1a516a6283f3c4216747960dd830a8c8a2c9ae4cc5ad",
+    "cpppj/src/zacket/LocalMissionTransport.cpp": "d84f75a9728be2178fd6580570667a14e66b79cb42abdb505aa63f14b947d067",
+    "cpppj/src/client/ClientConnectionGlobals.h": "6e425fc176f340db28d69beda63d470fd502dc614e92d577f6846df08be71b4c",
+    "cpppj/src/client/ClientMain.cpp": "c5551a176533345caff4c5941ab0330e8cbc95d598b6c4a978a86d7bde3cc0df",
+    "cpppj/src/client/ClientPacketSources.cpp": "55375d8f2aa3d10cffd4101841d6d283ec6d45878c73161589f9eafb9b6abb76",
+    "cpppj/src/client/ClientPacketSources.h": "10c978feb77eb6537158255009ec74f387b2cabb1eddad7230a6b86d15550a3e"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13470720,
+      "sha256": "34c8d8bf59196ff67a787dc2046cdcc1876cfd6b67e405fc12c535a773383152"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "95dc0dac85779a77421eb8afd8bc96f75e048f08258a4d4620aa7aea81638264"
+    }
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-1178/build.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "nativeEvidence": {
+    "extracted/cpp-m6-registry-native7c-patch/rebase-1177/evidence.json": "770f11a8c13d2747d46860dce1a5686df50549506f1743215efec447920b43b7",
+    "extracted/cpp-m6-registry-native7c-patch/rebase-1177/registry-native7c-1177.patch": "0071492f8cda87afeb3ea479358cc16ae99545bf1e91a21ef1573121d1864949",
+    "extracted/cpp-m6-global-device-owner-patch/node-app/evidence.json": "613e23894884a3a399709274a3411f37bc2598548867043b4431363bfeb59c02",
+    "extracted/cpp-m6-global-device-owner-patch/node-app/node-app.patch": "6dcf75944e72ea2eaafbaed1cd0798321156a0cdaf3ba569ba4985450fb416ec",
+    "extracted/cpp-m6-global-device-owner-patch/node-app-owner-closure/evidence.json": "b0c4aab7bbc99078233f1827003bc4e5f218c07fb910e141758532498552b515",
+    "extracted/cpp-m6-global-device-owner-patch/node-app-owner-closure/owner-closure.patch": "aff754c5b5d6b8607e3f212da3610fade12cbc78ea1c730143cb19ef522a0539"
+  },
+  "live": {
+    "tutorial1": {
+      "passed": true,
+      "unit": 1178,
+      "mission": "tutorial1",
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1178\\live-tutorial1\\game",
+        "--mcp",
+        "--window",
+        "--no-audio",
+        "--set",
+        "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+      ],
+      "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "exeSha256Before": "34c8d8bf59196ff67a787dc2046cdcc1876cfd6b67e405fc12c535a773383152",
+      "exeSha256After": "34c8d8bf59196ff67a787dc2046cdcc1876cfd6b67e405fc12c535a773383152",
+      "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1178\\live-tutorial1\\game",
+      "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1178\\live-tutorial1\\user-data",
+      "entryConfirmed": true,
+      "quitRequested": true,
+      "exitCode": 0,
+      "dataUnchanged": true,
+      "protectedUnchanged": true,
+      "protectedDifferences": [],
+      "events": [
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "click",
+          "arg": "Main Menu"
+        },
+        {
+          "op": "click",
+          "arg": "MORE"
+        },
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "key",
+          "arg": "f4"
+        },
+        {
+          "op": "click",
+          "arg": "production:82"
+        },
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "pointer",
+          "arg": "0x80010000,1015,540"
+        },
+        {
+          "op": "click",
+          "arg": "screen:1015,540"
+        }
+      ],
+      "observations": [
+        "main-0",
+        "main-1",
+        "main-2",
+        "entry-0",
+        "entry-1",
+        "entry-2",
+        "ready",
+        "home",
+        "bridge-instruction-trigger",
+        "await-bridge-guide",
+        "bridge-guide-closed",
+        "bridge-placement-pointer",
+        "before-place",
+        "place-bridge",
+        "after-place",
+        "bridge-settled",
+        "before-close"
+      ],
+      "checks": [
+        {
+          "before": "before-place",
+          "after": "after-place",
+          "type": 82,
+          "owner": 1,
+          "newLiveServerObjects": [
+            [
+              "15003",
+              "82",
+              "1",
+              "35",
+              "63",
+              "49"
+            ]
+          ],
+          "constructionRequestsBefore": 0,
+          "constructionRequestsAfter": 1,
+          "passed": true
+        }
+      ],
+      "commandErrors": [],
+      "failure": null,
+      "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+    }
+  },
+  "liveAttempts": [
+    {
+      "path": "extracted/cpp-resume-1178/live-tutorial1/summary.json",
+      "mission": "tutorial1",
+      "passed": true,
+      "exitCode": 0,
+      "failure": null
+    }
+  ],
+  "audit": {
+    "registryDevicePin": true,
+    "nativeOuterScopeCollectsBothRegisteredAndCurrentOwners": true,
+    "nativeBufferedDirectStep": true,
+    "currentInternalOwnerFromRegistry": true,
+    "meta7cCanonical": true,
+    "sourcePublishedBeforeDeviceOpen": true,
+    "registeredLivePendingDeviceRetained": true,
+    "noWorldOrSessionStrongOwner": true,
+    "appShutdownBeforeUiTimeDisplay": true,
+    "nativeStateCleanupNotReplaced": true,
+    "typedAndRootContractsPreserved": true,
+    "originalNativeInventory": 89,
+    "disabledValidation": 1,
+    "activeTarget": 88,
+    "canonicalTags": 15,
+    "untagged": 73,
+    "tagIsNotFullScopeCompletion": true,
+    "globalListenerReuseComplete": false,
+    "globalReceiveTableComplete": false,
+    "globalPollComplete": false,
+    "udpBufferedSendFlushComplete": false,
+    "queueActivated": false,
+    "m6Complete": false
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "packet": 0,
+    "network": 0,
+    "nonMp": 1,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  },
+  "remaining": [
+    "15태그의 전scope/observer/실제Source·직접송신/Fail/Notify·Node큐 및 잔여73F",
+    "실제 전역 listener 재사용/Editor 교체·공통수신표·전역 Poll·UDP flag2 송신/Flush·지연큐",
+    "JoinTestBattle 장기NoWorld 준비/snapshot",
+    "Host 생성/삭제/Regular·자원파생/실제NoWorld caller·debugBurst·전수마감",
+    "M7 다섯 항목·M8·K1~K5·S1~S4"
+  ]
+}
