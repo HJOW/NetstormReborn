@@ -783,7 +783,7 @@
       "bytes": 419588,
       "lines": 1300,
       "fixtureCommit": "6ff267a1",
-      "webCommit": "worktree",
+      "webCommit": "31193204",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidUnpopParent.cpp": "ea848459",
         "cpppj/src/o/RawSquidUnpopParent.h": "6ff267a1",
@@ -1231,7 +1231,7 @@
       "bytes": 6817,
       "lines": 152,
       "fixtureCommit": "a86150db",
-      "webCommit": "worktree",
+      "webCommit": "31193204",
       "cpppjBasis": {
         "cpppj/src/o/UnpopVtables.inc": "fbc27346",
         "cpppj/src/o/SquidUnpop.cpp": "739b04e5",
@@ -1299,7 +1299,7 @@
       "bytes": 1573181,
       "lines": 1993,
       "fixtureCommit": "5edb2b6d",
-      "webCommit": "worktree",
+      "webCommit": "31193204",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidDestroy.cpp": "f2215dc5",
         "cpppj/src/o/RawSquidDestroy.h": "886f2d23",
@@ -1735,7 +1735,7 @@
       "bytes": 862447,
       "lines": 8423,
       "fixtureCommit": "a86150db",
-      "webCommit": "worktree",
+      "webCommit": "31193204",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
         "cpppj/src/o/SquidUnpop.cpp": "739b04e5",
@@ -2380,7 +2380,7 @@
       "bytes": 780077,
       "lines": 6241,
       "fixtureCommit": "6c6765e3",
-      "webCommit": "worktree",
+      "webCommit": "31193204",
       "cpppjBasis": {
         "cpppj/src/o/SquidPop.cpp": "48385349",
         "cpppj/src/o/RawSquidPopParent.cpp": "48385349",
@@ -2412,7 +2412,7 @@
       "bytes": 5606,
       "lines": 152,
       "fixtureCommit": "6c6765e3",
-      "webCommit": "worktree",
+      "webCommit": "31193204",
       "cpppjBasis": {
         "cpppj/src/o/SquidPop.cpp": "48385349",
         "cpppj/src/o/PopVtables.inc": "6c6765e3"
@@ -7085,7 +7085,7 @@
       "bytes": 1634803,
       "lines": 2945,
       "fixtureCommit": "da0b5a66",
-      "webCommit": "worktree",
+      "webCommit": "31193204",
       "cpppjBasis": {
         "cpppj/src/o/SquidDisplay.cpp": "739b04e5",
         "cpppj/src/client/Renderer.cpp": "5a2cd047"
@@ -7115,7 +7115,7 @@
       "bytes": 62068,
       "lines": 433,
       "fixtureCommit": "fbc27346",
-      "webCommit": "worktree",
+      "webCommit": "31193204",
       "cpppjBasis": {
         "cpppj/src/o/SquidDisplay.cpp": "739b04e5"
       }
@@ -7145,9 +7145,96 @@
       "bytes": 803570,
       "lines": 5780,
       "fixtureCommit": "6a0907de",
-      "webCommit": "worktree",
+      "webCommit": "31193204",
       "cpppjBasis": {
         "cpppj/src/o/SquidFrame.cpp": "54bf1411"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E60",
+      "id": "buried-postpop",
+      "path": "cpppj/tests/fixtures/buried-postpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: buried 전용 postPop 00462170 의 슬롯 50바이트·boss·로딩·선택 하위 호출 기록(독립 풀 580 입력)",
+      "consumers": [
+        "webpj/tests/buried-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-buried-post-pop.js"
+      ],
+      "doc": "docs/webpj-post-pop-buried-carrier-fence-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBuriedPostPop.cpp"
+      ],
+      "scope": "580행 전부 사용(10.78 PE 전용 관측)",
+      "text": true,
+      "sha256": "76e346fc32bfe640f615ced94d4d497198e0abc483f17de8bfbdd9fbe6517bf4",
+      "bytes": 93112,
+      "lines": 581,
+      "fixtureCommit": "446713ea",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBuriedPostPop.cpp": "eae6fd03"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E60",
+      "id": "carrierpostpop",
+      "path": "cpppj/tests/fixtures/carrierpostpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Carrier 00427720 / Damageable 0044bf80 전체 몸체의 +0xcc·지면 소유자 갱신·공통 postPop 호출 기록과 슬롯 50바이트(세 PE)",
+      "consumers": [
+        "webpj/tests/carrier-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-post-pop.js"
+      ],
+      "doc": "docs/webpj-post-pop-buried-carrier-fence-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierPostPop.cpp"
+      ],
+      "scope": "10.78(originals) 2448행 사용(originalCD·original1037 각 2448행은 범위 밖)",
+      "text": true,
+      "sha256": "4efa1cd19250a64a436a9c9bddeaa15f88429fcd8e5b7aa2c9b0dfd4eca31124",
+      "bytes": 1380529,
+      "lines": 7346,
+      "fixtureCommit": "438e749f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierPostPop.cpp": "ab4fd3d2"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E60",
+      "id": "fence-postpop",
+      "path": "cpppj/tests/fixtures/fence-postpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 바리케이드 00457560 의 부모 50과 이웃 51~54 전체 250바이트·하위 호출 기록(330 입력, 두 x87 정밀도 동일)",
+      "consumers": [
+        "webpj/tests/fence-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fence-post-pop.js"
+      ],
+      "doc": "docs/webpj-post-pop-buried-carrier-fence-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFencePostPop.cpp"
+      ],
+      "scope": "330행 전부 사용(10.78 PE 전용 관측)",
+      "text": true,
+      "sha256": "aafbea1ba70bc8485b858d5e4936ec0b8910030e83c5de9b4793d9ffdd708d8e",
+      "bytes": 238650,
+      "lines": 331,
+      "fixtureCommit": "6b4ffe65",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFencePostPop.cpp": "e7427079"
       }
     }
   ]

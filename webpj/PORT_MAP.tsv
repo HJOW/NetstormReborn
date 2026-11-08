@@ -551,7 +551,7 @@ cpppj/src/o/RawBridgeLifecycle.cpp	port	www/core/bridge-lifecycle.js	1f00a25a	pa
 cpppj/src/o/RawBuildingSpace.cpp	port	www/core/squid-space.js	1f00a25a	port	[o-default] WB04-D1(Unpop 옆면·표면 통지) + WB04-E1(popSide·hasIsland)
 cpppj/src/o/RawBulfFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawBulwarkHit.cpp	port	www/core/raw-bulwark-hit.js	1f00a25a	port	[o-default] WB04-E11: 48ef20 불워크 피해 관문(공격자 비행 genus면 0, 아니면 일반 피해 연결). fixture bulwark-hit 10.78 492행 전부
-cpppj/src/o/RawBuriedPostPop.cpp	port			todo	[o-default]
+cpppj/src/o/RawBuriedPostPop.cpp	port	www/core/raw-buried-post-pop.js	1f00a25a	port	[o-default] WB04-E60: buried 후처리 00462170(보상 QA 쓰기·Bridge 통지·두 예약·공통 장부). fixture buried-postpop 580행 전부. SquidPostPop.setBody('buried') 연결·실제 World getter 는 WB05
 cpppj/src/o/RawBuriedRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawBurningFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawBurningLifetimeDraw.cpp	port			todo	[o-default]
@@ -583,7 +583,7 @@ cpppj/src/o/RawCarrierFallStart.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierMining.cpp	port	www/core/raw-carrier-mining.js	1f00a25a	port	[o-default] WB04-E14: 429800 채취 통지 6 BYTE 작성→송신→로컬 수신. fixture carrier-mining 10.78 864행 전부
 cpppj/src/o/RawCarrierMove.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierPickup.cpp	port			todo	[o-default]
-cpppj/src/o/RawCarrierPostPop.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierPostPop.cpp	port	www/core/raw-carrier-post-pop.js	1f00a25a	port	[o-default] WB04-E60: Carrier 00427720·Damageable 0044bf80·makeCarrierPostPopHooks. fixture carrierpostpop 10.78 2448행 전부(CD·1037 행은 범위 밖). 사제 접두 조합 검사는 RawPriestPostPop 단위에서
 cpppj/src/o/RawCarrierPreDestroy.cpp	port	www/core/raw-carrier-pre-destroy.js	1f00a25a	port	[o-default] WB04-E56: Carrier 삭제 준비 00426890·FindContained 004ac9f0·사제 훅 연결. fixture carrierpredestroy 10.78 960행 전부. 실제 Damageable/전역 후처리는 해당 이식 단위
 cpppj/src/o/RawCarrierRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierSteal.cpp	port			todo	[o-default]
@@ -677,7 +677,7 @@ cpppj/src/o/RawFenceLifetime.cpp	port			todo	[o-default]
 cpppj/src/o/RawFenceLine.cpp	port			todo	[o-default]
 cpppj/src/o/RawFenceMarkerClear.cpp	port			todo	[o-default]
 cpppj/src/o/RawFenceNeighbors.cpp	port			todo	[o-default]
-cpppj/src/o/RawFencePostPop.cpp	port			todo	[o-default]
+cpppj/src/o/RawFencePostPop.cpp	port	www/core/raw-fence-post-pop.js	1f00a25a	port	[o-default] WB04-E60: 썬 바리케이드 후처리 00457560(이웃·연결선·연결 수·Regular 사건). fixture fence-postpop 330행 전부. 자산 후처리(RawAssetPostPop) 분배 연결은 그 단위에서
 cpppj/src/o/RawFenceRebuild.cpp	port			todo	[o-default]
 cpppj/src/o/RawFenceRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawFenceTarget.cpp	port			todo	[o-default]
