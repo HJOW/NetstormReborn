@@ -11596,9 +11596,38 @@
       "bytes": 659319,
       "lines": 5952,
       "fixtureCommit": "b8628062",
-      "webCommit": "worktree",
+      "webCommit": "fcb3e6ff",
       "cpppjBasis": {
         "cpppj/src/o/RawCanonPixelShape.cpp": "167866d9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E148",
+      "id": "canonterrain",
+      "path": "cpppj/tests/fixtures/canonterrain-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 후보 지형/모양 종료/최종 지면 누적 구간과 지역 조회(10.78 3740행)",
+      "consumers": [
+        "webpj/tests/canon-placement-terrain.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-placement-terrain.js"
+      ],
+      "doc": "docs/webpj-canon-placement-terrain-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCanonPlacementTerrain.cpp"
+      ],
+      "scope": "10.78 실제 PE 3740행 전부",
+      "text": true,
+      "sha256": "19aaa625b1958e05dbf638893baee30103e5c09a16751bd81671ec7758a7f449",
+      "bytes": 5120365,
+      "lines": 11223,
+      "fixtureCommit": "6e7fdd37",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCanonPlacementTerrain.cpp": "6e7fdd37"
       }
     }
   ]
