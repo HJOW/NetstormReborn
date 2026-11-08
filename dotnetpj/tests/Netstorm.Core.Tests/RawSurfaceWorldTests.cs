@@ -1628,6 +1628,61 @@ public sealed class RawSurfaceWorldTests
         int sid = world.Create(6u, 0u);
         Assert.Throws<InvalidOperationException>(() => world.Unpop(sid, 0u));
     }
+
+    /// <summary>대여 없는 월드의 상태 Clear를 거부하는지 검증한다. 2026-11-08 F2d 월드 본체 상태 입출력 경계 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ClearProcessesForStateRejectsWithoutUse()
+    {
+        // 자동 껍데기 저장소는 장기 TYPE 표가 없어 호스트를 묶지 않으므로 대여가 없다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.False(world.ProcessBindingsReturned());
+        Assert.Throws<InvalidOperationException>(() => world.ClearProcessesForState());
+    }
+
+    /// <summary>빈 증빙의 상태 반납을 거부하는지 검증한다. 2026-11-08 F2d 월드 본체 상태 입출력 경계 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReturnProcessBindingsForStateRejectsNull()
+    {
+        // 원문 invalid_argument를 직역하며 슬롯·풀을 건드리지 않는다.
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullStorage(types, frames), frames);
+        Assert.Throws<ArgumentNullException>(() => world.ReturnProcessBindingsForState(null!));
+    }
+
+    /// <summary>단일 Clear 증빙의 발급·반납 순서를 검증한다. 2026-11-08 F2d 월드 본체 상태 입출력 경계 이식에서 추가됐다.</summary>
+    [Fact]
+    public void StateClearPassReturnConsumesSingleUse()
+    {
+        // 전체 저장소 월드는 장기 호스트를 묶으므로 현재 대여가 있다.
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullStorage(types, frames), frames);
+        Assert.False(world.ProcessBindingsReturned());
+        RawProcessHostStorage.ClearPass pass = world.ClearProcessesForState();
+        Assert.NotNull(pass);
+        Assert.False(world.ProcessBindingsReturned());
+        world.ReturnProcessBindingsForState(pass);
+        Assert.True(world.ProcessBindingsReturned());
+        // 현재 대여를 소비했으므로 같은 증빙의 재사용과 새 Clear를 모두 거부한다.
+        Assert.Throws<InvalidOperationException>(() => world.ReturnProcessBindingsForState(pass));
+        Assert.Throws<InvalidOperationException>(() => world.ClearProcessesForState());
+    }
+
+    /// <summary>다른 월드의 증빙으로 반납을 거부하는지 검증한다. 2026-11-08 F2d 월드 본체 상태 입출력 경계 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReturnProcessBindingsForStateRejectsForeignPass()
+    {
+        // 증빙의 소유 저장소가 다르면 같은 실제 대여가 아니므로 거부한다.
+        var firstTypes = Types188();
+        var firstFrames = Frames188();
+        var first = new RawSurfaceWorld(OriginalEdition.Patch1078, firstTypes, 97u, FullStorage(firstTypes, firstFrames), firstFrames);
+        var secondTypes = Types188();
+        var secondFrames = Frames188();
+        var second = new RawSurfaceWorld(OriginalEdition.Patch1078, secondTypes, 97u, FullStorage(secondTypes, secondFrames), secondFrames);
+        RawProcessHostStorage.ClearPass foreign = second.ClearProcessesForState();
+        Assert.Throws<ArgumentException>(() => first.ReturnProcessBindingsForState(foreign));
+    }
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
     {

@@ -79,8 +79,11 @@ public sealed class RawSurfaceWorld
     /// <summary>같은 풀·공간 자산 배열을 첫 월드만 빌리는 저장소 대여다. 원본 Impl.storageUse에 대응한다. 반납은 월드 수명과 함께 다룬다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
     private readonly RawSurfaceStorage.Use? _storageUse;
 
-    /// <summary>현재 월드의 실제 가상 처리기 대여다. 원본 Impl.processUse에 대응한다. 반납은 월드 수명과 함께 다룬다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
-    private readonly RawProcessHostStorage.Use? _processUse;
+    /// <summary>현재 월드의 실제 가상 처리기 대여다. 원본 Impl.processUse에 대응한다. 상태 증빙 반납 때 소비하므로 가변으로 둔다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐고 2026-11-08 상태 입출력 경계 이식에서 가변으로 바꿨다.</summary>
+    private RawProcessHostStorage.Use? _processUse;
+
+    /// <summary>명시 단일 Clear 뒤 실제 소비한 대여의 반납 증빙이다. 원본 Impl.returnedProcesses에 대응한다. 없으면 아직 반납하지 않은 것이다. 2026-11-08 F2d 월드 본체 상태 입출력 경계 이식에서 추가됐다.</summary>
+    private RawProcessHostStorage.Returned? _returnedProcesses;
 
     /// <summary>타입별 서로 다른 fallback 사슬을 같은 분배기로 모아 혼합 종속 체인의 중첩 삭제를 지원한다. 원본 Impl.formDispatch에 대응하며 188개 TYPE·같은 수 프레임이 있으면 비워 둔다. 2026-11-07 F2d 월드 본체 삭제 분배 이식에서 추가됐다.</summary>
     private readonly RawSquidFormDispatch? _formDispatch;
@@ -701,7 +704,7 @@ public sealed class RawSurfaceWorld
         RawWorldRuntimeHooks runtime = hooks.Clone();
         _runtime = runtime;
         _runtimeBound = true;
-        runtime.LoadingDepth(_loadState.LoadingDepth);
+        runtime.LoadingDepth!(_loadState.LoadingDepth);
     }
 
     /// <summary>사제·신전의 전용 몸체를 상위에서 선택한 뒤 나머지 자산 +74를 현재 표로 호출한다. 받침 분배는 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>
@@ -735,6 +738,39 @@ public sealed class RawSurfaceWorld
         }
         while (_kernel.Size() != 0);
     }
+
+    /// <summary>명시 월드 대여에서 실제 단일 Clear가 끝난 경우만 증빙을 전달한다. 2026-11-08 F2d 월드 본체 상태 입출력 경계 이식에서 추가됐다.</summary>
+    /// <returns>반납에 쓰는 정상 복귀 증빙이다.</returns>
+    public RawProcessHostStorage.ClearPass ClearProcessesForState()
+    {
+        // 원본 Impl.processUse 미보유 logic_error를 직역한다.
+        if (_processUse is null)
+        {
+            throw new InvalidOperationException("장기 ProcessHost 현재 대여 없는 State Clear");
+        }
+
+        return _processUse.ClearForState();
+    }
+
+    /// <summary>같은 증빙으로 현재 처리기 대여만 끝내며 Regular 잔류는 유지한다. 2026-11-08 F2d 월드 본체 상태 입출력 경계 이식에서 추가됐다.</summary>
+    /// <param name="pass">소비할 정상 복귀 증빙이다.</param>
+    public void ReturnProcessBindingsForState(RawProcessHostStorage.ClearPass pass)
+    {
+        // 원본 null 증빙 invalid_argument와 중복 반납 logic_error를 직역한다.
+        ArgumentNullException.ThrowIfNull(pass);
+        if (_processUse is null || _returnedProcesses is not null)
+        {
+            throw new InvalidOperationException("ProcessHost State 반납의 단일 실제 대여 필요");
+        }
+
+        // 현재 대여를 소비한 뒤에만 증빙을 보관하며 Kernel 잔류를 강제 정리하지 않는다.
+        _returnedProcesses = _processUse.ReturnForState(pass);
+        _processUse = null;
+    }
+
+    /// <summary>실제 소비된 Returned 증빙의 존재를 조회하며 공개 성공 setter는 제공하지 않는다. 2026-11-08 F2d 월드 본체 상태 입출력 경계 이식에서 추가됐다.</summary>
+    /// <returns>반납 증빙을 보관했으면 참이다.</returns>
+    public bool ProcessBindingsReturned() => _returnedProcesses is not null;
 
     /// <summary>같은 월드·전송·공간 재등록을 참가자별로 실행한다. 멀티플레이 3차 사전 구현이며 전송기가 없어 명시 오류로 멈춘다. 2026-11-07 F2d 월드 본체 전송 사전 구현에서 추가됐다.</summary>
     /// <param name="owner">동기화할 참가자 번호다.</param>
