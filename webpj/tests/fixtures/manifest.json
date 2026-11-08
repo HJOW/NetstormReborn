@@ -12648,9 +12648,129 @@
       "bytes": 63736,
       "lines": 61,
       "fixtureCommit": "8d6c325c",
-      "webCommit": "worktree",
+      "webCommit": "84507556",
       "cpppjBasis": {
         "cpppj/src/client/RawAiDebugMenu.cpp": "8d6c325c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E183",
+      "id": "burningprocessctor",
+      "path": "cpppj/tests/fixtures/burningprocess-constructor-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Burning 모드 0/1 warm-palette 생성자(표시 등록·150입자·메모리/부착 순서)(10.78 128행)",
+      "consumers": [
+        "webpj/tests/burning-visual.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-burning-visual.js"
+      ],
+      "doc": "docs/webpj-burning-visual-sources-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBurningVisual.cpp"
+      ],
+      "scope": "10.78 실제 PE 128행 전부(CD 행 제외)",
+      "text": true,
+      "sha256": "58727209e5e5264f029c50978e5863cbc622271ceb60e53d69a8ebdce3e1cbab",
+      "bytes": 42805,
+      "lines": 257,
+      "fixtureCommit": "db9b626c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBurningVisual.cpp": "961f6be5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E183",
+      "id": "burningsources",
+      "path": "cpppj/tests/fixtures/burningsources-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 연소점 선택 00424110(현재 HP/게임 정수 난수/기존 source 제거/입자·행 표식)(10.78 326행)",
+      "consumers": [
+        "webpj/tests/burning-sources.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-burning-sources.js",
+        "webpj/www/core/raw-burning-visual.js"
+      ],
+      "doc": "docs/webpj-burning-visual-sources-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBurningSources.cpp"
+      ],
+      "scope": "10.78 실제 PE 326행 전부(CD 행 제외)",
+      "text": true,
+      "sha256": "489fdfc92dc68f1b812e07ca8dc14ecdad091dc5489702b958e20a7ab45a8458",
+      "bytes": 4243477,
+      "lines": 653,
+      "fixtureCommit": "ab9361f1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBurningSources.cpp": "24785574"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E183",
+      "id": "burningsourcescorner",
+      "path": "cpppj/tests/fixtures/burning-sources-corner-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 연소점 선택의 작은 투명 캡처 모서리(10.78 은 픽셀 우선)(10.78 18행)",
+      "consumers": [
+        "webpj/tests/burning-sources.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-burning-sources.js"
+      ],
+      "doc": "docs/webpj-burning-visual-sources-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBurningSources.cpp"
+      ],
+      "scope": "10.78 실제 PE 18행 전부(CD 행 제외)",
+      "text": true,
+      "sha256": "ad767cbadce23caf84a7c1303ecdc4d6bf75ff5654edc7fb67d968e01c149500",
+      "bytes": 262063,
+      "lines": 37,
+      "fixtureCommit": "ae60fabc",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBurningSources.cpp": "24785574"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E183",
+      "id": "burningsourcecount",
+      "path": "cpppj/tests/fixtures/burning-source-count-current-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 연소점 부모/TYPE HP/정수식(높이 2 이른 복귀, 정상/IDIV 예외/진단 복귀 뒤 전역)(10.78 2,826행)",
+      "consumers": [
+        "webpj/tests/burning-source-count.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-burning-source-count.js",
+        "webpj/www/core/raw-burning-sources.js"
+      ],
+      "doc": "docs/webpj-burning-visual-sources-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBurningSourceCount.cpp",
+        "cpppj/src/o/RawBurningSources.cpp"
+      ],
+      "scope": "10.78 실제 PE 2,826행 전부(CD 행 제외)",
+      "text": true,
+      "sha256": "49a9912f1aa8bb8967d328c88f368db5d64cc03b3a57ee16a4b0d319f2083d32",
+      "bytes": 652107,
+      "lines": 5653,
+      "fixtureCommit": "24785574",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBurningSourceCount.cpp": "24785574",
+        "cpppj/src/o/RawBurningSources.cpp": "24785574"
       }
     }
   ]

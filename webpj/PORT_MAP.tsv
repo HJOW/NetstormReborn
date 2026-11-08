@@ -555,10 +555,10 @@ cpppj/src/o/RawBuriedPostPop.cpp	port	www/core/raw-buried-post-pop.js	1f00a25a	p
 cpppj/src/o/RawBuriedRegular.cpp	port	www/core/raw-buried-regular.js	1f00a25a	port	[o-default] WB04-E75: 오벨리스크 실제 Regular Handle 004622f0(가상 표 0x50a748·B 구간 signed 나머지 프레임·A 구간 복귀 난수 2..7). fixture buried-regular 384행 전부(10.78 전용 파일). 프레임 단계 이동/재Pop 본체는 해당 파일 단위에서
 cpppj/src/o/RawBurningFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawBurningLifetimeDraw.cpp	port			todo	[o-default]
-cpppj/src/o/RawBurningSourceCount.cpp	port			todo	[o-default]
-cpppj/src/o/RawBurningSources.cpp	port			todo	[o-default]
+cpppj/src/o/RawBurningSourceCount.cpp	port	www/core/raw-burning-source-count.js	1f00a25a	port	[o-default] WB04-E183: 연소점 개수 4241a2(DWORD 감김·signed IDIV zero/overflow). fixture burningsourcecount 10.78 2,826행 전부(높이 2 부모/HP getter/진단 복귀 포함). 남음: 없음(순수 정수 부모)
+cpppj/src/o/RawBurningSources.cpp	port	www/core/raw-burning-sources.js	1f00a25a	port	[o-default] WB04-E183: 연소점 선택 00424110(현재 HP 선저장·300시도 난수·7점 폴백·source 제거·공유 현재 옵션). fixture burningsources 326행(독립/공유 두 방식)·burningsourcescorner 18행 전부. 남음: 실제 Step/캡처/팔레트/표시 연결
 cpppj/src/o/RawBurningVictim.cpp	port	www/core/raw-burning-victim.js	1f00a25a	port	[o-default] WB04-E76: 연소 세 부모(423d50·424110·424530) 공통 앞단(checking 진단 뒤에도 두 번째 robust·선택 슬롯 고정·가상 표/HP 진단 줄)과 풀 연결 훅. fixture burning-victim-parent 504행 전부(10.78 전용 파일). 이후 캡처/HP 계산/입자 이동 본체는 해당 파일 단위에서
-cpppj/src/o/RawBurningVisual.cpp	port			todo	[o-default]
+cpppj/src/o/RawBurningVisual.cpp	port	www/core/raw-burning-visual.js	1f00a25a	port	[o-default] WB04-E183: Burning 모드 0/1 생성자(표시 등록·150입자·첫 색 표)와 00423e80 입자 추가. fixture burningprocessctor 10.78 128행 전부. 남음: 첫 색 표 생성/색띠 실제 연결, 후속 입자 프레임/표시(RawBurningFrame)
 cpppj/src/o/RawCampaignWorldLoad.cpp	port			todo	[o-default]
 cpppj/src/o/RawCannonFire.cpp	port	www/core/raw-cannon-fire.js	1f00a25a	port	[o-default] WB04-E114: 썬/썬더/반더 공통 발사 467330 프레임·단계표 004684b0/00468520/00468130·launch 00466f50(일반 투사체·반더 즉시 빔 회피 난수)·CannonFireProcess. fixture cannon-fire 5534행+vander-fire 393행(wrapper 24행은 RawLightningLifetime 때) 전부. 중심/공간/소리/Missile/빔/완료 통지/삭제는 훅 경계, GunProcess Host 연결(factory)은 RawGunProcess 이식 뒤
 cpppj/src/o/RawCanonPixelShape.cpp	port	www/core/raw-canon-pixel-shape.js	1f00a25a	port	[o-default] WB04-E147: 일반 픽셀 모양 getter(0043cbd0: 모든 패턴 칸의 SHP 머리·핫스폿·배율 합집합 범위·기준점 보정·00419850 frameCheck 거부). fixture canonshape 실제 PE 3150행 전부. 남음: 실제 자산 로더 연결
