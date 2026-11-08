@@ -12095,9 +12095,40 @@
       "bytes": 13211952,
       "lines": 2019,
       "fixtureCommit": "552656c0",
-      "webCommit": "worktree",
+      "webCommit": "43f3bfa7",
       "cpppjBasis": {
         "cpppj/src/o/RawIslandRuntime.cpp": "da6c61ae"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E164",
+      "id": "aibrain",
+      "path": "cpppj/tests/fixtures/ai-brain-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 본체 0xb08 생성/소멸과 Player 9기록·방향별 동맹·섬 3204바이트·실제 할당/역순 해제(10.78 160행)",
+      "consumers": [
+        "webpj/tests/ai-brain.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-brain.js"
+      ],
+      "doc": "docs/webpj-ai-brain-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiBrain.cpp",
+        "cpppj/src/o/RawAiCreate.cpp"
+      ],
+      "scope": "10.78 실제 PE 160행 전부",
+      "text": true,
+      "sha256": "53aecd3e635d5743ea07091d863d6db7fb328daa8181b7a5769b78a233087fab",
+      "bytes": 2657374,
+      "lines": 161,
+      "fixtureCommit": "cf5e22ca",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiBrain.cpp": "74a36237",
+        "cpppj/src/o/RawAiCreate.cpp": "76e3c453"
       }
     }
   ]
