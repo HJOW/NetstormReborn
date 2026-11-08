@@ -9133,7 +9133,7 @@
       "bytes": 1188225,
       "lines": 838,
       "fixtureCommit": "9b154872",
-      "webCommit": "worktree",
+      "webCommit": "d2d417a3",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierRegular.cpp": "9b154872"
       }
@@ -9162,9 +9162,38 @@
       "bytes": 1356,
       "lines": 84,
       "fixtureCommit": "9b154872",
-      "webCommit": "worktree",
+      "webCommit": "d2d417a3",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierRegular.cpp": "9b154872"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E92",
+      "id": "carrier-steal",
+      "path": "cpppj/tests/fixtures/carrier-steal-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 크리스탈 크랩 포획 Try/Receive/Halt/PostPop 의 효과 순서·결과·boss/편집/사제 타입/정지 카운터·네 슬롯 전체 raw·송신 패킷(1105행; 두 x87 정밀도 동일)",
+      "consumers": [
+        "webpj/tests/carrier-steal.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-steal.js"
+      ],
+      "doc": "docs/webpj-carrier-steal-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierSteal.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1105행 전부 사용(53비트 열 사용, 64비트 열 동일 확인)",
+      "text": true,
+      "sha256": "1229ca074c9db61da8cacbbe8f8f5510bd69fe4baa0432037f7b0631db08cbb8",
+      "bytes": 1097093,
+      "lines": 1106,
+      "fixtureCommit": "524cafda",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierSteal.cpp": "b04fd743"
       }
     }
   ]
