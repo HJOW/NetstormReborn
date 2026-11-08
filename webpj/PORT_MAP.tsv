@@ -680,7 +680,7 @@ cpppj/src/o/RawFenceNeighbors.cpp	port			todo	[o-default]
 cpppj/src/o/RawFencePostPop.cpp	port	www/core/raw-fence-post-pop.js	1f00a25a	port	[o-default] WB04-E60: 썬 바리케이드 후처리 00457560(이웃·연결선·연결 수·Regular 사건). fixture fence-postpop 330행 전부. 자산 후처리(RawAssetPostPop) 분배 연결은 그 단위에서
 cpppj/src/o/RawFenceRebuild.cpp	port	www/core/raw-fence-rebuild.js	1f00a25a	port	[o-default] WB04-E81: 썬 바리케이드 재생성 제어 00457460(부모 extra&9 진입 차단·네 방향 동맹 이웃/현재 좌표 사거리·이웃 현재 extra&0x21 재읽기·표식 뒤 현재 소유자/좌표로 포스필드 인수). fixture fence-create 재생성(R) 166행(표식 M 106·포스필드 S 306 은 RawFenceCreate 단위). 이웃 검색/사거리/표식/포스필드 본체 연결은 해당 단위에서
 cpppj/src/o/RawFenceRegular.cpp	port			todo	[o-default]
-cpppj/src/o/RawFenceTarget.cpp	port			todo	[o-default]
+cpppj/src/o/RawFenceTarget.cpp	port	www/core/raw-fence-target.js	1f00a25a	port	[o-default] WB04-E86: 썬 바리케이드 표적 Point 004571b0·Across 004568b0·포구/시야 004819b0/004818d0·선분 교차 00462800(float 저장 순서·해시 단계 칸 경계·finder 1). fixture fence-target 856행 전부(A 626·P 48·M 24·R 24·I 134, 값형/현재 방향별 동맹 두 방식). SHP 포구 헤더 자산 연결과 Missile 소비자는 해당 단위에서
 cpppj/src/o/RawFenceTypeParent.cpp	port	www/core/raw-fence-type-parent.js	1f00a25a	port	[o-default] WB04-E14: 457890/457e20 펜스 타입 진단과 복귀 뒤 재판정. fixture fence-type-parent 10.78 432행 전부. 실제 Fence 자식 연결 대조는 해당 단위에서
 cpppj/src/o/RawFieryTailFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawFieryTailLifetime.cpp	port			todo	[o-default]

@@ -8872,7 +8872,7 @@
       "bytes": 17103,
       "lines": 241,
       "fixtureCommit": "5f564e85",
-      "webCommit": "worktree",
+      "webCommit": "aeed4e2b",
       "cpppjBasis": {
         "cpppj/src/o/RawProjectileGeometry.cpp": "7f6ffcd8"
       }
@@ -8901,9 +8901,38 @@
       "bytes": 312377,
       "lines": 4041,
       "fixtureCommit": "98d4a440",
-      "webCommit": "worktree",
+      "webCommit": "aeed4e2b",
       "cpppjBasis": {
         "cpppj/src/o/RawProjectileGeometry.cpp": "7f6ffcd8"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E86",
+      "id": "fence-target",
+      "path": "cpppj/tests/fixtures/fence-target-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 바리케이드 표적(Across/Point/포구/시야/선분 교차)의 출력 네 float 원본 비트(원본 PATCH 856행)",
+      "consumers": [
+        "webpj/tests/fence-target.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fence-target.js"
+      ],
+      "doc": "docs/webpj-fence-target-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFenceTarget.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 856행 전부 사용",
+      "text": true,
+      "sha256": "d3586ba6885ef0fdb5238e0d220f970aaa568086ef5ee81dae0d4d32fbf23446",
+      "bytes": 142750,
+      "lines": 857,
+      "fixtureCommit": "aa2ce743",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFenceTarget.cpp": "56a28270"
       }
     }
   ]
