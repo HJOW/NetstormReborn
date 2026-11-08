@@ -15,6 +15,7 @@
 #include "client/ClientMain.h"
 #include "client/ClientDiagnostics.h"
 #include "client/ClientBuildReplay.h" // Session과 실제 Kernel 재생기가 같은 전역을 공유한다. //31h ht와 실제 Frame이 동일한 장기 진단 전역을 공유한다.
+#include "client/ClientConstructionGlobals.h" // 같은 Native 건설 상태/물리/전역을 모든 설치 경로에 결합한다.
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientColorSortInput.h" // 같은 Client의 공통 현재 색표 소유자를 빌린다.
 #include "client/ClientChatRuntime.h"
@@ -197,6 +198,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     services.kencloudGlobals=client.KencloudGlobals(); // 섬/지역 도장이 같은 실제0059a8b0에 월드 다시 그리기를 요청한다.
     services.processKernel=&client.GetKernel(); // 모든 실제 Form/경로/Regular와 번개가 같은 원문 전역 Kernel을 사용한다.
     services.surfaceStorage=client.SurfaceStorage(); // 현재 Core의 Pool/해시/TYPE/spot을 같은 실제 Client 물리에 연결한다.
+    if (services.surfaceStorage->UsesNativeTransmissionDevices()) { services.constructionGlobals=client.ConstructionGlobals();services.constructionGlobals->Bind(services.surfaceStorage,services.gameplayGlobals,services.buildReplay); } // 결합은 기존 상태/Player/World를 재초기화하지 않는다.
     services.surfaceStorage->Processes().BindDevices(client.ProcessKernelOwner(),client.FrameClockOwner()); // 이미 pin한 같은 실제 장치만 확인하며 현재 시각을 복사하지 않는다.
     services.colorSortInput=client.ColorSortInput(); // 실제 Client의 같은 고정 초기입력 소유자를 반드시 전달한다.
     services.ownerColorTables=client.ColorSortInput()->OwnerTables(); // 모든 표시/건설 캡처가 같은 현재 owner 표를 빌린다.

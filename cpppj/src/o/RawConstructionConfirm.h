@@ -22,6 +22,7 @@ struct ConstructionConfirmState {
     const std::uint32_t* sharedRecorderEnabled{}; // 실제59a7e4를 broadcast/자기 수신 뒤 현재 주소에서 읽는다. 독립 입력의 bool fallback은 유지한다.
     bool RecorderEnabled() const { return sharedRecorderEnabled ? *sharedRecorderEnabled!=0 : recorderEnabled; } // 현재 재생 플래그이며 Prepare 시점 사본으로 바꾸지 않는다.
     std::function<std::array<std::uint32_t,8>()> patternTypesRead; // ActualConfirm은 FindBuilder 정상 복귀 뒤 같은 현재8 TYPE owner를 조회한다. 독립 fixture는 기존 배열을 사용한다.
+    std::array<std::uint32_t,8> CurrentPatternTypes() const { return patternTypesRead ? patternTypesRead() : patternTypes; } // 상위 결합 검증과 실제 decoder가 같은 현재 owner를 조회한다.
 };
 // 확정 한 번의 입력이다. 원본 열 개 인자와 같은 순서다.
 struct ConstructionConfirmRequest {

@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1193 현행:**실제 장기 건설 전역·공유 마스크와 Request/Clear/Local/Command의 현재 소비 위치를 연결했다. 명시 비MP35+17검사와 Tutorial4 건설·실제 객체/600frame 대기, Edit 진입/복귀2회를 확인했다. Command/새MP/패킷 실행0이다. Client 장기 건설 owner/state·Session 없는8TYPE/mission·장치, 큰 NoWorld/AI/Carrier·다른 Form/일반 삭제 및 Source/listener/표/Poll·63잔여F·Snapshot/JoinTestBattle·M6-l/m/n/큐는 남는다. 태그25는 전scope 완료 수가 아니며 큐 비활성이다. [1193 근거](cpp-construction-current-globals-20261109.md).
+**1194 현행:**별도 Client 건설 상태 owner·Session 없는 현재8TYPE/NativeBounds mission·상위 current검증/Collision현재server를 연결했다. 명시 비MP35+17+11검사와 Tutorial4 실제TYPE75/600frame·Edit왕복2회를 확인했다. 전체 body는 Session이며 큰 NoWorld/장치·실제bool삭제/AI/Carrier·다른 Form/일반 삭제·Source/listener/표/Poll·63F·Snapshot/JoinTestBattle·M6-l/m/n/큐가 남는다. 새MP/패킷/통신 실행0/큐OFF다. [1194 근거](cpp-construction-client-state-20261109.md).
 
 이하 본문의 초기 조사는 제품 코드/LEFT_JOBS/추적 문서를 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 

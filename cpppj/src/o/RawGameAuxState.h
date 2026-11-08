@@ -10,6 +10,14 @@
 namespace netstorm::o { // Gameplay/Storage가 같은 주소를 pin하는 작은 게임 데이터 owner다.
 class RawGameAuxState {
 public:
+    std::uint32_t& PuzzlePieceType() { return puzzlePieceType_; } //00541204의 현재107을 패턴/Player 범위/지형이 공유한다.
+    const std::uint32_t& PuzzlePieceType() const { return puzzlePieceType_; } // Session 없는 패턴 조회도 같은 장기 주소를 읽는다.
+    std::uint32_t& ThunderCannonType() { return thunderCannonType_; } //00541264의 현재131을 패턴/Gun/Missile이 공유한다.
+    const std::uint32_t& ThunderCannonType() const { return thunderCannonType_; } // 효과 뒤 같은 현재 역할 번호다.
+    std::uint32_t& RainCannonType() { return rainCannonType_; } //0054125c의 현재129이며 아이스 캐논의 원문 역할 번호다.
+    const std::uint32_t& RainCannonType() const { return rainCannonType_; } // fallback 피해/패턴도 같은 주소를 빌린다.
+    std::uint32_t& WindBlockerType() { return windBlockerType_; } //00541290의 현재142이며 특수 패턴 여덟째 비교다.
+    const std::uint32_t& WindBlockerType() const { return windBlockerType_; } // Session 기본 배열로 현재 번호를 덮지 않는다.
     std::uint32_t& ConstructionBlocked() { return constructionBlocked_; } //00558e74의 현재 수신 차단 DWORD이며 Player/패킷 조회보다 먼저 읽는다.
     const std::uint32_t& ConstructionBlocked() const { return constructionBlocked_; } // 같은 실제 장기 슬롯을 사본 없이 빌린다.
     std::uint32_t& ConstructionDisplaceGenus() { return constructionDisplaceGenus_; } //005325b4를 건설/경로/배치 충돌이 함께 읽는다.
@@ -277,6 +285,7 @@ private:
     std::uint32_t supportTypeWas_{}; //0054d4e4의 최초 BSS0이며 진단 소비자와 실제 수신 writer가 공유할 장기 물리다.
     std::uint32_t firstTimerFactoryType_{85},secondTimerFactoryType_{87},outpostType_{126}; // 보호10.78 PE의 세 TYPE DWORD 초기값이며 일반 Runtime 초기화와 구별한다.
     std::uint32_t terrainType_{97},edgeFarmType_{121}; // 보호 PE 두 TYPE 전역이며 현재 Runtime 대여/반납은 초기화하지 않는다.
+    std::uint32_t puzzlePieceType_{107},thunderCannonType_{131},rainCannonType_{129},windBlockerType_{142}; // 보호 PE의 네 현재 역할 DWORD이며 fresh/Session 교체에서 덮지 않는다.
     std::uint32_t constructionBlocked_{}; // 보호 PE00558e74의 BSS0이며 Runtime 재대여로 초기화하지 않는다.
     std::uint32_t constructionDisplaceGenus_{0x10444200}; // 보호 PE005325b4의 최초 DWORD이며 네 실제 소비자가 공유한다.
     std::uint32_t emptyGeyserType_{84}; // 보호 PE005411a8의 최초 TYPE 번호다.

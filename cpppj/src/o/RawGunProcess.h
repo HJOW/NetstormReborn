@@ -48,6 +48,12 @@ struct GunProcessState {
     const bool& Server() const { return sharedAuthority ? sharedAuthority->server : server; } // 연결하지 않은 순수 모듈만 값형 입력을 읽는다.
     // 원본 방향을 유지해 현재 nonzero 동맹 칸을 판정한다. 반대 방향을 자동으로 읽지 않는다.
     bool IsAlly(std::uint32_t owner,std::uint32_t target) const;
+    const std::uint32_t* sharedWindArcherType{}; // 실제00541288의 같은 장기 역할이다.
+    const std::uint32_t* sharedThunderCannonType{}; // 실제00541264의 현재 역할이다.
+    const std::uint32_t* sharedRainCannonType{}; // 실제0054125c의 현재 역할이다.
+    const std::uint32_t& WindArcherType() const { return sharedWindArcherType ? *sharedWindArcherType : windArcherType; } // 회전 단계의 소비 위치에서 조회한다.
+    const std::uint32_t& ThunderCannonType() const { return sharedThunderCannonType ? *sharedThunderCannonType : thunderCannonType; } // 앞선 효과 뒤 현재 번호다.
+    const std::uint32_t& RainCannonType() const { return sharedRainCannonType ? *sharedRainCannonType : rainCannonType; } // 독립 typed 입력은 기존 필드를 사용한다.
 };
 // 명시 외부 경계다. 실제 원본 몸체가 아직 없으면 호출자가 예외를 유지하며 noop로 성공시키지 않는다.
 struct GunProcessHooks {

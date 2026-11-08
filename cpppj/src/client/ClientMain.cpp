@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/ClientConstructionGlobals.h" // Native 건설 상태를 Session 재생성보다 오래 보유한다.
 #include "client/RawUserSelection.h" // 공통 삭제의004d5440도 같은 실제 UI 기억점에 쓴다.
 #include "o/RawAiWallet.h" // 현재 Player/brain의 지갑은 조기 반환 뒤 실제 전체 owner를 빌린다.
 #include "client/ClientPacketRecord.h" //메타/일반 전송이 같은 실제 기록 FILE/프레임을 공유한다.
@@ -216,6 +217,7 @@ Client::Client(ClientOptions options)
       coreDataGlobals_(std::make_shared<ClientCoreDataGlobals>()),
       playerRecords_(std::make_shared<ClientPlayerRecords>()),
       gameplayGlobals_(std::make_shared<ClientGameplayGlobals>(subscriberGlobals_)),
+      constructionGlobals_(std::make_shared<ClientConstructionGlobals>()),
       htmlWindowGlobals_(std::make_shared<ClientHtmlWindowGlobals>()),
       chatWindowGlobals_(std::make_shared<ClientChatWindowGlobals>()),
       nsInfoGlobals_(std::make_shared<ClientNsInfoGlobals>()),
@@ -1372,6 +1374,7 @@ const std::shared_ptr<ClientCoreDataGlobals>& Client::CoreDataGlobals() const { 
 const std::shared_ptr<ClientPlayerRecords>& Client::PlayerRecords() const { return playerRecords_; }
 // 현재 전역의 주소를 빌리며 조회 자체는 게임/초기화를 수행하지 않는다.
 const std::shared_ptr<ClientGameplayGlobals>& Client::GameplayGlobals() const { return gameplayGlobals_; }
+const std::shared_ptr<ClientConstructionGlobals>& Client::ConstructionGlobals() const { return constructionGlobals_; } // 현재 Client의 같은 장기 상태 owner다.
 // 실제 현재 NSInfo/서버 이름 소유자를 조회하며 목록을 다시 읽거나 초기화하지 않는다.
 const std::shared_ptr<ClientHtmlWindowGlobals>& Client::HtmlWindowGlobals() const { return htmlWindowGlobals_; } // 같은 실제 장기 HTML 상태를 조회한다.
 const std::shared_ptr<ClientChatWindowGlobals>& Client::ChatWindowGlobals() const { return chatWindowGlobals_; } // 같은 장기 소유자를 조회한다.

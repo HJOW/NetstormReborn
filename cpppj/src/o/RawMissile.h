@@ -55,6 +55,16 @@ struct MissileState {
     std::uint32_t rainCannonType{129},iceMissileType{130}; //10.78의 초기 아이스 발사자와 충돌/반사 표시 TYPE다. 기존 값형 초기화 순서는 유지한다.
     std::uint32_t floaterType{146}; //005412a0의 현재 클라우드 플로터 TYPE이며 충돌 뒤에만 비교한다.
     std::int32_t avoidanceCutoff{800}; //00540bbc의 실제 signed DWORD이며 RandomFloat(0,1000)의 x87 반환과 비교한다.
+    const std::uint32_t* sharedSunCannonType{}; // 같은 장기00541258의 현재 역할이다.
+    const std::uint32_t* sharedSunArcherType{}; // 같은 장기00541174의 현재 역할이다.
+    const std::uint32_t* sharedCrossbowType{}; // 같은 장기00541288을 Gun/패턴과 공유한다.
+    const std::uint32_t* sharedThunderCannonType{}; // 같은 장기00541264의 현재 역할이다.
+    const std::uint32_t* sharedRainCannonType{}; // 같은 장기0054125c의 현재 역할이다.
+    const std::uint32_t& SunCannonType() const { return sharedSunCannonType ? *sharedSunCannonType : sunCannonType; } // 실제 발사자 비교 위치에서 조회한다.
+    const std::uint32_t& SunArcherType() const { return sharedSunArcherType ? *sharedSunArcherType : sunArcherType; } // 독립 typed 번호는 기존대로 보존한다.
+    const std::uint32_t& CrossbowType() const { return sharedCrossbowType ? *sharedCrossbowType : crossbowType; } // 같은 현재 윈드 아처 발사자 역할을 읽는다.
+    const std::uint32_t& ThunderCannonType() const { return sharedThunderCannonType ? *sharedThunderCannonType : thunderCannonType; } // 효과 뒤 현재 group1 역할이다.
+    const std::uint32_t& RainCannonType() const { return sharedRainCannonType ? *sharedRainCannonType : rainCannonType; } // 발사자 소멸 뒤 fallback 피해 TYPE도 같은 주소다.
 };
 // 실제 원본 월드 효과 경계다. 미복원 효과를 빈 성공으로 처리하지 않는다.
 struct MissileHooks {

@@ -153,21 +153,21 @@ struct RawCampaignConstructionBindings::Impl {
     }
     // 실제 현재 전역의 불일치/일반 건설 분기를 생성 전에 거부한다. 지원 범위를 임의 성공으로 넓히지 않는다.
     void ValidateState() const {
-        const auto type=state.place.noIslandType; // 동일받침전역과실제타입플래그를매요청다시읽는다.
-        if (type>=core.types.size() || type!=core.bridgeState.noIslandType || type!=state.geyser.noIslandType ||
-            type!=state.confirm.patternTypes[3] || state.confirm.patternTypes!=state.clear.patternTypes ||
-            state.confirm.patternTypes!=state.place.patternTypes || state.place.bridgeType!=state.clear.bridgeType ||
-            state.place.bridgeType!=core.bridgeState.bridgeType || state.place.localPlayer!=state.notice.localPlayer ||
-            state.place.authority!=state.clear.authority || state.place.authority!=state.notice.authority ||
-            state.place.authority!=state.geyser.boss || state.geyser.fort!=core.ownerMode.fort ||
+        const auto type=state.place.NoIslandType();const auto patterns=state.confirm.CurrentPatternTypes(); // 같은 현재 owner만 검증하고 준비 사본으로 정상 변경을 거부하지 않는다.
+        if (type>=core.types.size() || type!=core.bridgeState.noIslandType || type!=state.geyser.NoIslandType() ||
+            type!=patterns[3] || patterns!=state.clear.CurrentPatternTypes() ||
+            patterns!=state.place.CurrentPatternTypes() || state.place.BridgeType()!=state.clear.BridgeType() ||
+            state.place.BridgeType()!=core.bridgeState.bridgeType || state.place.LocalPlayer()!=state.notice.LocalPlayer() ||
+            state.place.Authority()!=state.clear.Authority() || state.place.Authority()!=state.notice.Authority() ||
+            state.place.Authority()!=state.geyser.Boss() || state.geyser.Fort()!=core.ownerMode.fort ||
             (core.types[type].flags1&kNoIslandUnsupportedFlags) || (core.types[type].flags2&kDaisGenus) ||
-            type==state.notice.daisType)
+            type==state.notice.DaisType())
             throw std::logic_error("캠페인 건설/간헐천의 현재 전역 불일치");
     }
     // 원본 LocalGeyser의 명시0인자만허용하여커서/SP/운반미연결을통과하지못하게한다.
     bool ConfirmSupport(const o::ConstructionConfirmRequest& request) const {
         ValidateState();
-        if (request.type!=state.place.noIslandType || request.player || request.argument || request.direction || request.flags ||
+        if (request.type!=state.place.NoIslandType() || request.player || request.argument || request.direction || request.flags ||
             request.timeLow || request.timeHigh || request.quality)
             throw std::logic_error("캠페인 받침 확정은 LocalGeyser의 noIsland/Player0 요청만 지원합니다");
         return confirm->ActualConfirm(request,state.packet);
@@ -179,7 +179,7 @@ struct RawCampaignConstructionBindings::Impl {
     // 실제 표면/받침/종유석의 확인된 가상 표만 표면 수명으로 분배한다. 살아 있는 받침도DropIsland가 정리한다.
     bool Support(o::Sid sid) const {
         const auto raw=core.pool.Slot(sid);const auto table=ConstructionVtable(raw);
-        if (raw[10]==state.place.noIslandType && table==o::kPatchNoIslandVtable) return true;
+        if (raw[10]==state.place.NoIslandType() && table==o::kPatchNoIslandVtable) return true;
         //94의 고유pre=442240·157의 고유post=442640은 기존SurfaceLifecycle이 구별한다.
         return (raw[10]==core.bridgeState.islandType && table==o::kPatchIslandVtable) ||
             (raw[10]==core.bridgeState.stalagType && table==o::kPatchStalagVtable) ||

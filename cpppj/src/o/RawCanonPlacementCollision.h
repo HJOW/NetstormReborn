@@ -10,6 +10,8 @@ struct CanonPlacementCollisionState {
     std::uint32_t ignoredGenus{}; // 005325b4 / CD 0053fc28: 배치 타입과 겹칠 때 후보 마스크를 반환하는 전역이다.
     const std::uint32_t* sharedIgnoredGenus{}; // 실제 건설/경로와 같은005325b4를 빌린다.
     std::uint32_t IgnoredGenus() const { return sharedIgnoredGenus ? *sharedIgnoredGenus : ignoredGenus; } // 후보별 충돌 판정의 현재 마스크다.
+    const bool* sharedServer{}; // 실제00540bc0의 현재 비영 상태이며 후보별 초기 관문에서 읽는다.
+    bool ClientMode() const { return sharedServer ? *sharedServer : clientMode!=0; } // 독립 DWORD 입력의 비영 계약을 유지한다.
 };
 // 0049ade0 / CD 00444900: 임의 타입의 원본 무시 함수다. 반환 비트값을 bool로 축소하지 않는다.
 std::uint32_t PlacementIgnoreValue(OriginalEdition edition,const RiftTypeRecord& placing,

@@ -72,10 +72,10 @@ void RawMissile::FrameNumber(Sid sid,std::uint32_t frame) const { const bool pat
 // 실제 ctor 순서에 따라 숫자 준비와 표시 자산 생성/Pop/비행효과를 수행한다.
 Sid RawMissile::Construct(MissileFields& fields,const GunProjectileRequest& request) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const bool reflected=patch && request.ricochet!=0;const auto layout=patch ? kPatch : kCd;const auto firing=Slot(request.firing),target=Slot(request.target,reflected);
-    const bool archer=firing[10]==state_.sunArcherType;
+    const bool archer=firing[10]==state_.SunArcherType();
     // group0 탄도와 썬 디스크 발사기71 전용 포구 보정 생략을 독립 판정한다.
-    const bool groupZero=archer || (patch && firing[10]==state_.crossbowType);
-    const bool cannon=firing[10]==state_.sunCannonType || (patch && (firing[10]==state_.thunderCannonType || firing[10]==state_.rainCannonType)); // 같은 group1의 초기 아이스129도 원문 수치/표시 생성 순서를 사용한다.
+    const bool groupZero=archer || (patch && firing[10]==state_.CrossbowType());
+    const bool cannon=firing[10]==state_.SunCannonType() || (patch && (firing[10]==state_.ThunderCannonType() || firing[10]==state_.RainCannonType())); // 같은 group1의 초기 아이스129도 원문 수치/표시 생성 순서를 사용한다.
     if ((reflected ? firing[10]!=state_.iceMissileType : (request.ricochet || (!groupZero && !cannon) || Valid(request.firingPosition)))) throw std::logic_error("Missile 미복원 반사/부모/포구 생성 경로 TYPE"+std::to_string(firing[10]));
     if (!reflected && types_[firing[10]].group!=(groupZero ? 0 : 1)) throw std::logic_error("Missile 실제부모 group 계약 오류");
     if (!std::isfinite(request.speed) || request.speed<=0 || !Valid(request.targetPosition)) throw std::invalid_argument("Missile 생성 좌표/속도 오류");
@@ -127,10 +127,10 @@ void RawMissile::Frame(MissileFields& fields,std::shared_ptr<const bool> process
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;if (patch && !CheckBase(fields,processAlive)) return;
     const auto alive=[processAlive] { return !processAlive || *processAlive; }; // 실제 Host에서 진단 중 삭제된 프로세스의 필드 접근을 막는다.
     const bool reflected=patch && Read(fields.bytes,kRicochet)!=0;const auto layout=patch ? kPatch : kCd;const auto assetSid=fields.Parent();const auto firing=Slot(fields.Firing()),target=Slot(fields.Target(),reflected),asset=Slot(assetSid);
-    const bool archer=firing[10]==state_.sunArcherType;
+    const bool archer=firing[10]==state_.SunArcherType();
     // 원본 group0 사거리/코너 종료는 크로스보우에도 같고71 전용 포구와 무관하다.
-    const bool groupZero=archer || (patch && firing[10]==state_.crossbowType);
-    const bool cannon=firing[10]==state_.sunCannonType || (patch && (firing[10]==state_.thunderCannonType || firing[10]==state_.rainCannonType)); // 초기 아이스도 같은 group1 이동/만료를 사용하고 충돌의 파생 효과는 아래에서 구별한다.
+    const bool groupZero=archer || (patch && firing[10]==state_.CrossbowType());
+    const bool cannon=firing[10]==state_.SunCannonType() || (patch && (firing[10]==state_.ThunderCannonType() || firing[10]==state_.RainCannonType())); // 초기 아이스도 같은 group1 이동/만료를 사용하고 충돌의 파생 효과는 아래에서 구별한다.
     if (!reflected && ((!groupZero && !cannon) || Read(fields.bytes,kRicochet))) throw std::logic_error("Missile 미복원 frame 파생/반사 경로"); // 반사 생성 뒤 발사 슬롯이 반납/재사용됐으면 원문처럼 아래에서 현재 TYPE/group을 읽는다.
     if (patch && Read(fields.bytes,40)) { Put(fields.bytes,40,0);Put(fields.bytes,44,1); } // 원문 빗나감 요청은 첫 프레임에 소비하고 종료 음향 표시를 유지한다.
     const float margin=static_cast<float>(patch && asset[10]==state_.thunderMissileType ? state_.thunderRangeMargin : (reflected ? 0 : state_.rangeMargin)); // 반사는 일반4 여유를 더하지 않는다.
@@ -195,7 +195,7 @@ void RawMissile::Frame(MissileFields& fields,std::shared_ptr<const bool> process
     const bool liveFiring=(finishingFiring[11]&1)==0;const auto firingGroup=types_[finishingFiring[10]].group;
     if (liveFiring && (firingGroup==0 || firingGroup==1)) { if (hit && !corner) { if (!hooks_.hit) throw std::logic_error("Missile 실제 직접 총 피해 경계 누락");hooks_.hit(fields.Firing(),fields.Target()); }else { if (!hooks_.refresh) throw std::logic_error("Missile 실제 총 사거리 갱신 경계 누락");hooks_.refresh(fields.Firing()); } }
     else if (patch && (liveFiring || (hit && !corner))) {
-        const auto& damageType=missileTypes_[liveFiring ? finishingFiring[10] : state_.rainCannonType];float damage=static_cast<float>(static_cast<double>(damageType.damagePerSecond)*0.6F);
+        const auto& damageType=missileTypes_[liveFiring ? finishingFiring[10] : state_.RainCannonType()];float damage=static_cast<float>(static_cast<double>(damageType.damagePerSecond)*0.6F);
         if (missileTypes_[finishingFiring[10]].specialFlyerDamage && (types_[target[10]].flags2&0x120000U)) damage=missileTypes_[finishingFiring[10]].flyerDamagePerSecond;
         // 원문의 살아 있는 비총 발사자는 dead2 표적, 반납된 발사자는 살아 있는 표적에만 가상98을 호출한다.
         const bool eligible=fields.Target().value && (liveFiring ? ((target[11]&2)!=0 && !(target[11]&1)) : !(target[11]&3));

@@ -66,7 +66,7 @@ bool RawConstructionConfirm::ActualConfirm(ConstructionConfirmRequest request,co
     std::array<std::uint8_t,512> packet; // 호출마다 독립512BYTE를 소유하여 중첩 Confirm이 앞 호출의 wire를 덮지 않는다.
     InitializeConstructionPacket(header,packet); // 원문의 df590은 decoder/Create보다 앞서 미작성 본문을ff로 만든다.
     const auto& meta=frames_[request.type]; // decoder 생성 시 선택한 같은 TYPE 프레임을 유지한다.
-    const auto patterns=state_.patternTypesRead ? state_.patternTypesRead() : state_.patternTypes; // FindBuilder의 효과 뒤 현재8 owner를 읽으며 기존 typed Confirm의 배열 계약은 보존한다.
+    const auto patterns=state_.CurrentPatternTypes(); // FindBuilder의 효과 뒤 현재8 owner를 읽으며 기존 typed Confirm의 배열 계약은 보존한다.
     auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,patterns,{request.type,std::bit_cast<int>(request.argument),
         std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics);
     std::size_t count{};Sid first{}; // 원본 지역 첫 SID는 wire의 후속 변경과 별개로 기록기에 전달한다. 빈 decoder의 기존 명시0 제한은 유지한다.

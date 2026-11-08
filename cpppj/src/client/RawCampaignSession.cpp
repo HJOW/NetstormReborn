@@ -117,6 +117,7 @@
 #include "o/RawMissionAiSettings.h"
 #include "client/RawCampaignCursor.h"
 #include "client/PriestPlacementAssets.h"
+#include "client/ClientConstructionGlobals.h" // Native 건설 상태와 그 실제 owner를 Session 교체 뒤에도 유지한다.
 #include "client/RawCampaignGunQueries.h"
 #include "o/RawGunBlocker.h"
 #include "o/RawPathRetarget.h"
@@ -322,7 +323,8 @@ template<std::size_t Count> bool HasRegularTable(const std::array<std::uint32_t,
 BridgeConnectState CampaignLinks() { BridgeConnectState result;result.bridgeType=82;result.islandType=94;result.stalagType=95;result.connectorType=155;result.noIslandType=157;result.battle=true;result.mission=true;return result; }
 // 같은 Client의 archive 정체성을 확인한 뒤에만 물리 대여/초기화를 허용한다.
 std::shared_ptr<RawSurfaceStorage> SessionSurfaceStorage(const RawCampaignSessionServices& services,const GameAssets& assets) {
-    if (services.surfaceStorage && services.surfaceStorage->Source()!=&assets) throw std::invalid_argument("Session의 실제 Client 월드 자산 불일치");return services.surfaceStorage;
+    if (services.surfaceStorage && services.surfaceStorage->Source()!=&assets) throw std::invalid_argument("Session의 실제 Client 월드 자산 불일치");
+    if (services.surfaceStorage && services.surfaceStorage->UsesNativeTransmissionDevices() && (!services.constructionGlobals || !services.constructionGlobals->Matches(services.surfaceStorage,services.gameplayGlobals,services.buildReplay))) throw std::invalid_argument("Session 대여 전 같은 Native 건설 상태 owner 미결합");return services.surfaceStorage;
 }
 // 다른 Client의 두 Subscriber를 실제 현재 전역에 섞기 전에 거부한다.
 std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignSessionServices& services) {
@@ -600,7 +602,8 @@ struct RawCampaignSession::Impl {
     CampaignWorldGlobals& globals{gameplayGlobals->world}; // 두 실제 Subscriber와 editor/post도 같은 장기 주소를 사용한다.
     std::uint32_t& revision{gameplayGlobals->MapRevision()}; // Vortex/로그인은005949d4를 증가시키고 섬/지역은 같은 주소에1을 쓴다.
     std::uint32_t localWorldRedraw{};std::uint32_t& worldRedraw{services.kencloudGlobals ? services.kencloudGlobals->WorldRedraw() : localWorldRedraw}; // 실제 Client의0059a8b0을 직접 빌리며 장치 없는 기존 독립 Session만 기존0 입력을 사용한다.
-    std::uint32_t piece{107}; // 현재 다리 패턴은 두 갱신 DWORD와 별개의 원본 전역이다.
+    std::uint32_t localPiece{107}; // 독립 typed Session의 기존 역할 기본값이다.
+    std::uint32_t& piece{world.Storage()->UsesNativeTransmissionDevices() ? gameplayGlobals->GameAux()->PuzzlePieceType():localPiece}; // Native는 실제00541204의 같은 장기 주소를 빌린다.
     std::uint32_t localCrt{}; // 소유자 없는 기존 독립Session 검사에 한해서 보존하는 초기CRT0 입력이다.
     std::uint32_t& crt{services.randomGlobals ? services.randomGlobals->CrtState() : localCrt}; // Seed/지형은같은Client실제DWORD를직접빌리며사본동기화를하지않는다.
     std::uint32_t localRandomMode{}; //독립Session의기존BSS0입력만보존한다.
@@ -912,7 +915,8 @@ struct RawCampaignSession::Impl {
     FormDeletionStamp& deletionStamp{world.Storage()->GameAux()->SquidTransmission().deletion}; // 실제 삭제 writer가 한 번 소비하는 최근 명령 표식이다.
     std::unique_ptr<RawFormPacket> formWriter; // 동일 Pool의 실제 가상+54/+58 직렬화 몸체다.
     std::array<std::uint8_t,2048>& formBuffer{world.Storage()->GameAux()->SquidTransmission().buffer}; // 감시/내용물/삭제 요청이 공유하는 원본 크기의 현재 송신 버퍼다.
-    RawCampaignConstructionState constructionState; //실제 받침/로컬 수량 실행 상태이며 최근 이력만 더 긴 Client 장부를 빌린다.
+    std::unique_ptr<RawCampaignConstructionState> localConstructionState{world.Storage()->UsesNativeTransmissionDevices() ? nullptr:std::make_unique<RawCampaignConstructionState>()}; // 독립 typed만 기존 지역 상태를 소유한다.
+    RawCampaignConstructionState& constructionState{localConstructionState ? *localConstructionState:services.constructionGlobals->State()}; // Native는 검증된 별도 Client owner의 같은 상태를 빌린다.
     SquidPostPopList& recentGeysers{world.Storage()->recentGeysers}; //00595094/98은같은Client전용최근5목록이며전체geysers와분리한다.
     std::uint8_t& geyserMapSize{battleOptions[6]}; //41ca10은현재0052f7e6을읽는다. Session지역0사본으로현재옵션을가리지않는다.
     std::array<std::uint32_t,9>& playerDirections{world.Storage()->geyserPlayerDirections}; //같은현재9DWORD를PlayerBounds와World없는생성부모가공유한다.
@@ -999,8 +1003,10 @@ struct RawCampaignSession::Impl {
         constructionState.place.sharedPlayerKnown=&playerState.playerKnown;constructionState.place.sharedBridgeType=&core.bridgeState.bridgeType;constructionState.place.sharedNoIslandType=&core.bridgeState.noIslandType; //SP 자연 관문과 표면 통지 뒤 TYPE 번호를 Prepare 사본으로 고정하지 않는다.
         constructionState.place.sharedBridgeLife=&kBridgeCrackLife; //원문52f960은 쓰기 없는 초기5이며 기존 Bridge/Decay/Editor가 읽는 같은 공통 owner를 빌린다.
         constructionState.notice.sharedDaisType=&gameplayGlobals->GameAux()->DaisType();constructionState.notice.sharedPriestType=&gameplayGlobals->GameAux()->PriestType(); //같은 현재 Dais/Priest 장기 TYPE owner를 통지에 빌린다.
-        constructionState.place.patternTypesRead=[this] { return std::array<std::uint32_t,8>{piece,core.bridgeState.bridgeType,core.bridgeState.islandType,core.bridgeState.noIslandType,gunState.thunderCannonType,gunState.rainCannonType,gameplayGlobals->GameAux()->WindArcherType(),constructionState.confirm.patternTypes[7]}; }; //player 진단 복귀 뒤 541204/11a0/11d0/12cc/1264/125c/1288/1290의 같은 현재 owner8개를 읽는다.
-        constructionState.confirm.patternTypesRead=constructionState.place.patternTypesRead; // 실제 확정도 FindBuilder 뒤 Place와 같은8 owner를 조회하며 Prepare 사본을 현재값으로 고정하지 않는다.
+        if (localConstructionState) {
+            constructionState.place.patternTypesRead=[this] { return std::array<std::uint32_t,8>{piece,core.bridgeState.bridgeType,core.bridgeState.islandType,core.bridgeState.noIslandType,gunState.ThunderCannonType(),gunState.RainCannonType(),gameplayGlobals->GameAux()->WindArcherType(),constructionState.confirm.patternTypes[7]}; }; // 독립 typed만 기존 Session 역할 입력을 읽는다.
+            constructionState.confirm.patternTypesRead=constructionState.place.patternTypesRead;
+        }
         if (world.Storage()->UsesNativeTransmissionDevices()) {
             auto& aux=*gameplayGlobals->GameAux(); // 실제 Native 소비자만 같은 장기 주소를 빌리며 typed 입력은 기존 Prepare 계약을 유지한다.
             constructionState.request.sharedEditor=&core.ownerMode.fort;constructionState.request.sharedLocalPlayer=constructionState.command.sharedLocalPlayer=&playerState.battleOwner;
@@ -1009,6 +1015,9 @@ struct RawCampaignSession::Impl {
             constructionState.command.sharedBlocked=&aux.ConstructionBlocked();constructionState.request.sharedDisplaceGenus=buildingState.sharedPushGenus=process.sharedBlockingGenus=placement.collision.sharedIgnoredGenus=gameplayPlacement.collision.sharedIgnoredGenus=&aux.ConstructionDisplaceGenus();
             constructionState.geyser.sharedFort=&core.ownerMode.fort;constructionState.geyser.sharedNoIslandType=&core.bridgeState.noIslandType;constructionState.geyser.sharedEmptyGeyserType=&aux.EmptyGeyserType();constructionState.geyser.sharedIsleType=&aux.TerrainType();
             constructionState.geyser.sharedFirstQuantity=&aux.FirstLocalGeyserQuantity();constructionState.geyser.sharedLastQuantity=&aux.LastLocalGeyserQuantity();
+            placement.collision.sharedServer=gameplayPlacement.collision.sharedServer=&gameplayGlobals->Authority()->server; // 각 후보가 앞선 지형 효과 뒤 현재 server를 읽는다.
+            gunState.sharedWindArcherType=&aux.WindArcherType();gunState.sharedThunderCannonType=&aux.ThunderCannonType();gunState.sharedRainCannonType=&aux.RainCannonType();
+            missileState.sharedSunCannonType=&aux.SunCannonType();missileState.sharedSunArcherType=&aux.SunArcherType();missileState.sharedCrossbowType=&aux.WindArcherType();missileState.sharedThunderCannonType=&aux.ThunderCannonType();missileState.sharedRainCannonType=&aux.RainCannonType();
         }
         farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();farm.sharedArchipelagoSpan=&gameplayGlobals->GameAux()->WorldGeyserMargin();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088/542654를 직접 빌린다.
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
@@ -1096,7 +1105,7 @@ struct RawCampaignSession::Impl {
             const auto current=coreDataGlobals->Current();const auto expected=services.installMode==CampaignInstallMode::MetaMap ? coreDataGlobals->Cached().data() : players.data()+180+0x6c;
             if (current.size()!=10 || current.data()!=expected || coreDataGlobals->Players().data()!=players.data()) throw std::logic_error("준비된 Editor/LAN/메타의 실제 cleanup/prefix Core 선택 불일치"); // 메타의 캐시10BYTE와 일반 Player1 Core를 구별하며 현재값을 다시 쓰지 않는다.
         } else if (services.coreDataGlobals) { const std::uint32_t metamap=core.ownerMode.challenge;coreDataGlobals->Select(playerState,metamap,1,1); } // 기존 독립/캠페인 어댑터는 종전 선택 순서를 보존한다.
-        constructionState.command.chargeBlockedRead=constructionState.place.chargeBlockedRead=[this] { return globals.missionPost; }; // 원본00594fa4는 캠페인/편집/일반 전투 모두의 현재 미션 전역이다. 각 소비 위치에서 읽어 캠페인 배치 확정의 중복 비용 검사와 잘못된 부족 안내를 막는다. 생산 가격·AI 자금 판정은 별도 몸체가 유지한다.
+        constructionState.command.chargeBlockedRead=constructionState.place.chargeBlockedRead=[owner=gameplayGlobals] { return owner->world.missionPost; }; // 같은 실제00594fa4 owner만 보관하며 Session 주소를 장기 상태에 남기지 않는다.
         //BYTE호환값을DWORD const참조로넘기면임시값수명오류가나므로실제Player DWORD를빌린다.
         broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,playerState.battleOwner,core.processState.Server(),
             [storage=world.Storage()] { storage->AssertDisplay("server","\\Ns\\O\\Ztrans.cpp",0x1c3); }); // 실제 진단 뒤 당시 로컬 번호로 제외 송신을 계속한다.
@@ -1254,7 +1263,7 @@ struct RawCampaignSession::Impl {
                     std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(header[34]|(std::uint16_t(header[35])<<8)))});
             }
         }
-        gunMode=std::make_unique<RawGunMode>(core.pool,core.frames,gunState.windArcherType);
+        gunMode=std::make_unique<RawGunMode>(core.pool,core.frames,gunState.WindArcherType());
         gunTarget=std::make_unique<RawGunTarget>(core.pool,core.hash,core.types,gunTypes,core.shapes,gunTargetState);
         EnergySupplyHooks energyHooks;energyHooks.providerEntry=EnergyProviderEntry;energyHooks.requirement=BindAiTypeRequiredEnergy(assets.game,core.types);
         EnergySupplyReads energyReads;energyReads.editor=[this] { return globals.editor; };energyReads.special=[this] { return playerState.special ? 1U : 0U; };energyReads.mission=[this] { return globals.missionPost ? 1U : 0U; };
@@ -2612,7 +2621,8 @@ struct RawCampaignSession::Impl {
         gameplay.notice.tryMove=[this](Sid priest,float x,float y,Sid target) { if (!motion) throw std::logic_error("일반 통지의 실제54 미설치");return motion->Paths().StartPriest({priest,{x,y},0,target.value,0,0,0})!=nullptr; };
         gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,std::bit_cast<float>(bits)); };
         auto constructionRuntime=BindConstructionRuntime(world);if (world.Storage()->UsesNativeTransmissionDevices()) constructionRuntime.players=[records=playerRecords] { return records->Records(); }; // 장기 Player owner만 보관하며 Session this나 현재 span을 고정하지 않는다.
-        const PlayerGeyserBoundsState boundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections,&metadata.geometry.decoderDiagnostics}; // 같은 장기 모드/표/진단 주소만 빌린다.
+        const bool& boundsMission=world.Storage()->UsesNativeTransmissionDevices() ? core.bridgeState.mission:objectState.mission; // Native는 이미 준비된 실제00594fa0을 읽고 독립 로더의 편의 writer를 alias하지 않는다.
+        const PlayerGeyserBoundsState boundsState{core.ownerMode.battle,boundsMission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections,&metadata.geometry.decoderDiagnostics}; // 같은 장기 모드/표/진단 주소만 빌린다.
         if (world.Storage()->UsesNativeTransmissionDevices()) construction=std::make_unique<RawCampaignConstructionBindings>(std::move(constructionRuntime),hp,sp,rewardState,metadata.frames,chunks,constructionState,boundsState,recentGeysers,assetState.Geysers(),std::move(effects),std::move(gameplay));
         else construction=std::make_unique<RawCampaignConstructionBindings>(std::move(constructionRuntime),hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,boundsState,recentGeysers,assetState.Geysers(),std::move(effects),std::move(gameplay)); // 독립 경로의 기존 Player span/방송 대여 계약을 유지한다.
     }
@@ -2723,7 +2733,7 @@ struct RawCampaignSession::Impl {
         collectors.log=[this](auto token,auto type,auto x,auto y) { if (!services.player.log) throw std::logic_error("AI 수집자 Lay 로그 미연결");if (type>=core.types.size()) throw std::out_of_range("AI 수집자 Lay TYPE 범위");services.player.log(aiLayLog,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(aiMemory.Bytes(token),0x260)))+": Lay "+core.types[type].name+" at ("+std::to_string(x)+","+std::to_string(y)+")\n"); };
         collectors.dropSound=[this] { if (!services.sound.play) throw std::logic_error("AI 수집자 로컬 드롭 음향 미연결");static_cast<void>(services.sound.play(soundNames.Lookup("droppiece.wav"),0,0,0,0,0)); };
         aiCollectors=std::make_unique<RawAiCollectors>(aiMemory,core.pool,core.types,random,AiCollectorsGlobals{core.processState.Now(),playerState.battleOwner,[this] { return static_cast<std::uint32_t>(core.bookkeeping.invalidGraph); }},std::move(collectors));
-        aiBridgeCandidates=std::make_unique<RawAiBridgeCandidates>(aiMemory,core.pool,core.types,core.frames,core.hash.Entries(0),core.spots,AiBridgeCandidateTypes{contentState.bridgeType,fenceNodeType,gunState.windArcherType});
+        aiBridgeCandidates=std::make_unique<RawAiBridgeCandidates>(aiMemory,core.pool,core.types,core.frames,core.hash.Entries(0),core.spots,AiBridgeCandidateTypes{contentState.bridgeType,fenceNodeType,gunState.WindArcherType()});
         aiBridgeSearch=std::make_unique<RawAiBridgeSearch>(aiMemory,core.frames,core.spots,contentState.bridgeType,random);
         AiFactoryProductionHooks factories;factories.technology=[this](auto owner) { const auto value=player->Technology(std::bit_cast<std::int32_t>(owner));if (value>65535 || value>=core.pool.Capacity()) throw std::out_of_range("AI 시설 생산 현재 기술부모 SID 범위");return Sid{static_cast<std::uint16_t>(value)}; };factories.product=[this](auto token,auto type) { return aiStrategySetup->FindProduct(token,type); };factories.addProduct=[this](auto token,Sid factory,auto type) { aiStrategySetup->AddProduct(token,factory,type); };
         factories.level=[this](Sid factory) { const auto table=Read(core.pool.Slot(factory),0);if (table!=0x509148U && table!=0x509210U) throw std::logic_error("AI 시설 가상level80 미지원 실제 표");return VirtualCount(factory); };

@@ -78,6 +78,7 @@ class ClientConnectionActivityGlobals; // Session보다 오래 사는 두 활동
 class ClientPlayerRecords; // 실제 Player/factory와 로그인 카운터를 Client 수명에 보관한다.
 class ClientCoreDataGlobals; // 현재 Core/active/cache를 같은 Client 수명에서 빌린다.
 class ClientGameplayGlobals;struct ProductionControlContext; // 실제 초기 HUD와 같은 현재 전역/물리를 공유한다.
+class ClientConstructionGlobals; // 실제 Native 건설 상태의 별도 Client 수명 owner다.
 class ClientKencloudGlobals; // 같은0059a8b0 월드 다시 그리기 DWORD를 지형/섬도 직접 빌린다.
 class ClientColorSortInput;class OwnerColorTableState; // 같은 Client 최초 RGB와 현재 전역 색표 소유자를 빌린다.
 class ClientLocalStateGlobals; // 실제 Client의 State 다섯 블록과 활동 기한의 장기 소유자다.
@@ -192,6 +193,7 @@ struct RawCampaignSessionServices {
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> developerQueue; // cr/신전 ViewMeta의452fe0을 같은 실제 입력 큐에 넣고 직접 UI/State 변경으로 대체하지 않는다.
     std::function<void(float,float)> developerHighlight; //4345e0의 현재 좌표 강조를 실제 Screen/카메라/즉시 출력에 연결한다.
     std::shared_ptr<ClientBuildReplayGlobals> buildReplay; // 건설 Confirm의 현재495710/495730이 읽는 실제 Client 전역이다.
+    std::shared_ptr<ClientConstructionGlobals> constructionGlobals; // Native는 같은 장기 상태를 빌리며 독립 typed는 기존 지역 상태를 유지한다.
     std::function<void(std::uint32_t)> developerSelectObject; //4958d0의 마지막4d5c90(SID,0,1)을 같은 실제 World 선택기로 전달한다.
     std::function<void()> requestFortEdit; //004b3560의 실제 next1/Battle14 Fort 보존 부모다. 신전 마지막 섬 이탈에서 즉시 호출한다.
     std::function<void(std::string_view)> developerRecordLabel; //4954f0의 현재 파일/RL 라벨 기록이며 원문 활성 관문 뒤에만 호출한다.

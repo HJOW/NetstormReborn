@@ -60,6 +60,7 @@ class ClientStaticStrings; // 원문 공유 임시 고리의 같은 네 DWORD와
 class ClientDotCommandGlobals; //최초 say와 같은 인접 명령 표를 Session보다 오래 보유한다.
 class RawSurfaceStorage; // 실제 Pool/Hash/TYPE/spot을 모든 Session과 초기 HUD보다 오래 보유한다.
 class ClientGameplayGlobals; // 실제 현재 Player/커서/미션 전역과 짧은 Runtime 연결을 소유한다.
+class ClientConstructionGlobals; // 건설 상태와 실제 물리/전역 수명을 별도 Client owner에 보관한다.
 struct ClientChatWindowGlobals; // 실제 Chat 현재 전역과 공유 로그의 장기 소유자다.
 struct ClientHtmlWindowGlobals; // 같은 Client의 HTML 수/serial/종료 시각 소유자다.
 struct ClientNsInfoGlobals; // 실제 NSInfo/zone/선택 서버와 이름 버퍼의 장기 소유자다.
@@ -219,6 +220,7 @@ public:
     const std::shared_ptr<ClientCoreDataGlobals>& CoreDataGlobals() const; //같은 현재 Core 슬롯/캐시를 빌리며 Player 자동 선택이나 해제를 실행하지 않는다.
     const std::shared_ptr<ClientPlayerRecords>& PlayerRecords() const; // 실제 세션이 같은 할당 소유자와 대여 관문을 빌린다.
     const std::shared_ptr<ClientGameplayGlobals>& GameplayGlobals() const; // 초기 HUD와 Session에 같은 현재 전역을 전달한다.
+    const std::shared_ptr<ClientConstructionGlobals>& ConstructionGlobals() const; // 모든 Native Session이 같은 건설 상태와 실제 backing owner를 빌린다.
     const std::shared_ptr<ClientHtmlWindowGlobals>& HtmlWindowGlobals() const; // 같은 장기 HTML 전역을 빌린다.
     const std::shared_ptr<ClientChatWindowGlobals>& ChatWindowGlobals() const; // 같은 실제 Chat 현재/공유 로그 상태를 빌린다.
     const std::shared_ptr<ClientNsInfoGlobals>& NsInfoGlobals() const; // 현재 NSInfo와 서버 이름을 같은 고정 주소에서 빌린다.
@@ -363,6 +365,7 @@ private:
     std::shared_ptr<ClientPlayerRecords> playerRecords_; // 모든 Session 고정뷰가 소멸한 뒤에 실제 Player/factory를 반납한다.
     std::shared_ptr<ClientPacketRecord> packetRecord_; //모든 UI/Session/전송보다 오래 살며 자체 frame owner도 실제 기록 완료까지 pin한다.
     std::shared_ptr<ClientGameplayGlobals> gameplayGlobals_; // Subscriber 뒤·UI/Session 앞에 구성한 실제 현재 전역이다.
+    std::shared_ptr<ClientConstructionGlobals> constructionGlobals_; // Storage/Gameplay를 pin하는 별도 owner이며 Gameplay 자체에 저장해 순환시키지 않는다.
     std::shared_ptr<ClientHtmlWindowGlobals> htmlWindowGlobals_; // 표시 부모 교체보다 오래 유지하는 실제 HTML 전역이다.
     std::shared_ptr<ClientChatWindowGlobals> chatWindowGlobals_; // 표시 부모 교체보다 오래 유지하는 공유 상태다.
     std::shared_ptr<ClientNsInfoGlobals> nsInfoGlobals_; // 모든 실제 NSInfo 자식/문자 소비자보다 오래 유지한다.

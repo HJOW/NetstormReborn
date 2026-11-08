@@ -162,7 +162,7 @@ void RawGunProcess::Frame(GunProcessFields& fields) const {
         CheckNoAnimation(fields);
         if (fields.Target().value) {
             const auto group=types_.at(Parent(fields)[10]).group;
-            if ((group!=0 || type==state_.windArcherType) && type!=state_.thunderCannonType && type!=state_.rainCannonType) {
+            if ((group!=0 || type==state_.WindArcherType()) && type!=state_.ThunderCannonType() && type!=state_.RainCannonType()) {
                 if (!hooks_.startAnimation) throw std::logic_error("GunProcess 회전 애니메이션 경계 누락");
                 hooks_.startAnimation(stage,fields.Form(),fields.Target());Stage(fields,3);
             } else Stage(fields,4);
