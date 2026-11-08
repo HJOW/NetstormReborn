@@ -53,12 +53,13 @@ void WriteClientPacketDefaultLength(std::span<std::uint8_t> packet,std::uint32_t
     if (packet.size()<4) throw std::out_of_range("Client 기본 관찰기의 선언WORD 물리 부족");
     packet[2]=static_cast<std::uint8_t>(length);packet[3]=static_cast<std::uint8_t>(length>>8);
 }
-// 원문40a020/40aae0/40ab20/40ab60/40a190/40a270/40aed0의 송신 효과만 실행한다.
+// 원문409fe0/40a020/40aae0/40ab20/40ab60/40a190/40a270/40aed0의 송신 효과만 실행한다.
 void ObserveClientPacketDefault(std::uint32_t type,std::span<std::uint8_t> packet,std::uint32_t sending,const std::shared_ptr<RawSurfaceStorage>& storage) {
     if (!sending) return; //원문 수신 방향은 실제 packet 필드를 읽기 전에 복귀한다.
     switch (type) {
+    case 0x0b:
     case 0x0c:
-        if (ReadClientPacketDefault(packet,8,4)==0xffffffffU) storage->AssertDisplay("extraDataLen != (int)-1","\\Ns\\O\\_p_packets.cpp",0x38c);
+        if (ReadClientPacketDefault(packet,8,4)==0xffffffffU) storage->AssertDisplay("extraDataLen != (int)-1","\\Ns\\O\\_p_packets.cpp",type==0x0b ? 0x36c:0x38c);
         WriteClientPacketDefaultLength(packet,ReadClientPacketDefault(packet,8,2)+12U);return;
     case 0x55:
         if (ReadClientPacketDefault(packet,4,4)==0xffffffffU) storage->AssertDisplay("count != (int)-1","\\Ns\\O\\_p_packets.cpp",0x8dc);
@@ -111,6 +112,15 @@ void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) 
         dispatch.Version(entry.type,1,0);dispatch.RequireLength(entry.type,entry.length);
         if (entry.c3Receiver) dispatch.Register(entry.type,[](std::uint32_t,o::PacketConnection&,std::span<const std::uint8_t>) {}); //4437f0의 실제 ret이며 ACK/반환 성공값/게임 State를 합성하지 않는다.
     }
+    dispatch.ObservePacket(0x0b,[storage](auto packet,auto sending) { ObserveClientPacketDefault(0x0b,packet,sending,storage); }); //409fe0은수신필드를읽지않고송신때만현재extraDataLen/선언WORD를처리한다.
+    dispatch.Version(0x0b,1,0);dispatch.RequireLength(0x0b,0xffff); //Client40b4b0의실제버전조회등록이며R의0b인사수신과다르다.
+    dispatch.Register(0x0b,[aux=storage->GameAux(),registry=client.ConnectionGlobals(),players=client.PlayerRecords()](auto sender,auto&,auto) {
+        const auto message=aux->Packet0cHeader()[0],protocol=aux->Packet0cHeader()[1];const auto initial=aux->Packet0cInitialLength(); //4b3af0이현재BYTE두개/WORD하나를df590인자로읽는경계다.
+        std::array<std::uint8_t,50> packet;packet.fill(0xff); //df590의실제50BYTE예약전체를FF로채우며extraDataLenDWORD도-1그대로남긴다.
+        packet[1]=message;packet[0]=static_cast<std::uint8_t>(protocol&0x7fU);WriteClientPacketDefaultLength(packet,initial<4 ? 4:initial); //생성자는선언길이를최소4로올리고실제wire길이는현재송신observer가나중에정한다.
+        packet[4]=10;packet[5]=0;packet[6]=78;packet[7]=0; //원문4b3b20/26은WORD10/78만쓰며제품표시11.01과기존wire10.78을구별한다.
+        static_cast<void>(registry->SendMutable(std::bit_cast<std::int32_t>(sender),packet,players->Records())); //현재sender/Player/NULL관문뒤선택된실제가상송신에서만0c관찰기를한번호출한다.
+    }); //실제장기세owner만보유하며수신payload/connection/phase/known을읽거나별도Session을붙잡지않는다.
 }
 // 같은 Client/Session의 물리를 검증하고 소켓을 열지 않는 실제 coordinator를 만든다.
 std::shared_ptr<CompositeMissionTransport> MakeClientCampaignTransport(Client& client,CompositeTransportRole role,const std::shared_ptr<GameWorld>& world,MissionNetwork network) {

@@ -1,0 +1,228 @@
+{
+  "unit": 1168,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCppCommit": "1916bd66 / 20261108-141 CP",
+  "summary": "M6-b2의0bh 실제 버전조회와 공용0ch 현재 metadata/50BYTE FF 응답을 같은 Registry의 mutable 송신에 연결했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1168\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13214208,
+      "sha256": "81cb42fe774b2fea6411e43d886cf103aab640c3fa8c14cdf213c134e0137ea6"
+    },
+    "R.exe": {
+      "bytes": 677888,
+      "sha256": "50b56cdfd480fef3d843741b59764fdf0c134b4e8bdf77a2326309ddbaa0f7c2"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "sourceSha256": {
+    "cpppj/src/client/ClientCampaignTransport.cpp": "fa0188dd196dea4ec480a46201f58295025b9e925ac77627432f4a054f375303",
+    "cpppj/src/o/RawGameAuxState.h": "0363a71948b41ebcb90add6f6559e36f70fb87311af62019689a8c3b442d309a"
+  },
+  "nativeEvidence": {
+    "004b3af0": {
+      "ranges": [
+        {
+          "first": "004b3af0",
+          "last": "004b3b3b",
+          "bytes": 76,
+          "sha256": "41d227d27f3c60c006bb0b9411bcf53d5126c0e672912e23b9ab12d05081c2cd"
+        }
+      ],
+      "bytes": 76,
+      "concatenatedRangesSha256": "41d227d27f3c60c006bb0b9411bcf53d5126c0e672912e23b9ab12d05081c2cd",
+      "cFragmentSha256": "6d0a830ec0d167d8046b5c74b657979568bf008b932eb43c85059e5e8f61c3ab"
+    },
+    "00409fe0": {
+      "ranges": [
+        {
+          "first": "00409fe0",
+          "last": "0040a017",
+          "bytes": 56,
+          "sha256": "871b1e15802d1e6cae645bf5b9b63aaa6bfcff382ab699311df31cbd09e25be1"
+        }
+      ],
+      "bytes": 56,
+      "concatenatedRangesSha256": "871b1e15802d1e6cae645bf5b9b63aaa6bfcff382ab699311df31cbd09e25be1",
+      "cFragmentSha256": "820dd73e697bd7ac53eef4b5fdd22bd58c4123d913658da49d953a84aef42a75"
+    },
+    "0040a020": {
+      "ranges": [
+        {
+          "first": "0040a020",
+          "last": "0040a057",
+          "bytes": 56,
+          "sha256": "790a8e01cf2b406a1fe0c45bd42fa2212449baf484695da23251a760aae66b08"
+        }
+      ],
+      "bytes": 56,
+      "concatenatedRangesSha256": "790a8e01cf2b406a1fe0c45bd42fa2212449baf484695da23251a760aae66b08",
+      "cFragmentSha256": "0bdc9733a3a93337352e279f4bee0690e4b022cc7a3464c276046f7809d85f7f"
+    },
+    "004df590": {
+      "ranges": [
+        {
+          "first": "004df590",
+          "last": "004df5d3",
+          "bytes": 68,
+          "sha256": "fd16184cb5899159205a8dab2587711940cb127ae6247c930cef5848a8cea8fd"
+        }
+      ],
+      "bytes": 68,
+      "concatenatedRangesSha256": "fd16184cb5899159205a8dab2587711940cb127ae6247c930cef5848a8cea8fd",
+      "cFragmentSha256": "f260ec0cf6d1395862dd4090ca56c7924751ed4030c5c452fc8e8e4b30e97ebe"
+    },
+    "004e2dc0": {
+      "ranges": [
+        {
+          "first": "004e2dc0",
+          "last": "004e2e2c",
+          "bytes": 109,
+          "sha256": "a3abef555f99d4fa990a03e8ab3d5c8baebea348c148d6d9f1f937639b3fcd06"
+        }
+      ],
+      "bytes": 109,
+      "concatenatedRangesSha256": "a3abef555f99d4fa990a03e8ab3d5c8baebea348c148d6d9f1f937639b3fcd06",
+      "cFragmentSha256": "70207967e10cf9e994e9a68efdc7489baefb0e9070727ca228273bb0e8efffa5"
+    },
+    "0040b4b0": {
+      "ranges": [
+        {
+          "first": "0040b4b0",
+          "last": "0040c2f4",
+          "bytes": 3653,
+          "sha256": "6a1bd7e40369119fe645fa0daa9b9025c0679eef0330e7b5b2acbbcd57cced2c"
+        }
+      ],
+      "bytes": 3653,
+      "concatenatedRangesSha256": "6a1bd7e40369119fe645fa0daa9b9025c0679eef0330e7b5b2acbbcd57cced2c",
+      "cFragmentSha256": "216e511c264729a8452667d1eb6056c4fd51013c07aacab9aa4de96e987293cd"
+    },
+    "004a6990": {
+      "ranges": [
+        {
+          "first": "004a6990",
+          "last": "004a6a63",
+          "bytes": 212,
+          "sha256": "6ed904a5fbe93bf9473c1cb71bc97d2f63b41593a64a0d3362242e1f8e57e6c9"
+        }
+      ],
+      "bytes": 212,
+      "concatenatedRangesSha256": "6ed904a5fbe93bf9473c1cb71bc97d2f63b41593a64a0d3362242e1f8e57e6c9",
+      "cFragmentSha256": "608469f18e5f76c0ab20c903e55c6d49adb00e8f5f10479675f63ddb4f08834c"
+    },
+    "004a6920": {
+      "ranges": [
+        {
+          "first": "004a6920",
+          "last": "004a6980",
+          "bytes": 97,
+          "sha256": "18184dc367cabe967e394ef83bc2178aac1fccc2a39d9754be9c3b9cbe7cd121"
+        }
+      ],
+      "bytes": 97,
+      "concatenatedRangesSha256": "18184dc367cabe967e394ef83bc2178aac1fccc2a39d9754be9c3b9cbe7cd121",
+      "cFragmentSha256": "67abaaa154b041b477c9a978b73ea75aeacb8a5b351fa0b604913b1145eee44a"
+    },
+    "0040a060": {
+      "ranges": [
+        {
+          "first": "0040a060",
+          "last": "0040a06a",
+          "bytes": 11,
+          "sha256": "0a88540d6a22f1ae3f5821ae2a3c920063d1f6490bbea5cc0cac6d01923e3cb4"
+        }
+      ],
+      "bytes": 11,
+      "concatenatedRangesSha256": "0a88540d6a22f1ae3f5821ae2a3c920063d1f6490bbea5cc0cac6d01923e3cb4",
+      "cFragmentSha256": "9aabb9a614fcbd7f4640d7156fb119b499ecae3c5f507cf08249e2d9567767de"
+    }
+  },
+  "nativePeInitialValues": {
+    "0052ed54": {
+      "hex": "0c01",
+      "note": "0ch 응답 현재message/protocol BYTE 초기값0c/1"
+    },
+    "00544c24": {
+      "hex": "0000",
+      "note": "4b3afd가읽는선언길이WORD BSS초기0"
+    },
+    "0052ec56": {
+      "hex": "ffffffff",
+      "note": "0b/0c 길이표 ffff/ffff"
+    }
+  },
+  "other0cWriter": {
+    "original": "004a6990::SendLoginBegin debugBurst0054dbc4 !=0 branch",
+    "call_site": "004a6a10 lengthWORD getter / caller004a7981",
+    "packet_type": "0c; same0052ed54/55 +00544c24 WORD metadata",
+    "body": "normal29hBegin first; 3x63012BYTE FF scratch; +8DWORD63000; 63000payloadBYTE; sameownerSend",
+    "current": "RawMissionLogin::SendBegin debugBurst throws explicit unimplemented; RawMissionLogin::Reply 28h18bytes is original004a6920 and unrelated",
+    "owner_design": "name as shared0c variable packet header, not version-query-only length"
+  },
+  "debugBurstDirectPeReferences": [
+    {
+      "address": "0043552d",
+      "bytes": "891dc4db5400",
+      "instruction": "mov dword ptr [0x54dbc4], ebx"
+    },
+    {
+      "address": "004a69e2",
+      "bytes": "a1c4db5400",
+      "instruction": "mov eax, dword ptr [0x54dbc4]"
+    }
+  ],
+  "debugBurstInitial": {
+    "address": "0054dbc4",
+    "pe_bytes": "",
+    "section": ".data",
+    "offset_in_section": 154564,
+    "section_raw_size": 118784
+  },
+  "audit": {
+    "actualClientDefaultRegistration": true,
+    "inputPayloadConnectionPhaseKnownUnused": true,
+    "currentMessageProtocolAndWordLengthOwner": true,
+    "full50BytesInitializedFF": true,
+    "only10And78PayloadWordsWritten": true,
+    "extraDataLengthRemainsMinusOne": true,
+    "sameMutableRegistrySendOnce": true,
+    "observerAfterRealSenderGate": true,
+    "defaultDiagnosticReturnLeavesDeclaredLengthEleven": true,
+    "shortLivedWorldSessionCapture": false,
+    "retiredValidationChanged": false,
+    "debugBurstBodyRestored": false
+  },
+  "remaining": {
+    "m6bComplete": true,
+    "next": "M6-c / 3fh 실제 건설 통지·Place·동일 버퍼와 mutable 방송",
+    "m6nDebugBurst": "0054dbc4활성비영writer미발견. 현재0ch63000BYTE×3본문·장기burstowner·Config reset은미복원이며현재상시0로제외하는판정과코드복원미완료를구별한다.",
+    "stage3Groups": 3
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

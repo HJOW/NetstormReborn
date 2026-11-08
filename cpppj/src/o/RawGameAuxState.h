@@ -9,6 +9,10 @@
 namespace netstorm::o { // Gameplay/Storage가 같은 주소를 pin하는 작은 게임 데이터 owner다.
 class RawGameAuxState {
 public:
+    std::array<std::uint8_t,2>& Packet0cHeader() { return packet0cHeader_; } //0052ed54/55의현재0ch메시지/프로토콜이며원문버전조회/디버그burst의공용전역을보관한다.
+    const std::array<std::uint8_t,2>& Packet0cHeader() const { return packet0cHeader_; } //Session/World교체뒤에도같은현재BYTE두개를읽는다.
+    std::uint16_t& Packet0cInitialLength() { return packet0cInitialLength_; } //00544c24의BSS WORD0을생성순간읽으며실제송신observer의최종길이와구별한다.
+    const std::uint16_t& Packet0cInitialLength() const { return packet0cInitialLength_; } //설정키나성공토글없이현재공용생성길이만빌린다.
     std::uint32_t& StateNotifyType() { return stateNotifyType_; } //005411a0:004ac220이 상태WORD 변경 뒤 표면 통지를 선택하는 현재 TYPE다.
     const std::uint32_t& StateNotifyType() const { return stateNotifyType_; } // World/Session 교체에서82로 다시 쓰지 않는다.
     RawGameAuxState()=default; // PE의 BSS+0과 명시25/2000/122·세계여백2/장식타입4개를 한 번 구성한다.
@@ -154,6 +158,8 @@ public:
         lostY_=std::bit_cast<float>(0xc61c4000U);lostX_=std::bit_cast<float>(0xc61c4000U);
     }
 private:
+    std::array<std::uint8_t,2> packet0cHeader_{0x0c,1}; //보호10.78 PE0052ed54/55의초기헤더이며일반월드fresh에서도덮어쓰지않는다.
+    std::uint16_t packet0cInitialLength_{}; //00544c24의최초BSS0이며버전조회/디버그burst의현재생성WORD다.
     std::uint32_t stateNotifyType_{82}; // 보호10.78 PE005411a0의 초기 DWORD이며 실제 상태 변경 부모가 현재 번호를 읽는다.
     std::array<float,2> centralPosition_{}; // 원문 최초 BSS0이며 중앙섬 배치가 X→Y 순서로 쓴다.
     RawSquidTransmissionState squidTransmission_; //최초한번의PE/BSS초기값이며일반월드fresh와별개로유지한다.
