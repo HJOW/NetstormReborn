@@ -12037,9 +12037,38 @@
       "bytes": 1133544,
       "lines": 1733,
       "fixtureCommit": "b76adf95",
-      "webCommit": "worktree",
+      "webCommit": "d9185226",
       "cpppjBasis": {
         "cpppj/src/o/RawPathCleanup.cpp": "0d82e448"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E160",
+      "id": "carrierarrival",
+      "path": "cpppj/tests/fixtures/carrierarrival-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 Carrier 도착의 내용물/현재 경로/깊이/다이스/운반 분기와 끝 회피 검색(큰 하위 효과 대체, 10.78 203행)",
+      "consumers": [
+        "webpj/tests/carrier-arrival.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-arrival.js"
+      ],
+      "doc": "docs/webpj-carrier-arrival-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierArrival.cpp"
+      ],
+      "scope": "10.78 실제 PE 203행 전부",
+      "text": true,
+      "sha256": "1414a203ded7276d096c5ab5bbba4c9849dca315a3df2e972a7556331efe42c2",
+      "bytes": 86626,
+      "lines": 407,
+      "fixtureCommit": "ab9361f1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierArrival.cpp": "0d82e448"
       }
     }
   ]
