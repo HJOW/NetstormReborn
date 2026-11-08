@@ -1260,6 +1260,103 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<ArgumentOutOfRangeException>(() => world.Find(10f, 10f, 999u));
     }
 
+    /// <summary>초기 적재 장면을 만든다. 2026-11-07 F2d 월드 본체 초기 적재 이식에서 추가됐다.</summary>
+    /// <returns>적재 가능한 월드와 타입·프레임 표다.</returns>
+    private static (RawSurfaceWorld World, List<OriginalTypeRecord> Types, List<RiftTypeFrames> Frames) LoadScene()
+    {
+        var types = Types188();
+        var frames = Frames188();
+        foreach (int type in new int[] { 82, 97, 157 })
+        {
+            frames[type] = new RiftTypeFrames([new RiftFrameCode((byte)'A', (byte)'P', 0, 0)]);
+        }
+
+        var shapes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new SquidDisplayShape()).ToList();
+        foreach (int type in new int[] { 82, 97, 157 })
+        {
+            shapes[type].FrameCount = 1;
+            shapes[type].Loaded = true;
+            shapes[type].Frames.Add(new SquidDisplayFrame { Width = 10, Height = 12, HotspotX = 2, HotspotY = 3, CellWidth = 8f, CellHeight = 6f });
+        }
+
+        var storage = new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes);
+        return (new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, storage, frames), types, frames);
+    }
+
+    /// <summary>초기 위치 목록을 만든다. 2026-11-07 F2d 월드 본체 초기 적재 이식에서 추가됐다.</summary>
+    private static List<SurfaceSeed> LoadSeeds() =>
+    [
+        new SurfaceSeed(82u, 5u, 0, 20f, 20f),
+        new SurfaceSeed(157u, 3u, 0, 10f, 10f),
+        new SurfaceSeed(97u, 7u, 0, 30f, 30f),
+    ];
+
+    /// <summary>세 종류를 순서대로 적재하는지 검증한다. 2026-11-07 F2d 월드 본체 초기 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LoadPlacesSeeds()
+    {
+        (RawSurfaceWorld world, _, _) = LoadScene();
+        world.Load(LoadSeeds());
+        Assert.True(world.Loaded());
+        Assert.True(world.TakeChanged());
+        Assert.False(world.TakeChanged());
+        List<SurfaceSnapshot> objects = world.Objects();
+        Assert.Equal(3, objects.Count);
+        SurfaceSnapshot bridge = Assert.Single(objects, snapshot => snapshot.Object.Type == 82u);
+        Assert.Equal(5u, bridge.Object.Owner);
+        Assert.Equal(0, bridge.Object.Frame);
+        Assert.Equal(20f, bridge.Object.X);
+        Assert.Equal(20f, bridge.Object.Y);
+        SurfaceSnapshot noIsland = Assert.Single(objects, snapshot => snapshot.Object.Type == 157u);
+        Assert.Equal(3u, noIsland.Object.Owner);
+        SurfaceSnapshot terrain = Assert.Single(objects, snapshot => snapshot.Object.Type == 97u);
+        Assert.Equal(7u, terrain.Object.Owner);
+    }
+
+    /// <summary>미지원 타입을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 초기 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LoadRejectsBadType()
+    {
+        (RawSurfaceWorld world, _, _) = LoadScene();
+        Assert.Throws<ArgumentException>(() => world.Load([new SurfaceSeed(999u, 0u, 0, 10f, 10f)]));
+    }
+
+    /// <summary>범위 밖 필드를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 초기 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LoadRejectsBadField()
+    {
+        (RawSurfaceWorld world, _, _) = LoadScene();
+        Assert.Throws<ArgumentOutOfRangeException>(() => world.Load([new SurfaceSeed(82u, 99u, 0, 10f, 10f)]));
+        Assert.Throws<ArgumentOutOfRangeException>(() => world.Load([new SurfaceSeed(82u, 0u, 0, 0.5f, 10f)]));
+        Assert.Throws<ArgumentOutOfRangeException>(() => world.Load([new SurfaceSeed(82u, 0u, 5, 10f, 10f)]));
+    }
+
+    /// <summary>중복 적재를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 초기 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LoadRejectsDuplicate()
+    {
+        (RawSurfaceWorld world, _, _) = LoadScene();
+        world.Load(LoadSeeds());
+        Assert.Throws<InvalidOperationException>(() => world.Load(LoadSeeds()));
+    }
+
+    /// <summary>188개가 아닌 TYPE 월드의 적재를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 초기 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LoadRejectsNon188World()
+    {
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        Assert.Throws<InvalidOperationException>(() => world.Load([]));
+    }
+
+    /// <summary>프레임 표가 맞지 않으면 적재를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 초기 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LoadRejectsMismatchedFrames()
+    {
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<ArgumentOutOfRangeException>(() => world.Load(LoadSeeds()));
+    }
+
     /// <summary>188개가 아닌 TYPE 월드의 해제를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 해제 연결 이식에서 추가됐다.</summary>
     [Fact]
     public void UnpopRejectsNon188World()

@@ -351,6 +351,20 @@ public sealed class RawSurfaceWorld
         return value;
     }
 
+    /// <summary>원본 필드 밖의 바이트는 보존하며 지정 폭만 쓴다. 2026-11-07 F2d 월드 본체 초기 적재 이식에서 추가됐다.</summary>
+    /// <param name="bytes">쓸 슬롯 바이트다.</param>
+    /// <param name="offset">쓸 위치다.</param>
+    /// <param name="value">쓸 값이다.</param>
+    /// <param name="width">쓸 폭이다.</param>
+    private static void WriteSlot(Span<byte> bytes, int offset, uint value, int width)
+    {
+        // 필드 밖의 바이트는 보존한다.
+        for (int i = 0; i < width; i++)
+        {
+            bytes[offset + i] = (byte)(value >> (8 * i));
+        }
+    }
+
     /// <summary>표시·검사에 현재 살아 있는 자산만 제공한다. ProcessForm은 제외한다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
     /// <returns>살아 있는 자산의 스냅샷 목록이다.</returns>
     public List<SurfaceSnapshot> Objects()
@@ -406,7 +420,56 @@ public sealed class RawSurfaceWorld
     /// <returns>현재 프레임 시각이다.</returns>
     public FrameTime CurrentTime() => _time;
 
-    /// <summary>원본 Fort 순서대로 Create·필드 저장·Pop하는 로더의 시작이다. 적재 중 Graph·장부를 켠다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
+    /// <summary>원본 Fort 순서대로 Create·필드 저장·Pop하는 로더의 시작과 종료다. 본섬→행 우선 noIsland→다리 순으로 일반 Pop을 실행하고 마지막에 전체 Graph를 재구성한다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐고 0.254에서 초기 적재를 연결했다.</summary>
+    /// <param name="seeds">초기 위치 목록이다.</param>
+    public void Load(IReadOnlyList<SurfaceSeed> seeds)
+    {
+        ArgumentNullException.ThrowIfNull(seeds);
+        if (_loaded)
+        {
+            throw new InvalidOperationException("원본 표면 월드 중복 적재입니다.");
+        }
+
+        if (_factory is null)
+        {
+            throw new InvalidOperationException("실제 월드 생성이 연결되지 않았습니다.");
+        }
+
+        // 쓰기 전에 전체 초기 입력의 지원 타입·정수 좌표·프레임·소유자를 검사한다.
+        foreach (SurfaceSeed seed in seeds)
+        {
+            if (seed.Type != _terrainType && seed.Type != _storage.Links.NoIslandType && seed.Type != _storage.Links.BridgeType)
+            {
+                throw new ArgumentException("원본 표면 월드의 미지원 초기 타입입니다.", nameof(seeds));
+            }
+
+            if (!float.IsFinite(seed.X) || !float.IsFinite(seed.Y) || seed.X < 1 || seed.Y < 1 || seed.X >= 256 || seed.Y >= 256
+                || seed.X != MathF.Truncate(seed.X) || seed.Y != MathF.Truncate(seed.Y) || seed.Owner > MaximumOwner
+                || seed.Frame < 0 || seed.Frame >= _frames[(int)seed.Type].Codes.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(seeds), "원본 표면 월드 초기 필드 오류");
+            }
+        }
+
+        // 비유한 좌표를 거부한 뒤 정렬한다. 받침 접두가 서·북 이웃을 읽으므로 noIsland는 행 우선이다.
+        List<SurfaceSeed> sorted = seeds.OrderBy(seed => seed.Type == _terrainType ? 0 : seed.Type == _storage.Links.NoIslandType ? 1 : 2).ThenBy(seed => seed.Y).ThenBy(seed => seed.X).ToList();
+        BeginLoad();
+        // 실제 생성자·가상 소유자·Pop을 사용하며 아직 Graph를 변경하지 않는다.
+        foreach (SurfaceSeed seed in sorted)
+        {
+            int sid = _factory.Create(seed.Type);
+            SetAssetOwner(sid, seed.Owner);
+            WriteSlot(_storage.Pool.AllocatedBytes(sid), _edition == OriginalEdition.Patch1078 ? 36 : 34, unchecked((uint)seed.Frame), _edition == OriginalEdition.Patch1078 ? 4 : 1);
+            Pop(sid, seed.X, seed.Y, 0u);
+        }
+
+        FinishLoad();
+    }
+
+    /// <summary>소유자 번호의 최댓값이다. 원본 kPlayerCount(8)에 대응한다. 2026-11-07 F2d 월드 본체 초기 적재 이식에서 추가됐다.</summary>
+    private const uint MaximumOwner = 8u;
+
+    /// <summary>원본 Fort 순서대로 Create·필드 저장·Pop하는 로더의 시작이다. 적재 중 Graph·장부를 켠다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐고 0.254에서 초기 적재를 연결했다.</summary>
     public void BeginLoad()
     {
         // 적재 중에도 noGraph 표면의 254 지정과 건물 점유 영역 무효화가 필요해 미리 켠다.
