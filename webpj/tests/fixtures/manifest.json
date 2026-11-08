@@ -11567,9 +11567,38 @@
       "bytes": 1798216,
       "lines": 5969,
       "fixtureCommit": "035d1324",
-      "webCommit": "worktree",
+      "webCommit": "52c5eb0c",
       "cpppjBasis": {
         "cpppj/src/o/RawCanonPlacementGeometry.cpp": "167866d9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E147",
+      "id": "canonshape",
+      "path": "cpppj/tests/fixtures/canonshape-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 전체 일반/패턴 픽셀 getter·SHP·기준점 변경(10.78 3150행)",
+      "consumers": [
+        "webpj/tests/canon-pixel-shape.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-pixel-shape.js"
+      ],
+      "doc": "docs/webpj-canon-pixel-shape-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCanonPixelShape.cpp"
+      ],
+      "scope": "10.78 실제 PE 3150행 전부",
+      "text": true,
+      "sha256": "271aa7ded45fe38dbeee9c533bd7d3ca8e1bc27d7fe0172dff3e95e5a34c8a5d",
+      "bytes": 659319,
+      "lines": 5952,
+      "fixtureCommit": "b8628062",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCanonPixelShape.cpp": "167866d9"
       }
     }
   ]

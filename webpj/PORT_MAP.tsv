@@ -561,7 +561,7 @@ cpppj/src/o/RawBurningVictim.cpp	port	www/core/raw-burning-victim.js	1f00a25a	po
 cpppj/src/o/RawBurningVisual.cpp	port			todo	[o-default]
 cpppj/src/o/RawCampaignWorldLoad.cpp	port			todo	[o-default]
 cpppj/src/o/RawCannonFire.cpp	port	www/core/raw-cannon-fire.js	1f00a25a	port	[o-default] WB04-E114: 썬/썬더/반더 공통 발사 467330 프레임·단계표 004684b0/00468520/00468130·launch 00466f50(일반 투사체·반더 즉시 빔 회피 난수)·CannonFireProcess. fixture cannon-fire 5534행+vander-fire 393행(wrapper 24행은 RawLightningLifetime 때) 전부. 중심/공간/소리/Missile/빔/완료 통지/삭제는 훅 경계, GunProcess Host 연결(factory)은 RawGunProcess 이식 뒤
-cpppj/src/o/RawCanonPixelShape.cpp	port			todo	[o-default]
+cpppj/src/o/RawCanonPixelShape.cpp	port	www/core/raw-canon-pixel-shape.js	1f00a25a	port	[o-default] WB04-E147: 일반 픽셀 모양 getter(0043cbd0: 모든 패턴 칸의 SHP 머리·핫스폿·배율 합집합 범위·기준점 보정·00419850 frameCheck 거부). fixture canonshape 실제 PE 3150행 전부. 남음: 실제 자산 로더 연결
 cpppj/src/o/RawCanonPlacement.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementCollision.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementGeometry.cpp	port	www/core/raw-canon-placement-geometry.js	1f00a25a	port	[o-default] WB04-E146: 일반 배치 모양 기하(0049b8c0..0049b95a finder 인자 산술·미리보기 범위·칸별 준비/후처리/조기 거부 순회). fixture canongeometry 실제 PE 3159행 전부. 남음: 지형/권한/관계/주변/충돌/미리보기 훅 본체
