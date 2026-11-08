@@ -1420,6 +1420,9 @@ void UberGump::Event(InputEvent event) {
     metaSail.join=[this](auto parameter) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("전투 참가 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->JoinBattle(parameter); };metaSail.sail=[this](auto position) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("항해 위치 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->SailPosition(position); };
     if (DispatchNativeMetaSailInput(event,metaSail)) { recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //누름의 효과 뒤 원문 일반 입력 꼬리를 유지하고 뗌은 장치를 읽지 않는다.
     if (DispatchNativeMetaZoneRequest(event,[this](auto section) { Tell(std::string(section)); })) { recentCommandHandled=true;if (event.code&InputCode::kRelease) return; } //e8은 일반 입력의 현재 signed 번호로 확인창만 열고 누름 꼬리를 유지한다.
+    if (transitionCode==0x020000a4U) {
+        if (event.code&InputCode::kRelease) return;if (client_.SurfaceStorage()->ownerMode.challenge) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("영역 하강 확인의 현재 메타 전송 owner 없음");editor_->metaTransport->DescendToZone(event.y); }recentCommandHandled=true;
+    } //원문542984는 비메타에서 효과 없이 지나가며 메타에서 같은 현재19 직접Run을 마친 뒤 일반 입력 꼬리를 유지한다.
     if (transitionCode==0x020000c6U) {
         if (event.code&InputCode::kRelease) return;if (client_.SurfaceStorage()->ownerMode.challenge) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("MetaRefresh의 현재 메타 전송 owner 없음");editor_->metaTransport->RefreshZones(); }else client_.WriteDiagnosticLog(9,"The commandMetaRefresh only works in metamap mode.\n");recentCommandHandled=true;
     } //004d80ec은 메타에서만4b40c0(11)을 재호출하고 비메타 진단/누름 뒤에도 같은 일반 입력 꼬리를 유지한다.

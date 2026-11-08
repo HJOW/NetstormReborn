@@ -1,0 +1,99 @@
+{
+  "unit": 1162,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "b1077db0 / 20261108-133 CP",
+  "summary": "M4.2b의 실제 영역 확인창 Yes→DecendToChalLevel/020000a4→같은 QA/CS/송신/메타표시 반납/current19 동기Run/7344BYTE 복원을 연결하고 M4 요청 UI/HTML 마감을 완료했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1162\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13174272,
+      "sha256": "6b40b9383b614b36749a75d7978df3977b376aaa347bd4e6294ed88dc119f95d"
+    },
+    "R.exe": {
+      "bytes": 670208,
+      "sha256": "c197c6d9db9223bd2b53c634039daf7dbd7619b333efba49d5bdc76725687c06"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": [],
+    "lastFullHashCheckUnit": 1161,
+    "writesToProtectedPaths": 0
+  },
+  "nativeEvidence": {
+    "004b8810": {
+      "bytes": 174,
+      "peSha256": "e4af77327fd9e5a41eabc9992cc998f4ed8305852e822c8df6d0ad55adbc6b34",
+      "cSha256": "c53733cccafeb0f6cdeadbf1dc3ed3fec8b9a42244868c503e1b62d5f3f8f527"
+    },
+    "0042bf40": {
+      "bytes": 106,
+      "peSha256": "e9384bd35c5473885110bdf5ff2a94d1ba8a27ae6c7665ff7b31c5785117a053",
+      "cSha256": "daf6e9782f457d2bfc36590f8970d73989bc1d85800d36ad952a07037385061c"
+    },
+    "0042b1a0": {
+      "bytes": 3,
+      "peSha256": "58367ffa2a0179375018fa0f5c26da24391e42ebe0ed8fdda35a21fc7bdc396f",
+      "cSha256": "649c3267ca787a7d937e779132e590a59ab1e5791664231d6197d2a1cfbc24e5"
+    },
+    "004795a0": {
+      "bytes": 160,
+      "peSha256": "c578b26f32b4c2fda7e99f5ddbae4550857cc322424e55adff3c8132e52d2d9e",
+      "cSha256": "851ee2325f0d67a45b085a12999619552a56f4c4e439282688344577a10005b0"
+    },
+    "004d62b0": {
+      "bytes": 16945,
+      "peSha256": "9e9cd511e4a0f74e1555ea2d93fcd17bd2e4ac3eef2b65afb656b22abe925b02",
+      "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2"
+    }
+  },
+  "sourceSha256": {
+    "cpppj/src/client/GameMenuCommands.cpp": "1aa9faa25da81f31b8c90b8c4d5abc71e7d03a3775b250d8ff2d72986cf286a5",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "c407a2e42014c0d2dee2779f2fd6ae161cbd935d023e8d06f259e1ca46b158e2",
+    "cpppj/src/client/MetaConnectionRuntime.h": "20cacef59ddd50c3255957495f8c53ff703ecb614db64c08cf4197268f884524",
+    "cpppj/src/client/UberGump.cpp": "cc8a8611927e7a87e62e82bb53596d1d6c9ff98db0365eaac5bdcfe2e16aa2be",
+    "cpppj/src/client/NativeMetaDisplay.cpp": "a78abdfcc67f83095b1f69479e38720b060d94f1ef336c46df219f59f2da2c98",
+    "cpppj/src/client/UberMeta.inc": "92aef4db7a0abb259a40d1bfbc3da30125ffa517a9c6a296cf4d3ac6aeb91304",
+    "cpppj/src/client/UberEditor.inc": "d633564ca9940456430da6e0248ab07309a7ed724ca638e183c07835a40fc30c",
+    "cpppj/src/o/RawLocalMissionState.cpp": "2033e9588d03ee47792d8050500b252bf268c8e26013041ffa423c2b74e56c34",
+    "cpppj/src/client/RawMenuHtml.inc": "c349cdc954dab4c64813a34bc259530c7bfd808f785a218b19902fbca98d6f39"
+  },
+  "audit": {
+    "actualHtmlYesNameNumericCommandAndQueueConnected": true,
+    "sameCurrentStateNotNextOrImmediate": true,
+    "lockedZoneReturnsBeforeSend": true,
+    "status80BeforeCurrentZoneSearchAndSail": true,
+    "same51RecordOwnerAndActualMetaDisplayDestroy": true,
+    "snapshotAfterDisplayLeaveAndRestoreAfterNormalSynchronousRun": true,
+    "sameTransportPinnedUntilSynchronousReturn": true,
+    "m4ActualRequestsClosed": true
+  },
+  "remaining": {
+    "next": "M5.1 / registryValue·LAN hostname 환경 계약, 이후 세.server 콘텐츠/배포",
+    "stage3Groups": 4,
+    "m6DetailedPlan": "docs/exe/cpp-lan-remaining-audit-20261108.md"
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

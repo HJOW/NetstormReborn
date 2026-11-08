@@ -28,7 +28,7 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,57> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,58> kCommands{{
     {0x005429a8U,kCreateInitialGeysersCommand},{0x005429f8U,kBrainCrankMoneyCommand},{0x005428d8U,kAiParamSetCommand}, //772의원문세일반명령이다.
     {0x005429d0U,kMakeAiCommand}, //005429d0의 실제 초기 일반 명령이다.
     {0x00542760U,kDrawWaterCommand}, //원문 후단 진단 명령이며 기본 메뉴 노출은 바꾸지 않는다.
@@ -37,6 +37,7 @@ constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,57> kCommands{{
     {0x00542764U,kChangeFontFaceCommand},{0x00542a68U,kChangeSoundQualityCommand}, //원문 두 현재 옵션 명령이다.
     {0x00542b84U,kShowTecSideMenuCommand},{0x00542b88U,kShowTecMenu2Command}, //원문추가지식선택버튼의현재명령도같은허용표를쓴다.
     {0x00542988U,kSetLanguageCommand},{0x0054298cU,kLanguageChangedCommand}, //원문의 두 언어 명령이다.
+    {0x00542984U,0x020000a4U}, //영역 확인창의 DecendToChalLevel도 같은 현재 명령 조회와 공통 메뉴 허용표를 공유한다.
     {0x00542a54U,kPlayIntroCommand}, // 원문 PlayIntro 이름의 초기 DWORD다.
     {0x00542ae8U,kRecheckCdCommand}, //RecheckCD의 이름·메타·큐 명령이다. 실제 CD 재탐색이 아니라 현재 serial 정리다.
     {0x00542968U,kCaptureCommand}, //연속 화면 저장의 이름과 정수 명령을 같은 큐로 보낸다.
@@ -112,6 +113,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     if (key=="chalforcejoinbattle") return 0x020000e3U; //PE5432a0의 실제 경고 확인은 옵션을 바꾸지 않고 직접 참가한다.
     if (key=="chaljoinbattlenowarning") return 0x020000feU; //PE543378의 실제 확인은 경고 억제 설정 뒤 참가한다.
     if (key=="querydecendtochallevel") return 0x020000e8U; //PE5432c8의 원문 오자를 그대로 지원하며 현재 영역 번호의 확인 Tell을 연다.
+    if (key=="decendtochallevel") return 0x020000a4U; //PE5430a8→542984의 실제 이름/명령이며 영역 확인창 Yes가 같은4b8810 부모를 실행한다.
     if (key=="serverforcebattlestart") return 0x020000f5U; //PE00543330 이름표/00542ac8의 실제 일반 명령이다.
     if (key=="delstatefile") return 0x020000acU; //PE005430e8→005429a4의 실제 저장상태 삭제 명령이다.
     if (key=="statereconnect") return 0x020000abU; //PE005430e0→005429a0의 실제 저장 복구 명령이다.

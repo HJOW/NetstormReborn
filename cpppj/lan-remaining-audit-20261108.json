@@ -1,0 +1,527 @@
+{
+  "date": "2026-11-08",
+  "host": "HJOW-Athlon",
+  "head": "faf16ab784bda8a7b2b005e0e58a3a7382bc0b6d",
+  "scope": "M6 읽기 전용 준비 조사; 제품/문서 변경 및 실행 테스트 없음",
+  "hashes": {
+    "AGENTS.md": "e6701478f05d0dd19e4e34aa5cbf5e9494615ff5fc4a2b3f4a89ff1242ab1753",
+    "LEFT_JOBS.md": "69db7c27dc7bea426d7deeb6382eb61b146f44fc7add6046ce2ddb5104bdd535",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "extracted/refined/originals/vtables.tsv": "2151f08f1d1ea08841964b3a3fa77bf5b744ccd928eda86cc466de1c3d633766",
+    "cpppj/src/client/RawCampaignSession.cpp": "c797d0a8757f1383c97024089549b6d806a85cdd244a19680f2da3284d39cc97",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "a25ed04c84c39c8de549165e9a1767f1b41d76453816e2a6295e5d4eccc9556e",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "ca47d1d4fd455e679b69c1ebf168fb1131cbb070ed58acf13556fef26beff9a2",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "bd9376b7b8d37f9ac8beebc3f812155b378d37448b864df3b40edb49caf884fe",
+    "cpppj/src/client/RawCampaignAssetBindings.cpp": "1b1a8ec144dee29fdffba273f1566e79754e101d0a103150b69c4e84a5fd3b90",
+    "cpppj/src/client/RawGameMenus.cpp": "6bdb27b0ed5e2a074b0d856f9dce3c511670604f747cb761ae483751cd0912af",
+    "cpppj/src/client/GameMenuCommands.cpp": "f3f3691b08ad20d9cb5cad883075ef0ae8c26094734753efb397903e8d83a822",
+    "cpppj/src/client/ClientMain.cpp": "bc2864045196cb8f459fe278997df509faca62ca6ebc781bf14dc33ee1746c17",
+    "cpppj/src/client/ClientPacketRecord.cpp": "4a205cf92ca53d3bf074c91c1a5e36cf8d09f6680892160909cea2ac257a746e",
+    "cpppj/src/client/ClientPacketRecord.h": "1f3afc0d0c3313f2c2db9a5c5880472ee51942245bfffdbcc35d62756c32dde0",
+    "cpppj/src/client/LocalTcpTransport.cpp": "7a3b2a93ae065a53ca047631b4a083207fad1b738a44949015eb41713d8cf4ed",
+    "cpppj/src/client/LocalUdpTransport.cpp": "ad2287c785dc75859d739d4dbf7c4315710e0050065aa232d2b24b5a6e20c661",
+    "cpppj/src/o/RawOutpostLifecycle.cpp": "061fbe9ac2ef9e63d6d70ab7dd4b29e469f09667364c87bb55e6012fb416e1f8",
+    "cpppj/src/o/RawFactoryPostPop.cpp": "7ccedd2ba740324c7624ecff9e1152b487305e49b5ed7e727025286bd90c7d2d",
+    "cpppj/src/o/RawPacketDispatch.cpp": "2a98f1f6a80199199455cad69f2d5b89ad9689b5ffdb790e4b8aa1f857bd17ef",
+    "cpppj/src/o/RawPacketFrame.cpp": "0b17965a9eb8e64ee5d55810bfbf1c1a8e4c5f4d6655f2e2b77bbf08485220c7",
+    "cpppj/src/o/RawMissionLogin.cpp": "3ca56771b152576e73a61ec408df466154bd31378191445190f5e16bc866b1f3",
+    "cpppj/src/o/RawMissionClientPackets.cpp": "355e83558c6e53c539dcc37385ecf77fd468d8f27ef7224b1c74b1e388cab7ca",
+    "cpppj/src/o/RawConstructionNotice.cpp": "fd072d924bd593da1cf7f7f5faaa03b5581e637c8f8f1d7793c5780c9ba8d449",
+    "cpppj/src/o/RawConstructionPacket.cpp": "f3d16c0ed9bfc1a068d59d6941922ddc30c5b52e38c3f2b0e5337922e0b68fc8",
+    "cpppj/src/o/RawConstructionCommand.cpp": "528068bf1d6011a115e44a45021f5be98ca14a06ce776c3f690c0d266733ace8",
+    "cpppj/src/o/RawBattleBroadcast.cpp": "d077dd21c34f21aaad35adaeaf491d61a79271c730e599a03fd856a820a7d893",
+    "cpppj/src/root/ChallengeSend.cpp": "d95798b53d12a2c2cf3be9628097633ae0e38e9a5476aa191af505413e68c879"
+  },
+  "original_registration_count": 92,
+  "original_receivers": [
+    {
+      "type": 11,
+      "hex": "0b",
+      "receive": "FUN_004b3af0"
+    },
+    {
+      "type": 12,
+      "hex": "0c",
+      "receive": "FUN_004437f0"
+    },
+    {
+      "type": 15,
+      "hex": "0f",
+      "receive": "FUN_004b4250"
+    },
+    {
+      "type": 26,
+      "hex": "1a",
+      "receive": "FUN_004b4df0"
+    },
+    {
+      "type": 27,
+      "hex": "1b",
+      "receive": "FUN_004b8b20"
+    },
+    {
+      "type": 29,
+      "hex": "1d",
+      "receive": "FUN_004b8ac0"
+    },
+    {
+      "type": 32,
+      "hex": "20",
+      "receive": "FUN_004b4710"
+    },
+    {
+      "type": 136,
+      "hex": "88",
+      "receive": "FUN_004b4680"
+    },
+    {
+      "type": 33,
+      "hex": "21",
+      "receive": "FUN_004b46d0"
+    },
+    {
+      "type": 34,
+      "hex": "22",
+      "receive": "FUN_004b4820"
+    },
+    {
+      "type": 35,
+      "hex": "23",
+      "receive": "FUN_004b4640"
+    },
+    {
+      "type": 36,
+      "hex": "24",
+      "receive": "FUN_004b4600"
+    },
+    {
+      "type": 37,
+      "hex": "25",
+      "receive": "FUN_004b47e0"
+    },
+    {
+      "type": 38,
+      "hex": "26",
+      "receive": "FUN_004b45a0"
+    },
+    {
+      "type": 39,
+      "hex": "27",
+      "receive": "FUN_004a7800"
+    },
+    {
+      "type": 40,
+      "hex": "28",
+      "receive": "FUN_004b8940"
+    },
+    {
+      "type": 41,
+      "hex": "29",
+      "receive": "FUN_004b3b40"
+    },
+    {
+      "type": 42,
+      "hex": "2a",
+      "receive": "FUN_004b3d30"
+    },
+    {
+      "type": 43,
+      "hex": "2b",
+      "receive": "FUN_004912d0"
+    },
+    {
+      "type": 44,
+      "hex": "2c",
+      "receive": "FUN_00433c30"
+    },
+    {
+      "type": 45,
+      "hex": "2d",
+      "receive": "FUN_004327b0"
+    },
+    {
+      "type": 46,
+      "hex": "2e",
+      "receive": "FUN_00433170"
+    },
+    {
+      "type": 47,
+      "hex": "2f",
+      "receive": "FUN_004332c0"
+    },
+    {
+      "type": 48,
+      "hex": "30",
+      "receive": "FUN_00489ee0"
+    },
+    {
+      "type": 49,
+      "hex": "31",
+      "receive": "FUN_0044dba0"
+    },
+    {
+      "type": 50,
+      "hex": "32",
+      "receive": "FUN_0044dc20"
+    },
+    {
+      "type": 51,
+      "hex": "33",
+      "receive": "FUN_004a71c0"
+    },
+    {
+      "type": 52,
+      "hex": "34",
+      "receive": "FUN_004333f0"
+    },
+    {
+      "type": 53,
+      "hex": "35",
+      "receive": "FUN_0046e940"
+    },
+    {
+      "type": 55,
+      "hex": "37",
+      "receive": "FUN_004427b0"
+    },
+    {
+      "type": 56,
+      "hex": "38",
+      "receive": "FUN_0045e410"
+    },
+    {
+      "type": 57,
+      "hex": "39",
+      "receive": "FUN_0045e2b0"
+    },
+    {
+      "type": 58,
+      "hex": "3a",
+      "receive": "FUN_0046a0c0"
+    },
+    {
+      "type": 59,
+      "hex": "3b",
+      "receive": "FUN_00466d30"
+    },
+    {
+      "type": 60,
+      "hex": "3c",
+      "receive": "FUN_00466b60"
+    },
+    {
+      "type": 61,
+      "hex": "3d",
+      "receive": "FUN_00491220"
+    },
+    {
+      "type": 62,
+      "hex": "3e",
+      "receive": "FUN_00444af0"
+    },
+    {
+      "type": 63,
+      "hex": "3f",
+      "receive": "FUN_004441b0"
+    },
+    {
+      "type": 64,
+      "hex": "40",
+      "receive": "FUN_00428570"
+    },
+    {
+      "type": 134,
+      "hex": "86",
+      "receive": "FUN_00426490"
+    },
+    {
+      "type": 65,
+      "hex": "41",
+      "receive": "FUN_0042dc90"
+    },
+    {
+      "type": 66,
+      "hex": "42",
+      "receive": "FUN_004437f0"
+    },
+    {
+      "type": 74,
+      "hex": "4a",
+      "receive": "FUN_00432710"
+    },
+    {
+      "type": 75,
+      "hex": "4b",
+      "receive": "FUN_004326e0"
+    },
+    {
+      "type": 77,
+      "hex": "4d",
+      "receive": "FUN_004437f0"
+    },
+    {
+      "type": 79,
+      "hex": "4f",
+      "receive": "FUN_00426520"
+    },
+    {
+      "type": 80,
+      "hex": "50",
+      "receive": "FUN_00444bc0"
+    },
+    {
+      "type": 81,
+      "hex": "51",
+      "receive": "FUN_004dc050"
+    },
+    {
+      "type": 82,
+      "hex": "52",
+      "receive": "FUN_004a71a0"
+    },
+    {
+      "type": 83,
+      "hex": "53",
+      "receive": "FUN_004436b0"
+    },
+    {
+      "type": 84,
+      "hex": "54",
+      "receive": "FUN_004436f0"
+    },
+    {
+      "type": 85,
+      "hex": "55",
+      "receive": "FUN_004437f0"
+    },
+    {
+      "type": 86,
+      "hex": "56",
+      "receive": "FUN_004437f0"
+    },
+    {
+      "type": 87,
+      "hex": "57",
+      "receive": "FUN_004437f0"
+    },
+    {
+      "type": 88,
+      "hex": "58",
+      "receive": "FUN_00453d70"
+    },
+    {
+      "type": 90,
+      "hex": "5a",
+      "receive": "FUN_004437f0"
+    },
+    {
+      "type": 91,
+      "hex": "5b",
+      "receive": "FUN_004266c0"
+    },
+    {
+      "type": 92,
+      "hex": "5c",
+      "receive": "FUN_0041e860"
+    },
+    {
+      "type": 95,
+      "hex": "5f",
+      "receive": "FUN_00420bf0"
+    },
+    {
+      "type": 96,
+      "hex": "60",
+      "receive": "FUN_004267c0"
+    },
+    {
+      "type": 97,
+      "hex": "61",
+      "receive": "FUN_0048bfe0"
+    },
+    {
+      "type": 98,
+      "hex": "62",
+      "receive": "FUN_00433120"
+    },
+    {
+      "type": 99,
+      "hex": "63",
+      "receive": "FUN_004a7510"
+    },
+    {
+      "type": 100,
+      "hex": "64",
+      "receive": "FUN_004b6180"
+    },
+    {
+      "type": 101,
+      "hex": "65",
+      "receive": "FUN_00432850"
+    },
+    {
+      "type": 102,
+      "hex": "66",
+      "receive": "FUN_004b8a10"
+    },
+    {
+      "type": 103,
+      "hex": "67",
+      "receive": "FUN_004b4900"
+    },
+    {
+      "type": 105,
+      "hex": "69",
+      "receive": "FUN_004b49e0"
+    },
+    {
+      "type": 106,
+      "hex": "6a",
+      "receive": "FUN_0044a280"
+    },
+    {
+      "type": 107,
+      "hex": "6b",
+      "receive": "FUN_00448e90"
+    },
+    {
+      "type": 108,
+      "hex": "6c",
+      "receive": "FUN_004d56f0"
+    },
+    {
+      "type": 109,
+      "hex": "6d",
+      "receive": "FUN_00493f80"
+    },
+    {
+      "type": 110,
+      "hex": "6e",
+      "receive": "FUN_004a7050"
+    },
+    {
+      "type": 111,
+      "hex": "6f",
+      "receive": "FUN_004900e0"
+    },
+    {
+      "type": 112,
+      "hex": "70",
+      "receive": "FUN_004cf980"
+    },
+    {
+      "type": 113,
+      "hex": "71",
+      "receive": "FUN_004b49c0"
+    },
+    {
+      "type": 114,
+      "hex": "72",
+      "receive": "FUN_004b3bc0"
+    },
+    {
+      "type": 115,
+      "hex": "73",
+      "receive": "FUN_0045e5d0"
+    },
+    {
+      "type": 116,
+      "hex": "74",
+      "receive": "FUN_0045e4f0"
+    },
+    {
+      "type": 117,
+      "hex": "75",
+      "receive": "FUN_004205f0"
+    },
+    {
+      "type": 118,
+      "hex": "76",
+      "receive": "FUN_004207a0"
+    },
+    {
+      "type": 119,
+      "hex": "77",
+      "receive": "FUN_0048f7f0"
+    },
+    {
+      "type": 120,
+      "hex": "78",
+      "receive": "FUN_0048f880"
+    },
+    {
+      "type": 121,
+      "hex": "79",
+      "receive": "FUN_0048f8f0"
+    },
+    {
+      "type": 122,
+      "hex": "7a",
+      "receive": "FUN_00434080"
+    },
+    {
+      "type": 123,
+      "hex": "7b",
+      "receive": "FUN_004b4790"
+    },
+    {
+      "type": 124,
+      "hex": "7c",
+      "receive": "FUN_004b2cc0"
+    },
+    {
+      "type": 125,
+      "hex": "7d",
+      "receive": "FUN_0041e320"
+    },
+    {
+      "type": 126,
+      "hex": "7e",
+      "receive": "FUN_00497030"
+    },
+    {
+      "type": 127,
+      "hex": "7f",
+      "receive": "FUN_0042cd10"
+    },
+    {
+      "type": 129,
+      "hex": "81",
+      "receive": "FUN_004b3e90"
+    },
+    {
+      "type": 132,
+      "hex": "84",
+      "receive": "FUN_004a6f30"
+    }
+  ],
+  "confirmed_missing_receiver_types": [
+    "0b",
+    "3f",
+    "53",
+    "62",
+    "69",
+    "6a",
+    "6f",
+    "77",
+    "79",
+    "7b",
+    "7c",
+    "86"
+  ],
+  "retired_types": [
+    "7f",
+    "80"
+  ],
+  "notes": [
+    "등록표의 함수 부재 여부는 함수별 기존 semantic helper와 비교해야 한다. 위 확정 누락 타입은 whole src의 receiver literal 및 실제 등록 동적목록 확인에 기반한다.",
+    "7c는 M4 송신/Caller와 겹치므로 parent의 현행 구현 후 다시 확인한다.",
+    "0054dbac의PE 직접참조는4354b2 reset0,4b4e7b read,4b8b6f read뿐이다.",
+    "005e4784의PE 직접참조는43543a/43544b/43545c 분포선택,439863 기본분포설치,4dfc00 read다."
+  ],
+  "artifacts": {
+    "PLAN.md": "ea150236da6395446fbf3b3730057479dad1b92d9d3a0bfaf07d99fb476fe169",
+    "original-fragments.c": "cd76fab1b2cdadd7439fad5f460d9aab1b8ad4498c14598abf55b9d8eec11c2c"
+  }
+}

@@ -52,6 +52,7 @@
 #include "client/NativeMetaBattleRemove.h" //24h 삭제는 같은 진입 CS와 실제 Rig/Image를 사용한다.
 #include "client/ClientAudio.h" //원문의guy.wav는같은Client장기음향을사용한다.
 #include "client/ClientStateStorageCleanup.h"
+#include "client/NativeMetaDisplay.h" //영역 하강도 같은 현재CS/존의 실제 메타 객체 반납을 사용한다.
 #include "client/ClientRandomGlobals.h"
 #include "client/CampaignTransportServices.h"
 #include "client/RawSurfaceWorld.h"
@@ -307,6 +308,25 @@ void MetaConnectionRuntime::SendMetaGameLogin() {
     Put(packet,12,owner,4);const auto own=PeerRecord(bytes,owner);Put(packet,16,subscriber,4);
     Put(packet,20,PeerWord(own,0xa4),4);Put(packet,24,PeerWord(own,0xa8),4);
     static_cast<void>(tcp_->SendMutable(9,packet)); //PlayerKnown/접속 상태/ACK를 새로 합성하지 않고 기존 송신 관문을 사용한다.
+}
+// 영역 확인창의 Yes가 현재 메타를 떠나 같은19 부모를 직접 실행한다. 원문은 표시 정리 후의 존 바이트를 보관한다.
+void MetaConnectionRuntime::DescendToZone(std::int32_t zone) {
+    if (!client_.SurfaceStorage()->ownerMode.challenge) return;
+    if (zone<0 || static_cast<std::uint32_t>(zone)>=o::kMetaZoneCleanupCount) throw std::out_of_range("메타 영역 하강의 실제51기록 물리 범위");
+    auto& local=*client_.LocalStateGlobals();
+    if (PeerWord(local.MetaZoneRecords(),static_cast<std::size_t>(zone)*o::kMetaZoneCleanupStride+0x84)) { tell_("ZoneLocked");return; }
+    const auto owner=shared_from_this(); //같은19의 정리가 메타 전송 슬롯을 반납해도 현재 동기 호출과 원문 송신 owner를 복귀까지 유지한다.
+    SendMetaStatus([this](auto packet) { Put(packet,4,client_.CurrentSubscriber(),4);Put(packet,8,0x80,4); });
+    for (std::uint32_t index=0;index<o::kMetaZoneCleanupCount;++index) { //송신 뒤 현재51기록을 다시 읽어 요청 ID와 처음 일치하는 영역의 원문 위치로 항해한다.
+        const auto record=local.MetaZoneRecords().subspan(std::size_t(index)*o::kMetaZoneCleanupStride,o::kMetaZoneCleanupStride); //같은 장기 QA 표의 현재 한 기록이며 잠금 검사 인덱스와 ID 검색을 구별한다.
+        if (PeerWord(record,0)!=std::bit_cast<std::uint32_t>(zone)) continue;SailPosition({PeerWord(record,0x88),PeerWord(record,0x8c)});break;
+    }
+    auto state=local.State();state.current[0x34/4]=std::bit_cast<std::uint32_t>(zone);state.current[0]=19;state.current[0x40/4]=1;
+    std::array<std::uint8_t,o::kMetaZoneCleanupBytes> saved; //원문42b1a0은 빈 생성자이며 실제7344BYTE 전체는 표시 정리가 끝난 뒤 복사한다.
+    NativeMetaDisplayHooks display;display.destroy=[this](auto sid,auto flags) { auto& session=client_.GameplayGlobals()->RequireSession();if (sid>65535U || sid>=session.Core().pool.Capacity()) throw std::out_of_range("영역 하강 표시 정리의 실제DWORD SID 범위");static_cast<void>(session.World().Destroy(o::Sid{static_cast<std::uint16_t>(sid)},flags)); };
+    LeaveMetaDisplay(*client_.ChallengeGlobals(),local.MetaZones().records,display);
+    std::copy_n(local.MetaZoneRecords().begin(),saved.size(),saved.begin());processState_();
+    std::copy(saved.begin(),saved.end(),local.MetaZones().records.begin()); //동기Run이 정상 복귀한 뒤에만 같은 장기 존 표에 원문 보관값을 복원한다.
 }
 // 기존slot4의TCP뒤UDP를진행한다.66h발견은원문처럼수신뒤같은Run을동기실행한다.
 void MetaConnectionRuntime::Pump() { if (pumping_) throw std::logic_error("메타 TCP/UDP 중첩 Poll 금지");pumping_=true;try { tcp_->Flush();static_cast<void>(tcp_->Poll());static_cast<void>(udp_->Poll()); }catch (...) { pumping_=false;throw; }pumping_=false; }
