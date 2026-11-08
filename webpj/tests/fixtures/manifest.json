@@ -1954,9 +1954,9 @@
       "bytes": 2565258,
       "lines": 7201,
       "fixtureCommit": "40cf5167",
-      "webCommit": "41310a53",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/SquidReward.cpp": "df2f5fa7",
+        "cpppj/src/o/SquidReward.cpp": "2b048419",
         "cpppj/src/o/SpStore.cpp": "a1bfa97d"
       }
     },
@@ -1985,9 +1985,9 @@
       "bytes": 33097,
       "lines": 505,
       "fixtureCommit": "58839028",
-      "webCommit": "41310a53",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/SquidReward.cpp": "df2f5fa7"
+        "cpppj/src/o/SquidReward.cpp": "2b048419"
       }
     },
     {
@@ -2016,10 +2016,10 @@
       "bytes": 107011,
       "lines": 1161,
       "fixtureCommit": "804b87a5",
-      "webCommit": "2a2e08e4",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a5",
-        "cpppj/src/o/SquidReward.cpp": "df2f5fa7"
+        "cpppj/src/o/SquidReward.cpp": "2b048419"
       }
     },
     {
@@ -12155,7 +12155,7 @@
       "bytes": 4248472,
       "lines": 146,
       "fixtureCommit": "ebd0dedb",
-      "webCommit": "worktree",
+      "webCommit": "811d0608",
       "cpppjBasis": {
         "cpppj/src/o/RawAiRuntime.cpp": "ebd0dedb"
       }

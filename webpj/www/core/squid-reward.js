@@ -26,6 +26,8 @@ const PLAYER_COUNT = 8;
 const SHARED_FIELDS = Object.freeze({
     percent: 'refundPercent', geyserPool: 'resourcePool', halfHealthMode: null, priestQuarterHp: 'priestQuarterHp', priestType: 'priestType',
     altarType: 'altarType', daisType: 'daisType', silentType: 'rainBlockerType', aliasType: 'growingRainBlockerType', nuggetType: 'nuggetType',
+    // SP 고정 두 모드는 GameAuxState 에 대응 칸이 없어 기본 키가 없다(share 에 소유자 칸 이름을 직접 준다). (2026-11-09 WB04-E166: cpppj 2b048419 의 sharedFixedSpA/B 동기화)
+    fixedSpA: null, fixedSpB: null,
 });
 
 // 원본 __ftol: 0방향 절삭 뒤 하위 32비트(signed)이다. 비유한/64비트 범위 밖은 원본에서 부정 정수이므로 거부한다. (2026-11-07 WB04-D5b)
@@ -135,6 +137,11 @@ export class SquidRewardState {
     currentSilentType() { return this.#read('silentType', this.types.silent) >>> 0; }
     currentAliasType() { return this.#read('aliasType', this.types.alias) >>> 0; }
     currentNuggetType() { return this.#read('nuggetType', this.types.fullValue) >>> 0; }
+    // 현재 SP 고정 모드 A(fort bool)와 B(editor DWORD)이다. 빌린 칸은 소유자의 현재 값(bool 이면 그대로, DWORD 이면 0 이 아닐 때 켜짐)이고 아니면 독립 값형 입력이다. (2026-11-09 WB04-E166: cpppj 2b048419 FixedSpA/FixedSpB 동기화)
+    currentFixedSpA() { return this.#truthy(this.#read('fixedSpA', this.fixedSpA)); }
+    currentFixedSpB() { return this.#truthy(this.#read('fixedSpB', this.fixedSpB)); }
+    // bool 은 그대로, 수(DWORD)는 하위 32비트가 0 이 아닌지로 판정한다. (2026-11-09 WB04-E166)
+    #truthy(value) { return typeof value === 'boolean' ? value : (value >>> 0) !== 0; }
     // 현재 checking DWORD 이다.
     currentChecking() { return (typeof this.debugAsserts === 'function' ? this.debugAsserts() : this.debugAsserts) >>> 0; }
 }
@@ -388,7 +395,7 @@ export class SquidReward {
         if (!Number.isInteger(deltaBits) || deltaBits < 0 || deltaBits > 0xffffffff) throw new RangeError('SP 가산 비트는 DWORD 여야 합니다.');
         const state = this.#state;
         let amount = deltaBits >>> 0;
-        const fixed = state.fixedSpA || state.fixedSpB;
+        const fixed = state.currentFixedSpA() || state.currentFixedSpB();
         const spBits = this.#store.get(owner);
         const sp = bitsToFloat(spBits);
         // 고정 모드: double 상수에서 현재 SP 를 빼 float 로 저장한다.

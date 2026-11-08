@@ -492,7 +492,7 @@ cpppj/src/o/RawAiDropSelection.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiDropTargets.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiDryGeometry.cpp	port	www/core/raw-ai-dry-geometry.js	1f00a25a	port	[o-default] WB04-E163: AI 가짜 부족 좌표 탐색(00415bb0 선분/수직 양방향 탐색·0041cfc0 점 거리·00414d30/00410540 디버그 표식 정리/생성). 독립 관측 fixture 없음, cpppj 계약 시험 12건. 남음: RawAiDrySpots/FakeDrySpots 연결
 cpppj/src/o/RawAiDrySpots.cpp	port			todo	[o-default]
-cpppj/src/o/RawAiEconomy.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiEconomy.cpp	port	www/core/raw-ai-economy.js	1f00a25a	port	[o-default] WB04-E166: AI 경제 004138c0(double 기한 단일 지원·+0x290+2200 감김·포획 두 owner·데모 하한·float 최종 SP 쓰기). 독립 관측 fixture 없음, cpppj 계약 시험 7건. 남음: 실제 데모/사제 포획/시각 조회 연결
 cpppj/src/o/RawAiFactoryProduction.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiFakeDrySpots.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiMovement.cpp	port			todo	[o-default]
@@ -502,7 +502,7 @@ cpppj/src/o/RawAiPriestActions.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiResourceChoice.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiRuntime.cpp	port	www/core/raw-ai-runtime.js	1f00a25a	port	[o-default] WB04-E165: AI 전체 행동 00417c70(float 지갑 비교 포함)·개별 Tick 00417d30(현재 timing 기한 로그)·Player 1..8 Frame 00417de0(소멸/반납/0). fixture airuntime 실제 PE 145행 전부. 남음: 초기화/준비/목표 선택/수집자/시설/부족 좌표/사제/배치/다리/운반자/경제 하위 몸체 연결
 cpppj/src/o/RawAiStrategySetup.cpp	port			todo	[o-default]
-cpppj/src/o/RawAiWallet.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiWallet.cpp	port	www/core/raw-ai-wallet.js	2b048419	port	[o-default] WB04-E166: AI 지갑 가산 00413bb0·조회 00413c20(조기 반환 뒤에만 본체 소유자 선택·DWORD 감김·데모 하한 1190·저장한 brain 재조회·현재 Player base 함수). 독립 관측 fixture 없음, cpppj 계약 시험 10건. 기준선 뒤 2b048419 변경 포함. 남음: 실제 Player 표/본체/현재 모드 조회기 연결
 cpppj/src/o/RawAiWorldRegistration.cpp	port			todo	[o-default]
 cpppj/src/o/RawAllocationFailure.cpp	exclude-host			-	[host-memory]
 cpppj/src/o/RawAltarReleaseParent.cpp	port	www/core/raw-altar-release-parent.js	1f00a25a	port	[o-default] WB04-E15: 00448bd0 제단 해방 부모(진단·해방·Unpop·P 프레임·Repop). fixture altar-release-parent-hardware 10.78 1596행 전부
@@ -974,7 +974,7 @@ cpppj/src/o/SquidPop.cpp	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB
 cpppj/src/o/SquidPostPop.cpp	port	www/core/squid-postpop-state.js;www/core/squid-postpop.js	1f00a25a	partial	[o-default] WB04-E41: 가상 분배·Validate/ValidateBase/Activate/PostPopVirtual·TotalCost·BridgePrefix·공통 PostPop 연결(+E2 장부 구조). fixture postpop 492행·bridgepostpop 80행·rawgraph 768·regiongraph 512·graphremove 386·graphrecovery 64. 표시 dirty 열은 SquidDisplay 단위, 파생 몸체 본체(자산·Factory·Priest·Rune·Dais·Dude·Player·buried·비행·벌룬·크랩·Carrier·주문·보호막)와 섬/표면/Teleport 접두는 각 종류 단위에서 setBody/set*Prefix로 연결
 cpppj/src/o/SquidPostPopPatch.cpp	port	www/core/squid-postpop.js	1f00a25a	port	[o-default] WB04-E41: PostPopPatch(현재 TYPE·Graph·진단·비용·공급원·공장·AI 통지·통계·선택 재검사 연결). fixture postpop·rawgraph·regiongraph·graphremove·graphrecovery
 cpppj/src/o/SquidProcess.cpp	port	www/core/squid-process.js	02b00b12	port	[o-default] WB04-D5c: SquidProcess/RegularProcess/SquidProcessState/SquidProcessHost·ScheduleBridgeFall. fixture process 시나리오·processform Attach 288·processretake 194·processtransmit·regular-current finder 1232/ctor 32 행. 3.6절 판정(02b00b12): ① 기준선 뒤 ReceiveSharedRegular/WriteFormPacket/shared_/writeFullData 는 LAN 전체 수신·참가자 월드 동기화(웹 제외, 단독 경로 결과 동일), ③ 발사/회전 애니메이션 프로세스 TYPE 두 칸(fireAnimationType·rotateAnimationType)은 애니메이션 소비자(RawCampaignArcherBindings) 이식 때 추가
-cpppj/src/o/SquidReward.cpp	port	www/core/squid-reward.js	1f00a25a	port	[o-default] WB04-D5b(0044c2f0 보상·SP 가산 비트·AI 지갑·최대 HP, reward 2400행·sp-add-bits 504행·HP 579행). 장부는 SquidPostPopState(WB04-E)의 localOwner/aiAttached 를 읽음
+cpppj/src/o/SquidReward.cpp	port	www/core/squid-reward.js	2b048419	port	[o-default] WB04-D5b(0044c2f0 보상·SP 가산 비트·AI 지갑·최대 HP, reward 2400행·sp-add-bits 504행·HP 579행). 장부는 SquidPostPopState(WB04-E)의 localOwner/aiAttached 를 읽음. WB04-E166: cpppj 2b048419 의 SP 고정 두 모드 현재값(currentFixedSpA/B·share) 보정
 cpppj/src/o/SquidSpatial.cpp	port			todo	[o-default]
 cpppj/src/o/SquidUnpop.cpp	port	www/core/squid-unpop.js;www/core/squid-vtables.js	1f00a25a	port	[o-default] WB04-D2(현재 TYPE 표·진단 연결)
 cpppj/src/o/StartupArchiveFiles.cpp	adapt			todo	[adapt-file]
