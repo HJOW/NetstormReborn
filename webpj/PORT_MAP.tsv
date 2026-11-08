@@ -240,7 +240,7 @@ cpppj/src/client/QuickHelpHtml.cpp	port	www/ui/help-topic.js	1f00a25a	partial	[c
 cpppj/src/client/QuickHelpList.cpp	exclude-host			-	[host-dev-files]
 cpppj/src/client/QuickHelpRequest.cpp	port	www/ui/help-window.js	1f00a25a	partial	[client-default] 주제 요청
 cpppj/src/client/QuickHelpWindow.cpp	port	www/ui/help-window.js	1f00a25a	partial	[client-default] 도움말 창 배치
-cpppj/src/client/RawAiDebugMenu.cpp	port			todo	[client-default]
+cpppj/src/client/RawAiDebugMenu.cpp	port	www/core/raw-ai-debug-menu.js	1f00a25a	port	[client-default] WB04-E182: AI 디버그 메뉴 413dd0(현재 Player 행의 +0xb0 재조회·AI Debug 뒤 보관 brain·진단 7행·파라미터 다섯 묶음). fixture aidebugmenu 60행 전부. 남음: 메뉴 작성기(서식/스택/Submenu)와 현재 Player/brain 물리 세션 연결
 cpppj/src/client/RawBackgroundGifControls.cpp	port			todo	[client-default]
 cpppj/src/client/RawBattleLeave.cpp	port			todo	[client-default] 단독 State3 복귀(LeaveBattle)에서도 쓴다
 cpppj/src/client/RawBombBlastBindings.cpp	port			todo	[client-default]
@@ -501,7 +501,7 @@ cpppj/src/o/RawAiPreparation.cpp	port	www/core/raw-ai-preparation.js	1f00a25a	po
 cpppj/src/o/RawAiPriestActions.cpp	port	www/core/raw-ai-priest-actions.js	1f00a25a	port	[o-default] WB04-E171: 사제 AI 전체 행동 00411cd0(탐색 접두·의식/제단/다이스 거리·건설 TYPE 선택/저자금·배치 20초·완료 탐색 소비/새 탐색·다이스 회수·기한)와 헬퍼 0041d7a0/0040e800/00491b30/00448a90. 독립 관측 fixture 없음, cpppj 계약 시험 21건. 남음: 실제 수집/배치/회수 요청 하위 연결
 cpppj/src/o/RawAiResourceChoice.cpp	port	www/core/raw-ai-resource-choice.js	1f00a25a	port	[o-default] WB04-E175: AI 자원 선택 00410a30(간헐천 거리 절삭·그래프 필터)·수집/귀환 00411900·포획 운반자 00410980/004109d0·신전 중심 004112b0·끊긴 간헐천 00411350. 독립 관측 fixture 없음, cpppj 계약 시험 13건. 남음: 실제 그래프/내용물/이동/로그 연결
 cpppj/src/o/RawAiRuntime.cpp	port	www/core/raw-ai-runtime.js	1f00a25a	port	[o-default] WB04-E165: AI 전체 행동 00417c70(float 지갑 비교 포함)·개별 Tick 00417d30(현재 timing 기한 로그)·Player 1..8 Frame 00417de0(소멸/반납/0). fixture airuntime 실제 PE 145행 전부. 남음: 초기화/준비/목표 선택/수집자/시설/부족 좌표/사제/배치/다리/운반자/경제 하위 몸체 연결
-cpppj/src/o/RawAiStrategySetup.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiStrategySetup.cpp	port	www/core/raw-ai-strategy-setup.js	1f00a25a	port	[o-default] WB04-E182: AI 전략 준비 초기화 00414af0·목표 선택 004139f0·생산 조회/등록 00410360/004103c0/00410420·다리 시드/보충 0040fc60/0040fcb0. 독립 관측 fixture 없음, cpppj 계약 시험 11건. 남음: 청크 경계/신전 조회/삭제/진단/데모 판정 세션 연결
 cpppj/src/o/RawAiWallet.cpp	port	www/core/raw-ai-wallet.js	2b048419	port	[o-default] WB04-E166: AI 지갑 가산 00413bb0·조회 00413c20(조기 반환 뒤에만 본체 소유자 선택·DWORD 감김·데모 하한 1190·저장한 brain 재조회·현재 Player base 함수). 독립 관측 fixture 없음, cpppj 계약 시험 10건. 기준선 뒤 2b048419 변경 포함. 남음: 실제 Player 표/본체/현재 모드 조회기 연결
 cpppj/src/o/RawAiWorldRegistration.cpp	port	www/core/raw-ai-world-registration.js	1f00a25a	port	[o-default] WB04-E180: AI 월드 등록 전체 스캔 00415720·간헐천 등록/제거 004153c0·동맹 거리 004152b0·표면 분류 00411000. 독립 관측 fixture 없음, cpppj 계약 시험 5건. 남음: RawGeyserAiRegistration.bindPatch 연결과 신전 중심/표면 진단 세션 연결
 cpppj/src/o/RawAllocationFailure.cpp	exclude-host			-	[host-memory]

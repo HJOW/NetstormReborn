@@ -12623,6 +12623,35 @@
       "cpppjBasis": {
         "cpppj/src/o/RawAiDamage.cpp": "c3cfc98f"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E182",
+      "id": "aidebugmenu",
+      "path": "cpppj/tests/fixtures/ai-debug-menu-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 디버그 메뉴 413dd0(checking·owner·brain·재진입 mutation 입력별 원문 메뉴 효과 trace)(10.78 60행)",
+      "consumers": [
+        "webpj/tests/ai-debug-menu.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-debug-menu.js"
+      ],
+      "doc": "docs/webpj-ai-strategy-setup-debug-menu-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawAiDebugMenu.cpp"
+      ],
+      "scope": "10.78 실제 PE 60행 전부",
+      "text": true,
+      "sha256": "7a48479e908aa4db35996c93dcc04689cfd27f58156b5269c0dfd77e2028240d",
+      "bytes": 63736,
+      "lines": 61,
+      "fixtureCommit": "8d6c325c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawAiDebugMenu.cpp": "8d6c325c"
+      }
     }
   ]
 }
