@@ -11422,9 +11422,38 @@
       "bytes": 2711331,
       "lines": 5342,
       "fixtureCommit": "5b99a6ea",
-      "webCommit": "worktree",
+      "webCommit": "04d214d2",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionData.cpp": "a942a75a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E142",
+      "id": "constructionbuilder",
+      "path": "cpppj/tests/fixtures/constructionbuilder-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 사제/운반 객체 생성·이동 전체와 공급원 목록 소비의 사건 순서·반환 double·생성 raw(세 판본 1110행)",
+      "consumers": [
+        "webpj/tests/construction-builder.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-builder.js"
+      ],
+      "doc": "docs/webpj-construction-builder-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionBuilder.cpp"
+      ],
+      "scope": "10.78(originals) 370행 사용, originalCD 370행은 10.72, original1037 370행은 10.37",
+      "text": true,
+      "sha256": "27cf79cfa157eb19fcd4e21e2f6924c327e64c651e2208139b525d8083cc4b95",
+      "bytes": 837334,
+      "lines": 1112,
+      "fixtureCommit": "9410a4fb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionBuilder.cpp": "33302112"
       }
     }
   ]

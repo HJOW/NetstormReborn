@@ -604,7 +604,7 @@ cpppj/src/o/RawConnectionCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawConnectionRegistration.cpp	port			todo	[o-default]
 cpppj/src/o/RawConnectionRegistry.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionArrival.cpp	port	www/core/raw-construction-arrival.js	1f00a25a	port	[o-default] WB04-E133: 건설 운반 도착 판정(정수 칸 finder 방문·서버 대상 건설 시작·예측 대기 contained 삭제·자기 삭제)과 start 어댑터. fixture constructionarrival originals 153행 전부(originalCD 는 10.72). 남음: 마나볼트 도착 101행(RawManaBoltArrival 이식 뒤)·PathProcess 도착 호출 연결
-cpppj/src/o/RawConstructionBuilder.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionBuilder.cpp	port	www/core/raw-construction-builder.js	1f00a25a	port	[o-default] WB04-E142: 건설 사제 이동(00443000: 기준점·건설 사제/운반 객체 생성·접근점·경로·속도 조정·공급원 소비)과 기준점/factory/소유자/Regular/로컬/통지 어댑터. fixture constructionbuilder originals 370행 전부(originalCD·original1037 제외). 남음: 실제 RawEnergySupply 연결 통합 시험
 cpppj/src/o/RawConstructionClear.cpp	port	www/core/raw-construction-clear.js	1f00a25a	port	[o-default] WB04-E137: 건설 배치 통지 직전의 로컬 예측 조각 정리(00441fd0: 칸 범위·Canon 디코더 칸 순회·abstract 후보 하나 삭제·같은 조각 플래그). fixture constructionclear originals 420행 전부(originalCD·original1037 제외). 남음: Place/Confirm 이식 뒤 통합 시험
 cpppj/src/o/RawConstructionCommand.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionConfirm.cpp	port	www/core/raw-construction-confirm.js	77a0c3a4	port	[o-default] (이식 원본은 기준선 뒤 갱신판 77a0c3a4: 실제 wire 경로 포함) WB04-E139: 서버 건설 확정(00444590: typed confirm·실제 wire actualConfirm·기준점 조회·조각별 SID 생성·통지 전송/직접 처리·기록기)과 factory 어댑터. fixture constructionconfirm originals 508행 전부(originalCD·original1037 제외). 실제 Confirm→Notice→Clear→Place 통합 시험 포함(construction-chain). 남음: Request/Command 연결
