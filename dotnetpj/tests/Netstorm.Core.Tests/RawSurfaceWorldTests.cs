@@ -629,6 +629,22 @@ public sealed class RawSurfaceWorldTests
         Assert.Equal(4.5f, objects[0].Object.Y);
     }
 
+    /// <summary>슬롯 바이트를 리틀 엔디언으로 읽는 검사 보조다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    /// <param name="raw">읽을 슬롯 바이트다.</param>
+    /// <param name="offset">읽을 위치다.</param>
+    /// <param name="width">읽을 폭이다.</param>
+    /// <returns>조합한 값이다.</returns>
+    private static uint ReadSlot(ReadOnlySpan<byte> raw, int offset, int width)
+    {
+        uint value = 0u;
+        for (int i = 0; i < width; i++)
+        {
+            value |= (uint)raw[offset + i] << (8 * i);
+        }
+
+        return value;
+    }
+
     /// <summary>슬롯 바이트를 리틀 엔디언으로 쓰는 검사 보조다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
     /// <param name="raw">쓸 슬롯 바이트다.</param>
     /// <param name="offset">쓸 위치다.</param>
@@ -1381,6 +1397,116 @@ public sealed class RawSurfaceWorldTests
         // PreDestroy·Transmit·PostDestroy가 삭제 요청으로 센다. 정확한 줄을 확인한다.
         // PreDestroy·Transmit·PostDestroy 3건이 삭제 요청으로 센다.
         Assert.Equal("raw_world\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t3", world.Report().Split('\n')[0]);
+    }
+
+    /// <summary>실행 장면을 만든다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    /// <param name="life">다리 초기 수명이다.</param>
+    /// <param name="carriers">대피 기록 목록이다.</param>
+    /// <returns>묶인 월드와 다리 번호다.</returns>
+    private static (RawSurfaceWorld World, int Root) RunScene(int life, List<int> carriers)
+    {
+        var types = Types188();
+        types[82].Flags1 = TypeFlag1.Surface;
+        types[82].Flags2 = TypeFlag2.Bridge;
+        var frames = Frames188();
+        frames[82] = new RiftTypeFrames([new RiftFrameCode((byte)'J', (byte)'P', 0, 0)]);
+        var shapes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new SquidDisplayShape()).ToList();
+        shapes[82].FrameCount = 1;
+        shapes[82].Loaded = true;
+        shapes[82].Frames.Add(new SquidDisplayFrame { Width = 10, Height = 12, HotspotX = 2, HotspotY = 3, CellWidth = 8f, CellHeight = 6f });
+        var storage = new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes);
+        storage.Graph.Records[0] = new Netstorm.Core.Bridges.GraphRecord { Surfaces = 9, InUse = 1 };
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, storage, frames);
+        int root = world.Storage().Pool.Allocate();
+        Span<byte> raw = world.Storage().Pool.AllocatedBytes(root);
+        raw[RawSidPool.StateOffset] = 0;
+        raw[RawSidPool.TypeOffset] = 82;
+        WriteSlot(raw, 36, 0u, 4);
+        WriteSlot(raw, 14, BitConverter.SingleToUInt32Bits(10f), 4);
+        WriteSlot(raw, 18, BitConverter.SingleToUInt32Bits(10f), 4);
+        WriteSlot(raw, 12, (uint)life * 8u, 2);
+        world.BindBridgeDecay(() => 0u, sid => carriers.Add(sid), _ => { });
+        return (world, root);
+    }
+
+    /// <summary>중복 연결을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindBridgeDecayRejectsDuplicate()
+    {
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullDisplayStorage(types, frames), frames);
+        world.BindBridgeDecay(() => 0u, _ => { }, _ => { });
+        Assert.Throws<InvalidOperationException>(() => world.BindBridgeDecay(() => 0u, _ => { }, _ => { }));
+    }
+
+    /// <summary>빠진 장치를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindBridgeDecayRejectsMissingHooks()
+    {
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullDisplayStorage(types, frames), frames);
+        Assert.Throws<ArgumentNullException>(() => world.BindBridgeDecay(() => 0u, null!, _ => { }));
+        Assert.Throws<ArgumentNullException>(() => world.BindBridgeDecay(() => 0u, _ => { }, null!));
+    }
+
+    /// <summary>조립이 덜 된 월드의 연결을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindBridgeDecayRejectsIncompleteWorld()
+    {
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<InvalidOperationException>(() => world.BindBridgeDecay(() => 0u, _ => { }, _ => { }));
+    }
+
+    /// <summary>한 칸 처리가 수명을 줄이는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DecayBridgeCellDecaysOne()
+    {
+        var carriers = new List<int>();
+        (RawSurfaceWorld world, int root) = RunScene(3, carriers);
+        world.DecayBridgeCell(new FrameTime { Game = 100.0 }, root);
+        Assert.Equal(2u * 8u, ReadSlot(world.Storage().Pool.Slot(root), 12, 2));
+        Assert.Equal([root], carriers);
+    }
+
+    /// <summary>연결 전 한 칸 처리를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DecayBridgeCellRejectsMissingDecay()
+    {
+        var types = Types188();
+        var frames = Frames188();
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullDisplayStorage(types, frames), frames);
+        Assert.Throws<InvalidOperationException>(() => world.DecayBridgeCell(new FrameTime { Game = 100.0 }, 5));
+    }
+
+    /// <summary>프레임 실행이 스캔·커널을 함께 도는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunFrameScansAndRunsKernel()
+    {
+        var carriers = new List<int>();
+        (RawSurfaceWorld world, int root) = RunScene(3, carriers);
+        world.Storage().BridgeDecayScan.First = root;
+        world.Storage().BridgeDecayScan.Last = root + 1;
+        world.Storage().BridgeDecayScan.Cursor = root;
+        world.Storage().BridgeDecayScan.Next = 0.0;
+        world.RunFrame(new FrameTime { Game = 100.0, Delta = 1.0 }, false);
+        Assert.Equal(2u * 8u, ReadSlot(world.Storage().Pool.Slot(root), 12, 2));
+        Assert.Equal(root, world.Storage().BridgeDecayScan.Cursor);
+        Assert.Equal(110.0, world.Storage().BridgeDecayScan.Next);
+        Assert.Equal(100.0, world.CurrentTime().Game);
+    }
+
+    /// <summary>정지 중에는 붕괴를 건드리지 않는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunFramePausedSkipsDecay()
+    {
+        var carriers = new List<int>();
+        (RawSurfaceWorld world, int root) = RunScene(3, carriers);
+        world.RunFrame(new FrameTime { Game = 100.0, Delta = 1.0 }, true);
+        Assert.Equal(3u * 8u, ReadSlot(world.Storage().Pool.Slot(root), 12, 2));
+        Assert.Empty(carriers);
+        Assert.Equal(100.0, world.CurrentTime().Game);
     }
 
     /// <summary>188개가 아닌 TYPE 월드의 해제를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 해제 연결 이식에서 추가됐다.</summary>

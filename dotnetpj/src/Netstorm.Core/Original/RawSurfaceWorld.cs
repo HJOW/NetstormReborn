@@ -79,6 +79,15 @@ public sealed class RawSurfaceWorld
     /// <summary>타입별 가상 삭제 경로를 선택하는 분배기다. 원본 Impl.virtualDestroy에 대응하며 188개 TYPE·같은 수 프레임이 있으면 비워 둔다. 2026-11-07 F2d 월드 본체 삭제 분배 이식에서 추가됐다.</summary>
     private readonly RawSquidDestroyDispatch? _virtualDestroy;
 
+    /// <summary>실제 다리 붕괴 몸체다. 원본 Impl.bridgeDecay에 대응하며 `BindBridgeDecay` 뒤에만 둔다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    private RawBridgeDecay? _bridgeDecay;
+
+    /// <summary>실제 Client의 현재 편집기 값을 읽는다. 원본 Impl.decayEditor에 대응한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    private Func<uint>? _decayEditor;
+
+    /// <summary>Kernel 준비보다 먼저 현재 입자·소리의 순수 시각 필드만 공급한다. 원본 Impl.decayTime에 대응한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    private Action<FrameTime>? _decayTime;
+
     /// <summary>원본 타입 전역과 현재 점검 전역이다. 원본 Impl.buildingState에 대응한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
     private readonly BuildingSpaceState _buildingState = new();
 
@@ -901,6 +910,97 @@ public sealed class RawSurfaceWorld
         }
 
         return _connect.FindTypeAt(x, y, type);
+    }
+
+    /// <summary>초기 상태를 재설정하지 않고 같은 현재 전역·장치만 설치한다.</summary>
+    /// <param name="editor">현재 편집기 값을 읽는다.</param>
+    /// <param name="carriers">현재 Session의 대피 장치다.</param>
+    /// <param name="sound">현재 Session의 위치 소리 장치다.</param>
+    /// <param name="time">현재 입자·소리의 순수 시각을 공급한다. 생략하면 쓰지 않는다.</param>
+    public void BindBridgeDecay(Func<uint> editor, Action<int> carriers, Action<int> sound, Action<FrameTime>? time = null)
+    {
+        ArgumentNullException.ThrowIfNull(editor);
+        ArgumentNullException.ThrowIfNull(carriers);
+        ArgumentNullException.ThrowIfNull(sound);
+        if (_decayEditor is not null)
+        {
+            throw new InvalidOperationException("실제 다리 붕괴 장치가 이미 연결되었습니다.");
+        }
+
+        if (_virtualDestroy is null || _display is null)
+        {
+            throw new InvalidOperationException("실제 다리 붕괴 연결에 가상 삭제·표시 수집이 필요합니다.");
+        }
+
+        RawSquidFormDispatch formDispatch = _formDispatch ?? throw new InvalidOperationException("실제 다리 붕괴 연결에 삭제 분배가 필요합니다.");
+        _virtualDestroy.BindCurrentModes(() => _storage.Authority(), editor);
+        _decayEditor = editor;
+        _decayTime = time;
+        SquidDisplay display = _display;
+        RawBuildingSpace building = _building ?? throw new InvalidOperationException("실제 다리 붕괴 연결에 건물 공간이 필요합니다.");
+        _bridgeDecay = new RawBridgeDecay(_storage.Pool, _types, _frames, new HashLevelView(_storage.Hash), _storage.Spots, _storage.Graph.Records, () => _mode, new RawBridgeDecayHooks
+        {
+            Destroy = (sid, flags) => formDispatch.Destroy(sid, flags),
+            NotifySurface = sid => building.NotifySurface(sid),
+            Refresh = sid => display.Update(_storage.Pool.Slot(sid)),
+            Carriers = carriers,
+            CrackSound = sound,
+            Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
+        }, _storage.Authority(), _storage.Checking());
+    }
+
+    /// <summary>같은 시각을 먼저 공급한 호출자가 프레임의 원문 위치에서 한 칸을 요청한다.</summary>
+    /// <param name="time">공급할 프레임 시각이다.</param>
+    /// <param name="sid">처리할 다리 번호다.</param>
+    public void DecayBridgeCell(FrameTime time, int sid)
+    {
+        PrepareFrame(time);
+        if (_bridgeDecay is null)
+        {
+            throw new InvalidOperationException("다리 붕괴의 현재 몸체가 연결되지 않았습니다.");
+        }
+
+        _decayTime?.Invoke(_time);
+        _bridgeDecay.Cell(sid);
+    }
+
+    /// <summary>독립 World의 프레임은 Kernel 전에 같은 저장소 커서를 전진한다. 실제 Client는 전역 공통 입구에서 한 번 호출한다.</summary>
+    /// <param name="time">공급할 프레임 시각이다.</param>
+    /// <param name="paused">정지 중이면 참이다.</param>
+    public void ScanBridgeDecay(FrameTime time, bool paused)
+    {
+        PrepareFrame(time);
+        if (_decayTime is not null)
+        {
+            _decayTime(_time);
+        }
+
+        if (_bridgeDecay is null)
+        {
+            return;
+        }
+
+        BridgeDecayMode current = _mode;
+        current = current with { Server = _storage.Authority().Server, Authority = _storage.Authority().Boss };
+        if (_decayEditor is not null)
+        {
+            current = current with { Editor = _decayEditor() != 0 };
+        }
+
+        var scan = new RawBridgeDecayScan(_storage.Pool, _types, _storage.BridgeDecayScan, () => _storage.BridgeDecayPeriod, () => current, sid => _bridgeDecay.Cell(sid));
+        scan.Frame(time, paused);
+    }
+
+    /// <summary>독립 호출자는 같은 준비 뒤 Kernel을 한 번 실행하며 기존 정지 계약을 유지한다.</summary>
+    /// <param name="time">공급할 프레임 시각이다.</param>
+    /// <param name="paused">정지 중이면 참이다.</param>
+    public void RunFrame(FrameTime time, bool paused)
+    {
+        ScanBridgeDecay(time, paused);
+        if (!paused)
+        {
+            _kernel.RunFrame();
+        }
     }
 
     /// <summary>현재 카메라의 원본 픽셀 기준값과 GUI 변경 표를 연결한다.</summary>

@@ -47,6 +47,22 @@ public sealed class RawSquidDestroyDispatch
     /// <summary>표면 수를 읽는 Graph. 연결하지 않으면 표면 수를 0 으로 본다(원본의 비활성 표와 같다).</summary>
     private readonly RawGraph? _graph;
 
+    /// <summary>호출마다 현재 우두머리를 읽으며 프레임별 복사 지연을 만들지 않는다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    private Func<RawAuthorityState>? _authority;
+
+    /// <summary>같은 Client·Session의 현재 편집기 값이며 불리언 사본과 구별한다. 2026-11-07 F2d 실행 연결 이식에서 추가됐다.</summary>
+    private Func<uint>? _editor;
+
+    /// <summary>현재 장기 전역만 빌리고 풀·Graph·모드를 초기화하지 않는다.</summary>
+    /// <param name="authority">현재 서버 전역의 장기 owner다.</param>
+    /// <param name="editor">현재 편집기 값을 읽는다. null이면 기존 모드를 유지한다.</param>
+    public void BindCurrentModes(Func<RawAuthorityState> authority, Func<uint>? editor = null)
+    {
+        ArgumentNullException.ThrowIfNull(authority);
+        _authority = authority;
+        _editor = editor;
+    }
+
     /// <summary>
     /// 고정된 실행 상태로 분배기를 만든다. 상태를 실행 중에 바꾸려면 공급자를 받는 생성자를 쓴다.
     /// </summary>
@@ -115,6 +131,16 @@ public sealed class RawSquidDestroyDispatch
         {
             byte extra = raw[ExtraOffset];
             BridgeDecayMode mode = _mode();
+            // 외부 효과 뒤 이 진입에 도달한 현재 두 전역을 읽는다.
+            if (_authority is not null)
+            {
+                mode = mode with { Authority = _authority().Boss };
+            }
+
+            if (_editor is not null)
+            {
+                mode = mode with { Editor = _editor() != 0 };
+            }
             // 편집기·권한 없음·abstract·매립은 Graph·프레임을 읽기 전에 단락한다
             if (!mode.Editor && mode.Authority && (extra & AbstractOrBuried) == 0)
             {
