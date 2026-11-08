@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1169 현행:** M6-a/b완료뒤c1의lazy wire/ActualHandle·ActualPlace와현재owner부품을연결했다. 실제3f등록/동일버퍼·mutable방송c2와outgoing후행진단c3는미완료이며다음c2다. M6-n의debugBurst본문/장기owner·Config reset잔여와1165const송신판정정정은유지한다. [현행근거](cpp-construction-notice-body-20261108.md).
+**1170 현행:** M6-a/b/c완료. c1본문1169에실제3fh등록/lease·512동일버퍼mutable방송/직접처리와후행진단c2/c3를연결했다. 허용비MP다리/윈드제네레이터건설2건과정상종료0·전후해시불변을확인했다. 다음M6-d다. M6-n의debugBurst와World없는자원효과owner분리를유지하며새MP실행0이다. [현행근거](cpp-construction-live-integration-20261108.md).
 
 제품 코드/LEFT_JOBS/추적 문서는 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 

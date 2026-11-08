@@ -60,7 +60,7 @@ public:
     bool Request(const o::ConstructionConfirmRequest& request) const;
     // 같은 실제0x3e 수신의 비용 선검사와 실패 환불을 실행한다.
     void Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const;
-    void ReceiveNotice(std::span<const std::uint8_t> packet) const; //현재 전역을 준비한 caller가 같은 실제3fh BYTE 통지 본체를 호출한다. 등록/직접 송신 접합은 별도 부모다.
+    void ReceiveNotice(std::span<const std::uint8_t> packet) const; //현재 전역을 준비한 caller와 실제3fh 등록이 같은 BYTE 통지 본체를 호출한다.
     void Refund(std::uint32_t type,std::uint32_t owner) const; // 다른 실제 서버 요청도 같은442a40 비용 환불/통지를 사용한다.
     void Reject(std::uint32_t type,std::uint32_t owner,float x,float y,std::uint32_t argument,std::uint32_t direction) const; //00442af0의현재환불/취소패킷수명을공유한다.
     void ChargeShortfall(std::uint32_t type,std::uint32_t owner,float x,float y,std::uint32_t argument,std::uint32_t direction) const; //00442b50의같은현재flags54/권한/안내와조건부Reject를사용한다.
@@ -75,7 +75,7 @@ public:
     // 최근 생성/자원/풀의 실제 단일 저장소를 빌린다. 독립 간헐천 모형을 만들지 않는다.
     const o::RawLocalGeyser& LocalGeysers() const;
     const o::RawPlayerGeyserBounds& PlayerBounds() const;
-    // 원본 임시512바이트 가운데 마지막 송신 길이만 빌린다. 다음 확정 때 같은 버퍼가 덮어써진다.
+    // 마지막 방송 직후 진단 사본의 본문/SID 범위를 빌린다. 실제 선언WORD/전송 길이와 별개이며 다음 방송 때 덮어쓴다.
     std::span<const std::uint8_t> LastPacket() const;
     // 실제 표면/받침/종유석의 Pre/Post를 기존 표면 수명으로 분배하고 다른 파생 효과는 보존한다.
     o::SquidDestroyHooks DestroyHooks(o::SquidDestroyHooks fallback) const;

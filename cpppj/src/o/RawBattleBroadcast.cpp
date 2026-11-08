@@ -42,6 +42,16 @@ void RawBattleBroadcast::Send(std::span<const std::uint8_t> packet) const {
         const auto send=peers_[owner];send(packet);
     }
 }
+// 실제 target별 가상 송신만 보관하며 observer를 별도로 선행 호출하지 않는다.
+void RawBattleBroadcast::BindMutableSend(BattlePacketMutableSend send) { mutableSend_=std::move(send); }
+// Player 접속/NULL peer/현재 local 조건을 기존 Send와 같은 순서로 매 후보에서 조회한다.
+void RawBattleBroadcast::SendMutable(std::span<std::uint8_t> packet) const {
+    for (std::uint32_t owner=1;owner<9;++owner) { // 같은 지역 packet의 앞 대상 변경을 다음 대상 송신에서도 보존한다.
+        if (!(players_[owner*stride_+connectedOffset_]&1) || !peers_[owner] || owner==localOwner_) continue;
+        if (!mutableSend_) throw std::logic_error("선택된 실제 방송 연결의 mutable 가상 송신 미연결");
+        const auto send=mutableSend_;send(owner,packet);
+    }
+}
 // 원본 제외 송신은 localOwner를 시작 때 보관하며 이후 접속/연결 표만 다시 읽는다.
 void RawBattleBroadcast::SendExcept(std::int32_t excluded,std::span<const std::uint8_t> packet) const {
     if (!server_) {

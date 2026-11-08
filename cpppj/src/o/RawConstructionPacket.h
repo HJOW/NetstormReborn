@@ -28,6 +28,8 @@ private:
     std::uint32_t Read(std::size_t offset,std::size_t width) const; //선택된 필드의 물리 범위만 보호하며 앞선 부분 효과를 되돌리지 않는다.
     std::span<const std::uint8_t> packet_; //호출자가 방송/직접 수신이 끝날 때까지 소유하는 같은 현재 버퍼다.
 };
+// 004df590의 초기512BYTE/헤더만 먼저 작성한다. decoder/Create보다 앞서 부르고 미작성 본문은ff로 유지한다.
+void InitializeConstructionPacket(const ConstructionPacketHeader& header,std::span<std::uint8_t> packet);
 // 00444590→004df590/0040a840. 먼저512바이트를ff로지운뒤원본필드/SID를쓴다. 반환크기는512다.
 // 이단계의선언길이는가변길이최종화이전값이며전송길이라고가정하지않는다.
 std::size_t WriteConstructionPacket(const ConstructionNotice& notice,const ConstructionPacketHeader& header,std::span<std::uint8_t> packet);

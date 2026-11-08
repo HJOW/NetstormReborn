@@ -8,6 +8,7 @@
 namespace netstorm::o {
 // 연결 객체의 가상+4에 전달할 현재 전체 packet 바이트다. 빈 함수는 NULL 연결이다.
 using BattlePacketSend=std::function<void(std::span<const std::uint8_t>)>;
+using BattlePacketMutableSend=std::function<void(std::uint32_t,std::span<std::uint8_t>)>; // 선택된 현재 target의 실제 Registry 가상 송신에 같은 writer 예약을 넘긴다.
 // 현재0..8 연결 객체 표다. 0번은 원본 두 분배 함수에서 순회하지 않는다.
 using BattlePacketPeers=std::array<BattlePacketSend,9>;
 // 제외 송신에서 server가0일 때 호출하는 실제 단언 장치다. 정상 복귀하면 원문 순회를 계속한다.
@@ -27,6 +28,8 @@ public:
     RawBattleBroadcast(OriginalEdition,std::span<const std::uint8_t>,BattlePacketPeers&,const std::uint32_t&&,const bool&,BattleBroadcastAssertion={})=delete;
     // PATCH004e2e30/CD004c0420: 현재 접속한1..8의 NULL 아닌 연결 중 로컬을 제외한다.
     void Send(std::span<const std::uint8_t> packet) const;
+    void BindMutableSend(BattlePacketMutableSend send); // 실제 전송 owner가 준비되면 연결하며 NULL peer만인 독립 호출은 장치 없이 자연 반환한다.
+    void SendMutable(std::span<std::uint8_t> packet) const; // 같은 원문 선택 순서 뒤 target마다 현재 observer가 같은 버퍼를 수정한다.
     // PATCH004e2e80/CD004c0480: 서버를 확인하고 시작 시 로컬 owner와 지정 제외 번호를 사용한다.
     void SendExcept(std::int32_t excluded,std::span<const std::uint8_t> packet) const;
 private:
@@ -35,6 +38,7 @@ private:
     const std::uint32_t& localOwner_; // 현재 원본 로컬 Player 번호다.
     const bool& server_; // 제외 송신의 실제 서버 assertion 입력이다.
     BattleBroadcastAssertion assertion_; // 진단 뒤 현재 로컬 번호를 읽도록 같은 실제 Client 장치를 보관한다.
+    BattlePacketMutableSend mutableSend_; // 같은 Session보다 오래 보관하지 않는 실제 Registry 송신 소비자다.
     std::size_t stride_,connectedOffset_; // 판본별 Player 폭과 접속 BYTE 위치다.
 };
 }

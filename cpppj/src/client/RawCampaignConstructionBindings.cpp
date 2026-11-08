@@ -1,5 +1,6 @@
 // 기존 원본 Confirm/Packet/Notice/Clear/Place와 PlayerBounds/LocalGeyser를 같은 월드에 조립한다.
 #include "client/RawCampaignConstructionBindings.h"
+#include <algorithm> // 진단 사본은 실제512BYTE 물리 범위만 노출한다.
 #include <stdexcept>
 #include <utility>
 
@@ -25,8 +26,8 @@ struct RawCampaignConstructionBindings::Impl {
     RawCampaignConstructionState& state; // 현재 모드/타입/수량/이력을 프레임 사본 없이 읽는다.
     o::RawBattleBroadcast& broadcast; // 같은 실제 Player9/NULL 또는 연결 표의 원본 송신 분배기다.
     RawCampaignConstructionEffects effects; // 실제 설정/벽시각/표시/진단의 외부 소비자다.
-    std::array<std::uint8_t,kPacketBytes> packet{}; // 원본 Confirm의512바이트 임시 패킷에 대응한다.
-    std::size_t packetLength{}; // 최종화 이후의 현재 송신 길이며 최초 확정 전에는0이다.
+    std::array<std::uint8_t,kPacketBytes> packet{}; // 마지막 방송 직후의 진단 사본이며 활성 Confirm wire의 owner로 사용하지 않는다.
+    std::size_t packetLength{}; // 기존 fixture의 본문/SID 조회 범위다. 실제 선언WORD와 구별하며 최초 통지 전에는0이다.
     std::unique_ptr<o::RawConstructionPlace> place; // 같은 HP/SP/소유자와 실제 Pop을 사용한다.
     std::unique_ptr<o::RawConstructionClear> clear; // 같은 현재 hash/예측 조각을 실제 가상 삭제한다.
     std::unique_ptr<o::RawConstructionNotice> notice; // 원본 직접 수신 순서와 이력을 실행한다.
@@ -80,21 +81,23 @@ struct RawCampaignConstructionBindings::Impl {
             o::MakeConstructionNoticeHooks(core.pool,*clear,*place,std::move(noticeHooks)));
         auto confirmHooks=std::move(gameplay.confirm); // 서버 SID와 실제 wire 전송 뒤 원본처럼 같은 통지를 직접 처리한다.
         if (!confirmHooks.findBuilder) confirmHooks.findBuilder=ConstructionMissing<o::Sid,std::uint32_t,std::uint32_t,float,float>("작업장/Graph 기준점");
-        confirmHooks.broadcast=[this](const o::ConstructionNotice& value) {
-            o::WriteConstructionPacket(value,state.packet,packet);o::FinalizeConstructionPacket(packet,true);
-            packetLength=static_cast<std::size_t>(packet[2])|(static_cast<std::size_t>(packet[3])<<8);
-            broadcast.Send(std::span<const std::uint8_t>(packet).first(packetLength));
+        confirmHooks.transmitAndHandle=[this](std::span<std::uint8_t> current) {
+            broadcast.SendMutable(current); // 각 대상의 실제 송신 관문 뒤 observer가 같은 호출별512BYTE를 변경한다.
+            std::copy(current.begin(),current.end(),packet.begin()); // 진단 조회만 사본에 보관하고 직접 수신은 계속 지역 current를 사용한다.
+            packetLength=std::min(current.size(),std::size_t{27}+std::size_t(current[26])*2U); // NULL peer이면 선언WORD4를 꾸미지 않고 본문 범위만 기존 조회 계약으로 보인다.
+            notice->ActualHandle(current); // 원문444717의 sender9/NULL이 사용하지 않는 값은 합성하지 않는다.
         };
+        confirmHooks.assertion=[storage=world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // SID store 이후의20개 진단도 같은 실제 Client 창/복귀 정책을 사용한다.
         if (!confirmHooks.recorderActive) confirmHooks.recorderActive=ConstructionMissing<bool>("기록기 활성 조회");
         if (!confirmHooks.record) confirmHooks.record=ConstructionMissing<void,o::Sid>("기록기 첫 SID 기록");
-        confirmHooks=o::MakeConstructionNoticeConfirmHooks(core.pool,*notice,std::move(confirmHooks));
+        // 실제 Confirm은 typed handle을 붙이지 않고 같은 지역 wire의 결합 소비자로만 들어간다.
         confirm=std::make_unique<o::RawConstructionConfirm>(core.pool,core.types,frames,state.confirm,
             o::MakeConstructionConfirmHooks(core.pool,core.factory,std::move(confirmHooks)));
         auto requestHooks=std::move(gameplay.request); // 명시된 실제 Session 하위만 사용한다.
         if (!requestHooks.mayPlace) requestHooks.mayPlace=ConstructionMissing<bool,const o::CanonPlacementQuery&>("전체 MayPlace");
         if (!requestHooks.displace) requestHooks.displace=ConstructionMissing<bool,float,float,std::uint32_t,std::uint32_t>("발자국 유닛 밀어내기");
         if (!requestHooks.cancel) requestHooks.cancel=ConstructionMissing<void,float,float,std::uint32_t,std::uint32_t>("실패 섬 정리");
-        requestHooks.confirm=[this](const o::ConstructionConfirmRequest& value) { return confirm->Confirm(value); };
+        requestHooks.confirm=[this](const o::ConstructionConfirmRequest& value) { return confirm->ActualConfirm(value,state.packet); };
         requestBody=std::make_unique<o::RawConstructionRequest>(core.pool,core.hash,core.types,frames,core.spots,state.request,std::move(requestHooks));
         o::ConstructionCommandHooks commandHooks; // 비용 선검사와 실패 환불도 같은 실제 Place다.
         commandHooks.money=[this](std::uint32_t owner) { return place->Money(owner); };
@@ -133,7 +136,7 @@ struct RawCampaignConstructionBindings::Impl {
         if (request.type!=state.place.noIslandType || request.player || request.argument || request.direction || request.flags ||
             request.timeLow || request.timeHigh || request.quality)
             throw std::logic_error("캠페인 받침 확정은 LocalGeyser의 noIsland/Player0 요청만 지원합니다");
-        return confirm->Confirm(request);
+        return confirm->ActualConfirm(request,state.packet);
     }
     // 가상삭제거부를성공한예측정리/empty교체로간주하지않는다.
     void Destroy(o::Sid sid,std::uint32_t flags) const {
@@ -158,7 +161,7 @@ RawCampaignConstructionBindings::RawCampaignConstructionBindings(RawSurfaceWorld
 // 내부모듈은새Kernel프로세스를소유하지않으며현재배열보다먼저해제한다.
 RawCampaignConstructionBindings::~RawCampaignConstructionBindings()=default;
 // 일반 서버 요청도 원본 확정/통지/배치 몸체를 그대로 사용한다. 배치 가능 판정은 호출자의 선행 책임이다.
-bool RawCampaignConstructionBindings::Confirm(const o::ConstructionConfirmRequest& request) const { impl_->ValidateState();return impl_->confirm->Confirm(request); }
+bool RawCampaignConstructionBindings::Confirm(const o::ConstructionConfirmRequest& request) const { impl_->ValidateState();return impl_->confirm->ActualConfirm(request,impl_->state.packet); }
 // 로컬 예측은 서버 확정/통지와 같은 실제 배치기를 사용한다.
 o::ConstructionLocalHooks RawCampaignConstructionBindings::BindLocal(o::ConstructionLocalHooks hooks) const { return o::MakeConstructionLocalHooks(impl_->core.pool,impl_->core.factory,*impl_->place,std::move(hooks)); }
 // 전체 요청의 실제 공간/받침 검사와 현재 원본 확정만 실행한다.
@@ -174,7 +177,12 @@ void RawCampaignConstructionBindings::Reject(std::uint32_t type,std::uint32_t ow
 // 같은이미복원된442b50계산본체를실제6ch/운반실패와공유한다.
 void RawCampaignConstructionBindings::ChargeShortfall(std::uint32_t type,std::uint32_t owner,float x,float y,std::uint32_t argument,std::uint32_t direction) const { impl_->ValidateState();impl_->place->ChargeShortfall(type,owner,x,y,argument,direction); }
 // 분배기/전송 계층의 실제 수신 지점에 현재 고정 주소 몸체를 연결한다.
-void RawCampaignConstructionBindings::Register(o::RawPacketDispatch& dispatch,std::function<void()> prepare) { o::RegisterConstructionCommand(dispatch,*impl_->command,std::move(prepare)); }
+void RawCampaignConstructionBindings::Register(o::RawPacketDispatch& dispatch,std::function<void()> prepare) {
+    o::RegisterConstructionCommand(dispatch,*impl_->command,prepare); // 같은 현재 전역 준비 장치를 두 원문 수신 입구가 빌린다.
+    dispatch.ObservePacket(0x3f,[storage=impl_->world.Storage()](auto packet,auto sending) { o::FinalizeConstructionPacket(packet,sending!=0,[storage] { storage->AssertDisplay("sidCount != (unsigned char)-1","\\Ns\\O\\_p_packets.cpp",0x7c9); }); });
+    dispatch.Version(0x3f,1,0);dispatch.RequireLength(0x3f,0xffff); //40b4b0/52ecbe의 실제 가변 통지 metadata다.
+    dispatch.RegisterDirect(0x3f,[this,prepare=std::move(prepare)](std::uint32_t,o::PacketConnection*,std::span<const std::uint8_t> packet) { if (prepare) prepare();ReceiveNotice(packet); }); // sender/nullable 연결을 원문처럼 사용하지 않고 같은 Session 대여로 보호한다.
+}
 // 로컬 간헐천 전용 입구는 기존 인자 제한을 보존한다.
 bool RawCampaignConstructionBindings::ConfirmSupport(const o::ConstructionConfirmRequest& request) const { return impl_->ConfirmSupport(request); }
 // 실제로그인/Player초기화뒤미션부모가지정한위치에서만호출한다.
@@ -185,7 +193,7 @@ void RawCampaignConstructionBindings::PopulateGeysers(std::int32_t quantity,o::G
 const o::RawLocalGeyser& RawCampaignConstructionBindings::LocalGeysers() const { return *impl_->geysers; }
 // 현재Player/청크지도의기존정밀몸체를공유한다.
 const o::RawPlayerGeyserBounds& RawCampaignConstructionBindings::PlayerBounds() const { return *impl_->bounds; }
-// 최종화이후실제송신에넘긴동일버퍼만노출한다.
+// 마지막 방송 직후의 진단 사본 본문을 노출한다. 선언WORD는 실제 observer 결과 그대로이며 실제 송신 길이를 합성하지 않는다.
 std::span<const std::uint8_t> RawCampaignConstructionBindings::LastPacket() const { return std::span<const std::uint8_t>(impl_->packet).first(impl_->packetLength); }
 // 실제 표면/받침/종유석의 pre/post는 같은 표면/공통 수명을 실행한다. 다른 효과는 기존 분배를 보존한다.
 o::SquidDestroyHooks RawCampaignConstructionBindings::DestroyHooks(o::SquidDestroyHooks fallback) const {

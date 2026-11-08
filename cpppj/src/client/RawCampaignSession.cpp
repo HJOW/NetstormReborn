@@ -339,7 +339,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,42> kEditorGameplayMessages{0x51,0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37,0x30,0x33,0x34,0x35,0x31,0x32}; // 개발자31h/현재 설정32h도 같은 실제 Session 등록/반납 수명을 따른다.
+constexpr std::array<std::uint32_t,43> kEditorGameplayMessages{0x51,0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x3f,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37,0x30,0x33,0x34,0x35,0x31,0x32}; // 개발자31h/현재 설정32h도 같은 실제 Session 등록/반납 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -428,6 +428,7 @@ struct RawCampaignSession::Impl {
     ChatRelayHooks ChatDevices(); // 같은 현재 Player/연결 표와 UI를 중계 부모에 공급한다.
     void WriteReconnect(o::SavedStateWriteHooks hooks); //004b54e0의 같은 현재 SP/Player·복구 슬롯과 실제 FILE writer를 일반/메타에서 공유한다.
     void SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet); // 준비된 현재 로컬 전송의 observer와 큐에 원시 패킷을 넘긴다.
+    void SendConstructionMutable(std::uint32_t target,std::span<std::uint8_t> packet); // 방송이 실제 target을 선택한 뒤 현재 Registry에 넘기며 loaded/로그인 생성 관문을 추가하지 않는다.
     void SendRemoteTell(std::uint32_t owner,std::string_view section,bool others); // 같은실제mutable송신을004c9150/4c9200부모에제공한다.
     void ChangeFortSubscriber(std::uint32_t id,std::optional<std::span<const std::uint8_t>> name); //004b32f0의 실제 현재 Fort 변경을 UI와 개발자 명령에서 공유한다.
     void ExecuteDeveloperCommand(std::string_view text); //44dc70의 현재 설정/생성·삭제·피해/배치 명령과 미접합 분기 진단이다.
@@ -973,6 +974,7 @@ struct RawCampaignSession::Impl {
         constructionState.place.sharedBridgeLife=&kBridgeCrackLife; //원문52f960은 쓰기 없는 초기5이며 기존 Bridge/Decay/Editor가 읽는 같은 공통 owner를 빌린다.
         constructionState.notice.sharedDaisType=&gameplayGlobals->GameAux()->DaisType();constructionState.notice.sharedPriestType=&gameplayGlobals->GameAux()->PriestType(); //같은 현재 Dais/Priest 장기 TYPE owner를 통지에 빌린다.
         constructionState.place.patternTypesRead=[this] { return std::array<std::uint32_t,8>{piece,core.bridgeState.bridgeType,core.bridgeState.islandType,core.bridgeState.noIslandType,gunState.thunderCannonType,gunState.rainCannonType,gameplayGlobals->GameAux()->WindArcherType(),constructionState.confirm.patternTypes[7]}; }; //player 진단 복귀 뒤 541204/11a0/11d0/12cc/1264/125c/1288/1290의 같은 현재 owner8개를 읽는다.
+        constructionState.confirm.patternTypesRead=constructionState.place.patternTypesRead; // 실제 확정도 FindBuilder 뒤 Place와 같은8 owner를 조회하며 Prepare 사본을 현재값으로 고정하지 않는다.
         farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();farm.sharedArchipelagoSpan=&gameplayGlobals->GameAux()->WorldGeyserMargin();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088/542654를 직접 빌린다.
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
         objectState.sharedFullDeck=&fullDeck;constructionState.confirm.sharedFullDeck=&fullDeck;anchorState.sharedFullDeck=&fullDeck; // 하위 모듈 생성 전에 같은 장기 DWORD를 빌리며 Prepare 때 사본을 쓰지 않는다.
@@ -1061,6 +1063,7 @@ struct RawCampaignSession::Impl {
         //BYTE호환값을DWORD const참조로넘기면임시값수명오류가나므로실제Player DWORD를빌린다.
         broadcast=std::make_unique<RawBattleBroadcast>(core.pool.Edition(),players,services.battlePeers,playerState.battleOwner,core.processState.Server(),
             [storage=world.Storage()] { storage->AssertDisplay("server","\\Ns\\O\\Ztrans.cpp",0x1c3); }); // 실제 진단 뒤 당시 로컬 번호로 제외 송신을 계속한다.
+        broadcast->BindMutableSend([this](auto target,auto packet) { SendConstructionMutable(target,packet); }); // 현재 연결을 선택한 뒤에만 실제 mutable 가상 송신을 호출한다.
         // 별도 관찰/장치 송신이 없으면 실제 분배기를 사용한다. NULL 연결은 원본 조건에서 자연스럽게 생략한다.
         if (!services.assets.sendGunPacket) services.assets.sendGunPacket=[this](std::span<const std::uint8_t> bytes) { broadcast->Send(bytes); };
         if (!services.pathPacket) services.pathPacket=[this](std::span<const std::uint8_t> bytes) { broadcast->Send(bytes); };
@@ -3783,6 +3786,12 @@ ChatRelayHooks RawCampaignSession::Impl::ChatDevices() {
     hooks.receive=[this](auto bytes,auto) { if (!services.chatReceive) throw std::logic_error("Chat 중계의 실제 UI 수신 미연결");services.chatReceive(bytes); };
     hooks.assertion=[](auto line) { std::fprintf(stderr,"Chat 패킷 원본 진단: %u\n",line); };return hooks;
 }
+// 건설 방송의 선택된 대상만 현재 실제 Registry로 보낸다. 초기화 중 NULL peer는 이 장치에 도달하지 않는다.
+void RawCampaignSession::Impl::SendConstructionMutable(std::uint32_t target,std::span<std::uint8_t> packet) {
+    const auto registry=login ? login->transport.registry : services.connectionRegistry; // 내부 Login의 자체 Registry와 준비된 Editor/일반 Client 표를 현재 위치에서 구별한다.
+    if (!registry) throw std::logic_error("선택된 건설 방송 연결의 실제 Registry 없음");
+    static_cast<void>(registry->SendMutable(static_cast<std::int32_t>(target),packet,players)); // 기존 현재 슬롯/Player/NULL 관문 뒤 backend의 observer 한 번과 실제 큐만 실행한다.
+}
 // 같은 전송의 실제 연결 관문과 mutable observer만 실행하며 수신기를 동기로 우회하지 않는다.
 void RawCampaignSession::Impl::SendChatMutable(std::int32_t target,std::span<std::uint8_t> packet) {
     if (!loaded) throw std::logic_error("실제 설치 전 mutable Chat 패킷 송신");if (login) login->SendMutable(target,packet);else if (services.editorTransport) static_cast<void>(services.editorTransport->SendMutable(target,packet));else throw std::logic_error("실제 로컬 전송 없는 mutable Chat 송신");
@@ -4946,9 +4955,9 @@ void RawCampaignSession::GenerateWorldGeysers() {
     hooks.populate=[&s](std::int32_t quantity,o::GameRandom& random,auto rectangle,auto options) { s.PrepareConstruction();s.construction->PopulateGeysers(quantity,random,rectangle,options); };
     o::RawWorldGeyser(s.core.pool.Edition(),{s.core.ownerMode.battle,s.battleOptions,s.gameplayGlobals->GameAux()->WorldDecorationTypes()},std::move(hooks)).Generate();
 }
-//00486bc0의 현재 자원 전역과 실제 송신/공간/생성 장치를 같은 월드에 연결한다.
+//00486bc0의 현재 자원 전역과 실제 장치를 연결하며 로그인 기한/모드의 원문 관문을 먼저 실행한다.
 void RawCampaignSession::RunBattleResources() {
-    auto& s=*impl_;if (!s.loaded) throw std::logic_error("설치 전 실제 자원 프레임");auto& aux=*s.gameplayGlobals->GameAux();o::WorldGeyserBoundsHooks geometry;
+    auto& s=*impl_;auto& aux=*s.gameplayGlobals->GameAux();o::WorldGeyserBoundsHooks geometry; //State8 준비 중에도 같은 실제 전역의 자연 반환을 loaded 선행 오류로 바꾸지 않는다.
     geometry.chunkBounds=[&s](auto region) { if (!s.islands->Exists(region)) throw std::logic_error("자원 프레임의 현재 ChunkMap.bounds 섬 존재 진단");return s.chunks.Bounds(region); };geometry.spacing=[&s] { return o::WorldGeyserSpacing(s.battleOptions[6]); };
     o::RawWorldGeyserBounds bounds(s.core.pool.Edition(),{s.globals.missionPost,s.gameplayGlobals->WorldCells(),aux.WorldGeyserMargin()},std::move(geometry));o::BattleResourceFrameHooks hooks;
     hooks.replenish=[&s] { s.ReplenishNuggets(); };hooks.income=[this](auto owner,auto source,auto value) { std::array<std::uint8_t,11> packet{1,0x6c,11,0,static_cast<std::uint8_t>(owner),static_cast<std::uint8_t>(source),2};for (std::size_t byte=0;byte<4;++byte) packet[7+byte]=static_cast<std::uint8_t>(std::bit_cast<std::uint32_t>(value)>>(byte*8));SendLocalPacket(9,packet); }; // 원문 비정렬 signed 금액의 네BYTE를 쓰고 같은 실제9 송신을 사용한다.

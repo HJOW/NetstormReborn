@@ -25,11 +25,16 @@ float ConstructionPacketView::X() const { return std::bit_cast<float>(Read(5,4))
 float ConstructionPacketView::Y() const { return std::bit_cast<float>(Read(9,4)); } //Y도 실제 소비 때 같은 버퍼를 다시 읽는다.
 // 선언 count나19개 제한을 앞세우지 않고 decoder가 요청한 현재 WORD만 읽는다.
 std::uint16_t ConstructionPacketView::SidAt(std::uint32_t index) const { return static_cast<std::uint16_t>(Read(kPayloadStart+std::size_t(index)*2U,2)); }
+// 실제 Confirm의 지역 예약을 decoder/Create 전에 초기화하며 선언WORD는 송신 observer가 나중에 확정한다.
+void InitializeConstructionPacket(const ConstructionPacketHeader& header,std::span<std::uint8_t> packet) {
+    if (packet.size()<kTemporarySize) throw std::out_of_range("건설 초기 패킷512BYTE 물리 부족");
+    std::fill_n(packet.begin(),kTemporarySize,std::uint8_t{0xff});packet[0]=header.protocol&0x7f;packet[1]=header.message;
+    Put(packet,2,std::max<std::uint16_t>(4,header.declaredLength),2);
+}
 // 정상호출의실제패킷전체와그뒤호출자버퍼의보존을보장한다.
 std::size_t WriteConstructionPacket(const ConstructionNotice& notice,const ConstructionPacketHeader& header,std::span<std::uint8_t> packet) {
     if (packet.size()<kTemporarySize || notice.sids.size()>kMaxSids) throw std::out_of_range("건설패킷의512바이트/정상SID19개범위오류");
-    std::fill_n(packet.begin(),kTemporarySize,std::uint8_t{0xff});packet[0]=header.protocol&0x7f;packet[1]=header.message;
-    Put(packet,2,std::max<std::uint16_t>(4,header.declaredLength),2);
+    InitializeConstructionPacket(header,packet);
     // 원본Confirm은현재decoder순서의SID목록을먼저쓴다.
     for (std::size_t index=0;index<notice.sids.size();++index) Put(packet,kPayloadStart+2*index,notice.sids[index],2);
     packet[4]=notice.type;Put(packet,5,std::bit_cast<std::uint32_t>(notice.x),4);Put(packet,9,std::bit_cast<std::uint32_t>(notice.y),4);

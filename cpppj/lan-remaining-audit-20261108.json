@@ -557,5 +557,14 @@
     "m6cComplete": false,
     "report": "cpppj/construction-notice-body-20261108.json",
     "newMpExecutions": 0
+  },
+  "progress1170": {
+    "m6c": "본문1169+실제접합c2/c3완료",
+    "m6cComplete": true,
+    "next": "M6-d",
+    "report": "cpppj/construction-live-integration-20261108.json",
+    "nonMpSuccessful": 2,
+    "newMpExecutions": 0,
+    "worldlessResourceEffectsRemain": true
   }
 }
