@@ -11509,9 +11509,38 @@
       "bytes": 202147,
       "lines": 2288,
       "fixtureCommit": "25f4ed67",
-      "webCommit": "worktree",
+      "webCommit": "c37fe508",
       "cpppjBasis": {
         "cpppj/src/o/RawPathHaltParent.cpp": "8a555c99"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E145",
+      "id": "path-arrival-parent-hardware",
+      "path": "cpppj/tests/fixtures/path-arrival-parent-hardware-x86.tsv",
+      "producer": "cpppj 실제 CPU 관측: 공통 경로 도착 부모의 Step/공간/Halt/도착 반환 분기와 진단 복귀(10.78 860행)",
+      "consumers": [
+        "webpj/tests/path-arrival-parent.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-arrival-parent.js"
+      ],
+      "doc": "docs/webpj-path-arrival-parent-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathArrivalParent.cpp"
+      ],
+      "scope": "10.78 실제 CPU 860행 전부",
+      "text": true,
+      "sha256": "c7053cf099c188faa2abe49bdd8d5eccd6e45f69092d484673906d199ee218b6",
+      "bytes": 300502,
+      "lines": 860,
+      "fixtureCommit": "8a555c99",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathArrivalParent.cpp": "8a555c99"
       }
     }
   ]
