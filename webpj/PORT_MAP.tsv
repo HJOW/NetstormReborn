@@ -746,7 +746,7 @@ cpppj/src/o/RawGunHit.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunImpact.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunMode.cpp	port	www/core/raw-gun-mode.js	1f00a25a	port	[o-default] WB04-E71: 총 공격 방향 getter 004d4d00(크로스보우 graph×2·signed 문자×2−152). cpppj 에 독립 fixture 가 없어 소스 계약 시험(gun-mode 3건)으로 대조. 소비자(캠페인 프레임·얼음/천둥 미사일)는 해당 파일 단위에서
 cpppj/src/o/RawGunProcess.cpp	port			todo	[o-default]
-cpppj/src/o/RawGunTarget.cpp	port			todo	[o-default]
+cpppj/src/o/RawGunTarget.cpp	port	www/core/raw-gun-target.js	1f00a25a	partial	[o-default] WB04-E82: Gun 표적 findTarget 0046b6f0·mayTarget 0046af80·mayShoot 0046ac00·mayFire 0046b070·cannonRay 00469190·footprint/center(Archer/Cannon finder 순서·float 저장 순서·진단 출력). fixture guntarget 10.78 1727행 전부(값형/현재 Player 조회기 두 방식). 남음: MakeGunTargetHooks(RawGunProcess 선행)·보호 SHP 자산 sunCannon 사정선 48행(cannon-asset-ray)
 cpppj/src/o/RawIceCannonFire.cpp	port			todo	[o-default]
 cpppj/src/o/RawIceRicochet.cpp	port			todo	[o-default]
 cpppj/src/o/RawIceTower.cpp	port			todo	[o-default]
