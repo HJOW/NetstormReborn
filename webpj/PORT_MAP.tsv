@@ -793,7 +793,7 @@ cpppj/src/o/RawNewTechnology.cpp	port	www/core/raw-new-technology.js	1f00a25a	po
 cpppj/src/o/RawNuggetPostPop.cpp	port	www/core/raw-nugget-post-pop.js	1f00a25a	port	[o-default] WB04-E16: 00484f90 너겟 PostPop(두 Regular 예약·난수 소비·Damageable 위임). fixture nugget-postpop 10.78 288행 전부
 cpppj/src/o/RawNuggetRegular.cpp	port	www/core/raw-nugget-regular.js	1f00a25a	port	[o-default] WB04-E72: 너겟 Regular 485230(왕복 프레임·끝점 난수 예약·지면 검사 485fe0·가속 낙하 484ec0). fixture nugget-regular 9019행 전부(10.78 전용 파일, 기본 CRT 53비트 열). 공간/프레임/삭제의 실제 월드 연결은 해당 단위에서
 cpppj/src/o/RawNuggetReplenish.cpp	port	www/core/raw-nugget-replenish.js	1f00a25a	port	[o-default] WB04-E71: 너겟 보충 00485e40(권한 진단 재독·모드 관문·지역 0 원점 배치와 확장 단위 사각형). fixture nugget-replenish 372행 전부(10.78 전용 파일). 실제 무작위 배치 0040e050 본체는 해당 파일 단위에서
-cpppj/src/o/RawObjectCommand.cpp	port			todo	[o-default]
+cpppj/src/o/RawObjectCommand.cpp	port	www/core/raw-object-command.js	1f00a25a	port	[o-default] WB04-E123: 공통 객체 명령 004ae010/Form 부모 004ac9b0. fixture object-command originals 160행 전부(originalCD 160행은 10.72 라 제외). 가상 소유자/피해/삭제/진단은 훅 경계
 cpppj/src/o/RawObjectConversion.cpp	port	www/core/raw-object-conversion.js	1f00a25a	port	[o-default] WB04-E106: 비석/주문 Command 0x030000ce 전환 41e400/462290(Unpop 뒤 QA/TYPE 재조회·retype·프레임 DWORD·QA WORD)·Session 바인더(SquidFactory.retype 진단 0x22d~0x22f). fixture squid-retype 128행+object-conversion 36행 전부(10.78 전용 파일). 공간 해제/재등록/기본 프레임/부모 명령은 훅 경계
 cpppj/src/o/RawObjectTrace.cpp	port			todo	[o-default]
 cpppj/src/o/RawObjectTraceFields.cpp	port			todo	[o-default]
@@ -918,7 +918,7 @@ cpppj/src/o/RawSunAviaryCapture.cpp	port			todo	[o-default]
 cpppj/src/o/RawSunAviaryProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawSunFlyerFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawSurfaceLifecycle.cpp	port			todo	[o-default]
-cpppj/src/o/RawTemplateLifetime.cpp	port			todo	[o-default]
+cpppj/src/o/RawTemplateLifetime.cpp	port	www/core/raw-template-lifetime.js	1f00a25a	port	[o-default] WB04-E123: Template9 헤더 초기화 004bd2e0·단일 반납 004bf690·전역 정리 004bfb00. fixture template-lifetime-v2 240행 전부(10.78 전용). DataManager 소멸/할당 반납은 훅 경계. 캠페인 템플릿 저장소(State 섹션 확장 포함)는 별도 client 단위
 cpppj/src/o/RawTemplateLoad.cpp	port			todo	[o-default]
 cpppj/src/o/RawTemplateSectionNames.cpp	port	www/core/raw-template-section-names.js	1f00a25a	port	[o-default] WB04-E19: 004bccb0 Template 구역 이름표 lazy 생성(277 BYTE). fixture template-section-names 12행 전부
 cpppj/src/o/RawTempleDraw.cpp	port			todo	[o-default]

@@ -10510,7 +10510,7 @@
       "bytes": 32182,
       "lines": 411,
       "fixtureCommit": "c6931d8e",
-      "webCommit": "worktree",
+      "webCommit": "6b927cf6",
       "cpppjBasis": {
         "cpppj/src/o/RawDudeBehavior.cpp": "f396a821"
       }
@@ -10539,9 +10539,67 @@
       "bytes": 579756,
       "lines": 1601,
       "fixtureCommit": "f396a821",
-      "webCommit": "worktree",
+      "webCommit": "6b927cf6",
       "cpppjBasis": {
         "cpppj/src/o/RawDudeRegular.cpp": "513cbece"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E123",
+      "id": "objectcommand",
+      "path": "cpppj/tests/fixtures/object-command-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 공통 객체 명령의 반환과 가상 효과 인자 순서(두 판본 320행)",
+      "consumers": [
+        "webpj/tests/object-command.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-command.js"
+      ],
+      "doc": "docs/webpj-object-command-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawObjectCommand.cpp"
+      ],
+      "scope": "10.78(originals) 160행 사용, originalCD 160행은 범위 밖",
+      "text": true,
+      "sha256": "d4f75b6dbc69276c228b23a4ac2f55b2086982df092f446b2a510badc0415d4e",
+      "bytes": 13805,
+      "lines": 321,
+      "fixtureCommit": "2cdcf81e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawObjectCommand.cpp": "2cdcf81e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E123",
+      "id": "templatelifetimev2",
+      "path": "cpppj/tests/fixtures/template-lifetime-v2-x86.tsv",
+      "producer": "cpppj 독립 PE 관측 v2: Template9 헤더 전역 정리/단일 반납/초기화의 전체 196바이트와 소멸·free 직전 호출 순서(240행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/template-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-template-lifetime.js"
+      ],
+      "doc": "docs/webpj-object-command-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTemplateLifetime.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 240행 전부 사용. 구 관측 template-lifetime-x86.tsv 는 v2 가 대체",
+      "text": true,
+      "sha256": "0e910f529a86609b6bf1ab22f3f0a937c9296b7e1d0b5ba17c25a9a767fd93c0",
+      "bytes": 385647,
+      "lines": 241,
+      "fixtureCommit": "9859f159",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTemplateLifetime.cpp": "9859f159"
       }
     }
   ]
