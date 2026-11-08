@@ -1954,7 +1954,7 @@
       "bytes": 2565258,
       "lines": 7201,
       "fixtureCommit": "40cf5167",
-      "webCommit": "worktree",
+      "webCommit": "41310a53",
       "cpppjBasis": {
         "cpppj/src/o/SquidReward.cpp": "df2f5fa7",
         "cpppj/src/o/SpStore.cpp": "a1bfa97d"
@@ -1985,7 +1985,7 @@
       "bytes": 33097,
       "lines": 505,
       "fixtureCommit": "58839028",
-      "webCommit": "worktree",
+      "webCommit": "41310a53",
       "cpppjBasis": {
         "cpppj/src/o/SquidReward.cpp": "df2f5fa7"
       }
@@ -7937,9 +7937,96 @@
       "bytes": 1244758,
       "lines": 4541,
       "fixtureCommit": "b726981a",
-      "webCommit": "worktree",
+      "webCommit": "41310a53",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestRegen.cpp": "c1c8bd0a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E70",
+      "id": "priest-ritual-frame",
+      "path": "cpppj/tests/fixtures/priest-ritual-frame-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 사제 604 의식 프레임 전체의 반환 float·호출 기록(E/S/F)·사제 슬롯 50 raw(픽셀 장치는 명시 경계)",
+      "consumers": [
+        "webpj/tests/priest-ritual-frame.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-ritual-frame.js"
+      ],
+      "doc": "docs/webpj-priest-ritual-fort-prep-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestRitualFrame.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1050행 전부 사용",
+      "text": true,
+      "sha256": "f9b7cb8cf07feb33ab4e045c832555192ca600b499812d95e2fd7fe808b9710f",
+      "bytes": 135254,
+      "lines": 1051,
+      "fixtureCommit": "4ed94013",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestRitualFrame.cpp": "4ed94013"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E70",
+      "id": "priestritualactions",
+      "path": "cpppj/tests/fixtures/priestritualactions-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 의식 Begin/Continue 의 프레임 지정·예약·604 공유 예약 호출 기록과 지정 슬롯 raw",
+      "consumers": [
+        "webpj/tests/priest-ritual-actions.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-ritual-actions.js"
+      ],
+      "doc": "docs/webpj-priest-ritual-fort-prep-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestRitualActions.cpp"
+      ],
+      "scope": "10.78(originals) 876행 전부 사용(originalCD 행은 범위 밖)",
+      "text": true,
+      "sha256": "95fddc7b02742d80d62159da55b893881bf597346c6f6c52feef4748b11ea72c",
+      "bytes": 237189,
+      "lines": 1753,
+      "fixtureCommit": "b76adf95",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestRitualActions.cpp": "b76adf95"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E70",
+      "id": "fort-priest-preparation",
+      "path": "cpppj/tests/fixtures/fort-priest-preparation-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 Fort 사제 준비의 라벨별 하위 호출 trace 와 마지막 missionPost(실제 부모와 두 helper, 큰 게임 하위는 명시 장치)",
+      "consumers": [
+        "webpj/tests/fort-priest-preparation.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-priest-preparation.js"
+      ],
+      "doc": "docs/webpj-priest-ritual-fort-prep-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortPriestPreparation.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 13행 전부 사용",
+      "text": true,
+      "sha256": "a0f6ad61f5af90432b27c3265f84b1f1126f1b34a0415eb1bace5e2da0a56be2",
+      "bytes": 1646,
+      "lines": 14,
+      "fixtureCommit": "b8ce42c7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortPriestPreparation.cpp": "b8ce42c7"
       }
     }
   ]
