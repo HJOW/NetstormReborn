@@ -624,3 +624,7 @@ cpppj/src/o/Bridge.h	Netstorm.Core/Original/RawBridgeDecay.cs	225f2322cf79366043
 cpppj/src/o/Bridge.cpp	Netstorm.Core/Original/RawBridgeDecay.cs	11b04c8e06f280b1e9c06b604cef339343342c3a	port
 cpppj/src/o/RawBridgeDecayScan.h	Netstorm.Core/Original/RawBridgeDecayScan.cs	53a639f037172ac42393647b16d118d776f9fea4	port
 cpppj/src/o/RawBridgeDecayScan.cpp	Netstorm.Core/Original/RawBridgeDecayScan.cs	53a639f037172ac42393647b16d118d776f9fea4	port
+cpppj/src/o/RawSquidDisplayParent.h	Netstorm.Core/Original/RawSquidDisplayParent.cs	023a0a93cd4af9e75c56334dcf0d77c2507ec9f6	port
+cpppj/src/o/RawSquidDisplayParent.cpp	Netstorm.Core/Original/RawSquidDisplayParent.cs	023a0a93cd4af9e75c56334dcf0d77c2507ec9f6	port
+cpppj/src/o/RawRiftShapeAccess.h	Netstorm.Core/Original/RawRiftShapeAccess.cs	5626fa85b1ef8883ebe2d84b15bf8f742f74965b	port
+cpppj/src/o/RawRiftShapeAccess.cpp	Netstorm.Core/Original/RawRiftShapeAccess.cs	5626fa85b1ef8883ebe2d84b15bf8f742f74965b	port
