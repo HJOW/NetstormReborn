@@ -1,0 +1,205 @@
+{
+  "unit": 1182,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "summary": "Native Geyser/Nugget·Damageable14VT의 장기 Regular와 현재 사건 DWORD 접합",
+  "sourceSha256": {
+    "cpppj/src/o/RawAssetRegular.h": "58c7176a7f5e57a662c9cd640ca18c05e3eb38a4c73897a44667700024a9636a",
+    "cpppj/src/o/RawAssetRegular.cpp": "4451b4e6d37f3d306db82206924ef70f8d3efd996b791d9008baa85781003272",
+    "cpppj/src/o/RawNuggetRegular.h": "c41ab35ed3516ab3216bd00cd336dce4b03f645e2166e9ae872cd47144536cb2",
+    "cpppj/src/o/RawNuggetRegular.cpp": "cb4e88933b28666ef90da86a6e9b91a78f5bf41b94dadfb3cd6383c19116be5e",
+    "cpppj/src/o/RawGameAuxState.h": "97c1254d3f03ad3e4a0aabc071c59de752225af45736aa75588726ae759edcca",
+    "cpppj/src/client/RawSurfaceWorld.h": "2c3639d1eacb6da932d896be89036f56f8f3ea4f7a8eb8aaaf9681db0c0d6925",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "a1c149ee6494ddf37e8080244854877d431348388bc80454e95ead9a7f69da80",
+    "cpppj/src/client/ClientMain.cpp": "9b76d4ac5923a500ac509318086e86133e469388c8d4903049faaa53a5892a0e",
+    "cpppj/src/client/RawCampaignSession.h": "692d90463fa446dbf3f11645134836bde59b411d3c3bfb7d34a5e64394670fcd",
+    "cpppj/src/client/RawCampaignSession.cpp": "2fa7fba6cd4ece98fe020d29403cc5776e301bbd91848c0e7018cf9d39fddf81"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13529600,
+      "sha256": "ec1bb5be9bd3129d75ec268e35163430909085bfde84aa345761ae73756a2d36"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "65dc6b7aee79cc69d397dc2235600fe74eca15bd69c66679d4a2320cca698579"
+    }
+  },
+  "nativeEvidence": {
+    "extracted/cpp-m6-resource-regular-prep/manifest.json": "1fd55d4f33a35d6138989fe743542c740c2724f1fde67ecbc25961bd6e26f9ea",
+    "extracted/cpp-m6-resource-regular-prep/native-data.json": "92711a442908a28b55816241444cb91d9da6447cf280b28df5ef8cb2fadd017a",
+    "extracted/cpp-m6-resource-regular-prep/function-index.json": "bb344d7bcc7424d651659d95445ef92fbb9bbcb2cdb680cb2571dcb1ad207068",
+    "extracted/cpp-m6-resource-regular-prep/cpe-hashes.json": "ff1dfe71b5bbadabd0024eb439f58572707a96734e9a2349a86d3d96425d5535",
+    "extracted/cpp-m6-resource-regular-prep/resource-n9b1-native-regular.patch": "09e0c0d0af8f2892478afa230f55ebe5d7a375bb10e07b604811ec16f92e8e50"
+  },
+  "build": {
+    "log": "extracted/cpp-resume-1182/build.log",
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "live": {
+    "passed": true,
+    "unit": 1182,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1182\\live-tutorial4\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "ec1bb5be9bd3129d75ec268e35163430909085bfde84aa345761ae73756a2d36",
+    "exeSha256After": "ec1bb5be9bd3129d75ec268e35163430909085bfde84aa345761ae73756a2d36",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1182\\live-tutorial4\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1182\\live-tutorial4\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.726,
+        "gameTimeAfter": 24.023,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "audit": {
+    "geyserNativeRegular": "00485640",
+    "nuggetNativeRegular": "00485230",
+    "damageableNativeRegular": "0044b900",
+    "damageableVtables": 14,
+    "existingBaseRegularVtables": 16,
+    "damageEventDword": 6699,
+    "constructionEventDword": 6700,
+    "currentAFrameCountGetter": true,
+    "sameRandomHostAndReservedRegular": true,
+    "sessionOverridePreserved": true,
+    "nativeDamageGroundBeforeHpRequirement": true,
+    "typedDamagePreflightPreserved": true,
+    "normalRegularFrameExcludesFreeDead": true,
+    "fallAllocatedBytesUnchanged": true,
+    "arbitraryDirectFallCallerNotAudited": true,
+    "allNoWorldResourceChildrenComplete": false,
+    "canonicalTags": 25,
+    "untagged": 63,
+    "tagIsNotFullScopeCompletion": true,
+    "queueActivated": false,
+    "m6Complete": false
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "packet": 0,
+    "network": 0,
+    "nonMp": 1,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  },
+  "remaining": [
+    "자원 파생 삭제/NoWorld 피해·건설·삭제/HP·보상·SP·큰 AI/Carrier owner·다른 Form",
+    "25태그 전scope/63잔여F·전역 Source/listener/표/Poll·Node큐·지연 큐·JoinTestBattle·debugBurst·M6 마감",
+    "M7·M8·K1~K5·S1~S4와 별도 후순위"
+  ]
+}

@@ -432,6 +432,12 @@ int Client::Run() {
     }}); //실제Client장치만첫Factory/Host/World전에고정하며observer표는기존실제전송owner가유지한다.
     if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindResourceDevices({[this]()->o::GameRandom& { return randomGlobals_->Game(); },[this](auto sid) {
         auto& session=gameplayGlobals_->RequireSession();const auto runtimePin=gameplayGlobals_->PinCurrentRuntime(session);session.CheckCarrierPostPop(sid); //원문cc가실제선택된위치만현재전체owner를요구한다.
+    },[this](auto sid,auto event,auto count,auto payload) {
+        auto& session=gameplayGlobals_->RequireSession();const auto runtimePin=gameplayGlobals_->PinCurrentRuntime(session);return session.HandleDamageableResourceRegular(sid,event,count,payload); //실제 피해 사건이 선택된 하위에서만 같은 현재 전체 Runtime을 보유한다.
+    },[this](auto sid) {
+        auto& session=gameplayGlobals_->RequireSession();const auto runtimePin=gameplayGlobals_->PinCurrentRuntime(session);session.StartResourceConstruction(sid); //현재 Form 관문을 통과한 건설 재시도만 같은 부모에 전달한다.
+    },[this](auto sid,auto flags) {
+        auto& session=gameplayGlobals_->RequireSession();const auto runtimePin=gameplayGlobals_->PinCurrentRuntime(session);session.DestroyResourceObject(sid,flags); //선택된 실제 가상 삭제의 수락/거부와 부분 효과를 보존한다.
     },[this](auto sid,auto operation) { o::RawGeyserAiRegistration registration(options_.edition,playerRecords_->Records());registration.BindPatch([this](auto token,auto number,auto value) { auto& session=gameplayGlobals_->RequireSession();const auto runtimePin=gameplayGlobals_->PinCurrentRuntime(session);session.NotifyGeyserAi(token,number,value); });registration.Register(sid.value,operation); }}); //실제Player1..8/NULL관문뒤에만큰AI를호출하며없는AI를성공callback으로꾸미지않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindProcessDevices({[this] { return gameplayGlobals_->selection.selected; },[this] {
         if (gameplayGlobals_->Borrowed()) { auto& session=gameplayGlobals_->RequireSession();const auto runtimeOwner=gameplayGlobals_->PinCurrentRuntime(session);ClearClientUserSelection(*this); }else ClearClientUserSelection(*this); //실제선택효과가현재Session을필요로하면전체owner를보유하고빈선택은기존자연반환을사용한다.

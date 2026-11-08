@@ -4396,6 +4396,9 @@ std::unique_ptr<RawProductionMaintenance> RawCampaignSession::MakeProductionMain
     return std::make_unique<RawProductionMaintenance>(current->core.pool,current->core.types.size(),current->contentFinder,globals,panel,std::move(reads),std::move(hooks));
 }
 
+float RawCampaignSession::HandleDamageableResourceRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) { static_cast<void>(event);static_cast<void>(payload);return impl_->assetBindings->Regular().DamageRegular(sid,count,true); } //현재사건판정뒤이미선택한실제피해지면/HP종단을사용하며사건값을가짜상수로치환하지않는다.
+void RawCampaignSession::StartResourceConstruction(o::Sid sid) { impl_->PrepareBuilding(impl_->core.processState.Now());impl_->building->Start(sid,0.0F); } //원문재시도의현재시각/TYPE/HP부모다.
+void RawCampaignSession::DestroyResourceObject(o::Sid sid,std::uint32_t flags) { static_cast<void>(impl_->world.Destroy(sid,flags)); } //선택된가상10의기존수락/거부·부분효과를보존한다.
 void RawCampaignSession::NotifyGeyserAi(std::uint32_t token,std::uint32_t sid,std::uint32_t operation) { impl_->aiWorld->Geyser(token,sid,operation); } //기존최초Pop/삭제와동일한실제AI목록본문이다.
 void RawCampaignSession::CheckCarrierPostPop(o::Sid sid) { static_cast<void>(impl_->priests->CheckCarrier(sid)); } //기존직접Carrier후처리와같은가상확인종단이다.
 void RawCampaignSession::NotifyAiObject(std::uint32_t owner,o::Sid object,bool added) { if (!impl_->aiObjects) throw std::logic_error("실제AI객체통지미설치");impl_->aiObjects->Notice(owner,object,added); } //원문선택후같은실제AI본체만소비한다.

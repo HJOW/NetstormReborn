@@ -13,6 +13,7 @@ struct NuggetRegularHooks {
     std::function<void(Sid,std::uint32_t)> destroy,unpop; // 현재가상10/48의실제효과다.
     std::function<void(Sid,float,float,std::uint32_t)> pop; // 낙하가캡처한x/y와flags40의현재가상90이다.
     RegularHandler damageable; // 마지막44b900의실제처리기다.
+    std::function<std::int32_t(std::uint32_t)> aFrameCount; //Native는현재TYPE의실제A프레임개수를선택위치에서읽고typed는기존span을유지한다.
 };
 // 너겟의기존두예약과끝점에서생긴후속예약이같은현재상태를읽는다.
 class RawNuggetRegular {

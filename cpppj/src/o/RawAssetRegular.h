@@ -51,6 +51,7 @@ struct AssetRegularHooks {
     std::function<bool()> suppressLeaveRequest; // event3의 소비 위치에서 현재00594fa0을 조회한다. 독립 입력은 기존 state를 쓴다.
     std::function<void(float,float)> descend; // event4의 실제 Fort 지역 조회→현재 서버/Descend 명령 큐다. 독립 기존 입력만 아래의 지역/애니메이션 훅을 사용한다.
 };
+float RunNativeGeyserRegular(SidPool& pool,std::span<const RiftTypeRecord> types,Sid sid,std::uint32_t event,std::uint32_t count,float payload,const std::function<void(Sid,std::uint32_t)>& display,const RegularHandler& damageable); //485640의실제표시접두/현재비용·프레임/후행Damageable을typed본문과분리해장기owner에제공한다.
 // +5c 가상 표의 실제 주소로 몸체를 선택하고 공통 Damageable의 event 분배까지 복원한다.
 class RawAssetRegular {
 public:
@@ -66,6 +67,7 @@ public:
     // 이미 복원된 사제 등과 합성할 처리기다. 미복원 부모를 받아주는 기본 payload 처리는 넣지 않는다.
     RegularHandler Handler(RegularHandler fallback={}) const;
     // 공통 피해 연쇄/abstract 건설 재시도 분배를 다른 Damageable 파생에서 직접 재사용한다.
+    float DamageRegular(Sid sid,std::uint32_t count,bool native=false) const; //Native현재사건값으로이미선택된피해지면/HP접두를typed와같은실제본문으로제공한다.
     float DamageableHandle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const;
     // 어댑터가 다른 월드의 풀을 섞지 않게 확인한다.
     const SidPool& Pool() const;

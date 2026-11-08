@@ -10,6 +10,7 @@
 #include "o/RawCheckingFlag.h" // Editor/Session이같은Client진단owner를빌린다.
 #include "o/RawGameAuxState.h"
 #include "o/RawAssetPostPop.h" //장기Geyser가현재TYPE/목록과같은기존원문몸체를빌린다.
+#include "o/RawNuggetRegular.h" //너겟의기존왕복/낙하/현재가상삭제를장기기본Host에연결한다.
 #include "o/RawNuggetPostPop.h" //실제두Regular확보와같은Host의기본부모다.
 #include "o/FortSerializationGlobals.h" //실제 Template/Core/객체의005c89b8 owner를같이pin한다.
 #include "o/RawBoardTarget.h"
@@ -43,6 +44,9 @@ class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물�
 struct RawSurfaceResourceDevices { //같은Client게임난수와선택된큰자산장치만장기로빌린다.
     std::function<o::GameRandom&()> random; //새seed/snapshot없이실제현재GameRandom한개를조회한다.
     std::function<void(o::Sid)> carrierCheck; //실제가상cc의현재Carrier검사를선택위치에서호출한다.
+    o::RegularHandler damageableRegular; //실제피해사건의현재큰세계종단이며자연기본사건은장기본문이직접판정한다.
+    std::function<void(o::Sid)> startConstruction; //실제abstract/현재Form조회뒤건설Start만선택해호출한다.
+    std::function<void(o::Sid,std::uint32_t)> destroy; //선택된현재가상삭제종단이며NoWorld미복원을성공으로꾸미지않는다.
     std::function<void(o::Sid,std::uint32_t)> geyserRegistration; //현재Player9/brain순회의실제416720등록부모다.
 };
 struct RawSurfaceProcessDevices { //실제Client현재선택/선택해제부모만장기로빌린다.
@@ -206,6 +210,8 @@ private:
     void RefreshChecking(); //이미존재하는실행기의진단view만갱신하고새모듈/World/Native효과는만들지않는다.
     void NoteChanged(); //현재World의기존호스트changed관찰만알리며원문게임상태를새로쓰지않는다.
     void TransmitPop(o::Sid sid,std::uint32_t flags); //현재World가없어도같은장기writer/실제Registry를사용한다.
+    float ResourceDamageableRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); //44b900의현재사건/abstract/현재Form관문뒤필요한실제큰하위만선택한다.
+    o::RawNuggetRegular& ResourceNuggetRegular(); //현재프레임/공간/권한/같은Regular확보메모리의실제장기본문이다.
     void DefaultResourcePostPop(o::Sid sid,std::uint32_t flags); //현재실제VT의Geyser/Nugget/직접Carrier·Damageable본문만분배한다.
     o::RawCarrierPostPop& ResourceCarrierPostPop(); //실제같은로딩깊이/권한/TYPE/지면소유자/공통깊이를장기로연결한다.
     bool AllocateResourceRegular(); //원문new28의동일확보메모리이며실패뒤난수를소비하지않는다.
@@ -232,6 +238,7 @@ private:
     o::AssetPostPopState resourceAssetState_; //장기Geyser경로가소비하는실제목록/표면TYPE주소이며다른자산용사본은사용하지않는다.
     std::unique_ptr<o::RawCarrierPostPop> resourceCarrier_; //같은공통PostPop을직접호출하는장기실제부모다.
     std::unique_ptr<o::RawAssetPostPop> resourceGeyser_; //Geyser전용본문만공유하며다른자산의가상등록을합성하지않는다.
+    std::unique_ptr<o::RawNuggetRegular> resourceNuggetRegular_; //장기기본Host의실제왕복/낙하본문이며현재Sessionoverride를보존한다.
     std::unique_ptr<o::RawNuggetPostPop> resourceNugget_; //같은Host/난수/확보메모리의너겟후처리다.
     std::unique_ptr<o::RegularProcess> resourceRegular_; //할당과생성사이동일new28의소유권만보존한다.
     std::unique_ptr<o::RawSquidDestroy> baseDestroy_; //같은Native공통pre/post깊이를World반납뒤에도보존한다.

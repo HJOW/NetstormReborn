@@ -24,7 +24,7 @@ std::uint32_t Cell(float value) {
 }
 RawNuggetRegular::RawNuggetRegular(SidPool& pool,std::span<const std::int32_t> aFrameCounts,std::span<const std::uint8_t> spots,const bool& boss,NuggetRegularHooks hooks)
     :pool_(pool),aFrameCounts_(aFrameCounts),spots_(spots),boss_(boss),hooks_(std::move(hooks)) {
-    if (pool.Edition()!=OriginalEdition::Patch1078 || aFrameCounts.size()!=188 || spots.size()!=65536) throw std::invalid_argument("너겟Regular는PATCH188TYPE/65536spot이필요합니다");
+    if (pool.Edition()!=OriginalEdition::Patch1078 || (aFrameCounts.size()!=188 && !hooks_.aFrameCount) || spots.size()!=65536) throw std::invalid_argument("너겟Regular는PATCH188TYPE/65536spot이필요합니다");
 }
 bool RawNuggetRegular::Handles(Sid sid) const { return Read(pool_.Slot(sid),0)==0x50dc30U; } // 실제 가상 진입은 현재 TYPE/할당 상태를 새 선행 조건으로 사용하지 않는다.
 bool RawNuggetRegular::CanFall(Sid sid) const {
@@ -34,7 +34,7 @@ bool RawNuggetRegular::CanFall(Sid sid) const {
 }
 float RawNuggetRegular::Animate(Sid sid,bool grow) const {
     const auto frame=Read(pool_.Slot(sid),36);bool endpoint=frame==0;
-    if (grow) { const auto type=pool_.Slot(sid)[10];if (type>=aFrameCounts_.size()) throw std::out_of_range("너겟프레임TYPE범위오류");endpoint=frame==std::bit_cast<std::uint32_t>(aFrameCounts_[type])-1U; }
+    if (grow) { const auto type=pool_.Slot(sid)[10];const auto read=hooks_.aFrameCount;if (!read && type>=aFrameCounts_.size()) throw std::out_of_range("너겟프레임TYPE범위오류");const auto frames=read ? read(type):aFrameCounts_[type];endpoint=frame==std::bit_cast<std::uint32_t>(frames)-1U; } //Native현재TYPE+170은실제getter이며기존typedspan도같은소비지점이다.
     if (endpoint) {
         if (Need(hooks_.allocate)()) { const auto delay=static_cast<float>(Need(hooks_.randomInteger)(2,8));Need(hooks_.construct)(sid,grow ? 0U : 1U,delay); }
         return 0.0F;

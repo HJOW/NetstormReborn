@@ -74,6 +74,10 @@ public:
     const std::uint32_t& StreakProcessType() const { return streakProcessType_; } // Runtime 교체/일반 월드 준비로12의 새 사본을 만들지 않는다.
     std::uint32_t& RegularProcessType() { return regularProcessType_; } //00541128: 일반 예약 생성과 종속 조회가 공유하는 현재 DWORD다.
     std::uint32_t& GunProcessType() { return gunProcessType_; } //005410f8의 현재 총 프로세스 TYPE를 신규 생성/전체 수신이 함께 읽는다.
+    std::uint32_t& DamageRegularEvent() { return damageRegularEvent_; } //005326c0의실제현재6699이며장기Handle이현재비교위치에서빌린다.
+    const std::uint32_t& DamageRegularEvent() const { return damageRegularEvent_; } //World교체로다시초기화하지않는다.
+    std::uint32_t& ConstructionRegularEvent() { return constructionRegularEvent_; } //005326c4의실제현재6700이며abstract건설재시도의현재비교값이다.
+    const std::uint32_t& ConstructionRegularEvent() const { return constructionRegularEvent_; } //현재DWORD를상수사본으로동기화하지않는다.
     std::uint32_t& ConstructionProcessType() { return constructionProcessType_; } //005410e8의 현재30이며 일반 생성/수신/볼텍스가 같은 DWORD를 읽는다.
     std::uint32_t& DaisProcessType() { return daisProcessType_; } //00541158의 현재58이며 asset DaisType165와 별개인 수신 부착 TYPE다.
     const std::uint32_t& DaisProcessType() const { return daisProcessType_; } // World/Session 교체에서 같은 장기 DWORD를 재초기화하지 않는다.
@@ -210,6 +214,7 @@ private:
     std::uint32_t evilRayProcessType_{10},particleSource_{}; // 보호 PE00541098의10과00595128의BSS0이며 일반 fresh에서 덮어쓰지 않는다.
     std::uint32_t flyerProcessType_{31}; // 보호 PE005410ec의 초기 DWORD이며 홈/생성·후속 writer가 공유할 장기 물리다.
     std::uint32_t gunProcessType_{34}; // 보호 PE005410f8의 초기 DWORD다. World/Session 교체에서 새34를 쓰지 않는다.
+    std::uint32_t damageRegularEvent_{6699},constructionRegularEvent_{6700}; //보호PE005326c0/c4의초기DWORD이며Session생성/정리가새값을쓰지않는다.
     std::uint32_t constructionProcessType_{30}; // 보호 PE005410e8의 최초30이며 World/Session 교체에서 초기화하지 않는다.
     std::uint32_t daisProcessType_{58}; // 보호 PE00541158의 최초3ah이며 Regular/Dais asset 번호와 공유하지 않는다.
     std::array<std::uint8_t,2> gunProcessHeader_{0x3a,1}; //보호PE005409b4/5의최초두BYTE이며같은현재owner를공유한다.

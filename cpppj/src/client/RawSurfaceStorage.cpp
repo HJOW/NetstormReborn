@@ -1,5 +1,7 @@
 // Client의 실제 배열을 Session보다 오래 보관하고 같은 물리를 두 월드에 중복 설치하지 않는다.
 #include "client/RawSurfaceWorld.h"
+#include "o/RawAssetRegular.h" //현재NativeGeyser의독립실제본문을같은Storage에서사용한다.
+#include "o/RawContainedLookup.h" //건설재시도의실제현재Form타입조회이며가짜존재값을반환하지않는다.
 #include "o/RawDaisProcessData.h" //현재PID의실제6a writer를장기기본직렬화에연결한다.
 #include "o/RawGunProcess.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
 #include "o/RawWindAviaryProcess.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
@@ -138,7 +140,7 @@ o::SquidUnpop& RawSurfaceStorage::Unpop() {
 }
 void RawSurfaceStorage::BindPopRuntime(const std::shared_ptr<const RawSurfacePopBindings>& runtime) { const auto current=popRuntime_.lock();if (!runtime || (current && current!=runtime) || !runtime->transmit) throw std::invalid_argument("동일실제Pop writer대여필요");popRuntime_=runtime; } //생성/전송/ACK를실행하지않는다.
 void RawSurfaceStorage::BindResourceDevices(RawSurfaceResourceDevices devices) { //현재Client장치를최초보관하며공장/Host/원문값을조기구성하지않는다.
-    if (!UsesNativeTransmissionDevices() || resourceDevices_.random || resourceCarrier_ || !devices.random || !devices.carrierCheck || !devices.geyserRegistration) throw std::invalid_argument("장기자원PostPop의실제최초Client장치계약");resourceDevices_=std::move(devices);
+    if (!UsesNativeTransmissionDevices() || resourceDevices_.random || resourceCarrier_ || !devices.random || !devices.carrierCheck || !devices.geyserRegistration || !devices.damageableRegular || !devices.startConstruction || !devices.destroy) throw std::invalid_argument("장기자원PostPop의실제최초Client장치계약");resourceDevices_=std::move(devices);
 }
 o::RawCarrierPostPop& RawSurfaceStorage::ResourceCarrierPostPop() { //실제공통부모를World없이같은물리/현재전역으로구성한다.
     if (!resourceCarrier_) {
@@ -152,6 +154,21 @@ bool RawSurfaceStorage::AllocateResourceRegular() { //같은new28의실패를그
 }
 void RawSurfaceStorage::ConstructResourceRegular(o::Sid sid,std::uint32_t event,float payload) { //두번째할당없이동일확보주소에서496e80과현재시각을소비한다.
     if (!resourceRegular_) throw std::logic_error("장기자원Regular의실제확보메모리누락");auto* reserved=resourceRegular_.get();std::destroy_at(reserved);std::construct_at(reserved,event,payload);auto* attached=Processes().Host().AttachRegular(std::move(resourceRegular_),sid);if (attached) attached->ResetTask(event,Processes().State().Now());
+}
+float RawSurfaceStorage::ResourceDamageableRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) { //일반사건의payload반환은원문496e70을직접실행하고큰세계효과를미리요구하지않는다.
+    if (event==gameAux_->DamageRegularEvent()) { const auto hit=resourceDevices_.damageableRegular;if (!hit) throw std::logic_error("장기Damageable의실제피해사건미연결");return hit(sid,event,count,payload); }
+    if (event==gameAux_->ConstructionRegularEvent()) {
+        if (pool.Slot(sid)[40]&1U) { o::RawContainedLookup lookup(pool,[this](auto object,auto flags) { const auto destroy=resourceDevices_.destroy;if (!destroy) throw std::logic_error("장기Form의현재가상삭제미연결");destroy(object,flags); });
+            if (!lookup.Find(sid,gameAux_->ConstructionProcessType()).value) { const auto start=resourceDevices_.startConstruction;if (!start) throw std::logic_error("장기Damageable의실제건설재시도미연결");start(sid); }
+        }return 0.0F;
+    }return payload;
+}
+o::RawNuggetRegular& RawSurfaceStorage::ResourceNuggetRegular() { //같은실제현재게임난수/프레임/공간과PostPop의확보메모리를공유한다.
+    if (!resourceNuggetRegular_) { o::NuggetRegularHooks hooks;hooks.setFrame=[this](auto sid,auto frame,auto flags) { Frame().Set(sid,frame,flags); };hooks.refresh=[this](auto sid) { Display().Update(pool.Slot(sid)); };hooks.allocate=[this] { return AllocateResourceRegular(); };
+        hooks.randomInteger=[this](auto low,auto high) { const auto read=resourceDevices_.random;if (!read) throw std::logic_error("장기너겟왕복의실제난수미연결");return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(low)+read().Next(static_cast<std::uint32_t>(high)-static_cast<std::uint32_t>(low))); };
+        hooks.construct=[this](auto sid,auto event,auto payload) { ConstructResourceRegular(sid,event,payload); };hooks.destroy=[this](auto sid,auto flags) { const auto destroy=resourceDevices_.destroy;if (!destroy) throw std::logic_error("장기너겟의현재가상삭제미연결");destroy(sid,flags); };hooks.unpop=[this](auto sid,auto flags) { UnpopAsset(sid,flags); };hooks.pop=[this](auto sid,auto x,auto y,auto flags) { PopAsset(sid,x,y,flags); };
+        hooks.damageable=[this](auto sid,auto event,auto count,auto payload) { return ResourceDamageableRegular(sid,event,count,payload); };hooks.aFrameCount=[this](auto type) { if (type>=frames.size()) throw std::out_of_range("장기너겟현재A프레임TYPE물리부족");return frames[type].Run('A').count; };resourceNuggetRegular_=std::make_unique<o::RawNuggetRegular>(pool,std::span<const std::int32_t>{},spots,authority_->boss,std::move(hooks));
+    }return *resourceNuggetRegular_;
 }
 void RawSurfaceStorage::DefaultResourcePostPop(o::Sid sid,std::uint32_t flags) { //보호PE의실제현재+20만선택하고전용미복원을base성공으로넘기지않는다.
     const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //현재물리VT4BYTE만해석한다.
@@ -192,6 +209,10 @@ o::SquidFormDispatch& RawSurfaceStorage::ProcessFormDispatch() { //현재World�
 float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) { //현재VT의실제+5c주소가base496e70인클래스만원문payload반환을실행한다.
     constexpr std::array<std::uint32_t,16> kBaseRegularVtables{0x00501dd0U,0x00503360U,0x00506d98U,0x00506e50U,0x00506f08U,0x005070c0U,0x005092d0U,0x00509388U,0x00509b98U,0x0050c3b0U,0x0050c9f0U,0x0050db78U,0x0050eb98U,0x00512098U,0x00512110U,0x00512188U}; //보호PE87VT를조회해+5c=00496e70인16개만보존한불변메타데이터다.
     const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //가상선택은현재VT4BYTE이며현재TYPE별추측으로바꾸지않는다.
+    if (table==0x50da88U) return o::RunNativeGeyserRegular(pool,types,sid,event,count,payload,[this](auto object,auto flags) { Display().Update(pool.Slot(object),flags); },[this](auto object,auto code,auto times,auto value) { return ResourceDamageableRegular(object,code,times,value); });
+    if (table==0x50dc30U) return ResourceNuggetRegular().Handle(sid,event,count,payload);
+    constexpr std::array<std::uint32_t,14> kDamageableRegularVtables{0x00501ea0U,0x00509930U,0x005099e8U,0x00509aa0U,0x0050a1e8U,0x0050a388U,0x0050b6e8U,0x0050b7c0U,0x0050b888U,0x0050b9b8U,0x0050bad0U,0x0050e940U,0x0050ea08U,0x0050ead0U}; //보호PE의현재VT+5c=0044b900인14클래스만같은원문부모를사용한다.
+    if (std::find(kDamageableRegularVtables.begin(),kDamageableRegularVtables.end(),table)!=kDamageableRegularVtables.end()) return ResourceDamageableRegular(sid,event,count,payload);
     if (std::find(kBaseRegularVtables.begin(),kBaseRegularVtables.end(),table)!=kBaseRegularVtables.end()) return payload; //496e70은event/count를읽지않는실제base본문이다.
     static_cast<void>(event);static_cast<void>(count);throw std::logic_error("World없는현재VT의전용Regular몸체미설치"); //Bridge/Geyser/Nugget전용을base반환으로가장하지않는다.
 }

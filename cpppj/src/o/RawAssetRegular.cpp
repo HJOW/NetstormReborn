@@ -46,6 +46,18 @@ template<class Callback> void Require(const Callback& callback,const char* messa
     if (!callback) throw std::logic_error(message);
 }
 }
+float RunNativeGeyserRegular(SidPool& pool,std::span<const RiftTypeRecord> types,Sid sid,std::uint32_t event,std::uint32_t count,float payload,const std::function<void(Sid,std::uint32_t)>& display,const RegularHandler& damageable) { //현재가상88을먼저실행하고실제로선택된TYPE/필드만읽는다.
+    const auto update=[&] { const auto current=display;Require(current,"Native간헐천현재표시미연결");current(sid,0); };update();
+    if (!event) {
+        const auto ratio=[&] { const auto raw=pool.Slot(sid);const auto quantity=Read(raw,12,2);const auto type=pool.Slot(sid)[10];if (type>=types.size()) throw std::out_of_range("Native간헐천현재비용TYPE물리부족");return static_cast<double>(quantity)/static_cast<double>(types[type].cost); }; //원문의반복getType/비용조회위치를보존한다.
+        const auto frame=[&] { return std::bit_cast<std::int32_t>(Read(pool.Slot(sid),36)); };std::int32_t next; //원문비용분기뒤각실제프레임읽기위치에서조회한다.
+        if (ratio()>0.75 && ratio()<=1.0) { next=frame()<16 ? Add(frame(),1):0;payload=std::bit_cast<float>(0x3cf5c28fU); }
+        else if (ratio()>0.5 && ratio()<=0.75) { next=frame()<32 ? Add(frame(),1):17;payload=std::bit_cast<float>(0x3d75c28fU); }
+        else { next=frame()<48 ? Add(frame(),1):33;payload=std::bit_cast<float>(0x3db851ecU); }
+        const auto selected=pool.Slot(sid);Write({const_cast<std::uint8_t*>(selected.data()),selected.size()},36,std::bit_cast<std::uint32_t>(next));update(); //직접DWORDstore뒤현재가상88이며별도SetFrame/Unpop을추가하지않는다.
+    }
+    const auto base=damageable;Require(base,"Native간헐천의실제DamageableHandle미연결");return base(sid,event,count,payload);
+}
 // 같은 월드의 표·프레임 지정기만 허용하고 비용·원소를 사본으로 만들지 않는다.
 RawAssetRegular::RawAssetRegular(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
     std::span<const RiftTypeFrames> frames,std::span<const std::int32_t> elements,const SquidFrame& setter,
@@ -238,15 +250,14 @@ float RawAssetRegular::Vortex(Sid sid,std::uint32_t event,std::uint32_t count,fl
     return DamageableHandle(sid,event,count,payload);
 }
 // Damageable의 기본 사건만 payload 반환을 사용한다. 지정된 두 사건은 실제 하위 효과를 요구한다.
+float RawAssetRegular::DamageRegular(Sid sid,std::uint32_t count,bool native) const { //사건판정뒤실제피해지면/HP/현재genus본문을같은원문순서로공유한다.
+    Require(hooks_.damageGround,"Damageable 지면 피해 몸체 누락");if (!native) Require(hooks_.hitPoints,"Damageable 가상 HP 몸체 누락"); //typed의기존선검사만보존한다.
+    const auto raw=pool_.Slot(sid);hooks_.damageGround(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
+    const auto source=std::bit_cast<std::int32_t>(count)>>16;if (native) Require(hooks_.hitPoints,"NativeDamageable의현재HP종단미연결");const auto result=hooks_.hitPoints(sid,count&65535U,source,0);
+    if (!result && !(types_[pool_.Slot(sid)[10]].flags2&0x200000U)) return -1.0f;return 0.0f;
+}
 float RawAssetRegular::DamageableHandle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
-    if (event==state_.damageEvent) {
-        Require(hooks_.damageGround,"Damageable 지면 피해 몸체 누락");Require(hooks_.hitPoints,"Damageable 가상 HP 몸체 누락");
-        const auto raw=pool_.Slot(sid);hooks_.damageGround(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
-        const auto source=std::bit_cast<std::int32_t>(count)>>16;
-        const auto result=hooks_.hitPoints(sid,count&65535U,source,0);
-        if (!result && !(types_[pool_.Slot(sid)[10]].flags2&0x200000U)) return -1.0f;
-        return 0.0f;
-    }
+    if (event==state_.damageEvent) return DamageRegular(sid,count);
     if (event==state_.constructionEvent) {
         const auto extra=pool_.Edition()==OriginalEdition::Patch1078 ? 40U : 35U;
         if (pool_.Slot(sid)[extra]&1U) {
