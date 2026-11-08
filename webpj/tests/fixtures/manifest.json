@@ -12416,7 +12416,7 @@
       "bytes": 821082,
       "lines": 145,
       "fixtureCommit": "13b4a4f7",
-      "webCommit": "worktree",
+      "webCommit": "2e1f7496",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgePath.cpp": "13b4a4f7"
       }
@@ -12445,9 +12445,154 @@
       "bytes": 28826,
       "lines": 601,
       "fixtureCommit": "da3a5c8a",
-      "webCommit": "worktree",
+      "webCommit": "2e1f7496",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgePath.cpp": "13b4a4f7"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E178",
+      "id": "aibridgeshape",
+      "path": "cpppj/tests/fixtures/ai-bridge-shape-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 다리 모양 0040f400(26개 패턴×4회전의 호출 전 채움 BYTE 를 보존한 0xbc 전체 버퍼)(10.78 208행)",
+      "consumers": [
+        "webpj/tests/ai-bridge-search.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-bridge-search.js"
+      ],
+      "doc": "docs/webpj-ai-bridge-search-strategies-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiBridgeSearch.cpp"
+      ],
+      "scope": "10.78 실제 PE 208행 전부",
+      "text": true,
+      "sha256": "80d8ff50cb11e86abdf3d66a5c802241db72d40cfea9f99e75ea9e14f7166ee6",
+      "bytes": 80073,
+      "lines": 209,
+      "fixtureCommit": "de78dbaa",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E178",
+      "id": "aibridgeclear",
+      "path": "cpppj/tests/fixtures/ai-bridge-clear-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 다리 점유 검사 0040f880(실제 decoder 순서·비대칭 점유 지도·소수 좌표의 첫 차단 반환)(10.78 416행)",
+      "consumers": [
+        "webpj/tests/ai-bridge-search.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-bridge-search.js"
+      ],
+      "doc": "docs/webpj-ai-bridge-search-strategies-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiBridgeSearch.cpp"
+      ],
+      "scope": "10.78 실제 PE 416행 전부",
+      "text": true,
+      "sha256": "aca492f5d1e840c91b9e730e28fceb7eb23c2ae7672fa20e41f7b6c86c97085a",
+      "bytes": 12809,
+      "lines": 417,
+      "fixtureCommit": "de78dbaa",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E178",
+      "id": "aibridgescore",
+      "path": "cpppj/tests/fixtures/ai-bridge-score-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 다리 끝점 점수 0040f910(x87 X 보존/Y float 저장·signed 감김·금지/벌점·미갱신 임시 XY)(10.78 640행)",
+      "consumers": [
+        "webpj/tests/ai-bridge-search.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-bridge-search.js"
+      ],
+      "doc": "docs/webpj-ai-bridge-search-strategies-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiBridgeSearch.cpp"
+      ],
+      "scope": "10.78 실제 PE 640행 전부",
+      "text": true,
+      "sha256": "4d5061a5f3a49b6a0a123300f215fffa37d8fe7f750249a29de78cef97a6dbd7",
+      "bytes": 40435,
+      "lines": 641,
+      "fixtureCommit": "de78dbaa",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E178",
+      "id": "aibridgesearch",
+      "path": "cpppj/tests/fixtures/ai-bridge-search-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 다리 검색 004144b0(72장면을 각 4번 재개한 본체 0xb08/공용 난수/임시 XY/완료값)(10.78 72장면/288호출)",
+      "consumers": [
+        "webpj/tests/ai-bridge-search.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-bridge-search.js"
+      ],
+      "doc": "docs/webpj-ai-bridge-search-strategies-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiBridgeSearch.cpp"
+      ],
+      "scope": "10.78 실제 PE 72장면/288호출 전부",
+      "text": true,
+      "sha256": "5a48f482a424e99a06e671df95f11e347d786ae5db81dfdb018c641ae68de8eb",
+      "bytes": 2042823,
+      "lines": 73,
+      "fixtureCommit": "de78dbaa",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E178",
+      "id": "aibridgestrategies",
+      "path": "cpppj/tests/fixtures/ai-bridge-strategies-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 네 다리 전략 00417bd0(네 case 전체/공통 관문/NaN 기한·좌표/재고 뒤 목표 재조회/중복 목록/기한/좌표의 본체·목록·난수·호출 순서)(10.78 198행)",
+      "consumers": [
+        "webpj/tests/ai-bridge-strategies.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-bridge-strategies.js"
+      ],
+      "doc": "docs/webpj-ai-bridge-search-strategies-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiBridgeStrategies.cpp"
+      ],
+      "scope": "10.78 실제 PE 198행 전부",
+      "text": true,
+      "sha256": "e42982e1380f075b82558bb3567f019b27d4e308911523aa525631b558542e2f",
+      "bytes": 2592673,
+      "lines": 199,
+      "fixtureCommit": "13485be9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiBridgeStrategies.cpp": "13485be9"
       }
     }
   ]
