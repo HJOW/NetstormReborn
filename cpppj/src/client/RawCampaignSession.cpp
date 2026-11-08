@@ -461,7 +461,8 @@ struct RawCampaignSession::Impl {
     std::span<std::uint8_t> headers; // 같은 저장소의 실제9×20BYTE이며 파생 모듈에 사본을 만들지 않는다.
 
     SessionAssets assets; // 보호 archive의 현재 실제 자료다.
-    PriestPlacementAssets metadata; // 실제 프레임/핫스폿/SHP이며 합성 그림 자료가 아니다.
+    std::unique_ptr<PriestPlacementAssets> localMetadata; // 독립 typed Session만 기존 지역 자산 변환을 소유한다.
+    PriestPlacementAssets& metadata; // Native는 같은 Client 장기 Canon/핫스폿/SHP/현재 진단을 빌린다.
     std::uint32_t& terrainType; // 실제 월드 생성/영역 조회/진단이 같은 장기005411dc를 빌린다.
     RawSurfaceWorld world; // 모든 생성/Pop/Graph가 사용하는 단일 raw 월드다.
     RawWorldCore core; // 같은 Pool/장부/해시의 참조만 유지한다.
@@ -945,7 +946,7 @@ struct RawCampaignSession::Impl {
         gameplayGlobals(SessionGameplayGlobals(input)),gameplayUse(input.adoptPreparedWorld ? gameplayGlobals->AcquirePrepared() : gameplayGlobals->Acquire()),
         coreDataGlobals(input.coreDataGlobals ? input.coreDataGlobals : std::make_shared<ClientCoreDataGlobals>()),
         playerRecords(input.playerRecords ? input.playerRecords : std::make_shared<ClientPlayerRecords>()),playerUse(playerRecords->Acquire()),
-        services(std::move(input)),missionFortName(mission),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
+        services(std::move(input)),missionFortName(mission),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),localMetadata(services.surfaceStorage && services.surfaceStorage->UsesNativeTransmissionDevices() ? nullptr:std::make_unique<PriestPlacementAssets>(assets.game)),metadata(localMetadata ? *localMetadata:SessionSurfaceStorage(services,game)->PlacementAssets()),
         terrainType(gameplayGlobals->GameAux()->TerrainType()),world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld,&localStateGlobals->SavedGame(),gameplayGlobals->Authority(),gameplayGlobals->GameAux(),templateStorage->SerializationGlobalsOwner()),core(world.Core()),
         localSp(services.spGlobals ? nullptr : std::make_unique<ScrambledSpStore>(random,[this] { return seed.Reseed(); })),
         sp(services.spGlobals ? services.spGlobals->Store() : *localSp),
@@ -1038,8 +1039,10 @@ struct RawCampaignSession::Impl {
         archerState.angles=world.Storage()->AngleDiagnostics();gunTargetState.angles=archerState.angles; // 네 방향 소비자가 같은 현재 Client 진단을 사용한다.
         process.checking.Bind(gameplayGlobals->AiDebug().Checking()); // 실제 Path의 자기 삭제 뒤에도 Client의 현재 진단 DWORD를 읽는다.
         gunState.checking.Bind(gameplayGlobals->AiDebug().Checking());gunTargetState.checking.Bind(gameplayGlobals->AiDebug().Checking());rewardState.debugAsserts.Bind(gameplayGlobals->AiDebug().Checking());missionAiSettings.checkingAsserts.Bind(gameplayGlobals->AiDebug().Checking());soundState.debug.Bind(gameplayGlobals->AiDebug().Checking());buildArrivalState.checking.Bind(gameplayGlobals->AiDebug().Checking());geyserMinedState.checking.Bind(gameplayGlobals->AiDebug().Checking());assetState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());regularState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());motionState.carrier.debug.Bind(gameplayGlobals->AiDebug().Checking());motionState.cleanup.checking.Bind(gameplayGlobals->AiDebug().Checking());generalDamageState.checking.Bind(gameplayGlobals->AiDebug().Checking());burningState.checking.Bind(gameplayGlobals->AiDebug().Checking());priestState.spawn.checkingPlacement.Bind(gameplayGlobals->AiDebug().Checking());priestState.forcefieldRegular.debug.Bind(gameplayGlobals->AiDebug().Checking());carrierDropState.checking.Bind(gameplayGlobals->AiDebug().Checking());
-        metadata.geometry.decoderDiagnostics.checking.Bind(gameplayGlobals->AiDebug().Checking()); // 반복자의 현재 checking은 같은 장기 Client owner를 읽는다.
-        metadata.geometry.decoderDiagnostics.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("CanonDecoder 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 진단 복귀 후 좌표/다음 칸 순회를 계속한다.
+        if (localMetadata) {
+            metadata.geometry.decoderDiagnostics.checking.Bind(gameplayGlobals->AiDebug().Checking()); // 독립 typed 반복자만 기존 진단 연결을 사용한다.
+            metadata.geometry.decoderDiagnostics.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("CanonDecoder 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // Native 장기 진단에는 Session this를 남기지 않는다.
+        }
         // 서버 요청/확정/통지 배치/예측 정리가 같은 장기 진단 객체를 빌린다.
         for (auto* diagnostics:{&constructionState.request.decoderDiagnostics,&constructionState.confirm.decoderDiagnostics,&constructionState.place.decoderDiagnostics,&constructionState.clear.decoderDiagnostics}) *diagnostics=&metadata.geometry.decoderDiagnostics;
         core.postPop.BindManaDiagnostics({RawCheckingFlag{gameplayGlobals->AiDebug().Checking()},[assertion=services.ai.assertion](auto expression,auto,auto line) { if (!assertion) throw std::logic_error("마나 공급원 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }}); // 진단 서비스만 소유해 Session 임시 this를 외부 World에 남기지 않는다.
@@ -2600,9 +2603,9 @@ struct RawCampaignSession::Impl {
         gameplay.notice.tryMove=[this](Sid priest,float x,float y,Sid target) { if (!motion) throw std::logic_error("일반 통지의 실제54 미설치");return motion->Paths().StartPriest({priest,{x,y},0,target.value,0,0,0})!=nullptr; };
         gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,std::bit_cast<float>(bits)); };
         auto constructionRuntime=BindConstructionRuntime(world);if (world.Storage()->UsesNativeTransmissionDevices()) constructionRuntime.players=[records=playerRecords] { return records->Records(); }; // 장기 Player owner만 보관하며 Session this나 현재 span을 고정하지 않는다.
-        construction=std::make_unique<RawCampaignConstructionBindings>(std::move(constructionRuntime),hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,
-            PlayerGeyserBoundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections,&metadata.geometry.decoderDiagnostics},
-            recentGeysers,assetState.Geysers(),std::move(effects),std::move(gameplay));
+        const PlayerGeyserBoundsState boundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections,&metadata.geometry.decoderDiagnostics}; // 같은 장기 모드/표/진단 주소만 빌린다.
+        if (world.Storage()->UsesNativeTransmissionDevices()) construction=std::make_unique<RawCampaignConstructionBindings>(std::move(constructionRuntime),hp,sp,rewardState,metadata.frames,chunks,constructionState,boundsState,recentGeysers,assetState.Geysers(),std::move(effects),std::move(gameplay));
+        else construction=std::make_unique<RawCampaignConstructionBindings>(std::move(constructionRuntime),hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,boundsState,recentGeysers,assetState.Geysers(),std::move(effects),std::move(gameplay)); // 독립 경로의 기존 Player span/방송 대여 계약을 유지한다.
     }
     // 실제 AI 계산/색 표/섬 프레임은 Session이 연결하고 언어/채팅/표시 통지는 외부 소비자에 남긴다.
     void ConnectAi() {

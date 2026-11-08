@@ -18,6 +18,7 @@
 #include "o/RawIceCannonFire.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
 #include "o/RawConstructionData.h" //현재건설객체의실제37 writer를같은공통버퍼에쓴다.
 #include "client/GameAssets.h"
+#include "client/PriestPlacementAssets.h" // 장기 Canon 소유자의 완전 형식은 구현 파일에서만 필요하다.
 #include "o/RawGameAuxState.h"
 #include "o/RawContentParentNotice.h" //공통종속의현재VT부모통지를직접선택한다.
 #include "o/RawAssetOwner.h" //표면/거주구역등실제가상owner분배다.
@@ -103,6 +104,7 @@ RawSurfaceStorage::~RawSurfaceStorage()=default;
 void RawSurfaceStorage::BindChecking(o::RawCheckingFlag checking) { checking_=checking;RefreshChecking(); } //원문값은쓰지않고이미존재하는C++진단view만현재owner에연결한다.
 void RawSurfaceStorage::RefreshChecking() {
     rewardState_.debugAsserts=Checking(); // 이미 구성한 장기 HP도 같은 현재 Client 진단 owner를 읽는다.
+    if (placementAssets_) placementAssets_->geometry.decoderDiagnostics.checking=Checking(); // 기존 Canon도 바뀐 현재 진단 owner를 직접 읽는다.
     const auto assertion=[this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); };
     if (graph_) graph_->BindDiagnostics({Checking(),assertion});if (building_) building_->BindNotifyDiagnostics(Checking(),assertion);
     if (factory_) factory_->BindDiagnostics({types,assertion,[this](auto text) { RecordAssertionDetail(text); },Checking()});if (postPop_) postPop_->BindManaDiagnostics({Checking(),assertion});
@@ -110,6 +112,20 @@ void RawSurfaceStorage::RefreshChecking() {
     if (containedUnpop_) containedUnpop_->BindChecking(Checking()); //새World없이도현재진단입력교체를모든기존실행기가읽는다.
 }
 void RawSurfaceStorage::NoteChanged() { if (const auto current=displayRuntime_.lock();current && current->changed) { const auto runtimePin=current->pin ? current->pin():std::shared_ptr<void>{};current->changed(); } } //기존World의뷰변경bool만설정한다. Native효과/성공값을대신하지않는다.
+// 실제 Native 자산만 한 번 변환하며 Player/World/난수/표 초기화는 실행하지 않는다.
+PriestPlacementAssets& RawSurfaceStorage::PlacementAssets() {
+    if (!UsesNativeTransmissionDevices() || !Source()) throw std::logic_error("장기 Canon의 실제 Native 자산 owner 미연결");
+    if (!placementAssets_) {
+        auto assets=std::make_unique<PriestPlacementAssets>(*Source());assets->geometry.decoderDiagnostics.checking=Checking();
+        assets->geometry.decoderDiagnostics.assertion=[this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); }; // 세션 주소 없이 같은 실제 Client 진단으로 정상 복귀한다.
+        placementAssets_=std::move(assets);
+    }
+    return *placementAssets_;
+}
+// 원문4e2e30의 Player→NULL Source→현재 로컬 제외·대상별 가상+4는 기존 실제 Client 장치가 수행한다.
+void RawSurfaceStorage::BroadcastAssetPacket(std::span<std::uint8_t> packet) {
+    const auto send=transmissionDevices_.broadcast;if (!send) throw std::logic_error("장기 건설의 실제 Native mutable 방송 미연결");send(packet);
+}
 void RawSurfaceStorage::BindPostPopDevices(o::SquidPostPopDevices devices) { if (pool.Edition()!=o::OriginalEdition::Patch1078 || !devices.aiNotice || !devices.localOwner || !devices.recheckSelection) throw std::invalid_argument("장기공통후처리의실제Client장치누락");const bool first=!postPopDevices_.aiNotice;if (first && (borrowed_ || postPop_)) throw std::logic_error("Native공통후처리장치는첫World/실행기전에필요");postPopDevices_=std::move(devices);if (first) { postPopState.graphsEnabled=true;postPopState.sharedSuppressed=&ownerMode.challenge; }if (postPop_) postPop_->BindDefaultPatchDevices(postPopDevices_); } //현재장치의함수만보관하며프레임/AI/입력을실행하지않는다.
 void RawSurfaceStorage::BindSavedGame(bool& savedGame) { islandPostPopState.sharedSavedGame=&savedGame; } //현재Client주소만빌리며게임값은쓰지않는다.
 void RawSurfaceStorage::BindContentCommand(std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> command) { if (!command) throw std::invalid_argument("공통종속의실제입력장치누락");contentCommand_=std::move(command); } //실제선택된UI통지에서만호출한다.

@@ -46,6 +46,7 @@
 
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
+struct PriestPlacementAssets; // 실제 Canon/핫스폿/SHP와 진단을 Native Client 수명에 한 번 보관한다.
 class NativeFortSaveVirtual; //저장/보상 가상 조회가 같은 현재 Pool/TYPE/Hash를 빌리는 순수 장치다.
 // 실제 분산 SP와 현재 편집 모드의 owner를 보존하며 Session/World를 소유하지 않는다.
 struct RawSurfaceRewardDevices {
@@ -207,6 +208,8 @@ public:
     void BindDisplayRuntime(const std::shared_ptr<const RawSurfaceDisplayBindings>& runtime); //같은현재World대여만weak로공개하고만료뒤장기Client장치를쓴다.
     o::Sid CreateAsset(std::uint32_t type,std::uint32_t flags=0); //기존 World의 changed prefix 뒤 같은 현재 Factory Create를 실행하고 새 World를 요구하지 않는다.
     NativeFortSaveVirtual& FortSaveVirtual(); //현재 Robust/HasLevel/Count의 동일 장기 조회기를 처음 필요할 때 구성하며 World/파일/등록을 만들지 않는다.
+    PriestPlacementAssets& PlacementAssets(); // 같은 최초 자산의 Canon/핫스폿/형상·현재 진단을 World 없이 빌린다.
+    void BroadcastAssetPacket(std::span<std::uint8_t> packet); // 같은 호출별 mutable 버퍼를 현재 Native Player/Source 방송 장치에 직접 전달한다.
     o::SquidFactory& Factory(); //같은Pool/현재TYPE/HP·깊이/진단으로실제Create를World없이실행하며Acquire/reset/Host대여를추가하지않는다.
     RawProcessHostStorage& Processes(); // 같은 Storage의 장기 Host/상태와 현재 World 대여를 제공한다.
     RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source=nullptr,std::shared_ptr<o::RawAuthorityState> authority={},std::shared_ptr<o::RawGameAuxState> gameAux={}); // 배열은 최초 한 번만 확보한다.
@@ -284,6 +287,7 @@ private:
     float HandleDefaultRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); //PE의현재VT+5c가복원된원문base인경우만해당본문을실행한다.
     std::int32_t WriteDefaultForm(o::SquidProcess& process,bool parentChanged,std::uint32_t force); //Dais/Construction의실제writer를같은공통버퍼로분배하며다른파생누락은선택위치에서드러낸다.
     o::BridgeConnectHooks SurfaceObjects(); //연결/받침이공유하는같은실제Factory/Owner/Pop/Frame/통지다.
+    std::unique_ptr<PriestPlacementAssets> placementAssets_; // 같은 자산을 빌린 건설/배치 모듈과 Host보다 나중에 반납한다.
     std::unique_ptr<o::RawSquidContainedUnpop> containedUnpop_; //현재실제공통종단은Pool/현재전역보다짧고World보다길다.
     std::unique_ptr<o::RawGraph> graph_; //Graph배열/스택과현재장부는앞의같은장기물리이며생성은재초기화하지않는다.
     std::unique_ptr<o::RawSquidNeighbors> neighbors_; //현재이웃/finder는같은실제공간과주소고정TYPE를사용한다.

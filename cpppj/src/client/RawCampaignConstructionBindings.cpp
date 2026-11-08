@@ -18,6 +18,14 @@ std::uint32_t ConstructionVtable(std::span<const std::uint8_t> raw) {
     // 실제첫네BYTE만조합하며객체의다른필드를읽지않는다.
     for (std::size_t index=0;index<4;++index) value|=std::uint32_t(raw[index])<<(8*index);return value;
 }
+// typed 기존 방송만 명시 대여하며 이미 연결된 실제 Native 장기 방송은 보존한다.
+RawConstructionRuntime ConstructionBroadcast(RawConstructionRuntime runtime,o::RawBattleBroadcast& broadcast) {
+    if (!runtime.broadcast) runtime.broadcast=[&broadcast](auto packet) { broadcast.SendMutable(packet); };return runtime;
+}
+// Native 공개 생성자는 현재 실제 장치를 요구하며 임시 Player/방송 객체를 구성하지 않는다.
+RawConstructionRuntime NativeConstructionRuntime(RawConstructionRuntime runtime) {
+    if (!runtime.storage || !runtime.storage->UsesNativeTransmissionDevices() || !runtime.players || !runtime.broadcast) throw std::invalid_argument("장기 건설의 실제 Native Player/방송 장치 누락");return runtime;
+}
 }
 // 독립 World가 이미 소유한 실제 부품만 선택하며 현재 값/상태를 복사하지 않는다.
 RawConstructionCore BindConstructionCore(const RawWorldCore& core) { return {core.pool,core.hash,core.spots,core.types,core.frames,core.bookkeeping,core.ownerMode,core.factory,core.owner,core.building,core.virtualDestroy,core.surfaces,core.bridgeState}; }
@@ -28,17 +36,22 @@ RawConstructionCore BindConstructionCore(RawSurfaceStorage& storage) {
 }
 // 기존 World adapter만 자기 짧은 실행기를 참조하며 장기 Storage에 World 포인터를 설치하지 않는다.
 RawConstructionRuntime BindConstructionRuntime(RawSurfaceWorld& world) {
-    const auto storage=world.Storage();return {storage->UsesNativeTransmissionDevices() ? BindConstructionCore(*storage):BindConstructionCore(world.Core()),storage,
+    const auto storage=world.Storage();RawConstructionRuntime runtime{storage->UsesNativeTransmissionDevices() ? BindConstructionCore(*storage):BindConstructionCore(world.Core()),storage,
         [&world](auto type,auto flags) { return world.Create(type,flags); },
         [&world](auto sid,auto x,auto y,auto flags) { world.Pop(sid,x,y,flags); },
         [&world](auto sid,auto flags) { return world.Destroy(sid,flags); }};
+    if (storage->UsesNativeTransmissionDevices()) {
+        runtime.create=[storage](auto type,auto flags) { return storage->CreateAsset(type,flags); };
+        runtime.pop=[storage](auto sid,auto x,auto y,auto flags) { static_cast<void>(storage->PopAsset(sid,x,y,flags)); };
+        runtime.broadcast=[storage](auto packet) { storage->BroadcastAssetPacket(packet); }; // 같은 실제 장기 Client 장치이며 새 Source/수신/ACK를 만들지 않는다.
+    }
+    return runtime;
 }
 // 외부의 단일 상태/월드 주소를 빌리며 실제 계산/공간/삭제 몸체만 내부에 조립한다.
 struct RawCampaignConstructionBindings::Impl {
     RawConstructionRuntime runtime; //같은 실제 장기 물리와 현재 가상 생성/Pop/삭제 부모를 빌리며 특정 World 타입에 결합하지 않는다.
     RawConstructionCore core; // 같은 Pool/TYPE/hash/spot/장부의 참조만 보관한다.
     RawCampaignConstructionState& state; // 현재 모드/타입/수량/이력을 프레임 사본 없이 읽는다.
-    o::RawBattleBroadcast& broadcast; // 같은 실제 Player9/NULL 또는 연결 표의 원본 송신 분배기다.
     RawCampaignConstructionEffects effects; // 실제 설정/벽시각/표시/진단의 외부 소비자다.
     std::array<std::uint8_t,kPacketBytes> packet{}; // 마지막 방송 직후의 진단 사본이며 활성 Confirm wire의 owner로 사용하지 않는다.
     std::size_t packetLength{}; // 기존 fixture의 본문/SID 조회 범위다. 실제 선언WORD와 구별하며 최초 통지 전에는0이다.
@@ -54,12 +67,12 @@ struct RawCampaignConstructionBindings::Impl {
     // 첫 생성 전에 같은 저장소/필수 서비스와 실제 일반 건설 경계를 구성한다.
     Impl(RawConstructionRuntime source,o::SquidReward& hp,o::ScrambledSpStore& sp,o::SquidRewardState& reward,
         std::span<const o::PriestPlainCanonType> frames,const o::ChunkMap& chunks,std::span<std::uint8_t> players,
-        o::RawBattleBroadcast& transmission,RawCampaignConstructionState& globals,o::PlayerGeyserBoundsState currentBounds,
+        RawCampaignConstructionState& globals,o::PlayerGeyserBoundsState currentBounds,
         o::SquidPostPopList& recent,const o::SquidPostPopList& allGeysers,RawCampaignConstructionEffects input,RawCampaignConstructionGameplay gameplay)
-        :runtime(std::move(source)),core(runtime.core),state(globals),broadcast(transmission),effects(std::move(input)) {
+        :runtime(std::move(source)),core(runtime.core),state(globals),effects(std::move(input)) {
         if (!runtime.storage || &core.pool!=&runtime.storage->pool || &core.hash!=&runtime.storage->hash ||
             core.types.data()!=runtime.storage->types.data() || core.spots.data()!=runtime.storage->spots.data() ||
-            !runtime.create || !runtime.pop || !runtime.destroy)
+            !runtime.create || !runtime.pop || !runtime.destroy || !runtime.broadcast)
             throw std::invalid_argument("건설 실행 부모의 동일 장기 물리/실제 가상 경계 누락"); //생성/reset 없이 실제 owner 정체성만 확인한다.
         if (core.pool.Edition()!=o::OriginalEdition::Patch1078 || &hp.Pool()!=&core.pool || &hp.Bookkeeping()!=&core.bookkeeping ||
             frames.size()!=core.types.size() || (!runtime.players && players.size()!=kPlayerBytes) || &recent==&allGeysers || recent.entries.size()<kRecentMinimum ||
@@ -100,7 +113,7 @@ struct RawCampaignConstructionBindings::Impl {
         auto confirmHooks=std::move(gameplay.confirm); // 서버 SID와 실제 wire 전송 뒤 원본처럼 같은 통지를 직접 처리한다.
         if (!confirmHooks.findBuilder) confirmHooks.findBuilder=ConstructionMissing<o::Sid,std::uint32_t,std::uint32_t,float,float>("작업장/Graph 기준점");
         confirmHooks.transmitAndHandle=[this](std::span<std::uint8_t> current) {
-            broadcast.SendMutable(current); // 각 대상의 실제 송신 관문 뒤 observer가 같은 호출별512BYTE를 변경한다.
+            runtime.broadcast(current); // 각 대상의 실제 송신 관문 뒤 observer가 같은 호출별512BYTE를 변경한다.
             std::copy(current.begin(),current.end(),packet.begin()); // 진단 조회만 사본에 보관하고 직접 수신은 계속 지역 current를 사용한다.
             packetLength=std::min(current.size(),std::size_t{27}+std::size_t(current[26])*2U); // NULL peer이면 선언WORD4를 꾸미지 않고 본문 범위만 기존 조회 계약으로 보인다.
             notice->ActualHandle(current); // 원문444717의 sender9/NULL이 사용하지 않는 값은 합성하지 않는다.
@@ -184,7 +197,13 @@ RawCampaignConstructionBindings::RawCampaignConstructionBindings(RawConstruction
     o::SquidRewardState& reward,std::span<const o::PriestPlainCanonType> frames,const o::ChunkMap& chunks,
     std::span<std::uint8_t> players,o::RawBattleBroadcast& broadcast,RawCampaignConstructionState& state,
     o::PlayerGeyserBoundsState bounds,o::SquidPostPopList& recent,const o::SquidPostPopList& allGeysers,RawCampaignConstructionEffects effects,RawCampaignConstructionGameplay gameplay)
-    :impl_(std::make_unique<Impl>(std::move(runtime),hp,sp,reward,frames,chunks,players,broadcast,state,bounds,recent,allGeysers,std::move(effects),std::move(gameplay))) {}
+    :impl_(std::make_unique<Impl>(ConstructionBroadcast(std::move(runtime),broadcast),hp,sp,reward,frames,chunks,players,state,bounds,recent,allGeysers,std::move(effects),std::move(gameplay))) {}
+// 같은 실제 Native 장치만 받아 Player span과 Session 방송 객체의 수명을 빌리지 않는다.
+RawCampaignConstructionBindings::RawCampaignConstructionBindings(RawConstructionRuntime runtime,o::SquidReward& hp,o::ScrambledSpStore& sp,
+    o::SquidRewardState& reward,std::span<const o::PriestPlainCanonType> frames,const o::ChunkMap& chunks,
+    RawCampaignConstructionState& state,o::PlayerGeyserBoundsState bounds,o::SquidPostPopList& recent,
+    const o::SquidPostPopList& allGeysers,RawCampaignConstructionEffects effects,RawCampaignConstructionGameplay gameplay)
+    :impl_(std::make_unique<Impl>(NativeConstructionRuntime(std::move(runtime)),hp,sp,reward,frames,chunks,std::span<std::uint8_t>{},state,bounds,recent,allGeysers,std::move(effects),std::move(gameplay))) {}
 // 내부모듈은새Kernel프로세스를소유하지않으며현재배열보다먼저해제한다.
 RawCampaignConstructionBindings::~RawCampaignConstructionBindings()=default;
 // 일반 서버 요청도 원본 확정/통지/배치 몸체를 그대로 사용한다. 배치 가능 판정은 호출자의 선행 책임이다.

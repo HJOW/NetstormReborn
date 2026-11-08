@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1191 현행:**건설의 Player 미할당 지연 구성과 실제 선택 위치의9기록 검증을 연결했다. 비MP32검사와 Tutorial4 건설·실제 객체/600frame 대기, Edit 진입/복귀2회를 확인했다. 전체 장기 건설 owner/실제 장치·현재 전역, 큰 NoWorld/AI/Carrier·다른 Form/일반 삭제 및 Source/listener/표/Poll·63잔여F·Snapshot/JoinTestBattle·M6-l/m/n/큐는 남는다. 태그25는 전scope 완료 수가 아니며 새MP 실행0/큐 비활성이다. [1191 근거](cpp-construction-player-deferred-20261109.md).
+**1192 현행:**Native 장기 Canon/진단·같은 실제 생성/Pop/방송 장치를 연결했다. 비MP35검사와 Tutorial4 건설·실제 객체/600frame 대기, Edit 진입/복귀2회를 확인했다. Client 장기 건설 owner/state·현재 전역, 큰 NoWorld/AI/Carrier·다른 Form/일반 삭제 및 Source/listener/표/Poll·63잔여F·Snapshot/JoinTestBattle·M6-l/m/n/큐는 남는다. 태그25는 전scope 완료 수가 아니며 새MP 실행0/큐 비활성이다. [1192 근거](cpp-construction-assets-runtime-20261109.md).
 
 이하 본문의 초기 조사는 제품 코드/LEFT_JOBS/추적 문서를 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 

@@ -65,6 +65,7 @@ struct RawConstructionRuntime {
     std::function<void(o::Sid,float,float,std::uint32_t)> pop; //현재 실제 가상+90의 전체 파생 PostPop/전송까지 호출한다.
     std::function<bool(o::Sid,std::uint32_t)> destroy; //현재 실제 가상 삭제의 수락/거부 결과이며 목록 제거만으로 대신하지 않는다.
     std::function<std::span<std::uint8_t>()> players; // Native는 같은 ClientPlayerRecords의 현재base를 원문 선택 위치에서 조회한다. 독립 World는 기존 span 계약을 유지한다.
+    std::function<void(std::span<std::uint8_t>)> broadcast; // Native는 Session 방송 객체 없이 같은 현재 Player/Source와 호출별 mutable 버퍼를 사용한다.
 };
 RawConstructionRuntime BindConstructionRuntime(RawSurfaceWorld& world); //기존 실제 World의 Core/Create/Pop/Destroy를 빌린다. World는 이 뷰와 결합한 모듈보다 오래 살아야 한다.
 // 원본 일반 서버 확정/배치 통지와 로컬 간헐천이 같은 실제 월드를 사용한다.
@@ -82,6 +83,11 @@ public:
         std::span<std::uint8_t> players,o::RawBattleBroadcast& broadcast,RawCampaignConstructionState& state,
         o::PlayerGeyserBoundsState bounds,o::SquidPostPopList& recent,const o::SquidPostPopList& allGeysers,
         RawCampaignConstructionEffects effects,RawCampaignConstructionGameplay gameplay={});
+    // Native 장기 장치는 현재 Player/방송 조회기를 필수로 제공하며 짧은 Player span/방송 객체를 빌리지 않는다.
+    RawCampaignConstructionBindings(RawConstructionRuntime runtime,o::SquidReward& hp,o::ScrambledSpStore& sp,
+        o::SquidRewardState& reward,std::span<const o::PriestPlainCanonType> frames,const o::ChunkMap& chunks,
+        RawCampaignConstructionState& state,o::PlayerGeyserBoundsState bounds,o::SquidPostPopList& recent,
+        const o::SquidPostPopList& allGeysers,RawCampaignConstructionEffects effects,RawCampaignConstructionGameplay gameplay={});
     // 고정 주소를 참조하는 내부 callback을 복사하지 않는다.
     ~RawCampaignConstructionBindings();
     RawCampaignConstructionBindings(const RawCampaignConstructionBindings&)=delete; // 다른 월드 저장소로 복사하지 않는다.
