@@ -9104,9 +9104,67 @@
       "bytes": 2830201,
       "lines": 514,
       "fixtureCommit": "52e714fa",
-      "webCommit": "worktree",
+      "webCommit": "1cb29513",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierCandidateSort.cpp": "52e714fa"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E91",
+      "id": "carrier-regular",
+      "path": "cpppj/tests/fixtures/carrier-regular-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 골렘 Regular 의 반환 float 비트·외부 효과 순서·여섯 슬롯 전체 raw(837행; 두 x87 정밀도 동일)",
+      "consumers": [
+        "webpj/tests/carrier-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-regular.js"
+      ],
+      "doc": "docs/webpj-carrier-regular-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierRegular.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 837행 전부 사용(53비트 열 사용, 64비트 열 동일 확인)",
+      "text": true,
+      "sha256": "90b9e5fbe46a542bd074467ef2be2da38a0482a6faf63aab0976c9dc35c7b5dd",
+      "bytes": 1188225,
+      "lines": 838,
+      "fixtureCommit": "9b154872",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierRegular.cpp": "9b154872"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E91",
+      "id": "carrier-regular-vtables",
+      "path": "cpppj/tests/fixtures/carrier-regular-vtables.tsv",
+      "producer": "보호 PE 에서 읽은 83개 가상 표의 실제 +5c 값(42a750 이면 골렘 Regular 직접 분배; 6 직접·77 파생)",
+      "consumers": [
+        "webpj/tests/carrier-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-regular.js"
+      ],
+      "doc": "docs/webpj-carrier-regular-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierRegular.cpp"
+      ],
+      "scope": "10.78 전용 83행 전부 사용",
+      "text": true,
+      "sha256": "6d8334f57842db299ce3d838cef14e3ba1428016cec20495d2c91a23d66361bb",
+      "bytes": 1356,
+      "lines": 84,
+      "fixtureCommit": "9b154872",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierRegular.cpp": "9b154872"
       }
     }
   ]

@@ -585,7 +585,7 @@ cpppj/src/o/RawCarrierMove.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierPickup.cpp	port	www/core/raw-carrier-pickup.js	1f00a25a	port	[o-default] WB04-E73: 일반 Carrier 포획 요청 428e00·서버 수신 426520·기존 내용물 제거 4264d0. fixture carrier-pickup 2657행 전부(10.78 전용 파일). 후보 조회/오벨리스크 변환/입력 큐/ContainedForm 생성은 해당 파일 단위에서
 cpppj/src/o/RawCarrierPostPop.cpp	port	www/core/raw-carrier-post-pop.js	1f00a25a	port	[o-default] WB04-E60: Carrier 00427720·Damageable 0044bf80·makeCarrierPostPopHooks. fixture carrierpostpop 10.78 2448행 전부(CD·1037 행은 범위 밖). 사제 접두 조합 검사는 RawPriestPostPop 단위에서
 cpppj/src/o/RawCarrierPreDestroy.cpp	port	www/core/raw-carrier-pre-destroy.js	1f00a25a	port	[o-default] WB04-E56: Carrier 삭제 준비 00426890·FindContained 004ac9f0·사제 훅 연결. fixture carrierpredestroy 10.78 960행 전부. 실제 Damageable/전역 후처리는 해당 이식 단위
-cpppj/src/o/RawCarrierRegular.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierRegular.cpp	port	www/core/raw-carrier-regular.js	1f00a25a	port	[o-default] WB04-E91: 골렘 Regular Handle 42a750(시전 기한 0x493·교대 표시 0x491·회피 0x492·낙하 0x5105·Damageable 위임·여섯 VT 분배). fixture carrier-regular 837행+carrier-regular-vtables 83행 전부(10.78 전용 파일). 내용물 조회/미리보기 생성/Pop/타이머/회피/낙하/Damageable 본체 연결은 해당 단위에서
 cpppj/src/o/RawCarrierSteal.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierTarget.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierTask.cpp	port	www/core/raw-carrier-task.js	1f00a25a	port	[o-default] WB04-E72: Carrier task 426db0(현재 Regular 조회/생성/낙하 유지/NaN 보존 기한). fixture carrier-fall-start 2850행 중 task 설정 행 포함 전부(10.78 전용 파일)
