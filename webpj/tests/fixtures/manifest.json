@@ -12978,7 +12978,7 @@
       "bytes": 2494733,
       "lines": 49,
       "fixtureCommit": "4a9b2ddf",
-      "webCommit": "worktree",
+      "webCommit": "a49d9887",
       "cpppjBasis": {
         "cpppj/src/o/ParticleGradient.cpp": "e6d97634"
       }
@@ -12990,18 +12990,21 @@
       "unit": "WB04-E186",
       "id": "fierytaillifetime",
       "path": "cpppj/tests/fixtures/fierytail-lifetime-x86.tsv",
-      "producer": "cpppj 독립 PE 관측: 불꽃 꼬리 생성/소멸(cold 생성자의 11색 표 포함)(10.78)",
+      "producer": "cpppj 독립 PE 관측: 불꽃 꼬리 생성/소멸(등록/부착 재진입·120입자·공유 색 표 11개·반납 순서, cold 생성자의 11색 표 포함)(10.78 62행: 기본 027f 31 + 비교 037f 31)",
       "consumers": [
-        "webpj/tests/particle-gradient.test.mjs"
+        "webpj/tests/particle-gradient.test.mjs",
+        "webpj/tests/fiery-tail-lifetime.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/particle-gradient.js"
+        "webpj/www/core/particle-gradient.js",
+        "webpj/www/core/raw-fiery-tail-lifetime.js"
       ],
-      "doc": "docs/webpj-lightning-gradient-20261109.md",
+      "doc": "docs/webpj-fiery-tail-20261109.md",
       "cpppjSources": [
-        "cpppj/src/o/ParticleGradient.cpp"
+        "cpppj/src/o/ParticleGradient.cpp",
+        "cpppj/src/o/RawFieryTailLifetime.cpp"
       ],
-      "scope": "10.78 cold 기본 생성자 색 표 3행만 사용(나머지 행은 FieryTail 이식 단위의 몫)",
+      "scope": "10.78 기본 027f 31입력 전부(037f 비교 행은 건너뜀). E186 은 cold 색 표 3행만, E187 이 생성/반납 전체를 소비",
       "text": true,
       "sha256": "0bdf2958f9e393cb06c926544ca4364b7cae2611e3899fab74186b93fb40570e",
       "bytes": 530414,
@@ -13009,7 +13012,8 @@
       "fixtureCommit": "8240d94c",
       "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/ParticleGradient.cpp": "e6d97634"
+        "cpppj/src/o/ParticleGradient.cpp": "e6d97634",
+        "cpppj/src/o/RawFieryTailLifetime.cpp": "fa80cc90"
       }
     },
     {
@@ -13037,7 +13041,7 @@
       "bytes": 2747043,
       "lines": 251,
       "fixtureCommit": "4f8ff8d0",
-      "webCommit": "worktree",
+      "webCommit": "a49d9887",
       "cpppjBasis": {
         "cpppj/src/o/RawLightningFrame.cpp": "4f8ff8d0"
       }
@@ -13068,7 +13072,7 @@
       "bytes": 957219,
       "lines": 111,
       "fixtureCommit": "e6d97634",
-      "webCommit": "worktree",
+      "webCommit": "a49d9887",
       "cpppjBasis": {
         "cpppj/src/o/RawLightningLifetime.cpp": "65b21851",
         "cpppj/src/o/ParticleGradient.cpp": "e6d97634"
@@ -13101,6 +13105,64 @@
       "webCommit": "985128f4",
       "cpppjBasis": {
         "cpppj/src/o/RawBurningVisual.cpp": "961f6be5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E187",
+      "id": "fierytailframe",
+      "path": "cpppj/tests/fixtures/fierytail-frame-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 불꽃 꼬리 프레임/출력(최초 10입자·시간 조각·전체 용량 수명·진단 2·색 표 인접 DWORD)(10.78 기본 027f 65 + 비교 037f 65행)",
+      "consumers": [
+        "webpj/tests/fiery-tail-frame.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fiery-tail-frame.js"
+      ],
+      "doc": "docs/webpj-fiery-tail-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFieryTailFrame.cpp"
+      ],
+      "scope": "10.78 기본 027f 65입력 전부(037f 비교 행은 건너뜀)",
+      "text": true,
+      "sha256": "38e03276460eb8655eb567d0419f87f0db0b8c934f45abde5250207d4230040c",
+      "bytes": 608372,
+      "lines": 131,
+      "fixtureCommit": "b77f1c9f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFieryTailFrame.cpp": "b77f1c9f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E187",
+      "id": "streaklifetime",
+      "path": "cpppj/tests/fixtures/streak-lifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 마나(Streak) 생성자 00458680 의 의미 필드(부모 0/50·부착 중 현재 부모 변경)(10.78 기본 027f 4 + 비교 037f 4행)",
+      "consumers": [
+        "webpj/tests/fiery-tail-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fiery-tail-lifetime.js"
+      ],
+      "doc": "docs/webpj-fiery-tail-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFieryTailLifetime.cpp"
+      ],
+      "scope": "10.78 기본 027f 4입력 전부(037f 비교 행은 건너뜀)",
+      "text": true,
+      "sha256": "0bb4a0361ae204b9995b9c377f8d0a0159d8ce6c2afe2b757b11faed7c320b16",
+      "bytes": 1532,
+      "lines": 9,
+      "fixtureCommit": "55520f78",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFieryTailLifetime.cpp": "fa80cc90"
       }
     }
   ]
