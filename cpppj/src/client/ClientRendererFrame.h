@@ -29,6 +29,7 @@ public:
     void HighlightDeveloperPoint(float x,float y); // 현재 snapshot으로 투영한 좌표의 원문 세 겹 강조이며 Frame/난수는 진행하지 않는다.
     void UpdateMetaBattle(std::uint32_t battle); //현재 특정 전투만 같은 실제 표시 장치로 갱신하며 전체 Poll을 실행하지 않는다.
     void UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask); //현재 특정 참가자만 원문 마스크로 같은 CS/Pool/이름표에 갱신한다.
+    void SetMetaParticipantStatus(std::int32_t kind,std::int32_t participant,bool enabled); //현재 실제 UI의 같은 MessageBoard에 참가자 상태 생성/제거를 전달한다.
     void RefreshMetaDisplay(bool whole); //같은실제CS/Pool·가상효과/Renderer·Gump장치로479760또는47dd60을수행한다.
     NativeIslandRig& AcquireIslandRig(std::uint32_t object,float height,std::uint32_t kill); //실제 현재 장치를 같은52 TYPE 공장/검색에 공급하며 socket이나 프레임을 실행하지 않는다.
     void Finish(); //정상 Draw의 화면 잠금 반납 뒤470ca0을 실행한다. 실패 경로에서는 부르지 않는다.

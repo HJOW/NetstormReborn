@@ -14,6 +14,7 @@ constexpr std::int32_t kPause=11; // 원문 분배기와 생성자가 사용하�
 constexpr std::int32_t kAllied=7,kStarted=9; //0048f880의 동맹 안내와004b4a20의 실제 게임 시작 안내다.
 constexpr std::int32_t kServerInactive=1,kPlayerInactive=2; //004b9010의 실제 응답 지연 종류이며 새 활동 수신에서 같은 키로 지운다.
 constexpr std::int32_t kMoneyReceived=4,kResourceInjection=18; //004d56f0의 송금/일반 주기 지급 안내 종류다.
+constexpr std::int32_t kPresent=3,kDisconnected=5; //0042b580/42bc10과 일반 접속 수신의 현재 참가/이탈 안내 종류다.
 constexpr std::array<char,8> kInactiveColors{'b','r','w','u','m','y','l','o'}; // PE004d08d6..4d09f2의 지연 서식은4번 색이u다.
 constexpr std::array<char,8> kAlliedColors{'b','r','w','g','m','y','l','o'}; // PE004d0f94..1db7의64서식에서 확인한 행/열 색이다.
 constexpr std::string_view kGameTimeText="~E~yGame Time~r:~w %d:%02d:%02d"; //PE00516024의원문번역서식이다.
@@ -77,7 +78,7 @@ MessageGumpNode& MessageGump::Node(std::uint32_t token) const {
 }
 // Pause는 시계/음향/idle을 호출하지 않고 기한0의 영구 메시지를 측정한다.
 std::uint32_t MessageGump::Construct(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter,std::optional<std::string_view> source) const {
-    if (kind!=kPause && kind!=kGameTime && kind!=kWarning && kind!=kAllied && kind!=kStarted && kind!=kServerInactive && kind!=kPlayerInactive && kind!=kMoneyReceived && kind!=kResourceInjection) throw std::logic_error("다른 원본 메시지 종류의 생성 분기 미복원");
+    if (kind!=kPause && kind!=kGameTime && kind!=kWarning && kind!=kAllied && kind!=kStarted && kind!=kServerInactive && kind!=kPlayerInactive && kind!=kMoneyReceived && kind!=kResourceInjection && kind!=kPresent && kind!=kDisconnected) throw std::logic_error("다른 원본 메시지 종류의 생성 분기 미복원");
     hooks_.constructText(token);
     Node(token).vtable=kMessageVtable;
     Node(token).deadline=0.0;
@@ -85,13 +86,24 @@ std::uint32_t MessageGump::Construct(std::uint32_t token,std::int32_t kind,std::
     Node(token).player=player;
     Node(token).parameter=parameter;
     std::span<const char> firstName; // 이름을 서식에 쓰는 종류만 원문 첫 주소를 번역 뒤까지 보유한다.
-    if (kind==kAllied || kind==kPlayerInactive || kind==kMoneyReceived) {
+    if (kind==kAllied || kind==kPlayerInactive || kind==kMoneyReceived || kind==kPresent || kind==kDisconnected) {
         const auto& name=hooks_.challenge() ? hooks_.challengePlayerText : hooks_.playerText;if (!name) throw std::logic_error("동맹 안내의 실제 이름 주소 미연결");firstName=name(player);
     } else if (hooks_.challenge()) {
         if (!hooks_.challengePlayerName) throw std::logic_error("Challenge 메시지의 실제42bbb0 이름 조회 미연결");
         hooks_.challengePlayerName(player);
     } else hooks_.playerName(player);
-    if (Node(token).kind==kMoneyReceived || Node(token).kind==kResourceInjection) {
+    if (Node(token).kind==kPresent || Node(token).kind==kDisconnected) {
+        if (Node(token).kind==kDisconnected) { //종류5만 공통 이름 조회 뒤 경고음을 재생하며 메타 모드를 다시 검사하지 않는다.
+            if (!hooks_.warningSound) throw std::logic_error("연결 해제 안내의 실제 경고 음향 미연결");hooks_.warningSound();const auto owner=Node(token).player;
+            if (owner>=1 && owner<=8) { const auto pattern=std::string("~E~")+kAlliedColors[static_cast<std::size_t>(owner-1)]+"%s~w has disconnected";const auto translated=hooks_.translate(pattern);hooks_.style(token,FormatWarningMessage(translated,CurrentMessageName(firstName))); }
+        } else if (hooks_.challenge()) { //원문4d0b64는 최초 이름 선택 뒤 현재 메타 플래그를 다시 읽는다.
+            const auto translated=hooks_.translate("~E~w%s is present");hooks_.style(token,FormatWarningMessage(translated,CurrentMessageName(firstName)));
+        } else {
+            if (!hooks_.battle) throw std::logic_error("접속 안내의 현재 일반 전투 관문 미연결");
+            if (hooks_.battle()) { const auto owner=Node(token).player;if (owner>=1 && owner<=8) { const auto pattern=std::string("~E~")+kAlliedColors[static_cast<std::size_t>(owner-1)]+"%s~w is present";const auto translated=hooks_.translate(pattern);hooks_.style(token,FormatWarningMessage(translated,CurrentMessageName(firstName))); } }
+        }
+        if (!hooks_.wallSeconds || !hooks_.idle) throw std::logic_error("접속/이탈 안내의 실제 기한/Idle 미연결");Node(token).deadline=hooks_.wallSeconds()+10.0;hooks_.idle(token,true); //무전투/범위 밖 owner도 원문 공통10초/Idle 꼬리를 실행한다.
+    } else if (Node(token).kind==kMoneyReceived || Node(token).kind==kResourceInjection) {
         if (Node(token).kind==kMoneyReceived) { if (!hooks_.warningSound) throw std::logic_error("송금 안내의 실제 경고 음향 미연결");hooks_.warningSound();const auto owner=Node(token).player;if (owner>=1 && owner<=8) { const auto pattern=std::string("~E~")+kAlliedColors[static_cast<std::size_t>(owner-1)]+"%s~w sent you %d Storm Power";const auto translated=hooks_.translate(pattern);hooks_.style(token,MoneyMessage(translated,firstName,parameter,true)); } }
         else { const auto text=hooks_.translate("~E~wResource Injection of %d sp was received");hooks_.style(token,MoneyMessage(text,{},Node(token).parameter,false)); } // 종류18은 음향 없이 번역 뒤 현재+b8을 읽는다.
         if (!hooks_.wallSeconds || !hooks_.idle) throw std::logic_error("SP 안내의 실제 기한/Idle 미연결");Node(token).deadline=hooks_.wallSeconds()+10.0;hooks_.idle(token,true);

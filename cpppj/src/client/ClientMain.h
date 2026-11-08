@@ -238,6 +238,7 @@ public:
     void HighlightDeveloperPoint(float x,float y); //4345e0의 세 겹 노란 사각형과 즉시 viewport 출력을 같은 Renderer 장치에 요청한다.
     void UpdateNativeMetaBattle(std::uint32_t battle); //현재 특정 전투만 기존00479c40/같은Renderer·CS·Gump 장치로 갱신한다.
     void UpdateNativeMetaParticipant(std::uint32_t participant,std::uint8_t mask); //0047d8c0의 지정한 참가자/마스크를 기존 실제 Frame 장치에 전달한다.
+    void SetNativeMetaParticipantStatus(std::int32_t kind,std::int32_t participant,bool enabled); //004d3090의 같은20칸에 참가자 안내 생성/제거를 요청하며 매개변수0/빈 문자열을 사용한다.
     void RefreshNativeMetaDisplay(bool whole); //현재메타Poll/전체존재배치를같은CS/World·Renderer·글자장치에연결한다.새수신/게임상태는합성하지않는다.
     NativeIslandRig& AcquireNativeIslandRig(std::uint32_t object,float height,std::uint32_t kill); //현재 실제 Host/Kernel에서 첫 같은 부모 Rig를 찾거나 생성한다. NULL 생성은 물리 경계 오류로 거부한다.
     void DumpDiagnostics(); // 객체 덤프가 끝난 뒤 현재 같은 Kernel의 프로세스 요약을 저장한다.

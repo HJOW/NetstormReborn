@@ -44,7 +44,7 @@ struct WarningMessages::Impl {
         MessageBoardHooks hooks;hooks.suppressed=std::move(suppressed);hooks.lookup=[this](auto serial) { return Lookup(serial); };
         hooks.kill=[this](auto token) { common.lifetime.Kill(token);common.changed(); };
         hooks.createText=[this](auto kind,auto player,auto parameter,std::optional<std::string_view> source) {
-            if (kind!=17 && kind!=11 && kind!=16 && kind!=7 && kind!=9 && kind!=1 && kind!=2 && kind!=4 && kind!=18) throw std::logic_error("다른 원본 메시지 생성자 미연결");
+            if (kind!=17 && kind!=11 && kind!=16 && kind!=7 && kind!=9 && kind!=1 && kind!=2 && kind!=4 && kind!=18 && kind!=3 && kind!=5) throw std::logic_error("다른 원본 메시지 생성자 미연결");
             const auto token=common.token();auto& node=*messages.emplace(token,std::make_unique<WarningNode>()).first->second;
             try { message->Construct(token,kind,player,parameter,source); } //kind17도 공통 Text/필드/이름 뒤의 음향·번역·서식·Style·기한·Idle·Fit 순서를 사용한다.
             catch (...) {

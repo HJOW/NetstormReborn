@@ -1,4 +1,4 @@
-// 원본10.78의004d0600 중 Pause(kind11)/게임시간(kind16)/Warning(kind17)을 기존 TextGump에 연결한다.
+// 원본10.78의004d0600 중 접속/이탈·전투·Pause/시간/Warning을 기존 TextGump에 연결한다.
 #pragma once
 #include "client/TextGump.h"
 #include <functional>
@@ -29,13 +29,14 @@ struct MessageGumpHooks {
     std::function<void(std::uint32_t,bool)> idle; //같은노드를기존00465330표에등록한다.
     std::function<void(std::uint32_t,std::int32_t,std::int32_t)> fit; // 기존 TextGump::Fit(0,0)의 측정/단정도 저장이다.
     std::function<std::span<const char>(std::int32_t)> playerText,challengePlayerText; // 동맹 안내는 실제 이름 주소를 빌리고 번역/두 번째 조회 뒤 첫 NUL을 읽는다. 기존 무문자열 종류의 getter 계약은 유지한다.
+    std::function<bool()> battle; //kind3의 두 번째 현재 메타 검사 뒤에만 읽는00594fbc 비영 상태다.
 };
 std::string FormatWarningMessage(std::string_view pattern,std::optional<std::string_view> source); //한문자열의실제%s/폭/정밀도/%%서식을처리하며원문NULL은(null),입력첫NUL은종료로구별한다.
 // 등록/루트20칸/Draw/삭제는 기존 MessageBoard·TextGump·GumpLifetime이 담당한다.
 class MessageGump {
 public:
     MessageGump(const GumpCreateState& create,MessageGumpHooks hooks); // 실제10.78 공통 생성 상태와 경계를 확인한다.
-    std::uint32_t Construct(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter,std::optional<std::string_view> source=std::nullopt) const; //kind11/16/17을생성한다.kind17의nullopt는원문NULL이며빈문자열과구별한다.
+    std::uint32_t Construct(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter,std::optional<std::string_view> source=std::nullopt) const; //지원하는 접속/전투/시간/Warning 종류를 생성하며 kind17의nullopt는원문NULL이다.
 private:
     MessageGumpNode& Node(std::uint32_t token) const; // 경계 호출 뒤 같은 현재 노드를 다시 조회한다.
     MessageGumpHooks hooks_; // 현재 실제 저장소와 공통 처리기를 빌리는 안정된 경계다.

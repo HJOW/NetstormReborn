@@ -1,0 +1,79 @@
+{
+  "unit": 1144,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "80abc346 / 20261108-112 CP",
+  "summary": "공통 MessageGump의 참가자 접속3/연결 해제5와 현재 메타 CS 이름 조회를 복원하고 같은20칸 MessageBoard의 생성/제거 진입점을 준비했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1144\\build.log",
+    "initialFailure": {
+      "errors": 3,
+      "cause": "Client 진입점이 Uber 비공개 rawButtons에 직접 접근",
+      "correction": "기존 친구 Frame을 통해 같은 실제 MessageBoard에 위임"
+    }
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12982784,
+      "sha256": "92a354f4e008f38e605f97189b622c444c4e9c0e0738d96f41f1ff02162d6505"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "0d5f900969e5b197b482d4980cfb6e0e3bb8333a87bcfcb244d51a902b350349"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4d0600/4d3090/42bbb0 C/PE·최초 이름 주소/현재 메타 재조회·일반 전투/1..8 색 분기·5만 음향·공통10초/Idle/Fit·같은 실제 CS/Gump/20칸 표를 대조했다.",
+  "nativeEvidenceSha256": {
+    "0042bbb0.asm": "e2d51eb5f280cc795ff3e404112bba8f0c71044993f925a64111d3d9bb244cda",
+    "0042bbb0.c": "dd24be1ac1f7fe5ed09deee3fa5ec72f358646064eef1e2d1cb288c0b49ea883",
+    "004d0600.asm": "bb6a8c57d2b9ba46616c7474e4f390f2f31e109b43ababf0e9f81c9b7239c0c6",
+    "004d0600.c": "7305567b1d3d9bb6913090d8bf63857994315f21b83932d0f8e38a4806dcac47",
+    "004d3090.asm": "13dc5cdc3588207955bda1b093006ec4804f16f5eb4675c15b24e1fc2e8ba10d",
+    "004d3090.c": "bc429e77257f14d2bb1d62f713c3af15c1482657fe73e04e7b86021ee0459de8"
+  },
+  "sourceAudit": {
+    "sameActualChallengeNameView": true,
+    "presentReloadsCurrentModeThenBattleGate": true,
+    "disconnectedSoundBeforeCurrentOwner": true,
+    "sameGreenFourthColorAndValidOwnerRange": true,
+    "tenSecondTailEvenWithoutStyle": true,
+    "sameMessageBoardStatusEntryPrepared": true
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "assetDataQuery": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "신규 MP/단위/게임/실제 통신 검사는 요청대로 제외했으며 동작/안정성 검증 완료가 아니다.",
+    "20h 생성/21h 제거의 실제 호출은 다음 단위이며 이번 메시지 자식/장치 준비를 전체 패킷 연결 완료로 세지 않는다. 새 MP 실행은 하지 않았다.",
+    "20h 생성·21h 제거·22h 이동·25h 오류·1a/1b checking 부모는 잔여다.",
+    "helpWord 캐시 수명과 기존 강제 활성 커서·조기/원격 희생·marker 진단 경계도 잔여다."
+  ],
+  "remaining": [
+    "나머지 메타 CS 수신20/21/22/25h·참가자 생성·카메라 caller·HTML 하강/참가 후속·1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI"
+  ]
+}

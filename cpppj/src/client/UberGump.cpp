@@ -415,18 +415,19 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) rawButtons_->Menus()->EnableHelp(std::move(help)); // 10.72에10.78 전용 이미지/창을 임의로 설치하지 않는다.
     objectMenus_=std::make_unique<CampaignObjectMenuClient>(client_,*rawButtons_,[this](std::string_view key) { state_.Post({"Tell",std::string(key)}); });
     MessageGumpHooks pauseContext; // 같은 현재 Session의 모드/이름과 Client 번역을 Pause 생성 시 조회한다.
-    pauseContext.challenge=[this] { return world_ && world_->Session().Core().ownerMode.challenge ? 1U : 0U; };
+    pauseContext.challenge=[this] { return client_.SurfaceStorage()->ownerMode.challenge ? 1U : 0U; }; //World 없는 준비된 MetaMap도 같은 현재00594fc8을 읽는다.
+    pauseContext.battle=[this] { return client_.SurfaceStorage()->ownerMode.battle; }; //kind3 일반 가지에서만 현재00594fbc를 요구한다.
     pauseContext.playerName=[this](std::int32_t owner) {
         if (owner<=0 || owner>=9) return; // 원본48f480은 범위 밖에서 빈 문자열 포인터만 반환한다.
         if (!world_) throw std::logic_error("Pause 이름 조회의 현재 Session 없음");
         static_cast<void>(world_->Session().PlayerRecords().subspan(static_cast<std::size_t>(owner)*180U+12U)); // 반환 이름은 종류11에서 읽지 않는다.
     };
-    pauseContext.challengePlayerName=[](auto) { throw std::logic_error("Challenge 메시지 현재 이름 관리자 미연결"); };
+    pauseContext.challengePlayerName=[this](auto owner) { static_cast<void>(client_.ChallengeGlobals()->ParticipantNameBytes(owner,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\Ch.cpp",line); })); }; //42bbb0의 현재범위 진단/active/같은 이름 주소 조회다.
     pauseContext.playerText=[this](std::int32_t owner)->std::span<const char> {
         static constexpr std::array<char,1> empty{}; // 원문 범위 밖48f480이 반환하는 실제 빈 NUL 문자열이다.
         if (owner<=0 || owner>=9) return empty;if (!world_) throw std::logic_error("동맹 이름의 현재 Session 없음");const auto name=world_->Session().PlayerRecords().subspan(static_cast<std::size_t>(owner)*180U+12U,32);return {reinterpret_cast<const char*>(name.data()),name.size()};
     }; // 이름 내용을 미리 복제하지 않고 원문 서식 시점의 현재 NUL까지 읽는다.
-    pauseContext.challengePlayerText=[](auto)->std::span<const char> { throw std::logic_error("Challenge 동맹 이름의 실제 관리자 미연결"); };
+    pauseContext.challengePlayerText=[this](auto owner)->std::span<const char> { const auto bytes=client_.ChallengeGlobals()->ParticipantNameBytes(owner,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\Ch.cpp",line); });return {reinterpret_cast<const char*>(bytes.data()),bytes.size()}; }; //실제 기록40BYTE 또는 같은 빈 NUL 주소를 번역 뒤까지 빌린다.
     pauseContext.gameTimeSeconds=[this] { auto& game=*client_.GameplayGlobals();return ReadGameTimeSeconds(game.BattleClockStamp(),game.BattleClockOrigin(),[] { return static_cast<std::uint32_t>(std::clock()); }); }; //기존로그인과같은CRT경계/현재두DWORD를사용한다.
     pauseContext.translate=[this](auto value) { return FontBytes(client_.Translate(value)); };
     warnings_=&rawButtons_->EnableWarnings([this] { return client_.WallSeconds(); },[this] {
