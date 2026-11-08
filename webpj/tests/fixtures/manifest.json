@@ -10160,7 +10160,7 @@
       "bytes": 3141271,
       "lines": 5535,
       "fixtureCommit": "b5982bb5",
-      "webCommit": "worktree",
+      "webCommit": "a73c1db9",
       "cpppjBasis": {
         "cpppj/src/o/RawCannonFire.cpp": "02b00b12"
       }
@@ -10189,7 +10189,7 @@
       "bytes": 251312,
       "lines": 418,
       "fixtureCommit": "08d1234f",
-      "webCommit": "worktree",
+      "webCommit": "a73c1db9",
       "cpppjBasis": {
         "cpppj/src/o/RawCannonFire.cpp": "02b00b12"
       }
@@ -10218,9 +10218,38 @@
       "bytes": 2211482,
       "lines": 3586,
       "fixtureCommit": "c4885358",
-      "webCommit": "worktree",
+      "webCommit": "a73c1db9",
       "cpppjBasis": {
         "cpppj/src/o/RawIceCannonFire.cpp": "02b00b12"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E115",
+      "id": "gunarcher",
+      "path": "cpppj/tests/fixtures/gunarcher-x86.tsv",
+      "producer": "cpppj 독립 PE 관찰: SunArcher 회전/각상태 발사/helper/생성자+Fire 초기화/launch 의 반환(또는 Missile 생성 접두)·외부 효과 순서·0x58바이트 이미지·부모 슬롯 50바이트·float 반환(두 판본 1690행)",
+      "consumers": [
+        "webpj/tests/archer-animation.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-archer-animation.js"
+      ],
+      "doc": "docs/webpj-archer-animation-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawArcherAnimation.cpp"
+      ],
+      "scope": "10.78(originals) 845행 사용, originalCD 845행은 범위 밖",
+      "text": true,
+      "sha256": "7882627526d66a7b5084902407788f83170f5c3da27745dfec0a3aa0cb77ab2b",
+      "bytes": 685536,
+      "lines": 1691,
+      "fixtureCommit": "552656c0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawArcherAnimation.cpp": "02b00b12"
       }
     }
   ]
