@@ -1,7 +1,9 @@
 // 같은 CS 포인터 토큰으로 관리하는 Image의 깊은 복사와 현재 두 Animator TYPE를 제공한다.
 #include "client/ClientChallengeGlobals.h"
+#include "client/RawImage.h" //에디터와 같은 실제 crop/RLE 변환 본문을 CS Image에도 사용한다.
 #include <bit>
 #include <stdexcept>
+#include <utility> //같은 bitmap의 소유 버퍼를 기존 변환 본문으로 이동한다.
 
 namespace netstorm::client { // 그림 버퍼는 기존 CS 가변 할당 소유자에만 등록한다.
 namespace { // 포인터를 호스트 주소로 자르지 않고 실제 토큰과 바이트를 사용한다.
@@ -17,6 +19,13 @@ void ClientChallengeGlobals::CopyImage(std::span<std::uint8_t> target,std::span<
         const auto length=width*height,token=AllocateArray(length);Put(target,0xc,height);Put(target,0,token);Put(target,8,width);const auto input=ArrayBytes(Read(source,0));const auto output=ArrayBytes(token);Copy(output,input,length);
     }
     if (Read(source,4)) { const auto length=Read(source,0x10);Put(target,0x10,length);if (std::bit_cast<std::int32_t>(length)>0) { const auto token=AllocateArray(length);const auto currentLength=Read(target,0x10);Put(target,4,token);const auto input=ArrayBytes(Read(source,4));const auto output=ArrayBytes(token);Copy(output,input,currentLength); } }
+}
+// 원문의 비영 imageBits 진단은 복귀형이며 기존 두 포인터를 먼저 ClearArray하지 않는다.
+void ClientChallengeGlobals::ConvertImage(std::span<std::uint8_t> target,o::TerrainBitmapImage bitmap,bool crop,const std::function<void(std::string_view,std::uint32_t)>& assertion) {
+    if (Read(target,0)) { if (!assertion) throw std::logic_error("CS Image 변환의 실제 진단 미연결");assertion("imageBits == NULL",0x40); }
+    const auto bitmapBytes=bitmap.pixels.size();if (bitmapBytes>0xffffffffU) throw std::out_of_range("CS Image 입력의 실제32비트 bitmap 범위");const auto bits=AllocateArray(bitmapBytes);Put(target,0,bits);Put(target,8,std::bit_cast<std::uint32_t>(bitmap.width));Put(target,0xc,std::bit_cast<std::uint32_t>(bitmap.height));Copy(ArrayBytes(bits),bitmap.pixels,static_cast<std::uint32_t>(bitmapBytes));
+    RawImage image;image.Convert(std::move(bitmap),crop);Put(target,0x10,image.ShapeSize());const auto shape=AllocateArray(Read(target,0x10));Put(target,4,shape);Copy(ArrayBytes(shape),image.Shape(),Read(target,0x10));
+    Put(target,8,std::bit_cast<std::uint32_t>(image.Width()));Put(target,0xc,std::bit_cast<std::uint32_t>(image.Height()));const auto currentBits=Read(target,0);if (currentBits && arrays_.erase(currentBits)!=1) throw std::logic_error("CS Image 변환의 실제 bitmap free 미등록");Put(target,0,0); //crop 크기 저장 뒤 현재 bitmap을 반납하고 같은 포인터만0으로 쓴다.
 }
 std::uint32_t& ClientChallengeGlobals::IslandAnimatorType() { return islandAnimatorType_; } // 현재 TYPE 주소를 그대로 빌린다.
 const std::uint32_t& ClientChallengeGlobals::IslandAnimatorType() const { return islandAnimatorType_; } // 조회가 값을 초기화하지 않는다.

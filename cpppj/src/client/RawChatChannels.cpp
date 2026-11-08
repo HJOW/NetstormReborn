@@ -37,11 +37,11 @@ void RawChatChannels::CopyName(std::span<std::uint8_t> record,std::string_view n
     }
 }
 // 실제 이름 정제의 memmove는 NUL까지 옮기고 그 뒤의 stale BYTE를 지우지 않는다.
-void RawChatChannels::NameChanged(std::uint32_t subscriber,std::span<std::uint8_t> record) const {
-    if (observe_) observe_(ChatChannelCall::NameChanged,subscriber);
+void SanitizePlayerName(std::uint32_t subscriber,std::span<std::uint8_t> record) {
     std::size_t length=0;
-    // Add가+27에NUL을 쓴 뒤의 실제 문자열만 읽는다.
-    while (length<kNameBytes && record[length]) ++length;
+    //같은 기록의 실제 첫 NUL만 찾으며 호출자가 임의로40BYTE에 잘라 보낸 CS 이름으로 대체하지 않는다.
+    while (length<record.size() && record[length]) ++length;
+    if (length==record.size()) throw std::out_of_range("실제 Player 이름의 NUL 물리 부족");
     std::size_t index=0;
     // 금지 문자를 지우면 같은 index를 다시 검사한다. 입력의 선후행 공백도 원본처럼 전부 지운다.
     while (index<length) {
@@ -53,9 +53,12 @@ void RawChatChannels::NameChanged(std::uint32_t subscriber,std::span<std::uint8_
     record[length]=0;
     if (length==0) {
         const auto replacement=std::string("Cheat")+std::to_string(subscriber&0xffU); // 원본 format 직전 and eax,ff의 unsigned 인자다.
+        if (replacement.size()+1>record.size()) throw std::out_of_range("실제 Player 빈 이름 대체의 물리 부족");
         std::copy(replacement.begin(),replacement.end(),record.begin());record[replacement.size()]=0;
     }
 }
+// Add가+27에NUL을 쓴 같은40BYTE를 관찰 뒤 공통 원문 정제에 전달한다.
+void RawChatChannels::NameChanged(std::uint32_t subscriber,std::span<std::uint8_t> record) const { if (observe_) observe_(ChatChannelCall::NameChanged,subscriber);SanitizePlayerName(subscriber,record.first(kNameBytes)); }
 // 실제004437f0은 단일ret이다. 선택 관찰을 제외하면 추가 UI 갱신이나 이벤트를 만들어내지 않는다.
 void RawChatChannels::Refresh() const { if (observe_) observe_(ChatChannelCall::Refresh,0); }
 // 현재 자기 식별자·첫 빈칸·기존 식별자와 특수-1 분기를 원본 검색 순서로 처리한다.

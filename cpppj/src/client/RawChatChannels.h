@@ -7,6 +7,7 @@
 #include <string_view>
 
 namespace netstorm::client {
+void SanitizePlayerName(std::uint32_t subscriber,std::span<std::uint8_t> name); //0042b0e0의 금지문자/NUL 제자리 정제와 Cheat<하위BYTE> 대체다. Chat은40BYTE, CS 생성은 같은 기록의 남은 실제 물리를 빌린다.
 // 원본 하위 몸체 진입을 검사에서 관찰한다. 게임 계산이나 이름 정제를 대체하지 않는다.
 enum class ChatChannelCall {
     NameChanged, // 이름/flags 쓰기 뒤 실제0042b0e0 이름 정제 본체에 진입하는 위치다.

@@ -1,6 +1,7 @@
 // Client가 실제 CS 포인터 슬롯·할당·공통 배치 좌표를 장기 소유한다.
 #pragma once
 #include "o/RawChallengeState.h"
+#include "o/RawTerrainBitmap.h" //같은 원문 bitmap 소유 입력을 CS Image 변환 선언에 제공한다.
 #include "client/NativeMetaProjection.h"
 #include <functional>
 #include <map>
@@ -35,6 +36,7 @@ public:
     std::span<std::uint8_t> ArrayBytes(std::uint32_t token); // 등록된 실제 배열 전체를 빌리고 임의 원본 주소를 호스트 포인터로 변환하지 않는다.
     void ClearArray(std::span<std::uint8_t> header); //0046d8a0의 두 비영 포인터 free 뒤 +0/+4/+c/+8 순서로 같은16BYTE를 지운다.
     void CopyImage(std::span<std::uint8_t> target,std::span<const std::uint8_t> source,const std::function<void(std::string_view,std::uint32_t)>& assertion); //0046d900의 해제 선행·현재 크기·두 실제 할당의 깊은 복사다. 자기 복사도 해제 순서를 보존한다.
+    void ConvertImage(std::span<std::uint8_t> target,o::TerrainBitmapImage bitmap,bool crop,const std::function<void(std::string_view,std::uint32_t)>& assertion); //0046d790: 같은 CS20BYTE Image에 입력 bitmap→원문 VFX shape/크기→bitmap 반납을 수행한다. 기존 shape를 선행 해제하지 않는다.
     std::uint32_t& IslandAnimatorType();const std::uint32_t& IslandAnimatorType() const; //00541140의 현재 Rig TYPE52를 생성/검색이 공유한다.
     std::uint32_t& CameraAnimatorType();const std::uint32_t& CameraAnimatorType() const; //00541144의 별도 카메라 TYPE53이며 Session 교체로 다시 쓰지 않는다.
 private:
