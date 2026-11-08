@@ -471,7 +471,7 @@ cpppj/src/o/RawAcidFence.cpp	port	www/core/raw-acid-fence.js	1f00a25a	port	[o-de
 cpppj/src/o/RawAcidZap.cpp	port	www/core/raw-acid-zap.js	1f00a25a	port	[o-default] WB04-E48: 애시드 11바이트 포획 명령 작성(40ad30)과 수신(48bfe0). fixture acid-zap 수신 927·헤더 90행. 실제 소리/분해 Form/가상 삭제는 월드 조립에서
 cpppj/src/o/RawAddRandom.cpp	port	www/core/raw-add-random.js	1f00a25a	port	[o-default] WB04-E30: 0040dfd0 AddRandom 고정 범위 부모와 시각 seed(RawFortFinishOwner TimeSeed 공유)·섬 검색 두 함수(RawFortTerritorySave의 검색 부분만, 저장 본체는 exclude-edit 유지). fixture add-random-parent 720행 전부
 cpppj/src/o/RawAiBrain.cpp	port	www/core/raw-ai-brain.js	1f00a25a	port	[o-default] WB04-E164: AI 본체 0xb08 실제 소유 메모리(RawAiBrainMemory)와 생성자 00416860/소멸자 00410100(17개 소유 블록·현재 그래프 BYTE 재조회·Player 첫 지역/섬 owner/ss 요구 에너지/방향별 동맹). fixture aibrain 실제 PE 160행 전부. 남음: 초기 갱신 00414710·RawAiRuntime·전략 몸체 연결
-cpppj/src/o/RawAiBrainInitialUpdate.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiBrainInitialUpdate.cpp	port	www/core/raw-ai-initial-update.js	1f00a25a	port	[o-default] WB04-E168: AI 초기 갱신 00414710(600바이트 재복사·이름·기술 부모 보장/목록·내용물 순회 분류·최대 비용·theme5 stack 칸 공유·battery 중립화). fixture aiinitialupdate 실제 PE 133행·aiinitialupdate-theme5 16행 전부. 남음: 실제 TYPE theme/요구 에너지/언어 이름 조회 자산 연결
 cpppj/src/o/RawAiBridgeCandidates.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiBridgePath.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiBridgePlanning.cpp	port			todo	[o-default]

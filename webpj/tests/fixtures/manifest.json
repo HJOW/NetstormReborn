@@ -12159,6 +12159,64 @@
       "cpppjBasis": {
         "cpppj/src/o/RawAiRuntime.cpp": "ebd0dedb"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E168",
+      "id": "aiinitialupdate",
+      "path": "cpppj/tests/fixtures/ai-initial-update-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 초기 갱신의 본체/빌더/Player 9기록/새 Form raw/이름·타입·부착 요청 순서(10.78 133행)",
+      "consumers": [
+        "webpj/tests/ai-initial-update.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-initial-update.js"
+      ],
+      "doc": "docs/webpj-ai-initial-update-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiBrainInitialUpdate.cpp"
+      ],
+      "scope": "10.78 실제 PE 133행 전부",
+      "text": true,
+      "sha256": "8784606de578d467f5ab2fbedc05662044782accf770ce9eb9ba1b18665a059d",
+      "bytes": 1207594,
+      "lines": 134,
+      "fixtureCommit": "4124e75b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiBrainInitialUpdate.cpp": "fc85f3c9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E168",
+      "id": "aiinitialupdate-theme5",
+      "path": "cpppj/tests/fixtures/ai-initial-update-theme5-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: theme5 의 실제 stack 칸 공유와 후속 battery 중립화·원소 목록·전체 본체(10.78 16행)",
+      "consumers": [
+        "webpj/tests/ai-initial-update.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-initial-update.js"
+      ],
+      "doc": "docs/webpj-ai-initial-update-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiBrainInitialUpdate.cpp"
+      ],
+      "scope": "10.78 실제 PE 16행 전부",
+      "text": true,
+      "sha256": "e6ec842056c6df0dc8ec294dc5454775e36ccb2069f996936bf48ccaf2ba77c3",
+      "bytes": 144425,
+      "lines": 17,
+      "fixtureCommit": "fc85f3c9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiBrainInitialUpdate.cpp": "fc85f3c9"
+      }
     }
   ]
 }
