@@ -8317,7 +8317,7 @@
       "bytes": 28632,
       "lines": 100,
       "fixtureCommit": "6b4ffe65",
-      "webCommit": "worktree",
+      "webCommit": "19f485b2",
       "cpppjBasis": {
         "cpppj/src/o/RawFenceLine.cpp": "6b4ffe65"
       }
@@ -8346,9 +8346,67 @@
       "bytes": 154009,
       "lines": 208,
       "fixtureCommit": "b62491bf",
-      "webCommit": "worktree",
+      "webCommit": "19f485b2",
       "cpppjBasis": {
         "cpppj/src/o/RawFenceLifetime.cpp": "b62491bf"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E75",
+      "id": "buried-regular",
+      "path": "cpppj/tests/fixtures/buried-regular-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 오벨리스크 Regular Handle(사건 0 애니메이션 288·기본 사건 96)의 슬롯 50 raw·반환 float 비트·게임 난수 상태·실제 표시 갱신 순서",
+      "consumers": [
+        "webpj/tests/buried-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-buried-regular.js"
+      ],
+      "doc": "docs/webpj-buried-regular-geyser-lifetime-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBuriedRegular.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 384행 전부 사용",
+      "text": true,
+      "sha256": "1eb06afac3c6fc99c94ea2501677981a8c9a102876ed01f665bd2c53da9df0c8",
+      "bytes": 62178,
+      "lines": 385,
+      "fixtureCommit": "07c71e65",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBuriedRegular.cpp": "07c71e65"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E75",
+      "id": "geyser-lifetime",
+      "path": "cpppj/tests/fixtures/geyser-lifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 간헐천 고유 삭제 전·후처리의 호출 순서·효과 뒤 목록 개수/편집 모드·부모 슬롯 raw·지면 목록 물리 꼬리 8칸(두 x87 정밀도에서 일치)",
+      "consumers": [
+        "webpj/tests/geyser-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-geyser-lifetime.js"
+      ],
+      "doc": "docs/webpj-buried-regular-geyser-lifetime-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGeyserLifetime.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 2016행 전부 사용",
+      "text": true,
+      "sha256": "2d2a608cdfe3948fb19430989895e31a5fc34659f31f9152c5f372364264446f",
+      "bytes": 665694,
+      "lines": 2017,
+      "fixtureCommit": "850ae867",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGeyserLifetime.cpp": "850ae867"
       }
     }
   ]

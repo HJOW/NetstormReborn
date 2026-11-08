@@ -552,7 +552,7 @@ cpppj/src/o/RawBuildingSpace.cpp	port	www/core/squid-space.js	1f00a25a	port	[o-d
 cpppj/src/o/RawBulfFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawBulwarkHit.cpp	port	www/core/raw-bulwark-hit.js	1f00a25a	port	[o-default] WB04-E11: 48ef20 불워크 피해 관문(공격자 비행 genus면 0, 아니면 일반 피해 연결). fixture bulwark-hit 10.78 492행 전부
 cpppj/src/o/RawBuriedPostPop.cpp	port	www/core/raw-buried-post-pop.js	1f00a25a	port	[o-default] WB04-E60: buried 후처리 00462170(보상 QA 쓰기·Bridge 통지·두 예약·공통 장부). fixture buried-postpop 580행 전부. SquidPostPop.setBody('buried') 연결·실제 World getter 는 WB05
-cpppj/src/o/RawBuriedRegular.cpp	port			todo	[o-default]
+cpppj/src/o/RawBuriedRegular.cpp	port	www/core/raw-buried-regular.js	1f00a25a	port	[o-default] WB04-E75: 오벨리스크 실제 Regular Handle 004622f0(가상 표 0x50a748·B 구간 signed 나머지 프레임·A 구간 복귀 난수 2..7). fixture buried-regular 384행 전부(10.78 전용 파일). 프레임 단계 이동/재Pop 본체는 해당 파일 단위에서
 cpppj/src/o/RawBurningFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawBurningLifetimeDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawBurningSourceCount.cpp	port			todo	[o-default]
@@ -734,7 +734,7 @@ cpppj/src/o/RawGameRandomSeed.cpp	port	www/core/random.js;www/assets/terrain-til
 cpppj/src/o/RawGemReward.cpp	port			todo	[o-default]
 cpppj/src/o/RawGeyserAiRegistration.cpp	port			todo	[o-default]
 cpppj/src/o/RawGeyserCapture.cpp	port			todo	[o-default]
-cpppj/src/o/RawGeyserLifetime.cpp	port			todo	[o-default]
+cpppj/src/o/RawGeyserLifetime.cpp	port	www/core/raw-geyser-lifetime.js	1f00a25a	port	[o-default] WB04-E75: 간헐천 고유 수명 전처리 485580·후처리 485540(기본 프레임 직접 쓰기·AI 제거·지면 목록 중복 제거·편집 모드 섬 정리). fixture geyser-lifetime 2016행 전부(10.78 전용 파일). 기본 프레임 getter/표시/AI/Damageable/섬 정리 본체는 해당 파일 단위에서
 cpppj/src/o/RawGeyserMined.cpp	port			todo	[o-default]
 cpppj/src/o/RawGraph.cpp	port	www/core/raw-graph.js	1f00a25a	partial	[o-default] WB04-E40: 사전 계산(Add·Flood·Region·RegionAdd·Detach·Rebuild·Allocate·Inspect·Pop 예측)·영역 통지·삭제 연결·PostDestroy 사본·Free/Frame/Reset. fixture graph-reset 16·graphforms 32·graphlookup 128·graphrebuild 96·graph-reference-checking 360·graph-sentinel-checking 540. Pop/PostPop/Unpop·SquidDisplay를 함께 쓰는 rawgraph/regiongraph/graphremove/graphrecovery 대조는 SquidPostPop 처리기 단위에서(Commit은 실제 실행이 쓰지 않아 제외)
 cpppj/src/o/RawGraphLive.cpp	port	www/core/raw-graph.js	1f00a25a	port	[o-default] WB04-E40: 실제 Flood·Rebuild·Allocate·Add·PostDestroy·Detach(진단 0x739~0x25d·로그·시계 복귀 재진입). fixture graph-live-checking 72·graph-live-free-callback 12·graph-detach-live 216·graph-region-free 4
