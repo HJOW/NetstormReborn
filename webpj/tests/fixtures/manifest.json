@@ -10247,9 +10247,39 @@
       "bytes": 685536,
       "lines": 1691,
       "fixtureCommit": "552656c0",
-      "webCommit": "worktree",
+      "webCommit": "b255f444",
       "cpppjBasis": {
         "cpppj/src/o/RawArcherAnimation.cpp": "02b00b12"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E116",
+      "id": "crossbowanimation",
+      "path": "cpppj/tests/fixtures/crossbow-animation-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 크로스보우 공유 회전/내림 발사/두 생성자/launch 의 반환·외부 효과 순서·필드 이미지[회전 88·발사 64바이트]·네 슬롯 200바이트(2638행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/crossbow-animation.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-crossbow-animation.js",
+        "webpj/www/core/raw-archer-animation.js"
+      ],
+      "doc": "docs/webpj-crossbow-animation-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCrossbowAnimation.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 2638행 전부 사용",
+      "text": true,
+      "sha256": "d7658e001e1f9e85af7c4ac140e8d34acb96500e16f4880ce32eb8dd10ab75be",
+      "bytes": 1635827,
+      "lines": 2639,
+      "fixtureCommit": "34510965",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCrossbowAnimation.cpp": "02b00b12"
       }
     }
   ]

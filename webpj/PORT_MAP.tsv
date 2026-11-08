@@ -628,7 +628,7 @@ cpppj/src/o/RawContentAttach.cpp	port	www/core/content-form-host.js	1f00a25a	por
 cpppj/src/o/RawContentParentNotice.cpp	port	www/core/content-parent-notice.js	1f00a25a	port	[o-default] WB04-D5a(+0x24 분배)
 cpppj/src/o/RawContentPreviewProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawCreateAt.cpp	port	www/core/raw-create-at.js	1f00a25a	port	[o-default] WB04-E31: 0044c660 CreateAt 생성 부모와 TYPE+15c 프레임 필드. fixture create-at-parent 580행 전부. 실제 월드 생성/HP/Pop과 TYPE 프레임 표(count 추가 필요) 연결은 소비자 단위에서
-cpppj/src/o/RawCrossbowAnimation.cpp	port			todo	[o-default]
+cpppj/src/o/RawCrossbowAnimation.cpp	port	www/core/raw-crossbow-animation.js	1f00a25a	port	[o-default] WB04-E116: 크로스보우 내림 발사 004674c0·생성자 00468050·launch 00466f50 arrow81 일반 투사체 분기·CrossbowAnimationProcess. fixture crossbow-animation 2638행 전부(10.78 전용; 회전 812행은 RawArcherAnimation.rotate 공유). 중심/공간/Missile 생성/완료 통지/삭제는 훅 경계, GunProcess Host 연결(factory)은 RawGunProcess 이식 뒤
 cpppj/src/o/RawDaisContentNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawDaisDraw.cpp	port	www/core/raw-dais-draw.js	1f00a25a	port	[o-default] WB04-E84: 다이스 165 의 TYPE 169 추가 그림 요청 004484b0(가상 표 0x507950·TYPE 165 확인·signed 프레임 나머지). fixture dais-draw 768행 전부(10.78 전용 파일). 497280 소비자/추상 관문은 표시 단위에서
 cpppj/src/o/RawDaisLifecycle.cpp	port			todo	[o-default]
