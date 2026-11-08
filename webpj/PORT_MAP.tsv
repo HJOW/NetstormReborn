@@ -633,7 +633,7 @@ cpppj/src/o/RawDaisContentNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawDaisDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawDaisLifecycle.cpp	port			todo	[o-default]
 cpppj/src/o/RawDaisRegular.cpp	port			todo	[o-default]
-cpppj/src/o/RawDamageableBurning.cpp	port			todo	[o-default]
+cpppj/src/o/RawDamageableBurning.cpp	port	www/core/raw-damageable-burning.js	1f00a25a	port	[o-default] WB04-E67: Damageable burning 판정 0044c060(damageEffect 0 자연 반환·checking 진단·절반 HP 생성/삭제·bulf 위치음). fixture priestdamage(본문 2)·damageable-burning-checking-hardware 10.78 550행 전부. burning 프로세스 본체는 해당 파일 단위에서
 cpppj/src/o/RawDamageableHit.cpp	port			todo	[o-default]
 cpppj/src/o/RawDamageablePostDestroy.cpp	port			todo	[o-default]
 cpppj/src/o/RawDamageablePreDestroy.cpp	port			todo	[o-default]
@@ -832,7 +832,7 @@ cpppj/src/o/RawPlayerTechnology.cpp	port	www/core/raw-player-technology.js	1f00a
 cpppj/src/o/RawPlayerTemplateState.cpp	port	www/core/raw-player-template-state.js	f261f530	port	[o-default] WB04-E55: State getter 004bd550·Notify 004bd540/004bd360. fixture player-regular·player-state-expand 99·player-state-initialization 2560행. 기준선 뒤 f261f530(Notify 자유 함수 분리) ①. CampaignTemplateStorage 연결은 WB05
 cpppj/src/o/RawPlayerWorld.cpp	port	www/core/raw-player-world.js	1f00a25a	port	[o-default] WB04-E55: Player152 생성 00490250·파생 postPop 004905d0·Technology getter 0048fc60/0048fc90. fixture player-world 10.78 840행 전부. RawSurfaceWorld 연결 검사는 WB05
 cpppj/src/o/RawPriestArrival.cpp	port			todo	[o-default]
-cpppj/src/o/RawPriestDamage.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestDamage.cpp	port	www/core/raw-priest-damage.js	1f00a25a	port	[o-default] WB04-E67: 사제 피격 00494380·레벨 보정 0044bfe0·makePriestDamageWorldHooks. fixture priestdamage 10.78 1712행 전부. GunHit 합성(makePriestGunHitHooks)은 RawGunHit 단위에서 실제 훅과 연결
 cpppj/src/o/RawPriestFall.cpp	port	www/core/raw-priest-fall.js	1f00a25a	port	[o-default] WB04-E65: 사제 낙하 요청 004941f0·tryFall 00494e80·0x25b 이벤트 00494580/00493e60·분배기/훅 연결(makePriestFallHandler/Walker/Hooks/FrameHooks). fixture priestfall 10.78 456행 전부. 회복 분배기 합성(RawPriestRegen)은 해당 단위에서
 cpppj/src/o/RawPriestForcefield.cpp	port	www/core/raw-priest-forcefield.js	1f00a25a	port	[o-default] WB04-E63: 사제 보호막 조회 004918e0. fixture priestforcefield 10.78 2976행(Find/Pre) 전부
 cpppj/src/o/RawPriestHalt.cpp	port	www/core/raw-priest-halt.js	1f00a25a	port	[o-default] WB04-E66: 사제 +38 Halt(지면 모드·저 HP 공간 보정)·공통 Halt 0042a5f0(Carrier 조회 12·운반체 포획/너겟 전달). fixture priesthalt 10.78 432행 전부

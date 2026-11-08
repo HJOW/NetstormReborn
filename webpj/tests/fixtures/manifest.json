@@ -7702,7 +7702,7 @@
       "bytes": 563661,
       "lines": 4853,
       "fixtureCommit": "7f03b648",
-      "webCommit": "worktree",
+      "webCommit": "dade628c",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestLookup.cpp": "1e8e43d9"
       }
@@ -7731,7 +7731,7 @@
       "bytes": 197809,
       "lines": 1127,
       "fixtureCommit": "6a1ddf20",
-      "webCommit": "worktree",
+      "webCommit": "dade628c",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPrayer.cpp": "6a1ddf20"
       }
@@ -7760,7 +7760,7 @@
       "bytes": 293550,
       "lines": 601,
       "fixtureCommit": "ab3ef43d",
-      "webCommit": "worktree",
+      "webCommit": "dade628c",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPanic.cpp": "ab3ef43d"
       }
@@ -7789,9 +7789,70 @@
       "bytes": 219057,
       "lines": 865,
       "fixtureCommit": "ab9361f1",
-      "webCommit": "worktree",
+      "webCommit": "dade628c",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestHalt.cpp": "ab9361f1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E67",
+      "id": "priestdamage",
+      "path": "cpppj/tests/fixtures/priestdamage-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 Hit+HP setter+rank 보정+burning 판정의 반환·경계 호출 순서·슬롯 50 raw·보정 결과(회복/프레임/소유자/가상 공간/burning 생성·삭제는 명시 경계)",
+      "consumers": [
+        "webpj/tests/priest-damage.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-damage.js",
+        "webpj/www/core/raw-damageable-burning.js"
+      ],
+      "doc": "docs/webpj-priest-damage-burning-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestDamage.cpp",
+        "cpppj/src/o/RawDamageableBurning.cpp"
+      ],
+      "scope": "10.78(originals) 1712행 전부 사용(originalCD 행은 범위 밖)",
+      "text": true,
+      "sha256": "40b8047e40fe0d1f0f8d9523f0516b8e201c9b4aeaca02698e73b2792c1ddbd0",
+      "bytes": 591278,
+      "lines": 3425,
+      "fixtureCommit": "5c2d0a1e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestDamage.cpp": "752d5713",
+        "cpppj/src/o/RawDamageableBurning.cpp": "a9157275"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E67",
+      "id": "damageable-burning-checking-hardware",
+      "path": "cpppj/tests/fixtures/damageable-burning-checking-hardware-x86.tsv",
+      "producer": "cpppj 독립 CPU 관측: 연소 갱신의 현재 checking DWORD·중복 진단 복귀·저장값/현재값·오버플로 절반 계산·생성/삭제/위치음 순서(합성 입력)",
+      "consumers": [
+        "webpj/tests/damageable-burning.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-damageable-burning.js"
+      ],
+      "doc": "docs/webpj-priest-damage-burning-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDamageableBurning.cpp"
+      ],
+      "scope": "10.78(originals) 550행 전부 사용(originalCD 행은 범위 밖)",
+      "text": true,
+      "sha256": "3a35ce8c2135ac10b224b9ec2e5e7670d09e4299be2f92d1c1edf9832e621927",
+      "bytes": 220882,
+      "lines": 1100,
+      "fixtureCommit": "a9157275",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDamageableBurning.cpp": "a9157275"
       }
     }
   ]
