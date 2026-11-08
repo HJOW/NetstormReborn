@@ -8930,9 +8930,67 @@
       "bytes": 142750,
       "lines": 857,
       "fixtureCommit": "aa2ce743",
-      "webCommit": "worktree",
+      "webCommit": "36c7f841",
       "cpppjBasis": {
         "cpppj/src/o/RawFenceTarget.cpp": "56a28270"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E87",
+      "id": "gun-blocker",
+      "path": "cpppj/tests/fixtures/gun-blocker-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 스톤 타워 배치의 주변 총 수집 목록과 기존 Gun 으로 보낸 통지 순서(네 방향·거리 비교·동맹/추상·빈 현재 표적·목록 포화 690행)",
+      "consumers": [
+        "webpj/tests/gun-blocker.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-gun-blocker.js"
+      ],
+      "doc": "docs/webpj-gun-blocker-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGunBlocker.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 690행 전부 사용",
+      "text": true,
+      "sha256": "326003cc70d664a46313cf2090586a0da3e73390b1a242342db2ff4929b89898",
+      "bytes": 45973,
+      "lines": 691,
+      "fixtureCommit": "8eaaf082",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGunBlocker.cpp": "815fbd67"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E87",
+      "id": "gun-blocker-boundary",
+      "path": "cpppj/tests/fixtures/gun-blocker-boundary-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 스톤 타워 후보 수집의 최대 반경 20 아래/동일/위 경계 수집·통지 6행",
+      "consumers": [
+        "webpj/tests/gun-blocker.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-gun-blocker.js"
+      ],
+      "doc": "docs/webpj-gun-blocker-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGunBlocker.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 6행 전부 사용",
+      "text": true,
+      "sha256": "cfa8f3ef18b6a7cee79f2f79519e50e8e3951beb6d895709c5fa53d8be381623",
+      "bytes": 509,
+      "lines": 7,
+      "fixtureCommit": "8eaaf082",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGunBlocker.cpp": "815fbd67"
       }
     }
   ]

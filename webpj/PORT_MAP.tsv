@@ -740,7 +740,7 @@ cpppj/src/o/RawGraph.cpp	port	www/core/raw-graph.js	1f00a25a	partial	[o-default]
 cpppj/src/o/RawGraphLive.cpp	port	www/core/raw-graph.js	1f00a25a	port	[o-default] WB04-E40: 실제 Flood·Rebuild·Allocate·Add·PostDestroy·Detach(진단 0x739~0x25d·로그·시계 복귀 재진입). fixture graph-live-checking 72·graph-live-free-callback 12·graph-detach-live 216·graph-region-free 4
 cpppj/src/o/RawGunAngle.h	port	www/core/raw-gun-angle.js	1f00a25a	port	[o-default] WB04-E16: 00467610 Gunanim 프레임→Graph 방향(인덱스·진단·20개 각도). fixture gun-angle 518행·gun-frame-checking 384행 전부(10.78)
 cpppj/src/o/RawGunAnimation.cpp	port			todo	[o-default]
-cpppj/src/o/RawGunBlocker.cpp	port			todo	[o-default]
+cpppj/src/o/RawGunBlocker.cpp	port	www/core/raw-gun-blocker.js	1f00a25a	port	[o-default] WB04-E87: 스톤 타워 표적 통지 수집 00469590·통지 0046ae80(아처 반경 finder·캐논 네 방향 ray finder·엄격한 점수 비교·타워 사각형 두 대각선 교차·signed 용량 포화 뒤 순회). fixture gun-blocker 690행+gun-blocker-boundary 6행 전부(10.78 전용 파일). 기존 Gun 의 표적/방향/포구와 setTarget 본체 연결은 RawGunProcess 단위에서
 cpppj/src/o/RawGunGroundTarget.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunHit.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunImpact.cpp	port			todo	[o-default]
