@@ -478,7 +478,7 @@ cpppj/src/o/RawAiBridgePlanning.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiBridgeSearch.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiBridgeStrategies.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiBuildChoice.cpp	port	www/core/raw-ai-build-choice.js	1f00a25a	port	[o-default] WB04-E167: AI 건설 선택 00411b40(포획 다이스 → 원소 신전 → 선호 워크샾 수량 복사본)·00411a40 수집자 여유 비용·00411ad0 적 자금·004709d0/00470a30 theme 매핑. 독립 관측 fixture 없음, cpppj 계약 시험 14건. 남음: 실제 사제 포획/사망/구매 가능/지갑/분산 SP 연결
-cpppj/src/o/RawAiBuildSearch.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiBuildSearch.cpp	port	www/core/raw-ai-build-search.js	1f00a25a	port	[o-default] WB04-E169: AI 배치 탐색 0040f660 초기화·0040f700 스캔(행별 deadline 예산/재개·strict 최대 거리·전체 배치 질의)·0040f130 빈 발자국. 독립 관측 fixture 없음, cpppj 계약 시험 14건. 남음: 실제 벽시각/전체 배치(RawCanonPlacement)/월드 spot 연결
 cpppj/src/o/RawAiCarrierActions.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiCollectors.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiCommandState.cpp	port	www/core/raw-ai-command-state.js	1f00a25a	port	[o-default] WB04-E76: AI 직접 명령 00413c60 CrankAiMoney·004143b0 SetAiParameter(현재 Player9 +0xb0 재조회·다섯 직접 writer·0xb08 본체 외 바이트 보존). fixture ai-command-state 1940행 전부(10.78 전용 파일). AI 본체 생성/해제와 Player9 실제 연결은 RawAiBrain 단위에서
