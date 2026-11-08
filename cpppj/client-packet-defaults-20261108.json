@@ -1,0 +1,328 @@
+{
+  "unit": 1167,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCppCommit": "ede61f05 / 20261108-140 CP",
+  "summary": "M6-b1의 C3 일곱 수신과 비폐기 관찰 전용11종을 실제 세 생성 경계의 비임대 기본표에 연결했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1167\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13211136,
+      "sha256": "f6b6b7d69cc40ebcaa43c066bfda4f65463ed4c9b93127bedffd984c4da79bab"
+    },
+    "R.exe": {
+      "bytes": 677888,
+      "sha256": "9662dfb389dc43d8a283eabeec779b6f69c5fa3a603ac1d92f0d460411f98b6a"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "sourceSha256": {
+    "cpppj/src/client/ClientCampaignTransport.h": "e2bf6d82cd83e0f03effc77d7d292729f2a2d481473b0540531a943803f5665b",
+    "cpppj/src/client/ClientCampaignTransport.cpp": "d0c338a928d3aa8c07f88826b6964c8a43bad89cfb692c86408dd4614c2a41c6",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "b0a2476b6faecb15651547217f86fa7769de9aca7b43c6b73118a974848af433",
+    "cpppj/src/client/UberEditor.inc": "ce99b8934dfebc1287eac83db54c4af7605409d840a344f602a111880b625588",
+    "cpppj/src/zacket/LocalMissionTransport.cpp": "f54f935d7025d322de5e99889a738246faa989af0057459d26a507c98a631a51"
+  },
+  "native": {
+    "actual_pe_ranges": [
+      {
+        "function": "FUN_0040a020",
+        "ranges": "40a020-40a057",
+        "spans": [
+          {
+            "first": "0040a020",
+            "last": "0040a057",
+            "sha256": "790a8e01cf2b406a1fe0c45bd42fa2212449baf484695da23251a760aae66b08",
+            "bytes": 56
+          }
+        ]
+      },
+      {
+        "function": "FUN_0040a190",
+        "ranges": "40a190-40a1cb",
+        "spans": [
+          {
+            "first": "0040a190",
+            "last": "0040a1cb",
+            "sha256": "ce9f6d32f67b8c6cd111d6423cd1dac48e1754f297c55a44964f525d6e9459bc",
+            "bytes": 60
+          }
+        ]
+      },
+      {
+        "function": "FUN_0040a270",
+        "ranges": "40a270-40a2a7",
+        "spans": [
+          {
+            "first": "0040a270",
+            "last": "0040a2a7",
+            "sha256": "096f874567e2e3844927afb2c41018ba753d7bf9c23c2d963c9a3719b36e30af",
+            "bytes": 56
+          }
+        ]
+      },
+      {
+        "function": "FUN_0040aae0",
+        "ranges": "40aae0-40ab17",
+        "spans": [
+          {
+            "first": "0040aae0",
+            "last": "0040ab17",
+            "sha256": "4bf5bdc6b73aa8a0c6155aa245f143b0e55ed50493e86adc929db17258489b9f",
+            "bytes": 56
+          }
+        ]
+      },
+      {
+        "function": "FUN_0040ab20",
+        "ranges": "40ab20-40ab57",
+        "spans": [
+          {
+            "first": "0040ab20",
+            "last": "0040ab57",
+            "sha256": "714eccfb672abc96717c0ebf8fafa2e3eb5e98e087b9aefcda21c7ae8dc5bbac",
+            "bytes": 56
+          }
+        ]
+      },
+      {
+        "function": "FUN_0040ab60",
+        "ranges": "40ab60-40ab97",
+        "spans": [
+          {
+            "first": "0040ab60",
+            "last": "0040ab97",
+            "sha256": "b9355c2997475c039ca954911a31fe2563177987143b8477bfa9db1f2b9342fa",
+            "bytes": 56
+          }
+        ]
+      },
+      {
+        "function": "FUN_0040aed0",
+        "ranges": "40aed0-40af09",
+        "spans": [
+          {
+            "first": "0040aed0",
+            "last": "0040af09",
+            "sha256": "371a44a1a9772b5d531ea9b7a820b4637563a29dc216efcb3cd1288338edb88a",
+            "bytes": 58
+          }
+        ]
+      },
+      {
+        "function": "FUN_0040b380",
+        "ranges": "40b380-40b382",
+        "spans": [
+          {
+            "first": "0040b380",
+            "last": "0040b382",
+            "sha256": "e598d0c3ba86d917b177d7adde0556aa99bc355543c57aee0a3e50b684dd7e99",
+            "bytes": 3
+          }
+        ]
+      },
+      {
+        "function": "FUN_004437f0",
+        "ranges": "4437f0-4437f0",
+        "spans": [
+          {
+            "first": "004437f0",
+            "last": "004437f0",
+            "sha256": "ae3f4619b0413d70d3004b9131c3752153074e45725be13b9a148978895e359e",
+            "bytes": 1
+          }
+        ]
+      }
+    ],
+    "original_exe_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "original_c_sha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "verified_metadata": [
+      {
+        "type": "0xc",
+        "length": 65535,
+        "original_observer": "FUN_0040a020",
+        "original_receiver": "FUN_004437f0",
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x42",
+        "length": 12,
+        "original_observer": "FUN_0040b380",
+        "original_receiver": "FUN_004437f0",
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x4d",
+        "length": 10,
+        "original_observer": "FUN_0040b380",
+        "original_receiver": "FUN_004437f0",
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x55",
+        "length": 65535,
+        "original_observer": "FUN_0040aae0",
+        "original_receiver": "FUN_004437f0",
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x56",
+        "length": 65535,
+        "original_observer": "FUN_0040ab20",
+        "original_receiver": "FUN_004437f0",
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x57",
+        "length": 65535,
+        "original_observer": "FUN_0040ab60",
+        "original_receiver": "FUN_004437f0",
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x5a",
+        "length": 5,
+        "original_observer": "FUN_0040b380",
+        "original_receiver": "FUN_004437f0",
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x10",
+        "length": 8,
+        "original_observer": "FUN_0040b380",
+        "original_receiver": null,
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x11",
+        "length": 12,
+        "original_observer": "FUN_0040b380",
+        "original_receiver": null,
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x12",
+        "length": 12,
+        "original_observer": "FUN_0040b380",
+        "original_receiver": null,
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x16",
+        "length": 65535,
+        "original_observer": "FUN_0040a190",
+        "original_receiver": null,
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x17",
+        "length": 14,
+        "original_observer": "FUN_0040b380",
+        "original_receiver": null,
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x1c",
+        "length": 65535,
+        "original_observer": "FUN_0040a270",
+        "original_receiver": null,
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x1e",
+        "length": 14,
+        "original_observer": "FUN_0040b380",
+        "original_receiver": null,
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x1f",
+        "length": 12,
+        "original_observer": "FUN_0040b380",
+        "original_receiver": null,
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x68",
+        "length": 5,
+        "original_observer": "FUN_0040b380",
+        "original_receiver": null,
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x85",
+        "length": 65535,
+        "original_observer": "FUN_0040aed0",
+        "original_receiver": null,
+        "version": 1,
+        "mismatch": 0
+      },
+      {
+        "type": "0x87",
+        "length": 274,
+        "original_observer": "FUN_0040b380",
+        "original_receiver": null,
+        "version": 1,
+        "mismatch": 0
+      }
+    ]
+  },
+  "audit": {
+    "c3Receivers": 7,
+    "observerOnlyTypes": 11,
+    "observerOnlyReceiverUntouched": true,
+    "samePreLeaseCreationPaths": 3,
+    "shortLivedWorldSessionCapture": false,
+    "meta16And1cUseSameAssertion": true,
+    "internal87DoesNotOverwriteWithNull": true,
+    "retired7f80Changed": false,
+    "rootRegistrationChanged": false
+  },
+  "remaining": {
+    "m6b1Complete": true,
+    "m6bComplete": false,
+    "next": "M6-b2 / 0bh 원문 버전조회 수신·0ch 실제 mutable 응답",
+    "stage3Groups": 3
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

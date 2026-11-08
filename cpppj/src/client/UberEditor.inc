@@ -63,7 +63,7 @@ void UberGump::PrepareNativeFortState(bool editing) {
     auto& e=*editor_;if (e.transport) e.transport->CloseListener(); //앞선 CloseAll이 닫은 이전 양끝 뒤에 이전 listener만 반납한다.
     auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
     e.transport=std::make_shared<EditorLocalTransport>(client_.PlayerRecords()->Records(),game.Server(),e.Hooks(),client_.ConnectionGlobals());
-    InstallClientMissionSendObservers(client_,e.transport->Dispatch()); //실제 Editor 생성 뒤 Open 전에 기본 표를 설치해 Login 없는2bh 상태 방송도 같은 mutable 길이를 쓴다.
+    InstallClientPacketDefaults(client_,e.transport->Dispatch()); //실제 Editor 생성 뒤 Open 전에 같은 Client C3/관찰기/metadata를 설치하고 Login 없는2bh 상태 방송도 유지한다.
     e.transport->Open(game.GameServerPort()); //004e22c0은 같은 현재005318e8을 읽고 로그인/Player 재배치 없이 client9를 연다.
     surface.ownerMode.fort=true;game.player.fortMode=true; //같은00594fb8을 읽는 기존 Player 어댑터의 호환 별칭에도 현재 모드를 전달한다.
     if (editing) { game.world.editor=1;game.world.missionPost=true;game.FortKeepGenus()=0xffffffffU;game.FullDeck()=1; } //State3은 이 네 쓰기를 실행하지 않고 앞선 전체 cleanup의 현재값을 유지한다.

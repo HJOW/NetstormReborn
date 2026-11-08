@@ -10,7 +10,7 @@
 #include "o/RawConnectionEnded.h"
 #include "client/RawSurfaceWorld.h" //기본 관찰기가 실제 storage의 AssertDisplay를 Session 없이 빌린다.
 #include "o/RawMissionClientPackets.h" //2a/2b/67/81의 같은 순수 가변 길이 관찰기 본체를 재사용한다.
-#include <array> //원문 네 관찰기만 기본 표에 설치하는 고정 목록이다.
+#include <array> //같은 네 송신 관찰기와 Client 기본18행의 고정 목록이다.
 #include <bit>
 #include "client/GameWorld.h"
 #include "client/RawCampaignSession.h"
@@ -27,6 +27,62 @@
 
 namespace netstorm::client { // 현재 연결을 만드는 효과는 원문 Serve/Connect 위치에 남긴다.
 namespace { // 장기 전송이 실제로 참조하는 물리만 보유하며 World를 강하게 되참조하지 않는다.
+// Client 원문 기본 등록 한 행이며 receiver NULL과 실제 C3를 별도로 구별한다.
+struct ClientPacketDefaultRegistration {
+    std::uint32_t type; //0040b4b0의 원문 패킷 종류다.
+    std::uint16_t length; //0052ec40의 고정 길이WORD이며ffff는 가변이다.
+    bool c3Receiver; //4437f0의 비NULL 빈 수신기만 설치하고 관찰 전용 receiver에는 손대지 않는다.
+    bool mutableObserver; //실제 this 버퍼를 읽는 일곱 원문 관찰기와 비NULL 빈40b380을 구별한다.
+};
+constexpr std::array<ClientPacketDefaultRegistration,18> kClientPacketDefaults{{ //원문 C3 7종과 폐기80h를 뺀 관찰 전용11종의 정확한 version1/policy0 목록이다.
+    {0x0c,0xffff,true,true},{0x42,12,true,false},{0x4d,10,true,false},
+    {0x55,0xffff,true,true},{0x56,0xffff,true,true},{0x57,0xffff,true,true},{0x5a,5,true,false},
+    {0x10,8,false,false},{0x11,12,false,false},{0x12,12,false,false},{0x16,0xffff,false,true},
+    {0x17,14,false,false},{0x1c,0xffff,false,true},{0x1e,14,false,false},{0x1f,12,false,false},
+    {0x68,5,false,false},{0x85,0xffff,false,true},{0x87,274,false,false}
+}};
+// 원문 비정렬 필드의 지정된 현재BYTE/WORD/DWORD만 little endian으로 읽는다.
+std::uint32_t ReadClientPacketDefault(std::span<const std::uint8_t> packet,std::size_t offset,std::size_t width) {
+    if (offset>packet.size() || width>packet.size()-offset) throw std::out_of_range("Client 기본 관찰기의 실제 필드 물리 부족");
+    std::uint32_t value{}; //현재 지정 폭 바깥의 미작성 tail은 읽지 않는다.
+    for (std::size_t byte=0;byte<width;++byte) value|=std::uint32_t(packet[offset+byte])<<(8*byte); //원문 낮은 BYTE부터 같은 현재 버퍼를 조립한다.
+    return value;
+}
+// 원문의 선언WORD만 갱신하며16비트 ADD/저장의 감김과 그 밖의 원본 버퍼를 보존한다.
+void WriteClientPacketDefaultLength(std::span<std::uint8_t> packet,std::uint32_t length) {
+    if (packet.size()<4) throw std::out_of_range("Client 기본 관찰기의 선언WORD 물리 부족");
+    packet[2]=static_cast<std::uint8_t>(length);packet[3]=static_cast<std::uint8_t>(length>>8);
+}
+// 원문40a020/40aae0/40ab20/40ab60/40a190/40a270/40aed0의 송신 효과만 실행한다.
+void ObserveClientPacketDefault(std::uint32_t type,std::span<std::uint8_t> packet,std::uint32_t sending,const std::shared_ptr<RawSurfaceStorage>& storage) {
+    if (!sending) return; //원문 수신 방향은 실제 packet 필드를 읽기 전에 복귀한다.
+    switch (type) {
+    case 0x0c:
+        if (ReadClientPacketDefault(packet,8,4)==0xffffffffU) storage->AssertDisplay("extraDataLen != (int)-1","\\Ns\\O\\_p_packets.cpp",0x38c);
+        WriteClientPacketDefaultLength(packet,ReadClientPacketDefault(packet,8,2)+12U);return;
+    case 0x55:
+        if (ReadClientPacketDefault(packet,4,4)==0xffffffffU) storage->AssertDisplay("count != (int)-1","\\Ns\\O\\_p_packets.cpp",0x8dc);
+        WriteClientPacketDefaultLength(packet,ReadClientPacketDefault(packet,4,2)+8U);return;
+    case 0x56:
+        if (ReadClientPacketDefault(packet,8,4)==0xffffffffU) storage->AssertDisplay("dataLength != (int)-1","\\Ns\\O\\_p_packets.cpp",0x8f8);
+        WriteClientPacketDefaultLength(packet,ReadClientPacketDefault(packet,8,2)+12U);return;
+    case 0x57:
+        if (ReadClientPacketDefault(packet,8,4)==0xffffffffU) storage->AssertDisplay("specLength != (int)-1","\\Ns\\O\\_p_packets.cpp",0x916);
+        WriteClientPacketDefaultLength(packet,ReadClientPacketDefault(packet,8,2)+12U);return;
+    case 0x16: {
+        if (ReadClientPacketDefault(packet,5,1)==0xffU) storage->AssertDisplay("numFriends != (char)-1","\\Ns\\O\\_p_packets.cpp",0x458);
+        const auto count=std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(ReadClientPacketDefault(packet,5,1))); //진단 복귀 뒤 현재 signed BYTE를 다시 읽는 MOVSX AX다.
+        WriteClientPacketDefaultLength(packet,static_cast<std::uint16_t>(std::int32_t(count)*4+14));return;
+    }
+    case 0x1c:
+        if (ReadClientPacketDefault(packet,45,1)==0xffU) storage->AssertDisplay("nameLen != (unsigned char)-1","\\Ns\\O\\_p_packets.cpp",0x4ca);
+        WriteClientPacketDefaultLength(packet,ReadClientPacketDefault(packet,45,1)+46U);return;
+    case 0x85:
+        if (ReadClientPacketDefault(packet,5,2)==0xffffU) storage->AssertDisplay("dataLen != (unsigned short)-1","\\Ns\\O\\_p_packets.cpp",0xa2c);
+        WriteClientPacketDefaultLength(packet,ReadClientPacketDefault(packet,5,2)+7U);return;
+    default:throw std::invalid_argument("Client 기본 표의 미등록 mutable 관찰기 종류");
+    }
+}
 // Player/서버 권한/시계의 실제 소유권만 묶고 현재 World는 약하게 참조하게 한다.
 struct TransportGlobals {
     std::shared_ptr<ClientPlayerRecords> players; // backend가 읽는 같은 Player1620BYTE 할당의 소유자다.
@@ -43,6 +99,17 @@ void InstallClientMissionSendObservers(Client& client,o::RawPacketDispatch& disp
         dispatch.ObservePacket(type,[storage,type](auto packet,auto sending) {
             o::ObserveMissionClientPacket(type,packet,sending,[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); //진단 정상 복귀 뒤 같은 현재 버퍼를 재조회한다.
         });
+    }
+}
+// 원문 C3 수신/관찰 전용 metadata와 a2 관찰기를 실제 같은 표의 비임대 기본 등록으로 묶는다.
+void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) {
+    InstallClientMissionSendObservers(client,dispatch); //같은 네 순수 관찰기를 재사용하며 실제 기능 수신기를 추가하지 않는다.
+    const auto storage=client.SurfaceStorage(); //진단의 장기 Client storage만 보유하고 Session/World/Meta this는 빌리지 않는다.
+    for (const auto& entry:kClientPacketDefaults) { //이18종만 version1/policy0/보호 PE 길이에 맞추고 다른 등록에는 손대지 않는다.
+        if (entry.mutableObserver) dispatch.ObservePacket(entry.type,[storage,type=entry.type](auto packet,auto sending) { ObserveClientPacketDefault(type,packet,sending,storage); });
+        else dispatch.Observe(entry.type,[](std::uint32_t) {}); //40b380의 비NULL ret4이며 NULL observer로 바꾸지 않는다.
+        dispatch.Version(entry.type,1,0);dispatch.RequireLength(entry.type,entry.length);
+        if (entry.c3Receiver) dispatch.Register(entry.type,[](std::uint32_t,o::PacketConnection&,std::span<const std::uint8_t>) {}); //4437f0의 실제 ret이며 ACK/반환 성공값/게임 State를 합성하지 않는다.
     }
 }
 // 같은 Client/Session의 물리를 검증하고 소켓을 열지 않는 실제 coordinator를 만든다.
@@ -71,7 +138,7 @@ std::shared_ptr<CompositeMissionTransport> MakeClientCampaignTransport(Client& c
     auto transport=network.composite;
     if (transport) { if (transport->Registry()!=client.ConnectionGlobals() || !transport->SharesNetwork(network)) throw std::logic_error("일반 State7 재진입의 같은 실제 전송 owner 불일치");transport->RebindWorld(role,globals->players->Records(),globals->game->Server(),std::move(hooks),globals); }
     else transport=CompositeMissionTransport::Create(role,globals->players->Records(),globals->game->Server(),std::move(hooks),client.ConnectionGlobals(),globals,std::move(network)); //첫 메타 인계와 기존 독립 경로는 원래 생성 위치를 유지한다.
-    InstallClientMissionSendObservers(client,transport->Dispatch()); //호출자의 BindSession보다 먼저 기본 표를 채워 임대 반납 때 이 네 관찰기가 복구되게 한다.
+    InstallClientPacketDefaults(client,transport->Dispatch()); //호출자의 BindSession보다 먼저 같은 기본 표를 채워 임대 반납 때 원문 C3/관찰기/metadata가 복구되게 한다.
     transport->Dispatch().Register(2,[runtime=std::weak_ptr<GameWorld>(world),globals,registry=client.ConnectionGlobals(),local=client.LocalStateGlobals(),activity=client.ConnectionActivityGlobals()](auto sender,auto& connection,auto) {
         const auto current=runtime.lock();if (!current) throw std::logic_error("연결 종료 통지의 실제 현재 World 수명 종료");o::ConnectionEndedHooks effects;
         effects.saveServerFailure=[current] { current->Session().SaveServerFailure(); };effects.disconnect=[registry](auto id) { registry->Disconnect(id); };effects.broadcastPlayer=[current](auto owner) { current->Session().BroadcastConnectionPlayer(owner); };

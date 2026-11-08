@@ -116,7 +116,7 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     hooks.close=[](auto&) {};hooks.release=[](auto&) {}; //이 위치의 추가 외부 장치가 없으며 TCP 노드가 실제 close/free를 소유한다.
     const auto udpHooks=hooks;tcp_=std::make_shared<LocalTcpTransport>(client_.PlayerRecords()->Records(),client_.GameplayGlobals()->Server(),std::move(hooks),client_.ConnectionGlobals());
     udp_=std::make_shared<LocalUdpTransport>(client_.PlayerRecords()->Records(),client_.GameplayGlobals()->Server(),udpHooks,client_.ConnectionGlobals(),tcp_->Dispatch().Registrations()); //실제등록표와연결표를복제하지않고공유한다.
-    auto& dispatch=tcp_->Dispatch();InstallClientMissionSendObservers(client_,dispatch);ChatRelayHooks chat; //TCP/UDP 생성 뒤 같은 비임대 기본 표에 네 관찰기만 설치한다.
+    auto& dispatch=tcp_->Dispatch();InstallClientPacketDefaults(client_,dispatch);ChatRelayHooks chat; //TCP/UDP 생성 뒤 같은 비임대 기본 표에 Client C3/관찰기/metadata를 설치한다.
     chat.read=[this](auto address)->std::uint32_t { switch (address) { case 0x594fbc:return client_.SurfaceStorage()->ownerMode.battle;case 0x540bc0:return client_.GameplayGlobals()->Server();case 0x540c74:return client_.CurrentSubscriber();default:throw std::out_of_range("메타41h중계의현재전역주소범위"); } };
     chat.address=[this](auto sender) { return client_.ConnectionGlobals()->Address(std::bit_cast<std::int32_t>(sender)); };
     chat.player=[this](auto subscriber) { if (!subscriber) client_.SurfaceStorage()->AssertDisplay("subId != INVALID_SUBSCRIBER_ID","\\Ns\\O\\Player.cpp",0xa5);const auto players=client_.PlayerRecords()->Records();for (std::uint32_t owner=1;owner<9;++owner) if (PeerWord(players,owner*180U+44U)==subscriber) return owner;return 0U; }; //같은현재Player1..8의첫subscriber일치만찾으며별도active관문을추가하지않는다.
@@ -165,20 +165,15 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
         o::ChallengeLoginReplyHooks reply;reply.log=[this](auto text) { client_.WriteDiagnosticLog(0x1d,text); };reply.version=[this](auto major,auto minor) { return CheckMetaVersion(major,minor); };reply.run=processState_;
         o::ReceiveChallengeLoginReply(packet,client_.LocalStateGlobals()->State(),client_.GameplayGlobals()->Subscribers()->MySubscriber(),reply);
     }); //sender/phase/known 필터나 가짜 성공을 추가하지 않고 실제 현재 Subscriber와 다섯 State 블록을 사용한다.
-    dispatch.ObservePacket(0x16,[](auto packet,auto sending) {
-        if (!sending) return;if (packet.size()<6) throw std::out_of_range("16h observer 필드 부족");if (packet[5]==0xffU) std::clog<<"_p_packets.cpp1112 numFriends 진단\n";
-        const auto count=std::bit_cast<std::int8_t>(packet[5]);Put(packet,2,static_cast<std::uint16_t>(std::int32_t(count)*4+14),2);
-    });dispatch.Version(0x16,1,0);dispatch.RequireLength(0x16,0xffff);
-    dispatch.ObservePacket(0x1c,[](auto packet,auto sending) {
-        if (!sending) return;if (packet.size()<46) throw std::out_of_range("1ch observer 필드 부족");if (packet[45]==0xffU) std::clog<<"_p_packets.cpp1226 nameLen 진단\n";Put(packet,2,std::uint32_t(packet[45])+46U,2);
-    });dispatch.Version(0x1c,1,0);dispatch.RequireLength(0x1c,0xffff);
+    dispatch.Version(0x16,1,0);dispatch.RequireLength(0x16,0xffff); //40a190은 앞선 공용 실제 진단/관찰기를 유지하고 Client receiver는 NULL이다.
+    dispatch.Version(0x1c,1,0);dispatch.RequireLength(0x1c,0xffff); //40a270도 같은 진단 복귀/현재 BYTE 재조회 본체를 사용한다.
     dispatch.Observe(0x66,{});dispatch.Version(0x66,1,0);dispatch.RequireLength(0x66,12);
     dispatch.Register(0x66,[this](auto sender,auto&,auto packet) {
         o::LocalServerDiscoveryReceiveHooks receive;receive.wall=[this] { return client_.WallSeconds(); };receive.peerAddress=[this](auto id) { return CampaignPeerAddressText(client_.ConnectionGlobals()->Address(std::bit_cast<std::int32_t>(id))); };receive.processState=processState_;
         o::ReceiveLocalServerDiscovery(client_.LocalStateGlobals()->State(),Discovery(),sender,packet,receive);
     }); //서버발견은현재36직접쓰기뒤실제Run을동기실행한다.검색토큰비교만인경우Run하지않는다.
-    dispatch.Observe(0x1f,{});dispatch.Version(0x1f,1,0);dispatch.RequireLength(0x1f,12); //0040a300의 고정12BYTE/master 준비 통지이며 별도 수신기를 합성하지 않는다.
-    dispatch.Observe(0x1e,{});dispatch.Version(0x1e,1,0);dispatch.RequireLength(0x1e,14); //0040a2c0/0040b380의 고정14BYTE·빈 관찰기이며 수신 부모를 합성하지 않는다.
+    dispatch.Version(0x1f,1,0);dispatch.RequireLength(0x1f,12); //고정12BYTE/master 준비 통지는 앞선 비NULL 빈 관찰기를 유지하며 Client 수신기는 NULL이다.
+    dispatch.Version(0x1e,1,0);dispatch.RequireLength(0x1e,14); //고정14BYTE 통지도 앞선 비NULL40b380 관찰기/NULL Client 수신기를 보존한다.
     dispatch.Observe(0x7c,{});dispatch.Version(0x7c,1,0);dispatch.RequireLength(0x7c,28); //0040b340/0040b380의 고정28BYTE/빈 관찰기다. 게임 로그인 수신은 별도 부모다.
     dispatch.Version(0x67,1,0);dispatch.RequireLength(0x67,0xffff); //송신 관찰기는 앞선 공용 기본 표를 유지하고 기존 버전/길이/수신 부모만 연결한다.
     dispatch.Register(0x67,[this](auto sender,auto&,auto packet) { ReceiveBattleOptions(sender,packet); }); //원문과같이sender/phase/known 관문 없이 전체 State 부모를 호출한다.

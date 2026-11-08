@@ -536,5 +536,12 @@
     "next": "M6-b",
     "report": "cpppj/login-mutable-send-20261108.json",
     "newMpExecutions": 0
+  },
+  "progress1167": {
+    "m6b1": "C3일곱종과관찰전용11종기본등록완료",
+    "m6b2": "0bh실제버전조회본문미완료",
+    "next": "M6-b2",
+    "report": "cpppj/client-packet-defaults-20261108.json",
+    "newMpExecutions": 0
   }
 }
