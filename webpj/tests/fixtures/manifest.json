@@ -12799,7 +12799,7 @@
       "bytes": 54031,
       "lines": 656,
       "fixtureCommit": "961f6be5",
-      "webCommit": "worktree",
+      "webCommit": "1932f1cb",
       "cpppjBasis": {
         "cpppj/src/o/RawBurningLifetimeDraw.cpp": "961f6be5",
         "cpppj/src/o/RawBurningVisual.cpp": "961f6be5"
@@ -12829,7 +12829,7 @@
       "bytes": 996,
       "lines": 129,
       "fixtureCommit": "961f6be5",
-      "webCommit": "worktree",
+      "webCommit": "1932f1cb",
       "cpppjBasis": {
         "cpppj/src/o/RawBurningLifetimeDraw.cpp": "961f6be5"
       }
@@ -12858,9 +12858,100 @@
       "bytes": 2822,
       "lines": 89,
       "fixtureCommit": "961f6be5",
-      "webCommit": "worktree",
+      "webCommit": "1932f1cb",
       "cpppjBasis": {
         "cpppj/src/o/RawBurningLifetimeDraw.cpp": "961f6be5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E185",
+      "id": "windaviaryframe",
+      "path": "cpppj/tests/fixtures/wind-aviary-frame-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 데빌메이커 45f0a0 프레임 1,607행과 0045edf0 후처리 32행(전체 80바이트·세 슬롯·효과 순서)(10.78 1,639행)",
+      "consumers": [
+        "webpj/tests/wind-aviary-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-wind-aviary-process.js",
+        "webpj/www/core/raw-wind-aviary-state.js"
+      ],
+      "doc": "docs/webpj-wind-aviary-process-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawWindAviaryProcess.cpp"
+      ],
+      "scope": "10.78 실제 PE 1,639행 전부",
+      "text": true,
+      "sha256": "5210995c295e336c4efc45eb9d4d40ec3be546f31ee55603fff807a0ab543bbb",
+      "bytes": 820507,
+      "lines": 1640,
+      "fixtureCommit": "6c876e2f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawWindAviaryProcess.cpp": "2b5ee903"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E185",
+      "id": "windcircleframe",
+      "path": "cpppj/tests/fixtures/wind-circle-frame-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 데빌메이커 상태 12 의 실제 중심/원주/헤더 위치(전체 80바이트·세 슬롯·Pop 좌표, 헤더 재진입 포함)(10.78 288행)",
+      "consumers": [
+        "webpj/tests/wind-aviary-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-wind-circle.js",
+        "webpj/www/core/raw-wind-aviary-process.js"
+      ],
+      "doc": "docs/webpj-wind-aviary-process-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawWindCircle.cpp",
+        "cpppj/src/o/RawWindAviaryProcess.cpp"
+      ],
+      "scope": "10.78 실제 PE 288행 전부",
+      "text": true,
+      "sha256": "213cd92056e7700bb505a3a65bdcda1895f0742c70def5e5d80e8c1f2c9561f4",
+      "bytes": 180132,
+      "lines": 289,
+      "fixtureCommit": "566f44d6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawWindCircle.cpp": "566f44d6",
+        "cpppj/src/o/RawWindAviaryProcess.cpp": "2b5ee903"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E185",
+      "id": "windaviarydestroy",
+      "path": "cpppj/tests/fixtures/wind-aviary-destroy-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 데빌메이커 0045c090 Form 삭제(정상 슬롯/주소 끝/bit31 별칭/진단 재진입/flags 비사용)(10.78 880행)",
+      "consumers": [
+        "webpj/tests/wind-aviary-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-wind-aviary-process.js"
+      ],
+      "doc": "docs/webpj-wind-aviary-process-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawWindAviaryProcess.cpp"
+      ],
+      "scope": "10.78 실제 PE 880행 전부",
+      "text": true,
+      "sha256": "ee99ac43e1b003ca10f211554ca8f4c8a32a99ed52c31dcbdc4453ff8c68f2a5",
+      "bytes": 521777,
+      "lines": 881,
+      "fixtureCommit": "51e97f71",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawWindAviaryProcess.cpp": "2b5ee903"
       }
     }
   ]
