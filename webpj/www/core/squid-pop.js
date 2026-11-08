@@ -85,7 +85,7 @@ export class SquidPop {
     // 프레임 변경의 제자리 갱신과 재등록이 같은 풀/표시 대상을 쓰는지 확인한다(표시를 생략한 Pop 으로 프레임을 재등록하면 새 영역이 누락되므로 미연결 구성도 거부).
     validateFrameBinding(pool, display, unpop) {
         if (pool !== this.#pool || display !== this.#display) throw new TypeError('프레임 Pop 풀/표시 연결 불일치');
-        unpop.validateSpace(pool, this.#hash, this.#spots);
+        unpop.validateFrameBinding(pool, display, this.#hash, this.#spots);
     }
 
     // 실제 현재 writer 와 방송을 연결한다(도달할 때만 요구). 함수 또는 null.

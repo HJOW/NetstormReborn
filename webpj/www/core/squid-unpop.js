@@ -211,6 +211,12 @@ export class SquidUnpop {
         return true;
     }
 
+    // 표시를 생략한 Unpop 으로 옛 영역을 남기는 연결을 구성 단계에서 거부한다: 같은 풀·표시 장치·해시·spot 지도(cpppj SquidUnpop::ValidateFrameBinding).
+    //   프레임 지정 연결(squid-frame-binding.js)이 쓴다. (2026-11-08 WB04-E59: 객체 프레임 지정 이식으로 추가)
+    validateFrameBinding(pool, display, hash, spots) {
+        if (pool !== this.#pool || display !== this.#display || hash !== this.#hash || spots !== this.#spots) throw new TypeError('프레임 Unpop 풀/표시/공간 연결 불일치');
+    }
+
     // 다른 공간 모듈(Graph·프레임 갱신)이 같은 해시/spot 을 쓰는지 확인한다.
     validateSpace(pool, hash, spots) {
         if (pool !== this.#pool || hash !== this.#hash || spots !== this.#spots) throw new TypeError('Unpop 풀/해시/spot 연결 불일치');

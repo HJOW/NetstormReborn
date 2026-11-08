@@ -783,7 +783,7 @@
       "bytes": 419588,
       "lines": 1300,
       "fixtureCommit": "6ff267a1",
-      "webCommit": "78860d24",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidUnpopParent.cpp": "ea848459",
         "cpppj/src/o/RawSquidUnpopParent.h": "6ff267a1",
@@ -1231,10 +1231,10 @@
       "bytes": 6817,
       "lines": 152,
       "fixtureCommit": "a86150db",
-      "webCommit": "3ef1d18b",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/UnpopVtables.inc": "fbc27346",
-        "cpppj/src/o/SquidUnpop.cpp": "ea848459",
+        "cpppj/src/o/SquidUnpop.cpp": "739b04e5",
         "cpppj/src/o/ContentNoticeVtables.inc": "68ca4e3a"
       }
     },
@@ -1299,12 +1299,12 @@
       "bytes": 1573181,
       "lines": 1993,
       "fixtureCommit": "5edb2b6d",
-      "webCommit": "2a2e08e4",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidDestroy.cpp": "f2215dc5",
         "cpppj/src/o/RawSquidDestroy.h": "886f2d23",
         "cpppj/src/o/RawBridgeLifecycle.cpp": "5879152b",
-        "cpppj/src/o/SquidUnpop.cpp": "ea848459"
+        "cpppj/src/o/SquidUnpop.cpp": "739b04e5"
       }
     },
     {
@@ -1735,10 +1735,10 @@
       "bytes": 862447,
       "lines": 8423,
       "fixtureCommit": "a86150db",
-      "webCommit": "2a2e08e4",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
-        "cpppj/src/o/SquidUnpop.cpp": "ea848459",
+        "cpppj/src/o/SquidUnpop.cpp": "739b04e5",
         "cpppj/src/o/RawSquidUnpopParent.cpp": "ea848459"
       }
     },
@@ -2380,7 +2380,7 @@
       "bytes": 780077,
       "lines": 6241,
       "fixtureCommit": "6c6765e3",
-      "webCommit": "78860d24",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidPop.cpp": "48385349",
         "cpppj/src/o/RawSquidPopParent.cpp": "48385349",
@@ -2412,7 +2412,7 @@
       "bytes": 5606,
       "lines": 152,
       "fixtureCommit": "6c6765e3",
-      "webCommit": "78860d24",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidPop.cpp": "48385349",
         "cpppj/src/o/PopVtables.inc": "6c6765e3"
@@ -6906,7 +6906,7 @@
       "bytes": 212463,
       "lines": 697,
       "fixtureCommit": "12d07372",
-      "webCommit": "worktree",
+      "webCommit": "7f11f8d3",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidDisplayParent.cpp": "023a0a93"
       }
@@ -6935,7 +6935,7 @@
       "bytes": 209199,
       "lines": 697,
       "fixtureCommit": "023a0a93",
-      "webCommit": "worktree",
+      "webCommit": "7f11f8d3",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidDisplayParent.cpp": "023a0a93"
       }
@@ -6964,7 +6964,7 @@
       "bytes": 5198,
       "lines": 49,
       "fixtureCommit": "a349e63c",
-      "webCommit": "worktree",
+      "webCommit": "7f11f8d3",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidDefense.cpp": "a349e63c"
       }
@@ -6995,7 +6995,7 @@
       "bytes": 358579,
       "lines": 5601,
       "fixtureCommit": "02c75a7a",
-      "webCommit": "worktree",
+      "webCommit": "7f11f8d3",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidSelection.cpp": "02c75a7a",
         "cpppj/src/o/SelectionVtables.inc": "02c75a7a"
@@ -7025,7 +7025,7 @@
       "bytes": null,
       "lines": null,
       "fixtureCommit": "9388cd63",
-      "webCommit": "worktree",
+      "webCommit": "7f11f8d3",
       "cpppjBasis": {
         "cpppj/src/o/SquidNameVtables.inc": "9388cd63"
       }
@@ -7054,9 +7054,100 @@
       "bytes": null,
       "lines": null,
       "fixtureCommit": "02c75a7a",
-      "webCommit": "worktree",
+      "webCommit": "7f11f8d3",
       "cpppjBasis": {
         "cpppj/src/o/SelectionVtables.inc": "02c75a7a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E59",
+      "id": "display",
+      "path": "cpppj/tests/fixtures/display-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 표시 활성 Squid 갱신(Update)·경계(Bounds)·Pop/Unpop 의 변경 표(위치·flags·병합·넘침)와 raw 슬롯 전체(합성 TYPE/SHP/카메라)",
+      "consumers": [
+        "webpj/tests/squid-display.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-display.js",
+        "webpj/www/render/dirty-regions.js"
+      ],
+      "doc": "docs/webpj-squid-display-frame-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidDisplay.cpp",
+        "cpppj/src/client/Renderer.cpp"
+      ],
+      "scope": "10.78(originals) 구간 사용(Update 200·Pop 240·Unpop 240·Bounds 150 초과), originalCD 구간은 범위 밖",
+      "text": true,
+      "sha256": "1db3d440108a74ff20e49ed21d473ca32b99d10230d1ca3c2ca49409c709b7a0",
+      "bytes": 1634803,
+      "lines": 2945,
+      "fixtureCommit": "da0b5a66",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidDisplay.cpp": "739b04e5",
+        "cpppj/src/client/Renderer.cpp": "5a2cd047"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E59",
+      "id": "geyser-partial-display",
+      "path": "cpppj/tests/fixtures/geyser-partial-display-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 간헐천 8c/가상78/부분 bounds/dirty(현재 기본 프레임·무효 raw 프레임·WORD/extra·확대율/클리핑)",
+      "consumers": [
+        "webpj/tests/squid-display.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-display.js"
+      ],
+      "doc": "docs/webpj-squid-display-frame-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidDisplay.cpp"
+      ],
+      "scope": "432행 전부 사용(10.78 PE 전용 관측)",
+      "text": true,
+      "sha256": "23e71fc90b0ca1d0040298202f76b5d631acc51513fcc904d1fe50ce9cb9cda2",
+      "bytes": 62068,
+      "lines": 433,
+      "fixtureCommit": "fbc27346",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidDisplay.cpp": "739b04e5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E59",
+      "id": "setframe",
+      "path": "cpppj/tests/fixtures/setframe-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Squid 프레임 지정 004acee0 의 가상 표시 갱신(D/E)·Unpop(U)·Pop(P) 호출 기록과 슬롯 50바이트(세 PE)",
+      "consumers": [
+        "webpj/tests/squid-frame.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-frame.js",
+        "webpj/www/core/squid-frame-binding.js"
+      ],
+      "doc": "docs/webpj-squid-display-frame-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidFrame.cpp"
+      ],
+      "scope": "10.78(originals) Set 1920·Thunk 4행 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "f7cab1c89d53cef928791f085e10a9a5f241d6056c672526e72c99cf5519ca7a",
+      "bytes": 803570,
+      "lines": 5780,
+      "fixtureCommit": "6a0907de",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidFrame.cpp": "54bf1411"
       }
     }
   ]

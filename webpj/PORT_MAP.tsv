@@ -350,7 +350,7 @@ cpppj/src/client/RawUserPick.cpp	port			todo	[client-default]
 cpppj/src/client/RawUserSelection.cpp	port			todo	[client-default]
 cpppj/src/client/ReadOnlyFileMap.cpp	exclude-host			-	[host-win32]
 cpppj/src/client/RecheckCdInput.cpp	exclude-host			-	[host-cd]
-cpppj/src/client/Renderer.cpp	port	www/render/world-sprites.js;www/render/indexed-surface.js	1f00a25a	partial	[client-default] WB03-Z 월드 그림/그림자 출력 일부. dirty·정렬 제출 전체는 WB03-M2
+cpppj/src/client/Renderer.cpp	port	www/render/world-sprites.js;www/render/indexed-surface.js;www/render/dirty-regions.js	1f00a25a	partial	[client-default] WB03-Z 월드 그림/그림자 출력 일부. WB04-E59: DirtyRegions(변경 사각형 표 00497580 Add·Clear·FullRedraw·FirstFlags) 추가(Squid 표시 변경 영역 수집). 정렬 제출·Draw/Present 전체는 WB03-M2
 cpppj/src/client/RendererDiagnostics.cpp	port			todo	[client-default]
 cpppj/src/client/RitualChoiceInput.cpp	port	www/core/ritual-choice-input.js	1f00a25a	partial	[client-default] WB04-E35: 004d82ed/004d8351/004d83b7 6b 요청 정적 복원(RawRitualChoice와 같음, WB10 확인). cpppj에도 관측 fixture가 없어 소스 계약 검사만
 cpppj/src/client/RotationKeyInput.cpp	port	www/core/rotation-key-input.js	1f00a25a	port	[client-default] WB04-E20: 004d96b6 C/c 회전 방향 반전과 Config 기록. fixture rotation-key-input 10.78 264행 전부. 실제 Client Config 연결은 해당 단위에서
@@ -872,7 +872,7 @@ cpppj/src/o/RawRegionOwnership.cpp	port			todo	[o-default] outpost 분기는 Raw
 cpppj/src/o/RawRegionPaint.cpp	port	www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] 지역 도장 일부
 cpppj/src/o/RawRenderCollection.cpp	port			todo	[o-default]
 cpppj/src/o/RawRiftHitPoints.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(TYPE HP 0049fce0). WB04-D5b: 음수 1/4 몫의 -0 교정, rifttype-hit-points 10.78 579행 대조
-cpppj/src/o/RawRiftShapeAccess.cpp	port			todo	[o-default]
+cpppj/src/o/RawRiftShapeAccess.cpp	port	www/core/raw-rift-shape-access.js	1f00a25a	port	[o-default] WB04-E59: 00419850 SHP 프레임 접근(범위 밖 번호 getter→상세 writer, rifttype.h:e1 진단, 복귀 뒤 같은 프레임). SquidDisplay.frameSize 계약 검사로 대조(별도 원본 fixture 없음)
 cpppj/src/o/RawRitualChoice.cpp	port			todo	[o-default] cpppj CMake 주석상 6b 입력/수신 MP 사전 구현. 단독 의식 보상 선택 도달 여부는 WB10 에서 확인
 cpppj/src/o/RawRitualRefresh.cpp	port	www/core/raw-ritual-refresh.js	1f00a25a	port	[o-default] WB04-E11: 의식 뒤 로컬 Core/CoreData/snapshot 세 호출과 두 현재 owner 읽기. fixture ritual-refresh 10.78 54행 전부
 cpppj/src/o/RawRunePostPop.cpp	port			todo	[o-default]
@@ -960,13 +960,13 @@ cpppj/src/o/SmokeVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/SpStore.cpp	port	www/core/random.js;www/core/sp-store.js	1f00a25a	port	[o-default] 게임 전역 난수(004558c0, random.js)와 분산 SP 저장소(ScrambledSpStore, sp-store.js, WB04-D5b). 세션 연결·사제 추적 offset 소유자 연결은 WB05/WB06
 cpppj/src/o/Squid.cpp	port	www/core/squid-space.js;www/core/squid-hash.js	1f00a25a	partial	[o-default] 저장 필드·공간 단계 일부
 cpppj/src/o/SquidDestroyLifecycle.cpp	port			todo	[o-default]
-cpppj/src/o/SquidDisplay.cpp	port			todo	[o-default]
+cpppj/src/o/SquidDisplay.cpp	port	www/core/squid-display.js	739b04e5	port	[o-default] WB04-E59: 경계 계산 bounds·Mark(4990d0)·update 특수 8c 분배(간헐천·마나/볼트·신전 rune)·validate·frameSize·assertion 상세. fixture display 10.78 2945행·geyser-partial-display 432행 전부. ①: 기준선 뒤 메타 섬 표시(0x50c9f0 MetaRefresh)는 메타맵 전용(웹 제외). Renderer 어댑터·ShapeDatabase 헤더 판독은 월드 표시 단위에서
 cpppj/src/o/SquidFactory.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4. 웹 타입 로더의 zorder/생성자 주소를 Factory 에 넘기는 연결은 WB05-A(4절 타입 표 생성 메타)
 cpppj/src/o/SquidFinder.cpp	port	www/core/surface-finder.js	1f00a25a	port	[o-default] WB04-E12: flag 8 표면 이웃 탐색(Neighbors·OriginInterior·Connects). graph fixture 1280개 검사 지점을 통해 대조. Bridge::CollectDecay 계열 대조는 Bridge 단위에서
 cpppj/src/o/SquidFormDispatch.cpp	port	www/core/squid-form-dispatch.js	1f00a25a	port	[o-default] WB04-D5b + WB04-D5c: Process 호스트 bind 와 혼합 체인 분배(자기 삭제 프로세스·Kernel)
 cpppj/src/o/SquidForms.cpp	port	www/core/squid-forms.js	1f00a25a	port	[o-default] WB04-D3
-cpppj/src/o/SquidFrame.cpp	port			todo	[o-default]
-cpppj/src/o/SquidFrameBinding.cpp	port			todo	[o-default]
+cpppj/src/o/SquidFrame.cpp	port	www/core/squid-frame.js	1f00a25a	port	[o-default] WB04-E59: 프레임 지정 004acee0·해시 단계 저장 004ace40. fixture setframe 10.78 Set 1920·Thunk 4행 전부
+cpppj/src/o/SquidFrameBinding.cpp	port	www/core/squid-frame-binding.js	1f00a25a	port	[o-default] WB04-E59: SquidFrame 훅을 SquidDisplay/Unpop/Pop 으로 잇는 조립. 연결 불일치 거부·old/new 변경 영역·단계 이동 재등록은 FrameDisplayTests 계약으로 대조(웹 SquidUnpop.validateFrameBinding 추가)
 cpppj/src/o/SquidHash.cpp	port	www/core/squid-hash.js	1f00a25a	port	[o-default] WB04-B
 cpppj/src/o/SquidNameVtables.inc	port	www/core/squid-name-vtables.js	1f00a25a	port	[o-default] WB04-E58: 이름 가상 표 83칸. cpppj .inc 와 행 단위 대조(tests/squid-name)
 cpppj/src/o/SquidOwner.cpp	port	www/core/squid-owner.js	1f00a25a	port	[o-default] WB04-E2: 소유자 지정(vtable +0x74) 처리기. fixture owner-x86 10.78 행(≥1000)·계약 3장면
