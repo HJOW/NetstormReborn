@@ -73,7 +73,11 @@ bool RawBridgeLifecycle::LinkNeedsDestroy(Sid link) const {
     return Ordinary(first) && ((Object(first)[kState]|Object(second)[kState])&kDead)!=0;
 }
 // 탐색 시작 후 매 항목에서 현재 타입·참조를 다시 읽는다. destroy 훅의 변경을 다음 판단에 반영한다.
-void RawBridgeLifecycle::PreDestroy(Sid bridge,std::uint32_t flags,std::uint32_t linkType,const BridgeLifecycleHooks& hooks) const {
+void RawBridgeLifecycle::PreDestroy(Sid bridge,std::uint32_t flags,std::uint32_t linkType,const BridgeLifecycleHooks& hooks) const { RunPreDestroy(bridge,flags,linkType,hooks); }
+// 실제 현재 연결 TYPE는 finder/가상 삭제 효과 뒤 다음 후보에서 다시 읽는다.
+void RawBridgeLifecycle::PreDestroyNative(Sid bridge,std::uint32_t flags,const std::uint32_t& linkType,const BridgeLifecycleHooks& hooks) const { RunPreDestroy(bridge,flags,linkType,hooks); }
+// 독립 typed의 기존 값 인자와 Native의 같은 전역 참조만 달리 사용한다.
+void RawBridgeLifecycle::RunPreDestroy(Sid bridge,std::uint32_t flags,const std::uint32_t& linkType,const BridgeLifecycleHooks& hooks) const {
     const bool ordinary = Ordinary(bridge);
     ValidateHooks(hooks,ordinary);
     if (ordinary) {

@@ -35,6 +35,8 @@ RawSurfaceLifecycle::RawSurfaceLifecycle(const SidPool& pool,const RawSquidNeigh
     if (!common_.emit || !common_.selected || !hooks_.scheduleFall || !hooks_.destroy || !hooks_.fallWalker || !hooks_.bridgeEffect)
         throw std::invalid_argument("표면 삭제 공통/외부 훅 누락");
 }
+// 현재 TYPE 값을 쓰거나 별도 World를 만들지 않고 같은 주소만 연결한다.
+void RawSurfaceLifecycle::BindCurrentConnectorType(const std::uint32_t& type) { if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("Native 표면 연결 TYPE 판본 오류");currentConnectorType_=&type; }
 // 선택 조회와 form 해제 계약은 공통 훅에서 유지한다. 파생 삭제 사건만 분배한다.
 SquidDestroyHooks RawSurfaceLifecycle::Hooks() {
     auto result=common_;
@@ -58,7 +60,7 @@ void RawSurfaceLifecycle::Emit(const SquidDestroyEvent& event) {
         const auto vtable=Vtable(pool_.Slot(event.sid));
         const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
         if (vtable==(patch ? kPatchBridgeVtable : kCdBridgeVtable)) {
-            if (pre) bridge_.PreDestroy(event.sid,event.flags,connectorType_,bridgeHooks_);
+            if (pre) { if (currentConnectorType_) bridge_.PreDestroyNative(event.sid,event.flags,*currentConnectorType_,bridgeHooks_);else bridge_.PreDestroy(event.sid,event.flags,connectorType_,bridgeHooks_); }
             else bridge_.PostDestroy(event.sid,event.flags,bridgeHooks_);
             return;
         }

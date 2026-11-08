@@ -54,6 +54,12 @@ struct RawSurfaceRewardDevices {
     std::function<void()> refreshSp; // 실제 현재 예산 serial의 Push/Attach/깊이 복원을 호출한다.
     std::function<void(std::uint32_t,std::int32_t)> creditWallet; // 원본 조기 반환 뒤 같은 Player/brain 지갑에 가산한다.
 };
+// 현재 World의 큰 낙하/파편 종단만 약하게 빌리며 장기 물리나 모드를 복사하지 않는다.
+struct RawSurfaceLifetimeBindings {
+    std::function<void(o::Sid)> fallWalker; // 원문의 선택된 실제 이동 유닛 낙하를 현재 모듈에 전달한다.
+    std::function<void(const o::BridgeLifecycleEvent&)> bridgeEffect; // 현재 실제 파편/소리 콜백이며 빈 성공을 허용하지 않는다.
+    std::function<std::shared_ptr<void>()> pin; // 선택 호출 동안만 실제 외곽 Runtime 소유권을 보유한다.
+};
 // 현재 Client의 순수 UI 기억/전역 소리를 공통 삭제의 장기 장치로 빌린다.
 struct RawSurfaceDeletionDevices {
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> rememberPlacement; // 같은 선택 owner의 실제 rememberedPoint/mouseType을 쓴다.
@@ -117,6 +123,7 @@ private:
     o::RawCheckingFlag checking_; // 대여/World반납뒤에도같은현재Client진단DWORD를읽는다.독립저장소기본값은0이다.
     o::SquidPostPopDevices postPopDevices_; //현재실제Client AI/로컬owner/선택의장기장치다.
     std::weak_ptr<const RawSurfacePopBindings> popRuntime_; //현재typed장치/외부Kernel만짧게빌리고반납뒤장기기본전송을사용한다.
+    std::weak_ptr<const RawSurfaceLifetimeBindings> surfaceLifetimeRuntime_; // 현재 World 반납 뒤 큰 파생 종단 주소를 남기지 않는다.
     RawSurfaceDamageableDevices damageableDevices_; // 실제 Client와 장기 전역만 소유하며 Session 주소를 저장하지 않는다.
     RawSurfaceDeletionDevices deletionDevices_; // 실제 Client 장치만 장기 보관하며 Session을 소유하지 않는다.
     std::weak_ptr<const RawSurfaceDeletionBindings> deletionRuntime_; // 현재 파생 종속 효과만 weak로 빌린다.
@@ -181,6 +188,9 @@ public:
     o::SquidRewardState& RewardState(); // 같은 장기 전역 뷰를 Session과 보상 caller가 공유한다.
     o::SquidReward& Reward(); // 같은 Pool/TYPE/장부의 장기 HP·보상을 필요한 순간 한 번 구성한다.
     void BindProcessDevices(RawSurfaceProcessDevices devices); //첫Host/삭제기전현재Client장치만결합하며선택/삭제를실행하지않는다.
+    void BindSurfaceLifetimeRuntime(const std::shared_ptr<const RawSurfaceLifetimeBindings>& runtime); // 현재 같은 World의 실제 큰 효과만 짧게 빌린다.
+    o::RawSquidDestroyDispatch& VirtualDestroy(); // 현재 Pool/Graph/boss/editor를 읽는 같은 장기 가상10 몸체다.
+    o::RawSurfaceLifecycle& SurfaceLifetime(); // 같은 공통 삭제/Host/TYPE를 사용하는 실제 표면 수명이다.
     o::RawSquidDestroy& BaseDestroy(); //Native공통삭제깊이/Unpop/Pool의장기실제owner다.
     void BroadcastProcessForm(std::int32_t length); //실제writer의양수반환뒤같은공통2048BYTE를Native대상별가상송신에넘긴다.
     o::RawSquidTransmission& Transmission(); //공통2048BYTE/헤더/압축전역과실제현재FormHost를장기로공유한다.
@@ -294,7 +304,10 @@ private:
     std::unique_ptr<o::RawNuggetRegular> resourceNuggetRegular_; //장기기본Host의실제왕복/낙하본문이며현재Sessionoverride를보존한다.
     o::SquidRewardState rewardState_; // Session 이후에도 같은 현재 장기 모드/TYPE/비율을 읽는다.
     std::unique_ptr<o::SquidReward> reward_; // Pool/TYPE/장부보다 먼저 반납하며 지역 Session callback을 저장하지 않는다.
+    o::BridgeDecayMode nativeDestroyMode_; // Native의 현재 authority/editor 주소를 결합하기 전 불변 기본 구조만 제공한다.
     std::unique_ptr<o::SquidDestroyLifecycle> commonDeletion_; // 같은 장기 HP/Graph/장부보다 먼저 반납한다.
+    std::unique_ptr<o::RawSquidDestroyDispatch> virtualDestroy_; // 같은 BaseDestroy/이웃/Graph보다 먼저 반납한다.
+    std::unique_ptr<o::RawSurfaceLifecycle> surfaceLifetime_; // 같은 공통 삭제보다 먼저 반납하며 큰 효과는 weak 대여만 사용한다.
     o::DamageablePreDestroyState damageablePreState_;o::DamageableReleaseState damageableReleaseState_; // 두 실제 장기 TYPE/허용 마스크 owner다.
     o::DamageablePostDestroyState damageablePostState_; // 실제 현재 모드/목록/사건을 같은 주소에서 읽는다.
     std::unique_ptr<o::RawDamageableRelease> damageableRelease_; // Pool/TYPE/검색 전역보다 먼저 반납한다.

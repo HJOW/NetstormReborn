@@ -26,6 +26,7 @@ public:
     // ProcessHost의 asset 훅으로 공급한다. form·종속 처리는 ProcessHost가 먼저 받고 자산만 여기로 넘긴다.
     // 같은 인스턴스의 다리 탐색은 중첩 사용하지 않는다. 연결 객체 삭제는 공통 훅만 사용하므로 탐색을 덮지 않는다.
     SquidDestroyHooks Hooks();
+    void BindCurrentConnectorType(const std::uint32_t& type); // Native 첫 구성 때 같은 장기 연결 TYPE 주소만 빌린다.
 private:
     // 실제 가상 표 기록값으로 bridge pre/post, island pre, noIsland post를 분배한다. 나머지는 공통 훅이다.
     void Emit(const SquidDestroyEvent& event);
@@ -35,6 +36,7 @@ private:
     const SidPool& pool_;
     // connectorType_: 연결부 타입.
     std::uint32_t connectorType_;
+    const std::uint32_t* currentConnectorType_{}; // Native의 실제005412c4 주소이며 typed 값 사본과 구별한다.
     // common_: 파생 타입 사이에 공유하는 기본 처리기 또는 상태.
     SquidDestroyHooks common_;
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (SurfaceLifecycleHooks).

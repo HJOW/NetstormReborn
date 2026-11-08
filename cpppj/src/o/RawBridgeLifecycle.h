@@ -46,12 +46,14 @@ public:
     bool LinkNeedsDestroy(Sid link) const;
     // 004221b0 ↔ CD 004498e0: 주변 특수 타입을 순서대로 처리한 뒤 공통 preDestroy로 이어진다.
     void PreDestroy(Sid bridge,std::uint32_t flags,std::uint32_t linkType,const BridgeLifecycleHooks& hooks) const;
+    void PreDestroyNative(Sid bridge,std::uint32_t flags,const std::uint32_t& linkType,const BridgeLifecycleHooks& hooks) const; // Native는 각 후보 비교에서 같은 현재 연결 TYPE DWORD를 읽는다.
     // 00422300 ↔ CD 00449c60: 파편 생성 요청→소리→칸 위 walker 낙하→공통 postDestroy 순서다.
     void PostDestroy(Sid bridge,std::uint32_t flags,const BridgeLifecycleHooks& hooks) const;
     // 00421530/00421f90 ↔ CD 004490b0: 두 _ftol의 하위 비트를 합친 signed DWORD를 float 수치로 저장한다.
     // 반환값은 이벤트 0x2692의 payload다. 등록/실행·끝 칸 변환(004215d0)은 별도 연결이 필요하다.
     static float DelayedFallPayload(float x,float y);
 private:
+    void RunPreDestroy(Sid bridge,std::uint32_t flags,const std::uint32_t& linkType,const BridgeLifecycleHooks& hooks) const; // typed 값 사본 또는 Native 현재 주소로 같은 실제 순회 몸체를 실행한다.
     // 원본 extra(패치 +40/CD +35)의 abstract·buried만 확인한다.
     bool Ordinary(Sid sid) const;
     // 0/풀 밖 자기 번호는 호스트에서 역참조하기 전에 거부한다. 참조 대상은 원본처럼 조용히 무효로 판정한다.

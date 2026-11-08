@@ -3771,3 +3771,9 @@ target_sources(netstorm_translated_pixels_tests PRIVATE GumpWidePanelTests.cpp G
 # 장기 TYPE owner의 실제 이동 선택/삭제 수량만 검증하며 MP/패킷은 실행하지 않는다(1188).
 target_sources(netstorm_tests PRIVATE CurrentDamageableRoleTests.cpp)
 target_sources(netstorm_damageable_lifetime_tests PRIVATE CurrentDamageableRoleTests.cpp)
+
+# 장기 표면/다리 수명의 기존 독립 PE 재생과 실제 Graph/Host 통합만 실행하며 MP/패킷은 실행하지 않는다(1189).
+add_executable(netstorm_surface_lifetime_tests FocusedTestMain.cpp BridgeLifecycleTests.cpp SurfaceLifecycleTests.cpp DestroyDispatchTests.cpp IslandLifecycleTests.cpp)
+target_link_libraries(netstorm_surface_lifetime_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_surface_lifetime_tests)
+target_compile_definitions(netstorm_surface_lifetime_tests PRIVATE NETSTORM_BRIDGEEFFECTS_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridgeeffects-x86.tsv" NETSTORM_BRIDGEDECAY_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridgedecay-x86.tsv" NETSTORM_ISLANDLIFECYCLE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/islandlifecycle-x86.tsv")

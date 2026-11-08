@@ -179,10 +179,11 @@ TEST_CASE(BridgeLifecycle_X86_LinkReferencesAndAsymmetricExtra) {
 }
 
 // 실제 pre/postDestroy 상위 호출의 모든 효과·탐색 범위·슬롯 바이트를 검사한다.
-void ReplayLifecycle(std::string_view kind,std::size_t expectedCount) {
+void ReplayLifecycle(std::string_view kind,std::size_t expectedCount,bool native=false) {
     std::size_t count=0;
     // 동일 배치라도 세 PE의 저장된 결과를 각각 읽어 검사한다.
     for (const std::string name:{"originals","originalCD","original1037"}) {
+        if (native && name!="originals") continue; // 장기 Native는 PATCH의 실제840행만 추가 재생한다.
         Scene scene(Edition(name));
         RawBridgeLifecycle lifecycle(scene.pool,scene.types);
         // 해당 판본의 입력 행만 재생한다.
@@ -192,7 +193,7 @@ void ReplayLifecycle(std::string_view kind,std::size_t expectedCount) {
                 static_cast<int>(Number(row[7])),kind=="Post");
             const std::vector<std::uint8_t> before(scene.pool.Bytes().begin(),scene.pool.Bytes().end());
             const auto hooks=scene.Hooks();
-            if (kind=="Pre") lifecycle.PreDestroy(kBridge,Number(row[4]),75,hooks);
+            if (kind=="Pre") { if (native) { const std::uint32_t current=75;lifecycle.PreDestroyNative(kBridge,Number(row[4]),current,hooks); }else lifecycle.PreDestroy(kBridge,Number(row[4]),75,hooks); }
             else lifecycle.PostDestroy(kBridge,Number(row[4]),hooks);
             CHECK(scene.Events()==row[8]);
             scene.CheckState(row[9],before);
@@ -229,4 +230,19 @@ TEST_CASE(BridgeLifecycle_InvalidHooksAndSIDDoNotStartEffects) {
     rejected=false;
     try { lifecycle.PreDestroy(Sid{},0,75,scene.Hooks()); } catch (const std::out_of_range&) { rejected=true; }
     CHECK(rejected && scene.events.empty());
+}
+
+// PATCH840행의 같은 탐색/효과/슬롯 출력이 현재 전역 참조를 읽는 Native 몸체에서도 같아야 한다.
+TEST_CASE(BridgeLifecycle_NativeCurrentTypeReplaysPatchRows) { ReplayLifecycle("Pre",kPreRows/3,true); }
+
+// 첫 연결 삭제가 TYPE 전역을 바꾸면 다음 후보는 현재 새 DWORD로 비교한다.
+TEST_CASE(BridgeLifecycle_NativeReadsConnectorAfterEarlierDestroy) {
+    Scene scene(OriginalEdition::Patch1078);scene.Prepare(0,std::bit_cast<std::uint32_t>(50.5F),std::bit_cast<std::uint32_t>(50.5F),1,false);RawBridgeLifecycle body(scene.pool,scene.types);std::uint32_t current=75;auto hooks=scene.Hooks();const auto effect=hooks.emit;
+    hooks.emit=[&](const BridgeLifecycleEvent& event) { effect(event);if (event.effect==BridgeLifecycleEffect::DestroyLink && event.sid==kLink) { current=76;scene.slots[kFollow.value][10]=76; } };body.PreDestroyNative(kBridge,0x1234,current,hooks);
+    CHECK(std::find(scene.events.begin(),scene.events.end(),"D:60:0")!=scene.events.end());CHECK(std::find(scene.events.begin(),scene.events.end(),"D:63:0")!=scene.events.end());CHECK(scene.events.back()=="A:50:4660");
+}
+
+// BYTE 원시 TYPE와 전체 DWORD 전역을 비교하므로 낮은8비트만 같아도 연결 삭제가 되면 안 된다.
+TEST_CASE(BridgeLifecycle_NativeConnectorUsesFullCurrentDword) {
+    Scene scene(OriginalEdition::Patch1078);scene.Prepare(0,std::bit_cast<std::uint32_t>(50.5F),std::bit_cast<std::uint32_t>(50.5F),1,false);RawBridgeLifecycle body(scene.pool,scene.types);const std::uint32_t current=0x1004b;body.PreDestroyNative(kBridge,0,current,scene.Hooks());CHECK(std::none_of(scene.events.begin(),scene.events.end(),[](const std::string& event) { return event.starts_with("D:"); }));CHECK(scene.events.back()=="A:50:0");
 }

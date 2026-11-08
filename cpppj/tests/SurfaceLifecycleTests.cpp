@@ -64,7 +64,7 @@ struct DisplaySink final:SquidDisplaySink {
 };
 // 한 판본에서 실제 모듈을 구성하고 섬 받침 삭제를 유일한 낙하 예약 트리거로 사용한다.
 void Run(OriginalEdition edition,Scenario scenario,bool removeSurfaceBefore=false,bool graphActive=false,
-    const netstorm::client::GameAssets* assets=nullptr) {
+    const netstorm::client::GameAssets* assets=nullptr,bool nativeConnector=false) {
     // ProcessForm을 포함하는 실제 SID 전체 수다.
     constexpr std::uint32_t capacity=32768;
     const bool patch=edition==OriginalEdition::Patch1078;
@@ -109,7 +109,9 @@ void Run(OriginalEdition edition,Scenario scenario,bool removeSurfaceBefore=fals
     if (assets) shapes=netstorm::client::SquidRenderer::Shapes(*assets,edition);
     DisplaySink sink;SquidDisplay display(edition,types,shapes,sink,{0,0,65536,{0,0,640,480}});
     std::vector<std::uint8_t> pixels(640*480);sink.renderer.Draw(pixels,640,7);sink.renderer.Present([](netstorm::client::ScreenRect){});
+    std::vector<std::pair<Sid,std::uint32_t>> popRequests; // 독립 기하 장면의 현재 Pop 요청을 관측하며 패킷 작성/송수신을 검증하지 않는다.
     SquidUnpop unpop(pool,hash,spots,&display);SquidPop pop(pool,hash,spots,&display,&postPop);SquidFactory factory(pool,types,false,&unpop);
+    pop.BindTransmission([&](Sid sid,std::uint32_t flags) { popRequests.emplace_back(sid,flags); }); // 실제 Pop 관문을 통과한 요청만 기록하며 원래 flags/공간 효과를 바꾸지 않는다.
     SquidOwnerMode ownerMode;ownerMode.battle=true;SquidOwner owner(pool,types,bookkeeping,ownerMode);
     RawSquidNeighbors neighbors(pool,hash,spots,types,frames);
     BridgeConnectState typeState;typeState.bridgeType=kBridge;typeState.islandType=kIsland;typeState.stalagType=kStalag;
@@ -146,6 +148,7 @@ void Run(OriginalEdition edition,Scenario scenario,bool removeSurfaceBefore=fals
     }
     const Sid island=connect.FindTypeAt(30,30,kIsland),stalag=connect.FindTypeAt(30,30,kStalag);
     CHECK(island.value && stalag.value && displays==11);
+    CHECK(!patch || !popRequests.empty()); // 패치 장면이 현재 Pop의 실제 요청 관측 경계까지 도달했는지 확인한다.
     const auto terrainCost=bookkeeping.totalCost;
     const Sid source=factory.Create(kBridge);owner.Set(source,3);
     // 실제 K 프레임 첫 번호 41, hard 번호 46이다. 소유자/수명/추가 비트 복사도 확인한다.
@@ -166,7 +169,7 @@ void Run(OriginalEdition edition,Scenario scenario,bool removeSurfaceBefore=fals
         [](const SquidDeletionEvent&) {},[](const SquidDestroyEvent& event) { CHECK(event.effect==SquidDestroyEffect::Transmit); }},activeGraph);
     Kernel kernel;SquidProcessState processState;processState.now=10;SquidProcessHost* hostPointer=nullptr;
     std::vector<Sid> removedLinks,fallen;std::vector<BridgeLifecycleEffect> effects;std::vector<std::string> order;
-    RawSurfaceLifecycle lifecycle(pool,neighbors,kConnector,common.Hooks(),SurfaceLifecycleHooks{
+    RawSurfaceLifecycle lifecycle(pool,neighbors,nativeConnector ? kConnector+1:kConnector,common.Hooks(),SurfaceLifecycleHooks{
         // 예약 직전에는 두 참조가 살아 있으므로 연결 객체를 지우지 않는다.
         [&](Sid sid,float x,float y) { CHECK(sid==source);order.push_back("schedule");CHECK(ScheduleBridgeFall(*hostPointer,sid,x,y)!=nullptr); },
         // 다리 preDestroy 안의 연결 삭제도 최종 ProcessHost 훅으로 재진입한다.
@@ -176,6 +179,7 @@ void Run(OriginalEdition edition,Scenario scenario,bool removeSurfaceBefore=fals
         },
         [&](Sid sid) { fallen.push_back(sid); },
         [&](const BridgeLifecycleEvent& event) { effects.push_back(event.effect);order.push_back("effect"); }});
+    if (nativeConnector) lifecycle.BindCurrentConnectorType(typeState.connectorType); // 다른 초기 사본 대신 실제 현재155 주소가 선택돼야 링크가 정리된다.
     BridgeEventState eventState;eventState.bridgeType=kBridge;
     BridgeEventHooks eventsHooks;
     eventsHooks.notifySurface=[](Sid) {}; // 수명 단어 쓰기의 진단 경계만 대체한다.
@@ -327,4 +331,9 @@ void InspectSurfaceLifecycle(const std::filesystem::path& root,o::OriginalEditio
     // 끝 칸 생성·고립 삭제·hard 삭제 거부·flags 보존을 실제 SHP로 각각 검사한다.
     for (const auto scenario:{Scenario::Replace,Scenario::Isolated,Scenario::Hard,Scenario::Keep}) Run(edition,scenario,false,true,&assets);
 }
+}
+
+// 같은 현재 연결 TYPE를 빌린 표면 분배에서 실제 Graph/Host/예약/끝 칸/연결 정리가 모두 이어진다.
+TEST_CASE(surface_lifecycle_native_connector_reuses_real_integrated_scenarios) {
+    for (const auto scenario:{Scenario::Replace,Scenario::Isolated,Scenario::Hard,Scenario::Keep}) Run(OriginalEdition::Patch1078,scenario,false,true,nullptr,true); // 네 원래 시나리오를 다른 초기 TYPE 사본과 같은 실제 주소로 대조한다.
 }
