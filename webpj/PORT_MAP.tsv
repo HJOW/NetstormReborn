@@ -577,7 +577,7 @@ cpppj/src/o/RawCarrierCheck.cpp	port	www/core/raw-carrier-check.js	1f00a25a	port
 cpppj/src/o/RawCarrierChoice.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierContentNotice.cpp	port	www/core/raw-carrier-content-notice.js	1f00a25a	port	[o-default] WB04-E73: 사제/Walker/Carrier 내용물 가상 +24 통지 00429560(폭탄 번개·소리·로컬 소유자 타이머·사제 소리·지면 처리·해방 소리). fixture carrier-content-notice 1731행 전부(10.78 전용 파일). 번개/소리/생성/타이머 본체는 해당 파일 단위에서
 cpppj/src/o/RawCarrierDrop.cpp	port	www/core/raw-carrier-drop.js	1f00a25a	port	[o-default] WB04-E93: 골렘 Cast/Drop 요청 427070·메뉴 42aa50·서버 수신 444bc0(주문 관문·현재 비용 재읽기·9바이트 송신·시전 최초 SID 보관·주문 생성/활성화·일반 배치 파괴·회피). fixture carrier-drop 413행 전부(10.78 전용 파일). 비용/투영/표시/예약/송신/배치 등 큰 하위 본체와 RawCarrierDropPoint 는 해당 단위에서
-cpppj/src/o/RawCarrierEscape.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierEscape.cpp	port	www/core/raw-carrier-escape.js	1f00a25a	port	[o-default] WB04-E101: 운반체 회피 429010(깊이 관문·진단·네 방향 회전 목적지·spot 막힘·새 경로 깊이 기록·주변 surface 후보 임시 BFS 시각 비교). fixture carrier-escape 1807행 전부(10.78 전용 파일). 경로 조회/난수/경로 시작/후보 운반체 조회/BFS는 훅 경계
 cpppj/src/o/RawCarrierFalling.cpp	port	www/core/raw-carrier-falling.js	1f00a25a	port	[o-default] WB04-E73: Carrier 위험한 다리 판정 4225b0·가속 낙하 426ef0·포획 사제 해방 426c80·내부 좌표 40e800. fixture carrier-falling 9884행·carrier-falling-vtables 8행 전부(10.78 전용 파일, 53비트 열). 포획 내용물 검색/Pop/삭제 본체는 해당 파일 단위에서
 cpppj/src/o/RawCarrierFallStart.cpp	port	www/core/raw-carrier-fall-start.js	1f00a25a	port	[o-default] WB04-E72: Carrier 낙하 시작 4287d0(이동 제거·선택 해제·복귀 좌표 41d7a0·사제 해방·5105 task). fixture carrier-fall-start 2850행 전부. 웜 40 경로 생성자 시험은 RawPathRuntime 단위에서
 cpppj/src/o/RawCarrierMining.cpp	port	www/core/raw-carrier-mining.js	1f00a25a	port	[o-default] WB04-E14: 429800 채취 통지 6 BYTE 작성→송신→로컬 수신. fixture carrier-mining 10.78 864행 전부

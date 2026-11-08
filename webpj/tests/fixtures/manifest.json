@@ -9512,7 +9512,7 @@
       "bytes": 1576206,
       "lines": 2246,
       "fixtureCommit": "b7932e86",
-      "webCommit": "worktree",
+      "webCommit": "acf8cacd",
       "cpppjBasis": {
         "cpppj/src/o/RawBoardTarget.cpp": "b7932e86",
         "cpppj/src/o/RawCarrierTarget.cpp": "b7932e86"
@@ -9542,9 +9542,38 @@
       "bytes": 117318,
       "lines": 2041,
       "fixtureCommit": "b7932e86",
-      "webCommit": "worktree",
+      "webCommit": "acf8cacd",
       "cpppjBasis": {
         "cpppj/src/o/RawBoardTarget.cpp": "b7932e86"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E101",
+      "id": "carrier-escape",
+      "path": "cpppj/tests/fixtures/carrier-escape-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 운반체 회피의 반환·외부 효과 순서·새 경로 깊이·기존 경로 삭제 여부·검사 전역·시각·부모와 두 후보 슬롯 raw(1807행; 53/64비트 열 동일)",
+      "consumers": [
+        "webpj/tests/carrier-escape.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-escape.js"
+      ],
+      "doc": "docs/webpj-carrier-escape-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierEscape.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1807행 전부 사용",
+      "text": true,
+      "sha256": "b2fc27887a3b5478e5a761161ac3fa5ec483908dfb6fee3ef5197ed897748c9f",
+      "bytes": 1565352,
+      "lines": 1808,
+      "fixtureCommit": "562c41c9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierEscape.cpp": "8b467ca0"
       }
     }
   ]
