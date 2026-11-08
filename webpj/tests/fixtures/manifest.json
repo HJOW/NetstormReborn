@@ -10306,9 +10306,38 @@
       "bytes": 1416394,
       "lines": 217,
       "fixtureCommit": "7a5d2972",
-      "webCommit": "worktree",
+      "webCommit": "e22d6956",
       "cpppjBasis": {
         "cpppj/src/o/RawLightningPath.cpp": "65b21851"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E118",
+      "id": "kencloudv2",
+      "path": "cpppj/tests/fixtures/kencloud-v2-x86.tsv",
+      "producer": "cpppj 독립 PE 관측 v2: 구름 캐시 build/step/file 의 중단 원인·12개 현재 필드·인접 전역/세 할당/파일 scratch SHA-256·호출 순서(246행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/kencloud.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-kencloud.js"
+      ],
+      "doc": "docs/webpj-kencloud-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawKencloud.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 246행 전부 사용. 구 관측 kencloud-x86.tsv 는 v2 가 대체",
+      "text": true,
+      "sha256": "ac466f1fcda4db1d43e3f1a19190256526e21418e06c3d2fd0b666faa97fbed9",
+      "bytes": 286504,
+      "lines": 247,
+      "fixtureCommit": "2ede4027",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawKencloud.cpp": "2ede4027"
       }
     }
   ]
