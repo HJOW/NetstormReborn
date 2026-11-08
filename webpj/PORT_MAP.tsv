@@ -516,7 +516,7 @@ cpppj/src/o/RawAssetOwner.cpp	port	www/core/raw-asset-owner.js	1f00a25a	port	[o-
 cpppj/src/o/RawAssetPostPop.cpp	port	www/core/raw-asset-post-pop-state.js	1f00a25a	partial	[o-default] WB04-E61: AssetPostPopState·AssetPostPopPlayer(서버/boss 권한·거주/신전/간헐천/아웃포스트 목록·Bridge TYPE) 이식(Factory 후처리가 사용). Gun·제네레이터·거주 구역·바리케이드·간헐천·신전 분배 본체와 AssetPostPopHooks 는 남음
 cpppj/src/o/RawAssetRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawAuthorityState.h	port	www/core/raw-authority-state.js	1f00a25a	port	[o-default] WB04-D5c(server/boss 두 논리 전역, 호스트 상태가 빌림)
-cpppj/src/o/RawAuxiliaryDraw.cpp	port			todo	[o-default]
+cpppj/src/o/RawAuxiliaryDraw.cpp	port	www/core/raw-auxiliary-draw.js	1f00a25a	port	[o-default] WB04-E84: 메타 배율 표시 00479340(숨김 조기 반환·16.16 배율 0 은 1배)과 고정 추상색 추가 Draw 00485f90. fixture auxiliary-draw 1728행 전부(10.78 전용 파일). 실제 VFX 출력/SHP 조회 본체는 표시 단위에서
 cpppj/src/o/RawBalloonBody.cpp	port			todo	[o-default]
 cpppj/src/o/RawBalloonFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawBaseFileIO.cpp	adapt			todo	[adapt-file]
@@ -630,7 +630,7 @@ cpppj/src/o/RawContentPreviewProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawCreateAt.cpp	port	www/core/raw-create-at.js	1f00a25a	port	[o-default] WB04-E31: 0044c660 CreateAt 생성 부모와 TYPE+15c 프레임 필드. fixture create-at-parent 580행 전부. 실제 월드 생성/HP/Pop과 TYPE 프레임 표(count 추가 필요) 연결은 소비자 단위에서
 cpppj/src/o/RawCrossbowAnimation.cpp	port			todo	[o-default]
 cpppj/src/o/RawDaisContentNotice.cpp	port			todo	[o-default]
-cpppj/src/o/RawDaisDraw.cpp	port			todo	[o-default]
+cpppj/src/o/RawDaisDraw.cpp	port	www/core/raw-dais-draw.js	1f00a25a	port	[o-default] WB04-E84: 다이스 165 의 TYPE 169 추가 그림 요청 004484b0(가상 표 0x507950·TYPE 165 확인·signed 프레임 나머지). fixture dais-draw 768행 전부(10.78 전용 파일). 497280 소비자/추상 관문은 표시 단위에서
 cpppj/src/o/RawDaisLifecycle.cpp	port			todo	[o-default]
 cpppj/src/o/RawDaisRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawDamageableBurning.cpp	port	www/core/raw-damageable-burning.js	1f00a25a	port	[o-default] WB04-E67: Damageable burning 판정 0044c060(damageEffect 0 자연 반환·checking 진단·절반 HP 생성/삭제·bulf 위치음). fixture priestdamage(본문 2)·damageable-burning-checking-hardware 10.78 550행 전부. burning 프로세스 본체는 해당 파일 단위에서

@@ -8726,7 +8726,7 @@
       "bytes": 2102432,
       "lines": 579,
       "fixtureCommit": "233d223b",
-      "webCommit": "worktree",
+      "webCommit": "f8ccd3ca",
       "cpppjBasis": {
         "cpppj/src/o/RawFenceRebuild.cpp": "233d223b",
         "cpppj/src/o/RawFenceCreate.cpp": "233d223b"
@@ -8785,9 +8785,67 @@
       "bytes": 165539,
       "lines": 260,
       "fixtureCommit": "da2b3423",
-      "webCommit": "worktree",
+      "webCommit": "f8ccd3ca",
       "cpppjBasis": {
         "cpppj/src/o/RawFenceMarkerClear.cpp": "da2b3423"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E84",
+      "id": "dais-draw",
+      "path": "cpppj/tests/fixtures/dais-draw-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다이스 TYPE 169 추가 그림 요청의 signed idiv 부호/감김 결과와 소비자 요청(두 x87 정밀도 768행 동일)",
+      "consumers": [
+        "webpj/tests/dais-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dais-draw.js"
+      ],
+      "doc": "docs/webpj-dais-draw-auxiliary-draw-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDaisDraw.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 768행 전부 사용",
+      "text": true,
+      "sha256": "6786affdceaadcd1cf13b0914822a58e0eb4d90fc0ca2499d7081cdb2a37bc91",
+      "bytes": 78670,
+      "lines": 769,
+      "fixtureCommit": "e2dfe0d0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDaisDraw.cpp": "e2dfe0d0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E84",
+      "id": "auxiliary-draw",
+      "path": "cpppj/tests/fixtures/auxiliary-draw-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 메타 배율/고정 추상색 추가 Draw 의 출력 요청 인자·SHP 조회·조기 반환(Scaled 864·Abstract 864)",
+      "consumers": [
+        "webpj/tests/auxiliary-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-auxiliary-draw.js"
+      ],
+      "doc": "docs/webpj-dais-draw-auxiliary-draw-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAuxiliaryDraw.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1728행 전부 사용",
+      "text": true,
+      "sha256": "b1ad9c15038d74f4a2e382588257afed38397757878a9cd63b2c30e2631add85",
+      "bytes": 326709,
+      "lines": 1729,
+      "fixtureCommit": "3682be7d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAuxiliaryDraw.cpp": "3682be7d"
       }
     }
   ]
