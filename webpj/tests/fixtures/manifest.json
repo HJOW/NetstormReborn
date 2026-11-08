@@ -10335,9 +10335,38 @@
       "bytes": 286504,
       "lines": 247,
       "fixtureCommit": "2ede4027",
-      "webCommit": "worktree",
+      "webCommit": "062f8299",
       "cpppjBasis": {
         "cpppj/src/o/RawKencloud.cpp": "2ede4027"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E119",
+      "id": "kencloudrender",
+      "path": "cpppj/tests/fixtures/kencloud-render-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 구름 update/mark/clean/query/draw/alternate 의 완료 종류·조회 결과·2054 DWORD FNV-1a 64·최종 clip·speed·호출 순서(944행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/kencloud-render.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-kencloud-render.js"
+      ],
+      "doc": "docs/webpj-kencloud-render-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawKencloudRender.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 944행 전부 사용",
+      "text": true,
+      "sha256": "a8ae41506b62852b053ee3588d230bec17c011e677db925429ced447a16394f0",
+      "bytes": 161230,
+      "lines": 945,
+      "fixtureCommit": "7553aefd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawKencloudRender.cpp": "7553aefd"
       }
     }
   ]
