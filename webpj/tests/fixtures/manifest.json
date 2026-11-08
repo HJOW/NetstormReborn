@@ -9191,9 +9191,38 @@
       "bytes": 1097093,
       "lines": 1106,
       "fixtureCommit": "524cafda",
-      "webCommit": "worktree",
+      "webCommit": "4eee1510",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierSteal.cpp": "b04fd743"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E93",
+      "id": "carrier-drop",
+      "path": "cpppj/tests/fixtures/carrier-drop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 골렘 Cast/Drop 요청·메뉴·서버 수신의 외부 효과 순서·송신 패킷·일곱 슬롯 전체 raw(413행; 두 x87 정밀도 동일)",
+      "consumers": [
+        "webpj/tests/carrier-drop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-drop.js"
+      ],
+      "doc": "docs/webpj-carrier-drop-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierDrop.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 413행 전부 사용(53비트 열 사용, 64비트 열 동일 확인)",
+      "text": true,
+      "sha256": "d2da9dfcac50dfa04c11c3d19d9665d7381c3947d3c7987259850eb6daa924b0",
+      "bytes": 810896,
+      "lines": 414,
+      "fixtureCommit": "779cd20e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierDrop.cpp": "d43f1d29"
       }
     }
   ]
