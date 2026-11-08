@@ -8375,7 +8375,7 @@
       "bytes": 62178,
       "lines": 385,
       "fixtureCommit": "07c71e65",
-      "webCommit": "worktree",
+      "webCommit": "b6d1a1e5",
       "cpppjBasis": {
         "cpppj/src/o/RawBuriedRegular.cpp": "07c71e65"
       }
@@ -8404,9 +8404,96 @@
       "bytes": 665694,
       "lines": 2017,
       "fixtureCommit": "850ae867",
-      "webCommit": "worktree",
+      "webCommit": "b6d1a1e5",
       "cpppjBasis": {
         "cpppj/src/o/RawGeyserLifetime.cpp": "850ae867"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E76",
+      "id": "ai-command-state",
+      "path": "cpppj/tests/fixtures/ai-command-state-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 직접 AI 명령 Money(CrankAiMoney)·Param(SetAiParameter)의 AI 부착 마스크/재조회 변경 조합에서 아홉 본체의 7DWORD 결과와 본체 DWORD 쓰기 순서",
+      "consumers": [
+        "webpj/tests/ai-command-state.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-command-state.js"
+      ],
+      "doc": "docs/webpj-ai-command-burning-victim-dude-task-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiCommandState.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1940행 전부 사용",
+      "text": true,
+      "sha256": "fe6a534535c6d2ac05a125787df3901a629516d51f048323004e9e8b0a183675",
+      "bytes": 1400825,
+      "lines": 1941,
+      "fixtureCommit": "aeb552a8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiCommandState.cpp": "aeb552a8"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E76",
+      "id": "burning-victim-parent",
+      "path": "cpppj/tests/fixtures/burning-victim-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 연소 세 부모의 앞단(두 번째 robust 와 선택 슬롯 고정·진단 복귀)의 결과·checking·현재/선택 SID·호출 순서(세 부모 1008관측 중 고유 504행)",
+      "consumers": [
+        "webpj/tests/burning-victim.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-burning-victim.js"
+      ],
+      "doc": "docs/webpj-ai-command-burning-victim-dude-task-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBurningVictim.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 504행 전부 사용",
+      "text": true,
+      "sha256": "77cea61c5e9a9f571dd5e1ed094adb352e53437ed12959816b006d3d237b1350",
+      "bytes": 50675,
+      "lines": 505,
+      "fixtureCommit": "d88de1a8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBurningVictim.cpp": "f4d1312f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E76",
+      "id": "dudetask",
+      "path": "cpppj/tests/fixtures/dudetask-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 Dude task setter 의 반환/낙하 assert 분류·조회/생성/표면 통지 순서·슬롯 50 raw·최종 Regular(시각 비트·event·payload·count)",
+      "consumers": [
+        "webpj/tests/dude-task.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dude-task.js"
+      ],
+      "doc": "docs/webpj-ai-command-burning-victim-dude-task-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDudeTask.cpp"
+      ],
+      "scope": "10.78(originals) 384행 전부 사용(CD 10.72 396행은 범위 밖)",
+      "text": true,
+      "sha256": "7d3a17e9491d6ac48201592140b7a746fbc6af85a7a82f322a2276e7094f8cb2",
+      "bytes": 170550,
+      "lines": 781,
+      "fixtureCommit": "db9b626c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDudeTask.cpp": "e210c755"
       }
     }
   ]
