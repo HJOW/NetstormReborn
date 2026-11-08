@@ -614,8 +614,8 @@ cpppj/src/o/RawConstructionFrame.cpp	port	www/core/raw-construction-frame.js	1f0
 cpppj/src/o/RawConstructionHistory.h	port	www/core/construction-history-key.js	1f00a25a	port	[o-default] WB04-E22: 최근 건설 위치 5칸+순번 값형 장부(createConstructionHistory). 배치 통지가 순번을 0으로 쓰는 부분은 건설 통지 단위에서
 cpppj/src/o/RawConstructionLifetime.cpp	port	www/core/raw-construction-lifetime.js	1f00a25a	port	[o-default] WB04-E129: 표시 목록 등록/40칸 확장/삭제와 건설 표시 버퍼 반납 순서·생성 어댑터. fixture constructionlifetime originals 459행 전부(originalCD/original1037 은 범위 밖). 남음: 실제 RawConstructionFrame Run/Draw/Kill 연결 시험(RawConstructionFrame 이식 뒤)
 cpppj/src/o/RawConstructionLocal.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionNotice.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionPacket.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionNotice.cpp	port	www/core/raw-construction-notice.js	1f00a25a	port	[o-default] WB04-E134: 건설 배치 통지(typed handle·실제 wire actualHandle: 정리·이력·배치·Builder 이동·사제 이동/환불/삭제·자동 건설 시작·갱신)와 정리/배치/확정 어댑터. fixture constructionnotice originals 537행 전부(originalCD·original1037 제외). 남음: 어댑터의 실제 Clear/Place 모듈 연결(해당 단위 이식 뒤)
+cpppj/src/o/RawConstructionPacket.cpp	port	www/core/raw-construction-packet.js	1f00a25a	port	[o-default] WB04-E134: 건설 확정 임시 패킷(읽기 뷰·초기화·쓰기·가변길이 확정). fixture construction-packet originals 86행 전부(Write 72·Finalize 14). 남음: Confirm 의 실제 송신 observer 연결
 cpppj/src/o/RawConstructionPlace.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionProcess.cpp	port	www/core/raw-construction-process.js	1f00a25a	port	[o-default] WB04-E132: 건설 프로세스 시작·진행·완료·form 삭제 통지·실제 host/Kernel 프로세스·보상/통지 어댑터. fixture constructionprocess originals 956행+construction-form-parent 64행 전부와 실제 host 통합 시험(originalCD/original1037 은 범위 밖). 남음: RawConstructionEffects 밀어내기 연결 시험(해당 모듈 이식 뒤)
 cpppj/src/o/RawConstructionRequest.cpp	port			todo	[o-default]

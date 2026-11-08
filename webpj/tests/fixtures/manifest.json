@@ -11098,9 +11098,67 @@
       "bytes": 44300,
       "lines": 307,
       "fixtureCommit": "a5afdafb",
-      "webCommit": "worktree",
+      "webCommit": "22ff2b40",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionArrival.cpp": "fa80cc90"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E134",
+      "id": "construction-packet",
+      "path": "cpppj/tests/fixtures/construction-packet-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 확정 임시 패킷 512바이트 쓰기 72행과 가변길이 확정 14행(헤더 변형·SID 목록·sidCount 255 진단 포함)",
+      "consumers": [
+        "webpj/tests/construction-packet.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-packet.js"
+      ],
+      "doc": "docs/webpj-construction-packet-notice-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionPacket.cpp"
+      ],
+      "scope": "10.78(originals) 86행 전부",
+      "text": true,
+      "sha256": "0fe67a16e27ff926d1f8261521c9779d6fd4ca3e23a2eafc3d88e19cf3ef8dad",
+      "bytes": 110177,
+      "lines": 87,
+      "fixtureCommit": "df350df3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionPacket.cpp": "77a0c3a4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E134",
+      "id": "constructionnotice",
+      "path": "cpppj/tests/fixtures/constructionnotice-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 배치 통지 처리기의 전체 분기·이력·SID/genus 조회·좌표 거의 올림과 하위 효과 순서(세 판본 1611행)",
+      "consumers": [
+        "webpj/tests/construction-notice.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-notice.js"
+      ],
+      "doc": "docs/webpj-construction-packet-notice-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionNotice.cpp"
+      ],
+      "scope": "10.78(originals) 537행 사용, originalCD 537행은 10.72, original1037 537행은 10.37",
+      "text": true,
+      "sha256": "b3fd22d42e3fd30d261433436e696c0442abd1987b9e14073fa94f469121a2d1",
+      "bytes": 807257,
+      "lines": 1613,
+      "fixtureCommit": "75a33c5e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionNotice.cpp": "976f2b7b"
       }
     }
   ]
