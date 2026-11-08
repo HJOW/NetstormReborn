@@ -1357,6 +1357,32 @@ public sealed class RawSurfaceWorldTests
         Assert.Throws<ArgumentOutOfRangeException>(() => world.Load(LoadSeeds()));
     }
 
+    /// <summary>188개가 아닌 TYPE 월드의 삭제 분배를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 삭제 분배 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DestroyRejectsNon188World()
+    {
+        // CD 171개 TYPE의 삭제 분배 연결은 후속 단위에서 잇는다.
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        Assert.Throws<InvalidOperationException>(() => world.Destroy(5));
+    }
+
+    /// <summary>배치된 자산 삭제가 장부와 변경을 갱신하는지 검증한다. 2026-11-07 F2d 월드 본체 삭제 분배 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DestroyRemovesPlacedObject()
+    {
+        var world = DisplayPopWorld();
+        int sid = world.Create(70u, 0u);
+        world.Pop(sid, 10f, 10f);
+        Assert.True(world.TakeChanged());
+        Assert.True(world.Destroy(sid));
+        Assert.Empty(world.Objects());
+        Assert.True(world.TakeChanged());
+        // PreDestroy·Transmit·PostDestroy가 삭제 요청으로 센다. 정확한 줄을 확인한다.
+        // PreDestroy·Transmit·PostDestroy 3건이 삭제 요청으로 센다.
+        Assert.Equal("raw_world\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t3", world.Report().Split('\n')[0]);
+    }
+
     /// <summary>188개가 아닌 TYPE 월드의 해제를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 해제 연결 이식에서 추가됐다.</summary>
     [Fact]
     public void UnpopRejectsNon188World()

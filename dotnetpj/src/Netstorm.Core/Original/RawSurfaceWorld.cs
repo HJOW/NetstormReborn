@@ -73,6 +73,12 @@ public sealed class RawSurfaceWorld
     /// <summary>무인도 최초 등록과 3×3 받침 소유자 전파를 복원한 처리기다. 원본 Impl.surface에 대응하며 188개 TYPE·같은 수 프레임이 아니면 비워 둔다. 연결 조회는 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐고 0.251에서 표시 갱신을 연결했다.</summary>
     private readonly RawIslandPostPop? _surface;
 
+    /// <summary>타입별 서로 다른 fallback 사슬을 같은 분배기로 모아 혼합 종속 체인의 중첩 삭제를 지원한다. 원본 Impl.formDispatch에 대응하며 188개 TYPE·같은 수 프레임이 있으면 비워 둔다. 2026-11-07 F2d 월드 본체 삭제 분배 이식에서 추가됐다.</summary>
+    private readonly RawSquidFormDispatch? _formDispatch;
+
+    /// <summary>타입별 가상 삭제 경로를 선택하는 분배기다. 원본 Impl.virtualDestroy에 대응하며 188개 TYPE·같은 수 프레임이 있으면 비워 둔다. 2026-11-07 F2d 월드 본체 삭제 분배 이식에서 추가됐다.</summary>
+    private readonly RawSquidDestroyDispatch? _virtualDestroy;
+
     /// <summary>원본 타입 전역과 현재 점검 전역이다. 원본 Impl.buildingState에 대응한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
     private readonly BuildingSpaceState _buildingState = new();
 
@@ -182,23 +188,6 @@ public sealed class RawSurfaceWorld
                     Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
                     Detail = text => _storage.RecordAssertionDetail(text),
                 });
-                _neighbors = new RawSquidNeighbors(_storage.Pool, _storage.Hash, _storage.Spots, _types, new RiftFrameCodeTables(_frames));
-                _connect = new RawBridgeConnect(_storage.Pool, _neighbors, _storage.Links, new BridgeConnectHooks
-                {
-                    Create = (type, flags) =>
-                    {
-                        _changed = true;
-                        return _factory!.Create(type, (SidAllocation)flags);
-                    },
-                    SetOwner = (sid, owner) =>
-                    {
-                        SetAssetOwner(sid, owner);
-                        _changed = true;
-                    },
-                    Pop = (sid, x, y, flags) => Pop(sid, x, y, flags),
-                    SetFrame = (_, _, _) => throw new InvalidOperationException("실제 프레임 지정이 연결되지 않았습니다."),
-                    NotifySurface = sid => _building!.NotifySurface(sid),
-                });
             }
             _baseDestroy = new RawSquidDestroy(_storage.Pool, _unpop, _types);
             _buildingState.IslandType = _terrainType;
@@ -208,6 +197,48 @@ public sealed class RawSurfaceWorld
             _pop = new RawPop(_storage.Pool, _storage.Hash, _storage.Spots, null, _postPop);
             _pop.SetBuildingSide(_building);
             _unpop.SetBuildingSide(_building);
+            if (_frames.Count == _types.Count)
+            {
+                RawSquidFactory factory = _factory!;
+                RawBuildingSpace building = _building!;
+                RawSquidDestroy baseDestroy = _baseDestroy!;
+                RawGraph graph = _graph!;
+                _neighbors = new RawSquidNeighbors(_storage.Pool, _storage.Hash, _storage.Spots, _types, new RiftFrameCodeTables(_frames));
+                _connect = new RawBridgeConnect(_storage.Pool, _neighbors, _storage.Links, new BridgeConnectHooks
+                {
+                    Create = (type, flags) =>
+                    {
+                        _changed = true;
+                        return factory.Create(type, (SidAllocation)flags);
+                    },
+                    SetOwner = (sid, owner) =>
+                    {
+                        SetAssetOwner(sid, owner);
+                        _changed = true;
+                    },
+                    Pop = (sid, x, y, flags) => Pop(sid, x, y, flags),
+                    SetFrame = (_, _, _) => throw new InvalidOperationException("실제 프레임 지정이 연결되지 않았습니다."),
+                    NotifySurface = sid => building.NotifySurface(sid),
+                });
+                RawSquidDestroyDispatch virtualDestroy = new(baseDestroy, _neighbors, () => _mode, graph);
+                _virtualDestroy = virtualDestroy;
+                _formDispatch = new RawSquidFormDispatch(_storage.Pool, baseDestroy, new SquidDestroyHooks
+                {
+                    Selected = () => _deletion.Selected,
+                    Emit = effect =>
+                    {
+                        _deletionRequests++;
+                        if (effect.Effect == SquidDestroyEffect.PreDestroy)
+                        {
+                            baseDestroy.CompletePreDestroy();
+                        }
+                        else if (effect.Effect == SquidDestroyEffect.PostDestroy)
+                        {
+                            baseDestroy.CompletePostDestroy();
+                        }
+                    },
+                }, (sid, flags, hooks) => virtualDestroy.Destroy(sid, flags, hooks));
+            }
         }
 
         // 소유자 처리는 판본에 맞는 개수(패치 188·CD 171)일 때만 둔다. 어긋난 기존 껍데기 호출은 명시 오류로 멈춘다.
@@ -823,6 +854,26 @@ public sealed class RawSurfaceWorld
     {
         ReadOnlySpan<byte> raw = _storage.Pool.Slot(sid);
         Pop(sid, BitConverter.UInt32BitsToSingle(ReadSlot(raw, 14, 4)), BitConverter.UInt32BitsToSingle(ReadSlot(raw, 18, 4)), flags);
+    }
+
+    /// <summary>다리 거부 조건과 파생 pre·post를 동일한 호출로 실행한다.</summary>
+    /// <param name="sid">삭제할 객체 번호다.</param>
+    /// <param name="flags">삭제 플래그다.</param>
+    /// <returns>삭제했으면 참이다.</returns>
+    public bool Destroy(int sid, uint flags = 0u)
+    {
+        if (_formDispatch is null)
+        {
+            throw new InvalidOperationException("실제 월드 삭제 분배가 연결되지 않았습니다.");
+        }
+
+        bool result = _formDispatch.Destroy(sid, flags);
+        if (result)
+        {
+            _changed = true;
+        }
+
+        return result;
     }
 
     /// <summary>실제 월드가 소유한 연결 생성기를 빌리며 별도 생성기를 만들지 않는다.</summary>
