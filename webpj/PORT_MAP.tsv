@@ -801,7 +801,7 @@ cpppj/src/o/RawObjectTraceMain.cpp	port			todo	[o-default]
 cpppj/src/o/RawOutpostLifecycle.cpp	exclude-mp			-	[mp-outpost]
 cpppj/src/o/RawPacketDispatch.cpp	port			todo	[o-default]
 cpppj/src/o/RawPacketLengths.h	port			todo	[o-default]
-cpppj/src/o/RawPathAnimation.cpp	port			todo	[o-default]
+cpppj/src/o/RawPathAnimation.cpp	port	www/core/raw-path-animation.js	1f00a25a	port	[o-default] WB04-E62: 보행 도착 프레임 접두 0048bd90과 Squid 방향 조회 004ad680/004ad710. fixture pathanimation 10.78 Read 608·Stop 1408행 전부. 보행 프로세스(경로 종료·타이머)는 PathProcess 단위에서
 cpppj/src/o/RawPathArrivalParent.cpp	port			todo	[o-default]
 cpppj/src/o/RawPathCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawPathData.cpp	port			todo	[o-default]
@@ -837,7 +837,7 @@ cpppj/src/o/RawPriestFall.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestForcefield.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestHalt.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestLookup.cpp	port			todo	[o-default]
-cpppj/src/o/RawPriestOwner.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestOwner.cpp	port	www/core/raw-priest-owner.js	1f00a25a	port	[o-default] WB04-E62: 사제 소유자 재정의 00491790(원래 소유자 WORD·알림·공통 지정·로컬 표식 비트)·사제 분배기. fixture priestowner 10.78 3528행·priest-owner-current-local 10.78 72행 전부(CD·1037 행은 범위 밖)
 cpppj/src/o/RawPriestPanic.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestParticipation.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPlacement.cpp	port			todo	[o-default]
@@ -857,7 +857,7 @@ cpppj/src/o/RawPriestRitualFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestSacrificeRequest.cpp	port	www/core/raw-priest-sacrifice-request.js	1f00a25a	port	[o-default] WB04-E14: 4498e0/494eb0 사제 희생 요청(호출 순서·owner 재독). fixture priest-sacrifice-request 10.78 128행 전부
 cpppj/src/o/RawPriestShield.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestSpawn.cpp	port			todo	[o-default]
-cpppj/src/o/RawPriestState.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestState.cpp	port	www/core/raw-priest-state.js	1f00a25a	port	[o-default] WB04-E62: 사제 이동 불가 조회 00492090/00427030과 HP setter 004942b0(PriestHitPointMode 포함). fixture prieststate 10.78 6752행 전부(Set 1312행은 Player 9 기록으로도 재생)
 cpppj/src/o/RawPriestTakenNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawProcessAttach.cpp	port	www/core/raw-process-attach.js	1f00a25a	port	[o-default] WB04-D5c: ProcessForm 파생 +74 접두. fixture process-attach-current-local 24행(10.78) + 서버 접두 계약
 cpppj/src/o/RawProcessRemoval.cpp	port	www/core/raw-process-removal.js	1f00a25a	port	[o-default] WB04-D5c: 004b27a0 일괄 제거. fixture process-removal-filter 64행(웹 입력은 raw 노드에 실제 VT 를 넣음)

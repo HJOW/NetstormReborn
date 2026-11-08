@@ -7261,7 +7261,7 @@
       "bytes": 598782,
       "lines": 1921,
       "fixtureCommit": "552656c0",
-      "webCommit": "worktree",
+      "webCommit": "a42a5faf",
       "cpppjBasis": {
         "cpppj/src/o/RawRunePostPop.cpp": "e043bb4a"
       }
@@ -7292,10 +7292,126 @@
       "bytes": 194406,
       "lines": 997,
       "fixtureCommit": "1a6c408f",
-      "webCommit": "worktree",
+      "webCommit": "a42a5faf",
       "cpppjBasis": {
         "cpppj/src/o/RawFactoryPostPop.cpp": "856d876b",
         "cpppj/src/o/RawAssetPostPop.cpp": "767c7855"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E62",
+      "id": "priestowner",
+      "path": "cpppj/tests/fixtures/priestowner-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 소유자 지정 00491790 의 알림/공통 지정 호출 순서와 슬롯 전체(세 PE)",
+      "consumers": [
+        "webpj/tests/priest-owner.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-owner.js"
+      ],
+      "doc": "docs/webpj-priest-owner-state-path-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestOwner.cpp"
+      ],
+      "scope": "10.78(originals) 3528행 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "fe892a4fe7f1687079d12a2ebc99709a905d6ae5cde18a00e1897ad601ab5d01",
+      "bytes": 1126390,
+      "lines": 7418,
+      "fixtureCommit": "e74fc81b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestOwner.cpp": "7ee98997"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E62",
+      "id": "priest-owner-current-local",
+      "path": "cpppj/tests/fixtures/priest-owner-current-local-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 소유자 본문의 현재 진단/알림/공통 부모 뒤 부분 효과(진단·알림이 바꾼 모드/WORD, 부모 중단, TYPE/free 변경)",
+      "consumers": [
+        "webpj/tests/priest-owner.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-owner.js"
+      ],
+      "doc": "docs/webpj-priest-owner-state-path-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestOwner.cpp"
+      ],
+      "scope": "10.78(originals) 72행 사용(originalCD 72행은 범위 밖)",
+      "text": true,
+      "sha256": "1cd15e36397e43768f55ba4baa7fcaffebc69ecdb947b5211986186f6df20dd2",
+      "bytes": 21453,
+      "lines": 145,
+      "fixtureCommit": "7ee98997",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestOwner.cpp": "7ee98997"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E62",
+      "id": "prieststate",
+      "path": "cpppj/tests/fixtures/prieststate-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 이동 불가 조회(Ground/Wrapper)와 HP setter(Set)의 반환·Unpop/Repop 기록·슬롯 50바이트(세 PE)",
+      "consumers": [
+        "webpj/tests/priest-state.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-state.js"
+      ],
+      "doc": "docs/webpj-priest-owner-state-path-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestState.cpp"
+      ],
+      "scope": "10.78(originals) 6752행 전부 사용(originalCD·original1037 각 6752행은 범위 밖)",
+      "text": true,
+      "sha256": "a8edd9d0c9bc1a4f29c2518bb34d432713b53fe44eaced85e821bf7ec2809223",
+      "bytes": 3159685,
+      "lines": 20258,
+      "fixtureCommit": "72a425b1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestState.cpp": "2c25ad04"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E62",
+      "id": "pathanimation",
+      "path": "cpppj/tests/fixtures/pathanimation-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Squid side/direction 조회와 도착 프레임 접두의 Unpop/Pop 호출 기록·슬롯 50바이트(세 PE, 프레임 코드 표 포함)",
+      "consumers": [
+        "webpj/tests/path-animation.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-animation.js"
+      ],
+      "doc": "docs/webpj-priest-owner-state-path-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathAnimation.cpp"
+      ],
+      "scope": "10.78(originals) Read 608·Stop 1408행 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "8c5220e53c40327d7f812e47527557b99b7a3ddad7a5814f254595935bb3b6af",
+      "bytes": 695225,
+      "lines": 6053,
+      "fixtureCommit": "51d7b8f3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathAnimation.cpp": "51d7b8f3"
       }
     }
   ]
