@@ -1,0 +1,97 @@
+{
+  "unit": 1152,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "af1fbf6c / 20261108-120 CP",
+  "summary": "M2.2a의전체4dece0/장기 가변 Zone owner를 만들고 실제 접속 초기 복제와 기존 일반 LAN State7의현재 token 설치·후행 재조회/해제·두 필드0에 연결했다. 메타 State7 부모는 다음이다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1152\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13112320,
+      "sha256": "d7ae8026d1f36e85934e1b0bd511bb41dca1bad17f49539805254eba69ed5793"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "c776f8f149ca792cfb979c2efe467af3edb28531f2fe28266945d677cfa0c4a2"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4dece0 C/PE의NULL/observer1/현재WORD/할당·signed 용량 비교/REP MOVSD→MOVSB를 대조했다. 같은 mutable 입력/전체 소유 할당·Registry 실제 Caller·Client 장기 token·일반 State7의현재 토큰 재조회/반납/예외 prefix·취소 소유권·미션 본체 불변을 확인했다.",
+  "nativeEvidenceSha256": {
+    "00435220.asm": "5f9cf8e851903ac32636b5416b9ac81026b3d0930b9c472770a8374ea6f4e37e",
+    "00435220.c": "06e0cae8103210ca310fc8f45289d9f1e377620979bd868b7b04e0aa483c3278",
+    "004b4df0.asm": "b5298c9214537f589294a405f0462dfa32b6d9df7f2394265f425ad88e95e43e",
+    "004b4df0.c": "5e7b18455666e266663417015ebc1b461ba440fa7ce44905dc5c76c4e0582caf",
+    "004b8b20.asm": "5ca5d0128c8affca622d114490386c031dac72a832fdde6167f99c0b07222eff",
+    "004b8b20.c": "2e3836671ba68cfc61bc4258145c08ab28826f3a7cf187944d17447c94bd7653",
+    "004debe0.asm": "c797239964b4d6e742595d4381bfc326721ab3ee624a9735f60db06c3d36b3e1",
+    "004debe0.c": "a76d13cfc14fbc265afcd305b27a15e2df64d732fa08b16b68f1e2b001568f46",
+    "004dec30.asm": "0a84306ffe847879dc2e74ba7e123cbfdd23f722b56f24b29c9fe1e82b20f465",
+    "004dec30.c": "1d79dc585977a7c2f545630ca6bd4bba3260d72d4841ad8bfc52e2836fef8cb0",
+    "004dece0.asm": "8f2787276012ef829f47dc12d4af49dc2fb4064a31d9b37ffdfcda15a1192a9b",
+    "004dece0.c": "0c82a23031181423987a5291ebbbc1aa0a98e721faad3513fa1a1ecda33e7d5c",
+    "004dff00.asm": "0a2b8e388f9c1e0a104f2f08f274c8f444e5699bbbe6c6420ceb57fc80e2e8c0",
+    "004dff00.c": "596532912e7dce13a70ea71fff2d894fb1fb7f186ed9664cc5f8ae3d1d320809",
+    "004e00e0.asm": "a9ecf27119dadc7dda1714308380713e505519c177d5f59472a7ce2abf888f66",
+    "004e00e0.c": "5f562a06cb05d75f1a3d6cdd488cbfaf97463f42e61c6b455cb0de0aff545893"
+  },
+  "sourceAudit": {
+    "nullBeforeObserverAndCurrentWordAfterObserver": true,
+    "signedCapacityAndCallerDestinationPreserved": true,
+    "forwardDwordThenByteAndPartialEffectsPreserved": true,
+    "sameActualRegistryConnectPacketCaller": true,
+    "longLivedClientZoneTokenOwnerWithoutPointerTruncation": true,
+    "sameExistingLanByteAllocationMovedWithoutCopyOrFakeAck": true,
+    "state7AcquiresCurrentTokenAndReReadsBeforeFree": true,
+    "currentAndNextClearedOnlyAfterActualFree": true,
+    "immediatePointerFieldPreserved": true,
+    "hostCancelTracksOwnLogicalAllocationAndNotForeignNext": true,
+    "fixed86MissionBodyUnchanged": true
+  },
+  "plan": {
+    "completed": "M2.2a / 공통 전체 복제·장기 owner·기존 일반 State7 소비자",
+    "next": "M2.2b / 메타 State7 실제 일반 World/전송 설치·콜백 수명/현재TCP9와Player base 인계",
+    "remainingMajorMpGroups": 7,
+    "checkingParents": [
+      "004b02d0",
+      "004dc220"
+    ],
+    "checkingMpReceive": [
+      "004b4df0",
+      "004b8b20"
+    ]
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "wholeSuite": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "새 MP/단위/게임/통신 실행 검사는 사용자 요청대로 제외했다. 실제 전투 진입/패킷 재현/원문 전체 동일성의 실행 검증이 아니다.",
+    "M2.2 전체가 아니라a를 완료했다. 메타 화면의State7 일반 부모와1ah/1bh 수신/기록Open은 아직 미연결이다.",
+    "현재MetaConnectionRuntime::CallbackActive/수신 중정리 관문·cleanup의메타 owner 반납·고정 Player span·기존TCP9 연결의 실제 인계를 해결해야 한다. 보호 제거/지연 성공/가짜 대기실ACK로 대신하지 않는다.",
+    "NULL/물리 범위 밖 목적지·입력/부족 할당·중복token은 해당 접근 위치의 호스트 오류다.0길이 자동 할당은 present와소유자 tag로NULL과 구별하며 원문 new/FILE/스택/SEH/OS고갈 자체 일치를 보장하지 않는다.",
+    "M2 잔여와M3~M8·K/S·기존 후순위를 유지한다."
+  ]
+}

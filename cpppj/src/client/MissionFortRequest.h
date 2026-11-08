@@ -44,6 +44,7 @@ struct MissionFortLoadRequest {
 struct GeneralBattleStartRequest {
     bool reconnect{}; // 실제 next+84의 저장 복구 요청이며 새 LAN과 달리 빈 현재 이름도 원문대로 보존한다.
     std::vector<std::uint8_t> zone; // 호스트가 작성한 가변 길이 Zone이며 참가자 기록은 원문71BYTE stride다. client는 비운다.
+    bool storedZone{};std::uint32_t zoneToken{}; //장기 ZonePackets를 사용하는 실제 요청인지와 취소 시 반납할 최초 소유 token이다. 설치/해제는 현재 State+80을 각각 다시 읽는다.
     std::string handle; // 정리 전 실제 Fort의 표시 부호화 이름이며 새 Session의 원문64BYTE 이름에 인계한다.
     std::optional<o::LocalMissionStartingSnapshot> starting; // 이전 World 정리 전에 캡처한 실제 State7 지역값이다.
     bool consumed{}; // 같은 요청의 정상 후반 소비만 표시하며 Player/Ready/연결 성공을 대신하지 않는다.

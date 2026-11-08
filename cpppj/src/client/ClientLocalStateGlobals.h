@@ -6,6 +6,7 @@
 #include "o/RawClockSyncReset.h"
 #include "o/RawClockSynchronization.h" // 서버/Commander와 Session 교체가 같은70개 시간 표본을 공유한다.
 #include "o/RawMetaZoneCleanup.h"
+#include "o/RawPacketCopy.h" //가변 Zone 포인터 대용 token의 실제 할당도 State/Session 전환보다 오래 보유한다.
 #include <array>
 
 namespace netstorm::client {
@@ -22,6 +23,7 @@ public:
     std::array<o::LocalMissionStateBlock,5>& Blocks() { return blocks_; } // old/phase/immediate/current/next 순서의 물리 배열 한 개다.
     const std::array<o::LocalMissionStateBlock,5>& Blocks() const { return blocks_; } // 진단도 같은720BYTE를 읽는다.
     o::LocalMissionStateStorage State() { return {blocks_[0],blocks_[1],blocks_[2],blocks_[3],blocks_[4]}; } // 기존 원문 분배기에 같은 블록 참조를 제공한다.
+    o::RawPacketCopies& ZonePackets() { return zonePackets_; } //같은 State+80이 가리키는 가변 Zone의 실제 소유 장부를 빌린다.
     std::uint32_t& FirstMenuPending() { return firstMenuPending_; } //00542530의 초기1이며 WelcomeGiven 비영 분기의 안내 종료 위치에서만0을 쓴다.
     const std::uint32_t& FirstMenuPending() const { return firstMenuPending_; } //재진입에서도 같은 현재 DWORD를 읽는다.
     std::uint32_t& UserUpdated() { return userUpdated_; } //0054da8c의 BSS0을 보존한다. 원문과 달리 종료된 서버의 security.dat/명령줄 검증 writer는 제품에 연결하지 않는다(사용자 지시).
@@ -123,6 +125,7 @@ private:
     std::uint32_t viewMetaCommand_{0x02000013}; // 보호 PE의 최초 ViewMeta 명령이며 Runtime 대여/반납에서 다시 쓰지 않는다.
     std::int32_t invalidTerritory_{127}; // 보호 PE00540a30의 실제 초기 DWORD다. BattleTerritory와 구별한다.
     std::array<o::LocalMissionStateBlock,5> blocks_{}; //005c8630/8758/86c8/87e8/8878의 독립144BYTE 다섯 개다.
+    o::RawPacketCopies zonePackets_; //State의 포인터 대용 token을 actual packet 할당에 연결하며 임의 Session 정리로 비우지 않는다.
     std::uint32_t firstMenuPending_{1},userUpdated_{},tellTips_{1}; //각 PE 초기값1/BSS0/1을 새 Client에서만 한 번 구성하며 State 교체로 되돌리지 않는다.
     std::uint32_t tipNumber_{1}; //00531910의 PE 초기1이며 TellTips 옵션과 별개인 실제32비트 안내 순번이다.
     std::uint32_t introAvailable_{}; //0054db98의 최초 BSS0이며 00435de0이0/1을 쓴다.

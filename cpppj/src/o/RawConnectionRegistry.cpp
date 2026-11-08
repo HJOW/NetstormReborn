@@ -1,5 +1,6 @@
 // 같은 실제 연결을 등록/재배치/지연 반환하며 callback 예외의 prefix를 유지한다.
 #include "o/RawConnectionRegistry.h"
+#include "o/RawPacketCopy.h" //접속 초기 복제도 같은 전체4dece0 observer/길이/앞방향 복사 본체를 사용한다.
 #include <bit>
 #include <stdexcept>
 #include <utility>
@@ -32,9 +33,8 @@ void RawConnectionRegistry::SendDirect(std::uint32_t token,std::span<std::uint8_
 // 실제 접속 성공 뒤의 부분 효과만 수행하며 새 접속/Player 상태를 만들지 않는다.
 void RawConnectionRegistry::StoreConnectPacket(std::int32_t id,std::span<std::uint8_t> packet,RawPacketDispatch& dispatch) {
     if (id<0 || id>=static_cast<std::int32_t>(buffers_.size())) throw std::out_of_range("접속 초기 패킷의 실제22칸 범위");auto& slot=buffers_[static_cast<std::size_t>(id)];if (slot) { Release(slot);slot=0; } // 기존 복제 반납 뒤에만 새 observer/할당을 수행한다.
-    if (packet.empty()) return;if (packet.size()<4) throw std::out_of_range("접속 초기 패킷의 실제 헤더 부족");const auto entry=dispatch.Registration(packet[1]);const auto pin=entry.Pin();entry.NotifyObserver(packet,1);
-    const auto length=std::size_t(packet[2])|(std::size_t(packet[3])<<8);if (length>packet.size()) throw std::out_of_range("접속 초기 패킷의 observer 뒤 길이 초과");auto copy=std::make_shared<std::vector<std::uint8_t>>(packet.begin(),packet.begin()+static_cast<std::ptrdiff_t>(length));
-    if (!nextToken_) throw std::overflow_error("접속 초기 패킷 opaque 토큰 소진");const auto token=nextToken_++;connectPackets_.emplace(token,std::move(copy));slot=token; //4dece0의 전체 복사가 끝난 뒤에만 현재 칸에 공개한다.
+    auto copy=DuplicateRawPacket(packet,0,{},dispatch);if (!copy.present) return;
+    if (!nextToken_) throw std::overflow_error("접속 초기 패킷 opaque 토큰 소진");const auto token=nextToken_++;connectPackets_.emplace(token,std::move(copy.allocation));slot=token; //4dece0의 전체 복사가 끝난 뒤에만 현재 칸에 공개한다.
 }
 // 송신 callback이 현재 버퍼 칸을 바꿔도 원문처럼 free 단계에서 다시 읽는다.
 void RawConnectionRegistry::SendConnectPacket(std::int32_t id) {

@@ -21,7 +21,8 @@ std::string LanHtmlText(std::string_view text) {
 void UberGump::CloseLanLobby() {
     if (!lan_) return;
     if (lan_->start && !lan_->start->consumed && client_.LocalStateGlobals()->State().current[0]!=7) { // 이미 실제 실행 중인 State7은 보존하고 아직 호스트 큐에서 기다리는 자기 시작만 취소한다.
-        state_.Cancel("LoadLanBattleWorld");auto& local=*client_.LocalStateGlobals();if (local.State().next[0]==7) local.State().next[0]=0;local.ZonePending()=0;lan_->start.reset();lan_->battle.reset();
+        state_.Cancel("LoadLanBattleWorld");auto& local=*client_.LocalStateGlobals();const bool ownNext=local.State().next[0]==7 && (!lan_->start->storedZone || local.State().next[32]==lan_->start->zoneToken); //Native 수신이 덮어쓴 다른 next7을 자기 대기실 요청으로 취소하지 않는다.
+        if (ownNext) { local.State().next[0]=0;local.ZonePending()=0; }if (lan_->start->storedZone) { local.ZonePackets().Release(lan_->start->zoneToken);if (ownNext) local.State().next[32]=0; }lan_->start.reset();lan_->battle.reset(); //자기 취소 요청의 실제 할당만 반납하며 다른 current/next의 token은 해제하지 않는다.
     }
     if (lan_->lobby) { lan_->lobby->Close();lan_->lobby.reset(); }if (lan_->serial) if (const auto token=rawButtons_->SerialGump(lan_->serial)) rawButtons_->KillGump(token);lan_->serial=0;lan_->body.clear();lan_->choosing=false;
 }
@@ -66,9 +67,9 @@ void UberGump::PollLanLobby() {
 // 로컬 명단 합의는 원문과 같은 next7/주소/포트/소유 Zone 표식에 인계한다.
 void UberGump::RequestLanBattle(LanLobbyBattle battle) {
     if (!lan_ || !world_ || mission_ || missionRuntime_ || state_.Pending()) throw std::logic_error("LAN 시작의 실제 일반 Fort/단일 호스트 요청 계약");
-    auto request=std::make_shared<GeneralBattleStartRequest>();request->handle=world_->Session().CurrentHandle();request->zone=std::move(battle.zone);auto& local=*client_.LocalStateGlobals();auto next=local.State().next;
+    auto request=std::make_shared<GeneralBattleStartRequest>();request->handle=world_->Session().CurrentHandle();auto& local=*client_.LocalStateGlobals();request->storedZone=battle.host;if (battle.host) request->zoneToken=local.ZonePackets().Adopt(std::move(battle.zone));else request->zone=std::move(battle.zone);auto next=local.State().next; //현재 일반 LAN 호스트의 같은 byte 할당을 장기 저장소에 인계하고 client/복구의 기존 입력 계약은 유지한다.
     auto bytes=std::span(reinterpret_cast<std::uint8_t*>(next.data()),sizeof(next));if (battle.host) { const std::array<std::uint8_t,9> address{'z','l','o','c','a','l',',','*',0};std::copy(address.begin(),address.end(),bytes.begin()+0x54); }else std::copy(battle.serverAddress.begin(),battle.serverAddress.end(),bytes.begin()+0x54);
-    next[0]=7;next[31]=battle.gamePort;next[32]=battle.host ? 1U:0U;next[33]=0;next[34]=0;local.State().next=next;local.ZonePending()=battle.host ? local.ZonePending()+1U : 0U; // handle1은 요청이 실제 소유한 가변 이미지이며 호스트 포인터를 절삭하지 않는다.
+    next[0]=7;next[31]=battle.gamePort;next[32]=request->zoneToken;next[33]=0;next[34]=0;local.State().next=next;local.ZonePending()=battle.host ? local.ZonePending()+1U : 0U; //State+80에는 실제 가변 할당의 token을 쓰며 특정 상수1이나 호스트 포인터 절삭으로 대체하지 않는다.
     CloseLanLobby();lan_->battle=std::move(battle);lan_->start=std::move(request);state_.Post({"LoadLanBattleWorld",{}});
 }
 // World 반납보다 오래 사는 같은 Client의 공통 State7/즉시8 부모다.

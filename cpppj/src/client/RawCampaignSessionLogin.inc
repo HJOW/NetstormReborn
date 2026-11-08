@@ -284,10 +284,12 @@ struct RawCampaignSession::Impl::Login {
     void BeginGeneral(bool parentRunning) {
         const auto request=s.services.generalBattleStart;
         if (!parentRunning || !request || request->consumed || !request->starting || blocks[3][0]!=7 || !effects.transport || s.globals.missionPost || s.objectState.mission) throw std::logic_error("일반 LAN의 외부 State7/같은 요청/실제 전송 계약");
-        if ((request->starting->zonePending!=0)==request->zone.empty()) throw std::logic_error("일반 LAN의 정리 전 Zone 표식/가변 이미지 불일치");
+        if (!request->storedZone && (request->starting->zonePending!=0)==request->zone.empty()) throw std::logic_error("일반 LAN의 정리 전 Zone 표식/가변 이미지 불일치"); //기존 독립/복구 요청의 벡터 계약만 유지하며 Native token은 실제 설치 위치에서 조회한다.
         if (simul) Need(transport.listen)(std::bit_cast<std::uint32_t>(Need(effects.configInt)("gameServerPort",6799))); // 원문은 서버 권한과 별개로 Zone 설치 전에 simulconnect listener를 연다.
         if (request->starting->zonePending) {
-            InstallZone(request->zone);std::vector<std::uint8_t>{}.swap(request->zone);blocks[3][32]=0;blocks[4][32]=0;
+            if (request->storedZone) { { const auto zone=s.localStateGlobals->ZonePackets().Acquire(blocks[3][32]);InstallZone(*zone); }const auto released=blocks[3][32];s.localStateGlobals->ZonePackets().Release(released);if (request->zoneToken==released) request->zoneToken=0; } //설치에는 당시 현재 token을 pin하고 복귀 뒤에는 현재 State+80을 다시 읽어 원문 free 위치에서 반납한다. 호스트 취소 소유권도 실제 반납 뒤에만 지운다.
+            else { InstallZone(request->zone);std::vector<std::uint8_t>{}.swap(request->zone); } //기존 독립 입력/복구의 실제 소유 벡터도 같은 위치에서 반납한다.
+            blocks[3][32]=0;blocks[4][32]=0; //실제 반납이 끝난 뒤 current/next만 지우며 이미 복사한 immediate+80은 보존한다.
             clockSynchronization->InitializeServer(*transport.dispatch); // 원문은 Zone 설치/해제 때만 서버 시간 응답기를 등록한다.
         }
         request->consumed=true;Need(effects.initializeRenderer)();s.playerState.playerKnown=0;SetUiMode(2);ResetAmbientSoundDeadline(activityEnd,effects.wallSeconds);blocks[2][1]=20;state->Request(8);
