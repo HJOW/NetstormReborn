@@ -1,0 +1,80 @@
+{
+  "unit": 1147,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "eefded86 / 20261108-115 CP",
+  "summary": "21h 참가자 제거의 현재 개수 순회·범위/checking/active 진단·캡처 CS 좌석/버전·실제 Chat100기록 제거·이탈 Rig/이미지 반납/460BYTE 초기화·마지막 NSInfo를 연결했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1147\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13052416,
+      "sha256": "0da6fae77419126c1e5717b6bebdbb1096c602f36372a9bb40edad66766292aa"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "bc98702fcd41b24b1b5afa70a490d0eed253c0be57b265a48aa968a41198bc17"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4b46d0/40a390/42c2a0/42bc10/42b980/445110 C/PE·현재BYTE/진입CS·진단 복귀 뒤 active 재조회·모든 subscriber 일치/0 포함·a0별 실제 Rig 이탈→Imagefree→115DWORD0·동일 Frame/Kernel/Chat 장치를 대조했다.",
+  "nativeEvidenceSha256": {
+    "0040a390.asm": "360ea56a39f4bb1b65e827d8ddd500debe3f86cd394119c2610f5251d6a2c33c",
+    "0040a390.c": "9d0451d9d112a40e45b1fc5417e0faea3c83f279f5e1c2c71013458bf8502593",
+    "0042b980.asm": "b488b9b3ae5af42abb7639f19b75755730e8178f4b7afa13b19122d2a4e6536e",
+    "0042b980.c": "a8fd2d5d69360afc1f1348af5c2663fc2522924dd57afd9de68877878392ed84",
+    "0042bc10.asm": "ad4eb02ac679f4dc205466427518c208b5194225a6c8c8b758bc10f897c05332",
+    "0042bc10.c": "6733872ace827e7165c849fa473c5c0b933a87ac6d8361192c74374441c92508",
+    "0042c2a0.asm": "a83bd5c95a4b404f937379321c8bc599ed32f437fc8632e20f65cb9113a48b74",
+    "0042c2a0.c": "19655a5dd16f4e0c92ad88cc637fde1de69444619b82bde22369f9242daa1b75",
+    "00445110.asm": "0343d83913814eb7c7f6101d3dfb8b6c5299a159b376557f5c42fa619ff03eb1",
+    "00445110.c": "fbc0eb644816cb44898c8e65caeebff72c3525a3dffa803b1bff093f2db58ab7",
+    "004b46d0.asm": "dbe835ce737db4405a41fba099a7bfbde4f45bd033d4c7f5e16904445e2cbc2b",
+    "004b46d0.c": "14d64b7ad208eb69fbd91e6940f90688494a58fb430e450c96b8a911e9e2c2c5"
+  },
+  "sourceAudit": {
+    "sameObserverCurrentCountAndVersionPolicy": true,
+    "sameIllegalAndCheckingInactiveBranches": true,
+    "sameCapturedCsSlotAndVersionAfterDisplay": true,
+    "chatClearsEveryMatchingRecordIncludingZeroWithoutRefresh": true,
+    "sameActualRigDownwardFlagThenImageFreeThenFullRecordZero": true,
+    "zeroCountStillRefreshesNsInfo": true,
+    "noSenderKnownPhaseFilterAdded": true
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "assetDataQuery": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "신규 MP/단위/게임/실제 통신 검사는 요청대로 제외했으며 실제 접속/이탈 애니메이션/동작/안정성 검증 완료가 아니다.",
+    "범위 밖 packet/CS/좌석/해제 토큰은 호스트 오류로 거부하며 원문 범위 밖 메모리 훼손/OS 실패/전체 입력 자체 일치를 보장하지 않는다. 앞선 좌석/Chat/Rig/Image 효과는 되돌리지 않는다.",
+    "22h 이동·25h 항해 오류·1a/1b checking·하강/참가 후속·HTML/송신 caller와 helpWord 캐시 수명·기존 강제 활성 커서/조기·원격 희생/marker 진단 경계는 잔여다."
+  ],
+  "remaining": [
+    "메타 CS 수신22/25h·1a/1b checking·하강/참가 후속 카메라·HTML·1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI"
+  ]
+}

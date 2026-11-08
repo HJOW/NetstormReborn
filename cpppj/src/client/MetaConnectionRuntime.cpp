@@ -32,6 +32,7 @@
 #include "client/NativeMetaBattleOptions.h" //현재CS의실제67h수신/음향·NSInfo갱신을공통등록표에결합한다.
 #include "client/NativeMetaParticipantName.h" //88h는 현재 CS 길드 표시/실제 이름표와 지정 참가자 갱신을 사용한다.
 #include "client/NativeMetaParticipantCreate.h" //20h의 전체 실제 참가자 생성/CS 좌석·Chat/후행 표시다.
+#include "client/NativeMetaParticipantRemove.h" //21h의 전체 캡처 CS 제거/같은 Chat/Rig/Image 수명이다.
 #include "client/NativeCameraRig.h" //자기 참가자의 실제 입장 카메라를 같은 Kernel에 연결한다.
 #include "client/RawChatChannels.h" //원문 packet 이름/채널20h를 같은 실제 Chat100기록에 저장한다.
 #include "client/NativeMetaGeometry.h" //26h는 같은 Renderer 한계와 장기 CS 원점/반경을 갱신한다.
@@ -117,6 +118,11 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     dispatch.Observe(0x88,{});dispatch.Version(0x88,1,0);dispatch.RequireLength(0x88,98); //0040b380 빈 관찰기와 보호 PE0052ec40의 고정98BYTE다.
     dispatch.ObservePacket(0x20,[this](auto packet,auto sending) { ObserveNativeMetaParticipantAdd(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x20,1,0);dispatch.RequireLength(0x20,0xffff);
     dispatch.Register(0x20,[this](auto,auto&,auto packet) { ReceiveParticipantAdd(packet); }); //원문 State의 메타 관문 뒤만 처리하며 sender/known/phase를 더 검사하지 않는다.
+    dispatch.ObservePacket(0x21,[this](auto packet,auto sending) { ObserveNativeMetaParticipantRemove(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x21,1,0);dispatch.RequireLength(0x21,0xffff);
+    dispatch.Register(0x21,[this](auto,auto&,auto packet) {
+        if (!client_.SurfaceStorage()->ownerMode.challenge) return;if (!client_.ChallengeGlobals()->Current()) client_.SurfaceStorage()->AssertDisplay("CS",".\\State.cpp",0xd04);NativeMetaParticipantRemoveHooks h;h.checking=client_.SurfaceStorage()->Checking();h.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };h.log=[this](auto text) { client_.WriteDiagnosticLog(9,text); };
+        h.battle=[this](auto id) { client_.UpdateNativeMetaBattle(id); };h.chat=[this](auto subscriber) { client_.ChatChannels().Forget(subscriber); };h.leave=[this](auto object,auto downward) { auto& rig=client_.AcquireNativeIslandRig(object,0,1);LeaveNativeIslandRig(rig,downward); };h.refreshInfo=refreshInfo_;ReceiveNativeMetaParticipantRemove(*client_.ChallengeGlobals(),packet,h);
+    }); //4b46d0의 현재 메타/CS 진단 뒤 전체 제거를 연결하며 phase/known/sender를 추가하지 않는다.
     dispatch.ObservePacket(0x26,[this](auto packet,auto sending) { ObserveNativeMetaGeometry(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x26,1,0);dispatch.RequireLength(0x26,0xffff);
     dispatch.Register(0x26,[this](auto,auto&,auto packet) {
         auto& challenge=*client_.ChallengeGlobals();ReceiveNativeMetaGeometry(packet,challenge.Geometry(),challenge.GeometryMode(),[this](float width,float height) { auto& screen=client_.GetScreen();client_.GameplayGlobals()->Camera().UpdateTargetLimits(screen.Width(),screen.Height(),width,height); });

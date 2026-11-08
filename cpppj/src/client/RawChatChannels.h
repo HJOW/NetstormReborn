@@ -32,6 +32,7 @@ public:
     void Clear(std::uint32_t mask) const;
     // 원본00445140: Subscriber 비0인 행만48BYTE 전체0으로 정리한다. 빈 행의 stale 값과 두 Subscriber 전역은 유지한다.
     void ResetOccupied() const;
+    void Forget(std::uint32_t subscriber) const; //00445110:같은ID의100기록을 모두 검사해 일치 행48BYTE를0으로 쓴다.0도 일치 대상이며 추가Refresh는 없다.
 private:
     // 정렬되지 않은 실제 기록+2c의 DWORD subscriber를 읽는다.
     std::uint32_t Subscriber(std::size_t index) const;

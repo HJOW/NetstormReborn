@@ -591,6 +591,9 @@ target_sources(netstorm PRIVATE client/NativeMetaParticipantName.h client/Native
 # 20h 참가자 생성/후행 CS 좌석·Chat/이름표 부모다.
 target_sources(netstorm PRIVATE client/NativeMetaParticipantCreate.h client/NativeMetaParticipantCreate.cpp)
 
+# 21h의 실제 참가자 제거와 같은 Chat/Rig/Image 반납 부모다.
+target_sources(netstorm PRIVATE client/NativeMetaParticipantRemove.h client/NativeMetaParticipantRemove.cpp)
+
 # 26h의 실제 화면 한계와 같은 CS 원점/반경 배치 전역 수신이다.
 target_sources(netstorm PRIVATE client/NativeMetaGeometry.h client/NativeMetaGeometry.cpp)
 

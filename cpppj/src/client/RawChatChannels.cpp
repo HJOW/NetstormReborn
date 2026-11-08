@@ -61,6 +61,13 @@ void SanitizePlayerName(std::uint32_t subscriber,std::span<std::uint8_t> record)
 void RawChatChannels::NameChanged(std::uint32_t subscriber,std::span<std::uint8_t> record) const { if (observe_) observe_(ChatChannelCall::NameChanged,subscriber);SanitizePlayerName(subscriber,record.first(kNameBytes)); }
 // 실제004437f0은 단일ret이다. 선택 관찰을 제외하면 추가 UI 갱신이나 이벤트를 만들어내지 않는다.
 void RawChatChannels::Refresh() const { if (observe_) observe_(ChatChannelCall::Refresh,0); }
+// 현재 subscriber가 같은 모든 행을 지우며0식별자 행의 stale 값도 원문처럼 반납한다.
+void RawChatChannels::Forget(std::uint32_t subscriber) const {
+    for (std::size_t index=0;index<kCount;++index) { //첫 일치에서 멈추지 않고 원문100개 기록을 같은 순서로 방문한다.
+        if (Subscriber(index)!=subscriber) continue;const auto record=records_.subspan(index*kStride,kStride);
+        for (auto& byte:record) byte=0; //같은 실제48BYTE 전체를 지우며 별도 Chat Refresh/이벤트를 만들지 않는다.
+    }
+}
 // 현재 자기 식별자·첫 빈칸·기존 식별자와 특수-1 분기를 원본 검색 순서로 처리한다.
 std::int32_t RawChatChannels::Add(std::uint32_t subscriber,std::optional<std::string_view> name,std::uint32_t flags) const {
     if (subscriber==mySubscriber_()) return -1;
