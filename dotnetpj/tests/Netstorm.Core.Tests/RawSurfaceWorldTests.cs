@@ -1117,6 +1117,111 @@ public sealed class RawSurfaceWorldTests
         (RawSurfaceWorld world, _, _) = DisplayScene(0x50c9f0u, invalidated);
         Assert.Throws<InvalidOperationException>(() => world.SetSupportOwner(10f, 10f, 5u));
     }
+    /// <summary>배치 가능한 타입 표를 만든다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    /// <returns>생성자 주소 표를 채운 타입 표다.</returns>
+    private static List<OriginalTypeRecord> DisplayTypes()
+    {
+        var types = TypesWithAddresses();
+        types[70].ConstructorAddress = 0u;
+        return types;
+    }
+
+    /// <summary>배치 가능한 전체 저장소를 만든다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    /// <param name="types">같은 전역 TYPE 표다.</param>
+    /// <param name="frames">같은 장기 프레임 표다.</param>
+    /// <returns>호스트·표시·배치 조회까지 되는 저장소다.</returns>
+    private static RawSurfaceStorage DisplayPopStorage(List<OriginalTypeRecord> types, List<RiftTypeFrames> frames)
+    {
+        var shapes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new SquidDisplayShape()).ToList();
+        shapes[70].FrameCount = 1;
+        shapes[70].Loaded = true;
+        shapes[70].Frames.Add(new SquidDisplayFrame { Width = 10, Height = 12, HotspotX = 2, HotspotY = 3, CellWidth = 8f, CellHeight = 6f });
+        return new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes);
+    }
+
+    /// <summary>배치 가능한 월드를 만든다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    /// <returns>배치 가능한 월드다.</returns>
+    private static RawSurfaceWorld DisplayPopWorld()
+    {
+        var types = DisplayTypes();
+        var frames = Frames188();
+        return new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, DisplayPopStorage(types, frames), frames);
+    }
+
+    /// <summary>188개가 아닌 TYPE 월드의 등록을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PopRejectsNon188World()
+    {
+        // CD 171개 TYPE의 배치 연결은 후속 단위에서 잇는다.
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        Assert.Throws<InvalidOperationException>(() => world.Pop(5, 10f, 10f));
+        Assert.Throws<InvalidOperationException>(() => world.Repop(5));
+    }
+
+    /// <summary>표시 수집이 없으면 등록을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PopRejectsMissingDisplay()
+    {
+        // 셰이프 표 없는 껍데기 월드의 배치는 후속 단위에서 잇는다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<InvalidOperationException>(() => world.Pop(5, 10f, 10f));
+    }
+
+    /// <summary>살아 있는 자산이 같은 공간에 등록되는지 검증한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PopPlacesLiveSlot()
+    {
+        // 생성→등록 파이프라인의 공간 고정을 검증한다.
+        var world = DisplayPopWorld();
+        int sid = world.Create(70u, 0u);
+        Assert.True(world.TakeChanged());
+        world.Pop(sid, 10f, 10f);
+        List<SurfaceSnapshot> objects = world.Objects();
+        Assert.Single(objects);
+        Assert.Equal(sid, objects[0].Sid);
+        Assert.Equal(10f, objects[0].Object.X);
+        Assert.Equal(10f, objects[0].Object.Y);
+        Assert.True(world.TakeChanged());
+    }
+
+    /// <summary>범위 밖 좌표가 10으로 고정되는지 검증한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PopClampsOutOfRange()
+    {
+        // 원문처럼 지도 밖·0 이하 좌표는 10으로 둔다.
+        var world = DisplayPopWorld();
+        int sid = world.Create(70u, 0u);
+        world.Pop(sid, 300f, 300f);
+        List<SurfaceSnapshot> objects = world.Objects();
+        Assert.Single(objects);
+        Assert.Equal(10f, objects[0].Object.X);
+        Assert.Equal(10f, objects[0].Object.Y);
+    }
+
+    /// <summary>다시 등록이 현재 좌표를 읽는지 검증한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RepopReregisters()
+    {
+        // 해제 뒤 같은 공간 재등록 경로를 검증한다.
+        var world = DisplayPopWorld();
+        int sid = world.Create(70u, 0u);
+        world.Pop(sid, 10f, 10f);
+        world.Unpop(sid);
+        Assert.Empty(world.Objects());
+        world.Repop(sid);
+        Assert.Single(world.Objects());
+    }
+
+    /// <summary>빈 번호의 등록을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PopRejectsFreeSlot()
+    {
+        // 슬롯 5번은 fresh 풀의 빈 머리라 SHP 조회 전에 멈춘다.
+        var world = DisplayPopWorld();
+        Assert.Throws<InvalidOperationException>(() => world.Pop(5, 10f, 10f));
+    }
+
     /// <summary>188개가 아닌 TYPE 월드의 해제를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 해제 연결 이식에서 추가됐다.</summary>
     [Fact]
     public void UnpopRejectsNon188World()

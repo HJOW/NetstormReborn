@@ -73,6 +73,18 @@ public sealed class RawSurfaceWorld
     /// <summary>무인도 최초 등록과 3×3 받침 소유자 전파를 복원한 처리기다. 원본 Impl.surface에 대응하며 188개 TYPE·같은 수 프레임이 아니면 비워 둔다. 연결 조회는 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐고 0.251에서 표시 갱신을 연결했다.</summary>
     private readonly RawIslandPostPop? _surface;
 
+    /// <summary>원본 타입 전역과 현재 점검 전역이다. 원본 Impl.buildingState에 대응한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    private readonly BuildingSpaceState _buildingState = new();
+
+    /// <summary>일반 건물의 공간 등록·해제를 반영하는 처리기다. 원본 Impl.building에 대응하며 188개 TYPE가 아니면 비워 둔다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    private readonly RawBuildingSpace? _building;
+
+    /// <summary>객체 Pop 이후 목록·공간 후처리를 수행하는 처리기다. 원본 Impl.postPop에 대응하며 188개 TYPE가 아니면 비워 둔다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    private readonly RawPostPop? _postPop;
+
+    /// <summary>객체를 공간 지도에 등록하는 처리기다. 원본 Impl.pop에 대응하며 188개 TYPE가 아니면 비워 둔다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    private readonly RawPop? _pop;
+
     private readonly RawUnpop? _unpop;
 
     /// <summary>자산 삭제의 기본 몸체다. 원본 Impl.baseDestroy에 대응한다. 188개 TYPE가 아니면 비워 두며 CD 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 연결 이식에서 추가됐다.</summary>
@@ -148,8 +160,7 @@ public sealed class RawSurfaceWorld
         {
             _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph.Records, _storage.Graph.Stack, null, GraphRecovery.FullPool);
             _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots);
-            _factory = new RawSquidFactory(_storage.Pool, _types, false, _unpop);
-            if (_frames.Count == _types.Count)
+            _factory = new RawSquidFactory(_storage.Pool, _types, false, _unpop);            if (_frames.Count == _types.Count)
             {
                 _surface = new RawIslandPostPop(_storage.Pool, new HashLevelView(_storage.Hash), _types, _frames, _storage.Links, _loadState, new IslandPostPopHooks
                 {
@@ -167,6 +178,13 @@ public sealed class RawSurfaceWorld
                 });
             }
             _baseDestroy = new RawSquidDestroy(_storage.Pool, _unpop, _types);
+            _buildingState.IslandType = _terrainType;
+            _buildingState.BridgeType = _storage.Links.BridgeType;
+            _building = new RawBuildingSpace(_storage.Pool, _storage.Hash, _types, _buildingState);
+            _postPop = new RawPostPop(_storage.Pool, _types, _bookkeeping, _graph);
+            _pop = new RawPop(_storage.Pool, _storage.Hash, _storage.Spots, null, _postPop);
+            _pop.SetBuildingSide(_building);
+            _unpop.SetBuildingSide(_building);
         }
 
         // 소유자 처리는 판본에 맞는 개수(패치 188·CD 171)일 때만 둔다. 어긋난 기존 껍데기 호출은 명시 오류로 멈춘다.
@@ -692,6 +710,33 @@ public sealed class RawSurfaceWorld
 
         _unpop.Unpop(sid, _types[_storage.Pool.Slot(sid)[RawSidPool.TypeOffset]], flags);
         _changed = true;
+    }
+
+    /// <summary>현재 raw 프레임의 실제 SHP 크기가 공간 등록에 쓰인다.</summary>
+    /// <param name="sid">등록할 객체 번호다.</param>
+    /// <param name="x">가로 좌표다.</param>
+    /// <param name="y">세로 좌표다.</param>
+    /// <param name="flags">등록 플래그다.</param>
+    public void Pop(int sid, float x, float y, uint flags = 0u)
+    {
+        if (_pop is null || _display is null)
+        {
+            throw new InvalidOperationException("실제 월드 공간 등록이 연결되지 않았습니다.");
+        }
+
+        ReadOnlySpan<byte> raw = _storage.Pool.Slot(sid);
+        float[] size = _display.FrameSize(_edition, raw, unchecked((int)ReadSlot(raw, 36, 4)));
+        _pop.Pop(sid, _types[raw[RawSidPool.TypeOffset]], size[0], size[1], x, y, flags);
+        _changed = true;
+    }
+
+    /// <summary>Unpop 뒤 현재 raw 좌표를 읽어 같은 공간에 다시 Pop한다. 원문 호출자가 해제 순서를 정한다.</summary>
+    /// <param name="sid">다시 등록할 객체 번호다.</param>
+    /// <param name="flags">등록 플래그다.</param>
+    public void Repop(int sid, uint flags = 0u)
+    {
+        ReadOnlySpan<byte> raw = _storage.Pool.Slot(sid);
+        Pop(sid, BitConverter.UInt32BitsToSingle(ReadSlot(raw, 14, 4)), BitConverter.UInt32BitsToSingle(ReadSlot(raw, 18, 4)), flags);
     }
 
     /// <summary>현재 카메라의 원본 픽셀 기준값과 GUI 변경 표를 연결한다.</summary>
