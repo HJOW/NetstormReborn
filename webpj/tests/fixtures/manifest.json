@@ -9249,7 +9249,7 @@
       "bytes": 161221,
       "lines": 234,
       "fixtureCommit": "6cbb7fdb",
-      "webCommit": "worktree",
+      "webCommit": "9ac84aab",
       "cpppjBasis": {
         "cpppj/src/o/RawBalloonBody.cpp": "0e66d91b"
       }
@@ -9278,9 +9278,38 @@
       "bytes": 184526,
       "lines": 257,
       "fixtureCommit": "6cbb7fdb",
-      "webCommit": "worktree",
+      "webCommit": "9ac84aab",
       "cpppjBasis": {
         "cpppj/src/o/RawBalloonBody.cpp": "0e66d91b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E95",
+      "id": "carrier-drop-point",
+      "path": "cpppj/tests/fixtures/carrier-drop-point-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 운반물 내려놓기 위치 Find/FindFootprint/Snap 의 결과 점·배치/중심 호출 순서·현재 전역 여섯 값·슬롯 raw 50바이트(998행; Snap 256행은 기본 53비트 열 사용·64비트 열과 다른 31행)",
+      "consumers": [
+        "webpj/tests/carrier-drop-point.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-drop-point.js"
+      ],
+      "doc": "docs/webpj-carrier-drop-point-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCarrierDropPoint.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 998행 전부 사용",
+      "text": true,
+      "sha256": "4092cfdba7201e449d64862e71488fd95257d6400513d81a2360cae1b6e3aebb",
+      "bytes": 619466,
+      "lines": 999,
+      "fixtureCommit": "12614433",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCarrierDropPoint.cpp": "12614433"
       }
     }
   ]
