@@ -573,7 +573,7 @@ cpppj/src/o/RawCanonPlacementSurrounding.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementTerrain.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierArrival.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierCandidateSort.cpp	port			todo	[o-default]
-cpppj/src/o/RawCarrierCheck.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierCheck.cpp	port	www/core/raw-carrier-check.js	1f00a25a	port	[o-default] WB04-E65: Carrier 가상 +0xcc 지면 조회 00426fc0(제외 genus 0x320000·거의 올림 칸 spot&6·가상 +0xc8)·makeCarrierCheckPostPopHooks/SpawnHooks. fixture carriercheck 10.78 676행 전부. 표면 삭제 합성(RawIslandLifecycle)·사제 나선 생성(RawPriestSpawn)은 해당 파일 단위에서
 cpppj/src/o/RawCarrierChoice.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierContentNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierDrop.cpp	port			todo	[o-default]
@@ -727,7 +727,7 @@ cpppj/src/o/RawFortTerritoryRecover.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/o/RawFortTerritorySave.cpp	exclude-edit			-	[edit-fort-save]
 cpppj/src/o/RawFortTypeNamesLoad.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/o/RawFortWorldLoad.cpp	port			todo	[o-default]
-cpppj/src/o/RawFrameAdvance.cpp	port			todo	[o-default]
+cpppj/src/o/RawFrameAdvance.cpp	port	www/core/raw-frame-advance.js	1f00a25a	port	[o-default] WB04-E65: 공통 프레임 진행 004afc90(구간 보정 한 번·실제 SquidFrame.set 호출·보정 여부). fixture frameadvance 10.78 7680행 전부
 cpppj/src/o/RawFrameChoose.cpp	port	www/assets/terrain-fringe.js;www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] 프레임 선택
 cpppj/src/o/RawGameAuxState.h	port	www/core/game-aux-state.js	11fbb988	port	[o-default] WB04-C2·D3(Form 종속 전역 3칸) / 3.6①(9cb0547f, WB02-H 판정): 중앙섬 X/Y(00568afc/00568b00) 칸 추가는 멀티플레이 중앙섬·메타 몫(웹 제외) / 3.6③(11fbb988, WB04-D5b 판정): 새 장기 전역 칸(StateNotifyType 82·Spell/Income·프로세스 TYPE·건설 헤더·미션 설정 7칸·Quick 건설 등) 추가와 지정 칸 의미 갱신 → 각 소비자 이식 단위에서 보호 PE 초기값과 함께 추가. 기존 웹 칸의 값/폭 변화 없음
 cpppj/src/o/RawGameRandomSeed.cpp	port	www/core/random.js;www/assets/terrain-tiles.js	1f00a25a	port	[o-default] WB04-C1(시드 Initialize/Reseed)
@@ -833,7 +833,7 @@ cpppj/src/o/RawPlayerTemplateState.cpp	port	www/core/raw-player-template-state.j
 cpppj/src/o/RawPlayerWorld.cpp	port	www/core/raw-player-world.js	1f00a25a	port	[o-default] WB04-E55: Player152 생성 00490250·파생 postPop 004905d0·Technology getter 0048fc60/0048fc90. fixture player-world 10.78 840행 전부. RawSurfaceWorld 연결 검사는 WB05
 cpppj/src/o/RawPriestArrival.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestDamage.cpp	port			todo	[o-default]
-cpppj/src/o/RawPriestFall.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestFall.cpp	port	www/core/raw-priest-fall.js	1f00a25a	port	[o-default] WB04-E65: 사제 낙하 요청 004941f0·tryFall 00494e80·0x25b 이벤트 00494580/00493e60·분배기/훅 연결(makePriestFallHandler/Walker/Hooks/FrameHooks). fixture priestfall 10.78 456행 전부. 회복 분배기 합성(RawPriestRegen)은 해당 단위에서
 cpppj/src/o/RawPriestForcefield.cpp	port	www/core/raw-priest-forcefield.js	1f00a25a	port	[o-default] WB04-E63: 사제 보호막 조회 004918e0. fixture priestforcefield 10.78 2976행(Find/Pre) 전부
 cpppj/src/o/RawPriestHalt.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestLookup.cpp	port			todo	[o-default]

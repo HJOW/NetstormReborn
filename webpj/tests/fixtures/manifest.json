@@ -7554,7 +7554,7 @@
       "bytes": 1370408,
       "lines": 6146,
       "fixtureCommit": "59fb516b",
-      "webCommit": "worktree",
+      "webCommit": "4552e0ea",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPostPopTail.cpp": "22589c72"
       }
@@ -7583,9 +7583,99 @@
       "bytes": 849509,
       "lines": 3842,
       "fixtureCommit": "7f1f4531",
-      "webCommit": "worktree",
+      "webCommit": "4552e0ea",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPostPopTail.cpp": "22589c72"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E65",
+      "id": "frameadvance",
+      "path": "cpppj/tests/fixtures/frameadvance-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 프레임 진행→지정(표 생성·단계 계산은 실제 명령, 표시/Unpop/Pop만 기록 대체)의 보정 여부·호출 기록·슬롯 50바이트",
+      "consumers": [
+        "webpj/tests/frame-advance.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-frame-advance.js"
+      ],
+      "doc": "docs/webpj-frame-carrier-priest-fall-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFrameAdvance.cpp"
+      ],
+      "scope": "10.78(originals) 7680행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "74f24374bf31a47be3a48024052102ae5f8edfcedd3ccc940e1ecfdacaac75f1",
+      "bytes": 3318484,
+      "lines": 23042,
+      "fixtureCommit": "54bf1411",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFrameAdvance.cpp": "54bf1411"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E65",
+      "id": "carriercheck",
+      "path": "cpppj/tests/fixtures/carriercheck-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Carrier +0xcc / 사제 +0xc8 및 실제 낙하 요청의 반환·호출 기록·슬롯 50바이트·현재 권한(미복원 공간/소리/부착만 명시 대체)",
+      "consumers": [
+        "webpj/tests/carrier-check.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-check.js",
+        "webpj/www/core/raw-priest-fall.js"
+      ],
+      "doc": "docs/webpj-frame-carrier-priest-fall-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierCheck.cpp",
+        "cpppj/src/o/RawPriestFall.cpp"
+      ],
+      "scope": "10.78(originals) 676행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "949a692a3cbd4f8dfd9a3eae79c63fd005b9a7c40fd6eae4de385014ff9caee3",
+      "bytes": 353692,
+      "lines": 2030,
+      "fixtureCommit": "68cea453",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierCheck.cpp": "68cea453",
+        "cpppj/src/o/RawPriestFall.cpp": "ca10924a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E65",
+      "id": "priestfall",
+      "path": "cpppj/tests/fixtures/priestfall-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 낙하 요청/0x25b 이벤트의 호출 기록·슬롯 50바이트·반환 비트·현재 권한(공유 생성자는 실제 실행, 부착/공간/소리/보호막은 명시 대체)",
+      "consumers": [
+        "webpj/tests/priest-fall.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-fall.js"
+      ],
+      "doc": "docs/webpj-frame-carrier-priest-fall-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestFall.cpp"
+      ],
+      "scope": "10.78(originals) 456행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "e74b1a855885e1846c29fb6082de20cfec3f770185bcee18955bc2251161c10a",
+      "bytes": 239998,
+      "lines": 1370,
+      "fixtureCommit": "e143e856",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestFall.cpp": "ca10924a"
       }
     }
   ]
