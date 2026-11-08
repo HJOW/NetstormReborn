@@ -9336,9 +9336,38 @@
       "bytes": 213785,
       "lines": 629,
       "fixtureCommit": "e49f11da",
-      "webCommit": "worktree",
+      "webCommit": "3f93533f",
       "cpppjBasis": {
         "cpppj/src/client/RawCarrierMenu.cpp": "8c10b36a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E97",
+      "id": "carrier-input",
+      "path": "cpppj/tests/fixtures/carrier-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 운반물 평가/강조/클릭/확인 음향의 반환 코드·효과 순서와 인자·caller 최종 점·전역 여섯 값·TYPE 플래그와 프레임 장부·여섯 슬롯 raw(454행; 53/64비트 열 동일)",
+      "consumers": [
+        "webpj/tests/carrier-input.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-input.js"
+      ],
+      "doc": "docs/webpj-carrier-input-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCarrierInput.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 454행 전부 사용",
+      "text": true,
+      "sha256": "86c9873814dc1c9a78bf7e2b66e20d348387c091d98492ae7909d80fbdbdcb11",
+      "bytes": 746722,
+      "lines": 455,
+      "fixtureCommit": "30cc125c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCarrierInput.cpp": "30cc125c"
       }
     }
   ]
