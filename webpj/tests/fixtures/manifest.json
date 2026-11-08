@@ -11949,7 +11949,7 @@
       "bytes": 2751837,
       "lines": 4862,
       "fixtureCommit": "5a0343cd",
-      "webCommit": "worktree",
+      "webCommit": "625d9fa1",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPlacement.cpp": "4df5da6a",
         "cpppj/src/o/RawPriestPlacementPreview.cpp": "b024fa1e"
@@ -11979,9 +11979,38 @@
       "bytes": 5494342,
       "lines": 11522,
       "fixtureCommit": "b20272c7",
-      "webCommit": "worktree",
+      "webCommit": "625d9fa1",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPlacementCollision.cpp": "a072d5d9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E158",
+      "id": "priestterrain",
+      "path": "cpppj/tests/fixtures/priestterrain-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 사제 후보 지형/모양 종료/최종 판정 구간과 지역 조회(10.78 2240행)",
+      "consumers": [
+        "webpj/tests/priest-placement-terrain.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-placement-terrain.js"
+      ],
+      "doc": "docs/webpj-priest-placement-terrain-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPlacementTerrain.cpp"
+      ],
+      "scope": "10.78 실제 PE 2240행 전부",
+      "text": true,
+      "sha256": "e660c8d523db5d7d8b6594557b0488d49eada37e05a7eb9164aae5ecce2c2283",
+      "bytes": 3020870,
+      "lines": 6723,
+      "fixtureCommit": "6649e44f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPlacementTerrain.cpp": "6649e44f"
       }
     }
   ]
