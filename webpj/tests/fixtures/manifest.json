@@ -13311,7 +13311,7 @@
       "bytes": 40406,
       "lines": 37,
       "fixtureCommit": "d4652e85",
-      "webCommit": "worktree",
+      "webCommit": "66acb914",
       "cpppjBasis": {
         "cpppj/src/o/RawEvilRayFrame.cpp": "d4652e85"
       }
@@ -13342,10 +13342,39 @@
       "bytes": 67322,
       "lines": 35,
       "fixtureCommit": "8eebe34b",
-      "webCommit": "worktree",
+      "webCommit": "66acb914",
       "cpppjBasis": {
         "cpppj/src/o/RawEvilRayLifetime.cpp": "8eebe34b",
         "cpppj/src/o/ParticleGradient.cpp": "e6d97634"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E191",
+      "id": "smokeeffect",
+      "path": "cpppj/tests/fixtures/smoke-effect-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 냉각 연기 프레임/출력(전체 delta·동적 분열·가득 찬 꼬리·dirty/선·색)·방출 실패/재사용·냉각/기본 생성자·현재 SHP wrapper·반납 순서(10.78 893행)",
+      "consumers": [
+        "webpj/tests/smoke-effect.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-smoke-effect.js"
+      ],
+      "doc": "docs/webpj-smoke-effect-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSmokeEffect.cpp"
+      ],
+      "scope": "10.78 893입력 전부(frame 841·spawn 28·cold 8·wrapper 8·ctor 8)",
+      "text": true,
+      "sha256": "902cc800062300ad4463e71c5c9e32bac6e6b30d199f07791d09b1b44f18858a",
+      "bytes": 6159068,
+      "lines": 894,
+      "fixtureCommit": "e6d638a0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSmokeEffect.cpp": "e6d638a0"
       }
     }
   ]
