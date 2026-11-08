@@ -129,5 +129,5 @@ void SunAviaryProcess::OnAttached() { Put(fields_.bytes,kForm,Form().value);Put(
 void SunAviaryProcess::Notify(std::uint32_t,std::uint32_t,std::uint32_t) {} // 원본 inner+1c는00480260의 ret12 빈 몸체다.
 SunAviaryProcessFields& SunAviaryProcess::Fields() { return fields_; } // 같은 원문을 수정한다.
 const SunAviaryProcessFields& SunAviaryProcess::Fields() const { return fields_; } // 같은 원문을 읽는다.
-std::uint16_t SunAviaryProcess::WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force) { OnAttached();return RawSunAviaryProcess::WriteProcess(fields_,packet,parentChanged,force); } // 원본 writer 호출은 OnAttached보다 앞서기도 한다.
+std::uint16_t SunAviaryProcess::WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force,std::uint8_t protocol,std::uint8_t message) { OnAttached();return RawSunAviaryProcess::WriteProcess(fields_,packet,parentChanged,force,protocol,message); } // 원본 writer 호출은 OnAttached보다 앞서기도 한다.
 }

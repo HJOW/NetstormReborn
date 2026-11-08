@@ -1,5 +1,6 @@
 //게임 보조 전역과 NUL 종료 타입 사용256BYTE를 소유하며 Runtime/Host 객체는 포함하지 않는다.
 #pragma once
+#include "o/RawPathData.h" //Path의현재DWORD선언길이와헤더owner를Session밖에유지한다.
 #include "o/RawSquidTransmission.h" // 같은Client의공통버퍼/압축전역을World/Session과공유한다.
 #include <bit>
 #include <array>
@@ -76,6 +77,22 @@ public:
     std::uint32_t& ConstructionProcessType() { return constructionProcessType_; } //005410e8의 현재30이며 일반 생성/수신/볼텍스가 같은 DWORD를 읽는다.
     std::uint32_t& DaisProcessType() { return daisProcessType_; } //00541158의 현재58이며 asset DaisType165와 별개인 수신 부착 TYPE다.
     const std::uint32_t& DaisProcessType() const { return daisProcessType_; } // World/Session 교체에서 같은 장기 DWORD를 재초기화하지 않는다.
+    std::span<std::uint8_t,2> GunProcessHeader() { return gunProcessHeader_; } //005409b4/5의현재메시지/프로토콜두BYTE를실제writer가읽는다.
+    std::span<const std::uint8_t,2> GunProcessHeader() const { return gunProcessHeader_; } //같은장기두BYTE의읽기뷰이며Session교체로초기화하지않는다.
+    std::span<std::uint8_t,2> FlyerProcessHeader() { return flyerProcessHeader_; } //00532780/1의현재메시지/프로토콜두BYTE를실제writer가읽는다.
+    std::span<const std::uint8_t,2> FlyerProcessHeader() const { return flyerProcessHeader_; } //같은장기두BYTE의읽기뷰이며Session교체로초기화하지않는다.
+    std::span<std::uint8_t,2> SunAviaryHeader() { return sunAviaryHeader_; } //00532786/7의현재메시지/프로토콜두BYTE를실제writer가읽는다.
+    std::span<const std::uint8_t,2> SunAviaryHeader() const { return sunAviaryHeader_; } //같은장기두BYTE의읽기뷰이며Session교체로초기화하지않는다.
+    std::span<std::uint8_t,2> WindAviaryHeader() { return windAviaryHeader_; } //0053278a/b의현재메시지/프로토콜두BYTE를실제writer가읽는다.
+    std::span<const std::uint8_t,2> WindAviaryHeader() const { return windAviaryHeader_; } //같은장기두BYTE의읽기뷰이며Session교체로초기화하지않는다.
+    std::span<std::uint8_t,2> RainAviaryHeader() { return rainAviaryHeader_; } //0053278e/f의현재메시지/프로토콜두BYTE를실제writer가읽는다.
+    std::span<const std::uint8_t,2> RainAviaryHeader() const { return rainAviaryHeader_; } //같은장기두BYTE의읽기뷰이며Session교체로초기화하지않는다.
+    std::span<std::uint8_t,2> BombTimerHeader() { return bombTimerHeader_; } //0052ee9a/b의현재메시지/프로토콜두BYTE를실제writer가읽는다.
+    std::span<const std::uint8_t,2> BombTimerHeader() const { return bombTimerHeader_; } //같은장기두BYTE의읽기뷰이며Session교체로초기화하지않는다.
+    std::uint32_t& BombTimerInitialLength() { return bombTimerInitialLength_; } //00544c98의현재DWORD를최소4비교전에WORD로좁히지않는다.
+    const std::uint32_t& BombTimerInitialLength() const { return bombTimerInitialLength_; } //독립반환크기22+2count와구별되는현재선언입력이다.
+    RawPathDataHeader& PathPacketHeader() { return pathPacketHeader_; } //0052edce/cf·00544c50의같은현재두BYTE/DWORDowner다.
+    const RawPathDataHeader& PathPacketHeader() const { return pathPacketHeader_; } //현재Path헤더를복제/재초기화하지않는읽기뷰다.
     std::span<std::uint8_t,2> DaisProcessHeader() { return daisProcessHeader_; } //00532690/91의 현재6a/message·1/protocol BYTE를 그대로 빌린다.
     std::span<const std::uint8_t,2> DaisProcessHeader() const { return daisProcessHeader_; } // writer의 protocol bit7도 지우지 않는 같은 두BYTE다.
     std::span<std::uint8_t,2> ConstructionHeader() { return constructionHeader_; } //005325b8/b9의 현재 메시지/프로토콜BYTE를 그대로 빌린다.
@@ -195,6 +212,14 @@ private:
     std::uint32_t gunProcessType_{34}; // 보호 PE005410f8의 초기 DWORD다. World/Session 교체에서 새34를 쓰지 않는다.
     std::uint32_t constructionProcessType_{30}; // 보호 PE005410e8의 최초30이며 World/Session 교체에서 초기화하지 않는다.
     std::uint32_t daisProcessType_{58}; // 보호 PE00541158의 최초3ah이며 Regular/Dais asset 번호와 공유하지 않는다.
+    std::array<std::uint8_t,2> gunProcessHeader_{0x3a,1}; //보호PE005409b4/5의최초두BYTE이며같은현재owner를공유한다.
+    std::array<std::uint8_t,2> flyerProcessHeader_{0x39,1}; //보호PE00532780/1의최초두BYTE이며같은현재owner를공유한다.
+    std::array<std::uint8_t,2> sunAviaryHeader_{0x38,1}; //보호PE00532786/7의최초두BYTE이며같은현재owner를공유한다.
+    std::array<std::uint8_t,2> windAviaryHeader_{0x74,1}; //보호PE0053278a/b의최초두BYTE이며같은현재owner를공유한다.
+    std::array<std::uint8_t,2> rainAviaryHeader_{0x73,1}; //보호PE0053278e/f의최초두BYTE이며같은현재owner를공유한다.
+    std::array<std::uint8_t,2> bombTimerHeader_{0x7d,1}; //보호PE0052ee9a/b의최초두BYTE이며같은현재owner를공유한다.
+    std::uint32_t bombTimerInitialLength_{}; //보호PE00544c98은DWORD0이며writer가df590에서최소4로비교한다.
+    RawPathDataHeader pathPacketHeader_; //보호PE0052edce/cf=3001·00544c50=DWORD0이며현재값을Session밖에유지한다.
     std::array<std::uint8_t,2> daisProcessHeader_{0x6a,1}; // 보호 PE00532690/91의 현재 writer 헤더 두BYTE다. 별도 길이 초기값은 없다.
     std::array<std::uint8_t,2> constructionHeader_{0x37,1}; // 보호 PE005325b8/b9의 최초 두BYTE다. 선언 길이는 별도 값으로 추가하지 않는다.
     std::int32_t pathTraceLevel_{99}; // 보호 PE00540c68의 초기99이며 실제 공통 로그의 현재 임계값과 별개다.

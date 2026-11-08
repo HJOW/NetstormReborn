@@ -157,7 +157,9 @@ bool RawCampaignPathBindings::RetargetCurrent(o::Sid parent) const {
 // 실제 Host WriteData가 원래 buffer에 쓴 뒤 caller의 같은 전송 경계를 실행한다.
 o::ProcessFormTransmission RawCampaignPathBindings::Transmission(o::RawPathDataHeader& header,std::span<std::uint8_t> buffer,
     std::function<void(std::int32_t)> transport,o::ProcessFormTransmission other) const {
-    return o::MakePathFormTransmission(core_.pool,core_.types,header,buffer,std::move(transport),std::move(other));
+    o::RawPathDataNativeWriter native; //Native만같은정확본문/예약을사용하고기존typed값writer의guard/결과는유지한다.
+    if (world_.Storage()->UsesNativeTransmissionDevices()) native=[storage=world_.Storage()](auto& process,auto bytes,auto changed,auto force) { return storage->SerializeProcessForm(process,bytes,changed,force); };
+    return o::MakePathFormTransmission(core_.pool,core_.types,header,buffer,std::move(transport),std::move(other),std::move(native));
 }
 // root가 소유한 모든 도착/운반 모듈은 이 풀 참조로 혼합 연결을 확인할 수 있다.
 const o::SidPool& RawCampaignPathBindings::Pool() const { return core_.pool; }

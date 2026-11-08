@@ -43,7 +43,7 @@ public:
     void Notify(std::uint32_t,std::uint32_t,std::uint32_t) override; // VT50330c+1c의480260은 ret12인 빈 통지다.
     const BombEffectTimerFields& Fields() const; // 선택 표시가 같은 현재 목록·기한·flags를 읽는다.
     void ReadPacket(std::span<const std::uint8_t> packet); // 원본41e230을 현재 유일한 목록에 누적 적용한다.
-    std::uint32_t WritePacket(std::span<std::uint8_t> packet,std::uint16_t declaredLength) const; // 현재 Host Form/부모를 실제41e280에 전달한다.
+    std::uint32_t WritePacket(std::span<std::uint8_t> packet,std::uint32_t declaredLength,std::uint8_t protocol=1,std::uint8_t message=0x7d) const; // 현재 Host Form/부모를 실제41e280에 전달한다.
 private:
     RawBombEffectTimer logic_; // 같은 풀과 시계를 빌리는 전체 Frame 몸체다.
     BombEffectTimerFields fields_; // 이 프로세스의 유일한 실제 상태다.

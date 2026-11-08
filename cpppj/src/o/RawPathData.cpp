@@ -28,6 +28,11 @@ std::int32_t Truncate(double value) {
         throw std::out_of_range("Path WriteData _ftol 범위");
     return static_cast<std::int32_t>(result);
 }
+// Native4e49c0의masked signed64절삭뒤낮은DWORD를보존하며typed의기존32비트범위검사는유지한다.
+std::uint32_t NativePathFtol(double value) {
+    constexpr double kSigned64Limit=9223372036854775808.0; //실제ftol signed64상한이며NaN/범위밖불확정값은낮은DWORD0이다.
+    if (!std::isfinite(value) || value< -kSigned64Limit || value>=kSigned64Limit) return 0;return static_cast<std::uint32_t>(static_cast<std::uint64_t>(static_cast<std::int64_t>(std::trunc(value))));
+}
 // 좌표 배열의 실제 float32를 읽은 뒤 _ftol와 같은0쪽 절삭을 한다.
 std::int32_t Coordinate(std::span<const std::uint8_t> image,std::size_t offset) {
     return Truncate(std::bit_cast<float>(static_cast<std::uint32_t>(ReadBits(image,offset))));
@@ -88,7 +93,7 @@ std::int32_t RawPathData::Write(std::span<const std::uint8_t> image,Sid form,Sid
         // 원본 BYTE/WORD/DWORD의 하위 바이트만 저장한다.
         for (std::size_t i=0;i<width;++i) buffer[offset+i]=static_cast<std::uint8_t>(value>>(8*i));
     };
-    put(1,header.packetId);put(0,header.packetFlags&0x7f);put(2,std::max<std::uint16_t>(header.packetLength,4),2);
+    put(1,header.packetId);put(0,header.packetFlags&0x7f);put(2,std::max<std::uint32_t>(header.packetLength,4),2);
     put(4,form.value,2);put(6,parent.value,2);
     const auto count=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(ReadBits(image,0x10)));
     if (count<1 || static_cast<std::size_t>(count)>layout.capacity) throw std::out_of_range("Path WriteData i < nVert");
@@ -121,16 +126,65 @@ std::int32_t RawPathData::Write(std::span<const std::uint8_t> image,Sid form,Sid
     if (written>std::numeric_limits<std::int16_t>::max()) throw std::out_of_range("Path WriteData signed 길이 범위");
     return written+static_cast<std::int32_t>(kPayload);
 }
+//4895b0의Native본문은typed값writer의스냅샷/자격guard/예외정책을가져오지않는다.
+std::int32_t RawPathData::WriteCurrent(const RawPathRuntime& runtime,Sid form,Sid parent,const RawPathDataHeader& header,std::span<std::uint8_t> buffer,const RawPathDataWriteHooks& hooks) const {
+    if (edition_!=OriginalEdition::Patch1078) throw std::invalid_argument("NativePath writer의실제PATCH판본필요");const auto image=runtime.Bytes();const auto layout=RawPathRuntime::Layout(edition_);
+    if (image.size()!=layout.size) throw std::invalid_argument("NativePath writer의실제이미지물리불일치");
+    const auto put=[buffer](std::int64_t at,std::uint64_t value,std::size_t width=1) { //선택된실제쓰기폭만물리경계에서검사하며앞선prefix를되돌리지않는다.
+        if (at<0 || static_cast<std::uint64_t>(at)>buffer.size() || width>buffer.size()-static_cast<std::size_t>(at)) throw std::out_of_range("NativePath writer의현재송신예약범위");
+        for (std::size_t byte=0;byte<width;++byte) buffer[static_cast<std::size_t>(at)+byte]=static_cast<std::uint8_t>(value>>(8*byte)); //인접미작성tail을지우지않는다.
+    };
+    const auto count=[image] { return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(ReadBits(image,0x10))); }; //각진단/루프조건마다원문현재nVert를다시읽는다.
+    const auto check=[&](std::int32_t index,std::uint32_t line) { if (index>=count()) { const auto diagnose=hooks.assertion;if (!diagnose) throw std::logic_error("NativePath writer의현재진단장치미연결");diagnose("i < nVert",R"(c:\ns\o\path.h)",line); } }; //정상복귀뒤count를다시자격검사하지않고선택된물리를읽는다.
+    const auto coordinate=[image](std::int32_t index,bool y) { const auto at=std::int64_t(0x14)+std::int64_t(index)*8+(y ? 4:0);if (at<0) throw std::out_of_range("NativePath writer의현재좌표물리범위");return std::bit_cast<std::int32_t>(NativePathFtol(std::bit_cast<float>(static_cast<std::uint32_t>(ReadBits(image,static_cast<std::size_t>(at)))))); }; //배열count상한대신선택된실제이미지바이트만경계로삼는다.
+    const auto nodeWord=[buffer] { return static_cast<std::uint16_t>(ReadBits(buffer,13,2)); }; //진단/로그가바꾼현재WORD를각원문위치에서읽는다.
+    const auto signedWord=[&] { return std::int32_t(std::bit_cast<std::int16_t>(nodeWord())); }; //payload주소와반환은원문signed WORD다.
+    const auto tracePoint=[&](std::int32_t index,std::int32_t x,std::int32_t y,std::uint32_t direction) { //각point의현재로그형식을그대로사용한다.
+        std::array<char,128> text{};const auto length=std::snprintf(text.data(),text.size(),"[%d] (%d,%d) , %d\n",index,x,y,std::bit_cast<std::int32_t>(direction));if (length<0 || static_cast<std::size_t>(length)>=text.size()) throw std::length_error("NativePath point로그물리범위");const auto trace=hooks.trace;if (!trace) throw std::logic_error("NativePath writer의실제로그장치미연결");trace({text.data(),static_cast<std::size_t>(length)});
+    };
+    put(1,header.packetId);put(0,header.packetFlags&0x7fU);put(2,std::max<std::uint32_t>(header.packetLength,4),2); //df590의unsigned DWORD최소4뒤낮은WORD만쓴다.
+    put(4,form.value,2);put(6,parent.value,2); //Form0/Parent0을선행거부하지않는다.
+    check(0,0x1f);put(15,static_cast<std::uint32_t>(coordinate(0,false)));check(0,0x1f);put(16,static_cast<std::uint32_t>(coordinate(0,true)));
+    check(0,0x24);put(17,NativePathFtol(std::bit_cast<double>(ReadBits(image,layout.times,8))*kTimeScale),4);
+    put(11,ReadBits(image,layout.helper,2),2);put(21,ReadBits(image,0x186e4,2),2);put(23,ReadBits(image,0x186e8,1));
+    check(0,0x1f);auto x=coordinate(0,false);check(0,0x1f);auto y=coordinate(0,true);put(13,0,2);
+    const auto genus=hooks.parentGenus;if (!genus) throw std::logic_error("NativePath writer의현재부모genus장치미연결");const auto parentGenus=genus(Sid{static_cast<std::uint16_t>(ReadBits(buffer,6,2))}); //고정prefix뒤현재packet+6에서4ac200을한번선택한다.
+    if (!(parentGenus&0x120000U)) {
+        check(0,0x29);tracePoint(0,x,y,static_cast<std::uint32_t>(ReadBits(image,layout.directions)));
+        std::int32_t index=1;if (index<count()) { check(index,0x1f);
+            do { //원문은최초x진단뒤각y/방향진단과현재count루프조건을다시실행한다.
+                const auto nextX=coordinate(index,false);check(index,0x1f);const auto nextY=coordinate(index,true);check(index,0x29);const auto direction=static_cast<std::uint32_t>(ReadBits(image,layout.directions+static_cast<std::size_t>(index)*4));tracePoint(index,nextX,nextY,direction);
+                if (x!=nextX || y!=nextY) {
+                    const auto distance=[](std::int32_t from,std::int32_t to) { const auto delta=std::uint32_t(from)-std::uint32_t(to),sign=(delta&0x80000000U) ? 0xffffffffU:0U;return (delta^sign)-sign; }; //원문SUB/ABS/ADD의DWORD감김을보존한다.
+                    auto bits=distance(x,nextX);if (!(direction&1U)) bits+=distance(y,nextY);auto remaining=std::bit_cast<std::int32_t>(bits);
+                    while (remaining>0) { //양수signed거리만31칸씩쓰고각run의실제로그뒤현재WORD를다시읽는다.
+                        const auto step=std::min<std::int32_t>(remaining,31);std::array<char,96> text{};const auto length=std::snprintf(text.data(),text.size(),"n[%d] %d | %d\n",signedWord(),static_cast<int>(direction&7U),step&0x1f);if (length<0 || static_cast<std::size_t>(length)>=text.size()) throw std::length_error("NativePath run로그물리범위");const auto trace=hooks.trace;if (!trace) throw std::logic_error("NativePath run의실제로그장치미연결");trace({text.data(),static_cast<std::size_t>(length)});
+                        put(std::int64_t(kPayload)+signedWord(),(std::uint32_t(step)<<3)|(direction&7U));put(13,static_cast<std::uint16_t>(nodeWord()+1U),2); //압축분기는byte store뒤현재WORD를증가한다.
+                        remaining=std::bit_cast<std::int32_t>(std::uint32_t(remaining)-std::uint32_t(step));
+                    }
+                }x=nextX;y=nextY;++index;
+            }while (index<count());
+        }
+    }else {
+        std::int32_t index=1;
+        while (index<count()) { //직접좌표는각WORD증가뒤진단/현재좌표읽기/store를수행한다.
+            auto before=signedWord();put(13,static_cast<std::uint16_t>(nodeWord()+1U),2);check(index,0x1f);put(std::int64_t(kPayload)+before,static_cast<std::uint32_t>(coordinate(index,false)));
+            before=signedWord();put(13,static_cast<std::uint16_t>(nodeWord()+1U),2);check(index,0x1f);put(std::int64_t(kPayload)+before,static_cast<std::uint32_t>(coordinate(index,true)));++index;
+        }
+    }return signedWord()+static_cast<std::int32_t>(kPayload); //별도written스냅샷/INT16상한guard대신원문현재signedWORD로반환한다.
+}
+
 // 같은 pool/hash를 사용하는 Host의 flags0 서버 부착이 실제 Path packet을 만들도록 분배한다.
 ProcessFormTransmission MakePathFormTransmission(SidPool& pool,std::span<const RiftTypeRecord> types,
-    RawPathDataHeader& header,std::span<std::uint8_t> buffer,std::function<void(std::int32_t)> transport,ProcessFormTransmission other) {
+    RawPathDataHeader& header,std::span<std::uint8_t> buffer,std::function<void(std::int32_t)> transport,ProcessFormTransmission other,RawPathDataNativeWriter nativeWriter) {
     if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U) || buffer.size()<kPayload || !transport)
         throw std::invalid_argument("Path 서버 직렬화 연결 누락");
     ProcessFormTransmission result;
     const auto pathSelected=std::make_shared<bool>(); // 반환된 writer와 버퍼 조회가 마지막 실제 파생 선택을 공유한다.
-    result.writeData=[&pool,types,&header,buffer,other,pathSelected](SquidProcess& process,bool parentChanged) {
+    result.writeData=[&pool,types,&header,buffer,other,pathSelected,nativeWriter](SquidProcess& process,bool parentChanged) {
         *pathSelected=dynamic_cast<RawPathProcess*>(&process)!=nullptr;
         if (auto* path=dynamic_cast<RawPathProcess*>(&process)) {
+            if (nativeWriter) return nativeWriter(process,buffer,parentChanged,0); //Native는동일정확본문에서prefix뒤부모를선택하고typed만종전자격guard를사용한다.
             if (&path->Pool()!=&pool || !process.Form().value || !process.Parent().value) throw std::invalid_argument("Path 서버 직렬화 풀/부착 불일치");
             const auto type=pool.Slot(process.Parent())[10];
             return RawPathData(pool.Edition()).Write(path->Runtime(),process.Form(),process.Parent(),types[type].flags2,header,buffer);
@@ -142,8 +196,8 @@ ProcessFormTransmission MakePathFormTransmission(SidPool& pool,std::span<const R
         if (!*pathSelected) { if (!other.packet) throw std::logic_error("다른 Process의 실제 작성 버퍼 미연결");return other.packet(size); }
         if (size<0 || static_cast<std::size_t>(size)>buffer.size()) throw std::out_of_range("Path 실제 작성 버퍼 범위");return buffer.first(static_cast<std::size_t>(size));
     };
-    result.writeFullData=[writer=result.writeData,other,pathSelected](SquidProcess& process,std::uint32_t force) {
-        if (dynamic_cast<RawPathProcess*>(&process)) return writer(process,false); // 원문 Path writer는 세 번째 force 인자로 필드를 선별하지 않고 현재 전체 경로를 작성한다.
+    result.writeFullData=[writer=result.writeData,other,pathSelected,nativeWriter,buffer](SquidProcess& process,std::uint32_t force) {
+        if (dynamic_cast<RawPathProcess*>(&process)) { if (nativeWriter) { *pathSelected=true;return nativeWriter(process,buffer,false,force); }return writer(process,false); } // 원문 Path writer는 세 번째 force 인자로 필드를 선별하지 않고 현재 전체 경로를 작성한다.
         *pathSelected=false; // 파생 fallback 뒤 버퍼 조회가 앞선 Path 버퍼를 잘못 선택하지 않게 같은 writer 선택을 갱신한다.
         if (!other.writeFullData) throw std::logic_error("다른 Process의 실제 전체 writer 미연결");return other.writeFullData(process,force);
     };

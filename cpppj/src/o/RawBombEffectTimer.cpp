@@ -59,5 +59,5 @@ void BombEffectTimerProcess::RunFrame() {
 const BombEffectTimerFields& BombEffectTimerProcess::Fields() const { return fields_; }
 void BombEffectTimerProcess::Notify(std::uint32_t,std::uint32_t,std::uint32_t) {}
 void BombEffectTimerProcess::ReadPacket(std::span<const std::uint8_t> packet) { ReadBombTimerPacket(fields_,packet); }
-std::uint32_t BombEffectTimerProcess::WritePacket(std::span<std::uint8_t> packet,std::uint16_t declaredLength) const { return WriteBombTimerPacket(fields_,Form(),Parent(),packet,declaredLength); }
+std::uint32_t BombEffectTimerProcess::WritePacket(std::span<std::uint8_t> packet,std::uint32_t declaredLength,std::uint8_t protocol,std::uint8_t message) const { return WriteBombTimerPacket(fields_,Form(),Parent(),packet,declaredLength,protocol,message); } //현재DWORD선언입력과두헤더BYTE를기존실제writer에그대로넘긴다.
 }

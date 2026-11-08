@@ -23,11 +23,11 @@ void Write(std::span<std::uint8_t> packet,std::size_t offset,std::uint64_t value
     for (std::size_t i=0;i<width;++i) packet[offset+i]=static_cast<std::uint8_t>(value>>(8*i)); // 하위 바이트부터 원본 폭만 기록한다.
 }
 }
-std::uint32_t WriteBombTimerPacket(const BombEffectTimerFields& fields,Sid form,Sid parent,std::span<std::uint8_t> packet,std::uint16_t declaredLength,std::uint8_t protocol,std::uint8_t message) {
+std::uint32_t WriteBombTimerPacket(const BombEffectTimerFields& fields,Sid form,Sid parent,std::span<std::uint8_t> packet,std::uint32_t declaredLength,std::uint8_t protocol,std::uint8_t message) {
     const auto count=static_cast<std::uint16_t>(fields.members.size()); // 원본은 count DWORD의 하위WORD만 전송한다.
     const auto length=22U+2U*count; // 실제 반환 길이와 현재 헤더의 선언 길이는 별도 값이다.
     if (packet.size()<length) throw std::invalid_argument("상태 타이머 출력 버퍼 부족");
-    Write(packet,0,protocol&0x7fU,1);Write(packet,1,message,1);Write(packet,2,std::max<std::uint16_t>(4,declaredLength),2);
+    Write(packet,0,protocol&0x7fU,1);Write(packet,1,message,1);Write(packet,2,std::max<std::uint32_t>(4,declaredLength),2);
     Write(packet,4,form.value,2);Write(packet,6,parent.value,2);Write(packet,18,fields.flags,4);Write(packet,16,count,2);Write(packet,8,std::bit_cast<std::uint64_t>(fields.endTime),8);
     for (std::size_t i=0;i<count;++i) Write(packet,22+2*i,fields.members[i],2); // SID는 이 경계에서만 WORD로 잘라 쓰며 중복/순서를 유지한다.
     return length;

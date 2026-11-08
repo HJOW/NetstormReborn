@@ -4,7 +4,7 @@
 
 namespace netstorm::o {
 // 41e280은 현재 선언 길이를 헤더에 쓰며 실제 반환 길이로 헤더를 덮어쓰지 않는다.
-std::uint32_t WriteBombTimerPacket(const BombEffectTimerFields& fields,Sid form,Sid parent,std::span<std::uint8_t> packet,std::uint16_t declaredLength,std::uint8_t protocol=1,std::uint8_t message=0x7d);
+std::uint32_t WriteBombTimerPacket(const BombEffectTimerFields& fields,Sid form,Sid parent,std::span<std::uint8_t> packet,std::uint32_t declaredLength,std::uint8_t protocol=1,std::uint8_t message=0x7d);
 // 41e230은 flags를 먼저 쓰고 현재 한도까지 기존 목록에 WORD 대상을 추가한 뒤 기한 비트를 복사한다.
 void ReadBombTimerPacket(BombEffectTimerFields& fields,std::span<const std::uint8_t> packet);
 void FinalizeBombTimerPacket(std::span<std::uint8_t> packet,bool writing); // 40b390의 송신 observer로 현재 수에 맞게 선언 길이만 확정한다.

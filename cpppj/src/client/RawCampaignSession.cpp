@@ -809,7 +809,8 @@ struct RawCampaignSession::Impl {
     BombStatusState bombStatusState;std::unique_ptr<RawBombStatus> bombStatus; // 같은 현재 동맹/가상 효과로 은신과 마비를 실행한다.
     std::uint32_t bombTimerType{57};std::unique_ptr<BombEffectTimerProcess> pendingBombTimer; // 수신/시전이 확보한 타이머를 같은 Host에 넘긴다.
     std::unique_ptr<void,void(*)(void*)> pendingBombTimerStorage{nullptr,[](void* memory) { ::operator delete(memory); }}; // new40 경계의 미생성 메모리를 예외 시에도 해제한다.
-    std::array<std::uint8_t,222> bombTimerPacket{};bool writingBombTimer{}; // 최대100개 WORD 대상의 실제7d 송신 버퍼다.
+    std::array<std::uint8_t,222> typedBombTimerPacket{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
+    std::span<std::uint8_t> bombTimerPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedBombTimerPacket)};bool writingBombTimer{}; // 최대100개 WORD 대상의 실제7d 송신 버퍼다.
     std::unique_ptr<RawDamageablePreDestroy> damageablePre; // 공통 삭제와 같은 깊이/Graph/장부를 사용한다.
     std::unique_ptr<RawFlyerPreDestroy> flyerPre; //144의 현재+8 WORD 대상 삭제 뒤 실제 Damageable Pre다.
     std::unique_ptr<RawDamageablePostDestroy> damageablePost; // 같은 실제 예약/다리/공통 후처리다.
@@ -837,7 +838,8 @@ struct RawCampaignSession::Impl {
     std::vector<std::uint32_t> windActiveSounds; // 같은188TYPE의실제activeSound 토큰이다.
     std::uint32_t& windAviaryType{gameplayGlobals->GameAux()->WindAviaryProcessType()}; // 생성/검색/수신이 같은0054115c를 직접 빌린다.
     std::uint32_t windAviaryAsset{139}; // 실제 건물 TYPE이며 프로세스 전역과 구별한다.
-    std::array<std::uint8_t,64> windAviaryPacket{};bool writingWindAviary{}; // 실제0x74 writer와동일송신버퍼다.
+    std::array<std::uint8_t,64> typedWindAviaryPacket{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
+    std::span<std::uint8_t> windAviaryPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedWindAviaryPacket)};bool writingWindAviary{}; // 실제0x74 writer와동일송신버퍼다.
     std::unique_ptr<RegularProcess> pendingWindRegular; // 더스트 데빌첫Pop의new28 예약소유권이다.
     std::unique_ptr<RawFlyerProcess> flyer; // 같은 실제 Host의 공통 비행 생성/전송/홈 연결이다.
     std::unique_ptr<RawFlyerFrame> flyerFrame; // 같은 현재 시각/부모/표적/소리 장부의 실제 비행 Frame 제어다.
@@ -850,14 +852,17 @@ struct RawCampaignSession::Impl {
     std::uint32_t windFlyerType{138}; // PATCH00541280의 현재 더스트 데빌 타입이다.
     std::unique_ptr<RawFlyerPostPop> flyerPostPop; // 맨 오 워/훨리기그의 실제 생성·그림자·압축 시각 후처리다.
     std::uint32_t& flyerProcessType{gameplayGlobals->GameAux()->FlyerProcessType()}; // PATCH005410ec를 같은 Client의 장기 owner에서 직접 빌린다.
-    std::array<std::uint8_t,64> flyerPacket{};bool writingFlyer{}; // 실제0x39 상태 writer와 송신의 단일 버퍼/선택 표식이다.
+    std::array<std::uint8_t,64> typedFlyerPacket{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
+    std::span<std::uint8_t> flyerPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedFlyerPacket)};bool writingFlyer{}; // 실제0x39 상태 writer와 송신의 단일 버퍼/선택 표식이다.
     std::unique_ptr<FlyerProcess> pendingFlyer; // 기본 생성자의 부착 경계까지 단일 프로세스 소유권을 보관한다.
     std::uint32_t& rainAviaryType{gameplayGlobals->GameAux()->RainAviaryProcessType()}; // 생성/검색/수신이 같은00541160을 직접 빌린다.
     std::uint32_t rainFlyerType{144}; // PATCH00541298의 플라이어 TYPE다.
-    std::array<std::uint8_t,64> rainAviaryPacket{};bool writingRainAviary{}; // 실제0x73 writer와 송신이 공유하는 버퍼/분배 표식이다.
+    std::array<std::uint8_t,64> typedRainAviaryPacket{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
+    std::span<std::uint8_t> rainAviaryPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedRainAviaryPacket)};bool writingRainAviary{}; // 실제0x73 writer와 송신이 공유하는 버퍼/분배 표식이다.
     std::uint32_t& sunAviaryType{gameplayGlobals->GameAux()->SunAviaryProcessType()}; // 생성/검색/수신이 같은005410f0을 직접 빌린다.
     std::uint32_t sunFlyerType{73}; // PATCH0054117c의 플라이어 TYPE다.
-    std::array<std::uint8_t,64> sunAviaryPacket{};bool writingSunAviary{}; // 현재 writer/송신이 공유하는 패킷과 분배 표식이다.
+    std::array<std::uint8_t,64> typedSunAviaryPacket{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
+    std::span<std::uint8_t> sunAviaryPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedSunAviaryPacket)};bool writingSunAviary{}; // 현재 writer/송신이 공유하는 패킷과 분배 표식이다.
     std::array<std::uint8_t,64> localHandle{};std::array<std::uint8_t,64>& handle{services.subscriberGlobals ? services.subscriberGlobals->Handle():localHandle}; // 실제 Client는 같은 장기PTR00540ca8을 빌리고 독립 Session만 기존 지역64BYTE를 소유한다.
     std::unique_ptr<RawCampaignWorldRuntime> runtime; // 위 실제 하위를 단일 캠페인 부모에 연결한다.
     PlayerPlacementAnchorState anchorState; // 현재 같은 Graph의 배치/도착 조회 전역이다.
@@ -892,8 +897,10 @@ struct RawCampaignSession::Impl {
     ManaBoltRegularState manaRegularState; // 실제105 주기의 현재0.05/간격16 전역이다.
     std::unique_ptr<RawManaBoltRegular> manaRegular; // 같은 Target/Frame/현재 카메라/가상 공간을 연결한다.
     std::unique_ptr<RegularProcess> manaPendingRegular; // new28 성공 뒤 실제 부착까지 소유하는 예약이다.
-    RawPathDataHeader pathHeader; // 실제 경로 writer가 사용하는 현재 프로토콜 header다.
-    std::array<std::uint8_t,16384> pathBuffer{}; // 원본 경로 직렬화의 현재 송신 버퍼다.
+    RawPathDataHeader typedPathHeader; //독립typedSession의기존지역초기헤더계약을유지한다.
+    RawPathDataHeader& pathHeader{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->GameAux()->PathPacketHeader():typedPathHeader}; //Native의실제기존writer만같은장기두BYTE/DWORD를소비한다.
+    std::array<std::uint8_t,16384> typedPathBuffer{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
+    std::span<std::uint8_t> pathBuffer{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedPathBuffer)}; // 원본 경로 직렬화의 현재 송신 버퍼다.
     std::unique_ptr<RawBattleBroadcast> broadcast; // 동일 Player9와 실제 현재 연결 표를 사용하는 송신 분배기다.
     FormPacketHeaders& formHeaders{world.Storage()->GameAux()->SquidTransmission().forms}; // 원본 현재 감시/내용물/삭제 헤더 전역이다.
     FormDeletionStamp& deletionStamp{world.Storage()->GameAux()->SquidTransmission().deletion}; // 실제 삭제 writer가 한 번 소비하는 최근 명령 표식이다.
@@ -1081,7 +1088,7 @@ struct RawCampaignSession::Impl {
         // 실제 Form Pop이 정규화한 현재 상태 BYTE를 writer가 읽은 다음 같은 송신 분배기로 보낸다.
         if (!services.dependencyTransmit) services.dependencyTransmit=[this](Sid form,std::uint32_t) {
             const auto size=formWriter->WriteData(form,formBuffer); // 원본 반환 크기13/18이며 헤더의 선언 길이와 별개다.
-            services.formPacket(std::span<const std::uint8_t>(formBuffer).first(size));
+            if (world.Storage()->UsesNativeTransmissionDevices()) world.Storage()->BroadcastProcessForm(size);else services.formPacket(std::span<const std::uint8_t>(formBuffer).first(size)); //Native는같은공통예약의실제observer뒤선언길이를소비한다.
         };
         auto& sidLists=world.Storage()->sidLists; //첫 파생 소비자 전에 같은 장기 실제 목록8개를 연결한다.
         priestState.priests.sharedOwnerState=&world.Storage()->priestOwnerState;
@@ -2213,7 +2220,7 @@ struct RawCampaignSession::Impl {
         hooks.writeData=[this,write,fallback](SquidProcess& process,bool changed) { auto* dais=dynamic_cast<DaisProcess*>(&process);writingDaisProcess=dais!=nullptr;if (dais) return write(*dais,changed,false);if (!fallback.writeData) throw std::logic_error("다른 Process의 일반 writer 미연결");return fallback.writeData(process,changed); };
         hooks.writeFullData=[this,write,fallback](SquidProcess& process,std::uint32_t force) { auto* dais=dynamic_cast<DaisProcess*>(&process);writingDaisProcess=dais!=nullptr;if (dais) return write(*dais,false,force!=0);if (!fallback.writeFullData) throw std::logic_error("다른 Process의 전체 writer 미연결");return fallback.writeFullData(process,force); };
         hooks.packet=[this,fallback](std::int32_t length)->std::span<const std::uint8_t> { if (!writingDaisProcess) { if (!fallback.packet) throw std::logic_error("다른 Process의 작성 버퍼 미연결");return fallback.packet(length); }const auto& bytes=gameplayGlobals->GameAux()->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>bytes.size()) throw std::out_of_range("DaisProcess의 실제 패킷 범위");return std::span(bytes).first(static_cast<std::size_t>(length)); };
-        hooks.transmit=[this,fallback](std::int32_t length) { if (!writingDaisProcess) { if (!fallback.transmit) throw std::logic_error("다른 Process의 송신 미연결");fallback.transmit(length);return; }const auto& bytes=gameplayGlobals->GameAux()->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>bytes.size()) throw std::out_of_range("DaisProcess의 실제 송신 범위");services.formPacket(std::span(bytes).first(static_cast<std::size_t>(length))); };
+        hooks.transmit=[this,fallback](std::int32_t length) { if (writingDaisProcess && world.Storage()->UsesNativeTransmissionDevices()) { world.Storage()->BroadcastProcessForm(length);return; }if (!writingDaisProcess) { if (!fallback.transmit) throw std::logic_error("다른 Process의 송신 미연결");fallback.transmit(length);return; }const auto& bytes=gameplayGlobals->GameAux()->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>bytes.size()) throw std::out_of_range("DaisProcess의 실제 송신 범위");services.formPacket(std::span(bytes).first(static_cast<std::size_t>(length))); };
         return hooks;
     }
     // 현재 건설 객체의 같은30BYTE writer/공통 버퍼를 일반/전체 상태 송신에 연결한다.
@@ -2223,7 +2230,7 @@ struct RawCampaignSession::Impl {
         hooks.writeData=[this,write,fallback](SquidProcess& process,bool parentChanged) { auto* current=dynamic_cast<ConstructionProcess*>(&process);writingConstruction=current!=nullptr;if (current) return write(*current,parentChanged,false);if (!fallback.writeData) throw std::logic_error("다른 프로세스의 실제 일반 writer 미연결");return fallback.writeData(process,parentChanged); };
         hooks.writeFullData=[this,write,fallback](SquidProcess& process,std::uint32_t force) { auto* current=dynamic_cast<ConstructionProcess*>(&process);writingConstruction=current!=nullptr;if (current) return write(*current,false,force!=0);if (!fallback.writeFullData) throw std::logic_error("다른 프로세스의 실제 전체 writer 미연결");return fallback.writeFullData(process,force); };
         hooks.packet=[this,fallback](std::int32_t length)->std::span<const std::uint8_t> { if (!writingConstruction) { if (!fallback.packet) throw std::logic_error("다른 프로세스의 실제 작성 버퍼 미연결");return fallback.packet(length); }const auto& buffer=gameplayGlobals->GameAux()->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>buffer.size()) throw std::out_of_range("건설의 실제 작성 버퍼 범위");return std::span(buffer).first(static_cast<std::size_t>(length)); };
-        hooks.transmit=[this,fallback](std::int32_t length) { if (!writingConstruction) { if (!fallback.transmit) throw std::logic_error("다른 프로세스의 실제 송신 미연결");fallback.transmit(length);return; }const auto& buffer=gameplayGlobals->GameAux()->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>buffer.size()) throw std::out_of_range("건설의 실제 송신 길이 범위");services.formPacket(std::span(buffer).first(static_cast<std::size_t>(length))); };
+        hooks.transmit=[this,fallback](std::int32_t length) { if (writingConstruction && world.Storage()->UsesNativeTransmissionDevices()) { world.Storage()->BroadcastProcessForm(length);return; }if (!writingConstruction) { if (!fallback.transmit) throw std::logic_error("다른 프로세스의 실제 송신 미연결");fallback.transmit(length);return; }const auto& buffer=gameplayGlobals->GameAux()->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>buffer.size()) throw std::out_of_range("건설의 실제 송신 길이 범위");services.formPacket(std::span(buffer).first(static_cast<std::size_t>(length))); };
         return hooks;
     }
     // 타입31/32/60의 서로 다른 writer와 같은 실제 송신기를 연결한다.
@@ -2231,7 +2238,7 @@ struct RawCampaignSession::Impl {
         ProcessFormTransmission hooks;
         hooks.writeFullData=[this,fallback](SquidProcess& process,std::uint32_t force) {
             auto* timer=dynamic_cast<BombEffectTimerProcess*>(&process);writingBombTimer=timer!=nullptr;auto* flying=dynamic_cast<FlyerProcess*>(&process);writingFlyer=flying!=nullptr;auto* rain=dynamic_cast<RainAviaryProcess*>(&process);writingRainAviary=rain!=nullptr;auto* current=dynamic_cast<SunAviaryProcess*>(&process);writingSunAviary=current!=nullptr;auto* wind=dynamic_cast<WindAviaryProcess*>(&process);writingWindAviary=wind!=nullptr;
-            if (timer) return static_cast<std::int32_t>(timer->WritePacket(bombTimerPacket,22));if (wind) return static_cast<std::int32_t>(wind->WritePacket(windAviaryPacket,false,force!=0));if (flying) return static_cast<std::int32_t>(flying->WritePacket(flyerPacket,false,force!=0));if (rain) return static_cast<std::int32_t>(rain->WritePacket(rainAviaryPacket,false,force!=0));if (current) return static_cast<std::int32_t>(current->WritePacket(sunAviaryPacket,false,force!=0));
+            if (timer) { if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->SerializeProcessForm(*timer,bombTimerPacket,false,force);return static_cast<std::int32_t>(timer->WritePacket(bombTimerPacket,22)); }if (wind) { if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->SerializeProcessForm(*wind,windAviaryPacket,false,force);return static_cast<std::int32_t>(wind->WritePacket(windAviaryPacket,false,force!=0)); }if (flying) { if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->SerializeProcessForm(*flying,flyerPacket,false,force);return static_cast<std::int32_t>(flying->WritePacket(flyerPacket,false,force!=0)); }if (rain) { if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->SerializeProcessForm(*rain,rainAviaryPacket,false,force);return static_cast<std::int32_t>(rain->WritePacket(rainAviaryPacket,false,force!=0)); }if (current) { if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->SerializeProcessForm(*current,sunAviaryPacket,false,force);return static_cast<std::int32_t>(current->WritePacket(sunAviaryPacket,false,force!=0)); }
             if (!fallback.writeFullData) throw std::logic_error("다른 Process의 실제 전체 writer 미연결");return fallback.writeFullData(process,force);
         };
         hooks.packet=[this,fallback](std::int32_t length)->std::span<const std::uint8_t> {
@@ -2240,8 +2247,8 @@ struct RawCampaignSession::Impl {
             else { if (!fallback.packet) throw std::logic_error("다른 Process의 실제 작성 버퍼 미연결");return fallback.packet(length); }
             if (length<0 || static_cast<std::size_t>(length)>bytes.size()) throw std::out_of_range("Aviary/비행/Timer 실제 작성 버퍼 범위");return bytes.first(static_cast<std::size_t>(length));
         };
-        hooks.writeData=[this,fallback](SquidProcess& process,bool parentChanged) { auto* timer=dynamic_cast<BombEffectTimerProcess*>(&process);writingBombTimer=timer!=nullptr;auto* flying=dynamic_cast<FlyerProcess*>(&process);writingFlyer=flying!=nullptr;auto* rain=dynamic_cast<RainAviaryProcess*>(&process);writingRainAviary=rain!=nullptr;auto* current=dynamic_cast<SunAviaryProcess*>(&process);writingSunAviary=current!=nullptr;auto* wind=dynamic_cast<WindAviaryProcess*>(&process);writingWindAviary=wind!=nullptr;if (timer) return static_cast<std::int32_t>(timer->WritePacket(bombTimerPacket,22));if (wind) return static_cast<std::int32_t>(wind->WritePacket(windAviaryPacket,parentChanged));if (flying) return static_cast<std::int32_t>(flying->WritePacket(flyerPacket,parentChanged));if (rain) return static_cast<std::int32_t>(rain->WritePacket(rainAviaryPacket,parentChanged));if (current) return static_cast<std::int32_t>(current->WritePacket(sunAviaryPacket,parentChanged));if (!fallback.writeData) throw std::logic_error("다른 실제 프로세스 writer 미연결");return fallback.writeData(process,parentChanged); };
-        hooks.transmit=[this,fallback](std::int32_t length) { if (writingBombTimer) { if (length<0 || static_cast<std::size_t>(length)>bombTimerPacket.size()) throw std::out_of_range("상태 타이머 실제 패킷 길이 오류");for (std::uint32_t owner=1;owner<9;++owner) if ((players[owner*180+0x50]&1U) && services.battlePeers[owner] && owner!=playerState.battleOwner) { FinalizeBombTimerPacket(bombTimerPacket,true);break; }services.formPacket(std::span<const std::uint8_t>(bombTimerPacket).first(static_cast<std::size_t>(length)));return; }if (writingWindAviary) { if (length<0 || static_cast<std::size_t>(length)>windAviaryPacket.size()) throw std::out_of_range("데빌메이커 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(windAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingFlyer) { if (length<0 || static_cast<std::size_t>(length)>flyerPacket.size()) throw std::out_of_range("비행 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(flyerPacket).first(static_cast<std::size_t>(length)));return; }if (writingRainAviary) { if (length<0 || static_cast<std::size_t>(length)>rainAviaryPacket.size()) throw std::out_of_range("맨 오 워 풀 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(rainAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingSunAviary) { if (length<0 || static_cast<std::size_t>(length)>sunAviaryPacket.size()) throw std::out_of_range("훨리베이스 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(sunAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (!fallback.transmit) throw std::logic_error("다른 실제 프로세스 송신 미연결");fallback.transmit(length); };return hooks;
+        hooks.writeData=[this,fallback](SquidProcess& process,bool parentChanged) { auto* timer=dynamic_cast<BombEffectTimerProcess*>(&process);writingBombTimer=timer!=nullptr;auto* flying=dynamic_cast<FlyerProcess*>(&process);writingFlyer=flying!=nullptr;auto* rain=dynamic_cast<RainAviaryProcess*>(&process);writingRainAviary=rain!=nullptr;auto* current=dynamic_cast<SunAviaryProcess*>(&process);writingSunAviary=current!=nullptr;auto* wind=dynamic_cast<WindAviaryProcess*>(&process);writingWindAviary=wind!=nullptr;if (timer) { if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->SerializeProcessForm(*timer,bombTimerPacket,parentChanged,0);return static_cast<std::int32_t>(timer->WritePacket(bombTimerPacket,22)); }if (wind) { if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->SerializeProcessForm(*wind,windAviaryPacket,parentChanged,0);return static_cast<std::int32_t>(wind->WritePacket(windAviaryPacket,parentChanged)); }if (flying) { if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->SerializeProcessForm(*flying,flyerPacket,parentChanged,0);return static_cast<std::int32_t>(flying->WritePacket(flyerPacket,parentChanged)); }if (rain) { if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->SerializeProcessForm(*rain,rainAviaryPacket,parentChanged,0);return static_cast<std::int32_t>(rain->WritePacket(rainAviaryPacket,parentChanged)); }if (current) { if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->SerializeProcessForm(*current,sunAviaryPacket,parentChanged,0);return static_cast<std::int32_t>(current->WritePacket(sunAviaryPacket,parentChanged)); }if (!fallback.writeData) throw std::logic_error("다른 실제 프로세스 writer 미연결");return fallback.writeData(process,parentChanged); };
+        hooks.transmit=[this,fallback](std::int32_t length) { if (world.Storage()->UsesNativeTransmissionDevices() && (writingBombTimer || writingWindAviary || writingFlyer || writingRainAviary || writingSunAviary)) { world.Storage()->BroadcastProcessForm(length);return; }if (writingBombTimer) { if (length<0 || static_cast<std::size_t>(length)>bombTimerPacket.size()) throw std::out_of_range("상태 타이머 실제 패킷 길이 오류");for (std::uint32_t owner=1;owner<9;++owner) if ((players[owner*180+0x50]&1U) && services.battlePeers[owner] && owner!=playerState.battleOwner) { FinalizeBombTimerPacket(bombTimerPacket,true);break; }services.formPacket(std::span<const std::uint8_t>(bombTimerPacket).first(static_cast<std::size_t>(length)));return; }if (writingWindAviary) { if (length<0 || static_cast<std::size_t>(length)>windAviaryPacket.size()) throw std::out_of_range("데빌메이커 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(windAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingFlyer) { if (length<0 || static_cast<std::size_t>(length)>flyerPacket.size()) throw std::out_of_range("비행 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(flyerPacket).first(static_cast<std::size_t>(length)));return; }if (writingRainAviary) { if (length<0 || static_cast<std::size_t>(length)>rainAviaryPacket.size()) throw std::out_of_range("맨 오 워 풀 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(rainAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (writingSunAviary) { if (length<0 || static_cast<std::size_t>(length)>sunAviaryPacket.size()) throw std::out_of_range("훨리베이스 실제 패킷 길이 오류");services.formPacket(std::span<const std::uint8_t>(sunAviaryPacket).first(static_cast<std::size_t>(length)));return; }if (!fallback.transmit) throw std::logic_error("다른 실제 프로세스 송신 미연결");fallback.transmit(length); };return hooks;
     }
     // 저장 크랩의 첫Pop 전 전용492예약과 같은 공통장부를 연결한다.
     void ConnectCarrierSteal() {
@@ -3704,7 +3711,7 @@ struct RawCampaignSession::Impl {
         FillMissing(services.pathPacket);
         auto pathTx=motion->Paths().Transmission(pathHeader,pathBuffer,[this](std::int32_t length) {
             if (length<=0 || static_cast<std::size_t>(length)>pathBuffer.size()) throw std::logic_error("세션 Path 송신 길이 오류");
-            services.pathPacket(std::span<const std::uint8_t>(pathBuffer).first(static_cast<std::size_t>(length)));
+            if (world.Storage()->UsesNativeTransmissionDevices()) world.Storage()->BroadcastProcessForm(length);else services.pathPacket(std::span<const std::uint8_t>(pathBuffer).first(static_cast<std::size_t>(length))); //같은Nativewriter예약을현재대상별observer로한번만보낸다.
         });
         core.processes.SetFormTransmit(DaisTransmission(AviaryTransmission(ConstructionTransmission(combat->Transmission(services.formPacket,assetBindings->Transmission(std::move(pathTx)))))));
         BridgeCarrierHooks bridgeHooks;
@@ -5011,7 +5018,8 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     dispatch.Register(0x5c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationActivation(packet); });
     dispatch.Observe(0x5f,{});dispatch.Version(0x5f,1,0);dispatch.RequireLength(0x5f,0xffff);
     dispatch.Register(0x5f,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationEffect(packet); });
-    dispatch.Observe(0x7d,{});dispatch.Version(0x7d,1,0);dispatch.RequireLength(0x7d,0xffff);
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) dispatch.ObservePacket(0x7d,[](auto packet,auto sending) { FinalizeBombTimerPacket(packet,sending!=0); });else dispatch.Observe(0x7d,{}); //Native의실제송신gate뒤한번만선언WORD를정하며typed의기존Nullobserver는유지한다.
+    dispatch.Version(0x7d,1,0);dispatch.RequireLength(0x7d,0xffff);
     dispatch.Register(0x7d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveBombTimer(packet); });
     dispatch.Observe(0x6b,{});dispatch.Version(0x6b,1,0);dispatch.RequireLength(0x6b,10); //0040b380빈observer와원문등록표의6b/버전1/정책0이다.
     dispatch.Register(0x6b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveRitualChoice(impl_->core.pool,impl_->contentFinder,*impl_->contained,packet,[this](Sid form,std::uint32_t flags) { impl_->world.Destroy(form,flags); }); }); //00448e90은sender/owner검사를추가하지않는다.직접획득/희생완료를부르지않는다.

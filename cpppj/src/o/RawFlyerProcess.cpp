@@ -123,7 +123,7 @@ void FlyerProcess::Notify(std::uint32_t message,std::uint32_t info1,std::uint32_
 void FlyerProcess::OnParentDying(Sid) { logic_.ParentDying(fields_); } // 원문은 전달된 부모 인자를 사용하지 않는다.
 FlyerProcessFields& FlyerProcess::Fields() { return fields_; } // 같은 현재 이미지다.
 const FlyerProcessFields& FlyerProcess::Fields() const { return fields_; } // 같은 현재 이미지다.
-std::uint16_t FlyerProcess::WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force) { OnAttached();return RawFlyerProcess::WriteProcess(fields_,packet,parentChanged,force); } // 부착 전 writer에도 현재 Host SID를 쓴다.
+std::uint16_t FlyerProcess::WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force,std::uint8_t protocol,std::uint8_t message) { OnAttached();return RawFlyerProcess::WriteProcess(fields_,packet,parentChanged,force,protocol,message); } // 부착 전 writer에도 현재 Host SID를 쓴다.
 RawFlyerPostPop::RawFlyerPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const FlyerPostPopType> details,const bool& server,FlyerPostPopHooks hooks):pool_(pool),types_(types.begin(),types.end()),details_(details.begin(),details.end()),server_(server),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || details.size()!=188) throw std::invalid_argument("비행 후처리는 PATCH188 타입만 복원했습니다");
 }

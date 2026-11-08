@@ -100,5 +100,5 @@ void WindAviaryProcess::OnFormDestroy(std::uint32_t) { logic_.FormDestroy(fields
 void WindAviaryProcess::Notify(std::uint32_t,std::uint32_t,std::uint32_t) {} // 원본 빈 통지 몸체다.
 WindAviaryProcessFields& WindAviaryProcess::Fields() { return fields_; } // 현재 단일 원문이다.
 const WindAviaryProcessFields& WindAviaryProcess::Fields() const { return fields_; } // 관찰기에서 필드를 복제하거나 수정하지 않는다.
-std::uint16_t WindAviaryProcess::WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force) { OnAttached();return RawWindAviaryState::WriteProcess(fields_,packet,parentChanged,force); } // 부착 전 전송도 같은 Host 필드를 사용한다.
+std::uint16_t WindAviaryProcess::WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force,std::uint8_t protocol,std::uint8_t message) { OnAttached();return RawWindAviaryState::WriteProcess(fields_,packet,parentChanged,force,protocol,message); } // 부착 전 전송도 같은 Host 필드를 사용한다.
 }

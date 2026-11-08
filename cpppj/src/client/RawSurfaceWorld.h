@@ -106,7 +106,10 @@ public:
     void BindContentCommand(std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> command); //실제Client입력getter를연결만한다.
     void BindSavedGame(bool& savedGame); //실제Client의현재005c85d4를첫World전부터같이읽는다.
     void BindPopRuntime(const std::shared_ptr<const RawSurfacePopBindings>& runtime); //현재실제writer만weak로빌린다.
+    bool UsesNativeTransmissionDevices() const { return static_cast<bool>(transmissionDevices_.broadcast); } //실제Native송신장치의명시결합수명만조회하며typed/GameState/성공값을추정하지않는다.
     void BindTransmissionDevices(RawSurfaceTransmissionDevices devices); //첫Factory/Host/World앞에현재Client장치만연결한다.
+    std::int32_t SerializeProcessForm(o::SquidProcess& process,std::span<std::uint8_t> buffer,bool parentChanged,std::uint32_t force); //같은실제Kernel객체의파생writer에현재헤더와caller의같은예약을넘긴다.
+    void BroadcastProcessForm(std::int32_t length); //실제writer의양수반환뒤같은공통2048BYTE를Native대상별가상송신에넘긴다.
     o::RawSquidTransmission& Transmission(); //공통2048BYTE/헤더/압축전역과실제현재FormHost를장기로공유한다.
     void UnpopAsset(o::Sid sid,std::uint32_t flags); //현재TYPE와동일Unpop/표시·종속장치를사용하고정상뒤현재World의호스트changed만알린다.
     void SetAssetOwner(o::Sid sid,std::uint32_t owner); //같은실제가상owner분배를World없이선택하며장부/현재모드를복제하지않는다.

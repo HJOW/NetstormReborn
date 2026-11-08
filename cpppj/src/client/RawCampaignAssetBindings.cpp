@@ -50,7 +50,8 @@ struct RawCampaignAssetBindings::Impl {
     std::unique_ptr<o::RawFactoryPostPop> factory; // 같은 Damageable/프레임/목록의 실제 Factory/아웃포스트 몸체다.
     std::unique_ptr<o::RawSquidLevel> level; // 같은 Pool의 baseLevel과 signed 범위 진단 몸체다.
     std::unique_ptr<o::RawAssetRegular> regular; // 실제 초기 예약의 가상 Handle 몸체다.
-    std::array<std::uint8_t,64> packet{}; // 실제 Gun packet writer가 현재 한 요청을 작성하는 임시 저장소다.
+    std::array<std::uint8_t,64> typedPacket{}; //독립typed Gun writer의기존지역64BYTE/미작성바이트관측을보존한다.
+    std::span<std::uint8_t> packet{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedPacket)}; //Native는같은장기공통예약을실제writer/observer/방송이공유한다.
     bool writingGun{},active{}; // 송신 분배와 공통 PostPop 등록의 현재 상태다.
     // 저장객체 Pop 전에 같은 Pool/TYPE/9기록 계약을 확인하고 실제 모듈을 구성한다.
     Impl(RawSurfaceWorld& input,const o::RawCarrierPostPop& carrier,o::AssetPostPopState& state,
@@ -193,16 +194,16 @@ o::RegularHandler RawCampaignAssetBindings::Handler(o::RegularHandler fallback) 
 // 같은서버flags0의Gun packet만분배하고다른현재Process packet은기존경계를유지한다.
 o::ProcessFormTransmission RawCampaignAssetBindings::Transmission(o::ProcessFormTransmission fallback) {
     o::ProcessFormTransmission hooks;
-    hooks.writeData=[this,fallback](o::SquidProcess& process,bool parentChanged) { auto* gun=dynamic_cast<o::GunProcess*>(&process);impl_->writingGun=gun!=nullptr;if (gun) return static_cast<std::int32_t>(gun->WritePacket(impl_->packet,parentChanged));if (!fallback.writeData) throw std::logic_error("캠페인 다른실제Process packet writer 미연결");return fallback.writeData(process,parentChanged); };
+    hooks.writeData=[this,fallback](o::SquidProcess& process,bool parentChanged) { auto* gun=dynamic_cast<o::GunProcess*>(&process);impl_->writingGun=gun!=nullptr;if (gun) { if (impl_->world.Storage()->UsesNativeTransmissionDevices()) return impl_->world.Storage()->SerializeProcessForm(*gun,impl_->packet,parentChanged,0);return static_cast<std::int32_t>(gun->WritePacket(impl_->packet,parentChanged)); }if (!fallback.writeData) throw std::logic_error("캠페인 다른실제Process packet writer 미연결");return fallback.writeData(process,parentChanged); };
     hooks.writeFullData=[this,fallback](o::SquidProcess& process,std::uint32_t force) {
-        auto* gun=dynamic_cast<o::GunProcess*>(&process);impl_->writingGun=gun!=nullptr;if (gun) return static_cast<std::int32_t>(gun->WritePacket(impl_->packet,false,force!=0));
+        auto* gun=dynamic_cast<o::GunProcess*>(&process);impl_->writingGun=gun!=nullptr;if (gun) { if (impl_->world.Storage()->UsesNativeTransmissionDevices()) return impl_->world.Storage()->SerializeProcessForm(*gun,impl_->packet,false,force);return static_cast<std::int32_t>(gun->WritePacket(impl_->packet,false,force!=0)); }
         if (!fallback.writeFullData) throw std::logic_error("다른 Process의 실제 전체 writer 미연결");return fallback.writeFullData(process,force);
     };
     hooks.packet=[this,fallback](std::int32_t length)->std::span<const std::uint8_t> {
         if (!impl_->writingGun) { if (!fallback.packet) throw std::logic_error("다른 Process의 실제 작성 버퍼 미연결");return fallback.packet(length); }
         if (length<0 || static_cast<std::size_t>(length)>impl_->packet.size()) throw std::out_of_range("Gun 실제 작성 버퍼 범위");return std::span(impl_->packet).first(static_cast<std::size_t>(length));
     };
-    hooks.transmit=[this,fallback](std::int32_t length) { if (impl_->writingGun) { if (!impl_->effects.sendGunPacket) throw std::logic_error("캠페인 Gun flags0 실제 packet 송신 미연결");if (length<0 || static_cast<std::size_t>(length)>impl_->packet.size()) throw std::out_of_range("캠페인 Gun 실제 packet 길이 오류");impl_->effects.sendGunPacket(std::span<const std::uint8_t>(impl_->packet).first(static_cast<std::size_t>(length)));return; }if (!fallback.transmit) throw std::logic_error("캠페인 다른실제Process packet 송신 미연결");fallback.transmit(length); };return hooks;
+    hooks.transmit=[this,fallback](std::int32_t length) { if (impl_->writingGun && impl_->world.Storage()->UsesNativeTransmissionDevices()) { impl_->world.Storage()->BroadcastProcessForm(length);return; }if (impl_->writingGun) { if (!impl_->effects.sendGunPacket) throw std::logic_error("캠페인 Gun flags0 실제 packet 송신 미연결");if (length<0 || static_cast<std::size_t>(length)>impl_->packet.size()) throw std::out_of_range("캠페인 Gun 실제 packet 길이 오류");impl_->effects.sendGunPacket(std::span<const std::uint8_t>(impl_->packet).first(static_cast<std::size_t>(length)));return; }if (!fallback.transmit) throw std::logic_error("캠페인 다른실제Process packet 송신 미연결");fallback.transmit(length); };return hooks;
 }
 // 상위설치/검사가같은원본PostPop몸체를조회한다.
 const o::RawAssetPostPop& RawCampaignAssetBindings::PostPop() const { return *impl_->postPop; }

@@ -9,7 +9,7 @@ namespace netstorm::o {
 struct RawPathDataHeader {
     std::uint8_t packetId{0x30}; // 패치0052edce/CD0050ff68: Path 패킷 종류 번호다.
     std::uint8_t packetFlags{1}; // 패치0052edcf/CD0050ff6c: 공통 헤더의 하위7비트다.
-    std::uint16_t packetLength{}; // 패치00544c50/CD0050ff70: 공통 헤더에 기록할 현재 WORD 길이다.
+    std::uint32_t packetLength{}; //패치00544c50/CD0050ff70의현재DWORD다. df590이최소4를비교한뒤에만낮은WORD를기록한다.
 };
 // 실제489a10의 현재 TYPE 속도·의식 목표점·시계/로그·예약 해제를 같은 월드에서 빌린다.
 struct RawPathDataReadHooks {
@@ -21,10 +21,17 @@ struct RawPathDataReadHooks {
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; // 진단 정상 복귀 뒤 append/해석을 계속한다.
 };
 // 패치004895b0/CD0047d630의 실제 필드 폭·좌표 압축·기존 버퍼 보존을 수행한다.
+struct RawPathDataWriteHooks { //Native4895b0의실제선택위치에서만현재장치를조회한다.
+    std::function<std::uint32_t(Sid)> parentGenus; //헤더/SID/고정payload/WORD0뒤현재packet+6부모의4ac200을조회한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //i<nVert진단정상복귀뒤실제물리첫점/현재필드를계속읽는다.
+    std::function<void(std::string_view)> trace; //각원문point/run로그의현재00540c68/Client로그장치를호출한다.
+};
+using RawPathDataNativeWriter=std::function<std::int32_t(SquidProcess&,std::span<std::uint8_t>,bool,std::uint32_t)>; //Native기존Session경로도같은정확본문/예약을선택하며typed값writer는유지한다.
 class RawPathData {
 public:
     // 판본은 Path 이미지의 실제 배열/끝 필드 위치를 선택하며 호출 사이에 바뀌지 않는다.
     explicit RawPathData(OriginalEdition edition);
+    std::int32_t WriteCurrent(const RawPathRuntime& runtime,Sid form,Sid parent,const RawPathDataHeader& header,std::span<std::uint8_t> buffer,const RawPathDataWriteHooks& hooks) const; //Native의현재count/진단/로그/선택된부모/WORD쓰기를원문순서로수행한다.
     // 부모 변경·force 인자는 원본 두 WriteData에서 읽지 않는다. form/parent는 OnAttached 전 현재 base 번호다.
     std::int32_t Write(const RawPathRuntime& runtime,Sid form,Sid parent,std::uint32_t parentGenus,
         const RawPathDataHeader& header,std::span<std::uint8_t> buffer) const;
@@ -42,5 +49,5 @@ void ObservePathData(std::span<std::uint8_t> packet,std::uint32_t sending,const 
 // header/buffer/types/pool/송신 효과는 Host보다 오래 살아야 한다. transport는 이미 쓴 같은 buffer를 전송해야 한다.
 ProcessFormTransmission MakePathFormTransmission(SidPool& pool,std::span<const RiftTypeRecord> types,
     RawPathDataHeader& header,std::span<std::uint8_t> buffer,std::function<void(std::int32_t)> transport,
-    ProcessFormTransmission other={});
+    ProcessFormTransmission other={},RawPathDataNativeWriter nativeWriter={});
 }

@@ -1,6 +1,18 @@
 // Client의 실제 배열을 Session보다 오래 보관하고 같은 물리를 두 월드에 중복 설치하지 않는다.
 #include "client/RawSurfaceWorld.h"
 #include "o/RawDaisProcessData.h" //현재PID의실제6a writer를장기기본직렬화에연결한다.
+#include "o/RawGunProcess.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
+#include "o/RawWindAviaryProcess.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
+#include "o/RawRainAviaryProcess.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
+#include "o/RawSunAviaryProcess.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
+#include "o/RawFlyerProcess.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
+#include "o/RawBombEffectTimer.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
+#include "o/RawPathProcess.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
+#include "o/RawGunAnimation.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
+#include "o/RawArcherAnimation.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
+#include "o/RawCrossbowAnimation.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
+#include "o/RawCannonFire.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
+#include "o/RawIceCannonFire.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
 #include "o/RawConstructionData.h" //현재건설객체의실제37 writer를같은공통버퍼에쓴다.
 #include "client/GameAssets.h"
 #include "o/RawGameAuxState.h"
@@ -136,12 +148,33 @@ o::RawSquidTransmission& RawSurfaceStorage::Transmission() { //같은현재TYPE/
         transmission_=std::make_unique<o::RawSquidTransmission>(pool,gameAux_->SquidTransmission(),std::move(hooks));
     }return *transmission_;
 }
+void RawSurfaceStorage::BroadcastProcessForm(std::int32_t length) { //선언WORD/observer를미리수정하지않고원문양수반환뒤실제broadcast를선택한다.
+    auto& buffer=gameAux_->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>buffer.size()) throw std::out_of_range("현재ProcessForm의공통송신예약범위");if (!transmissionDevices_.broadcast) throw std::logic_error("현재ProcessForm의실제Native방송장치미연결");if (length>0) { const auto send=transmissionDevices_.broadcast;send(buffer); }
+}
 void RawSurfaceStorage::TransmitPop(o::Sid sid,std::uint32_t flags) { const auto current=popRuntime_.lock();if (current && current->transmit) { const auto runtimeOwner=current->pin ? current->pin():std::shared_ptr<void>{};current->transmit(sid,flags); }else Transmission().Pop(sid,flags); } //공간/장부뒤실제writer를실행하고NULL대상은기존Registry선택에서자연반환한다.
-std::int32_t RawSurfaceStorage::WriteDefaultForm(o::SquidProcess& process,bool parentChanged,std::uint32_t force) { //실제Kernel객체/dirty/미작성tail을복사본으로대체하지않는다.
-    auto& buffer=gameAux_->SquidTransmission().buffer;
+std::int32_t RawSurfaceStorage::WriteDefaultForm(o::SquidProcess& process,bool parentChanged,std::uint32_t force) { return SerializeProcessForm(process,gameAux_->SquidTransmission().buffer,parentChanged,force); } //World없는현재Host도같은2048BYTE와실제공통분배를쓴다.
+std::int32_t RawSurfaceStorage::SerializeProcessForm(o::SquidProcess& process,std::span<std::uint8_t> buffer,bool parentChanged,std::uint32_t force) { //현재원본헤더/실제PID객체/미작성tail을사용하고자체송신이나성공값을만들지않는다.
     if (auto* dais=dynamic_cast<o::DaisProcess*>(&process)) { const auto header=gameAux_->DaisProcessHeader();return dais->WritePacket(buffer,parentChanged,force!=0,header[1],header[0]); }
     if (auto* construction=dynamic_cast<o::ConstructionProcess*>(&process)) { const auto header=gameAux_->ConstructionHeader();return o::RawConstructionData::WriteProcess(*construction,buffer,parentChanged,force!=0,{header[1],header[0]}); }
-    throw std::logic_error("World없는ProcessForm의선택된파생기본writer미연결"); //다른실제파생기본owner는다음층이며성공/빈writer를합성하지않는다.
+    if (auto* gun=dynamic_cast<o::GunProcess*>(&process)) { const auto header=gameAux_->GunProcessHeader();return gun->WritePacket(buffer,parentChanged,force!=0,header[1],header[0]); }
+    if (auto* current=dynamic_cast<o::WindAviaryProcess*>(&process)) { const auto header=gameAux_->WindAviaryHeader();return current->WritePacket(buffer,parentChanged,force!=0,header[1],header[0]); }
+    if (auto* current=dynamic_cast<o::RainAviaryProcess*>(&process)) { const auto header=gameAux_->RainAviaryHeader();return current->WritePacket(buffer,parentChanged,force!=0,header[1],header[0]); }
+    if (auto* current=dynamic_cast<o::SunAviaryProcess*>(&process)) { const auto header=gameAux_->SunAviaryHeader();return current->WritePacket(buffer,parentChanged,force!=0,header[1],header[0]); }
+    if (auto* current=dynamic_cast<o::FlyerProcess*>(&process)) { const auto header=gameAux_->FlyerProcessHeader();return current->WritePacket(buffer,parentChanged,force!=0,header[1],header[0]); }
+    if (auto* timer=dynamic_cast<o::BombEffectTimerProcess*>(&process)) { const auto header=gameAux_->BombTimerHeader();return static_cast<std::int32_t>(timer->WritePacket(buffer,gameAux_->BombTimerInitialLength(),header[1],header[0])); }
+    if (auto* path=dynamic_cast<o::RawPathProcess*>(&process)) {
+        if (&path->Pool()!=&pool) throw std::invalid_argument("장기Path writer의실제Pool정체성불일치"); //호스트소유권만검증하며Form/Parent값자격검사는추가하지않는다.
+        o::RawPathDataWriteHooks hooks;hooks.parentGenus=[this](auto parent) { return types.at(pool.Slot(parent)[10]).flags2; };hooks.assertion=[this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); };hooks.trace=[this](auto text) { TraceGraph(gameAux_->PathTraceLevel(),text); };
+        return o::RawPathData(pool.Edition()).WriteCurrent(path->Runtime(),process.Form(),process.Parent(),gameAux_->PathPacketHeader(),buffer,hooks); //실제prefix뒤현재packet+6/TYPE+ec를읽으며force/parentChanged는원문처럼사용하지않는다.
+    }
+    std::span<std::uint8_t> animation; //동일outer접두를실제소유하는확인된다섯클래스만선택한다.
+    if (auto* gunAnimation=dynamic_cast<o::GunAnimation*>(&process)) animation=gunAnimation->Fields().bytes;
+    else if (auto* cannonFire=dynamic_cast<o::CannonFire*>(&process)) animation=cannonFire->Fields().bytes;
+    else if (auto* archerAnimation=dynamic_cast<o::ArcherAnimation*>(&process)) animation=archerAnimation->Fields().bytes;
+    else if (auto* crossbowAnimation=dynamic_cast<o::CrossbowAnimation*>(&process)) animation=crossbowAnimation->Fields().bytes;
+    else if (auto* iceFire=dynamic_cast<o::IceCannonFire*>(&process)) animation=iceFire->Fields().common.bytes;
+    if (!animation.empty()) { process.OnAttached();const auto header=o::GunAnimationUsesFirePacket(animation) ? gameAux_->FireAnimationHeader():gameAux_->RotateAnimationHeader();return o::WriteGunAnimationProcessData(animation,buffer,parentChanged,force!=0,header[0],header[1]); } //이들OnAttached는Base Form/Parent DWORD동기화만하며실제가상writer의현재입력을만든다.
+    throw std::logic_error("선택된ProcessForm의실제파생writer미연결"); //모르는파생을빈writer로가장하지않는다.
 }
 o::SquidPop& RawSurfaceStorage::Pop() {
     if (!pop_) {
@@ -238,7 +271,7 @@ RawProcessHostStorage& RawSurfaceStorage::Processes() {
         if (transmissionDevices_.broadcast) { //실제Client만기본writer를명시결합하며독립fixture의정책은유지한다.
             o::ProcessFormTransmission transmit;transmit.writeData=[this](auto& process,auto changed) { return WriteDefaultForm(process,changed,0); };transmit.writeFullData=[this](auto& process,auto force) { return WriteDefaultForm(process,false,force); };
             transmit.packet=[this](auto length)->std::span<const std::uint8_t> { const auto& buffer=gameAux_->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>buffer.size()) throw std::out_of_range("장기Form의실제작성크기범위");return std::span(buffer).first(static_cast<std::size_t>(length)); };
-            transmit.transmit=[this](auto length) { auto& buffer=gameAux_->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>buffer.size()) throw std::out_of_range("장기Form의실제송신크기범위");if (length>0) transmissionDevices_.broadcast(buffer); }; //양수관문뒤같은전체예약으로대상별observer를실행한다.
+            transmit.transmit=[this](auto length) { BroadcastProcessForm(length); }; //양수관문뒤같은전체예약으로대상별observer를실행한다.
             processes->BindFormTransmissionDefaults(std::move(transmit),[this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); });
         }processes_=std::move(processes);
     }return *processes_;

@@ -28,6 +28,9 @@
 #include "o/RawConnectionEnded.h"
 #include "client/RawSurfaceWorld.h" //기본 관찰기가 실제 storage의 AssertDisplay를 Session 없이 빌린다.
 #include "o/RawTechnologyTypesPacket.h" //69h는 같은Client의장기목록/현재Session표시와Client관찰기진단을사용한다.
+#include "o/RawPathData.h" //장기NoWorld/lease반납뒤에도실제40a660송신observer를사용한다.
+#include "o/RawSquidCompressedReceive.h" //공통Squid7a의실제40b2a0길이관찰기를공유한다.
+#include "o/RawBombTimerPacket.h" //7d의실제40b390은같은mutable버퍼의현재count로길이를정한다.
 #include "o/RawMissionClientPackets.h" //2a/2b/67/81의 같은 순수 가변 길이 관찰기 본체를 재사용한다.
 #include <array> //같은 네 송신 관찰기와 Client 기본18행의 고정 목록이다.
 #include <bit>
@@ -231,6 +234,9 @@ void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) 
     dispatch.RegisterCanonicalDirect(0x7b,0x004b4790U,[challenge=client.ChallengeGlobals()](std::uint32_t,o::PacketConnection*,std::span<const std::uint8_t> packet) { challenge->ReceivePeerAddress(packet); }); // 고정F004b4790은 같은 장기 CS만 보유하며 CS0 조기반환 앞에 Session/Source/lease pin이나 sender/nullable 연결 조회를 추가하지 않는다.
     dispatch.ObservePacket(0x3f,[storage](auto packet,auto sending) { o::FinalizeConstructionPacket(packet,sending!=0,[storage] { storage->AssertDisplay("sidCount != (unsigned char)-1","\\Ns\\O\\_p_packets.cpp",0x7c9); }); }); //40a800의 같은 버퍼/진단 정상 복귀 뒤 현재count 재조회다.
     dispatch.Version(0x3f,1,0);dispatch.RequireLength(0x3f,0xffff); // receiver만 Session 대여에 맡기며 원문 기본 metadata/observer는 반납 뒤에도 남긴다.
+    dispatch.ObservePacket(0x30,[storage](auto packet,auto sending) { o::ObservePathData(packet,sending,[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); });dispatch.Version(0x30,1,0);dispatch.RequireLength(0x30,0xffff); //40a660은현재nodeCount재조회뒤같은WORD를쓰며receiver는추가하지않는다.
+    dispatch.ObservePacket(0x7a,[storage](auto packet,auto sending) { o::ObserveCompressedSquid(packet,sending,[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); });dispatch.Version(0x7a,1,0);dispatch.RequireLength(0x7a,0xffff); //40b2a0은dataLength진단복귀뒤현재BYTE를읽고같은버퍼의길이를정한다.
+    dispatch.ObservePacket(0x7d,[](auto packet,auto sending) { o::FinalizeBombTimerPacket(packet,sending!=0); });dispatch.Version(0x7d,1,0);dispatch.RequireLength(0x7d,0xffff); //40b390은송신때만현재count WORD로길이를정하며lease반납뒤에도남는다.
     for (const auto& entry:kClientPacketDefaults) { //이18종만 version1/policy0/보호 PE 길이에 맞추고 다른 등록에는 손대지 않는다.
         if (entry.mutableObserver) dispatch.ObservePacket(entry.type,[storage,type=entry.type](auto packet,auto sending) { ObserveClientPacketDefault(type,packet,sending,storage); });
         else dispatch.Observe(entry.type,[](std::uint32_t) {}); //40b380의 비NULL ret4이며 NULL observer로 바꾸지 않는다.

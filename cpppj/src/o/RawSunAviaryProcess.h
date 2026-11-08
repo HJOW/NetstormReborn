@@ -71,7 +71,7 @@ public:
     void Notify(std::uint32_t,std::uint32_t,std::uint32_t) override; // 실제 inner+1c는 ret12의 빈 몸체다.
     SunAviaryProcessFields& Fields(); // 원문 writer/검사가 같은 이미지를 조회한다.
     const SunAviaryProcessFields& Fields() const; // 상수 소비자도 사본을 만들지 않는다.
-    std::uint16_t WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force=false); // OnAttached 전에도 현재 Host의 Form/부모를 쓴다.
+    std::uint16_t WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force=false,std::uint8_t protocol=1,std::uint8_t message=0x38); // OnAttached 전에도 현재 Host의 Form/부모를 쓴다.
 private:
     const RawSunAviaryProcess& logic_; // 같은 Pool/현재 시각/효과를 사용하는 장기 처리기다.
     SunAviaryProcessFields fields_; // 실제48BYTE의 유일한 소유 이미지다.

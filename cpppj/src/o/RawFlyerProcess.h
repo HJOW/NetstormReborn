@@ -68,7 +68,7 @@ public:
     void OnParentDying(Sid parent) override; // 현재 프로세스의 홈 통지를 전달한다.
     FlyerProcessFields& Fields(); // 현재 바이트만 수정한다.
     const FlyerProcessFields& Fields() const; // 현재 바이트만 읽는다.
-    std::uint16_t WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force=false); // 부착 이전 전송도 실제 Host Form/부모를 기록한다.
+    std::uint16_t WritePacket(std::span<std::uint8_t> packet,bool parentChanged,bool force=false,std::uint8_t protocol=1,std::uint8_t message=0x39); // 부착 이전 전송도 실제 Host Form/부모를 기록한다.
 private:
     const RawFlyerProcess& logic_; // 이 객체보다 오래 사는 단일 로직이다.
     FlyerProcessFields fields_; // 맨 오 워 확장까지 포함하는 같은 원문 이미지다.
