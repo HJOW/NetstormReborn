@@ -758,11 +758,11 @@ cpppj/src/o/RawIslandPopulation.cpp	port			todo	[o-default]
 cpppj/src/o/RawIslandPostPop.cpp	port	www/assets/island-supports.js;www/core/raw-island-post-pop.js	1f00a25a	port	[o-default] WB04-E47(+3.6③): noIsland 최초 등록 접두·3×3 받침 소유자 전파·표면 글자(패치판 진단 복귀·현재 좌표 재조회·FootDelta 포함). fixture islandpostpop SurfacePostPop 402·SupportOwner 150행. 실제 SquidFactory/SquidOwner 통합 검사는 월드 조립에서
 cpppj/src/o/RawIslandQueries.cpp	port			todo	[o-default]
 cpppj/src/o/RawIslandRuntime.cpp	port			todo	[o-default]
-cpppj/src/o/RawKencloud.cpp	port			todo	[o-default] WB02-H: 메인 메뉴 구름 배경 생성(ClientKencloudGlobals 메모 참조)
+cpppj/src/o/RawKencloud.cpp	port	www/core/raw-kencloud.js	1f00a25a	port	[o-default] WB04-E118: 구름 캐시 파일 부모 00470bb0·생성 00471040·행 이동 00470b20. fixture kencloud-v2 246행 전부(10.78 전용; 정상 208+중단 38, 전역 8KB·세 할당·scratch SHA-256 포함). 파일 시스템/GIF 디코더/할당/메모리 조회는 훅 경계
 cpppj/src/o/RawKencloudRender.cpp	port			todo	[o-default] WB02-H: 메인 메뉴 구름 배경 출력(ClientKencloudGlobals 메모 참조)
 cpppj/src/o/RawLightningFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawLightningLifetime.cpp	port			todo	[o-default]
-cpppj/src/o/RawLightningPath.cpp	port			todo	[o-default]
+cpppj/src/o/RawLightningPath.cpp	port	www/core/raw-lightning-path.js	1f00a25a	port	[o-default] WB04-E117: 빔 경로 생성자 00471b20/00471ca0·시작 입자 004720f0·진행 00472180·재귀 가지 00471fc0. fixture lightning-path 216행 전부(10.78 전용; 생성자 72+생성/Seed/Step 144). 중심 조회(004adea0)는 호출자 공급 함수
 cpppj/src/o/RawLocalGeyser.cpp	port			todo	[o-default]
 cpppj/src/o/RawLocalMissionState.cpp	port			todo	[o-default]
 cpppj/src/o/RawMakeAi.cpp	port	www/core/raw-make-ai.js	1f00a25a	port	[o-default] WB04-E32: 일반 MakeAi 부모와 전체 객체 이전/삭제 순회. fixture make-ai-parent 770·make-ai-objects 2592행 전부. AI 생성(417e50)/Player 카운터/가상 삭제는 훅
