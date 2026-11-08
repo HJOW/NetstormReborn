@@ -1,6 +1,6 @@
 # webpj 건설 배치(RawConstructionPlace) 이식 — WB04-E138
 
-2026-11-09, HJOW-Athlon. [LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 3.2절 순서3의 WB04-E 중 백서른여덟 번째 부분이다. 건설 배치 실행(Construction.cpp `00442c80`)과 비용 부족 처리(`00442b50`)·환불(`00442a40`)·취소 통지(`00442af0`)·SP 조회(`0040ef30`)·SP 가산(`0041dff0`)을 옮긴 `o/RawConstructionPlace`(cpppj 기준선 `1f00a25a`, 기준선 뒤 변경 없음)이다. 로컬 배치(`004433b0`)와 서버 확정(`00444590`)이 미리 확보한 SID 목록을 받아 타입의 조각마다 abstract 비트·HP·프레임·단어·소유자를 정하고 Pop 을 요청한다. 선행은 E136 `decodeCanonType`·기존 `SquidReward`/`SidPool`·E134 통지 어댑터(`place.place`/`actualPlace`/`refund` 계약)다.
+2026-11-09, HJOW-Athlon. [LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 3.2절 순서3의 WB04-E 중 백서른여덟 번째 부분이다. 건설 배치 실행(Construction.cpp `00442c80`)과 비용 부족 처리(`00442b50`)·환불(`00442a40`)·취소 통지(`00442af0`)·SP 조회(`0040ef30`)·SP 가산(`0041dff0`)을 옮긴 `o/RawConstructionPlace`(cpppj 기준선 `1f00a25a` 뒤 갱신판 `976f2b7b` 를 옮겼다: [E141 문서](webpj-construction-data-20261109.md) 3절 참고)이다. 로컬 배치(`004433b0`)와 서버 확정(`00444590`)이 미리 확보한 SID 목록을 받아 타입의 조각마다 abstract 비트·HP·프레임·단어·소유자를 정하고 Pop 을 요청한다. 선행은 E136 `decodeCanonType`·기존 `SquidReward`/`SidPool`·E134 통지 어댑터(`place.place`/`actualPlace`/`refund` 계약)다.
 
 ## 1. 옮긴 것
 
@@ -33,6 +33,7 @@
 
 - 실제 예측→확정→통지→정리→배치 전체를 잇는 cpppj 통합 시험(`ConstructionClear_ReplacesLocalPredictionWithConfirmedPieces`, 실제 `SquidFactory`·`SquidOwner`·확정)은 `RawConstructionConfirm` 이식 뒤 옮긴다. 어댑터는 대역으로 이름 계약만 시험했다.
 - 10.72(CD) 경로(HP WORD·프레임 BYTE·비용 처리 없음)와 10.37 은 범위 밖이다.
+- **이식 원본의 판:** `RawConstructionPlace` 는 `976f2b7b`(20261108-145 CP)의 판(`ActualPlace`·실제 Player 기록 연결·공유 전역)을 옮겼다. 기준선 판에는 실제 wire 경로가 없으며 PORT_MAP base 를 해당 커밋으로 바로잡았다(E141 기록).
 
 ## 4. 다음 시작점
 

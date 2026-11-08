@@ -1,6 +1,6 @@
 # webpj 건설 패킷(RawConstructionPacket)·배치 통지(RawConstructionNotice) 이식 — WB04-E134
 
-2026-11-08, HJOW-Athlon. [LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 3.2절 순서3의 WB04-E 중 백서른네 번째 부분이다. 건설 확정(메시지 0x3f)의 실제 0x200바이트 임시 패킷과 그 위에서 도는 배치 통지 처리기(원본 `004441b0`) — 놓을 칸의 로컬 예측 조각 정리 → 최근 건설 위치 이력 → 조각 배치 → 건설 사제 이동 / 소유 사제 이동·환불 / 자동 건설 시작 → 갱신 — 를 옮긴 `o/RawConstructionPacket`·`o/RawConstructionNotice`(cpppj 기준선 `1f00a25a`, 기준선 뒤 두 파일 모두 변경 없음)이다. 선행은 E132의 `makeConstructionProcessNoticeHooks`(통지의 건설 시작 경계)와 기존 `construction-history-key.js`(최근 건설 위치 장부), `raw-priest-state.js`(사제 이동 불가 조회)다.
+2026-11-08, HJOW-Athlon. [LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 3.2절 순서3의 WB04-E 중 백서른네 번째 부분이다. 건설 확정(메시지 0x3f)의 실제 0x200바이트 임시 패킷과 그 위에서 도는 배치 통지 처리기(원본 `004441b0`) — 놓을 칸의 로컬 예측 조각 정리 → 최근 건설 위치 이력 → 조각 배치 → 건설 사제 이동 / 소유 사제 이동·환불 / 자동 건설 시작 → 갱신 — 를 옮긴 `o/RawConstructionPacket`·`o/RawConstructionNotice`(cpppj 기준선 `1f00a25a` 뒤 갱신판을 옮겼다: 아래 "이식 원본의 판"과 [E141 문서](webpj-construction-data-20261109.md) 3절 참고)이다. 선행은 E132의 `makeConstructionProcessNoticeHooks`(통지의 건설 시작 경계)와 기존 `construction-history-key.js`(최근 건설 위치 장부), `raw-priest-state.js`(사제 이동 불가 조회)다.
 
 ## 1. 옮긴 것
 
@@ -51,6 +51,7 @@
 - 통지 처리기의 실제 정리·배치(`RawConstructionClear`·`RawConstructionPlace`)와 확정 요청(`RawConstructionConfirm`/`Request`/`Local`/`Command`)은 별도 단위다. 어댑터는 이름 계약(`clear.clear`·`place.place`·`place.actualPlace`·`place.refund`·`pool`)만 시험했다.
 - 10.72(CD) 경로(소유자 +32, contained 없음)와 10.37 은 범위 밖이다. 같은 cpppj 시험의 `ConstructionNotice_ReplaysCd`/`Extra1037` 은 옮기지 않았다.
 - 통지의 건설 시작 경계는 E132 `makeConstructionProcessNoticeHooks`(지속 시간 비트 0 → 10초 건설)로 이어진다.
+- **이식 원본의 판:** `RawConstructionPacket` 은 `77a0c3a4`(20261108-151 CP), `RawConstructionNotice` 는 `976f2b7b`(20261108-145 CP)의 작업 트리 판을 옮겼다. 기준선 `1f00a25a` 판에는 없는 실제 wire 경로(`ConstructionPacketView`·`ActualHandle` 등)가 이 갱신판에 있으며 두 파일의 fixture 재생은 갱신판에서도 같다. PORT_MAP base 를 해당 커밋으로 바로잡았다(E141 기록).
 
 ## 4. 다음 시작점
 

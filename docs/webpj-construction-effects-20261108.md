@@ -1,6 +1,6 @@
 # webpj 건설 효과(RawConstructionEffects)·선택 어댑터(RawConstructionSelection) 이식 — WB04-E135
 
-2026-11-08, HJOW-Athlon. [LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 3.2절 순서3의 WB04-E 중 백서른다섯 번째 부분이다. 건설 요청이 쓰는 유닛 밀어내기(원본 `00443800`)와 섬 실패 정리(`0046e6c0`)를 옮긴 `o/RawConstructionEffects`와, 확정의 그래프 기준점·통지의 소유 사제 조회를 실제 몸체에 잇는 두 어댑터 `o/RawConstructionSelection`(cpppj 기준선 `1f00a25a`, 기준선 뒤 세 파일 모두 변경 없음)이다. 선행은 기존 `RawSquidFinder`·`SidPool`·`SquidHash`, E134 통지·E132 건설 프로세스 어댑터, E57 `RawPlayerPlacementAnchor`, E66 `RawPriestLookup`이다.
+2026-11-08, HJOW-Athlon. [LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 3.2절 순서3의 WB04-E 중 백서른다섯 번째 부분이다. 건설 요청이 쓰는 유닛 밀어내기(원본 `00443800`)와 섬 실패 정리(`0046e6c0`)를 옮긴 `o/RawConstructionEffects`와, 확정의 그래프 기준점·통지의 소유 사제 조회를 실제 몸체에 잇는 두 어댑터 `o/RawConstructionSelection`(cpppj 기준선 `1f00a25a`; `RawConstructionEffects` 는 기준선 뒤 갱신판 `4717dff5`, `RawConstructionSelection` 은 기준선 판과 같음: [E141 문서](webpj-construction-data-20261109.md) 3절 참고)이다. 선행은 기존 `RawSquidFinder`·`SidPool`·`SquidHash`, E134 통지·E132 건설 프로세스 어댑터, E57 `RawPlayerPlacementAnchor`, E66 `RawPriestLookup`이다.
 
 ## 1. 옮긴 것
 
@@ -37,6 +37,7 @@
 - 실제 요청→밀어내기→확정 실패→섬 정리→공통 삭제/풀 반납을 잇는 cpppj 통합 시험(`ConstructionEffects_ConnectsRequestMovementAndFailureCleanup`)은 `RawConstructionRequest` 이식 뒤 옮긴다.
 - 선택 어댑터의 `ConstructionConfirm`·`ConstructionNotice` 와의 통합(cpppj `PriestLookupTests`)도 `RawConstructionConfirm` 이식 뒤 시험한다.
 - 10.72(CD) 경로(탐색 거리 2, 소유자 +32, void 반환)와 10.37 은 범위 밖이다.
+- **이식 원본의 판:** `RawConstructionEffects` 는 `4717dff5`(20261107-47 CP)의 판(공유 전역 접근자 `shared*`)을 옮겼다. 기준선 판과 fixture 재생 결과는 같고 PORT_MAP base 를 해당 커밋으로 바로잡았다(E141 기록).
 
 ## 4. 다음 시작점
 

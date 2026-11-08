@@ -1,6 +1,6 @@
 # webpj 건설 확정(RawConstructionConfirm)과 건설 계열 통합 이식 — WB04-E139
 
-2026-11-09, HJOW-Athlon. [LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 3.2절 순서3의 WB04-E 중 백서른아홉 번째 부분이다. 서버의 건설 확정(Construction.cpp `00444590`)을 옮긴 `o/RawConstructionConfirm`(cpppj 기준선 `1f00a25a`, 기준선 뒤 변경 없음)과, 지금까지 옮긴 건설 계열 실제 모듈(Confirm·Notice·Clear·Place·Packet)을 실제 SID 생성/소유자/보상/SP 저장소와 함께 한 번에 잇는 통합 시험이다. 배치 가능 판정을 통과한 요청에 대해 조각마다 서버 SID 를 확보하고 배치 통지(메시지 0x3f)를 만들어 보낸 뒤 같은 통지를 자기 쪽 처리기에 직접 넘긴다. 선행은 E134 통지·패킷, E136 Canon 디코더, E137 정리, E138 배치다.
+2026-11-09, HJOW-Athlon. [LEFT_JOBS.webpj.md](../LEFT_JOBS.webpj.md) 3.2절 순서3의 WB04-E 중 백서른아홉 번째 부분이다. 서버의 건설 확정(Construction.cpp `00444590`)을 옮긴 `o/RawConstructionConfirm`(cpppj 기준선 `1f00a25a` 뒤 갱신판 `77a0c3a4` 를 옮겼다: [E141 문서](webpj-construction-data-20261109.md) 3절 참고)과, 지금까지 옮긴 건설 계열 실제 모듈(Confirm·Notice·Clear·Place·Packet)을 실제 SID 생성/소유자/보상/SP 저장소와 함께 한 번에 잇는 통합 시험이다. 배치 가능 판정을 통과한 요청에 대해 조각마다 서버 SID 를 확보하고 배치 통지(메시지 0x3f)를 만들어 보낸 뒤 같은 통지를 자기 쪽 처리기에 직접 넘긴다. 선행은 E134 통지·패킷, E136 Canon 디코더, E137 정리, E138 배치다.
 
 ## 1. 옮긴 것
 
@@ -31,6 +31,7 @@
 - 사제 이동·환불 분기(`immobile`·`approach`·`tryMove` 등)와 `RawConstructionRequest`(배치 가능 판정)·`Local`·`Command`(패킷 분배 등록)·`Data`·`Builder` 는 아직 옮기지 않았다.
 - `actualConfirm` 의 20개 진단은 패턴 한 칸 최대 15개 때문에 정상 입력에서 닿지 않아 시험하지 않았다(원본 코드 경로만 보존).
 - 10.72(CD) 경로는 범위 밖이다.
+- **이식 원본의 판:** `RawConstructionConfirm` 은 `77a0c3a4`(20261108-151 CP)의 판(`ActualConfirm`·공유 전역)을 옮겼다. 기준선 판에는 실제 wire 경로가 없으며 PORT_MAP base 를 해당 커밋으로 바로잡았다(E141 기록).
 
 ## 4. 다음 시작점
 

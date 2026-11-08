@@ -11364,7 +11364,7 @@
       "bytes": 681220,
       "lines": 2194,
       "fixtureCommit": "3d568ff6",
-      "webCommit": "worktree",
+      "webCommit": "37ca1639",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionRequest.cpp": "2a8f937e"
       }
@@ -11393,9 +11393,38 @@
       "bytes": 386120,
       "lines": 1452,
       "fixtureCommit": "e3df7f74",
-      "webCommit": "worktree",
+      "webCommit": "37ca1639",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionLocal.cpp": "2a8f937e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E141",
+      "id": "constructiondata",
+      "path": "cpppj/tests/fixtures/constructiondata-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 상태 메시지 0x37의 쓰기/읽기/수신/전송 래퍼와 변동(세 판본 5340행)",
+      "consumers": [
+        "webpj/tests/construction-data.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-data.js"
+      ],
+      "doc": "docs/webpj-construction-data-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionData.cpp"
+      ],
+      "scope": "10.78(originals) 1780행 사용, originalCD 1780행은 10.72, original1037 1780행은 10.37",
+      "text": true,
+      "sha256": "aa57418290ff1a6f815439a77bf447ff045c6bef2eae46a8b3130504594afd9f",
+      "bytes": 2711331,
+      "lines": 5342,
+      "fixtureCommit": "5b99a6ea",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionData.cpp": "a942a75a"
       }
     }
   ]
