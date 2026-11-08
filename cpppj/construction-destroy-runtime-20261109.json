@@ -1,0 +1,926 @@
+{
+  "unit": 1195,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "summary": "실제 가상 삭제의 bool을 보존하고 Native 건설 Runtime의 마지막 World 캡처를 장기 Storage/현재 Client 삭제 장치로 교체했다.",
+  "sourceSha256": {
+    "cpppj/src/client/RawSurfaceWorld.h": "8fb305ca8014169e2f0c0a8ec28227a6f5ad09517490d169a64b10e00f27d5db",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "2c6f8c497234deab3dbeb6823e2842781adc6d280e201f97ce4e11a4c6232447",
+    "cpppj/src/client/RawCampaignSession.h": "1f95b9503e3f072fa46532a5c2af9595314801decc373d9c339559acd6b5d9a8",
+    "cpppj/src/client/RawCampaignSession.cpp": "e82b69b3d00f7d3d469b447dea076bb695004e696917e7c9ff4343433dc42c95",
+    "cpppj/src/client/ClientMain.cpp": "4f782aa82663600d866e25e35334341654d66c0b979fb8fe3ef27c86c09a65d0",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "d7cc59bc70b942f36105d2e0d544c1c50166f35968a96d6cb5f33c17e765d7e8",
+    "cpppj/tests/ConstructionOwnerStateTests.cpp": "f80aae47993d8bfc1bac59b0e9b2e008bce49108073575b20cf6116cc091955a"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13632000,
+      "sha256": "abc840176764fa6a997938c5ce7dd5f4743e792e8c368d3a53a357cfac16bf36"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "f55639dc70452a4fa301646a8c59d0aae0918721cf8d60546277413c52d751b8"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_construction_current_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 24.869248151779175,
+    "sourcesUnchanged": true
+  },
+  "tests": {
+    "targets": [
+      {
+        "target": "owner",
+        "sha256": "5ca79cb5763aa4d9e09a3a43d8aa28721eed1b6a81aadb4930a2f37703bc3eb6",
+        "cases": [
+          {
+            "name": "ConstructionOwner_BindingsValidateCurrentValuesWithoutPacketEffects",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionOwner_RetainsActualBackingAndReleasesWithoutCycles",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionOwner_StateReadsLongRolesBeforeAnySession",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionOwner_CollisionReadsCurrentServerBetweenCandidates",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionOwner_MissingCurrentDeletionDeviceRejectsBeforeWorldCreation",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionOwner_RuntimeDeletionSurvivesWorldReturnAndPreservesResult",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "canon_collision_patch_x86",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "canon_collision_cd_x86",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "canon_collision_1037_x86",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "canon_collision_real_finder_stops_after_rejection",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "canon_collision_current_type_and_saved_finder_next",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "canon_collision_pattern_preview_geometry_stops_at_second_shape",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "canon_collision_guards_and_required_regions",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          }
+        ],
+        "excluded": []
+      },
+      {
+        "target": "current",
+        "sha256": "21cb3d32191a5c97372c4d69151b60968ce789c9d015a936e677f73b40d04b38",
+        "cases": [
+          {
+            "name": "ConstructionCurrent_RequestSelectsGlobalsAfterOriginalEffects",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionCurrent_ClearReadsBridgeAfterCandidateEffects",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionCurrent_LocalKeepsCandidateTypeAndReselectsReplacementType",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionCurrent_PlayerBoundsEffectsSelectCurrentQuantities",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionRequest_ReplaysOriginals",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionRequest_ReplaysCd",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionRequest_ReplaysExtra1037",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionRequest_RejectsInvalidInputsBeforeEffects",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionRequest_ReadsCurrentFlagsAfterConfirm",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "CanonConsumers_ConstructionRequestAfterMayPlace",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionClear_ReplaysOriginals",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionClear_ReplaysCd",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionClear_ReplaysExtra1037",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionClear_ComputesCellAreaWithClampAndValidity",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionClear_RemovesOnePredictionPerCell",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "ConstructionClear_SharedBossControlsForeignTypeCandidate",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          },
+          {
+            "name": "CanonConsumers_ConstructionClearBeforeFinder",
+            "exitCode": 0,
+            "counts": [
+              [
+                "1",
+                "0"
+              ]
+            ]
+          }
+        ],
+        "excluded": [
+          "ConstructionClear_ReplacesLocalPredictionWithConfirmedPieces",
+          "ConstructionRequest_ConnectsPipelineConfirmAndNotice"
+        ]
+      }
+    ],
+    "executed": 30,
+    "allPassed": true,
+    "multiplayerExecutions": 0
+  },
+  "gui": {
+    "passed": true,
+    "unit": 1195,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1195\\live-tutorial4\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "abc840176764fa6a997938c5ce7dd5f4743e792e8c368d3a53a357cfac16bf36",
+    "exeSha256After": "abc840176764fa6a997938c5ce7dd5f4743e792e8c368d3a53a357cfac16bf36",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1195\\live-tutorial4\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1195\\live-tutorial4\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 4.583,
+        "gameTimeAfter": 14.38,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "staticAudit": {
+    "checks": {
+      "resource-device-bool": true,
+      "session-actual-bool": true,
+      "client-result-with-runtime-pin": true,
+      "storage-missing-reject": true,
+      "native-storage-result": true,
+      "native-no-world-capture": true,
+      "typed-world-contract-retained": true,
+      "construction-refusal-retained": true,
+      "world-changed-only-on-acceptance": true
+    },
+    "allPassed": true,
+    "productExecutions": 0,
+    "multiplayerExecutions": 0,
+    "decompilerHost": "HJOW-Athlon",
+    "decompilerSourcesModified": false
+  },
+  "nativeEvidence": [
+    {
+      "edition": "originals",
+      "entry": "004220f0",
+      "ranges": [
+        {
+          "first": "004220f0",
+          "lastInclusive": "00422147",
+          "sha256": "9e4d0df5a5d6fde42eeda0bda351aef61a5e3d747248d3cba7078a523f3ef606"
+        }
+      ],
+      "cSha256": "9fb1b7ffbcf40bf4354cb9887a981b4ed907a9259b2a59585250fb81b9210838"
+    },
+    {
+      "edition": "originals",
+      "entry": "00441fd0",
+      "ranges": [
+        {
+          "first": "00441fd0",
+          "lastInclusive": "00442192",
+          "sha256": "eeaf2d741ee5c5f54607acd10a8406efb5936599ef17bb6b9dcdd865a9755508"
+        }
+      ],
+      "cSha256": "6f0f32c979991b9e6c1f9dabf9071755a933ec1dce88e7c9b9fee1b2f905f63e"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "00449820",
+      "ranges": [
+        {
+          "first": "00449820",
+          "lastInclusive": "0044988e",
+          "sha256": "8d79a4ce68a8288ee28ae1e32f59873170f392e29ea5f876465ebc62fc327460"
+        }
+      ],
+      "cSha256": null
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004cff80",
+      "ranges": [
+        {
+          "first": "004cff80",
+          "lastInclusive": "004d0171",
+          "sha256": "dd34259dbf52cb028ff4eea339c12209b72119959de1e889534c2c30b654ddd3"
+        }
+      ],
+      "cSha256": "2908d1ad94a94c224245b6d1d38d1f76a7af3519173bee7da7cac8f3ed22a18b"
+    }
+  ],
+  "verificationHistory": {
+    "initialBuild": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_construction_owner_tests",
+        "netstorm_construction_current_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 387.3160445690155,
+      "sourcesUnchanged": true
+    },
+    "initialTests": {
+      "targets": [
+        {
+          "target": "owner",
+          "sha256": "e9199b1d853306d7c18a4ef4b31ecae57bc49202635d925e8a594e12b60c6717",
+          "cases": [
+            {
+              "name": "ConstructionOwner_BindingsValidateCurrentValuesWithoutPacketEffects",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionOwner_RetainsActualBackingAndReleasesWithoutCycles",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionOwner_StateReadsLongRolesBeforeAnySession",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionOwner_CollisionReadsCurrentServerBetweenCandidates",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionOwner_MissingCurrentDeletionDeviceRejectsBeforeWorldCreation",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionOwner_RuntimeDeletionSurvivesWorldReturnAndPreservesResult",
+              "exitCode": 1,
+              "counts": [
+                [
+                  "1",
+                  "1"
+                ]
+              ]
+            },
+            {
+              "name": "canon_collision_patch_x86",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "canon_collision_cd_x86",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "canon_collision_1037_x86",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "canon_collision_real_finder_stops_after_rejection",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "canon_collision_current_type_and_saved_finder_next",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "canon_collision_pattern_preview_geometry_stops_at_second_shape",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "canon_collision_guards_and_required_regions",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            }
+          ],
+          "excluded": []
+        },
+        {
+          "target": "current",
+          "sha256": "21cb3d32191a5c97372c4d69151b60968ce789c9d015a936e677f73b40d04b38",
+          "cases": [
+            {
+              "name": "ConstructionCurrent_RequestSelectsGlobalsAfterOriginalEffects",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionCurrent_ClearReadsBridgeAfterCandidateEffects",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionCurrent_LocalKeepsCandidateTypeAndReselectsReplacementType",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionCurrent_PlayerBoundsEffectsSelectCurrentQuantities",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionRequest_ReplaysOriginals",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionRequest_ReplaysCd",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionRequest_ReplaysExtra1037",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionRequest_RejectsInvalidInputsBeforeEffects",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionRequest_ReadsCurrentFlagsAfterConfirm",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "CanonConsumers_ConstructionRequestAfterMayPlace",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionClear_ReplaysOriginals",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionClear_ReplaysCd",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionClear_ReplaysExtra1037",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionClear_ComputesCellAreaWithClampAndValidity",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionClear_RemovesOnePredictionPerCell",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "ConstructionClear_SharedBossControlsForeignTypeCandidate",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            },
+            {
+              "name": "CanonConsumers_ConstructionClearBeforeFinder",
+              "exitCode": 0,
+              "counts": [
+                [
+                  "1",
+                  "0"
+                ]
+              ]
+            }
+          ],
+          "excluded": [
+            "ConstructionClear_ReplacesLocalPredictionWithConfirmedPieces",
+            "ConstructionRequest_ConnectsPipelineConfirmAndNotice"
+          ]
+        }
+      ],
+      "executed": 30,
+      "allPassed": false,
+      "multiplayerExecutions": 0
+    },
+    "correction": "새 수명 검사에 누락된 Native editor/보상/공통 삭제 필수 장치만 추가했다. 제품6파일은 최초 빌드 뒤 불변이다."
+  },
+  "protectedFiles": 2800,
+  "protectedUnchanged": true,
+  "lastDecompiler": {
+    "client": "2026-11-03/HJOW-Athlon",
+    "root": "2026-11-07/HJOW-Athlon",
+    "sourcesModified": false
+  },
+  "multiplayerExecutions": 0,
+  "originalGameExecutions": 0,
+  "fullGoalComplete": false,
+  "remaining": [
+    "전체 건설 body/선택된 큰 Runtime 수명",
+    "큰 NoWorld/AI/Carrier/다른 Form/일반 삭제",
+    "Source/listener/표/Poll/63F/지연큐/JoinTestBattle",
+    "M7/M8/K1~K5/S1~S4/B1~B4 및 별도 후순위"
+  ]
+}

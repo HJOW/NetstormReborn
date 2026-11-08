@@ -43,6 +43,7 @@ RawConstructionRuntime BindConstructionRuntime(RawSurfaceWorld& world) {
     if (storage->UsesNativeTransmissionDevices()) {
         runtime.create=[storage](auto type,auto flags) { return storage->CreateAsset(type,flags); };
         runtime.pop=[storage](auto sid,auto x,auto y,auto flags) { static_cast<void>(storage->PopAsset(sid,x,y,flags)); };
+        runtime.destroy=[storage](auto sid,auto flags) { return storage->DestroyAsset(sid,flags); }; //장기 Runtime은 선택 시 현재 실제 전체 owner를 pin하는 Client 장치만 사용한다.
         runtime.broadcast=[storage](auto packet) { storage->BroadcastAssetPacket(packet); }; // 같은 실제 장기 Client 장치이며 새 Source/수신/ACK를 만들지 않는다.
     }
     return runtime;

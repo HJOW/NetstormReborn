@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 및 공통 인수인계
 
-**사용자2026-11-09 요청으로1194 단위 완료·문서/로컬 커밋 뒤 목표를 일시 중지했다. 전체 목표는 미완료다.** 현재 완료 제품은1194 / 11.01이며 [현행 중지 인계](docs/exe/handoffs/cpp-pause-20261109-1194.md)를 먼저 읽는다. M6~M8의3필수묶음 뒤 한국어K1~K5·시나리오UI S1~S4를 진행한다. [1179 인계](docs/exe/handoffs/cpp-pause-20261108-1179.md)의 준비본을 실제 적용 전후와 구분한다.
+**사용자2026-11-09 `/goal`로 재개했다.1195 실제 삭제 bool/장기 건설 Runtime 단위를 완료했으며 전체 목표는 미완료다.** 현재 완료 제품은1195 / 11.01이다. [1194 중지 인계](docs/exe/handoffs/cpp-pause-20261109-1194.md)의 첫 삭제 항목은1195에서 완료했고, 다음 전체 건설 body와 큰 장치 수명부터 계속한다. M6~M8 뒤 K1~K5→S1~S4→B1~B4 순서를 유지한다.
 
 다음 **6차 한국어 후속**으로 넘어가려면 **M6~M8의3필수묶음**을마쳐야한다. M1~M5와4·5·7차는구현됐다. 이후6차잔여5묶음→8차시나리오UI4묶음→9차B1~B4 순서다. M6은전수14세부묶음이며묶음수는커밋수/소요일/완료율이아니다.
 
@@ -12,20 +12,20 @@
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **사용자2026-11-09 지시로 일시 중지.** 제품1194 구현·검증·문서·로컬 커밋 완료 후 멈췄다.1195는 자료 확인만 했으며 제품 수정/빌드/검사 실행은 시작하지 않았다. 재개 지시 뒤 M6-l/m/n→M7→M8→K1~K5→S1~S4→B1~B4 순서로 계속한다. 전체 미완료다. |
-| 재개·현재 지점 | 1194에서 별도 Client 건설 상태 owner·Session 없는 현재8TYPE/NativeBounds mission·상위 current검증/Collision현재server를 연결했다. 전체 body는 Session이다. 다음 실제 bool삭제·장기 body/큰 효과 Runtime pin과 큰 NoWorld/AI/Carrier·다른 Form/일반 삭제 및 Source/표/Poll·잔여F/큐·JoinTestBattle다. 전체 M6는 미완료다. |
-| 진행 중인 실행 | 없음.1194 빌드12890/86678·허용 GUI30742/42705와 모든 검사는 종료됐다. 제품 커밋cc562ccf 뒤 중지 인계를 추가했다. 전체 body/큰 NoWorld/M6 미완료·새MP/패킷 실행0·큐OFF다. |
-| 현재 제품 | **1194 / 표시·파일·제품11.01**. M6-a~k 완료, l/m/n 부분 접합. 전체 M6·M7~M8/한국어/시나리오UI/9차는 미완료다. |
+| 진행 상태 | **사용자2026-11-09 `/goal`로 재개·진행 중.**1195 구현/검증/문서를 완료했다. M6-l/m/n→M7→M8→K1~K5→S1~S4→B1~B4 순서이며 전체 미완료다. |
+| 재개·현재 지점 | 1195에서 실제 가상 삭제 bool의 Session→Client 장치→Storage→건설 Runtime 반환 사슬을 연결했다. Native Runtime의 마지막 World 캡처를 제거했다. 전체 body는 아직 Session이며 다음은 별도 Client body/선택된 큰 Runtime pin과 큰 NoWorld/AI/Carrier·다른 Form/일반 삭제, Source/표/Poll·잔여F/큐·JoinTestBattle다. |
+| 진행 중인 실행 | 없음.1195 최종 Release 빌드/30비MP 집중 검사/Tutorial4 생산·건설·600frame 대기가 종료0이다. 새MP/패킷/통신 실행0·큐OFF다. |
+| 현재 제품 | **1195 / 표시·파일·제품11.01**. M6-a~k 완료, l/m/n 부분 접합. 전체 M6/M7~M8/한국어/시나리오UI/9차는 미완료다. |
 | 실행·플레이 | 무인자 GUI와 미션 플레이 경로가 있다. 마지막 전체34진입은 **645에서 검증한 제품644**이며 현 제품 전체 회귀 결과가 아니다. |
 | 원본과의 동일성 | 부품별 원문 대조를 누적했다. 모든 시나리오 자연 완주·전체 동일성은 사용자 확인 대상이다. |
-| 최신 빌드·정적 확인 | **1194 NetstormCpp/NetstormRoot/세 집중 대상 Release/x64 종료0·경고오류0·고정20소스/보호2800 불변**. 별도 Client 상태 수명·현재8TYPE/미션/상위 검증/server를 연결했다. [보고서](cpppj/construction-client-state-20261109.json)·[설명](docs/exe/cpp-construction-client-state-20261109.md). 새MP 실행0이다. |
-| 최근 완료 | **1193:**현재 건설 전역·공유 마스크와 효과 뒤 조회 순서. **1194:**별도 Client 건설 상태 수명·현재8TYPE/NativeBounds 미션/상위 검증·충돌server. 전체 body/M6는 미완료다. [1193](docs/exe/cpp-construction-current-globals-20261109.md)·[1194](docs/exe/cpp-construction-client-state-20261109.md). |
+| 최신 빌드·정적 확인 | **1195 NetstormCpp/NetstormRoot/두 집중 대상 Release/x64 종료0·경고오류0·고정7소스 불변·보호2800 불변**. 정적9조건과 양판본4함수 PE/3함수 C를 확인했다. CD 다리 삭제449820은 정밀 C 목록에 없어 실제PE(ret4 끝)로 확인했다. [보고서](cpppj/construction-destroy-runtime-20261109.json)·[설명](docs/exe/cpp-construction-destroy-runtime-20261109.md). |
+| 최근 완료 | **1194:**별도 Client 건설 상태 owner·현재8TYPE/미션/상위 검증·충돌server. **1195:**실제 삭제 bool과 Native Runtime의 장기 Storage/현재 삭제 장치 연결. 전체 body/M6는 미완료다. [1194](docs/exe/cpp-construction-client-state-20261109.md)·[1195](docs/exe/cpp-construction-destroy-runtime-20261109.md). |
 | checking 잔여 | **현재 목록0개.** `004b02d0`/`004dc220`은1157에서 기존 전체 본체/실제 같은 DWORD 연결을 확인했다. 모든 MP 경로 완료를 뜻하지 않으며 M4~M8은 남는다. 중앙 원문 진단창은M7.5다. |
-| 마지막 C++ 실행 검사 | **1194 명시 비MP35+17+11검사(합계63) 실패0/신규4.** 상위 current검증/수량0·비활성Player, backing보유/무순환해제, Session전8역할/fresh, 후보효과뒤server와 기존 독립 PE fixture를 확인했다. 결합 Notice/패킷2개 제외·새MP/패킷/통신 실행0이다. |
-| 마지막 GUI | **1194 최종 제품:**Tutorial4 생산/건설 요청·실제 TYPE75 객체 생성·600frame 대기, 같은 Client의800×600 Edit→TEST01→메인 복귀2회/정상 종료0. NoWorld 전체 저장·Test Battle·MP·포획/희생·공격·승리·공중3종 검증이 아니다. |
+| 마지막 C++ 실행 검사 | **1195 비MP13+명시17=30검사 실패0/신규2.** World 반납 뒤 현재 삭제 장치의 거부/수락/예외·장기 backing 반납과 장치 부재 거부를 확인했다. 최초 새 수명 검사의 Native editor/보상 장치 누락1실패를 검사 준비만 수정했고 원시 로그를 보존했다. 결합 Notice/패킷2개 제외·신규MP/패킷/통신 실행0이다. |
+| 마지막 GUI | **1195 최종 제품:**Tutorial4 정상 생산/건설 요청→실제TYPE75/owner1 생성·600frame 대기·정상 종료0.1194의 같은 Client Edit왕복2회는 이전 제품 근거다. 전체 NoWorld 삭제/Test Battle/MP/포획·희생/특정 공격/승리/공중3종 검증이 아니다. |
 | 전체 검사·ZIP | 현재 전체 솔루션 실행 통과 기록은 없다.1166은 기존 검사 코드 컴파일만 완료했다. 최신ZIP은 **1092**이며 현재1194 바이너리의ZIP이 아니다. 다음 패키지 정합성은 **M8**이다. |
-| 보호 기준 | 원본/CD/fixture **2799파일은 불변**. AGENTS.md는 개발자 커밋551d27ae를 읽고 반영한 기준이며 에이전트 수정0이다. 해당 기준 뒤 **2800파일 불변(1194)**. extracted/cpp-resume-1194/protected-before.json·protected-after.json에 전수 기록했다. |
-| EXE SHA-256 | Netstorm.exe 13629952바이트/SHA-256 `2f0e5dfa506c576202475757f30f8224fd8d698feb56b06975039335b6877a27` / R.exe 677376바이트/SHA-256 `65cd7deeba04f7557193623288f16deda40c07db858e6a460537b082b8425676` |
+| 보호 기준 | 원본/CD/fixture2799와 AGENTS.md 포함 **2800파일 불변(1195)**. AGENTS는 개발자 커밋551d27ae 기준이며 에이전트 수정0이다. extracted/cpp-resume-1195/protected-before.json·protected-after.json에 전수 기록했다. |
+| EXE SHA-256 | Netstorm.exe 13632000바이트/SHA-256 `abc840176764fa6a997938c5ce7dd5f4743e792e8c368d3a53a357cfac16bf36` / R.exe 677376바이트/SHA-256 `f55639dc70452a4fa301646a8c59d0aae0918721cf8d60546277413c52d751b8` |
 | 마지막 정밀 디컴파일 | **클라이언트 양판본 2026-11-03 / HJOW-Athlon(192.168.0.94)**. R전용은 **2026-11-07 / 같은 호스트**. [기록](docs/exe/cpp-decompilation-20261103.md). |
 
 ### 0.2 재개 순서
@@ -35,7 +35,7 @@
 3. **M6 → M7 → M8** 순서로진행하며실제의존하위를먼저복원한다. M1~M5완료분을옛예고로다시만들지않는다.
 4. `extracted/cpp-resume-1179/`는최신빌드/허용3비MP/보호해시원시이며Host/선택값/자원PostPop의C·PE/사본경로는1179문서에명시했다. [M6전수감사](docs/exe/cpp-lan-remaining-audit-20261108.md)의초기활성판정정정을읽는다. M7.1/2는 [준비](docs/exe/cpp-help-cursor-remaining-audit-20261108.md)를구현완료로세지않는다.
 5. 단위 종료마다 **0.1의 현행 값·해당 M/K/S 항목·checking 목록·최근 완료2건**을 갱신하고 단위 문서/보고서를 작성해 로컬 커밋한다. 과거 예고·완료 로그를 이 문서에 계속 누적하지 않는다.
-6. 다른세션의DN/WB변경/스테이징을수정/정리/커밋하지않는다. 사용자가 재개하면 중지 인계에 따라 M6-l/n/m부터 계속한다.
+6. 다른세션의DN/WB변경/스테이징을수정/정리/커밋하지않는다. 1194 중지 인계의 첫 bool삭제는1195 완료이며 다음 전체 body/큰 장치와 M6-l/n/m을 계속한다.
 
 ### 0.3 유효한 실행 제외·보류
 
@@ -54,7 +54,7 @@
 | --- | --- | --- |
 | 1차 10.78 원본 복원 | 활성 **비멀티** UI929·Edit943·미션 수명956·내부 수명/FILE980 범위 마감. MP 전용은3차에서 복원 중이다. | 새 구체적 누락/사용자 제보는 다시 연다. 전체 자연 완주·전체 픽셀 동일성은 사용자 확인이다. |
 | 2차 Win10/11 호환 | 호환 전체화면/재실행·화면비·가장자리 스크롤·저장 재시작을 구현/확인하고 다음 단계로 전환했다. 덱 결함981도 해결했다. | 다른 장치/Windows11/ARM 실기는 현재 전환 조건이 아니다. 무오류 보증과 구별한다. |
-| **3차 TCP/IP 로컬 MP·Outpost** | **진행 중. 제품1194/M6-a~k 완료·l/m/n 부분 접합.** | **M6~M8의3묶음.** 새MP 실행 테스트는 종료 조건에서 제외한다. |
+| **3차 TCP/IP 로컬 MP·Outpost** | **진행 중. 제품1195/M6-a~k 완료·l/m/n 부분 접합.** | **M6~M8의3묶음.** 새MP 실행 테스트는 종료 조건에서 제외한다. |
 | 4차 로컬MCP·와이드 | 935~937 구현, 덱 보완981. 캡처/음향 녹화의936 후속 성공도 있다. | 물리/환경 확인은0.3절. 같은 기능을 다시 미구현으로 세지 않는다. |
 | 5차 사용자 홈 저장·맵 목록 | 932~934 이관/reader/읽기 전용 설치·Unicode 실행·무제한50행 스크롤 구현. | 현재 `CustomMaps\d\NAME.fort`, 최초 Edit의 원본433맵 복사, 이동행 클릭/휠 미구현을 유지한다. 임의 배치 변경은 하지 않으며 이동행 한국어 문구는K4다. |
 | **6차 한국어** | 938의1차: D2Coding·번역502·Language 메뉴·korean→english 대체·배포 동봉. **986 후보는 미적용**이다. | **K1~K5의5묶음.** 3차 M1~M8 뒤 착수한다. |
@@ -77,7 +77,7 @@
 | **M3** | 공통 Pop/신전 Handle·Descend/참가 후속 World·카메라/HTML/진단 장치 접합. | 기존 부모1157 대조·master 주소1158 교정·State19/Core 현재 진단/실제 전환 Caller1159 마감. [근거](docs/exe/cpp-meta-transition-closure-20261108.md). | **접합 완료(1159)**. 중앙 기본 진단창/파일의 새 누락은M7.5에 명시했으며 완료로 세지 않는다. |
 | **M4** | State33 송신·NSInfo/메타 요청 UI·HTML 후속. | 실제송신1160·NSInfo5명령1161·영역확인후속1162. [마감](docs/exe/cpp-meta-zone-descend-20261108.md). | **완료(1162)**. 새수신/독립후속은M6/M7로 구별한다. |
 | **M5** | 두환경계약·세.server콘텐츠/실제reader·배포. | 1163환경계약·1164서버페이지32섹션/요청응답·빌드복사/DryRun. [근거](docs/exe/cpp-server-pages-integration-20261108.md). | **완료(1164)**. 원본서버본문미확보·새호환본문의한계를명시하며실제ZIP바이트는M8이다. |
-| **M6** | 일반LAN·Outpost 전수14세부묶음. | [현행 감사](docs/exe/cpp-lan-remaining-audit-20261108.md). **a~k1173까지 완료.** Source/Host 기반1174~1179 뒤1180은 Meta8/설정 장기F·옵션 owner(67h bool 관문 기록은1184에서 정정),1181은41h 장기 F/Editor 같은 F 반납,1182는 자원 장기 Regular,1183은 m2b1 저장 전역,1184는 m2c1 실제 가상 조회 Caller,1185는 n9c1 장기 HP/보상/SP·현재 모드/Player base·실제 Runtime,1186은 장기 공통 삭제/현재 UI·전역·실제 종단 반납과 동일 Player 목록 재진입,1187은 같은 장기 Damageable/Geyser 수명과 현재 TYPE/모드/population/사건·목록,1188은 삭제 제외/벌프 TYPE와 Native 이동·비행·전달의 같은 owner,1189는 장기 표면 수명/가상 삭제·현재 연결 TYPE와 실제 큰 종단 weak 대여/반납,1190은 건설13참조/현재 Player base·선택 this 수명,1191은 Player 미할당 단계의 지연 구성/실제 선택 시 검증,1192는 Native 장기 Canon/진단·실제 생성/Pop/방송 장치,1193은 실제 건설 전역·공유 마스크와 Request/Clear/Local/Command 현재 소비,1194는 별도 Client 건설 상태 owner·현재8TYPE/NativeBounds 미션/상위 검증·Collision현재server를 연결했다. 전체 body는 Session이다.25태그 전scope/무태그63F·전역 Source/큐·m JoinTestBattle,n 전용Regular/삭제/NoWorld·큰AI/다른Form·debugBurst/전수 마감은 남는다. | **다음 M6-l/n/미완료·큼.** 기존 Pop/저장복구/78h/기록은 재작성하지 않는다. |
+| **M6** | 일반LAN·Outpost 전수14세부묶음. | [현행 감사](docs/exe/cpp-lan-remaining-audit-20261108.md). **a~k1173까지 완료.** Source/Host 기반1174~1179 뒤1180은 Meta8/설정 장기F·옵션 owner(67h bool 관문 기록은1184에서 정정),1181은41h 장기 F/Editor 같은 F 반납,1182는 자원 장기 Regular,1183은 m2b1 저장 전역,1184는 m2c1 실제 가상 조회 Caller,1185는 n9c1 장기 HP/보상/SP·현재 모드/Player base·실제 Runtime,1186은 장기 공통 삭제/현재 UI·전역·실제 종단 반납과 동일 Player 목록 재진입,1187은 같은 장기 Damageable/Geyser 수명과 현재 TYPE/모드/population/사건·목록,1188은 삭제 제외/벌프 TYPE와 Native 이동·비행·전달의 같은 owner,1189는 장기 표면 수명/가상 삭제·현재 연결 TYPE와 실제 큰 종단 weak 대여/반납,1190은 건설13참조/현재 Player base·선택 this 수명,1191은 Player 미할당 단계의 지연 구성/실제 선택 시 검증,1192는 Native 장기 Canon/진단·실제 생성/Pop/방송 장치,1193은 실제 건설 전역·공유 마스크와 Request/Clear/Local/Command 현재 소비,1194는 별도 Client 건설 상태 owner·현재8TYPE/NativeBounds 미션/상위 검증·Collision현재server를 연결했다. 1195는 실제 삭제 bool과 Native Runtime의 장기 Storage/현재 삭제 장치를 연결했다. 전체 body는 Session이다.25태그 전scope/무태그63F·전역 Source/큐·m JoinTestBattle,n 전용Regular/삭제/NoWorld·큰AI/다른Form·debugBurst/전수 마감은 남는다. | **다음 M6-l/n/미완료·큼.** 기존 Pop/저장복구/78h/기록은 재작성하지 않는다. |
 | **M7** | helpWord캐시·메타커서본문/장치설치·조기/원격희생안내·marker표시/갱신·공통assertion창/파일5건. | [M7.1/2현재차이준비](docs/exe/cpp-help-cursor-remaining-audit-20261108.md): 빈Config기존cache유지/정체성·메타커서본문/상태Lock/Unlock/장치선행. M7.5는초기registry진단도같은중앙장치에통합한다. | 미완료. 준비/원문발췌는구현/실행통과가아니다. 사용자제외희생/MP테스트는하지않는다. |
 | **M8** | **3차 구현 마감 감사·배포 정합성**. | M1~M7/현재 checking 목록0/새 누락/활성 Caller·실제 owner/수명·외부 검증 비활성화 대조, Release 빌드, 필요한 최종 ZIP의 실제 Netstorm/R/에셋 바이트 검증. | 미완료 / 마지막 관문. MP 실행 테스트는 하지 않으며 ZIP/전체검사를 반복하지 않는다. |
 
@@ -178,7 +178,7 @@
 
 ## 6. 운영 규칙과 유효한 사용자 결정
 
-- **최신 지시:** 사용자2026-11-08 `/goal`로 일시중지를 해제하고 LEFT_JOBS의 모든 CPP 작업을 계속하라고 요청했다. 단위마다 문서/로컬 커밋을 수행하며 실패해도 계속한다. 자연 완주·전체 동일성·사용자 직접 확인·MP 테스트는0.3절대로 제외한다.
+- **최신 지시:** 사용자2026-11-09 `/goal`로 재개했다. LEFT_JOBS의 모든 CPP 작업을 계속하고 단위마다 문서/로컬 커밋을 수행하며 커밋 실패해도 계속한다. 자연 완주/전체 동일성/사용자 직접 확인/MP 테스트는0.3절대로 제외한다.
 - **검증 구분/빈도:** 정적 대조·컴파일·단위 실행·GUI·물리를 구별한다. 최초 실패/교정 원시를 보존하고 기대값을 제품에 맞춰 약화하지 않는다. 많은 기능 묶음 뒤 필요한 통합 확인을 하되 옛3~5단위 숫자를 자동 전체34/CTest/ZIP 실행 조건으로 쓰지 않는다.
 - **빌드:** 현재 HJOW-Athlon은 VS18(2026)/MSBuild18.x다. `cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --parallel 4 -- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true`로 빌드한다. 살아 있는 단일 핸들을 추적하고 종료0을 확인한 뒤 다음 작업을 한다. 빌드 중 제품 소스를 변경하지 않는다. HJOW-X3D는VS17(2022)/v143이다. [빌드 안내](docs/cpp-build.md).
 - **실행 파일/자료:** 대상NetstormCpp·OUTPUT_NAME Netstorm·ARCHIVE_OUTPUT_NAME NetstormCpp를 유지한다. 원본/클론은 전체 경로로 구별하고 EXE 옆 `game/netstorm.tarc`를 우선한다. cwd의 다른 게임/보호 원본을 자동 탐색하지 않는다. 무인자 GUI·`--help/--run`·분석CLI를 유지한다.

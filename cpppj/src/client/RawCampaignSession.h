@@ -462,7 +462,7 @@ public:
     bool DeployAi(std::uint32_t owner,std::uint32_t type,float x,float y,std::uint32_t argument=0,std::uint32_t direction=0); //선택된 전략 입력으로004106e0 실제 생산/비용/배치를 명시 실행한다. 자동 선택은 후속이다.
     float HandleDamageableResourceRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); //장기피해사건이선택한현재실제HP/피해지면부모이며caller가전체owner를pin한다.
     void StartResourceConstruction(o::Sid sid); //실제현재Form조회뒤선택한건설Start(parent,0)만같은현재상태로실행한다.
-    void DestroyResourceObject(o::Sid sid,std::uint32_t flags); //현재실제가상삭제분배를공개하며장기owner분리완료를가장하지않는다.
+    bool DestroyResourceObject(o::Sid sid,std::uint32_t flags); //현재 실제 가상 삭제의 수락/거부를 반환하며 전체 NoWorld 삭제 복원 완료로 간주하지 않는다.
     void NotifyGeyserAi(std::uint32_t token,std::uint32_t sid,std::uint32_t operation); //현재실제AI본체의4153c0등록을장기자원caller와공유하며실제외곽pin은caller가소유한다.
     void CheckCarrierPostPop(o::Sid sid); //현재같은사제/Carrier검사몸체만호출하며새World/loaded관문을만들지않는다.
     void NotifyAiObject(std::uint32_t owner,o::Sid object,bool added); //현재실제AI생성/삭제통지를같은소유메모리/414de0에전달한다.

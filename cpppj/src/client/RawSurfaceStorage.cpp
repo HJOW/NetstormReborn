@@ -353,6 +353,12 @@ o::SquidDisplay& RawSurfaceStorage::Display() {
     return *display_;
 }
 // 원문의 실제 공통생성자를 같은 장기물리에 한 번 구성한다. 생성의 선택효과는 기존Factory가 결정한다.
+// 선택된 실제 Client 삭제 장치를 호출하며 거부/예외/부분 효과와 현재 Runtime의 수명은 그 장치가 보존한다.
+bool RawSurfaceStorage::DestroyAsset(o::Sid sid,std::uint32_t flags) {
+    const auto destroy=resourceDevices_.destroy; //현재 장치를 호출이 끝날 때까지 보유하며 Session/World를 캡처하지 않는다.
+    if (!destroy) throw std::logic_error("장기 자산의 현재 가상 삭제 장치 미연결");
+    return destroy(sid,flags);
+}
 o::Sid RawSurfaceStorage::CreateAsset(std::uint32_t type,std::uint32_t flags) { NoteChanged();return Factory().Create(type,flags); } //실제 현재 표시 대여가 있을 때만 같은 changed bool을 알리고 Native 생성 순서는 보존한다.
 NativeFortSaveVirtual& RawSurfaceStorage::FortSaveVirtual() {
     if (!fortSaveVirtual_) fortSaveVirtual_=std::make_unique<NativeFortSaveVirtual>(*this,*gameAux_);return *fortSaveVirtual_;

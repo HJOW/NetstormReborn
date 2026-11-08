@@ -86,7 +86,7 @@ struct RawSurfaceResourceDevices { //같은Client게임난수와선택된큰자�
     std::function<void(o::Sid)> carrierCheck; //실제가상cc의현재Carrier검사를선택위치에서호출한다.
     o::RegularHandler damageableRegular; //실제피해사건의현재큰세계종단이며자연기본사건은장기본문이직접판정한다.
     std::function<void(o::Sid)> startConstruction; //실제abstract/현재Form조회뒤건설Start만선택해호출한다.
-    std::function<void(o::Sid,std::uint32_t)> destroy; //선택된현재가상삭제종단이며NoWorld미복원을성공으로꾸미지않는다.
+    std::function<bool(o::Sid,std::uint32_t)> destroy; //선택된 현재 가상 삭제의 수락/거부를 그대로 반환하며 NoWorld 미복원을 성공으로 꾸미지 않는다.
     std::function<void(o::Sid,std::uint32_t)> geyserRegistration; //현재Player9/brain순회의실제416720등록부모다.
 };
 struct RawSurfaceProcessDevices { //실제Client현재선택/선택해제부모만장기로빌린다.
@@ -206,6 +206,7 @@ public:
     o::SquidDisplay& Display(); //같은TYPE/SHP/진단과현재Renderer로실제표시부모를World없이제공한다.
     void BindDisplayDevices(RawSurfaceDisplayBindings devices); //첫실제Client물리준비뒤현재Renderer/카메라getter만결합하며조회/난수/그리기는실행하지않는다.
     void BindDisplayRuntime(const std::shared_ptr<const RawSurfaceDisplayBindings>& runtime); //같은현재World대여만weak로공개하고만료뒤장기Client장치를쓴다.
+    bool DestroyAsset(o::Sid sid,std::uint32_t flags); //현재 Client 장치에서 실제 가상 삭제 bool을 빌리며 World 주소를 보관하거나 성공을 합성하지 않는다.
     o::Sid CreateAsset(std::uint32_t type,std::uint32_t flags=0); //기존 World의 changed prefix 뒤 같은 현재 Factory Create를 실행하고 새 World를 요구하지 않는다.
     NativeFortSaveVirtual& FortSaveVirtual(); //현재 Robust/HasLevel/Count의 동일 장기 조회기를 처음 필요할 때 구성하며 World/파일/등록을 만들지 않는다.
     PriestPlacementAssets& PlacementAssets(); // 같은 최초 자산의 Canon/핫스폿/형상·현재 진단을 World 없이 빌린다.

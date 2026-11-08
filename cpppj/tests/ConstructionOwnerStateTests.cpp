@@ -82,3 +82,36 @@ TEST_CASE(ConstructionOwner_CollisionReadsCurrentServerBetweenCandidates) {
     hash.Bucket(0,20,21)=50;RawCanonPlacementCollision collision(pool,hash,types,state,preview,{OwnerForbidden<bool,const CanonPlacementQuery&,const std::function<bool(SquidSearchArea)>&>(),[&](auto,auto sid) { visited.push_back(sid.value);server=!server; }});CHECK(!collision.InspectArea({82,0,20,21,0,1,0},true,{20,21,20,21}));CHECK((visited==std::vector<std::uint16_t>{50}));
     visited.clear();server=false;state.clientMode=1;preview.blocked.fill(0);InputRaw(pool,Sid{50})[40]=1;CHECK(collision.InspectArea({82,0,20,21,0,1,0},true,{20,21,20,21}));CHECK((visited==std::vector<std::uint16_t>{50,51}) && std::count(preview.blocked.begin(),preview.blocked.end(),std::uint8_t{1})==1);
 }
+
+// 현재 삭제 장치가 없는 저장소는 일반 자산 삭제를 성공으로 대신하지 않는다.
+TEST_CASE(ConstructionOwner_MissingCurrentDeletionDeviceRejectsBeforeWorldCreation) {
+    auto gameplay=std::make_shared<ClientGameplayGlobals>();auto storage=OwnerStorage(gameplay);
+    CHECK(OwnerRejected([&] { static_cast<void>(storage->DestroyAsset(Sid{5},0x1000)); }));
+    CHECK(storage->Generation()==0 && !storage->Borrowed());
+}
+
+// 건설 실행기는 짧은 World 반납 뒤에도 실제 현재 장치의 거부/수락/예외를 보존하고 새 World를 만들지 않는다.
+TEST_CASE(ConstructionOwner_RuntimeDeletionSurvivesWorldReturnAndPreservesResult) {
+    auto gameplay=std::make_shared<ClientGameplayGlobals>();auto storage=OwnerStorage(gameplay);GameRandom random(123);
+    storage->BindSerializationGlobals(std::make_shared<FortSerializationGlobals>()); //Native World의 실제 공통 로딩 깊이 owner를 준비한다.
+    auto sp=std::make_shared<ScrambledSpStore>(random,[] { return 1U; }); //같은 물리 HP/보상이 요구하는 실제 SP 몸체이며 이 검사에서 소비하지 않는다.
+    storage->BindRewardDevices({sp,std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->world.editor),OwnerForbidden<void>(),OwnerForbidden<void,std::uint32_t,std::int32_t>()});
+    storage->BindPostPopDevices({OwnerForbidden<void,std::uint32_t,Sid,bool>(),[gameplay] { return gameplay->player.battleOwner; },OwnerForbidden<void>()});
+    storage->BindDeletionDevices({OwnerForbidden<void,std::uint32_t,std::uint32_t,std::uint32_t>(),OwnerForbidden<void,Sid>()}); //선택되지 않은 큰 효과는 계속 금지하며 실제 필수 장치 계약만 채운다.
+    std::uint32_t calls=0;bool accepted=false,failed=false; //동일 현재 장치의 결과를 각 호출 사이에 변경한다.
+    storage->BindResourceDevices({[&]()->GameRandom& { return random; },OwnerForbidden<void,Sid>(),OwnerForbidden<float,Sid,std::uint32_t,std::uint32_t,float>(),OwnerForbidden<void,Sid>(),[&](Sid sid,std::uint32_t flags) {
+        CHECK(sid==Sid{5} && flags==0x1000);++calls;
+        if (failed) throw std::runtime_error("선택된 실제 삭제 효과 실패");return accepted;
+    },OwnerForbidden<void,Sid,std::uint32_t>()});
+    std::optional<RawConstructionRuntime> runtime; //World를 반납한 뒤 장기 물리와 삭제 장치만 유지한다.
+    {
+        RawSurfaceWorld world(OriginalEdition::Patch1078,storage->types,storage->frames,storage->shapes,OwnerBindingScene::Links(),97,nullptr,storage);
+        runtime.emplace(BindConstructionRuntime(world));CHECK(storage->Borrowed() && calls==0);
+    }
+    const auto generation=storage->Generation();std::weak_ptr<RawSurfaceStorage> physicalWatch=storage;
+    CHECK(!storage->Borrowed() && !runtime->destroy(Sid{5},0x1000) && calls==1);
+    accepted=true;CHECK(runtime->destroy(Sid{5},0x1000) && calls==2);
+    failed=true;bool thrown=false;try { static_cast<void>(runtime->destroy(Sid{5},0x1000)); }catch (const std::runtime_error&) { thrown=true; }
+    CHECK(thrown && calls==3 && storage->Generation()==generation && !storage->Borrowed() && random.State()==123);
+    storage.reset();CHECK(!physicalWatch.expired());runtime.reset();CHECK(physicalWatch.expired());
+}
