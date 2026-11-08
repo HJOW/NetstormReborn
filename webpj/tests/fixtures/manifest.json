@@ -9986,9 +9986,67 @@
       "bytes": 491781,
       "lines": 1427,
       "fixtureCommit": "ab9486b5",
-      "webCommit": "worktree",
+      "webCommit": "6ef4e1f8",
       "cpppjBasis": {
         "cpppj/src/o/RawIceTower.cpp": "e7427079"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E110",
+      "id": "flare",
+      "path": "cpppj/tests/fixtures/flare-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 플레어 Spawn 30·Regular 109의 반환 float·난수 상태·부모/후보 열한 슬롯 raw·호출 순서(139행)",
+      "consumers": [
+        "webpj/tests/flare.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-flare.js"
+      ],
+      "doc": "docs/webpj-flare-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFlare.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 139행 전부 사용",
+      "text": true,
+      "sha256": "f856dde9fe711dae3ead2c6a1f5baab7a8956b4b99493b1abcb374e3f01d6610",
+      "bytes": 175207,
+      "lines": 140,
+      "fixtureCommit": "659184a6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFlare.cpp": "f02ea8d1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E110",
+      "id": "bomb-status-flare",
+      "path": "cpppj/tests/fixtures/bomb-status-flare-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 같은 Spawn 입력 30개의 C/D 방향별 난수 상태·열한 슬롯 raw·예약 인자 호출 순서(60행)",
+      "consumers": [
+        "webpj/tests/flare.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-flare.js"
+      ],
+      "doc": "docs/webpj-flare-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFlare.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 60행 전부 사용",
+      "text": true,
+      "sha256": "c76b875ab7dabd2f099d6170dc5ddd431b0cb75b7cb08dbfaf4348f611c8365a",
+      "bytes": 89272,
+      "lines": 61,
+      "fixtureCommit": "f02ea8d1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFlare.cpp": "f02ea8d1"
       }
     }
   ]

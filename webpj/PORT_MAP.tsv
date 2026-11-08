@@ -685,7 +685,7 @@ cpppj/src/o/RawFenceTypeParent.cpp	port	www/core/raw-fence-type-parent.js	1f00a2
 cpppj/src/o/RawFieryTailFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawFieryTailLifetime.cpp	port			todo	[o-default]
 cpppj/src/o/RawFileName.cpp	port	www/core/raw-file-name.js	1f00a25a	port	[o-default] WB04-E28: 459c60/459900/459b20/459990/459890 경로 이름 작성기와 10칸 출력 고리. fixture file-name-formatter 352·file-name-leaf 64·file-name-device 32·file-directory 192·file-full 16행 전부. 실제 Client 소비자(옵션 저장/VFS/CD/시작 파일)는 해당 단위에서
-cpppj/src/o/RawFlare.cpp	port			todo	[o-default]
+cpppj/src/o/RawFlare.cpp	port	www/core/raw-flare.js	1f00a25a	port	[o-default] WB04-E110: 플레어 생성 45a6c0→45a480(핫스팟 기준 난수 범위·방향별 첫 프레임·Regular 주기)·수명 45a250(후속 플레어·종료·프레임·powerup 소리). fixture flare 139행+bomb-status-flare 60행 전부(10.78 전용 파일). 효과 생성/핫스팟/소유자/배치/갱신/삭제/예약/소리는 훅 경계
 cpppj/src/o/RawFlyerFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawFlyerPreDestroy.cpp	port	www/core/raw-flyer-pre-destroy.js	1f00a25a	port	[o-default] WB04-E14: 0045e7e0 플라이어 삭제 전처리(+8 WORD 대상 삭제 후 Damageable). fixture flyer-predestroy 10.78 96행 전부
 cpppj/src/o/RawFlyerProcess.cpp	port			todo	[o-default]
