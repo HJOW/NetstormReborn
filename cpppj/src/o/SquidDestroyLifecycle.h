@@ -44,7 +44,7 @@ public:
     // Pop과 같은 장부/풀을 사용한다. 풀·원본 삭제 어댑터·상태의 수명은 이 객체보다 길어야 한다.
     SquidDestroyLifecycle(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& bookkeeping,
         SquidDeletionState& state,RawSquidDestroy& destroy,SquidDeletionHooks hooks,RawGraph* graph=nullptr,SquidReward* reward=nullptr);
-    // 손상 목록·미연결 Graph/AI 효과·비유한 비용·누락 외부 효과를 장부 쓰기 전에 거부한다.
+    // 독립 typed/CD는 손상 목록·미연결 효과를 사전검사한다. 실제 PATCH는 원문에 없는 선행 효과 없이 반환한다.
     void ValidatePre(Sid sid,std::uint32_t flags) const;
     void ValidatePost(Sid sid,std::uint32_t flags) const;
     // 004b0950 ↔ CD 004add20. 끝에서 기존 공통 삭제 어댑터의 pre 깊이를 감소시킨다.
@@ -57,6 +57,7 @@ public:
 private:
     // 매 효과 사이에 현재 raw 타입/상태를 다시 읽는다. 호스트에서 원본 vtable을 호출하지 않는다.
     std::span<const std::uint8_t> Object(Sid sid) const;
+    std::span<const RiftTypeRecord> CurrentTypes() const; // 실제 PATCH는 같은 World의 현재 TYPE를 빌리고 미연결/CD는 기존 생성 시 사본을 사용한다.
     const RiftTypeRecord& Type(Sid sid) const;
     std::uint8_t Owner(Sid sid) const;
     bool Ordinary(Sid sid) const;

@@ -404,6 +404,7 @@ int Client::Run() {
     surfaceStorage_->BindChecking(o::RawCheckingFlag{gameplayGlobals_->AiDebug().Checking()}); // 같은ClientDWORD를Editor/Session대여전부터빌리며새World에서0으로복제하지않는다.
     surfaceStorage_->BindDisplayDiagnostics(gameplayGlobals_->AiDebug().AssertionDetail(),[](std::string_view expression,std::string_view file,std::uint32_t line) { std::clog<<"원본 표시 진단: "<<file<<':'<<line<<' '<<expression<<'\n'; }); // 첫 Editor/Session 이전부터 현재 상세 저장소와 복귀하는 기존 로그 진단을 연결한다.
     surfaceStorage_->BindGraphTrace([this](auto level,auto text) { WriteDiagnosticLog(level,text); }); // Graph의 원문 로그도 현재 Client 필터/들여쓰기/FILE 수명을 직접 사용한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->EnablePatchDestroyDiagnostics(); // 실제 첫 Editor/Session 전부터 원문 공통 삭제의 정상 복귀 진단을 같은 Client에 연결한다.
     surfaceStorage_->BindGraphClock([this] { return clock_->GameSeconds(timeGetTime()); }); // 삭제 Graph의 두 시각 읽기도 같은 현재 Client 시계를 쓴다.
     surfaceStorage_->BindAllocationDiagnostics([this] { DumpObjectDiagnostics(); },[this](std::string_view name) { if (name!="BridgesKilled" || !menu_) throw std::logic_error("CD SID 회수의 현재 Tell UI 미연결");menu_->ShowSidRecoveryNotice(); }); //CD 소진의 객체/상세/대화상자는 기존 Client 부모를 공유한다.
     surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.

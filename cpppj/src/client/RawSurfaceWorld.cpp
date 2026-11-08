@@ -206,6 +206,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             [owner=storage.get()](auto text) { owner->RecordAssertionDetail(text); },
             [owner=storage.get()] { return owner->GameAux()->SupportTypeWas(); }}); // 같은 Client의 현재 상세/진단/TYPE 문맥이며 정상 복귀 뒤 연결을 계속한다.
         baseDestroy=std::make_unique<o::RawSquidDestroy>(pool,*unpop,types);
+        if (auto diagnostics=storage->DestroyDiagnostics()) baseDestroy->BindPatchDiagnostics(std::move(*diagnostics)); // 실제 PATCH Client만 같은 장기 AssertDisplay/로그와 원문 공통 삭제 순서를 사용한다.
         virtualDestroy=std::make_unique<o::RawSquidDestroyDispatch>(*baseDestroy,*neighbors,mode,graph.get());
         virtualDestroy->BindCurrentModes(*storage->Authority()); //다른 효과에서 boss가 바뀌어도 다음 가상 삭제가 같은 현재 주소를 읽는다.
         // 이 기본값은 단독 표면 기하 검사용 관찰이다. 실제 세션은 BindDeletion으로 보상/실제 UI를 공급한다.

@@ -24,4 +24,10 @@ struct SquidMutationHooks {
 void ReceiveContentSquid(SidPool& pool,std::span<const std::uint8_t> packet,const SquidMutationHooks& hooks); //004327b0의 PATCH18BYTE 내용물 수신이다.
 void ReceiveDeletedSquid(const SidPool& pool,std::span<const std::uint8_t> packet,const SquidMutationHooks& hooks); //00433170/CD00488270 비교의 PATCH8BYTE 삭제 수신이다.
 void ReceiveDependencySquid(SidPool& pool,std::span<const std::uint8_t> packet,const SquidMutationHooks& hooks); //00432850의65h13BYTE 감시 Form 수신이다.
+// 004436b0/53h는 현재 포인터 범위와 free만 확인하고 현재 가상+10을 flags0으로 호출한다.
+void ReceiveRemoteDeletedSquid(const SidPool& pool,std::span<const std::uint8_t> packet,const std::function<void(Sid,std::uint32_t)>& destroy);
+// 00433120/62h는 signed count와 각 WORD를 실제 접근마다 읽으며 삭제 뒤 현재 count를 다시 읽는다.
+void ReceiveRemoteDeletedSquids(const SidPool& pool,std::span<const std::uint8_t> packet,const std::function<void(Sid,std::uint32_t)>& destroy);
+// 0040ad70/62h의 송신 관찰기다. 수신 방향은 payload에 접근하지 않고 송신 진단 뒤 LOWORD를 재조회한다.
+void ObserveRemoteDeletedSquids(std::span<std::uint8_t> packet,std::uint32_t sending,const std::function<void(std::string_view,std::string_view,std::uint32_t)>& assertion);
 }

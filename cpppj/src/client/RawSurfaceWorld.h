@@ -47,6 +47,7 @@ private:
     std::function<void(std::string_view,std::string_view,std::uint32_t)> displayAssertion_; // 현재 표시 진단 장치이며 World/Session callback을 보관하지 않는다.
     std::function<double()> graphClock_; // Client 수명 동안 현재 게임 시각을 읽는 장치다. World 대여/반납은 교체하지 않는다.
     std::function<void(std::int32_t,std::string_view)> graphTrace_; // 실제 Client의 현재 로그 장치를 빌리며 World보다 오래 살아 있다.
+    bool patchDestroyDiagnostics_{}; // 실제 Client만 명시 선택하며 독립 typed World와 CD는 기존 삭제 계약을 유지한다.
     std::function<void()> allocationDump_; //CD 소진에서만 선택하는 현재 Client 객체 덤프 장치다.
     std::function<void(std::string_view)> allocationTell_; //CD 회수 뒤 같은 Client 공통 Tell 부모를 호출한다.
 public:
@@ -77,6 +78,8 @@ public:
     void RecordDisplayFrameError(std::uint32_t type,std::int32_t frame,std::uint32_t abstract); //현재 같은 TYPE/shape로43d40의 상세를 저장한다.
     void RecordAssertionDetail(std::string_view text); // 00436d20처럼 전달된 문구를 같은 Client 상세 소유자에 복사하며 원문 포인터를 보관하지 않는다.
     void AssertDisplay(std::string_view expression,std::string_view file,std::uint32_t line) const; // 선택된 원문 진단 장치가 복귀하면 caller도 계속한다.
+    void EnablePatchDestroyDiagnostics(); // 첫 실제 PATCH World 전에 같은 Client의 공통 삭제 진단 경로를 선택한다.
+    std::optional<o::SquidDestroyDiagnostics> DestroyDiagnostics() const; // 선택된 경우 같은 장기 owner의 현재 진단/로그만 World에 빌려 준다.
     void BindAllocationDiagnostics(std::function<void()> dump,std::function<void(std::string_view)> tell); //CD 소진의 객체 덤프와 Tell을 World보다 긴 Client 수명으로 연결한다.
     void BindGraphTrace(std::function<void(std::int32_t,std::string_view)> trace); // 첫 World 전에 현재 Client의 로그 writer를 연결한다.
     void UpdateAmbientWind(o::GameRandom& random); // 같은 Client 난수를 한 번/선택 시 두 번 소비하며 현재 세 바람 전역을 갱신한다.

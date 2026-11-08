@@ -2,6 +2,8 @@
 #pragma once
 #include "o/SquidUnpop.h"
 #include <functional>
+#include <optional>
+#include <string_view>
 
 namespace netstorm::o {
 // 가상 삭제 훅과 외부 효과는 호스트 콜백이다. 원본 vtable 주소를 실행하지 않는다.
@@ -26,11 +28,23 @@ struct SquidDestroyHooks {
     // form(타입 70 미만) 루트의 가상 Unpop(vtable +0x48)이다. 있으면 contained form 루트를 삭제할 수 있다.
     std::function<void(Sid)> unpopForm;
 };
+// 실제 PATCH Client가 선택하는 공통 삭제의 정상 복귀 단언과 원문 로그 장치다.
+struct SquidDestroyDiagnostics {
+    // 현재 Client의 AssertDisplay를 호출하며 정상 복귀 뒤 같은 삭제 위치에서 계속한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion;
+    // 현재 TYPE 이름으로 만든 원문 level0x27 로그를 같은 Client writer에 전달한다.
+    std::function<void(std::int32_t,std::string_view)> trace;
+    // 0059ab50 비용 캐시의 최초 로딩 입력이다. 현재 TYPE+c4 변경과 분리하며 실제 GameAssets가 World보다 오래 살아야 한다.
+    std::span<const RiftTypeRecord> loadedCostTypes;
+};
 // 공통 Squid destroy의 dead·삭제 훅·종속 체인·공간 해제·SID 반납 순서를 복원한다.
 class RawSquidDestroy {
 public:
     // 풀/공간 해제/타입 입력의 수명은 어댑터보다 길어야 한다. 서로 다른 풀 연결은 거부한다.
     RawSquidDestroy(SidPool& pool,SquidUnpop& unpop,std::span<const RiftTypeRecord> types);
+    // 실제 PATCH World에만 원문 진단 경로를 연결한다. 독립 typed/CD의 기존 계약은 바꾸지 않는다.
+    void BindPatchDiagnostics(SquidDestroyDiagnostics diagnostics);
+    bool HasPatchDiagnostics() const { return patchDiagnostics_.has_value(); } // 실제 World의 원문 가상/장부 경로만 선택하며 독립 typed 계약을 변경하지 않는다.
     // 004af780 ↔ CD 004ab7e0. 지원 자산의 실제 Unpop/반납을 연결하며 이미 dead이면 반환한다.
     // 이 함수는 공통 몸체다. vtable +0x10 호출은 RawSquidDestroyDispatch를 통해 다리 재정의를 거친다.
     // pre/post 훅은 각각 CompletePreDestroy/CompletePostDestroy를 정확히 한 번 호출해야 한다.
@@ -49,6 +63,14 @@ public:
     // 공통 훅의 Graph와 실제 Unpop이 서로 다른 공간을 갱신하는 연결을 막는다.
     void ValidateGraph(const RawGraph& graph) const;
 private:
+    friend class SquidDestroyLifecycle; // 원문 공통 Pre의 !isForm 단언도 같은 Client 진단 장치와 복귀 수명을 사용한다.
+    // 004af780의 dead 선기록과 선택된 단언·로그·가상 효과의 순서를 실제 PATCH 경로에 적용한다.
+    void DestroyPatch(Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks);
+    // 진단을 선택한 순간 현재 장치만 빌리며 콜백이 장치를 교체해도 호출 수명을 유지한다.
+    void AssertPatch(std::string_view expression,std::uint32_t line,std::string_view file="\\Ns\\O\\Squid.cpp") const;
+    void ReleasePatch(Sid sid); // 004abf60의 void/free 단언 복귀 뒤 실제 같은 Pool 이력·슬롯·FIFO 반납을 수행한다.
+    // 00441fa0의 실제 client SID 범위5 이상·15000 미만을 같은 PATCH 풀 배치로 조회한다.
+    bool IsClientSid(Sid sid) const;
     // raw +4/+6 WORD를 호스트 정렬과 무관하게 읽는다.
     std::uint16_t Word(Sid sid,std::size_t offset) const;
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
@@ -60,5 +82,7 @@ private:
     // preDepth_: 삭제 전처리의 중첩 깊이.
     // postDepth_: 삭제 후처리의 중첩 깊이.
     std::uint32_t preDepth_{},postDepth_{};
+    // 실제 Client의 명시 연결만 원문 경로를 선택한다. 장치는 공통 삭제 실행기보다 오래 살아야 한다.
+    std::optional<SquidDestroyDiagnostics> patchDiagnostics_;
 };
 }

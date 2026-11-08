@@ -24,7 +24,20 @@ void RawSurfaceStorage::RecordDisplayFrameError(std::uint32_t type,std::int32_t 
     if (!displayAssertionDetail_) throw std::logic_error("표시 오류 상세 Client owner 미연결");*displayAssertionDetail_=o::BuildSquidFrameAssertionDetail(types,shapes,type,frame,abstract);
 }
 // 진단을 선택한 지점만 장치를 요구하며 복귀 뒤 다음 TYPE 조회를 막지 않는다.
-void RawSurfaceStorage::AssertDisplay(std::string_view expression,std::string_view file,std::uint32_t line) const { if (!displayAssertion_) throw std::logic_error("표시 원문 진단 장치 미연결");displayAssertion_(expression,file,line); }
+void RawSurfaceStorage::AssertDisplay(std::string_view expression,std::string_view file,std::uint32_t line) const { const auto assertion=displayAssertion_;if (!assertion) throw std::logic_error("표시 원문 진단 장치 미연결");assertion(expression,file,line); } // 진단 안에서 현재 장치를 교체해도 선택된 호출의 수명을 보존한다.
+// 실제 Client의 PATCH 선택만 저장하며 World 대여/반납은 이 장기 선택을 초기화하지 않는다.
+void RawSurfaceStorage::EnablePatchDestroyDiagnostics() {
+    if (pool.Edition()!=o::OriginalEdition::Patch1078) throw std::invalid_argument("PATCH 공통 삭제 Client 판본 불일치");
+    patchDestroyDiagnostics_=true;
+}
+// 현재 장치의 함수 사본을 고정하지 않고 각 삭제 효과가 같은 Client owner를 다시 조회하게 한다.
+std::optional<o::SquidDestroyDiagnostics> RawSurfaceStorage::DestroyDiagnostics() const {
+    if (!patchDestroyDiagnostics_) return std::nullopt;
+    return o::SquidDestroyDiagnostics{
+        [this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); },
+        [this](auto level,auto text) { TraceGraph(level,text); },
+        source_ ? source_->TypeTable().Types() : std::span<const o::RiftTypeRecord>{}}; // 실제 Client의 최초 비용 캐시는 hp.BindLoadedCosts와 같은 불변 GameAssets 표에서 읽는다.
+}
 // 장기 물리는 현재 Client 장치만 보관하며 실제 소진 전에는 덤프/대화상자를 실행하지 않는다.
 void RawSurfaceStorage::BindAllocationDiagnostics(std::function<void()> dump,std::function<void(std::string_view)> tell) { allocationDump_=std::move(dump);allocationTell_=std::move(tell); }
 // Client의 현재 로그 서비스를 장기 owner에 보관한다. World 대여마다 다른 Session 포인터로 교체하지 않는다.
@@ -38,7 +51,7 @@ void RawSurfaceStorage::BindGraphClock(std::function<double()> clock) { graphClo
 // 독립 저장소에는 외부 시계 효과가 없다. 실제 Client는 GameSeconds를 호출한다.
 double RawSurfaceStorage::ReadGraphClock() const { return graphClock_ ? graphClock_() : 0.0; }
 // 독립 저장소는 기존 무출력 계약을 유지하고 실제 Client는 필터/FILE writer의 원문 계약을 적용한다.
-void RawSurfaceStorage::TraceGraph(std::int32_t level,std::string_view text) const { if (graphTrace_) graphTrace_(level,text); }
+void RawSurfaceStorage::TraceGraph(std::int32_t level,std::string_view text) const { const auto trace=graphTrace_;if (trace) trace(level,text); } // 현재 로그 장치 교체는 다음 호출에 반영하며 실행 중인 함수는 유지한다.
 // 참조 배열을 원본 자산에서 최초 한 번만 복사해 이후 주소를 고정한다.
 RawSurfaceStorage::RawSurfaceStorage(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> inputTypes,std::span<const o::RiftTypeFrames> inputFrames,std::span<const o::SquidDisplayShape> inputShapes,const GameAssets* source,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux)
     :authority_(authority ? std::move(authority) : std::make_shared<o::RawAuthorityState>()),gameAux_(gameAux ? std::move(gameAux) : std::make_shared<o::RawGameAuxState>()),types(inputTypes.begin(),inputTypes.end()),frames(inputFrames.begin(),inputFrames.end()),shapes(inputShapes.begin(),inputShapes.end()),codes(types.size()),pool(edition,kCapacity,true,&authority_->server),spots(kCells),bridgeDecayScan{edition==o::OriginalEdition::Patch1078 ? -1 : 0,edition==o::OriginalEdition::Patch1078 ? -1 : 0,0,0.0},source_(source) {

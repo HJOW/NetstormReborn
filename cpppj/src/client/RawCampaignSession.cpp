@@ -339,7 +339,7 @@ std::shared_ptr<ClientGameplayGlobals> SessionGameplayGlobals(const RawCampaignS
     if (services.gameplayGlobals && services.surfaceStorage && services.gameplayGlobals->GameAux()!=services.surfaceStorage->GameAux()) throw std::invalid_argument("Session의 실제 게임 보조 owner 불일치"); // 초기화/대여 전에 다른 owner를 거부한다.
     return services.gameplayGlobals ? services.gameplayGlobals : std::make_shared<ClientGameplayGlobals>(services.subscriberGlobals,services.surfaceStorage ? services.surfaceStorage->Authority() : nullptr,services.surfaceStorage ? services.surfaceStorage->GameAux() : nullptr);
 }
-constexpr std::array<std::uint32_t,43> kEditorGameplayMessages{0x51,0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x3f,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37,0x30,0x33,0x34,0x35,0x31,0x32}; // 개발자31h/현재 설정32h도 같은 실제 Session 등록/반납 수명을 따른다.
+constexpr std::array<std::uint32_t,45> kEditorGameplayMessages{0x51,0x5b,0x40,0x4f,0x50,0x60,0x61,0x5c,0x5f,0x7d,0x6d,0x75,0x76,0x3e,0x3f,0x54,0x58,0x6b,0x6c,0x70,0x2f,0x2c,0x7a,0x4a,0x4b,0x2d,0x2e,0x53,0x62,0x65,0x7e,0x3a,0x38,0x73,0x74,0x39,0x3b,0x3c,0x37,0x30,0x33,0x34,0x35,0x31,0x32}; // 개발자31h/현재 설정32h도 같은 실제 Session 등록/반납 수명을 따른다.
 constexpr std::uint32_t kAiSearchTypeBase=0x6b000000U; //같은실제188TYPE의opaque32포인터기준이다.원본가상주소가아니며500stride대응만보존한다.
 // 실제83개 VT에서+10/+14/+18이4af780/44b4b0/44b9e0인14개만 일반 Damageable 수명으로 연결한다.
 constexpr std::array<std::uint32_t,14> kPlainDamageableTables{0x501ea0,0x509148,0x509930,0x5099e8,0x509aa0,0x50a820,0x50a8e8,0x50b6e8,0x50b7c0,0x50b888,0x50b9b8,0x50bad0,0x50e668,0x50e738};
@@ -4799,6 +4799,11 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     for (const auto type:{0x3bU,0x3cU}) { dispatch.Observe(type,{});dispatch.Version(type,1,0);dispatch.RequireLength(type,0xffff);dispatch.Register(type,[this,type](auto,auto&,auto packet) { if (!impl_->combat) throw std::logic_error("애니메이션 수신의 실제 전투 본체 미연결");impl_->combat->ReceiveAnimationPacket(type,packet); }); } // 두 원문 등록은 observer NULL/버전1/정책0/가변 길이다.
     for (const auto type:{0x38U,0x73U,0x74U}) { dispatch.Observe(type,{});dispatch.Version(type,1,0);dispatch.RequireLength(type,0xffff);dispatch.Register(type,[this,type](auto,auto&,auto packet) { impl_->ReceiveAviaryPacket(type,packet); }); } // 세 원문 receiver 모두 observer NULL/버전1/정책0/가변 길이다.
     const auto assertion=[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // 같은 현재 Client 진단을 송신 관찰기에도 공급한다.
+    // 53h의 원문40b380은 NULL이 아닌 빈 observer다. 수신은 sender/연결을 새 조건으로 읽지 않는다.
+    dispatch.Observe(0x53,[](std::uint32_t) {});dispatch.Version(0x53,1,0);dispatch.RequireLength(0x53,6);
+    dispatch.Register(0x53,[this](auto,auto&,auto packet) { auto& s=*impl_;ReceiveRemoteDeletedSquid(s.core.pool,packet,[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); }); });
+    dispatch.ObservePacket(0x62,[assertion](auto packet,auto sending) { ObserveRemoteDeletedSquids(packet,sending,assertion); });dispatch.Version(0x62,1,0);dispatch.RequireLength(0x62,0xffff);
+    dispatch.Register(0x62,[this](auto,auto&,auto packet) { auto& s=*impl_;ReceiveRemoteDeletedSquids(s.core.pool,packet,[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); }); }); //00433120의 flags0을 그대로 현재 World에 전달하며 flags8을 덧붙이지 않는다.
     const auto verify=[this,assertion](auto packet,bool freePacket) { // 실제 현재 Pool/TYPE와 두 장기 DWORD를 직접 빌린다.
         auto& s=*impl_;SquidVerificationHooks hooks;hooks.assertion=assertion;hooks.log=s.services.player.log;
         hooks.typeName=[&s](auto sid) { const auto type=s.core.pool.Slot(sid)[10];if (type>=s.core.types.size()) throw std::out_of_range("검증 간격의 현재 TYPE 물리 범위");const auto& name=s.core.types[type].name;return name.substr(0,name.find('\0')); };

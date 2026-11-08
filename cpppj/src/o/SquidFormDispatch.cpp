@@ -2,11 +2,24 @@
 #include "o/SquidFormDispatch.h"
 #include <stdexcept>
 #include <utility>
+#include "o/SquidFactory.h"
+#include "o/SquidForms.h"
 
 namespace netstorm::o {
 namespace {
 // 네 내장 Form 클래스의 등록 번호이며 변경 가능한 raw TYPE 범위와 구별한다.
 constexpr std::uint32_t kDepend=1,kProcess=2,kGump=3,kContent=6;
+// 현재 VT DWORD를 물리 슬롯에서 읽으며 TYPE 번호를 가상 선택의 별도 조건으로 사용하지 않는다.
+std::uint32_t CurrentDestroyVtable(const SidPool& pool,Sid sid) {
+    const auto raw=pool.Slot(sid);
+    return std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);
+}
+// 네 내장 Form은 같은 공통+10을 쓰며 각 실제 클래스의 Pre/Post/Unpop 호스트는 별도로 선택한다.
+bool CurrentFormVtable(SidPool& pool,std::uint32_t table) {
+    const SquidForms forms(pool); // 표 주소만 읽으며 풀/목록은 수정하지 않는다.
+    for (const auto type:{kDepend,kProcess,kGump,kContent}) if (forms.Vtable(type)==table) return true; // 네 실제 원문 클래스만 순서대로 비교한다.
+    return false;
+}
 }
 // 같은 풀/깊이로 들어가는 공통 몸체와 최상위 자산 가상 삭제를 묶는다.
 SquidFormDispatch::SquidFormDispatch(SidPool& pool,RawSquidDestroy& destroy,SquidDestroyHooks assets,SquidAssetDestroy assetDestroy)
@@ -35,7 +48,8 @@ void SquidFormDispatch::Bind(SquidProcessHost& processes) {
 // 전체 Form 경로가 합성한 현재 자산 훅/가상 삭제 경계를 공유하게 한다.
 void SquidFormDispatch::SetAssets(SquidDestroyHooks assets,SquidAssetDestroy assetDestroy) {
     if (!assets.emit || !assets.selected || !assetDestroy) throw std::invalid_argument("Form 분배 현재 자산 경계 필요");
-    assets_=std::move(assets);assetDestroy_=std::move(assetDestroy);
+    assets_=std::move(assets);
+    if (!destroy_.HasPatchDiagnostics()) assetDestroy_=std::move(assetDestroy); // 실제 PATCH83VT의+10은 최초 같은 World의 common/Bridge 부모를 유지한다. 후설치의 TYPE별 분류는 현재 Pre/Post hooks에만 반영한다.
 }
 // 콜백 뒤 현재 VT의 실제 Form 클래스로 다시 선택하며 TYPE 별칭을 다른 파생 효과로 보내지 않는다.
 const SquidDestroyHooks& SquidFormDispatch::Route(Sid sid) const {
@@ -48,6 +62,15 @@ const SquidDestroyHooks& SquidFormDispatch::Route(Sid sid) const {
 }
 // 루트 자산 재정의와 Form 공통 몸체를 현재 타입에서 구분한다.
 bool SquidFormDispatch::Destroy(Sid sid,std::uint32_t flags) const {
+    if (destroy_.HasPatchDiagnostics()) {
+        const auto table=CurrentDestroyVtable(pool_,sid);
+        if (SquidFactory::SupportsConstructedVtable(pool_.Edition(),table)) {
+            if (!assetDestroy_) throw std::logic_error("PATCH 현재 자산 가상+10의 실제 World 처리기 미연결");
+            return assetDestroy_(sid,flags,Hooks());
+        }
+        if (!CurrentFormVtable(pool_,table)) throw std::logic_error("PATCH 현재 가상+10의 미지 VT는 호스트에서 실행할 수 없습니다");
+        destroy_.Destroy(sid,flags,Hooks());return true;
+    }
     if (pool_.Slot(sid)[10]>=kFirstAssetTypeNumber && assetDestroy_) return assetDestroy_(sid,flags,Hooks());
     destroy_.Destroy(sid,flags,Hooks());return true;
 }
@@ -60,7 +83,11 @@ SquidDestroyHooks SquidFormDispatch::Hooks() const {
     hooks.emit=[this](const SquidDestroyEvent& event) {
         if (event.effect==SquidDestroyEffect::Transmit || event.effect==SquidDestroyEffect::ClearSelection) { assets_.emit(event);return; }
         if (event.effect==SquidDestroyEffect::DestroyDependent) { Destroy(event.sid,event.flags);return; }
-        if (pool_.Slot(event.sid)[10]<kFirstAssetTypeNumber) { Route(event.sid).emit(event);return; }
+        if (destroy_.HasPatchDiagnostics()) {
+            const auto table=CurrentDestroyVtable(pool_,event.sid);
+            if (CurrentFormVtable(pool_,table)) { Route(event.sid).emit(event);return; }
+            if (!SquidFactory::SupportsConstructedVtable(pool_.Edition(),table)) throw std::logic_error("PATCH 현재 삭제 가상 효과의 미지 VT");
+        } else if (pool_.Slot(event.sid)[10]<kFirstAssetTypeNumber) { Route(event.sid).emit(event);return; }
         assets_.emit(event);
     };return hooks;
 }

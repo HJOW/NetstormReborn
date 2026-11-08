@@ -566,5 +566,12 @@
     "nonMpSuccessful": 2,
     "newMpExecutions": 0,
     "worldlessResourceEffectsRemain": true
+  },
+  "progress1171": {
+    "m6d": "53h/62h와실제PATCH공통삭제부모완료",
+    "m6dComplete": true,
+    "next": "M6-e",
+    "report": "cpppj/remote-deletion-integration-20261108.json",
+    "newMpExecutions": 0
   }
 }

@@ -18,9 +18,9 @@ public:
     void Bind(GumpFormHost& forms);
     void Bind(ContentFormLifetime& forms);
     void Bind(SquidProcessHost& processes);
-    // 비표면 runtime을 같은 풀에 구성한 뒤 자산 경계를 교체한다. 등록된 Form 훅은 그대로 현재 경계를 읽는다.
+    // 같은 풀의 현재 자산 훅을 교체한다. 실제 PATCH는 원문83VT의 최초 World +10 부모를 보존하고 typed/CD만 assetDestroy도 교체한다.
     void SetAssets(SquidDestroyHooks assets,SquidAssetDestroy assetDestroy);
-    // 현재 타입별 가상 루트 삭제다. 자산의 별도 재정의는 assetDestroy를 사용하고 Form은 공통 몸체에 들어간다.
+    // 실제 PATCH는 현재83자산/네Form VT의 +10을 선택한다. 미연결 typed/CD는 기존 TYPE별 자산/공통 분배를 유지한다.
     bool Destroy(Sid sid,std::uint32_t flags=0) const;
     // Form범위의효과/Unpop은현재VT로분배하며전송·선택해제는공통자산경계로전달한다.
     SquidDestroyHooks Hooks() const;
