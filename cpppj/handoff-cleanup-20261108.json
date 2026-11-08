@@ -1,0 +1,105 @@
+{
+  "unit": 1148,
+  "kind": "인수인계 문서 정리",
+  "productUnchanged": 1147,
+  "previousCommit": "ce5d8878 / 20261108-116 CP",
+  "host": "HJOW-Athlon",
+  "date": "2026-11-08",
+  "before": {
+    "bytes": 251150,
+    "lines": 1174,
+    "sha256": "dd840215a38e2298d674d1c96e3c9c6216a2fd9a98930ec35efd3e56b7b22f11"
+  },
+  "after": {
+    "bytes": 27864,
+    "lines": 171,
+    "sha256": "300c9e562fdbe781a7e4dfc9428d6cbce7ffd444a19b38749c6aef93cab2f404"
+  },
+  "archive": {
+    "path": "LEFT_JOBS.old.md",
+    "anchor": "archive-20261108-through-1147",
+    "oldPrefixBytes": 3552678,
+    "oldPrefixSha256": "0f0185da3a5ecdcec54a5bcade1a5357faff03dc7e74e1a925a5ff1851a9265e",
+    "prefixUnchanged": true,
+    "exactSnapshotAppended": true
+  },
+  "phase": {
+    "current": 3,
+    "next": "6차 한국어 후속",
+    "requiredGroupsUntilNext": 8,
+    "koreanGroups": 5,
+    "scenarioUiGroups": 4,
+    "notCommitOrTimeEstimate": true,
+    "unresolvedChecking": {
+      "parents": [
+        "004b02d0",
+        "004dc220"
+      ],
+      "mpReceive": [
+        "004b4df0",
+        "004b8b20"
+      ],
+      "completed1147": "0042bc10"
+    }
+  },
+  "coveragePreserved": [
+    "004b02d0",
+    "004dc220",
+    "004b4df0",
+    "004b8b20",
+    "helpWord",
+    "강제 활성 커서",
+    "조기/원격 희생",
+    "marker 진단",
+    "registryValue",
+    "Outpost",
+    "60/120",
+    "10.72",
+    "file_tests",
+    "pop_context",
+    "menu_session",
+    "mission_entry",
+    "guide_fort_request",
+    "renderer_presentation",
+    "world_generation",
+    "startup_file_names",
+    "CampaignForwardBattle_NaturalTempleAssault",
+    "gate.demo=1",
+    "237파일",
+    "2800파일",
+    "선택적packet-record"
+  ],
+  "preparedManifest": {
+    "files": 237,
+    "unchanged": true
+  },
+  "protected": {
+    "files": 2800,
+    "changed": []
+  },
+  "localLinksChecked": 36,
+  "externalFragmentsPreserved": [
+    "0-재개-전-확인-사항",
+    "agents-reflection-20261102",
+    "인수인계-문서-임시-분할"
+  ],
+  "productHashesUnchanged": {
+    "Netstorm.exe": {
+      "bytes": 13052416,
+      "sha256": "0da6fae77419126c1e5717b6bebdbb1096c602f36372a9bb40edad66766292aa"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "bc98702fcd41b24b1b5afa70a490d0eed253c0be57b265a48aa968a41198bc17"
+    }
+  },
+  "executions": {
+    "build": 0,
+    "cppTests": 0,
+    "game": 0,
+    "multiplayer": 0,
+    "network": 0,
+    "decompile": 0
+  },
+  "next": "M1.1:22h 이동 수신. 문서 정리 뒤 CPP 구현 계속."
+}

@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-**2026-11-08 현재 제품1147 / 표시 버전11.01. /goal 지시로 진행 중이다.** 21h 참가자 제거의 현재 개수 순회·범위/checking/active 진단·캡처 CS 좌석/버전·실제 Chat100기록 제거·이탈 Rig/이미지 반납/460BYTE 초기화·마지막 NSInfo를 연결했다. NetstormCpp/NetstormRoot Release/x64 종료0·경고/오류0·보호2800파일 불변이다. 새fixture/C++ 단위/MP/게임/통신/자료조회/전체검사/34미션/ZIP 실행0이며 마지막 C++ 실행검사는1052 기존7개다. 다음은 메타 CS 수신22/25h·1a/1b checking·하강/참가 후속 카메라·HTML·1095 송신 상태 호출이다. 전체 목표는 미완료다. [1147 기록](../docs/exe/cpp-meta-participant-remove-20261108.md)·[현재 인계](../LEFT_JOBS.md). 986 한국어/시나리오 후보는 미적용이다.
+**2026-11-08 현재 제품1147 / 표시 버전11.01. /goal 진행 중이다.** 현재는3차 TCP/IP 로컬 멀티플레이·Outpost 복원이다.20h 생성/21h 제거를 연결했고 다음은22h 이동이다. 한국어 후속으로 넘어가기 전 남은8묶음과 이후K1~K5/S1~S4의 종료 조건을 [현행 인수인계](../LEFT_JOBS.md)에 정리했다. 만료 이력/예고는 [보관본](../LEFT_JOBS.old.md#archive-20261108-through-1147)으로 옮겼다. 제품1147의 Release/x64 경고·오류0/보호2800 불변 근거는 [1147 기록](../docs/exe/cpp-meta-participant-remove-20261108.md)이며 새MP 실행검사는0이다. 이번1148은 문서 정리이고 제품 코드는 바꾸지 않았다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
 
