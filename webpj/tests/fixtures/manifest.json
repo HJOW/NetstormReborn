@@ -10015,7 +10015,7 @@
       "bytes": 175207,
       "lines": 140,
       "fixtureCommit": "659184a6",
-      "webCommit": "worktree",
+      "webCommit": "5804630f",
       "cpppjBasis": {
         "cpppj/src/o/RawFlare.cpp": "f02ea8d1"
       }
@@ -10044,9 +10044,38 @@
       "bytes": 89272,
       "lines": 61,
       "fixtureCommit": "f02ea8d1",
-      "webCommit": "worktree",
+      "webCommit": "5804630f",
       "cpppjBasis": {
         "cpppj/src/o/RawFlare.cpp": "f02ea8d1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E111",
+      "id": "meltdown",
+      "path": "cpppj/tests/fixtures/meltdown-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 제네레이터 Meltdown 의 명령/자격/피해/요청·효과 수신/패킷 확정의 반환·외부 효과 순서·대상 슬롯 raw·220바이트 패킷(442행; 두 정밀도 열 동일)",
+      "consumers": [
+        "webpj/tests/meltdown.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-meltdown.js"
+      ],
+      "doc": "docs/webpj-meltdown-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMeltdown.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 442행 전부 사용",
+      "text": true,
+      "sha256": "1767cd85fd19411aefa05793bbbe91c5421d24b95c34658b6e92200aaa9e4bcf",
+      "bytes": 742146,
+      "lines": 443,
+      "fixtureCommit": "f8d6da53",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMeltdown.cpp": "f8d6da53"
       }
     }
   ]

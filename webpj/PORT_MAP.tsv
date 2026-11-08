@@ -770,7 +770,7 @@ cpppj/src/o/RawManaBoltArrival.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaBoltRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaRegistration.cpp	port	www/core/raw-mana-registration.js	1f00a25a	port	[o-default] WB04-E10: 00472f70 마나 공급원 등록(최초 개수 저장·중복 검색·checking 진단 복귀·productionDirty 감김). fixture mana-registration-hardware 10.78 542행 전부(originalCD 542행은 10.72라 제외). 실제 Client/World 통합 대조는 공통 PostPop 본체 단위에서
-cpppj/src/o/RawMeltdown.cpp	port			todo	[o-default]
+cpppj/src/o/RawMeltdown.cpp	port	www/core/raw-meltdown.js	1f00a25a	port	[o-default] WB04-E111: 제네레이터 Meltdown 명령 41c290·자격 420340·검색 4203a0·피해 4204f0·요청 4207a0/효과 4205f0 패킷·길이 확정 40b150. fixture meltdown 442행 전부(10.78 전용 파일). RawGunImpact::Clamp 식은 이 모듈에 비공개로 두었고 RawGunImpact 이식 때 옮김. 검색/송신/배포/삭제/피해/지면 효과/끝 칸/시각 효과는 훅 경계
 cpppj/src/o/RawMemStream.cpp	port			todo	[o-default]
 cpppj/src/o/RawMetadisplayDirty.cpp	port	www/core/metadisplay-dirty.js	1f00a25a	port	[o-default] WB04-D2
 cpppj/src/o/RawMetaZoneCleanup.cpp	port	www/core/raw-meta-zone-cleanup.js	1f00a25a	port	[o-default] WB04-E77: 메타구역 정리 0042b1b0(진입 플래그 분기·자식 51회·7344B DWORD 표 쓰기와 짧은 물리 접두 보존)·마커 00479520(상태 signed·SID 관문·가상 삭제 뒤 같은 DWORD 0). fixture meta-zone-cleanup 38행 전부. 마커 가상 삭제 본체와 State 소유자 연결은 해당 단위에서
