@@ -500,7 +500,7 @@ cpppj/src/o/RawAiObjectNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiPreparation.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiPriestActions.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiResourceChoice.cpp	port			todo	[o-default]
-cpppj/src/o/RawAiRuntime.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiRuntime.cpp	port	www/core/raw-ai-runtime.js	1f00a25a	port	[o-default] WB04-E165: AI 전체 행동 00417c70(float 지갑 비교 포함)·개별 Tick 00417d30(현재 timing 기한 로그)·Player 1..8 Frame 00417de0(소멸/반납/0). fixture airuntime 실제 PE 145행 전부. 남음: 초기화/준비/목표 선택/수집자/시설/부족 좌표/사제/배치/다리/운반자/경제 하위 몸체 연결
 cpppj/src/o/RawAiStrategySetup.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiWallet.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiWorldRegistration.cpp	port			todo	[o-default]

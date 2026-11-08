@@ -12125,10 +12125,39 @@
       "bytes": 2657374,
       "lines": 161,
       "fixtureCommit": "cf5e22ca",
-      "webCommit": "worktree",
+      "webCommit": "0c15aa05",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBrain.cpp": "74a36237",
         "cpppj/src/o/RawAiCreate.cpp": "76e3c453"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E165",
+      "id": "airuntime",
+      "path": "cpppj/tests/fixtures/ai-runtime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 전체 행동/개별 Tick/Player 순회 수명과 float 지갑·동적 기한 로그·하위 호출 순서(10.78 145행)",
+      "consumers": [
+        "webpj/tests/ai-runtime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-runtime.js"
+      ],
+      "doc": "docs/webpj-ai-runtime-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiRuntime.cpp"
+      ],
+      "scope": "10.78 실제 PE 145행 전부",
+      "text": true,
+      "sha256": "38016d7426a64fc8473b1ce97ba775e8c99c04530d73a00f732f1209ee9ecb05",
+      "bytes": 4248472,
+      "lines": 146,
+      "fixtureCommit": "ebd0dedb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiRuntime.cpp": "ebd0dedb"
       }
     }
   ]
