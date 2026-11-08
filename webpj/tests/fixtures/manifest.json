@@ -11625,9 +11625,38 @@
       "bytes": 5120365,
       "lines": 11223,
       "fixtureCommit": "6e7fdd37",
-      "webCommit": "worktree",
+      "webCommit": "3a283930",
       "cpppjBasis": {
         "cpppj/src/o/RawCanonPlacementTerrain.cpp": "6e7fdd37"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E149",
+      "id": "canonpermission",
+      "path": "cpppj/tests/fixtures/canonpermission-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 후보 권한/방향 관계 helper 의 실제 정상 반환과 Player 조회 인자·변화(10.78 5850행)",
+      "consumers": [
+        "webpj/tests/canon-placement-permission.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-placement-permission.js"
+      ],
+      "doc": "docs/webpj-canon-placement-permission-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCanonPlacementPermission.cpp"
+      ],
+      "scope": "10.78 실제 PE 5850행 전부",
+      "text": true,
+      "sha256": "1b8122a85562e67d6a971a377ae3b2b240d56cb4b10cabfaf4e1deb520744270",
+      "bytes": 3035246,
+      "lines": 16892,
+      "fixtureCommit": "c8870ba2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCanonPlacementPermission.cpp": "da8bb776"
       }
     }
   ]
