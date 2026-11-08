@@ -8665,9 +8665,38 @@
       "bytes": 975411,
       "lines": 1729,
       "fixtureCommit": "637ad767",
-      "webCommit": "worktree",
+      "webCommit": "749ea54f",
       "cpppjBasis": {
         "cpppj/src/o/RawVortexOwner.cpp": "637ad767"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E80",
+      "id": "vortex-pre",
+      "path": "cpppj/tests/fixtures/vortex-pre-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 신전 PreDestroy 의 아홉 Player 전체 raw·슬롯 50/60/61 raw·세 목록 count+물리 꼬리·로딩 깊이·외부 효과 호출 순서(변이 조합 102행)",
+      "consumers": [
+        "webpj/tests/vortex-pre-destroy.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-vortex-pre-destroy.js"
+      ],
+      "doc": "docs/webpj-vortex-pre-destroy-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawVortexPreDestroy.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 102행 전부 사용",
+      "text": true,
+      "sha256": "027a0d1edeb5d6c96d82980c3be92ce18cdc0bc8bc83c48002e22e7d952cca9c",
+      "bytes": 377987,
+      "lines": 103,
+      "fixtureCommit": "463aad22",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawVortexPreDestroy.cpp": "463aad22"
       }
     }
   ]

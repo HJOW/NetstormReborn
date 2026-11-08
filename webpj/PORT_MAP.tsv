@@ -940,7 +940,7 @@ cpppj/src/o/RawTypeRequiredEnergy.cpp	port	www/core/raw-type-required-energy.js	
 cpppj/src/o/RawVortexAscend.cpp	port			todo	[o-default]
 cpppj/src/o/RawVortexOwner.cpp	port	www/core/raw-vortex-owner.js	1f00a25a	port	[o-default] WB04-E79: 신전 가상 소유자 변경 004dc4e0(이전 소유자 신전 DWORD 해제·섬 조회/진단/소유자·지역 소유·추가 목록 현재 개수/항목 순회·공통 Owner 뒤 현재 소유자 신전 기록·생산 갱신·revision+1). fixture vortex-owner 10.78 864행 전부(CD 864행은 웹 범위 밖). 섬 목록/지역 투표/생산 갱신 본체와 캠페인 조립(RawCampaignOwnership)은 해당 단위에서
 cpppj/src/o/RawVortexOwnerDiagnostic.cpp	port	www/core/raw-vortex-owner-diagnostic.js	1f00a25a	port	[o-default] WB04-E78: 신전 소유자 missingIsland 진단 004dc58f(원문 6줄 상세 문자열—ftol 좌표·signed 정수—을 상세 장치에 쓴 뒤 Vortex.cpp 0x235 진단). fixture vortex-owner-diagnostic-local 10.78 48행 전부(CD 48행은 웹 범위 밖). 부모 RawVortexOwner(슬롯 필드 제거·Player 18필드)는 해당 단위에서
-cpppj/src/o/RawVortexPreDestroy.cpp	port			todo	[o-default]
+cpppj/src/o/RawVortexPreDestroy.cpp	port	www/core/raw-vortex-pre-destroy.js	1f00a25a	port	[o-default] WB04-E80: 신전 가상 PreDestroy 004dca50(신전/거주 목록 중복 제거·섬 진단 0x2ab/0x2ac·지역 소유 현재 좌표·추가 목록 현재 개수/항목·Damageable 뒤 로딩/extra 재읽기 생산 갱신·현재 소유자 신전 DWORD 두 쌍 해제). fixture vortex-pre 102행 전부(10.78 전용 파일). 섬 목록/지역 투표/생산 갱신/Damageable PreDestroy 본체 연결은 해당 단위에서
 cpppj/src/o/RawWalkerFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawWindAviaryProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawWindAviaryState.cpp	port			todo	[o-default]
