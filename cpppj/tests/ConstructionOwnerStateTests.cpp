@@ -199,3 +199,37 @@ TEST_CASE(ConstructionOwner_ClientDevicesKeepSelectedCallAndDoNotFallbackAfterRe
     auto invalid=OwnerClientDevices();invalid.tell={};CHECK(OwnerRejected([&] { scene.owner->BindDevices(std::move(invalid)); }));failed=false;try { body->GenerateLocalGeysers(); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="다음 Client 설정 실패"; }CHECK(failed && calls==2);
     auto runtime=std::make_shared<ClientConstructionRuntimeBindings>();runtime->effects.configInt=[&](auto,auto)->std::int32_t { ++runtimeCalls;throw std::logic_error("반납 뒤 선택 금지된 Session 설정"); };scene.owner->BindRuntime(runtime);scene.owner->ReleaseDevices();CHECK(OwnerRejected([&] { body->GenerateLocalGeysers(); }));CHECK(runtimeCalls==0 && calls==2 && scene.players->Base()==0 && scene.storage->Generation()==0 && !scene.storage->Borrowed());
 }
+
+// 원문조기반환은실제Bounds/SP/Player와큰배치를구성하거나조회하지않는다.
+TEST_CASE(ConstructionOwner_ReplenishModesBeforeBodyAndPlayer) {
+    LongConstructionScene scene;scene.gameplay->Boss()=true;const auto seed=scene.random->Game().State();
+    for (int mode=0;mode<3;++mode) { //각원문single/fort/editor관문을독립입력으로확인한다.
+        scene.gameplay->world.missionPost=mode==0;scene.storage->ownerMode.fort=mode==1;scene.gameplay->world.editor=mode==2 ? 7U:0U;scene.owner->ReplenishNuggets();CHECK(OwnerRejected([&] { static_cast<void>(scene.owner->Body()); }));
+    }
+    std::optional<std::string> detail;std::uint32_t assertions{};scene.storage->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) { CHECK(expression=="boss" && file=="\\Ns\\O\\Nugget.cpp" && line==0x246);++assertions; });scene.gameplay->Boss()=false;scene.owner->ReplenishNuggets();
+    CHECK(assertions==1 && scene.players->Base()==0 && scene.storage->Generation()==0 && !scene.storage->Borrowed() && scene.random->Game().State()==seed);
+}
+
+// 장기backing은초기화없이보유하고다른owner교체를거부하며반납시순환없이소멸한다.
+TEST_CASE(ConstructionOwner_ReplenishBackingBeforeBodyRetainsIdentity) {
+    LongConstructionScene scene;scene.owner->BindBacking(scene.sp,scene.players,scene.gameplay->BattleOptionsOwner());CHECK(OwnerRejected([&] { static_cast<void>(scene.owner->Body()); }));
+    auto other=std::make_shared<ClientPlayerRecords>();CHECK(OwnerRejected([&] { scene.owner->BindBacking(scene.sp,other,scene.gameplay->BattleOptionsOwner()); }));std::weak_ptr<ClientPlayerRecords> watch=scene.players;scene.players.reset();CHECK(!watch.expired());scene.owner.reset();CHECK(watch.expired());
+}
+
+namespace { // 실제선택된배치효과와그효과를소유한외곽수명을함께모델링한다.
+// 콜백몸체를포함한실제검사런타임을소유해외곽pin의반납순서를검사한다.
+struct ReplenishRuntimeOwner {
+    std::shared_ptr<ClientConstructionRuntimeBindings> binding{std::make_shared<ClientConstructionRuntimeBindings>()}; //실제함수몸체를소유하며Global에서는weak로만빌린다.
+};
+}
+
+// 같은현재Bounds/여백을다시읽고배치호출중외곽owner반납·예외에도실제선택수명을유지한다.
+TEST_CASE(ConstructionOwner_ReplenishBoundsAndActualPlacementPin) {
+    LongConstructionScene scene;scene.owner->BindBacking(scene.sp,scene.players,scene.gameplay->BattleOptionsOwner());scene.gameplay->Boss()=true;scene.gameplay->world.missionPost=false;scene.storage->ownerMode.fort=false;scene.gameplay->world.editor=0;scene.storage->chunks.At(0,0).island=0;scene.storage->chunks.At(0,0).record={0,0,0,0,0,0};
+    auto whole=std::make_shared<ReplenishRuntimeOwner>();std::weak_ptr<ReplenishRuntimeOwner> watch=whole;whole->binding->pin=[watch]()->std::shared_ptr<void> { return watch.lock(); };std::vector<FortRandomRectangle> areas;bool fail{};
+    whole->binding->replenishPlacement=[&](auto area,auto quantity) { CHECK(quantity==1 && !watch.expired());areas.push_back(area);if (fail) { whole.reset();CHECK(!watch.expired());throw std::runtime_error("선택한 실제 보충 배치 실패"); } };scene.owner->BindRuntime(whole->binding);
+    scene.owner->ReplenishNuggets();auto* body=&scene.owner->Body();scene.storage->GameAux()->WorldGeyserMargin()+=1;scene.owner->ReplenishNuggets();CHECK(areas.size()==2);
+    if (areas.size()==2) CHECK(areas[1].left==areas[0].left-16 && areas[1].top==areas[0].top-16 && areas[1].right==areas[0].right+16 && areas[1].bottom==areas[0].bottom+16);
+    fail=true;bool thrown{};try { scene.owner->ReplenishNuggets(); }catch (const std::runtime_error& error) { thrown=std::string_view(error.what())=="선택한 실제 보충 배치 실패"; }
+    CHECK(thrown && watch.expired() && &scene.owner->Body()==body && areas.size()==3);CHECK(OwnerRejected([&] { scene.owner->ReplenishNuggets(); }));CHECK(scene.players->Base()==0 && scene.storage->Generation()==0 && !scene.storage->Borrowed());
+}

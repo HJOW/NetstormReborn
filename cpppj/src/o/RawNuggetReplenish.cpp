@@ -13,7 +13,10 @@ float Cell(std::int32_t value) { return static_cast<float>(Signed(static_cast<st
 }
 // 모드 관문에서 사용하지 않는 큰 하위는 생성 시 요구하지 않는다.
 RawNuggetReplenish::RawNuggetReplenish(const RawPlayerGeyserBounds& bounds,NuggetReplenishState state,NuggetReplenishHooks hooks)
-    :bounds_(bounds),state_(state),hooks_(std::move(hooks)) {}
+    :RawNuggetReplenish([&bounds]()->const RawPlayerGeyserBounds& { return bounds; },state,std::move(hooks)) {}
+// 첫모드관문이반환하는경우지도·Player·큰배치장치를요구하지않는다.
+RawNuggetReplenish::RawNuggetReplenish(std::function<const RawPlayerGeyserBounds&()> bounds,NuggetReplenishState state,NuggetReplenishHooks hooks)
+    :bounds_(std::move(bounds)),state_(state),hooks_(std::move(hooks)) {}
 // 현재 boss는 진단 뒤 재독하고 확장 단위는 실제 패턴 계산 뒤에 읽는다.
 void RawNuggetReplenish::Run() const {
     if (!state_.boss) {
@@ -21,7 +24,8 @@ void RawNuggetReplenish::Run() const {
         hooks_.assertion(0x246);if (!state_.boss) return;
     }
     if (state_.single || state_.fort || state_.editor) return;
-    const auto record=bounds_.RegionRecord(0);const auto area=bounds_.OriginPlacement(record); //현재 지역0의 첫 record를 값으로 보존한다.
+    if (!bounds_) throw std::logic_error("너겟 보충의 실제 현재 Bounds 미연결");
+    const auto& bounds=bounds_();const auto record=bounds.RegionRecord(0);const auto area=bounds.OriginPlacement(record); //현재지역0의첫record를값으로보존하며이때만실제장기지도를요구한다.
     const auto scaled=static_cast<std::uint32_t>(state_.archipelagoSpan)<<4;const auto trim=Signed(scaled-16U); //두 signed 정수 모두 float로 먼저 축약하지 않는다.
     const FortRandomRectangle rectangle{static_cast<float>(static_cast<double>(Cell(area.left))-trim),static_cast<float>(static_cast<double>(Cell(area.top))-trim),
         static_cast<float>(static_cast<double>(Cell(area.right))+Signed(scaled)),static_cast<float>(static_cast<double>(Cell(area.bottom))+Signed(scaled))}; //원본의 각 fstp DWORD에서만 반올림한다.

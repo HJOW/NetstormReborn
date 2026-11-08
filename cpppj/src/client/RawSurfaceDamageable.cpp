@@ -1,11 +1,26 @@
 // 실제 피해가능 객체 전/후처리와 간헐천 고유 수명을 같은 장기 물리/전역에 연결한다.
 #include "client/RawSurfaceWorld.h"
 #include "o/SquidProcess.h"
+#include "o/RawCarrierPreDestroy.h" //현재장기finder와실제Damageable부모의Carrier전처리를구성한다.
 #include <bit>
 #include <stdexcept>
 #include <utility>
 
 namespace netstorm::client { // 큰 선택 효과만 실제 현재 Runtime을 요구하며 새 World/상태 사본을 만들지 않는다.
+// 실제Client보충부모를최초연결만하며권한/지도/모드관문을앞당겨실행하지않는다.
+void RawSurfaceStorage::BindCarrierReplenishment(std::function<void()> replenish) {
+    if (!UsesNativeTransmissionDevices() || borrowed_ || carrierPre_ || carrierReplenishment_ || !replenish) throw std::invalid_argument("장기 Carrier 보충 부모의 최초 Native 계약");carrierReplenishment_=std::move(replenish);
+}
+// 같은실제finder/권한과Damageable전처리후현재내용물조회·보충을연결한다.
+o::RawCarrierPreDestroy& RawSurfaceStorage::CarrierPre() {
+    static_cast<void>(DamageablePreGlobals());
+    if (!carrierPre_) {
+        o::CarrierPreDestroyHooks hooks;hooks.validateDamageable=[this](auto sid,auto flags) { DamageablePre().Validate(sid,flags); };hooks.damageablePre=[this](auto sid,auto flags) { DamageablePre().PreDestroy(sid,flags); };
+        hooks.dependentFound=[this] { const auto replenish=carrierReplenishment_;if (!replenish) throw std::logic_error("Carrier 내용물의 실제 장기 너겟 보충 부모 미결합");replenish(); };
+        auto body=std::make_unique<o::RawCarrierPreDestroy>(pool,*damageableDevices_.finder,std::move(hooks));body->EnableNativeBody();carrierPre_=std::move(body);
+    }
+    return *carrierPre_;
+}
 // 첫 실제 모듈 전 actual finder/허용 genus owner와 현재 장치만 연결한다.
 void RawSurfaceStorage::BindDamageableDevices(RawSurfaceDamageableDevices devices) {
     if (!UsesNativeTransmissionDevices() || !deletionDevices_.unitLost || borrowed_ || damageableDevices_.finder || !devices.finder || !devices.allowedGenus || !devices.collapse || !devices.explosion || !devices.sound || !devices.spawnPriest || !devices.dropDude || !devices.dropIsland) throw std::invalid_argument("장기 Damageable의 실제 Native 최초 장치 계약");

@@ -1158,7 +1158,7 @@ struct RawCampaignSession::Impl {
         // 사제 Owner의 004214a0도 동일한 실제 무상태 다리 진단 몸체다. 별도 AI 통지로 대체하지 않는다.
         if (!priestEffects.ownerNotice) priestEffects.ownerNotice=[this](Sid sid) { core.building.NotifySurface(sid); };
         priestEffects.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
-        priestEffects.dependentFound=[this] { ReplenishNuggets(); };priestEffects.reserveRegular=[] { return true; };
+        priestEffects.dependentFound=[this] { ReplenishNuggets(); };if (world.Storage()->UsesNativeTransmissionDevices()) priestEffects.sharedCarrier=&world.Storage()->CarrierPre();priestEffects.reserveRegular=[] { return true; }; //Native사제와직접Carrier가같은현재finder/장기전처리를사용한다.
         priestEffects.shield.reserveSound=[] { return true; };
         sounds=std::make_unique<SoundProcessSystem>(core.processes,soundState,services.sound);
         priestEffects.shield.loadSound=[this](std::string_view name) { return soundNames.Lookup(name); };
@@ -2581,6 +2581,7 @@ struct RawCampaignSession::Impl {
     }
     // 같은 현재 모드/지도/Canon과 실제 지역 난수 배치를 사용하는 원본 보충 부모다.
     void ReplenishNuggets() const {
+        if (world.Storage()->UsesNativeTransmissionDevices()) { services.constructionGlobals->ReplenishNuggets();return; } //기존네Caller가같은장기계산/모드/현재Runtime배치를사용한다.
         if (!construction) throw std::logic_error("보충 부모의 실제 지도 범위 미설치");
         RawNuggetReplenish body(construction->PlayerBounds(),{assetState.Boss(),globals.missionPost,core.ownerMode.fort,globals.editor,farm.ArchipelagoSpan()},
             {[storage=world.Storage()](std::uint32_t line) { storage->AssertDisplay("boss","\\Ns\\O\\Nugget.cpp",line); },[this](auto rectangle,auto quantity) { if (!placeBattleNuggets) throw std::logic_error("너겟 보충의 같은 Session 배치 미연결");placeBattleNuggets(rectangle,quantity); }});
@@ -2625,6 +2626,7 @@ struct RawCampaignSession::Impl {
         gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,std::bit_cast<float>(bits)); };
         if (world.Storage()->UsesNativeTransmissionDevices()) {
             constructionRuntime=std::make_shared<ClientConstructionRuntimeBindings>();constructionRuntime->effects=std::move(effects);constructionRuntime->gameplay=std::move(gameplay);constructionRuntime->pin=constructionRuntimePin;
+            constructionRuntime->replenishPlacement=[this](auto rectangle,auto quantity) { if (!placeBattleNuggets) throw std::logic_error("너겟 보충의 현재 실제 배치 미연결");const auto place=placeBattleNuggets;place(rectangle,quantity); }; //0040e050/실제단일배치는선택된현재전체Runtime을pin한호출에서만빌린다.
             services.constructionGlobals->BindRuntime(constructionRuntime); //같은 실제 Session만 효과 대여를 소유하며 이전 반납 뒤에만 교체한다.
             construction=&services.constructionGlobals->Body(services.spGlobals,playerRecords,services.missionOptions); //SP/Canon/지도/현재Player와 본체는 장기 owner에서 직접 선택한다.
         } else {

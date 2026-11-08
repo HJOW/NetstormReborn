@@ -20,8 +20,11 @@ RawCarrierPreDestroy::RawCarrierPreDestroy(SidPool& pool,const CarrierPreDestroy
     if (!hooks_.validateDamageable || !hooks_.damageablePre || !hooks_.dependentFound)
         throw std::invalid_argument("Carrier preDestroy 하위 효과 누락");
 }
-// 새로운 가상 지원이나 공간 해제 없이 순수 경계 검사만 수행한다.
+// 실제PATCH몸체만선택하며게임상태/내용물/난수를조회하거나변경하지않는다.
+void RawCarrierPreDestroy::EnableNativeBody() { if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("Native Carrier 전처리 판본 오류");nativeBody_=true; }
+// 독립typed의순수경계검사를유지하고Native의실제부모앞에추가소비를넣지않는다.
 void RawCarrierPreDestroy::Validate(Sid sid,std::uint32_t flags) const {
+    if (nativeBody_) return;
     const auto raw=pool_.AllocatedBytes(sid);
     const auto typeEnd=pool_.Edition()==OriginalEdition::Patch1078 ? 188U : 171U;
     if ((raw[kState]&kFreeContained) || raw[kType]<kFirstAssetTypeNumber || raw[kType]>=typeEnd)

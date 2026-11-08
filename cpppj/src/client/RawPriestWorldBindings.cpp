@@ -73,7 +73,7 @@ struct RawPriestWorldBindings::Impl {
     // tail: 목록/회복 접두→Carrier→현재 지면/프레임→낙하/보호막을 같은 풀에서 실행한다 (std::unique_ptr<o::RawPriestPostPopTail>).
     std::unique_ptr<o::RawPriestPostPopTail> tail;
     // carrierPre: 캐리어 전처리.
-    std::unique_ptr<o::RawCarrierPreDestroy> carrierPre;
+    std::unique_ptr<o::RawCarrierPreDestroy> localCarrierPre;o::RawCarrierPreDestroy* carrierPre{}; //Native는같은장기몸체를빌리고독립typed만자체Carrier를소유한다.
     // priestPre: 사제 전처리.
     std::unique_ptr<o::RawPriestPreDestroy> priestPre;
     // fieldPost: 사용: 같은 풀의 실제 예약 훅을 구성한 뒤 SquidPostPop::SetForcefieldPostPop에 등록한다 (std::unique_ptr<o::RawForcefieldPostPop>).
@@ -128,9 +128,10 @@ struct RawPriestWorldBindings::Impl {
             [this](o::Sid sid,std::uint32_t event,float payload) { Host().AddRegular(sid,event,payload); }},state.movement.priest); // 회복 분자는 같은 장기 사제 TYPE DWORD를 호출 시점에 읽는다(단위862).
         tail=std::make_unique<o::RawPriestPostPopTail>(core.pool,*prefix,*carrierPost,*priest,core.frames,core.spots,
             o::MakePriestPostPopTailShieldHooks(core.pool,*shield,*lookup,effects.destroy,[this](o::Sid sid) { fall->Begin(sid); }));
-        carrierPre=std::make_unique<o::RawCarrierPreDestroy>(core.pool,state.contained,o::CarrierPreDestroyHooks{
+        if (effects.sharedCarrier) { if (&effects.sharedCarrier->Pool()!=&core.pool) throw std::invalid_argument("사제/장기 Carrier 실제 Pool 불일치");carrierPre=effects.sharedCarrier; }
+        else { localCarrierPre=std::make_unique<o::RawCarrierPreDestroy>(core.pool,state.contained,o::CarrierPreDestroyHooks{
             [this](o::Sid sid,std::uint32_t flags) { Damageable().Validate(sid,flags); },
-            [this](o::Sid sid,std::uint32_t flags) { Damageable().PreDestroy(sid,flags); },effects.dependentFound});
+            [this](o::Sid sid,std::uint32_t flags) { Damageable().PreDestroy(sid,flags); },effects.dependentFound});carrierPre=localCarrierPre.get(); }
         priestPre=std::make_unique<o::RawPriestPreDestroy>(core.pool,state.priests,
             o::MakeCarrierPreDestroyHooks(core.pool,*carrierPre,o::MakePriestForcefieldHooks(core.pool,*lookup,
                 o::PriestPreDestroyHooks{{},effects.destroy,{},{}})));

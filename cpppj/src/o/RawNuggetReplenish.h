@@ -20,9 +20,10 @@ struct NuggetReplenishHooks {
 class RawNuggetReplenish {
 public:
     RawNuggetReplenish(const RawPlayerGeyserBounds& bounds,NuggetReplenishState state,NuggetReplenishHooks hooks); //같은 월드의 지도·패턴과 현재 전역을 빌린다.
+    RawNuggetReplenish(std::function<const RawPlayerGeyserBounds&()> bounds,NuggetReplenishState state,NuggetReplenishHooks hooks); //실제Client는모드관문뒤에만같은장기Bounds를요구한다.
     void Run() const; //권한 재확인→모드→현재 지역0→원점 배치→확장→실제 배치 순서다.
 private:
-    const RawPlayerGeyserBounds& bounds_; //기존 간헐천과 같은 실제 ChunkMap/Canon/TYPE를 사용한다.
+    std::function<const RawPlayerGeyserBounds&()> bounds_; //기존간헐천의같은실제Bounds를선택위치에서조회하며임시World/Player를생성하지않는다.
     NuggetReplenishState state_; //호출 중에도 바뀔 수 있는 현재 전역 참조다.
     NuggetReplenishHooks hooks_; //선택된 큰 하위만 요구하며 없는 배치를 성공 처리하지 않는다.
 };

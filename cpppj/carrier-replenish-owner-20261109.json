@@ -1,0 +1,321 @@
+{
+  "unit": 1201,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "summary": "장기Carrier전처리와같은finder·Native사제공유·너겟보충모드/Bounds부모·선택된실제배치Runtime대여를연결했다. 실제배치전체NoWorld는미완료다.",
+  "sourceSha256": {
+    "cpppj/src/o/RawCarrierPreDestroy.h": "7ef4110e17f9aeb887410d8da552d509b88e5658515c6410535e600c0bb4ab8a",
+    "cpppj/src/o/RawCarrierPreDestroy.cpp": "d9cb78443dd72d3e04ba210150ae4d2bf311d7cb33b8516a74efec62894b591c",
+    "cpppj/src/o/RawNuggetReplenish.h": "162abf76c33eb574a79b401ba07aa2af7046b4d62cfcfbe7173129ab3f72381a",
+    "cpppj/src/o/RawNuggetReplenish.cpp": "6a82a44d02716913706832f15b6fd9e7f45d1699035723889acf7ed1e0e1d52e",
+    "cpppj/src/client/RawSurfaceWorld.h": "420cb174a49df3521b7bcbb3f4ef57f4fdb91c9ec1225765e129b6c3d057e233",
+    "cpppj/src/client/RawSurfaceDamageable.cpp": "31d1fc1a84b2f9076abfc5300617b9248d8965757cd7535c6211bbfc25172710",
+    "cpppj/src/client/RawSurfaceAssetDeletion.cpp": "d0dbe3018e2306340bf94aae7e27238b059b075052b29bcfa37d47765100068b",
+    "cpppj/src/client/ClientConstructionGlobals.h": "48bdad25a4f1ab84709e77dd5aa8ef28abc0c2396caab81730734b61b4354a4c",
+    "cpppj/src/client/ClientConstructionGlobals.cpp": "c1a1c66fcf8eed93ed5c4ac6a442f4fdc5a4a7f621592bbba56af8d1e868d317",
+    "cpppj/src/client/ClientMain.cpp": "dbc9cb2e0f56875beaa9de6346960e6feb1ecfa8b19ed139099bdef8a19625ed",
+    "cpppj/src/client/RawPriestWorldBindings.h": "2f94f499bcdf832feb7dbc70851df003e51f0c4bb3f7451a9fdde5c61ade3b3b",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "e77521942f1b19a5116e2164865eb86f121ff9c847cafdbc0db8c2d19a295b01",
+    "cpppj/src/client/RawCampaignSession.cpp": "85a25f2e5c8180dedac55824cf853beca60e2ee715ed63d73063417d09045862",
+    "cpppj/tests/SurfaceAssetDeletionTests.cpp": "211740aac2b4dd9d2d4660d1bb8c029f500ba5e95613db277d57805382c93a7e",
+    "cpppj/tests/ConstructionOwnerStateTests.cpp": "00768c551c1300918c89c01cdc2b102d4257bf58aef38e0988111a39f53b3161",
+    "cpppj/tests/CMakeLists.txt": "1de8eea219aa0d5b82c6c7c32a8a0f17db5bc4e89a515c317d76f7ba9e99806e",
+    "cpppj/tests/CarrierPreDestroyTests.cpp": "510dd01b3bae7d364c11dbcd6fd44b2d6d8a709b1c87d4cd772970b6d4752d01"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13718016,
+      "sha256": "8c3752405d17a84f53be973e1cbead3200a3cd2f757a861694a0076beff507bf"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "f36e8a9e312804324522827a4d4461b98007c20925a7781c469f0dbf6dd28f2c"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 48.891398906707764,
+    "sourcesUnchanged": true
+  },
+  "tests": {
+    "cases": 111,
+    "passed": 111,
+    "newCases": 5,
+    "extendedExistingCases": 1,
+    "groups": {
+      "netstorm_construction_owner_tests": 37,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "multiplayerExecutions": 0
+  },
+  "staticAudit": {
+    "assetVtablesCompared": {
+      "patch1078": 83,
+      "cd1072Reference": 68
+    },
+    "comparedPatchMetadataDwords": 332,
+    "patchDestroyEntries": [
+      "004af780",
+      "004220f0"
+    ],
+    "parentRoutesConnected": 57,
+    "dedicatedParentRoutesRemaining": 26,
+    "parentConnectedVtables": [
+      "00501dd0",
+      "00501ea0",
+      "00502448",
+      "00502510",
+      "005025d8",
+      "005026a0",
+      "00502778",
+      "00502840",
+      "00502908",
+      "005029d0",
+      "00502aa8",
+      "00502b70",
+      "00502e68",
+      "00502f30",
+      "00502ff8",
+      "005030c0",
+      "00503188",
+      "00503360",
+      "005034c8",
+      "00503d80",
+      "00503e50",
+      "00503f20",
+      "00503ff0",
+      "00506d98",
+      "00506e50",
+      "00506f08",
+      "005070c0",
+      "005075d8",
+      "00507770",
+      "00509148",
+      "005092d0",
+      "00509388",
+      "005096a0",
+      "00509758",
+      "00509810",
+      "00509930",
+      "005099e8",
+      "00509aa0",
+      "00509b98",
+      "0050a820",
+      "0050a8e8",
+      "0050b570",
+      "0050b6e8",
+      "0050b7c0",
+      "0050b888",
+      "0050b9b8",
+      "0050bad0",
+      "0050c3b0",
+      "0050c9f0",
+      "0050cc08",
+      "0050da88",
+      "0050db78",
+      "0050dc30",
+      "0050e568",
+      "0050e668",
+      "0050e738",
+      "0050eb98"
+    ],
+    "remainingVtables": [
+      "00502370",
+      "00502c38",
+      "00502cf0",
+      "00502db0",
+      "005040c0",
+      "00504198",
+      "005076b8",
+      "00507950",
+      "00508cc8",
+      "00509210",
+      "00509470",
+      "0050a050",
+      "0050a1e8",
+      "0050a388",
+      "0050a748",
+      "0050e888",
+      "0050e940",
+      "0050ea08",
+      "0050ead0",
+      "0050ee08",
+      "0050f210",
+      "0050f540",
+      "005196f0",
+      "005197a8",
+      "00519860",
+      "00519918"
+    ],
+    "emptyParentNoticeVtables": 77,
+    "originalFunctionsRequested": 11,
+    "cAndFullMetadataRangeAvailable": 11,
+    "cUnavailable": [],
+    "originalExecutions": 0,
+    "multiplayerExecutions": 0,
+    "decompilerSourceChanges": 0
+  },
+  "tutorial4": {
+    "passed": true,
+    "unit": 1201,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1201\\live-tutorial4\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "8c3752405d17a84f53be973e1cbead3200a3cd2f757a861694a0076beff507bf",
+    "exeSha256After": "8c3752405d17a84f53be973e1cbead3200a3cd2f757a861694a0076beff507bf",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1201\\live-tutorial4\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1201\\live-tutorial4\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.519,
+        "gameTimeAfter": 24.002,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "editor": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0
+  },
+  "protectedFilesUnchanged": 2800,
+  "originalGameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "decompilerSourceChanges": 0,
+  "limitations": [
+    "57은Pre/Post부모분배수이며일반상태의큰하위전체NoWorld완료수가아니다.",
+    "실제PlaceBattleNuggets/완전한MayPlace/오벨리스크생성PostPop은현재Runtime에남는다.",
+    "전용26부모/6통지·다른Form/Regular·큰AI및전수Caller/owner감사는미완료다.",
+    "허용GUI는생산/건설요청·대기·같은Client Edit왕복이며공격/승리/희생/MP/TestBattle검증이아니다."
+  ],
+  "raw": "extracted/cpp-resume-1201/"
+}

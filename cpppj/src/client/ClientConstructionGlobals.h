@@ -24,6 +24,7 @@ struct ClientConstructionRuntimeBindings {
     RawCampaignConstructionEffects effects; //실제 현재 설정/표시/비용 안내/진단의 콜백이다.
     RawCampaignConstructionGameplay gameplay; //실제 현재 Builder/사제/배치/건설 모듈의 콜백이다.
     std::function<std::shared_ptr<void>()> pin; //공개된 전체 Runtime을 선택 호출 동안만 보유한다. 생성/직접 로드는 호출자의 소유권을 따른다.
+    std::function<void(o::FortRandomRectangle,std::uint32_t)> replenishPlacement; //실제0040e050/큰배치의현재몸체이며계산/모드관문뒤선택된호출만Runtime을빌린다.
 };
 class ClientConstructionGlobals {
 public:
@@ -38,6 +39,8 @@ public:
     void BindDevices(ClientConstructionDevices devices); //필수 실제 장치를 검증해 현재 집합만 교체하며 게임 상태나 본체를 초기화하지 않는다.
     void ReleaseDevices(); //Client 최종 반납에서 함수 집합만 끊고 본체/현재 물리/State를 보존한다.
     void BindRuntime(const std::shared_ptr<ClientConstructionRuntimeBindings>& runtime); //실제 현재 대여만 약하게 공개하고 중복된 살아 있는 대여는 거부한다.
+    void BindBacking(std::shared_ptr<ClientSpGlobals> sp,std::shared_ptr<ClientPlayerRecords> players,std::shared_ptr<std::array<std::uint8_t,87>> options); //최초메뉴전실제backing만보유하고SP/Player/Bounds를조회하지않는다.
+    void ReplenishNuggets(); //현재권한/모드관문뒤에만같은장기Bounds와선택된실제배치를사용한다.
     RawCampaignConstructionBindings& Body(std::shared_ptr<ClientSpGlobals> sp,std::shared_ptr<ClientPlayerRecords> players,std::shared_ptr<std::array<std::uint8_t,87>> options); //같은 장기 물리/현재 Player getter로 본체를 한 번 구성하며 World를 만들지 않는다.
     RawCampaignConstructionBindings& Body(); //이미 구성한 장기 본체를 빌리며 Session 반납 뒤에도 주소/상태를 보존한다.
 private:

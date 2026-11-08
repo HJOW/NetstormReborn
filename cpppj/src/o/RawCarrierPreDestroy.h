@@ -17,6 +17,7 @@ class RawCarrierPreDestroy {
 public:
     // 가상 지원 범위를 넓히지 않는 직접 호출용 몸체다. 풀·상태·훅 대상은 더 오래 살아야 한다.
     RawCarrierPreDestroy(SidPool& pool,const CarrierPreDestroyState& state,CarrierPreDestroyHooks hooks);
+    void EnableNativeBody(); //실제PATCH부모는typed사전검사를앞당기지않고Damageable뒤현재boss/내용물을읽는다.
     // 사제 목록 변경 전에 하위 몸체와 raw 자산의 지원 상태를 검사한다.
     void Validate(Sid sid,std::uint32_t flags) const;
     // 00426890 / CD 004e43b0: Damageable→현재 boss→FindContained(1,0,0)→전역 후처리다.
@@ -35,6 +36,7 @@ private:
     const CarrierPreDestroyState& state_;
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (CarrierPreDestroyHooks).
     CarrierPreDestroyHooks hooks_;
+    bool nativeBody_{}; //실제Client장기몸체만선택하며독립typed/CD계약은유지한다.
 };
 // 사제의 Carrier 경계를 같은 풀의 실제 몸체에 연결하고 보호막 훅을 보존한다.
 PriestPreDestroyHooks MakeCarrierPreDestroyHooks(const SidPool& pool,const RawCarrierPreDestroy& carrier,PriestPreDestroyHooks hooks);

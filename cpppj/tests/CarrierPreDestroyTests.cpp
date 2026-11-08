@@ -4,6 +4,12 @@
 
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
+// 실제PATCH는typed선검사대신Damageable효과를먼저실행한뒤현재boss를읽는다.
+TEST_CASE(CarrierPreDestroy_NativeParentBeforeCurrentBossAndFinder) {
+    SidPool pool(OriginalEdition::Patch1078,kCapacity,false);const auto sid=pool.Allocate(2);auto raw=pool.AllocatedBytes(sid);raw[10]=0;raw[6]=raw[7]=0xff;CarrierPreDestroyState state;state.boss=true;std::uint32_t parents{},found{},validations{};
+    RawCarrierPreDestroy body(pool,state,{[&](auto,auto) { ++validations;throw std::logic_error("Native 앞의 typed 사전검사"); },[&](auto parent,auto flags) { CHECK(parent==sid && flags==0xdeadbeefU);++parents;state.boss=false; },[&] { ++found; }});body.EnableNativeBody();body.PreDestroy(sid,0xdeadbeefU);
+    CHECK(parents==1 && validations==0 && found==0 && !state.boss);
+}
 namespace {
 // 세 PE 각각의 직접 조회/Carrier 관찰 수와 전체 raw 비교 슬롯이다.
 constexpr std::size_t kRowsPerEdition=960;

@@ -63,7 +63,7 @@ struct DeletionScene {
 
 // 공통·피해가능·다리·섬·noIsland·간헐천·너겟은 같은 실제 장기 Pre/Post로 반납한다.
 TEST_CASE(SurfaceAssetDeletion_NoWorldActualParentsBalanceAndRelease) {
-    for (const auto table:{0x503360U,0x509930U,0x5034c8U,0x506d98U,0x506f08U,0x50da88U,0x50dc30U}) { // 각 전용 경로를 새 실제 물리에서 독립 검사한다.
+    for (const auto table:{0x503360U,0x509930U,0x5034c8U,0x506d98U,0x506f08U,0x50da88U,0x50dc30U,0x503d80U}) { //공중3종을제외한실제Carrier를포함해각부모를새물리에서검사한다.
         DeletionScene scene;const auto sid=scene.Asset(table);const auto type=scene.storage->pool.Slot(sid)[10];const auto free=scene.storage->pool.FreeCount();
         CHECK(scene.storage->DestroyAsset(sid,0x10));CHECK((scene.storage->pool.Slot(sid)[11]&3U)==3U);CHECK(scene.storage->pool.Slot(sid)[10]==type && scene.storage->pool.FreeCount()==free+1);
         CHECK(scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);CHECK(scene.traces==1 && scene.legacyDeletes==0 && !scene.storage->Borrowed() && scene.storage->Generation()==0);
@@ -103,4 +103,13 @@ TEST_CASE(SurfaceAssetDeletion_BridgeVirtualRejectionLeavesCurrentState) {
 TEST_CASE(SurfaceAssetDeletion_PhysicalLeaseWithoutDeletionRuntimeUsesLongBody) {
     DeletionScene scene;auto lease=scene.storage->AcquirePrepared();CHECK(scene.storage->Borrowed());const auto sid=scene.Asset(0x503360U);
     CHECK(scene.storage->DestroyAsset(sid,0x10));CHECK((scene.storage->pool.Slot(sid)[11]&3U)==3U && scene.legacyDeletes==0);CHECK(scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 실제Carrier는Damageable/공통Pre뒤현재내용물을조회하고선택한보충실패의부분효과를보존한다.
+TEST_CASE(SurfaceAssetDeletion_CarrierReplenishesAfterActualParent) {
+    DeletionScene scene;std::uint32_t calls{};Sid root{};
+    scene.storage->BindCarrierReplenishment([&] { ++calls;CHECK((scene.storage->pool.Slot(root)[11]&3U)==2U && scene.storage->BaseDestroy().PreDepth()==0);throw std::runtime_error("실제 보충 선택 실패"); });
+    root=scene.Asset(0x503d80U);const auto child=scene.storage->pool.Allocate(2);auto raw=scene.storage->pool.AllocatedBytes(child);raw[10]=6;raw[11]=4;raw[4]=raw[5]=0;raw[20]=1;auto parent=scene.storage->pool.AllocatedBytes(root);parent[6]=static_cast<std::uint8_t>(child.value);parent[7]=static_cast<std::uint8_t>(child.value>>8);scene.gameplay->Boss()=true;
+    bool failed{};try { scene.storage->DestroyAsset(root,0x10); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="실제 보충 선택 실패"; }
+    CHECK(failed && calls==1 && scene.legacyDeletes==0 && scene.storage->BaseDestroy().PostDepth()==0);CHECK((scene.storage->pool.Slot(root)[11]&3U)==2U && !(scene.storage->pool.Slot(child)[11]&1U));
 }

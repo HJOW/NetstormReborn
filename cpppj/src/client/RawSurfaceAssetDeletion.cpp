@@ -40,6 +40,7 @@ void RawSurfaceStorage::EmitDefaultAssetEffect(const o::SquidDestroyEvent& event
     case 0x0044b4b0U: // 실제 Damageable의 가상 전처리다. 내부44afd0과 구별한다.
     case 0x00484f80U:DamageablePre().PreDestroy(event.sid,event.flags);return; // Nugget의 실제 단일 점프 thunk다.
     case 0x0044b9e0U:DamageablePost().PostDestroy(event.sid,event.flags);return;
+    case 0x00426890U:CarrierPre().PreDestroy(event.sid,event.flags);return; //실제다섯Carrier VT가같은장기finder/보충부모를사용한다.
     case 0x004221b0U: // 다리의 고유 전처리다.
     case 0x00422300U: // 다리의 고유 후처리다.
     case 0x00442240U: // 섬의 고유 전처리다.

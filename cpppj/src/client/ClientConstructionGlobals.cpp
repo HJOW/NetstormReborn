@@ -6,6 +6,7 @@
 #include "client/ClientPlayerRecords.h" //현재 base를 구성 시 조회하거나 초기화하지 않는다.
 #include "client/PriestPlacementAssets.h" // 같은 Storage가 소유한 Canon 진단 주소를 빌린다.
 #include "o/Bridge.h" // 원문 최초5인 같은 불변 다리 수명이다.
+#include "o/RawNuggetReplenish.h" //원문권한/모드/지역0/확장계산을같은장기Bounds에연결한다.
 #include <stdexcept>
 #include <utility>
 #include <type_traits> //선택한 실제 콜백의 std::function 서명을 보존한다.
@@ -66,10 +67,24 @@ void ClientConstructionGlobals::ReleaseDevices() { devices_.reset(); } //Client/
 void ClientConstructionGlobals::BindRuntime(const std::shared_ptr<ClientConstructionRuntimeBindings>& runtime) {
     const auto current=runtime_.lock();if (!storage_ || !runtime || (current && current!=runtime)) throw std::invalid_argument("건설 본체의 같은 실제 현재 대여 필요");runtime_=runtime;
 }
+// 실제backing의정체성만결합하며첫메뉴에서SP/Player를초기화하지않는다.
+void ClientConstructionGlobals::BindBacking(std::shared_ptr<ClientSpGlobals> sp,std::shared_ptr<ClientPlayerRecords> players,std::shared_ptr<std::array<std::uint8_t,87>> options) {
+    if (!gameplay_ || !sp || !players || options!=gameplay_->BattleOptionsOwner()) throw std::invalid_argument("장기 건설 backing의 같은 실제 owner 필요");
+    if ((sp_ && sp_!=sp) || (players_ && players_!=players) || (options_ && options_!=options)) throw std::logic_error("장기 건설 backing의 다른 owner 재결합 금지");
+    sp_=std::move(sp);players_=std::move(players);options_=std::move(options);
+}
+// 보충의작은원문부모는World없이실행하고실제배치가선택된때만현재Runtime을pin한다.
+void ClientConstructionGlobals::ReplenishNuggets() {
+    if (!storage_ || !gameplay_) throw std::logic_error("너겟 보충의 실제 Client 전역 미결합");
+    o::RawNuggetReplenish body([this]()->const o::RawPlayerGeyserBounds& { return Body(sp_,players_,options_).PlayerBounds(); },
+        {gameplay_->Boss(),gameplay_->world.missionPost,storage_->ownerMode.fort,gameplay_->world.editor,storage_->GameAux()->WorldGeyserMargin()},
+        {[storage=storage_](auto line) { storage->AssertDisplay("boss","\\Ns\\O\\Nugget.cpp",line); },CurrentConstructionCall(runtime_,[](const auto& current) { return current.replenishPlacement; })});
+    body.Run();
+}
 // 장기 부품만 실제 본체에 고정하고 큰 효과는 각 원문 선택 위치에서 현재 짧은 대여를 조회한다.
 RawCampaignConstructionBindings& ClientConstructionGlobals::Body(std::shared_ptr<ClientSpGlobals> sp,std::shared_ptr<ClientPlayerRecords> players,std::shared_ptr<std::array<std::uint8_t,87>> options) {
     if (!storage_ || !devices_ || !sp || !players || !options || options!=gameplay_->BattleOptionsOwner()) throw std::invalid_argument("건설 본체의 같은 실제 Client 장치/SP/Player/옵션 owner 필요");
-    if (body_) { if (sp_!=sp || players_!=players || options_!=options) throw std::logic_error("장기 건설 본체의 다른 backing 재결합 금지");return *body_; }
+    BindBacking(sp,players,options);if (body_) return *body_;
     auto runtime=BindConstructionRuntime(storage_);runtime.players=[records=players] { return records->Records(); }; //원문이 고른 위치까지 Player 할당/조회와 현재 span 선택을 지연한다.
     auto& metadata=storage_->PlacementAssets();auto& aux=*storage_->GameAux(); //동일 Source의 실제 Canon/현재 TYPE이며 새 자산을 만들지 않는다.
     RawCampaignConstructionEffects effects; //큰 효과의 임시 Session 주소는 장기 본체에 저장하지 않는다.
@@ -103,7 +118,7 @@ RawCampaignConstructionBindings& ClientConstructionGlobals::Body(std::shared_ptr
     gameplay.notice.start=CurrentConstructionCall(runtime_,[](const auto& current) { return current.gameplay.notice.start; }); //현재 시각의 실제 건설 시작이다.
     const o::PlayerGeyserBoundsState bounds{storage_->ownerMode.battle,storage_->links.mission,storage_->ownerMode.challenge,(*options)[6],aux.PuzzlePieceType(),storage_->geyserPlayerDirections,&metadata.geometry.decoderDiagnostics}; //모든 참조는 같은 장기 물리/옵션에서만 빌린다.
     auto body=std::make_unique<RawCampaignConstructionBindings>(std::move(runtime),storage_->Reward(),sp->Store(),storage_->RewardState(),metadata.frames,storage_->chunks,state_,bounds,storage_->recentGeysers,storage_->sidLists.geysers,std::move(effects),std::move(gameplay));
-    sp_=std::move(sp);players_=std::move(players);options_=std::move(options);body_=std::move(body);return *body_; //완전 구성 성공 뒤에만 backing과 본체를 함께 공개한다.
+    body_=std::move(body);return *body_; //실제backing은BindBacking에서유지하고완전구성성공뒤본체만공개한다.
 }
 // 구성 전의 빈 본체를 성공 대용으로 만들지 않는다.
 RawCampaignConstructionBindings& ClientConstructionGlobals::Body() { if (!body_) throw std::logic_error("Client의 장기 건설 본체 미구성");return *body_; }

@@ -180,6 +180,8 @@ public:
     o::DamageableReleaseState& DamageableReleaseGlobals(); // 같은 장기 허용 genus를 실제 소비자가 공유한다.
     o::DamageablePostDestroyState& DamageablePostGlobals(); // 현재 battle/boss/population/사건의 장기 owner다.
     o::RawDamageablePreDestroy& DamageablePre(); // 현재 실제 전처리/해방/공통 Pre를 World 없이 제공한다.
+    void BindCarrierReplenishment(std::function<void()> replenish); //최초Carrier앞에실제Client보충부모만결합하며호출하지않는다.
+    o::RawCarrierPreDestroy& CarrierPre(); //현재finder·Damageable·보충부모를같은장기물리에서사용한다.
     o::RawDamageableRelease& DamageableRelease(); // 현재 물리의 실제 해방 몸체를 공유한다.
     o::RawDamageablePostDestroy& DamageablePost(); // 현재 실제 후처리/공통 Post를 공유한다.
     o::RawGeyserLifetime& GeyserLifetime(); // 같은 지면 목록/기본프레임/현재 편집 모드를 사용한다.
@@ -318,6 +320,8 @@ private:
     o::DamageablePostDestroyState damageablePostState_; // 실제 현재 모드/목록/사건을 같은 주소에서 읽는다.
     std::unique_ptr<o::RawDamageableRelease> damageableRelease_; // Pool/TYPE/검색 전역보다 먼저 반납한다.
     std::unique_ptr<o::RawDamageablePreDestroy> damageablePre_; // 장기 실제 효과 장치와 같은 공통 Pre를 빌린다.
+    std::unique_ptr<o::RawCarrierPreDestroy> carrierPre_; //같은finder/Damageable보다먼저반납하는실제장기Carrier전처리다.
+    std::function<void()> carrierReplenishment_; //실제장기보충owner를약하게빌리는Client장치이며Session을소유하지않는다.
     std::unique_ptr<o::RawDamageablePostDestroy> damageablePost_; // 같은 HP/목록/공통 Post를 빌린다.
     std::unique_ptr<o::RawGeyserLifetime> geyserLifetime_; // 같은 피해가능 객체 수명보다 먼저 반납한다.
     std::unique_ptr<NativeFortSaveVirtual> fortSaveVirtual_; //같은 Storage/GameAux를 빌리는 실제 조회기이며 해당 소유자보다 먼저 반납한다.
