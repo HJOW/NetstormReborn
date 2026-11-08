@@ -9600,9 +9600,38 @@
       "bytes": 1546934,
       "lines": 722,
       "fixtureCommit": "87c37af6",
-      "webCommit": "worktree",
+      "webCommit": "281f39d0",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierChoice.cpp": "8b467ca0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E103",
+      "id": "path-retarget",
+      "path": "cpppj/tests/fixtures/path-retarget-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 경로 Halt 의 대상 사망 분기의 외부 효과 순서·삭제 직전 대상/부모·너겟 타입·조회 횟수·앞 0x10000바이트 Adler-32(4801행; 53/64비트 열 동일)",
+      "consumers": [
+        "webpj/tests/path-retarget.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-retarget.js"
+      ],
+      "doc": "docs/webpj-path-retarget-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathRetarget.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 4801행 전부 사용",
+      "text": true,
+      "sha256": "89b1fc34c732d83eb35ec98095b89883003737faffaa002686eee10e6d6fb122",
+      "bytes": 522589,
+      "lines": 4802,
+      "fixtureCommit": "cd6c03ae",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathRetarget.cpp": "cd6c03ae"
       }
     }
   ]
