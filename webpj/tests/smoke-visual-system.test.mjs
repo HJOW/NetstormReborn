@@ -275,3 +275,16 @@ test('공통 표시 저장소: 00487960 Form 삭제 영역 기본 027f 48입력�
     assert.equal(count, 48);
     assert.equal(extended, 48);
 });
+
+// 웹 추가(2026-11-09 WB04-E194): Host 부착이 예외로 실패해도 C++ unique_ptr 매개변수 해제처럼 객체를 바로 소멸시켜 등록/조회를 남기지 않고, 다음 생성이 정상이다.
+test('연기 표시 시스템: Host 부착 예외 실패는 객체를 즉시 소멸해 표시 등록을 남기지 않고 다음 생성을 막지 않는다', () => {
+    const scene = new SmokeVisualScene();
+    const attach = scene.host.attach;
+    scene.host.attach = () => { throw new Error('명시 부착 실패'); };
+    assert.ok(throwsOf(() => scene.smoke.addCooling(scene.parent, [16, -11])));
+    assert.ok(scene.smoke.size === 0 && scene.rendering.size === 0 && scene.kernel.size === 0 && scene.rendering.slots[0] === 0);
+    assert.deepEqual(scene.released, [SmokeRelease.Object]);
+    scene.host.attach = attach;
+    assert.ok(scene.smoke.addCooling(scene.parent, [16, -11]));
+    assert.ok(scene.smoke.size === 1 && scene.kernel.size === 1);
+});

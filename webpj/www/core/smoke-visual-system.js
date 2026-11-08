@@ -112,10 +112,17 @@ export class SmokeVisualSystem {
             const process = this.#pending;
             token = rendering.track(process.fields.registration, (fields, type, target, flags) => {
                 if (!this.#pending || this.#pending.fields.registration !== fields) throw new Error('냉각 연기 부착 객체 불일치');
-                // 소유권을 Host 로 넘긴다. 부착이 실패하면 넘겨받은 쪽이 없으므로 C++ unique_ptr 해제처럼 바로 소멸시킨다.
+                // 소유권을 Host 로 넘긴다. 부착이 null 이나 예외로 실패하면 넘겨받은 쪽이 없으므로 C++ unique_ptr 매개변수 해제처럼 바로 소멸시킨다.
+                // (2026-11-09 WB04-E194: 예외 실패 경로도 소멸하도록 보강)
                 const owned = this.#pending;
                 this.#pending = null;
-                const attached = rendering.host.attach(owned, type, target, flags);
+                let attached;
+                try {
+                    attached = rendering.host.attach(owned, type, target, flags);
+                } catch (error) {
+                    owned.destroy();
+                    throw error;
+                }
                 if (!attached) {
                     owned.destroy();
                     throw new Error('냉각 연기 실제 Host 부착 실패');

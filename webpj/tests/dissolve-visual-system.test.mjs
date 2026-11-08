@@ -183,3 +183,17 @@ test('분해 표시 시스템 경계(웹 추가): 세계/반납·프레임 출�
     assert.ok(scene.effect.size === 0 && scene.kernel.size === 0 && scene.rendering.size === 0);
     assert.ok(scene.destroy.preDepth === 0 && scene.destroy.postDepth === 0);
 });
+
+// 웹 추가(2026-11-09 WB04-E194): Host 부착이 예외로 실패해도 객체를 바로 소멸시키고, 상호 감시 쌍 전의 더미도 정리하며, 다음 생성이 정상이다.
+test('분해 표시 시스템: Host 부착 예외 실패는 객체와 짝 없는 더미를 정리하고 다음 생성을 막지 않는다', () => {
+    const scene = new DissolveScene();
+    const attach = scene.host.attach;
+    scene.host.attach = () => { throw new Error('명시 부착 실패'); };
+    assert.ok(throwsOf(() => scene.effect.add(scene.source, scene.first, scene.second, 0)));
+    assert.ok(scene.effect.size === 0 && scene.rendering.size === 0 && scene.kernel.size === 0 && (scene.pool.slot(scene.dummy)[11] & 3) === 3);
+    assert.deepEqual(scene.releases, [ShrapnelRelease.Object]);
+    scene.host.attach = attach;
+    assert.ok(scene.effect.add(scene.source, scene.first, scene.second, 0));
+    assert.ok(scene.effect.size === 1 && scene.kernel.size === 1);
+    assert.ok(scene.destroy.preDepth === 0 && scene.destroy.postDepth === 0);
+});
