@@ -6520,7 +6520,7 @@
       "bytes": 1366900,
       "lines": 301,
       "fixtureCommit": "fa516f5a",
-      "webCommit": "worktree",
+      "webCommit": "d3ebad25",
       "cpppjBasis": {
         "cpppj/src/o/RawBombTargets.cpp": "0f0b70e2"
       }
@@ -6549,7 +6549,7 @@
       "bytes": 1973041,
       "lines": 2083,
       "fixtureCommit": "0f0b70e2",
-      "webCommit": "worktree",
+      "webCommit": "d3ebad25",
       "cpppjBasis": {
         "cpppj/src/o/RawBombBlast.cpp": "0f0b70e2"
       }
@@ -6578,7 +6578,7 @@
       "bytes": 60072,
       "lines": 65,
       "fixtureCommit": "0f0b70e2",
-      "webCommit": "worktree",
+      "webCommit": "d3ebad25",
       "cpppjBasis": {
         "cpppj/src/o/RawBombBlast.cpp": "0f0b70e2"
       }
@@ -6607,7 +6607,7 @@
       "bytes": 3920874,
       "lines": 1677,
       "fixtureCommit": "12eff4b3",
-      "webCommit": "worktree",
+      "webCommit": "d3ebad25",
       "cpppjBasis": {
         "cpppj/src/o/RawBombEffect.cpp": "e210c755"
       }
@@ -6636,9 +6636,128 @@
       "bytes": 1759830,
       "lines": 1421,
       "fixtureCommit": "1ccb8ae1",
-      "webCommit": "worktree",
+      "webCommit": "d3ebad25",
       "cpppjBasis": {
         "cpppj/src/o/RawBombStrike.cpp": "1ccb8ae1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E55",
+      "id": "player-world",
+      "path": "cpppj/tests/fixtures/player-world-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Player 생성 00490250·파생 postPop 004905d0·두 Technology getter 의 반환·진단·9기록·슬롯·해시·spot·장부·Regular·Form·Kernel",
+      "consumers": [
+        "webpj/tests/player-world.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-world.js"
+      ],
+      "doc": "docs/webpj-player-world-regular-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerWorld.cpp"
+      ],
+      "scope": "10.78(originals) 840행 전부 사용(originalCD 840행은 범위 밖)",
+      "text": true,
+      "sha256": "c53c5f89f6734cbc89535199a69d0348f5f051192ce9e7c339c55565caa5c53b",
+      "bytes": 5726929,
+      "lines": 1681,
+      "fixtureCommit": "ab9361f1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerWorld.cpp": "fe3d121d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E55",
+      "id": "player-regular",
+      "path": "cpppj/tests/fixtures/player-regular-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Player Regular 처리기 00490810·State getter 004bd550·Notify 004bd540 의 반환/경계·효과 순서·Template·State·Regular·Form·Kernel",
+      "consumers": [
+        "webpj/tests/player-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-regular.js",
+        "webpj/www/core/raw-player-template-state.js"
+      ],
+      "doc": "docs/webpj-player-world-regular-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerRegular.cpp",
+        "cpppj/src/o/RawPlayerTemplateState.cpp"
+      ],
+      "scope": "10.78(originals) 329행 전부 사용(originalCD 329행은 범위 밖, depth 열은 CD 전용 증감이라 10.78 입력값 그대로)",
+      "text": true,
+      "sha256": "e3ef582f5da9c62f3235eb16f30bd76b97f9db1a5bff0728070f7ac83ccea932",
+      "bytes": 734133,
+      "lines": 659,
+      "fixtureCommit": "ab9361f1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerRegular.cpp": "ab9361f1",
+        "cpppj/src/o/RawPlayerTemplateState.cpp": "f261f530"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E55",
+      "id": "player-state-expand",
+      "path": "cpppj/tests/fixtures/player-state-expand-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 짧은 State 의 44d290 확장 원문 보존·0 확장·position/end (두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/player-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-template-state.js"
+      ],
+      "doc": "docs/webpj-player-world-regular-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerTemplateState.cpp"
+      ],
+      "scope": "99행 전부 사용(53/64 비트 두 정밀도 열은 같은 값)",
+      "text": true,
+      "sha256": "e859c3b2435fad540a69ba4e699dddcce5d25afbdc919f10ab1198df3260dfad",
+      "bytes": 13441,
+      "lines": 100,
+      "fixtureCommit": "0cb53fac",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerTemplateState.cpp": "f261f530"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E55",
+      "id": "player-state-initialization",
+      "path": "cpppj/tests/fixtures/player-state-initialization-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 빈 State 의 4bd550 생성 조건·보존 스택/flags·28 BYTE 쓰기·자연 반환",
+      "consumers": [
+        "webpj/tests/player-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-template-state.js"
+      ],
+      "doc": "docs/webpj-player-world-regular-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerTemplateState.cpp"
+      ],
+      "scope": "2560행 전부 사용",
+      "text": true,
+      "sha256": "b3e93bb8106906a2ae11c2f1e84b505685aafbd25bba3aa35cbf9befbc6d613a",
+      "bytes": 741878,
+      "lines": 2561,
+      "fixtureCommit": "0429e571",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerTemplateState.cpp": "f261f530"
       }
     }
   ]

@@ -827,10 +827,10 @@ cpppj/src/o/RawPlayerLinksCleanup.cpp	port	www/core/raw-player-links-cleanup.js	
 cpppj/src/o/RawPlayerNotification.cpp	port	www/core/raw-player-notification.js	1f00a25a	port	[o-default] WB04-E8: 00490da0 프레임 끝 대기 결과(제단 승급·Core 합계 43 획득·내용물 조회)·0042b210 Core 기술 합계. fixture player-notices 118행·core-technology-weight 92행 전부(10.78)
 cpppj/src/o/RawPlayerParticipation.cpp	port	www/core/raw-player-participation.js	1f00a25a	port	[o-default] WB04-E5: 004a6dc0 로그인·00490ea0 방향별 동맹·0048f6a0 동맹 추가·00491220 수신·004911a0 AI 부착/해제·State 반납 증빙(BrainResetPass 의 JS 대응: 비공개 수명 토큰·1회 소비·진행 중 소비 거부). fixture player-participation 608행·player-alliance-packet 288행 전부(10.78). RawAiCreate 연동 거부 대조는 RawAiCreate 단위에서
 cpppj/src/o/RawPlayerPlacementAnchor.cpp	port			todo	[o-default]
-cpppj/src/o/RawPlayerRegular.cpp	port			todo	[o-default]
+cpppj/src/o/RawPlayerRegular.cpp	port	www/core/raw-player-regular.js	1f00a25a	port	[o-default] WB04-E55: Player 가상 +5c 소어 루저 Regular 처리기 00490810. fixture player-regular 10.78 329행 전부. 실제 로그/처리기 등록/5→60초 사슬은 WB05
 cpppj/src/o/RawPlayerTechnology.cpp	port			todo	[o-default]
-cpppj/src/o/RawPlayerTemplateState.cpp	port			todo	[o-default]
-cpppj/src/o/RawPlayerWorld.cpp	port			todo	[o-default]
+cpppj/src/o/RawPlayerTemplateState.cpp	port	www/core/raw-player-template-state.js	f261f530	port	[o-default] WB04-E55: State getter 004bd550·Notify 004bd540/004bd360. fixture player-regular·player-state-expand 99·player-state-initialization 2560행. 기준선 뒤 f261f530(Notify 자유 함수 분리) ①. CampaignTemplateStorage 연결은 WB05
+cpppj/src/o/RawPlayerWorld.cpp	port	www/core/raw-player-world.js	1f00a25a	port	[o-default] WB04-E55: Player152 생성 00490250·파생 postPop 004905d0·Technology getter 0048fc60/0048fc90. fixture player-world 10.78 840행 전부. RawSurfaceWorld 연결 검사는 WB05
 cpppj/src/o/RawPriestArrival.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestDamage.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestFall.cpp	port			todo	[o-default]
