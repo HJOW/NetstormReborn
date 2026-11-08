@@ -609,7 +609,7 @@ cpppj/src/o/RawConstructionClear.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionCommand.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionConfirm.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionData.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionEffects.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionEffects.cpp	port	www/core/raw-construction-effects.js	1f00a25a	port	[o-default] WB04-E135: 건설 유닛 밀어내기(00443800)와 섬 실패 정리(0046e6c0)와 요청 어댑터. fixture constructioneffects originals 1178행 전부(originalCD·original1037 제외). 남음: 실제 Request/Factory/Destroy 통합 시험(RawConstructionRequest 이식 뒤)
 cpppj/src/o/RawConstructionFrame.cpp	port	www/core/raw-construction-frame.js	1f00a25a	port	[o-default] WB04-E130: 건설 표시 프레임 갱신(Run)·Draw·Expand·Append·Color·Clock. fixture constructionframe originals 435행 전부(originalCD/original1037 은 범위 밖). 남음: Run 의 Kill 을 표시 해제에 연결하는 통합 시험(ConstructionProcess 계열과 함께)
 cpppj/src/o/RawConstructionHistory.h	port	www/core/construction-history-key.js	1f00a25a	port	[o-default] WB04-E22: 최근 건설 위치 5칸+순번 값형 장부(createConstructionHistory). 배치 통지가 순번을 0으로 쓰는 부분은 건설 통지 단위에서
 cpppj/src/o/RawConstructionLifetime.cpp	port	www/core/raw-construction-lifetime.js	1f00a25a	port	[o-default] WB04-E129: 표시 목록 등록/40칸 확장/삭제와 건설 표시 버퍼 반납 순서·생성 어댑터. fixture constructionlifetime originals 459행 전부(originalCD/original1037 은 범위 밖). 남음: 실제 RawConstructionFrame Run/Draw/Kill 연결 시험(RawConstructionFrame 이식 뒤)
@@ -619,7 +619,7 @@ cpppj/src/o/RawConstructionPacket.cpp	port	www/core/raw-construction-packet.js	1
 cpppj/src/o/RawConstructionPlace.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionProcess.cpp	port	www/core/raw-construction-process.js	1f00a25a	port	[o-default] WB04-E132: 건설 프로세스 시작·진행·완료·form 삭제 통지·실제 host/Kernel 프로세스·보상/통지 어댑터. fixture constructionprocess originals 956행+construction-form-parent 64행 전부와 실제 host 통합 시험(originalCD/original1037 은 범위 밖). 남음: RawConstructionEffects 밀어내기 연결 시험(해당 모듈 이식 뒤)
 cpppj/src/o/RawConstructionRequest.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionSelection.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionSelection.cpp	port	www/core/raw-construction-selection.js	1f00a25a	port	[o-default] WB04-E135: 확정의 그래프 기준점(findBuilder)과 통지의 소유 사제 조회(findPriest) 어댑터. 이름 계약·풀 불일치 거부는 대역으로 확인. 남음: Confirm 과의 통합 시험(RawConstructionConfirm 이식 뒤)
 cpppj/src/o/RawConstructionVisual.cpp	port	www/core/raw-construction-visual.js	1f00a25a	port	[o-default] WB04-E128: 건설 표시 생성·색 표 캐시·좌표 동기화·초기 입자 선택. fixture constructionvisual originals 592행 전부(originalCD/original1037 은 범위 밖). 남음: 실제 RawConstructionProcess::Start 연결 시험(RawConstructionProcess 이식 뒤)
 cpppj/src/o/RawContainedCreate.cpp	port	www/core/contained-create.js	1f00a25a	port	[o-default] WB04-D5a(004afa70)
 cpppj/src/o/RawContainedFinder.cpp	port	www/core/raw-contained-finder.js	1f00a25a	port	[o-default] WB04-E56: 내용물 검색기 004b2270 Begin·004b1b20 Next·004acc60 CountContained와 ContainedFinderState(공유 boss/checking 대여). fixture carrierpredestroy 경유 대조. 실제 Client 권한/checking 연결은 WB05
