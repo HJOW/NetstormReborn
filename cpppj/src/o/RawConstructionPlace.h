@@ -34,7 +34,21 @@ struct ConstructionPlaceState {
     const CanonDecoderDiagnostics* decoderDiagnostics{}; // 반복자보다 오래 사는 같은 Client의 현재 checking·진단 장치를 빌린다.
     const std::uint32_t* sharedNuggetType{}; // 실제005412c0의 같은 너겟 번호로 비용 판정/환불 예외를 선택한다.
     const std::uint32_t& NuggetType() const { return sharedNuggetType ? *sharedNuggetType : nuggetType; } // 실제 장기 owner를 참조하며 별도 연결 없는 독립/CD는 기존 필드를 쓴다.
+    const std::uint32_t* sharedLocalPlayer{}; //실제00540c70을 비용/환불/로컬 가산의 소비 위치에서 읽는다.
+    const std::uint32_t* sharedPlayerKnown{}; //실제00595344이며 Prepare 사본의 bool로 현재 SP 선택을 고정하지 않는다.
+    const std::uint32_t* sharedBridgeType{}; //실제005411a0의 현재 TYPE 번호다.
+    const std::uint32_t* sharedNoIslandType{}; //실제005412cc의 현재 TYPE 번호다.
+    const std::int32_t* sharedBridgeLife{}; //실제0052f960의 현행 공통 owner를 빌리며 독립 typed 입력은 기존 필드를 유지한다.
+    std::function<std::array<std::uint32_t,8>()> patternTypesRead; //진단 복귀 뒤 decoder 생성 위치에서 현재 패턴 TYPE들을 읽는다.
+    const std::uint32_t& LocalPlayer() const { return sharedLocalPlayer ? *sharedLocalPlayer : localPlayer; } //독립 typed 입력은 기존 값을 유지한다.
+    bool BattleShown() const { return sharedPlayerKnown ? *sharedPlayerKnown!=0 : battleShown; } //원문 현재 PlayerKnown의 비영 전체를 사용한다.
+    const std::uint32_t& BridgeType() const { return sharedBridgeType ? *sharedBridgeType : bridgeType; } //표면 통지 뒤 품질 선택도 현재 번호다.
+    const std::uint32_t& NoIslandType() const { return sharedNoIslandType ? *sharedNoIslandType : noIslandType; } //각 조각의 시작 칸 비교 위치에서 읽는다.
+    const std::int32_t& BridgeLife() const { return sharedBridgeLife ? *sharedBridgeLife : bridgeLife; } //금 간 품질과 끝 칸 각각의 원문 소비 위치에서 읽는다.
+    std::array<std::uint32_t,8> CurrentPatternTypes() const { return patternTypesRead ? patternTypesRead() : patternTypes; } //생성 인자의 현재 번호를 고정하되 이후 decoder 순회는 같은 반복자를 쓴다.
 };
+// 원문 SID pointer를 대신해 decoder가 실제 소비할 때 현재 비정렬 WORD를 읽는 경계다.
+using ConstructionSidReader=std::function<std::uint16_t(std::uint32_t)>;
 // 배치 한 번의 입력이다. 원본 열 개 인자 가운데 SID 개수는 sids의 길이로 받는다.
 struct ConstructionPlaceRequest {
     std::uint32_t type{};      // 배치할 타입 번호.
@@ -93,6 +107,7 @@ struct ConstructionPlaceHooks {
     std::function<void(std::string_view)> tell;
     // 004e2dc0에 실리는 배치 취소 통지다. 첫 인자는 받는 플레이어다.
     std::function<void(std::uint32_t,const ConstructionRejectNotice&)> sendReject;
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //실제 wire 배치의 player9/isVoid/후행 개수 진단을 정상 복귀시키는 Client 장치다.
 };
 // 건설 배치의 실행 계층이다. 사용 순서: 호출자가 SID를 확보하고 Place를 한 번 부른다.
 class RawConstructionPlace {
@@ -104,6 +119,8 @@ public:
     // 00442c80 / CD 004d0ca0: 패치판은 먼저 비용을 판정하고, 이어 조각마다 abstract 비트·HP·프레임·단어(다리는 품질·수명)를 쓰고
     // 소유자 지정과 Pop을 요청한다. SID 개수가 조각 수와 다르면 아무 효과 없이 거부한다(원본은 끝에서 assert).
     void Place(const ConstructionPlaceRequest& request);
+    // 00442c80의 실제 wire 경로다. sids span은 쓰지 않고 고정 scalar/count와 현재 SID reader로 비용→조각→후행 진단을 실행한다.
+    void ActualPlace(const ConstructionPlaceRequest& request,std::uint32_t declaredCount,const ConstructionSidReader& sidReader);
     // 00442b50(패치): 잔액이 모자란 배치의 처리다. 표시 비트를 켜고, 권한이 있으면 안내와 환불/취소 통지를, 없으면 강제 차감과 로컬 안내를 한다.
     void ChargeShortfall(std::uint32_t type,std::uint32_t player,float x,float y,std::uint32_t argument,std::uint32_t direction);
     // 00442a40 / CD 004d1bc0: 타입 비용을 0방향 절삭한 정수만큼 돌려주고(패치) 금액이 양수이면 SP 통지를 보낸다.
@@ -127,6 +144,8 @@ private:
     void ChargeForPlacement(const ConstructionPlaceRequest& request);
     // 004ac220 / CD 004abb00: +0xc 단어를 쓰고 객체 타입이 다리 타입이면 표면 알림을 부른다.
     void SetWord(Sid sid,std::uint16_t word);
+    std::span<std::uint8_t> ActualBytes(Sid sid) const; //실제 배치는 free/예약을 선거부하지 않고 같은 풀의 물리 범위만 보호한다.
+    void AssertActual(std::string_view expression,std::string_view file,std::uint32_t line) const; //선택한 원문 진단만 실제 Client에 전달하고 정상 복귀 뒤 계속한다.
     // pool_: 객체 슬롯의 생성·조회·반납에 사용하는 SID 풀.
     SidPool& pool_;
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.

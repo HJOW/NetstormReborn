@@ -51,6 +51,7 @@ struct RawCampaignConstructionBindings::Impl {
         auto placeHooks=effects.presentation; // 현재 비용/UI 소비자를 사용하며 비어 있는 선택 경계는 명시 오류다.
         placeHooks.notifySurface=[this](o::Sid sid) { core.building.NotifySurface(sid); };
         placeHooks.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
+        placeHooks.assertion=[storage=world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; //실제 wire Place의 player/isVoid/후행 개수도 같은 Client 진단으로 정상 복귀한다.
         if (!placeHooks.sendMoney) placeHooks.sendMoney=ConstructionMissing<void,std::uint32_t,const o::ConstructionMoneyNotice&>("SP 통지");
         if (!placeHooks.format) placeHooks.format=ConstructionMissing<std::string,std::string_view,std::string_view>("비용 안내 서식");
         if (!placeHooks.tellOthers) placeHooks.tellOthers=ConstructionMissing<void,std::uint32_t,std::string_view>("다른 Player 비용 안내");
@@ -164,6 +165,8 @@ o::ConstructionLocalHooks RawCampaignConstructionBindings::BindLocal(o::Construc
 bool RawCampaignConstructionBindings::Request(const o::ConstructionConfirmRequest& value) const { impl_->ValidateState();return impl_->requestBody->Request(value); }
 // 원본 수신은 요청 실패 때 같은 실제 Place에서 환불/취소를 요청한다.
 void RawCampaignConstructionBindings::Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const { impl_->ValidateState();impl_->command->Receive(sender,packet); }
+// 실제3fh는 요청/받침 ValidateState를 선행하지 않고 같은 현재 BYTE 통지 본문으로 들어간다.
+void RawCampaignConstructionBindings::ReceiveNotice(std::span<const std::uint8_t> packet) const { impl_->notice->ActualHandle(packet); }
 // Cast/Drop의 잘못된 소유자도 기존 원본 환불 몸체를 사용한다.
 void RawCampaignConstructionBindings::Refund(std::uint32_t type,std::uint32_t owner) const { impl_->ValidateState();impl_->place->Refund(type,owner); }
 // 비용 부족 뒤 계속하는 서버 분기는 같은 원본 취소 통지를 요청한다.

@@ -1,0 +1,233 @@
+{
+  "unit": 1169,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCppCommit": "5318a9b2 / 20261108-143 CP",
+  "summary": "M6-c1의 같은 BYTE lazy view/ActualHandle·ActualPlace와 실제 현재 owner·진단을 연결했다. 실제3f등록/방송 caller는c2에남는다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "errors": 0,
+    "warnings": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1169\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13221888,
+      "sha256": "251c79c11399c68d7e46891a19bf80d783ecb2339deb112ce5c7de48a82d19c9"
+    },
+    "R.exe": {
+      "bytes": 677888,
+      "sha256": "c396061af878ca852d3ef08952524ead8063a7232454ef9cdbd764a993b86d4b"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "sourceSha256": {
+    "cpppj/src/o/RawConstructionPacket.h": "b1d46189ab8cbf36c23e0308009ef8e3b9717fd46b81b84ae901401f652a998e",
+    "cpppj/src/o/RawConstructionPacket.cpp": "a433b0f79c97e3e502a1e403f5e24bb9d5cc9e8cf306f4492a57f65bbada94fa",
+    "cpppj/src/o/RawConstructionPlace.h": "f4663ff605f213f732b7600b4993c09f8b9ce97cf645e26c8da2f3429370e967",
+    "cpppj/src/o/RawConstructionPlace.cpp": "b0659c7a6e9cb5825f891ba8a0d02815f3bf88bab72f75b110440ebda2e6262a",
+    "cpppj/src/o/RawConstructionNotice.h": "5cd1d40b636aff227d36dc9810674c8f10a3588ee067570839bd651eef2d2143",
+    "cpppj/src/o/RawConstructionNotice.cpp": "4aabf6b11a888c2fd973a88be3bb961561ee7f55c197db655165acf7d4c7210d",
+    "cpppj/src/o/SidPool.h": "d6598d19a512abe78ee7262c6f3b064ec31773c5a8717501ad52b6ee8d0eb817",
+    "cpppj/src/client/RawCampaignConstructionBindings.h": "57ffc333e0351526dd9f291ff92a9bb7400fbb6ca221393335edc84a4b3ff86c",
+    "cpppj/src/client/RawCampaignConstructionBindings.cpp": "7ffa047d2a361fd7186671069f844d9a55ac8e8fd63c62d4aca630ef488012da",
+    "cpppj/src/client/RawCampaignSession.cpp": "2043a7609a636b1acac0fd3d5fe054e6190bcff8be8321d8be132acf58a04559"
+  },
+  "native": {
+    "actual_pe_ranges": [
+      {
+        "function": "FUN_0040a840",
+        "ranges": "40a840-40a84a",
+        "spans": [
+          {
+            "first": "0040a840",
+            "last": "0040a84a",
+            "bytes": 11,
+            "sha256": "0a03f554926391af15db18528564030a0aa95941c1b8e8ad1554b7b3d61fede7"
+          }
+        ]
+      },
+      {
+        "function": "FUN_0040ef30",
+        "ranges": "40ef30-40ef7c",
+        "spans": [
+          {
+            "first": "0040ef30",
+            "last": "0040ef7c",
+            "bytes": 77,
+            "sha256": "7b9621f5d2ab241072832d79f377f173f5e51f70de9272eaaddc468dd3495f83"
+          }
+        ]
+      },
+      {
+        "function": "FUN_0041dff0",
+        "ranges": "41dff0-41e012",
+        "spans": [
+          {
+            "first": "0041dff0",
+            "last": "0041e012",
+            "bytes": 35,
+            "sha256": "fea31c06a316989caf58569aa704902adc9f2bae508086f2117747d9bdd488b6"
+          }
+        ]
+      },
+      {
+        "function": "FUN_00425830",
+        "ranges": "425830-42585c",
+        "spans": [
+          {
+            "first": "00425830",
+            "last": "0042585c",
+            "bytes": 45,
+            "sha256": "45263337c495b847e7e25763e33249efc6836d6feed3440371574253aaedcca0"
+          }
+        ]
+      },
+      {
+        "function": "FUN_00425c20",
+        "ranges": "425c20-425d75",
+        "spans": [
+          {
+            "first": "00425c20",
+            "last": "00425d75",
+            "bytes": 342,
+            "sha256": "942fa6c51171e473b17ccdc62d37b2af5011d074eb313fc1fa3c2ed7a75e9254"
+          }
+        ]
+      },
+      {
+        "function": "FUN_00442a40",
+        "ranges": "442a40-442ae1",
+        "spans": [
+          {
+            "first": "00442a40",
+            "last": "00442ae1",
+            "bytes": 162,
+            "sha256": "0ef798de6bbba4466bd296047e58fb4e322f62f1740b3d8043db2fd6ec46e495"
+          }
+        ]
+      },
+      {
+        "function": "FUN_00442c80",
+        "ranges": "442c80-442dc4;442dd0-442ff6",
+        "spans": [
+          {
+            "first": "00442c80",
+            "last": "00442dc4",
+            "bytes": 325,
+            "sha256": "b7cbb87e1ff6a5568a9e05e35ae72c72145030d60c742fd3f9104cd9b5db2b4b"
+          },
+          {
+            "first": "00442dd0",
+            "last": "00442ff6",
+            "bytes": 551,
+            "sha256": "7fb34b5a148ea8916a173b609101ce53742dd3b6ff46b7288c5f589d1de0a9a6"
+          }
+        ]
+      },
+      {
+        "function": "FUN_004441b0",
+        "ranges": "4441b0-444589",
+        "spans": [
+          {
+            "first": "004441b0",
+            "last": "00444589",
+            "bytes": 986,
+            "sha256": "196e566388105e1417ca35e8804c38d080e5d8cc34d725b31f3d234147941c69"
+          }
+        ]
+      },
+      {
+        "function": "FUN_0049a840",
+        "ranges": "49a840-49a852",
+        "spans": [
+          {
+            "first": "0049a840",
+            "last": "0049a852",
+            "bytes": 19,
+            "sha256": "ef7fb1ddc081345687d5f8823c7b1131b872fa37d6086dfc9d26d4d693b82339"
+          }
+        ]
+      },
+      {
+        "function": "FUN_0049aa30",
+        "ranges": "49aa30-49aa8b",
+        "spans": [
+          {
+            "first": "0049aa30",
+            "last": "0049aa8b",
+            "bytes": 92,
+            "sha256": "5ac75f2c0922eb237002958395251e1c34d51846d37ab9cbe521562ebb79f2b7"
+          }
+        ]
+      },
+      {
+        "function": "FUN_004ac220",
+        "ranges": "4ac220-4ac255",
+        "spans": [
+          {
+            "first": "004ac220",
+            "last": "004ac255",
+            "bytes": 54,
+            "sha256": "6c23833dbd9d91c7f90d510fc234b1862851ce6af1f9024e79913b66206d0642"
+          }
+        ]
+      }
+    ],
+    "original_exe_sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "original_c_sha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "important_orders": [
+      "4441b0 진입 TYPE 포인터/argument/direction 보관→현재 Clear→같은 TYPE flags/group 및 현재 wire→같은5칸 history→quality/scalar/count 고정→lazy Place→선택 분기만 현재 SID/time/player",
+      "442c80 TYPE 선택→player9 진단 복귀→decoder 생성→현재 비용/SP→각 현재 SID/쓰기/현재 owner/Pop→후행 count 진단 복귀",
+      "예약/free를 실제 배치 전에 추가 거부하지 않고 SidPool::Offset의 물리 범위만 보호",
+      "같은 Client local/known/bridge/noIsland/Dais/Priest 및 history를 빌리며 별도 게임 상태 사본을 만들지 않음"
+    ],
+    "typed_bodies_unchanged": [
+      "void RawConstructionPlace::Place(",
+      "void RawConstructionNotice::Handle("
+    ]
+  },
+  "audit": {
+    "lazyFieldAndUnalignedSidReads": true,
+    "selectedTypeAddressCachedBeforeClear": true,
+    "scalarArgumentsFixedBeforePlace": true,
+    "sidReaderRereadsAfterEffects": true,
+    "noDeclaredCountOr19SidPreflight": true,
+    "costThenPiecesThenCountDiagnostic": true,
+    "realStorageAssertionAndCurrentOwner": true,
+    "currentPatternOwners": 8,
+    "sameBridgeLifeOwner": true,
+    "typedPlaceAndHandleBodiesUnchanged": true,
+    "hostPhysicalBoundsAtAccess": true,
+    "actual3fRegistrationConnected": false,
+    "serverSameBufferBroadcastThenHandleConnected": false
+  },
+  "remaining": {
+    "m6c1BodyComplete": true,
+    "m6cComplete": false,
+    "next": "M6-c2 / 실제3f 등록·lease·호출별512 동일 buffer/mutable 방송",
+    "c3": "outgoing20SID후행진단·부분Create순서",
+    "nonMpFocusAfterC2": "일반Confirm의실제변경에대해사용자허용단순미션진입/건설집중확인필요성검토",
+    "stage3Groups": 3
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

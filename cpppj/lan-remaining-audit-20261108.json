@@ -550,5 +550,12 @@
     "m6nDebugBurst": "0054dbc4활성비영writer미발견. 현재0ch63000BYTE×3본문·장기burstowner·Config reset은미복원이며현재상시0로제외하는판정과코드복원미완료를구별한다.",
     "report": "cpppj/client-version-query-20261108.json",
     "newMpExecutions": 0
+  },
+  "progress1169": {
+    "m6c1": "lazy본문/현재owner부품완료",
+    "next": "M6-c2 실제등록/같은버퍼방송",
+    "m6cComplete": false,
+    "report": "cpppj/construction-notice-body-20261108.json",
+    "newMpExecutions": 0
   }
 }

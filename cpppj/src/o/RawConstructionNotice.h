@@ -23,6 +23,12 @@ struct ConstructionNoticeState {
     std::uint32_t& HistoryCounter() { return sharedHistory ? sharedHistory->index : historyCounter; } //Tab과 통지가 같은 순번을 쓴다.
     const std::uint32_t& HistoryCounter() const { return sharedHistory ? sharedHistory->index : historyCounter; } //독립 저장소와 공유 저장소를 혼합하지 않는다.
     const bool& Authority() const { return sharedAuthority ? *sharedAuthority : authority; } // 배치 효과 뒤 자동 건설/사제 이동 관문에서 현재값을 읽는다.
+    const std::uint32_t* sharedLocalPlayer{}; //실제 wire 통지는 Clear/Place 뒤 같은00540c70을 직접 읽는다.
+    const std::uint32_t* sharedDaisType{}; //실제005412ec의 현재 Dais TYPE 번호다.
+    const std::uint32_t* sharedPriestType{}; //실제005412d0의 현재 Priest TYPE 번호다.
+    const std::uint32_t& LocalPlayer() const { return sharedLocalPlayer ? *sharedLocalPlayer : localPlayer; } //기존 typed 검사 입력은 값형 필드를 유지한다.
+    const std::uint32_t& DaisType() const { return sharedDaisType ? *sharedDaisType : daisType; } //Clear 뒤 abstract 선택 위치에서만 현재 값을 읽는다.
+    const std::uint32_t& PriestType() const { return sharedPriestType ? *sharedPriestType : priestType; } //첫 사제 선택 뒤 contained TYPE 조회의 현재 전역이다.
 };
 // 처리기 밖의 효과다. 공통 경계는 모두 필수이며 contained 두 경계는 패치판에서만 필요하다.
 struct ConstructionNoticeHooks {
@@ -53,6 +59,7 @@ struct ConstructionNoticeHooks {
     std::function<void(Sid,std::uint32_t)> start;
     // 004da650 / 0041eac0: 정상 처리 끝에 한 번 갱신을 요청한다.
     std::function<void()> refresh;
+    std::function<void(const ConstructionPlaceRequest&,std::uint32_t,const ConstructionSidReader&)> actualPlace; //고정 인자/count와 현재 wire SID reader를 같은 실제442c80에 전달한다.
 };
 // 메시지 수신과 서버 확정의 직접 처리가 함께 사용하는 통지 실행 계층이다.
 class RawConstructionNotice {
@@ -62,6 +69,8 @@ public:
     // 정리 → abstract/사제 분기·로컬 이력 → 배치 → 사제 이동 또는 건설 시작/환불·삭제 → 갱신 순서다.
     // 빈 SID 목록·19개 초과·풀 밖 SID·없는 타입은 효과 없이 거부한다. 원본 발신자 인자 둘은 사용하지 않는다.
     void Handle(const ConstructionNotice& notice) const;
+    // 4441b0의 실제 BYTE 경로다. 전체 typed 변환/19개 선검사 없이 원문 소비 위치마다 현재 packet을 읽는다.
+    void ActualHandle(std::span<const std::uint8_t> packet) const;
     // 연결할 실제 모듈이 같은 풀인지 확인한다.
     const SidPool& Pool() const;
 private:

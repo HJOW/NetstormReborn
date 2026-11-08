@@ -13,6 +13,18 @@ void Put(std::span<std::uint8_t> bytes,std::size_t offset,std::uint32_t value,st
     for (std::size_t index=0;index<width;++index) bytes[offset+index]=static_cast<std::uint8_t>(value>>(8*index));
 }
 }
+// 고정 스냅숏을 만들지 않고 실제 지정 필드를 현재 little endian 바이트에서 읽는다.
+std::uint32_t ConstructionPacketView::Read(std::size_t offset,std::size_t width) const {
+    if (offset>packet_.size() || width>packet_.size()-offset) throw std::out_of_range("건설 통지의 현재 wire 필드 물리 부족");
+    std::uint32_t value{}; //지정한 필드 바깥의 미작성 바이트는 읽지 않는다.
+    for (std::size_t byte=0;byte<width;++byte) value|=std::uint32_t(packet_[offset+byte])<<(8*byte); //비정렬 WORD/DWORD를 낮은 BYTE부터 조립한다.
+    return value;
+}
+// 원문의 현재 좌표 DWORD를 단정도 비트로 해석한다.
+float ConstructionPacketView::X() const { return std::bit_cast<float>(Read(5,4)); }
+float ConstructionPacketView::Y() const { return std::bit_cast<float>(Read(9,4)); } //Y도 실제 소비 때 같은 버퍼를 다시 읽는다.
+// 선언 count나19개 제한을 앞세우지 않고 decoder가 요청한 현재 WORD만 읽는다.
+std::uint16_t ConstructionPacketView::SidAt(std::uint32_t index) const { return static_cast<std::uint16_t>(Read(kPayloadStart+std::size_t(index)*2U,2)); }
 // 정상호출의실제패킷전체와그뒤호출자버퍼의보존을보장한다.
 std::size_t WriteConstructionPacket(const ConstructionNotice& notice,const ConstructionPacketHeader& header,std::span<std::uint8_t> packet) {
     if (packet.size()<kTemporarySize || notice.sids.size()>kMaxSids) throw std::out_of_range("건설패킷의512바이트/정상SID19개범위오류");

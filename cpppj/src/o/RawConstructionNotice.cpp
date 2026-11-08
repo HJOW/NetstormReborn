@@ -1,5 +1,6 @@
 // 배치 통지 처리기의 전체 분기와 효과 순서를 원본 판본별 차이까지 보존한다.
 #include "o/RawConstructionNotice.h"
+#include "o/RawConstructionPacket.h" //실제 같은 wire 버퍼의 필드를 소비 시점에만 읽는다.
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -95,6 +96,45 @@ void RawConstructionNotice::Handle(const ConstructionNotice& notice) const {
     }
     hooks_.refresh();
 }
+// 같은 packet 주소를 Clear/Place 뒤에도 읽으며 typed Handle의 전체 선검사 계약과 구별한다.
+void RawConstructionNotice::ActualHandle(std::span<const std::uint8_t> packet) const {
+    if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("실제 건설 wire 통지는 PATCH 전용이다");
+    if (!hooks_.actualPlace) throw std::logic_error("실제 건설 wire 통지의 ActualPlace 장치 없음");
+    const ConstructionPacketView wire(packet);const auto firstType=wire.Type(),direction=wire.Direction(),argument=wire.Argument(); //원문이 진입 때 읽는 TYPE 번호와 보관할 두 BYTE다.
+    if (firstType>=types_.size()) throw std::out_of_range("실제 건설 wire 통지의 TYPE 물리 범위");
+    const auto& selectedType=types_[firstType]; //Clear가 packet TYPE를 바꾸어도 진입 때 선택한 같은 레코드를 읽는다.
+    const auto clearPlayer=wire.Player();const auto clearY=wire.Y();const auto clearType=wire.Type();const auto clearX=wire.X(); //4441cd..e2의 현재 인자를 Clear 호출 직전에 고정한다.
+    hooks_.clear({clearType,clearX,clearY,argument,direction,clearPlayer});
+    const auto flags=selectedType.flags1; //Clear 뒤 같은 TYPE의 현재 flags DWORD 한 번으로 두 분기를 선택한다.
+    const bool abstract=((flags&kHasHp)!=0 || wire.Type()==state_.DaisType()) && !(wire.Flags()&1U);
+    const bool needsBuilder=(flags&kNeedsBuilder)!=0 && !(wire.Flags()&1U);
+    if (selectedType.group!=kNoHistoryGroup && wire.Player()==state_.LocalPlayer()) {
+        auto& history=state_.History(); //같은 Client 카메라의 최근5칸을 뒤에서 앞으로 밀고 현재 XY를 저장한다.
+        for (std::size_t index=history.size()-1;index>0;--index) history[index]=history[index-1]; //입구 snapshot/별도 이력 사본을 만들지 않는다.
+        history[0]={wire.X(),wire.Y()};state_.HistoryCounter()=0;
+    }
+    const auto quality=wire.Quality(); //444301의 품질은 Place 전에 보관하고 이후 재조회하지 않는다.
+    const ConstructionSidReader sidReader=[wire](std::uint32_t index) { return wire.SidAt(index); }; //40a840은 각 decoder 칸의 현재 홀수 주소 WORD를 읽는 pointer다.
+    const auto count=wire.SidCount();const auto y=wire.Y();const auto player=wire.Player();const auto x=wire.X();const auto type=wire.Type(); //444310..29의 scalar 인자는 Place 안에서 packet 변경으로 바뀌지 않는다.
+    hooks_.actualPlace({type,x,y,argument,direction,player,{},abstract ? 1U:0U,quality},count,sidReader);
+    if (abstract) {
+        if (needsBuilder) {
+            if (wire.Player()!=state_.LocalPlayer() || state_.moveLocalBuilder) {
+                const auto high=wire.TimeHigh(),low=wire.TimeLow();const Sid first{wire.SidAt(0)};const auto owner=wire.Player(); //선택된 이동 분기만 원문 순서의 시각/첫 SID/현재 owner를 읽는다.
+                hooks_.moveBuilder(owner,first,low,high);hooks_.refresh();return;
+            }
+        } else if (state_.Authority()) {
+            const Sid first{wire.SidAt(0)}; //Place 뒤 현재 boss일 때만 실제 첫 대상 주소를 보관한다.
+            if (Genus(first)&kPriestTargets) {
+                const Sid priest=hooks_.findPriest(wire.Player());const auto contained=hooks_.containedType(state_.PriestType()); //첫 사제 주소는 보관하고 현재 Priest TYPE의 contained를 찾는다.
+                const Sid current=hooks_.findPriest(wire.Player());hooks_.removeContained(current,contained); //두 번째 사제 선택은 현재 packet owner를 다시 읽는다.
+                const bool moved=(pool_.Slot(priest)[kState]&3)==0 && (Genus(priest)&kPriest)!=0 && !hooks_.immobile(priest) && (Approach(priest,first,7) || Approach(priest,first,3));
+                if (!moved) { const auto raw=pool_.Slot(first);hooks_.refund(raw[kType],raw[kPatchOwner]);hooks_.destroy(first,0);hooks_.refresh();return; } //처음 선택한 대상의 현재 TYPE/owner로 환불 후 같은 대상을 지운다.
+            } else hooks_.start(Sid{wire.SidAt(0)},0); //자동 시작은 원문처럼 packet의 첫 SID를 다시 읽는다.
+        }
+    }
+    hooks_.refresh(); //abstract가 아니거나 선택되지 않은 Builder 분기도 첫 SID 없이 이 꼬리만 실행한다.
+}
 // 실제 풀을 돌려준다.
 const SidPool& RawConstructionNotice::Pool() const { return pool_; }
 // 외부 효과 가운데 이미 복원된 몸체만 실제 모듈로 교체한다.
@@ -104,6 +144,7 @@ ConstructionNoticeHooks MakeConstructionNoticeHooks(const SidPool& pool,const Ra
         throw std::invalid_argument("건설 배치 통지 어댑터의 풀 연결 오류");
     hooks.clear=[&clear](const ConstructionClearRequest& request) { clear.Clear(request); };
     hooks.place=[&place](const ConstructionPlaceRequest& request) { place.Place(request); };
+    hooks.actualPlace=[&place](const ConstructionPlaceRequest& request,std::uint32_t count,const ConstructionSidReader& reader) { place.ActualPlace(request,count,reader); }; //실제 wire의 lazy SID 경계를 같은 풀 배치에 결합한다.
     hooks.refund=[&place](std::uint32_t type,std::uint32_t player) { place.Refund(type,player); };
     if (priest) hooks.immobile=[priest](Sid sid) { return priest->Immobile(sid); };
     return hooks;

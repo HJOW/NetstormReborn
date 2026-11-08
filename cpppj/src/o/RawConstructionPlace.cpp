@@ -121,6 +121,57 @@ void RawConstructionPlace::Place(const ConstructionPlaceRequest& request) {
         hooks_.pop(sid,x,y,popFlags);
     }
 }
+// 실제 wire 배치는 예약/free 슬롯도 원문처럼 접근하며 풀 바깥의 호스트 메모리만 거부한다.
+std::span<std::uint8_t> RawConstructionPlace::ActualBytes(Sid sid) const { return std::span(pool_.bytes_).subspan(pool_.Offset(sid),pool_.Layout().stride); }
+// 진단 장치가 선택한 현재 바이트/전역을 바꿔도 정상 복귀 뒤 같은 배치 순서를 계속한다.
+void RawConstructionPlace::AssertActual(std::string_view expression,std::string_view file,std::uint32_t line) const {
+    if (!hooks_.assertion) throw std::logic_error("실제 건설 배치의 Client 진단 장치 미연결");hooks_.assertion(expression,file,line);
+}
+// 고정 scalar/count와 lazy SID pointer의 실제 실행 경로이며 typed Place의 선행 전수 검사는 사용하지 않는다.
+void RawConstructionPlace::ActualPlace(const ConstructionPlaceRequest& request,std::uint32_t declaredCount,const ConstructionSidReader& sidReader) {
+    RequirePatch();if (!sidReader) throw std::invalid_argument("실제 건설 배치의 현재 SID reader 없음");
+    if (request.type>=types_.size()) throw std::out_of_range("실제 건설 배치 TYPE 물리 범위");
+    const auto& selectedType=types_[request.type]; //49a840은 player 진단/decoder보다 먼저 고른 같은 TYPE 레코드 주소다.
+    if (request.player==kServerPlayer) AssertActual("playerId != GAME_SERVER_ID","\\Ns\\O\\Construction.cpp",0x273);
+    if (request.type>=frames_.size()) throw std::out_of_range("실제 건설 배치 frame TYPE 물리 범위");
+    const auto& meta=frames_[request.type];const auto patternTypes=state_.CurrentPatternTypes(); //진단 복귀 뒤 현재 패턴 번호로 생성하되 반복자는 한 번만 만든다.
+    auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,patternTypes,{request.type,std::bit_cast<int>(request.argument),std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics);
+    const auto player=std::bit_cast<std::int32_t>(request.player); //원문 비용 범위는 signed DWORD다.
+    if (request.player!=state_.LocalPlayer() && !(state_.chargeBlockedRead ? state_.chargeBlockedRead() : state_.chargeBlocked) && player>0 && player<static_cast<std::int32_t>(kServerPlayer) && selectedType.cost!=0.0F && request.type!=state_.NuggetType()) {
+        const auto money=Money(request.player); //SP 조회 뒤 비용은 진입 때 선택한 같은 TYPE에서 다시 읽는다.
+        if (!(money>=selectedType.cost)) ChargeShortfall(request.type,request.player,request.x,request.y,request.argument,request.direction);
+        else AddMoney(request.player,-selectedType.cost);
+    }
+    const auto serverFirst=pool_.Layout().serverFirst;const auto popFlags=request.abstract ? kPopAbstract:kPopPlaced; //원문 별도 local1c의1/2에 확정 배치40h를 합친 값이다.
+    std::uint32_t index{}; //패킷의 선언 개수와 별도로 decoder가 실제 소비한 SID 수다.
+    for (;decoder.Valid();decoder.Advance()) { //개수 선검사 없이 비용/앞 조각의 부분 효과 뒤 다음 현재 SID WORD를 읽는다.
+        Sid sid{sidReader(index++)};
+        if (!state_.Server() && (sid.value<kFirstSid || sid.value>=serverFirst)) sid=hooks_.take(request.type,sid);
+        auto raw=ActualBytes(sid);if (!(raw[kState]&kVoid)) { AssertActual("isVoid()","c:\\ns\\o\\squid.h",0x282);raw=ActualBytes(sid); }
+        raw[kPatchExtra]=static_cast<std::uint8_t>((raw[kPatchExtra]&0xfe)|(request.abstract&1U));
+        if (reward_.HasHitPoints(sid)) { const auto hp=request.abstract ? 0U:std::bit_cast<std::uint32_t>(reward_.MaxHitPoints(sid));Put(ActualBytes(sid),kHp,hp,4); }
+        const auto frame=decoder.Frame();Put(ActualBytes(sid),kPatchFrame,std::bit_cast<std::uint32_t>(frame),4); //decoder가 보유한 현재 frame을 쓴다.
+        const float x=decoder.X(),y=decoder.Y();const bool origin=request.type==state_.NoIslandType() && x==request.x && y==request.y; //원문의 ordered 좌표 같음이다.
+        Put(ActualBytes(sid),kWord,origin ? kOriginWord:static_cast<std::uint16_t>(request.argument),2);
+        if (ActualBytes(sid)[kType]==state_.BridgeType()) hooks_.notifySurface(sid); //4ac220은 방금 쓴 조각의 현재 TYPE와 현재 다리 번호를 비교한다.
+        if (request.type==state_.BridgeType()) {
+            std::uint32_t qualityFlags{};std::int32_t life{}; //원문의 품질 flag DWORD와 실제 수명 char를 따로 보유한다.
+            if (request.quality==kQualityCracked) { qualityFlags=kCrackedFlag;life=std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(std::bit_cast<std::uint32_t>(state_.BridgeLife())-1U)); }
+            else if (request.quality==kQualityHard) qualityFlags=kHardFlag;
+            const auto bridge=state_.BridgeType();if (bridge>=frames_.size()) throw std::out_of_range("실제 건설 품질의 현재 다리 TYPE 물리 범위");
+            const auto& bridgeFrames=frames_[bridge].frames;const auto codes=bridgeFrames.Codes(); //표면 통지 뒤 현재 다리 TYPE의 코드 표를 선택한다.
+            if (frame<0 || static_cast<std::size_t>(frame)>=codes.size()) throw std::out_of_range("실제 건설 품질의 코드 물리 범위");
+            const auto code=codes[static_cast<std::size_t>(frame)];if (static_cast<std::int8_t>(code.side)>kLastPlankSide) life=std::bit_cast<std::int8_t>(static_cast<std::uint8_t>(std::bit_cast<std::uint32_t>(state_.BridgeLife())-1U));
+            const auto quality=bridgeFrames.FindFlags(code.side,code.variant,static_cast<std::int32_t>(static_cast<std::int8_t>(code.flags))|std::bit_cast<std::int32_t>(qualityFlags)); //같은 current code/품질로 원문49aa30을 찾는다.
+            if (quality<0) AssertActual("0","\\Ns\\O\\Rifttype.cpp",0x16a); //원문 진단 복귀 뒤 반환값-1도 실제 frame에 쓴다.
+            raw=ActualBytes(sid);Put(raw,kPatchFrame,std::bit_cast<std::uint32_t>(quality),4);
+            const auto word=static_cast<std::uint16_t>(raw[kWord]|(std::uint32_t(raw[kWord+1])<<8));const auto mixed=static_cast<std::uint16_t>(word^((static_cast<std::uint16_t>(std::bit_cast<std::uint32_t>(life)<<3)^word)&kLifeMask)); //수명 비트3..6만 바꾼다.
+            Put(raw,kWord,mixed,2);hooks_.notifySurface(sid);
+        }
+        hooks_.setOwner(sid,request.player);hooks_.pop(sid,x,y,popFlags);
+    }
+    if (index!=declaredCount) AssertActual("i == sidCount","\\Ns\\O\\Construction.cpp",0x2f2); //모든 decoder 칸의 부분 효과가 끝난 뒤 진단한다.
+}
 // 로컬 플레이어·차단 전역·범위 밖 번호·비용 0·nugget은 판정하지 않는다. 잔액 비교는 x87과 같이 NaN을 "모자람"으로 본다.
 void RawConstructionPlace::ChargeForPlacement(const ConstructionPlaceRequest& request) {
     const auto player=std::bit_cast<std::int32_t>(request.player);
@@ -171,7 +222,7 @@ void RawConstructionPlace::Refund(std::uint32_t type,std::uint32_t player) {
     if (patch && type==state_.NuggetType()) return;
     const std::int32_t amount=Ftol(static_cast<double>(record.cost));
     // 패치판만 SP를 돌려준다. 전투 표시 중의 로컬 플레이어는 가산을 건너뛴다.
-    if (patch && !(state_.battleShown && player==state_.localPlayer)) AddMoney(player,static_cast<float>(amount));
+    if (patch && !(state_.BattleShown() && player==state_.LocalPlayer())) AddMoney(player,static_cast<float>(amount));
     if (amount>0) hooks_.sendMoney(player,{static_cast<std::uint8_t>(player),static_cast<std::uint8_t>(player),1,amount});
 }
 // 00442af0: 환불 뒤 좌표·타입·두 인자의 하위 바이트를 실은 취소 통지를 보낸다.
@@ -183,21 +234,21 @@ void RawConstructionPlace::Reject(std::uint32_t type,std::uint32_t player,float 
 // 0040ef30: 전투 표시 중의 로컬 플레이어는 번호 검사 없이, 그 밖에는 1~8일 때만 저장소를 읽는다.
 float RawConstructionPlace::Money(std::uint32_t player) const {
     RequirePatch();
-    if (state_.battleShown && player==state_.localPlayer) return hooks_.storedSp(state_.localPlayer);
+    if (state_.BattleShown() && player==state_.LocalPlayer()) return hooks_.storedSp(state_.LocalPlayer());
     const auto number=std::bit_cast<std::int32_t>(player);
     return number>0 && number<static_cast<std::int32_t>(kServerPlayer) ? hooks_.storedSp(player) : 0.0F;
 }
 // 0041dff0: 로컬 플레이어이면 로컬 가산, 아니면 플레이어 가산으로 넘긴다.
 void RawConstructionPlace::AddMoney(std::uint32_t player,float delta) {
     RequirePatch();
-    if (player==state_.localPlayer) hooks_.addLocalSp(delta);
+    if (player==state_.LocalPlayer()) hooks_.addLocalSp(delta);
     else hooks_.addPlayerSp(player,delta);
 }
 // 004ac220 / CD 004abb00: 단어를 쓴 뒤 객체의 타입 바이트가 다리 타입이면 표면 알림을 부른다.
 void RawConstructionPlace::SetWord(Sid sid,std::uint16_t word) {
     auto raw=pool_.AllocatedBytes(sid);
     Put(raw,kWord,word,2);
-    if (static_cast<std::uint32_t>(raw[kType])==state_.bridgeType) hooks_.notifySurface(sid);
+    if (static_cast<std::uint32_t>(raw[kType])==state_.BridgeType()) hooks_.notifySurface(sid);
 }
 // 실제 Player 기록은 Session보다 오래 살아야 하며 PATCH의9개 구조체 크기를 요구한다.
 void RawConstructionPlace::BindPlayerRecords(std::span<std::uint8_t> players) {
@@ -215,7 +266,7 @@ ConstructionPlaceHooks MakeConstructionPlaceHooks(const SidPool& pool,SquidFacto
     hooks.setOwner=[&owner](Sid sid,std::uint32_t player) { owner.Set(sid,player); };
     if (patch) {
         hooks.storedSp=[store](std::uint32_t player) { return std::bit_cast<float>(store->Get(player)); };
-        hooks.addLocalSp=[&reward,&state](float delta) { reward.AddSp(state.localPlayer,delta); };
+        hooks.addLocalSp=[&reward,&state](float delta) { reward.AddSp(state.LocalPlayer(),delta); }; //실제 공유 로컬 번호는 가산 선택 뒤에도 같은 소비 위치에서 읽는다.
         hooks.addPlayerSp=[&reward](std::uint32_t player,float delta) { reward.AddSp(player,delta); };
     }
     return hooks;

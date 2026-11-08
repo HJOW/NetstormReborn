@@ -60,6 +60,7 @@ public:
     bool Request(const o::ConstructionConfirmRequest& request) const;
     // 같은 실제0x3e 수신의 비용 선검사와 실패 환불을 실행한다.
     void Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const;
+    void ReceiveNotice(std::span<const std::uint8_t> packet) const; //현재 전역을 준비한 caller가 같은 실제3fh BYTE 통지 본체를 호출한다. 등록/직접 송신 접합은 별도 부모다.
     void Refund(std::uint32_t type,std::uint32_t owner) const; // 다른 실제 서버 요청도 같은442a40 비용 환불/통지를 사용한다.
     void Reject(std::uint32_t type,std::uint32_t owner,float x,float y,std::uint32_t argument,std::uint32_t direction) const; //00442af0의현재환불/취소패킷수명을공유한다.
     void ChargeShortfall(std::uint32_t type,std::uint32_t owner,float x,float y,std::uint32_t argument,std::uint32_t direction) const; //00442b50의같은현재flags54/권한/안내와조건부Reject를사용한다.
