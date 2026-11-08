@@ -9220,9 +9220,67 @@
       "bytes": 810896,
       "lines": 414,
       "fixtureCommit": "779cd20e",
-      "webCommit": "worktree",
+      "webCommit": "ab018437",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierDrop.cpp": "d43f1d29"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E94",
+      "id": "balloon-body",
+      "path": "cpppj/tests/fixtures/balloon-body-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 벌룬 그림자 후처리/삭제의 외부 효과 순서·부모+두 그림자 전체 150바이트 raw·현재 boss/프레임 수(233행; 두 x87 정밀도 동일)",
+      "consumers": [
+        "webpj/tests/balloon-body.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-balloon-body.js"
+      ],
+      "doc": "docs/webpj-balloon-body-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBalloonBody.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 233행 전부 사용",
+      "text": true,
+      "sha256": "025f0a64da997418e805812250c16a752b989ebb4dd7154aeab8ea5df9be19fa",
+      "bytes": 161221,
+      "lines": 234,
+      "fixtureCommit": "6cbb7fdb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBalloonBody.cpp": "0e66d91b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E94",
+      "id": "balloon-body-height",
+      "path": "cpppj/tests/fixtures/balloon-body-height-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 벌룬 그림자 후처리의 고도(+30)·좌표 float 저장 지점 별도 입력(256행)",
+      "consumers": [
+        "webpj/tests/balloon-body.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-balloon-body.js"
+      ],
+      "doc": "docs/webpj-balloon-body-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBalloonBody.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 256행 전부 사용",
+      "text": true,
+      "sha256": "eb760c5a444713f601fa37c83cb69c1f5d9b2fab5bf66bdef294cf680f88d7b5",
+      "bytes": 184526,
+      "lines": 257,
+      "fixtureCommit": "6cbb7fdb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBalloonBody.cpp": "0e66d91b"
       }
     }
   ]
