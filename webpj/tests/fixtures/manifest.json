@@ -10869,6 +10869,35 @@
       "cpppjBasis": {
         "cpppj/src/o/RawMissile.cpp": "a24cdcf4"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E127",
+      "id": "archertype",
+      "path": "cpppj/tests/fixtures/archertype-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 아처 TYPE 초기화 접두와 35클러스터 callback/후처리의 의미 필드·4바이트 프레임 코드·글자 구간(두 판본 44행)",
+      "consumers": [
+        "webpj/tests/archer-type-data.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-archer-type-data.js"
+      ],
+      "doc": "docs/webpj-archer-type-data-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawArcherTypeData.cpp"
+      ],
+      "scope": "10.78(originals) 22행 사용, originalCD 22행은 범위 밖",
+      "text": true,
+      "sha256": "3ee737427acf5ea66a2c251d25370f829b60cc6ec1ae0e45551b051bb43e222e",
+      "bytes": 100396,
+      "lines": 45,
+      "fixtureCommit": "5bdb5bed",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawArcherTypeData.cpp": "5bdb5bed"
+      }
     }
   ]
 }
