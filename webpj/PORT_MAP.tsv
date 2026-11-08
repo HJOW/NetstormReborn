@@ -617,7 +617,7 @@ cpppj/src/o/RawConstructionLocal.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionPacket.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionPlace.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionProcess.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionProcess.cpp	port	www/core/raw-construction-process.js	1f00a25a	port	[o-default] WB04-E132: 건설 프로세스 시작·진행·완료·form 삭제 통지·실제 host/Kernel 프로세스·보상/통지 어댑터. fixture constructionprocess originals 956행+construction-form-parent 64행 전부와 실제 host 통합 시험(originalCD/original1037 은 범위 밖). 남음: RawConstructionEffects 밀어내기 연결 시험(해당 모듈 이식 뒤)
 cpppj/src/o/RawConstructionRequest.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionSelection.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionVisual.cpp	port	www/core/raw-construction-visual.js	1f00a25a	port	[o-default] WB04-E128: 건설 표시 생성·색 표 캐시·좌표 동기화·초기 입자 선택. fixture constructionvisual originals 592행 전부(originalCD/original1037 은 범위 밖). 남음: 실제 RawConstructionProcess::Start 연결 시험(RawConstructionProcess 이식 뒤)

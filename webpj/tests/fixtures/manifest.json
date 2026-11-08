@@ -11011,9 +11011,67 @@
       "bytes": 4723709,
       "lines": 4306,
       "fixtureCommit": "3e6286eb",
-      "webCommit": "worktree",
+      "webCommit": "b3ec5644",
       "cpppjBasis": {
         "cpppj/src/o/RawRenderCollection.cpp": "3e6286eb"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E132",
+      "id": "constructionprocess",
+      "path": "cpppj/tests/fixtures/constructionprocess-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 프로세스 Start/Run/Complete/Destroy의 외부 요청 순서·프로세스 필드·부모 슬롯 전체와 17가지 경계 변동(세 판본 2868행)",
+      "consumers": [
+        "webpj/tests/construction-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-process.js"
+      ],
+      "doc": "docs/webpj-construction-process-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionProcess.cpp"
+      ],
+      "scope": "10.78(originals) 956행 사용, originalCD·original1037 은 범위 밖",
+      "text": true,
+      "sha256": "c0d70a7107329b0107166691c316d4c42d7deee5b771fb3ab6c9176c16080773",
+      "bytes": 830816,
+      "lines": 2870,
+      "fixtureCommit": "f4688206",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionProcess.cpp": "a942a75a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E132",
+      "id": "constructionformparent",
+      "path": "cpppj/tests/fixtures/construction-form-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 Run 접두의 현재 checking/Form 조회·연결 진단·진단 복귀 결과와 사건 문자열(64행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/construction-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-process.js"
+      ],
+      "doc": "docs/webpj-construction-process-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionProcess.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 64행 전부 사용",
+      "text": true,
+      "sha256": "5f7ef95ab43e877604a143a96343cc2505a59c3b283347629afb729a810e1290",
+      "bytes": 4630,
+      "lines": 65,
+      "fixtureCommit": "72012e83",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionProcess.cpp": "a942a75a"
       }
     }
   ]
