@@ -27,6 +27,7 @@ struct SquidDestroyHooks {
     std::function<Sid()> selected;
     // form(타입 70 미만) 루트의 가상 Unpop(vtable +0x48)이다. 있으면 contained form 루트를 삭제할 수 있다.
     std::function<void(Sid)> unpopForm;
+    std::function<std::uint32_t()> selectedRaw; //Native선택비교의현재전체DWORD이며기존typed selected/Sid계약은그대로유지한다.
 };
 // 실제 PATCH Client가 선택하는 공통 삭제의 정상 복귀 단언과 원문 로그 장치다.
 struct SquidDestroyDiagnostics {

@@ -305,7 +305,10 @@ std::uint32_t& SquidPostPop::ActivationDepth() { return state_.depth; } //현재
 // 파생가상몸체가반환한뒤의깊이진단은현재실제Activate부모한곳에서수행한다.
 void SquidPostPop::DispatchPostPop(Sid sid,std::uint32_t flags) {
     const auto pin=runtimePin_;const auto runtimeOwner=pin ? pin():std::shared_ptr<void>{}; //현재실제파생포인터/AI/선택callback을전체하위호출끝까지유지한다.
-    if (defaultDevices_.aiNotice && RawAssetPostPop::HasDedicatedVtable(pool_.Edition(),Vtable(pool_.Slot(sid))) && !HandlesAsset(sid)) throw std::logic_error("Native전용자산후처리의실제장기모듈미설치"); //Geyser/Nugget미연결을base성공으로넘기지않고실제가상호출위치에서드러낸다.
+    const auto table=Vtable(pool_.Slot(sid)); //실제현재가상표를한번선택하고현재파생처리기가있으면종전몸체를우선한다.
+    if (defaultDevices_.aiNotice && !HandlesDerived(sid) && (RawAssetPostPop::HasDedicatedVtable(pool_.Edition(),table) || std::ranges::find(kPatchCarrierVtables,table)!=kPatchCarrierVtables.end() || std::ranges::find(kPatchDamageableVtables,table)!=kPatchDamageableVtables.end())) {
+        const auto postPop=defaultResourcePostPop_;if (!postPop) throw std::logic_error("Native전용자산후처리의실제장기모듈미설치");postPop(sid,flags);return; //미복원전용몸체는장기분배선택위치에서실패하며공통성공으로바꾸지않는다.
+    }
     // 벌룬의 재귀 그림자 Pop은 내부 Damageable을 통해 각 공통 깊이를 끝낸다.
     if (HandlesBalloon(sid)) { balloonPostPop_->PostPop(sid,flags);return; }
     // 맨 오 워는 자신의 그림자 재귀 Pop과 Damageable 뒤 공통 깊이를 한 번 줄인다.
@@ -430,6 +433,7 @@ void SquidPostPop::PostPopBase(Sid sid,std::uint32_t flags) {
 // 서로 다른 SID 풀의 연결을 막는 읽기 전용 소유자다.
 const SidPool& SquidPostPop::Pool() const { return pool_; }
 // 실제 PATCH 통지와 해제만 허용한다. CD의 기존 가상 표/값형 입력은 별도로 유지한다.
+void SquidPostPop::BindDefaultResourcePostPop(std::function<void(Sid,std::uint32_t)> postPop) { if (pool_.Edition()!=OriginalEdition::Patch1078 || !postPop) throw std::invalid_argument("장기자원가상PostPop의실제PATCH장치필요");defaultResourcePostPop_=std::move(postPop); } //실제후처리는선택시에만실행하며대여반납으로지우지않는다.
 void SquidPostPop::BindDefaultPatchDevices(SquidPostPopDevices devices) { if (pool_.Edition()!=OriginalEdition::Patch1078 || !devices.aiNotice || !devices.localOwner || !devices.recheckSelection) throw std::invalid_argument("기본공통후처리의실제Client장치누락");defaultDevices_=std::move(devices); } //원문효과는호출될때만선택한다.
 void SquidPostPop::BindRuntimePin(std::function<std::shared_ptr<void>()> pin) { runtimePin_=std::move(pin); } //원문값을쓰지않고실제C++호출수명장치만결합/반납한다.
 void SquidPostPop::ReleaseRuntimeBindings() { //C++대여반납은Native전역reset이아니며이전Session주소만분리한다.

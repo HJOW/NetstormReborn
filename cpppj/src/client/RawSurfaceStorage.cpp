@@ -22,8 +22,11 @@
 #include "o/RawSquidPoolReset.h"
 #include "client/SquidRenderer.h"
 #include <algorithm>
+#include <array> //원문baseRegular주소를가리키는고정VT16개의실제메타데이터다.
 #include <stdexcept>
 #include <utility>
+#include <cmath> //공유난수float범위의원문넓은차이를계산한다.
+#include <new> //실제Regular할당실패만원문NULL결과로돌린다.
 
 namespace netstorm::client {
 namespace {
@@ -120,7 +123,7 @@ o::SquidPostPop& RawSurfaceStorage::PostPop() {
     if (!postPop_) {
         auto post=std::make_unique<o::SquidPostPop>(pool,types,postPopState,&Graph(),[this](auto sid) { Connections().Connect(sid); });
         if (pool.Edition()==o::OriginalEdition::Patch1078) { post->BindCurrentTypes(types);if (Source()) post->BindLoadedCosts(Source()->TypeTable().Types()); }
-        if (postPopDevices_.aiNotice && pool.Edition()==o::OriginalEdition::Patch1078) post->BindDefaultPatchDevices(postPopDevices_);
+        if (postPopDevices_.aiNotice && pool.Edition()==o::OriginalEdition::Patch1078) { post->BindDefaultPatchDevices(postPopDevices_);post->BindDefaultResourcePostPop([this](auto sid,auto flags) { DefaultResourcePostPop(sid,flags); }); }
         post->BindManaDiagnostics({Checking(),[this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); }});
         post->SetIslandPrefix([this](auto sid,auto flags) { Connections().IslandPostPopPrefix(sid,flags); });post->SetSurfacePrefix([this](auto sid,auto flags) { Surface().Prefix(sid,flags); });postPop_=std::move(post);
     }
@@ -134,6 +137,64 @@ o::SquidUnpop& RawSurfaceStorage::Unpop() {
     return *unpop_;
 }
 void RawSurfaceStorage::BindPopRuntime(const std::shared_ptr<const RawSurfacePopBindings>& runtime) { const auto current=popRuntime_.lock();if (!runtime || (current && current!=runtime) || !runtime->transmit) throw std::invalid_argument("동일실제Pop writer대여필요");popRuntime_=runtime; } //생성/전송/ACK를실행하지않는다.
+void RawSurfaceStorage::BindResourceDevices(RawSurfaceResourceDevices devices) { //현재Client장치를최초보관하며공장/Host/원문값을조기구성하지않는다.
+    if (!UsesNativeTransmissionDevices() || resourceDevices_.random || resourceCarrier_ || !devices.random || !devices.carrierCheck || !devices.geyserRegistration) throw std::invalid_argument("장기자원PostPop의실제최초Client장치계약");resourceDevices_=std::move(devices);
+}
+o::RawCarrierPostPop& RawSurfaceStorage::ResourceCarrierPostPop() { //실제공통부모를World없이같은물리/현재전역으로구성한다.
+    if (!resourceCarrier_) {
+        if (!serializationGlobals_) throw std::logic_error("장기자원후처리의실제Template로딩owner미연결");resourceCarrierState_.sharedBoss=&authority_->boss;resourceCarrierState_.sharedLoadingDepth=&LoadingDepth();resourceCarrierState_.sharedGeyserType=&gameAux_->GeyserType();
+        auto hooks=o::MakeCarrierPostPopHooks(pool,PostPop(),[this](auto sid) { const auto check=resourceDevices_.carrierCheck;if (!check) throw std::logic_error("장기Carrier의현재가상확인미연결");check(sid); },[this](auto x,auto y,auto owner) { Surface().SetSupportOwner(x,y,owner); });
+        auto carrier=std::make_unique<o::RawCarrierPostPop>(pool,types,resourceCarrierState_,std::move(hooks));carrier->BindCurrentTypes(types);resourceCarrier_=std::move(carrier);
+    }return *resourceCarrier_;
+}
+bool RawSurfaceStorage::AllocateResourceRegular() { //같은new28의실패를그시점에서만반환한다.
+    if (resourceRegular_) throw std::logic_error("장기자원Regular의확보메모리중복");try { resourceRegular_=std::make_unique<o::RegularProcess>(0,0.0F); }catch (const std::bad_alloc&) { return false; }return true;
+}
+void RawSurfaceStorage::ConstructResourceRegular(o::Sid sid,std::uint32_t event,float payload) { //두번째할당없이동일확보주소에서496e80과현재시각을소비한다.
+    if (!resourceRegular_) throw std::logic_error("장기자원Regular의실제확보메모리누락");auto* reserved=resourceRegular_.get();std::destroy_at(reserved);std::construct_at(reserved,event,payload);auto* attached=Processes().Host().AttachRegular(std::move(resourceRegular_),sid);if (attached) attached->ResetTask(event,Processes().State().Now());
+}
+void RawSurfaceStorage::DefaultResourcePostPop(o::Sid sid,std::uint32_t flags) { //보호PE의실제현재+20만선택하고전용미복원을base성공으로넘기지않는다.
+    const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //현재물리VT4BYTE만해석한다.
+    if (table==0x503d80U || table==0x503e50U || table==0x50e568U) { ResourceCarrierPostPop().PostPop(sid,flags);return; }
+    if (table==0x50a820U || table==0x50a8e8U) { ResourceCarrierPostPop().DamageablePostPop(sid,flags);return; }
+    if (table==0x50dc30U) {
+        if (!resourceNugget_) { o::NuggetPostPopHooks hooks;hooks.hasRegular=[this](auto parent,auto event) { return Processes().Host().FindEvent(parent,event)!=nullptr; };hooks.allocate=[this] { return AllocateResourceRegular(); };
+            hooks.random=[this](float low,float high) { const auto read=resourceDevices_.random;if (!read) throw std::logic_error("장기너겟의실제게임난수미연결");return static_cast<float>(static_cast<double>(read().Next(65536))*(1.0/65536.0)*std::abs(static_cast<double>(high)-low)+low); };
+            hooks.construct=[this](auto parent,auto event,auto payload) { ConstructResourceRegular(parent,event,payload); };hooks.damageable=[this](auto parent,auto value) { ResourceCarrierPostPop().DamageablePostPop(parent,value); };resourceNugget_=std::make_unique<o::RawNuggetPostPop>(pool,std::move(hooks));
+        }resourceNugget_->PostPop(sid,flags);return;
+    }
+    if (table==0x50da88U) {
+        if (!resourceGeyser_) { resourceAssetState_.sharedGeysers=&sidLists.geysers;resourceAssetState_.currentBridgeType=&links.bridgeType;resourceAssetState_.currentIslandType=&links.islandType;resourceAssetState_.currentStalagType=&links.stalagType;
+            o::AssetPostPopHooks hooks;hooks.reserveRegular=[this] { return AllocateResourceRegular(); };hooks.addRegular=[this](auto parent,auto event,auto payload) { ConstructResourceRegular(parent,event,payload); };
+            hooks.geyserRegistration=[this](auto parent,auto operation) { const auto registration=resourceDevices_.geyserRegistration;if (!registration) throw std::logic_error("장기간헐천의현재PlayerAI등록미연결");registration(parent,operation); };hooks.notifySurface=[this](auto parent) { Building().NotifySurface(parent); };
+            hooks.unpop=[this](auto parent,auto value) { UnpopAsset(parent,value); };hooks.repop=[this](auto parent,auto value) { RepopAsset(parent,value); };hooks.visitAtPosition=o::MakeAssetPostPopFinder(pool,hash,types,true);
+            resourceGeyser_=std::make_unique<o::RawAssetPostPop>(pool,types,PostPop(),ResourceCarrierPostPop(),resourceAssetState_,std::move(hooks));
+        }resourceGeyser_->GeyserPostPop(sid,flags);return;
+    }
+    throw std::logic_error("World없는현재VT의전용자원PostPop몸체미설치");
+}
+void RawSurfaceStorage::BindProcessDevices(RawSurfaceProcessDevices devices) { //실제장기선택장치만초기연결하며게임전역값은쓰지않는다.
+    if (!UsesNativeTransmissionDevices() || borrowed_ || processes_ || baseDestroy_ || processDevices_.selected || !devices.selected || !devices.clearSelection) throw std::invalid_argument("장기Process기본선택장치의최초Native계약");processDevices_=std::move(devices);
+}
+std::uint32_t RawSurfaceStorage::CurrentProcessSelection() const { //앞선진단/전송효과뒤현재Client선택을잘림없이다시읽는다.
+    const auto selected=processDevices_.selected;if (!selected) throw std::logic_error("장기Process삭제의현재선택조회미연결");return selected();
+}
+o::RawSquidDestroy& RawSurfaceStorage::BaseDestroy() { //Native의같은전역pre/post깊이와현재Pool/Unpop/TYPE를공유한다.
+    if (!baseDestroy_) { auto destroy=std::make_unique<o::RawSquidDestroy>(pool,Unpop(),types);if (auto diagnostics=DestroyDiagnostics()) destroy->BindPatchDiagnostics(std::move(*diagnostics));baseDestroy_=std::move(destroy); }return *baseDestroy_;
+}
+o::SquidDestroyHooks RawSurfaceStorage::DefaultProcessAssetHooks() { //전송/선택정리는실제장기부모이며미복원자산가상효과를빈성공으로대체하지않는다.
+    o::SquidDestroyHooks hooks;hooks.selectedRaw=[this] { return CurrentProcessSelection(); };hooks.unpopForm=[this](auto sid) { Factory().UnpopForm(sid); };
+    hooks.emit=[this](const o::SquidDestroyEvent& event) { if (event.effect==o::SquidDestroyEffect::Transmit) { Transmission().Transmit(event.sid,-1,-2,0,event.flags);return; }if (event.effect==o::SquidDestroyEffect::ClearSelection) { const auto clear=processDevices_.clearSelection;if (!clear) throw std::logic_error("장기Process삭제의실제선택정리미연결");clear();return; }throw std::logic_error("World없는종속자산의실제가상삭제몸체미설치"); };return hooks;
+}
+o::SquidFormDispatch& RawSurfaceStorage::ProcessFormDispatch() { //현재World가없어도같은실제Host의ProcessForm만공통삭제기에결합한다.
+    if (!processForms_) { auto forms=std::make_unique<o::SquidFormDispatch>(pool,BaseDestroy(),DefaultProcessAssetHooks());forms->Bind(Processes().Host());processForms_=std::move(forms); }return *processForms_;
+}
+float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) { //현재VT의실제+5c주소가base496e70인클래스만원문payload반환을실행한다.
+    constexpr std::array<std::uint32_t,16> kBaseRegularVtables{0x00501dd0U,0x00503360U,0x00506d98U,0x00506e50U,0x00506f08U,0x005070c0U,0x005092d0U,0x00509388U,0x00509b98U,0x0050c3b0U,0x0050c9f0U,0x0050db78U,0x0050eb98U,0x00512098U,0x00512110U,0x00512188U}; //보호PE87VT를조회해+5c=00496e70인16개만보존한불변메타데이터다.
+    const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //가상선택은현재VT4BYTE이며현재TYPE별추측으로바꾸지않는다.
+    if (std::find(kBaseRegularVtables.begin(),kBaseRegularVtables.end(),table)!=kBaseRegularVtables.end()) return payload; //496e70은event/count를읽지않는실제base본문이다.
+    static_cast<void>(event);static_cast<void>(count);throw std::logic_error("World없는현재VT의전용Regular몸체미설치"); //Bridge/Geyser/Nugget전용을base반환으로가장하지않는다.
+}
 void RawSurfaceStorage::BindTransmissionDevices(RawSurfaceTransmissionDevices devices) { //실제장치를첫writer/World앞에서고정하며선택효과는발생시키지않는다.
     if (pool.Edition()!=o::OriginalEdition::Patch1078 || borrowed_ || factory_ || processes_ || transmission_ || !devices.broadcast || !devices.connected || !devices.send) throw std::invalid_argument("장기Squid전송의실제Client장치계약");transmissionDevices_=std::move(devices);
 }
@@ -273,6 +334,8 @@ RawProcessHostStorage& RawSurfaceStorage::Processes() {
             transmit.packet=[this](auto length)->std::span<const std::uint8_t> { const auto& buffer=gameAux_->SquidTransmission().buffer;if (length<0 || static_cast<std::size_t>(length)>buffer.size()) throw std::out_of_range("장기Form의실제작성크기범위");return std::span(buffer).first(static_cast<std::size_t>(length)); };
             transmit.transmit=[this](auto length) { BroadcastProcessForm(length); }; //양수관문뒤같은전체예약으로대상별observer를실행한다.
             processes->BindFormTransmissionDefaults(std::move(transmit),[this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); });
+            processes->BindFormFactoryDefaults([this]()->o::SquidFactory& { return Factory(); },[this] { return postPopState.depth; }); //실제장기공장/공통깊이만getter로연결하며메뉴에서생성/대여를발생시키지않는다.
+            processes->BindLifecycleDefaults([this]()->o::RawSquidDestroy& { return BaseDestroy(); },[this](auto sid,auto event,auto count,auto payload) { return HandleDefaultRegular(sid,event,count,payload); },[this] { return ProcessFormDispatch().Hooks(); }); //현재World가없는경우만실제장기기본부모를선택한다.
         }processes_=std::move(processes);
     }return *processes_;
 } // 한 번 만든 상태/Host 주소는 다음 World에서도 유지한다.

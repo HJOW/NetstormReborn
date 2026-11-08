@@ -97,6 +97,7 @@ public:
     // 같은 판본의 풀·상태·선택적인 raw Graph를 받는다. 타입을 복사하며 상태/Graph 수명은 더 길어야 한다.
     SquidPostPop(SidPool& pool,std::span<const RiftTypeRecord> types,SquidPostPopState& state,RawGraph* graph=nullptr,
         std::function<void(Sid)> bridgeConnector={});
+    void BindDefaultResourcePostPop(std::function<void(Sid,std::uint32_t)> postPop); //현재Session파생이없을때만같은장기Storage의실제자원가상몸체를선택한다.
     void BindDefaultPatchDevices(SquidPostPopDevices devices); //실제Client기본장치를장기결합하며선택된누락을빈성공으로대체하지않는다.
     void BindRuntimePin(std::function<std::shared_ptr<void>()> pin); //장기PostPop이빌린현재Session파생의실제외곽owner를선택호출동안보유한다.
     void ReleaseRuntimeBindings(); //현재World/Session의파생포인터·AI/선택getter만반납하며장기장부/표면접두는보존한다.
@@ -199,6 +200,7 @@ private:
     std::function<std::shared_ptr<void>()> runtimePin_; //실제현재owner공개뒤의짧은하위호출수명이며값없는독립typed경로는종전계약이다.
     void PostPopPatch(Sid sid,std::uint32_t flags); //실제004b0d30의현재조회/선행부분효과를같은장부에분배한다.
     std::function<void()> selectionRecheck_; //현재UI의같은선택몸체/기억좌표에대한대여다.
+    std::function<void(Sid,std::uint32_t)> defaultResourcePostPop_; //반납뒤에도살아있는실제자원PostPop분배이며현재파생을덮지않는다.
     SquidPostPopDevices defaultDevices_; //World/Session대여반납뒤에도현재Client원문부모를사용한다.
     std::function<std::uint32_t()> localOwner_; //통지중변경될수있는현재Client owner getter다.
     void DispatchPostPop(Sid sid,std::uint32_t flags); //선택된실제파생또는공통몸체를호출하며깊이는호출자가소유한다.

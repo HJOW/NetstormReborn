@@ -37,6 +37,7 @@ struct SquidDeletionHooks {
     // emit: 관찰한 이벤트를 외부 처리기에 전달하는 콜백.
     std::function<void(const SquidDeletionEvent&)> emit;
     std::function<void(const SquidDestroyEvent&)> forward; // 종속 가상 메서드/전파를 별도로 연결한다.
+    std::function<std::uint32_t()> selectedRaw; //Native Pre가실제비교위치에서읽는현재Client전체DWORD이며기존typed Sid state는보존한다.
 };
 // 공통 pre/postDestroy의 비전투 선택·공급/작업장 목록·타입 통계·비용 장부를 복원한다.
 class SquidDestroyLifecycle {
@@ -66,6 +67,7 @@ private:
     std::int32_t RemainingCost(Sid sid) const;
     // 선택 해제의 외부 UI 경계와 논리 선택 번호를 함께 처리한다.
     void ClearSelection(Sid sid);
+    bool IsSelected(Sid sid) const; //실제Native getter는진단뒤선택비교위치에서만조회하고직접typed/CD는기존Sid state를사용한다.
     // 선택 처리 뒤·장부 억제 앞의 실제 분할/Free를 처리한다. validate이면 변경하지 않는다.
     void PreGraph(Sid sid,std::uint32_t flags,bool validate) const;
     // post의 주변 표면 Add는 비용 차감보다 먼저 실행된다.

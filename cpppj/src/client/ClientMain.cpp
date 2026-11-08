@@ -55,6 +55,8 @@
 #include "client/ClientLocalStateGlobals.h"
 #include "client/ClientCdGlobals.h"
 #include "client/ClientConnectionActivityGlobals.h"
+#include "o/RawGeyserAiRegistration.h" //World없는자원후처리도실제현재Player의NULL brain관문을실행한다.
+#include "client/ClientUserSelectionCleanup.h" //공통ProcessForm삭제도기존현재Client선택정리부모를사용한다.
 #include "client/ClientConnectionGlobals.h"
 #include "client/ClientPacketSources.h" //현재선택노드의실제TCP/내부/Editor장치를송신반환까지보유한다.
 #include "o/PacketRegistrationTable.h" //현재observer표의실제판본/수명을Client가보유한다.
@@ -428,6 +430,12 @@ int Client::Run() {
         if (token) { source=registry->PacketSources()->Resolve(registry->Node(token));if (!source) throw std::logic_error("Squid대상송신의실제Source수명미공개"); } //NULL연결은Source요구없이기존4e2dc0에서자연반환한다.
         static_cast<void>(registry->SendMutableNative(target,packet,playerRecords_->Records(),[owner=surfaceStorage_](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); })); //선택된실제backend의observer와큐만한번실행하며수신/성공값을합성하지않는다.
     }}); //실제Client장치만첫Factory/Host/World전에고정하며observer표는기존실제전송owner가유지한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindResourceDevices({[this]()->o::GameRandom& { return randomGlobals_->Game(); },[this](auto sid) {
+        auto& session=gameplayGlobals_->RequireSession();const auto runtimePin=gameplayGlobals_->PinCurrentRuntime(session);session.CheckCarrierPostPop(sid); //원문cc가실제선택된위치만현재전체owner를요구한다.
+    },[this](auto sid,auto operation) { o::RawGeyserAiRegistration registration(options_.edition,playerRecords_->Records());registration.BindPatch([this](auto token,auto number,auto value) { auto& session=gameplayGlobals_->RequireSession();const auto runtimePin=gameplayGlobals_->PinCurrentRuntime(session);session.NotifyGeyserAi(token,number,value); });registration.Register(sid.value,operation); }}); //실제Player1..8/NULL관문뒤에만큰AI를호출하며없는AI를성공callback으로꾸미지않는다.
+    if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindProcessDevices({[this] { return gameplayGlobals_->selection.selected; },[this] {
+        if (gameplayGlobals_->Borrowed()) { auto& session=gameplayGlobals_->RequireSession();const auto runtimeOwner=gameplayGlobals_->PinCurrentRuntime(session);ClearClientUserSelection(*this); }else ClearClientUserSelection(*this); //실제선택효과가현재Session을필요로하면전체owner를보유하고빈선택은기존자연반환을사용한다.
+    }}); //가짜선택0/가짜World/새대여없이실제현재장치만첫Host앞에연결한다.
     surfaceStorage_->BindSavedGame(localStateGlobals_->SavedGame()); //현재저장게임관문도World없는받침prefix와같은주소를빌린다.
     surfaceStorage_->BindContentCommand([this](auto code,auto x,auto y) { Input().PushCommand(code,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); }); //실제내용물UI통지는같은입력큐에예약한다.
     rendererFrame_->BindSurfaceDisplay(); //첫World전자체Renderer/카메라의현재getter만설치하며그리기/카메라/게임진행은실행하지않는다.

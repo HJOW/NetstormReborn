@@ -122,9 +122,9 @@ void RawSquidDestroy::DestroyPatch(Sid sid,std::uint32_t flags,const SquidDestro
     if (pool_.Slot(sid)[kState]&kFree) return;
     if (!(flags&(kClient|kDependent)) && pool_.IsServer() && !IsClientSid(sid))
         emit({SquidDestroyEffect::Transmit,sid,{},flags|kServer});
-    const auto selected=hooks.selected;
-    if (!selected) throw std::logic_error("PATCH 공통 삭제의 현재 선택 조회 미연결");
-    if (selected()==sid) emit({SquidDestroyEffect::ClearSelection,sid,{},0});
+    const auto selected=hooks.selected;const auto selectedRaw=hooks.selectedRaw;
+    if (!selectedRaw && !selected) throw std::logic_error("PATCH 공통 삭제의 현재 선택 조회 미연결");
+    if ((selectedRaw ? selectedRaw():std::uint32_t(selected().value))==sid.value) emit({SquidDestroyEffect::ClearSelection,sid,{},0}); //현재DWORD를조회한뒤비교하며고비트를선행절삭하거나별도물리예외로바꾸지않는다.
     if (!sid.value || sid.value>=pool_.Capacity()) AssertPatch("isValid()",0x2a2);
     const auto raw=pool_.Slot(sid);
     if (!(raw[kState]&kVoid)) {
@@ -158,7 +158,7 @@ void RawSquidDestroy::Destroy(Sid sid,std::uint32_t flags,const SquidDestroyHook
     const bool form=raw[kType]<kFirstAssetTypeNumber;
     if ((raw[kState]&kFree) || raw[kType]>=types_.size() || (form ? !hooks.unpopForm : (raw[kState]&kContained)!=0))
         throw std::logic_error("Destroy unsupported root");
-    if (!hooks.emit || !hooks.selected) throw std::invalid_argument("Destroy hooks");
+    if (!hooks.emit || (!hooks.selected && !hooks.selectedRaw)) throw std::invalid_argument("Destroy hooks");
     const bool client=sid.value<pool_.Layout().serverFirst;
     // 패치 원본의 assert 앞 부분 변경은 새 코드에서 피한다. 서버 객체의 수신 삭제는 flag 8이 필요하다.
     if (!pool_.IsServer() && !client && !(flags&kServer)) throw std::logic_error("Destroy server authority");
@@ -184,7 +184,7 @@ void RawSquidDestroy::Destroy(Sid sid,std::uint32_t flags,const SquidDestroyHook
     if (pool_.Slot(sid)[kState]&kFree) throw std::logic_error("Destroy root released during pre");
     if (!(flags&(kClient|kDependent)) && pool_.IsServer() && !client)
         hooks.emit({SquidDestroyEffect::Transmit,sid,{},flags|kServer});
-    if (hooks.selected()==sid) hooks.emit({SquidDestroyEffect::ClearSelection,sid,{},0});
+    if ((hooks.selectedRaw ? hooks.selectedRaw():std::uint32_t(hooks.selected().value))==sid.value) hooks.emit({SquidDestroyEffect::ClearSelection,sid,{},0}); //기존typed Sid와새Native DWORD의동일시점비교를구별한다.
     raw=pool_.Slot(sid);
     // 파생 효과 뒤 현재 타입/void를 사용한다. 실제 공간 해제는 flags 0으로 호출한다.
     if (!(raw[kState]&kVoid)) {

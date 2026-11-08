@@ -124,8 +124,11 @@ void SquidDestroyLifecycle::ValidatePost(Sid sid,std::uint32_t flags) const {
     if (Ordinary(sid)) static_cast<void>(RemainingCost(sid));
 }
 // 선택 복구 효과 뒤 논리 선택을 지우고 실제 UI 변경은 호출자에게 전달한다.
+bool SquidDestroyLifecycle::IsSelected(Sid sid) const { //현재Native전역은Sid로좁히지않고원문4d5430의전체반환과비교한다.
+    if (destroy_.HasPatchDiagnostics() && hooks_.selectedRaw) { const auto selected=hooks_.selectedRaw;return selected()==sid.value; }return state_.selected==sid;
+}
 void SquidDestroyLifecycle::ClearSelection(Sid sid) {
-    hooks_.emit({SquidDeletionEffect::ClearSelection,sid,0});state_.selected={};
+    hooks_.emit({SquidDeletionEffect::ClearSelection,sid,0});if (!destroy_.HasPatchDiagnostics() || !hooks_.selectedRaw) state_.selected={}; //Native는실제4d5c60만선택을쓰며enabled=0의자연반환도보존한다.
 }
 // 원본은 0x800 Free를 noGraph보다 먼저 판단하며 buried만 Graph 효과를 생략한다.
 void SquidDestroyLifecycle::PreGraph(Sid sid,std::uint32_t flags,bool validate) const {
@@ -156,7 +159,7 @@ void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
     if (destroy_.HasPatchDiagnostics()) {
         if (Object(sid)[kType]<kFirstAssetTypeNumber) destroy_.AssertPatch("!isForm()",0x771);
     } else ValidatePre(sid,flags); // 기존 typed/CD의 문서화된 선검사는 유지한다. 실제 PATCH는 보상 가상Count를 중복 호출하지 않는다.
-    if (state_.selected==sid) {
+    if (IsSelected(sid)) {
         if (!Ordinary(sid) && (Type(sid).flags2&kPlacement)) {
             const auto raw=Object(sid);state_.placementX=Coordinate(raw,kX);state_.placementY=Coordinate(raw,kY);
             state_.placementType=raw[kType];bookkeeping_.pendingPlacement=true;
@@ -196,7 +199,7 @@ void SquidDestroyLifecycle::PostDestroy(Sid sid,std::uint32_t flags) {
 }
 // 원본 파생 가상 메서드는 forward로, 공통 Pre/Post는 위 구현으로 연결한다.
 SquidDestroyHooks SquidDestroyLifecycle::Hooks() {
-    return {
+    SquidDestroyHooks result{
         // 미연결 외부 효과는 해당 경계에서 중단한다. 임의의 dead 대체를 하지 않는다.
         [this](const SquidDestroyEvent& event) {
             switch (event.effect) {
@@ -209,6 +212,8 @@ SquidDestroyHooks SquidDestroyLifecycle::Hooks() {
             }
         },[this] { return state_.selected; }
     };
+    if (destroy_.HasPatchDiagnostics() && hooks_.selectedRaw) result.selectedRaw=[this] { const auto selected=hooks_.selectedRaw;if (!selected) throw std::logic_error("현재Native자산Pre의전체DWORD선택조회미연결");return selected(); }; //공통Destroy의후행비교도같은현재Client주소를다시읽는다.
+    return result;
 }
 // 미연결/CD의 기존 검사 경로를 유지하며 PATCH에서만 현재 통지를 연결/분리한다.
 void SquidDestroyLifecycle::BindPatchAiNotice(std::function<void(std::uint32_t,Sid,bool)> notice) { if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("PATCH AI 삭제 통지 판본 불일치");aiNotice_=std::move(notice); }

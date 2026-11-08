@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 및 공통 인수인계
 
-**사용자2026-11-08 `/goal`로 진행 중이다. 단위1178에서7ch·실제장치/등록Node·App종료를부분접합했다. 다음은 Host/자원·잔여F/전역Source·지연큐다.** 현재AGENTS3차, 제품 **1178 / 11.01**, 3차잔여 **M6~M8의3묶음**은미완료다.
+**사용자2026-11-08 요청으로1179 마감·문서·로컬커밋 후 목표를 일시 중지한다. 전체목표는 미완료다.** [중지 인계](docs/exe/handoffs/cpp-pause-20261108-1179.md)에 미적용 사본과 정확한 재개 순서를 보존했다. 현재AGENTS3차, 제품 **1179 / 11.01**, 3차잔여 **M6~M8의3묶음**은미완료다.
 
 다음 **6차 한국어 후속**으로 넘어가려면 **M6~M8의3필수묶음**을마쳐야한다. M1~M5와4·5·7차는구현됐다. 이후6차잔여5묶음→8차시나리오UI4묶음순서다. M6은전수14세부묶음이며묶음수는커밋수/소요일/완료율이아니다.
 
@@ -12,20 +12,20 @@
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 진행 상태 | **사용자 `/goal`로 진행 중.** 최근1178/M6-l 7ch·실제장치/Node·App반납 부분접합, 다음 **Host/자원·잔여F/전역Source/지연큐**다. 전체목표는 미완료다. |
-| 재개·현재 지점 | 1178의7ch 장기F·Registry실제호출·등록Node장기owner/App최종반납과 현재/등록당시두owner를접합해 빌드/T1다리·대기·종료를확인했다.15태그·전scope완료구분/73잔여F·전체l/n·전역리스너/표/Poll·큐는미완료다. |
-| 진행 중인 실행 | 1178 제품두종Release최종0·경고오류0/T1다리·90frame·정상종료0/보호2800·설치·EXE·14소스불변이다. 이단위진행중빌드/게임없음. 새MP·단위·패킷·통신검사0/큐비활성이다. |
-| 현재 제품 | **1178 / 표시·파일·제품11.01**. M6-a~k완료,l/n일부접합/전체l·m·n·M7~M8/한국어/시나리오UI는미완료다. |
+| 진행 상태 | **사용자 요청으로1179 마감·문서·로컬커밋 뒤 목표 일시 중지.** 전체목표는미완료이며 재개 지시 전 다음단위 제품적용을 하지 않는다. [중지 인계](docs/exe/handoffs/cpp-pause-20261108-1179.md). |
+| 재개·현재 지점 | 1179의Host 장기공장/같은공통삭제깊이·ProcessForm/baseRegular16VT·Native전체DWORD선택·자원7VT PostPop을접합하고빌드/허용3미션을확인했다. 전용Regular/삭제/큰AI·다른Form/NoWorld caller·전체n/l·15태그전scope/73잔여F·큐는미완료다. |
+| 진행 중인 실행 | 1179 제품두종Release최종0·경고오류0/허용3비MP각정상종료0/보호2800·설치·EXE·19소스불변. 진행중빌드/게임없음. 병렬사본도체크포인트저장후종료했다. 새MP·단위·패킷·통신검사0/큐비활성이다. |
+| 현재 제품 | **1179 / 표시·파일·제품11.01**. M6-a~k완료,l/n일부접합/전체l·m·n·M7~M8/한국어/시나리오UI는미완료다. |
 | 실행·플레이 | 무인자 GUI와 미션 플레이 경로가 있다. 마지막 전체34진입은 **645에서 검증한 제품644**이며 현 제품 전체 회귀 결과가 아니다. |
 | 원본과의 동일성 | 부품별 원문 대조를 누적했다. 모든 시나리오 자연 완주·전체 동일성은 사용자 확인 대상이다. |
-| 최신 빌드·정적 확인 | **1178 NetstormCpp/NetstormRoot Release/x64 최종0·경고오류0·보호2800불변**. 7ch/실제장치11함수·Node/App10함수의C/PE집합과실제Source/등록/소멸caller를대조했다. 두집합의중복은고유수로합산하지않는다. [보고서](cpppj/registry-device-lifetime-20261108.json)·[설명](docs/exe/cpp-registry-device-lifetime-20261108.md). 새MP실행0이다. |
-| 최근 완료 | **1177:** 현재writer/mutable송신·NativePath. **1178:** 7ch·Registry호출/등록Node장기owner·App반납. 전체l/n은미완료다. [1177](docs/exe/cpp-process-form-native-writers-20261108.md)·[1178](docs/exe/cpp-registry-device-lifetime-20261108.md). |
+| 최신 빌드·정적 확인 | **1179 NetstormCpp/NetstormRoot Release/x64 최종0·경고오류0·보호2800불변**. Host22완전함수/2PEleaf·선택6/자원13함수 집합과 실제장기caller를대조했다. 중복은고유수로합산하지않는다. [보고서](cpppj/host-resource-postpop-20261108.json)·[설명](docs/exe/cpp-host-resource-postpop-20261108.md). 새MP실행0이다. |
+| 최근 완료 | **1178:** 7ch·실제장치/등록Node·App반납. **1179:** 장기Host·전체선택값·자원PostPop. 전체l/n은미완료다. [1178](docs/exe/cpp-registry-device-lifetime-20261108.md)·[1179](docs/exe/cpp-host-resource-postpop-20261108.md). |
 | checking 잔여 | **현재 목록0개.** `004b02d0`/`004dc220`은1157에서 기존 전체 본체/실제 같은 DWORD 연결을 확인했다. 모든 MP 경로 완료를 뜻하지 않으며 M4~M8은 남는다. 중앙 원문 진단창은M7.5다. |
 | 마지막 C++ 실행 검사 | **1052의 기존7개**. 이후 MP 작업에서는 새 단위/패킷/통신/게임 검사를 실행하지 않았다. |
-| 마지막 GUI | **1178:** 격리1920×1080 Tutorial1 정상UI다리건설·90frame·정상종료0. MP/포획·희생/특정공격/승리·공중3종전용검증아니다. T4/캠페인1-1은1177근거다. |
-| 전체 검사·ZIP | 현재전체솔루션실행통과기록은없다.1166은기존검사코드컴파일만완료했다. 최신ZIP은 **1092**이며현재1178바이너리의ZIP이아니다. 다음패키지정합성은 **M8**이다. |
-| 보호 기준 | AGENTS.md·원본/CD/fixture **2800파일불변(1178)**. extracted/cpp-resume-1178/protected-after.json에전수재확인했다. |
-| EXE SHA-256 | Netstorm.exe 13,470,720바이트/SHA-256 `34c8d8bf59196ff67a787dc2046cdcc1876cfd6b67e405fc12c535a773383152` / R.exe 677,376바이트/SHA-256 `95dc0dac85779a77421eb8afd8bc96f75e048f08258a4d4620aa7aea81638264` |
+| 마지막 GUI | **1179:** 격리1920×1080 Tutorial1다리·Tutorial4윈드제네레이터 정상UI건설/대기·캠페인1-1진입대기·각정상종료0. MP/포획·희생/특정공격/승리·공중3종전용검증아니다. |
+| 전체 검사·ZIP | 현재전체솔루션실행통과기록은없다.1166은기존검사코드컴파일만완료했다. 최신ZIP은 **1092**이며현재1179바이너리의ZIP이아니다. 다음패키지정합성은 **M8**이다. |
+| 보호 기준 | AGENTS.md·원본/CD/fixture **2800파일불변(1179)**. extracted/cpp-resume-1179/protected-after.json에전수재확인했다. |
+| EXE SHA-256 | Netstorm.exe 13,512,704바이트/SHA-256 `9e532dd4c70b8fea3fce9518305439e7ea80aad9ab7b5c2d57d00a42825275a9` / R.exe 677,376바이트/SHA-256 `32e38bc28c9a7f61efc6e6bc95fa36de244ef6d2175327bac18d431b1ec68b47` |
 | 마지막 정밀 디컴파일 | **클라이언트 양판본 2026-11-03 / HJOW-Athlon(192.168.0.94)**. R전용은 **2026-11-07 / 같은 호스트**. [기록](docs/exe/cpp-decompilation-20261103.md). |
 
 ### 0.2 재개 순서
@@ -33,9 +33,9 @@
 1. AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 읽고 `git status`/`git fetch`로 다른 세션 변경을 확인한다. push는 하지 않는다.
 2. 현재 호스트가 위 마지막 디컴파일 호스트와 다르면 CPP 작업/원문 분석 전에 `tools/ghidra/refine_all.ps1`을 다시 실행하고 호스트를 갱신한다. R원문은 필요 시 `tools/ghidra/refine_root_server.ps1`도 실행한다. HJOW-X3D의2026-10-27 중단 산출물은 완성본으로 쓰지 않는다.
 3. **M6 → M7 → M8** 순서로진행하며실제의존하위를먼저복원한다. M1~M5완료분을옛예고로다시만들지않는다.
-4. `extracted/cpp-resume-1178/`는최신빌드/허용T1/보호해시원시이며7ch·Registry/Node/App의C·PE/사본경로는1178문서에명시했다. [M6전수감사](docs/exe/cpp-lan-remaining-audit-20261108.md)의초기활성판정정정을읽는다. M7.1/2는 [준비](docs/exe/cpp-help-cursor-remaining-audit-20261108.md)를구현완료로세지않는다.
+4. `extracted/cpp-resume-1179/`는최신빌드/허용3비MP/보호해시원시이며Host/선택값/자원PostPop의C·PE/사본경로는1179문서에명시했다. [M6전수감사](docs/exe/cpp-lan-remaining-audit-20261108.md)의초기활성판정정정을읽는다. M7.1/2는 [준비](docs/exe/cpp-help-cursor-remaining-audit-20261108.md)를구현완료로세지않는다.
 5. 단위 종료마다 **0.1의 현행 값·해당 M/K/S 항목·checking 목록·최근 완료2건**을 갱신하고 단위 문서/보고서를 작성해 로컬 커밋한다. 과거 예고·완료 로그를 이 문서에 계속 누적하지 않는다.
-6. 다른세션의DN/WB변경/스테이징을수정/정리/커밋하지않는다. 사용자 `/goal`로M6-l부터계속한다.
+6. 다른세션의DN/WB변경/스테이징을수정/정리/커밋하지않는다. 사용자가 재개하면 중지 인계에 따라 M6-l/n/m부터 계속한다.
 
 ### 0.3 유효한 실행 제외·보류
 
@@ -54,7 +54,7 @@
 | --- | --- | --- |
 | 1차 10.78 원본 복원 | 활성 **비멀티** UI929·Edit943·미션 수명956·내부 수명/FILE980 범위 마감. MP 전용은3차에서 복원 중이다. | 새 구체적 누락/사용자 제보는 다시 연다. 전체 자연 완주·전체 픽셀 동일성은 사용자 확인이다. |
 | 2차 Win10/11 호환 | 호환 전체화면/재실행·화면비·가장자리 스크롤·저장 재시작을 구현/확인하고 다음 단계로 전환했다. 덱 결함981도 해결했다. | 다른 장치/Windows11/ARM 실기는 현재 전환 조건이 아니다. 무오류 보증과 구별한다. |
-| **3차 TCP/IP 로컬 MP·Outpost** | **진행중. 제품1178/M6-a~k완료·l/n부분접합, 다음l/m/n.** | **M6~M8의3묶음.** 새MP실행테스트는종료조건에서제외한다. |
+| **3차 TCP/IP 로컬 MP·Outpost** | **진행중. 제품1179/M6-a~k완료·l/n부분접합, 다음l/m/n.** | **M6~M8의3묶음.** 새MP실행테스트는종료조건에서제외한다. |
 | 4차 로컬MCP·와이드 | 935~937 구현, 덱 보완981. 캡처/음향 녹화의936 후속 성공도 있다. | 물리/환경 확인은0.3절. 같은 기능을 다시 미구현으로 세지 않는다. |
 | 5차 사용자 홈 저장·맵 목록 | 932~934 이관/reader/읽기 전용 설치·Unicode 실행·무제한50행 스크롤 구현. | 현재 `CustomMaps\d\NAME.fort`, 최초 Edit의 원본433맵 복사, 이동행 클릭/휠 미구현을 유지한다. 임의 배치 변경은 하지 않으며 이동행 한국어 문구는K4다. |
 | **6차 한국어** | 938의1차: D2Coding·번역502·Language 메뉴·korean→english 대체·배포 동봉. **986 후보는 미적용**이다. | **K1~K5의5묶음.** 3차 M1~M8 뒤 착수한다. |
@@ -76,7 +76,7 @@
 | **M3** | 공통 Pop/신전 Handle·Descend/참가 후속 World·카메라/HTML/진단 장치 접합. | 기존 부모1157 대조·master 주소1158 교정·State19/Core 현재 진단/실제 전환 Caller1159 마감. [근거](docs/exe/cpp-meta-transition-closure-20261108.md). | **접합 완료(1159)**. 중앙 기본 진단창/파일의 새 누락은M7.5에 명시했으며 완료로 세지 않는다. |
 | **M4** | State33 송신·NSInfo/메타 요청 UI·HTML 후속. | 실제송신1160·NSInfo5명령1161·영역확인후속1162. [마감](docs/exe/cpp-meta-zone-descend-20261108.md). | **완료(1162)**. 새수신/독립후속은M6/M7로 구별한다. |
 | **M5** | 두환경계약·세.server콘텐츠/실제reader·배포. | 1163환경계약·1164서버페이지32섹션/요청응답·빌드복사/DryRun. [근거](docs/exe/cpp-server-pages-integration-20261108.md). | **완료(1164)**. 원본서버본문미확보·새호환본문의한계를명시하며실제ZIP바이트는M8이다. |
-| **M6** | 일반LAN·Outpost전수14세부묶음. | [현행감사](docs/exe/cpp-lan-remaining-audit-20261108.md). **a~k1173까지완료.** Source1174/n기반1175/기본scope·메타3F1176/n8b·Path1177/7ch·Node/App1178부분접합.15태그/전scope구별·73잔여F·전역리스너/표/Poll·큐미활성,m JoinTestBattle,n Host·자원파생/실제NoWorld caller·debugBurst/전수마감은남는다. | **다음M6-l/n/미완료·큼.** 기존Pop/저장복구/78h/기록은재작성하지않는다. |
+| **M6** | 일반LAN·Outpost전수14세부묶음. | [현행감사](docs/exe/cpp-lan-remaining-audit-20261108.md). **a~k1173까지완료.** Source1174/n기반1175/기본scope·메타3F1176/writer1177/Node1178/Host·선택값·자원PostPop1179부분접합.15태그/전scope구별·73잔여F·전역Source/큐·m JoinTestBattle,n 전용Regular/삭제·NoWorld caller/큰AI/다른Form·debugBurst/전수마감은남는다. | **다음M6-l/n/미완료·큼.** 기존Pop/저장복구/78h/기록은재작성하지않는다. |
 | **M7** | helpWord캐시·메타커서본문/장치설치·조기/원격희생안내·marker표시/갱신·공통assertion창/파일5건. | [M7.1/2현재차이준비](docs/exe/cpp-help-cursor-remaining-audit-20261108.md): 빈Config기존cache유지/정체성·메타커서본문/상태Lock/Unlock/장치선행. M7.5는초기registry진단도같은중앙장치에통합한다. | 미완료. 준비/원문발췌는구현/실행통과가아니다. 사용자제외희생/MP테스트는하지않는다. |
 | **M8** | **3차 구현 마감 감사·배포 정합성**. | M1~M7/현재 checking 목록0/새 누락/활성 Caller·실제 owner/수명·외부 검증 비활성화 대조, Release 빌드, 필요한 최종 ZIP의 실제 Netstorm/R/에셋 바이트 검증. | 미완료 / 마지막 관문. MP 실행 테스트는 하지 않으며 ZIP/전체검사를 반복하지 않는다. |
 

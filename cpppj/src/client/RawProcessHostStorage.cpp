@@ -39,11 +39,17 @@ void RawProcessHostStorage::BindDevices(std::shared_ptr<o::Kernel> kernel,std::s
 bool RawProcessHostStorage::UsesKernel(const o::Kernel* kernel) const { return kernel_ && kernel_.get()==kernel; } // 현재 실제 Kernel 주소만 비교한다.
 bool RawProcessHostStorage::HasDevices() const { return external_; } // 대여를 만들거나 상태를 복사하지 않는다.
 o::Kernel& RawProcessHostStorage::Kernel() { if (!kernel_) kernel_=std::make_shared<o::Kernel>(pool_.Edition()==o::OriginalEdition::Patch1078 ? o::kProcessCapacity : o::kCdProcessCapacity);return *kernel_; } // 독립 판본의 실제 capacity를 유지한다.
+void RawProcessHostStorage::BindLifecycleDefaults(std::function<o::RawSquidDestroy&()> destroy,o::RegularHandler regular,std::function<o::SquidDestroyHooks()> assets) { //장기장치를보관만하며외부Kernel결합전에Host/Factory를생성하지않는다.
+    if (host_ || destroy_ || !destroy || !regular || !assets) throw std::invalid_argument("장기Host기본수명장치의최초결합계약");destroy_=std::move(destroy);regular_=std::move(regular);assets_=std::move(assets);
+}
+void RawProcessHostStorage::BindFormFactoryDefaults(std::function<o::SquidFactory&()> factory,std::function<std::uint32_t()> depth) { //외부Kernel/시각장치가결합되기전에는실제공장도Host도만들지않는다.
+    if (host_ || formFactory_ || !factory || !depth) throw std::invalid_argument("장기Host기본공장의최초장치계약");formFactory_=std::move(factory);postPopDepth_=std::move(depth);
+}
 void RawProcessHostStorage::BindFormTransmissionDefaults(o::ProcessFormTransmission transmit,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion) { //Host/독립Kernel을조기구성하지않고실제장기장치만최초보관한다.
     if (host_ || formTransmission_.writeData || !transmit.writeData || !transmit.writeFullData || !transmit.packet || !transmit.transmit || !assertion) throw std::invalid_argument("장기Host기본직렬화의최초장치계약");formTransmission_=std::move(transmit);formAssertion_=std::move(assertion);
 }
 o::SquidProcessHost& RawProcessHostStorage::Host() {
-    if (!host_) { auto host=std::make_unique<o::SquidProcessHost>(pool_,types_,Kernel(),state_,[this] { return current_.lock(); });if (formTransmission_.writeData) host->BindDefaultFormTransmission(formTransmission_,formAssertion_);host_=std::move(host); }return *host_;
+    if (!host_) { auto host=std::make_unique<o::SquidProcessHost>(pool_,types_,Kernel(),state_,[this] { return current_.lock(); });if (formTransmission_.writeData) host->BindDefaultFormTransmission(formTransmission_,formAssertion_);if (formFactory_) host->BindDefaultFormFactory(formFactory_,postPopDepth_);if (destroy_) host->BindDefaultLifecycle(destroy_,regular_,assets_);host_=std::move(host); }return *host_;
 } // 현재 World가 없어도 안정된 Host 자체를 소유할 수 있다.
 o::SquidProcessState& RawProcessHostStorage::State() { return state_; } // 같은 scalar와 현재 외부 참조다.
 // Pool이긴수명을유지해도종료된World주소는사용하지않고현재모듈반납을호출중금지한다.

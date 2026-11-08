@@ -9,6 +9,8 @@
 #include "o/RawBattleBroadcast.h" // 같은현재연결표를사용하는Squid패킷송신경계다.
 #include "o/RawCheckingFlag.h" // Editor/Session이같은Client진단owner를빌린다.
 #include "o/RawGameAuxState.h"
+#include "o/RawAssetPostPop.h" //장기Geyser가현재TYPE/목록과같은기존원문몸체를빌린다.
+#include "o/RawNuggetPostPop.h" //실제두Regular확보와같은Host의기본부모다.
 #include "o/FortSerializationGlobals.h" //실제 Template/Core/객체의005c89b8 owner를같이pin한다.
 #include "o/RawBoardTarget.h"
 #include "o/RawPathSearch.h" //원문거리표의한소유자를Client물리에보존한다.
@@ -38,6 +40,15 @@
 
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
+struct RawSurfaceResourceDevices { //같은Client게임난수와선택된큰자산장치만장기로빌린다.
+    std::function<o::GameRandom&()> random; //새seed/snapshot없이실제현재GameRandom한개를조회한다.
+    std::function<void(o::Sid)> carrierCheck; //실제가상cc의현재Carrier검사를선택위치에서호출한다.
+    std::function<void(o::Sid,std::uint32_t)> geyserRegistration; //현재Player9/brain순회의실제416720등록부모다.
+};
+struct RawSurfaceProcessDevices { //실제Client현재선택/선택해제부모만장기로빌린다.
+    std::function<std::uint32_t()> selected; //현재전체DWORD선택전역이며Form이라는이유로0/WORD를합성하지않는다.
+    std::function<void()> clearSelection; //실제현재Client선택정리부모를선택된효과위치에서호출한다.
+};
 struct RawSurfaceTransmissionDevices { //실제Client의현재Registry/Player장치만Storage수명으로보관한다.
     std::function<void(std::span<std::uint8_t>)> broadcast; //현재Player/NULL/로컬선택뒤대상별같은버퍼를실제가상+4에넘긴다.
     std::function<bool(std::int32_t)> connected; //writer뒤현재Player+50bit1만읽는48f4b0이다.
@@ -69,6 +80,8 @@ private:
     o::RawCheckingFlag checking_; // 대여/World반납뒤에도같은현재Client진단DWORD를읽는다.독립저장소기본값은0이다.
     o::SquidPostPopDevices postPopDevices_; //현재실제Client AI/로컬owner/선택의장기장치다.
     std::weak_ptr<const RawSurfacePopBindings> popRuntime_; //현재typed장치/외부Kernel만짧게빌리고반납뒤장기기본전송을사용한다.
+    RawSurfaceResourceDevices resourceDevices_; //실제Client장치만보관하며짧은Session주소를저장하지않는다.
+    RawSurfaceProcessDevices processDevices_; //실제Native선택/정리장치만보관하며World/Session을캡처하지않는다.
     RawSurfaceTransmissionDevices transmissionDevices_; //실제Client만명시연결하며Source포인터로Native정책을추정하지않는다.
     std::weak_ptr<o::RawSquidContainedUnpop> currentContainedUnpop_; //현재Session의파생종단만약하게빌린다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> contentCommand_; //같은Client입력큐의실제452fe0장치다.
@@ -109,6 +122,10 @@ public:
     bool UsesNativeTransmissionDevices() const { return static_cast<bool>(transmissionDevices_.broadcast); } //실제Native송신장치의명시결합수명만조회하며typed/GameState/성공값을추정하지않는다.
     void BindTransmissionDevices(RawSurfaceTransmissionDevices devices); //첫Factory/Host/World앞에현재Client장치만연결한다.
     std::int32_t SerializeProcessForm(o::SquidProcess& process,std::span<std::uint8_t> buffer,bool parentChanged,std::uint32_t force); //같은실제Kernel객체의파생writer에현재헤더와caller의같은예약을넘긴다.
+    std::uint32_t CurrentProcessSelection() const; //Native공통삭제의선택비교위치에서실제Client전체DWORD를현재조회한다.
+    void BindResourceDevices(RawSurfaceResourceDevices devices); //첫자원파생앞에실제장기장치만연결하며난수/생성/대여는실행하지않는다.
+    void BindProcessDevices(RawSurfaceProcessDevices devices); //첫Host/삭제기전현재Client장치만결합하며선택/삭제를실행하지않는다.
+    o::RawSquidDestroy& BaseDestroy(); //Native공통삭제깊이/Unpop/Pool의장기실제owner다.
     void BroadcastProcessForm(std::int32_t length); //실제writer의양수반환뒤같은공통2048BYTE를Native대상별가상송신에넘긴다.
     o::RawSquidTransmission& Transmission(); //공통2048BYTE/헤더/압축전역과실제현재FormHost를장기로공유한다.
     void UnpopAsset(o::Sid sid,std::uint32_t flags); //현재TYPE와동일Unpop/표시·종속장치를사용하고정상뒤현재World의호스트changed만알린다.
@@ -188,6 +205,13 @@ private:
     void RefreshChecking(); //이미존재하는실행기의진단view만갱신하고새모듈/World/Native효과는만들지않는다.
     void NoteChanged(); //현재World의기존호스트changed관찰만알리며원문게임상태를새로쓰지않는다.
     void TransmitPop(o::Sid sid,std::uint32_t flags); //현재World가없어도같은장기writer/실제Registry를사용한다.
+    void DefaultResourcePostPop(o::Sid sid,std::uint32_t flags); //현재실제VT의Geyser/Nugget/직접Carrier·Damageable본문만분배한다.
+    o::RawCarrierPostPop& ResourceCarrierPostPop(); //실제같은로딩깊이/권한/TYPE/지면소유자/공통깊이를장기로연결한다.
+    bool AllocateResourceRegular(); //원문new28의동일확보메모리이며실패뒤난수를소비하지않는다.
+    void ConstructResourceRegular(o::Sid sid,std::uint32_t event,float payload); //확보한같은객체주소에서현재Host에생성·부착한다.
+    o::SquidDestroyHooks DefaultProcessAssetHooks(); //실제선택/전송과미설치자산가상몸체를구별하는장기Formfallback이다.
+    o::SquidFormDispatch& ProcessFormDispatch(); //같은공통삭제깊이에실제ProcessForm호스트를등록하며다른Form은필요한전용owner를요구한다.
+    float HandleDefaultRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); //PE의현재VT+5c가복원된원문base인경우만해당본문을실행한다.
     std::int32_t WriteDefaultForm(o::SquidProcess& process,bool parentChanged,std::uint32_t force); //Dais/Construction의실제writer를같은공통버퍼로분배하며다른파생누락은선택위치에서드러낸다.
     o::BridgeConnectHooks SurfaceObjects(); //연결/받침이공유하는같은실제Factory/Owner/Pop/Frame/통지다.
     std::unique_ptr<o::RawSquidContainedUnpop> containedUnpop_; //현재실제공통종단은Pool/현재전역보다짧고World보다길다.
@@ -203,6 +227,14 @@ private:
     std::unique_ptr<o::RawBridgeConnect> connections_; //현재표면연결과공통owner를실행한다.
     std::unique_ptr<o::RawIslandPostPop> surface_; //현재깊이/저장게임과동일받침생성접두다.
     std::unique_ptr<o::SquidFactory> factory_; //공통장부/Pool보다먼저반납하고장기Host가마지막Regular를반납할때까지실제공장을유지한다.
+    o::CarrierPostPopState resourceCarrierState_; //현재원문권한/로딩/간헐천TYPE주소만빌리며지역기본값으로복제하지않는다.
+    o::AssetPostPopState resourceAssetState_; //장기Geyser경로가소비하는실제목록/표면TYPE주소이며다른자산용사본은사용하지않는다.
+    std::unique_ptr<o::RawCarrierPostPop> resourceCarrier_; //같은공통PostPop을직접호출하는장기실제부모다.
+    std::unique_ptr<o::RawAssetPostPop> resourceGeyser_; //Geyser전용본문만공유하며다른자산의가상등록을합성하지않는다.
+    std::unique_ptr<o::RawNuggetPostPop> resourceNugget_; //같은Host/난수/확보메모리의너겟후처리다.
+    std::unique_ptr<o::RegularProcess> resourceRegular_; //할당과생성사이동일new28의소유권만보존한다.
+    std::unique_ptr<o::RawSquidDestroy> baseDestroy_; //같은Native공통pre/post깊이를World반납뒤에도보존한다.
+    std::unique_ptr<o::SquidFormDispatch> processForms_; //장기Host와같은Pool의실제ProcessForm경로이며UI/내용물가짜처리기는등록하지않는다.
     std::unique_ptr<o::RawSquidTransmission> transmission_; //같은Pool/현재TYPE/GameAux보다먼저반납하는공통실제송신기다.
     std::unique_ptr<RawProcessHostStorage> processes_; // 실제 Pool/TYPE 뒤에 선언하여 그 참조보다 먼저 최종 반납한다.
     const GameAssets* source_;bool borrowed_{};std::uint64_t generation_{}; // 최초 자산 정체성·단일 대여·호스트 관측 번호다.

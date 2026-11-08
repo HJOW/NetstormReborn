@@ -60,6 +60,9 @@ struct AssetPostPopState {
     const SquidPostPopList& Outposts() const { return sharedOutposts ? *sharedOutposts : outposts; } //원본의 별도100칸 정체성을 보존한다.
     std::uint32_t bridgeType{82}; // WORD setter004ac220/CD004abb00이 통지를 선택하는 독립 TYPE DWORD다.
     const std::uint32_t* currentBridgeType{}; // 실제 World의 같은 현재 BridgeState TYPE를 빌리며 owner는 처리기보다 오래 살아야 한다.
+    const std::uint32_t* currentIslandType{};const std::uint32_t* currentStalagType{}; //장기Geyser가finder효과뒤읽는동일표면TYPE주소이며기존typed는값형상태를유지한다.
+    std::uint32_t IslandType() const { return currentIslandType ? *currentIslandType:islandType; } //현재후보의TYPE비교위치에서실제섬번호를읽는다.
+    std::uint32_t StalagType() const { return currentStalagType ? *currentStalagType:stalagType; } //isle이아닌후보에서현재종유석번호를읽는다.
     std::uint32_t BridgeType() const { return currentBridgeType ? *currentBridgeType : bridgeType; } // WORD 저장 뒤 현재 TYPE 비교에서만 전체 DWORD를 읽는다.
 };
 // 외부 몸체를 생략하지 않고 호출 순서대로 연결하는 명시 경계다. 필요한 경계가 없으면 사전 검사에서 거부한다.
@@ -113,6 +116,7 @@ public:
     void Validate(Sid sid,std::uint32_t flags,const RawGraphPop* pop=nullptr) const;
     // Gun·제네레이터·거주 구역·바리케이드·간헐천·신전 전체 재정의 순서를 실행한다.
     void PostPop(Sid sid,std::uint32_t flags) const;
+    void GeyserPostPop(Sid sid,std::uint32_t flags) const; //현재VT가실제Geyser+20으로선택된장기부모도같은원문전체본문을직접공유한다.
     // 실제9 Player BYTE를 공유한다. 현재 localOwner 포인터를 주면 외부 효과 후에도 그 DWORD를 다시 읽는다.
     // 기록은 PATCH0xb4/CD0xac 크기9개이며 이 모듈보다 오래 살아야 한다. 생략한 owner는 state.localOwner다.
     void BindPlayerRecords(std::span<std::uint8_t> records,const std::uint32_t* currentLocalOwner=nullptr);
@@ -132,7 +136,7 @@ private:
     // 거주 구역 최초 소유자·목록·예약·연결·패치의 잔여 프레임을 처리한다.
     void Residence(Sid sid,std::uint32_t flags) const;
     // 간헐천 최초 비용 WORD·목록·주변 받침 neutral 프레임·Damageable을 처리한다.
-    void Geyser(Sid sid,std::uint32_t flags) const;
+    void Geyser(Sid sid,std::uint32_t flags,bool native=false) const; //독립기존Geyser는기존예외계약이며실제장기입구만Native정수화를선택한다.
     // 신전 공통 몸체 후 각 원소 wrapper의 extra/예약을 처리한다.
     void Vortex(Sid sid,std::uint32_t flags,std::uint32_t kind) const;
     // Damageable 뒤 Player·목록·영역·다른 신전 삭제·slot 생성을 처리한다.
@@ -163,5 +167,5 @@ private:
     const std::uint32_t* localOwner_{};
 };
 // 같은 풀/해시/현재 TYPE를 빌리는 일반 finder를 만든다. 각 visitor 뒤 Next를 실행하며 외부 저장소는 반환한 장치보다 오래 살아야 한다.
-std::function<void(float,float,const std::function<void(Sid)>&)> MakeAssetPostPopFinder(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types);
+std::function<void(float,float,const std::function<void(Sid)>&)> MakeAssetPostPopFinder(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,bool native=false);
 }

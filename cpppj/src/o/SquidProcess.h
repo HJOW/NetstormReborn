@@ -143,6 +143,8 @@ public:
         SquidProcessState& state,RegularHandler handler={},SquidDestroyHooks asset={},ProcessFormTransmission transmit={});
     // 장기 Pool/Kernel/상태를 빌리고 현재 World의 가상 처리기만 선택 위치에서 조회한다.
     SquidProcessHost(SidPool& pool,std::span<const RiftTypeRecord> types,Kernel& kernel,SquidProcessState& state,ProcessHostRuntimeGetter current);
+    void BindDefaultLifecycle(std::function<RawSquidDestroy&()> destroy,RegularHandler regular,std::function<SquidDestroyHooks()> assets); //NoWorld의실제공통삭제/현재가상Regular/종속분배를장기getter로만결합한다.
+    void BindDefaultFormFactory(std::function<SquidFactory&()> factory,std::function<std::uint32_t()> depth); //현재World대여밖의실제장기공장/공통깊이getter만결합하며조회/생성을실행하지않는다.
     void BindDefaultFormTransmission(ProcessFormTransmission transmit,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion); //장기Host의실제기본writer/진단만최초연결하며현재World대여나Kernel실행은만들지않는다.
     void BindFormFactory(SquidFactory& factory); // 같은 수명의 직접 Host에만 공장을 연결한다. 장기 Host는 현재 대여의 factory를 소비 위치에서 조회한다.
     bool Owns(const BaseProcess& process) const; // 잔류 객체가 실제로 이 Host를 빌리는지 조회하며 PID나 SID를 정규화하지 않는다.
@@ -219,6 +221,8 @@ private:
     std::size_t TypeCount() const; // 현재 실제 타입 표의 판본 길이다.
     RegularHandler Regular() const; // 호출 중 현재 대여 반납이 있어도 복사한 외부 함수의 수명을 지킨다.
     SquidDestroyHooks Asset() const; // 현재 자산 가상 분배를 원래 효과 직전에 조회한다.
+    SquidFactory* FormFactory() const; //현재World의실제공장을우선하고없으면명시된장기기본공장을선택한다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> AssertionDevice() const; //현재대여또는같은장기State의실제진단을선택위치에서복사한다.
     ProcessFormTransmission Transmission() const; // 직렬화와 송신의 각 소비 위치에서 현재 경계를 얻는다.
     Sid CreateOrTakeForm(std::uint32_t flags,Sid form); // 현재 번호와 같은 공장의 원문 Create/Take를 사용한다. 독립 입력도 고정 VT를 합성하지 않는다.
     ProcessHostRuntimeGetter currentRuntime_; // 장기 owner만 캡처하며 old World 구현 주소는 저장하지 않는다.
@@ -231,6 +235,11 @@ private:
     Kernel& kernel_;
     // destroy_: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기.
     RawSquidDestroy* destroy_{}; // 기존 독립 생성자의 직접 대여이며 장기 Host에서는 사용하지 않는다.
+    std::function<RawSquidDestroy&()> defaultDestroy_; //같은Storage의공통삭제깊이/Pool/Unpop실행기를선택시조회한다.
+    RegularHandler defaultRegular_; //원문현재VT가고른복원된실제기본Handle만실행한다.
+    std::function<SquidDestroyHooks()> defaultAssets_; //장기Form분배/현재선택/실제삭제방송의실제부모getter다.
+    std::function<SquidFactory&()> defaultFormFactory_; //장기Storage의실제Factory를선택시조회하며짧은World주소를보유하지않는다.
+    std::function<std::uint32_t()> defaultPostPopDepth_; //같은장기PostPopDWORD를SharedRegular진단위치에서읽는다.
     SquidFactory* directFormFactory_{}; // 직접 Host와 같은 World 수명일 때만 빌린다. 장기 현재 대여 경로에는 쓰지 않는다.
     // state_: 프로세스 계층이 읽거나 바꾸는 원본 전역이다. 패치 주소/CD 주소는 괄호에 둔다 (SquidProcessState).
     SquidProcessState& state_;

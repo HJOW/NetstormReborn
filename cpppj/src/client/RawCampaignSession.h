@@ -458,6 +458,8 @@ public:
     bool AdvanceAiBridge(std::uint32_t owner,o::RawPathPoint target,o::RawPathPoint& endpointScratch); //004174c0의실제시작점/예산검색/배치/소비/재고갱신이다.원본caller임시XY는명시입력/출력이며false는본체없음또는실제timeout이다.전체자동전략순서는후속이다.
     bool ReconcileAiEconomy(std::uint32_t owner); //같은 본체 지갑과 분산SP로004138c0을 명시 실행한다. 본체 없음은false이며 자동 프레임은 후속이다.
     bool DeployAi(std::uint32_t owner,std::uint32_t type,float x,float y,std::uint32_t argument=0,std::uint32_t direction=0); //선택된 전략 입력으로004106e0 실제 생산/비용/배치를 명시 실행한다. 자동 선택은 후속이다.
+    void NotifyGeyserAi(std::uint32_t token,std::uint32_t sid,std::uint32_t operation); //현재실제AI본체의4153c0등록을장기자원caller와공유하며실제외곽pin은caller가소유한다.
+    void CheckCarrierPostPop(o::Sid sid); //현재같은사제/Carrier검사몸체만호출하며새World/loaded관문을만들지않는다.
     void NotifyAiObject(std::uint32_t owner,o::Sid object,bool added); //현재실제AI생성/삭제통지를같은소유메모리/414de0에전달한다.
     void RecheckCurrentSelection(); //같은현재UI선택의da650이며선택된살아있는몸체가없으면명시실패한다.
     bool EnsureAiCollectors(std::uint32_t owner); //원본00415a10 수집자 선택→자기 영역 후보→실제 배치를 명시 실행한다. 전체 자동 프레임은 후속이다.

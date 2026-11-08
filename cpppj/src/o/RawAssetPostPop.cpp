@@ -80,6 +80,7 @@ void AppendUniqueAssetList(SquidPostPopList& list,Sid sid) {
     storage[used]=sid.value;list.SetCount(list.Count()+1U);
 }
 // CRT ftol의 유한 signed64 범위에서 low DWORD를 반환한다.
+std::uint32_t NativeTruncate(float value) { const double wide=value;return !std::isfinite(wide) || wide<-9223372036854775808.0 || wide>=9223372036854775808.0 ? 0U:static_cast<std::uint32_t>(static_cast<std::int64_t>(wide)); } //원문_ftol의signed64와indefinite하위DWORD를보존하며typed의예외를바꾸지않는다.
 std::uint32_t Truncate(float value) {
     const auto wide=static_cast<double>(value);
     if (!std::isfinite(wide) || wide<-9223372036854775808.0 || wide>=9223372036854775808.0)
@@ -238,16 +239,17 @@ void RawAssetPostPop::Residence(Sid sid,std::uint32_t flags) const {
     base_.PostPopBase(sid,flags);
 }
 // 간헐천의 비용이 실제 결정량 WORD가 된다. 주변 iterator는 원본 순서로 현재 raw 타입을 다시 읽는다.
-void RawAssetPostPop::Geyser(Sid sid,std::uint32_t flags) const {
+void RawAssetPostPop::GeyserPostPop(Sid sid,std::uint32_t flags) const { Geyser(sid,flags,true); } //현재가상선택은caller가소유하며다른자산의몸체를넓혀허용하지않는다.
+void RawAssetPostPop::Geyser(Sid sid,std::uint32_t flags,bool native) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if ((flags&1) && !(pool_.Slot(sid)[patch ? 40 : 35]&9)) {
         AppendAssetList(state_.Geysers(),sid);AssetNeed(hooks_.geyserRegistration)(sid,1);
-        SetAssetWord(pool_,sid,Truncate(Type(sid).cost),state_,hooks_);
+        SetAssetWord(pool_,sid,native ? NativeTruncate(Type(sid).cost):Truncate(Type(sid).cost),state_,hooks_);
         Regular(sid,0,0.1f);
         const auto raw=pool_.Slot(sid);
         const auto visit=[this](Sid neighbor) { // 현재 후보의 TYPE를 읽고 Unpop→같은 물리 프레임→현재 가상 Repop 순서를 실행한다.
             const auto type=pool_.Slot(neighbor)[10];
-            if (type==state_.islandType || type==state_.stalagType) {
+            if (type==state_.IslandType() || type==state_.StalagType()) {
                 const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
                 AssetNeed(hooks_.unpop)(neighbor,0);Write(AssetSlot(pool_,neighbor),patch ? 36U : 34U,8,patch ? 4U : 1U);AssetNeed(hooks_.repop)(neighbor,0x40);
             }
@@ -355,9 +357,9 @@ void RawAssetPostPop::PostPop(Sid sid,std::uint32_t flags) const {
 }
 // 일반 Pop 분배와 같은 raw 저장소인지 검사하도록 반환한다.
 const SidPool& RawAssetPostPop::Pool() const { return pool_; }
-std::function<void(float,float,const std::function<void(Sid)>&)> MakeAssetPostPopFinder(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types) { //0041def0의 plain 정수화와 실제 일반 finder를 공유한다.
-    return [&pool,&hash,types](float x,float y,const std::function<void(Sid)>& visitor) {
-        const auto action=AssetNeed(visitor);const auto cellX=std::bit_cast<std::int32_t>(Truncate(x)),cellY=std::bit_cast<std::int32_t>(Truncate(y));RawSquidFinder finder(pool,hash,types);
+std::function<void(float,float,const std::function<void(Sid)>&)> MakeAssetPostPopFinder(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,bool native) { //0041def0의 plain 정수화와 실제 일반 finder를 공유한다.
+    return [&pool,&hash,types,native](float x,float y,const std::function<void(Sid)>& visitor) {
+        const auto action=AssetNeed(visitor);const auto cellX=std::bit_cast<std::int32_t>(native ? NativeTruncate(x):Truncate(x)),cellY=std::bit_cast<std::int32_t>(native ? NativeTruncate(y):Truncate(y));RawSquidFinder finder(pool,hash,types);
         for (auto sid=finder.Begin({cellX,cellY,cellX,cellY});sid.value;sid=finder.Next()) action(sid); // 후보 next 저장과 각 효과 뒤 현재 링크/버킷 전진 순서를 보존한다.
     };
 }

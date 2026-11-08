@@ -4393,6 +4393,8 @@ std::unique_ptr<RawProductionMaintenance> RawCampaignSession::MakeProductionMain
     return std::make_unique<RawProductionMaintenance>(current->core.pool,current->core.types.size(),current->contentFinder,globals,panel,std::move(reads),std::move(hooks));
 }
 
+void RawCampaignSession::NotifyGeyserAi(std::uint32_t token,std::uint32_t sid,std::uint32_t operation) { impl_->aiWorld->Geyser(token,sid,operation); } //기존최초Pop/삭제와동일한실제AI목록본문이다.
+void RawCampaignSession::CheckCarrierPostPop(o::Sid sid) { static_cast<void>(impl_->priests->CheckCarrier(sid)); } //기존직접Carrier후처리와같은가상확인종단이다.
 void RawCampaignSession::NotifyAiObject(std::uint32_t owner,o::Sid object,bool added) { if (!impl_->aiObjects) throw std::logic_error("실제AI객체통지미설치");impl_->aiObjects->Notice(owner,object,added); } //원문선택후같은실제AI본체만소비한다.
 void RawCampaignSession::RecheckCurrentSelection() {
     auto& s=*impl_;const auto link=s.activeSelection.lock();if (link && link->selection) { link->selection->RecheckMouse([&s](auto x,auto y,auto type) { return s.world.Find(std::bit_cast<float>(x),std::bit_cast<float>(y),type).value; });return; }

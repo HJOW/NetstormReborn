@@ -659,5 +659,19 @@
     "queueActivated": false,
     "m6lComplete": false,
     "newMpExecutions": 0
+  },
+  "progress1179": {
+    "report": "cpppj/host-resource-postpop-20261108.json",
+    "longHostFactoryLifecycle": true,
+    "baseRegularVtables": 16,
+    "nativeFullSelection": true,
+    "resourcePostPopVtables": 7,
+    "allNoWorldDerivedComplete": false,
+    "canonicalTags": 15,
+    "untagged": 73,
+    "tagIsNotFullScopeCompletion": true,
+    "queueActivated": false,
+    "m6nComplete": false,
+    "newMpExecutions": 0
   }
 }

@@ -25,7 +25,7 @@ bool CurrentFormVtable(SidPool& pool,std::uint32_t table) {
 SquidFormDispatch::SquidFormDispatch(SidPool& pool,RawSquidDestroy& destroy,SquidDestroyHooks assets,SquidAssetDestroy assetDestroy)
     :pool_(pool),destroy_(destroy),assets_(std::move(assets)),assetDestroy_(std::move(assetDestroy)) {
     if (&destroy.Pool()!=&pool) throw std::invalid_argument("Form 분배 공통 삭제 SID 풀 불일치");
-    if (!assets_.emit || !assets_.selected) throw std::invalid_argument("Form 분배 자산 공통 경계 필요");
+    if (!assets_.emit || (!assets_.selected && !assets_.selectedRaw)) throw std::invalid_argument("Form 분배 자산 공통 경계 필요");
 }
 // 가상 몸체의 emit/Unpop 두 경계가 함께 있어야 완전한 Form 등록으로 인정한다.
 void SquidFormDispatch::Register(const SidPool& pool,std::uint32_t type,SquidDestroyHooks hooks) {
@@ -47,7 +47,7 @@ void SquidFormDispatch::Bind(SquidProcessHost& processes) {
 }
 // 전체 Form 경로가 합성한 현재 자산 훅/가상 삭제 경계를 공유하게 한다.
 void SquidFormDispatch::SetAssets(SquidDestroyHooks assets,SquidAssetDestroy assetDestroy) {
-    if (!assets.emit || !assets.selected || !assetDestroy) throw std::invalid_argument("Form 분배 현재 자산 경계 필요");
+    if (!assets.emit || (!assets.selected && !assets.selectedRaw) || !assetDestroy) throw std::invalid_argument("Form 분배 현재 자산 경계 필요");
     assets_=std::move(assets);
     if (!destroy_.HasPatchDiagnostics()) assetDestroy_=std::move(assetDestroy); // 실제 PATCH83VT의+10은 최초 같은 World의 common/Bridge 부모를 유지한다. 후설치의 TYPE별 분류는 현재 Pre/Post hooks에만 반영한다.
 }
@@ -76,7 +76,8 @@ bool SquidFormDispatch::Destroy(Sid sid,std::uint32_t flags) const {
 }
 // 공유 분배기는 파생 호스트가 전달한 공통 효과도 같은 최상위 자산 경계로 바로 보낸다.
 SquidDestroyHooks SquidFormDispatch::Hooks() const {
-    SquidDestroyHooks hooks;hooks.selected=[this] { return assets_.selected(); };
+    SquidDestroyHooks hooks;if (assets_.selected) hooks.selected=[this] { return assets_.selected(); };
+    if (assets_.selectedRaw) hooks.selectedRaw=[this] { const auto selected=assets_.selectedRaw;if (selected) return selected();if (!assets_.selected) throw std::logic_error("현재Form분배의실제선택조회미연결");return std::uint32_t(assets_.selected().value); }; //현재부모교체뒤에도Native전체DWORD를유지하고typed는기존Sid를사용한다.
     // 파생 Unpop도 현재 타입별 실제 호스트가 처리한다.
     hooks.unpopForm=[this](Sid sid) { Route(sid).unpopForm(sid); };
     // 종속 삭제는 루트 재진입으로 처리해 가상 자산 재정의를 보존하며 각 pre/post/release는 해당 호스트에 전달한다.

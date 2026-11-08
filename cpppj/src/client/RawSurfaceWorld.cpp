@@ -106,7 +106,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     // neighbors: 발자국에 인접한 표면·객체를 조회하는 검색기.
     o::RawSquidNeighbors* neighbors{};/* connect: 연결. */ o::RawBridgeConnect* connect{};
     // surface: 표면.
-    o::RawIslandPostPop* surface{};/* baseDestroy: 기본 삭제. */ std::unique_ptr<o::RawSquidDestroy> baseDestroy;
+    o::RawIslandPostPop* surface{};/* baseDestroy: 기본 삭제. */ std::unique_ptr<o::RawSquidDestroy> legacyBaseDestroy; //독립typedWorld의기존지역삭제깊이/수명계약만유지한다.
+    o::RawSquidDestroy* baseDestroy{}; //Native는동일Storage의장기공통삭제기를빌린다.
     // virtualDestroy: 타입별 가상 삭제 경로를 선택하는 분배기.
     std::unique_ptr<o::RawSquidDestroyDispatch> virtualDestroy;/* common: 파생 타입 사이에 공유하는 기본 처리기 또는 상태. */ std::unique_ptr<o::SquidDestroyLifecycle> common;
     // lifecycle: 수명.
@@ -170,16 +171,18 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         objects.setFrame=[this](o::Sid sid,std::int32_t number,std::uint32_t flags) { frame->Set(sid,number,flags);changed=true; };
         objects.notifySurface=[this](o::Sid sid) { building->NotifySurface(sid); }; // 실제 판본별 무상태 진단 몸체다.
         connect=&storage->Connections();surface=&storage->Surface(); //표면접두/연결도같은장기생성/공간실행기다.
-        baseDestroy=std::make_unique<o::RawSquidDestroy>(pool,*unpop,types);
+        if (storage->UsesNativeTransmissionDevices()) baseDestroy=&storage->BaseDestroy();else { legacyBaseDestroy=std::make_unique<o::RawSquidDestroy>(pool,*unpop,types);baseDestroy=legacyBaseDestroy.get(); } //Native공통깊이는재할당하지않고typed는종전새World깊이를보존한다.
         if (auto diagnostics=storage->DestroyDiagnostics()) baseDestroy->BindPatchDiagnostics(std::move(*diagnostics)); // 실제 PATCH Client만 같은 장기 AssertDisplay/로그와 원문 공통 삭제 순서를 사용한다.
         virtualDestroy=std::make_unique<o::RawSquidDestroyDispatch>(*baseDestroy,*neighbors,mode,graph);
         virtualDestroy->BindCurrentModes(*storage->Authority()); //다른 효과에서 boss가 바뀌어도 다음 가상 삭제가 같은 현재 주소를 읽는다.
         // 이 기본값은 단독 표면 기하 검사용 관찰이다. 실제 세션은 BindDeletion으로 보상/실제 UI를 공급한다.
-        common=std::make_unique<o::SquidDestroyLifecycle>(pool,types,bookkeeping,deletion,*baseDestroy,o::SquidDeletionHooks{
+        o::SquidDeletionHooks commonHooks{ //독립typed표면의기존관찰경계이며Native선택getter만아래에서실제장기주소에연결한다.
             [this](const o::SquidDeletionEvent&) { ++deletionRequests; },
             [](const o::SquidDestroyEvent& event) {
                 if (event.effect!=o::SquidDestroyEffect::Transmit) throw std::logic_error("raw 표면 월드의 미연결 삭제 효과");
-            }},graph);
+            }};
+        if (storage->UsesNativeTransmissionDevices()) commonHooks.selectedRaw=[owner=storage.get()] { return owner->CurrentProcessSelection(); }; //Pre진단뒤같은전체DWORD를비교하며Sid snapshot을선행소비하지않는다.
+        common=std::make_unique<o::SquidDestroyLifecycle>(pool,types,bookkeeping,deletion,*baseDestroy,std::move(commonHooks),graph);
         lifecycle=std::make_unique<o::RawSurfaceLifecycle>(pool,*neighbors,links.connectorType,CommonDeletionHooks(),o::SurfaceLifecycleHooks{
             [this](o::Sid sid,float x,float y) { o::ScheduleBridgeFallChecked(*host,pool,types,sid,x,y,storage->Checking()); },
             [this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); },
@@ -195,7 +198,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         formDispatch=std::make_unique<o::SquidFormDispatch>(pool,*baseDestroy,lifecycle->Hooks(),
             [this](o::Sid sid,std::uint32_t flags,const o::SquidDestroyHooks& hooks) { return virtualDestroy->Destroy(sid,flags,hooks); });
         if (sharedProcessHost) {
-            auto binding=std::make_shared<o::ProcessHostRuntimeBindings>();binding->destroy=baseDestroy.get();binding->regular=o::MakeBridgeRegularHandler(pool,*events);binding->asset=formDispatch->Hooks(); // 실제 현재 World의 가상 부모만 짧게 빌린다.
+            auto binding=std::make_shared<o::ProcessHostRuntimeBindings>();binding->destroy=baseDestroy;binding->regular=o::MakeBridgeRegularHandler(pool,*events);binding->asset=formDispatch->Hooks(); // 실제 현재 World의 가상 부모만 짧게 빌린다.
             binding->factory=factory; // 같은 World의 공장만 현재 대여에 보관하며 장기 Storage Host에 직접 남기지 않는다.
             binding->postPopDepth=[this] { return bookkeeping.depth; };binding->assertion=[this](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // 공통 깊이는 짧은 World 대여, 진단은 같은 장기 Client 장치를 사용한다.
             processRuntime=binding;processUse=storage->Processes().Bind(std::move(binding));host=&storage->Processes().Host();
@@ -231,8 +234,9 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     o::SquidDestroyHooks CommonDeletionHooks() {
         o::SquidDestroyHooks hooks;
         hooks.selected=[this] { return deletionSelected ? deletionSelected() : deletion.selected; };
+        if (storage->UsesNativeTransmissionDevices()) hooks.selectedRaw=[this] { return storage->CurrentProcessSelection(); }; //실제Native공통삭제는현재World안에서도동일Client전체DWORD를비교한다.
         hooks.emit=[this](const o::SquidDestroyEvent& event) {
-            if (event.effect==o::SquidDestroyEffect::PreDestroy && deletionSelected) deletion.selected=deletionSelected();
+            if (event.effect==o::SquidDestroyEffect::PreDestroy && deletionSelected && !storage->UsesNativeTransmissionDevices()) deletion.selected=deletionSelected(); //Native는실제Pre비교위치에서전체DWORD를읽고typed만기존Sid snapshot을사용한다.
             common->Hooks().emit(event);
         };return hooks;
     }
@@ -297,6 +301,7 @@ void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
         if (!(s.pool.Slot(o::Sid{static_cast<std::uint16_t>(id)})[11]&1)) throw std::logic_error("월드 runtime 설치 전 객체가 존재합니다");
     if (!hooks.assets.emit || !hooks.assets.selected || !hooks.destroy || !hooks.regular || !hooks.transmit.writeData ||
         !hooks.transmit.transmit || !hooks.walkerFall || !hooks.loadingDepth || !hooks.bridgeEffect) throw std::invalid_argument("월드 runtime 필수 경계 누락");
+    if (s.storage->UsesNativeTransmissionDevices()) hooks.assets.selectedRaw=[owner=s.storage.get()] { return owner->CurrentProcessSelection(); }; //후설치가typed Sid callback으로현재NativeDWORD를좁히지않게같은장기조회자를유지한다.
     s.formDispatch->SetAssets(hooks.assets,hooks.destroy);s.host->SetRegularHandler(hooks.regular);s.host->SetFormTransmit(hooks.transmit);
     s.runtime=std::move(hooks);s.runtimeBound=true;s.runtime.loadingDepth(s.loadState.LoadingDepth());
 }
@@ -319,6 +324,7 @@ void RawSurfaceWorld::BindDeletion(o::SquidReward& reward,std::function<o::Sid()
     for (std::uint32_t id=5;id<state.pool.Capacity();++id)
         if (!(state.pool.Slot(o::Sid{static_cast<std::uint16_t>(id)})[11]&1U)) throw std::logic_error("공통 삭제 실제 소비자 설치 전 객체가 존재합니다");
     if (!selected || !hooks.emit || !hooks.forward) throw std::invalid_argument("공통 삭제의 실제 선택/효과/파생 경계 누락");
+    if (state.storage->UsesNativeTransmissionDevices()) hooks.selectedRaw=[owner=state.storage.get()] { return owner->CurrentProcessSelection(); }; //실제후설치common교체도동일Client전체선택getter를유지한다.
     auto replacement=std::make_unique<o::SquidDestroyLifecycle>(state.pool,state.types,state.bookkeeping,state.deletion,*state.baseDestroy,
         std::move(hooks),state.graph,&reward); // 같은Pool/장부가아닌reward는기존생성자가효과전에거부한다.
     state.common=std::move(replacement);state.deletionSelected=std::move(selected);state.deletionBound=true;

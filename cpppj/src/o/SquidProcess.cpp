@@ -81,24 +81,41 @@ std::shared_ptr<ProcessHostRuntimeBindings> SquidProcessHost::Runtime() const {
     auto value=currentRuntime_();if (!value || !value->destroy || &value->destroy->Pool()!=&pool_) throw std::logic_error("장기 ProcessHost의 현재 World 처리기 미연결");return value;
 }
 // 직접 fixture와 현재 World 대여는 각각 자기 실제 삭제 몸체를 사용한다.
-RawSquidDestroy& SquidProcessHost::Destroy() const { return currentRuntime_ ? *Runtime()->destroy : *destroy_; }
+RawSquidDestroy& SquidProcessHost::Destroy() const { //현재World의실제삭제기를우선하고NoWorld는같은장기기본깊이를사용한다.
+    if (currentRuntime_) { const auto current=currentRuntime_();if (current) { if (!current->destroy || &current->destroy->Pool()!=&pool_) throw std::logic_error("현재Host삭제의실제Pool불일치");return *current->destroy; }if (!defaultDestroy_) throw std::logic_error("World없는Host의실제공통삭제미연결");auto& destroy=defaultDestroy_();if (&destroy.Pool()!=&pool_) throw std::logic_error("장기기본삭제의실제Pool불일치");return destroy; }return *destroy_;
+}
 std::size_t SquidProcessHost::TypeCount() const { return sharedTypes_.empty() ? types_.size() : sharedTypes_.size(); } // 직접 fixture의 사본과 장기 실제 TYPE를 구분한다.
 const RiftTypeRecord& SquidProcessHost::Type(std::size_t type) const { if (type>=TypeCount()) throw std::out_of_range("ProcessHost 현재 TYPE 범위");return sharedTypes_.empty() ? types_[type] : sharedTypes_[type]; } // 옵션/다음 World가 바꾼 실제 flags도 즉시 읽는다.
-RegularHandler SquidProcessHost::Regular() const { return currentRuntime_ ? Runtime()->regular : handler_; } // 현재 사건 함수만 짧게 빌린다.
-SquidDestroyHooks SquidProcessHost::Asset() const { return currentRuntime_ ? Runtime()->asset : asset_; } // 현재 자산 효과를 복사해 호출 중 수명을 지킨다.
+RegularHandler SquidProcessHost::Regular() const { //기본payload반환을모든미복원파생에적용하지않고실제VT분배장치를선택한다.
+    if (currentRuntime_) { const auto current=currentRuntime_();if (current) return current->regular;if (!defaultRegular_) throw std::logic_error("World없는Host의실제Regular미연결");return defaultRegular_; }return handler_;
+} // 현재 사건 함수만 짧게 빌린다.
+SquidDestroyHooks SquidProcessHost::Asset() const { //현재World의가상부모또는같은장기Form분배를실제효과직전에조회한다.
+    if (currentRuntime_) { const auto current=currentRuntime_();if (current) return current->asset;if (!defaultAssets_) throw std::logic_error("World없는Host의실제종속삭제분배미연결");return defaultAssets_(); }return asset_;
+} // 현재 자산 효과를 복사해 호출 중 수명을 지킨다.
 ProcessFormTransmission SquidProcessHost::Transmission() const { //현재대여의실제파생writer가있으면우선하고반납뒤에는같은장기기본writer를사용한다.
     if (currentRuntime_) { const auto current=currentRuntime_();if (current && (current->transmit.writeData || current->transmit.writeFullData || current->transmit.packet || current->transmit.transmit)) return current->transmit; }return transmit_;
 }
 void SquidProcessHost::BindDefaultFormTransmission(ProcessFormTransmission transmit,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion) { //같은장기Storage의실제직렬화와진단만최초한번보관한다.
     if (!currentRuntime_ || transmit_.writeData || !transmit.writeData || !transmit.writeFullData || !transmit.packet || !transmit.transmit || !assertion) throw std::invalid_argument("장기ProcessForm의실제기본직렬화장치계약");transmit_=std::move(transmit);state_.assertion=std::move(assertion);
 }
+void SquidProcessHost::BindDefaultLifecycle(std::function<RawSquidDestroy&()> destroy,RegularHandler regular,std::function<SquidDestroyHooks()> assets) { //실제장기getter만최초연결하고가짜World대여를만들지않는다.
+    if (!currentRuntime_ || defaultDestroy_ || !destroy || !regular || !assets) throw std::invalid_argument("장기Host의실제기본삭제/Regular장치계약");defaultDestroy_=std::move(destroy);defaultRegular_=std::move(regular);defaultAssets_=std::move(assets);
+}
+void SquidProcessHost::BindDefaultFormFactory(std::function<SquidFactory&()> factory,std::function<std::uint32_t()> depth) { //Native기본getter만최초한번보관하고Pool/깊이를아직조회하지않는다.
+    if (!currentRuntime_ || defaultFormFactory_ || !factory || !depth) throw std::invalid_argument("장기Host의실제기본공장/깊이계약");defaultFormFactory_=std::move(factory);defaultPostPopDepth_=std::move(depth);
+}
+SquidFactory* SquidProcessHost::FormFactory() const { //World대여자체를합성하지않고실제현재공장만소비위치에서고른다.
+    if (currentRuntime_) { const auto current=currentRuntime_();if (current) { if (!current->factory || &current->factory->Pool()!=&pool_) throw std::logic_error("현재World의동일Pool공장미연결");return current->factory; }if (!defaultFormFactory_) throw std::logic_error("World없는Host의실제장기공장미연결");auto& factory=defaultFormFactory_();if (&factory.Pool()!=&pool_) throw std::logic_error("장기Host기본공장의실제Pool불일치");return &factory; }return directFormFactory_;
+}
+std::function<void(std::string_view,std::string_view,std::uint32_t)> SquidProcessHost::AssertionDevice() const { //진단정상복귀중교체에도선택한현재callable수명만유지한다.
+    if (currentRuntime_) { const auto current=currentRuntime_();if (current) return current->assertion; }return state_.assertion;
+}
 void SquidProcessHost::BindFormFactory(SquidFactory& factory) { // 장기 Host의 옛 World 주소 저장과 다른 Pool 연결을 거부한다.
     if (currentRuntime_ || &factory.Pool()!=&pool_ || (directFormFactory_ && directFormFactory_!=&factory)) throw std::invalid_argument("ProcessForm 직접 공장 연결의 같은 수명/Pool 계약");directFormFactory_=&factory;
 }
 Sid SquidProcessHost::CreateOrTakeForm(std::uint32_t flags,Sid form) { // 인자 계산 뒤 현재 번호를 읽고 실제 선택 장치만 요구한다.
     const auto apply=[&](SquidFactory& factory) { if (&factory.Pool()!=&pool_) throw std::invalid_argument("ProcessForm 공장의 실제 Pool 불일치");const auto type=state_.ProcessFormType();if (form.value) { factory.Take(type,form);return form; }return factory.Create(type,(flags&kClientForm) ? 2U : 0U); }; // 지정 슬롯의 Take 반환은 원문처럼 무시하고 원래 SID를 후단에 사용한다.
-    if (currentRuntime_) { const auto runtime=Runtime();if (!runtime->factory) throw std::logic_error("현재 World의 ProcessForm 공장 미연결");return apply(*runtime->factory); }
-    if (directFormFactory_) return apply(*directFormFactory_);
+    if (auto* factory=FormFactory()) return apply(*factory);
     SquidFactory independent(pool_,types_);independent.BindDiagnostics({types_,state_.assertion,{}});return apply(independent); // 독립 입력의 명시 TYPE snapshot에도 같은 공통 부모를 적용한다.
 }
 bool SquidProcessHost::Owns(const BaseProcess& process) const { const auto* squid=dynamic_cast<const SquidProcess*>(&process);return squid && squid->host_==this; } // 같은 실제 Host 포인터를 비교한다.
@@ -132,11 +149,10 @@ void SquidProcessHost::AttachForm(Sid form,Sid parent,std::uint32_t flags) {
     hooks.lookup=[&](Sid sid) { selected=FromForm(sid); }; // flags가 로컬이어도 서버 lookup은 먼저 실행한다. NULL은 writer 선택 때만 오류다.
     hooks.writeData=[&](bool changed) { if (!selected) throw std::logic_error("Process 부착의 선택된 실제 PID 미연결");const auto device=Transmission().writeData;if (!device) throw std::logic_error("Process 부착의 선택된 실제 writer 미연결");return device(*selected,changed); };
     hooks.transmit=[this](std::int32_t size) { const auto device=Transmission().transmit;if (!device) throw std::logic_error("Process 부착의 선택된 실제 송신 장치 미연결");device(size); };
-    hooks.assertion=[this](auto expression,auto file,auto line) { const auto device=currentRuntime_ ? Runtime()->assertion : state_.assertion;if (!device) throw std::logic_error("Process 부착의 선택된 원문 진단 장치 미연결");device(expression,file,line); }; // 진단 선택 위치에서 현재 대여만 요구한다.
+    hooks.assertion=[this](auto expression,auto file,auto line) { const auto device=AssertionDevice();if (!device) throw std::logic_error("Process 부착의 선택된 원문 진단 장치 미연결");device(expression,file,line); }; // 진단 선택 위치에서 현재 대여만 요구한다.
     hooks.attach=[this](Sid form,Sid parent,std::uint32_t flags) {
     const auto apply=[&](SquidFactory& factory) { factory.AttachForm(form,parent,flags); }; // 파생 직렬화 접두 뒤에만 공통 현재 genus/링크/Pop 진단을 실행한다.
-    if (currentRuntime_) { const auto runtime=Runtime();if (!runtime->factory) throw std::logic_error("현재 World의 공통 Form 부착 공장 미연결");apply(*runtime->factory); }
-    else if (directFormFactory_) apply(*directFormFactory_);
+    if (auto* factory=FormFactory()) apply(*factory);
     else { SquidFactory independent(pool_,types_);independent.BindDiagnostics({types_,state_.assertion,{}});apply(independent); } // 독립 입력도 같은 현재 표/진단 부모를 쓴다.
     }; // 원문 파생 접두를 마친 위치에서만 현재 공통 공장을 요구한다.
     const auto table=std::uint32_t(Word(form,0))|(std::uint32_t(Word(form,2))<<16); // TYPE를 바꾸어도 실제 생성 VT의 +74를 선택한다.
@@ -162,7 +178,7 @@ SquidProcess* SquidProcessHost::Reattach(SquidProcess& process,std::uint32_t pro
 bool SquidProcessHost::AttachBase(SquidProcess& process,std::uint32_t processType,Sid parent,std::uint32_t flags,Sid form,std::unique_ptr<SquidProcess>* owned) {
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr);process.host_=this;process.runtimeBinding_=currentRuntime_ ? currentRuntime_() : std::shared_ptr<ProcessHostRuntimeBindings>{};
     BaseProcessAttachHooks hooks;hooks.typeEnd=[this] { return ProcessTypeEnd(); };hooks.processFormType=[this] { return state_.ProcessFormType(); };
-    hooks.assertion=[this](auto expression,auto file,auto line) { const auto device=currentRuntime_ ? Runtime()->assertion : state_.assertion;if (!device) throw std::logic_error("BaseProcess 부착의 선택된 원문 진단 장치 미연결");device(expression,file,line); };
+    hooks.assertion=[this](auto expression,auto file,auto line) { const auto device=AssertionDevice();if (!device) throw std::logic_error("BaseProcess 부착의 선택된 원문 진단 장치 미연결");device(expression,file,line); };
     hooks.registerProcess=[&] { if (pool_.Edition()==OriginalEdition::Patch1078) state_.typeRotation=(state_.typeRotation+1U)%static_cast<std::uint32_t>(TypeCount());const auto pid=owned ? kernel_.Add(std::move(*owned)) : kernel_.Add(process);process.pid_=pid;return pid; }; // 원문 Kernel helper는 슬롯 검색 전에 회전을 전진시킨다.
     hooks.create=[this](std::uint32_t allocationFlags) { return CreateOrTakeForm(allocationFlags==2 ? kClientForm : 0U,Sid{}); };
     hooks.take=[this](Sid selected) { static_cast<void>(CreateOrTakeForm(0,selected)); };
@@ -190,8 +206,9 @@ RegularProcess* SquidProcessHost::ReceiveSharedRegular(std::span<const std::uint
 RegularProcess* SquidProcessHost::AttachRegular(std::unique_ptr<RegularProcess> process,Sid parent,bool shared,std::uint32_t flags) {
     if (process) process->shared_=shared; // 원문 두 생성자의 실제 writer 가상 표 선택을 부착 전에 보존한다.
     if (shared && pool_.Edition()==OriginalEdition::Patch1078) {
-        const auto runtime=currentRuntime_ ? Runtime() : nullptr;RuntimeCall call(runtime); // 진단이 대여 반납을 시도해도 호출 중 World를 보존한다.
-        const auto depth=runtime ? runtime->postPopDepth : std::function<std::uint32_t()>{};
+        const auto runtime=currentRuntime_ ? currentRuntime_() : nullptr;RuntimeCall call(runtime); //현재실제World가있으면전체owner를보유하고NoWorld는같은장기기본깊이를읽는다.
+        if (currentRuntime_ && !runtime && !defaultPostPopDepth_) throw std::logic_error("World없는SharedRegular의실제공통깊이미연결");
+        const auto depth=runtime ? runtime->postPopDepth : defaultPostPopDepth_;
         if (runtime && !depth) throw std::logic_error("SharedRegular 현재 Pop 깊이 미연결");
         if (depth ? depth()!=0 : state_.postPopDepth!=0) {
             const auto assertion=runtime ? runtime->assertion : state_.assertion; // 정상 복귀 중 연결 교체에도 실행 중 callable은 유지한다.
@@ -240,15 +257,14 @@ void SquidProcessHost::RefreshForm(SquidProcess& process) {
     RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 현재 World의 호출 대여를 끝까지 유지한다.
     if (process.host_!=this || !IsRegistered(process.pid_,&process)) throw std::logic_error("Form 갱신 프로세스의 C++ 소유권 불일치");
     const auto parent=CommonContainedParent(pool_,process.Form());const auto raw=pool_.Slot(parent);const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 부모는 첫 getter에서 저장하고 Form 필드는 각 가상 진입 전에 다시 읽는다.
-    const auto assertion=[this,patch](std::string_view expression,std::uint32_t patchLine,std::uint32_t cdLine) { const auto device=currentRuntime_ ? Runtime()->assertion : state_.assertion;if (!device) throw std::logic_error("Form 갱신의 선택된 원문 진단 장치 미연결");device(expression,patch ? "\\Ns\\O\\Baseprocess.cpp" : "\\ns\\o\\BaseProcess.cpp",patch ? patchLine : cdLine); };
+    const auto assertion=[this,patch](std::string_view expression,std::uint32_t patchLine,std::uint32_t cdLine) { const auto device=AssertionDevice();if (!device) throw std::logic_error("Form 갱신의 선택된 원문 진단 장치 미연결");device(expression,patch ? "\\Ns\\O\\Baseprocess.cpp" : "\\ns\\o\\BaseProcess.cpp",patch ? patchLine : cdLine); };
     if (raw[11]&kDead) assertion("!parent.isDead()",0xb0,0xab);
     if (raw[11]&kFree) assertion("!parent.isFree()",0xb1,0xac);
     UnpopForm(process.Form());AttachForm(process.Form(),parent,0);
 }
 void SquidProcessHost::UnpopForm(Sid form) {
-    const auto runtime=currentRuntime_ ? Runtime() : nullptr;RuntimeCall call(runtime); // 실제 분리/진단이 돌아올 때까지 현재 World를 보존한다.
-    if (runtime) { if (!runtime->factory) throw std::logic_error("Process Unpop의 현재 공장 미연결");runtime->factory->UnpopForm(form);return; }
-    if (directFormFactory_) { directFormFactory_->UnpopForm(form);return; }
+    RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); //현재실제World가있으면전체owner를실제분리반환까지보유한다.
+    if (auto* factory=FormFactory()) { factory->UnpopForm(form);return; }
     FormUnpopHooks hooks;hooks.assertion=state_.assertion;SquidForms(pool_,{}, {},std::move(hooks)).Unpop(form); // 독립 Host도 같은 공통 해제/진단 순서를 사용한다.
 }
 void SquidProcessHost::FormPreDestroy(Sid form,std::uint32_t flags) {
@@ -281,8 +297,13 @@ void SquidProcessHost::Kill(SquidProcess& process,std::uint32_t flags) {
     const auto form=process.form_;
     // 권한이 없고 form이 서버 번호이며 client flag도 없으면 아무것도 하지 않는다.
     if (!state_.Boss() && !(form.value>4 && form.value<pool_.Layout().serverFirst) && !(flags&kClientForm)) return;
-    if (form.value==0 || form.value>=pool_.Capacity() || (pool_.Slot(form)[kState]&kDead))
-        throw std::logic_error("프로세스 form 상태 오류");
+    if (defaultDestroy_) { //실제Native기본장치가있는경로만원문진단의정상복귀를이어가며typed는종전실패계약이다.
+        const auto diagnose=[this](auto expression,auto line) { const auto assertion=AssertionDevice();if (!assertion) throw std::logic_error("NativeProcess Kill의실제진단미연결");assertion(expression,R"(\Ns\O\Baseprocess.cpp)",line); };
+        if (!form.value || form.value>=pool_.Capacity()) diagnose("s.isValid()",0x98U);
+        if (form.value>=pool_.Capacity()) throw std::out_of_range("NativeProcess Kill진단후실제SID예약범위"); //원문저장pointer를바꾸거나잘못된물리를대체하지않는다.
+        if (pool_.Slot(form)[kState]&kDead) diagnose("!s.isDead()",0x99U);
+    }else if (form.value==0 || form.value>=pool_.Capacity() || (pool_.Slot(form)[kState]&kDead)) throw std::logic_error("프로세스 form 상태 오류");
+    if (defaultDestroy_) { const auto asset=Asset();if (!asset.emit) throw std::logic_error("NativeProcess Kill의현재가상삭제분배미연결");asset.emit({SquidDestroyEffect::DestroyDependent,form,{},flags});return; } //실제현재Form/자산VT를공유분배기가선택하며Bridge재정의를공통몸체로우회하지않는다.
     Destroy().Destroy(form,flags,Hooks());
 }
 // 슬롯의 현재 주소와 비교만 한다. 이미 해제된 프로세스의 주소를 넘겨도 객체를 읽지 않는다.
@@ -362,6 +383,7 @@ SquidDestroyHooks SquidProcessHost::Hooks() {
     // form은 선택 대상이 아니므로 자산 훅이 없으면 선택 없음으로 답한다.
     if (currentRuntime_) hooks.selected=[this] { RuntimeCall call(currentRuntime_());const auto asset=Asset();return asset.selected ? asset.selected() : Sid{}; };
     else if (asset_.selected) hooks.selected=asset_.selected;else hooks.selected=[] { return Sid{}; };
+    if (defaultAssets_) hooks.selectedRaw=[this] { RuntimeCall call(currentRuntime_ ? currentRuntime_():nullptr);const auto asset=Asset();if (!asset.selectedRaw) throw std::logic_error("현재Native Host의전체DWORD선택조회미연결");return asset.selectedRaw(); }; //Native장기기본장치가결합된경우만전체현재DWORD를공통삭제에전달한다.
     hooks.unpopForm=[this](Sid sid) { UnpopForm(sid); };
     hooks.emit=[this](const SquidDestroyEvent& event) {
         RuntimeCall call(currentRuntime_ ? currentRuntime_() : nullptr); // 선택한 가상 효과가 같은 현재 대여를 사용하는 동안 유지한다.
