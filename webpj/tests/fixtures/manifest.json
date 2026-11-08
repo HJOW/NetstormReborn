@@ -12066,9 +12066,38 @@
       "bytes": 86626,
       "lines": 407,
       "fixtureCommit": "ab9361f1",
-      "webCommit": "worktree",
+      "webCommit": "e29b3c22",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierArrival.cpp": "0d82e448"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E161",
+      "id": "islandruntime",
+      "path": "cpppj/tests/fixtures/islandruntime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: mutable 100개 섬 기록/owner/Player 첫 지역과 callback 뒤 현재 목록(10.78 1009행)",
+      "consumers": [
+        "webpj/tests/island-runtime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-island-runtime.js"
+      ],
+      "doc": "docs/webpj-island-runtime-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawIslandRuntime.cpp"
+      ],
+      "scope": "10.78 실제 PE 1009행 전부",
+      "text": true,
+      "sha256": "bc220732f4d41892cd82c847196ae01507598a3e0edb0ae0d3e1ceed2eaaa180",
+      "bytes": 13211952,
+      "lines": 2019,
+      "fixtureCommit": "552656c0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawIslandRuntime.cpp": "da6c61ae"
       }
     }
   ]
