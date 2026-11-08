@@ -8814,7 +8814,7 @@
       "bytes": 78670,
       "lines": 769,
       "fixtureCommit": "e2dfe0d0",
-      "webCommit": "worktree",
+      "webCommit": "41c4d9db",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisDraw.cpp": "e2dfe0d0"
       }
@@ -8843,9 +8843,67 @@
       "bytes": 326709,
       "lines": 1729,
       "fixtureCommit": "3682be7d",
-      "webCommit": "worktree",
+      "webCommit": "41c4d9db",
       "cpppjBasis": {
         "cpppj/src/o/RawAuxiliaryDraw.cpp": "3682be7d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E85",
+      "id": "projectile-geom",
+      "path": "cpppj/tests/fixtures/projectile-geom-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 디스크 발사기 포구(M)/치수(D)/표적 충돌 상자(B)의 float 전체 비트(x87=027f; 원본 PATCH/CD 두 판본 240행)",
+      "consumers": [
+        "webpj/tests/projectile-geometry.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-projectile-geometry.js"
+      ],
+      "doc": "docs/webpj-projectile-geometry-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawProjectileGeometry.cpp"
+      ],
+      "scope": "10.78(originals) 120행 전부 사용(CD 10.72 120행은 범위 밖)",
+      "text": true,
+      "sha256": "4bd57e85b13ff957ec63459638b0655d44b1595bfb5db79d37ca4ec2fbeeaffc",
+      "bytes": 17103,
+      "lines": 241,
+      "fixtureCommit": "5f564e85",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawProjectileGeometry.cpp": "7f6ffcd8"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E85",
+      "id": "cannon-rayend",
+      "path": "cpppj/tests/fixtures/cannon-rayend-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 캐논(TYPE 128) 사정선 끝의 프레임·출발/도착 좌표·사정거리별 반환 두 DWORD(4040행)",
+      "consumers": [
+        "webpj/tests/projectile-geometry.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-projectile-geometry.js"
+      ],
+      "doc": "docs/webpj-projectile-geometry-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawProjectileGeometry.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 4040행 전부 사용",
+      "text": true,
+      "sha256": "442c1aa29620c7f4a782c8fb590a2786a3588f1bfbc73c32f896c6df93de5d63",
+      "bytes": 312377,
+      "lines": 4041,
+      "fixtureCommit": "98d4a440",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawProjectileGeometry.cpp": "7f6ffcd8"
       }
     }
   ]

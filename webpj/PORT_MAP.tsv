@@ -864,7 +864,7 @@ cpppj/src/o/RawProcessRemoval.cpp	port	www/core/raw-process-removal.js	1f00a25a	
 cpppj/src/o/RawProcessSummary.cpp	exclude-host			-	[host-dev-files]
 cpppj/src/o/RawProductionDeck.cpp	port			todo	[o-default]
 cpppj/src/o/RawProductionSync.cpp	port			todo	[o-default]
-cpppj/src/o/RawProjectileGeometry.cpp	port			todo	[o-default]
+cpppj/src/o/RawProjectileGeometry.cpp	port	www/core/raw-projectile-geometry.js	1f00a25a	partial	[o-default] WB04-E85: 투사체 포구/치수 기하(썬 디스크 포구 0046a780·가상 +b4 포구·캐논 사정선 끝 00481750·방향 프레임 0041d6e0·표적 치수/상자 0049af10). fixture projectile-geom 10.78 120행+cannon-rayend 4040행 전부. 남음: muzzle 71 외·hotspot·directionFrame·아이스/썬더(129/131) 사정선의 소비자 fixture 대조와 실제 SHP 헤더 연결
 cpppj/src/o/RawRainAviaryProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawRainVortexDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawRegionOwner.cpp	port	www/core/raw-region-owner.js	1f00a25a	port	[o-default] WB04-E26: 0046f710/0046f770 표면 소유자. fixture region-owner 10.78 816행(originalCD 816행 제외). 실제 Session/미션 adapter 연결은 해당 단위에서
