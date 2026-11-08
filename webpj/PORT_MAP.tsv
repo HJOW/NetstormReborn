@@ -878,8 +878,8 @@ cpppj/src/o/RawRitualRefresh.cpp	port	www/core/raw-ritual-refresh.js	1f00a25a	po
 cpppj/src/o/RawRunePostPop.cpp	port	www/core/raw-rune-post-pop.js	1f00a25a	port	[o-default] WB04-E61: Rune166 후처리(304 예약·Dais/Altar finder·건설 시간 7/10/25·공통 postPopBase). fixture runepostpop 10.78 960행 전부(CD 960행은 범위 밖). 실제 Rune→Pop→Construction 완료 통합은 RawConstructionProcess 단위에서
 cpppj/src/o/RawSalvageCommand.cpp	port	www/core/raw-salvage-command.js	1f00a25a	port	[o-default] WB04-E35: 44c420 요청·4437c0 송신·4436f0 54h 수신. fixture salvage-command 3458행 전부(두 x87 정밀도). 환불/삭제 가상·송신 경계는 훅
 cpppj/src/o/RawSavedStateRead.cpp	exclude-mp			-	[mp-saved-battle]
-cpppj/src/o/RawShrapnelFrame.cpp	port			todo	[o-default]
-cpppj/src/o/RawShrapnelLifetime.cpp	port			todo	[o-default]
+cpppj/src/o/RawShrapnelFrame.cpp	port	www/core/raw-shrapnel-frame.js	1f00a25a	port	[o-default] WB04-E188: 파편 준비 00460000(부모 좌표×배율−캡처 기준점·불투명 수 용량·작업 복사본 행/열 순회)·세 가상 생성기(폭발 게임→CRT, 붕괴/셋째 CRT)·분할 004600a0(한도 3..5 반복마다 재추첨·첫 행/열 제외)·프레임 0045fd60(한 시간 조각·용량 전체 진입 양수·넓은 y/영역 ±3·소진 시 removeForm)·출력 0045fef0(캡처 색 픽셀). fixture shrapnelframe 10.78 980행 전부. 남음: ShrapnelVisualSystem Host 부착·실제 캡처/픽셀 장치 연결
+cpppj/src/o/RawShrapnelLifetime.cpp	port	www/core/raw-shrapnel-lifetime.js	1f00a25a	port	[o-default] WB04-E188: wrapper 004604a0 new104·parent 0 등록(process 16)→더미 TYPE 110 생성→생성 뒤 현재 source 좌표 Pop→부착→상호 감시→셋째 깊이+1→중력 binary32 3종→캡처/준비→최종 source 깊이, 반납 순서(그림→입자→등록→객체). fixture shrapnellifetime 10.78 216행 전부. 남음: 실제 더미/캡처/Host 월드 연결(RawDissolveLifetime 이 재사용)
 cpppj/src/o/RawSidRobust.cpp	port	www/core/raw-sid-robust.js	1f00a25a	port	[o-default] WB04-E26: 004ac040/004ac140 SID 건전성 두 부모. fixture sid-robust-parent 1012행 전부 + 호스트 풀 재사용 계약
 cpppj/src/o/RawSmokeEffect.cpp	port			todo	[o-default]
 cpppj/src/o/RawSnart.cpp	port	www/core/raw-snart.js	1f00a25a	port	[o-default] WB04-E19: 004a8800/004a8850 SNART 이름표 선택(제자리 변환). data-manager-initialize 64행·template-section-names 12행을 통해 대조. 파일 이미지 reader 경로는 DataManager 단위에서

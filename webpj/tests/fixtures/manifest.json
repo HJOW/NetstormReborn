@@ -13010,7 +13010,7 @@
       "bytes": 530414,
       "lines": 63,
       "fixtureCommit": "8240d94c",
-      "webCommit": "worktree",
+      "webCommit": "6ca819d6",
       "cpppjBasis": {
         "cpppj/src/o/ParticleGradient.cpp": "e6d97634",
         "cpppj/src/o/RawFieryTailLifetime.cpp": "fa80cc90"
@@ -13131,7 +13131,7 @@
       "bytes": 608372,
       "lines": 131,
       "fixtureCommit": "b77f1c9f",
-      "webCommit": "worktree",
+      "webCommit": "6ca819d6",
       "cpppjBasis": {
         "cpppj/src/o/RawFieryTailFrame.cpp": "b77f1c9f"
       }
@@ -13160,9 +13160,70 @@
       "bytes": 1532,
       "lines": 9,
       "fixtureCommit": "55520f78",
-      "webCommit": "worktree",
+      "webCommit": "6ca819d6",
       "cpppjBasis": {
         "cpppj/src/o/RawFieryTailLifetime.cpp": "fa80cc90"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E188",
+      "id": "shrapnelframe",
+      "path": "cpppj/tests/fixtures/shrapnel-frame-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 픽셀 파편 준비(세 가상 생성기·두 난수·가장자리/투명 픽셀)와 프레임/출력(가속도·넓은 y·소진·정수화·clip·행 padding)(10.78 준비 198 + 프레임/출력 782행)",
+      "consumers": [
+        "webpj/tests/shrapnel-frame.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-shrapnel-frame.js"
+      ],
+      "doc": "docs/webpj-shrapnel-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawShrapnelFrame.cpp"
+      ],
+      "scope": "10.78 980입력 전부(준비 198·프레임/출력 782)",
+      "text": true,
+      "sha256": "6c7f82e6713691dca43dc48f106c9dc68b4487507110351582f086dee6d38e92",
+      "bytes": 12794383,
+      "lines": 981,
+      "fixtureCommit": "392ab168",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawShrapnelFrame.cpp": "392ab168"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E188",
+      "id": "shrapnellifetime",
+      "path": "cpppj/tests/fixtures/shrapnel-lifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 픽셀 파편 wrapper/세 생성자/같은 준비와 반납(표시 목록 구멍/확장·source 깊이·callback 중 변경 3종·flags)(10.78 216행)",
+      "consumers": [
+        "webpj/tests/shrapnel-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-shrapnel-lifetime.js",
+        "webpj/www/core/raw-shrapnel-frame.js"
+      ],
+      "doc": "docs/webpj-shrapnel-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawShrapnelLifetime.cpp",
+        "cpppj/src/o/RawShrapnelFrame.cpp"
+      ],
+      "scope": "10.78 216입력 전부",
+      "text": true,
+      "sha256": "68b71fd279ca04806b60d5e06261fe919ed25f15a17c0ca16d540fd80b926180",
+      "bytes": 303325,
+      "lines": 217,
+      "fixtureCommit": "954d1942",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawShrapnelLifetime.cpp": "954d1942",
+        "cpppj/src/o/RawShrapnelFrame.cpp": "392ab168"
       }
     }
   ]
