@@ -612,7 +612,7 @@ cpppj/src/o/RawConstructionData.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionEffects.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionHistory.h	port	www/core/construction-history-key.js	1f00a25a	port	[o-default] WB04-E22: 최근 건설 위치 5칸+순번 값형 장부(createConstructionHistory). 배치 통지가 순번을 0으로 쓰는 부분은 건설 통지 단위에서
-cpppj/src/o/RawConstructionLifetime.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionLifetime.cpp	port	www/core/raw-construction-lifetime.js	1f00a25a	port	[o-default] WB04-E129: 표시 목록 등록/40칸 확장/삭제와 건설 표시 버퍼 반납 순서·생성 어댑터. fixture constructionlifetime originals 459행 전부(originalCD/original1037 은 범위 밖). 남음: 실제 RawConstructionFrame Run/Draw/Kill 연결 시험(RawConstructionFrame 이식 뒤)
 cpppj/src/o/RawConstructionLocal.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionPacket.cpp	port			todo	[o-default]

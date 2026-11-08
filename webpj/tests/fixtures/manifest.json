@@ -10923,9 +10923,38 @@
       "bytes": 5046193,
       "lines": 1777,
       "fixtureCommit": "5389347d",
-      "webCommit": "worktree",
+      "webCommit": "d7fe3a0d",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionVisual.cpp": "5389347d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E129",
+      "id": "constructionlifetime",
+      "path": "cpppj/tests/fixtures/constructionlifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 표시 등록/삭제(40칸 확장·빈 칸 재사용)·건설 표시 버퍼 소멸 순서의 외부 요청·슬롯 배열·필드·기록(세 판본 1377행)",
+      "consumers": [
+        "webpj/tests/construction-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-lifetime.js"
+      ],
+      "doc": "docs/webpj-construction-lifetime-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionLifetime.cpp"
+      ],
+      "scope": "10.78(originals) 459행 사용, originalCD·original1037 은 범위 밖",
+      "text": true,
+      "sha256": "ea3657a6c6a46048b368422f2005d35f1755f9305982ff5cd66a429958ed2e8a",
+      "bytes": 396892,
+      "lines": 1378,
+      "fixtureCommit": "d8479868",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionLifetime.cpp": "3e6286eb"
       }
     }
   ]
