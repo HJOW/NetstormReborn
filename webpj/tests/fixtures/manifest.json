@@ -9747,10 +9747,100 @@
       "bytes": 2424203,
       "lines": 1251,
       "fixtureCommit": "a192ea5c",
-      "webCommit": "worktree",
+      "webCommit": "ec532f82",
       "cpppjBasis": {
         "cpppj/src/o/RawDeckDraw.cpp": "a192ea5c",
         "cpppj/src/o/RawGemReward.cpp": "a192ea5c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E106",
+      "id": "squid-retype",
+      "path": "cpppj/tests/fixtures/squid-retype-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 타입 변경 004b1620 의 이전/새 TYPE·상태·발자국 불일치 → 50바이트 전체 raw·진단 행 순서(128행)",
+      "consumers": [
+        "webpj/tests/object-conversion.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-factory.js",
+        "webpj/www/core/raw-object-conversion.js"
+      ],
+      "doc": "docs/webpj-object-conversion-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawObjectConversion.cpp",
+        "cpppj/src/o/SquidFactory.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 128행 전부 사용",
+      "text": true,
+      "sha256": "695a553d2ee0c6a4eff4bb77e6cb0aa1f7d5d1545923a04796425edeb57e4988",
+      "bytes": 15275,
+      "lines": 129,
+      "fixtureCommit": "7198298b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawObjectConversion.cpp": "5d714fe8",
+        "cpppj/src/o/SquidFactory.cpp": "be567d46"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E106",
+      "id": "object-conversion",
+      "path": "cpppj/tests/fixtures/object-conversion-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 비석/주문 Command 0x030000ce 전환의 반환·50바이트 전체 raw·U/P/B/A 효과 순서(36행)",
+      "consumers": [
+        "webpj/tests/object-conversion.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-conversion.js"
+      ],
+      "doc": "docs/webpj-object-conversion-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawObjectConversion.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 36행 전부 사용",
+      "text": true,
+      "sha256": "f05675cd6873807fd82b4b492db84c226b99488c0010a9056fa1c2ca26bd8a41",
+      "bytes": 5340,
+      "lines": 37,
+      "fixtureCommit": "7198298b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawObjectConversion.cpp": "5d714fe8"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E106",
+      "id": "foreign-ritual-reward",
+      "path": "cpppj/tests/fixtures/foreign-ritual-reward-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 비로컬 의식 보상의 기술 비트 쓰기(mode 0)의 256바이트 Core 창과 효과 순서·SP 덧셈(mode 1)의 분산 저장소 결과(x87 제어 639/895)",
+      "consumers": [
+        "webpj/tests/foreign-ritual-reward.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-foreign-ritual-reward.js"
+      ],
+      "doc": "docs/webpj-object-conversion-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawForeignRitualReward.cpp"
+      ],
+      "scope": "10.78 전용: 기술 모드(mode 0) 144행 사용, SP 모드(mode 1) 180행은 분산 SP 정책 이식 뒤 사용",
+      "text": true,
+      "sha256": "d24f26652aae2a1c4cee5bf92a6ca212b0006b176670e522431f6fa9d65f4983",
+      "bytes": 279988,
+      "lines": 505,
+      "fixtureCommit": "1a3ccedb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawForeignRitualReward.cpp": "1a3ccedb"
       }
     }
   ]

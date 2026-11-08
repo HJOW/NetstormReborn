@@ -691,7 +691,7 @@ cpppj/src/o/RawFlyerPreDestroy.cpp	port	www/core/raw-flyer-pre-destroy.js	1f00a2
 cpppj/src/o/RawFlyerProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawFlyerTarget.cpp	port			todo	[o-default]
 cpppj/src/o/RawForcefieldLifecycle.cpp	port			todo	[o-default]
-cpppj/src/o/RawForeignRitualReward.cpp	port			todo	[o-default]
+cpppj/src/o/RawForeignRitualReward.cpp	port	www/core/raw-foreign-ritual-reward.js	1f00a25a	partial	[o-default] WB04-E106: 비로컬 의식 SP 덧셈 004482b0·별도 Core 기술 비트 0048f380→0042b280. fixture foreign-ritual-reward mode 0(기술) 144행 전부 대조. 남음: mode 1(SP) 180행의 실제 분산 SP 저장소/정책(ReadPlayerSpAmount·SetPlayerSpAmount·ScrambledSpStore 연결) 대조
 cpppj/src/o/RawFormAttach.cpp	port	www/core/squid-forms.js	1f00a25a	port	[o-default] WB04-D3(004ac800)
 cpppj/src/o/RawFormLinked.cpp	port	www/core/raw-form-linked.js	1f00a25a	port	[o-default] WB04-D5a(004ae080)
 cpppj/src/o/RawFormPacket.cpp	port	www/core/squid-vtables.js	b8cadde1	partial	[o-default] Form VT 4종 칸만. 패킷 작성(+54/+58)은 미이식 / 3.6③(b8cadde1, WB04-D5b 판정): 삭제 패킷 writer 의 헤더 선기록·client SID 진단 정상 복귀 → 패킷 writer 이식 때 반영. VT 4종 칸은 ①
@@ -794,7 +794,7 @@ cpppj/src/o/RawNuggetPostPop.cpp	port	www/core/raw-nugget-post-pop.js	1f00a25a	p
 cpppj/src/o/RawNuggetRegular.cpp	port	www/core/raw-nugget-regular.js	1f00a25a	port	[o-default] WB04-E72: 너겟 Regular 485230(왕복 프레임·끝점 난수 예약·지면 검사 485fe0·가속 낙하 484ec0). fixture nugget-regular 9019행 전부(10.78 전용 파일, 기본 CRT 53비트 열). 공간/프레임/삭제의 실제 월드 연결은 해당 단위에서
 cpppj/src/o/RawNuggetReplenish.cpp	port	www/core/raw-nugget-replenish.js	1f00a25a	port	[o-default] WB04-E71: 너겟 보충 00485e40(권한 진단 재독·모드 관문·지역 0 원점 배치와 확장 단위 사각형). fixture nugget-replenish 372행 전부(10.78 전용 파일). 실제 무작위 배치 0040e050 본체는 해당 파일 단위에서
 cpppj/src/o/RawObjectCommand.cpp	port			todo	[o-default]
-cpppj/src/o/RawObjectConversion.cpp	port			todo	[o-default]
+cpppj/src/o/RawObjectConversion.cpp	port	www/core/raw-object-conversion.js	1f00a25a	port	[o-default] WB04-E106: 비석/주문 Command 0x030000ce 전환 41e400/462290(Unpop 뒤 QA/TYPE 재조회·retype·프레임 DWORD·QA WORD)·Session 바인더(SquidFactory.retype 진단 0x22d~0x22f). fixture squid-retype 128행+object-conversion 36행 전부(10.78 전용 파일). 공간 해제/재등록/기본 프레임/부모 명령은 훅 경계
 cpppj/src/o/RawObjectTrace.cpp	port			todo	[o-default]
 cpppj/src/o/RawObjectTraceFields.cpp	port			todo	[o-default]
 cpppj/src/o/RawObjectTraceMain.cpp	port			todo	[o-default]
