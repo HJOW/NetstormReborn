@@ -10131,9 +10131,96 @@
       "bytes": 470063,
       "lines": 2561,
       "fixtureCommit": "8abd00ac",
-      "webCommit": "worktree",
+      "webCommit": "68b0a9c1",
       "cpppjBasis": {
         "cpppj/src/o/RawGunAnimation.cpp": "02b00b12"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E114",
+      "id": "cannonfire",
+      "path": "cpppj/tests/fixtures/cannon-fire-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬/썬더 캐논 공통 Fire 의 Frame/Initialize/Step/Launch 반환·외부 효과 순서·64바이트 이미지·네 슬롯 200바이트(5534행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/cannon-fire.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cannon-fire.js"
+      ],
+      "doc": "docs/webpj-cannon-fire-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCannonFire.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 5534행 전부 사용",
+      "text": true,
+      "sha256": "b1090cbf8edc90b391c170a323ba0797163b572262c1ba527b2cf16236ab2e3a",
+      "bytes": 3141271,
+      "lines": 5535,
+      "fixtureCommit": "b5982bb5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCannonFire.cpp": "02b00b12"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E114",
+      "id": "vanderfire",
+      "path": "cpppj/tests/fixtures/vander-fire-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 반더 발사의 Initialize/Step/Launch/Frame 반환·외부 효과·즉시 빔 회피 난수 상태·64바이트 이미지·네 슬롯·현재 시각(393행)과 이름 wrapper(24행)",
+      "consumers": [
+        "webpj/tests/cannon-fire.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cannon-fire.js"
+      ],
+      "doc": "docs/webpj-cannon-fire-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCannonFire.cpp"
+      ],
+      "scope": "10.78 전용 417행 중 발사 393행 사용, 이름 wrapper 24행은 RawLightningLifetime 이식 때 사용",
+      "text": true,
+      "sha256": "be3c685abe10d7deaa88d0a7d1436855b377d3eed439743d6c9c3aa862f20d81",
+      "bytes": 251312,
+      "lines": 418,
+      "fixtureCommit": "08d1234f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCannonFire.cpp": "02b00b12"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E114",
+      "id": "icecannonfire",
+      "path": "cpppj/tests/fixtures/ice-cannon-fire-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 아이스 캐논 80바이트 파생의 Frame/Initialize/Step/Launch 반환·외부 효과 순서·80바이트 이미지·네 슬롯 200바이트(3585행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/ice-cannon-fire.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ice-cannon-fire.js"
+      ],
+      "doc": "docs/webpj-cannon-fire-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawIceCannonFire.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 3585행 전부 사용",
+      "text": true,
+      "sha256": "fc77d37af375595b785c557f8e5a36f09ff4a120b8749a1a163ff1a72343d9ce",
+      "bytes": 2211482,
+      "lines": 3586,
+      "fixtureCommit": "c4885358",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawIceCannonFire.cpp": "02b00b12"
       }
     }
   ]

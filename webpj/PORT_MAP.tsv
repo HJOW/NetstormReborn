@@ -560,7 +560,7 @@ cpppj/src/o/RawBurningSources.cpp	port			todo	[o-default]
 cpppj/src/o/RawBurningVictim.cpp	port	www/core/raw-burning-victim.js	1f00a25a	port	[o-default] WB04-E76: 연소 세 부모(423d50·424110·424530) 공통 앞단(checking 진단 뒤에도 두 번째 robust·선택 슬롯 고정·가상 표/HP 진단 줄)과 풀 연결 훅. fixture burning-victim-parent 504행 전부(10.78 전용 파일). 이후 캡처/HP 계산/입자 이동 본체는 해당 파일 단위에서
 cpppj/src/o/RawBurningVisual.cpp	port			todo	[o-default]
 cpppj/src/o/RawCampaignWorldLoad.cpp	port			todo	[o-default]
-cpppj/src/o/RawCannonFire.cpp	port			todo	[o-default]
+cpppj/src/o/RawCannonFire.cpp	port	www/core/raw-cannon-fire.js	1f00a25a	port	[o-default] WB04-E114: 썬/썬더/반더 공통 발사 467330 프레임·단계표 004684b0/00468520/00468130·launch 00466f50(일반 투사체·반더 즉시 빔 회피 난수)·CannonFireProcess. fixture cannon-fire 5534행+vander-fire 393행(wrapper 24행은 RawLightningLifetime 때) 전부. 중심/공간/소리/Missile/빔/완료 통지/삭제는 훅 경계, GunProcess Host 연결(factory)은 RawGunProcess 이식 뒤
 cpppj/src/o/RawCanonPixelShape.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacement.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementCollision.cpp	port			todo	[o-default]
@@ -747,7 +747,7 @@ cpppj/src/o/RawGunImpact.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunMode.cpp	port	www/core/raw-gun-mode.js	1f00a25a	port	[o-default] WB04-E71: 총 공격 방향 getter 004d4d00(크로스보우 graph×2·signed 문자×2−152). cpppj 에 독립 fixture 가 없어 소스 계약 시험(gun-mode 3건)으로 대조. 소비자(캠페인 프레임·얼음/천둥 미사일)는 해당 파일 단위에서
 cpppj/src/o/RawGunProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunTarget.cpp	port	www/core/raw-gun-target.js	1f00a25a	partial	[o-default] WB04-E82: Gun 표적 findTarget 0046b6f0·mayTarget 0046af80·mayShoot 0046ac00·mayFire 0046b070·cannonRay 00469190·footprint/center(Archer/Cannon finder 순서·float 저장 순서·진단 출력). fixture guntarget 10.78 1727행 전부(값형/현재 Player 조회기 두 방식). 남음: MakeGunTargetHooks(RawGunProcess 선행)·보호 SHP 자산 sunCannon 사정선 48행(cannon-asset-ray)
-cpppj/src/o/RawIceCannonFire.cpp	port			todo	[o-default]
+cpppj/src/o/RawIceCannonFire.cpp	port	www/core/raw-ice-cannon-fire.js	1f00a25a	port	[o-default] WB04-E114: 아이스 캐논 80바이트 파생 004685e0 초기화·00468660 냉각 전환/문맥/표적 판정·공통 프레임 연결·IceCannonFireProcess. fixture ice-cannon-fire 3585행 전부. 냉각 표시/문맥/표적 판정은 훅 경계, GunProcess Host 연결은 RawGunProcess 이식 뒤
 cpppj/src/o/RawIceRicochet.cpp	port			todo	[o-default]
 cpppj/src/o/RawIceTower.cpp	port	www/core/raw-ice-tower.js	1f00a25a	port	[o-default] WB04-E109: 아이스 타워 완성형 파괴 48edf0·성장형 예약 48ead0·삭제 48eb80·이벤트 0x3a6 48ebe0. fixture ice-tower 1426행 전부(10.78 전용 파일). 예약/표면 칸/finder/생성/공간/소유자/받침 정리/공통 후처리/프레임 갱신은 훅 경계
 cpppj/src/o/RawIslandAdd.cpp	exclude-edit			-	[edit-island-add]
