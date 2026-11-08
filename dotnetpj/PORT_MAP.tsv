@@ -628,3 +628,5 @@ cpppj/src/o/RawSquidDisplayParent.h	Netstorm.Core/Original/RawSquidDisplayParent
 cpppj/src/o/RawSquidDisplayParent.cpp	Netstorm.Core/Original/RawSquidDisplayParent.cs	023a0a93cd4af9e75c56334dcf0d77c2507ec9f6	port
 cpppj/src/o/RawRiftShapeAccess.h	Netstorm.Core/Original/RawRiftShapeAccess.cs	5626fa85b1ef8883ebe2d84b15bf8f742f74965b	port
 cpppj/src/o/RawRiftShapeAccess.cpp	Netstorm.Core/Original/RawRiftShapeAccess.cs	5626fa85b1ef8883ebe2d84b15bf8f742f74965b	port
+cpppj/src/o/SquidDisplay.h	Netstorm.Core/Original/RawSquidDisplay.cs	739b04e5ba1d73bb9a42a7049120836107dda130	port
+cpppj/src/o/SquidDisplay.cpp	Netstorm.Core/Original/RawSquidDisplay.cs	739b04e5ba1d73bb9a42a7049120836107dda130	port

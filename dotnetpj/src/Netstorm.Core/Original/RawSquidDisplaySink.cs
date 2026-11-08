@@ -54,6 +54,13 @@ public abstract class SquidDisplaySink
     {
         throw new InvalidOperationException("표시 원문 진단 장치 미연결");
     }
+
+    /// <summary>현재 메타 섬 파생 표시 갱신 장치다. 일반 사각형·억제·성공 대용으로 처리하지 않는다. 2026-11-07 F2d 표시 수집 이식에서 추가됐다.</summary>
+    /// <param name="raw">현재 슬롯 바이트다.</param>
+    public virtual void MetaRefresh(ReadOnlySpan<byte> raw)
+    {
+        throw new InvalidOperationException("현재 메타 표시 갱신 장치 미연결");
+    }
 }
 
 // 같은 TYPE 이름·프레임 개수와 세 인자로 오류 상세를 만든다. 임의 포인터·힙은 공유하지 않는다. 2026-11-07 F2d 표시 진단 이식에서 추가됐다.

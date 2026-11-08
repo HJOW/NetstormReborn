@@ -31,6 +31,9 @@ public sealed class OriginalTypeRecord
     /// <summary>최대 HP 속성(원본 타입 구조체 +0). 서버가 오브젝트를 만들 때 초기 HP 로 쓴다.</summary>
     public int MaxHitPoints { get; set; }
 
+    /// <summary>고정 외형 프레임 번호(원본 타입 구조체 +0x130 부근, 간헐천 가상78이 읽는다). 표시 수집이 억제보다 먼저 현재 TYPE+128을 읽을 때 쓴다. 2026-11-07 F2d 표시 수집 이식에서 추가됐다.</summary>
+    public int DefaultFrame { get; set; }
+
     /// <summary>비용(원본 타입 구조체 +0xc4, float). 공통 PostPop 이 전역 비용 집계에 더하는 값이다. 추가: W02 PostPop 조각(2026-10-20).</summary>
     public float Cost { get; set; }
 
@@ -106,6 +109,7 @@ public sealed class OriginalTypeRecord
             Flags1 = Flags1,
             Flags2 = Flags2,
             MaxHitPoints = MaxHitPoints,
+            DefaultFrame = DefaultFrame,
             Cost = Cost,
             ZOrder = ZOrder,
             DamageEffect = DamageEffect,
