@@ -36,6 +36,7 @@ struct LocalGeyserHooks {
     std::function<Sid(std::uint32_t,std::uint32_t)> create; // 실제004af530(현재geyserType,0) factory다.
     std::function<void(Sid,float,float,std::uint32_t)> pop; // 생성한 간헐천의 실제 가상+90(x,y,0)이다.
     std::function<bool(std::int32_t)> regionExists; //004857d0에서 선택한 실제 IslandList.exists다. 제외 요청이 없으면 요구하지 않는다.
+    std::function<FortRandomRectangle(std::uint32_t,std::span<const std::uint8_t>)> playerBoundsRecord; // 앞선 반복이 고른 같은 Player this를 경계 member에 전달한다.
 };
 // PATCH의 로컬/일반 생성이 같은 난수·빈 간헐천 교체·프레임 문자 필터를 공유한다.
 class RawLocalGeyser {
@@ -46,6 +47,7 @@ public:
         LocalGeyserState& state,LocalGeyserHooks hooks);
     // 00486360: seed0xfed 또는 현재 TimeSeed, eligible Player1~8 순서에서 같은 local 난수를 공유한다.
     void Generate() const;
+    void BindCurrentPlayers(std::function<std::span<const std::uint8_t>()> players); // 반복마다 현재base를 조회하며 선택한 this는 실제 경계 호출까지 유지한다.
     // 00486130의 로컬 요청: 권한/요새 guard→최근목록0→각 생성100회 시도→실제 생성/자원 순서다.
     void Populate(std::int32_t quantity,GameRandom& random,FortRandomRectangle rectangle) const;
     //일반 요청은 constructor 위치에서 제외 영역을 한 번 캡처하고 각 후보에 지형/허공 허용을 적용한다.
@@ -82,6 +84,9 @@ private:
     std::span<const std::uint8_t> spots_; // 후보/confirm 사이 효과가 바꾼 현재65536BYTE spot 표다.
     std::span<const RiftTypeRecord> types_; // 현재 emptyGeyser genus와 geyser cost를 읽는 실제 TYPE 표다.
     std::span<const RiftTypeFrames> frames_; // hash0의현재isle 프레임문자를읽는같은프레임표다.
+    std::function<std::span<const std::uint8_t>()> currentPlayers_; // Native의 같은 장기 Player owner 조회기다.
+    std::span<const std::uint8_t> Players() const; // 각 원문 반복의 현재9기록 물리만 조회한다.
+    FortRandomRectangle SelectedBounds(std::uint32_t owner,std::span<const std::uint8_t> record) const; // 선택한 this를 보존하고 typed의 기존 owner 인자는 유지한다.
     std::span<const std::uint8_t> players_; // eligible flags/region을 매 Player 차례에서 직접 읽는 원본9기록이다.
     SquidPostPopList& recent_; // 00595094/98의 최근 최대5생성 목록이며 전체 장부를 대신하지 않는다.
     LocalGeyserState& state_; // 권한/수량/자원pool/현재타입 전역의 단일 저장소다.

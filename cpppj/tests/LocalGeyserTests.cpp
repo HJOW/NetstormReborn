@@ -78,7 +78,7 @@ struct GeyserEnvironment {
 }
 
 // 같은원본221행을기존독립상태/실제공유자원두backend에서결과/전체저장소/효과순서까지대조한다.
-void CheckLocalGeyserFixture(bool shared,bool gameOwner=false) {
+void CheckLocalGeyserFixture(bool shared,bool gameOwner=false,bool currentBase=false) {
     std::ifstream input(NETSTORM_LOCALGEYSER_FIXTURE);if (!input) throw std::runtime_error("로컬간헐천 fixture 없음");
     std::string line;std::uint32_t count=0;
     // 사례마다 실제 원본과 같은 독립 raw 저장소를 구성한다.
@@ -113,7 +113,9 @@ void CheckLocalGeyserFixture(bool shared,bool gameOwner=false) {
         RawGameAuxState owner;owner.ResourcePool()=state.resourcePool;std::int32_t localSharedPool=state.resourcePool;std::int32_t& sharedPool=gameOwner ? owner.ResourcePool() : localSharedPool; // 실제 owner와 기존 값형 backend를 구별한다.
         if (gameOwner) { state.sharedGeyserType=&owner.GeyserType();state.geyserType=70; } // 실제전역의명시초기입력이며Bind시의복사/예산snapshot이아니다.
         if (shared) { state.resourcePool=-777;environment.sharedPool=&sharedPool; }
-        RawLocalGeyser body(pool,hash,spots,types,frames,players,recent,state,environment.Hooks());CHECK(&body.Pool()==&pool);CHECK(&body.Recent()==&recent);
+        auto selectedHooks=environment.Hooks();selectedHooks.playerBoundsRecord=[original=selectedHooks.playerBounds](auto owner,auto) { return original(owner); };RawLocalGeyser body(pool,hash,spots,types,frames,players,recent,state,std::move(selectedHooks));std::vector<std::uint8_t> oldAllocation;
+        if (currentBase) { body.BindCurrentPlayers([&] { return std::span<const std::uint8_t>(players); });oldAllocation=std::move(players);players=oldAllocation;environment.players=players;std::fill(oldAllocation.begin(),oldAllocation.end(),std::uint8_t{0xee}); } // 다음 Player 차례의 실제base와 물리 수명만 바꾼다.
+        CHECK(&body.Pool()==&pool);CHECK(&body.Recent()==&recent);
         if (shared) { body.BindResourcePool(sharedPool);CHECK(&body.ResourcePool()==&sharedPool); }
         GameRandom random(Number(row[1]));LocalGeyserPoint point{Float(0xdeadbeef),Float(0xcafebabe)};std::uint32_t result=0;
         if (row[0]=="T") result=body.TryCandidate(random,GeyserRectangle(Number(row[2])),point);
@@ -221,4 +223,19 @@ TEST_CASE(LocalGeyser_GeneralExclusionSelectedRequirements) {
     bool missing=false;try { body.Populate(0,random,{}, {1,1,1}); } catch (const std::logic_error&) { missing=true; }
     CHECK(missing && recent.count==0 && random.State()==123);
     body.Populate(0,random,{}, {0,1,1});CHECK(random.State()==123);
+}
+
+// 생성 뒤 현재base를 바꿔도 같은221행의 실제 난수/생성/최근목록/자원 출력이 유지된다.
+TEST_CASE(LocalGeyser_CurrentBaseReplaysIndependent221) { CheckLocalGeyserFixture(true,true,true); }
+
+// 한 차례의 실제 경계 호출 뒤 다음 Player 차례는 새base를 읽고 부모는 권한 guard 앞에서 호출된다.
+TEST_CASE(LocalGeyser_GenerateReselectsBaseBetweenPlayers) {
+    SidPool pool(OriginalEdition::Patch1078,kLocalPoolCapacity);SquidHash hash;std::vector<std::uint8_t> spots(65536),before(1620),after(1620);std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));Put(before,0xb4+0x50,2,1);Put(before,0xb4+0x78,1);Put(after,2*0xb4+0x50,32,1);Put(after,2*0xb4+0x78,2);SquidPostPopList recent;recent.entries={1,2,3,4,5};recent.count=3;LocalGeyserState state;state.boss=false;GeyserEnvironment environment{state,recent,before,types};environment.predictable=1;auto hooks=environment.Hooks();std::span<const std::uint8_t> current=before;std::vector<std::uint32_t> seen;std::uint32_t reads{};
+    hooks.playerBoundsRecord=[&](auto owner,auto record) { seen.push_back(owner);CHECK(record.data()==(owner==1 ? before.data()+0xb4:after.data()+2*0xb4));if (owner==1) current=after;return GeyserRectangle(0); };RawLocalGeyser body(pool,hash,spots,types,frames,before,recent,state,std::move(hooks));body.BindCurrentPlayers([&] { ++reads;return current; });body.Generate();CHECK((seen==std::vector<std::uint32_t>{1,2}) && reads==8 && recent.count==3 && environment.created==0);
+}
+
+// regionExists 뒤 base가 바뀌어도 이 차례의 경계 member에는 앞서 선택한 같은 this를 전달한다.
+TEST_CASE(LocalGeyser_ExclusionsKeepSelectedRecordAfterRegionEffect) {
+    SidPool pool(OriginalEdition::Patch1078,kLocalPoolCapacity);SquidHash hash;std::vector<std::uint8_t> spots(65536),before(1620),after(1620);std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));Put(before,0xb4+0x50,1,1);Put(before,0xb4+0x78,7);Put(after,2*0xb4+0x50,1,1);Put(after,2*0xb4+0x78,8);SquidPostPopList recent;recent.entries={1,2,3,4,5};LocalGeyserState state;GeyserEnvironment environment{state,recent,before,types};auto hooks=environment.Hooks();std::span<const std::uint8_t> current=before;std::vector<std::uint32_t> seen;
+    hooks.regionExists=[&](auto region) { CHECK(region==7 || region==8);current=after;return true; };hooks.playerBoundsRecord=[&](auto owner,auto record) { seen.push_back(owner);CHECK(record.data()==(owner==1 ? before.data()+0xb4:after.data()+2*0xb4));return FortRandomRectangle{static_cast<float>(Get(record,0x78)),0,20,30}; };RawLocalGeyser body(pool,hash,spots,types,frames,before,recent,state,std::move(hooks));body.BindCurrentPlayers([&] { return current; });const auto areas=body.PlayerExclusions();CHECK((seen==std::vector<std::uint32_t>{1,2}) && areas.size()==2);if (areas.size()==2) CHECK(areas[0].left==-5.F && areas[1].left==-4.F);
 }

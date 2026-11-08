@@ -39,13 +39,32 @@ struct RawCampaignConstructionGameplay {
     o::ConstructionConfirmHooks confirm; // 기준점과 선택적 실제 기록기다. 생성/송신/직접 통지는 내부가 연결한다.
     o::ConstructionNoticeHooks notice; // 운반/사제 조회·접근·이동/시작이다. 정리/배치/환불/삭제/갱신은 내부가 연결한다.
 };
+// 건설이 실제 소비하는 같은13참조만 보관하며 World/Kernel/Form 소유권을 만들지 않는다.
+struct RawConstructionCore {
+    o::SidPool& pool; // 현재 생성/삭제의 실제 SID 풀이다.
+    o::SquidHash& hash; // 현재 후보/표면 검색의 같은 해시다.
+    std::span<std::uint8_t> spots; // 실제65536BYTE 점유 지도다.
+    std::span<const o::RiftTypeRecord> types; // 같은 현재 TYPE 표다.
+    std::span<const o::RiftTypeFrames> frames; // 같은 현재 프레임 표다.
+    o::SquidPostPopState& bookkeeping; // HP/비용/생산과 공유하는 실제 장부다.
+    o::SquidOwnerMode& ownerMode; // 같은 현재 battle/metamap bool 주소다.
+    o::SquidFactory& factory; // 같은 실제 생성자 분배기다.
+    o::SquidOwner& owner; // 같은 공통 소유자 지정 부모다.
+    o::RawBuildingSpace& building; // 실제 표면 통지 부모다.
+    o::RawSquidDestroyDispatch& virtualDestroy; // 같은 현재 가상10 삭제다.
+    o::RawSurfaceLifecycle& surfaces; // 같은 실제 표면 Pre/Post 수명이다.
+    o::BridgeConnectState& bridgeState; // 현재 다리/받침 TYPE 번호의 같은 주소다.
+};
+RawConstructionCore BindConstructionCore(const RawWorldCore& core); // 독립 World의 기존 실제 참조13개만 선택한다.
+RawConstructionCore BindConstructionCore(RawSurfaceStorage& storage); // Native는 World 없이 같은 장기 부품을 직접 빌린다.
 // 건설/간헐천의 실제 물리와 가상 생성·공간·삭제 부모다. World를 새로 만들거나 대여/reset하지 않는다.
 struct RawConstructionRuntime {
-    RawWorldCore core; //같은 Pool/Hash/TYPE/spot/장부·Factory/Pop/Graph/Host를 참조하며 배열이나 상태 사본을 만들지 않는다.
+    RawConstructionCore core; //같은 Pool/Hash/TYPE/spot/장부·Factory/Pop/Graph/Host를 참조하며 배열이나 상태 사본을 만들지 않는다.
     std::shared_ptr<RawSurfaceStorage> storage; //진단과 같은 장기 물리를 pin하며 짧은 UI/Session의 소유권을 합성하지 않는다.
     std::function<o::Sid(std::uint32_t,std::uint32_t)> create; //현재 실제 Factory 생성 부모이며 선택된 생성의 앞선 효과를 보존한다.
     std::function<void(o::Sid,float,float,std::uint32_t)> pop; //현재 실제 가상+90의 전체 파생 PostPop/전송까지 호출한다.
     std::function<bool(o::Sid,std::uint32_t)> destroy; //현재 실제 가상 삭제의 수락/거부 결과이며 목록 제거만으로 대신하지 않는다.
+    std::function<std::span<std::uint8_t>()> players; // Native는 같은 ClientPlayerRecords의 현재base를 원문 선택 위치에서 조회한다. 독립 World는 기존 span 계약을 유지한다.
 };
 RawConstructionRuntime BindConstructionRuntime(RawSurfaceWorld& world); //기존 실제 World의 Core/Create/Pop/Destroy를 빌린다. World는 이 뷰와 결합한 모듈보다 오래 살아야 한다.
 // 원본 일반 서버 확정/배치 통지와 로컬 간헐천이 같은 실제 월드를 사용한다.

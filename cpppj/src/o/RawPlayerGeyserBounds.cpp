@@ -77,14 +77,22 @@ ChunkRect RawPlayerGeyserBounds::Placement(std::int32_t player,std::span<const s
 // flags진단→현재region record복사→현재PlayerId 진단→배치→좌표저장/확장 순서다.
 FortRandomRectangle RawPlayerGeyserBounds::Bounds(std::uint32_t player) const {
     if (player>=9) throw std::out_of_range("Player 간헐천 범위의 원문9기록 경계");
-    const auto offset=player*kPlayerBytes; // 유효한 동일 Player 원문의 시작 위치다.
-    if (!(players_[offset+kFlags]&0x22U)) assertion_(PlayerGeyserBoundsAssertion::InactivePlayer);
-    const auto record=RegionRecord(Signed(Word(players_,offset+kRegion))); // PlayerId 진단 전에 원본처럼 record를 값으로 보존한다.
+    return BoundsRecord(player,Players().subspan(player*kPlayerBytes,kPlayerBytes)); // 현재base는 진입에서 한 번 선택한다.
+}
+// 원문 member this와 같은 레코드를 사용하며 진단 뒤 필드 내용만 다시 읽는다.
+FortRandomRectangle RawPlayerGeyserBounds::BoundsRecord(std::uint32_t player,std::span<const std::uint8_t> selected) const {
+    if (player>=9 || selected.size()!=kPlayerBytes) throw std::out_of_range("선택한 Player this의 실제 b4 물리 범위");
+    if (!(selected[kFlags]&0x22U)) assertion_(PlayerGeyserBoundsAssertion::InactivePlayer);
+    const auto record=RegionRecord(Signed(Word(selected,kRegion))); // PlayerId 진단 전에 원본처럼 record를 값으로 보존한다.
     if (state_.metamap) assertion_(PlayerGeyserBoundsAssertion::Metamap);
     const auto rectangle=Placement(static_cast<std::int32_t>(player),record); // 유효한 원문 주소의 PlayerId는 같은0~8인덱스다.
     return {static_cast<float>(static_cast<double>(Cell(rectangle.left))-kExpansion),static_cast<float>(static_cast<double>(Cell(rectangle.top))-kExpansion),
         static_cast<float>(static_cast<double>(Cell(rectangle.right))+kExpansion),static_cast<float>(static_cast<double>(Cell(rectangle.bottom))+kExpansion)};
 }
+// 현재 조회기만 결합하고 초기 Player나 World를 구성하지 않는다.
+void RawPlayerGeyserBounds::BindCurrentPlayers(std::function<std::span<const std::uint8_t>()> players) { if (!players || currentPlayers_) throw std::invalid_argument("현재 Player 범위 조회기의 중복/누락");currentPlayers_=std::move(players); }
+// 각 member 호출의 this 선택에 필요한 현재9기록만 읽는다.
+std::span<const std::uint8_t> RawPlayerGeyserBounds::Players() const { const auto read=currentPlayers_;const auto result=read ? read():players_;if (result.size()!=9*kPlayerBytes) throw std::out_of_range("현재 Player 범위의9기록 물리 부족");return result; }
 // 실제 풀과 지도의 참조만 노출하며 사본을 생성하지 않는다.
 const SidPool& RawPlayerGeyserBounds::Pool() const { return pool_; }
 const ChunkMap& RawPlayerGeyserBounds::Map() const { return chunks_; }

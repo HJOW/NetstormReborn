@@ -32,6 +32,8 @@ public:
         std::function<void(PlayerGeyserBoundsAssertion)> assertion);
     // 0048f5c0: 현재 Player flags/region→record→PlayerId→배치→16배→양끝4확장이다.
     FortRandomRectangle Bounds(std::uint32_t player) const;
+    FortRandomRectangle BoundsRecord(std::uint32_t player,std::span<const std::uint8_t> record) const; // 앞선 원문 Caller가 선택한 같은 b4 BYTE this를 진단 뒤에도 유지한다.
+    void BindCurrentPlayers(std::function<std::span<const std::uint8_t>()> players); // 각 Bounds 진입의 현재base 조회기만 연결한다.
     // 00432430: y행/x열의 첫 signed섬BYTE 일치에서6BYTE를 복사하고 없으면0레코드다.
     std::array<std::uint8_t,6> RegionRecord(std::int32_t region) const;
     // 00431ff0: 현재 패턴의 실제 폭/높이를 원점(6,6)에 더한다. record의 위치 nibble은 사용하지 않는다.
@@ -50,6 +52,8 @@ private:
     const ChunkMap& chunks_; // 현재 지역 record를 직접 읽는 유일한 실제 지도다.
     std::span<const RiftTypeRecord> types_; // 현재 puzzlePiece 발자국을 읽는 실제 TYPE 표다.
     std::span<const RiftTypeFrames> frames_; // 같은 타입 번호의 실제 Canon 프레임 표다.
+    std::function<std::span<const std::uint8_t>()> currentPlayers_; // 현재base를 선택하며 이미 선택한 this를 콜백 뒤 다시 고르지 않는다.
+    std::span<const std::uint8_t> Players() const; // 실제 선택 위치에서 현재9기록 물리를 확인한다.
     std::span<const std::uint8_t> players_; // 현재 flags와 첫 지역DWORD를 읽는 원문9기록이다.
     PlayerGeyserBoundsState state_; // 현재 모드/옵션/타입/배치 방향의 단일 저장소 참조다.
     std::function<void(PlayerGeyserBoundsAssertion)> assertion_; // 원본 진단의 실제 소비자이며 누락을 허용하지 않는다.

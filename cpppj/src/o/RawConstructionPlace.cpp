@@ -184,23 +184,24 @@ void RawConstructionPlace::ChargeForPlacement(const ConstructionPlaceRequest& re
 // 00442b50: 표시 비트를 먼저 읽어 두고 켠 뒤 권한 여부로 갈린다. 권한 쪽은 SP를 빼지 않고 환불/취소 통지를 보낸다.
 void RawConstructionPlace::ChargeShortfall(std::uint32_t type,std::uint32_t player,float x,float y,std::uint32_t argument,std::uint32_t direction) {
     RequirePatch();
+    const auto selectedPlayers=currentPlayers_ ? Players():players_; // 442b50 진입에서 고른 같은 Player base는 SP/안내 효과 뒤에도 유지한다.
     const float cost=Type(type).cost;
     if (player>static_cast<std::uint32_t>(kPlayerCount)) throw std::out_of_range("건설 비용 처리 플레이어 번호 오류");
     const auto offset=static_cast<std::size_t>(player)*0xb4; // 현재 Player의 원본 stride다.
     auto flags=state_.playerFlags[player]; // 값형 원문 fixture의 입력이며 실제 연결에서는 현재 raw로 교체한다.
-    if (!players_.empty()) { flags=0;
+    if (!selectedPlayers.empty()) { flags=0;
         // 현재 비정렬 DWORD를 little endian으로 읽는다.
-        for (std::size_t i=0;i<4;++i) flags|=static_cast<std::uint32_t>(players_[offset+0x54+i])<<(8*i);
+        for (std::size_t i=0;i<4;++i) flags|=static_cast<std::uint32_t>(selectedPlayers[offset+0x54+i])<<(8*i);
     }
     const bool reported=(flags&kShortfallFlag)!=0;flags|=kShortfallFlag;
-    if (players_.empty()) state_.playerFlags[player]=flags;
+    if (selectedPlayers.empty()) state_.playerFlags[player]=flags;
     else {
         // 표시 비트 외의 현재 Player 비트를 모두 보존한다.
-        for (std::size_t i=0;i<4;++i) players_[offset+0x54+i]=static_cast<std::uint8_t>(flags>>(8*i));
+        for (std::size_t i=0;i<4;++i) selectedPlayers[offset+0x54+i]=static_cast<std::uint8_t>(flags>>(8*i));
     }
-    const auto name=[this,offset,player] { // 안내를 선택하는 현재 위치에서만 실제 원본 이름을 읽는다.
-        if (players_.empty()) return state_.playerNames[player];
-        const auto begin=players_.begin()+offset+0xc,end=players_.begin()+offset+0x2c; // 원본 Player 이름은+c부터subscriber+2c 직전의32바이트다.
+    const auto name=[this,offset,player,selectedPlayers] { // 안내를 선택하는 현재 위치에서만 실제 원본 이름을 읽는다.
+        if (selectedPlayers.empty()) return state_.playerNames[player];
+        const auto begin=selectedPlayers.begin()+offset+0xc,end=selectedPlayers.begin()+offset+0x2c; // 원본 Player 이름은+c부터subscriber+2c 직전의32바이트다.
         const auto terminator=std::find(begin,end,0); // 정상 Player 이름의 종료를 인접 필드까지 넘겨 찾지 않는다.
         if (terminator==end) throw std::out_of_range("건설 비용 안내 Player 이름의 NUL 누락");return std::string(begin,terminator);
     };
@@ -254,6 +255,10 @@ void RawConstructionPlace::SetWord(Sid sid,std::uint16_t word) {
 void RawConstructionPlace::BindPlayerRecords(std::span<std::uint8_t> players) {
     RequirePatch();if (players.size()!=9*0xb4) throw std::invalid_argument("건설 배치의 실제 Player 기록 크기 오류");players_=players;
 }
+// 실제 Native 조회기만 연결하며 여기서 초기화/레코드 선택은 수행하지 않는다.
+void RawConstructionPlace::BindCurrentPlayers(std::function<std::span<std::uint8_t>()> players) { RequirePatch();if (!players || currentPlayers_) throw std::invalid_argument("현재 건설 Player 조회기의 중복/누락");currentPlayers_=std::move(players); }
+// 원문 선택 시점의 실제 물리만 확인하며 미연결 typed는 기존 span을 유지한다.
+std::span<std::uint8_t> RawConstructionPlace::Players() const { const auto read=currentPlayers_;auto result=read ? read():players_;if (result.size()!=9*0xb4) throw std::out_of_range("현재 건설 Player9 물리 범위");return result; }
 // 어댑터와 호출자가 같은 풀을 쓰는지 확인할 수 있게 실제 풀을 돌려준다.
 const SidPool& RawConstructionPlace::Pool() const { return pool_; }
 // 같은 풀의 실제 수신/소유자/SP 모듈만 바꿔 끼운다. Pop과 통지 경계는 호출자가 준 것을 유지한다.

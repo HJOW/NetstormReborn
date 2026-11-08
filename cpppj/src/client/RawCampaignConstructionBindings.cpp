@@ -19,9 +19,16 @@ std::uint32_t ConstructionVtable(std::span<const std::uint8_t> raw) {
     for (std::size_t index=0;index<4;++index) value|=std::uint32_t(raw[index])<<(8*index);return value;
 }
 }
+// 독립 World가 이미 소유한 실제 부품만 선택하며 현재 값/상태를 복사하지 않는다.
+RawConstructionCore BindConstructionCore(const RawWorldCore& core) { return {core.pool,core.hash,core.spots,core.types,core.frames,core.bookkeeping,core.ownerMode,core.factory,core.owner,core.building,core.virtualDestroy,core.surfaces,core.bridgeState}; }
+// Native의 실제 장기 부품을 빌리며 World/Acquire/새 Kernel을 구성하지 않는다.
+RawConstructionCore BindConstructionCore(RawSurfaceStorage& storage) {
+    if (!storage.UsesNativeTransmissionDevices()) throw std::invalid_argument("Native 건설 뷰의 실제 장기 owner 누락");
+    return {storage.pool,storage.hash,storage.spots,storage.types,storage.frames,storage.postPopState,storage.ownerMode,storage.Factory(),storage.Owner(),storage.Building(),storage.VirtualDestroy(),storage.SurfaceLifetime(),storage.links};
+}
 // 기존 World adapter만 자기 짧은 실행기를 참조하며 장기 Storage에 World 포인터를 설치하지 않는다.
 RawConstructionRuntime BindConstructionRuntime(RawSurfaceWorld& world) {
-    return {world.Core(),world.Storage(),
+    const auto storage=world.Storage();return {storage->UsesNativeTransmissionDevices() ? BindConstructionCore(*storage):BindConstructionCore(world.Core()),storage,
         [&world](auto type,auto flags) { return world.Create(type,flags); },
         [&world](auto sid,auto x,auto y,auto flags) { world.Pop(sid,x,y,flags); },
         [&world](auto sid,auto flags) { return world.Destroy(sid,flags); }};
@@ -29,7 +36,7 @@ RawConstructionRuntime BindConstructionRuntime(RawSurfaceWorld& world) {
 // 외부의 단일 상태/월드 주소를 빌리며 실제 계산/공간/삭제 몸체만 내부에 조립한다.
 struct RawCampaignConstructionBindings::Impl {
     RawConstructionRuntime runtime; //같은 실제 장기 물리와 현재 가상 생성/Pop/삭제 부모를 빌리며 특정 World 타입에 결합하지 않는다.
-    RawWorldCore core; // 같은 Pool/TYPE/hash/spot/장부의 참조만 보관한다.
+    RawConstructionCore core; // 같은 Pool/TYPE/hash/spot/장부의 참조만 보관한다.
     RawCampaignConstructionState& state; // 현재 모드/타입/수량/이력을 프레임 사본 없이 읽는다.
     o::RawBattleBroadcast& broadcast; // 같은 실제 Player9/NULL 또는 연결 표의 원본 송신 분배기다.
     RawCampaignConstructionEffects effects; // 실제 설정/벽시각/표시/진단의 외부 소비자다.
@@ -73,7 +80,7 @@ struct RawCampaignConstructionBindings::Impl {
         placeHooks=o::MakeConstructionPlaceHooks(core.pool,core.factory,core.owner,hp,&sp,state.place,std::move(placeHooks));
         if (gameplay.setOwner) placeHooks.setOwner=std::move(gameplay.setOwner); // 내려놓은 사제의 원래 소유자와 전투 표식을 가상 몸체가 복원한다.
         place=std::make_unique<o::RawConstructionPlace>(core.pool,core.types,frames,state.place,hp,std::move(placeHooks));
-        place->BindPlayerRecords(players);
+        place->BindPlayerRecords(players);if (runtime.players) place->BindCurrentPlayers(runtime.players); // 실제 원문의 진입에서만 현재base를 선택한다.
         o::ConstructionClearHooks clearHooks; // 삭제는 관찰/목록 제거가 아닌 같은 가상 수명 전체를 실행한다.
         clearHooks.destroy=[this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); };
         clear=std::make_unique<o::RawConstructionClear>(core.pool,core.hash,core.types,frames,state.clear,std::move(clearHooks));
@@ -116,7 +123,7 @@ struct RawCampaignConstructionBindings::Impl {
         commandHooks.request=[this](const o::ConstructionConfirmRequest& value) { return requestBody->Request(value); };
         commandHooks.reject=[this](const o::ConstructionConfirmRequest& value) { place->Reject(value.type,value.player,value.x,value.y,value.argument,value.direction); };
         command=std::make_unique<o::RawConstructionCommand>(core.types,state.command,std::move(commandHooks));
-        bounds=std::make_unique<o::RawPlayerGeyserBounds>(core.pool,chunks,core.types,core.frames,players,currentBounds,effects.boundsAssertion);
+        bounds=std::make_unique<o::RawPlayerGeyserBounds>(core.pool,chunks,core.types,core.frames,players,currentBounds,effects.boundsAssertion);if (runtime.players) bounds->BindCurrentPlayers([read=runtime.players] { return std::span<const std::uint8_t>(read()); }); // 현재base는 각 Player 진입에서 선택하고 선택한 this는 유지한다.
         o::LocalGeyserHooks geyserHooks; // factory/Pop/삭제/받침 모두 현재 같은 월드의 실제 몸체다.
         geyserHooks.configInt=effects.configInt;geyserHooks.wallSeconds=effects.wallSeconds;geyserHooks.negativeQuantity=effects.negativeQuantity;
         geyserHooks.regionExists=effects.islandExists;
@@ -125,7 +132,8 @@ struct RawCampaignConstructionBindings::Impl {
         geyserHooks.confirm=[this](const o::ConstructionConfirmRequest& request) { static_cast<void>(ConfirmSupport(request)); };
         geyserHooks.create=[this](std::uint32_t type,std::uint32_t flags) { return runtime.create(type,flags); };
         geyserHooks.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { runtime.pop(sid,x,y,flags); };
-        geysers=std::make_unique<o::RawLocalGeyser>(core.pool,core.hash,core.spots,core.types,core.frames,players,recent,state.geyser,std::move(geyserHooks));
+        geyserHooks.playerBoundsRecord=[this](auto owner,auto record) { return bounds->BoundsRecord(owner,record); }; // 원문이 앞서 선택한 같은 Player this를 그대로 전달한다.
+        geysers=std::make_unique<o::RawLocalGeyser>(core.pool,core.hash,core.spots,core.types,core.frames,players,recent,state.geyser,std::move(geyserHooks));if (runtime.players) geysers->BindCurrentPlayers([read=runtime.players] { return std::span<const std::uint8_t>(read()); });
         geysers->BindResourcePool(reward.GeyserPool());
     }
     // 실제 현재 전역의 불일치/일반 건설 분기를 생성 전에 거부한다. 지원 범위를 임의 성공으로 넓히지 않는다.

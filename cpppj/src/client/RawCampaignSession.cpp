@@ -2599,7 +2599,8 @@ struct RawCampaignSession::Impl {
         };
         gameplay.notice.tryMove=[this](Sid priest,float x,float y,Sid target) { if (!motion) throw std::logic_error("일반 통지의 실제54 미설치");return motion->Paths().StartPriest({priest,{x,y},0,target.value,0,0,0})!=nullptr; };
         gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,std::bit_cast<float>(bits)); };
-        construction=std::make_unique<RawCampaignConstructionBindings>(world,hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,
+        auto constructionRuntime=BindConstructionRuntime(world);if (world.Storage()->UsesNativeTransmissionDevices()) constructionRuntime.players=[records=playerRecords] { return records->Records(); }; // 장기 Player owner만 보관하며 Session this나 현재 span을 고정하지 않는다.
+        construction=std::make_unique<RawCampaignConstructionBindings>(std::move(constructionRuntime),hp,sp,rewardState,metadata.frames,chunks,players,*broadcast,constructionState,
             PlayerGeyserBoundsState{core.ownerMode.battle,objectState.mission,core.ownerMode.challenge,geyserMapSize,piece,playerDirections,&metadata.geometry.decoderDiagnostics},
             recentGeysers,assetState.Geysers(),std::move(effects),std::move(gameplay));
     }

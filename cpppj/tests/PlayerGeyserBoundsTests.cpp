@@ -42,7 +42,7 @@ std::string BoundsWords(std::span<const std::uint32_t> words) {
 }
 
 // 새 원본439행의 실제 검색/양쪽 배치/원본 Canon과 전체 상태/진단 순서를 검증한다.
-TEST_CASE(PlayerGeyserBounds_IndependentPeFixture) {
+void ReplayPlayerBounds(bool currentBase) {
     std::ifstream input(NETSTORM_PLAYER_GEYSER_BOUNDS_FIXTURE);if (!input) throw std::runtime_error("Player 간헐천 범위 fixture 없음");
     std::string line;std::uint32_t count=0;
     // 사례마다 동일 입력을 독립 저장소에 공급한다.
@@ -81,6 +81,8 @@ TEST_CASE(PlayerGeyserBounds_IndependentPeFixture) {
             else if (mutation==4) { types[107].footX=2;types[107].footY=3;piece=108; }
             else if (mutation==5) chunks.At(std::min(2,width-1),std::min(3,height-1)).record=BoundsRecord(row,true);
         });CHECK(&body.Pool()==&pool);CHECK(&body.Map()==&chunks);
+        std::vector<std::uint8_t> oldAllocation; // 원문 this의 물리는 검사 호출이 끝날 때까지 살아 있게 보유한다.
+        if (currentBase) { body.BindCurrentPlayers([&] { return std::span<const std::uint8_t>(players); });oldAllocation=std::move(players);players=oldAllocation;std::fill(oldAllocation.begin(),oldAllocation.end(),std::uint8_t{0xee}); } // 이전 span을 쓰면 같은 독립 PE 출력과 달라져야 한다.
         std::array<std::uint8_t,16> output;
         // 부분 record출력의 뒤 stale BYTE도 원본과 같은 값으로 보존한다.
         for (std::size_t index=0;index<4;++index) Put(output,index*4,0xdeadbeef);
@@ -113,4 +115,20 @@ TEST_CASE(CanonConsumers_PlayerGeyserPatternDimensions) {
     CanonDecoderDiagnostics diagnostics;diagnostics.checking.Bind(checking);diagnostics.assertion=[&](auto,auto,std::uint32_t line) { CHECK(line==0x325);++reported;throw std::runtime_error("Player 범위 Canon 진단 중단"); };
     RawPlayerGeyserBounds body(pool,chunks,types,frames,players,{battle,mission,metamap,size,piece,directions,&diagnostics},[](PlayerGeyserBoundsAssertion) { throw std::logic_error("다른 Player 범위 진단 미선택"); });const std::array<std::uint8_t,6> record{3,1,0,7,0xaa,0xbb};
     CHECK(Throws([&] { body.OriginPlacement(record); }));CHECK(reported==1);
+}
+
+// 기존439행의 원래 span 계약을 같은 재생 함수로 유지한다.
+TEST_CASE(PlayerGeyserBounds_IndependentPeFixture) { ReplayPlayerBounds(false); }
+// 생성 뒤 base가 바뀌어도 각 진입이 현재 레코드를 선택해 같은439행의 독립 PE 출력을 재생한다.
+TEST_CASE(PlayerGeyserBounds_CurrentBaseReplaysIndependent439) { ReplayPlayerBounds(true); }
+
+// member는 진입의 this를 유지하며 진단 뒤에는 같은 this의 현재 필드 내용을 다시 읽는다.
+TEST_CASE(PlayerGeyserBounds_CurrentBaseAndSelectedThisHaveDifferentLifetimes) {
+    SidPool pool(OriginalEdition::Patch1078,32768);ChunkMap chunks(2,2);chunks.At(0,0).island=7;chunks.At(0,0).record={0,0,0x21,0,0,0};chunks.At(1,0).island=8;chunks.At(1,0).record={0,0,0x43,0,0,0};std::vector<RiftTypeRecord> types(188);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<FrameCode> codes;
+    for (std::uint8_t side='A';side<='P';++side) { // 같은 실제 패턴의 모든 방향/변형 프레임을 공급한다.
+        for (std::uint8_t number=0;number<11;++number) codes.push_back({side,'P',number,0}); // 각 원문 셀의 실제 변형 번호다.
+    }
+    frames[107]=RiftTypeFrames(std::move(codes));types[107].footX=types[107].footY=1;std::vector<std::uint8_t> before(1620),after(1620);Put(before,0xb4+0x78,7);Put(after,0xb4+0x50,2,1);Put(after,0xb4+0x78,7);std::span<const std::uint8_t> current=before;std::uint32_t reads{},assertions{};bool battle=true,mission=true,metamap=false;std::uint8_t mapSize{};std::uint32_t piece=107;std::array<std::uint32_t,9> directions{};
+    RawPlayerGeyserBounds body(pool,chunks,types,frames,before,{battle,mission,metamap,mapSize,piece,directions},[&](auto event) { CHECK(event==PlayerGeyserBoundsAssertion::InactivePlayer);++assertions;Put(before,0xb4+0x78,8);current=after; });body.BindCurrentPlayers([&] { ++reads;return current; });
+    const auto first=body.Bounds(1);CHECK(first.left==60.F && first.top==76.F && reads==1 && assertions==1);const auto second=body.Bounds(1);CHECK(second.left==28.F && second.top==44.F && reads==2);Put(before,0xb4+0x50,2,1);current={};const auto selected=body.BoundsRecord(1,std::span<const std::uint8_t>(before).subspan(0xb4,0xb4));CHECK(selected.left==60.F && reads==2);
 }

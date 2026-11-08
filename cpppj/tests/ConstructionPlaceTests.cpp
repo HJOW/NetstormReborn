@@ -344,3 +344,10 @@ TEST_CASE(NuggetTypeNumber_ConstructionChargesAndRefundsUseCurrentOwner) {
     FillSlot(InputRaw(scene.pool,Sid{50}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,2,sids,0,0});CHECK(reads==0 && charges==0);next=154;FillSlot(InputRaw(scene.pool,Sid{50}),0,kTypePlain);place.Place({kTypePlain,20.5F,21.25F,0,0,2,sids,0,0});CHECK(reads==1 && charges==1);
     current=kTypePlain;place.Refund(kTypePlain,2);CHECK(refunds==0 && notices==0);current=154;place.Refund(kTypePlain,2);CHECK(refunds==1 && notices==1 && scene.state.nuggetType==154);
 }
+
+// 비용 처리마다 현재base를 고르되 SP 효과 뒤 이름은 진입에서 선택한 같은 레코드에서 읽는다.
+TEST_CASE(ConstructionPlace_CurrentBaseAndSelectedRecordPreserveOriginalChargeOrder) {
+    PlaceScene scene(OriginalEdition::Patch1078);scene.Prepare(kTypePlain,Bits(250.F),0,0,0,0,0,0,1,false,true,false,false,false,5);std::vector<std::uint8_t> before(1620),after(1620);std::span<std::uint8_t> current=before;std::vector<std::string> names;std::uint32_t reads{},charges{};
+    const auto setName=[](auto& bytes,std::string_view name) { std::fill(bytes.begin()+2*0xb4+0xc,bytes.begin()+2*0xb4+0x2c,std::uint8_t{});std::copy(name.begin(),name.end(),bytes.begin()+2*0xb4+0xc); };setName(before,"OLD");setName(after,"NEXT");auto hooks=scene.Hooks();
+    hooks.addPlayerSp=[&](auto owner,float delta) { CHECK(owner==2 && delta==-250.F);++charges;if (charges==1) { setName(before,"KEPT");current=after; }else setName(after,"AFTER"); };hooks.format=[&](auto,auto name) { names.emplace_back(name);return std::string("message"); };SquidReward reward(scene.pool,scene.types,scene.books,scene.rewardState,&scene.store);RawConstructionPlace body(scene.pool,scene.types,scene.frames,scene.state,reward,std::move(hooks));body.BindPlayerRecords(after);body.BindCurrentPlayers([&] { ++reads;return current; });body.ChargeShortfall(kTypePlain,2,20.F,20.F,0,0);body.ChargeShortfall(kTypePlain,2,20.F,20.F,0,0);CHECK((names==std::vector<std::string>{"KEPT","AFTER"}) && reads==2 && charges==2);CHECK(Get(before,2*0xb4+0x54)==0x400 && Get(after,2*0xb4+0x54)==0x400);
+}

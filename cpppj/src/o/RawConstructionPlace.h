@@ -133,6 +133,7 @@ public:
     void AddMoney(std::uint32_t player,float delta);
     // PATCH의 실제9 Player 원문을 연결한다. 비용 표시+54/이름+c를 매 호출 직접 읽고 쓰며 값형 fixture는 기존 State를 쓴다.
     void BindPlayerRecords(std::span<std::uint8_t> players);
+    void BindCurrentPlayers(std::function<std::span<std::uint8_t>()> players); // 같은 현재base를 비용 처리 진입에서만 조회하고 선택한 레코드는 유지한다.
     // 어댑터가 같은 실제 풀을 연결하는지 확인하는 데 쓴다.
     const SidPool& Pool() const;
 private:
@@ -157,6 +158,8 @@ private:
     // reward_: HP·SP·지갑 보상을 실제 장부에 적용하는 처리기.
     const SquidReward& reward_;
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (ConstructionPlaceHooks).
+    std::function<std::span<std::uint8_t>()> currentPlayers_; // Client 장기 owner의 현재base 조회이며 값/이름 사본을 만들지 않는다.
+    std::span<std::uint8_t> Players() const; // 실제 선택 위치의9×b4 물리만 확인한다.
     std::span<std::uint8_t> players_; // 연결됐으면 같은 현재9×b4 Player 바이트이며 사본으로 동기화하지 않는다.
     ConstructionPlaceHooks hooks_;
 };

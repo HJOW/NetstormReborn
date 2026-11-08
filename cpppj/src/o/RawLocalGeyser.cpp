@@ -56,10 +56,10 @@ bool RawLocalGeyser::TryCandidate(GameRandom& random,FortRandomRectangle rectang
 std::vector<FortRandomRectangle> RawLocalGeyser::PlayerExclusions() const {
     std::vector<FortRandomRectangle> result;
     for (std::uint32_t owner=1;owner<=8;++owner) { //각 Player 차례에서 앞선 실제 하위가 바꾼 기록을 다시 읽는다.
-        const auto offset=owner*kPlayerStride;if (!(players_[offset+kPlayerFlags]&1U)) continue;
+        const auto selected=Players().subspan(owner*kPlayerStride,kPlayerStride);if (!(selected[kPlayerFlags]&1U)) continue; // 반복 시작의 실제 current base를 한 번 고른다.
         if (!hooks_.regionExists) throw std::logic_error("간헐천 제외 영역의 실제 IslandList 조회 미연결");
-        if (!hooks_.regionExists(std::bit_cast<std::int32_t>(PlayerWord(players_,offset+kPlayerRegion)))) continue;
-        const auto bounds=hooks_.playerBounds(owner);
+        if (!hooks_.regionExists(std::bit_cast<std::int32_t>(PlayerWord(selected,kPlayerRegion)))) continue;
+        const auto bounds=SelectedBounds(owner,selected);
         result.push_back({bounds.left-kPlayerExclusionMargin,bounds.top-kPlayerExclusionMargin,bounds.right+kPlayerExclusionMargin,bounds.bottom+kPlayerExclusionMargin});
     }
     return result;
@@ -159,12 +159,18 @@ void RawLocalGeyser::Generate() const {
     if (hooks_.configInt("predictableGeysers",1)==0) random.SetState(RawFortFinishOwner::TimeSeed(hooks_.wallSeconds()));
     // 플레이어번호순으로현재flags/지역을읽으며앞선생성효과가바꾼뒤기록도반영한다.
     for (std::uint32_t owner=1;owner<=8;++owner) {
-        const auto offset=owner*kPlayerStride; // 현재Player의원문기록시작이다.
-        if (!(players_[offset+kPlayerFlags]&0x22U) || PlayerWord(players_,offset+kPlayerRegion)==127U) continue;
-        const auto rectangle=hooks_.playerBounds(owner); // 원본은수량전역을읽기전에현재Player사각형을구한다.
+        const auto selected=Players().subspan(owner*kPlayerStride,kPlayerStride); // 다음 반복은 현재base를 다시 고르고 이 차례의 this는 유지한다.
+        if (!(selected[kPlayerFlags]&0x22U) || PlayerWord(selected,kPlayerRegion)==127U) continue;
+        const auto rectangle=SelectedBounds(owner,selected); // 원본은수량전역을읽기전에현재Player사각형을구한다.
         Populate(owner<=4 ? state_.firstPlayerQuantity : state_.lastPlayerQuantity,random,rectangle);
     }
 }
+// 현재 조회기만 연결하며 조회/초기화는 실제 반복의 선택 위치까지 미룬다.
+void RawLocalGeyser::BindCurrentPlayers(std::function<std::span<const std::uint8_t>()> players) { if (!players || currentPlayers_ || !hooks_.playerBoundsRecord) throw std::invalid_argument("현재 간헐천 Player/선택 this 부모의 중복/누락");currentPlayers_=std::move(players); }
+// 선택된 원문 반복에서만 같은 실제9기록을 읽는다.
+std::span<const std::uint8_t> RawLocalGeyser::Players() const { const auto read=currentPlayers_;const auto result=read ? read():players_;if (result.size()!=9*kPlayerStride) throw std::out_of_range("현재 간헐천 Player9 물리 부족");return result; }
+// Native는 같은 선택 레코드를 전달하고 기존 typed 입력은 기존 owner 콜백을 사용한다.
+FortRandomRectangle RawLocalGeyser::SelectedBounds(std::uint32_t owner,std::span<const std::uint8_t> record) const { if (currentPlayers_) { const auto bounds=hooks_.playerBoundsRecord;if (!bounds) throw std::logic_error("간헐천의 실제 선택 Player this 부모 미연결");return bounds(owner,record); }return hooks_.playerBounds(owner); }
 // 실제 자원 전역의 주소만 빌리며 기존값복사·주기적동기화·로컬예산사본을 만들지 않는다.
 void RawLocalGeyser::BindResourcePool(std::int32_t& resourcePool) {
     if (resourcePool_ && resourcePool_!=&resourcePool) throw std::logic_error("로컬 간헐천 자원 전역의 중복 다른 주소 연결");
