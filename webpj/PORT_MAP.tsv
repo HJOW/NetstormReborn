@@ -672,10 +672,10 @@ cpppj/src/o/RawFactoryResearch.cpp	port			todo	[o-default]
 cpppj/src/o/RawFactoryUpgrade.cpp	port			todo	[o-default]
 cpppj/src/o/RawFactoryUpgradeCommand.cpp	port			todo	[o-default]
 cpppj/src/o/RawFarmCluster.cpp	port			todo	[o-default]
-cpppj/src/o/RawFenceCreate.cpp	port			todo	[o-default]
+cpppj/src/o/RawFenceCreate.cpp	port	www/core/raw-fence-create.js	1f00a25a	port	[o-default] WB04-E83: 썬 바리케이드 표식 생성 00456460(방향·포함 사각형·4칸 구간·QA/QB 태그·현재 소유자·Pop 0x40)과 포스 필드 생성 00455b20 mode 1(float 보정·100개 상한·J/K 직접 프레임·bit20 조기 종료·signed SID 소유자). fixture fence-create 표식 M 106+포스 필드 S 306행(재생성 R 166행은 RawFenceRebuild). 새 객체 생성/표면 통지/소유자/Pop 본체 연결은 해당 단위에서
 cpppj/src/o/RawFenceLifetime.cpp	port	www/core/raw-fence-lifetime.js	1f00a25a	port	[o-default] WB04-E74: 썬 바리케이드 연결 정리 4577f0·이웃 갱신 4578f0·가상 preDestroy 457990. fixture fence-lifetime 207행 전부(10.78 전용 파일). 이웃 검색/표식 삭제/재생성(RawFenceRebuild)/Damageable 본체는 해당 파일 단위에서
 cpppj/src/o/RawFenceLine.cpp	port	www/core/raw-fence-line.js	1f00a25a	port	[o-default] WB04-E74: 썬 바리케이드 연결선 삭제 00455b20 mode 0(보정 검색점·100회 상한·J/K 방향 연결선 가상 삭제 0x40). fixture fence-line 99개 입력 전부(10.78 전용 파일). 가상 삭제 본체는 해당 파일 단위에서
-cpppj/src/o/RawFenceMarkerClear.cpp	port			todo	[o-default]
+cpppj/src/o/RawFenceMarkerClear.cpp	port	www/core/raw-fence-marker-clear.js	1f00a25a	port	[o-default] WB04-E83: 기존 fencemark 연결 삭제 004566d0(이웃 중심 영역·QA/packed QB 가 부모인 현재 TYPE 표식만 flags 0x40 가상 삭제·삭제 뒤 finder next/태그 재읽기). fixture fence-marker-clear 259행 전부(10.78 전용 파일). 가상 삭제 본체 연결은 해당 단위에서
 cpppj/src/o/RawFenceNeighbors.cpp	port			todo	[o-default]
 cpppj/src/o/RawFencePostPop.cpp	port	www/core/raw-fence-post-pop.js	1f00a25a	port	[o-default] WB04-E60: 썬 바리케이드 후처리 00457560(이웃·연결선·연결 수·Regular 사건). fixture fence-postpop 330행 전부. 자산 후처리(RawAssetPostPop) 분배 연결은 그 단위에서
 cpppj/src/o/RawFenceRebuild.cpp	port	www/core/raw-fence-rebuild.js	1f00a25a	port	[o-default] WB04-E81: 썬 바리케이드 재생성 제어 00457460(부모 extra&9 진입 차단·네 방향 동맹 이웃/현재 좌표 사거리·이웃 현재 extra&0x21 재읽기·표식 뒤 현재 소유자/좌표로 포스필드 인수). fixture fence-create 재생성(R) 166행(표식 M 106·포스필드 S 306 은 RawFenceCreate 단위). 이웃 검색/사거리/표식/포스필드 본체 연결은 해당 단위에서

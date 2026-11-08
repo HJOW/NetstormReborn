@@ -8708,24 +8708,28 @@
       "path": "cpppj/tests/fixtures/fence-create-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 썬 바리케이드 생성 함수의 부모/새 슬롯 전체 raw 와 호출 순서(표식 M 106·포스필드 S 306·재생성 R 166; 이번 단위는 R 만 소비)",
       "consumers": [
-        "webpj/tests/fence-rebuild.test.mjs"
+        "webpj/tests/fence-rebuild.test.mjs",
+        "webpj/tests/fence-create.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-fence-rebuild.js"
+        "webpj/www/core/raw-fence-rebuild.js",
+        "webpj/www/core/raw-fence-create.js"
       ],
       "doc": "docs/webpj-fence-rebuild-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawFenceRebuild.cpp"
+        "cpppj/src/o/RawFenceRebuild.cpp",
+        "cpppj/src/o/RawFenceCreate.cpp"
       ],
-      "scope": "10.78 전용 단일 판본 578행 중 재생성(R) 166행 사용(표식/포스필드 행은 RawFenceCreate 단위)",
+      "scope": "10.78 전용 단일 판본 578행 전부 사용(표식 M 106·포스 필드 S 306 은 fence-create 시험, 재생성 R 166 은 fence-rebuild 시험)",
       "text": true,
       "sha256": "84c1247a20c3a7cc1321f0fa36b5a36553a13f1e01e3df41caa3444a1dc12fd1",
       "bytes": 2102432,
       "lines": 579,
       "fixtureCommit": "233d223b",
-      "webCommit": "071bd5c6",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawFenceRebuild.cpp": "233d223b"
+        "cpppj/src/o/RawFenceRebuild.cpp": "233d223b",
+        "cpppj/src/o/RawFenceCreate.cpp": "233d223b"
       }
     },
     {
@@ -8752,9 +8756,38 @@
       "bytes": 468607,
       "lines": 3455,
       "fixtureCommit": "028bd402",
-      "webCommit": "worktree",
+      "webCommit": "9c09e067",
       "cpppjBasis": {
         "cpppj/src/o/RawGunTarget.cpp": "56a28270"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E83",
+      "id": "fence-marker-clear",
+      "path": "cpppj/tests/fixtures/fence-marker-clear-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 기존 fencemark 표식 삭제의 검색 영역·삭제 요청 순서·여섯 슬롯 전체 raw(삭제 효과가 태그/체인을 바꾸는 변이 포함)",
+      "consumers": [
+        "webpj/tests/fence-marker-clear.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fence-marker-clear.js"
+      ],
+      "doc": "docs/webpj-fence-create-marker-clear-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFenceMarkerClear.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 259행 전부 사용",
+      "text": true,
+      "sha256": "9dbf35a118c9b319062a3ef6a126142ab0e152c0b3951bc72fccff2a63294c27",
+      "bytes": 165539,
+      "lines": 260,
+      "fixtureCommit": "da2b3423",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFenceMarkerClear.cpp": "da2b3423"
       }
     }
   ]
