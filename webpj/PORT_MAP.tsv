@@ -575,21 +575,21 @@ cpppj/src/o/RawCarrierArrival.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierCandidateSort.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierCheck.cpp	port	www/core/raw-carrier-check.js	1f00a25a	port	[o-default] WB04-E65: Carrier 가상 +0xcc 지면 조회 00426fc0(제외 genus 0x320000·거의 올림 칸 spot&6·가상 +0xc8)·makeCarrierCheckPostPopHooks/SpawnHooks. fixture carriercheck 10.78 676행 전부. 표면 삭제 합성(RawIslandLifecycle)·사제 나선 생성(RawPriestSpawn)은 해당 파일 단위에서
 cpppj/src/o/RawCarrierChoice.cpp	port			todo	[o-default]
-cpppj/src/o/RawCarrierContentNotice.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierContentNotice.cpp	port	www/core/raw-carrier-content-notice.js	1f00a25a	port	[o-default] WB04-E73: 사제/Walker/Carrier 내용물 가상 +24 통지 00429560(폭탄 번개·소리·로컬 소유자 타이머·사제 소리·지면 처리·해방 소리). fixture carrier-content-notice 1731행 전부(10.78 전용 파일). 번개/소리/생성/타이머 본체는 해당 파일 단위에서
 cpppj/src/o/RawCarrierDrop.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierEscape.cpp	port			todo	[o-default]
-cpppj/src/o/RawCarrierFalling.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierFalling.cpp	port	www/core/raw-carrier-falling.js	1f00a25a	port	[o-default] WB04-E73: Carrier 위험한 다리 판정 4225b0·가속 낙하 426ef0·포획 사제 해방 426c80·내부 좌표 40e800. fixture carrier-falling 9884행·carrier-falling-vtables 8행 전부(10.78 전용 파일, 53비트 열). 포획 내용물 검색/Pop/삭제 본체는 해당 파일 단위에서
 cpppj/src/o/RawCarrierFallStart.cpp	port	www/core/raw-carrier-fall-start.js	1f00a25a	port	[o-default] WB04-E72: Carrier 낙하 시작 4287d0(이동 제거·선택 해제·복귀 좌표 41d7a0·사제 해방·5105 task). fixture carrier-fall-start 2850행 전부. 웜 40 경로 생성자 시험은 RawPathRuntime 단위에서
 cpppj/src/o/RawCarrierMining.cpp	port	www/core/raw-carrier-mining.js	1f00a25a	port	[o-default] WB04-E14: 429800 채취 통지 6 BYTE 작성→송신→로컬 수신. fixture carrier-mining 10.78 864행 전부
 cpppj/src/o/RawCarrierMove.cpp	port			todo	[o-default]
-cpppj/src/o/RawCarrierPickup.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierPickup.cpp	port	www/core/raw-carrier-pickup.js	1f00a25a	port	[o-default] WB04-E73: 일반 Carrier 포획 요청 428e00·서버 수신 426520·기존 내용물 제거 4264d0. fixture carrier-pickup 2657행 전부(10.78 전용 파일). 후보 조회/오벨리스크 변환/입력 큐/ContainedForm 생성은 해당 파일 단위에서
 cpppj/src/o/RawCarrierPostPop.cpp	port	www/core/raw-carrier-post-pop.js	1f00a25a	port	[o-default] WB04-E60: Carrier 00427720·Damageable 0044bf80·makeCarrierPostPopHooks. fixture carrierpostpop 10.78 2448행 전부(CD·1037 행은 범위 밖). 사제 접두 조합 검사는 RawPriestPostPop 단위에서
 cpppj/src/o/RawCarrierPreDestroy.cpp	port	www/core/raw-carrier-pre-destroy.js	1f00a25a	port	[o-default] WB04-E56: Carrier 삭제 준비 00426890·FindContained 004ac9f0·사제 훅 연결. fixture carrierpredestroy 10.78 960행 전부. 실제 Damageable/전역 후처리는 해당 이식 단위
 cpppj/src/o/RawCarrierRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierSteal.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierTarget.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierTask.cpp	port	www/core/raw-carrier-task.js	1f00a25a	port	[o-default] WB04-E72: Carrier task 426db0(현재 Regular 조회/생성/낙하 유지/NaN 보존 기한). fixture carrier-fall-start 2850행 중 task 설정 행 포함 전부(10.78 전용 파일)
-cpppj/src/o/RawCarrierTransfer.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierTransfer.cpp	port	www/core/raw-carrier-transfer.js	1f00a25a	port	[o-default] WB04-E73: 미등록 187 캐리어의 주기 Halt 42ac60·너겟 전달 42a0d0·수신 426830. fixture carrier-transfer 1110행 전부(10.78 전용 파일, 53비트 열). 이동 제거/간헐천 선택/귀환/공통 Halt 본체는 해당 파일 단위에서
 cpppj/src/o/RawChatManagerPrefix.cpp	port			todo	[o-default] 단독 HUD Chat 의 manager 초기화. 랭크 prefix 는 단독 관문 그대로
 cpppj/src/o/RawCheckingDiagnostics.h	port			todo	[o-default]
 cpppj/src/o/RawCheckingFlag.h	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB04-E1: 소비 위치마다 읽는 현재 DWORD 뷰는 웹에서 checking() getter 함수 계약으로 대신한다(squid-unpop.js·squid-pop.js·squid-space.js)

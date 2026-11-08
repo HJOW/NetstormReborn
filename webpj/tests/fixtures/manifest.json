@@ -8111,7 +8111,7 @@
       "bytes": 2840413,
       "lines": 9020,
       "fixtureCommit": "f915b765",
-      "webCommit": "worktree",
+      "webCommit": "b113ecbf",
       "cpppjBasis": {
         "cpppj/src/o/RawNuggetRegular.cpp": "4398ba2c"
       }
@@ -8142,10 +8142,155 @@
       "bytes": 2059572,
       "lines": 2851,
       "fixtureCommit": "c3b0a4d5",
-      "webCommit": "worktree",
+      "webCommit": "b113ecbf",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierTask.cpp": "c3b0a4d5",
         "cpppj/src/o/RawCarrierFallStart.cpp": "c3b0a4d5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E73",
+      "id": "carrier-falling",
+      "path": "cpppj/tests/fixtures/carrier-falling-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Carrier 다리 판정/낙하/포획 사제 해방/내부 좌표의 반환 DWORD·호출 순서·부모/포획 Form/새 사제 raw·권한·사제 종류(x87 정밀도 53/64 두 관측 중 53비트 열 사용)",
+      "consumers": [
+        "webpj/tests/carrier-falling.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-falling.js"
+      ],
+      "doc": "docs/webpj-carrier-bodies-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierFalling.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 9884행 전부 사용(64비트 정밀도 열은 범위 밖)",
+      "text": true,
+      "sha256": "15f5eebe0a06307036e1e863a0c516e12d919f0303da8d0ab8ee3753db774367",
+      "bytes": 7742674,
+      "lines": 9885,
+      "fixtureCommit": "030386a6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierFalling.cpp": "8b467ca0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E73",
+      "id": "carrier-falling-vtables",
+      "path": "cpppj/tests/fixtures/carrier-falling-vtables.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제/캐리어/보호막 가상 표의 파괴·사전/사후 파괴·해방·Unpop·Pop·낙하 가상 슬롯 주소(낙하 슬롯 선택 근거)",
+      "consumers": [
+        "webpj/tests/carrier-falling.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-falling.js"
+      ],
+      "doc": "docs/webpj-carrier-bodies-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierFalling.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 8행 전부 사용",
+      "text": true,
+      "sha256": "650e40b5f93b31014cb2e6988f681ca91a5f777c2b7698297202818476bbab54",
+      "bytes": 567,
+      "lines": 9,
+      "fixtureCommit": "030386a6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierFalling.cpp": "8b467ca0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E73",
+      "id": "carrier-pickup",
+      "path": "cpppj/tests/fixtures/carrier-pickup-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 Carrier 포획 요청/수신/기존 내용물 제거의 호출 순서·최종 현재 전역·아홉 물리 슬롯 raw·송신 패킷(x87 정밀도 53/64 두 관측이 같은 열)",
+      "consumers": [
+        "webpj/tests/carrier-pickup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-pickup.js"
+      ],
+      "doc": "docs/webpj-carrier-bodies-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierPickup.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 2657행 전부 사용",
+      "text": true,
+      "sha256": "2245911a825393ecf233e261f486b47efce2ce941339fc5dd123023f0a02441e",
+      "bytes": 5666122,
+      "lines": 2658,
+      "fixtureCommit": "318bfd14",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierPickup.cpp": "318bfd14"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E73",
+      "id": "carrier-content-notice",
+      "path": "cpppj/tests/fixtures/carrier-content-notice-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Carrier 내용물 통지의 외부 효과 호출 순서·재진입 뒤 현재 전역 9칸·부모/내용물 슬롯 50바이트 둘",
+      "consumers": [
+        "webpj/tests/carrier-content-notice.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-content-notice.js"
+      ],
+      "doc": "docs/webpj-carrier-bodies-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierContentNotice.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1731행 전부 사용",
+      "text": true,
+      "sha256": "c8a21b68d3b0b6e271d04950022366eab9abd3069ff5a9ce3b53746f1fb4d4bf",
+      "bytes": 620091,
+      "lines": 1732,
+      "fixtureCommit": "a550c7f0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierContentNotice.cpp": "a550c7f0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E73",
+      "id": "carrier-transfer",
+      "path": "cpppj/tests/fixtures/carrier-transfer-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 미등록 187 캐리어의 너겟 전달/주기 Halt/수신의 호출 순서·최종 상태 7칸·네 물리 슬롯 raw·송출 패킷(x87 정밀도 53/64 두 관측 중 53비트 열 사용)",
+      "consumers": [
+        "webpj/tests/carrier-transfer.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-transfer.js"
+      ],
+      "doc": "docs/webpj-carrier-bodies-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierTransfer.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1110행 전부 사용(64비트 정밀도 열은 범위 밖)",
+      "text": true,
+      "sha256": "11ea45cdc7567e5fa85fe229428c9232c11863ff092637315cadaad23a919fd9",
+      "bytes": 1082972,
+      "lines": 1111,
+      "fixtureCommit": "d00175c9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierTransfer.cpp": "0d82e448"
       }
     }
   ]
