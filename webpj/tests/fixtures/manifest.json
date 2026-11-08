@@ -8053,7 +8053,7 @@
       "bytes": 62320,
       "lines": 373,
       "fixtureCommit": "e7d9ff94",
-      "webCommit": "worktree",
+      "webCommit": "37324329",
       "cpppjBasis": {
         "cpppj/src/o/RawNuggetReplenish.cpp": "e7d9ff94"
       }
@@ -8082,9 +8082,70 @@
       "bytes": 17726,
       "lines": 129,
       "fixtureCommit": "30d49562",
-      "webCommit": "worktree",
+      "webCommit": "37324329",
       "cpppjBasis": {
         "cpppj/src/o/RawAssetOwner.cpp": "30d49562"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E72",
+      "id": "nugget-regular",
+      "path": "cpppj/tests/fixtures/nugget-regular-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 너겟 Regular 의 반환 float·호출 순서(F/R/X/A/I/C/D/U/P/Y/B)·슬롯 50 raw·게임 난수 상태(x87 정밀도 53/64 두 관측 중 53비트 열 사용)",
+      "consumers": [
+        "webpj/tests/nugget-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-nugget-regular.js"
+      ],
+      "doc": "docs/webpj-nugget-regular-carrier-fall-start-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawNuggetRegular.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 9019행 전부 사용(64비트 정밀도 열은 범위 밖)",
+      "text": true,
+      "sha256": "185f7df7e9600e2e1f1d7d622b0a7de3c4382bb5f1347309822326d5bf50f1e6",
+      "bytes": 2840413,
+      "lines": 9020,
+      "fixtureCommit": "f915b765",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawNuggetRegular.cpp": "4398ba2c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E72",
+      "id": "carrier-fall-start",
+      "path": "cpppj/tests/fixtures/carrier-fall-start-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Carrier task 설정/낙하 시작의 하위 호출 순서·프로세스 필드·현재 시각·Player 기록 Adler-32·부모/Form raw(확보 실패 480행 포함; x87 53/64 두 관측 중 53비트 열 사용)",
+      "consumers": [
+        "webpj/tests/carrier-fall-start.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-carrier-task.js",
+        "webpj/www/core/raw-carrier-fall-start.js"
+      ],
+      "doc": "docs/webpj-nugget-regular-carrier-fall-start-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCarrierTask.cpp",
+        "cpppj/src/o/RawCarrierFallStart.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 2850행 전부 사용(64비트 정밀도 열은 범위 밖)",
+      "text": true,
+      "sha256": "ed68324eaa72914ed304434e148bfb563dcebf24f11d04c17f93599d5501b686",
+      "bytes": 2059572,
+      "lines": 2851,
+      "fixtureCommit": "c3b0a4d5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCarrierTask.cpp": "c3b0a4d5",
+        "cpppj/src/o/RawCarrierFallStart.cpp": "c3b0a4d5"
       }
     }
   ]

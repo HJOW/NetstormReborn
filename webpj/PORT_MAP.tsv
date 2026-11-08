@@ -579,7 +579,7 @@ cpppj/src/o/RawCarrierContentNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierDrop.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierEscape.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierFalling.cpp	port			todo	[o-default]
-cpppj/src/o/RawCarrierFallStart.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierFallStart.cpp	port	www/core/raw-carrier-fall-start.js	1f00a25a	port	[o-default] WB04-E72: Carrier 낙하 시작 4287d0(이동 제거·선택 해제·복귀 좌표 41d7a0·사제 해방·5105 task). fixture carrier-fall-start 2850행 전부. 웜 40 경로 생성자 시험은 RawPathRuntime 단위에서
 cpppj/src/o/RawCarrierMining.cpp	port	www/core/raw-carrier-mining.js	1f00a25a	port	[o-default] WB04-E14: 429800 채취 통지 6 BYTE 작성→송신→로컬 수신. fixture carrier-mining 10.78 864행 전부
 cpppj/src/o/RawCarrierMove.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierPickup.cpp	port			todo	[o-default]
@@ -588,7 +588,7 @@ cpppj/src/o/RawCarrierPreDestroy.cpp	port	www/core/raw-carrier-pre-destroy.js	1f
 cpppj/src/o/RawCarrierRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierSteal.cpp	port			todo	[o-default]
 cpppj/src/o/RawCarrierTarget.cpp	port			todo	[o-default]
-cpppj/src/o/RawCarrierTask.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierTask.cpp	port	www/core/raw-carrier-task.js	1f00a25a	port	[o-default] WB04-E72: Carrier task 426db0(현재 Regular 조회/생성/낙하 유지/NaN 보존 기한). fixture carrier-fall-start 2850행 중 task 설정 행 포함 전부(10.78 전용 파일)
 cpppj/src/o/RawCarrierTransfer.cpp	port			todo	[o-default]
 cpppj/src/o/RawChatManagerPrefix.cpp	port			todo	[o-default] 단독 HUD Chat 의 manager 초기화. 랭크 prefix 는 단독 관문 그대로
 cpppj/src/o/RawCheckingDiagnostics.h	port			todo	[o-default]
@@ -791,7 +791,7 @@ cpppj/src/o/RawMissionStart.cpp	port			todo	[o-default]
 cpppj/src/o/RawNewFort.cpp	exclude-edit			-	[edit-new-fort]
 cpppj/src/o/RawNewTechnology.cpp	port	www/core/raw-new-technology.js	1f00a25a	port	[o-default] WB04-E13: 00492a30 기술 획득 부모(조회/추가/snapshot/이름·그림 Config/안내 순서). fixture new-technology 10.78 45행 전부
 cpppj/src/o/RawNuggetPostPop.cpp	port	www/core/raw-nugget-post-pop.js	1f00a25a	port	[o-default] WB04-E16: 00484f90 너겟 PostPop(두 Regular 예약·난수 소비·Damageable 위임). fixture nugget-postpop 10.78 288행 전부
-cpppj/src/o/RawNuggetRegular.cpp	port			todo	[o-default]
+cpppj/src/o/RawNuggetRegular.cpp	port	www/core/raw-nugget-regular.js	1f00a25a	port	[o-default] WB04-E72: 너겟 Regular 485230(왕복 프레임·끝점 난수 예약·지면 검사 485fe0·가속 낙하 484ec0). fixture nugget-regular 9019행 전부(10.78 전용 파일, 기본 CRT 53비트 열). 공간/프레임/삭제의 실제 월드 연결은 해당 단위에서
 cpppj/src/o/RawNuggetReplenish.cpp	port	www/core/raw-nugget-replenish.js	1f00a25a	port	[o-default] WB04-E71: 너겟 보충 00485e40(권한 진단 재독·모드 관문·지역 0 원점 배치와 확장 단위 사각형). fixture nugget-replenish 372행 전부(10.78 전용 파일). 실제 무작위 배치 0040e050 본체는 해당 파일 단위에서
 cpppj/src/o/RawObjectCommand.cpp	port			todo	[o-default]
 cpppj/src/o/RawObjectConversion.cpp	port			todo	[o-default]
