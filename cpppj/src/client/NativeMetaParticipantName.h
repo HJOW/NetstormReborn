@@ -13,4 +13,5 @@ struct NativeMetaParticipantNameHooks { // 원문이 선택한 현재 번역/기
 void WriteNativeMetaParticipantLabel(std::span<std::uint8_t> record,std::string_view prefix,const NativeMetaParticipantNameHooks& hooks); //두 생성/갱신 부모의 경고 그림·번역·rank/weight·이름 서식을 같은+d8에 쓴다. prefix는 caller가 원문대로 구성한다.
 void RebuildNativeMetaParticipantLabel(std::span<std::uint8_t> record,const NativeMetaParticipantNameHooks& hooks); //0042b490 전체: 현재+8 길드를 ~a/콜론으로 감싸되 빈 길드는 빈 접두사를 사용한다.
 void ReceiveNativeMetaParticipantName(ClientChallengeGlobals& challenge,std::span<const std::uint8_t> packet,const NativeMetaParticipantNameHooks& hooks); //004b4680 전체: 첫 subscriber 일치의 active만 검사해 +8 복사→서식→지정 표시→NSInfo를 수행한다.
+void RefreshNativeMetaPlayers(ClientChallengeGlobals& challenge,const NativeMetaParticipantNameHooks& hooks); //004d7189..71d2의현재active40기록을이름재작성→지정표시ff→NSInfo순서로갱신한다.모드/known관문을추가하지않는다.
 }

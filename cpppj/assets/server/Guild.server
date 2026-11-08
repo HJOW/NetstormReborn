@@ -1,0 +1,156 @@
+[Guild]
+<h2>Guilds</h2>
+$Button=Create guild,Tell,REGGUILD
+$Button=Recruiting guilds,Tell,ZSEND(GUILDJOIN,1,6)
+$Button=Guild administration,Tell,GUILDLOGIN(GUILDLOGIN)
+$Button=Leave guild,Tell,ZSEND(GUILDQUIT,0,0)
+$Button=Close,DoNothing,0
+[END]
+
+[GuildAdmin]
+<h2>Guild administration</h2>
+$Button=Recruitment,Tell,ZSEND(GUILDTOGGLEREC,0,0)
+$Button=Join requests,Tell,ZSEND(GUILDVIEWREQUEST,1,6)
+$Button=Choose password,Tell,GUILDLOGIN(GUILDSETPASS)
+$Button=Disband guild,Tell,ZSEND(GUILD,GuildDisbandQuestion,0)
+$Button=Close,DoNothing,0
+[END]
+
+[GuildDisbandQuestion]
+<h2>Disband guild?</h2>
+<p>This removes your current guild.</p>
+$Button=Disband,Tell,ZSEND(GUILDDISBAND,0,0)
+$Button=Cancel,DoNothing,0
+[END]
+
+[GuildViewRequest]
+<h2>Join requests</h2>
+<p>Requests {START} through {END}; total {MAXGUILDS}.</p>
+{CURRENTLYOPEN}
+<?g {BACKSTART}=0>$Button=Previous,Tell,ZSEND(GUILDVIEWREQUEST,{BACKSTART},{BACKEND})
+</?>
+<?l {END}={MAXGUILDS}>$Button=Next,Tell,ZSEND(GUILDVIEWREQUEST,{NEXTSTART},{NEXTEND})
+</?>
+$Button=Refresh,Tell,ZSEND(GUILDVIEWREQUEST,{START},{END})
+$Button=Close,DoNothing,0
+[END]
+
+[GuildSingleRequest]
+<p>{ID}. {PLAYERNAME} (subscriber {SUBID})
+<a href="cmd:Tell,ZSEND(GUILDREQAPROVE,0,{SUBID})">Approve</a></p>
+[END]
+
+[GuildJoin]
+<h2>Recruiting guilds</h2>
+<p>Guilds {START} through {END}; total {MAXGUILDS}.</p>
+{CURRENTLYOPEN}
+<?g {BACKSTART}=0>$Button=Previous,Tell,ZSEND(GUILDJOIN,{BACKSTART},{BACKEND})
+</?>
+<?l {END}={MAXGUILDS}>$Button=Next,Tell,ZSEND(GUILDJOIN,{NEXTSTART},{NEXTEND})
+</?>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildView]
+<p>{ID}. {GUILDNAME}: {MEMBERS} members.
+<a href="cmd:Tell,ZSEND(GUILDSUBMIT,{GUILDNAME},{SUBID})">Request to join</a></p>
+[END]
+
+[GuildSubmitQuestion]
+<h2>Request to join {GUILDNAME}?</h2>
+$Button=Send request,Tell,ZSEND(GUILDSETPENDING,{GUILDNAME},{SUBID})
+$Button=Cancel,DoNothing,0
+[END]
+
+[GuildRecruiting]
+<h2>Guild recruitment</h2>
+<p>Recruitment is now {STATUS}.</p>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildCheckPass]
+<h2>Set guild password?</h2>
+<p>New password: {PASSWORD}</p>
+$Button=Set password,Tell,ZSEND(GUILDCHANGEIT,{PASSWORD},0)
+$Button=Cancel,DoNothing,0
+[END]
+
+[GuildPassWorked]
+<h2>Guild password</h2>
+<p>The password was changed.</p>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildSubmitError1]
+<h2>Join request declined</h2>
+<p>You already belong to a guild.</p>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildSubmitError2]
+<h2>Join request already pending</h2>
+<p>A request to join this guild already exists.</p>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildSubmitError3]
+<h2>Guild not found</h2>
+<p>The requested guild does not exist.</p>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildSubmitError4]
+<h2>Recruitment closed</h2>
+<p>This guild is not accepting requests.</p>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildRequestOk]
+<h2>Join request submitted</h2>
+<p>Your request was recorded for the guild to review.</p>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildLoginCode1]
+<h2>Guild login declined</h2>
+<p>Check your guild membership, guild name and password.</p>
+$Button=Close,DoNothing,0
+[END]
+
+[QuitComplete]
+<h2>Guild membership</h2>
+<p>You left your guild.</p>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildErrorCode2]
+<h2>Guild creation declined</h2>
+<p>You already belong to a guild.</p>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildErrorCode3]
+<h2>Guild creation declined</h2>
+<p>A guild named {GUILDNAME} already exists.</p>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildCode1]
+<h2>Guild created</h2>
+<p>Guild name: {GUILDNAME}</p>
+$Button=Close,DoNothing,0
+[END]
+
+[GuildAdded]
+<h2>Guilds</h2>
+<p>This older interface has been replaced by the guild menu.</p>
+$Button=Guild menu,RequestMenu,Guild
+$Button=Close,DoNothing,0
+[END]
+
+[GuildAddedFail]
+<h2>Guilds</h2>
+<p>This older interface has been replaced by the guild menu.</p>
+$Button=Guild menu,RequestMenu,Guild
+$Button=Close,DoNothing,0
+[END]

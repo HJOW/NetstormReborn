@@ -1,0 +1,39 @@
+[Admin]
+<h2>Netstorm 11.01 Local Server</h2>
+<p>{TIME}Server administration</p>
+<p>Player commands require server administrator access.</p>
+<p>Select a zone to list its players. Empty zones have no players.</p>
+<a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,0X1)">0</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,1X1)">1</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,2X1)">2</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,3X1)">3</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,4X1)">4</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,5X1)">5</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,6X1)">6</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,7X1)">7</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,8X1)">8</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,9X1)">9</a><br>
+<a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,10X1)">10</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,11X1)">11</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,12X1)">12</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,13X1)">13</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,14X1)">14</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,15X1)">15</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,16X1)">16</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,17X1)">17</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,18X1)">18</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,19X1)">19</a><br>
+<a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,20X1)">20</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,21X1)">21</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,22X1)">22</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,23X1)">23</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,24X1)">24</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,25X1)">25</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,26X1)">26</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,27X1)">27</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,28X1)">28</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,29X1)">29</a><br>
+<a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,30X1)">30</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,31X1)">31</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,32X1)">32</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,33X1)">33</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,34X1)">34</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,35X1)">35</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,36X1)">36</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,37X1)">37</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,38X1)">38</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,39X1)">39</a><br>
+<a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,40X1)">40</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,41X1)">41</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,42X1)">42</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,43X1)">43</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,44X1)">44</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,45X1)">45</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,46X1)">46</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,47X1)">47</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,48X1)">48</a> | <a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,49X1)">49</a><br>
+<a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,50X1)">50</a>
+$Button=Close,DoNothing,0
+[END]
+
+[PlayerList]
+<h2>Players in zone {LOCALZONE}</h2>
+<p>{TIME}Players {VIEWMIN} through {VIEWMAX}</p>
+{PLAYERLIST}
+{NAVMENU}
+$Button=Close,DoNothing,0
+[END]
+
+[Player]
+<p>~y{NAME}~w (player {ID}, subscriber {SID})<br>
+Address {IP}; version {MAJOR}.{MINOR}; battle {BATTLE}, slot {SLOT}.<br>
+{MCOLOR}<a href="cmd:Tell,ZSEND(ADMIN,SHUTUP,{ZONE}X{ID})">Mute {SHUTUP}</a>~w |
+{ACOLOR}<a href="cmd:Tell,ZSEND(ADMIN,ADMIN,{ZONE}X{ID})">Administrator {ADMIN}</a>~w |
+<a href="cmd:Tell,ZSEND(ADMIN,KICK,{ZONE}X{ID})">Disconnect</a> |
+<a href="cmd:Tell,ZSEND(ADMIN,FORTBAN,{ZONE}X{ID})">Ban subscriber</a> |
+<a href="cmd:Tell,ZSEND(ADMIN,IPBAN,{ZONE}X{ID})">Ban address</a></p>
+[END]
+
+[NEXTPLAYER]
+<p>
+<?g {BACK}=0><a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,{ZONE}X{BACK})">Previous</a> | </?>
+<?le {START}=34><a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,{ZONE}X{START})">Next</a></?>
+<?g {START}=34><?l {BACK}=28><a href="cmd:Tell,ZSEND(ADMIN,GETPLAYER,{ZONE}X34)">Next</a></?></?>
+</p>
+[END]

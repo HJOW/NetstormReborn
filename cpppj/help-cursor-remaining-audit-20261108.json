@@ -1,0 +1,48 @@
+{
+  "date": "2026-11-08",
+  "host": "HJOW-Athlon",
+  "head": "8f8a9f2219a6bd45b9f7ca47bc928b36829b3e40",
+  "scope": "M7.1 helpWord 및 M7.2 메타 활성 커서 읽기 전용 구현 준비; 코드수정/빌드/실행/커밋 없음",
+  "source_hashes": {
+    "AGENTS.md": "e6701478f05d0dd19e4e34aa5cbf5e9494615ff5fc4a2b3f4a89ff1242ab1753",
+    "LEFT_JOBS.md": "b7f6ce4d047612b8ae72411ca6bd059e2041bb089ef416aafaae09fda45ad95e",
+    "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "extracted/refined/originals/Netstorm.c": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "cpppj/src/client/ClientMain.cpp": "6a42af61ee188c7ab0746eaf866985d0f3baa122f2765abd75738f2d1a397a51",
+    "cpppj/src/client/ClientMain.h": "6a0f1a31437f033afe5b8b107d73137e797841fe54957422119efbd7235c7ded",
+    "cpppj/src/o/ConfigInterface.cpp": "9a545893f5cd5a9ae17e1b81954bf30560c660f32e3f7151aa1212afe373676b",
+    "cpppj/src/o/ConfigInterface.h": "ad86fc68c60599663616ff2401741c969997f38712afcc360421b7a61b42a14e",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "69dd66b9e0945e4deef3e9795b8e7b8d036f7b55831bc3f85a10191c03349e66",
+    "cpppj/src/client/ClientMetaObjectInput.cpp": "1c3311ddd67df074875308750c17d2e1ce1b86c5148553cc9ef62515f6811064",
+    "cpppj/src/client/RawObjectMenu.cpp": "f64429574e0fd57e325cd99b47e3c46197979b5047d879b1a9693fda7d58a1ef",
+    "cpppj/src/client/RawObjectMenu.h": "47fa941dc9fe3becb679f297ea29c8f7cc662aa44d1e6f91c5643739aa905e9a",
+    "cpppj/src/client/RawMenuControls.cpp": "81f61f2ec08c2701542676866a0af6ff10f1c8e9879aed70b29d223a210336c7",
+    "cpppj/src/client/RawMenuControls.h": "dba68a504a74880ab8a5655330cbbf82422e5099a7903eef093ea58924ca4030",
+    "cpppj/src/client/GumpHelp.cpp": "4321be566905b048b4d6fed95c9385ab8a1887a39682d9aa73f162abba701594",
+    "cpppj/src/client/UberGump.cpp": "9bd6eb5e61afc726a24b1fbee4a7eac2bd856f200c53a3da50af17b8072256be",
+    "cpppj/src/client/UberGumpCamera.cpp": "7d9fa0c4374958a00c5d0fbd2dc2e9d6aeb44f7919304d0c6f082c297abef04a",
+    "cpppj/src/client/UberMeta.inc": "856ad5f58f42c2da57deecb2bc6a8c87d15320951a30f75283ed0a8e1b61eb59",
+    "cpppj/src/client/ClientMetaPointerInput.cpp": "b71a170ba0c4658d69c45df910635fec34e826a6b804914734f4dd454d2aba94",
+    "cpppj/src/client/RawCampaignSession.cpp": "c797d0a8757f1383c97024089549b6d806a85cdd244a19680f2da3284d39cc97",
+    "cpppj/src/client/RawCampaignSession.h": "d00c757b8be8596821ff2bc31fc369b372c2d66d8fb1fccadcc1acccc4141e38",
+    "cpppj/src/client/RawCampaignCursor.cpp": "364d399135dceb5c1447ead47645b6d6a225e90915ad9e99623a59205c960f7d",
+    "cpppj/src/client/RawCampaignCursor.h": "cc9155789108c73e8d9d645fc527b801e498f62bd4c721ea9368cdc8863aa69b",
+    "cpppj/src/client/RawCursorActions.cpp": "955fe38b0a432cbd5b81e0fe0785525107c49715c27425f903cb840df40482d3",
+    "cpppj/src/client/RawCursorLifecycle.cpp": "bd85c4d435864e4fe04ccb111a100556a07f6cfd81f2d8ec6c121d9b98fb07d9",
+    "cpppj/src/client/RawCursorPreviews.cpp": "65e3b5d689648a7b20f9dd2a0531afc828f9fa4bc45a266982b3273d0b736177",
+    "cpppj/src/client/RawCameraCommit.cpp": "fb68f57c370156195c763f86ec8b10c76852137180a4ed3416b7cfc0ee68340f",
+    "cpppj/src/client/ScriptCommand.cpp": "87908a7252875cfcd2b7a96313c29bd8ea7ae91ef95e53f793c29e8bf0ad880b",
+    "cpppj/src/o/OriginalText.h": "6fb78807ff06d3154849e63f1c29e11336a84ebcaaec1fdf0a54fe35973cd02d"
+  },
+  "critical_findings": [
+    "4413c0의441300 scratch는빈문자열로초기화된다. Config값이빈문자열이면441300이변경없음0을반환해현재캐시(NULL포함)를유지한다.",
+    "현행MetaMap Session에는ConnectCursor/SetEffects설치가없다. world_→InputSession만바꾸는것은활성depth0을복원하지않는다.",
+    "RawMenuControls의61000002특수토큰은현재Translate(Help)를반환하며실제helpWord캐시와다르다.",
+    "한국어준비config.korean의helpWord는정보다. 표시부호화를cache/원문설정저장경계와구별해야한다."
+  ],
+  "artifacts": {
+    "PLAN.md": "24d3842830bfdb13e1729ea310767a799fc17c8ba428ea97516f0df5ee219c36",
+    "original-fragments.c": "d8bd2da43a7ba6249c18516deb507dd713aff86151159a430f6d261160b21683",
+    "4413c0.asm.txt": "97f526da9a621412332dbcfe42186abe07651c17ce8d2fa0f7a8a43620ac36ea"
+  }
+}

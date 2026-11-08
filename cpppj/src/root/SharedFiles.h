@@ -28,7 +28,7 @@ class SharedFileStorage final { // 원문 CWD 입력과 dataPrefix 입력을 구
 public:
     SharedFileStorage(std::filesystem::path workingDirectory,std::filesystem::path dataDirectory,platform::UserDataRoot user); // 경로만 보관하며 파일/폴더를 생성하지 않는다.
     void DataDirectory(std::filesystem::path directory); // Configuration::DataPrefix가 확정된 뒤 실제 최종 owner가 갱신한다.
-    std::ifstream OpenWorking(std::string_view name) const; // 사용자 Saves 우선, 그 외 원문 CWD의 실제 텍스트 입력을 연다.
+    std::ifstream OpenWorking(std::string_view name) const; // 사용자 Saves→원문 CWD 순서의 텍스트 입력이다. 세.server만 둘 다 없으면 모듈 옆 server 자산을 읽는다.
     std::filesystem::path DataFile(std::string_view name) const; // 사용자 Saves 우선, 그 외 현재 dataPrefix의 실제 전체 읽기/시각 경로다.
     std::filesystem::path WorkingFile(const std::filesystem::path& relative) const; // 사용자 Saves의 같은 파일명 우선,그 외 현재 workingDirectory와 원문 상대 경로를 결합한다.
     std::filesystem::path WritableFile(std::string_view name) const; // 현재 사용자 Saves를 만들고 단일 생성 파일의 실제 wide 경로만 반환한다.

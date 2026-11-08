@@ -21,6 +21,8 @@
 #include "client/ClientSubscriberGlobals.h"
 #include "client/ClientCdGlobals.h"
 #include "client/ClientChatRuntime.h"
+#include "client/RawChatRelay.h" //RequestMenu의확장41h응답도같은원문중계/관찰기와현재UI로전달한다.
+#include "client/ClientChatWindowGlobals.h" //메타/일반이같은현재수신maskDWORD를공유한다.
 #include "client/ClientChallengeGlobals.h"
 #include "client/NativeMetaConnectedState.h"
 #include "client/CurrentAllocationBytes.h"
@@ -103,9 +105,9 @@ BOOL CALLBACK FindRootWindow(HWND window,LPARAM value) {
 }
 }
 // 현재 저장소를 검증하고 observer/기본 연결 종료를 설치하며 실제 소켓 열기는 Connect까지 지연한다.
-MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo,std::shared_ptr<std::array<std::uint8_t,87>> options,std::function<void()> recreateHud,std::function<void(std::shared_ptr<MetaConnectionRuntime>,bool)> battleState)
-    :client_(client),progress_(std::move(progress)),request_(std::move(request)),processState_(std::move(processState)),battleState_(std::move(battleState)),tell_(std::move(tell)),refreshInfo_(std::move(refreshInfo)),options_(std::move(options)),recreateHud_(std::move(recreateHud)) {
-    if (!progress_ || !request_ || !processState_ || !battleState_ || !tell_ || !refreshInfo_ || !options_ || !recreateHud_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/실제Run/전투Source/NSInfo/전역옵션/HUD 장치 필요");
+MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo,std::shared_ptr<std::array<std::uint8_t,87>> options,std::function<void()> recreateHud,std::function<void(std::shared_ptr<MetaConnectionRuntime>,bool)> battleState,std::function<void(std::span<std::uint8_t>)> chatReceive)
+    :client_(client),progress_(std::move(progress)),request_(std::move(request)),processState_(std::move(processState)),battleState_(std::move(battleState)),tell_(std::move(tell)),chatReceive_(std::move(chatReceive)),refreshInfo_(std::move(refreshInfo)),options_(std::move(options)),recreateHud_(std::move(recreateHud)) {
+    if (!progress_ || !request_ || !processState_ || !battleState_ || !tell_ || !chatReceive_ || !refreshInfo_ || !options_ || !recreateHud_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/실제Run/전투Source/NSInfo/전역옵션/HUD/41h수신 장치 필요");
     o::PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(client_.WallSeconds()); };
     hooks.players=[players=client_.PlayerRecords()] { return std::span<const std::uint8_t>(players->Records()); }; //Native 송신이 선택한 시점의 현재 base이며 ctor의 낡은 span을 재사용하지 않는다.
     const auto record=client_.PacketRecordOwner();hooks.record=[record](auto& connection,auto packet,auto length) { record->Write(false,connection,packet,length); };hooks.sent=[record](auto& connection,auto packet,auto length) { record->Write(true,connection,packet,length); }; //World 없는 메타도 같은 현재 실제 프레임/주소/FILE를 사용하며 초기 disabled에서는 파일을 만들지 않는다.
@@ -113,7 +115,16 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     hooks.close=[](auto&) {};hooks.release=[](auto&) {}; //이 위치의 추가 외부 장치가 없으며 TCP 노드가 실제 close/free를 소유한다.
     const auto udpHooks=hooks;tcp_=std::make_shared<LocalTcpTransport>(client_.PlayerRecords()->Records(),client_.GameplayGlobals()->Server(),std::move(hooks),client_.ConnectionGlobals());
     udp_=std::make_shared<LocalUdpTransport>(client_.PlayerRecords()->Records(),client_.GameplayGlobals()->Server(),udpHooks,client_.ConnectionGlobals(),tcp_->Dispatch().Registrations()); //실제등록표와연결표를복제하지않고공유한다.
-    auto& dispatch=tcp_->Dispatch();dispatch.Register(2,[this](auto sender,auto& connection,auto) {
+    auto& dispatch=tcp_->Dispatch();ChatRelayHooks chat;
+    chat.read=[this](auto address)->std::uint32_t { switch (address) { case 0x594fbc:return client_.SurfaceStorage()->ownerMode.battle;case 0x540bc0:return client_.GameplayGlobals()->Server();case 0x540c74:return client_.CurrentSubscriber();default:throw std::out_of_range("메타41h중계의현재전역주소범위"); } };
+    chat.address=[this](auto sender) { return client_.ConnectionGlobals()->Address(std::bit_cast<std::int32_t>(sender)); };
+    chat.player=[this](auto subscriber) { if (!subscriber) client_.SurfaceStorage()->AssertDisplay("subId != INVALID_SUBSCRIBER_ID","\\Ns\\O\\Player.cpp",0xa5);const auto players=client_.PlayerRecords()->Records();for (std::uint32_t owner=1;owner<9;++owner) if (PeerWord(players,owner*180U+44U)==subscriber) return owner;return 0U; }; //같은현재Player1..8의첫subscriber일치만찾으며별도active관문을추가하지않는다.
+    chat.channel=[this](auto owner) { if (client_.SurfaceStorage()->ownerMode.challenge) client_.SurfaceStorage()->AssertDisplay("!inMetamapMode","\\Ns\\O\\Player.cpp",0x134);if (owner>=9) throw std::out_of_range("메타41h중계의현재Player번호범위");return static_cast<std::int32_t>(owner&255U); };
+    chat.connected=[this](auto id) { const auto registry=client_.ConnectionGlobals();const auto slots=registry->Cleanup();if (id<0 || static_cast<std::size_t>(id)>=slots.transceivers.size()) throw std::out_of_range("메타41h중계의현재연결번호범위");const auto token=slots.transceivers[static_cast<std::size_t>(id)];return token && !(registry->Node(token).flags&0x40U); }; //원문현재슬롯/NULL/닫힘관문이며socketACK를합성하지않는다.
+    chat.send=[this](auto id,auto packet) { static_cast<void>(client_.ConnectionGlobals()->SendMutable(id,packet,client_.PlayerRecords()->Records())); };chat.receive=[this](auto packet,auto) { chatReceive_(packet); };
+    chat.assertion=[this](auto line) { const auto expression=line==0x81dU ? "nameLen != (short)-1":line==0x81eU ? "bufferLen != (short)-1":"addrLen != (unsigned char)-1";client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }; //현재패킷관찰기의실제식/줄번호를같은Client진단에전달하고복귀뒤길이계산을계속한다.
+    RegisterChatPacket(dispatch,client_.ChatWindowGlobals()->receivedMask,std::move(chat)); //메타의같은TCP/UDP등록표에실제41h중계를설치하며일반Session인계시기존동일슬롯재등록을사용한다.
+    dispatch.Register(2,[this](auto sender,auto& connection,auto) {
         auto& local=*client_.LocalStateGlobals();o::ConnectionEndedHooks ended;ended.disconnect=[this](auto id) { client_.ConnectionGlobals()->Disconnect(id); };
         ended.saveServerFailure=[this] { client_.GameplayGlobals()->RequireSession().SaveServerFailure(); };ended.broadcastPlayer=[this](auto owner) { client_.GameplayGlobals()->RequireSession().BroadcastConnectionPlayer(owner); }; //현재 실제 메타/게임 Session의 flags·공유 저장 writer·접속자별 방송을 사용한다.
         o::ReceiveConnectionEnded(std::bit_cast<std::int32_t>(sender),client_.ConnectionGlobals()->TokenFor(connection),{client_.GameplayGlobals()->Server(),local.ClockSynchronization().connection,local.State().phase[0],local.State().next[0],client_.ConnectionActivityGlobals()->Frames(),[this] { return client_.PlayerRecords()->Records(); }},ended);

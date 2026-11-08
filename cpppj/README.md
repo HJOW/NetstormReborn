@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-**2026-11-08 현재 제품1163 / 표시 버전11.01, `/goal` 진행 중이다.** 실제Client/R의legacy registryValue·명시hostname 첫LAN IPv4환경계약을연결했다. 다음M5.2의세.server콘텐츠/배포는미완료다. 두Release종료0·경고/오류0·보호2800불변이며새MP실행0이다. [현행계획](../LEFT_JOBS.md)·[1163기록](../docs/exe/cpp-lan-environment-contracts-20261108.md)을따른다. 전체목표는미완료다.
+**2026-11-08 현재 제품1164 / 표시 버전11.01, `/goal` 진행 중이다.** 세서버페이지/실제요청응답·reader/배포계획을연결해M5를마감했다. 다음M6-a의활성로그인송신observer이며3차M6~M8은미완료다. 두Release종료0·경고/오류0·세자산복사SHA동일·패키지DryRun1387항목을확인했고MP/ZIP실행0이다. [현행계획](../LEFT_JOBS.md)·[1164기록](../docs/exe/cpp-server-pages-integration-20261108.md)을따른다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
 

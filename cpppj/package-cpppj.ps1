@@ -449,6 +449,7 @@ function New-ReadmeText {
         '  lang\               한국어 번역표(xlat.korean). 옵션 > 언어(Language)에서 한국어를 고릅니다.',
         '  game\               게임 데이터 (원본 Netstorm 10.78)',
         '    netstorm.tarc, d\, sound\, music\, MOVIE\ (영상 원천이 있을 때)',
+        '    Admin.server, Update.server, Guild.server  로컬 서버 명령 페이지',
         '    Netstorm.exe      원본 실행 파일. 클론이 아이콘, 커서, 로딩 그림을 읽는 자료로만 쓰며',
         '                      직접 실행하지 않습니다.',
         '  BUILD_INFO.txt      이 배포판을 만든 소스와 실행 파일 정보',
@@ -871,6 +872,15 @@ try {
     $koreanTable = Join-Path $RepoRoot 'assets\lang\korean\xlat.korean'
     if (-not (Test-Path -LiteralPath $koreanTable -PathType Leaf)) { throw "한국어 번역표를 찾을 수 없습니다: ${koreanTable}" }
     Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/xlat.korean') -Source $koreanTable
+
+    # 세 서버 페이지는 사용자가 지정한 게임 원천에 있으면 보존하고, 없으면 클론의 호환 콘텐츠를 동봉한다.
+    foreach ($serverPageName in @('Admin.server', 'Update.server', 'Guild.server')) {
+        $serverPageSource = Join-Path $GameSource $serverPageName # 명시한 원천의 사용자 페이지가 배포 기본본보다 우선한다.
+        if (-not (Test-Path -LiteralPath $serverPageSource -PathType Leaf)) { $serverPageSource = Join-Path $CppRoot ('assets\server\' + $serverPageName) }
+        if (-not (Test-Path -LiteralPath $serverPageSource -PathType Leaf)) { throw "로컬 서버 페이지를 찾을 수 없습니다: ${serverPageSource}" }
+        Add-FileItem -Items $items -Entry ($PackageRootName + '/' + $GameFolderName + '/' + $serverPageName) -Source $serverPageSource
+        Write-Host ('서버 페이지   : {0}/{1} <- {2}' -f $GameFolderName, $serverPageName, $serverPageSource) # DryRun에서도 세 실제 원천과 압축 내부 reader 위치를 확인할 수 있게 한다.
+    }
 
     # BUILD_INFO.txt 는 게임 항목을 포함한 전체 수를 알아야 해서 게임 항목을 더한 뒤 마지막에 만든다.
     $gameBytes = [long]0

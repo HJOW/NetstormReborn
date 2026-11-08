@@ -1,0 +1,189 @@
+{
+  "unit": 1164,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCppCommit": "8f8a9f22 / 20261108-135 CP",
+  "summary": "M5.2의 실제 세.server 콘텐츠·개발/배포reader와 RequestMenu/RefreshPlayers·메타41h HTML 응답을 연결하고 M5를 마감했다. 원본서버본문 동일성을 주장하지 않는다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1164\\build.log"
+  },
+  "packagePlan": {
+    "exitCode": 0,
+    "shell": "Windows PowerShell",
+    "items": 1387,
+    "zipCreated": false,
+    "source": "cpppj/assets/server",
+    "destination": "game/*.server",
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1164\\package-dryrun.log"
+  },
+  "assets": {
+    "Admin.server": {
+      "bytes": 4061,
+      "sha256": "6caba05b102df465e16b4b00dc8a95022bbab43c6459d125ce3b1d667a310700",
+      "sections": [
+        "Admin",
+        "PlayerList",
+        "Player",
+        "NEXTPLAYER"
+      ]
+    },
+    "Guild.server": {
+      "bytes": 3833,
+      "sha256": "5c8c7b09a4e1fa205f99b475ac57ee1f36579094244662f0be1fdecea3c8c45d",
+      "sections": [
+        "Guild",
+        "GuildAdmin",
+        "GuildDisbandQuestion",
+        "GuildViewRequest",
+        "GuildSingleRequest",
+        "GuildJoin",
+        "GuildView",
+        "GuildSubmitQuestion",
+        "GuildRecruiting",
+        "GuildCheckPass",
+        "GuildPassWorked",
+        "GuildSubmitError1",
+        "GuildSubmitError2",
+        "GuildSubmitError3",
+        "GuildSubmitError4",
+        "GuildRequestOk",
+        "GuildLoginCode1",
+        "QuitComplete",
+        "GuildErrorCode2",
+        "GuildErrorCode3",
+        "GuildCode1",
+        "GuildAdded",
+        "GuildAddedFail"
+      ]
+    },
+    "Update.server": {
+      "bytes": 2790,
+      "sha256": "2ff9111d05e38dbb7cc8e4c22d2b24f0b9a56c3640d1ab10aa544b8163801f22",
+      "sections": [
+        "Updates",
+        "Update1",
+        "Update2",
+        "Update3",
+        "Update4"
+      ]
+    }
+  },
+  "assetsMatchPreparedAndActualBuildCopies": true,
+  "originalServerBodiesRecovered": false,
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13204992,
+      "sha256": "2eaf7982bd6485018578b3549d17845332b8f86bbbc540ac68464aed91830fb8"
+    },
+    "R.exe": {
+      "bytes": 677888,
+      "sha256": "66236e929f856558c8a5953dd5a8ff092380b9f98a51f732ceaec373ed562f81"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": [],
+    "lastFullHashCheckUnit": 1163,
+    "writesToProtectedPaths": 0
+  },
+  "nativeEvidence": {
+    "originals-004d62b0": {
+      "bytes": 16945,
+      "peSha256": "9e9cd511e4a0f74e1555ea2d93fcd17bd2e4ac3eef2b65afb656b22abe925b02",
+      "cSha256": "5aa1724d653fe5cd97561dbdf16143fe393f5a482d1e5459c38b0b3a021657c2"
+    },
+    "originals-0040a150": {
+      "bytes": 52,
+      "peSha256": "bf1ce8b7b603a1572d9df5bf8e4af0d8aceab84fd8c249623f758013dd7114d2",
+      "cSha256": "1f30b1267ea55f551835acc813a23a2608581371af2c6d940b36406996339e54"
+    },
+    "originals-0042b490": {
+      "bytes": 227,
+      "peSha256": "67951ce6e659768cefaadc1757b460a405938fff492cff33eeaf8d5f8c514054",
+      "cSha256": "758b5ce2d165c55fd85852ea36c92505aa28dccac3dd6a5ffeb96a9f49d200ad"
+    },
+    "originals-0042dc90": {
+      "bytes": 333,
+      "peSha256": "04e7be91f846a50e1c21a811ef1afcb11ce86b1641f2759996f2d9f1fc3acc20",
+      "cSha256": "b10156c741423677bd019f6dafafaa723d12713ab545c000e67c6043dcb3dd5f"
+    },
+    "root-server-00451f30": {
+      "bytes": 460,
+      "peSha256": "601712939c763de4016d3ed037dbe6d8e4114cc1bb1209c68b8ab051f0a585ed",
+      "cSha256": "eb07bfd55bcca2e2e40ec3f2d7f3889a957b1907cb6c8a0acba4b29cf54bd068"
+    },
+    "root-server-00452170": {
+      "bytes": 314,
+      "peSha256": "b81f548cff6e0029ecea3de7d26a6972febda4a56b6f6bdd6f6cc25733207396",
+      "cSha256": "3c2529df6354d15f3e52b03cfb4b4b8aefdfc75777412ee345e6ed8b43d62aef"
+    },
+    "root-server-00459fc0": {
+      "bytes": 348,
+      "peSha256": "6168d82dbdd42258b2ee6fac726364120df347fd4deb81df6239bfbc76fad9ea",
+      "cSha256": "4c1d82765f0097342769e7367367447d22325eb1f1c280cffc411e833c136430"
+    },
+    "root-server-00452f50": {
+      "bytes": 8555,
+      "peSha256": "367c66cfcf76f4a5bbb410e4956951c80b7ecc2d602805a643c65391b02aff3e",
+      "cSha256": "e1f124bd135b0cee2c996bd3cf14bb9ebbbf8675e118afc0ca8958516f82d006"
+    }
+  },
+  "sourceSha256": {
+    "cpppj/package-cpppj.ps1": "db95d3c3efc6e952516f0afa47f698529e3018e537f6a1a3067ae3b1fbd20f1a",
+    "cpppj/src/CMakeLists.txt": "a7e55ca5aa34558d4c289659ffdfe64d5e016a9832961c4fca130208cc4daaba",
+    "cpppj/src/root/SharedFileStorage.cpp": "7632271c8bf10aaaebca2be212a4d1f68eb08003647f23b19b727de4262ae9e3",
+    "cpppj/src/root/SharedFiles.h": "3370177d792d41b5e0336dbeb4a8924e1211997d7faf40cc7be793786cc0ab27",
+    "cpppj/src/client/GameMenuCommands.cpp": "9a339bb3d4d825e3bc06761d12bfd5c2374264e857da6908ca370d0842d64e15",
+    "cpppj/src/client/HtmlZsend.cpp": "4ea96a70b12df849ff2600191a8f835d47a25e4fdbb950780dd24ab2535444e1",
+    "cpppj/src/client/HtmlZsend.h": "5945824b1df202d05dd44aaa827be74b72f5c0c72942c5da0204e0671d25805b",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "c6b6f8b87202c7af0e29857056daf0fef37a6577d25801bb2f404f02c97ec294",
+    "cpppj/src/client/MetaConnectionRuntime.h": "8b65e4734c67fa0795bcf7312865beb70ae830a831d64198c102fefb22f0bfe6",
+    "cpppj/src/client/NativeMetaParticipantName.cpp": "cdfb9a70e4a9be251dd9644eb4deaa3c6a410a96bd7fd46e05325e3cb7946794",
+    "cpppj/src/client/NativeMetaParticipantName.h": "a29abbdc7fc38b8bb6346e8e18c08714eefd53ca77d129ee712ccb7bf3ab1352",
+    "cpppj/src/client/UberGump.cpp": "9bd6eb5e61afc726a24b1fbee4a7eac2bd856f200c53a3da50af17b8072256be",
+    "cpppj/src/client/UberMeta.inc": "856ad5f58f42c2da57deecb2bc6a8c87d15320951a30f75283ed0a8e1b61eb59"
+  },
+  "sourceInventory": "cpppj/server-pages-source-audit-20261108.json",
+  "audit": {
+    "threePages32NonemptySectionsAndActualSourceRequests": true,
+    "requestMenuHeaderGetThenSectionAndSameRegistry11": true,
+    "refresh40ActiveRowsCurrentLabelsDisplayAndNsInfo": true,
+    "sameActual41RelayAndHtmlReceiveConnectedInMeta": true,
+    "savedWorkingThenAbsentOnlyModuleServerReader": true,
+    "canonicalBuildAndPackageSourcesByteEqual": true,
+    "m5Closed": true
+  },
+  "remaining": {
+    "next": "M6-a / 정상로그인 송신4종의 mutable observer 미연결 교정",
+    "stage3Groups": 3,
+    "m6DetailedGroups": 14,
+    "m7HelpCursorPreparation": "docs/exe/cpp-help-cursor-remaining-audit-20261108.md"
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "zip": 0
+  },
+  "limitations": [
+    "실제MP페이지·요청응답·길드/관리자 동작은 사용자지시로 검사하지 않았다.",
+    "원본세.server파일은두원본및TAFF에도없다. Admin/Guild는새LAN용본문, Update1~4는원본d/update.english역사본문재사용이다. 폐기다운로드URL4개는제거했다.",
+    "유한32섹션은명시요청과기존서버응답범위다. 임의사용자섹션전체·원문누락marker의성공fallback을만들지않았다.",
+    "기본미작성packet바이트는기존HtmlZsend와같은호스트0입력이다. 원문미정스택동일성을주장하지않는다.",
+    "최종ZIP의실제바이트검증은M8이며이번단위는DryRun/빌드자산복사검증이다."
+  ],
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

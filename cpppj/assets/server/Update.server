@@ -1,0 +1,78 @@
+[Updates]
+<h2>Netstorm 11.01 Updates</h2>
+<p>Historical Netstorm 10.70 release notes</p>
+$Button=Alpha 4.6,RequestMenu,Update4
+$Button=Alpha 4.5,RequestMenu,Update3
+$Button=Alpha 4.4,RequestMenu,Update2
+$Button=Alpha 4.3,RequestMenu,Update1
+$Button=Close,DoNothing,0
+[END]
+
+[Update1]
+<h2>Netstorm 11.01: historical 10.70 notes</h2>
+~B~E~dAbout<br>
+~a---------<br>
+~w~[Iicon.12]~B~E Your Priest has been captured by (Player color and name) <br>
+~w~[Iicon.12]~B~E Server Communication Menus<br><br>
+~a~B~E---------<br>
+<p>Downloads for this historical release are unavailable.</p>
+~a~B~E---------<br>
+$Button=Back,RequestMenu,Updates
+$Button=OK,DoNothing,1
+[END]
+
+[Update2]
+<h2>Netstorm 11.01: historical 10.70 notes</h2>
+~B~E~dAbout<br>
+~a---------<br>
+~w~[Iicon.12]~B~E Added Spell Gravitation<br>
+~w~[Iicon.12]~B~E Added Gravitation Spell Effect<br>
+~w~[Iicon.12]~B~E Added Heal Spell Effect<br>
+~w~[Iicon.12]~B~E Added Spell Book Under the Pray Menu<br>
+~w~[Iicon.12]~B~E Added Support for Priest Praying <br>
+~w~[Iicon.12]~B~E Added Pray Timer Bar<br>
+~w~[Iicon.12]~B~E Added Cast Timer Bar<br>
+~w~[Iicon.12]~B~E Modified Pray zacket size was increased<br>
+~w~[Iicon.12]~B~E Added Server Respond $Zsend Command<br>
+~w~[Iicon.12]~B~E Increased Zacket Size of Server Respond <br>
+~w~[Iicon.12]~B~E Added tell Scripting Support for the Guild System<br>
+~w~[Iicon.12]~B~E Server Should Allow Guild Adding Now (work in progress)<br>
+~w~[Iicon.12]~B~E Health, and time bars have been decreased in height<br>
+~w~[Iicon.12]~B~E Priest Immobilized Warnings Should be fixed<br>
+~a~B~E---------<br>
+<p>Downloads for this historical release are unavailable.</p>
+~a~B~E---------<br>
+$Button=Back,RequestMenu,Updates
+$Button=OK,DoNothing,1
+[END]
+
+[Update3]
+<h2>Netstorm 11.01: historical 10.70 notes</h2>
+~B~E~dAbout<br>
+~a---------<br>
+~w~[Iicon.12]~B~EFixed Priest receiving the Special Devastation that Caused the Pray Menu to Disappear<br>
+~w~[Iicon.12]~B~ENew Script Command RefreshPlayers was Added<br>
+~w~[Iicon.12]~B~E~wGuild System *Should* Display Player Guilds<br>
+~w~[Iicon.12]Sounds for the Spell Gravitation Was added<br>
+
+~a~B~E---------<br>
+<p>Downloads for this historical release are unavailable.</p>
+~a~B~E---------<br>
+$Button=Back,RequestMenu,Updates
+$Button=OK,DoNothing,1
+[END]
+
+[Update4]
+<h2>Netstorm 11.01: historical 10.70 notes</h2>
+~B~E~dAbout<br>
+~a---------<br>
+~w~[Iicon.12]~B~EFixed the Guild System bug that Caused : to be displayed before someone's name who isn't in a guild<br>
+~w~[Iicon.12]~B~EFixed the Bug that caused carrier units -mainly the priest- from moving faster when rapidly clicked.<br>
+
+
+~a~B~E---------<br>
+<p>Downloads for this historical release are unavailable.</p>
+~a~B~E---------<br>
+$Button=Back,RequestMenu,Updates
+$Button=OK,DoNothing,1
+[END]

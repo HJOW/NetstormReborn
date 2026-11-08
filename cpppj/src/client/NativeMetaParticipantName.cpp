@@ -29,6 +29,11 @@ void WriteNativeMetaParticipantLabel(std::span<std::uint8_t> record,std::string_
 void RebuildNativeMetaParticipantLabel(std::span<std::uint8_t> record,const NativeMetaParticipantNameHooks& h) {
     std::string prefix="~a";prefix+=Text(record,8);prefix+=':';if (Read(record,8,1)==0) prefix.clear();WriteNativeMetaParticipantLabel(record,prefix,h);
 }
+void RefreshNativeMetaPlayers(ClientChallengeGlobals& challenge,const NativeMetaParticipantNameHooks& h) { //표시/NSInfo장치가CS를교체해도다음반복은같은owner의현재할당을다시읽는다.
+    for (std::uint32_t index=0;index<o::kChallengeParticipantCount;++index) { //원문0..39의현재activeBYTE만검사하며이름표/표시호출뒤그기록을다시읽지않는다.
+        const auto record=challenge.Participant(index);if (!(Read(record,0x64,1)&1U)) continue;RebuildNativeMetaParticipantLabel(record,h);Need(h.update)(index,0xffU);Need(h.refreshInfo)();
+    }
+}
 // 미발견 NULL 역참조는 호스트 오류로 표시하고 active가0이면 입력 이름/장치를 읽지 않는다.
 void ReceiveNativeMetaParticipantName(ClientChallengeGlobals& challenge,std::span<const std::uint8_t> packet,const NativeMetaParticipantNameHooks& h) {
     const auto participant=challenge.FindParticipantBySubscriber(Read(packet,4));if (!participant) throw std::out_of_range("88h subscriber의 실제 CS 참가자 포인터 없음");const auto record=challenge.Participant(*participant);

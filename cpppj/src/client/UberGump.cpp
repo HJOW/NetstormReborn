@@ -53,6 +53,8 @@
 #include "client/RawMovieControls.h"
 #include "client/RawHtmlWindowContext.h"
 #include "client/HtmlZsend.h" //Zsend는원문세문자열을그대로같은현재11번송신기에보낸다.
+#include "client/NativeMetaParticipantName.h" //RefreshPlayers도기존CS길드/기술이름서식과지정표시장치를사용한다.
+#include "o/RawPlayerNotification.h" //이름표의기술합계는같은현재TYPE의비트/level을조회한다.
 #include "client/RawGameMenus.h"
 #include "client/ScreenResolutions.h" // 메인/ESC가 같은 원본 확인 흐름과 호환 화면비 선택을 사용한다.
 #include "client/GameMenuCommands.h"
@@ -1415,6 +1417,14 @@ void UberGump::Event(InputEvent event) {
     }
     if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.
     if (MultiplayerOptionsEvent(event)) return; // 일반 옵션의 이름/연결 예약도 같은 Guide/Gump 뒤 일반 입력 큐에서 소비한다.
+    if (transitionCode==0x0200011cU) {
+        if (event.code&InputCode::kRelease) return;SendRequestMenu(scriptStrings_.Resolve(std::bit_cast<std::uint32_t>(event.y)),[this](auto target,auto packet) { static_cast<void>(client_.ConnectionGlobals()->SendMutable(target,packet,client_.PlayerRecords()->Records())); });recentCommandHandled=true;
+    } //004d712e는Guide/Gump뒤같은현재문자열고리/11번을사용하며NULL연결에서별도성공응답을합성하지않는다.
+    if (transitionCode==0x0200011eU) {
+        if (event.code&InputCode::kRelease) return;NativeMetaParticipantNameHooks refresh;refresh.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };
+        refresh.weight=[this](auto core) { o::CoreTechnologyWeightHooks weight;weight.count=[this] { return static_cast<std::int32_t>(client_.SurfaceStorage()->types.size()); };weight.type=[this](auto index) { const auto& type=client_.SurfaceStorage()->types.at(static_cast<std::size_t>(index));return o::CoreTechnologyWeightType{type.techBitIndex,type.level}; };return o::CoreTechnologyWeight(core,weight); };
+        refresh.update=[this](auto index,auto mask) { client_.UpdateNativeMetaParticipant(index,mask); };refresh.refreshInfo=[this] { rawButtons_->Menus()->RefreshMetaNsInfo(*client_.NsInfoGlobals()); };RefreshNativeMetaPlayers(*client_.ChallengeGlobals(),refresh);recentCommandHandled=true;
+    } //004d7181은별도메타/known/통신관문없이현재CS40기록과같은TYPE/번역/표시를읽고일반입력꼬리를유지한다.
     NativeMetaSailInputHooks metaSail;metaSail.passedDiags=[this] { return client_.NsInfoGlobals()->passedDiags; };metaSail.noShowWarn=[this] { return client_.Configuration().GetInt("noShowWarnFailedDiags"); };metaSail.serverSelection=[this] { return client_.NsInfoGlobals()->serverSelection; };
     metaSail.freeSlots=[this](auto battle) { return client_.ChallengeGlobals()->FreeBattleSlots(battle); };metaSail.tell=[this](auto section) { Tell(std::string(section)); };metaSail.suppress=[this] { client_.Configuration().SetInt("noShowWarnFailedDiags",1); };
     metaSail.join=[this](auto parameter) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("전투 참가 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->JoinBattle(parameter); };metaSail.sail=[this](auto position) { if (!editor_ || !editor_->metaTransport) throw std::logic_error("항해 위치 입력의 현재 메타 전송 owner 미연결");editor_->metaTransport->SailPosition(position); };

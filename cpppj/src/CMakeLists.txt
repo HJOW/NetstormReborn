@@ -237,6 +237,24 @@ add_executable(NetstormRoot root/main.cpp root/ProductVersion.rc app/NetstormCpp
 set_target_properties(NetstormRoot PROPERTIES OUTPUT_NAME R ARCHIVE_OUTPUT_NAME NetstormRoot)
 netstorm_apply_compiler_options(NetstormRoot)
 target_link_libraries(NetstormRoot PRIVATE netstorm)
+# 원본에 누락된 세 서버 페이지의 호환 자산은 빌드 산출물 옆 server 폴더에 읽기 전용 원천으로 배치한다.
+set(NETSTORM_SERVER_PAGES
+    "${PROJECT_SOURCE_DIR}/assets/server/Admin.server"
+    "${PROJECT_SOURCE_DIR}/assets/server/Update.server"
+    "${PROJECT_SOURCE_DIR}/assets/server/Guild.server")
+# 다중 구성 VS와 단일 구성 도구의 실제 실행 파일 출력 경로에 맞춘다.
+set(NETSTORM_SERVER_PAGE_DESTINATION "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+if(CMAKE_CONFIGURATION_TYPES)
+    string(APPEND NETSTORM_SERVER_PAGE_DESTINATION "/$<CONFIG>")
+endif()
+string(APPEND NETSTORM_SERVER_PAGE_DESTINATION "/server")
+# 자산만 바뀌어도 게임 빌드 명령에서 복사하며 동일 바이트는 다시 쓰지 않는다. 생성/실행되는 것은 CMake 파일 복사뿐이다.
+add_custom_target(NetstormServerPages
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${NETSTORM_SERVER_PAGE_DESTINATION}"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${NETSTORM_SERVER_PAGES} "${NETSTORM_SERVER_PAGE_DESTINATION}"
+    SOURCES ${NETSTORM_SERVER_PAGES}
+    VERBATIM)
+add_dependencies(NetstormRoot NetstormServerPages) # R만 빌드하거나 게임의 기존 의존 빌드를 해도 세 페이지가 먼저 준비된다.
 if(MSVC)
     target_link_options(NetstormRoot PRIVATE "/MAP:$<TARGET_FILE_DIR:NetstormRoot>/NetstormRoot.map") # 실행 없이 최종 링크의 실제 Server/메인·수신 부모를 대조하는 빌드 산출물이다.
 endif()
