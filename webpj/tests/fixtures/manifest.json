@@ -12888,7 +12888,7 @@
       "bytes": 820507,
       "lines": 1640,
       "fixtureCommit": "6c876e2f",
-      "webCommit": "worktree",
+      "webCommit": "9bd81914",
       "cpppjBasis": {
         "cpppj/src/o/RawWindAviaryProcess.cpp": "2b5ee903"
       }
@@ -12919,7 +12919,7 @@
       "bytes": 180132,
       "lines": 289,
       "fixtureCommit": "566f44d6",
-      "webCommit": "worktree",
+      "webCommit": "9bd81914",
       "cpppjBasis": {
         "cpppj/src/o/RawWindCircle.cpp": "566f44d6",
         "cpppj/src/o/RawWindAviaryProcess.cpp": "2b5ee903"
@@ -12949,9 +12949,158 @@
       "bytes": 521777,
       "lines": 881,
       "fixtureCommit": "51e97f71",
-      "webCommit": "worktree",
+      "webCommit": "9bd81914",
       "cpppjBasis": {
         "cpppj/src/o/RawWindAviaryProcess.cpp": "2b5ee903"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E186",
+      "id": "particlegradient",
+      "path": "cpppj/tests/fixtures/particle-gradient-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 입자 RGB 색 띠(전체 256항목 의미 필드)와 1/2/3색 띠 병합(기본 027f 24입력 + 비교 037f 24행)(10.78 48행)",
+      "consumers": [
+        "webpj/tests/particle-gradient.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/particle-gradient.js"
+      ],
+      "doc": "docs/webpj-lightning-gradient-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/ParticleGradient.cpp"
+      ],
+      "scope": "10.78 기본 027f 24입력 전부(037f 비교 행은 건너뜀)",
+      "text": true,
+      "sha256": "c918f485648298270e7cc2457474c176e2dd4042d3c5e7577839b4c0fc1f9f1a",
+      "bytes": 2494733,
+      "lines": 49,
+      "fixtureCommit": "4a9b2ddf",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/ParticleGradient.cpp": "e6d97634"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E186",
+      "id": "fierytaillifetime",
+      "path": "cpppj/tests/fixtures/fierytail-lifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 불꽃 꼬리 생성/소멸(cold 생성자의 11색 표 포함)(10.78)",
+      "consumers": [
+        "webpj/tests/particle-gradient.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/particle-gradient.js"
+      ],
+      "doc": "docs/webpj-lightning-gradient-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/ParticleGradient.cpp"
+      ],
+      "scope": "10.78 cold 기본 생성자 색 표 3행만 사용(나머지 행은 FieryTail 이식 단위의 몫)",
+      "text": true,
+      "sha256": "0bdf2958f9e393cb06c926544ca4364b7cae2611e3899fab74186b93fb40570e",
+      "bytes": 530414,
+      "lines": 63,
+      "fixtureCommit": "8240d94c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/ParticleGradient.cpp": "e6d97634"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E186",
+      "id": "lightningframe",
+      "path": "cpppj/tests/fixtures/lightning-frame-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 번개 프레임/출력(최초·연속 소리·시간 후퇴·긴 간격·전체 용량 수명·흔들림·소진·굵기 경계·카메라 절삭)(10.78 250행)",
+      "consumers": [
+        "webpj/tests/lightning-frame.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-lightning-frame.js",
+        "webpj/www/core/raw-lightning-path.js"
+      ],
+      "doc": "docs/webpj-lightning-gradient-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawLightningFrame.cpp"
+      ],
+      "scope": "10.78 실제 PE 250행 전부",
+      "text": true,
+      "sha256": "5a2b4663cf78ed261d44aac90071b5c0afce8a241b8d3466ecf3a2693b301849",
+      "bytes": 2747043,
+      "lines": 251,
+      "fixtureCommit": "4f8ff8d0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawLightningFrame.cpp": "4f8ff8d0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E186",
+      "id": "lightninglifetime",
+      "path": "cpppj/tests/fixtures/lightning-lifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 번개 생성(등록/부착 재진입·120입자·공유 색 표 11개·경로)과 반납 순서(기본 027f 55입력 + 비교 037f 55행)(10.78 110행)",
+      "consumers": [
+        "webpj/tests/lightning-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-lightning-lifetime.js",
+        "webpj/www/core/particle-gradient.js"
+      ],
+      "doc": "docs/webpj-lightning-gradient-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawLightningLifetime.cpp",
+        "cpppj/src/o/ParticleGradient.cpp"
+      ],
+      "scope": "10.78 기본 027f 55입력 전부(037f 비교 행은 건너뜀)",
+      "text": true,
+      "sha256": "cb4229dc5837044fb5ed3b6d952254ef86aec582798acfc9457056aed57655da",
+      "bytes": 957219,
+      "lines": 111,
+      "fixtureCommit": "e6d97634",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawLightningLifetime.cpp": "65b21851",
+        "cpppj/src/o/ParticleGradient.cpp": "e6d97634"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E186",
+      "id": "burningparticle",
+      "path": "cpppj/tests/fixtures/burningparticle-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Burning 6필드 입자 추가(여유 칸/첫 만료 칸 선택, NaN·무한대·음수 0 수명)(10.78 282행 + CD 282행)",
+      "consumers": [
+        "webpj/tests/burning-visual.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-burning-visual.js"
+      ],
+      "doc": "docs/webpj-lightning-gradient-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBurningVisual.cpp"
+      ],
+      "scope": "10.78 실제 PE 282행 전부(CD 행 제외)",
+      "text": true,
+      "sha256": "a193d2b78a5f747ad2e0497d7e0e96309157f1ced6a0ef4fb118a373f2cae591",
+      "bytes": 100944,
+      "lines": 565,
+      "fixtureCommit": "db9b626c",
+      "webCommit": "985128f4",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBurningVisual.cpp": "961f6be5"
       }
     }
   ]

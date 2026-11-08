@@ -464,7 +464,7 @@ cpppj/src/o/Kernel.cpp	port	www/core/kernel.js	1f00a25a	port	[o-default] WB04-C1
 cpppj/src/o/LightningVisualSystem.cpp	port			todo	[o-default]
 cpppj/src/o/OriginalText.cpp	port	www/assets/text-encoding.js	1f00a25a	partial	[o-default] Windows-1252 변환
 cpppj/src/o/PacketRegistrationTable.cpp	port			todo	[o-default]
-cpppj/src/o/ParticleGradient.cpp	port			todo	[o-default]
+cpppj/src/o/ParticleGradient.cpp	port	www/core/particle-gradient.js	1f00a25a	port	[o-default] WB04-E186: RGB 색 띠 00439de0/0043ad20(최근접·투영·CRT 세 번 정렬·원통 선택)·병합 00487d20·불꽃 꼬리 표 00457ea0·번개 표 00458480. fixture particlegradient 기본 027f 24입력 전체 비트·fierytaillifetime cold 3행·lightninglifetime 공유 색 표 55입력 전부. 남음: 없음(순수 계산)
 cpppj/src/o/Player.cpp	port			todo	[o-default]
 cpppj/src/o/PopVtables.inc	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB04-E1: 10.78 PE 가상 표 26칸(PATCH_POP_VTABLES). CD 표는 범위 밖
 cpppj/src/o/RawAcidFence.cpp	port	www/core/raw-acid-fence.js	1f00a25a	port	[o-default] WB04-E50: 애시드 0.3 예약 후처리(48c7a0)·Regular(48ea30)·두 축 공격(48c830)·13영역 포획/송신/로컬 수신(48ca70). fixture acid-fence 1125행. 실제 공간 검색/예약/피해/송신/진단/프레임 변경은 월드 조립에서
@@ -760,8 +760,8 @@ cpppj/src/o/RawIslandQueries.cpp	port			todo	[o-default]
 cpppj/src/o/RawIslandRuntime.cpp	port	www/core/raw-island-runtime.js	1f00a25a	port	[o-default] WB04-E161: 섬 런타임(IslandList 00568b60 100개 기록 getter/setter·owner 변경 순서·세션 없는 Reset·Player 기록 공유, FortFinishOwnerState 팩토리 포함). fixture islandruntime 실제 PE 1009행 전부(비공유·Player 공유). 남음: 실제 Client 전역/거주 구역 가상 owner 연결
 cpppj/src/o/RawKencloud.cpp	port	www/core/raw-kencloud.js	1f00a25a	port	[o-default] WB04-E118: 구름 캐시 파일 부모 00470bb0·생성 00471040·행 이동 00470b20. fixture kencloud-v2 246행 전부(10.78 전용; 정상 208+중단 38, 전역 8KB·세 할당·scratch SHA-256 포함). 파일 시스템/GIF 디코더/할당/메모리 조회는 훅 경계
 cpppj/src/o/RawKencloudRender.cpp	port	www/core/raw-kencloud-render.js	1f00a25a	port	[o-default] WB04-E119: 구름 갱신 00470c50·표시 요청 00470c80·행 정리 00470ca0·행 조회 00470ce0·표시 부모 004711d0/00471410. fixture kencloud-render 944행 전부(10.78 전용; 639/895 두 x87 열 행 모두, 2054 DWORD FNV-1a 64 포함). 화면 잠금/복사/clip 은 훅 경계
-cpppj/src/o/RawLightningFrame.cpp	port			todo	[o-default]
-cpppj/src/o/RawLightningLifetime.cpp	port			todo	[o-default]
+cpppj/src/o/RawLightningFrame.cpp	port	www/core/raw-lightning-frame.js	1f00a25a	port	[o-default] WB04-E186: 번개 프레임 00472310(시간 조각·흔들림·소진)·출력 004724f0(굵기 선). fixture lightningframe 250행 전부. 남음: LightningVisualSystem Host 부착·실제 dirty/선 소비자 연결
+cpppj/src/o/RawLightningLifetime.cpp	port	www/core/raw-lightning-lifetime.js	1f00a25a	port	[o-default] WB04-E186: 번개 wrapper 00472700/00472690/00472770·생성자 00471b20/00471e70·소멸 순서. fixture lightninglifetime 기본 027f 55입력(비교 037f 55행은 건너뜀) 전부. 남음: LightningVisualSystem Host/실제 반납 연결
 cpppj/src/o/RawLightningPath.cpp	port	www/core/raw-lightning-path.js	1f00a25a	port	[o-default] WB04-E117: 빔 경로 생성자 00471b20/00471ca0·시작 입자 004720f0·진행 00472180·재귀 가지 00471fc0. fixture lightning-path 216행 전부(10.78 전용; 생성자 72+생성/Seed/Step 144). 중심 조회(004adea0)는 호출자 공급 함수
 cpppj/src/o/RawLocalGeyser.cpp	port			todo	[o-default]
 cpppj/src/o/RawLocalMissionState.cpp	port			todo	[o-default]
