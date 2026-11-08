@@ -498,7 +498,7 @@ cpppj/src/o/RawAiFakeDrySpots.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiMovement.cpp	port	www/core/raw-ai-movement.js	1f00a25a	port	[o-default] WB04-E167: AI 경로 조회/정지 00411630/00411680·대상 이동 004116d0·좌표 이동 004117e0·신전 복귀 004118a0·발자국 거리 0041d840. 독립 관측 fixture 없음, cpppj 계약 시험 9건. 남음: 실제 경로 시작(RawPathStart)/의식/이름·로그 연결
 cpppj/src/o/RawAiObjectNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiPreparation.cpp	port			todo	[o-default]
-cpppj/src/o/RawAiPriestActions.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiPriestActions.cpp	port	www/core/raw-ai-priest-actions.js	1f00a25a	port	[o-default] WB04-E171: 사제 AI 전체 행동 00411cd0(탐색 접두·의식/제단/다이스 거리·건설 TYPE 선택/저자금·배치 20초·완료 탐색 소비/새 탐색·다이스 회수·기한)와 헬퍼 0041d7a0/0040e800/00491b30/00448a90. 독립 관측 fixture 없음, cpppj 계약 시험 21건. 남음: 실제 수집/배치/회수 요청 하위 연결
 cpppj/src/o/RawAiResourceChoice.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiRuntime.cpp	port	www/core/raw-ai-runtime.js	1f00a25a	port	[o-default] WB04-E165: AI 전체 행동 00417c70(float 지갑 비교 포함)·개별 Tick 00417d30(현재 timing 기한 로그)·Player 1..8 Frame 00417de0(소멸/반납/0). fixture airuntime 실제 PE 145행 전부. 남음: 초기화/준비/목표 선택/수집자/시설/부족 좌표/사제/배치/다리/운반자/경제 하위 몸체 연결
 cpppj/src/o/RawAiStrategySetup.cpp	port			todo	[o-default]
