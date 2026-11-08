@@ -453,7 +453,7 @@ cpppj/src/o/DerivedConstructors.inc	port	www/core/squid-constructors.js	1f00a25a
 cpppj/src/o/DissolveVisualSystem.cpp	port	www/core/dissolve-visual-system.js	1f00a25a	port	[o-default] WB04-E193: 분해 process 18 의 120바이트 확보(실패 null)·대기 객체 → 실제 Host 부착(실패 즉시 소멸)·상호 감시 쌍 완료 표시·준비(RawDissolveFrame.initialize)·소진 Host 삭제·생성 실패 정리(부착 뒤 Host 삭제 0x10, 부착 전 직접 소멸)·소멸 순서와 쌍 전 실패 더미 정리·Form 삭제 dirty. cpppj DissolveVisualSystemTests 2건 전부. 남음: 애시드 포획 호출·실제 캡처/더미 월드·픽셀 장치·Session 월드 연결 (+WB04-E194: Host 부착 예외도 즉시 소멸·짝 없는 더미 정리 보강, 웹 회귀 시험 1건)
 cpppj/src/o/EnergyProviderVtables.inc	port			todo	[o-default]
 cpppj/src/o/EvilRayVisualSystem.cpp	port			todo	[o-default]
-cpppj/src/o/FieryTailVisualSystem.cpp	port			todo	[o-default]
+cpppj/src/o/FieryTailVisualSystem.cpp	port	www/core/fiery-tail-visual-system.js	1f00a25a	port	[o-default] WB04-E195: 불꽃 꼬리 process 11/12 의 수명 몸체 연결·경계/배율 검사·대기 객체 → 실제 client Form 부착(null/예외 실패 즉시 소멸)·생성 실패 정리·준비 완료 프레임·현재 부모 끝점 출력·Form 삭제 dirty·소멸 순서·dispose. cpppj FieryTailVisualSystemTests 4건(공통 수집 정렬은 draw-sort 로 시험 쪽 조립, 삭제 영역 fixture 는 E192). 남음: 실제 Session 월드·Streak 호출자·끝점 장치·래스터·client DrawSubmission
 cpppj/src/o/FileSpecQuery.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/FortSerializationGlobals.h	port			todo	[o-default]
 cpppj/src/o/GameClock.cpp	port	www/core/game-clock.js	3e9dc2c7	port	[o-default] WB04-C1 / 3.6③(3e9dc2c7, WB04-D5b 판정): 시간 동기화 보정 0055b4ac 바인딩과 (ms−origin−보정) 감산. 보정 0 이면 기준선과 같은 결과 → WB05 시간 패킷(5번)의 단독 도달 확인 때
