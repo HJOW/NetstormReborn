@@ -523,5 +523,12 @@
   "artifacts": {
     "PLAN.md": "ea150236da6395446fbf3b3730057479dad1b92d9d3a0bfaf07d99fb476fe169",
     "original-fragments.c": "cd76fab1b2cdadd7439fad5f460d9aab1b8ad4498c14598abf55b9d8eec11c2c"
+  },
+  "progress1165": {
+    "m6a1": "observer본문/등록완료",
+    "m6a2": "정상writer의const Send우회교정미완료",
+    "m6aComplete": false,
+    "correction": "아래초기상시throw판정은const Send경로에는해당하지않는다. 실제mutable경로만기존throw를실행한다.",
+    "evidence": "docs/exe/cpp-login-send-observers-20261108.md"
   }
 }

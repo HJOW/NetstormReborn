@@ -71,6 +71,7 @@ struct MissionClientPacketHooks {
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> playerNotice; //004d3090(kind,owner,arg,0,"")의 실제 소비자다.
     std::function<void(std::int32_t,std::span<const std::uint8_t>)> send; // 현재 실제 연결/접속gate를 지나는 송신이다.
     std::function<void(std::uint32_t)> sendReady; //004a6f70의 실제현재mask/전체분배이며 RawMissionLogin에 연결할 수 있다.
+    std::function<void(std::string_view,std::string_view,std::uint32_t)> observerAssertion; //송신observer의현재식/원문파일/줄을같은Client진단에전달하며정상복귀뒤필드재조회를허용한다.
 };
 // 0042b0e0의 실제 이름 삭제/빈 이름 규칙이다. Player와 이후 송신 이름 처리도 같은 몸체를 사용할 수 있다.
 void SanitizeMissionPlayerName(std::uint32_t subscriber,std::span<std::uint8_t> name);
@@ -84,6 +85,7 @@ public:
     void Receive(std::uint32_t sender,PacketConnection& connection,std::span<const std::uint8_t> packet) const;
     //004a7800의 직접004b4900 호출도 같은 본문을 사용하며 관계없는 연결 객체를 요구하지 않는다.
     void Options(std::uint32_t sender,std::span<const std::uint8_t> packet) const;
+    void Observe(std::uint32_t type,std::span<std::uint8_t> packet,std::uint32_t sending) const; //40a540/40a590/40ae80/40b460의현재송신필드검사와선언WORD재작성을실행하며수신방향에서는읽지않는다.
 private:
     // 실제 Player 필드와 문자열의 원본 폭/종료를 보존한다.
     std::uint32_t Read(std::uint32_t owner,std::size_t offset,std::size_t width=4) const;

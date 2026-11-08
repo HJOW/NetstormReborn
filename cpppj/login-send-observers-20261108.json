@@ -1,0 +1,88 @@
+{
+  "unit": 1165,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCppCommit": "5a40ee37 / 20261108-136 CP",
+  "summary": "M6-a1 송신4종의 mutable observer 본체/등록과 같은 진단 장치를 복원했다. 정상 Login writer의const Send는observer를우회하므로실제caller접합은M6-a2미완료로명시한다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1165\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13206528,
+      "sha256": "acaf079329ca6d496d629ebe2a7408d0f99d1e84088d23b1056bddc5f5edaa8c"
+    },
+    "R.exe": {
+      "bytes": 677888,
+      "sha256": "035914e9ca7e289c1888a2e6045c9736faa97145a34e1f33dd60e62d7f556826"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "nativeEvidence": {
+    "0040a540": {
+      "bytes": 56,
+      "peSha256": "dff1e4ede2bc5237e28ea5b26075c5c13e81e16b84990d14680590b34c3b671a",
+      "cSha256": "45976cab564d483f0399a178be6251eadc706c32dbe3a7e1f9c2e0ceab5c6f84"
+    },
+    "0040a590": {
+      "bytes": 56,
+      "peSha256": "96e5482fdf3b3c68afc5486222ebbdca6f0d9064e24de0fe843b8dcd8c8ceee1",
+      "cSha256": "8e53e73f9b8bd8a2d4eba7f997ef7935641f8c64b2893caebec1cd250432c6ad"
+    },
+    "0040ae80": {
+      "bytes": 58,
+      "peSha256": "bd3df2c840d44a3041a7c6eab65f479f99813994739f27ad9818f5e8226afce3",
+      "cSha256": "2284d7b53fe5a238f954a368b76eed41de71db4b8f96498ab8d22553834d751d"
+    },
+    "0040b460": {
+      "bytes": 61,
+      "peSha256": "627c36ade6c1dc4fd814bb926378fe4649afe4c08e5f2a915d78df8dc8a2f81c",
+      "cSha256": "6f100ed88ec454a62f214f3a39f8ef8183077b08e473f82fff12457723de4ff5"
+    }
+  },
+  "sourceSha256": {
+    "cpppj/src/o/RawMissionClientPackets.cpp": "bcff32e993a1c391f854eebc35038f0bac9c1fff86165bc399be78b67704b494",
+    "cpppj/src/o/RawMissionClientPackets.h": "a14f49ae39df69bd459e0ebd6a73e2398382582756d1ccaaf87799e38e64f98f",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "c3f679bd5162dfa8884a4811701b74014d33c8ce045f30ea99772c28643f15e6",
+    "cpppj/src/client/CompositeMissionTransport.cpp": "71d9c26d91ce2d0e34b7436da7bd49221448da17d7534dbe02b66534ff08da00",
+    "cpppj/src/client/LocalTcpTransport.cpp": "673a86fc5818b0e73649a4c31e5a0f6233dfee1a03c4d32f55842d91e0076933",
+    "cpppj/src/zacket/LocalMissionTransport.cpp": "72a75d20d8c0a3f1a904fd937f3ed8cc771d06a4ec4fc516ecb4d647e2721d9b"
+  },
+  "audit": {
+    "sameMutableObserverCallbackInstalledForFourTypes": true,
+    "diagnosticReturnRereadsCurrentPacketField": true,
+    "dwordChecksAndWordLengthArithmeticSeparated": true,
+    "81AddsWordBeforeShift": true,
+    "sameClientAssertionDevice": true,
+    "ordinaryImmutableSendBypassExplicitlyStillOpen": true
+  },
+  "remaining": {
+    "next": "M6-a2 / concrete writer 2a·2b·67·81의 actual mutable 송신 접합",
+    "m6aComplete": false,
+    "stage3Groups": 3
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "zip": 0
+  },
+  "correction": "초기감사의일반로그인송신4종상시throw판정은const Send경로에대해정정한다. 기존미연결observer는mutable경로에서throw하지만현재정상writer들은const Send로통과하며observer를실행하지않는다. 부품복원만으로actual송신완료를주장하지않는다.",
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

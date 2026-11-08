@@ -170,14 +170,33 @@ void RawMissionClientPackets::Receive(std::uint32_t sender,PacketConnection&,std
     default:throw std::invalid_argument("미등록 미션 클라이언트 packet 종류");
     }
 }
-//원본버전/정책과실제수신기를등록한다.송신observer는이미완성바이트를쓰는전송계약과구분한다.
+// 선택된observer의진단이현재packet을바꿀수있으므로선언길이는복귀뒤원문폭으로다시읽는다.
+void RawMissionClientPackets::Observe(std::uint32_t type,std::span<std::uint8_t> packet,std::uint32_t sending) const {
+    if (!sending) return;
+    switch (type) {
+    case 0x2a:
+        if (Get(packet,0xc)==0xffffffffU) Need(hooks_.observerAssertion)("fortFileSize != (int)-1","\\Ns\\O\\_p_packets.cpp",0x672);
+        Write(packet,2,Get(packet,0xc,2)+0x11U,2);return;
+    case 0x2b:
+        if (Get(packet,0x33,1)==0xffU) Need(hooks_.observerAssertion)("nameLen != (unsigned char)-1","\\Ns\\O\\_p_packets.cpp",0x695);
+        Write(packet,2,Get(packet,0x33,1)+0x3bU,2);return;
+    case 0x67:
+        if (Get(packet,5,2)==0xffffU) Need(hooks_.observerAssertion)("dataLen != (unsigned short)-1","\\Ns\\O\\_p_packets.cpp",0xa07);
+        Write(packet,2,Get(packet,5,2)+7U,2);return;
+    case 0x81: {
+        if (Get(packet,4)==0xffffffffU) Need(hooks_.observerAssertion)("numPlayers != (int)-1","\\Ns\\O\\_p_packets.cpp",0xc3d);
+        const auto count=(Get(packet,4,2)+2U)&65535U; //40b48a의현재하위WORD와ADD AX의16비트감김을SHL전에보존한다.
+        Write(packet,2,count*4U,2);return;
+    }
+    default:return; //나머지등록4종의원문observer는입력/출력효과없는몸체다.
+    }
+}
+//원본버전/정책과실제수신기를등록하며같은mutable전송버퍼를송신observer에전달한다.
 void RegisterMissionClientPackets(RawPacketDispatch& dispatch,RawMissionClientPackets& packets) {
     constexpr std::array<std::uint32_t,8> types{0x29,0x67,0x2b,0x2a,0x28,0x81,0x84,0x6e}; //실제복원한8종등록번호다.
     //각타입은버전1/정책0과동일처리기를가지며원본길이표는분배기가이미소유한다.
     for (const auto type:types) {
-        dispatch.Observe(type,[type](std::uint32_t sending) {
-            if (sending && (type==0x67 || type==0x2b || type==0x2a || type==0x81)) throw std::logic_error("미션 수신 observer의 송신 버퍼 경계 미연결");
-        });dispatch.Version(type,1,0);
+        dispatch.ObservePacket(type,[&packets,type](std::span<std::uint8_t> packet,std::uint32_t sending) { packets.Observe(type,packet,sending); });dispatch.Version(type,1,0);
         dispatch.Register(type,[&packets](std::uint32_t sender,PacketConnection& connection,std::span<const std::uint8_t> packet) { packets.Receive(sender,connection,packet); });
     }
 }
