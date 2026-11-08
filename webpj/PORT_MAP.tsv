@@ -947,8 +947,8 @@ cpppj/src/o/RawWindAviaryState.cpp	port			todo	[o-default]
 cpppj/src/o/RawWindCircle.cpp	port			todo	[o-default]
 cpppj/src/o/RawWindFlyer.cpp	port			todo	[o-default]
 cpppj/src/o/RawWindSpell.cpp	port			todo	[o-default]
-cpppj/src/o/RawWorldGeyser.cpp	port			todo	[o-default]
-cpppj/src/o/RawWorldGeyserBounds.cpp	port			todo	[o-default]
+cpppj/src/o/RawWorldGeyser.cpp	port	www/core/raw-world-geyser.js	1f00a25a	port	[o-default] WB04-E107: 전체 세계 간헐천 생성 부모 00486440(장식 난수·예산 corner/edge/center·3×3 분할/전체 요청·밀도 표 0041ca40·시각 시드). fixture world-geyser 354행 전부(10.78 전용 파일). 로컬 생성/실제 배치/demo 플래그는 훅 경계
+cpppj/src/o/RawWorldGeyserBounds.cpp	port	www/core/raw-world-geyser-bounds.js	1f00a25a	port	[o-default] WB04-E107: 세계 간헐천 청크 범위 전체 00485bc0·분할 00485cc0(x87 폭 float/높이 배정도·공유 여백 DWORD)·간격 표 0041ca10·Player 예산 0041c8e0. fixture world-geyser-bounds 820행 전부(10.78 전용 파일). 청크 지도 조회는 훅 경계
 cpppj/src/o/RawXlat.cpp	port			todo	[o-default]
 cpppj/src/o/RenderProcessSystem.cpp	port			todo	[o-default]
 cpppj/src/o/RiftType.cpp	port	www/assets/type-table.js	1f00a25a	partial	[o-default] 타입 레코드 일부

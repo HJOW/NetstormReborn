@@ -9779,7 +9779,7 @@
       "bytes": 15275,
       "lines": 129,
       "fixtureCommit": "7198298b",
-      "webCommit": "worktree",
+      "webCommit": "bb8ebe44",
       "cpppjBasis": {
         "cpppj/src/o/RawObjectConversion.cpp": "5d714fe8",
         "cpppj/src/o/SquidFactory.cpp": "be567d46"
@@ -9809,7 +9809,7 @@
       "bytes": 5340,
       "lines": 37,
       "fixtureCommit": "7198298b",
-      "webCommit": "worktree",
+      "webCommit": "bb8ebe44",
       "cpppjBasis": {
         "cpppj/src/o/RawObjectConversion.cpp": "5d714fe8"
       }
@@ -9838,9 +9838,70 @@
       "bytes": 279988,
       "lines": 505,
       "fixtureCommit": "1a3ccedb",
-      "webCommit": "worktree",
+      "webCommit": "bb8ebe44",
       "cpppjBasis": {
         "cpppj/src/o/RawForeignRitualReward.cpp": "1a3ccedb"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E107",
+      "id": "world-geyser-bounds",
+      "path": "cpppj/tests/fixtures/world-geyser-bounds-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 세계 간헐천 전체/분할 사각형 16바이트·공유 여백 DWORD·예산·청크/간격 호출 순서·모드·크기(820행)",
+      "consumers": [
+        "webpj/tests/world-geyser.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-world-geyser-bounds.js"
+      ],
+      "doc": "docs/webpj-world-geyser-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawWorldGeyserBounds.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 820행 전부 사용",
+      "text": true,
+      "sha256": "275d968ce263959d60847f4523aac3008ce021946226086e74f7cda1d993fa7c",
+      "bytes": 76167,
+      "lines": 821,
+      "fixtureCommit": "80eda37e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawWorldGeyserBounds.cpp": "80eda37e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E107",
+      "id": "world-geyser",
+      "path": "cpppj/tests/fixtures/world-geyser-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 전체 세계 간헐천 생성 부모의 로그/로컬/장식/요청 순서와 전체 인자·옵션 87바이트·Player 1620바이트·장식 타입·demo(354행)",
+      "consumers": [
+        "webpj/tests/world-geyser.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-world-geyser.js",
+        "webpj/www/core/raw-world-geyser-bounds.js"
+      ],
+      "doc": "docs/webpj-world-geyser-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawWorldGeyser.cpp",
+        "cpppj/src/o/RawWorldGeyserBounds.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 354행 전부 사용",
+      "text": true,
+      "sha256": "0a6eea6bc24ba4156dd311caf2902583310be4b9033fe4ecf97f3b8fbf9e8183",
+      "bytes": 1401138,
+      "lines": 355,
+      "fixtureCommit": "f87b0308",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawWorldGeyser.cpp": "f87b0308",
+        "cpppj/src/o/RawWorldGeyserBounds.cpp": "80eda37e"
       }
     }
   ]
