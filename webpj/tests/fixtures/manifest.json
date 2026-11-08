@@ -11538,9 +11538,38 @@
       "bytes": 300502,
       "lines": 860,
       "fixtureCommit": "8a555c99",
-      "webCommit": "worktree",
+      "webCommit": "4cc9c997",
       "cpppjBasis": {
         "cpppj/src/o/RawPathArrivalParent.cpp": "8a555c99"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E146",
+      "id": "canongeometry",
+      "path": "cpppj/tests/fixtures/canongeometry-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 타입 전역 9종의 전체 decoder 와 모든 유효 칸의 finder 직전 계산(10.78 3159행)",
+      "consumers": [
+        "webpj/tests/canon-placement-geometry.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-placement-geometry.js"
+      ],
+      "doc": "docs/webpj-canon-placement-geometry-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCanonPlacementGeometry.cpp"
+      ],
+      "scope": "10.78 실제 PE 3159행 전부",
+      "text": true,
+      "sha256": "a842473cbc5b493f75c3a6dfd262576f12af0acb9f75d498e03d07a90dcc3ae8",
+      "bytes": 1798216,
+      "lines": 5969,
+      "fixtureCommit": "035d1324",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCanonPlacementGeometry.cpp": "167866d9"
       }
     }
   ]

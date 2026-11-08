@@ -564,7 +564,7 @@ cpppj/src/o/RawCannonFire.cpp	port	www/core/raw-cannon-fire.js	1f00a25a	port	[o-
 cpppj/src/o/RawCanonPixelShape.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacement.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementCollision.cpp	port			todo	[o-default]
-cpppj/src/o/RawCanonPlacementGeometry.cpp	port			todo	[o-default]
+cpppj/src/o/RawCanonPlacementGeometry.cpp	port	www/core/raw-canon-placement-geometry.js	1f00a25a	port	[o-default] WB04-E146: 일반 배치 모양 기하(0049b8c0..0049b95a finder 인자 산술·미리보기 범위·칸별 준비/후처리/조기 거부 순회). fixture canongeometry 실제 PE 3159행 전부. 남음: 지형/권한/관계/주변/충돌/미리보기 훅 본체
 cpppj/src/o/RawCanonPlacementPermission.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementPipeline.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementPreview.cpp	port			todo	[o-default]
