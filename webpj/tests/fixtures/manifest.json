@@ -9867,7 +9867,7 @@
       "bytes": 76167,
       "lines": 821,
       "fixtureCommit": "80eda37e",
-      "webCommit": "worktree",
+      "webCommit": "a1c50b59",
       "cpppjBasis": {
         "cpppj/src/o/RawWorldGeyserBounds.cpp": "80eda37e"
       }
@@ -9898,10 +9898,68 @@
       "bytes": 1401138,
       "lines": 355,
       "fixtureCommit": "f87b0308",
-      "webCommit": "worktree",
+      "webCommit": "a1c50b59",
       "cpppjBasis": {
         "cpppj/src/o/RawWorldGeyser.cpp": "f87b0308",
         "cpppj/src/o/RawWorldGeyserBounds.cpp": "80eda37e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E108",
+      "id": "contained",
+      "path": "cpppj/tests/fixtures/contained-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 종속 타입/순번 조회·권한별 가상 삭제의 반환·삭제 요청 순서·부모와 일곱 종속 슬롯 전체 raw(세 판본 2415행)",
+      "consumers": [
+        "webpj/tests/contained-lookup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-contained-lookup.js"
+      ],
+      "doc": "docs/webpj-contained-geyser-mined-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawContainedLookup.cpp"
+      ],
+      "scope": "10.78(originals) 805행 사용, originalCD 805행·original1037 805행은 범위 밖",
+      "text": true,
+      "sha256": "1f8cdf3a2f6feed18de01b0526e01f4d66792a9db3c3e55f6528279f1eff14d8",
+      "bytes": 1669971,
+      "lines": 2416,
+      "fixtureCommit": "7572a3c3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawContainedLookup.cpp": "7572a3c3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E108",
+      "id": "geysermined",
+      "path": "cpppj/tests/fixtures/geysermined-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 간헐천 채집 통지의 난수 상태·효과 순서·간헐천/생성물 슬롯 raw(두 판본 2312행)",
+      "consumers": [
+        "webpj/tests/geyser-mined.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-geyser-mined.js"
+      ],
+      "doc": "docs/webpj-contained-geyser-mined-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGeyserMined.cpp"
+      ],
+      "scope": "10.78(originals) 1156행 사용, originalCD 1156행은 범위 밖",
+      "text": true,
+      "sha256": "29abf72063278eecebd954401b6af4a2e67fe8ad236e51bb60ce3db141bfd5aa",
+      "bytes": 553540,
+      "lines": 2313,
+      "fixtureCommit": "5c2d0a1e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGeyserMined.cpp": "0d82e448"
       }
     }
   ]
