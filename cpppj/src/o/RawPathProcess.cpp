@@ -133,7 +133,7 @@ bool RawPathProcess::GroundStop(RawPathPoint point) {
     return false;
 }
 // 추가 shape finder는 해당 정수 칸의 실제 일반 hash를 읽는다.
-bool RawPathProcess::Blocked(RawPathPoint point) const { return PathArrivalBlocked(pool_,hash_,types_,spots_,state_.blockingGenus,point); }
+bool RawPathProcess::Blocked(RawPathPoint point) const { return PathArrivalBlocked(pool_,hash_,types_,spots_,state_.BlockingGenus(),point); }
 // type54은 사망/HP 이동 불가가 아니라 원본 Regular0x5105 존재를 먼저 검사한다.
 void RawPathProcess::RunFrame() {
     if (!Host()) throw std::logic_error("미부착 경로 RunFrame");

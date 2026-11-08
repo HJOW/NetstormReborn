@@ -16,6 +16,10 @@ struct ConstructionClearState {
     const bool* sharedAuthority{}; // 실제 Client boss를 후보 비교마다 조회하도록 빌린다.
     const bool& Authority() const { return sharedAuthority ? *sharedAuthority : authority; } // 앞선 가상 삭제 뒤의 다음 후보도 현재 권한을 읽는다.
     const CanonDecoderDiagnostics* decoderDiagnostics{}; // 반복자보다 오래 사는 같은 Client의 현재 checking·진단 장치를 빌린다.
+    const std::uint32_t* sharedBridgeType{}; // 후보 프레임 비교 위치의 실제005411a0이다.
+    std::function<std::array<std::uint32_t,8>()> patternTypesRead; // decoder 생성 위치에서만 현재8TYPE를 선택한다.
+    std::uint32_t BridgeType() const { return sharedBridgeType ? *sharedBridgeType : bridgeType; } // 앞선 삭제/탐색 효과 뒤에도 현재 번호다.
+    std::array<std::uint32_t,8> CurrentPatternTypes() const { return patternTypesRead ? patternTypesRead() : patternTypes; } // 독립 typed 배열 계약을 유지한다.
 };
 // 정리 한 번의 입력이다. 통지의 타입·좌표·decoder 인자·방향·플레이어를 그대로 받는다.
 struct ConstructionClearRequest {

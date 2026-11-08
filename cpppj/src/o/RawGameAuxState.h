@@ -10,6 +10,16 @@
 namespace netstorm::o { // Gameplay/Storage가 같은 주소를 pin하는 작은 게임 데이터 owner다.
 class RawGameAuxState {
 public:
+    std::uint32_t& ConstructionBlocked() { return constructionBlocked_; } //00558e74의 현재 수신 차단 DWORD이며 Player/패킷 조회보다 먼저 읽는다.
+    const std::uint32_t& ConstructionBlocked() const { return constructionBlocked_; } // 같은 실제 장기 슬롯을 사본 없이 빌린다.
+    std::uint32_t& ConstructionDisplaceGenus() { return constructionDisplaceGenus_; } //005325b4를 건설/경로/배치 충돌이 함께 읽는다.
+    const std::uint32_t& ConstructionDisplaceGenus() const { return constructionDisplaceGenus_; } // 효과 뒤에도 같은 현재 마스크다.
+    std::uint32_t& EmptyGeyserType() { return emptyGeyserType_; } //005411a8의 현재84이며 후보 재사용과 실제 교체 조회가 공유한다.
+    const std::uint32_t& EmptyGeyserType() const { return emptyGeyserType_; } // 원문이 선택한 시점의 실제 번호다.
+    std::int32_t& FirstLocalGeyserQuantity() { return firstLocalGeyserQuantity_; } //00540bd4의 현재 Player1~4 요청 수다.
+    const std::int32_t& FirstLocalGeyserQuantity() const { return firstLocalGeyserQuantity_; } // 실제 Player 경계 효과 뒤 읽는다.
+    std::int32_t& LastLocalGeyserQuantity() { return lastLocalGeyserQuantity_; } //00540bd8의 현재 Player5~8 요청 수다.
+    const std::int32_t& LastLocalGeyserQuantity() const { return lastLocalGeyserQuantity_; } // 지역 생성 중 다음 Player도 같은 슬롯을 읽는다.
     std::uint32_t& FreeTechnologyType() { return freeTechnologyType_; } //005412bc의 현재153이며 Deck 재계산과 같은 주소를 빌린다.
     const std::uint32_t& FreeTechnologyType() const { return freeTechnologyType_; } //Session/NoWorld의 별도 초기값으로 대체하지 않는다.
     std::uint32_t& TempleProductType() { return templeProductType_; } //0054126c의 현재133이며 Factory의 기본 신전 제품을 선택한다.
@@ -267,6 +277,10 @@ private:
     std::uint32_t supportTypeWas_{}; //0054d4e4의 최초 BSS0이며 진단 소비자와 실제 수신 writer가 공유할 장기 물리다.
     std::uint32_t firstTimerFactoryType_{85},secondTimerFactoryType_{87},outpostType_{126}; // 보호10.78 PE의 세 TYPE DWORD 초기값이며 일반 Runtime 초기화와 구별한다.
     std::uint32_t terrainType_{97},edgeFarmType_{121}; // 보호 PE 두 TYPE 전역이며 현재 Runtime 대여/반납은 초기화하지 않는다.
+    std::uint32_t constructionBlocked_{}; // 보호 PE00558e74의 BSS0이며 Runtime 재대여로 초기화하지 않는다.
+    std::uint32_t constructionDisplaceGenus_{0x10444200}; // 보호 PE005325b4의 최초 DWORD이며 네 실제 소비자가 공유한다.
+    std::uint32_t emptyGeyserType_{84}; // 보호 PE005411a8의 최초 TYPE 번호다.
+    std::int32_t firstLocalGeyserQuantity_{3},lastLocalGeyserQuantity_{4}; // 보호 PE00540bd4/d8의 최초 signed 요청 수다.
     std::int32_t worldGeyserMargin_{2}; //보호 PE00542654의 실제 초기 DWORD다.
     std::array<std::uint32_t,4> worldDecorationTypes_{100,184,101,185}; //실제 treeTwo/RUIN/treeThree/Monument 타입 순서다.
 };

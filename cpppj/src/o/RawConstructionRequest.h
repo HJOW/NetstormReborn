@@ -12,6 +12,18 @@ struct ConstructionRequestState {
     std::uint32_t displaceGenus{};  // 005325b4 / 0053fc28: 이 genus에 해당하면 기존 유닛을 밀어낸다.
     std::array<std::uint32_t,8> patternTypes{107,82,94,157,131,129,140,142}; // decoder와 island/noIsland 번호 전역.
     const CanonDecoderDiagnostics* decoderDiagnostics{}; // 반복자보다 오래 사는 같은 Client의 현재 checking·진단 장치를 빌린다.
+    const bool* sharedEditor{}; // 실제00594fb8의 현재 모드이며 독립 입력은 기존 bool을 쓴다.
+    const std::uint32_t* sharedLocalPlayer{}; // 실제00540c70의 현재 로컬 owner다.
+    const std::uint32_t* sharedDisplaceGenus{}; // 같은 장기005325b4의 현재 마스크다.
+    const std::uint32_t* sharedIslandType{}; // Displace 뒤 선택하는 현재005411d0이다.
+    const std::uint32_t* sharedNoIslandType{}; // 후보 비교/받침 확정 시 읽는 현재005412cc다.
+    std::function<std::array<std::uint32_t,8>()> patternTypesRead; // MayPlace 뒤 decoder 생성 위치의 현재8TYPE다.
+    bool Editor() const { return sharedEditor ? *sharedEditor : editor; } // 진입의 원문 편집 관문에서 읽는다.
+    std::uint32_t LocalPlayer() const { return sharedLocalPlayer ? *sharedLocalPlayer : localPlayer; } // 편집 관문을 통과했을 때만 선택한다.
+    std::uint32_t DisplaceGenus() const { return sharedDisplaceGenus ? *sharedDisplaceGenus : displaceGenus; } // 순회 효과 뒤 현재 마스크다.
+    std::uint32_t IslandType() const { return sharedIslandType ? *sharedIslandType : patternTypes[2]; } // 현재 받침 발자국 TYPE를 선택한다.
+    std::uint32_t NoIslandType() const { return sharedNoIslandType ? *sharedNoIslandType : patternTypes[3]; } // 앞선 후보/공간 효과 뒤에도 현재 번호다.
+    std::array<std::uint32_t,8> CurrentPatternTypes() const { return patternTypesRead ? patternTypesRead() : patternTypes; } // 같은 decoder의 생성 인자만 고정한다.
 };
 // 요청 밖의 효과다. 공통 세 경계와 판본에 맞는 유닛 밀어내기 경계가 필수다.
 struct ConstructionRequestHooks {

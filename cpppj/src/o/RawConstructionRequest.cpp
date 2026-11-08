@@ -67,9 +67,9 @@ bool RawConstructionRequest::Request(ConstructionConfirmRequest request) const {
         !std::isfinite(request.x) || !std::isfinite(request.y)) throw std::out_of_range("건설 요청 타입/좌표 오류");
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto& record=types_[request.type];const auto& meta=frames_[request.type];
-    if (state_.editor) request.player=state_.localPlayer;
+    if (state_.Editor()) request.player=state_.LocalPlayer();
     if (!hooks_.mayPlace({request.type,request.argument,request.x,request.y,request.direction,request.player,0})) return false;
-    auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,{request.type,std::bit_cast<int>(request.argument),
+    auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,state_.CurrentPatternTypes(),{request.type,std::bit_cast<int>(request.argument),
         std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics);
     const std::size_t extra=patch ? kPatchExtra : kCdExtra,owner=patch ? kPatchOwner : kCdOwner;
     // decoder의 모든 유효 칸에서 abstract 예측이 같은 플레이어·타입·정확한 좌표인지 검사한다.
@@ -80,16 +80,17 @@ bool RawConstructionRequest::Request(ConstructionConfirmRequest request) const {
         // 일반 finder의 순서를 유지하고 첫 충돌에서 효과 없이 종료한다.
         for (Sid current=finder.Begin(area);current.value!=0;current=finder.Next()) {
             const auto raw=pool_.Slot(current);
-            if (!(raw[extra]&1) || raw[kType]==state_.patternTypes[3]) continue;
+            if (!(raw[extra]&1) || raw[kType]==state_.NoIslandType()) continue;
             if (static_cast<std::uint32_t>(raw[owner])!=request.player || static_cast<std::uint32_t>(raw[kType])!=request.type ||
                 Coordinate(raw,kX)!=decoder.X() || Coordinate(raw,kY)!=decoder.Y()) return false;
         }
     }
-    if (record.flags2&state_.displaceGenus) {
+    if (record.flags2&state_.DisplaceGenus()) {
         if (patch) { if (!hooks_.displace(request.x,request.y,request.type,request.player)) return false; }
         else hooks_.displaceCd(request.x,request.y,request.type);
     }
-    const auto& island=types_[state_.patternTypes[2]];
+    const auto islandType=state_.IslandType();if (islandType>=types_.size()) throw std::out_of_range("건설 요청의 현재 island TYPE 범위");
+    const auto& island=types_[islandType];
     const float baseX=static_cast<float>(static_cast<double>(request.x)+Offset(island.footX));
     const float baseY=static_cast<float>(static_cast<double>(request.y)+Offset(island.footY));
     const auto rectangle=Footprint(request.x,request.y,record.footX,record.footY);
@@ -97,7 +98,7 @@ bool RawConstructionRequest::Request(ConstructionConfirmRequest request) const {
         // 원본은 먼저 표면을 조회한다. spot에 bit 2가 없거나 표면이 abstract이면 받침을 선행 확정한다.
         const auto surface=pool_.Slot(Surface(request.x,request.y));
         if (NoSurface(rectangle) || (surface[extra]&1))
-            hooks_.confirm({state_.patternTypes[3],baseX,baseY,request.player,0,0,0,0,0,0});
+            hooks_.confirm({state_.NoIslandType(),baseX,baseY,request.player,0,0,0,0,0,0});
     }
     if (hooks_.confirm(request)) return true;
     // 확정 경계가 타입 플래그를 바꿀 수 있으므로 실패 후 현재 flags1을 다시 읽는다.

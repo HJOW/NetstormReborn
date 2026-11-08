@@ -24,6 +24,8 @@ struct RawPathProcessState {
     std::uint32_t walkerProcess{38},windWalkerType{137},rainWalkerType{156},windWalkerCounter{}; //00541108/54127c/5412c8/5951c4의 세션 공유 전역이다.
     std::uint32_t bulfProcess{41}; //00541114의 현재 Bulf 전용 회전/보행 경로다.
     RawCheckingFlag checking; // 패치 Halt의 현재 진단 DWORD이며 삭제 뒤에도 원래 owner를 빌린다.
+    const std::uint32_t* sharedBlockingGenus{}; // 실제005325b4의 같은 장기 마스크다.
+    std::uint32_t BlockingGenus() const { return sharedBlockingGenus ? *sharedBlockingGenus : blockingGenus; } // 도착 판정 위치에서 현재값을 읽는다.
 };
 // 실제 가상 효과 및 아직 복원되지 않은 큰 하위 몸체의 경계다. 누락을 실행 가능한 빈 효과로 바꾸지 않는다.
 struct RawPathProcessHooks {

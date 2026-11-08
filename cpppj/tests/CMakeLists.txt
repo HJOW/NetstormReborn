@@ -3781,5 +3781,9 @@ target_compile_definitions(netstorm_surface_lifetime_tests PRIVATE NETSTORM_BRID
 # 건설/간헐천의 독립 PE 및 현재 Player this/base만 실행하며 MP 프로토콜/패킷/통신 검사는 포함하지 않는다(1190).
 add_executable(netstorm_construction_player_tests FocusedTestMain.cpp ConstructionPlaceTests.cpp PlayerGeyserBoundsTests.cpp LocalGeyserTests.cpp ConstructionPlayerLifetimeTests.cpp ConstructionOwnerAssetsTests.cpp)
 target_link_libraries(netstorm_construction_player_tests PRIVATE netstorm)
+add_executable(netstorm_construction_current_tests FocusedTestMain.cpp ConstructionCurrentStateTests.cpp ConstructionRequestTests.cpp ConstructionClearTests.cpp)
+target_link_libraries(netstorm_construction_current_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_construction_current_tests)
+target_compile_definitions(netstorm_construction_current_tests PRIVATE NETSTORM_CONSTRUCTIONREQUEST_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionrequest-x86.tsv" NETSTORM_CONSTRUCTIONCLEAR_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionclear-x86.tsv")
 netstorm_apply_compiler_options(netstorm_construction_player_tests)
 target_compile_definitions(netstorm_construction_player_tests PRIVATE NETSTORM_CONSTRUCTIONPLACE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionplace-x86.tsv" NETSTORM_LOCALGEYSER_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/local-geyser-x86.tsv" NETSTORM_GEYSER_PLACEMENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/geyser-placement-x86.tsv" NETSTORM_PLAYER_GEYSER_BOUNDS_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-geyser-bounds-x86.tsv")

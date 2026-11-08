@@ -36,10 +36,10 @@ ConstructionConfirmRequest RawConstructionCommand::Read(std::uint32_t sender,std
 }
 // NaN 잔액/비용의 원본 선검사는 ordered less이며 후속 Place의 부족 판단과 구별한다.
 void RawConstructionCommand::Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const {
-    if (state_.blocked) return;
+    if (state_.Blocked()) return;
     if (packet.size()<kReadBytes) throw std::out_of_range("건설 요청 수신 본문 부족");
     const auto type=packet[4];if (type>=types_.size()) throw std::out_of_range("건설 요청 현재 TYPE 범위 오류");
-    if (!(state_.chargeBlockedRead ? state_.chargeBlockedRead() : state_.chargeBlocked) && sender!=state_.localPlayer) { // TYPE 검증 뒤 현재 전역을 읽고 그 뒤 로컬 sender를 비교한다.
+    if (!(state_.chargeBlockedRead ? state_.chargeBlockedRead() : state_.chargeBlocked) && sender!=state_.LocalPlayer()) { // TYPE 검증 뒤 현재 전역을 읽고 그 뒤 로컬 sender를 비교한다.
         const auto money=hooks_.money(sender); // 실제 잔액 경계 뒤 현재 TYPE 비용을 읽는다.
         if (money<types_[type].cost) { hooks_.shortfall(Read(sender,packet));return; }
     }

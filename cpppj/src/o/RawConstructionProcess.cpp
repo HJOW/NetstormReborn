@@ -161,7 +161,7 @@ void RawConstructionProcess::Complete(Sid parent) const {
     if (!(pool_.Slot(parent)[kState]&kVoid)) throw std::logic_error("건설 완료의 abstract 해제는 void 상태여야 합니다");
     pool_.AllocatedBytes(parent)[extra]&=static_cast<std::uint8_t>(~kAbstract);
     hooks_.repop(parent,kRepopFlags);
-    if (!(state_.pushGenus&Genus(parent))) return;
+    if (!(state_.PushGenus()&Genus(parent))) return;
     const auto raw=pool_.Slot(parent);
     hooks_.push(std::bit_cast<float>(Read(raw,kX)),std::bit_cast<float>(Read(raw,kY)),raw[kType],raw[owner]);
 }

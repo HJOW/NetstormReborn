@@ -55,7 +55,7 @@ bool RawCanonPlacementCollision::InspectCandidate(CanonPlacementQuery query,bool
     const auto& other=types_[type];const float x=Coordinate(raw,kX),y=Coordinate(raw,kY);
     const auto firstServer=pool_.Edition()==OriginalEdition::Patch1078 ? 15000U : 6000U;
     if (state_.clientMode && candidate.value>=kFirstClient && candidate.value<firstServer) return true;
-    if (PlacementIgnoreValue(pool_.Edition(),placing,other,query.mode,state_.ignoredGenus)) return true;
+    if (PlacementIgnoreValue(pool_.Edition(),placing,other,query.mode,state_.IgnoredGenus())) return true;
     if (localOwner) {
         if (!std::isfinite(x) || !std::isfinite(y) || other.footX<0 || other.footY<0 || other.footX>256 || other.footY>256)
             throw std::out_of_range("일반 타입 충돌 후보 발자국/좌표 오류");

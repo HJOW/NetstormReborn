@@ -62,7 +62,7 @@ void RawConstructionClear::Clear(const ConstructionClearRequest& request) const 
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (request.type>=types_.size() || request.type>=frames_.size() || request.type>0xff) throw std::out_of_range("건설 예측 정리 타입 번호 오류");
     const auto& record=types_[request.type];const auto& meta=frames_[request.type];
-    auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,state_.patternTypes,{request.type,std::bit_cast<int>(request.argument),
+    auto decoder=DecodeCanonType(meta.frames,meta.defaultFrame,state_.CurrentPatternTypes(),{request.type,std::bit_cast<int>(request.argument),
         std::bit_cast<int>(request.direction),request.x,request.y,false},pool_.Edition(),state_.decoderDiagnostics);
     const std::size_t extraOffset=patch ? kPatchExtra : kCdExtra,ownerOffset=patch ? kPatchOwner : kCdOwner;
     const std::uint32_t serverFirst=pool_.Layout().serverFirst;
@@ -82,7 +82,7 @@ void RawConstructionClear::Clear(const ConstructionClearRequest& request) const 
                 // 프레임이 같거나, 다리 타입이면서 방향 글자가 같으면 통지와 같은 조각이다. 패치는 DWORD, CD는 BYTE 프레임을 비교한다.
                 const std::uint32_t frame=Read(raw,patch ? kPatchFrame : kCdFrame,patch ? 4 : 1);
                 bool same=frame==std::bit_cast<std::uint32_t>(decoder.Frame());
-                if (!same && type==state_.bridgeType) {
+                if (!same && type==state_.BridgeType()) {
                     if (frame>=codes.size()) throw std::out_of_range("건설 예측 정리 후보의 프레임 범위 오류");
                     same=static_cast<std::int8_t>(codes[frame].side)==static_cast<std::int8_t>(decoder.Side());
                 }

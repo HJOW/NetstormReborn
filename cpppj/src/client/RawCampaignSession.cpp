@@ -1001,6 +1001,15 @@ struct RawCampaignSession::Impl {
         constructionState.notice.sharedDaisType=&gameplayGlobals->GameAux()->DaisType();constructionState.notice.sharedPriestType=&gameplayGlobals->GameAux()->PriestType(); //같은 현재 Dais/Priest 장기 TYPE owner를 통지에 빌린다.
         constructionState.place.patternTypesRead=[this] { return std::array<std::uint32_t,8>{piece,core.bridgeState.bridgeType,core.bridgeState.islandType,core.bridgeState.noIslandType,gunState.thunderCannonType,gunState.rainCannonType,gameplayGlobals->GameAux()->WindArcherType(),constructionState.confirm.patternTypes[7]}; }; //player 진단 복귀 뒤 541204/11a0/11d0/12cc/1264/125c/1288/1290의 같은 현재 owner8개를 읽는다.
         constructionState.confirm.patternTypesRead=constructionState.place.patternTypesRead; // 실제 확정도 FindBuilder 뒤 Place와 같은8 owner를 조회하며 Prepare 사본을 현재값으로 고정하지 않는다.
+        if (world.Storage()->UsesNativeTransmissionDevices()) {
+            auto& aux=*gameplayGlobals->GameAux(); // 실제 Native 소비자만 같은 장기 주소를 빌리며 typed 입력은 기존 Prepare 계약을 유지한다.
+            constructionState.request.sharedEditor=&core.ownerMode.fort;constructionState.request.sharedLocalPlayer=constructionState.command.sharedLocalPlayer=&playerState.battleOwner;
+            constructionState.request.sharedIslandType=&core.bridgeState.islandType;constructionState.request.sharedNoIslandType=&core.bridgeState.noIslandType;constructionState.clear.sharedBridgeType=&core.bridgeState.bridgeType;
+            constructionState.request.patternTypesRead=constructionState.clear.patternTypesRead=constructionState.place.patternTypesRead; // MayPlace/decoder 진단 뒤 원문 선택 위치에서 현재 패턴을 조회한다.
+            constructionState.command.sharedBlocked=&aux.ConstructionBlocked();constructionState.request.sharedDisplaceGenus=buildingState.sharedPushGenus=process.sharedBlockingGenus=placement.collision.sharedIgnoredGenus=gameplayPlacement.collision.sharedIgnoredGenus=&aux.ConstructionDisplaceGenus();
+            constructionState.geyser.sharedFort=&core.ownerMode.fort;constructionState.geyser.sharedNoIslandType=&core.bridgeState.noIslandType;constructionState.geyser.sharedEmptyGeyserType=&aux.EmptyGeyserType();constructionState.geyser.sharedIsleType=&aux.TerrainType();
+            constructionState.geyser.sharedFirstQuantity=&aux.FirstLocalGeyserQuantity();constructionState.geyser.sharedLastQuantity=&aux.LastLocalGeyserQuantity();
+        }
         farm.sharedArchipelago=&gameplayGlobals->GameAux()->Archipelago();farm.sharedArchipelagoSpan=&gameplayGlobals->GameAux()->WorldGeyserMargin();devastationEffectState.sharedSpentCounter=&gameplayGlobals->GameAux()->ResourcePool(); // Login과 별개의 bb0 및 같은595088/542654를 직접 빌린다.
         if (services.deferExistingEditorFile && services.installMode!=CampaignInstallMode::ExistingEditor) throw std::invalid_argument("파일지연은명시ExistingEditor전용입니다");
         objectState.sharedFullDeck=&fullDeck;constructionState.confirm.sharedFullDeck=&fullDeck;anchorState.sharedFullDeck=&fullDeck; // 하위 모듈 생성 전에 같은 장기 DWORD를 빌리며 Prepare 때 사본을 쓰지 않는다.
@@ -2548,7 +2557,7 @@ struct RawCampaignSession::Impl {
         constructionState.place.chargeBlocked=globals.missionPost; // 값형 관측도 같은 현재00594fa4를 반영하고 실제 판정은 위 공유 조회기를 소비 시점에 읽는다.
         constructionState.place.localPlayer=constructionState.notice.localPlayer=playerState.battleOwner;
         constructionState.request.editor=core.ownerMode.fort;constructionState.request.localPlayer=playerState.battleOwner;
-        constructionState.request.displaceGenus=buildingState.pushGenus;constructionState.request.patternTypes=constructionState.confirm.patternTypes;
+        constructionState.request.displaceGenus=buildingState.PushGenus();constructionState.request.patternTypes=constructionState.confirm.patternTypes;
         constructionState.command.localPlayer=playerState.battleOwner;constructionState.command.chargeBlocked=constructionState.place.chargeBlocked;
         constructionState.place.battleShown=playerState.playerKnown!=0;
         constructionState.geyser.fort=core.ownerMode.fort;
@@ -3353,7 +3362,7 @@ struct RawCampaignSession::Impl {
         if (!gameplayPipeline) throw std::logic_error("게임 요청의 전체 MayPlace 미설치");
         gameplayPlacement.placement.localPlayer=std::bit_cast<std::int32_t>(playerState.battleOwner);gameplayPlacement.permission.editor=globals.editor;
         gameplayPlacement.permission.graphReady=anchorState.graphReady;gameplayPlacement.permission.alliances=alliances;gameplayPlacement.anchor=anchorState;
-        gameplayPlacement.collision.clientMode=core.processState.Server() ? 1U : 0U;gameplayPlacement.collision.ignoredGenus=buildingState.pushGenus;
+        gameplayPlacement.collision.clientMode=core.processState.Server() ? 1U : 0U;gameplayPlacement.collision.ignoredGenus=buildingState.PushGenus();
         gameplayPlacement.geometry.patternTypes=constructionState.confirm.patternTypes;gameplayPlacement.relations.islandCount=islands->Count();
         // 현재 원본 섬의 제한/존재 DWORD만 읽고 Player/owner를 새로 만들지 않는다.
         for (std::size_t index=0;index<gameplayRegions.size();++index) gameplayRegions[index]={Read(islandBytes,4+index*32),Read(islandBytes,8+index*32)};

@@ -1,0 +1,1611 @@
+{
+  "unit": 1193,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "summary": "Request/Clear/Local/Command가 실제 원문 소비 위치에서 현재 모드·owner·패턴·TYPE·마스크·수량을 읽도록 연결했다. 건설/경로/충돌은 같은 장기005325b4를 사용한다.",
+  "sourceSha256": {
+    "cpppj/src/o/RawGameAuxState.h": "4bd906a53249261b7f11e52aa373e8db1a37e77684850ba8409a649a2b148c16",
+    "cpppj/src/o/RawConstructionRequest.h": "ac33a94ef835b15a6010076b63e6ad26ebb339975b36a814be4a873c65fa22a4",
+    "cpppj/src/o/RawConstructionRequest.cpp": "65f48a5febd76765450380658ed1dc4f68b614c3c96b3258c62b10ea190e451a",
+    "cpppj/src/o/RawConstructionClear.h": "8391616696317f66fa97779e77bfb36f497aaa6cb0e94af412fadda47550e0dc",
+    "cpppj/src/o/RawConstructionClear.cpp": "0ae2c14519e0bfaa5c214392b48a478c955705eb323ed9819153fddbb46f3d8e",
+    "cpppj/src/o/RawConstructionCommand.h": "c624d98fe08a359b1de8df3291f497f521e5844dac05ff425c1ed470527422ad",
+    "cpppj/src/o/RawConstructionCommand.cpp": "13842e1991465f3ce869ff74a5ae323cb45b130ff8d805da0e2f33dbee376d11",
+    "cpppj/src/o/RawLocalGeyser.h": "4e19358161ea7f62a15faf8873023e5ec5e1f7663385400ff10057fb98ce917c",
+    "cpppj/src/o/RawLocalGeyser.cpp": "6340997b1b475dba037022c63ceea1280561b8ee5580953b6a164d693ed4aa07",
+    "cpppj/src/o/RawConstructionProcess.h": "06fcea7c7682b57f2fe7b4d28fd6c316202a5dd8930c7cc5d664b669244bad2e",
+    "cpppj/src/o/RawConstructionProcess.cpp": "ee70a66fbc9432a0e153294ebb74c4afc1313958df884168c6bef24a513083fa",
+    "cpppj/src/o/RawPathProcess.h": "b39ec44a33839897e9f23583f491554ab2a270e0e3d8a0cedc8c4434188e96e1",
+    "cpppj/src/o/RawPathProcess.cpp": "72cfbea741ce0c5035031635b9c5972ad310ae2c74376246474c6ae3388bcebb",
+    "cpppj/src/o/RawCanonPlacementCollision.h": "43a8bc49d06b23d550ce6baba13d0878ac124a94ea26fa26217260e041733976",
+    "cpppj/src/o/RawCanonPlacementCollision.cpp": "2c2431fac735dff67fd878f79c82584ddd1b69ef3b6bfb9b973357b50fa70648",
+    "cpppj/src/client/RawCampaignSession.cpp": "1b880fb90c75697dfd075569def7af81731fe5ed7d87efe4fd93c522843c6746",
+    "cpppj/tests/ConstructionCurrentStateTests.cpp": "2a3e1119779cbd49f7a060adfb7994000449a02f4e13198d24304bb767988e4f",
+    "cpppj/tests/CMakeLists.txt": "bb47583c1d0fd38d4a126c619608db8482d8b5e6cb0ae966dd6e35a8d7d23195"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13622272,
+      "sha256": "a74d3bedc167847307a8ac7e56b1ba74daac4e2d35753cb5fd6f72c3d1202ec2"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "e3a0a9bc0c1c567baf363cd615495032fa87535f85baed11c86e08a57eed6dc8"
+    }
+  },
+  "nativeEvidence": [
+    {
+      "entry": "00444760",
+      "metadata": {
+        "entry": "444760",
+        "name": "FUN_00444760",
+        "size": "909",
+        "ranges": "444760-444aec",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__cdecl",
+        "call_refs": "3",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "41080f,444b8e,444e84",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "40eaf0,41d360,41d770,41d7a0,425860,425c20,443800,444590,46e6c0,49a840,49ae80,49b510,4b16d0,4b1810,4e49c0",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "0",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __cdecl FUN_00444760()"
+      },
+      "ranges": [
+        {
+          "first": "00444760",
+          "lastInclusive": "00444aec",
+          "sha256": "86687e2d7bd7472bdeffd8b265fa263641bcaa5aa1d04cc04323f2bfb083bb1c"
+        }
+      ],
+      "cSha256": "253b1cc8c6b4c69cb3917ad5354ef1a451cada7e5644b4fdcd85d001bfd3cb3b"
+    },
+    {
+      "entry": "00441fd0",
+      "metadata": {
+        "entry": "441fd0",
+        "name": "FUN_00441fd0",
+        "size": "451",
+        "ranges": "441fd0-442192",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__cdecl",
+        "call_refs": "1",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "4441e7",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "41d770,41d7a0,425860,425af0,425c00,425c20,4ad680,4b16d0,4b1810,4e49c0",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "0",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __cdecl FUN_00441fd0()"
+      },
+      "ranges": [
+        {
+          "first": "00441fd0",
+          "lastInclusive": "00442192",
+          "sha256": "eeaf2d741ee5c5f54607acd10a8406efb5936599ef17bb6b9dcdd865a9755508"
+        }
+      ],
+      "cSha256": "6f0f32c979991b9e6c1f9dabf9071755a933ec1dce88e7c9b9fee1b2f905f63e"
+    },
+    {
+      "entry": "00444af0",
+      "metadata": {
+        "entry": "444af0",
+        "name": "FUN_00444af0",
+        "size": "206",
+        "ranges": "444af0-444bbd",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__cdecl",
+        "call_refs": "0",
+        "data_refs": "1",
+        "jump_refs": "0",
+        "callers": "",
+        "data_ref_from": "40ba98",
+        "jump_ref_from": "",
+        "calls": "40ef30,442af0,442b50,444760,49a840",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "0",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __cdecl FUN_00444af0()"
+      },
+      "ranges": [
+        {
+          "first": "00444af0",
+          "lastInclusive": "00444bbd",
+          "sha256": "d9a62434c63d4090875982b6461f31ce9e24cea9fcf3676a8ee9f77f4a9de079"
+        }
+      ],
+      "cSha256": "56e1bff6e7ff1802b9e2e145e1bb3fea451f1f6a473dc8f9cd914cc892cbe1a9"
+    },
+    {
+      "entry": "00486130",
+      "metadata": {
+        "entry": "486130",
+        "name": "FUN_00486130",
+        "size": "557",
+        "ranges": "486130-4861ec;4861f0-48635f",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__cdecl",
+        "call_refs": "6",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "486412,4866d3,486791,4867d1,4870c1,4871ee",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "444590,485890,486030,49a840,4af530,4b1fa0,4e0620,4e49c0",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "0",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __cdecl FUN_00486130()"
+      },
+      "ranges": [
+        {
+          "first": "00486130",
+          "lastInclusive": "004861ec",
+          "sha256": "2dc3d50f71d2f8861acb6e5eb15c6b14bdf39bf4dd4af1b58ac03299f8c10060"
+        },
+        {
+          "first": "004861f0",
+          "lastInclusive": "0048635f",
+          "sha256": "4ea98a912ba220c11b325f216265e765e2058cdbb2b987beafbe199db3fb72df"
+        }
+      ],
+      "cSha256": "fc18626021d0a541cdaf60eaf98aea9ba5dd8fcc3f4b6219d9de750731e192ea"
+    },
+    {
+      "entry": "00486360",
+      "metadata": {
+        "entry": "486360",
+        "name": "FUN_00486360",
+        "size": "209",
+        "ranges": "486360-486430",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__cdecl",
+        "call_refs": "2",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "486454,4c3abf",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "441470,486130,48f5c0,4bcab0",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "0",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __cdecl FUN_00486360()"
+      },
+      "ranges": [
+        {
+          "first": "00486360",
+          "lastInclusive": "00486430",
+          "sha256": "c017db6c79031bd8b9793fd30fb837b4a20e9f320e8ae1dd5c1e2519e640c326"
+        }
+      ],
+      "cSha256": "5c015dc35b3f463a0c5314206c103c2ccbe7ed2c617bbd192ab895fa549402eb"
+    },
+    {
+      "entry": "00485890",
+      "metadata": {
+        "entry": "485890",
+        "name": "FUN_00485890",
+        "size": "814",
+        "ranges": "485890-485bbd",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__thiscall",
+        "call_refs": "2",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "4861e2,486201",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "41daf0,43fa60,4ad680,4b1fa0,4e49c0,4e65ed",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "1",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __thiscall FUN_00485890(void * this)"
+      },
+      "ranges": [
+        {
+          "first": "00485890",
+          "lastInclusive": "00485bbd",
+          "sha256": "ed715c429e33635ac5963a843599f7e5e4a7343728dabb4ad118af5424ae8660"
+        }
+      ],
+      "cSha256": "8310393aac20286fe6207830ce678e96fcb9b2e2d9c0a19a398e5fa1bafd5896"
+    },
+    {
+      "entry": "0049ade0",
+      "metadata": {
+        "entry": "49ade0",
+        "name": "FUN_0049ade0",
+        "size": "150",
+        "ranges": "49ade0-49ae75",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__thiscall",
+        "call_refs": "1",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "49ba31",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "1",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __thiscall FUN_0049ade0(void * this)"
+      },
+      "ranges": [
+        {
+          "first": "0049ade0",
+          "lastInclusive": "0049ae75",
+          "sha256": "1f827c7769728435dd1c507b46d0df30f13e7c4f70a34001ebf8e96d578119af"
+        }
+      ],
+      "cSha256": "0c45bc48e02044e9a95bd6fdebd3973a2c2c30193c3202c1444ef07835f551a6"
+    },
+    {
+      "entry": "00443e20",
+      "metadata": {
+        "entry": "443e20",
+        "name": "FUN_00443e20",
+        "size": "406",
+        "ranges": "443e20-443fb5",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__thiscall",
+        "call_refs": "1",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "444037",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "41bfb0,42b050,443800,4a9550,4a9d70,4ac200,4ac550,4adcb0,4b1a90,4da650",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "1",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __thiscall FUN_00443e20(void * this)"
+      },
+      "ranges": [
+        {
+          "first": "00443e20",
+          "lastInclusive": "00443fb5",
+          "sha256": "6386e83821eb96424ddb51dccfc96a405df3872c2d04408d1cab002224c8c8be"
+        }
+      ],
+      "cSha256": "0b8f53fd2687efa466b13d015e417a38f621402a898cb68043909321ad1fe0a7"
+    },
+    {
+      "entry": "0048b340",
+      "metadata": {
+        "entry": "48b340",
+        "name": "FUN_0048b340",
+        "size": "822",
+        "ranges": "48b340-48b675",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__thiscall",
+        "call_refs": "1",
+        "data_refs": "6",
+        "jump_refs": "0",
+        "callers": "48bdd5",
+        "data_ref_from": "50df88,50e2a8,50e2dc,50e310,50e344,50e378",
+        "jump_ref_from": "",
+        "calls": "41be80,41bf10,4202f0,443800,48a330,4ac200,4b1810,4e0620,4e49c0",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "1",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __thiscall FUN_0048b340(void * this)"
+      },
+      "ranges": [
+        {
+          "first": "0048b340",
+          "lastInclusive": "0048b675",
+          "sha256": "91b33fbbb9b585c3d7532d42a099e8339ea3ac57b5cb86794a1797fc2bda8df9"
+        }
+      ],
+      "cSha256": "f7baa9b0749a81a2b94e30b0661862727bcf1eab37b0d2c90fd3e9d7dbed3e3a"
+    }
+  ],
+  "initialPeGlobals": {
+    "005325b4": {
+      "value": 272908800,
+      "sha256": "4b1276fcad27ad84621909650e03c705c1aa552795214dc4eb425d6df6a91de0"
+    },
+    "00558e74": {
+      "value": 0,
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    "005411a8": {
+      "value": 84,
+      "sha256": "3fbf037cb6bcb6178ea17e51a1766736cbcb464e4bc6991e76c0961d313c9446"
+    },
+    "00540bd4": {
+      "value": 3,
+      "sha256": "9d9f290527a6be626a8f5985b26e19b237b44872b03631811df4416fc1713178"
+    },
+    "00540bd8": {
+      "value": 4,
+      "sha256": "fb5e512425fc9449316ec95969ebe71e2d576dbab833d61e2a5b9330fd70ee02"
+    }
+  },
+  "directOriginalGlobalReferences": [
+    {
+      "token": "DAT_00558e74",
+      "function": "// ==== FUN_00444af0 @ 00444af0",
+      "line": "  if (DAT_00558e74 == 0) {"
+    },
+    {
+      "token": "DAT_005325b4",
+      "function": "// ==== FUN_00443e20 @ 00443e20",
+      "line": "        if ((DAT_005325b4 & uVar6) != 0) {"
+    },
+    {
+      "token": "DAT_005325b4",
+      "function": "// ==== FUN_00444760 @ 00444760",
+      "line": "    if (((*(uint *)(iVar1 + 0xec) & DAT_005325b4) == 0) ||"
+    },
+    {
+      "token": "DAT_005325b4",
+      "function": "// ==== FUN_0048b340 @ 0048b340",
+      "line": "        if ((DAT_005325b4 & uVar4) != 0) {"
+    },
+    {
+      "token": "DAT_005325b4",
+      "function": "// ==== FUN_0049ade0 @ 0049ade0",
+      "line": "    if ((DAT_005325b4 & uVar2) != 0) {"
+    },
+    {
+      "token": "DAT_00540bd4",
+      "function": "// ==== FUN_00486360 @ 00486360",
+      "line": "      uVar3 = DAT_00540bd4;"
+    },
+    {
+      "token": "DAT_00540bd8",
+      "function": "// ==== FUN_00486360 @ 00486360",
+      "line": "        uVar3 = DAT_00540bd8;"
+    }
+  ],
+  "lastDecompilation": {
+    "client": "2026-11-03",
+    "root": "2026-11-07",
+    "host": "HJOW-Athlon"
+  },
+  "decompiledSourceChanged": false,
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_player_tests",
+      "netstorm_construction_current_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 19.328558921813965,
+    "sourcesUnchanged": true
+  },
+  "buildDiagnostics": [],
+  "tests": {
+    "existingGameplay": {
+      "exeSha256": "2d0680dfdb08ead263b6e4e4416fe2d91c65e6c9b0ec9402aa59278347f0130f",
+      "exitCode": 0,
+      "counts": [
+        [
+          "35",
+          "0"
+        ]
+      ],
+      "registered": 35,
+      "multiplayerExecutions": 0
+    },
+    "currentGameplay": {
+      "exeSha256": "2485251a20df963b8814303ed0f1469ba62868e647292c9dcbfb2caa92df31a5",
+      "registered": 19,
+      "executed": 17,
+      "excluded": [
+        "ConstructionClear_ReplacesLocalPredictionWithConfirmedPieces",
+        "ConstructionRequest_ConnectsPipelineConfirmAndNotice"
+      ],
+      "cases": [
+        {
+          "name": "ConstructionCurrent_RequestSelectsGlobalsAfterOriginalEffects",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionCurrent_ClearReadsBridgeAfterCandidateEffects",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionCurrent_LocalKeepsCandidateTypeAndReselectsReplacementType",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionCurrent_PlayerBoundsEffectsSelectCurrentQuantities",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReplaysOriginals",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReplaysCd",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReplaysExtra1037",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_RejectsInvalidInputsBeforeEffects",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReadsCurrentFlagsAfterConfirm",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "CanonConsumers_ConstructionRequestAfterMayPlace",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ReplaysOriginals",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ReplaysCd",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ReplaysExtra1037",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ComputesCellAreaWithClampAndValidity",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_RemovesOnePredictionPerCell",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_SharedBossControlsForeignTypeCandidate",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "CanonConsumers_ConstructionClearBeforeFinder",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        }
+      ],
+      "allPassed": true,
+      "multiplayerExecutions": 0
+    },
+    "totalExecuted": 52,
+    "newGameplayCases": 4,
+    "commandReceiverExecutions": 0,
+    "combinedPacketCasesSkipped": 2
+  },
+  "staticAudit": {
+    "allPassed": true,
+    "checks": {
+      "frozenSourcesUnchanged": true,
+      "realFiveSlotOwners": true,
+      "freshDoesNotResetNewSlots": true,
+      "nativeSameGenusAddress": true,
+      "allFourBodiesReadCurrentMask": true,
+      "requestEntryOwnerBeforeMayPlace": true,
+      "requestPatternsAfterMayPlace": true,
+      "requestMaskAfterCandidateLoop": true,
+      "requestIslandAfterDisplace": true,
+      "requestNoIslandAtBothOriginalReads": true,
+      "clearPatternBeforeFinderAndCurrentBridgeAfterScan": true,
+      "commandBlockedBeforeBody": true,
+      "commandLocalAfterChargeGate": true,
+      "nativeBlockedAndOwnerAliases": true,
+      "localBossThenCurrentFort": true,
+      "localReuseSnapshotAndCurrentReplacement": true,
+      "localNoIslandAfterDelete": true,
+      "localCurrentIsleAtFrameComparison": true,
+      "localQuantitiesAfterSelectedBounds": true,
+      "nativeQuantityEmptyAndTerrainOwners": true
+    },
+    "sources": 18,
+    "cpeFunctions": 9,
+    "initialPeGlobals": {
+      "005325b4": {
+        "value": 272908800,
+        "sha256": "4b1276fcad27ad84621909650e03c705c1aa552795214dc4eb425d6df6a91de0"
+      },
+      "00558e74": {
+        "value": 0,
+        "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+      },
+      "005411a8": {
+        "value": 84,
+        "sha256": "3fbf037cb6bcb6178ea17e51a1766736cbcb464e4bc6991e76c0961d313c9446"
+      },
+      "00540bd4": {
+        "value": 3,
+        "sha256": "9d9f290527a6be626a8f5985b26e19b237b44872b03631811df4416fc1713178"
+      },
+      "00540bd8": {
+        "value": 4,
+        "sha256": "fb5e512425fc9449316ec95969ebe71e2d576dbab833d61e2a5b9330fd70ee02"
+      }
+    },
+    "lastDecompilation": {
+      "client": "2026-11-03",
+      "root": "2026-11-07",
+      "host": "HJOW-Athlon"
+    },
+    "multiplayerExecutions": 0,
+    "commandReceiverExecutionTests": 0,
+    "fullNoWorldConstructionOwner": false
+  },
+  "gui": {
+    "tutorial4": {
+      "passed": true,
+      "unit": 1193,
+      "mission": "tutorial4",
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1193\\live-tutorial4\\game",
+        "--mcp",
+        "--window",
+        "--no-audio",
+        "--set",
+        "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+      ],
+      "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "exeSha256Before": "a74d3bedc167847307a8ac7e56b1ba74daac4e2d35753cb5fd6f72c3d1202ec2",
+      "exeSha256After": "a74d3bedc167847307a8ac7e56b1ba74daac4e2d35753cb5fd6f72c3d1202ec2",
+      "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1193\\live-tutorial4\\game",
+      "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1193\\live-tutorial4\\user-data",
+      "entryConfirmed": true,
+      "quitRequested": true,
+      "exitCode": 0,
+      "dataUnchanged": true,
+      "protectedUnchanged": true,
+      "protectedDifferences": [],
+      "events": [
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "click",
+          "arg": "Main Menu"
+        },
+        {
+          "op": "click",
+          "arg": "MORE"
+        },
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "right",
+          "arg": "world:sunFactory"
+        },
+        {
+          "op": "click",
+          "arg": "Put Knowledge into Production"
+        },
+        {
+          "op": "click",
+          "arg": "Wind Generator"
+        },
+        {
+          "op": "click",
+          "arg": "production:75"
+        },
+        {
+          "op": "pointer",
+          "arg": "0x80010000,960,635"
+        },
+        {
+          "op": "click",
+          "arg": "screen:960,635"
+        }
+      ],
+      "observations": [
+        "main-0",
+        "main-1",
+        "main-2",
+        "entry-0",
+        "entry-1",
+        "entry-2",
+        "ready",
+        "factory-menu",
+        "knowledge-menu",
+        "wind-production",
+        "generator-selected",
+        "generator-pointer",
+        "before-generator",
+        "after-generator",
+        "generator-settled",
+        "before-close"
+      ],
+      "checks": [
+        {
+          "before": "before-generator",
+          "after": "after-generator",
+          "type": 75,
+          "owner": 1,
+          "newLiveServerObjects": [
+            [
+              "15074",
+              "75",
+              "1",
+              "0",
+              "125",
+              "85"
+            ]
+          ],
+          "constructionRequestsBefore": 0,
+          "constructionRequestsAfter": 1,
+          "passed": true
+        },
+        {
+          "kind": "normal-entry-and-wait",
+          "before": "after-generator",
+          "after": "generator-settled",
+          "gameTimeBefore": 13.535,
+          "gameTimeAfter": 23.42,
+          "mission": "tutorial4",
+          "passed": true
+        }
+      ],
+      "commandErrors": [],
+      "failure": null,
+      "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+    },
+    "editor": {
+      "passed": true,
+      "exeSha256": "a74d3bedc167847307a8ac7e56b1ba74daac4e2d35753cb5fd6f72c3d1202ec2",
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1193\\live-editor-game-fixed",
+        "--mcp",
+        "--window",
+        "--no-audio",
+        "--set",
+        "intro=1;tellTips=0;autoDemo=0;currentLanguage=english;mayEditMissions=1;fortSpec=d/title950/{local.1}.fort;SOLOSpec=d/title950/{local.1}.fort;blankWindowName=MAIN;EditorWindowName=EDITOR:{local.1};missionWindowName=MISSION:{local.1};testBattleWindowName=TEST:{local.1};demoWindowName=DEMO:{local.1}"
+      ],
+      "exitCode": 0,
+      "dataUnchanged": true,
+      "actions": [
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "click",
+          "arg": "Main Menu"
+        },
+        {
+          "op": "click",
+          "arg": "Edit"
+        },
+        {
+          "op": "click",
+          "arg": "TEST01"
+        },
+        {
+          "op": "esc",
+          "arg": ""
+        },
+        {
+          "op": "click",
+          "arg": "Game"
+        },
+        {
+          "op": "click",
+          "arg": "Main Menu"
+        },
+        {
+          "op": "click",
+          "arg": "No"
+        },
+        {
+          "op": "click",
+          "arg": "Edit"
+        },
+        {
+          "op": "click",
+          "arg": "TEST01"
+        },
+        {
+          "op": "esc",
+          "arg": ""
+        },
+        {
+          "op": "click",
+          "arg": "Game"
+        },
+        {
+          "op": "click",
+          "arg": "Main Menu"
+        },
+        {
+          "op": "click",
+          "arg": "No"
+        }
+      ],
+      "observations": [
+        {
+          "label": "main-0",
+          "reportFile": "000-main-0.tsv",
+          "title": "MAIN",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Welcome"
+            ]
+          ],
+          "mission": null,
+          "session": null,
+          "modes": null
+        },
+        {
+          "label": "main-1",
+          "reportFile": "001-main-1.tsv",
+          "title": "MAIN",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "Welcome2"
+            ]
+          ],
+          "mission": null,
+          "session": null,
+          "modes": null
+        },
+        {
+          "label": "main-2",
+          "reportFile": "002-main-2.tsv",
+          "title": "MAIN",
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "mission": null,
+          "session": null,
+          "modes": null
+        },
+        {
+          "label": "map-list-0",
+          "reportFile": "003-map-list-0.tsv",
+          "title": "MAIN",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "LoadEditable"
+            ]
+          ],
+          "mission": null,
+          "session": null,
+          "modes": null
+        },
+        {
+          "label": "editor-0",
+          "reportFile": "004-editor-0.tsv",
+          "title": "EDITOR:TEST01",
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "mission": null,
+          "session": [
+            [
+              "1",
+              "1"
+            ]
+          ],
+          "modes": [
+            [
+              "1",
+              "1"
+            ]
+          ]
+        },
+        {
+          "label": "leave-editor-0",
+          "reportFile": "005-leave-editor-0.tsv",
+          "title": "EDITOR:TEST01",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "LeaveEditMode"
+            ]
+          ],
+          "mission": null,
+          "session": [
+            [
+              "1",
+              "1"
+            ]
+          ],
+          "modes": [
+            [
+              "1",
+              "1"
+            ]
+          ]
+        },
+        {
+          "label": "main-0",
+          "reportFile": "006-main-0.tsv",
+          "title": "MAIN",
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "mission": null,
+          "session": null,
+          "modes": null
+        },
+        {
+          "label": "map-list-1",
+          "reportFile": "007-map-list-1.tsv",
+          "title": "MAIN",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "LoadEditable"
+            ]
+          ],
+          "mission": null,
+          "session": null,
+          "modes": null
+        },
+        {
+          "label": "editor-0",
+          "reportFile": "008-editor-0.tsv",
+          "title": "EDITOR:TEST01",
+          "phase": [
+            [
+              "4"
+            ]
+          ],
+          "page": [
+            [
+              "editor"
+            ]
+          ],
+          "mission": null,
+          "session": [
+            [
+              "1",
+              "1"
+            ]
+          ],
+          "modes": [
+            [
+              "1",
+              "1"
+            ]
+          ]
+        },
+        {
+          "label": "leave-editor-1",
+          "reportFile": "009-leave-editor-1.tsv",
+          "title": "EDITOR:TEST01",
+          "phase": [
+            [
+              "1"
+            ]
+          ],
+          "page": [
+            [
+              "LeaveEditMode"
+            ]
+          ],
+          "mission": null,
+          "session": [
+            [
+              "1",
+              "1"
+            ]
+          ],
+          "modes": [
+            [
+              "1",
+              "1"
+            ]
+          ]
+        },
+        {
+          "label": "main-0",
+          "reportFile": "010-main-0.tsv",
+          "title": "MAIN",
+          "phase": [
+            [
+              "0"
+            ]
+          ],
+          "page": [
+            [
+              "main"
+            ]
+          ],
+          "mission": null,
+          "session": null,
+          "modes": null
+        }
+      ]
+    },
+    "editorChecks": {
+      "exitCode": 0,
+      "protectedUnchanged": true,
+      "exeUnchanged": true,
+      "multiplayer": 0,
+      "testBattle": 0
+    }
+  },
+  "runtimeDiagnosticLines": {
+    "live-tutorial4/stderr.log": [
+      "인트로 영상 열기 실패: H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1193\\live-tutorial4\\game\\MOVIE\\englishintro2x.smk",
+      "unable to open: H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1193\\live-tutorial4\\user-data\\Cache\\!color.dat"
+    ],
+    "live-editor-fixed/stderr.log": [
+      "unable to open: H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1193\\live-editor-fixed\\user-data\\Cache\\!color.dat"
+    ]
+  },
+  "protected": {
+    "count": 2800,
+    "unchanged": true,
+    "agentsSha256": "e070c27a763625e7933632ab0c3b82572dac9f48c95fca4bb36ca3252669e874",
+    "originalCdFixtureCount": 2799,
+    "agentModifiedAgents": false
+  },
+  "fullNoWorldConstructionOwner": false,
+  "multiplayerExecutions": 0,
+  "originalExecutions": 0,
+  "excludedPlayTests": [
+    "사제 포획/희생",
+    "특정 적 공격",
+    "시나리오 승리",
+    "공중3종 전용 실행",
+    "Test Battle",
+    "사용자 직접 확인 지정 검사"
+  ],
+  "delayQueueEnabled": false,
+  "nativeRegistryCounts": {
+    "tagged": 25,
+    "active": 88,
+    "untagged": 63
+  },
+  "remaining": [
+    "Bindings.ValidateState/ConfirmSupport/Support의 raw 사본 비교를 현재 getter와 결합하고 Collision.clientMode 현재주소도 연결",
+    "Client 장기 Construction state/body와 Session 없는 현재8TYPE·mission·실제 장치 연결",
+    "destroy의 실제 bool/큰 NoWorld·AI·Carrier 보충·다른 Form·일반 삭제와 실제 Builder/사제/DropIsland",
+    "Source/listener/표/Poll·무태그63F·지연 큐·Snapshot/JoinTestBattle·M6-l/m/n",
+    "M7·M8 뒤 한국어 K1~K5·시나리오 UI S1~S4·9차 B1~B4"
+  ],
+  "rawDirectory": "extracted/cpp-resume-1193",
+  "fullGoalComplete": false,
+  "latestPackageUnit": 1092,
+  "currentGlobalContracts": {
+    "owner": "같은 장기 owner의 원문 DWORD5개를 PE 초기값과 대조했으며 기존 fresh helper가 덮어쓰지 않는다.",
+    "request": "진입 editor/local owner 선택→MayPlace 뒤 pattern→후보별 noIsland→순회 뒤 mask→Displace 뒤 island/base TYPE 순서다.",
+    "clear": "decoder 생성의 pattern을 고정하고 scan 뒤 현재 bridge TYPE를 읽는다.",
+    "local": "후보 reuse TYPE의 constructor snapshot과 실제 교체 query의 current TYPE를 구별하며 삭제 효과 뒤 noIsland, PlayerBounds 뒤 signed quantity를 읽는다.",
+    "command": "blocked는 본문 전, charge gate 뒤 local owner를 읽는다. 원문/정적/컴파일만 확인했고 새 수신/패킷 실행은0이다.",
+    "remaining": "8TYPE getter는 아직 Session의 기존 getter를 사용하며 전체 state/body도 Session 소유다. 전체 NoWorld 완료가 아니다."
+  },
+  "verificationHistory": {
+    "initialBuildFailure": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_construction_player_tests",
+        "netstorm_construction_current_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 1,
+      "seconds": 728.1131463050842,
+      "sourcesUnchanged": true
+    },
+    "preCandidateInputBuild": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_construction_player_tests",
+        "netstorm_construction_current_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 18.282349586486816,
+      "sourcesUnchanged": true
+    },
+    "preCandidateInputTests": {
+      "exeSha256": "dd4e5259cb348b9b4b731d1dfe75ce443297633f48b9eea986cab17100ffedc0",
+      "registered": 19,
+      "executed": 17,
+      "excluded": [
+        "ConstructionClear_ReplacesLocalPredictionWithConfirmedPieces",
+        "ConstructionRequest_ConnectsPipelineConfirmAndNotice"
+      ],
+      "cases": [
+        {
+          "name": "ConstructionCurrent_RequestSelectsGlobalsAfterOriginalEffects",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionCurrent_ClearReadsBridgeAfterCandidateEffects",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionCurrent_LocalKeepsCandidateTypeAndReselectsReplacementType",
+          "exitCode": 1,
+          "counts": [
+            [
+              "1",
+              "3"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionCurrent_PlayerBoundsEffectsSelectCurrentQuantities",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReplaysOriginals",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReplaysCd",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReplaysExtra1037",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_RejectsInvalidInputsBeforeEffects",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReadsCurrentFlagsAfterConfirm",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "CanonConsumers_ConstructionRequestAfterMayPlace",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ReplaysOriginals",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ReplaysCd",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ReplaysExtra1037",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ComputesCellAreaWithClampAndValidity",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_RemovesOnePredictionPerCell",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_SharedBossControlsForeignTypeCandidate",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "CanonConsumers_ConstructionClearBeforeFinder",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        }
+      ],
+      "allPassed": false,
+      "multiplayerExecutions": 0
+    },
+    "cause": "신규 하네스의 CanonPlacementQuery 필드는 player가 아닌 owner여서 한 번 컴파일이 실패했다. 이후 지역 간헐천 입력이 새 좌표까지 허용해 고정 후보 기대가 실패했으므로 미재사용 좌표를 원문 spot 관문에서 거부하는 입력으로 제한했다. 제품 몸체는 최초 빌드 이후 변경하지 않았다.",
+    "finalBuild": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_construction_player_tests",
+        "netstorm_construction_current_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 19.328558921813965,
+      "sourcesUnchanged": true
+    },
+    "finalGameplayTests": {
+      "exeSha256": "2485251a20df963b8814303ed0f1469ba62868e647292c9dcbfb2caa92df31a5",
+      "registered": 19,
+      "executed": 17,
+      "excluded": [
+        "ConstructionClear_ReplacesLocalPredictionWithConfirmedPieces",
+        "ConstructionRequest_ConnectsPipelineConfirmAndNotice"
+      ],
+      "cases": [
+        {
+          "name": "ConstructionCurrent_RequestSelectsGlobalsAfterOriginalEffects",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionCurrent_ClearReadsBridgeAfterCandidateEffects",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionCurrent_LocalKeepsCandidateTypeAndReselectsReplacementType",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionCurrent_PlayerBoundsEffectsSelectCurrentQuantities",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReplaysOriginals",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReplaysCd",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReplaysExtra1037",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_RejectsInvalidInputsBeforeEffects",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionRequest_ReadsCurrentFlagsAfterConfirm",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "CanonConsumers_ConstructionRequestAfterMayPlace",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ReplaysOriginals",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ReplaysCd",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ReplaysExtra1037",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_ComputesCellAreaWithClampAndValidity",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_RemovesOnePredictionPerCell",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "ConstructionClear_SharedBossControlsForeignTypeCandidate",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        },
+        {
+          "name": "CanonConsumers_ConstructionClearBeforeFinder",
+          "exitCode": 0,
+          "counts": [
+            [
+              "1",
+              "0"
+            ]
+          ]
+        }
+      ],
+      "allPassed": true,
+      "multiplayerExecutions": 0
+    }
+  },
+  "testBinariesStillMatch": true
+}

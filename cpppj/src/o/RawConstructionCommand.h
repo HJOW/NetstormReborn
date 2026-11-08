@@ -16,6 +16,10 @@ struct ConstructionCommandState {
     bool chargeBlocked{}; // 비용 선검사를 생략한다. 후속 Request는 별도 원본 판단을 수행한다.
     std::uint32_t localPlayer{1}; // sender 전체 DWORD와 비교하며 BYTE로 줄이지 않는다.
     std::function<bool()> chargeBlockedRead; // 연결된 실제00594fa4를 원문 비용 관문에서 조회한다. 미연결 값형 검사는 위 bool을 사용한다.
+    const std::uint32_t* sharedBlocked{}; // 실제00558e74이며 본문 길이/TYPE보다 먼저 읽는다.
+    const std::uint32_t* sharedLocalPlayer{}; // 비용 관문 뒤 현재00540c70을 읽는다.
+    std::uint32_t Blocked() const { return sharedBlocked ? *sharedBlocked : blocked; } // 독립 typed 입력의 기존 DWORD 계약을 유지한다.
+    std::uint32_t LocalPlayer() const { return sharedLocalPlayer ? *sharedLocalPlayer : localPlayer; } // BYTE로 줄이지 않는 현재 로컬 번호다.
 };
 // 기존 실제 Money/ChargeShortfall/Request/Reject에 연결할 게임 몸체다.
 struct ConstructionCommandHooks {

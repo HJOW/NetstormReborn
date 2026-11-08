@@ -24,6 +24,18 @@ struct LocalGeyserState {
     std::uint32_t GeyserType() const { return sharedGeyserType ? *sharedGeyserType : geyserType; } // 생성/Pop 효과 뒤에도 현재 TYPE를 읽는다.
     const bool* sharedBoss{}; // 실제 Client의 생성 권한이며 독립 입력 bool은 유지한다.
     const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 각 Populate 진입의 원문 권한 관문에서 현재값을 읽는다.
+    const bool* sharedFort{}; // 실제00594fb8이며 boss 관문 뒤에만 읽는다.
+    const std::uint32_t* sharedEmptyGeyserType{}; // 같은005411a8의 현재 후보 재사용/실제 교체 TYPE다.
+    const std::uint32_t* sharedNoIslandType{}; // 같은005412cc의 현재 받침 확정 TYPE다.
+    const std::uint32_t* sharedIsleType{}; // 같은005411dc의 현재 프레임 문자 수집 지면 TYPE다.
+    const std::int32_t* sharedFirstQuantity{}; // 실제00540bd4의 현재 Player1~4 수량이다.
+    const std::int32_t* sharedLastQuantity{}; // 실제00540bd8의 현재 Player5~8 수량이다.
+    bool Fort() const { return sharedFort ? *sharedFort : fort; } // 독립 typed 상태는 기존 bool을 유지한다.
+    std::uint32_t EmptyGeyserType() const { return sharedEmptyGeyserType ? *sharedEmptyGeyserType : emptyGeyserType; } // 후보 constructor와 실제 교체 조회가 각 시점의 번호를 선택한다.
+    std::uint32_t NoIslandType() const { return sharedNoIslandType ? *sharedNoIslandType : noIslandType; } // 앞선 empty 삭제 효과 뒤의 현재 번호다.
+    std::uint32_t IsleType() const { return sharedIsleType ? *sharedIsleType : isleType; } // 각 실제 지면 슬롯 비교에서 읽는다.
+    std::int32_t FirstQuantity() const { return sharedFirstQuantity ? *sharedFirstQuantity : firstPlayerQuantity; } // Player 경계 효과 뒤 현재 수량을 선택한다.
+    std::int32_t LastQuantity() const { return sharedLastQuantity ? *sharedLastQuantity : lastPlayerQuantity; } // 후반 Player도 같은 현재 전역을 읽는다.
 };
 // 원본 생성/공간/설정의 필수 하위다. 생성 성공을 임시 좌표나 빈 콜백으로 대신하지 않는다.
 struct LocalGeyserHooks {

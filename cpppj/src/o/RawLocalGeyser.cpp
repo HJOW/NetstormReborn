@@ -56,12 +56,12 @@ std::uint8_t RawLocalGeyser::Spot(std::int32_t x,std::int32_t y) const {
 }
 // rectangle의 값형 snapshot은 현재 Player 처리 중 외부 사각형 변경과 분리한다.
 bool RawLocalGeyser::TryCandidate(GameRandom& random,FortRandomRectangle rectangle,LocalGeyserPoint& point) const {
-    return Candidate(random,rectangle,point,state_.emptyGeyserType,0,1,{});
+    return Candidate(random,rectangle,point,state_.EmptyGeyserType(),0,1,{});
 }
 //직접 finder 호출은 Player constructor를 대신 실행하지 않고 전달받은 사각형만 사용한다.
 bool RawLocalGeyser::TryCandidate(GameRandom& random,FortRandomRectangle rectangle,LocalGeyserPoint& point,std::uint32_t allowLand,std::uint32_t allowVoid,std::span<const FortRandomRectangle> exclusions) const {
     if (exclusions.size()>8) throw std::out_of_range("간헐천 finder 제외 사각형의 실제8개 물리 범위");
-    return Candidate(random,rectangle,point,state_.emptyGeyserType,allowLand,allowVoid,exclusions);
+    return Candidate(random,rectangle,point,state_.EmptyGeyserType(),allowLand,allowVoid,exclusions);
 }
 //원문은 AI/everLoggedIn 비트가 아니라 정확히 flags BYTE의 bit0만 검사한다.
 std::vector<FortRandomRectangle> RawLocalGeyser::PlayerExclusions() const {
@@ -107,7 +107,7 @@ bool RawLocalGeyser::Candidate(GameRandom& random,FortRandomRectangle rectangle,
             if (previousSurface!=0xffffffffU && kind!=previousSurface) return false;previousSurface=kind;
             const auto surface=sx>=0 && sy>=0 && sx<256 && sy<256 ? hash_.Entries(0)[static_cast<std::size_t>(sy*256+sx)] : std::uint16_t{}; // 원본WORDgetter는범위밖0을읽는다.
             const auto raw=pool_.Slot(Sid{surface}); // SID0도원본처럼type0을조회한다.
-            if (raw[10]==state_.isleType) {
+            if (raw[10]==state_.IsleType()) {
                 const auto frame=std::bit_cast<std::int32_t>(PlayerWord(raw,36)); // PATCH현재frameDWORD다.
                 if (raw[10]>=frames_.size() || frame<0 || static_cast<std::size_t>(frame)>=frames_[raw[10]].Codes().size()) throw std::out_of_range("로컬 간헐천 isle프레임 물리 범위");
                 auto side=frames_[raw[10]].Codes()[static_cast<std::size_t>(frame)].side; // 실제004ad680의현재첫코드BYTE다.
@@ -120,7 +120,7 @@ bool RawLocalGeyser::Candidate(GameRandom& random,FortRandomRectangle rectangle,
 }
 // emptyGeyser의 부류가 surface/bridge가 아니면 원본처럼hash0을 건너뛴다.
 Sid RawLocalGeyser::FindEmpty(float x,float y) const {
-    return FindType(x,y,state_.emptyGeyserType);
+    return FindType(x,y,state_.EmptyGeyserType());
 }
 // 부모가보존한reuse타입과성공뒤의현재empty전역모두같은실제typedfinder를사용한다.
 Sid RawLocalGeyser::FindType(float x,float y,std::uint32_t number) const {
@@ -136,11 +136,11 @@ void RawLocalGeyser::Populate(std::int32_t quantity,GameRandom& random,FortRando
 }
 //수량0에서도 원문 constructor는 최근 목록을 지운 뒤 제외 영역을 조회한다.
 void RawLocalGeyser::Populate(std::int32_t quantity,GameRandom& random,FortRandomRectangle rectangle,GeyserPlacementOptions options) const {
-    if (!state_.Boss() || state_.fort) return;
+    if (!state_.Boss() || state_.Fort()) return;
     if (quantity<0) { hooks_.negativeQuantity();quantity=0; }
     recent_.count=0;
     const auto exclusions=options.excludePlayers ? PlayerExclusions() : std::vector<FortRandomRectangle>{};
-    const auto reuseType=state_.emptyGeyserType; // 원본ctor뒤finder+ac는이시점타입을한번보존한다.
+    const auto reuseType=state_.EmptyGeyserType(); // 원본ctor뒤finder+ac는이시점타입을한번보존한다.
     // 요청수량은값형인자이며실제생성성공마다한번감소한다.
     while (quantity!=0) {
         LocalGeyserPoint point;bool found=false;
@@ -151,7 +151,7 @@ void RawLocalGeyser::Populate(std::int32_t quantity,GameRandom& random,FortRando
         --quantity;
         const float x=static_cast<float>(static_cast<double>(point.x)-kRadius),y=static_cast<float>(static_cast<double>(point.y)-kRadius); // 원본confirm의별도단정도저장좌표다.
         if (!(Spot(Truncate(static_cast<double>(point.x)+kSpotBias),Truncate(static_cast<double>(point.y)+kSpotBias))&2U))
-            hooks_.confirm({state_.noIslandType,x,y,0,0,0,0,0,0,0});
+            hooks_.confirm({state_.NoIslandType(),x,y,0,0,0,0,0,0,0});
         const auto created=hooks_.create(state_.GeyserType(),0); // 실제factory실패를존재하는간헐천으로계산하지않는다.
         if (!created.value) throw std::logic_error("로컬 간헐천 실제 factory 생성 실패");
         hooks_.pop(created,point.x,point.y,0);
@@ -173,7 +173,7 @@ void RawLocalGeyser::Generate() const {
         const auto selected=Players().subspan(owner*kPlayerStride,kPlayerStride); // 다음 반복은 현재base를 다시 고르고 이 차례의 this는 유지한다.
         if (!(selected[kPlayerFlags]&0x22U) || PlayerWord(selected,kPlayerRegion)==127U) continue;
         const auto rectangle=SelectedBounds(owner,selected); // 원본은수량전역을읽기전에현재Player사각형을구한다.
-        Populate(owner<=4 ? state_.firstPlayerQuantity : state_.lastPlayerQuantity,random,rectangle);
+        Populate(owner<=4 ? state_.FirstQuantity() : state_.LastQuantity(),random,rectangle);
     }
 }
 // 현재 조회기만 연결하며 조회/초기화는 실제 반복의 선택 위치까지 미룬다.
