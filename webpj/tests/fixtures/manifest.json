@@ -11712,9 +11712,70 @@
       "bytes": 660178,
       "lines": 1574,
       "fixtureCommit": "75f3175c",
-      "webCommit": "worktree",
+      "webCommit": "f5352395",
       "cpppjBasis": {
         "cpppj/src/o/RawCanonPlacementSurrounding.cpp": "9ece3b53"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E152",
+      "id": "canonplacement",
+      "path": "cpppj/tests/fixtures/canonplacement-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 배치 접두/여백/지도 조건(모양 진입과 후반 구간 대체, 10.78 1120행)",
+      "consumers": [
+        "webpj/tests/canon-placement.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-placement.js"
+      ],
+      "doc": "docs/webpj-canon-placement-preview-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCanonPlacement.cpp"
+      ],
+      "scope": "10.78 실제 PE 1120행 전부",
+      "text": true,
+      "sha256": "c35d8d23a65a4bac2a49c3081784a323fbd713dcf047731663a6c1c544cb00e2",
+      "bytes": 467610,
+      "lines": 3362,
+      "fixtureCommit": "4df5da6a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCanonPlacement.cpp": "a84509c9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E152",
+      "id": "canonpreview",
+      "path": "cpppj/tests/fixtures/canonpreview-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 일반 타입/패턴 배치 접두/미리보기/표면/관계(모양 진입과 미리보기 뒤 충돌 구간만 대체, 10.78 1620행)",
+      "consumers": [
+        "webpj/tests/canon-placement-preview.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-placement-preview.js",
+        "webpj/www/core/raw-canon-placement.js"
+      ],
+      "doc": "docs/webpj-canon-placement-preview-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCanonPlacement.cpp",
+        "cpppj/src/o/RawCanonPlacementPreview.cpp"
+      ],
+      "scope": "10.78 실제 PE 1620행 전부",
+      "text": true,
+      "sha256": "f85f5e24f83f2fa9c1cd7ed00981dae471d43363b53543c398d0303f4de17aa9",
+      "bytes": 2761003,
+      "lines": 4862,
+      "fixtureCommit": "b024fa1e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCanonPlacement.cpp": "a84509c9",
+        "cpppj/src/o/RawCanonPlacementPreview.cpp": "b024fa1e"
       }
     }
   ]
