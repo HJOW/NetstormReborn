@@ -490,7 +490,7 @@ cpppj/src/o/RawAiDropEvaluation.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiDropScan.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiDropSelection.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiDropTargets.cpp	port			todo	[o-default]
-cpppj/src/o/RawAiDryGeometry.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiDryGeometry.cpp	port	www/core/raw-ai-dry-geometry.js	1f00a25a	port	[o-default] WB04-E163: AI 가짜 부족 좌표 탐색(00415bb0 선분/수직 양방향 탐색·0041cfc0 점 거리·00414d30/00410540 디버그 표식 정리/생성). 독립 관측 fixture 없음, cpppj 계약 시험 12건. 남음: RawAiDrySpots/FakeDrySpots 연결
 cpppj/src/o/RawAiDrySpots.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiEconomy.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiFactoryProduction.cpp	port			todo	[o-default]
