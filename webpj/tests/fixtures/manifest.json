@@ -11217,7 +11217,7 @@
       "bytes": 1009583,
       "lines": 3929,
       "fixtureCommit": "3c570b27",
-      "webCommit": "b42ac0d6",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/CanonTypeDecoder.cpp": "167866d9",
         "cpppj/src/o/CanonDecoder.cpp": "167866d9"
@@ -11247,7 +11247,7 @@
       "bytes": 22538,
       "lines": 157,
       "fixtureCommit": "167866d9",
-      "webCommit": "b42ac0d6",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/CanonDecoder.cpp": "167866d9"
       }
@@ -11276,9 +11276,39 @@
       "bytes": 206524,
       "lines": 1022,
       "fixtureCommit": "c0146d4d",
-      "webCommit": "worktree",
+      "webCommit": "861ecb4e",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionClear.cpp": "2a8f937e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E138",
+      "id": "constructionplace",
+      "path": "cpppj/tests/fixtures/constructionplace-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 배치 실행과 비용 부족 처리·환불·취소 통지·SP 조회/가산의 효과 순서와 조각 슬롯 전체(세 판본 3684행)",
+      "consumers": [
+        "webpj/tests/construction-place.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-place.js",
+        "webpj/www/assets/territory.js"
+      ],
+      "doc": "docs/webpj-construction-place-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionPlace.cpp"
+      ],
+      "scope": "10.78(originals) 1778행 사용, originalCD 952행은 10.72, original1037 952행은 10.37",
+      "text": true,
+      "sha256": "aace8e0b8b24d41ee120ff99c711a0241ddb4b799b5d0f6044f9a521ed8dfcbb",
+      "bytes": 1611139,
+      "lines": 3684,
+      "fixtureCommit": "c0146d4d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionPlace.cpp": "976f2b7b"
       }
     }
   ]

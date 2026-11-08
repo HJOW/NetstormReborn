@@ -130,6 +130,8 @@ const CRACKED_FLAG = 0x20;
 const CANON_FILE = '\\Ns\\O\\Canondecoder.cpp';
 const CRACKED_EXPRESSION = 'frame == EMPTY_FRAME || !(typeStruct->frameInfo[frame].flags & FF_CRACKED)';
 const CRACKED_LINE = 0x325;
+// 반복자 사본을 만드는 내부 토큰이다(원본 C++ 의 값 복사: 생성자의 첫 진행을 다시 하지 않고 현재 상태를 그대로 복사). (2026-11-09 WB04-E138)
+const CLONE = Symbol('CanonDecoder.clone');
 // 패턴 없는 한 칸 경로에서 명시 프레임이 프레임 표 밖일 때의 원문 진단(10.78 Canondecoder.cpp 0x305)이다. (2026-11-08 WB04-E136)
 const SINGLE_FRAME_EXPRESSION = '0 <= frame && frame < ::getType(type)->numFrames';
 const SINGLE_FRAME_LINE = 0x305;
@@ -175,6 +177,30 @@ export class CanonDecoder {
     // pattern 이 null 이면 패턴 없는 한 칸 경로(00425c20 의 비패턴 분기)이다: single = { defaultFrame, argument, explicitFrame } 이 필요하며 회전은 0, 폭·높이는 1이고,
     // 명시 프레임이 아니면 기본 프레임을, 명시 프레임이면 argument 를 프레임으로 쓴다(프레임 표 밖이면 원문 진단 0x305). 좌표가 유한하지 않으면 거부한다. (2026-11-08 WB04-E136: 비패턴 경로 추가)
     constructor(frameCodes, pattern, direction, x, y, onMissingFrame = null, diagnostics = null, single = null) {
+        if (frameCodes === CLONE) {
+            // pattern 인자에 원본 반복자를 받아 모든 상태를 복사한다. 진단·콜백 참조는 같은 것을 가리킨다.
+            const source = pattern;
+            this.#codes = source.#codes;
+            this.#pattern = source.#pattern;
+            this.#single = source.#single;
+            this.#rotation = source.#rotation;
+            this.#onMissingFrame = source.#onMissingFrame;
+            this.#diagnostics = source.#diagnostics;
+            this.#originX = source.#originX;
+            this.#originY = source.#originY;
+            this.#outerCount = source.#outerCount;
+            this.#innerCount = source.#innerCount;
+            this.#patternX = source.#patternX;
+            this.#patternY = source.#patternY;
+            this.#outer = source.#outer;
+            this.#inner = source.#inner;
+            this.#frame = source.#frame;
+            this.#valid = source.#valid;
+            this.#label = source.#label;
+            this.#x = source.#x;
+            this.#y = source.#y;
+            return;
+        }
         if (pattern === null) {
             if (!single || !Number.isFinite(x) || !Number.isFinite(y)) throw new TypeError('패턴 없는 CanonDecoder 좌표 오류');
             this.#single = { defaultFrame: single.defaultFrame | 0, argument: single.argument | 0, explicitFrame: Boolean(single.explicitFrame) };
@@ -219,6 +245,9 @@ export class CanonDecoder {
         for (const value of [left, top, x, y]) if (!Number.isFinite(value) || value < -2147483648 || value > 2147483647) throw new RangeError('CanonDecoder 범위 산술 오류');
         return [left | 0, top | 0, x | 0, y | 0];
     }
+
+    // 현재 상태를 그대로 복사한 반복자를 만든다(C++ 값 복사와 같음: 생성자의 첫 진행과 진단을 다시 하지 않는다). 남은 칸 수를 세어 보는 등 원 반복자를 건드리지 않는 순회에 쓴다. (2026-11-09 WB04-E138)
+    clone() { return new CanonDecoder(CLONE, this); }
 
     // 아직 칸이 남았는가이다.
     get valid() { return this.#valid; }
