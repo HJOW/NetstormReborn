@@ -16,6 +16,14 @@ struct PacketConnection {
     bool delayed{}; // +0x7c: 지연 분배 큐가 있으면 이 API에서는 거부한다.
     std::array<std::uint8_t,20> address{}; // +0x4c..5f의 현재 주소20BYTE다. 실제 로컬 두 끝의 생성 값을 보관한다.
 };
+//원문 receiver 함수F의 코드 정체성과 장기 데이터만 담는 불변 본문값이다. 현재 타입표나 packet[1]로 G를 다시 선택하지 않는다.
+struct CanonicalPacketReceiver {
+    using Receive=std::function<void(std::uint32_t,PacketConnection*,std::span<const std::uint8_t>)>; //선택된 F가 쓰는원래인자이며 nullable연결의허용은각본문계약이다.
+    const std::uint32_t nativeEntry; //원문함수주소는정체성표식이며호스트함수포인터로캐스팅하지않는다.
+    const Receive receive; //Client장기owner와고정코드본문만보유하며oldSession/lease/enqueuepin을담지않는다.
+    CanonicalPacketReceiver(std::uint32_t entry,Receive body); //실제비NULL원문본문/정체성만허용하며가짜성공본문을만들지않는다.
+    void Invoke(std::uint32_t sender,PacketConnection* connection,std::span<const std::uint8_t> packet) const; //저장된F값만실행하며Validate/version/observer/record/depth를추가하지않는다.
+};
 // 원본 세 등록 표를 호스트 함수/값으로 옮긴 한 항목이다.
 struct PacketRegistration {
     std::weak_ptr<PacketRegistrationLease> registrationLease; // 실행 중 실제 Session 전체 owner를 pin할 약한 대여다.
@@ -23,6 +31,7 @@ struct PacketRegistration {
     std::shared_ptr<void> Pin() const; // receiver/observer 호출이 끝날 때까지 실제 참조 모듈을 유지한다.
     std::function<void(std::uint32_t,PacketConnection&,std::span<const std::uint8_t>)> receive; // 처리기(sender,연결,원본 버퍼)다.
     std::function<void(std::uint32_t,PacketConnection*,std::span<const std::uint8_t>)> directReceive; // R 내부 직접 호출의 실제NULL 연결을 지원한다. 일반 framed receive와 같은 callable 소유자를 공유한다.
+    std::shared_ptr<const CanonicalPacketReceiver> canonicalReceive; //검토된장기F만기록한다. 일반짧은closure는NULL이며계획중인큐가안전하다고가장하지않는다.
     std::function<void(std::uint32_t)> observer; // 집합 패킷에서만 쓰이는 관찰기이며 단일 분배에서는 호출하지 않는다.
     std::function<void(std::span<std::uint8_t>,std::uint32_t)> packetObserver; // 같은 원문 observer 슬롯의 mutable this를 쓰는 장치다. 기존 인자 전용 장치와 동시에 등록하지 않는다.
     void NotifyObserver(std::span<std::uint8_t> packet,std::uint32_t sending) const; // 현재 등록된 한 종류의 observer만 실제 패킷/방향 인자로 호출한다.
@@ -51,6 +60,9 @@ public:
     // 각 원본 등록 함수처럼 한 표만 바꾼다. 타입 0/최대 밖 번호는 등록 전에 거부한다.
     void Register(std::uint32_t type,decltype(PacketRegistration::receive) receive);
     void RegisterDirect(std::uint32_t type,decltype(PacketRegistration::directReceive) receive); // 같은 등록표의 수신기이며 일반 프레임은 실제 연결 주소, 직접 호출은 선택한 nullable 포인터를 전달한다.
+    void RegisterCanonicalDirect(std::uint32_t type,std::uint32_t nativeEntry,CanonicalPacketReceiver::Receive receive); //고정Native본문/장기데이터를불변값으로등록하고현재즉시두입구도같이설치한다.
+    void RegisterCanonical(std::uint32_t type,const std::shared_ptr<const CanonicalPacketReceiver>& receive); //이미선택한같은F를재등록해lease표식만바꾸며본문을type현재표에서다시선택하지않는다.
+    std::shared_ptr<const CanonicalPacketReceiver> SnapshotReceiver(std::uint32_t type) const; //enqueue선택시한번F값을복사한다. NULLreceiver는NULL이고미전환짧은본문은명시오류다. Runtime pin은하지않는다.
     void InvokeDirect(std::uint32_t type,std::uint32_t sender,PacketConnection* connection,std::span<const std::uint8_t> packet) const; // 원문 함수 포인터 호출처럼 검증/observer·기록/시각/연결 깊이·닫힘을 추가하지 않는다. 등록 owner pin만 유지한다.
     // 해당 타입의 관찰기 표만 바꾼다. 단일 분배는 등록된 관찰기를 호출하지 않는다.
     void Observe(std::uint32_t type,decltype(PacketRegistration::observer) observer);

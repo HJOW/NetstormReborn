@@ -19,7 +19,7 @@ struct RawCampaignSession::Impl::Login {
     std::array<LocalMissionStateBlock,5>& blocks{s.localStateGlobals->Blocks()}; // Editor/State/로그인이 같은720BYTE를 직접 빌리며 독립 Session도 유일한 owner를 쓴다.
     std::array<std::uint32_t,2>& zoneWords{s.localStateGlobals->ZoneWords()}; //원본 Zone6BYTE와 같은 장기 Client 물리를 실제 로그인도 빌린다.
     std::span<std::uint8_t> cachedCore{s.coreDataGlobals->Cached()};std::span<std::uint8_t>& currentCore{s.coreDataGlobals->Current()}; // 실제 같은 장기10BYTE와 현재 포인터 슬롯을 직접 빌린다.
-    std::array<std::uint8_t,256> typeUse{}; //원본256BYTE 타입사용표다.
+    std::array<std::uint8_t,256>& typeUse{s.gameplayGlobals->GameAux()->TypeUse()}; //005451f8의 같은 장기256BYTE를 빌려 fortCount0의 명시 ClearTypes와69h 누적 수신이 공유하게 한다.
     std::span<const float,4> ranges{s.gameplayGlobals->ManaRanges()}; //원본5425f4의 현재4float다. 기본3번도 읽고 최대 비교는 원래2번30을 사용한다.
     float& range{s.gameplayGlobals->ManaRadius()}; //원본52f488을 같은 커서/AI/메타 옵션과 공유하며 제곱도 실제EnergySupplyState에 쓴다.
     bool& simul{s.localStateGlobals->Simulconnect()};std::uint32_t& adjust{s.gameplayGlobals->GameAux()->TerrainEnabled()};bool& saved{s.localStateGlobals->SavedGame()};std::uint8_t overrideFlags{},localTitle{};std::uint8_t& battleByte{s.localStateGlobals->BattleByte()}; //State의 현재 입력과 생성/Zone 보정은 같은 Client 수명이며 독립 검사만 별도 배경 첫BYTE를 사용한다.
@@ -214,12 +214,12 @@ struct RawCampaignSession::Impl::Login {
         forts=std::make_unique<RawMissionLoginPackets>(OriginalEdition::Patch1078,s.players,MissionFortPacketReads{[this](std::uint32_t player)->const FortTemplate* { return player<9 && Get(s.headers,player*20) ? &s.templateStorage->Template(player) : nullptr; },[] { return std::uint16_t{4}; }},FortImageHooks{[this] { return static_cast<std::uint32_t>(s.core.types.size()); },{}},MissionFortPacketHooks{[this](std::uint32_t,std::int32_t) { Need(effects.log)("로컬 Fort 전송\n"); },sendMutable,{}});
         MissionSettingsPacketHooks setting;setting.current=[this](MissionSettingsField field) { return settingValues.at(static_cast<std::size_t>(field)); };setting.setCurrent=[this](MissionSettingsField field,std::uint32_t value) { settingValues.at(static_cast<std::size_t>(field))=value; };setting.send=send;settings=std::make_unique<RawMissionSettingsPacket>(OriginalEdition::Patch1078,std::move(setting));
         ClockSynchronizationHooks synchronization;synchronization.gameSeconds=effects.gameSeconds;synchronization.wallSeconds=effects.wallSeconds;
-        synchronization.send=[this](auto token,auto packet) { transport.registry->SendDirect(token,packet); }; // 원문 Commander의 고정 this token을 사용하고 Player ID를 재선택하지 않는다.
-        synchronization.reply=[this](auto& connection,auto packet,const auto* address) {
+        synchronization.send=[registry=transport.registry](auto token,auto packet) { registry->SendDirect(token,packet); }; // 원문 Commander의 고정 this token을 사용하고 Player ID를 재선택하지 않는다.
+        synchronization.reply=[registry=transport.registry](auto& connection,auto packet,const auto* address) {
             if (address && *address!=connection.address) throw std::logic_error("고정 TCP/내부 peer와 다른 시간 응답 주소는 LAN 범위 밖"); // 현재 TCP/내부 가상+8은 같은 고정 peer에만 보낸다. UDP/인터넷 목적지를 임의 대체하지 않는다.
-            transport.registry->SendDirect(transport.registry->TokenFor(connection),packet);
+            registry->SendDirect(registry->TokenFor(connection),packet);
         };
-        clockSynchronization=std::make_unique<RawClockSynchronization>(s.localStateGlobals->ClockSynchronization(),s.localStateGlobals->ClockSamples(),std::move(synchronization));
+        clockSynchronization=std::make_unique<RawClockSynchronization>(s.localStateGlobals->ClockSynchronization(),s.localStateGlobals->ClockSamples(),std::move(synchronization),effects.frameLoginTimer ? s.localStateGlobals : std::shared_ptr<void>{}); //실제 Client의 검토된 장기 시계 hooks만 canonical로 묶고 독립 주입 hooks는 기존 generic 수신으로 남긴다.
         state=std::make_unique<RawLocalMissionState>(OriginalEdition::Patch1078,LocalMissionStateStorage{blocks[0],blocks[1],blocks[2],blocks[3],blocks[4]},LocalMissionStateGlobals{s.core.processState.Server(),s.assetState.Boss(),s.assetState.inBattle,s.globals.missionPost,saved,s.objectState.mission,simul,s.core.ownerMode.challenge,s.playerState,zonePending,ticks,source,cdPresent,blocks[2][33],metaRefresh,metaRebuild,title,battleByte,connectEnd,activityEnd,s.core.processState.Now(),wall},StateHooks());
         MissionLoginHooks serverHooks;serverHooks.disconnect=[this](auto id) { Need(transport.close)(id); };
         serverHooks.pendingReply=[this](PacketConnection& connection,auto packet) { const auto id=std::bit_cast<std::int32_t>(connection.sender);if (&RequiredConnection(id)!=&connection) throw std::logic_error("거부 응답의 현재 연결 정체성 불일치");Send(id,packet); };
@@ -374,5 +374,6 @@ struct RawCampaignSession::Impl::Login {
         } else Need(transport.connect)(address,port); // 기존 private LAN/단독 시작의 typed 연결은 유지한다.
     }
     // 현재 송신을flush한 뒤 실제 큐를 분배한다. 프레임 계산은 기존Kernel이 수행한다.
+    std::function<std::size_t()> PrepareClientPoll() { if (!effects.frameLoginTimer) throw std::logic_error("실제 Client 분리 Poll의 원래 외부 타이머 계약 누락");wall=Need(effects.wallSeconds)();Need(transport.flush)();clockSynchronization->Poll();return Need(transport.poll); } //송신 prefix는 현재 Login에서 완료하고 수신 action은 실제 Source만 보유한다. 실제 Client의 타이머는 별도439ae3에 남는다.
     void Pump() { wall=Need(effects.wallSeconds)();Need(transport.flush)();clockSynchronization->Poll();static_cast<void>(Need(transport.poll)());if (!effects.frameLoginTimer && s.loginEnd!=0.0) timer->Run(false); } // 실제 Client의 타이머는439ae3에 두고 독립 Session만 기존 편의 호출을 유지한다.
 };

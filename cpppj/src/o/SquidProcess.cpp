@@ -223,7 +223,8 @@ std::int32_t SquidProcessHost::WriteFormPacket(Sid form,std::uint32_t argument,s
     const auto device=Transmission();if (!device.writeFullData) throw std::logic_error("ProcessForm의 실제 전체 파생 writer 미연결");const auto size=device.writeFullData(*process,argument);
     if (size>0) {
         if (!device.packet) throw std::logic_error("ProcessForm의 실제 작성 버퍼 미연결");const auto bytes=device.packet(size);
-        if (static_cast<std::size_t>(size)>bytes.size() || static_cast<std::size_t>(size)>packet.size()) throw std::out_of_range("ProcessForm의 실제 패킷 복사 범위");std::copy_n(bytes.begin(),size,packet.begin());
+        if (static_cast<std::size_t>(size)>bytes.size() || static_cast<std::size_t>(size)>packet.size()) throw std::out_of_range("ProcessForm의 실제 패킷 복사 범위");
+        if (bytes.data()!=packet.data()) std::copy_n(bytes.begin(),size,packet.begin()); // 같은2048BYTE 버퍼를 쓴 Dais/건설 writer는 전체 포인터가 같으면 다시 겹쳐 복사하지 않는다.
     }return size;
 }
 // 원문 일반/공유 Regular의 가상 writer 선택만 공개한다.

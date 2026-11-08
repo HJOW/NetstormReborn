@@ -11,6 +11,7 @@
 #include "o/RawCampaignWorldLoad.h"
 #include "o/RawContainedFinder.h"
 #include "o/RawEnergySupply.h"
+#include <cstddef> //실행 중인 실제 Runtime pin의 호스트 호출 수를 보관한다.
 #include <memory>
 #include <array>
 
@@ -19,6 +20,7 @@ namespace netstorm::client {
 class ClientSubscriberGlobals;class RawCampaignSession; // 실제 전역 소유자와 현재 Runtime을 복제하지 않는다.
 class ClientGameplayGlobals {
 private:
+    struct RuntimeCall; //배송 중 실제 전체 owner와 호출 수를 함께 보유하는 짧은 호스트 장치다.
     std::shared_ptr<o::RawAuthorityState> authority_; // 물리 저장소와 공유하며 모든 bool 참조보다 먼저 구성하고 나중에 반납한다.
     std::shared_ptr<o::RawGameAuxState> gameAux_; // 모든 게임 보조 참조보다 먼저 구성하고 마지막에 반납한다.
     std::shared_ptr<ClientSubscriberGlobals> subscribers_; // world의 두 DWORD 참조보다 오래 유지한다.
@@ -42,6 +44,9 @@ public:
     std::unique_ptr<Use> Acquire(); // 기존 독립 Session 생성 의미를 같은 전역 주소에서 수행한다. NativeState 전체 순서와 구별한다.
     std::unique_ptr<Use> AcquirePrepared(); // 명시 Native 정리/prefix의 현재 값을 그대로 빌린다. 준비 완료 판정은 조립 호출자의 책임이다.
     RawCampaignSession& RequireSession() const; // 선택된 게임 효과가 실제 Runtime을 요구할 때만 호출한다.
+    void BindRuntimeOwner(RawCampaignSession& session,const std::shared_ptr<void>& owner); //현재 Session을 실제로 소유한 GameWorld/EditorRuntime을 weak로 공개하며 명목 토큰을 만들지 않는다.
+    std::shared_ptr<void> PinCurrentRuntime(RawCampaignSession& session); //선택한 현재 Session/owner 일치를 확인한 뒤 실제 전체 owner를 이번 하위 호출 종료/예외까지 보유한다.
+    bool RuntimeCallActive(const RawCampaignSession& session) const noexcept; //실제 owner pin의 배송 중 호출만 세며 대기 중 큐/weak 공개는 정리 관문을 잠그지 않는다.
     bool Borrowed() const; // 현재 대여 여부의 읽기 전용 관측이다.
     const std::shared_ptr<ClientSubscriberGlobals>& Subscribers() const; // 다른 Client의 참조를 잘못 합치지 않는다.
     float& ManaRadius() { return manaRadius_; } //0052f488의 실제 공급 반경을 옵션/커서/AI가 같은 주소에서 읽고 쓴다.
@@ -161,5 +166,8 @@ private:
     ClientAiDebugGlobals aiDebug_; // World/Session교체에서도유지하는현재진단전역이다.
     std::array<double,9> priestTakenDeadlines_{}; // 원문 BSS의9개0 기한이며 새 Client에서 한 번만 만든다.
     RawCampaignSession* current_{};bool borrowed_{}; // 게임 값의 대체가 아닌 현재 C++ Runtime 대여다.
+    std::weak_ptr<void> runtimeOwner_; //현재 실제 GameWorld 또는 Session/표시/입력을 함께 소유한 EditorRuntime이며 장기 전역과 순환을 만들지 않는다.
+    RawCampaignSession* runtimeOwnerSession_{}; //weak owner가 소유한 실제 Session 정체성이며 현재 raw 포인터와 별도로 대조한다.
+    std::size_t runtimeCalls_{}; //strong owner를 확보한 짧은 배송 구간의 호출 수이며 Native 게임 전역/패킷 상태가 아니다.
 };
 }

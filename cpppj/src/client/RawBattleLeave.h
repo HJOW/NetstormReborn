@@ -26,7 +26,7 @@ struct BattleLeaveStateGlobals { //004d803e의 양수 이유가 공통 중단에
     const std::uint32_t& playerKnown; //00595344의 현재 번호 확정 여부다. 복사본으로 원격 선택을 판정하지 않는다.
 };
 // signed 양수 이유만 처리하며 이유2는 직접next3, 이유3/9는 선행 삭제 뒤 공통 부모를 실행한다.
-// 원격 처리가 선택되면 필수 장치를 요구한다. 이 장치의 구현/검사는 후순위 MP 범위이며 빈 성공으로 대체하지 않는다.
+// 원격 처리가 선택되면 현재Session의실제Core/Template/Snapshot후속을필수로요구한다. MP실행검사는사용자제외이며빈성공으로대체하지않는다.
 void PrepareBattleLeaveState(std::int32_t reason,BattleLeaveStateGlobals globals,const std::function<void()>& deleteSavedState,const std::function<void()>& remoteLeave={});
 // LeaveBattle의 뗌은 소비하고 signed 이유가0 이하이면 실제 ConfirmRetreat 안내만 연다.
 // 양수 이유/다른 명령은 false로 남겨 기존 Native 예약 본문이 처리한다. Tell 실패도 현재 전투를 반납하지 않는다.

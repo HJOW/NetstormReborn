@@ -6,6 +6,10 @@
 #include <utility>
 
 namespace netstorm::o {
+//원문함수주소표식과선택된실제본문을한번구성한뒤바꾸지않는다.
+CanonicalPacketReceiver::CanonicalPacketReceiver(std::uint32_t entry,Receive body):nativeEntry(entry),receive(std::move(body)) { if (!nativeEntry || !receive) throw std::invalid_argument("고정 Native receiver 정체성/본문 누락"); }
+//등록표가F에서G로바뀌어도이객체의저장된F만호출한다. 현재자료/Runtime선택은F본문의원래위치에남긴다.
+void CanonicalPacketReceiver::Invoke(std::uint32_t sender,PacketConnection* connection,std::span<const std::uint8_t> packet) const { receive(sender,connection,packet); }
 bool PacketPlayerActive(std::span<const std::uint8_t> fallback,const std::function<std::span<const std::uint8_t>()>& current,std::uint32_t owner) { const auto players=current ? current():fallback;if (players.size()!=9U*180U || owner>=9) throw std::out_of_range("송신의 실제 현재 Player9 물리 부족");return (players[owner*180U+0x50U]&1U)!=0; } //현재 base를 한 번 조회하고 active의 낮은BYTE만 읽으며 별도 known/phase 조건을 더하지 않는다.
 namespace {
 // 단일 패킷 헤더의 선언 길이 WORD다. caller가 최소 4바이트를 확인한 뒤 읽는다.
@@ -18,13 +22,25 @@ RawPacketDispatch::RawPacketDispatch(OriginalEdition edition,PacketDispatchHooks
 // 등록표만 공유하며 실제 분배의 시계/record/close/free는 backend 고유 장치를 사용한다.
 const std::shared_ptr<PacketRegistrationTable>& RawPacketDispatch::Registrations() const { return registrations_; }
 void RawPacketDispatch::CheckType(std::uint32_t type) const { if (!type || type>lastType_) throw std::out_of_range("패킷 등록 타입 범위 오류"); }
-void RawPacketDispatch::Register(std::uint32_t type,decltype(PacketRegistration::receive) receive) { CheckType(type);registrations_->Touch(type);auto& entry=registrations_->entries_[type];entry.receive=std::move(receive);entry.directReceive={}; } // 일반 재등록도 같은 이전 nullable 수신기를 제거한다.
+void RawPacketDispatch::Register(std::uint32_t type,decltype(PacketRegistration::receive) receive) { CheckType(type);registrations_->Touch(type);auto& entry=registrations_->entries_[type];entry.receive=std::move(receive);entry.directReceive={};entry.canonicalReceive.reset(); } // 일반 재등록도 같은 이전 nullable 수신기를 제거한다.
 void RawPacketDispatch::RegisterDirect(std::uint32_t type,decltype(PacketRegistration::directReceive) receive) {
-    CheckType(type);if (!receive) { registrations_->Touch(type);auto& entry=registrations_->entries_[type];entry.receive={};entry.directReceive={};return; }
+    CheckType(type);if (!receive) { registrations_->Touch(type);auto& entry=registrations_->entries_[type];entry.receive={};entry.directReceive={};entry.canonicalReceive.reset();return; }
     const auto shared=std::make_shared<decltype(receive)>(std::move(receive)); // 두 입구가 mutable callable의 같은 실제 상태를 사용하며 dispatch 객체 this를 빌리지 않는다.
     decltype(PacketRegistration::directReceive) direct=[shared](auto sender,auto* connection,auto packet) { (*shared)(sender,connection,packet); };
     decltype(PacketRegistration::receive) framed=[shared](auto sender,auto& connection,auto packet) { (*shared)(sender,&connection,packet); };
-    registrations_->Touch(type);auto& entry=registrations_->entries_[type];entry.directReceive=std::move(direct);entry.receive=std::move(framed); // 모든 할당을 준비한 뒤 같은 lease/등록을 noexcept 이동으로 교체한다.
+    registrations_->Touch(type);auto& entry=registrations_->entries_[type];entry.directReceive=std::move(direct);entry.receive=std::move(framed);entry.canonicalReceive.reset(); // 모든 할당을 준비한 뒤 같은 lease/등록을 noexcept 이동으로 교체한다.
+}
+//알려진고정본문값을만든뒤같은현재슬롯의즉시입구와정체성을함께등록한다.
+void RawPacketDispatch::RegisterCanonicalDirect(std::uint32_t type,std::uint32_t nativeEntry,CanonicalPacketReceiver::Receive receive) { RegisterCanonical(type,std::make_shared<CanonicalPacketReceiver>(nativeEntry,std::move(receive))); }
+//인자가같은현재slot의참조여도선택된F를먼저복사해등록교체와분리한다.
+void RawPacketDispatch::RegisterCanonical(std::uint32_t type,const std::shared_ptr<const CanonicalPacketReceiver>& receive) {
+    CheckType(type);const auto selected=receive;if (!selected) { RegisterDirect(type,{});return; } //원문의NULL함수와미전환shortclosure를구별한다.
+    RegisterDirect(type,[selected](auto sender,auto* connection,auto packet) { selected->Invoke(sender,connection,packet); });registrations_->entries_[type].canonicalReceive=selected;
+}
+//큐는이값만보관해야하며이전PacketRegistration/lease를대기수명동안보유하지않는다.
+std::shared_ptr<const CanonicalPacketReceiver> RawPacketDispatch::SnapshotReceiver(std::uint32_t type) const {
+    CheckType(type);const auto& entry=registrations_->entries_[type];if (!entry.receive && !entry.directReceive) return {}; //원문NULLreceiver의delay0자연반환을유지한다.
+    if (!entry.canonicalReceive) throw std::logic_error("지연 receiver의 장기 고정본문 전환 미완료");return entry.canonicalReceive; //짧은oldSessionclosure를안전한F로포장하지않는다.
 }
 void RawPacketDispatch::InvokeDirect(std::uint32_t type,std::uint32_t sender,PacketConnection* connection,std::span<const std::uint8_t> packet) const {
     CheckType(type);const auto& entry=registrations_->entries_[type];if (!entry.receive && !entry.directReceive) return;const auto pin=entry.Pin();const auto direct=entry.directReceive;

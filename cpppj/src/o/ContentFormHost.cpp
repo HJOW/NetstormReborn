@@ -103,7 +103,7 @@ void ContentFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const {
 void ContentFormHost::Unpop(Sid form) const { if (unpop_) unpop_(form);else forms_.Unpop(form); } // 실제 가상 진입 앞에 고정 TYPE/free 검사를 추가하지 않는다.
 void ContentFormHost::BindPop(std::function<void(Sid,std::uint32_t)> pop) { pop_=std::move(pop); } // 같은 Session이 살아 있는 동안 현재 실제 Pop만 사용한다.
 void ContentFormHost::BindUnpop(std::function<void(Sid)> unpop) { unpop_=std::move(unpop); } // 현재 World와 같은 수명의 공통 해제를 연결한다.
-void ContentFormHost::BindReattach(std::function<void(Sid,Sid,std::uint32_t)> reattach) { reattach_=std::move(reattach); } // Regular의 Unpop 뒤 현재 VT+50을 선택할 실제 장치를 연결한다.
+void ContentFormHost::BindReattach(std::function<void(Sid,Sid,std::uint32_t)> reattach) { reattach_=std::move(reattach); } //Regular의 Unpop 뒤와 Create의 필드 쓰기 뒤 현재 VT+50을 선택할 실제 장치를 연결한다.
 // 실제 현재 TYPE 대여는 통지 뒤에도 같은 표를 다시 읽는다.
 void ContentFormHost::BindCurrentTypes(std::span<const RiftTypeRecord> types) { if (!types.empty() && types.size()!=types_.size()) throw std::invalid_argument("Content 현재 TYPE 표의 판본/길이 계약");currentTypes_=types; }
 std::uint32_t ContentFormHost::TypeGenus(std::uint32_t type) const { const auto current=currentTypes_.empty() ? std::span<const RiftTypeRecord>(types_) : currentTypes_;if (type>=current.size()) throw std::out_of_range("Content 통지 뒤 현재 TYPE 물리 범위");return current[type].flags2; } // 실제 소비 위치의 오류만 보고한다.
@@ -120,24 +120,27 @@ bool ContentFormHost::Robust(Sid form) const {
 bool ContentFormHost::Linked(Sid form) const {
     return CheckRawFormLinked(pool_,form,[this](Sid current) { return CommonContainedParent(pool_,current); }); // 예약 부모0도 실제 물리 head만 읽으며 TYPE/free/dead를 별도로 거르지 않는다.
 }
+//선택한 마지막 가상 부착은 생성/통지 또는 Unpop이 바꾼 현재 장치를 읽고 호출 끝까지 보유한다.
+void ContentFormHost::AttachCurrent(Sid form,Sid parent,std::uint32_t flags) const {
+    const auto attach=reattach_; //BindCreate 시점의 낡은 callable 대신 실제 소비 위치의 장치를 값으로 보유한다.
+    if (attach) { attach(form,parent,flags);return; }
+    const auto raw=pool_.Slot(form); //독립 Host도 생성/통지 뒤 현재 객체의 실제 VT를 조회한다.
+    const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24); //비정렬 현재 DWORD이며 TYPE BYTE를 VT의 대용으로 쓰지 않는다.
+    if (table!=forms_.Vtable(6)) throw std::logic_error("ContentForm 현재 가상+50 부착 장치 미연결");
+    Attach(form,parent,flags); //확인된 Content6만 기존 정렬 부착을 쓰고 다른 미설치 가상표는 앞선 생성/필드 쓰기 뒤 거부한다.
+}
 // 원본 Regular+5c는 양수 count에서만 현재 getter→Unpop→flags 쓰기→현재 가상 재부착을 실행한다.
 float ContentFormHost::Damage(Sid form,std::int32_t damage,float amount) const {
     if (damage<=0) return amount;
     const auto parent=CommonContainedParent(pool_,form);Unpop(form);const auto current=pool_.Slot(form);auto* bytes=const_cast<std::uint8_t*>(current.data());
     if (pool_.Edition()==OriginalEdition::Patch1078) bytes[kFlags+1]&=0xfeU; // PATCH는 Unpop 뒤 현재 high BYTE의 bit0만 끈다.
     else { const auto flags=Word(form,kFlags)&~kChanged;bytes[kFlags]=static_cast<std::uint8_t>(flags);bytes[kFlags+1]=static_cast<std::uint8_t>(flags>>8); } // CD는 같은 효과를 WORD store로 남긴다.
-    const auto reattach=reattach_; // Unpop이 장치를 바꿀 수 있으므로 실제 소비 위치에서 선택하고 수명을 유지한다.
-    if (reattach) reattach(form,parent,0x10);
-    else { const auto raw=pool_.Slot(form);const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);
-        if (table!=forms_.Vtable(6)) throw std::logic_error("ContentForm 현재 가상 재부착 장치 미연결");Attach(form,parent,0x10); // 독립 기존 Content 호출만 보존하고 다른 클래스의 +50을 임의 정렬 부착으로 대체하지 않는다.
-    }
-    return 0;
+    AttachCurrent(form,parent,0x10);return 0;
 }
-// RawContainedCreate의 원래 생성·필드 쓰기 순서를 유지하면서 마지막 부착만 실제 처리기로 바꾼다.
+//RawContainedCreate의 생성/필드 쓰기/표면 통지 순서 뒤 마지막 현재 가상+50만 같은 실제 분배기로 연결한다.
 ContainedCreateHooks ContentFormHost::BindCreate(SquidFactory& factory,ContainedCreateHooks hooks) const {
     hooks=MakeContainedCreateHooks(pool_,factory,std::move(hooks));
-    // 표면 별도 알림은 호출자의 기존 경계를 유지하고 ContentForm 부착만 같은 저장소를 사용한다.
-    hooks.attach=[this](Sid form,Sid parent,std::uint32_t flags) { Attach(form,parent,flags); };return hooks;
+    hooks.attach=[this](Sid form,Sid parent,std::uint32_t flags) { AttachCurrent(form,parent,flags); };return hooks; //실제 생성 후 호출되므로 factory/통지 중 바뀐 장치와 VT도 이 위치에서 선택한다.
 }
 // 외부 분배기의 풀 소유권 대조에 사용한다.
 const SidPool& ContentFormHost::Pool() const { return pool_; }

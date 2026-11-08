@@ -325,6 +325,8 @@ public:
     void ConnectLocalConnectionForState(std::span<const std::uint8_t> address,std::uint32_t port); // 부모의 현재8이 같은 로컬 접속 몸체를 사용한다. 외부 TCP/IP 접속을 대신하지 않는다.
     bool PollLocalConnectionState(); // 다음8/9/10/13/14를 한 번 소비했으면 true다. 메인/Edit/이탈 부모는 소비하지 않아 같은 Tick에 두 상태를 실행하지 않는다.
     bool LocalConnectionReady() const; // 실제 loaded/phase14/PlayerKnown/현재 Player 참여 비트만 조회한다. 별도 성공 플래그를 만들지 않는다.
+    void FinalizeBattleLeave(std::int32_t reason); //일반양수Leave의현재사제/SP/종료판정→필요Core WORD변경/Notify→실제Snapshot을수행한다.
+    void RejectDraw(); //490220의같은지역6fh를로컬실제수신에먼저적용하고그버퍼를방송한다.
     void RequestForcedAlliance(std::uint32_t packed); // 원문02000122의 highWORD owner/lowBYTE target을 실제78h로 서버9에 요청한다.
     void PollReconnectSave(); //004b6730의 현재 전투/벽시각 만료를 같은 실제 로그인 writer/Client 기한에 연결한다.
     bool BattleFinished() const; //00449200의 실제 현재 참가자/동맹/사제 종료 관문이며 UI 메뉴 존재 여부가 아니다.
@@ -337,6 +339,7 @@ public:
     void SendPlayerTell(std::uint32_t owner,std::string_view section,bool others=false); //004c9150/4c9200의 실제70h를현재대상또는해당대상을뺀1..8에보낸다.
     //프레임마다현재실제송신/수신큐와로그인타이머를진행한다.
     void PumpLocalConnection();
+    std::function<std::size_t()> PrepareClientPacketPoll(); //실제 Client의 wall→Flush→시계 prefix 뒤 장기 Source Poll만 값으로 반환한다. 호출 중 old Runtime을 보유하지 않으며 독립 편의 Pump의 타이머 순서는 바꾸지 않는다.
     //현재연결상태/실제수신패킷은진단전용읽기다. 별도성공flag를만들지않는다.
     std::uint32_t LocalConnectionPhase() const;
     std::span<const std::uint8_t> LocalConnectionPackets() const;
@@ -402,6 +405,7 @@ public:
     std::span<std::uint8_t> MutableFortState(std::uint32_t slot); //004bd550의 실제 현재 State/최소28BYTE를 빌린다. 다른 callback 뒤에는 다시 조회해야 한다.
     void SynchronizeProductionContents(); // 실제43ec00(first1)의43df80 직접 호출이다.
     const o::ContainedFinderState& ProductionFinder() const; // 같은 현재 내용물 검색 전역이다.
+    void IndicateTechnology(std::uint32_t type); //004929e0의 현재 Player/Technology·kindWORD·실제 contained 생성 부모만 호출하며TYPE를선검사하지않는다.
     ProductionControlContext ProductionContext() const; // 실제 같은 물리/현재 전역/Player/옵션을 초기 HUD 생성자에 빌린다.
     bool UpdateProductionContents(); // 실제현재모드/부모/dirty→Deck 재계산→43df80 단락이다.
     void GetFullDeck(); //0044f9d0의실제전체Deck명령을같은현재Client DWORD·Player Deck·공유난수로실행한다.

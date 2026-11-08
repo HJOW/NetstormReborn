@@ -7,6 +7,7 @@
 #include <memory>
 #include <optional>
 #include <utility>
+#include <string_view> // 실제 Tell 문자열/현재 Player 이름을 같은 BYTE로 빌린다.
 
 namespace netstorm::o {
 // 원본의 진단 후 계속 진행하는 두 assertion 경계다.
@@ -34,6 +35,28 @@ struct PlayerParticipationHooks {
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> sendAlliance; // 004e2dc0(9,playerBYTE+maskDWORD)의 논리 packet이다.
     std::function<void(std::uint32_t)> destructBrain,freeBrain; // 00410100(brain) 뒤 CRT free(brain)이며 같은 실제 소유자를 사용한다.
 };
+// 동맹 협상/Draw 수신의 현재 Client 장치다. 선택되지 않은 효과는 호출하지 않는다.
+struct AllianceNegotiationHooks {
+    std::function<bool()> boss; //00540bc4의 현재 boss를 안내/방송 뒤 각 원문 위치에서 읽는다.
+    std::function<bool(std::uint32_t)> ignoredSubscriber; //548750/548754의 실제 subscriber 목록이며 메뉴 존재/Chat창 busy가 아니다.
+    std::function<void(std::string_view)> tell; //원문의 괄호 인자 문자열을 같은 Tell/param.Append/HTML 부모로 전달한다.
+    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> status; //종류/Player/parameter의 같은 MessageBoard 표시1·빈문자열 경계다.
+    std::function<void(std::span<const std::uint8_t>)> broadcast; //수신 relay의 같은 실제 버퍼를 기존1..8 연결에 방송한다.
+    std::function<double()> gameSeconds; //Draw 방송 뒤 현재55b4d0을 읽는다. 벽시각/CRT clock과 구별한다.
+};
+//5caf44/68/b0의 실제9 counter·sample/start쌍·초기화 DWORD를 Client 수명에 보관한다.
+struct AllianceRequestState {
+    std::array<std::uint32_t,9> counters{}; //초과 요청도 감긴32비트 +1을 그대로 남기며 Session 교체로 초기화하지 않는다.
+    std::array<std::array<std::uint32_t,2>,9> clocks{}; //각 행은4a68b0이 쓰는 sampled DWORD와 초기화/만료가 쓰는 start DWORD다.
+    std::uint32_t initialized{}; //5cafb0의 초기BSS0이며 첫 요청의9회 clock store 뒤1을 쓴다.
+    std::int32_t windowSeconds{60},limit{3}; //540bc8/bcc의 실제 signed DWORD 초기값이며 비교/안내 위치마다 현재값을 읽는다.
+};
+struct AllianceRequestInputHooks { //선택한 입력이 실제 Client의 현재 clock/owner/연결/Tell만 사용한다.
+    std::function<std::uint32_t()> clock,localOwner; //CRT clock32와540c70이며 게임/벽 시계와 구별한다.
+    std::function<void(std::span<std::uint8_t>)> send; //현재 서버9의 실제 Registry mutable 송신이며 ACK/직접 수신을 만들지 않는다.
+    std::function<void(std::string_view)> tell; //AllianceSpam의 같은 괄호 인자/Tell/param.Append 경계다.
+};
+bool HandleAllianceRequestInput(std::uint32_t event,std::int32_t target,AllianceRequestState& state,std::span<const std::uint8_t> players,const AllianceRequestInputHooks& hooks); //fb/fa/7e/db만 처리하며 공통 뗌은 하위조회 없이 소비한다.
 // 9×0xb4 Player와 원본9×9 DWORD 표를 참조한다. 배열 사본/대칭 동맹/추정 active 입력을 만들지 않는다.
 class RawPlayerParticipation {
     struct RetirementLifetime {}; // Native 전역이 아닌 이 실제 모듈의 C++ 수명 정체성만 나타낸다.
@@ -63,6 +86,10 @@ public:
     void SetAlliance(std::uint32_t owner,std::uint32_t mask) const;
     // 0048f6a0: 지정 방향의 한 bit/한 cell만 켜며 battle이면 현재 mask를 서버9에 요청한다.
     void AddAlly(std::uint32_t owner,std::uint32_t target) const;
+    void RemoveAlly(std::uint32_t owner,std::uint32_t target) const; //48f710의 mask해제→번호진단→현재battle→방향한칸0→각3dh송신 순서다.
+    void ReceiveAllianceRequest(std::span<const std::uint8_t> packet,const AllianceNegotiationHooks& hooks) const; //77h는 먼저 boss relay 뒤 현재 target/ignored subscriber/Tell을 선택한다.
+    void ReceiveBrokenAlliance(std::span<const std::uint8_t> packet,const AllianceNegotiationHooks& hooks) const; //79h는 양방향 Remove/relay 뒤 현재 local의 Tell 또는 종류8 안내다.
+    void ReceiveDraw(std::span<const std::uint8_t> packet,double& deadline,const AllianceNegotiationHooks& hooks) const; //6fh는 실제 flag80/종류6/현재boss relay/현재yes 재조회 뒤20초 기한이다.
     // 00491220: 같은 수신 packet의 자기 bit→Player mask→방향표/Chat→broadcast 순서를 보존한다.
     void ReceiveAlliance(std::span<std::uint8_t> packet,const std::function<void(std::span<const std::uint8_t>)>& broadcast) const;
     // 004911a0: 실제 생성 소유자가 전달한 opaque32 brain을 +b0에 기록하고 flags20을 켠다.

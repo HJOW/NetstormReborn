@@ -164,6 +164,7 @@ target_sources(netstorm PRIVATE
     RawSquidDefense.cpp RawSquidDefense.h
     RawArcherTypeData.cpp RawArcherTypeData.h
     RawDaisRegular.cpp RawDaisRegular.h
+    RawDaisProcessData.cpp RawDaisProcessData.h
     RawAltarSacrifice.cpp RawAltarSacrifice.h
     RawDaisLifecycle.cpp RawDaisLifecycle.h
     RawIslandBuilder.cpp RawIslandBuilder.h
@@ -596,3 +597,6 @@ target_sources(netstorm PRIVATE RawVortexDeparture.h RawVortexDeparture.cpp)
 
 # 원문 CS 객체의10개 전투/40개 참가자 기록과 최초 배치 좌표 초기화를 컴파일한다.
 target_sources(netstorm PRIVATE RawChallengeState.h RawChallengeState.cpp)
+
+#69h의실제unsigned타입사용목록누적/현재기술표시수신과Client송신관찰기를등록한다.
+target_sources(netstorm PRIVATE RawTechnologyTypesPacket.cpp RawTechnologyTypesPacket.h)

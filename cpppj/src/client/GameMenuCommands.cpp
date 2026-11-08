@@ -28,7 +28,7 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,60> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,63> kCommands{{
     {0x005429a8U,kCreateInitialGeysersCommand},{0x005429f8U,kBrainCrankMoneyCommand},{0x005428d8U,kAiParamSetCommand}, //772의원문세일반명령이다.
     {0x005429d0U,kMakeAiCommand}, //005429d0의 실제 초기 일반 명령이다.
     {0x00542760U,kDrawWaterCommand}, //원문 후단 진단 명령이며 기본 메뉴 노출은 바꾸지 않는다.
@@ -74,6 +74,7 @@ constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,60> kCommands{{
     {0x00542a28U,0x020000cdU}, //GetFullDeck의 원본 입력 ID다.
     {0x00542a4cU,0x020000d6U},
     {0x00542a60U,0x020000dbU},
+    {0x00542ae0U,0x020000fbU},{0x00542adcU,0x020000faU},{0x005428f0U,0x0200007eU}, //Request/Break/ConfirmAlliance의실제일반입력과HTML Yes가같은현재명령을쓴다.
     {0x00542a8cU,0x020000e6U},
     {0x00542a90U,0x020000e7U},
     {0x00542aa0U,0x020000ebU}, //Tips의 이전·다음·확인은 같은 TellTip 명령의 두 번째 인자를 쓴다.
@@ -117,6 +118,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     if (key=="decendtochallevel") return 0x020000a4U; //PE5430a8→542984의 실제 이름/명령이며 영역 확인창 Yes가 같은4b8810 부모를 실행한다.
     if (key=="requestmenu") return 0x0200011cU; //PE543420→542b40의서버섹션요청이며로컬Tell/Zsend별칭으로바꾸지않는다.
     if (key=="refreshplayers") return 0x0200011eU; //PE543428→542b44의현재CS이름표/NSInfo갱신이며새서버요청을만들지않는다.
+    if (key=="requestalliance") return 0x020000fbU;if (key=="breakalliance") return 0x020000faU;if (key=="confirmalliance") return 0x0200007eU;if (key=="declaredraw") return 0x020000dbU; //PE543364/335c/2f7c/3264의실제이름이며Confirm은기존78h승낙이다.
     if (key=="serverforcebattlestart") return 0x020000f5U; //PE00543330 이름표/00542ac8의 실제 일반 명령이다.
     if (key=="delstatefile") return 0x020000acU; //PE005430e8→005429a4의 실제 저장상태 삭제 명령이다.
     if (key=="statereconnect") return 0x020000abU; //PE005430e0→005429a0의 실제 저장 복구 명령이다.

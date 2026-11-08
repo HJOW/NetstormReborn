@@ -54,6 +54,7 @@ void UberGump::PrepareMetaWorldRuntime() {
     services.templateStorage=templateStorage_;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;
     services.missionOutcome.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; }; //원문463b50은 실제 현재 Guide가 없으면0이며 현재 미션이 있으면 같은 demo DWORD를 읽는다.
     editor_->metaWorld=std::make_unique<RawCampaignSession>(client_.Assets(),client_.Files(),o::FortTemplate{},std::string(client_.FortGlobals()->Current()),std::move(services));
+    client_.GameplayGlobals()->BindRuntimeOwner(*editor_->metaWorld,editor_); //실제Session/표시/입력/전송을함께소유하는현재EditorRuntime을weak공개한다.
     BindClientMetaSpriteRefresh(client_,*rawButtons_,editor_->metaWorld->World()); //첫 메타 객체 생성/Pop 이전에 같은 World의 실제 파생 표시 장치를 설치한다.
     auto* session=editor_->metaWorld.get();editor_->metaDisplay=std::make_unique<RawCampaignFactoryDisplay>(session->Core(),client_.Assets(),[session](auto sid,const auto& draw) { session->DrawTemple(sid,draw); },&client_.GameplayGlobals()->PatchDiagnostic());
     editor_->metaDisplay->BindMetaPixels([this](auto sid,auto point,auto pixels,auto pitch,auto height,auto clip) { auto* menus=rawButtons_->Menus();if (!menus) throw std::logic_error("현재 메타 선택 캡처의 실제 메뉴 장치 미연결");menus->WithTextDrawing(pixels,pitch,height,clip,[&] { DrawClientMetaSprite(client_,*menus,sid,point,pixels,pitch,height,clip); }); }); //같은 현재 장치를 빌리며 별도 FontStore/메타 객체/선택 그림을 만들지 않는다.
@@ -87,8 +88,8 @@ o::LocalMissionParentResult UberGump::InstallMetaConnectionState(std::uint32_t s
 
 // 현재7은 수신 caller의 동기Run이며 다음Tick의 호스트 command를 합성하지 않는다.
 void UberGump::RunMetaRequestedState() { if (client_.LocalStateGlobals()->State().current[0]==7) RunMetaBattleState(editor_->metaTransport);else editor_->state->Run(); }
-// 수신을 보유한 실제 Source와 현재 World를 같은 동기 Run 전체 동안 유지한다.
-void UberGump::RunMetaBattleState(std::shared_ptr<MetaConnectionRuntime> source) { const auto previousWorld=world_;if (!source || !editor_ || !editor_->state) throw std::logic_error("전투 State7의 실제 Source/분배기 누락");editor_->state->RunStarting([this,source] { LoadNativeBattleWorldBody(source); }); }
+//수신을 보유한 실제 Source만 동기 Run 복귀까지 유지한다. 이전 World는 원래 cleanup에서 실제 반납해야 한다.
+void UberGump::RunMetaBattleState(std::shared_ptr<MetaConnectionRuntime> source) { if (!source || !editor_ || !editor_->state) throw std::logic_error("전투 State7의 실제 Source/분배기 누락");editor_->state->RunStarting([this,source] { LoadNativeBattleWorldBody(source); }); }
 // Native State의 현재 Zone token만 입력으로 사용하며 LAN 대기실 ACK를 요구하지 않는다.
 void UberGump::LoadNativeBattleWorldBody(std::shared_ptr<MetaConnectionRuntime> source) {
     if (!source) throw std::logic_error("메타 State7의 실제 전송 Source 누락");nativeBattleStart_=std::make_shared<GeneralBattleStartRequest>();nativeBattleStart_->storedZone=true;nativeBattleStart_->textAddress=true;LoadGeneralBattleWorldBody(nativeBattleStart_,std::move(source),std::nullopt);

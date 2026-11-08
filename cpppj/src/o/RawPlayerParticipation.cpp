@@ -1,6 +1,7 @@
 // Player 기록 변경을 실제 원본 순서로 수행하며 AI 생성/전략의 성공을 추정하지 않는다.
 #include "o/RawPlayerParticipation.h"
 #include <bit>
+#include <string> // 원문 고정 Tell 서식의 현재 이름/색/번호만 조합한다.
 #include <stdexcept>
 
 namespace netstorm::o {
@@ -12,10 +13,47 @@ struct BrainCall { // 실제 brain 파괴/반납 효과가 정상 또는 예외 
     explicit BrainCall(std::size_t& value):calls(value) { ++calls; } // 선택한 비영 brain의 실제 효과 직전에 시작한다.
     ~BrainCall() { --calls; } // 앞선 부분 효과를 되돌리지 않고 호출 수명만 끝낸다.
 };
+constexpr std::array<std::string_view,8> kAllianceTellColors{"~l","~r","~w","~u","~s","~y","~d","~a"}; //4cef50의 Tell 색이며 MessageGump8색과 다르다.
+// 실제 소비 필드만 읽어 relay/안내의 앞선 부분 효과를 선행 길이 검사로 없애지 않는다.
+std::uint8_t AlliancePacketByte(std::span<const std::uint8_t> packet,std::size_t offset) {
+    if (offset>=packet.size()) throw std::out_of_range("동맹 협상의 현재 packet BYTE 물리 부족");return packet[offset];
+}
+// 원문1..8 번호만 특수 색이며 그 밖은~q다. 이 helper는 효과나 Player 조회를 하지 않는다.
+std::string_view AllianceTellColor(std::uint32_t owner) { return owner>=1 && owner<=8 ? kAllianceTellColors[owner-1] : std::string_view("~q"); }
 // 실제 도달한 효과만 필수로 요구한다. 부재를 성공이나 가짜 장치로 바꾸지 않는다.
 template<class Function> const Function& Require(const Function& function) {
     if (!function) throw std::logic_error("Player 참여 초기화의 실제 외부효과 미연결");return function;
 }
+}
+// 실제 일반 입력의9칸 제한 갱신은 target 검사보다 먼저 수행하며 fa/7e/db에는 제한을 적용하지 않는다.
+bool HandleAllianceRequestInput(std::uint32_t event,std::int32_t target,AllianceRequestState& state,std::span<const std::uint8_t> players,const AllianceRequestInputHooks& hooks) {
+    const auto command=event&0x03ffffffU; //원문 공통 modifier 제거 뒤 네 명령만 선택한다.
+    if (command!=0x020000fbU && command!=0x020000faU && command!=0x0200007eU && command!=0x020000dbU) return false;
+    if (event&0x80000000U) return true;
+    const auto message=static_cast<std::uint8_t>(command==0x020000faU ? 0x79U : command==0x0200007eU ? 0x78U : command==0x020000dbU ? 0x6fU : 0x77U); //기존78h 강제동맹 receiver와 같은 송신만 사용한다.
+    if (command==0x020000fbU) {
+        if (!state.initialized) {
+            for (std::size_t owner=0;owner<kCount;++owner) { state.clocks[owner][1]=Require(hooks.clock)();state.counters[owner]=0; } //각start에 서로 다른 실제 clock 호출을 저장한다. sampled는 쓰지 않는다.
+            state.initialized=1;
+        } else {
+            for (std::size_t owner=0;owner<kCount;++owner) { //4a68b0은현재clock을sample에먼저쓰고signed감김/1000의정수초를만든다.
+                auto& pair=state.clocks[owner];pair[0]=Require(hooks.clock)();const auto elapsed=std::bit_cast<std::int32_t>(pair[0]-pair[1])/1000;
+                if (elapsed>=state.windowSeconds) { pair[1]=Require(hooks.clock)();state.counters[owner]=0; } //같은60초도초기화하며reset의두번째clock조회는합치지않는다.
+            }
+        }
+        const auto limit=state.limit; //원문은현재limit을target범위검사보다먼저보관한다.
+        if (target<1 || target>8) return true;
+        const auto owner=static_cast<std::uint32_t>(target);const auto count=state.counters[owner]+1U;state.counters[owner]=count;
+        if (std::bit_cast<std::int32_t>(count)>limit) {
+            const auto offset=std::size_t(owner)*kStride+12;if (offset>players.size() || 32>players.size()-offset) throw std::out_of_range("동맹 요청 안내의 현재 Player 이름 물리 범위");
+            const auto name=players.subspan(offset,32);std::size_t length{};while (length<name.size() && name[length]) ++length; //원문이실제서식에서소비하는현재첫NUL까지읽는다.
+            if (length==name.size()) throw std::out_of_range("동맹 요청 안내의 현재 이름 NUL 부족");
+            const auto text=std::string("AllianceSpam(")+std::to_string(state.limit)+","+std::string(AllianceTellColor(owner))+","+std::string(reinterpret_cast<const char*>(name.data()),length)+")";
+            Require(hooks.tell)(text);return true;
+        }
+    }
+    std::array<std::uint8_t,6> packet{1,message,6,0,static_cast<std::uint8_t>(Require(hooks.localOwner)()),command==0x020000dbU ? std::uint8_t{1}:static_cast<std::uint8_t>(target)}; //DeclareDraw는기존80bit를반전하지않고항상yes1이다.
+    Require(hooks.send)(packet);return true;
 }
 // 실제 한 저장소의 물리 범위와 판본을 변경 전에 확인한다.
 RawPlayerParticipation::RawPlayerParticipation(OriginalEdition edition,std::span<std::uint8_t> players,std::span<std::uint32_t> allies,
@@ -94,6 +132,52 @@ void RawPlayerParticipation::AddAlly(std::uint32_t owner,std::uint32_t target) c
     if (battle) {
         if (Metamap()) Require(hooks_.assertion)(PlayerParticipationAssertion::MetamapMode);
         Require(hooks_.sendAlliance)(9,owner,Read(owner,kAllies));
+    }
+}
+// 먼저 실제 mask를 바꾸며 이후 진단/물리 방향표 실패도 앞선 부분 효과를 취소하지 않는다.
+void RawPlayerParticipation::RemoveAlly(std::uint32_t owner,std::uint32_t target) const {
+    Put(owner,kAllies,Read(owner,kAllies)&~(1U<<(target&31)));
+    if (Metamap()) Require(hooks_.assertion)(PlayerParticipationAssertion::MetamapMode);
+    const bool battle=Battle();const auto cell=std::size_t(owner)*kCount+target; //원문은 번호 진단 뒤 battle을 저장하고 같은 방향 한칸만 지운다.
+    if (cell>=allies_.size()) throw std::out_of_range("동맹 해제의 현재 방향표 물리 범위");allies_[cell]=0;
+    if (battle) {
+        if (Metamap()) Require(hooks_.assertion)(PlayerParticipationAssertion::MetamapMode);
+        Require(hooks_.sendAlliance)(9,owner,Read(owner,kAllies));
+    }
+}
+// 원문은 requester 주소를 먼저 보관하고 boss relay 뒤에 현재 target/요청 BYTE를 다시 읽는다.
+void RawPlayerParticipation::ReceiveAllianceRequest(std::span<const std::uint8_t> packet,const AllianceNegotiationHooks& hooks) const {
+    const auto boss=Require(hooks.boss)(); //PE48f7f6이 저장한 현재boss를 requester BYTE 조회보다 먼저 읽는다.
+    const auto requester=std::uint32_t(AlliancePacketByte(packet,4)); //주소 선택만 보관하며 선택되지 않은 Player 기록을 미리 읽지 않는다.
+    if (boss) Require(hooks.broadcast)(packet);
+    if (AlliancePacketByte(packet,5)==LocalOwner() && !Require(hooks.ignoredSubscriber)(Read(requester,kSubscriber))) {
+        const auto color=AllianceTellColor(AlliancePacketByte(packet,4));const auto name=Name(requester); //ignored 효과 뒤 같은 최초 Player의 현재 이름을 읽는다.
+        const auto text=std::string("AllianceRequested(")+std::string(color)+","+std::string(name)+","+std::to_string(AlliancePacketByte(packet,4))+")";
+        Require(hooks.tell)(text);
+    }
+}
+// 두 owner/색/Player 선택은 효과 전 값이며 각 Tell의 이름 내용은 relay 뒤 현재값이다.
+void RawPlayerParticipation::ReceiveBrokenAlliance(std::span<const std::uint8_t> packet,const AllianceNegotiationHooks& hooks) const {
+    const auto first=std::uint32_t(AlliancePacketByte(packet,4)),second=std::uint32_t(AlliancePacketByte(packet,5));
+    const auto firstColor=AllianceTellColor(first),secondColor=AllianceTellColor(second);
+    if (Require(hooks.boss)()) { RemoveAlly(first,second);RemoveAlly(second,first);Require(hooks.broadcast)(packet); }
+    const auto local=LocalOwner(); //PE48f961은 relay 뒤 현재local을 한 번 보관해 두 owner와 비교한다.
+    if (local==first) { Require(hooks.tell)(std::string("AllianceBroken(")+std::string(Name(second))+","+std::string(secondColor)+")");return; }
+    if (local==second) { Require(hooks.tell)(std::string("AllianceBroken(")+std::string(Name(first))+","+std::string(firstColor)+")");return; }
+    Require(hooks.status)(8,first,second);
+}
+// 거부는 Tell 뒤 현재 flag80만 지운다. 합의는 안내 뒤 현재boss, relay 뒤 현재yes/게임시각을 읽는다.
+void RawPlayerParticipation::ReceiveDraw(std::span<const std::uint8_t> packet,double& deadline,const AllianceNegotiationHooks& hooks) const {
+    if (!AlliancePacketByte(packet,5)) {
+        if (Read(LocalOwner(),kFlags)&0x80U) Require(hooks.tell)("DrawNotAccepted");
+        for (std::uint32_t owner=1;owner<kCount;++owner) Put(owner,kFlags,Read(owner,kFlags)&~0x80U); //Tell 효과가 바꾼 각 현재 DWORD의80 bit만 해제한다.
+        return;
+    }
+    const auto owner=std::uint32_t(AlliancePacketByte(packet,4));Put(owner,kFlags,Read(owner,kFlags)|0x80U);
+    Require(hooks.status)(6,AlliancePacketByte(packet,4),0);
+    if (Require(hooks.boss)()) {
+        Require(hooks.broadcast)(packet);
+        if (AlliancePacketByte(packet,5)) deadline=Require(hooks.gameSeconds)()+20.0; //원문 수신은 거부/종료 없이 별도595358만 현재시각으로 예약한다.
     }
 }
 // 원본의 수신 버퍼 직접 쓰기와 같은 Player/방향별 동맹/현재 Chat 재구성을 실행한다.

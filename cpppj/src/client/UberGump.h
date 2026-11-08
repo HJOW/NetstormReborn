@@ -105,6 +105,7 @@ public:
     void CleanupGumps(); // 원본4662b0 위치에서 실제 전체 HTML/Warning을 포함한 같은 공통 큐를 정리한다.
     void ShowGameTimeMessage(); //00439b5f의kind16/player1/표시1을기존메시지20칸에전달한다.
     void PollConnectionHealth(); //00439ad8의 실제 활동/지연/자동 서버 이전과 뒤439ae3 로그인 타이머를 실행한다.
+    void PollBattleCompletion(); //439b3e의44ac30을주기저장뒤·시간안내앞한번실행한다.
     void PollBattleResources(); //00439b34의 실제 자원 프레임이며 월드 없는 메뉴도 같은 전역의 자연 관문을 실행한다.
     void ShowSidRecoveryNotice(); //CD SID 회수 뒤 BridgesKilled를 실제 공통 Tell 부모로 연다.
     void IdleGumps(); // 원본464170 위치에서 Warning을 포함한 현재 공통 idle 표를 한 번 실행한다.
@@ -231,7 +232,7 @@ private:
     std::int32_t scrollWhileMouseOut_{1}; //005318d0의 PE 초기1이며 설정 누락은 현재값을 유지한다.
     bool PollCameraPan(const InputEvent& pointer); //현재 커서 갱신 뒤 원문 Alt/가운데 이동과 전용 큐 경로를 선택한다.
     struct HudRuntime;std::unique_ptr<HudRuntime> hud_; // 실제 화면/지도 전역의 주소를 Client UI 수명에 고정한다.
-    struct EditorRuntime;std::unique_ptr<EditorRuntime> editor_; //실제 파일/전송/State 장치는 World보다 먼저 만들고 Session 반납 뒤 해제한다.
+    struct EditorRuntime;std::shared_ptr<EditorRuntime> editor_; //작업 파일/양끝/State와실제Meta Session/표시/입력을함께소유하며배송중전체owner를보유할수있다.
     struct LanRuntime;std::unique_ptr<LanRuntime> lan_; // 대기실 제어 수명과 정리 전 일반 시작 요청을 소유한다.
     void OpenLanChoice(); // 원문 HTML 부품으로 로컬 host/join/주소 선택을 제공한다.
     void ResumeLanChoiceAfterInput(); // 주소 입력이 대기실 선택에서 열렸을 때만 같은 선택 창으로 복귀한다.

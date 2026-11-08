@@ -15,9 +15,16 @@ void ClockWrite(std::span<std::uint8_t> bytes,std::size_t at,double value) { con
 std::uint32_t ClockTruncate(double value) { if (!std::isfinite(value) || value>=9223372036854775808.0 || value< -9223372036854775808.0) return 0;return static_cast<std::uint32_t>(static_cast<std::int64_t>(value)); } // 유효 signed64 밖의 x86 indefinite 낮은 DWORD는0이다.
 int ClockCompare(const void* first,const void* second) { const auto* left=static_cast<const std::array<double,2>*>(first);const auto* right=static_cast<const std::array<double,2>*>(second);return (*left)[1]<(*right)[1] ? -1 : (*right)[1]<(*left)[1] ? 1 : 0; } //004c1e30의 두 ordered 비교이며 NaN/동률은0이다.
 }
-RawClockSynchronization::RawClockSynchronization(ClockSyncResetGlobals globals,ClockSynchronizationData& data,ClockSynchronizationHooks hooks):globals_(globals),data_(data),hooks_(std::move(hooks)) {} // 생성 자체는 전역/등록/기한을 변경하지 않는다.
+RawClockSynchronization::RawClockSynchronization(ClockSyncResetGlobals globals,ClockSynchronizationData& data,ClockSynchronizationHooks hooks,std::shared_ptr<void> dataOwner):dataOwner_(std::move(dataOwner)),globals_(globals),data_(data),hooks_(std::move(hooks)) {} // 생성 자체는 전역/등록/기한을 변경하지 않는다.
 void RawClockSynchronization::Register(RawPacketDispatch& dispatch) {
-    dispatch.Observe(5,{});dispatch.Register(5,[this](auto,auto& connection,auto packet) { if (packet.size()<32) throw std::out_of_range("시간 동기화 실제32BYTE 부족");std::array<std::uint8_t,32> current;std::copy_n(packet.begin(),32,current.begin());Receive(connection,current); }); // const 전송 어댑터의 현재 수신32BYTE만 지역 writable로 빌리며 실제 응답/표본 바이트를 유지한다.
+    dispatch.Observe(5,{}); //원문 빈 관찰기만 갱신하고 version/length 정책은 기존 값을 유지한다.
+    if (dataOwner_) {
+        dispatch.RegisterCanonicalDirect(5,0x004c1f60U,[owner=dataOwner_,globals=globals_,data=&data_,hooks=hooks_](auto,PacketConnection* connection,auto packet) { //저장 F는 같은 Client 전역/실제 시계·Registry만 보유하고 짧은 this를 캡처하지 않는다.
+            static_cast<void>(owner);if (!connection) throw std::logic_error("시간 수신의 실제 connection 누락");if (packet.size()<32) throw std::out_of_range("시간 동기화 실제32BYTE 부족");
+            std::array<std::uint8_t,32> current;std::copy_n(packet.begin(),32,current.begin());RawClockSynchronization selected(globals,*data,hooks);selected.Receive(*connection,current); //이 wrapper 생성은 전역을 reset/재등록하지 않고 같은 현재 데이터만 읽는다.
+        });return; //owner는 실제 LocalState 저장소의 수명이며 enqueue Runtime pin이 아니다.
+    }
+    dispatch.Register(5,[this](auto,auto& connection,auto packet) { if (packet.size()<32) throw std::out_of_range("시간 동기화 실제32BYTE 부족");std::array<std::uint8_t,32> current;std::copy_n(packet.begin(),32,current.begin());Receive(connection,current); }); // const 전송 어댑터의 현재 수신32BYTE만 지역 writable로 빌리며 실제 응답/표본 바이트를 유지한다.
 }
 void RawClockSynchronization::InitializeServer(RawPacketDispatch& dispatch) { Register(dispatch);data_.sent=0;data_.received=0;globals_.replyMode=1; } // 표본/기한/이전 연결은 원문에서 쓰지 않는다.
 void RawClockSynchronization::Attach(RawPacketDispatch& dispatch,std::uint32_t connection) {

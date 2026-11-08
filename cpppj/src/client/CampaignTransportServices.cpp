@@ -61,6 +61,10 @@ CampaignTransportServices BindEditorCampaignTransport(std::shared_ptr<EditorLoca
 CampaignTransportServices BindCompositeCampaignTransport(std::shared_ptr<CompositeMissionTransport> transport,const std::shared_ptr<void>& sessionOwner) {
     if (!transport) throw std::invalid_argument("복합 전송 실제 owner 누락");auto lease=transport->BindSession(sessionOwner);auto services=Basic(transport);services.composite=transport;
     if (transport->Dispatch().Registration(2).receive) transport->Dispatch().Register(2,transport->Dispatch().Registration(2).receive); // 같은 bootstrap 몸체도 현재 Session을 사용하므로 대여의 실행 pin/정리 관문에 포함하고 detach 때 이전 전역 등록을 복원한다.
+    const auto technologyCanonical=transport->Dispatch().Registration(0x69).canonicalReceive; //lease등록도기존불변F값을먼저복사한다.
+    const auto technologyReceiver=transport->Dispatch().Registration(0x69).directReceive; //독립명시즉시등록의기존호환입구만별도로보유한다.
+    if (technologyCanonical) transport->Dispatch().RegisterCanonical(0x69,technologyCanonical); //같은F의정체성과장기본문을유지한채이번leasepin만붙인다.
+    else if (technologyReceiver) transport->Dispatch().RegisterDirect(0x69,technologyReceiver); //미전환독립즉시입구를canonical이라고표시하지않는다.
     services.detachSession=[lease] { lease->Detach(); }; // 자기 세대만 즉시 detach하며 실행 중 callback은 같은 owner pin으로 정상 복귀한다.
     services.callbacksActive=[transport] { return transport->ConnectionCallbackActive(); }; // table의 현재/반납 대여를 함께 조회한다.
     services.address=[transport](auto id) { return transport->Address(id); };services.peerAddress=[address=services.address](auto id) { return CampaignPeerAddressText(address(id)); }; // 다른 backend owner의 주소도 canonical 현재 ID 검증을 거친다.

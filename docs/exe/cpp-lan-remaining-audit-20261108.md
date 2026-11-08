@@ -1,6 +1,6 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1171 현행:** M6-a/b/c/d완료. 53h/62h실제수신·62h관찰기/Session lease와같은PATCH공통삭제/현재VT·TYPE·최초비용·반납을연결했다. 다음M6-e와실제Runtime수명기반이다. Outpost고유Pre는M6-k,debugBurst와World없는자원효과는M6-n으로유지한다. 새MP실행0이며허용비MP회귀범위만[현행근거](cpp-remote-deletion-integration-20261108.md)에기록한다.
+**1172 현행:** M6-a~g완료. 69h 기술 목록/장기TypeUse,6ah Dais writer·decoder,77h/79h/6fh·실제완료/이탈소비자를연결했다. 실제Runtime소유·Poll/current기반과고정원문함수7/89(13type)까지반영했으며M6-l전체와지연큐는미완료/미활성이다. 다음M6-h주소수신이며i/j/k/l/m/n도남는다. 새MP실행0,허용비MP다리/제네레이터회귀2건은[근거](cpp-technology-dais-alliance-integration-20261108.md)에한정한다.
 
 제품 코드/LEFT_JOBS/추적 문서는 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 

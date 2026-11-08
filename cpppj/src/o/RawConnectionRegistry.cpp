@@ -43,7 +43,7 @@ void RawConnectionRegistry::SendConnectPacket(std::int32_t id) {
 }
 // 각 실제 backend가 같은 등록표를 빌릴 때 기존 bootstrap/사용자 수신기는 그대로 둔다.
 void RegisterConnectPacketReceiver(RawPacketDispatch& dispatch,const std::shared_ptr<RawConnectionRegistry>& registry) {
-    if (!registry) throw std::invalid_argument("접속 통지의 실제 Registry 없음");if (!dispatch.Registration(1).receive) dispatch.Register(1,[registry](auto sender,auto&,auto) { registry->SendConnectPacket(std::bit_cast<std::int32_t>(sender)); });
+    if (!registry) throw std::invalid_argument("접속 통지의 실제 Registry 없음");if (!dispatch.Registration(1).receive) dispatch.RegisterCanonicalDirect(1,0x004e2f00U,[registry](auto sender,auto*,auto) { registry->SendConnectPacket(std::bit_cast<std::int32_t>(sender)); });
 }
 PacketConnection& RawConnectionRegistry::Node(std::uint32_t token) const { const auto it=bindings_.find(token);if (it==bindings_.end()) throw std::out_of_range("해제되거나 다른 owner의 연결 토큰");return *it->second.node; }
 ConnectionRegistrationHooks RawConnectionRegistry::RegistrationHooks(std::function<void(std::uint32_t)> buffered) {

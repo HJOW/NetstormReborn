@@ -100,6 +100,13 @@ std::uint32_t PeerWord(std::span<const std::uint8_t> bytes,std::size_t at) {
     for (std::size_t byte=0;byte<4;++byte) value|=std::uint32_t(bytes[at+byte])<<(8*byte);
     return value;
 }
+//004b4160의 현재 Client 진단/Config/Tell만 사용하는 고정 버전 본문이다. 실제 Source나 Runtime을 요구하지 않는다.
+bool CheckClientMetaVersion(Client& client,const std::function<void(std::string_view)>& tell,std::uint32_t major,std::uint32_t minor) {
+    if (major!=10 || minor!=78) {
+        client.WriteDiagnosticLog(0x1d,"VERSION DIFFERENCE: You are 10.78. Meta Server is "+std::to_string(major)+'.'+std::to_string(minor)+".\n");
+        if (major!=10 && !client.Configuration().GetInt("suppressVersionMessage")) { tell("MetaVerDiff("+std::to_string(major)+'.'+std::to_string(minor)+')');return false; }
+    }return true;
+}
 // 00435a60의제목부분일치를검사하고모든창의열거를계속한다.실제LPARAM폭으로결과주소를전달한다.
 BOOL CALLBACK FindRootWindow(HWND window,LPARAM value) {
     std::array<char,256> title{};GetWindowTextA(window,title.data(),static_cast<int>(title.size()));if (std::strstr(title.data(),"Netstorm Root Server")) *reinterpret_cast<bool*>(value)=true;return TRUE;
@@ -161,16 +168,16 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
         NativeMetaParticipantNameHooks receive;receive.translate=[this](auto source) { const auto encoded=o::EncodeDisplayText(client_.Translate(source));return std::string(encoded.begin(),encoded.end()); };receive.weight=[this](auto core) { return Weight(core); };
         receive.update=[this](auto participant,auto mask) { client_.UpdateNativeMetaParticipant(participant,mask); };receive.refreshInfo=refreshInfo_;ReceiveNativeMetaParticipantName(*client_.ChallengeGlobals(),packet,receive);
     }); //원문의88h에는 메타 모드/CS 진단/known/송신자 관문이 없다.
-    dispatch.Register(0x1d,[this](auto,auto&,auto packet) {
-        o::ChallengeLoginReplyHooks reply;reply.log=[this](auto text) { client_.WriteDiagnosticLog(0x1d,text); };reply.version=[this](auto major,auto minor) { return CheckMetaVersion(major,minor); };reply.run=processState_;
-        o::ReceiveChallengeLoginReply(packet,client_.LocalStateGlobals()->State(),client_.GameplayGlobals()->Subscribers()->MySubscriber(),reply);
+    dispatch.RegisterCanonicalDirect(0x1d,0x004b8ac0U,[client=&client_,tell=tell_,run=processState_](auto,auto*,auto packet) { //Client의 현재 State/장기 UI Run만 필요하며 old Meta/Session이나 Runtime pin을 보유하지 않는다.
+        o::ChallengeLoginReplyHooks reply;reply.log=[client](auto text) { client->WriteDiagnosticLog(0x1d,text); };reply.version=[client,tell](auto major,auto minor) { return CheckClientMetaVersion(*client,tell,major,minor); };reply.run=run;
+        o::ReceiveChallengeLoginReply(packet,client->LocalStateGlobals()->State(),client->GameplayGlobals()->Subscribers()->MySubscriber(),reply);
     }); //sender/phase/known 필터나 가짜 성공을 추가하지 않고 실제 현재 Subscriber와 다섯 State 블록을 사용한다.
     dispatch.Version(0x16,1,0);dispatch.RequireLength(0x16,0xffff); //40a190은 앞선 공용 실제 진단/관찰기를 유지하고 Client receiver는 NULL이다.
     dispatch.Version(0x1c,1,0);dispatch.RequireLength(0x1c,0xffff); //40a270도 같은 진단 복귀/현재 BYTE 재조회 본체를 사용한다.
     dispatch.Observe(0x66,{});dispatch.Version(0x66,1,0);dispatch.RequireLength(0x66,12);
-    dispatch.Register(0x66,[this](auto sender,auto&,auto packet) {
-        o::LocalServerDiscoveryReceiveHooks receive;receive.wall=[this] { return client_.WallSeconds(); };receive.peerAddress=[this](auto id) { return CampaignPeerAddressText(client_.ConnectionGlobals()->Address(std::bit_cast<std::int32_t>(id))); };receive.processState=processState_;
-        o::ReceiveLocalServerDiscovery(client_.LocalStateGlobals()->State(),Discovery(),sender,packet,receive);
+    dispatch.RegisterCanonicalDirect(0x66,0x004b8a10U,[client=&client_,run=processState_](auto sender,auto*,auto packet) { //고정 Native F만 보관하고 실제 sender 주소는 본문이 선택한 때 같은 현재 Registry에서 조회한다.
+        o::LocalServerDiscoveryReceiveHooks receive;receive.wall=[client] { return client->WallSeconds(); };receive.peerAddress=[client](auto id) { return CampaignPeerAddressText(client->ConnectionGlobals()->Address(std::bit_cast<std::int32_t>(id))); };receive.processState=run;
+        auto& local=*client->LocalStateGlobals();o::ReceiveLocalServerDiscovery(local.State(),{local.LocalServerToken(),local.LocalServerSearchEnd(),local.LocalServerRetryEnd()},sender,packet,receive);
     }); //서버발견은현재36직접쓰기뒤실제Run을동기실행한다.검색토큰비교만인경우Run하지않는다.
     dispatch.Version(0x1f,1,0);dispatch.RequireLength(0x1f,12); //고정12BYTE/master 준비 통지는 앞선 비NULL 빈 관찰기를 유지하며 Client 수신기는 NULL이다.
     dispatch.Version(0x1e,1,0);dispatch.RequireLength(0x1e,14); //고정14BYTE 통지도 앞선 비NULL40b380 관찰기/NULL Client 수신기를 보존한다.
@@ -245,12 +252,7 @@ void MetaConnectionRuntime::ReceiveBattleOptions(std::uint32_t sender,std::span<
         [this] { return o::MissionOptionRefundPercent(*options_); },recreateHud_}); //임시 함수 장치의 수명은 이 전체 동기 호출 끝까지 유지된다.
 }
 // minor 차이는 로그만 남기고 major 차이만 현재 설정값/실제 Tell 결과로 거부한다.
-bool MetaConnectionRuntime::CheckMetaVersion(std::uint32_t major,std::uint32_t minor) {
-    if (major!=10 || minor!=78) {
-        client_.WriteDiagnosticLog(0x1d,"VERSION DIFFERENCE: You are 10.78. Meta Server is "+std::to_string(major)+'.'+std::to_string(minor)+".\n");
-        if (major!=10 && !client_.Configuration().GetInt("suppressVersionMessage")) { tell_("MetaVerDiff("+std::to_string(major)+'.'+std::to_string(minor)+')');return false; }
-    }return true;
-}
+bool MetaConnectionRuntime::CheckMetaVersion(std::uint32_t major,std::uint32_t minor) { return CheckClientMetaVersion(client_,tell_,major,minor); } //기존 Root 응답도 같은 현재 버전 본문을 공유한다.
 // 현재 Client의 같은 기록/phase/목록을 빌리며 별도 메타 표나 접속성공을 만들지 않는다.
 void MetaConnectionRuntime::ReceiveRootReply(std::span<const std::uint8_t> packet) {
     auto& local=*client_.LocalStateGlobals();o::RootLoginReplyHooks hooks;hooks.version=[this](auto major,auto minor) { return CheckMetaVersion(major,minor); };

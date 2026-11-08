@@ -34,7 +34,7 @@ public:
     void Unpop(Sid form) const;
     void BindPop(std::function<void(Sid,std::uint32_t)> pop); // 정렬 링크 뒤 실제 World 공통 Pop 깊이/현재 진단을 대여한다.
     void BindUnpop(std::function<void(Sid)> unpop); // 실제 World의 공통 Factory가 현재 번호/부모 알림을 선택하도록 대여한다.
-    void BindReattach(std::function<void(Sid,Sid,std::uint32_t)> reattach); // Regular 분리 뒤 현재 VT+50을 같은 Factory/정렬 호스트로 선택한다.
+    void BindReattach(std::function<void(Sid,Sid,std::uint32_t)> reattach); //Regular 분리 뒤와 contained 생성의 마지막 현재 VT+50을 같은 Factory/정렬 호스트로 선택한다.
     void BindCurrentTypes(std::span<const RiftTypeRecord> types); // 같은 현재 표를 빌리고 독립 입력의 기존 사본은 유지한다.
     // 가상 +0x60의 직접 flags 조회다. WORLD 진단 복귀 뒤 현재 0x34를 읽으며 TYPE/상태를 선행 검사하지 않는다.
     bool Robust(Sid form) const;
@@ -44,11 +44,12 @@ public:
     // 가상 +0x5c: 양수 피해는 Unpop→0x100 플래그 해제→로컬 재부착 후 0을 반환한다.
     // 피해량이 0/음수이면 그대로 돌려준다. 재부착 부모 알림/원본 순서 BYTE를 함께 갱신한다.
     float Damage(Sid form,std::int32_t damage,float amount) const;
-    // 기존 contained 생성기의 타입6 생성과 부착 경계를 같은 저장소로 연결한다.
+    //기존 contained 생성기의 필드 쓰기/표면 통지 뒤 마지막 현재 가상+50을 같은 저장소에 연결한다.
     ContainedCreateHooks BindCreate(SquidFactory& factory,ContainedCreateHooks hooks) const;
     // 전체 월드의 Form 분배기가 같은 풀을 사용하는지 확인한다.
     const SidPool& Pool() const;
 private:
+    void AttachCurrent(Sid form,Sid parent,std::uint32_t flags) const; //004afa70 생성 말미와 Regular 재부착에서 그때의 실제 VT+50 장치를 선택한다.
     void Assert(std::string_view expression,std::uint32_t line) const; // 선택한10.78 진단만 요구하고 돌아오면 원문 본문을 계속한다.
     std::uint16_t Word(Sid sid,std::size_t offset) const;
     void Put(Sid sid,std::size_t offset,std::uint16_t value) const;
@@ -70,7 +71,7 @@ private:
     // captured_: 포획된 사제 또는 현재 포획 상태 자료.
     ContentPriestNotice captured_;
     std::function<void(Sid,std::uint32_t)> pop_; // 실제 Session은 같은 World 공장에 후처리를 보내고 독립 입력은 기존 Form 몸체를 사용한다.
-    std::function<void(Sid,Sid,std::uint32_t)> reattach_; // Regular의 분리/flags 쓰기 뒤 현재 가상 +50을 선택하는 실제 Session 장치다.
+    std::function<void(Sid,Sid,std::uint32_t)> reattach_; //Regular의 분리/flags 쓰기 뒤와 Create의 마지막 부착에서 현재 가상+50을 선택하는 실제 Session 장치다.
     std::function<void(Sid)> unpop_; // 미연결 독립 Host는 같은 공통 Form 분리와 입력 notice를 사용한다.
 };
 }

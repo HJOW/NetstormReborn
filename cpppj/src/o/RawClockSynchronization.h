@@ -3,6 +3,7 @@
 #include "o/RawClockSyncReset.h"
 #include "o/RawPacketDispatch.h"
 #include <array>
+#include <memory> //실제 Client의 시간 전역 owner만 고정 수신값과 함께 보유한다.
 
 namespace netstorm::o { // Client 수명의 같은 상태만 빌리며 네트워크/시계 소유자를 복제하지 않는다.
 // 원문 BSS 표본과 진단값을 장기 보유하며 서버/Commander의 서로 다른 초기화 범위를 유지한다.
@@ -20,7 +21,7 @@ struct ClockSynchronizationHooks {
 // 동일 전역을 사용하는 서버 응답과 Commander 측정 부모를 실제 등록표/프레임에 연결한다.
 class RawClockSynchronization {
 public:
-    RawClockSynchronization(ClockSyncResetGlobals globals,ClockSynchronizationData& data,ClockSynchronizationHooks hooks); // 같은 연결·응답모드·게임보정 DWORD와 Client70표본을 빌린다.
+    RawClockSynchronization(ClockSyncResetGlobals globals,ClockSynchronizationData& data,ClockSynchronizationHooks hooks,std::shared_ptr<void> dataOwner={}); // 같은 연결·응답모드·게임보정 DWORD와 Client70표본을 빌린다.
     void InitializeServer(RawPacketDispatch& dispatch); //004c1e70: 등록→두 카운터0→응답모드1이며 기존 표본/연결을 지우지 않는다.
     void Attach(RawPacketDispatch& dispatch,std::uint32_t connection); //004c1eb0: 등록→표본 전체0→현재 기한→카운터/모드0→연결 순서다.
     void Receive(PacketConnection& connection,std::span<std::uint8_t> packet) const; //004c1f60: 응답이면 현재 게임시각/직접송신, 아니면 현재벽시각/동일 요청시간 첫 표본 복사다.
@@ -28,6 +29,7 @@ public:
 private:
     void Register(RawPacketDispatch& dispatch); // 같은 실제5번 receiver/빈 observer만 등록하며 version/length 표는 변경하지 않는다.
     static void ClearTimes(std::span<std::uint8_t> packet); //004c1de0:8/16/24의 세 double만0을 쓰고 헤더/미작성4BYTE는 유지한다.
+    std::shared_ptr<void> dataOwner_; //실제 ClientLocalState의 같은 전역 저장소이며 Login/Session/World나 명목 토큰을 보유하지 않는다. 독립 장치에는 기존 generic 등록을 유지한다.
     ClockSyncResetGlobals globals_;ClockSynchronizationData& data_;ClockSynchronizationHooks hooks_; // 원문 현재 저장소와 도달 위치의 실제 외부 장치다.
 };
 }

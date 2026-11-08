@@ -66,6 +66,7 @@
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "client/LanguageOptions.h" //6차: 옵션 메뉴 Language 하위 메뉴가 한국어 번호(kKoreanLanguageNumber)를 쓴다.
 #include "client/GameMenuActions.h"
+#include <ctime> //동맹 요청 제한은게임/벽시각대신실제CRT clock32를각원문위치에서읽는다.
 #include "client/ViewKeyInput.h"
 #include "client/PauseKeyInput.h" //Pause 가상키도 같은 일반 Pause 명령 FIFO를 정지 관문 전에 사용한다.
 #include "client/RotationKeyInput.h" //C/c는 World 없이도 같은 현재 Client 옵션을 반전하는 일반 입력이다.
@@ -174,7 +175,8 @@
 #include "o/RawSavedStateRead.h" //startupStateCheck의 실제 저장 파일 부재 관문도 원문 reader에서 판정한다.
 #include "o/RawBattleReconnect.h" // 저장 질문/서버 실패의 실제 같은 후보 선택 부모를 사용한다.
 #include "o/RawConnectionHealth.h" // 실제 프레임의 연결 활동/지연/자동 서버 이전을 같은 상태에 연결한다.
-#include "o/RawBattleResourceFrame.h" // Kernel 뒤 같은 장기 자원 전역의 프레임을 실행한다.
+#include "o/RawBattleResourceFrame.h"
+#include "o/RawBattleCompletion.h" //기존현재팀/flag판정과44ac30후반프레임을같은Player/State에연결한다. // Kernel 뒤 같은 장기 자원 전역의 프레임을 실행한다.
 #include "client/ClientConnectionActivityGlobals.h" // 수신과 프레임 감시가 같은22칸/기한/자동 이전 DWORD를 빌린다.
 #include "client/SavedStateFileRead.h" // 같은 startup reader를 실제 사용자 FILE/Player/Core에 연결한다.
 #include "client/SavedStateFiles.h" //State1/3의 같은 저장파일 이름/State3 정리를 실제 설치 경로에 연결한다.
@@ -485,7 +487,7 @@ void UberGump::ReleaseCurrentGuideMission() {
 // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
     CloseLanLobby();lan_.reset();state_.Cancel("LoadLanBattleWorld"); // Player 주소를 다시 만들기 전에 제어 연결과 이전 일반 시작 요청을 반납한다.
-    if (world_ && world_->Session().ConnectionCallbackActive()) throw std::logic_error("패킷 콜백 실행 중 전체 World 정리 재진입"); // UI/공유 저장소를 일부 반납하기 전에 전체 정리를 거부한다.
+    if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaWorld && editor_->metaWorld->ConnectionCallbackActive())) throw std::logic_error("패킷 콜백 실행 중 전체 World 정리 재진입"); // UI/공유 저장소를 일부 반납하기 전에 전체 정리를 거부한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseSaveFortNameDialogs(); // 숫자 창도 현재 Session의 확정 장치를 반납한 뒤 월드를 해제한다.
     ClearPage(); // 현재 부모의 OnExit를 월드/미션 수명보다 먼저 같은 큐에 반납한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseEditorIslandWindows(); // 창/루트 드래그의 실제 Session 대여를 월드보다 먼저 반납한다.
@@ -536,7 +538,7 @@ void UberGump::RetireWorldForState() {
 // 같은34Effect/직접 전역/Runtime 조정기를 실제 공통 UI와 원문 부모 위치에 연결한다.
 void UberGump::CleanupNativeStateWorld(std::uint32_t reason,std::shared_ptr<MetaConnectionRuntime> handoff) {
     if (handoff && (!editor_ || editor_->metaTransport!=handoff)) { const auto current=world_ ? world_->Session().SharedConnectionTransport():nullptr;if (!current || !current->SharesNetwork(handoff->SharedNetwork())) throw std::logic_error("Native State7의 현재 World/메타 인계 owner 불일치"); } //인계후에도같은실제장치인Source만허용하며다른World 콜백보호는아래유지한다.
-    if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive() && editor_->metaTransport!=handoff)) throw std::logic_error("패킷 콜백 실행 중 Native/LAN 정리 금지");CloseLanLobby(); //제어 연결이 빌린 Player 주소를 재할당하기 전에 현재 callback 대여부터 확인한다.
+    if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaWorld && editor_->metaWorld->ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive() && editor_->metaTransport!=handoff)) throw std::logic_error("패킷 콜백 실행 중 Native/LAN 정리 금지");CloseLanLobby(); //제어 연결이 빌린 Player 주소를 재할당하기 전에 현재 callback 대여부터 확인한다.
     ClientStateWorldDevices devices;devices.cancelInitialCursor=[this] { CancelClientCursorForState(client_,*client_.SurfaceStorage()); };
     devices.killGumps=[this] { KillGumpsForState(); };devices.cleanupGumps=[this] { CleanupGumpsForState(); };devices.replaceUber=[this] { ReplaceHudForState(); };devices.refreshSp=[this] { RefreshStormPower(); };
     devices.retireRuntime=[this] { RetireWorldForState(); };devices.assertion=[](auto line) { throw std::logic_error("원문 State 중복 모드 진단:"+std::to_string(line)); };
@@ -1440,6 +1442,11 @@ void UberGump::Event(InputEvent event) {
     if (transitionCode==0x020000f5U) { if (!(event.code&InputCode::kRelease)) client_.LocalStateGlobals()->Begin()=1;return; } // ServerForceBattleStart는 원문처럼 Begin만1을 쓰며 다음 타이머가 실제6e를 송신한다.
     if (transitionCode==0x020000acU) { if (!(event.code&InputCode::kRelease)) static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile()));return; } // DelStateFile은4b5880처럼 현재 경로를 작성해 unlink하고 반환을 무시한다. 새 상태 요청/월드 반납을 추가하지 않는다.
     if (transitionCode==0x020000abU || transitionCode==0x020000a9U) { if (!(event.code&InputCode::kRelease)) RequestBattleReconnect(transitionCode==0x020000abU);return; } // StateReconnect는1, ForceServerDeath는0을 같은004b8cb0 부모에 전달한다.
+    o::AllianceRequestInputHooks allianceInput; //Guide/Gump 뒤 같은 일반 뗌 관문을 재사용하며 Console/정지보다 먼저 원문 협상 명령을 처리한다.
+    allianceInput.clock=[] { return static_cast<std::uint32_t>(std::clock()); };allianceInput.localOwner=[this] { return client_.GameplayGlobals()->player.battleOwner; };
+    allianceInput.send=[this](auto packet) { static_cast<void>(client_.ConnectionGlobals()->SendMutable(9,packet,client_.PlayerRecords()->Records())); }; //World/loaded/새Login관문없이현재서버9의원문슬롯/Player/NULL관문에맡긴다.
+    allianceInput.tell=[this](auto text) { Tell(std::string(text)); };
+    if (o::HandleAllianceRequestInput(event.code,event.y,client_.ChatWindowGlobals()->allianceRequests,client_.PlayerRecords()->Records(),allianceInput)) return;
     if (transitionCode==0x02000122U) { if (!(event.code&InputCode::kRelease)) { if (!world_) throw std::logic_error("강제 동맹 일반 입력의 현재 World 없음");world_->Session().RequestForcedAlliance(std::bit_cast<std::uint32_t>(event.y)); }return; } // 원문 팀 시작/동맹 요청도 같은 일반 입력 위치에서78h만 송신한다.
     if (DispatchTellTip(event,client_.LocalStateGlobals()->TipNumber(),{
         [](std::int32_t value) { char text[32]{};std::snprintf(text,sizeof(text),"%d",value);return std::string(text); }, //원문 호출자의 지역 버퍼와 signed 정수 서식만 사용한다.
@@ -1598,7 +1605,7 @@ void UberGump::Event(InputEvent event) {
         if (event.code&InputCode::kRelease) return; // Guide가 소비한 Abort와 달리 실제 Leave는 원본 일반 입력의 key-up 거부 뒤에 실행한다.
         if (event.y>=1 && client_.Assets().Edition()==o::OriginalEdition::Patch1078) {
             auto& local=*client_.LocalStateGlobals();auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
-            PrepareBattleLeaveState(event.y,{{local.State(),local.AbortPending(),client_.WorldAudio().ResultState(),game.world.missionPost,game.world.editor,surface.ownerMode.challenge,surface.ownerMode.battle},local.ScriptBreak(),local.SourceType(),game.player.playerKnown},[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile())); }); // 실제 양수 부모의 이유2/3/9·두 삭제/부분 효과를 공유하며 다음 Tick에 정리한다.
+            PrepareBattleLeaveState(event.y,{{local.State(),local.AbortPending(),client_.WorldAudio().ResultState(),game.world.missionPost,game.world.editor,surface.ownerMode.challenge,surface.ownerMode.battle},local.ScriptBreak(),local.SourceType(),game.player.playerKnown},[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile())); },[this,reason=event.y] { client_.GameplayGlobals()->RequireSession().FinalizeBattleLeave(reason); }); // 실제 양수 부모의 이유2/3/9·두 삭제/부분 효과를 공유하며 다음 Tick에 정리한다.
             return; //실제 다음 Poll의 State3에 종료 통지·정리·메뉴를 맡기며 사건 수신 중 World를 반납하지 않는다.
         }
         MainMenu();if (client_.Audio()) client_.Audio()->StartScene(false);return; //CD판은 기존 호스트 경로다.10.78의 확인 요청/양수 이탈은 위의 별도 원문 경로가 처리한다.
@@ -1701,7 +1708,7 @@ bool UberGump::Input() {
 }
 // 예약 명령은 메시지/입력보다 앞서 실행한다(원본 004b88c0 자리).
 void UberGump::Tick() {
-    if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive())) return; //재진입 Tick의 State/후속 명령 전체를 현재 수신 뒤 정상 Tick까지 유지한다.
+    if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaWorld && editor_->metaWorld->ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive())) return; //재진입 Tick의 State/후속 명령 전체를 현재 수신 뒤 정상 Tick까지 유지한다.
     const auto action=state_.TakeAfterPoll([this] { if (client_.LocalStateGlobals()->State().next[0]==7 && !pendingMetaBattleSource_.expired()) PollEditorState();else if (!(world_ && world_->Session().PollLocalConnectionState())) PollEditorState(); }); //1ah의같은next7은현재World가있어도외부전체State7로처리하며Poll을두번소비하지않는다. 나머지기존미션/Guide/timeout순서는유지한다.
     const bool loading = state_.phase == ClientPhase::LoadingMission;
     if (action) Execute(*action);
@@ -1711,14 +1718,18 @@ void UberGump::Tick() {
 }
 // 실제 로컬 큐는 일반 원문 슬롯4에서 진행하며 완료가 Guide/입력보다 먼저 현재 UI를 설치한다.
 void UberGump::PollMissionPackets() {
-    PollLanLobby(); // 대기실 callback이 반환한 뒤에만 다음 Tick의 World 교체를 예약한다.
-    const auto previousWorld=world_;const auto meta=editor_ ? editor_->metaTransport:nullptr; //콜백이 UI의 메타 필드를 반납해도 실제 전체 TCP/UDP owner는 외곽 복귀까지 살아 있다.
-    if (meta) { meta->Pump();if (world_!=previousWorld) return; } //World없는메타도같은slot4에서TCP→UDP수신을진행하며66h발견은같은Run을동기실행한다.
-    const auto world=world_; // 이 폴링과 완료 후처리가 끝날 때까지 실제 표시/Session 소비자를 함께 보유한다.
-    if (!world || world->PreparingFort()) return;world->Session().PumpLocalConnection();
-    if (world_!=world) return; // callback이 현재 호스트를 바꿨으면 이전 결과를 새 월드에 공개하지 않는다.
+    PollLanLobby(); //대기실 callback은 기존과 같이 다음 Tick의 World 교체만 예약한다.
+    const std::weak_ptr<GameWorld> previousWorld=world_;const auto meta=editor_ ? editor_->metaTransport:nullptr; //수신 중 실제 Source만 보유하며 이전 World는 control-block 정체성만 남긴다.
+    const auto changedWorld=[this,&previousWorld] { const std::weak_ptr<GameWorld> current=world_;return previousWorld.owner_before(current) || current.owner_before(previousWorld); }; //주소 재사용도 다른 세대로 구별하며 old World를 strong으로 복구하지 않는다.
+    if (meta) { meta->Pump();if (changedWorld()) return; } //합법1bh의 동기 State7은 실제 이전 Runtime을 소멸시켜 Pool을 재대여할 수 있다.
+    std::function<std::size_t()> poll; //실제 전송 Source만 보유하는 action이며 World/Session 소유권과 분리한다.
+    { const auto prefixWorld=world_;if (!prefixWorld || prefixWorld->PreparingFort()) return;poll=prefixWorld->Session().PrepareClientPacketPoll(); } //송신 prefix 동안만 실제 World를 보유하고 수신 전에 반납한다. 10.72의 기존 비Composite 접합도 같은 전체 owner를 사용한다.
+    if (poll) static_cast<void>(poll()); //이 지점에는 old World/Session strong 참조나 RuntimeCall이 없고 Source 수신은 끝까지 살아 있다.
+    if (changedWorld()) return; //현재 World가 바뀌면 이전 Session의 loaded/타이머/후처리를 읽지 않는다.
+    const auto world=world_; //수신이 끝난 뒤 동일한 현재 World의 완료 후속에만 strong owner를 선택한다.
+    if (!world) return;
     if (world->Connecting() && !missionRuntime_ && ((lan_ && lan_->start && lan_->start->consumed) || (nativeBattleStart_ && nativeBattleStart_->consumed)) && world->CompleteLocalConnection()) { FinishLanBattleWorld();nativeBattleStart_.reset(); }
-    else if (world->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken && world->CompleteLocalConnection()) FinishMissionWorldLoad(); // 이전 미션이면 호스트 World의 공개도 건너뛰고 원래 cleanup까지 닫아 둔다.
+    else if (world->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken && world->CompleteLocalConnection()) FinishMissionWorldLoad();
 }
 // 원본 루프8번에서 현재 Guide의 상태/창 관문과0..6 단계를 한 번 실행한다.
 void UberGump::MissionFrame() {
@@ -1729,6 +1740,18 @@ void UberGump::PrepareKernelFrame() { if (world_) world_->PrepareKernelFrame(); 
 // 현재 단일 Kernel의 이동/생성/삭제가 끝난 같은 프레임에서만 표시 사본을 갱신한다.
 void UberGump::FinishKernelFrame() { if (world_) world_->FinishKernelFrame(); }
 // 실제 World가 없는 메뉴도 원문 boss/옵션을 유지하고 현재 전역 조회 뒤 자연 반환한다.
+//44ac30은메뉴에서도네SID진단을먼저실행하며실제일반battle/서버객체/State14뒤에만Session사제를요구한다.
+void UberGump::PollBattleCompletion() {
+    auto& game=*client_.GameplayGlobals();auto& local=*client_.LocalStateGlobals();auto& surface=*client_.SurfaceStorage();
+    o::BattleCompletionHooks gate;gate.serverConnection=[this] { return client_.ConnectionGlobals()->Cleanup().transceivers[9]!=0; }; //4e2b10은open/LoggedIn이아닌현재객체존재다.
+    gate.priestDead=[this](auto owner) { return client_.GameplayGlobals()->RequireSession().MissionPriestDead(owner); };gate.currentPlayers=[this] { return client_.PlayerRecords()->Records(); };
+    o::RawBattleCompletion completion({client_.PlayerRecords()->Records(),*missionOptions_,client_.PlayerRecords()->Alliances(),surface.ownerMode.battle,game.world.missionPost,game.Boss(),local.ScriptBreak(),local.LoginEnd()},std::move(gate));
+    o::BattleCompletionFrameHooks hooks;hooks.wallSeconds=[this] { return client_.WallSeconds(); };hooks.currentDialog=[this] { return rawButtons_->CurrentDialog(); };
+    hooks.assertion=[storage=client_.SurfaceStorage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); };
+    hooks.deleteSavedState=[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile())); }; //같은실제사용자저장파일writer를재사용하며반환값을성공값으로합성하지않는다.
+    hooks.rejectDraw=[this] { client_.GameplayGlobals()->RequireSession().RejectDraw(); };hooks.queueMainMenu=[this] { client_.Input().PushCommand(GameMenuCommandValue(0x00542a08U).value(),1,1); };
+    auto& aux=*game.GameAux();completion.Frame({client_.PlayerRecords()->Records(),game.Server(),local.State().phase[0],game.player.battleOwner,local.CaptureEnd(),aux.ScheduledDrawDeadline(),aux.BattleFinishFrames(),client_.WorldAudio().ResultState(),client_.Time().game},hooks);
+}
 void UberGump::PollBattleResources() {
     if (world_) { if (!world_->PreparingFort()) world_->Session().RunBattleResources();return; }auto& game=*client_.GameplayGlobals();auto& local=*client_.LocalStateGlobals();
     const auto storage=client_.SurfaceStorage();o::BattleResourceFrameHooks hooks; //메뉴의 같은 장기 Pool/TYPE/목록을 빌리며 빈 World나 생성 성공값을 만들지 않는다.

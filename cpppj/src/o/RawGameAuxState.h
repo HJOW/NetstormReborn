@@ -1,4 +1,4 @@
-// 게임 보조 전역의 실제 폭만 소유하며 Runtime/목록/Host를 포함하지 않는다.
+//게임 보조 전역과 NUL 종료 타입 사용256BYTE를 소유하며 Runtime/Host 객체는 포함하지 않는다.
 #pragma once
 #include "o/RawSquidTransmission.h" // 같은Client의공통버퍼/압축전역을World/Session과공유한다.
 #include <bit>
@@ -9,6 +9,8 @@
 namespace netstorm::o { // Gameplay/Storage가 같은 주소를 pin하는 작은 게임 데이터 owner다.
 class RawGameAuxState {
 public:
+    std::array<std::uint8_t,256>& TypeUse() { return typeUse_; } //005451f8의 NUL 종료 타입 사용 목록이며 Login/69h가 같은 장기256BYTE를 직접 빌린다.
+    const std::array<std::uint8_t,256>& TypeUse() const { return typeUse_; } //World/Session 대여와 반납이 현재 목록을 복사하거나 초기화하지 않는다.
     std::array<std::uint8_t,2>& Packet0cHeader() { return packet0cHeader_; } //0052ed54/55의현재0ch메시지/프로토콜이며원문버전조회/디버그burst의공용전역을보관한다.
     const std::array<std::uint8_t,2>& Packet0cHeader() const { return packet0cHeader_; } //Session/World교체뒤에도같은현재BYTE두개를읽는다.
     std::uint16_t& Packet0cInitialLength() { return packet0cInitialLength_; } //00544c24의BSS WORD0을생성순간읽으며실제송신observer의최종길이와구별한다.
@@ -34,6 +36,7 @@ public:
     const double& CleanupDeadline() const { return cleanupDeadline_; } // 의미 미확정의 현재 값을 그대로 빌린다.
     double& SecondaryGeyserDeadline() { return secondaryGeyserDeadline_; } //005950c8: b8과 별개인 게임 프레임 기한이다.
     const double& SecondaryGeyserDeadline() const { return secondaryGeyserDeadline_; } // 현재8BYTE를 그대로 읽는다.
+    std::uint8_t& BattleFinishFrames() { return battleFinishFrames_; } //0055a44c의BSS0 BYTE이며44ac30의signed비교/증가와실제결과확정만쓴다.
     double& ScheduledDrawDeadline() { return scheduledDrawDeadline_; } //00595358: Draw/Dais 부모가 읽는 별도 게임 기한이다.
     const double& ScheduledDrawDeadline() const { return scheduledDrawDeadline_; } // 미복원 부모의 예약을 Session 생성으로 지우지 않는다.
     std::int32_t& TotalCost() { return totalCost_; } //0059508c: 실제 Pop/삭제 장부의 signed 비용 DWORD다.
@@ -71,6 +74,10 @@ public:
     std::uint32_t& RegularProcessType() { return regularProcessType_; } //00541128: 일반 예약 생성과 종속 조회가 공유하는 현재 DWORD다.
     std::uint32_t& GunProcessType() { return gunProcessType_; } //005410f8의 현재 총 프로세스 TYPE를 신규 생성/전체 수신이 함께 읽는다.
     std::uint32_t& ConstructionProcessType() { return constructionProcessType_; } //005410e8의 현재30이며 일반 생성/수신/볼텍스가 같은 DWORD를 읽는다.
+    std::uint32_t& DaisProcessType() { return daisProcessType_; } //00541158의 현재58이며 asset DaisType165와 별개인 수신 부착 TYPE다.
+    const std::uint32_t& DaisProcessType() const { return daisProcessType_; } // World/Session 교체에서 같은 장기 DWORD를 재초기화하지 않는다.
+    std::span<std::uint8_t,2> DaisProcessHeader() { return daisProcessHeader_; } //00532690/91의 현재6a/message·1/protocol BYTE를 그대로 빌린다.
+    std::span<const std::uint8_t,2> DaisProcessHeader() const { return daisProcessHeader_; } // writer의 protocol bit7도 지우지 않는 같은 두BYTE다.
     std::span<std::uint8_t,2> ConstructionHeader() { return constructionHeader_; } //005325b8/b9의 현재 메시지/프로토콜BYTE를 그대로 빌린다.
     std::int32_t& PathTraceLevel() { return pathTraceLevel_; } //00540c68의 현재 경로 수신 로그 수준이며 FILE 포인터와 다르다.
     std::uint32_t& IslandDropBlocked() { return islandDropBlocked_; } //0054db84의 섬 정리 억제 DWORD이며 로딩 깊이와 독립인 장기 BSS다.
@@ -158,6 +165,8 @@ public:
         lostY_=std::bit_cast<float>(0xc61c4000U);lostX_=std::bit_cast<float>(0xc61c4000U);
     }
 private:
+    std::array<std::uint8_t,256> typeUse_{}; //005451f8의 최초 BSS0이며 명시 ClearTypes만 정확256BYTE를0으로 쓴다.
+    std::uint8_t battleFinishFrames_{}; //0055a44c를같은Client수명으로보관하며World/Session교체로초기화하지않는다.
     std::array<std::uint8_t,2> packet0cHeader_{0x0c,1}; //보호10.78 PE0052ed54/55의초기헤더이며일반월드fresh에서도덮어쓰지않는다.
     std::uint16_t packet0cInitialLength_{}; //00544c24의최초BSS0이며버전조회/디버그burst의현재생성WORD다.
     std::uint32_t stateNotifyType_{82}; // 보호10.78 PE005411a0의 초기 DWORD이며 실제 상태 변경 부모가 현재 번호를 읽는다.
@@ -185,6 +194,8 @@ private:
     std::uint32_t flyerProcessType_{31}; // 보호 PE005410ec의 초기 DWORD이며 홈/생성·후속 writer가 공유할 장기 물리다.
     std::uint32_t gunProcessType_{34}; // 보호 PE005410f8의 초기 DWORD다. World/Session 교체에서 새34를 쓰지 않는다.
     std::uint32_t constructionProcessType_{30}; // 보호 PE005410e8의 최초30이며 World/Session 교체에서 초기화하지 않는다.
+    std::uint32_t daisProcessType_{58}; // 보호 PE00541158의 최초3ah이며 Regular/Dais asset 번호와 공유하지 않는다.
+    std::array<std::uint8_t,2> daisProcessHeader_{0x6a,1}; // 보호 PE00532690/91의 현재 writer 헤더 두BYTE다. 별도 길이 초기값은 없다.
     std::array<std::uint8_t,2> constructionHeader_{0x37,1}; // 보호 PE005325b8/b9의 최초 두BYTE다. 선언 길이는 별도 값으로 추가하지 않는다.
     std::int32_t pathTraceLevel_{99}; // 보호 PE00540c68의 초기99이며 실제 공통 로그의 현재 임계값과 별개다.
     std::uint32_t islandDropBlocked_{},islandStumpType_{96}; // 보호 PE0054db84의 BSS0과005411d8의 최초96이며 Session 대여로 초기화하지 않는다.

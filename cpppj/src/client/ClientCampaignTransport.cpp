@@ -10,6 +10,7 @@
 #include "client/ClientConnectionActivityGlobals.h"
 #include "o/RawConnectionEnded.h"
 #include "client/RawSurfaceWorld.h" //기본 관찰기가 실제 storage의 AssertDisplay를 Session 없이 빌린다.
+#include "o/RawTechnologyTypesPacket.h" //69h는 같은Client의장기목록/현재Session표시와Client관찰기진단을사용한다.
 #include "o/RawMissionClientPackets.h" //2a/2b/67/81의 같은 순수 가변 길이 관찰기 본체를 재사용한다.
 #include <array> //같은 네 송신 관찰기와 Client 기본18행의 고정 목록이다.
 #include <bit>
@@ -107,17 +108,20 @@ void InstallClientMissionSendObservers(Client& client,o::RawPacketDispatch& disp
 void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) {
     InstallClientMissionSendObservers(client,dispatch); //같은 네 순수 관찰기를 재사용하며 실제 기능 수신기를 추가하지 않는다.
     const auto storage=client.SurfaceStorage(); //진단의 장기 Client storage만 보유하고 Session/World/Meta this는 빌리지 않는다.
+    const auto game=client.GameplayGlobals(); //69h 기본 receiver는장기전역만보유하고이전Session/World를고정하지않는다.
+    o::RegisterTechnologyTypesPacket(dispatch,game->GameAux()->TypeUse(),[game](auto type) { auto& session=game->RequireSession();const auto runtimePin=game->PinCurrentRuntime(session);session.IndicateTechnology(type); },
+        [storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); //합집합뒤비영항목마다현재Session/실제전체owner를선택하며반환/예외까지pin한다.빈목록은World를요구하지않는다.
     dispatch.ObservePacket(0x3f,[storage](auto packet,auto sending) { o::FinalizeConstructionPacket(packet,sending!=0,[storage] { storage->AssertDisplay("sidCount != (unsigned char)-1","\\Ns\\O\\_p_packets.cpp",0x7c9); }); }); //40a800의 같은 버퍼/진단 정상 복귀 뒤 현재count 재조회다.
     dispatch.Version(0x3f,1,0);dispatch.RequireLength(0x3f,0xffff); // receiver만 Session 대여에 맡기며 원문 기본 metadata/observer는 반납 뒤에도 남긴다.
     for (const auto& entry:kClientPacketDefaults) { //이18종만 version1/policy0/보호 PE 길이에 맞추고 다른 등록에는 손대지 않는다.
         if (entry.mutableObserver) dispatch.ObservePacket(entry.type,[storage,type=entry.type](auto packet,auto sending) { ObserveClientPacketDefault(type,packet,sending,storage); });
         else dispatch.Observe(entry.type,[](std::uint32_t) {}); //40b380의 비NULL ret4이며 NULL observer로 바꾸지 않는다.
         dispatch.Version(entry.type,1,0);dispatch.RequireLength(entry.type,entry.length);
-        if (entry.c3Receiver) dispatch.Register(entry.type,[](std::uint32_t,o::PacketConnection&,std::span<const std::uint8_t>) {}); //4437f0의 실제 ret이며 ACK/반환 성공값/게임 State를 합성하지 않는다.
+        if (entry.c3Receiver) dispatch.RegisterCanonicalDirect(entry.type,0x004437f0U,[](std::uint32_t,o::PacketConnection*,std::span<const std::uint8_t>) {}); //4437f0의 실제 ret이며 ACK/반환 성공값/게임 State를 합성하지 않는다.
     }
     dispatch.ObservePacket(0x0b,[storage](auto packet,auto sending) { ObserveClientPacketDefault(0x0b,packet,sending,storage); }); //409fe0은수신필드를읽지않고송신때만현재extraDataLen/선언WORD를처리한다.
     dispatch.Version(0x0b,1,0);dispatch.RequireLength(0x0b,0xffff); //Client40b4b0의실제버전조회등록이며R의0b인사수신과다르다.
-    dispatch.Register(0x0b,[aux=storage->GameAux(),registry=client.ConnectionGlobals(),players=client.PlayerRecords()](auto sender,auto&,auto) {
+    dispatch.RegisterCanonicalDirect(0x0b,0x004b3af0U,[aux=storage->GameAux(),registry=client.ConnectionGlobals(),players=client.PlayerRecords()](auto sender,auto*,auto) {
         const auto message=aux->Packet0cHeader()[0],protocol=aux->Packet0cHeader()[1];const auto initial=aux->Packet0cInitialLength(); //4b3af0이현재BYTE두개/WORD하나를df590인자로읽는경계다.
         std::array<std::uint8_t,50> packet;packet.fill(0xff); //df590의실제50BYTE예약전체를FF로채우며extraDataLenDWORD도-1그대로남긴다.
         packet[1]=message;packet[0]=static_cast<std::uint8_t>(protocol&0x7fU);WriteClientPacketDefaultLength(packet,initial<4 ? 4:initial); //생성자는선언길이를최소4로올리고실제wire길이는현재송신observer가나중에정한다.

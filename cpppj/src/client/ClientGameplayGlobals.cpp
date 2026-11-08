@@ -3,10 +3,18 @@
 #include "client/ClientSubscriberGlobals.h"
 #include "o/RawTerrainBitmap.h"
 #include "o/RawTerrainStamp.h"
+#include <limits> //호스트 실행 pin 호출 수의 넘침만 명시 실패시킨다.
 #include <stdexcept>
 #include <utility>
 
 namespace netstorm::client {
+//실제 전체 Runtime을 먼저 보유하고 난 뒤 호출 수를 올리며 반환 때 자식 owner보다 먼저 호출 수를 반납한다.
+struct ClientGameplayGlobals::RuntimeCall {
+    std::size_t& calls; //실제 현재 Gameplay owner의 배송 중 호출 장부다.
+    std::shared_ptr<void> owner; //GameWorld 또는 EditorRuntime 전체이며 임의 표식 토큰이 아니다.
+    RuntimeCall(std::size_t& current,std::shared_ptr<void> selected):calls(current),owner(std::move(selected)) { if (calls==std::numeric_limits<std::size_t>::max()) throw std::overflow_error("현재 Runtime 배송 호출 수 넘침");++calls; } //할당/owner 선택 실패는 호출 수를 바꾸지 않는다.
+    ~RuntimeCall() { --calls; } //owner member가 소멸해 Session을 반납하기 전에 실행 종료를 기록한다.
+};
 namespace { // 게임 fresh가 실제 별도 기록 전역을 지우지 않도록 커서 부분만 초기화한다.
 void ResetGameplayCursor(CursorDropState& cursor) {
     const auto recording=cursor.recording,recorder=cursor.recorder;cursor=CursorDropState{.lockDepth=1};cursor.recording=recording;cursor.recorder=recorder; // 별도0059a7dc/e8만 유지하고 기존 커서 초기화 계약은 그대로 적용한다.
@@ -31,15 +39,16 @@ ClientGameplayGlobals::Use::Use(ClientGameplayGlobals& globals,bool prepared):gl
     globals_.selection.ResetForGeneralWorld(); // 기존 일반 GameWorld의 fresh 입력 호환이다. prepared와 반납에서는 이 전역을 암묵 초기화하지 않는다.
 }
 // Player/커서의 기존 C++ 소멸 의미를 장기 전역의 명시 무효화로 바꾸며 두 Subscriber는 유지한다.
-ClientGameplayGlobals::Use::~Use() { globals_.current_=nullptr;if (!prepared_) { globals_.player.playerKnown=0;ResetGameplayCursor(globals_.cursor);globals_.cursorGlobals_.ResetForGeneralWorld();globals_.world.editor=0; }globals_.borrowed_=false; }
+ClientGameplayGlobals::Use::~Use() { globals_.runtimeOwner_.reset();globals_.runtimeOwnerSession_=nullptr;globals_.current_=nullptr;if (!prepared_) { globals_.player.playerKnown=0;ResetGameplayCursor(globals_.cursor);globals_.cursorGlobals_.ResetForGeneralWorld();globals_.world.editor=0; }globals_.borrowed_=false; }
 // 완성 전의 부분 생성 객체를 실제 게임 효과 대상으로 노출하지 않는다.
 void ClientGameplayGlobals::Use::Publish(RawCampaignSession& session) { if (globals_.current_) throw std::logic_error("현재 게임 Runtime 중복 연결");globals_.current_=&session; }
 // 현재 실제 객체의 공개 메서드가 부분 반납된 Impl을 다시 읽지 않도록 한다.
-void ClientGameplayGlobals::Use::Withdraw(RawCampaignSession& session) { if (globals_.current_!=&session) throw std::logic_error("현재 게임 Runtime 반납 불일치");globals_.current_=nullptr; }
+void ClientGameplayGlobals::Use::Withdraw(RawCampaignSession& session) { if (globals_.current_!=&session) throw std::logic_error("현재 게임 Runtime 반납 불일치");if (globals_.RuntimeCallActive(session)) throw std::logic_error("실제 Runtime 배송 종료 전 공개 반납");globals_.runtimeOwner_.reset();globals_.runtimeOwnerSession_=nullptr;globals_.current_=nullptr; }
 // 자식 정리 증빙은 실제 Session 소멸자가 먼저 검사하며 이 함수는 같은 공개 대상의 C++ 대여 정책만 바꾼다.
 void ClientGameplayGlobals::Use::WithdrawForState(RawCampaignSession& session) {
     if (!globals_.borrowed_ || globals_.current_!=&session) throw std::logic_error("State 반납의 같은 현재 게임 Runtime 필요");
-    prepared_=true;globals_.current_=nullptr;
+    if (globals_.RuntimeCallActive(session)) throw std::logic_error("실제 Runtime 배송 종료 전 State 반납");
+    globals_.runtimeOwner_.reset();globals_.runtimeOwnerSession_=nullptr;prepared_=true;globals_.current_=nullptr;
 }
 // 실제 대여 객체가 모든 주소를 반납할 때까지 단일 상태를 유지한다.
 std::unique_ptr<ClientGameplayGlobals::Use> ClientGameplayGlobals::Acquire() { return std::unique_ptr<Use>(new Use(*this)); }
@@ -47,6 +56,19 @@ std::unique_ptr<ClientGameplayGlobals::Use> ClientGameplayGlobals::Acquire() { r
 std::unique_ptr<ClientGameplayGlobals::Use> ClientGameplayGlobals::AcquirePrepared() { return std::unique_ptr<Use>(new Use(*this,true)); }
 // 미연결 게임 효과를 빈 성공/가짜 Session으로 대체하지 않는다.
 RawCampaignSession& ClientGameplayGlobals::RequireSession() const { if (!current_) throw std::logic_error("선택한 생산 효과의 현재 게임 Runtime 미연결");return *current_; }
+//실제 외곽 owner가 구성된 뒤 공개하며 callback 중 owner/현재 Session을 몰래 바꾸지 않는다.
+void ClientGameplayGlobals::BindRuntimeOwner(RawCampaignSession& session,const std::shared_ptr<void>& owner) {
+    if (!owner || current_!=&session) throw std::invalid_argument("현재 Session과 실제 Runtime owner 공개 불일치");
+    if (runtimeCalls_) throw std::logic_error("실제 Runtime 배송 중 owner 재공개");runtimeOwner_=owner;runtimeOwnerSession_=&session;
+}
+//현재 목록/권한 분기가 실제 Session 하위를 선택한 위치에서만 실제 외곽 owner를 strong으로 빌린다.
+std::shared_ptr<void> ClientGameplayGlobals::PinCurrentRuntime(RawCampaignSession& session) {
+    if (current_!=&session || runtimeOwnerSession_!=&session) throw std::logic_error("선택한 현재 Runtime의 실제 owner 미공개");
+    const auto owner=runtimeOwner_.lock();if (!owner) throw std::logic_error("선택한 현재 Runtime의 실제 owner 수명 종료"); //weak 공개만으로 소유권을 가장하지 않는다.
+    return std::make_shared<RuntimeCall>(runtimeCalls_,owner);
+}
+//전체 owner가 살아 있어도 명시 Pool/Player/unique 자식 reset은 같은 배송 수명을 따로 존중해야 한다.
+bool ClientGameplayGlobals::RuntimeCallActive(const RawCampaignSession& session) const noexcept { return runtimeOwnerSession_==&session && runtimeCalls_!=0; }
 // 전역 대여 관측은 아무 게임 값을 바꾸지 않는다.
 bool ClientGameplayGlobals::Borrowed() const { return borrowed_; }
 // 실제 Subscriber 소유자의 정체성을 조회한다.

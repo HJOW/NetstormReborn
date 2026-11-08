@@ -16,7 +16,7 @@ struct UberGump::EditorRuntime {
     std::function<void()> connectLan; // 실제 로컬 host/join 선택을 같은 일반 입력 소비자에 연결한다.
     explicit EditorRuntime(Client& value):client(value),files(ResolveEditorRoots(value.GameDirectory(),value.UserData()).work,ResolveEditorRoots(value.GameDirectory(),value.UserData()).protectedRoots) {} //기존에는 자산 디렉터리의 형제 작업본, 5차 사용자 홈 정책에서는 CustomMaps를 작업 루트로, 같은 보호 루트를 선택한다. 생성만으로 파일/게임 상태를 쓰지 않는다.
     //호스트 메인 메뉴/종료에서 Session 수신기를 반납한 뒤 남은 실제 양끝/리스너를 닫는다.
-    void Close() { metaInput.reset();metaDisplay.reset();metaWorld.reset();if (transport) { client.ConnectionGlobals()->CloseAll();transport->CloseListener();transport.reset(); }metaTransport.reset(); } //호스트 종료는 입력/출력기를 먼저 닫은 뒤 실제 메타 Session/노드를 자기 owner로 반납한다.
+    void Close() { if (metaWorld && metaWorld->ConnectionCallbackActive()) throw std::logic_error("실제 Meta Runtime 배송 중 unique 자식 종료");metaInput.reset();metaDisplay.reset();metaWorld.reset();if (transport) { client.ConnectionGlobals()->CloseAll();transport->CloseListener();transport.reset(); }metaTransport.reset(); } //호스트 종료는 입력/출력기를 먼저 닫은 뒤 실제 메타 Session/노드를 자기 owner로 반납한다.
     //큐/노드 소유권은 기존 전송의 SocketClosed/Track이 처리하고 이 경계는 실제 시각과 진단만 제공한다.
     o::PacketDispatchHooks Hooks() {
         o::PacketDispatchHooks hooks;hooks.now=[this] { return static_cast<std::uint32_t>(client.WallSeconds()); };
@@ -28,7 +28,7 @@ struct UberGump::EditorRuntime {
 };
 // 실제 파일 조회가 처음 필요할 때만 장기 작업 namespace의 장치를 만든다. World/Player/State 성공은 쓰지 않는다.
 EditorFortFileDevices& UberGump::EnsureEditorFortFiles() {
-    if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);if (editor_->paths) return *editor_->paths;auto& e=*editor_;
+    if (!editor_) editor_=std::make_shared<EditorRuntime>(client_);if (editor_->paths) return *editor_->paths;auto& e=*editor_;
     EditorFortPathEffects paths;paths.currentName=[this] { return client_.FortGlobals()->Current(); };paths.selectFileSpec=[this] { mapFileSpec_.SelectFort(); };paths.fileSpecKey=[this] { return mapFileSpec_.Current(); };
     paths.resolve=[this](auto configured) { return editorCatalog_->Resolve(configured); };paths.prepare=[this](auto configured) { static_cast<void>(editorCatalog_->Prepare(configured)); }; //현재 경로와 lazy 준비 모두 같은 이관 장부/삭제 상태를 공유한다.
     paths.assertion=[](auto line) { std::clog<<"Editor 파일 진단 "<<line<<'\n'; };e.paths=std::make_unique<EditorFortFileDevices>(e.files,client_.Files(),client_.Configuration(),std::move(paths));
@@ -44,7 +44,7 @@ void UberGump::OpenSendMoneyDialog(std::uint32_t target) {
 // 원문 이름 대화창은 현재 작업본과 Template 헤더를 동기 호출 동안 그대로 빌린다.
 void UberGump::OpenSaveFortNameDialog(std::uint32_t fortMode) {
     if (fortMode && (!world_ || !client_.GameplayGlobals()->world.editor)) throw std::logic_error("실제 Editor 밖의 Save as 파일 장치 미연결");
-    if (!editor_) editor_=std::make_unique<EditorRuntime>(client_); // mode0 새 이름 창은 World/State1 이전에도 같은 작업 파일 장치를 빌린다.
+    if (!editor_) editor_=std::make_shared<EditorRuntime>(client_); // mode0 새 이름 창은 World/State1 이전에도 같은 작업 파일 장치를 빌린다.
     SaveFortNameDialogContext context;context.work=&editor_->files;context.currentName=client_.FortGlobals()->Current();context.editor.now=[this] { return client_.WallSeconds(); };
     BindTextClipboard(context.editor,textClipboard_); //최초 Chat이 이미 만든 공통 문자 UI와 같은 장치를 계속 빌린다.
     context.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
@@ -89,6 +89,7 @@ o::LocalMissionParentResult UberGump::InstallPreparedFortState(bool prefixHud,st
     services.templateStorage=templateStorage_;services.missionOptions=missionOptions_;services.missionRestrictions=missionRestrictions_;services.editorTransport=e.transport;services.fortMission=FortMissionSaveEffects();
     services.fortBadges=client_.FortBadges();services.fortTypeConversion=client_.FortTypeConversion(); //기존 파일의 실제 장부/변환표를 캠페인과 같은 Client owner에서 빌린다.
     world_=std::make_shared<GameWorld>(client_.Assets(),client_.Files(),o::FortTemplate{},o::MissionPlayers{},pending,std::move(services),ScreenPoint{client_.GetScreen().Width(),client_.GetScreen().Height()},true);
+    client_.GameplayGlobals()->BindRuntimeOwner(world_->Session(),world_); //Login/Composite가없는기존Editor도공유생성뒤현재실제GameWorld전체를weak공개한다.
     world_->elapsed=[this] { return client_.Time().delta; };world_->paused=[this] { return client_.Paused(); };world_->frameTime=[this] { return client_.Time(); };
     world_->BindHideBuildings([this] { return hideBuildings_; });world_->soundViewChanged=[this](auto view) { client_.WorldAudio().SetView(view); };
     world_->surfaceDisplay={[this] { return client_.GetRenderer().FullRedrawPending(); },[this](auto rect,auto flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
@@ -277,10 +278,10 @@ o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t sele
 // 미션 Login은 기존 분배기에 남기고 Edit1/2·메인3·인트로39~42과 다음4를 같은 분배기로 처리한다.
 void UberGump::PollEditorState() {
     auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];const bool fort=next==1 || next==2 || next==6; // 일반 복귀6도 같은 Fort 설치/공통 확정을 사용하며 첫 배경/결과만 전용 부모가 처리한다.
-    const auto battleSource=pendingMetaBattleSource_.lock();const bool metaBattle=next==7 && battleSource;const auto previousWorld=metaBattle ? world_:nullptr; //이미 일반 World여도1ah의같은Source가예약한현재next7을같은분배기로처리한다.
+    const auto battleSource=pendingMetaBattleSource_.lock();const bool metaBattle=next==7 && battleSource; //이미 일반 World여도1ah의같은Source가예약한현재next7을같은분배기로처리한다.
     const bool metaIdle=next==0 && !world_ && editor_ && editor_->metaWorld && client_.SurfaceStorage()->ownerMode.challenge; //새 상태가 없어도 원문 Poll의 메타 표시/NSInfo 예약은 실제 현재 World에서 소비한다.
     if (!fort && next!=3 && !(next>=19 && next<=38) && !(next>=39 && next<=42) && !(editor_ && next==4) && !metaIdle && !metaBattle) return; //메타19~38 전체와 next0의 현재 메타 Poll을 같은 장기 분배기에 전달한다.
-    if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);
+    if (!editor_) editor_=std::make_shared<EditorRuntime>(client_);
     if (!editor_->state) { // 새 이름 창에서 먼저 확보한 파일 장치가 있어도 실제 State 분배기는 별도로 처음 한 번 구성한다.
         auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
         o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.parentState=[this](auto selected) { if (selected>=39 && selected<=42) return InstallIntroNativeState(selected);if (selected==19) return InstallMetaNativeState(selected);if (selected>=20 && selected<=38) return InstallMetaConnectionState(selected);if (selected==6) return InstallBattleReturnNativeState(selected);return selected==3 ? InstallMainMenuNativeState(selected) : InstallExistingEditorState(selected); };
