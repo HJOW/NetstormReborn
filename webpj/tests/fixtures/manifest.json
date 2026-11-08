@@ -11185,9 +11185,71 @@
       "bytes": 847328,
       "lines": 3536,
       "fixtureCommit": "d1b13bac",
-      "webCommit": "worktree",
+      "webCommit": "07806ebe",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionEffects.cpp": "4717dff5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E136",
+      "id": "canontype",
+      "path": "cpppj/tests/fixtures/canontype-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 타입 전역 9종의 Canon 디코더 생성/전체 순회/발자국 범위/끝 상태(세 판본 3927행)",
+      "consumers": [
+        "webpj/tests/canon-type.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-type.js",
+        "webpj/www/assets/canon-type-patterns.js",
+        "webpj/www/assets/territory.js"
+      ],
+      "doc": "docs/webpj-canon-type-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/CanonTypeDecoder.cpp",
+        "cpppj/src/o/CanonDecoder.cpp"
+      ],
+      "scope": "10.78(originals) 2079행 사용, originalCD 924행은 10.72, original1037 924행은 10.37",
+      "text": true,
+      "sha256": "cbf2d6c29d6edc006024955ad1956f27af6721d5a36d83e71790e801742fc1e1",
+      "bytes": 1009583,
+      "lines": 3929,
+      "fixtureCommit": "3c570b27",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/CanonTypeDecoder.cpp": "167866d9",
+        "cpppj/src/o/CanonDecoder.cpp": "167866d9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E136",
+      "id": "canon-decoder-checking",
+      "path": "cpppj/tests/fixtures/canon-decoder-checking-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 패턴 없는 한 칸 Canon 경로의 명시/기본 프레임·checking·금 간 프레임 진단 복귀/중단(패치 156행)",
+      "consumers": [
+        "webpj/tests/canon-type.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/territory.js"
+      ],
+      "doc": "docs/webpj-canon-type-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/CanonDecoder.cpp"
+      ],
+      "scope": "10.78 패치 156행 전부",
+      "text": true,
+      "sha256": "9f5976c556f892efa6a1205ee4136c0bf9d3ae3c06a15d1f433756bac9e259ea",
+      "bytes": 22538,
+      "lines": 157,
+      "fixtureCommit": "167866d9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/CanonDecoder.cpp": "167866d9"
       }
     }
   ]

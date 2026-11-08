@@ -130,12 +130,16 @@ const CRACKED_FLAG = 0x20;
 const CANON_FILE = '\\Ns\\O\\Canondecoder.cpp';
 const CRACKED_EXPRESSION = 'frame == EMPTY_FRAME || !(typeStruct->frameInfo[frame].flags & FF_CRACKED)';
 const CRACKED_LINE = 0x325;
+// 패턴 없는 한 칸 경로에서 명시 프레임이 프레임 표 밖일 때의 원문 진단(10.78 Canondecoder.cpp 0x305)이다. (2026-11-08 WB04-E136)
+const SINGLE_FRAME_EXPRESSION = '0 <= frame && frame < ::getType(type)->numFrames';
+const SINGLE_FRAME_LINE = 0x305;
 
 // 원본 CanonDecoder 반복자 객체(00425c20 생성·00425860 다음 칸·00425b90 범위)의 영역/다리 패턴 경로이다(cpppj `o/CanonDecoder` 의 패턴 생성자·Advance·Bounds, 10.78).
 // 생성자가 첫 유효 칸까지 한 번 진행한다(그 앞 칸의 프레임 누락만 onMissingFrame 으로 알린다). checking 이 켜졌으면 고른 프레임 코드의 금 간 비트를 진단(0x325)하고 복귀하면 계속한다.
 // bounds(footX, footY) 는 현재 좌표의 절삭에서 순회 개수 × 현재 발자국을 뺀 [left, top, right, bottom] 정수이다(유효 칸이 없어도 마지막 좌표로 계산).
 // frameCodes 는 { side, variant, number, flags } 배열, diagnostics 는 { checking() → DWORD, assertion(식, 파일, 줄) } 이다(없으면 진단하지 않음).
 // 사용: new CanonDecoder(codes, TERRITORY_PATTERNS[3], 0, 0, 0, () => missing += 1).bounds(1, 1). (2026-11-08 WB04-E57: Player 간헐천 범위의 패턴 폭/높이 계산과 함께 추가)
+// 패턴이 null 이고 마지막 인자에 { defaultFrame, argument, explicitFrame } 을 주면 패턴 없는 한 칸 경로(비패턴 타입)이다. 타입 전역으로 패턴을 고르는 생성은 core/raw-canon-type.js 의 decodeCanonType 이다. (2026-11-08 WB04-E136)
 export class CanonDecoder {
     // 그 타입의 프레임 코드 표이다.
     #codes;
@@ -164,8 +168,30 @@ export class CanonDecoder {
     #x = 0;
     #y = 0;
 
+    // 패턴 없는 타입의 한 칸 경로 입력이다: { defaultFrame, argument, explicitFrame }. 패턴 경로에서는 null 이다. (2026-11-08 WB04-E136)
+    #single = null;
+
     // 패턴 경로의 반복자를 만들고 첫 유효 칸으로 진행한다. 회전이 0~3 밖이면 오류이다.
-    constructor(frameCodes, pattern, direction, x, y, onMissingFrame = null, diagnostics = null) {
+    // pattern 이 null 이면 패턴 없는 한 칸 경로(00425c20 의 비패턴 분기)이다: single = { defaultFrame, argument, explicitFrame } 이 필요하며 회전은 0, 폭·높이는 1이고,
+    // 명시 프레임이 아니면 기본 프레임을, 명시 프레임이면 argument 를 프레임으로 쓴다(프레임 표 밖이면 원문 진단 0x305). 좌표가 유한하지 않으면 거부한다. (2026-11-08 WB04-E136: 비패턴 경로 추가)
+    constructor(frameCodes, pattern, direction, x, y, onMissingFrame = null, diagnostics = null, single = null) {
+        if (pattern === null) {
+            if (!single || !Number.isFinite(x) || !Number.isFinite(y)) throw new TypeError('패턴 없는 CanonDecoder 좌표 오류');
+            this.#single = { defaultFrame: single.defaultFrame | 0, argument: single.argument | 0, explicitFrame: Boolean(single.explicitFrame) };
+            this.#rotation = 0;
+            this.#codes = frameCodes;
+            this.#pattern = null;
+            this.#onMissingFrame = onMissingFrame;
+            this.#diagnostics = diagnostics;
+            this.#originX = Math.fround(x);
+            this.#originY = Math.fround(y);
+            this.#outerCount = 1;
+            this.#innerCount = 1;
+            this.#patternX = 0;
+            this.#patternY = 0;
+            this.advance();
+            return;
+        }
         this.#rotation = Math.trunc(direction / 2);
         if (!(this.#rotation >= 0 && this.#rotation <= 3)) throw new RangeError('CanonDecoder rotation');
         this.#codes = frameCodes;
@@ -238,6 +264,11 @@ export class CanonDecoder {
                 this.#inner = 0;
             }
             this.#frame = -1;
+            if (pattern === null) {
+                // 패턴 없는 한 칸 경로: 기본 프레임 또는 명시 프레임이다. 명시 프레임이 표 밖이면 원문 진단(복귀하면 그 값으로 계속, 물리 표 밖 조회는 side 에서 거부).
+                this.#frame = this.#single.explicitFrame ? this.#single.argument : this.#single.defaultFrame;
+                if (this.#single.explicitFrame && (this.#frame < 0 || this.#frame >= this.#codes.length)) this.#diagnose(SINGLE_FRAME_EXPRESSION, SINGLE_FRAME_LINE);
+            } else {
             // 셀 해석(00425700): 줄 우선 배열에서 (패턴 x, 패턴 y)의 칸.
             const index = pattern.width * this.#patternY + this.#patternX;
             if (index < 0 || index >= pattern.sides.length) throw new RangeError('패턴 칸 번호가 범위를 벗어났습니다.');
@@ -255,6 +286,7 @@ export class CanonDecoder {
                 this.#frame = findFrameNumber(this.#codes, rotated.charCodeAt(orientation.charCodeAt(0) - FIRST_SIDE.charCodeAt(0)), rotated.charCodeAt(VARIANT_COLUMN), variation);
                 // 원본 assert lookup 은 보고한 뒤 -1 을 반환하며 같은 진행이 그 칸을 건너뛴다.
                 if (this.#frame === -1 && typeof this.#onMissingFrame === 'function') this.#onMissingFrame();
+            }
             }
             // 10.78 은 현재 checking 에서 현재 프레임 코드의 금 간 비트를 읽는다.
             if (this.#diagnostics && (this.#diagnostics.checking?.() >>> 0) && this.#frame !== -1) {
