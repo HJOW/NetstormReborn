@@ -12594,6 +12594,35 @@
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgeStrategies.cpp": "13485be9"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E180",
+      "id": "aidamage",
+      "path": "cpppj/tests/fixtures/ai-damage-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: AI 피해 반응 00415460(독립 입력 17개별 호출 뒤 전체 본체·네 목록 backing·홈/로그 순서·입력 슬롯)(10.78 149행)",
+      "consumers": [
+        "webpj/tests/ai-damage.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ai-damage.js"
+      ],
+      "doc": "docs/webpj-ai-damage-notice-registration-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAiDamage.cpp"
+      ],
+      "scope": "10.78 실제 PE 149행 전부",
+      "text": true,
+      "sha256": "eaa90a665618f23d59365df1e65b330499f7a4fd87fac6280d9955b5ca05ab3a",
+      "bytes": 935331,
+      "lines": 150,
+      "fixtureCommit": "c3cfc98f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAiDamage.cpp": "c3cfc98f"
+      }
     }
   ]
 }
