@@ -11217,7 +11217,7 @@
       "bytes": 1009583,
       "lines": 3929,
       "fixtureCommit": "3c570b27",
-      "webCommit": "b42ac0d6",
+      "webCommit": "19489327",
       "cpppjBasis": {
         "cpppj/src/o/CanonTypeDecoder.cpp": "167866d9",
         "cpppj/src/o/CanonDecoder.cpp": "167866d9"
@@ -11247,7 +11247,7 @@
       "bytes": 22538,
       "lines": 157,
       "fixtureCommit": "167866d9",
-      "webCommit": "b42ac0d6",
+      "webCommit": "19489327",
       "cpppjBasis": {
         "cpppj/src/o/CanonDecoder.cpp": "167866d9"
       }
@@ -11276,9 +11276,300 @@
       "bytes": 206524,
       "lines": 1022,
       "fixtureCommit": "c0146d4d",
-      "webCommit": "worktree",
+      "webCommit": "861ecb4e",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionClear.cpp": "2a8f937e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E138",
+      "id": "constructionplace",
+      "path": "cpppj/tests/fixtures/constructionplace-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 배치 실행과 비용 부족 처리·환불·취소 통지·SP 조회/가산의 효과 순서와 조각 슬롯 전체(세 판본 3684행)",
+      "consumers": [
+        "webpj/tests/construction-place.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-place.js",
+        "webpj/www/assets/territory.js"
+      ],
+      "doc": "docs/webpj-construction-place-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionPlace.cpp"
+      ],
+      "scope": "10.78(originals) 1778행 사용, originalCD 952행은 10.72, original1037 952행은 10.37",
+      "text": true,
+      "sha256": "aace8e0b8b24d41ee120ff99c711a0241ddb4b799b5d0f6044f9a521ed8dfcbb",
+      "bytes": 1611139,
+      "lines": 3684,
+      "fixtureCommit": "c0146d4d",
+      "webCommit": "19489327",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionPlace.cpp": "976f2b7b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E139",
+      "id": "constructionconfirm",
+      "path": "cpppj/tests/fixtures/constructionconfirm-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 서버 건설 확정의 기준점 조회·SID 생성·통지 필드·전송/직접 처리/기록기 순서(세 판본 1300행)",
+      "consumers": [
+        "webpj/tests/construction-confirm.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-confirm.js"
+      ],
+      "doc": "docs/webpj-construction-confirm-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionConfirm.cpp"
+      ],
+      "scope": "10.78(originals) 508행 사용, originalCD 396행은 10.72, original1037 396행은 10.37",
+      "text": true,
+      "sha256": "0970aaa9df5042a43d41d858d49e66e8beccc65c3a5841ea179c8e697ccb1777",
+      "bytes": 281802,
+      "lines": 1302,
+      "fixtureCommit": "c0146d4d",
+      "webCommit": "f78148a8",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionConfirm.cpp": "77a0c3a4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E140",
+      "id": "constructionrequest",
+      "path": "cpppj/tests/fixtures/constructionrequest-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 서버 건설 요청 전체의 배치 가능 판정·충돌·밀어내기·받침 확정·실패 정리 순서와 인자(세 판본 2192행)",
+      "consumers": [
+        "webpj/tests/construction-request.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-request.js"
+      ],
+      "doc": "docs/webpj-construction-request-local-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionRequest.cpp"
+      ],
+      "scope": "10.78(originals) 816행 사용, originalCD 688행은 10.72, original1037 688행은 10.37",
+      "text": true,
+      "sha256": "e36176be5730d4dde45fc356f96e7118c0d027f2b83541e52e71e2dbd75403aa",
+      "bytes": 681220,
+      "lines": 2194,
+      "fixtureCommit": "3d568ff6",
+      "webCommit": "37ca1639",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionRequest.cpp": "2a8f937e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E140",
+      "id": "constructionlocal",
+      "path": "cpppj/tests/fixtures/constructionlocal-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 로컬 건설 배치 전체의 미리보기/조각 반환/SID 생성/배치/사제 이동/서버 요청 사건 순서(세 판본 1450행)",
+      "consumers": [
+        "webpj/tests/construction-local.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-local.js"
+      ],
+      "doc": "docs/webpj-construction-request-local-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionLocal.cpp"
+      ],
+      "scope": "10.78(originals) 558행 사용, originalCD 446행은 10.72, original1037 446행은 10.37",
+      "text": true,
+      "sha256": "8674e54bdf374a06a162199bf239e8a185e8cb5227897c08592f69ded29c366b",
+      "bytes": 386120,
+      "lines": 1452,
+      "fixtureCommit": "e3df7f74",
+      "webCommit": "37ca1639",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionLocal.cpp": "2a8f937e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E141",
+      "id": "constructiondata",
+      "path": "cpppj/tests/fixtures/constructiondata-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 상태 메시지 0x37의 쓰기/읽기/수신/전송 래퍼와 변동(세 판본 5340행)",
+      "consumers": [
+        "webpj/tests/construction-data.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-data.js"
+      ],
+      "doc": "docs/webpj-construction-data-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionData.cpp"
+      ],
+      "scope": "10.78(originals) 1780행 사용, originalCD 1780행은 10.72, original1037 1780행은 10.37",
+      "text": true,
+      "sha256": "aa57418290ff1a6f815439a77bf447ff045c6bef2eae46a8b3130504594afd9f",
+      "bytes": 2711331,
+      "lines": 5342,
+      "fixtureCommit": "5b99a6ea",
+      "webCommit": "04d214d2",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionData.cpp": "a942a75a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E142",
+      "id": "constructionbuilder",
+      "path": "cpppj/tests/fixtures/constructionbuilder-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 사제/운반 객체 생성·이동 전체와 공급원 목록 소비의 사건 순서·반환 double·생성 raw(세 판본 1110행)",
+      "consumers": [
+        "webpj/tests/construction-builder.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-builder.js"
+      ],
+      "doc": "docs/webpj-construction-builder-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionBuilder.cpp"
+      ],
+      "scope": "10.78(originals) 370행 사용, originalCD 370행은 10.72, original1037 370행은 10.37",
+      "text": true,
+      "sha256": "27cf79cfa157eb19fcd4e21e2f6924c327e64c651e2208139b525d8083cc4b95",
+      "bytes": 837334,
+      "lines": 1112,
+      "fixtureCommit": "9410a4fb",
+      "webCommit": "2474fbe1",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionBuilder.cpp": "33302112"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E143",
+      "id": "mana-bolt-arrival",
+      "path": "cpppj/tests/fixtures/mana-bolt-arrival-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 마나 볼트 도착의 대상 검색·반환·효과 순서(10.78 101행)",
+      "consumers": [
+        "webpj/tests/mana-bolt-arrival.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mana-bolt-arrival.js"
+      ],
+      "doc": "docs/webpj-mana-bolt-arrival-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawManaBoltArrival.cpp"
+      ],
+      "scope": "10.78 독립 101행 전부",
+      "text": true,
+      "sha256": "4ed1bc04ea15ff9cab1f9c088216337bdacbd61c48bbf6e060c9cbb3c7988239",
+      "bytes": 5616,
+      "lines": 102,
+      "fixtureCommit": "8bf76206",
+      "webCommit": "d29cb9c0",
+      "cpppjBasis": {
+        "cpppj/src/o/RawManaBoltArrival.cpp": "9dd15ef2"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E144",
+      "id": "path-halt-parent-hardware",
+      "path": "cpppj/tests/fixtures/path-halt-parent-hardware-x86.tsv",
+      "producer": "cpppj 실제 CPU 관측: 공통 경로 Halt 부모의 가상 결과·진단 복귀·강제 정지·재지정 순서(10.78 2288행)",
+      "consumers": [
+        "webpj/tests/path-halt-parent.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-halt-parent.js"
+      ],
+      "doc": "docs/webpj-path-halt-parent-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathHaltParent.cpp"
+      ],
+      "scope": "10.78 실제 CPU 2288행 전부",
+      "text": true,
+      "sha256": "ca7661b77324eb0b47cddf86211902d96e6fe282eee683ebf0cf251c648a2db8",
+      "bytes": 202147,
+      "lines": 2288,
+      "fixtureCommit": "25f4ed67",
+      "webCommit": "c37fe508",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathHaltParent.cpp": "8a555c99"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E145",
+      "id": "path-arrival-parent-hardware",
+      "path": "cpppj/tests/fixtures/path-arrival-parent-hardware-x86.tsv",
+      "producer": "cpppj 실제 CPU 관측: 공통 경로 도착 부모의 Step/공간/Halt/도착 반환 분기와 진단 복귀(10.78 860행)",
+      "consumers": [
+        "webpj/tests/path-arrival-parent.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-arrival-parent.js"
+      ],
+      "doc": "docs/webpj-path-arrival-parent-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathArrivalParent.cpp"
+      ],
+      "scope": "10.78 실제 CPU 860행 전부",
+      "text": true,
+      "sha256": "c7053cf099c188faa2abe49bdd8d5eccd6e45f69092d484673906d199ee218b6",
+      "bytes": 300502,
+      "lines": 860,
+      "fixtureCommit": "8a555c99",
+      "webCommit": "4cc9c997",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathArrivalParent.cpp": "8a555c99"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E146",
+      "id": "canongeometry",
+      "path": "cpppj/tests/fixtures/canongeometry-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 타입 전역 9종의 전체 decoder 와 모든 유효 칸의 finder 직전 계산(10.78 3159행)",
+      "consumers": [
+        "webpj/tests/canon-placement-geometry.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-placement-geometry.js"
+      ],
+      "doc": "docs/webpj-canon-placement-geometry-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCanonPlacementGeometry.cpp"
+      ],
+      "scope": "10.78 실제 PE 3159행 전부",
+      "text": true,
+      "sha256": "a842473cbc5b493f75c3a6dfd262576f12af0acb9f75d498e03d07a90dcc3ae8",
+      "bytes": 1798216,
+      "lines": 5969,
+      "fixtureCommit": "035d1324",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCanonPlacementGeometry.cpp": "167866d9"
       }
     }
   ]

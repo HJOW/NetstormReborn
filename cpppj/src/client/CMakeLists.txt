@@ -167,6 +167,7 @@ target_sources(netstorm PRIVATE
     GameWorld.cpp GameWorld.h
     RawSurfaceWorld.cpp RawSurfaceWorld.h
     RawSurfaceStorage.cpp
+    RawSurfaceReward.cpp #같은 장기 HP/보상과 실제 SP·현재 모드 장치를 공유한다.
     ClientGameplayGlobals.cpp ClientGameplayGlobals.h ProductionControlContext.h
     ClientNsInfoGlobals.cpp ClientNsInfoGlobals.h RawNsInfoContext.h
     HudNsInfo.cpp HudNsInfo.h HudNsInfoCreate.cpp HudNsInfoCreate.h

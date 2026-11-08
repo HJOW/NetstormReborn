@@ -564,7 +564,7 @@ cpppj/src/o/RawCannonFire.cpp	port	www/core/raw-cannon-fire.js	1f00a25a	port	[o-
 cpppj/src/o/RawCanonPixelShape.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacement.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementCollision.cpp	port			todo	[o-default]
-cpppj/src/o/RawCanonPlacementGeometry.cpp	port			todo	[o-default]
+cpppj/src/o/RawCanonPlacementGeometry.cpp	port	www/core/raw-canon-placement-geometry.js	1f00a25a	port	[o-default] WB04-E146: 일반 배치 모양 기하(0049b8c0..0049b95a finder 인자 산술·미리보기 범위·칸별 준비/후처리/조기 거부 순회). fixture canongeometry 실제 PE 3159행 전부. 남음: 지형/권한/관계/주변/충돌/미리보기 훅 본체
 cpppj/src/o/RawCanonPlacementPermission.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementPipeline.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementPreview.cpp	port			todo	[o-default]
@@ -604,21 +604,21 @@ cpppj/src/o/RawConnectionCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawConnectionRegistration.cpp	port			todo	[o-default]
 cpppj/src/o/RawConnectionRegistry.cpp	port			todo	[o-default]
 cpppj/src/o/RawConstructionArrival.cpp	port	www/core/raw-construction-arrival.js	1f00a25a	port	[o-default] WB04-E133: 건설 운반 도착 판정(정수 칸 finder 방문·서버 대상 건설 시작·예측 대기 contained 삭제·자기 삭제)과 start 어댑터. fixture constructionarrival originals 153행 전부(originalCD 는 10.72). 남음: 마나볼트 도착 101행(RawManaBoltArrival 이식 뒤)·PathProcess 도착 호출 연결
-cpppj/src/o/RawConstructionBuilder.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionBuilder.cpp	port	www/core/raw-construction-builder.js	1f00a25a	port	[o-default] WB04-E142: 건설 사제 이동(00443000: 기준점·건설 사제/운반 객체 생성·접근점·경로·속도 조정·공급원 소비)과 기준점/factory/소유자/Regular/로컬/통지 어댑터. fixture constructionbuilder originals 370행 전부(originalCD·original1037 제외). 남음: 실제 RawEnergySupply 연결 통합 시험
 cpppj/src/o/RawConstructionClear.cpp	port	www/core/raw-construction-clear.js	1f00a25a	port	[o-default] WB04-E137: 건설 배치 통지 직전의 로컬 예측 조각 정리(00441fd0: 칸 범위·Canon 디코더 칸 순회·abstract 후보 하나 삭제·같은 조각 플래그). fixture constructionclear originals 420행 전부(originalCD·original1037 제외). 남음: Place/Confirm 이식 뒤 통합 시험
 cpppj/src/o/RawConstructionCommand.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionConfirm.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionData.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionEffects.cpp	port	www/core/raw-construction-effects.js	1f00a25a	port	[o-default] WB04-E135: 건설 유닛 밀어내기(00443800)와 섬 실패 정리(0046e6c0)와 요청 어댑터. fixture constructioneffects originals 1178행 전부(originalCD·original1037 제외). 남음: 실제 Request/Factory/Destroy 통합 시험(RawConstructionRequest 이식 뒤)
+cpppj/src/o/RawConstructionConfirm.cpp	port	www/core/raw-construction-confirm.js	77a0c3a4	port	[o-default] (이식 원본은 기준선 뒤 갱신판 77a0c3a4: 실제 wire 경로 포함) WB04-E139: 서버 건설 확정(00444590: typed confirm·실제 wire actualConfirm·기준점 조회·조각별 SID 생성·통지 전송/직접 처리·기록기)과 factory 어댑터. fixture constructionconfirm originals 508행 전부(originalCD·original1037 제외). 실제 Confirm→Notice→Clear→Place 통합 시험 포함(construction-chain). 남음: Request/Command 연결
+cpppj/src/o/RawConstructionData.cpp	port	www/core/raw-construction-data.js	a942a75a	port	[o-default] WB04-E141: 건설 상태 메시지 0x37(004426d0 쓰기·00443bd0 전송 래퍼·00442760 읽기·004427b0 수신: free/live form·실제 새 소유 수신)과 hooks/실제 logic+host 두 구성(이식 원본은 기준선 뒤 갱신판 a942a75a). fixture constructiondata originals 1780행 전부(originalCD·original1037 제외). 남음: 패킷 분배 등록(RawPacketDispatch 이식 뒤)
+cpppj/src/o/RawConstructionEffects.cpp	port	www/core/raw-construction-effects.js	4717dff5	port	[o-default] (이식 원본은 기준선 뒤 갱신판 4717dff5: 실제 wire 경로 포함) WB04-E135: 건설 유닛 밀어내기(00443800)와 섬 실패 정리(0046e6c0)와 요청 어댑터. fixture constructioneffects originals 1178행 전부(originalCD·original1037 제외). 남음: 실제 Request/Factory/Destroy 통합 시험(RawConstructionRequest 이식 뒤)
 cpppj/src/o/RawConstructionFrame.cpp	port	www/core/raw-construction-frame.js	1f00a25a	port	[o-default] WB04-E130: 건설 표시 프레임 갱신(Run)·Draw·Expand·Append·Color·Clock. fixture constructionframe originals 435행 전부(originalCD/original1037 은 범위 밖). 남음: Run 의 Kill 을 표시 해제에 연결하는 통합 시험(ConstructionProcess 계열과 함께)
 cpppj/src/o/RawConstructionHistory.h	port	www/core/construction-history-key.js	1f00a25a	port	[o-default] WB04-E22: 최근 건설 위치 5칸+순번 값형 장부(createConstructionHistory). 배치 통지가 순번을 0으로 쓰는 부분은 건설 통지 단위에서
 cpppj/src/o/RawConstructionLifetime.cpp	port	www/core/raw-construction-lifetime.js	1f00a25a	port	[o-default] WB04-E129: 표시 목록 등록/40칸 확장/삭제와 건설 표시 버퍼 반납 순서·생성 어댑터. fixture constructionlifetime originals 459행 전부(originalCD/original1037 은 범위 밖). 남음: 실제 RawConstructionFrame Run/Draw/Kill 연결 시험(RawConstructionFrame 이식 뒤)
-cpppj/src/o/RawConstructionLocal.cpp	port			todo	[o-default]
-cpppj/src/o/RawConstructionNotice.cpp	port	www/core/raw-construction-notice.js	1f00a25a	port	[o-default] WB04-E134: 건설 배치 통지(typed handle·실제 wire actualHandle: 정리·이력·배치·Builder 이동·사제 이동/환불/삭제·자동 건설 시작·갱신)와 정리/배치/확정 어댑터. fixture constructionnotice originals 537행 전부(originalCD·original1037 제외). 남음: 어댑터의 실제 Clear/Place 모듈 연결(해당 단위 이식 뒤)
-cpppj/src/o/RawConstructionPacket.cpp	port	www/core/raw-construction-packet.js	1f00a25a	port	[o-default] WB04-E134: 건설 확정 임시 패킷(읽기 뷰·초기화·쓰기·가변길이 확정). fixture construction-packet originals 86행 전부(Write 72·Finalize 14). 남음: Confirm 의 실제 송신 observer 연결
-cpppj/src/o/RawConstructionPlace.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionLocal.cpp	port	www/core/raw-construction-local.js	1f00a25a	port	[o-default] WB04-E140: 로컬 건설 배치(004433b0: 미리보기 삭제·조각 반환·예측 SID 확보·받침/본 place·사제 이동·서버 요청 전송)와 factory/배치 어댑터. fixture constructionlocal originals 558행 전부(originalCD·original1037 제외). 남음: 요청 메시지 wire 직렬화(Command 이식 뒤)
+cpppj/src/o/RawConstructionNotice.cpp	port	www/core/raw-construction-notice.js	976f2b7b	port	[o-default] (이식 원본은 기준선 뒤 갱신판 976f2b7b: 실제 wire 경로 포함) WB04-E134: 건설 배치 통지(typed handle·실제 wire actualHandle: 정리·이력·배치·Builder 이동·사제 이동/환불/삭제·자동 건설 시작·갱신)와 정리/배치/확정 어댑터. fixture constructionnotice originals 537행 전부(originalCD·original1037 제외). 남음: 어댑터의 실제 Clear/Place 모듈 연결(해당 단위 이식 뒤)
+cpppj/src/o/RawConstructionPacket.cpp	port	www/core/raw-construction-packet.js	77a0c3a4	port	[o-default] (이식 원본은 기준선 뒤 갱신판 77a0c3a4: 실제 wire 경로 포함) WB04-E134: 건설 확정 임시 패킷(읽기 뷰·초기화·쓰기·가변길이 확정). fixture construction-packet originals 86행 전부(Write 72·Finalize 14). 남음: Confirm 의 실제 송신 observer 연결
+cpppj/src/o/RawConstructionPlace.cpp	port	www/core/raw-construction-place.js	976f2b7b	port	[o-default] (이식 원본은 기준선 뒤 갱신판 976f2b7b: 실제 wire 경로 포함) WB04-E138: 건설 배치 실행(00442c80 typed/실제 wire)과 비용 부족 처리·환불·취소 통지·SP 조회/가산·실제 Player 기록 연결·수신/소유자/SP 어댑터. fixture constructionplace originals 1778행 전부(originalCD·original1037 제외). 남음: Confirm/Factory/Owner 와의 통합 시험(Confirm 이식 뒤)
 cpppj/src/o/RawConstructionProcess.cpp	port	www/core/raw-construction-process.js	1f00a25a	port	[o-default] WB04-E132: 건설 프로세스 시작·진행·완료·form 삭제 통지·실제 host/Kernel 프로세스·보상/통지 어댑터. fixture constructionprocess originals 956행+construction-form-parent 64행 전부와 실제 host 통합 시험(originalCD/original1037 은 범위 밖). 남음: RawConstructionEffects 밀어내기 연결 시험(해당 모듈 이식 뒤)
-cpppj/src/o/RawConstructionRequest.cpp	port			todo	[o-default]
+cpppj/src/o/RawConstructionRequest.cpp	port	www/core/raw-construction-request.js	1f00a25a	port	[o-default] WB04-E140: 서버 건설 요청(00444760: 편집 소유자 보정·배치 가능 판정·abstract 충돌 검사·밀어내기·받침 선행 확정·본 확정·실패 정리)과 어댑터. fixture constructionrequest originals 816행 전부(originalCD·original1037 제외). 남음: 전체 배치 가능 판정 파이프라인 통합 시험
 cpppj/src/o/RawConstructionSelection.cpp	port	www/core/raw-construction-selection.js	1f00a25a	port	[o-default] WB04-E135: 확정의 그래프 기준점(findBuilder)과 통지의 소유 사제 조회(findPriest) 어댑터. 이름 계약·풀 불일치 거부는 대역으로 확인. 남음: Confirm 과의 통합 시험(RawConstructionConfirm 이식 뒤)
 cpppj/src/o/RawConstructionVisual.cpp	port	www/core/raw-construction-visual.js	1f00a25a	port	[o-default] WB04-E128: 건설 표시 생성·색 표 캐시·좌표 동기화·초기 입자 선택. fixture constructionvisual originals 592행 전부(originalCD/original1037 은 범위 밖). 남음: 실제 RawConstructionProcess::Start 연결 시험(RawConstructionProcess 이식 뒤)
 cpppj/src/o/RawContainedCreate.cpp	port	www/core/contained-create.js	1f00a25a	port	[o-default] WB04-D5a(004afa70)
@@ -766,7 +766,7 @@ cpppj/src/o/RawLightningPath.cpp	port	www/core/raw-lightning-path.js	1f00a25a	po
 cpppj/src/o/RawLocalGeyser.cpp	port			todo	[o-default]
 cpppj/src/o/RawLocalMissionState.cpp	port			todo	[o-default]
 cpppj/src/o/RawMakeAi.cpp	port	www/core/raw-make-ai.js	1f00a25a	port	[o-default] WB04-E32: 일반 MakeAi 부모와 전체 객체 이전/삭제 순회. fixture make-ai-parent 770·make-ai-objects 2592행 전부. AI 생성(417e50)/Player 카운터/가상 삭제는 훅
-cpppj/src/o/RawManaBoltArrival.cpp	port			todo	[o-default]
+cpppj/src/o/RawManaBoltArrival.cpp	port	www/core/raw-mana-bolt-arrival.js	1f00a25a	port	[o-default] WB04-E143: 마나 볼트 건설 대상 검색(0045aab0)과 도착 분기(0045ab30: 음향·프로세스 제거·Regular 예약 또는 자기 삭제). fixture mana-bolt-arrival 101행 전부. 남음: RawManaBoltRegular(클라이언트 투영 선행)
 cpppj/src/o/RawManaBoltRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaRegistration.cpp	port	www/core/raw-mana-registration.js	1f00a25a	port	[o-default] WB04-E10: 00472f70 마나 공급원 등록(최초 개수 저장·중복 검색·checking 진단 복귀·productionDirty 감김). fixture mana-registration-hardware 10.78 542행 전부(originalCD 542행은 10.72라 제외). 실제 Client/World 통합 대조는 공통 PostPop 본체 단위에서
@@ -802,10 +802,10 @@ cpppj/src/o/RawOutpostLifecycle.cpp	exclude-mp			-	[mp-outpost]
 cpppj/src/o/RawPacketDispatch.cpp	port			todo	[o-default]
 cpppj/src/o/RawPacketLengths.h	port			todo	[o-default]
 cpppj/src/o/RawPathAnimation.cpp	port	www/core/raw-path-animation.js	1f00a25a	port	[o-default] WB04-E62: 보행 도착 프레임 접두 0048bd90과 Squid 방향 조회 004ad680/004ad710. fixture pathanimation 10.78 Read 608·Stop 1408행 전부. 보행 프로세스(경로 종료·타이머)는 PathProcess 단위에서
-cpppj/src/o/RawPathArrivalParent.cpp	port			todo	[o-default]
+cpppj/src/o/RawPathArrivalParent.cpp	port	www/core/raw-path-arrival-parent.js	1f00a25a	port	[o-default] WB04-E145: 공통 경로 도착 부모(0048b340: Step 좌표 공간 갱신·도착 막힘 판정·Halt·finished·부모 도착 반환 분기·삭제 뒤 정리)와 기반 SID 범위 진단(0041be80). fixture path-arrival-parent-hardware 실제 CPU 860행 전부. 남음: 경로 프로세스 본체 연결
 cpppj/src/o/RawPathCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawPathData.cpp	port			todo	[o-default]
-cpppj/src/o/RawPathHaltParent.cpp	port			todo	[o-default]
+cpppj/src/o/RawPathHaltParent.cpp	port	www/core/raw-path-halt-parent.js	1f00a25a	port	[o-default] WB04-E144: 공통 경로 Halt 부모(00489ff0: 저장 부모·가상 Halt 결과·자기 삭제 뒤 진단 복귀·강제 정지·운반 계열 재지정). fixture path-halt-parent-hardware 실제 CPU 2288행 전부. 남음: 경로 프로세스 본체 연결
 cpppj/src/o/RawPathProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawPathRetarget.cpp	port	www/core/raw-path-retarget.js	1f00a25a	port	[o-default] WB04-E103: 경로 Halt 의 운반 대상 사망 분기 489ff0(귀환/간헐천 대상 dead 비트·현재 부모/Halt 전 부모 내용물 조회·새 후보 선택·이동 시작·호출 중 경로 삭제 후 무접근). fixture path-retarget 4801행 전부(10.78 전용 파일). 내용물 조회/후보 선택/이동 시작은 훅 경계
 cpppj/src/o/RawPathRuntime.cpp	port	www/core/raw-path-runtime.js	1f00a25a	port	[o-default] WB04-E98: 경로 이미지 100080바이트·생성자 8종(heap 보존)·Prepare 00488e20·Step 0048a330·비행 Init 48af00/488d00·필드 접근자(10.78). fixture path-constructor 32행 전부, pathruntime originals ctor 4+prepare 24+step 80행, flypath ctor 3+init 24행(arrival/frame 행은 RawPathProcess 단위, CD 행은 10.72)

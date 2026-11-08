@@ -480,8 +480,10 @@ struct RawCampaignSession::Impl {
     GameRandom localRandom; //소유자없는기존독립Session만종전최초0입력을유지한다.
     GameRandom& random{services.randomGlobals ? services.randomGlobals->Game() : localRandom}; //모든기존SP/객체/지형/AI/저장이같은실제Client객체를직접빌린다.
     std::unique_ptr<ScrambledSpStore> localSp;ScrambledSpStore& sp; // 실제 Client는 공통 시작의 같은 저장소를 빌리며 독립 Session만 기존 지역 SP를 소유한다.
-    SquidRewardState rewardState; // 실제 HP getter의 장기 전역이다.
-    SquidReward hp; // 같은 Pool/TYPE/장부로 최대HP와 실제HP를 읽는다.
+    SquidRewardState localRewardState; // 독립 typed Session만 기존 지역 전역 입력을 소유한다.
+    SquidRewardState& rewardState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->RewardState():localRewardState}; // 실제 Native는 같은 장기 전역을 빌린다.
+    std::unique_ptr<SquidReward> localHp; // 독립 typed 경로의 기존 HP/보상 처리기만 소유한다.
+    SquidReward& hp; // Native의 모든 기존 caller가 Storage의 같은 장기 HP/보상을 직접 사용한다.
     std::unique_ptr<RawSquidLevel> level; // 실제 base 가상80/84의 Factory 저장 상태를 처리한다.
     ChunkMap& chunks{world.Storage()->chunks}; // 실제 Builder/성장/영역소유/저장이 Client 저장소의 같은 mode/지도 물리를 빌린다.
     std::array<std::uint8_t,RawIslandRuntime::kBytes>& islandBytes{world.Storage()->islands.records}; // 같은3204BYTE count/100기록이며 Session 지역 사본을 만들지 않는다.
@@ -945,7 +947,9 @@ struct RawCampaignSession::Impl {
         services(std::move(input)),missionFortName(mission),templateStorage(services.templateStorage ? services.templateStorage : std::make_shared<CampaignTemplateStorage>()),headers(templateStorage->Headers()),assets(game,files),metadata(assets.game),
         terrainType(gameplayGlobals->GameAux()->TerrainType()),world(OriginalEdition::Patch1078,assets.types,assets.frames,metadata.shapes,CampaignLinks(),terrainType,services.processKernel,SessionSurfaceStorage(services,game),services.adoptPreparedWorld,&localStateGlobals->SavedGame(),gameplayGlobals->Authority(),gameplayGlobals->GameAux(),templateStorage->SerializationGlobalsOwner()),core(world.Core()),
         localSp(services.spGlobals ? nullptr : std::make_unique<ScrambledSpStore>(random,[this] { return seed.Reseed(); })),
-        sp(services.spGlobals ? services.spGlobals->Store() : *localSp),hp(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{[this](Sid sid) { return RewardCount(sid); },services.refreshSp}),
+        sp(services.spGlobals ? services.spGlobals->Store() : *localSp),
+        localHp(world.Storage()->UsesNativeTransmissionDevices() ? nullptr:std::make_unique<SquidReward>(core.pool,core.types,core.bookkeeping,rewardState,&sp,SquidRewardHooks{[this](Sid sid) { return RewardCount(sid); },services.refreshSp})),
+        hp(world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->Reward():*localHp),
         battleOptions(services.missionOptions ? *services.missionOptions : localBattleOptions),
         aiMemory(0x20000000,[this](std::span<std::uint8_t> bytes) {
             if (!services.ai.allocationBytes) throw std::logic_error("실제 Session AI 할당 입력 바이트 미연결");services.ai.allocationBytes(bytes);
@@ -959,7 +963,7 @@ struct RawCampaignSession::Impl {
         rewardState.sharedPercent=&gameplayGlobals->GameAux()->RefundPercent();rewardState.sharedGeyserPool=&gameplayGlobals->GameAux()->ResourcePool(); // 실제 Reward/LocalGeyser의 같은 물리다.
         rewardState.sharedHalfHealthMode=&core.ownerMode.battle; // 회수 메뉴/실제 환불은 초기 false 사본 대신 현재 World의 전투 모드00594fbc를 같은 관문에서 읽는다.
         rewardState.sharedPriestQuarterHp=&gameplayGlobals->GameAux()->PriestQuarterHp(); // State 직접 쓰기와 기존 HP setter/최대HP가 같은 현재 전역을 쓴다.
-        rewardState.sharedPriestType=&priestState.movement.priest; // 0049fce0의 1/4 비교와 사제 회복 분자가 같은 장기005412d0을 읽는다(단위862).
+        rewardState.sharedPriestType=world.Storage()->UsesNativeTransmissionDevices() ? &gameplayGlobals->GameAux()->PriestType():&priestState.movement.priest; // 0049fce0의 1/4 비교와 사제 회복 분자가 같은 장기005412d0을 읽는다(단위862).
         rewardState.sharedAltarType=&gameplayGlobals->GameAux()->AltarType();rewardState.sharedDaisType=&gameplayGlobals->GameAux()->DaisType(); // 비용 곡선/다이스HP의 현재 두 TYPE 번호를 같은 장기 owner에서 빌린다.
         runeState.sharedRuneType=&gameplayGlobals->GameAux()->RuneType();ritualState.sharedRuneType=runeState.sharedRuneType;runeState.sharedSuppressedDuration=&globals.missionPost; // 같은 현재 Rune 번호와 미션 상태를 효과 뒤 각 소비 지점에서 읽는다.
         runeState.sharedAltarType=rewardState.sharedAltarType;runeState.sharedDaisType=rewardState.sharedDaisType; // Rune/다이스·참여자·AI/메뉴가 보상과 같은 현재 두 DWORD를 빌리며 임시 getter 값의 주소를 남기지 않는다.
@@ -967,8 +971,8 @@ struct RawCampaignSession::Impl {
         rewardState.sharedAliasType=&gameplayGlobals->GameAux()->GrowingRainBlockerType();rewardState.sharedNuggetType=&gameplayGlobals->GameAux()->NuggetType(); // 별칭 비용/환불의 현재 성장형·너겟 번호다.
         contentLifetimeState.sharedNuggetType=carrierTransferState.sharedNuggetType=geyserMinedState.sharedNuggetType=rewardState.sharedNuggetType; // 내용물·전달·채집이 보상과 같은 현재005412c0을 빌린다.
         motionState.carrier.sharedNuggetType=motionState.cleanup.sharedNuggetType=constructionState.place.sharedNuggetType=rewardState.sharedNuggetType; // 경로·건설·덱/의식 요청의 참조도 같은 장기 owner로 연결한다.
-        hp.BindCurrentTypes(core.types); // 실제 PATCH의 최대HP/HP 플래그가 World의 같은 현재 TYPE 표를 읽는다. 별도 정수 비용 캐시는 유지한다(단위863).
-        hp.BindLoadedCosts(assets.game.TypeTable().Types()); // Session 교체 뒤에도 최초 로딩 비용표를 읽고 현재 TYPE+c4 float 쓰기와 분리한다(단위865).
+        if (localHp) hp.BindCurrentTypes(core.types); // 실제 PATCH의 최대HP/HP 플래그가 World의 같은 현재 TYPE 표를 읽는다. 별도 정수 비용 캐시는 유지한다(단위863).
+        if (localHp) hp.BindLoadedCosts(assets.game.TypeTable().Types()); // Session 교체 뒤에도 최초 로딩 비용표를 읽고 현재 TYPE+c4 float 쓰기와 분리한다(단위865).
         priestState.regen.patch.sharedChangedSample=&gameplayGlobals->PatchDiagnostic();priestState.regen.patch.sharedSample=&gameplayGlobals->PatchSample();motionState.search.sharedPolicySelector=&gameplayGlobals->PatchDiagnostic(); // 최초 객체 생성 전에 추적 writer와 BFS가 같은 장기005318ec을 직접 빌린다.
         priestState.regen.sharedPriestType=&gameplayGlobals->GameAux()->PriestType(); // 회복 증분도 이동/일반HP와 같은 장기 현재 사제 TYPE를 매 조회에서 읽는다.
         missionStart.sharedDenySalvage=&gameplayGlobals->DenySalvage();missionStart.sharedDenyAscend=&gameplayGlobals->DenyAscend(); // Start·회수·메뉴와 World 없는 Guide 해제가 같은 장기 전역을 빌린다. 근거: docs/exe/cpp-guide-release-20261101.md.
@@ -1040,7 +1044,7 @@ struct RawCampaignSession::Impl {
         core.unpop.BindDiagnostics({RawCheckingFlag{gameplayGlobals->AiDebug().Checking()},core.types,[assertion=services.ai.assertion](auto expression,auto,auto line) { if (!assertion) throw std::logic_error("Unpop 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }}); // 독립 Session도 같은 현재 Client owner/서비스를 복사해 쓴다.
         core.pop.BindDiagnostics({RawCheckingFlag{gameplayGlobals->AiDebug().Checking()},core.types,{},[owner=world.Storage().get()] { return owner->ownerMode.challenge; },[owner=world.Storage().get()](auto level,auto text) { owner->TraceGraph(level,text); },[assertion=services.ai.assertion](auto expression,auto,auto line) { if (!assertion) throw std::logic_error("Pop 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); },[current=gameplayGlobals] { return current->WorldCells(); }}); // 실제 Client 세계 크기의 장기 owner도 보관해 Session 반납 뒤에 지역 주소를 남기지 않는다.
         core.factory.BindDiagnostics({core.types,[assertion=services.ai.assertion](auto expression,auto,auto line) { if (!assertion) throw std::logic_error("Take/postTake 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); },[owner=world.Storage().get()](auto text) { owner->RecordAssertionDetail(text); },RawCheckingFlag{gameplayGlobals->AiDebug().Checking()}}); // Session 이후에도 살아 있는 같은 Storage의 Client 상세 owner와 현재 TYPE·진단 복귀를 연결한다.
-        hp.BindHitPointDiagnostics([assertion=services.ai.assertion](auto expression,auto,auto line) { if (!assertion) throw std::logic_error("보상 TYPE HP 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }); // 같은 현재 checking과 장기 TYPE/약화 주소를 사용하는 기존 HP 소비자에 Client 진단 복귀를 연결한다.
+        if (localHp) hp.BindHitPointDiagnostics([assertion=services.ai.assertion](auto expression,auto,auto line) { if (!assertion) throw std::logic_error("보상 TYPE HP 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }); // 같은 현재 checking과 장기 TYPE/약화 주소를 사용하는 기존 HP 소비자에 Client 진단 복귀를 연결한다.
         core.building.BindNotifyDiagnostics(RawCheckingFlag{gameplayGlobals->AiDebug().Checking()},[assertion=services.ai.assertion](auto expression,auto,auto) { if (!assertion) throw std::logic_error("지면 통지 실제 진단 장치 미연결");assertion(expression); }); // 같은 현재 checking owner와 Session보다 오래 보관할 수 있는 실제 서비스 callable만 빌린다.
         core.graph.BindDiagnostics({RawCheckingFlag{gameplayGlobals->AiDebug().Checking()},[this](auto expression,auto,auto line) { if (!services.ai.assertion) throw std::logic_error("Graph 참조 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }}); // 독립 Session도 같은 현재 owner/서비스를 쓰며 Validate 계획에는 진단을 섞지 않는다.
         anchorState.graphAssertion=[this](auto expression,auto,auto line) { if (!services.ai.assertion) throw std::logic_error("Graph SID 조회 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 현재 상태의 복사본도 같은 장기 Session 서비스를 매 호출 읽는다.
@@ -2646,7 +2650,7 @@ struct RawCampaignSession::Impl {
         aiWallet=std::make_unique<RawAiWallet>(aiMemory,players,AiWalletReads{
             [this] { return core.ownerMode.challenge; }, // 원본00594fc8은 참여/동맹이 조회하는 같은 현재 모드다.
             [this] { return services.missionOutcome.demo()!=0; }}); //00463b50은 missionPost가 아니라 현재 미션+68의 demo를 읽는다.
-        hp.BindPatchWallet([this](auto owner,auto amount) { aiWallet->Credit(owner,amount); }); // 새 brain이나 복제 지갑을 만들지 않고 현재 Player 포인터를 매번 조회한다.
+        if (localHp) hp.BindPatchWallet([this](auto owner,auto amount) { aiWallet->Credit(owner,amount); }); // 새 brain이나 복제 지갑을 만들지 않고 현재 Player 포인터를 매번 조회한다.
         AiObjectNoticeHooks objects;objects.carrierTargets=[this](Sid sid) { return AiCarrierTargets(sid); }; //00426150의같은현재경로TargetA/B를행동과공유한다.
         objects.distanceSquared=[this](Sid first,std::uint32_t second) {
             if (second>=core.pool.Capacity() || second>65535) throw std::out_of_range("AI 생성 통지 거리 SID 범위");const auto target=gunTarget->Center(Sid{static_cast<std::uint16_t>(second)}),source=gunTarget->Center(first);const double dx=static_cast<double>(source[0])-target[0],dy=static_cast<double>(source[1])-target[1];return dx*dx+dy*dy;
@@ -4415,6 +4419,8 @@ void RawCampaignSession::RecheckCurrentSelection() {
 }
 // 실제 Player 생성/현재 기술/참여가 같은 DWORD를 읽는다.
 std::uint32_t RawCampaignSession::PlayerKnown() const { return impl_->playerState.playerKnown; }
+// 비영 Player brain을 이미 선택한 호출만 현재 전체 Runtime을 보유하고 같은 실제 메모리를 빌린다.
+o::AiWalletMemoryAccess RawCampaignSession::BorrowAiWalletMemory() { return {&impl_->aiMemory,impl_->gameplayGlobals->PinCurrentRuntime(*this)}; }
 // 원본 로더의 현재 편집 조건과 같은 저장소를 직접 읽는다.
 std::uint32_t RawCampaignSession::Editor() const { return impl_->globals.editor; }
 // Get은 같은 분산배열의 값 비트를 모으고 float로 재해석하며 금액 변환/가산을 하지 않는다.

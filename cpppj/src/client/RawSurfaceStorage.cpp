@@ -102,6 +102,7 @@ const std::uint32_t& RawSurfaceStorage::LoadingDepth() const { return serializat
 RawSurfaceStorage::~RawSurfaceStorage()=default;
 void RawSurfaceStorage::BindChecking(o::RawCheckingFlag checking) { checking_=checking;RefreshChecking(); } //원문값은쓰지않고이미존재하는C++진단view만현재owner에연결한다.
 void RawSurfaceStorage::RefreshChecking() {
+    rewardState_.debugAsserts=Checking(); // 이미 구성한 장기 HP도 같은 현재 Client 진단 owner를 읽는다.
     const auto assertion=[this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); };
     if (graph_) graph_->BindDiagnostics({Checking(),assertion});if (building_) building_->BindNotifyDiagnostics(Checking(),assertion);
     if (factory_) factory_->BindDiagnostics({types,assertion,[this](auto text) { RecordAssertionDetail(text); },Checking()});if (postPop_) postPop_->BindManaDiagnostics({Checking(),assertion});

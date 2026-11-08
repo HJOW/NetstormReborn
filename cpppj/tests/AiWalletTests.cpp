@@ -3,8 +3,27 @@
 #include "o/SquidReward.h"
 #include "RawSceneSupport.h"
 #include <bit>
+#include <memory> // 지갑 호출 동안 실제 선택 owner가 살아 있는지 확인한다.
 using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
+
+// 원문 모드/owner/NULL brain 관문은 현재 메모리 owner조차 선택하지 않는다.
+TEST_CASE(AiWallet_DeferredMemoryPreservesEarlyReturnsAndSelectedLifetime) {
+    std::array<std::uint8_t,1620> players{};bool disabled=true;std::size_t acquisitions{}; // 비활성/NULL 본체 입력과 실제 선택 횟수다.
+    auto memory=std::make_shared<RawAiBrainMemory>(0x51000000,[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{}); });const auto token=memory->Allocate(RawAiBrainConstructor::kBytes);Put(memory->Bytes(token),0x2d8,5);std::weak_ptr<RawAiBrainMemory> lifetime=memory; // 선택된 실제 메모리의 외부 owner 반납을 관찰한다.
+    RawAiWallet wallet([&] { ++acquisitions;return AiWalletMemoryAccess{memory.get(),memory}; },players,{[&] { return disabled; },[&] { memory.reset();CHECK(!lifetime.expired());const auto current=lifetime.lock();CHECK(Get(current->Bytes(token),0x2d8)==12);Put(players,180+0xb0,0);return true; }});
+    Put(players,180+0xb0,token);wallet.Credit(1,7);CHECK(wallet.Balance(1)==0 && acquisitions==0);disabled=false;
+    wallet.Credit(0,7);wallet.Credit(0xffffffffU,7);CHECK(wallet.Balance(0x80000000U)==0 && acquisitions==0);Put(players,180+0xb0,0);wallet.Credit(1,7);CHECK(wallet.Balance(1)==0 && acquisitions==0);
+    Put(players,180+0xb0,token);wallet.Credit(1,7);CHECK(acquisitions==1 && lifetime.expired()); // demo가 외부 owner를 반납해도 같은 본체 재조회까지 pin을 유지한 뒤 반납한다.
+}
+
+// 현재 fort bool/editor DWORD를 기존 SP 가산 몸체가 매번 읽고 값형 사본으로 되돌리지 않는다.
+TEST_CASE(AiWallet_RewardReadsCurrentFixedSpModes) {
+    SidPool pool(OriginalEdition::Patch1078,32768);std::vector<RiftTypeRecord> types(188);SquidPostPopState bookkeeping;SquidRewardState state;GameRandom random(123);ScrambledSpStore store(random,[] { return 100U; });bool fort{};std::uint32_t editor{};std::size_t refreshes{}; // 실제 주소를 빌리는 두 모드와 표시 관측이다.
+    state.sharedFixedSpA=&fort;state.sharedFixedSpB=&editor;SquidReward reward(pool,types,bookkeeping,state,&store,{{},[&] { ++refreshes; }});store.Set(1,std::bit_cast<std::uint32_t>(1000.0F));
+    reward.AddSp(1,10.0F);CHECK(std::bit_cast<float>(store.Get(1))==1010.0F);editor=0x80000000U;reward.AddSp(1,1.0F);CHECK(std::bit_cast<float>(store.Get(1))==194162.0F && !state.fixedSpB);
+    editor=0;fort=true;store.Set(1,std::bit_cast<std::uint32_t>(2000.0F));reward.AddSp(1,1.0F);CHECK(std::bit_cast<float>(store.Get(1))==194162.0F && !state.fixedSpA);fort=false;reward.AddSp(1,2.0F);CHECK(std::bit_cast<float>(store.Get(1))==194164.0F && refreshes==4);
+}
 
 // 조회는현재Player포인터의signed지갑만읽으며데모/SP/본문바이트를변경하지않는다.
 TEST_CASE(AiWallet_BalanceUsesCurrentBrainWithoutDemoOrWrites) {
@@ -62,4 +81,13 @@ TEST_CASE(AiWallet_RewardUsesSameBrainAndKeepsLegacySeparate) {
     const auto randomBefore=random.State();reward.CreditWallet(1,-4);CHECK(Get(memory.Bytes(token),0x2d8)==873 && random.State()==randomBefore && refreshes==1 && std::bit_cast<float>(store.Get(1))==1100.75F);
     CHECK(Throws([&] { reward.BindPatchWallet({}); }));reward.CreditWallet(1,1);CHECK(Get(memory.Bytes(token),0x2d8)==874);
     SidPool cdPool(OriginalEdition::Cd1072,32768);std::vector<RiftTypeRecord> cdTypes(171);SquidPostPopState cdBook;cdBook.aiAttached[1]=true;SquidRewardState cdState;cdState.aiWallet[1]=77;SquidReward cd(cdPool,cdTypes,cdBook,cdState,nullptr);CHECK(Throws([&] { cd.BindPatchWallet([](auto,auto) {}); }));cd.CreditWallet(1,5);CHECK(cdState.aiWallet[1]==82);
+}
+
+// 같은 Client의 Player base가 바뀌면 오래된 span을 사용하지 않고 현재 표의 brain을 선택한다.
+TEST_CASE(AiWallet_CurrentPlayerBaseFollowsReallocationAfterEarlyGates) {
+    std::array<std::uint8_t,1620> firstPlayers{},secondPlayers{};bool disabled=true,second{};std::size_t playerReads{},memoryReads{};RawAiBrainMemory memory(0x52000000,[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{}); });const auto first=memory.Allocate(RawAiBrainConstructor::kBytes),next=memory.Allocate(RawAiBrainConstructor::kBytes); // 서로 다른 현재 Player base와 실제 본체다.
+    Put(firstPlayers,180+0xb0,first);Put(secondPlayers,180+0xb0,next);Put(memory.Bytes(first),0x2d8,7);Put(memory.Bytes(next),0x2d8,100);
+    RawAiWallet wallet([&] { ++memoryReads;return AiWalletMemoryAccess{&memory,{}}; },[&]() -> std::span<const std::uint8_t> { ++playerReads;return second ? std::span<const std::uint8_t>(secondPlayers):std::span<const std::uint8_t>(firstPlayers); },{[&] { return disabled; },[] { return false; }});
+    wallet.Credit(1,4);CHECK(wallet.Balance(1)==0 && playerReads==0 && memoryReads==0);disabled=false;wallet.Credit(0,4);CHECK(wallet.Balance(0xffffffffU)==0 && playerReads==0 && memoryReads==0);
+    wallet.Credit(1,4);second=true;wallet.Credit(1,5);CHECK(wallet.Balance(1)==105 && Get(memory.Bytes(first),0x2d8)==11 && playerReads==3 && memoryReads==3);
 }

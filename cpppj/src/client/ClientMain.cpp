@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "o/RawAiWallet.h" // 현재 Player/brain의 지갑은 조기 반환 뒤 실제 전체 owner를 빌린다.
 #include "client/ClientPacketRecord.h" //메타/일반 전송이 같은 실제 기록 FILE/프레임을 공유한다.
 #include "client/FontFaceEncoding.h" //Config 내부UTF-8 글꼴 이름을 원문 GDI A의 현재 ACP로 옮긴다.
 #include "client/ConfigFileRead.h" //실제10.78 Config만 현재 FILE/키와40380 부모를 사용한다.
@@ -442,6 +443,10 @@ int Client::Run() {
     if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindProcessDevices({[this] { return gameplayGlobals_->selection.selected; },[this] {
         if (gameplayGlobals_->Borrowed()) { auto& session=gameplayGlobals_->RequireSession();const auto runtimeOwner=gameplayGlobals_->PinCurrentRuntime(session);ClearClientUserSelection(*this); }else ClearClientUserSelection(*this); //실제선택효과가현재Session을필요로하면전체owner를보유하고빈선택은기존자연반환을사용한다.
     }}); //가짜선택0/가짜World/새대여없이실제현재장치만첫Host앞에연결한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) {
+        const auto wallet=std::make_shared<o::RawAiWallet>([current=gameplayGlobals_] { return current->RequireSession().BorrowAiWalletMemory(); },[records=playerRecords_]() -> std::span<const std::uint8_t> { return records->Records(); },o::AiWalletReads{[storage=surfaceStorage_.get()] { return storage->ownerMode.challenge; },[this] { return menu_ ? menu_->NativeMissionDemo()!=0:false; }}); // NULL brain은 Session 없이 원문처럼 반환하고 실제 비영 본체만 현재 Runtime을 요구한다.
+        surfaceStorage_->BindRewardDevices({std::shared_ptr<o::ScrambledSpStore>(spGlobals_,&spGlobals_->Store()),std::shared_ptr<const std::uint32_t>(gameplayGlobals_,&gameplayGlobals_->world.editor),[this] { if (!menu_) throw std::logic_error("SP 표시의 실제 현재 메뉴 장치 미연결");menu_->RefreshStormPower(); },[wallet](auto owner,auto amount) { wallet->Credit(owner,amount); }}); // aliasing owner가 실제 SP/editor/Player 물리를 보존하며 seed나 값은 쓰지 않는다.
+    }
     surfaceStorage_->BindSavedGame(localStateGlobals_->SavedGame()); //현재저장게임관문도World없는받침prefix와같은주소를빌린다.
     surfaceStorage_->BindContentCommand([this](auto code,auto x,auto y) { Input().PushCommand(code,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); }); //실제내용물UI통지는같은입력큐에예약한다.
     rendererFrame_->BindSurfaceDisplay(); //첫World전자체Renderer/카메라의현재getter만설치하며그리기/카메라/게임진행은실행하지않는다.

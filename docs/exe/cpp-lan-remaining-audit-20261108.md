@@ -1,8 +1,8 @@
 # M6 전수 대조 준비 — 2026-11-08 / HJOW-Athlon
 
-**1184 현행:**1183 저장 전역 뒤 m2c1 장기 가상 조회를 실제 Native 저장/보상 Caller와 공유했다.1180의 전투 플래그는 bool 참조였으며 DWORD 임시값 진단/복원 주장을 정정했다. NoWorld HP/보상/SP·파생 삭제/큰 owner·전체 Snapshot/JoinTestBattle와 Source/listener/표/Poll·63잔여F·M6-l/m/n/큐는 미완료다. 태그25는 전scope 완료 수가 아니다. 기존 비MP Fort 로더5검사 통과/새MP 실행0이다. [1184 근거](cpp-fort-save-virtual-owner-20261108.md).
+**1185 현행:**1184 가상 조회 뒤 n9c1 장기 HP/보상·같은 분산 SP/현재 fort·editor·현재 Player base와 선택된 실제 AI Runtime을 연결했다. 비MP26검사와 Tutorial4 생산/건설 요청·600frame 대기, Edit 진입/복귀를 확인했다. NoWorld 공통/자원 파생 삭제·ConstructionRuntime·큰 AI/Carrier owner·전체 Snapshot/JoinTestBattle와 Source/listener/표/Poll·63잔여F·M6-l/m/n/큐는 미완료다. 태그25는 전scope 완료 수가 아니며 새MP 실행0/큐 비활성이다. [1185 근거](cpp-reward-sp-owner-20261109.md).
 
-제품 코드/LEFT_JOBS/추적 문서는 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
+이하 본문의 초기 조사는 제품 코드/LEFT_JOBS/추적 문서를 수정하지 않은 병렬 읽기 전용 조사다. 실행 검사·빌드·MP/소켓/원본 실행은 0이다. 마지막 전체 정밀 디컴파일은 LEFT_JOBS의 2026-11-03/HJOW-Athlon, R 전용 2026-11-07/동일 호스트로 현재 호스트와 일치한다. 새 디컴파일은 하지 않았다.
 
 `audit.json`은 당시 HEAD/28개 근거 파일 SHA-256과 원문40b4b0의 수신 등록92행을 보존한다. `original-fragments.c`는 아래 직접 근거의 생성 C 원문 발췌다. 조사 이후 부모/다른 에이전트의 소스가 바뀔 수 있으므로 구현 직전에 현행 파일과 다시 대조한다. 후보 수를 M6 전체 완료율이나 예상 커밋 수로 쓰지 않는다.
 

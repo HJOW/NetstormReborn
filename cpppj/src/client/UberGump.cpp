@@ -204,6 +204,8 @@
 #include "platform/Utf8Path.h" //Windows10/11의 한글 Edit 작업본은 원본 ANSI 경로와 달리 UTF-8/W 경계로 전달한다.
 
 namespace netstorm::client {
+// 원문과 같이 현재 Mission의 실제 gate.demo를 읽고 World/Session을 새로 요구하지 않는다.
+std::uint32_t UberGump::NativeMissionDemo() const { return missionRuntime_ ? missionRuntime_->gate.demo:0U; }
 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 미션 진행/적 상태/기술은 바꾸지 않는다.
 void UberGump::InspectBridgePatterns(std::string_view patterns) { rawButtons_->ConfigureTestBridgePatterns(patterns); }
 namespace {

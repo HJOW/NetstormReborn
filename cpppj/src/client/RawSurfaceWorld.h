@@ -31,6 +31,7 @@
 #include "o/SquidFrameBinding.h"
 #include "o/SquidDestroyLifecycle.h"
 #include "o/SquidOwner.h"
+#include "o/SquidReward.h" // Native HP/보상은 같은 Client 물리와 전역을 장기 공유한다.
 #include "o/RawStateSidLists.h"
 #include <functional>
 #include <memory>
@@ -42,6 +43,13 @@
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
 class NativeFortSaveVirtual; //저장/보상 가상 조회가 같은 현재 Pool/TYPE/Hash를 빌리는 순수 장치다.
+// 실제 분산 SP와 현재 편집 모드의 owner를 보존하며 Session/World를 소유하지 않는다.
+struct RawSurfaceRewardDevices {
+    std::shared_ptr<o::ScrambledSpStore> sp; // 같은 ClientSpGlobals의 실제 저장소를 aliasing 소유권으로 빌린다.
+    std::shared_ptr<const std::uint32_t> editor; // 같은 GameplayGlobals의 실제 editor DWORD 주소를 보존한다.
+    std::function<void()> refreshSp; // 실제 현재 예산 serial의 Push/Attach/깊이 복원을 호출한다.
+    std::function<void(std::uint32_t,std::int32_t)> creditWallet; // 원본 조기 반환 뒤 같은 Player/brain 지갑에 가산한다.
+};
 struct RawSurfaceResourceDevices { //같은Client게임난수와선택된큰자산장치만장기로빌린다.
     std::function<o::GameRandom&()> random; //새seed/snapshot없이실제현재GameRandom한개를조회한다.
     std::function<void(o::Sid)> carrierCheck; //실제가상cc의현재Carrier검사를선택위치에서호출한다.
@@ -85,6 +93,7 @@ private:
     o::RawCheckingFlag checking_; // 대여/World반납뒤에도같은현재Client진단DWORD를읽는다.독립저장소기본값은0이다.
     o::SquidPostPopDevices postPopDevices_; //현재실제Client AI/로컬owner/선택의장기장치다.
     std::weak_ptr<const RawSurfacePopBindings> popRuntime_; //현재typed장치/외부Kernel만짧게빌리고반납뒤장기기본전송을사용한다.
+    RawSurfaceRewardDevices rewardDevices_; // 같은 실제 SP/모드 owner를 처리기보다 오래 보관한다.
     RawSurfaceResourceDevices resourceDevices_; //실제Client장치만보관하며짧은Session주소를저장하지않는다.
     RawSurfaceProcessDevices processDevices_; //실제Native선택/정리장치만보관하며World/Session을캡처하지않는다.
     RawSurfaceTransmissionDevices transmissionDevices_; //실제Client만명시연결하며Source포인터로Native정책을추정하지않는다.
@@ -129,6 +138,9 @@ public:
     std::int32_t SerializeProcessForm(o::SquidProcess& process,std::span<std::uint8_t> buffer,bool parentChanged,std::uint32_t force); //같은실제Kernel객체의파생writer에현재헤더와caller의같은예약을넘긴다.
     std::uint32_t CurrentProcessSelection() const; //Native공통삭제의선택비교위치에서실제Client전체DWORD를현재조회한다.
     void BindResourceDevices(RawSurfaceResourceDevices devices); //첫자원파생앞에실제장기장치만연결하며난수/생성/대여는실행하지않는다.
+    void BindRewardDevices(RawSurfaceRewardDevices devices); // 첫 Native 사용 전에 실제 장치만 연결하며 SP/난수/World를 초기화하지 않는다.
+    o::SquidRewardState& RewardState(); // 같은 장기 전역 뷰를 Session과 보상 caller가 공유한다.
+    o::SquidReward& Reward(); // 같은 Pool/TYPE/장부의 장기 HP·보상을 필요한 순간 한 번 구성한다.
     void BindProcessDevices(RawSurfaceProcessDevices devices); //첫Host/삭제기전현재Client장치만결합하며선택/삭제를실행하지않는다.
     o::RawSquidDestroy& BaseDestroy(); //Native공통삭제깊이/Unpop/Pool의장기실제owner다.
     void BroadcastProcessForm(std::int32_t length); //실제writer의양수반환뒤같은공통2048BYTE를Native대상별가상송신에넘긴다.
@@ -241,6 +253,8 @@ private:
     std::unique_ptr<o::RawCarrierPostPop> resourceCarrier_; //같은공통PostPop을직접호출하는장기실제부모다.
     std::unique_ptr<o::RawAssetPostPop> resourceGeyser_; //Geyser전용본문만공유하며다른자산의가상등록을합성하지않는다.
     std::unique_ptr<o::RawNuggetRegular> resourceNuggetRegular_; //장기기본Host의실제왕복/낙하본문이며현재Sessionoverride를보존한다.
+    o::SquidRewardState rewardState_; // Session 이후에도 같은 현재 장기 모드/TYPE/비율을 읽는다.
+    std::unique_ptr<o::SquidReward> reward_; // Pool/TYPE/장부보다 먼저 반납하며 지역 Session callback을 저장하지 않는다.
     std::unique_ptr<NativeFortSaveVirtual> fortSaveVirtual_; //같은 Storage/GameAux를 빌리는 실제 조회기이며 해당 소유자보다 먼저 반납한다.
     std::unique_ptr<o::RawNuggetPostPop> resourceNugget_; //같은Host/난수/확보메모리의너겟후처리다.
     std::unique_ptr<o::RegularProcess> resourceRegular_; //할당과생성사이동일new28의소유권만보존한다.
