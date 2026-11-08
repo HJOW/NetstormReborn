@@ -283,8 +283,9 @@ private:
     o::RawCarrierPostPop& ResourceCarrierPostPop(); //실제같은로딩깊이/권한/TYPE/지면소유자/공통깊이를장기로연결한다.
     bool AllocateResourceRegular(); //원문new28의동일확보메모리이며실패뒤난수를소비하지않는다.
     void ConstructResourceRegular(o::Sid sid,std::uint32_t event,float payload); //확보한같은객체주소에서현재Host에생성·부착한다.
-    o::SquidDestroyHooks DefaultProcessAssetHooks(); //실제선택/전송과미설치자산가상몸체를구별하는장기Formfallback이다.
-    o::SquidFormDispatch& ProcessFormDispatch(); //같은공통삭제깊이에실제ProcessForm호스트를등록하며다른Form은필요한전용owner를요구한다.
+    void EmitDefaultAssetEffect(const o::SquidDestroyEvent& event); //현재VT의실제Pre/Post/부모통지를같은장기삭제부모에분배한다.
+    o::SquidDestroyHooks DefaultProcessAssetHooks(); //실제선택/전송과자산가상효과를같은장기부모에연결한다.
+    o::SquidFormDispatch& ProcessFormDispatch(); //같은공통삭제깊이에실제자산가상10과ProcessForm을등록하며다른Form은전용owner를요구한다.
     float HandleDefaultRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); //PE의현재VT+5c가복원된원문base인경우만해당본문을실행한다.
     std::int32_t WriteDefaultForm(o::SquidProcess& process,bool parentChanged,std::uint32_t force); //Dais/Construction의실제writer를같은공통버퍼로분배하며다른파생누락은선택위치에서드러낸다.
     o::BridgeConnectHooks SurfaceObjects(); //연결/받침이공유하는같은실제Factory/Owner/Pop/Frame/통지다.

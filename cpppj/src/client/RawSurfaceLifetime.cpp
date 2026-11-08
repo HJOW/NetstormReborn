@@ -22,7 +22,7 @@ o::RawSurfaceLifecycle& RawSurfaceStorage::SurfaceLifetime() {
     if (!surfaceLifetime_) {
         o::SurfaceLifecycleHooks hooks;
         hooks.scheduleFall=[this](auto sid,auto x,auto y) { o::ScheduleBridgeFallChecked(Processes().Host(),pool,types,sid,x,y,Checking()); };
-        hooks.destroy=[this](auto sid,auto flags) { const auto destroy=resourceDevices_.destroy;if (!destroy) throw std::logic_error("표면 연결 객체의 실제 현재 가상 삭제 미연결");destroy(sid,flags); };
+        hooks.destroy=[this](auto sid,auto flags) { DestroyAsset(sid,flags); }; //중첩된실제연결객체도현재World또는같은장기VT분배를다시선택한다.
         hooks.fallWalker=[this](auto sid) { const auto current=surfaceLifetimeRuntime_.lock();if (!current) throw std::logic_error("표면의 선택된 실제 이동 유닛 낙하 owner 미연결");const auto pin=current->pin ? current->pin():std::shared_ptr<void>{};const auto fall=current->fallWalker;fall(sid); };
         hooks.bridgeEffect=[this](const auto& event) { const auto current=surfaceLifetimeRuntime_.lock();if (!current) throw std::logic_error("표면의 선택된 실제 파편/소리 owner 미연결");const auto pin=current->pin ? current->pin():std::shared_ptr<void>{};const auto effect=current->bridgeEffect;effect(event); };
         auto body=std::make_unique<o::RawSurfaceLifecycle>(pool,Neighbors(),links.connectorType,CommonDeletion().Hooks(),std::move(hooks));body->BindCurrentConnectorType(links.connectorType);surfaceLifetime_=std::move(body);

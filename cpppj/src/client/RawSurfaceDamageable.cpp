@@ -43,7 +43,7 @@ o::RawDamageablePostDestroy& RawSurfaceStorage::DamageablePost() {
         o::DamageablePostDestroyHooks hooks;hooks.dropDude=damageableDevices_.dropDude;hooks.dropIsland=damageableDevices_.dropIsland;
         hooks.regular=[this](auto sid,auto event,auto payload,auto count) { auto* process=Processes().Host().AddRegular(sid,event,payload);if (!process) throw std::bad_alloc();process->SetInitialCount(count); };
         hooks.hasBridgeFall=[this](auto sid) { return o::HasScheduledBridgeFall(Processes().Host(),sid); };hooks.notifySurface=[this](auto sid) { Building().NotifySurface(sid); };hooks.displayUpdate=[this](auto sid) { Display().Update(pool.Slot(sid)); };
-        hooks.destroy=[this](auto sid,auto flags) { const auto destroy=resourceDevices_.destroy;if (!destroy) throw std::logic_error("장기 Damageable의 선택된 실제 가상 삭제 미연결");destroy(sid,flags); };hooks.base=[this](auto sid,auto flags) { CommonDeletion().PostDestroy(sid,flags); };
+        hooks.destroy=[this](auto sid,auto flags) { DestroyAsset(sid,flags); };hooks.base=[this](auto sid,auto flags) { CommonDeletion().PostDestroy(sid,flags); }; //현재World없는주변다리도같은장기삭제분배로재진입한다.
         damageablePost_=std::make_unique<o::RawDamageablePostDestroy>(pool,hash,types,frames,Reward(),Neighbors(),DamageablePostGlobals(),std::move(hooks));
     }
     return *damageablePost_;

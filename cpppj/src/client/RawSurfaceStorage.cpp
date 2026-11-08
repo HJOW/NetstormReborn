@@ -184,7 +184,7 @@ float RawSurfaceStorage::ResourceDamageableRegular(o::Sid sid,std::uint32_t even
 o::RawNuggetRegular& RawSurfaceStorage::ResourceNuggetRegular() { //같은실제현재게임난수/프레임/공간과PostPop의확보메모리를공유한다.
     if (!resourceNuggetRegular_) { o::NuggetRegularHooks hooks;hooks.setFrame=[this](auto sid,auto frame,auto flags) { Frame().Set(sid,frame,flags); };hooks.refresh=[this](auto sid) { Display().Update(pool.Slot(sid)); };hooks.allocate=[this] { return AllocateResourceRegular(); };
         hooks.randomInteger=[this](auto low,auto high) { const auto read=resourceDevices_.random;if (!read) throw std::logic_error("장기너겟왕복의실제난수미연결");return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(low)+read().Next(static_cast<std::uint32_t>(high)-static_cast<std::uint32_t>(low))); };
-        hooks.construct=[this](auto sid,auto event,auto payload) { ConstructResourceRegular(sid,event,payload); };hooks.destroy=[this](auto sid,auto flags) { const auto destroy=resourceDevices_.destroy;if (!destroy) throw std::logic_error("장기너겟의현재가상삭제미연결");destroy(sid,flags); };hooks.unpop=[this](auto sid,auto flags) { UnpopAsset(sid,flags); };hooks.pop=[this](auto sid,auto x,auto y,auto flags) { PopAsset(sid,x,y,flags); };
+        hooks.construct=[this](auto sid,auto event,auto payload) { ConstructResourceRegular(sid,event,payload); };hooks.destroy=[this](auto sid,auto flags) { DestroyAsset(sid,flags); };hooks.unpop=[this](auto sid,auto flags) { UnpopAsset(sid,flags); };hooks.pop=[this](auto sid,auto x,auto y,auto flags) { PopAsset(sid,x,y,flags); }; //실제너겟소진도현재World또는같은장기가상삭제를선택한다.
         hooks.damageable=[this](auto sid,auto event,auto count,auto payload) { return ResourceDamageableRegular(sid,event,count,payload); };hooks.aFrameCount=[this](auto type) { if (type>=frames.size()) throw std::out_of_range("장기너겟현재A프레임TYPE물리부족");return frames[type].Run('A').count; };resourceNuggetRegular_=std::make_unique<o::RawNuggetRegular>(pool,std::span<const std::int32_t>{},spots,authority_->boss,std::move(hooks));
     }return *resourceNuggetRegular_;
 }
@@ -217,12 +217,12 @@ std::uint32_t RawSurfaceStorage::CurrentProcessSelection() const { //앞선진�
 o::RawSquidDestroy& RawSurfaceStorage::BaseDestroy() { //Native의같은전역pre/post깊이와현재Pool/Unpop/TYPE를공유한다.
     if (!baseDestroy_) { auto destroy=std::make_unique<o::RawSquidDestroy>(pool,Unpop(),types);if (auto diagnostics=DestroyDiagnostics()) destroy->BindPatchDiagnostics(std::move(*diagnostics));baseDestroy_=std::move(destroy); }return *baseDestroy_;
 }
-o::SquidDestroyHooks RawSurfaceStorage::DefaultProcessAssetHooks() { //전송/선택정리는실제장기부모이며미복원자산가상효과를빈성공으로대체하지않는다.
+o::SquidDestroyHooks RawSurfaceStorage::DefaultProcessAssetHooks() { //같은장기부모에서현재VT의실제삭제효과를선택한다.
     o::SquidDestroyHooks hooks;hooks.selectedRaw=[this] { return CurrentProcessSelection(); };hooks.unpopForm=[this](auto sid) { Factory().UnpopForm(sid); };
-    hooks.emit=[this](const o::SquidDestroyEvent& event) { if (event.effect==o::SquidDestroyEffect::Transmit) { Transmission().Transmit(event.sid,-1,-2,0,event.flags);return; }if (event.effect==o::SquidDestroyEffect::ClearSelection) { const auto clear=processDevices_.clearSelection;if (!clear) throw std::logic_error("장기Process삭제의실제선택정리미연결");clear();return; }throw std::logic_error("World없는종속자산의실제가상삭제몸체미설치"); };return hooks;
+    hooks.emit=[this](const o::SquidDestroyEvent& event) { if (event.effect==o::SquidDestroyEffect::Transmit) { Transmission().Transmit(event.sid,-1,-2,0,event.flags);return; }if (event.effect==o::SquidDestroyEffect::ClearSelection) { const auto clear=processDevices_.clearSelection;if (!clear) throw std::logic_error("장기Process삭제의실제선택정리미연결");clear();return; }EmitDefaultAssetEffect(event); };return hooks;
 }
-o::SquidFormDispatch& RawSurfaceStorage::ProcessFormDispatch() { //현재World가없어도같은실제Host의ProcessForm만공통삭제기에결합한다.
-    if (!processForms_) { auto forms=std::make_unique<o::SquidFormDispatch>(pool,BaseDestroy(),DefaultProcessAssetHooks());forms->Bind(Processes().Host());processForms_=std::move(forms); }return *processForms_;
+o::SquidFormDispatch& RawSurfaceStorage::ProcessFormDispatch() { //현재World가없어도같은실제Host와공통/다리의가상10을결합한다.
+    if (!processForms_) { auto forms=std::make_unique<o::SquidFormDispatch>(pool,BaseDestroy(),DefaultProcessAssetHooks(),[this](auto sid,auto flags,const auto& hooks) { return VirtualDestroy().Destroy(sid,flags,hooks); });forms->Bind(Processes().Host());processForms_=std::move(forms); }return *processForms_;
 }
 float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) { //현재VT의실제+5c주소가base496e70인클래스만원문payload반환을실행한다.
     constexpr std::array<std::uint32_t,16> kBaseRegularVtables{0x00501dd0U,0x00503360U,0x00506d98U,0x00506e50U,0x00506f08U,0x005070c0U,0x005092d0U,0x00509388U,0x00509b98U,0x0050c3b0U,0x0050c9f0U,0x0050db78U,0x0050eb98U,0x00512098U,0x00512110U,0x00512188U}; //보호PE87VT를조회해+5c=00496e70인16개만보존한불변메타데이터다.
@@ -353,8 +353,9 @@ o::SquidDisplay& RawSurfaceStorage::Display() {
     return *display_;
 }
 // 원문의 실제 공통생성자를 같은 장기물리에 한 번 구성한다. 생성의 선택효과는 기존Factory가 결정한다.
-// 선택된 실제 Client 삭제 장치를 호출하며 거부/예외/부분 효과와 현재 Runtime의 수명은 그 장치가 보존한다.
+// 현재삭제대여가있으면기존Client장치의실제Runtime pin을유지하고없으면같은장기VT분배를사용한다.
 bool RawSurfaceStorage::DestroyAsset(o::Sid sid,std::uint32_t flags) {
+    if (UsesNativeTransmissionDevices() && patchDestroyDiagnostics_ && deletionRuntime_.expired()) { const auto result=ProcessFormDispatch().Destroy(sid,flags);if (result) NoteChanged();return result; } //실제Client의PATCH삭제모드만장기본문을사용한다.독립typed장치계약은유지하고물리World잔류가아니라실제삭제대여의생존을기준으로선택한다.
     const auto destroy=resourceDevices_.destroy; //현재 장치를 호출이 끝날 때까지 보유하며 Session/World를 캡처하지 않는다.
     if (!destroy) throw std::logic_error("장기 자산의 현재 가상 삭제 장치 미연결");
     return destroy(sid,flags);
