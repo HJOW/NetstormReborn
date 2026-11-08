@@ -56,6 +56,8 @@ public:
     ~UberGump();
     // 원본 루프 시작의 State 자리에서 대기 명령을 실행하고 시간 제한을 갱신한다.
     void Tick();
+    void RunNativePacketState(); //장기 수신 F가 선택한 현재 State를 기존 실제 동기 Run 부모로 전달한다.
+    void ShowNativePacketTell(std::string_view section); //같은 현재 Config/미션 HTML Tell을 사용하고 상태나 성공값을 만들지 않는다.
     NativeBattleSource CurrentNativeBattleSource() const; //현재 실제 Composite/Meta/Editor device만 읽으며 phase 추정/새Source 생성을 하지 않는다.
     void DispatchNativeBattleStart(NativeBattleSource source,bool direct); //1a는 기존next7에weak로 기억하고1b는같은current7을즉시실행한다.
     void PollMissionPackets(); // 정상 루프의 메시지 처리 전에 실제 로컬 큐를 폴링하고 같은 미션의 접속 완료만 UI에 공개한다. 외부 TCP/IP 폴링을 대신하지 않는다.

@@ -100,13 +100,6 @@ std::uint32_t PeerWord(std::span<const std::uint8_t> bytes,std::size_t at) {
     for (std::size_t byte=0;byte<4;++byte) value|=std::uint32_t(bytes[at+byte])<<(8*byte);
     return value;
 }
-//004b4160의 현재 Client 진단/Config/Tell만 사용하는 고정 버전 본문이다. 실제 Source나 Runtime을 요구하지 않는다.
-bool CheckClientMetaVersion(Client& client,const std::function<void(std::string_view)>& tell,std::uint32_t major,std::uint32_t minor) {
-    if (major!=10 || minor!=78) {
-        client.WriteDiagnosticLog(0x1d,"VERSION DIFFERENCE: You are 10.78. Meta Server is "+std::to_string(major)+'.'+std::to_string(minor)+".\n");
-        if (major!=10 && !client.Configuration().GetInt("suppressVersionMessage")) { tell("MetaVerDiff("+std::to_string(major)+'.'+std::to_string(minor)+')');return false; }
-    }return true;
-}
 // 00435a60의제목부분일치를검사하고모든창의열거를계속한다.실제LPARAM폭으로결과주소를전달한다.
 BOOL CALLBACK FindRootWindow(HWND window,LPARAM value) {
     std::array<char,256> title{};GetWindowTextA(window,title.data(),static_cast<int>(title.size()));if (std::strstr(title.data(),"Netstorm Root Server")) *reinterpret_cast<bool*>(value)=true;return TRUE;
@@ -132,11 +125,7 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     chat.send=[this](auto id,auto packet) { static_cast<void>(client_.ConnectionGlobals()->SendMutable(id,packet,client_.PlayerRecords()->Records())); };chat.receive=[this](auto packet,auto) { chatReceive_(packet); };
     chat.assertion=[this](auto line) { const auto expression=line==0x81dU ? "nameLen != (short)-1":line==0x81eU ? "bufferLen != (short)-1":"addrLen != (unsigned char)-1";client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }; //현재패킷관찰기의실제식/줄번호를같은Client진단에전달하고복귀뒤길이계산을계속한다.
     RegisterChatPacket(dispatch,client_.ChatWindowGlobals()->receivedMask,std::move(chat)); //메타의같은TCP/UDP등록표에실제41h중계를설치하며일반Session인계시기존동일슬롯재등록을사용한다.
-    InstallClientConnectionEndedReceiver(client_,dispatch); //World 없는 Meta도 같은 전역 F를 사용하며 실제 저장·방송만 현재 Session을 선택한다.
-    dispatch.ObservePacket(0x0f,[this](auto packet,auto sending) { o::ObserveRootLoginReply(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x0f,1,0);dispatch.RequireLength(0x0f,0xffff);
-    dispatch.Register(0x0f,[this](auto,auto&,auto packet) { ReceiveRootReply(packet); }); //원문과같이sender/연결번호·현재phase 관문을 수신 앞에 추가하지 않는다.
     //1a/1b의 metadata와 고정 전역 수신값은 앞선 같은 InstallClientPacketDefaults에서 설치한다.
-    dispatch.Observe(0x1d,[](std::uint32_t) {});dispatch.Version(0x1d,1,0);dispatch.RequireLength(0x1d,13); //원문0b380의 빈 관찰기/버전1과 실제13BYTE의 고정 응답이다.
     dispatch.Observe(0x88,{});dispatch.Version(0x88,1,0);dispatch.RequireLength(0x88,98); //0040b380 빈 관찰기와 보호 PE0052ec40의 고정98BYTE다.
     dispatch.ObservePacket(0x20,[this](auto packet,auto sending) { ObserveNativeMetaParticipantAdd(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x20,1,0);dispatch.RequireLength(0x20,0xffff);
     dispatch.Register(0x20,[this](auto,auto&,auto packet) { ReceiveParticipantAdd(packet); }); //원문 State의 메타 관문 뒤만 처리하며 sender/known/phase를 더 검사하지 않는다.
@@ -147,32 +136,18 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
         if (!client_.SurfaceStorage()->ownerMode.challenge) return;if (!client_.ChallengeGlobals()->Current()) client_.SurfaceStorage()->AssertDisplay("CS",".\\State.cpp",0xd04);NativeMetaParticipantRemoveHooks h;h.checking=client_.SurfaceStorage()->Checking();h.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };h.log=[this](auto text) { client_.WriteDiagnosticLog(9,text); };
         h.battle=[this](auto id) { client_.UpdateNativeMetaBattle(id); };h.chat=[this](auto subscriber) { client_.ChatChannels().Forget(subscriber); };h.leave=[this](auto object,auto downward) { auto& rig=client_.AcquireNativeIslandRig(object,0,1);LeaveNativeIslandRig(rig,downward); };h.refreshInfo=refreshInfo_;ReceiveNativeMetaParticipantRemove(*client_.ChallengeGlobals(),packet,h);
     }); //4b46d0의 현재 메타/CS 진단 뒤 전체 제거를 연결하며 phase/known/sender를 추가하지 않는다.
-    dispatch.ObservePacket(0x26,[this](auto packet,auto sending) { ObserveNativeMetaGeometry(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x26,1,0);dispatch.RequireLength(0x26,0xffff);
-    dispatch.Register(0x26,[this](auto,auto&,auto packet) {
-        auto& challenge=*client_.ChallengeGlobals();ReceiveNativeMetaGeometry(packet,challenge.Geometry(),challenge.GeometryMode(),[this](float width,float height) { auto& screen=client_.GetScreen();client_.GameplayGlobals()->Camera().UpdateTargetLimits(screen.Width(),screen.Height(),width,height); });
-    }); //4b45a0에는 CS NULL 진단/메타 모드/송신자/known 관문이 없다.
     dispatch.Register(0x88,[this](auto,auto&,auto packet) {
         NativeMetaParticipantNameHooks receive;receive.translate=[this](auto source) { const auto encoded=o::EncodeDisplayText(client_.Translate(source));return std::string(encoded.begin(),encoded.end()); };receive.weight=[this](auto core) { return Weight(core); };
         receive.update=[this](auto participant,auto mask) { client_.UpdateNativeMetaParticipant(participant,mask); };receive.refreshInfo=refreshInfo_;ReceiveNativeMetaParticipantName(*client_.ChallengeGlobals(),packet,receive);
     }); //원문의88h에는 메타 모드/CS 진단/known/송신자 관문이 없다.
-    dispatch.RegisterCanonicalDirect(0x1d,0x004b8ac0U,[client=&client_,tell=tell_,run=processState_](auto,auto*,auto packet) { //Client의 현재 State/장기 UI Run만 필요하며 old Meta/Session이나 Runtime pin을 보유하지 않는다.
-        o::ChallengeLoginReplyHooks reply;reply.log=[client](auto text) { client->WriteDiagnosticLog(0x1d,text); };reply.version=[client,tell](auto major,auto minor) { return CheckClientMetaVersion(*client,tell,major,minor); };reply.run=run;
-        o::ReceiveChallengeLoginReply(packet,client->LocalStateGlobals()->State(),client->GameplayGlobals()->Subscribers()->MySubscriber(),reply);
-    }); //sender/phase/known 필터나 가짜 성공을 추가하지 않고 실제 현재 Subscriber와 다섯 State 블록을 사용한다.
     dispatch.Version(0x16,1,0);dispatch.RequireLength(0x16,0xffff); //40a190은 앞선 공용 실제 진단/관찰기를 유지하고 Client receiver는 NULL이다.
     dispatch.Version(0x1c,1,0);dispatch.RequireLength(0x1c,0xffff); //40a270도 같은 진단 복귀/현재 BYTE 재조회 본체를 사용한다.
-    dispatch.Observe(0x66,[](std::uint32_t) {});dispatch.Version(0x66,1,0);dispatch.RequireLength(0x66,12);
-    dispatch.RegisterCanonicalDirect(0x66,0x004b8a10U,[client=&client_,run=processState_](auto sender,auto*,auto packet) { //고정 Native F만 보관하고 실제 sender 주소는 본문이 선택한 때 같은 현재 Registry에서 조회한다.
-        o::LocalServerDiscoveryReceiveHooks receive;receive.wall=[client] { return client->WallSeconds(); };receive.peerAddress=[client](auto id) { return CampaignPeerAddressText(client->ConnectionGlobals()->Address(std::bit_cast<std::int32_t>(id))); };receive.processState=run;
-        auto& local=*client->LocalStateGlobals();o::ReceiveLocalServerDiscovery(local.State(),{local.LocalServerToken(),local.LocalServerSearchEnd(),local.LocalServerRetryEnd()},sender,packet,receive);
-    }); //서버발견은현재36직접쓰기뒤실제Run을동기실행한다.검색토큰비교만인경우Run하지않는다.
     dispatch.Version(0x1f,1,0);dispatch.RequireLength(0x1f,12); //고정12BYTE/master 준비 통지는 앞선 비NULL 빈 관찰기를 유지하며 Client 수신기는 NULL이다.
     dispatch.Version(0x1e,1,0);dispatch.RequireLength(0x1e,14); //고정14BYTE 통지도 앞선 비NULL40b380 관찰기/NULL Client 수신기를 보존한다.
     dispatch.Observe(0x7c,[](std::uint32_t) {});dispatch.Version(0x7c,1,0);dispatch.RequireLength(0x7c,28); //0040b380의 비NULL 빈 관찰기이며 원문 고정28BYTE metadata다.
     dispatch.RegisterDirect(0x7c,[this](std::uint32_t sender,o::PacketConnection*,std::span<const std::uint8_t> packet) { ReceiveMetaGameLogin(sender,packet); }); // 둘째 연결 인자는 사용하지 않으며 SharedNetwork가 보유하는 같은 실제 Meta/TCP owner를 사용한다.
     dispatch.Version(0x67,1,0);dispatch.RequireLength(0x67,0xffff); //송신 관찰기는 앞선 공용 기본 표를 유지하고 기존 버전/길이/수신 부모만 연결한다.
     dispatch.Register(0x67,[this](auto sender,auto&,auto packet) { ReceiveBattleOptions(sender,packet); }); //원문과같이sender/phase/known 관문 없이 전체 State 부모를 호출한다.
-    o::RegisterStateMetaBattleDescription(dispatch,client_.ChallengeGlobals()->Current(),[this](auto,auto packet) { ReceiveNativeMetaBattleDescription(*client_.ChallengeGlobals(),packet,MakeClientMetaBattleDescriptionHooks(client_)); },[this](auto expression) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",0xae3); }); //sender/phase/known/mode 조건을 추가하지 않는다.
     dispatch.Observe(0x23,{});dispatch.Version(0x23,1,0);dispatch.RequireLength(0x23,20); //0040b380의 빈 관찰기와 보호 PE의 고정20BYTE다.
     dispatch.Register(0x23,[this](auto,auto&,auto packet) {
         if (!client_.SurfaceStorage()->ownerMode.challenge) return;if (!client_.ChallengeGlobals()->Current()) client_.SurfaceStorage()->AssertDisplay("CS",".\\State.cpp",0xce6);NativeMetaBattleCreateHooks receive;BindClientMetaBattleObjects(receive,client_);
@@ -242,13 +217,7 @@ void MetaConnectionRuntime::ReceiveBattleOptions(std::uint32_t sender,std::span<
 // minor 차이는 로그만 남기고 major 차이만 현재 설정값/실제 Tell 결과로 거부한다.
 bool MetaConnectionRuntime::CheckMetaVersion(std::uint32_t major,std::uint32_t minor) { return CheckClientMetaVersion(client_,tell_,major,minor); } //기존 Root 응답도 같은 현재 버전 본문을 공유한다.
 // 현재 Client의 같은 기록/phase/목록을 빌리며 별도 메타 표나 접속성공을 만들지 않는다.
-void MetaConnectionRuntime::ReceiveRootReply(std::span<const std::uint8_t> packet) {
-    auto& local=*client_.LocalStateGlobals();o::RootLoginReplyHooks hooks;hooks.version=[this](auto major,auto minor) { return CheckMetaVersion(major,minor); };
-    hooks.clearZones=[this] { ClearClientMetaZoneRecords(client_,*client_.SurfaceStorage()); };
-    hooks.checksum=[this](auto value) { client_.NsInfoGlobals()->SetServerValue(std::bit_cast<std::int32_t>(client_.LocalStateGlobals()->State().phase[0x44/4]),value); };
-    hooks.server=[this](auto row) { client_.NsInfoGlobals()->UpsertServer(row,true); };hooks.saveServers=[this] { SaveClientRootServerList(client_); };
-    o::ReceiveRootLoginReply(packet,{local.State(),local.MetaZones().records,local.MetaRefresh()},hooks);
-}
+void MetaConnectionRuntime::ReceiveRootReply(std::span<const std::uint8_t> packet) { ReceiveClientRootReply(client_,packet); } //직접 명시 호출도 같은 장기 F본문을 공유하며 Meta 존재를 수신 자격으로 삼지 않는다.
 bool MetaConnectionRuntime::CallbackActive() const { return pumping_; } //현재 대여 중인 이 owner를 Native cleanup이 반납하지 않게 한다.
 bool MetaConnectionRuntime::OwnsConnection(const o::PacketConnection& connection) const noexcept { return tcp_->OwnsConnection(connection) || udp_->OwnsConnection(connection); } //closed/retired도 같은 실제 node owner로 선택한다.
 MissionNetwork MetaConnectionRuntime::SharedNetwork() { return {tcp_,udp_,shared_from_this()}; } //같은 실제 owner를 pin하며 원문 연결/Player 값을 새로 쓰지 않는다.

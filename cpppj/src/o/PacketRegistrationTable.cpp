@@ -45,6 +45,18 @@ void PacketRegistrationTable::Touch(std::uint32_t type) {
     if (const auto retiring=retiring_.lock();retiring && retiring->calls_) throw std::logic_error("반납된 Session 콜백 안에서 전역 등록 수정 금지");
     entries_[type].registrationLease.reset();entries_[type].leased=false;
 }
+//실제 전역 등록 뒤의 장기 항목만 현재 표와 lease 반환 snapshot에 함께 보존한다.
+void PacketRegistrationTable::PersistCanonicalBaseline(std::uint32_t type) {
+    if (!entries_[type].canonicalReceive) throw std::logic_error("장기 고정 F가 없는 baseline 승격 거부");
+    const auto current=current_.lock(); //현재 세대만 선택하며 반납 중 세대에 새 snapshot을 쓰지 않는다.
+    if (currentIdentity_ && (!current || !current->active_)) throw std::logic_error("반납 중 등록 baseline 변경 금지");
+    if (!current && ConnectionCallbackActive()) throw std::logic_error("반납된 callback 중 baseline 변경 금지");
+    auto selected=entries_[type];selected.registrationLease.reset();selected.leased=false; //장기 F와 실제 observer/버전/길이는 그대로 두고 Session 표식만 반납한다.
+    auto previous=selected; //두 함수 사본의 모든 할당을 먼저 완료하여 실패 시 현재 표/반환 snapshot을 보존한다.
+    static_assert(std::is_nothrow_swappable_v<PacketRegistration>); //준비 뒤 두 항목 공개에는 할당이나 예외가 없다.
+    if (current) { std::swap(current->previous_[type],previous);current->touched_.set(type); } //이후 같은 세대가 다시 수정해도 detach는 마지막 실제 전역 baseline을 복구한다.
+    std::swap(entries_[type],selected); //현재 즉시 분배도 old Session pin 없이 같은 장기 본문을 실행한다.
+}
 // 실제 현재 표를 모두 snapshot하되 수정/반납은 touched 슬롯만 수행한다.
 PacketRegistrationLease::PacketRegistrationLease(std::shared_ptr<PacketRegistrationTable> table,const std::shared_ptr<void>& owner):table_(std::move(table)),owner_(owner),previous_(table_->entries_) {}
 // 외부에서 명시 반납했으면 아무 것도 바꾸지 않는다.

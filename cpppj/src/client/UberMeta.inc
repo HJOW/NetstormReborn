@@ -98,6 +98,9 @@ void UberGump::DispatchNativeBattleStart(NativeBattleSource source,bool direct) 
 }
 bool UberGump::NativeBattleStartPending() const { const auto state=client_.LocalStateGlobals()->State();return state.next[0]==7 && pendingNativeBattleSource_.has_value() && state.next[32]==pendingNativeBattleZone_; } //할당token은재사용하지않으므로예전Source를새Guide/LAN요청으로오인하지않는다.
 // 현재7은 수신 caller의 동기Run이며 다음Tick의 호스트 command를 합성하지 않는다.
+//장기 기본 수신도 동일한 현재 분배기와 Tell 본문을 사용하며 old Meta callback을 보유하지 않는다.
+void UberGump::RunNativePacketState() { RunMetaRequestedState(); }
+void UberGump::ShowNativePacketTell(std::string_view section) { static_cast<void>(ShowMetaTell(section)); } //실제 HTML 반환 serial을 가짜 성공 응답으로 바꾸지 않는다.
 void UberGump::RunMetaRequestedState() { if (client_.LocalStateGlobals()->State().current[0]==7) RunNativeBattleState(CurrentNativeBattleSource());else { EnsureNativeStateDispatcher();editor_->state->Run(); } }
 //수신을 보유한 실제 Source만 동기 Run 복귀까지 유지한다. 이전 World는 원래 cleanup에서 실제 반납해야 한다.
 void UberGump::RunNativeBattleState(NativeBattleSource source) { EnsureNativeStateDispatcher();editor_->state->RunStarting([this,source] { LoadNativeBattleWorldBody(source); }); }

@@ -14,7 +14,7 @@
 #include <optional>
 #include <stdexcept>
 
-namespace netstorm::client { // 함수 장치는 World가 반납할 때 해제하며 다른 World에 전역 등록하지 않는다.
+namespace netstorm::client { //동일한실제본문을장기Client장치와선택된현재World의짧은override가공유한다.
 namespace { // 원문 좌표/필드 비트만 호스트에서 정의된 계산으로 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t at,std::size_t width=4) { if (at>raw.size() || width>raw.size()-at) throw std::out_of_range("메타 dirty 장치의 현재 필드 물리 범위");std::uint32_t value{};for (std::size_t byte=0;byte<width;++byte) value|=std::uint32_t(raw[at+byte])<<(8*byte);return value; } //선택된 폭만 낮은BYTE부터 조립한다.
 std::int32_t Add(std::int32_t left,std::int32_t right) { return std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(left)+std::bit_cast<std::uint32_t>(right)); } //LEA 좌표 감김이다.
@@ -28,15 +28,15 @@ ScreenRect Bounds(Client& client,std::span<const std::uint8_t> raw) {
     const auto zoom=client.GameplayGlobals()->Camera().Snapshot().zoom;const auto left=Sub(x,Scale(header->hotspotX,zoom)),top=Sub(y,Scale(header->hotspotY,zoom));return {left,top,Add(Add(left,Scale(header->width,zoom)),1),Add(Add(top,Scale(header->height,zoom)),1)};
 } //현재498ff0의 두 FTOL→카메라 뺄셈→SHP 존재/진단→현재 배율·네 WORD 순서다.
 }
-// HUD 재생성 후에도 같은 controls의 현재 Menus/viewport를 읽고 이전 노드/Renderer 포인터를 보관하지 않는다.
-void BindClientMetaSpriteRefresh(Client& client,RawButtonControls& controls,RawSurfaceWorld& world) {
-    world.BindMetaRefresh([&client,&controls](auto raw) {
+//같은현재Client/controls와기존4787c0본문만공유하며Session/World를새로요구하지않는다.
+void RefreshClientMetaSprite(Client& client,RawButtonControls& controls,std::span<const std::uint8_t> raw) {
         auto& storage=*client.SurfaceStorage();auto& game=*client.GameplayGlobals();NativeMetaSpriteRefreshHooks hooks;hooks.bounds=[&client](auto object) { return Bounds(client,object); };
         hooks.dirty=[&client,&controls](auto rect) { rect=ClampOriginalScreenRect(rect,controls.MapViewRect());if (rect.right!=rect.left && Sub(rect.right,rect.left)>=0 && rect.bottom!=rect.top && Sub(rect.bottom,rect.top)>=0) client.GetRenderer().Invalidate(rect,0); }; //00499310은 일반 표시 억제 관문을 추가하지 않는다.
         hooks.raw=[&storage](auto sid)->std::span<const std::uint8_t> { if (sid>65535U || sid>=storage.pool.Capacity()) throw std::out_of_range("메타 dirty Form SID 물리 범위");return storage.pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)}); };
         hooks.redrawGump=[&controls](auto id) { if (!controls.Menus()) throw std::logic_error("메타 dirty 현재 Gump 장치 미연결");controls.Menus()->RedrawRegisteredGump(id); };
         hooks.assertion=[&storage](auto expression,auto file,auto line) { storage.AssertDisplay(expression,file,line); };
         RefreshNativeMetaSprite(raw,{*client.ChallengeGlobals(),game.GameAux()->DependFormType(),game.GameAux()->ProcessTypeEnd(),storage.Checking(),storage.ownerMode.challenge,game.Boss()},hooks);
-    });
 }
+//현재World의명시대여도동일실제본문을공유하며짧은controls는선택된Runtimepin으로보존한다.
+void BindClientMetaSpriteRefresh(Client& client,RawButtonControls& controls,RawSurfaceWorld& world) { world.BindMetaRefresh([&client,&controls](auto raw) { RefreshClientMetaSprite(client,controls,raw); }); }
 }

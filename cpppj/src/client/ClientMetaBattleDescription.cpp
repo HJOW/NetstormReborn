@@ -18,7 +18,8 @@ std::optional<std::string_view> ResolveClientMetaDescriptionText(const ClientCha
 } //CS 내용은 메뉴 작성 때 복사하지 않으며 HTML 고리는 덮어쓴 토큰을 다른 주소로 재해석하지 않는다.
 NativeMetaBattleDescriptionHooks MakeClientMetaBattleDescriptionHooks(Client& client) {
     NativeMetaBattleDescriptionHooks hooks;hooks.log=[&client](auto text) { client.WriteDiagnosticLog(9,text); };
-    hooks.refreshObject=[&client](auto number) { auto& storage=*client.SurfaceStorage();if (number>65535U || number>=storage.pool.Capacity()) throw std::out_of_range("전투 설명의 실제 객체 SID 물리 범위");const auto raw=storage.pool.Slot(o::Sid{static_cast<std::uint16_t>(number)});client.GameplayGlobals()->RequireSession().Core().display.Update(raw,0); };
+    //실제선택된파생MetaRefresh의현재대여만1175Storage가pin하며공통표시는World를요구하지않는다.
+    hooks.refreshObject=[&client](auto number) { auto& storage=*client.SurfaceStorage();if (number>65535U || number>=storage.pool.Capacity()) throw std::out_of_range("전투 설명의 실제 객체 SID 물리 범위");const auto raw=storage.pool.Slot(o::Sid{static_cast<std::uint16_t>(number)});storage.Display().Update(raw,0); };
     hooks.updateBattle=[&client](auto battle) { client.UpdateNativeMetaBattle(battle); };return hooks; //전체 Poll/다른 참가자 갱신으로 대체하지 않는다.
 }
 }

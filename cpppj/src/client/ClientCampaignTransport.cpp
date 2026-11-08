@@ -3,6 +3,17 @@
 #include "client/ClientPacketSources.h" //actual device/network는 배송 지점에서만 선택한다.
 #include "client/UberGump.h" //현재 실제 UI 분배기의 같은 State7 부모만 호출한다.
 #include "o/PacketRegistrationTable.h" //Zone 복제는 실제 현재 observer 표만 읽는다.
+#include "client/ClientNsInfoGlobals.h" //0fh의 현재 서버행/checksum 저장소는 Client 수명이다.
+#include "client/ClientStateStorageCleanup.h" //실제 marker가 있을 때만 현재 World 삭제 하위를 선택한다.
+#include "client/RootServerListDisk.h" //기존 사용자 Saves의 동일 서버목록 쓰기 부모다.
+#include "client/ClientMetaBattleDescription.h" //71h는현재CS본문과같은가상표시하위만공유한다.
+#include "o/RawStateMetaBattleDescription.h" //일반등록도같은장기F/observer를다시대여한다.
+#include "client/NativeMetaGeometry.h" //26h의 현재 geometry/Camera 한계 순수본문을 공유한다.
+#include "client/Screen.h" //26h의 화면 논리 폭/높이를 현재 장치에서 읽는다.
+#include "o/RawRootLoginReply.h" //0fh의 기존 버전/목록/서버행/다음상태 전체본문이다.
+#include "o/RawChallengeLoginReply.h" //1dh의 현재 State/Subscriber와 동일 버전 거부 순서를 공유한다.
+#include "o/RawLocalServerDiscovery.h" //66h는 현재36 쓰기 뒤 현재 주소와 실제 Run을 선택한다.
+#include "client/CampaignTransportServices.h" //실제 sender 주소의 기존 문자열 변환을 그대로 공유한다.
 #include "o/RawStateBattleStart.h" //1a/1b의 기존 원문 순수 본문을 공유한다.
 #include "o/RawConstructionPacket.h" // Session 전후에도 같은3fh 순수 길이 관찰기를 실제 기본 표에 보관한다.
 #include "client/ClientMain.h"
@@ -153,7 +164,62 @@ void InstallClientStateBattleStartReceivers(Client& client,o::RawPacketDispatch&
         o::ReceiveBattleStartPeer(packet,{local.State(),local.ZonePending(),game.GameServerPort(),game.Subscribers()->MySubscriber(),record->Requested(),client->SurfaceStorage()->Checking()},game.Server(),hooks);
     });
 }
+//004b4160의 현재 Client 진단/Config/Tell만 사용하는 고정 버전 본문이다. 실제 Source나 Runtime을 요구하지 않는다.
+bool CheckClientMetaVersion(Client& client,const std::function<void(std::string_view)>& tell,std::uint32_t major,std::uint32_t minor) {
+    if (major!=10 || minor!=78) {
+        client.WriteDiagnosticLog(0x1d,"VERSION DIFFERENCE: You are 10.78. Meta Server is "+std::to_string(major)+'.'+std::to_string(minor)+".\n");
+        if (major!=10 && !client.Configuration().GetInt("suppressVersionMessage")) { tell("MetaVerDiff("+std::to_string(major)+'.'+std::to_string(minor)+')');return false; }
+    }return true;
+}
+// 1dh/66h는 현재 Client의 실제 UI만 선택하며 Meta 생성 이력이나 Session을 요구하지 않는다.
+void InstallClientStateReplyReceivers(Client& client,o::RawPacketDispatch& dispatch) {
+    dispatch.Observe(0x1d,[](std::uint32_t) {});dispatch.Version(0x1d,1,0);dispatch.RequireLength(0x1d,13); //40b380은 비NULL 빈 observer이며 원문 고정 길이는13이다.
+    dispatch.RegisterCanonicalDirect(0x1d,0x004b8ac0U,[client=&client](auto,auto*,auto packet) { //고정 F는 장기 Client만 빌리고 현재 원문 하위에서 UI를 다시 조회한다.
+        o::ChallengeLoginReplyHooks reply;reply.log=[client](auto text) { client->WriteDiagnosticLog(0x1d,text); };
+        reply.version=[client](auto major,auto minor) { return CheckClientMetaVersion(*client,[client](auto section) { if (!client->Menu()) throw std::logic_error("1dh 버전 안내의 현재 UI 없음");client->Menu()->ShowNativePacketTell(section); },major,minor); };
+        reply.run=[client] { if (!client->Menu()) throw std::logic_error("1dh 현재 State Run의 실제 UI 없음");client->Menu()->RunNativePacketState(); }; //현재28/12를 쓴 뒤에만 동기 Run을 수행한다.
+        o::ReceiveChallengeLoginReply(packet,client->LocalStateGlobals()->State(),client->GameplayGlobals()->Subscribers()->MySubscriber(),reply);
+    });
+    dispatch.Observe(0x66,[](std::uint32_t) {});dispatch.Version(0x66,1,0);dispatch.RequireLength(0x66,12); //검색 명령 두 DWORD를 가진 원문12BYTE다.
+    dispatch.RegisterCanonicalDirect(0x66,0x004b8a10U,[client=&client](auto sender,auto*,auto packet) { //현재type/Meta/phase로 F나 Source를 다시 선택하지 않는다.
+        o::LocalServerDiscoveryReceiveHooks receive;receive.wall=[client] { return client->WallSeconds(); };
+        receive.peerAddress=[client](auto id) { return CampaignPeerAddressText(client->ConnectionGlobals()->Address(std::bit_cast<std::int32_t>(id))); };
+        receive.processState=[client] { if (!client->Menu()) throw std::logic_error("66h 현재 State Run의 실제 UI 없음");client->Menu()->RunNativePacketState(); };
+        auto& local=*client->LocalStateGlobals();o::ReceiveLocalServerDiscovery(local.State(),{local.LocalServerToken(),local.LocalServerSearchEnd(),local.LocalServerRetryEnd()},sender,packet,receive);
+    }); //명령1의 현재36/주소/port 뒤만 Run하며 경쟁 토큰 경로는 UI를 조회하지 않는다.
+}
+//0fh는 버전 거부 앞에 Meta/Source/World를 요구하지 않으며 실제 marker 삭제만 해당 하위에서 pin한다.
+void ReceiveClientRootReply(Client& client,std::span<const std::uint8_t> packet) {
+    auto& local=*client.LocalStateGlobals();o::RootLoginReplyHooks hooks;
+    hooks.version=[&client](auto major,auto minor) { return CheckClientMetaVersion(client,[&client](auto section) { if (!client.Menu()) throw std::logic_error("0fh 버전 안내의 현재 UI 없음");client.Menu()->ShowNativePacketTell(section); },major,minor); };
+    hooks.clearZones=[&client] { ClearClientMetaZoneRecords(client,*client.SurfaceStorage()); };
+    hooks.checksum=[&client](auto value) { client.NsInfoGlobals()->SetServerValue(std::bit_cast<std::int32_t>(client.LocalStateGlobals()->State().phase[0x44/4]),value); };
+    hooks.server=[&client](auto row) { client.NsInfoGlobals()->UpsertServer(row,true); };hooks.saveServers=[&client] { SaveClientRootServerList(client); };
+    o::ReceiveRootLoginReply(packet,{local.State(),local.MetaZones().records,local.MetaRefresh()},hooks); //기존10.71 compact 구별/부분쓰기/파일위치/phase23분기를 바꾸지 않는다.
+}
+//0fh/26h의 observer도 같은 Client 장기 진단만 보유하며 실제 Meta 객체를 캡처하지 않는다.
+void InstallClientMetaGlobalReceivers(Client& client,o::RawPacketDispatch& dispatch) {
+    const auto storage=client.SurfaceStorage(); //observer의 실제 장기 storage이며 이전 World/CS 할당을 고정하지 않는다.
+    dispatch.ObservePacket(0x0f,[storage](auto packet,auto sending) { o::ObserveRootLoginReply(packet,sending,[storage](auto expression,auto line) { storage->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x0f,1,0);dispatch.RequireLength(0x0f,0xffff);
+    dispatch.RegisterCanonicalDirect(0x0f,0x004b4250U,[client=&client](auto,auto*,auto packet) { ReceiveClientRootReply(*client,packet); }); //sender/nullable연결/phase/known을 앞단 필터로 추가하지 않는다.
+    dispatch.ObservePacket(0x26,[storage](auto packet,auto sending) { ObserveNativeMetaGeometry(packet,sending,[storage](auto expression,auto line) { storage->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x26,1,0);dispatch.RequireLength(0x26,0xffff);
+    dispatch.RegisterCanonicalDirect(0x26,0x004b45a0U,[client=&client](auto,auto*,auto packet) { //CS0/메타모드/송신자/known/World 선행 관문이 없는 원문 F다.
+        auto& challenge=*client->ChallengeGlobals();ReceiveNativeMetaGeometry(packet,challenge.Geometry(),challenge.GeometryMode(),[client](float width,float height) { auto& screen=client->GetScreen();client->GameplayGlobals()->Camera().UpdateTargetLimits(screen.Width(),screen.Height(),width,height); });
+    }); //Camera한계→mode0→현재contact길이→선택geometry부분쓰기→mode1을 기존 본문 그대로 유지한다.
+}
+//71h는현재CS0이면본문을읽지않고모드/known/송신자/World를앞에서요구하지않는다.
+void InstallClientMetaDescriptionReceiver(Client& client,o::RawPacketDispatch& dispatch) {
+    const auto challenge=client.ChallengeGlobals();const auto storage=client.SurfaceStorage(); //각각같은Client의장기CS슬롯과현재진단owner다.
+    o::RegisterStateMetaBattleDescription(dispatch,challenge->Current(),[client=&client](auto,auto packet) { ReceiveNativeMetaBattleDescription(*client->ChallengeGlobals(),packet,MakeClientMetaBattleDescriptionHooks(*client)); },[storage](auto expression) { storage->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",0xae3); }); //40b0d0의실제observer/버전/길이와장기진단을공유한다.
+    dispatch.RegisterCanonicalDirect(0x71,0x004b49c0U,[client=&client,challenge](auto,auto*,auto packet) { //저장F는Native본문정체성을유지하고현재표/type으로다시고르지않는다.
+        if (!challenge->Current()) return;ReceiveNativeMetaBattleDescription(*challenge,packet,MakeClientMetaBattleDescriptionHooks(*client));
+    });
+}
 void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) {
+    InstallClientMetaDescriptionReceiver(client,dispatch); //Meta/일반/Editor의같은장기기본F이며Session반납뒤에도유지한다.
+    InstallClientMetaGlobalReceivers(client,dispatch); //원문 앱 전역F이므로 Meta 생성 전후/일반/Editor에 같은 baseline이 남는다.
+    InstallClientConnectionEndedReceiver(client,dispatch); //Editor도 같은 전역2번 F를 Session 등록 전에 보유한다.
+    InstallClientStateReplyReceivers(client,dispatch); //원문 앱 전역1dh/66h를 Meta/일반/Editor의 같은 기본 표에 설치한다.
     InstallClientStateBattleStartReceivers(client,dispatch); //같은 Client 기본 F는 Meta/일반/Editor와 lease 반납 뒤에도 존재한다.
     InstallClientMissionSendObservers(client,dispatch); //같은 네 순수 관찰기를 재사용하며 실제 기능 수신기를 추가하지 않는다.
     const auto storage=client.SurfaceStorage(); //진단의 장기 Client storage만 보유하고 Session/World/Meta this는 빌리지 않는다.
@@ -209,7 +275,6 @@ std::shared_ptr<CompositeMissionTransport> MakeClientCampaignTransport(Client& c
     else transport=CompositeMissionTransport::Create(role,globals->players->Records(),globals->game->Server(),std::move(hooks),client.ConnectionGlobals(),globals,std::move(network)); //첫 메타 인계와 기존 독립 경로는 원래 생성 위치를 유지한다.
     transport->BindMetaSource(meta);client.ConnectionGlobals()->PacketSources()->Publish(transport); //실제 shared coordinator가 완성된 뒤 weak node 경로를 공개한다.
     InstallClientPacketDefaults(client,transport->Dispatch()); //호출자의 BindSession보다 먼저 같은 기본 표를 채워 임대 반납 때 원문 C3/관찰기/metadata가 복구되게 한다.
-    InstallClientConnectionEndedReceiver(client,transport->Dispatch()); //004b6660의 같은 전역 본문을 실제 Session lease보다 먼저 설치한다.
     return transport;
 }
 }

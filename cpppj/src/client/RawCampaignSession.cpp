@@ -550,6 +550,7 @@ struct RawCampaignSession::Impl {
     ClientLocalStateGlobals* editorUiStateOwner{}; // 서비스를 통해 같은 Client가 소유하는 다섯 State 블록의 정체성을 보관한다.
     LocalMissionStateBlock editorUiRequest{},editorUiPreviousPhase{}; // UI 진입의 전체144BYTE 요청/이전 phase를 공통 확정 뒤 검증한다. 원문 상태를 대신 쓰지 않는다.
     bool editorRegisteringCommands{};RawPacketDispatch* editorRegisteredDispatch{}; // 최종 commit의 한정 등록 범위와 현재 Session을 빌리는13종 수신기의 반납 대상을 구별한다.
+    std::vector<std::pair<std::uint32_t,std::shared_ptr<const CanonicalPacketReceiver>>> editorCanonicalBaselines; // Editor가 빌리기 전 실제 장기 F만 보존하며 짧은 Session/lease/실행 pin은 담지 않는다.
     RawPacketDispatch* editorActivityRegisteredDispatch{}; // 기존13종과 별개인 실제64h 수신의 충돌·실패 반납·Session 소멸 경계다.
     std::optional<FortTemplate> deferredEditorFort; //명시지연입력의같은파일보조metadata다.rawsection은File.load의실제reader가소유한다.
 
@@ -3754,7 +3755,11 @@ struct RawCampaignSession::Impl {
     void ReleaseEditorCommandReceivers() {
         if (editorActivityRegisteredDispatch) { editorActivityRegisteredDispatch->Register(0x64,{});editorActivityRegisteredDispatch=nullptr; } //64h receive만 지우고 실제 observer/version/정책/길이는 유지한다.
         if (!editorRegisteredDispatch) return;
-        for (const auto type:kEditorGameplayMessages) editorRegisteredDispatch->Register(type,{}); // 같은 Session을 빌리는 receive만 해제하고 실제 observer/프로토콜/정책/길이 표는 보존한다.
+        for (const auto type:kEditorGameplayMessages) { //각 짧은 수신만 반납하고 검토된 장기 기본 F는 같은 정체성으로 복구한다.
+            const auto saved=std::find_if(editorCanonicalBaselines.begin(),editorCanonicalBaselines.end(),[type](const auto& item) { return item.first==type; });
+            if (saved!=editorCanonicalBaselines.end()) editorRegisteredDispatch->RegisterCanonical(type,saved->second);else editorRegisteredDispatch->Register(type,{});
+        }
+        editorCanonicalBaselines.clear(); //기본표가 소유권을 되찾은 뒤 이 대여의 사본만 반납한다.
         editorRegisteredDispatch->Register(0x41,{}); // 같은 Session을 빌린 Chat 수신도 원본 observer/버전은 남기고 반납한다.
         editorRegisteredDispatch->Register(0x52,{}); // 같은 Player span을 빌리는 종료 통지도 Session보다 먼저 해제한다.
         editorRegisteredDispatch=nullptr;editorRegisteringCommands=false;
@@ -4128,8 +4133,9 @@ void RawCampaignSession::CommitExistingEditorInstall(ClientLocalStateGlobals& ow
     if (!IsExistingFortEntry(s.editorUiRequest[0],s.services.adoptMainMenuFort) || state.current[0] || state.immediate[0] || state.next[0]!=(s.editorUiRequest[0]==6 ? 0U : 4U) || state.phase!=s.editorUiRequest || state.old!=s.editorUiPreviousPhase || !std::equal(state.current.begin()+1,state.current.end(),s.editorUiRequest.begin()+1)) throw std::logic_error("기존 Fort 실제 State 공통 확정/편집 다음4·일반 복귀 다음0 미완료");
     if (s.services.editorTransport) {
         auto& dispatch=s.services.editorTransport->Dispatch();if (s.login || s.editorRegisteredDispatch || s.editorActivityRegisteredDispatch) throw std::logic_error("Editor 실제 전송의 중복 Login/수신 등록");
-        for (const auto type:kEditorGameplayMessages) if (dispatch.Registration(type).receive) throw std::logic_error("Editor 현재 수신 등록표의 다른 소유자 존재"); // 전체 등록종을 먼저 확인하여 기존 처리기를 부분 덮어쓰지 않는다.
+        for (const auto type:kEditorGameplayMessages) { const auto& entry=dispatch.Registration(type);if (entry.receive && (entry.leased || !entry.canonicalReceive)) throw std::logic_error("Editor 현재 수신 등록표의 다른 소유자 존재"); } //대여 중/짧은 다른 소유자는 거부하고 검토된 장기 기본 F만 보존 대여한다.
         if (dispatch.Registration(0x64).receive || dispatch.Registration(0x41).receive || dispatch.Registration(0x52).receive) throw std::logic_error("Editor 실제64h/41h/52h 수신 등록표의 다른 소유자 존재"); // 모든 receive 충돌을 쓰기 전에 거부한다.
+        s.editorCanonicalBaselines.clear();for (const auto type:kEditorGameplayMessages) if (const auto receiver=dispatch.Registration(type).canonicalReceive) s.editorCanonicalBaselines.emplace_back(type,receiver); //전체 충돌 검사 뒤 실제 장기 기본값만 쓰기 전에 보존한다.
         s.editorRegisteredDispatch=&dispatch;s.editorActivityRegisteredDispatch=&dispatch;s.editorRegisteringCommands=true;
         try { RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch);RegisterConnectionActivity(dispatch,*s.connectionActivity);RegisterChatPacket(dispatch,s.chatGlobals->receivedMask,s.ChatDevices());RegisterBattleLeavePacket(dispatch,s.players);s.editorRegisteringCommands=false; }
         catch (...) { s.ReleaseEditorCommandReceivers();throw; } // 부분 등록 예외도 살아 있는 Session 포인터를 외부 표에 남기지 않는다.

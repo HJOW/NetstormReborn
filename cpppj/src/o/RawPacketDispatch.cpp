@@ -37,6 +37,8 @@ void RawPacketDispatch::RegisterCanonical(std::uint32_t type,const std::shared_p
     CheckType(type);const auto selected=receive;if (!selected) { RegisterDirect(type,{});return; } //원문의NULL함수와미전환shortclosure를구별한다.
     RegisterDirect(type,[selected](auto sender,auto* connection,auto packet) { selected->Invoke(sender,connection,packet); });registrations_->entries_[type].canonicalReceive=selected;
 }
+//실제 전역 setter의 현재 항목을 같은 활성 대여의 반환 값에도 보관한다. 새 수신기나 게임 효과는 실행하지 않는다.
+void RawPacketDispatch::PersistCanonicalBaseline(std::uint32_t type) { CheckType(type);registrations_->PersistCanonicalBaseline(type); }
 //큐는이값만보관해야하며이전PacketRegistration/lease를대기수명동안보유하지않는다.
 std::shared_ptr<const CanonicalPacketReceiver> RawPacketDispatch::SnapshotReceiver(std::uint32_t type) const {
     CheckType(type);const auto& entry=registrations_->entries_[type];if (!entry.receive && !entry.directReceive) return {}; //원문NULLreceiver의delay0자연반환을유지한다.

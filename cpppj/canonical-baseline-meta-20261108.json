@@ -1,0 +1,216 @@
+{
+  "unit": 1176,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCppCommit": "be567d46 / 20261108-187 CP",
+  "summary": "2/1d/66/5 기본 등록 scope·0f/26/71 장기 고정F·Editor 기본F 반납·실제 메타 표시 하위 접합",
+  "sourceSha256": {
+    "cpppj/src/client/ClientCampaignTransport.cpp": "43077754b6316172f7a60595abc9492d973fcaa1e181dfaecb361e8dc8acab4a",
+    "cpppj/src/client/ClientCampaignTransport.h": "ed4ae2720df39a97972773ef033eccd0aff842fa1fa7b934aab18d76d855626c",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "ea0b32455dea511f6871c33929db8b7ce73fe8c9226c7aaaf908a45865842b45",
+    "cpppj/src/client/UberGump.h": "6c6607aee34851fa7b9f110863ce06f52ae78f4797d9ed03e056910616d07ba9",
+    "cpppj/src/client/UberMeta.inc": "277c0454732cc7ea77ebbead0541da158575613c220adedf288b5ff59e4bd135",
+    "cpppj/src/o/PacketRegistrationTable.cpp": "56f93933c6acbf578088a554d6d680999e54e0e81ae6844e7038721b67930da9",
+    "cpppj/src/o/PacketRegistrationTable.h": "6c0e520f48d097933ed5793484bd676961a88d206c6b87ee99cff817efc11fa4",
+    "cpppj/src/o/RawClockSynchronization.cpp": "4045c44d4374f851dc3570ead51ef50c1a0117128c33a3a3fd3a3e7e844504cf",
+    "cpppj/src/o/RawPacketDispatch.cpp": "605cd70cf1c831315024cb20f7acd99d9b7c0f62cd2f8482d96d45f3cefe4dbf",
+    "cpppj/src/o/RawPacketDispatch.h": "c2468f3cd01b2101c52a0c802bc987e1b92647aba8be6a30ba623c1dca407eda",
+    "cpppj/src/client/ClientStateStorageCleanup.cpp": "5e2701f71aca632bc0ae56e4da23b6097f4268d3661f26a820501ba23ac92ae9",
+    "cpppj/src/client/RawCampaignSession.cpp": "561681920e2f0243bc8973e85094bcbf3f8668eed0ac2f206d3f616d5af0db10",
+    "cpppj/src/client/ClientMetaBattleDescription.cpp": "be1b1114906539e86a3f9327220f3d53813afd6694cb2bde2ff65590203b351b",
+    "cpppj/src/client/ClientMetaSpriteRefresh.cpp": "c0cfe999646eed99319f27b8ff31007aea0e487cfe77a2ded6748132611b3242",
+    "cpppj/src/client/ClientMetaSpriteRefresh.h": "0a970de940af65a3a8d72a2bd883ef9767af4e3f9732361a981f04503a2ed34c",
+    "cpppj/src/client/ClientRendererFrame.cpp": "0264422fce2a475741a7a8b8e8f7cef82dcacfaa29d01d5a6e86f819b7c043f2",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "0b73f4107053de0e3f4b907a0fb1d0972bcee12c834275ac955237cc0d392a0b",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "d428c7d4ce3b305c6f6953bdbd4832bdea3aca7217a2acc89ad634b36cd3a9de",
+    "cpppj/src/client/RawSurfaceWorld.h": "02e6145396a85be65d9ad8344b5f7696b9e0ed90346a1125c10bb41341cf13e8",
+    "cpppj/src/o/RawStateMetaBattleDescription.cpp": "8657e5d7077ce48a0b99b575905e033cd22f05e0f2959de662bc4bf91037125b"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13427200,
+      "sha256": "410af2a1cf9328ba76c1f811470462a525db4f21ced7dd16dd7237b5d4bd2d2f"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "87545beb4e54dfe4c11e3f2e38b720f91c7976a16c7eb398c9a8397b7b7c547e"
+    }
+  },
+  "builds": [
+    {
+      "log": "extracted/cpp-resume-1176/build.log",
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "nativeEvidence": {
+    "extracted/cpp-m6-canonical-baseline-patch/copies.json": "a8c3e8d3c57359752769469f6d1f1d4171e6fc373d792e90ca3ae91a562520c6",
+    "extracted/cpp-m6-canonical-baseline-patch/evidence.json": "620ffbce648389e835fa1e1d80b9d2314512abbf318c7906554a5bf1fe7e807c",
+    "extracted/cpp-m6-meta-canonical-patch/pure-global/copies.json": "db97df6d962711dcec31218c599b77eea09119745a1eb99ee22a00a93fe4d5f6",
+    "extracted/cpp-m6-meta-canonical-patch/pure-global/evidence.json": "0cf29f1d1a55f608810e3482f1170bb461235f1f14d8fa4209bbe5823ddad4fe",
+    "extracted/cpp-m6-meta-canonical-patch/description71/copies.json": "ddc005eaf2bb978e04c7ddb1cf1bcdb85da766da4a3ac0fd5f278502ee069aed",
+    "extracted/cpp-m6-meta-canonical-patch/description71/evidence.json": "d88fec66761aebd991ffe6766e9fa499713e71fb618462a1d0f0160ba839de2f",
+    "extracted/cpp-resume-1176/editor-baseline-prep/manifest.json": "1c5b5b5173c517d4cd05deab0b612bec9e356899e174e620a4a578dc46de57f0"
+  },
+  "live": {
+    "passed": true,
+    "unit": 1176,
+    "mission": "tutorial1",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1176\\live-tutorial1\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "410af2a1cf9328ba76c1f811470462a525db4f21ced7dd16dd7237b5d4bd2d2f",
+    "exeSha256After": "410af2a1cf9328ba76c1f811470462a525db4f21ced7dd16dd7237b5d4bd2d2f",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1176\\live-tutorial1\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1176\\live-tutorial1\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "key",
+        "arg": "f4"
+      },
+      {
+        "op": "click",
+        "arg": "production:82"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,1015,540"
+      },
+      {
+        "op": "click",
+        "arg": "screen:1015,540"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "home",
+      "bridge-instruction-trigger",
+      "await-bridge-guide",
+      "bridge-instructions-closed",
+      "candidate-east",
+      "before-place",
+      "after-click",
+      "after-place",
+      "settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-place",
+        "after": "after-place",
+        "type": 82,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15003",
+            "82",
+            "1",
+            "35",
+            "63",
+            "49"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "liveAttempts": [
+    {
+      "path": "extracted/cpp-resume-1176/live-tutorial1/summary.json",
+      "mission": "tutorial1",
+      "passed": true,
+      "exitCode": 0,
+      "failure": null
+    }
+  ],
+  "audit": {
+    "originalNativeInventory": 89,
+    "disabledValidation": 1,
+    "activeTarget": 88,
+    "canonicalTags": 14,
+    "untagged": 74,
+    "tagIsNotFullScopeCompletion": true,
+    "globalConnectionEndedEditor": true,
+    "globalStateRepliesAllDefaults": true,
+    "clockNonNullEmptyObserver": true,
+    "clockLateSetterPersistsLeaseBaseline": true,
+    "sameFixedFLeaseFor71": true,
+    "editorRestoresSameFixedF": true,
+    "editorObserverAllScopesClosed": false,
+    "currentActualMetaRefreshDefault": true,
+    "explicitWorldOverrideOnly": true,
+    "commonMetaPoolUnpopOwnerPop": true,
+    "queueActivated": false,
+    "m6Complete": false
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "executions": {
+    "newCppUnit": 0,
+    "multiplayer": 0,
+    "packet": 0,
+    "network": 0,
+    "nonMp": 1,
+    "zip": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  },
+  "remaining": [
+    "기존 태그의 전scope/observer/실제Source/직접송신·Fail·Node수명 감사와 잔여74F",
+    "실제 연결별 지연 큐",
+    "JoinTestBattle",
+    "n8b·Host·자원파생·실제 NoWorld caller·debugBurst",
+    "M7 다섯 항목·M8·K1~K5·S1~S4"
+  ]
+}

@@ -1,5 +1,6 @@
 // 원문 앞단/배경 본체는 유지하고 실제 Client/Screen/Gump/Pool 장치만 제공한다.
 #include "client/ClientRendererFrame.h"
+#include "client/ClientMetaSpriteRefresh.h" //실제4787c0/8c의기존본문을현재Client/Gump로공유한다.
 #include "client/VFXLine.h" //진단방향선도기존실제VFX본문으로그린다.
 #include "client/DrawWater.h" //같은 실제 후단 finder/카메라/VFX·전체 viewport 출력을 연결한다.
 #include "client/ClientMain.h"
@@ -63,7 +64,8 @@ void ClientRendererFrame::BindSurfaceDisplay() {
     devices.view=[client=&client_] { if (!client->menu_ || !client->menu_->rawButtons_) throw std::logic_error("표면표시의현재Root지도영역미설치");const auto& camera=client->gameplayGlobals_->Camera().Snapshot();const auto viewport=client->menu_->rawButtons_->MapViewRect();return o::SquidDisplayView{camera.pixels[0],camera.pixels[1],std::bit_cast<std::int32_t>(camera.zoom),{viewport.left,viewport.top,viewport.right,viewport.bottom}}; };
     devices.suppressed=[client=&client_] { return client->renderer_->FullRedrawPending(); };
     devices.invalidate=[client=&client_](auto rectangle,auto flags) { client->renderer_->Invalidate({rectangle.left,rectangle.top,rectangle.right,rectangle.bottom},flags); };
-    client_.SurfaceStorage()->BindDisplayDevices(std::move(devices)); //메타VT전용88은현재World의별도실제대여만사용하며빈성공을공급하지않는다.
+    devices.metaRefresh=[client=&client_](auto raw) { if (!client->menu_ || !client->menu_->rawButtons_) throw std::logic_error("메타가상표시의현재Client/Gump장치없음");RefreshClientMetaSprite(*client,*client->menu_->rawButtons_,raw); }; //World없는같은NativeVT도실제현재UI본문을사용하며가짜표시성공을만들지않는다.
+    client_.SurfaceStorage()->BindDisplayDevices(std::move(devices)); //명시World의실제override가있을때만그대여를선택하고그외에는동일장기Client장치를쓴다.
 }
 void ClientRendererFrame::ReadOptions() { client_.configuration_.ReadInt("showSoftAsserts",client_.gameplayGlobals_->AiDebug().Checking());client_.gameplayGlobals_->DrawFire()=0; } //현재 Checking을 읽고 원문4356a6처럼 Fire만 끈다. 다른 진단 DWORD는 보존한다.
 
@@ -79,16 +81,16 @@ NativeMetaSceneHooks ClientRendererFrame::MetaDevices() {
     NativeMetaSceneHooks hooks;client_.menu_->rawButtons_->Menus()->BindMetaSceneGumps(hooks);
     const auto sid=[this](std::uint32_t number) { if (number>65535U || number>=client_.SurfaceStorage()->pool.Capacity()) throw std::out_of_range("메타의현재DWORD SID물리범위");return o::Sid{static_cast<std::uint16_t>(number)}; }; //전체DWORD를검사한뒤에만같은WORD주소를사용한다.
     hooks.display.raw=[this,sid](auto number)->std::span<std::uint8_t> {
-        auto& pool=client_.gameplayGlobals_->RequireSession().Core().pool;const auto bytes=pool.Slot(sid(number));
+        const auto storage=client_.SurfaceStorage();const auto bytes=storage->pool.Slot(sid(number)); //Pool조회자체는장기물리이며Session을선행요구하지않는다.
         return {const_cast<std::uint8_t*>(bytes.data()),bytes.size()}; //실제비const Pool의현재물리다. AllocatedBytes의free필터를추가하지않고원문50BYTE쓰기만허용한다.
     };
-    hooks.display.unpop=[this,sid](auto number,auto flags) { client_.gameplayGlobals_->RequireSession().World().Unpop(sid(number),flags); };
+    hooks.display.unpop=[this,sid](auto number,auto flags) { client_.SurfaceStorage()->UnpopAsset(sid(number),flags); }; //같은TYPE/Unpop/현재표시·종속대여를장기Storage가선택한다.
     hooks.display.setKind=[this,sid,raw=hooks.display.raw](auto number,auto kind) {
-        auto bytes=raw(number);bytes[12]=static_cast<std::uint8_t>(kind);bytes[13]=static_cast<std::uint8_t>(kind>>8);const auto core=client_.gameplayGlobals_->RequireSession().Core();if (bytes[10]==core.bridgeState.bridgeType) core.building.NotifySurface(sid(number));
+        auto bytes=raw(number);bytes[12]=static_cast<std::uint8_t>(kind);bytes[13]=static_cast<std::uint8_t>(kind>>8);const auto storage=client_.SurfaceStorage();if (bytes[10]==storage->links.bridgeType) storage->Building().NotifySurface(sid(number));
     }; //004ac220은소유자BYTE가아닌QA WORD와조건부현재다리통지다.
-    hooks.display.paintOwner=[this,sid](auto number,auto owner) { client_.gameplayGlobals_->RequireSession().World().SetAssetOwner(sid(number),owner); };
+    hooks.display.paintOwner=[this,sid](auto number,auto owner) { client_.SurfaceStorage()->SetAssetOwner(sid(number),owner); }; //공통owner직접호출로좁히지않고동일현재가상owner분배를공유한다.
     hooks.display.destroy=[this,sid](auto number,auto flags) { static_cast<void>(client_.gameplayGlobals_->RequireSession().World().Destroy(sid(number),flags)); };
-    hooks.display.move=[this,sid](auto number,float x,float y,auto flags) { client_.gameplayGlobals_->RequireSession().World().Pop(sid(number),x,y,flags); };
+    hooks.display.move=[this,sid](auto number,float x,float y,auto flags) { static_cast<void>(client_.SurfaceStorage()->PopAsset(sid(number),x,y,flags)); }; //현재TYPE/SHP·전송/후처리·실제runtime pin은1175의장기Pop부모가선택한다.
     hooks.display.translate=[this](auto text) { const auto encoded=o::EncodeDisplayText(client_.Translate(text));return std::string(encoded.begin(),encoded.end()); }; //안내는실제현재언어와같은글꼴바이트로한번변환한다.
     hooks.display.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };
     hooks.display.denominator=[this](auto value) { client_.gameplayGlobals_->Camera().SelectDenominator(value,client_.kencloudGlobals_->WorldRedraw()); };

@@ -141,7 +141,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         bookkeeping.localOwner=1;if (!prepared) ownerMode={false,true,false};else mode.editor=true;eventState.bridgeType=links.bridgeType; // 준비 대여는 ExistingEditor 전용이며 새 지역 장부/붕괴 소비자만 구성한다.
         graph=&storage->Graph(); //같은장기Graph실행기/기록을빌리며현재World는재할당/재초기화하지않는다.
         displayRuntime=std::make_shared<RawSurfaceDisplayBindings>();displayRuntime->changed=[this] { changed=true; };displayRuntime->view=[this] { return displayView; };displayRuntime->suppressed=[this] { return Suppressed(); };
-        displayRuntime->invalidate=[this](auto rectangle,auto flags) { Invalidate(rectangle,flags); };displayRuntime->metaRefresh=[this](auto raw) { MetaRefresh(raw); };
+        displayRuntime->invalidate=[this](auto rectangle,auto flags) { Invalidate(rectangle,flags); }; //메타파생대여는실제BindMetaRefresh가설치될때만공개하여미연결proxy가장기Client본문을가리지않는다.
         storage->BindDisplayRuntime(displayRuntime);display=&storage->Display(); //표시실행기는장기owner의한개이고기존World장치는반납뒤만료된다.
         if (!storage->UsesNativePostPopDevices()) { buildingState.islandType=terrainType;buildingState.bridgeType=links.bridgeType; } //독립terrain계약만보존하며현재진단view는덮지않는다.
         postPop=&storage->PostPop();unpop=&storage->Unpop();pop=&storage->Pop();containedUnpop=&storage->ContainedUnpop();building=&storage->Building();
@@ -444,7 +444,7 @@ void RawSurfaceWorld::ScanBridgeDecay(o::FrameTime time,bool paused) {
 }
 // 현재 카메라의 원본 픽셀 기준값과 GUI 변경 표를 연결한다.
 void RawSurfaceWorld::SetDisplay(o::SquidDisplayView view,SurfaceDisplayHooks hooks) { impl_->display->SetView(view);impl_->displayView=view;impl_->displayHooks=std::move(hooks); }
-void RawSurfaceWorld::BindMetaRefresh(std::function<void(std::span<const std::uint8_t>)> refresh) { if (!refresh) throw std::invalid_argument("현재 메타 표시 갱신 장치 누락");impl_->metaRefresh=std::move(refresh); } //장치 설치는 프레임/화면/통신을 실행하지 않는다.
+void RawSurfaceWorld::BindMetaRefresh(std::function<void(std::span<const std::uint8_t>)> refresh) { if (!refresh) throw std::invalid_argument("현재 메타 표시 갱신 장치 누락");impl_->metaRefresh=std::move(refresh);impl_->displayRuntime->metaRefresh=[selected=impl_.get()](auto raw) { selected->MetaRefresh(raw); }; } //장치 설치는 프레임/화면/통신을 실행하지 않는다.
 // 일반 4단계 해시와 실제 타입 필터를 사용하는 조회다.
 o::Sid RawSurfaceWorld::Find(float x,float y,std::uint32_t type) const { return impl_->connect->FindTypeAt(x,y,type); }
 // 다리 거부 조건과 파생 pre/post를 동일한 호출로 실행한다.

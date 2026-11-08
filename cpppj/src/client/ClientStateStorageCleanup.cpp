@@ -49,7 +49,7 @@ void ClearClientMetaZoneRecords(Client& client,RawSurfaceStorage& storage) {
     const auto globals=client.LocalStateGlobals()->MetaZones();
     o::ClearMetaZoneRecords(globals,{[&](auto index) {
         o::ClearMetaZoneMarker(globals.records,index,{[&](std::uint32_t sid,std::uint32_t flags) {
-            auto& world=client.GameplayGlobals()->RequireSession().World(); //정상 빈 기록에는 Runtime을 요구하지 않으며 매 선택 위치에서 현재 것을 조회한다.
+            const auto game=client.GameplayGlobals();auto& session=game->RequireSession();const auto pin=game->PinCurrentRuntime(session);auto& world=session.World(); //실제 비영 marker 삭제가 선택된 하위만 현재 전체 owner를 복귀까지 보유한다. 빈 기록에는 Session을 요구하지 않는다.
             if (world.Storage().get()!=&storage) throw std::logic_error("메타구역 삭제의 현재 Session/Pool 불일치");
             if (sid>=storage.pool.Capacity() || sid>0xffffU) throw std::out_of_range("메타구역 DWORD SID의 현재 Pool 물리 범위");
             static_cast<void>(world.Destroy(o::Sid{static_cast<std::uint16_t>(sid)},flags)); //지원된 실제 가상+10 분배를 재사용하며 bool 반환은 원문처럼 무시한다.

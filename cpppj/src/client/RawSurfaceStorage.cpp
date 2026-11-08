@@ -151,6 +151,10 @@ o::SquidPop& RawSurfaceStorage::Pop() {
     return *pop_;
 }
 o::SquidFrame& RawSurfaceStorage::Frame() { if (!frame_) { auto frame=std::make_unique<o::SquidFrame>(pool,types,o::MakeSquidFrameHooks(pool,types,Display(),Unpop(),Pop()));if (pool.Edition()==o::OriginalEdition::Patch1078) frame->BindCurrentTypes(types);frame_=std::move(frame); }return *frame_; } //같은세실행기를빌리며새공간상태는없다.
+//장기물리조회뒤기존World와동일한공통Unpop을수행하며실제하위대여의pin은각실행기가선택한다.
+void RawSurfaceStorage::UnpopAsset(o::Sid sid,std::uint32_t flags) { Unpop().Unpop(sid,types.at(pool.Slot(sid)[10]),flags);NoteChanged(); }
+//기존World와같은가상owner부모를공유하여생산dirty·섬받침/종유석과공통접두분배를보존한다.
+void RawSurfaceStorage::SetAssetOwner(o::Sid sid,std::uint32_t owner) { const auto set=o::MakeAssetOwnerDispatch(pool,links,postPopState.productionDirty,[this](auto object,auto player) { Owner().Set(object,player); });set(sid,owner);NoteChanged(); }
 o::RawPopResult RawSurfaceStorage::PopAsset(o::Sid sid,float x,float y,std::uint32_t flags) {
     if (pool.Edition()==o::OriginalEdition::Patch1078) { const auto result=Pop().PopCurrent(sid,x,y,flags);if (result!=o::RawPopResult::Unchanged) NoteChanged();return result; }
     const auto raw=pool.Slot(sid);const auto size=Display().FrameSize(pool.Edition(),raw,raw[34]);const auto result=Pop().Pop(sid,types[raw[10]],size[0],size[1],x,y,flags);if (result!=o::RawPopResult::Unchanged) NoteChanged();return result; //CD의기존BYTE프레임/사전크기계약이다.
@@ -210,7 +214,7 @@ bool RawSurfaceStorage::Suppressed() const { const auto current=displayRuntime_.
 void RawSurfaceStorage::Invalidate(o::SquidDisplayRect rectangle,std::uint32_t flags) { const auto current=displayRuntime_.lock();const auto runtimePin=current && current->pin ? current->pin():std::shared_ptr<void>{};const auto write=current ? current->invalidate:displayDevices_.invalidate;if (!write) throw std::logic_error("표면표시의실제dirty장치미연결");write(rectangle,flags); }
 void RawSurfaceStorage::FrameError(std::uint32_t type,std::int32_t frame,std::uint32_t abstract) { RecordDisplayFrameError(type,frame,abstract); } //원문상세를같은장기owner에기록한다.
 void RawSurfaceStorage::Assertion(std::string_view expression,std::string_view file,std::uint32_t line) { AssertDisplay(expression,file,line); } //현재진단정상복귀를기존표시부모에반환한다.
-void RawSurfaceStorage::MetaRefresh(std::span<const std::uint8_t> bytes) { const auto current=displayRuntime_.lock();const auto runtimePin=current && current->pin ? current->pin():std::shared_ptr<void>{};const auto update=current ? current->metaRefresh:displayDevices_.metaRefresh;if (!update) throw std::logic_error("현재메타표시의실제파생갱신장치미연결");update(bytes); }
+void RawSurfaceStorage::MetaRefresh(std::span<const std::uint8_t> bytes) { const auto current=displayRuntime_.lock();const bool selected=current && static_cast<bool>(current->metaRefresh);const auto runtimePin=selected && current->pin ? current->pin():std::shared_ptr<void>{};const auto update=selected ? current->metaRefresh:displayDevices_.metaRefresh;if (!update) throw std::logic_error("현재메타표시의실제파생갱신장치미연결");update(bytes); }
 o::SquidDisplay& RawSurfaceStorage::Display() {
     if (!display_) { auto display=std::make_unique<o::SquidDisplay>(pool.Edition(),types,shapes,static_cast<o::SquidDisplaySink&>(*this),CurrentDisplayView());display->BindView([this] { return CurrentDisplayView(); });display_=std::move(display); } //첫실제표시사용에한실행기만구성하고World/Acquire를만들지않는다.
     return *display_;

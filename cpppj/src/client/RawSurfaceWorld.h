@@ -108,6 +108,8 @@ public:
     void BindPopRuntime(const std::shared_ptr<const RawSurfacePopBindings>& runtime); //현재실제writer만weak로빌린다.
     void BindTransmissionDevices(RawSurfaceTransmissionDevices devices); //첫Factory/Host/World앞에현재Client장치만연결한다.
     o::RawSquidTransmission& Transmission(); //공통2048BYTE/헤더/압축전역과실제현재FormHost를장기로공유한다.
+    void UnpopAsset(o::Sid sid,std::uint32_t flags); //현재TYPE와동일Unpop/표시·종속장치를사용하고정상뒤현재World의호스트changed만알린다.
+    void SetAssetOwner(o::Sid sid,std::uint32_t owner); //같은실제가상owner분배를World없이선택하며장부/현재모드를복제하지않는다.
     o::RawPopResult PopAsset(o::Sid sid,float x,float y,std::uint32_t flags); //원문PATCH는좌표/spot뒤현재TYPE/SHP를읽으며CD의기존사전크기계약은유지한다.
     void RepopAsset(o::Sid sid,std::uint32_t flags); //현재같은슬롯의float좌표로실제가상Pop을다시실행한다.
     o::RawGraph& Graph(); //같은현재장부/Graph물리와TYPE/진단/시계를World없이빌린다.

@@ -22,6 +22,7 @@ public:
 private:
     friend class RawPacketDispatch; // 기존 등록 API만 실제 슬롯을 수정한다.
     friend class PacketRegistrationLease; // 자기 세대가 바꾼 슬롯만 noexcept 복원한다.
+    void PersistCanonicalBaseline(std::uint32_t type); //현재 장기 canonical 항목을 반환 snapshot과 현재 표에 함께 보존한다. observer도 실제 장기 경계여야 한다.
     void Touch(std::uint32_t type); // 현재 대여의 변경 슬롯과 receiver/observer pin을 기록한다.
     std::array<PacketRegistration,256> entries_; // Local/TCP/Editor가 실제 함께 조회하는 원문 표 한 개다.
     std::uint32_t lastType_; // PATCH137/CD126의 기존 한도다.

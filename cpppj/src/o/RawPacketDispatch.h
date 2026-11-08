@@ -62,6 +62,7 @@ public:
     void RegisterDirect(std::uint32_t type,decltype(PacketRegistration::directReceive) receive); // 같은 등록표의 수신기이며 일반 프레임은 실제 연결 주소, 직접 호출은 선택한 nullable 포인터를 전달한다.
     void RegisterCanonicalDirect(std::uint32_t type,std::uint32_t nativeEntry,CanonicalPacketReceiver::Receive receive); //고정Native본문/장기데이터를불변값으로등록하고현재즉시두입구도같이설치한다.
     void RegisterCanonical(std::uint32_t type,const std::shared_ptr<const CanonicalPacketReceiver>& receive); //이미선택한같은F를재등록해lease표식만바꾸며본문을type현재표에서다시선택하지않는다.
+    void PersistCanonicalBaseline(std::uint32_t type); //검토된 현재 장기 F/observer를 활성 Session 반납 뒤에도 같은 표에 보존한다. 실제 전역 setter 직후에만 호출한다.
     std::shared_ptr<const CanonicalPacketReceiver> SnapshotReceiver(std::uint32_t type) const; //enqueue선택시한번F값을복사한다. NULLreceiver는NULL이고미전환짧은본문은명시오류다. Runtime pin은하지않는다.
     void InvokeDirect(std::uint32_t type,std::uint32_t sender,PacketConnection* connection,std::span<const std::uint8_t> packet) const; // 원문 함수 포인터 호출처럼 검증/observer·기록/시각/연결 깊이·닫힘을 추가하지 않는다. 등록 owner pin만 유지한다.
     // 해당 타입의 관찰기 표만 바꾼다. 단일 분배는 등록된 관찰기를 호출하지 않는다.
