@@ -25,6 +25,15 @@ CompositeMissionTransport::CompositeMissionTransport(CompositeTransportRole role
 }
 // 노드/OS 핸들 반납은 backend의 같은 Registry 수명 장치가 수행한다.
 CompositeMissionTransport::~CompositeMissionTransport()=default;
+// 원문 전역 장치의 같은 물리인지 확인하며 이름/현재 phase만으로 동일성을 추정하지 않는다.
+bool CompositeMissionTransport::SharesNetwork(const MissionNetwork& network) const { return tcp_ && udp_ && inheritedNetwork_ && tcp_==network.tcp && udp_==network.udp && inheritedNetwork_==network.lifetime && tcp_->Registry()==registry_ && udp_->Registry()==registry_ && tcp_->Dispatch().Registrations()==registrations_ && udp_->Registrations()==registrations_; }
+// 기존 내부0/listener와 정상1..8·TCP9/UDP12가 살아 있으면 같은 주소/큐를 유지한다.
+void CompositeMissionTransport::RebindWorld(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<void> globalsLifetime) {
+    if ((role!=CompositeTransportRole::LanHost && role!=CompositeTransportRole::LanClient) || (role_!=CompositeTransportRole::LanHost && role_!=CompositeTransportRole::LanClient) || !tcp_ || !udp_ || !inheritedNetwork_ || editor_ || &server!=&server_ || players.size()!=9U*180U || !globalsLifetime || !hooks.now || !hooks.record || !hooks.terminate || !hooks.close || !hooks.release) throw std::invalid_argument("재진입의 같은 실제 LAN 장치/Client/World 계약 오류");
+    if (ConnectionCallbackActive()) throw std::logic_error("다른 Session 콜백 복귀 전 전송 재인계 금지");
+    tcp_->RebindHooks(hooks);udp_->RebindHooks(hooks);if (internal_) internal_->RebindHooks(hooks);players_=players;dispatchHooks_=hooks;globalsLifetime_=std::move(globalsLifetime);
+    if (role==CompositeTransportRole::LanHost && !internal_) internal_=std::make_shared<zacket::LocalMissionTransport>(players_,server_,hooks,registry_,registrations_);role_=role; //client→host에 필요한 내부 owner만 늦게 만들며 기존 내부 owner를 교체/반납하지 않는다.
+}
 // LAN host도 실제 서버 권한과 준비된 등록만 사용하고 게임 상태를 쓰지 않는다.
 void CompositeMissionTransport::Serve(std::uint32_t port) {
     const auto pin=shared_from_this();
@@ -131,8 +140,9 @@ std::size_t CompositeMissionTransport::Poll() {
     try {
         if (tcp_) { tcp_->BeginPoll();tcpBegun=true; }if (udp_) { udp_->BeginPoll();udpBegun=true; }if (internal_) { internal_->BeginPoll();localBegun=true; }if (editor_) { editor_->BeginPoll();editorBegun=true; }
         if (internal_) internal_->AcceptPending();if (editor_) editor_->AcceptPending();if (tcp_) tcp_->AcceptPending(); //004e28b0은5e4a10의zlocal→5e4a08의TCP→생략SPX 순서다. 같은 프레임의 첫 pending 선택도 이 순서를 따른다.
-        for (std::int32_t id=-1;id>-static_cast<std::int32_t>(o::kPendingConnectionSlots);--id) { const auto result=ReceiveOne(id);if (result.consumed) ++count; } //004df560의 현재 각 pending 한 번이다.
-        for (std::int32_t id=0;id<static_cast<std::int32_t>(o::kTransceiverSlots);++id) { for (;;) { const auto result=ReceiveOne(id);if (result.consumed) ++count;if (!result.again) break; } } // callback의 재배치/반납을 매 회 현재 표에서 반영한다.
+        const auto beginLateLocal=[&] { if (internal_ && !localBegun) { internal_->BeginPoll();localBegun=true; } }; //수신 중 client→host가 만든 내부 owner도 첫 현재ID 수신 전에 같은 외곽 대여를 시작한다. accept는 반복하지 않는다.
+        for (std::int32_t id=-1;id>-static_cast<std::int32_t>(o::kPendingConnectionSlots);--id) { beginLateLocal();const auto result=ReceiveOne(id);if (result.consumed) ++count; } //004df560의 현재 각 pending 한 번이다.
+        for (std::int32_t id=0;id<static_cast<std::int32_t>(o::kTransceiverSlots);++id) { for (;;) { beginLateLocal();const auto result=ReceiveOne(id);if (result.consumed) ++count;if (!result.again) break; } } // callback의 재배치/반납을 매 회 현재 표에서 반영한다.
     }catch (...) {
         const auto failure=std::current_exception(); // 원래 수신 실패를 보존하고 모든 backend 대여를 먼저 반납한다.
         if (editorBegun) { try { editor_->EndPoll(); }catch (...) {} } // 원래 예외가 우선이며 나머지 backend 정리를 계속한다.

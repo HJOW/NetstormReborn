@@ -3808,6 +3808,8 @@ void RawCampaignSession::DetachConnectionTransport() noexcept {
 bool RawCampaignSession::ConnectionCallbackActive() const noexcept {
     if (!impl_->services.localLogin || !impl_->services.localLogin->transport) return false;const auto& active=impl_->services.localLogin->transport->callbacksActive;return active && active();
 }
+// 같은 실제 전송 owner를 새 일반 World로 인계하며 이전 Session의 등록 대여는 별도로 반납한다.
+std::shared_ptr<CompositeMissionTransport> RawCampaignSession::SharedConnectionTransport() const { return impl_->services.localLogin && impl_->services.localLogin->transport ? impl_->services.localLogin->transport->composite : nullptr; }
 // backend는 Login this를 보관하지 않는다. 약한 전체 World의 현재 Session에서만 실제 기록을 조회한다.
 void RawCampaignSession::RecordConnectionPacket(o::PacketConnection& connection,std::span<const std::uint8_t> packet) {
     const auto current=impl_->login;if (current) current->Record(connection,packet);

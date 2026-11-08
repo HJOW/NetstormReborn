@@ -17,6 +17,7 @@ std::string CampaignPeerAddressText(const std::array<std::uint8_t,20>& address);
 // 독립 backend의 Poll 두 개를 이어 호출한 값을 복합 원문 순서라고 쓰면 안 된다.
 struct CampaignTransportServices {
     std::shared_ptr<void> lifetime; // 실제 backend가 callbacks보다 먼저 사라지지 않는 강한 owner다.
+    std::shared_ptr<CompositeMissionTransport> composite; //실제 복합 backend만 형식을 유지해 다음 State7에 같은 내부/TCP/UDP를 인계한다.
     std::function<void()> detachSession; // 외부 장기 owner 주입 시 필수인 단일 Session 등록 대여 반납이다. callback은 현재 대여 토큰만 해제하고 예외를 던지지 않아야 한다.
     std::function<bool()> callbacksActive; // 반납 중인 콜백까지 포함한 실제 전체 Runtime 정리 진입 관문이다.
     std::shared_ptr<o::RawConnectionRegistry> registry; // Client State/Chat/cleanup과 같은 현재22/32칸이다.

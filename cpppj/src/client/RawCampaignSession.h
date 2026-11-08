@@ -318,6 +318,7 @@ public:
     void BindConnectionTransport(std::shared_ptr<CompositeMissionTransport> transport,const std::shared_ptr<void>& runtimeOwner); // Load/Prepare 전 실제 World 전체 owner로 한 번만 등록을 대여한다.
     void DetachConnectionTransport() noexcept; // 현재 Session 등록만 반납하며 실행 중 callback의 owner pin은 복귀까지 유지한다. 반납한 Session은 다시 사용하지 않는다.
     bool ConnectionCallbackActive() const noexcept; // 전체 State/Kernel 정리 전에 활성/반납 콜백을 함께 확인한다.
+    std::shared_ptr<CompositeMissionTransport> SharedConnectionTransport() const; //실제 현재 복합 전송만 반환하며 내부/TCP의 별도 owner를 합성하지 않는다.
     void RecordConnectionPacket(o::PacketConnection& connection,std::span<const std::uint8_t> packet); // 장기 backend는 약한 World를 재조회한 뒤 현재 Login의 실제 기록만 호출한다.
     void StartLocalConnection(); // 독립 편의 접합은 같은 준비/상태8까지 실행한다. 실제 Client의 실행 중 부모는 PrepareLocalConnectionForState를 사용한다.
     void PrepareLocalConnectionForState(); // 실행 중인 외부 State7 부모에서 Zone/후반만 설치한다. 공통 확정이나 상태8 접속을 중첩 실행하지 않는다.

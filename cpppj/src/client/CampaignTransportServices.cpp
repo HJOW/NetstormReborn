@@ -59,7 +59,7 @@ CampaignTransportServices BindEditorCampaignTransport(std::shared_ptr<EditorLoca
 }
 // 하나의 실제 coordinator를 모든 writer/State/Chat/배치 부모에 공급하고 Session 수신 대여도 반납한다.
 CampaignTransportServices BindCompositeCampaignTransport(std::shared_ptr<CompositeMissionTransport> transport,const std::shared_ptr<void>& sessionOwner) {
-    if (!transport) throw std::invalid_argument("복합 전송 실제 owner 누락");auto lease=transport->BindSession(sessionOwner);auto services=Basic(transport);
+    if (!transport) throw std::invalid_argument("복합 전송 실제 owner 누락");auto lease=transport->BindSession(sessionOwner);auto services=Basic(transport);services.composite=transport;
     if (transport->Dispatch().Registration(2).receive) transport->Dispatch().Register(2,transport->Dispatch().Registration(2).receive); // 같은 bootstrap 몸체도 현재 Session을 사용하므로 대여의 실행 pin/정리 관문에 포함하고 detach 때 이전 전역 등록을 복원한다.
     services.detachSession=[lease] { lease->Detach(); }; // 자기 세대만 즉시 detach하며 실행 중 callback은 같은 owner pin으로 정상 복귀한다.
     services.callbacksActive=[transport] { return transport->ConnectionCallbackActive(); }; // table의 현재/반납 대여를 함께 조회한다.

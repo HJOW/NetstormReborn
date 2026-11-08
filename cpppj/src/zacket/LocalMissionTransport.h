@@ -95,6 +95,7 @@ public:
     bool DispatchFrame(o::PacketConnection& connection,std::span<const std::uint8_t> frame);
     // 같은 실제 분배기에 건설/준비/서버 응답 처리기도 추가할 수 있다.
     o::RawPacketDispatch& Dispatch();
+    void RebindHooks(o::PacketDispatchHooks hooks); //같은 내부 listener/두 끝/버퍼/depth/등록표를 유지하고 현재 World 장치만 바꾼다.
     // 원본 두 끝의 현재 sender/flags/depth를 실제 상위 로그인/종료 소비자에게 제공한다.
     o::PacketConnection& Client();
     o::PacketConnection& Server();

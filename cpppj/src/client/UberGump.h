@@ -215,6 +215,7 @@ private:
     std::shared_ptr<CampaignTemplateStorage> templateStorage_; // 이전 Session이 사라져도 같은 Template9를 명시 정리 전까지 보유한다.
     std::shared_ptr<MissionFortLoadRequest> missionFortRequest_; //현재 Guide의 지연 요청이다. Guide/전체 종료에서 반납하며 이전 World의 State 반납은 보존한다.
     std::shared_ptr<GeneralBattleStartRequest> nativeBattleStart_; //대기실 ACK와 별개인 실제 메타 State7의 현재 Zone/설치 요청이다.
+    std::weak_ptr<MetaConnectionRuntime> pendingMetaBattleSource_; //1ah의같은다음7만실제전체Source에연결한다. 전송 owner/새 게임 요청을 소유하거나 만들지 않는다.
     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions_{std::make_shared<std::array<std::uint8_t,87>>()}; // 월드보다 오래 사는 실제 Init/로그인 옵션이다.
     std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions_{std::make_shared<std::array<std::uint32_t,256>>()}; // 설치 전/후가 공유하는 기술 허용 표다.
     std::uint32_t missionNumber_{},tutorialSeen_{}; // 실제5ca8e0/f0의 현재 전역이다.
@@ -244,8 +245,9 @@ private:
     void LoadLanBattleWorld(); // Client 수명의 State7 공통 부모가 이전/새 World를 끝까지 소유한다.
     void LoadLanBattleWorldBody(); // 실제 cleanup/전투 prefix와 일반 Session 후반을 연결한다.
     void LoadGeneralBattleWorldBody(const std::shared_ptr<GeneralBattleStartRequest>& request,std::shared_ptr<MetaConnectionRuntime> meta,std::optional<bool> lanHost); //기존 LAN과 메타가 같은 일반 World 본체를 사용하되 메타는 캡처 Zone 유무로 역할을 고른다.
-    void LoadNativeBattleWorldBody(); //현재7의 메타 요청을 만들고 실제 소유 Zone/같은 TCP·UDP로 일반 World를 설치한다.
+    void LoadNativeBattleWorldBody(std::shared_ptr<MetaConnectionRuntime> source); //현재7의 실제Source를 받아 같은 Zone/내부·TCP·UDP로 일반 World를 설치한다.
     void RunMetaRequestedState(); //현재7은 같은 분배기의 RunStarting으로 동기 처리하고 다른 요청은 기존 Run으로 전달한다.
+    void RunMetaBattleState(std::shared_ptr<MetaConnectionRuntime> source); //1bh는현재Source/이전World를외곽복귀까지pin하고같은분배기의현재7을동기실행한다.
     void FinishLanBattleWorld(); // 실제 phase14/Player 참여 뒤에만 사용자 입력·커서·표시를 연다.
     std::uint32_t multiplayerOptionsToken_{}; // 현재 일반 옵션의 실제 Gump token이며 닫힌 창의 serial을 새 창으로 대신하지 않는다.
     std::shared_ptr<const TextClipboard> textClipboard_; //최초 Chat과 뒤 Save as의 두 callback이 같은 OS 장치 수명을 공유한다.

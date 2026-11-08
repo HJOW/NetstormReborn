@@ -531,7 +531,7 @@ void UberGump::RetireWorldForState() {
 }
 // 같은34Effect/직접 전역/Runtime 조정기를 실제 공통 UI와 원문 부모 위치에 연결한다.
 void UberGump::CleanupNativeStateWorld(std::uint32_t reason,std::shared_ptr<MetaConnectionRuntime> handoff) {
-    if (handoff && (!editor_ || editor_->metaTransport!=handoff)) throw std::logic_error("Native State7의 현재 메타 인계 owner 불일치");
+    if (handoff && (!editor_ || editor_->metaTransport!=handoff)) { const auto current=world_ ? world_->Session().SharedConnectionTransport():nullptr;if (!current || !current->SharesNetwork(handoff->SharedNetwork())) throw std::logic_error("Native State7의 현재 World/메타 인계 owner 불일치"); } //인계후에도같은실제장치인Source만허용하며다른World 콜백보호는아래유지한다.
     if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive() && editor_->metaTransport!=handoff)) throw std::logic_error("패킷 콜백 실행 중 Native/LAN 정리 금지");CloseLanLobby(); //제어 연결이 빌린 Player 주소를 재할당하기 전에 현재 callback 대여부터 확인한다.
     ClientStateWorldDevices devices;devices.cancelInitialCursor=[this] { CancelClientCursorForState(client_,*client_.SurfaceStorage()); };
     devices.killGumps=[this] { KillGumpsForState(); };devices.cleanupGumps=[this] { CleanupGumpsForState(); };devices.replaceUber=[this] { ReplaceHudForState(); };devices.refreshSp=[this] { RefreshStormPower(); };
@@ -1687,7 +1687,7 @@ bool UberGump::Input() {
 // 예약 명령은 메시지/입력보다 앞서 실행한다(원본 004b88c0 자리).
 void UberGump::Tick() {
     if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive())) return; //재진입 Tick의 State/후속 명령 전체를 현재 수신 뒤 정상 Tick까지 유지한다.
-    const auto action=state_.TakeAfterPoll([this] { if (!(world_ && world_->Session().PollLocalConnectionState())) PollEditorState(); }); // 원문 Poll은 한 번만 소비한다. 여기서 새로 예약한 Guide/미션 설치와 timeout의next3는 다음 Tick까지 유지한다.
+    const auto action=state_.TakeAfterPoll([this] { if (client_.LocalStateGlobals()->State().next[0]==7 && !pendingMetaBattleSource_.expired()) PollEditorState();else if (!(world_ && world_->Session().PollLocalConnectionState())) PollEditorState(); }); //1ah의같은next7은현재World가있어도외부전체State7로처리하며Poll을두번소비하지않는다. 나머지기존미션/Guide/timeout순서는유지한다.
     const bool loading = state_.phase == ClientPhase::LoadingMission;
     if (action) Execute(*action);
     else if (!state_.Pending() && loading && world_ && !world_->Connecting() && !(missionRuntime_ && missionRuntime_->guided)) AdvanceBriefing();

@@ -269,6 +269,8 @@ void LocalMissionTransport::CloseAll() {
 }
 // 후속 실제 로컬 packet들은 이 한 분배기의 현재 등록을 공유한다.
 o::RawPacketDispatch& LocalMissionTransport::Dispatch() { return dispatch_; }
+// 메타 재진입도 같은 현재 내부 끝과 진행 중인 Poll/콜백 깊이를 보존한다.
+void LocalMissionTransport::RebindHooks(o::PacketDispatchHooks hooks) { if (!hooks.now || !hooks.record || !hooks.terminate || !hooks.close || !hooks.release) throw std::invalid_argument("내부 전송 인계의 실제 분배 장치 누락");hooks_=std::move(hooks); }
 // 원본 서버ID9 방향에서 들어오는 현재 연결 객체다.
 o::PacketConnection& LocalMissionTransport::Client() { return client_; }
 // 원본 pending-1/재배치owner의 같은 현재 연결 객체다.

@@ -17,7 +17,7 @@ struct NativeMetaSeatHooks; //같은 실제 C프레임/포구 조회 장치의 �
 struct NativeMetaConnectedHooks; //같은28~33 부모에 현재 HTML serial/카메라 장치만 외부에서 공급한다.
 class MetaConnectionRuntime:public std::enable_shared_from_this<MetaConnectionRuntime> { //수신 중 일반 전투가 같은 callback/장치를 끝까지 pin할 수 있다.
 public:
-    MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo,std::shared_ptr<std::array<std::uint8_t,87>> options,std::function<void()> recreateHud); //생성은소켓을열지않고실제전역옵션·CS/NSInfo·전체HUD 장치를같은수명으로연결한다.
+    MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo,std::shared_ptr<std::array<std::uint8_t,87>> options,std::function<void()> recreateHud,std::function<void(std::shared_ptr<MetaConnectionRuntime>,bool)> battleState); //생성은소켓을열지않고실제전역옵션·CS/NSInfo·전체HUD·전투전환Source 장치를같은수명으로연결한다.
     MetaConnectionRuntime(const MetaConnectionRuntime&)=delete;MetaConnectionRuntime& operator=(const MetaConnectionRuntime&)=delete; //등록된 callback의 주소/실제 socket owner를 복제하지 않는다.
     ~MetaConnectionRuntime(); //Native CloseAll 뒤 남은 자기 노드만 실제 TCP owner가 반납한다.
     o::LocalMissionParentResult Run(std::uint32_t selected); //20~27/34~38의부모와37의실제새R lan실행을연결하고공통144BYTE확정은바깥분배기에남긴다.
@@ -57,6 +57,7 @@ private:
     std::function<void(std::string_view)> progress_; //004cf570의 실제 현재 transient HTML 장치다.
     std::function<void(std::uint32_t)> request_; //실제 분배기의004b2bc0 즉시 요청 장치다.
     std::function<void()> processState_; //66h서버발견의현재36직접쓰기뒤같은실제004b6dd0을동기실행한다.
+    std::function<void(std::shared_ptr<MetaConnectionRuntime>,bool)> battleState_; //1ah는다음7의현재Source만연결하고1bh는같은Source로동기Run한다. 호스트 큐를 추가하지 않는다.
     std::function<void(std::string_view)> tell_; //실제 현재 HTML Tell 장치이며 버전 차이 안내를 고정 문자열 창으로 대체하지 않는다.
     std::function<void()> refreshInfo_; //같은현재NSInfo의0047cab0이며수신전체보다오래사는실제UI를빌린다.
     std::shared_ptr<std::array<std::uint8_t,87>> options_;std::function<void()> recreateHud_; //일반/메타가 같은 전역87BYTE를 공유하고 현재004c7880을 선택한다.

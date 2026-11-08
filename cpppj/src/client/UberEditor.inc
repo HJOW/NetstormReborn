@@ -276,7 +276,7 @@ o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t sele
 // 미션 Login은 기존 분배기에 남기고 Edit1/2·메인3·인트로39~42과 다음4를 같은 분배기로 처리한다.
 void UberGump::PollEditorState() {
     auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];const bool fort=next==1 || next==2 || next==6; // 일반 복귀6도 같은 Fort 설치/공통 확정을 사용하며 첫 배경/결과만 전용 부모가 처리한다.
-    const bool metaBattle=next==7 && editor_ && !world_ && client_.SurfaceStorage()->ownerMode.challenge; //실제 메타가 예약한 다음7만 현재 일반 전투 설치에 넘긴다.
+    const auto battleSource=pendingMetaBattleSource_.lock();const bool metaBattle=next==7 && battleSource;const auto previousWorld=metaBattle ? world_:nullptr; //이미 일반 World여도1ah의같은Source가예약한현재next7을같은분배기로처리한다.
     const bool metaIdle=next==0 && !world_ && editor_ && editor_->metaWorld && client_.SurfaceStorage()->ownerMode.challenge; //새 상태가 없어도 원문 Poll의 메타 표시/NSInfo 예약은 실제 현재 World에서 소비한다.
     if (!fort && next!=3 && !(next>=19 && next<=38) && !(next>=39 && next<=42) && !(editor_ && next==4) && !metaIdle && !metaBattle) return; //메타19~38 전체와 next0의 현재 메타 Poll을 같은 장기 분배기에 전달한다.
     if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);
@@ -289,7 +289,7 @@ void UberGump::PollEditorState() {
         hooks.metaFirst=[this] { client_.RefreshNativeMetaDisplay(false); };hooks.metaSecond=[this] { client_.RefreshNativeMetaDisplay(true); }; //원문Poll의479760/47dd60을같은현재CS/Pool/Renderer에연결한다.
         editor_->state=std::make_unique<o::RawLocalMissionState>(client_.Assets().Edition(),local.State(),o::LocalMissionStateGlobals{game.Server(),game.Boss(),surface.ownerMode.battle,game.world.missionPost,local.SavedGame(),surface.links.mission,local.Simulconnect(),surface.ownerMode.challenge,game.player,local.ZonePending(),local.GameTicks(),local.SourceType(),local.CdPresent(),local.Blocks()[2][33],local.MetaRefresh(),local.MetaRebuild(),reinterpret_cast<std::uint8_t&>(htmlGlobals_.background[0]),local.BattleByte(),local.ConnectEnd(),local.ActivityEnd(),client_.Time().game,client_.Time().wall},std::move(hooks));
     }
-    if (fort || next==3) editor_->committed=false;if (metaBattle) editor_->state->PollStarting([this] { LoadNativeBattleWorldBody(); });else editor_->state->Poll();
+    if (fort || next==3) editor_->committed=false;if (metaBattle) { pendingMetaBattleSource_.reset();editor_->state->PollStarting([this,battleSource] { LoadNativeBattleWorldBody(battleSource); }); }else editor_->state->Poll(); //소비한Source를먼저비워동기재진입의새예약을덮어지우지않는다.
     if (next>=39 && next<=42) {
         if (local.State().phase[0]==3 && local.State().next[0]==4) PublishNativeMainMenuState();
         return; // 영상이 살아 있는 State40은 다음 Poll까지 유지하며 메인 메뉴를 먼저 공개하지 않는다.

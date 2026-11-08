@@ -39,6 +39,8 @@ public:
     bool ConnectionCallbackActive() const noexcept; // detached 콜백까지 포함하여 전체 State/Kernel 정리의 진입을 막는다.
     const std::shared_ptr<EditorLocalTransport>& EditorTransport() const; // 기존 Editor services도 같은 실제 내부 owner를 그대로 빌릴 수 있다.
     CompositeTransportRole Role() const; // UI/원문 State가 이미 선택한 전송 경로만 조회한다.
+    bool SharesNetwork(const MissionNetwork& network) const; //실제 같은 TCP/UDP/두 표/전체 Meta owner인지 확인해 다른 World의 정리를 허용하지 않는다.
+    void RebindWorld(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<void> globalsLifetime); //등록 반납 뒤 같은 coordinator/모든 기존 backend를 새 World에 인계한다.
 private:
     // 정적 Create만 실제 장기 owner를 만들며 생성 자체는 소켓/게임을 실행하지 않는다.
     CompositeMissionTransport(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<void> globalsLifetime,MissionNetwork network);

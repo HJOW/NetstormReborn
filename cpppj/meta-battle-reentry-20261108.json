@@ -1,0 +1,72 @@
+{
+  "unit": 1156,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "dc2d85be / 20261108-126 CP",
+  "summary": "M2.5의 인계 후1ah/1bh 재수신을 실제 Source·현재 World·같은 전체 복합 전송에 연결했다. M2를 마치고 M3으로 진행한다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1156\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13169664,
+      "sha256": "76ff76230af03c4c189d9e7de5e5bd6adfaf3f6aaf1d3a27f6f55f12f2a0722d"
+    },
+    "R.exe": {
+      "bytes": 670208,
+      "sha256": "4cfdfe3f46384090bbd9328959d3aebda4844b29556273bb0f8f4f1d7963c9be"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "원문4b2df0/4b6dd0의 현재 장치 유지·정리 전 캡처·동기 State7/즉시8 순서, source pin/next7 단일 Poll 우선 선택, 실제 TCP/UDP/두 표/전체 Meta identity, 기존 내부 끝/버퍼/깊이 유지, World 등록 detach→같은 전송 hooks 재연결→새 World 대여, 다른 Session callback 보호/늦은 내부 Poll 대여를 정적으로 대조했다.",
+  "nativeEvidenceSha256": {
+    "004b2df0.asm": "74fbfa2c41e5516fbef581fbba820b0229d59881e4a02a58932e2f44aca3ef58",
+    "004b2df0.c": "f6524806686adc8085877a5510b371818cf26ff97f29d89161c4d7969617fcab",
+    "004b6dd0.asm": "35c457d8f9f34bb9e0e984fedc9b64550b36ecd09046cb684bca10913f2e54d0",
+    "004b6dd0.c": "57657c478577af842a6ca07e8dfab7ee580f20d0415bb313d0067cf606a4bc11"
+  },
+  "sourceAudit": {
+    "actualSourceForDirectAndScheduledState7": true,
+    "scheduledSourceWeakAndConsumedBeforePollWithoutExtraNativeState": true,
+    "oneExternalPollForActualMetaNext7EvenWithExistingWorld": true,
+    "previousWorldPinnedAcrossSynchronousRun": true,
+    "sameCurrentTcpUdpRegistriesTableAndWholeSourceIdentity": true,
+    "sameCompositeIncludingInternalEndsAndAllExistingNodesReused": true,
+    "noRelaxationOfOtherActiveSessionCallbackGuards": true,
+    "oldSessionDetachedBeforeRebindAndNewSessionLease": true,
+    "lateInternalBeginPollWithoutRepeatedAccept": true,
+    "noNewSenderKnownPhaseFilterOrHostPost": true,
+    "newRuntimeExecutionCount": 0
+  },
+  "remaining": {
+    "m2Complete": true,
+    "next": "M3.1 / 공통Squid Pop 004b02d0의 현재checking/전체부모·실제caller 대조",
+    "checkingFunctions": [
+      "004b02d0",
+      "004dc220"
+    ],
+    "stage3Groups": 6,
+    "otherCallers": "개발자이름 제한4b8be0→1bh직접Caller/기록요청 활성writer·추가전송은M6 전수대조에 남는다."
+  },
+  "limitations": [
+    "사용자 지시로 새 MP 단위/패킷/게임/통신 검사를 실행하지 않았다. 정상/반복 접속과 전체 MP 동일성이 실행 검증됐다는 뜻이 아니다.",
+    "실제 같은 Source/TCP/UDP/등록표의 첫 메타 진입 및 일반 World 재진입을 연결했다. 물리 계약 누락/다른 Source나 다른 Session 콜백을 성공으로 간주하지 않는다.",
+    "일반 LAN/Outpost 전수 감사와 나머지 현재 미구현 Caller는M3~M8에서 계속한다."
+  ],
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}
