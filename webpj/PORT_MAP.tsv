@@ -732,7 +732,7 @@ cpppj/src/o/RawFrameChoose.cpp	port	www/assets/terrain-fringe.js;www/assets/terr
 cpppj/src/o/RawGameAuxState.h	port	www/core/game-aux-state.js	11fbb988	port	[o-default] WB04-C2·D3(Form 종속 전역 3칸) / 3.6①(9cb0547f, WB02-H 판정): 중앙섬 X/Y(00568afc/00568b00) 칸 추가는 멀티플레이 중앙섬·메타 몫(웹 제외) / 3.6③(11fbb988, WB04-D5b 판정): 새 장기 전역 칸(StateNotifyType 82·Spell/Income·프로세스 TYPE·건설 헤더·미션 설정 7칸·Quick 건설 등) 추가와 지정 칸 의미 갱신 → 각 소비자 이식 단위에서 보호 PE 초기값과 함께 추가. 기존 웹 칸의 값/폭 변화 없음
 cpppj/src/o/RawGameRandomSeed.cpp	port	www/core/random.js;www/assets/terrain-tiles.js	1f00a25a	port	[o-default] WB04-C1(시드 Initialize/Reseed)
 cpppj/src/o/RawGemReward.cpp	port			todo	[o-default]
-cpppj/src/o/RawGeyserAiRegistration.cpp	port			todo	[o-default]
+cpppj/src/o/RawGeyserAiRegistration.cpp	port	www/core/raw-geyser-ai-registration.js	1f00a25a	port	[o-default] WB04-E78: 간헐천 AI 등록 00416720(Player 0xb4 의 1..8 +0xb0 포인터 번호순 재조회·연결된 004153c0 하위 호출·미연결 nonnull 은 첫 요청 경계 거부). fixture geyser-ai-registration 10.78 302행 전부(CD 302행은 웹 범위 밖). 004153c0 AI 갱신 본체와 Player 저장소 실제 연결은 RawAiBrain 단위에서
 cpppj/src/o/RawGeyserCapture.cpp	port			todo	[o-default]
 cpppj/src/o/RawGeyserLifetime.cpp	port	www/core/raw-geyser-lifetime.js	1f00a25a	port	[o-default] WB04-E75: 간헐천 고유 수명 전처리 485580·후처리 485540(기본 프레임 직접 쓰기·AI 제거·지면 목록 중복 제거·편집 모드 섬 정리). fixture geyser-lifetime 2016행 전부(10.78 전용 파일). 기본 프레임 getter/표시/AI/Damageable/섬 정리 본체는 해당 파일 단위에서
 cpppj/src/o/RawGeyserMined.cpp	port			todo	[o-default]
@@ -939,7 +939,7 @@ cpppj/src/o/RawTutorialTwo.cpp	port			todo	[o-default]
 cpppj/src/o/RawTypeRequiredEnergy.cpp	port	www/core/raw-type-required-energy.js	1f00a25a	port	[o-default] WB04-E26: 0049c3b0/0049b0d0 TYPE 요구 에너지. fixture type-required-energy 2352행 전부 + 경계 거부
 cpppj/src/o/RawVortexAscend.cpp	port			todo	[o-default]
 cpppj/src/o/RawVortexOwner.cpp	port			todo	[o-default]
-cpppj/src/o/RawVortexOwnerDiagnostic.cpp	port			todo	[o-default]
+cpppj/src/o/RawVortexOwnerDiagnostic.cpp	port	www/core/raw-vortex-owner-diagnostic.js	1f00a25a	port	[o-default] WB04-E78: 신전 소유자 missingIsland 진단 004dc58f(원문 6줄 상세 문자열—ftol 좌표·signed 정수—을 상세 장치에 쓴 뒤 Vortex.cpp 0x235 진단). fixture vortex-owner-diagnostic-local 10.78 48행 전부(CD 48행은 웹 범위 밖). 부모 RawVortexOwner(슬롯 필드 제거·Player 18필드)는 해당 단위에서
 cpppj/src/o/RawVortexPreDestroy.cpp	port			todo	[o-default]
 cpppj/src/o/RawWalkerFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawWindAviaryProcess.cpp	port			todo	[o-default]

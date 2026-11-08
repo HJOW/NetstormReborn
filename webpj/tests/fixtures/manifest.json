@@ -8520,7 +8520,7 @@
       "bytes": 349264,
       "lines": 1272,
       "fixtureCommit": "a9ededa6",
-      "webCommit": "worktree",
+      "webCommit": "57b8bc6f",
       "cpppjBasis": {
         "cpppj/src/o/RawAmbientSound.cpp": "a9ededa6"
       }
@@ -8549,7 +8549,7 @@
       "bytes": 570588,
       "lines": 39,
       "fixtureCommit": "adb9739e",
-      "webCommit": "worktree",
+      "webCommit": "57b8bc6f",
       "cpppjBasis": {
         "cpppj/src/o/RawMetaZoneCleanup.cpp": "35041198"
       }
@@ -8578,9 +8578,67 @@
       "bytes": 35729,
       "lines": 117,
       "fixtureCommit": "2ede4027",
-      "webCommit": "worktree",
+      "webCommit": "57b8bc6f",
       "cpppjBasis": {
         "cpppj/src/o/RawColorSortStartup.cpp": "2ede4027"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E78",
+      "id": "geyser-ai-registration",
+      "path": "cpppj/tests/fixtures/geyser-ai-registration-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 간헐천 등록 순회의 분류(정상/하위 거부)·AI 읽기 순서·첫 요청 인자·전체 Player 저장소 Adler-32(원본 PATCH/CD 두 판본 604행)",
+      "consumers": [
+        "webpj/tests/geyser-ai-registration.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-geyser-ai-registration.js"
+      ],
+      "doc": "docs/webpj-geyser-ai-vortex-owner-diagnostic-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGeyserAiRegistration.cpp"
+      ],
+      "scope": "10.78(originals) 302행 전부 사용(CD 10.72 302행은 범위 밖)",
+      "text": true,
+      "sha256": "d7b6d2a738a8c84fe5b9ec8ebe92776bb7a9d69bd0e55684aff0e58304e89850",
+      "bytes": 51766,
+      "lines": 605,
+      "fixtureCommit": "ab9361f1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGeyserAiRegistration.cpp": "af9cc28e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E78",
+      "id": "vortex-owner-diagnostic-local",
+      "path": "cpppj/tests/fixtures/vortex-owner-diagnostic-local-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 신전 소유자 missingIsland 진단의 상세 문자열 바이트·진단 식/파일/줄(원본 PATCH/CD 두 판본 96행; 슬롯 필드 제거와 Player 18필드는 부모 단위)",
+      "consumers": [
+        "webpj/tests/vortex-owner-diagnostic.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-vortex-owner-diagnostic.js"
+      ],
+      "doc": "docs/webpj-geyser-ai-vortex-owner-diagnostic-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawVortexOwnerDiagnostic.cpp"
+      ],
+      "scope": "10.78(originals) 48행의 상세 문자열·진단 위치 사용(CD 10.72 48행은 범위 밖, 슬롯/Player 열은 부모 단위)",
+      "text": true,
+      "sha256": "f38a3da225499fc1a9a980bb53fa7501ea6655976e57e2b5a0d084a1f7924f13",
+      "bytes": 40935,
+      "lines": 97,
+      "fixtureCommit": "b3f1a1b6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawVortexOwnerDiagnostic.cpp": "b3f1a1b6"
       }
     }
   ]
