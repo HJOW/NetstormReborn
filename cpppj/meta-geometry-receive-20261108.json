@@ -1,0 +1,79 @@
+{
+  "unit": 1143,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "5e4d232f / 20261108-111 CP",
+  "summary": "26h 기하 배치 통지를 실제 현재 Renderer 한계와 같은 CS 원점/두 반경/mode 전역에 연결하고 송신 길이 observer도 원문의 복귀형 진단/현재 필드 재조회 순서로 복원했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1143\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 12977664,
+      "sha256": "2da3ce01f5b56dff33d9200f4eabe9c16b5ccd5c76bc7573c46295a1ed3f03c6"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "0b6295ef7ebde11de5fb82641eafbf3380aef0c28fc0c0f552dab05d34fa7865"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4b45a0/42c780/40a3e0/40a440/497f80 C/PE·513780 float 비트·mod 뒤 contact 위치·3DWORD의 둘째 반경 보존·mode0/부분 저장/mode1·같은 논리 Screen/카메라 장치를 대조했다.",
+  "nativeEvidenceSha256": {
+    "0040a3e0.asm": "e14417968d7389bc7e11c758ebb175e648164625d08a48d80b8ea2400b1993f1",
+    "0040a3e0.c": "ec410d5d2c1b5b596da3d002d8a4f943a2e888a627ca02881abf694ab55b27d3",
+    "0040a440.asm": "f462d0c275c6170f693d3be7487027cb1665d084d4a3150e7b0a44f20947f8e9",
+    "0040a440.c": "f3ba196b89deab461f4aa3d41b3121982c229a220c731c64b95b03c012a529f5",
+    "0042c780.asm": "50bcd3492045182b12bc414d2a82eb92544a2a0282e33c701d261a31b1898699",
+    "0042c780.c": "3d9c75067e10af8922315c9bd258761a570cbc4c9b6fd2ff05fba5f4c91f50ff",
+    "00497f80.asm": "adfeab8b478def0a5b0b58d7b6d73d7687bb2ce2feeb332ac0feb2a0c71c3d68",
+    "00497f80.c": "e9da6182c4f6100696ff14ce9cafc70a399325bba0855ea72baf03a96cc12291",
+    "004b45a0.asm": "e92961c40ea913e64322cb216c6c83902eb51e07f2fba7294f38d2ce917b7f6d",
+    "004b45a0.c": "2336e09fdca554dc10c80376bd1b90bb52fb3a1aefa19a20364da24fa42846f5"
+  },
+  "sourceAudit": {
+    "currentScreenAndRendererLimitsBeforeMode": true,
+    "noCsOrModeOrSenderGuardAdded": true,
+    "nativeHeightBits411ba2e9": true,
+    "modOffsetAndContactCountFromCurrentPacket": true,
+    "count3PreservesSecondRadius": true,
+    "modeAndStorePartialEffectsPreserved": true,
+    "observerCurrentFieldReloadAndWordWrap": true
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "assetDataQuery": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "신규 MP/단위/게임/실제 통신 검사는 요청대로 제외했으며 동작/안정성 검증 완료가 아니다.",
+    "패킷 물리 부족은 명시 오류로 거부하며 선행 Renderer 한계/mode/원점 쓰기를 되돌리지 않는다. x87 전체 환경/반올림 상태 전체 일치는 입증하지 않았다.",
+    "20h 생성·21h 제거·22h 이동·25h 오류·1a/1b checking 부모는 잔여다.",
+    "helpWord 캐시 수명과 기존 강제 활성 커서·조기/원격 희생·marker 진단 경계도 잔여다."
+  ],
+  "remaining": [
+    "나머지 메타 CS 수신20/21/22/25h·참가자 생성·카메라 caller·HTML 하강/참가 후속·1095 송신 상태 호출",
+    "세.server·LAN hostname/Config registryValue·LAN/Outpost/checking5→한국어 후속→Edit 시나리오UI"
+  ]
+}

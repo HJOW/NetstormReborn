@@ -588,6 +588,9 @@ target_sources(netstorm PRIVATE client/NativeMetaBattleOptions.h client/NativeMe
 # CS 참가자 표시 서식과 실제88h 길드 표시 수신 부모다.
 target_sources(netstorm PRIVATE client/NativeMetaParticipantName.h client/NativeMetaParticipantName.cpp)
 
+# 26h의 실제 화면 한계와 같은 CS 원점/반경 배치 전역 수신이다.
+target_sources(netstorm PRIVATE client/NativeMetaGeometry.h client/NativeMetaGeometry.cpp)
+
 # 메타전투 생성/23h 수신 부모다. 실제공장/QA/Pop/Rig 장치뒤에등록한다.
 target_sources(netstorm PRIVATE client/NativeMetaBattleCreate.h client/NativeMetaBattleCreate.cpp)
 
