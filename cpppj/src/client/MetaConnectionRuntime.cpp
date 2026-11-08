@@ -33,6 +33,7 @@
 #include "client/NativeMetaParticipantName.h" //88h는 현재 CS 길드 표시/실제 이름표와 지정 참가자 갱신을 사용한다.
 #include "client/NativeMetaParticipantCreate.h" //20h의 전체 실제 참가자 생성/CS 좌석·Chat/후행 표시다.
 #include "client/NativeMetaParticipantRemove.h" //21h의 전체 캡처 CS 제거/같은 Chat/Rig/Image 수명이다.
+#include "client/NativeMetaParticipantMove.h" //22h의 실제 같은 packet 변경/좌석·master·항해/Chat 후행이다.
 #include "client/NativeCameraRig.h" //자기 참가자의 실제 입장 카메라를 같은 Kernel에 연결한다.
 #include "client/RawChatChannels.h" //원문 packet 이름/채널20h를 같은 실제 Chat100기록에 저장한다.
 #include "client/NativeMetaGeometry.h" //26h는 같은 Renderer 한계와 장기 CS 원점/반경을 갱신한다.
@@ -118,6 +119,7 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     dispatch.Observe(0x88,{});dispatch.Version(0x88,1,0);dispatch.RequireLength(0x88,98); //0040b380 빈 관찰기와 보호 PE0052ec40의 고정98BYTE다.
     dispatch.ObservePacket(0x20,[this](auto packet,auto sending) { ObserveNativeMetaParticipantAdd(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x20,1,0);dispatch.RequireLength(0x20,0xffff);
     dispatch.Register(0x20,[this](auto,auto&,auto packet) { ReceiveParticipantAdd(packet); }); //원문 State의 메타 관문 뒤만 처리하며 sender/known/phase를 더 검사하지 않는다.
+    dispatch.Observe(0x22,{});dispatch.Version(0x22,1,0);dispatch.RequireLength(0x22,17);dispatch.Register(0x22,[this](auto,auto&,auto packet) { ReceiveParticipantMove(packet); }); //원문 빈 observer/고정17BYTE의 전체 State 부모다.
     dispatch.ObservePacket(0x21,[this](auto packet,auto sending) { ObserveNativeMetaParticipantRemove(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x21,1,0);dispatch.RequireLength(0x21,0xffff);
     dispatch.Register(0x21,[this](auto,auto&,auto packet) {
         if (!client_.SurfaceStorage()->ownerMode.challenge) return;if (!client_.ChallengeGlobals()->Current()) client_.SurfaceStorage()->AssertDisplay("CS",".\\State.cpp",0xd04);NativeMetaParticipantRemoveHooks h;h.checking=client_.SurfaceStorage()->Checking();h.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };h.log=[this](auto text) { client_.WriteDiagnosticLog(9,text); };
@@ -195,6 +197,18 @@ void MetaConnectionRuntime::ReceiveParticipantAdd(std::span<const std::uint8_t> 
     h.chat=[this](auto subscriber,auto name,auto flags) { if (subscriber==client_.CurrentSubscriber()) { static_cast<void>(client_.ChatChannels().Add(subscriber,std::nullopt,flags));return; }const auto end=std::find(name.begin(),name.end(),0);if (end==name.end()) throw std::out_of_range("20h Chat packet 이름의 실제 NUL 물리 부족");static_cast<void>(client_.ChatChannels().Add(subscriber,std::string_view(reinterpret_cast<const char*>(name.data()),static_cast<std::size_t>(end-name.begin())),flags)); }; //자기 채널의 원문 조기 반환에서는 이름을 먼저 읽지 않는다.
     h.update=[this](auto participant,auto mask) { client_.UpdateNativeMetaParticipant(participant,mask); };h.refreshInfo=refreshInfo_;ReceiveNativeMetaParticipantAdd(challenge,packet,h);
 }
+// 실제 수신 frame은 TCP/UDP/zlocal이 소유한 mutable 저장소이며 기존 집합 observer도 같은 버퍼를 사용한다.
+void MetaConnectionRuntime::ReceiveParticipantMove(std::span<const std::uint8_t> packet) {
+    if (!client_.SurfaceStorage()->ownerMode.challenge) return;if (!client_.ChallengeGlobals()->Current()) client_.SurfaceStorage()->AssertDisplay("CS",".\\State.cpp",0xd3c);NativeMetaParticipantMoveHooks h;h.owner=[this] { return client_.GameplayGlobals()->player.battleOwner; };h.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };
+    h.kick=[this](auto battle,auto slot) { ExplodeBattleSlot(battle,slot); };h.battle=[this](auto id) { client_.UpdateNativeMetaBattle(id); };h.kickedSound=[this] { client_.WorldAudio().Sounds().PlayByName("kickedoff.wav",0,0,0,1,0); };h.dropSound=[this] { client_.WorldAudio().Sounds().PlayByName("dropPiece.wav",0,0,0,0,0); };h.thunder=[this](float x,float y) { client_.WorldAudio().Sounds().PlayNameAt(x,y,"thundercrack.wav",0); };h.music=[this] { client_.WorldAudio().RequestMusic("anticipation.mus"); };const auto sail=SailDevices();h.seat=sail.seat;h.animate=sail.animate;
+    h.resetOptions=[](auto options) { o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,options); };h.sendOptions=[this](auto battle,auto options) { SendMetaData(battle,options,87); };h.chatMode=[this](auto mode) { client_.RefreshNativeMetaChatMode(mode); };h.chatMembers=[this] { RefreshClientBattleChatMembers(client_); };h.refreshInfo=refreshInfo_;h.update=[this](auto participant,auto mask) { client_.UpdateNativeMetaParticipant(participant,mask); };h.refreshCore=[this] { RefreshParticipantCore(); };
+    h.rebuildName=[this](auto participant) { NativeMetaParticipantNameHooks name;name.translate=[this](auto text) { const auto bytes=o::EncodeDisplayText(client_.Translate(text));return std::string(bytes.begin(),bytes.end()); };name.weight=[this](auto core) { return Weight(core); };RebuildNativeMetaParticipantLabel(client_.ChallengeGlobals()->Participant(participant),name); };auto& game=*client_.GameplayGlobals();ReceiveNativeMetaParticipantMove(*client_.ChallengeGlobals(),{const_cast<std::uint8_t*>(packet.data()),packet.size()},game.Subscribers()->MySubscriber(),game.player.playerKnown,h); //원본packet5 bit8을 같은 실제 입력에만 쓰며 사본/readonly 임시 입력을 만들지 않는다.
+}
+// 비영/활성 관문과 포구 처리는 원문 자식에 맡기며 실제 지면 효과의 공유 난수도 그대로 소비한다.
+void MetaConnectionRuntime::ExplodeBattleSlot(std::uint32_t battle,std::uint32_t slot) {
+    NativeMetaBattleSlotHooks h;h.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); };h.shape=SeatShapeDevices();h.raw=[this](auto object)->std::span<const std::uint8_t> { const auto core=client_.GameplayGlobals()->RequireSession().Core();if (object>65535U || object>=core.pool.Capacity()) throw std::out_of_range("메타 슬롯 효과의 실제 DWORD SID 물리 범위");return core.pool.Slot(o::Sid{static_cast<std::uint16_t>(object)}); };
+    h.ground=[this](float x,float y) { client_.GameplayGlobals()->RequireSession().GroundImpact(x,y); };h.sound=[this](float x,float y) { client_.WorldAudio().Sounds().PlayNameAt(x,y,"explodeSlot.wav",0); };ExplodeNativeMetaBattleSlot(*client_.ChallengeGlobals(),std::bit_cast<std::int32_t>(battle),std::bit_cast<std::int32_t>(slot),client_.GameplayGlobals()->Camera().Snapshot(),h);
+}
 // 장치/전역은 실제 Client 주소를 빌리며 CS가0이어도 전역 옵션과 파생값 갱신을 수행한다.
 void MetaConnectionRuntime::ReceiveBattleOptions(std::uint32_t sender,std::span<const std::uint8_t> packet) {
     auto& game=*client_.GameplayGlobals();auto& local=*client_.LocalStateGlobals();auto& storage=*client_.SurfaceStorage();
@@ -222,18 +236,20 @@ void MetaConnectionRuntime::ReceiveRootReply(std::span<const std::uint8_t> packe
     o::ReceiveRootLoginReply(packet,{local.State(),local.MetaZones().records,local.MetaRefresh()},hooks);
 }
 bool MetaConnectionRuntime::CallbackActive() const { return pumping_; } //현재 대여 중인 이 owner를 Native cleanup이 반납하지 않게 한다.
-//실제 포구/SHP 조회 뒤 같은 CS 좌표를 읽고 현재 Rig의 목표만 변경한다.
-NativeMetaSailHooks MetaConnectionRuntime::SailDevices() {
-    NativeMetaSailHooks hooks;hooks.subscriber=[this] { return client_.CurrentSubscriber(); };hooks.send=[this](auto packet) { static_cast<void>(tcp_->SendMutable(11,packet)); };
-    hooks.animate=[this](auto record) { auto& rig=client_.AcquireNativeIslandRig(PeerWord(record,0xb8),0,0);MoveNativeParticipantRig(rig,record); };
-    hooks.seat=[this](auto participant,auto battle,auto seat) {
+// 실제 C 프레임/포구와 복귀형 진단을 항해와 추방 효과가 공유한다.
+NativeMetaSeatHooks MetaConnectionRuntime::SeatShapeDevices() {
         auto& storage=*client_.SurfaceStorage();NativeMetaSeatHooks shape;shape.firstFrame=[&storage](auto type) { return storage.frames.at(type).Run('C').first; };
         shape.muzzle=[&storage](auto type,auto frame) { const auto& selected=storage.types.at(type);const auto& current=storage.shapes.at(type);o::RiftShapeAccessHooks access;
             access.typeNumber=[](auto value) { return value.token; };access.frameError=[&storage](auto number,auto index,auto abstract) { storage.RecordDisplayFrameError(number,index,abstract); };access.assertion=[&storage](auto expression,auto file,auto line) { storage.AssertDisplay(expression,file,line); };
             access.shape=[&storage](auto number,auto index) { const auto& value=storage.shapes.at(number);if (!value.loaded || index<0 || static_cast<std::size_t>(index)>=value.frames.size()) throw std::out_of_range("메타 좌석 진단복귀 뒤 SHP 포구 물리 범위");const auto& header=value.frames[static_cast<std::size_t>(index)];return std::array<float,2>{static_cast<float>(header.muzzleX),static_cast<float>(header.muzzleY)}; };
             return o::ReadRiftShapeFrame({type,selected.flags1,current.frameCount,current.loaded,selected.maxHitPoints},frame,0,access);
-        };return NativeMetaSeatPosition(*client_.ChallengeGlobals(),participant,battle,seat,client_.GameplayGlobals()->Camera().RendererView(),shape);
-    };return hooks;
+        };return shape;
+}
+// 실제 포구/SHP 조회 뒤 같은 CS 좌표를 읽고 현재 Rig의 목표만 변경한다.
+NativeMetaSailHooks MetaConnectionRuntime::SailDevices() {
+    NativeMetaSailHooks hooks;hooks.subscriber=[this] { return client_.CurrentSubscriber(); };hooks.send=[this](auto packet) { static_cast<void>(tcp_->SendMutable(11,packet)); };
+    hooks.animate=[this](auto record) { auto& rig=client_.AcquireNativeIslandRig(PeerWord(record,0xb8),0,0);MoveNativeParticipantRig(rig,record); };
+    hooks.seat=[this](auto participant,auto battle,auto seat) { const auto shape=SeatShapeDevices();return NativeMetaSeatPosition(*client_.ChallengeGlobals(),participant,battle,seat,client_.GameplayGlobals()->Camera().RendererView(),shape); };return hooks;
 }
 void MetaConnectionRuntime::JoinBattle(std::uint32_t parameter) { JoinNativeMetaBattle(*client_.ChallengeGlobals(),parameter,SailDevices()); } //실제 입력을 선택한 때만 현재 장치를 구성한다.
 void MetaConnectionRuntime::SailPosition(std::array<std::uint32_t,2> position) { SailNativeMetaParticipant(*client_.ChallengeGlobals(),position,SailDevices()); } //송신 뒤 조회하는 현재 참가자와 같은 Rig를 사용한다.

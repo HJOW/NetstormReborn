@@ -66,7 +66,11 @@ void RefreshClientBattleChatChannel(Client& client,RawMenuControls& menus,std::u
             if (!backend) throw std::logic_error("메타 BATTLE 접두의 실제 Chat 장치 없음");backend->ChangeRecipient(chat.window.current,name,mode ? 0U : 1U);
         }
     }
-    client.ChatChannels().Clear(8);
+    RefreshClientBattleChatMembers(client);
+}
+// 메타 이동의 다른 참가자 변경은42f3d0 접두 처리 없이 이 공통 자식만 실행한다.
+void RefreshClientBattleChatMembers(Client& client) {
+    auto& player=client.GameplayGlobals()->player;client.ChatChannels().Clear(8);
     if (!player.playerKnown) return;
     const auto battleIndex=ChallengeWord(client.ChallengeGlobals()->Participant(player.battleOwner),0xa4);if (!battleIndex) return;
     const auto battle=client.ChallengeGlobals()->Battle(battleIndex); //원문은 이 현재 전투의 참가자 목록 포인터를 고정해 순회한다.

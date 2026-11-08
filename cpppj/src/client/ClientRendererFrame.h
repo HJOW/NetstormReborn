@@ -32,6 +32,7 @@ public:
     void UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask); //현재 특정 참가자만 원문 마스크로 같은 CS/Pool/이름표에 갱신한다.
     void SetMetaParticipantStatus(std::int32_t kind,std::int32_t participant,bool enabled); //현재 실제 UI의 같은 MessageBoard에 참가자 상태 생성/제거를 전달한다.
     void BindMetaParticipantDevices(NativeMetaParticipantCreateHooks& hooks); //기존 메타 World/가상효과·실제d8 이름표·Reference/현재Root를 연결한다.
+    void RefreshMetaChatMode(std::uint32_t mode); //현재 실제 메뉴 ChatBackend를42f3d0에 빌리고 별도 Chat 창을 만들지 않는다.
     void RefreshMetaDisplay(bool whole); //같은실제CS/Pool·가상효과/Renderer·Gump장치로479760또는47dd60을수행한다.
     NativeIslandRig& AcquireIslandRig(std::uint32_t object,float height,std::uint32_t kill); //실제 현재 장치를 같은52 TYPE 공장/검색에 공급하며 socket이나 프레임을 실행하지 않는다.
     void Finish(); //정상 Draw의 화면 잠금 반납 뒤470ca0을 실행한다. 실패 경로에서는 부르지 않는다.

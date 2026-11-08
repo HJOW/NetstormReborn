@@ -657,6 +657,7 @@ public:
     const o::CanonDecoderDiagnostics& DecoderDiagnostics() const;
     // 화면의 현재 HP/최대 HP 조회는 실제 SquidReward를 사용한다.
     const o::SquidReward& HitPoints() const;
+    void GroundImpact(float x,float y); //470ac0의 실제 같은 Dude/공유난수/지면 시각 효과를 메타 슬롯 효과에도 제공한다.
     // 실제 사제 목록/움직임/보호막 상태의 읽기 경계를 빌린다.
     const RawPriestWorldBindings& Priests() const;
 private:

@@ -5578,6 +5578,7 @@ RawWorldCore RawCampaignSession::Core() { return impl_->core; }
 // 임시 진단 사본을 만들지 않아 분석 조회 중 바뀐 checking/callback도 같은 owner에서 읽는다.
 const o::CanonDecoderDiagnostics& RawCampaignSession::DecoderDiagnostics() const { return impl_->metadata.geometry.decoderDiagnostics; }
 const SquidReward& RawCampaignSession::HitPoints() const { return impl_->hp; }
+void RawCampaignSession::GroundImpact(float x,float y) { if (!impl_->hits) throw std::logic_error("메타 슬롯의 실제 지면 효과 owner 미설치");impl_->hits->Impact().Ground(x,y); } //기존 피해/폭발과 같은 단일 인스턴스를 호출하며 효과/난수를 재구현하지 않는다.
 const RawPriestWorldBindings& RawCampaignSession::Priests() const { return *impl_->priests; }
 // 같은 현재 포획 몸체를 실제 요청과 수신 검사에서 빌린다.
 const RawCarrierSteal& RawCampaignSession::CarrierSteal() const { if (!impl_->loaded || !impl_->carrierSteal) throw std::logic_error("미설치 Session의 크랩 포획");return *impl_->carrierSteal; }

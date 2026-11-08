@@ -1,0 +1,107 @@
+{
+  "unit": 1149,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "12baa7c1 / 20261108-117 CP (문서 정리1148)",
+  "previousProduct": 1147,
+  "summary": "M1.1의22h 참가자 이동 전체를 실제 좌석 추방/지면·음향·Rig·87BYTE master 옵션 송신·Chat·표시/장부/현재 이름표에 연결하고 같은 수신 버퍼의 bit8/WORD 플래그 쓰기 순서를 보존했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1149\\build.log",
+    "initialFailure": {
+      "exitCode": 1,
+      "errors": 9,
+      "cause": "MetaConnectionRuntime.h의 NativeMetaSeatHooks 전방 선언 누락",
+      "correction": "같은 반환 형식의 전방 선언을 추가한 뒤 재빌드 종료0",
+      "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1149\\build-first-failure.log"
+    }
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13078528,
+      "sha256": "28e93e81919f32a49b3f4980a86600dd9dfa1658363f29c1dd4bd4ebf062fb85"
+    },
+    "R.exe": {
+      "bytes": 669696,
+      "sha256": "2e7970ddad6990a87fb3e87b55f235471332bc62cfcb3a4c7e1d8bdecc6448b6"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4b4820/42c2e0/479cf0/478720/41d180/470ac0/41cb90/42bfb0 C/PE·고정17BYTE/실제 mutable 수신 소유·캡처 CS/owner·현재 flags 재조회·Snapshot 포구·같은 지면 효과/난수·Chat 자식/포구 provider 토큰 불변·후행 현재CS 이름표를 대조했다.",
+  "nativeEvidenceSha256": {
+    "0041cb90.asm": "56d37c50d258a063d2192a3e15cf81a28ff7019d8a53bd3b9b6878371c4d9481",
+    "0041cb90.c": "a5f5441b6f8d3377533f00bcad64224861b1d106c5b5719e6b6539aacf0c23b1",
+    "0041d180.asm": "dbf1e33b926f577f0887af9b1713d1a952bc23a7e0d6b1e39b78837f7a51b2bf",
+    "0041d180.c": "0f2a00d3f94a0812133a9fcd60affe89157e3a9e57391b1bfdc2e2cd1866a672",
+    "0042bfb0.asm": "27107d445883d46a449edc0a58d0c78ec0452863cd963ea17ffbe6b9b93b378b",
+    "0042bfb0.c": "4d8993736f7104d339222a11ca09831996f301e383511a5539d134686a2d3121",
+    "0042c2e0.asm": "6d882dd06fe5082f332a2a65600b515e3a20716256356143528dab1271b0735c",
+    "0042c2e0.c": "c67998e8f0ceb86729ca3d2a070a2f503840c58d767f2ec843c30b79accd31ad",
+    "00470ac0.asm": "7ae6d025ad06301be91047848b0709d46dad8acaf415af267cfeda91517085a5",
+    "00470ac0.c": "7e80f46968d6806db6389be86a38a057b33f478b99ade2b926f45e6b6edf9553",
+    "00478720.asm": "4159dd7f6c07a36ef62f80560e6d2c872d658c988f83584465312e20c125a52f",
+    "00478720.c": "a39e7c7562fb3f8057f5a235819a34e79abba157c0238ca9e09ce770128c233a",
+    "00479cf0.asm": "a8716f1d8e5a5d63010b4ee76f9d4172affd425c823574990b4d17a4f5421234",
+    "00479cf0.c": "9406ef73b7313b61d8b7e3cf61aac54fc7bb28da56a30e39e7d32d97fbf01caf",
+    "004b4820.asm": "8e1d420c8bc3fe05b93fe4609de761536b0cec3ca8c30629ebf9ea44e9dd4565",
+    "004b4820.c": "7454ae3ca7000177c2c1776fc758f7b14a1e8740ee640409874b4b0d77b404c0"
+  },
+  "sourceAudit": {
+    "sameOwnedMutableFrameWithoutCopy": true,
+    "capturedOwnerOwnBattleAndCsPreserved": true,
+    "packetBit8ClearedAtNativeMiddleAndWordSignExtended": true,
+    "wordReloadAfterDropSoundAndPositionRewriteAfterRig": true,
+    "sameActualSlotMuzzleSnapshotGroundSoundAndRandom": true,
+    "existingChatMembersLoopTokenOrderUnchanged": true,
+    "existingShapeProviderBodyTokenOrderUnchanged": true,
+    "sameMasterOptions87ResetAndActualSend": true,
+    "finalNameUsesCurrentCsAfterUpdateAndMetadata": true
+  },
+  "plan": {
+    "completed": "M1.1",
+    "next": "M1.2 / 25h 항해 오류",
+    "remainingMajorMpGroups": 8,
+    "remainingCsReceives": [
+      "25h"
+    ],
+    "checkingParents": [
+      "004b02d0",
+      "004dc220"
+    ],
+    "checkingMpReceive": [
+      "004b4df0",
+      "004b8b20"
+    ]
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "assetDataQuery": 0,
+    "wholeSuite": 0,
+    "missions34": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "새 MP/단위/게임/실제 통신 검사는 사용자 요청대로 제외했으며 이동/음향/장면/안정성의 실행 검증 완료가 아니다.",
+    "22h 수신 adapter는 실제 TCP/UDP/zlocal의 mutable 소유 frame을 전제로 한다. readonly 임시 입력을 만들어 이를 수정하지 않는다.",
+    "물리 CS/SID/좌석/SHP/packet 경계 밖은 호스트 오류다. 원문 범위 밖 메모리 훼손/OS 실패/전체 formatter/x87 입력 자체 일치는 보장하지 않으며 앞선 부분 효과를 되돌리지 않는다.",
+    "M1.2/25h 및 M2~M8·한국어/시나리오/기존 후순위가 남아 있다."
+  ]
+}

@@ -12,6 +12,7 @@ namespace netstorm::client { //같은 Client Player/CS/시계/현재 상태를 �
 class Client; //실제 Client는 이 장기 EditorRuntime 자식보다 오래 살아야 한다.
 class LocalUdpTransport; //실제UDP12의물리소유자이며구현은같은Meta부모의cpp에서결합한다.
 struct NativeMetaSailHooks; //같은 CS/현재 카메라·SHP·TCP11·Rig의 동기 장치 묶음이다.
+struct NativeMetaSeatHooks; //같은 실제 C프레임/포구 조회 장치의 반환 형식을 전방 선언한다.
 struct NativeMetaConnectedHooks; //같은28~33 부모에 현재 HTML serial/카메라 장치만 외부에서 공급한다.
 class MetaConnectionRuntime {
 public:
@@ -34,6 +35,9 @@ private:
     void ReceiveParticipantAdd(std::span<const std::uint8_t> packet); //4b4710의 실제 메타/CS/자기Core 선택 뒤 전체42c180 생성/후행 표시를 실행한다.
     void ConstructParticipant(std::span<std::uint8_t> record,std::span<const std::uint8_t> packet); //현재 실제 World/Gump/Config/Core/카메라·Chat 장치를 전체42b580에 결합한다.
     void RefreshParticipantCore(); //48f190의 현재 일반 관문/같은 전투40참가자→실제1..8 Core 장부다.
+    void ReceiveParticipantMove(std::span<const std::uint8_t> packet); //4b4820의 실제 메타/CS 진단 뒤 mutable 수신 버퍼를 전체42c2e0에 전달한다.
+    void ExplodeBattleSlot(std::uint32_t battle,std::uint32_t slot); //479cf0/478720의 실제 현재 Pool/SHP/Snapshot/지면 효과·음향 장치다.
+    NativeMetaSeatHooks SeatShapeDevices(); //좌석 배치와 추방 효과가 같은 실제 C 프레임/포구·복귀형 진단을 공유한다.
     NativeMetaSailHooks SailDevices(); //조회만으로 효과를 실행하지 않고 같은 현재 CS/SHP/카메라·전송/프로세스를 결합한다.
     bool Connect(std::string_view endpoint,std::uint32_t port,std::uint32_t challenge); //004b3ed0의현재 해석 뒤 TCP10/11을 실제 선택한다. 공개/DNS 주소는 기존 LAN 장치가 거부한다.
     std::span<std::uint8_t> Core(); //0048f0d0의 같은 현재 Client Core와 실제 진단을 읽는다.

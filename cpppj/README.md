@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-**2026-11-08 현재 제품1147 / 표시 버전11.01. /goal 진행 중이다.** 현재는3차 TCP/IP 로컬 멀티플레이·Outpost 복원이다.20h 생성/21h 제거를 연결했고 다음은22h 이동이다. 한국어 후속으로 넘어가기 전 남은8묶음과 이후K1~K5/S1~S4의 종료 조건을 [현행 인수인계](../LEFT_JOBS.md)에 정리했다. 만료 이력/예고는 [보관본](../LEFT_JOBS.old.md#archive-20261108-through-1147)으로 옮겼다. 제품1147의 Release/x64 경고·오류0/보호2800 불변 근거는 [1147 기록](../docs/exe/cpp-meta-participant-remove-20261108.md)이며 새MP 실행검사는0이다. 이번1148은 문서 정리이고 제품 코드는 바꾸지 않았다.
+**2026-11-08 현재 제품1149 / 표시 버전11.01. /goal 진행 중이다.** 3차 TCP/IP 로컬 멀티플레이·Outpost 복원에서20h/21h에 이어M1.1의22h 이동을 연결했다. 다음은M1.2의25h 항해 오류다. 단계별8개M·5개K·4개S 계획은 [현행 인수인계](../LEFT_JOBS.md), 이번 원문 대조/Release 종료0·경고/오류0·보호2800 불변은 [1149 기록](../docs/exe/cpp-meta-participant-move-20261108.md)을 따른다. 새MP 실행검사는0이며 전체 목표는 미완료다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
 

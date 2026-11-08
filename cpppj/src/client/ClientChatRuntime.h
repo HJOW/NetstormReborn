@@ -18,6 +18,7 @@ void InitializeClientIssueCommands(Client& client); //004d53a0의 네 등록을 
 void LoadClientSystemNewsTime(Client& client); //0042e4d0의 현재 서버별 뉴스 시각을 같은 장기 DWORD에 읽는다. State19의 실제 호출자에서 사용한다.
 void SaveClientSystemNewsTime(Client& client); //0042e4f0의 현재 시각/서버 이름과 같은 Config 설정문/변경 알림을 실행한다. 별도 네트워크/강제 디스크 저장은 없다.
 void RefreshClientBattleChatChannel(Client& client,RawMenuControls& menus,std::uint32_t mode); //0042f3d0/0042f330의 현재 BATTLE 접두와 채널8을 같은 CS/Chat 기록에서 갱신한다.
+void RefreshClientBattleChatMembers(Client& client); //0042f330만 실행해 현재 채널8의 멤버를 갱신한다. 수신 대상/접두 변경을 추가하지 않는다.
 void RefreshClientChatRankPrefix(Client& client,const GameAssets& assets,const RawSurfaceStorage& surface); //0042f540의 현재 manager/active 관문과 실제 Core+4·아이콘 getter를 실행한다.
 bool ResolveClientChatIdentity(Client& client,const RawSurfaceStorage& surface,std::string_view currentName,o::PlayerIdentityRecord& record); //004841c0을 현재 Playerbase/Chat100/Client 전역과 실제 이름으로 실행한다. 호출동안 이름/표면뷰가 살아 있어야 한다.
 void BindClientChatRecipients(RawChatWindowContext& context,Client& client,std::shared_ptr<RawSurfaceStorage> surface,std::function<std::string_view()> currentName); //같은 현재 Identity/번역/manager를 ChatWindow와Console Draw에 연결한다. 송신/자동완성은 별도 장치다.
