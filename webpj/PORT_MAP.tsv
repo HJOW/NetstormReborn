@@ -847,7 +847,7 @@ cpppj/src/o/RawPriestPlacementPreview.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPlacementShape.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPlacementTerrain.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPostPop.cpp	port	www/core/raw-priest-post-pop.js	1f00a25a	port	[o-default] WB04-E63: 사제 후처리 접두 004950f0(목록 00414450·회복 예약·소유자 상태)·PriestPostPopState·resetPriestOwnerState. fixture priestpostpop 10.78 Prefix 2392행 전부. ProcessHost 통합 장면은 호스트 장면 단위에서
-cpppj/src/o/RawPriestPostPopTail.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestPostPopTail.cpp	port	www/core/raw-priest-post-pop-tail.js	1f00a25a	port	[o-default] WB04-E64: 사제 postPop 후반 004950f0(Carrier 뒤 이동 불가 조회·낙하/보호막)·makePriestPostPopTailShieldHooks. fixture priestpostpoptail 10.78 2048행·priestpop 10.78 1280행 전부. 회복 Form/Kernel·낙하(RawPriestFall) 통합 장면은 해당 단위에서
 cpppj/src/o/RawPriestPrayer.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPreDestroy.cpp	port	www/core/raw-priest-pre-destroy.js	1f00a25a	port	[o-default] WB04-E63: 사제 삭제 준비 004919b0(목록 압축·보호막 삭제 요청·Carrier). fixture priestdestroy 10.78 2184행 전부. Damageable/Kernel 정리 통합은 해당 단위에서
 cpppj/src/o/RawPriestRegen.cpp	port			todo	[o-default]

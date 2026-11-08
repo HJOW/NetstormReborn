@@ -7438,7 +7438,7 @@
       "bytes": 1790220,
       "lines": 7178,
       "fixtureCommit": "9907ebe0",
-      "webCommit": "worktree",
+      "webCommit": "3480aea4",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPostPop.cpp": "22589c72"
       }
@@ -7467,7 +7467,7 @@
       "bytes": 1142749,
       "lines": 6554,
       "fixtureCommit": "c25416f6",
-      "webCommit": "worktree",
+      "webCommit": "3480aea4",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPreDestroy.cpp": "1e8e43d9"
       }
@@ -7496,7 +7496,7 @@
       "bytes": 6276639,
       "lines": 10419,
       "fixtureCommit": "c3986c59",
-      "webCommit": "worktree",
+      "webCommit": "3480aea4",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestForcefield.cpp": "d2d9a042"
       }
@@ -7525,9 +7525,67 @@
       "bytes": 684806,
       "lines": 2498,
       "fixtureCommit": "d2d9a042",
-      "webCommit": "worktree",
+      "webCommit": "3480aea4",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestShield.cpp": "d2d9a042"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E64",
+      "id": "priestpostpoptail",
+      "path": "cpppj/tests/fixtures/priestpostpoptail-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 postPop 전체 wrapper 의 Carrier/낙하/보호막 호출 기록·슬롯 50바이트·목록·소유자 상태(Carrier/낙하/보호막/Regular 경계만 대체)",
+      "consumers": [
+        "webpj/tests/priest-post-pop-tail.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-post-pop-tail.js"
+      ],
+      "doc": "docs/webpj-priest-postpop-tail-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPostPopTail.cpp"
+      ],
+      "scope": "10.78(originals) 2048행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "3ade3400c400743740f7ff3fd7be37c5613d66bc9817066832a542201b8abbb4",
+      "bytes": 1370408,
+      "lines": 6146,
+      "fixtureCommit": "59fb516b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPostPopTail.cpp": "22589c72"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E64",
+      "id": "priestpop",
+      "path": "cpppj/tests/fixtures/priestpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 Pop/firstPop/Activate/사제 postPop 전체의 효과 기록·슬롯·해시 머리·목록·소유자 상태(Carrier/Regular/낙하/보호막은 명시 경계)",
+      "consumers": [
+        "webpj/tests/priest-post-pop-tail.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-post-pop-tail.js"
+      ],
+      "doc": "docs/webpj-priest-postpop-tail-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPostPopTail.cpp"
+      ],
+      "scope": "10.78(originals) 1280행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "842df6144cf66fa75a12e2a23c0db62657a2b442efd1c9c35accb734fe24dd21",
+      "bytes": 849509,
+      "lines": 3842,
+      "fixtureCommit": "7f1f4531",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPostPopTail.cpp": "22589c72"
       }
     }
   ]
