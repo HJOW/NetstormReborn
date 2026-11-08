@@ -73,6 +73,15 @@ public sealed class RawSurfaceWorld
     /// <summary>무인도 최초 등록과 3×3 받침 소유자 전파를 복원한 처리기다. 원본 Impl.surface에 대응하며 188개 TYPE·같은 수 프레임이 아니면 비워 둔다. 연결 조회는 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 받침 소유 지정 이식에서 추가됐고 0.251에서 표시 갱신을 연결했다.</summary>
     private readonly RawIslandPostPop? _surface;
 
+    /// <summary>외부 미션 모듈의 참조는 첫 객체 생성 전에만 설치한다. 원본 Impl.runtime에 대응하며 설치 전에는 비어 있다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    private RawWorldRuntimeHooks? _runtime;
+
+    /// <summary>같은 풀·공간 자산 배열을 첫 월드만 빌리는 저장소 대여다. 원본 Impl.storageUse에 대응한다. 반납은 월드 수명과 함께 다룬다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    private readonly RawSurfaceStorage.Use? _storageUse;
+
+    /// <summary>현재 월드의 실제 가상 처리기 대여다. 원본 Impl.processUse에 대응한다. 반납은 월드 수명과 함께 다룬다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    private readonly RawProcessHostStorage.Use? _processUse;
+
     /// <summary>타입별 서로 다른 fallback 사슬을 같은 분배기로 모아 혼합 종속 체인의 중첩 삭제를 지원한다. 원본 Impl.formDispatch에 대응하며 188개 TYPE·같은 수 프레임이 있으면 비워 둔다. 2026-11-07 F2d 월드 본체 삭제 분배 이식에서 추가됐다.</summary>
     private readonly RawSquidFormDispatch? _formDispatch;
 
@@ -160,6 +169,7 @@ public sealed class RawSurfaceWorld
         _frames = frames ?? [];
         _terrainType = terrainType;
         _storage = storage ?? new RawSurfaceStorage(edition);
+        _storageUse = _storage.Acquire();
         _processState = _storage.Processes().State();
         _kernel = _storage.Processes().Kernel();
         _containedUnpop = new RawSquidContainedUnpop(_storage.Pool, new SquidContainedUnpopState
@@ -206,6 +216,19 @@ public sealed class RawSurfaceWorld
             _pop = new RawPop(_storage.Pool, _storage.Hash, _storage.Spots, null, _postPop);
             _pop.SetBuildingSide(_building);
             _unpop.SetBuildingSide(_building);
+            // 호스트 대여는 같은 장기 TYPE 표를 가진 전체 저장소에서만 한다. 자동 껍데기 저장소는 호스트를 묶지 않는다.
+            if (_storage.Types.Count == _types.Count && _types.Count > 0)
+            {
+                RawSquidDestroy boundDestroy = _baseDestroy;
+                RawSquidFactory boundFactory = _factory!;
+                _processUse = _storage.Processes().Bind(new ProcessHostRuntimeBindings
+                {
+                    Destroy = boundDestroy,
+                    Factory = boundFactory,
+                    PostPopDepth = () => _bookkeeping.Depth,
+                    Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
+                });
+            }
             if (_frames.Count == _types.Count)
             {
                 RawSquidFactory factory = _factory!;
@@ -328,8 +351,12 @@ public sealed class RawSurfaceWorld
     /// <param name="depth">쓸 로딩 중첩 깊이다.</param>
     public void SetLoadingDepth(uint depth)
     {
-        // 원본 impl_->loadState.loadingDepth 대입을 직역한다. runtime 연결 뒤의 전달은 BindRuntime 단위에서 잇는다.
+        // 원본 impl_->loadState.loadingDepth 대입을 직역한다. runtimeBound 뒤에는 같은 값을 runtime에도 전달한다.
         _loadState.LoadingDepth = depth;
+        if (_runtimeBound && _runtime?.LoadingDepth is not null)
+        {
+            _runtime.LoadingDepth(_loadState.LoadingDepth);
+        }
     }
 
     /// <summary>현재 로딩 중첩 깊이를 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-07 F2d 월드 본체 SetLoadingDepth 이식에서 추가됐다.</summary>
@@ -634,6 +661,47 @@ public sealed class RawSurfaceWorld
         }
 
         _sessionContainedUnpop = binding is null ? null : new WeakReference<RawSquidContainedUnpop>(binding);
+    }
+
+    /// <summary>같은 저장소를 사용하는 자산·Regular·Form 전송·낙하·로딩 경계를 설치한다. 미연결 콜백은 생략하지 않는다.</summary>
+    /// <param name="hooks">설치할 완성된 실제 파생 훅 묶음이다.</param>
+    public void BindRuntime(RawWorldRuntimeHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        RawSidPool pool = _storage.Pool;
+        if (_runtimeBound || _loading || _loaded || pool.FreeCount != (uint)(pool.Capacity - RawSidPool.FirstOrdinary))
+        {
+            throw new InvalidOperationException("실제 월드 runtime은 초기 객체 생성 전에 한 번 연결해야 합니다.");
+        }
+
+        // 지정 Take가 freeCount를 보존할 수 있으므로 실제 슬롯도 함께 검사한다.
+        for (int sid = RawSidPool.FirstOrdinary; sid < pool.Capacity; sid++)
+        {
+            if ((pool.Slot(sid)[RawSidPool.StateOffset] & RawSidPool.FreeBit) == 0)
+            {
+                throw new InvalidOperationException("실제 월드 runtime 설치 전 객체가 존재합니다.");
+            }
+        }
+
+        if (hooks.Assets?.Emit is null || hooks.Assets?.Selected is null || hooks.Destroy is null || hooks.Regular is null
+            || hooks.Transmit?.WriteData is null || hooks.Transmit?.Transmit is null || hooks.WalkerFall is null || hooks.LoadingDepth is null || hooks.BridgeEffect is null)
+        {
+            throw new ArgumentException("실제 월드 runtime 필수 경계 누락", nameof(hooks));
+        }
+
+        if (_formDispatch is null)
+        {
+            throw new InvalidOperationException("실제 월드 Form 분배가 연결되지 않았습니다.");
+        }
+
+        _formDispatch.SetAssets(hooks.Assets, hooks.Destroy);
+        SquidProcessHost host = _storage.Processes().Host();
+        host.SetRegularHandler(hooks.Regular);
+        host.SetFormTransmit(hooks.Transmit);
+        RawWorldRuntimeHooks runtime = hooks.Clone();
+        _runtime = runtime;
+        _runtimeBound = true;
+        runtime.LoadingDepth(_loadState.LoadingDepth);
     }
 
     /// <summary>사제·신전의 전용 몸체를 상위에서 선택한 뒤 나머지 자산 +74를 현재 표로 호출한다. 받침 분배는 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>

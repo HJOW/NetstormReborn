@@ -59,6 +59,41 @@ public sealed class RawBridgeEvents
     /// <summary>낙하·칸 변환 사건 번호(원본 kBridgeFallEvent = 0x2692).</summary>
     public const uint FallEvent = 0x2692;
 
+    /// <summary>10.78 다리 클래스의 가상 표 값(원본 kPatchBridgeVtable)이다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    private const uint PatchBridgeVtable = 0x005034C8u;
+
+    /// <summary>CD판 다리 클래스의 가상 표 값(원본 kCdBridgeVtable)이다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    private const uint CdBridgeVtable = 0x00501AB0u;
+
+    /// <summary>다리 Regular만 실제 사건 처리기에 연결하고 나머지는 대체 처리기·원본 값으로 둔다.</summary>
+    /// <param name="pool">같은 풀의 슬롯을 읽는다.</param>
+    /// <param name="events">다리 사건 처리기다.</param>
+    /// <param name="fallback">다리가 아닐 때 부르는 대체 처리기다. 없으면 원본 값을 돌려준다.</param>
+    /// <returns>합성 Regular 처리기다.</returns>
+    public static RegularHandler MakeBridgeRegularHandler(RawSidPool pool, RawBridgeEvents events, RegularHandler? fallback = null)
+    {
+        ArgumentNullException.ThrowIfNull(pool);
+        ArgumentNullException.ThrowIfNull(events);
+        uint bridgeVtable = pool.Edition == OriginalEdition.Patch1078 ? PatchBridgeVtable : CdBridgeVtable;
+        return (parent, ev, count, payload) =>
+        {
+            ReadOnlySpan<byte> raw = pool.Slot(parent);
+            uint vtable = 0u;
+            // 슬롯 맨 앞 DWORD가 가상 표 주소 기록값이다.
+            for (int i = 0; i < 4; i++)
+            {
+                vtable |= (uint)raw[i] << (8 * i);
+            }
+
+            if (vtable == bridgeVtable)
+            {
+                return events.Handle(parent, ev, count, payload);
+            }
+
+            return fallback is not null ? fallback(parent, ev, count, payload) : payload;
+        };
+    }
+
     /// <summary>처리기가 돌려주는 "끝" 값. 사건 뒤 예약을 남기지 않는다.</summary>
     public const float EventEnd = 0.0f;
 

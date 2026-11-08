@@ -688,7 +688,7 @@ public sealed class RawSurfaceWorldTests
         string[] lines = report.Split('\n');
         Assert.Equal(256, lines.Length);
         Assert.Equal("raw_world\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0", lines[0]);
-        Assert.Equal("raw_graph_record\t0\t0\t0", lines[1]);
+        Assert.Equal("raw_graph_record\t0\t0\t1", lines[1]);
         Assert.Equal("raw_graph_record\t250\t0\t0", lines[251]);
         Assert.Equal("bridge_decay\t-1\t-1\t0\t0\t10", lines[252]);
         Assert.Equal("raw_terrain_type\t97\t-1\t0", lines[253]);
@@ -1415,8 +1415,8 @@ public sealed class RawSurfaceWorldTests
         shapes[82].Loaded = true;
         shapes[82].Frames.Add(new SquidDisplayFrame { Width = 10, Height = 12, HotspotX = 2, HotspotY = 3, CellWidth = 8f, CellHeight = 6f });
         var storage = new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes);
-        storage.Graph.Records[0] = new Netstorm.Core.Bridges.GraphRecord { Surfaces = 9, InUse = 1 };
         var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, storage, frames);
+        storage.Graph.Records[0] = new Netstorm.Core.Bridges.GraphRecord { Surfaces = 9, InUse = 1 };
         int root = world.Storage().Pool.Allocate();
         Span<byte> raw = world.Storage().Pool.AllocatedBytes(root);
         raw[RawSidPool.StateOffset] = 0;
@@ -1507,6 +1507,93 @@ public sealed class RawSurfaceWorldTests
         Assert.Equal(3u * 8u, ReadSlot(world.Storage().Pool.Slot(root), 12, 2));
         Assert.Empty(carriers);
         Assert.Equal(100.0, world.CurrentTime().Game);
+    }
+
+    /// <summary>완성된 런타임 훅 묶음을 만든다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    /// <param name="depths">로딩 깊이 전달 기록 목록이다.</param>
+    /// <returns>연결용 훅 묶음이다.</returns>
+    private static RawWorldRuntimeHooks RuntimeHooks(List<uint> depths) => new()
+    {
+        Assets = new SquidDestroyHooks { Emit = _ => { }, Selected = () => 0 },
+        Destroy = (_, _, _) => false,
+        Regular = (_, _, _, _) => 0f,
+        Transmit = new ProcessFormTransmission { WriteData = (_, _) => 0, Transmit = _ => { } },
+        WalkerFall = _ => true,
+        LoadingDepth = depth => depths.Add(depth),
+        BridgeEffect = _ => { },
+    };
+
+    /// <summary>런타임 경계가 한 번 연결되는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindRuntimeBindsOnce()
+    {
+        var world = DisplayPopWorld();
+        world.BindRuntime(RuntimeHooks([]));
+        Assert.Throws<InvalidOperationException>(() => world.BindRuntime(RuntimeHooks([])));
+    }
+
+    /// <summary>객체가 생긴 뒤의 늦은 연결을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindRuntimeRejectsLateCall()
+    {
+        var world = DisplayPopWorld();
+        world.Storage().Pool.Allocate();
+        Assert.Throws<InvalidOperationException>(() => world.BindRuntime(RuntimeHooks([])));
+    }
+
+    /// <summary>빠진 필수 경계를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindRuntimeRejectsMissingHooks()
+    {
+        var world = DisplayPopWorld();
+        Assert.Throws<ArgumentNullException>(() => world.BindRuntime(null!));
+        Assert.Throws<ArgumentException>(() => world.BindRuntime(new RawWorldRuntimeHooks()));
+    }
+
+    /// <summary>188개가 아닌 TYPE 월드의 연결을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindRuntimeRejectsNon188World()
+    {
+        var types171 = Enumerable.Range(0, 171).Select(_ => new OriginalTypeRecord()).ToList();
+        var world = new RawSurfaceWorld(OriginalEdition.Cd1072, types171, 97u);
+        Assert.Throws<InvalidOperationException>(() => world.BindRuntime(RuntimeHooks([])));
+    }
+
+    /// <summary>로딩 깊이가 양쪽에 전달되는지 검증한다. 2026-11-07 F2d 월드 본체 실행 연결 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BindRuntimeForwardsLoadingDepth()
+    {
+        var world = DisplayPopWorld();
+        var depths = new List<uint>();
+        world.BindRuntime(RuntimeHooks(depths));
+        Assert.Equal([1u], depths);
+        world.SetLoadingDepth(5u);
+        Assert.Equal([1u, 5u], depths);
+    }
+
+    /// <summary>월드 생성 뒤 호스트 런타임 묶음이 연결되는지 검증한다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    [Fact]
+    public void HostBoundAfterWorldCreation()
+    {
+        var types = Types188();
+        var frames = Frames188();
+        var shapes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new SquidDisplayShape()).ToList();
+        var storage = new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes);
+        Assert.Throws<InvalidOperationException>(() => storage.Processes().Host().Runtime());
+        _ = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, storage, frames);
+        Assert.NotNull(storage.Processes().Host().Runtime().Destroy);
+    }
+
+    /// <summary>같은 저장소의 두 번째 월드를 거부하는지 검증한다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SecondWorldOnSameStorageThrows()
+    {
+        var types = Types188();
+        var frames = Frames188();
+        var shapes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new SquidDisplayShape()).ToList();
+        var storage = new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes);
+        _ = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, storage, frames);
+        Assert.Throws<InvalidOperationException>(() => new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, storage, frames));
     }
 
     /// <summary>188개가 아닌 TYPE 월드의 해제를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 해제 연결 이식에서 추가됐다.</summary>
