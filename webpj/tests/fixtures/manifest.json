@@ -250,9 +250,9 @@
       "bytes": 207615,
       "lines": 2993,
       "fixtureCommit": "2f7c2d51",
-      "webCommit": "2f7c2d51",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/CanonDecoder.cpp": "5bdb5bed",
+        "cpppj/src/o/CanonDecoder.cpp": "167866d9",
         "cpppj/src/o/ChunkMap.cpp": "da6c61ae",
         "cpppj/src/o/Islandbuilder.cpp": "bfb780c4"
       }
@@ -6786,7 +6786,7 @@
       "bytes": 1473429,
       "lines": 2882,
       "fixtureCommit": "d2fc6d2d",
-      "webCommit": "worktree",
+      "webCommit": "5f84610d",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierPreDestroy.cpp": "da27e191",
         "cpppj/src/o/RawContainedFinder.cpp": "da27e191"
@@ -6816,9 +6816,70 @@
       "bytes": 124720,
       "lines": 159,
       "fixtureCommit": "507a2913",
-      "webCommit": "worktree",
+      "webCommit": "5f84610d",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerTechnology.cpp": "507a2913"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E57",
+      "id": "player-geyser-bounds",
+      "path": "cpppj/tests/fixtures/player-geyser-bounds-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Player 간헐천 범위 0048f5c0·지역 record 00432430·배치 00432050 의 출력 16 BYTE·진단 효과 뒤 현재 저장소·진단 순서",
+      "consumers": [
+        "webpj/tests/player-geyser-bounds.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-geyser-bounds.js",
+        "webpj/www/assets/territory.js"
+      ],
+      "doc": "docs/webpj-player-geyser-anchor-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerGeyserBounds.cpp",
+        "cpppj/src/o/CanonDecoder.cpp"
+      ],
+      "scope": "439행 전부 사용(10.78 PE 전용 관측)",
+      "text": true,
+      "sha256": "9803c4376774b817ff1cd67cdc75f6cc430c29115d0ecb6bea199013b576020c",
+      "bytes": 43454,
+      "lines": 440,
+      "fixtureCommit": "5326d2b1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerGeyserBounds.cpp": "2a8f937e",
+        "cpppj/src/o/CanonDecoder.cpp": "167866d9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E57",
+      "id": "playeranchor",
+      "path": "cpppj/tests/fixtures/playeranchor-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Player 배치 기준점 0048fdb0·거리 0048fd30·그래프 00462b80/00462bc0 의 반환·임시 후보·raw/지도 Adler",
+      "consumers": [
+        "webpj/tests/player-placement-anchor.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-placement-anchor.js"
+      ],
+      "doc": "docs/webpj-player-geyser-anchor-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPlayerPlacementAnchor.cpp"
+      ],
+      "scope": "10.78(originals) 1598행 전부 사용(originalCD·original1037 각 1598행은 범위 밖)",
+      "text": true,
+      "sha256": "2f21f734822ec3b3fd8875ca329c049f549c602becdb7d395aed799cbdf0192d",
+      "bytes": 11959995,
+      "lines": 4796,
+      "fixtureCommit": "e6afe25a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPlayerPlacementAnchor.cpp": "2d166e07"
       }
     }
   ]

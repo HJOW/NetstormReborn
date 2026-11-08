@@ -125,6 +125,153 @@ export function* decodeTerritoryPattern(pattern, direction, originX, originY, fr
     }
 }
 
+// 금 간 프레임 코드 비트(FF_CRACKED)와 그 원문 진단 위치이다(10.78 Canondecoder.cpp 0x325). (2026-11-08 WB04-E57)
+const CRACKED_FLAG = 0x20;
+const CANON_FILE = '\\Ns\\O\\Canondecoder.cpp';
+const CRACKED_EXPRESSION = 'frame == EMPTY_FRAME || !(typeStruct->frameInfo[frame].flags & FF_CRACKED)';
+const CRACKED_LINE = 0x325;
+
+// 원본 CanonDecoder 반복자 객체(00425c20 생성·00425860 다음 칸·00425b90 범위)의 영역/다리 패턴 경로이다(cpppj `o/CanonDecoder` 의 패턴 생성자·Advance·Bounds, 10.78).
+// 생성자가 첫 유효 칸까지 한 번 진행한다(그 앞 칸의 프레임 누락만 onMissingFrame 으로 알린다). checking 이 켜졌으면 고른 프레임 코드의 금 간 비트를 진단(0x325)하고 복귀하면 계속한다.
+// bounds(footX, footY) 는 현재 좌표의 절삭에서 순회 개수 × 현재 발자국을 뺀 [left, top, right, bottom] 정수이다(유효 칸이 없어도 마지막 좌표로 계산).
+// frameCodes 는 { side, variant, number, flags } 배열, diagnostics 는 { checking() → DWORD, assertion(식, 파일, 줄) } 이다(없으면 진단하지 않음).
+// 사용: new CanonDecoder(codes, TERRITORY_PATTERNS[3], 0, 0, 0, () => missing += 1).bounds(1, 1). (2026-11-08 WB04-E57: Player 간헐천 범위의 패턴 폭/높이 계산과 함께 추가)
+export class CanonDecoder {
+    // 그 타입의 프레임 코드 표이다.
+    #codes;
+    // 칸별 방향·변형·라벨을 펼칠 패턴이다.
+    #pattern;
+    // 패턴 회전(방향 값 ÷ 2, 0~3)이다.
+    #rotation;
+    // 프레임을 찾지 못한 칸을 알리는 장치(없으면 null)이다.
+    #onMissingFrame;
+    // 현재 checking getter 와 원문 진단 장치 묶음(없으면 null)이다.
+    #diagnostics;
+    // 첫 칸의 좌표(float)이다.
+    #originX;
+    #originY;
+    // 바깥/안쪽 반복의 칸 개수와 현재 패턴 좌표·반복 번호이다.
+    #outerCount;
+    #innerCount;
+    #patternX;
+    #patternY;
+    #outer = 0;
+    #inner = 0;
+    // 현재 칸의 프레임 번호(-1=없음)·남은 칸 여부·라벨·좌표(float)이다.
+    #frame = -1;
+    #valid = true;
+    #label = 0;
+    #x = 0;
+    #y = 0;
+
+    // 패턴 경로의 반복자를 만들고 첫 유효 칸으로 진행한다. 회전이 0~3 밖이면 오류이다.
+    constructor(frameCodes, pattern, direction, x, y, onMissingFrame = null, diagnostics = null) {
+        this.#rotation = Math.trunc(direction / 2);
+        if (!(this.#rotation >= 0 && this.#rotation <= 3)) throw new RangeError('CanonDecoder rotation');
+        this.#codes = frameCodes;
+        this.#pattern = pattern;
+        this.#onMissingFrame = onMissingFrame;
+        this.#diagnostics = diagnostics;
+        this.#originX = Math.fround(x);
+        this.#originY = Math.fround(y);
+        const { width, height } = pattern;
+        // 회전이 홀수면 폭과 높이를 바꿔 센다.
+        this.#outerCount = (this.#rotation & 1) !== 0 ? width : height;
+        this.#innerCount = (this.#rotation & 1) !== 0 ? height : width;
+        this.#patternX = (width - 1) * START_X[this.#rotation];
+        this.#patternY = (height - 1) * START_Y[this.#rotation];
+        this.advance();
+    }
+
+    // 00425b90: 현재 좌표 절삭에서 순회 개수 × 발자국을 뺀 미리보기 사각형이다. 정수 범위를 벗어나면 오류이다.
+    bounds(footX, footY) {
+        const x = Math.trunc(this.#x);
+        const y = Math.trunc(this.#y);
+        const left = x - this.#innerCount * footX;
+        const top = y - this.#outerCount * footY;
+        // 원본 int 산술/CRT 범위를 벗어나는 입력은 별도 계약으로 거부한다.
+        for (const value of [left, top, x, y]) if (!Number.isFinite(value) || value < -2147483648 || value > 2147483647) throw new RangeError('CanonDecoder 범위 산술 오류');
+        return [left | 0, top | 0, x | 0, y | 0];
+    }
+
+    // 아직 칸이 남았는가이다.
+    get valid() { return this.#valid; }
+
+    // 현재 칸의 프레임 번호이다.
+    get frame() { return this.#frame; }
+
+    // 현재 칸의 좌표(float)이다.
+    get x() { return this.#x; }
+    get y() { return this.#y; }
+
+    // 현재 칸의 번호 글자에서 'a' 를 뺀 값이다(번호 없으면 -0x61).
+    get label() { return this.#label; }
+
+    // 현재 프레임 코드의 방향 글자(코드)이다. 물리 표 밖은 오류이다.
+    get side() {
+        if (this.#frame < 0 || this.#frame >= this.#codes.length) throw new RangeError('CanonDecoder 방향 조회 물리 프레임 범위 오류');
+        return this.#codes[this.#frame].side;
+    }
+
+    // 선택한 원문 진단을 보고한다. 장치가 없으면 그 위치에서 오류이며 복귀를 성공으로 합성하지 않는다.
+    #diagnose(expression, line) {
+        const assertion = this.#diagnostics?.assertion;
+        if (typeof assertion !== 'function') throw new RangeError(`CanonDecoder 원문 진단 장치 미연결 ${line}`);
+        assertion(expression, CANON_FILE, line);
+    }
+
+    // 00425860: 다음 유효 칸으로 간다. 빈 칸과 프레임을 찾지 못한 칸은 건너뛴다.
+    advance() {
+        const rotation = this.#rotation;
+        const pattern = this.#pattern;
+        // 프레임이 있는 칸을 만날 때까지 간다.
+        for (;;) {
+            if (this.#inner >= this.#innerCount) {
+                // 한 줄이 끝났다: 패턴 좌표를 바깥 방향으로 한 칸 옮기고 다음 줄로 간다.
+                if (OUTER_STEP_X[rotation] !== 0) this.#patternX = (OUTER_STEP_X[rotation] + this.#outerCount + this.#patternX) % this.#outerCount;
+                if (OUTER_STEP_Y[rotation] !== 0) this.#patternY = (OUTER_STEP_Y[rotation] + this.#outerCount + this.#patternY) % this.#outerCount;
+                this.#outer += 1;
+                if (this.#outer >= this.#outerCount) {
+                    this.#valid = false;
+                    return;
+                }
+                this.#inner = 0;
+            }
+            this.#frame = -1;
+            // 셀 해석(00425700): 줄 우선 배열에서 (패턴 x, 패턴 y)의 칸.
+            const index = pattern.width * this.#patternY + this.#patternX;
+            if (index < 0 || index >= pattern.sides.length) throw new RangeError('패턴 칸 번호가 범위를 벗어났습니다.');
+            const labelChar = pattern.labels[index];
+            const labelCode = labelChar === '-' ? 0 : labelChar.charCodeAt(0);
+            if (labelCode !== 0 && (labelCode < LABEL_BASE || labelCode > 0x7a)) throw new Error("num==0 || ('a' <= num && num <= 'z')");
+            this.#label = labelCode - LABEL_BASE;
+            const orientation = pattern.sides[index];
+            const variation = pattern.variations.charCodeAt(index) - VARIATION_BASE;
+            if (orientation !== EMPTY_SIDE) {
+                if (orientation < FIRST_SIDE || orientation > LAST_SIDE) throw new Error("'A' <= orientation && orientation <= 'P'");
+                if (variation < 0 || variation > MAX_VARIATION) throw new Error('0 <= variation && variation <= 10');
+                // 회전에 따라 방향 글자를 바꿔 그 방향·변형·번호의 프레임을 찾는다(원본 FUN_0049a940).
+                const rotated = ROTATED_SIDES[rotation];
+                this.#frame = findFrameNumber(this.#codes, rotated.charCodeAt(orientation.charCodeAt(0) - FIRST_SIDE.charCodeAt(0)), rotated.charCodeAt(VARIANT_COLUMN), variation);
+                // 원본 assert lookup 은 보고한 뒤 -1 을 반환하며 같은 진행이 그 칸을 건너뛴다.
+                if (this.#frame === -1 && typeof this.#onMissingFrame === 'function') this.#onMissingFrame();
+            }
+            // 10.78 은 현재 checking 에서 현재 프레임 코드의 금 간 비트를 읽는다.
+            if (this.#diagnostics && (this.#diagnostics.checking?.() >>> 0) && this.#frame !== -1) {
+                if (this.#frame < 0 || this.#frame >= this.#codes.length) throw new RangeError('CanonDecoder 진단 복귀 뒤 물리 프레임 코드 범위 오류');
+                if ((this.#codes[this.#frame].flags ?? 0) & CRACKED_FLAG) this.#diagnose(CRACKED_EXPRESSION, CRACKED_LINE);
+            }
+            this.#x = Math.fround(this.#inner + this.#originX);
+            this.#y = Math.fround(this.#outer + this.#originY);
+            // 패턴 좌표를 안쪽 방향으로 한 칸 옮긴다.
+            if (INNER_STEP_X[rotation] !== 0) this.#patternX = (INNER_STEP_X[rotation] + this.#innerCount + this.#patternX) % this.#innerCount;
+            if (INNER_STEP_Y[rotation] !== 0) this.#patternY = (INNER_STEP_Y[rotation] + this.#innerCount + this.#patternY) % this.#innerCount;
+            this.#inner += 1;
+            if (this.#frame !== -1) return;
+        }
+    }
+}
+
 // 청크 지도의 항목 하나이다(원본 12바이트): 섬 목록 번호·영역 패턴 칸의 방향 글자·`Territory` 레코드 6바이트·영역 안에서 몇 번째 칸인가. (2026-11-01 WB03-V)
 function emptyEntry() {
     return { island: NO_ISLAND, side: '', record: new Uint8Array(TERRITORY_RECORD_BYTES), ordinal: 0 };
