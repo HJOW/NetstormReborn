@@ -11683,9 +11683,38 @@
       "bytes": 908967,
       "lines": 6923,
       "fixtureCommit": "da8bb776",
-      "webCommit": "worktree",
+      "webCommit": "4ae150df",
       "cpppjBasis": {
         "cpppj/src/o/RawCanonPlacementRelations.cpp": "da8bb776"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E151",
+      "id": "canonsurrounding",
+      "path": "cpppj/tests/fixtures/canonsurrounding-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 모양 표면 finder 전체와 MayPlace 주변 구간(Player locator 만 대체, 10.78 524행)",
+      "consumers": [
+        "webpj/tests/canon-placement-surrounding.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-placement-surrounding.js"
+      ],
+      "doc": "docs/webpj-canon-placement-surrounding-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCanonPlacementSurrounding.cpp"
+      ],
+      "scope": "10.78 실제 PE 524행 전부",
+      "text": true,
+      "sha256": "26f9ed2fe1f147bb9e2646c7233a840c8cde027259e75147d9393e391bb3f011",
+      "bytes": 660178,
+      "lines": 1574,
+      "fixtureCommit": "75f3175c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCanonPlacementSurrounding.cpp": "9ece3b53"
       }
     }
   ]
