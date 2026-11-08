@@ -9017,9 +9017,67 @@
       "bytes": 1132816,
       "lines": 1905,
       "fixtureCommit": "6b4ffe65",
-      "webCommit": "worktree",
+      "webCommit": "c54ecbdc",
       "cpppjBasis": {
         "cpppj/src/o/RawFenceNeighbors.cpp": "6b4ffe65"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E89",
+      "id": "fence-regular",
+      "path": "cpppj/tests/fixtures/fence-regular-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 바리케이드 Regular Handle 의 부모+네 이웃 전체 250바이트·반환 float 비트·외부 효과 호출 순서(애니메이션 A 1305·위임 E 18·Damageable D 49)",
+      "consumers": [
+        "webpj/tests/fence-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fence-regular.js"
+      ],
+      "doc": "docs/webpj-fence-regular-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFenceRegular.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1372행 전부 사용",
+      "text": true,
+      "sha256": "a87290020823e235540e7f38fe98cc43bafa363dd52edfc1995ccf79280dd9d4",
+      "bytes": 1001162,
+      "lines": 1373,
+      "fixtureCommit": "da2b3423",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFenceRegular.cpp": "bad7cf5c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E89",
+      "id": "fence-event3",
+      "path": "cpppj/tests/fixtures/fence-event3-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 원본 호출자/생성자까지 실행한 사건 3 의 FST 반환 NaN 비트·전체 250바이트·하위 순서·현재/새 Regular(301행)",
+      "consumers": [
+        "webpj/tests/fence-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fence-regular.js"
+      ],
+      "doc": "docs/webpj-fence-regular-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFenceRegular.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 301행의 반환/250바이트/하위 순서 열 사용(Host 재예약 열은 Host 단위)",
+      "text": true,
+      "sha256": "e6ae4858b56e961af2a66d9a7f6f09eddb2434cc6279b5792bcd11f79b0e0e59",
+      "bytes": 228627,
+      "lines": 302,
+      "fixtureCommit": "bad7cf5c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFenceRegular.cpp": "bad7cf5c"
       }
     }
   ]
