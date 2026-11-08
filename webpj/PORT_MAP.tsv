@@ -491,7 +491,7 @@ cpppj/src/o/RawAiDropScan.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiDropSelection.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiDropTargets.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiDryGeometry.cpp	port	www/core/raw-ai-dry-geometry.js	1f00a25a	port	[o-default] WB04-E163: AI 가짜 부족 좌표 탐색(00415bb0 선분/수직 양방향 탐색·0041cfc0 점 거리·00414d30/00410540 디버그 표식 정리/생성). 독립 관측 fixture 없음, cpppj 계약 시험 12건. 남음: RawAiDrySpots/FakeDrySpots 연결
-cpppj/src/o/RawAiDrySpots.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiDrySpots.cpp	port	www/core/raw-ai-dry-spots.js	1f00a25a	port	[o-default] WB04-E170: AI 부족 좌표 목록 0040f1c0 추가·0040f260 제거·0040f2b0 순환 검사·00417c70 유지·004133e0 가짜 좌표 선택. 독립 관측 fixture 없음, cpppj 계약 시험 15건. 남음: 실제 에너지 판정/로그/공용 난수 연결
 cpppj/src/o/RawAiEconomy.cpp	port	www/core/raw-ai-economy.js	1f00a25a	port	[o-default] WB04-E166: AI 경제 004138c0(double 기한 단일 지원·+0x290+2200 감김·포획 두 owner·데모 하한·float 최종 SP 쓰기). 독립 관측 fixture 없음, cpppj 계약 시험 7건. 남음: 실제 데모/사제 포획/시각 조회 연결
 cpppj/src/o/RawAiFactoryProduction.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiFakeDrySpots.cpp	port			todo	[o-default]
