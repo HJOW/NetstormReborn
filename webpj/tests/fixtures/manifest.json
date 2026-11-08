@@ -1954,7 +1954,7 @@
       "bytes": 2565258,
       "lines": 7201,
       "fixtureCommit": "40cf5167",
-      "webCommit": "2a2e08e4",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidReward.cpp": "df2f5fa7",
         "cpppj/src/o/SpStore.cpp": "a1bfa97d"
@@ -1985,7 +1985,7 @@
       "bytes": 33097,
       "lines": 505,
       "fixtureCommit": "58839028",
-      "webCommit": "2a2e08e4",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidReward.cpp": "df2f5fa7"
       }
@@ -7879,7 +7879,7 @@
       "bytes": 2539162,
       "lines": 1238,
       "fixtureCommit": "0b9da410",
-      "webCommit": "worktree",
+      "webCommit": "0bd48588",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestSpawn.cpp": "0b9da410"
       }
@@ -7908,9 +7908,38 @@
       "bytes": 93047,
       "lines": 306,
       "fixtureCommit": "400aaefb",
-      "webCommit": "worktree",
+      "webCommit": "0bd48588",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestParticipation.cpp": "da6c61ae"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E69",
+      "id": "priestregen",
+      "path": "cpppj/tests/fixtures/priestregen-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 0x25a 회복의 반환 float 비트·호출 순서(V/D/N/U/R/F/O/A/M)·패치 추적 상태·난수 상태·슬롯 50 raw(표시/Damageable/점유/중립/감사/측정만 명시 경계)",
+      "consumers": [
+        "webpj/tests/priest-regen.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-regen.js"
+      ],
+      "doc": "docs/webpj-priest-regen-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestRegen.cpp"
+      ],
+      "scope": "10.78(originals) 1513행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "d2235ca27e9cce81d5d4ea9ba15f6424f36e5e91f1aa37235bb112ce6df933bc",
+      "bytes": 1244758,
+      "lines": 4541,
+      "fixtureCommit": "b726981a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestRegen.cpp": "c1c8bd0a"
       }
     }
   ]

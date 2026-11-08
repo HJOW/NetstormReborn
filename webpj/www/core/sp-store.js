@@ -167,4 +167,10 @@ export class ScrambledSpStore {
         if (!this.#tracking) throw new Error('SP 추적 offset 의 실제 소유자 연결 누락');
         return this.#tracking.value;
     }
+
+    // 빌린 추적 offset 의 holder({ value }) 자체이다. 사제 회복이 같은 객체인지 동일성으로 확인하고 직접 읽고 쓰는 데 쓴다. 미연결이면 오류다. (2026-11-08 WB04-E69: 사제 회복 이식으로 추가)
+    get trackingOwner() {
+        if (!this.#tracking) throw new Error('SP 추적 offset 의 실제 소유자 연결 누락');
+        return this.#tracking;
+    }
 }

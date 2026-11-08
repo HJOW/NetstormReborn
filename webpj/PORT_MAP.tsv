@@ -850,7 +850,7 @@ cpppj/src/o/RawPriestPostPop.cpp	port	www/core/raw-priest-post-pop.js	1f00a25a	p
 cpppj/src/o/RawPriestPostPopTail.cpp	port	www/core/raw-priest-post-pop-tail.js	1f00a25a	port	[o-default] WB04-E64: 사제 postPop 후반 004950f0(Carrier 뒤 이동 불가 조회·낙하/보호막)·makePriestPostPopTailShieldHooks. fixture priestpostpoptail 10.78 2048행·priestpop 10.78 1280행 전부. 회복 Form/Kernel·낙하(RawPriestFall) 통합 장면은 해당 단위에서
 cpppj/src/o/RawPriestPrayer.cpp	port	www/core/raw-priest-prayer.js	1f00a25a	port	[o-default] WB04-E66: 사제 기도 입력 4940b0·수신 493f80·605 진행 494580. fixture priest-prayer 1126행 전부(10.78 전용 파일)
 cpppj/src/o/RawPriestPreDestroy.cpp	port	www/core/raw-priest-pre-destroy.js	1f00a25a	port	[o-default] WB04-E63: 사제 삭제 준비 004919b0(목록 압축·보호막 삭제 요청·Carrier). fixture priestdestroy 10.78 2184행 전부. Damageable/Kernel 정리 통합은 해당 단위에서
-cpppj/src/o/RawPriestRegen.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestRegen.cpp	port	www/core/raw-priest-regen.js	1f00a25a	port	[o-default] WB04-E69: 사제 이벤트 0x25a 회복 00494580(난수 표본·추적 sequence·HP 증분 setter·중립 관문·패치 SP 추적)·BindPriestRegenSpStore·makePriestRegenHandler. fixture priestregen 10.78 1513행 전부. 중립 행동/점유/형태/측정/감사 본체는 해당 파일 단위에서
 cpppj/src/o/RawPriestRegenHitPoints.cpp	port	www/core/raw-priest-regen-hit-points.js	1f00a25a	port	[o-default] WB04-E15: 4945ee 사제 회복 HP(10.78 경로). fixture priest-regen-hit-points-current originals 432행 전부
 cpppj/src/o/RawPriestRitualActions.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestRitualFrame.cpp	port			todo	[o-default]
