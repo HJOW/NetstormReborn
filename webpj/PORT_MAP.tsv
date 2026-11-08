@@ -870,7 +870,7 @@ cpppj/src/o/RawRainVortexDraw.cpp	port			todo	[o-default]
 cpppj/src/o/RawRegionOwner.cpp	port	www/core/raw-region-owner.js	1f00a25a	port	[o-default] WB04-E26: 0046f710/0046f770 표면 소유자. fixture region-owner 10.78 816행(originalCD 816행 제외). 실제 Session/미션 adapter 연결은 해당 단위에서
 cpppj/src/o/RawRegionOwnership.cpp	port			todo	[o-default] outpost 분기는 RawOutpostLifecycle(exclude-mp)로 명시 웹 제외
 cpppj/src/o/RawRegionPaint.cpp	port	www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] 지역 도장 일부
-cpppj/src/o/RawRenderCollection.cpp	port			todo	[o-default]
+cpppj/src/o/RawRenderCollection.cpp	port	www/core/raw-render-collection.js	1f00a25a	port	[o-default] WB04-E131: 표시 영역 월드 환산·엄격한 교차·슬롯 순서 16바이트 항목 수집. fixture rendercollection originals 1435행 전부(originalCD/original1037 은 범위 밖). 정렬 비교는 기존 www/render/draw-sort.js
 cpppj/src/o/RawRiftHitPoints.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(TYPE HP 0049fce0). WB04-D5b: 음수 1/4 몫의 -0 교정, rifttype-hit-points 10.78 579행 대조
 cpppj/src/o/RawRiftShapeAccess.cpp	port	www/core/raw-rift-shape-access.js	1f00a25a	port	[o-default] WB04-E59: 00419850 SHP 프레임 접근(범위 밖 번호 getter→상세 writer, rifttype.h:e1 진단, 복귀 뒤 같은 프레임). SquidDisplay.frameSize 계약 검사로 대조(별도 원본 fixture 없음)
 cpppj/src/o/RawRitualChoice.cpp	port			todo	[o-default] cpppj CMake 주석상 6b 입력/수신 MP 사전 구현. 단독 의식 보상 선택 도달 여부는 WB10 에서 확인

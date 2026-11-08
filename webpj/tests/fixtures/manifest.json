@@ -10981,9 +10981,39 @@
       "bytes": 963921,
       "lines": 1318,
       "fixtureCommit": "2558bbcd",
-      "webCommit": "worktree",
+      "webCommit": "5af86b61",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionFrame.cpp": "2558bbcd"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E131",
+      "id": "rendercollection",
+      "path": "cpppj/tests/fixtures/rendercollection-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 표시 영역 월드 환산·교차·슬롯 순서 수집·그리기 정렬 비교의 반환값과 16바이트 항목 출력(세 판본 4305행)",
+      "consumers": [
+        "webpj/tests/render-collection.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-render-collection.js",
+        "webpj/www/render/draw-sort.js"
+      ],
+      "doc": "docs/webpj-render-collection-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawRenderCollection.cpp"
+      ],
+      "scope": "10.78(originals) 1435행 사용, originalCD·original1037 은 범위 밖",
+      "text": true,
+      "sha256": "175e14a99b9ffbd73fd10db360ebe33060457885036c21d3f01d1958758916d0",
+      "bytes": 4723709,
+      "lines": 4306,
+      "fixtureCommit": "3e6286eb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawRenderCollection.cpp": "3e6286eb"
       }
     }
   ]
