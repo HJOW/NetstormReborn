@@ -11889,7 +11889,7 @@
       "bytes": 584405,
       "lines": 4354,
       "fixtureCommit": "b13e5a35",
-      "webCommit": "worktree",
+      "webCommit": "50ada5bf",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPlacementGeometry.cpp": "035d1324"
       }
@@ -11918,9 +11918,70 @@
       "bytes": 1022970,
       "lines": 8066,
       "fixtureCommit": "5f97df0f",
-      "webCommit": "worktree",
+      "webCommit": "50ada5bf",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPlacementShape.cpp": "b8628062"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E157",
+      "id": "priestpreview",
+      "path": "cpppj/tests/fixtures/priestpreview-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 사제 배치 접두/미리보기/표면/관계(모양 진입과 미리보기 뒤 충돌 구간만 대체, 10.78 1620행)",
+      "consumers": [
+        "webpj/tests/priest-placement-preview.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-placement-preview.js",
+        "webpj/www/core/raw-priest-placement.js"
+      ],
+      "doc": "docs/webpj-priest-placement-collision-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPlacement.cpp",
+        "cpppj/src/o/RawPriestPlacementPreview.cpp"
+      ],
+      "scope": "10.78 실제 PE 1620행 전부",
+      "text": true,
+      "sha256": "e16e2df64f4dbd06afc689e1c8d4da264f67628407518af0d0b22b143f865a40",
+      "bytes": 2751837,
+      "lines": 4862,
+      "fixtureCommit": "5a0343cd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPlacement.cpp": "4df5da6a",
+        "cpppj/src/o/RawPriestPlacementPreview.cpp": "b024fa1e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E157",
+      "id": "priestcollision",
+      "path": "cpppj/tests/fixtures/priestcollision-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 배치 원본 무시 함수 반환과 한 후보 인라인 구간(모양/finder/지형/전체 MayPlace 미실행, 10.78 3840행)",
+      "consumers": [
+        "webpj/tests/priest-placement-collision.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-placement-collision.js"
+      ],
+      "doc": "docs/webpj-priest-placement-collision-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPlacementCollision.cpp"
+      ],
+      "scope": "10.78 실제 PE 3840행 전부",
+      "text": true,
+      "sha256": "a3876d2cc444a5a0a258c598aca8c3376bd808357eca78680afdc3b4ed8bd403",
+      "bytes": 5494342,
+      "lines": 11522,
+      "fixtureCommit": "b20272c7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPlacementCollision.cpp": "a072d5d9"
       }
     }
   ]
