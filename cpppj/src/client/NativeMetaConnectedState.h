@@ -32,7 +32,7 @@ struct NativeMetaConnectedHooks { //실제 장치 접합 전에는 선택된 필
     std::function<void(std::uint32_t)> listen,closeConnection; //004e2430(port)/004e2940(id)이다.
     std::function<void()> closePending,notifyMaster,sendLogin; //004e2a00/004b2c00/004b62b0의 실제 본체다.
     std::function<bool(std::uint32_t)> open;std::function<std::int32_t(std::uint32_t)> status; //004e2b10/004e2b70의 현재 노드를 조회한다.
-    std::function<void(std::uint32_t,std::string_view,std::uint32_t)> connect; //004e2620(id,address,port,0)의 실제 접속이다.
+    std::function<void(std::uint32_t,std::string_view,std::uint32_t)> connect; //004e2620(id,address,port,0)이다. 주소는현재44BYTE경계의보기이며기존9조기재사용전에NUL/주소를읽지않는다.
 };
 std::int32_t FindMetaBattleMaster(ClientChallengeGlobals& challenge,std::uint32_t owner); //004b2c60의 자기+a4 전투/8참가자와 bit4 첫 master 조회다.
 std::string MetaLoginReason(std::int32_t code,const std::function<std::string(std::string_view)>& translate); //0042b090의 Unknown 선번역/여섯 이유/선택값 재번역 순서다.

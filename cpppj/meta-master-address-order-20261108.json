@@ -1,0 +1,75 @@
+{
+  "unit": 1158,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "809ef16a / 20261108-128 CP",
+  "summary": "M3.3a의 State33 master 주소를 현재 CS의 bounded44BYTE view로 전달해 같은 TCP의 기존9 준비 비영 재사용이 NUL/주소 해석보다 먼저 오도록 복원했다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1158\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13169664,
+      "sha256": "ab184250379d8db2a42f0b40d434c42ed1b3463313e25e312e188914f97314e0"
+    },
+    "R.exe": {
+      "bytes": 670208,
+      "sha256": "c526c36cb3e2425f31a952304b614a9de0d5a9ba6dde0b9db2f10f6f3f03b729"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "nativeEvidenceSha256": {
+    "004b6dd0.asm": "35c457d8f9f34bb9e0e984fedc9b64550b36ecd09046cb684bca10913f2e54d0",
+    "004b6dd0.c": "57657c478577af842a6ca07e8dfab7ee580f20d0415bb313d0067cf606a4bc11",
+    "004e2620.asm": "172e4ef7f1ade55434a55fc444dd001692cb63a7385f7fcb9a577e3cfae50c6e",
+    "004e2620.c": "caa8027d0f0fdb1b72a4489fc149b3e88445646c754d2d489720fc83c97ce99a"
+  },
+  "sourceSha256": {
+    "cpppj/src/client/NativeMetaConnectedState.cpp": "79e55146bf5b47dd042e167dd7789ce3e34e782f18dab19387bc3787ea970a67",
+    "cpppj/src/client/NativeMetaConnectedState.h": "ebf952f61419e9c78b21b447f67b006b8414a5dbc269d4ea9b3d20db6708033b",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "bd9376b7b8d37f9ac8beebc3f812155b378d37448b864df3b40edb49caf884fe",
+    "cpppj/src/client/LocalTcpTransport.cpp": "7a3b2a93ae065a53ca047631b4a083207fad1b738a44949015eb41713d8cf4ed"
+  },
+  "sourceAudit": {
+    "sameCurrentMasterRecordAndGamePort": true,
+    "noByteReadOrNulScanBeforeActualConnect": true,
+    "bothChangedAndUnchangedMasterBranchesUseSameHelper": true,
+    "actualTcpReusesAnyNonzeroReadinessBeforeAddressParse": true,
+    "samePointerAnd44BytePhysicalBoundWithoutCopy": true
+  },
+  "remaining": {
+    "next": "M3.3b / State19 준비·Descend/참가 후속 World/카메라/HTML·실제 진단 장치",
+    "m3Complete": false,
+    "stage3Groups": 6,
+    "checkingListedParents": 0,
+    "concreteFollowup": "UberMeta의State19 CS->listsInitialized 및FortCoreDataLoadContext assertion이현재clog만사용한다. 원문 C/PE의 식/파일/줄을 확인해 같은 Client AssertDisplay에 연결하고 전체 전환 후속을 대조한다."
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "full34": 0,
+    "zip": 0
+  },
+  "limitations": [
+    "사용자 지시로 MP 실행 검사를 하지 않았으며 정상/재사용 master 접속을 실행 검증했다고 주장하지 않는다.",
+    "다른 Source/OS/heap 물리 실패나 모든 일반 LAN/Outpost 원문 동일성이 증명됐다는 뜻이 아니다. M3.3b와 M4~M8은 계속한다."
+  ],
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}

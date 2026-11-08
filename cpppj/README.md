@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-**2026-11-08 제품1156 / 표시 버전11.01, 최신 작업1157 정적 감사. /goal 진행 중이다.** 기존 공통 Pop/신전 정기 Handle의 전체 부모·같은 현재 checking/실제 Caller를 대조해M3.1/M3.2를 마쳤다. 다음은M3.3의 Descend/메타전환·World/카메라/HTML 후속이다.3차 잔여6묶음은 [현행 인수인계](../LEFT_JOBS.md), 제품 변경/새 빌드·실행 없이 같은 두 EXE/보호2800 불변을 확인한 근거는 [1157 감사](../docs/exe/cpp-checking-parent-closure-20261108.md)를 따른다. 전체 목표는 미완료다.
+**2026-11-08 현재 제품1158 / 표시 버전11.01. /goal 진행 중이다.** M3.3a의 State33 master 주소를 실제 TCP의 기존9 조기 재사용 전에 읽지 않게 복원했다. 다음은M3.3b의 State19 준비·Descend/참가 후속 World/카메라/HTML·실제 진단 장치다.3차 잔여6묶음은 [현행 인수인계](../LEFT_JOBS.md), 두 Release 종료0·경고/오류0·보호2800 불변과 실행 제외는 [1158 기록](../docs/exe/cpp-meta-master-address-order-20261108.md)을 따른다. 전체 목표는 미완료다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
 
