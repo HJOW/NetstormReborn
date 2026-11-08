@@ -748,7 +748,7 @@ cpppj/src/o/RawGunMode.cpp	port	www/core/raw-gun-mode.js	1f00a25a	port	[o-defaul
 cpppj/src/o/RawGunProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawGunTarget.cpp	port	www/core/raw-gun-target.js	1f00a25a	partial	[o-default] WB04-E82: Gun 표적 findTarget 0046b6f0·mayTarget 0046af80·mayShoot 0046ac00·mayFire 0046b070·cannonRay 00469190·footprint/center(Archer/Cannon finder 순서·float 저장 순서·진단 출력). fixture guntarget 10.78 1727행 전부(값형/현재 Player 조회기 두 방식). 남음: MakeGunTargetHooks(RawGunProcess 선행)·보호 SHP 자산 sunCannon 사정선 48행(cannon-asset-ray)
 cpppj/src/o/RawIceCannonFire.cpp	port	www/core/raw-ice-cannon-fire.js	1f00a25a	port	[o-default] WB04-E114: 아이스 캐논 80바이트 파생 004685e0 초기화·00468660 냉각 전환/문맥/표적 판정·공통 프레임 연결·IceCannonFireProcess. fixture ice-cannon-fire 3585행 전부. 냉각 표시/문맥/표적 판정은 훅 경계, GunProcess Host 연결은 RawGunProcess 이식 뒤
-cpppj/src/o/RawIceRicochet.cpp	port			todo	[o-default]
+cpppj/src/o/RawIceRicochet.cpp	port	www/core/raw-ice-ricochet.js	1f00a25a	port	[o-default] WB04-E124: 아이스 Missile 반사점 00482080·후보 선택/후속 생성 요청 00482190·월드 훅. fixture ice-ricochet 1182행+ice-ricochet-scratch 213행 전부(10.78 전용). 후속 Missile 생성/Pop 은 RawMissile 이식 때 연결. MissileFields 는 raw-missile-fields.js(RawMissile 본체는 미이식)
 cpppj/src/o/RawIceTower.cpp	port	www/core/raw-ice-tower.js	1f00a25a	port	[o-default] WB04-E109: 아이스 타워 완성형 파괴 48edf0·성장형 예약 48ead0·삭제 48eb80·이벤트 0x3a6 48ebe0. fixture ice-tower 1426행 전부(10.78 전용 파일). 예약/표면 칸/finder/생성/공간/소유자/받침 정리/공통 후처리/프레임 갱신은 훅 경계
 cpppj/src/o/RawIslandAdd.cpp	exclude-edit			-	[edit-island-add]
 cpppj/src/o/RawIslandBuilder.cpp	port			todo	[o-default]
@@ -775,7 +775,7 @@ cpppj/src/o/RawMemStream.cpp	port			todo	[o-default]
 cpppj/src/o/RawMetadisplayDirty.cpp	port	www/core/metadisplay-dirty.js	1f00a25a	port	[o-default] WB04-D2
 cpppj/src/o/RawMetaZoneCleanup.cpp	port	www/core/raw-meta-zone-cleanup.js	1f00a25a	port	[o-default] WB04-E77: 메타구역 정리 0042b1b0(진입 플래그 분기·자식 51회·7344B DWORD 표 쓰기와 짧은 물리 접두 보존)·마커 00479520(상태 signed·SID 관문·가상 삭제 뒤 같은 DWORD 0). fixture meta-zone-cleanup 38행 전부. 마커 가상 삭제 본체와 State 소유자 연결은 해당 단위에서
 cpppj/src/o/RawMinimapRaster.cpp	port			todo	[o-default]
-cpppj/src/o/RawMissile.cpp	port			todo	[o-default]
+cpppj/src/o/RawMissile.cpp	port	www/core/raw-missile-fields.js	1f00a25a	partial	[o-default] WB04-E124: MissileFields 128바이트 필드 이미지(www/core/raw-missile-fields.js)만 이식(RawIceRicochet 의 선행). 남음: RawMissile 생성자·프레임·충돌·반사 연결 본체와 Missile 프로세스
 cpppj/src/o/RawMissionAiSettings.cpp	port	www/core/raw-mission-ai-settings.js	1f00a25a	partial	[o-default] WB04-E32: initialize(0040ef80)는 make-ai-parent 770행의 설정 600바이트로 대조. apply/setAbility/prepare는 소스 계약 검사만(미션 시작 override 관측은 MissionStart 단위에서)
 cpppj/src/o/RawMissionBattleOptions.cpp	port	www/core/raw-mission-battle-options.js	1f00a25a	port	[o-default] WB04-E37: 0041cb90/0041cc10 초기화·004b4860 범위·0041c8b0/0041ca70·밀도·004b4900 파생·사용표. fixture mission-option-reset 296·mission-battle-options 3305행 전부(float는 NaN 페이로드 보존을 위해 비트 보관)
 cpppj/src/o/RawMissionClientPackets.cpp	port			todo	[o-default]

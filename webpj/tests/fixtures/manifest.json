@@ -10568,7 +10568,7 @@
       "bytes": 13805,
       "lines": 321,
       "fixtureCommit": "2cdcf81e",
-      "webCommit": "worktree",
+      "webCommit": "30b07358",
       "cpppjBasis": {
         "cpppj/src/o/RawObjectCommand.cpp": "2cdcf81e"
       }
@@ -10597,9 +10597,68 @@
       "bytes": 385647,
       "lines": 241,
       "fixtureCommit": "9859f159",
-      "webCommit": "worktree",
+      "webCommit": "30b07358",
       "cpppjBasis": {
         "cpppj/src/o/RawTemplateLifetime.cpp": "9859f159"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E124",
+      "id": "icericochet",
+      "path": "cpppj/tests/fixtures/ice-ricochet-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 아이스 반사점/후보 선택/후속 Missile 인자의 효과 순서·반사점 8바이트·128바이트 필드 이미지·공유 난수(1182행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/ice-ricochet.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ice-ricochet.js",
+        "webpj/www/core/raw-missile-fields.js"
+      ],
+      "doc": "docs/webpj-ice-ricochet-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawIceRicochet.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 1182행 전부 사용",
+      "text": true,
+      "sha256": "07b12af8ac2d098aded65459c547c4db0221196697ca2221f2cfa933e7c49615",
+      "bytes": 518486,
+      "lines": 1183,
+      "fixtureCommit": "1679f128",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawIceRicochet.cpp": "56a28270"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E124",
+      "id": "icericochetscratch",
+      "path": "cpppj/tests/fixtures/ice-ricochet-scratch-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 변위 0/비영 변위·NaN/경계의 호출 전 지역 점 8바이트 입력과 같은 출력 4열(213행, 10.78 전용)",
+      "consumers": [
+        "webpj/tests/ice-ricochet.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ice-ricochet.js"
+      ],
+      "doc": "docs/webpj-ice-ricochet-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawIceRicochet.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 213행 전부 사용",
+      "text": true,
+      "sha256": "2f14707db8e06b817eb4043dc2268b1d136e0f307c33953994d8f3d4de1fe45e",
+      "bytes": 99848,
+      "lines": 214,
+      "fixtureCommit": "2eb294f0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawIceRicochet.cpp": "56a28270"
       }
     }
   ]
