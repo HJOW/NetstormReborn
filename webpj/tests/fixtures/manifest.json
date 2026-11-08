@@ -11860,9 +11860,67 @@
       "bytes": 419468,
       "lines": 3026,
       "fixtureCommit": "352ec8d4",
-      "webCommit": "worktree",
+      "webCommit": "11acac41",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPlacement.cpp": "4df5da6a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E156",
+      "id": "priestgeometry",
+      "path": "cpppj/tests/fixtures/priestgeometry-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 비패턴 decoder/범위와 한 모양 충돌 인자(finder/전체 MayPlace/지형 미실행, 10.78 2304행)",
+      "consumers": [
+        "webpj/tests/priest-placement-geometry.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-placement-geometry.js"
+      ],
+      "doc": "docs/webpj-priest-placement-geometry-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPlacementGeometry.cpp"
+      ],
+      "scope": "10.78 실제 PE 2304행 전부",
+      "text": true,
+      "sha256": "b49b1ce9cb4145afdd45806ba43404c49ab5523ca05e1a259ce83fa273c8e12a",
+      "bytes": 584405,
+      "lines": 4354,
+      "fixtureCommit": "b13e5a35",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPlacementGeometry.cpp": "035d1324"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E156",
+      "id": "priestshape",
+      "path": "cpppj/tests/fixtures/priestshape-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 비패턴 전체 픽셀 getter 의 범위/기준점 보정(SHP 머리/핫스폿/배율 입력, 10.78 4032행)",
+      "consumers": [
+        "webpj/tests/priest-placement-shape.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-placement-shape.js"
+      ],
+      "doc": "docs/webpj-priest-placement-geometry-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPlacementShape.cpp"
+      ],
+      "scope": "10.78 실제 PE 4032행 전부",
+      "text": true,
+      "sha256": "f81259fa6c49401cb286dbd923d24e6f56f97db78d4a2cdf040798cfb4c182d2",
+      "bytes": 1022970,
+      "lines": 8066,
+      "fixtureCommit": "5f97df0f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPlacementShape.cpp": "b8628062"
       }
     }
   ]

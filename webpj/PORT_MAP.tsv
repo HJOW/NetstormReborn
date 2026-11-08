@@ -842,9 +842,9 @@ cpppj/src/o/RawPriestPanic.cpp	port	www/core/raw-priest-panic.js	1f00a25a	port	[
 cpppj/src/o/RawPriestParticipation.cpp	port	www/core/raw-priest-participation.js	1f00a25a	port	[o-default] WB04-E68: 사제 참여 조회 00494f10/갱신 00495060(live 목록→Carrier 포획 내용물→마지막 일치 제단·소유자 상태 0/1/2). fixture priest-participation 304행 전부(10.78 전용 파일). 설치된 제단 몸체(RawAltarSacrifice) 연결은 해당 파일 단위에서
 cpppj/src/o/RawPriestPlacement.cpp	port	www/core/raw-priest-placement.js	a84509c9	port	[o-default] WB04-E155: 사제 배치 접두(사제 genus 한정 MayPlace 접두를 일반 배치 접두에 위임·요청 값 복사·사제 생성 훅 어댑터). fixture priestplacement 실제 PE 1008행 전부와 사제 생성자 연결. 남음: 기하·모양·미리보기·충돌·지형 단위 연결
 cpppj/src/o/RawPriestPlacementCollision.cpp	port			todo	[o-default]
-cpppj/src/o/RawPriestPlacementGeometry.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestPlacementGeometry.cpp	port	www/core/raw-priest-placement-geometry.js	1f00a25a	port	[o-default] WB04-E156: 사제 배치 기하(비패턴 계약 검사·미리보기 범위·모양 순회/충돌 사각형·양수 발자국 계약·미리보기/충돌 훅 어댑터). fixture priestgeometry 실제 PE 2304행 전부. 남음: 사제 미리보기·충돌·지형 연결 통합 시험
 cpppj/src/o/RawPriestPlacementPreview.cpp	port			todo	[o-default]
-cpppj/src/o/RawPriestPlacementShape.cpp	port			todo	[o-default]
+cpppj/src/o/RawPriestPlacementShape.cpp	port	www/core/raw-priest-placement-shape.js	1f00a25a	port	[o-default] WB04-E156: 사제 배치 픽셀 모양(비패턴 계약 검사·일반 픽셀 getter 위임·배치 shape 훅 어댑터). fixture priestshape 실제 PE 4032행 전부. 남음: 사제 배치 통합 시험
 cpppj/src/o/RawPriestPlacementTerrain.cpp	port			todo	[o-default]
 cpppj/src/o/RawPriestPostPop.cpp	port	www/core/raw-priest-post-pop.js	1f00a25a	port	[o-default] WB04-E63: 사제 후처리 접두 004950f0(목록 00414450·회복 예약·소유자 상태)·PriestPostPopState·resetPriestOwnerState. fixture priestpostpop 10.78 Prefix 2392행 전부. ProcessHost 통합 장면은 호스트 장면 단위에서
 cpppj/src/o/RawPriestPostPopTail.cpp	port	www/core/raw-priest-post-pop-tail.js	1f00a25a	port	[o-default] WB04-E64: 사제 postPop 후반 004950f0(Carrier 뒤 이동 불가 조회·낙하/보호막)·makePriestPostPopTailShieldHooks. fixture priestpostpoptail 10.78 2048행·priestpop 10.78 1280행 전부. 회복 Form/Kernel·낙하(RawPriestFall) 통합 장면은 해당 단위에서
