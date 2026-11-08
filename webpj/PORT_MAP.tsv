@@ -568,7 +568,7 @@ cpppj/src/o/RawCanonPlacementGeometry.cpp	port	www/core/raw-canon-placement-geom
 cpppj/src/o/RawCanonPlacementPermission.cpp	port	www/core/raw-canon-placement-permission.js	1f00a25a	port	[o-default] WB04-E149: 일반 배치 권한(00462cb0 후보 권한·004629e0 방향 관계·주변 바깥 관계·지형 후보 권한 훅 어댑터). fixture canonpermission 실제 PE 5850행 전부. 남음: 실제 3x3 decoder/미리보기/finder/지형 통합 시험은 충돌·미리보기·배치 접두 단위
 cpppj/src/o/RawCanonPlacementPipeline.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementPreview.cpp	port			todo	[o-default]
-cpppj/src/o/RawCanonPlacementRelations.cpp	port			todo	[o-default]
+cpppj/src/o/RawCanonPlacementRelations.cpp	port	www/core/raw-canon-placement-relations.js	1f00a25a	port	[o-default] WB04-E150: 일반 배치 최종 관계(MayPlace 후반: 표시 차단 소유 관계·특수 섬 지역 지면 취소·최종 소유자 거부·표면 지도 조회·지형 최종 관계 훅 어댑터). fixture canonrelations 실제 PE 2307행 전부. 남음: 일반/패턴 완전 파이프라인 통합 시험은 배치 파이프라인 단위
 cpppj/src/o/RawCanonPlacementSurrounding.cpp	port			todo	[o-default]
 cpppj/src/o/RawCanonPlacementTerrain.cpp	port	www/core/raw-canon-placement-terrain.js	1f00a25a	port	[o-default] WB04-E148: 일반 배치 지형(후보 지형 누적·144바이트 지역 배열·모양 종료 지면 완성·최종 지면/권한 누적·지역 getter·기하/충돌 훅 어댑터). fixture canonterrain 실제 PE 3740행 전부. 남음: 실제 받침 decoder/미리보기/finder 통합 시험은 충돌·미리보기·배치 접두 단위
 cpppj/src/o/RawCarrierArrival.cpp	port			todo	[o-default]

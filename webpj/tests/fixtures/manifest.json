@@ -11654,9 +11654,38 @@
       "bytes": 3035246,
       "lines": 16892,
       "fixtureCommit": "c8870ba2",
-      "webCommit": "worktree",
+      "webCommit": "082ebd1a",
       "cpppjBasis": {
         "cpppj/src/o/RawCanonPlacementPermission.cpp": "da8bb776"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E150",
+      "id": "canonrelations",
+      "path": "cpppj/tests/fixtures/canonrelations-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 MayPlace 최종 구간/에필로그의 표면·관계·지역 helper(10.78 2307행)",
+      "consumers": [
+        "webpj/tests/canon-placement-relations.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-canon-placement-relations.js"
+      ],
+      "doc": "docs/webpj-canon-placement-relations-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCanonPlacementRelations.cpp"
+      ],
+      "scope": "10.78 실제 PE 2307행 전부",
+      "text": true,
+      "sha256": "343f5bee5c7ef8914f81757eb48787e8aa90298dd97108ab393c38d47e28c16b",
+      "bytes": 908967,
+      "lines": 6923,
+      "fixtureCommit": "da8bb776",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCanonPlacementRelations.cpp": "da8bb776"
       }
     }
   ]
