@@ -22,6 +22,15 @@ template<class Select> auto CurrentConstructionCall(const std::weak_ptr<const Cl
         return call(std::forward<decltype(arguments)>(arguments)...);
     });
 }
+// 장기 Client의 현재 장치만 선택하며 반납/재결합 중에도 이미 선택한 집합과 함수 사본을 호출 끝까지 보유한다.
+template<class Select> auto CurrentConstructionDevice(const std::shared_ptr<const ClientConstructionDevices>& owner,Select select) {
+    using Function=std::invoke_result_t<Select,const ClientConstructionDevices&>; //실제 장치의 반환값/인수 서명을 변경하지 않는다.
+    return Function([&owner,select](auto&&... arguments)->decltype(auto) {
+        const auto current=owner;if (!current) throw std::logic_error("장기 건설의 실제 현재 Client 장치 미연결");
+        const auto call=select(*current);if (!call) throw std::logic_error("장기 건설의 선택된 Client 장치 본문 누락");
+        return call(std::forward<decltype(arguments)>(arguments)...);
+    });
+}
 }
 void ClientConstructionGlobals::Bind(std::shared_ptr<RawSurfaceStorage> storage,std::shared_ptr<ClientGameplayGlobals> gameplay,std::shared_ptr<ClientBuildReplayGlobals> replay) {
     if (!storage || !gameplay || !storage->UsesNativeTransmissionDevices() || storage->GameAux()!=gameplay->GameAux() || storage->Authority()!=gameplay->Authority()) throw std::invalid_argument("건설 상태의 같은 Native Client 전역/물리 계약 오류");
@@ -47,29 +56,35 @@ void ClientConstructionGlobals::Bind(std::shared_ptr<RawSurfaceStorage> storage,
 bool ClientConstructionGlobals::Matches(const std::shared_ptr<RawSurfaceStorage>& storage,const std::shared_ptr<ClientGameplayGlobals>& gameplay,const std::shared_ptr<ClientBuildReplayGlobals>& replay) const { return storage_ && storage_==storage && gameplay_==gameplay && replay_==replay; }
 RawCampaignConstructionState& ClientConstructionGlobals::State() { if (!storage_) throw std::logic_error("건설 상태의 실제 Client owner 미결합");return state_; } // 결합 전에는 임시 전역으로 진행하지 않는다.
 const RawCampaignConstructionState& ClientConstructionGlobals::State() const { if (!storage_) throw std::logic_error("건설 상태의 실제 Client owner 미결합");return state_; } // 같은 장기 상태만 조회한다.
+// 필수 장치 누락은 기존 집합을 바꾸기 전에 거부하며 실제 호출은 원문 선택 위치까지 지연한다.
+void ClientConstructionGlobals::BindDevices(ClientConstructionDevices devices) {
+    if (!storage_ || !devices.configInt || !devices.wallSeconds || !devices.refresh || !devices.negativeQuantity || !devices.boundsAssertion || !devices.format || !devices.tell) throw std::invalid_argument("장기 건설의 실제 Client 장치 계약 오류");
+    devices_=std::make_shared<ClientConstructionDevices>(std::move(devices));
+}
+void ClientConstructionGlobals::ReleaseDevices() { devices_.reset(); } //Client/현재 UI를 반납한 뒤 죽은 주소의 함수를 다시 선택하지 않게 한다.
 // 같은 현재 Session이 반납되지 않은 상태에서 다른 효과 owner로 몰래 교체하지 않는다.
 void ClientConstructionGlobals::BindRuntime(const std::shared_ptr<ClientConstructionRuntimeBindings>& runtime) {
     const auto current=runtime_.lock();if (!storage_ || !runtime || (current && current!=runtime)) throw std::invalid_argument("건설 본체의 같은 실제 현재 대여 필요");runtime_=runtime;
 }
 // 장기 부품만 실제 본체에 고정하고 큰 효과는 각 원문 선택 위치에서 현재 짧은 대여를 조회한다.
 RawCampaignConstructionBindings& ClientConstructionGlobals::Body(std::shared_ptr<ClientSpGlobals> sp,std::shared_ptr<ClientPlayerRecords> players,std::shared_ptr<std::array<std::uint8_t,87>> options) {
-    if (!storage_ || !sp || !players || !options || options!=gameplay_->BattleOptionsOwner()) throw std::invalid_argument("건설 본체의 같은 실제 SP/Player/옵션 owner 필요");
+    if (!storage_ || !devices_ || !sp || !players || !options || options!=gameplay_->BattleOptionsOwner()) throw std::invalid_argument("건설 본체의 같은 실제 Client 장치/SP/Player/옵션 owner 필요");
     if (body_) { if (sp_!=sp || players_!=players || options_!=options) throw std::logic_error("장기 건설 본체의 다른 backing 재결합 금지");return *body_; }
     auto runtime=BindConstructionRuntime(storage_);runtime.players=[records=players] { return records->Records(); }; //원문이 고른 위치까지 Player 할당/조회와 현재 span 선택을 지연한다.
     auto& metadata=storage_->PlacementAssets();auto& aux=*storage_->GameAux(); //동일 Source의 실제 Canon/현재 TYPE이며 새 자산을 만들지 않는다.
     RawCampaignConstructionEffects effects; //큰 효과의 임시 Session 주소는 장기 본체에 저장하지 않는다.
-    effects.configInt=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.configInt; }); //현재 Config를 실제 선택 시 읽는다.
-    effects.wallSeconds=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.wallSeconds; }); //선택된 비결정적 시드의 실제 벽시각이다.
-    effects.refresh=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.refresh; }); //현재 Renderer의 실제 전체 갱신이다.
-    effects.negativeQuantity=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.negativeQuantity; }); //원문의 수량 진단을 선택 시 실행한다.
-    effects.boundsAssertion=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.boundsAssertion; }); //현재 Player/Bounds 진단의 복귀 계약이다.
-    effects.islandExists=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.islandExists; }); //선택된 실제 IslandList 존재 조회다.
+    effects.configInt=CurrentConstructionDevice(devices_,[](const auto& current) { return current.configInt; }); //현재 Config를 Session 없이 실제 선택 시 읽는다.
+    effects.wallSeconds=CurrentConstructionDevice(devices_,[](const auto& current) { return current.wallSeconds; }); //같은 실제 비결정적 벽시각을 읽는다.
+    effects.refresh=CurrentConstructionDevice(devices_,[](const auto& current) { return current.refresh; }); //현재 Renderer 장치의 실제 갱신이다.
+    effects.negativeQuantity=CurrentConstructionDevice(devices_,[](const auto& current) { return current.negativeQuantity; }); //장기 Client 수량 진단을 선택한다.
+    effects.boundsAssertion=CurrentConstructionDevice(devices_,[](const auto& current) { return current.boundsAssertion; }); //장기 Client의 현재 Bounds 진단이다.
+    effects.islandExists=[storage=storage_](std::int32_t island) { return o::RawIslandExists(storage->islands.records,island)!=0; }; //같은 현재 섬 기록의 DWORD를 bool로만 변환하며 임시 실행기/목록을 만들지 않는다.
     effects.presentation.sendMoney=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.presentation.sendMoney; }); //같은 실제6ch 송신을 사용한다.
     effects.presentation.sendReject=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.presentation.sendReject; }); //같은 실제2fh 취소 송신이다.
-    effects.presentation.format=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.presentation.format; }); //원문 비용 안내 서식을 그대로 전달한다.
+    effects.presentation.format=CurrentConstructionDevice(devices_,[](const auto& current) { return current.format; }); //같은 실제 서식 몸체를 Session 없이 사용한다.
     effects.presentation.tellOthers=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.presentation.tellOthers; }); //현재 타인 안내의 실제 장치다.
     effects.presentation.tellPlayer=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.presentation.tellPlayer; }); //현재 Player 안내를 같은 장치로 보낸다.
-    effects.presentation.tell=CurrentConstructionCall(runtime_,[](const auto& current) { return current.effects.presentation.tell; }); //로컬 표시 부호화 경계는 기존 실제 콜백이 처리한다.
+    effects.presentation.tell=CurrentConstructionDevice(devices_,[](const auto& current) { return current.tell; }); //현재 Client의 같은 Tell/표시 부호화 경계다.
     RawCampaignConstructionGameplay gameplay; //큰 실제 모듈의 선택 위치에서만 짧은 Runtime 대여를 사용한다.
     gameplay.setOwner=CurrentConstructionCall(runtime_,[](const auto& current) { return current.gameplay.setOwner; }); //사제 가상 소유자 분배를 유지한다.
     gameplay.request.mayPlace=CurrentConstructionCall(runtime_,[](const auto& current) { return current.gameplay.request.mayPlace; }); //현재 전체 MayPlace를 선택한다.

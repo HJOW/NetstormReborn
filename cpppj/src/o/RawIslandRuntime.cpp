@@ -19,6 +19,12 @@ bool PositiveBits(float value) { return std::bit_cast<std::int32_t>(value)>0; }
 void WriteIslandField(std::span<std::uint8_t> records,std::size_t offset,std::uint32_t value,std::size_t width=4) {
     for (std::size_t byte=0;byte<width;++byte) records[offset+byte]=static_cast<std::uint8_t>(value>>(byte*8)); // 해당 원문 필드의 폭만 쓴다.
 }
+// 원본의 정렬되지 않은 필드 폭만 little endian으로 읽는다.
+std::uint32_t ReadIslandField(std::span<const std::uint8_t> records,std::size_t offset,std::size_t width=4) {
+    std::uint32_t value=0;
+    for (std::size_t byte=0;byte<width;++byte) value|=std::uint32_t(records[offset+byte])<<(byte*8); //지정 필드의 BYTE만 순서대로 결합한다.
+    return value;
+}
 // Delete와 전체 Reset은 같은 한 기록 몸체를 사용하며 물리 밖 입력은 쓰기 전에 거부한다.
 void ResetIslandRecord(std::span<std::uint8_t> records,std::int32_t island) {
     if (records.size()!=RawIslandStorage::kBytes || island<0 || island>=100) throw std::out_of_range("Island Reset 실제3204BYTE/기록 범위 오류");
@@ -35,6 +41,13 @@ void ResetRawIslandRecords(std::span<std::uint8_t> records) {
     for (std::int32_t island=0;island<100;++island) ResetIslandRecord(records,island); // 실제100행을 모두 쓰며 padding2BYTE는 유지한다.
     WriteIslandField(records,0,0);
 }
+// 원문의 signed 논리 범위가 먼저이며 그 관문을 통과한 물리100기록 밖 접근은 기존 호스트처럼 거부한다.
+std::uint32_t RawIslandExists(std::span<const std::uint8_t> records,std::int32_t island) {
+    if (records.size()!=RawIslandStorage::kBytes) throw std::invalid_argument("Island Exists 실제3204BYTE 범위 오류");
+    if (island<0 || island>=std::bit_cast<std::int32_t>(ReadIslandField(records,0))) return 0;
+    if (island>=100) throw std::out_of_range("IslandRuntime 물리기록범위오류");
+    return ReadIslandField(records,4+static_cast<std::size_t>(island)*kStride+4);
+}
 // 실제3204바이트저장소와필수하위효과·기존모드/Player/목록을확인한다.
 RawIslandRuntime::RawIslandRuntime(const SidPool& pool,const SquidHash& hash,std::span<std::uint8_t> records,
     FortFinishOwnerState& modes,SquidPostPopList& residences,std::uint32_t& worldRedraw,std::uint32_t& mapRevision,
@@ -44,10 +57,7 @@ RawIslandRuntime::RawIslandRuntime(const SidPool& pool,const SquidHash& hash,std
 }
 // raw필드의낮은바이트부터결합한다.
 std::uint32_t RawIslandRuntime::Read(std::size_t offset,std::size_t width) const {
-    std::uint32_t value=0;
-    // 원본지정폭을넘어padding이나이웃을읽지않는다.
-    for (std::size_t index=0;index<width;++index) value|=static_cast<std::uint32_t>(records_[offset+index])<<(index*8);
-    return value;
+    return ReadIslandField(records_,offset,width); //NoWorld 조회와 같은 실제 필드 읽기 몸체다.
 }
 // 원본지정폭의낮은바이트부터대입한다.
 void RawIslandRuntime::Write(std::size_t offset,std::uint32_t value,std::size_t width) {
@@ -71,8 +81,7 @@ void RawIslandRuntime::Reset() {
 std::uint32_t RawIslandRuntime::Count() const { return Read(0); }
 // 원본signed범위검사와존재DWORD반환을그대로보존한다.
 std::uint32_t RawIslandRuntime::Exists(std::int32_t island) const {
-    if (island<0 || island>=std::bit_cast<std::int32_t>(Count())) return 0;
-    return Read(Record(island)+4);
+    return RawIslandExists(records_,island); //Pool/효과 없이 같은 현재 count/존재DWORD를 조회한다.
 }
 // missing진단뒤현재Exists를다시읽어callback의원본상태변경도보존한다.
 bool RawIslandRuntime::Require(std::int32_t island,bool bothEditions) const {

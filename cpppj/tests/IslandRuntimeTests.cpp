@@ -188,6 +188,14 @@ TEST_CASE(IslandRuntime_RejectsMissingEffectsAndPhysicalOverflow) {
     CHECK(Throws([&scene] { RawIslandRuntime missing(scene.pool,scene.hash,scene.records,scene.modes,scene.residences,scene.revision,scene.changed,{}); }));
 }
 
+// World 없는 조회는 비정규 존재DWORD·signed count/물리 경계와 입력 불변을 그대로 보존한다.
+TEST_CASE(IslandRuntime_DataOnlyExistsPreservesDwordAndSignedGate) {
+    RawIslandStorage storage;Put(storage.records,0,2);Put(storage.records,8,0x80000001U);Put(storage.records,40,0xffffffffU);const auto before=storage.records;
+    CHECK(RawIslandExists(storage.records,0)==0x80000001U && RawIslandExists(storage.records,1)==0xffffffffU && RawIslandExists(storage.records,-1)==0 && RawIslandExists(storage.records,2)==0 && storage.records==before);
+    Put(storage.records,0,0xffffffffU);CHECK(RawIslandExists(storage.records,0)==0 && RawIslandExists(storage.records,99)==0);Put(storage.records,0,100);CHECK(RawIslandExists(storage.records,100)==0);Put(storage.records,0,101);CHECK(Throws([&] { RawIslandExists(storage.records,100); }));
+    bool rejected=false;try { RawIslandExists(std::span(storage.records).first(RawIslandStorage::kBytes-1),-1); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
+}
+
 // 실제0046ef10의0059a8b0 증가와005949d4의1 저장을 서로 다른 Client owner에서 관측한다.
 TEST_CASE(IslandRuntime_ActualClientOwnersKeepWorldIncrementAndMapStoreSeparate) {
     netstorm::client::ClientKencloudGlobals cloud;netstorm::client::ClientGameplayGlobals gameplay;IslandRuntimeScene scene(OriginalEdition::Patch1078);

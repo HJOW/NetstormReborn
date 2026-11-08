@@ -172,7 +172,7 @@ target_sources(netstorm PRIVATE
     RawSurfaceDeletion.cpp #같은 현재 장기 공통 삭제와 실제 UI/소리/AI를 연결한다.
     RawSurfaceReward.cpp #같은 장기 HP/보상과 실제 SP·현재 모드 장치를 공유한다.
     ClientGameplayGlobals.cpp ClientGameplayGlobals.h ProductionControlContext.h
-    ClientConstructionGlobals.cpp ClientConstructionGlobals.h #같은 실제 건설 상태/물리 수명을 Client에서 소유한다.
+    ClientConstructionGlobals.cpp ClientConstructionGlobals.h ClientConstructionDevices.cpp #같은 장기 건설 본체/현재 Client 장치를 World 없이 연결한다.
     ClientNsInfoGlobals.cpp ClientNsInfoGlobals.h RawNsInfoContext.h
     HudNsInfo.cpp HudNsInfo.h HudNsInfoCreate.cpp HudNsInfoCreate.h
     ChatWindow.cpp ChatWindow.h HudChatGeometry.cpp HudChatGeometry.h

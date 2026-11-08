@@ -260,6 +260,7 @@ Client::~Client() {
     configuration_.onChanged = {}; // 부분 반납 중인 Client를 콜백으로 다시 읽지 않게 먼저 해제한다.
     connectionGlobals_->ShutdownDevices(); //최종App경계에서actual Node/Source순환을먼저끊는다.NativeState7/19의부분정리로대체하지않는다.
     menu_.reset();
+    constructionGlobals_->ReleaseDevices(); //실제 Session/Host 정리 뒤 죽은 Client 장치를 다시 선택하지 않도록 함수 집합만 반납한다.
     nativePacketTable_.reset(); //실제Source/queue/Session반납뒤dataowner를해제하며Kernel/시계/표시자식보다늦게끌고가지않는다.
     titleBitmaps_.reset(); //실패로남은host픽셀도Screen/창반납전에회수하며원문정상free8/깊이감소를합성하지않는다.
     rendererFrame_.reset(); //현재 Frame의 표시 작업 배열/Pool 대여를 화면·원문 물리 소유자보다 먼저 반납한다.
@@ -461,6 +462,7 @@ int Client::Run() {
     surfaceStorage_->BindSavedGame(localStateGlobals_->SavedGame()); //현재저장게임관문도World없는받침prefix와같은주소를빌린다.
     surfaceStorage_->BindContentCommand([this](auto code,auto x,auto y) { Input().PushCommand(code,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); }); //실제내용물UI통지는같은입력큐에예약한다.
     rendererFrame_->BindSurfaceDisplay(); //첫World전자체Renderer/카메라의현재getter만설치하며그리기/카메라/게임진행은실행하지않는다.
+    if (options_.edition==o::OriginalEdition::Patch1078) { constructionGlobals_->Bind(surfaceStorage_,gameplayGlobals_,trace_->buildReplay);constructionGlobals_->BindDevices(MakeClientConstructionDevices(*this)); } //현재 Client 장치는 첫 메뉴/Session 전에 연결만 하며 Player/World를 만들지 않는다.
     surfaceStorage_->BindGraphClock([this] { return clock_->GameSeconds(timeGetTime()); }); // 삭제 Graph의 두 시각 읽기도 같은 현재 Client 시계를 쓴다.
     surfaceStorage_->BindAllocationDiagnostics([this] { DumpObjectDiagnostics(); },[this](std::string_view name) { if (name!="BridgesKilled" || !menu_) throw std::logic_error("CD SID 회수의 현재 Tell UI 미연결");menu_->ShowSidRecoveryNotice(); }); //CD 소진의 객체/상세/대화상자는 기존 Client 부모를 공유한다.
     surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.

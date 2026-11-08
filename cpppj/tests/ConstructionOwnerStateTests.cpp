@@ -7,6 +7,7 @@
 #include "client/ClientSpGlobals.h" //장기 본체의 실제 SP backing과 초기화 지연을 확인한다.
 #include "client/ClientPlayerRecords.h" //본체 구성 전 Player base0을 유지하는 실제 할당 owner다.
 #include "o/RawCanonPlacementCollision.h"
+#include "o/ConfigInterface.h" //NoWorld 장치가 같은 실제 Config의 현재값/fallback을 읽는지 확인한다.
 
 using namespace netstorm::client;
 using namespace netstorm::o;
@@ -119,6 +120,10 @@ TEST_CASE(ConstructionOwner_RuntimeDeletionSurvivesWorldReturnAndPreservesResult
 }
 
 namespace { //World/Session/패킷을 만들지 않고 장기 본체의 실제 backing을 조립한다.
+// 선택되지 않은 실제 UI/시계/진단을 성공 대용으로 실행하지 않는 명시 입력 장치다.
+ClientConstructionDevices OwnerClientDevices() {
+    return {OwnerForbidden<std::int32_t,std::string_view,std::int32_t>(),OwnerForbidden<double>(),OwnerForbidden<void>(),OwnerForbidden<void>(),OwnerForbidden<void,PlayerGeyserBoundsAssertion>(),OwnerForbidden<std::string,std::string_view,std::string_view>(),OwnerForbidden<void,std::string_view>()};
+}
 struct LongConstructionScene {
     std::shared_ptr<ClientGameplayGlobals> gameplay{std::make_shared<ClientGameplayGlobals>()}; //실제 현재 모드/TYPE/옵션 owner다.
     std::shared_ptr<RawSurfaceStorage> storage{OwnerStorage(gameplay)}; //같은 원본 자산/Pool/목록이며 Native 전송은 금지한다.
@@ -133,7 +138,7 @@ struct LongConstructionScene {
         storage->BindSerializationGlobals(std::make_shared<FortSerializationGlobals>());
         storage->BindRewardDevices({std::shared_ptr<ScrambledSpStore>(sp,&sp->Store()),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->world.editor),OwnerForbidden<void>(),OwnerForbidden<void,std::uint32_t,std::int32_t>()});
         storage->BindPostPopDevices({OwnerForbidden<void,std::uint32_t,Sid,bool>(),[current=gameplay] { return current->player.battleOwner; },OwnerForbidden<void>()});
-        storage->BindDeletionDevices({OwnerForbidden<void,std::uint32_t,std::uint32_t,std::uint32_t>(),OwnerForbidden<void,Sid>()});owner->Bind(storage,gameplay,{});
+        storage->BindDeletionDevices({OwnerForbidden<void,std::uint32_t,std::uint32_t,std::uint32_t>(),OwnerForbidden<void,Sid>()});owner->Bind(storage,gameplay,{});owner->BindDevices(OwnerClientDevices());
     }
     RawCampaignConstructionBindings& Body() { return owner->Body(sp,players,gameplay->BattleOptionsOwner()); } //동일 실제 backing만 전달하며 현재 Player를 조회하지 않는다.
 };
@@ -149,20 +154,20 @@ TEST_CASE(ConstructionOwner_LongBodyBeforeWorldAndPlayerAllocation) {
     CHECK(OwnerRejected([&] { body->GenerateLocalGeysers(); }));CHECK(scene.players->Base()==0 && scene.storage->Generation()==0 && !scene.storage->Borrowed()); //실제 설정 효과가 없으면 Player/생성/방송 전에 명시 실패한다.
 }
 
-// 선택된 설정 콜백의 대여/전체 pin은 콜백이 외부 owner를 반납해도 예외 복귀까지 살아 있고 다음 대여만 새로 선택한다.
+// 선택된 큰 MayPlace 콜백의 대여/전체 pin은 외부 owner 반납 뒤에도 예외 복귀까지 살아 있고 다음 대여만 새로 선택한다.
 TEST_CASE(ConstructionOwner_LongBodyWeakRuntimePinsSelectedEffectAndRebinds) {
     LongConstructionScene scene;auto* body=&scene.Body();scene.owner->State().notice.historyCounter=23;
     auto runtime=std::make_shared<ClientConstructionRuntimeBindings>();auto whole=std::make_shared<int>(7);std::weak_ptr<int> wholeWatch=whole;std::weak_ptr<ClientConstructionRuntimeBindings> runtimeWatch=runtime;std::uint32_t calls=0;
     runtime->pin=[wholeWatch]()->std::shared_ptr<void> { auto current=wholeWatch.lock();if (!current) throw std::logic_error("검사의 실제 선택 pin 만료");return current; }; //선택 호출만 실제 외곽 owner를 strong으로 빌린다.
-    runtime->effects.configInt=[&](auto key,auto fallback)->std::int32_t {
-        CHECK(key=="predictableGeysers" && fallback==1 && !wholeWatch.expired() && !runtimeWatch.expired());++calls;runtime.reset();whole.reset();CHECK(!wholeWatch.expired() && !runtimeWatch.expired());throw std::runtime_error("선택 설정의 원래 실패"); //Player/패킷/실제 생성에 들어가기 전 예외 경계를 확인한다.
+    runtime->gameplay.request.mayPlace=[&](const CanonPlacementQuery&)->bool {
+        CHECK(!wholeWatch.expired() && !runtimeWatch.expired());++calls;runtime.reset();whole.reset();CHECK(!wholeWatch.expired() && !runtimeWatch.expired());throw std::runtime_error("선택 배치의 원래 실패"); //Player/패킷/실제 생성에 들어가기 전 큰 효과의 예외 경계를 확인한다.
     };
     scene.owner->BindRuntime(runtime);auto other=std::make_shared<ClientConstructionRuntimeBindings>();CHECK(OwnerRejected([&] { scene.owner->BindRuntime(other); }));
-    bool failed=false;try { body->GenerateLocalGeysers(); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="선택 설정의 원래 실패"; }
+    bool failed=false;try { static_cast<void>(body->Request({75,1,20,21})); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="선택 배치의 원래 실패"; }
     CHECK(failed && calls==1 && wholeWatch.expired() && runtimeWatch.expired() && scene.players->Base()==0);
-    other->effects.configInt=[&](auto,auto)->std::int32_t { ++calls;throw std::runtime_error("다음 설정의 원래 실패"); }; //반납된 Session 콜백을 다시 실행하지 않는다.
-    scene.owner->BindRuntime(other);failed=false;try { body->GenerateLocalGeysers(); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="다음 설정의 원래 실패"; }
-    CHECK(failed && calls==2 && &scene.Body()==body && scene.owner->State().notice.historyCounter==23 && scene.players->Base()==0 && !scene.storage->Borrowed());other.reset();CHECK(OwnerRejected([&] { body->GenerateLocalGeysers(); }));
+    other->gameplay.request.mayPlace=[&](const CanonPlacementQuery&)->bool { ++calls;throw std::runtime_error("다음 배치의 원래 실패"); }; //반납된 Session 콜백을 다시 실행하지 않는다.
+    scene.owner->BindRuntime(other);failed=false;try { static_cast<void>(body->Request({75,1,20,21})); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="다음 배치의 원래 실패"; }
+    CHECK(failed && calls==2 && &scene.Body()==body && scene.owner->State().notice.historyCounter==23 && scene.players->Base()==0 && !scene.storage->Borrowed());other.reset();CHECK(OwnerRejected([&] { static_cast<void>(body->Request({75,1,20,21})); }));
 }
 
 // 전체 body가 모든 실제 backing을 보유하고 최종 owner 반납 뒤 참조 순환 없이 함께 해제한다.
@@ -170,4 +175,27 @@ TEST_CASE(ConstructionOwner_LongBodyRetainsAndReleasesActualBacking) {
     LongConstructionScene scene;auto* body=&scene.Body();std::weak_ptr<RawSurfaceStorage> physical=scene.storage;std::weak_ptr<ClientGameplayGlobals> gameplay=scene.gameplay;std::weak_ptr<ClientSpGlobals> sp=scene.sp;std::weak_ptr<ClientPlayerRecords> players=scene.players;
     scene.storage.reset();scene.gameplay.reset();scene.sp.reset();scene.players.reset();scene.random.reset();CHECK(!physical.expired() && !gameplay.expired() && !sp.expired() && !players.expired() && &scene.owner->Body()==body);
     scene.owner.reset();CHECK(physical.expired() && gameplay.expired() && sp.expired() && players.expired());
+}
+
+// 같은 실제 Config/Player 기록으로 World/Runtime 없이 생성 입구를 실행하고 현재 설정/시계 선택을 확인한다.
+TEST_CASE(ConstructionOwner_ClientDevicesGenerateWithoutWorldOrRuntime) {
+    LongConstructionScene scene;auto* body=&scene.Body();ConfigInterface config([](auto)->std::optional<std::vector<std::uint8_t>> { return {}; });std::uint32_t reads=0,clocks=0,alliances=0;
+    auto devices=OwnerClientDevices();devices.configInt=[&](auto key,auto fallback) { CHECK(key=="predictableGeysers");++reads;config.ReadInt(key,fallback);return fallback; };devices.wallSeconds=[&] { ++clocks;return 27.5; }; //실제 Config의 현재값과 명시 벽시각 입력만 선택한다.
+    scene.owner->BindDevices(std::move(devices));scene.players->Initialize([&](auto,auto) { ++alliances; });auto records=scene.players->Records();
+    for (std::size_t owner=0;owner<9;++owner) records[owner*0xb4+0x50]=0; //아홉 실제 기록의 비활성 Player 입력으로 생성/방송/전투를 선택하지 않는다.
+    const auto randomBefore=scene.random->Game().State();scene.owner->State().notice.historyCounter=31;
+    body->GenerateLocalGeysers();CHECK(reads==1 && clocks==0);CHECK(!config.Set("predictableGeysers","0"));body->GenerateLocalGeysers();CHECK(reads==2 && clocks==1);CHECK(config.Set("predictableGeysers","1"));body->GenerateLocalGeysers();CHECK(reads==3 && clocks==1);
+    CHECK(alliances!=0 && scene.players->Initialized() && &scene.Body()==body && scene.storage->Generation()==0 && !scene.storage->Borrowed() && scene.random->Game().State()==randomBefore && scene.owner->State().notice.historyCounter==31 && body->LastPacket().empty());scene.owner->ReleaseDevices();
+}
+
+// 재결합 중 선택된 장치/함수의 수명과 예외를 보존하고 반납 뒤 Session 효과로 우회하지 않는다.
+TEST_CASE(ConstructionOwner_ClientDevicesKeepSelectedCallAndDoNotFallbackAfterRelease) {
+    LongConstructionScene scene;auto* body=&scene.Body();std::weak_ptr<int> watch;std::uint32_t calls=0,runtimeCalls=0;
+    auto next=OwnerClientDevices();next.configInt=[&](auto,auto)->std::int32_t { ++calls;throw std::runtime_error("다음 Client 설정 실패"); }; //다음 호출은 새 실제 장치 집합만 선택한다.
+    {
+        auto selected=std::make_shared<int>(9);watch=selected;auto first=OwnerClientDevices();first.configInt=[selected,&watch,&scene,&next,&calls](auto,auto)->std::int32_t { ++calls;scene.owner->BindDevices(next);CHECK(!watch.expired());throw std::runtime_error("선택 Client 설정 실패"); };scene.owner->BindDevices(std::move(first)); //선택 중 외부 집합 교체도 현재 함수/집합을 무효화하지 않는다.
+    }
+    bool failed=false;try { body->GenerateLocalGeysers(); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="선택 Client 설정 실패"; }CHECK(failed && calls==1 && watch.expired());
+    auto invalid=OwnerClientDevices();invalid.tell={};CHECK(OwnerRejected([&] { scene.owner->BindDevices(std::move(invalid)); }));failed=false;try { body->GenerateLocalGeysers(); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="다음 Client 설정 실패"; }CHECK(failed && calls==2);
+    auto runtime=std::make_shared<ClientConstructionRuntimeBindings>();runtime->effects.configInt=[&](auto,auto)->std::int32_t { ++runtimeCalls;throw std::logic_error("반납 뒤 선택 금지된 Session 설정"); };scene.owner->BindRuntime(runtime);scene.owner->ReleaseDevices();CHECK(OwnerRejected([&] { body->GenerateLocalGeysers(); }));CHECK(runtimeCalls==0 && calls==2 && scene.players->Base()==0 && scene.storage->Generation()==0 && !scene.storage->Borrowed());
 }
