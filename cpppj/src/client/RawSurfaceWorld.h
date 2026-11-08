@@ -50,6 +50,16 @@ struct RawSurfaceRewardDevices {
     std::function<void()> refreshSp; // 실제 현재 예산 serial의 Push/Attach/깊이 복원을 호출한다.
     std::function<void(std::uint32_t,std::int32_t)> creditWallet; // 원본 조기 반환 뒤 같은 Player/brain 지갑에 가산한다.
 };
+// 현재 Client의 순수 UI 기억/전역 소리를 공통 삭제의 장기 장치로 빌린다.
+struct RawSurfaceDeletionDevices {
+    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> rememberPlacement; // 같은 선택 owner의 실제 rememberedPoint/mouseType을 쓴다.
+    std::function<void(o::Sid)> unitLost; // 실제 같은 SoundPlayer의 unitLost.wav를 재생한다.
+};
+// Session 파생 종속 삭제만 현재 World 수명으로 빌리고 반납 뒤 저장하지 않는다.
+struct RawSurfaceDeletionBindings {
+    o::SquidDeletionHooks hooks; // 현재 Session의 기존 실제 파생 forward를 그대로 사용한다.
+    std::function<std::shared_ptr<void>()> pin; // 이미 공개된 실제 전체 Runtime을 선택 호출 동안만 보유한다.
+};
 struct RawSurfaceResourceDevices { //같은Client게임난수와선택된큰자산장치만장기로빌린다.
     std::function<o::GameRandom&()> random; //새seed/snapshot없이실제현재GameRandom한개를조회한다.
     std::function<void(o::Sid)> carrierCheck; //실제가상cc의현재Carrier검사를선택위치에서호출한다.
@@ -93,6 +103,9 @@ private:
     o::RawCheckingFlag checking_; // 대여/World반납뒤에도같은현재Client진단DWORD를읽는다.독립저장소기본값은0이다.
     o::SquidPostPopDevices postPopDevices_; //현재실제Client AI/로컬owner/선택의장기장치다.
     std::weak_ptr<const RawSurfacePopBindings> popRuntime_; //현재typed장치/외부Kernel만짧게빌리고반납뒤장기기본전송을사용한다.
+    RawSurfaceDeletionDevices deletionDevices_; // 실제 Client 장치만 장기 보관하며 Session을 소유하지 않는다.
+    std::weak_ptr<const RawSurfaceDeletionBindings> deletionRuntime_; // 현재 파생 종속 효과만 weak로 빌린다.
+    void RestoreDeletionGlobals(); // fresh 대여와 같은 owner 결합 뒤 현재 원문 주소만 복구하며 값은 쓰지 않는다.
     RawSurfaceRewardDevices rewardDevices_; // 같은 실제 SP/모드 owner를 처리기보다 오래 보관한다.
     RawSurfaceResourceDevices resourceDevices_; //실제Client장치만보관하며짧은Session주소를저장하지않는다.
     RawSurfaceProcessDevices processDevices_; //실제Native선택/정리장치만보관하며World/Session을캡처하지않는다.
@@ -139,6 +152,9 @@ public:
     std::uint32_t CurrentProcessSelection() const; //Native공통삭제의선택비교위치에서실제Client전체DWORD를현재조회한다.
     void BindResourceDevices(RawSurfaceResourceDevices devices); //첫자원파생앞에실제장기장치만연결하며난수/생성/대여는실행하지않는다.
     void BindRewardDevices(RawSurfaceRewardDevices devices); // 첫 Native 사용 전에 실제 장치만 연결하며 SP/난수/World를 초기화하지 않는다.
+    void BindDeletionDevices(RawSurfaceDeletionDevices devices); // 첫 공통 삭제 전에 실제 UI/소리 장치만 연결한다.
+    void BindDeletionRuntime(const std::shared_ptr<const RawSurfaceDeletionBindings>& runtime); // 현재 World의 실제 파생 종단만 짧게 빌린다.
+    o::SquidDestroyLifecycle& CommonDeletion(); // 같은 장기 공통 깊이/장부/Graph/보상을 실제 Native caller가 공유한다.
     o::SquidRewardState& RewardState(); // 같은 장기 전역 뷰를 Session과 보상 caller가 공유한다.
     o::SquidReward& Reward(); // 같은 Pool/TYPE/장부의 장기 HP·보상을 필요한 순간 한 번 구성한다.
     void BindProcessDevices(RawSurfaceProcessDevices devices); //첫Host/삭제기전현재Client장치만결합하며선택/삭제를실행하지않는다.
@@ -255,6 +271,7 @@ private:
     std::unique_ptr<o::RawNuggetRegular> resourceNuggetRegular_; //장기기본Host의실제왕복/낙하본문이며현재Sessionoverride를보존한다.
     o::SquidRewardState rewardState_; // Session 이후에도 같은 현재 장기 모드/TYPE/비율을 읽는다.
     std::unique_ptr<o::SquidReward> reward_; // Pool/TYPE/장부보다 먼저 반납하며 지역 Session callback을 저장하지 않는다.
+    std::unique_ptr<o::SquidDestroyLifecycle> commonDeletion_; // 같은 장기 HP/Graph/장부보다 먼저 반납한다.
     std::unique_ptr<NativeFortSaveVirtual> fortSaveVirtual_; //같은 Storage/GameAux를 빌리는 실제 조회기이며 해당 소유자보다 먼저 반납한다.
     std::unique_ptr<o::RawNuggetPostPop> resourceNugget_; //같은Host/난수/확보메모리의너겟후처리다.
     std::unique_ptr<o::RegularProcess> resourceRegular_; //할당과생성사이동일new28의소유권만보존한다.

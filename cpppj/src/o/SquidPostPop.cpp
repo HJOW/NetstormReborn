@@ -58,6 +58,8 @@ std::span<const std::uint32_t> SquidPostPopList::Items() const {
     const auto used=Count();if (used>Capacity()) throw std::logic_error("postPop 목록 count 범위 오류");
     return Storage().first(used);
 }
+// 실제 같은 현재 저장소/행의 장기 getter 묶음인지 확인하며 NULL 정체성은 재사용하지 않는다.
+bool SquidPostPopList::MatchesCurrentSource(const void* owner,std::uint32_t slot) const { return owner && current.storage && current.sourceOwner==owner && current.sourceSlot==slot; }
 // 기존 독립 자료가 있으면 별도 숨은 사본을 남기지 않고 연결을 거부한다.
 void SquidPostPopList::BindCurrent(CurrentBinding binding) {
     if (current.storage || !entries.empty() || count || !binding.storage || !binding.capacity || !binding.readCount || !binding.writeCount)

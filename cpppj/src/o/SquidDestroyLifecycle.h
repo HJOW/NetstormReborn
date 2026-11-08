@@ -31,6 +31,15 @@ struct SquidDeletionState {
     const float& LostX() const { return sharedLostX ? *sharedLostX : lostX; } // const 관측도 같은 실제 X를 읽는다.
     float& LostY() { return sharedLostY ? *sharedLostY : lostY; } // X와 Y를 별개의 실제 주소에 보존한다.
     const float& LostY() const { return sharedLostY ? *sharedLostY : lostY; } // const 관측도 같은 실제 Y를 읽는다.
+    const std::uint32_t* sharedLoadingDepth{};const bool* sharedFortMode{}; // Native 소리/좌표 억제의 현재005c89b8 DWORD와00594fb8 bool이다.
+    const std::uint32_t* sharedSilentType{}; // 현재005412a4의 레인 바리케이드 TYPE를 소리 관문에서만 읽는다.
+    const std::uint32_t* sharedSpecialSurfaceType{};const std::uint32_t* sharedReplacementSurfaceType{};const std::uint32_t* sharedLargeSurfaceType{}; // 같은 noIsland/fakeSurface 전역을 Graph 분할이 현재 조회한다.
+    bool LoadingSuppressed() const { return sharedLoadingDepth ? *sharedLoadingDepth!=0:unitLostSuppressed1; } // 원문 loadingDepth 비영을 bool 사본으로 바꾸지 않는다.
+    bool FortSuppressed() const { return sharedFortMode ? *sharedFortMode:unitLostSuppressed2; } // 효과 뒤 현재 fort 모드를 다시 읽는다.
+    std::uint32_t SilentType() const { return sharedSilentType ? *sharedSilentType:silentType; } // CD/독립 입력만 기존 타입을 사용한다.
+    std::uint32_t SpecialSurfaceType() const { return sharedSpecialSurfaceType ? *sharedSpecialSurfaceType:specialSurfaceType; } // Graph H 치환 대상의 현재 전체 DWORD다.
+    std::uint32_t ReplacementSurfaceType() const { return sharedReplacementSurfaceType ? *sharedReplacementSurfaceType:specialSurfaceReplacementType; } // 선택된 H 프레임의 실제 현재 대체 타입이다.
+    std::uint32_t LargeSurfaceType() const { return sharedLargeSurfaceType ? *sharedLargeSurfaceType:largeSurfaceType; } //9칸 감소 대상을 같은 현재 fakeSurface로 판단한다.
 };
 // 객체 삭제 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct SquidDeletionHooks {
@@ -38,6 +47,8 @@ struct SquidDeletionHooks {
     std::function<void(const SquidDeletionEvent&)> emit;
     std::function<void(const SquidDestroyEvent&)> forward; // 종속 가상 메서드/전파를 별도로 연결한다.
     std::function<std::uint32_t()> selectedRaw; //Native Pre가실제비교위치에서읽는현재Client전체DWORD이며기존typed Sid state는보존한다.
+    std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> rememberPlacement; // Native004d5440의 실제 UI 기억점/TYPE를 기록한다. 독립 입력은 기존 상태 기록을 유지한다.
+    std::function<std::uint32_t()> localOwner; // Native의 같은 현재00540c70을 각 비교 위치에서 읽는다.
 };
 // 공통 pre/postDestroy의 비전투 선택·공급/작업장 목록·타입 통계·비용 장부를 복원한다.
 class SquidDestroyLifecycle {
@@ -63,6 +74,7 @@ private:
     std::uint8_t Owner(Sid sid) const;
     bool Ordinary(Sid sid) const;
     bool LostNotice(Sid sid,std::uint32_t flags) const;
+    std::uint32_t LocalOwner() const; // 실제 Native는 장기 Client getter를 사용하고 독립 typed는 기존 장부 BYTE를 쓴다.
     // encoded 비용은 postPop과 같은 인코딩 접두 결과를 해독하고 DWORD 감김을 보존한다.
     std::int32_t RemainingCost(Sid sid) const;
     // 선택 해제의 외부 UI 경계와 논리 선택 번호를 함께 처리한다.

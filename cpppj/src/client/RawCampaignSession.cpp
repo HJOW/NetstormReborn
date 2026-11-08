@@ -1103,7 +1103,7 @@ struct RawCampaignSession::Impl {
         assetState.sharedTemples=&sidLists.temples;assetState.sharedOutposts=&sidLists.outposts;assetState.sharedGeysers=&sidLists.geysers;
         // 원문 전체 초기화가 만든 실제 Player 배열과 같은 공장 목록을 연결한다.
         for (std::uint32_t owner=0;owner<9;++owner) {
-            playerUse->BindFactory(core.bookkeeping.ownerFactories[owner],owner); // +0/+4/+8을 매번 읽으며 SID 목록 사본을 만들지 않는다.
+            if (world.Storage()->UsesNativeTransmissionDevices()) playerUse->ReuseOrBindFactory(core.bookkeeping.ownerFactories[owner],owner);else playerUse->BindFactory(core.bookkeeping.ownerFactories[owner],owner); // +0/+4/+8을 매번 읽으며 SID 목록 사본을 만들지 않는다.
             gunTargetState.allyMasks[owner]=1U<<owner;gunState.allies[owner][owner]=true;
         }
         // 방향별 동맹/flag는 실제 현재 Player와 같은81DWORD를 각 총 판정 위치에서 읽는다.
@@ -2662,7 +2662,7 @@ struct RawCampaignSession::Impl {
             services.player.log(29,"AI"+std::to_string(std::bit_cast<std::int32_t>(Read(raw,0x260)))+": "+text+"\n");
         }; // 기존 피해 로그와 같은 원본 종류29/현재 Player 장치를 사용한다.
         aiObjects=std::make_unique<RawAiObjectNotice>(aiMemory,core.pool,core.types,players,core.processState.Now(),researchOutpost,[this] { return core.ownerMode.challenge; },std::move(objects));
-        core.postPop.BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); });world.CommonDeletion().BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); }); // 두 원본 통지 지점이 같은 현재 본체에 도달한다.
+        core.postPop.BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); });if (!world.Storage()->UsesNativeTransmissionDevices()) world.CommonDeletion().BindPatchAiNotice([this](auto owner,auto sid,auto added) { aiObjects->Notice(owner,sid,added); }); // 두 원본 통지 지점이 같은 현재 본체에 도달한다.
         core.postPop.BindPatchLocalOwner([owner=gameplayGlobals] { return owner->player.battleOwner; }); //AI하위통지후Prepare사본대신같은Client현재owner를읽는다.
         core.postPop.BindPatchSelectionRecheck([this] { //같은현재선택의수명은weak토큰으로확인하고Session정리뒤대여를반납한다.
             const auto link=activeSelection.lock();if (link && link->selection) { link->selection->RecheckMouse([this](auto x,auto y,auto type) { return world.Find(std::bit_cast<float>(x),std::bit_cast<float>(y),type).value; });return; }
@@ -3799,7 +3799,7 @@ struct RawCampaignSession::Impl {
         catch (const std::exception& error) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: %s\n",error.what()); }
         catch (...) { std::fprintf(stderr,"실제 Session Kernel 정리 실패: 알 수 없는 예외\n"); }
         world.BindContainedUnpop({});containedUnpop.reset(); // 실제 Kernel 정리 뒤 파생 부모/UI 수명을 반납하고 World 기본 종단으로 복귀한다.
-        core.postPop.BindPatchAiNotice({});world.CommonDeletion().BindPatchAiNotice({}); // AI 본체/통지 처리기를 해제하기 전에 외부 공통 몸체의 참조를 분리한다.
+        core.postPop.BindPatchAiNotice({});if (!world.Storage()->UsesNativeTransmissionDevices()) world.CommonDeletion().BindPatchAiNotice({}); // AI 본체/통지 처리기를 해제하기 전에 외부 공통 몸체의 참조를 분리한다.
         core.postPop.BindPatchSelectionRecheck({});core.postPop.BindPatchLocalOwner({}); //외부World에이전Session/UI주소를남기지않는다.
         core.postPop.SetDudePostPop(nullptr); // 생성/최초 Pop 모듈보다 먼저 파생 분배를 반납한다.
         core.postPop.SetCarrierStealPostPop(nullptr); // 장기 크랩 몸체보다 먼저 가상 분배를 반납한다.

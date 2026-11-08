@@ -380,7 +380,7 @@ std::unique_ptr<RawSurfaceStorage::Use> RawSurfaceStorage::Acquire() {
     sidLists.PrepareGeneralWorld(); //일반 설치만 기존 새 목록 의미를 유지한다. prepared/반납은 현재 SID/count/용량을 보존한다.
     postPopState=o::SquidPostPopState{.sharedTotalMade=&totalMade,.sharedTotalCost=&gameAux_->TotalCost(),.sharedProviders=&sidLists.providers,.sharedFactories=&sidLists.factories}; //기존일반fresh장부정책만같은주소에서보존한다. prepared/반납에는쓰지않는다.
     postPopState.sharedSuppressed=postPopDevices_.aiNotice ? &ownerMode.challenge:nullptr; //일반fresh후에도같은Native모드주소를다시결합할뿐값은쓰지않는다.
-    deletionState=o::SquidDeletionState{.sharedLostX=&gameAux_->LostX(),.sharedLostY=&gameAux_->LostY()};islandPostPopState=o::IslandPostPopState{1,false}; //일반fresh지역상태호환이며실제공유loadingDWORD는변경하지않는다.
+    deletionState=o::SquidDeletionState{.sharedLostX=&gameAux_->LostX(),.sharedLostY=&gameAux_->LostY()};if (deletionDevices_.unitLost) RestoreDeletionGlobals();islandPostPopState=o::IslandPostPopState{1,false}; //일반fresh지역상태호환이며실제공유loadingDWORD는변경하지않는다.
     totalMade=o::RawTotalMadeStorage{}; // 기존 일반 World의 새 장부3×256 전체0 의미만 유지한다. Native의 각255칸 부분 reset과 구별한다.
     islands=o::RawIslandStorage{};o::ResetRawIslandRecords(islands.records);chunks=o::ChunkMap{}; // 기존 일반 Session의 fresh 입력/Reset/기본 청크 의미를 같은 주소에서 유지한다. Native cleanup이나 최초 할당 복원으로 세지 않는다.
     borrowed_=true;++generation_;return use;

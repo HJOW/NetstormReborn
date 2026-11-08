@@ -109,7 +109,9 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     o::RawIslandPostPop* surface{};/* baseDestroy: 기본 삭제. */ std::unique_ptr<o::RawSquidDestroy> legacyBaseDestroy; //독립typedWorld의기존지역삭제깊이/수명계약만유지한다.
     o::RawSquidDestroy* baseDestroy{}; //Native는동일Storage의장기공통삭제기를빌린다.
     // virtualDestroy: 타입별 가상 삭제 경로를 선택하는 분배기.
-    std::unique_ptr<o::RawSquidDestroyDispatch> virtualDestroy;/* common: 파생 타입 사이에 공유하는 기본 처리기 또는 상태. */ std::unique_ptr<o::SquidDestroyLifecycle> common;
+    std::unique_ptr<o::RawSquidDestroyDispatch> virtualDestroy;/* common: 파생 타입 사이에 공유하는 기본 처리기 또는 상태. */ std::unique_ptr<o::SquidDestroyLifecycle> localCommon; // 독립 typed World의 기존 지역 공통 삭제만 소유한다.
+    o::SquidDestroyLifecycle* common{}; // Native는 Storage의 같은 장기 공통 몸체를 직접 빌린다.
+    std::shared_ptr<RawSurfaceDeletionBindings> deletionRuntime; // 현재 Session의 실제 forward와 pin을 이번 World 수명으로만 소유한다.
     // lifecycle: 수명.
     std::unique_ptr<o::RawSurfaceLifecycle> lifecycle;/* events: 발생한 이벤트 또는 이벤트 처리기. */ std::unique_ptr<o::RawBridgeEvents> events;
     // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트.
@@ -182,7 +184,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
                 if (event.effect!=o::SquidDestroyEffect::Transmit) throw std::logic_error("raw 표면 월드의 미연결 삭제 효과");
             }};
         if (storage->UsesNativeTransmissionDevices()) commonHooks.selectedRaw=[owner=storage.get()] { return owner->CurrentProcessSelection(); }; //Pre진단뒤같은전체DWORD를비교하며Sid snapshot을선행소비하지않는다.
-        common=std::make_unique<o::SquidDestroyLifecycle>(pool,types,bookkeeping,deletion,*baseDestroy,std::move(commonHooks),graph);
+        if (storage->UsesNativeTransmissionDevices()) common=&storage->CommonDeletion();else { localCommon=std::make_unique<o::SquidDestroyLifecycle>(pool,types,bookkeeping,deletion,*baseDestroy,std::move(commonHooks),graph);common=localCommon.get(); } // Native는 새 지역 관찰 처리기를 만들지 않고 같은 실제 장기 보상을 사용한다.
         lifecycle=std::make_unique<o::RawSurfaceLifecycle>(pool,*neighbors,links.connectorType,CommonDeletionHooks(),o::SurfaceLifecycleHooks{
             [this](o::Sid sid,float x,float y) { o::ScheduleBridgeFallChecked(*host,pool,types,sid,x,y,storage->Checking()); },
             [this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); },
@@ -263,7 +265,7 @@ RawSurfaceWorld::RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::R
     std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> storage,bool adoptPrepared,bool* sharedSavedGame,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux,std::shared_ptr<o::FortSerializationGlobals> serialization)
     :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType,processKernel,std::move(storage),adoptPrepared,sharedSavedGame,std::move(authority),std::move(gameAux),std::move(serialization))) {}
 // 프로세스가 빌린 raw 데이터보다 먼저 반납되며 외부 Client Kernel 자체는 파괴하지 않는다.
-RawSurfaceWorld::~RawSurfaceWorld() { BindRuntimePin({});impl_->DrainCurrentProcessesForShutdown();impl_->postPop->ReleaseRuntimeBindings(); } // 현재 대여의 생성 실패/일반 종료만 반납하며 이전 Native 잔류의 최종 소유자는 Storage다.
+RawSurfaceWorld::~RawSurfaceWorld() { BindRuntimePin({});impl_->DrainCurrentProcessesForShutdown();impl_->deletionRuntime.reset();impl_->postPop->ReleaseRuntimeBindings(); } // 현재 대여의 생성 실패/일반 종료만 반납하며 이전 Native 잔류의 최종 소유자는 Storage다.
 // 이 뷰는 내부 모듈의 현재 참조만 돌려주며 새 배열/풀을 만들지 않는다.
 RawWorldCore RawSurfaceWorld::Core() {
     auto& s=*impl_;return {s.pool,s.hash,s.spots,s.types,s.frames,s.shapes,s.bookkeeping,s.ownerMode,
@@ -308,6 +310,7 @@ void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
 // 실제전체owner공개전의직접생성/로드는caller의소유권을사용하고공개뒤의장기전역입구는이장치로외곽수명을pin한다.
 void RawSurfaceWorld::BindRuntimePin(std::function<std::shared_ptr<void>()> pin) {
     auto& state=*impl_;state.runtimePin=std::move(pin);if (state.factoryRuntime) state.factoryRuntime->pin=state.runtimePin;if (state.displayRuntime) state.displayRuntime->pin=state.runtimePin;if (state.popRuntime) state.popRuntime->pin=state.runtimePin;
+    if (state.deletionRuntime) state.deletionRuntime->pin=state.runtimePin; // 같은 파생 종단도 실제 외곽 owner 공개/반납을 따른다.
     if (state.processRuntime) state.processRuntime->pin=state.runtimePin;state.postPop->BindRuntimePin(state.runtimePin);if (const auto current=state.sessionContainedUnpop.lock()) current->BindRuntimePin(state.runtimePin);
 }
 // Session은 엔진을 소유하고 월드는 현재 호출 동안만 pin하여 생성 실패/반납 뒤 수명 밖 접근을 막는다.
@@ -325,9 +328,11 @@ void RawSurfaceWorld::BindDeletion(o::SquidReward& reward,std::function<o::Sid()
         if (!(state.pool.Slot(o::Sid{static_cast<std::uint16_t>(id)})[11]&1U)) throw std::logic_error("공통 삭제 실제 소비자 설치 전 객체가 존재합니다");
     if (!selected || !hooks.emit || !hooks.forward) throw std::invalid_argument("공통 삭제의 실제 선택/효과/파생 경계 누락");
     if (state.storage->UsesNativeTransmissionDevices()) hooks.selectedRaw=[owner=state.storage.get()] { return owner->CurrentProcessSelection(); }; //실제후설치common교체도동일Client전체선택getter를유지한다.
-    auto replacement=std::make_unique<o::SquidDestroyLifecycle>(state.pool,state.types,state.bookkeeping,state.deletion,*state.baseDestroy,
-        std::move(hooks),state.graph,&reward); // 같은Pool/장부가아닌reward는기존생성자가효과전에거부한다.
-    state.common=std::move(replacement);state.deletionSelected=std::move(selected);state.deletionBound=true;
+    if (state.storage->UsesNativeTransmissionDevices()) {
+        if (&reward!=&state.storage->Reward()) throw std::invalid_argument("Native 공통 삭제의 같은 장기 HP/보상 계약");
+        state.deletionRuntime=std::make_shared<RawSurfaceDeletionBindings>(RawSurfaceDeletionBindings{std::move(hooks),state.runtimePin});state.storage->BindDeletionRuntime(state.deletionRuntime);state.common=&state.storage->CommonDeletion();
+    } else { state.localCommon=std::make_unique<o::SquidDestroyLifecycle>(state.pool,state.types,state.bookkeeping,state.deletion,*state.baseDestroy,std::move(hooks),state.graph,&reward);state.common=state.localCommon.get(); } // 독립 typed의 기존 후설치 보상/효과 계약이다.
+    state.deletionSelected=std::move(selected);state.deletionBound=true;
 }
 // 기존표면과후설치된공통body가읽는같은유일전역이다.
 o::SquidDeletionState& RawSurfaceWorld::DeletionState() { return impl_->deletion; }
@@ -384,7 +389,7 @@ void RawSurfaceWorld::ClearProcesses() { impl_->kernel.Clear(); }
 void RawSurfaceWorld::DrainProcesses() { do { impl_->kernel.Clear(); } while (impl_->kernel.Size()); }
 // 완성된 새 Session의 후반 실패도 이전 Native 잔류를 제거하지 않고 자기 현재 처리기만 반납한다.
 void RawSurfaceWorld::DrainCurrentProcessBindingsForShutdown() {
-    impl_->DrainCurrentProcessesForShutdown(); // 명시 종료와 직접 World 소멸이 같은 현재 소유권 필터를 사용한다.
+    impl_->DrainCurrentProcessesForShutdown();impl_->deletionRuntime.reset(); // 실제 현재 Host가 반납된 뒤 Session 파생 삭제 주소도 함께 반납한다. 명시 종료와 직접 World 소멸이 같은 현재 소유권 필터를 사용한다.
 }
 // 명시 World 대여에서 실제 Native 단일 Clear가 끝난 경우만 증빙을 전달한다.
 RawProcessHostStorage::ClearPass RawSurfaceWorld::ClearProcessesForState() {
@@ -392,7 +397,7 @@ RawProcessHostStorage::ClearPass RawSurfaceWorld::ClearProcessesForState() {
 }
 void RawSurfaceWorld::ReturnProcessBindingsForState(RawProcessHostStorage::ClearPass&& pass) {
     if (!impl_->processUse || impl_->returnedProcesses) throw std::logic_error("ProcessHost State 반납의 단일 실제 대여 필요");
-    impl_->returnedProcesses.emplace(impl_->processUse->ReturnForState(std::move(pass)));impl_->processUse.reset();
+    impl_->returnedProcesses.emplace(impl_->processUse->ReturnForState(std::move(pass)));impl_->processUse.reset();impl_->deletionRuntime.reset();
 } // 현재 대여를 소비한 뒤에만 증빙을 보관하며 Kernel/잔류를 강제 정리하지 않는다.
 bool RawSurfaceWorld::ProcessBindingsReturned() const { return bool(impl_->returnedProcesses); } // 실제 반납 객체의 존재만 진단한다.
 // 중첩 로딩의 표면/사제/자산 후처리가 같은 값을 읽게 한다.

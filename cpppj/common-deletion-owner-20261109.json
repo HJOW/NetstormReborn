@@ -1,0 +1,528 @@
+{
+  "unit": 1186,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "summary": "같은 장기 공통 삭제/HP·Graph·장부와 현재 UI/전역을 연결하고 동일 Client의 Player 공장 목록 재진입을 복구했다.",
+  "sourceSha256": {
+    "cpppj/src/client/RawSurfaceWorld.h": "74b6025de762b3bfa7160de99f3dbb89f8fb31972e88e56af412de8ab91e4ee3",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "3c8203b067d4479bcc62ea3d77a0d88be03c63761f25d15eabd55b64265632bf",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "5d429c48c1acdb63936684f63226816c0befb53726898f4db02925952a88a050",
+    "cpppj/src/client/RawCampaignSession.cpp": "51e674b9dda2232dbacde86b441e9558eb58401902ebe3b9eb10ffc861507dff",
+    "cpppj/src/client/ClientMain.cpp": "5d28769934b2c37289b37cbc5e96c2dc7490b255aff118e31d83455e1b373b4f",
+    "cpppj/src/client/CMakeLists.txt": "e3cbfc23a1c86824fad16d3f5b8af39ea81d37feddb0070f645622f0de3ae371",
+    "cpppj/src/o/SquidDestroyLifecycle.h": "14e24806eae854bc204407c68cf6632348f9084a99229dca2c108628b15add36",
+    "cpppj/src/o/SquidDestroyLifecycle.cpp": "a801a93de824aeae0d446446a4cb3ed89ed5c646b99b183eb58909ae6a8aa2fb",
+    "cpppj/src/o/SquidPostPop.h": "712a8bf2bffcbc0a43208b3bcf66da5cef62f05c900ad7e43422619b4ad79842",
+    "cpppj/src/o/SquidPostPopPatch.cpp": "91be7cc35c2b284ede7149d096b14e23c4657dff790304c4718d26561ff3306e",
+    "cpppj/tests/CMakeLists.txt": "69144197f74e250410d38b2f2d3858860b7719e1e41bf17625752ef726e4eb1b",
+    "cpppj/tests/DestroyLifecycleTests.cpp": "ad292c93e181ca2247958bb15436b8e4c26d26941d6f2a362b38d2d5db7b0fa8",
+    "cpppj/src/o/SquidPostPop.cpp": "1ec6e3cf5ca284460f42cd0bbeee054b06bb3ed23ca858860e2f2fda75fa3485",
+    "cpppj/src/client/ClientPlayerRecords.h": "7bcfcaae878d243a20077c1634b688a401835d82328f0ba7c9c87ae337b8ad67",
+    "cpppj/src/client/ClientPlayerRecords.cpp": "b0a84b4de45b50ab68489d4babcba91b0d7932132b0f62388421c3b52caa11de",
+    "cpppj/tests/ClientPlayerRecordsTests.cpp": "a7652b0fd8028ca21ca2a2cc663bc3768d06816f9f2acd4701c6961f5797662b",
+    "cpppj/src/client/RawSurfaceDeletion.cpp": "9c153bbb07431a81bd72d08b655c2b4b06d4ad056c3977f1487868742d4d52e1"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13565952,
+      "sha256": "59acb38358aa4c4ac7f55c91d66f65f7fffab2b78bdccb150272069d2b611876"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "c7b9ad2ab4d02928cb9f8e511e59bcbed5785e9f9971fe473d3589f0db27d2c7"
+    }
+  },
+  "nativeEvidence": [
+    {
+      "entry": "004b0950",
+      "metadata": {
+        "entry": "4b0950",
+        "name": "FUN_004b0950",
+        "size": "778",
+        "ranges": "4b0950-4b0c59",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__thiscall",
+        "call_refs": "6",
+        "data_refs": "37",
+        "jump_refs": "0",
+        "callers": "41e9ad,41f910,422215,4422f8,44b816,490709",
+        "data_ref_from": "501de4,50245c,502524,5025ec,5026b4,50278c,502854,50291c,5029e4,502abc,502b84,502e7c,502f44,50300c,5030d4,50319c,503374,506e64,506f1c,5070d4,5075ec,507784,508cdc,5092e4,50939c,5096b4,50976c,509824,509bac,50b584,50c3c4,50ca04,50cc1c,50db8c,50e89c,50ebac,50f554",
+        "jump_ref_from": "",
+        "calls": "4166e0,44c2f0,44f7a0,45ae60,462e50,4637b0,472ff0,4900a0,49a840,4a9cb0,4ac200,4ad390,4ad680,4c25a0,4c25c0,4d5430,4d5440,4d5c60,4e0620",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "1",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __thiscall FUN_004b0950(void * this)"
+      },
+      "ranges": [
+        {
+          "first": "004b0950",
+          "lastInclusive": "004b0c59",
+          "sha256": "b96cd8a6ee2da7f22bd9dd7da88c08d5222a464c0ebd4974861a07bc050d8801"
+        }
+      ],
+      "cSha256": "b73f56c1d0fe8a80b604405cd03ff0e1f3997f455e6521d0f6ed3bdf8fcf52f2"
+    },
+    {
+      "entry": "004b0840",
+      "metadata": {
+        "entry": "4b0840",
+        "name": "FUN_004b0840",
+        "size": "270",
+        "ranges": "4b0840-4b094d",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__thiscall",
+        "call_refs": "6",
+        "data_refs": "40",
+        "jump_refs": "0",
+        "callers": "4223a6,4426b6,44bcfd,450952,48ebc8,49a4d2",
+        "data_ref_from": "501de8,502388,502460,502528,5025f0,5026b8,502790,502858,502920,5029e8,502ac0,502b88,502c50,502d08,502dc8,502e80,502f48,503010,5030d8,5031a0,503378,506db0,506e68,5070d8,5075f0,507788,5092e8,5093a0,5096b8,509770,509828,509bb0,50a760,50b588,50c3c8,50ca08,50cc20,50db90,50ebb0,50ee20",
+        "jump_ref_from": "",
+        "calls": "41def0,4633c0,49a840,4ade70,4b1810,4e49c0",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "1",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __thiscall FUN_004b0840(void * this)"
+      },
+      "ranges": [
+        {
+          "first": "004b0840",
+          "lastInclusive": "004b094d",
+          "sha256": "c60d097c835ec58eb96dc238408b83a1462f77ff3a0cd3d8d2bfcfa052d0eaae"
+        }
+      ],
+      "cSha256": "77c46f4ab9bf3f962bca04e901841c4e1741ff9c442a1ccc43c03409cbc06b8d"
+    },
+    {
+      "entry": "004166e0",
+      "metadata": {
+        "entry": "4166e0",
+        "name": "FUN_004166e0",
+        "size": "60",
+        "ranges": "4166e0-41671b",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__cdecl",
+        "call_refs": "2",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "4b0c09,4b0f56",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "414de0",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "0",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __cdecl FUN_004166e0()"
+      },
+      "ranges": [
+        {
+          "first": "004166e0",
+          "lastInclusive": "0041671b",
+          "sha256": "f36d93bdb443e02a95ded64ee2847d5fd95d695f960d9e23421078e8760fd7d4"
+        }
+      ],
+      "cSha256": "c755a8d4d84bd2fc317adae5fa872400f88efe29d75e6774f82861e51deeae64"
+    },
+    {
+      "entry": "004d5c60",
+      "metadata": {
+        "entry": "4d5c60",
+        "name": "FUN_004d5c60",
+        "size": "33",
+        "ranges": "4d5c60-4d5c80",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__cdecl",
+        "call_refs": "9",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "4af9c2,4b09b5,4b3077,4c3c4e,4c3ce4,4c3d6a,4c3e02,4c3e3e,4c4510",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "4d5490,4d5bb0",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "0",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __cdecl FUN_004d5c60()"
+      },
+      "ranges": [
+        {
+          "first": "004d5c60",
+          "lastInclusive": "004d5c80",
+          "sha256": "ec3878f1c50446536735e7cd8e59f331d4d636f02ec778690d46dbf549625d6c"
+        }
+      ],
+      "cSha256": "c2f7beab19b9ded5ba389765b599c31d01027d9e5ac350e403e9282e7be739ca"
+    },
+    {
+      "entry": "004d5440",
+      "metadata": {
+        "entry": "4d5440",
+        "name": "FUN_004d5440",
+        "size": "55",
+        "ranges": "4d5440-4d5476",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__cdecl",
+        "call_refs": "2",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "4b09ad,4d5f32",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "49a840",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "0",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __cdecl FUN_004d5440()"
+      },
+      "ranges": [
+        {
+          "first": "004d5440",
+          "lastInclusive": "004d5476",
+          "sha256": "4640cbf32986fc8dfb2c3a0379e4b59537ba8c66bbde87137c2ed1c287593d69"
+        }
+      ],
+      "cSha256": "c793b170b1ee126a86492be2ee6a32e6e6fdb0011670e8ebbef888bfc262c4a1"
+    },
+    {
+      "entry": "004637b0",
+      "metadata": {
+        "entry": "4637b0",
+        "name": "FUN_004637b0",
+        "size": "540",
+        "ranges": "4637b0-4639cb",
+        "noreturn": "0",
+        "thunk": "0",
+        "cc": "__cdecl",
+        "call_refs": "1",
+        "data_refs": "0",
+        "jump_refs": "0",
+        "callers": "4b0a69",
+        "data_ref_from": "",
+        "jump_ref_from": "",
+        "calls": "460cd0,462ac0,462bc0,462c30,462f10,463330,49a840,4b1e70,4b24c0,4e0620",
+        "has_ret": "1",
+        "indirect_jumps": "",
+        "param_count": "0",
+        "sig_source": "DEFAULT",
+        "signature": "undefined __cdecl FUN_004637b0()"
+      },
+      "ranges": [
+        {
+          "first": "004637b0",
+          "lastInclusive": "004639cb",
+          "sha256": "d0226111a77c750a6bb273145caa2f19c3d34c270cc6bfde70328f1654fa122f"
+        }
+      ],
+      "cSha256": "7d191b0ee952f4c20a8107d7a1934b1182ee00f8b697fc183dcf7222bd0f84fa"
+    }
+  ],
+  "builds": {
+    "initial": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_common_deletion_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 422.3589358329773,
+      "sourcesUnchanged": true
+    },
+    "beforeRebind": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_common_deletion_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 24.808363914489746,
+      "sourcesUnchanged": true
+    },
+    "final": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_common_deletion_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 1033.0433673858643,
+      "sourcesUnchanged": true
+    },
+    "compilerLinkerDiagnostics": {
+      "build-initial.log": [],
+      "build-before-rebind.log": [],
+      "build.log": []
+    }
+  },
+  "tests": {
+    "exeSha256": "e0cb91467ae0a122ed39401e3a70fd32f2c103465453280d2aaa8797cd5fe61a",
+    "exitCode": 0,
+    "counts": [
+      [
+        "24",
+        "0"
+      ]
+    ],
+    "multiplayerExecutions": 0
+  },
+  "live": {
+    "tutorial4": {
+      "passed": true,
+      "unit": 1186,
+      "mission": "tutorial4",
+      "command": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1186\\live-tutorial4-final-agents\\game",
+        "--mcp",
+        "--window",
+        "--no-audio",
+        "--set",
+        "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+      ],
+      "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "exeSha256Before": "59acb38358aa4c4ac7f55c91d66f65f7fffab2b78bdccb150272069d2b611876",
+      "exeSha256After": "59acb38358aa4c4ac7f55c91d66f65f7fffab2b78bdccb150272069d2b611876",
+      "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1186\\live-tutorial4-final-agents\\game",
+      "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1186\\live-tutorial4-final-agents\\user-data",
+      "entryConfirmed": true,
+      "quitRequested": true,
+      "exitCode": 0,
+      "dataUnchanged": true,
+      "protectedUnchanged": true,
+      "protectedDifferences": [],
+      "events": [
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "click",
+          "arg": "Main Menu"
+        },
+        {
+          "op": "click",
+          "arg": "MORE"
+        },
+        {
+          "op": "click",
+          "arg": "OK"
+        },
+        {
+          "op": "right",
+          "arg": "world:sunFactory"
+        },
+        {
+          "op": "click",
+          "arg": "Put Knowledge into Production"
+        },
+        {
+          "op": "click",
+          "arg": "Wind Generator"
+        },
+        {
+          "op": "click",
+          "arg": "production:75"
+        },
+        {
+          "op": "pointer",
+          "arg": "0x80010000,960,635"
+        },
+        {
+          "op": "click",
+          "arg": "screen:960,635"
+        }
+      ],
+      "observations": [
+        "main-0",
+        "main-1",
+        "main-2",
+        "entry-0",
+        "entry-1",
+        "entry-2",
+        "ready",
+        "factory-menu",
+        "knowledge-menu",
+        "wind-production",
+        "generator-selected",
+        "generator-pointer",
+        "before-generator",
+        "after-generator",
+        "generator-settled",
+        "before-close"
+      ],
+      "checks": [
+        {
+          "before": "before-generator",
+          "after": "after-generator",
+          "type": 75,
+          "owner": 1,
+          "newLiveServerObjects": [
+            [
+              "15074",
+              "75",
+              "1",
+              "0",
+              "125",
+              "85"
+            ]
+          ],
+          "constructionRequestsBefore": 0,
+          "constructionRequestsAfter": 1,
+          "passed": true
+        },
+        {
+          "kind": "normal-entry-and-wait",
+          "before": "after-generator",
+          "after": "generator-settled",
+          "gameTimeBefore": 13.56,
+          "gameTimeAfter": 23.984,
+          "mission": "tutorial4",
+          "passed": true
+        }
+      ],
+      "commandErrors": [],
+      "failure": null,
+      "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+    },
+    "editorTwoCycles": {
+      "exitCode": 0,
+      "protectedUnchanged": true,
+      "exeUnchanged": true,
+      "multiplayer": 0,
+      "testBattle": 0
+    },
+    "editorObservations": 11
+  },
+  "failedAttempt": {
+    "path": "extracted/cpp-resume-1186/live-editor-fixed",
+    "checks": {
+      "exitCode": 1,
+      "protectedUnchanged": true,
+      "exeUnchanged": true,
+      "multiplayer": 0,
+      "testBattle": 0
+    },
+    "reason": "두 번째 Edit에서 같은 장기 Player 공장 목록의 기존 현재 getter를 중복 Bind하여 거부됐다. 실제 데이터는 보존됐으며 동일 저장소/행의 명시 Native 재사용으로 보완했다.",
+    "testsBeforeRebind": {
+      "exeSha256": "5f64474a04e523dc227be75218723b076c90c535ace527743d97260fcfb9730b",
+      "exitCode": 0,
+      "counts": [
+        [
+          "18",
+          "0"
+        ]
+      ],
+      "multiplayerExecutions": 0
+    }
+  },
+  "audit": {
+    "checks": {
+      "frozenSourcesUnchanged": true,
+      "commonUsesSameStateDepthGraphReward": true,
+      "nativeWorldBorrowsSameCommon": true,
+      "nativeBindingRequiresSameReward": true,
+      "runtimeForwardHasRealPin": true,
+      "threeExplicitRuntimeReturns": true,
+      "noSessionAiCaptureInNativeCommon": true,
+      "sameCurrentLoadingDepth": true,
+      "originalCoordinateBitsToRemember": true,
+      "currentMetamapSuppression": true,
+      "nativeFactoryReuseRequiresSameOwnerSlot": true,
+      "genericFactoryBindRetainsOriginalContract": true,
+      "onlyNativeSessionSelectsFactoryReuse": true,
+      "currentOwnerComparedWithoutByteTruncation": true
+    },
+    "allPassed": true,
+    "sources": 17,
+    "nativeFunctions": 6,
+    "mpExecutions": 0,
+    "lastDecompilation": {
+      "client": "2026-11-03",
+      "root": "2026-11-07",
+      "host": "HJOW-Athlon"
+    }
+  },
+  "protected": {
+    "files": 2800,
+    "unchangedAfterDeveloperAgentsCommit": true,
+    "transition": {
+      "commit": "551d27aee3668d8ebe09c155ff498a038586cd03",
+      "changes": {
+        "AGENTS.md": {
+          "before": "1ec42b0236aad88bc21b32c94d0396ace58794f24777d4434151f950f4b1c679",
+          "after": "e070c27a763625e7933632ab0c3b82572dac9f48c95fca4bb36ca3252669e874"
+        }
+      },
+      "otherProtectedFilesUnchanged": 2799,
+      "agentModifiedAgents": false,
+      "reason": "개발자 커밋이 진행상황 요약 대상에 webpj를 추가했다. 새 내용을 다시 읽었고 실행/수정 정책은 그대로다.",
+      "blockedBeforeGameLaunch": true
+    }
+  },
+  "executions": {
+    "originalGames": 0,
+    "multiplayerGames": 0,
+    "newMultiplayerTests": 0,
+    "multiplayerPacketTests": 0,
+    "captureSacrificeAttackWin": 0,
+    "dedicatedAirUnits": 0
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03",
+    "root": "2026-11-07",
+    "host": "HJOW-Athlon"
+  },
+  "remaining": [
+    "NoWorld 자원/파생 삭제·ConstructionRuntime·큰 AI/Carrier owner와 다른 Form",
+    "비영 brain과 파생 종속 Release/Destroy의 전체 NoWorld 종단. 누락은 실제 선택 위치에서 명시 실패하며 성공으로 대신하지 않는다.",
+    "Source/listener/공통표/Poll·잔여 F/큐·전체 Snapshot/JoinTestBattle·M6 마감",
+    "M7~M8·K1~K5·S1~S4·B1~B4 및 별도 후속 요구사항"
+  ]
+}

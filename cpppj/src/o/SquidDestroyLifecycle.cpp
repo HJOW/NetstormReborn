@@ -14,13 +14,15 @@ constexpr std::uint32_t kFactoryMask=0x4200,kProvider=0x10000000,kPlacement=0x30
 constexpr std::uint32_t kNoRefund=0x200000,kNoGraph=0x2000000,kDestroyGraph=0x800,kSilentGenus=0x200000;
 // 원본 타입 비용 표에 더하는 인코딩 계수다.
 constexpr std::int64_t kCostBias=23;
-// 정렬되지 않은 float의 비트는 원본 바이트 순서대로 읽는다.
-float Coordinate(std::span<const std::uint8_t> raw,std::size_t offset) {
+// 비정렬 좌표 DWORD를 원시 비트 그대로 읽어 float 연산과 UI 기억점을 구별한다.
+std::uint32_t CoordinateBits(std::span<const std::uint8_t> raw,std::size_t offset) {
     std::uint32_t bits=0;
     // 호스트 엔디언/정렬을 결과에 섞지 않는다.
     for (std::size_t i=0;i<4;++i) bits|=static_cast<std::uint32_t>(raw[offset+i])<<(8*i);
-    return std::bit_cast<float>(bits);
+    return bits;
 }
+// 좌표 기록만 같은 원문 DWORD를 float로 해석하며 UI 기억점은 원시 비트를 직접 전달한다.
+float Coordinate(std::span<const std::uint8_t> raw,std::size_t offset) { return std::bit_cast<float>(CoordinateBits(raw,offset)); }
 // 원본 Array::remove는 모든 중복을 순서대로 압축하고 inactive 꼬리 메모리는 지우지 않는다.
 void Remove(SquidPostPopList& list,Sid sid,bool native) {
     if (!native) { list.RemoveAll(sid.value);return; }
@@ -72,9 +74,11 @@ std::uint8_t SquidDestroyLifecycle::Owner(Sid sid) const { return Object(sid)[po
 // abstract 또는 buried이면 글로벌 장부/비용 경로를 생략한다. owner 목록 제거와 구별한다.
 bool SquidDestroyLifecycle::Ordinary(Sid sid) const { return !(Object(sid)[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&9); }
 // 원본 unitLost 조건이며 패치 silentType의 소리 제외는 좌표 기록과 별도로 적용한다.
+std::uint32_t SquidDestroyLifecycle::LocalOwner() const { return destroy_.HasPatchDiagnostics() && hooks_.localOwner ? hooks_.localOwner():bookkeeping_.localOwner; } // 현재 getter는 효과 사이의 다음 비교에서만 실행한다.
+// 원문 소리와 손실 좌표가 공유하는 현재 억제 관문이다.
 bool SquidDestroyLifecycle::LostNotice(Sid sid,std::uint32_t flags) const {
-    return Type(sid).group!=10 && !(flags&(kNoRefund|kDestroyGraph)) && Owner(sid)==bookkeeping_.localOwner &&
-        !(Type(sid).flags2&kSilentGenus) && !state_.unitLostSuppressed1 && !state_.unitLostSuppressed2;
+    return Type(sid).group!=10 && !(flags&(kNoRefund|kDestroyGraph)) && Owner(sid)==LocalOwner() &&
+        !(Type(sid).flags2&kSilentGenus) && !state_.LoadingSuppressed() && !state_.FortSuppressed();
 }
 // postDestroy의 x87 뺄셈/0방향 절삭을 low DWORD로 보존한다.
 std::int32_t SquidDestroyLifecycle::RemainingCost(Sid sid) const {
@@ -108,7 +112,7 @@ void SquidDestroyLifecycle::ValidatePre(Sid sid,std::uint32_t flags) const {
     if (!aiNotice_ && owner && bookkeeping_.aiAttached[owner]) throw std::logic_error("삭제 훅 AI 통지 미복원");
     // 보상 객체가 있으면 계산 입력 오류를 쓰기 전에 거부하고, 없으면 외부 보상 콜백이 필요하다.
     if (!(flags&kNoRefund)) { if (reward_) static_cast<void>(reward_->Plan(sid,(flags>>16)&15,false)); else if (!hooks_.emit) throw std::invalid_argument("삭제 훅 보상 콜백 누락"); }
-    if (LostNotice(sid,flags) && (pool_.Edition()==OriginalEdition::Cd1072 || raw[kType]!=state_.silentType) && !hooks_.emit)
+    if (LostNotice(sid,flags) && (pool_.Edition()==OriginalEdition::Cd1072 || raw[kType]!=state_.SilentType()) && !hooks_.emit)
         throw std::invalid_argument("삭제 훅 소리 콜백 누락");
     if (type.flags1&kProvider) static_cast<void>(bookkeeping_.Providers().Items());
     if (type.flags2&kFactoryMask) static_cast<void>(bookkeeping_.Factories().Items());
@@ -141,11 +145,11 @@ void SquidDestroyLifecycle::PreGraph(Sid sid,std::uint32_t flags,bool validate) 
         if (validate) graph_->ValidateFree(number);else graph_->Free(number);return;
     }
     std::optional<std::uint8_t> sourceType;
-    if (raw[kType]==state_.specialSurfaceType) {
+    if (raw[kType]==state_.SpecialSurfaceType()) {
         if (graph_->Frame(sid).side!='H') return;
-        sourceType=state_.specialSurfaceReplacementType;
+        const auto replacement=state_.ReplacementSurfaceType();if (replacement>255) throw std::out_of_range("삭제 Graph의 현재 대체 TYPE BYTE 범위");sourceType=static_cast<std::uint8_t>(replacement);
     }
-    const auto removed=static_cast<std::uint8_t>(sourceType.value_or(raw[kType])==state_.largeSurfaceType ? 9 : 1);
+    const auto removed=static_cast<std::uint8_t>(sourceType.value_or(raw[kType])==state_.LargeSurfaceType() ? 9 : 1);
     if (validate) graph_->ValidateDetach(sid,state_.rebuildGraph,removed,sourceType);
     else graph_->Detach(sid,state_.rebuildGraph,removed,sourceType);
 }
@@ -160,14 +164,14 @@ void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
         if (Object(sid)[kType]<kFirstAssetTypeNumber) destroy_.AssertPatch("!isForm()",0x771);
     } else ValidatePre(sid,flags); // 기존 typed/CD의 문서화된 선검사는 유지한다. 실제 PATCH는 보상 가상Count를 중복 호출하지 않는다.
     if (IsSelected(sid)) {
-        if (!Ordinary(sid) && (Type(sid).flags2&kPlacement)) {
-            const auto raw=Object(sid);state_.placementX=Coordinate(raw,kX);state_.placementY=Coordinate(raw,kY);
-            state_.placementType=raw[kType];bookkeeping_.pendingPlacement=true;
+        if (!Ordinary(sid)) {
+            if (destroy_.HasPatchDiagnostics() && hooks_.rememberPlacement) { const auto raw=Object(sid);hooks_.rememberPlacement(CoordinateBits(raw,kX),CoordinateBits(raw,kY),raw[kType]); } // 원문은 flags2 관문을 실제004d5440 안에서 판정하며 Clear보다 먼저 현재 UI에 쓴다.
+            else if (Type(sid).flags2&kPlacement) { const auto raw=Object(sid);state_.placementX=Coordinate(raw,kX);state_.placementY=Coordinate(raw,kY);state_.placementType=raw[kType];bookkeeping_.pendingPlacement=true; } // 독립 typed/CD의 기존 관찰 상태다.
         }
         ClearSelection(sid);
     }
     PreGraph(sid,flags,false);
-    if (!bookkeeping_.suppressed) {
+    if (!bookkeeping_.Suppressed()) {
         if (Type(sid).flags2&kFactoryMask) { const auto owner=Owner(sid);if (owner) Remove(bookkeeping_.ownerFactories.at(owner),sid,destroy_.HasPatchDiagnostics()); }
         if (Ordinary(sid)) {
             if (!(flags&kNoRefund)) {
@@ -176,10 +180,10 @@ void SquidDestroyLifecycle::PreDestroy(Sid sid,std::uint32_t flags) {
                 else hooks_.emit({SquidDeletionEffect::Refund,sid,(flags>>16)&15});
             }
             const auto number=Object(sid)[kType];
-            if (Owner(sid)==bookkeeping_.localOwner) --bookkeeping_.LocalCounts()[number];
+            if (Owner(sid)==LocalOwner()) --bookkeeping_.LocalCounts()[number];
             --bookkeeping_.GlobalCounts()[number]; // localSecondaryCounts는 누적 생산 수이므로 유지한다.
             if (LostNotice(sid,flags)) {
-                if (pool_.Edition()==OriginalEdition::Cd1072 || Object(sid)[kType]!=state_.silentType)
+                if (pool_.Edition()==OriginalEdition::Cd1072 || Object(sid)[kType]!=state_.SilentType())
                     hooks_.emit({SquidDeletionEffect::UnitLostSound,sid,0});
                 const auto raw=Object(sid);state_.LostX()=Coordinate(raw,kX);state_.LostY()=Coordinate(raw,kY);
             }

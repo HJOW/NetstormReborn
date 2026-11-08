@@ -33,7 +33,9 @@ struct SquidPostPopList {
         std::function<std::span<std::uint32_t>()> storage; // 현재 포인터와 용량이 가리키는 실제 DWORD 물리다.
         std::function<std::uint32_t()> capacity,readCount; // 현재 Player+4/+8의 두 DWORD를 각각 읽는다.
         std::function<void(std::uint32_t)> writeCount; // 같은 Player+8만 직접 쓴다.
+        const void* sourceOwner{};std::uint32_t sourceSlot{}; // 원본 값이 아닌 실제 C++ 저장소/행 정체성이다. 명시 Native 재사용만 이 키를 비교한다.
     } current; // 미연결 목록의 기존 vector/count 동작을 유지한다.
+    bool MatchesCurrentSource(const void* owner,std::uint32_t slot) const; // 같은 실제 저장소/행의 기존 getter 묶음만 재사용하며 물리 조회/쓰기는 실행하지 않는다.
     void BindCurrent(CurrentBinding binding); // 빈 독립 목록에 같은 실제 저장소의 조회/쓰기를 연결한다.
     std::uint32_t Count() const; // 연결된 경우 현재 Player+8을 매번 읽는다.
     std::size_t Capacity() const; // 연결된 경우 현재 Player+4를 매번 읽는다.

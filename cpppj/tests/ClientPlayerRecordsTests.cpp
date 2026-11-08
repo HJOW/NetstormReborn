@@ -84,3 +84,16 @@ TEST_CASE(ClientPlayerRecords_ActualClientOwnerStartsWithoutAllocation) {
     CHECK(owner && owner==client.PlayerRecords() && owner->Base()==0 && owner->Records().empty());
     auto use=owner->Acquire();OwnerInitialize(*owner,*use);CHECK(client.PlayerRecords()->Records().data()==owner->Records().data());
 }
+
+// Native 공유 목록은 같은 Client/행 getter를 재사용하며 실제 재할당 뒤 새 base를 계속 조회한다.
+TEST_CASE(ClientPlayerRecords_NativeReuseKeepsCurrentFactoryAcrossReallocation) {
+    ClientPlayerRecords records([](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x67}); });SquidPostPopList list;auto first=records.Acquire();OwnerInitialize(records,*first);first->ReuseOrBindFactory(list,3);list.Append(88);first->ReuseOrBindFactory(list,3);CHECK(list.Count()==1 && list.Items()[0]==88);const auto base=records.Base();first.reset();
+    auto second=records.Acquire();CHECK(PlayerOwnerThrows([&] { second->ReuseOrBindFactory(list,3); }));OwnerInitialize(records,*second);second->ReuseOrBindFactory(list,3);CHECK(records.Base()!=base && list.Count()==0 && list.Capacity()==30 && list.Storage()[0]==0x67676767);list.Append(99);second->ReuseOrBindFactory(list,3);CHECK(list.Count()==1 && list.Items()[0]==99);
+    CHECK(PlayerOwnerThrows([&] { second->BindFactory(list,3); })); // 기존 독립 Bind의 중복 거부는 그대로 유지한다.
+}
+
+// 명시 재사용도 다른 실제 Client/행이나 독립 데이터가 있는 목록을 덮지 않는다.
+TEST_CASE(ClientPlayerRecords_NativeReuseRejectsForeignOwnerSlotAndIndependentData) {
+    ClientPlayerRecords first([](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{}); }),other([](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{}); });auto a=first.Acquire(),b=other.Acquire();OwnerInitialize(first,*a);OwnerInitialize(other,*b);SquidPostPopList list;a->ReuseOrBindFactory(list,2);list.Append(77);
+    CHECK(PlayerOwnerThrows([&] { a->ReuseOrBindFactory(list,3); }));CHECK(PlayerOwnerThrows([&] { b->ReuseOrBindFactory(list,2); }));CHECK(list.Count()==1 && list.Items()[0]==77);SquidPostPopList independent{{55},1};CHECK(PlayerOwnerThrows([&] { a->ReuseOrBindFactory(independent,2); }) && independent.entries==std::vector<std::uint32_t>{55} && independent.count==1);
+}

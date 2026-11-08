@@ -55,7 +55,12 @@ void ClientPlayerRecords::Use::BindFactory(o::SquidPostPopList& list,std::uint32
     if (!initialized_ || owner>=o::kInitializedPlayerCount) throw std::logic_error("초기화되지 않은 Player factory 연결");
     auto* records=&records_; // Use보다 오래 사는 실제 Client 저장소다.
     list.BindCurrent({[records,owner] { return records->Factory(owner); },[records,owner] { return records->Read(owner,4); },
-        [records,owner] { return records->Read(owner,8); },[records,owner](auto value) { records->Write(owner,8,value); }});
+        [records,owner] { return records->Read(owner,8); },[records,owner](auto value) { records->Write(owner,8,value); },records,owner});
+}
+// Native prepared World가 같은 장기 목록을 다시 빌리면 실제 현재 Player getter를 그대로 사용한다.
+void ClientPlayerRecords::Use::ReuseOrBindFactory(o::SquidPostPopList& list,std::uint32_t owner) {
+    if (!initialized_ || owner>=o::kInitializedPlayerCount) throw std::logic_error("초기화되지 않은 Native Player factory 재사용");
+    if (list.MatchesCurrentSource(&records_,owner)) return;BindFactory(list,owner); // 다른 Client/행/이미 채운 독립 목록의 기존 거부는 유지한다.
 }
 // 실제 부모의 두 할당 크기만 받으며 factory의 미초기화 입력은 임의0으로 치환하지 않는다.
 std::uint32_t ClientPlayerRecords::Allocate(std::uint32_t bytes,bool player) {

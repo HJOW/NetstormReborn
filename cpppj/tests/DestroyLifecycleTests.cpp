@@ -279,3 +279,28 @@ TEST_CASE(GameAux_DeletionReadsCurrentLossAndCostAfterSoundEffect) {
     SquidDestroyLifecycle lifecycle(scene.pool,scene.types,scene.bookkeeping,scene.state,scene.destroy,hooks);lifecycle.PreDestroy(Sid{5},0);lifecycle.PostDestroy(Sid{5},0);
     CHECK(sounds==1 && owner.LostX()==22.25F && owner.LostY()==23.75F && owner.TotalCost()==1400);CHECK(scene.bookkeeping.totalCost==1000 && scene.state.lostX==90.25F && scene.state.lostY==-91.5F);
 }
+
+// 현재 loadingDepth/fort/소리 제외 TYPE를 효과 위치에서 읽으며 오래된 bool/TYPE 사본은 사용하지 않는다.
+TEST_CASE(DestroyLifecycle_CurrentLossSuppressionGlobals) {
+    constexpr std::array<std::array<std::uint32_t,4>,5> cases{{{1,0,148,0},{0xffffffffU,0,148,0},{0,1,148,0},{0,0,74,0},{0,0,148,1}}}; // 실제 깊이/fort/현재 제외 TYPE/기대 소리 횟수다.
+    for (const auto& row:cases) { // 각 독립 장면은 같은 정상 객체를 한 번만 삭제한다.
+        auto args=Basic();args[8]="0";Scene scene(OriginalEdition::Patch1078,args);std::uint32_t depth=row[0],silent=row[2],sounds{};bool fort=row[1]!=0;scene.state.unitLostSuppressed1=scene.state.unitLostSuppressed2=true;scene.state.sharedLoadingDepth=&depth;scene.state.sharedFortMode=&fort;scene.state.sharedSilentType=&silent;
+        SquidDeletionHooks hooks;hooks.emit=[&](const SquidDeletionEvent& event) { if (event.effect==SquidDeletionEffect::UnitLostSound) ++sounds; };SquidDestroyLifecycle lifecycle(scene.pool,scene.types,scene.bookkeeping,scene.state,scene.destroy,hooks);lifecycle.PreDestroy(Sid{5},0);CHECK(sounds==row[3]);
+    }
+}
+
+// 원문 Native Pre는 abstract 선택의 좌표 원시 비트를 실제 기억점 helper에 넘긴 뒤 선택을 해제한다.
+TEST_CASE(DestroyLifecycle_NativeRememberPrecedesClearWithOriginalBits) {
+    auto args=Basic();args[7]="1";Scene scene(OriginalEdition::Patch1078,args);scene.destroy.BindPatchDiagnostics({[](auto,auto,auto) { CHECK(false); },[](auto,auto) {},scene.types});auto bytes=scene.pool.AllocatedBytes(Sid{5});Put(bytes,14,0x7fa00001U);Put(bytes,18,0x80000000U);std::uint32_t selected=5;std::vector<std::uint32_t> events; // NaN 부호 비트/음수0도 UI에 그대로 전달한다.
+    SquidDeletionHooks hooks;hooks.selectedRaw=[&] { return selected; };hooks.rememberPlacement=[&](auto x,auto y,auto type) { CHECK(x==0x7fa00001U && y==0x80000000U && type==74 && selected==5);events.push_back(1); };hooks.emit=[&](const SquidDeletionEvent& event) { CHECK(event.effect==SquidDeletionEffect::ClearSelection);selected=0;events.push_back(2); };
+    SquidDestroyLifecycle lifecycle(scene.pool,scene.types,scene.bookkeeping,scene.state,scene.destroy,hooks);lifecycle.PreDestroy(Sid{5},0x200000);CHECK((events==std::vector<std::uint32_t>{1,2}) && !scene.bookkeeping.pendingPlacement && scene.state.placementType==0);
+}
+
+// Native 비교는 전체 현재 localOwner와 현재 metamap 억제를 읽고 장부 BYTE/생성 시 bool을 재사용하지 않는다.
+TEST_CASE(DestroyLifecycle_NativeCurrentOwnerAndSuppression) {
+    constexpr std::array<std::array<std::uint32_t,4>,3> cases{{{257,0,0,1},{1,0,1,1},{1,1,0,0}}}; // 현재 owner/억제/로컬 감소/전체 감소다.
+    for (const auto& row:cases) { // 실제 Pre 한 번의 표 변화만 독립 기대값과 비교한다.
+        Scene scene(OriginalEdition::Patch1078,Basic());scene.destroy.BindPatchDiagnostics({[](auto,auto,auto) { CHECK(false); },[](auto,auto) {},scene.types});bool suppressed=row[1]!=0;scene.bookkeeping.sharedSuppressed=&suppressed;const auto local=scene.bookkeeping.LocalCounts()[74],global=scene.bookkeeping.GlobalCounts()[74];SquidDeletionHooks hooks;hooks.localOwner=[&] { return row[0]; };
+        SquidDestroyLifecycle lifecycle(scene.pool,scene.types,scene.bookkeeping,scene.state,scene.destroy,hooks);lifecycle.PreDestroy(Sid{5},0x200000);CHECK(scene.bookkeeping.LocalCounts()[74]==local-row[2] && scene.bookkeeping.GlobalCounts()[74]==global-row[3]);
+    }
+}

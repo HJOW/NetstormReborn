@@ -25,6 +25,7 @@ public:
         Use& operator=(const Use&)=delete; // 대여의 중복 반납을 막는다.
         void Initialize(std::function<void(std::uint32_t,std::uint32_t)> alliance); // 같은 대여의 첫 호출만 원문236BYTE를 실행한다.
         void AdoptCurrent(); // 앞선 실제 Native 부모가 초기화한 기록만 대여한다. 할당/동맹/필드 초기화를 다시 실행하지 않는다.
+        void ReuseOrBindFactory(o::SquidPostPopList& list,std::uint32_t owner); // Native 공유 목록만 같은 Client/행 연결을 명시 재사용한다. 초기화/재할당/장부 기록은 생략하지 않는다.
         void BindFactory(o::SquidPostPopList& list,std::uint32_t owner); // 실제 Player+0/+4/+8에 목록을 연결한다.
     private:
         friend class ClientPlayerRecords;
