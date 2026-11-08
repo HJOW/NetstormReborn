@@ -599,6 +599,7 @@ target_sources(netstorm PRIVATE client/NativeMetaParticipantMove.h client/Native
 target_sources(netstorm PRIVATE client/NativeMetaSailError.h client/NativeMetaSailError.cpp) #25h 항해 오류도 같은 실제 참가자/객체 안내에 연결한다.
 target_sources(netstorm PRIVATE client/ClientPacketRecord.h client/ClientPacketRecord.cpp) #메타/일반/편집의 선택적 기록 FILE를 같은 실제 Client 수명에 연결한다.
 target_sources(netstorm PRIVATE o/RawPacketCopy.h o/RawPacketCopy.cpp) #4dece0 전체와 현재 State+80의 가변 Zone 소유권을 같은 실제 할당에 연결한다.
+target_sources(netstorm PRIVATE client/MissionNetwork.h) #메타/일반 전투가 같은 실제 TCP/UDP/등록표·callback owner를 공유한다.
 
 # 26h의 실제 화면 한계와 같은 CS 원점/반경 배치 전역 수신이다.
 target_sources(netstorm PRIVATE client/NativeMetaGeometry.h client/NativeMetaGeometry.cpp)

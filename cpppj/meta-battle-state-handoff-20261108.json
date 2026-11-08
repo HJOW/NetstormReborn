@@ -1,0 +1,97 @@
+{
+  "unit": 1153,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "efc78ee5 / 20261108-121 CP",
+  "summary": "M2.2b의 메타 current/next7→같은 분배기의 State7/즉시8→실제 일반 World를 연결하고 기존 TCP/UDP·두 표·전체 callback owner/현재 Player base를 인계했다.1ah/1bh 부모는 다음이다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1153\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13134848,
+      "sha256": "15ed722115e14fc79e1b63b53f7abe095ce4c48d28f7b4b7793a39e3334f0c44"
+    },
+    "R.exe": {
+      "bytes": 670208,
+      "sha256": "ce7efa72b4e7190750332cdf7fc7c528ca507a52386dbc8e7d88603170c87044"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "staticAudit": "4b6dd0/4b2df0/4e2620/4e2dc0 C/PE, Zone 예약에 따른9/1..8 정리·현재9 준비 비영 재사용 선행·같은 실제 transport/표·현재 Player BYTE·State7 캡처/cleanup/CD/명령/복원/음악/일반 설치·동기 RunStarting/즉시8·UDP12 전역ID·callback owner/중복 Poll 방지를 대조했다.",
+  "nativeEvidenceSha256": {
+    "004b02d0.asm": "8a837d8eecf8a0d9b51eb6c85e255d21bb39f6a5f92657c4925f8450502e96bb",
+    "004b02d0.c": "61175aa7597f7d852b273eafeacc1e4a5b325f976f16ce724bd864642ce6c0b7",
+    "004b2df0.asm": "74fbfa2c41e5516fbef581fbba820b0229d59881e4a02a58932e2f44aca3ef58",
+    "004b2df0.c": "f6524806686adc8085877a5510b371818cf26ff97f29d89161c4d7969617fcab",
+    "004b4df0.asm": "b5298c9214537f589294a405f0462dfa32b6d9df7f2394265f425ad88e95e43e",
+    "004b4df0.c": "5e7b18455666e266663417015ebc1b461ba440fa7ce44905dc5c76c4e0582caf",
+    "004b6dd0.asm": "35c457d8f9f34bb9e0e984fedc9b64550b36ecd09046cb684bca10913f2e54d0",
+    "004b6dd0.c": "57657c478577af842a6ca07e8dfab7ee580f20d0415bb313d0067cf606a4bc11",
+    "004b8b20.asm": "5ca5d0128c8affca622d114490386c031dac72a832fdde6167f99c0b07222eff",
+    "004b8b20.c": "2e3836671ba68cfc61bc4258145c08ab28826f3a7cf187944d17447c94bd7653",
+    "004e2620.asm": "172e4ef7f1ade55434a55fc444dd001692cb63a7385f7fcb9a577e3cfae50c6e",
+    "004e2620.c": "caa8027d0f0fdb1b72a4489fc149b3e88445646c754d2d489720fc83c97ce99a",
+    "004e2940.asm": "fea8655bd74ebc1d2f47fad33598afe51b2351ae39fe64b6fb99a7b98db96296",
+    "004e2940.c": "19e7f876781f7a3841db93c72b27f5f401cab4c96a544a2808dc6460b50e5d50",
+    "004e2dc0.asm": "f1c8729d324361ac9d921b19fa3f444192647a6a84edb226281393dff04af5ab",
+    "004e2dc0.c": "4fdb65830262cdc154ecb1d1be45aa0c7cc5dce9784a9480be86e0a9eb2ce9aa"
+  },
+  "sourceAudit": {
+    "sameInheritedTcpUdpNodeAndRegistrationOwners": true,
+    "sameOldMetaCallbackOwnerPinnedThroughCurrentFrameAndNewWorld": true,
+    "rebindDevicesWithoutNewSocketBufferDepthOrTable": true,
+    "nativeCurrentPlayerReadOnlyForSelectedNormalOwners": true,
+    "existingFixedSpanAndDirectSendPathsPreserved": true,
+    "next7PollStartingAndCurrent7RunStartingNotHostPost": true,
+    "sameGeneralState7BodyAndImmediate8": true,
+    "cleanupAllowsOnlyExplicitSameMetaHandoffAndKeepsOtherGuards": true,
+    "textAddressBytesNotReadBeforeTcpReuse": true,
+    "udp12StillPolledInGlobalIdOrderAndUsesOriginalReadiness": true,
+    "noSecondNewWorldPollInTheHandoffFrame": true,
+    "receiveParentsStillUnregisteredNotClaimedComplete": true
+  },
+  "plan": {
+    "completed": "M2.2b / 메타 일반 State7·수신/전송 소유 인계 배선",
+    "next": "M2.3 / 1ah 전체 부모와실제 등록·선택적 기록Open, 이어M2.4/1bh",
+    "remainingMajorMpGroups": 7,
+    "checkingParents": [
+      "004b02d0",
+      "004dc220"
+    ],
+    "checkingMpReceive": [
+      "004b4df0",
+      "004b8b20"
+    ]
+  },
+  "executions": {
+    "newCppTests": 0,
+    "multiplayer": 0,
+    "game": 0,
+    "network": 0,
+    "wholeSuite": 0,
+    "zip": 0
+  },
+  "decompilation": {
+    "clientFull": "2026-11-03/HJOW-Athlon",
+    "rootOnly": "2026-11-07/HJOW-Athlon",
+    "generatedSourceChanged": false
+  },
+  "limitations": [
+    "새 MP/단위/게임/통신 검사는 사용자 요청대로 제외했다. 실제 전투 진입·소켓 인계/원문 전체 동일성을 실행 검증한 결과가 아니다.",
+    "1ah/1bh 수신 부모·실제 등록/선택적 기록Open은 아직 미연결이다. M2 전체는 미완료이며 두 checking 수신을 완료로 세지 않는다.",
+    "같은 실제 메타 owner·Client/표/Player9 물리·현재7/일반 준비 계약이 없는 호출은 해당 호스트 경계 오류다. 원문 OS고갈/스택/포인터/SEH 자체나 임의 오염된 입력·모드 전체의 동일성을 주장하지 않는다.",
+    "M3~M8·K/S 및 기존 후순위가 남아 있으며 사용자가 제외한 실행 검사를 통과로 바꾸지 않는다."
+  ]
+}

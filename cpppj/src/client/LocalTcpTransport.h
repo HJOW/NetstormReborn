@@ -16,6 +16,7 @@ class LocalTcpTransport final {
 public:
     LocalTcpTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry={},std::shared_ptr<o::PacketRegistrationTable> registrations={}); // Player9와 현재 서버 권한/실제 진단 장치는 이 owner보다 오래 살아야 한다.
     ~LocalTcpTransport(); // 최종 owner 종료에서 자기 노드의 별칭과 OS 핸들을 반드시 반납한다. 정상 State cleanup은 CloseAll로 요청한다.
+    void RebindHooks(o::PacketDispatchHooks hooks); //같은 현재 노드/등록표를 유지하고 새 World의 현재 Player/기록·수명 효과만 연결한다.
     LocalTcpTransport(const LocalTcpTransport&)=delete; // 실제 socket/노드와 현재 등록표의 반납 권한을 복제하지 않는다.
     LocalTcpTransport& operator=(const LocalTcpTransport&)=delete; // 생존 연결의 고정 주소를 다른 전송으로 대입하지 않는다.
     LocalTcpTransport(LocalTcpTransport&&)=delete; // 등록된 callback의 this와 안정된 노드 주소를 이동하지 않는다.

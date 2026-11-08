@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-**2026-11-08 현재 제품1152 / 표시 버전11.01. /goal 진행 중이다.** 3차 TCP/IP 로컬 멀티플레이·Outpost에서M2.2a의전체 패킷 복제/장기 Zone owner와 기존 일반 State7 소비자를 연결했다. 다음은M2.2b의메타 State7 일반 World/수신 콜백·실제 TCP9 수명 접합이다.3차 잔여7묶음과K/S 계획은 [현행 인수인계](../LEFT_JOBS.md), Release 종료0·경고/오류0·보호2800 불변은 [1152 기록](../docs/exe/cpp-packet-copy-zone-owner-20261108.md)을 따른다. 새MP 실행검사는0이며 메타State7/1ah·1bh 및전체 목표는 미완료다.
+**2026-11-08 현재 제품1153 / 표시 버전11.01. /goal 진행 중이다.** 3차 TCP/IP 로컬 멀티플레이·Outpost에서M2.2b의메타 일반 State7/즉시8·같은 TCP/UDP·현재Player/callback 소유 인계를 연결했다. 다음은M2.3의1ah 전체 부모/실제 등록·기록Open이다.3차 잔여7묶음과K/S 계획은 [현행 인수인계](../LEFT_JOBS.md), Release 종료0·경고/오류0·보호2800 불변은 [1153 기록](../docs/exe/cpp-meta-battle-state-handoff-20261108.md)을 따른다. 새MP 실행검사는0이며1ah/1bh와전체 목표는 미완료다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
 

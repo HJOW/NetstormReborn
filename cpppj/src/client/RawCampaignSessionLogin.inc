@@ -365,7 +365,8 @@ struct RawCampaignSession::Impl::Login {
     // 부모/독립 상태8이 같은 로컬 접속 몸체를 사용하며 원문 현재 블록을 검증한다.
     void Connect(std::span<const std::uint8_t> address,std::uint32_t port) {
         if (address.size()!=20 || blocks[3][0]!=8) throw std::logic_error("실제 현재8/typed주소20BYTE 접속 계약 오류");
-        if (blocks[3][33]) {
+        if (s.services.generalBattleStart && s.services.generalBattleStart->textAddress) { const auto field=std::span(reinterpret_cast<const std::uint8_t*>(blocks[3].data()),sizeof(blocks[3])).subspan(0x54,40);Need(transport.connectPeerText)({reinterpret_cast<const char*>(field.data()),field.size()},port); } //Native 주소 바이트를 먼저 훑지 않는다. 실제 TCP의 기존9 준비 조회가 문자열 해석보다 먼저다.
+        else if (blocks[3][33]) {
             const auto field=std::span(reinterpret_cast<const std::uint8_t*>(blocks[3].data()),sizeof(blocks[3])).subspan(0x54,40);const auto end=std::find(field.begin(),field.end(),0);if (end==field.end()) throw std::length_error("저장 재접속 주소40BYTE의NUL 누락");
             Need(transport.connectPeerText)({reinterpret_cast<const char*>(field.data()),static_cast<std::size_t>(end-field.begin())},port); // Native4e2620의 실제 문자열과 별도 현재 포트를 전달한다.
         } else Need(transport.connect)(address,port); // 기존 private LAN/단독 시작의 typed 연결은 유지한다.

@@ -38,7 +38,9 @@ struct PacketDispatchHooks {
     std::function<void(PacketConnection&)> close; // 콜백 뒤 depth 0/flags 0x40이면 연결 소멸 몸체를 실행한다.
     std::function<void(PacketConnection&)> release; // 위 소멸 뒤 저장소를 해제한다. 호출 뒤 연결을 다시 읽지 않는다.
     std::function<void(PacketConnection&,std::span<const std::uint8_t>,std::uint16_t)> sent; //실제 가상 송신의 복사/쓰기 뒤 원문 방향1 기록이다. 수신 record와 구별하며 장치 없는 독립 전송은 비워 둔다.
+    std::function<std::span<const std::uint8_t>()> players; //실제 Client는 Player 재할당 뒤에도 현재0059534c를 조회한다. 독립 고정뷰 장치는 기존 입력 span을 사용한다.
 };
+bool PacketPlayerActive(std::span<const std::uint8_t> fallback,const std::function<std::span<const std::uint8_t>()>& current,std::uint32_t owner); //4e2dc0의 선택된 owner 기록+50 BYTE만 현재 실제 Player9에서 읽는다.
 // 004ded50/70/90·004df240·004df740·004df010 ↔ CD 00418bb0/bd0/bf0·004190a0·00419130·00418d40.
 // 단일 패킷과 즉시 콜백 분기만 지원한다. 타입 4 집합/지연 큐·소켓 송수신·연결 생성/종료 몸체는 후속이다.
 class RawPacketDispatch {

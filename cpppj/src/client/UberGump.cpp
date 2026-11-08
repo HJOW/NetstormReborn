@@ -530,8 +530,9 @@ void UberGump::RetireWorldForState() {
     if (world_) { auto retiring=std::move(world_);retiring.reset(); }else { editor_->metaInput.reset();editor_->metaDisplay.reset();editor_->metaWorld.reset(); } //선택/입력과 표시기의 비소유 참조를 Session보다 먼저 반납한다.
 }
 // 같은34Effect/직접 전역/Runtime 조정기를 실제 공통 UI와 원문 부모 위치에 연결한다.
-void UberGump::CleanupNativeStateWorld(std::uint32_t reason) {
-    if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive())) throw std::logic_error("패킷 콜백 실행 중 Native/LAN 정리 금지");CloseLanLobby(); //제어 연결이 빌린 Player 주소를 재할당하기 전에 현재 callback 대여부터 확인한다.
+void UberGump::CleanupNativeStateWorld(std::uint32_t reason,std::shared_ptr<MetaConnectionRuntime> handoff) {
+    if (handoff && (!editor_ || editor_->metaTransport!=handoff)) throw std::logic_error("Native State7의 현재 메타 인계 owner 불일치");
+    if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive() && editor_->metaTransport!=handoff)) throw std::logic_error("패킷 콜백 실행 중 Native/LAN 정리 금지");CloseLanLobby(); //제어 연결이 빌린 Player 주소를 재할당하기 전에 현재 callback 대여부터 확인한다.
     ClientStateWorldDevices devices;devices.cancelInitialCursor=[this] { CancelClientCursorForState(client_,*client_.SurfaceStorage()); };
     devices.killGumps=[this] { KillGumpsForState(); };devices.cleanupGumps=[this] { CleanupGumpsForState(); };devices.replaceUber=[this] { ReplaceHudForState(); };devices.refreshSp=[this] { RefreshStormPower(); };
     devices.retireRuntime=[this] { RetireWorldForState(); };devices.assertion=[](auto line) { throw std::logic_error("원문 State 중복 모드 진단:"+std::to_string(line)); };
@@ -1696,11 +1697,12 @@ void UberGump::Tick() {
 // 실제 로컬 큐는 일반 원문 슬롯4에서 진행하며 완료가 Guide/입력보다 먼저 현재 UI를 설치한다.
 void UberGump::PollMissionPackets() {
     PollLanLobby(); // 대기실 callback이 반환한 뒤에만 다음 Tick의 World 교체를 예약한다.
-    if (editor_ && editor_->metaTransport) editor_->metaTransport->Pump(); //World없는메타도같은slot4에서TCP→UDP수신을진행하며66h발견은같은Run을동기실행한다.
+    const auto previousWorld=world_;const auto meta=editor_ ? editor_->metaTransport:nullptr; //콜백이 UI의 메타 필드를 반납해도 실제 전체 TCP/UDP owner는 외곽 복귀까지 살아 있다.
+    if (meta) { meta->Pump();if (world_!=previousWorld) return; } //World없는메타도같은slot4에서TCP→UDP수신을진행하며66h발견은같은Run을동기실행한다.
     const auto world=world_; // 이 폴링과 완료 후처리가 끝날 때까지 실제 표시/Session 소비자를 함께 보유한다.
     if (!world || world->PreparingFort()) return;world->Session().PumpLocalConnection();
     if (world_!=world) return; // callback이 현재 호스트를 바꿨으면 이전 결과를 새 월드에 공개하지 않는다.
-    if (world->Connecting() && !missionRuntime_ && lan_ && lan_->start && lan_->start->consumed && world->CompleteLocalConnection()) FinishLanBattleWorld();
+    if (world->Connecting() && !missionRuntime_ && ((lan_ && lan_->start && lan_->start->consumed) || (nativeBattleStart_ && nativeBattleStart_->consumed)) && world->CompleteLocalConnection()) { FinishLanBattleWorld();nativeBattleStart_.reset(); }
     else if (world->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken && world->CompleteLocalConnection()) FinishMissionWorldLoad(); // 이전 미션이면 호스트 World의 공개도 건너뛰고 원래 cleanup까지 닫아 둔다.
 }
 // 원본 루프8번에서 현재 Guide의 상태/창 관문과0..6 단계를 한 번 실행한다.

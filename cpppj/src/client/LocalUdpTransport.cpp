@@ -82,7 +82,7 @@ bool LocalUdpTransport::Open(std::uint32_t port) {
     if (setsockopt(socket.socket,SOL_SOCKET,SO_BROADCAST,reinterpret_cast<const char*>(&enabled),sizeof(enabled))==SOCKET_ERROR || setsockopt(socket.socket,SOL_SOCKET,SO_REUSEADDR,reinterpret_cast<const char*>(&enabled),sizeof(enabled))==SOCKET_ERROR) { lastError_=WSAGetLastError();return failed(); }
     if (bind(socket.socket,reinterpret_cast<const sockaddr*>(&bindAddress),sizeof(bindAddress))==SOCKET_ERROR && (setsockopt(socket.socket,SOL_SOCKET,SO_REUSEADDR,reinterpret_cast<const char*>(&enabled),sizeof(enabled))==SOCKET_ERROR || bind(socket.socket,reinterpret_cast<const sockaddr*>(&bindAddress),sizeof(bindAddress))==SOCKET_ERROR)) { lastError_=WSAGetLastError();return failed(); } //첫bind실패뒤원문의reuse설정/재시도도보존한다.
     auto node=std::make_unique<Node>();node->socket=static_cast<std::uintptr_t>(socket.Release());node->connection.sender=12;node->connection.flags=4U|0x20U;node->connection.received=hooks_.now();node->connection.heartbeat=hooks_.now();auto* pointer=node.get();nodes_.push_back(std::move(node));
-    try { pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendNode(*pointer,packet,std::nullopt)); },[] { return 0; });registry_->PublishConnect(12,pointer->token); } //실제Registry의close/free호출중에도물리노드를보존한다.UDP004e1800의현재값은0이다.
+    try { pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendNode(*pointer,packet,packet,std::nullopt)); },[] { return 0; });registry_->PublishConnect(12,pointer->token); } //실제Registry의close/free호출중에도물리노드를보존한다.UDP004e1800의현재값은0이다.
     catch (...) { registry_->Forget(pointer->token);nodes_.pop_back();throw; }return true;
 }
 void LocalUdpTransport::Close() { registry_->Disconnect(12); } //깊이1의같은수신노드는슬롯0뒤에도분배종료까지물리를보존한다.
@@ -95,12 +95,12 @@ void LocalUdpTransport::Fail(Node& node,std::int32_t error) {
 }
 // observer가고친같은버퍼의길이를읽고별도TCP헤더없이원문바이트만한번보낸다.
 bool LocalUdpTransport::Broadcast(std::span<std::uint8_t> packet,std::uint32_t port) {
-    if (port>65535) throw std::invalid_argument("UDP 송신포트물리범위");auto* node=Current();return node && SendNode(*node,packet,port);
+    if (port>65535) throw std::invalid_argument("UDP 송신포트물리범위");auto* node=Current();return node && SendNode(*node,packet,packet,port);
 }
 // 같은원문가상this를유지하고observer1뒤현재길이의send또는sendto를선택한다.
-bool LocalUdpTransport::SendNode(Node& nodeValue,std::span<std::uint8_t> packet,std::optional<std::uint32_t> broadcastPort) {
+bool LocalUdpTransport::SendNode(Node& nodeValue,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,std::optional<std::uint32_t> broadcastPort) {
     if (packet.size()<4) throw std::out_of_range("UDP 송신물리헤더부족");if (Retired(packet)) return false;const CallGuard call(activeCalls_);auto* node=&nodeValue;if (node->retired || node->socket==kInvalidSocket || (node->connection.flags&kClosed)) return false;
-    const auto observer=dispatcher_.Dispatch().Registration(packet[1]);const auto pin=observer.Pin();observer.NotifyObserver(packet,1);const auto length=Length(packet);if (length>packet.size()) throw std::out_of_range("UDP 송신선언길이물리초과");if (node->retired || node->socket==kInvalidSocket) return false;
+    const auto observer=dispatcher_.Dispatch().Registration(packet[1]);const auto pin=observer.Pin();if (!writable.empty()) observer.NotifyObserver(writable,1);const auto length=Length(packet);if (length>packet.size()) throw std::out_of_range("UDP 송신선언길이물리초과");if (node->retired || node->socket==kInvalidSocket) return false;
     if (Retired(packet)) return false;const auto record=[this,node,packet] { if (hooks_.sent) hooks_.sent(node->connection,packet,static_cast<std::uint16_t>(Length(packet))); }; //4e00e0은 실제 쓰기/종료 통지가 끝난 뒤 실패 경로도 방향1을 기록한다. 현재 WORD 길이를 명시적으로 같은16비트 인자에 전달한다.
     sockaddr_in target{};target.sin_family=AF_INET;target.sin_port=htons(static_cast<u_short>(broadcastPort.value_or(0)));target.sin_addr.s_addr=INADDR_BROADCAST;u_long nonblocking=1;
     if (ioctlsocket(Socket(node->socket),FIONBIO,&nonblocking)==SOCKET_ERROR) { Fail(*node,WSAGetLastError());record();return false; }
@@ -116,10 +116,23 @@ o::TransportPollResult LocalUdpTransport::ReceiveOne(Node& node) {
     if (packet[1]==0x7f || packet[1]==0x80) return {true,true};if (!dispatcher_.Dispatch().Validate(packet)) return {true,false};const auto observer=dispatcher_.Dispatch().Registration(packet[1]);const auto pin=observer.Pin();if (packet[1]!=4) observer.NotifyObserver(packet,0);if (node.retired || (node.connection.flags&kClosed)) { CloseReady(node);return {true,false}; }return {true,dispatcher_.DispatchFrame(node.connection,packet) && !node.retired};
 }
 // 자기 현재12만 폴링하며 callback이 슬롯을 바꾸면 다음 순회에서 현재값을 다시 읽는다.
-std::size_t LocalUdpTransport::Poll() {
-    if (polling_ || activeCalls_) throw std::logic_error("UDP 중첩폴링금지");polling_=true;std::size_t count{};
-    try { { const CallGuard call(activeCalls_);for (auto& node:nodes_) CloseReady(*node);for (;;) { auto* node=Current();if (!node) break;const auto result=ReceiveOne(*node);if (result.consumed) ++count;if (!result.again) break; } }polling_=false;CollectRetired(); }catch (...) { polling_=false;throw; }return count;
+void LocalUdpTransport::BeginPoll() {
+    if (polling_ || activeCalls_) throw std::logic_error("UDP 중첩폴링금지");polling_=true;
+    try { const CallGuard call(activeCalls_);for (auto& node:nodes_) CloseReady(*node); }catch (...) { polling_=false;throw; } //기존 현재 노드 정리부터 실행하고 실제 수신 전까지는 물리를 수거하지 않는다.
 }
+o::TransportPollResult LocalUdpTransport::ReceiveOne(std::int32_t id) { if (!polling_) throw std::logic_error("UDP per-ID 수신의 외곽 대여 누락");if (id!=12) return {};const CallGuard call(activeCalls_);auto* node=Current();return node ? ReceiveOne(*node):o::TransportPollResult{}; } //현재 자기12의 한 데이터그램/sentinel만 원문 본체로 처리한다.
+void LocalUdpTransport::EndPoll() { if (!polling_) throw std::logic_error("UDP 외곽 반납의 대여 누락");polling_=false;CollectRetired(); } //전체 순회가 복귀한 뒤에만 반납 노드의 실제 물리를 수거한다.
+std::size_t LocalUdpTransport::Poll() {
+    BeginPoll();std::size_t count{};try { for (;;) { const auto result=ReceiveOne(12);if (result.consumed) ++count;if (!result.again) break; } }catch (...) { EndPoll();throw; }EndPoll();return count; //단독 메타도 같은 per-ID 본체를 반복하며 장치/주소를 새로 만들지 않는다.
+}
+void LocalUdpTransport::RebindHooks(o::PacketDispatchHooks hooks) { if (!hooks.now || !hooks.record || !hooks.terminate || !hooks.close || !hooks.release) throw std::invalid_argument("UDP 인계의 실제 분배 장치 누락");hooks_=std::move(hooks); } //기존 wrapper는 현재 장치만 다시 읽고 node/socket/depth는 보존한다.
+o::PacketConnection* LocalUdpTransport::Connection(std::int32_t id) const { const auto* node=id==12 ? Current():nullptr;return node ? const_cast<o::PacketConnection*>(&node->connection):nullptr; } //같은 안정된 현재 노드의 짧은 대여이며 다른 ID를 UDP로 해석하지 않는다.
+bool LocalUdpTransport::IsOpen(std::int32_t id) const { const auto* node=id==12 ? Current():nullptr;return node && node->socket!=kInvalidSocket && !(node->connection.flags&kClosed); } //상위 closed와 실제 socket 존재를 구별한다.
+std::int32_t LocalUdpTransport::Status(std::int32_t id) const { const auto* node=id==12 ? Current():nullptr;return node ? registry_->SocketReadiness(node->token):0; } //UDP 원문 준비 조회0도 같은 등록된 실제 가상 장치를 그대로 사용한다.
+const std::shared_ptr<o::RawConnectionRegistry>& LocalUdpTransport::Registry() const { return registry_; } //동일한 현재22칸 표만 대여한다.
+const std::shared_ptr<o::PacketRegistrationTable>& LocalUdpTransport::Registrations() { return dispatcher_.Dispatch().Registrations(); } //같은 observer/receiver 표의 실제 정체성을 조회한다.
+bool LocalUdpTransport::Send(std::span<const std::uint8_t> packet) { auto* node=Current();return node && SendNode(*node,packet,{},std::nullopt); } //이미 작성된 readonly writer의 현재 선언 바이트만 전송한다.
+bool LocalUdpTransport::SendMutable(std::span<std::uint8_t> packet) { auto* node=Current();return node && SendNode(*node,packet,packet,std::nullopt); } //실제 mutable writer는 같은 this로 observer1을 실행한다.
 // 원문처럼 자기 호스트 이름만 해석하고 첫 AF_INET 주소를 사용한다. 실패 시 family0을 보존한다.
 std::array<std::uint8_t,20> LocalUdpTransport::LocalAddress() {
     StartSockets();std::array<std::uint8_t,20> result{};if (!socketsStarted_) return result;std::array<char,80> name{};if (gethostname(name.data(),79)==SOCKET_ERROR) { lastError_=WSAGetLastError();return result; }const auto* host=gethostbyname(name.data());

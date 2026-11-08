@@ -48,6 +48,7 @@ struct GeneralBattleStartRequest {
     std::string handle; // 정리 전 실제 Fort의 표시 부호화 이름이며 새 Session의 원문64BYTE 이름에 인계한다.
     std::optional<o::LocalMissionStartingSnapshot> starting; // 이전 World 정리 전에 캡처한 실제 State7 지역값이다.
     bool consumed{}; // 같은 요청의 정상 후반 소비만 표시하며 Player/Ready/연결 성공을 대신하지 않는다.
+    bool textAddress{}; //메타 Native 요청의 current+54는 원문 C문자열이다. 기존 일반 LAN의20BYTE binary 주소와 구별한다.
 };
 // 원본0040a1e0(1)의 길이 확정과004dece0의 실제 소유 복제를 같은 버퍼에 수행한다.
 std::uint32_t CaptureMissionFortZone(MissionFortLoadRequest& request,zacket::LocalMissionPacket& packet);

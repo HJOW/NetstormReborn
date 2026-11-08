@@ -33,6 +33,7 @@ struct GameMenuBarState; // 현재Session의기존검산참조와메뉴serial만
 struct FortSelectionHooks; //편집 선택과 Test Battle 복귀가 같은 실제 파일/State/섬/Notify 장치를 사용한다.
 class CampaignObjectMenuClient; // 같은 실제 원본 객체 메뉴와 현재 명령 큐를 연결한다.
 struct MissionFortLoadRequest; // Init부터 실제 Session 설치까지 같은 요청과 Zone 이미지를 소유한다.
+struct GeneralBattleStartRequest;class MetaConnectionRuntime; //일반 State7의 실제 요청과 인계할 전체 메타 전송 owner다.
 class CampaignTemplateStorage; // 원본 명시 Init/State 정리까지 같은9개 manager의 수명을 소유한다.
 struct CampaignGuideRuntime; // 같은 실제 Guide 상태와 소멸을 창 없는 World 검사에도 공유한다.
 struct RawHtmlWindowContext; // 실제 전체 HTML에 현재 게임 소유자의 장치를 빌린다.
@@ -82,7 +83,7 @@ public:
     void CleanupGumpsForState(); //004662b0 실제 공통 정리와 호스트 페이지 캐시 반납이며 State 확정은 하지 않는다.
     void ApplyHudModeForState(std::uint32_t mode); //00466280의 현재 명령/원문 모드를 자식 우선·숨김 포함으로 분배하며 State/loaded는 쓰지 않는다.
     void ReplaceHudForState(); //004c77c0의 전체 네 자식 공장을 World 생성 전에 구성하며 mode/Player/loaded를 쓰지 않는다.
-    void CleanupNativeStateWorld(std::uint32_t reason); //004b2df0 전체 부모를 같은 실제 Client/UI와 Core0 뒤 Runtime 반납에 실행한다. State1 prefix/확정은 별도다.
+    void CleanupNativeStateWorld(std::uint32_t reason,std::shared_ptr<MetaConnectionRuntime> handoff={}); //004b2df0 전체 부모다. 명시한 같은 메타 owner만 수신 중 인계할 수 있고 다른 World/메타 콜백의 정리 금지는 유지한다.
     // 새 화면 팔레트를 월드 어댑터에도 전달하고 UI/표시를 다시 그린다.
     void PaletteChanged();
     // 현재 월드가 번개 효과의 부모로 살아 있는지 반환한다. 브리핑 정지 중에도 월드는 존재한다.
@@ -213,6 +214,7 @@ private:
     std::shared_ptr<o::FortSerializationGlobals> serializationGlobals_; // 주Template·맵목록임시manager·실제Session이같은판본DWORD를빌리는Client수명이다.
     std::shared_ptr<CampaignTemplateStorage> templateStorage_; // 이전 Session이 사라져도 같은 Template9를 명시 정리 전까지 보유한다.
     std::shared_ptr<MissionFortLoadRequest> missionFortRequest_; //현재 Guide의 지연 요청이다. Guide/전체 종료에서 반납하며 이전 World의 State 반납은 보존한다.
+    std::shared_ptr<GeneralBattleStartRequest> nativeBattleStart_; //대기실 ACK와 별개인 실제 메타 State7의 현재 Zone/설치 요청이다.
     std::shared_ptr<std::array<std::uint8_t,87>> missionOptions_{std::make_shared<std::array<std::uint8_t,87>>()}; // 월드보다 오래 사는 실제 Init/로그인 옵션이다.
     std::shared_ptr<std::array<std::uint32_t,256>> missionRestrictions_{std::make_shared<std::array<std::uint32_t,256>>()}; // 설치 전/후가 공유하는 기술 허용 표다.
     std::uint32_t missionNumber_{},tutorialSeen_{}; // 실제5ca8e0/f0의 현재 전역이다.
@@ -241,6 +243,9 @@ private:
     void QueueReconnectBattleWorld(); // 원문 next7/문자열40BYTE/복구 표식을 보존해 다음 Tick의 같은 일반 World 설치에 인계한다.
     void LoadLanBattleWorld(); // Client 수명의 State7 공통 부모가 이전/새 World를 끝까지 소유한다.
     void LoadLanBattleWorldBody(); // 실제 cleanup/전투 prefix와 일반 Session 후반을 연결한다.
+    void LoadGeneralBattleWorldBody(const std::shared_ptr<GeneralBattleStartRequest>& request,std::shared_ptr<MetaConnectionRuntime> meta,std::optional<bool> lanHost); //기존 LAN과 메타가 같은 일반 World 본체를 사용하되 메타는 캡처 Zone 유무로 역할을 고른다.
+    void LoadNativeBattleWorldBody(); //현재7의 메타 요청을 만들고 실제 소유 Zone/같은 TCP·UDP로 일반 World를 설치한다.
+    void RunMetaRequestedState(); //현재7은 같은 분배기의 RunStarting으로 동기 처리하고 다른 요청은 기존 Run으로 전달한다.
     void FinishLanBattleWorld(); // 실제 phase14/Player 참여 뒤에만 사용자 입력·커서·표시를 연다.
     std::uint32_t multiplayerOptionsToken_{}; // 현재 일반 옵션의 실제 Gump token이며 닫힌 창의 serial을 새 창으로 대신하지 않는다.
     std::shared_ptr<const TextClipboard> textClipboard_; //최초 Chat과 뒤 Save as의 두 callback이 같은 OS 장치 수명을 공유한다.

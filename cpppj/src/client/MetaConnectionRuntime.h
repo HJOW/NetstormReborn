@@ -3,6 +3,7 @@
 #include "client/LocalTcpTransport.h"
 #include "o/RawLocalMissionState.h"
 #include "o/RawLocalServerDiscovery.h"
+#include "client/MissionNetwork.h" //메타와 일반 전투가 같은 실제 TCP/UDP 소유권을 인계한다.
 #include <functional>
 #include <array> //같은 실제 전역87BYTE 옵션의 공유 소유권을 형식으로 보관한다.
 #include <memory>
@@ -14,7 +15,7 @@ class LocalUdpTransport; //실제UDP12의물리소유자이며구현은같은Met
 struct NativeMetaSailHooks; //같은 CS/현재 카메라·SHP·TCP11·Rig의 동기 장치 묶음이다.
 struct NativeMetaSeatHooks; //같은 실제 C프레임/포구 조회 장치의 반환 형식을 전방 선언한다.
 struct NativeMetaConnectedHooks; //같은28~33 부모에 현재 HTML serial/카메라 장치만 외부에서 공급한다.
-class MetaConnectionRuntime {
+class MetaConnectionRuntime:public std::enable_shared_from_this<MetaConnectionRuntime> { //수신 중 일반 전투가 같은 callback/장치를 끝까지 pin할 수 있다.
 public:
     MetaConnectionRuntime(Client& client,std::function<void(std::string_view)> progress,std::function<void(std::uint32_t)> request,std::function<void()> processState,std::function<void(std::string_view)> tell,std::function<void()> refreshInfo,std::shared_ptr<std::array<std::uint8_t,87>> options,std::function<void()> recreateHud); //생성은소켓을열지않고실제전역옵션·CS/NSInfo·전체HUD 장치를같은수명으로연결한다.
     MetaConnectionRuntime(const MetaConnectionRuntime&)=delete;MetaConnectionRuntime& operator=(const MetaConnectionRuntime&)=delete; //등록된 callback의 주소/실제 socket owner를 복제하지 않는다.
@@ -23,6 +24,7 @@ public:
     o::LocalMissionParentResult RunConnected(std::uint32_t selected,const NativeMetaConnectedHooks& ui); //28~33의 같은 CS/State/포트·실제 TCP/표시/전송에 현재 HTML/카메라 장치를 결합한다.
     void Pump(); //같은 원문 slot4의 flush→수신을 World 없이 진행한다.
     bool CallbackActive() const; //동기 수신/송신 중 전체 Native 정리의 재진입을 막는다.
+    MissionNetwork SharedNetwork(); //현재 안정된 TCP/UDP와 이 전체 callback owner를 반환하며 새 접속/등록표를 만들지 않는다.
     void NotifyMetaMaster(); //004b2c00의 현재 자기 flags에2000h를 저장하고 같은 TCP11로1fh/12BYTE를 전송한다.
     void SendMetaStatus(const std::function<void(std::span<std::uint8_t>)>& writePayload); //0040a300의실제12BYTE 헤더뒤caller가+4/+8과부분효과를쓰고같은11로송신한다.
     void SendMetaData(std::uint32_t key,std::span<const std::uint8_t> data,std::uint32_t count); //0042bfb0: signed160관문·FF초기화/67h생성·BYTE키/WORD길이·현재원문복사→같은11송신이다.
@@ -58,8 +60,8 @@ private:
     std::function<void(std::string_view)> tell_; //실제 현재 HTML Tell 장치이며 버전 차이 안내를 고정 문자열 창으로 대체하지 않는다.
     std::function<void()> refreshInfo_; //같은현재NSInfo의0047cab0이며수신전체보다오래사는실제UI를빌린다.
     std::shared_ptr<std::array<std::uint8_t,87>> options_;std::function<void()> recreateHud_; //일반/메타가 같은 전역87BYTE를 공유하고 현재004c7880을 선택한다.
-    std::unique_ptr<LocalTcpTransport> tcp_; //같은 Registry10/11의 실제 OS 노드/분배 owner다.
-    std::unique_ptr<LocalUdpTransport> udp_; //TCP와같은Registry/등록표의실제검색12이며생성은소켓을열지않는다.
+    std::shared_ptr<LocalTcpTransport> tcp_; //일반 전투에 인계한 뒤에도 같은9/10/11의 실제 노드 주소를 보존한다.
+    std::shared_ptr<LocalUdpTransport> udp_; //현재12도 같은 표/물리를 유지하고 마지막 실제 owner가 반납한다.
     bool pumping_{}; //호스트 재진입 보호이며 접속 성공/Native 상태를 나타내지 않는다.
 };
 }

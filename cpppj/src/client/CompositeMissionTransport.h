@@ -3,6 +3,7 @@
 #include "client/LocalTcpTransport.h"
 #include "client/EditorLocalTransport.h"
 #include "o/PacketRegistrationTable.h"
+#include "client/MissionNetwork.h" //메타에서 인계한 실제 OS owner/등록표 수명을 같은 coordinator에 결합한다.
 
 namespace netstorm::client { // UI/roster/일반 State는 이 전송 owner의 바깥에서 원문대로 작성한다.
 // 전송 경로만 선택하며 server/boss/Player/Ready 값을 새로 쓰지 않는다.
@@ -11,7 +12,7 @@ enum class CompositeTransportRole { InternalMission,Editor,LanHost,LanClient };
 class CompositeMissionTransport final:public std::enable_shared_from_this<CompositeMissionTransport> {
 public:
     // globalsLifetime은 players/server/hooks가 빌리는 Client 물리 전체를 실제로 유지해야 한다.
-    static std::shared_ptr<CompositeMissionTransport> Create(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<void> globalsLifetime);
+    static std::shared_ptr<CompositeMissionTransport> Create(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<void> globalsLifetime,MissionNetwork network={});
     ~CompositeMissionTransport(); // backend가 실제 자기 노드/소켓만 반납한다. Player/등록 성공을 합성하지 않는다.
     CompositeMissionTransport(const CompositeMissionTransport&)=delete; // 현재 노드/대여 수명을 복제하지 않는다.
     CompositeMissionTransport& operator=(const CompositeMissionTransport&)=delete; // 같은 장기 표 주소를 대입하지 않는다.
@@ -40,9 +41,9 @@ public:
     CompositeTransportRole Role() const; // UI/원문 State가 이미 선택한 전송 경로만 조회한다.
 private:
     // 정적 Create만 실제 장기 owner를 만들며 생성 자체는 소켓/게임을 실행하지 않는다.
-    CompositeMissionTransport(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<void> globalsLifetime);
+    CompositeMissionTransport(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<void> globalsLifetime,MissionNetwork network);
     // 현재 token의 실제 backend를 구별한다. Unknown은 다른 외부 owner여서 dispatch하지 않는다.
-    enum class Backend { Missing,Internal,Editor,Tcp,Unknown };
+    enum class Backend { Missing,Internal,Editor,Tcp,Udp,Unknown }; //현재12도 같은 실제 UDP 노드로 선택한다.
     Backend Select(std::int32_t id) const; // 매 callback 뒤의 현재 Registry를 새로 읽는다.
     o::TransportPollResult ReceiveOne(std::int32_t id); // 선택 backend의 한 실제 프레임만 받는다.
     CompositeTransportRole role_; // API 호출이 다른 역할을 조용히 성공시키지 않게 하는 선택값이다.
@@ -51,9 +52,11 @@ private:
     std::shared_ptr<void> globalsLifetime_; // Player/server/시계·진단 hooks의 실제 장기 물리를 유지한다.
     std::shared_ptr<o::RawConnectionRegistry> registry_; // 모든 backend와 State가 함께 쓰는 고정 표다.
     std::shared_ptr<o::PacketRegistrationTable> registrations_; // 한 번만 초기화한 실제 전역 등록표다.
+    std::shared_ptr<void> inheritedNetwork_; //인계한 전체 메타 callback owner는 실제 backend보다 먼저 반납하지 않는다.
     std::shared_ptr<zacket::LocalMissionTransport> internal_; // 단독/LAN host 자기끝의 실제 내부 listener/client/accepted다.
     std::shared_ptr<EditorLocalTransport> editor_; // Editor 역할에서만 존재하는 실제 unbuffered 내부 owner다.
     std::shared_ptr<LocalTcpTransport> tcp_; // LAN 역할에서만 존재하는 실제 OS TCP owner다.
+    std::shared_ptr<LocalUdpTransport> udp_; //메타에서 현재12를 인계받은 경우 같은 전역ID 순회에 포함한다.
     bool polling_{}; // coordinator 자체의 재진입을 막아 같은 ID를 중복 소비하지 않는다.
 };
 }

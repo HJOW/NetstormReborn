@@ -4,7 +4,7 @@ struct UberGump::EditorRuntime {
     EditorFiles files; //읽기 전용 자산과 다른 형제 디렉터리의 편집 작업본만 쓴다.
     std::unique_ptr<EditorFortFileDevices> paths; //현재 Fort 이름/고정 FileSpec의 경로 scratch를 Session보다 오래 유지한다.
     std::shared_ptr<EditorLocalTransport> transport; //prefix에서 연 listener/client9와 뒤 수신기가 같은 실제 양끝을 빌린다.
-    std::unique_ptr<MetaConnectionRuntime> metaTransport; //World 없는 메타10/11의 실제 TCP/요청/현재 상태 장치다.
+    std::shared_ptr<MetaConnectionRuntime> metaTransport; //수신 중에도 실제 전체 메타 owner를 일반 전투에 인계하여 같은 callback/노드를 보존한다.
     std::unique_ptr<RawCampaignSession> metaWorld; //게임 GameWorld/커서와 구별하며 같은 실제 Pool·GumpForm·가상 자산 처리기를 빌리는 메타 수명이다.
     std::unique_ptr<RawCampaignFactoryDisplay> metaDisplay; //같은메타Session의Pool·Frame/현재팔레트출력기를빌리고Session보다먼저반납한다.
     std::unique_ptr<ClientMetaPointerInput> metaInput; //같은메타Session/표시기를 빌리는 선택·마우스 입력이며 두 owner보다 먼저 반납한다.
@@ -276,18 +276,20 @@ o::LocalMissionParentResult UberGump::InstallIntroNativeState(std::uint32_t sele
 // 미션 Login은 기존 분배기에 남기고 Edit1/2·메인3·인트로39~42과 다음4를 같은 분배기로 처리한다.
 void UberGump::PollEditorState() {
     auto& local=*client_.LocalStateGlobals();const auto next=local.State().next[0];const bool fort=next==1 || next==2 || next==6; // 일반 복귀6도 같은 Fort 설치/공통 확정을 사용하며 첫 배경/결과만 전용 부모가 처리한다.
+    const bool metaBattle=next==7 && editor_ && !world_ && client_.SurfaceStorage()->ownerMode.challenge; //실제 메타가 예약한 다음7만 현재 일반 전투 설치에 넘긴다.
     const bool metaIdle=next==0 && !world_ && editor_ && editor_->metaWorld && client_.SurfaceStorage()->ownerMode.challenge; //새 상태가 없어도 원문 Poll의 메타 표시/NSInfo 예약은 실제 현재 World에서 소비한다.
-    if (!fort && next!=3 && !(next>=19 && next<=38) && !(next>=39 && next<=42) && !(editor_ && next==4) && !metaIdle) return; //메타19~38 전체와 next0의 현재 메타 Poll을 같은 장기 분배기에 전달한다.
+    if (!fort && next!=3 && !(next>=19 && next<=38) && !(next>=39 && next<=42) && !(editor_ && next==4) && !metaIdle && !metaBattle) return; //메타19~38 전체와 next0의 현재 메타 Poll을 같은 장기 분배기에 전달한다.
     if (!editor_) editor_=std::make_unique<EditorRuntime>(client_);
     if (!editor_->state) { // 새 이름 창에서 먼저 확보한 파일 장치가 있어도 실제 State 분배기는 별도로 처음 한 번 구성한다.
         auto& game=*client_.GameplayGlobals();auto& surface=*client_.SurfaceStorage();
         o::LocalMissionStateHooks hooks;hooks.logState=[](auto value) { std::clog<<"State "<<value<<'\n'; };hooks.parentState=[this](auto selected) { if (selected>=39 && selected<=42) return InstallIntroNativeState(selected);if (selected==19) return InstallMetaNativeState(selected);if (selected>=20 && selected<=38) return InstallMetaConnectionState(selected);if (selected==6) return InstallBattleReturnNativeState(selected);return selected==3 ? InstallMainMenuNativeState(selected) : InstallExistingEditorState(selected); };
+        hooks.wallSeconds=[this] { return client_.WallSeconds(); };hooks.progress=[this](auto kind,auto remaining) { ShowLoginProgress(kind,remaining); };hooks.connectServer=[this](auto address,auto port) { if (!world_) throw std::logic_error("메타 State8의 현재 일반 World 누락");world_->Session().ConnectLocalConnectionForState(address,port); }; //실제 State7 뒤 같은 공통부의 즉시8도 새 World/현재 주소로 실행한다.
         hooks.invalidState=[](auto state) { throw std::logic_error("Editor/메인 분배기의 선택된 Native State 미연결:"+std::to_string(state)); };
         hooks.metaThird=[this] { rawButtons_->Menus()->RefreshMetaNsInfo(*client_.NsInfoGlobals()); }; //0047cab0은별도CS목록이아닌기존00593150 NSInfo를실제Push/Attach한다.
         hooks.metaFirst=[this] { client_.RefreshNativeMetaDisplay(false); };hooks.metaSecond=[this] { client_.RefreshNativeMetaDisplay(true); }; //원문Poll의479760/47dd60을같은현재CS/Pool/Renderer에연결한다.
         editor_->state=std::make_unique<o::RawLocalMissionState>(client_.Assets().Edition(),local.State(),o::LocalMissionStateGlobals{game.Server(),game.Boss(),surface.ownerMode.battle,game.world.missionPost,local.SavedGame(),surface.links.mission,local.Simulconnect(),surface.ownerMode.challenge,game.player,local.ZonePending(),local.GameTicks(),local.SourceType(),local.CdPresent(),local.Blocks()[2][33],local.MetaRefresh(),local.MetaRebuild(),reinterpret_cast<std::uint8_t&>(htmlGlobals_.background[0]),local.BattleByte(),local.ConnectEnd(),local.ActivityEnd(),client_.Time().game,client_.Time().wall},std::move(hooks));
     }
-    if (fort || next==3) editor_->committed=false;editor_->state->Poll();
+    if (fort || next==3) editor_->committed=false;if (metaBattle) editor_->state->PollStarting([this] { LoadNativeBattleWorldBody(); });else editor_->state->Poll();
     if (next>=39 && next<=42) {
         if (local.State().phase[0]==3 && local.State().next[0]==4) PublishNativeMainMenuState();
         return; // 영상이 살아 있는 State40은 다음 Poll까지 유지하며 메인 메뉴를 먼저 공개하지 않는다.

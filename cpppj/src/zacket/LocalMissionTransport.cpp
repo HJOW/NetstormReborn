@@ -182,7 +182,7 @@ bool LocalMissionTransport::SendPacket(std::int32_t destination,std::span<const 
     if (!open_) throw std::logic_error("로컬 전송 연결을 열기 전 송신");
     if (packet.size()>=kHeader && IsRetiredCdValidationPacket(packet[1])) return false; // 폐기된 파일 검증은 observer/송신 큐까지 전달하지 않는다.
     if ((direct ? direct==&client_ : destination==9) && (!clientPresent_ || !(client_.flags&2U) || (client_.flags&0x40U) || clientPeerLost_)) return false; //현재 실제 Client9/반대 끝 수명을 사용한다.
-    if (!direct && destination>=1 && destination<static_cast<std::int32_t>(kPlayers) && !(players_[std::size_t(destination)*kPlayerBytes+0x50]&1U)) return false;
+    if (!direct && destination>=1 && destination<static_cast<std::int32_t>(kPlayers) && !o::PacketPlayerActive(players_,hooks_.players,static_cast<std::uint32_t>(destination))) return false;
     const bool client=direct ? direct==&client_ : destination==9,server=serverPresent_ && !serverPeerLost_ && !(server_.flags&0x40U) && (direct ? direct==&server_ : (destination==pendingId_ && pending_) || (destination>=1 && static_cast<std::uint32_t>(destination)==owner_));
     if (!client && !server) return false;if (packet.size()<4) throw std::out_of_range("로컬 송신 헤더 부족");const auto registration=dispatch_.Registration(packet[1]);const auto sessionPin=registration.Pin(); // observer 뒤 caller의 실제 패킷 저장소까지 송신 복귀 동안 유지한다.
     if (!writable.empty()) registration.NotifyObserver(writable,1);

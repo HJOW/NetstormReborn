@@ -10,6 +10,11 @@ class LocalUdpTransport final {
 public:
     LocalUdpTransport(std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<o::PacketRegistrationTable> registrations); //생성은소켓을열지않으며같은현재표두개와원문분배효과를필수로받는다.
     ~LocalUdpTransport(); //자기UDP노드/소켓/WSA참조만반납한다.다른backend의현재슬롯을지우지않는다.
+    void RebindHooks(o::PacketDispatchHooks hooks); //현재 실제12/등록표를 보존하고 새 World의 장치만 연결한다.
+    void BeginPoll();o::TransportPollResult ReceiveOne(std::int32_t id);void EndPoll(); //복합 전송도 같은 전역ID 순회에서 현재12만 수신하고 외곽 복귀 뒤 물리를 수거한다.
+    o::PacketConnection* Connection(std::int32_t id) const;bool IsOpen(std::int32_t id) const;std::int32_t Status(std::int32_t id) const; //현재 자기12의 같은 객체/소켓/원문 준비값을 조회한다.
+    const std::shared_ptr<o::RawConnectionRegistry>& Registry() const;const std::shared_ptr<o::PacketRegistrationTable>& Registrations(); //TCP와 같은 실제 두 표인지 인계 때 확인한다.
+    bool Send(std::span<const std::uint8_t> packet);bool SendMutable(std::span<std::uint8_t> packet); //현재 자기12에 일반 가상 송신을 하고 mutable 경계에서만 observer1을 실행한다.
     LocalUdpTransport(const LocalUdpTransport&)=delete;LocalUdpTransport& operator=(const LocalUdpTransport&)=delete; //고정노드와callback의this주소를복제하지않는다.
     bool Open(std::uint32_t port); //004e2bd0의현재UDP12를새로열어공개한다.실제OS실패는false/LastError이며검색성공을쓰지않는다.
     void Close(); //004e2d20의현재12만닫고callback깊이가남은물리는분배복귀까지보존한다.
@@ -26,7 +31,7 @@ private:
     Node* Find(const o::PacketConnection& connection) const; //반납대기중에도같은물리주소를식별한다.
     Node* Current() const; //현재12가자기노드일때만반환한다.옛세대/다른backend는선택하지않는다.
     o::TransportPollResult ReceiveOne(Node& node); //004dfc00의데이터그램크기/4096상한/검증/observer/수신순서다.
-    bool SendNode(Node& node,std::span<std::uint8_t> packet,std::optional<std::uint32_t> broadcastPort); //가상+4의send와가상+8의sendto를구별한다.UDP일반send의실제OS실패도원문처럼종료통지한다.
+    bool SendNode(Node& node,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,std::optional<std::uint32_t> broadcastPort); //가상+4의send와가상+8의sendto를구별하고 같은 mutable this의 observer를 한 번 실행한다.
     void Fail(Node& node,std::int32_t error); //004df9f0의마지막version을보존한2번통지만한번수행한다.
     void CloseSocket(Node& node); //현재실제OS핸들을한번반납한다.실패시원래코드를보존한다.
     void CloseReady(Node& node); //closed/depth0일때만같은Registry의소멸/반납을완료한다.

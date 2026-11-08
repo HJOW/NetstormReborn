@@ -19,6 +19,7 @@
 #include <utility>
 
 namespace netstorm::client { // 원문 Ztrans/Zocket의 OS 소켓과 패킷 분배를 명시적으로 나눈다.
+void LocalTcpTransport::RebindHooks(o::PacketDispatchHooks hooks) { if (!hooks.now || !hooks.record || !hooks.terminate || !hooks.close || !hooks.release) throw std::invalid_argument("TCP 인계의 실제 분배 장치 누락");hooks_=std::move(hooks); } //현재 wrapper가 매 효과에서 새 장치를 읽으며 socket/depth/버퍼는 보존한다.
 namespace { // TCP 주소·원문 비정렬 헤더와 오류 변환만 제공한다.
 constexpr std::size_t kHeader=4,kWireLimit=65535,kPlayerStride=180,kPlayerCount=9; // 원문 헤더/WORD 길이/Player9의 실제 폭이다.
 constexpr std::uint32_t kClosed=0x40,kBuffered=2,kConnecting=0x20,kTerminated=0x10; // PacketConnection 상위 필드이며 하위 socket 상태와 구별한다.
@@ -272,7 +273,7 @@ bool LocalTcpTransport::SendMutable(std::int32_t destination,std::span<std::uint
 //004e2dc0의 Player/연결 gate를 실행한 뒤에만 observer와 실제 송신을 선택한다.
 bool LocalTcpTransport::SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,o::PacketConnection* direct) {
     const CallGuard call(activeCalls_);if (packet.size()>=kHeader && Retired(packet[1])) return false;
-    if (!direct && destination>=1 && destination<static_cast<std::int32_t>(kPlayerCount) && !(players_[static_cast<std::size_t>(destination)*kPlayerStride+0x50]&1U)) return false;auto* node=direct ? Find(*direct) : Current(destination);if (!node || node->retired || (node->connection.flags&kClosed) || node->socket==kInvalidSocket) return false;
+    if (!direct && destination>=1 && destination<static_cast<std::int32_t>(kPlayerCount) && !o::PacketPlayerActive(players_,hooks_.players,static_cast<std::uint32_t>(destination))) return false;auto* node=direct ? Find(*direct) : Current(destination);if (!node || node->retired || (node->connection.flags&kClosed) || node->socket==kInvalidSocket) return false;
     if (packet.size()<kHeader) throw std::out_of_range("LAN TCP 송신 헤더 부족");if (RetiredFrame(packet)) return false;
     const auto observer=dispatcher_.Dispatch().Registration(packet[1]);const auto sessionPin=observer.Pin(); // callback이 caller의 패킷 owner를 반납해도 실제 송신 복귀까지 유지한다.
     if (!writable.empty()) observer.NotifyObserver(writable,1);if ((!direct && Current(destination)!=node) || node->retired || (node->connection.flags&kClosed)) return false;const auto length=Read(packet,2,2);if (length<kHeader || length>packet.size()) throw std::out_of_range("LAN TCP 송신 선언 길이 범위");if (RetiredFrame(packet)) return false;if (packet[1]==4 && (node->connection.flags&kBuffered)) throw std::logic_error("LAN TCP buffered 안의 직접 집합 송신 미복원");SendNode(*node,packet.first(length));return !node->retired && !(node->connection.flags&kClosed);

@@ -6,6 +6,7 @@
 #include <utility>
 
 namespace netstorm::o {
+bool PacketPlayerActive(std::span<const std::uint8_t> fallback,const std::function<std::span<const std::uint8_t>()>& current,std::uint32_t owner) { const auto players=current ? current():fallback;if (players.size()!=9U*180U || owner>=9) throw std::out_of_range("송신의 실제 현재 Player9 물리 부족");return (players[owner*180U+0x50U]&1U)!=0; } //현재 base를 한 번 조회하고 active의 낮은BYTE만 읽으며 별도 known/phase 조건을 더하지 않는다.
 namespace {
 // 단일 패킷 헤더의 선언 길이 WORD다. caller가 최소 4바이트를 확인한 뒤 읽는다.
 std::uint16_t Length(std::span<const std::uint8_t> packet) { return static_cast<std::uint16_t>(packet[2]|(static_cast<std::uint16_t>(packet[3])<<8)); }
