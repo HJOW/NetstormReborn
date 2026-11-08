@@ -527,7 +527,7 @@ cpppj/src/o/RawBaseProcessAttach.cpp	port	www/core/raw-process-attach.js	1f00a25
 cpppj/src/o/RawBattleBroadcast.cpp	port			todo	[o-default]
 cpppj/src/o/RawBoardAngle.cpp	port	www/core/raw-board-angle.js	1f00a25a	port	[o-default] WB04-E15: 0041cdb0 Boardcoord 각도 정규화(10.78 경로). fixture board-angle-hardware originals 544행 전부
 cpppj/src/o/RawBoardApproach.cpp	port			todo	[o-default]
-cpppj/src/o/RawBoardTarget.cpp	port			todo	[o-default]
+cpppj/src/o/RawBoardTarget.cpp	port	www/core/raw-board-target.js	1f00a25a	port	[o-default] WB04-E100: 운반 명령 변 중간점 41d400·일반 접근점 41d530(x87 53비트 확장·float 저장 지점·flags2 북쪽 특례·진단 실패점). fixture carrier-target 2245행+carrier-target-hardware 2040행(실제 CPU 53/64비트) 전부(10.78 전용 파일). 실패점 sNaN quiet 비트는 JS 표현 한계로 시험이 정규화
 cpppj/src/o/RawBombActivation.cpp	port	www/core/raw-bomb-activation.js	1f00a25a	port	[o-default] WB04-E17: 0x5c/41e860 주문 활성화 수신(원격 비용·genus 진단·할당·예약). fixture bomb-activation 10.78 434행 전부
 cpppj/src/o/RawBombBlast.cpp	port	www/core/raw-bomb-blast.js	1f00a25a	port	[o-default] WB04-E54: 502370 폭발 계열 자격 41e9c0·효과 41ea30. fixture bomb-blast 2082·bomb-blast-dais 64행. 실제 피해/삭제/ground/끝 칸 변환은 월드 조립에서
 cpppj/src/o/RawBombEffect.cpp	port	www/core/raw-bomb-effect.js	1f00a25a	port	[o-default] WB04-E54: 0x5f 주문 효과 수신 420bf0·송신 observer 40aca0. fixture bomb-effect 1676행. 실제 시전 종료/apply/지연 객체/소리/삭제는 월드 조립에서
@@ -587,7 +587,7 @@ cpppj/src/o/RawCarrierPostPop.cpp	port	www/core/raw-carrier-post-pop.js	1f00a25a
 cpppj/src/o/RawCarrierPreDestroy.cpp	port	www/core/raw-carrier-pre-destroy.js	1f00a25a	port	[o-default] WB04-E56: Carrier 삭제 준비 00426890·FindContained 004ac9f0·사제 훅 연결. fixture carrierpredestroy 10.78 960행 전부. 실제 Damageable/전역 후처리는 해당 이식 단위
 cpppj/src/o/RawCarrierRegular.cpp	port	www/core/raw-carrier-regular.js	1f00a25a	port	[o-default] WB04-E91: 골렘 Regular Handle 42a750(시전 기한 0x493·교대 표시 0x491·회피 0x492·낙하 0x5105·Damageable 위임·여섯 VT 분배). fixture carrier-regular 837행+carrier-regular-vtables 83행 전부(10.78 전용 파일). 내용물 조회/미리보기 생성/Pop/타이머/회피/낙하/Damageable 본체 연결은 해당 단위에서
 cpppj/src/o/RawCarrierSteal.cpp	port	www/core/raw-carrier-steal.js	1f00a25a	port	[o-default] WB04-E92: 크리스탈 크랩 포획 Try 429ed0·Halt 42ab80·PostPop 42abb0·수신 4267c0(역방향 동맹·사제 제외·10바이트 명령 로컬 수신→송신→이동 제거→귀환·공유 정지 카운터). fixture carrier-steal 1105행 전부(10.78 전용 파일). 공통 정지/Regular 생성자/분리·부착/송신/이동 제거/귀환 본체 연결은 해당 단위에서
-cpppj/src/o/RawCarrierTarget.cpp	port			todo	[o-default]
+cpppj/src/o/RawCarrierTarget.cpp	port	www/core/raw-carrier-target.js	1f00a25a	port	[o-default] WB04-E100: 운반체 대상 접근 4894e0(네 변 재시도)·귀환 4276a0·간헐천 427600·집으로 428fd0. fixture carrier-target 2245행 전부. 발자국 4ade70·경로 시작 489080·귀환 후보 428ea0은 훅 경계
 cpppj/src/o/RawCarrierTask.cpp	port	www/core/raw-carrier-task.js	1f00a25a	port	[o-default] WB04-E72: Carrier task 426db0(현재 Regular 조회/생성/낙하 유지/NaN 보존 기한). fixture carrier-fall-start 2850행 중 task 설정 행 포함 전부(10.78 전용 파일)
 cpppj/src/o/RawCarrierTransfer.cpp	port	www/core/raw-carrier-transfer.js	1f00a25a	port	[o-default] WB04-E73: 미등록 187 캐리어의 주기 Halt 42ac60·너겟 전달 42a0d0·수신 426830. fixture carrier-transfer 1110행 전부(10.78 전용 파일, 53비트 열). 이동 제거/간헐천 선택/귀환/공통 Halt 본체는 해당 파일 단위에서
 cpppj/src/o/RawChatManagerPrefix.cpp	port			todo	[o-default] 단독 HUD Chat 의 manager 초기화. 랭크 prefix 는 단독 관문 그대로

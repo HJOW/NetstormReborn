@@ -9481,9 +9481,70 @@
       "bytes": 630169,
       "lines": 983,
       "fixtureCommit": "f3e45255",
-      "webCommit": "worktree",
+      "webCommit": "1c797936",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierMove.cpp": "9388cd63"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E100",
+      "id": "carrier-target",
+      "path": "cpppj/tests/fixtures/carrier-target-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 운반 대상 접근의 외부 효과 순서·반환 주소·직접 결과·실패점·boss·시도 횟수·두 슬롯 raw(2245행; 연산 6종)",
+      "consumers": [
+        "webpj/tests/carrier-target.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-board-target.js",
+        "webpj/www/core/raw-carrier-target.js"
+      ],
+      "doc": "docs/webpj-carrier-target-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBoardTarget.cpp",
+        "cpppj/src/o/RawCarrierTarget.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 2245행 전부 사용(기하 1020행은 실제 CPU 열을 기대값으로 대체)",
+      "text": true,
+      "sha256": "7ec562c25de1439cf420ddeb6f6f18207ced85dc78f2abbc996c604b52423e45",
+      "bytes": 1576206,
+      "lines": 2246,
+      "fixtureCommit": "b7932e86",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBoardTarget.cpp": "b7932e86",
+        "cpppj/src/o/RawCarrierTarget.cpp": "b7932e86"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E100",
+      "id": "carrier-target-hardware",
+      "path": "cpppj/tests/fixtures/carrier-target-hardware.tsv",
+      "producer": "cpppj 실제 CPU 측정: 변 중간점/일반 접근점의 53/64비트 x87 정밀도(제어 워드 639/895) 효과·결과 두 좌표·실패점(2040행)",
+      "consumers": [
+        "webpj/tests/carrier-target.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-board-target.js"
+      ],
+      "doc": "docs/webpj-carrier-target-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBoardTarget.cpp"
+      ],
+      "scope": "10.78 전용 2040행 전부 사용(입력 1020개 × 두 제어 워드)",
+      "text": true,
+      "sha256": "d3b55267077f3ed7416b6923bf96cefdfa96264aa2a7968827514c531196043c",
+      "bytes": 117318,
+      "lines": 2041,
+      "fixtureCommit": "b7932e86",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBoardTarget.cpp": "b7932e86"
       }
     }
   ]
