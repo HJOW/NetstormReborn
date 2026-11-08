@@ -11480,9 +11480,38 @@
       "bytes": 5616,
       "lines": 102,
       "fixtureCommit": "8bf76206",
-      "webCommit": "worktree",
+      "webCommit": "d29cb9c0",
       "cpppjBasis": {
         "cpppj/src/o/RawManaBoltArrival.cpp": "9dd15ef2"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E144",
+      "id": "path-halt-parent-hardware",
+      "path": "cpppj/tests/fixtures/path-halt-parent-hardware-x86.tsv",
+      "producer": "cpppj 실제 CPU 관측: 공통 경로 Halt 부모의 가상 결과·진단 복귀·강제 정지·재지정 순서(10.78 2288행)",
+      "consumers": [
+        "webpj/tests/path-halt-parent.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-halt-parent.js"
+      ],
+      "doc": "docs/webpj-path-halt-parent-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathHaltParent.cpp"
+      ],
+      "scope": "10.78 실제 CPU 2288행 전부",
+      "text": true,
+      "sha256": "ca7661b77324eb0b47cddf86211902d96e6fe282eee683ebf0cf251c648a2db8",
+      "bytes": 202147,
+      "lines": 2288,
+      "fixtureCommit": "25f4ed67",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathHaltParent.cpp": "8a555c99"
       }
     }
   ]
