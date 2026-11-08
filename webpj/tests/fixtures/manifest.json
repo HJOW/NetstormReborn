@@ -8172,7 +8172,7 @@
       "bytes": 7742674,
       "lines": 9885,
       "fixtureCommit": "030386a6",
-      "webCommit": "worktree",
+      "webCommit": "6fae5622",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierFalling.cpp": "8b467ca0"
       }
@@ -8201,7 +8201,7 @@
       "bytes": 567,
       "lines": 9,
       "fixtureCommit": "030386a6",
-      "webCommit": "worktree",
+      "webCommit": "6fae5622",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierFalling.cpp": "8b467ca0"
       }
@@ -8230,7 +8230,7 @@
       "bytes": 5666122,
       "lines": 2658,
       "fixtureCommit": "318bfd14",
-      "webCommit": "worktree",
+      "webCommit": "6fae5622",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierPickup.cpp": "318bfd14"
       }
@@ -8259,7 +8259,7 @@
       "bytes": 620091,
       "lines": 1732,
       "fixtureCommit": "a550c7f0",
-      "webCommit": "worktree",
+      "webCommit": "6fae5622",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierContentNotice.cpp": "a550c7f0"
       }
@@ -8288,9 +8288,67 @@
       "bytes": 1082972,
       "lines": 1111,
       "fixtureCommit": "d00175c9",
-      "webCommit": "worktree",
+      "webCommit": "6fae5622",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierTransfer.cpp": "0d82e448"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E74",
+      "id": "fence-line",
+      "path": "cpppj/tests/fixtures/fence-line-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 바리케이드 연결선 삭제 mode 0 이 finder 에 넘기는 정수 검색점 순서(단정도 네 끝점 비트 입력; x87 53/64 두 정밀도에서 일치)",
+      "consumers": [
+        "webpj/tests/fence-line.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fence-line.js"
+      ],
+      "doc": "docs/webpj-fence-line-lifetime-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFenceLine.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 99개 입력 전부 사용(머리글 행 제외)",
+      "text": true,
+      "sha256": "f32d6fae769eef91a6b853b10da261baadb7b793c9370c0715c01d2bc39c0e4c",
+      "bytes": 28632,
+      "lines": 100,
+      "fixtureCommit": "6b4ffe65",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFenceLine.cpp": "6b4ffe65"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E74",
+      "id": "fence-lifetime",
+      "path": "cpppj/tests/fixtures/fence-lifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 바리케이드 Clear/Refresh/PreDestroy 의 호출 순서와 다섯 슬롯 raw 전체(두 x87 정밀도에서 일치한 입력)",
+      "consumers": [
+        "webpj/tests/fence-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fence-lifetime.js"
+      ],
+      "doc": "docs/webpj-fence-line-lifetime-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFenceLifetime.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 207행 전부 사용",
+      "text": true,
+      "sha256": "f3e5be8c131684bc679dba1fb7d27f431ace773495800e92ced8fd7ac856155b",
+      "bytes": 154009,
+      "lines": 208,
+      "fixtureCommit": "b62491bf",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFenceLifetime.cpp": "b62491bf"
       }
     }
   ]

@@ -673,8 +673,8 @@ cpppj/src/o/RawFactoryUpgrade.cpp	port			todo	[o-default]
 cpppj/src/o/RawFactoryUpgradeCommand.cpp	port			todo	[o-default]
 cpppj/src/o/RawFarmCluster.cpp	port			todo	[o-default]
 cpppj/src/o/RawFenceCreate.cpp	port			todo	[o-default]
-cpppj/src/o/RawFenceLifetime.cpp	port			todo	[o-default]
-cpppj/src/o/RawFenceLine.cpp	port			todo	[o-default]
+cpppj/src/o/RawFenceLifetime.cpp	port	www/core/raw-fence-lifetime.js	1f00a25a	port	[o-default] WB04-E74: 썬 바리케이드 연결 정리 4577f0·이웃 갱신 4578f0·가상 preDestroy 457990. fixture fence-lifetime 207행 전부(10.78 전용 파일). 이웃 검색/표식 삭제/재생성(RawFenceRebuild)/Damageable 본체는 해당 파일 단위에서
+cpppj/src/o/RawFenceLine.cpp	port	www/core/raw-fence-line.js	1f00a25a	port	[o-default] WB04-E74: 썬 바리케이드 연결선 삭제 00455b20 mode 0(보정 검색점·100회 상한·J/K 방향 연결선 가상 삭제 0x40). fixture fence-line 99개 입력 전부(10.78 전용 파일). 가상 삭제 본체는 해당 파일 단위에서
 cpppj/src/o/RawFenceMarkerClear.cpp	port			todo	[o-default]
 cpppj/src/o/RawFenceNeighbors.cpp	port			todo	[o-default]
 cpppj/src/o/RawFencePostPop.cpp	port	www/core/raw-fence-post-pop.js	1f00a25a	port	[o-default] WB04-E60: 썬 바리케이드 후처리 00457560(이웃·연결선·연결 수·Regular 사건). fixture fence-postpop 330행 전부. 자산 후처리(RawAssetPostPop) 분배 연결은 그 단위에서
