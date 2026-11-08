@@ -1,6 +1,6 @@
 # cpppj — NetStorm C++ 빌드
 
-**2026-11-08 현재 제품1158 / 표시 버전11.01. /goal 진행 중이다.** M3.3a의 State33 master 주소를 실제 TCP의 기존9 조기 재사용 전에 읽지 않게 복원했다. 다음은M3.3b의 State19 준비·Descend/참가 후속 World/카메라/HTML·실제 진단 장치다.3차 잔여6묶음은 [현행 인수인계](../LEFT_JOBS.md), 두 Release 종료0·경고/오류0·보호2800 불변과 실행 제외는 [1158 기록](../docs/exe/cpp-meta-master-address-order-20261108.md)을 따른다. 전체 목표는 미완료다.
+**2026-11-08 현재 제품1159 / 표시 버전11.01. /goal 진행 중이다.** M3의 State19/Core 현재 진단 장치·Descend/참가 후속 World/카메라/HTML Caller 접합을 마쳤다. 중앙 원문 진단창/파일은M7.5의 명시 미완료다. 다음은M4.1의1095 송신1fh/7ch·State33 실제 Caller 대조다.3차 잔여5묶음은 [현행 인수인계](../LEFT_JOBS.md), 두 Release 종료0·경고/오류0·보호2800 불변/실행 제외는 [1159 기록](../docs/exe/cpp-meta-transition-closure-20261108.md)을 따른다. 전체 목표는 미완료다.
 
 1052에서 사용자 제보 `SubscriberGlobalsTests.cpp(40,50)` C2607을 수정했다. 같은 실제 파일 Release컴파일/기존7검사가 통과했으며 해당 검사 수정 단위는 제품 코드를 바꾸지 않았다. [수정 기록](../docs/exe/cpp-subscriber-globals-compile-fix-20261107.md).
 

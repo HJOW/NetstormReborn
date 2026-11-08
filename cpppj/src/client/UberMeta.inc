@@ -22,7 +22,7 @@ o::LocalMissionParentResult UberGump::InstallMetaNativeState(std::uint32_t selec
     hooks.applyPalette=[this](auto path) { client_.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(path.data()),path.size()+1}); };
     hooks.cleanup=[this](auto reason) { CleanupNativeStateWorld(reason); };
     hooks.checkCd=[this] { return client_.CdGlobals()->Check(MakeWindowsCdPresenceHooks(&client_.StaticStrings()->FileNames())); };
-    hooks.initializeRenderer=[this] { client_.InitializeNativeRendererView(); };hooks.assertion=[](auto line) { std::clog<<"State.cpp CS->listsInitialized 진단:"<<line<<'\n'; };
+    hooks.initializeRenderer=[this] { client_.InitializeNativeRendererView(); };hooks.assertion=[this](auto line) { client_.SurfaceStorage()->AssertDisplay("CS->listsInitialized",".\\State.cpp",line); }; //기존 CS 재사용 진단도 같은 현재 Client 장치를 호출하고 복귀 뒤 Reset을 계속한다.
     hooks.request=[this](auto next) { editor_->state->Request(next); };
     hooks.selectCore=[this,&game,&surface](auto owner,auto templateOwner) { const std::uint32_t mode=surface.ownerMode.challenge;client_.CoreDataGlobals()->Select(game.player,mode,owner,templateOwner); };
     hooks.currentFortPath=[this] { return std::string(EnsureEditorFortFiles().PrepareCurrent()); }; //같은 사용자 홈/기존 자산 이관 정책에서 실제 현재 파일만 준비한다.
@@ -35,7 +35,7 @@ o::LocalMissionParentResult UberGump::InstallMetaNativeState(std::uint32_t selec
     hooks.loadCore=[this,&game,&surface](auto owner,auto minimum) {
         FortCoreDataLoadContext context{game.world.missionPost,game.world.editor,surface.ownerMode.challenge,game.player,*client_.CoreDataGlobals(),templateStorage_->LoadingDepth()};
         context.seed=[this]()->std::uint32_t& { return client_.RandomGlobals()->FortCoreSeed(); };
-        context.assertion=[](auto expression,auto file,auto line) { std::clog<<file<<':'<<line<<' '<<expression<<'\n'; };
+        context.assertion=[this](auto expression,auto file,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,file,line); }; //CoreData의 현재 식/파일/줄을 보존해 같은 Client 진단과 복귀 순서를 사용한다.
         context.refreshRank=[this,&surface] { RefreshClientChatRankPrefix(client_,client_.Assets(),surface); };context.invalidData=[&game] { game.PatchDiagnostic()=game.PatchSample(); };
         LoadFortCoreData(*templateStorage_,owner,minimum!=0,std::move(context));PrepareMetaWorldRuntime(); //같은Fort/캐시읽기뒤HUD가필요로하는실제Pool·Form처리기만구성한다.
     };

@@ -1,0 +1,145 @@
+{
+  "unit": 1159,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "71636c95 / 20261108-129 CP",
+  "summary": "M3.3b의 State19/같은 Fort Core 진단을 현재 Client 장치로 연결하고 Descend→State19/같은 World·카메라/HTML 후속 Caller를 C/PE에 대조해 M3 구현 접합을 마감했다. 중앙 로그 전용 진단의 원본 창/파일 복원은M7.5로 명시한다.",
+  "build": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "configuration": "Release/x64",
+    "exitCode": 0,
+    "warnings": 0,
+    "errors": 0,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1159\\build.log"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13169664,
+      "sha256": "45249f4e0d8e20d86f1d669753808f52d72902034a13d059c33545cda3cef3f0"
+    },
+    "R.exe": {
+      "bytes": 670208,
+      "sha256": "e0d1edb704d076c0ae9a9abcdcf77404b2e7274ec67810ba2b0e9f3a8c34a7ea"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": []
+  },
+  "nativeEvidence": {
+    "004b3620": {
+      "bytes": 316,
+      "peSha256": "f81db8e9e4e3f245319fd4ba8cce232086ce83a54c45d1fa1f621a425535e8c6",
+      "cSha256": "85d6e98a22a9c2cbfa76124c9e39b8471e9bca0c47907cc501dadcb310bcc0dc"
+    },
+    "004b3760": {
+      "bytes": 65,
+      "peSha256": "b219b4fe91196ee60632fcd1e34af0fcdd7a066855284c39cf190b25966bbe69",
+      "cSha256": "820616c2158954af29aa742fd6e0184fdd0a8e350fef12ff1b4ab17eee3e1996"
+    },
+    "004beca0": {
+      "bytes": 532,
+      "peSha256": "14cb88dd169d547c4c607b233562e7f09187a16b22e398916bfaece42358a9cf",
+      "cSha256": "2b00b14b55bf00738529f411dcd1e240db7b7519c4819677bb923c2ddc939a91"
+    },
+    "004b6dd0": {
+      "bytes": 6521,
+      "peSha256": "76ffc59e8bd82f122c1ad251831be6e9acaaad20a331f989bfdbd7a7de6710b2",
+      "cSha256": "953810f4b0035f4b9ad9de1875dde37697947dab8716088375f3a570fbf166be"
+    },
+    "004340d0": {
+      "bytes": 673,
+      "peSha256": "74e8670cbe9427f32628a3fca294f0a5b53d774e432c88b9087307dcdf03b97b",
+      "cSha256": "5f4ee6af819b29396e76024af8890ee747fac29922694306ba97f8466bde22ff"
+    },
+    "004e0620": {
+      "bytes": 784,
+      "peSha256": "ea1e814c716eca5df76e51e0decc016c323db56ff416f7c72433572ae2916eb3",
+      "cSha256": "ebc58dd5ca6781a97c05e5a5b642dbb6f4435d76711fb4198370de89250993ae"
+    },
+    "004e0520": {
+      "bytes": 249,
+      "peSha256": "66c7ebcce1451ccd5fe7b9436bff92c73450f133e44fcea659feb94114e45b0b",
+      "cSha256": "9f34059bd093a7e897d1940f355710bb5d7efc6a824be605fc17bc8b7e279f4b"
+    },
+    "0042f270": {
+      "bytes": 145,
+      "peSha256": "45837250546dbb426621fec2b05bacc443d16dc52b2b1d1c73b348fecf569444",
+      "cSha256": "86cf858408e97481781210ca90816dfd5387a3fe54ed2955f382896946d12517"
+    },
+    "0042f3d0": {
+      "bytes": 91,
+      "peSha256": "f53e4ca871ce6261975b42553d00043adcd92fd56697f8a28a0209b7b12c9bdd",
+      "cSha256": "b71ab10d5a6664859c81f1bd298053068649f1daf0568bcaf037019a916be70a"
+    },
+    "0042e4d0": {
+      "bytes": 20,
+      "peSha256": "45b435badb7bc94a70fbf8fdabff5ede730ee90702d4e11916d38be4f413d1eb",
+      "cSha256": "356803795798eadb8ac5a4c4ab38677e5e4f56c38ca7fa9f332678a838886656"
+    },
+    "0048f3b0": {
+      "bytes": 126,
+      "peSha256": "ebe471b7a79de2393d63bc5ad604f2d0eed43f8de0d97aa3c8d952679c93f047",
+      "cSha256": "bb90b60875d2aba0a86ef4e12c51a0c7111e8b3a2aa414deb0c941505d82154a"
+    },
+    "00460680": {
+      "bytes": 65,
+      "peSha256": "9bebb79446f24bedbf68c551693938162b50f7a8651ecd707ae61313bb1b47b3",
+      "cSha256": "cc4f4a0055d408fdc7f404c14d0ce78727e8addfd15a694de22da5eeac7afda8"
+    }
+  },
+  "sourceSha256": {
+    "cpppj/src/client/UberMeta.inc": "92aef4db7a0abb259a40d1bfbc3da30125ffa517a9c6a296cf4d3ac6aeb91304",
+    "cpppj/src/client/NativeMetaState.cpp": "09462d08d679cd3ce27450cb7f09fc92ed0f9c1876bfa7b169c2fdc605068ffc",
+    "cpppj/src/client/RawCampaignVortex.inc": "1db84eb1ab1ba22c9f6679c0cf129497b791be6aaefd114a98a45d653b48d730",
+    "cpppj/src/client/VortexCommandInput.cpp": "fc1e8b5533ebce082dac1d87e62730b6814c525ea15dcb0810052820a5c9677c",
+    "cpppj/src/client/RawCampaignSession.cpp": "c797d0a8757f1383c97024089549b6d806a85cdd244a19680f2da3284d39cc97",
+    "cpppj/src/client/UberEditor.inc": "d633564ca9940456430da6e0248ab07309a7ed724ca638e183c07835a40fc30c",
+    "cpppj/src/client/UberGump.cpp": "466775d05dcada786b406f289c76d3116482a927ecb304f892331b80c795d42f",
+    "cpppj/src/client/FortCoreDataLoad.cpp": "c3cd2b8087869450a00bd065c619d701cc8850b36c9b64d9b56b43f9593ee5a6",
+    "cpppj/src/client/ClientChatRuntime.cpp": "06d67079c3f5ccfa723e465fec87431ba049b7c2101913c96f13d2f894a72582",
+    "cpppj/src/client/NativeMetaConnectedState.cpp": "79e55146bf5b47dd042e167dd7789ce3e34e782f18dab19387bc3787ea970a67",
+    "cpppj/src/client/ClientRendererFrame.cpp": "8af6b741f3982afe75f662402414e13ecd0b683e15253078beac6f7f3c1c194b",
+    "cpppj/src/client/CameraHome.cpp": "bab8631076d24c4dfd6c02013c45741c9e64427f085e99746bf381fb4af53db2",
+    "cpppj/src/client/ClientMain.cpp": "bc2864045196cb8f459fe278997df509faca62ca6ebc781bf14dc33ee1746c17"
+  },
+  "sourceAudit": {
+    "currentClientDiagnosticUsedForBothSelectedParents": true,
+    "originalStateCppExpressionFileAnd1322LineConfirmedInPe": true,
+    "actualTempleQueueToViewMetaToFortTerritoryWriteToNext19": true,
+    "sameFiveBlocksSinglePoll19AndImmediate253421": true,
+    "paletteCleanupCdModesRendererCsCoreFortHudNewsChatInputOrder": true,
+    "sameActualPreparedMetaSessionAndDisplayInputOwners": true,
+    "participantCameraResetCommitsActualSharedCameraAndLoadingDepth": true,
+    "actualHtmlTellSerialAndModal32NotSyntheticToken": true,
+    "centralDefaultDiagnosticGapExplicitlyNotCountedComplete": true
+  },
+  "remaining": {
+    "m3Complete": true,
+    "next": "M4.1 / unit1095의1fh·7ch 송신/State33 실제 Caller 마감 대조",
+    "stage3Groups": 5,
+    "m7Items": 5,
+    "m7Added": "M7.5: ClientMain.cpp의중앙AssertDisplay기본값은clog뿐이다. 원문4e0620/4e0520의재진입guard·assert.html/실제진단대화상자·상세반납을사용자홈/11.01/64비트환경에맞춰복원해야한다. 기존32비트스택주소동일성경계로활성진단창을숨기지않는다."
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "full34": 0,
+    "zip": 0
+  },
+  "limitations": [
+    "사용자 지시로 MP 실행 검사를 하지 않았다. 실제 Descend/참가·카메라/HTML 화면을 검증했다고 주장하지 않는다.",
+    "M3는실제전환Caller/진단장치접합마감이다. 중앙원문진단UI·파일은M7.5의명시미완료이며현재AssertDisplay기본값은로그다.",
+    "일반LAN/Outpost·송신Caller/환경/배포및기존사용자확인범위는M4~M8에서계속한다."
+  ],
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}
