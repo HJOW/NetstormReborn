@@ -461,7 +461,7 @@ cpppj/src/o/Graph.cpp	port	www/core/graph.js	1f00a25a	port	[o-default] WB04-E12:
 cpppj/src/o/GumpFormHost.cpp	port	www/core/gump-form-host.js	1f00a25a	port	[o-default] WB04-D5a
 cpppj/src/o/Islandbuilder.cpp	port	www/assets/territory.js	1f00a25a	partial	[o-default] WB03-V 영역 패턴 배치
 cpppj/src/o/Kernel.cpp	port	www/core/kernel.js	1f00a25a	port	[o-default] WB04-C1(1..39999 현재 슬롯 순서) / WB04-D5c: 기준선 정렬 — 진단 장치(소진 요약→상세→단언 0x7a, 빈 슬롯 삭제 단언 0x82), 슬롯 0 조회·삭제(순회 제외), 밀려난 객체 보관, drainOwnedForShutdown. KernelDiagnosticCurrentTests 의 Client 접합 2장면은 WB05
-cpppj/src/o/LightningVisualSystem.cpp	port			todo	[o-default]
+cpppj/src/o/LightningVisualSystem.cpp	port	www/core/lightning-visual-system.js	1f00a25a	port	[o-default] WB04-E196: 빔 process 19 의 경로 상태/RawLightningPath/RawLightningLifetime 소유·배율 검사와 경로 배율 반영·add/addAtScreen(정수 양끝 float 변환)·대기 객체 → 실제 client Form 부착(null/예외 실패 즉시 소멸)·생성 실패 정리·준비 완료 프레임(소진 removeForm=Host 삭제 0)·선 출력·Form 삭제 dirty·소멸 순서·dispose. cpppj LightningVisualSystemTests 3건 전부(+웹 계약 1). 남음: 실제 Session 월드·발사 쪽 create 연결·중심 조회 장치·소리 재생·래스터
 cpppj/src/o/OriginalText.cpp	port	www/assets/text-encoding.js	1f00a25a	partial	[o-default] Windows-1252 변환
 cpppj/src/o/PacketRegistrationTable.cpp	port			todo	[o-default]
 cpppj/src/o/ParticleGradient.cpp	port	www/core/particle-gradient.js	1f00a25a	port	[o-default] WB04-E186: RGB 색 띠 00439de0/0043ad20(최근접·투영·CRT 세 번 정렬·원통 선택)·병합 00487d20·불꽃 꼬리 표 00457ea0·번개 표 00458480. fixture particlegradient 기본 027f 24입력 전체 비트·fierytaillifetime cold 3행·lightninglifetime 공유 색 표 55입력 전부. 남음: 없음(순수 계산)
