@@ -526,7 +526,7 @@ cpppj/src/o/RawBaseFileWholeRead.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/RawBaseProcessAttach.cpp	port	www/core/raw-process-attach.js	1f00a25a	port	[o-default] WB04-D5c: 신규 로컬/지정 Form 부착 부모. fixture baseprocess-attach-current-local 24행(10.78)
 cpppj/src/o/RawBattleBroadcast.cpp	port			todo	[o-default]
 cpppj/src/o/RawBoardAngle.cpp	port	www/core/raw-board-angle.js	1f00a25a	port	[o-default] WB04-E15: 0041cdb0 Boardcoord 각도 정규화(10.78 경로). fixture board-angle-hardware originals 544행 전부
-cpppj/src/o/RawBoardApproach.cpp	port			todo	[o-default]
+cpppj/src/o/RawBoardApproach.cpp	port	www/core/raw-board-approach.js	1f00a25a	port	[o-default] WB04-E104: 건설 사제 Graph 접근점 41db70(변 중간점 시작·면적 횟수 가장자리 순회·실패 때 안쪽 재탐색). fixture board-approach 696행 전부(10.78 전용 파일). Graph 번호 조회는 훅 경계
 cpppj/src/o/RawBoardTarget.cpp	port	www/core/raw-board-target.js	1f00a25a	port	[o-default] WB04-E100: 운반 명령 변 중간점 41d400·일반 접근점 41d530(x87 53비트 확장·float 저장 지점·flags2 북쪽 특례·진단 실패점). fixture carrier-target 2245행+carrier-target-hardware 2040행(실제 CPU 53/64비트) 전부(10.78 전용 파일). 실패점 sNaN quiet 비트는 JS 표현 한계로 시험이 정규화
 cpppj/src/o/RawBombActivation.cpp	port	www/core/raw-bomb-activation.js	1f00a25a	port	[o-default] WB04-E17: 0x5c/41e860 주문 활성화 수신(원격 비용·genus 진단·할당·예약). fixture bomb-activation 10.78 434행 전부
 cpppj/src/o/RawBombBlast.cpp	port	www/core/raw-bomb-blast.js	1f00a25a	port	[o-default] WB04-E54: 502370 폭발 계열 자격 41e9c0·효과 41ea30. fixture bomb-blast 2082·bomb-blast-dais 64행. 실제 피해/삭제/ground/끝 칸 변환은 월드 조립에서
@@ -884,7 +884,7 @@ cpppj/src/o/RawSidRobust.cpp	port	www/core/raw-sid-robust.js	1f00a25a	port	[o-de
 cpppj/src/o/RawSmokeEffect.cpp	port			todo	[o-default]
 cpppj/src/o/RawSnart.cpp	port	www/core/raw-snart.js	1f00a25a	port	[o-default] WB04-E19: 004a8800/004a8850 SNART 이름표 선택(제자리 변환). data-manager-initialize 64행·template-section-names 12행을 통해 대조. 파일 이미지 reader 경로는 DataManager 단위에서
 cpppj/src/o/RawSoloMapList.cpp	exclude-edit			-	[edit-map-list]
-cpppj/src/o/RawSpecialDamage.cpp	port			todo	[o-default]
+cpppj/src/o/RawSpecialDamage.cpp	port	www/core/raw-special-damage.js	1f00a25a	port	[o-default] WB04-E104: 신전 건설 중 피해 분배 4dba40·윈드 타워 방향 방어 48ef70. fixture special-damage 432행+wind-tower-zero 216행 전부(10.78 전용 파일). 건설 Form 조회/끝 시각/일반 피해/표시 갱신은 훅 경계
 cpppj/src/o/RawSpStoreNoticeBindings.cpp	port			todo	[o-default]
 cpppj/src/o/RawSquidActivate.cpp	port	www/core/raw-squid-activate.js	1f00a25a	port	[o-default] WB04-E1: 004ac560 공통 Activate(void·권한·전송·깊이 진단)
 cpppj/src/o/RawSquidContainedUnpop.cpp	port	www/core/squid-contained-unpop.js	1f00a25a	port	[o-default] 3.6②→반영(WB04-D5a): 정렬 Content 부착용 PreviousAtTable getter/setter

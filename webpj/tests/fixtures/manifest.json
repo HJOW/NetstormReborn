@@ -9629,9 +9629,96 @@
       "bytes": 522589,
       "lines": 4802,
       "fixtureCommit": "cd6c03ae",
-      "webCommit": "worktree",
+      "webCommit": "53445e08",
       "cpppjBasis": {
         "cpppj/src/o/RawPathRetarget.cpp": "cd6c03ae"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E104",
+      "id": "board-approach",
+      "path": "cpppj/tests/fixtures/board-approach-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 건설 접근점 탐색의 모든 Graph 조회 순서·반환 점·사각형 복구/확장 비트(696행; 두 정밀도 동일)",
+      "consumers": [
+        "webpj/tests/board-approach.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-board-approach.js"
+      ],
+      "doc": "docs/webpj-board-approach-special-damage-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBoardApproach.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 696행 전부 사용",
+      "text": true,
+      "sha256": "055dc5270539116efa4455479ddc7f518c34b2774f37042eb1f846a3b8b56497",
+      "bytes": 392115,
+      "lines": 697,
+      "fixtureCommit": "33302112",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBoardApproach.cpp": "35de22d2"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E104",
+      "id": "special-damage",
+      "path": "cpppj/tests/fixtures/special-damage-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 신전 건설 중 피해 분배(연산 0)와 윈드 타워 방향 방어(연산 1)의 반환과 외부 효과 순서(432행)",
+      "consumers": [
+        "webpj/tests/special-damage.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-special-damage.js"
+      ],
+      "doc": "docs/webpj-board-approach-special-damage-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSpecialDamage.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 432행 전부 사용",
+      "text": true,
+      "sha256": "039030961fa2a1d086b43799c79faa5d2801044f421c77ed0a8b70417443d2a5",
+      "bytes": 18832,
+      "lines": 433,
+      "fixtureCommit": "ac29d049",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSpecialDamage.cpp": "18c35f0e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E104",
+      "id": "wind-tower-zero",
+      "path": "cpppj/tests/fixtures/wind-tower-zero-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 예약 피해의 공격자 SID 0 이 현재 풀 0 번 슬롯의 TYPE/좌표를 읽는 윈드 타워 방어 반환(216행)",
+      "consumers": [
+        "webpj/tests/special-damage.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-special-damage.js"
+      ],
+      "doc": "docs/webpj-board-approach-special-damage-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSpecialDamage.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 216행 전부 사용",
+      "text": true,
+      "sha256": "eb6db5547fc9bae7a945fd5903e24c9eea88a9fd2d106ebafcb5df5fc8e78336",
+      "bytes": 9119,
+      "lines": 217,
+      "fixtureCommit": "18c35f0e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSpecialDamage.cpp": "18c35f0e"
       }
     }
   ]
