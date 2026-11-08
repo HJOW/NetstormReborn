@@ -1,0 +1,77 @@
+{
+  "unit": 1160,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "previousCommit": "c5dbeb5f / 20261108-131 CP",
+  "summary": "M4.1의 State33→1fh/7ch 실제 master/자기 CS·동일 TCP/등록표/기록 owner 연결을 C/PE로 마감 대조했다. 기존 1140 접합이 유효하여 제품 소스를 변경하지 않았다.",
+  "sourceChanged": false,
+  "build": {
+    "performed": false,
+    "latestVerifiedUnit": 1159,
+    "reason": "제품 소스/실행 파일 변경이 없는 정적 마감 감사"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13169664,
+      "sha256": "45249f4e0d8e20d86f1d669753808f52d72902034a13d059c33545cda3cef3f0"
+    },
+    "R.exe": {
+      "bytes": 670208,
+      "sha256": "e0d1edb704d076c0ae9a9abcdcf77404b2e7274ec67810ba2b0e9f3a8c34a7ea"
+    }
+  },
+  "protected": {
+    "count": 2800,
+    "changed": [],
+    "checkedAtPreparation": true
+  },
+  "nativeEvidence": {
+    "004b2c00": {
+      "bytes": 84,
+      "peSha256": "500167398fdaa264eab1e74d3a476f6998b056878285a55ad675a4b5e34e15b4",
+      "cSha256": "02a18eeafaa6d8860da69546e86416171d340ff7b5f1a7f292962d2486b0851e"
+    },
+    "004b62b0": {
+      "bytes": 145,
+      "peSha256": "b69af6d072ab95962dddec4f490b1f9e7497687107db36cb5ecff6534a74b1ab",
+      "cSha256": "0c6c2e8f9f764848e188e0114ed05352ac350e937a4e29dac1518285fa3ff25e"
+    },
+    "004b6dd0": {
+      "bytes": 6521,
+      "peSha256": "76ffc59e8bd82f122c1ad251831be6e9acaaad20a331f989bfdbd7a7de6710b2",
+      "cSha256": "953810f4b0035f4b9ad9de1875dde37697947dab8716088375f3a570fbf166be"
+    }
+  },
+  "sourceSha256": {
+    "cpppj/src/client/NativeMetaConnectedState.cpp": "79e55146bf5b47dd042e167dd7789ce3e34e782f18dab19387bc3787ea970a67",
+    "cpppj/src/client/MetaConnectionRuntime.cpp": "bd9376b7b8d37f9ac8beebc3f812155b378d37448b864df3b40edb49caf884fe",
+    "cpppj/src/client/UberMeta.inc": "92aef4db7a0abb259a40d1bfbc3da30125ffa517a9c6a296cf4d3ac6aeb91304",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "ccbc8da6cb72e388b0000489595179613d4bf0ddf05b1939ce8bb76b1beb97ea",
+    "cpppj/src/client/LocalTcpTransport.cpp": "7a3b2a93ae065a53ca047631b4a083207fad1b738a44949015eb41713d8cf4ed",
+    "cpppj/src/client/ClientPacketRecord.cpp": "4a205cf92ca53d3bf074c91c1a5e36cf8d09f6680892160909cea2ac257a746e"
+  },
+  "audit": {
+    "actualState33CallerAndSameClientCaches": true,
+    "assemblyConfirmsIndexValueBattleSlotNotifiedStoreOrder": true,
+    "sameActualTcp11StatusAndTcp9Login": true,
+    "sourceCsCaptureAndMasterDiagnosticReturnOrder": true,
+    "sameRegistrationAndPacketRecordingPath": true,
+    "noSyntheticAckOrSuccess": true
+  },
+  "executions": {
+    "cppUnit": 0,
+    "mpPacket": 0,
+    "game": 0,
+    "network": 0,
+    "zip": 0
+  },
+  "remaining": {
+    "next": "M4.2 / NSInfo·메타 요청 UI/State·HTML 실제 진입점 마감",
+    "m4Complete": false
+  },
+  "lastDecompilation": {
+    "client": "2026-11-03 / HJOW-Athlon",
+    "root": "2026-11-07 / HJOW-Athlon",
+    "generatedSourcesChanged": false
+  }
+}
