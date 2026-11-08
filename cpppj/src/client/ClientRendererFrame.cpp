@@ -113,6 +113,13 @@ void ClientRendererFrame::BindMetaParticipantDevices(NativeMetaParticipantCreate
 void Client::BindNativeMetaParticipantDevices(NativeMetaParticipantCreateHooks& hooks) { if (!rendererFrame_) throw std::logic_error("참가자 생성의 실제 Frame owner 미설치");rendererFrame_->BindMetaParticipantDevices(hooks); } //friend Frame이 같은 현재 UI를 빌린다.
 void ClientRendererFrame::RefreshMetaChatMode(std::uint32_t mode) { if (!client_.menu_ || !client_.menu_->rawButtons_ || !client_.menu_->rawButtons_->Menus()) throw std::logic_error("메타 Chat 대상의 실제 UI owner 미설치");RefreshClientBattleChatChannel(client_,*client_.menu_->rawButtons_->Menus(),mode); } //실제 대상 변경과 공통42f330 자식을 원문 순서로 실행한다.
 void Client::RefreshNativeMetaChatMode(std::uint32_t mode) { if (!rendererFrame_) throw std::logic_error("메타 Chat 대상의 실제 Frame owner 미설치");rendererFrame_->RefreshMetaChatMode(mode); } //기존 친구 Frame이 현재 UI를 조회한다.
+// 원문 객체 SID0도 읽되 물리 밖을 임의 객체/가짜 성공으로 바꾸지 않는다.
+void ClientRendererFrame::ShowObjectNote(std::uint32_t object,std::string_view translated) {
+    const auto core=client_.GameplayGlobals()->RequireSession().Core();if (object>65535U || object>=core.pool.Capacity()) throw std::out_of_range("객체 안내의 실제 DWORD SID 물리 범위");const auto raw=core.pool.Slot(o::Sid{static_cast<std::uint16_t>(object)});
+    const auto coordinate=[raw](std::size_t at) { std::uint32_t bits{};for (std::size_t byte=0;byte<4;++byte) bits|=std::uint32_t(raw[at+byte])<<(8*byte);return std::bit_cast<float>(bits); }; //같은 현재 객체의 비정렬 float x/y를 읽는다.
+    const auto point=ProjectCameraView(client_.GameplayGlobals()->Camera().Snapshot(),coordinate(0xe),coordinate(0x12));if (!client_.menu_ || !client_.menu_->rawButtons_ || !client_.menu_->rawButtons_->Menus()) throw std::logic_error("객체 안내의 실제 UI owner 미설치");client_.menu_->rawButtons_->Menus()->ShowObjectNote(object,{point[0],point[1]},translated);
+}
+void Client::ShowNativeObjectNote(std::uint32_t object,std::string_view translated) { if (!rendererFrame_) throw std::logic_error("객체 안내의 실제 Frame owner 미설치");rendererFrame_->ShowObjectNote(object,translated); } //같은 현재 UI를 친구 Frame에서 조회한다.
 void Client::UpdateNativeMetaBattle(std::uint32_t battle) { if (!rendererFrame_) throw std::logic_error("특정 메타 전투의 실제 Renderer owner 미설치");rendererFrame_->UpdateMetaBattle(battle); } //실제 장기 owner로만 위임하며 장치를 생성하지 않는다.
 void Client::RefreshNativeMetaDisplay(bool whole) { if (!rendererFrame_) throw std::logic_error("메타표시의실제Renderer owner미설치");rendererFrame_->RefreshMetaDisplay(whole); } //원문State Poll의두표시위치를같은실제Frame장치에전달한다.
 

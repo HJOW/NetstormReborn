@@ -385,6 +385,7 @@ UberGump::UberGump(Client& client) : client_(client),initLoginSubscriber_(client
     menuHooks.poll=[this](auto code) { return client_.Poll(code); };menuHooks.cursor=[this](auto number) { client_.GetCursor().Set(static_cast<int>(number)); };
     menuHooks.objectForms=[this]() -> o::GumpFormHost& { return client_.GameplayGlobals()->RequireSession().GumpForms(); }; //게임 GameWorld 또는 명시 메타 Session의 같은 실제 호스트만 조회한다.
     menuHooks.gameSeconds=[this] { return client_.Time().game; }; // 비용 표시도 같은 프레임의 게임 시각을 읽는다.
+    menuHooks.wallSeconds=[this] { return client_.WallSeconds(); };menuHooks.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); }; //공통 안내는 실제 벽시계와 같은 한 번의 번역/표시 경계를 사용한다.
     rawButtons_->EnableMenus(client_.Assets(),client_.Fonts(),std::move(menuHooks)).SetPalette(client_.GetScreen().Colors());
     rawButtons_->Menus()->BindColorMaps([owner=client_.ColorSortInput()]() -> const std::array<ColorMap,9>& { return owner->Maps(); }); // 메뉴 그림/도움말도 현재9표를 사용하며 파일 hit 뒤 재계산하지 않는다.
     RawHelpHooks help;help.globals=&htmlGlobals_; // Tell과 같은 HTML 전역/Config/입력 고리를 빌린다.

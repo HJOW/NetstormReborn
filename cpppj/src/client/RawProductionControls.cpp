@@ -57,7 +57,7 @@ struct RawProductionControls::Impl {
     PriestPlacementAssets geometry;o::PriestPlacementShapeState measureState;o::RawCanonPixelShape measure; // 실제 전체 Canon 경계/프레임이다.
     GumpDrawState hitClip;std::vector<std::uint8_t> hitBytes;ColorMap hitColors{};GumpPixelTarget hitTarget; // 원본 이미지 hit의 실제200×200 임시 표면이다.
     std::unique_ptr<ImageGumpPixelTarget> hitRaster;ImageGumpHooks activeImage;const GumpBackgroundDraw* activeBackground{}; // 실제 현재 출력 문맥이다.
-    ProductionHintState hintState;std::unique_ptr<ProductionHintGump> hint;std::map<std::uint32_t,std::unique_ptr<ProductionHintNode>> hints; // 공통 루트에 붙는 실제 실패 안내다.
+    ProductionHintState& hintState{menus.HintState()};std::unique_ptr<ProductionHintGump> hint;std::map<std::uint32_t,std::unique_ptr<ProductionHintNode>> hints; //같은 UI 전역을 공유하되 생산 안내 노드/문자열의 기존 소유권은 유지한다.
     std::map<std::uint32_t,std::string> hintStrings;std::uint32_t hintStringSerial{0x70000000U}; // 원본 strdup/free의 단일 소유 문자열이다.
     std::map<std::uint32_t,std::unique_ptr<HudDividerNode>> dividers;HudDockHooks dividerHooks;std::int8_t dividerKind{55}; // 실제0x11c 저장소와 같은 공통 분배다.
     std::unique_ptr<HudDividerGump> dividerGeometry;std::unique_ptr<HudDividerInput> dividerInput; // 원문 생성/부착과 가상 입력을 공유한다.

@@ -36,6 +36,7 @@ private:
     void ConstructParticipant(std::span<std::uint8_t> record,std::span<const std::uint8_t> packet); //현재 실제 World/Gump/Config/Core/카메라·Chat 장치를 전체42b580에 결합한다.
     void RefreshParticipantCore(); //48f190의 현재 일반 관문/같은 전투40참가자→실제1..8 Core 장부다.
     void ReceiveParticipantMove(std::span<const std::uint8_t> packet); //4b4820의 실제 메타/CS 진단 뒤 mutable 수신 버퍼를 전체42c2e0에 전달한다.
+    void ReceiveSailError(std::span<const std::uint8_t> packet); //4b47e0의 메타/CS 진단 뒤 첫 자기 기록/25h의 실제 안내·Tell·지정 표시를 실행한다.
     void ExplodeBattleSlot(std::uint32_t battle,std::uint32_t slot); //479cf0/478720의 실제 현재 Pool/SHP/Snapshot/지면 효과·음향 장치다.
     NativeMetaSeatHooks SeatShapeDevices(); //좌석 배치와 추방 효과가 같은 실제 C 프레임/포구·복귀형 진단을 공유한다.
     NativeMetaSailHooks SailDevices(); //조회만으로 효과를 실행하지 않고 같은 현재 CS/SHP/카메라·전송/프로세스를 결합한다.

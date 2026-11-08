@@ -20,6 +20,7 @@ class RawCampaignSession; // 현재 지식 창도 같은 세션의 실제 기술
 class RawImage;class MetaImageGump;struct MetaImageGumpNode; // 같은 공통 트리의 전용 동적 Image 파생이다.
 class MetaImageList;struct MetaImageListNode; // 실제21개 후보의 목록 파생과 같은 공통 저장소다.
 struct RawNsInfoContext; // 전체 NSInfo 생성의 실제 Client 전역과 문자열 수명이다.
+struct ProductionHintState; //생산/메타 안내가 같은 종류/팔레트/마지막 serial 전역을 빌린다.
 struct NativeMetaDisplayHooks;struct ClientNsInfoGlobals; //메타 표시도 같은 Gump/NSInfo 공용 장치를 빌린다.
 struct NativeMetaSceneHooks; //전체원격존장면도기존한줄TextGump/serial/객체부착을공유한다.
 struct NativeMetaParticipantCreateHooks; //참가자 이름표는 일반Text와 다른 실제d8 titleWidgets를 사용한다.
@@ -68,6 +69,8 @@ struct RawMenuHooks {
     std::function<void(std::uint32_t)> cursor; // 실제 커서 리소스 선택이다.
     std::function<o::GumpFormHost&()> objectForms; // 매Form효과에서현재Session의같은호스트를조회한다. 메뉴보다먼저Session을반납하지않는다.
     std::function<double()> gameSeconds; // 비용 표시의0055b4d0 현재 게임 시각이다. 벽시계와 구별한다.
+    std::function<double()> wallSeconds; //메타 객체 안내의4초 만료도 현재 Client 벽시계를 사용한다.
+    std::function<std::string(std::string_view)> translate; //공통 안내 wrapper가 필요로 하는 원문 번역/표시 바이트다.
 };
 // 전용 Help가 읽는 현재 Client 경계다. 창/파서/다중 줄/그림은 같은 실제 Gump 처리기를 사용한다.
 struct RawHelpHooks {
@@ -111,6 +114,8 @@ public:
     std::uint32_t CreateMetaText(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color); //같은등록표에new(a4)/TextGump를생성한다.미부착실패노드도공통Cleanup이소유한다.
     std::uint32_t CreateMetaName(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color); //같은new(d8)/다중줄/버퍼·Slider를생성하여메타참가자이름표로사용한다.
     void CloseMetaDisplayGumps(); //같은메타공장에서생성한등록/미등록노드만공통자식우선수명으로정리한다.
+    ProductionHintState& HintState(); //현재 UI의 생산/메타 안내가 같은 원문 전역을 사용하며 생산 패널이 다시 생성해도 보존한다.
+    void ShowObjectNote(std::uint32_t object,ScreenPoint point,std::string_view translated); //472ad0의 이미 번역된 문구/실제 투영점을 같은 안내 파생/객체 Form/현재 루트에 붙인다.
     void RefreshMetaNsInfo(ClientNsInfoGlobals& globals) const; //같은기존NSInfo 슬롯으로0047cab0 Push/재조회/Attach를실행한다.
     void OpenMetaParticipant(std::uint32_t participant,ScreenPoint point); //004785f0의두전체메뉴경로를같은실제Client/controlled트리/객체Form에연결한다.활성관문은caller가판정한다.
     void BindMetaObjectInput(NativeMetaObjectInputHooks& hooks); //기존 controlled 공장만 연결하며 바인딩으로 메뉴/객체를 생성하거나 이전 팝업을 닫지 않는다.
