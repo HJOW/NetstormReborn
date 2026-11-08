@@ -30,6 +30,7 @@
 #include "client/LocalServerProcess.h"
 #include "client/RootServerListDisk.h"
 #include "client/NativeMetaBattleOptions.h" //현재CS의실제67h수신/음향·NSInfo갱신을공통등록표에결합한다.
+#include "client/NativeMetaParticipantName.h" //88h는 현재 CS 길드 표시/실제 이름표와 지정 참가자 갱신을 사용한다.
 #include "o/RawStateMetaBattleDescription.h" //일반과 같은71h 전체 observer/State CS 관문이다.
 #include "client/ClientMetaBattleDescription.h" //실제 CS 설명 자식과 현재 표시 장치다.
 #include "o/RawStateBattleOptions.h" //메타도 일반 수신과 같은67h 전체 부모/복사 순서를 사용한다.
@@ -50,6 +51,7 @@
 #include "o/RawFileName.h"
 #include "o/RawRootLoginReply.h"
 #include "o/RawChallengeLoginReply.h" //1dh는 현재28/12 직접 쓰기 뒤 같은 실제 Run을 동기 호출한다.
+#include "o/OriginalText.h" //현재 이름표 번역을 공통 영어/한국어 표시 바이트로 변환한다.
 #include "platform/Utf8Path.h"
 #include "platform/PortableStartup.h"
 #include <algorithm>
@@ -107,6 +109,11 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     dispatch.ObservePacket(0x0f,[this](auto packet,auto sending) { o::ObserveRootLoginReply(packet,sending,[this](auto expression,auto line) { client_.SurfaceStorage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",line); }); });dispatch.Version(0x0f,1,0);dispatch.RequireLength(0x0f,0xffff);
     dispatch.Register(0x0f,[this](auto,auto&,auto packet) { ReceiveRootReply(packet); }); //원문과같이sender/연결번호·현재phase 관문을 수신 앞에 추가하지 않는다.
     dispatch.Observe(0x1d,{});dispatch.Version(0x1d,1,0);dispatch.RequireLength(0x1d,13); //원문0b380의 빈 관찰기/버전1과 실제13BYTE의 고정 응답이다.
+    dispatch.Observe(0x88,{});dispatch.Version(0x88,1,0);dispatch.RequireLength(0x88,98); //0040b380 빈 관찰기와 보호 PE0052ec40의 고정98BYTE다.
+    dispatch.Register(0x88,[this](auto,auto&,auto packet) {
+        NativeMetaParticipantNameHooks receive;receive.translate=[this](auto source) { const auto encoded=o::EncodeDisplayText(client_.Translate(source));return std::string(encoded.begin(),encoded.end()); };receive.weight=[this](auto core) { return Weight(core); };
+        receive.update=[this](auto participant,auto mask) { client_.UpdateNativeMetaParticipant(participant,mask); };receive.refreshInfo=refreshInfo_;ReceiveNativeMetaParticipantName(*client_.ChallengeGlobals(),packet,receive);
+    }); //원문의88h에는 메타 모드/CS 진단/known/송신자 관문이 없다.
     dispatch.Register(0x1d,[this](auto,auto&,auto packet) {
         o::ChallengeLoginReplyHooks reply;reply.log=[this](auto text) { client_.WriteDiagnosticLog(0x1d,text); };reply.version=[this](auto major,auto minor) { return CheckMetaVersion(major,minor); };reply.run=processState_;
         o::ReceiveChallengeLoginReply(packet,client_.LocalStateGlobals()->State(),client_.GameplayGlobals()->Subscribers()->MySubscriber(),reply);

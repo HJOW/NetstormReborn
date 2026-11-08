@@ -585,6 +585,9 @@ target_sources(netstorm PRIVATE client/NativeBattleInfoMenus.h client/NativeBatt
 # 실제CS 전투옵션67h 수신과 현재음향/NSInfo 부모다.
 target_sources(netstorm PRIVATE client/NativeMetaBattleOptions.h client/NativeMetaBattleOptions.cpp)
 
+# CS 참가자 표시 서식과 실제88h 길드 표시 수신 부모다.
+target_sources(netstorm PRIVATE client/NativeMetaParticipantName.h client/NativeMetaParticipantName.cpp)
+
 # 메타전투 생성/23h 수신 부모다. 실제공장/QA/Pop/Rig 장치뒤에등록한다.
 target_sources(netstorm PRIVATE client/NativeMetaBattleCreate.h client/NativeMetaBattleCreate.cpp)
 

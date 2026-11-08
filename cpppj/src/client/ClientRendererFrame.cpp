@@ -102,6 +102,8 @@ void ClientRendererFrame::RefreshMetaDisplay(bool whole) {
 }
 // 설명 수신은 다른 참가자/전투의 Poll 대신 지정한 현재 전투 한 개만 갱신한다.
 void ClientRendererFrame::UpdateMetaBattle(std::uint32_t battle) { const auto globals=MetaGlobals();const auto hooks=MetaDevices();netstorm::client::UpdateMetaBattle(battle,globals.display,hooks.display); }
+void ClientRendererFrame::UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask) { const auto globals=MetaGlobals();const auto hooks=MetaDevices();netstorm::client::UpdateMetaParticipant(participant,mask,globals.display,hooks.display); } //다른 참가자/존/카메라 Poll의 추가 효과를 발생시키지 않는다.
+void Client::UpdateNativeMetaParticipant(std::uint32_t participant,std::uint8_t mask) { if (!rendererFrame_) throw std::logic_error("특정 메타 참가자의 실제 Renderer owner 미설치");rendererFrame_->UpdateMetaParticipant(participant,mask); } //기존 장기 owner로만 위임한다.
 void Client::UpdateNativeMetaBattle(std::uint32_t battle) { if (!rendererFrame_) throw std::logic_error("특정 메타 전투의 실제 Renderer owner 미설치");rendererFrame_->UpdateMetaBattle(battle); } //실제 장기 owner로만 위임하며 장치를 생성하지 않는다.
 void Client::RefreshNativeMetaDisplay(bool whole) { if (!rendererFrame_) throw std::logic_error("메타표시의실제Renderer owner미설치");rendererFrame_->RefreshMetaDisplay(whole); } //원문State Poll의두표시위치를같은실제Frame장치에전달한다.
 
