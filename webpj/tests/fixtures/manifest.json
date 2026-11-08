@@ -7322,7 +7322,7 @@
       "bytes": 1126390,
       "lines": 7418,
       "fixtureCommit": "e74fc81b",
-      "webCommit": "worktree",
+      "webCommit": "d7202272",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestOwner.cpp": "7ee98997"
       }
@@ -7351,7 +7351,7 @@
       "bytes": 21453,
       "lines": 145,
       "fixtureCommit": "7ee98997",
-      "webCommit": "worktree",
+      "webCommit": "d7202272",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestOwner.cpp": "7ee98997"
       }
@@ -7380,7 +7380,7 @@
       "bytes": 3159685,
       "lines": 20258,
       "fixtureCommit": "72a425b1",
-      "webCommit": "worktree",
+      "webCommit": "d7202272",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestState.cpp": "2c25ad04"
       }
@@ -7409,9 +7409,125 @@
       "bytes": 695225,
       "lines": 6053,
       "fixtureCommit": "51d7b8f3",
-      "webCommit": "worktree",
+      "webCommit": "d7202272",
       "cpppjBasis": {
         "cpppj/src/o/RawPathAnimation.cpp": "51d7b8f3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E63",
+      "id": "priestpostpop",
+      "path": "cpppj/tests/fixtures/priestpostpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 postPop 접두 004950f0 의 목록 결과·소유자 상태 9칸·검색/확보/생성 호출 기록·슬롯 50바이트(세 PE)",
+      "consumers": [
+        "webpj/tests/priest-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-post-pop.js"
+      ],
+      "doc": "docs/webpj-priest-postpop-shield-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPostPop.cpp"
+      ],
+      "scope": "10.78(originals) Prefix 2392행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "3924ceb7ffb2315eae4fd8a9a3e89b9bff261994d36c0109ac684c1d89738cdd",
+      "bytes": 1790220,
+      "lines": 7178,
+      "fixtureCommit": "9907ebe0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPostPop.cpp": "22589c72"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E63",
+      "id": "priestdestroy",
+      "path": "cpppj/tests/fixtures/priestdestroy-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 preDestroy 004919b0 의 목록 압축 결과·보호막 삭제/Carrier 호출 기록·슬롯(조회/보호막 가상 삭제/Carrier 만 대체)",
+      "consumers": [
+        "webpj/tests/priest-pre-destroy.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-pre-destroy.js"
+      ],
+      "doc": "docs/webpj-priest-postpop-shield-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestPreDestroy.cpp"
+      ],
+      "scope": "10.78(originals) 2184행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "56da3fd0581263e9b9d1ba9e39cd60ac1158d5129cbe67ea8e730c873aa6c19d",
+      "bytes": 1142749,
+      "lines": 6554,
+      "fixtureCommit": "c25416f6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestPreDestroy.cpp": "1e8e43d9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E63",
+      "id": "priestforcefield",
+      "path": "cpppj/tests/fixtures/priestforcefield-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 보호막 조회 004918e0 의 Find/Pre 결과·목록·호출 기록·일곱 슬롯 전체(Scene 입력 포함)",
+      "consumers": [
+        "webpj/tests/priest-forcefield.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-forcefield.js"
+      ],
+      "doc": "docs/webpj-priest-postpop-shield-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestForcefield.cpp"
+      ],
+      "scope": "10.78(originals) 2976행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "fa52609068960483eb2e90680a2e013aeb8e9d4af36071863d875687898b5a89",
+      "bytes": 6276639,
+      "lines": 10419,
+      "fixtureCommit": "c3986c59",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestForcefield.cpp": "d2d9a042"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E63",
+      "id": "priestshield",
+      "path": "cpppj/tests/fixtures/priestshield-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 사제 보호막 확보 00493d30 의 생성/소유자/Pop/소리/안내 호출 기록·사제·보호막 슬롯·전역 세 값(실제 조회/finder/공통 소유자 포함)",
+      "consumers": [
+        "webpj/tests/priest-shield.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-shield.js"
+      ],
+      "doc": "docs/webpj-priest-postpop-shield-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestShield.cpp"
+      ],
+      "scope": "10.78(originals) 832행 전부 사용(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "98bc837c0862a0c31c7a3a7b517054fccc38ead2460335f8b04d59afca2af68b",
+      "bytes": 684806,
+      "lines": 2498,
+      "fixtureCommit": "d2d9a042",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestShield.cpp": "d2d9a042"
       }
     }
   ]
