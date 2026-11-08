@@ -208,11 +208,10 @@ void SquidReward::BindPatchWallet(std::function<void(std::uint32_t,std::int32_t)
 }
 // 패치 0040eec0/0041df80 및 CD 00414680의 SP 가산과 AI 지갑 갱신, 표시 갱신이다.
 void SquidReward::AddSp(std::uint32_t owner,float delta) {
-    const bool fixed=state_.fixedSpA || state_.fixedSpB;
     if (pool_.Edition()==OriginalEdition::Patch1078) {
         const float sp=std::bit_cast<float>(store_->Get(owner));
         // SP 고정 모드에서는 지급액이 고정값과 현재 SP의 차이로 바뀐다.
-        if (fixed) delta=static_cast<float>(kPatchFixedSp-static_cast<double>(sp));
+        if (state_.FixedSpA() || state_.FixedSpB()) delta=static_cast<float>(kPatchFixedSp-static_cast<double>(sp));
         const float sum=static_cast<float>(static_cast<double>(sp)+static_cast<double>(delta));
         const auto mirror=SpMirrorFtol(delta);
         store_->Set(owner,std::bit_cast<std::uint32_t>(sum));
@@ -220,7 +219,7 @@ void SquidReward::AddSp(std::uint32_t owner,float delta) {
     } else {
         // CD판은 로컬 SP만 전역 float으로 두고 고정 모드가 값을 덮어쓴다. 지갑에는 입력 지급액이 간다.
         float sp=static_cast<float>(static_cast<double>(delta)+static_cast<double>(state_.cdLocalSp));
-        if (fixed) sp=static_cast<float>(kCdFixedSp);
+        if (state_.FixedSpA() || state_.FixedSpB()) sp=static_cast<float>(kCdFixedSp);
         state_.cdLocalSp=sp;
         AddWallet(owner,Ftol(static_cast<double>(delta)));
     }

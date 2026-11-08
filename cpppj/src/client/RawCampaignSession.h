@@ -58,7 +58,7 @@
 #include "o/RawTutorialLater.h"
 #include "o/RawMissionFrameGate.h"
 #include "client/RawCampaignParticles.h"
-namespace netstorm::o { class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; class RawDudeBehavior; struct MissionStartGlobals; struct MissionAiSettingsState; struct FortObjectLoadState; class RawFortBadgesGlobals; } // 포획/Dude 몸체와 미션 시작 전역의 고정 참조만 공개한다.
+namespace netstorm::o { struct AiWalletMemoryAccess; class RawCarrierSteal; class RawCarrierPickup; class RawCarrierMove; class RawGemReward; class RawDudeBehavior; struct MissionStartGlobals; struct MissionAiSettingsState; struct FortObjectLoadState; class RawFortBadgesGlobals; } // 포획/Dude 몸체와 미션 시작 전역의 고정 참조만 공개한다.
 namespace netstorm::o { class RawConnectionRegistry; } //실제 Client와 로컬 양끝이 빌리는 같은 연결표다.
 namespace netstorm::o { class BombEffectTimerProcess; } // 기본 생성 결과의 실제 클래스이며 호출자는 사용 전에 본문 헤더를 포함한다.
 
@@ -670,6 +670,7 @@ public:
     const o::CanonDecoderDiagnostics& DecoderDiagnostics() const;
     // 화면의 현재 HP/최대 HP 조회는 실제 SquidReward를 사용한다.
     const o::SquidReward& HitPoints() const;
+    o::AiWalletMemoryAccess BorrowAiWalletMemory(); // 선택한 현재 brain의 실제 메모리/전체 Runtime을 이번 호출 범위로 빌린다.
     void GroundImpact(float x,float y); //470ac0의 실제 같은 Dude/공유난수/지면 시각 효과를 메타 슬롯 효과에도 제공한다.
     // 실제 사제 목록/움직임/보호막 상태의 읽기 경계를 빌린다.
     const RawPriestWorldBindings& Priests() const;

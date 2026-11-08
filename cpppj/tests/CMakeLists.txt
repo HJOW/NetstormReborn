@@ -2610,8 +2610,9 @@ target_compile_definitions(netstorm_basefile_read_key_tests PRIVATE ${_netstorm_
 # 기본 이름 선택과 실제 작업 파일/Session 설치를 창 없이 대조한다.
 target_sources(netstorm_tests PRIVATE EditorDefaultNameTests.cpp)
 set_source_files_properties(EditorDefaultNameTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_EDITOR_DEFAULT_NAME_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/editor-default-name-x86.tsv\"")
-add_executable(netstorm_editor_default_name_tests FocusedTestMain.cpp EditorDefaultNameTests.cpp ExistingEditorInstallOuterTests.cpp CampaignExistingEditorCheckpointTests.cpp FortCurrentNameTests.cpp)
+add_executable(netstorm_editor_default_name_tests FocusedTestMain.cpp AiWalletTests.cpp RewardTests.cpp EditorDefaultNameTests.cpp ExistingEditorInstallOuterTests.cpp CampaignExistingEditorCheckpointTests.cpp FortCurrentNameTests.cpp)
 target_link_libraries(netstorm_editor_default_name_tests PRIVATE netstorm)
+target_compile_definitions(netstorm_editor_default_name_tests PRIVATE NETSTORM_REWARD_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/reward-x86.tsv") #기존 비MP 보상 PE fixture만 현재 집중 대상에서 재사용한다.
 netstorm_apply_compiler_options(netstorm_editor_default_name_tests)
 target_compile_definitions(netstorm_editor_default_name_tests PRIVATE ${_netstorm_menu_session_definitions})
 

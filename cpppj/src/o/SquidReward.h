@@ -55,6 +55,10 @@ struct SquidRewardState {
     std::uint32_t SilentType() const { return sharedSilentType ? *sharedSilentType : types.silent; } // 삭제 보상 제외와 성장형 비용 별칭을 같은 현재 번호로 판단한다.
     std::uint32_t AliasType() const { return sharedAliasType ? *sharedAliasType : types.alias; } // 가상Count 뒤의 현재 성장형 제외를 조회한다.
     std::uint32_t NuggetType() const { return sharedNuggetType ? *sharedNuggetType : types.fullValue; } // 현재 너겟만 환불 단가의1/4 배율을 생략한다.
+    const bool* sharedFixedSpA{}; // 실제 Client의 bool fort 모드이며 독립 입력은 기존 fixedSpA를 쓴다.
+    const std::uint32_t* sharedFixedSpB{}; // 실제 Client의 현재 editor DWORD이며 bool 임시값을 빌리지 않는다.
+    bool FixedSpA() const { return sharedFixedSpA ? *sharedFixedSpA : fixedSpA; } // SP 가산 관문의 현재 fort 모드를 조회한다.
+    bool FixedSpB() const { return sharedFixedSpB ? *sharedFixedSpB!=0 : fixedSpB; } // SP 고정/정책 setter의 현재 editor를 조회한다.
 };
 // 객체 보상 외부 동작과 저장소 조회를 연결하는 콜백 묶음이다.
 struct SquidRewardHooks {

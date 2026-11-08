@@ -52,7 +52,7 @@ std::uint8_t RawFortMoneyLoad::PlayerFlags(std::uint32_t owner) const {
 // AI지갑가산이나SP차감용AddSp를사용하지않고실제지정몸체의분기를따른다.
 void RawFortMoneyLoad::SetPlayerSp(std::int32_t owner,std::int32_t amount) const {
     if (edition_!=OriginalEdition::Patch1078) throw std::logic_error("CD Money에패치SetPlayerSp를호출할수없습니다");
-    SetPlayerSpAmount(owner,amount,*patchStore_,{[this] { return state_.clientActive ? 1U : 0U; },[this] { return std::uint32_t(players_.localOwner); },[this] { return reward_.fixedSpB ? 1U : 0U; }},hooks_.refreshSp);
+    SetPlayerSpAmount(owner,amount,*patchStore_,{[this] { return state_.clientActive ? 1U : 0U; },[this] { return std::uint32_t(players_.localOwner); },[this] { return reward_.FixedSpB() ? 1U : 0U; }},hooks_.refreshSp);
 }
 
 // wrapper의현재깊이/Template진단뒤Money4바이트소비·현재모드별SP를순서대로적용한다.
@@ -63,7 +63,7 @@ void RawFortMoneyLoad::Load(FortMoneyCursor& stream) const {
 void RawFortMoneyLoad::LoadSelected(const std::function<FortMoneyCursor&()>& select) const {
     if (!select) throw std::invalid_argument("Fort Money 실제 섹션 선택 누락");
     const bool patch=edition_==OriginalEdition::Patch1078;
-    if (patch && reward_.halfHealthMode && !state_.economyBlocked) state_.spCheckCount=kSpCheckCount;
+    if (patch && reward_.HalfHealthMode() && !state_.economyBlocked) state_.spCheckCount=kSpCheckCount;
     ++loadingDepth_;hooks_.loadingDepthChanged(loadingDepth_);
     try {
         if (!state_.templatePresent) hooks_.assertion(FortMoneyAssertion::MissingTemplate);
@@ -79,11 +79,11 @@ void RawFortMoneyLoad::ReadMoney(FortMoneyCursor& stream) const {
         const bool patch=edition_==OriginalEdition::Patch1078;
         stream.position+=4U;
         if (std::bit_cast<std::int32_t>(stream.end)<std::bit_cast<std::int32_t>(stream.position)) hooks_.assertion(FortMoneyAssertion::StreamPastEnd);
-        if (reward_.fixedSpA) {
+        if (reward_.FixedSpA()) {
             if (patch) patchStore_->Set(players_.localOwner,std::bit_cast<std::uint32_t>(kPatchFortSp));
             else reward_.cdLocalSp=kCdFortSp;
         }
-        if (reward_.halfHealthMode && !state_.economyBlocked) {
+        if (reward_.HalfHealthMode() && !state_.economyBlocked) {
             if (patch) {
                 if (state_.difficulty>=kInitialSp.size()) throw std::out_of_range("FortMoney 실제difficulty배열범위오류");
                 const auto amount=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(kInitialSp[state_.difficulty])+kBonusSp);
