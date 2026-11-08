@@ -808,7 +808,7 @@ cpppj/src/o/RawPathData.cpp	port			todo	[o-default]
 cpppj/src/o/RawPathHaltParent.cpp	port			todo	[o-default]
 cpppj/src/o/RawPathProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawPathRetarget.cpp	port			todo	[o-default]
-cpppj/src/o/RawPathRuntime.cpp	port			todo	[o-default]
+cpppj/src/o/RawPathRuntime.cpp	port	www/core/raw-path-runtime.js	1f00a25a	port	[o-default] WB04-E98: 경로 이미지 100080바이트·생성자 8종(heap 보존)·Prepare 00488e20·Step 0048a330·비행 Init 48af00/488d00·필드 접근자(10.78). fixture path-constructor 32행 전부, pathruntime originals ctor 4+prepare 24+step 80행, flypath ctor 3+init 24행(arrival/frame 행은 RawPathProcess 단위, CD 행은 10.72)
 cpppj/src/o/RawPathSearch.cpp	port	www/core/raw-path-surface.js	1f00a25a	partial	[o-default] WB04-E40: RawPathSurfaceAt(0.9999 보정 칸의 해시 0단계 머리)만. BFS 길 찾기 본체(RawPathSearch/RawPathProcess)는 후속 단위
 cpppj/src/o/RawPathStart.cpp	port			todo	[o-default]
 cpppj/src/o/RawPlainAssetDraw.cpp	port			todo	[o-default]

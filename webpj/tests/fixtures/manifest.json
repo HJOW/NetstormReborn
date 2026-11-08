@@ -9365,9 +9365,96 @@
       "bytes": 746722,
       "lines": 455,
       "fixtureCommit": "30cc125c",
-      "webCommit": "worktree",
+      "webCommit": "60d6d294",
       "cpppjBasis": {
         "cpppj/src/client/RawCarrierInput.cpp": "30cc125c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E98",
+      "id": "path-constructor",
+      "path": "cpppj/tests/fixtures/path-constructor-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: PATCH 경로 생성자 8종 × heapFill 0/A5 × 잔여 caller 인자의 100080바이트 전체 이미지 반복 BYTE 압축(32행)",
+      "consumers": [
+        "webpj/tests/path-runtime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-runtime.js"
+      ],
+      "doc": "docs/webpj-path-runtime-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathRuntime.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 32행 전부 사용",
+      "text": true,
+      "sha256": "d525d4b772fd0a67db50f6acdee2f14b3856b55bee3a043a3f214c570b654bb2",
+      "bytes": 2285,
+      "lines": 33,
+      "fixtureCommit": "38742606",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathRuntime.cpp": "8a555c99"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E98",
+      "id": "pathruntime",
+      "path": "cpppj/tests/fixtures/pathruntime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 경로 ctor FNV32·Prepare 꼭짓점 시각 QWORD·연쇄 Step·arrival/frame(RawPathProcess)(두 판본 360행)",
+      "consumers": [
+        "webpj/tests/path-runtime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-runtime.js"
+      ],
+      "doc": "docs/webpj-path-runtime-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathRuntime.cpp"
+      ],
+      "scope": "10.78(originals) ctor 4+prepare 24+step 80=108행 사용(arrival 12·frame 60 은 RawPathProcess 단위, CD 10.72 행은 범위 밖)",
+      "text": true,
+      "sha256": "28d5c373696f4b855299bb01efd924e54b2da847872e0fad1ad5197b9a68ac50",
+      "bytes": 37981,
+      "lines": 361,
+      "fixtureCommit": "ada85427",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathRuntime.cpp": "8a555c99"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E98",
+      "id": "flypath",
+      "path": "cpppj/tests/fixtures/flypath-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 fly39 경로 ctor FNV32·기존 개수별 비행 Init 전체 이미지 FNV32·frame(RawPathProcess)(90행)",
+      "consumers": [
+        "webpj/tests/path-runtime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-runtime.js"
+      ],
+      "doc": "docs/webpj-path-runtime-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathRuntime.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 ctor 3+init 24=27행 사용(frame 63 은 RawPathProcess 단위)",
+      "text": true,
+      "sha256": "94f29b69b4b2be2868ce3099de063d404d54aabe1ef2646633457b8b89abcc65",
+      "bytes": 8550,
+      "lines": 91,
+      "fixtureCommit": "8bf76206",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathRuntime.cpp": "8a555c99"
       }
     }
   ]
