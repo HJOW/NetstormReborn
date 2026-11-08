@@ -477,7 +477,7 @@ cpppj/src/o/RawAiBridgePath.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiBridgePlanning.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiBridgeSearch.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiBridgeStrategies.cpp	port			todo	[o-default]
-cpppj/src/o/RawAiBuildChoice.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiBuildChoice.cpp	port	www/core/raw-ai-build-choice.js	1f00a25a	port	[o-default] WB04-E167: AI 건설 선택 00411b40(포획 다이스 → 원소 신전 → 선호 워크샾 수량 복사본)·00411a40 수집자 여유 비용·00411ad0 적 자금·004709d0/00470a30 theme 매핑. 독립 관측 fixture 없음, cpppj 계약 시험 14건. 남음: 실제 사제 포획/사망/구매 가능/지갑/분산 SP 연결
 cpppj/src/o/RawAiBuildSearch.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiCarrierActions.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiCollectors.cpp	port			todo	[o-default]
@@ -495,7 +495,7 @@ cpppj/src/o/RawAiDrySpots.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiEconomy.cpp	port	www/core/raw-ai-economy.js	1f00a25a	port	[o-default] WB04-E166: AI 경제 004138c0(double 기한 단일 지원·+0x290+2200 감김·포획 두 owner·데모 하한·float 최종 SP 쓰기). 독립 관측 fixture 없음, cpppj 계약 시험 7건. 남음: 실제 데모/사제 포획/시각 조회 연결
 cpppj/src/o/RawAiFactoryProduction.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiFakeDrySpots.cpp	port			todo	[o-default]
-cpppj/src/o/RawAiMovement.cpp	port			todo	[o-default]
+cpppj/src/o/RawAiMovement.cpp	port	www/core/raw-ai-movement.js	1f00a25a	port	[o-default] WB04-E167: AI 경로 조회/정지 00411630/00411680·대상 이동 004116d0·좌표 이동 004117e0·신전 복귀 004118a0·발자국 거리 0041d840. 독립 관측 fixture 없음, cpppj 계약 시험 9건. 남음: 실제 경로 시작(RawPathStart)/의식/이름·로그 연결
 cpppj/src/o/RawAiObjectNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiPreparation.cpp	port			todo	[o-default]
 cpppj/src/o/RawAiPriestActions.cpp	port			todo	[o-default]
