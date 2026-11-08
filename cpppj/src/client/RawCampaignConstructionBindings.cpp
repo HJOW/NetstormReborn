@@ -62,7 +62,7 @@ struct RawCampaignConstructionBindings::Impl {
             !runtime.create || !runtime.pop || !runtime.destroy)
             throw std::invalid_argument("건설 실행 부모의 동일 장기 물리/실제 가상 경계 누락"); //생성/reset 없이 실제 owner 정체성만 확인한다.
         if (core.pool.Edition()!=o::OriginalEdition::Patch1078 || &hp.Pool()!=&core.pool || &hp.Bookkeeping()!=&core.bookkeeping ||
-            frames.size()!=core.types.size() || players.size()!=kPlayerBytes || &recent==&allGeysers || recent.entries.size()<kRecentMinimum ||
+            frames.size()!=core.types.size() || (!runtime.players && players.size()!=kPlayerBytes) || &recent==&allGeysers || recent.entries.size()<kRecentMinimum ||
             &currentBounds.battle!=&core.ownerMode.battle || &currentBounds.metamap!=&core.ownerMode.challenge ||
             !effects.configInt || !effects.wallSeconds || !effects.refresh || !effects.negativeQuantity || !effects.boundsAssertion)
             throw std::invalid_argument("캠페인 받침/간헐천의 같은 월드/현재 모드/전용 목록/실제 서비스 계약 오류");
@@ -80,7 +80,7 @@ struct RawCampaignConstructionBindings::Impl {
         placeHooks=o::MakeConstructionPlaceHooks(core.pool,core.factory,core.owner,hp,&sp,state.place,std::move(placeHooks));
         if (gameplay.setOwner) placeHooks.setOwner=std::move(gameplay.setOwner); // 내려놓은 사제의 원래 소유자와 전투 표식을 가상 몸체가 복원한다.
         place=std::make_unique<o::RawConstructionPlace>(core.pool,core.types,frames,state.place,hp,std::move(placeHooks));
-        place->BindPlayerRecords(players);if (runtime.players) place->BindCurrentPlayers(runtime.players); // 실제 원문의 진입에서만 현재base를 선택한다.
+        if (runtime.players) place->BindCurrentPlayers(runtime.players);else place->BindPlayerRecords(players); // Native는 초기 span을 읽거나 고정하지 않고 실제 비용 처리 진입에서만 현재base를 선택한다.
         o::ConstructionClearHooks clearHooks; // 삭제는 관찰/목록 제거가 아닌 같은 가상 수명 전체를 실행한다.
         clearHooks.destroy=[this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); };
         clear=std::make_unique<o::RawConstructionClear>(core.pool,core.hash,core.types,frames,state.clear,std::move(clearHooks));
@@ -123,7 +123,8 @@ struct RawCampaignConstructionBindings::Impl {
         commandHooks.request=[this](const o::ConstructionConfirmRequest& value) { return requestBody->Request(value); };
         commandHooks.reject=[this](const o::ConstructionConfirmRequest& value) { place->Reject(value.type,value.player,value.x,value.y,value.argument,value.direction); };
         command=std::make_unique<o::RawConstructionCommand>(core.types,state.command,std::move(commandHooks));
-        bounds=std::make_unique<o::RawPlayerGeyserBounds>(core.pool,chunks,core.types,core.frames,players,currentBounds,effects.boundsAssertion);if (runtime.players) bounds->BindCurrentPlayers([read=runtime.players] { return std::span<const std::uint8_t>(read()); }); // 현재base는 각 Player 진입에서 선택하고 선택한 this는 유지한다.
+        if (runtime.players) bounds=std::make_unique<o::RawPlayerGeyserBounds>([read=runtime.players] { return std::span<const std::uint8_t>(read()); },core.pool,chunks,core.types,core.frames,currentBounds,effects.boundsAssertion);
+        else bounds=std::make_unique<o::RawPlayerGeyserBounds>(core.pool,chunks,core.types,core.frames,players,currentBounds,effects.boundsAssertion); // 독립 span은 기존 생성 시9기록 계약을 유지한다.
         o::LocalGeyserHooks geyserHooks; // factory/Pop/삭제/받침 모두 현재 같은 월드의 실제 몸체다.
         geyserHooks.configInt=effects.configInt;geyserHooks.wallSeconds=effects.wallSeconds;geyserHooks.negativeQuantity=effects.negativeQuantity;
         geyserHooks.regionExists=effects.islandExists;
@@ -133,7 +134,8 @@ struct RawCampaignConstructionBindings::Impl {
         geyserHooks.create=[this](std::uint32_t type,std::uint32_t flags) { return runtime.create(type,flags); };
         geyserHooks.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { runtime.pop(sid,x,y,flags); };
         geyserHooks.playerBoundsRecord=[this](auto owner,auto record) { return bounds->BoundsRecord(owner,record); }; // 원문이 앞서 선택한 같은 Player this를 그대로 전달한다.
-        geysers=std::make_unique<o::RawLocalGeyser>(core.pool,core.hash,core.spots,core.types,core.frames,players,recent,state.geyser,std::move(geyserHooks));if (runtime.players) geysers->BindCurrentPlayers([read=runtime.players] { return std::span<const std::uint8_t>(read()); });
+        if (runtime.players) geysers=std::make_unique<o::RawLocalGeyser>([read=runtime.players] { return std::span<const std::uint8_t>(read()); },core.pool,core.hash,core.spots,core.types,core.frames,recent,state.geyser,std::move(geyserHooks));
+        else geysers=std::make_unique<o::RawLocalGeyser>(core.pool,core.hash,core.spots,core.types,core.frames,players,recent,state.geyser,std::move(geyserHooks)); // 현재base는 각 Player 반복에서 선택하고 같은 this는 실제 Bounds 호출까지 유지한다.
         geysers->BindResourcePool(reward.GeyserPool());
     }
     // 실제 현재 전역의 불일치/일반 건설 분기를 생성 전에 거부한다. 지원 범위를 임의 성공으로 넓히지 않는다.

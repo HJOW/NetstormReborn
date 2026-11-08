@@ -45,6 +45,10 @@ public:
     RawLocalGeyser(const SidPool& pool,const SquidHash& hash,std::span<const std::uint8_t> spots,
         std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::span<const std::uint8_t> players,SquidPostPopList& recent,
         LocalGeyserState& state,LocalGeyserHooks hooks);
+    // Native 장기 구성은 Player를 할당/조회하지 않으며 실제 반복이 선택한 this의 물리만 그 자리에서 확인한다.
+    RawLocalGeyser(std::function<std::span<const std::uint8_t>()> players,const SidPool& pool,const SquidHash& hash,
+        std::span<const std::uint8_t> spots,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
+        SquidPostPopList& recent,LocalGeyserState& state,LocalGeyserHooks hooks);
     // 00486360: seed0xfed 또는 현재 TimeSeed, eligible Player1~8 순서에서 같은 local 난수를 공유한다.
     void Generate() const;
     void BindCurrentPlayers(std::function<std::span<const std::uint8_t>()> players); // 반복마다 현재base를 조회하며 선택한 this는 실제 경계 호출까지 유지한다.
@@ -67,6 +71,10 @@ public:
     const SidPool& Pool() const;
     SquidPostPopList& Recent() const;
 private:
+    // 같은 원본 자료/필수 효과 계약을 공유하며 독립 span은 기존 생성 전9기록 검사를 유지한다.
+    RawLocalGeyser(const SidPool& pool,const SquidHash& hash,std::span<const std::uint8_t> spots,
+        std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::span<const std::uint8_t> players,
+        SquidPostPopList& recent,LocalGeyserState& state,LocalGeyserHooks hooks,std::function<std::span<const std::uint8_t>()> currentPlayers);
     // 실제4e49c0의 signed64 절삭 뒤 저DWORD 비트와 불확정 하위0을 보존한다.
     static std::int32_t Truncate(double value);
     // 원본004bca20은 limit<=0이면 local seed를 소비하지 않고0을 반환한다.

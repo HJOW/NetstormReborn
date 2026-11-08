@@ -3278,7 +3278,7 @@ target_sources(netstorm_file_tests PRIVATE GunProcessTests.cpp)
 set_property(SOURCE GunProcessTests.cpp APPEND PROPERTY COMPILE_DEFINITIONS "NETSTORM_GUNPROCESS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gunprocess-x86.tsv\";NETSTORM_GUN_NOTIFY_CHECKING_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/gun-notify-checking-x86.tsv\"")
 
 # Canon 진단 owner가 건설·섬·Fort의 실제 소비자까지 전달되는 집중 검사다.
-target_sources(netstorm_file_tests PRIVATE ConstructionConfirmTests.cpp ConstructionPlaceTests.cpp ConstructionClearTests.cpp ConstructionLocalTests.cpp ConstructionRequestTests.cpp IslandBuilderTests.cpp FortWorldLoadTests.cpp PlayerGeyserBoundsTests.cpp CampaignWorldLoadTests.cpp)
+target_sources(netstorm_file_tests PRIVATE ConstructionPlayerLifetimeTests.cpp ConstructionConfirmTests.cpp ConstructionPlaceTests.cpp ConstructionClearTests.cpp ConstructionLocalTests.cpp ConstructionRequestTests.cpp IslandBuilderTests.cpp FortWorldLoadTests.cpp PlayerGeyserBoundsTests.cpp CampaignWorldLoadTests.cpp)
 
 # 같은 레벨 진단 어댑터와 Factory 표시 갱신을 기존 원본 슬롯 기대값으로 창 없이 대조한다.
 target_sources(netstorm_file_tests PRIVATE CampaignMotionTests.cpp FactoryPostPopTests.cpp)
@@ -3779,7 +3779,7 @@ netstorm_apply_compiler_options(netstorm_surface_lifetime_tests)
 target_compile_definitions(netstorm_surface_lifetime_tests PRIVATE NETSTORM_BRIDGEEFFECTS_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridgeeffects-x86.tsv" NETSTORM_BRIDGEDECAY_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridgedecay-x86.tsv" NETSTORM_ISLANDLIFECYCLE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/islandlifecycle-x86.tsv")
 
 # 건설/간헐천의 독립 PE 및 현재 Player this/base만 실행하며 MP 프로토콜/패킷/통신 검사는 포함하지 않는다(1190).
-add_executable(netstorm_construction_player_tests FocusedTestMain.cpp ConstructionPlaceTests.cpp PlayerGeyserBoundsTests.cpp LocalGeyserTests.cpp)
+add_executable(netstorm_construction_player_tests FocusedTestMain.cpp ConstructionPlaceTests.cpp PlayerGeyserBoundsTests.cpp LocalGeyserTests.cpp ConstructionPlayerLifetimeTests.cpp)
 target_link_libraries(netstorm_construction_player_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_construction_player_tests)
 target_compile_definitions(netstorm_construction_player_tests PRIVATE NETSTORM_CONSTRUCTIONPLACE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionplace-x86.tsv" NETSTORM_LOCALGEYSER_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/local-geyser-x86.tsv" NETSTORM_GEYSER_PLACEMENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/geyser-placement-x86.tsv" NETSTORM_PLAYER_GEYSER_BOUNDS_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-geyser-bounds-x86.tsv")

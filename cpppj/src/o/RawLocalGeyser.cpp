@@ -24,8 +24,19 @@ std::uint32_t PlayerWord(std::span<const std::uint8_t> bytes,std::size_t offset)
 RawLocalGeyser::RawLocalGeyser(const SidPool& pool,const SquidHash& hash,std::span<const std::uint8_t> spots,
     std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::span<const std::uint8_t> players,SquidPostPopList& recent,
     LocalGeyserState& state,LocalGeyserHooks hooks)
-    :pool_(pool),hash_(hash),spots_(spots),types_(types),frames_(frames),players_(players),recent_(recent),state_(state),hooks_(std::move(hooks)) {
-    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=types.size() || spots.size()!=65536 || players.size()!=9*kPlayerStride ||
+    :RawLocalGeyser(pool,hash,spots,types,frames,players,recent,state,std::move(hooks),{}) {}
+// 구성 시 current getter를 실행하지 않으며 Generate/제외 순회의 실제 선택 위치까지 Player 조회를 미룬다.
+RawLocalGeyser::RawLocalGeyser(std::function<std::span<const std::uint8_t>()> players,const SidPool& pool,const SquidHash& hash,
+    std::span<const std::uint8_t> spots,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
+    SquidPostPopList& recent,LocalGeyserState& state,LocalGeyserHooks hooks)
+    :RawLocalGeyser(pool,hash,spots,types,frames,{},recent,state,std::move(hooks),std::move(players)) {}
+// 같은 필수 저장소/효과를 검사하며 Native의 선택 레코드 부모가 빠진 경로를 사전 거부한다.
+RawLocalGeyser::RawLocalGeyser(const SidPool& pool,const SquidHash& hash,std::span<const std::uint8_t> spots,
+    std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::span<const std::uint8_t> players,
+    SquidPostPopList& recent,LocalGeyserState& state,LocalGeyserHooks hooks,std::function<std::span<const std::uint8_t>()> currentPlayers)
+    :pool_(pool),hash_(hash),spots_(spots),types_(types),frames_(frames),currentPlayers_(std::move(currentPlayers)),players_(players),recent_(recent),state_(state),hooks_(std::move(hooks)) {
+    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=types.size() || spots.size()!=65536 || (!currentPlayers_ && players.size()!=9*kPlayerStride) ||
+        (currentPlayers_ && !hooks_.playerBoundsRecord) ||
         recent.entries.size()<kRecentLimit || !hooks_.configInt || !hooks_.wallSeconds || !hooks_.playerBounds ||
         !hooks_.negativeQuantity || !hooks_.destroy || !hooks_.confirm || !hooks_.create || !hooks_.pop)
         throw std::invalid_argument("로컬 간헐천의 현재 원본 자료/실제 생성 경계 누락");

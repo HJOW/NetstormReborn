@@ -23,8 +23,18 @@ float Cell(std::int32_t value) { return static_cast<float>(Signed(static_cast<st
 RawPlayerGeyserBounds::RawPlayerGeyserBounds(const SidPool& pool,const ChunkMap& chunks,std::span<const RiftTypeRecord> types,
     std::span<const RiftTypeFrames> frames,std::span<const std::uint8_t> players,PlayerGeyserBoundsState state,
     std::function<void(PlayerGeyserBoundsAssertion)> assertion)
-    :pool_(pool),chunks_(chunks),types_(types),frames_(frames),players_(players),state_(state),assertion_(std::move(assertion)) {
-    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=188 || players.size()!=9*kPlayerBytes || !assertion_)
+    :RawPlayerGeyserBounds(pool,chunks,types,frames,players,state,std::move(assertion),{}) {}
+// 실제 Player owner가 아직 할당되지 않았어도 조회기 결합은 원문 Player 선택을 실행하지 않는다.
+RawPlayerGeyserBounds::RawPlayerGeyserBounds(std::function<std::span<const std::uint8_t>()> players,const SidPool& pool,const ChunkMap& chunks,
+    std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,PlayerGeyserBoundsState state,
+    std::function<void(PlayerGeyserBoundsAssertion)> assertion)
+    :RawPlayerGeyserBounds(pool,chunks,types,frames,{},state,std::move(assertion),std::move(players)) {}
+// 참조/조회기만 저장하며 독립 span의 기존 생성 전 검사와 실제 장기 조회기의 지연 검사를 구별한다.
+RawPlayerGeyserBounds::RawPlayerGeyserBounds(const SidPool& pool,const ChunkMap& chunks,std::span<const RiftTypeRecord> types,
+    std::span<const RiftTypeFrames> frames,std::span<const std::uint8_t> players,PlayerGeyserBoundsState state,
+    std::function<void(PlayerGeyserBoundsAssertion)> assertion,std::function<std::span<const std::uint8_t>()> currentPlayers)
+    :pool_(pool),chunks_(chunks),types_(types),frames_(frames),currentPlayers_(std::move(currentPlayers)),players_(players),state_(state),assertion_(std::move(assertion)) {
+    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=188 || (!currentPlayers_ && players.size()!=9*kPlayerBytes) || !assertion_)
         throw std::invalid_argument("Player 간헐천 범위의 현재 원본 자료/진단 누락");
 }
 // 지도 전체의 원본 순서이며 첫 일치에서만 record6BYTE를 복사한다.

@@ -30,6 +30,10 @@ public:
     RawPlayerGeyserBounds(const SidPool& pool,const ChunkMap& chunks,std::span<const RiftTypeRecord> types,
         std::span<const RiftTypeFrames> frames,std::span<const std::uint8_t> players,PlayerGeyserBoundsState state,
         std::function<void(PlayerGeyserBoundsAssertion)> assertion);
+    // 장기 Native owner는 조회기만 보관한다. Player 할당과9기록 검사는 실제 Bounds 진입에서만 요구한다.
+    RawPlayerGeyserBounds(std::function<std::span<const std::uint8_t>()> players,const SidPool& pool,const ChunkMap& chunks,
+        std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,PlayerGeyserBoundsState state,
+        std::function<void(PlayerGeyserBoundsAssertion)> assertion);
     // 0048f5c0: 현재 Player flags/region→record→PlayerId→배치→16배→양끝4확장이다.
     FortRandomRectangle Bounds(std::uint32_t player) const;
     FortRandomRectangle BoundsRecord(std::uint32_t player,std::span<const std::uint8_t> record) const; // 앞선 원문 Caller가 선택한 같은 b4 BYTE this를 진단 뒤에도 유지한다.
@@ -44,6 +48,10 @@ public:
     const SidPool& Pool() const;
     const ChunkMap& Map() const;
 private:
+    // 두 공개 생성자가 같은 실제 지도/판본/진단 계약을 검증하되 현재base를 미리 조회하지 않는다.
+    RawPlayerGeyserBounds(const SidPool& pool,const ChunkMap& chunks,std::span<const RiftTypeRecord> types,
+        std::span<const RiftTypeFrames> frames,std::span<const std::uint8_t> players,PlayerGeyserBoundsState state,
+        std::function<void(PlayerGeyserBoundsAssertion)> assertion,std::function<std::span<const std::uint8_t>()> currentPlayers);
     // 원본 현재 옵션0~3의 실제 정수 간격을 읽는다. 물리 표밖 옵션은 오류다.
     std::uint32_t Spacing() const;
     // 같은 record의 실제 CanonDecoder와 TYPE 발자국에서 배치 폭/높이를 얻는다.
