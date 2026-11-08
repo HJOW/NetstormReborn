@@ -8433,7 +8433,7 @@
       "bytes": 1400825,
       "lines": 1941,
       "fixtureCommit": "aeb552a8",
-      "webCommit": "worktree",
+      "webCommit": "7eff2db0",
       "cpppjBasis": {
         "cpppj/src/o/RawAiCommandState.cpp": "aeb552a8"
       }
@@ -8462,7 +8462,7 @@
       "bytes": 50675,
       "lines": 505,
       "fixtureCommit": "d88de1a8",
-      "webCommit": "worktree",
+      "webCommit": "7eff2db0",
       "cpppjBasis": {
         "cpppj/src/o/RawBurningVictim.cpp": "f4d1312f"
       }
@@ -8491,9 +8491,96 @@
       "bytes": 170550,
       "lines": 781,
       "fixtureCommit": "db9b626c",
-      "webCommit": "worktree",
+      "webCommit": "7eff2db0",
       "cpppjBasis": {
         "cpppj/src/o/RawDudeTask.cpp": "e210c755"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E77",
+      "id": "ambient-sound-hardware",
+      "path": "cpppj/tests/fixtures/ambient-sound-hardware-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 주변음 부모의 최종 기한 비트·종류·강제 값·모달·난수 상태·시계 호출 수·호출 기록(W 시계/S 음향/F 섬광)과 결합된 공유 바람 float 비트(원본 PATCH/CD 두 판본 1272행)",
+      "consumers": [
+        "webpj/tests/ambient-sound.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-ambient-sound.js"
+      ],
+      "doc": "docs/webpj-ambient-sound-meta-zone-colorsort-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAmbientSound.cpp"
+      ],
+      "scope": "10.78(originals) 636행 전부 사용(CD 10.72 636행은 범위 밖)",
+      "text": true,
+      "sha256": "b53d24da6391db8f0ee71541bba7bea3e9b97e335115cf80aad3a0b5d6b657dc",
+      "bytes": 349264,
+      "lines": 1272,
+      "fixtureCommit": "a9ededa6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAmbientSound.cpp": "a9ededa6"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E77",
+      "id": "meta-zone-cleanup",
+      "path": "cpppj/tests/fixtures/meta-zone-cleanup-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 메타구역 기록 정리 부모의 표 7344+canary 16 바이트·플래그·자식 호출 번호·콜백 기록(두 x87 정밀도 38행: 정상 28·명시 중단 10)",
+      "consumers": [
+        "webpj/tests/meta-zone-cleanup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-meta-zone-cleanup.js"
+      ],
+      "doc": "docs/webpj-ambient-sound-meta-zone-colorsort-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMetaZoneCleanup.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 38행 전부 사용",
+      "text": true,
+      "sha256": "b1331f080470c7024b151674bac60815d35c89f89c2ac2bbe4d26fbd1f5a1ae8",
+      "bytes": 570588,
+      "lines": 39,
+      "fixtureCommit": "adb9739e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMetaZoneCleanup.cpp": "35041198"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E77",
+      "id": "colorsort-startup",
+      "path": "cpppj/tests/fixtures/colorsort-startup-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: ColorSort 시작 부모 두 개의 완료 분류·현재 전역 5개·세 할당 prefix와 source 부분 쓰기·하위 호출 인자(두 x87 정밀도 116행: 정상 100·부분 중단 16)",
+      "consumers": [
+        "webpj/tests/color-sort-startup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-color-sort-startup.js"
+      ],
+      "doc": "docs/webpj-ambient-sound-meta-zone-colorsort-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawColorSortStartup.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 116행 전부 사용",
+      "text": true,
+      "sha256": "d0667b2814f450f6ab9ea9812ece0172ac0a5a431c5e32c3bfa68aa0e2415e3c",
+      "bytes": 35729,
+      "lines": 117,
+      "fixtureCommit": "2ede4027",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawColorSortStartup.cpp": "2ede4027"
       }
     }
   ]
