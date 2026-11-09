@@ -6,14 +6,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
-import { REPO_ROOT, readData } from './helpers.mjs';
+import { REPO_ROOT } from './helpers.mjs';
 import { readRows, put } from './raw-support.mjs';
-import { TaffArchive } from '../www/assets/taff.js';
+import { realCaptureAssets, clientPool, hexOrDash as hex } from './capture-assets-support.mjs';
 import { TypeTable, TYPE_LOAD_ORDER } from '../www/assets/type-table.js';
-import { decodeOriginalText } from '../www/assets/text-encoding.js';
-import { buildTypeRecords } from '../www/assets/type-flags.js';
-import { ShapeDatabase } from '../www/assets/shapes.js';
-import { SidPool } from '../www/core/sid-pool.js';
 import { DirtyRegions } from '../www/render/dirty-regions.js';
 import { drawShape } from '../www/render/vfx-draw.js';
 import { drawMappedShape } from '../www/render/vfx-mapped-draw.js';
@@ -31,34 +27,8 @@ function throws(action) {
     return false;
 }
 
-// 바이트의 소문자 16진 문자열이다(빈 버퍼는 fixture 처럼 '-'). (2026-11-09 WB04-E199)
-const hex = (bytes) => (bytes.length ? Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength).toString('hex') : '-');
-
-// 정의의 maxHitPoints 속성 값이다(없으면 원본 초기값 0). (2026-11-09 WB04-E199)
-function maxHitPointsOf(definition) {
-    const property = definition?.properties.find((item) => item.name.toLowerCase() === 'maxhitpoints');
-    return property && typeof property.value === 'number' ? Math.trunc(property.value) : 0;
-}
-
-// 한 번만 읽은 실제 10.78 TYPE/SHP 자료이다. TYPE 기준점은 각 검사가 원문처럼 명시한 값만 넣는다. (2026-11-09 WB04-E199)
-let cached = null;
-function realAssets() {
-    if (cached) return cached;
-    const table = TypeTable.fromArchive(new TaffArchive(readData('netstorm.tarc')), decodeOriginalText);
-    const database = new ShapeDatabase(readData('d/_shapes.shp'));
-    const records = buildTypeRecords(table.definitions);
-    const types = records.map((record, number) => ({ ...record, maxHitPoints: number >= 70 ? maxHitPointsOf(table.definitions[number - 70]) : 0, hotspotX: 0, hotspotY: 0 }));
-    cached = { table, database, types, shapes: squidRendererShapes(table, database) };
-    return cached;
-}
-
-// 원본 격리 장면과 같은 client 50 슬롯까지 확보한 풀이다. (2026-11-09 WB04-E199)
-function clientPool() {
-    const pool = new SidPool(32768);
-    // client 영역에서 SID 5..50 을 차례로 확보한다.
-    for (let sid = 5; sid <= 50; sid += 1) assert.equal(pool.allocate(2), sid);
-    return pool;
-}
+// 실제 자료·client 50 풀·16진 표기는 capture-assets-support.mjs 와 공유한다(2026-11-09 WB04-E200 분리).
+const realAssets = realCaptureAssets;
 
 // 캡처 결과를 fixture 의 네 출력 칸과 같은 문자열로 만든다. (2026-11-09 WB04-E199)
 const output = (image) => [`${image.width},${image.height},${image.hotspotX},${image.hotspotY}`, hex(image.pixels), String(image.pixels.length), '1'];

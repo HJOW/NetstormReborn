@@ -13430,7 +13430,7 @@
       "bytes": 1881547,
       "lines": 710,
       "fixtureCommit": "128f8b95",
-      "webCommit": "worktree",
+      "webCommit": "89e7b739",
       "cpppjBasis": {
         "cpppj/src/client/VFXDraw.cpp": "3725d58b"
       }
@@ -13460,7 +13460,7 @@
       "bytes": 100503,
       "lines": 165,
       "fixtureCommit": "ab9361f1",
-      "webCommit": "worktree",
+      "webCommit": "89e7b739",
       "cpppjBasis": {
         "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d17"
       }
@@ -13489,9 +13489,41 @@
       "bytes": 662508,
       "lines": 163,
       "fixtureCommit": "a726b49f",
-      "webCommit": "worktree",
+      "webCommit": "89e7b739",
       "cpppjBasis": {
         "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d17"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E200",
+      "id": "burningframe",
+      "path": "cpppj/tests/fixtures/burningframe-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Burning 프레임 00424530→보호 SHP ShapeToBuffer→연소점/Append/dirty 사슬(초기 캡처·단계·visible/off·timer·입자 패턴·NaN 수명·dirty 병합·난수 상태, 10.78 213행·CD 213행)",
+      "consumers": [
+        "webpj/tests/burning-frame.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-burning-frame.js",
+        "webpj/www/render/raw-shape-to-buffer.js"
+      ],
+      "doc": "docs/webpj-burning-frame-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBurningFrame.cpp",
+        "cpppj/src/client/BurningFrameCapture.cpp"
+      ],
+      "scope": "10.78 213입력 전부(바람 owner 재실행 포함, originalCD 213행은 범위 밖)",
+      "text": true,
+      "sha256": "0a85ecb00d74883f49adebf817c290976532c3746dabc602a1d5719c07d54172",
+      "bytes": 519796,
+      "lines": 427,
+      "fixtureCommit": "ab9361f1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBurningFrame.cpp": "e5a198df",
+        "cpppj/src/client/BurningFrameCapture.cpp": "ab9361f1"
       }
     }
   ]

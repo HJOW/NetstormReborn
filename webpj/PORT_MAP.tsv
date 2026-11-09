@@ -9,7 +9,7 @@ cpppj/src/client/AiTypeRequiredEnergy.cpp	port	www/core/raw-type-required-energy
 cpppj/src/client/AiUtilityCommandInput.cpp	port	www/core/client-input-commands.js	1f00a25a	port	[client-default] WB04-E23: AI/간헐천 일반 명령 세 개 분배. fixture ai-utility-commands 10.78 72행 전부. ai-utility-names 30행(스크립트 큐)은 해당 단위에서
 cpppj/src/client/BackgroundGifGump.cpp	port			todo	[client-default]
 cpppj/src/client/BitmapFont.cpp	port	www/assets/bitmap-font.js;www/assets/font-set.js;www/render/glyph-text.js	1f00a25a	partial	[client-default] .chfnt 글꼴 표·글자 출력
-cpppj/src/client/BurningFrameCapture.cpp	port			todo	[client-default]
+cpppj/src/client/BurningFrameCapture.cpp	port	www/core/raw-burning-frame.js	1f00a25a	port	[client-default] WB04-E200: makeBurningFrameCapture — 같은 풀의 RawShapeToBuffer 만 받아 capture 를 설치하고 호출자의 다른 소비자(소리 정지)는 유지. burningframe 213행 대조에서 실제 캡처로 사용. 남음: 없음
 cpppj/src/client/ButtonGump.cpp	port	www/ui/stone-button.js	1f00a25a	partial	[client-default] 버튼 상태·입력
 cpppj/src/client/CameraHome.cpp	port			todo	[client-default]
 cpppj/src/client/CampaignClientServices.cpp	port			todo	[client-default]
@@ -553,7 +553,7 @@ cpppj/src/o/RawBulfFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawBulwarkHit.cpp	port	www/core/raw-bulwark-hit.js	1f00a25a	port	[o-default] WB04-E11: 48ef20 불워크 피해 관문(공격자 비행 genus면 0, 아니면 일반 피해 연결). fixture bulwark-hit 10.78 492행 전부
 cpppj/src/o/RawBuriedPostPop.cpp	port	www/core/raw-buried-post-pop.js	1f00a25a	port	[o-default] WB04-E60: buried 후처리 00462170(보상 QA 쓰기·Bridge 통지·두 예약·공통 장부). fixture buried-postpop 580행 전부. SquidPostPop.setBody('buried') 연결·실제 World getter 는 WB05
 cpppj/src/o/RawBuriedRegular.cpp	port	www/core/raw-buried-regular.js	1f00a25a	port	[o-default] WB04-E75: 오벨리스크 실제 Regular Handle 004622f0(가상 표 0x50a748·B 구간 signed 나머지 프레임·A 구간 복귀 난수 2..7). fixture buried-regular 384행 전부(10.78 전용 파일). 프레임 단계 이동/재Pop 본체는 해당 파일 단위에서
-cpppj/src/o/RawBurningFrame.cpp	port			todo	[o-default]
+cpppj/src/o/RawBurningFrame.cpp	port	www/core/raw-burning-frame.js	1f00a25a	port	[o-default] WB04-E200: Burning 캡처 00423d50(이미지/행 반납·입자 zero·피해 앞단·현재 victim 캡처·(폭+높이)/5 행)·프레임 00424530(capacity 0·단계 0/1·선택 슬롯 좌표/깊이·이중 ftol visible/inset·off 소리 정지·timer 10배·연소점·capacity 전체 입자 방출/이동·현재 바람·상자 보정·SetRect 두 번). fixture burningframe 10.78 213행 전부(바람 owner 재실행·세 소비자 진단 복귀 포함). 남음: Host 부착(E201 BurningVisualSystem)·실제 소리/바람/카메라 전역·Session 월드 연결, CD 분기는 범위 밖
 cpppj/src/o/RawBurningLifetimeDraw.cpp	port	www/core/raw-burning-lifetime-draw.js	1f00a25a	port	[o-default] WB04-E184: Burning 입자 출력 423ec0·소멸 423cd0/4240f0·RenderProcess 프레임 진입 487940·71/128 궁수 캡처 그림. fixture burninglifetimedraw 655행(D 579·X 64·C 12)·renderframegate 128행·burningarchercapture 88행 전부. 남음: 실제 팔레트/Surface/Host 연결(BurningVisualSystem·RenderProcessSystem)
 cpppj/src/o/RawBurningSourceCount.cpp	port	www/core/raw-burning-source-count.js	1f00a25a	port	[o-default] WB04-E183: 연소점 개수 4241a2(DWORD 감김·signed IDIV zero/overflow). fixture burningsourcecount 10.78 2,826행 전부(높이 2 부모/HP getter/진단 복귀 포함). 남음: 없음(순수 정수 부모)
 cpppj/src/o/RawBurningSources.cpp	port	www/core/raw-burning-sources.js	1f00a25a	port	[o-default] WB04-E183: 연소점 선택 00424110(현재 HP 선저장·300시도 난수·7점 폴백·source 제거·공유 현재 옵션). fixture burningsources 326행(독립/공유 두 방식)·burningsourcescorner 18행 전부. 남음: 실제 Step/캡처/팔레트/표시 연결
