@@ -11,8 +11,8 @@
 #include <utility>
 
 namespace netstorm::client { // 장기 본문은 World/Session을 만들거나 현재 게임 상태를 초기화하지 않는다.
-namespace { // 기존 전체 자격/효과가 연결된 실제 열두 VT만 Native 정기 분배에 등록한다.
-constexpr std::array<std::uint32_t,12> kConnectedBombTables{0x502908U,0x502b70U,0x5029d0U,0x502aa8U,0x5030c0U,0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}; // 나머지4VT는 별도 복원 대상이다.
+namespace { //실제 자격/효과를 연결한 열다섯 VT만 Native 정기 분배에 등록한다.
+constexpr std::array<std::uint32_t,15> kConnectedBombTables{0x5026a0U,0x502778U,0x502840U,0x502908U,0x502b70U,0x5029d0U,0x502aa8U,0x5030c0U,0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}; //트리즌1VT는 별도 복원 대상이다.
 }
 // 큰 후단은 같은 World가 실제 외곽 pin과 함께 공개하며 Storage는 약하게만 빌린다.
 void RawSurfaceStorage::BindBombRuntime(const std::shared_ptr<const RawSurfaceBombBindings>& runtime) {
@@ -37,6 +37,19 @@ std::span<std::int32_t> RawSurfaceStorage::BombCastTimes() {
         bombCastTimesLoaded_=true;
     }
     return bombCastTimes_;
+}
+//현재 TYPE의 spawns를 최초 로드 뒤 같은 저장소에 유지하여 Session별 속성 사본을 만들지 않는다.
+std::span<std::int32_t> RawSurfaceStorage::BombSpawns() {
+    if (!UsesNativeTransmissionDevices() || pool.Edition()!=o::OriginalEdition::Patch1078 || !Source() || types.size()!=bombSpawns_.size()) throw std::logic_error("장기 Bomb의 같은 실제 spawns TYPE owner 미연결");
+    if (!bombSpawnsLoaded_) {
+        for (const auto& asset:Source()->Types()) { //실제 자산 block 번호로 TYPE70 이후의 signed spawns를 한 번 읽는다.
+            const auto count=asset.definition.Number("spawns").value_or(0.0);const auto type=asset.block+70U;
+            if (type>=bombSpawns_.size() || !std::isfinite(count) || count<std::numeric_limits<std::int32_t>::min() || count>std::numeric_limits<std::int32_t>::max()) throw std::out_of_range("장기 Bomb 현재 spawns TYPE/정수 범위");
+            bombSpawns_[type]=static_cast<std::int32_t>(count);
+        }
+        bombSpawnsLoaded_=true;
+    }
+    return bombSpawns_;
 }
 // 실제 현재 VT의 DWORD를 읽으며 TYPE 번호/사건만으로 미연결 주문을 다른 효과에 보내지 않는다.
 bool RawSurfaceStorage::HasBombRegular(o::Sid sid) const {

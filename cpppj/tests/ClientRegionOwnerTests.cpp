@@ -1263,10 +1263,10 @@ TEST_CASE(ClientBombOwner_GetterKeepsCurrentStatePoolAndFactory) { // getter는 
 TEST_CASE(ClientBombOwner_CastTimesKeepSameMutableStorage) { // 같은 TYPE+1b8 표를 다시 조회/본문 구성/대여할 때 현재 값을 덮지 않는다.
     BombOwnerScene f;auto& s=f.scene;auto values=s.storage->BombCastTimes();CHECK(values.size()==188 && values[0]==0 && values[69]==0);values[113]=-123;auto* body=&s.storage->BombRegular();CHECK(s.storage->BombCastTimes().data()==values.data() && values[113]==-123 && body==&s.storage->BombRegular());
 }
-TEST_CASE(ClientBombOwner_OnlyActualTwelveVtablesAreRegistered) { // 현재12VT와 별도 복원4VT를 실제 생성자 기준으로 구별한다.
+TEST_CASE(ClientBombOwner_PreviousTablesStayRegisteredAndTreasonStaysRejected) { //기존12VT와 미연결 트리즌만 실제 생성자로 검사한다. 공중 소환3VT는 사용자 제외로 정적 감사한다.
     BombOwnerScene f;auto& s=f.scene;
     for (const auto table:{0x502908U,0x502b70U,0x5029d0U,0x502aa8U,0x5030c0U,0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}) { const auto sid=f.Bomb(table);CHECK(s.storage->HasBombRegular(sid)); } // 연결된 실제 클래스만 조회한다.
-    for (const auto table:{0x5026a0U,0x502778U,0x502840U,0x503188U}) { const auto sid=f.Bomb(table);CHECK(!s.storage->HasBombRegular(sid)); } // 같은 원문+5c라도 아직 연결하지 않은 후단은 완료로 세지 않는다.
+    const auto sid=f.Bomb(0x503188U);CHECK(!s.storage->HasBombRegular(sid)); //같은 원문+5c라도 미연결 트리즌을 완료로 세지 않는다.
 }
 TEST_CASE(ClientBombOwner_CountZeroUsesActualFirstFrameAndFullPayload) { // carrier0의 첫 호출은 실제 프레임을 쓰고 현재 Boss0이면 원래 NaN payload를 보존한다.
     BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();s.gameplay->Authority()->boss=false;const auto type=s.storage->pool.Slot(sid)[10];const auto first=s.storage->frames[type].Run('A').first;const auto payload=std::bit_cast<float>(0x7fc12345U);
@@ -1486,4 +1486,13 @@ TEST_CASE(ClientBombStrikeOwner_EffectGlobalsKeepSameOwnerAcrossWorldLoan) { //�
     RegionScene s;auto aux=s.gameplay->GameAux();CHECK(aux==s.storage->GameAux());auto* gravity=&aux->GravityEffectType();auto* meteor=&aux->MeteorEffectType();aux->GravityEffectType()=0x123400aeU;aux->MeteorEffectType()=0x567800b1U;
     { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(gravity==&world.Storage()->GameAux()->GravityEffectType() && meteor==&world.Storage()->GameAux()->MeteorEffectType()); }
     CHECK(*gravity==0x123400aeU && *meteor==0x567800b1U && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombOwner_SpawnsUseSameCurrentStorageAcrossWorldLoan) { //공통 TYPE 속성의 현재 주소/값만 확인하고 공중3종의 생성/생산/행동은 실행하지 않는다.
+    RegionScene s;auto counts=s.storage->BombSpawns();CHECK(counts.size()==188);counts[113]=-123;counts[0]=0x12345678;auto* address=counts.data();
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(address==world.Storage()->BombSpawns().data() && world.Storage()->BombSpawns()[113]==-123); }
+    CHECK(address==s.storage->BombSpawns().data() && s.storage->BombSpawns()[113]==-123 && s.storage->BombSpawns()[0]==0x12345678 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombOwner_SpawnsGetterKeepsCurrentRandomAndSp) { //속성 getter는 현재 권한/난수/SP/Player를 초기화하지 않으며 재조회로 현재값을 덮지 않는다.
+    RegionScene s;const auto random=s.random->Game().State();const auto boss=s.gameplay->Authority()->boss;const auto free=s.storage->pool.FreeCount();auto counts=s.storage->BombSpawns();counts[113]=2147483647;
+    CHECK(s.storage->BombSpawns()[113]==2147483647 && s.random->Game().State()==random && s.gameplay->Authority()->boss==boss && s.storage->pool.FreeCount()==free && !s.sp->Store().Initialized() && s.players->Base()==0);
 }

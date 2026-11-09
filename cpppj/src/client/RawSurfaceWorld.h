@@ -294,6 +294,7 @@ public:
     float ImpactRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 실제 충돌 anim의 현재 프레임/가상 삭제 본문을 같은 장기 물리에서 실행한다.
     o::BombRegularState& BombState(); // 현재 Boss/로컬 Player getter·5fh 헤더를 같은 장기 주소에서 읽는다.
     std::span<std::int32_t> BombCastTimes(); // TYPE+1b8의 같은 장기188DWORD를 최초 로딩 뒤 공유한다.
+    std::span<std::int32_t> BombSpawns(); //TYPE+1c8의 같은 장기188DWORD를 소환/후속 조회가 직접 공유한다.
     o::RawBombRegular& BombRegular(); // 현재 프레임/시전 시간과 실제 큰 후단을 사용하는 같은 정기 본문이다.
     void BindBombRuntime(const std::shared_ptr<const RawSurfaceBombBindings>& runtime); // 현재 후단 대여만 연결하고 본문/상태를 초기화하지 않는다.
     bool HasBombRegular(o::Sid sid) const; // 실제 현재 VT가 장기 연결한 연결한7VT인지 직접 확인한다.
@@ -475,6 +476,8 @@ private:
     std::unique_ptr<o::ContentFormLifetime> contentLifetime_; // 같은 Reward/공통 삭제/정렬 본체보다 먼저 반납한다.
     std::array<std::int32_t,188> bombCastTimes_{}; // 원본 TYPE+1b8의 현재 값이며 Session마다 별도 표를 만들지 않는다.
     bool bombCastTimesLoaded_{}; // 최초 자산 값만 한 번 보충하고 재대여 때 현재 값을 덮지 않는다.
+    std::array<std::int32_t,188> bombSpawns_{}; //원본 TYPE+1c8의 현재 signed spawns이며 World/Session마다 초기화하지 않는다.
+    bool bombSpawnsLoaded_{}; //최초 자산 속성만 한 번 로드하고 이후 현재값을 보존한다.
     o::BombRegularState bombState_{.effect={0x5f,1,0}}; // 보호 PE 헤더5f01과00544c6c의 최초 BSS WORD0을 유지한다.
     std::vector<std::unique_ptr<std::uint32_t[]>> bombSearchMemory_; // 실제 new400의 중첩 호출별 확보/해제 소유권을 LIFO로 보유한다.
     std::unique_ptr<o::RawBombRegular> bombRegular_; // 상태/TYPE/프레임/실제 장치보다 먼저 반납하는 같은 정기 본문이다.

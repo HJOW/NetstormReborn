@@ -36,6 +36,7 @@
 #include "o/RawBombHeal.h" //힐 주문도 같은 현재 풀/HP/펜스/표시/공장/Pop 몸체를 사용한다.
 #include "o/RawBombHardener.h" //하드너는 현재 다리 방향/강화 후보와 같은 실제 프레임/플레어를 사용한다.
 #include "o/RawBombStrike.h" //라이트닝 웨이브/잽은 기존 실제 피해/빔·현재 투영/소리에 연결한다.
+#include "o/RawManoSpell.h" //맨 오 워3주문의 자격 소환도 같은 실제 생성/소유자/현재 헤더와 Pop을 사용한다.
 #include "o/RawSquidHitPoints.h" //CreateAt도 같은 비가상 공통HP DWORD 쓰기를 사용한다.
 #include "client/EditorIslandBitmap.h"
 #include "o/RawFortRandomPlacement.h"
@@ -826,7 +827,8 @@ struct RawCampaignSession::Impl {
     MeltdownState meltdownState;std::unique_ptr<RawMeltdown> meltdown; // 같은 풀/해시/권한/동맹의 실제76h 요청과75h 효과다.
     std::unique_ptr<RegularProcess> pendingDevastationRegular; // 실제 활성화 확보부터 SharedRegular 부착까지 한 객체를 보관한다.
     std::unique_ptr<std::uint8_t[]> devastationSearchMemory,devastationEffectMemory; // 각각 원본new400/대상배열의 실제 확보와 해제 수명을 보존한다.
-    WindSpellState windSpellState;std::vector<std::int32_t> windSpellCounts;std::unique_ptr<RawWindSpell> windSpell; // 세 소환 주문의 현재spawns와 실제59 생성을 소유한다.
+    WindSpellState windSpellState;std::vector<std::int32_t> windSpellCounts;std::unique_ptr<RawWindSpell> windSpell; //Native는 장기 현재spawns를 빌리며 독립 typed만 기존 값형 표를 보유한다.
+    std::unique_ptr<RawManoSpell> manoSpell; //현재 서버/장기TYPE spawns와 실제 공장·소유자·헤더/공간 장치를 빌리는 자격 본문이다.
     BombStatusState bombStatusState;std::unique_ptr<RawBombStatus> bombStatus; // 같은 현재 동맹/가상 효과로 은신과 마비를 실행한다.
     std::uint32_t bombTimerType{57};std::unique_ptr<BombEffectTimerProcess> pendingBombTimer; // 수신/시전이 확보한 타이머를 같은 Host에 넘긴다.
     std::unique_ptr<void,void(*)(void*)> pendingBombTimerStorage{nullptr,[](void* memory) { ::operator delete(memory); }}; // new40 경계의 미생성 메모리를 예외 시에도 해제한다.

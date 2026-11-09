@@ -255,7 +255,7 @@ float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std
     const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //가상선택은현재VT4BYTE이며현재TYPE별추측으로바꾸지않는다.
     if (table==0x502cf0U || table==0x502db0U) return o::HandleHealBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //힐/미티어의 필수41f9d0을 같은 장기 본문에서 처리한다.
     if (table==0x502c38U) return o::HandleGravityBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //그라비테이션의 필수41f760도 같은 실제 풀/프레임/Host를 사용한다.
-    if (HasBombRegular(sid)) return BombRegular().Handle(sid,event,count,payload); // 현재 원문41e6a0의 연결12VT만 같은 장기 본문으로 보낸다.
+    if (HasBombRegular(sid)) return BombRegular().Handle(sid,event,count,payload); //현재 원문41e6a0의 연결15VT만 같은 장기 본문으로 보낸다.
     if (table==0x512208U) return ContentForms().Damage(sid,std::bit_cast<std::int32_t>(count),payload); // 실제4af070은 사건과 무관하게 signed count만 판정한다.
     if (table==0x5034c8U) return BridgeRegular().Handle(sid,event,count,payload); // 실제422740은 World와 같은 장기 본문/현재 전역을 사용한다.
     if (table==0x509758U) return ImpactRegular(sid,event,count,payload); // 실제45a6e0의 프레임 지정/종료다.
