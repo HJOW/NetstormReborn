@@ -13760,9 +13760,38 @@
       "bytes": 2623901,
       "lines": 4723,
       "fixtureCommit": "560df210",
-      "webCommit": "worktree",
+      "webCommit": "be08662f",
       "cpppjBasis": {
         "cpppj/src/o/RawMinimapRaster.cpp": "560df210"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E205",
+      "id": "colorsortprimary",
+      "path": "cpppj/tests/fixtures/colorsort-primary-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: ColorSort primary 생성자 439de0 의 논리 RGBX·초기 할당·alias·store 수 중단 입력과 raw 0x3800 결과·실행 뒤 입력·완료 여부·store 관측열(10.78, 제어어 027f 40행·037f 40행)",
+      "consumers": [
+        "webpj/tests/color-sort-primary.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-color-sort-primary.js"
+      ],
+      "doc": "docs/webpj-color-sort-primary-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawColorSortPrimary.cpp"
+      ],
+      "scope": "027f 40입력 전부 대조, 037f 40행은 차이 감사만",
+      "text": true,
+      "sha256": "ddc522d49ab538e33c27661efcc4198f27a2e1e581bfa92de44020acec6ebc29",
+      "bytes": 7105483,
+      "lines": 81,
+      "fixtureCommit": "88834c49",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawColorSortPrimary.cpp": "88834c49"
       }
     }
   ]

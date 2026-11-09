@@ -595,7 +595,7 @@ cpppj/src/o/RawCheckingDiagnostics.h	port			todo	[o-default]
 cpppj/src/o/RawCheckingFlag.h	port	www/core/squid-pop.js	1f00a25a	port	[o-default] WB04-E1: 소비 위치마다 읽는 현재 DWORD 뷰는 웹에서 checking() getter 함수 계약으로 대신한다(squid-unpop.js·squid-pop.js·squid-space.js)
 cpppj/src/o/RawClockSyncReset.cpp	port	www/core/raw-clock-sync-reset.js	1f00a25a	port	[o-default] WB04-E11: 004c1f20 시간 동기화 세 DWORD 0 쓰기. fixture clock-sync-reset 10.78 64행 전부
 cpppj/src/o/RawColorMapCache.cpp	adapt			todo	[adapt-file]
-cpppj/src/o/RawColorSortPrimary.cpp	port			todo	[o-default]
+cpppj/src/o/RawColorSortPrimary.cpp	port	www/core/raw-color-sort-primary.js	1f00a25a	port	[o-default] WB04-E205: 439de0 기본 53비트 primary(0x3800 초기 할당 그대로 소유·첫 순회 R→G→번호(B 선캡처)→B 와 503608 상수·둘째 순회 저장 RGB 에서 합/명도/채도(≤0.5 분모, (2-최대)-최소)/색상(×60, 음수 +360, 회색 S0 H-1)·store checkpoint 와 예외 부분 효과·alias 현재 입력·constructed 표식·명도 비트 getter). fixture colorsortprimary 027f 40행 전부와 037f 차이 감사. 남음: E77 construct hook 연결·검색/qsort·Session 수명, 037f 는 범위 밖
 cpppj/src/o/RawColorSortStartup.cpp	port	www/core/raw-color-sort-startup.js	1f00a25a	port	[o-default] WB04-E77: ColorSort 시작 43b430(로드 진단 451·두 슬롯 해제/0·primary 생성·검색 생성/vtable 0x506658/qsort·search 캡처 대입·count 10)·43b300(색띠 해제/할당/현재 count/60B 인자). fixture colorsort-startup 116행 전부. 생성·정렬·색띠 계산 본체는 RawColorSortPrimary 등 해당 단위에서
 cpppj/src/o/RawCommonOwner.cpp	port	www/core/raw-common-owner.js	1f00a25a	port	[o-default] WB04-E2: 004adf00 공통 소유자 지정(범위 진단 0x9ff/0xa02·작업장 목록 제거/추가)
 cpppj/src/o/RawConfigFileLoad.cpp	adapt			todo	[adapt-file]
