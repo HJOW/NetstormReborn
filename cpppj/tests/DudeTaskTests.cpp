@@ -47,8 +47,8 @@ struct TaskScene {
         hooks.notifySurface=[this](Sid sid) { events.push_back("S:"+std::to_string(sid.value)); };return hooks;
     }
     // 원본 결과칸을 읽지 않고 현재 입력으로 실행한 raw/Regular 상태를 직렬화한다.
-    std::vector<std::string> Run() {
-        DudeTaskState state{clock};RawDudeTask task(pool,state,Hooks());std::string status="return";
+    std::vector<std::string> Run(bool native=false) {
+        DudeTaskState state{clock};state.native=native;auto hooks=Hooks();hooks.assertion=[] { throw std::logic_error("Dude task FALL 교체 원본 assert"); };hooks.setWord=[this](Sid sid,std::uint32_t value) { const auto current=pool.Slot(sid);auto raw=std::span<std::uint8_t>{const_cast<std::uint8_t*>(current.data()),current.size()};Put(raw,12,value,2);if (raw[10]==82) events.push_back("S:"+std::to_string(sid.value)); };RawDudeTask task(pool,state,std::move(hooks));std::string status="return";
         try { task.Set(Sid{static_cast<std::uint16_t>(Number(row[1]))},Number(row[4]),std::bit_cast<float>(Number(row[7]))); }
         catch (const std::logic_error& error) { if (std::string(error.what())!="Dude task FALL 교체 원본 assert") throw;events.push_back("A:156");status="assert"; }
         std::string actions,regular="-";
@@ -59,13 +59,13 @@ struct TaskScene {
     }
 };
 // 정상 반환과 원본 assert 분류를 구분하여 판본별 모든 독립 입력을 재생한다.
-void ReplayTask(std::string_view edition) {
+void ReplayTask(std::string_view edition,bool native=false) {
     std::size_t count=0,expectedCount=0;int failures=0;
     // 판본별 행 수만 계산하고 기대 출력은 실제 실행 후 비교한다.
     for (const auto& row:TaskRows()) if (row[0]==edition) ++expectedCount;
     // 원본 입력과 마지막 네 출력칸을 분리해 전수 대조한다.
     for (const auto& row:TaskRows()) {
-        if (row[0]!=edition) continue;CHECK(row.size()==13);TaskScene scene(row);const auto output=scene.Run();const auto expected=std::vector<std::string>(row.begin()+9,row.end());const bool same=output==expected;CHECK(same);
+        if (row[0]!=edition) continue;CHECK(row.size()==13);TaskScene scene(row);const auto output=scene.Run(native);const auto expected=std::vector<std::string>(row.begin()+9,row.end());const bool same=output==expected;CHECK(same);
         if (!same) {
             // 첫 차이는 입력행과 두 실제 결과를 함께 기록한다.
             for (std::size_t index=0;index<output.size();++index) if (output[index]!=expected[index]) std::printf("%s DudeTask 행%zu 결과%zu 기대%s / 실제%s\n",row[0].c_str(),count,index,expected[index].c_str(),output[index].c_str());
@@ -84,4 +84,10 @@ TEST_CASE(DudeTask_CdNativeSetterAndFallRetention) { ReplayTask("originalCD"); }
 TEST_CASE(DudeTask_MissingCreationAndSurfaceRejected) {
     auto row=TaskRows().front();TaskScene scene(row);auto hooks=scene.Hooks();hooks.addTaskRegular={};DudeTaskState state{scene.clock};RawDudeTask task(scene.pool,state,std::move(hooks));CHECK(Throws([&] { task.Set(kSource,0x5103,0); }));CHECK(Get(scene.pool.Slot(kSource),12,2)==0x5101);
     row[6]="82";TaskScene bridge(row);auto bridgeHooks=bridge.Hooks();bridgeHooks.notifySurface={};DudeTaskState bridgeState{bridge.clock};RawDudeTask bridgeTask(bridge.pool,bridgeState,std::move(bridgeHooks));CHECK(Throws([&] { bridgeTask.Set(kSource,0x5103,.1f); }));CHECK(Get(bridge.pool.Slot(kSource),12,2)==0x5103);CHECK(bridge.host.FindEvent(kSource,0x5103)!=nullptr);
+}
+
+TEST_CASE(DudeTask_CurrentPatchReplay) { ReplayTask("originals",true); } // 같은 불변 원문 행을 Native 현재 Host/WORD 분기로 비교한다.
+
+TEST_CASE(DudeTask_CurrentFallAssertionCanReturnAndKeepsRealRegular) { // 정상 복귀하는 원문 FALL 진단 뒤에도 실제 Host 예약과 WORD 쓰기를 계속한다.
+    auto row=TaskRows().front();TaskScene scene(row);Put(scene.pool.AllocatedBytes(kSource),12,0x5105,2);DudeTaskState state{scene.clock};state.native=true;auto hooks=scene.Hooks();std::uint32_t assertions{};hooks.assertion=[&] { ++assertions; };hooks.setWord=[&](Sid parent,std::uint32_t word) { CHECK(parent==kSource);Put(scene.pool.AllocatedBytes(parent),12,word,2); };RawDudeTask body(scene.pool,state,std::move(hooks));body.Set(kSource,0x5103,0.1F);CHECK(assertions==1 && scene.current && Get(scene.pool.Slot(kSource),12,2)==0x5103);if (scene.current) CHECK(scene.current->Event()==0x5103 && scene.current->Count()==0 && scene.current->Time()==scene.clock.Now()+static_cast<double>(0.1F));
 }

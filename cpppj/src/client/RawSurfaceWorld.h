@@ -11,6 +11,7 @@
 #include "o/RawGameAuxState.h"
 #include "o/RawDamageablePreDestroy.h" // 같은 장기 피해가능 객체 전처리/검색 상태를 공유한다.
 #include "o/RawBombPreDestroy.h" //Point Blast의고유전처리도같은물리/현재폭발과공통부모를공유한다.
+#include "o/RawPathRuntime.h" // 현재 Dude 경로 좌표를 실제 Runtime 대여에 전달한다.
 #include "o/RawFactoryPostPop.h" // 같은 Factory 후처리/레벨 보정을 장기 보유한다.
 #include "o/RawBalloonBody.h" // 벌룬의 실제 그림자·후처리·삭제 본체를 같은 장기 물리에 연결한다.
 #include "o/RawFlyerPreDestroy.h" // Flyer의 현재 WORD 대상 삭제와 Damageable 부모를 공유한다.
@@ -67,7 +68,7 @@
 #include <vector>
 #include <optional>
 
-namespace netstorm::o { struct TerrainBitmapState;class RawBuriedPostPop;class RawBuriedRegular; } //장기본문의완전형식은Storage구현에서만필요하다.
+namespace netstorm::o { class RawDudeRegular;class RawDudeBehavior;class RawDudeTask;struct TerrainBitmapState;class RawBuriedPostPop;class RawBuriedRegular; } //장기본문의완전형식은Storage구현에서만필요하다.
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
 class ClientPlayerRecords; // 현재 Player 배열을 조회할 때만 수명을 pin하는 실제 장기 owner다.
@@ -101,6 +102,12 @@ struct RawSurfaceCarrierBindings { // 선택된 큰 이동/낙하와 전용 owne
     std::function<float(o::Sid,std::uint32_t)> falling; // 기존426ef0의 전체 낙하/해방 본문이다.
     std::function<void(o::Sid,std::uint32_t)> setOwner; // 사제/메타의 전용 가상74는 기존 전체 소유권 분배를 쓴다.
     std::function<std::shared_ptr<void>()> pin; // 선택 호출의 정상/예외 반환까지 실제 전체 Runtime을 보유한다.
+};
+struct RawSurfaceDudeBindings { // 실제 경로/목표 진입점과 선택된 이동 종류만 현재 Runtime으로 빌린다.
+    std::function<std::uint32_t(std::uint32_t)> movementType; // 기존 전체488fe0 현재 선택기다.
+    std::function<o::RawPathPoint(o::Sid)> entrance; // 기존 전체4505a0 진입점이다.
+    std::function<bool(o::Sid,o::RawPathPoint,bool)> move; // 기존 전체450760의 속도/경로/현재 프레임 처리다.
+    std::function<std::shared_ptr<void>()> pin; // 실제 전체 Runtime의 선택 호출 수명이다.
 };
 struct RawSurfaceResidenceBindings { // Fort 전용 Dude 효과만 현재 Runtime 수명으로 빌린다.
     std::function<std::array<float,2>(o::Sid)> entrance; // 기존 실제 발자국 진입점이다.
@@ -211,6 +218,7 @@ private:
     RawSurfaceResourceDevices resourceDevices_; //실제Client장치만보관하며짧은Session주소를저장하지않는다.
     RawSurfaceContentDevices contentDevices_; // 같은 Client 전역 alias와 현재 장치를 본체보다 오래 유지한다.
     std::weak_ptr<const RawSurfaceCarrierBindings> carrierRuntime_; // 큰 선택 효과만 약하게 빌려 죽은 Session을 역소유하지 않는다.
+    std::weak_ptr<const RawSurfaceDudeBindings> dudeRuntime_; // 실제 현재 큰 이동 효과만 약하게 대여한다.
     std::weak_ptr<const RawSurfaceResidenceBindings> residenceRuntime_; // 선택한 Dude 효과만 현재 owner를 빌린다.
     std::weak_ptr<const o::TerrainBitmapState> residenceTerrain_; // 실제 현재 fringeType 저장소의 약한 대여다.
     std::function<std::uint32_t()> residenceTheme_; // 실제 장기 설정 owner를 선택 호출할 장치다.
@@ -333,6 +341,12 @@ public:
     bool HasCarrierRegular(o::Sid sid) const; // 실제42a750의 직접6VT만 분배한다.
     void BindCarrierRuntime(const std::shared_ptr<const RawSurfaceCarrierBindings>& runtime); // 현재 큰 하위의 실제 대여만 연결한다.
     o::RawFactoryPostPop& FactoryPostPop(); //현재 목록/TYPE/역할과 장기 예약·공통 후처리를 같은 본체로 공유한다.
+    void BindDudeRuntime(const std::shared_ptr<const RawSurfaceDudeBindings>& runtime); // 큰 현재 이동 하위만 대여하며 게임 상태는 초기화하지 않는다.
+    o::RawDudeRegular& DudeRegular(); // 같은 공급원/순환/현재 사건/난수/프레임의 장기 정기 본문이다.
+    o::RawDudeBehavior& DudeBehavior(); // 같은 지면/현재 task/종속 삭제의 장기 부모다.
+    o::RawDudeTask& DudeTask(); // 같은 실제 Host/시각/WORD의 장기 작업 예약기다.
+    void SetDudeWord(o::Sid sid,std::uint32_t value); //4ac220의 현재 WORD 저장 뒤 실제 Bridge 통지다.
+    void DudeAssert(std::uint32_t line); // 원문 표현/파일/행을 같은 실제 진단 장치에 전달한다.
     void BindResidenceDevices(const std::shared_ptr<const o::TerrainBitmapState>& terrain,std::function<std::uint32_t()> theme); // 첫 메뉴 전 현재 지형/설정만 연결한다.
     void BindResidenceRuntime(const std::shared_ptr<const RawSurfaceResidenceBindings>& runtime); // 현재 Dude 효과의 실제 수명만 빌린다.
     float ResidenceRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 같은 현재 주민/장식/신전/난수의 정기 본문이다.
@@ -461,6 +475,9 @@ private:
     std::unique_ptr<o::SquidFactory> factory_; //공통장부/Pool보다먼저반납하고장기Host가마지막Regular를반납할때까지실제공장을유지한다.
     o::CarrierPostPopState resourceCarrierState_; //현재원문권한/로딩/간헐천TYPE주소만빌리며지역기본값으로복제하지않는다.
     o::AssetPostPopState resourceAssetState_; //장기Geyser경로가소비하는실제목록/표면TYPE주소이며다른자산용사본은사용하지않는다.
+    std::unique_ptr<o::RawDudeRegular> dudeRegular_; // 같은 장기 물리/현재 전역만 빌리는 정기 본문이다.
+    std::unique_ptr<o::RawDudeBehavior> dudeBehavior_; // 같은 지도와 population/작업기를 빌린다.
+    std::unique_ptr<o::RawDudeTask> dudeTask_; // 같은 실제 Host/시각을 빌리고 Host 정리 때까지 유지한다.
     std::unique_ptr<o::RawFactoryPostPop> resourceFactoryPostPop_; // 같은 장기 상태를 빌리고 Host보다 먼저 반납하지 않는다.
     std::unique_ptr<o::RawCarrierPostPop> resourceCarrier_; //같은공통PostPop을직접호출하는장기실제부모다.
     std::unique_ptr<o::RawAssetPostPop> resourceGeyser_; //Geyser전용본문만공유하며다른자산의가상등록을합성하지않는다.
@@ -633,6 +650,7 @@ struct RawWorldRuntimeHooks {
     RawSurfaceBombBindings bombRegular; // 현재 큰 시전/검색/수신만 World 수명으로 제공하며 실제 pin은 같은 World가 연결한다.
     o::ContentFormNotice contentNotice; // 현재 Session의 파생 부모 통지이며 실제 빈 부모는 장기 분배기가 직접 처리한다.
     o::ContentPriestNotice capturedContent; // 기존 전체 포획 안내 본문을 선택된 현재 Runtime으로 전달한다.
+    RawSurfaceDudeBindings dude; // 현재 기존 전체 경로 이동/진입점의 실제 Runtime이다.
     RawSurfaceResidenceBindings residence; // 기존 실제 Dude 생성/진입점/작업의 현재 Runtime 대여다.
     RawSurfaceFactoryBindings factoryRegular; // 현재 전체 업그레이드/플레어를 실제 World pin과 공개한다.
     o::GumpFormNotice gumpNotice; // 현재 Session이 제공한 실제 UI 가상 통지이며 미연결이면 장기 실제 UI 등록표를 사용한다.

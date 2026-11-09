@@ -662,13 +662,17 @@ struct RawCampaignSession::Impl {
     std::function<std::int32_t(Sid,std::uint32_t,std::int32_t,std::uint32_t)> developerDamage; // 실제 가상98 분배를 기존 정기 피해와 공유하며 새 피해 공식을 만들지 않는다.
     std::unique_ptr<RawCampaignHitBindings> hits; // 같은 피해/감시/충돌/주변Dude/자산수명 처리기다.
     SquidPostPopList& dudePopulation{world.Storage()->sidLists.dudes}; //같은 장기30칸 population/count를 생성/행동/삭제가 직접 빌린다.
-    std::int32_t dudeProviderIndex{}; //0055a4fc의현재공급자 보행 순환 전역이며 초기값은0이다.
+    std::int32_t localDudeProviderIndex{}; // 독립 typed의 기존 초기0 저장소다.
+    std::int32_t& dudeProviderIndex{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->GameAux()->DudeProviderIndex():localDudeProviderIndex}; //0055a4fc의현재공급자 보행 순환 전역이며 초기값은0이다.
     DudeSpawnState dudeSpawnState{dudePopulation}; // 생성과 최초 Pop이 같은 현재 목록을 사용한다.
     std::unique_ptr<RawDudeSpawn> dudeSpawn; // 실제 factory/owner/가상Pop 생성 몸체다.
     std::unique_ptr<RawDudePostPop> dudePostPop; // 같은 population/idle/I 프레임과 공통 후처리다.
-    std::unique_ptr<RawDudeTask> dudeTask; // 같은 Host의 masked Regular 조회/생성과 float 지연이다.
-    std::unique_ptr<RawDudeBehavior> dudeBehavior; // 같은 지도/task/이동 삭제와 population의 부모 동작/후처리다.
-    std::unique_ptr<RawDudeRegular> dudeRegular; //같은 Kernel/공급자 목록/난수/24 경로의 실제 정기/네 하위 몸체다.
+    std::unique_ptr<RawDudeTask> localDudeTask; // 독립 typed만 기존 지역 작업기를 소유한다.
+    RawDudeTask* dudeTask{}; // 같은 Host의 masked Regular 조회/생성과 float 지연이다.
+    std::unique_ptr<RawDudeBehavior> localDudeBehavior; // 독립 typed만 기존 지역 부모를 소유한다.
+    RawDudeBehavior* dudeBehavior{}; // 같은 지도/task/이동 삭제와 population의 부모 동작/후처리다.
+    std::unique_ptr<RawDudeRegular> localDudeRegular; // 독립 typed만 기존 지역 정기 본문을 소유한다.
+    RawDudeRegular* dudeRegular{}; //같은 Kernel/공급자 목록/난수/24 경로의 실제 정기/네 하위 몸체다.
     std::unique_ptr<RawDudeDrop> dudeDrop; // 실제 무작위/진입점 드롭과 두 난수 소비를 연결한다.
     SoundList& soundNames; // 실제 보호막 파일명의 원본 이름표/opaque handle 조회다.
     std::unique_ptr<void,void(*)(void*)> pendingPickupSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // 원본new40 성공부터실제Sound47 생성까지의단일예약메모리다.
@@ -1587,6 +1591,7 @@ struct RawCampaignSession::Impl {
         decorationHit=assetEffects.regular.hitPoints; // 같은 실제 현재 가상98 본문을 복제하지 않고 대여한다.
         assetBindings=std::make_unique<RawCampaignAssetBindings>(world,*carrier,assetState,random,*islands,players,playerState,RawCampaignAssetGlobals{regularState,gunState,elements,archerCommand,{85,87,126,&gameplayGlobals->FirstTimerFactoryType(),&gameplayGlobals->SecondTimerFactoryType(),&researchOutpost}},std::move(assetEffects));assetBindings->ActivatePostPop(); // 세 TYPE는 같은 실제 Client 주소를 빌리고 Session 사본으로 바꾸지 않는다.
         RawWorldRuntimeHooks worldHooks;
+        worldHooks.dude.movementType=[this](auto type) { return priests->MovementProcessType(type); };worldHooks.dude.entrance=[this](auto target) { const auto point=hits->Dudes().ResidencePoint(target);return RawPathPoint{point[0],point[1]}; };worldHooks.dude.move=[this](auto parent,auto point,auto quickly) { return hits->Dudes().Move(parent,{point.x,point.y},quickly); }; // 기존 전체 이동/진입점만 현재 실제 Runtime에 공개한다.
         worldHooks.residence.entrance=residenceDudeEffects.entrance;worldHooks.residence.spawn=residenceDudeEffects.spawn;worldHooks.residence.task=residenceDudeEffects.task; // 실제 생성 하위만 현재 전체 Runtime과 공개한다.
         worldHooks.factoryRegular.begin=assetEffectsFactoryBegin;worldHooks.factoryRegular.finish=assetEffectsFactoryFinish;worldHooks.factoryRegular.flare=assetEffectsFactoryFlare; // move 전 보관한 같은 실제 큰 후단만 공개한다.
         worldHooks.damageable.hitPoints=decorationHit; // 선언 뒤 같은 실제 가상98 본문만 현재 대여로 공개한다.
@@ -1760,7 +1765,7 @@ struct RawCampaignSession::Impl {
         // 실제 사건이 실패하면 당시 부모/사건/횟수를 남기고 같은 예외를 전파한다. 성공/상태 되돌림으로 대신하지 않는다.
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             try {
-                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
+                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x508cc8U) return world.Storage()->DudeRegular().Handle(sid,event,count,payload);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
                 if (const auto table=Read(core.pool.Slot(sid),0);table==0x50a820U || table==0x50a8e8U) {
                     if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->DecorationRegular(sid,event,count,payload);
                     DecorationRegularHooks hooks;hooks.maxHitPoints=[this](auto parent) { return hp.MaxHitPoints(parent); };
@@ -2576,7 +2581,7 @@ struct RawCampaignSession::Impl {
         dudeSpawn=std::make_unique<RawDudeSpawn>(core.pool,core.factory,core.owner,dudeSpawnState,DudeSpawnHooks{[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); }});
         auto dudePostHooks=MakeDudePostPopHooks(core.pool,core.frame,core.postPop);dudePostHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); }; // QA 저장 뒤에만 현재 Bridge 통지와 실제 프레임/공통 부모를 같은 World에 연결한다.
         dudePostPop=std::make_unique<RawDudePostPop>(core.pool,core.frames,dudeSpawnState,std::move(dudePostHooks),core.bridgeState.bridgeType);core.postPop.SetDudePostPop(dudePostPop.get());
-        DudeTaskHooks task;task.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };dudeTask=std::make_unique<RawDudeTask>(core.pool,DudeTaskState{core.processState,core.bridgeState.bridgeType},MakeDudeTaskHostHooks(core.pool,core.processes,std::move(task)));
+        DudeTaskHooks task;task.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };if (world.Storage()->UsesNativeTransmissionDevices()) dudeTask=&world.Storage()->DudeTask();else { localDudeTask=std::make_unique<RawDudeTask>(core.pool,DudeTaskState{core.processState,core.bridgeState.bridgeType},MakeDudeTaskHostHooks(core.pool,core.processes,std::move(task)));dudeTask=localDudeTask.get(); }
         DudeBehaviorHooks behavior; // 450e80/450960/450920의 효과는 모두 기존 같은 Session 몸체다.
         behavior.task=[this](Sid sid,std::uint32_t event,float delay) { dudeTask->Set(sid,event,delay); };
         behavior.movementType=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
@@ -2584,7 +2589,7 @@ struct RawCampaignSession::Impl {
         behavior.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
         behavior.basePostDestroy=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PostDestroy(sid,flags); };
         behavior.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Dude.cpp 부모 진단 "+std::to_string(line)); };
-        dudeBehavior=std::make_unique<RawDudeBehavior>(core.pool,core.spots,DudeBehaviorState{gunState.checking,dudePopulation},std::move(behavior));
+        if (world.Storage()->UsesNativeTransmissionDevices()) dudeBehavior=&world.Storage()->DudeBehavior();else { localDudeBehavior=std::make_unique<RawDudeBehavior>(core.pool,core.spots,DudeBehaviorState{gunState.checking,dudePopulation},std::move(behavior));dudeBehavior=localDudeBehavior.get(); }
         DudeRegularHooks regular; //실제450fa0의 하위는 기존 같은 저장소/가상 공간/경로 몸체다.
         regular.checkSpace=[this](Sid sid) { return dudeBehavior->CheckSpace(sid); };
         regular.findPath=[this](Sid parent,std::uint32_t kind) { RawContainedLookup lookup(core.pool,[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); });return lookup.Find(parent,kind,0,false); };
@@ -2597,7 +2602,7 @@ struct RawCampaignSession::Impl {
         regular.pop=[this](Sid sid,RawPathPoint point,std::uint32_t flags) { world.Pop(sid,point.x,point.y,flags); };
         regular.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
         regular.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Dude.cpp 정기 진단 "+std::to_string(line)); };
-        dudeRegular=std::make_unique<RawDudeRegular>(core.pool,core.frames,random,DudeRegularState{gunState.checking,core.bookkeeping.Providers(),dudeProviderIndex},std::move(regular));
+        if (world.Storage()->UsesNativeTransmissionDevices()) dudeRegular=&world.Storage()->DudeRegular();else { localDudeRegular=std::make_unique<RawDudeRegular>(core.pool,core.frames,random,DudeRegularState{gunState.checking,core.bookkeeping.Providers(),dudeProviderIndex},std::move(regular));dudeRegular=localDudeRegular.get(); }
         dudeDrop=std::make_unique<RawDudeDrop>(core.pool,core.types,*dudeSpawn,*dudeTask,hits->Dudes(),random);
         DamageableReleaseHooks release;release.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         release.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };

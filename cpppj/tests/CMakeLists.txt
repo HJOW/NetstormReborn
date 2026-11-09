@@ -3837,3 +3837,6 @@ set_source_files_properties(FactoryRegularCurrentTests.cpp PROPERTIES COMPILE_DE
 # 거주 구역/일반 Fort Dude 부모만 집중 검증하고 MP 실행은 선택하지 않는다.
 target_sources(netstorm_tests PRIVATE ResidenceRegularTests.cpp)
 target_sources(netstorm_construction_owner_tests PRIVATE ResidenceRegularTests.cpp AssetRegularTests.cpp)
+
+# 현재 Dude 정기/작업의 원문 재생만 직접 집중 대상에 포함한다.
+target_sources(netstorm_construction_owner_tests PRIVATE DudeRegularTests.cpp DudeTaskTests.cpp)

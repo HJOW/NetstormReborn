@@ -14,6 +14,12 @@ RawDudeTask::RawDudeTask(SidPool& pool,DudeTaskState state,DudeTaskHooks hooks)
     :pool_(pool),state_(state),hooks_(std::move(hooks)) {}
 // float 지연은 먼저 double로 승격하며 원본 x87의 현재 시각 정밀도를 유지한다.
 void RawDudeTask::Set(Sid sid,std::uint32_t event,float delay) const {
+    if (state_.native) {
+        if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("Native Dude task 판본 오류");const auto before=pool_.Slot(sid);const auto previous=static_cast<std::uint16_t>(before[12]|(before[13]<<8));
+        if (previous==kFallTask && event!=kFallTask) { const auto assertion=hooks_.assertion;if (!assertion) throw std::logic_error("Dude task 현재 FALL 진단 미연결");assertion(); }
+        const auto find=hooks_.taskRegular;if (!find) throw std::logic_error("Dude task 현재 Regular 조회 미연결");auto* regular=find(sid);if (!regular) { const auto add=hooks_.addTaskRegular;if (!add) throw std::logic_error("Dude task 실제 Regular 생성 미연결");regular=add(sid,event); }if (!regular) throw std::logic_error("Dude task 원문 NULL Regular 쓰기 경계");
+        regular->ResetTask(event,state_.clock.Now()+static_cast<double>(delay));const auto word=hooks_.setWord;if (!word) throw std::logic_error("Dude task 현재 WORD 쓰기 미연결");word(sid,event);return;
+    }
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     if (!patch && !sid.value) return;
     const auto raw=pool_.Slot(sid);

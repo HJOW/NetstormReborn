@@ -5,7 +5,8 @@ using namespace netstorm::o;
 using namespace netstorm::test::rawscene;
 
 // 명시 큰 효과 경계는 native와 같은 인자로 기록하며 나머지 분기/WORD/프레임/RNG는 실제 모듈을 쓴다.
-TEST_CASE(DudeRegular_Native1600) {
+namespace { // 두 실제 경로에 같은 불변 PE 입력을 공급한다.
+void ReplayDudeRegular(bool native) {
     SidPool pool(OriginalEdition::Patch1078,24000,false);std::size_t rows{},initializers{};
     // 원문에 쓰인 현재 부모/목표 번호를 실제 client 목록에서 확보한다.
     for (std::uint16_t number=5;number<=53;++number) CHECK(pool.Allocate(2)==Sid{number});
@@ -17,8 +18,8 @@ TEST_CASE(DudeRegular_Native1600) {
         // unsigned 원문 비트를 보존하고 signed count는 실제 호출 때만 해석한다.
         for (std::size_t index=0;index<input.size();++index) input[index]=Number(fields[index]);const auto expected=Split(row[1],'|');CHECK(expected.size()==6);if (expected.size()!=6) return;
         if (input[0]==6) {
-            const auto native=Split(expected[5],',');CHECK(native.size()==4);if (native.size()!=4) return;SquidPostPopList population;InitializeDudePopulation(population);
-            CHECK(Number(native[0])==0x508c04U && Number(native[1])==1);CHECK(population.entries.size()==Number(native[2]) && population.count==Number(native[3]));++initializers;++rows;continue; //registry/atexit 토큰이나 미사용 heap을 호스트 바이트 복제로 표시하지 않는다.
+            const auto populationFields=Split(expected[5],',');CHECK(populationFields.size()==4);if (populationFields.size()!=4) return;SquidPostPopList population;InitializeDudePopulation(population);
+            CHECK(Number(populationFields[0])==0x508c04U && Number(populationFields[1])==1);CHECK(population.entries.size()==Number(populationFields[2]) && population.count==Number(populationFields[3]));++initializers;++rows;continue; //registry/atexit 토큰이나 미사용 heap을 호스트 바이트 복제로 표시하지 않는다.
         }
         std::fill(raw.begin(),raw.end(),std::uint8_t{0xa5});Put(raw,0,0x508cc8);raw[10]=70;raw[11]=static_cast<std::uint8_t>(input[4]);Put(raw,12,0x5102,2);Put(raw,14,std::bit_cast<std::uint32_t>(20.75F));Put(raw,18,input[16]);raw[34]=2;Put(raw,36,input[13]);
         // 목표 진단은 일반 목표 이동 wrapper의 원본 입력이며 free/dead에서도 raw 읽기를 허용한다.
@@ -41,7 +42,7 @@ TEST_CASE(DudeRegular_Native1600) {
         hooks.unpop=[&](Sid sid,std::uint32_t flags) { event("unpop",{sid.value,flags});raw[11]|=4;if (input[14]) { Put(raw,14,std::bit_cast<std::uint32_t>(42.5F));Put(raw,18,std::bit_cast<std::uint32_t>(43.5F));Put(raw,36,3); } };
         hooks.pop=[&](Sid sid,RawPathPoint point,std::uint32_t flags) { event("pop",{sid.value,std::bit_cast<std::uint32_t>(point.x),std::bit_cast<std::uint32_t>(point.y),flags});Put(raw,14,std::bit_cast<std::uint32_t>(point.x));Put(raw,18,std::bit_cast<std::uint32_t>(point.y));raw[11]&=static_cast<std::uint8_t>(~4U); };
         hooks.assertion=[&](std::uint32_t line) { event("assert",{line}); };
-        RawDudeRegular body(pool,frames,random,{checking,providers,providerIndex},std::move(hooks));const auto count=std::bit_cast<std::int32_t>(input[2]);std::uint32_t result{};
+        hooks.setWord=[&](Sid sid,std::uint32_t word) { CHECK(sid.value==50);Put(raw,12,word,2); };DudeRegularState state{checking,providers,providerIndex};state.native=native;RawDudeRegular body(pool,frames,random,state,std::move(hooks));const auto count=std::bit_cast<std::int32_t>(input[2]);std::uint32_t result{};
         switch (input[0]) {
         case 0:result=std::bit_cast<std::uint32_t>(body.Handle(Sid{50},input[1],input[2],std::bit_cast<float>(input[3])));break;
         case 1:result=std::bit_cast<std::uint32_t>(body.Wander(Sid{50},count,input[1]!=0));break;
@@ -56,4 +57,11 @@ TEST_CASE(DudeRegular_Native1600) {
         CHECK(observed==row[1]);++rows;
     }
     CHECK(rows==1600 && initializers==3);
+}
+
+}
+TEST_CASE(DudeRegular_Native1600) { ReplayDudeRegular(false); } // 기존 독립 typed 입력 경로를 보존한다.
+TEST_CASE(DudeRegular_Current1600) { ReplayDudeRegular(true); } // 현재 Native 본문도 같은 실제 PE1600행을 전수 대조한다.
+TEST_CASE(DudeRegular_CurrentPollIgnoresUnselectedTypeAndDevices) { // 현재 poll은 TYPE70/프레임/목록/난수/장치를 선택하지 않는다.
+    SidPool pool(OriginalEdition::Patch1078,24000,true);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));SquidPostPopList providers;providers.count=0xffffffffU;std::int32_t index=123;std::uint32_t poll=17,path=24;DudeRegularState state{false,providers,index};state.native=true;state.sharedPollEvent=&poll;state.sharedPathType=&path;RawDudeRegular body(pool,frames,std::function<GameRandom&()>{},state,{});CHECK(body.Handle(Sid{},17,0,3)==0);poll=19;CHECK(body.Handle(Sid{},19,0,3)==0 && index==123);
 }

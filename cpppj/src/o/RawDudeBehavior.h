@@ -9,6 +9,7 @@ namespace netstorm::o {
 struct DudeBehaviorState {
     RawCheckingFlag checking; // 005e4794의 현재 진단 모드이며 도착에서만 조건부로 읽는다.
     SquidPostPopList& population; // 0055a4f0/4/8의 실제 목록·capacity·count이며 stale 꼬리도 보존한다.
+    bool native{}; // 실제 가상 부모는 현재 VT 선택 뒤 TYPE70 선검사를 반복하지 않는다.
 };
 // 이미 복원한 실제 task/타입/내용물/공통 삭제 몸체를 공급한다.
 struct DudeBehaviorHooks {

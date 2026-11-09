@@ -69,6 +69,13 @@ Sid RawDudeNotice::NearestResidence(Sid sid) const {
     }
     return result;
 }
+// 실제 Native 호출은 TYPE/free 선검사 없이 현재59a9d8/e0의 목록과 같은 pool을 읽는다.
+Sid RawDudeNotice::NearestResidenceCurrent(const SidPool& pool,const SquidPostPopList& residences,Sid sid) {
+    const auto source=pool.Slot(sid);const auto owner=source[pool.Edition()==OriginalEdition::Patch1078 ? 34U:32U];const double x=DudeCoordinate(source,14),y=DudeCoordinate(source,18);float best=kFarDistance;Sid result;const auto count=std::bit_cast<std::int32_t>(residences.Count());if (count<=0) return result;const auto items=residences.Storage();
+    for (std::int32_t index=0;index<count;++index) { // 입력 목록의 실제 순서와 엄격한 거리 비교를 유지한다.
+        if (static_cast<std::size_t>(index)>=items.size()) throw std::out_of_range("Dude 현재 거주 구역 목록 물리 범위");const auto number=items[static_cast<std::size_t>(index)];if (number>=pool.Capacity()) throw std::out_of_range("Dude 현재 거주 구역 SID 물리 범위");const auto candidate=pool.Slot(Sid{static_cast<std::uint16_t>(number)});if (candidate[pool.Edition()==OriginalEdition::Patch1078 ? 34U:32U]!=owner) continue;const double dx=x-DudeCoordinate(candidate,14),dy=y-DudeCoordinate(candidate,18);const double distance=std::sqrt(dx*dx+dy*dy);if (distance<best) { best=static_cast<float>(distance);result={static_cast<std::uint16_t>(number)}; }
+    }return result;
+}
 // 일반Gun center와달리x−footX*0.5 절삭+0.5 및타입높이/현재genus로y를보정한다.
 std::array<float,2> RawDudeNotice::ResidencePoint(Sid sid) const {
     const auto raw=Slot(sid);const auto& type=types_[raw[10]];const float x=DudeCoordinate(raw,14);if (!std::isfinite(x) || x<0 || x>256) throw std::out_of_range("Dude notice 거주 구역좌표 오류");float y=DudeCoordinate(raw,18)-static_cast<float>(type.footY);
@@ -78,7 +85,7 @@ std::array<float,2> RawDudeNotice::ResidencePoint(Sid sid) const {
 // 원본은기존목적지를비교한후speed정수백업을만들고새경로요청앞에서만2배로쓴다.
 bool RawDudeNotice::Move(Sid sid,std::array<float,2> destination,bool quickly) const {
     Slot(sid);
-    if (Process(sid,state_.pathProcessType).value) {
+    if (Process(sid,state_.PathType()).value) {
         if (!hooks_.pathEndpoint) throw std::logic_error("Dude notice 실제기존경로 endpoint 미연결");const auto endpoint=hooks_.pathEndpoint(sid);
         if (!endpoint) throw std::logic_error("Dude notice 현재경로 객체조회 오류");if (*endpoint==Snap(destination)) return true;
     }

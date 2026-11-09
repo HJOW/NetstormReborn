@@ -7,12 +7,15 @@ namespace netstorm::o {
 struct DudeTaskState {
     SquidProcessState& clock; // 새 작업의 float 지연에 더하는 현재 double 게임 시각이다.
     std::uint32_t bridgeType{82}; // task WORD 쓰기 뒤 실제 표면 통지를 받는 다리 타입이다.
+    bool native{}; // 실제 PATCH는 선행 finite/free 검사 대신 도달한 원문 진단/현재 장치를 따른다.
 };
 // 현재 Host Regular와 미복원 표면 효과의 명시적 연결점이다.
 struct DudeTaskHooks {
     std::function<RegularProcess*(Sid)> taskRegular; // mask fff0/value5100의 현재 Regular 조회다.
     std::function<RegularProcess*(Sid,std::uint32_t)> addTaskRegular; // event/payload5/flags50의 실제 Regular 생성이다.
     std::function<void(Sid)> notifySurface; // 다리의 task WORD 변경 뒤 실제 표면 통지를 수행한다.
+    std::function<void()> assertion; // Native FALL 교체 진단은 정상 복귀를 허용한다.
+    std::function<void(Sid,std::uint32_t)> setWord; // Native4ac220의 실제 현재 WORD/Bridge 통지다.
 };
 // 00450670/CD004e8ba0의 일반 task 설정이며 Dude 생성과 이동은 별도 소비자다.
 class RawDudeTask {

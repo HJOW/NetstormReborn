@@ -70,8 +70,9 @@ struct RawCampaignHitBindings::Impl {
         auto notice=std::move(effects.dudes);
         notice.setFrame=[this](o::Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
         notice.notifySurface=[this](o::Sid sid) { core.building.NotifySurface(sid); };
+        o::DudeNoticeState noticeState{core.processState};if (world.Storage()->UsesNativeTransmissionDevices()) noticeState.sharedPathType=&world.Storage()->GameAux()->DudePathType(); // 같은 현재 경로 역할은 큰 Move에서도 복제하지 않는다.
         dudes=std::make_unique<o::RawDudeNotice>(core.pool,core.hash,core.types,core.frames,speeds,residences,
-            o::DudeNoticeState{core.processState},o::MakeDudeNoticeHostHooks(core.pool,core.processes,std::move(notice)));
+            noticeState,o::MakeDudeNoticeHostHooks(core.pool,core.processes,std::move(notice)));
         o::GunImpactHooks visual;
         visual.pop=[this](o::Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         visual.destroy=[this](o::Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };

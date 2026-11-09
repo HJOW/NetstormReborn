@@ -22,7 +22,7 @@ std::int32_t Cell(std::uint32_t bits) {
     if (!(value>=0 && value<256)) throw std::out_of_range("Dude 지면 판정 지도 범위 오류");return static_cast<std::int32_t>(value);
 }
 // 실제 선택된 효과가 미연결이면 그 지점에서 중단한다.
-template<class F> const F& Need(const F& hook) {
+template<class F> F Need(const F& hook) {
     if (!hook) throw std::logic_error("Dude 부모의 실제 하위 미연결");return hook;
 }
 }
@@ -34,7 +34,7 @@ RawDudeBehavior::RawDudeBehavior(const SidPool& pool,std::span<const std::uint8_
 // 같은 이름의 다른 파생 자산은 포함하지 않는다.
 bool RawDudeBehavior::Handles(Sid sid) const { const auto raw=pool_.Slot(sid);return raw[10]==70 && Read(raw,0)==0x508cc8U; }
 // 원본 도착은 free/dead에서도 반환하므로 이 getter에 생존 관문을 추가하지 않는다.
-std::span<const std::uint8_t> RawDudeBehavior::Raw(Sid sid) const { if (!Handles(sid)) throw std::invalid_argument("Dude 부모 타입/가상 표 오류");return pool_.Slot(sid); }
+std::span<const std::uint8_t> RawDudeBehavior::Raw(Sid sid) const { if (state_.native) return pool_.Slot(sid);if (!Handles(sid)) throw std::invalid_argument("Dude 부모 타입/가상 표 오류");return pool_.Slot(sid); }
 // 원본은 task 설정 이후의 현재 타입으로 이동 종류를 다시 선택한다.
 void RawDudeBehavior::StopMovement(Sid sid) const { const auto type=Need(hooks_.movementType)(Raw(sid)[10]);static_cast<void>(Need(hooks_.find)(sid,type,0,true)); }
 // 450f50의 반환1은 실제 이동 객체가 있었는지와 무관하다.
@@ -63,7 +63,7 @@ std::uint32_t RawDudeBehavior::Arrival(Sid sid) const {
 }
 // 원본40ea00은 모든 일치 항목을 제거하고 남은 항목 순서와 물리 꼬리 바이트를 보존한다.
 void RawDudeBehavior::PostDestroy(Sid sid,std::uint32_t flags) const {
-    if (!(Raw(sid)[40]&9U)) static_cast<void>(state_.population.Items()); // 독립 typed의 기존 구성/범위 검사는 유지한다.
+    if (!state_.native && !(Raw(sid)[40]&9U)) static_cast<void>(state_.population.Items()); // 독립 typed의 기존 구성/범위 검사는 유지한다.
     PostDestroyNative(pool_,state_.population,sid,flags,hooks_.basePostDestroy);
 }
 // 실제 가상 분배기는 VT로 선택하고 같은 일반 객체의 목록 제거 뒤 공통 Post를 한 번 호출한다.

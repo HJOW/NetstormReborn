@@ -8,7 +8,7 @@
 namespace netstorm::client {
 // 참조를 공개하기 전에 같은 owner 또는 독립 지역 주소를 고르고 TYPE 값은 쓰지 않는다.
 RawMovementProcessTypes::RawMovementProcessTypes(std::uint32_t* sharedPriest,o::RawGameAuxState* sharedRoles)
-    :sunWalker(sharedRoles ? sharedRoles->TempleProductType():localSunWalker_),empty(sharedRoles ? sharedRoles->EmptyCarrierType():localEmpty_),rainWalker(sharedRoles ? sharedRoles->RainWalkerType():localRainWalker_),bulf(sharedRoles ? sharedRoles->BulfType():localBulf_),priest(sharedPriest ? *sharedPriest:localPriest_) {}
+    :sunWalker(sharedRoles ? sharedRoles->TempleProductType():localSunWalker_),empty(sharedRoles ? sharedRoles->EmptyCarrierType():localEmpty_),rainWalker(sharedRoles ? sharedRoles->RainWalkerType():localRainWalker_),bulf(sharedRoles ? sharedRoles->BulfType():localBulf_),priest(sharedPriest ? *sharedPriest:localPriest_),dudeProcess(sharedRoles ? sharedRoles->DudePathType():localDudeProcess_) {}
 // 기존 이동 선택 몸체의 타입 조회 시점·우선순위·CD assert 분기를 그대로 공유한다.
 std::uint32_t SelectMovementProcessType(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,
     const RawMovementProcessTypes& selection,std::uint32_t type) {

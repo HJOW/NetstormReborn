@@ -18,6 +18,7 @@ namespace netstorm::client {
 struct RawMovementProcessTypes {
 private:
     std::uint32_t localSunWalker_{133},localEmpty_{187},localRainWalker_{156},localBulf_{135}; // 독립 입력과 명시 값 사본의 기존 TYPE 저장소다.
+    std::uint32_t localDudeProcess_{24}; // 독립 값 구성만 사용하는 기존 Dude 경로 역할이다.
     std::uint32_t localPriest_{o::kPriestType}; // 독립 입력의 기존158 값이며 실제 Session은 장기 owner 주소를 빌린다.
 public:
     RawMovementProcessTypes(std::uint32_t* sharedPriest=nullptr,o::RawGameAuxState* sharedRoles=nullptr); // Native는 같은 현재 TYPE owner 주소만 연결하고 독립 기본 구성은 지역 값을 유지한다.
@@ -33,7 +34,8 @@ public:
     std::uint32_t& priest; // 실제 Session의 같은005412d0/CD0051cbbc 또는 독립localPriest_의 주소다.
     // 내장 프로세스 타입 전역: worm/simpleWalker/balloon/teleport/bulf/dude/priest/simpleFly 순서다.
     std::uint32_t wormProcess{40},walkerProcess{38},balloonProcess{42},teleportProcess{23},bulfProcess{41},
-        dudeProcess{24},priestProcess{54},flyProcess{39};
+        priestProcess{54},flyProcess{39};
+    std::uint32_t& dudeProcess; // Native005410d0의 같은 현재 DWORD이며 독립 구성만 local24를 빌린다.
 };
 // 00488fe0/CD0047d020의 기존 몸체를 공유한다. PathStart 훅과 사제 월드 바인딩이 같은 mutable 선택 상태를 읽는다.
 std::uint32_t SelectMovementProcessType(o::OriginalEdition edition,std::span<const o::RiftTypeRecord> types,

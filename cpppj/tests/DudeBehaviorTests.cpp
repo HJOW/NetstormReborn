@@ -38,3 +38,7 @@ TEST_CASE(DudeBehavior_Native410) {
     }
     CHECK(rows==410);
 }
+
+TEST_CASE(DudeBehavior_CurrentPostDestroySkipsTypedListPrevalidation) { // Native의 음수 count는 원문 압축 반복을 건너뛰고 실제 공통 후단을 호출한다.
+    SidPool pool(OriginalEdition::Patch1078,24000,true);const auto slot=pool.Slot(Sid{50});auto raw=std::span<std::uint8_t>{const_cast<std::uint8_t*>(slot.data()),slot.size()};std::fill(raw.begin(),raw.end(),std::uint8_t{});std::vector<std::uint8_t> spots(65536);SquidPostPopList population;population.count=0xffffffffU;DudeBehaviorState state{false,population};state.native=true;DudeBehaviorHooks hooks;bool called{};hooks.basePostDestroy=[&](Sid parent,std::uint32_t flags) { CHECK(parent.value==50 && flags==7 && population.count==0xffffffffU);called=true; };RawDudeBehavior body(pool,spots,state,std::move(hooks));body.PostDestroy(Sid{50},7);CHECK(called && population.count==0xffffffffU);
+}

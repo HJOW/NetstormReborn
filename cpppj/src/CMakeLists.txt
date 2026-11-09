@@ -304,6 +304,7 @@ target_sources(netstorm PRIVATE o/RawCarrierRegular.cpp o/RawCarrierRegular.h cl
 # 장식/가장자리 팜의 실제462420과 같은 장기 HP/삭제 본문을 공유한다.
 target_sources(netstorm PRIVATE o/RawDecorationRegular.cpp o/RawDecorationRegular.h client/RawSurfaceDecoration.cpp)
 # 두 Factory VT의 같은 정기 본문과 실제 현재 장기 장치를 공유한다.
+target_sources(netstorm PRIVATE client/RawSurfaceDudeRegular.cpp)
 target_sources(netstorm PRIVATE o/RawResidenceRegular.cpp o/RawResidenceRegular.h client/RawSurfaceResidenceRegular.cpp)
 target_sources(netstorm PRIVATE o/RawFactoryRegular.cpp o/RawFactoryRegular.h client/RawSurfaceFactoryRegular.cpp)
 

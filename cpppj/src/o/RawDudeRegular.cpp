@@ -2,13 +2,14 @@
 #include "o/RawDudeRegular.h"
 #include "o/RawPathAnimation.h"
 #include <bit>
+#include <limits>
 #include <stdexcept>
 #include <utility>
 
 namespace netstorm::o {
 namespace {
 // 누락된 원본 효과는 선택한 시점에만 진단한다.
-template<class F> const F& Need(const F& effect) { if (!effect) throw std::logic_error("Dude 정기 실제 효과 미연결");return effect; }
+template<class F> F Need(const F& effect) { if (!effect) throw std::logic_error("Dude 정기 실제 효과 미연결");return effect; }
 // 비정렬 raw의 지정 폭을 little endian으로 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4) {
     std::uint32_t value{};
@@ -20,20 +21,23 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::siz
 void InitializeDudePopulation(SquidPostPopList& population) { if (!population.entries.empty() || population.count) throw std::logic_error("Dude population 중복 초기화");population.entries.resize(kDudePopulationCapacity); }
 // 다른 판본/누락된 Run 배열을 첫 실행 전에 거부한다.
 RawDudeRegular::RawDudeRegular(SidPool& pool,std::span<const RiftTypeFrames> frames,GameRandom& random,DudeRegularState state,DudeRegularHooks hooks)
-    :pool_(pool),frames_(frames),random_(random),state_(state),hooks_(std::move(hooks)) {
-    if (pool.Edition()!=OriginalEdition::Patch1078 || frames.size()!=188) throw std::invalid_argument("Dude 정기 판본/프레임 연결 오류");static_cast<void>(state_.providers.Items());
+    :RawDudeRegular(pool,frames,[&random]()->GameRandom& { return random; },state,std::move(hooks)) {}
+RawDudeRegular::RawDudeRegular(SidPool& pool,std::span<const RiftTypeFrames> frames,std::function<GameRandom&()> random,DudeRegularState state,DudeRegularHooks hooks)
+    :pool_(pool),frames_(frames),random_(std::move(random)),state_(state),hooks_(std::move(hooks)) { // Native는 장치/목록을 첫 선택 전 조회하지 않는다.
+    if (pool.Edition()!=OriginalEdition::Patch1078 || frames.size()!=188 || (!random_ && !state_.native)) throw std::invalid_argument("Dude 정기 판본/프레임 연결 오류");if (!state_.native) static_cast<void>(state_.providers.Items());
 }
+std::uint32_t RawDudeRegular::RandomNext(std::uint32_t limit) const { auto& random=Need(random_)();if (!limit && state_.native) { static_cast<void>(random.Next(1));throw std::domain_error("Dude 원문 난수0범위 나눗셈"); }return random.Next(limit); } // 실제4558c0의 seed store가 DIV보다 먼저다.
 // 가상+5c=450fa0인 실제 부모만 이 분배에 들어온다.
 bool RawDudeRegular::Handles(Sid sid) const { const auto raw=pool_.Slot(sid);return raw[10]==70 && Read(raw,0)==0x508cc8U; }
 // free는 Handle의 원래 fallback 관문이 읽으므로 여기서 제거하지 않는다.
-std::span<const std::uint8_t> RawDudeRegular::Raw(Sid sid) const { if (sid.value<5 || sid.value>=pool_.Capacity()) throw std::out_of_range("Dude 정기 SID 범위");const auto raw=pool_.Slot(sid);if (raw[10]>=frames_.size()) throw std::out_of_range("Dude 정기 현재 타입 범위");return raw; }
+std::span<const std::uint8_t> RawDudeRegular::Raw(Sid sid) const { if (state_.native) return pool_.Slot(sid);if (sid.value<5 || sid.value>=pool_.Capacity()) throw std::out_of_range("Dude 정기 SID 범위");const auto raw=pool_.Slot(sid);if (raw[10]>=frames_.size()) throw std::out_of_range("Dude 정기 현재 타입 범위");return raw; }
 // 효과 호출 뒤 현재 위치를 읽을 때도 같은 raw만 사용한다.
 RawPathPoint RawDudeRegular::Position(Sid sid) const { const auto raw=Raw(sid);return {std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))}; }
 // signed side의 의미와 범위 진단은 기존 원본 프레임 조회를 재사용한다.
-std::int32_t RawDudeRegular::Stage(Sid sid) const { const auto raw=Raw(sid);return RawPathAnimation::Direction(frames_[raw[10]],std::bit_cast<std::int32_t>(Read(raw,36))); }
+std::int32_t RawDudeRegular::Stage(Sid sid) const { const auto raw=Raw(sid);if (raw[10]>=frames_.size()) throw std::out_of_range("Dude 현재 단계 TYPE 물리 범위");return RawPathAnimation::Direction(frames_[raw[10]],std::bit_cast<std::int32_t>(Read(raw,36))); }
 // WORD task와 BYTE35 및 frame DWORD의 이웃 바이트를 보존한다.
 void RawDudeRegular::Write(Sid sid,std::size_t offset,std::uint32_t value,std::size_t width) const {
-    auto raw=pool_.AllocatedBytes(sid);
+    const auto current=pool_.Slot(sid);auto raw=state_.native ? std::span<std::uint8_t>{const_cast<std::uint8_t*>(current.data()),current.size()}:pool_.AllocatedBytes(sid);
     // 원본 폭만 낮은 바이트부터 쓴다.
     for (std::size_t index=0;index<width;++index) raw[offset+index]=static_cast<std::uint8_t>(value>>(8*index));
 }
@@ -41,10 +45,19 @@ void RawDudeRegular::Write(Sid sid,std::size_t offset,std::uint32_t value,std::s
 bool RawDudeRegular::MoveTo(Sid sid,Sid target,bool quickly) const { if (!target.value) return false;if (Raw(target)[11]&3U) Need(hooks_.assertion)(0xde);return Need(hooks_.move)(sid,Need(hooks_.entrance)(target),quickly); }
 // 난수 호출 순서를 바꾸지 않고 원본 공급자 active 목록의 현재 항목을 선택한다.
 float RawDudeRegular::Wander(Sid sid,std::int32_t count,bool quickly) const {
-    if (!count || random_.Next(100)>=10) {
+    if (state_.native) {
+        if (!count || RandomNext(100)>=10) {
+            if (state_.providers.Count()!=0) {
+                const auto step=RandomNext(1)+1U;const auto next=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(state_.providerIndex)+step);const auto divisor=std::bit_cast<std::int32_t>(state_.providers.Count());
+                if (!divisor || (next==std::numeric_limits<std::int32_t>::min() && divisor==-1)) throw std::domain_error("Dude 원문 공급원 IDIV 범위");state_.providerIndex=next%divisor;const auto storage=state_.providers.Storage();
+                if (state_.providerIndex<0 || static_cast<std::size_t>(state_.providerIndex)>=storage.size()) throw std::out_of_range("Dude 현재 공급원 색인 물리 범위");const auto value=storage[static_cast<std::size_t>(state_.providerIndex)];if (value>=pool_.Capacity()) throw std::out_of_range("Dude 현재 공급원 SID 물리 범위");if (MoveTo(sid,Sid{static_cast<std::uint16_t>(value)},quickly)) return 10.0F;
+            }
+        }Need(hooks_.task)(sid,0x5103,0);return 0.1F;
+    }
+    if (!count || RandomNext(100)>=10) {
         const auto providers=state_.providers.Items();
         if (!providers.empty()) {
-            const auto next=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(state_.providerIndex)+random_.Next(1)+1U); //원본4558f0(1,2)는 상한 제외라 간격은1이며 난수는 한 번 소비한다.
+            const auto next=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(state_.providerIndex)+RandomNext(1)+1U); //원본4558f0(1,2)는 상한 제외라 간격은1이며 난수는 한 번 소비한다.
             state_.providerIndex=next%static_cast<std::int32_t>(providers.size());
             if (state_.providerIndex<0) throw std::out_of_range("Dude 공급자 순환 음수 색인");const auto number=providers[static_cast<std::size_t>(state_.providerIndex)];
             if (number>0xffffU) throw std::out_of_range("Dude 공급자 SID 폭");if (MoveTo(sid,Sid{static_cast<std::uint16_t>(number)},quickly)) return 10.0F;
@@ -67,14 +80,14 @@ float RawDudeRegular::Fall(Sid sid,std::int32_t count) const {
     if (Stage(sid)==8) { const auto type=Raw(sid)[10];Need(hooks_.setFrame)(sid,frames_[type].Run('A').first,0); }
     const auto point=Position(sid);float y=static_cast<float>((static_cast<double>(count)*0.5+1.0)*0.0625+static_cast<double>(point.y));if (254.0F<y) y=254.0F;
     Need(hooks_.unpop)(sid,0);const auto direction=Stage(sid);if (direction<0 || direction>15) throw std::out_of_range("Dude 낙하 단계 범위");const auto run=frames_[Raw(sid)[10]].Run(static_cast<std::uint8_t>('A'+direction));
-    if (run.count<=0) throw std::out_of_range("Dude 낙하 현재 Run0");const auto frame=static_cast<std::uint32_t>(run.first)+random_.Next(static_cast<std::uint32_t>(run.count));Write(sid,36,frame,4);Need(hooks_.pop)(sid,{point.x,y},0x40);return 0.05F;
+    if (!state_.native && run.count<=0) throw std::out_of_range("Dude 낙하 현재 Run0");const auto frame=static_cast<std::uint32_t>(run.first)+RandomNext(static_cast<std::uint32_t>(run.count));Write(sid,36,frame,4);Need(hooks_.pop)(sid,{point.x,y},0x40);return 0.05F;
 }
 // 원본의 poll 우선·free/마스크 fallback·낙하 우선·경로 대기·task 쓰기 순서다.
 float RawDudeRegular::Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
-    if (!Handles(sid)) throw std::invalid_argument("Dude 정기 실제 타입/가상 표 오류");if (event==state_.pollEvent) return 0;
+    if (!state_.native && !Handles(sid)) throw std::invalid_argument("Dude 정기 실제 타입/가상 표 오류");if (event==state_.PollEvent()) return 0;
     if ((Raw(sid)[11]&1U) || (event&0xfff0U)!=0x5100U) { if (state_.checking) Need(hooks_.assertion)(399);return payload; }
     const auto signedCount=std::bit_cast<std::int32_t>(count);if (event!=0x5105 && Need(hooks_.checkSpace)(sid)) return Fall(sid,signedCount);
-    const auto path=Need(hooks_.findPath)(sid,state_.pathType);if (path.value && count && event!=0x5107) return payload;Write(sid,12,event,2);
+    const auto path=Need(hooks_.findPath)(sid,state_.PathType());if (path.value && count && event!=0x5107) return payload;if (state_.native) Need(hooks_.setWord)(sid,event);else Write(sid,12,event,2);
     switch (event) {
     case 0x5101:Need(hooks_.assertion)(0x179);[[fallthrough]];
     case 0x5102:return Wander(sid,signedCount,false);

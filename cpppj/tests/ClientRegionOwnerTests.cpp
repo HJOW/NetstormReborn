@@ -23,6 +23,10 @@
 #include "o/RawDamageableHit.h" //장식 수명 감소를 실제 일반 HP/burning 본문에 연결한다.
 #include "o/RawTerrainBitmap.h" // 거주 구역이 현재 지형 TYPE owner를 직접 빌린다.
 #include "o/RawResidenceRegular.h"
+#include "o/RawDudeRegular.h" // 실제 장기 정기/현재 역할을 검사한다.
+#include "o/RawDudeTask.h" // 같은 실제 Host 작업 예약을 관찰한다.
+#include "o/RawDudeBehavior.h" // 같은 지면/낙하 부모를 호출한다.
+
 #include "o/RawDamageableBurning.h"
 #include "o/RawSquidHitPoints.h" //현재HP의 원문 비가상 DWORD setter를 같은 풀에서 쓴다.
 #include "o/RawBombTargets.h" //같은TYPE사거리를쓰던기존다른소비자의연결도확인한다.
@@ -1695,4 +1699,20 @@ TEST_CASE(ClientResidenceOwner_SelectedDudeTaskPinsActualOwnerAndFunction) { // 
 
 TEST_CASE(ClientResidenceOwner_DudeGateUsesProvidersInsteadOfResidencesOrCapacity) { // 원문592f8c 공급원 count와59a9e0 거주 구역 count가 달라도 실제 공급원만 비교한다.
     RegionScene s;s.storage->ownerMode.fort=true;s.storage->sidLists.dudes.count=0;s.storage->sidLists.providers.count=0;s.storage->sidLists.residences.count=10;CHECK(s.storage->ResidenceRegular(Sid{},2,0,9)==9);s.storage->sidLists.residences.count=0;s.storage->sidLists.providers.count=1;bool selected{};try { s.storage->ResidenceRegular(Sid{},2,0,9); }catch (const std::logic_error& error) { selected=std::string_view(error.what()).find("srcSid")!=std::string_view::npos; }CHECK(selected && !s.storage->Borrowed());
+}
+
+TEST_CASE(ClientDudeOwner_GettersShareCurrentIndexAndSurviveWorldLoan) { // 본체 구성/World 대여가 현재 순환·경로·난수를 초기화하지 않는다.
+    RegionScene s;auto& index=s.storage->GameAux()->DudeProviderIndex();auto& path=s.storage->GameAux()->DudePathType();index=123;path=91;const auto seed=s.random->Game().State();auto* regular=&s.storage->DudeRegular();auto* task=&s.storage->DudeTask();auto* behavior=&s.storage->DudeBehavior();{ RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->DudeRegular()==regular && &world.Storage()->DudeTask()==task && &world.Storage()->DudeBehavior()==behavior); }CHECK(index==123 && path==91 && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientDudeOwner_NoWorldHostUsesSameTaskAndProviderAbsence) { // 현재 공급원이 없으면 같은 Regular를5103으로 재예약하고 새 Session/난수를 요구하지 않는다.
+    RegionScene s;const auto parent=s.Asset(0x508cc8U);s.Position(parent);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]=0;raw[40]=8;RegionPut(raw,12,0x5102);RegionPut(raw,36,0);s.storage->Frame().StoreLevel(parent);s.Index(parent);s.storage->spots[100*256+100]=6;const auto seed=s.random->Game().State();auto* process=s.storage->Processes().Host().AddRegular(parent,0x5102,5);CHECK(process);if (!process) return;process->RunFrame();CHECK(process->Event()==0x5103 && process->Count()==1 && process->Payload()==0.1F && (RegionRead(raw,12)&0xffffU)==0x5103 && s.storage->Processes().Host().FindEventMasked(parent,0xfff0,0x5100)==process && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientDudeOwner_CurrentPollAndActualPathRoleUseSameHost) { // poll은 잘못된 TYPE도 읽지 않으며 현재 경로 역할은 실제 부착 Regular를 찾는다.
+    RegionScene s;const auto parent=s.Asset(0x508cc8U);auto raw=s.storage->pool.AllocatedBytes(parent);const auto type=raw[10];raw[10]=255;s.storage->GameAux()->DamageRegularEvent()=17;CHECK(s.storage->DudeRegular().Handle(parent,17,0,3)==0);s.storage->GameAux()->DamageRegularEvent()=19;CHECK(s.storage->DudeRegular().Handle(parent,19,0,3)==0);raw[10]=type;raw[11]=0;raw[40]=8;s.Position(parent);RegionPut(raw,12,0x5104);s.storage->spots[100*256+100]=6;auto* process=s.storage->Processes().Host().AddRegular(parent,0x5102,5);CHECK(process);if (!process) return;s.storage->GameAux()->DudePathType()=46;CHECK(s.storage->DudeRegular().Handle(parent,0x5102,1,7)==7 && (RegionRead(raw,12)&0xffffU)==0x5104 && process->Event()==0x5102 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientDudeOwner_SelectedMovementPinsActualOwnerAndFunction) { // 실제 이동 함수 사본과 전체 owner가 자기 연결 반납에도 호출 끝까지 유지된다.
+    RegionScene s;BindFactoryOwnerDevices(s);const auto parent=s.Asset(0x508cc8U),target=s.Asset(0x50f540U);s.storage->sidLists.providers.entries={target.value};s.storage->sidLists.providers.count=1;s.storage->GameAux()->DudeProviderIndex()=0;s.random->Game().SetState(1);GameRandom expected(1);auto runtime=std::make_shared<RawSurfaceDudeBindings>();auto owner=std::make_shared<int>(7);const auto weak=std::weak_ptr<int>(owner);runtime->pin=[weak] { return weak.lock(); };runtime->entrance=[&](auto selected) { CHECK(selected==target);return RawPathPoint{12,24}; };bool called{};runtime->move=[&](auto selected,auto point,auto quickly) { CHECK(selected==parent && point.x==12 && point.y==24 && quickly);runtime->move={};runtime.reset();owner.reset();CHECK(!weak.expired());called=true;return true; };s.storage->BindDudeRuntime(runtime);CHECK(s.storage->DudeRegular().Wander(parent,0,true)==10 && called && weak.expired());static_cast<void>(expected.Next(1));CHECK(s.random->Game().State()==expected.State() && s.storage->GameAux()->DudeProviderIndex()==0);bool failed{};try { s.storage->DudeRegular().Wander(parent,0,true); }catch (const std::logic_error&) { failed=true; }static_cast<void>(expected.Next(1));CHECK(failed && s.random->Game().State()==expected.State() && !s.storage->Borrowed());
+}
+TEST_CASE(ClientDudeOwner_NoWorldFallUsesCurrentFrameRandomAndActualPop) { // 실제 I→A 단계/높이BYTE/난수/frame/같은 Hash Pop을 현재 장기 본문으로 수행한다.
+    RegionScene s;BindFactoryOwnerDevices(s);const auto parent=s.Asset(0x508cc8U);s.Position(parent);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]=0;raw[40]=8;RegionPut(raw,12,0x5105);const auto type=raw[10];const auto idle=s.storage->frames[type].Run('I'),run=s.storage->frames[type].Run('A');CHECK(idle.first>=0 && run.count>0);if (idle.first<0 || run.count<=0) return;RegionPut(raw,36,static_cast<std::uint32_t>(idle.first));s.storage->Frame().StoreLevel(parent);s.Index(parent);s.random->Game().SetState(1);GameRandom expected(1);const auto frame=static_cast<std::uint32_t>(run.first)+expected.Next(static_cast<std::uint32_t>(run.count));CHECK(s.storage->DudeRegular().Handle(parent,0x5105,10,7)==0.05F);CHECK(raw[35]==20 && RegionRead(raw,36)==frame && std::bit_cast<float>(RegionRead(raw,14))==100.0F && std::bit_cast<float>(RegionRead(raw,18))==100.375F && !(raw[11]&4U) && s.random->Game().State()==expected.State() && s.storage->postPopState.depth==0 && !s.storage->Borrowed());
 }

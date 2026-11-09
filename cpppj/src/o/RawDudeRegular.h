@@ -15,6 +15,10 @@ struct DudeRegularState {
     const SquidPostPopList& providers; //00592f84/88/8c의 기존 에너지 공급자 목록이다.
     std::int32_t& providerIndex; //0055a4fc의 같은 signed 순환 값이다.
     std::uint32_t pollEvent{0x1a2b},pathType{24}; //005326c0/005410d0의 현재 사건·경로 종류다.
+    bool native{}; // 실제 가상 진입은 TYPE70 선검사/사전 목록 조회 없이 원문 위치에서만 현재 필드를 읽는다.
+    const std::uint32_t* sharedPollEvent{},*sharedPathType{}; // 같은005326c0/005410d0의 장기 주소다.
+    std::uint32_t PollEvent() const { return sharedPollEvent ? *sharedPollEvent:pollEvent; } // 첫 사건 비교 시 현재값을 읽는다.
+    std::uint32_t PathType() const { return sharedPathType ? *sharedPathType:pathType; } // 지면 효과 뒤 현재 경로 종류를 읽는다.
 };
 // 현재 몸체의 효과만 요구한다. 도달하지 않은 효과는 빈 성공으로 대체하지 않는다.
 struct DudeRegularHooks {
@@ -28,11 +32,13 @@ struct DudeRegularHooks {
     std::function<void(Sid,std::uint32_t)> unpop,destroy; //현재 부모의 실제+48/+10이다.
     std::function<void(Sid,RawPathPoint,std::uint32_t)> pop; //현재 부모+90의 좌표/flags다.
     std::function<void(std::uint32_t)> assertion; //복귀하는 진단의 행 번호이며 Session은 예외로 진단한다.
+    std::function<void(Sid,std::uint32_t)> setWord; // Native4ac220의 실제 WORD 쓰기 뒤 현재 Bridge 통지다.
 };
 // 10.78의450fa0/451190/451210/451270/451340/4508b0을 같은 저장소로 실행한다.
 class RawDudeRegular {
 public:
     RawDudeRegular(SidPool& pool,std::span<const RiftTypeFrames> frames,GameRandom& random,DudeRegularState state,DudeRegularHooks hooks); // 같은 프레임/난수/현재 목록을 빌린다.
+    RawDudeRegular(SidPool& pool,std::span<const RiftTypeFrames> frames,std::function<GameRandom&()> random,DudeRegularState state,DudeRegularHooks hooks); // 실제 Native 난수 owner를 소비 위치에서만 조회한다.
     bool Handles(Sid sid) const; //70/VT508cc8만 실제 부모 정기로 분배한다.
     float Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const; //poll·공통 fallback·지면·현재 경로·각 task 순서다.
     float Wander(Sid sid,std::int32_t count,bool quickly) const; //451190의 확률 관문·공급자 순환·실패 task5103이다.
@@ -48,7 +54,8 @@ private:
     void Write(Sid sid,std::size_t offset,std::uint32_t value,std::size_t width) const; //원본 BYTE/WORD/DWORD 폭만 쓴다.
     SidPool& pool_; //부모·목표·실제 종속의 유일한 저장소다.
     std::span<const RiftTypeFrames> frames_; //현재 타입의 코드/Run 표다.
-    GameRandom& random_; //게임 전역의 같은32비트 난수다.
+    std::uint32_t RandomNext(std::uint32_t limit) const; // 현재 실제 난수와0범위의 선행 seed 쓰기를 보존한다.
+    std::function<GameRandom&()> random_; //게임 전역의 같은32비트 난수다.
     DudeRegularState state_; //같은 목록/순환/진단 전역의 참조다.
     DudeRegularHooks hooks_; //실제 선택한 하위 효과다.
 };

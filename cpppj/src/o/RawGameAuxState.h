@@ -10,6 +10,10 @@
 namespace netstorm::o { // Gameplay/Storage가 같은 주소를 pin하는 작은 게임 데이터 owner다.
 class RawGameAuxState {
 public:
+    std::int32_t& DudeProviderIndex() { return dudeProviderIndex_; } //0055a4fc의 현재 공급원 순환 DWORD이며 Session 생성/반납으로 지우지 않는다.
+    const std::int32_t& DudeProviderIndex() const { return dudeProviderIndex_; } // 같은 signed 순환 값을 읽기 전용으로 빌린다.
+    std::uint32_t& DudePathType() { return dudePathType_; } //005410d0의 현재24를 정기/이동 선택/통지가 공유한다.
+    const std::uint32_t& DudePathType() const { return dudePathType_; } // 같은 실제 프로세스 역할 DWORD다.
     std::int32_t& ResidenceMaximumScan() { return residenceMaximumScan_; } //0059a9e4의 현재 signed 최대 조사 수이며 Session 대여로 초기화하지 않는다.
     const std::int32_t& ResidenceMaximumScan() const { return residenceMaximumScan_; } // 현재 같은 DWORD를 읽기 전용으로 빌린다.
     FormPacketHeader& ContentIncomeHeader() { return contentIncomeHeader_; } //0052ee2e/2f/30의 현재 BYTE/BYTE/WORD를 생성 순간 읽는다.
@@ -303,6 +307,8 @@ private:
     std::uint32_t rainBlockerType_{147},growingRainBlockerType_{150}; //005412a4/005412b0의 현재 두 TYPE 번호이며 TYPE 기록 표와 별개다.
     std::uint32_t fenceMarkerType_{90},fenceShieldType_{170}; //내부 표식과 화면 포스 필드의 별도 원문 역할이며 월드 준비로 초기화하지 않는다.
     std::uint32_t runeType_{166}; // 보호 PE005412f0의 초기 DWORD이며 ResetForGeneralWorld는 현재 번호를 유지한다.
+    std::int32_t dudeProviderIndex_{}; //0055a4fc의 최초 BSS0이다.
+    std::uint32_t dudePathType_{24}; //005410d0의 보호 PE 초기값이며 일반 World 준비로 재설정하지 않는다.
     std::int32_t residenceMaximumScan_{}; //0059a9e4의 최초 BSS0을 Client 수명에 보관한다.
     FormPacketHeader contentIncomeHeader_{0x5a,1,5}; // 보호 PE의 실제 초기4BYTE이며 작성하지 않는 다섯째 바이트와 구별한다.
     std::uint32_t soundProcessType_{47}; //0054112c의 PE 초기값47을 Client 수명에 한 번 소유한다.

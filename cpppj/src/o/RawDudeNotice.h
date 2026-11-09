@@ -16,6 +16,8 @@ struct DudeNoticeState {
     SquidProcessState& clock; // 피해 상태변경의 현재double 게임 시각이다.
     std::uint32_t burningProcessType{14},pathProcessType{24},bridgeType{82}; // 실제typed Form 조회와task 표면통지 종류다.
     std::uint32_t raisedGenusMask{0x50444200}; // 표적 진입점에서높이를보정하는 실제005424b8/CD005395cc 마스크다.
+    const std::uint32_t* sharedPathType{}; // Native 현재005410d0을 이동 소비 위치에서 빌린다.
+    std::uint32_t PathType() const { return sharedPathType ? *sharedPathType:pathProcessType; } // 현재 같은 경로 역할을 읽는다.
 };
 // 실제하위생성/현재경로조회 경계다. 누락된 Dude/Path 생성은 원본몸체의 호출시점에서 거부한다.
 struct DudeNoticeHooks {
@@ -40,6 +42,8 @@ public:
     void Notice(Sid sid) const;
     // 0048fd30/CD00406ef0: 현재owner가맞는거주 구역중float 저장거리보다엄격히가까운첫후보다.
     Sid NearestResidence(Sid sid) const;
+    static Sid NearestResidenceCurrent(const SidPool& pool,const SquidPostPopList& residences,Sid sid); // Native48fd30의 현재 signed count/실제 목록과 raw 좌표만 조회한다.
+
     // 004505a0/CD004e8a30의현재표적 발자국 진입점이다. 일반Gun 중심과구별한다.
     std::array<float,2> ResidencePoint(Sid sid) const;
     // 기존같은경로목적지면성공하며그외실제2배speed 요청후정수복원·현재I단계frame을처리한다.
