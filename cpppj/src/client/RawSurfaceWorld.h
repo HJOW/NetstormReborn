@@ -157,7 +157,7 @@ struct RawSurfaceDisplayBindings { //같은장기표시의현재카메라/Render
     std::function<o::SquidDisplayView()> view; //현재카메라snapshot/실제Root지도영역이며새기본viewport를만들지않는다.
     std::function<bool()> suppressed; //현재Renderer의원문전체갱신억제전역이다.
     std::function<void(o::SquidDisplayRect,std::uint32_t)> invalidate; //계산된실제그림/그림자범위를같은dirty표에기록한다.
-    std::function<void(std::span<const std::uint8_t>)> metaRefresh; //선택된메타VT만실제파생88장치를요구한다.
+    std::function<void(std::span<const std::uint8_t>)> metaRefresh; //기존 어댑터 이름이며 현재 메타/일반 Sprite VT의 실제88 장치를 공통으로 요구한다.
     std::function<std::shared_ptr<void>()> pin; //현재World의실제전체owner를dirty/카메라callback반환까지보유한다.장기Client장치는비워둔다.
 };
 // Session보다 오래 사는 실제 Pool/공간/자산 배열이다. Runtime 모듈의 수명과 구별한다.

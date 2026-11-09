@@ -18,4 +18,5 @@ struct NativeMetaSpriteRefreshHooks { // 선택된 실제 장치만 해당 원�
     std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion; //Squidfinder.cpp158의 복귀형 진단이다.
 };
 void RefreshNativeMetaSprite(std::span<const std::uint8_t> object,NativeMetaSpriteRefreshGlobals globals,const NativeMetaSpriteRefreshHooks& hooks); //004787c0 전체: 기본 영역→큰 배율 보정→dirty→기본 Form finder/이름표 갱신이다.
+void RefreshNativeSprite(std::span<std::uint8_t> object,NativeMetaSpriteRefreshGlobals globals,const NativeMetaSpriteRefreshHooks& hooks); //004791b0 전체: 일반 Sprite의 중심 확대→dirty→BYTE35=20→동일 기본 Form finder/Gump 갱신이다.
 }

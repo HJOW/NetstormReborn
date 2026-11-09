@@ -36,6 +36,7 @@
 #include "o/RawBombHeal.h" //힐 주문도 같은 현재 풀/HP/펜스/표시/공장/Pop 몸체를 사용한다.
 #include "o/RawBombHardener.h" //하드너는 현재 다리 방향/강화 후보와 같은 실제 프레임/플레어를 사용한다.
 #include "o/RawBombStrike.h" //라이트닝 웨이브/잽은 기존 실제 피해/빔·현재 투영/소리에 연결한다.
+#include "o/RawSpriteRegular.h" //일반 Sprite는 같은 실제 현재 풀/TYPE/프레임 본문을 공유한다.
 #include "o/RawBombTreason.h" //트리즌도 실제 소유권/받침/펜스/표시의 같은 장치를 빌린다.
 #include "o/RawManoSpell.h" //맨 오 워3주문의 자격 소환도 같은 실제 생성/소유자/현재 헤더와 Pop을 사용한다.
 #include "o/RawSquidHitPoints.h" //CreateAt도 같은 비가상 공통HP DWORD 쓰기를 사용한다.
@@ -1714,6 +1715,7 @@ struct RawCampaignSession::Impl {
             if (manaRegular && manaRegular->Handles(sid)) return manaRegular->Run(sid,event,count);
             if (nuggetRegular && nuggetRegular->Handles(sid)) return nuggetRegular->Handle(sid,event,count,payload);
             const auto raw=core.pool.Slot(sid);
+            if (Read(raw,0)==0x50cc08U) return RunSpriteRegular(core.pool,core.types,core.frame,sid,payload); //현재4794b0을상수payload/기본Regular로대체하지않는다.
             if (Read(raw,0)==0x50e668U) return arcSpire->Handle(sid,event,count,payload); //48c6e0의 전용 주기이며 공통44b900으로 바로 넘기지 않는다.
             if (Read(raw,0)==0x50e738U) return acidFence->Handle(sid,event,count,payload); //48ea30은첫count0부터공격하며공통Regular를호출하지않는다.
             if (GrowingIce(sid)) return iceTower->Handle(sid,event,count,payload); //48ebe0의event3a6과현재numFrames/40초주기다.

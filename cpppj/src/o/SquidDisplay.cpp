@@ -123,7 +123,7 @@ bool SquidDisplay::PatchFrameValid(std::size_t type,int frame) const {
 // 미복원 파생 update88/update8c는 표시가 꺼져도 지원한다고 가장하지 않는다.
 void SquidDisplay::Validate(OriginalEdition edition,std::span<const std::uint8_t> bytes,std::uint32_t flags) const {
     if (edition!=edition_) throw std::invalid_argument("표시 판본 불일치");
-    if (edition_==OriginalEdition::Patch1078 && Read(bytes,0)==0x50c9f0U) return; //실제 메타88/8c는 공통 frameCheck 부모가 아니며 사전 검증에서 표시 효과를 앞당기지 않는다.
+    if (edition_==OriginalEdition::Patch1078 && (Read(bytes,0)==0x50c9f0U || Read(bytes,0)==0x50cc08U)) return; //실제 메타/일반 Sprite88/8c는 공통 frameCheck 부모가 아니며 사전 검증에서 표시 효과를 앞당기지 않는다.
     if (!SquidUnpop::SupportsDisplay(edition_,Read(bytes,0),flags)) throw std::logic_error("파생 표시 갱신 미복원");
     if (edition_==OriginalEdition::Patch1078 && Read(bytes,0)==kPatchGeyserVtable && (flags&0x2000U)) {
         const auto type=Read(bytes,10,1);if (type>=types_.size()) throw std::out_of_range("간헐천 고정 외형 TYPE 범위 오류");
@@ -166,7 +166,7 @@ SquidDisplayRect SquidDisplay::Bounds(std::size_t type,int frame,float x,float y
 }
 // 현재 VT의 특수8c를 먼저 분배하고 나머지 확인된 가상 경로만 공통 표시 부모에 전달한다.
 void SquidDisplay::Update(std::span<const std::uint8_t> bytes,std::uint32_t flags) {
-    if (edition_==OriginalEdition::Patch1078 && Read(bytes,0)==0x50c9f0U) { sink_.MetaRefresh(bytes);return; } //8c의004ad670도 현재88로 꼬리 호출하므로 flags와 무관하게 같은 실제 파생을 선택한다.
+    if (edition_==OriginalEdition::Patch1078 && (Read(bytes,0)==0x50c9f0U || Read(bytes,0)==0x50cc08U)) { sink_.MetaRefresh(bytes);return; } //8c의004ad670도 현재88로 꼬리 호출하므로 flags와 무관하게 같은 실제 파생을 선택한다.
     if (edition_==OriginalEdition::Patch1078 && Read(bytes,0)==kPatchGeyserVtable && (flags&0x2000U)) {
         const auto type=Read(bytes,10,1);if (type>=types_.size()) throw std::out_of_range("간헐천 고정 외형 TYPE 범위 오류");
         const auto frame=types_[type].defaultFrame; // 004acfe0은 현재 raw TYPE의 고정 외형을 반환하며 frameCheck 부모를 호출하지 않는다.

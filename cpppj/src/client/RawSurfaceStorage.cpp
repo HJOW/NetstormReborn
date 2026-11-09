@@ -1,5 +1,6 @@
 // Client의 실제 배열을 Session보다 오래 보관하고 같은 물리를 두 월드에 중복 설치하지 않는다.
 #include "client/RawSurfaceWorld.h"
+#include "o/RawSpriteRegular.h" //일반 Sprite의 현재 프레임 정기도 같은 실제 Frame/표시 장치를 사용한다.
 #include "o/RawBombHeal.h" //힐 버스트의 실제 정기 프레임/후속 예약/삭제를 장기 Host에서 처리한다.
 #include "o/RawVortexOwner.h" //장기신전가상74는같은원문VT표와실제영역owner로분배한다.
 #include "client/NativeFortSaveVirtual.h" //완전 형식의 조회기 생성/반납을 Storage 구현에서만 수행한다.
@@ -253,6 +254,7 @@ o::SquidFormDispatch& RawSurfaceStorage::ProcessFormDispatch() { //현재World�
 float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) { //현재VT의실제+5c주소가base496e70인클래스만원문payload반환을실행한다.
     constexpr std::array<std::uint32_t,16> kBaseRegularVtables{0x00501dd0U,0x00503360U,0x00506d98U,0x00506e50U,0x00506f08U,0x005070c0U,0x005092d0U,0x00509388U,0x00509b98U,0x0050c3b0U,0x0050c9f0U,0x0050db78U,0x0050eb98U,0x00512098U,0x00512110U,0x00512188U}; //보호PE87VT를조회해+5c=00496e70인16개만보존한불변메타데이터다.
     const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //가상선택은현재VT4BYTE이며현재TYPE별추측으로바꾸지않는다.
+    if (table==0x50cc08U) return o::RunSpriteRegular(pool,types,Frame(),sid,payload); //원문4794b0은event/count를읽지않고현재TYPE+114를사용한다.
     if (table==0x502cf0U || table==0x502db0U) return o::HandleHealBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //힐/미티어의 필수41f9d0을 같은 장기 본문에서 처리한다.
     if (table==0x502c38U) return o::HandleGravityBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //그라비테이션의 필수41f760도 같은 실제 풀/프레임/Host를 사용한다.
     if (HasBombRegular(sid)) return BombRegular().Handle(sid,event,count,payload); //현재 원문41e6a0의 연결16VT만 같은 장기 본문으로 보낸다.

@@ -28,14 +28,19 @@ ScreenRect Bounds(Client& client,std::span<const std::uint8_t> raw) {
     const auto zoom=client.GameplayGlobals()->Camera().Snapshot().zoom;const auto left=Sub(x,Scale(header->hotspotX,zoom)),top=Sub(y,Scale(header->hotspotY,zoom));return {left,top,Add(Add(left,Scale(header->width,zoom)),1),Add(Add(top,Scale(header->height,zoom)),1)};
 } //현재498ff0의 두 FTOL→카메라 뺄셈→SHP 존재/진단→현재 배율·네 WORD 순서다.
 }
-//같은현재Client/controls와기존4787c0본문만공유하며Session/World를새로요구하지않는다.
+//같은 실제 Client/controls가 현재 메타4787c0과 일반 Sprite4791b0을 선택하며 새 Session/World를 만들지 않는다.
 void RefreshClientMetaSprite(Client& client,RawButtonControls& controls,std::span<const std::uint8_t> raw) {
         auto& storage=*client.SurfaceStorage();auto& game=*client.GameplayGlobals();NativeMetaSpriteRefreshHooks hooks;hooks.bounds=[&client](auto object) { return Bounds(client,object); };
         hooks.dirty=[&client,&controls](auto rect) { rect=ClampOriginalScreenRect(rect,controls.MapViewRect());if (rect.right!=rect.left && Sub(rect.right,rect.left)>=0 && rect.bottom!=rect.top && Sub(rect.bottom,rect.top)>=0) client.GetRenderer().Invalidate(rect,0); }; //00499310은 일반 표시 억제 관문을 추가하지 않는다.
         hooks.raw=[&storage](auto sid)->std::span<const std::uint8_t> { if (sid>65535U || sid>=storage.pool.Capacity()) throw std::out_of_range("메타 dirty Form SID 물리 범위");return storage.pool.Slot(o::Sid{static_cast<std::uint16_t>(sid)}); };
         hooks.redrawGump=[&controls](auto id) { if (!controls.Menus()) throw std::logic_error("메타 dirty 현재 Gump 장치 미연결");controls.Menus()->RedrawRegisteredGump(id); };
         hooks.assertion=[&storage](auto expression,auto file,auto line) { storage.AssertDisplay(expression,file,line); };
-        RefreshNativeMetaSprite(raw,{*client.ChallengeGlobals(),game.GameAux()->DependFormType(),game.GameAux()->ProcessTypeEnd(),storage.Checking(),storage.ownerMode.challenge,game.Boss()},hooks);
+        NativeMetaSpriteRefreshGlobals globals{*client.ChallengeGlobals(),game.GameAux()->DependFormType(),game.GameAux()->ProcessTypeEnd(),storage.Checking(),storage.ownerMode.challenge,game.Boss()};
+        if (Read(raw,0)==0x50cc08U) {
+            const auto owned=storage.pool.Bytes();const auto first=reinterpret_cast<std::uintptr_t>(owned.data()),address=reinterpret_cast<std::uintptr_t>(raw.data());
+            if (raw.size()!=50 || owned.size()<50 || address<first || address-first>owned.size()-50 || (address-first)%50) throw std::invalid_argument("Sprite 표시 장치의 같은 실제 Pool 슬롯 계약 오류");
+            RefreshNativeSprite({const_cast<std::uint8_t*>(raw.data()),raw.size()},globals,hooks); //실제 소유 저장소의 같은 가변50BYTE임을 확인한 뒤 원문BYTE35 쓰기만 허용한다.
+        } else RefreshNativeMetaSprite(raw,globals,hooks);
 }
 //현재World의명시대여도동일실제본문을공유하며짧은controls는선택된Runtimepin으로보존한다.
 void BindClientMetaSpriteRefresh(Client& client,RawButtonControls& controls,RawSurfaceWorld& world) { world.BindMetaRefresh([&client,&controls](auto raw) { RefreshClientMetaSprite(client,controls,raw); }); }

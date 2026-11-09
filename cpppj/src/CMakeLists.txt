@@ -361,6 +361,8 @@ target_sources(netstorm PRIVATE o/RawBombHardener.cpp o/RawBombHardener.h)
 target_sources(netstorm PRIVATE o/RawManoSpell.cpp o/RawManoSpell.h)
 #트리즌의 실제 소유권/받침/이웃 전파를 같은 공통 주문에 연결한다.
 target_sources(netstorm PRIVATE o/RawBombTreason.cpp o/RawBombTreason.h)
+#일반 Sprite의 실제 signed 프레임 정기를 같은 장기/Session에 연결한다.
+target_sources(netstorm PRIVATE o/RawSpriteRegular.cpp o/RawSpriteRegular.h)
 # 검사 전용 실제 Session/World 상태 덤프(ui-script session-dump)다. 2026-11-09 webpj/dotnetpj L2·L3 대조 요청으로 추가했다.
 target_sources(netstorm PRIVATE client/SessionStateDump.h client/SessionStateDump.cpp)
 # Client OS 시각의 단일 공급원과 검사 전용 고정 시각 모드(--fixed-frame-ms)다. 2026-11-09 결정론 대조용으로 추가했다.

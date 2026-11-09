@@ -38,7 +38,7 @@ std::span<std::uint8_t> SquidUnpop::Bytes(Sid sid) {
 }
 // 코드 주소는 비교용 기록값이다. 실제 공통 표시 연결도 이 지원 표를 따른다.
 bool SquidUnpop::SupportsDisplay(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags) {
-    if (edition==OriginalEdition::Patch1078 && vtable==0x50c9f0U) return true; //보호 PE의88=4787c0/8c=4ad670(JMP현재88)을 실제 메타 장치로 분배한다.
+    if (edition==OriginalEdition::Patch1078 && (vtable==0x50c9f0U || vtable==0x50cc08U)) return true; //보호 PE의88=4787c0/8c=4ad670(JMP현재88)을 실제 메타 장치로 분배한다.
     // 새 독립 PE 관측으로 복원한 마나88/8c다. 과거 공통 가상 경로 metadata는 그대로 보존한다.
     if (edition==OriginalEdition::Patch1078 && (vtable==0x50c3b0 || vtable==0x509810)) return true; // 105의45ac90 부분 갱신도 별도 몸체로 복원했다.
     const auto values=edition==OriginalEdition::Patch1078 ? std::span<const DisplayVtable>(kPatchDisplayVtables) :

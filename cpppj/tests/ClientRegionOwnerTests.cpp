@@ -15,6 +15,7 @@
 #include "o/RawBombHeal.h" //힐의 실제 대상 자격/HP/현재 가상 효과를 패킷 없이 검증한다.
 #include "o/RawBombHardener.h" //강화 후보/난수/프레임·플레어 순서를 독립 PE 입력으로 검증한다.
 #include "o/RawBombTreason.h" //원본 독립 관찰과 현재 소유권/받침 전파를 패킷 없이 검증한다.
+#include "client/NativeMetaSpriteRefresh.h" //일반 Sprite의 실제 파생 갱신도 같은 장기 표시/Host에 연결한다.
 #include "o/RawBombStrike.h" //직접 피해의 생성/Pop 뒤 현재 권한/TYPE 재조회를 검증한다.
 #include "client/RawBombBlastBindings.h" //하드너의 같은41e3d0 추가 그림도 실제 현재 TYPE/프레임으로 분배한다.
 #include "RawSceneSupport.h" //새 하드너 원문 TSV의 입력과 실제 관찰 결과만 읽는다.
@@ -1561,4 +1562,22 @@ TEST_CASE(ClientBombTreasonOwner_RoleGlobalsKeepSameCurrentOwner) { //두 신규
 TEST_CASE(ClientBombTreasonOwner_MissingRefreshKeepsOwnershipEffect) { //누락한 후단은 실제 owner 쓰기를 되돌리거나 플레어 성공으로 숨기지 않는다.
     std::vector<std::string> row{"A","0","94","0","72","0","0","0","0"};TreasonOwnerScene f(row);auto hooks=f.Hooks(false);hooks.refresh={};auto& s=f.scene;RawBombTreason body(s.pool,s.hash,s.types,s.frames,std::move(hooks));bool rejected{};
     try { body.Apply(Sid{50},Sid{60}); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && s.pool.Slot(Sid{60})[34]==2 && s.events.size()==2 && !f.first);
+}
+TEST_CASE(ClientSpriteOwner_NoWorldHostUsesCurrentTypeAndActualDerivedRefresh) { //World 없는 실제 Host/Frame.Set이 현재 TYPE 개수와 두 실제 Sprite 표시를 공유한다.
+    RegionScene s;const auto sid=s.Asset(0x50cc08U);const auto type=s.storage->links.bridgeType;auto raw=s.storage->pool.AllocatedBytes(sid);raw[10]=static_cast<std::uint8_t>(type);raw[11]&=static_cast<std::uint8_t>(~4U);raw[33]=0;raw[40]&=static_cast<std::uint8_t>(~9U);raw[35]=0x77;RegionPut(raw,36,0);s.storage->types[type].frameCount=2;s.Index(sid);s.gameplay->Authority()->boss=false;
+    struct DisplayState { //저장소의 장치 callback이 지역 변수보다 오래 살아도 필요한 중립 소유자/관찰을 함께 유지한다.
+        ClientChallengeGlobals challenge; //실제 일반 Sprite 장치 형식의 중립 소유자이며 CS/MP 동작은 실행하지 않는다.
+        std::uint32_t dirty{},updates{}; //두 실제 옛/새 영역 갱신의 관찰 횟수다.
+    };
+    const auto state=std::make_shared<DisplayState>();auto* const physical=s.storage.get();const auto authority=s.gameplay->Authority();RawSurfaceDisplayBindings devices;
+    devices.view=[] { return SquidDisplayView{0,0,65536,{0,0,1024,768}}; };devices.suppressed=RegionForbidden<bool>("Sprite에 일반 표시 억제 혼입");devices.invalidate=RegionForbidden<void,SquidDisplayRect,std::uint32_t>();
+    devices.metaRefresh=[physical,state,authority](auto object) { ++state->updates;NativeMetaSpriteRefreshHooks hooks;
+        hooks.bounds=[physical](auto bytes) { const auto bounds=physical->Display().Bounds(bytes[10],std::bit_cast<std::int32_t>(RegionRead(bytes,36)),std::bit_cast<float>(RegionRead(bytes,14)),std::bit_cast<float>(RegionRead(bytes,18)));return ScreenRect{bounds.left,bounds.top,bounds.right,bounds.bottom}; };
+        hooks.dirty=[state](auto) { ++state->dirty; };hooks.raw=[physical](auto form)->std::span<const std::uint8_t> { return physical->pool.Slot(Sid{static_cast<std::uint16_t>(form)}); };hooks.redrawGump=RegionForbidden<void,std::uint32_t>();hooks.assertion=RegionForbidden<void,std::string_view,std::string_view,std::uint32_t>();
+        auto& aux=*physical->GameAux();RefreshNativeSprite({const_cast<std::uint8_t*>(object.data()),object.size()},{state->challenge,aux.DependFormType(),aux.ProcessTypeEnd(),physical->Checking(),physical->ownerMode.challenge,authority->boss},hooks);
+    };s.storage->BindDisplayDevices(std::move(devices));
+    CHECK((raw[11]&7U)==0); //원문 Host는 void/free/dead 부모를 실행하지 않으므로 명시 입력도 실제 배치된 상태여야 한다.
+    auto* task=s.storage->Processes().Host().AddRegular(sid,0x1234,0.125F);CHECK(task);if (!task) return;task->RunFrame();
+    if (task->Count()!=1 || task->Payload()!=0.125F || RegionRead(raw,36)!=1 || raw[10]!=type || raw[35]!=20 || state->updates!=2 || state->dirty!=2 || s.storage->Borrowed()) std::cerr<<"Sprite owner count="<<task->Count()<<" payload="<<task->Payload()<<" frame="<<RegionRead(raw,36)<<" type="<<int(raw[10])<<" expectedType="<<type<<" byte35="<<int(raw[35])<<" updates="<<state->updates<<" dirty="<<state->dirty<<" borrowed="<<s.storage->Borrowed()<<'\n'; //원본 기대/강한 단언은 유지하고 최초 실패의 실제 상태를 출력한다.
+    CHECK(task->Count()==1);CHECK(task->Payload()==0.125F);CHECK(RegionRead(raw,36)==1);CHECK(raw[10]==type);CHECK(raw[35]==20);CHECK(state->updates==2);CHECK(state->dirty==2);CHECK(!s.storage->Borrowed());
 }
