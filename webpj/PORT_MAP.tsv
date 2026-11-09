@@ -713,7 +713,7 @@ cpppj/src/o/RawFortObjectLoad.cpp	port	www/core/fort-object-load.js	1f00a25a	par
 cpppj/src/o/RawFortObjectSave.cpp	exclude-edit			-	[edit-fort-save]
 cpppj/src/o/RawFortObjectsSave.cpp	exclude-edit			-	[edit-fort-save]
 cpppj/src/o/RawFortObjectStream.cpp	port			todo	[o-default]
-cpppj/src/o/RawFortPaletteTransition.cpp	port			todo	[o-default]
+cpppj/src/o/RawFortPaletteTransition.cpp	port	www/core/raw-fort-palette-transition.js	1f00a25a	port	[o-default] WB04-E227: 팔레트 이름 전환 004b6100(로그 29 "init palette" 복귀 뒤 인자 변수 캡처·대소문자 무시 비교 0 이면 자연 반환·이름 NUL 까지 순방향 복사·캐시 해제·구름 이름 설정·"GamePalSpec" 경로 조회·적재 둘째 인자 1·추가 표 계산·렌더러 비영일 때만 dirty=1)와 하위 세 부모(00470c30 비영 캐시만 해제 후 무조건 0, 00471190 이름 복사·캐시 0 이면 계산·현재 횟수 한 번 캡처 후 행 갱신, 004973c0 dirty). 이름 복사는 BYTE 단위로 입력 범위가 출력 범위보다 먼저. 도달한 필수 장치 누락은 TypeError 로 앞선 효과를 남긴 채 거부. fixture fort-palette-transition 10.78 676관측(중단 34) 전부와 cpppj 계약 및 웹 계약 1건(고비트 BYTE 복사·입출력 범위 순서). 남음: 팔레트 계산·경로 조회·파일 적재·CRT 비교의 실제 몸체와 Fort 로드 흐름 호출 지점은 순서4·5
 cpppj/src/o/RawFortPriestPreparation.cpp	port	www/core/raw-fort-priest-preparation.js	1f00a25a	port	[o-default] WB04-E70: 일반 Fort 설치의 기본 기술 4종 보장과 지역 사제 준비 004923e0(수집 00492120·표시 선택 004921a0). fixture fort-priest-preparation 13행 전부(10.78 전용 파일). 기술 생성/섬 조회/초기 배치 본체는 해당 파일 단위에서
 cpppj/src/o/RawFortRandomPlacement.cpp	port			todo	[o-default]
 cpppj/src/o/RawFortRegionSave.cpp	exclude-edit			-	[edit-fort-save]

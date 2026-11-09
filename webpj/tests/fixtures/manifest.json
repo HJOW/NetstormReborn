@@ -14446,9 +14446,38 @@
       "bytes": 532060,
       "lines": 951,
       "fixtureCommit": "db9b626c",
-      "webCommit": "worktree",
+      "webCommit": "ab3050cf",
       "cpppjBasis": {
         "cpppj/src/o/RawFortMetaLoad.cpp": "9f401229"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E227",
+      "id": "fort-palette-transition",
+      "path": "cpppj/tests/fixtures/fort-palette-transition-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 팔레트 이름 전환 004b6100·구름 캐시 해제 00470c30·구름 이름 설정 00471190·dirty 표시 004973c0. 입력(진입점·이름 케이스 0..10·캐시/횟수/렌더러/dirty·build 결과·경로 선택·callback 변이)에서 반환/물리 중단 원인·현재 11개 필드·두 이름 버퍼와 입력/경로 전체 물리·하위 호출 trace (676관측, 중단 34)",
+      "consumers": [
+        "webpj/tests/fort-palette-transition.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-palette-transition.js"
+      ],
+      "doc": "docs/webpj-fort-palette-transition-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortPaletteTransition.cpp"
+      ],
+      "scope": "10.78 676관측 전부",
+      "text": true,
+      "sha256": "73e8d0b30bc93d1626b743f40fa81ca80504fc8f5f4c037e175520eee29dea31",
+      "bytes": 2931280,
+      "lines": 677,
+      "fixtureCommit": "29bee739",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortPaletteTransition.cpp": "29bee739"
       }
     }
   ]
