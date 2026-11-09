@@ -355,6 +355,8 @@ target_sources(netstorm PRIVATE o/RawBombStrike.cpp o/RawBombStrike.h)
 
 # 힐 주문의 실제 자격/회복/상태 해제와 버스트 생성 부모다.
 target_sources(netstorm PRIVATE o/RawBombHeal.cpp o/RawBombHeal.h)
+# 하드너의 실제 자격/강화 프레임/플레어를 기존 공통 주문에 연결한다.
+target_sources(netstorm PRIVATE o/RawBombHardener.cpp o/RawBombHardener.h)
 # 검사 전용 실제 Session/World 상태 덤프(ui-script session-dump)다. 2026-11-09 webpj/dotnetpj L2·L3 대조 요청으로 추가했다.
 target_sources(netstorm PRIVATE client/SessionStateDump.h client/SessionStateDump.cpp)
 # Client OS 시각의 단일 공급원과 검사 전용 고정 시각 모드(--fixed-frame-ms)다. 2026-11-09 결정론 대조용으로 추가했다.

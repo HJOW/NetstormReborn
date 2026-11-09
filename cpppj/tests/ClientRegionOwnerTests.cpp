@@ -13,6 +13,9 @@
 #include "o/RawAiWallet.h" //삭제환불의실제owner0/NULL brain지갑관문을그대로사용한다.
 #include "o/RawAiObjectNotice.h" //실제Player의NULL brain은기존전체통지본문의자연반환으로처리한다.
 #include "o/RawBombHeal.h" //힐의 실제 대상 자격/HP/현재 가상 효과를 패킷 없이 검증한다.
+#include "o/RawBombHardener.h" //강화 후보/난수/프레임·플레어 순서를 독립 PE 입력으로 검증한다.
+#include "client/RawBombBlastBindings.h" //하드너의 같은41e3d0 추가 그림도 실제 현재 TYPE/프레임으로 분배한다.
+#include "RawSceneSupport.h" //새 하드너 원문 TSV의 입력과 실제 관찰 결과만 읽는다.
 #include "o/RawSquidHitPoints.h" //현재HP의 원문 비가상 DWORD setter를 같은 풀에서 쓴다.
 #include "o/RawBombTargets.h" //같은TYPE사거리를쓰던기존다른소비자의연결도확인한다.
 #include "o/RawDiscRegular.h" // 원문의 IDIV/감김은 새 실제 PE 경계 자료와 직접 대조한다.
@@ -1259,10 +1262,10 @@ TEST_CASE(ClientBombOwner_GetterKeepsCurrentStatePoolAndFactory) { // getter는 
 TEST_CASE(ClientBombOwner_CastTimesKeepSameMutableStorage) { // 같은 TYPE+1b8 표를 다시 조회/본문 구성/대여할 때 현재 값을 덮지 않는다.
     BombOwnerScene f;auto& s=f.scene;auto values=s.storage->BombCastTimes();CHECK(values.size()==188 && values[0]==0 && values[69]==0);values[113]=-123;auto* body=&s.storage->BombRegular();CHECK(s.storage->BombCastTimes().data()==values.data() && values[113]==-123 && body==&s.storage->BombRegular());
 }
-TEST_CASE(ClientBombOwner_OnlyActualSevenVtablesAreRegistered) { // 현재7VT와 별도 복원9VT를 실제 생성자 기준으로 구별한다.
+TEST_CASE(ClientBombOwner_OnlyActualEightVtablesAreRegistered) { // 현재8VT와 별도 복원8VT를 실제 생성자 기준으로 구별한다.
     BombOwnerScene f;auto& s=f.scene;
-    for (const auto table:{0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}) { const auto sid=f.Bomb(table);CHECK(s.storage->HasBombRegular(sid)); } // 연결된 실제 클래스만 조회한다.
-    for (const auto table:{0x5026a0U,0x502778U,0x502840U,0x502908U,0x5029d0U,0x502aa8U,0x502b70U,0x5030c0U,0x503188U}) { const auto sid=f.Bomb(table);CHECK(!s.storage->HasBombRegular(sid)); } // 같은 원문+5c라도 아직 연결하지 않은 후단은 완료로 세지 않는다.
+    for (const auto table:{0x5030c0U,0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}) { const auto sid=f.Bomb(table);CHECK(s.storage->HasBombRegular(sid)); } // 연결된 실제 클래스만 조회한다.
+    for (const auto table:{0x5026a0U,0x502778U,0x502840U,0x502908U,0x5029d0U,0x502aa8U,0x502b70U,0x503188U}) { const auto sid=f.Bomb(table);CHECK(!s.storage->HasBombRegular(sid)); } // 같은 원문+5c라도 아직 연결하지 않은 후단은 완료로 세지 않는다.
 }
 TEST_CASE(ClientBombOwner_CountZeroUsesActualFirstFrameAndFullPayload) { // carrier0의 첫 호출은 실제 프레임을 쓰고 현재 Boss0이면 원래 NaN payload를 보존한다.
     BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();s.gameplay->Authority()->boss=false;const auto type=s.storage->pool.Slot(sid)[10];const auto first=s.storage->frames[type].Run('A').first;const auto payload=std::bit_cast<float>(0x7fc12345U);
@@ -1388,4 +1391,40 @@ TEST_CASE(ClientBombHealOwner_BurstNoWorldDispatchRunsActualDeletion) { //실제
     BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x502cf0U);auto raw=s.storage->pool.AllocatedBytes(sid);raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]&=static_cast<std::uint8_t>(~1U);s.Index(sid);auto& host=s.storage->Processes().Host();const auto frames=s.storage->frames[raw[10]].Run('A').count;CHECK(host.AddRegular(sid,0x12345678U,0.05F));
     for (int step=0;step<frames;++step) { auto* task=host.FindEvent(sid,0x12345678U);CHECK(task);if (!task) break;s.storage->Processes().State().Now()=task->Time();task->RunFrame(); } //같은 실제 예약의 시각/횟수로 마지막 프레임까지 진행한다.
     CHECK((s.storage->pool.Slot(sid)[11]&3U)!=0 && !s.storage->Borrowed() && s.storage->BaseDestroy().PreDepth()==0 && s.storage->BaseDestroy().PostDepth()==0);
+}
+
+TEST_CASE(ClientBombHardenerOwner_IndependentPeSelectionAndEffects) { //21개 독립 원본 관찰의 자격/후보 상한/난수/QA·실패 플레어를 대조한다.
+    using namespace netstorm::test::rawscene;const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/bomb-hardener-x86.tsv").string();std::size_t count{};
+    for (const auto& row:LoadFixture(path.c_str()).rows) { //매 행은 같은 입력에서 새 실제 풀/현재 TYPE/프레임/게임 난수로 시작한다.
+        SidPool pool(OriginalEdition::Patch1078,24000);const auto parent=pool.Allocate(2),target=pool.Allocate(2);auto source=pool.AllocatedBytes(parent),raw=pool.AllocatedBytes(target);
+        std::fill(source.begin(),source.end(),std::uint8_t{});std::fill(raw.begin(),raw.end(),std::uint8_t{});source[10]=119;raw[10]=94;Put(source,12,Number(row[3]) ? target.value:0,2);Put(raw,36,Number(row[4]));
+        std::vector<RiftTypeRecord> types(188);types[94].flags2=Number(row[1]);std::vector<RiftTypeFrames> frames(188,RiftTypeFrames({}));std::vector<FrameCode> codes;
+        for (std::size_t start=0;start<row[5].size();start+=8) { //fixture의 실제4BYTE 코드를 순서대로 해독하며 기대 프레임을 계산하지 않는다.
+            FrameCode code;auto* bytes=reinterpret_cast<std::uint8_t*>(&code);
+            for (std::size_t byte=0;byte<4;++byte) bytes[byte]=static_cast<std::uint8_t>(std::stoul(row[5].substr(start+byte*2,2),nullptr,16)); //각 BYTE를 독립16진수 입력 그대로 쓴다.
+            codes.push_back(code);
+        }
+        frames[94]=RiftTypeFrames(std::move(codes));GameRandom random(Number(row[2]));std::string trace;std::uint32_t updates{};SquidFrameHooks hooks;
+        hooks.frameSize=RegionForbidden<std::array<float,2>,Sid,std::int32_t>();hooks.unpop=RegionForbidden<void,Sid,std::uint32_t>();hooks.pop=RegionForbidden<void,Sid,float,float,std::uint32_t>();
+        hooks.update=[&](Sid sid,std::uint32_t flags) { CHECK(sid==target && flags==0);if (++updates==2) trace+='S'; }; //실제4acee0의 두 갱신을 원문 장치 경계S 한 번으로 정규화한다.
+        SquidFrame setter(pool,types,std::move(hooks));RawBombHardener body(pool,types,frames,random,setter,[&](Sid sid,std::int32_t n,std::uint32_t event) { CHECK(sid==target && n==1 && event==2 && (updates==0 || updates==2));trace+='F'; });
+        if (row[0]=="E") { raw[11]=3;raw[34]=255;CHECK(body.MayTarget(target)==Number(row[6])); } //자격에 상태/소유자 검사를 추가하지 않는다.
+        else body.Apply(parent,target);
+        CHECK(RegionRead(raw,36)==Number(row[7]) && random.State()==Number(row[8]) && (trace.empty() ? "-":trace)==row[9]);++count;
+    }
+    CHECK(count==21);
+}
+TEST_CASE(ClientBombHardenerOwner_NoWorldHostUsesSameCurrentBody) { //새 실제 하드너VT의 정기도 같은 장기 Pool/Host/프레임·권한을 사용한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x5030c0U);s.gameplay->Authority()->boss=false;auto raw=s.storage->pool.AllocatedBytes(sid);raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]&=static_cast<std::uint8_t>(~1U);s.Index(sid);
+    auto* body=&s.storage->BombRegular();auto* task=s.storage->Processes().Host().AddRegular(sid,0x1234,0.125F);CHECK(task);if (!task) return;task->RunFrame();CHECK(s.storage->HasBombRegular(sid) && task->Count()==1 && task->Payload()==0.125F && body==&s.storage->BombRegular() && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombHardenerOwner_MissingFlareKeepsActualFrameAndRandom) { //선택된 장치 누락은 이미 수행된 강화/난수 소비를 되돌리지 않고 명시 실패한다.
+    BombOwnerScene f;auto& s=f.scene;const auto parent=f.Bomb(0x5030c0U),target=s.storage->CreateAsset(94,2);auto raw=s.storage->pool.AllocatedBytes(target);raw[33]=0;RegionPut(raw,36,0);s.storage->types[94].flags2=4;s.storage->frames[94]=RiftTypeFrames({{65,80,0,0},{65,80,1,64}});std::uint32_t updates{};
+    SquidFrameHooks hooks;hooks.frameSize=RegionForbidden<std::array<float,2>,Sid,std::int32_t>();hooks.unpop=RegionForbidden<void,Sid,std::uint32_t>();hooks.pop=RegionForbidden<void,Sid,float,float,std::uint32_t>();hooks.update=[&](auto,auto) { ++updates; };SquidFrame setter(s.storage->pool,s.storage->types,std::move(hooks));
+    auto& random=s.random->Game();random.SetState(55);RawBombHardener body(s.storage->pool,s.storage->types,s.storage->frames,random,setter,{});bool rejected{};try { body.Apply(parent,target); }catch (const std::logic_error&) { rejected=true; }
+    CHECK(rejected && RegionRead(raw,36)==1 && random.State()==0x003700a8U && updates==2);
+}
+TEST_CASE(ClientBombHardenerOwner_AdditionalDrawUsesActualCurrentTypeFrame) { //정기/수신 등록과 같은 실제8VT를 그리기 경계도 허용한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x5030c0U);auto raw=s.storage->pool.AllocatedBytes(sid);RegionPut(raw,36,0xffffffffU);std::uint32_t calls{};
+    DrawDevastationAdditional(s.storage->pool,sid,123,-45,[&](auto type,auto frame,auto x,auto y) { CHECK(type==119 && frame==-1 && x==123 && y==-45);++calls; });CHECK(calls==1);
 }

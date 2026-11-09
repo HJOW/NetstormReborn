@@ -34,6 +34,7 @@
 #include "o/RawDestroyAt.h"
 #include "o/RawCreateAt.h" //같은 위치 parser와 실제 생성/가상Owner/HP/Pop 부모다.
 #include "o/RawBombHeal.h" //힐 주문도 같은 현재 풀/HP/펜스/표시/공장/Pop 몸체를 사용한다.
+#include "o/RawBombHardener.h" //하드너는 현재 다리 방향/강화 후보와 같은 실제 프레임/플레어를 사용한다.
 #include "o/RawSquidHitPoints.h" //CreateAt도 같은 비가상 공통HP DWORD 쓰기를 사용한다.
 #include "client/EditorIslandBitmap.h"
 #include "o/RawFortRandomPlacement.h"
@@ -813,6 +814,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawDamageableRelease> localDamageableRelease;RawDamageableRelease* damageableRelease{}; // 같은 풀/내용물/사제 실제 생성으로 해방한다.
     std::unique_ptr<RawBombPreDestroy> localBombPre;RawBombPreDestroy* bombPre{}; //Native는같은장기41e960을빌리며독립typed만기존본문을소유한다.
     std::uint32_t healBurstType{176};std::unique_ptr<RawBombHeal> bombHeal; //00541318의 현재 힐 버스트 TYPE와 같은 실제 대상 효과 본문이다.
+    std::unique_ptr<RawBombHardener> bombHardener; //현재 풀/TYPE/코드·단일 게임 난수와 프레임/플레어를 빌리는 실제 대상 본문이다.
     BombTargetState devastationTargetState;BombBlastState devastationBlastState; // 같은 현재 권한/동맹을 각 실제 자격/효과 위치에 공급한다.
     BombRegularState localDevastationRegularState; // 독립 typed Session만 기존 값형 상태를 보유한다.
     BombRegularState& devastationRegularState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->BombState():localDevastationRegularState};BombEffectState devastationEffectState; // 주기/수신 상태와 실제 비용 누적을 같은 Session에서 소유한다.
