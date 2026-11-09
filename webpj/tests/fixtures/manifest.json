@@ -14592,9 +14592,38 @@
       "bytes": 118759,
       "lines": 309,
       "fixtureCommit": "4d0b8061",
-      "webCommit": "worktree",
+      "webCommit": "cfc8a2b1",
       "cpppjBasis": {
         "cpppj/src/o/RawObjectTraceFields.cpp": "4d0b8061"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E231",
+      "id": "missionframe",
+      "path": "cpppj/tests/fixtures/missionframe-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 공통 미션 프레임(Frame·Advance·Pause·Postpone). 입력(사건·게임 시각 double 비트·시계 정지 깊이·다이얼로그/지식/안내/막는 Gump 조회·재진입 변이·14개 상태 필드 비트)에서 전체 상태 비트·정지 깊이·외부 조회/효과 순서·반환값 (328행)",
+      "consumers": [
+        "webpj/tests/mission-frame-gate.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mission-frame-gate.js"
+      ],
+      "doc": "docs/webpj-mission-frame-gate-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissionFrameGate.cpp"
+      ],
+      "scope": "10.78 328행 전부",
+      "text": true,
+      "sha256": "40182df69191a2950fd1e73c1c6e150504556aa279e69aac5bcf34ba8398796e",
+      "bytes": 72912,
+      "lines": 329,
+      "fixtureCommit": "c3a294ed",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissionFrameGate.cpp": "9a57ed9d"
       }
     }
   ]

@@ -779,7 +779,7 @@ cpppj/src/o/RawMissile.cpp	port	www/core/raw-missile-fields.js;www/core/raw-miss
 cpppj/src/o/RawMissionAiSettings.cpp	port	www/core/raw-mission-ai-settings.js	1f00a25a	partial	[o-default] WB04-E32: initialize(0040ef80)는 make-ai-parent 770행의 설정 600바이트로 대조. apply/setAbility/prepare는 소스 계약 검사만(미션 시작 override 관측은 MissionStart 단위에서)
 cpppj/src/o/RawMissionBattleOptions.cpp	port	www/core/raw-mission-battle-options.js	1f00a25a	port	[o-default] WB04-E37: 0041cb90/0041cc10 초기화·004b4860 범위·0041c8b0/0041ca70·밀도·004b4900 파생·사용표. fixture mission-option-reset 296·mission-battle-options 3305행 전부(float는 NaN 페이로드 보존을 위해 비트 보관)
 cpppj/src/o/RawMissionClientPackets.cpp	port			todo	[o-default]
-cpppj/src/o/RawMissionFrameGate.cpp	port			todo	[o-default]
+cpppj/src/o/RawMissionFrameGate.cpp	port	www/core/raw-mission-frame-gate.js	1f00a25a	port	[o-default] WB04-E231: 미션 공통 프레임 문 RunFrame 004c34c0(started 0 이면 무조회·stageDirty 0→checkOutcome→(다음 단계 기한 ≤ 게임 시각 || 정지 중) && 잠금 > 0 이면 다이얼로그 없을 때 잠금 −1/있으면 10·잠금 < 1 이면 tellStage→tellAt 상대 기한(< 게임 시각 − 시작)·다이얼로그/지식 창 조회→정지 보유 중 잠금 0 이면 안내·다이얼로그·막는 Gump 없는 연속 7프레임 후 resume→데모 종료 기한→잠금 0·비데모·번호 1~6 이면 tutorial 판정), Advance 004c33f0(정지/잠금 거부·char 단계 저 8비트 부호 확장·잠금 10·float 지연+double 게임 시각·타이머 0), PauseForDialog 004c2a40(독립 pauseMissionFrameForDialog 자기 정지 표식), Postpone 004c3170(비영 기한만 재예약). 13개 경계(시계/UI/Tell/데모/Tutorial/정지·재개) 필수. fixture missionframe 10.78 328행 전부(상태 14필드 비트·정지 깊이 unsigned·trace·반환)와 cpppj 계약 및 웹 계약 1건(초기 상태·승패 확인 시점 stageDirty·Advance 반환). 남음: raw-tutorial-mission-release 의 상태 객체 합치기와 실제 시계·UI·Tell/Tutorial 본체·호출 지점은 순서4·6
 cpppj/src/o/RawMissionGuide.cpp	port			todo	[o-default]
 cpppj/src/o/RawMissionLogin.cpp	port			todo	[o-default]
 cpppj/src/o/RawMissionLoginPackets.cpp	port			todo	[o-default]
