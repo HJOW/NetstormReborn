@@ -33,10 +33,13 @@ o::SquidDeletionHooks MakeCampaignDeletionEffects(o::SquidDestroyHooks effects,s
 // 기존Form분배기의타입6만등록하며다른Host/감시/프로세스경로를덮어쓰지않는다.
 RawCampaignLifetimeBindings::RawCampaignLifetimeBindings(RawSurfaceWorld& world,o::ContentFormHost& forms,const o::ContentLifetimeState& state,
     o::ContentLifetimeHooks effects,o::SquidReward& reward,const o::RawPlayerContentNotice& player,o::ContentFormNotice fallbackParent)
-    :core_(world.Core()),player_(player),fallbackParent_(std::move(fallbackParent)),
-     contents_(core_.pool,core_.types,forms,core_.destroy,state,std::move(effects),core_.forms.Hooks(),&reward) {
+    :core_(world.Core()),player_(player),fallbackParent_(std::move(fallbackParent)) {
     if (core_.pool.Edition()!=o::OriginalEdition::Patch1078 || &player.Pool()!=&core_.pool) throw std::invalid_argument("캠페인 내용물/Player 통지는 같은 PATCH 풀이어야 합니다");
-    core_.forms.Bind(contents_);
+    if (world.Storage()->UsesNativeTransmissionDevices()) {
+        if (&forms!=&world.Storage()->ContentForms() || &state!=&world.Storage()->ContentState() || &reward!=&world.Storage()->Reward()) throw std::invalid_argument("Native Content의 같은 실제 정렬/상태/보상 owner 필요");
+        contents_=&world.Storage()->ContentLifetime();
+    } // Native Core는 World 생성 때 이미 같은 장기 본문을 등록했다.
+    else { localContents_=std::make_unique<o::ContentFormLifetime>(core_.pool,core_.types,forms,core_.destroy,state,std::move(effects),core_.forms.Hooks(),&reward);contents_=localContents_.get();core_.forms.Bind(*contents_); }
 }
 // baseVT가실제값일때만84의세공통가상몸체를사용한다.
 bool RawCampaignLifetimeBindings::EmptyGeyser(o::Sid sid) const { const auto raw=core_.pool.Slot(sid);return raw[10]==kEmptyGeyser && LifetimeVtable(raw)==kBaseVtable; }
@@ -65,6 +68,6 @@ void RawCampaignLifetimeBindings::ParentNotice(o::Sid parent,o::Sid form,std::ui
     if (!fallbackParent_) throw std::logic_error("다른 캠페인 내용물 실제 부모 통지 미연결");fallbackParent_(parent,form,reason);
 }
 // 상위실제세션의동일성검증과수명조립을돕는다.
-const o::ContentFormLifetime& RawCampaignLifetimeBindings::Contents() const { return contents_; }
+const o::ContentFormLifetime& RawCampaignLifetimeBindings::Contents() const { return *contents_; }
 const o::SidPool& RawCampaignLifetimeBindings::Pool() const { return core_.pool; }
 }

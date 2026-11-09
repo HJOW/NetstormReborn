@@ -12,6 +12,8 @@ struct ContentLifetimeState {
     std::uint32_t localOwner{1},notice{};  // 패치 00540c70 / 005429c4: 로컬 소유자와 수입 알림 명령이다.
     bool boss{true};                      // 패치 00540bc4: 다른 소유자에게 너겟 알림을 송신하는 권한이다.
     std::function<std::uint32_t()> currentCursor; //실제같은커서DWORD를매삭제시조회한다.미연결독립장치는같은폭의cursor입력을읽는다.
+    const std::uint32_t* sharedLocalOwner{}; // 같은 Client00540c70 주소이며 중첩 효과 뒤 현재 전체 DWORD를 읽는다.
+    const std::uint32_t& LocalOwner() const { return sharedLocalOwner ? *sharedLocalOwner:localOwner; } // 독립 fixture는 기존 값형 입력을 사용한다.
     const bool* sharedBoss{}; // 실제 커서 취소와 같은 Client의 boss 주소다.
     const bool& Boss() const { return sharedBoss ? *sharedBoss : boss; } // 중첩 커서 취소 뒤 원격 수입 알림 위치에서 현재값을 읽는다.
     const std::uint32_t* sharedNuggetType{}; // 실제005412c0의 장기 owner이며 커서 취소/알림 뒤 현재 kind·비용을 다시 읽는다.

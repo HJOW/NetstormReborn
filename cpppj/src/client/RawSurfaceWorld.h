@@ -49,6 +49,7 @@
 #include "o/SquidFactory.h"
 #include "o/SquidFormDispatch.h"
 #include "o/DependFormHost.h" // 장기 감시 본체와 현재 World 알림 경계를 명시적으로 선언한다.
+#include "o/ContentFormLifetime.h" // 실제 정렬/삭제 본문과 현재 경제 상태를 Client 수명으로 공유한다.
 #include "o/GumpFormHost.h" // 같은 장기 UI Form과 실제 현재 등록표 알림을 연결한다.
 #include "o/SquidFrameBinding.h"
 #include "o/SquidDestroyLifecycle.h"
@@ -88,6 +89,15 @@ struct RawSurfaceDependBindings { // 현재 World의 실제 감시 알림만 짧
 struct RawSurfaceGumpBindings { // 실제 UI 등록표 또는 현재 World의 가상 UI 통지 소비자를 그 owner 수명으로 빌린다.
     o::GumpFormNotice notice; // 전체 등록ID와 현재 부모 WORD를 기존 실제 UI 가상+4에 전달한다.
     std::function<std::shared_ptr<void>()> pin; // 현재 UI 저장소/전체 World를 선택 호출의 정상·예외 복귀까지 보유한다.
+};
+struct RawSurfaceContentDevices { // 같은 실제 현재 전역과 Client 장치만 보유하며 Session을 강하게 소유하지 않는다.
+    std::shared_ptr<const std::uint32_t> cursor,localOwner,contentType; // preview/로컬 Player/내용물 TYPE의 실제 주소를 aliasing owner로 보존한다.
+    o::ContentLifetimeHooks effects; // 커서 leaf 취소·입력 큐·실제 전송·위치 소리이며 wallet/SP는 같은 Reward가 처리한다.
+};
+struct RawSurfaceContentBindings { // 현재 큰 부모/포획 통지만 전체 Runtime의 수명으로 약하게 빌린다.
+    o::ContentFormNotice notice; // 파생 부모의 현재 VT+24를 기존 전체 Session 본문에 전달한다.
+    o::ContentPriestNotice captured; // 정렬/부모 통지 뒤 실제 사제 포획 안내를 같은 현재 Runtime에서 실행한다.
+    std::function<std::shared_ptr<void>()> pin; // 선택 호출의 정상/예외 복귀까지 전체 외곽 owner를 보유한다.
 };
 // 현재 Client의 순수 UI 기억/전역 소리를 공통 삭제의 장기 장치로 빌린다.
 struct RawSurfaceDeletionDevices {
@@ -165,6 +175,8 @@ private:
     void RestoreDeletionGlobals(); // fresh 대여와 같은 owner 결합 뒤 현재 원문 주소만 복구하며 값은 쓰지 않는다.
     RawSurfaceRewardDevices rewardDevices_; // 같은 실제 SP/모드 owner를 처리기보다 오래 보관한다.
     RawSurfaceResourceDevices resourceDevices_; //실제Client장치만보관하며짧은Session주소를저장하지않는다.
+    RawSurfaceContentDevices contentDevices_; // 같은 Client 전역 alias와 현재 장치를 본체보다 오래 유지한다.
+    std::weak_ptr<const RawSurfaceContentBindings> contentRuntime_; // 파생 Session 효과만 빌려 반납 뒤 죽은 콜백을 보유하지 않는다.
     RawSurfaceProcessDevices processDevices_; //실제Native선택/정리장치만보관하며World/Session을캡처하지않는다.
     RawSurfaceTransmissionDevices transmissionDevices_; //실제Client만명시연결하며Source포인터로Native정책을추정하지않는다.
     std::weak_ptr<o::RawSquidContainedUnpop> currentContainedUnpop_; //현재Session의파생종단만약하게빌린다.
@@ -257,6 +269,13 @@ public:
     void BindSurfaceLifetimeRuntime(const std::shared_ptr<const RawSurfaceLifetimeBindings>& runtime); // 현재 같은 World의 실제 큰 효과만 짧게 빌린다.
     void BindDependRuntime(const std::shared_ptr<const RawSurfaceDependBindings>& runtime); // 현재 World의 실제 알림/수명만 weak로 빌리며 감시 본체는 바꾸지 않는다.
     o::DependFormHost& DependForms(); // 같은 Pool·현재 공장/TYPE·가상 삭제를 World 밖에서도 사용하는 장기 감시 본체다.
+    void BindContentDevices(RawSurfaceContentDevices devices); // 첫 Host/World 앞에서 실제 현재 주소/장치만 연결하고 값을 쓰지 않는다.
+    void BindContentRuntime(const std::shared_ptr<const RawSurfaceContentBindings>& runtime); // 큰 통지의 실제 현재 대여만 weak로 보관한다.
+    const std::uint32_t& ContentType() const; // Native는 실제 finder의 현재 DWORD를 빌리고 독립 저장소는 기존 containedType을 읽는다.
+    o::ContentLifetimeState& ContentState(); // 같은 cursor/owner/권한/너겟 주소와 장기 수입 명령을 빌린다.
+    o::ContentFormHost& ContentForms(); // Native Session/NoWorld가 같은 정렬·부착·현재 TYPE 본체를 사용한다.
+    o::ContentFormLifetime& ContentLifetime(); // 같은 Reward/공통 깊이/Factory Unpop의 실제 장기 삭제 본문이다.
+    void NoticeContent(o::Sid parent,o::Sid form,std::uint32_t reason); // 실제 빈 부모와 파생 부모를 현재 VT로 구분한다.
     o::GumpFormHost& GumpForms(); // 같은 공장/현재 TYPE·가상 삭제와 실제 UI 등록표를 사용하는 장기 Gump 본체다.
     void BindGumpRuntime(const std::shared_ptr<const RawSurfaceGumpBindings>& runtime); // 현재 World의 실제 UI 통지를 weak로 빌리며 장기 Form 본체를 바꾸지 않는다.
     void BindGumpUiRuntime(const std::shared_ptr<const RawSurfaceGumpBindings>& runtime); // 첫 메뉴 이전 실제 UI 등록표와 그 저장소 pin을 weak로 연결한다.
@@ -436,6 +455,10 @@ private:
     std::unique_ptr<o::RawSquidDestroy> baseDestroy_; //같은Native공통pre/post깊이를World반납뒤에도보존한다.
     std::unique_ptr<o::DependFormHost> dependForms_; // 장기 Host/분배기 정리가 끝날 때까지 같은 공장·삭제기보다 먼저 반납하지 않는다.
     std::unique_ptr<o::GumpFormHost> gumpForms_; // 실제 Host와 분배기 정리까지 현재 공장/공통 삭제보다 짧은 장기 UI Form 수명이다.
+    o::ContentFormState contentFormState_; // 같은 현재 battle/checking/TYPE와 Client 진단 장치를 정렬 본체가 빌린다.
+    o::ContentLifetimeState contentLifetimeState_{.notice=0x020000b4U}; //005429c4의 실제 초기 수입 명령이며 Session 대여에서 덮어쓰지 않는다.
+    std::unique_ptr<o::ContentFormHost> contentForms_; // 장기 상태/Factory보다 먼저 반납하는 동일 정렬 본체다.
+    std::unique_ptr<o::ContentFormLifetime> contentLifetime_; // 같은 Reward/공통 삭제/정렬 본체보다 먼저 반납한다.
     std::unique_ptr<o::SquidFormDispatch> processForms_; //장기Host와같은Pool의실제ProcessForm경로이며UI/내용물가짜처리기는등록하지않는다.
     std::unique_ptr<o::RawSquidTransmission> transmission_; //같은Pool/현재TYPE/GameAux보다먼저반납하는공통실제송신기다.
     std::unique_ptr<RawProcessHostStorage> processes_; // 실제 Pool/TYPE 뒤에 선언하여 그 참조보다 먼저 최종 반납한다.
@@ -535,6 +558,8 @@ struct RawWorldRuntimeHooks {
     std::function<void(std::int32_t,std::span<const std::uint8_t>)> squidSend; // 같은 현재 대상의 연결 객체로만 패킷을 보낸다.
     o::DependFormNotice dependencyNotice; // watcher의 실제 가상+34다. 누락 시 기존 ProcessForm 통지를 사용한다.
     std::function<void(const o::BridgeLifecycleEvent&)> bridgeEffect; // 실제 세션의 다리 파편/위치 소리 소비자이며 runtime 설치 전에 필수로 공급한다.
+    o::ContentFormNotice contentNotice; // 현재 Session의 파생 부모 통지이며 실제 빈 부모는 장기 분배기가 직접 처리한다.
+    o::ContentPriestNotice capturedContent; // 기존 전체 포획 안내 본문을 선택된 현재 Runtime으로 전달한다.
     o::GumpFormNotice gumpNotice; // 현재 Session이 제공한 실제 UI 가상 통지이며 미연결이면 장기 실제 UI 등록표를 사용한다.
 };
 // 같은 SID 풀·공간 지도에서 표면 객체의 생성·등록·수명·표시를 관리하는 월드이다.

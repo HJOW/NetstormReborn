@@ -10,6 +10,8 @@
 namespace netstorm::o { // Gameplay/Storage가 같은 주소를 pin하는 작은 게임 데이터 owner다.
 class RawGameAuxState {
 public:
+    FormPacketHeader& ContentIncomeHeader() { return contentIncomeHeader_; } //0052ee2e/2f/30의 현재 BYTE/BYTE/WORD를 생성 순간 읽는다.
+    const FormPacketHeader& ContentIncomeHeader() const { return contentIncomeHeader_; } // Session 교체 뒤에도 같은 현재 원문 헤더다.
     std::uint32_t& PuzzlePieceType() { return puzzlePieceType_; } //00541204의 현재107을 패턴/Player 범위/지형이 공유한다.
     const std::uint32_t& PuzzlePieceType() const { return puzzlePieceType_; } // Session 없는 패턴 조회도 같은 장기 주소를 읽는다.
     std::uint32_t& ThunderCannonType() { return thunderCannonType_; } //00541264의 현재131을 패턴/Gun/Missile이 공유한다.
@@ -287,6 +289,7 @@ private:
     std::uint32_t rainBlockerType_{147},growingRainBlockerType_{150}; //005412a4/005412b0의 현재 두 TYPE 번호이며 TYPE 기록 표와 별개다.
     std::uint32_t fenceMarkerType_{90},fenceShieldType_{170}; //내부 표식과 화면 포스 필드의 별도 원문 역할이며 월드 준비로 초기화하지 않는다.
     std::uint32_t runeType_{166}; // 보호 PE005412f0의 초기 DWORD이며 ResetForGeneralWorld는 현재 번호를 유지한다.
+    FormPacketHeader contentIncomeHeader_{0x5a,1,5}; // 보호 PE의 실제 초기4BYTE이며 작성하지 않는 다섯째 바이트와 구별한다.
     std::uint32_t nuggetType_{154}; //005412c0의 최초154를 한 번만 소유하고 Session 재대여로 덮어쓰지 않는다.
     std::uint32_t verifySid_{}; //0054d4d8의 최초 BSS0을 Session/World 교체에서 초기화하지 않는다.
     std::uint32_t previousVerifySid_{}; //0054d4dc의 최초 BSS0이며 현재 검증 SID의0 저장과 별도로 유지한다.

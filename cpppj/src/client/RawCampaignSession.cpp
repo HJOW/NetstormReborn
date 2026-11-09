@@ -712,7 +712,8 @@ struct RawCampaignSession::Impl {
     ContainedCreateState contentState; // 저장 내용물은 실제 Form6으로 생성한다.
     ContentFormState contentFormState; // 같은 현재 전투/checking과 원문 진단을 부착 부모에 제공한다.
     std::unique_ptr<RawPriestTakenNotice> priestTakenNotice; // 현재 참여/Player 이름/소리/Tell과 Client 기한을 연결한다.
-    std::unique_ptr<ContentFormHost> contentForms; // ProcessForm과 다른 실제 Form6의 정렬 부착 몸체다.
+    std::unique_ptr<ContentFormHost> localContentForms; // 독립 typed Session만 기존 지역 정렬 본문을 소유한다.
+    ContentFormHost* contentForms{}; // ProcessForm과 다른 실제 Form6의 정렬 부착 몸체다.
     std::vector<CarrierRegularType> carrierRegularTypes; // 같은 실제 TYPE 정의의 기본 프레임/casttime이다.
     std::unique_ptr<RawContentPreviewProcess> contentPreviewProcess; // 같은 현재 시계/공유47타입의 일시 표시 수명이다.
     std::unique_ptr<ContentPreviewProcess> pendingContentPreview; // 원본 new18 성공 뒤 생성/부착까지의 단일 소유권이다.
@@ -776,7 +777,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierContentNotice> carrierContentNotice; // 실제 Walker/Carrier/사제의 가상+24 전체 몸체다.
 
     std::unique_ptr<RawContainedCreate> contained; // 실제 Factory/ContentFormHost의 저장 내용물 생성이다.
-    ContentLifetimeState contentLifetimeState; // 같은 ContentForm의 커서·로컬 소유자·수입 명령 전역이다.
+    ContentLifetimeState localContentLifetimeState; // 독립 typed Session의 기존 값형 수입 상태다.
+    ContentLifetimeState& contentLifetimeState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->ContentState():localContentLifetimeState}; // 같은 ContentForm의 커서·로컬 소유자·수입 명령 전역이다.
     std::uint32_t localContentGumpType{3}; // 독립 typed 입력의 기존0054107c 초기값이다.
     std::uint32_t& contentGumpType{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->containedGumpType:localContentGumpType}; // Native의 생성/부모통지/UI 검색은 같은 현재 DWORD를 공유한다.
     std::uint32_t contentEvent{0x02000031}; // PATCH005427bc의 실제 초기 사건이다.
@@ -1567,6 +1569,8 @@ struct RawCampaignSession::Impl {
         worldHooks.squidConnected=[this](std::int32_t target) { return target>0 && target<9 && (players[static_cast<std::size_t>(target)*180+0x50]&1U); }; //0048f4b0은 실제 소켓 존재 대신 현재 Player 접속 비트만 읽는다.
         worldHooks.squidSend=[this](std::int32_t target,auto packet) { if (target<0 || target>=9) throw std::out_of_range("현재 대상별 Squid 연결 범위");const auto send=services.battlePeers[static_cast<std::size_t>(target)];if (send) send(packet); }; //004e2dc0은 현재 NULL 연결을 자연 생략한다.
         worldHooks.formTransmit=services.dependencyTransmit;
+        worldHooks.contentNotice=[this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); };
+        worldHooks.capturedContent=[this](Sid parent,std::uint32_t previous) { priestTakenNotice->Notify(parent,previous); }; // 실제 기존 전체 안내 본문만 현재 Runtime 수명으로 빌린다.
         worldHooks.gumpNotice=services.gumpNotice; // Native의 명시 실제 UI 소비자는 같은 World Runtime pin과 함께 빌린다.
         FillMissing(worldHooks.formTransmit);
         worldHooks.assets=services.deletion;FillMissing(worldHooks.assets.selected);
@@ -2934,15 +2938,17 @@ struct RawCampaignSession::Impl {
         taken.sound=[this](std::string_view name) { if (!services.sound.play) throw std::logic_error("포획 안내 실제 전역 음향 미연결");services.sound.play(soundNames.Lookup(name),0,0,0,1,0); };
         taken.tell=[this](std::string_view section) { if (!services.factoryTell) throw std::logic_error("포획 안내 실제 Tell 미연결");services.factoryTell(section); };
         priestTakenNotice=std::make_unique<RawPriestTakenNotice>(core.pool,playerState.battleOwner,gameplayGlobals->PriestTakenDeadlines(),std::move(taken));
-        contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,
+        if (world.Storage()->UsesNativeTransmissionDevices()) contentForms=&world.Storage()->ContentForms();
+        else { localContentForms=std::make_unique<ContentFormHost>(core.pool,core.types,
             [this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); },services.dependencyTransmit,&contentFormState,
             [this](Sid parent,std::uint32_t previousOwner) { priestTakenNotice->Notify(parent,previousOwner); }); // 부착/일반 부모 알림 뒤 원문의 현재 상태로 포획 안내를 판정한다.
+        contentForms=localContentForms.get(); }
         contentForms->BindCurrentTypes(core.types); // 통지 뒤에도 같은 World TYPE 표의 현재 genus를 사용한다.
         auto contentEffects=services.contentLifetime;
         contentEffects.cancelCursor=[this] {
             if (!cursor) throw std::logic_error("현재 ContentForm 커서 수명 미설치");cursor->Cancel();
         };
-        contentLifetimeState.currentCursor=[this] { return cursorDrop.preview; };
+        if (!world.Storage()->UsesNativeTransmissionDevices()) contentLifetimeState.currentCursor=[this] { return cursorDrop.preview; };
         FillMissing(contentEffects.localNotice);
         if (!contentEffects.remoteNotice) contentEffects.remoteNotice=[this](std::uint32_t owner) {
             if (owner>=services.battlePeers.size()) throw std::out_of_range("너겟 수입 송신 Player 범위");
@@ -2950,8 +2956,8 @@ struct RawCampaignSession::Impl {
             throw std::logic_error("너겟 수입의 연결된 원격5a 패킷 송신 미연결"); //연결된원격사람의기존미복원경계는빈성공으로바꾸지않는다.
         };
         FillMissing(contentEffects.wallet);FillMissing(contentEffects.addSp);FillMissing(contentEffects.sound);
-        contentLifetimeState.localOwner=static_cast<std::uint8_t>(playerState.battleOwner);
-        contentLifetimeState.notice=0x020000b4; // PATCH005429c4의 실제 수입 명령 초기값이다.
+        if (!world.Storage()->UsesNativeTransmissionDevices()) contentLifetimeState.localOwner=static_cast<std::uint8_t>(playerState.battleOwner);
+        if (!world.Storage()->UsesNativeTransmissionDevices()) contentLifetimeState.notice=0x020000b4; // PATCH005429c4의 실제 수입 명령 초기값이다.
         auto carrierEffects=services.carrierContent;
         carrierEffects.center=[this](Sid parent) { return gunTarget->Center(parent); };
         carrierEffects.checkCarrier=[this](Sid parent) {
@@ -3005,7 +3011,7 @@ struct RawCampaignSession::Impl {
         unpopHooks.assertion=[assertion=services.ai.assertion](auto expression,auto,auto line) { if (!assertion) throw std::logic_error("종속 Unpop의 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }; // 정상 복귀 뒤 원문의 현재 필드 재조회를 계속한다.
         containedUnpop=std::make_shared<RawSquidContainedUnpop>(core.pool,SquidContainedUnpopState{contentFinder.containedType,contentGumpType,contentUnpopEvent,RawCheckingFlag{gameplayGlobals->AiDebug().Checking()},[this] { return core.ownerMode.challenge; },[this] { return gameplayGlobals->Authority()->boss; }},std::move(unpopHooks));
         world.BindContainedUnpop(containedUnpop); // 첫 객체 생성 전 같은 World의 일반 Unpop에 현재 Session 종단을 대여한다.
-        contentForms->BindPop([this](Sid sid,std::uint32_t flags) { core.factory.PopForm(sid,flags); }); // 실제 Content 정렬 후 같은 현재 진단/공유 basePostPop을 사용한다.
+        if (!world.Storage()->UsesNativeTransmissionDevices()) { contentForms->BindPop([this](Sid sid,std::uint32_t flags) { core.factory.PopForm(sid,flags); }); // 실제 Content 정렬 후 같은 현재 진단/공유 basePostPop을 사용한다.
         contentForms->BindUnpop([this](Sid sid) { core.factory.UnpopForm(sid); }); // Form6도 현재 번호/부모 알림을 같은 World 공장에서 조회한다.
         contentForms->BindReattach([this](Sid sid,Sid parent,std::uint32_t flags) { // Regular의 Unpop 이후 현재 가상+50을 같은 World에 연결한다.
             const auto table=Read(core.pool.Slot(sid),0);const SquidForms forms(core.pool);
@@ -3013,6 +3019,7 @@ struct RawCampaignSession::Impl {
             for (const auto type:{1U,2U,3U}) if (table==forms.Vtable(type)) { core.factory.AttachForm(sid,parent,flags);return; } // 현재 내장 클래스의 공통 부착/Pop 깊이를 대여한다.
             throw std::logic_error("Content Regular의 현재 가상+50 미연결");
         });
+        } // Native 정렬 본문에는 짧은 Session 콜백을 설치하지 않는다.
         ContainedCreateHooks createHooks;createHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         contentState.sharedContainedType=&contentFinder.containedType;contentState.sharedBridgeType=&world.Storage()->links.bridgeType; // 생성/검색과 실제 다리 소비자가 같은 현재 번호 주소를 사용한다.
         contained=std::make_unique<RawContainedCreate>(core.pool,contentState,contentForms->BindCreate(core.factory,std::move(createHooks)));

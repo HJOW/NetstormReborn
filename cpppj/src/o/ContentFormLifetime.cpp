@@ -69,7 +69,7 @@ void ContentFormLifetime::PreDestroy(Sid form) const {
         const Sid parent{Word(form,kParent)};
         if (!parent.value || parent.value>=pool_.Capacity()) throw std::logic_error("Content 너겟 부모 번호 오류");
         if (!(pool_.Slot(parent)[kState]&kDead)) {
-            if (Owner(parent)==state_.localOwner) {
+            if (Owner(parent)==state_.LocalOwner()) {
                 if (!hooks_.localNotice) throw std::invalid_argument("Content 로컬 수입 알림 경계 필요");hooks_.localNotice(state_.notice);
             } else if (state_.Boss()) {
                 if (!hooks_.remoteNotice) throw std::invalid_argument("Content 원격 수입 알림 경계 필요");hooks_.remoteNotice(Owner(parent));
@@ -79,7 +79,7 @@ void ContentFormLifetime::PreDestroy(Sid form) const {
                 if (reward_) reward_->CreditWallet(recipient,amount);
                 else { if (!hooks_.wallet) throw std::invalid_argument("Content 지갑 선가산 경계 필요");hooks_.wallet(recipient,amount); }
                 // 지갑 콜백 뒤 current owner/cost/localOwner를 다시 읽어 정확한 SP 가산 경로를 고른다.
-                const auto owner=Owner(parent);const auto cost=Cost();const bool local=owner==state_.localOwner;
+                const auto owner=Owner(parent);const auto cost=Cost();const bool local=owner==state_.LocalOwner();
                 if (reward_) reward_->AddSp(owner,cost);
                 else { if (!hooks_.addSp) throw std::invalid_argument("Content SP 가산 경계 필요");hooks_.addSp(owner,cost,local); }
                 if (!hooks_.sound) throw std::invalid_argument("Content 너겟 위치 소리 경계 필요");
@@ -95,7 +95,7 @@ void ContentFormLifetime::Destroy(Sid form,std::uint32_t flags) const {
 }
 // 다른 파생 Form/자산 분배는 fallback으로 유지하며 부모 release 통지는 빈 실제 가상 함수다.
 SquidDestroyHooks ContentFormLifetime::Hooks() const {
-    SquidDestroyHooks hooks;hooks.selected=fallback_.selected ? fallback_.selected : std::function<Sid()>([] { return Sid{}; });
+    SquidDestroyHooks hooks;hooks.selectedRaw=fallback_.selectedRaw;hooks.selected=fallback_.selected ? fallback_.selected : std::function<Sid()>([] { return Sid{}; });
     // 실제 제거 알림·부모 dead 링크 보존은 앞서 검증한 ContentFormHost로 연결한다.
     hooks.unpopForm=[this](Sid form) {
         if (IsContentForm(form)) forms_.Unpop(form);

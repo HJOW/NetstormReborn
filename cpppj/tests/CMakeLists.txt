@@ -3810,3 +3810,6 @@ target_sources(netstorm_construction_owner_tests PRIVATE BridgeEventTests.cpp)
 target_compile_definitions(netstorm_construction_owner_tests PRIVATE NETSTORM_BRIDGEEVENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridgeevent-x86.tsv")
 target_compile_definitions(netstorm_construction_owner_tests PRIVATE NETSTORM_BRIDGEDECAY_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridgedecay-x86.tsv") # 기존 다리 글자/프레임 대조가 함께 읽는 원래 자료 경로다.
 target_sources(netstorm_construction_owner_tests PRIVATE GunImpactTests.cpp DiscRegularTests.cpp ArcherTypeDataTests.cpp) # 같은 실제 프레임/방향 parser의 기존 원문 fixture를 공유한다.
+
+# 실제 Content의 기존 비MP 원문/현재값/혼합 수명 검사를 장기 owner 집중 대상에서도 빌드한다.
+target_sources(netstorm_construction_owner_tests PRIVATE ContentLifetimeTests.cpp)

@@ -5,6 +5,8 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/ClientCursorStateCleanup.h" // Content 삭제의447390은 같은 원문 커서 취소 leaf만 호출한다.
+#include "client/CurrentAllocationBytes.h" // 원문 수입 예약의 미작성 다섯째 BYTE를 기존 호스트 입력으로 보존한다.
 #include "client/ClientConstructionGlobals.h" // Native 건설 상태를 Session 재생성보다 오래 보유한다.
 #include "client/RawUserSelection.h" // 공통 삭제의004d5440도 같은 실제 UI 기억점에 쓴다.
 #include "o/RawAiWallet.h" // 현재 Player/brain의 지갑은 조기 반환 뒤 실제 전체 owner를 빌린다.
@@ -465,6 +467,23 @@ int Client::Run() {
         auto& current=gameplayGlobals_->RequireSession();const auto pin=gameplayGlobals_->PinCurrentRuntime(current);current.FinishDaisSacrificeForDeletion(sid);
     }); // 실제 제단24가 선택될 때만 같은 전체 Runtime을 보유하고 기존449b30 전체 본문을 호출한다.
     surfaceStorage_->BindSavedGame(localStateGlobals_->SavedGame()); //현재저장게임관문도World없는받침prefix와같은주소를빌린다.
+    if (options_.edition==o::OriginalEdition::Patch1078) {
+        o::ContentLifetimeHooks content;
+        content.cancelCursor=[this] {
+            if (gameplayGlobals_->Borrowed()) { auto& session=gameplayGlobals_->RequireSession();const auto pin=gameplayGlobals_->PinCurrentRuntime(session);session.CancelCursorForState(); }
+            else CancelClientCursorForState(*this,*surfaceStorage_); // 실제 Session 밖에서도 같은 현재 전역/Project/dirty를 사용한다.
+        };
+        content.localNotice=[this](auto code) { Input().PushCommand(code,0,0); };
+        content.sound=[this](auto x,auto y) { WorldAudio().Sounds().PlayNameAt(x,y,"guy.wav",0); };
+        content.remoteNotice=[this](auto player) {
+            const auto header=gameplayGlobals_->GameAux()->ContentIncomeHeader();std::array<std::uint8_t,8> packet;CurrentAllocationBytes(packet); //40abe0은4BYTE만 쓰며 스택 예약의 나머지는 초기화하지 않는다.
+            packet[0]=static_cast<std::uint8_t>(header.protocol&0x7fU);packet[1]=header.message;packet[2]=static_cast<std::uint8_t>(header.length);packet[3]=static_cast<std::uint8_t>(header.length>>8); // 실제df230은 최소 길이 보정 없이 현재 WORD를 쓴다.
+            const auto registry=connectionGlobals_;std::optional<NativeBattleSource> source;
+            if (player<registry->Cleanup().transceivers.size()) { const auto token=registry->Cleanup().transceivers[player];if (token) { source=registry->PacketSources()->Resolve(registry->Node(token));if (!source) throw std::logic_error("Content 수입의 실제 Source 수명 미공개"); } }
+            static_cast<void>(registry->SendMutableNative(std::bit_cast<std::int32_t>(player),packet,playerRecords_->Records(),[storage=surfaceStorage_](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); })); // 기존4e2dc0의 현재 Player/NULL/observer/실제 송신을 그대로 선택한다.
+        };
+        surfaceStorage_->BindContentDevices({std::shared_ptr<const std::uint32_t>(gameplayGlobals_,&gameplayGlobals_->cursor.preview),std::shared_ptr<const std::uint32_t>(gameplayGlobals_,&gameplayGlobals_->player.battleOwner),std::shared_ptr<const std::uint32_t>(gameplayGlobals_,&gameplayGlobals_->finder.containedType),std::move(content)}); // 값을 복사/초기화하지 않고 실제 현재 주소만 공유한다.
+    }
     surfaceStorage_->BindContentCommand([this](auto code,auto x,auto y) { Input().PushCommand(code,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); }); //실제내용물UI통지는같은입력큐에예약한다.
     rendererFrame_->BindSurfaceDisplay(); //첫World전자체Renderer/카메라의현재getter만설치하며그리기/카메라/게임진행은실행하지않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) {

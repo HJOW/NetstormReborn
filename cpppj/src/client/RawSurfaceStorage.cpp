@@ -112,6 +112,7 @@ void RawSurfaceStorage::RefreshChecking() {
     if (graph_) graph_->BindDiagnostics({Checking(),assertion});if (building_) building_->BindNotifyDiagnostics(Checking(),assertion);
     if (factory_) factory_->BindDiagnostics({types,assertion,[this](auto text) { RecordAssertionDetail(text); },Checking()});if (postPop_) postPop_->BindManaDiagnostics({Checking(),assertion});
     if (unpop_) unpop_->BindDiagnostics({Checking(),types,assertion});if (pop_) pop_->BindDiagnostics({Checking(),types,{},[this] { return ownerMode.challenge; },[this](auto level,auto text) { TraceGraph(level,text); },assertion});
+    contentFormState_.checkingLinks=Checking(); // 기존 정렬 본체도 같은 현재 checking 주소를 계속 읽는다.
     if (containedUnpop_) containedUnpop_->BindChecking(Checking()); //새World없이도현재진단입력교체를모든기존실행기가읽는다.
 }
 void RawSurfaceStorage::NoteChanged() { if (const auto current=displayRuntime_.lock();current && current->changed) { const auto runtimePin=current->pin ? current->pin():std::shared_ptr<void>{};current->changed(); } } //기존World의뷰변경bool만설정한다. Native효과/성공값을대신하지않는다.
@@ -136,9 +137,9 @@ void RawSurfaceStorage::BindContainedUnpop(const std::shared_ptr<o::RawSquidCont
 o::RawSquidContainedUnpop& RawSurfaceStorage::ContainedUnpop() {
     if (!containedUnpop_) {
         o::SquidContainedUnpopHooks hooks;hooks.parent=[this](auto sid) { return o::CommonContainedParent(pool,sid); };hooks.previous=[this](auto sid) { return o::CommonContainedPrevious(pool,sid); };
-        hooks.setPrevious=[this](auto sid,auto previous) { o::CommonContainedSetPrevious(pool,sid,previous); };hooks.parentNotice=[this](auto parent,auto form,auto reason) { o::RawContentParentNotice(pool).Notice(parent,form,reason); };
+        hooks.setPrevious=[this](auto sid,auto previous) { o::CommonContainedSetPrevious(pool,sid,previous); };hooks.parentNotice=[this](auto parent,auto form,auto reason) { if (UsesNativeTransmissionDevices()) NoticeContent(parent,form,reason);else o::RawContentParentNotice(pool).Notice(parent,form,reason); };
         hooks.command=[this](auto code,auto x,auto y) { const auto command=contentCommand_;if (!command) throw std::logic_error("공통종속의실제입력장치미연결");command(code,x,y); };hooks.assertion=[this](auto expression,auto file,auto line) { AssertDisplay(expression,file,line); };
-        containedUnpop_=std::make_unique<o::RawSquidContainedUnpop>(pool,o::SquidContainedUnpopState{containedType,containedGumpType,containedUiEvent,Checking(),[this] { return ownerMode.challenge; },[this] { return authority_->boss; }},std::move(hooks));
+        containedUnpop_=std::make_unique<o::RawSquidContainedUnpop>(pool,o::SquidContainedUnpopState{ContentType(),containedGumpType,containedUiEvent,Checking(),[this] { return ownerMode.challenge; },[this] { return authority_->boss; }},std::move(hooks));
     }
     return *containedUnpop_;
 }
@@ -246,11 +247,12 @@ o::SquidDestroyHooks RawSurfaceStorage::DefaultProcessAssetHooks() { //같은장
     hooks.emit=[this](const o::SquidDestroyEvent& event) { if (event.effect==o::SquidDestroyEffect::Transmit) { Transmission().Transmit(event.sid,-1,-2,0,event.flags);return; }if (event.effect==o::SquidDestroyEffect::ClearSelection) { const auto clear=processDevices_.clearSelection;if (!clear) throw std::logic_error("장기Process삭제의실제선택정리미연결");clear();return; }EmitDefaultAssetEffect(event); };return hooks;
 }
 o::SquidFormDispatch& RawSurfaceStorage::ProcessFormDispatch() { //현재World가없어도같은실제Host와공통/다리의가상10을결합한다.
-    if (!processForms_) { auto forms=std::make_unique<o::SquidFormDispatch>(pool,BaseDestroy(),DefaultProcessAssetHooks(),[this](auto sid,auto flags,const auto& hooks) { return VirtualDestroy().Destroy(sid,flags,hooks); });forms->Bind(Processes().Host());if (UsesNativeTransmissionDevices()) { forms->Bind(DependForms());forms->Bind(GumpForms()); }processForms_=std::move(forms); }return *processForms_;
+    if (!processForms_) { auto forms=std::make_unique<o::SquidFormDispatch>(pool,BaseDestroy(),DefaultProcessAssetHooks(),[this](auto sid,auto flags,const auto& hooks) { return VirtualDestroy().Destroy(sid,flags,hooks); });forms->Bind(Processes().Host());if (UsesNativeTransmissionDevices()) { forms->Bind(DependForms());forms->Bind(GumpForms());forms->Bind(ContentLifetime()); }processForms_=std::move(forms); }return *processForms_;
 }
 float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) { //현재VT의실제+5c주소가base496e70인클래스만원문payload반환을실행한다.
     constexpr std::array<std::uint32_t,16> kBaseRegularVtables{0x00501dd0U,0x00503360U,0x00506d98U,0x00506e50U,0x00506f08U,0x005070c0U,0x005092d0U,0x00509388U,0x00509b98U,0x0050c3b0U,0x0050c9f0U,0x0050db78U,0x0050eb98U,0x00512098U,0x00512110U,0x00512188U}; //보호PE87VT를조회해+5c=00496e70인16개만보존한불변메타데이터다.
     const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //가상선택은현재VT4BYTE이며현재TYPE별추측으로바꾸지않는다.
+    if (table==0x512208U) return ContentForms().Damage(sid,std::bit_cast<std::int32_t>(count),payload); // 실제4af070은 사건과 무관하게 signed count만 판정한다.
     if (table==0x5034c8U) return BridgeRegular().Handle(sid,event,count,payload); // 실제422740은 World와 같은 장기 본문/현재 전역을 사용한다.
     if (table==0x509758U) return ImpactRegular(sid,event,count,payload); // 실제45a6e0의 프레임 지정/종료다.
     if (table==0x50b570U) return DiscRegular(sid,event,count,payload); // 실제469540의 현재TYPE signed modulo다.

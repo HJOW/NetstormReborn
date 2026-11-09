@@ -1165,3 +1165,76 @@ TEST_CASE(ClientGumpOwner_ActualFloatingMenuUsesCurrentTypeAndUiFormReentry) { /
     GumpUiScene ui(scene);RawMenuHooks hooks;hooks.command=RegionForbidden<void,std::uint32_t,std::uint32_t,std::uint32_t>();hooks.readInt=[](auto,std::int32_t&) {};hooks.sound=RegionForbidden<void,std::string_view>();hooks.poll=RegionForbidden<InputEvent,std::uint32_t>();hooks.cursor=RegionForbidden<void,std::uint32_t>();hooks.objectForms=[&]()->GumpFormHost& { return scene.storage->GumpForms(); };hooks.gameSeconds=[] { return 0.0; };auto& menus=ui.controls->EnableMenus(assets.game,fonts,std::move(hooks));
     scene.storage->types[7]=scene.storage->types[3];scene.storage->containedGumpType=7;const auto parent=scene.Asset(0x5092d0U);const auto popup=menus.ShowSp(100,10,20,parent.value);const Sid form{static_cast<std::uint16_t>(RegionRead(scene.storage->pool.Slot(parent),6)&0xffffU)};CHECK(popup && form.value && scene.storage->pool.Slot(form)[10]==7 && scene.storage->GumpForms().Owner(form)>0);const auto free=scene.storage->pool.FreeCount();scene.storage->GumpForms().Notify(form);CHECK((scene.storage->pool.Slot(form)[11]&3U)==3U && scene.storage->pool.FreeCount()==free+1);ui.controls->CleanupGumps();CHECK(scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
 }
+
+
+namespace { // 통신/Session 없이 실제 Client 전역과 Content 본문을 같은 수명으로 조립한다.
+struct ContentOwnerScene {
+    RegionScene scene; // 실제 Pool/TYPE/Factory/Reward/난수/선택의 기존 owner다.
+    std::uint32_t cancels{},notices{},sounds{}; // 선택된 비MP 장치 호출만 관찰한다.
+    std::function<void()> onCancel,onNotice; // 동기 효과 뒤 현재값 재조회를 검사한다.
+    ContentOwnerScene() {
+        ContentLifetimeHooks effects;effects.cancelCursor=[this] { ++cancels;if (onCancel) onCancel(); };effects.localNotice=[this](auto code) { ++notices;CHECK(code==scene.storage->ContentState().notice);if (onNotice) onNotice(); };
+        effects.remoteNotice=RegionForbidden<void,std::uint32_t>("Content 검사 원격 송신 금지");effects.sound=[this](auto,auto) { ++sounds; };
+        scene.storage->BindContentDevices({std::shared_ptr<const std::uint32_t>(scene.gameplay,&scene.gameplay->cursor.preview),std::shared_ptr<const std::uint32_t>(scene.gameplay,&scene.gameplay->player.battleOwner),std::shared_ptr<const std::uint32_t>(scene.gameplay,&scene.gameplay->finder.containedType),std::move(effects)});
+    } // 연결은 실제 cursor/Player/SP/난수를 초기화하지 않는다.
+    Sid Form(Sid parent,std::uint16_t kind=75,std::uint16_t flags=0x134) {
+        const auto form=scene.storage->Factory().Create(scene.storage->ContentType(),2);DependWord(scene.storage->pool,form,18,kind);DependWord(scene.storage->pool,form,20,flags);scene.storage->ContentForms().Attach(form,parent,0x10U);return form;
+    } // 실제 현재 생성자→필드 입력→정렬 부착을 사용하고 송신은 명시 flags10으로 선택하지 않는다.
+};
+}
+TEST_CASE(ClientContentOwner_GettersKeepCurrentStateFactoryAndPool) { // getter와 같은 현재 주소는 World/Player/SP/난수를 만들거나 초기화하지 않는다.
+    ContentOwnerScene fixture;auto& s=fixture.scene;const auto free=s.storage->pool.FreeCount(),random=s.random->Game().State();auto* body=&s.storage->ContentForms();auto* life=&s.storage->ContentLifetime();auto* state=&s.storage->ContentState();
+    CHECK(body==&s.storage->ContentForms() && life==&s.storage->ContentLifetime() && state==&s.storage->ContentState() && &body->Pool()==&s.storage->pool && &life->Pool()==&s.storage->pool);
+    s.gameplay->cursor.preview=0x12345678U;s.gameplay->player.battleOwner=0xfedcba98U;s.gameplay->finder.containedType=7;CHECK(state->currentCursor()==0x12345678U && state->LocalOwner()==0xfedcba98U && s.storage->ContentType()==7);
+    CHECK(s.storage->pool.FreeCount()==free && s.random->Game().State()==random && s.players->Base()==0 && !s.sp->Store().Initialized() && !s.storage->Borrowed());
+}
+TEST_CASE(ClientContentOwner_CurrentTypeUsesActualConstructorAndSortedLinks) { // 현재7의 실제 Content 생성자/정렬/분리가 같은 현재 finder DWORD를 읽는다.
+    ContentOwnerScene f;auto& s=f.scene;s.storage->types[7]=s.storage->types[6];s.gameplay->finder.containedType=7;const auto parent=s.Asset(0x5092d0U),a=f.Form(parent),b=f.Form(parent);CHECK(s.storage->pool.Slot(a)[10]==7 && RegionRead(s.storage->pool.Slot(a),0)==0x512208U);
+    CHECK((RegionRead(s.storage->pool.Slot(parent),6)&0xffffU)==a.value && (RegionRead(s.storage->pool.Slot(a),4)&0xffffU)==b.value && s.storage->pool.Slot(a)[23]==0 && s.storage->pool.Slot(b)[23]==1);
+    const auto free=s.storage->pool.FreeCount();CHECK(s.storage->DestroyAsset(a,0x10U));CHECK(s.storage->pool.FreeCount()==free+1 && (RegionRead(s.storage->pool.Slot(parent),6)&0xffffU)==b.value && CommonContainedPrevious(s.storage->pool,b).value==0);
+}
+TEST_CASE(ClientContentOwner_CurrentTypeDwordDoesNotNarrow) { // 현재262를 초기6/하위BYTE6으로 줄이지 않고 정렬 순회에서 그대로 비교한다.
+    ContentOwnerScene f;auto& s=f.scene;const auto parent=s.Asset(0x5092d0U),a=f.Form(parent);s.gameplay->finder.containedType=262;const auto b=s.storage->Factory().Create(6,2);DependWord(s.storage->pool,b,18,75);DependWord(s.storage->pool,b,20,0x134);s.storage->ContentForms().Attach(b,parent,0x10U);
+    CHECK(s.storage->pool.Slot(a)[23]==0 && s.storage->pool.Slot(b)[23]==0 && CommonContainedPrevious(s.storage->pool,b)==a);
+}
+TEST_CASE(ClientContentOwner_DefaultDeletionReleasesWithBalancedDepths) { // NoWorld 공통 가상10이 실제 Content pre/Unpop/post/반납을 수행한다.
+    ContentOwnerScene f;auto& s=f.scene;const auto parent=s.Asset(0x5092d0U),form=f.Form(parent);const auto free=s.storage->pool.FreeCount();CHECK(s.storage->DestroyAsset(form,0x10U));
+    CHECK(s.storage->pool.FreeCount()==free+1 && (s.storage->pool.Slot(form)[11]&1U) && (RegionRead(s.storage->pool.Slot(parent),6)&0xffffU)==0 && s.storage->BaseDestroy().PreDepth()==0 && s.storage->BaseDestroy().PostDepth()==0 && f.cancels==0 && f.notices==0 && !s.storage->Borrowed());
+    const auto high=f.Form(parent);s.gameplay->selection.selected=0x10000U+high.value;s.storage->ContentLifetime().Destroy(high,0x10U);CHECK(s.clears==0 && s.gameplay->selection.selected==0x10000U+high.value);
+    const auto exact=f.Form(parent);s.gameplay->selection.selected=exact.value;s.storage->ContentLifetime().Destroy(exact,0x10U);CHECK(s.clears==1 && s.gameplay->selection.selected==0);
+}
+TEST_CASE(ClientContentOwner_CursorComparisonPreservesWholeDword) { // preview의 높은WORD가 있으면 하위SID 일치만으로 커서를 취소하지 않는다.
+    ContentOwnerScene f;auto& s=f.scene;const auto parent=s.Asset(0x5092d0U),form=f.Form(parent);s.gameplay->cursor.preview=0x10000U+form.value;CHECK(s.storage->DestroyAsset(form,0x10U));CHECK(f.cancels==0 && s.gameplay->cursor.preview==0x10000U+form.value);
+}
+TEST_CASE(ClientContentOwner_CursorCancelPrecedesCurrentNuggetKind) { // 실제 취소 효과가 바꾼 현재 kind/너겟TYPE를 그 뒤 비교하고 부모 dead 관문으로 경제장치를 생략한다.
+    ContentOwnerScene f;auto& s=f.scene;const auto parent=s.Asset(0x5092d0U),form=f.Form(parent);s.gameplay->cursor.preview=form.value;
+    f.onCancel=[&] { s.gameplay->cursor.preview=0;s.storage->GameAux()->NuggetType()=75;s.storage->pool.AllocatedBytes(parent)[11]|=2U; };CHECK(s.storage->DestroyAsset(form,0x10U));CHECK(f.cancels==1 && f.notices==0 && f.sounds==0 && s.storage->BaseDestroy().PreDepth()==0);
+}
+TEST_CASE(ClientContentOwner_PaidNuggetUsesCurrentLocalOwnerAndNotice) { // 선지급 너겟은 현재 로컬 안내만 큐에 넣고 새 지갑/SP/소리는 선택하지 않는다.
+    ContentOwnerScene f;auto& s=f.scene;const auto parent=s.Asset(0x5092d0U);s.storage->pool.AllocatedBytes(parent)[34]=3;const auto form=f.Form(parent,154);s.storage->pool.AllocatedBytes(form)[22]=1;s.gameplay->player.battleOwner=3;s.storage->ContentState().notice=0x1234;
+    CHECK(s.storage->DestroyAsset(form,0x10U));CHECK(f.notices==1 && f.sounds==0 && s.walletCalls==0 && !s.sp->Store().Initialized() && s.storage->ContentState().notice==0x1234);
+}
+TEST_CASE(ClientContentOwner_CurrentNuggetCostReachesSameRewardAndSp) { // 안내 효과 뒤 바뀐 너겟TYPE/비용이 같은 실제 지갑/SP에 한 번 가산된다.
+    ContentOwnerScene f;auto& s=f.scene;s.PlayerBlock();s.sp->Store().Set(1,std::bit_cast<std::uint32_t>(100.0F));const auto parent=s.Asset(0x5092d0U);s.Position(parent);s.storage->pool.AllocatedBytes(parent)[34]=1;const auto form=f.Form(parent,154);s.storage->GameAux()->NuggetType()=154;
+    const auto before=std::bit_cast<float>(s.sp->Store().Get(1));f.onNotice=[&] { s.storage->GameAux()->NuggetType()=75;s.storage->types[75].cost=37.5F; };CHECK(s.storage->DestroyAsset(form,0x10U));
+    CHECK(std::bit_cast<float>(s.sp->Store().Get(1))==before+37.5F && s.walletCalls==2 && f.notices==1 && f.sounds==1 && s.storage->BaseDestroy().PreDepth()==0);
+}
+TEST_CASE(ClientContentOwner_EmptyParentNoticeIgnoresTypeStateAndArguments) { // 네 Form의 실제 빈 가상24는 TYPE/상태/인수를 추가로 읽지 않는다.
+    ContentOwnerScene f;auto& s=f.scene;const auto parent=s.storage->Factory().Create(6,2);auto raw=s.storage->pool.AllocatedBytes(parent);raw[10]=255;raw[11]=0xff;s.storage->NoticeContent(parent,Sid{65535},0xffffffffU);CHECK(raw[10]==255 && raw[11]==0xff);
+}
+TEST_CASE(ClientContentOwner_DerivedNoticePinsActualOwnerAndExpires) { // 현재 파생 통지가 자기 대여/외부 owner를 반납해도 선택 pin과 함수 사본은 복귀까지 유지된다.
+    ContentOwnerScene f;auto& s=f.scene;const auto parent=s.Asset(0x503d80U);auto ui=std::make_shared<RawButtonControls>(OriginalEdition::Patch1078,RawButtonHooks{});std::weak_ptr<RawButtonControls> weak=ui;auto binding=std::make_shared<RawSurfaceContentBindings>();
+    binding->pin=[weak]()->std::shared_ptr<void> { return weak.lock(); };binding->notice=[&](auto current,auto form,auto reason) { CHECK(current==parent && form.value==65535 && reason==17);binding.reset();ui.reset();CHECK(!weak.expired()); };s.storage->BindContentRuntime(binding);s.storage->NoticeContent(parent,Sid{65535},17);CHECK(weak.expired());
+    bool rejected{};try { s.storage->NoticeContent(parent,Sid{},0); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected);
+}
+TEST_CASE(ClientContentOwner_ActualRegularReattachesAndClearsChangedBit) { // 장기 실제 Host의 현재 Content+5c가 Unpop→flags→가상50 재부착을 수행한다.
+    ContentOwnerScene f;auto& s=f.scene;const auto parent=s.Asset(0x5092d0U),form=f.Form(parent);auto& host=s.storage->Processes().Host();auto* regular=host.AddRegular(form,99,0.25F,0x52U);CHECK(regular);if (!regular) return;
+    regular->RunFrame();CHECK(regular->Count()==1 && regular->Payload()==0.25F && (RegionRead(s.storage->pool.Slot(form),20)&0x100U)!=0); // count0의 실제 payload 반환/재예약도 확인한다.
+    s.storage->Processes().State().Now()=regular->Time();const auto processForm=regular->Form();regular->RunFrame(); // 예약 시각의 count1은0을 반환해 실제 ProcessForm/Kernel도 반납한다.
+    CHECK(host.FindEvent(form,99)==nullptr && (s.storage->pool.Slot(processForm)[11]&1U) && (RegionRead(s.storage->pool.Slot(form),20)&0x100U)==0 && CommonContainedParent(s.storage->pool,form)==parent && !s.storage->Borrowed());
+}
+TEST_CASE(ClientContentOwner_NativeWorldBorrowsSameBodyAndReturnsIt) { // World 대여/반납 뒤에도 실제 정렬/삭제/상태의 주소와 현재 수입 명령이 유지된다.
+    ContentOwnerScene f;auto& s=f.scene;auto* body=&s.storage->ContentForms();auto* life=&s.storage->ContentLifetime();auto* state=&s.storage->ContentState();state->notice=0x4321;const auto links=s.storage->links;
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,links,94,nullptr,s.storage);CHECK(body==&world.Storage()->ContentForms() && life==&world.Storage()->ContentLifetime()); }
+    CHECK(body==&s.storage->ContentForms() && life==&s.storage->ContentLifetime() && state==&s.storage->ContentState() && state->notice==0x4321 && !s.storage->Borrowed());
+}

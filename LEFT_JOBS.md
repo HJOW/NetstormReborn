@@ -1,8 +1,8 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품 1222 / 11.01 · 인계 갱신 2026-11-09 · 사용자 요청에 따라 커밋 후 목표 일시 중지 · 전체 목표 미완료**
+**제품 1223 / 11.01 · 인계 갱신 2026-11-09 · 전체 목표 진행 중 · 전체 목표 미완료**
 
-**사용자 요청(2026-11-09): 현재1222 작업까지 완료하고 문서 반영·로컬 커밋 후 목표를 일시 중지한다.** 재개 지시 전에는 다음 제품 단위를 시작하지 않는다. 남은 전체 계획의 범위는 유지한다.
+**사용자 재개 지시(2026-11-09): LEFT_JOBS의 모든 cpppj 작업을 우선순위대로 진행한다.** 작업 단위마다 문서 갱신·로컬 커밋한다. 지정한 MP·자연 완주·포획/희생·특정 공격·사용자 직접 확인 검사는 제외한다.1223 Content 단위의 구현/허용 검증을 마쳤고 다음 M6-n Regular를 진행한다.
 
 cpppj는 메뉴와 미션 플레이가 가능하다. 최근 확인은 Tutorial4의 생산·건설 요청 → 실제 객체 생성 → 대기와 Edit 왕복까지다. 전체 시나리오·화면·음향의 원본 동일성은 미확정이다.
 
@@ -16,7 +16,7 @@ cpppj는 메뉴와 미션 플레이가 가능하다. 최근 확인은 Tutorial4�
 | **4** | **알려진 버그 — B1~B4** | **4개 상위 계획.** NB01~NB34 **34건 등록만 완료**. 원인·현행 적용 여부 조사와 수정·건별 마감은 미착수다. |
 | **합계** | **16개 상위 계획** | 각 계획에 여러 구현·검증·커밋이 포함된다. 버그 34건은 B1~B4의 대상이므로 합계에 별도로 더하지 않는다. |
 
-**재개 시 다음 제품 작업:** M6-n의 **Content Form 장기 연결**부터 진행한다. Gump의 실제 공장/현재 TYPE·UI 등록표/저장소 pin·현재 가상 삭제와 Native 메뉴/생산 연결은1222에서 마감했다. 기본 Form 삭제 **1종(Content)**과 Regular 잔여 **48VT/고유 함수23개**가 남는다. 큰 AI·다른 배치/Fort 상위 Finish·전수 caller/owner 감사는 이 수량 밖에 남는다. **사용자 재개 지시 전 새 단위를 시작하지 않는다.**
+**다음 제품 작업:** M6-n의 **잔여 Regular47VT/고유22함수**를 원문과 대조해 같은 장기 본체에 연결한다. 기본 Form 삭제 **4/4종**과 Content의 정렬/현재 TYPE·cursor·부모 통지·경제/해제·Native 대여는1223에서 마감했다. 큰 AI·다른 배치/Fort 상위 Finish·전수 caller/owner 감사는 이 수량 밖에 남는다.
 
 이 수치는 일부 분배의 연결량이며 **전체 완료율·예상 소요일로 환산하지 않는다.** 60/120프레임·CD 10.72 복원은 별도 후순위다.
 
@@ -24,11 +24,11 @@ cpppj는 메뉴와 미션 플레이가 가능하다. 최근 확인은 Tutorial4�
 
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
-AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품 1222, DN은 0.261, WB는 열람 당시 병행 작업 인계의 WB04-E201 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
+AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품 1223, DN은 0.261, WB는 열람 당시 병행 작업 인계의 WB04-E201 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
-| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품 1222의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
+| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품 1223의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
 | **dotnetpj** | 기존 `Netstorm.Game`/`Netstorm.exe`는 1-1·1-2 근사 플레이가 가능하다. 새 `Netstorm.Client.Host`는 메뉴 일부까지이며 미션 플레이가 불가능하다. | 새 경로의 실제 메뉴·게임 캡처 비교는 0건이다. R3 진행/R4 일부 이식이며 부품 fixture 통과를 전체 동일성으로 합산하지 않는다. |
 | **webpj** | 클릭하여 시작·메뉴/목록·도움말/옵션·Credits·개발용 지형 미리보기까지다. 실제 미션 플레이는 불가능하다. | cpppj 오라클 M1 메뉴 8장면은 기록한 원인 밖 픽셀 차이 0이다. 구름 등 차이가 남고 실제 미션 L2/L3·전체 화면/음향·자연 완주는 미검증이다. |
 
@@ -36,12 +36,12 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj�
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품·소스 | **1222 / 11.01**. [Gump 장기 연결](docs/exe/cpp-gump-owner-20261109.md)·[확정 보고서](cpppj/gump-owner-20261109.json). Native Session·메뉴·생산 UI가 같은 Gump 본체/공장/현재 TYPE와 실제 UI 등록표·저장소 pin을 공유한다. |
-| 최근 빌드·집중 검사 | 1222 Release/x64 제품2·집중5대상 최종 종료0, 경고·오류0, 소스17개 고정. **비MP397/397**(기존371+신규16+기존 관련10, Take 원문600입력·메뉴308행 포함). 최초396/397의 새 Take 입력 오류와 교정은 보고서/first-*에 보존했다. 제품 본문·원문 fixture는 바꾸지 않았다. |
-| 최근 실제 실행 | 1222 Tutorial4 생산·건설 요청→TYPE75/owner1 생성·요청0→1→600프레임13.581→24.085초 대기, 같은 EXE/800×600 설정 Edit TEST01↔Main2회/11관측 모두 종료0. 015 PNG 검토. 전체 전투/건물 완성/Test Battle 검증은 아니다. 시작한 빌드·집중·GUI 핸들은 모두 종료했다. |
-| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품 1222 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
+| 확정 제품·소스 | **1223 / 11.01**. [Content 장기 연결](docs/exe/cpp-content-owner-20261109.md)·[확정 보고서](cpppj/content-owner-20261109.json). Native World/Session·NoWorld가 같은 Content 정렬/Regular/삭제·현재 TYPE/cursor/로컬 owner/수입 명령·실제 Client 장치를 공유한다. |
+| 최근 빌드·집중 검사 | 1223 Release/x64 제품2·직접 관련 집중1대상 최종 종료0, 경고·오류0, 소스15개 고정. **비MP59/59**(신규12+기존47). 최초57/59의 Regular count/시각 입력과 기존 커서 폭 검사의 누락 VT·교정 빌드 오타는 first-*/correction-build-*에 보존했다. 보호 fixture/기대값·제품 계산은 유지했다. |
+| 최근 실제 실행 | 1223 Tutorial4 생산·건설 요청→TYPE75/owner1 실제 새 서버 객체 생성→600프레임 대기·정상 종료0. 같은 EXE의 Edit TEST01↔Main2회/11관측 종료0, PNG 검토. 전체 전투/건물 완성/Test Battle 검증은 아니다. 시작한 빌드·집중·GUI 핸들은 모두 종료했다. |
+| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품 1223 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
 | M6 감사 기준 | checking 잔여 목록 0, 태그 25/활성 88/무태그 63F, 지연큐 OFF. checking 0과 자산 Pre/Post·통지 83/83을 MP/전체 NoWorld 완료로 세지 않는다. |
-| 마지막 디컴파일 | **Client 양판본 2026-11-03 / HJOW-Athlon(192.168.0.94), R 전용 2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md). 1222 새 디컴파일/원문 변경0, 보호 원본/CD/fixture·AGENTS **2,801파일 불변**. |
+| 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1223 새 디컴파일/원문 변경0, 보호 원본/CD/fixture·AGENTS **2,801파일 불변**. |
 
 <!-- 과거 1207 진행 중 인계의 직접 링크를 보존한다. 현재 제품은 위 0.1절이 기준이다. -->
 <a id="02-진행-중인-1207--완료-처리-금지"></a>
@@ -76,14 +76,14 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 | 순서 / ID | 해야 할 일 | 완료 조건과 주의점 |
 | --- | --- | --- |
-| **1. M6-n: NoWorld·자산 삭제/AI** | 알려진83VT의 Pre/Post와 통지를 모두 분배했다. 다른 Form/Regular·큰 AI·다른 배치 호출자/Fort 상위 Finish의 장기 연결이 남는다. | 미션 월드가 없는 메뉴·전환에서도 같은 실제 Pool/목록/TYPE/현재 전역을 사용한다. 큰449b30 등 실제 Runtime이 필요한 하위를 빈 성공으로 숨기지 않는다. 83/83을 전체 NoWorld 완료로 세지 않는다. |
+| **1. M6-n: NoWorld·자산 삭제/AI** | 알려진83VT의 Pre/Post와 통지를 모두 분배했다. 기본4Form 삭제는1223까지 연결했고 Regular·큰 AI·다른 배치 호출자/Fort 상위 Finish의 장기 연결이 남는다. | 미션 월드가 없는 메뉴·전환에서도 같은 실제 Pool/목록/TYPE/현재 전역을 사용한다. 큰449b30 등 실제 Runtime이 필요한 하위를 빈 성공으로 숨기지 않는다. 83/83을 전체 NoWorld 완료로 세지 않는다. |
 | **2. M6-n: 호출자·owner 전수 감사** | Source/listener/두 등록표/Poll/송수신·선택적 기록, 25태그 전 scope·무태그 63F, Snapshot/debugBurst를 대조한다. | 원문 등록 92행/모든 실제 process VT, 현재 receiver/observer/version/길이·파일/해제 수명을 연결한다. 없는 큰 장치·빈 효과를 숨기지 않는다. l/m 구현 후 최종 감사를 다시 닫는다. |
 | **3. M6-l: 실제 지연큐** | Client 장기 분포·OS시계/CRT rand·각 노드 queue·현재 20BYTE 주소·실제 전송/등록 수명을 연결한다. | 원문 `4def40/4df010/4dee60/4def20/4df5e0/4dfc00`. FIFO·엄격한 `deadline < now`·난수 소비·observer/기록·닫힘/해제를 보존한다. queue=false로 완료 처리하지 않는다. |
 | **4. M6-m: JoinTestBattle** | 개발자 4이름 제한·현재 주소·server0/current29 뒤 기존 1bh 전체 수신을 직접 호출한다. | 원문 `4b8be0 → 4b8b20`, 입력 `0200002b`의 선행 `4b3620` 보존. Edit TestBattle(c2)와 구별하고 새 수신 본문을 복제하지 않는다. |
 
-세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1222 구현 문서](docs/exe/cpp-gump-owner-20261109.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
+세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1223 구현 문서](docs/exe/cpp-content-owner-20261109.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
-**재개 시 다음 한 단위 — Content Form:** Storage 기본 삭제 분배의 마지막 미연결 Content와 실제 cursor/내용물/부모 통지·현재 TYPE·장치/해제 수명을 원문에 맞춰 장기 연결한다. 이번 단위에서 Content를 구현한 것으로 세지 않는다. Gump/기존 Process 등 미확보 독립 C 경계는 해당 변경 전 실제 PE와 대조한다. **현재1222까지만 완료하고 중지하며 다음 구현은 착수하지 않았다.**
+**다음 한 단위 — 잔여 Regular:** 기본 Form 삭제의 Content를1223에서 연결했다. 잔여47VT/22함수 중 같은 본문을 공유하는 묶음별로 실제 NoWorld 도달성·현재 전역/TYPE·큰 하위 장치·호출자/해제 수명을 확인하고 연결한다. 우선 큰 공통 BombRegular0041e6a0(16VT)의 원문/장기 owner를 조사한다. 현재 VT의 전용 본문 누락을 base payload/빈 성공으로 대체하지 않는다.
 
 ### 2.2 다음 구현의 출발점과 유지할 계약
 
@@ -91,8 +91,9 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 | --- | --- |
 | 장기 건설·배치 | `ClientConstructionGlobals`는 같은 SP/HP/Canon/Chunks·최근/전체 목록·현재 Player/Bounds를 보유한다. 전체 MayPlace·단일 난수/너겟 배치·Gem/오벨리스크 하위에 이어 1206의 실제 섬/신전/투표/도장도 같은 장기 본체를 사용한다. Native Session은 본체·캐시·영향 목록을 빌린다. |
 | 자산 삭제 | **Pre/Post분배83/83·통지분배83/83·알려진 부모/통지 잔여0**이다. 1215 다이스/제단의 같은 Player·참여/전체 부모와 1216 전용6통지를 공유한다. Native Session3호출자도 같은 장기 본문을 쓴다. 홈3은 정적/컴파일 전용이다. 큰449b30은 실제 Client Runtime pin 뒤 기존 전체 처리기로 전달하며 다른 Form/Regular·큰 AI·전수 Caller/owner 감사는 남는다. |
-| 감시 Form | **Depend 장기 연결1221 완료.** Native World/Core·NoWorld가 같은 공장/현재 TYPE·감시 쌍·현재 상대 VT 삭제를 사용한다. 알림은 weak 대여→실제 Runtime pin→함수 사본→호출이며, 공통 선택 DWORD와 검색/제거 진단의 정상 복귀·현재 필드/선저장 next를 유지한다. Gump/Content 삭제는 별도다. |
+| 감시 Form | **Depend 장기 연결1221 완료.** Native World/Core·NoWorld가 같은 공장/현재 TYPE·감시 쌍·현재 상대 VT 삭제를 사용한다. 알림은 weak 대여→실제 Runtime pin→함수 사본→호출이며, 공통 선택 DWORD와 검색/제거 진단의 정상 복귀·현재 필드/선저장 next를 유지한다. Gump/Content는 각각1222/1223에서 같은 장기 삭제에 연결했다. |
 | UI Form | **Gump 장기 연결1222 완료.** 같은 `containedGumpType` DWORD를 Native 생성/메뉴·Player/contained 통지가 공유한다. 실제 UI 등록표는 첫 메뉴 전 weak 대여·실제 RawButtonControls 저장소 pin으로 연결하고 현재 World 소비자는 전체 Runtime pin/함수 사본을 유지한다. Source별 TYPE 사본이나 임시 Session을 만들지 않는다. |
+| Content Form | **장기 정렬/Regular/삭제1223 완료.** Native World/Core/Session·NoWorld가 같은 공장/현재 finder TYPE/cursor·로컬 owner/권한/너겟·Reward와 실제 입력/소리/전송 장치를 공유한다. 파생 부모/포획 통지는 현재 실제 Runtime pin/함수 사본이며 Session 콜백은 장기 본문에 남기지 않는다. |
 | 수명 | 건설 큰 효과 **16개**는 weak 대여 → 실제 Runtime pin → 함수 사본 → 호출이다. Client 장치 **10개**는 첫 메뉴/Session 전에 결합한다. 섬/영역/신전은 같은 Player getter·Kencloud redraw·난수/목록을 빌리며 Storage→영역 callback도 weak 선택 pin이다. 펜스는 현재 TYPE.range/두 역할·Player 동맹 weak 선택 pin을 사용한다. 결합 시 Player/상태/캐시를 초기화하지 않는다. |
 | 해제 | body를 State/backing보다 먼저 반납하고 참조 순환을 피한다. 세 Runtime 공개 경로·Host 반납 순서를 유지한다. 실제 Menu/Session/Host 정리 뒤 최종 Client 장치를 끊는다. 강한 Session 역참조·임시 World/Player/reset·성공 fallback을 넣지 않는다. |
 | 기존 LAN | M1~M5, Pop/저장복구/78h/선택적 기록은 재작성하지 않는다. checking `004b02d0/004dc220`은 1157에서 같은 기존 본체/DWORD 연결을 확인했다. 중앙 assertion의 새 누락은 M7.5다. |
@@ -105,15 +106,17 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 <a id="23-수량을-확정한-연결-범위--제품-1221-기준"></a>
 
-### 2.3 수량을 확정한 연결 범위 — 제품 1222 기준
+<a id="23-수량을-확정한-연결-범위--제품-1222-기준"></a>
+
+### 2.3 수량을 확정한 연결 범위 — 제품 1223 기준
 
 | 범위 | 연결 완료 | 남은 범위 |
 | --- | --- | --- |
 | 알려진 자산 83VT의 Pre/Post·통지 분배 | **각 83/83VT** | 해당 분배의 알려진 부모/통지 잔여 0. 큰 하위·모든 caller/owner의 완료를 뜻하지 않는다. |
-| 자산 83+내장 Form 4의 장기 Regular(+5c) | **39/87VT**(base16·Damageable14·고유9) | **48VT / 고유 함수 23개**(자산47+Content1). 같은 함수를 공유하는 VT를 별도 함수 작업으로 중복 계산하지 않는다. |
-| Storage 기본 내장 Form 삭제 분배 | **3/4종 — Process·Depend·Gump** | **1종 — Content**. 실제 NoWorld caller·현재 cursor/내용물/부모 통지와 장치/해제 수명 연결이 필요하다. |
+| 자산 83+내장 Form 4의 장기 Regular(+5c) | **40/87VT**(base16·Damageable14·고유10) | **47VT / 고유 함수22개**(모두 자산). 같은 함수를 공유하는 VT를 별도 함수 작업으로 중복 계산하지 않는다. |
+| Storage 기본 내장 Form 삭제 분배 | **4/4종 — Process·Depend·Gump·Content** | 기본4종의 알려진 누락0. 큰 AI·다른 배치/Fort 상위 Finish·전수 caller/owner 감사는 별도다. |
 
-정확한 현재 잔여 행은 [1222 보고서](cpppj/gump-owner-20261109.json)의 `staticAudit.remainingRows`를 따른다. [1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md)·[당시 87VT JSON](cpppj/no-world-regular-audit-20261109.json)은 **연결 36/87VT·잔여 51VT/26함수인 당시 자료**다. 이후 다리와 두 프레임의 3VT/3함수를 연결했다. 프로세스 전체 클래스/PID/VT·큰 AI·배치/Fort 상위 Finish·전수 호출자 감사와 M6-l/m은 이 87개 집계 밖에 남는다.
+정확한 현재 잔여 행은 [1223 보고서](cpppj/content-owner-20261109.json)의 `staticAudit.remainingRows`를 따른다. [1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md)·[당시 87VT JSON](cpppj/no-world-regular-audit-20261109.json)은 **연결 36/87VT·잔여 51VT/26함수인 당시 자료**다. 이후 다리·두 프레임·Content의4VT/4함수를 연결했다. 프로세스 전체 클래스/PID/VT·큰 AI·배치/Fort 상위 Finish·전수 호출자 감사와 M6-l/m은 이 87개 집계 밖에 남는다.
 
 ## 3. M7 독립 5건과 M8 마감
 
@@ -208,7 +211,7 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 
 | 확인할 범위 | 기준 문서 |
 | --- | --- |
-| 현재 제품·현재 잔여 목록 | [1222 구현 문서](docs/exe/cpp-gump-owner-20261109.md)·[보고서](cpppj/gump-owner-20261109.json), 원시 `extracted/cpp-resume-1222/` |
+| 현재 제품·현재 잔여 목록 | [1223 구현 문서](docs/exe/cpp-content-owner-20261109.md)·[보고서](cpppj/content-owner-20261109.json), 원시 `extracted/cpp-resume-1223/` |
 | M6 전체 잔여와 최초 Regular 조사 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[최초 1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md). 각 문서의 과거 “없음/다음”보다 현행 2절을 우선한다. |
 | 비MP 구현 마감 | [UI 929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit 943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션 956](docs/exe/cpp-mission-state-scope-20261106.md)·[내부 수명 980](docs/exe/cpp-internal-lifetime-closure-20261106.md) |
 | 디컴파일·이식 근거 | [디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md) |
@@ -228,4 +231,4 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 | `b5197d48` — 9차 알려진 버그 추가 | 1절 9차와 4.3절 **B1~B4·NB01~NB34**에 전체 34건을 연결한다. 등록과 원인 조사·수정·검증 완료를 구별한다. |
 | `3051892a` — 루트 README 개요 보호 | 6절에서 **AGENTS.md·README.md 개요 보호**, README.en.md Overview 번역 허용을 유지한다. 해당 원문은 수정하지 않는다. |
 
-**최근 완료1222 / 중지 인계:** Gump 장기 연결과 허용 검증을 마감했다. 문서·로컬 커밋 뒤 사용자 요청대로 목표를 일시 중지한다. 유효한16상위계획·검증 제외·미해결 한계는 그대로이며 재개 시 Content부터 진행한다. 만료된1221 인계는 원문 보관했다.
+**최근 완료1223:** Content 장기 정렬/Regular/삭제와 현재 Client 전역·실제 장치·Native 대여 및 허용 검증을 마감했다. 작업 단위 문서와 보고서를 기록하고 자기 파일만 로컬 커밋한다. 다음은 M6-n 잔여 Regular47VT/22함수이며 유효한16상위계획·검증 제외·미해결 한계를 유지한다. 전체 목표는 계속 진행 중이다.

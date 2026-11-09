@@ -36,6 +36,7 @@ private:
     RawWorldCore core_; // 실제풀/장부/공통삭제/분배기의참조만보관한다.
     const o::RawPlayerContentNotice& player_; // 같은풀의현재Player+24실제몸체다.
     o::ContentFormNotice fallbackParent_; // 워커/다이스/워크샾등다른실제부모통지경계다.
-    o::ContentFormLifetime contents_; // 기존Form6의실제pre/Unpop/부모알림/post/SID반납을등록한다.
+    std::unique_ptr<o::ContentFormLifetime> localContents_; // 독립 typed World만 기존 지역 수명 본문을 소유한다.
+    o::ContentFormLifetime* contents_{}; // 기존Form6의실제pre/Unpop/부모알림/post/SID반납을등록한다.
 };
 }
