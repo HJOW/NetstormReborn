@@ -657,7 +657,7 @@ cpppj/src/o/RawDudeBehavior.cpp	port	www/core/raw-dude-behavior.js	1f00a25a	port
 cpppj/src/o/RawDudeDrop.cpp	port			todo	[o-default]
 cpppj/src/o/RawDudeNotice.cpp	port			todo	[o-default]
 cpppj/src/o/RawDudeRegular.cpp	port	www/core/raw-dude-regular.js	1f00a25a	port	[o-default] WB04-E122: Dude 정기 분배 450fa0·방황 451190·복귀 451210·투하 451270·낙하 451340·목표 이동 4508b0·정적 초기화. fixture dude-regular 1600행 전부(10.78 전용; 정기 1597+초기화 3). 지면/경로/거주 구역/진입점/이동/공간/삭제/진단은 훅 경계
-cpppj/src/o/RawDudeSpawn.cpp	port			todo	[o-default]
+cpppj/src/o/RawDudeSpawn.cpp	port	www/core/raw-dude-spawn.js	1f00a25a	port	[o-default] WB04-E206: Dude 생성 00450a20(현재 개수→용량→차단 순 signed 관문·실제 Factory flags2·물리 frame DWORD 0·Owner·Pop 미연결 위치 거부)·최초 Pop 후처리 00450cd0(물리 QA 0x5101·현재 TYPE 과 Bridge DWORD getter 전체 비교 통지·signed 등록과 저장 위치 거부·현재 개수+1·현재 TYPE I 첫 프레임(-1 포함)·항상 공통 부모, 부분 효과 보존)·명시 validate·makeDudePostPopHooks. fixture dudespawn 10.78 144행 전부(실제 보호 Dude 장면)와 DudeParentCurrent 18건. 남음: Player 장기 population/차단/Bridge 전역·004214a0 표면 통지·생성 호출자 World 연결, CD 분기는 범위 밖
 cpppj/src/o/RawDudeTask.cpp	port	www/core/raw-dude-task.js	1f00a25a	port	[o-default] WB04-E76: 일반 Dude task 설정 00450670(낙하 0x5105 교체 진단·현재 Regular 조회/생성·같은 Regular 갱신·task WORD·다리 82 표면 통지)과 Host 훅. fixture dudetask 10.78 384행 전부(CD 396행은 웹 범위 밖). Dude 생성/드롭은 RawDudeSpawn/RawDudeDrop 단위에서
 cpppj/src/o/RawEditorPlayers.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/o/RawEditorWorldFinish.cpp	exclude-edit			-	[edit-editor]

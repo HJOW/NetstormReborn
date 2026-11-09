@@ -13789,9 +13789,38 @@
       "bytes": 7105483,
       "lines": 81,
       "fixtureCommit": "88834c49",
-      "webCommit": "worktree",
+      "webCommit": "abbb159c",
       "cpppjBasis": {
         "cpppj/src/o/RawColorSortPrimary.cpp": "88834c49"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E206",
+      "id": "dudespawn",
+      "path": "cpppj/tests/fixtures/dudespawn-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Dude 생성 00450a20 과 최초 Pop 후처리 00450cd0 의 population 용량/개수·차단·좌표·소유자 입력과 새 SID·population·슬롯·해시/spot·장부·변경 사각형(실제 보호 65클러스터/130물리프레임 SHP, 10.78 144행·CD 144행)",
+      "consumers": [
+        "webpj/tests/dude-spawn.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dude-spawn.js"
+      ],
+      "doc": "docs/webpj-dude-spawn-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDudeSpawn.cpp"
+      ],
+      "scope": "10.78 144입력 전부(originalCD 144행은 범위 밖)",
+      "text": true,
+      "sha256": "e3f9fb13a1451588779c5175348092c4bec85dc066818eb8887f1d62f11ae3f3",
+      "bytes": 94814,
+      "lines": 289,
+      "fixtureCommit": "860030e7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDudeSpawn.cpp": "654ee45a"
       }
     }
   ]
