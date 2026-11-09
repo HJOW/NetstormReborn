@@ -13551,7 +13551,7 @@
       "bytes": 6482293,
       "lines": 201,
       "fixtureCommit": "e6c41d17",
-      "webCommit": "worktree",
+      "webCommit": "9586dcca",
       "cpppjBasis": {
         "cpppj/src/o/RawFactoryDraw.cpp": "16ca2d8b"
       }
@@ -13581,7 +13581,7 @@
       "bytes": 8341264,
       "lines": 334,
       "fixtureCommit": "16ca2d8b",
-      "webCommit": "worktree",
+      "webCommit": "9586dcca",
       "cpppjBasis": {
         "cpppj/src/o/RawThunderCannonCapture.cpp": "16ca2d8b"
       }
@@ -13611,7 +13611,7 @@
       "bytes": 6912732,
       "lines": 385,
       "fixtureCommit": "078e4c84",
-      "webCommit": "worktree",
+      "webCommit": "9586dcca",
       "cpppjBasis": {
         "cpppj/src/o/RawSunAviaryCapture.cpp": "078e4c84"
       }
@@ -13641,9 +13641,99 @@
       "bytes": 5077839,
       "lines": 460,
       "fixtureCommit": "87c3f91f",
-      "webCommit": "worktree",
+      "webCommit": "9586dcca",
       "cpppjBasis": {
         "cpppj/src/o/RawGeyserCapture.cpp": "ce5a3884"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E203",
+      "id": "templedraw",
+      "path": "cpppj/tests/fixtures/temple-draw-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 윈드·레인·썬더 신전의 기본 프레임 4acfe0 반환과 전용 추가 Draw 4dcf10/4dcd00/4dd0f0 의 그림/소리 제출 순서(raw 50바이트 입력, 10.78 264행)",
+      "consumers": [
+        "webpj/tests/temple-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-temple-draw.js",
+        "webpj/www/core/raw-rain-vortex-draw.js"
+      ],
+      "doc": "docs/webpj-temple-mana-draw-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTempleDraw.cpp",
+        "cpppj/src/o/RawRainVortexDraw.cpp"
+      ],
+      "scope": "10.78 264입력 전부",
+      "text": true,
+      "sha256": "18ee694cd715e13e64e97b30abd2b920ecaa36ba684febf1ac9d894077179f3d",
+      "bytes": 34070,
+      "lines": 265,
+      "fixtureCommit": "6e5a4fc8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTempleDraw.cpp": "6e5a4fc8",
+        "cpppj/src/o/RawRainVortexDraw.cpp": "20e055e3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E203",
+      "id": "raindraw",
+      "path": "cpppj/tests/fixtures/rain-draw-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 레인 신전 가상 Draw 004dcd00/CD 0044fe00 의 현재 프레임·WORD 상태별 그림/소리 제출 순서(10.78 116행·CD 116행)",
+      "consumers": [
+        "webpj/tests/rain-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-rain-vortex-draw.js"
+      ],
+      "doc": "docs/webpj-temple-mana-draw-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawRainVortexDraw.cpp"
+      ],
+      "scope": "10.78 116입력 전부(originalCD 116행은 범위 밖)",
+      "text": true,
+      "sha256": "d2a7881326a3d6bd9d551c3c3c97e72074f471db9e9f3f07ea8d06ad4e920fe2",
+      "bytes": 5743,
+      "lines": 233,
+      "fixtureCommit": "20e055e3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawRainVortexDraw.cpp": "20e055e3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E203",
+      "id": "manaadditional",
+      "path": "cpppj/tests/fixtures/mana-additional-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 마나 추가 Draw 00473710 의 그림자/본체 출력·현재 SHP 읽기·그림자 출력 뒤 raw/TYPE/SHP/WORD 변경 반영(10.78 756행)",
+      "consumers": [
+        "webpj/tests/mana-additional.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mana-draw.js"
+      ],
+      "doc": "docs/webpj-temple-mana-draw-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawManaDraw.cpp"
+      ],
+      "scope": "10.78 756입력 전부",
+      "text": true,
+      "sha256": "5a69003c0bc3e7b96aeb5fd6883f7c394a214f2899e13a815c81b7d09996713f",
+      "bytes": 288099,
+      "lines": 757,
+      "fixtureCommit": "ab993bdf",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawManaDraw.cpp": "ab993bdf"
       }
     }
   ]

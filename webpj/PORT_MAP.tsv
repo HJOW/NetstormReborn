@@ -768,7 +768,7 @@ cpppj/src/o/RawLocalMissionState.cpp	port			todo	[o-default]
 cpppj/src/o/RawMakeAi.cpp	port	www/core/raw-make-ai.js	1f00a25a	port	[o-default] WB04-E32: 일반 MakeAi 부모와 전체 객체 이전/삭제 순회. fixture make-ai-parent 770·make-ai-objects 2592행 전부. AI 생성(417e50)/Player 카운터/가상 삭제는 훅
 cpppj/src/o/RawManaBoltArrival.cpp	port	www/core/raw-mana-bolt-arrival.js	1f00a25a	port	[o-default] WB04-E143: 마나 볼트 건설 대상 검색(0045aab0)과 도착 분기(0045ab30: 음향·프로세스 제거·Regular 예약 또는 자기 삭제). fixture mana-bolt-arrival 101행 전부. 남음: RawManaBoltRegular(클라이언트 투영 선행)
 cpppj/src/o/RawManaBoltRegular.cpp	port			todo	[o-default]
-cpppj/src/o/RawManaDraw.cpp	port			todo	[o-default]
+cpppj/src/o/RawManaDraw.cpp	port	www/core/raw-mana-draw.js	1f00a25a	port	[o-default] WB04-E203: 00473710 TYPE 1회 선택·WORD 상태면 프레임→현재 SHP 순서로 읽은 그림자(+10 32비트 감김) 뒤 본체(프레임/SHP 재읽기, 바뀐 TYPE 미반영)·짧은 raw/소비자 누락 거부. fixture manaadditional 756행 전부. 남음: 실제 VFX 그림자 치환표 557738·현재 SHP 토큰·Session 표시 연결
 cpppj/src/o/RawManaRegistration.cpp	port	www/core/raw-mana-registration.js	1f00a25a	port	[o-default] WB04-E10: 00472f70 마나 공급원 등록(최초 개수 저장·중복 검색·checking 진단 복귀·productionDirty 감김). fixture mana-registration-hardware 10.78 542행 전부(originalCD 542행은 10.72라 제외). 실제 Client/World 통합 대조는 공통 PostPop 본체 단위에서
 cpppj/src/o/RawMeltdown.cpp	port	www/core/raw-meltdown.js	1f00a25a	port	[o-default] WB04-E111: 제네레이터 Meltdown 명령 41c290·자격 420340·검색 4203a0·피해 4204f0·요청 4207a0/효과 4205f0 패킷·길이 확정 40b150. fixture meltdown 442행 전부(10.78 전용 파일). RawGunImpact::Clamp 식은 이 모듈에 비공개로 두었고 RawGunImpact 이식 때 옮김. 검색/송신/배포/삭제/피해/지면 효과/끝 칸/시각 효과는 훅 경계
 cpppj/src/o/RawMemStream.cpp	port			todo	[o-default]
@@ -866,7 +866,7 @@ cpppj/src/o/RawProductionDeck.cpp	port			todo	[o-default]
 cpppj/src/o/RawProductionSync.cpp	port			todo	[o-default]
 cpppj/src/o/RawProjectileGeometry.cpp	port	www/core/raw-projectile-geometry.js	1f00a25a	partial	[o-default] WB04-E85: 투사체 포구/치수 기하(썬 디스크 포구 0046a780·가상 +b4 포구·캐논 사정선 끝 00481750·방향 프레임 0041d6e0·표적 치수/상자 0049af10). fixture projectile-geom 10.78 120행+cannon-rayend 4040행 전부. 남음: muzzle 71 외·hotspot·directionFrame·아이스/썬더(129/131) 사정선의 소비자 fixture 대조와 실제 SHP 헤더 연결
 cpppj/src/o/RawRainAviaryProcess.cpp	port			todo	[o-default]
-cpppj/src/o/RawRainVortexDraw.cpp	port			todo	[o-default]
+cpppj/src/o/RawRainVortexDraw.cpp	port	www/core/raw-rain-vortex-draw.js	1f00a25a	port	[o-default] WB04-E203: 10.78 레인 VT 0x5196f0 판정·004dcd00(0번·현재 프레임 제출, WORD 상태면 C 구간 개수 안에서 현재 코드 방향 첫 번호일 때 templeAscend 소리 뒤 C 첫 번호+재읽은 현재 프레임, 방향 범위 밖 RangeError). fixture raindraw 10.78 116행과 templedraw 레인 116행. 남음: RainDrawTests Renderer 합성 2건은 client Renderer 이식 때, 실제 소리·Session 표시 연결, CD 분기는 범위 밖
 cpppj/src/o/RawRegionOwner.cpp	port	www/core/raw-region-owner.js	1f00a25a	port	[o-default] WB04-E26: 0046f710/0046f770 표면 소유자. fixture region-owner 10.78 816행(originalCD 816행 제외). 실제 Session/미션 adapter 연결은 해당 단위에서
 cpppj/src/o/RawRegionOwnership.cpp	port			todo	[o-default] outpost 분기는 RawOutpostLifecycle(exclude-mp)로 명시 웹 제외
 cpppj/src/o/RawRegionPaint.cpp	port	www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] 지역 도장 일부
@@ -921,7 +921,7 @@ cpppj/src/o/RawSurfaceLifecycle.cpp	port			todo	[o-default]
 cpppj/src/o/RawTemplateLifetime.cpp	port	www/core/raw-template-lifetime.js	1f00a25a	port	[o-default] WB04-E123: Template9 헤더 초기화 004bd2e0·단일 반납 004bf690·전역 정리 004bfb00. fixture template-lifetime-v2 240행 전부(10.78 전용). DataManager 소멸/할당 반납은 훅 경계. 캠페인 템플릿 저장소(State 섹션 확장 포함)는 별도 client 단위
 cpppj/src/o/RawTemplateLoad.cpp	port			todo	[o-default]
 cpppj/src/o/RawTemplateSectionNames.cpp	port	www/core/raw-template-section-names.js	1f00a25a	port	[o-default] WB04-E19: 004bccb0 Template 구역 이름표 lazy 생성(277 BYTE). fixture template-section-names 12행 전부
-cpppj/src/o/RawTempleDraw.cpp	port			todo	[o-default]
+cpppj/src/o/RawTempleDraw.cpp	port	www/core/raw-temple-draw.js	1f00a25a	port	[o-default] WB04-E203: 세 신전 VT(윈드 0x519860·레인 0x5196f0·썬더 0x519918) 판정·기본 프레임 4acfe0(현재 TYPE baseFrame, -1 유지)·윈드/썬더 추가 그림 4dcf10/4dd0f0(썬더 늘·윈드 baseFrame 앞만 현재 프레임, WORD 상태면 C 구간 개수 안에서 C 첫 번호+현재 32비트 감김). fixture templedraw 264행 전부(레인 행은 raw-rain-vortex-draw.js). 남음: 실제 Squid 가상 분배·SpriteDraw 본체·Session 표시 연결
 cpppj/src/o/RawTempleRitual.cpp	port			todo	[o-default]
 cpppj/src/o/RawTerrainBitmap.cpp	port			todo	[o-default]
 cpppj/src/o/RawTerrainContext.cpp	port	www/assets/terrain-mask.js;www/assets/terrain-fringe.js	1f00a25a	partial	[o-default] 3.6③: 기준선의 Edition()/ArchipelagoMode() 접근자는 군도 지형 이식 때 반영
