@@ -14716,11 +14716,98 @@
       "bytes": 236542,
       "lines": 205,
       "fixtureCommit": "69c584bd",
-      "webCommit": "worktree",
+      "webCommit": "fff101a1",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionStart.cpp": "3cea1b14",
         "cpppj/src/o/RawMissionAiSettings.cpp": "69c584bd",
         "cpppj/src/o/RawAiCreate.cpp": "76e3c453"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E235",
+      "id": "object-trace-main",
+      "path": "cpppj/tests/fixtures/object-trace-main-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 객체 Main/Task 직접 본체. 입력(진입 본체·SID·덤프 모드·TYPE flags1/flags2·로그 직후 변경·슬롯 raw 50 BYTE)에서 실제 로그 장치가 받은 레벨과 서식 바이트 전체와 수치 인자 (373행)",
+      "consumers": [
+        "webpj/tests/object-trace-main.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-trace-main.js"
+      ],
+      "doc": "docs/webpj-object-trace-main-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawObjectTraceMain.cpp"
+      ],
+      "scope": "10.78 373행 전부",
+      "text": true,
+      "sha256": "751c817bf2a0ea73f9f24bd6890336eae3c3e34fe2308814facfc370eed5b1c1",
+      "bytes": 231693,
+      "lines": 374,
+      "fixtureCommit": "a5c411c3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawObjectTraceMain.cpp": "a5c411c3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E235",
+      "id": "object-trace-vtables",
+      "path": "cpppj/tests/fixtures/object-trace-vtables-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 83개 자산과 네 내장 Form 의 가상 표 +0x70 진입 주소 (87행)",
+      "consumers": [
+        "webpj/tests/object-trace-main.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-trace-main.js"
+      ],
+      "doc": "docs/webpj-object-trace-main-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawObjectTraceMain.cpp"
+      ],
+      "scope": "10.78 87행 전부",
+      "text": true,
+      "sha256": "eb3f8535e446351a37677d5d2a117d238296f21d63159904b6aa3518ed966968",
+      "bytes": 3162,
+      "lines": 88,
+      "fixtureCommit": "a5c411c3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawObjectTraceMain.cpp": "a5c411c3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E235",
+      "id": "object-trace-coordinate",
+      "path": "cpppj/tests/fixtures/object-trace-coordinate-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 원본 CRT sprintf %2.5f 의 float32 887개 전체 바이트(0·음의 0·반올림 동률·전 지수·NaN/INF·고정 난수)",
+      "consumers": [
+        "webpj/tests/object-trace-main.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-trace-main.js"
+      ],
+      "doc": "docs/webpj-object-trace-main-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawObjectTraceMain.cpp"
+      ],
+      "scope": "10.78 887행 전부",
+      "text": true,
+      "sha256": "8adbba5746ea90cd5f42c1579c110b818eaa6e148ff187952f99a89984980ed9",
+      "bytes": 37878,
+      "lines": 888,
+      "fixtureCommit": "a5c411c3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawObjectTraceMain.cpp": "a5c411c3"
       }
     }
   ]
