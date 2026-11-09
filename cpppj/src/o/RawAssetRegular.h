@@ -50,6 +50,7 @@ struct AssetRegularHooks {
     std::function<void(Sid,std::uint16_t)> state; // 신전의 상태WORD와004ac220 특정TYPE 통지를 같은 실제 부모로 실행한다.
     std::function<bool()> suppressLeaveRequest; // event3의 소비 위치에서 현재00594fa0을 조회한다. 독립 입력은 기존 state를 쓴다.
     std::function<void(float,float)> descend; // event4의 실제 Fort 지역 조회→현재 서버/Descend 명령 큐다. 독립 기존 입력만 아래의 지역/애니메이션 훅을 사용한다.
+    std::function<std::int32_t(Sid)> virtualCount; // PATCH Factory의 실제 현재 가상80이며 독립 입력만 확인된 base getter를 쓴다.
 };
 float RunNativeGeyserRegular(SidPool& pool,std::span<const RiftTypeRecord> types,Sid sid,std::uint32_t event,std::uint32_t count,float payload,const std::function<void(Sid,std::uint32_t)>& display,const RegularHandler& damageable); //485640의실제표시접두/현재비용·프레임/후행Damageable을typed본문과분리해장기owner에제공한다.
 // +5c 가상 표의 실제 주소로 몸체를 선택하고 공통 Damageable의 event 분배까지 복원한다.

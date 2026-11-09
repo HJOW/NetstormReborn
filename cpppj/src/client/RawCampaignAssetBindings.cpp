@@ -47,7 +47,8 @@ struct RawCampaignAssetBindings::Impl {
     o::RawFrameAdvance advance; // 현재 Core.frame/프레임 표의 실제 진행기다.
     std::unique_ptr<o::RawGunProcess> gun; // 원본 초기 총 생성자/상태 기계와 실제 Host 소비자다.
     std::unique_ptr<o::RawAssetPostPop> postPop; // 실제 초기 자산 가상 PostPop 분배 몸체다.
-    std::unique_ptr<o::RawFactoryPostPop> factory; // 같은 Damageable/프레임/목록의 실제 Factory/아웃포스트 몸체다.
+    std::unique_ptr<o::RawFactoryPostPop> localFactory; // 독립 typed만 지역 본체를 소유한다.
+    o::RawFactoryPostPop* factory{}; // 같은 Damageable/프레임/목록의 실제 Factory/아웃포스트 몸체다.
     std::unique_ptr<o::RawSquidLevel> level; // 같은 Pool의 baseLevel과 signed 범위 진단 몸체다.
     std::unique_ptr<o::RawAssetRegular> regular; // 실제 초기 예약의 가상 Handle 몸체다.
     std::array<std::uint8_t,64> typedPacket{}; //독립typed Gun writer의기존지역64BYTE/미작성바이트관측을보존한다.
@@ -69,7 +70,7 @@ struct RawCampaignAssetBindings::Impl {
         gun=std::make_unique<o::RawGunProcess>(core.pool,core.types,globals.gun,GunHooks());
         postPop=std::make_unique<o::RawAssetPostPop>(core.pool,core.types,core.postPop,damageable,assets,PostHooks());
         postPop->BindPlayerRecords(players,&playerState.battleOwner);
-        factory=std::make_unique<o::RawFactoryPostPop>(core.pool,core.hash,core.types,core.frames,core.postPop,damageable,assets,FactoryHooks(),globals.factoryTypes);
+        if (world.Storage()->UsesNativeTransmissionDevices()) factory=&world.Storage()->FactoryPostPop();else { localFactory=std::make_unique<o::RawFactoryPostPop>(core.pool,core.hash,core.types,core.frames,core.postPop,damageable,assets,FactoryHooks(),globals.factoryTypes);factory=localFactory.get(); } // Native는 같은 실제 장기 후처리/레벨 보정 본문을 공유한다.
         auto assertion=effects.levelAssertion;RejectMissing(assertion,"캠페인 Factory 실제 Level 진단 미연결");
         level=std::make_unique<o::RawSquidLevel>(core.pool,core.types,std::move(assertion));
         regular=std::make_unique<o::RawAssetRegular>(core.pool,core.hash,core.types,core.frames,globals.elements,core.frame,advance,random,assets,globals.regular,RegularHooks());
@@ -178,7 +179,7 @@ RawCampaignAssetBindings::RawCampaignAssetBindings(RawSurfaceWorld& world,const 
 // 상위가현재Kernel/반환callback수명을끝낸후활성자산분배만해제한다.
 RawCampaignAssetBindings::~RawCampaignAssetBindings() { if (impl_->active) { impl_->core.postPop.SetAssetPostPop(nullptr);impl_->core.postPop.SetFactoryPostPop(nullptr); } }
 // 실제초기Pop전에한번등록하며동일객체의재활성은허용한다.
-void RawCampaignAssetBindings::ActivatePostPop() { impl_->core.postPop.SetAssetPostPop(impl_->postPop.get());impl_->core.postPop.SetFactoryPostPop(impl_->factory.get());impl_->active=true; }
+void RawCampaignAssetBindings::ActivatePostPop() { impl_->core.postPop.SetAssetPostPop(impl_->postPop.get());impl_->core.postPop.SetFactoryPostPop(impl_->factory);impl_->active=true; }
 // 원본clock과현재Player모드를조회하여다음실제프레임에사용한다.
 void RawCampaignAssetBindings::PrepareFrame(double now) { impl_->Prepare(now); }
 // 실제부모로더의중첩값을사본상태없이기존자산모듈에전달한다.

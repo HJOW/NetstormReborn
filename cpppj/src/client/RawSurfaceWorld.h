@@ -11,6 +11,7 @@
 #include "o/RawGameAuxState.h"
 #include "o/RawDamageablePreDestroy.h" // 같은 장기 피해가능 객체 전처리/검색 상태를 공유한다.
 #include "o/RawBombPreDestroy.h" //Point Blast의고유전처리도같은물리/현재폭발과공통부모를공유한다.
+#include "o/RawFactoryPostPop.h" // 같은 Factory 후처리/레벨 보정을 장기 보유한다.
 #include "o/RawBalloonBody.h" // 벌룬의 실제 그림자·후처리·삭제 본체를 같은 장기 물리에 연결한다.
 #include "o/RawFlyerPreDestroy.h" // Flyer의 현재 WORD 대상 삭제와 Damageable 부모를 공유한다.
 #include "o/RawPlayerWorld.h" // 실제 Player 전처리도 같은 현재 기록과 공통 삭제를 사용한다.
@@ -100,6 +101,12 @@ struct RawSurfaceCarrierBindings { // 선택된 큰 이동/낙하와 전용 owne
     std::function<float(o::Sid,std::uint32_t)> falling; // 기존426ef0의 전체 낙하/해방 본문이다.
     std::function<void(o::Sid,std::uint32_t)> setOwner; // 사제/메타의 전용 가상74는 기존 전체 소유권 분배를 쓴다.
     std::function<std::shared_ptr<void>()> pin; // 선택 호출의 정상/예외 반환까지 실제 전체 Runtime을 보유한다.
+};
+struct RawSurfaceFactoryBindings { // 큰 업그레이드/플레어만 현재 World 수명으로 빌린다.
+    std::function<void(o::Sid,float)> begin; // 기존 전체 예측 그림/건설/감시쌍 본문이다.
+    std::function<float(o::Sid)> finish; // 기존 전체 완료/현재AI 통지 본문이다.
+    std::function<void(o::Sid,std::int32_t,std::uint32_t)> flare; // 실제 현재 플레어 생성기다.
+    std::function<std::shared_ptr<void>()> pin; // 선택 호출 동안 실제 전체 Runtime을 보유한다.
 };
 struct RawSurfaceDamageableBindings { // 현재 큰 가상98 분배만 World 수명으로 빌린다.
     std::function<std::int32_t(o::Sid,std::uint32_t,std::int32_t,std::uint32_t)> hitPoints; // 기존 Session의 실제 가상98 전체 분배기다.
@@ -198,6 +205,7 @@ private:
     RawSurfaceResourceDevices resourceDevices_; //실제Client장치만보관하며짧은Session주소를저장하지않는다.
     RawSurfaceContentDevices contentDevices_; // 같은 Client 전역 alias와 현재 장치를 본체보다 오래 유지한다.
     std::weak_ptr<const RawSurfaceCarrierBindings> carrierRuntime_; // 큰 선택 효과만 약하게 빌려 죽은 Session을 역소유하지 않는다.
+    std::weak_ptr<const RawSurfaceFactoryBindings> factoryRegularRuntime_; // 현재 큰 후단만 약하게 빌리고 프레임/난수는 장기 현재값을 사용한다.
     std::weak_ptr<const RawSurfaceDamageableBindings> damageableRuntime_; // 선택한 가상98만 약하게 빌려 Session 역소유를 피한다.
     std::weak_ptr<const RawSurfaceBombBindings> bombRuntime_; // 큰 주문 후단만 현재 World 수명으로 빌려 오래된 Session을 강하게 보유하지 않는다.
     std::weak_ptr<const RawSurfaceContentBindings> contentRuntime_; // 파생 Session 효과만 빌려 반납 뒤 죽은 콜백을 보유하지 않는다.
@@ -315,6 +323,9 @@ public:
     o::RawCarrierRegular& CarrierRegular(); // 현재 TYPE/권한/내용물과 같은 Host를 연결하는 유일한 Native 본문이다.
     bool HasCarrierRegular(o::Sid sid) const; // 실제42a750의 직접6VT만 분배한다.
     void BindCarrierRuntime(const std::shared_ptr<const RawSurfaceCarrierBindings>& runtime); // 현재 큰 하위의 실제 대여만 연결한다.
+    o::RawFactoryPostPop& FactoryPostPop(); //현재 목록/TYPE/역할과 장기 예약·공통 후처리를 같은 본체로 공유한다.
+    float FactoryRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); //현재 TYPE/가상80/난수/프레임과 같은 공통 HP 부모를 사용한다.
+    void BindFactoryRegularRuntime(const std::shared_ptr<const RawSurfaceFactoryBindings>& runtime); //현재 큰 후단의 대여만 공개한다.
     float DecorationRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 두 실제VT의462420을 현재 HP/권한/같은 공통 부모에 연결한다.
     void BindDamageableRuntime(const std::shared_ptr<const RawSurfaceDamageableBindings>& runtime); // 현재 큰 가상98의 실제 대여만 연결한다.
     void BindBombRuntime(const std::shared_ptr<const RawSurfaceBombBindings>& runtime); // 현재 후단 대여만 연결하고 본문/상태를 초기화하지 않는다.
@@ -438,6 +449,7 @@ private:
     std::unique_ptr<o::SquidFactory> factory_; //공통장부/Pool보다먼저반납하고장기Host가마지막Regular를반납할때까지실제공장을유지한다.
     o::CarrierPostPopState resourceCarrierState_; //현재원문권한/로딩/간헐천TYPE주소만빌리며지역기본값으로복제하지않는다.
     o::AssetPostPopState resourceAssetState_; //장기Geyser경로가소비하는실제목록/표면TYPE주소이며다른자산용사본은사용하지않는다.
+    std::unique_ptr<o::RawFactoryPostPop> resourceFactoryPostPop_; // 같은 장기 상태를 빌리고 Host보다 먼저 반납하지 않는다.
     std::unique_ptr<o::RawCarrierPostPop> resourceCarrier_; //같은공통PostPop을직접호출하는장기실제부모다.
     std::unique_ptr<o::RawAssetPostPop> resourceGeyser_; //Geyser전용본문만공유하며다른자산의가상등록을합성하지않는다.
     std::unique_ptr<o::RawNuggetRegular> resourceNuggetRegular_; //장기기본Host의실제왕복/낙하본문이며현재Sessionoverride를보존한다.
@@ -609,6 +621,7 @@ struct RawWorldRuntimeHooks {
     RawSurfaceBombBindings bombRegular; // 현재 큰 시전/검색/수신만 World 수명으로 제공하며 실제 pin은 같은 World가 연결한다.
     o::ContentFormNotice contentNotice; // 현재 Session의 파생 부모 통지이며 실제 빈 부모는 장기 분배기가 직접 처리한다.
     o::ContentPriestNotice capturedContent; // 기존 전체 포획 안내 본문을 선택된 현재 Runtime으로 전달한다.
+    RawSurfaceFactoryBindings factoryRegular; // 현재 전체 업그레이드/플레어를 실제 World pin과 공개한다.
     o::GumpFormNotice gumpNotice; // 현재 Session이 제공한 실제 UI 가상 통지이며 미연결이면 장기 실제 UI 등록표를 사용한다.
 };
 // 같은 SID 풀·공간 지도에서 표면 객체의 생성·등록·수명·표시를 관리하는 월드이다.

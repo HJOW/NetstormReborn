@@ -308,7 +308,7 @@ std::uint32_t& SquidPostPop::ActivationDepth() { return state_.depth; } //현재
 void SquidPostPop::DispatchPostPop(Sid sid,std::uint32_t flags) {
     const auto pin=runtimePin_;const auto runtimeOwner=pin ? pin():std::shared_ptr<void>{}; //현재실제파생포인터/AI/선택callback을전체하위호출끝까지유지한다.
     const auto table=Vtable(pool_.Slot(sid)); //실제현재가상표를한번선택하고현재파생처리기가있으면종전몸체를우선한다.
-    if (defaultDevices_.aiNotice && !HandlesDerived(sid) && (table==0x5040c0U || table==0x504198U || table==0x50a748U || table==0x50e888U || table==0x509470U || RawAssetPostPop::HasDedicatedVtable(pool_.Edition(),table) || std::ranges::find(kPatchCarrierVtables,table)!=kPatchCarrierVtables.end() || std::ranges::find(kPatchDamageableVtables,table)!=kPatchDamageableVtables.end())) { // 벌룬의 재귀 그림자도 전용 장기 본문으로 분배한다.
+    if (defaultDevices_.aiNotice && !HandlesDerived(sid) && (table==0x509148U || table==0x509210U || table==0x5040c0U || table==0x504198U || table==0x50a748U || table==0x50e888U || table==0x509470U || RawAssetPostPop::HasDedicatedVtable(pool_.Edition(),table) || std::ranges::find(kPatchCarrierVtables,table)!=kPatchCarrierVtables.end() || std::ranges::find(kPatchDamageableVtables,table)!=kPatchDamageableVtables.end())) { // 벌룬의 재귀 그림자도 전용 장기 본문으로 분배한다.
         const auto postPop=defaultResourcePostPop_;if (!postPop) throw std::logic_error("Native전용자산후처리의실제장기모듈미설치");postPop(sid,flags);return; //미복원전용몸체는장기분배선택위치에서실패하며공통성공으로바꾸지않는다.
     }
     // 벌룬의 재귀 그림자 Pop은 내부 Damageable을 통해 각 공통 깊이를 끝낸다.

@@ -1640,3 +1640,34 @@ TEST_CASE(ClientDecorationOwner_SelectedHitPinsOwnerAndFunction) { //최대HP �
 TEST_CASE(ClientDecorationOwner_UsesCurrentSharedAltarTypeForMaximum) { //장식이 현재dais genus인 명시 입력도 같은 최대HP 원문/제단 역할을 읽는다.
     RegionScene s;const auto parent=s.Asset(0x50a820U);auto raw=s.storage->pool.AllocatedBytes(parent);s.storage->types[raw[10]].flags2|=0x400000U;raw[40]|=1;s.storage->types[164].maxHitPoints=120;s.storage->types[155].maxHitPoints=90;auto& role=s.gameplay->GameAux()->AltarType();role=164;CHECK(s.storage->Reward().MaxHitPoints(parent)==120);role=155;CHECK(s.storage->Reward().MaxHitPoints(parent)==90);RegionPut(raw,26,0);CHECK(s.storage->DecorationRegular(parent,0,1,0.25F)==0.25F && !s.storage->Borrowed());
 }
+
+namespace { //실제 Client 난수와 선택 금지 효과를 분리한 초기 연결만 준비한다.
+void BindFactoryOwnerDevices(RegionScene& scene) { //장기 실제 난수만 빌리고 선택되지 않은 효과는 명시 거부한다.
+    RawSurfaceResourceDevices devices;devices.random=[owner=scene.random]()->GameRandom& { return owner->Game(); };devices.carrierCheck=RegionForbidden<void,Sid>();devices.damageableRegular=RegionForbidden<float,Sid,std::uint32_t,std::uint32_t,float>();devices.startConstruction=RegionForbidden<void,Sid>();devices.destroy=RegionForbidden<bool,Sid,std::uint32_t>();devices.geyserRegistration=RegionForbidden<void,Sid,std::uint32_t>();scene.storage->BindResourceDevices(std::move(devices));
+}
+}
+TEST_CASE(ClientFactoryOwner_NoWorldHostUsesSameActualRandomAndFrame) { //World 없는 실제 Host/Frame.Set이 같은 난수를 한 번 소비한다.
+    RegionScene s;BindFactoryOwnerDevices(s);const auto parent=s.Asset(0x509148U);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]=0;raw[40]=8;RegionPut(raw,14,std::bit_cast<std::uint32_t>(100.0F));RegionPut(raw,18,std::bit_cast<std::uint32_t>(100.0F));RegionPut(raw,36,0);s.storage->Frame().StoreLevel(parent);s.Index(parent);s.gameplay->Authority()->boss=false;s.random->Game().SetState(1);
+    const auto run=s.storage->frames[raw[10]].Run('A');CHECK(run.count>0);if (run.count<=0) return;GameRandom expected(1);const auto frame=std::uint32_t(run.first)+expected.Next(std::uint32_t(run.count));auto* task=s.storage->Processes().Host().AddRegular(parent,2,0.25F);CHECK(task);if (!task) return;task->RunFrame();CHECK(task->Count()==1 && task->Payload()==0.25F && RegionRead(raw,36)==frame && s.random->Game().State()==expected.State() && !s.storage->Borrowed());
+}
+TEST_CASE(ClientFactoryOwner_CurrentZeroRangeKeepsOriginalSeedWrite) { //현재 프레임 구간0은 frame/기본 호출 전에 seed 쓰기만 남기고 실패한다.
+    RegionScene s;BindFactoryOwnerDevices(s);const auto parent=s.Asset(0x509148U);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]&=31U;s.storage->frames[raw[10]]=RiftTypeFrames({});s.random->Game().SetState(0);GameRandom expected(0);static_cast<void>(expected.Next(1));const auto frame=RegionRead(raw,36);bool failed{};
+    try { s.storage->FactoryRegular(parent,2,0,0.25F); }catch (const std::domain_error&) { failed=true; }CHECK(failed && s.random->Game().State()==expected.State() && RegionRead(raw,36)==frame);
+}
+TEST_CASE(ClientFactoryOwner_SelectedFinishPinsActualOwnerAndFunction) { //선택된 전체 완료 호출만 pin하고 본문의 반환을 그대로 사용한다.
+    RegionScene s;const auto parent=s.Asset(0x509148U);auto owner=std::make_shared<int>(1);std::weak_ptr<int> weak=owner;auto binding=std::make_shared<RawSurfaceFactoryBindings>();std::uint32_t calls{},pins{};
+    binding->pin=[&] { ++pins;return owner; };binding->finish=[&](auto target) { owner.reset();binding->finish={};binding.reset();CHECK(target==parent && !weak.expired());++calls;return 0.125F; };s.storage->BindFactoryRegularRuntime(binding);
+    CHECK(s.storage->FactoryRegular(parent,3,1,9.0F)==0.125F && calls==1 && pins==1 && weak.expired());CHECK(s.storage->FactoryRegular(parent,4,1,9.0F)==0.0F);bool failed{};try { s.storage->FactoryRegular(parent,3,1,9.0F); }catch (const std::logic_error&) { failed=true; }CHECK(failed && calls==1);
+}
+TEST_CASE(ClientFactoryOwner_CurrentLevelSelectsOnlyRealFlare) { //현재 레벨2는 큰 장치를 요구하지 않고3에서만 원문2/1 플레어를 선택한다.
+    RegionScene s;const auto parent=s.Asset(0x509148U);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]=static_cast<std::uint8_t>((raw[11]&31U)|(2U<<5));CHECK(s.storage->FactoryRegular(parent,5,0,0.25F)==0.25F);auto binding=std::make_shared<RawSurfaceFactoryBindings>();std::uint32_t calls{};binding->flare=[&](auto target,auto count,auto event) { CHECK(target==parent && count==2 && event==1);++calls; };s.storage->BindFactoryRegularRuntime(binding);raw[11]=static_cast<std::uint8_t>((raw[11]&31U)|(3U<<5));CHECK(s.storage->FactoryRegular(parent,5,0,0.25F)==0.25F && calls==1 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientFactoryOwner_PostPopKeepsSameBodyAfterWorldReturn) { //같은 장기 가상20을 World 반납 뒤에도 실제 공통 깊이와 사용한다.
+    RegionScene s(true);BindFactoryOwnerDevices(s);auto* const body=&s.storage->FactoryPostPop();{ RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->FactoryPostPop()==body); }
+    const auto parent=s.Asset(0x509148U);s.gameplay->Authority()->boss=false;auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]&=31U;s.storage->GameAux()->OutpostType()=raw[10];CHECK(s.storage->PopAsset(parent,128,128,0x10U)==RawPopResult::Registered);CHECK(&s.storage->FactoryPostPop()==body && s.storage->postPopState.depth==0 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientFactoryOwner_PostPopUsesCurrentTimerRoleAndActualHost) { //일반 워크샾의 최초 예약은 현재 역할 DWORD와 같은 Host에서 조회한다.
+    RegionScene s(true);BindFactoryOwnerDevices(s);const auto parent=s.Asset(0x509148U);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]&=31U;raw[40]&=0xf6U; // 일반 최초 Pop의 실제 가상30이 flags1을 선택하도록 추상/그림자만 끈다.
+    s.gameplay->Authority()->boss=false;s.storage->GameAux()->FirstTimerFactoryType()=raw[10];s.storage->GameAux()->SecondTimerFactoryType()=255;s.storage->GameAux()->OutpostType()=raw[10];CHECK(s.storage->PopAsset(parent,128,128,0x10U)==RawPopResult::Registered);
+    auto& host=s.storage->Processes().Host();CHECK(host.FindEvent(parent,2)!=nullptr && host.FindEvent(parent,5)!=nullptr && host.FindEvent(parent,1)==nullptr && s.storage->postPopState.depth==0 && !s.storage->Borrowed());
+}

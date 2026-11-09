@@ -213,6 +213,7 @@ o::RawNuggetRegular& RawSurfaceStorage::ResourceNuggetRegular() { //같은실제
 }
 void RawSurfaceStorage::DefaultResourcePostPop(o::Sid sid,std::uint32_t flags) { //보호PE의실제현재+20만선택하고전용미복원을base성공으로넘기지않는다.
     const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //현재물리VT4BYTE만해석한다.
+    if (table==0x509148U || table==0x509210U) { FactoryPostPop().PostPop(sid,flags);return; } // 장기 Factory/아웃포스트 실제 가상20이다.
     if (table==0x503d80U || table==0x503e50U || table==0x50e568U) { ResourceCarrierPostPop().PostPop(sid,flags);return; }
     if (table==0x5040c0U || table==0x504198U) { BalloonBody().PostPop(sid,flags);return; } // 같은 실제 그림자 생성·표시와 Carrier/Damageable 부모다.
     if (table==0x50a820U || table==0x50a8e8U) { ResourceCarrierPostPop().DamageablePostPop(sid,flags);return; }
@@ -257,6 +258,7 @@ float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std
     if (table==0x50cc08U) return o::RunSpriteRegular(pool,types,Frame(),sid,payload); //원문4794b0은event/count를읽지않고현재TYPE+114를사용한다.
     if (table==0x502cf0U || table==0x502db0U) return o::HandleHealBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //힐/미티어의 필수41f9d0을 같은 장기 본문에서 처리한다.
     if (table==0x502c38U) return o::HandleGravityBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //그라비테이션의 필수41f760도 같은 실제 풀/프레임/Host를 사용한다.
+    if (table==0x509148U || table==0x509210U) return FactoryRegular(sid,event,count,payload); // 실제4549c0의 두 직접 가상 표다.
     if (table==0x50a820U || table==0x50a8e8U) return DecorationRegular(sid,event,count,payload); // 실제462420의 장식/가장자리 팜 수명 감소다.
     if (HasCarrierRegular(sid)) return CarrierRegular().Handle(sid,event,count,payload); // 공통6VT는 World/NoWorld에서 같은 실제42a750을 쓴다.
     if (HasBombRegular(sid)) return BombRegular().Handle(sid,event,count,payload); //현재 원문41e6a0의 연결16VT만 같은 장기 본문으로 보낸다.

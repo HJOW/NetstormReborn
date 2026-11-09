@@ -3828,3 +3828,8 @@ target_sources(netstorm_pop_context_tests PRIVATE ClientTimeSourceTests.cpp)
 # 장식462420의 독립 원본630입력과 현재 장기 HP 연결이다.
 target_sources(netstorm_tests PRIVATE DecorationRegularTests.cpp)
 set_source_files_properties(DecorationRegularTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_DECORATION_REGULAR_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/decoration-regular-x86.tsv\"")
+
+# 현재 Factory 분배/장기 후처리와 기존 전체 업그레이드 본문을 비MP로 선택 검증한다.
+target_sources(netstorm_tests PRIVATE FactoryRegularCurrentTests.cpp)
+target_sources(netstorm_construction_owner_tests PRIVATE FactoryRegularCurrentTests.cpp FactoryUpgradeTests.cpp)
+set_source_files_properties(FactoryRegularCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FACTORY_REGULAR_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factory-regular-current-x86.tsv\"")

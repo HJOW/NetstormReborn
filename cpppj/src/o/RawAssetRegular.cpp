@@ -1,5 +1,6 @@
 // 실제 거주 구역/간헐천/신전의 가상 Handle와 공통 Damageable 사건을 분기별로 복원한다.
 #include "o/RawAssetRegular.h"
+#include "o/RawFactoryRegular.h" // PATCH의 같은 현재 Factory 본문을 Native와 공유한다.
 #include "o/RawPathAnimation.h"
 #include <algorithm>
 #include <bit>
@@ -99,6 +100,16 @@ float RawAssetRegular::Handle(Sid sid,std::uint32_t event,std::uint32_t count,fl
 }
 // PATCH004549c0/CD0047ac20: 현재 상태의 첫프레임+Next(현재count)를 지정한 뒤 공통Handle에 넘긴다.
 float RawAssetRegular::Factory(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
+    if (pool_.Edition()==OriginalEdition::Patch1078) {
+        FactoryRegularHooks current;
+        current.level=[this](auto parent) { const auto read=hooks_.virtualCount;return read ? read(parent):std::int32_t(pool_.Slot(parent)[11]>>5); };
+        current.firstFrame=[this](auto parent,auto level) { if (level<0 || level>=16) throw std::out_of_range("Factory 현재 firstFrame 레벨 범위");return frames_[pool_.Slot(parent)[10]].Run(static_cast<std::uint8_t>('A'+level)).first; };
+        current.frameCount=[this](auto parent,auto level) { if (level<0 || level>=16) throw std::out_of_range("Factory 현재 frameCount 레벨 범위");return frames_[pool_.Slot(parent)[10]].Run(static_cast<std::uint8_t>('A'+level)).count; };
+        current.random=[this](auto limit) { if (!limit) { static_cast<void>(random_.Next(1));throw std::domain_error("Factory 원문 난수0범위 나눗셈"); }return random_.Next(limit); };
+        current.frame=[this](auto parent,auto value,auto flags) { setter_.Set(parent,value,flags); };current.advance=[this](auto parent,auto delta,auto flags) { advance_.Advance(parent,delta,flags); };
+        current.begin=hooks_.beginFactoryUpgrade;current.finish=hooks_.finishFactoryUpgrade;current.flare=hooks_.factoryFlare;current.damageable=[this](auto parent,auto code,auto times,auto value) { return DamageableHandle(parent,code,times,value); };
+        return RunFactoryRegular(pool_,sid,event,count,payload,current);
+    }
     if (event==2) {
         const auto raw=pool_.Slot(sid);const auto first=frames_[raw[10]].Run(static_cast<std::uint8_t>('A'+(raw[11]>>5))).first;
         const auto current=pool_.Slot(sid);const auto size=frames_[current[10]].Run(static_cast<std::uint8_t>('A'+(current[11]>>5))).count;
