@@ -14268,9 +14268,38 @@
       "bytes": 682534,
       "lines": 8491,
       "fixtureCommit": "5b10ce82",
-      "webCommit": "worktree",
+      "webCommit": "503a8d38",
       "cpppjBasis": {
         "cpppj/src/o/RawIslandQueries.cpp": "5b10ce82"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E221",
+      "id": "fortfinishowner",
+      "path": "cpppj/tests/fixtures/fortfinishowner-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Fort 소유자 후처리 모드 F(Finish 전체)·B(AddRandom 배치)·S(시각 seed). 16칸 입력(소유자·모드 3종·지역·목록 프로필·벽시계 비트·사각형 프로필·성공 시도/주기·local seed·타입·수량·force·변이)에서 호출 순서(R·T·P·D)·반환·local PRNG 상태·거주 구역 목록·현재 거주 구역 TYPE(10.78 719행·CD 719행)",
+      "consumers": [
+        "webpj/tests/fort-finish-owner.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-finish-owner.js"
+      ],
+      "doc": "docs/webpj-fort-finish-owner-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortFinishOwner.cpp"
+      ],
+      "scope": "10.78 719입력 전부(originalCD 719행은 범위 밖)",
+      "text": true,
+      "sha256": "0bcdfd8325d57267bb47c4e7927577285aabe4b90355b619b00e545a70256da5",
+      "bytes": 7314586,
+      "lines": 1439,
+      "fixtureCommit": "ada85427",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortFinishOwner.cpp": "a4b63270"
       }
     }
   ]
