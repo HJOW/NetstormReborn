@@ -1262,10 +1262,10 @@ TEST_CASE(ClientBombOwner_GetterKeepsCurrentStatePoolAndFactory) { // getter는 
 TEST_CASE(ClientBombOwner_CastTimesKeepSameMutableStorage) { // 같은 TYPE+1b8 표를 다시 조회/본문 구성/대여할 때 현재 값을 덮지 않는다.
     BombOwnerScene f;auto& s=f.scene;auto values=s.storage->BombCastTimes();CHECK(values.size()==188 && values[0]==0 && values[69]==0);values[113]=-123;auto* body=&s.storage->BombRegular();CHECK(s.storage->BombCastTimes().data()==values.data() && values[113]==-123 && body==&s.storage->BombRegular());
 }
-TEST_CASE(ClientBombOwner_OnlyActualEightVtablesAreRegistered) { // 현재8VT와 별도 복원8VT를 실제 생성자 기준으로 구별한다.
+TEST_CASE(ClientBombOwner_OnlyActualTenVtablesAreRegistered) { // 현재10VT와 별도 복원6VT를 실제 생성자 기준으로 구별한다.
     BombOwnerScene f;auto& s=f.scene;
-    for (const auto table:{0x5030c0U,0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}) { const auto sid=f.Bomb(table);CHECK(s.storage->HasBombRegular(sid)); } // 연결된 실제 클래스만 조회한다.
-    for (const auto table:{0x5026a0U,0x502778U,0x502840U,0x502908U,0x5029d0U,0x502aa8U,0x502b70U,0x503188U}) { const auto sid=f.Bomb(table);CHECK(!s.storage->HasBombRegular(sid)); } // 같은 원문+5c라도 아직 연결하지 않은 후단은 완료로 세지 않는다.
+    for (const auto table:{0x5029d0U,0x502aa8U,0x5030c0U,0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}) { const auto sid=f.Bomb(table);CHECK(s.storage->HasBombRegular(sid)); } // 연결된 실제 클래스만 조회한다.
+    for (const auto table:{0x5026a0U,0x502778U,0x502840U,0x502908U,0x502b70U,0x503188U}) { const auto sid=f.Bomb(table);CHECK(!s.storage->HasBombRegular(sid)); } // 같은 원문+5c라도 아직 연결하지 않은 후단은 완료로 세지 않는다.
 }
 TEST_CASE(ClientBombOwner_CountZeroUsesActualFirstFrameAndFullPayload) { // carrier0의 첫 호출은 실제 프레임을 쓰고 현재 Boss0이면 원래 NaN payload를 보존한다.
     BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();s.gameplay->Authority()->boss=false;const auto type=s.storage->pool.Slot(sid)[10];const auto first=s.storage->frames[type].Run('A').first;const auto payload=std::bit_cast<float>(0x7fc12345U);
@@ -1427,4 +1427,18 @@ TEST_CASE(ClientBombHardenerOwner_MissingFlareKeepsActualFrameAndRandom) { //선
 TEST_CASE(ClientBombHardenerOwner_AdditionalDrawUsesActualCurrentTypeFrame) { //정기/수신 등록과 같은 실제8VT를 그리기 경계도 허용한다.
     BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x5030c0U);auto raw=s.storage->pool.AllocatedBytes(sid);RegionPut(raw,36,0xffffffffU);std::uint32_t calls{};
     DrawDevastationAdditional(s.storage->pool,sid,123,-45,[&](auto type,auto frame,auto x,auto y) { CHECK(type==119 && frame==-1 && x==123 && y==-45);++calls; });CHECK(calls==1);
+}
+TEST_CASE(ClientBombStrikeOwner_TwoNativeHostsUseCurrentLongBody) { //두 실제 주문의 NoWorld Host가 같은 현재 풀/프레임/권한의 공통 정기를 빌린다.
+    for (const auto table:{0x5029d0U,0x502aa8U}) { //다른 직접 피해 두 주문의 미연결 장치/효과를 호출하지 않는다.
+        BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(table);s.gameplay->Authority()->boss=false;auto raw=s.storage->pool.AllocatedBytes(sid);raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]&=static_cast<std::uint8_t>(~1U);s.Index(sid);
+        auto* body=&s.storage->BombRegular();auto* task=s.storage->Processes().Host().AddRegular(sid,0x1234,0.125F);CHECK(task);if (!task) continue;task->RunFrame();CHECK(s.storage->HasBombRegular(sid) && task->Count()==1 && task->Payload()==0.125F && body==&s.storage->BombRegular() && !s.storage->Borrowed());
+    }
+}
+TEST_CASE(ClientBombStrikeOwner_TwoAdditionalDrawsUseCurrentTypeFrame) { //같은 실제 추가 그림41e3d0의 TYPE/프레임과 좌표 인자를 그대로 전달한다.
+    BombOwnerScene f;auto& s=f.scene;std::uint32_t calls{};
+    for (const auto table:{0x5029d0U,0x502aa8U}) { //두 현재 가상 표를 각각 실제 생성자에서 만든다.
+        const auto sid=f.Bomb(table);const auto raw=s.storage->pool.Slot(sid);const auto expected=std::bit_cast<std::int32_t>(RegionRead(raw,36));
+        DrawDevastationAdditional(s.storage->pool,sid,-12,34,[&](auto type,auto frame,auto x,auto y) { CHECK(type==raw[10] && frame==expected && x==-12 && y==34);++calls; });
+    }
+    CHECK(calls==2);
 }
