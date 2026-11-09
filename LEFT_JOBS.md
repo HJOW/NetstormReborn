@@ -1,26 +1,28 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품 1219 / 11.01 · 인계 갱신 2026-11-09. 전체 개발 목표는 진행 중이다.**
+**2026-11-09 문서 정리 1220 · 확정 제품 1219 / 11.01 · 전체 개발 목표 진행 중**
 
-**현재:** 메뉴·미션 플레이가 가능하다. 최근에는 Tutorial4 생산·건설 요청 → 실제 객체 생성 → 대기와 Edit 왕복을 확인했다. 전체 원본 동일성은 미확정이다.
+cpppj는 메뉴와 미션 플레이가 가능하다. 최근 확인은 Tutorial4의 생산·건설 요청 → 실제 객체 생성 → 대기와 Edit 왕복까지다. 전체 시나리오·화면·음향의 원본 동일성은 미확정이다.
 
-**다음:** M6-n의 장기 Regular 미연결48VT/23함수와 내장 Form 삭제3종을 실제 NoWorld caller·같은 owner에 연결한다. 다리와 두 프레임 Regular는 연결했으며 큰 비영 AI·배치 호출자/Fort 상위 Finish도 남는다. 이어서 M6 잔여 → M7 → M8 → 한국어 → 시나리오 편집 → 알려진 버그 수정 순서로 진행한다.
+**현재 위치:** AGENTS 1~9차 중 **1·2·4·5·7차는 정해진 구현 범위 마감**, **3·6·8·9차가 남아 있다.** 단계 마감은 전체 플레이·다른 물리 환경까지 검증했다는 뜻이 아니다.
 
-| 남은 영역 | 상위 계획 | 현재 상태와 남은 양 |
+| 우선순위 | 남은 영역 | 남은 양과 현재 상태 |
 | --- | --- | --- |
-| LAN·Outpost 마감 | **3개 — M6·M7·M8** | M6 연결·수명/지연큐/JoinTestBattle·전수 감사, M7 독립 5건, M8 최종 감사·배포가 남는다. |
-| 한국어 | **5개 — K1~K5** | 번역 502 등 일부 구현. 후보 41 코드·배포·검사파일/44자산 선별 병합, 입력/IME·본문·그림·검수가 남는다. |
-| 시나리오 편집 | **4개 — S1~S4** | 전용 편집 UI 미구현. 모델/기본 english·부재 Test Battle 수정/화면 편집/저장·진입 확인이 남는다. |
-| 알려진 버그 | **4개 — B1~B4** | **34건 등록만 완료**. 원인·현행 적용 여부 조사, 비MP/MP 구현 구분, 건별 마감 판정이 남는다. |
-| **합계** | **16개 상위 계획** | 각 계획은 여러 구현·검증·커밋을 포함한다. 34개 버그는 B1~B4의 대상이며 별도 34계획으로 더하지 않는다. |
+| **1** | **LAN·Outpost — M6·M7·M8** | **3개 상위 계획.** M6는 장기 연결·수명/전수 감사·지연큐·JoinTestBattle의 4갈래, M7은 독립 5건, M8은 최종 감사·배포다. |
+| **2** | **한국어 — K1~K5** | **5개 상위 계획.** 번역 502 등 일부 구현. 후보 41 코드·배포·검사파일/44자산 병합, 입력/IME·본문·그림·검수가 남는다. |
+| **3** | **시나리오 편집 — S1~S4** | **4개 상위 계획.** 전용 UI 미구현. 모델 병합·기본 english/부재 Test Battle 수정·화면 편집·저장/진입 확인이 남는다. |
+| **4** | **알려진 버그 — B1~B4** | **4개 상위 계획.** NB01~NB34 **34건 등록만 완료**. 원인·현행 적용 여부 조사와 수정·건별 마감은 미착수다. |
+| **합계** | **16개 상위 계획** | 각 계획에 여러 구현·검증·커밋이 포함된다. 버그 34건은 B1~B4의 대상이므로 합계에 별도로 더하지 않는다. |
 
-작업 크기가 다르고 M6의 큰 하위 연결은 전수 감사가 남아 있어, 이 수를 전체 완료율이나 소요일로 환산하지 않는다. 60/120프레임·CD 10.72 복원은 이 16개 뒤의 별도 후순위다.
+**바로 다음 제품 작업:** M6-n의 **Depend Form 장기 연결**부터 진행한다. 이후 Gump·Content와 Regular 잔여를 기존 실제 본문·현재 owner·NoWorld 호출자에 연결한다. Regular는 **39/87VT 연결, 48VT/고유 함수 23개 잔여**, Storage 기본 Form 삭제는 **1/4종 연결, 3종 잔여**다. 큰 AI·다른 배치/Fort 상위 Finish·전수 호출자 감사는 이 수량 밖에 남아 있다.
 
-읽는 순서: **[단계별 현황](#1-단계별-현황과-진행-순서) → [바로 이어갈 M6](#2-바로-이어갈-m6) → [검증 제외](#5-검증-제외와-미해결-한계)**. 과거 완료 로그·해소된 실패·만료된 다음 작업은 [1218까지 보관본](LEFT_JOBS.old.md#archive-20261109-through-1218)에 있다. **현행 작업 순서는 이 문서가 기준**이며, DN/WB는 [dotnetpj 인계](LEFT_JOBS.dotnetpj.md)·[webpj 인계](LEFT_JOBS.webpj.md)가 기준이다.
+이 수치는 일부 분배의 연결량이며 **전체 완료율·예상 소요일로 환산하지 않는다.** 60/120프레임·CD 10.72 복원은 별도 후순위다.
+
+읽는 순서: **[단계별 현황](#1-단계별-현황과-진행-순서) → [바로 이어갈 M6](#2-바로-이어갈-m6) → [검증 제외](#5-검증-제외와-미해결-한계)**. 현행 작업 순서는 이 문서가 기준이다. 만료된 다음 작업·완료 상세·옛 정리 이력은 [1219까지 보관본](LEFT_JOBS.old.md#archive-20261109-through-1219), DN/WB는 [dotnetpj 인계](LEFT_JOBS.dotnetpj.md)·[webpj 인계](LEFT_JOBS.webpj.md)를 따른다.
 
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
-AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품 1219, DN은 0.261, WB는 WB04-E198 인계 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니다.
+AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품 1219, DN은 0.261, WB는 열람 당시 병행 작업 인계의 WB04-E199 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
@@ -32,12 +34,12 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj�
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품·소스 | **1219 / 11.01**. [충돌 anim·썬 디스크 장기 연결](docs/exe/cpp-frame-regular-owner-20261109.md)·[보고서](cpppj/frame-regular-owner-20261109.json). 두 Regular/Native Session과 현재 TYPE+110/+114를 공유하고 원래 IDIV/감김을 복원했다. 직전 제품은 **1218**(`a927575d / 20261109-98 CP`)이다. |
-| 확정 빌드·집중 검사 | 1219 Release/x64 제품2·집중5대상 종료0, 경고·오류0, 소스/새자료15개 고정. **비MP350/350 통과**(기존328+신규11+기존 충돌/디스크/TYPE11). 새 실제 PATCH 정수 관측70입력(정상47/IDIV오류23), 기존 TYPE golden22행씩을 대조했다. **Pre/Post·통지83/83**, 장기 Regular **39/87VT**, 잔여 **48VT/23함수**다. 큰 하위/전체 NoWorld 완료 수는 아니다. |
-| 확정 실제 실행 | 1219 Tutorial4 생산·건설 요청→TYPE75/owner1 생성·요청 증가→600프레임 대기, 같은 EXE/Client800×600 Edit TEST01→Main 왕복2회 모두 종료0. 전체 충돌/발사 플레이·공중3종·포획/희생·특정 공격·승리·건물 완성/Test Battle·큰 AI의 실제 플레이 검증은 아니다. 시작한 빌드·집중·GUI 핸들은 모두 종료했다. |
-| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 1219 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
-| M6 감사 기준 | checking 잔여 목록 0, 태그 25/활성 88/무태그 63F, 지연큐 OFF. checking 0은 MP 구현 완료나 MP 검사 통과를 뜻하지 않는다. |
-| 디컴파일·보호 | 마지막 정밀 디컴파일: **Client 양판본 2026-11-03 / HJOW-Athlon(192.168.0.94), R 전용 2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md). 1219에서 원문 변경/새 디컴파일 0, 보호 원본/CD/fixture·AGENTS 2,800파일 불변을 확인했다. |
+| 확정 제품·소스 | **1219 / 11.01**, 커밋 `f2f9e837 / 20261109-99 CP`. [구현 문서](docs/exe/cpp-frame-regular-owner-20261109.md)·[확정 보고서](cpppj/frame-regular-owner-20261109.json). **1220은 문서 정리이며 제품을 갱신하지 않았다.** |
+| 최근 빌드·집중 검사 | 1219 Release/x64 제품 2개·집중 검사 대상 5개 빌드 종료 0, 경고·오류 0. **비MP 350/350 통과**. 분배/원문 대조·부품 검사와 실제 플레이 검증을 구별한다. |
+| 최근 실제 실행 | 1219 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기, 같은 EXE/Client800×600 Edit TEST01↔Main 2회 모두 종료 0. 전체 충돌/발사·건물 완성/Test Battle·큰 AI의 실제 플레이 검증은 아니다. |
+| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품 1219 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
+| M6 감사 기준 | checking 잔여 목록 0, 태그 25/활성 88/무태그 63F, 지연큐 OFF. checking 0과 자산 Pre/Post·통지 83/83을 MP/전체 NoWorld 완료로 세지 않는다. |
+| 마지막 디컴파일 | **Client 양판본 2026-11-03 / HJOW-Athlon(192.168.0.94), R 전용 2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md). 이번 정리에서는 디컴파일·게임·빌드/검사를 새로 실행하지 않는다. |
 
 <!-- 과거 1207 진행 중 인계의 직접 링크를 보존한다. 현재 제품은 위 0.1절이 기준이다. -->
 <a id="02-진행-중인-1207--완료-처리-금지"></a>
@@ -79,6 +81,8 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1219 구현 문서](docs/exe/cpp-frame-regular-owner-20261109.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
+**다음 한 단위 — Depend Form:** `RawSurfaceStorage::ProcessFormDispatch()`는 현재 Process만 등록하고, `RawSurfaceWorld`가 `DependFormHost`를 따로 소유한다. 같은 Storage의 실제 Pool·현재 공장/Depend TYPE·감시 쌍·알림·가상 삭제를 공유하도록 연결한다. 현재 World callback의 실제 Runtime pin·함수 사본·해제 순서와 혼합 Form 재진입을 보존한다. **읽기 전용 조사만 했고 아직 구현하지 않았다.** Gump·Content의 미연결을 성공 fallback으로 숨기지 않는다.
+
 ### 2.2 다음 구현의 출발점과 유지할 계약
 
 | 범위 | 현재 연결 / 유지 조건 |
@@ -91,14 +95,17 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 | R/주소 | 1062~1093의 실제 새 R/TCP·UDP/등록표/시계/Config/주소/기록 owner를 유지한다. 제공 R10.71의 3BYTE 존과 Client10.78의 47BYTE 존은 1093 compact 호환 범위다. 원본 R 복사/실행으로 대체하지 않는다. |
 | 외부 기능 | 요청 DWORD `0054dbac`는 reset0/1ah·1bh read 근거만 있다. 새 Config/CLI/writer를 발명하지 않는다. 폐기 CD7f/80·온라인 유효성검증·PIRATE quota는 복구하지 않는다. IPX/SPX 명시 미지원, 1163 hostname OS조회/첫 LAN IPv4·숫자주소 TCP/UDP 유지. 원문에 없는 원격 관리 포트를 추가하지 않는다. |
 
-### 2.3 장기 Regular·Form 잔여 집계1219 — 큰 하위 완료와 구분
+<a id="23-장기-regularform-잔여-집계1219--큰-하위-완료와-구분"></a>
 
-| 이번에 수량을 확정한 범위 | 연결 | 남은 범위 |
+### 2.3 수량을 확정한 연결 범위 — 제품 1219 기준
+
+| 범위 | 연결 완료 | 남은 범위 |
 | --- | --- | --- |
-| 실제 자산83+내장 Form4의 장기 Regular(+5c) 분배 | **39/87VT**(base16·Damageable14·고유9) | **48VT/23고유함수**(자산47+Content1). 같은 함수 공유를 중복 작업으로 세지 않는다. |
-| Storage 기본 내장 Form 삭제 분배 | Process1종 | **Depend·Gump·Content3종**. 실제 NoWorld caller/현재 owner·하위 장치/수명 감사가 필요하다. |
+| 알려진 자산 83VT의 Pre/Post·통지 분배 | **각 83/83VT** | 해당 분배의 알려진 부모/통지 잔여 0. 큰 하위·모든 caller/owner의 완료를 뜻하지 않는다. |
+| 자산 83+내장 Form 4의 장기 Regular(+5c) | **39/87VT**(base16·Damageable14·고유9) | **48VT / 고유 함수 23개**(자산47+Content1). 같은 함수를 공유하는 VT를 별도 함수 작업으로 중복 계산하지 않는다. |
+| Storage 기본 내장 Form 삭제 분배 | **1/4종 — Process** | **3종 — Depend·Gump·Content**. 각 실제 NoWorld caller·현재 owner·장치/수명 연결이 필요하다. |
 
-[최초26함수 조사](docs/exe/cpp-no-world-regular-audit-20261109.md)·[다리 마감](docs/exe/cpp-bridge-regular-owner-20261109.md)·[현재23함수/프레임 마감](docs/exe/cpp-frame-regular-owner-20261109.md)·[87VT 전체 JSON](cpppj/no-world-regular-audit-20261109.json). **최초1217은 정적 조사다. 1218 다리와1219 두 프레임을 더해3VT/3함수를 연결했고 최신 비MP350/350·제한된 GUI를 확인했다.** 분배 존재를 큰 하위/실행 검증 완료로 합산하지 않는다. 프로세스 전체 클래스/PID/VT·큰 AI·배치/Fort·전수 caller 감사와 l/m은 이87개 조사 밖에 남는다. 다음은 나머지23함수와 Form3종·각 실제 caller/owner를 기존 본문에 연결한다.
+정확한 현재 잔여 행은 [1219 보고서](cpppj/frame-regular-owner-20261109.json)의 `staticAudit.remainingRows`를 따른다. [1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md)·[당시 87VT JSON](cpppj/no-world-regular-audit-20261109.json)은 **연결 36/87VT·잔여 51VT/26함수인 당시 자료**다. 이후 다리와 두 프레임의 3VT/3함수를 연결했다. 프로세스 전체 클래스/PID/VT·큰 AI·배치/Fort 상위 Finish·전수 호출자 감사와 M6-l/m은 이 87개 집계 밖에 남는다.
 
 ## 3. M7 독립 5건과 M8 마감
 
@@ -187,29 +194,30 @@ AGENTS 최근 변경 `b5197d48`의 **34건 전체**는 [NB01~NB34 목록](docs/e
 cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --parallel 4 -- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true
 ```
 
-## 7. 근거와 보관
+<a id="7-근거와-보관"></a>
+
+## 7. 근거·보관·AGENTS 최근 변경 반영
 
 | 확인할 범위 | 기준 문서 |
 | --- | --- |
-| 최근 정적 잔여 조사 | [최초1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md)·[당시87VT JSON](cpppj/no-world-regular-audit-20261109.json). 당시36/87·51VT/26함수에서 다리/두 프레임3VT/3함수를 연결한 현재 값은2.3절/1219보고서다. |
-| 확정 제품·원시 | [1219 문서](docs/exe/cpp-frame-regular-owner-20261109.md)·[1219 보고서](cpppj/frame-regular-owner-20261109.json), `extracted/cpp-resume-1219/` |
-| 직전 제품 | [1218 다리 Regular 장기 연결](docs/exe/cpp-bridge-regular-owner-20261109.md)·[보고서](cpppj/bridge-regular-owner-20261109.json). 최초 실패/교정과 상세 원시는 각 단위 문서를 따른다. |
+| 현재 제품·현재 잔여 목록 | [1219 구현 문서](docs/exe/cpp-frame-regular-owner-20261109.md)·[보고서](cpppj/frame-regular-owner-20261109.json), 원시 `extracted/cpp-resume-1219/` |
+| M6 전체 잔여와 최초 Regular 조사 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[최초 1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md). 각 문서의 과거 “없음/다음”보다 현행 2절을 우선한다. |
 | 비MP 구현 마감 | [UI 929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit 943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션 956](docs/exe/cpp-mission-state-scope-20261106.md)·[내부 수명 980](docs/exe/cpp-internal-lifetime-closure-20261106.md) |
-| 디컴파일/소스 | [디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md) |
+| 디컴파일·이식 근거 | [디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md) |
 | 제품 계약·경로 | [11.01](docs/exe/cpp-product-1101-20261101.md)·[TODO](TODO.md)·[미션 대응표](docs/gameplay/demo-campaign-map.md) |
-| 과거 완료/정리 이력 | [1218까지 보관본](LEFT_JOBS.old.md#archive-20261109-through-1218). 이전 1206/1204/1198/1195 보관 구간도 그대로 유지한다. 단위 1207/1209의 상세 완료·최초 실패와 교정은 각 구현 문서·보고서가 기준이다. |
-| 이전 문서 정리 검증 | [1210 보고서](docs/exe/cpp-handoff-review-1210-20261109.json). 당시 이전 본문·보관본 접두부·소스/제품/보호 파일 불변과 링크를 확인했다. 문서 정리 1210 자체는 빌드·게임을 실행하지 않았다. |
+| 과거 이력 | [1219까지 보관본](LEFT_JOBS.old.md#archive-20261109-through-1219). 이전 보관 구간은 그대로 유지한다. 해소된 최초 실패·교정과 제품별 상세는 각 단위 문서/보고서에 남아 있다. |
+| 이번 문서 정리 | [1220 검증 보고서](docs/exe/cpp-handoff-review-1220-20261109.json). 정리 전 본문 원문 보관·기존 보관본 보존·링크/앵커·제품과 보호 파일 불변을 확인한다. |
 
 <a id="인수인계-문서-임시-분할"></a>
 
-**정리 1210:** 제품 1209 이전 인계를 보관하고, 최근 완료·최초 실패의 긴 설명과 옛 정리 지시를 현행에서 덜어냈다. 유효한 잔여 작업·검증 제외·기존 한계는 유지했다. 지난 보고서의 “작업 중/다음”은 당시 상태이며 현재 지시로 쓰지 않는다.
+<a id="agentsmd-최근-변경-반영"></a>
 
-### AGENTS.md 최근 변경 반영
+### AGENTS.md 최근 변경 반영 — 2026-11-09 재확인
 
-| 변경 | 이 인계에 적용한 위치 |
+| 변경 | 적용 |
 | --- | --- |
-| `551d27ae` — 진행 요약에 webpj 추가 | 0절에서 **cpppj·dotnetpj·webpj 각각 실행·플레이 / 원본 동일성**을 구분한다. 부품 검사와 실제 플레이를 합산하지 않는다. |
-| `b5197d48` — 9차 알려진 버그 추가 | 1절 9차와 4.3절 **B1~B4·NB01~NB34**에 34건 전체를 연결했다. 등록과 수정 완료를 구별한다. |
-| `3051892a` — 루트 README 개요 보호 | 6절 보호 규칙을 적용한다. **AGENTS.md·README.md 개요는 수정하지 않았다.** README.en.md Overview의 번역 허용은 유지한다. |
+| `551d27ae` — 진행 요약에 webpj 추가 | 0절에서 **cpppj·dotnetpj·webpj 각각 실행·플레이 / 원본 동일성**을 구분한다. 다른 프로젝트의 현행 인계를 읽고 기준 단위를 명시했으며 이번에 새로 실행한 결과로 표시하지 않는다. |
+| `b5197d48` — 9차 알려진 버그 추가 | 1절 9차와 4.3절 **B1~B4·NB01~NB34**에 전체 34건을 연결한다. 등록과 원인 조사·수정·검증 완료를 구별한다. |
+| `3051892a` — 루트 README 개요 보호 | 6절에서 **AGENTS.md·README.md 개요 보호**, README.en.md Overview 번역 허용을 유지한다. 해당 원문은 수정하지 않는다. |
 
-문서 정리 1210은 게임·원본/CD·후보 자산·DN/WB 인계를 변경하지 않았다. 이후 제품 1219 구현·검증을 위 현행 값에 반영했다. 1219에서는 만료된1218 인계를 보관본에 추가했다. 1218에서는 만료된1217 인계를 보관본에 추가했다. 1216에서는 만료된1215 전체 인계를 보관본에 추가하고 유효한16상위계획·검증 제외·기존 한계를 유지했다. 원본/CD·AGENTS·DN/WB 인계는 그대로이며 MP 검사·원격 push는 실행하지 않았다.
+**문서 정리 1220 완료:** 만료된 다음 작업·중복 완료 상세·옛 정리 이력은 정리 전 인계 원문과 함께 보관본으로 옮겼다. 유효한 16개 상위 계획·사용자 검증 제외·미해결 한계·운영 계약은 유지했다. 제품 기준은 1219 그대로이며 전체 개발 목표는 미완료다.

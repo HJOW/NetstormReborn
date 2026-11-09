@@ -1,0 +1,98 @@
+{
+  "unit": 1220,
+  "kind": "현행 인계 정리·만료 이력 이관·AGENTS 최근 변경 재확인",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "productUnit": 1219,
+  "productCommit": "f2f9e8374c8c36dcbe0a41b50504a4e8b337423e",
+  "archive": {
+    "anchor": "archive-20261109-through-1219",
+    "originalPrefixBytes": 4045557,
+    "originalPrefixSha256": "6e86e6baccab9974c2b38b99ac129ff8c04fc2394a6497d30dc09c7c5c567fe1",
+    "archivedCurrentBytes": 31349,
+    "archivedCurrentSha256": "53e75c6372294d131dea63140cc2807dd82633b08a52f2baaa44547924922d36",
+    "prefixPreserved": true,
+    "currentBeforePreservedVerbatim": true
+  },
+  "current": {
+    "bytesBefore": 31349,
+    "bytesAfter": 31310,
+    "linesBefore": 215,
+    "linesAfter": 223,
+    "sha256": "23a1749c5bcc049f0d9ea5509a6073caf11484ae1e40be1ef388fb502ed8118c",
+    "remainingUpperPlanIds": [
+      "M6",
+      "M7",
+      "M8",
+      "K1",
+      "K2",
+      "K3",
+      "K4",
+      "K5",
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "upperPlanCount": 16,
+    "implementedStageScope": [
+      1,
+      2,
+      4,
+      5,
+      7
+    ],
+    "remainingStages": [
+      3,
+      6,
+      8,
+      9
+    ],
+    "connectedRegularVtables": 39,
+    "remainingRegularVtables": 48,
+    "remainingRegularFunctions": 23,
+    "remainingFormDeletionClasses": 3,
+    "knownBugsRegistered": 34,
+    "knownBugRootCauseInvestigation": "34건 미착수",
+    "next": "M6-n Depend Form의 장기 Storage/공장/현재 TYPE/통지/가상 삭제와 실제 Runtime 수명 연결"
+  },
+  "agentsChanges": {
+    "551d27ae": "세 프로젝트별 실행·플레이와 원본 동일성 평가",
+    "b5197d48": "9차 34건을 NB01~NB34/B1~B4에 연결하고 등록·조사·수정·검증을 구별",
+    "3051892a": "AGENTS와 README 개요 보호/영문 Overview 번역 허용"
+  },
+  "checks": {
+    "localLinks": 42,
+    "legacyAnchors": 7,
+    "stableContractSections": 6,
+    "utf8": true,
+    "currentCrlfPreserved": true,
+    "protectedFilesUnchanged": 2801,
+    "trackedCppAndFixedReferencesUnchanged": 13705,
+    "productBinariesUnchanged": 2,
+    "latestProductSourceAndFixtureUnchanged": 15,
+    "latestProductEvidenceMatched": true
+  },
+  "concurrentReadOnlyHandoffChanges": [
+    "LEFT_JOBS.webpj.md"
+  ],
+  "firstReviewFailure": {
+    "handle": 10917,
+    "exitCode": 1,
+    "cause": "병행 webpj 작업의 인계 갱신",
+    "evidence": "extracted/cpp-resume-1220/first-review-error.txt",
+    "correction": "타 프로젝트 인계 변경을 별도 기록하고 최신 요약을 읽기 전용으로 반영. 제품/보호 해시 조건 유지."
+  },
+  "newExecutions": {
+    "build": 0,
+    "game": 0,
+    "multiplayerTests": 0,
+    "decompilation": 0,
+    "remotePush": 0
+  }
+}
