@@ -1577,7 +1577,7 @@ struct RawCampaignSession::Impl {
             other(event);
         };
         worldHooks.dependencyNotice=[this](Sid watcher,Sid watched,Sid form) {
-            if (world.Storage()->UsesNativeTransmissionDevices() && world.Storage()->NotifyAssetDependency(watcher,watched,form.value)) return; // 모든 Native 자산은 메뉴와 같은 현재 가상34를 쓰고 Form만 기존 Host에 남긴다.
+            if (world.Storage()->UsesNativeTransmissionDevices()) { world.Storage()->NotifyDependency(watcher,watched,form);return; } // Native 자산과 네 Form은 메뉴/NoWorld와 같은 현재 가상34를 직접 선택한다.
             //110의 실제0048f0a0은 두 통지 인수를 무시하고 현재 가상+10(flags0)을 호출한다.
             if (VisualDummy(watcher)) { world.Destroy(watcher,0);return; }
             core.processes.NotifyDependency(watcher,watched,form);

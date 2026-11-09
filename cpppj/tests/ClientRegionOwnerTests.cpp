@@ -1018,3 +1018,75 @@ TEST_CASE(ClientFrameRegular_DiscNativeIntegerBoundaryGolden) {
     }
     CHECK(count==70 && faults==23);
 }
+
+namespace { // 감시 연결의 입력은 실제 슬롯의 WORD만 바꾸며 인접 상대 번호를 보존한다.
+void DependWord(SidPool& pool,Sid sid,std::size_t offset,std::uint16_t value) {
+    auto raw=pool.AllocatedBytes(sid);raw[offset]=static_cast<std::uint8_t>(value);raw[offset+1]=static_cast<std::uint8_t>(value>>8); // 원문 비정렬 WORD 쓰기다.
+}
+}
+TEST_CASE(ClientDependOwner_GetterKeepsCurrentPoolTypeAndFactory) { // getter는 대여·생성·초기화 없이 같은 주소를 반환한다.
+    RegionScene scene;scene.storage->GameAux()->DependFormType()=8;const auto free=scene.storage->pool.FreeCount();auto* factory=&scene.storage->Factory();auto* first=&scene.storage->DependForms();
+    CHECK(first==&scene.storage->DependForms() && &first->Pool()==&scene.storage->pool && factory==&scene.storage->Factory());CHECK(scene.storage->pool.FreeCount()==free && scene.storage->GameAux()->DependFormType()==8 && !scene.storage->Borrowed());
+}
+TEST_CASE(ClientDependOwner_ActualPairCreateFindAndRemoveWithoutWorld) { // 실제 공장·두 부착·검색·현재 가상 삭제가 같은 풀을 쓴다.
+    RegionScene scene;const auto watched=scene.Asset(0x5092d0U),watcher=scene.Asset(0x5092d0U);const auto free=scene.storage->pool.FreeCount();auto& body=scene.storage->DependForms();const auto pair=body.Create(watched,watcher);
+    CHECK(body.Has(watched,watcher) && body.Watcher(pair.watchedForm)==watcher);CHECK(CommonContainedParent(scene.storage->pool,pair.watchedForm)==watched && CommonContainedParent(scene.storage->pool,pair.watcherForm)==watcher && scene.storage->pool.FreeCount()==free-2);
+    body.Remove(watcher,watched,0x10U);CHECK(!body.Has(watched,watcher) && scene.storage->pool.FreeCount()==free && !scene.storage->Borrowed());CHECK(scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0 && scene.storage->postPopState.depth==0);
+}
+TEST_CASE(ClientDependOwner_CurrentTypesUseActualConstructorAndOldClass) { // 두 현재 번호가 같은 감시 생성자를 사용해도 조회/제거는 현재 전체 번호를 읽는다.
+    RegionScene scene;scene.storage->types[7]=scene.storage->types[1];scene.storage->types[8]=scene.storage->types[1];const auto watched=scene.Asset(0x5092d0U),watcher=scene.Asset(0x5092d0U);const auto free=scene.storage->pool.FreeCount();auto& body=scene.storage->DependForms();
+    scene.storage->GameAux()->DependFormType()=7;const auto old=body.Create(watched,watcher);scene.storage->GameAux()->DependFormType()=8;CHECK(!body.Has(watched,watcher));const auto current=body.Create(watched,watcher);CHECK(body.Has(watched,watcher));
+    CHECK(scene.storage->pool.Slot(old.watchedForm)[10]==7 && scene.storage->pool.Slot(current.watchedForm)[10]==8);body.Remove(watcher,watched,0x10U);CHECK(scene.storage->pool.FreeCount()==free-2 && body.IsDependForm(old.watchedForm));scene.storage->GameAux()->DependFormType()=7;body.Remove(watcher,watched,0x10U);CHECK(scene.storage->pool.FreeCount()==free);
+}
+TEST_CASE(ClientDependOwner_CurrentTypeDoesNotNarrowToByte) { // 현재 DWORD257을 TYPE BYTE1 또는 초기1로 바꾸지 않는다.
+    RegionScene scene;const auto watched=scene.Asset(0x5092d0U),watcher=scene.Asset(0x5092d0U);auto& body=scene.storage->DependForms();const auto pair=body.Create(watched,watcher);const auto free=scene.storage->pool.FreeCount();scene.storage->GameAux()->DependFormType()=257;
+    CHECK(!body.Has(watched,watcher));body.Remove(watcher,watched,0x10U);CHECK(scene.storage->pool.FreeCount()==free && body.IsDependForm(pair.watchedForm));scene.storage->GameAux()->DependFormType()=1;body.Remove(watcher,watched,0x10U);CHECK(scene.storage->pool.FreeCount()==free+2);
+}
+TEST_CASE(ClientDependOwner_FinderAndParentDoNotAddFreeDeadFilters) { // 원문 FormFinder/현재 부모 getter는 후보·상대의 free/dead를 추가 필터로 쓰지 않는다.
+    RegionScene scene;const auto watched=scene.Asset(0x5092d0U),watcher=scene.Asset(0x5092d0U);auto& body=scene.storage->DependForms();const auto pair=body.Create(watched,watcher);auto first=scene.storage->pool.AllocatedBytes(pair.watchedForm),second=scene.storage->pool.AllocatedBytes(pair.watcherForm);const auto firstState=first[11],secondState=second[11];first[11]|=3U;second[11]|=1U;
+    CHECK(body.Has(watched,watcher) && body.Watcher(pair.watchedForm)==watcher);first[11]=firstState;second[11]=secondState;body.Remove(watcher,watched,0x10U);
+}
+TEST_CASE(ClientDependOwner_FinderExcludesAssetByteBeforeDependComparison) { // FormFinder는 현재 Depend 번호와 같아도 TYPE70 이상을 후보로 반환하지 않는다.
+    RegionScene scene;const auto watched=scene.Asset(0x5092d0U),watcher=scene.Asset(0x5092d0U);auto& body=scene.storage->DependForms();const auto pair=body.Create(watched,watcher);scene.storage->pool.AllocatedBytes(pair.watchedForm)[10]=70;scene.storage->GameAux()->DependFormType()=70;
+    CHECK(!body.Has(watched,watcher));scene.storage->pool.AllocatedBytes(pair.watchedForm)[10]=1;scene.storage->GameAux()->DependFormType()=1;body.Remove(watcher,watched,0x10U);
+}
+TEST_CASE(ClientDependOwner_PreDestroyUsesActualProcessPeerVirtual) { // 실제 감시+14의 상대는 현재 ProcessForm 가상10으로 삭제한다.
+    RegionScene scene;const auto parent=scene.Asset(0x5092d0U);auto& host=scene.storage->Processes().Host();auto* process=host.AddRegular(parent,99,0.25F,0x52U);CHECK(process);if (!process) return;const auto processForm=process->Form();const auto source=scene.storage->Factory().Create(1,2);scene.storage->Factory().AttachForm(source,parent,0x10U);DependWord(scene.storage->pool,source,20,processForm.value);const auto free=scene.storage->pool.FreeCount();
+    scene.storage->DependForms().Destroy(source,0x10U);CHECK(host.FindEvent(parent,99)==nullptr && (scene.storage->pool.Slot(source)[11]&3U)==3U && (scene.storage->pool.Slot(processForm)[11]&3U)==3U && scene.storage->pool.FreeCount()==free+2);CHECK(scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+TEST_CASE(ClientDependOwner_PreDestroyReadsSecondPeerAfterFirstEffect) { // 첫 상대 삭제의 실제 trace 효과가 바꾼 두 번째 WORD/현재 VT를 다시 읽는다.
+    RegionScene scene;const auto parent=scene.Asset(0x5092d0U);auto& host=scene.storage->Processes().Host();auto* first=host.AddRegular(parent,91,0.25F,0x52U);auto* second=host.AddRegular(parent,92,0.25F,0x52U);auto* third=host.AddRegular(parent,93,0.25F,0x52U);CHECK(first && second && third);if (!first || !second || !third) return;const auto firstSid=first->Form(),secondSid=second->Form(),thirdSid=third->Form();const auto source=scene.storage->Factory().Create(1,2);scene.storage->Factory().AttachForm(source,parent,0x10U);DependWord(scene.storage->pool,source,20,firstSid.value);DependWord(scene.storage->pool,source,18,secondSid.value);bool changed{};
+    scene.onTrace=[&] { if (!changed && (scene.storage->pool.Slot(firstSid)[11]&2U)) { changed=true;DependWord(scene.storage->pool,source,18,thirdSid.value); } };scene.storage->DependForms().Destroy(source,0x10U);CHECK(changed && host.FindEvent(parent,91)==nullptr && host.FindEvent(parent,93)==nullptr && host.FindEvent(parent,92)==second && !(scene.storage->pool.Slot(secondSid)[11]&3U));scene.onTrace={};CHECK(scene.storage->DestroyAsset(secondSid,0x10U));
+}
+TEST_CASE(ClientDependOwner_CommonSelectionKeepsFullDword) { // 현재 전체 DWORD 비교가 일치할 때만 실제 Client 선택 정리를 실행한다.
+    RegionScene scene;const auto first=scene.storage->Factory().Create(1,2);scene.gameplay->selection.selected=0x10000U|first.value;scene.storage->DependForms().Destroy(first,0x10U);CHECK(scene.clears==0 && scene.gameplay->selection.selected==(0x10000U|first.value));const auto second=scene.storage->Factory().Create(1,2);scene.gameplay->selection.selected=second.value;scene.storage->DependForms().Destroy(second,0x10U);CHECK(scene.clears==1 && scene.gameplay->selection.selected==0);
+}
+TEST_CASE(ClientDependOwner_ThreeEmptyVirtualNoticesIgnoreOtherFields) { // 실제1/3/6의+34는 TYPE·권한·인수를 읽지 않는 같은 원문 빈 함수다.
+    RegionScene scene;
+    for (const auto type:{1U,3U,6U}) { // 실제 공장의 세 생성자 VT를 사용하며 삭제 미구현과 구별한다.
+        const auto form=scene.storage->Factory().Create(type,2);scene.storage->pool.AllocatedBytes(form)[10]=255;scene.storage->NotifyDependency(form,Sid{65535},Sid{65534});
+    }
+}
+TEST_CASE(ClientDependOwner_ProcessNoticeServerZeroStopsBeforePid) { // 실제 Process+34는 server0이면 없는 PID·인수·전송 장치를 선택하지 않는다.
+    RegionScene scene;const auto form=scene.storage->Factory().Create(2,2);scene.storage->Authority()->server=false;scene.storage->NotifyDependency(form,Sid{65535},Sid{65534});CHECK(RegionRead(scene.storage->pool.Slot(form),18)==0);
+}
+TEST_CASE(ClientDependOwner_CurrentNoticePinsOwnerAndExpires) { // 알림 중 대여/외부 소유자를 반납해도 실제 pin·함수 사본이 반환까지 살아 있다.
+    RegionScene scene;const auto watched=scene.Asset(0x5092d0U),watcher=scene.storage->Factory().Create(3,2);auto& body=scene.storage->DependForms();const auto pair=body.Create(watched,watcher);std::size_t calls{};auto owner=std::make_shared<int>(7);std::weak_ptr<int> weak=owner;auto binding=std::make_shared<RawSurfaceDependBindings>();
+    binding->pin=[weak]()->std::shared_ptr<void> { const auto pin=weak.lock();if (!pin) throw std::logic_error("검사 실제 알림 owner 반납 뒤 pin");return pin; };
+    binding->notice=[&](auto receiver,auto parent,auto form) { ++calls;owner.reset();binding.reset();CHECK(!weak.expired());scene.storage->NotifyDependency(receiver,parent,form); };scene.storage->BindDependRuntime(binding);body.Notify(pair.watchedForm,watched);CHECK(calls==1 && weak.expired());body.Notify(pair.watchedForm,watched);CHECK(calls==1);body.Remove(watcher,watched,0x10U);
+}
+TEST_CASE(ClientDependOwner_NotifyAssertionCanReturnNormally) { // 통지 뒤 현재 watchedFid 진단은 실제 Client assertion 정상 복귀를 보존한다.
+    RegionScene scene;const auto watched=scene.Asset(0x5092d0U),watcher=scene.storage->Factory().Create(3,2);auto& body=scene.storage->DependForms();const auto pair=body.Create(watched,watcher);std::size_t assertions{};scene.storage->BindDisplayDiagnostics(scene.detail,[&](auto expression,auto file,auto line) { CHECK(expression=="watchedFid == 0" && file=="\\Ns\\O\\Squid.cpp" && line==0xadf);++assertions; });DependWord(scene.storage->pool,pair.watchedForm,20,pair.watcherForm.value);body.Notify(pair.watchedForm,watched);CHECK(assertions==1);DependWord(scene.storage->pool,pair.watchedForm,20,0);body.Remove(watcher,watched,0x10U);
+}
+TEST_CASE(ClientDependOwner_RemoveAssertionsReadCurrentFieldsAndContinue) { // 원문 제거 진단 둘이 정상 복귀하면 빈 head에서 정상 종료한다.
+    RegionScene scene;const auto parent=scene.Asset(0x5092d0U);scene.storage->GameAux()->DependFormType()=scene.storage->pool.Slot(parent)[10];std::vector<std::uint32_t> lines;scene.storage->BindDisplayDiagnostics(scene.detail,[&](auto,auto file,auto line) { CHECK(file=="\\Ns\\O\\Squid.cpp");lines.push_back(line); });scene.storage->DependForms().Remove(parent,parent,0x10U);CHECK(lines==std::vector<std::uint32_t>({0xb4b,0xb4e}));
+}
+TEST_CASE(ClientDependOwner_FinderReadsHeadAfterCurrentCheckingAssertion) { // checking 진단의 정상 복귀가 바꾼 현재 head로 탐색을 시작한다.
+    RegionScene scene;const auto watched=scene.Asset(0x5092d0U),watcher=scene.Asset(0x5092d0U);auto& body=scene.storage->DependForms();const auto pair=body.Create(watched,watcher);DependWord(scene.storage->pool,watched,6,0);auto raw=scene.storage->pool.AllocatedBytes(watched);const auto state=raw[11];raw[11]|=2U;scene.storage->Authority()->boss=false;scene.storage->BindChecking(RawCheckingFlag{0x80000000U});std::size_t assertions{};
+    scene.storage->BindDisplayDiagnostics(scene.detail,[&](auto expression,auto file,auto line) { CHECK(expression=="inMetamapMode || !cont.isDead() || boss || yesIKnowThatIShouldntLookInsideMyselfDuringADestroy" && file=="\\Ns\\O\\Squidfinder.cpp" && line==0x158);++assertions;DependWord(scene.storage->pool,watched,6,pair.watchedForm.value); });CHECK(body.Has(watched,watcher) && assertions==1);raw[11]=state;scene.storage->Authority()->boss=true;body.Remove(watcher,watched,0x10U);
+}
+TEST_CASE(ClientDependOwner_NativeWorldBorrowsSameBodyAndReturnsIt) { // Native World의 Core도 같은 장기 감시 본체를 빌리고 반납 시 교체하지 않는다.
+    RegionScene scene;auto* body=&scene.storage->DependForms();BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157;
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,scene.storage->types,scene.storage->frames,scene.storage->shapes,links,94,nullptr,scene.storage);CHECK(&world.Core().dependencies==body && scene.storage->Borrowed()); }
+    CHECK(&scene.storage->DependForms()==body && !scene.storage->Borrowed());
+}

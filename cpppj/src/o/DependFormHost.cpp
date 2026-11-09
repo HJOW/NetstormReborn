@@ -2,6 +2,7 @@
 #include "o/DependFormHost.h"
 #include "o/RawDependCreate.h" // 두 Create/링크/가상 부착의 실제 순서 부모다.
 #include "o/SquidFactory.h" // 독립 입력도 원문 TYPE 생성자를 사용하는 같은 공장으로 처리한다.
+#include "o/RawSquidContainedUnpop.h" // Native의 현재 가상 부모 getter는 free/TYPE 선검사를 추가하지 않는다.
 #include <stdexcept>
 #include <optional>
 #include <unordered_set>
@@ -21,6 +22,9 @@ DependFormHost::DependFormHost(SidPool& pool,RawSquidDestroy& destroy,DependForm
     if (&destroy.Pool()!=&pool) throw std::invalid_argument("DependForm 삭제 SID 풀 불일치");
 }
 void DependFormHost::BindUnpop(std::function<void(Sid)> unpop) { unpop_=std::move(unpop); } // 공통 삭제에서도 현재 Factory의 진단/분리 순서를 사용한다.
+void DependFormHost::BindVirtualDestroy(std::function<void(Sid,std::uint32_t)> destroy,std::function<void(Sid)> beforeFind) {
+    if (!destroy || !beforeFind) throw std::invalid_argument("Native Depend의 실제 가상 삭제/검색 진단 미연결");virtualDestroy_=std::move(destroy);beforeFind_=std::move(beforeFind); // 연결 자체는 슬롯·현재 타입·공장을 초기화하지 않는다.
+}
 void DependFormHost::BindCreation(SquidFactory& factory,const std::uint32_t& type,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion) {
     if (&factory.Pool()!=&pool_) throw std::invalid_argument("Depend 생성 공장의 실제 SID 풀 불일치");factory_=&factory;dependType_=&type;creationAssertion_=std::move(assertion); // 반납 후 다른 World 공장을 장기 저장소에 남기지 않는다.
 }
@@ -71,52 +75,62 @@ DependFormPair DependFormHost::Create(Sid watched,Sid watcher) const {
 }
 // 상대는 Form 부모 getter를 사용하므로 ProcessForm의 원래 타입도 공통 검사를 통과한다.
 Sid DependFormHost::Watcher(Sid form) const {
-    Form(form);const auto watcher=Word(form,kWatcher);return watcher.value ? forms_.Parent(watcher) : Sid{};
+    if (!virtualDestroy_) Form(form);const auto watcher=Word(form,kWatcher);return watcher.value ? (virtualDestroy_ ? CommonContainedParent(pool_,watcher) : forms_.Parent(watcher)) : Sid{}; // Native는 상대 현재 VT의+0을 그대로 선택한다.
 }
 // 원본은 free/dead/void 필터를 추가하지 않고 현재 Form 타입과 watcher 번호만 비교한다.
 bool DependFormHost::Has(Sid watched,Sid watcher) const {
-    if (!watched.value || watched.value>=pool_.Capacity()) throw std::out_of_range("DependForm 조회 부모 번호 오류");
+    if (virtualDestroy_) beforeFind_(watched);else if (!watched.value || watched.value>=pool_.Capacity()) throw std::out_of_range("DependForm 조회 부모 번호 오류");
     std::unordered_set<std::uint16_t> visited;Sid current=Word(watched,kHead);
     // 후보를 반환하기 전에 next를 저장하는 FormFinder 규칙을 유지한다.
     while (current.value) {
         if (current.value>=pool_.Capacity() || !visited.insert(current.value).second) throw std::logic_error("DependForm 조회 체인 손상");
         const auto next=Word(current,kNext);
-        if (pool_.Slot(current)[kType]==DependType() && Watcher(current)==watcher) return true;
+        if ((!virtualDestroy_ || pool_.Slot(current)[kType]<kFirstAssetTypeNumber) && pool_.Slot(current)[kType]==DependType() && Watcher(current)==watcher) return true; // 원문 FormFinder는 먼저 TYPE<70 후보만 반환한다.
         current=next;
     }
     return false;
 }
 // watched가 이미 dead이면 타입/같은 객체 검사보다 먼저 반환한다.
 void DependFormHost::Remove(Sid watcher,Sid watched,std::uint32_t flags) const {
-    if (!watched.value || watched.value>=pool_.Capacity()) throw std::out_of_range("DependForm 제거 부모 번호 오류");
+    if (!virtualDestroy_ && (!watched.value || watched.value>=pool_.Capacity())) throw std::out_of_range("DependForm 제거 부모 번호 오류");
     if (pool_.Slot(watched)[kState]&kDead) return;
-    Parents(watcher,watched);std::unordered_set<std::uint16_t> visited;Sid current=Word(watched,kHead);
+    if (virtualDestroy_) {
+        const auto assertion=creationAssertion_;if (!assertion) throw std::logic_error("Native Depend 제거의 실제 진단 미연결"); // 원문 진단은 정상 복귀 후 현재 필드를 다시 조회한다.
+        if (!watcher.value || watcher.value>=pool_.Capacity()) assertion("watcher.isValid()","\\Ns\\O\\Squid.cpp",0xb48);
+        if (!watched.value || watched.value>=pool_.Capacity()) assertion("watched.isValid()","\\Ns\\O\\Squid.cpp",0xb49);
+        if (pool_.Slot(watcher)[kType]==DependType()) assertion("watcher.getType() != dependFormType","\\Ns\\O\\Squid.cpp",0xb4b);
+        if (pool_.Slot(watched)[kType]<kFirstAssetTypeNumber) assertion("!watched.isForm()","\\Ns\\O\\Squid.cpp",0xb4c);
+        if (watcher==watched) assertion("watcherSid != watchedSid","\\Ns\\O\\Squid.cpp",0xb4e);
+        beforeFind_(watched);
+    } else Parents(watcher,watched);
+    std::unordered_set<std::uint16_t> visited;Sid current=Word(watched,kHead);
     // 삭제 콜백이 현재 슬롯을 반납하더라도 선저장한 next로 이어간다.
     while (current.value) {
         if (current.value>=pool_.Capacity() || !visited.insert(current.value).second) throw std::logic_error("DependForm 제거 체인 손상");
         const auto next=Word(current,kNext);
-        if (pool_.Slot(current)[kType]==DependType() && Watcher(current)==watcher) Destroy(current,flags);
+        if ((!virtualDestroy_ || pool_.Slot(current)[kType]<kFirstAssetTypeNumber) && pool_.Slot(current)[kType]==DependType() && Watcher(current)==watcher) Destroy(current,flags);
         current=next;
     }
 }
 // 알림은 상대 Form의 client 번호/서버 권한으로 결정하며 콜백 뒤 현재 watchedFid를 다시 검사한다.
 void DependFormHost::Notify(Sid form,Sid watched) const {
-    Form(form);const auto watcher=Word(form,kWatcher);if (!watcher.value) return;
-    const auto parent=forms_.Parent(watcher);
+    if (!virtualDestroy_) Form(form);const auto watcher=Word(form,kWatcher);if (!watcher.value) return;
+    const auto parent=virtualDestroy_ ? CommonContainedParent(pool_,watcher) : forms_.Parent(watcher); // 현재 상대 VT의 부모 getter를 통지 직전에 선택한다.
     if (watcher.value<pool_.Layout().serverFirst || pool_.IsServer()) {
         if (!notice_) throw std::invalid_argument("DependForm watcher 통지 경계 필요");
         notice_(parent,watched,form);
     }
-    if (Word(form,kWatched).value) throw std::logic_error("DependForm 통지 뒤 watchedFid 오류");
+    if (Word(form,kWatched).value) { if (virtualDestroy_ && creationAssertion_) creationAssertion_("watchedFid == 0","\\Ns\\O\\Squid.cpp",0xadf);else throw std::logic_error("DependForm 통지 뒤 watchedFid 오류"); } // Native 진단이 정상 복귀하면 원문처럼 반환한다.
 }
 // 상대 삭제도 같은 hooks를 사용하므로 두 Form이 서로를 재삭제해도 dead에서 즉시 반환한다.
 void DependFormHost::Destroy(Sid form,std::uint32_t flags) const {
+    if (virtualDestroy_) { const auto selected=virtualDestroy_;selected(form,flags);return; } // 첫 상대 삭제의 효과 뒤 다음 상대/VT를 현재 슬롯에서 다시 읽는다.
     if (!IsDependForm(form)) throw std::logic_error("DependForm 삭제 타입 오류");
     destroy_.Destroy(form,flags,Hooks());
 }
 // 실제 월드가 다른 파생 Form/자산 분배를 겹쳐 연결할 수 있도록 미처리 효과를 전달한다.
 SquidDestroyHooks DependFormHost::Hooks() const {
-    SquidDestroyHooks hooks;hooks.selected=fallback_.selected ? fallback_.selected : std::function<Sid()>([] { return Sid{}; });
+    SquidDestroyHooks hooks;hooks.selected=fallback_.selected ? fallback_.selected : std::function<Sid()>([] { return Sid{}; });hooks.selectedRaw=fallback_.selectedRaw; // Native 공통 선택 비교는 전체 DWORD를 유지한다.
     // Form 공통 Unpop은 부모 dead의 링크를 보존한다.
     hooks.unpopForm=[this](Sid sid) {
         if (IsDependForm(sid)) { if (unpop_) unpop_(sid);else forms_.Unpop(sid); }

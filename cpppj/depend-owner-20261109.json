@@ -1,0 +1,981 @@
+{
+  "unit": 1221,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "accepted": true,
+  "summary": "Depend Form의 현재 공장/TYPE·감시 쌍·가상 상대 삭제·알림과 검색 진단을 같은 장기 Storage에 연결하고 Native World/Session이 공유한다.",
+  "sourceSha256": {
+    "cpppj/src/o/DependFormHost.h": "f394462caf09de38fa7ee58feebd23ce8bc546c45803586371c48e0fe98340f6",
+    "cpppj/src/o/DependFormHost.cpp": "e1797a2bd6c60b211837a5328b05e06427b207a84f3c7cc17d971ae9a89b7d12",
+    "cpppj/src/client/RawSurfaceWorld.h": "d5d5ef9cb507382528e0fecf4e073a5aebcc56c55c8a17885770b5a0548cf27a",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "54d7da001ed9a52a9517fcba208410ce2b032c8324ef0ee2b4a06a4c4493aade",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "ec88768f0f20fef7b911a1fb5bb2c9195ffc37801935eebeb345f4c8b0df7dca",
+    "cpppj/src/client/RawCampaignSession.cpp": "41728a6997f1c61e62fa1840e83dcbd61c555f37c72fa8be405b45a6a85a0355",
+    "cpppj/src/client/CMakeLists.txt": "ece175634b091f1ca79c387db8204b1c57c59e7bbc0c76bafb43cead6c7a2ea7",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "1b9487fca3e96fb3031f527578dcd0f9d25fb789e32169fdda2a11d63b485d1c",
+    "cpppj/tests/CMakeLists.txt": "6efd97363630334d793a09b65ba7af722a4a3dfba2a9e87eba126f0a83874108",
+    "cpppj/src/client/RawSurfaceDepend.cpp": "7efd761b4f5f3c87edadd30af809cec037965ec22aad085d9993e3562c43cc49"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13959168,
+      "sha256": "0fb034d0373fbb2bd256c5401270bb731c7df5ebbfffae7a006bda690ee43858"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "c1401621c911a61514ca97d7581670157c7897adcc2aeb39ff7e4eb8589d6b50"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 410.3275303840637,
+    "sourcesUnchanged": true,
+    "handle": 20244,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 371,
+    "passed": 371,
+    "previousNonMpCases": 350,
+    "newDependOwnerCases": 16,
+    "additionalExistingDependCreateCases": 5,
+    "originalCreationFixtureInputs": 1620,
+    "groups": {
+      "netstorm_construction_owner_tests": 297,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "seconds": 69.58113074302673,
+    "handle": 94406,
+    "multiplayerExecutions": 0
+  },
+  "staticAudit": {
+    "unit": 1221,
+    "assetPrePostDispatch": 83,
+    "assetNoticeDispatch": 83,
+    "sourceVtables": 87,
+    "connectedRegularVtables": 39,
+    "remainingRegularVtables": 48,
+    "remainingRegularFunctions": 23,
+    "remainingRows": [
+      {
+        "vtable": "00502370",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502448",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502510",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005025d8",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005026a0",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502778",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502840",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502908",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005029d0",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502aa8",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502b70",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502c38",
+        "regular": "0041f760",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502cf0",
+        "regular": "0041f9d0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502db0",
+        "regular": "0041f9d0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502e68",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502f30",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502ff8",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005030c0",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503188",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503d80",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503e50",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503f20",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503ff0",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005040c0",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005075d8",
+        "regular": "0044a3a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005076b8",
+        "regular": "0044a5e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00507770",
+        "regular": "00448e00",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00507950",
+        "regular": "0044b150",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00508cc8",
+        "regular": "00450fa0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509148",
+        "regular": "004549c0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509210",
+        "regular": "004549c0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005096a0",
+        "regular": "0045a250",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509810",
+        "regular": "0045a8e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050a050",
+        "regular": "0045e8b0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050a820",
+        "regular": "00462420",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050a8e8",
+        "regular": "00462420",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050cc08",
+        "regular": "004794b0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050e568",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050e668",
+        "regular": "0048c6e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050e738",
+        "regular": "0048ea30",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050ee08",
+        "regular": "00490810",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050f210",
+        "regular": "00494580",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050f540",
+        "regular": "0049a4e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00512208",
+        "regular": "004af070",
+        "kind": "Content",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005196f0",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005197a8",
+        "regular": "004dcf00",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00519860",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00519918",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      }
+    ],
+    "registeredDefaultNativeFormDeletion": [
+      "Process",
+      "Depend"
+    ],
+    "remainingFormDeletionClasses": 2,
+    "remainingFormDeletionClassNames": [
+      "Gump",
+      "Content"
+    ],
+    "nativeWorldSameDependBody": true,
+    "nativeSessionSameVirtualNotice": true,
+    "currentFactoryAndType": true,
+    "actualCurrentVirtualPeerDestroy": true,
+    "currentFullDwordSelection": true,
+    "currentRuntimeWeakPinAndFunctionCopy": true,
+    "nativeFinderAssertionAndCurrentFields": true,
+    "originalRequestedEntries": 37,
+    "originalFullFunctions": 29,
+    "independentCMetadataUnavailable": [
+      {
+        "edition": "originals",
+        "entry": "004ac1b0",
+        "cMetadataUnavailable": true
+      },
+      {
+        "edition": "originals",
+        "entry": "004ac1c0",
+        "cMetadataUnavailable": true
+      },
+      {
+        "edition": "originals",
+        "entry": "004ae2b0",
+        "cMetadataUnavailable": true
+      },
+      {
+        "edition": "originals",
+        "entry": "004ae9d0",
+        "cMetadataUnavailable": true
+      },
+      {
+        "edition": "originalCD",
+        "entry": "004af450",
+        "cMetadataUnavailable": true
+      },
+      {
+        "edition": "originalCD",
+        "entry": "004af490",
+        "cMetadataUnavailable": true
+      },
+      {
+        "edition": "originalCD",
+        "entry": "004af4c0",
+        "cMetadataUnavailable": true
+      },
+      {
+        "edition": "originalCD",
+        "entry": "004afd40",
+        "cMetadataUnavailable": true
+      }
+    ],
+    "boundedPeFunctions": 5,
+    "newNonMpCases": [
+      "ClientDependOwner_GetterKeepsCurrentPoolTypeAndFactory",
+      "ClientDependOwner_ActualPairCreateFindAndRemoveWithoutWorld",
+      "ClientDependOwner_CurrentTypesUseActualConstructorAndOldClass",
+      "ClientDependOwner_CurrentTypeDoesNotNarrowToByte",
+      "ClientDependOwner_FinderAndParentDoNotAddFreeDeadFilters",
+      "ClientDependOwner_FinderExcludesAssetByteBeforeDependComparison",
+      "ClientDependOwner_PreDestroyUsesActualProcessPeerVirtual",
+      "ClientDependOwner_PreDestroyReadsSecondPeerAfterFirstEffect",
+      "ClientDependOwner_CommonSelectionKeepsFullDword",
+      "ClientDependOwner_ThreeEmptyVirtualNoticesIgnoreOtherFields",
+      "ClientDependOwner_ProcessNoticeServerZeroStopsBeforePid",
+      "ClientDependOwner_CurrentNoticePinsOwnerAndExpires",
+      "ClientDependOwner_NotifyAssertionCanReturnNormally",
+      "ClientDependOwner_RemoveAssertionsReadCurrentFieldsAndContinue",
+      "ClientDependOwner_FinderReadsHeadAfterCurrentCheckingAssertion",
+      "ClientDependOwner_NativeWorldBorrowsSameBodyAndReturnsIt"
+    ],
+    "fullNoWorldComplete": false,
+    "fullGoalComplete": false,
+    "multiplayerExecutions": 0,
+    "newDecompilation": 0,
+    "lastClientDecompilation": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    }
+  },
+  "originalEvidence": [
+    {
+      "edition": "originals",
+      "entry": "0040b380",
+      "ranges": [
+        {
+          "first": "0040b380",
+          "lastInclusive": "0040b382",
+          "sha256": "e598d0c3ba86d917b177d7adde0556aa99bc355543c57aee0a3e50b684dd7e99"
+        }
+      ],
+      "cSha256": "06d5358140e264b754d023c1bfaba74e72d267d3b1758f6a44f8b18ad38eec7e"
+    },
+    {
+      "edition": "originals",
+      "entry": "0041c100",
+      "ranges": [
+        {
+          "first": "0041c100",
+          "lastInclusive": "0041c102",
+          "sha256": "1d10894625976bca9d8906f3ecf1e766b94e9219ec3bf1c30e02feea5e18e45a"
+        }
+      ],
+      "cSha256": "ce57306db64cdaa26abf37109cf87c38185b24abace2764bfc8ae5dcb579d0dc"
+    },
+    {
+      "edition": "originals",
+      "entry": "004ac1b0",
+      "cMetadataUnavailable": true
+    },
+    {
+      "edition": "originals",
+      "entry": "004ac1c0",
+      "cMetadataUnavailable": true
+    },
+    {
+      "edition": "originals",
+      "entry": "004ae240",
+      "ranges": [
+        {
+          "first": "004ae240",
+          "lastInclusive": "004ae275",
+          "sha256": "ed59ccabed05f93ff7ee31358d42ab7799518e458c9aae3263fef6a3aceffb84"
+        }
+      ],
+      "cSha256": "fffaaede8c0d718a644144c185f2f45f720666b37edcc4736f3f2b5e44629a8d"
+    },
+    {
+      "edition": "originals",
+      "entry": "004ae280",
+      "ranges": [
+        {
+          "first": "004ae280",
+          "lastInclusive": "004ae2aa",
+          "sha256": "0039e37641469b004ecb09fbcc7bd7404081c7c1d7b6b594ee73d7e8b99d0175"
+        }
+      ],
+      "cSha256": "8d0b991f0c6704d622d0fc0645f471f96c9ed9eb9c61689ec81b83b0de3d9f6d"
+    },
+    {
+      "edition": "originals",
+      "entry": "004ae2b0",
+      "cMetadataUnavailable": true
+    },
+    {
+      "edition": "originals",
+      "entry": "004ae410",
+      "ranges": [
+        {
+          "first": "004ae410",
+          "lastInclusive": "004ae4af",
+          "sha256": "07aec980342fcd87fc67a53ca8554cf37054525518c92f17d4feffe9312c294d"
+        }
+      ],
+      "cSha256": "665a15c295258ea980a6f52ca37243af9b956af120449e56a912f260a182368a"
+    },
+    {
+      "edition": "originals",
+      "entry": "004ae4b0",
+      "ranges": [
+        {
+          "first": "004ae4b0",
+          "lastInclusive": "004ae500",
+          "sha256": "a9e86e8e2f7964458372554a7ab934da03b6f2bd2fd9e29ff2d15468cbbedb6b"
+        }
+      ],
+      "cSha256": "29e542bfdfe7c3067f53261eb5721e3b1c816537fed28841747d5e03342c8f39"
+    },
+    {
+      "edition": "originals",
+      "entry": "004ae780",
+      "ranges": [
+        {
+          "first": "004ae780",
+          "lastInclusive": "004ae8f3",
+          "sha256": "457a8bd32eca48cbf84c29c21ad3d0ad6d3126780b4c8f0797dba16a771ed302"
+        }
+      ],
+      "cSha256": "dc13dbaa7f91a4d08d07840c0a4de3fab72f4362014d9f510dc666181edc8988"
+    },
+    {
+      "edition": "originals",
+      "entry": "004ae900",
+      "ranges": [
+        {
+          "first": "004ae900",
+          "lastInclusive": "004ae97d",
+          "sha256": "790805265eeb22600f3a94b100dc65c6563172620f0734596af943de8b863c5f"
+        }
+      ],
+      "cSha256": "49d53b67c71fcec977275014857e1fedf1a3d51475b6e84329559aa1de3aa708"
+    },
+    {
+      "edition": "originals",
+      "entry": "004ae9d0",
+      "cMetadataUnavailable": true
+    },
+    {
+      "edition": "originals",
+      "entry": "004aeeb0",
+      "ranges": [
+        {
+          "first": "004aeeb0",
+          "lastInclusive": "004af00e",
+          "sha256": "35c91016f4e37b295ed10c0a7a5e7e1e1c5e39823fb7a0fb24886f65da67ebea"
+        }
+      ],
+      "cSha256": "4001c30252c3852b9a50c0a0a0c737fbbf66ef7d8948d6987a2a9f6bc06ed640"
+    },
+    {
+      "edition": "originals",
+      "entry": "004b1510",
+      "ranges": [
+        {
+          "first": "004b1510",
+          "lastInclusive": "004b15e1",
+          "sha256": "975b647e9b47af222ca50baeefc47c3e8e70a4297c28a266dfdd09f2494a24ff"
+        }
+      ],
+      "cSha256": "cbf3cfad7e5894978ac5ed0cdc215deaaa938dc872726f7d4dfec0ebbf75e835"
+    },
+    {
+      "edition": "originals",
+      "entry": "004b1b80",
+      "ranges": [
+        {
+          "first": "004b1b80",
+          "lastInclusive": "004b1bce",
+          "sha256": "cd2289d607a8e9accb786ccf227fb076a084bf98e434661fd215a73405bf4c8e"
+        }
+      ],
+      "cSha256": "8c5a20f64f45f8447a054a7548d29edd17f40175b58d40d7ee0c05a0fd39ee73"
+    },
+    {
+      "edition": "originals",
+      "entry": "004b1bd0",
+      "ranges": [
+        {
+          "first": "004b1bd0",
+          "lastInclusive": "004b1bec",
+          "sha256": "a13073bd8f0dd88380a2cb7b12b82ebc3f565d9bcdcc5470291a168a23bcf2f9"
+        }
+      ],
+      "cSha256": "300283360e5f5df64b397aa57b5c4d12c4b4c793c4004cfa5026c58669d8882c"
+    },
+    {
+      "edition": "originals",
+      "entry": "004b22d0",
+      "ranges": [
+        {
+          "first": "004b22d0",
+          "lastInclusive": "004b2332",
+          "sha256": "9e8ea2d6bf5b27bf59f77d007d2243311bd868e4875eae52f487775899441a96"
+        }
+      ],
+      "cSha256": "c304e8863e6c41b985b4a108bd23c3f1f47cdd90557a7bd6f7bd1d7a715ffdc6"
+    },
+    {
+      "edition": "originals",
+      "entry": "004b2390",
+      "ranges": [
+        {
+          "first": "004b2390",
+          "lastInclusive": "004b23d8",
+          "sha256": "e51c246c76af8a6b0abf527e95db6951163ed094dcd8d75054c4954c5b50cc2f"
+        }
+      ],
+      "cSha256": "dd4b49a02e52fb45541fc33fe2cd6c83823affba623708e2c95308c134e8ae73"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "00407ca0",
+      "ranges": [
+        {
+          "first": "00407ca0",
+          "lastInclusive": "00407ca2",
+          "sha256": "1d10894625976bca9d8906f3ecf1e766b94e9219ec3bf1c30e02feea5e18e45a"
+        }
+      ],
+      "cSha256": "7d2ac2be57497787d5de8d2bec3884e268b97bd190887383bc304109ce2619d0"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004aba90",
+      "ranges": [
+        {
+          "first": "004aba90",
+          "lastInclusive": "004aba98",
+          "sha256": "16b0c3c1347e2c7db3409d8ba977c4c1eeda696efe917d25911798b541f467f3"
+        }
+      ],
+      "cSha256": "94270b4a233079d0624485406fffe30b9dc6f3629c13264daaccbf259a10237c"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004abaa0",
+      "ranges": [
+        {
+          "first": "004abaa0",
+          "lastInclusive": "004abaa8",
+          "sha256": "296806835d999a53046f2b0742adb92ce25499204b6a596f1c8039732fce2295"
+        }
+      ],
+      "cSha256": "6028ccf300e71f960b226139307b845610a100e421b1ffb09a311dd88b0b6298"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004af450",
+      "cMetadataUnavailable": true
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004af490",
+      "cMetadataUnavailable": true
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004af4c0",
+      "cMetadataUnavailable": true
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004af600",
+      "ranges": [
+        {
+          "first": "004af600",
+          "lastInclusive": "004af691",
+          "sha256": "e93d4f506f699474d6d9c88bcfa1aae197d25dd045017307fa65f4ca5db94eb0"
+        }
+      ],
+      "cSha256": "2a6f5de8815a400a80ddf12163e2d6ea1efff2345919b087e452a360038f8601"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004af6a0",
+      "ranges": [
+        {
+          "first": "004af6a0",
+          "lastInclusive": "004af6fb",
+          "sha256": "beccfe55823ea3c54310bd0e4276c36c5c0c6639e008fdeaea88078c16ecd489"
+        }
+      ],
+      "cSha256": "07d2751216a716ea95e9ef7d7ac55cc3e39dae1915e119715bdb554eebe28317"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004af700",
+      "ranges": [
+        {
+          "first": "004af700",
+          "lastInclusive": "004af71e",
+          "sha256": "6d660b3f16b7b025430eae607511665c9d9ce5ade47731457f34615cf153c51c"
+        }
+      ],
+      "cSha256": "0f1881a129d916c6c8148aaca6e3553197feb7cfc7b0768e9734365b2f8273c6"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004af940",
+      "ranges": [
+        {
+          "first": "004af940",
+          "lastInclusive": "004afa01",
+          "sha256": "e4486a38598bff84b17bff2d718f5b79643fa9c9ad11489b042142e982549019"
+        }
+      ],
+      "cSha256": "b28b83254359b99a73a29c30931df501b9b03eab8a8f66010553ba3fbea06f20"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004afa50",
+      "ranges": [
+        {
+          "first": "004afa50",
+          "lastInclusive": "004afbb7",
+          "sha256": "2b88780315271ba6aa4105c57f27dfd0c7164c925a07db5724fbbe33a54e3c66"
+        }
+      ],
+      "cSha256": "ebfda8f63481e8a40e2f25d96df655e1367d1038d70fc2ded6423460bfd3e8f7"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004afbc0",
+      "ranges": [
+        {
+          "first": "004afbc0",
+          "lastInclusive": "004afc20",
+          "sha256": "c3d3f5f94171e487b8b7c950f36afa92d14064eb411a3c098c94b07998befe29"
+        }
+      ],
+      "cSha256": "70ed52a4e9f82180bdfa326c65d1016197c859e1806afd05705f78613c7db83d"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004afd40",
+      "cMetadataUnavailable": true
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004afe60",
+      "ranges": [
+        {
+          "first": "004afe60",
+          "lastInclusive": "004afe62",
+          "sha256": "e598d0c3ba86d917b177d7adde0556aa99bc355543c57aee0a3e50b684dd7e99"
+        }
+      ],
+      "cSha256": "1ae42c6426699d0f99d9ce39ea7a8cbc7d907df9b9fc968ebf603dbb1177c1d0"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004b0300",
+      "ranges": [
+        {
+          "first": "004b0300",
+          "lastInclusive": "004b032b",
+          "sha256": "ac2152208e430408789a01e70cc2ce36a47b28a4953987a76c736fff1a4e2384"
+        }
+      ],
+      "cSha256": "198d119f178198c5d4957d3fec5d993574f18fdd1ee9645e0281dd14f191d4c4"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004eb960",
+      "ranges": [
+        {
+          "first": "004eb960",
+          "lastInclusive": "004eb982",
+          "sha256": "a226c3eb160fd5a54899ba9ab74f4dc649feeee18b4c18523b814880fe6c17e5"
+        }
+      ],
+      "cSha256": "23a40e16a55d4a5497d6abf7e66a2e81b9861df647a3f03598b1e95f2afcecf8"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004eb990",
+      "ranges": [
+        {
+          "first": "004eb990",
+          "lastInclusive": "004eb9e8",
+          "sha256": "76d2935f980bac14a88f33416cd634e297fbdf9372a961bef50028b8d5b76ffd"
+        }
+      ],
+      "cSha256": "a796dd6da73b99cac54ee40d05ddfa85f59cedce1ab2f28857edcf58b4e98ed1"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004eba30",
+      "ranges": [
+        {
+          "first": "004eba30",
+          "lastInclusive": "004eba6a",
+          "sha256": "1cf98de682640a454da8c0d20e6e74d554dfda20d2b39e4b204f5a947309369b"
+        }
+      ],
+      "cSha256": "79e665a9a5d12bd44ea1dfbc2978261e1a7553ccbfd3d0de27c6bef0eb5d0eb8"
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004eba70",
+      "ranges": [
+        {
+          "first": "004eba70",
+          "lastInclusive": "004eba91",
+          "sha256": "c627e7dc44698becf4d5f7c06fe0c6d0791e0176e9e3594502138ab7b8a89fb0"
+        }
+      ],
+      "cSha256": "5c5865431c320744d3a91975e077d8ddc27b929c69d619011f96caf847257e18"
+    }
+  ],
+  "boundedPeEvidence": [
+    {
+      "edition": "originals",
+      "entry": "004ad010",
+      "bytes": 5,
+      "completeThroughRet": true
+    },
+    {
+      "edition": "originals",
+      "entry": "00453740",
+      "bytes": 8,
+      "completeThroughRet": true
+    },
+    {
+      "edition": "originals",
+      "entry": "004ac1b0",
+      "bytes": 9,
+      "completeThroughRet": true
+    },
+    {
+      "edition": "originalCD",
+      "entry": "004b04a0",
+      "bytes": 7,
+      "completeThroughRet": true
+    },
+    {
+      "edition": "originalCD",
+      "entry": "0040f190",
+      "bytes": 8,
+      "completeThroughRet": true
+    }
+  ],
+  "toolingCorrections": {
+    "firstFreezeFailure": "first-freeze-error.txt",
+    "firstStaticAuditFailure": "first-static-error.txt",
+    "description": "독립 C 경계가 없는 thunk/getter와 요청37진입 중8개의 metadata 부재를 구분했다. 전체 C/PE29개·RET까지 짧은 PE5개를 보존하며 미래 Gump/기존 Process 하위 미확보를 완료로 합산하지 않는다.",
+    "productBuildFailures": 0,
+    "productTestFailures": 0,
+    "expectationsWeakened": false
+  },
+  "tutorial": {
+    "handle": 96956,
+    "exitCode": 0,
+    "mission": "tutorial4",
+    "passed": true,
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.405,
+        "gameTimeAfter": 24.077,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "waitFrames": 600,
+    "observations": 16,
+    "reviewedImage": "extracted/cpp-resume-1221/live-tutorial4/015-generator-settled.png",
+    "fullCombatOrBuildingCompletionVerified": false
+  },
+  "editor": {
+    "handle": 78954,
+    "exitCode": 0,
+    "passed": true,
+    "roundTrips": 2,
+    "observations": 11,
+    "testBattleExecutions": 0,
+    "configuredClientWidth": 800,
+    "configuredClientHeight": 600
+  },
+  "protection": {
+    "existingFiles": 2801,
+    "unchanged": true,
+    "newFixtureFiles": 0,
+    "originalFileChanges": 0,
+    "agentsChanges": 0
+  },
+  "lastDecompilation": {
+    "clientBothEditions": {
+      "date": "2026-11-03",
+      "host": "HJOW-Athlon"
+    },
+    "rootServer": {
+      "date": "2026-11-07",
+      "host": "HJOW-Athlon"
+    },
+    "newDecompilation": 0,
+    "decompilerSourceChanges": 0
+  },
+  "boundaries": [
+    "실제 NoWorld 전체 완료가 아니다. Storage 기본 Form 삭제는 Process/Depend2종 연결, Gump/Content2종 잔여다.",
+    "Regular39/87VT·잔여48VT/23함수, 다른 process/PID/VT·큰 AI·배치/Fort 상위 Finish·전수 호출자/owner·M6-l/m이 남는다.",
+    "M7독립5건/M8·K1~K5·S1~S4·B1~B4의16상위계획과 조사 미착수34버그가 남는다.",
+    "새 MP/공중3종 전용/포획희생/특정공격/승리 검사는 하지 않았다. 전체34진입 마지막제품644/검증645, 최신ZIP1092, 최신전체솔루션검사통과 기록 없음."
+  ],
+  "allStartedBuildTestGuiTerminal": true,
+  "remotePushes": 0,
+  "handoff": {
+    "archiveAnchor": "archive-20261109-through-1220",
+    "previousArchiveBytes": 4077373,
+    "previousArchiveSha256": "4369993cf287357d929c4667791db4c16a6cd35cbca3d09dbe52000827767914",
+    "archivedCurrentSha256": "23a1749c5bcc049f0d9ea5509a6073caf11484ae1e40be1ef388fb502ed8118c",
+    "archivePrefixPreserved": true,
+    "currentBeforePreservedVerbatim": true,
+    "localLinks": 42,
+    "remainingUpperPlans": 16
+  }
+}

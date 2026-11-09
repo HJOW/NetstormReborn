@@ -48,6 +48,7 @@
 #include "o/RawSquidDestroyDispatch.h"
 #include "o/SquidFactory.h"
 #include "o/SquidFormDispatch.h"
+#include "o/DependFormHost.h" // 장기 감시 본체와 현재 World 알림 경계를 명시적으로 선언한다.
 #include "o/SquidFrameBinding.h"
 #include "o/SquidDestroyLifecycle.h"
 #include "o/SquidOwner.h"
@@ -78,6 +79,10 @@ struct RawSurfaceLifetimeBindings {
     std::function<void(o::Sid)> fallWalker; // 원문의 선택된 실제 이동 유닛 낙하를 현재 모듈에 전달한다.
     std::function<void(const o::BridgeLifecycleEvent&)> bridgeEffect; // 현재 실제 파편/소리 콜백이며 빈 성공을 허용하지 않는다.
     std::function<std::shared_ptr<void>()> pin; // 선택 호출 동안만 실제 외곽 Runtime 소유권을 보유한다.
+};
+struct RawSurfaceDependBindings { // 현재 World의 실제 감시 알림만 짧게 소유하며 장기 감시 쌍/공장과 구별한다.
+    o::DependFormNotice notice; // 기존 Session의 가상+34 소비자이며 비어 있으면 장기 현재 VT 분배를 직접 사용한다.
+    std::function<std::shared_ptr<void>()> pin; // 선택한 알림이 정상/예외 반환할 때까지 실제 전체 Runtime을 보유한다.
 };
 // 현재 Client의 순수 UI 기억/전역 소리를 공통 삭제의 장기 장치로 빌린다.
 struct RawSurfaceDeletionDevices {
@@ -144,6 +149,7 @@ private:
     o::SquidPostPopDevices postPopDevices_; //현재실제Client AI/로컬owner/선택의장기장치다.
     std::weak_ptr<const RawSurfacePopBindings> popRuntime_; //현재typed장치/외부Kernel만짧게빌리고반납뒤장기기본전송을사용한다.
     std::weak_ptr<const RawSurfaceLifetimeBindings> surfaceLifetimeRuntime_; // 현재 World 반납 뒤 큰 파생 종단 주소를 남기지 않는다.
+    std::weak_ptr<const RawSurfaceDependBindings> dependRuntime_; // World의 실제 알림 callback을 강하게 역소유하지 않는다.
     RawSurfaceDamageableDevices damageableDevices_; // 실제 Client와 장기 전역만 소유하며 Session 주소를 저장하지 않는다.
     std::weak_ptr<ClientPlayerRecords> playerRecords_; // 현재 실제 Player owner만 약하게 빌리며 span/base를 캐시하지 않는다.
     bool playerRecordsBound_{}; // 최초 Client 결합만 허용하며 owner 반납을 새 초기화로 대체하지 않는다.
@@ -242,6 +248,9 @@ public:
     o::SquidReward& Reward(); // 같은 Pool/TYPE/장부의 장기 HP·보상을 필요한 순간 한 번 구성한다.
     void BindProcessDevices(RawSurfaceProcessDevices devices); //첫Host/삭제기전현재Client장치만결합하며선택/삭제를실행하지않는다.
     void BindSurfaceLifetimeRuntime(const std::shared_ptr<const RawSurfaceLifetimeBindings>& runtime); // 현재 같은 World의 실제 큰 효과만 짧게 빌린다.
+    void BindDependRuntime(const std::shared_ptr<const RawSurfaceDependBindings>& runtime); // 현재 World의 실제 알림/수명만 weak로 빌리며 감시 본체는 바꾸지 않는다.
+    o::DependFormHost& DependForms(); // 같은 Pool·현재 공장/TYPE·가상 삭제를 World 밖에서도 사용하는 장기 감시 본체다.
+    void NotifyDependency(o::Sid watcher,o::Sid watched,o::Sid form); // 현재 자산83개와 내장 Form 네 클래스의 실제+34를 직접 선택한다.
     o::RawSquidDestroyDispatch& VirtualDestroy(); // 현재 Pool/Graph/boss/editor를 읽는 같은 장기 가상10 몸체다.
     o::RawSurfaceLifecycle& SurfaceLifetime(); // 같은 공통 삭제/Host/TYPE를 사용하는 실제 표면 수명이다.
     o::RawBridgeEvents& BridgeRegular(); // 현재 권한/디버그/다리 TYPE와 같은 이웃·공장·소유/Pop·삭제를 사용하는 장기 다리 Regular다.
@@ -342,7 +351,8 @@ private:
     void EmitDefaultAssetEffect(const o::SquidDestroyEvent& event); //현재VT의실제Pre/Post/부모통지를같은장기삭제부모에분배한다.
     void NotifyAviaryHome(o::Sid home,std::uint32_t method); // 서버 관문 뒤 같은 장기 Pool/Host/현재 TYPE/시각/난수로 실제 세 홈 통지 본문을 공유한다.
     o::SquidDestroyHooks DefaultProcessAssetHooks(); //실제선택/전송과자산가상효과를같은장기부모에연결한다.
-    o::SquidFormDispatch& ProcessFormDispatch(); //같은공통삭제깊이에실제자산가상10과ProcessForm을등록하며다른Form은전용owner를요구한다.
+    void DeliverDependNotice(o::Sid watcher,o::Sid watched,o::Sid form); // 현재 World 알림의 실제 pin/함수 사본을 선택하거나 장기 가상34를 직접 실행한다.
+    o::SquidFormDispatch& ProcessFormDispatch(); // 같은 공통 삭제 깊이에 실제 자산 가상10과 Process/Depend Form을 등록한다.
     float HandleDefaultRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); //PE의현재VT+5c가복원된원문base인경우만해당본문을실행한다.
     std::int32_t WriteDefaultForm(o::SquidProcess& process,bool parentChanged,std::uint32_t force); //Dais/Construction의실제writer를같은공통버퍼로분배하며다른파생누락은선택위치에서드러낸다.
     o::BridgeConnectHooks SurfaceObjects(); //연결/받침이공유하는같은실제Factory/Owner/Pop/Frame/통지다.
@@ -413,6 +423,7 @@ private:
     std::unique_ptr<o::RawBuriedRegular> buriedRegular_; //현재Frame과난수보다먼저반납하고Host종료까지살아있다.
     std::unique_ptr<o::RegularProcess> resourceRegular_; //할당과생성사이동일new28의소유권만보존한다.
     std::unique_ptr<o::RawSquidDestroy> baseDestroy_; //같은Native공통pre/post깊이를World반납뒤에도보존한다.
+    std::unique_ptr<o::DependFormHost> dependForms_; // 장기 Host/분배기 정리가 끝날 때까지 같은 공장·삭제기보다 먼저 반납하지 않는다.
     std::unique_ptr<o::SquidFormDispatch> processForms_; //장기Host와같은Pool의실제ProcessForm경로이며UI/내용물가짜처리기는등록하지않는다.
     std::unique_ptr<o::RawSquidTransmission> transmission_; //같은Pool/현재TYPE/GameAux보다먼저반납하는공통실제송신기다.
     std::unique_ptr<RawProcessHostStorage> processes_; // 실제 Pool/TYPE 뒤에 선언하여 그 참조보다 먼저 최종 반납한다.

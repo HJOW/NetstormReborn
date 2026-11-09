@@ -13,6 +13,7 @@ struct DependFormPair { /* watchedForm: 암묵적인 런타임 SquidId 변환을
 class DependFormHost {
 public:
     void BindUnpop(std::function<void(Sid)> unpop); // 실제 World 공장의 현재 진단/종속 분리를 연결한다.
+    void BindVirtualDestroy(std::function<void(Sid,std::uint32_t)> destroy,std::function<void(Sid)> beforeFind); // Native는 현재 상대 VT의 실제 삭제와 FormFinder 시작 진단을 같은 장기 owner에 연결한다.
     void BindCreation(SquidFactory& factory,const std::uint32_t& type,std::function<void(std::string_view,std::string_view,std::uint32_t)> assertion={}); // 같은 풀의 공장/장기 현재 번호와 원문 진단을 연결한다.
     // 풀·삭제 처리기는 이 객체보다 오래 살아야 한다. 다른 Form/자산의 가상 분배는 fallback으로 보존한다.
     DependFormHost(SidPool& pool,RawSquidDestroy& destroy,DependFormNotice notice={},
@@ -35,6 +36,8 @@ public:
     bool IsDependForm(Sid form) const;
     const SidPool& Pool() const;
 private:
+    std::function<void(Sid,std::uint32_t)> virtualDestroy_; // Native 상대 삭제는 현재 클래스의 가상+10을 다시 선택하며 독립 typed 계약은 기존 검사/삭제를 유지한다.
+    std::function<void(Sid)> beforeFind_; // 현재 checking/메타맵/권한 진단 뒤 부모 head를 읽게 하는 원문 FormFinder 시작 경계다.
     std::function<void(Sid)> unpop_; // 독립 입력의 미연결은 기존 forms_의 같은 공통 해제를 사용한다.
     SquidFactory* factory_{}; // 실제 World와 같은 수명의 공장이며 독립 입력은 같은 공통 Factory를 호출마다 구성한다.
     const std::uint32_t* dependType_{}; // 미연결 독립 입력만 원문 초기1을 쓰고 실제 World는 장기 DWORD를 빌린다.

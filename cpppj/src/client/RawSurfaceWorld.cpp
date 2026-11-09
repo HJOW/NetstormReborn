@@ -114,6 +114,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     std::shared_ptr<RawSurfaceDeletionBindings> deletionRuntime; // 현재 Session의 실제 forward와 pin을 이번 World 수명으로만 소유한다.
     // lifecycle: 수명.
     std::shared_ptr<RawSurfaceLifetimeBindings> surfaceLifetimeRuntime; // 실제 큰 효과만 World 수명으로 소유한다.
+    std::shared_ptr<RawSurfaceDependBindings> dependRuntime; // 현재 감시 알림만 소유하며 Storage가 실제 외곽 pin과 함께 weak로 빌린다.
     std::unique_ptr<o::RawSurfaceLifecycle> localLifecycle;o::RawSurfaceLifecycle* lifecycle{};std::unique_ptr<o::RawBridgeEvents> localEvents; // 독립 typed의 다리 Regular만 World가 소유한다.
     o::RawBridgeEvents* events{}; // Native는 같은 Storage의 장기 다리 Regular를 빌린다.
     // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트.
@@ -124,8 +125,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     std::optional<RawProcessHostStorage::Returned> returnedProcesses; // 단일 Native Clear 뒤 실제 소비한 대여의 반납 증빙이다.
     // formDispatch: 타입별 서로 다른 fallback 사슬을 같은 분배기로 모아 혼합 종속 체인의 중첩 삭제를 지원한다 (std::unique_ptr<o::SquidFormDispatch>).
     std::unique_ptr<o::SquidFormDispatch> formDispatch;
-    // dependencies: 같은 삭제 분배기에 영구 등록하는 실제 감시 Form 쌍 소유자다.
-    std::unique_ptr<o::DependFormHost> dependencies;
+    std::unique_ptr<o::DependFormHost> localDependencies; // 독립 typed World의 기존 지역 감시 수명만 보존한다.
+    o::DependFormHost* dependencies{}; // Native는 Storage의 같은 장기 감시 본체를 빌린다.
     std::unique_ptr<o::RawBridgeDecay> bridgeDecay; //실제 Graph/풀을 읽고 같은 World의 가상 삭제/표시를 호출한다.
     const std::uint32_t* decayEditor{}; //실제 Client의 현재 Editor 주소이며 독립 World는 기존 mode를 사용한다.
     std::function<void(o::Sid)> decayCarriers,decaySound; //현재 Session의 대피/위치 소리 장치이며 World 반납 전에 같이 소멸한다.
@@ -210,7 +211,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             legacyAllocationReclaim=storage->Processes().BindLegacyAllocationReclaim([this](o::Sid sid) { static_cast<void>(Destroy(sid,0)); }); // 실제 현재 Form/자산 분배로만 회수하며 raw Kernel을 Storage의 다른 Kernel로 대체하지 않는다.
         } // 직접 Host와 공장은 같은 World 수명이며 대여 밖으로 참조를 남기지 않는다.
         formDispatch->Bind(*host);
-        dependencies=std::make_unique<o::DependFormHost>(pool,*baseDestroy,
+        if (storage->UsesNativeTransmissionDevices()) dependencies=&storage->DependForms();
+        else { localDependencies=std::make_unique<o::DependFormHost>(pool,*baseDestroy,
             [this](o::Sid watcher,o::Sid watched,o::Sid form) {
                 if (runtime.dependencyNotice) { runtime.dependencyNotice(watcher,watched,form);return; }
                 // 실제 ProcessForm34는 server일 때 PID의 notify(2,form,watched)를 호출한다.
@@ -218,10 +220,11 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
             },formDispatch->Hooks(),[this](o::Sid form,std::uint32_t flags) {
                 if (!runtime.formTransmit) throw std::logic_error("현재 DependForm 서버 전송 소비자 미연결");
                 runtime.formTransmit(form,flags);
-            });
-        formDispatch->Bind(*dependencies);
+            });dependencies=localDependencies.get();
         dependencies->BindCreation(*factory,storage->GameAux()->DependFormType(),[owner=storage.get()](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); }); // 장기 현재 번호를 두 번 읽고 같은 World의 공통 생성자/진단을 사용한다.
         dependencies->BindUnpop([this](o::Sid sid) { factory->UnpopForm(sid); }); // 감시 Form 삭제도 같은 현재 World의 진단과 부모 getter를 사용한다.
+        }
+        formDispatch->Bind(*dependencies);
         if (edition==o::OriginalEdition::Patch1078) {
             o::RawBridgeDecayHooks decay;
             decay.destroy=[this](o::Sid sid,std::uint32_t flags) { static_cast<void>(Destroy(sid,flags)); };
@@ -266,7 +269,7 @@ RawSurfaceWorld::RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::R
     std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> storage,bool adoptPrepared,bool* sharedSavedGame,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux,std::shared_ptr<o::FortSerializationGlobals> serialization)
     :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType,processKernel,std::move(storage),adoptPrepared,sharedSavedGame,std::move(authority),std::move(gameAux),std::move(serialization))) {}
 // 프로세스가 빌린 raw 데이터보다 먼저 반납되며 외부 Client Kernel 자체는 파괴하지 않는다.
-RawSurfaceWorld::~RawSurfaceWorld() { BindRuntimePin({});impl_->DrainCurrentProcessesForShutdown();impl_->deletionRuntime.reset();impl_->surfaceLifetimeRuntime.reset();impl_->postPop->ReleaseRuntimeBindings(); } // 현재 대여의 생성 실패/일반 종료만 반납하며 이전 Native 잔류의 최종 소유자는 Storage다.
+RawSurfaceWorld::~RawSurfaceWorld() { BindRuntimePin({});impl_->DrainCurrentProcessesForShutdown();impl_->deletionRuntime.reset();impl_->surfaceLifetimeRuntime.reset();impl_->dependRuntime.reset();impl_->postPop->ReleaseRuntimeBindings(); } // 현재 대여의 생성 실패/일반 종료만 반납하며 이전 Native 잔류의 최종 소유자는 Storage다.
 // 이 뷰는 내부 모듈의 현재 참조만 돌려주며 새 배열/풀을 만들지 않는다.
 RawWorldCore RawSurfaceWorld::Core() {
     auto& s=*impl_;return {s.pool,s.hash,s.spots,s.types,s.frames,s.shapes,s.bookkeeping,s.ownerMode,
@@ -309,6 +312,7 @@ void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
     s.runtime=std::move(hooks);
     if (s.storage->UsesNativeTransmissionDevices()) {
         auto binding=std::make_shared<RawSurfaceLifetimeBindings>();binding->fallWalker=[fall=s.runtime.walkerFall](auto sid) { if (!fall(sid)) throw std::logic_error("월드 낙하 처리 실패"); };binding->bridgeEffect=s.runtime.bridgeEffect;binding->pin=s.runtimePin;s.surfaceLifetimeRuntime=binding;s.storage->BindSurfaceLifetimeRuntime(binding); // 전체 현재 효과의 실제 소유자는 기존 World/Session이며 Storage는 weak로만 빌린다.
+        auto depend=std::make_shared<RawSurfaceDependBindings>();depend->notice=s.runtime.dependencyNotice;depend->pin=s.runtimePin;s.dependRuntime=depend;s.storage->BindDependRuntime(depend); // 현재 실제 통지 소비자는 보존하고 감시 본체/공장/TYPE를 교체하지 않는다.
     }
     s.runtimeBound=true;s.runtime.loadingDepth(s.loadState.LoadingDepth());
 }
@@ -316,6 +320,7 @@ void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
 void RawSurfaceWorld::BindRuntimePin(std::function<std::shared_ptr<void>()> pin) {
     auto& state=*impl_;state.runtimePin=std::move(pin);if (state.factoryRuntime) state.factoryRuntime->pin=state.runtimePin;if (state.displayRuntime) state.displayRuntime->pin=state.runtimePin;if (state.popRuntime) state.popRuntime->pin=state.runtimePin;
     if (state.surfaceLifetimeRuntime) state.surfaceLifetimeRuntime->pin=state.runtimePin; // 표면의 큰 파생 효과도 같은 실제 외곽 소유권을 따른다.
+    if (state.dependRuntime) state.dependRuntime->pin=state.runtimePin; // 감시 알림도 같은 전체 Runtime의 공개/반납 수명을 따른다.
     if (state.deletionRuntime) state.deletionRuntime->pin=state.runtimePin; // 같은 파생 종단도 실제 외곽 owner 공개/반납을 따른다.
     if (state.processRuntime) state.processRuntime->pin=state.runtimePin;state.postPop->BindRuntimePin(state.runtimePin);if (const auto current=state.sessionContainedUnpop.lock()) current->BindRuntimePin(state.runtimePin);
 }
