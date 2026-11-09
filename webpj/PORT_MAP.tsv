@@ -796,7 +796,7 @@ cpppj/src/o/RawNuggetReplenish.cpp	port	www/core/raw-nugget-replenish.js	1f00a25
 cpppj/src/o/RawObjectCommand.cpp	port	www/core/raw-object-command.js	1f00a25a	port	[o-default] WB04-E123: 공통 객체 명령 004ae010/Form 부모 004ac9b0. fixture object-command originals 160행 전부(originalCD 160행은 10.72 라 제외). 가상 소유자/피해/삭제/진단은 훅 경계
 cpppj/src/o/RawObjectConversion.cpp	port	www/core/raw-object-conversion.js	1f00a25a	port	[o-default] WB04-E106: 비석/주문 Command 0x030000ce 전환 41e400/462290(Unpop 뒤 QA/TYPE 재조회·retype·프레임 DWORD·QA WORD)·Session 바인더(SquidFactory.retype 진단 0x22d~0x22f). fixture squid-retype 128행+object-conversion 36행 전부(10.78 전용 파일). 공간 해제/재등록/기본 프레임/부모 명령은 훅 경계
 cpppj/src/o/RawObjectTrace.cpp	port			todo	[o-default]
-cpppj/src/o/RawObjectTraceFields.cpp	port			todo	[o-default]
+cpppj/src/o/RawObjectTraceFields.cpp	port	www/core/raw-object-trace-fields.js	1f00a25a	port	[o-default] WB04-E230: 객체 trace 필드 서식 Base 004ac400(`~1~y<SID 4자리>~n Base type=<TYPE>/~y<이름 20자>~n` next/head(덤프 모드 억제)·FREE/DEAD/VOID/CONTAINED, 레벨 29)과 첫 줄 뒤 슬롯 재조회 Form 004ae1e0(부모 +16·이전 +14 0 이면 생략)·Process 004ae3f0(부호 PID +18 3자리)·Depend 004ae530(감시 +18/+20)·Content 004aea90(내용 TYPE·sprintf name "XXX" 치환 20자·수량·flags 16진), C %0*d 폭 규칙(부호 포함), 단일 %s/%% 와 폭/정밀도/- 정렬만(다른 플래그·추가 인자·80 BYTE 초과 거부). fixture object-trace-fields 10.78 308행 전부와 cpppj 계약 및 웹 계약 1건(표준 C 규칙 서식·판본/표 크기/범위 밖). 남음: 실제 로그 장치/서식 파서와 객체 vtable +70·파생 자산 Main/Task 연결은 순서4
 cpppj/src/o/RawObjectTraceMain.cpp	port			todo	[o-default]
 cpppj/src/o/RawOutpostLifecycle.cpp	exclude-mp			-	[mp-outpost]
 cpppj/src/o/RawPacketDispatch.cpp	port			todo	[o-default]

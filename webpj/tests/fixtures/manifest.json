@@ -14563,9 +14563,38 @@
       "bytes": 7733012,
       "lines": 645,
       "fixtureCommit": "2ede4027",
-      "webCommit": "worktree",
+      "webCommit": "0c9d9833",
       "cpppjBasis": {
         "cpppj/src/o/RawChatManagerPrefix.cpp": "2ede4027"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E230",
+      "id": "object-trace-fields",
+      "path": "cpppj/tests/fixtures/object-trace-fields-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 객체 Base 와 내장 Form 4종의 trace 서식. 입력 6칸(진입 본체·SID·덤프 모드·변경 여부·이름 hex·50 BYTE 슬롯 hex)에서 실제 로그 장치가 받은 레벨과 서식 완료 바이트 전체 (308행: 5개 본체 × 상태 16조합·덤프 모드 0/1/2·이름 10종·정수 경계·기록 뒤 필드 변경)",
+      "consumers": [
+        "webpj/tests/object-trace-fields.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-trace-fields.js"
+      ],
+      "doc": "docs/webpj-object-trace-fields-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawObjectTraceFields.cpp"
+      ],
+      "scope": "10.78 308행 전부",
+      "text": true,
+      "sha256": "a293da2272eda1d402ec8841d4cc48d148dcbae03e8c03441f29e6b1835cd1a5",
+      "bytes": 118759,
+      "lines": 309,
+      "fixtureCommit": "4d0b8061",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawObjectTraceFields.cpp": "4d0b8061"
       }
     }
   ]
