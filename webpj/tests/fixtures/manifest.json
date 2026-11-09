@@ -14059,7 +14059,7 @@
       "bytes": 1608479,
       "lines": 1729,
       "fixtureCommit": "e0169cba",
-      "webCommit": "worktree",
+      "webCommit": "01ae6446",
       "cpppjBasis": {
         "cpppj/src/o/SquidDestroyLifecycle.cpp": "7ba0130b"
       }
@@ -14089,7 +14089,7 @@
       "bytes": 12597854,
       "lines": 1729,
       "fixtureCommit": "67070e23",
-      "webCommit": "worktree",
+      "webCommit": "01ae6446",
       "cpppjBasis": {
         "cpppj/src/o/SquidDestroyLifecycle.cpp": "7ba0130b"
       }
@@ -14119,9 +14119,41 @@
       "bytes": 178212,
       "lines": 25,
       "fixtureCommit": "a726b49f",
-      "webCommit": "worktree",
+      "webCommit": "01ae6446",
       "cpppjBasis": {
         "cpppj/src/o/SquidDestroyLifecycle.cpp": "7ba0130b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E215",
+      "id": "production-deck",
+      "path": "cpppj/tests/fixtures/production-deck-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 Deck/Contains 전체와 Indicate 상위 몸체. 모드(Get·Contains·Initialize·Clear·Append·Activate·Compact·Indicate)별 입력(templateOwner·type·chance·개수·채움 바이트·Player 포인터 유무·PlayerKnown·battleOwner)에서 반환·352 BYTE Deck 전체·Player 9기록 전체·요청한 하위 경계 순서(할당 바이트·진단·종속 부착) 248행",
+      "consumers": [
+        "webpj/tests/production-deck.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-production-deck.js",
+        "webpj/www/core/raw-sp-store-notice-bindings.js"
+      ],
+      "doc": "docs/webpj-production-deck-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawProductionDeck.cpp",
+        "cpppj/src/o/RawSpStoreNoticeBindings.cpp"
+      ],
+      "scope": "10.78 248입력 전부",
+      "text": true,
+      "sha256": "8c0402e5bfcc7914457eea5acc0144f73b673ea33160bade3b35d02d0c44647c",
+      "bytes": 988543,
+      "lines": 249,
+      "fixtureCommit": "05d7cb57",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawProductionDeck.cpp": "b37bd01a",
+        "cpppj/src/o/RawSpStoreNoticeBindings.cpp": "eb22304d"
       }
     }
   ]

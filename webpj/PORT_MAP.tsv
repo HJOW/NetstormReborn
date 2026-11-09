@@ -862,7 +862,7 @@ cpppj/src/o/RawPriestTakenNotice.cpp	port	www/core/raw-priest-taken-notice.js	1f
 cpppj/src/o/RawProcessAttach.cpp	port	www/core/raw-process-attach.js	1f00a25a	port	[o-default] WB04-D5c: ProcessForm 파생 +74 접두. fixture process-attach-current-local 24행(10.78) + 서버 접두 계약
 cpppj/src/o/RawProcessRemoval.cpp	port	www/core/raw-process-removal.js	1f00a25a	port	[o-default] WB04-D5c: 004b27a0 일괄 제거. fixture process-removal-filter 64행(웹 입력은 raw 노드에 실제 VT 를 넣음)
 cpppj/src/o/RawProcessSummary.cpp	exclude-host			-	[host-dev-files]
-cpppj/src/o/RawProductionDeck.cpp	port			todo	[o-default]
+cpppj/src/o/RawProductionDeck.cpp	port	www/core/raw-production-deck.js	1f00a25a	port	[o-default] WB04-E215: 생산 Deck(실제 352 BYTE 블록·66개 5 BYTE 항목·count 0x14c/가중합 0x150/남은 수 0x154/seed/open)의 저장소 0044f700 Get(현재 Player+68 조회·없으면 할당·fill 입력 보존·다섯 DWORD 초기화·부착)과 Initialize 0044f200·ClearEntries 0044f230·Contains 0044f970(현재 templateOwner·type BYTE 비교)·Append 0044f290(중복/용량/절단 진단)·Activate 0044f3d0(signed power)·Compact 0044f430(앞방향 겹침 복사), 66 초과·모르는 토큰·Player 9 이상 물리 거부, 소멸자 dispose(자기 포인터만 0), Player 링크 정리 0048fcd0 와 같은 owner release·정상 복귀 증빙 PlayerLinksPass(열쇠·약한 수명 표식·세 DWORD 0 확인·진행 중 소비 금지·소비 뒤 닫힘), RawIndicateTechnology 004929e0(kind WORD 2 BYTE 조회·생성 사슬 (type,0,4,0x10,0)). fixture production-deck 10.78 248행 전부와 cpppj ProductionDeckTests·ProductionDeckReleaseTests 계약 10건. 남음: RawCampaignProductionBindings(재계산·Factory 상품, production-refresh 242행)·장기 FullDeck 전역은 client 단위 이식 때·Client 장기 저장소 소유와 Session 교체 순서는 순서4~5
 cpppj/src/o/RawProductionSync.cpp	port			todo	[o-default]
 cpppj/src/o/RawProjectileGeometry.cpp	port	www/core/raw-projectile-geometry.js	1f00a25a	partial	[o-default] WB04-E85: 투사체 포구/치수 기하(썬 디스크 포구 0046a780·가상 +b4 포구·캐논 사정선 끝 00481750·방향 프레임 0041d6e0·표적 치수/상자 0049af10). fixture projectile-geom 10.78 120행+cannon-rayend 4040행 전부. 남음: muzzle 71 외·hotspot·directionFrame·아이스/썬더(129/131) 사정선의 소비자 fixture 대조와 실제 SHP 헤더 연결
 cpppj/src/o/RawRainAviaryProcess.cpp	port			todo	[o-default]
@@ -885,7 +885,7 @@ cpppj/src/o/RawSmokeEffect.cpp	port	www/core/raw-smoke-effect.js	1f00a25a	port	[
 cpppj/src/o/RawSnart.cpp	port	www/core/raw-snart.js	1f00a25a	port	[o-default] WB04-E19: 004a8800/004a8850 SNART 이름표 선택(제자리 변환). data-manager-initialize 64행·template-section-names 12행을 통해 대조. 파일 이미지 reader 경로는 DataManager 단위에서
 cpppj/src/o/RawSoloMapList.cpp	exclude-edit			-	[edit-map-list]
 cpppj/src/o/RawSpecialDamage.cpp	port	www/core/raw-special-damage.js	1f00a25a	port	[o-default] WB04-E104: 신전 건설 중 피해 분배 4dba40·윈드 타워 방향 방어 48ef70. fixture special-damage 432행+wind-tower-zero 216행 전부(10.78 전용 파일). 건설 Form 조회/끝 시각/일반 피해/표시 갱신은 훅 경계
-cpppj/src/o/RawSpStoreNoticeBindings.cpp	port			todo	[o-default]
+cpppj/src/o/RawSpStoreNoticeBindings.cpp	port	www/core/raw-sp-store-notice-bindings.js	1f00a25a	port	[o-default] WB04-E215: Player 내용물 통지 SP 접두의 네 전역 getter(cursorA=실제 offset·cursorB=추적 offset signed→DWORD·firstSpPool=첫 분산 배열 확보 1/0·firstPermutation=순열 첫 signed WORD)를 같은 ScrambledSpStore 현재 조회에 연결하고 추적 offset 미연결은 첫 바인딩에서 거부. 독립 fixture 없음: production-deck 248행의 통지 접두 장면(Indicate)이 간접 대조
 cpppj/src/o/RawSquidActivate.cpp	port	www/core/raw-squid-activate.js	1f00a25a	port	[o-default] WB04-E1: 004ac560 공통 Activate(void·권한·전송·깊이 진단)
 cpppj/src/o/RawSquidContainedUnpop.cpp	port	www/core/squid-contained-unpop.js	1f00a25a	port	[o-default] 3.6②→반영(WB04-D5a): 정렬 Content 부착용 PreviousAtTable getter/setter
 cpppj/src/o/RawSquidCreation.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(004af530)
