@@ -14001,9 +14001,38 @@
       "bytes": 1238683,
       "lines": 5847,
       "fixtureCommit": "5b10ce82",
-      "webCommit": "worktree",
+      "webCommit": "f4d6a9cc",
       "cpppjBasis": {
         "cpppj/src/o/RawDamageableHit.cpp": "c3cfc98f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E212",
+      "id": "forcefieldpostpop",
+      "path": "cpppj/tests/fixtures/forcefieldpostpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 보호막 후처리 접두(예약 두 번의 성공 여부별 사건 1·2 등록과 공통 base 호출)·Regular 사건 1·2·모르는 사건(진행·삭제 기록과 반환 float 비트)·좌표 타입 finder(후보 배치 layout 0~9)·보호막 50바이트 raw 전체(10.78 1208행·CD 1208행·10.37 1208행)",
+      "consumers": [
+        "webpj/tests/forcefield-lifecycle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-forcefield-lifecycle.js"
+      ],
+      "doc": "docs/webpj-forcefield-lifecycle-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawForcefieldLifecycle.cpp"
+      ],
+      "scope": "10.78 1208입력 전부(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "001ee50b7a9f42e6e834a3c0bf271ccf7ea9af33ea7682a7ef50aa2416189355",
+      "bytes": 608426,
+      "lines": 3626,
+      "fixtureCommit": "6a3aafb8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawForcefieldLifecycle.cpp": "fcf47cc2"
       }
     }
   ]
