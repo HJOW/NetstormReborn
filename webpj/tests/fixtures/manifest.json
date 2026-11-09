@@ -14475,9 +14475,68 @@
       "bytes": 2931280,
       "lines": 677,
       "fixtureCommit": "29bee739",
-      "webCommit": "worktree",
+      "webCommit": "7c0ee6b1",
       "cpppjBasis": {
         "cpppj/src/o/RawFortPaletteTransition.cpp": "29bee739"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E228",
+      "id": "state-world-cleanup",
+      "path": "cpppj/tests/fixtures/state-world-cleanup-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: State 세계 정리 부모 004b2df0. 입력 15칸(seed·reason·Client·모드 비트·editor·mission·State·known·owner·Template·header 존재 마스크·정지 깊이·defaultSp·mission·변이)에서 전역 61곳 전체·세 Player 물리·TYPE+c4 float·9×20 BYTE Template header·현재 Core 포인터·하위 호출 trace (294행: 정상 194·중단 100)",
+      "consumers": [
+        "webpj/tests/state-world-cleanup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-state-world-cleanup.js",
+        "webpj/www/core/raw-player-core-data.js"
+      ],
+      "doc": "docs/webpj-state-world-cleanup-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawStateWorldCleanup.cpp"
+      ],
+      "scope": "10.78 294행 전부",
+      "text": true,
+      "sha256": "edf74df13e372875515cd78a92cf6d9bbf5644a5d121428c8dfad7f0b3ccd152",
+      "bytes": 3422079,
+      "lines": 296,
+      "fixtureCommit": "d207940c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawStateWorldCleanup.cpp": "a18bf611"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E228",
+      "id": "state-flat-reset",
+      "path": "cpppj/tests/fixtures/state-flat-reset-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: State 작은 정리 몸체 004328a0(PlayerNoMake 경고 255 DWORD)·004ab940(spot 65536 BYTE). 두 x87 상태 × 경고/spot × 네 패턴의 입력/출력 전체 Adler-32 와 앞뒤 인접 16 BYTE (16행)",
+      "consumers": [
+        "webpj/tests/state-world-cleanup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-state-world-cleanup.js"
+      ],
+      "doc": "docs/webpj-state-world-cleanup-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawStateWorldCleanup.cpp"
+      ],
+      "scope": "10.78 16행 전부",
+      "text": true,
+      "sha256": "dd87f5c131381376737060cace5f1a7390304a2752bb41227568ff3166ca8e72",
+      "bytes": 1967,
+      "lines": 17,
+      "fixtureCommit": "a18bf611",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawStateWorldCleanup.cpp": "a18bf611"
       }
     }
   ]
