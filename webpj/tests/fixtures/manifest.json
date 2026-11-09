@@ -13672,7 +13672,7 @@
       "bytes": 34070,
       "lines": 265,
       "fixtureCommit": "6e5a4fc8",
-      "webCommit": "worktree",
+      "webCommit": "65db68c4",
       "cpppjBasis": {
         "cpppj/src/o/RawTempleDraw.cpp": "6e5a4fc8",
         "cpppj/src/o/RawRainVortexDraw.cpp": "20e055e3"
@@ -13702,7 +13702,7 @@
       "bytes": 5743,
       "lines": 233,
       "fixtureCommit": "20e055e3",
-      "webCommit": "worktree",
+      "webCommit": "65db68c4",
       "cpppjBasis": {
         "cpppj/src/o/RawRainVortexDraw.cpp": "20e055e3"
       }
@@ -13731,9 +13731,38 @@
       "bytes": 288099,
       "lines": 757,
       "fixtureCommit": "ab993bdf",
-      "webCommit": "worktree",
+      "webCommit": "65db68c4",
       "cpppjBasis": {
         "cpppj/src/o/RawManaDraw.cpp": "ab993bdf"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E204",
+      "id": "minimapcell",
+      "path": "cpppj/tests/fixtures/minimap-cell-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 미니맵 셀 그림 004808d0 의 raw 슬롯·해시 머리·모드/색 억제/색 DWORD 입력과 원문이 바꾼 bitmap 픽셀·쓰기 순서·스택/명령 수·bitmap SHA(10.78 4722행, 두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/minimap-raster.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-minimap-raster.js"
+      ],
+      "doc": "docs/webpj-minimap-raster-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMinimapRaster.cpp"
+      ],
+      "scope": "10.78 4722입력 전부",
+      "text": true,
+      "sha256": "9a40c0edda37812fec1db3e7e65eb9de2da5ea319f16f93d7cc2e99edd0271b4",
+      "bytes": 2623901,
+      "lines": 4723,
+      "fixtureCommit": "560df210",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMinimapRaster.cpp": "560df210"
       }
     }
   ]
