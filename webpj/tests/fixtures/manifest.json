@@ -14683,9 +14683,44 @@
       "bytes": 1220797,
       "lines": 729,
       "fixtureCommit": "a5afdafb",
-      "webCommit": "worktree",
+      "webCommit": "d5134cff",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionOutcome.cpp": "da6c61ae"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E234",
+      "id": "mission-start",
+      "path": "cpppj/tests/fixtures/mission-start-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 공통 미션 시작(Start)과 AI 설정(init/apply/prepare/ability)·AI 생성(create). 입력(`|` 로 나뉜 정수 목록과 설정 키=hex 값)에서 start 전체 상태·double 비트·조회/효과 순서, 설정 600 BYTE 전체, Player 180 BYTE·반환 토큰·효과 순서 (204개 고유 입력)",
+      "consumers": [
+        "webpj/tests/mission-start.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mission-start.js",
+        "webpj/www/core/raw-mission-ai-settings.js",
+        "webpj/www/core/raw-ai-brain.js"
+      ],
+      "doc": "docs/webpj-mission-start-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissionStart.cpp",
+        "cpppj/src/o/RawMissionAiSettings.cpp",
+        "cpppj/src/o/RawAiCreate.cpp"
+      ],
+      "scope": "10.78 204개 고유 입력 전부",
+      "text": true,
+      "sha256": "0872a680e563feda45823a75bd9cc0f6be52576629f57745f22054c7a75a5011",
+      "bytes": 236542,
+      "lines": 205,
+      "fixtureCommit": "69c584bd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissionStart.cpp": "3cea1b14",
+        "cpppj/src/o/RawMissionAiSettings.cpp": "69c584bd",
+        "cpppj/src/o/RawAiCreate.cpp": "76e3c453"
       }
     }
   ]
