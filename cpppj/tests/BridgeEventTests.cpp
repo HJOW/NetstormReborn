@@ -426,13 +426,13 @@ TEST_CASE(bridge_event_real_raw_conversion_replaces_space_and_removes_its_proces
             const auto frameOffset=patch ? 36U : 34U,extraOffset=patch ? 40U : 35U,ownerOffset=patch ? 34U : 32U;
             const Sid source=factory.Create(kBridgeType);owner.Set(source,3);
             Write(pool.AllocatedBytes(source),frameOffset,mode==1 ? 40U : 35U,patch ? 4 : 1);
-            CHECK(pop.Pop(source,type,16,11,20.75f,21.9f)==RawPopResult::Registered);
+            CHECK(pop.Pop(source,type,16,11,20.75f,21.9f,0x10U)==RawPopResult::Registered); // 공통 공간 검사는 원문 전송 억제를 쓰며 아래 물리/장부/해시 단언을 그대로 유지한다.
             Write(pool.AllocatedBytes(source),8,23,2);pool.AllocatedBytes(source)[extraOffset]|=0x10;
             Sid neighbor{};
             if (mode!=2) {
                 neighbor=factory.Create(kBridgeType);owner.Set(neighbor,3);
                 // 실제 L 프레임은 아래쪽만 열린다. 낙하 칸 y=21에서 고른 L에 연결될 이웃은 한 칸 아래다.
-                CHECK(pop.Pop(neighbor,type,16,11,20.75f,22.9f)==RawPopResult::Registered);
+                CHECK(pop.Pop(neighbor,type,16,11,20.75f,22.9f,0x10U)==RawPopResult::Registered); // 실제 서버/패킷을 요구하지 않는 같은 원문 Pop 입력이다.
             }
             RawSquidNeighbors neighbors(pool,hash,spots,types,allFrames);
             BridgeEventState eventState;eventState.bridgeType=kBridgeType;Sid born{};
@@ -444,7 +444,7 @@ TEST_CASE(bridge_event_real_raw_conversion_replaces_space_and_removes_its_proces
             effects.destroy=[&](Sid sid,std::uint32_t flags) { destroy.Destroy(sid,flags,hostPointer->Hooks()); };
             effects.setOwner=[&](Sid sid,std::uint8_t player) { owner.Set(sid,player); };
             effects.pop=[&](Sid sid,float x,float y,std::uint32_t flags) {
-                CHECK(pop.Pop(sid,type,16,11,x,y,flags)==RawPopResult::Registered);
+                CHECK(pop.Pop(sid,type,16,11,x,y,flags|0x10U)==RawPopResult::Registered); // 끝 칸 교체의 실제 상태 변화는 유지하고 전송만 원문 관문에서 억제한다.
             };
             RawBridgeEvents events(pool,eventState,MakeBridgeNeighborHooks(neighbors,std::move(effects)));
             Kernel kernel;SquidProcessState processState;processState.now=10.0;

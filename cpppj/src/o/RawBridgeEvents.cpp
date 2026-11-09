@@ -53,6 +53,11 @@ RawBridgeEvents::RawBridgeEvents(SidPool& pool, const BridgeEventState& state, B
     if (!hooks_.frames || !hooks_.firstNeighbor || !hooks_.notifySurface || !hooks_.create || !hooks_.destroy ||
         !hooks_.setOwner || !hooks_.pop) throw std::invalid_argument("다리 이벤트 훅이 모두 연결되어야 한다");
 }
+// Native 실제 전역은 외부 긴 owner가 소유하며 결합 때 기존 모드/TYPE를 복사하거나 쓰지 않는다.
+void RawBridgeEvents::BindCurrentState(const bool& authority,const bool& debugKeep,const std::uint32_t& bridgeType) {
+    if (currentAuthority_ || currentDebugKeep_ || currentBridgeType_) throw std::logic_error("다리 Regular 현재 전역 중복 결합");
+    currentAuthority_=&authority;currentDebugKeep_=&debugKeep;currentBridgeType_=&bridgeType;
+}
 // 패치는 +0x24 DWORD(부호 있는 인덱스), CD는 +0x22 바이트다.
 std::int32_t RawBridgeEvents::Frame(Sid sid) const {
     const auto raw = pool_.Slot(sid);
@@ -73,11 +78,11 @@ void RawBridgeEvents::SetFrame(Sid sid, std::uint32_t frame) const {
 void RawBridgeEvents::SetWord(Sid sid, std::uint16_t word) const {
     auto raw = pool_.AllocatedBytes(sid);
     PutWord(raw, kWord, word);
-    if (static_cast<std::uint32_t>(raw[kType]) == state_.bridgeType) hooks_.notifySurface(sid);
+    if (static_cast<std::uint32_t>(raw[kType]) == (currentBridgeType_ ? *currentBridgeType_:state_.bridgeType)) hooks_.notifySurface(sid);
 }
 void RawBridgeEvents::ConvertEnd(Sid bridge, float x, float y) const {
     // 004215d0의 첫 조건: 디버그 유지가 꺼져 있고 권한이 있어야 한다.
-    if (state_.debugKeep || !state_.authority) return;
+    if ((currentDebugKeep_ ? *currentDebugKeep_:state_.debugKeep) || !(currentAuthority_ ? *currentAuthority_:state_.authority)) return;
     const bool patch = pool_.Edition() == OriginalEdition::Patch1078;
     // 소유자·플래그 필드 위치는 판본마다 다르다.
     const std::size_t ownerOffset = patch ? 0x22 : 0x20, flagOffset = patch ? 0x28 : 0x23;
@@ -133,12 +138,12 @@ void RawBridgeEvents::ConvertEnd(Sid bridge, float x, float y) const {
 float RawBridgeEvents::Handle(Sid bridge, std::uint32_t event, std::uint32_t, float payload) const {
     if (event == kBridgeDestroyEvent) {
         // 권한이 없으면 아무것도 하지 않고 예약을 끝낸다(반환 0).
-        if (!state_.authority) return kBridgeEventEnd;
+        if (!(currentAuthority_ ? *currentAuthority_:state_.authority)) return kBridgeEventEnd;
         hooks_.destroy(bridge, 0);
         return kBridgeEventKeep;
     }
     if (event == kBridgeFallEvent) {
-        if (!state_.authority) return kBridgeEventEnd;
+        if (!(currentAuthority_ ? *currentAuthority_:state_.authority)) return kBridgeEventEnd;
         // payload는 (x & 255) | (y << 8)을 float로 바꾼 값이다. _ftol 하위 DWORD에서 x는 하위 8비트, y는 부호 있는 오른쪽 8비트 이동이다.
         const std::uint32_t low = FtolLow(payload);
         ConvertEnd(bridge, static_cast<float>(low & 0xffU), static_cast<float>(static_cast<std::int32_t>(low) >> 8));

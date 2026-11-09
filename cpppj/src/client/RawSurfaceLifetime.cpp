@@ -29,4 +29,17 @@ o::RawSurfaceLifecycle& RawSurfaceStorage::SurfaceLifetime() {
     }
     return *surfaceLifetime_;
 }
+// 끝 칸 변환의 기존 본문과 현재 공통 장치를 사용하며 실제 World 대여를 만들지 않는다.
+o::RawBridgeEvents& RawSurfaceStorage::BridgeRegular() {
+    if (!UsesNativeTransmissionDevices()) throw std::logic_error("장기 다리 Regular의 Native 판본 계약");
+    if (!nativeBridgeEvents_) {
+        const auto objects=SurfaceObjects();o::BridgeEventHooks hooks;
+        hooks.notifySurface=objects.notifySurface;hooks.create=[this](auto type) { return CreateAsset(type,0); };
+        hooks.destroy=[this](auto sid,auto flags) { DestroyAsset(sid,flags); };
+        hooks.setOwner=[this](auto sid,auto owner) { SetAssetOwner(sid,owner); };hooks.pop=[this](auto sid,auto x,auto y,auto flags) { static_cast<void>(PopAsset(sid,x,y,flags)); };
+        auto body=std::make_unique<o::RawBridgeEvents>(pool,nativeBridgeEventState_,o::MakeBridgeNeighborHooks(Neighbors(),std::move(hooks)));
+        body->BindCurrentState(authority_->boss,nativeDestroyMode_.debugKeep,links.bridgeType);nativeBridgeEvents_=std::move(body);
+    }
+    return *nativeBridgeEvents_;
+}
 }

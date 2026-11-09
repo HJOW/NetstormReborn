@@ -3803,3 +3803,7 @@ netstorm_apply_compiler_options(netstorm_construction_current_tests)
 target_compile_definitions(netstorm_construction_current_tests PRIVATE NETSTORM_CONSTRUCTIONREQUEST_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionrequest-x86.tsv" NETSTORM_CONSTRUCTIONCLEAR_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionclear-x86.tsv")
 netstorm_apply_compiler_options(netstorm_construction_player_tests)
 target_compile_definitions(netstorm_construction_player_tests PRIVATE NETSTORM_CONSTRUCTIONPLACE_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/constructionplace-x86.tsv" NETSTORM_LOCALGEYSER_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/local-geyser-x86.tsv" NETSTORM_GEYSER_PLACEMENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/geyser-placement-x86.tsv" NETSTORM_PLAYER_GEYSER_BOUNDS_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/player-geyser-bounds-x86.tsv")
+# 장기 다리 Regular와 공유하는 기존 양판본/10.37 원문 fixture·실제 공통 통합 사례를 같은 집중 대상에 연결한다.
+target_sources(netstorm_construction_owner_tests PRIVATE BridgeEventTests.cpp)
+target_compile_definitions(netstorm_construction_owner_tests PRIVATE NETSTORM_BRIDGEEVENT_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridgeevent-x86.tsv")
+target_compile_definitions(netstorm_construction_owner_tests PRIVATE NETSTORM_BRIDGEDECAY_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/fixtures/bridgedecay-x86.tsv") # 기존 다리 글자/프레임 대조가 함께 읽는 원래 자료 경로다.

@@ -1,0 +1,522 @@
+{
+  "unit": 1218,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "accepted": true,
+  "summary": "다리 Regular와 끝 칸 변환을 같은 장기 본문/현재 boss·debugKeep·다리 TYPE에 연결하고 Native World도 공유한다.",
+  "sourceSha256": {
+    "cpppj/src/o/RawBridgeEvents.h": "3850b4de2634394787b5a40aa79088ee089e14aba8ad5637c551172f72910496",
+    "cpppj/src/o/RawBridgeEvents.cpp": "f0f4ff9008edc51c61fe9f489b8d1c3075cc2ff83befa59507224d62f9a875b3",
+    "cpppj/src/client/RawSurfaceWorld.h": "df6354fa87d774600e6af787290049a94b46847dc5e2ff90769b0131a032f31a",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "b5202cfacff33f125868345a87feb89ed7ad533573a0484976ed52bdaa174e40",
+    "cpppj/src/client/RawSurfaceLifetime.cpp": "c579c63d08ad02d53a0436a8c82137fa573a84becce59618bf651d0108b28174",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "91c5c63fb5589e2466d89ccdc39fa7fd84d9dfac01211cf5619a8598f43ece7e",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "41bd71fe57b3041571852600c98ae8535f919df6392a9c7859b4aad037f07c6b",
+    "cpppj/tests/CMakeLists.txt": "2a9e4059dad3bea32d48d552c3095fa8fd3a0e2b043cc355fb19ce4b82978f64",
+    "cpppj/tests/BridgeEventTests.cpp": "945d389a97251e8b3732b990c48739cfaebd6790517a216fe3f74e6483c8a2b4"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13944832,
+      "sha256": "4d3e07db776210488030a24bbec081da6945dd7ad8f5b11fa2fe037d1aa71a93"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "76570652136861aec6db951358795962f5f4e5844550517f1f491f83e5efb581"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 33.4688196182251,
+    "sourcesUnchanged": true,
+    "handle": 61838,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 328,
+    "passed": 328,
+    "newBridgeCases": 8,
+    "previousNonMpCases": 313,
+    "additionalExistingBridgeCases": 7,
+    "groups": {
+      "netstorm_construction_owner_tests": 254,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "seconds": 58.608418464660645,
+    "handle": 40920
+  },
+  "corrections": {
+    "firstBuildHandle": 91468,
+    "firstBuildExitCode": 1,
+    "cause": "새 집중 대상의 기존 BridgeEventTests.cpp가 추가로 읽는 NETSTORM_BRIDGEDECAY_FIXTURE 정의 누락(C2065)",
+    "description": "최초 빌드 C2065는 기존 다리 검사에 필요한 추가 BridgeDecay fixture 경로 정의 누락이었다. 원래 fixture 경로를 같은 집중 대상에 연결했고 제품 본문/fixture/검사 기대는 바꾸지 않았다. 최초 집중325/328의 신규 Host2는 abstract/void 부모 입력으로 원문 관문이 반환한 원인을 교정했다. 기존 공간 변환1의 미결합 서버 Pop 전송은 원문0x10 억제 입력을 연결했다. 모든 기존 물리/장부/해시/정리 단언과 원문fixture 기대는 유지했다.",
+    "expectationsWeakened": false,
+    "firstTestFailures": [
+      {
+        "target": "netstorm_construction_owner_tests",
+        "name": "ClientBridgeRegular_ActualHostEndsOnCurrentAuthorityZero",
+        "exitCode": 1,
+        "pass": false
+      },
+      {
+        "target": "netstorm_construction_owner_tests",
+        "name": "ClientBridgeRegular_ActualHostReadsCurrentVtable",
+        "exitCode": 1,
+        "pass": false
+      },
+      {
+        "target": "netstorm_construction_owner_tests",
+        "name": "bridge_event_real_raw_conversion_replaces_space_and_removes_its_process",
+        "exitCode": 1,
+        "pass": false
+      }
+    ],
+    "firstTestHandle": 97508,
+    "firstTestCases": 328,
+    "firstTestPassed": 325,
+    "inputCorrections": [
+      "신규 Host 부모의 extra9/void4 입력은 원문 abstract/void 관문에서 실행되지 않았다. 이 두 독립 관문/분배 입력만 live/buried로 준비한다.",
+      "기존 비전투 Graph비활성 공간 변환 fixture의 Pop은 요청flags0으로 실제 전송을 요구했다. 공통 물리 검사의 기존 모든 단언을 유지하고 원문0x10 전송 억제 입력을 연결한다."
+    ]
+  },
+  "staticAudit": {
+    "unit": 1218,
+    "sourceVtables": 87,
+    "connectedRegularVtables": 37,
+    "remainingRegularVtables": 50,
+    "remainingRegularFunctions": 25,
+    "remainingRows": [
+      {
+        "vtable": "00502370",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502448",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502510",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005025d8",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005026a0",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502778",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502840",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502908",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005029d0",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502aa8",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502b70",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502c38",
+        "regular": "0041f760",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502cf0",
+        "regular": "0041f9d0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502db0",
+        "regular": "0041f9d0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502e68",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502f30",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502ff8",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005030c0",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503188",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503d80",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503e50",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503f20",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503ff0",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005040c0",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005075d8",
+        "regular": "0044a3a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005076b8",
+        "regular": "0044a5e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00507770",
+        "regular": "00448e00",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00507950",
+        "regular": "0044b150",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00508cc8",
+        "regular": "00450fa0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509148",
+        "regular": "004549c0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509210",
+        "regular": "004549c0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005096a0",
+        "regular": "0045a250",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509758",
+        "regular": "0045a6e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509810",
+        "regular": "0045a8e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050a050",
+        "regular": "0045e8b0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050a820",
+        "regular": "00462420",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050a8e8",
+        "regular": "00462420",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050b570",
+        "regular": "00469540",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050cc08",
+        "regular": "004794b0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050e568",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050e668",
+        "regular": "0048c6e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050e738",
+        "regular": "0048ea30",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050ee08",
+        "regular": "00490810",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050f210",
+        "regular": "00494580",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050f540",
+        "regular": "0049a4e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00512208",
+        "regular": "004af070",
+        "kind": "Content",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005196f0",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005197a8",
+        "regular": "004dcf00",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00519860",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00519918",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      }
+    ],
+    "implementedEntries": [
+      "00422740",
+      "004215d0"
+    ],
+    "cdEntry": "00449a20",
+    "preservedFunctions": 3,
+    "currentVtable": "005034c8",
+    "sameLongBridgeBody": true,
+    "currentAuthorityDebugType": true,
+    "nativeWorldSameBody": true,
+    "fullNoWorldComplete": false,
+    "remainingFormDeletionClasses": 3,
+    "newDecompilation": 0,
+    "originalDecompilationChanges": 0,
+    "lastClientDecompilation": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    },
+    "multiplayerExecutions": 0
+  },
+  "tutorial4": {
+    "passed": true,
+    "exitCode": 0,
+    "handle": 34018,
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.398,
+        "gameTimeAfter": 23.797,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "waitFrames": 600,
+    "imageInspected": "015-generator-settled.png",
+    "raw": "extracted/cpp-resume-1218/live-tutorial4/summary.json"
+  },
+  "editor": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0,
+    "passed": true,
+    "handle": 97956,
+    "sameClientRoundTrips": 2,
+    "observations": 11,
+    "screen": [
+      800,
+      600
+    ]
+  },
+  "protectedFilesUnchanged": 2800,
+  "allStartedBuildTestGuiTerminal": true,
+  "originalGameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "flyerDedicatedExecutions": 0,
+  "aviaryNoticeExecutions": 0,
+  "decompilerSourceChanges": 0,
+  "remainingUpperPlanIds": [
+    "M6",
+    "M7",
+    "M8",
+    "K1",
+    "K2",
+    "K3",
+    "K4",
+    "K5",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "B1",
+    "B2",
+    "B3",
+    "B4"
+  ],
+  "knownBugsRegistered": 34,
+  "limitations": [
+    "장기 Regular 분배37/87VT와 잔여50VT/25함수는 큰 하위/전체 NoWorld 완료 수가 아니다.",
+    "내장 Form 삭제3종·큰 비영 AI·배치/Fort 상위 Finish·호출자/owner 전수 감사·M6-l/m·M7 독립5건/M8·K/S/B 상위16계획과 등록34버그가 남는다.",
+    "제품644 전체34진입/검증645·최신ZIP1092·최신 전체 솔루션 통과 없음과 사용자 제외 검증은 유지한다."
+  ],
+  "raw": "extracted/cpp-resume-1218/"
+}

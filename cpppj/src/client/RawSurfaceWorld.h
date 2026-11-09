@@ -244,6 +244,7 @@ public:
     void BindSurfaceLifetimeRuntime(const std::shared_ptr<const RawSurfaceLifetimeBindings>& runtime); // 현재 같은 World의 실제 큰 효과만 짧게 빌린다.
     o::RawSquidDestroyDispatch& VirtualDestroy(); // 현재 Pool/Graph/boss/editor를 읽는 같은 장기 가상10 몸체다.
     o::RawSurfaceLifecycle& SurfaceLifetime(); // 같은 공통 삭제/Host/TYPE를 사용하는 실제 표면 수명이다.
+    o::RawBridgeEvents& BridgeRegular(); // 현재 권한/디버그/다리 TYPE와 같은 이웃·공장·소유/Pop·삭제를 사용하는 장기 다리 Regular다.
     o::RawSquidDestroy& BaseDestroy(); //Native공통삭제깊이/Unpop/Pool의장기실제owner다.
     void BroadcastProcessForm(std::int32_t length); //실제writer의양수반환뒤같은공통2048BYTE를Native대상별가상송신에넘긴다.
     o::RawSquidTransmission& Transmission(); //공통2048BYTE/헤더/압축전역과실제현재FormHost를장기로공유한다.
@@ -368,6 +369,8 @@ private:
     std::unique_ptr<o::SquidDestroyLifecycle> commonDeletion_; // 같은 장기 HP/Graph/장부보다 먼저 반납한다.
     std::unique_ptr<o::RawSquidDestroyDispatch> virtualDestroy_; // 같은 BaseDestroy/이웃/Graph보다 먼저 반납한다.
     std::unique_ptr<o::RawSurfaceLifecycle> surfaceLifetime_; // 같은 공통 삭제보다 먼저 반납하며 큰 효과는 weak 대여만 사용한다.
+    o::BridgeEventState nativeBridgeEventState_; // 독립 몸체의 참조 저장소이며 Native는 실제 세 전역 포인터를 결합해 현재 값을 읽는다.
+    std::unique_ptr<o::RawBridgeEvents> nativeBridgeEvents_; // Session/World를 소유하지 않고 같은 장기 물리/공통 부모보다 먼저 반납한다.
     o::DamageablePreDestroyState damageablePreState_;o::DamageableReleaseState damageableReleaseState_; // 두 실제 장기 TYPE/허용 마스크 owner다.
     o::DamageablePostDestroyState damageablePostState_; // 실제 현재 모드/목록/사건을 같은 주소에서 읽는다.
     std::unique_ptr<o::RawDamageableRelease> damageableRelease_; // Pool/TYPE/검색 전역보다 먼저 반납한다.

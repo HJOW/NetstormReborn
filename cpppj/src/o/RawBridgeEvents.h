@@ -48,6 +48,7 @@ class RawBridgeEvents {
 public:
     // 풀·상태·훅은 이 객체보다 오래 살아야 한다. 훅은 모두 연결돼 있어야 한다.
     RawBridgeEvents(SidPool& pool, const BridgeEventState& state, BridgeEventHooks hooks);
+    void BindCurrentState(const bool& authority,const bool& debugKeep,const std::uint32_t& bridgeType); // Native는 본문보다 오래 사는 실제 세 전역 주소를 최초 한 번 결합하며 값을 초기화하지 않는다.
     // 00422740 ↔ CD 00449a20: 이벤트를 처리하고 Regular 계약의 반환값을 돌려준다.
     // 0x2691은 자기 destroy, 0x2692는 payload(좌표 포장 float)를 풀어 끝 칸 변환을 한다. 그 밖의 이벤트는 payload를 그대로 돌려준다.
     // count(두 번째 인자)는 원본이 읽지 않는다.
@@ -65,6 +66,8 @@ private:
     SidPool& pool_;
     // state_: 처리기가 읽는 원본 전역이다. 패치 주소 / CD 주소를 괄호에 둔다 (BridgeEventState).
     const BridgeEventState& state_;
+    const bool* currentAuthority_{};const bool* currentDebugKeep_{}; // Native 현재 권한/디버그 전역을 소비 위치에서 읽으며 독립 typed는 기존 state를 사용한다.
+    const std::uint32_t* currentBridgeType_{}; // 공간 효과 뒤에도 원문의 현재 다리 TYPE DWORD를 다시 읽는다.
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (BridgeEventHooks).
     BridgeEventHooks hooks_;
 };

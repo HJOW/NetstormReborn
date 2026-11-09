@@ -114,7 +114,8 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     std::shared_ptr<RawSurfaceDeletionBindings> deletionRuntime; // 현재 Session의 실제 forward와 pin을 이번 World 수명으로만 소유한다.
     // lifecycle: 수명.
     std::shared_ptr<RawSurfaceLifetimeBindings> surfaceLifetimeRuntime; // 실제 큰 효과만 World 수명으로 소유한다.
-    std::unique_ptr<o::RawSurfaceLifecycle> localLifecycle;o::RawSurfaceLifecycle* lifecycle{};/* events: 발생한 이벤트 또는 이벤트 처리기. */ std::unique_ptr<o::RawBridgeEvents> events;
+    std::unique_ptr<o::RawSurfaceLifecycle> localLifecycle;o::RawSurfaceLifecycle* lifecycle{};std::unique_ptr<o::RawBridgeEvents> localEvents; // 독립 typed의 다리 Regular만 World가 소유한다.
+    o::RawBridgeEvents* events{}; // Native는 같은 Storage의 장기 다리 Regular를 빌린다.
     // host: Form이나 프로세스의 등록·통지·수명을 연결하는 호스트.
     std::unique_ptr<o::SquidProcessHost> legacyHost; // raw Kernel*만 빌린 기존 독립 fixture의 좁은 수명이다.
     std::shared_ptr<const std::function<void(o::Sid)>> legacyAllocationReclaim; // 같은 현재 World의 회수 경계를 소유하며 Storage에는 weak 참조만 남긴다.
@@ -195,7 +196,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
         eventHooks.notifySurface=objects.notifySurface;eventHooks.create=[this](std::uint32_t type) { changed=true;return factory->Create(type); };
         eventHooks.destroy=[this](o::Sid sid,std::uint32_t flags) { Destroy(sid,flags); };
         eventHooks.setOwner=[setOwner=objects.setOwner](o::Sid sid,std::uint8_t player) { setOwner(sid,player); };eventHooks.pop=objects.pop;
-        events=std::make_unique<o::RawBridgeEvents>(pool,eventState,o::MakeBridgeNeighborHooks(*neighbors,std::move(eventHooks)));
+        if (storage->UsesNativeTransmissionDevices()) events=&storage->BridgeRegular();else { localEvents=std::make_unique<o::RawBridgeEvents>(pool,eventState,o::MakeBridgeNeighborHooks(*neighbors,std::move(eventHooks)));events=localEvents.get(); } // Native Session/NoWorld는 권한 사본 없이 같은 장기 본문을 사용한다.
         // 표면 월드의 실제 자산 재정의/프로세스 삭제도 공유 Form 분배기를 사용한다.
         formDispatch=std::make_unique<o::SquidFormDispatch>(pool,*baseDestroy,lifecycle->Hooks(),
             [this](o::Sid sid,std::uint32_t flags,const o::SquidDestroyHooks& hooks) { return virtualDestroy->Destroy(sid,flags,hooks); });

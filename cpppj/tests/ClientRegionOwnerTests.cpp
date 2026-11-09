@@ -872,3 +872,68 @@ TEST_CASE(ClientAssetNotice_DeleteFailureRetainsActualPrefix) {
     CHECK(rejected && scene.storage->pool.FreeCount()==free && scene.traces==1 && scene.clears==0 && scene.gameplay->selection.selected==sid.value);
     CHECK((scene.storage->pool.Slot(sid)[11]&3U)==2U && scene.storage->BaseDestroy().PreDepth()==1 && scene.storage->BaseDestroy().PostDepth()==0);
 }
+
+
+// 장기 다리 본문 조회는 기존 물리/난수/Player/SP/World 대여를 초기화하지 않는다.
+TEST_CASE(ClientBridgeRegular_LongBodyDoesNotResetOwners) {
+    RegionScene scene;const auto seed=scene.random->Game().State(),free=scene.storage->pool.FreeCount();
+    auto* body=&scene.storage->BridgeRegular();CHECK(&scene.storage->BridgeRegular()==body);
+    CHECK(scene.random->Game().State()==seed && scene.storage->pool.FreeCount()==free && scene.players->Base()==0 && !scene.sp->Store().Initialized() && !scene.storage->Borrowed());
+}
+
+// 다른 사건은 원문처럼 수신자 TYPE/프레임/owner를 읽지 않고 payload의 비트를 반환한다.
+TEST_CASE(ClientBridgeRegular_UnknownEventPreservesPayload) {
+    RegionScene scene;const auto sid=scene.Asset(kPatchBridgeVtable);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[10]=255;raw[34]=255;RegionPut(raw,36,0xffffffffU);
+    const auto seed=scene.random->Game().State();const auto result=scene.storage->BridgeRegular().Handle(sid,17,0xffffffffU,std::bit_cast<float>(0x7fc12345U));
+    CHECK(std::bit_cast<std::uint32_t>(result)==0x7fc12345U && RegionRead(scene.storage->pool.Slot(sid),36)==0xffffffffU && scene.random->Game().State()==seed && scene.traces==0);
+}
+
+// 현재 boss0은 두 원문 사건/끝 칸 변환을 TYPE/시각/공간/삭제 전에 끝낸다.
+TEST_CASE(ClientBridgeRegular_CurrentAuthorityZeroGuardsBothEvents) {
+    RegionScene scene;const auto sid=scene.Asset(kPatchBridgeVtable);auto& body=scene.storage->BridgeRegular();scene.gameplay->Authority()->boss=false;
+    auto raw=scene.storage->pool.AllocatedBytes(sid);raw[10]=255;RegionPut(raw,36,0xffffffffU);const auto free=scene.storage->pool.FreeCount();
+    CHECK(body.Handle(sid,kBridgeDestroyEvent,0xffffffffU,std::bit_cast<float>(0x7fc12345U))==0.0F);
+    CHECK(body.Handle(sid,kBridgeFallEvent,0xffffffffU,std::bit_cast<float>(0x7fc12345U))==0.0F);body.ConvertEnd(sid,0,0);
+    CHECK(scene.storage->pool.FreeCount()==free && scene.traces==0 && RegionRead(scene.storage->pool.Slot(sid),36)==0xffffffffU && scene.players->Base()==0);
+}
+
+// 본문 생성 후 바뀐 현재 boss를 읽고 실제 client SID의 flags0 가상 삭제를 선택한다.
+TEST_CASE(ClientBridgeRegular_AuthorityChangeUsesActualVirtualDelete) {
+    RegionScene scene;const auto sid=scene.Asset(kPatchBridgeVtable);scene.Position(sid);auto& body=scene.storage->BridgeRegular();scene.gameplay->world.editor=1;scene.gameplay->Authority()->boss=false;
+    const auto free=scene.storage->pool.FreeCount();CHECK(body.Handle(sid,kBridgeDestroyEvent,99,0.25F)==0.0F && scene.storage->pool.FreeCount()==free);
+    scene.gameplay->Authority()->boss=true;CHECK(body.Handle(sid,kBridgeDestroyEvent,99,0.25F)==-1.0F);
+    CHECK(scene.storage->pool.FreeCount()==free+1 && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// J/K 외 실제 L 글자는 끝 칸 변환을 하지 않고 현재 부모/프레임을 보존한다.
+TEST_CASE(ClientBridgeRegular_FallWithOtherLetterDoesNotChangeParent) {
+    RegionScene scene;const auto sid=scene.Asset(kPatchBridgeVtable);scene.Position(sid);const auto frame=scene.storage->frames[82].Run('L').first;CHECK(frame>=0);if (frame<0) return;
+    RegionPut(scene.storage->pool.AllocatedBytes(sid),36,static_cast<std::uint32_t>(frame));const auto free=scene.storage->pool.FreeCount();
+    CHECK(scene.storage->BridgeRegular().Handle(sid,kBridgeFallEvent,0xffffffffU,123.0F)==-1.0F);
+    CHECK(scene.storage->pool.FreeCount()==free && scene.traces==0 && RegionRead(scene.storage->pool.Slot(sid),36)==static_cast<std::uint32_t>(frame));
+}
+
+// 실제 J 프레임/빈 이웃 공간은 임시 프레임을 복구한 뒤 원문 flags0 자기삭제를 실행한다.
+TEST_CASE(ClientBridgeRegular_FallWithoutNeighborDeletesActualParent) {
+    RegionScene scene;const auto sid=scene.Asset(kPatchBridgeVtable);scene.Position(sid);scene.gameplay->world.editor=1;const auto frame=scene.storage->frames[82].Run('J').first;CHECK(frame>=0);if (frame<0) return;
+    RegionPut(scene.storage->pool.AllocatedBytes(sid),36,static_cast<std::uint32_t>(frame));const auto free=scene.storage->pool.FreeCount();
+    CHECK(scene.storage->BridgeRegular().Handle(sid,kBridgeFallEvent,0xffffffffU,0.0F)==-1.0F);
+    CHECK(scene.storage->pool.FreeCount()==free+1 && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 실제 client ProcessForm/Kernel의 기본 Regular 분배도 같은 현재 boss0을 읽고 예약을 종료한다.
+TEST_CASE(ClientBridgeRegular_ActualHostEndsOnCurrentAuthorityZero) {
+    RegionScene scene;const auto sid=scene.Asset(kPatchBridgeVtable);scene.gameplay->Authority()->boss=false;auto& host=scene.storage->Processes().Host();const auto free=scene.storage->pool.FreeCount();
+    auto raw=scene.storage->pool.AllocatedBytes(sid);raw[40]=8U;raw[11]&=static_cast<std::uint8_t>(~4U); // 실제 Host 관문을 통과하는 live/buried 부모 입력이며 boss0 사건은 공간을 소비하지 않는다.
+    auto* process=host.AddRegular(sid,kBridgeDestroyEvent,0.25F,0x52U);CHECK(process);if (!process) return;process->RunFrame();
+    CHECK(host.FindEvent(sid,kBridgeDestroyEvent)==nullptr && scene.storage->pool.FreeCount()==free && !(scene.storage->pool.Slot(sid)[11]&1U) && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0 && !scene.storage->Borrowed());
+}
+
+// Host는 호출 시 현재 VT를 선택하므로 TYPE82여도 base VT로 바뀌면 payload 예약을 유지한다.
+TEST_CASE(ClientBridgeRegular_ActualHostReadsCurrentVtable) {
+    RegionScene scene;const auto sid=scene.Asset(kPatchBridgeVtable);scene.gameplay->Authority()->boss=false;auto& host=scene.storage->Processes().Host();
+    auto raw=scene.storage->pool.AllocatedBytes(sid);raw[40]=8U;raw[11]&=static_cast<std::uint8_t>(~4U); // 원문의 abstract/void 관문을 지난 현재 VT 분배 입력을 준비한다.
+    auto* process=host.AddRegular(sid,kBridgeDestroyEvent,0.25F,0x52U);CHECK(process);if (!process) return;
+    RegionPut(scene.storage->pool.AllocatedBytes(sid),0,0x50eb98U);process->RunFrame();
+    CHECK(host.FindEvent(sid,kBridgeDestroyEvent)==process && process->Count()==1 && process->Payload()==0.25F && !scene.storage->Borrowed());
+}
