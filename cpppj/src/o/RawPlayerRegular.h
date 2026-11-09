@@ -17,7 +17,9 @@ struct PlayerRegularHooks {
     std::function<void(Sid,std::uint32_t,float)> addRegular; // 실제 같은 Host가 event2/payload60/currenttime/count0을 만든다.
     std::function<std::span<std::uint8_t>(std::uint32_t)> templateState; // 현재Template의실제 State getter4bd550/CD427920를 호출한다.
     std::function<void(std::uint32_t)> templateChanged; // getter뒤다시읽은현재Template의Notify4bd540/CD427910이다.
+    std::function<std::shared_ptr<void>()> templatePin; // Native는 Get/반환span쓰기/현재owner Notify 전체의 실제 Runtime을 보유한다. 독립 typed는 기존 외곽 caller 수명을 사용한다.
 };
+float RunPlayerRegular(const SidPool& pool,const PlayerWorldState& state,const SquidOwnerMode& mode,Sid sid,std::uint32_t event,std::uint32_t count,float payload,const PlayerRegularHooks& hooks); // 가상진입 판정 뒤 같은 원문 분기를 Native/typed가 공유한다.
 // event1/count0 자연반환은 최초payload5를 현재+5로 재예약하는 실제Regular RunFrame에 맡긴다.
 class RawPlayerRegular {
 public:

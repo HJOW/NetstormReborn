@@ -301,7 +301,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
         player.PlayOnceAt(x,y,sound,0,0);
     };
     // 원본 Player 진단 그룹과 문자열을 실제 프로세스 로그 스트림에 순서대로 출력한다.
-    services.player.log=[](std::uint32_t group,std::string_view text) { std::clog<<"["<<group<<"] "<<text; };
+    services.player.log=[&client](std::uint32_t group,std::string_view text) { client.WriteDiagnosticLog(std::bit_cast<std::int32_t>(group),text); }; // 같은 Client 필터/들여쓰기/실제FILE 수명을 기존 Player·AI 로그에도 사용한다.
     auto constructionDevices=MakeClientConstructionDevices(client); //독립 typed 서비스도 Native와 같은 실제 설정/시계/표시/진단 몸체를 사용한다.
     services.construction.configInt=std::move(constructionDevices.configInt);services.construction.wallSeconds=std::move(constructionDevices.wallSeconds);
     services.construction.refresh=std::move(constructionDevices.refresh);services.construction.negativeQuantity=std::move(constructionDevices.negativeQuantity);services.construction.boundsAssertion=std::move(constructionDevices.boundsAssertion); //비용/Tell은 기존 서비스의 실제 UI 대여 계약을 보존한다.

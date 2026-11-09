@@ -18,6 +18,7 @@
 #include "o/RawFactoryPostPop.h" // 같은 Factory 후처리/레벨 보정을 장기 보유한다.
 #include "o/RawBalloonBody.h" // 벌룬의 실제 그림자·후처리·삭제 본체를 같은 장기 물리에 연결한다.
 #include "o/RawFlyerPreDestroy.h" // Flyer의 현재 WORD 대상 삭제와 Damageable 부모를 공유한다.
+#include "o/RawPlayerRegular.h" // Player 정기가 같은 현재 전역과 실제 장기 Host를 직접 사용한다.
 #include "o/RawPlayerWorld.h" // 실제 Player 전처리도 같은 현재 기록과 공통 삭제를 사용한다.
 #include "o/RawDamageableRelease.h" // 실제 현재 권한/TYPE/공간으로 종속을 해방한다.
 #include "o/RawDamageablePostDestroy.h" // 같은 HP/Graph/목록/Host로 후처리한다.
@@ -124,6 +125,11 @@ struct RawSurfaceFactoryBindings { // 큰 업그레이드/플레어만 현재 Wo
     std::function<float(o::Sid)> finish; // 기존 전체 완료/현재AI 통지 본문이다.
     std::function<void(o::Sid,std::int32_t,std::uint32_t)> flare; // 실제 현재 플레어 생성기다.
     std::function<std::shared_ptr<void>()> pin; // 선택 호출 동안 실제 전체 Runtime을 보유한다.
+};
+struct RawSurfacePlayerBindings { // State getter와 Notify의 기존 큰 본문만 현재 전체 Runtime 수명으로 대여한다.
+    std::function<std::span<std::uint8_t>(std::uint32_t)> state; // 같은 현재 manager의 실제 State getter다.
+    std::function<void(std::uint32_t)> changed; // getter 뒤 다시 읽은 현재 Template의 실제 Notify다.
+    std::function<std::shared_ptr<void>()> pin; // 반환 State span 쓰기와 Notify까지 전체 owner를 보존한다.
 };
 struct RawSurfacePriestBindings { // 큰 회복/추락/기도/의식 프레임만 실제 현재 Runtime으로 빌린다.
     o::RegularHandler unique; // 기존602~605 실제 몸체와 전체 후단을 선택한다.
@@ -248,6 +254,7 @@ private:
     std::weak_ptr<const o::TerrainBitmapState> residenceTerrain_; // 실제 현재 fringeType 저장소의 약한 대여다.
     std::function<std::uint32_t()> residenceTheme_; // 실제 장기 설정 owner를 선택 호출할 장치다.
     std::weak_ptr<const RawSurfaceFactoryBindings> factoryRegularRuntime_; // 현재 큰 후단만 약하게 빌리고 프레임/난수는 장기 현재값을 사용한다.
+    std::weak_ptr<const RawSurfacePlayerBindings> playerRegularRuntime_; // Session을 강하게 역소유하지 않는 현재 Template 후단이다.
     std::weak_ptr<const RawSurfacePriestBindings> priestRuntime_; // 전체 Session을 강하게 역소유하지 않는 현재 고유 후단이다.
     std::weak_ptr<const RawSurfaceRitualBindings> ritualRuntime_; // 장기 분기 본문은 Session을 강하게 역소유하지 않는다.
     std::weak_ptr<const RawSurfaceDamageableBindings> damageableRuntime_; // 선택한 가상98만 약하게 빌려 Session 역소유를 피한다.
@@ -377,6 +384,11 @@ public:
     o::RawManaBoltArrival& ManaArrival(); // 같은 실제 finder·Host·현재 프로세스 역할과 도착 본문이다.
     o::RawManaBoltRegular& ManaRegular(); // 현재 TYPE/프레임/SHP·카메라·가상 공간을 공유하는 유일한 Native 정기다.
     o::AltarSacrificeState& AltarState(); //00532698/69c의 같은 현재 지연/확률을 Session과 공유한다.
+    void BindPlayerRegularState(std::shared_ptr<o::PlayerWorldState> state); // 첫 메뉴 전에 같은 Client의 현재 두 owner 주소만 alias로 보유한다.
+    void BindPlayerRegularRuntime(const std::shared_ptr<const RawSurfacePlayerBindings>& runtime); // 선택된 실제 Template 후단만 weak로 공개한다.
+    float PlayerRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 같은 현재 Player·battle·로그/진단·실제 확보/Host 본문을 실행한다.
+    bool ReservePlayerRegular(); // 원문 new28의 실제 확보 실패를 보존하며 성공 상수를 쓰지 않는다.
+    void ConstructPlayerRegular(o::Sid sid,std::uint32_t event,float payload); // 확보했던 같은 주소에서 Regular를 구성하고 현재 Host에 부착한다.
     RawPriestWorldState& PriestState(); // 현재 사제 전역을 재초기화 없이 Session/NoWorld에 빌린다.
     void BindPriestRuntime(const std::shared_ptr<const RawSurfacePriestBindings>& runtime); // 고유602~605의 실제 현재 Runtime을 weak로 공개한다.
     float PriestRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 실제494580의 같은 분기/현재 Carrier를 실행한다.
@@ -594,6 +606,8 @@ private:
     std::unique_ptr<o::RawManaBoltArrival> manaArrival_; // 같은 대상 검색/도착 본문은 정기보다 오래 유지한다.
     std::unique_ptr<o::RawManaBoltRegular> manaRegular_; // Host 정리까지 현재 장기 대상 검색과 물리를 빌린다.
     std::unique_ptr<void,void(*)(void*)> manaReservation_{nullptr,[](void* memory) { ::operator delete(memory); }}; // 실제 new28 확보부터 같은 주소의 Regular 구성까지 소유한다.
+    std::shared_ptr<o::PlayerWorldState> playerRegularState_; // 현재 Client Player 전역의 alias owner이며 값 사본을 만들지 않는다.
+    std::unique_ptr<void,void(*)(void*)> playerRegularReservation_{nullptr,[](void* memory) { ::operator delete(memory); }}; // new28부터 같은 주소의 구성까지 실제 확보 메모리를 보유한다.
     o::AltarSacrificeState altarState_; // 제단의 현재 두 전역은 Session 대여에서 기본값으로 재설정하지 않는다.
     o::ForcefieldRegularState forcefieldState_; // 현재 사제 역할/진단의 장기 참조를 보관한다.
     std::unique_ptr<o::RawForcefieldRegular> forcefieldRegular_; // 같은 실제 검색/프레임과 Host 정리가 끝날 때까지 유지한다.
@@ -705,6 +719,7 @@ struct RawWorldRuntimeHooks {
     RawSurfaceDudeBindings dude; // 현재 기존 전체 경로 이동/진입점의 실제 Runtime이다.
     RawSurfaceResidenceBindings residence; // 기존 실제 Dude 생성/진입점/작업의 현재 Runtime 대여다.
     RawSurfaceFactoryBindings factoryRegular; // 현재 전체 업그레이드/플레어를 실제 World pin과 공개한다.
+    RawSurfacePlayerBindings playerRegular; // 현재 Template getter/Notify만 실제 전체 Runtime과 함께 공개한다.
     RawSurfacePriestBindings priestRegular; // 큰 고유 후단만 기존 Session 전체 수명으로 공개한다.
     RawSurfaceRitualBindings ritualRegular; // 실제 큰 의식만 같은 전체 Runtime pin과 함께 공개한다.
     o::GumpFormNotice gumpNotice; // 현재 Session이 제공한 실제 UI 가상 통지이며 미연결이면 장기 실제 UI 등록표를 사용한다.

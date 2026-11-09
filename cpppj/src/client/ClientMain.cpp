@@ -438,6 +438,7 @@ int Client::Run() {
         if (token) { source=registry->PacketSources()->Resolve(registry->Node(token));if (!source) throw std::logic_error("Squid대상송신의실제Source수명미공개"); } //NULL연결은Source요구없이기존4e2dc0에서자연반환한다.
         static_cast<void>(registry->SendMutableNative(target,packet,playerRecords_->Records(),[owner=surfaceStorage_](auto expression,auto file,auto line) { owner->AssertDisplay(expression,file,line); })); //선택된실제backend의observer와큐만한번실행하며수신/성공값을합성하지않는다.
     }}); //실제Client장치만첫Factory/Host/World전에고정하며observer표는기존실제전송owner가유지한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindPlayerRegularState(std::shared_ptr<o::PlayerWorldState>(gameplayGlobals_,&gameplayGlobals_->player)); // Native 장치 뒤/첫 메뉴 전에 같은 두owner 주소만 연결하고 값/Player배열은 초기화하지 않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindResourceDevices({[this]()->o::GameRandom& { return randomGlobals_->Game(); },[this](auto sid) {
         auto& session=gameplayGlobals_->RequireSession();const auto runtimePin=gameplayGlobals_->PinCurrentRuntime(session);session.CheckCarrierPostPop(sid); //원문cc가실제선택된위치만현재전체owner를요구한다.
     },[this](auto sid,auto event,auto count,auto payload) {

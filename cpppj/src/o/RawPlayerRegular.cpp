@@ -19,23 +19,27 @@ bool RawPlayerRegular::Handles(Sid sid) const { return player_.Handles(sid); }
 // count/event/payload를 같은원본폭으로 읽으며 firstevent/count0은 원래float를 그대로 돌려준다.
 float RawPlayerRegular::Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
     if (!Handles(sid)) throw std::logic_error("Player Regular 미복원 가상Handler 표");
-    const auto raw=Pool().Slot(sid);const auto owner=raw[Pool().Edition()==OriginalEdition::Patch1078 ? 34U : 32U];
-    if (owner!=player_.State().battleOwner || !count) return payload;
+    return RunPlayerRegular(Pool(),player_.State(),mode_,sid,event,count,payload,hooks_);
+}
+float RunPlayerRegular(const SidPool& pool,const PlayerWorldState& state,const SquidOwnerMode& mode,Sid sid,std::uint32_t event,std::uint32_t count,float payload,const PlayerRegularHooks& hooks) { // 현재 두 owner/battle과 원문 호출 순서/반환을 복사 없이 공유한다.
+    const auto raw=pool.Slot(sid);const auto owner=raw[pool.Edition()==OriginalEdition::Patch1078 ? 34U : 32U];
+    if (owner!=state.battleOwner || !count) return payload;
     if (event==kFirstEvent) {
-        hooks_.log(kLogGroup,"SORE LOSER TEST: ");
-        if (mode_.battle) {
-            hooks_.log(kLogGroup,"STARTING.\n");if (hooks_.reserveRegular()) hooks_.addRegular(sid,kSecondEvent,kSecondPayload);return 0.0F;
+        hooks.log(kLogGroup,"SORE LOSER TEST: ");
+        if (mode.battle) {
+            hooks.log(kLogGroup,"STARTING.\n");if (hooks.reserveRegular()) hooks.addRegular(sid,kSecondEvent,kSecondPayload);return 0.0F;
         }
-        hooks_.log(kLogGroup,"NOT STARTING YET.\n");return payload;
+        hooks.log(kLogGroup,"NOT STARTING YET.\n");return payload;
     }
     if (event==kSecondEvent) {
-        if (mode_.battle) {
-            auto state=hooks_.templateState(player_.State().templateOwner);if (state.empty()) throw std::out_of_range("Player 실제Template State BYTE 누락");
-            state[0]|=4U;hooks_.templateChanged(player_.State().templateOwner);
+        if (mode.battle) {
+            const auto pin=hooks.templatePin;const auto hold=pin ? pin():std::shared_ptr<void>{}; // Native의 실제 owner는 반환 span 쓰기와 현재 owner Notify까지 유지한다.
+            auto bytes=hooks.templateState(state.templateOwner);if (bytes.empty()) throw std::out_of_range("Player 실제Template State BYTE 누락");
+            bytes[0]|=4U;hooks.templateChanged(state.templateOwner);
         }
         return 0.0F;
     }
-    hooks_.assertion(PlayerRegularAssertion::UnknownEvent);return payload;
+    hooks.assertion(PlayerRegularAssertion::UnknownEvent);return payload;
 }
 // 현재 Player/Post/Host와 동일한 풀을 상위 분배기에서 검증한다.
 const SidPool& RawPlayerRegular::Pool() const { return player_.Pool(); }

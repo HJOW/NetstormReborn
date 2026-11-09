@@ -624,7 +624,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawPriestWorldBindings> priests; // 저장 사제의 실제 Owner/PostPop/보호막 분배기다.
     std::unique_ptr<RawPriestParticipation> localPriestParticipation;RawPriestParticipation* priestParticipation{}; // Native는 장기 같은 목록/참여 조회를 빌리고 독립 typed만 지역 본체를 소유한다.
     std::unique_ptr<RawPlayerWorld> player; // 최초152 생성자/실제 PostPop/9기록을 연결한다.
-    std::unique_ptr<RawPlayerRegular> playerRegular; // 현재 Player의 실제 사건1/2를 처리한다.
+    std::unique_ptr<RawPlayerRegular> playerRegular; // 독립 typed만 wrapper를 소유하며 Native는 현재 Storage 공용 본문을 직접 사용한다. // 현재 Player의 실제 사건1/2를 처리한다.
     std::unique_ptr<RawPlayerTemplateState> templateState; // 같은Template header/원본State28BYTE를 직접 읽는다.
     RegionPaintState localPaint{.sharedWorldRedraw=&worldRedraw};RegionPaintState& paint{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->RegionPaintGlobals():localPaint}; //Native도장캐시는메뉴/전환과같은장기주소다.
     RegionOwnershipState localVotes{.sharedWorldRedraw=&worldRedraw,.sharedMapRevision=&revision};RegionOwnershipState& votes{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->RegionVoteGlobals():localVotes}; //Native영향목록과실제두DWORD를같은owner에서빌린다.
@@ -1226,8 +1226,8 @@ struct RawCampaignSession::Impl {
         playerHooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         playerHooks.setOwner=[this](Sid sid,std::uint32_t owner) { core.owner.Set(sid,owner); };
         playerHooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
-        playerHooks.reserveRegular=[] { return true; };
-        playerHooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) { SessionCheck(core.processes.AddRegular(sid,event,payload)!=nullptr); };
+        if (world.Storage()->UsesNativeTransmissionDevices()) { playerHooks.reserveRegular=[this] { return world.Storage()->ReservePlayerRegular(); };playerHooks.addRegular=[this](auto sid,auto event,auto payload) { world.Storage()->ConstructPlayerRegular(sid,event,payload); }; } // 최초 local Player 예약도 같은 실제 확보 메모리/Host를 쓴다.
+        else { playerHooks.reserveRegular=[] { return true; };playerHooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) { SessionCheck(core.processes.AddRegular(sid,event,payload)!=nullptr); }; } // 독립 typed의 기존 명시 장치 계약만 유지한다.
         player=std::make_unique<RawPlayerWorld>(core.pool,core.postPop,players,playerState,std::move(playerHooks));core.postPop.SetPlayerPostPop(player.get());
         templateState=std::make_unique<RawPlayerTemplateState>(core.pool.Edition(),headers,[this](auto slot)->PlayerTemplateStateStream& { return templateStorage->SelectState(slot); },[this](auto slot)->const std::string& { return templateStorage->Name(slot); },
             objectState.loadingDepth,objectState.mission,SessionMissing<void,PlayerTemplateStateAssertion>(),[this](std::uint32_t depth) { world.SetLoadingDepth(depth); });
@@ -1240,7 +1240,7 @@ struct RawCampaignSession::Impl {
         playerRegularHooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) { SessionCheck(core.processes.AddRegular(sid,event,payload)!=nullptr); };
         playerRegularHooks.templateState=[this](std::uint32_t slot) { return templateState->Get(slot); };
         playerRegularHooks.templateChanged=[this](std::uint32_t slot) { templateState->Changed(slot); };
-        playerRegular=std::make_unique<RawPlayerRegular>(*player,core.ownerMode,std::move(playerRegularHooks));
+        if (!world.Storage()->UsesNativeTransmissionDevices()) playerRegular=std::make_unique<RawPlayerRegular>(*player,core.ownerMode,std::move(playerRegularHooks)); // Native는 같은 장기 공용 본문을 직접 사용하며 별도 지역 정기를 만들지 않는다.
         auto ownerEffects=services.ownership;
         ownerEffects.otherOwner=[this](Sid sid,std::uint32_t owner) { priests->SetOwner(sid,owner); };
         FillMissing(ownerEffects.refreshProduction);FillMissing(ownerEffects.themeMode);
@@ -1738,6 +1738,7 @@ struct RawCampaignSession::Impl {
             if (NativeOutpostLifetime(sid) || BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || BlockerLifetime(sid) || GrowingIce(sid) || SunFence(sid) || Nugget(sid) || (daisLifecycle && daisLifecycle->Handles(sid)) || (dudeBehavior && dudeBehavior->Handles(sid)) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestDeletionLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         if (world.Storage()->UsesNativeTransmissionDevices()) buriedRegular=&world.Storage()->BuriedRegular();else { localBuriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);buriedRegular=localBuriedRegular.get(); } //Native는World반납뒤에도같은현재Frame/난수를사용한다.
+        worldHooks.playerRegular.state=[this](auto owner) { if (!templateState) throw std::logic_error("Player 정기의 현재 State getter 설치 전 호출");return templateState->Get(owner); };worldHooks.playerRegular.changed=[this](auto owner) { if (!templateState) throw std::logic_error("Player 정기의 현재 Notify 설치 전 호출");templateState->Changed(owner); }; // 실제 현재 큰 getter/Notify만 전체 Runtime 수명으로 빌린다.
         worldHooks.priestRegular.unique=[this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { // 실제 고유 후단은 현재 같은 모듈을 호출하고 누락을 성공으로 바꾸지 않는다.
             if (event==602 || event==603) { if (!priests) throw std::logic_error("사제 회복/추락 몸체 설치 전 호출");return priests->UniqueRegular(sid,event,count,payload); }
             if (event==604) { if (!priestRitualFrame) throw std::logic_error("사제604 몸체 설치 전 호출");return priestRitualFrame->Tick(sid); }
@@ -1747,7 +1748,7 @@ struct RawCampaignSession::Impl {
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (daisRegular && daisRegular->Handles(sid)) { PrepareRitual();return daisRegular->Handle(sid,event,count,payload); }
             if (altarSacrifice && altarSacrifice->Handles(sid)) { PrepareRitual();return altarSacrifice->Handle(sid,event,count,payload); }
-            if (playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
+            if (playerRegular && playerRegular->Handles(sid)) return playerRegular->Handle(sid,event,count,payload);
             if (manaRegular && manaRegular->Handles(sid)) return manaRegular->Run(sid,event,count);
             if (nuggetRegular && nuggetRegular->Handles(sid)) return nuggetRegular->Handle(sid,event,count,payload);
             const auto raw=core.pool.Slot(sid);
@@ -1778,7 +1779,7 @@ struct RawCampaignSession::Impl {
         // 실제 사건이 실패하면 당시 부모/사건/횟수를 남기고 같은 예외를 전파한다. 성공/상태 되돌림으로 대신하지 않는다.
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             try {
-                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50f210U) return world.Storage()->PriestRegular(sid,event,count,payload);if (table==0x5075d8U || table==0x5076b8U || table==0x507770U || table==0x507950U) return world.Storage()->RitualRegular(sid,event,count,payload);if (table==0x508cc8U) return world.Storage()->DudeRegular().Handle(sid,event,count,payload);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
+                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50ee08U) return world.Storage()->PlayerRegular(sid,event,count,payload);if (table==0x50f210U) return world.Storage()->PriestRegular(sid,event,count,payload);if (table==0x5075d8U || table==0x5076b8U || table==0x507770U || table==0x507950U) return world.Storage()->RitualRegular(sid,event,count,payload);if (table==0x508cc8U) return world.Storage()->DudeRegular().Handle(sid,event,count,payload);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
                 if (const auto table=Read(core.pool.Slot(sid),0);table==0x50a820U || table==0x50a8e8U) {
                     if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->DecorationRegular(sid,event,count,payload);
                     DecorationRegularHooks hooks;hooks.maxHitPoints=[this](auto parent) { return hp.MaxHitPoints(parent); };

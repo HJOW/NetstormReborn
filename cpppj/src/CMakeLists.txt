@@ -654,3 +654,5 @@ target_sources(netstorm PRIVATE client/NativeMetaBattleCreate.h client/NativeMet
 target_sources(netstorm PRIVATE client/ClientMetaBattleObjects.h client/ClientMetaBattleObjects.cpp)
 
 target_sources(netstorm PRIVATE o/RawPriestRegular.cpp client/RawSurfacePriest.cpp) # 사제의 같은 정기 분기와 장기 상태/후단 수명을 함께 연결한다.
+
+target_sources(netstorm PRIVATE client/RawSurfacePlayerRegular.cpp) # Player 정기의 실제 장기 전역과 확보/Template 수명을 연결한다.
