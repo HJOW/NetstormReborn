@@ -14,6 +14,8 @@ void RegisterStateSidList(std::span<std::uint32_t> headers,std::uint32_t header)
 void UnregisterStateSidList(std::span<std::uint32_t> headers,std::uint32_t header);
 //00472830은 매 슬롯의 현재 포인터를 읽고 비영 헤더의+0c 개수만0으로 쓴다.
 void ResetRegisteredStateSidLists(std::span<const std::uint32_t> headers,const std::function<void(std::uint32_t)>& resetCount);
+// PATCH0040ea00의 signed count 반복으로 모든 일치 DWORD를 압축하며 비활성 꼬리·용량·등록 표를 보존한다.
+void RemoveStateSidList(SquidPostPopList& list,std::uint32_t sid);
 // 원본 CRT의 정적 목록8개와 다른 Client 소유의 다중선택 목록 등록을 보관한다.
 struct RawStateSidLists {
     SquidPostPopList factories; //0055a4d0 헤더의500DWORD 목록이다.

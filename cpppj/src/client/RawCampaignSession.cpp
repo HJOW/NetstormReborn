@@ -1607,6 +1607,12 @@ struct RawCampaignSession::Impl {
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.
         worldHooks.assets.emit=[this,previous=std::move(previousEffects)](const SquidDestroyEvent& event) {
+            if (world.Storage()->UsesNativeTransmissionDevices() && (event.effect==SquidDestroyEffect::PreDestroy || event.effect==SquidDestroyEffect::PostDestroy)) {
+                const auto table=Read(core.pool.Slot(event.sid),0); // 실제 Native 가상 선택은 TYPE 이름과 별개인 현재 VT다.
+                if (event.effect==SquidDestroyEffect::PreDestroy && table==0x50ee08U) { world.Storage()->PlayerPreDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy && table==0x50f540U) { world.Storage()->ResidencePostDestroy(event.sid,event.flags);return; }
+                if (event.effect==SquidDestroyEffect::PostDestroy && table==0x508cc8U) { world.Storage()->DudePostDestroy(event.sid,event.flags);return; }
+            } // 세 실제 본체는 같은 장기 Player/목록/부모를 사용하고 독립 typed의 기존 분배는 유지한다.
             if (NativeOutpostLifetime(event.sid)) {
                 if (event.effect==SquidDestroyEffect::PreDestroy) {
                     OutpostPreDestroyHooks hooks;hooks.regionChanged=[this](float x,float y) { ownership->UpdateRegionNative(x,y); };

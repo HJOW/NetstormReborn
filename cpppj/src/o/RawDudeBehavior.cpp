@@ -1,5 +1,6 @@
 // 거의 올림·현재 상태 재조회·삭제 뒤 반환과 목록의 stale 꼬리를 원본대로 유지한다.
 #include "o/RawDudeBehavior.h"
+#include "o/RawStateSidLists.h" // 같은 원문0040ea00의 목록 압축을 장기 삭제와 공유한다.
 #include <bit>
 #include <stdexcept>
 #include <utility>
@@ -62,13 +63,14 @@ std::uint32_t RawDudeBehavior::Arrival(Sid sid) const {
 }
 // 원본40ea00은 모든 일치 항목을 제거하고 남은 항목 순서와 물리 꼬리 바이트를 보존한다.
 void RawDudeBehavior::PostDestroy(Sid sid,std::uint32_t flags) const {
-    if (!(Raw(sid)[40]&9U)) {
-        auto& list=state_.population;static_cast<void>(list.Items());std::uint32_t removed{}; // 원본 count와 같은 DWORD 폭이며 count 이하만 증가한다.
-        // 앞의 제거 수만큼 당겨 쓰며 count 뒤의 stale 영역은 지우지 않는다.
-        for (std::size_t index=0;index<list.count;++index) { const auto value=list.entries[index];if (value==sid.value) ++removed;else list.entries[index-removed]=value; }
-        list.count-=removed;
-    }
-    Need(hooks_.basePostDestroy)(sid,flags);
+    if (!(Raw(sid)[40]&9U)) static_cast<void>(state_.population.Items()); // 독립 typed의 기존 구성/범위 검사는 유지한다.
+    PostDestroyNative(pool_,state_.population,sid,flags,hooks_.basePostDestroy);
+}
+// 실제 가상 분배기는 VT로 선택하고 같은 일반 객체의 목록 제거 뒤 공통 Post를 한 번 호출한다.
+void RawDudeBehavior::PostDestroyNative(const SidPool& pool,SquidPostPopList& population,Sid sid,std::uint32_t flags,const std::function<void(Sid,std::uint32_t)>& base) {
+    if (pool.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("Native Dude 후처리 판본 오류");
+    if (!(pool.Slot(sid)[40]&9U)) RemoveStateSidList(population,sid.value);
+    Need(base)(sid,flags);
 }
 // 기존 월드/경로/후처리의 같은 저장소 검증에 사용한다.
 const SidPool& RawDudeBehavior::Pool() const { return pool_; }

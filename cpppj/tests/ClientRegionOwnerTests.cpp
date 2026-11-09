@@ -42,6 +42,7 @@ struct RegionScene { //게임실행기없이실제장기owner/보호자산/물�
     std::optional<std::string> detail; //원문진단상세의실제수명이다.
     std::uint32_t refreshes{},traces{},clears{},themes{1},themeReads{}; //외부선택장치의실제호출을관찰한다.
     std::function<void()> onRefresh; //실제UI선택뒤base/장치변경을관찰한다.
+    std::function<void()> onClear; // 실제 공통 Pre의 선택 해제 뒤 owner/base 변경 순서를 관찰한다.
     std::unique_ptr<RawAiWallet> wallet; //기존실제현재Player지갑본문이며비영AI선택은금지한다.
     RawAiBrainMemory aiMemory{0x26000000U,RegionForbidden<void,std::span<std::uint8_t>>("영역 검사 비영 AI 할당 금지")}; //빈실제메모리owner이며가짜brain을할당하지않는다.
     double now{};std::uint32_t outpostType{126}; //NULL brain통지가읽지않는현재시각/원문TYPE입력이다.
@@ -57,7 +58,8 @@ struct RegionScene { //게임실행기없이실제장기owner/보호자산/물�
         wallet=std::make_unique<RawAiWallet>(RegionForbidden<AiWalletMemoryAccess>("영역 검사 비영 AI 지갑 대여 금지"),[this]()->std::span<const std::uint8_t> { return players->Records(); },AiWalletReads{[this] { return storage->ownerMode.challenge; },RegionForbidden<bool>()});
         storage->BindRewardDevices({std::shared_ptr<ScrambledSpStore>(sp,&sp->Store()),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->world.editor),[this] { ++spRefreshes; },[this](auto player,auto amount) { ++walletCalls;wallet->Credit(player,amount); }});
         storage->BindPostPopDevices({[this](auto player,auto sid,auto added) { ++aiNotices;if (storage->ownerMode.challenge || std::bit_cast<std::int32_t>(player)<1) return;RawAiObjectNotice body(aiMemory,storage->pool,storage->types,players->Records(),now,outpostType,[this] { return storage->ownerMode.challenge; },{});body.Notice(player,sid,added); },[current=gameplay] { return current->player.battleOwner; },[this,observePostPop] { if (!observePostPop) RegionForbidden<void>("영역 검사 금지 PostPop UI")();CHECK(gameplay->selection.mouseType==0);++postPopSelections; }});
-        storage->BindDeletionDevices({[](auto,auto,auto) {},[this](Sid sid) { ++lostSounds;CHECK(storage->pool.Slot(sid)[34]==gameplay->player.battleOwner); }});storage->BindProcessDevices({[this] { return gameplay->selection.selected; },[this] { ++clears;gameplay->selection.selected=0; }});
+        storage->BindDeletionDevices({[](auto,auto,auto) {},[this](Sid sid) { ++lostSounds;CHECK(storage->pool.Slot(sid)[34]==gameplay->player.battleOwner); }});storage->BindProcessDevices({[this] { return gameplay->selection.selected; },[this] { ++clears;gameplay->selection.selected=0;if (onClear) onClear(); }});
+        storage->BindPlayerRecords(players); // 본문은 각 주소 소비 때만 현재 실제 Player를 pin한다.
         storage->BindDamageableDevices({std::shared_ptr<ContainedFinderState>(gameplay,&gameplay->finder),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->FortKeepGenus()),RegionForbidden<void,Sid>("영역 검사 금지 붕괴"),RegionForbidden<void,Sid>("영역 검사 금지 폭발"),RegionForbidden<void,const DamageableSoundEvent&>("영역 검사 금지 피해 소리"),RegionForbidden<void,float,float,std::uint32_t,std::uint16_t>("영역 검사 금지 해방 사제 생성"),RegionForbidden<void,Sid,std::int32_t,bool>("영역 검사 금지 Dude 드롭"),RegionForbidden<void,float,float,std::uint32_t,std::uint32_t>("영역 검사 금지 섬 드롭")});
         storage->links.bridgeType=82;storage->links.islandType=94;storage->links.stalagType=95;storage->links.connectorType=155;storage->links.noIslandType=157;
         owner->Bind(storage,gameplay,{});owner->BindBacking(sp,players,gameplay->BattleOptionsOwner());owner->BindRandom(random);owner->BindRegionContext(kencloud);owner->BindDevices(Devices());
@@ -105,6 +107,92 @@ struct RegionScene { //게임실행기없이실제장기owner/보호자산/물�
     // 실패는숨기지않고실제현재필드/삭제깊이를기록한뒤같은예외를다시전달한다.
     bool Destroy(Sid sid) { try { return storage->DestroyAsset(sid,0x10); }catch (...) { const auto raw=storage->pool.Slot(sid);std::cerr<<"type="<<std::uint32_t(raw[10])<<" state="<<std::uint32_t(raw[11])<<" extra="<<std::uint32_t(raw[40])<<" pre="<<storage->BaseDestroy().PreDepth()<<" post="<<storage->BaseDestroy().PostDepth()<<" ui="<<refreshes<<'\n';throw; } }
 };
+}
+
+// Player 장기 장치는 배열·동맹·SP·난수를 조기 초기화하지 않고 한 번만 결합한다.
+TEST_CASE(ClientRegistry_PlayerBindingDoesNotInitializeRecords) {
+    RegionScene scene;const auto random=scene.random->Game().State();bool rejected{};
+    try { scene.storage->BindPlayerRecords(scene.players); }catch (const std::invalid_argument&) { rejected=true; }
+    CHECK(rejected && scene.players->Base()==0 && !scene.players->Initialized() && !scene.sp->Store().Initialized() && scene.random->Game().State()==random && !scene.storage->Borrowed());
+}
+
+// 실제 Player base가 없으면 원문의 첫 기록 접근 위치에서 실패하고 앞선 dead/로그/깊이를 보존한다.
+TEST_CASE(ClientRegistry_PlayerWithoutBasePreservesDeletePrefix) {
+    RegionScene scene;const auto sid=scene.Asset(0x50ee08U);const auto free=scene.storage->pool.FreeCount();bool rejected{};
+    try { scene.storage->DestroyAsset(sid,0x10U); }catch (const std::out_of_range&) { rejected=true; }
+    CHECK(rejected && scene.storage->pool.FreeCount()==free && scene.traces==1 && (scene.storage->pool.Slot(sid)[11]&3U)==2U && scene.storage->BaseDestroy().PreDepth()==1 && scene.storage->BaseDestroy().PostDepth()==0 && scene.players->Base()==0);
+}
+
+// 자신의 현재 Player+9c만 지우고 같은 flags DWORD의 다른 비트와 다른 행은 보존한다.
+TEST_CASE(ClientRegistry_PlayerClearsMatchingSidAndUpdatesExactBits) {
+    RegionScene scene;scene.PlayerBlock();const auto sid=scene.Asset(0x50ee08U);scene.storage->pool.AllocatedBytes(sid)[34]=1;
+    scene.PlayerWrite(1,0x9c,sid.value);scene.PlayerWrite(1,0x50,0xa5a50003U);scene.PlayerWrite(2,0x9c,0x12345678U);scene.PlayerWrite(2,0x50,0x76543210U);
+    const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(sid,0x10U));
+    CHECK(scene.PlayerRead(1,0x9c)==0 && scene.PlayerRead(1,0x50)==0xa5a50102U && scene.PlayerRead(2,0x9c)==0x12345678U && scene.PlayerRead(2,0x50)==0x76543210U);
+    CHECK(scene.storage->pool.FreeCount()==free+1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 다른 Player SID를 자신으로 오인하지 않으며 owner0도 실제 배열의 원문 행을 사용한다.
+TEST_CASE(ClientRegistry_PlayerKeepsOtherSidAndSupportsOwnerZero) {
+    RegionScene scene;scene.PlayerBlock();const auto sid=scene.Asset(0x50ee08U);scene.storage->pool.AllocatedBytes(sid)[34]=0;
+    scene.PlayerWrite(0,0x9c,0x10000U|sid.value);scene.PlayerWrite(0,0x50,1);CHECK(scene.storage->DestroyAsset(sid,0x10U));
+    CHECK(scene.PlayerRead(0,0x9c)==(0x10000U|sid.value) && scene.PlayerRead(0,0x50)==0x100U);
+}
+
+// 공통 Pre가 Player 배열과 raw owner를 바꿔도 이후 두 flags 쓰기는 새 주소에만 적용한다.
+TEST_CASE(ClientRegistry_PlayerRereadsBaseAndOwnerAfterCommonPre) {
+    RegionScene scene;const auto oldBase=scene.PlayerBlock();const auto sid=scene.Asset(0x50ee08U);scene.storage->pool.AllocatedBytes(sid)[34]=1;scene.PlayerWrite(1,0x9c,sid.value);scene.gameplay->selection.selected=sid.value;
+    scene.onClear=[&] { CHECK(scene.PlayerRead(1,0x9c)==0);scene.PlayerBlock();scene.storage->pool.AllocatedBytes(sid)[34]=2;scene.PlayerWrite(1,0x50,0x77U);scene.PlayerWrite(2,0x9c,0x5678U);scene.PlayerWrite(2,0x50,0x80000001U); };
+    CHECK(scene.storage->DestroyAsset(sid,0x10U));
+    CHECK(scene.players->Base()!=oldBase && scene.clears==1 && scene.PlayerRead(1,0x50)==0x77U && scene.PlayerRead(2,0x9c)==0x5678U && scene.PlayerRead(2,0x50)==0x80000100U && !scene.storage->Borrowed());
+}
+
+// 장기 Storage의 약한 기록 장치는 실제 owner를 반납한 뒤 가짜 배열이나 재초기화를 만들지 않는다.
+TEST_CASE(ClientRegistry_PlayerOwnerLifetimeIsWeak) {
+    RegionScene scene;const auto sid=scene.Asset(0x50ee08U);const auto weak=std::weak_ptr<ClientPlayerRecords>(scene.players);scene.owner.reset();scene.players.reset();CHECK(weak.expired());bool rejected{};
+    try { scene.storage->DestroyAsset(sid,0x10U); }catch (const std::logic_error& error) { rejected=std::string_view(error.what())=="장기 Player 삭제의 실제 현재 기록 owner 미연결"; }
+    CHECK(rejected && scene.storage->BaseDestroy().PreDepth()==1 && scene.traces==1);
+}
+
+// 두 고유 Post는 같은 장기 목록에서 중복 DWORD만 압축하고 비활성 꼬리와 높은 SID 비트는 보존한다.
+TEST_CASE(ClientRegistry_ResidenceAndDudeRemoveExactDuplicates) {
+    for (const auto table:{0x50f540U,0x508cc8U}) { // 실제 두 VT의 동일 제거 본체를 각각 독립 물리에서 실행한다.
+        RegionScene scene;const auto sid=scene.Asset(table);scene.storage->pool.AllocatedBytes(sid)[40]=0;auto& list=table==0x50f540U ? scene.storage->sidLists.residences:scene.storage->sidLists.dudes;
+        list.count=5;list.entries[0]=sid.value;list.entries[1]=0x10000U|sid.value;list.entries[2]=sid.value;list.entries[3]=7;list.entries[4]=sid.value;list.entries[5]=0xdeadbeefU;
+        const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(sid,0x200810U)); // 원문의 환급/Graph 정리 억제와 전송 억제로 실제 목록/부모 수명만 확인한다.
+        CHECK(list.count==2 && list.entries[0]==(0x10000U|sid.value) && list.entries[1]==7 && list.entries[2]==sid.value && list.entries[3]==7 && list.entries[4]==sid.value && list.entries[5]==0xdeadbeefU);
+        CHECK(scene.storage->pool.FreeCount()==free+1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+    }
+}
+
+// extra9는 목록 데이터와 count가 비정상이어도 원문처럼 읽기 전에 제거 접두를 생략한다.
+TEST_CASE(ClientRegistry_SkippedPostDoesNotReadInvalidCount) {
+    for (const auto table:{0x50f540U,0x508cc8U}) { // 두 고유 Post의 같은 자연 관문을 확인한다.
+        RegionScene scene;const auto sid=scene.Asset(table);auto& list=table==0x50f540U ? scene.storage->sidLists.residences:scene.storage->sidLists.dudes;list.count=0xffffffffU;list.entries[0]=sid.value;
+        CHECK(scene.storage->DestroyAsset(sid,0x10U));CHECK(list.count==0xffffffffU && list.entries[0]==sid.value && scene.storage->BaseDestroy().PostDepth()==0);
+    }
+}
+
+// 원문0040ea00의 signed count가 음수이면 일반 객체도 배열을 읽지 않고 해당 DWORD를 보존한다.
+TEST_CASE(ClientRegistry_NegativeSignedCountSurvivesActualPost) {
+    for (const auto table:{0x50f540U,0x508cc8U}) { // Native는 독립 typed의 Items 사전 검사를 삽입하지 않는다.
+        RegionScene scene;const auto sid=scene.Asset(table);scene.storage->pool.AllocatedBytes(sid)[40]=0;auto& list=table==0x50f540U ? scene.storage->sidLists.residences:scene.storage->sidLists.dudes;list.count=0x80000000U;list.entries[0]=sid.value;
+        CHECK(scene.storage->DestroyAsset(sid,0x200810U));CHECK(list.count==0x80000000U && list.entries[0]==sid.value && scene.storage->BaseDestroy().PostDepth()==0);
+    }
+}
+
+// 목록은 생성 때 snapshot하지 않고 앞선 공통 Pre/UI가 바꾼 실제 현재 데이터에서만 제거한다.
+TEST_CASE(ClientRegistry_PostReadsListChangedByEarlierCommonPre) {
+    RegionScene scene;const auto sid=scene.Asset(0x508cc8U);scene.storage->pool.AllocatedBytes(sid)[40]=0;scene.gameplay->selection.selected=sid.value;auto& list=scene.storage->sidLists.dudes;list.count=1;list.entries[0]=123;
+    scene.onClear=[&] { list.count=3;list.entries[0]=9;list.entries[1]=sid.value;list.entries[2]=11; };
+    CHECK(scene.storage->DestroyAsset(sid,0x200810U));CHECK(scene.clears==1 && list.count==2 && list.entries[0]==9 && list.entries[1]==11 && list.entries[2]==11);
+}
+
+// 공통 Pre가 extra를 바꾼 뒤 고유 Post는 그때의 새 관문을 읽어 목록을 남긴다.
+TEST_CASE(ClientRegistry_PostRereadsExtraAfterEarlierCommonPre) {
+    RegionScene scene;const auto sid=scene.Asset(0x50f540U);scene.storage->pool.AllocatedBytes(sid)[40]=0;scene.gameplay->selection.selected=sid.value;auto& list=scene.storage->sidLists.residences;list.count=1;list.entries[0]=sid.value;
+    scene.onClear=[&] { scene.storage->pool.AllocatedBytes(sid)[40]|=9U; };
+    CHECK(scene.storage->DestroyAsset(sid,0x200810U));CHECK(scene.clears==1 && list.count==1 && list.entries[0]==sid.value && scene.storage->BaseDestroy().PostDepth()==0);
 }
 
 // 전체 벌룬 본체를 조립해도 현재 물리·Player·SP·난수와 대여 상태를 초기화하지 않는다.

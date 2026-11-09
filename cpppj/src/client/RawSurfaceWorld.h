@@ -13,6 +13,7 @@
 #include "o/RawBombPreDestroy.h" //Point Blast의고유전처리도같은물리/현재폭발과공통부모를공유한다.
 #include "o/RawBalloonBody.h" // 벌룬의 실제 그림자·후처리·삭제 본체를 같은 장기 물리에 연결한다.
 #include "o/RawFlyerPreDestroy.h" // Flyer의 현재 WORD 대상 삭제와 Damageable 부모를 공유한다.
+#include "o/RawPlayerWorld.h" // 실제 Player 전처리도 같은 현재 기록과 공통 삭제를 사용한다.
 #include "o/RawDamageableRelease.h" // 실제 현재 권한/TYPE/공간으로 종속을 해방한다.
 #include "o/RawDamageablePostDestroy.h" // 같은 HP/Graph/목록/Host로 후처리한다.
 #include "o/RawGeyserLifetime.h" // 실제 간헐천 고유 수명 접두를 보존한다.
@@ -59,6 +60,7 @@
 namespace netstorm::o { class RawBuriedPostPop;class RawBuriedRegular; } //장기본문의완전형식은Storage구현에서만필요하다.
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
+class ClientPlayerRecords; // 현재 Player 배열을 조회할 때만 수명을 pin하는 실제 장기 owner다.
 struct PriestPlacementAssets; // 실제 Canon/핫스폿/SHP와 진단을 Native Client 수명에 한 번 보관한다.
 class NativeFortSaveVirtual; //저장/보상 가상 조회가 같은 현재 Pool/TYPE/Hash를 빌리는 순수 장치다.
 // 실제 분산 SP와 현재 편집 모드의 owner를 보존하며 Session/World를 소유하지 않는다.
@@ -140,6 +142,8 @@ private:
     std::weak_ptr<const RawSurfacePopBindings> popRuntime_; //현재typed장치/외부Kernel만짧게빌리고반납뒤장기기본전송을사용한다.
     std::weak_ptr<const RawSurfaceLifetimeBindings> surfaceLifetimeRuntime_; // 현재 World 반납 뒤 큰 파생 종단 주소를 남기지 않는다.
     RawSurfaceDamageableDevices damageableDevices_; // 실제 Client와 장기 전역만 소유하며 Session 주소를 저장하지 않는다.
+    std::weak_ptr<ClientPlayerRecords> playerRecords_; // 현재 실제 Player owner만 약하게 빌리며 span/base를 캐시하지 않는다.
+    bool playerRecordsBound_{}; // 최초 Client 결합만 허용하며 owner 반납을 새 초기화로 대체하지 않는다.
     RawSurfaceDeletionDevices deletionDevices_; // 실제 Client 장치만 장기 보관하며 Session을 소유하지 않는다.
     std::weak_ptr<const RawSurfaceDeletionBindings> deletionRuntime_; // 현재 파생 종속 효과만 weak로 빌린다.
     void RestoreDeletionGlobals(); // fresh 대여와 같은 owner 결합 뒤 현재 원문 주소만 복구하며 값은 쓰지 않는다.
@@ -204,6 +208,10 @@ public:
     o::RawDamageablePostDestroy& DamageablePost(); // 현재 실제 후처리/공통 Post를 공유한다.
     o::RawBombPreDestroy& BombPre(); //현재502370의41e960을World없이같은장기폭발/소리/공통부모에연결한다.
     o::RawFlyerPreDestroy& FlyerPre(); // 현재 +8 WORD 대상 삭제 뒤 같은 장기 Damageable 전처리를 실행한다.
+    void BindPlayerRecords(std::weak_ptr<ClientPlayerRecords> records); // 최초 메뉴 전에 현재 실제 owner만 결합하고 배열을 초기화하지 않는다.
+    void PlayerPreDestroy(o::Sid sid,std::uint32_t flags); // 현재 Player 필드의 세 주소 계산과 공통 Pre를 원문 순서로 실행한다.
+    void ResidencePostDestroy(o::Sid sid,std::uint32_t flags); // 일반 거주 구역의 장기50칸 목록을 압축한 뒤 공통 Post를 실행한다.
+    void DudePostDestroy(o::Sid sid,std::uint32_t flags); // 기존450920 본체를 같은 장기30칸 population에 연결한다.
     o::RawBalloonBody& BalloonBody(); // 실제 두 VT의 그림자·Robust·PostPop·Pre를 같은 장기 본체에 조립한다.
     float BalloonRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // Cloud Floater 사건3은 같은 프레임, 나머지는 현재 Carrier Runtime으로 전달한다.
     o::RawGeyserLifetime& GeyserLifetime(); // 같은 지면 목록/기본프레임/현재 편집 모드를 사용한다.

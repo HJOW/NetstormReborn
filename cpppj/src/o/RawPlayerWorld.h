@@ -3,8 +3,19 @@
 #include "o/SquidPostPop.h"
 #include <functional>
 #include <span>
+#include <memory> // 각 현재 Player 필드 접근 동안만 실제 기록 owner를 pin한다.
 
 namespace netstorm::o {
+// 선택된 주소 계산 한 번 동안 현재 실제 Player 배열과 owner 수명을 함께 빌린다.
+struct PlayerRecordAccess {
+    std::shared_ptr<void> pin; // 기록 재할당을 넘어 span을 저장하지 않고 현재 필드 접근까지만 보유한다.
+    std::span<std::uint8_t> records; // 그때의0059534c가 가리키는 실제 Player BYTE 배열이다.
+};
+// Player 고유 전처리는 각 주소 소비 위치에서 현재 기록을 다시 구하고 공통 부모를 호출한다.
+struct PlayerPreDestroyHooks {
+    std::function<PlayerRecordAccess()> current; // 실제 현재 Player owner/base를 선택하며 초기화하지 않는다.
+    std::function<void(Sid,std::uint32_t)> base; // 원문4906c0 중간의 비가상4b0950이다.
+};
 // 원본 Player 생성과 명시 owner Technology 조회의 진단 종류다.
 enum class PlayerWorldAssertion {
     PlayerIdKnown, // current PlayerKnown이0일 때 원본 assert를 전달한다.
@@ -39,6 +50,8 @@ public:
     Sid Create(std::int32_t owner) const;
     // PATCH4905d0/CD407cc0: 현재 owner의SID→조건부예약→special 직접frame1→비가상공통Post다.
     void PostPop(Sid sid,std::uint32_t flags) const;
+    // PATCH4906c0: 현재 Player+9c의 자신 SID만0 → 공통Pre → 재조회한+50 bit0 clear → 다시 재조회한 bit8 set이다.
+    static void PreDestroyNative(const SidPool& pool,Sid sid,std::uint32_t flags,const PlayerPreDestroyHooks& hooks);
     // 실제 Player VT를 확인한다. PATCH는 물리 슬롯을 읽으며 CD는 기존 할당 경계를 유지한다.
     bool Handles(Sid sid) const;
     // Player 기록/공통Post와 선택된 실제예약을 공간 변경 전에 검사한다.

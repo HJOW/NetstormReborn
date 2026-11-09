@@ -22,6 +22,19 @@ std::uint32_t PlayerRead(std::span<const std::uint8_t> raw,std::size_t field) {
     return value;
 }
 }
+// 원문 각 주소 계산을 독립 범위로 보존해 공통 Pre의 owner/base 재할당 뒤 새 기록을 사용한다.
+void RawPlayerWorld::PreDestroyNative(const SidPool& pool,Sid sid,std::uint32_t flags,const PlayerPreDestroyHooks& hooks) {
+    if (pool.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("Native Player 전처리 판본 오류");
+    const auto field=[&](std::size_t offset) { // 같은 주소의 읽기/쓰기는 하나의 현재 view/pin 안에서 수행한다.
+        const auto owner=pool.Slot(sid)[34];auto access=PlayerNeed(hooks.current)();const auto start=std::size_t(owner)*0xb4+offset;
+        if (start>access.records.size() || access.records.size()-start<4) throw std::out_of_range("Player 전처리 현재 기록 범위");
+        access.records=access.records.subspan(start,4);return access;
+    };
+    { auto access=field(0x9c);if (PlayerRead(access.records,0)==sid.value) PlayerWrite(access.records,0,0); } // 이전 Player 포인터는 공통 부모 뒤에 재사용하지 않는다.
+    PlayerNeed(hooks.base)(sid,flags);
+    { auto access=field(0x50);PlayerWrite(access.records,0,PlayerRead(access.records,0)&0xfffffffeU); }
+    { auto access=field(0x50);PlayerWrite(access.records,0,PlayerRead(access.records,0)|0x100U); }
+}
 // 같은 풀/실제9기록을 확인하며 CD의 기존 전수 장치 계약은 유지한다.
 RawPlayerWorld::RawPlayerWorld(SidPool& pool,SquidPostPop& base,std::span<std::uint8_t> playerRecords,
     PlayerWorldState& state,PlayerWorldHooks hooks)

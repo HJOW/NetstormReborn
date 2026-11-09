@@ -42,6 +42,9 @@ void RawSurfaceStorage::EmitDefaultAssetEffect(const o::SquidDestroyEvent& event
     if (!pre && event.effect!=o::SquidDestroyEffect::PostDestroy) throw std::logic_error("장기 자산의 가상 삭제 효과 종류 오류");
     const auto method=pre ? entry.pre:entry.post;
     switch (method) {
+    case 0x004906c0U:PlayerPreDestroy(event.sid,event.flags);return; // 공통 Pre 앞뒤에 실제 현재 Player SID/flags를 다시 읽고 쓴다.
+    case 0x0049a4a0U:ResidencePostDestroy(event.sid,event.flags);return; // 같은 실제50칸 거주 구역 목록과 공통 Post다.
+    case 0x00450920U:DudePostDestroy(event.sid,event.flags);return; // 기존30칸 population 제거 본체를 장기로 사용한다.
     case 0x0042ae80U:BalloonBody().PreDestroy(event.sid,event.flags);return; // 그림자 우선 삭제와 현재 Carrier 부모를 같은 장기 본체에서 실행한다.
     case 0x0045e7e0U:FlyerPre().PreDestroy(event.sid,event.flags);return; // 실제 세 VT만 같은 WORD 대상 정리·Damageable 부모를 선택한다.
     case 0x0041e960U:BombPre().PreDestroy(event.sid,event.flags);return; //실제Point Blast의자연폭발관문뒤현재소리와공통부모를같은장기본문에서선택한다.

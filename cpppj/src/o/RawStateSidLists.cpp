@@ -1,6 +1,7 @@
 // 현재 등록 표와 목록 개수의 실제 수명을 공유하며 데이터/용량은 Native 정리에서 보존한다.
 #include "o/RawStateSidLists.h"
 #include <algorithm>
+#include <bit> // 원문 count의 signed 비교와 원시 DWORD를 구분한다.
 #include <stdexcept>
 
 namespace netstorm::o { //실제 PATCH 등록 표의 순서와 count 쓰기를 복원한다.
@@ -8,6 +9,16 @@ namespace { // Native 정적 생성 순서와 현재 물리의 연결만 지정�
 constexpr std::array<std::uint32_t,9> kHeaders{0x55a4d0,0x55a4ec,0x55a708,0x592f80,0x5950d8,0x5954c0,0x59a9d4,0x5caf28,0x5e1898}; //0044fb20의 실제 아홉 this다.
 // 짧은 호스트 뷰를 원문 고정20칸으로 잘못 역참조하지 않는다.
 void RequireRegistry(std::span<const std::uint32_t> headers) { if (headers.size()<kStateSidRegistryCapacity) throw std::invalid_argument("State SID 등록 표의20DWORD 누락"); }
+}
+// 원문은 선검사나 꼬리 지우기 없이 현재 signed count 아래의 각 DWORD만 순서대로 압축한다.
+void RemoveStateSidList(SquidPostPopList& list,std::uint32_t sid) {
+    std::uint32_t removed{}; // 실제 제거된 일치 항목 수이며 최종 count에서만 뺀다.
+    for (std::int32_t index=0;index<std::bit_cast<std::int32_t>(list.count);++index) { // 음수 count는 원문처럼 읽기/쓰기를 생략한다.
+        if (static_cast<std::size_t>(index)>=list.entries.size()) throw std::out_of_range("SID 목록 제거의 현재 물리 범위");
+        const auto value=list.entries[static_cast<std::size_t>(index)]; // 앞선 압축 뒤에도 현재 읽기 위치를 보존한다.
+        if (value==sid) ++removed;else list.entries[static_cast<std::size_t>(index)-removed]=value;
+    }
+    list.count-=removed;
 }
 void RegisterStateSidList(std::span<std::uint32_t> headers,std::uint32_t header) {
     RequireRegistry(headers);

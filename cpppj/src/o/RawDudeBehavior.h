@@ -29,6 +29,8 @@ public:
     bool Fall(Sid sid) const; // 현재 상태에 추가 관문 없이 task5105와 기존 이동 삭제를 수행한다.
     std::uint32_t Arrival(Sid sid) const; // task별 가상 삭제와1000/1001 원본 반환을 보존한다.
     void PostDestroy(Sid sid,std::uint32_t flags) const; // 일반 객체의 중복 population 항목을 모두 압축한 뒤 공통 후처리한다.
+    // PATCH450920의 실제 가상 진입이다. 현재 Pool/장기 population을 빌리고 추가 TYPE/상태 선검사 없이 원문 순서를 따른다.
+    static void PostDestroyNative(const SidPool& pool,SquidPostPopList& population,Sid sid,std::uint32_t flags,const std::function<void(Sid,std::uint32_t)>& base);
     const SidPool& Pool() const; // 실제 Session/경로 어댑터의 풀 혼용을 검사한다.
     const SquidPostPopList& Population() const; //현재 생성/최초 Pop/삭제와 같은30칸 목록을 읽기 전용으로 제공한다.
 private:
