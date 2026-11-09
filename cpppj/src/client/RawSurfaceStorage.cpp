@@ -3,6 +3,7 @@
 #include "o/RawDudeRegular.h" // 장기 저장소 소멸 시 실제 Dude 본문 완전형을 사용한다.
 #include "o/RawDudeTask.h"
 #include "o/RawDudeBehavior.h"
+#include "o/RawFlare.h" // Host와 장기 플레어의 실제 소멸 순서를 완전형으로 보장한다.
 #include "o/RawSpriteRegular.h" //일반 Sprite의 현재 프레임 정기도 같은 실제 Frame/표시 장치를 사용한다.
 #include "o/RawBombHeal.h" //힐 버스트의 실제 정기 프레임/후속 예약/삭제를 장기 Host에서 처리한다.
 #include "o/RawVortexOwner.h" //장기신전가상74는같은원문VT표와실제영역owner로분배한다.
@@ -264,6 +265,7 @@ float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std
     if (table==0x502cf0U || table==0x502db0U) return o::HandleHealBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //힐/미티어의 필수41f9d0을 같은 장기 본문에서 처리한다.
     if (table==0x502c38U) return o::HandleGravityBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //그라비테이션의 필수41f760도 같은 실제 풀/프레임/Host를 사용한다.
     if (table==0x508cc8U) return DudeRegular().Handle(sid,event,count,payload); // 실제450fa0의 현재 장기 본문이다.
+    if (table==0x5096a0U) return Flare().Handle(sid,event,count,payload); // 실제45a250도 같은 장기/Session 본문을 사용한다.
     if (table==0x50f540U) return ResidenceRegular(sid,event,count,payload); // 같은 현재 거주 구역 정기 본문이다.
     if (table==0x509148U || table==0x509210U) return FactoryRegular(sid,event,count,payload); // 실제4549c0의 두 직접 가상 표다.
     if (table==0x50a820U || table==0x50a8e8U) return DecorationRegular(sid,event,count,payload); // 실제462420의 장식/가장자리 팜 수명 감소다.

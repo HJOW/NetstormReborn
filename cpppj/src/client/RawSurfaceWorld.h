@@ -68,7 +68,7 @@
 #include <vector>
 #include <optional>
 
-namespace netstorm::o { class RawDudeRegular;class RawDudeBehavior;class RawDudeTask;struct TerrainBitmapState;class RawBuriedPostPop;class RawBuriedRegular; } //장기본문의완전형식은Storage구현에서만필요하다.
+namespace netstorm::o { class RawFlare;class RawDudeRegular;class RawDudeBehavior;class RawDudeTask;struct TerrainBitmapState;class RawBuriedPostPop;class RawBuriedRegular; } //장기본문의완전형식은Storage구현에서만필요하다.
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
 class ClientPlayerRecords; // 현재 Player 배열을 조회할 때만 수명을 pin하는 실제 장기 owner다.
@@ -169,6 +169,10 @@ struct RawSurfaceResourceDevices { //같은Client게임난수와선택된큰자�
     std::function<void(o::Sid,std::uint32_t)> geyserRegistration; //현재Player9/brain순회의실제416720등록부모다.
     o::RegularHandler carrierRegular; // 벌룬의 비3 사건에서만 현재 실제 Carrier 본체와 전체 Runtime을 빌린다.
 };
+struct RawSurfaceFlareDevices { // 실제 Client의 억제 시각과 같은 위치 음향만 장기로 빌린다.
+    std::shared_ptr<const double> suppression; // 같은 ClientLocalStateGlobals005c85f0 주소를 aliasing owner로 보존한다.
+    std::function<void(float,float,std::string_view,std::uint32_t)> sound; // 실제 SoundPlayer의 위치 소리를 선택 시 재생한다.
+};
 struct RawSurfaceProcessDevices { //실제Client현재선택/선택해제부모만장기로빌린다.
     std::function<std::uint32_t()> selected; //현재전체DWORD선택전역이며Form이라는이유로0/WORD를합성하지않는다.
     std::function<void()> clearSelection; //실제현재Client선택정리부모를선택된효과위치에서호출한다.
@@ -216,6 +220,7 @@ private:
     void RestoreDeletionGlobals(); // fresh 대여와 같은 owner 결합 뒤 현재 원문 주소만 복구하며 값은 쓰지 않는다.
     RawSurfaceRewardDevices rewardDevices_; // 같은 실제 SP/모드 owner를 처리기보다 오래 보관한다.
     RawSurfaceResourceDevices resourceDevices_; //실제Client장치만보관하며짧은Session주소를저장하지않는다.
+    RawSurfaceFlareDevices flareDevices_; // 현재 억제/음향 owner는 효과 본문과 Host보다 오래 유지한다.
     RawSurfaceContentDevices contentDevices_; // 같은 Client 전역 alias와 현재 장치를 본체보다 오래 유지한다.
     std::weak_ptr<const RawSurfaceCarrierBindings> carrierRuntime_; // 큰 선택 효과만 약하게 빌려 죽은 Session을 역소유하지 않는다.
     std::weak_ptr<const RawSurfaceDudeBindings> dudeRuntime_; // 실제 현재 큰 이동 효과만 약하게 대여한다.
@@ -343,6 +348,8 @@ public:
     o::RawFactoryPostPop& FactoryPostPop(); //현재 목록/TYPE/역할과 장기 예약·공통 후처리를 같은 본체로 공유한다.
     void BindDudeRuntime(const std::shared_ptr<const RawSurfaceDudeBindings>& runtime); // 큰 현재 이동 하위만 대여하며 게임 상태는 초기화하지 않는다.
     o::RawDudeRegular& DudeRegular(); // 같은 공급원/순환/현재 사건/난수/프레임의 장기 정기 본문이다.
+    void BindFlareDevices(RawSurfaceFlareDevices devices); // 첫 효과 전에 실제 억제 시각/소리 장치만 결합한다.
+    o::RawFlare& Flare(); // 같은 현재 TYPE/프레임·난수/생성·공간·Host의 유일한 Native 효과 본문이다.
     o::RawDudeBehavior& DudeBehavior(); // 같은 지면/현재 task/종속 삭제의 장기 부모다.
     o::RawDudeTask& DudeTask(); // 같은 실제 Host/시각/WORD의 장기 작업 예약기다.
     void SetDudeWord(o::Sid sid,std::uint32_t value); //4ac220의 현재 WORD 저장 뒤 실제 Bridge 통지다.
@@ -546,6 +553,8 @@ private:
     std::unique_ptr<o::ContentPreviewProcess> pendingContentPreview_; // 원문new18 성공부터 부착까지의 단일 확보 소유권이다.
     std::unique_ptr<o::RawCarrierRegular> carrierRegular_; // 현재 필드 getter와 실제 Client 장치를 빌린다.
     std::unique_ptr<o::RawBombRegular> bombRegular_; // 상태/TYPE/프레임/실제 장치보다 먼저 반납하는 같은 정기 본문이다.
+    std::unique_ptr<o::RawFlare> flare_; // Host가 잔류 Regular를 정리할 때까지 같은 효과 본문을 유지한다.
+    std::unique_ptr<void,void(*)(void*)> flareReservation_{nullptr,[](void* memory) { ::operator delete(memory); }}; // new28부터 실제 Regular 생성까지 같은 확보 메모리 한 개다.
     std::unique_ptr<o::SquidFormDispatch> processForms_; //장기Host와같은Pool의실제ProcessForm경로이며UI/내용물가짜처리기는등록하지않는다.
     std::unique_ptr<o::RawSquidTransmission> transmission_; //같은Pool/현재TYPE/GameAux보다먼저반납하는공통실제송신기다.
     std::unique_ptr<RawProcessHostStorage> processes_; // 실제 Pool/TYPE 뒤에 선언하여 그 참조보다 먼저 최종 반납한다.

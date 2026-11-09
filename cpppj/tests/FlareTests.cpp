@@ -55,11 +55,11 @@ std::vector<std::uint32_t> FlareInputs(const std::string& text,bool spawn) {
 }
 }
 // 원본 동결139행의 본체/자식550바이트·난수·모든 효과·float 비트를 대조한다.
-TEST_CASE(Flare_Native139) {
+void ReplayFlare(bool native) { // 같은 불변 원문139행을 독립 typed와 현재 Native 입력 계약에 각각 적용한다.
     std::size_t spawnCount{},regularCount{};
     // 기대값은 원본 TSV에만 있으며 새 몸체로 생성하지 않는다.
     for (const auto& row:LoadFixture(NETSTORM_FLARE_FIXTURE).rows) {
-        const bool spawn=row[0]=="Spawn";const auto input=FlareInputs(row[1],spawn);FlareScene scene(input,spawn);RawFlare flare(scene.pool,scene.types,scene.frames,scene.random,{scene.suppressed,scene.loading,scene.type},scene.hooks);std::uint32_t result{};
+        const bool spawn=row[0]=="Spawn";const auto input=FlareInputs(row[1],spawn);FlareScene scene(input,spawn);auto state=native ? FlareState{std::function<double()>([&scene] { return scene.suppressed; }),scene.loading,scene.type}:FlareState{scene.suppressed,scene.loading,scene.type};RawFlare flare(scene.pool,scene.types,scene.frames,scene.random,std::move(state),scene.hooks);std::uint32_t result{};
         if (spawn) { flare.Spawn(Sid{50},std::bit_cast<std::int32_t>(input[0]),input[1]);++spawnCount; }
         else { result=Bits(flare.Handle(Sid{50},input[1],input[2],Float(input[8])));++regularCount; }
         std::string raw;
@@ -71,13 +71,20 @@ TEST_CASE(Flare_Native139) {
     }
     CHECK(spawnCount==30 && regularCount==109);
 }
+TEST_CASE(Flare_Native139) { ReplayFlare(false); } // 기존 typed의 원문139행 계약을 유지한다.
+TEST_CASE(Flare_Current139) { ReplayFlare(true); } // Native 현재 입력도 같은 슬롯/난수/순서/반환을 만족한다.
 // C/D 방향은 별도 보호 원문으로 전체 슬롯·난수·예약 인자까지 비교한다.
-TEST_CASE(Flare_BombStatusDirectionsNative60) {
+void ReplayFlareDirections(bool native) { // 보호된 C/D 방향60행을 양쪽 현재 입력 계약에 대조한다.
     const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/bomb-status-flare-x86.tsv").string();std::size_t count{};
     for (const auto& row:LoadFixture(path.c_str()).rows) { // 원본 입력30개를 두 방향에서 각각 실행한다.
-        const auto input=FlareInputs(row[1],true);FlareScene scene(input,true);RawFlare flare(scene.pool,scene.types,scene.frames,scene.random,{scene.suppressed,scene.loading,scene.type},scene.hooks);flare.SpawnDirection({50},std::bit_cast<std::int32_t>(input[0]),input[1],106,Number(row[0]));std::string raw;
+        const auto input=FlareInputs(row[1],true);FlareScene scene(input,true);auto state=native ? FlareState{std::function<double()>([&scene] { return scene.suppressed; }),scene.loading,scene.type}:FlareState{scene.suppressed,scene.loading,scene.type};RawFlare flare(scene.pool,scene.types,scene.frames,scene.random,std::move(state),scene.hooks);flare.SpawnDirection({50},std::bit_cast<std::int32_t>(input[0]),input[1],106,Number(row[0]));std::string raw;
         for (const auto sid:std::array<std::uint16_t,11>{50,100,101,102,103,104,105,106,107,108,109}) raw+=Hex(scene.pool.Slot({sid})); // 방문하지 않은 주변 슬롯도 모두 비교한다.
         CHECK(Number(row[2])==0 && scene.random.State()==Number(row[3]) && raw==row[4] && (scene.trace.empty() ? "-" : scene.trace)==row[5]);++count;
     }
     CHECK(count==60);
+}
+TEST_CASE(Flare_BombStatusDirectionsNative60) { ReplayFlareDirections(false); } // 기존 주문 방향 계약을 유지한다.
+TEST_CASE(Flare_CurrentDirections60) { ReplayFlareDirections(true); } // Native 방향별 생성도 같은 원문 기대값을 사용한다.
+TEST_CASE(Flare_CurrentRegularDoesNotReadSuppressionOrRandomAtLaterCount) { // 원문에 없는 VT/선택되지 않은 전역 검사를 삽입하지 않는다.
+    const auto input=FlareInputs("0,1,1,0,0,0,1,0,1045220557",false);FlareScene scene(input,false);Put(InputRaw(scene.pool,Sid{50}),0,0x12345678U);auto state=FlareState{std::function<double()>{},scene.loading,scene.type};RawFlare flare(scene.pool,scene.types,scene.frames,std::function<GameRandom&()>{},std::move(state),scene.hooks);CHECK(Bits(flare.Handle(Sid{50},1,1,Float(1045220557U)))==1045220557U && scene.trace=="F,50,1,0");
 }

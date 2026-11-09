@@ -11,7 +11,7 @@ namespace {
 constexpr std::uint32_t kFlareVtable=0x005096a0U; // 원본106 생성자의 실제 가상 표다.
 constexpr float kYScale=0.09090909361839294F; // 원본504194의float 비트3dba2e8c다.
 // 필수 효과를 실제 호출할 때만 검사한다.
-template<class F> const F& Need(const F& callback) { if (!callback) throw std::logic_error("플레어 실제 하위 미연결");return callback; }
+template<class F> F Need(const F& callback) { if (!callback) throw std::logic_error("플레어 실제 하위 미연결");return callback; }
 // 실제fadd0.5→CRT ftol→하위signedDWORD→float 저장 순서다. invalid의 하위DWORD는0이다.
 float Integer(float input) {
     const double value=double(input)+0.5;if (!std::isfinite(value) || value<-0x1p63 || value>=0x1p63) return 0;
@@ -22,7 +22,9 @@ float Clamp(float value) { if (value<1.0F) value=1.0F;if (255.0F<value) value=25
 }
 // 같은 PATCH 자료의188개 타입/프레임만 허용하며 생성 시 게임 효과는 실행하지 않는다.
 RawFlare::RawFlare(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,GameRandom& random,FlareState state,FlareHooks hooks)
-    :pool_(pool),types_(types),frames_(frames),random_(random),state_(state),hooks_(std::move(hooks)) {
+    :RawFlare(pool,types,frames,[&random]()->GameRandom& { return random; },std::move(state),std::move(hooks)) {}
+RawFlare::RawFlare(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::function<GameRandom&()> random,FlareState state,FlareHooks hooks) // 장기 구성 자체는 난수와 효과를 소비하지 않는다.
+    :pool_(pool),types_(types),frames_(frames),random_(std::move(random)),state_(std::move(state)),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=188) throw std::invalid_argument("플레어 PATCH 풀/TYPE/프레임 오류");
 }
 // 가상 표를 확인해 이름만 같은 다른 파생에 처리기를 적용하지 않는다.
@@ -35,12 +37,13 @@ std::uint32_t RawFlare::Read(Sid sid,std::size_t offset) const {
 }
 // 원본의 직접 frame 쓰기는 SquidFrame 통지를 호출하지 않는다.
 void RawFlare::Put(Sid sid,std::size_t offset,std::uint32_t value) const {
-    auto raw=pool_.AllocatedBytes(sid);
+    auto raw=Bytes(sid);
     // 네 바이트만 덮어써 깊이/owner/extra를 유지한다.
     for (std::size_t i=0;i<4;++i) raw[offset+i]=static_cast<std::uint8_t>(value>>(i*8));
 }
 // 원본은 입력float 구간 차이를 넓힌 뒤 절댓값과 현재 상위16비트를 곱한다.
-double RawFlare::Random(float low,float high) const { return double(random_.Next(65536))*(1.0/65536.0)*std::abs(double(high)-double(low))+double(low); }
+double RawFlare::Random(float low,float high) const { return double(Need(random_)().Next(65536))*(1.0/65536.0)*std::abs(double(high)-double(low))+double(low); }
+std::span<std::uint8_t> RawFlare::Bytes(Sid sid) const { if (!state_.native) return pool_.AllocatedBytes(sid);const auto raw=pool_.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // 원문 직접 BYTE/DWORD 쓰기만 수행한다.
 // TYPE의 실제 코드 방향으로부터 first/count를 얻고 잘못된 물리 프레임은 거부한다.
 RiftTypeFrames::LetterRun RawFlare::Run(Sid sid) const {
     const auto type=pool_.Slot(sid)[10];if (type>=frames_.size()) throw std::out_of_range("플레어 현재 TYPE 범위");
@@ -53,7 +56,7 @@ void RawFlare::Spawn(Sid parent,std::int32_t count,std::uint32_t event) const {
 }
 // 주문은 같은 생성 몸체에 C/D 방향을 전달하며 기본 wrapper의 A 방향과 구별한다.
 void RawFlare::SpawnDirection(Sid parent,std::int32_t count,std::uint32_t event,std::uint32_t effectType,std::uint32_t direction) const {
-    if (state_.suppressedTime!=0 || state_.loadingDepth) return;
+    if (state_.SuppressedTime()!=0 || state_.loadingDepth) return;
     if (direction>=16) throw std::out_of_range("플레어 생성 방향 범위");
     const auto depth=pool_.Slot(parent)[35];auto size=Need(hooks_.processCount)();
     // 음수/0개는 생성하지 않으며30000개일 때는 마지막 하나만 더 만든다.
@@ -65,7 +68,7 @@ void RawFlare::SpawnDirection(Sid parent,std::int32_t count,std::uint32_t event,
         const auto highX=static_cast<float>(double(hotspot[0])*0.0625+double(offsetX)),highY=static_cast<float>(double(hotspot[1])*double(kYScale)+double(offsetY));
         const auto randomX=Random(offsetX,highX),randomY=Random(offsetY,highY);const auto currentType=pool_.Slot(child)[10];if (currentType>=frames_.size()) throw std::out_of_range("플레어 생성 현재 TYPE 범위");
         Put(child,36,static_cast<std::uint32_t>(frames_[currentType].Run(static_cast<std::uint8_t>('A'+direction)).first));Need(hooks_.owner)(child,0);
-        auto raw=pool_.AllocatedBytes(child);raw[40]|=8U;raw[35]=static_cast<std::uint8_t>(depth-1U);
+        auto raw=Bytes(child);raw[40]|=8U;raw[35]=static_cast<std::uint8_t>(depth-1U);
         const float spawnX=Clamp(static_cast<float>(double(x)-randomX)),spawnY=Clamp(static_cast<float>(double(y)-randomY));Need(hooks_.pop)(child,spawnX,spawnY,0);
         if (Need(hooks_.reserveRegular)()) Need(hooks_.addRegular)(child,event,static_cast<float>(Random(0,0.07F)+0.05));
         ++size;
@@ -73,7 +76,7 @@ void RawFlare::SpawnDirection(Sid parent,std::int32_t count,std::uint32_t event,
 }
 // count/event은 원본signed int 비교이며 실제 Kernel의uint32 비트 입력을 유지한다.
 float RawFlare::Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
-    if (!Handles(sid)) throw std::invalid_argument("플레어 현재 가상 표 오류");
+    if (!state_.native && !Handles(sid)) throw std::invalid_argument("플레어 현재 가상 표 오류");
     const auto run=Run(sid);const auto step=std::bit_cast<std::int32_t>(count),kind=std::bit_cast<std::int32_t>(event);
     if (!step) payload=static_cast<float>(Random(0.05F,0.13F));
     if (kind>1 && step==run.count-1) {

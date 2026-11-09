@@ -3840,3 +3840,4 @@ target_sources(netstorm_construction_owner_tests PRIVATE ResidenceRegularTests.c
 
 # 현재 Dude 정기/작업의 원문 재생만 직접 집중 대상에 포함한다.
 target_sources(netstorm_construction_owner_tests PRIVATE DudeRegularTests.cpp DudeTaskTests.cpp)
+target_sources(netstorm_construction_owner_tests PRIVATE FlareTests.cpp) # 보호 원문139입력과 방향60입력을 같은 Native/typed 본문으로 비교한다.

@@ -810,9 +810,9 @@ struct RawCampaignSession::Impl {
     std::uint32_t& templeProduct{gameplayGlobals->GameAux()->TempleProductType()}; //PATCH0054126c의같은장기현재TYPE이며새Session에서133으로덮지않는다.
     std::unique_ptr<RawCampaignProductionBindings> production; // 같은 현재 Factory/기술 내용물/허용 표를 조합한다.
     std::unique_ptr<RawProductionSync> productionSync; // 현재Deck과 같은 기술 부모의 실제teleport 내용물을 동기화한다.
-    std::uint32_t flareType{106}; // PATCH00541200의 실제 효과 TYPE다.
+    std::uint32_t& flareType{gameplayGlobals->GameAux()->BombFlareType()}; // 같은00541200의 현재 전체DWORD를 빌린다.
     std::uint32_t& researchOutpost{gameplayGlobals->OutpostType()}; //00541250은 Factory 프레임과 AI 제외/연구/업그레이드가 같은 Client 장기 DWORD를 빌린다.
-    std::unique_ptr<RawFlare> flare; // 같은 난수/Kernel/공간/표시/삭제를 사용하는 실제 효과다.
+    std::unique_ptr<RawFlare> localFlare;RawFlare* flare{}; // Native는 같은 장기 효과 본문을 빌리고 독립 typed만 지역 소유한다.
     std::unique_ptr<void,void(*)(void*)> pendingFlareRegular{nullptr,[](void* storage) { ::operator delete(storage); }}; // 실제 new40 예약부터 Regular 생성까지의 단일 메모리다.
     std::unique_ptr<RawFactoryResearch> factoryResearch; // 같은 내용물/생산 Deck/현재 권한과58h 송신을 연결한다.
     std::unique_ptr<RawFactoryUpgradeCommand> factoryUpgradeCommand; //같은58h의 업그레이드 요청/수신과 실제 SP·SharedRegular을 연결한다.
@@ -1842,6 +1842,7 @@ struct RawCampaignSession::Impl {
     }
     // 실제 플레어의 생성·주기·후속 생성·표시·수명을 같은 현재 월드에 연결한다.
     void ConnectFlare() {
+        if (world.Storage()->UsesNativeTransmissionDevices()) { flare=&world.Storage()->Flare();return; } // Native는 같은 생성/정기/현재 역할을 빌리며 Session 사본을 만들지 않는다.
         FlareHooks hooks;
         hooks.processCount=[this] { return static_cast<std::int32_t>(core.kernel.Size()); };
         hooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
@@ -1864,7 +1865,7 @@ struct RawCampaignSession::Impl {
         hooks.update=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         hooks.sound=[this](float x,float y,std::string_view name,std::uint32_t flags) { if (!services.sound.playOnceAt) throw std::logic_error("플레어 현재 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),flags,0); };
-        flare=std::make_unique<RawFlare>(core.pool,core.types,core.frames,random,FlareState{impactState.SuppressedTime(),objectState.loadingDepth,flareType},std::move(hooks));
+        localFlare=std::make_unique<RawFlare>(core.pool,core.types,core.frames,random,FlareState{impactState.SuppressedTime(),objectState.loadingDepth,flareType},std::move(hooks));flare=localFlare.get();
     }
     // 전체 최초 펜스 몸체를 같은 현재 해시/TYPE/동맹/가상 삭제/공통 장부에 연결한다.
     void ConnectFence() {

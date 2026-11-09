@@ -26,6 +26,8 @@
 #include "o/RawDudeRegular.h" // 실제 장기 정기/현재 역할을 검사한다.
 #include "o/RawDudeTask.h" // 같은 실제 Host 작업 예약을 관찰한다.
 #include "o/RawDudeBehavior.h" // 같은 지면/낙하 부모를 호출한다.
+#include "o/RawFlare.h" // 실제 장기 생성/정기/Host 예약을 호출한다.
+#include "client/ClientLocalStateGlobals.h" // 같은005c85f0의 실제 owner와 주소를 검증한다.
 
 #include "o/RawDamageableBurning.h"
 #include "o/RawSquidHitPoints.h" //현재HP의 원문 비가상 DWORD setter를 같은 풀에서 쓴다.
@@ -1715,4 +1717,20 @@ TEST_CASE(ClientDudeOwner_SelectedMovementPinsActualOwnerAndFunction) { // 실�
 }
 TEST_CASE(ClientDudeOwner_NoWorldFallUsesCurrentFrameRandomAndActualPop) { // 실제 I→A 단계/높이BYTE/난수/frame/같은 Hash Pop을 현재 장기 본문으로 수행한다.
     RegionScene s;BindFactoryOwnerDevices(s);const auto parent=s.Asset(0x508cc8U);s.Position(parent);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]=0;raw[40]=8;RegionPut(raw,12,0x5105);const auto type=raw[10];const auto idle=s.storage->frames[type].Run('I'),run=s.storage->frames[type].Run('A');CHECK(idle.first>=0 && run.count>0);if (idle.first<0 || run.count<=0) return;RegionPut(raw,36,static_cast<std::uint32_t>(idle.first));s.storage->Frame().StoreLevel(parent);s.Index(parent);s.random->Game().SetState(1);GameRandom expected(1);const auto frame=static_cast<std::uint32_t>(run.first)+expected.Next(static_cast<std::uint32_t>(run.count));CHECK(s.storage->DudeRegular().Handle(parent,0x5105,10,7)==0.05F);CHECK(raw[35]==20 && RegionRead(raw,36)==frame && std::bit_cast<float>(RegionRead(raw,14))==100.0F && std::bit_cast<float>(RegionRead(raw,18))==100.375F && !(raw[11]&4U) && s.random->Game().State()==expected.State() && s.storage->postPopState.depth==0 && !s.storage->Borrowed());
+}
+
+TEST_CASE(ClientFlareOwner_GetterAndWorldLoanKeepCurrentGlobals) { // 장기 getter/대여는 선택하지 않은 난수·억제 시각 장치를 요구하거나 현재 역할을 초기화하지 않는다.
+    RegionScene s;s.storage->GameAux()->BombFlareType()=91;const auto seed=s.random->Game().State();auto* body=&s.storage->Flare();{ RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->Flare()==body); }CHECK(s.storage->GameAux()->BombFlareType()==91 && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientFlareOwner_ActualHostUsesSameFrameAndRandomWithoutWorld) { // 실제 Host의 count0은 같은 현재 프레임/난수로 주기를 정하고 Session을 만들지 않는다.
+    RegionScene s;BindFactoryOwnerDevices(s);const auto parent=s.Asset(0x5096a0U);s.Position(parent);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]=0;raw[40]=8;const auto run=s.storage->frames[raw[10]].Run('A');RegionPut(raw,36,static_cast<std::uint32_t>(run.first));s.storage->Frame().StoreLevel(parent);s.Index(parent);s.random->Game().SetState(1);const auto seed=s.random->Game().State();auto* process=s.storage->Processes().Host().AddRegular(parent,1,9);CHECK(process);if (!process) return;process->RunFrame();CHECK(process->Count()==1 && process->Payload()>=0.05F && process->Payload()<=0.13F && s.random->Game().State()!=seed && RegionRead(raw,36)==static_cast<std::uint32_t>(run.first) && !s.storage->Borrowed());
+}
+TEST_CASE(ClientFlareOwner_CurrentSuppressionThenLoadingStopsBeforeParent) { // 같은 실제 double과 현재 로딩 깊이는 SID/난수/생성 전에 원문 순서로 단락한다.
+    RegionScene s;auto local=std::make_shared<ClientLocalStateGlobals>();local->LoginEnd()=1;s.storage->BindFlareDevices({std::shared_ptr<const double>(local,&local->LoginEnd()),RegionForbidden<void,float,float,std::string_view,std::uint32_t>()});auto* body=&s.storage->Flare();body->Spawn(Sid{},1,2);local->LoginEnd()=0;s.storage->LoadingDepth()=1;body->Spawn(Sid{},1,2);CHECK(&s.storage->Flare()==body && !s.storage->Borrowed());
+}
+TEST_CASE(ClientFlareOwner_NoWorldExpiryUsesActualDeletionAndHost) { // 마지막 프레임의 표시 뒤 실제 삭제가 같은 Form/Hash/풀과 장기 Host를 해제한다.
+    RegionScene s;const auto parent=s.Asset(0x5096a0U);s.Position(parent);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]=0;raw[40]=8;const auto run=s.storage->frames[raw[10]].Run('A');RegionPut(raw,36,static_cast<std::uint32_t>(run.first));s.storage->Frame().StoreLevel(parent);s.Index(parent);CHECK(s.storage->Processes().Host().AddRegular(parent,1,9));CHECK(s.storage->Flare().Handle(parent,1,static_cast<std::uint32_t>(run.count),9)==-1 && (s.storage->pool.Slot(parent)[11]&1U) && !s.storage->Processes().Host().FindEvent(parent,1) && !s.storage->Borrowed());
+}
+TEST_CASE(ClientFlareOwner_SpawnUsesCurrentTypeRealPopAndAttachedRegular) { // 생성은 현재 공유 TYPE와 같은 실제 공장/소유/Pop·new28 예약/Host를 사용한다.
+    RegionScene s;BindFactoryOwnerDevices(s);auto local=std::make_shared<ClientLocalStateGlobals>();s.storage->BindFlareDevices({std::shared_ptr<const double>(local,&local->LoginEnd()),RegionForbidden<void,float,float,std::string_view,std::uint32_t>()});s.storage->LoadingDepth()=0;const auto parent=s.Asset(0x50f540U);s.Position(parent);auto raw=s.storage->pool.AllocatedBytes(parent);RegionPut(raw,36,0);raw[35]=20;const auto first=s.storage->pool.FirstFree(true);const auto size=s.storage->Processes().Kernel().Size();const auto seed=s.random->Game().State();s.storage->GameAux()->BombFlareType()=106;s.storage->Flare().Spawn(parent,1,2);const auto child=s.storage->pool.Slot(first);auto* process=s.storage->Processes().Host().FindEvent(first,2);CHECK(child[10]==106 && child[34]==0 && child[35]==19 && !(child[11]&5U) && (child[40]&8U) && process && process->Payload()>=0.05F && process->Payload()<=0.12F && s.storage->Processes().Kernel().Size()==size+1 && s.random->Game().State()!=seed && !s.storage->Borrowed());
 }
