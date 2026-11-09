@@ -22,7 +22,7 @@
 | 열 | 관리 | 뜻 |
 | --- | --- | --- |
 | `cpp` | 도구 | 대표 파일. `.cpp`→`.h`→`.inc` 순서로 있는 것 |
-| `class` | 도구 규칙 | `port`/`adapt`/`exclude-mp`/`exclude-edit`/`exclude-host`. 대응표에서 손으로 바꾸지 않고 `RULES`와 사유를 고친 뒤 `--write`한다 |
+| `class` | 도구 규칙 | `port`/`adapt`/`exclude-mp`/`exclude-edit`/`exclude-host`/`exclude-legacy`(2026-11-10 WB04-E246 추가). 대응표에서 손으로 바꾸지 않고 `RULES`와 사유를 고친 뒤 `--write`한다 |
 | `web` | 사람 | 대응 웹 모듈(webpj 기준, `;` 구분) |
 | `base` | 사람 | 웹과 대조·판정한 cpppj 커밋. 이식분은 판정한 기준선, `todo` 행은 기준선 뒤 변경을 판정했을 때만 그 커밋을 적는다. **이식 원본은 언제나 기준선 판**이며 base가 더 뒤라도 그 사이 변경은 ①(웹 결과 영향 없음)으로 판정된 것이다 |
 | `status` | 사람 | `todo`→`partial`→`port`→`session`→`oracle`, 제외 분류는 `-` |
@@ -52,8 +52,9 @@
 | host-cd / host-gpu / host-display-mode / host-tech-help / host-memory / host-win32 | exclude-host | CD 탐색4·D3D11/FSR2·모드 전환3·기술 도움말2·new_handler2·Win32 3 | 3절 웹 제외 목록(설치/CD·해상도/전체화면·Direct3D 11/FSR·Win32) |
 | host-dev-files | exclude-host | F7 객체 덤프·procSumm·DataManager 덤프·CreateHelpList 6단위 | 개발자 진단 파일 출력. 화면 진단(RendererDiagnostics·trace)은 port로 남겼다 |
 | host-capture | exclude-host | 연속 화면 BMP 저장 5단위 | Capture 명령의 파일 출력 |
+| legacy-spatial | exclude-legacy | SquidSpatial 1단위 | (2026-11-10 WB04-E246) raw 풀 이전의 옛 `std::map` 공간 등록 모델. cpppj production 소비자가 없고(CMake 등록과 `SpatialTests`·`PopTests` 마지막 시험뿐) 같은 갱신을 SquidPop/SquidUnpop(raw 풀)이 대체해 웹은 raw 구현을 이식했다. 웹은 옛 fixture `spatial-x86`를 대조에 쓰지 않는다 |
 | adapt-screen / adapt-sound / adapt-file / adapt-options / adapt-main / adapt-external / adapt-screenshot / adapt-log | adapt | 44단위 | 화면 장치·커서·OS 입력 폴링·창 제목·클립보드, DirectSound·Smacker, FILE/VFS·파일 읽기·캐시, options.cfg, WinMain, URL 실행, 화면 저장, trace 로그 |
-| zacket-default / o-default / client-default | port | 나머지 852단위 | 원본 공용 규칙(`\Ns\O\`)·클라이언트·단독 내부 전송 |
+| zacket-default / o-default / client-default | port | 나머지 851단위 | 원본 공용 규칙(`\Ns\O\`)·클라이언트·단독 내부 전송 |
 
 ### 3.1 단독 경로 판정(이름은 멀티플레이 같지만 port)
 
@@ -70,11 +71,12 @@ LEFT_JOBS 1절 경계("원본 싱글플레이도 같은 프로세스의 내부 �
 
 | 분류 | o | client | zacket | 계 | 상태 |
 | --- | --- | --- | --- | --- | --- |
-| port | 508 | 343 | 1 | 852 | port 41, partial 76, todo 735 |
+| port | 507 | 343 | 1 | 851 | (2026-11-06 작성 때 port 41, partial 76, todo 735; 현재 값은 LEFT_JOBS.webpj.md 0.3절) |
 | adapt | 9 | 35 | 0 | 44 | partial 9, todo 35 |
 | exclude-mp | 3 | 3 | 0 | 6 | - |
 | exclude-edit | 31 | 24 | 0 | 55 | - |
 | exclude-host | 4 | 23 | 0 | 27 | - |
+| exclude-legacy | 1 | 0 | 0 | 1 | - |
 | 계 | 555 | 428 | 1 | 984 | |
 
 `exclude-mp`가 6단위뿐인 것은 cpppj의 LAN 사전 구현이 대부분 공유 파일(로그인 부모·Session·Player/SP setter·패킷 분배) 안의 분기이기 때문이다. Multiplayer 메뉴·LAN UI·참가자 목록·일반 전투는 cpppj 3차에서 아직 파일로 생기지 않았다. 기준선 뒤 새 파일은 도구가 "새 파일"로 보고하며, 재기준선 때 분류한다.

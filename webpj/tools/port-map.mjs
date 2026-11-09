@@ -3,7 +3,8 @@
 //  - cpp    : 단위의 대표 파일(저장소 기준). .cpp 가 있으면 .cpp, 없으면 .h, 그것도 없으면 .inc 이다.
 //  - class  : 분류. 이 도구의 RULES 가 정하며 대응표에서 손으로 바꾸지 않는다(바꿀 때는 규칙과 사유를 고친다).
 //             port(이식 대상) / adapt(창·입력·소리·파일·시계처럼 웹 대체가 필요한 플랫폼 경계) /
-//             exclude-mp(LAN·멀티플레이) / exclude-edit(Edit·커스텀 맵) / exclude-host(DirectDraw·D3D11/FSR·CD·Win32·개발자 파일 출력)
+//             exclude-mp(LAN·멀티플레이) / exclude-edit(Edit·커스텀 맵) / exclude-host(DirectDraw·D3D11/FSR·CD·Win32·개발자 파일 출력) /
+//             exclude-legacy(raw 풀 이전의 옛 단독 모델로 production 소비자가 없고 raw 구현이 대체한 단위, 2026-11-10 WB04-E246)
 //  - web    : 대응 웹 모듈(webpj 기준 경로, 여럿이면 `;`). 사람이 적는다.
 //  - base   : 그 단위를 웹과 대조·판정한 cpppj 커밋. 사람이 적는다(판정한 단위에서 기준선 또는 그 뒤 커밋으로 올린다).
 //  - status : todo(미이식) / partial(웹 모듈이 일부만 가짐) / port(이식·L1/cpppj 검사 통과) / session(앱 수명 연결) / oracle(cpppj 오라클 비교 통과) / -(제외 분류)
@@ -37,8 +38,8 @@ export const EXTENSIONS = Object.freeze(['.cpp', '.h', '.inc']);
 // 대응표 열 이름과 순서이다. (2026-11-06 WB02-G)
 export const COLUMNS = Object.freeze(['cpp', 'class', 'web', 'base', 'status', 'note']);
 
-// 분류 이름이다. 3.0절의 다섯 분류와 같다. (2026-11-06 WB02-G)
-export const CLASSES = Object.freeze(['port', 'adapt', 'exclude-mp', 'exclude-edit', 'exclude-host']);
+// 분류 이름이다. 3.0절의 다섯 분류에 옛 모델 제외(exclude-legacy)를 더했다. (2026-11-06 WB02-G, 2026-11-10 WB04-E246: exclude-legacy 추가)
+export const CLASSES = Object.freeze(['port', 'adapt', 'exclude-mp', 'exclude-edit', 'exclude-host', 'exclude-legacy']);
 
 // 상태 이름이다. todo→partial→port→session→oracle 순서로 올리며 제외 분류는 '-' 이다. (2026-11-06 WB02-G)
 export const STATUSES = Object.freeze(['todo', 'partial', 'port', 'session', 'oracle', '-']);
@@ -74,6 +75,7 @@ export const RULES = Object.freeze([
     { id: 'host-win32', class: 'exclude-host', names: ['Win32FileError', 'ReadOnlyFileMap', 'FontFaceEncoding'], reason: 'Win32 오류→errno·파일 매핑·Windows ANSI 글꼴 이름 변환' },
     { id: 'host-dev-files', class: 'exclude-host', names: ['ObjectDumpDisk', 'RawObjectDump', 'RawProcessSummary', 'RawDataManagerDump', 'HelpListDisk', 'QuickHelpList'], reason: '개발자 진단 파일 출력(F7 객체 덤프·procSumm.txt·DataManager 덤프·CreateHelpList)' },
     { id: 'host-capture', class: 'exclude-host', names: ['RawCaptureSequence', 'ClientCaptureSequence', 'CaptureInput', 'RawIndexedBitmap', 'IndexedBitmapFile'], reason: '연속 화면 8비트 BMP 파일 저장(Capture 명령)' },
+    { id: 'legacy-spatial', class: 'exclude-legacy', names: ['SquidSpatial'], reason: 'raw 풀 이전의 옛 std::map 공간 등록 모델. cpppj production 소비자는 없고(CMake 등록과 SpatialTests·PopTests 마지막 시험뿐) 같은 갱신은 SquidPop/SquidUnpop(raw 풀)이 대체해 웹은 raw 구현을 이식했다. 삭제하지 않은 옛 시험 fixture(spatial-x86)는 웹 대조에 쓰지 않는다' },
     { id: 'adapt-screen', class: 'adapt', names: ['Screen', 'ScreenPresentation', 'Cursor', 'ParticlePaletteMemory', 'GumpPointerBoundary', 'WindowTitle', 'TextClipboard'], reason: '화면 장치·표시 확대·하드웨어 커서·OS 입력 폴링·창 제목·클립보드. 웹은 Canvas/DOM 으로 대체' },
     { id: 'adapt-sound', class: 'adapt', names: ['ClientAudio', 'SoundDevice', 'SoundMusicFile', 'SoundMusicRuntime', 'MoviePcmOutput', 'MovieTimer', 'SmackerDecoder', 'MovieLifecycle'], reason: 'DirectSound·WAVE 파일·음악 스레드·Smacker 디코더/PCM 출력. 웹은 Web Audio·영상 요소로 대체' },
     {
