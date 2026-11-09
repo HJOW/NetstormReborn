@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품1230 / 11.01 · 사용자 /goal 지시로 계속 진행 중 · 전체 목표 미완료**
+**제품1231 / 11.01 · 사용자 /goal 지시로 계속 진행 중 · 전체 목표 미완료**
 
 **사용자 지시(2026-11-10): LEFT_JOBS의 모든 cpppj 작업을 우선순위대로 재개한다.** 단위마다 인계 갱신·로컬 커밋을 수행하며 커밋 실패 시에도 계속한다. 지정한 MP·자연 완주·포획/희생·특정 공격·사용자 직접 확인 검사의 제외는 계속 유효하다.
 
@@ -26,11 +26,11 @@ cpppj는 메뉴와 미션 플레이가 가능하다. 최근 확인은 Tutorial4�
 
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
-AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품 1230, DN은 0.261, WB는 열람 당시 병행 작업 인계의 WB04-E201 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
+AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품 1231, DN은 0.261, WB는 열람 당시 병행 작업 인계의 WB04-E201 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
-| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품 1230의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
+| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품 1231의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
 | **dotnetpj** | 기존 `Netstorm.Game`/`Netstorm.exe`는 1-1·1-2 근사 플레이가 가능하다. 새 `Netstorm.Client.Host`는 메뉴 일부까지이며 미션 플레이가 불가능하다. | 새 경로의 실제 메뉴·게임 캡처 비교는 0건이다. R3 진행/R4 일부 이식이며 부품 fixture 통과를 전체 동일성으로 합산하지 않는다. |
 | **webpj** | 클릭하여 시작·메뉴/목록·도움말/옵션·Credits·개발용 지형 미리보기까지다. 실제 미션 플레이는 불가능하다. | cpppj 오라클 M1 메뉴 8장면은 기록한 원인 밖 픽셀 차이 0이다. 구름 등 차이가 남고 실제 미션 L2/L3·전체 화면/음향·자연 완주는 미검증이다. |
 
@@ -38,12 +38,12 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj�
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품·소스 | **1230 / 11.01**. [맨 오 워3주문 연결](docs/exe/cpp-bomb-mano-owner-20261110.md)·[확정 보고서](cpppj/bomb-mano-owner-20261110.json). 실제 소환 자격/빈ret4 효과를 정적 복원하여 같은 공통 시전/검색/수신·실제 생성/소유권/Pop에 연결했다. Native Wind/Mano는 같은 장기188TYPE spawns를 빌린다. 큰 후단은 현재 Runtime을 빌리며 새3VT 전용 실행은 제외했다. |
-| 최근 빌드·집중 검사 |1230 Release/x64 제품2·직접 집중1대상 최종 41.565초/종료0, 경고·오류0, 소스11개 고정. **비MP104/104**(신규 장기 spawns2+기존102), 기존 직접 피해1420입력 재대조. 원문9함수 C/PE·가상표/역할의 정적 대조이며 세 주문 전용 PE/C++/게임 실행·새 fixture는0이다. 첫 C2039와 판정순서/설명 교정 원시를 보존했다. |
-| 최근 실제 실행 |1230 최종 EXE의 Tutorial4 생산·건설 요청→TYPE75/owner1 실제 새 서버 객체 생성→600프레임 대기·정상 종료0, PNG 확인. 최신 Edit TEST01↔Main2회/11관측은1225의 별도 결과다. 실제 주문 시전/전체 전투/건물 완성/Test Battle 검증은 아니다. 시작한 빌드·집중·GUI 작업은 모두 종료했다. |
-| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품 1230 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
+| 확정 제품·소스 | **1231 / 11.01**. [소환 중심 교정](docs/exe/cpp-bomb-mano-center-20261110.md)·[확정 보고서](cpppj/bomb-mano-center-20261110.json).1230의 맨 오 워3주문 실제 연결에서 중심 callback을 원문004adea0의 기존 발자국 중심으로 교정했다. 같은 장기188TYPE spawns·실제 생성/소유권/Pop을 유지하며 새3VT 전용 실행은 제외했다. |
+| 최근 빌드·집중 검사 |1231 Release/x64 제품2·직접 집중1대상 135.140초/종료0, 경고·오류0, 소스1개 고정. **비MP104/104**·기존 직접 피해1420입력 재대조. 원문5함수 C/PE의 정적 호출 대조이며 소환 전용 실행·새 fixture는0이다. |
+| 최근 실제 실행 |1231 최종 EXE의 Tutorial4 생산·건설 요청→TYPE75/owner1 실제 새 서버 객체 생성→600프레임 대기·정상 종료0, PNG 확인. 최신 Edit TEST01↔Main2회/11관측은1225의 별도 결과다. 실제 주문 시전/전체 전투/건물 완성/Test Battle 검증은 아니다. 시작한 빌드·집중·GUI 작업은 모두 종료했다. |
+| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품 1231 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
 | M6 감사 기준 | checking 잔여 목록 0, 태그 25/활성 88/무태그 63F, 지연큐 OFF. checking 0과 자산 Pre/Post·통지 83/83을 MP/전체 NoWorld 완료로 세지 않는다. |
-| 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1230 새 디컴파일/원문 변경0, 보호 원본/CD/fixture·AGENTS **2,803파일 불변**. |
+| 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1231 새 디컴파일/원문 변경0, 보호 원본/CD/fixture·AGENTS **2,803파일 불변**. |
 
 <!-- 과거 1207 진행 중 인계의 직접 링크를 보존한다. 현재 제품은 위 0.1절이 기준이다. -->
 <a id="02-진행-중인-1207--완료-처리-금지"></a>
@@ -83,7 +83,7 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 | **3. M6-l: 실제 지연큐** | Client 장기 분포·OS시계/CRT rand·각 노드 queue·현재 20BYTE 주소·실제 전송/등록 수명을 연결한다. | 원문 `4def40/4df010/4dee60/4def20/4df5e0/4dfc00`. FIFO·엄격한 `deadline < now`·난수 소비·observer/기록·닫힘/해제를 보존한다. queue=false로 완료 처리하지 않는다. |
 | **4. M6-m: JoinTestBattle** | 개발자 4이름 제한·현재 주소·server0/current29 뒤 기존 1bh 전체 수신을 직접 호출한다. | 원문 `4b8be0 → 4b8b20`, 입력 `0200002b`의 선행 `4b3620` 보존. Edit TestBattle(c2)와 구별하고 새 수신 본문을 복제하지 않는다. |
 
-세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1230 구현 문서](docs/exe/cpp-bomb-mano-owner-20261110.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
+세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1231 교정 문서](docs/exe/cpp-bomb-mano-center-20261110.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
 **다음 한 단위 — Bomb 미연결 트리즌1VT:** [1224 조사](docs/exe/cpp-bomb-regular-audit-20261109.md)의16VT/19TYPE·자격/효과 행렬을 따른다.1230 맨 오 워3주문의 직접 소환 자격/실제 빈ret4 효과를 정적으로 연결해 공통15/16VT·별도 효과3VT, Regular58/87·잔여29VT/20함수다. 트리즌의 현재 소유권/주변 대상 전파·펜스/받침/표시/플레어를 같은 실제 하위에 연결한다. 큰 하위/전체 NoWorld 감사도 별도이며 빈 성공으로 대체하지 않는다.
 
@@ -96,7 +96,7 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 | 감시 Form | **Depend 장기 연결1221 완료.** Native World/Core·NoWorld가 같은 공장/현재 TYPE·감시 쌍·현재 상대 VT 삭제를 사용한다. 알림은 weak 대여→실제 Runtime pin→함수 사본→호출이며, 공통 선택 DWORD와 검색/제거 진단의 정상 복귀·현재 필드/선저장 next를 유지한다. Gump/Content는 각각1222/1223에서 같은 장기 삭제에 연결했다. |
 | UI Form | **Gump 장기 연결1222 완료.** 같은 `containedGumpType` DWORD를 Native 생성/메뉴·Player/contained 통지가 공유한다. 실제 UI 등록표는 첫 메뉴 전 weak 대여·실제 RawButtonControls 저장소 pin으로 연결하고 현재 World 소비자는 전체 Runtime pin/함수 사본을 유지한다. Source별 TYPE 사본이나 임시 Session을 만들지 않는다. |
 | Content Form | **장기 정렬/Regular/삭제1223 완료.** Native World/Core/Session·NoWorld가 같은 공장/현재 finder TYPE/cursor·로컬 owner/권한/너겟·Reward와 실제 입력/소리/전송 장치를 공유한다. 파생 부모/포획 통지는 현재 실제 Runtime pin/함수 사본이며 Session 콜백은 장기 본문에 남기지 않는다. |
-| Bomb Regular | **공통15VT와 필수 효과 정기3VT 연결1230 완료.**1225~1229의 같은 현재 TYPE/A 첫 프레임·casttime/권한·Player·검색/5Fh·힐/하드너/직접 피해와 필수 정기를 유지한다.1230 맨 오 워3주문은 현재 서버/QA·TYPE/spawns·실제 공장/소유권/헤더/중심/원주/Pop을 정적 복원/연결했다. Native Wind3도 같은 장기 spawns다. 큰 후단은 weak 대여→실제 Runtime pin→함수 사본이며 미연결 트리즌1VT·다른 큰 하위는 별도다. |
+| Bomb Regular | **공통15VT와 필수 효과 정기3VT 연결1230·중심 교정1231 완료.**1225~1229의 같은 현재 TYPE/A 첫 프레임·casttime/권한·Player·검색/5Fh·힐/하드너/직접 피해와 필수 정기를 유지한다.1230 맨 오 워3주문은 현재 서버/QA·TYPE/spawns·실제 공장/소유권/헤더/중심/원주/Pop을 정적 복원/연결했다. Native Wind3도 같은 장기 spawns다.1231 소환 중심은 실제4adea0의 기존 발자국 중심이다. 큰 후단은 weak 대여→실제 Runtime pin→함수 사본이며 미연결 트리즌1VT·다른 큰 하위는 별도다. |
 | 수명 | 건설 큰 효과 **16개**는 weak 대여 → 실제 Runtime pin → 함수 사본 → 호출이다. Client 장치 **10개**는 첫 메뉴/Session 전에 결합한다. 섬/영역/신전은 같은 Player getter·Kencloud redraw·난수/목록을 빌리며 Storage→영역 callback도 weak 선택 pin이다. 펜스는 현재 TYPE.range/두 역할·Player 동맹 weak 선택 pin을 사용한다. 결합 시 Player/상태/캐시를 초기화하지 않는다. |
 | 해제 | body를 State/backing보다 먼저 반납하고 참조 순환을 피한다. 세 Runtime 공개 경로·Host 반납 순서를 유지한다. 실제 Menu/Session/Host 정리 뒤 최종 Client 장치를 끊는다. 강한 Session 역참조·임시 World/Player/reset·성공 fallback을 넣지 않는다. |
 | 기존 LAN | M1~M5, Pop/저장복구/78h/선택적 기록은 재작성하지 않는다. checking `004b02d0/004dc220`은 1157에서 같은 기존 본체/DWORD 연결을 확인했다. 중앙 assertion의 새 누락은 M7.5다. |
@@ -123,7 +123,9 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 <a id="23-수량을-확정한-연결-범위--제품-1229-기준"></a>
 
-### 2.3 수량을 확정한 연결 범위 — 제품 1230 기준
+<a id="23-수량을-확정한-연결-범위--제품-1230-기준"></a>
+
+### 2.3 수량을 확정한 연결 범위 — 제품 1231 기준
 
 | 범위 | 연결 완료 | 남은 범위 |
 | --- | --- | --- |
@@ -131,7 +133,7 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 | 자산 83+내장 Form 4의 장기 Regular(+5c) | **58/87VT**(base16·Damageable14·기타28) | **29VT / 고유 함수20개**(모두 자산). 미연결 Bomb1VT 트리즌은41e6a0을 공유한다. 새 맨 오 워3VT 전용 실행은 제외했다. |
 | Storage 기본 내장 Form 삭제 분배 | **4/4종 — Process·Depend·Gump·Content** | 기본4종의 알려진 누락0. 큰 AI·다른 배치/Fort 상위 Finish·전수 caller/owner 감사는 별도다. |
 
-정확한 현재 잔여 행은 [1230 보고서](cpppj/bomb-mano-owner-20261110.json)의 `staticAudit.remainingRows`를 따른다. Bomb16VT 행렬은 [1224 감사](cpppj/bomb-regular-audit-20261109.json), 공통15VT/미연결 트리즌1VT와 별도 효과3VT는1230 보고서다.1229 연결55/87·잔여32/20에 맨 오 워3VT를 더했다. 이3VT는 사용자 제외로 전용 실행하지 않았다. [1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md)는 당시 연결36/87·잔여51/26의 근거다. 프로세스 전체 클래스/PID/VT·큰 AI·배치/Fort 상위 Finish·전수 호출자 감사와 M6-l/m은 이87개 집계 밖에 남는다.
+정확한 현재 잔여 행은 [1231 보고서](cpppj/bomb-mano-center-20261110.json)의 `staticAudit.remainingRows`를 따른다. Bomb16VT 행렬은 [1224 감사](cpppj/bomb-regular-audit-20261109.json), 공통15VT/미연결 트리즌1VT와 별도 효과3VT는1230 보고서다.1229 연결55/87·잔여32/20에 맨 오 워3VT를 더했다. 이3VT는 사용자 제외로 전용 실행하지 않았다. [1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md)는 당시 연결36/87·잔여51/26의 근거다. 프로세스 전체 클래스/PID/VT·큰 AI·배치/Fort 상위 Finish·전수 호출자 감사와 M6-l/m은 이87개 집계 밖에 남는다.
 
 ## 3. M7 독립 5건과 M8 마감
 
@@ -226,8 +228,8 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 
 | 확인할 범위 | 기준 문서 |
 | --- | --- |
-| 현재 제품·현재 잔여 목록 | [1230 구현 문서](docs/exe/cpp-bomb-mano-owner-20261110.md)·[보고서](cpppj/bomb-mano-owner-20261110.json), 원시 `extracted/cpp-resume-1230/` |
-| Bomb Regular 실제 후단/다음 구현 | [1224 조사](docs/exe/cpp-bomb-regular-audit-20261109.md)·[16VT/19TYPE 행렬](cpppj/bomb-regular-audit-20261109.json), 원시 `extracted/cpp-resume-1224/`. 현행은1230 연결58·잔여29/20이며 공통 Bomb 미연결 트리즌1VT를 계속한다. |
+| 현재 제품·현재 잔여 목록 | [1231 교정 문서](docs/exe/cpp-bomb-mano-center-20261110.md)·[보고서](cpppj/bomb-mano-center-20261110.json), 원시 `extracted/cpp-resume-1231/` |
+| Bomb Regular 실제 후단/다음 구현 | [1224 조사](docs/exe/cpp-bomb-regular-audit-20261109.md)·[16VT/19TYPE 행렬](cpppj/bomb-regular-audit-20261109.json), 원시 `extracted/cpp-resume-1224/`. 현행은1231 연결58·잔여29/20이며 공통 Bomb 미연결 트리즌1VT를 계속한다. |
 | M6 전체 잔여와 최초 Regular 조사 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[최초 1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md). 각 문서의 과거 “없음/다음”보다 현행 2절을 우선한다. |
 | 비MP 구현 마감 | [UI 929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit 943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션 956](docs/exe/cpp-mission-state-scope-20261106.md)·[내부 수명 980](docs/exe/cpp-internal-lifetime-closure-20261106.md) |
 | 디컴파일·이식 근거 | [디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md) |
@@ -247,4 +249,4 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 | `b5197d48` — 9차 알려진 버그 추가 | 1절 9차와 4.3절 **B1~B4·NB01~NB34**에 전체 34건을 연결한다. 등록과 원인 조사·수정·검증 완료를 구별한다. |
 | `3051892a` — 루트 README 개요 보호 | 6절에서 **AGENTS.md·README.md 개요 보호**, README.en.md Overview 번역 허용을 유지한다. 해당 원문은 수정하지 않는다. |
 
-**최근 완료1230 / 다음 작업:** 맨 오 워3주문의 실제 자격 소환/빈 효과를 정적으로 복원하고 현재 spawns·실제 생성/소유권/Pop에 연결했다. Release 제품2·집중1대상 빌드, 비MP104/104·기존1420입력 재대조, Tutorial4 생산·건설 요청 후600프레임 대기/종료0·PNG 확인을 마쳤다. 새3주문/공중3종 전용 실행은0이다. 문서/로컬 커밋 뒤 M6-n Bomb 트리즌1VT를 계속한다.16상위계획·검증 제외·미해결 한계는 유지하며 전체 목표는 미완료다.
+**최근 완료1231 / 다음 작업:** 맨 오 워3주문의 중심 연결 오류를 발견해 원문004adea0의 기존 발자국 중심으로 교정했다. Release 제품2·집중1대상 빌드, 비MP104/104·기존1420입력 재대조, Tutorial4 생산·건설 요청 후600프레임 대기/종료0·PNG 확인을 마쳤다. 소환/공중3종 전용 실행은0이다. 문서/로컬 커밋 뒤 M6-n Bomb 트리즌1VT를 계속한다.16상위계획·검증 제외·미해결 한계는 유지하며 전체 목표는 미완료다.

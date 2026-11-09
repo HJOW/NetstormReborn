@@ -78,7 +78,7 @@ void ConnectDevastation() {
         if (limit<1 || !shape.loaded || record.maxHitPoints==-0x22222223 || record.maxHitPoints==-0x32323233) world.Storage()->AssertDisplay("frameCheck( abstract, frame, false )",inlined ? "c:\\ns\\o\\rifttype.h":"..\\o\\rifttype.h",0xe1);
         const auto& header=core.shapes[type].frames.at(0);return std::array<std::int16_t,2>{header.height,header.hotspotY}; //진단 복귀 뒤 같은 선택 TYPE의 현재 signed SHP 헤더를 읽는다.
     };
-    mano.center=[this](Sid carrier) { return devastationTargets->Center(carrier); };mano.pop=[this](Sid created,std::uint32_t,float x,float y,std::uint32_t flags) { world.Pop(created,x,y,flags); }; //헤더 뒤 현재 중심과 새 객체의 실제 가상90을 사용한다.
+    mano.center=[this](Sid carrier) { return core.neighbors.Center(carrier); };mano.pop=[this](Sid created,std::uint32_t,float x,float y,std::uint32_t flags) { world.Pop(created,x,y,flags); }; //헤더 뒤 원문4adea0 발자국 중심과 새 객체의 실제 가상90을 사용한다. 대상 검색용 스냅/클램프를 넣지 않는다.
     manoSpell=std::make_unique<RawManoSpell>(core.pool,core.processState.Server(),spellCounts,std::move(mano)); //같은 실제 풀/서버·현재 spawns와 Runtime 장치를 빌리며 공통 시전/수신을 복제하지 않는다.
     BombHealHooks heal;heal.hasHitPoints=[this](Sid target) { return hp.HasHitPoints(target); };heal.maximumHitPoints=[this](Sid target) { return hp.MaxHitPoints(target); };
     heal.fenceType=[this] { return gunTargetState.sunFenceType; };heal.burstType=[this] { return healBurstType; }; //현재 전역은 효과가 도달한 위치에서 읽는다.
