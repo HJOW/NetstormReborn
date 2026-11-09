@@ -14150,10 +14150,39 @@
       "bytes": 988543,
       "lines": 249,
       "fixtureCommit": "05d7cb57",
-      "webCommit": "worktree",
+      "webCommit": "9483d6ae",
       "cpppjBasis": {
         "cpppj/src/o/RawProductionDeck.cpp": "b37bd01a",
         "cpppj/src/o/RawSpStoreNoticeBindings.cpp": "eb22304d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E216",
+      "id": "production-sync",
+      "path": "cpppj/tests/fixtures/production-sync-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 생산 Deck 과 현재 기술 부모의 CFF_TELEPORT 내용물 동기화 43df80. 내용물 목록(kind:flags, BYTE seen 255/256/257 중복 포함)·Deck 항목(kind:power)·TYPE 프로필·신전 유무·fullDeck·기술 부모 변경·기존 종속 조회 반환에서 호출 순서와 인자 전체(K·T·Q·X·D·C·A) 98행",
+      "consumers": [
+        "webpj/tests/production-sync.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-production-sync.js"
+      ],
+      "doc": "docs/webpj-production-sync-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawProductionSync.cpp"
+      ],
+      "scope": "10.78 98입력 전부",
+      "text": true,
+      "sha256": "5dd7df714a0e7b7c2c47974539504e6f4df179f32fd937b335172be0a780b164",
+      "bytes": 11117,
+      "lines": 99,
+      "fixtureCommit": "5d817c15",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawProductionSync.cpp": "674e3202"
       }
     }
   ]
