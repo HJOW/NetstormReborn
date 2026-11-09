@@ -296,7 +296,7 @@ public:
     std::span<std::int32_t> BombCastTimes(); // TYPE+1b8의 같은 장기188DWORD를 최초 로딩 뒤 공유한다.
     o::RawBombRegular& BombRegular(); // 현재 프레임/시전 시간과 실제 큰 후단을 사용하는 같은 정기 본문이다.
     void BindBombRuntime(const std::shared_ptr<const RawSurfaceBombBindings>& runtime); // 현재 후단 대여만 연결하고 본문/상태를 초기화하지 않는다.
-    bool HasBombRegular(o::Sid sid) const; // 실제 현재 VT가 장기 연결한 기존6VT인지 직접 확인한다.
+    bool HasBombRegular(o::Sid sid) const; // 실제 현재 VT가 장기 연결한 연결한7VT인지 직접 확인한다.
     std::size_t BombSearchReservations() const; // 실제 확보한400BYTE 버퍼 개수를 진단하며 별도 성공 카운터를 만들지 않는다.
     float DiscRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 실제 썬 디스크의 현재 TYPE 방향/클러스터 수와 프레임 지정기를 공유한다.
     o::RawSquidDestroy& BaseDestroy(); //Native공통삭제깊이/Unpop/Pool의장기실제owner다.

@@ -12,6 +12,8 @@
 #include "o/RawPlayerParticipation.h" //공개Player초기화의동맹mask자식도기존실제본문을사용한다.
 #include "o/RawAiWallet.h" //삭제환불의실제owner0/NULL brain지갑관문을그대로사용한다.
 #include "o/RawAiObjectNotice.h" //실제Player의NULL brain은기존전체통지본문의자연반환으로처리한다.
+#include "o/RawBombHeal.h" //힐의 실제 대상 자격/HP/현재 가상 효과를 패킷 없이 검증한다.
+#include "o/RawSquidHitPoints.h" //현재HP의 원문 비가상 DWORD setter를 같은 풀에서 쓴다.
 #include "o/RawBombTargets.h" //같은TYPE사거리를쓰던기존다른소비자의연결도확인한다.
 #include "o/RawDiscRegular.h" // 원문의 IDIV/감김은 새 실제 PE 경계 자료와 직접 대조한다.
 #include "client/GumpFormBinding.h" // 실제 등록표 알림과 메뉴 Form 연결을 같은 Native 본체로 검사한다.
@@ -1257,10 +1259,10 @@ TEST_CASE(ClientBombOwner_GetterKeepsCurrentStatePoolAndFactory) { // getter는 
 TEST_CASE(ClientBombOwner_CastTimesKeepSameMutableStorage) { // 같은 TYPE+1b8 표를 다시 조회/본문 구성/대여할 때 현재 값을 덮지 않는다.
     BombOwnerScene f;auto& s=f.scene;auto values=s.storage->BombCastTimes();CHECK(values.size()==188 && values[0]==0 && values[69]==0);values[113]=-123;auto* body=&s.storage->BombRegular();CHECK(s.storage->BombCastTimes().data()==values.data() && values[113]==-123 && body==&s.storage->BombRegular());
 }
-TEST_CASE(ClientBombOwner_OnlyActualSixVtablesAreRegistered) { // 현재6VT와 별도 복원10VT를 실제 생성자 기준으로 구별한다.
+TEST_CASE(ClientBombOwner_OnlyActualSevenVtablesAreRegistered) { // 현재7VT와 별도 복원9VT를 실제 생성자 기준으로 구별한다.
     BombOwnerScene f;auto& s=f.scene;
-    for (const auto table:{0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}) { const auto sid=f.Bomb(table);CHECK(s.storage->HasBombRegular(sid)); } // 연결된 실제 클래스만 조회한다.
-    for (const auto table:{0x502448U,0x5026a0U,0x502778U,0x502840U,0x502908U,0x5029d0U,0x502aa8U,0x502b70U,0x5030c0U,0x503188U}) { const auto sid=f.Bomb(table);CHECK(!s.storage->HasBombRegular(sid)); } // 같은 원문+5c라도 아직 연결하지 않은 후단은 완료로 세지 않는다.
+    for (const auto table:{0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}) { const auto sid=f.Bomb(table);CHECK(s.storage->HasBombRegular(sid)); } // 연결된 실제 클래스만 조회한다.
+    for (const auto table:{0x5026a0U,0x502778U,0x502840U,0x502908U,0x5029d0U,0x502aa8U,0x502b70U,0x5030c0U,0x503188U}) { const auto sid=f.Bomb(table);CHECK(!s.storage->HasBombRegular(sid)); } // 같은 원문+5c라도 아직 연결하지 않은 후단은 완료로 세지 않는다.
 }
 TEST_CASE(ClientBombOwner_CountZeroUsesActualFirstFrameAndFullPayload) { // carrier0의 첫 호출은 실제 프레임을 쓰고 현재 Boss0이면 원래 NaN payload를 보존한다.
     BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();s.gameplay->Authority()->boss=false;const auto type=s.storage->pool.Slot(sid)[10];const auto first=s.storage->frames[type].Run('A').first;const auto payload=std::bit_cast<float>(0x7fc12345U);
@@ -1318,4 +1320,72 @@ TEST_CASE(ClientBombOwner_TargetSearchUsesActualAllocatedArrayAndReleasesOnThrow
     hooks.targetBuffer=[&] { return std::span<std::uint32_t>(memory.get(),100); };hooks.targets=[&](auto parent,auto output)->std::uint32_t { CHECK(parent==sid && output.data()==memory.get() && output.size()==100);output[99]=0xfedc1234U;saw=true;throw std::logic_error("검색 경계 확인"); };
     hooks.release=[&](auto bytes) { CHECK(bytes==400 && saw && memory && memory[99]==0xfedc1234U);memory.reset();released=true; };
     RawBombRegular body(s.storage->pool,state,std::move(hooks),[](auto) { return BombRegularType{0,-1}; });bool rejected{};try { body.Handle(sid,0,1,0.25F); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && saw && released && !memory);
+}
+
+
+namespace { //각 검사는 실제 Native 풀/자산을 보유하고 선택한 하위 호출만 관찰한다.
+struct HealOwnerScene {
+    BombOwnerScene bomb; //같은 실제 Client 본체/Pool/TYPE/장치를 보유한다.
+    Sid parent{bomb.Bomb(0x502448U)},target{bomb.scene.Asset(0x5092d0U)}; //실제 힐 생성자와 별도의 실제 대상 슬롯이다.
+    BombHealHooks hooks; //도달한 원문 하위만 명시적으로 공급한다.
+    explicit HealOwnerScene() { //기본은HP 없는 표면 대상이며 버스트를 생성하지 않는 원문 경로다.
+        auto& s=bomb.scene;s.storage->types[s.storage->pool.Slot(target)[10]].flags2=4;
+        hooks.hasHitPoints=[](auto) { return false; };hooks.fenceType=[] { return 0xffffffffU; };hooks.refresh=[](auto,auto) {};
+    }
+    RawBombHeal Body() { return RawBombHeal(bomb.scene.storage->pool,bomb.scene.storage->types,hooks); } //같은 현재 자료를 빌리며 별도 TYPE 표를 복제하지 않는다.
+};
+}
+TEST_CASE(ClientBombHealOwner_EligibilityKeepsOriginalMaskAndCurrentType) { //자격은 현재 genus의 전체 마스크이며HP/free/dead/소유자를 추가 검사하지 않는다.
+    HealOwnerScene f;auto& s=f.bomb.scene;const auto type=s.storage->pool.Slot(f.target)[10];auto body=f.Body();auto raw=s.storage->pool.AllocatedBytes(f.target);raw[11]=3;raw[34]=255;RegionPut(raw,26,0);
+    s.storage->types[type].flags2=0xffffffffU;CHECK(body.MayTarget(f.target)==0x81574204U);s.storage->types[type].flags2=0x200000U;CHECK(body.MayTarget(f.target)==0);s.storage->types[type].flags2=0x80000000U;CHECK(body.MayTarget(f.target)==0x80000000U && &body.Pool()==&s.storage->pool);
+}
+TEST_CASE(ClientBombHealOwner_CarrierReturnsBeforeTypeAndDevices) { //대상이 QA이면 잘못된 현재TYPE와 누락 장치도 읽지 않는다.
+    HealOwnerScene f;auto& s=f.bomb.scene;DependWord(s.storage->pool,f.parent,12,f.target.value);auto raw=s.storage->pool.AllocatedBytes(f.target);raw[10]=255;raw[40]=0x30;RegionPut(raw,26,123);RawBombHeal body(s.storage->pool,s.storage->types,{});body.Apply(f.parent,f.target);CHECK(raw[40]==0x30 && RegionRead(raw,26)==123);
+}
+TEST_CASE(ClientBombHealOwner_SignedWrappedAverageMatchesPe) { //ADD/CDQ/SUB/SAR의 DWORD 감김과 음수0방향 평균을 경계값으로 확인한다.
+    HealOwnerScene f;auto& s=f.bomb.scene;f.hooks.hasHitPoints=[](auto) { return true; };std::int32_t maximum{};f.hooks.maximumHitPoints=[&](auto) { return maximum; };auto body=f.Body();
+    const std::array<std::array<std::int32_t,3>,7> cases{{{100,301,200},{-4,1,-1},{-3,0,-1},{0,1,0},{2147483647,1,-1073741824},{-2147483647-1,-1,1073741823},{2147483647,2147483647,-1}}}; //기계어32비트 합과 signed 절삭으로 확인한 독립 기대값이다.
+    for (const auto& row:cases) { RegionPut(s.storage->pool.AllocatedBytes(f.target),26,std::bit_cast<std::uint32_t>(row[0]));maximum=row[1];body.Apply(f.parent,f.target);CHECK(std::bit_cast<std::int32_t>(RegionRead(s.storage->pool.Slot(f.target),26))==row[2]); } //각 입력은 이전 회복 결과와 독립적으로 공급한다.
+}
+TEST_CASE(ClientBombHealOwner_HealthIsSavedBeforeMaximumGetter) { //최대HP 조회가 현재HP를 바꿔도 EDI에 저장한 최초HP로 평균을 쓴다.
+    HealOwnerScene f;auto& s=f.bomb.scene;RegionPut(s.storage->pool.AllocatedBytes(f.target),26,101);f.hooks.hasHitPoints=[](auto) { return true; };f.hooks.maximumHitPoints=[&](auto target) { RegionPut(s.storage->pool.AllocatedBytes(target),26,9999);return 300; };f.Body().Apply(f.parent,f.target);CHECK(RegionRead(s.storage->pool.Slot(f.target),26)==200);
+}
+TEST_CASE(ClientBombHealOwner_NoHealthStillClearsOnlyTwoStatusBits) { //HP가 없어도 상태 비트 두 개만 해제하고 실제 현재 가상88을 호출한다.
+    HealOwnerScene f;auto& s=f.bomb.scene;auto raw=s.storage->pool.AllocatedBytes(f.target);raw[40]=0xff;RegionPut(raw,26,0xabcdef12U);std::uint32_t calls{};f.hooks.refresh=[&](auto target,auto table) { CHECK(target==f.target && table==RegionRead(raw,0) && raw[40]==0xcf);++calls; };f.Body().Apply(f.parent,f.target);CHECK(calls==1 && raw[40]==0xcf && RegionRead(raw,26)==0xabcdef12U);
+}
+TEST_CASE(ClientBombHealOwner_FencePrecedesWalkingAndRepopReadsCurrentVtable) { //펜스 효과가 바꾼 현재 genus와 해제가 바꾼 현재 VT를 순서대로 사용한다.
+    HealOwnerScene f;auto& s=f.bomb.scene;auto raw=s.storage->pool.AllocatedBytes(f.target);const auto type=raw[10];std::string order;f.hooks.fenceType=[&] { return type; };
+    f.hooks.fence=[&](auto target) { CHECK(target==f.target);order+='F';s.storage->types[type].flags2=0x200004U;RegionPut(raw,0,0x11111111U); };
+    f.hooks.unpop=[&](auto target,auto table,auto flags) { CHECK(target==f.target && table==0x11111111U && flags==0);order+='U';RegionPut(raw,0,0x22222222U); };
+    f.hooks.repop=[&](auto target,auto table,auto flags) { CHECK(target==f.target && table==0x22222222U && flags==0x40);order+='P'; };f.Body().Apply(f.parent,f.target);CHECK(order=="FUP");
+}
+TEST_CASE(ClientBombHealOwner_RefreshMutationAndCreationUseCurrentBurstCenter) { //갱신 뒤 genus/전역과 생성 뒤 대상 TYPE/좌표를 다시 읽고 현재 새 가상90을 호출한다.
+    HealOwnerScene f;auto& s=f.bomb.scene;auto raw=s.storage->pool.AllocatedBytes(f.target);const auto type=raw[10];const auto created=s.Asset(0x5092d0U);std::uint32_t burst=176;std::string order;
+    f.hooks.refresh=[&](auto,auto) { order+='R';s.storage->types[type].flags2=0;burst=177; };f.hooks.burstType=[&] { return burst; };
+    f.hooks.create=[&](auto kind,auto flags) { CHECK(kind==177 && flags==2);order+='C';raw[10]=117;s.storage->types[117].footX=6;s.storage->types[117].footY=10;s.Position(f.target,30,50);RegionPut(s.storage->pool.AllocatedBytes(created),0,0x12345678U);return created; };
+    f.hooks.pop=[&](auto target,auto table,float x,float y,auto flags) { CHECK(target==created && table==0x12345678U && x==27 && y==45 && flags==0);order+='P'; };f.Body().Apply(f.parent,f.target);CHECK(order=="RCP");
+}
+TEST_CASE(ClientBombHealOwner_MissingSelectedRefreshKeepsOriginalPrefix) { //현재 선택한 하위가 없으면 앞선HP/상태 변경을 숨기거나 되돌리지 않고 명시 실패한다.
+    HealOwnerScene f;auto& s=f.bomb.scene;auto raw=s.storage->pool.AllocatedBytes(f.target);raw[40]=0x30;RegionPut(raw,26,100);f.hooks.hasHitPoints=[](auto) { return true; };f.hooks.maximumHitPoints=[](auto) { return 300; };f.hooks.refresh={};bool rejected{};try { f.Body().Apply(f.parent,f.target); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && raw[40]==0 && RegionRead(raw,26)==200);
+}
+TEST_CASE(ClientBombHealOwner_UsesSameActualNativeHpAndCurrentType) { //실제 장기 Reward의 현재TYPE HP와 공통 setter를 Session/송신 없이 사용한다.
+    HealOwnerScene f;auto& s=f.bomb.scene;auto& hp=s.storage->Reward();const auto type=s.storage->pool.Slot(f.target)[10];s.storage->types[type].flags1|=0x10U;s.storage->types[type].maxHitPoints=310;RegionPut(s.storage->pool.AllocatedBytes(f.target),26,90);f.hooks.hasHitPoints=[&](auto target) { return hp.HasHitPoints(target); };f.hooks.maximumHitPoints=[&](auto target) { return hp.MaxHitPoints(target); };auto body=f.Body();body.Apply(f.parent,f.target);CHECK(RegionRead(s.storage->pool.Slot(f.target),26)==200 && !s.storage->Borrowed());
+    s.storage->types[type].maxHitPoints=400;body.Apply(f.parent,f.target);CHECK(RegionRead(s.storage->pool.Slot(f.target),26)==300 && &hp==&s.storage->Reward());
+}
+TEST_CASE(ClientBombHealOwner_NoWorldRegularUsesActualLongBody) { //실제 힐 VT도 같은 장기 정기를 사용하며 Boss0 프레임 뒤 원래 payload를 반환한다.
+    HealOwnerScene f;auto& s=f.bomb.scene;s.gameplay->Authority()->boss=false;auto* body=&s.storage->BombRegular();auto raw=s.storage->pool.AllocatedBytes(f.parent);raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]&=static_cast<std::uint8_t>(~1U);s.Index(f.parent);auto& host=s.storage->Processes().Host();auto* task=host.AddRegular(f.parent,23,0.125F);CHECK(task);if (!task) return;task->RunFrame();CHECK(s.storage->HasBombRegular(f.parent) && task->Count()==1 && task->Payload()==0.125F && body==&s.storage->BombRegular() && !s.storage->Borrowed());
+}
+
+TEST_CASE(ClientBombHealOwner_BurstAdvancesCurrentFrameAndKeepsNanPayload) { //count0에서도 원래 현재 프레임+1이며 첫 A 프레임으로 되돌리지 않는다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x502cf0U);const auto run=s.storage->frames[s.storage->pool.Slot(sid)[10]].Run('A');CHECK(run.count>2);s.storage->Frame().Set(sid,run.first+1,0);std::uint32_t refreshes{};const auto payload=std::bit_cast<float>(0x7fc12345U);
+    const auto result=HandleHealBurstRegular(s.storage->pool,s.storage->frames,s.storage->Frame(),s.storage->Processes().Host(),[&](auto target) { CHECK(target==sid && RegionRead(s.storage->pool.Slot(sid),36)==std::uint32_t(run.first+2));++refreshes; },{},sid,0,payload);CHECK(std::bit_cast<std::uint32_t>(result)==0x7fc12345U && refreshes==1 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombHealOwner_BurstEndAttachesRealEventTwoBeforeDestroy) { //종료 경계에서 실제 일반 Regular2/0.05/현재 시각을 먼저 붙이고 원래 삭제flags를 전달한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x502cf0U);auto raw=s.storage->pool.AllocatedBytes(sid);raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]&=static_cast<std::uint8_t>(~1U);s.Index(sid);auto& host=s.storage->Processes().Host();bool destroyed{};
+    const auto count=std::uint32_t(s.storage->frames[raw[10]].Run('A').count-1);const auto result=HandleHealBurstRegular(s.storage->pool,s.storage->frames,s.storage->Frame(),host,{},[&](auto target,auto flags) { const auto* next=host.FindEvent(sid,2);CHECK(target==sid && flags==0x100048U && next && next->Payload()==0.05F && next->Count()==0);destroyed=true; },sid,count,0.25F);CHECK(result==-1 && destroyed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombHealOwner_BurstNoWorldDispatchRunsActualDeletion) { //실제 NoWorld Host 분배가 같은 버스트 종료와 자산/종속 Regular 정리를 완수한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x502cf0U);auto raw=s.storage->pool.AllocatedBytes(sid);raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]&=static_cast<std::uint8_t>(~1U);s.Index(sid);auto& host=s.storage->Processes().Host();const auto frames=s.storage->frames[raw[10]].Run('A').count;CHECK(host.AddRegular(sid,0x12345678U,0.05F));
+    for (int step=0;step<frames;++step) { auto* task=host.FindEvent(sid,0x12345678U);CHECK(task);if (!task) break;s.storage->Processes().State().Now()=task->Time();task->RunFrame(); } //같은 실제 예약의 시각/횟수로 마지막 프레임까지 진행한다.
+    CHECK((s.storage->pool.Slot(sid)[11]&3U)!=0 && !s.storage->Borrowed() && s.storage->BaseDestroy().PreDepth()==0 && s.storage->BaseDestroy().PostDepth()==0);
 }

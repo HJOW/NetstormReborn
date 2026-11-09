@@ -1,8 +1,8 @@
 // Impl 안에서 포함하여 폭발/은신/마비 주문의 실제 월드·Host·경제·음향을 연결한다.
 // 세 Wind 소환 주문은 bc의 소환 부수 효과와 별도 c0를 사용한다.
 bool WindSpellTable(std::uint32_t table) const { return table==0x5025d8U || table==0x502e68U || table==0x502f30U; }
-// 같은 공용 시전/수신을 사용하는 정확한 여섯 가상 표만 허용한다.
-bool ConnectedBombTable(std::uint32_t table) const { return table==0x502370U || table==0x502510U || table==0x502ff8U || WindSpellTable(table); }
+// 같은 공용 시전/수신을 사용하는 정확한 일곱 가상 표만 허용한다.
+bool ConnectedBombTable(std::uint32_t table) const { return table==0x502448U || table==0x502370U || table==0x502510U || table==0x502ff8U || WindSpellTable(table); }
 // 상태 주문/만료의 현재 타입 진단 부모를 거쳐 같은 기존 펜스 몸체를 실행한다.
 void DispatchFenceType(Sid sid,FenceTypeOperation operation) {
     FenceTypeParentHooks hooks; // 같은 Session의 현재 진단 서비스와 전체 자식이다.
@@ -59,10 +59,17 @@ void ConnectDevastation() {
     summons.allocate=[]()->std::optional<WindAviaryProcessFields> { auto* storage=std::malloc(80);if (!storage) return std::nullopt;WindAviaryProcessFields fields;std::memcpy(fields.bytes.data(),storage,80);std::free(storage);return fields; };
     summons.attach=[this](WindAviaryProcessFields fields,Sid parent,std::uint32_t type,std::uint32_t flags) { static_cast<void>(core.processes.Attach(std::make_unique<WindAviaryProcess>(*windAviary,std::move(fields)),type,parent,flags)); };
     windSpell=std::make_unique<RawWindSpell>(core.pool,core.processState.Server(),core.processState.Now(),windSpellState,std::move(summons));
+    BombHealHooks heal;heal.hasHitPoints=[this](Sid target) { return hp.HasHitPoints(target); };heal.maximumHitPoints=[this](Sid target) { return hp.MaxHitPoints(target); };
+    heal.fenceType=[this] { return gunTargetState.sunFenceType; };heal.burstType=[this] { return healBurstType; }; //현재 전역은 효과가 도달한 위치에서 읽는다.
+    heal.fence=[this](Sid target) { DispatchFenceType(target,FenceTypeOperation::Rebuild); };
+    heal.unpop=[this](Sid target,std::uint32_t,std::uint32_t flags) { world.Unpop(target,flags); };heal.repop=[this](Sid target,std::uint32_t,std::uint32_t flags) { world.Repop(target,flags); };
+    heal.refresh=[this](Sid target,std::uint32_t) { core.display.Update(core.pool.Slot(target),0); };
+    heal.create=[this](std::uint32_t type,std::uint32_t flags) { return core.factory.Create(type,flags); }; //가상90 이전에 원래4af530만 실행하며 World::Create의 추가changed 접두는 넣지 않는다.
+    heal.pop=[this](Sid created,std::uint32_t,float x,float y,std::uint32_t flags) { world.Pop(created,x,y,flags); };bombHeal=std::make_unique<RawBombHeal>(core.pool,core.types,std::move(heal));
     BombTargetHooks targets;
     // 실제502370의b4는41e3c0이며 다른 표의 반경으로 대체하지 않는다.
     targets.radius=[this](Sid parent,std::uint32_t table) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 반경 표 오류");return devastationTargets->DefaultRadius(parent); };
-    targets.eligible=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 자격 표 오류");PrepareDevastation();return WindSpellTable(table) ? windSpell->MayTarget(parent) : table==0x502370U ? devastationBlast->MayTarget(target) : bombStatus->MayTarget(parent,target); };
+    targets.eligible=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 자격 표 오류");PrepareDevastation();if (table==0x502448U) return bombHeal->MayTarget(target)!=0;return WindSpellTable(table) ? windSpell->MayTarget(parent) : table==0x502370U ? devastationBlast->MayTarget(target) : bombStatus->MayTarget(parent,target); };
     targets.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Devastation 권한 진단 "+std::to_string(line)); };
     devastationTargets=std::make_unique<RawBombTargets>(core.pool,core.hash,core.types,devastationTargetState,std::move(targets)); //같은원문TYPE+44를직접읽어펜스용사거리사본/조립순서에의존하지않는다.
     devastationBlast=std::make_unique<RawBombBlast>(core.pool,core.types,core.frames,*devastationTargets,devastationBlastState,MakeCampaignBombBlastHooks(world,*hits,*devastationTargets));
@@ -99,7 +106,7 @@ void ConnectDevastation() {
         }
     };
     effect.allocate=[this](std::uint32_t bytes) { try { if (!devastationEffectMemory) devastationEffectMemory=std::make_unique<std::uint8_t[]>(bytes);else { if (bytes!=40 || pendingBombTimerStorage || pendingBombTimer) throw std::logic_error("상태 타이머 확보 순서 오류");pendingBombTimerStorage.reset(::operator new(sizeof(BombEffectTimerProcess))); }return true; }catch (const std::bad_alloc&) { return false; } };
-    effect.apply=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 효과 표 오류");PrepareDevastation();if (table==0x502370U) devastationBlast->Apply(parent,target);else if (table!=0x5025d8U) bombStatus->Apply(parent,target); };
+    effect.apply=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 효과 표 오류");PrepareDevastation();if (table==0x502448U) bombHeal->Apply(parent,target);else if (table==0x502370U) devastationBlast->Apply(parent,target);else if (table!=0x5025d8U) bombStatus->Apply(parent,target); };
     effect.construct=[this](std::int32_t delay,std::uint32_t,std::span<const std::uint32_t> members,std::uint32_t flags) { if (!pendingBombTimerStorage || pendingBombTimer) throw std::logic_error("상태 타이머 생성 메모리 누락");auto* process=::new (pendingBombTimerStorage.get()) BombEffectTimerProcess(core.pool,core.types,core.processState.Now(),delay,members,flags,MakeBombTimerHooks());static_cast<void>(pendingBombTimerStorage.release());pendingBombTimer.reset(process);return 1U; };
     effect.argument=[this](std::uint32_t x,std::uint32_t y) { if (x || y) throw std::logic_error("상태 타이머 예약 인자 오류");return std::uint32_t(BombTimerParent(core.pool,core.types,assetState.Residences().Items()).value); };
     effect.attach=[this](std::uint32_t token,std::uint32_t type,std::uint32_t parent,std::uint32_t form,std::uint32_t flags) { if (token!=1 || !pendingBombTimer || parent>65535 || form>65535) throw std::logic_error("상태 타이머 예약 객체/인자 오류");static_cast<void>(core.processes.Attach(std::move(pendingBombTimer),type,Sid{static_cast<std::uint16_t>(parent)},flags,Sid{static_cast<std::uint16_t>(form)})); };

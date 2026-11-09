@@ -353,6 +353,9 @@ target_sources(netstorm PRIVATE o/RawMeltdown.cpp o/RawMeltdown.h) # 제네레�
 target_sources(netstorm PRIVATE o/RawBombBlast.cpp o/RawBombBlast.h)
 target_sources(netstorm PRIVATE o/RawBombStrike.cpp o/RawBombStrike.h)
 
+# 힐 주문의 실제 자격/회복/상태 해제와 버스트 생성 부모다.
+target_sources(netstorm PRIVATE o/RawBombHeal.cpp o/RawBombHeal.h)
+
 # 오벨리스크의 실제 임시Deck 추첨과 보상 변환이다.
 target_sources(netstorm PRIVATE o/RawDeckDraw.cpp o/RawDeckDraw.h o/RawGemReward.cpp o/RawGemReward.h)
 
