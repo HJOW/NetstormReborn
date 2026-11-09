@@ -949,7 +949,7 @@ cpppj/src/o/RawWindFlyer.cpp	port			todo	[o-default]
 cpppj/src/o/RawWindSpell.cpp	port	www/core/raw-wind-spell.js	1f00a25a	port	[o-default] WB04-E121: 세 윈드 소환 주문 41ecf0/41fb60/41fcc0. fixture wind-spell 300행 전부(10.78 전용). 존재 조회(4b1a90)/확보(new50)/부착(41bd20)은 훅 경계
 cpppj/src/o/RawWorldGeyser.cpp	port	www/core/raw-world-geyser.js	1f00a25a	port	[o-default] WB04-E107: 전체 세계 간헐천 생성 부모 00486440(장식 난수·예산 corner/edge/center·3×3 분할/전체 요청·밀도 표 0041ca40·시각 시드). fixture world-geyser 354행 전부(10.78 전용 파일). 로컬 생성/실제 배치/demo 플래그는 훅 경계
 cpppj/src/o/RawWorldGeyserBounds.cpp	port	www/core/raw-world-geyser-bounds.js	1f00a25a	port	[o-default] WB04-E107: 세계 간헐천 청크 범위 전체 00485bc0·분할 00485cc0(x87 폭 float/높이 배정도·공유 여백 DWORD)·간격 표 0041ca10·Player 예산 0041c8e0. fixture world-geyser-bounds 820행 전부(10.78 전용 파일). 청크 지도 조회는 훅 경계
-cpppj/src/o/RawXlat.cpp	port			todo	[o-default]
+cpppj/src/o/RawXlat.cpp	port	www/core/raw-xlat.js	1f00a25a	port	[o-default] WB04-E242: 10.78 Xlat 일곱 파일 버퍼와 언어별 번역 장부(load: 설치→마지막 BYTE NUL·NUL 전까지의 CR 이동→`*` 키/`-` 값/`=` 끝 줄 레코드 병합(키 앞 BYTE·구분자 줄 첫 BYTE 를 NUL 로 쓰고 불완전한 마지막 레코드는 저장하지 않음·여러 줄 키 허용·다른 언어 칸 보존), allocate/normalize/parse 개별 단계, translate 004de9a0: 언어 0·1 원문·첫 NUL 앞 정확 키·없는 키는 입력 전체·NULL 칸 원문·빈 번역은 빈 문자열·키가 있을 때 언어 범위 검사, 시작 적재 004dea00 German 3→English 1→Portuguese 6 고정 순서). 원문 바이트 문자열(문자 코드 0~255)을 쓰고 UTF-8 변환은 호출자 몫. fixture xlat-runtime 10.78 2,031행·xlat-assets 44행(실제 TARC 97,526바이트) 전부와 cpppj 계약 및 웹 계약 5건. 남음: XlatFileRead(TARC/TAFF 읽기·xlat-file-read fixture 253행)·클라이언트 Translate/언어 번호 연결은 순서5, cpppj 4번째 시험(Client 언어 변경)은 client 이식 때
 cpppj/src/o/RenderProcessSystem.cpp	port	www/core/render-process-system.js	1f00a25a	port	[o-default] WB04-E192: 공통 표시 저장소(토큰 발급/감김 거부·registry attach 의 토큰별 실제 Host 부착 분배·ready/forget·슬롯 순서 draw/drawToken·준비 완료만 collect·lookup)와 00487960 Form 삭제 영역(변 정수화 뒤 카메라/여유, top 만 무저장). fixture renderremoval 10.78 기본 48행 전부. 남음: 실제 Session/Client 월드에 생성·연결
 cpppj/src/o/RiftType.cpp	port	www/assets/type-table.js	1f00a25a	partial	[o-default] 타입 레코드 일부
 cpppj/src/o/RiftTypeTable.cpp	port	www/assets/type-flags.js;www/assets/fort.js;www/assets/type-table.js	1f00a25a	partial	[o-default] 3.6③: 기준선의 defaultFrame(+0x128) 보관은 웹 type-table 정의에는 있으나 Factory 용 타입 레코드에 없음 → WB03-M2/WB05 Draw·타입 레코드 연결 때. zorder/생성자 주소 연결도 WB05-A
@@ -985,5 +985,5 @@ cpppj/src/o/TypeLoadOrder.cpp	port	www/assets/type-table.js	1f00a25a	port	[o-def
 cpppj/src/o/TypeParser.cpp	port	www/assets/type-table.js	1f00a25a	partial	[o-default] .type 정의 해석(프레임 코드·특수 프레임·기준점)
 cpppj/src/o/UnpopVtables.inc	port	www/core/squid-vtables.js	1f00a25a	port	[o-default] WB04-D2(지원 자산 VT 83칸)
 cpppj/src/o/Win32FileError.cpp	exclude-host			-	[host-win32]
-cpppj/src/o/Xlat.cpp	port	www/assets/xlat.js	1f00a25a	partial	[o-default] 용어표 조회. 10.78 다중 장부(RawXlat)는 별도
+cpppj/src/o/Xlat.cpp	port	www/assets/xlat.js	1f00a25a	partial	[o-default] 용어표 조회. 10.78 다중 장부(RawXlat)는 www/core/raw-xlat.js 로 WB04-E242 에서 별도 이식(웹 assets/xlat.js 는 UTF-8 용어표 계층으로 남김)
 cpppj/src/zacket/LocalMissionTransport.cpp	port			todo	[zacket-default] 단독 미션 Zone/로그인 바이트와 로컬 두 연결

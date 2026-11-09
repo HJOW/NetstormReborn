@@ -15017,10 +15017,72 @@
       "bytes": 214679,
       "lines": 958,
       "fixtureCommit": "2c79a9b8",
-      "webCommit": "worktree",
+      "webCommit": "6f7b1db7",
       "cpppjBasis": {
         "cpppj/src/o/RawContentPreviewProcess.cpp": "2c79a9b8",
         "cpppj/src/o/RawContentPreviewProcess.h": "2c79a9b8"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E242",
+      "id": "xlat-runtime",
+      "path": "cpppj/tests/fixtures/xlat-runtime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 Xlat 다중 장부의 언어별 파일 적재(원문 바이트 → 정규화한 전체 버퍼와 고유 키 수) 45회, 조회(언어·키 바이트 → 결과 바이트) 1,935회, 시작 적재 8가지(존재 마스크 → 존재 확인/열기/닫기/9번 진단 순서) (2,031행)",
+      "consumers": [
+        "webpj/tests/xlat-runtime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-xlat.js"
+      ],
+      "doc": "docs/webpj-xlat-runtime-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawXlat.cpp",
+        "cpppj/src/o/RawXlat.h"
+      ],
+      "scope": "10.78 2,031행 전부",
+      "text": true,
+      "sha256": "17c26c436989fb0d64c319382b1da91da1f68a6af35b32f9c7bfa51e7d3aa8e3",
+      "bytes": 49031,
+      "lines": 2032,
+      "fixtureCommit": "2c490626",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawXlat.cpp": "9960f8b7",
+        "cpppj/src/o/RawXlat.h": "9960f8b7"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E242",
+      "id": "xlat-assets",
+      "path": "cpppj/tests/fixtures/xlat-assets-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 보호 TARC 의 xlat.german/english/portuguese 97,526바이트(fixture 에 hex 로 포함)를 원문이 수정한 동일 크기 버퍼와 고유 키 수, 조회 40회 (44행)",
+      "consumers": [
+        "webpj/tests/xlat-runtime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-xlat.js"
+      ],
+      "doc": "docs/webpj-xlat-runtime-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawXlat.cpp",
+        "cpppj/src/o/RawXlat.h"
+      ],
+      "scope": "10.78 44행 전부",
+      "text": true,
+      "sha256": "7b2ef55a9ce1970317221281deaf7b23482f6ff0a17edb2ee84acffe00a67ed3",
+      "bytes": 392076,
+      "lines": 45,
+      "fixtureCommit": "2c490626",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawXlat.cpp": "9960f8b7",
+        "cpppj/src/o/RawXlat.h": "9960f8b7"
       }
     }
   ]
