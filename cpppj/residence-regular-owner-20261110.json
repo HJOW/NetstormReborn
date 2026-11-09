@@ -5,7 +5,7 @@
   "host": "HJOW-Athlon",
   "accepted": true,
   "fullGoalComplete": false,
-  "summary": "거주 구역의 현재 주민/장식/신전/테마·실제 난수/Host와 Fort의 Dude 수 대 거주 구역 수 부모를 같은 장기 상태와 기존 생성/작업기에 연결했다.",
+  "summary": "거주 구역의 현재 주민/장식/신전/테마·실제 난수/Host와 Fort의 Dude 수 대 거주 구역 수 부모를 같은 장기 상태와 기존 생성/작업기에 연결했다. Fort 생성 비교 목록 오접속은제품1238에서 정정했다.",
   "sourceSha256": {
     "cpppj/src/o/RawResidenceRegular.h": "48a6ff9009b14eeeb6610b6e6dc7be46d39d2988a6bd6c9200492a3530edb9a6",
     "cpppj/src/o/RawResidenceRegular.cpp": "dbda8902e8e9ab6bc94016ef0bb959d68230b3fc8de5b2eb0c5e3fe15a5c9beb",
@@ -2498,5 +2498,14 @@
     "공중3종 전용 생성/생산/행동",
     "MP 단위/패킷/게임/통신/기록·전용 실행",
     "사용자 직접 확인 항목"
-  ]
+  ],
+  "correction1238": {
+    "introducedIn": 1237,
+    "fixedIn": 1238,
+    "wrongList": "sidLists.residences / assetState.Residences(), count0059a9e0",
+    "correctList": "sidLists.providers / core.bookkeeping.Providers(), count00592f8c",
+    "reason": "450a90 reads0055a4f8 then00592f8c;49a2b0 registers Residence at0059a9d8/e0;472f70 registers Provider at00592f84/8c",
+    "oldTestsMissedBecause": "기존 새 helper 검사도 같은 잘못된 목록 입력을 공급했다. 새 Native 회귀는 두 목록 수를 다르게 유지한다."
+  },
+  "currentBaselineUnit": 1238
 }

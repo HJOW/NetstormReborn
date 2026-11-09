@@ -22,5 +22,5 @@ struct ResidenceDudeHooks { // 실제450a90이 선택한 기존 생성/진입점
     std::function<void(Sid,std::uint32_t,float)> task; // 실제450670이다.
     std::function<void()> assertion; // srcSid 진단은 정상 복귀를 허용한다.
 };
-void RunResidenceDudeSpawn(const SidPool& pool,const bool& fort,const SquidPostPopList& population,const SquidPostPopList& residences,Sid source,const ResidenceDudeHooks& hooks); // Fort/현재 거주 구역 수와 Dude 수의 선행 관문 뒤 현재 raw/owner와 새 Dude 상태를 읽는다.
+void RunResidenceDudeSpawn(const SidPool& pool,const bool& fort,const SquidPostPopList& population,const SquidPostPopList& providers,Sid source,const ResidenceDudeHooks& hooks); // Fort/현재 공급원 수와 Dude 수의 선행 관문 뒤 현재 raw/owner와 새 Dude 상태를 읽는다.
 }

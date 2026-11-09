@@ -29,7 +29,7 @@ float RawSurfaceStorage::ResidenceRegular(o::Sid sid,std::uint32_t event,std::ui
     hooks.recordScan=[this](auto count) { auto& maximum=gameAux_->ResidenceMaximumScan();if (maximum<=count) maximum=count; };
     hooks.dude=[this](auto parent) {
         o::ResidenceDudeHooks effects;effects.entrance=[this](auto source) { return ResidenceCall(residenceRuntime_,&RawSurfaceResidenceBindings::entrance,source); };effects.spawn=[this](auto x,auto y,auto owner) { return ResidenceCall(residenceRuntime_,&RawSurfaceResidenceBindings::spawn,x,y,owner); };effects.task=[this](auto born,auto event,auto delay) { ResidenceCall(residenceRuntime_,&RawSurfaceResidenceBindings::task,born,event,delay); };effects.assertion=[this] { AssertDisplay("srcSid",".\\Dude.cpp",0x1b5); };
-        o::RunResidenceDudeSpawn(pool,ownerMode.fort,sidLists.dudes,sidLists.residences,parent,effects);
+        o::RunResidenceDudeSpawn(pool,ownerMode.fort,sidLists.dudes,sidLists.providers,parent,effects);
     };
     return o::RunResidenceRegular(pool,hash,types,frames,sidLists.temples,sid,event,count,payload,hooks);
 }

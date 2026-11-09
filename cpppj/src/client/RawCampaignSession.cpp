@@ -1516,7 +1516,7 @@ struct RawCampaignSession::Impl {
         InstallVortexDeparture();
         ResidenceDudeHooks residenceDudeEffects;residenceDudeEffects.entrance=[this](auto source) { return hits->Dudes().ResidencePoint(source); };residenceDudeEffects.spawn=[this](auto x,auto y,auto owner) { if (!dudeSpawn) throw std::logic_error("거주 구역의 실제 Dude 생성기 미설치");return dudeSpawn->Spawn(x,y,owner); };residenceDudeEffects.task=[this](auto born,auto event,auto delay) { if (!dudeTask) throw std::logic_error("거주 구역의 실제 Dude 작업기 미설치");dudeTask->Set(born,event,delay); };residenceDudeEffects.assertion=[this] { world.Storage()->AssertDisplay("srcSid",".\\Dude.cpp",0x1b5); }; // 기존 전체 하위를 같은 현재 Runtime에 연결한다.
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };
-        if (core.pool.Edition()==OriginalEdition::Patch1078) assetEffects.regular.residenceEvent2=[this,residenceDudeEffects](auto parent) { RunResidenceDudeSpawn(core.pool,core.ownerMode.fort,dudePopulation,assetState.Residences(),parent,residenceDudeEffects); }; // 최초 Fort/거주 구역 수 관문은 같은 실제 장부를 읽는다.
+        if (core.pool.Edition()==OriginalEdition::Patch1078) assetEffects.regular.residenceEvent2=[this,residenceDudeEffects](auto parent) { RunResidenceDudeSpawn(core.pool,core.ownerMode.fort,dudePopulation,core.bookkeeping.Providers(),parent,residenceDudeEffects); }; // 최초 Fort/공급원 수 관문은 같은 실제 장부를 읽는다.
         assetEffects.regular.state=[this](Sid sid,std::uint16_t state) { SetVortexState(sid,state); };
         assetEffects.regular.suppressLeaveRequest=[this] { return core.bridgeState.mission; }; // event3의 현재00594fa0이며 missionPost와 구별한다.
         assetEffects.regular.ascendTick=[this](Sid sid,std::uint32_t count) { return vortexAscend->Tick(sid,count); };

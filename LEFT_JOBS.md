@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품1237 / 11.01 · 사용자 /goal 지시로 계속 진행 중 · 전체 목표 미완료**
+**제품1238 / 11.01 · 사용자 /goal 지시로 계속 진행 중 · 전체 목표 미완료**
 
 **사용자 지시(2026-11-10): LEFT_JOBS의 모든 cpppj 작업을 우선순위대로 재개한다.** 단위마다 인계 갱신·로컬 커밋을 수행하며 커밋 실패 시에도 계속한다. 지정한 MP·자연 완주·포획/희생·특정 공격·사용자 직접 확인 검사의 제외는 계속 유효하다.
 
@@ -16,7 +16,7 @@ cpppj는 메뉴와 미션 플레이가 가능하다. 최근 확인은 Tutorial4�
 | **4** | **알려진 버그 — B1~B4** | **4개 상위 계획.** NB01~NB34 **34건 등록만 완료**. 원인·현행 적용 여부 조사와 수정·건별 마감은 미착수다. |
 | **합계** | **16개 상위 계획** | 각 계획에 여러 구현·검증·커밋이 포함된다. 버그 34건은 B1~B4의 대상이므로 합계에 별도로 더하지 않는다. |
 
-**다음 제품 작업:** M6-n **Dude1VT/450fa0**의 현재 정기 처리를 장기 연결한다.1237 거주 구역1VT/49a4e0의 현재 주민/장식·지형 TYPE/신전/테마·실제 난수/Host, Fort Dude count 대 Residence count 부모를 연결했다. **잔여 Regular16VT/고유14함수**와 전체 최초 후처리·큰 Dude/AI/배치/Fort 상위 Finish·전수 caller/owner 감사·지연큐/JoinTestBattle은 남는다. 지정 실행 제외를 유지한다.
+**다음 제품 작업:** M6-n **Dude1VT/450fa0**의 현재 정기 처리를 장기 연결한다.1238에서1237의 Fort Dude 생성 비교 목록 오접속을 수정했다.00592f8c는 공급원 count이고 거주 구역 count는0059a9e0이다. **잔여 Regular16VT/고유14함수**와 전체 최초 후처리·큰 Dude/AI/배치/Fort 상위 Finish·전수 caller/owner 감사·지연큐/JoinTestBattle은 남는다. 지정 실행 제외를 유지한다.
 
 이 수치는 일부 분배의 연결량이며 **전체 완료율·예상 소요일로 환산하지 않는다.** 60/120프레임·CD 10.72 복원은 별도 후순위다.
 
@@ -26,11 +26,11 @@ cpppj는 메뉴와 미션 플레이가 가능하다. 최근 확인은 Tutorial4�
 
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
-AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품 1237, DN은 0.261, WB는 열람 당시 병행 작업 인계의 WB04-E201 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
+AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품 1238, DN은 0.261, WB는 열람 당시 병행 작업 인계의 WB04-E201 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
-| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품 1237의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
+| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품 1238의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
 | **dotnetpj** | 기존 `Netstorm.Game`/`Netstorm.exe`는 1-1·1-2 근사 플레이가 가능하다. 새 `Netstorm.Client.Host`는 메뉴 일부까지이며 미션 플레이가 불가능하다. | 새 경로의 실제 메뉴·게임 캡처 비교는 0건이다. R3 진행/R4 일부 이식이며 부품 fixture 통과를 전체 동일성으로 합산하지 않는다. |
 | **webpj** | 클릭하여 시작·메뉴/목록·도움말/옵션·Credits·개발용 지형 미리보기까지다. 실제 미션 플레이는 불가능하다. | cpppj 오라클 M1 메뉴 8장면은 기록한 원인 밖 픽셀 차이 0이다. 구름 등 차이가 남고 실제 미션 L2/L3·전체 화면/음향·자연 완주는 미검증이다. |
 
@@ -38,12 +38,12 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj�
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품·소스 | **1237 / 11.01**. [거주 구역 장기 연결](docs/exe/cpp-residence-regular-owner-20261110.md)·[확정 보고서](cpppj/residence-regular-owner-20261110.json). 같은 현재 주민/장식/지형 TYPE·신전/테마/난수·Host와 실제 Fort Dude 생성 부모를 연결했다. |
-| 최근 빌드·집중 검사 |1237 Release/x64 제품2·집중1대상 최종37.966초/종료0·경고/오류0·소스/신규 근거17개 고정. **비MP155/155**(기존146+장기5+순수2+기존 거주 입력/좌표 재생2). 원본1125입력/두 정밀도2250회 대조.450a90 큰 하위 등은 명시 경계이며 전수 실행으로 세지 않는다. |
-| 최근 실제 실행 |1237 EXE: Tutorial4 생산·건설 요청→TYPE75/owner1 생성→600프레임 대기, Dissolved Alliance 정상 진입→기존 자기 거주 구역(TYPE89/owner1)1000프레임씩 두 번 대기→같은 SID/위치·실제 프레임 전환. 두 실행 정상 종료0·PNG 확인. Factory UI 업그레이드는1236, Edit TEST01↔Main2회는1225 별도 결과다. 시작한 작업은 모두 종료했다. |
-| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품 1237 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
+| 확정 제품·소스 | **1238 / 11.01**. [공급원 비교 목록 정정](docs/exe/cpp-residence-provider-gate-20261110.md)·[확정 보고서](cpppj/residence-provider-gate-20261110.json).1237의 Fort Dude 생성 한도를 잘못된 거주 구역 목록에서 실제 공급원 목록으로 고쳤다. |
+| 최근 빌드·집중 검사 |1238 Release/x64 제품2·집중1대상 최종134.146초/종료0·경고/오류0·변경 소스/검사6개 고정. **비MP156/156**(기존155+서로 다른 실제 두 목록 Native 회귀1). 원본 관문128입력은55a4f8→592f8c를 읽고59a9e0은 읽지 않는다. 큰 하위 전체 실행으로 세지 않는다. |
+| 최근 실제 실행 |1238 EXE Tutorial4 생산·건설 요청→TYPE75/owner1 생성→600프레임 대기·정상 종료0·PNG 확인. 기존 자기 거주 구역1000프레임씩 두 번 대기/같은 SID·위치·프레임17→16은1237, Factory UI 업그레이드는1236, Edit TEST01↔Main2회는1225의 별도 증거다. 시작한 작업은 모두 종료했다. |
+| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품 1238 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
 | M6 감사 기준 | checking 잔여 목록 0, 태그 25/활성 88/무태그 63F, 지연큐 OFF. checking 0과 자산 Pre/Post·통지 83/83을 MP/전체 NoWorld 완료로 세지 않는다. |
-| 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1237 새 디컴파일/원문 변경0, 보호 원본/CD/fixture·AGENTS **2,807파일 불변**. |
+| 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1238 새 디컴파일/원문 변경0, 보호 원본/CD/fixture·AGENTS **2,807파일 불변**. |
 
 <!-- 과거 1207 진행 중 인계의 직접 링크를 보존한다. 현재 제품은 위 0.1절이 기준이다. -->
 <a id="02-진행-중인-1207--완료-처리-금지"></a>
@@ -83,7 +83,7 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 | **3. M6-l: 실제 지연큐** | Client 장기 분포·OS시계/CRT rand·각 노드 queue·현재 20BYTE 주소·실제 전송/등록 수명을 연결한다. | 원문 `4def40/4df010/4dee60/4def20/4df5e0/4dfc00`. FIFO·엄격한 `deadline < now`·난수 소비·observer/기록·닫힘/해제를 보존한다. queue=false로 완료 처리하지 않는다. |
 | **4. M6-m: JoinTestBattle** | 개발자 4이름 제한·현재 주소·server0/current29 뒤 기존 1bh 전체 수신을 직접 호출한다. | 원문 `4b8be0 → 4b8b20`, 입력 `0200002b`의 선행 `4b3620` 보존. Edit TestBattle(c2)와 구별하고 새 수신 본문을 복제하지 않는다. |
 
-세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1237 구현 문서](docs/exe/cpp-residence-regular-owner-20261110.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
+세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1238 정정 문서](docs/exe/cpp-residence-provider-gate-20261110.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
 **다음 한 단위 — Dude1VT/450fa0:** [1237 거주 구역](docs/exe/cpp-residence-regular-owner-20261110.md)의 현재 정기 연결을 마쳤다. Dude의 현재 작업/생성/경로·현재 역할과 큰 선택 후단을 장기 연결한다. 포획/희생·특정 공격·공중3종 전용·MP·사용자 직접 확인 실행은 제외한다. 다른 Regular16VT/14함수·큰 하위/전수 감사도 계속한다.
 
@@ -96,7 +96,7 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 | 감시 Form | **Depend 장기 연결1221 완료.** Native World/Core·NoWorld가 같은 공장/현재 TYPE·감시 쌍·현재 상대 VT 삭제를 사용한다. 알림은 weak 대여→실제 Runtime pin→함수 사본→호출이며, 공통 선택 DWORD와 검색/제거 진단의 정상 복귀·현재 필드/선저장 next를 유지한다. Gump/Content는 각각1222/1223에서 같은 장기 삭제에 연결했다. |
 | UI Form | **Gump 장기 연결1222 완료.** 같은 `containedGumpType` DWORD를 Native 생성/메뉴·Player/contained 통지가 공유한다. 실제 UI 등록표는 첫 메뉴 전 weak 대여·실제 RawButtonControls 저장소 pin으로 연결하고 현재 World 소비자는 전체 Runtime pin/함수 사본을 유지한다. Source별 TYPE 사본이나 임시 Session을 만들지 않는다. |
 | Content Form | **장기 정렬/Regular/삭제1223 완료.** Native World/Core/Session·NoWorld가 같은 공장/현재 finder TYPE/cursor·로컬 owner/권한/너겟·Reward와 실제 입력/소리/전송 장치를 공유한다. 파생 부모/포획 통지는 현재 실제 Runtime pin/함수 사본이며 Session 콜백은 장기 본문에 남기지 않는다. |
-| 거주 구역 Regular | **직접1VT 장기 연결1237 완료.** 같은 현재 주민/장식·지형 fringe TYPE/신전/현재 테마·난수/Host와 signed 최대 조사를 공유한다. Fort는 실제 Dude count 대 Residence count를 먼저 비교하고 선택된 기존 생성/작업만 Runtime pin/함수 사본으로 호출한다. 최초 후처리/큰 Dude 전수 마감은 별도다. |
+| 거주 구역 Regular | **직접1VT 장기 연결1237 완료.** 같은 현재 주민/장식·지형 fringe TYPE/신전/현재 테마·난수/Host와 signed 최대 조사를 공유한다. Fort는 실제 Dude count 대 Provider count를 먼저 비교하고 선택된 기존 생성/작업만 Runtime pin/함수 사본으로 호출한다. 1237의 잘못된 비교 목록은1238에서 고쳤다. 최초 후처리/큰 Dude 전수 마감은 별도다. |
 | Factory Regular/후처리 | **직접2VT 장기 연결1236 완료.** 같은 현재 레벨/TYPE프레임·실제 난수/Host·현재 타이머 역할/목록/가상 owner/Depend를 공유한다. 큰 Begin/Finish/플레어는 실제 Runtime pin/함수 사본 뒤 기존 전체 본문을 사용한다. 일반 워크샾 UI 업그레이드1→2/1000SP를 확인했고 Outpost 전용 실행은 제외했다. |
 | 장식/가장자리 팜 Regular | **직접2VT 장기 연결1235 완료.** 현재 최대HP/제단 역할·signed count와 DWORD 곱 감김·같은 HP/기존 가상98·권한별 최종 삭제를 공유한다. 큰 가상98만 현재 Runtime pin/함수 사본 뒤 원래 전체 분배를 사용한다.1234 다음 이름 Geyser는 오기였다. |
 | Carrier Regular | **공통6VT 장기 연결1234 완료.** 같은 현재 TYPE+118/1b8·실제 finder/Factory/Owner/Pop/Display·현재 게임 시각/공유 SoundProcessType·Host 타이머를 Native Session과 공유한다. 순수 위험 칸은 현재 표를 직접 읽으며 이동/낙하/전용 owner의 선택 효과만 실제 Runtime pin/함수 사본 뒤 기존 전체 본문을 호출한다. |
@@ -133,7 +133,7 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 <a id="23-수량을-확정한-연결-범위--제품-1232-기준"></a>
 
-### 2.3 수량을 확정한 연결 범위 — 제품 1237 기준
+### 2.3 수량을 확정한 연결 범위 — 제품 1238 기준
 
 | 범위 | 연결 완료 | 남은 범위 |
 | --- | --- | --- |
@@ -141,7 +141,7 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 | 자산 83+내장 Form 4의 장기 Regular(+5c) | **71/87VT**(base16·Damageable14·기타41) | **16VT / 고유 함수14개**(모두 자산).1237 거주 구역1VT/49a4e0을 같은 장기/Session에 연결했다. 공통 Bomb16VT 분배와 전체 NoWorld 마감은 구별한다. |
 | Storage 기본 내장 Form 삭제 분배 | **4/4종 — Process·Depend·Gump·Content** | 기본4종의 알려진 누락0. 큰 AI·다른 배치/Fort 상위 Finish·전수 caller/owner 감사는 별도다. |
 
-정확한 현재 잔여 행은 [1237 보고서](cpppj/residence-regular-owner-20261110.json)의 `staticAudit.remainingRows`를 따른다.1236 연결70/87·잔여17/15에 거주 구역1VT/1함수를 더했다. 알려진83VT·공통 Bomb16VT 분배는 전체 실행/큰 하위 마감을 뜻하지 않는다. 전체 최초 후처리·프로세스 전체 클래스/PID/VT·큰 Dude/AI/배치/Fort 상위 Finish·전수 호출자 감사·M6-l/m은 이87개 집계 밖에 남는다.
+정확한 현재 잔여 행은 [1238 보고서](cpppj/residence-provider-gate-20261110.json)의 `staticAudit.remainingRows`를 따른다. 연결71/87·잔여16/14는1237과 같고1238은 Fort Dude 비교 목록 정정이다. 알려진83VT·공통 Bomb16VT 분배는 전체 실행/큰 하위 마감을 뜻하지 않는다. 전체 최초 후처리·프로세스 전체 클래스/PID/VT·큰 Dude/AI/배치/Fort 상위 Finish·전수 호출자 감사·M6-l/m은 이87개 집계 밖에 남는다.
 
 ## 3. M7 독립 5건과 M8 마감
 
@@ -236,8 +236,8 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 
 | 확인할 범위 | 기준 문서 |
 | --- | --- |
-| 현재 제품·현재 잔여 목록 | [1237 구현 문서](docs/exe/cpp-residence-regular-owner-20261110.md)·[보고서](cpppj/residence-regular-owner-20261110.json), 원시 `extracted/cpp-resume-1237/` |
-| Bomb Regular 실제 후단/다음 구현 | [1224 조사](docs/exe/cpp-bomb-regular-audit-20261109.md)·[16VT/19TYPE 행렬](cpppj/bomb-regular-audit-20261109.json), 원시 `extracted/cpp-resume-1224/`. 현행은1237 연결71·잔여16/14이며 Dude를 포함한 다른 Regular/큰 하위와 전수 감사를 계속한다. |
+| 현재 제품·현재 잔여 목록 | [1238 정정 문서](docs/exe/cpp-residence-provider-gate-20261110.md)·[보고서](cpppj/residence-provider-gate-20261110.json), 원시`extracted/cpp-resume-1238/` |
+| Bomb Regular 실제 후단/다음 구현 | [1224 조사](docs/exe/cpp-bomb-regular-audit-20261109.md)·[16VT/19TYPE 행렬](cpppj/bomb-regular-audit-20261109.json), 원시 `extracted/cpp-resume-1224/`. 현행은1238 연결71·잔여16/14이며 Dude를 포함한 다른 Regular/큰 하위와 전수 감사를 계속한다. |
 | M6 전체 잔여와 최초 Regular 조사 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[최초 1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md). 각 문서의 과거 “없음/다음”보다 현행 2절을 우선한다. |
 | 비MP 구현 마감 | [UI 929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit 943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션 956](docs/exe/cpp-mission-state-scope-20261106.md)·[내부 수명 980](docs/exe/cpp-internal-lifetime-closure-20261106.md) |
 | 디컴파일·이식 근거 | [디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md) |
@@ -257,4 +257,4 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 | `b5197d48` — 9차 알려진 버그 추가 | 1절 9차와 4.3절 **B1~B4·NB01~NB34**에 전체 34건을 연결한다. 등록과 원인 조사·수정·검증 완료를 구별한다. |
 | `3051892a` — 루트 README 개요 보호 | 6절에서 **AGENTS.md·README.md 개요 보호**, README.en.md Overview 번역 허용을 유지한다. 해당 원문은 수정하지 않는다. |
 
-**최근 완료1237 / 다음 작업:** 거주 구역1VT의 현재 주민/장식/지형 TYPE·신전/테마/난수·Host와 Fort Dude count 대 Residence count 부모를 연결했다. Release 빌드·비MP155/155·원본PE1125입력/2250회·Tutorial4 생산/건설 대기·기존 자기 거주 구역 정상 대기/프레임 전환·정상 종료/PNG 확인을 마쳤다. 다음 Dude1VT/450fa0이며 Regular16VT/14함수·큰 하위/전수 감사·16상위계획과 지정 실행 제외를 유지한다. 전체 목표는 미완료다.
+**최근 완료1238 / 다음 작업:** Fort Dude의00592f8c를 거주 구역으로 잘못 연결한1237 오류를 실제 공급원으로 수정했다. Release 빌드·비MP156/156·원본 관문128입력/실제 주소 읽기·Tutorial4 생산/건설 요청 후 대기/정상 종료·PNG 확인을 마쳤다. 다음 Dude1VT/450fa0이며 Regular16VT/14함수·큰 하위/전수 감사·16상위계획과 지정 실행 제외를 유지한다. 전체 목표는 미완료다.

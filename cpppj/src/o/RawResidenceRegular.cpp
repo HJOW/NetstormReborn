@@ -41,9 +41,9 @@ float RunResidenceRegular(SidPool& pool,const SquidHash& hash,std::span<const Ri
         }Need(hooks.frame)(sid,Add(std::bit_cast<std::int32_t>(Read(pool.Slot(sid),42)),theme*6),0);SetEven(pool,sid,hooks);return 0.1F;
     }return payload;
 }
-void RunResidenceDudeSpawn(const SidPool& pool,const bool& fort,const SquidPostPopList& population,const SquidPostPopList& residences,Sid source,const ResidenceDudeHooks& hooks) {
+void RunResidenceDudeSpawn(const SidPool& pool,const bool& fort,const SquidPostPopList& population,const SquidPostPopList& providers,Sid source,const ResidenceDudeHooks& hooks) {
     if (pool.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("거주 구역450a90은 PATCH 본문입니다");
-    if (!fort) return;const auto dudeCount=std::bit_cast<std::int32_t>(population.Count());const auto residenceCount=std::bit_cast<std::int32_t>(residences.Count());if (dudeCount>=residenceCount) return; // 원문처럼 Dude count를 먼저 읽고 거주 구역 count를 다음에 읽는다.
+    if (!fort) return;const auto dudeCount=std::bit_cast<std::int32_t>(population.Count());const auto providerCount=std::bit_cast<std::int32_t>(providers.Count());if (dudeCount>=providerCount) return; // 원문처럼 Dude count를 먼저 읽고 공급원 count를 다음에 읽는다.
     if (!source.value) Need(hooks.assertion)();if (pool.Slot(source)[11]&1U) return;
     const auto point=Need(hooks.entrance)(source);const auto born=Need(hooks.spawn)(point[0],point[1],pool.Slot(source)[34]);if (born.value && !(pool.Slot(born)[11]&3U)) Need(hooks.task)(born,0x5102,0.0F);
 }
