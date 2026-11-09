@@ -42,6 +42,7 @@ void RawSurfaceStorage::EmitDefaultAssetEffect(const o::SquidDestroyEvent& event
     if (!pre && event.effect!=o::SquidDestroyEffect::PostDestroy) throw std::logic_error("장기 자산의 가상 삭제 효과 종류 오류");
     const auto method=pre ? entry.pre:entry.post;
     switch (method) {
+    case 0x0041e960U:BombPre().PreDestroy(event.sid,event.flags);return; //실제Point Blast의자연폭발관문뒤현재소리와공통부모를같은장기본문에서선택한다.
     case 0x00457990U:FenceLifetime().PreDestroy(event.sid,event.flags);return; //같은장기이웃/정리/두Regular뒤실제Damageable부모를호출한다.
     case 0x0048edf0U:IceTower().PostDestroy(event.sid,event.flags);return; //실제완성형세VT의현재역할/로딩/표면/재성장과Damageable부모다.
     case 0x0048eb80U:IceTower().GrowingPostDestroy(event.sid,event.flags);return; //성장형은일반Damageable후처리를추가하지않는다.

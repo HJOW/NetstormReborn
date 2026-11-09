@@ -51,6 +51,18 @@ o::RawDamageablePreDestroy& RawSurfaceStorage::DamageablePre() {
     }
     return *damageablePre_;
 }
+// 실제41e960은현재큰폭발과위치소리뒤에같은공통Pre를호출하며World/Session을장기소유하지않는다.
+o::RawBombPreDestroy& RawSurfaceStorage::BombPre() {
+    static_cast<void>(DamageablePreGlobals()); //동일Native finder/실제Client효과의최초결합만확인하며값을초기화하지않는다.
+    if (!bombPre_) {
+        o::BombPreDestroyHooks hooks; //자연관문을통과한선택위치에서만현재Runtime또는실제소리를요구한다.
+        hooks.explosion=[this](auto sid) { const auto explosion=damageableDevices_.explosion;explosion(sid); }; //Client장치가실제전체Runtime을pin하고기존4605d0본문을선택한다.
+        hooks.sound=[this](auto x,auto y) { const auto sound=damageableDevices_.sound;sound({o::DamageableSound::Explosion,x,y}); }; //폭발효과뒤본문이갱신된좌표를다시읽으며소리장치는호출끝까지보유한다.
+        hooks.base=[this](auto sid,auto flags) { CommonDeletion().PreDestroy(sid,flags); }; //DamageablePre를끼워넣지않고원문의비가상4b0950만호출한다.
+        bombPre_=std::make_unique<o::RawBombPreDestroy>(pool,std::move(hooks));
+    }
+    return *bombPre_;
+}
 // 실제 같은 HP/목록/공간/Host로 드롭·피해 예약·다리 약화·공통 Post를 연결한다.
 o::RawDamageablePostDestroy& RawSurfaceStorage::DamageablePost() {
     static_cast<void>(DamageablePostGlobals()); // 실제 같은 장기 전역이 있어야 한다.

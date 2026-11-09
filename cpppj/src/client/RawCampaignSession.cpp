@@ -805,7 +805,7 @@ struct RawCampaignSession::Impl {
     DamageableReleaseState localDamageableReleaseState;DamageableReleaseState& damageableReleaseState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->DamageableReleaseGlobals():localDamageableReleaseState}; // 해방 요청마다 같은 현재 전투 모드를 공급한다.
     DamageablePostDestroyState localDamageablePostState;DamageablePostDestroyState& damageablePostState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->DamageablePostGlobals():localDamageablePostState}; // 삭제 후의 현재 전투/권한 전역이다.
     std::unique_ptr<RawDamageableRelease> localDamageableRelease;RawDamageableRelease* damageableRelease{}; // 같은 풀/내용물/사제 실제 생성으로 해방한다.
-    std::unique_ptr<RawBombPreDestroy> bombPre; // 실제502370의고유41e960 전처리다.다른Bomb 파생은공통전처리다.
+    std::unique_ptr<RawBombPreDestroy> localBombPre;RawBombPreDestroy* bombPre{}; //Native는같은장기41e960을빌리며독립typed만기존본문을소유한다.
     BombTargetState devastationTargetState;BombBlastState devastationBlastState; // 같은 현재 권한/동맹을 각 실제 자격/효과 위치에 공급한다.
     BombRegularState devastationRegularState;BombEffectState devastationEffectState; // 주기/수신 상태와 실제 비용 누적을 같은 Session에서 소유한다.
     std::vector<BombRegularType> devastationRegularTypes;std::vector<BombEffectType> devastationEffectTypes; // 기존188TYPE의A프레임/casttime/cost/fireSound만 보충한다.
@@ -2545,7 +2545,8 @@ struct RawCampaignSession::Impl {
         pre.validateBase=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().ValidatePre(sid,flags); };
         pre.base=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PreDestroy(sid,flags); };
         pre.releaseContained=[this](Sid sid) { damageableReleaseState.battle=core.ownerMode.battle;damageableRelease->Release(sid); };
-        bombPre=std::make_unique<RawBombPreDestroy>(core.pool,BombPreDestroyHooks{pre.explosion,[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("Bomb 실제폭발음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("explosion.wav"),0,0); },pre.base}); // 큰폭발과공통전처리는같은실제몸체를공유한다.
+        if (world.Storage()->UsesNativeTransmissionDevices()) bombPre=&world.Storage()->BombPre();
+        else { localBombPre=std::make_unique<RawBombPreDestroy>(core.pool,BombPreDestroyHooks{pre.explosion,[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("Bomb 실제폭발음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("explosion.wav"),0,0); },pre.base});bombPre=localBombPre.get(); } //독립typed도원문의큰폭발/현재좌표/공통전처리를유지한다.
         collapseEffect=pre.collapse;ritualExplosion=pre.explosion;if (world.Storage()->UsesNativeTransmissionDevices()) damageablePre=&world.Storage()->DamageablePre();else { localDamageablePre=std::make_unique<RawDamageablePreDestroy>(core.pool,core.spots,contentFinder,damageablePreState,std::move(pre));damageablePre=localDamageablePre.get(); }priests->BindDamageable(*damageablePre);
         flyerPre=std::make_unique<RawFlyerPreDestroy>(core.pool,FlyerPreDestroyHooks{[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); },[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); }});
         auto post=services.damageablePost;
@@ -4468,7 +4469,7 @@ std::uint32_t RawCampaignSession::PlayerKnown() const { return impl_->playerStat
 o::AiWalletMemoryAccess RawCampaignSession::BorrowAiWalletMemory() { return {&impl_->aiMemory,impl_->gameplayGlobals->PinCurrentRuntime(*this)}; }
 // 선택된 큰 효과의 실제 같은 Session 모듈만 사용한다. Client caller가 실제 Runtime pin을 보유한다.
 void RawCampaignSession::EmitDamageableCollapse(o::Sid sid) { if (!impl_->collapseEffect) throw std::logic_error("실제 붕괴 효과 미연결");impl_->collapseEffect(sid); }
-void RawCampaignSession::EmitDamageableExplosion(o::Sid sid) { if (!impl_->ritualExplosion) throw std::logic_error("실제 폭발 효과 미연결");impl_->ritualExplosion(sid); } // 실제 같은 Impact/파편 몸체다.
+void RawCampaignSession::EmitDamageableExplosion(o::Sid sid) { const auto explosion=impl_->ritualExplosion;if (!explosion) throw std::logic_error("실제 폭발 효과 미연결");explosion(sid); } //Client의실제Runtime pin안에서선택한함수사본을호출끝까지보유하며같은Impact/파편본문을사용한다.
 void RawCampaignSession::SpawnReleasedPriest(float x,float y,std::uint32_t type,std::uint16_t word) { impl_->priests->Spawn().Spawn(x,y,type,word); } // 현재 권한/공간/원문 WORD의 실제 사제 생성이다.
 void RawCampaignSession::DropDamageableDude(o::Sid sid,std::int32_t index,bool random) { impl_->dudeDrop->Drop(sid,index,random); } // 같은 실제 생성/작업/통지 목록을 사용한다.
 void RawCampaignSession::DropDamageableIsland(float x,float y,std::uint32_t flags,std::uint32_t owner) { if (!impl_->buildingEffects) throw std::logic_error("실제 받침 정리 모듈 미연결");impl_->PrepareBuilding(impl_->core.processState.Now());impl_->buildingEffects->DropIsland(x,y,flags,owner); } // 실제 현재 건설 정리기를 같은 인자로 호출한다.

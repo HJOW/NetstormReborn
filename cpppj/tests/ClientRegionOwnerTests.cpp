@@ -107,6 +107,57 @@ struct RegionScene { //게임실행기없이실제장기owner/보호자산/물�
 };
 }
 
+// 고유Bomb본문구성은Player/SP/난수/현재TYPE를초기화하거나World를대여하지않는다.
+TEST_CASE(ClientBomb_LongBodySharesCurrentPhysicalOwner) {
+    RegionScene scene;const auto random=scene.random->Game().State();scene.storage->types[113].range=19.75F;
+    auto* body=&scene.storage->BombPre();CHECK(&scene.storage->BombPre()==body && scene.storage->types[113].range==19.75F);
+    CHECK(scene.players->Base()==0 && !scene.sp->Store().Initialized() && scene.random->Game().State()==random && !scene.storage->Borrowed());
+}
+
+// TYPE이름이나범주로넓히지않고매호출의실제VT502370만선택한다.
+TEST_CASE(ClientBomb_HandlesOnlyCurrentActualVtable) {
+    RegionScene scene;const auto sid=scene.Asset(0x502370U);auto raw=scene.storage->pool.AllocatedBytes(sid);CHECK(raw[10]==113 && scene.storage->BombPre().Handles(sid));
+    RegionPut(raw,0,0x509470U);CHECK(!scene.storage->BombPre().Handles(sid));RegionPut(raw,0,0x502370U);CHECK(scene.storage->BombPre().Handles(sid));
+}
+
+// 원문의extra1/8각비트는폭발/소리없이현재공통Pre의실제선택해제를실행한다.
+TEST_CASE(ClientBomb_NoWorldExtraGuardsReachActualCommonParent) {
+    for (const auto extra:{1U,8U,9U}) { //각자연관문입력을독립장기물리에서확인한다.
+        RegionScene scene;const auto sid=scene.Asset(0x502370U);scene.storage->pool.AllocatedBytes(sid)[40]=static_cast<std::uint8_t>(extra);scene.gameplay->selection.selected=sid.value;
+        CHECK(scene.storage->DestroyAsset(sid,0x100010U));
+        CHECK(scene.clears==1 && scene.gameplay->selection.selected==0 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0 && scene.players->Base()==0 && !scene.storage->Borrowed());
+    }
+}
+
+// extra가0이어도원문의100000플래그가없으면큰효과보다같은공통부모를직접호출한다.
+TEST_CASE(ClientBomb_NoWorldMissingExplosionFlagUsesCommonParent) {
+    RegionScene scene;const auto sid=scene.Asset(0x502370U);scene.storage->pool.AllocatedBytes(sid)[40]=0;scene.gameplay->selection.selected=sid.value;
+    CHECK(scene.storage->DestroyAsset(sid,0x10U));
+    CHECK(scene.clears==1 && scene.gameplay->selection.selected==0 && scene.storage->BaseDestroy().PreDepth()==0 && !scene.storage->Borrowed());
+}
+
+// 실제외부송신은원문10비트로억제하고동일고유Pre/공통Post/풀반납까지실행한다.
+TEST_CASE(ClientBomb_NoWorldDestroyRunsBothActualParents) {
+    RegionScene scene;const auto sid=scene.Asset(0x502370U);const auto free=scene.storage->pool.FreeCount();scene.gameplay->selection.selected=sid.value;
+    CHECK(scene.storage->DestroyAsset(sid,0x100010U));
+    CHECK(scene.storage->pool.FreeCount()==free+1 && scene.clears==1 && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0 && !scene.storage->Borrowed());
+}
+
+// 선택된큰폭발장치가실패하면뒤소리/선택해제/공통Pre를앞당기지않는다.
+TEST_CASE(ClientBomb_SelectedExplosionFailurePreservesEarlierBoundary) {
+    RegionScene scene;const auto sid=scene.Asset(0x502370U);scene.storage->pool.AllocatedBytes(sid)[40]=0;scene.gameplay->selection.selected=sid.value;
+    const auto raw=scene.storage->pool.Slot(sid);const std::vector<std::uint8_t> before(raw.begin(),raw.end());bool rejected{};
+    try { scene.storage->BombPre().PreDestroy(sid,0x100010U); }catch (const std::logic_error& error) { rejected=std::string_view(error.what())=="영역 검사 금지 폭발"; }
+    const auto after=scene.storage->pool.Slot(sid);CHECK(rejected && std::equal(before.begin(),before.end(),after.begin()) && scene.clears==0 && scene.gameplay->selection.selected==sid.value && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 장기본문을직접호출해도다른현재VT를Point Blast로간주하거나공통부모로조용히통과시키지않는다.
+TEST_CASE(ClientBomb_WrongActualVtableIsRejectedBeforeEffects) {
+    RegionScene scene;const auto sid=scene.Fence();bool rejected{};
+    try { scene.storage->BombPre().PreDestroy(sid,0x100010U); }catch (const std::invalid_argument& error) { rejected=std::string_view(error.what())=="Bomb 고유전처리 VT불일치"; }
+    CHECK(rejected && scene.clears==0 && scene.storage->BaseDestroy().PreDepth()==0);
+}
+
 // 전체 장기 본체를 구성해도 Player base/난수/섬/장기 캐시는 초기화하지 않는다.
 TEST_CASE(ClientRegions_NoWorldBindDoesNotReadPlayersOrResetState) {
     RegionScene scene;const auto random=scene.random->Game().State();scene.kencloud->WorldRedraw()=19;scene.gameplay->MapRevision()=23;

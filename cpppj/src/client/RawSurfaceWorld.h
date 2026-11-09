@@ -10,6 +10,7 @@
 #include "o/RawCheckingFlag.h" // Editor/Session이같은Client진단owner를빌린다.
 #include "o/RawGameAuxState.h"
 #include "o/RawDamageablePreDestroy.h" // 같은 장기 피해가능 객체 전처리/검색 상태를 공유한다.
+#include "o/RawBombPreDestroy.h" //Point Blast의고유전처리도같은물리/현재폭발과공통부모를공유한다.
 #include "o/RawDamageableRelease.h" // 실제 현재 권한/TYPE/공간으로 종속을 해방한다.
 #include "o/RawDamageablePostDestroy.h" // 같은 HP/Graph/목록/Host로 후처리한다.
 #include "o/RawGeyserLifetime.h" // 실제 간헐천 고유 수명 접두를 보존한다.
@@ -198,6 +199,7 @@ public:
     o::RawBuriedRegular& BuriedRegular(); //현재프레임/같은전역난수의실제오벨리스크사건0/1을제공한다.
     o::RawDamageableRelease& DamageableRelease(); // 현재 물리의 실제 해방 몸체를 공유한다.
     o::RawDamageablePostDestroy& DamageablePost(); // 현재 실제 후처리/공통 Post를 공유한다.
+    o::RawBombPreDestroy& BombPre(); //현재502370의41e960을World없이같은장기폭발/소리/공통부모에연결한다.
     o::RawGeyserLifetime& GeyserLifetime(); // 같은 지면 목록/기본프레임/현재 편집 모드를 사용한다.
     o::IceTowerTypes& IceTowerGlobals(); //같은현재완성형/성장형/noIsland TYPE주소만빌리며값을초기화하지않는다.
     o::RawIceTower& IceTower(); //전체파괴/성장형후처리/주기를World없이같은현재Pool/Host에조립한다.
@@ -346,6 +348,7 @@ private:
     o::DamageablePostDestroyState damageablePostState_; // 실제 현재 모드/목록/사건을 같은 주소에서 읽는다.
     std::unique_ptr<o::RawDamageableRelease> damageableRelease_; // Pool/TYPE/검색 전역보다 먼저 반납한다.
     std::unique_ptr<o::RawDamageablePreDestroy> damageablePre_; // 장기 실제 효과 장치와 같은 공통 Pre를 빌린다.
+    std::unique_ptr<o::RawBombPreDestroy> bombPre_; //같은현재폭발장치와공통부모보다먼저반납할Point Blast전처리다.
     std::unique_ptr<o::RawCarrierPreDestroy> carrierPre_; //같은finder/Damageable보다먼저반납하는실제장기Carrier전처리다.
     std::function<void()> carrierReplenishment_; //실제장기보충owner를약하게빌리는Client장치이며Session을소유하지않는다.
     std::function<void(o::Sid,std::uint32_t)> vortexOwner_; //실제신전가상74의장기owner를약하게빌린다.

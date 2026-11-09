@@ -1,0 +1,347 @@
+{
+  "unit": 1211,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "accepted": true,
+  "summary": "Point Blast의고유41e960을같은장기Pool/폭발/소리/공통Pre에연결하고Native Session이같은본문을빌린다.",
+  "sourceSha256": {
+    "cpppj/src/client/RawSurfaceWorld.h": "a1073aef17a5fc692936d7203f09db8bb41dc2686680aab0c2c175b36118ebc0",
+    "cpppj/src/client/RawSurfaceDamageable.cpp": "54675a163874a386e8beb1d801e866d73d2997e280c92cc1a468a1a250f2709c",
+    "cpppj/src/client/RawSurfaceAssetDeletion.cpp": "42a795394426f527f225f2937649fd1edefe272819e50a32a79050f9c714f217",
+    "cpppj/src/client/RawCampaignSession.cpp": "ecc634ed88dbe94c6b31745dcfb6d0eaac7d303be6daba68a098ec74ce064074",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "00344199bb35006f4ca8d58e16fa69bb4e4c0faf11daa19986c12f7a0b82cda3",
+    "cpppj/tests/CMakeLists.txt": "02e91b9610f5bd6e1b8af1b82f635cff904a0bfa90967b9a1430ec3274c3c735",
+    "cpppj/tests/SurfaceAssetDeletionTests.cpp": "db77060ecd9eb99a09c632edf620889d21dc39ccc817763cecc4bfe71e16af3c"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13876736,
+      "sha256": "a04663c7a007d6e48faae9cd865ef106674b31ad01b49921ba5a5f08c3e1eca2"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "9da1a3040e61cb8db230e58334376eb86e2de7aea83a1c3835bdb5eb8cf13e9e"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 30.720707178115845,
+    "sourcesUnchanged": true,
+    "handle": 10160,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 245,
+    "passed": 245,
+    "newCases": 7,
+    "additionalExistingNonMpCases": 1,
+    "existingBombPreFixtureRows": 96,
+    "groups": {
+      "netstorm_construction_owner_tests": 171,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "seconds": 46.94534182548523,
+    "handle": 89556,
+    "raw": "extracted/cpp-resume-1211/tests.json"
+  },
+  "corrections": {
+    "firstBuild": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_construction_owner_tests",
+        "netstorm_carrier_replenish_tests",
+        "netstorm_damageable_lifetime_tests",
+        "netstorm_common_deletion_tests",
+        "netstorm_surface_lifetime_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 1,
+      "seconds": 350.6909873485565,
+      "sourcesUnchanged": true,
+      "handle": 99770
+    },
+    "firstTests": {
+      "cases": 245,
+      "passed": 244,
+      "failed": [
+        {
+          "target": "netstorm_construction_owner_tests",
+          "name": "SurfaceAssetDeletion_UnrestoredSpecialPrePreservesPartialEffects",
+          "exitCode": 1,
+          "pass": false
+        }
+      ],
+      "handle": 21287
+    },
+    "expectationsWeakened": false,
+    "buildFailure": "새검사3곳이비공개DefaultProcessAssetHooks를호출해C2248이었다.",
+    "buildFix": "정상완료검사는공개DestroyAsset으로진입해상위깊이와같은실제분배를사용하고선택실패검사는공개BombPre본문을직접호출한다. 기대값은유지했다.",
+    "raw": [
+      "first-tests.json",
+      "first-test-SurfaceAssetDeletion_UnrestoredSpecialPrePreservesPartialEffects.log",
+      "first-SurfaceAssetDeletionTests.cpp",
+      "first-build.json",
+      "first-build.log",
+      "first-source-frozen.json",
+      "pre-fixture-build.json",
+      "pre-fixture-source-frozen.json"
+    ],
+    "preFixtureBuild": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_construction_owner_tests",
+        "netstorm_carrier_replenish_tests",
+        "netstorm_damageable_lifetime_tests",
+        "netstorm_common_deletion_tests",
+        "netstorm_surface_lifetime_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 37.16215634346008,
+      "sourcesUnchanged": true,
+      "handle": 63806
+    },
+    "reason": "미복원고유Pre검사의대표VT502370이이번복원으로연결되어원래미복원실패경계를더이상선택하지않았다.",
+    "fix": "실제잔여VT5040c0/pre42ae80로입력만바꾸고기존dead/로그/깊이1/풀미반납단언을모두유지했다. Point Blast복원성공은새7검사로확인했다."
+  },
+  "staticAudit": {
+    "sourceVtables": 83,
+    "connectedPrePost": 72,
+    "remainingPrePost": 11,
+    "remainingNotices": 6,
+    "addedVtables": [
+      "00502370"
+    ],
+    "remainingRows": [
+      {
+        "vt": "005040c0",
+        "destroy": "004af780",
+        "pre": "0042ae80",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "00504198",
+        "destroy": "004af780",
+        "pre": "0042ae80",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "005076b8",
+        "destroy": "004af780",
+        "pre": "0044a4d0",
+        "post": "00448b60",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "00507950",
+        "destroy": "004af780",
+        "pre": "0044afd0",
+        "post": "00449580",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "00508cc8",
+        "destroy": "004af780",
+        "pre": "004b0950",
+        "post": "00450920",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050a050",
+        "destroy": "004af780",
+        "pre": "0045e7e0",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050a1e8",
+        "destroy": "004af780",
+        "pre": "0045e7e0",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050a388",
+        "destroy": "004af780",
+        "pre": "0045e7e0",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050ee08",
+        "destroy": "004af780",
+        "pre": "004906c0",
+        "post": "004b0840",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050f210",
+        "destroy": "004af780",
+        "pre": "004919b0",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050f540",
+        "destroy": "004af780",
+        "pre": "004b0950",
+        "post": "0049a4a0",
+        "notice": "0041c100"
+      }
+    ],
+    "reviewedFunctions": 6,
+    "originalDecompilationChanges": 0,
+    "lastClientDecompilation": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    },
+    "largeExplosion": {
+      "sameExisting4605d0Body": true,
+      "currentRuntimePin": true,
+      "selectedFunctionCopy": true,
+      "noWorldSelectedRuntimeStillRequired": true
+    },
+    "multiplayerExecutions": 0
+  },
+  "tutorial4": {
+    "passed": true,
+    "exitCode": 0,
+    "handle": 25836,
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.361,
+        "gameTimeAfter": 24.0,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "waitFrames": 600,
+    "protectedUnchanged": true,
+    "dataUnchanged": true,
+    "imageInspected": "015-generator-settled.png",
+    "raw": "extracted/cpp-resume-1211/live-tutorial4/summary.json"
+  },
+  "editor": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0,
+    "passed": true,
+    "handle": 63135,
+    "sameClientRoundTrips": 2,
+    "observations": 11,
+    "screen": [
+      800,
+      600
+    ],
+    "raw": "extracted/cpp-resume-1211/live-editor-fixed/summary.json"
+  },
+  "protectedFilesUnchanged": 2800,
+  "allStartedBuildTestGuiTerminal": true,
+  "originalGameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "decompilerSourceChanges": 0,
+  "remainingUpperPlanIds": [
+    "M6",
+    "M7",
+    "M8",
+    "K1",
+    "K2",
+    "K3",
+    "K4",
+    "K5",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "B1",
+    "B2",
+    "B3",
+    "B4"
+  ],
+  "knownBugsRegistered": 34,
+  "limitations": [
+    "72/83은실제Pre/Post분배수다. 잔여11부모/6통지·큰비영AI·다른Form/Regular·배치Caller/Fort상위Finish와전수감사는남는다.",
+    "선택된큰폭발은기존실제Runtime을요구한다. 이번비MPNative검사는NoWorld자연관문/삭제완료/선택실패를검증했으며큰폭발성공을실제플레이로재현한것은아니다.",
+    "M6-l/m·M7/M8·K/S/B의16계획/등록34버그를유지하며이번연결을버그원인조사/수정완료로세지않는다.",
+    "GUI는건물완성/TestBattle/전체자연완주검증이아니다. 전체34진입제품644/검증645·최신ZIP1092·최신전체솔루션통과없음을유지한다.",
+    "사용자제외실제플레이/공중3종전용관측·MP단위/패킷/통신/게임/기록검사를실행하지않았다."
+  ],
+  "raw": "extracted/cpp-resume-1211/"
+}
