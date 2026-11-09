@@ -14958,7 +14958,7 @@
       "bytes": 5170,
       "lines": 289,
       "fixtureCommit": "8b467ca0",
-      "webCommit": "worktree",
+      "webCommit": "0fd37303",
       "cpppjBasis": {
         "cpppj/src/o/RawCheckingDiagnostics.h": "8b467ca0"
       }
@@ -14987,9 +14987,40 @@
       "bytes": 6637,
       "lines": 193,
       "fixtureCommit": "8b467ca0",
-      "webCommit": "worktree",
+      "webCommit": "0fd37303",
       "cpppjBasis": {
         "cpppj/src/o/RawCheckingDiagnostics.h": "8b467ca0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E241",
+      "id": "content-preview-process",
+      "path": "cpppj/tests/fixtures/content-preview-process-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 내용물 미리보기 프로세스의 생성(428700)·프레임(428770)·통지(480260)·소멸(468230→41bd00). 동작·현재 시각·인자 float·저장된 만료 시각·부모·현재 타입·부모 head·효과 변형 → 53비트/64비트 CRT 정밀도의 24바이트와 효과 순서 (957행)",
+      "consumers": [
+        "webpj/tests/content-preview-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-content-preview-process.js"
+      ],
+      "doc": "docs/webpj-content-preview-process-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawContentPreviewProcess.cpp",
+        "cpppj/src/o/RawContentPreviewProcess.h"
+      ],
+      "scope": "10.78 957행 전부(53비트 열 재생; 64비트 열은 별도 관측으로 보존)",
+      "text": true,
+      "sha256": "c05105f5e39cb0ce50682719b5494e65d67cb64f1db08c29882a89ef9837f948",
+      "bytes": 214679,
+      "lines": 958,
+      "fixtureCommit": "2c79a9b8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawContentPreviewProcess.cpp": "2c79a9b8",
+        "cpppj/src/o/RawContentPreviewProcess.h": "2c79a9b8"
       }
     }
   ]
