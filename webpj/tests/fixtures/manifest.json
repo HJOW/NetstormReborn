@@ -14209,9 +14209,38 @@
       "bytes": 11965,
       "lines": 217,
       "fixtureCommit": "7cbcd998",
-      "webCommit": "worktree",
+      "webCommit": "ee5c9a1b",
       "cpppjBasis": {
         "cpppj/src/o/RawFactoryResearch.cpp": "7c51717d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E219",
+      "id": "daiscontentnotice",
+      "path": "cpppj/tests/fixtures/daiscontentnotice-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다이스 내용물 부모 알림의 입력 JSON(제단 존재·첫 A 프레임 수·내용물 kind·로컬 owner·다이스 owner·reason·원래 owner WORD)에서 가상 공간/cue 요청 순서와 Dais·제단·내용물 세 슬롯 raw 전체(10.78 722행·CD 722행)",
+      "consumers": [
+        "webpj/tests/dais-content-notice.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dais-content-notice.js"
+      ],
+      "doc": "docs/webpj-dais-content-notice-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDaisContentNotice.cpp"
+      ],
+      "scope": "10.78 722입력 전부(originalCD 722행은 범위 밖)",
+      "text": true,
+      "sha256": "abc3bd27d30a92d17db9e42f57ba97fba2c92503ac4691a0febc8d22474b8eb9",
+      "bytes": 506376,
+      "lines": 1445,
+      "fixtureCommit": "db9b626c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDaisContentNotice.cpp": "efcd13e4"
       }
     }
   ]
