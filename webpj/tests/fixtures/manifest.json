@@ -15048,7 +15048,7 @@
       "bytes": 49031,
       "lines": 2032,
       "fixtureCommit": "2c490626",
-      "webCommit": "worktree",
+      "webCommit": "bf156eea",
       "cpppjBasis": {
         "cpppj/src/o/RawXlat.cpp": "9960f8b7",
         "cpppj/src/o/RawXlat.h": "9960f8b7"
@@ -15079,10 +15079,40 @@
       "bytes": 392076,
       "lines": 45,
       "fixtureCommit": "2c490626",
-      "webCommit": "worktree",
+      "webCommit": "bf156eea",
       "cpppjBasis": {
         "cpppj/src/o/RawXlat.cpp": "9960f8b7",
         "cpppj/src/o/RawXlat.h": "9960f8b7"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E243",
+      "id": "neighbor",
+      "path": "cpppj/tests/fixtures/neighbor-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 해시 flag 0 첫 연결 이웃과 실제 이웃 탐색을 쓰는 다리 끝 칸 변환(반환 float·효과 순서·슬롯 50바이트 전체)",
+      "consumers": [
+        "webpj/tests/neighbor.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-squid-neighbors.js",
+        "webpj/www/core/raw-bridge-events.js"
+      ],
+      "doc": "docs/webpj-neighbor-first-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSquidNeighbors.cpp"
+      ],
+      "scope": "1,728행 중 10.78(originals) First 288·Event 288행 사용(originalCD·original1037 구간은 범위 밖)",
+      "text": true,
+      "sha256": "c6c955f5ca77f2d2e53c96f88d7e73d92b49dca886bf27da82947b9add7ab957",
+      "bytes": 772623,
+      "lines": 1729,
+      "fixtureCommit": "8bb3d9ca",
+      "webCommit": "0efb3ea1",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSquidNeighbors.cpp": "99ff1a5f"
       }
     }
   ]
