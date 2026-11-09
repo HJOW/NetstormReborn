@@ -226,6 +226,7 @@ void RawSurfaceStorage::DefaultResourcePostPop(o::Sid sid,std::uint32_t flags) {
             hooks.construct=[this](auto parent,auto event,auto payload) { ConstructResourceRegular(parent,event,payload); };hooks.damageable=[this](auto parent,auto value) { ResourceCarrierPostPop().DamageablePostPop(parent,value); };resourceNugget_=std::make_unique<o::RawNuggetPostPop>(pool,std::move(hooks));
         }resourceNugget_->PostPop(sid,flags);return;
     }
+    if (table==0x50f540U && !(flags&1U)) { PostPop().PostPopBase(sid,flags);return; } // 원문 Residence의 최초가 아닌 재Pop은 실제 공통 부모만 호출한다. 최초 후처리는 기존 현재 자산 모듈이 담당한다.
     if (table==0x50da88U) {
         if (!resourceGeyser_) { resourceAssetState_.sharedGeysers=&sidLists.geysers;resourceAssetState_.currentBridgeType=&links.bridgeType;resourceAssetState_.currentIslandType=&links.islandType;resourceAssetState_.currentStalagType=&links.stalagType;
             o::AssetPostPopHooks hooks;hooks.reserveRegular=[this] { return AllocateResourceRegular(); };hooks.addRegular=[this](auto parent,auto event,auto payload) { ConstructResourceRegular(parent,event,payload); };
@@ -258,6 +259,7 @@ float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std
     if (table==0x50cc08U) return o::RunSpriteRegular(pool,types,Frame(),sid,payload); //원문4794b0은event/count를읽지않고현재TYPE+114를사용한다.
     if (table==0x502cf0U || table==0x502db0U) return o::HandleHealBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //힐/미티어의 필수41f9d0을 같은 장기 본문에서 처리한다.
     if (table==0x502c38U) return o::HandleGravityBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //그라비테이션의 필수41f760도 같은 실제 풀/프레임/Host를 사용한다.
+    if (table==0x50f540U) return ResidenceRegular(sid,event,count,payload); // 같은 현재 거주 구역 정기 본문이다.
     if (table==0x509148U || table==0x509210U) return FactoryRegular(sid,event,count,payload); // 실제4549c0의 두 직접 가상 표다.
     if (table==0x50a820U || table==0x50a8e8U) return DecorationRegular(sid,event,count,payload); // 실제462420의 장식/가장자리 팜 수명 감소다.
     if (HasCarrierRegular(sid)) return CarrierRegular().Handle(sid,event,count,payload); // 공통6VT는 World/NoWorld에서 같은 실제42a750을 쓴다.

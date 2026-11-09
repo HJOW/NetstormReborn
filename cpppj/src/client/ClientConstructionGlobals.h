@@ -47,6 +47,7 @@ public:
     bool Matches(const std::shared_ptr<RawSurfaceStorage>& storage,const std::shared_ptr<ClientGameplayGlobals>& gameplay,const std::shared_ptr<ClientBuildReplayGlobals>& replay) const; // 다른 Client/전역을 섞기 전에 정체성만 확인한다.
     RawCampaignConstructionState& State(); // 같은 현재 건설 상태의 주소를 Session 교체 뒤에도 유지한다.
     const RawCampaignConstructionState& State() const; // 값 사본 없이 같은 장기 상태를 조회한다.
+    std::uint32_t CurrentThemeMode() const; // 현재 실제 설정 장치를 호출하는 동안 보유하며 기본값 사본을 만들지 않는다.
     void BindDevices(ClientConstructionDevices devices); //필수 실제 장치를 검증해 현재 집합만 교체하며 게임 상태나 본체를 초기화하지 않는다.
     void ReleaseDevices(); //Client 최종 반납에서 함수 집합만 끊고 본체/현재 물리/State를 보존한다.
     void BindRuntime(const std::shared_ptr<ClientConstructionRuntimeBindings>& runtime); //실제 현재 대여만 약하게 공개하고 중복된 살아 있는 대여는 거부한다.

@@ -197,6 +197,7 @@
 #include "o/RawPlayerCoreRefresh.h"
 #include "o/RawStateMetaBattleDescription.h" //일반 수신의71h도 같은 실제 observer/CS 부모를 등록한다.
 #include "o/RawSquidSelection.h"
+#include "o/RawResidenceRegular.h" // 같은 현재 거주 구역 정기와 Fort Dude 생성 부모다.
 #include "o/RawDecorationRegular.h" // 장식/가장자리 팜의 같은462420 본문을 typed/Native가 공유한다.
 #include "o/RawCarrierRegular.h"
 #include "o/RawContentPreviewProcess.h"
@@ -1513,7 +1514,9 @@ struct RawCampaignSession::Impl {
         combatEffects.missile.ricochet=[this](const MissileFields& fields) { iceRicochet->Generate(fields); };
         combat=std::make_unique<RawCampaignArcherBindings>(world,*gunTarget,random,archerTypes,metadata.frames,missileTypes,archerState,missileState,std::move(combatEffects));
         InstallVortexDeparture();
+        ResidenceDudeHooks residenceDudeEffects;residenceDudeEffects.entrance=[this](auto source) { return hits->Dudes().ResidencePoint(source); };residenceDudeEffects.spawn=[this](auto x,auto y,auto owner) { if (!dudeSpawn) throw std::logic_error("거주 구역의 실제 Dude 생성기 미설치");return dudeSpawn->Spawn(x,y,owner); };residenceDudeEffects.task=[this](auto born,auto event,auto delay) { if (!dudeTask) throw std::logic_error("거주 구역의 실제 Dude 작업기 미설치");dudeTask->Set(born,event,delay); };residenceDudeEffects.assertion=[this] { world.Storage()->AssertDisplay("srcSid",".\\Dude.cpp",0x1b5); }; // 기존 전체 하위를 같은 현재 Runtime에 연결한다.
         auto assetEffects=services.assets;assetEffects.postPop.reserveRegular=[] { return true; };
+        if (core.pool.Edition()==OriginalEdition::Patch1078) assetEffects.regular.residenceEvent2=[this,residenceDudeEffects](auto parent) { RunResidenceDudeSpawn(core.pool,core.ownerMode.fort,dudePopulation,assetState.Residences(),parent,residenceDudeEffects); }; // 최초 Fort/거주 구역 수 관문은 같은 실제 장부를 읽는다.
         assetEffects.regular.state=[this](Sid sid,std::uint16_t state) { SetVortexState(sid,state); };
         assetEffects.regular.suppressLeaveRequest=[this] { return core.bridgeState.mission; }; // event3의 현재00594fa0이며 missionPost와 구별한다.
         assetEffects.regular.ascendTick=[this](Sid sid,std::uint32_t count) { return vortexAscend->Tick(sid,count); };
@@ -1584,6 +1587,7 @@ struct RawCampaignSession::Impl {
         decorationHit=assetEffects.regular.hitPoints; // 같은 실제 현재 가상98 본문을 복제하지 않고 대여한다.
         assetBindings=std::make_unique<RawCampaignAssetBindings>(world,*carrier,assetState,random,*islands,players,playerState,RawCampaignAssetGlobals{regularState,gunState,elements,archerCommand,{85,87,126,&gameplayGlobals->FirstTimerFactoryType(),&gameplayGlobals->SecondTimerFactoryType(),&researchOutpost}},std::move(assetEffects));assetBindings->ActivatePostPop(); // 세 TYPE는 같은 실제 Client 주소를 빌리고 Session 사본으로 바꾸지 않는다.
         RawWorldRuntimeHooks worldHooks;
+        worldHooks.residence.entrance=residenceDudeEffects.entrance;worldHooks.residence.spawn=residenceDudeEffects.spawn;worldHooks.residence.task=residenceDudeEffects.task; // 실제 생성 하위만 현재 전체 Runtime과 공개한다.
         worldHooks.factoryRegular.begin=assetEffectsFactoryBegin;worldHooks.factoryRegular.finish=assetEffectsFactoryFinish;worldHooks.factoryRegular.flare=assetEffectsFactoryFlare; // move 전 보관한 같은 실제 큰 후단만 공개한다.
         worldHooks.damageable.hitPoints=decorationHit; // 선언 뒤 같은 실제 가상98 본문만 현재 대여로 공개한다.
         worldHooks.squidPacket=services.formPacket; //일반Squid와Form은같은버퍼/현재방송분배기를사용한다.
@@ -1756,7 +1760,7 @@ struct RawCampaignSession::Impl {
         // 실제 사건이 실패하면 당시 부모/사건/횟수를 남기고 같은 예외를 전파한다. 성공/상태 되돌림으로 대신하지 않는다.
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             try {
-                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
+                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
                 if (const auto table=Read(core.pool.Slot(sid),0);table==0x50a820U || table==0x50a8e8U) {
                     if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->DecorationRegular(sid,event,count,payload);
                     DecorationRegularHooks hooks;hooks.maxHitPoints=[this](auto parent) { return hp.MaxHitPoints(parent); };

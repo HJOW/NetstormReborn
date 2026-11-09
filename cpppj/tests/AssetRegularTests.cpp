@@ -220,3 +220,13 @@ TEST_CASE(AssetRegular_SharedAuthorityReplaysBothNativeBodies) { Replay("origina
 
 // 같은 원본 반환/효과/raw/프레임을 공유 신전 목록에서 재생하여 실제 Session의 원소별 Residence 그림 선택을 확인한다.
 TEST_CASE(AssetRegular_SharedTemplesReplaysNativeBody) { Replay("originals",false,true); }
+
+TEST_CASE(AssetRegular_ResidencePatchOnly) { // 기존 원본 기대값 중 거주 구역만 실행하며 신전 이탈/MP 입력은 선택하지 않는다.
+    AssetRegularScene scene(OriginalEdition::Patch1078);std::size_t count{};
+    for (const auto& row:Rows()) { // 원문 입력/반환/효과/raw를 그대로 비교한다.
+        if (row[0]!="originals" || !row[1].starts_with("0,")) continue;scene.Prepare(row);const auto& input=scene.input;const auto result=scene.regular->Handle(kSource,input[1],input[2],std::bit_cast<float>(input[3]));std::string events;
+        for (const auto& event:scene.events) { if (!events.empty()) events+=';';events+=event; } // 실제 효과를 순서대로 직렬화한다.
+        if (events.empty()) events="-";const auto neighbors=std::to_string(scene.Frame(Sid{60}))+','+std::to_string(scene.Frame(Sid{61}))+','+std::to_string(scene.Frame(Sid{62}));
+        CHECK(std::bit_cast<std::uint32_t>(result)==Number(row[2]));CHECK(scene.random.State()==Number(row[3]));CHECK(scene.state.maxDecorationScan==Number(row[4]));CHECK(events==row[5]);CHECK(Hex(scene.pool.Slot(kSource))==row[6]);CHECK(neighbors==row[7]);++count;
+    }CHECK(count>0);
+}

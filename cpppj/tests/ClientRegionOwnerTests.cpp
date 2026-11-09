@@ -21,6 +21,8 @@
 #include "client/RawBombBlastBindings.h" //하드너의 같은41e3d0 추가 그림도 실제 현재 TYPE/프레임으로 분배한다.
 #include "RawSceneSupport.h" //새 하드너 원문 TSV의 입력과 실제 관찰 결과만 읽는다.
 #include "o/RawDamageableHit.h" //장식 수명 감소를 실제 일반 HP/burning 본문에 연결한다.
+#include "o/RawTerrainBitmap.h" // 거주 구역이 현재 지형 TYPE owner를 직접 빌린다.
+#include "o/RawResidenceRegular.h"
 #include "o/RawDamageableBurning.h"
 #include "o/RawSquidHitPoints.h" //현재HP의 원문 비가상 DWORD setter를 같은 풀에서 쓴다.
 #include "o/RawBombTargets.h" //같은TYPE사거리를쓰던기존다른소비자의연결도확인한다.
@@ -1670,4 +1672,23 @@ TEST_CASE(ClientFactoryOwner_PostPopUsesCurrentTimerRoleAndActualHost) { //일�
     RegionScene s(true);BindFactoryOwnerDevices(s);const auto parent=s.Asset(0x509148U);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]&=31U;raw[40]&=0xf6U; // 일반 최초 Pop의 실제 가상30이 flags1을 선택하도록 추상/그림자만 끈다.
     s.gameplay->Authority()->boss=false;s.storage->GameAux()->FirstTimerFactoryType()=raw[10];s.storage->GameAux()->SecondTimerFactoryType()=255;s.storage->GameAux()->OutpostType()=raw[10];CHECK(s.storage->PopAsset(parent,128,128,0x10U)==RawPopResult::Registered);
     auto& host=s.storage->Processes().Host();CHECK(host.FindEvent(parent,2)!=nullptr && host.FindEvent(parent,5)!=nullptr && host.FindEvent(parent,1)==nullptr && s.storage->postPopState.depth==0 && !s.storage->Borrowed());
+}
+
+namespace { // 현재 지형/설정 owner만 연결하며 새 월드/옵션 값을 만들지 않는다.
+void BindResidenceOwnerDevices(RegionScene& scene) { BindFactoryOwnerDevices(scene);scene.storage->BindResidenceDevices(std::shared_ptr<const TerrainBitmapState>(scene.gameplay,&scene.gameplay->TerrainBitmaps()),[weak=std::weak_ptr<ClientConstructionGlobals>(scene.owner)] { const auto current=weak.lock();if (!current) throw std::logic_error("검사 현재 테마 owner 반납");return current->CurrentThemeMode(); }); }
+}
+TEST_CASE(ClientResidenceOwner_NoWorldHostUsesActualNibbleFrameAndRandom) { // 같은 실제 Host의 사건0이 같은 난수와 프레임/주민을 변경한다.
+    RegionScene s;BindResidenceOwnerDevices(s);const auto parent=s.Asset(0x50f540U);s.Position(parent);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]=0;raw[40]=8;RegionPut(raw,12,0xa5a0);RegionPut(raw,36,0);s.storage->Frame().StoreLevel(parent);s.Index(parent);s.random->Game().SetState(1);GameRandom expected(1);const auto delay=static_cast<float>(double(expected.Next(65536))*(20.0/65536.0)+15.0);auto* process=s.storage->Processes().Host().AddRegular(parent,0,0);CHECK(process);if (!process) return;process->RunFrame();CHECK(process->Count()==1);CHECK(process->Payload()==delay);CHECK(s.random->Game().State()==expected.State());CHECK((RegionRead(raw,12)&0xffffU)==0xa5a1U);CHECK(RegionRead(raw,36)==1);CHECK(s.storage->postPopState.depth==0 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientResidenceOwner_LazyUnknownAndFortFalseNeedNoRuntime) { // 조기/비선택 사건은 지형·난수·Dude 장치를 요구하지 않는다.
+    RegionScene s;const auto payload=std::bit_cast<float>(0x7fc12345U);CHECK(std::bit_cast<std::uint32_t>(s.storage->ResidenceRegular(Sid{},99,0,payload))==0x7fc12345U);s.storage->ownerMode.fort=false;CHECK(std::bit_cast<std::uint32_t>(s.storage->ResidenceRegular(Sid{},2,0,payload))==0x7fc12345U && !s.storage->Borrowed());
+}
+TEST_CASE(ClientResidenceOwner_CurrentSignedMaximumSurvivesWorldLoan) { // 현재 signed 최대 조사를 같은 주소에서 비교하고 빈 finder는 지형 owner를 요구하지 않는다.
+    RegionScene s;BindFactoryOwnerDevices(s);const auto parent=s.Asset(0x50f540U);s.Position(parent,80,80);auto& maximum=s.storage->GameAux()->ResidenceMaximumScan();maximum=-1;{ RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->GameAux()->ResidenceMaximumScan()==&maximum); }CHECK(s.storage->ResidenceRegular(parent,1,0,3)==1 && maximum==0);maximum=123;CHECK(s.storage->ResidenceRegular(parent,1,0,3)==1 && maximum==123 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientResidenceOwner_CurrentTempleTypeAndConfigChooseSameFrame) { // 실제 공유 신전 목록과 현재 TYPE+98/설정을 매 호출에 사용한다.
+    RegionScene s;BindResidenceOwnerDevices(s);const auto parent=s.Asset(0x50f540U),temple=s.Asset(0x5196f0U);s.Position(parent);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]=4;raw[34]=1;raw[40]=9;RegionPut(raw,36,0);RegionPut(raw,42,0);s.storage->Frame().StoreLevel(parent);s.Index(parent);s.storage->pool.AllocatedBytes(temple)[34]=1;auto& list=s.storage->sidLists.temples;list.entries={temple.value};list.count=1;const auto type=s.storage->pool.Slot(temple)[10];s.storage->types[type].theme=2;s.themes=1;CHECK(s.storage->ResidenceRegular(parent,3,0,5)==0.1F && RegionRead(raw,36)==6);s.storage->types[type].theme=0;CHECK(s.storage->ResidenceRegular(parent,3,0,5)==0.1F && RegionRead(raw,36)==12);s.themes=0;CHECK(s.storage->ResidenceRegular(parent,3,0,5)==0.1F && RegionRead(raw,36)==0 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientResidenceOwner_SelectedDudeTaskPinsActualOwnerAndFunction) { // 선택된 실제 Runtime/함수 사본이 자기 연결을 반납해도 호출 끝까지 살아 있다.
+    RegionScene s;s.storage->ownerMode.fort=true;s.storage->sidLists.residences.count=1;const auto parent=s.Asset(0x50f540U),born=s.storage->CreateAsset(70,2);s.storage->pool.AllocatedBytes(parent)[34]=1;s.storage->pool.AllocatedBytes(born)[11]=4;auto runtime=std::make_shared<RawSurfaceResidenceBindings>();auto owner=std::make_shared<int>(7);const auto weak=std::weak_ptr<int>(owner);runtime->pin=[weak] { return weak.lock(); };runtime->entrance=[&](auto source) { CHECK(source==parent);s.storage->pool.AllocatedBytes(parent)[34]=3;return std::array<float,2>{12,24}; };runtime->spawn=[&](auto x,auto y,auto player) { CHECK(x==12 && y==24 && player==3);return born; };bool called{};runtime->task=[&](auto target,auto event,auto delay) { CHECK(target==born && event==0x5102 && delay==0);runtime->task={};runtime.reset();owner.reset();CHECK(!weak.expired());called=true; };s.storage->BindResidenceRuntime(runtime);CHECK(s.storage->ResidenceRegular(parent,2,0,9)==9 && called && weak.expired() && !s.storage->Borrowed());bool failed{};try { s.storage->ResidenceRegular(parent,2,0,9); }catch (const std::logic_error&) { failed=true; }CHECK(failed);
 }

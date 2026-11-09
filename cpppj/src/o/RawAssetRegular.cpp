@@ -1,5 +1,6 @@
 // 실제 거주 구역/간헐천/신전의 가상 Handle와 공통 Damageable 사건을 분기별로 복원한다.
 #include "o/RawAssetRegular.h"
+#include "o/RawResidenceRegular.h" // PATCH 거주 구역의 같은 현재 본문을 공유한다.
 #include "o/RawFactoryRegular.h" // PATCH의 같은 현재 Factory 본문을 Native와 공유한다.
 #include "o/RawPathAnimation.h"
 #include <algorithm>
@@ -138,6 +139,11 @@ RegularHandler RawAssetRegular::Handler(RegularHandler fallback) const {
 // 원본 거주 구역은 마지막 base Handle에서 payload를 그대로 반환한다.
 float RawAssetRegular::Residence(Sid sid,std::uint32_t event,std::uint32_t,float payload) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
+    if (patch) {
+        ResidenceRegularHooks current;current.random=[this]()->GameRandom& { return random_; };current.notify=hooks_.notifySurface;current.frame=[this](auto parent,auto value,auto flags) { setter_.Set(parent,value,flags); };current.surface=hooks_.surface;current.owner=hooks_.setOwner;current.dude=hooks_.residenceEvent2;
+        current.element=[this](auto temple) { const auto type=pool_.Slot(temple)[10];if (type>=elements_.size()) throw std::out_of_range("거주 구역 현재 신전 원소 범위");return elements_[type]; };current.themeMode=[this] { const auto get=hooks_.themeMode;return get ? get():std::uint32_t(state_.themeMode); };current.decorationType=[this] { return state_.decorationType; };current.recordScan=[this](auto value) { if (std::bit_cast<std::int32_t>(state_.maxDecorationScan)<=value) state_.maxDecorationScan=std::bit_cast<std::uint32_t>(value); };
+        return RunResidenceRegular(pool_,hash_,types_,frames_,assets_.Temples(),sid,event,0,payload,current);
+    }
     if (event==0) {
         Require(hooks_.notifySurface,"거주 구역 주민 통지 몸체 누락");
         auto raw=pool_.AllocatedBytes(sid);const auto word=Read(raw,12,2);

@@ -3833,3 +3833,7 @@ set_source_files_properties(DecorationRegularTests.cpp PROPERTIES COMPILE_DEFINI
 target_sources(netstorm_tests PRIVATE FactoryRegularCurrentTests.cpp)
 target_sources(netstorm_construction_owner_tests PRIVATE FactoryRegularCurrentTests.cpp FactoryUpgradeTests.cpp)
 set_source_files_properties(FactoryRegularCurrentTests.cpp PROPERTIES COMPILE_DEFINITIONS "NETSTORM_FACTORY_REGULAR_CURRENT_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/factory-regular-current-x86.tsv\"")
+
+# 거주 구역/일반 Fort Dude 부모만 집중 검증하고 MP 실행은 선택하지 않는다.
+target_sources(netstorm_tests PRIVATE ResidenceRegularTests.cpp)
+target_sources(netstorm_construction_owner_tests PRIVATE ResidenceRegularTests.cpp AssetRegularTests.cpp)

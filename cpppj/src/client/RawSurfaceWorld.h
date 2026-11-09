@@ -67,7 +67,7 @@
 #include <vector>
 #include <optional>
 
-namespace netstorm::o { class RawBuriedPostPop;class RawBuriedRegular; } //장기본문의완전형식은Storage구현에서만필요하다.
+namespace netstorm::o { struct TerrainBitmapState;class RawBuriedPostPop;class RawBuriedRegular; } //장기본문의완전형식은Storage구현에서만필요하다.
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
 class ClientPlayerRecords; // 현재 Player 배열을 조회할 때만 수명을 pin하는 실제 장기 owner다.
@@ -101,6 +101,12 @@ struct RawSurfaceCarrierBindings { // 선택된 큰 이동/낙하와 전용 owne
     std::function<float(o::Sid,std::uint32_t)> falling; // 기존426ef0의 전체 낙하/해방 본문이다.
     std::function<void(o::Sid,std::uint32_t)> setOwner; // 사제/메타의 전용 가상74는 기존 전체 소유권 분배를 쓴다.
     std::function<std::shared_ptr<void>()> pin; // 선택 호출의 정상/예외 반환까지 실제 전체 Runtime을 보유한다.
+};
+struct RawSurfaceResidenceBindings { // Fort 전용 Dude 효과만 현재 Runtime 수명으로 빌린다.
+    std::function<std::array<float,2>(o::Sid)> entrance; // 기존 실제 발자국 진입점이다.
+    std::function<o::Sid(float,float,std::uint32_t)> spawn; // 기존 실제 생성/소유자/Pop이다.
+    std::function<void(o::Sid,std::uint32_t,float)> task; // 기존 실제 Host 작업 예약이다.
+    std::function<std::shared_ptr<void>()> pin; // 현재 실제 전체 Runtime을 선택 호출 동안 유지한다.
 };
 struct RawSurfaceFactoryBindings { // 큰 업그레이드/플레어만 현재 World 수명으로 빌린다.
     std::function<void(o::Sid,float)> begin; // 기존 전체 예측 그림/건설/감시쌍 본문이다.
@@ -205,6 +211,9 @@ private:
     RawSurfaceResourceDevices resourceDevices_; //실제Client장치만보관하며짧은Session주소를저장하지않는다.
     RawSurfaceContentDevices contentDevices_; // 같은 Client 전역 alias와 현재 장치를 본체보다 오래 유지한다.
     std::weak_ptr<const RawSurfaceCarrierBindings> carrierRuntime_; // 큰 선택 효과만 약하게 빌려 죽은 Session을 역소유하지 않는다.
+    std::weak_ptr<const RawSurfaceResidenceBindings> residenceRuntime_; // 선택한 Dude 효과만 현재 owner를 빌린다.
+    std::weak_ptr<const o::TerrainBitmapState> residenceTerrain_; // 실제 현재 fringeType 저장소의 약한 대여다.
+    std::function<std::uint32_t()> residenceTheme_; // 실제 장기 설정 owner를 선택 호출할 장치다.
     std::weak_ptr<const RawSurfaceFactoryBindings> factoryRegularRuntime_; // 현재 큰 후단만 약하게 빌리고 프레임/난수는 장기 현재값을 사용한다.
     std::weak_ptr<const RawSurfaceDamageableBindings> damageableRuntime_; // 선택한 가상98만 약하게 빌려 Session 역소유를 피한다.
     std::weak_ptr<const RawSurfaceBombBindings> bombRuntime_; // 큰 주문 후단만 현재 World 수명으로 빌려 오래된 Session을 강하게 보유하지 않는다.
@@ -324,6 +333,9 @@ public:
     bool HasCarrierRegular(o::Sid sid) const; // 실제42a750의 직접6VT만 분배한다.
     void BindCarrierRuntime(const std::shared_ptr<const RawSurfaceCarrierBindings>& runtime); // 현재 큰 하위의 실제 대여만 연결한다.
     o::RawFactoryPostPop& FactoryPostPop(); //현재 목록/TYPE/역할과 장기 예약·공통 후처리를 같은 본체로 공유한다.
+    void BindResidenceDevices(const std::shared_ptr<const o::TerrainBitmapState>& terrain,std::function<std::uint32_t()> theme); // 첫 메뉴 전 현재 지형/설정만 연결한다.
+    void BindResidenceRuntime(const std::shared_ptr<const RawSurfaceResidenceBindings>& runtime); // 현재 Dude 효과의 실제 수명만 빌린다.
+    float ResidenceRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 같은 현재 주민/장식/신전/난수의 정기 본문이다.
     float FactoryRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); //현재 TYPE/가상80/난수/프레임과 같은 공통 HP 부모를 사용한다.
     void BindFactoryRegularRuntime(const std::shared_ptr<const RawSurfaceFactoryBindings>& runtime); //현재 큰 후단의 대여만 공개한다.
     float DecorationRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 두 실제VT의462420을 현재 HP/권한/같은 공통 부모에 연결한다.
@@ -621,6 +633,7 @@ struct RawWorldRuntimeHooks {
     RawSurfaceBombBindings bombRegular; // 현재 큰 시전/검색/수신만 World 수명으로 제공하며 실제 pin은 같은 World가 연결한다.
     o::ContentFormNotice contentNotice; // 현재 Session의 파생 부모 통지이며 실제 빈 부모는 장기 분배기가 직접 처리한다.
     o::ContentPriestNotice capturedContent; // 기존 전체 포획 안내 본문을 선택된 현재 Runtime으로 전달한다.
+    RawSurfaceResidenceBindings residence; // 기존 실제 Dude 생성/진입점/작업의 현재 Runtime 대여다.
     RawSurfaceFactoryBindings factoryRegular; // 현재 전체 업그레이드/플레어를 실제 World pin과 공개한다.
     o::GumpFormNotice gumpNotice; // 현재 Session이 제공한 실제 UI 가상 통지이며 미연결이면 장기 실제 UI 등록표를 사용한다.
 };

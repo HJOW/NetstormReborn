@@ -64,6 +64,7 @@ void ClientConstructionGlobals::BindDevices(ClientConstructionDevices devices) {
     if (!storage_ || !devices.configInt || !devices.wallSeconds || !devices.refresh || !devices.negativeQuantity || !devices.boundsAssertion || !devices.format || !devices.tell) throw std::invalid_argument("장기 건설의 실제 Client 장치 계약 오류");
     devices_=std::make_shared<ClientConstructionDevices>(std::move(devices));
 }
+std::uint32_t ClientConstructionGlobals::CurrentThemeMode() const { const auto current=devices_;if (!current || !current->themeMode) throw std::logic_error("장기 거주 구역의 현재 테마 장치 반납");const auto read=current->themeMode;return read(); } // 선택한 실제 설정 함수 사본을 현재 호출 끝까지 유지한다.
 void ClientConstructionGlobals::ReleaseDevices() { devices_.reset(); } //Client/현재 UI를 반납한 뒤 죽은 주소의 함수를 다시 선택하지 않게 한다.
 // 같은 현재 Session이 반납되지 않은 상태에서 다른 효과 owner로 몰래 교체하지 않는다.
 void ClientConstructionGlobals::BindRuntime(const std::shared_ptr<ClientConstructionRuntimeBindings>& runtime) {

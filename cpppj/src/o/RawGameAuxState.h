@@ -10,6 +10,8 @@
 namespace netstorm::o { // Gameplay/Storage가 같은 주소를 pin하는 작은 게임 데이터 owner다.
 class RawGameAuxState {
 public:
+    std::int32_t& ResidenceMaximumScan() { return residenceMaximumScan_; } //0059a9e4의 현재 signed 최대 조사 수이며 Session 대여로 초기화하지 않는다.
+    const std::int32_t& ResidenceMaximumScan() const { return residenceMaximumScan_; } // 현재 같은 DWORD를 읽기 전용으로 빌린다.
     FormPacketHeader& ContentIncomeHeader() { return contentIncomeHeader_; } //0052ee2e/2f/30의 현재 BYTE/BYTE/WORD를 생성 순간 읽는다.
     const FormPacketHeader& ContentIncomeHeader() const { return contentIncomeHeader_; } // Session 교체 뒤에도 같은 현재 원문 헤더다.
     std::uint32_t& PuzzlePieceType() { return puzzlePieceType_; } //00541204의 현재107을 패턴/Player 범위/지형이 공유한다.
@@ -301,6 +303,7 @@ private:
     std::uint32_t rainBlockerType_{147},growingRainBlockerType_{150}; //005412a4/005412b0의 현재 두 TYPE 번호이며 TYPE 기록 표와 별개다.
     std::uint32_t fenceMarkerType_{90},fenceShieldType_{170}; //내부 표식과 화면 포스 필드의 별도 원문 역할이며 월드 준비로 초기화하지 않는다.
     std::uint32_t runeType_{166}; // 보호 PE005412f0의 초기 DWORD이며 ResetForGeneralWorld는 현재 번호를 유지한다.
+    std::int32_t residenceMaximumScan_{}; //0059a9e4의 최초 BSS0을 Client 수명에 보관한다.
     FormPacketHeader contentIncomeHeader_{0x5a,1,5}; // 보호 PE의 실제 초기4BYTE이며 작성하지 않는 다섯째 바이트와 구별한다.
     std::uint32_t soundProcessType_{47}; //0054112c의 PE 초기값47을 Client 수명에 한 번 소유한다.
     std::uint32_t nuggetType_{154}; //005412c0의 최초154를 한 번만 소유하고 Session 재대여로 덮어쓰지 않는다.
