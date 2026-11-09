@@ -1,0 +1,161 @@
+{
+  "unit": 1208,
+  "kind": "현행 인계 정리·미완료 구현 구분·AGENTS 최근 변경 반영",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "productUnit": 1206,
+  "productCommit": "f0d065dce9957861dce6b7e034007afc5dfe4638",
+  "archive": {
+    "anchor": "archive-20261109-through-1206",
+    "originalPrefixBytes": 3897409,
+    "originalPrefixSha256": "f4e82f1063ee8b217c0688fd04deb6a973a88541c7cbfe2c4f050d2e3528b142",
+    "archivedCurrentBytes": 27336,
+    "archivedCurrentSha256": "ee1fe703d7287765f3c4b2e16a41c2cfebb58ec6e72e2c11dd8016010078717d",
+    "prefixPreserved": true,
+    "currentBeforePreservedVerbatim": true
+  },
+  "current": {
+    "bytesBefore": 27336,
+    "bytesAfter": 28594,
+    "sha256": "fe197937059e66b59ac0b0cd514ed3d4a14fa4d0a0ab6958c86acf17190910e4",
+    "upperPlanIdsRemaining": 16,
+    "remainingPlanIds": [
+      "M6",
+      "M7",
+      "M8",
+      "K1",
+      "K2",
+      "K3",
+      "K4",
+      "K5",
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "knownBugsRegistered": 34,
+    "next": "1207의 실제 아이스 타워 3실패 진단·교정·허용 회귀 뒤 M6 잔여"
+  },
+  "inProgress": {
+    "unit": 1207,
+    "accepted": false,
+    "sourceSha256": {
+      "cpppj/src/o/RawIceTower.h": "29f65b934a0a49928fd052746a1085f832ce4ff28d83fcabf7bc5ab3e05830d7",
+      "cpppj/src/o/RawIceTower.cpp": "13dee50608dd3c98112d4a7878472802571f3ed04141f6be3130b62295b3b4d8",
+      "cpppj/src/client/RawSurfaceWorld.h": "be44d72492e0f26cca1ecb2ae0ecfd174bda792103b963f4b99cfec07f009d4f",
+      "cpppj/src/client/RawSurfaceIce.cpp": "bb822d9df564f4b60059ea30d642a1437c9b989aabca997e66a0067140376d2f",
+      "cpppj/src/client/RawSurfaceStorage.cpp": "bcdd2154e7978a13ac0ad4012d0956d8b2447d4e1005b60084940a59e3dea31a",
+      "cpppj/src/client/RawSurfaceAssetDeletion.cpp": "80a9f6865a9aecdf62c9789eafc04aecfbae1a118fe2455e023c91a5f88976ed",
+      "cpppj/src/o/SquidPostPop.cpp": "6ca11aa1e613823cb5d5a35c3f36aefb78ca08664cbc802128ac256f4bcc2102",
+      "cpppj/src/client/RawCampaignSession.cpp": "feb9acbe007646cfeaa65af46d748f7f3340952922517818ad84c7729872e140",
+      "cpppj/src/client/CMakeLists.txt": "9a40409aeccf6f1b77feca323934787ccc8545f0d892d090751854904c1467b8",
+      "cpppj/tests/CMakeLists.txt": "593db628eeb4c97c9080ff22ec199125f392bb837b408662e703cd668736abb1",
+      "cpppj/tests/ClientRegionOwnerTests.cpp": "ac762ecc92c94dfb41a040d7a1f569229201a19b7b049d621379a2297e8f68d8"
+    },
+    "build": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_construction_owner_tests",
+        "netstorm_carrier_replenish_tests",
+        "netstorm_damageable_lifetime_tests",
+        "netstorm_common_deletion_tests",
+        "netstorm_surface_lifetime_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 0,
+      "seconds": 109.156498670578,
+      "sourcesUnchanged": true
+    },
+    "tests": {
+      "cases": 194,
+      "passed": 191,
+      "failed": [
+        {
+          "target": "netstorm_construction_owner_tests",
+          "name": "ClientIce_GrowingDeletePreservesSelectedDropFailure",
+          "exitCode": 1,
+          "pass": false
+        },
+        {
+          "target": "netstorm_construction_owner_tests",
+          "name": "ClientIce_RegrowthCreatesCurrentRoleBeforeExternalFailure",
+          "exitCode": 1,
+          "pass": false
+        },
+        {
+          "target": "netstorm_construction_owner_tests",
+          "name": "ClientIce_RegrowthUsesVirtualOwnerOfCurrentRole",
+          "exitCode": 1,
+          "pass": false
+        }
+      ],
+      "seconds": 37.71855974197388,
+      "multiplayerExecutions": 0
+    },
+    "buildHandle": 55994,
+    "testHandle": 55389,
+    "bothHandlesTerminal": true,
+    "newGuiVerification": false,
+    "parentDispatchAccepted": "66/83",
+    "parentDispatchProposed": "70/83",
+    "handoff": "docs/exe/cpp-in-progress-1207-20261109.md"
+  },
+  "movedToArchive": [
+    "1206 기준의 정리 전 전체 인계 원문",
+    "1204/1205 완료 이력과 구 다음 작업 표현",
+    "938의 과거 검사 실패 건수·기준선 및 파일별 집계",
+    "942/1052의 해결된 세부 기록"
+  ],
+  "agentsChangesApplied": {
+    "551d27ae": "CPP/DN/WB 각각의 실행·플레이 가능성과 원본 동일성",
+    "b5197d48": "9차 34건과 B1~B4 유지; 조사·수정 미착수",
+    "3051892a": "루트 README 개요 보호; AGENTS 자체와 원본 파일도 불변"
+  },
+  "verification": {
+    "unchangedProtectedFiles": 2800,
+    "unchangedTrackedFilesOutsideHandoffs": 23693,
+    "unchangedInProgressSourceFiles": 11,
+    "localLinksChecked": 42,
+    "preservedInboundAnchors": [
+      "agents-reflection-20261102",
+      "0-재개-전-확인-사항",
+      "인수인계-문서-임시-분할"
+    ],
+    "utf8AndExistingCrLfPreserved": true,
+    "crlfAwareDiffCheckExit": 0,
+    "startedBuilds": 0,
+    "startedTests": 0,
+    "observedPreexistingTestCompletion": 55389,
+    "gameExecutions": 0,
+    "multiplayerExecutions": 0,
+    "decompilations": 0
+  },
+  "productsPreserved": {
+    "Netstorm.exe": {
+      "bytes": 13831680,
+      "sha256": "d3a6cee1a93e556eaee3f3991dd1f8c60dc4d47ab2fb90d06c2c5de2eeb9260f"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "11614b5f7903ff3bddbe23d3305ac4b7036c00186ca72b868fd0cc818dcb86cb"
+    }
+  },
+  "raw": "extracted/cpp-handoff-review-20261109/"
+}
