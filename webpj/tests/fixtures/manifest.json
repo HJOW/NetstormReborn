@@ -13879,9 +13879,99 @@
       "bytes": 133834,
       "lines": 309,
       "fixtureCommit": "860030e7",
-      "webCommit": "worktree",
+      "webCommit": "93bb8d31",
       "cpppjBasis": {
         "cpppj/src/o/RawDudeDrop.cpp": "860030e7"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E209",
+      "id": "balloon-path",
+      "path": "cpppj/tests/fixtures/balloon-path-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 벌룬 경로 생성자 할당 성공/실패·비행 Init·프레임 0048ad60 의 외부 효과 순서·경로 100080바이트 Adler-32·부모 50바이트 raw·관찰 flags/stamp(688행; 두 x87 정밀도 동일)",
+      "consumers": [
+        "webpj/tests/balloon-path.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-balloon-frame.js",
+        "webpj/www/core/raw-path-runtime.js"
+      ],
+      "doc": "docs/webpj-path-unit-frames-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBalloonFrame.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 688행 전부 사용",
+      "text": true,
+      "sha256": "be32994968c78fb4b3b365cd90e7e8064ff687c62b4f7b3269794f0eef4a5c30",
+      "bytes": 200983,
+      "lines": 689,
+      "fixtureCommit": "6cbb7fdb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBalloonFrame.cpp": "6cbb7fdb"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E209",
+      "id": "bulf-path",
+      "path": "cpppj/tests/fixtures/bulf-path-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 벌프 경로 생성자·프레임 0048b760·회전 helper 0048ba30 의 외부 효과 순서·경로 100080바이트 Adler-32·부모 50바이트 raw·helper 반환값(314행; 두 x87 정밀도 동일)",
+      "consumers": [
+        "webpj/tests/bulf-path.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bulf-frame.js",
+        "webpj/www/core/raw-path-runtime.js"
+      ],
+      "doc": "docs/webpj-path-unit-frames-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBulfFrame.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 314행 전부 사용",
+      "text": true,
+      "sha256": "6f9480d21e45e3fca4de10ead238e4519df4c81eecc135ca621643d3254e9f29",
+      "bytes": 109838,
+      "lines": 315,
+      "fixtureCommit": "fc85f3c9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBulfFrame.cpp": "fc85f3c9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E209",
+      "id": "walker-path",
+      "path": "cpppj/tests/fixtures/walker-path-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 보행 경로 생성자·프레임 0048b080 의 외부 효과 순서·경로 100080바이트 Adler-32·부모 50바이트 raw·윈드 공유 counter(348행; 두 x87 정밀도 동일)",
+      "consumers": [
+        "webpj/tests/walker-path.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-walker-frame.js",
+        "webpj/www/core/raw-path-runtime.js"
+      ],
+      "doc": "docs/webpj-path-unit-frames-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawWalkerFrame.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 348행 전부 사용",
+      "text": true,
+      "sha256": "bf133ee926e5bb99a274285ffaa21465a65859f375944b95919b5907d3790006",
+      "bytes": 132876,
+      "lines": 349,
+      "fixtureCommit": "dc95d35e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawWalkerFrame.cpp": "dc95d35e"
       }
     }
   ]
