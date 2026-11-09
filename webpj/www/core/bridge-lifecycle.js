@@ -4,8 +4,10 @@
 //  - postDestroy(00422300): 일반 다리면 파편 생성 요청 → 낙하 소리(현재 좌표) → 그 칸의 walker(flags2 0x10000) 낙하 → 공통 postDestroy 순서이다.
 //  - delayedFallPayload(00421530/00421f90): 두 _ftol 하위 비트를 합친 signed DWORD 를 float 로 바꾼 낙하 사건(0x2692) 값이다.
 // 삭제·파편·소리·낙하 효과는 호출자 장치(emit)이며, 각 효과 뒤 다음 후보의 현재 TYPE·참조를 다시 읽는다.
-// 근거: cpppj `o/RawBridgeLifecycle.cpp/.h`(5879152b·225f2322), 원본 관측 `cpppj/tests/fixtures/destroy-x86.tsv` Bridge 64행(10.78).
-// 다리 가상 삭제 분배(004220f0, 프레임/Graph 단락)와 CD 10.72 경로는 범위 밖이다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-05 WB04-D2: 공통 삭제기 대조와 함께 추가)
+//  - preDestroyNative(bridge, flags, currentLinkType, hooks): 같은 몸체이되 연결 TYPE 을 값이 아니라 현재 전역 getter 로 받아 각 후보 비교 때마다 다시 읽는다(cpppj PreDestroyNative, 기준선 뒤 712e7224 의 Native 연결). BYTE 슬롯 TYPE 과 전체 DWORD 를 비교한다.
+// 근거: cpppj `o/RawBridgeLifecycle.cpp/.h`(5879152b·225f2322·712e7224), 원본 관측 `cpppj/tests/fixtures/destroy-x86.tsv` Bridge 64행과 `bridgeeffects-x86.tsv`(10.78: Link 882·Pre 840·Post 600·Delay 242·Pack 242).
+// 다리 가상 삭제 분배(가상 표 기록값으로 다리 pre/post 를 고르는 RawSurfaceLifecycle)와 CD 10.72 경로는 이 모듈 밖이다. 이 모듈은 DOM 을 쓰지 않는다.
+// (2026-11-05 WB04-D2: 공통 삭제기 대조와 함께 추가, 2026-11-10 WB04-E247: preDestroyNative 와 bridgeeffects 관측 대조 추가)
 
 // 낙하 처리 사건 번호이다. (2026-11-05 WB04-D2)
 export const BRIDGE_FALL_EVENT = 0x2692;
@@ -111,8 +113,19 @@ export class RawBridgeLifecycle {
         return this.#ordinary(first) && ((this.#object(first)[STATE] | this.#object(second)[STATE]) & DEAD) !== 0;
     }
 
-    // 004221b0: 주변 링크를 원본 탐색 순서로 처리한 뒤 공통 preDestroy 로 간다. 매 후보에서 현재 TYPE·참조를 다시 읽는다.
+    // 004221b0: 주변 링크를 원본 탐색 순서로 처리한 뒤 공통 preDestroy 로 간다. 매 후보에서 현재 TYPE·참조를 다시 읽는다. linkType 은 값(독립 typed 경로)이다.
     preDestroy(bridge, flags, linkType, hooks) {
+        this.#runPreDestroy(bridge, flags, () => linkType, hooks);
+    }
+
+    // 실제 현재 연결 TYPE 전역(getter)을 각 후보 비교에서 다시 읽는 Native 경로이다. 첫 연결 삭제가 전역을 바꾸면 다음 후보는 새 DWORD 로 비교한다. (2026-11-10 WB04-E247)
+    preDestroyNative(bridge, flags, currentLinkType, hooks) {
+        if (typeof currentLinkType !== 'function') throw new TypeError('다리 preDestroy 의 현재 연결 TYPE getter 미연결');
+        this.#runPreDestroy(bridge, flags, currentLinkType, hooks);
+    }
+
+    // typed 값 사본 또는 Native 현재 getter 로 같은 실제 순회 몸체를 실행한다. (2026-11-10 WB04-E247)
+    #runPreDestroy(bridge, flags, readLinkType, hooks) {
         const ordinary = this.#ordinary(bridge);
         validateHooks(hooks, ordinary);
         if (ordinary) {
@@ -121,7 +134,7 @@ export class RawBridgeLifecycle {
             const y = cell(coordinate(raw, Y), AREA_COORDINATE_BIAS);
             // 원본 탐색 순서와 0 종료 표식을 그대로 쓴다.
             for (let current = hooks.begin({ left: x - 1, top: y - 1, right: x + 1, bottom: y + 1 }); current !== 0; current = hooks.next()) {
-                if (this.#object(current)[TYPE] === linkType && this.linkNeedsDestroy(current)) {
+                if (this.#object(current)[TYPE] === readLinkType() && this.linkNeedsDestroy(current)) {
                     hooks.emit({ effect: BRIDGE_LIFECYCLE_EFFECT.destroyLink, sid: current, flags: 0 });
                 }
             }

@@ -15140,7 +15140,7 @@
       "bytes": 760262,
       "lines": 604,
       "fixtureCommit": "2a0963d3",
-      "webCommit": "worktree",
+      "webCommit": "4a9cb1c9",
       "cpppjBasis": {
         "cpppj/src/o/RawBridgeDraw.h": "2a0963d3"
       }
@@ -15170,9 +15170,38 @@
       "bytes": 759044,
       "lines": 601,
       "fixtureCommit": "2a0963d3",
-      "webCommit": "worktree",
+      "webCommit": "4a9cb1c9",
       "cpppjBasis": {
         "cpppj/src/o/RawBridgeDraw.h": "2a0963d3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E247",
+      "id": "bridgeeffects",
+      "path": "cpppj/tests/fixtures/bridgeeffects-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다리 preDestroy/postDestroy 효과 순서·탐색 범위·풀 바이트와 링크 참조 판정, 낙하 좌표 포장 수치 float",
+      "consumers": [
+        "webpj/tests/bridge-lifecycle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/bridge-lifecycle.js"
+      ],
+      "doc": "docs/webpj-bridge-lifecycle-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBridgeLifecycle.cpp"
+      ],
+      "scope": "10.78(originals) Link 882·Pre 840·Post 600·Delay 242·Pack 242행 전부 사용(originalCD·original1037 구간은 범위 밖)",
+      "text": true,
+      "sha256": "cb68d6265d0d71ede7ed96f85e0be3311ebc6f6fec6279442c7607c7ca1ff3f5",
+      "bytes": 607225,
+      "lines": 6171,
+      "fixtureCommit": "9fa82165",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBridgeLifecycle.cpp": "712e7224"
       }
     }
   ]
