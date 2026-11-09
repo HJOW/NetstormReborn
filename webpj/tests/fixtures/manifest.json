@@ -14387,9 +14387,38 @@
       "bytes": 295394,
       "lines": 2058,
       "fixtureCommit": "6a0907de",
-      "webCommit": "worktree",
+      "webCommit": "bc235b95",
       "cpppjBasis": {
         "cpppj/src/o/RawIslandLifecycle.cpp": "6a0907de"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E225",
+      "id": "fort-badges-globals",
+      "path": "cpppj/tests/fixtures/fort-badges-globals-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Badges 전역 장부 CRT 구성(004fcbe0)과 count reset(0047d860). 6160 BYTE 장부의 초기 프로필 0..7(0·0xff·0xa5·증가·감소·곱셈·DWORD 패턴·1..255 순환)과 함수 순서(crt·reset·crt-reset·reset-crt 각 8)에서 적용 뒤 전체 장부(32행)",
+      "consumers": [
+        "webpj/tests/fort-badges-globals.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-badges-globals.js"
+      ],
+      "doc": "docs/webpj-fort-badges-globals-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortBadgesGlobals.cpp"
+      ],
+      "scope": "10.78 32행 전부",
+      "text": true,
+      "sha256": "8e743060a2d555dea66ccadbcbb9075fd0ce8224cddf2e741f8a006dd7b8cf51",
+      "bytes": 399192,
+      "lines": 33,
+      "fixtureCommit": "fa7762f9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortBadgesGlobals.cpp": "fa7762f9"
       }
     }
   ]
