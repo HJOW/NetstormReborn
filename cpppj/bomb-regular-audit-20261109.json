@@ -1,0 +1,531 @@
+{
+  "unit": 1224,
+  "product": 1223,
+  "staticOnly": true,
+  "originalVtables": 16,
+  "currentSessionCommonRegularVtables": 6,
+  "noWorldRegularVtables": 0,
+  "methods": {
+    "+14": {
+      "0041e960": 1,
+      "004b0950": 15
+    },
+    "+18": {
+      "004b0840": 16
+    },
+    "+5c": {
+      "0041e6a0": 16
+    },
+    "+ac": {
+      "0041e660": 16
+    },
+    "+b0": {
+      "00498000": 16
+    },
+    "+b4": {
+      "0041e3c0": 16
+    },
+    "+b8": {
+      "004429e0": 16
+    },
+    "+bc": {
+      "0041e9c0": 1,
+      "0041ebb0": 1,
+      "0041eca0": 1,
+      "0041ecf0": 1,
+      "0041ede0": 1,
+      "0041ef30": 1,
+      "0041f110": 1,
+      "0041f2f0": 1,
+      "0041f3d0": 3,
+      "0041fb60": 1,
+      "0041fcc0": 1,
+      "0041fdb0": 1,
+      "0041fe90": 1,
+      "0041ff20": 1
+    },
+    "+c0": {
+      "0041ea30": 1,
+      "0041ebd0": 1,
+      "0041fc50": 3,
+      "0040b380": 4,
+      "0041f310": 1,
+      "0041f410": 1,
+      "0041f4e0": 1,
+      "0041f650": 1,
+      "0041fdd0": 1,
+      "0041feb0": 1,
+      "0041ff90": 1
+    }
+  },
+  "rows": [
+    {
+      "vtable": "00502370",
+      "types": [
+        {
+          "number": 113,
+          "name": "bombExplodeSmall"
+        },
+        {
+          "number": 114,
+          "name": "bombExplodeMedium"
+        },
+        {
+          "number": 115,
+          "name": "bombExplodeLarge"
+        },
+        {
+          "number": 168,
+          "name": "bombSpecialOne"
+        }
+      ],
+      "methods": {
+        "+14": "0041e960",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041e9c0",
+        "+c0": "0041ea30"
+      },
+      "sessionCommonRegular": true,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    },
+    {
+      "vtable": "00502448",
+      "types": [
+        {
+          "number": 116,
+          "name": "bombHeal"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041ebb0",
+        "+c0": "0041ebd0"
+      },
+      "sessionCommonRegular": false,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    },
+    {
+      "vtable": "00502510",
+      "types": [
+        {
+          "number": 117,
+          "name": "bombInvisible"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041eca0",
+        "+c0": "0041fc50"
+      },
+      "sessionCommonRegular": true,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    },
+    {
+      "vtable": "005025d8",
+      "types": [
+        {
+          "number": 171,
+          "name": "bombTwister"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041ecf0",
+        "+c0": "0040b380"
+      },
+      "sessionCommonRegular": true,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": true
+    },
+    {
+      "vtable": "005026a0",
+      "types": [
+        {
+          "number": 179,
+          "name": "bombIMano"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041ede0",
+        "+c0": "0040b380"
+      },
+      "sessionCommonRegular": false,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": true
+    },
+    {
+      "vtable": "00502778",
+      "types": [
+        {
+          "number": 180,
+          "name": "bombIIMano"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041ef30",
+        "+c0": "0040b380"
+      },
+      "sessionCommonRegular": false,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": true
+    },
+    {
+      "vtable": "00502840",
+      "types": [
+        {
+          "number": 181,
+          "name": "bombIIIMano"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041f110",
+        "+c0": "0040b380"
+      },
+      "sessionCommonRegular": false,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": true
+    },
+    {
+      "vtable": "00502908",
+      "types": [
+        {
+          "number": 175,
+          "name": "bombGraviton"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041f2f0",
+        "+c0": "0041f310"
+      },
+      "sessionCommonRegular": false,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    },
+    {
+      "vtable": "005029d0",
+      "types": [
+        {
+          "number": 183,
+          "name": "bombLightingwave"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041f3d0",
+        "+c0": "0041f410"
+      },
+      "sessionCommonRegular": false,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    },
+    {
+      "vtable": "00502aa8",
+      "types": [
+        {
+          "number": 182,
+          "name": "bombLightingZap"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041f3d0",
+        "+c0": "0041f4e0"
+      },
+      "sessionCommonRegular": false,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    },
+    {
+      "vtable": "00502b70",
+      "types": [
+        {
+          "number": 178,
+          "name": "BOMBmeteor"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041f3d0",
+        "+c0": "0041f650"
+      },
+      "sessionCommonRegular": false,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    },
+    {
+      "vtable": "00502e68",
+      "types": [
+        {
+          "number": 172,
+          "name": "bombIITwister"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041fb60",
+        "+c0": "0041fc50"
+      },
+      "sessionCommonRegular": true,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    },
+    {
+      "vtable": "00502f30",
+      "types": [
+        {
+          "number": 173,
+          "name": "bombIIITwister"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041fcc0",
+        "+c0": "0041fc50"
+      },
+      "sessionCommonRegular": true,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    },
+    {
+      "vtable": "00502ff8",
+      "types": [
+        {
+          "number": 118,
+          "name": "bombParalyze"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041fdb0",
+        "+c0": "0041fdd0"
+      },
+      "sessionCommonRegular": true,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    },
+    {
+      "vtable": "005030c0",
+      "types": [
+        {
+          "number": 119,
+          "name": "bombHardener"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041fe90",
+        "+c0": "0041feb0"
+      },
+      "sessionCommonRegular": false,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    },
+    {
+      "vtable": "00503188",
+      "types": [
+        {
+          "number": 120,
+          "name": "bombTreason"
+        }
+      ],
+      "methods": {
+        "+14": "004b0950",
+        "+18": "004b0840",
+        "+5c": "0041e6a0",
+        "+ac": "0041e660",
+        "+b0": "00498000",
+        "+b4": "0041e3c0",
+        "+b8": "004429e0",
+        "+bc": "0041ff20",
+        "+c0": "0041ff90"
+      },
+      "sessionCommonRegular": false,
+      "noWorldRegular": false,
+      "actualEmptyTargetEffect": false
+    }
+  ],
+  "sourceSha256": {
+    "cpppj/src/o/RawBombRegular.h": "9ef9f94681c6337f31f76dee7b12618525e0242a905d2d369531105c346a8104",
+    "cpppj/src/o/RawBombRegular.cpp": "16cffdf904a26a7443adef08bbd24309606a6f60c12cfeff3725a5b109379232",
+    "cpppj/src/o/RawBombTargets.cpp": "da8267edb1cf835e399ef543354d5cdc018ca95ee3609deaab4b7cc1d8a294f0",
+    "cpppj/src/o/RawBombEffect.cpp": "bc578a1656c90337dbdcf551ed2ece92dceab3c44701c7eb0007dabee0821a09",
+    "cpppj/src/client/RawCampaignDevastation.inc": "729169d6b930222ae27efcce5eb684f8791108910b395dfc9b32744c44618acd",
+    "cpppj/src/client/RawCampaignMeltdown.inc": "b198d4e217ee59e7089c41301cb12d275b1e52021b0c776c16753a54442189c6",
+    "cpppj/src/client/RawCampaignSession.cpp": "0b382184c873d6e20b0970d842072fcdc0e509b76e12bb545d8c4dff498a2ea1",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "b2a7b35bea55f22f1a97f4b88dad512fb9902fd766ea9140ff9da55050573238",
+    "cpppj/src/client/RawSurfaceWorld.h": "4dd997ba39292bdee7bcfa1b21d5760d7a416e3501eaaa1d548e996542e98548",
+    "cpppj/src/o/DerivedConstructors.inc": "fac1a032778ba7e6745476904a13446c36b79625e38c40120195bc009a798b00",
+    "cpppj/src/o/TypeConstructors.inc": "bfac943af8c22cf91a0c267200f3e94133b021f2fe0e02507544978a7e08bd27"
+  },
+  "executableSha256": "7262bc0b76c2a751cb3133821c5dc0138c6d9b13166d7d1569706b30e5d55c91",
+  "originalRequests": 38,
+  "sourceChanges": 0,
+  "multiplayerExecutions": 0,
+  "gameExecutions": 0,
+  "headlessTypeDumpExecutions": 1,
+  "fullM6Complete": false,
+  "originalFullCAndPeFunctions": 33,
+  "independentCMetadataUnavailable": 5,
+  "boundedPeFunctions": [
+    {
+      "entry": "0041e3c0",
+      "bytes": 13,
+      "ending": "external-tail-jump",
+      "lastInstruction": "0041e3c8",
+      "independentC": false,
+      "sha256": "1be88e92e78fa5a558cdacaedc80b50c785a1471a6a658d0c5fee82714e3a167"
+    },
+    {
+      "entry": "0041ebd0",
+      "bytes": 208,
+      "ending": "ret",
+      "lastInstruction": "0041ec9d",
+      "independentC": false,
+      "sha256": "9007365d4390a2c7c0f7c9c6bb678996db56f16d4bbcb0c959c84c0e44d25410"
+    },
+    {
+      "entry": "0041fc50",
+      "bytes": 107,
+      "ending": "ret",
+      "lastInstruction": "0041fcb8",
+      "independentC": false,
+      "sha256": "de35248eed5bd284896c2d2f918ad199ad82e872c72c9af74b53c0b46af3363a"
+    },
+    {
+      "entry": "0041fdd0",
+      "bytes": 188,
+      "ending": "ret",
+      "lastInstruction": "0041fe89",
+      "independentC": false,
+      "sha256": "05edc83120a6be598f3614fde9dad59bf38c7976aa0360087b05ca4caae4b97a"
+    },
+    {
+      "entry": "0041feb0",
+      "bytes": 106,
+      "ending": "ret",
+      "lastInstruction": "0041ff17",
+      "independentC": false,
+      "sha256": "4d2bba38d8a48e22e81aabf188fbe844407bee39524ecad37036a1e0d74a489e"
+    }
+  ],
+  "typeNumbers": 19,
+  "currentSessionCoveredTypeNumbers": 9,
+  "uncoveredSessionVtables": [
+    "00502448",
+    "005026a0",
+    "00502778",
+    "00502840",
+    "00502908",
+    "005029d0",
+    "00502aa8",
+    "00502b70",
+    "005030c0",
+    "00503188"
+  ],
+  "uniqueEligibilityEntries": 14,
+  "uniqueTargetEffectEntries": 11,
+  "productImplementationChanged": false,
+  "regularConnectedVtables": 40,
+  "regularRemainingVtables": 47,
+  "regularRemainingFunctions": 22,
+  "lastClientDecompile": "2026-11-03 / HJOW-Athlon",
+  "lastRootDecompile": "2026-11-07 / HJOW-Athlon",
+  "newDecompilation": 0,
+  "originalPeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236"
+}

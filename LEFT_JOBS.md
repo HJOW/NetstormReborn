@@ -83,7 +83,7 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1223 구현 문서](docs/exe/cpp-content-owner-20261109.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
-**다음 한 단위 — 잔여 Regular:** 기본 Form 삭제의 Content를1223에서 연결했다. 잔여47VT/22함수 중 같은 본문을 공유하는 묶음별로 실제 NoWorld 도달성·현재 전역/TYPE·큰 하위 장치·호출자/해제 수명을 확인하고 연결한다. 우선 큰 공통 BombRegular0041e6a0(16VT)의 원문/장기 owner를 조사한다. 현재 VT의 전용 본문 누락을 base payload/빈 성공으로 대체하지 않는다.
+**다음 한 단위 — 잔여 Regular:** 기본 Form 삭제의 Content를1223에서 연결했다. 잔여47VT/22함수 중 같은 본문을 공유하는 묶음별로 실제 NoWorld 도달성·현재 전역/TYPE·큰 하위 장치·호출자/해제 수명을 확인하고 연결한다. [조사1224](docs/exe/cpp-bomb-regular-audit-20261109.md)에서 BombRegular0041e6a0의16VT/TYPE19개와 +bc14/ +c0 11고유 함수를 확정했다. 현재 Session 공통6VT/TYPE9개·NoWorld0/16이다. 다음은 공통 장기 owner와 기존6VT의 실제 경로부터 연결하고, 미연결10VT의 실제 자격/효과를 순차 복원한다. 공통16분배와 전체 후단 완료를 구별한다. 현재 VT의 전용 본문 누락을 base payload/빈 성공으로 대체하지 않는다.
 
 ### 2.2 다음 구현의 출발점과 유지할 계약
 
@@ -116,7 +116,7 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 | 자산 83+내장 Form 4의 장기 Regular(+5c) | **40/87VT**(base16·Damageable14·고유10) | **47VT / 고유 함수22개**(모두 자산). 같은 함수를 공유하는 VT를 별도 함수 작업으로 중복 계산하지 않는다. |
 | Storage 기본 내장 Form 삭제 분배 | **4/4종 — Process·Depend·Gump·Content** | 기본4종의 알려진 누락0. 큰 AI·다른 배치/Fort 상위 Finish·전수 caller/owner 감사는 별도다. |
 
-정확한 현재 잔여 행은 [1223 보고서](cpppj/content-owner-20261109.json)의 `staticAudit.remainingRows`를 따른다. [1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md)·[당시 87VT JSON](cpppj/no-world-regular-audit-20261109.json)은 **연결 36/87VT·잔여 51VT/26함수인 당시 자료**다. 이후 다리·두 프레임·Content의4VT/4함수를 연결했다. 프로세스 전체 클래스/PID/VT·큰 AI·배치/Fort 상위 Finish·전수 호출자 감사와 M6-l/m은 이 87개 집계 밖에 남는다.
+정확한 현재 잔여 행은 [1223 보고서](cpppj/content-owner-20261109.json)의 `staticAudit.remainingRows`를 따른다. Bomb16VT의 세부 행렬/현재6VT 제한은 [1224 감사](cpppj/bomb-regular-audit-20261109.json)를 따른다.1224는 정적 조사이며 연결 수량 증가는0이다. [1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md)·[당시 87VT JSON](cpppj/no-world-regular-audit-20261109.json)은 **연결 36/87VT·잔여 51VT/26함수인 당시 자료**다. 이후 다리·두 프레임·Content의4VT/4함수를 연결했다. 프로세스 전체 클래스/PID/VT·큰 AI·배치/Fort 상위 Finish·전수 호출자 감사와 M6-l/m은 이 87개 집계 밖에 남는다.
 
 ## 3. M7 독립 5건과 M8 마감
 
@@ -212,6 +212,7 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 | 확인할 범위 | 기준 문서 |
 | --- | --- |
 | 현재 제품·현재 잔여 목록 | [1223 구현 문서](docs/exe/cpp-content-owner-20261109.md)·[보고서](cpppj/content-owner-20261109.json), 원시 `extracted/cpp-resume-1223/` |
+| Bomb Regular 실제 후단/다음 구현 | [1224 조사](docs/exe/cpp-bomb-regular-audit-20261109.md)·[16VT/19TYPE 행렬](cpppj/bomb-regular-audit-20261109.json), 원시 `extracted/cpp-resume-1224/`. 제품1223/연결40·잔여47/22는 그대로다. |
 | M6 전체 잔여와 최초 Regular 조사 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[최초 1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md). 각 문서의 과거 “없음/다음”보다 현행 2절을 우선한다. |
 | 비MP 구현 마감 | [UI 929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit 943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션 956](docs/exe/cpp-mission-state-scope-20261106.md)·[내부 수명 980](docs/exe/cpp-internal-lifetime-closure-20261106.md) |
 | 디컴파일·이식 근거 | [디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md) |
