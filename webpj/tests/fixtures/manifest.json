@@ -14180,9 +14180,38 @@
       "bytes": 11117,
       "lines": 99,
       "fixtureCommit": "5d817c15",
-      "webCommit": "worktree",
+      "webCommit": "038ab3cf",
       "cpppjBasis": {
         "cpppj/src/o/RawProductionSync.cpp": "674e3202"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E217",
+      "id": "factory-research",
+      "path": "cpppj/tests/fixtures/factory-research-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Factory 연구 Learn 32·Input 72·Receive 16·Notice 96의 입력(검색 결과·남은 슬롯·attach flags·kind·수정키·sender·부모 상태/TYPE flags2·권한·내용물 flags/reason/loading)에서 반환·productionDirty 카운터·전체 호출 순서(find·slots·destroy·create·send 16바이트·help/assert 메시지 원문 hex·flare·refresh) 216행",
+      "consumers": [
+        "webpj/tests/factory-research.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-factory-research.js"
+      ],
+      "doc": "docs/webpj-factory-research-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFactoryResearch.cpp"
+      ],
+      "scope": "10.78 216입력 전부",
+      "text": true,
+      "sha256": "d9fb839cef70c799e863d90ddc86d50eaf081b9e8b21a886495ee5af12200c8d",
+      "bytes": 11965,
+      "lines": 217,
+      "fixtureCommit": "7cbcd998",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFactoryResearch.cpp": "7c51717d"
       }
     }
   ]
