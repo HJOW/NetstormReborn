@@ -14898,9 +14898,40 @@
       "bytes": 85928,
       "lines": 347,
       "fixtureCommit": "95f879a0",
-      "webCommit": "worktree",
+      "webCommit": "e3073203",
       "cpppjBasis": {
         "cpppj/src/o/RawTutorialTwo.cpp": "95f879a0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E239",
+      "id": "tutorial-later",
+      "path": "cpppj/tests/fixtures/tutorial-later-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Early Missions 3~6 의 단계 판정(PATCH 004c3f00/004c40f0/004c42b0/004c45e0). 30개 명시 입력(미션 번호·단계·사건 DWORD 셋·생산 목록·사제/Graph/지역/주변/포획 반환·제작 집계·선택·타이머·정지 깊이·재진입 변이 등)에서 게이트 14필드·정지 깊이·하위 호출 순서·반환·옵션 8 BYTE·허용 표·선택·일회성 경고 표식·owner (533개 고유 입력)",
+      "consumers": [
+        "webpj/tests/tutorial-later.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-tutorial-later.js",
+        "webpj/www/core/raw-mission-start.js",
+        "webpj/www/core/raw-total-made.js"
+      ],
+      "doc": "docs/webpj-tutorial-later-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTutorialLater.cpp"
+      ],
+      "scope": "10.78 533개 고유 입력 전부",
+      "text": true,
+      "sha256": "4bf256da853bb6d96518df5f9779249ac1e82d56665d7de699e7f2fc8dbd68c4",
+      "bytes": 126224,
+      "lines": 534,
+      "fixtureCommit": "400aaefb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTutorialLater.cpp": "400aaefb"
       }
     }
   ]
