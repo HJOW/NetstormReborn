@@ -52,6 +52,7 @@ void ClientConstructionGlobals::Bind(std::shared_ptr<RawSurfaceStorage> storage,
     state_.command.chargeBlockedRead=state_.place.chargeBlockedRead=[owner=gameplay_] { return owner->world.missionPost; }; // 소유자는 별도 Client 객체이므로 Gameplay를 보유해도 역참조 순환이 없다.
     state_.confirm.sharedRecorderEnabled=replay_ ? &replay_->playing:nullptr;
     for (auto* diagnostics:{&state_.request.decoderDiagnostics,&state_.confirm.decoderDiagnostics,&state_.place.decoderDiagnostics,&state_.clear.decoderDiagnostics}) *diagnostics=&metadata.geometry.decoderDiagnostics; // 같은 장기 Canon 진단을 모든 원문 소비자가 빌린다.
+    BindPlacementGlobals(); //같은실제게임배치상태만첫결합에서설치하며본체/Player를구성하지않는다.
 }
 // 비교는 조회뿐이며 누락된 Source/World나 새로운 상태를 만들지 않는다.
 bool ClientConstructionGlobals::Matches(const std::shared_ptr<RawSurfaceStorage>& storage,const std::shared_ptr<ClientGameplayGlobals>& gameplay,const std::shared_ptr<ClientBuildReplayGlobals>& replay) const { return storage_ && storage_==storage && gameplay_==gameplay && replay_==replay; }
@@ -102,7 +103,7 @@ RawCampaignConstructionBindings& ClientConstructionGlobals::Body(std::shared_ptr
     effects.presentation.tell=CurrentConstructionDevice(devices_,[](const auto& current) { return current.tell; }); //현재 Client의 같은 Tell/표시 부호화 경계다.
     RawCampaignConstructionGameplay gameplay; //큰 실제 모듈의 선택 위치에서만 짧은 Runtime 대여를 사용한다.
     gameplay.setOwner=CurrentConstructionCall(runtime_,[](const auto& current) { return current.gameplay.setOwner; }); //사제 가상 소유자 분배를 유지한다.
-    gameplay.request.mayPlace=CurrentConstructionCall(runtime_,[](const auto& current) { return current.gameplay.request.mayPlace; }); //현재 전체 MayPlace를 선택한다.
+    gameplay.request.mayPlace=[this](const o::CanonPlacementQuery& query) { return MayPlace(query); }; //같은장기전체배치본체를선택하며Session으로우회하지않는다.
     gameplay.request.displace=CurrentConstructionCall(runtime_,[](const auto& current) { return current.gameplay.request.displace; }); //실제 발자국 밀어내기다.
     gameplay.request.cancel=CurrentConstructionCall(runtime_,[](const auto& current) { return current.gameplay.request.cancel; }); //실패 뒤 실제 DropIsland를 실행한다.
     gameplay.confirm.findBuilder=CurrentConstructionCall(runtime_,[](const auto& current) { return current.gameplay.confirm.findBuilder; }); //현재 실제 Graph 기준점이다.

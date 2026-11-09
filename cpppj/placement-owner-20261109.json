@@ -1,0 +1,239 @@
+{
+  "unit": 1202,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "summary": "전체 게임 MayPlace와 현재 배치 상태·기준점·추가 목록을 같은 장기 Client owner에 연결했다. 실제 너겟 배치 전체는 미완료다.",
+  "sourceSha256": {
+    "cpppj/src/client/ClientConstructionGlobals.h": "16b785dd2de469db19caf8cd007c5eedef4bc687ca8ed36f675e5c45f5693af1",
+    "cpppj/src/client/ClientConstructionGlobals.cpp": "bd9f474be8965e0959f78ce1b1bbed3c8047a676ed8ae9878bca20f2ef6aa45a",
+    "cpppj/src/client/ClientConstructionPlacement.cpp": "c16d70cc033c0888fda88aab51fe9803720d51c4402b20005e75dbc81e2311cc",
+    "cpppj/src/client/CMakeLists.txt": "344f5c0b74611020eb9452a0fc8ffb56a5d92a904d229f7feaf7dee72943dcd6",
+    "cpppj/src/client/RawCampaignSession.cpp": "1a14f0a518a05afae499cffbc77115e2b61c60e8a90f114b5eb4f1c382abbb6f",
+    "cpppj/tests/ConstructionOwnerStateTests.cpp": "270919aad314cff8cb4a137d26dbae5f476e560d99e68d1848b3ba93ad9f9414",
+    "cpppj/tests/CMakeLists.txt": "1b3c39622247208aba5202510ccff8ae5332f294e7b05685dcd330bde92d5477"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13722112,
+      "sha256": "5fb2469df273d4169cbb8bce5a2987e2bb3eb19262f10ed60a83b321de912c8d"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "783d7822d455e2c2f57eb3183cc1887c6d43787837a48233f85edb69e934da7c"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 134.1194610595703,
+    "sourcesUnchanged": true
+  },
+  "tests": {
+    "cases": 117,
+    "passed": 117,
+    "newCases": 3,
+    "adaptedExistingPinCase": 1,
+    "additionalExistingFixtureCases": 3,
+    "groups": {
+      "netstorm_construction_owner_tests": 43,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "multiplayerExecutions": 0
+  },
+  "staticAudit": {
+    "originalFunctionsRequested": 8,
+    "cAndFullMetadataRangeAvailable": 8,
+    "patchInitialDwords": [
+      {
+        "address": "00540414",
+        "role": "graphReady",
+        "bytes": "01000000",
+        "dword": 1
+      },
+      {
+        "address": "00540cb0",
+        "role": "useAlliances",
+        "bytes": "01000000",
+        "dword": 1
+      }
+    ],
+    "assetVtablesCompared": {
+      "patch1078": 83,
+      "cd1072Reference": 68
+    },
+    "assetMetadataSource": "extracted/cpp-resume-1201/asset-vtables.json",
+    "parentRoutesConnected": 57,
+    "dedicatedParentRoutesRemaining": 26,
+    "emptyParentNoticeVtables": 77,
+    "originalExecutions": 0,
+    "multiplayerExecutions": 0,
+    "decompilerSourceChanges": 0,
+    "scope": "PE/표 대조 수치다. 장기 owner/상태/수명은 집중 검사와 실제 GUI 근거를 함께 사용하며 전체 NoWorld 완료를 뜻하지 않는다."
+  },
+  "tutorial4": {
+    "passed": true,
+    "unit": 1202,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1202\\live-tutorial4\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "5fb2469df273d4169cbb8bce5a2987e2bb3eb19262f10ed60a83b321de912c8d",
+    "exeSha256After": "5fb2469df273d4169cbb8bce5a2987e2bb3eb19262f10ed60a83b321de912c8d",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1202\\live-tutorial4\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1202\\live-tutorial4\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.269,
+        "gameTimeAfter": 23.91,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "editor": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0
+  },
+  "protectedFilesUnchanged": 2800,
+  "originalGameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "decompilerSourceChanges": 0,
+  "remainingRuntimeEffects": {
+    "construction": 16,
+    "replenishPlacement": 1
+  },
+  "limitations": [
+    "실제 PlaceBattleNuggets/난수 배치/완료/오벨리스크 생성 PostPop은 현재 Runtime에 남는다.",
+    "57은 Pre/Post 부모 분배 수이며 전체 NoWorld 완료 수가 아니다.",
+    "전용26부모/6통지·다른 Form/Regular·큰 AI와 전수 Caller/owner 감사는 미완료다.",
+    "허용 GUI는 생산/건설 요청·대기·같은 Client Edit 왕복이며 건물 완성/공격/승리/희생/MP/TestBattle 검증이 아니다."
+  ],
+  "raw": "extracted/cpp-resume-1202/"
+}

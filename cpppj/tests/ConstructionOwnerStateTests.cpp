@@ -154,18 +154,18 @@ TEST_CASE(ConstructionOwner_LongBodyBeforeWorldAndPlayerAllocation) {
     CHECK(OwnerRejected([&] { body->GenerateLocalGeysers(); }));CHECK(scene.players->Base()==0 && scene.storage->Generation()==0 && !scene.storage->Borrowed()); //실제 설정 효과가 없으면 Player/생성/방송 전에 명시 실패한다.
 }
 
-// 선택된 큰 MayPlace 콜백의 대여/전체 pin은 외부 owner 반납 뒤에도 예외 복귀까지 살아 있고 다음 대여만 새로 선택한다.
+// 실제큰밀어내기콜백의대여/전체pin은외부owner반납뒤에도예외복귀까지살아있고다음대여만새로선택한다.
 TEST_CASE(ConstructionOwner_LongBodyWeakRuntimePinsSelectedEffectAndRebinds) {
-    LongConstructionScene scene;auto* body=&scene.Body();scene.owner->State().notice.historyCounter=23;
+    LongConstructionScene scene;auto* body=&scene.Body();scene.owner->State().notice.historyCounter=23;scene.storage->GameAux()->MissionSettings()[1]=1;scene.storage->GameAux()->ConstructionDisplaceGenus()=0xffffffffU; //원문의명시강제배치입력뒤실제남은밀어내기효과를선택하며게임프로필은변경하지않는다.
     auto runtime=std::make_shared<ClientConstructionRuntimeBindings>();auto whole=std::make_shared<int>(7);std::weak_ptr<int> wholeWatch=whole;std::weak_ptr<ClientConstructionRuntimeBindings> runtimeWatch=runtime;std::uint32_t calls=0;
     runtime->pin=[wholeWatch]()->std::shared_ptr<void> { auto current=wholeWatch.lock();if (!current) throw std::logic_error("검사의 실제 선택 pin 만료");return current; }; //선택 호출만 실제 외곽 owner를 strong으로 빌린다.
-    runtime->gameplay.request.mayPlace=[&](const CanonPlacementQuery&)->bool {
+    runtime->gameplay.request.displace=[&](float,float,std::uint32_t,std::uint32_t)->bool {
         CHECK(!wholeWatch.expired() && !runtimeWatch.expired());++calls;runtime.reset();whole.reset();CHECK(!wholeWatch.expired() && !runtimeWatch.expired());throw std::runtime_error("선택 배치의 원래 실패"); //Player/패킷/실제 생성에 들어가기 전 큰 효과의 예외 경계를 확인한다.
     };
     scene.owner->BindRuntime(runtime);auto other=std::make_shared<ClientConstructionRuntimeBindings>();CHECK(OwnerRejected([&] { scene.owner->BindRuntime(other); }));
     bool failed=false;try { static_cast<void>(body->Request({75,1,20,21})); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="선택 배치의 원래 실패"; }
     CHECK(failed && calls==1 && wholeWatch.expired() && runtimeWatch.expired() && scene.players->Base()==0);
-    other->gameplay.request.mayPlace=[&](const CanonPlacementQuery&)->bool { ++calls;throw std::runtime_error("다음 배치의 원래 실패"); }; //반납된 Session 콜백을 다시 실행하지 않는다.
+    other->gameplay.request.displace=[&](float,float,std::uint32_t,std::uint32_t)->bool { ++calls;throw std::runtime_error("다음 배치의 원래 실패"); }; //반납된Session콜백을다시실행하지않고같은원래실패/수명단언을유지한다.
     scene.owner->BindRuntime(other);failed=false;try { static_cast<void>(body->Request({75,1,20,21})); }catch (const std::runtime_error& error) { failed=std::string_view(error.what())=="다음 배치의 원래 실패"; }
     CHECK(failed && calls==2 && &scene.Body()==body && scene.owner->State().notice.historyCounter==23 && scene.players->Base()==0 && !scene.storage->Borrowed());other.reset();CHECK(OwnerRejected([&] { static_cast<void>(body->Request({75,1,20,21})); }));
 }
@@ -232,4 +232,25 @@ TEST_CASE(ConstructionOwner_ReplenishBoundsAndActualPlacementPin) {
     if (areas.size()==2) CHECK(areas[1].left==areas[0].left-16 && areas[1].top==areas[0].top-16 && areas[1].right==areas[0].right+16 && areas[1].bottom==areas[0].bottom+16);
     fail=true;bool thrown{};try { scene.owner->ReplenishNuggets(); }catch (const std::runtime_error& error) { thrown=std::string_view(error.what())=="선택한 실제 보충 배치 실패"; }
     CHECK(thrown && watch.expired() && &scene.owner->Body()==body && areas.size()==3);CHECK(OwnerRejected([&] { scene.owner->ReplenishNuggets(); }));CHECK(scene.players->Base()==0 && scene.storage->Generation()==0 && !scene.storage->Borrowed());
+}
+
+// 실제전체MayPlace는World/Runtime/Player할당없이같은공간에서판정하고Session콜백을선택하지않는다.
+TEST_CASE(ConstructionOwner_PlacementBeforeWorldAndPlayerUsesFullBody) {
+    LongConstructionScene scene;scene.owner->BindBacking(scene.sp,scene.players,scene.gameplay->BattleOptionsOwner());std::uint32_t borrowed{};auto runtime=std::make_shared<ClientConstructionRuntimeBindings>();runtime->gameplay.request.mayPlace=[&](const auto&)->bool { ++borrowed;throw std::logic_error("장기 MayPlace의 Session 우회"); };scene.owner->BindRuntime(runtime);
+    const auto seed=scene.random->Game().State();CHECK(!scene.owner->MayPlace({75,0,128,128,0,1,0}));auto* pipeline=&scene.owner->PlacementPipeline();runtime.reset();CHECK(!scene.owner->MayPlace({75,0,128,128,0,1,0}));
+    CHECK(&scene.owner->PlacementPipeline()==pipeline && borrowed==0 && scene.players->Base()==0 && !scene.storage->Borrowed() && scene.storage->Generation()==0 && scene.random->Game().State()==seed);CHECK(OwnerRejected([&] { static_cast<void>(scene.owner->Body()); }));
+}
+
+// 현재Player/방향동맹/editor/Graph/TYPE와강제배치DWORD를실제owner에서다시읽는다.
+TEST_CASE(ConstructionOwner_PlacementReadsCurrentGlobalsAndAlliances) {
+    LongConstructionScene scene;scene.owner->BindBacking(scene.sp,scene.players,scene.gameplay->BattleOptionsOwner());scene.storage->GameAux()->MissionSettings()[1]=0x80000000U;scene.gameplay->player.battleOwner=0x80000001U;scene.gameplay->world.editor=0x10001U;scene.owner->PlacementAnchor().graphReady=9;scene.players->Alliances()[11]=0xfedcba98U;scene.storage->GameAux()->PuzzlePieceType()=108;
+    scene.owner->PlacementState().placement.blockedRelation=0xabcdef01U;CHECK(scene.owner->MayPlace({75,0,128,128,0,1,0}));auto& state=scene.owner->PlacementState();CHECK(state.placement.blockedRelation==0 && state.placement.localPlayer==std::bit_cast<std::int32_t>(0x80000001U));CHECK(state.permission.editor==0x10001U && state.permission.graphReady==9 && state.permission.alliances[11]==0xfedcba98U && state.geometry.patternTypes[0]==108);
+    scene.gameplay->world.editor=0;scene.players->Alliances()[11]=7;scene.owner->PlacementAnchor().graphReady=0;CHECK(scene.owner->MayPlace({75,0,128,128,0,1,0}));CHECK(state.permission.editor==0 && state.permission.graphReady==0 && state.permission.alliances[11]==7 && scene.players->Base()==0);
+}
+
+// 같은Client재결합에서실제배치본체/현재상태/추가목록을재생성하거나초기화하지않는다.
+TEST_CASE(ConstructionOwner_PlacementRebindPreservesActualStateAndLifetime) {
+    LongConstructionScene scene;auto* pipeline=&scene.owner->PlacementPipeline();auto* state=&scene.owner->PlacementState();auto* anchor=&scene.owner->PlacementAnchor();auto* additional=&scene.owner->PlacementAdditional();state->permission.useAlliances=7;anchor->graphReady=9;additional->entries={123};additional->count=1;
+    scene.owner->Bind(scene.storage,scene.gameplay,{});CHECK(&scene.owner->PlacementPipeline()==pipeline && &scene.owner->PlacementState()==state && &scene.owner->PlacementAnchor()==anchor && &scene.owner->PlacementAdditional()==additional);CHECK(state->permission.useAlliances==7 && anchor->graphReady==9 && additional->count==1 && additional->entries[0]==123);
+    std::weak_ptr<RawSurfaceStorage> storage=scene.storage;std::weak_ptr<ClientGameplayGlobals> gameplay=scene.gameplay;scene.storage.reset();scene.gameplay.reset();CHECK(!storage.expired() && !gameplay.expired());scene.owner.reset();CHECK(storage.expired() && gameplay.expired());
 }

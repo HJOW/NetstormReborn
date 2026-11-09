@@ -693,11 +693,11 @@ struct RawCampaignSession::Impl {
         {0x541244,123},{0x541248,124},{0x54124c,125},{0x541258,128},{0x541264,131},{0x541268,132},{0x54126c,133},{0x541288,140},{0x54128c,141},{0x5412ec,165}}; // 보호PE의 현재 TYPE 전역이다. Early2와 공유하는71/85는 기존 저장소에서 읽는다.
     std::uint32_t tutorialContainedCommand{0x030000b1U},tutorialTechnologyCommand{0x020000b5U},tutorialCaptureCommand{0x020000d7U},tutorialAscendCommand{0x020000dfU}; // 보호PE5429b8/5429c8/542a50/542a70의 실제 큐 사건이다.
     std::unique_ptr<RawCampaignAssetBindings> assetBindings; // 실제 저장 건물 후처리와 Gun/Regular다.
-    CanonPlacementPipelineState gameplayPlacement; // 생성용 지형 판정과 구별한 실제 요청/커서의 현재 모드·방향 동맹이다.
+    CanonPlacementPipelineState localGameplayPlacement;CanonPlacementPipelineState& gameplayPlacement{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->PlacementState():localGameplayPlacement}; //Native는같은장기커서/요청상태를빌리고독립typed만지역상태를소유한다.
     std::array<CanonPlacementIslandRegion,100> gameplayRegions{}; // 같은 원본32바이트 섬 기록의 현재 제한/존재 view다.
-    std::unique_ptr<RawCanonPlacementPipeline> gameplayPipeline; // 같은 풀/표면/원본 자산으로 전체 실제 MayPlace를 실행한다.
+    std::unique_ptr<RawCanonPlacementPipeline> localGameplayPipeline;RawCanonPlacementPipeline* gameplayPipeline{}; //Native전체배치본체는장기owner를빌리고독립typed만지역본체를소유한다.
     CanonPlacementPipelineState placement; // 실제 공간/기하/지형 허용 상태다.
-    SquidPostPopList additional; // 기존 pipeline이 읽는 실제 추가 목록이다.
+    SquidPostPopList localAdditional;SquidPostPopList& additional{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->PlacementAdditional():localAdditional}; //Native기준점/생성/게임파이프라인이같은장기추가목록을사용한다.
     ContainedFinderState& contentFinder{gameplayGlobals->finder}; // 초기/현재 생산 UI와 같은 검색 전역이다.
     PriestMenuState priestMenu; // 원본 사제 메뉴의 타입/명령·특수 모드 전역을 같은 Session에서 소유한다.
     SquidPostPopList constructionExcludedTypes; // 0052f7e0의 초기 빈 TYPE 목록이며 additional의 SID 목록과 다르다.
@@ -874,7 +874,7 @@ struct RawCampaignSession::Impl {
     std::span<std::uint8_t> sunAviaryPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedSunAviaryPacket)};bool writingSunAviary{}; // 현재 writer/송신이 공유하는 패킷과 분배 표식이다.
     std::array<std::uint8_t,64> localHandle{};std::array<std::uint8_t,64>& handle{services.subscriberGlobals ? services.subscriberGlobals->Handle():localHandle}; // 실제 Client는 같은 장기PTR00540ca8을 빌리고 독립 Session만 기존 지역64BYTE를 소유한다.
     std::unique_ptr<RawCampaignWorldRuntime> runtime; // 위 실제 하위를 단일 캠페인 부모에 연결한다.
-    PlayerPlacementAnchorState anchorState; // 현재 같은 Graph의 배치/도착 조회 전역이다.
+    PlayerPlacementAnchorState localAnchorState;PlayerPlacementAnchorState& anchorState{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->PlacementAnchor():localAnchorState}; //Native배치/도착조회는같은장기Graph/기준점전역을공유한다.
     std::unique_ptr<RawPlayerPlacementAnchor> anchor; // 같은 hash0/장부를 직접 읽는 getter다.
     RawCampaignMotionState motionState; // 실제 Halt/Arrival/cleanup/BFS의 현재 상태다.
     std::uint32_t& geyserType{gameplayGlobals->GeyserType()}; // 실제 현재 간헐천 자산 전역이다.
@@ -1073,7 +1073,7 @@ struct RawCampaignSession::Impl {
         if (localHp) hp.BindHitPointDiagnostics([assertion=services.ai.assertion](auto expression,auto,auto line) { if (!assertion) throw std::logic_error("보상 TYPE HP 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }); // 같은 현재 checking과 장기 TYPE/약화 주소를 사용하는 기존 HP 소비자에 Client 진단 복귀를 연결한다.
         core.building.BindNotifyDiagnostics(RawCheckingFlag{gameplayGlobals->AiDebug().Checking()},[assertion=services.ai.assertion](auto expression,auto,auto) { if (!assertion) throw std::logic_error("지면 통지 실제 진단 장치 미연결");assertion(expression); }); // 같은 현재 checking owner와 Session보다 오래 보관할 수 있는 실제 서비스 callable만 빌린다.
         core.graph.BindDiagnostics({RawCheckingFlag{gameplayGlobals->AiDebug().Checking()},[this](auto expression,auto,auto line) { if (!services.ai.assertion) throw std::logic_error("Graph 참조 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }}); // 독립 Session도 같은 현재 owner/서비스를 쓰며 Validate 계획에는 진단을 섞지 않는다.
-        anchorState.graphAssertion=[this](auto expression,auto,auto line) { if (!services.ai.assertion) throw std::logic_error("Graph SID 조회 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; // 현재 상태의 복사본도 같은 장기 Session 서비스를 매 호출 읽는다.
+        if (!world.Storage()->UsesNativeTransmissionDevices()) anchorState.graphAssertion=[this](auto expression,auto,auto line) { if (!services.ai.assertion) throw std::logic_error("Graph SID 조회 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; //Native는같은장기Client진단을유지하고독립typed만기존Session장치를쓴다.
         placement.anchor.graphAssertion=anchorState.graphAssertion; // 지형 생성용 고정 파이프라인도 같은 현재 진단을 빌리며 gameplay 쪽은 매 요청 anchorState 전체를 복사한다.
         assetState.sharedAuthority=gameplayGlobals->Authority().get();gunState.sharedAuthority=gameplayGlobals->Authority().get();regularState.sharedAuthority=gameplayGlobals->Authority().get(); // 첫 파생 모듈 전에 같은 owner를 연결하며 준비된false를 true로 덮지 않는다.
         assetState.inBattle=true;assetState.localOwner=services.installMode==CampaignInstallMode::GeneralBattle || services.installMode==CampaignInstallMode::MetaMap ? static_cast<std::uint8_t>(playerState.battleOwner) : 1;
@@ -3371,12 +3371,15 @@ struct RawCampaignSession::Impl {
     }
     // 생성용 임의 동맹 표와 구별한 현재 게임 배치 파이프라인을 한 번 구성한다.
     void ConnectGameplayPlacement() {
-        if (gameplayPipeline) throw std::logic_error("실제 게임 배치 중복 연결");gameplayPlacement.geometry=metadata.geometry;
+        if (gameplayPipeline) throw std::logic_error("실제 게임 배치 중복 연결");
+        if (world.Storage()->UsesNativeTransmissionDevices()) { gameplayPipeline=&services.constructionGlobals->PlacementPipeline();return; } //새Native파이프라인/상태를만들거나초기값을재설치하지않는다.
+        gameplayPlacement.geometry=metadata.geometry;
         gameplayPlacement.permission.useAlliances=1; // 실제540cb0의 PE 초기 DWORD는1이다. 이후에도 같은 장기 상태를 읽는다.
-        gameplayPipeline=std::make_unique<RawCanonPlacementPipeline>(core.pool,core.hash,CanonPlacementPipelineData{core.types,metadata.frames,core.shapes,metadata.hotspots,core.spots,core.hash.Entries(0),gameplayRegions},core.bookkeeping,additional,contentFinder,gameplayPlacement);
+        localGameplayPipeline=std::make_unique<RawCanonPlacementPipeline>(core.pool,core.hash,CanonPlacementPipelineData{core.types,metadata.frames,core.shapes,metadata.hotspots,core.spots,core.hash.Entries(0),gameplayRegions},core.bookkeeping,additional,contentFinder,gameplayPlacement);gameplayPipeline=localGameplayPipeline.get();
     }
     // 현재 Player/실제 방향 동맹/Graph와 IslandList를 요청 직전에 원본 소비 위치로 공급한다.
     bool MayPlaceGameplay(const CanonPlacementQuery& query) {
+        if (world.Storage()->UsesNativeTransmissionDevices()) return services.constructionGlobals->MayPlace(query); //현재원문입력과전체본체를World없는같은장기owner에서선택한다.
         if (!gameplayPipeline) throw std::logic_error("게임 요청의 전체 MayPlace 미설치");
         gameplayPlacement.placement.localPlayer=std::bit_cast<std::int32_t>(playerState.battleOwner);gameplayPlacement.permission.editor=globals.editor;
         gameplayPlacement.permission.graphReady=anchorState.graphReady;gameplayPlacement.permission.alliances=alliances;gameplayPlacement.anchor=anchorState;

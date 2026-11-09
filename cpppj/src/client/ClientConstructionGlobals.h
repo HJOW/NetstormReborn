@@ -1,6 +1,7 @@
 // Client의 실제 건설 상태와 그 raw 참조가 빌리는 장기 owner를 함께 유지한다.
 #pragma once
 #include "client/RawCampaignConstructionBindings.h"
+#include "o/RawCanonPlacementPipeline.h" //현재게임배치의상태/부모를같은Client수명에보유한다.
 
 namespace netstorm::client { // Session 상태를 복제하지 않고 같은 Client 저장소에 결합한다.
 class ClientGameplayGlobals; // 현재 Player/카메라/미션 전역의 실제 owner다.
@@ -41,9 +42,15 @@ public:
     void BindRuntime(const std::shared_ptr<ClientConstructionRuntimeBindings>& runtime); //실제 현재 대여만 약하게 공개하고 중복된 살아 있는 대여는 거부한다.
     void BindBacking(std::shared_ptr<ClientSpGlobals> sp,std::shared_ptr<ClientPlayerRecords> players,std::shared_ptr<std::array<std::uint8_t,87>> options); //최초메뉴전실제backing만보유하고SP/Player/Bounds를조회하지않는다.
     void ReplenishNuggets(); //현재권한/모드관문뒤에만같은장기Bounds와선택된실제배치를사용한다.
+    o::CanonPlacementPipelineState& PlacementState(); //커서/요청과같은현재배치상태를빌리며Session사본을만들지않는다.
+    o::PlayerPlacementAnchorState& PlacementAnchor(); //같은현재Graph/전체덱/기준점상태를공유한다.
+    o::SquidPostPopList& PlacementAdditional(); //같은원문추가후보목록을다른조회기와공유한다.
+    o::RawCanonPlacementPipeline& PlacementPipeline(); //현재장기Pool/공간/Canon/상태로완전한배치본체를한번구성한다.
+    bool MayPlace(const o::CanonPlacementQuery& query); //실제현재Player/동맹/섬/모드를읽어전체배치판정을실행한다.
     RawCampaignConstructionBindings& Body(std::shared_ptr<ClientSpGlobals> sp,std::shared_ptr<ClientPlayerRecords> players,std::shared_ptr<std::array<std::uint8_t,87>> options); //같은 장기 물리/현재 Player getter로 본체를 한 번 구성하며 World를 만들지 않는다.
     RawCampaignConstructionBindings& Body(); //이미 구성한 장기 본체를 빌리며 Session 반납 뒤에도 주소/상태를 보존한다.
 private:
+    void BindPlacementGlobals(); //최초장기결합에서원문초기값과현재전역주소만연결한다.
     std::shared_ptr<RawSurfaceStorage> storage_; // 상태의 TYPE/모드/Canon raw 참조보다 오래 유지한다.
     std::shared_ptr<ClientGameplayGlobals> gameplay_; // Player/카메라/미션 raw 참조의 실제 owner다.
     std::shared_ptr<ClientBuildReplayGlobals> replay_; // 선택적 재생 raw DWORD 참조의 수명을 보증한다.
@@ -53,6 +60,12 @@ private:
     std::weak_ptr<const ClientConstructionRuntimeBindings> runtime_; //큰 Session 효과를 반납 뒤 보유하지 않으며 새 실제 대여로 교체할 수 있다.
     std::shared_ptr<const ClientConstructionDevices> devices_; //선택된 호출은 자기 집합/함수 사본을 보유하고 다음 호출만 새 장치를 조회한다.
     RawCampaignConstructionState state_; //현재 값과 raw 참조는 본체보다 오래 유지하고 앞의 실제 backing보다 먼저 반납한다.
+    o::CanonPlacementPipelineState placementState_; //원문미리보기/충돌/권한/거부값을커서와같은주소에서유지한다.
+    o::PlayerPlacementAnchorState placementAnchor_; //현재기준점/Graph조회의실제장기상태다.
+    o::SquidPostPopList placementAdditional_; //기본작업장목록과구별한원문추가목록이다.
+    std::array<o::CanonPlacementIslandRegion,100> placementRegions_{}; //같은3204BYTE섬기록의현재제한/존재view다.
+    bool placementBound_{}; //초기값을한번만설치하며Session재진입에서다시쓰지않는다.
     std::unique_ptr<RawCampaignConstructionBindings> body_; //전체 건설/Bounds/최근 목록 본체를 Client 수명에 보유하고 State/backing보다 먼저 반납한다.
+    std::unique_ptr<o::RawCanonPlacementPipeline> placementPipeline_; //같은상태/물리보다먼저반납하며World/Session을캡처하지않는다.
 };
 }
