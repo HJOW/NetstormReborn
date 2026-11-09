@@ -9,6 +9,8 @@
 #include "o/RawCanonPlacementCollision.h"
 #include "o/ConfigInterface.h" //NoWorld 장치가 같은 실제 Config의 현재값/fallback을 읽는지 확인한다.
 #include <iostream> //실제선택경계의최초실패를조건별값과함께기록한다.
+#include "o/RawBuriedPostPop.h" //실제장기후처리의공통깊이/두Host사건을검사한다.
+#include "o/RawBuriedRegular.h" //현재Native프레임/난수와같은장기본문을직접대조한다.
 
 using namespace netstorm::client;
 using namespace netstorm::o;
@@ -140,6 +142,7 @@ struct LongConstructionScene {
         storage->BindRewardDevices({std::shared_ptr<ScrambledSpStore>(sp,&sp->Store()),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->world.editor),OwnerForbidden<void>(),OwnerForbidden<void,std::uint32_t,std::int32_t>()});
         storage->BindPostPopDevices({OwnerForbidden<void,std::uint32_t,Sid,bool>(),[current=gameplay] { return current->player.battleOwner; },OwnerForbidden<void>()});
         storage->BindDeletionDevices({OwnerForbidden<void,std::uint32_t,std::uint32_t,std::uint32_t>(),OwnerForbidden<void,Sid>()});owner->Bind(storage,gameplay,{});owner->BindDevices(OwnerClientDevices());owner->BindRandom(random); //같은난수를결합만하며첫값을보존한다.
+        storage->BindBuriedResource(std::shared_ptr<GameRandom>(random,&random->Game()),[weak=std::weak_ptr<ClientConstructionGlobals>(owner)](auto value) { const auto current=weak.lock();if (!current) throw std::logic_error("검사의 실제 보상 owner 반납 뒤 선택");return current->GemReward().Choose(value); }); //실제Client와같은약한보상owner/동일난수alias를사용한다.
     }
     RawCampaignConstructionBindings& Body() { return owner->Body(sp,players,gameplay->BattleOptionsOwner()); } //동일 실제 backing만 전달하며 현재 Player를 조회하지 않는다.
 };
@@ -217,22 +220,12 @@ TEST_CASE(ConstructionOwner_ReplenishBackingBeforeBodyRetainsIdentity) {
     auto other=std::make_shared<ClientPlayerRecords>();CHECK(OwnerRejected([&] { scene.owner->BindBacking(scene.sp,other,scene.gameplay->BattleOptionsOwner()); }));std::weak_ptr<ClientPlayerRecords> watch=scene.players;scene.players.reset();CHECK(!watch.expired());scene.owner.reset();CHECK(watch.expired());
 }
 
-namespace { // 실제선택된배치효과와그효과를소유한외곽수명을함께모델링한다.
-// 콜백몸체를포함한실제검사런타임을소유해외곽pin의반납순서를검사한다.
-struct ReplenishRuntimeOwner {
-    std::shared_ptr<ClientConstructionRuntimeBindings> binding{std::make_shared<ClientConstructionRuntimeBindings>()}; //실제함수몸체를소유하며Global에서는weak로만빌린다.
-};
-}
-
-// 같은현재Bounds/여백을다시읽고배치호출중외곽owner반납·예외에도실제선택수명을유지한다.
-TEST_CASE(ConstructionOwner_ReplenishBoundsAndActualPlacementPin) {
-    LongConstructionScene scene;scene.owner->BindBacking(scene.sp,scene.players,scene.gameplay->BattleOptionsOwner());scene.gameplay->Boss()=true;scene.gameplay->world.missionPost=false;scene.storage->ownerMode.fort=false;scene.gameplay->world.editor=0;scene.storage->chunks.At(0,0).island=0;scene.storage->chunks.At(0,0).record={0,0,0,0,0,0};
-    auto whole=std::make_shared<ReplenishRuntimeOwner>();std::weak_ptr<ReplenishRuntimeOwner> watch=whole;whole->binding->pin=[watch]()->std::shared_ptr<void> { return watch.lock(); };std::vector<FortRandomRectangle> areas;bool fail{};
-    whole->binding->replenishPlacement=[&](auto area,auto quantity) { CHECK(quantity==1 && !watch.expired());areas.push_back(area);if (fail) { whole.reset();CHECK(!watch.expired());throw std::runtime_error("선택한 실제 보충 배치 실패"); } };scene.owner->BindRuntime(whole->binding);
-    scene.owner->ReplenishNuggets();auto* body=&scene.owner->Body();scene.storage->GameAux()->WorldGeyserMargin()+=1;scene.owner->ReplenishNuggets();CHECK(areas.size()==2);
-    if (areas.size()==2) CHECK(areas[1].left==areas[0].left-16 && areas[1].top==areas[0].top-16 && areas[1].right==areas[0].right+16 && areas[1].bottom==areas[0].bottom+16);
-    fail=true;bool thrown{};try { scene.owner->ReplenishNuggets(); }catch (const std::runtime_error& error) { thrown=std::string_view(error.what())=="선택한 실제 보충 배치 실패"; }
-    CHECK(thrown && watch.expired() && &scene.owner->Body()==body && areas.size()==3);CHECK(OwnerRejected([&] { scene.owner->ReplenishNuggets(); }));CHECK(scene.players->Base()==0 && scene.storage->Generation()==0 && !scene.storage->Borrowed());
+// 보충의실제Bounds/배치부모는현재Runtime이없거나반납돼도동작하고대여pin을선택하지않는다.
+TEST_CASE(ConstructionOwner_ReplenishUsesLongParentWithoutRuntime) {
+    LongConstructionScene scene;scene.owner->BindBacking(scene.sp,scene.players,scene.gameplay->BattleOptionsOwner());scene.gameplay->Boss()=true;scene.gameplay->world.missionPost=false;scene.storage->ownerMode.fort=false;scene.gameplay->world.editor=0;scene.storage->chunks.At(0,0).island=0;scene.storage->chunks.At(0,0).record={0,0,0,0,0,0};std::uint32_t clocks{};const auto seed=scene.random->Game().State();
+    auto devices=OwnerClientDevices();devices.wallSeconds=[&] { ++clocks;return 7.0; };scene.owner->BindDevices(std::move(devices));scene.owner->ReplenishNuggets();auto* body=&scene.owner->Body();
+    auto runtime=std::make_shared<ClientConstructionRuntimeBindings>();runtime->pin=OwnerForbidden<std::shared_ptr<void>>();scene.owner->BindRuntime(runtime);scene.storage->GameAux()->WorldGeyserMargin()+=1;scene.owner->ReplenishNuggets();runtime.reset();scene.owner->ReplenishNuggets();
+    CHECK(clocks==3 && &scene.owner->Body()==body && scene.random->Game().State()==seed && scene.players->Base()==0 && scene.storage->Generation()==0 && !scene.storage->Borrowed());scene.owner->ReleaseDevices();CHECK(OwnerRejected([&] { scene.owner->ReplenishNuggets(); }));CHECK(clocks==3);
 }
 
 // 실제전체MayPlace는World/Runtime/Player할당없이같은공간에서판정하고Session콜백을선택하지않는다.
@@ -307,4 +300,58 @@ TEST_CASE(ConstructionOwner_IslandGettersReadCurrentRecordsAfterDiagnostic) {
     const auto bounds=RawIslandBounds(storage.records,0,[&] { ++diagnostics;put(20,0x80000000U);put(24,0x3f800001U);put(28,0x7fc12345U);put(32,0xff800000U); });
     CHECK(diagnostics==2 && std::bit_cast<std::uint32_t>(bounds.left)==0x80000000U && std::bit_cast<std::uint32_t>(bounds.top)==0x3f800001U && std::bit_cast<std::uint32_t>(bounds.right)==0x7fc12345U && std::bit_cast<std::uint32_t>(bounds.bottom)==0xff800000U);
     CHECK(RawIslandOwner(storage.records,-1,[&] { ++diagnostics; })==0);CHECK(OwnerRejected([&] { static_cast<void>(RawIslandBounds(storage.records,-1,[&] { ++diagnostics; })); }));CHECK(diagnostics==4);
+}
+
+namespace { //실제Deck/Host/공통후처리를관측하고외부AI/UI결과는만들지않는다.
+// 실제슬롯의네BYTE만조합하며검사용공개제품API를추가하지않는다.
+std::uint32_t OwnerReadDword(std::span<const std::uint8_t> raw,std::size_t offset) { std::uint32_t result{};for (std::size_t i=0;i<4;++i) result|=std::uint32_t(raw[offset+i])<<(8*i);return result; } //현재little endian필드를그대로읽는다.
+// 실제표의공중3종외유효후보하나만남겨현재제외목록공유를확인한다.
+std::uint32_t OwnerGemCandidate(LongConstructionScene& scene) {
+    std::uint32_t chosen{};for (std::uint32_t type=70;type<scene.storage->types.size();++type) { const auto& record=scene.storage->types[type];if (type!=73 && type!=138 && type!=144 && (record.flags2&0x100U) && record.level>=0 && record.level<=3) { chosen=type;break; } } //실제로딩한TYPE의첫유효후보를입력으로고른다.
+    CHECK(chosen>=70);auto& excluded=scene.owner->ConstructionExcludedTypes();excluded.entries.clear();for (std::uint32_t type=0;type<188;++type) if (type!=chosen) excluded.entries.push_back(type);excluded.count=static_cast<std::uint32_t>(excluded.entries.size()); //제외목록은원문의BYTE항목이며단일후보의결과만예측한다.
+    return chosen;
+}
+struct OwnerBuriedObservation { std::uint32_t ai{},selection{},dirty{}; }; //외부통지의실제호출수이며성공표식으로사용하지않는다.
+// 원문공통부모의AI/UI선택과실제표시무효화인자를기록한다.송신은계속금지한다.
+void OwnerObserveBuried(LongConstructionScene& scene,OwnerBuriedObservation& observed) {
+    scene.storage->BindPostPopDevices({[&](auto owner,auto sid,auto added) { CHECK(owner==0 && sid.value!=0 && added);++observed.ai; },[current=scene.gameplay] { return current->player.battleOwner; },[&] { ++observed.selection; }});
+    scene.storage->BindProcessDevices({[current=scene.gameplay] { return current->selection.selected; },[current=scene.gameplay] { current->selection.selected=0; }}); //실제선택DWORD를공통Form정리도사용한다.
+    RawSurfaceDisplayBindings display;display.view=[] { return SquidDisplayView{1536,1024,65536,{0,0,1024,768}}; };display.suppressed=[] { return false; };display.invalidate=[&](auto,std::uint32_t) { ++observed.dirty; };scene.storage->BindDisplayDevices(std::move(display));
+}
+}
+
+// 실제Deck과현재장치/제외목록은World/Player/Runtime없이같은난수owner로동작한다.
+TEST_CASE(ConstructionOwner_GemDeckBeforeWorldReadsCurrentDevicesAndExclusions) {
+    LongConstructionScene scene;const auto expected=OwnerGemCandidate(scene);std::uint32_t fills{},clocks{};auto next=OwnerClientDevices();next.allocationBytes=[&](auto bytes) { ++fills;std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x5a}); };next.wallSeconds=[&] { ++clocks;return 13.0; };
+    auto first=OwnerClientDevices();first.allocationBytes=[&](auto bytes) { ++fills;std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa5});scene.owner->BindDevices(next); };scene.owner->BindDevices(std::move(first));auto* gem=&scene.owner->GemReward();
+    CHECK(gem->Choose()==expected && fills==1 && clocks==1);CHECK(gem->Choose()==expected && fills==2 && clocks==2);auto* excluded=&scene.owner->ConstructionExcludedTypes();scene.owner->Bind(scene.storage,scene.gameplay,{});
+    CHECK(&scene.owner->GemReward()==gem && &scene.owner->ConstructionExcludedTypes()==excluded && excluded->count==187 && scene.players->Base()==0 && !scene.players->Initialized() && !scene.storage->Borrowed() && scene.storage->Generation()==0);CHECK(OwnerRejected([&] { static_cast<void>(scene.owner->Body()); }));scene.owner->ReleaseDevices();CHECK(OwnerRejected([&] { gem->Choose(); }));
+}
+
+// 현재TYPE개수/제외목록뒤빈Deck진단은같은실제Client문구/소스/행을거쳐정상복귀한다.
+TEST_CASE(ConstructionOwner_GemEmptyDeckUsesActualLongDiagnostic) {
+    LongConstructionScene scene;scene.owner->GemState().typeCount=0;auto devices=OwnerClientDevices();devices.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xab}); };scene.owner->BindDevices(std::move(devices));std::optional<std::string> detail;std::uint32_t diagnostics{};
+    scene.storage->BindDisplayDiagnostics(detail,[&](auto expression,auto file,auto line) { CHECK(expression=="type" && file=="\\Ns\\O\\Gem.cpp" && line==0x104);++diagnostics; });const auto seed=scene.random->Game().State();CHECK(scene.owner->GemReward().Choose()==0);CHECK(diagnostics==1 && scene.random->Game().State()==seed && scene.players->Base()==0 && !scene.storage->Borrowed());
+}
+
+// 원문송신억제flags10으로실제Pop/두Regular/공통장부와Native기본Host의사건0/1을연결한다.
+TEST_CASE(ConstructionOwner_BuriedNoWorldPopCreatesTwoActualHostEvents) {
+    LongConstructionScene scene;OwnerBuriedObservation observed;OwnerObserveBuried(scene,observed);scene.gameplay->Boss()=false;const auto sid=scene.storage->Factory().Create(112,0);const auto seed=scene.random->Game().State();
+    CHECK(scene.storage->PopAsset(sid,128,128,0x10)==RawPopResult::Registered);auto& host=scene.storage->Processes().Host();auto* first=host.FindEvent(sid,0);auto* second=host.FindEvent(sid,1);
+    CHECK(first && second && !first->Shared() && !second->Shared());if (!first || !second) return;CHECK(first->Count()==0 && first->Payload()==0 && second->Count()==0 && std::bit_cast<std::uint32_t>(second->Payload())==0x3c23d70aU);CHECK(scene.storage->PostPop().ActivationDepth()==0 && observed.ai==1 && observed.selection==1 && observed.dirty>0);
+    GameRandom expected(seed);const auto wait=static_cast<float>(expected.Next(6)+2);first->RunFrame();CHECK(first->Count()==1 && first->Payload()==wait && scene.random->Game().State()==expected.State());CHECK(std::bit_cast<std::int32_t>(OwnerReadDword(scene.storage->pool.Slot(sid),36))==scene.storage->frames[112].Run('A').first);
+    second->RunFrame();CHECK(second->Count()==1 && std::bit_cast<std::uint32_t>(second->Payload())==0x3c23d70aU);CHECK(scene.players->Base()==0 && !scene.storage->Borrowed() && scene.storage->Generation()==0);
+}
+
+// 실제추첨QA와두Host사건은같은장기TYPE/제외목록/현재boss-loading을사용한다.
+TEST_CASE(ConstructionOwner_BuriedBossChoosesActualLongRewardBeforeTwoEvents) {
+    LongConstructionScene scene;OwnerBuriedObservation observed;OwnerObserveBuried(scene,observed);const auto expected=OwnerGemCandidate(scene);scene.gameplay->Boss()=true;scene.storage->LoadingDepth()=0;std::uint32_t fills{},clocks{};auto devices=OwnerClientDevices();devices.allocationBytes=[&](auto bytes) { ++fills;std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa5}); };devices.wallSeconds=[&] { ++clocks;return 9.0; };scene.owner->BindDevices(std::move(devices));
+    const auto sid=scene.storage->Factory().Create(112,0);CHECK(scene.storage->PopAsset(sid,128,128,0x10)==RawPopResult::Registered);const auto raw=scene.storage->pool.Slot(sid);CHECK((std::uint32_t(raw[12])|(std::uint32_t(raw[13])<<8))==expected && fills==1 && clocks==1);
+    CHECK(scene.storage->Processes().Host().FindEvent(sid,0) && scene.storage->Processes().Host().FindEvent(sid,1) && scene.storage->PostPop().ActivationDepth()==0 && observed.ai==1 && observed.selection==1);CHECK(scene.players->Base()==0 && !scene.storage->Borrowed() && scene.storage->Generation()==0);
+}
+
+// 보상owner를강하게순환보유하지않고미선택추첨/기본사건은반납뒤에도현재장기몸체를쓴다.
+TEST_CASE(ConstructionOwner_BuriedOwnerReturnDoesNotCycleOrInventReward) {
+    LongConstructionScene scene;auto* post=&scene.storage->BuriedPostPop();auto* regular=&scene.storage->BuriedRegular();const auto sid=scene.storage->Factory().Create(112,0);std::weak_ptr<ClientConstructionGlobals> watch=scene.owner;scene.owner.reset();CHECK(watch.expired());
+    CHECK(&scene.storage->BuriedPostPop()==post && &scene.storage->BuriedRegular()==regular && regular->Handle(sid,1,0,0.125F)==0.125F);scene.gameplay->Boss()=true;scene.storage->LoadingDepth()=0;CHECK(OwnerRejected([&] { post->PostPop(sid,1); }));CHECK(scene.storage->PostPop().ActivationDepth()==0 && scene.players->Base()==0 && !scene.storage->Borrowed());
 }

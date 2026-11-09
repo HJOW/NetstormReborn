@@ -35,6 +35,7 @@ void RawSurfaceStorage::EmitDefaultAssetEffect(const o::SquidDestroyEvent& event
     if (!pre && event.effect!=o::SquidDestroyEffect::PostDestroy) throw std::logic_error("장기 자산의 가상 삭제 효과 종류 오류");
     const auto method=pre ? entry.pre:entry.post;
     switch (method) {
+    case 0x0041f910U: //실제오벨리스크의단일jmp는현재공통Pre와동일한인자/순서를사용한다.
     case 0x004b0950U:CommonDeletion().PreDestroy(event.sid,event.flags);return;
     case 0x004b0840U:CommonDeletion().PostDestroy(event.sid,event.flags);return;
     case 0x0044b4b0U: // 실제 Damageable의 가상 전처리다. 내부44afd0과 구별한다.

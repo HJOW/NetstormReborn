@@ -700,7 +700,7 @@ struct RawCampaignSession::Impl {
     SquidPostPopList localAdditional;SquidPostPopList& additional{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->PlacementAdditional():localAdditional}; //Native기준점/생성/게임파이프라인이같은장기추가목록을사용한다.
     ContainedFinderState& contentFinder{gameplayGlobals->finder}; // 초기/현재 생산 UI와 같은 검색 전역이다.
     PriestMenuState priestMenu; // 원본 사제 메뉴의 타입/명령·특수 모드 전역을 같은 Session에서 소유한다.
-    SquidPostPopList constructionExcludedTypes; // 0052f7e0의 초기 빈 TYPE 목록이며 additional의 SID 목록과 다르다.
+    SquidPostPopList localConstructionExcludedTypes;SquidPostPopList& constructionExcludedTypes{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->ConstructionExcludedTypes():localConstructionExcludedTypes}; //Native건설/메뉴/보상이같은현재TYPE제외목록을공유한다.
 
     std::unique_ptr<RawCanonPlacementPipeline> pipeline; // 실제 Same Core MayPlace다.
     TerrainContextGlobals terrainGlobals; // 정상 문자 mapping의 실제 전역이다.
@@ -725,7 +725,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierTask> carrierTask; // 실제 현재 Regular/SharedRegular task와 double 기한을 갱신한다.
     std::unique_ptr<RawCarrierFallStart> carrierFallStart; // 현재 이동 삭제/선택 해제/복귀 좌표/즉시 해방을 수행한다.
     GemRewardState localGemRewardState;GemRewardState& gemRewardState{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->GemState():localGemRewardState}; //Native보상/변환/너겟배치는같은장기TYPE주소를읽는다.
-    std::unique_ptr<RawGemReward> gemReward; //같은게임난수/TYPE제외목록/시각/월드의보상선택·변환이다.
+    std::unique_ptr<RawGemReward> localGemReward;RawGemReward* gemReward{}; //Native는같은장기보상본체를빌리고독립typed만지역본체를소유한다.
     CarrierMoveState carrierMoveState; //같은40h 요청의 현재 BYTE/BYTE/WORD다.
     std::unique_ptr<RawCarrierMove> carrierMove; //실제 요청/서버관문과 같은 경로/후보/현재 전송을 공유한다.
     CarrierDropState carrierDropState;CarrierDropPointState carrierDropPointState; // 실제0x50/0x5c 헤더와현재위치판정 전역이다.
@@ -824,8 +824,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawFlyerPreDestroy> flyerPre; //144의 현재+8 WORD 대상 삭제 뒤 실제 Damageable Pre다.
     std::unique_ptr<RawDamageablePostDestroy> localDamageablePost;RawDamageablePostDestroy* damageablePost{}; // 같은 실제 예약/다리/공통 후처리다.
     std::unique_ptr<RawVortexPreDestroy> vortexPre; // 실제 신전의 목록/섬/Player 정리를 담당한다.
-    std::unique_ptr<RawBuriedPostPop> buriedPostPop; // 같은 boss/로딩 전역과 공통 장부를 사용하는 저장 buried 후처리다.
-    std::unique_ptr<RawBuriedRegular> buriedRegular; // 같은 현재 Pool/Frame/공유 난수의 오벨리스크 사건 처리다.
+    std::unique_ptr<RawBuriedPostPop> localBuriedPostPop;RawBuriedPostPop* buriedPostPop{}; //Native의현재전역/두Regular/공통부모는같은장기Storage몸체다.
+    std::unique_ptr<RawBuriedRegular> localBuriedRegular;RawBuriedRegular* buriedRegular{}; //Native의현재Frame/전역난수는같은장기Storage몸체다.
     std::vector<float> fenceRanges; // 현재 불변 TYPE 표에서 읽은188개 실제 사거리다.
     std::uint32_t fenceShieldType{170}; //PATCH00541300의 실제 포스 필드(fenceShield) 타입이다.
     std::uint32_t fenceNodeType{90}; //PATCH005411c0의 별도 내부 fencemark 타입이다.
@@ -1592,13 +1592,14 @@ struct RawCampaignSession::Impl {
         ConnectFlyer(); // TYPE144의 전체 후처리와 기본 표 부착→전용 표 쓰기의 실제 순서를 연결한다.
         ConnectFence(); // 실제 최근접/연결선 삭제/Regular를 첫 저장 펜스 Pop 전에 연결한다.
         ConnectGemReward(); //첫오벨리스크Pop 전에실제보상추첨을연결한다.
-        BuriedPostPopHooks buried;buried.chooseType=[this](std::uint32_t value) { return gemReward->Choose(value); };
+        if (world.Storage()->UsesNativeTransmissionDevices()) buriedPostPop=&world.Storage()->BuriedPostPop();
+        else { BuriedPostPopHooks buried;buried.chooseType=[this](std::uint32_t value) { return gemReward->Choose(value); };
         buried.reserveRegular=[] { return true; }; // 실제 Host 할당 실패는 addRegular에서 예외로 전달한다.
         buried.addRegular=[this](Sid sid,std::uint32_t event,float delay) { SessionCheck(core.processes.AddRegular(sid,event,delay)!=nullptr); };
         buried.validateBase=[this](Sid sid,std::uint32_t flags,const RawGraphPop* projected) { core.postPop.ValidateBase(sid,flags,projected); };
         buried.base=[this](Sid sid,std::uint32_t flags) { core.postPop.PostPopBase(sid,flags); };
         buried.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); }; // QA를 먼저 저장한 뒤 현재 Bridge TYPE와 같을 때만 실제 통지를 실행한다.
-        buriedPostPop=std::make_unique<RawBuriedPostPop>(core.pool,assetState.Boss(),objectState.loadingDepth,std::move(buried),core.bridgeState.bridgeType);core.postPop.SetBuriedPostPop(buriedPostPop.get()); // 00462170의 실제00540bc4는 현재 boss이며 별도 server/전투 조건을 사용하지 않는다.
+        localBuriedPostPop=std::make_unique<RawBuriedPostPop>(core.pool,assetState.Boss(),objectState.loadingDepth,std::move(buried),core.bridgeState.bridgeType);buriedPostPop=localBuriedPostPop.get(); }core.postPop.SetBuriedPostPop(buriedPostPop); //Native는장기현재boss/로딩과실제할당을사용하고독립typed는기존계약을유지한다.
         worldHooks.assets=construction->DestroyHooks(lifetime->DestroyHooks(hits->DestroyHooks(std::move(worldHooks.assets))));
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.
@@ -1664,7 +1665,7 @@ struct RawCampaignSession::Impl {
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
             if (NativeOutpostLifetime(sid) || BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || BlockerLifetime(sid) || GrowingIce(sid) || SunFence(sid) || Nugget(sid) || (daisLifecycle && daisLifecycle->Handles(sid)) || (dudeBehavior && dudeBehavior->Handles(sid)) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
-        buriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);
+        if (world.Storage()->UsesNativeTransmissionDevices()) buriedRegular=&world.Storage()->BuriedRegular();else { localBuriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);buriedRegular=localBuriedRegular.get(); } //Native는World반납뒤에도같은현재Frame/난수를사용한다.
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (daisRegular && daisRegular->Handles(sid)) { PrepareRitual();return daisRegular->Handle(sid,event,count,payload); }
             if (altarSacrifice && altarSacrifice->Handles(sid)) { PrepareRitual();return altarSacrifice->Handle(sid,event,count,payload); }
@@ -1895,6 +1896,7 @@ struct RawCampaignSession::Impl {
     // 같은 현재 원문/Host의 생성·프레임·QA·패킷을 연결한다. 미복원 BaseFlyer 하위는 선택 시 거부한다.
     // 현재전역게임난수와별도시각난수의실제Deck,같은풀의월드효과를연결한다.
     void ConnectGemReward() {
+        if (world.Storage()->UsesNativeTransmissionDevices()) { gemReward=&services.constructionGlobals->GemReward();return; } //같은제외목록/현재Deck장치/실제Pool을World없이공유한다.
         GemRewardHooks hooks;hooks.fill=services.production.allocationBytes;hooks.deck.wallSeconds=services.sound.wallSeconds;
         hooks.assertion=hooks.deck.assertion=[](std::uint32_t line) { throw std::logic_error("원본Gem/Deck.cpp 보상진단 "+std::to_string(line)); };
         hooks.deckAssertion=SessionMissing<void,ProductionDeckAssertion>();
@@ -1904,7 +1906,7 @@ struct RawCampaignSession::Impl {
         hooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
-        gemReward=std::make_unique<RawGemReward>(core.pool,core.types,random,constructionExcludedTypes,gemRewardState,std::move(hooks));
+        localGemReward=std::make_unique<RawGemReward>(core.pool,core.types,random,constructionExcludedTypes,gemRewardState,std::move(hooks));gemReward=localGemReward.get();
     }
     // 데빌메이커의실제80BYTE 생성/생산/104BYTE 비행체와같은Host를연결한다.
     void ConnectWindAviary() {
@@ -2626,7 +2628,6 @@ struct RawCampaignSession::Impl {
         gameplay.notice.start=[this](Sid parent,std::uint32_t bits) { if (!building) throw std::logic_error("일반 통지의 실제30 미설치");PrepareBuilding(core.processState.Now());building->Start(parent,std::bit_cast<float>(bits)); };
         if (world.Storage()->UsesNativeTransmissionDevices()) {
             constructionRuntime=std::make_shared<ClientConstructionRuntimeBindings>();constructionRuntime->effects=std::move(effects);constructionRuntime->gameplay=std::move(gameplay);constructionRuntime->pin=constructionRuntimePin;
-            constructionRuntime->replenishPlacement=[this](auto rectangle,auto quantity) { if (!placeBattleNuggets) throw std::logic_error("너겟 보충의 현재 실제 배치 미연결");const auto place=placeBattleNuggets;place(rectangle,quantity); }; //0040e050/실제단일배치는선택된현재전체Runtime을pin한호출에서만빌린다.
             services.constructionGlobals->BindRuntime(constructionRuntime); //같은 실제 Session만 효과 대여를 소유하며 이전 반납 뒤에만 교체한다.
             construction=&services.constructionGlobals->Body(services.spGlobals,playerRecords,services.missionOptions); //SP/Canon/지도/현재Player와 본체는 장기 owner에서 직접 선택한다.
         } else {

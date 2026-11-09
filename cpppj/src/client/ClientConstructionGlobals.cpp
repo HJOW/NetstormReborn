@@ -75,12 +75,12 @@ void ClientConstructionGlobals::BindBacking(std::shared_ptr<ClientSpGlobals> sp,
     if ((sp_ && sp_!=sp) || (players_ && players_!=players) || (options_ && options_!=options)) throw std::logic_error("장기 건설 backing의 다른 owner 재결합 금지");
     sp_=std::move(sp);players_=std::move(players);options_=std::move(options);
 }
-// 보충의작은원문부모는World없이실행하고실제배치가선택된때만현재Runtime을pin한다.
+// 현재모드/Bounds와전체배치부모는같은장기owner를사용하며현재Session대여를요구하지않는다.
 void ClientConstructionGlobals::ReplenishNuggets() {
     if (!storage_ || !gameplay_) throw std::logic_error("너겟 보충의 실제 Client 전역 미결합");
     o::RawNuggetReplenish body([this]()->const o::RawPlayerGeyserBounds& { return Body(sp_,players_,options_).PlayerBounds(); },
         {gameplay_->Boss(),gameplay_->world.missionPost,storage_->ownerMode.fort,gameplay_->world.editor,storage_->GameAux()->WorldGeyserMargin()},
-        {[storage=storage_](auto line) { storage->AssertDisplay("boss","\\Ns\\O\\Nugget.cpp",line); },CurrentConstructionCall(runtime_,[](const auto& current) { return current.replenishPlacement; })});
+        {[storage=storage_](auto line) { storage->AssertDisplay("boss","\\Ns\\O\\Nugget.cpp",line); },[this](auto rectangle,auto quantity) { PlaceBattleNuggets(rectangle,quantity); }});
     body.Run();
 }
 // 장기 부품만 실제 본체에 고정하고 큰 효과는 각 원문 선택 위치에서 현재 짧은 대여를 조회한다.

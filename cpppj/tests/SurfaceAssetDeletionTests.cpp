@@ -63,7 +63,7 @@ struct DeletionScene {
 
 // 공통·피해가능·다리·섬·noIsland·간헐천·너겟은 같은 실제 장기 Pre/Post로 반납한다.
 TEST_CASE(SurfaceAssetDeletion_NoWorldActualParentsBalanceAndRelease) {
-    for (const auto table:{0x503360U,0x509930U,0x5034c8U,0x506d98U,0x506f08U,0x50da88U,0x50dc30U,0x503d80U}) { //공중3종을제외한실제Carrier를포함해각부모를새물리에서검사한다.
+    for (const auto table:{0x503360U,0x509930U,0x5034c8U,0x506d98U,0x506f08U,0x50da88U,0x50dc30U,0x503d80U,0x50a748U,0x502c38U,0x502cf0U,0x502db0U}) { //공중3종을제외하고실제41f910점프네표의공통부모까지새물리에서검사한다.
         DeletionScene scene;const auto sid=scene.Asset(table);const auto type=scene.storage->pool.Slot(sid)[10];const auto free=scene.storage->pool.FreeCount();
         CHECK(scene.storage->DestroyAsset(sid,0x10));CHECK((scene.storage->pool.Slot(sid)[11]&3U)==3U);CHECK(scene.storage->pool.Slot(sid)[10]==type && scene.storage->pool.FreeCount()==free+1);
         CHECK(scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);CHECK(scene.traces==1 && scene.legacyDeletes==0 && !scene.storage->Borrowed() && scene.storage->Generation()==0);

@@ -2,6 +2,8 @@
 #include "client/RawSurfaceWorld.h"
 #include "client/NativeFortSaveVirtual.h" //완전 형식의 조회기 생성/반납을 Storage 구현에서만 수행한다.
 #include "o/RawAssetRegular.h" //현재NativeGeyser의독립실제본문을같은Storage에서사용한다.
+#include "o/RawBuriedPostPop.h" //실제오벨리스크전용후처리를같은장기저장소에서선택한다.
+#include "o/RawBuriedRegular.h" //같은프레임/난수의기존사건본문을Native기본Host에연결한다.
 #include "o/RawContainedLookup.h" //건설재시도의실제현재Form타입조회이며가짜존재값을반환하지않는다.
 #include "o/RawDaisProcessData.h" //현재PID의실제6a writer를장기기본직렬화에연결한다.
 #include "o/RawGunProcess.h" //실제현재ProcessForm파생writer와같은객체필드를공유한다.
@@ -167,6 +169,23 @@ o::RawCarrierPostPop& RawSurfaceStorage::ResourceCarrierPostPop() { //실제공�
         auto carrier=std::make_unique<o::RawCarrierPostPop>(pool,types,resourceCarrierState_,std::move(hooks));carrier->BindCurrentTypes(types);resourceCarrier_=std::move(carrier);
     }return *resourceCarrier_;
 }
+void RawSurfaceStorage::BindBuriedResource(std::shared_ptr<o::GameRandom> random,std::function<std::uint32_t(std::uint32_t)> choose) { //실제owner만처음연결하며게임상태를조회하거나초기화하지않는다.
+    if (!UsesNativeTransmissionDevices() || !random || !choose || buriedRandom_ || buriedPostPop_ || buriedRegular_) throw std::invalid_argument("장기 오벨리스크의 실제 최초 난수/보상 owner 필요");buriedRandom_=std::move(random);buriedChoose_=std::move(choose);
+}
+o::RawBuriedPostPop& RawSurfaceStorage::BuriedPostPop() { //미선택추첨은요구하지않고두new의각성공/실패를실제Host로연결한다.
+    if (!serializationGlobals_) throw std::logic_error("오벨리스크의 실제 장기 로딩 owner 미결합");
+    if (!buriedPostPop_) {
+        o::BuriedPostPopHooks hooks;hooks.chooseType=[this](auto value) { const auto choose=buriedChoose_;if (!choose) throw std::logic_error("오벨리스크의 실제 현재 보상 선택 미결합");return choose(value); };
+        hooks.reserveRegular=[this] { return AllocateResourceRegular(); };hooks.addRegular=[this](auto sid,auto event,auto payload) { ConstructResourceRegular(sid,event,payload); };
+        hooks.validateBase=[this](auto sid,auto flags,const auto* projected) { PostPop().ValidateBase(sid,flags,projected); };hooks.base=[this](auto sid,auto flags) { PostPop().PostPopBase(sid,flags); };
+        hooks.notifySurface=[this](auto sid) { Building().NotifySurface(sid); };
+        buriedPostPop_=std::make_unique<o::RawBuriedPostPop>(pool,authority_->boss,LoadingDepth(),std::move(hooks),links.bridgeType);
+    }return *buriedPostPop_;
+}
+o::RawBuriedRegular& RawSurfaceStorage::BuriedRegular() { //다음사건도같은현재TYPE/Frame/난수를읽으며Session대여를요구하지않는다.
+    if (!buriedRandom_) throw std::logic_error("오벨리스크의 실제 장기 난수 owner 미결합");
+    if (!buriedRegular_) buriedRegular_=std::make_unique<o::RawBuriedRegular>(pool,frames,Frame(),*buriedRandom_);return *buriedRegular_;
+}
 bool RawSurfaceStorage::AllocateResourceRegular() { //같은new28의실패를그시점에서만반환한다.
     if (resourceRegular_) throw std::logic_error("장기자원Regular의확보메모리중복");try { resourceRegular_=std::make_unique<o::RegularProcess>(0,0.0F); }catch (const std::bad_alloc&) { return false; }return true;
 }
@@ -192,6 +211,7 @@ void RawSurfaceStorage::DefaultResourcePostPop(o::Sid sid,std::uint32_t flags) {
     const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //현재물리VT4BYTE만해석한다.
     if (table==0x503d80U || table==0x503e50U || table==0x50e568U) { ResourceCarrierPostPop().PostPop(sid,flags);return; }
     if (table==0x50a820U || table==0x50a8e8U) { ResourceCarrierPostPop().DamageablePostPop(sid,flags);return; }
+    if (table==0x50a748U) { BuriedPostPop().PostPop(sid,flags);return; } //실제현재+20=462170을선택하고공통성공으로넘기지않는다.
     if (table==0x50dc30U) {
         if (!resourceNugget_) { o::NuggetPostPopHooks hooks;hooks.hasRegular=[this](auto parent,auto event) { return Processes().Host().FindEvent(parent,event)!=nullptr; };hooks.allocate=[this] { return AllocateResourceRegular(); };
             hooks.random=[this](float low,float high) { const auto read=resourceDevices_.random;if (!read) throw std::logic_error("장기너겟의실제게임난수미연결");return static_cast<float>(static_cast<double>(read().Next(65536))*(1.0/65536.0)*std::abs(static_cast<double>(high)-low)+low); };
@@ -229,6 +249,7 @@ float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std
     const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //가상선택은현재VT4BYTE이며현재TYPE별추측으로바꾸지않는다.
     if (table==0x50da88U) return o::RunNativeGeyserRegular(pool,types,sid,event,count,payload,[this](auto object,auto flags) { Display().Update(pool.Slot(object),flags); },[this](auto object,auto code,auto times,auto value) { return ResourceDamageableRegular(object,code,times,value); });
     if (table==0x50dc30U) return ResourceNuggetRegular().Handle(sid,event,count,payload);
+    if (table==0x50a748U) return BuriedRegular().Handle(sid,event,count,payload); //실제+5c=4622f0은사건1도원문payload를반환한다.
     constexpr std::array<std::uint32_t,14> kDamageableRegularVtables{0x00501ea0U,0x00509930U,0x005099e8U,0x00509aa0U,0x0050a1e8U,0x0050a388U,0x0050b6e8U,0x0050b7c0U,0x0050b888U,0x0050b9b8U,0x0050bad0U,0x0050e940U,0x0050ea08U,0x0050ead0U}; //보호PE의현재VT+5c=0044b900인14클래스만같은원문부모를사용한다.
     if (std::find(kDamageableRegularVtables.begin(),kDamageableRegularVtables.end(),table)!=kDamageableRegularVtables.end()) return ResourceDamageableRegular(sid,event,count,payload);
     if (std::find(kBaseRegularVtables.begin(),kBaseRegularVtables.end(),table)!=kBaseRegularVtables.end()) return payload; //496e70은event/count를읽지않는실제base본문이다.

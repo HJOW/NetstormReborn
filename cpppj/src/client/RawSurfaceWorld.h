@@ -44,6 +44,7 @@
 #include <vector>
 #include <optional>
 
+namespace netstorm::o { class RawBuriedPostPop;class RawBuriedRegular; } //장기본문의완전형식은Storage구현에서만필요하다.
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
 struct PriestPlacementAssets; // 실제 Canon/핫스폿/SHP와 진단을 Native Client 수명에 한 번 보관한다.
@@ -182,6 +183,9 @@ public:
     o::RawDamageablePreDestroy& DamageablePre(); // 현재 실제 전처리/해방/공통 Pre를 World 없이 제공한다.
     void BindCarrierReplenishment(std::function<void()> replenish); //최초Carrier앞에실제Client보충부모만결합하며호출하지않는다.
     o::RawCarrierPreDestroy& CarrierPre(); //현재finder·Damageable·보충부모를같은장기물리에서사용한다.
+    void BindBuriedResource(std::shared_ptr<o::GameRandom> random,std::function<std::uint32_t(std::uint32_t)> choose); //같은난수alias와약한실제보상owner만결합하고배치/추첨은실행하지않는다.
+    o::RawBuriedPostPop& BuriedPostPop(); //같은현재boss/로딩/BridgeTYPE·Host/공통부모를장기로제공한다.
+    o::RawBuriedRegular& BuriedRegular(); //현재프레임/같은전역난수의실제오벨리스크사건0/1을제공한다.
     o::RawDamageableRelease& DamageableRelease(); // 현재 물리의 실제 해방 몸체를 공유한다.
     o::RawDamageablePostDestroy& DamageablePost(); // 현재 실제 후처리/공통 Post를 공유한다.
     o::RawGeyserLifetime& GeyserLifetime(); // 같은 지면 목록/기본프레임/현재 편집 모드를 사용한다.
@@ -326,6 +330,10 @@ private:
     std::unique_ptr<o::RawGeyserLifetime> geyserLifetime_; // 같은 피해가능 객체 수명보다 먼저 반납한다.
     std::unique_ptr<NativeFortSaveVirtual> fortSaveVirtual_; //같은 Storage/GameAux를 빌리는 실제 조회기이며 해당 소유자보다 먼저 반납한다.
     std::unique_ptr<o::RawNuggetPostPop> resourceNugget_; //같은Host/난수/확보메모리의너겟후처리다.
+    std::shared_ptr<o::GameRandom> buriedRandom_; //실제Client난수의aliasowner로참조수명을보증하고별도seed를만들지않는다.
+    std::function<std::uint32_t(std::uint32_t)> buriedChoose_; //실제장기보상owner는약하게빌려Storage역참조순환을피한다.
+    std::unique_ptr<o::RawBuriedPostPop> buriedPostPop_; //같은현재전역/실제두할당/공통부모를사용한다.
+    std::unique_ptr<o::RawBuriedRegular> buriedRegular_; //현재Frame과난수보다먼저반납하고Host종료까지살아있다.
     std::unique_ptr<o::RegularProcess> resourceRegular_; //할당과생성사이동일new28의소유권만보존한다.
     std::unique_ptr<o::RawSquidDestroy> baseDestroy_; //같은Native공통pre/post깊이를World반납뒤에도보존한다.
     std::unique_ptr<o::SquidFormDispatch> processForms_; //장기Host와같은Pool의실제ProcessForm경로이며UI/내용물가짜처리기는등록하지않는다.

@@ -21,6 +21,7 @@ struct ClientConstructionDevices {
     std::function<void(o::PlayerGeyserBoundsAssertion)> boundsAssertion; //현재 Player/Bounds 진단의 실제 장치다.
     std::function<std::string(std::string_view,std::string_view)> format; //원래 비용 문구 서식의 문자열 입력/출력을 유지한다.
     std::function<void(std::string_view)> tell; //원문 표시 바이트를 현재 Tell 장치에서 UTF-8로 변환한다.
+    o::RawProductionDeck::Fill allocationBytes; //스택Deck의원문미작성영역을현재실제힙입력으로채우며선택시점에만호출한다.
 };
 ClientConstructionDevices MakeClientConstructionDevices(Client& client); //현재 Client만 참조하며 장치 조회/창 생성/게임 호출을 결합 시 실행하지 않는다.
 // 현재 Session의 큰 효과만 짧게 빌리며 장기 body는 이 객체를 강하게 소유하지 않는다.
@@ -28,7 +29,6 @@ struct ClientConstructionRuntimeBindings {
     RawCampaignConstructionEffects effects; //실제 현재 설정/표시/비용 안내/진단의 콜백이다.
     RawCampaignConstructionGameplay gameplay; //실제 현재 Builder/사제/배치/건설 모듈의 콜백이다.
     std::function<std::shared_ptr<void>()> pin; //공개된 전체 Runtime을 선택 호출 동안만 보유한다. 생성/직접 로드는 호출자의 소유권을 따른다.
-    std::function<void(o::FortRandomRectangle,std::uint32_t)> replenishPlacement; //실제0040e050/큰배치의현재몸체이며계산/모드관문뒤선택된호출만Runtime을빌린다.
 };
 class ClientConstructionGlobals {
 public:
@@ -44,7 +44,7 @@ public:
     void ReleaseDevices(); //Client 최종 반납에서 함수 집합만 끊고 본체/현재 물리/State를 보존한다.
     void BindRuntime(const std::shared_ptr<ClientConstructionRuntimeBindings>& runtime); //실제 현재 대여만 약하게 공개하고 중복된 살아 있는 대여는 거부한다.
     void BindBacking(std::shared_ptr<ClientSpGlobals> sp,std::shared_ptr<ClientPlayerRecords> players,std::shared_ptr<std::array<std::uint8_t,87>> options); //최초메뉴전실제backing만보유하고SP/Player/Bounds를조회하지않는다.
-    void ReplenishNuggets(); //현재권한/모드관문뒤에만같은장기Bounds와선택된실제배치를사용한다.
+    void ReplenishNuggets(); //현재권한/모드관문뒤같은장기Bounds와직접장기너겟배치를사용한다.
     o::CanonPlacementPipelineState& PlacementState(); //커서/요청과같은현재배치상태를빌리며Session사본을만들지않는다.
     o::PlayerPlacementAnchorState& PlacementAnchor(); //같은현재Graph/전체덱/기준점상태를공유한다.
     o::SquidPostPopList& PlacementAdditional(); //같은원문추가후보목록을다른조회기와공유한다.
@@ -54,6 +54,8 @@ public:
     o::FortRandomPlacementState& RandomPlacementState(); //현재단일배치의TYPE/ownerOverride를모든NativeCaller가공유한다.
     o::FortFinishOwnerState& FinishOwnerState(); //섬/거주구역/반복배치의같은현재모드를공유한다.
     o::GemRewardState& GemState(); //배치/보상/변환의같은현재오벨리스크TYPE를공유한다.
+    o::SquidPostPopList& ConstructionExcludedTypes(); //건설/메뉴/보상이같은현재TYPE제외목록을빌린다.
+    o::RawGemReward& GemReward(); //현재Deck/난수/진단/실제생성·Pop·삭제를같은장기owner에조립한다.
     std::uint32_t PlaceRandomSingle(o::GameRandom& random,const o::FortRandomPlaceRequest& request); //원문의단일전체배치를같은장기Factory/HP/가상owner/Pop에연결한다.
     void PlaceBattleNuggets(o::FortRandomRectangle rectangle,std::uint32_t quantity); //원문의현재시각/지역seed와1000회반복단일배치를World없이조립한다.
     RawCampaignConstructionBindings& Body(std::shared_ptr<ClientSpGlobals> sp,std::shared_ptr<ClientPlayerRecords> players,std::shared_ptr<std::array<std::uint8_t,87>> options); //같은 장기 물리/현재 Player getter로 본체를 한 번 구성하며 World를 만들지 않는다.
@@ -78,7 +80,9 @@ private:
     o::FortRandomPlacementState randomPlacementState_; //현재TYPE포인터와ownerOverride를장기로유지한다.
     o::FortFinishOwnerState finishOwnerState_; //섬/후처리가같은상태를빌리며임시성공/Player배열을만들지않는다.
     o::GemRewardState gemState_; //현재TYPE개수/오벨리스크TYPE를실제보상Caller도읽는다.
+    o::SquidPostPopList constructionExcludedTypes_; //0052f7e0의현재BYTE항목목록이며추가SID목록과구별한다.
     std::unique_ptr<RawCampaignConstructionBindings> body_; //전체 건설/Bounds/최근 목록 본체를 Client 수명에 보유하고 State/backing보다 먼저 반납한다.
     std::unique_ptr<o::RawCanonPlacementPipeline> placementPipeline_; //같은상태/물리보다먼저반납하며World/Session을캡처하지않는다.
+    std::unique_ptr<o::RawGemReward> gemReward_; //같은난수/제외목록/전역보다먼저반납하며Session주소를보유하지않는다.
 };
 }
