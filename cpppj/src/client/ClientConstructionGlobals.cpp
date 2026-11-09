@@ -53,6 +53,7 @@ void ClientConstructionGlobals::Bind(std::shared_ptr<RawSurfaceStorage> storage,
     state_.confirm.sharedRecorderEnabled=replay_ ? &replay_->playing:nullptr;
     for (auto* diagnostics:{&state_.request.decoderDiagnostics,&state_.confirm.decoderDiagnostics,&state_.place.decoderDiagnostics,&state_.clear.decoderDiagnostics}) *diagnostics=&metadata.geometry.decoderDiagnostics; // 같은 장기 Canon 진단을 모든 원문 소비자가 빌린다.
     BindPlacementGlobals(); //같은실제게임배치상태만첫결합에서설치하며본체/Player를구성하지않는다.
+    randomPlacementState_.sharedIslandType=&aux.TerrainType();randomPlacementState_.sharedEdgeFarmType=&aux.EdgeFarmType(); //같은현재TYPE를기존지형Caller와새장기단일배치가함께읽는다.
 }
 // 비교는 조회뿐이며 누락된 Source/World나 새로운 상태를 만들지 않는다.
 bool ClientConstructionGlobals::Matches(const std::shared_ptr<RawSurfaceStorage>& storage,const std::shared_ptr<ClientGameplayGlobals>& gameplay,const std::shared_ptr<ClientBuildReplayGlobals>& replay) const { return storage_ && storage_==storage && gameplay_==gameplay && replay_==replay; }

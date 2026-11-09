@@ -14,6 +14,8 @@ struct RawIslandStorage {
 // 0046edf0의 지정 필드와 마지막 count만 쓴다. Pool/Player/모드/효과나 padding은 바꾸지 않는다.
 void ResetRawIslandRecords(std::span<std::uint8_t> records);
 std::uint32_t RawIslandExists(std::span<const std::uint8_t> records,std::int32_t island); //같은3204BYTE의 signed count 관문 뒤 현재 존재DWORD를 읽으며 Pool/Player/모드/효과를 요구하지 않는다.
+std::uint32_t RawIslandOwner(std::span<const std::uint8_t> records,std::int32_t island,const std::function<void()>& missing); //부재진단뒤같은존재를재조회해현재ownerDWORD만읽는장기getter다.
+FortRandomRectangle RawIslandBounds(std::span<const std::uint8_t> records,std::int32_t island,const std::function<void()>& missing); //부재진단뒤에도물리100행의현재네float를읽으며World를만들지않는다.
 // 실제 섬 목록이 보고하는 진단이며 callback 뒤 원본처럼 조건부 작업을 이어간다.
 enum class IslandRuntimeAssertion {
     // MissingIsland: 존재/범위 검사에 실패한 섬의 getter/setter를 요청했다.

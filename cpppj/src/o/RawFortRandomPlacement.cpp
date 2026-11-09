@@ -58,7 +58,7 @@ Sid RawFortRandomPlacement::Find(float x,float y,std::uint32_t value,bool genus)
 // WORD 표면 번호/type만 검사한다. 게임 상태 필터를 새로 넣지 않는다.
 bool RawFortRandomPlacement::Island(std::int32_t x,std::int32_t y) const {
     if (x<0 || y<0 || x>=256 || y>=256) return false;const Sid sid{hash_.Entries(0)[static_cast<std::size_t>(y*256+x)]};
-    return sid.value && pool_.Slot(sid)[kType]==state_.islandType;
+    return sid.value && pool_.Slot(sid)[kType]==state_.IslandType();
 }
 // NW→NE→SE→SW의 원본 단락 평가를 유지한다.
 bool RawFortRandomPlacement::MayReplace(std::int32_t x,std::int32_t y) const {
@@ -104,7 +104,7 @@ std::uint32_t RawFortRandomPlacement::Place(GameRandom& localRandom,const FortRa
     (void)localRandom;const auto sx=Ftol(static_cast<double>(request.x)+0.5),sy=Ftol(static_cast<double>(request.y)+0.5);
     if (sx<0 || sy<0 || sx>=256 || sy>=256) throw std::out_of_range("Fort 반올림 spot 주소 범위 오류");
     if (!(spots_[static_cast<std::size_t>(sy*256+sx)]&kSpotMask)) return 0;
-    if (Find(request.x,request.y,state_.edgeFarmType,false).value) return 0;
+    if (Find(request.x,request.y,state_.EdgeFarmType(),false).value) return 0;
     const CanonPlacementQuery query{request.type,0,request.x,request.y,0,0,0};
     if (!hooks_.mayPlace(query)) return 0;
     if (!request.force && static_cast<std::int32_t>(hooks_.chunkRegion(Ftol(request.x)/16,Ftol(request.y)/16))!=request.region) return 0;
@@ -114,7 +114,7 @@ std::uint32_t RawFortRandomPlacement::Place(GameRandom& localRandom,const FortRa
         if (!ground.value) throw std::logic_error("Fort terrain-frame 원본 지면 assert");
         if (request.mode) {
             if (!MayReplace(Ftol(request.x),Ftol(request.y))) return 1;
-            hooks_.unpop(ground,0);Retype(ground,state_.edgeFarmType);HitPoints(ground);hooks_.repop(ground,64);return ground.value;
+            hooks_.unpop(ground,0);Retype(ground,state_.EdgeFarmType());HitPoints(ground);hooks_.repop(ground,64);return ground.value;
         }
         const bool patch=pool_.Edition()==OriginalEdition::Patch1078;frame=Read(pool_.Slot(ground),patch ? kPatchFrame : kCdFrame,patch ? 4U : 1U);
     }

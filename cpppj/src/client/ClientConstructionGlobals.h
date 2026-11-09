@@ -2,12 +2,15 @@
 #pragma once
 #include "client/RawCampaignConstructionBindings.h"
 #include "o/RawCanonPlacementPipeline.h" //현재게임배치의상태/부모를같은Client수명에보유한다.
+#include "o/RawFortRandomPlacement.h" //단일난수배치의현재전역과실제본체를공유한다.
+#include "o/RawGemReward.h" //오벨리스크TYPE와보상Caller가같은장기주소를읽는다.
 
 namespace netstorm::client { // Session 상태를 복제하지 않고 같은 Client 저장소에 결합한다.
 class ClientGameplayGlobals; // 현재 Player/카메라/미션 전역의 실제 owner다.
 struct ClientBuildReplayGlobals; // 현재 재생 DWORD와 객체를 같은 수명으로 보관한다.
 class ClientSpGlobals; //초기화/난수 소비 없이 같은 실제 SP 저장소를 보유한다.
 class ClientPlayerRecords; //현재 Player base를 원문 선택 위치에서만 읽는 실제 할당 owner다.
+class ClientRandomGlobals; //메뉴/SP/현재게임과같은실제난수한개를보유한다.
 class Client; //현재 Config/시계/Renderer/Tell을 실제 Client 장치로 연결한다.
 // Session/World 없이 소비할 수 있는 실제 현재 Client 장치다. 큰 게임 효과와 분리한다.
 struct ClientConstructionDevices {
@@ -47,6 +50,12 @@ public:
     o::SquidPostPopList& PlacementAdditional(); //같은원문추가후보목록을다른조회기와공유한다.
     o::RawCanonPlacementPipeline& PlacementPipeline(); //현재장기Pool/공간/Canon/상태로완전한배치본체를한번구성한다.
     bool MayPlace(const o::CanonPlacementQuery& query); //실제현재Player/동맹/섬/모드를읽어전체배치판정을실행한다.
+    void BindRandom(std::shared_ptr<ClientRandomGlobals> random); //같은실제난수owner만보유하고seed/난수소비를추가하지않는다.
+    o::FortRandomPlacementState& RandomPlacementState(); //현재단일배치의TYPE/ownerOverride를모든NativeCaller가공유한다.
+    o::FortFinishOwnerState& FinishOwnerState(); //섬/거주구역/반복배치의같은현재모드를공유한다.
+    o::GemRewardState& GemState(); //배치/보상/변환의같은현재오벨리스크TYPE를공유한다.
+    std::uint32_t PlaceRandomSingle(o::GameRandom& random,const o::FortRandomPlaceRequest& request); //원문의단일전체배치를같은장기Factory/HP/가상owner/Pop에연결한다.
+    void PlaceBattleNuggets(o::FortRandomRectangle rectangle,std::uint32_t quantity); //원문의현재시각/지역seed와1000회반복단일배치를World없이조립한다.
     RawCampaignConstructionBindings& Body(std::shared_ptr<ClientSpGlobals> sp,std::shared_ptr<ClientPlayerRecords> players,std::shared_ptr<std::array<std::uint8_t,87>> options); //같은 장기 물리/현재 Player getter로 본체를 한 번 구성하며 World를 만들지 않는다.
     RawCampaignConstructionBindings& Body(); //이미 구성한 장기 본체를 빌리며 Session 반납 뒤에도 주소/상태를 보존한다.
 private:
@@ -57,6 +66,7 @@ private:
     std::shared_ptr<ClientSpGlobals> sp_; //본체의 같은 실제 분산 SP 주소를 마지막 호출 뒤까지 보유한다.
     std::shared_ptr<ClientPlayerRecords> players_; //본체는 span을 고정하지 않고 이 owner의 현재base를 선택 위치에서 읽는다.
     std::shared_ptr<std::array<std::uint8_t,87>> options_; //같은87BYTE의 mapSize 주소를 본체보다 오래 유지한다.
+    std::shared_ptr<ClientRandomGlobals> random_; //단일배치의전역프레임난수는지역좌표난수와구별하며재초기화하지않는다.
     std::weak_ptr<const ClientConstructionRuntimeBindings> runtime_; //큰 Session 효과를 반납 뒤 보유하지 않으며 새 실제 대여로 교체할 수 있다.
     std::shared_ptr<const ClientConstructionDevices> devices_; //선택된 호출은 자기 집합/함수 사본을 보유하고 다음 호출만 새 장치를 조회한다.
     RawCampaignConstructionState state_; //현재 값과 raw 참조는 본체보다 오래 유지하고 앞의 실제 backing보다 먼저 반납한다.
@@ -65,6 +75,9 @@ private:
     o::SquidPostPopList placementAdditional_; //기본작업장목록과구별한원문추가목록이다.
     std::array<o::CanonPlacementIslandRegion,100> placementRegions_{}; //같은3204BYTE섬기록의현재제한/존재view다.
     bool placementBound_{}; //초기값을한번만설치하며Session재진입에서다시쓰지않는다.
+    o::FortRandomPlacementState randomPlacementState_; //현재TYPE포인터와ownerOverride를장기로유지한다.
+    o::FortFinishOwnerState finishOwnerState_; //섬/후처리가같은상태를빌리며임시성공/Player배열을만들지않는다.
+    o::GemRewardState gemState_; //현재TYPE개수/오벨리스크TYPE를실제보상Caller도읽는다.
     std::unique_ptr<RawCampaignConstructionBindings> body_; //전체 건설/Bounds/최근 목록 본체를 Client 수명에 보유하고 State/backing보다 먼저 반납한다.
     std::unique_ptr<o::RawCanonPlacementPipeline> placementPipeline_; //같은상태/물리보다먼저반납하며World/Session을캡처하지않는다.
 };

@@ -53,14 +53,14 @@ void RawFarmCluster::Place(FortRandomRectangle area,std::int32_t region,std::uin
     do {
         const auto dy=Next(random,height),dx=Next(random,width);
         const auto x=static_cast<float>(static_cast<double>(dx)+area.left),y=static_cast<float>(static_cast<double>(dy)+area.top);
-        if (hooks_.place(random,{placementState_.edgeFarmType,x,y,region,1,force})) {
+        if (hooks_.place(random,{placementState_.EdgeFarmType(),x,y,region,1,force})) {
             --remaining;failures=kFailureLimit;
             // 원본주변순회는x바깥/y안쪽이며중심좌표도다시시도한다.
             for (std::int32_t ox=-radius;ox<=radius && remaining;++ox) {
                 // 성공할때만remaining을감소시키고0이면남은주변시도를멈춘다.
                 for (std::int32_t oy=-radius;oy<=radius && remaining;++oy) {
                     const auto nx=static_cast<float>(static_cast<double>(x)+ox),ny=static_cast<float>(static_cast<double>(y)+oy);
-                    if (hooks_.place(random,{placementState_.edgeFarmType,nx,ny,region,1,force})) --remaining;
+                    if (hooks_.place(random,{placementState_.EdgeFarmType(),nx,ny,region,1,force})) --remaining;
                 }
             }
         }

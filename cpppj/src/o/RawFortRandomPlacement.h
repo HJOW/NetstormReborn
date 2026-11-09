@@ -9,6 +9,9 @@ namespace netstorm::o {
 struct FortRandomPlacementState {
     std::uint32_t islandType{97},edgeFarmType{121}; // 두 PE의 isle/edgeFarm 타입 초기값이다.
     std::uint32_t ownerOverride{}; // 00544ce0/CD005187b8: 0이면 지역 owner/force0 규칙을 유지한다.
+    const std::uint32_t* sharedIslandType{};const std::uint32_t* sharedEdgeFarmType{}; //Native는현재실제TYPE전역의같은주소를빌리고독립typed는기존필드를쓴다.
+    std::uint32_t IslandType() const { return sharedIslandType ? *sharedIslandType:islandType; } //모서리조회위치마다현재지면TYPE를읽는다.
+    std::uint32_t EdgeFarmType() const { return sharedEdgeFarmType ? *sharedEdgeFarmType:edgeFarmType; } //앞선효과뒤Retype에서도현재TYPE를다시읽는다.
 };
 // 임의 성공/기본값을 제공하지 않는 실제 월드 효과 경계다.
 struct FortRandomPlacementHooks {

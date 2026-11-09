@@ -565,7 +565,7 @@ struct RawCampaignSession::Impl {
     MissionAiSettingsState missionAiSettings; // 실제600BYTE 설정 초기화가 읽는 현재 기본 전역이다.
     std::unique_ptr<RawRegionOwner> regionOwner; // 동일 Pool/hash0에서 현재 지면 소유자 BYTE를 읽는다.
     std::unique_ptr<RawMissionOutcome> outcome; // 같은 Player9/동맹/사제/HP/영역의 현재 입력을 매 조회 읽는다.
-    FortFinishOwnerState finishState; // 실제 미션 chaffMode의 자연 반환 조건이다.
+    FortFinishOwnerState localFinishState;FortFinishOwnerState& finishState{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->FinishOwnerState():localFinishState}; //Native섬/후처리는장기같은상태를빌리고독립typed는기존지역상태를쓴다.
     AssetPostPopState assetState; // 실제 신전/거주 구역/간헐천/아웃포스트 목록이다.
     RawPriestWorldState priestState{&gameplayGlobals->GameAux()->PriestType(),world.Storage()->UsesNativeTransmissionDevices() ? gameplayGlobals->GameAux().get():nullptr}; // HP/이동/회복의 사제 번호는 World보다 오래 사는 같은 Client 전역을 빌린다.
     RunePostPopState runeState; // PATCH005412e8/ec/f0의 현재Altar164/Dais165/Rune166이며 후속 실제 의식도 같은 저장소를 사용한다.
@@ -705,7 +705,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCanonPlacementPipeline> pipeline; // 실제 Same Core MayPlace다.
     TerrainContextGlobals terrainGlobals; // 정상 문자 mapping의 실제 전역이다.
     TerrainStampState& stamp{gameplayGlobals->TerrainStamp()}; // 원본005c8be4의99cache는 Client가 소유한다. 재시작/편집 복귀 때 다시 추첨해 CRT를99회 더 소비하지 않는다.
-    FortRandomPlacementState randomPlacement; // 실제 지형/edgeFarm 배치 상태다.
+    FortRandomPlacementState localRandomPlacement;FortRandomPlacementState& randomPlacement{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->RandomPlacementState():localRandomPlacement}; //Native단일배치/지형/Farm은같은현재TYPE/ownerOverride를공유한다.
     FarmClusterState farm; // 실제 정상 군집 모드다.
     std::unique_ptr<RawNormalTerrainWorldBinding> normal; // 실제 성장/도장/Normalize/군집 몸체다.
     std::unique_ptr<RawFortFinishOwner> finish; // 같은9 Player의 최초 지역을 읽는다.
@@ -724,7 +724,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierFalling> carrierFalling; // 같은 표면/Player/권한에서 캐리어 낙하와 포획 사제 해방을 처리한다.
     std::unique_ptr<RawCarrierTask> carrierTask; // 실제 현재 Regular/SharedRegular task와 double 기한을 갱신한다.
     std::unique_ptr<RawCarrierFallStart> carrierFallStart; // 현재 이동 삭제/선택 해제/복귀 좌표/즉시 해방을 수행한다.
-    GemRewardState gemRewardState; //현재TYPE개수/오벨리스크타입이다.
+    GemRewardState localGemRewardState;GemRewardState& gemRewardState{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->GemState():localGemRewardState}; //Native보상/변환/너겟배치는같은장기TYPE주소를읽는다.
     std::unique_ptr<RawGemReward> gemReward; //같은게임난수/TYPE제외목록/시각/월드의보상선택·변환이다.
     CarrierMoveState carrierMoveState; //같은40h 요청의 현재 BYTE/BYTE/WORD다.
     std::unique_ptr<RawCarrierMove> carrierMove; //실제 요청/서버관문과 같은 경로/후보/현재 전송을 공유한다.
@@ -5207,6 +5207,7 @@ void RawCampaignSession::RunBattleResources() {
 }
 //0040e050의 지역 난수/모드·현재 오벨리스크 TYPE를 같은 공간·Factory·MayPlace에 연결한다.
 void RawCampaignSession::PlaceBattleNuggets(o::FortRandomRectangle rectangle,std::uint32_t quantity) {
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) { impl_->services.constructionGlobals->PlaceBattleNuggets(rectangle,quantity);return; } //실제Native배치의모드/seed/현재TYPE/전체단일몸체는장기owner를직접사용한다.
     auto& s=*impl_;if (!s.loaded || !s.construction) throw std::logic_error("설치 전 실제 비미션 보충 배치");auto singleHooks=MakeNormalTerrainFarmWorldHooks(s.world,s.chunks,*s.islands,*s.pipeline,s.hp);singleHooks.mayPlace=[&s](const o::CanonPlacementQuery& query) { return s.MayPlaceGameplay(query); };
     o::RawFortRandomPlacement single(s.core.pool,s.core.hash,s.core.spots,s.core.types,s.core.frames,s.random,s.randomPlacement,std::move(singleHooks));o::FortFinishOwnerHooks finish;
     finish.regionBounds=[&s](auto region) { const auto result=s.islands->Bounds(region);return o::FortRandomRectangle{result.left,result.top,result.right,result.bottom}; };finish.wallSeconds=s.services.construction.wallSeconds;

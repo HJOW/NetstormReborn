@@ -46,11 +46,11 @@ void RawNormalTerrainWorldBinding::RequireNormal() const {
 }
 // 현재 원본 모드의 선택과 분리하여 같은 실제 TYPE/지역/생성자 연결을 확인한다.
 void RawNormalTerrainWorldBinding::RequireStorage() const {
-    if (contextGlobals_.islandType!=placementState_.islandType || contextGlobals_.islandType!=stampState_.islandType ||
+    if (contextGlobals_.islandType!=placementState_.IslandType() || contextGlobals_.islandType!=stampState_.islandType ||
         contextGlobals_.edgeType!=stampState_.edgeType || contextGlobals_.noRegion!=stampState_.noRegion)
         throw std::invalid_argument("일반 지형 같은 타입/지역 전역 연결 오류");
     // 지면97의 실제0 슬롯/base 계약은 보존하며121의 실제 생성자를 임의0 슬롯으로 대신하지 않는다.
-    for (const auto type:{contextGlobals_.islandType,placementState_.edgeFarmType})
+    for (const auto type:{contextGlobals_.islandType,placementState_.EdgeFarmType()})
         if (type>=core_.types.size() ||
             core_.types[type].constructorAddress!=o::TypeConstructorAddress(core_.pool.Edition(),type))
             throw std::invalid_argument("일반 지형 실제 타입 생성자 연결 누락");

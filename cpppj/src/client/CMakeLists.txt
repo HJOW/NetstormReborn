@@ -2,6 +2,7 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    ClientConstructionRandomPlacement.cpp #실제단일난수배치와오벨리스크배치부모를장기로공유한다.
     ClientConstructionPlacement.cpp #같은실제장기상태로완전한게임MayPlace를구성한다.
     RawSurfaceAssetDeletion.cpp AssetDeletionVtables.inc #실제83VT의Pre/Post/부모통지를같은장기삭제몸체에연결한다.
     NativeFortSaveVirtual.cpp NativeFortSaveVirtual.h #같은 장기 물리의 저장/보상 가상 조회를 실제 호출자가 공유한다.

@@ -8,6 +8,7 @@
 #include "client/ClientPlayerRecords.h" //본체 구성 전 Player base0을 유지하는 실제 할당 owner다.
 #include "o/RawCanonPlacementCollision.h"
 #include "o/ConfigInterface.h" //NoWorld 장치가 같은 실제 Config의 현재값/fallback을 읽는지 확인한다.
+#include <iostream> //실제선택경계의최초실패를조건별값과함께기록한다.
 
 using namespace netstorm::client;
 using namespace netstorm::o;
@@ -19,7 +20,7 @@ template<class Result,class... Arguments> std::function<Result(Arguments...)> Ow
 template<class Function> bool OwnerRejected(Function&& function) { try { function();return false; }catch (const std::logic_error&) { return true; } }
 // Source/현재 GameAux/Authority는 같은 실제 owner를 사용하고 Native 장치의 실행은 금지한다.
 std::shared_ptr<RawSurfaceStorage> OwnerStorage(const std::shared_ptr<ClientGameplayGlobals>& gameplay) {
-    auto result=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay->Authority(),gameplay->GameAux());result->BindTransmissionDevices({OwnerForbidden<void,std::span<std::uint8_t>>(),OwnerForbidden<bool,std::int32_t>(),OwnerForbidden<void,std::int32_t,std::span<std::uint8_t>>()});return result;
+    auto result=MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay->Authority(),gameplay->GameAux());result->BindTransmissionDevices({[](std::span<std::uint8_t>) { throw std::logic_error("건설 상태 검사에서 선택 금지된 Native 방송"); },OwnerForbidden<bool,std::int32_t>(),OwnerForbidden<void,std::int32_t,std::span<std::uint8_t>>()});return result; //실제대상송신을허용하지않으며선택된금지장치를식별한다.
 }
 // 독립 typed World에 명시 현재 getter를 연결해 상위 검증이 raw 사본을 읽는 회귀를 검출한다.
 struct OwnerBindingScene {
@@ -138,7 +139,7 @@ struct LongConstructionScene {
         storage->BindSerializationGlobals(std::make_shared<FortSerializationGlobals>());
         storage->BindRewardDevices({std::shared_ptr<ScrambledSpStore>(sp,&sp->Store()),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->world.editor),OwnerForbidden<void>(),OwnerForbidden<void,std::uint32_t,std::int32_t>()});
         storage->BindPostPopDevices({OwnerForbidden<void,std::uint32_t,Sid,bool>(),[current=gameplay] { return current->player.battleOwner; },OwnerForbidden<void>()});
-        storage->BindDeletionDevices({OwnerForbidden<void,std::uint32_t,std::uint32_t,std::uint32_t>(),OwnerForbidden<void,Sid>()});owner->Bind(storage,gameplay,{});owner->BindDevices(OwnerClientDevices());
+        storage->BindDeletionDevices({OwnerForbidden<void,std::uint32_t,std::uint32_t,std::uint32_t>(),OwnerForbidden<void,Sid>()});owner->Bind(storage,gameplay,{});owner->BindDevices(OwnerClientDevices());owner->BindRandom(random); //같은난수를결합만하며첫값을보존한다.
     }
     RawCampaignConstructionBindings& Body() { return owner->Body(sp,players,gameplay->BattleOptionsOwner()); } //동일 실제 backing만 전달하며 현재 Player를 조회하지 않는다.
 };
@@ -253,4 +254,57 @@ TEST_CASE(ConstructionOwner_PlacementRebindPreservesActualStateAndLifetime) {
     LongConstructionScene scene;auto* pipeline=&scene.owner->PlacementPipeline();auto* state=&scene.owner->PlacementState();auto* anchor=&scene.owner->PlacementAnchor();auto* additional=&scene.owner->PlacementAdditional();state->permission.useAlliances=7;anchor->graphReady=9;additional->entries={123};additional->count=1;
     scene.owner->Bind(scene.storage,scene.gameplay,{});CHECK(&scene.owner->PlacementPipeline()==pipeline && &scene.owner->PlacementState()==state && &scene.owner->PlacementAnchor()==anchor && &scene.owner->PlacementAdditional()==additional);CHECK(state->permission.useAlliances==7 && anchor->graphReady==9 && additional->count==1 && additional->entries[0]==123);
     std::weak_ptr<RawSurfaceStorage> storage=scene.storage;std::weak_ptr<ClientGameplayGlobals> gameplay=scene.gameplay;scene.storage.reset();scene.gameplay.reset();CHECK(!storage.expired() && !gameplay.expired());scene.owner.reset();CHECK(storage.expired() && gameplay.expired());
+}
+
+// 단일배치의실제spot/전체MayPlace거부는World/Player/Runtime과난수소비를요구하지않는다.
+TEST_CASE(ConstructionOwner_RandomSingleBeforeWorldUsesActualSpotAndMayPlace) {
+    LongConstructionScene scene;scene.owner->BindBacking(scene.sp,scene.players,scene.gameplay->BattleOptionsOwner());GameRandom local(123);const auto seed=scene.random->Game().State();
+    CHECK(scene.owner->PlaceRandomSingle(local,{112,128,128,-1,0,1})==0);scene.storage->spots[128*256+128]=0x3f;
+    CHECK(scene.owner->PlaceRandomSingle(local,{112,128,128,-1,0,1})==0);CHECK(local.State()==123 && scene.random->Game().State()==seed && scene.players->Base()==0 && !scene.storage->Borrowed() && scene.storage->Generation()==0);
+    CHECK(OwnerRejected([&] { static_cast<void>(scene.owner->Body()); }));
+}
+
+// 시각효과뒤현재오벨리스크TYPE를읽고전체반복의spot거부를장기단일몸체로보낸다.
+TEST_CASE(ConstructionOwner_BattleNuggetParentUsesCurrentClockAndTypeWithoutRuntime) {
+    LongConstructionScene scene;scene.gameplay->Boss()=true;scene.gameplay->world.missionPost=false;scene.owner->BindBacking(scene.sp,scene.players,scene.gameplay->BattleOptionsOwner());const auto seed=scene.random->Game().State();std::uint32_t first{},second{};
+    auto next=OwnerClientDevices();next.wallSeconds=[&] { ++second;scene.owner->GemState().buriedType=112;return 7.0; };
+    auto devices=OwnerClientDevices();devices.wallSeconds=[&] { ++first;scene.owner->GemState().buriedType=0;scene.owner->BindDevices(next);return 3.0; };scene.owner->BindDevices(std::move(devices));
+    scene.owner->PlaceBattleNuggets({120,121,130,131},1);CHECK(first==1 && second==0 && scene.owner->GemState().buriedType==0);
+    scene.owner->PlaceBattleNuggets({120,121,130,131},1);CHECK(first==1 && second==1 && scene.owner->GemState().buriedType==112);
+    CHECK(scene.random->Game().State()==seed && scene.players->Base()==0 && !scene.storage->Borrowed() && scene.storage->Generation()==0);CHECK(OwnerRejected([&] { static_cast<void>(scene.owner->Body()); }));
+    scene.owner->ReleaseDevices();CHECK(OwnerRejected([&] { scene.owner->PlaceBattleNuggets({120,121,130,131},1); }));CHECK(first==1 && second==1);
+}
+
+// 재결합은같은세상태/난수owner를보존하고현재TYPE주소를지면/Farm이함께읽는다.
+TEST_CASE(ConstructionOwner_RandomStateIdentityAndCurrentTypes) {
+    LongConstructionScene scene;auto* single=&scene.owner->RandomPlacementState();auto* finish=&scene.owner->FinishOwnerState();auto* gem=&scene.owner->GemState();const auto seed=scene.random->Game().State();
+    single->ownerOverride=0x80000001U;finish->residenceType=91;gem->buriedType=113;scene.storage->GameAux()->TerrainType()=98;scene.storage->GameAux()->EdgeFarmType()=122;scene.owner->Bind(scene.storage,scene.gameplay,{});scene.owner->BindRandom(scene.random);
+    CHECK(&scene.owner->RandomPlacementState()==single && &scene.owner->FinishOwnerState()==finish && &scene.owner->GemState()==gem);CHECK(single->ownerOverride==0x80000001U && single->IslandType()==98 && single->EdgeFarmType()==122 && finish->residenceType==91 && gem->buriedType==113 && scene.random->Game().State()==seed);
+    CHECK(OwnerRejected([&] { scene.owner->BindRandom(std::make_shared<ClientRandomGlobals>()); }));CHECK(scene.players->Base()==0 && !scene.storage->Borrowed() && scene.storage->Generation()==0);
+}
+
+// 비boss의지역seed는실제같은청크기록을읽으며벽시각/Player할당을요구하지않는다.
+TEST_CASE(ConstructionOwner_BattleNuggetNonBossUsesActualRegionWithoutClock) {
+    LongConstructionScene scene;scene.owner->BindBacking(scene.sp,scene.players,scene.gameplay->BattleOptionsOwner());scene.gameplay->Boss()=false;scene.gameplay->world.missionPost=false;scene.owner->GemState().buriedType=0;scene.storage->chunks.At(0,0).island=0;scene.storage->chunks.At(0,0).record={1,2,3,211,5,6};const auto seed=scene.random->Game().State();
+    scene.owner->PlaceBattleNuggets({120,121,130,131},1);auto* body=&scene.owner->Body();scene.storage->chunks.At(0,0).record[3]=17;scene.owner->PlaceBattleNuggets({120,121,130,131},1);
+    CHECK(&scene.owner->Body()==body && scene.players->Base()==0 && !scene.players->Initialized() && scene.random->Game().State()==seed && !scene.storage->Borrowed() && scene.storage->Generation()==0);
+}
+
+// 실제Factory/HP/owner/Pop뒤원문의선행Client효과가실패하면같은풀/좌표/hash/표시의부분효과를보존한다.
+TEST_CASE(ConstructionOwner_RandomSinglePreservesActualNativeCreationOnClientFailure) {
+    LongConstructionScene scene;scene.owner->BindBacking(scene.sp,scene.players,scene.gameplay->BattleOptionsOwner());scene.storage->GameAux()->MissionSettings()[1]=1;scene.storage->spots[128*256+128]=0x3f;GameRandom local(77);std::uint32_t dirty{}; //원문의실제서버/할당입력을유지하고외부Client효과는성공으로합성하지않는다.
+    RawSurfaceDisplayBindings display;display.view=[] { return SquidDisplayView{1536,1024,65536,{0,0,1024,768}}; };display.suppressed=[] { return false; };display.invalidate=[&](auto,std::uint32_t) { ++dirty; };scene.storage->BindDisplayDevices(std::move(display)); //128*16,128*11픽셀의실제대상을현재화면안에두며표시/공간/생성결과를합성하지않는다.
+    bool reached{};std::string failure;try { static_cast<void>(scene.owner->PlaceRandomSingle(local,{112,128,128,-1,0,1})); }catch (const std::logic_error& error) { failure=error.what();reached=failure=="건설 상태 검사에서 선택 금지된 Native 방송"; } //004ac560은가상PostPop앞에실제전송을선택하므로후처리성공을기대하지않는다.
+    std::uint32_t created{};for (std::uint32_t value=5;value<scene.storage->pool.Capacity();++value) { const auto raw=scene.storage->pool.Slot(Sid{static_cast<std::uint16_t>(value)});if (!(raw[11]&1U) && raw[10]==112) { ++created;const auto read=[raw](std::size_t offset) { std::uint32_t result{};for (std::size_t i=0;i<4;++i) result|=std::uint32_t(raw[offset+i])<<(i*8);return result; };CHECK(read(0)==0x50a748U && read(14)==std::bit_cast<std::uint32_t>(128.0F) && read(18)==std::bit_cast<std::uint32_t>(128.0F) && raw[34]==0);CHECK(scene.storage->hash.Bucket(raw[33],128,128)==value); } } //같은실제풀의VT/현재좌표/owner/hash를확인하며새SID나성공효과를공급하지않는다.
+    if (!reached || created!=1 || !dirty) std::clog<<"실제 단일 배치 경계: "<<failure<<" 생성="<<created<<" 표시="<<dirty<<'\n'; //기대값은유지하며실패한실제선택위치를분리해기록한다.
+    CHECK(reached);CHECK(created==1);CHECK(dirty>0);CHECK(local.State()==77 && scene.players->Base()==0 && !scene.storage->Borrowed() && scene.storage->Generation()==0);
+}
+
+// 장기섬getter는부재진단뒤바뀐현재DWORD/네float비트를읽고기존물리경계를유지한다.
+TEST_CASE(ConstructionOwner_IslandGettersReadCurrentRecordsAfterDiagnostic) {
+    RawIslandStorage storage;std::uint32_t diagnostics{};const auto put=[&](std::size_t offset,std::uint32_t value) { for (std::size_t i=0;i<4;++i) storage.records[offset+i]=static_cast<std::uint8_t>(value>>(i*8)); }; //현재비정렬필드의네BYTE만입력한다.
+    CHECK(RawIslandOwner(storage.records,0,[&] { ++diagnostics;put(0,1);put(8,1);put(12,0x80000001U); })==0x80000001U);put(8,0);
+    const auto bounds=RawIslandBounds(storage.records,0,[&] { ++diagnostics;put(20,0x80000000U);put(24,0x3f800001U);put(28,0x7fc12345U);put(32,0xff800000U); });
+    CHECK(diagnostics==2 && std::bit_cast<std::uint32_t>(bounds.left)==0x80000000U && std::bit_cast<std::uint32_t>(bounds.top)==0x3f800001U && std::bit_cast<std::uint32_t>(bounds.right)==0x7fc12345U && std::bit_cast<std::uint32_t>(bounds.bottom)==0xff800000U);
+    CHECK(RawIslandOwner(storage.records,-1,[&] { ++diagnostics; })==0);CHECK(OwnerRejected([&] { static_cast<void>(RawIslandBounds(storage.records,-1,[&] { ++diagnostics; })); }));CHECK(diagnostics==4);
 }

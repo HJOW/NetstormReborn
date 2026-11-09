@@ -1,0 +1,294 @@
+{
+  "unit": 1203,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "summary": "단일 난수 배치와 너겟 배치 부모 및 현재 상태/TYPE·섬 getter를 같은 장기 Client에 연결했다. 전용 오벨리스크 PostPop과 전체 NoWorld 보충은 미완료다.",
+  "sourceSha256": {
+    "cpppj/src/client/ClientConstructionGlobals.h": "bc13ce9bc0b2fc43d5adcfccc4463bcf33954412b69e4fed729848c3d7b85b10",
+    "cpppj/src/client/ClientConstructionGlobals.cpp": "8763af4fda3c0c9a82eabb4ee169da042b2f2d78523efca88912075e0efdb2de",
+    "cpppj/src/client/ClientConstructionRandomPlacement.cpp": "3a3dfbd642f5ebfe8e3e9186d85bd18bedd4cc98c9ba8984c6f7649328057c64",
+    "cpppj/src/client/ClientMain.cpp": "4b0147c0832279d78a88f2a830685849d27f2b724017d99587d8dd13bcca0267",
+    "cpppj/src/client/RawCampaignSession.cpp": "921b314b49426e449833d8269f2dec297b74b73e16b2c42e464e737c7c44165e",
+    "cpppj/src/client/CMakeLists.txt": "ebc8a6f5e22339f1afcd8887ab5f3c2d8a593b47594c0ad52a3626153f02a1b5",
+    "cpppj/tests/ConstructionOwnerStateTests.cpp": "a8cd4fac0fb405637924aae207bd2aac286a69a9c3e7626637efb80fb8f07418",
+    "cpppj/tests/CMakeLists.txt": "a8ad5526ee2789ab6c5e3c514f88972ae8889d55e72d66b3bdb77a6d32c19d2a",
+    "cpppj/src/o/RawFortRandomPlacement.h": "96af9f5558d0cd344034c22a6e4e8edc9813b7d15aeefab61752c1c6b8694886",
+    "cpppj/src/o/RawFortRandomPlacement.cpp": "8b780251055f98b56b3b3ac1edcefee7c6b665cef609bc463760eee6c366801b",
+    "cpppj/src/o/RawIslandRuntime.h": "8e6e4d60de6ca0dc4959c48216f8cc4a07556f04b6dee0f79a4c5f56c8fd1edb",
+    "cpppj/src/o/RawIslandRuntime.cpp": "18d192da4e25bc9620b1eb2e88db882bc478de67ca3c081effc28f18e120679b",
+    "cpppj/src/o/RawFarmCluster.cpp": "348ff8d2be555ae137526c893f294cb98874914d16c5e2a7bc3602b0388f7ec4",
+    "cpppj/src/client/RawNormalTerrainWorldBinding.cpp": "8a7ca4031704a30834bf0488da9a9012b0f690a081652b8aaf84d25eab3f1b47"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13747200,
+      "sha256": "7ca9b64b9e17d7be0ea801341268d7ece1605a5c89b1468d2e4e5582f4817ebf"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "b891edfe8ae9d60bd930a712387ec7dbf18940a243f55907d03e83e4dac826ce"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 34.191574811935425,
+    "sourcesUnchanged": true
+  },
+  "firstBuild": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 445.57954359054565,
+    "sourcesUnchanged": true
+  },
+  "tests": {
+    "cases": 136,
+    "passed": 136,
+    "newCases": 6,
+    "additionalExistingNonMpCases": 13,
+    "groups": {
+      "netstorm_construction_owner_tests": 62,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "multiplayerExecutions": 0
+  },
+  "firstFailure": {
+    "firstCases": 136,
+    "firstPassed": 135,
+    "firstFailedCase": "ConstructionOwner_RandomSingleReachesActualNativeFactoryAndPostPopBoundary",
+    "cause": "신규 검사가 서버 Activate의 선행 Client 효과보다 전용 PostPop을 먼저 기대했고, 검사 카메라도 실제 대상 밖에 있었다. 제품 오류를 통과 기대값으로 덮은 것이 아니라 원본004ac560의 전체 C/PE로 검사 도달 순서가 틀렸음을 확인했다.",
+    "firstPreserved": [
+      "first-failure-tests.json",
+      "first-failure-source-frozen.json",
+      "first-failure-ConstructionOwnerStateTests.cpp",
+      "first-failure-test-ConstructionOwner_RandomSingleReachesActualNativeFactoryAndPostPopBoundary.log"
+    ],
+    "diagnostic": "생성1/표시0과 Native 금지 효과의 예외를 관측했다. 비서버 입력도 조사했으나 해당 할당의 진단 대상이었으며, 그 실패/소스는 nonserver-input-*에 별도 보존했다.",
+    "oracle": "originals-004ac560.c와 전체 정밀 범위 PE: 현재 서버/대상에 따른 송신은 +20 PostPop과 curPostPop 증가보다 먼저 실행한다.",
+    "finalInput": "원래 서버/할당 입력으로 복귀하고 카메라1536,1024에서 실제128,128 대상을 관측한다. Native 외부 장치는 계속 예외로 금지한다.",
+    "finalCase": "ConstructionOwner_RandomSinglePreservesActualNativeCreationOnClientFailure",
+    "finalAssertions": "실제 Pool의112/VT0050a748·현재 float좌표/owner/hash·표시와 지역 난수 불변·Player미할당·World미생성을 확인한다. 선행 Client 효과 실패 뒤 부분 효과가 남아야 한다.",
+    "productServerPacketPostPopChangesForTest": false,
+    "unproven": "전송/패킷 내용/다중 peer/전용 PostPop 통과와 전체 NoWorld 성공은 검증하지 않았다."
+  },
+  "staticAudit": {
+    "originalFunctionsRequested": 11,
+    "cAndFullMetadataRangeAvailable": 11,
+    "patchInitialDwords": [
+      {
+        "address": "005411dc",
+        "role": "terrainType",
+        "bytes": "61000000",
+        "dword": 97
+      },
+      {
+        "address": "0054123c",
+        "role": "edgeFarmType",
+        "bytes": "79000000",
+        "dword": 121
+      },
+      {
+        "address": "00541218",
+        "role": "buriedType",
+        "bytes": "70000000",
+        "dword": 112
+      }
+    ],
+    "parentRoutesConnected": 57,
+    "dedicatedParentRoutesRemaining": 26,
+    "emptyParentNoticeVtables": 77,
+    "dedicatedNoticesRemaining": 6,
+    "decompilerSourceChanges": 0,
+    "originalExecutions": 0,
+    "multiplayerExecutions": 0,
+    "precision": "0040db90의 C에는 in_stack/unaff_EBP 조각 주의가 있다. 전체 정밀 범위 PE와 기존 단일 배치/완료/Farm 원문 fixture·실제 비MP 연결 검사를 함께 보며 C만으로 전체 동일성을 주장하지 않는다."
+  },
+  "tutorial4": {
+    "passed": true,
+    "unit": 1203,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1203\\live-tutorial4\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "7ca9b64b9e17d7be0ea801341268d7ece1605a5c89b1468d2e4e5582f4817ebf",
+    "exeSha256After": "7ca9b64b9e17d7be0ea801341268d7ece1605a5c89b1468d2e4e5582f4817ebf",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1203\\live-tutorial4\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1203\\live-tutorial4\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.603,
+        "gameTimeAfter": 24.104,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "editor": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0
+  },
+  "protectedFilesUnchanged": 2800,
+  "originalGameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "decompilerSourceChanges": 0,
+  "remainingRuntimeEffects": {
+    "construction": 16,
+    "replenishPlacement": 1
+  },
+  "limitations": [
+    "실제 오벨리스크 보상 선택/두 Regular/전용 PostPop과 정기 사건은 아직 Session 하위가 있다.",
+    "보충의 실제 배치 선택은 기존 weak Runtime 대여와 전체 pin을 유지한다. 해당 전용 하위를 장기로 연결한 뒤 제거해야 한다.",
+    "57은 Pre/Post 부모 분배 수이며 전체 NoWorld 완료 수가 아니다. 전용26부모/6통지·다른 Form/Regular·큰 AI·전수 Caller/owner 감사가 남는다.",
+    "실제 생성 검사는 선행 Client 효과를 금지한 상태의 부분 효과 보존이다. 송신/패킷/다중 peer/전용 PostPop 통과나 전체 NoWorld 성공을 검증한 것이 아니다.",
+    "허용 GUI는 생산/건설 요청·대기·같은 Client Edit 왕복이며 건물 완성/공격/승리/희생/MP/TestBattle 검증이 아니다.",
+    "다른 Fort/초기 사제/AddRandomObjects Caller의 조립본과 RawFortFinishOwner::Finish 상위 연결은 Session에 남는다. 공유 상태/PlaceRandom 연결을 전수 Caller 장기 연결 완료로 세지 않는다."
+  ],
+  "raw": "extracted/cpp-resume-1203/"
+}

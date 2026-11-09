@@ -48,6 +48,18 @@ std::uint32_t RawIslandExists(std::span<const std::uint8_t> records,std::int32_t
     if (island>=100) throw std::out_of_range("IslandRuntime 물리기록범위오류");
     return ReadIslandField(records,4+static_cast<std::size_t>(island)*kStride+4);
 }
+// 현재존재관문과진단뒤재조회는World없는Caller와기존섬실행기가같은몸체를사용한다.
+std::uint32_t RawIslandOwner(std::span<const std::uint8_t> records,std::int32_t island,const std::function<void()>& missing) {
+    if (!RawIslandExists(records,island)) { if (!missing) throw std::logic_error("Island Owner 실제 부재 진단 미결합");missing(); }
+    return RawIslandExists(records,island) ? ReadIslandField(records,4+static_cast<std::size_t>(island)*kStride+8):0;
+}
+// 원문Bounds는부재진단뒤에도현재네float를읽으며물리100기록밖만호스트경계로거부한다.
+FortRandomRectangle RawIslandBounds(std::span<const std::uint8_t> records,std::int32_t island,const std::function<void()>& missing) {
+    if (!RawIslandExists(records,island)) { if (!missing) throw std::logic_error("Island Bounds 실제 부재 진단 미결합");missing(); }
+    if (island<0 || island>=100) throw std::out_of_range("IslandRuntime 물리기록범위오류");
+    const auto record=4+static_cast<std::size_t>(island)*kStride;
+    return {std::bit_cast<float>(ReadIslandField(records,record+16)),std::bit_cast<float>(ReadIslandField(records,record+20)),std::bit_cast<float>(ReadIslandField(records,record+24)),std::bit_cast<float>(ReadIslandField(records,record+28))};
+}
 // 실제3204바이트저장소와필수하위효과·기존모드/Player/목록을확인한다.
 RawIslandRuntime::RawIslandRuntime(const SidPool& pool,const SquidHash& hash,std::span<std::uint8_t> records,
     FortFinishOwnerState& modes,SquidPostPopList& residences,std::uint32_t& worldRedraw,std::uint32_t& mapRevision,
@@ -107,11 +119,10 @@ std::uint32_t RawIslandRuntime::Temple(std::int32_t island) const { return Requi
 // 현재record신전DWORD를원본그대로대입한다.
 void RawIslandRuntime::Temple(std::int32_t island,std::uint32_t temple) { if (Require(island)) Write(Record(island),temple); }
 // ownergetter는원래ownerBYTE를반환하지않는다.
-std::uint32_t RawIslandRuntime::Owner(std::int32_t island) const { return Require(island) ? Read(Record(island)+8) : 0; }
+std::uint32_t RawIslandRuntime::Owner(std::int32_t island) const { return RawIslandOwner(records_,island,[this] { if (pool_.Edition()==OriginalEdition::Patch1078) hooks_.assertion(IslandRuntimeAssertion::MissingIsland); }); }
 // 논리부재진단뒤에도물리100기록안의원본float4개는읽는다.
 FortRandomRectangle RawIslandRuntime::Bounds(std::int32_t island) const {
-    Require(island,true);const auto record=Record(island);
-    return {std::bit_cast<float>(Read(record+16)),std::bit_cast<float>(Read(record+20)),std::bit_cast<float>(Read(record+24)),std::bit_cast<float>(Read(record+28))};
+    return RawIslandBounds(records_,island,[this] { hooks_.assertion(IslandRuntimeAssertion::MissingIsland); });
 }
 // 실제float비트만대입하며경계유효성검사는owner변경시별도실행한다.
 void RawIslandRuntime::Bounds(std::int32_t island,const FortRandomRectangle& bounds) {

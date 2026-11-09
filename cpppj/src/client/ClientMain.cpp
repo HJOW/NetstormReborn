@@ -463,7 +463,7 @@ int Client::Run() {
     surfaceStorage_->BindContentCommand([this](auto code,auto x,auto y) { Input().PushCommand(code,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); }); //실제내용물UI통지는같은입력큐에예약한다.
     rendererFrame_->BindSurfaceDisplay(); //첫World전자체Renderer/카메라의현재getter만설치하며그리기/카메라/게임진행은실행하지않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) {
-        constructionGlobals_->Bind(surfaceStorage_,gameplayGlobals_,trace_->buildReplay);constructionGlobals_->BindDevices(MakeClientConstructionDevices(*this));constructionGlobals_->BindBacking(spGlobals_,playerRecords_,gameplayGlobals_->BattleOptionsOwner());
+        constructionGlobals_->Bind(surfaceStorage_,gameplayGlobals_,trace_->buildReplay);constructionGlobals_->BindDevices(MakeClientConstructionDevices(*this));constructionGlobals_->BindBacking(spGlobals_,playerRecords_,gameplayGlobals_->BattleOptionsOwner());constructionGlobals_->BindRandom(randomGlobals_); //최초메뉴전같은난수owner만결합하며초기화/소비는하지않는다.
         surfaceStorage_->BindCarrierReplenishment([owner=std::weak_ptr<ClientConstructionGlobals>(constructionGlobals_)] { const auto current=owner.lock();if (!current) throw std::logic_error("장기 Carrier의 실제 건설 owner 반납 뒤 보충 호출");current->ReplenishNuggets(); }); //강한Storage역참조순환없이선택호출끝까지실제장기owner를보유한다.
     } //첫메뉴/Session전에실제장치/backing만보유하며SP/Player/World를초기화하지않는다.
     surfaceStorage_->BindGraphClock([this] { return clock_->GameSeconds(timeGetTime()); }); // 삭제 Graph의 두 시각 읽기도 같은 현재 Client 시계를 쓴다.
