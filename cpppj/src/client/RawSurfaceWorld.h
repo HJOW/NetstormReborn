@@ -259,6 +259,7 @@ public:
     void BindDisplayDevices(RawSurfaceDisplayBindings devices); //첫실제Client물리준비뒤현재Renderer/카메라getter만결합하며조회/난수/그리기는실행하지않는다.
     void BindDisplayRuntime(const std::shared_ptr<const RawSurfaceDisplayBindings>& runtime); //같은현재World대여만weak로공개하고만료뒤장기Client장치를쓴다.
     bool DestroyAsset(o::Sid sid,std::uint32_t flags); //현재 Client 장치에서 실제 가상 삭제 bool을 빌리며 World 주소를 보관하거나 성공을 합성하지 않는다.
+    bool NotifyAssetDependency(o::Sid receiver,o::Sid parent,std::uint32_t value); // 현재83자산 VT의 실제+34를 호출하며 다른 Form VT만 false로 돌려 기존 Host가 처리하게 한다.
     o::Sid CreateAsset(std::uint32_t type,std::uint32_t flags=0); //기존 World의 changed prefix 뒤 같은 현재 Factory Create를 실행하고 새 World를 요구하지 않는다.
     NativeFortSaveVirtual& FortSaveVirtual(); //현재 Robust/HasLevel/Count의 동일 장기 조회기를 처음 필요할 때 구성하며 World/파일/등록을 만들지 않는다.
     PriestPlacementAssets& PlacementAssets(); // 같은 최초 자산의 Canon/핫스폿/형상·현재 진단을 World 없이 빌린다.
@@ -336,6 +337,7 @@ private:
     bool AllocateResourceRegular(); //원문new28의동일확보메모리이며실패뒤난수를소비하지않는다.
     void ConstructResourceRegular(o::Sid sid,std::uint32_t event,float payload); //확보한같은객체주소에서현재Host에생성·부착한다.
     void EmitDefaultAssetEffect(const o::SquidDestroyEvent& event); //현재VT의실제Pre/Post/부모통지를같은장기삭제부모에분배한다.
+    void NotifyAviaryHome(o::Sid home,std::uint32_t method); // 서버 관문 뒤 같은 장기 Pool/Host/현재 TYPE/시각/난수로 실제 세 홈 통지 본문을 공유한다.
     o::SquidDestroyHooks DefaultProcessAssetHooks(); //실제선택/전송과자산가상효과를같은장기부모에연결한다.
     o::SquidFormDispatch& ProcessFormDispatch(); //같은공통삭제깊이에실제자산가상10과ProcessForm을등록하며다른Form은전용owner를요구한다.
     float HandleDefaultRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); //PE의현재VT+5c가복원된원문base인경우만해당본문을실행한다.

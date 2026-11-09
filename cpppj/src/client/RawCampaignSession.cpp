@@ -1577,6 +1577,7 @@ struct RawCampaignSession::Impl {
             other(event);
         };
         worldHooks.dependencyNotice=[this](Sid watcher,Sid watched,Sid form) {
+            if (world.Storage()->UsesNativeTransmissionDevices() && world.Storage()->NotifyAssetDependency(watcher,watched,form.value)) return; // 모든 Native 자산은 메뉴와 같은 현재 가상34를 쓰고 Form만 기존 Host에 남긴다.
             //110의 실제0048f0a0은 두 통지 인수를 무시하고 현재 가상+10(flags0)을 호출한다.
             if (VisualDummy(watcher)) { world.Destroy(watcher,0);return; }
             core.processes.NotifyDependency(watcher,watched,form);
@@ -1610,6 +1611,7 @@ struct RawCampaignSession::Impl {
         worldHooks.destroy=construction->Destroy(lifetime->Destroy(hits->Destroy(services.destroy)));
         auto previousEffects=std::move(worldHooks.assets.emit); // 다른 기존 파생/전송/선택 처리기를 유지한다.
         worldHooks.assets.emit=[this,previous=std::move(previousEffects)](const SquidDestroyEvent& event) {
+            if (world.Storage()->UsesNativeTransmissionDevices() && event.effect==SquidDestroyEffect::ReleaseDependent && world.Storage()->NotifyAssetDependency(event.sid,event.parent,event.flags)) return; // 직접 삭제 종속 통지도 같은 장기 본문으로 연결한다.
             if (world.Storage()->UsesNativeTransmissionDevices() && (event.effect==SquidDestroyEffect::PreDestroy || event.effect==SquidDestroyEffect::PostDestroy)) {
                 const auto table=Read(core.pool.Slot(event.sid),0); // 실제 Native 가상 선택은 TYPE 이름과 별개인 현재 VT다.
                 if (table==kPatchAltarVtable || table==kPatchDaisVtable) {
@@ -2202,7 +2204,8 @@ struct RawCampaignSession::Impl {
         hooks.command=[this](Sid parent,std::uint32_t command) { BroadcastFlyerCommand(parent,command); };
         hooks.sunProcess=[this](Sid sid,std::uint32_t type)->SunAviaryProcessFields& { const auto form=FindAttachedProcess(core.pool,sid,type);auto* process=form.value ? dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(form)) : nullptr;if (!process) throw std::logic_error("착륙 대상의 실제 훨리베이스 프로세스 미연결");return process->Fields(); };
         hooks.refreshSun=[this](SunAviaryProcessFields& fields) { auto* process=dynamic_cast<SunAviaryProcess*>(core.processes.FromForm(fields.Form()));if (!process || &process->Fields()!=&fields) throw std::logic_error("착륙 훨리베이스 Host/raw 이미지 불일치");core.processes.RefreshForm(*process); };
-        hooks.homeNotice=[this](Sid home,std::uint32_t,std::uint32_t) {
+        hooks.homeNotice=[this](Sid home,std::uint32_t first,std::uint32_t second) {
+            if (world.Storage()->UsesNativeTransmissionDevices() && world.Storage()->NotifyAssetDependency(home,Sid{static_cast<std::uint16_t>(first)},second)) return; // 실제 홈+34 세 본문은 두 DWORD 인자를 모두 무시한다.
             if (!core.processState.Server()) return;const auto table=Read(core.pool.Slot(home),0); // 두 원본 홈의 실제 가상34로만 분배한다.
             if (table==0x509930U) { sunAviary->FlyerDied(home);return; } // 실제45b4a0은 Rain의 재출격 난수 지연을 사용하지 않는다.
             if (table!=0x5099e8) throw std::logic_error("다른 실제 플라이어 홈 가상 통지 미복원");

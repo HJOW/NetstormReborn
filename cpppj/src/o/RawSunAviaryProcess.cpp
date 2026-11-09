@@ -62,11 +62,17 @@ void RawSunAviaryProcess::FlyerDied(Sid home) const {
     if (!globals_.server) return;
     const auto form=Need(hooks_.findProcess)(home,globals_.processType); // 원본4b1a90의 현재 타입/첫 일치다.
     auto* fields=form.value ? Need(hooks_.processFields)(form) : nullptr; // 원본은 NULL도 공간 효과 뒤에야 역참조한다.
-    Need(hooks_.unpop)(home,0);
-    Put(pool_.AllocatedBytes(home),36,27); // SetFrame의 다른 검사/효과를 추가하지 않고 원본 DWORD만 쓴다.
-    Need(hooks_.repop)(home,0);
+    FlyerDiedIn(pool_,fields,home,hooks_.unpop,hooks_.repop,hooks_.refreshForm);
+}
+// 원문은 조회 결과가 NULL이어도 Unpop/plain27/Repop을 끝낸 뒤에야 프로세스 필드를 소비한다.
+void RawSunAviaryProcess::FlyerDiedIn(SidPool& pool,SunAviaryProcessFields* fields,Sid home,const std::function<void(Sid,std::uint32_t)>& unpop,
+    const std::function<void(Sid,std::uint32_t)>& repop,const std::function<void(SunAviaryProcessFields&)>& refresh,bool nativePhysical) {
+    const auto unpopCall=Need(unpop);unpopCall(home,0);
+    const auto physical=pool.Slot(home);auto raw=nativePhysical ? std::span<std::uint8_t>(const_cast<std::uint8_t*>(physical.data()),physical.size()):pool.AllocatedBytes(home);
+    Put(raw,36,27); // Native는 공간 효과 뒤 같은 물리 슬롯에 실제 DWORD만 쓴다.
+    const auto repopCall=Need(repop);repopCall(home,0);
     if (!fields) throw std::logic_error("훨리베이스 홈 통지의 현재 프로세스 NULL 원본 경계");
-    fields->bytes[kDirty]|=4;Put(fields->bytes,kStage,8);Need(hooks_.refreshForm)(*fields);
+    fields->bytes[kDirty]|=4;Put(fields->bytes,kStage,8);const auto refreshCall=Need(refresh);refreshCall(*fields);
 }
 // stage2/4의 frame은 진입 시 읽으며 호출 뒤 단계/횟수/시각만 원본 위치에서 다시 읽는다.
 void RawSunAviaryProcess::Frame(SunAviaryProcessFields& fields) const {

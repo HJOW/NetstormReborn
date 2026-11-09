@@ -40,6 +40,7 @@ public:
     void PostPop(Sid parent,std::uint32_t flags) const; // 0045edf0의 관문/할당/부착/공통 순서다.
     void Frame(WindAviaryProcessFields& fields) const; // 일반 생산과 특별 부모의 상태1..13이다.
     void FlyerDied(WindAviaryProcessFields& fields,const std::function<void(WindAviaryProcessFields&)>& refresh) const; // 0045b680의 상태2와 Form 갱신이다.
+    static void FlyerDiedIn(WindAviaryProcessFields& fields,const std::function<void(WindAviaryProcessFields&)>& refresh); // 장기 Native 통지도 같은 AP2/dirty4/실제 Form 갱신 본문을 공유한다.
     void FormDestroy(WindAviaryProcessFields& fields) const; // 0045c090: boss/현재DWORD주소/dead2 검사 뒤 임시 비행체를 정리한다.
 private:
     SidPool& pool_; WindAviaryGlobals globals_; WindAviaryHooks hooks_; // 원문·전역·효과의 단일 수명이다.

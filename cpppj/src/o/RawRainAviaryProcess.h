@@ -52,6 +52,8 @@ public:
     void Frame(RainAviaryProcessFields& fields) const; // inner0045dde0의 실제 상태1~10을 실행한다.
     //0045b5b0: 실제 홈 lookup 뒤 stage10/현재 시각→정수10..14초 대기→Form 갱신을 수행한다.
     void FlyerDied(RainAviaryProcessFields& fields,GameRandom& random,const std::function<void(RainAviaryProcessFields&)>& refresh) const;
+    static void FlyerDiedIn(RainAviaryProcessFields& fields,const std::function<double()>& now,const std::function<GameRandom&()>& random,
+        const std::function<void(RainAviaryProcessFields&)>& refresh); // 현재 필드 쓰기 뒤에만 시각/난수를 읽는 같은 홈 통지 본문이다.
     static std::uint16_t WriteProcess(RainAviaryProcessFields& fields,std::span<std::uint8_t> packet,bool includeParent,bool force=false,std::uint8_t protocol=1,std::uint8_t message=0x73); // 0045d870→0045b2a0의 변경 비트와 길이를 기록한다.
     const SidPool& Pool() const; // Host와 동일 풀인지 확인한다.
 private:

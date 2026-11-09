@@ -30,12 +30,24 @@ void RawSurfaceStorage::BindRegionLifecycle(std::function<void(o::Sid,std::uint3
     vortexOwner_=std::move(vortexOwner);vortexPre_=std::move(vortexPre);regionChanged_=std::move(region);
 }
 
-// 공통/표면/피해가능 객체/간헐천은 기존 실제 몸체를 재사용하고 전용 미연결은 선택 위치에서 알린다.
+// 현재83자산의 통지만 소비하며 다른 Form은 기존 실제 Host 분배로 남긴다.
+bool RawSurfaceStorage::NotifyAssetDependency(o::Sid receiver,o::Sid parent,std::uint32_t value) {
+    if (!UsesNativeTransmissionDevices()) throw std::logic_error("장기 자산 통지의 Native 판본 계약");
+    const auto raw=pool.Slot(receiver);const auto table=std::uint32_t(raw[0])|(std::uint32_t(raw[1])<<8)|(std::uint32_t(raw[2])<<16)|(std::uint32_t(raw[3])<<24);
+    for (const auto& entry:kNativeAssetDeletionEntries) { // TYPE/owner/상태를 읽지 않고 실제 현재 가상표만 선택한다.
+        if (entry.table==table) { EmitDefaultAssetEffect({o::SquidDestroyEffect::ReleaseDependent,receiver,parent,value});return true; }
+    }
+    return false;
+}
+
+// 공통/표면/피해가능 객체/간헐천과 여섯 전용 통지는 기존 실제 몸체를 공유한다.
 void RawSurfaceStorage::EmitDefaultAssetEffect(const o::SquidDestroyEvent& event) {
     if (!UsesNativeTransmissionDevices()) throw std::logic_error("장기 자산 가상 효과의 Native 판본 계약");
     const auto& entry=CurrentAssetDeletionEntry(pool,event.sid);
     if (event.effect==o::SquidDestroyEffect::ReleaseDependent) {
         if (entry.notice==0x0041c100U) return; // 실제77VT의 빈 ret8이며 상태·TYPE·통지 인자를 추가로 읽지 않는다.
+        if (entry.notice==0x0048f0a0U) { DestroyAsset(event.sid,0);return; } // 실제 세 VT는 두 인자를 무시하며 서버 관문 없이 현재 가상10(flags0)을 부른다.
+        if (entry.notice==0x0045b4a0U || entry.notice==0x0045b5b0U || entry.notice==0x0045b680U) { NotifyAviaryHome(event.sid,entry.notice);return; }
         throw std::logic_error("장기 자산의 전용 부모 삭제 통지 미연결: "+std::to_string(entry.notice));
     }
     const bool pre=event.effect==o::SquidDestroyEffect::PreDestroy;

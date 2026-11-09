@@ -42,8 +42,15 @@ void RawRainAviaryProcess::Initialize(RainAviaryProcessFields& fields) const {
 }
 // 가상 홈 통지의 현재 시각 저장/난수 소비/정수 나눗셈과 실제 갱신 순서를 유지한다.
 void RawRainAviaryProcess::FlyerDied(RainAviaryProcessFields& fields,GameRandom& random,const std::function<void(RainAviaryProcessFields&)>& refresh) const {
-    if (!globals_.server) return;Stage(fields,10);fields.bytes[kDirty]|=2;StoreTime(fields,globals_.now);
-    const auto milliseconds=random.Next(5000)+10000U;StoreTime(fields,globals_.now+static_cast<double>(milliseconds/1000U));Need(refresh)(fields);
+    if (!globals_.server) return;FlyerDiedIn(fields,[this] { return globals_.now; },[&random]()->GameRandom& { return random; },refresh);
+}
+// 최초 dirty를 보존하고 AP10/첫 시각을 쓴 뒤 난수와 그 뒤 현재 시각을 각각 소비한다.
+void RawRainAviaryProcess::FlyerDiedIn(RainAviaryProcessFields& fields,const std::function<double()>& now,const std::function<GameRandom&()>& random,
+    const std::function<void(RainAviaryProcessFields&)>& refresh) {
+    const auto dirty=fields.bytes[kDirty];fields.bytes[kDirty]=dirty|4U;Put(fields.bytes,kStage,10);
+    const auto firstTime=Need(now)();fields.bytes[kDirty]=dirty|6U;StoreTime(fields,firstTime);
+    const auto randomCall=Need(random);const auto milliseconds=randomCall().Next(5000)+10000U;
+    StoreTime(fields,Need(now)()+static_cast<double>(milliseconds/1000U));const auto refreshCall=Need(refresh);refreshCall(fields);
 }
 // 실제 할당 실패도 NULL inner 부착 요청으로 전달한다. Host는 해당 비정상 경로를 명시 거부할 수 있다.
 void RawRainAviaryProcess::PostPop(Sid parent,std::uint32_t flags) const {

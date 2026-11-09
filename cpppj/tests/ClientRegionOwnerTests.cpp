@@ -815,3 +815,60 @@ TEST_CASE(ClientFence_LineClearReadsCurrentRoleAndFrameDirection) {
     scene.storage->GameAux()->FenceShieldType()=90;scene.storage->FenceLine().Clear({100,100,100,110});CHECK(scene.OfType(170).size()==8);
     scene.storage->GameAux()->FenceShieldType()=170;scene.storage->FenceLine().Clear({100,100,100,110});CHECK(scene.OfType(170).empty() && scene.storage->pool.FreeCount()==free && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
 }
+
+
+// 실제 세 자기삭제 가상34는 두 인수를 무시하고 flags0의 현재 가상10을 실행한다.
+TEST_CASE(ClientAssetNotice_ThreeSelfDeleteVtables) {
+    for (const auto table:{0x509148U,0x509210U,0x50eb98U}) { // 공중3종이 아닌 세 일반 자산만 실제 client SID로 확인한다.
+        RegionScene scene;const auto sid=scene.Asset(table);scene.Position(sid);const auto free=scene.storage->pool.FreeCount();
+        CHECK(scene.storage->NotifyAssetDependency(sid,Sid{65535},0xffffffffU));
+        CHECK(scene.storage->pool.FreeCount()==free+1 && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+        CHECK(scene.players->Base()==0 && !scene.sp->Store().Initialized() && !scene.storage->Borrowed());
+    }
+}
+
+// 자기삭제 통지에는 서버 관문이 없으며 client SID는 원문의 송신 억제를 유지한다.
+TEST_CASE(ClientAssetNotice_SelfDeleteAlsoOnNonServer) {
+    RegionScene scene;const auto sid=scene.Asset(0x50eb98U);scene.Position(sid);scene.gameplay->Authority()->server=false;
+    const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->NotifyAssetDependency(sid,{},0));
+    CHECK(scene.storage->pool.FreeCount()==free+1 && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 이미 dead인 수신자는 실제 가상10의 기존 관문으로 돌아가며 통지가 풀/선택을 중복 처리하지 않는다.
+TEST_CASE(ClientAssetNotice_SelfDeleteRetainsDeadGuard) {
+    RegionScene scene;const auto sid=scene.Asset(0x50eb98U);scene.storage->pool.AllocatedBytes(sid)[11]|=2U;scene.gameplay->selection.selected=sid.value;
+    const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->NotifyAssetDependency(sid,Sid{65535},0xffffffffU));
+    CHECK(scene.storage->pool.FreeCount()==free && scene.traces==0 && scene.clears==0 && scene.gameplay->selection.selected==sid.value);
+}
+
+// 빈 원문 ret8은 TYPE/owner/두 통지 인자를 해석하지 않고 물리 필드를 보존한다.
+TEST_CASE(ClientAssetNotice_EmptyBodyDoesNotReadTypeOrArguments) {
+    RegionScene scene;const auto sid=scene.Asset(0x502370U);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[10]=255;raw[34]=255;
+    const std::vector<std::uint8_t> before(raw.begin(),raw.end());const auto free=scene.storage->pool.FreeCount();
+    CHECK(scene.storage->NotifyAssetDependency(sid,Sid{65535},0xffffffffU));
+    CHECK(std::equal(before.begin(),before.end(),scene.storage->pool.Slot(sid).begin()) && scene.storage->pool.FreeCount()==free && scene.traces==0 && scene.players->Base()==0);
+}
+
+// 등록되지 않은 Form VT는 자산 성공으로 삼지 않고 기존 Host가 처리하도록 false로 돌린다.
+TEST_CASE(ClientAssetNotice_UnknownVtableIsNotConsumed) {
+    RegionScene scene;const auto sid=scene.Asset(0x50eb98U);RegionPut(scene.storage->pool.AllocatedBytes(sid),0,0x12345678U);
+    const auto free=scene.storage->pool.FreeCount();CHECK(!scene.storage->NotifyAssetDependency(sid,Sid{65535},0xffffffffU));
+    CHECK(scene.storage->pool.FreeCount()==free && scene.traces==0 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 현재 VT가 가상 선택을 결정하며 다른 유효 TYPE로 바꿔도 자기삭제 통지 본문을 유지한다.
+TEST_CASE(ClientAssetNotice_CurrentVtableSelectsBody) {
+    RegionScene scene;const auto sid=scene.Asset(0x509148U);scene.Position(sid);scene.storage->pool.AllocatedBytes(sid)[10]=70;
+    const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->NotifyAssetDependency(sid,{},0));
+    CHECK(scene.storage->pool.FreeCount()==free+1 && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 실제 가상10 진입 뒤 현재 VT가 바뀌면 실패 접두/깊이를 보존하고 풀을 거짓 반납하지 않는다.
+TEST_CASE(ClientAssetNotice_DeleteFailureRetainsActualPrefix) {
+    RegionScene scene;const auto sid=scene.Asset(0x50eb98U);scene.Position(sid);scene.gameplay->selection.selected=sid.value;
+    scene.onTrace=[&] { RegionPut(scene.storage->pool.AllocatedBytes(sid),0,0x12345678U); };
+    const auto free=scene.storage->pool.FreeCount();bool rejected{};
+    try { scene.storage->NotifyAssetDependency(sid,{},0); }catch (const std::logic_error& error) { rejected=std::string_view(error.what())=="PATCH 현재 삭제 가상 효과의 미지 VT"; }
+    CHECK(rejected && scene.storage->pool.FreeCount()==free && scene.traces==1 && scene.clears==0 && scene.gameplay->selection.selected==sid.value);
+    CHECK((scene.storage->pool.Slot(sid)[11]&3U)==2U && scene.storage->BaseDestroy().PreDepth()==1 && scene.storage->BaseDestroy().PostDepth()==0);
+}

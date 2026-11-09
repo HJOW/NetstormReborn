@@ -1,0 +1,227 @@
+{
+  "unit": 1216,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "accepted": true,
+  "summary": "실제83자산의 종속 통지와 Native Session의 세 호출자를 같은 장기 Pool/Host 및 기존 자기삭제/홈 통지 본문에 연결했다.",
+  "sourceSha256": {
+    "cpppj/src/o/RawSunAviaryProcess.h": "f5a75bc34fb17ec81cb91a9e63cad40b2a2b15acc332262dbad5d458d3e5b121",
+    "cpppj/src/o/RawSunAviaryProcess.cpp": "66b4d7b64f62bdc6344d2939ff6f24f39b475eaaeeed0a78cdf7c110a337f74b",
+    "cpppj/src/o/RawRainAviaryProcess.h": "60d20b00ab5c165f2884313118d04daa7cbd9c421c5b7b36c08db254408df0e2",
+    "cpppj/src/o/RawRainAviaryProcess.cpp": "f2ab911c98e4d7a0926e8f04fb6d8150ac7ef88a94b69abfb7e522e4fc3d17bc",
+    "cpppj/src/o/RawWindAviaryProcess.h": "a6a07999066830eca4950190e5d4891a2d1a073bc3df9937a5819ed1fcd21ae2",
+    "cpppj/src/o/RawWindAviaryProcess.cpp": "e2ca59bc4e2c4d373e46c8dc3a187b0e2aef4acf860ac08c35e5623187c0bf10",
+    "cpppj/src/client/RawSurfaceWorld.h": "6278771d981c767a41fb71cc06ff7950614137c889476afa2bf3633d4ddd4ef3",
+    "cpppj/src/client/RawSurfaceAssetDeletion.cpp": "6c87845001c8c629bd2637d520bc77b5afdd7ea332ccb7c08a2ba17ffd0dcf91",
+    "cpppj/src/client/RawSurfaceAssetNotice.cpp": "1e3729ca39e320abb3185bf926f7306e0d31fb7b663a2c764921a8924fb83596",
+    "cpppj/src/client/CMakeLists.txt": "4e1074156367371022ff3280c2940d1964f7f49d5cc933c144190994f1e608e1",
+    "cpppj/src/client/RawCampaignSession.cpp": "7b10f8dfa0d65d7960aad7ee05cbe0747f15c5a254db40ede2e40c748f9b2f34",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "969318966e05e211f916aa91e4745a8b3a97cde6f1182fc5275642d45eecd1b1"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13940224,
+      "sha256": "2ca683fe582342b89f0ddf4d6868613b73d36f1414a407042c6e749e3d943a9e"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "c3e11a8b5d6313572bf842f4c862a3f5f32249bbebb341ce77bdb697e83560bf"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 334.2676248550415,
+    "sourcesUnchanged": true,
+    "handle": 8850,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 313,
+    "passed": 313,
+    "newCommonAssetCases": 7,
+    "previousNonMpCases": 306,
+    "groups": {
+      "netstorm_construction_owner_tests": 239,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "seconds": 60.54205107688904,
+    "handle": 30697
+  },
+  "corrections": {
+    "firstBuildHandle": 24412,
+    "firstBuildExitCode": 1,
+    "cause": "WindAviaryProcessFields에 없는 Form() 접근자 사용(C2039); 원문의 현재 inner+4, outer+60 필드 조회로 교정한다.",
+    "expectationsWeakened": false,
+    "firstTestFailures": []
+  },
+  "staticAudit": {
+    "sourceVtables": 83,
+    "connectedPrePost": 83,
+    "remainingPrePost": 0,
+    "connectedNotices": 83,
+    "emptyNotices": 77,
+    "specialNotices": 6,
+    "remainingNotices": 0,
+    "noticeRows": [
+      {
+        "vtable": "00509148",
+        "method": "0048f0a0"
+      },
+      {
+        "vtable": "00509210",
+        "method": "0048f0a0"
+      },
+      {
+        "vtable": "00509930",
+        "method": "0045b4a0"
+      },
+      {
+        "vtable": "005099e8",
+        "method": "0045b5b0"
+      },
+      {
+        "vtable": "00509aa0",
+        "method": "0045b680"
+      },
+      {
+        "vtable": "0050eb98",
+        "method": "0048f0a0"
+      }
+    ],
+    "preservedFunctions": 4,
+    "refinedFunctions": 3,
+    "boundedOnlyFunction": {
+      "first": "0048f0a0",
+      "lastInclusive": "0048f0a9",
+      "bytes": 10,
+      "sha256": "d8086afdbc62c8bd9ef98bd4c520fe9d1624c576d2312d0b4d244e5c13cf70a6",
+      "sourceChanged": false
+    },
+    "nativeSessionCallers": 3,
+    "sameLongPoolHostFields": true,
+    "currentTypesClockRandom": true,
+    "fullNoWorldComplete": false,
+    "newDecompilation": 0,
+    "originalDecompilationChanges": 0,
+    "lastClientDecompilation": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    },
+    "multiplayerExecutions": 0,
+    "flyerDedicatedExecutions": 0,
+    "aviaryNoticeExecutions": 0,
+    "homeNoticeValidation": "정적 대조·컴파일 전용"
+  },
+  "tutorial4": {
+    "passed": true,
+    "exitCode": 0,
+    "handle": 7711,
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.319,
+        "gameTimeAfter": 23.83,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "waitFrames": 600,
+    "imageInspected": "015-generator-settled.png",
+    "raw": "extracted/cpp-resume-1216/live-tutorial4/summary.json"
+  },
+  "editor": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0,
+    "passed": true,
+    "handle": 34289,
+    "sameClientRoundTrips": 2,
+    "observations": 11,
+    "screen": [
+      800,
+      600
+    ]
+  },
+  "protectedFilesUnchanged": 2800,
+  "allStartedBuildTestGuiTerminal": true,
+  "originalGameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "flyerDedicatedExecutions": 0,
+  "aviaryNoticeExecutions": 0,
+  "decompilerSourceChanges": 0,
+  "remainingUpperPlanIds": [
+    "M6",
+    "M7",
+    "M8",
+    "K1",
+    "K2",
+    "K3",
+    "K4",
+    "K5",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "B1",
+    "B2",
+    "B3",
+    "B4"
+  ],
+  "knownBugsRegistered": 34,
+  "limitations": [
+    "홈 통지3은 정적 대조·컴파일만 했으며 공중3종 전용 실행 검사는 하지 않았다.",
+    "83/83 Pre/Post·통지 분배는 전체 NoWorld 완료가 아니다. 다른 Form/Regular·큰 비영 AI·배치/Fort 상위 Finish·호출자/owner 전수 감사가 남는다.",
+    "M6-l/m·M7 독립5건/M8·K/S/B 상위16계획과 등록34버그를 닫지 않는다. 전체34진입 제품644/검증645·최신ZIP1092·최신 전체 솔루션 통과 없음은 유지한다."
+  ],
+  "raw": "extracted/cpp-resume-1216/"
+}

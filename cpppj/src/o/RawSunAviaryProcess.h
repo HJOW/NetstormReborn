@@ -55,6 +55,8 @@ public:
     void PostPop(Sid parent,std::uint32_t flags) const; // 0045ec50의 중복/할당/생성/부착/Damageable 순서다.
     void Frame(SunAviaryProcessFields& fields) const; // inner0045d8c0의 실제 상태1~10을 실행한다.
     void FlyerDied(Sid home) const; // 홈 가상34=0045b4a0의 조회→Unpop→frame27→Repop→AP8/dirty4→Refresh다.
+    static void FlyerDiedIn(SidPool& pool,SunAviaryProcessFields* fields,Sid home,const std::function<void(Sid,std::uint32_t)>& unpop,
+        const std::function<void(Sid,std::uint32_t)>& repop,const std::function<void(SunAviaryProcessFields&)>& refresh,bool nativePhysical=false); // Native 장기 통지도 조회해 둔 실제 필드와 같은 원문 공간/쓰기 순서를 공유한다.
     static std::uint16_t WriteProcess(SunAviaryProcessFields& fields,std::span<std::uint8_t> packet,bool includeParent,bool force=false,std::uint8_t protocol=1,std::uint8_t message=0x38); // 0045d6e0→0045b070의 변경 비트와 길이를 기록한다.
     const SidPool& Pool() const; // Host와 동일 풀인지 확인한다.
 private:

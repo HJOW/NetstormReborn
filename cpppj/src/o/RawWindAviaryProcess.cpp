@@ -38,7 +38,9 @@ void RawWindAviaryProcess::PostPop(Sid parent,std::uint32_t flags) const {
     Need(hooks_.damageable)(parent,flags);
 }
 // 원문45b680에는 난수나 대기 시각 변경이 없다.
-void RawWindAviaryProcess::FlyerDied(WindAviaryProcessFields& fields,const std::function<void(WindAviaryProcessFields&)>& refresh) const { if (!globals_.server) return;State(fields,2);Need(refresh)(fields); }
+void RawWindAviaryProcess::FlyerDied(WindAviaryProcessFields& fields,const std::function<void(WindAviaryProcessFields&)>& refresh) const { if (!globals_.server) return;FlyerDiedIn(fields,refresh); }
+// 원문에는 난수/시각 변경이 없으며 갱신이 실패해도 먼저 쓴 상태/dirty를 유지한다.
+void RawWindAviaryProcess::FlyerDiedIn(WindAviaryProcessFields& fields,const std::function<void(WindAviaryProcessFields&)>& refresh) { State(fields,2);const auto refreshCall=Need(refresh);refreshCall(fields); }
 // 원본은 임시DWORD를0으로 지우거나 free1을 검사하지 않으며 진단 뒤에도 처음 구한 포인터를 사용한다.
 void RawWindAviaryProcess::FormDestroy(WindAviaryProcessFields& fields) const {
     if (!globals_.boss) return;const auto stored=Read(fields.bytes,48);if (!stored) return; // +48은 WORD가 아닌 현재 DWORD다.
