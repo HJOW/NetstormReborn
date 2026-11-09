@@ -14866,10 +14866,41 @@
       "bytes": 866222,
       "lines": 371,
       "fixtureCommit": "c3a294ed",
-      "webCommit": "worktree",
+      "webCommit": "fcb60939",
       "cpppjBasis": {
         "cpppj/src/o/RawTotalMade.cpp": "0365fa99",
         "cpppj/src/o/RawTutorialOne.cpp": "c3a294ed"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E238",
+      "id": "tutorial-two",
+      "path": "cpppj/tests/fixtures/tutorial-two-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: PATCH Tutorial2 실제 몸체와 Advance/Pause/TotalMade/Genus. 입력(사건·게임 시각 double 비트·정지 깊이·재진입 변이·미션 게이트 14필드·제작 집계 셋·현재 선택·생산 포함·Tell 반환·옵션 8 BYTE·회수 금지·허용 표)에서 반환·게이트 비트·정지 깊이·외부 조회/효과 순서·옵션/금지/허용/선택 (346행)",
+      "consumers": [
+        "webpj/tests/tutorial-two.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-tutorial-two.js",
+        "webpj/www/core/raw-mission-frame-gate.js",
+        "webpj/www/core/raw-total-made.js"
+      ],
+      "doc": "docs/webpj-tutorial-two-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTutorialTwo.cpp"
+      ],
+      "scope": "10.78 346행 전부",
+      "text": true,
+      "sha256": "677d90896ea069aae53667de24d802535be8887457153a723811afb3dcd9846a",
+      "bytes": 85928,
+      "lines": 347,
+      "fixtureCommit": "95f879a0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTutorialTwo.cpp": "95f879a0"
       }
     }
   ]
