@@ -36,6 +36,7 @@
 #include "o/RawIslandRuntime.h"
 #include "o/ChunkMap.h"
 #include "o/RawPriestPostPop.h"
+#include "o/RawPriestForcefield.h" // 사제 고유 삭제와 보호막 조회를 같은 장기 본체로 조립한다.
 #include "o/RawBridgeConnect.h"
 #include "o/SquidDisplay.h"
 #include "o/RawBridgeEvents.h"
@@ -212,6 +213,8 @@ public:
     void PlayerPreDestroy(o::Sid sid,std::uint32_t flags); // 현재 Player 필드의 세 주소 계산과 공통 Pre를 원문 순서로 실행한다.
     void ResidencePostDestroy(o::Sid sid,std::uint32_t flags); // 일반 거주 구역의 장기50칸 목록을 압축한 뒤 공통 Post를 실행한다.
     void DudePostDestroy(o::Sid sid,std::uint32_t flags); // 기존450920 본체를 같은 장기30칸 population에 연결한다.
+    o::RawPriestForcefield& PriestForcefield(); // 현재 TYPE/역할/Pool/해시의 동일 조회기를 Session 없이 사용한다.
+    o::RawPriestPreDestroy& PriestPre(); // 같은 장기 사제 목록·보호막 가상 삭제·Carrier 부모를 공유한다.
     o::RawBalloonBody& BalloonBody(); // 실제 두 VT의 그림자·Robust·PostPop·Pre를 같은 장기 본체에 조립한다.
     float BalloonRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // Cloud Floater 사건3은 같은 프레임, 나머지는 현재 Carrier Runtime으로 전달한다.
     o::RawGeyserLifetime& GeyserLifetime(); // 같은 지면 목록/기본프레임/현재 편집 모드를 사용한다.
@@ -365,6 +368,9 @@ private:
     std::unique_ptr<o::RawBombPreDestroy> bombPre_; //같은현재폭발장치와공통부모보다먼저반납할Point Blast전처리다.
     std::unique_ptr<o::RawFlyerPreDestroy> flyerPre_; // Pool과 Damageable보다 먼저 반납하는 실제 전처리다.
     std::unique_ptr<o::RawCarrierPreDestroy> carrierPre_; //같은finder/Damageable보다먼저반납하는실제장기Carrier전처리다.
+    o::PriestPostPopState priestDeletionState_; // 고유 목록/owner 상태는 앞의 장기 실제 저장소 주소만 빌린다.
+    std::unique_ptr<o::RawPriestForcefield> priestForcefield_; //Pool/TYPE/현재 역할보다 먼저 반납할 실제 조회기다.
+    std::unique_ptr<o::RawPriestPreDestroy> priestPre_; // 역순 파괴로 참조하는 조회/목록/Carrier보다 먼저 반납한다.
     std::unique_ptr<o::RawBalloonBody> balloonBody_; // 역순 파괴로 참조하는 Carrier 전처리/후처리·공간·프레임보다 먼저 반납한다.
     std::function<void()> carrierReplenishment_; //실제장기보충owner를약하게빌리는Client장치이며Session을소유하지않는다.
     std::function<void(o::Sid,std::uint32_t)> vortexOwner_; //실제신전가상74의장기owner를약하게빌린다.

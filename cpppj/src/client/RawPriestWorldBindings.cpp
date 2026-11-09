@@ -53,7 +53,7 @@ struct RawPriestWorldBindings::Impl {
     // fallFrames: 추락 프레임.
     std::vector<o::PriestFallFrames> fallFrames;
     // lookup: 조건에 맞는 현재 객체를 찾는 조회 처리기.
-    std::unique_ptr<o::RawPriestForcefield> lookup;
+    std::unique_ptr<o::RawPriestForcefield> localLookup;o::RawPriestForcefield* lookup{}; // 독립 typed만 사본을 소유하고 Native는 장기 현재 조회를 빌린다.
     // priest: 사제 상태를 조회·변경하는 처리기 또는 사제 경로 여부.
     std::unique_ptr<o::RawPriestState> priest;
     // owner: 소유 플레이어 번호 또는 소유권 처리 자료.
@@ -75,7 +75,7 @@ struct RawPriestWorldBindings::Impl {
     // carrierPre: 캐리어 전처리.
     std::unique_ptr<o::RawCarrierPreDestroy> localCarrierPre;o::RawCarrierPreDestroy* carrierPre{}; //Native는같은장기몸체를빌리고독립typed만자체Carrier를소유한다.
     // priestPre: 사제 전처리.
-    std::unique_ptr<o::RawPriestPreDestroy> priestPre;
+    std::unique_ptr<o::RawPriestPreDestroy> localPriestPre;o::RawPriestPreDestroy* priestPre{}; // Native는 장기 부모를 빌리고 독립 typed의 기존 계약은 보존한다.
     // fieldPost: 사용: 같은 풀의 실제 예약 훅을 구성한 뒤 SquidPostPop::SetForcefieldPostPop에 등록한다 (std::unique_ptr<o::RawForcefieldPostPop>).
     std::unique_ptr<o::RawForcefieldPostPop> fieldPost;
     // fieldRegular: 사용: Handle을 Regular 처리기에 연결하고 advance/destroy를 같은 월드의 실제 모듈로 공급한다 (std::unique_ptr<o::RawForcefieldRegular>).
@@ -101,7 +101,8 @@ struct RawPriestWorldBindings::Impl {
         // 실제 타입 +0x154/+0x140은 방향 J/E의 첫 프레임 표다. 저장/낙하마다 임의 프레임을 만들지 않는다.
         for (std::size_t index=0;index<core.frames.size();++index)
             fallFrames[index]={core.frames[index].Run('J').first,core.frames[index].Run('E').first};
-        lookup=std::make_unique<o::RawPriestForcefield>(core.pool,core.hash,core.types,state.forcefield);
+        if (effects.sharedForcefield) { if (&effects.sharedForcefield->Pool()!=&core.pool) throw std::invalid_argument("사제/장기 보호막 조회 Pool 불일치");lookup=effects.sharedForcefield; }
+        else { localLookup=std::make_unique<o::RawPriestForcefield>(core.pool,core.hash,core.types,state.forcefield);lookup=localLookup.get(); }
         priest=std::make_unique<o::RawPriestState>(core.pool,core.reward,core.types,core.spots);
         if (core.pool.Edition()==o::OriginalEdition::Patch1078) priest->BindCurrentTypes(core.types); // 지면 genus와 HP getter가 같은 실제 현재 TYPE 표를 읽는다(단위863).
         owner=std::make_unique<o::RawPriestOwner>(core.pool,core.ownerMode,state.owner,o::PriestOwnerHooks{
@@ -132,9 +133,10 @@ struct RawPriestWorldBindings::Impl {
         else { localCarrierPre=std::make_unique<o::RawCarrierPreDestroy>(core.pool,state.contained,o::CarrierPreDestroyHooks{
             [this](o::Sid sid,std::uint32_t flags) { Damageable().Validate(sid,flags); },
             [this](o::Sid sid,std::uint32_t flags) { Damageable().PreDestroy(sid,flags); },effects.dependentFound});carrierPre=localCarrierPre.get(); }
-        priestPre=std::make_unique<o::RawPriestPreDestroy>(core.pool,state.priests,
+        if (effects.sharedPriestPre) { if (&effects.sharedPriestPre->Pool()!=&core.pool) throw std::invalid_argument("사제/장기 전처리 Pool 불일치");priestPre=effects.sharedPriestPre; }
+        else { localPriestPre=std::make_unique<o::RawPriestPreDestroy>(core.pool,state.priests,
             o::MakeCarrierPreDestroyHooks(core.pool,*carrierPre,o::MakePriestForcefieldHooks(core.pool,*lookup,
-                o::PriestPreDestroyHooks{{},effects.destroy,{},{}})));
+                o::PriestPreDestroyHooks{{},effects.destroy,{},{}})));priestPre=localPriestPre.get(); }
         fieldPost=std::make_unique<o::RawForcefieldPostPop>(core.pool,o::ForcefieldPostPopHooks{
             effects.reserveRegular,[this](o::Sid sid,std::uint32_t event,float payload) { Host().AddRegular(sid,event,payload); }});
         if (core.pool.Edition()==o::OriginalEdition::Patch1078) {

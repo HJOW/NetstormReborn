@@ -175,6 +175,8 @@ public:
     const std::uint32_t& EmptyCarrierType() const { return emptyCarrierType_; } // 숨은 미등록187 분기도 같은 현재 번호를 읽는다.
     std::uint32_t& PriestType() { return priestType_; } //005412d0/CD0051cbbc의 같은 현재 사제 TYPE를 HP/이동/회복이 공유한다.
     const std::uint32_t& PriestType() const { return priestType_; } // Session 교체/일반 월드 준비로158을 다시 쓰지 않는다.
+    std::uint32_t& PriestForcefieldType() { return priestForcefieldType_; } //005412f4의 현재 보호막 역할을 실제 조회/생성에 공유한다.
+    const std::uint32_t& PriestForcefieldType() const { return priestForcefieldType_; } //World 반납/재대여에서167의 사본으로 되돌리지 않는다.
     std::uint32_t& FakeSurfaceType() { return fakeSurfaceType_; } //005412e0의 현재 DWORD를 Create 입구 진단이 읽는다.
     const std::uint32_t& FakeSurfaceType() const { return fakeSurfaceType_; } // 일반 월드 준비와 Session 교체로162 사본을 새로 쓰지 않는다.
     std::uint32_t& RuneType() { return runeType_; } //005412f0의 현재 Rune 번호를 조회/생성/주변 정리가 같은 장기 주소에서 읽는다.
@@ -280,6 +282,7 @@ private:
     std::uint32_t altarType_{164},daisType_{165}; // 보호 PE005412e8/005412ec의 두 초기 DWORD이며 일반 월드 준비에서 초기화하지 않는다.
     std::uint32_t bulfType_{135},windFlyerType_{138},rainFlyerType_{144},rainWalkerType_{156},emptyCarrierType_{187}; // 보호 PE의 다섯 장기 TYPE DWORD 초기값이다. 일반 fresh/반납에서 재초기화하지 않는다.
     std::uint32_t priestType_{158}; // 두 보호 PE의 최초158이며 실제 HP/이동 소비자가 같은 장기 주소를 빌린다.
+    std::uint32_t priestForcefieldType_{167}; //005412f4의 최초167이며 사제 보호막 조회와 생성이 같은 현재 DWORD를 읽는다.
     std::uint32_t fakeSurfaceType_{162}; // PATCH005412e0의 최초162이며 실제 생성 부모가 장기 주소를 빌린다.
     std::uint32_t rainBlockerType_{147},growingRainBlockerType_{150}; //005412a4/005412b0의 현재 두 TYPE 번호이며 TYPE 기록 표와 별개다.
     std::uint32_t fenceMarkerType_{90},fenceShieldType_{170}; //내부 표식과 화면 포스 필드의 별도 원문 역할이며 월드 준비로 초기화하지 않는다.

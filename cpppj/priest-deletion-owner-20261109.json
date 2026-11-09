@@ -1,0 +1,230 @@
+{
+  "unit": 1214,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "accepted": true,
+  "summary": "사제 삭제·보호막 조회를 현재 TYPE/역할·같은 장기 목록·가상 삭제·Carrier에 연결하고 Native Session도 같은 본체를 빌린다.",
+  "sourceSha256": {
+    "cpppj/src/o/RawPriestPreDestroy.h": "2c30a4872128d708aea4ed24fc2a8bdee8e2346beaf8acda95da3b21d91f2206",
+    "cpppj/src/o/RawPriestPreDestroy.cpp": "2c2d061779e42dbb176767399bc4a93bcaf10bf3757a0088b42ce703f36f9198",
+    "cpppj/src/o/RawPriestForcefield.h": "1d4f261dd0f99bb57072c6fb40d67038f34a6f8f6c47b9d609ed6fe15211a46c",
+    "cpppj/src/o/RawPriestForcefield.cpp": "851a9e4f36af52dcf33eaf2b22e13eede83f385e2733393dbd00261efdfbb36f",
+    "cpppj/src/o/RawGameAuxState.h": "e747af83e33a8b143f41742aca5f6335c604798fc4f2ecd21f19ec7a85985061",
+    "cpppj/src/client/RawSurfaceWorld.h": "16b51a52e00d1161b9075acecf4424287a71168483b9dc162ad0b66bf4e120e8",
+    "cpppj/src/client/RawSurfacePriestDeletion.cpp": "692fbc19d1f0930f83dcf2df7b9adaf42312092f5276a90b52d54bc239cc0596",
+    "cpppj/src/client/RawSurfaceAssetDeletion.cpp": "e3b3a685cb5bb110fb439014a616c5ee18fb7ee733fc2523126939d0e2509f68",
+    "cpppj/src/client/CMakeLists.txt": "10843180c15c3a5418acfab910ae366b528f54ad0cdbbe13a7a67af945fcac0c",
+    "cpppj/src/client/RawPriestWorldBindings.h": "fbe532452fc65363c30da6acf58eb735a7e3519770e805a6f369dc8a3b9c6c27",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "1d524d96bd7117ad297c61685f0c106d3ac3ac9408c61982cb4b0b3cfb46796f",
+    "cpppj/src/client/RawCampaignSession.cpp": "4b23dc2dec8a8945578620860cfc4c4209b18fc60ebe285025450d9cd1de0c48",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "23f456ee480fc5201c158d8d1f1dc5aec9bedfe356074966e2bdd44920c0f687",
+    "cpppj/tests/CMakeLists.txt": "ec9114db38f57c0308c97c17c9e3f0801cd66f0aa71652553a60a52967a4bec1"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13900288,
+      "sha256": "7dc958936110eb209a8c46c856fd14e450d50d76382f3fc7b993aa7d9c5058b8"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "3e4c545e997f15b05ac94ebe899c9cf210a830c94aa2452eb753a1156eb60933"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 111.41417598724365,
+    "sourcesUnchanged": true,
+    "handle": 45784,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 287,
+    "passed": 287,
+    "newPriestCases": 11,
+    "additionalExistingNonMpCases": 8,
+    "existingPriestPreRowsPerEdition": 2184,
+    "existingForcefieldRowsPerEdition": 2976,
+    "groups": {
+      "netstorm_construction_owner_tests": 213,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "seconds": 50.28402900695801,
+    "handle": 50152,
+    "raw": "extracted/cpp-resume-1214/tests.json"
+  },
+  "corrections": {
+    "firstFailures": [],
+    "expectationsWeakened": false,
+    "description": "첫 빌드6656/287검사95653/Tutorial1251은 모두 통과했다. 마감 전 코드 검토에서 Native Session의 바깥 삭제 분배에 남은 TYPE158/167 고정 관문을 발견했다. 성공 원시를 pre-caller 접두부로 보존하고 삭제 전용 VT 분배와 같은 실제 사제 래퍼 검사를 보강한 뒤 최종 빌드/집중/GUI를 다시 확인했다. 기존 기대값을 약화하지 않았다.",
+    "preCallerHandles": {
+      "build": 6656,
+      "tests": 95653,
+      "tutorial": 1251
+    },
+    "outputMap": "pre-caller-output-map.json"
+  },
+  "staticAudit": {
+    "sourceVtables": 83,
+    "connectedPrePost": 81,
+    "remainingPrePost": 2,
+    "remainingNotices": 6,
+    "addedVtables": [
+      "0050f210"
+    ],
+    "remainingRows": [
+      {
+        "vt": "005076b8",
+        "destroy": "004af780",
+        "pre": "0044a4d0",
+        "post": "00448b60",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "00507950",
+        "destroy": "004af780",
+        "pre": "0044afd0",
+        "post": "00449580",
+        "notice": "0041c100"
+      }
+    ],
+    "preservedFunctions": 7,
+    "implementedEntries": [
+      "004919b0",
+      "004918e0"
+    ],
+    "sharedExistingEntries": [
+      "0040ea00",
+      "004b16d0",
+      "004b1810",
+      "00426890"
+    ],
+    "nativeSessionSameBodies": true,
+    "nativeSessionOuterDeletionVtable": true,
+    "nativeCurrentTypesAndRole": true,
+    "sameLongSidLists": true,
+    "typedGuardContractPreserved": true,
+    "newDecompilation": 0,
+    "originalDecompilationChanges": 0,
+    "lastClientDecompilation": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    },
+    "multiplayerExecutions": 0
+  },
+  "tutorial4": {
+    "passed": true,
+    "exitCode": 0,
+    "handle": 35004,
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.316,
+        "gameTimeAfter": 24.131,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "waitFrames": 600,
+    "protectedUnchanged": true,
+    "dataUnchanged": true,
+    "imageInspected": "015-generator-settled.png",
+    "raw": "extracted/cpp-resume-1214/live-tutorial4/summary.json"
+  },
+  "editor": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0,
+    "passed": true,
+    "handle": 95246,
+    "sameClientRoundTrips": 2,
+    "observations": 11,
+    "screen": [
+      800,
+      600
+    ],
+    "raw": "extracted/cpp-resume-1214/live-editor-fixed/summary.json"
+  },
+  "protectedFilesUnchanged": 2800,
+  "allStartedBuildTestGuiTerminal": true,
+  "originalGameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "flyerDedicatedExecutions": 0,
+  "decompilerSourceChanges": 0,
+  "remainingUpperPlanIds": [
+    "M6",
+    "M7",
+    "M8",
+    "K1",
+    "K2",
+    "K3",
+    "K4",
+    "K5",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "B1",
+    "B2",
+    "B3",
+    "B4"
+  ],
+  "knownBugsRegistered": 34,
+  "limitations": [
+    "81/83은 실제 Pre/Post 분배 수이며 다이스/제단2쌍·통지6·큰 비영 AI·다른Form/Regular·다른 배치/Fort 상위 Finish·전수 Caller/owner 감사는 남는다.",
+    "Native 사제 접두는 별도 TYPE/상태/Items/Carrier 선검사를 넣지 않는다. 독립 typed의 기존 계약은 유지한다. 임의 손상 heap/비정상 float 전체 일치는 호스트 경계다.",
+    "Session의 Shield/낙하/조회도 같은 장기 lookup을 빌리지만 모든 사제 파생/Regular의 NoWorld 연결 완료를 뜻하지 않는다.",
+    "M6-l/m·M7/M8·K/S/B 상위16계획/등록34버그를 유지하며 이번 연결을 알려진 버그 조사/수정 완료로 세지 않는다.",
+    "GUI는 사제 삭제/포획/희생·특정 공격·승리·TestBattle·건물 완성 검증이 아니다. 전체34진입 제품644/검증645·최신ZIP1092·최신 전체 솔루션 통과 없음은 유지한다."
+  ],
+  "raw": "extracted/cpp-resume-1214/"
+}

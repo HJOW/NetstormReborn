@@ -42,6 +42,7 @@ void RawSurfaceStorage::EmitDefaultAssetEffect(const o::SquidDestroyEvent& event
     if (!pre && event.effect!=o::SquidDestroyEffect::PostDestroy) throw std::logic_error("장기 자산의 가상 삭제 효과 종류 오류");
     const auto method=pre ? entry.pre:entry.post;
     switch (method) {
+    case 0x004919b0U:PriestPre().PreDestroy(event.sid,event.flags);return; // 현재 사제 목록/보호막 조회와 실제 Carrier 부모를 공유한다.
     case 0x004906c0U:PlayerPreDestroy(event.sid,event.flags);return; // 공통 Pre 앞뒤에 실제 현재 Player SID/flags를 다시 읽고 쓴다.
     case 0x0049a4a0U:ResidencePostDestroy(event.sid,event.flags);return; // 같은 실제50칸 거주 구역 목록과 공통 Post다.
     case 0x00450920U:DudePostDestroy(event.sid,event.flags);return; // 기존30칸 population 제거 본체를 장기로 사용한다.

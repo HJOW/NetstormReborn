@@ -16,6 +16,7 @@
 #include <bit>
 #include <optional>
 #include <iostream> //최초실패의실제삭제깊이/현재필드를보존한다.
+#include <limits> // Native 조회가 실제로 소비한 NaN 좌표의 실패 위치를 확인한다.
 
 namespace { //명시입력/장치관찰은게임본문이나원본기대값을대체하지않는다.
 using namespace netstorm::client;using namespace netstorm::o; //제품의실제동일부품을사용한다.
@@ -193,6 +194,94 @@ TEST_CASE(ClientRegistry_PostRereadsExtraAfterEarlierCommonPre) {
     RegionScene scene;const auto sid=scene.Asset(0x50f540U);scene.storage->pool.AllocatedBytes(sid)[40]=0;scene.gameplay->selection.selected=sid.value;auto& list=scene.storage->sidLists.residences;list.count=1;list.entries[0]=sid.value;
     scene.onClear=[&] { scene.storage->pool.AllocatedBytes(sid)[40]|=9U; };
     CHECK(scene.storage->DestroyAsset(sid,0x200810U));CHECK(scene.clears==1 && list.count==1 && list.entries[0]==sid.value && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 장기 사제 본체 조립은 목록/역할/난수/SP/Player를 초기화하거나 World를 대여하지 않는다.
+TEST_CASE(ClientPriest_LongBodiesKeepActualOwners) {
+    RegionScene scene;const auto random=scene.random->Game().State();auto& list=scene.storage->sidLists.priests;list.count=1;list.entries[0]=123;scene.gameplay->GameAux()->PriestForcefieldType()=0x1234U;
+    const auto free=scene.storage->pool.FreeCount();auto* pre=&scene.storage->PriestPre();auto* lookup=&scene.storage->PriestForcefield();
+    CHECK(&pre->Pool()==&scene.storage->pool && &lookup->Pool()==&scene.storage->pool && &scene.storage->PriestPre()==pre && &scene.storage->PriestForcefield()==lookup);
+    CHECK(list.count==1 && list.entries[0]==123 && lookup->Type()==0x1234U && scene.storage->pool.FreeCount()==free && scene.random->Game().State()==random && scene.players->Base()==0 && !scene.sp->Store().Initialized() && !scene.storage->Borrowed());
+}
+
+// 실제 VT4919b0은 같은16칸 목록에서 전체 DWORD 일치만 압축한 뒤 Carrier/공통 부모로 끝난다.
+TEST_CASE(ClientPriest_ActualDeleteCompressesLongList) {
+    RegionScene scene;const auto sid=scene.Asset(0x50f210U);scene.Position(sid);scene.storage->pool.AllocatedBytes(sid)[40]=0;auto& list=scene.storage->sidLists.priests;
+    list.count=5;list.entries[0]=sid.value;list.entries[1]=0x10000U|sid.value;list.entries[2]=sid.value;list.entries[3]=7;list.entries[4]=sid.value;list.entries[5]=0xdeadbeefU;
+    const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(sid,0x810U)); // 실제 해방/Graph 억제 인자와 client SID로 파생 생성·송신 없이 같은 부모를 확인한다.
+    CHECK(list.count==2 && list.entries[0]==(0x10000U|sid.value) && list.entries[1]==7 && list.entries[2]==sid.value && list.entries[3]==7 && list.entries[4]==sid.value && list.entries[5]==0xdeadbeefU);
+    CHECK(scene.storage->pool.FreeCount()==free+1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0 && scene.traces==1);
+}
+
+// 추상/매장 관문은 손상 count와 NaN 좌표보다 먼저 적용하고 실제 Carrier 부모는 호출한다.
+TEST_CASE(ClientPriest_SkippedPrefixReadsNeitherListNorCoordinate) {
+    RegionScene scene;const auto sid=scene.Asset(0x50f210U);scene.Position(sid,std::numeric_limits<float>::quiet_NaN());auto& list=scene.storage->sidLists.priests;list.count=0xffffffffU;list.entries[0]=sid.value;
+    CHECK(scene.storage->DestroyAsset(sid,0x10U));CHECK(list.count==0xffffffffU && list.entries[0]==sid.value && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 조회/가상 분배는 raw TYPE/상태를 사제 번호로 제한하지 않고 현재 VT만 분배에 사용한다.
+TEST_CASE(ClientPriest_NativeLookupDoesNotPreflightSource) {
+    RegionScene scene;const auto sid=scene.Asset(0x50f210U);scene.Position(sid);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[10]=70;raw[11]=9;
+    CHECK(scene.storage->PriestPre().Handles(sid));CHECK(scene.storage->PriestForcefield().Find(sid)==Sid{});
+    RegionPut(raw,0,0x12345678U);CHECK(!scene.storage->PriestPre().Handles(sid));CHECK(scene.storage->PriestForcefield().Find(sid)==Sid{});
+}
+
+// 역할 비교는 BYTE 절삭 없이 현재 DWORD를 매 조회에서 읽고 후보/부모의 현재 owner를 비교한다.
+TEST_CASE(ClientPriest_LookupUsesCurrentFullRoleAndOwner) {
+    RegionScene scene;const auto sid=scene.Asset(0x50f210U),field=scene.Asset(0x507770U);scene.Position(sid,100.75F,100.9F);scene.Position(field);auto source=scene.storage->pool.AllocatedBytes(sid),candidate=scene.storage->pool.AllocatedBytes(field);
+    candidate[40]=1;source[34]=candidate[34]=3;scene.storage->hash.Bucket(1,100,100)=field.value;auto& lookup=scene.storage->PriestForcefield();
+    CHECK(lookup.Find(sid)==field);scene.gameplay->GameAux()->PriestForcefieldType()=0x100U+candidate[10];CHECK(lookup.Find(sid)==Sid{});
+    scene.gameplay->GameAux()->PriestForcefieldType()=candidate[10];source[34]=4;CHECK(lookup.Find(sid)==Sid{});candidate[34]=4;CHECK(lookup.Find(sid)==field);
+}
+
+// Native 조회기를 먼저 구성해도 나중에 바뀐 실제 TYPE 발자국을 현재 finder가 읽는다.
+TEST_CASE(ClientPriest_LookupBorrowsCurrentTypeFootprint) {
+    RegionScene scene;const auto sid=scene.Asset(0x50f210U),field=scene.Asset(0x507770U);scene.Position(sid);scene.Position(field,101,100);scene.storage->pool.AllocatedBytes(field)[40]=1;
+    scene.storage->hash.Bucket(1,101,100)=field.value;auto& type=scene.storage->types[scene.storage->pool.Slot(field)[10]];type.footX=1;type.footY=1;auto& lookup=scene.storage->PriestForcefield();
+    CHECK(lookup.Find(sid)==Sid{});type.footX=2;CHECK(lookup.Find(sid)==field);type.footX=1;CHECK(lookup.Find(sid)==Sid{});
+}
+
+// 후보 free/dead/void/contained는 추가로 걸러내지 않고 원문 finder의 extra8만 생략한다.
+TEST_CASE(ClientPriest_LookupKeepsOriginalCandidateFilters) {
+    RegionScene scene;const auto sid=scene.Asset(0x50f210U),field=scene.Asset(0x507770U);scene.Position(sid);scene.Position(field);auto candidate=scene.storage->pool.AllocatedBytes(field);candidate[40]=1;scene.storage->hash.Bucket(1,100,100)=field.value;
+    for (const auto state:{1,2,4,8}) { candidate[11]=static_cast<std::uint8_t>(state);CHECK(scene.storage->PriestForcefield().Find(sid)==field); } // 이미 확보한 물리 view에서 상태 입력만 바꾸며 재할당하지 않는다.
+    candidate[40]=8;CHECK(scene.storage->PriestForcefield().Find(sid)==Sid{});
+}
+
+// 실제 보호막 가상 destroy(flags0)가 끝난 뒤에만 같은 사제의 Carrier/공통 Pre가 선택을 해제한다.
+TEST_CASE(ClientPriest_ActualForcefieldDeletePrecedesCarrier) {
+    RegionScene scene;const auto sid=scene.Asset(0x50f210U),field=scene.Asset(0x507770U);scene.Position(sid);scene.Position(field);scene.storage->pool.AllocatedBytes(sid)[40]=0;scene.storage->pool.AllocatedBytes(field)[40]=1;
+    auto& list=scene.storage->sidLists.priests;list.count=1;list.entries[0]=sid.value;scene.storage->hash.Bucket(1,100,100)=field.value;scene.gameplay->selection.selected=sid.value;
+    scene.onClear=[&] { CHECK(list.count==0 && (scene.storage->pool.Slot(field)[11]&1U) && scene.traces==2); };
+    const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(sid,0x810U));
+    CHECK(scene.clears==1 && scene.traces==2 && scene.storage->pool.FreeCount()==free+2 && list.count==0 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// Native signed count는 음수를 그대로 보존한 뒤에도 실제 lookup을 실행한다.
+TEST_CASE(ClientPriest_NegativeCountStillReachesLookup) {
+    RegionScene scene;const auto sid=scene.Asset(0x50f210U);scene.Position(sid,std::numeric_limits<float>::quiet_NaN());scene.storage->pool.AllocatedBytes(sid)[40]=0;auto& list=scene.storage->sidLists.priests;list.count=0x80000000U;list.entries[0]=sid.value;bool rejected{};
+    try { scene.storage->DestroyAsset(sid,0x810U); }catch (const std::out_of_range& error) { rejected=std::string_view(error.what())=="사제 보호막 조회 좌표 절삭 범위 오류"; }
+    CHECK(rejected && list.count==0x80000000U && list.entries[0]==sid.value && scene.storage->BaseDestroy().PreDepth()==1 && scene.traces==1);
+}
+
+// lookup 실패 앞에 완료된 목록 압축은 보존하고 Carrier/공통 깊이는 아직 끝내지 않는다.
+TEST_CASE(ClientPriest_LookupFailurePreservesEarlierCompression) {
+    RegionScene scene;const auto sid=scene.Asset(0x50f210U);scene.Position(sid,std::numeric_limits<float>::quiet_NaN());scene.storage->pool.AllocatedBytes(sid)[40]=0;auto& list=scene.storage->sidLists.priests;list.count=3;list.entries[0]=sid.value;list.entries[1]=77;list.entries[2]=sid.value;bool rejected{};
+    try { scene.storage->DestroyAsset(sid,0x810U); }catch (const std::out_of_range& error) { rejected=std::string_view(error.what())=="사제 보호막 조회 좌표 절삭 범위 오류"; }
+    CHECK(rejected && list.count==1 && list.entries[0]==77 && list.entries[1]==77 && list.entries[2]==sid.value && scene.storage->BaseDestroy().PreDepth()==1 && (scene.storage->pool.Slot(sid)[11]&2U));
+}
+
+// VT가 사제인 실제 공통 삭제는 TYPE70으로 바뀌어도 고유 접두와 같은 장기 부모를 선택한다.
+TEST_CASE(ClientPriest_ActualDispatchKeepsVtableWithChangedType) {
+    for (const bool wrapped:{false,true}) { // NoWorld 직접 VT 분배와 Native Session이 실제로 사용하는 사제 래퍼를 각각 독립 물리에서 확인한다.
+        RegionScene scene;const auto sid=scene.Asset(0x50f210U);scene.Position(sid);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[10]=70;raw[40]=0;auto& list=scene.storage->sidLists.priests;list.count=1;list.entries[0]=sid.value;const auto free=scene.storage->pool.FreeCount();
+        if (wrapped) {
+            auto fallback=scene.storage->CommonDeletion().Hooks();const auto previous=fallback.emit; // 같은 실제 공통 선택/전송 경계와 파생44b9e0을 사용하며 성공 효과를 합성하지 않는다.
+            fallback.emit=[&scene,previous](const SquidDestroyEvent& event) { if (event.effect==SquidDestroyEffect::PostDestroy) scene.storage->DamageablePost().PostDestroy(event.sid,event.flags);else previous(event); };
+            const auto hooks=MakePriestPreDestroyHooks(scene.storage->pool,scene.storage->PriestPre(),std::move(fallback));scene.storage->BaseDestroy().Destroy(sid,0x810U,hooks);
+        } else CHECK(scene.storage->DestroyAsset(sid,0x810U));
+        CHECK(list.count==0 && scene.storage->pool.FreeCount()==free+1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+    }
 }
 
 // 전체 벌룬 본체를 조립해도 현재 물리·Player·SP·난수와 대여 상태를 초기화하지 않는다.

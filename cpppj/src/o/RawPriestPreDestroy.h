@@ -18,6 +18,7 @@ public:
     // 004919b0 / CD 0040c330. dead/void여도 실행하며 extra&9이면 Carrier만 호출한다.
     // 깊이 감소는 연결한 Carrier의 책임이다. 이 몸체는 일반 사제 Pop/공간 해제를 허용하지 않는다.
     void PreDestroy(Sid sid,std::uint32_t flags) const;
+    void EnableNativeBody(); // PATCH의 실제 VT 분배 뒤에는 TYPE/상태/목록/Carrier 선검사를 추가하지 않는다.
     // 가상 분배기가 같은 풀인지 확인하고 실제 사제 표만 판별한다.
     const SidPool& Pool() const;
     bool Handles(Sid sid) const;
@@ -28,6 +29,7 @@ private:
     PriestPostPopState& state_;
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (PriestPreDestroyHooks).
     PriestPreDestroyHooks hooks_;
+    bool nativeBody_{}; // 독립 typed의 기존 검증 계약과 실제 Native 본문을 구별한다.
 };
 // 사제 PreDestroy만 새 몸체로 분배하고 다른 삭제 사건/선택/form 훅은 fallback으로 넘긴다.
 // ProcessHost의 자산 훅으로 연결하면 회복 form의 실제 Kernel 제거를 그대로 사용할 수 있다.

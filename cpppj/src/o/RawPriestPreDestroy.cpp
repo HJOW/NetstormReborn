@@ -1,5 +1,6 @@
 // 두 판본에서 동일한 목록 압축과 보호막 가상 호출 조건을 사용한다.
 #include "o/RawPriestPreDestroy.h"
+#include "o/RawStateSidLists.h" // 실제 signed40ea00의 압축과 stale 꼬리를 공유한다.
 #include <stdexcept>
 #include <utility>
 
@@ -25,25 +26,23 @@ RawPriestPreDestroy::RawPriestPreDestroy(SidPool& pool,PriestPostPopState& state
 }
 // 예약/풀 밖 번호 및 다른 파생 표는 사제 경로로 분배하지 않는다.
 bool RawPriestPreDestroy::Handles(Sid sid) const {
-    if (sid.value<5 || sid.value>=pool_.Capacity()) return false;
+    if (sid.value<(nativeBody_ ? 1 : 5) || sid.value>=pool_.Capacity()) return false;
     const auto raw=pool_.Slot(sid);
-    return raw[10]==kPriestTypeNumber && Vtable(raw)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchTable : kCdTable);
+    return (nativeBody_ || raw[10]==kPriestTypeNumber) && Vtable(raw)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchTable : kCdTable);
+}
+// 장기 Native owner가 최초 조립할 때만 선택하며 게임 전역이나 목록은 읽지 않는다.
+void RawPriestPreDestroy::EnableNativeBody() {
+    if (pool_.Edition()!=OriginalEdition::Patch1078) throw std::invalid_argument("Native 사제 전처리 판본 오류");
+    nativeBody_=true;
 }
 // 원본은 공통 Destroy가 dead를 켠 뒤 진입한다. 여기서 dead를 이유로 생략하면 목록/회복이 남는다.
 void RawPriestPreDestroy::PreDestroy(Sid sid,std::uint32_t flags) const {
-    if (!Handles(sid) || (pool_.Slot(sid)[11]&kInvalidState)) throw std::invalid_argument("사제 삭제 준비 raw 상태 오류");
+    if (!nativeBody_ && (!Handles(sid) || (pool_.Slot(sid)[11]&kInvalidState))) throw std::invalid_argument("사제 삭제 준비 raw 상태 오류");
     const auto extraOffset=pool_.Edition()==OriginalEdition::Patch1078 ? 40U : 35U;
     const bool ordinary=(pool_.Slot(sid)[extraOffset]&kSkipPrefix)==0;
-    if (ordinary) (void)state_.Priests().Items();
-    hooks_.validateCarrier(sid,flags);
+    if (!nativeBody_) { if (ordinary) (void)state_.Priests().Items();hooks_.validateCarrier(sid,flags); } // 독립 typed의 기존 실패 순서만 유지한다.
     if (ordinary) {
-        auto& list=state_.Priests();std::uint32_t removed=0;
-        // 모든 일치 항목을 지우고 남은 활성 DWORD만 압축한다. 비활성 꼬리는 원본처럼 지우지 않는다.
-        for (std::uint32_t i=0;i<list.count;++i) {
-            if (list.entries[i]==sid.value) ++removed;
-            else list.entries[i-removed]=list.entries[i];
-        }
-        list.count-=removed;
+        RemoveStateSidList(state_.Priests(),sid.value); // Native는 현재 signed count를 소비하며 음수도 정규화하지 않는다.
         const Sid forcefield=hooks_.findForcefield(sid);
         // 원본은 SID 1~4도 주소 범위 안으로 인정한다. 타입/free/dead를 여기서 추가로 검사하지 않는다.
         if (forcefield.value>=1 && forcefield.value<pool_.Capacity()) hooks_.destroyForcefield(forcefield,0);

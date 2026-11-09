@@ -128,6 +128,8 @@ struct RawPriestWorldEffects {
     std::function<void(o::Sid,std::uint32_t)> nonPriestOwner; // 실제 Session은 World의 표면/생산/중립 재정의를 연결한다. 빈 독립 입력은 기존 공통 부모다.
     std::function<void(std::string_view,std::string_view,std::uint32_t)> ownerAssertion; // 현재 Client의 사제Owner 진단과 정상 복귀를 연결한다.
     o::RawCarrierPreDestroy* sharedCarrier{}; //Native는같은Storage의실제장기Carrier를빌리고독립typed는지역몸체를유지한다.
+    o::RawPriestForcefield* sharedForcefield{}; // Native의 Shield/낙하/조회도 같은 장기 현재 TYPE/역할을 빌린다.
+    o::RawPriestPreDestroy* sharedPriestPre{}; // Native 삭제 분배는 같은 장기 사제 목록/가상 삭제/Carrier 본체를 사용한다.
 };
 // 사용 순서: 생성→ProcessHost(RegularHandler/DestroyHooks) 생성→BindProcesses→후속 모듈 Bind다.
 // 로딩 Pop 전에 BindProcesses가 필요하며, 삭제/해방 전에는 Damageable/Placement도 연결해야 한다.

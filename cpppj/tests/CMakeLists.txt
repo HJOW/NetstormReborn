@@ -3789,6 +3789,7 @@ target_sources(netstorm_construction_owner_tests PRIVATE BombTargetsTests.cpp) #
 target_sources(netstorm_construction_owner_tests PRIVATE LightningScreenTests.cpp) #Bomb고유전처리의기존원문96입력검사만선택실행하며다른화면/MP사례는실행하지않는다.
 target_sources(netstorm_construction_owner_tests PRIVATE BalloonPathTests.cpp) # 기존 그림자489입력/Robust 사례만 선택 실행하며 공중3종·MP 실행은 추가하지 않는다.
 target_sources(netstorm_construction_owner_tests PRIVATE DudeBehaviorTests.cpp) # 기존450920을 포함한 독립 원문410입력을 같은 실제 본체와 대조한다.
+target_sources(netstorm_construction_owner_tests PRIVATE PriestPreDestroyTests.cpp PriestForcefieldTests.cpp) # 사제 삭제/조회 원문 fixture와 독립 계약만 선택하며 포획/희생 플레이·MP 검사는 실행하지 않는다.
 target_sources(netstorm_tests PRIVATE RiftTypeTests.cpp) #실제사거리로더검사를전체등록에도유지한다.
 target_sources(netstorm_tests PRIVATE SurfaceAssetDeletionTests.cpp) #같은장기물리의비MP삭제/선택/거부를전체대상에도등록한다.
 target_link_libraries(netstorm_construction_owner_tests PRIVATE netstorm)

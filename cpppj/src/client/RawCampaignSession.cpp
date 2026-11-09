@@ -1158,7 +1158,9 @@ struct RawCampaignSession::Impl {
         // 사제 Owner의 004214a0도 동일한 실제 무상태 다리 진단 몸체다. 별도 AI 통지로 대체하지 않는다.
         if (!priestEffects.ownerNotice) priestEffects.ownerNotice=[this](Sid sid) { core.building.NotifySurface(sid); };
         priestEffects.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
-        priestEffects.dependentFound=[this] { ReplenishNuggets(); };if (world.Storage()->UsesNativeTransmissionDevices()) priestEffects.sharedCarrier=&world.Storage()->CarrierPre();priestEffects.reserveRegular=[] { return true; }; //Native사제와직접Carrier가같은현재finder/장기전처리를사용한다.
+        priestEffects.dependentFound=[this] { ReplenishNuggets(); };
+        if (world.Storage()->UsesNativeTransmissionDevices()) { priestEffects.sharedCarrier=&world.Storage()->CarrierPre();priestEffects.sharedForcefield=&world.Storage()->PriestForcefield();priestEffects.sharedPriestPre=&world.Storage()->PriestPre(); } // Native의 삭제/Shield/낙하가 같은 장기 조회·현재 역할·목록·Carrier를 빌린다.
+        priestEffects.reserveRegular=[] { return true; };
         priestEffects.shield.reserveSound=[] { return true; };
         sounds=std::make_unique<SoundProcessSystem>(core.processes,soundState,services.sound);
         priestEffects.shield.loadSound=[this](std::string_view name) { return soundNames.Lookup(name); };
@@ -1653,7 +1655,7 @@ struct RawCampaignSession::Impl {
                 if (event.effect==SquidDestroyEffect::PostDestroy) { PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
             }
             // 실제 사제 +18은44b9e0이다. 고유 +14는 뒤의 사제 전처리 래퍼가 먼저 실행한다.
-            if (PriestLifetime(event.sid) && event.effect==SquidDestroyEffect::PostDestroy) { PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
+            if (PriestDeletionLifetime(event.sid) && event.effect==SquidDestroyEffect::PostDestroy) { PrepareDamageablePost();damageablePost->PostDestroy(event.sid,event.flags);return; }
             if (BombLifetime(event.sid) && bombPre->Handles(event.sid) && event.effect==SquidDestroyEffect::PreDestroy) { bombPre->PreDestroy(event.sid,event.flags);return; } // 실제고유전처리는공통절앞에서처리한다.
             if (RuneLifetime(event.sid) || FenceCommon(event.sid) || VisualDummy(event.sid) || PriestForcefield(event.sid) || BuriedLifetime(event.sid) || BombLifetime(event.sid)) { // 실제 보호막도 +14/+18이 공통004b0950/004b0840이다.
                 if (event.effect==SquidDestroyEffect::PreDestroy) { world.CommonDeletion().PreDestroy(event.sid,event.flags);return; }
@@ -1672,7 +1674,7 @@ struct RawCampaignSession::Impl {
         worldHooks.assets=priests->DestroyHooks(std::move(worldHooks.assets)); // 실제4919b0의 목록·보호막·Carrier 전처리를 같은 삭제 호출에 연결한다.
         auto previousDestroy=std::move(worldHooks.destroy); // 실제 신전 VT의 공통+10만 추가 분배한다.
         worldHooks.destroy=[this,previous=std::move(previousDestroy)](Sid sid,std::uint32_t flags,const SquidDestroyHooks& hooks) {
-            if (NativeOutpostLifetime(sid) || BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || BlockerLifetime(sid) || GrowingIce(sid) || SunFence(sid) || Nugget(sid) || (daisLifecycle && daisLifecycle->Handles(sid)) || (dudeBehavior && dudeBehavior->Handles(sid)) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
+            if (NativeOutpostLifetime(sid) || BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || BlockerLifetime(sid) || GrowingIce(sid) || SunFence(sid) || Nugget(sid) || (daisLifecycle && daisLifecycle->Handles(sid)) || (dudeBehavior && dudeBehavior->Handles(sid)) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestDeletionLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         if (world.Storage()->UsesNativeTransmissionDevices()) buriedRegular=&world.Storage()->BuriedRegular();else { localBuriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);buriedRegular=localBuriedRegular.get(); } //Native는World반납뒤에도같은현재Frame/난수를사용한다.
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
@@ -1876,11 +1878,12 @@ struct RawCampaignSession::Impl {
     bool SunFence(Sid sid) const { return Read(core.pool.Slot(sid),0)==0x509470; } //실제가상부모에없는추가TYPE136조건을넣지않는다.
     // 보호50dc30의+14는484f80→44b4b0 thunk이며+18/+10도기존Damageable/공통삭제다. 메뉴 범위와는 별개다.
     bool Nugget(Sid sid) const { return Read(core.pool.Slot(sid),0)==0x50dc30U; } // 원문 파생 가상표의 삭제/후처리이며 표시 TYPE154 사본을 추가로 요구하지 않는다.
-    // 실제 사제 보호막167/507770의 공통 수명만 추가한다. 펜스 보호막170과 구별한다.
-    bool PriestForcefield(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==167 && Read(raw,0)==0x507770U; }
+    // Native 보호막의 삭제 분배는 표시 TYPE와 별개인 현재507770 VT를 따른다. 독립 typed 계약은 유지한다.
+    bool PriestForcefield(Sid sid) const { const auto raw=core.pool.Slot(sid);return (world.Storage()->UsesNativeTransmissionDevices() || raw[10]==167) && Read(raw,0)==0x507770U; }
     // 다섯 직접 Carrier의 +14=426890/+18=44b9e0이다. 5040c0은 별도42ae80이므로 포함하지 않는다.
     // TYPE158과 실제 PATCH 사제 VT가 함께 맞을 때만 공통4af780·고유4919b0·44b9e0 삭제를 분배한다.
     bool PriestLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==kPriestType && Read(raw,0)==kPatchPriestVtable; }
+    bool PriestDeletionLifetime(Sid sid) const { return world.Storage()->UsesNativeTransmissionDevices() ? Read(core.pool.Slot(sid),0)==kPatchPriestVtable:PriestLifetime(sid); } // Native의 가상10/18 삭제 선택만 현재 VT를 사용하고 피격 경로의 기존 별도 계약은 보존한다.
     // 실제50a748의+14=41f910은공통4b0950으로가는jmp이며+10/+18도공통4af780/4b0840이다.
     bool BuriedLifetime(Sid sid) const { const auto raw=core.pool.Slot(sid);return std::uint32_t(raw[10])==gemRewardState.buriedType && Read(raw,0)==0x50a748U; }
     // 원본여섯Bomb 생성자표의+10/+18은공통이며502370의+14만41e960이다.정확한VT만추가한다.

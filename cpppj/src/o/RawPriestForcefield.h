@@ -13,6 +13,7 @@ class RawPriestForcefield {
 public:
     // 타입은 복사하고 풀/해시/전역은 참조한다. 참조 대상은 조회 객체보다 오래 살아야 한다.
     RawPriestForcefield(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,PriestForcefieldState& state);
+    RawPriestForcefield(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,const std::uint32_t& currentType); // Native는 실제 주소가 고정된 현재 TYPE 표와 역할 DWORD만 빌린다.
     // 004918e0 / CD 0040bf00. 좌표를 0방향 절삭하고 같은 타입·owner BYTE의 첫 SID 또는 0을 반환한다.
     // dead/void/추상/매장은 사제 자체의 조회 생략 조건이 아니다. 후보의 매장은 finder가 제외한다.
     Sid Find(Sid priest) const;
@@ -28,7 +29,9 @@ private:
     // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
     std::vector<RiftTypeRecord> types_;
     // state_: 처리 중 조회·갱신하는 상태 (PriestForcefieldState).
-    PriestForcefieldState& state_;
+    PriestForcefieldState* state_{}; // 독립 typed가 공급한 기존 상태만 가리킨다.
+    std::span<const RiftTypeRecord> currentTypes_; // Native의 실제 장기 TYPE 표이며 발자국을 복사하지 않는다.
+    const std::uint32_t* currentType_{}; // Native의005412f4를 후보 비교 및 생성 직전에 다시 읽는다.
 };
 // 같은 풀의 findForcefield만 실제 조회로 바꾼다. 나머지 삭제/Carrier 경계는 호출자가 공급한다.
 PriestPreDestroyHooks MakePriestForcefieldHooks(const SidPool& pool,const RawPriestForcefield& lookup,PriestPreDestroyHooks hooks);
