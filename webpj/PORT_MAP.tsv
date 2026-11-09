@@ -891,7 +891,7 @@ cpppj/src/o/RawSquidContainedUnpop.cpp	port	www/core/squid-contained-unpop.js	1f
 cpppj/src/o/RawSquidCreation.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(004af530)
 cpppj/src/o/RawSquidDefense.cpp	port	www/core/raw-squid-defense.js	1f00a25a	port	[o-default] WB04-E58: 기본 방어 0043d9b0 false·현재 가상 표 5칸 분배·다른 파생 fallback 보존. fixture squiddefense 10.78 24행(CD 4aed90 24행은 범위 밖). 실제 rejectDamage 소비자 연결은 DamageableHit 단위
 cpppj/src/o/RawSquidDestroy.cpp	port	www/core/squid-destroy.js	1f00a25a	port	[o-default] WB04-D2
-cpppj/src/o/RawSquidDestroyDispatch.cpp	port			todo	[o-default]
+cpppj/src/o/RawSquidDestroyDispatch.cpp	port	www/core/raw-squid-destroy-dispatch.js	1f00a25a	port	[o-default] WB04-E214: 다리 가상 삭제 재정의 004220f0(실제 가상 표 0x005034c8 로 선택·편집기/권한/abstract-buried(extra 9) 단락 시 Graph 번호/프레임 비접근·Graph 기록 표면 수 5 이상에서 현재 프레임 DWORD 코드의 단단한 플래그 0x40 또는 debugKeep 이면 dead/장부/표시 불변 false·무효 Graph 254·표 밖·프레임 범위 밖은 쓰기 전 오류·그 밖은 공통 destroy 전달 true)와 bindCurrentModes(현재 boss/편집기 전역 호출마다 읽음), 구성 때 풀/Graph 풀·해시/spot·타입 표 일치 확인. fixture 없음: cpppj DestroyDispatchTests 5건과 웹 계약. 남음: 다리 vtable +0x10 실제 분배 호출 연결·실제 boss/편집기 전역 소유자는 순서4~5·CD BYTE 프레임은 범위 밖
 cpppj/src/o/RawSquidDisplayParent.cpp	port	www/core/raw-squid-display-parent.js	1f00a25a	port	[o-default] WB04-E58: 표시 부모 004ad500·프레임 고정·현재 TYPE 두 조회·846 진단·mark. fixture squid-display-parent 696·squid-display-number 696행 전부. 실제 TYPE 뷰/표시 장치 연결은 SquidDisplay 단위
 cpppj/src/o/RawSquidFinder.cpp	port	www/core/raw-squid-finder.js	1f00a25a	port	[o-default] WB04-B
 cpppj/src/o/RawSquidHitPoints.cpp	port	www/core/raw-squid-word.js	1f00a25a	port	[o-default] WB04-E2: 004adca0 현재 HP DWORD setter(옆 필드 보존)
