@@ -14929,9 +14929,67 @@
       "bytes": 126224,
       "lines": 534,
       "fixtureCommit": "400aaefb",
-      "webCommit": "worktree",
+      "webCommit": "dcc659dc",
       "cpppjBasis": {
         "cpppj/src/o/RawTutorialLater.cpp": "400aaefb"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E240",
+      "id": "checking-forms",
+      "path": "cpppj/tests/fixtures/checking-forms-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 공통 Form 검사(004ad730). 부모/자식/마지막 후보의 TYPE·상태 조합과 head 개수(0/1/2) → 결과 (288행)",
+      "consumers": [
+        "webpj/tests/checking-diagnostics.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-checking-diagnostics.js"
+      ],
+      "doc": "docs/webpj-checking-diagnostics-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCheckingDiagnostics.h"
+      ],
+      "scope": "10.78 288행 전부",
+      "text": true,
+      "sha256": "ae5841c0c49da787725147ca0043277a41e97a9c0d3dad4f381096c8ddd88662",
+      "bytes": 5170,
+      "lines": 289,
+      "fixtureCommit": "8b467ca0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCheckingDiagnostics.h": "8b467ca0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E240",
+      "id": "checking-island-owner",
+      "path": "cpppj/tests/fixtures/checking-island-owner-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 총 noIsland 소유자 진단(0046b830 case 1 의 41def0). checking·부모 소유자·noIsland TYPE·첫 진단 뒤 변경·발자국 상한 세 가지 → 진단 횟수·진단 뒤 checking/noIsland/부모 소유자·상한 정수 변환 (192행)",
+      "consumers": [
+        "webpj/tests/checking-diagnostics.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-checking-diagnostics.js"
+      ],
+      "doc": "docs/webpj-checking-diagnostics-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCheckingDiagnostics.h"
+      ],
+      "scope": "10.78 192행 전부",
+      "text": true,
+      "sha256": "ca8cadbabd2ea20090dc7ddd0a3ac8757f78e5a15e2c4f5b336b409bcca019ca",
+      "bytes": 6637,
+      "lines": 193,
+      "fixtureCommit": "8b467ca0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCheckingDiagnostics.h": "8b467ca0"
       }
     }
   ]
