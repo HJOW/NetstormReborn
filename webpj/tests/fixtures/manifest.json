@@ -14297,9 +14297,40 @@
       "bytes": 7314586,
       "lines": 1439,
       "fixtureCommit": "ada85427",
-      "webCommit": "worktree",
+      "webCommit": "6ccb3998",
       "cpppjBasis": {
         "cpppj/src/o/RawFortFinishOwner.cpp": "a4b63270"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E222",
+      "id": "islandbuilder",
+      "path": "cpppj/tests/fixtures/islandbuilder-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 IslandBuilder Place/PlaceAll. 입력 14칸(월드/임시 지도·owner·territory·기존 count·builder 경계·ignorePosition·프레임 프로필·청크 16x16·start/end)과 레코드에서 반환 지역·대상 지도 256청크 12 BYTE 전체·임시 지도일 때 월드 지도·3204 BYTE 섬 목록 전체·진단 순서와 횟수(10.78 578행·CD 578행)",
+      "consumers": [
+        "webpj/tests/island-builder.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-island-builder.js",
+        "webpj/www/core/raw-island-runtime.js",
+        "webpj/www/assets/territory.js"
+      ],
+      "doc": "docs/webpj-island-builder-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawIslandBuilder.cpp"
+      ],
+      "scope": "10.78 578입력 전부(originalCD 578행은 범위 밖)",
+      "text": true,
+      "sha256": "8048e92b263b026d17d02ccf7ddf8b0a3fefa0240970c8581cf5a3ea2b6c60a4",
+      "bytes": 557818,
+      "lines": 1157,
+      "fixtureCommit": "5bdb5bed",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawIslandBuilder.cpp": "2a8f937e"
       }
     }
   ]
