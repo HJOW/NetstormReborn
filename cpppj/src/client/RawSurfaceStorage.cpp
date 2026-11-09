@@ -257,6 +257,7 @@ float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std
     if (table==0x50cc08U) return o::RunSpriteRegular(pool,types,Frame(),sid,payload); //원문4794b0은event/count를읽지않고현재TYPE+114를사용한다.
     if (table==0x502cf0U || table==0x502db0U) return o::HandleHealBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //힐/미티어의 필수41f9d0을 같은 장기 본문에서 처리한다.
     if (table==0x502c38U) return o::HandleGravityBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //그라비테이션의 필수41f760도 같은 실제 풀/프레임/Host를 사용한다.
+    if (table==0x50a820U || table==0x50a8e8U) return DecorationRegular(sid,event,count,payload); // 실제462420의 장식/가장자리 팜 수명 감소다.
     if (HasCarrierRegular(sid)) return CarrierRegular().Handle(sid,event,count,payload); // 공통6VT는 World/NoWorld에서 같은 실제42a750을 쓴다.
     if (HasBombRegular(sid)) return BombRegular().Handle(sid,event,count,payload); //현재 원문41e6a0의 연결16VT만 같은 장기 본문으로 보낸다.
     if (table==0x512208U) return ContentForms().Damage(sid,std::bit_cast<std::int32_t>(count),payload); // 실제4af070은 사건과 무관하게 signed count만 판정한다.

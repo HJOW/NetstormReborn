@@ -20,6 +20,8 @@
 #include "o/RawBombStrike.h" //직접 피해의 생성/Pop 뒤 현재 권한/TYPE 재조회를 검증한다.
 #include "client/RawBombBlastBindings.h" //하드너의 같은41e3d0 추가 그림도 실제 현재 TYPE/프레임으로 분배한다.
 #include "RawSceneSupport.h" //새 하드너 원문 TSV의 입력과 실제 관찰 결과만 읽는다.
+#include "o/RawDamageableHit.h" //장식 수명 감소를 실제 일반 HP/burning 본문에 연결한다.
+#include "o/RawDamageableBurning.h"
 #include "o/RawSquidHitPoints.h" //현재HP의 원문 비가상 DWORD setter를 같은 풀에서 쓴다.
 #include "o/RawBombTargets.h" //같은TYPE사거리를쓰던기존다른소비자의연결도확인한다.
 #include "o/RawDiscRegular.h" // 원문의 IDIV/감김은 새 실제 PE 경계 자료와 직접 대조한다.
@@ -1616,4 +1618,25 @@ TEST_CASE(ClientCarrierOwner_PreviewUsesCurrentFrameOwnerAndSharedType) { //실�
 TEST_CASE(ClientCarrierOwner_SoundRoleKeepsSameCurrentAddress) { //기존 독립 소리 입력과 Native 공유 역할이 같은 getter 계약을 사용한다.
     RegionScene s;SoundProcessState state;state.processType=99;CHECK(state.ProcessType()==99);state.sharedProcessType=&s.gameplay->GameAux()->SoundProcessType();const auto* address=&state.ProcessType();CHECK(*address==47);s.gameplay->GameAux()->SoundProcessType()=63;CHECK(state.ProcessType()==63);
     { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(address==&world.Storage()->GameAux()->SoundProcessType() && state.ProcessType()==63); }CHECK(state.ProcessType()==63 && !s.storage->Borrowed());
+}
+
+TEST_CASE(ClientDecorationOwner_NoWorldHostUsesActualHitPointsAndCurrentType) { //실제 장기 Host/최대HP와 일반 HP·burning 몸체의 현재값을 공유한다.
+    RegionScene s;const auto parent=s.Asset(0x50a820U);auto raw=s.storage->pool.AllocatedBytes(parent);const auto type=raw[10];raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]=0;raw[34]=0;s.storage->types[type].flags1|=16;s.storage->types[type].maxHitPoints=100;s.storage->types[type].damageEffect=0;SetRawSquidHitPoints(s.storage->pool,parent,100);s.gameplay->Authority()->boss=false;
+    PriestDamageState levels;levels.levelCorrectionDisabled=true;DamageableHitState state{levels};DamageableBurningState burnState;RawDamageableBurning burning(s.storage->pool,s.storage->types,s.storage->Reward(),burnState,{});DamageableHitHooks effects;std::uint32_t notices{},pins{};
+    effects.rejectDamage=[](auto,auto) { return false; };effects.ownerDamageNotice=[&](auto owner,auto target,auto attacker) { CHECK(owner==0 && target==parent && !attacker.value);++notices; };effects=MakeDamageableHitBurningHooks(s.storage->pool,burning,std::move(effects));RawDamageableHit hit(s.storage->pool,s.storage->types,state,std::move(effects));
+    auto owner=std::make_shared<int>(1);auto binding=std::make_shared<RawSurfaceDamageableBindings>();binding->pin=[&] { ++pins;return owner; };binding->hitPoints=[&](auto target,auto amount,auto sourceOwner,auto source) { CHECK(sourceOwner==0 && source==0);return hit.Hit(target,std::bit_cast<std::int32_t>(amount),0,Sid{}); };s.storage->BindDamageableRuntime(binding);
+    auto& host=s.storage->Processes().Host();auto& clock=s.storage->Processes().State();clock.now=0;auto* task=host.AddRegular(parent,0,0.25F);CHECK(task);if (!task) return;task->RunFrame();CHECK(task->Count()==1 && RegionRead(raw,26)==100 && pins==0);
+    clock.now=0.25;task->RunFrame();CHECK(task->Count()==2 && RegionRead(raw,26)==66 && notices==1 && pins==1);s.storage->types[type].maxHitPoints=60;clock.now=0.5;task->RunFrame();CHECK(task->Count()==3 && RegionRead(raw,26)==20 && notices==2 && pins==2);CHECK(!s.storage->Borrowed());
+}
+TEST_CASE(ClientDecorationOwner_NoWorldFinalDeleteAndCurrentBoss) { //signed count3의 서버 관문 뒤 같은 실제 가상 삭제를 호출한다.
+    RegionScene s;const auto parent=s.Asset(0x50a8e8U);s.gameplay->Authority()->boss=false;CHECK(s.storage->DecorationRegular(parent,0,3,0.25F)==-1.0F && !(s.storage->pool.Slot(parent)[11]&1U));s.gameplay->Authority()->boss=true;
+    CHECK(s.storage->DecorationRegular(parent,0,3,0.25F)==-1.0F);CHECK(s.storage->pool.Slot(parent)[11]&1U);CHECK(s.storage->BaseDestroy().PreDepth()==0 && s.storage->BaseDestroy().PostDepth()==0 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientDecorationOwner_SelectedHitPinsOwnerAndFunction) { //최대HP 뒤 선택된 가상98만 실제 owner/함수 사본을 유지한다.
+    RegionScene s;const auto parent=s.Asset(0x50a820U);auto raw=s.storage->pool.AllocatedBytes(parent);s.storage->types[raw[10]].maxHitPoints=100;RegionPut(raw,26,100);auto owner=std::make_shared<int>(1);std::weak_ptr<int> weak=owner;auto binding=std::make_shared<RawSurfaceDamageableBindings>();std::uint32_t calls{},pins{};
+    binding->pin=[&] { ++pins;return owner; };binding->hitPoints=[&](auto target,auto amount,auto player,auto attacker) { owner.reset();binding->hitPoints={};binding.reset();CHECK(!weak.expired() && target==parent && amount==34 && player==0 && attacker==0);++calls;return 1; };s.storage->BindDamageableRuntime(binding);
+    CHECK(s.storage->DecorationRegular(parent,0,1,0.25F)==0.25F && calls==1 && pins==1 && weak.expired());bool failed{};try { s.storage->DecorationRegular(parent,0,1,0.25F); }catch (const std::logic_error&) { failed=true; }CHECK(failed && calls==1 && RegionRead(raw,26)==100);
+}
+TEST_CASE(ClientDecorationOwner_UsesCurrentSharedAltarTypeForMaximum) { //장식이 현재dais genus인 명시 입력도 같은 최대HP 원문/제단 역할을 읽는다.
+    RegionScene s;const auto parent=s.Asset(0x50a820U);auto raw=s.storage->pool.AllocatedBytes(parent);s.storage->types[raw[10]].flags2|=0x400000U;raw[40]|=1;s.storage->types[164].maxHitPoints=120;s.storage->types[155].maxHitPoints=90;auto& role=s.gameplay->GameAux()->AltarType();role=164;CHECK(s.storage->Reward().MaxHitPoints(parent)==120);role=155;CHECK(s.storage->Reward().MaxHitPoints(parent)==90);RegionPut(raw,26,0);CHECK(s.storage->DecorationRegular(parent,0,1,0.25F)==0.25F && !s.storage->Borrowed());
 }

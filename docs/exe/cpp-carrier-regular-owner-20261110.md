@@ -23,3 +23,5 @@ Regular 연결은66/87VT, 잔여21VT/17함수다. 공통 Bomb16VT 분배와 전�
 - R.exe: 677376 bytes, SHA256 `aa324b88e971407f3da1bb3e405fd66d291060189ae08244c234b2942decd32f`.
 
 [확정 보고서](../../cpppj/carrier-regular-owner-20261110.json).
+
+제품1235의 원문 대조에서 당시 다음 작업의 “Geyser2VT/462420” 이름을 장식/가장자리 팜2VT로 교정했다. 주소·대상2VT는 같다. [정정과 구현](cpp-decoration-regular-owner-20261110.md)을 따른다.

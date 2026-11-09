@@ -1,0 +1,1330 @@
+{
+  "unit": 1235,
+  "version": "11.01",
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "accepted": true,
+  "fullGoalComplete": false,
+  "summary": "장식·가장자리 팜의462420 signed 단계별 HP 감소/최종 삭제를 실제 장기 HP·현재 권한·같은 Host와 기존 전체 가상98 분배기에 연결했다.",
+  "sourceSha256": {
+    "cpppj/src/client/RawSurfaceWorld.h": "f7e79b56d3aebe2db3cc47d604935c9dd1267c098d5660f67a26aee857a408f1",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "c63bbc9e0414810cf661654b83ec1ce93c0ffe6c4683222f4f95bd15efbcc920",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "6a59c516c44f8c6d7e83b6e5deb25d90fcc58a7915a45b476f6913985b787911",
+    "cpppj/src/client/RawCampaignSession.cpp": "ced14fe1c68a2dd73640c2ec51951d0805f2afda5e018b9bc5ca0e4d5649fb30",
+    "cpppj/src/CMakeLists.txt": "c8eb0b6afcde1a468e4c658949118f7690a6174a66f583f1c27f3b0ebb87479f",
+    "cpppj/src/o/RawDecorationRegular.h": "3a797c93b92128608644bbb9f8b1db84bdab35b1eabac08d638d38f0ecc1f0cf",
+    "cpppj/src/o/RawDecorationRegular.cpp": "5c1d0ab67d48d9ac5440684c8e70618e3a430b4295968b20dfe681bbc65027ef",
+    "cpppj/src/client/RawSurfaceDecoration.cpp": "af630584d4f279b466f62f61665b541a0e60bb9690ff53ba11a88634be0f1191",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "2047c63cd6f3dda9b30e8cbe45805a40199b6e203baf184d6776d4835282fe7c",
+    "cpppj/tests/CMakeLists.txt": "75a9b628e73fa6394bc199033a3c0f2693d5fc1c76f7e3b80510cac64141101e",
+    "tools/decomp_decoration_regular.py": "dc81a8d243b5cfa66147957280cba0ccc6fe9f8a9125b18e4715fe393a8e9c39",
+    "cpppj/tests/fixtures/decoration-regular-x86.tsv": "552870876337dc3537316360b670987faeb84f836f6e2645b210d228694d3477",
+    "cpppj/tests/DecorationRegularTests.cpp": "30f1ded0f7364173e6427f780b76907268811259baf026fd1e5f0c5a1a91c8e7"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 14146560,
+      "sha256": "6f6833d738e804bd155c94228d5b1acfeff222eedab5fde5c719c628100fa6f7"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "6f497f76c99fc08936025af49fa66aba9988ac84ee7e201a621e0db591a6e5a0"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 31.545697689056396,
+    "sourcesUnchanged": true,
+    "warnings": 0,
+    "errors": 0
+  },
+  "firstBuild": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 1,
+    "seconds": 178.8275556564331,
+    "sourcesUnchanged": true
+  },
+  "ownerReviewBuild": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 1,
+    "seconds": 321.62601685523987,
+    "sourcesUnchanged": true
+  },
+  "tests": {
+    "cases": 132,
+    "passed": 132,
+    "failed": [],
+    "seconds": 20.37436532974243,
+    "results": [
+      {
+        "name": "ClientDependOwner_GetterKeepsCurrentPoolTypeAndFactory",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.11521577835083008
+      },
+      {
+        "name": "ClientDependOwner_ActualPairCreateFindAndRemoveWithoutWorld",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1225438117980957
+      },
+      {
+        "name": "ClientDependOwner_CurrentTypesUseActualConstructorAndOldClass",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.11197662353515625
+      },
+      {
+        "name": "ClientDependOwner_CurrentTypeDoesNotNarrowToByte",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12421226501464844
+      },
+      {
+        "name": "ClientDependOwner_FinderAndParentDoNotAddFreeDeadFilters",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12212562561035156
+      },
+      {
+        "name": "ClientDependOwner_FinderExcludesAssetByteBeforeDependComparison",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1331164836883545
+      },
+      {
+        "name": "ClientDependOwner_PreDestroyUsesActualProcessPeerVirtual",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.10533976554870605
+      },
+      {
+        "name": "ClientDependOwner_PreDestroyReadsSecondPeerAfterFirstEffect",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.0908050537109375
+      },
+      {
+        "name": "ClientDependOwner_CommonSelectionKeepsFullDword",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1690225601196289
+      },
+      {
+        "name": "ClientDependOwner_ThreeEmptyVirtualNoticesIgnoreOtherFields",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.15307927131652832
+      },
+      {
+        "name": "ClientDependOwner_ProcessNoticeServerZeroStopsBeforePid",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1217505931854248
+      },
+      {
+        "name": "ClientDependOwner_CurrentNoticePinsOwnerAndExpires",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.10563898086547852
+      },
+      {
+        "name": "ClientDependOwner_NotifyAssertionCanReturnNormally",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.10224747657775879
+      },
+      {
+        "name": "ClientDependOwner_RemoveAssertionsReadCurrentFieldsAndContinue",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.18544816970825195
+      },
+      {
+        "name": "ClientDependOwner_FinderReadsHeadAfterCurrentCheckingAssertion",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.21440935134887695
+      },
+      {
+        "name": "ClientDependOwner_NativeWorldBorrowsSameBodyAndReturnsIt",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.13457608222961426
+      },
+      {
+        "name": "ClientGumpOwner_GetterKeepsPoolCurrentTypeAndFactory",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12294578552246094
+      },
+      {
+        "name": "ClientGumpOwner_CurrentConstructorAndWholeOwnerDword",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.11579108238220215
+      },
+      {
+        "name": "ClientGumpOwner_TakeUsesCurrentTypeAndActualUnpop",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1816880702972412
+      },
+      {
+        "name": "ClientGumpOwner_OutOfRangeCurrentTypeKeepsAllocationPrefix",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12894105911254883
+      },
+      {
+        "name": "ClientGumpOwner_ZeroOwnerSkipsStateTypeAndAllUiDevices",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.10932517051696777
+      },
+      {
+        "name": "ClientGumpOwner_NotifySavesFullOwnerAndCurrentParentBeforeCallback",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.0956881046295166
+      },
+      {
+        "name": "ClientGumpOwner_ActualUiRegistryKillIsDeferred",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1287674903869629
+      },
+      {
+        "name": "ClientGumpOwner_RegistryLookupUsesCurrentReusedEntry",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1713716983795166
+      },
+      {
+        "name": "ClientGumpOwner_UiPinKeepsActualRegistryUntilNoticeReturns",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.23732542991638184
+      },
+      {
+        "name": "ClientGumpOwner_MissingUiIsExplicitAndOwnerZeroIsNotRequired",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.14472126960754395
+      },
+      {
+        "name": "ClientGumpOwner_CurrentWorldNoticePinsAndExpiresToUiRegistry",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12403225898742676
+      },
+      {
+        "name": "ClientGumpOwner_CommonSelectionUsesFullDword",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.11873626708984375
+      },
+      {
+        "name": "ClientGumpOwner_DestroyUsesCurrentDifferentFormVirtual",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.10622477531433105
+      },
+      {
+        "name": "ClientGumpOwner_DependantPeerUsesActualGumpDeletion",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.15497970581054688
+      },
+      {
+        "name": "ClientGumpOwner_ParentDeletionReachesRealUiAndReleasesForm",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.15058112144470215
+      },
+      {
+        "name": "ClientGumpOwner_ActualFloatingMenuUsesCurrentTypeAndUiFormReentry",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1442396640777588
+      },
+      {
+        "name": "ClientContentOwner_GettersKeepCurrentStateFactoryAndPool",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12283205986022949
+      },
+      {
+        "name": "ClientContentOwner_CurrentTypeUsesActualConstructorAndSortedLinks",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.19214200973510742
+      },
+      {
+        "name": "ClientContentOwner_CurrentTypeDwordDoesNotNarrow",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.2318410873413086
+      },
+      {
+        "name": "ClientContentOwner_DefaultDeletionReleasesWithBalancedDepths",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12355494499206543
+      },
+      {
+        "name": "ClientContentOwner_CursorComparisonPreservesWholeDword",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.13806748390197754
+      },
+      {
+        "name": "ClientContentOwner_CursorCancelPrecedesCurrentNuggetKind",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.15484881401062012
+      },
+      {
+        "name": "ClientContentOwner_PaidNuggetUsesCurrentLocalOwnerAndNotice",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.0984961986541748
+      },
+      {
+        "name": "ClientContentOwner_CurrentNuggetCostReachesSameRewardAndSp",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1696181297302246
+      },
+      {
+        "name": "ClientContentOwner_EmptyParentNoticeIgnoresTypeStateAndArguments",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.14406800270080566
+      },
+      {
+        "name": "ClientContentOwner_DerivedNoticePinsActualOwnerAndExpires",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12383580207824707
+      },
+      {
+        "name": "ClientContentOwner_ActualRegularReattachesAndClearsChangedBit",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.13874578475952148
+      },
+      {
+        "name": "ClientContentOwner_NativeWorldBorrowsSameBodyAndReturnsIt",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12958574295043945
+      },
+      {
+        "name": "ClientBombOwner_GetterKeepsCurrentStatePoolAndFactory",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.2716505527496338
+      },
+      {
+        "name": "ClientBombOwner_CastTimesKeepSameMutableStorage",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.23110008239746094
+      },
+      {
+        "name": "ClientBombOwner_PreviousTablesAndTreasonStayRegistered",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.18485164642333984
+      },
+      {
+        "name": "ClientBombOwner_CountZeroUsesActualFirstFrameAndFullPayload",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.2108323574066162
+      },
+      {
+        "name": "ClientBombOwner_LaterCountUsesSameActualFrameAdvance",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.13887906074523926
+      },
+      {
+        "name": "ClientBombOwner_StrictCastTimeEqualityReturnsPayload",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12417721748352051
+      },
+      {
+        "name": "ClientBombOwner_SignedCountKeepsNegativeElapsed",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.14303326606750488
+      },
+      {
+        "name": "ClientBombOwner_NanElapsedNeverSelectsTargetOrPacket",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.14003610610961914
+      },
+      {
+        "name": "ClientBombOwner_MissingTargetThrowsAndFreesRealAllocation",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1156775951385498
+      },
+      {
+        "name": "ClientBombOwner_NoticeReadsCurrentBossAfterEffect",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.14716196060180664
+      },
+      {
+        "name": "ClientBombOwner_NoticeMutationUsesNewCurrentType",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.2532532215118408
+      },
+      {
+        "name": "ClientBombOwner_NoticePinsActualWorldUntilReturn",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.21804237365722656
+      },
+      {
+        "name": "ClientBombOwner_ActualDefaultHostUsesLongBody",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12391042709350586
+      },
+      {
+        "name": "ClientBombOwner_WorldBorrowsSameBodyAndCurrentHeader",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12155914306640625
+      },
+      {
+        "name": "ClientBombOwner_LegacySpanStillUsesTypedInputs",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1329481601715088
+      },
+      {
+        "name": "ClientBombOwner_TargetSearchUsesActualAllocatedArrayAndReleasesOnThrow",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1496596336364746
+      },
+      {
+        "name": "ClientBombHealOwner_EligibilityKeepsOriginalMaskAndCurrentType",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1311633586883545
+      },
+      {
+        "name": "ClientBombHealOwner_CarrierReturnsBeforeTypeAndDevices",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.19435715675354004
+      },
+      {
+        "name": "ClientBombHealOwner_SignedWrappedAverageMatchesPe",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.10651397705078125
+      },
+      {
+        "name": "ClientBombHealOwner_HealthIsSavedBeforeMaximumGetter",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.22847938537597656
+      },
+      {
+        "name": "ClientBombHealOwner_NoHealthStillClearsOnlyTwoStatusBits",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.18279433250427246
+      },
+      {
+        "name": "ClientBombHealOwner_FencePrecedesWalkingAndRepopReadsCurrentVtable",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.15197229385375977
+      },
+      {
+        "name": "ClientBombHealOwner_RefreshMutationAndCreationUseCurrentBurstCenter",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12069892883300781
+      },
+      {
+        "name": "ClientBombHealOwner_MissingSelectedRefreshKeepsOriginalPrefix",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.20758581161499023
+      },
+      {
+        "name": "ClientBombHealOwner_UsesSameActualNativeHpAndCurrentType",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12079095840454102
+      },
+      {
+        "name": "ClientBombHealOwner_NoWorldRegularUsesActualLongBody",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1566944122314453
+      },
+      {
+        "name": "ClientBombHealOwner_BurstAdvancesCurrentFrameAndKeepsNanPayload",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.22510290145874023
+      },
+      {
+        "name": "ClientBombHealOwner_BurstEndAttachesRealEventTwoBeforeDestroy",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1785111427307129
+      },
+      {
+        "name": "ClientBombHealOwner_BurstNoWorldDispatchRunsActualDeletion",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.23285913467407227
+      },
+      {
+        "name": "ClientBombHardenerOwner_IndependentPeSelectionAndEffects",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.10551714897155762
+      },
+      {
+        "name": "ClientBombHardenerOwner_NoWorldHostUsesSameCurrentBody",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.2091655731201172
+      },
+      {
+        "name": "ClientBombHardenerOwner_MissingFlareKeepsActualFrameAndRandom",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.21315383911132812
+      },
+      {
+        "name": "ClientBombHardenerOwner_AdditionalDrawUsesActualCurrentTypeFrame",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1840651035308838
+      },
+      {
+        "name": "ClientBombStrikeOwner_FourNativeHostsUseCurrentLongBody",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.20307183265686035
+      },
+      {
+        "name": "ClientBombStrikeOwner_FourAdditionalDrawsUseCurrentTypeFrame",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.2316441535949707
+      },
+      {
+        "name": "ClientBombBurstOwner_GravityRegularMatchesIndependentPe122Inputs",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.22377276420593262
+      },
+      {
+        "name": "ClientBombBurstOwner_GravityNoWorldReversesAndActuallyDeletes",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.14556574821472168
+      },
+      {
+        "name": "ClientBombBurstOwner_MeteorNoWorldUsesSharedBurstAndDeletes",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12529969215393066
+      },
+      {
+        "name": "ClientBombStrikeOwner_GravityReadsCurrentGlobalsAfterPop",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.16161465644836426
+      },
+      {
+        "name": "ClientBombStrikeOwner_MeteorReadsCurrentTypeBeforeEachSpawn",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12633728981018066
+      },
+      {
+        "name": "ClientBombStrikeOwner_CarrierReturnsBeforeCurrentGlobals",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.18333649635314941
+      },
+      {
+        "name": "ClientBombStrikeOwner_EffectGlobalsKeepSameOwnerAcrossWorldLoan",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.09665870666503906
+      },
+      {
+        "name": "ClientBombOwner_SpawnsUseSameCurrentStorageAcrossWorldLoan",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.10470008850097656
+      },
+      {
+        "name": "ClientBombOwner_SpawnsGetterKeepsCurrentRandomAndSp",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.13502860069274902
+      },
+      {
+        "name": "ClientBombTreasonOwner_IndependentPeEligibilityAndEffects",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.20899486541748047
+      },
+      {
+        "name": "ClientBombTreasonOwner_NoWorldHostUsesSameCurrentBody",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.09134697914123535
+      },
+      {
+        "name": "ClientBombTreasonOwner_AdditionalDrawUsesCurrentTypeFrame",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.13156461715698242
+      },
+      {
+        "name": "ClientBombTreasonOwner_RoleGlobalsKeepSameCurrentOwner",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1474764347076416
+      },
+      {
+        "name": "ClientBombTreasonOwner_MissingRefreshKeepsOwnershipEffect",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.04491448402404785
+      },
+      {
+        "name": "ClientSpriteOwner_NoWorldHostUsesCurrentTypeAndActualDerivedRefresh",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12095880508422852
+      },
+      {
+        "name": "ClientCarrierOwner_NoWorldCurrentCastAndHost",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1472318172454834
+      },
+      {
+        "name": "ClientCarrierOwner_SelectedRuntimePinsWholeOwnerAndFunction",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.15491366386413574
+      },
+      {
+        "name": "ClientCarrierOwner_CurrentDangerCellUsesSameFrame",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.13457059860229492
+      },
+      {
+        "name": "ClientCarrierOwner_PreviewUsesCurrentFrameOwnerAndSharedType",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.13999676704406738
+      },
+      {
+        "name": "ClientCarrierOwner_SoundRoleKeepsSameCurrentAddress",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1094365119934082
+      },
+      {
+        "name": "ClientDecorationOwner_NoWorldHostUsesActualHitPointsAndCurrentType",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.15273833274841309
+      },
+      {
+        "name": "ClientDecorationOwner_NoWorldFinalDeleteAndCurrentBoss",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.15765023231506348
+      },
+      {
+        "name": "ClientDecorationOwner_SelectedHitPinsOwnerAndFunction",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.20223641395568848
+      },
+      {
+        "name": "ClientDecorationOwner_UsesCurrentSharedAltarTypeForMaximum",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.2380690574645996
+      },
+      {
+        "name": "ContentLifetime_IndependentPeFixture",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 1.1671867370605469
+      },
+      {
+        "name": "ContentLifetime_ActualSpAndWalletIntegration",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.059343576431274414
+      },
+      {
+        "name": "ContentFormAttach_DeadDiagnosticsResumeAtCurrentSlots",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.09914422035217285
+      },
+      {
+        "name": "ContentFormAttach_UnrepairedDeadReturnsWithoutLinkWrites",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.0807185173034668
+      },
+      {
+        "name": "ContentFormAttach_PriestTakenDeadlineOwnerSurvivesWorldLeases",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.03966569900512695
+      },
+      {
+        "name": "ContentLifetime_PriestNoticeUsesCurrentStructuralLinks",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.07057762145996094
+      },
+      {
+        "name": "ContentLifetime_SharedMixedFormDispatch",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.06252026557922363
+      },
+      {
+        "name": "ContentLifetime_SharedBossRecheckedAfterCursorCancel",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.04799652099609375
+      },
+      {
+        "name": "CursorPreviewDword_ContentComparisonNative56KeepsAllBits",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.12878012657165527
+      },
+      {
+        "name": "NuggetTypeNumber_ContentReadsCurrentKindAndEachIncomeCost",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.03268909454345703
+      },
+      {
+        "name": "SpriteRefresh_IndependentPe225Inputs",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.1615734100341797
+      },
+      {
+        "name": "SpriteRefresh_DestroyingParentSkipsMetaDiagnostic",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.05698847770690918
+      },
+      {
+        "name": "SpriteRefresh_MissingDirtyKeepsByte35AndStopsForms",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.06843018531799316
+      },
+      {
+        "name": "SpriteRefresh_MissingFormAccessKeepsDirtyAndByte35",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.03598356246948242
+      },
+      {
+        "name": "SpriteRefresh_DisplayDispatchUsesActualDerivedBeforeFrameChecks",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.031241893768310547
+      },
+      {
+        "name": "CarrierRegular_NativeParentAndCurrentCallbacks",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.061478376388549805
+      },
+      {
+        "name": "CarrierRegular_NativeVtablesAndDerivedFallback",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.06991863250732422
+      },
+      {
+        "name": "CarrierRegular_LazyBoundariesAndEdition",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.06150388717651367
+      },
+      {
+        "name": "ContentPreviewProcess_NativeConstructorFrameNotifyDestructor",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.06521296501159668
+      },
+      {
+        "name": "ContentPreviewProcess_ActualHostExpiryAndExternalParentDelete",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.05597639083862305
+      },
+      {
+        "name": "ContentPreviewProcess_LazyEffectsAndEdition",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.060143470764160156
+      },
+      {
+        "name": "DecorationRegular_Original630Inputs",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.07546877861022949
+      },
+      {
+        "name": "DecorationRegular_LazySelectedEffectsAndEdition",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.06903481483459473
+      },
+      {
+        "name": "BombStrike_Native1420Inputs",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.11776113510131836
+      },
+      {
+        "name": "FormTake_IndependentPeFixture",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 1.6269328594207764
+      },
+      {
+        "name": "FormTake_GumpAttachmentAndDestroyIntegration",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.07342767715454102
+      },
+      {
+        "name": "FormClassLifetime_CurrentVtableKeepsGumpAndContentEffects",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.05816769599914551
+      },
+      {
+        "name": "FormCreationCurrent_FacadesUseCurrentConstructorsAndReturnedVtable",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.056059837341308594
+      },
+      {
+        "name": "FormCreationCurrent_NullConstructorUsesRealBaseAndSelectedDiagnostics",
+        "exitCode": 0,
+        "passed": true,
+        "seconds": 0.09011101722717285
+      }
+    ]
+  },
+  "originalEvidence": [
+    {
+      "edition": "originals",
+      "entry": "00462420",
+      "ranges": [
+        {
+          "first": "00462420",
+          "lastInclusive": "0046249e",
+          "sha256": "5f83e4b919ca6c89f10e827cbf8d9210d43273b335ebf8b9d7de1a33dd5cc083"
+        }
+      ],
+      "cSha256": "84d2096c92fd1b02a2f6df8506fe31234915e06ad7bb01bfe0ed0b60f89e191d"
+    },
+    {
+      "edition": "originals",
+      "entry": "00462610",
+      "ranges": [
+        {
+          "first": "00462610",
+          "lastInclusive": "0046262a",
+          "sha256": "dfe7ceb752fab2193f1ae3b7f95fc5478c095f7d0104a3cbd603b003c7bc8aaf"
+        }
+      ],
+      "cSha256": "1885b6d468cfbda91eefe4cf05e5cde96d25f6bdf62dc4e19ab3a3e5f92e041f"
+    },
+    {
+      "edition": "originals",
+      "entry": "00462630",
+      "ranges": [
+        {
+          "first": "00462630",
+          "lastInclusive": "0046264a",
+          "sha256": "c0047a23d2e53bcabd4f8f60dca7d0d04d9c554d8a37bd5f83c0718c49aac369"
+        }
+      ],
+      "cSha256": "12b856d603f5489fd48ad02910456df346dece5f6d9f6fbfb70b67bc653382c0"
+    },
+    {
+      "edition": "originals",
+      "entry": "004adcb0",
+      "ranges": [
+        {
+          "first": "004adcb0",
+          "lastInclusive": "004add03",
+          "sha256": "2b29c16fd77043c109c220e1094e369a832c88b41defd211ba73ee541d144ff4"
+        }
+      ],
+      "cSha256": "2a32f1e8c9bfe1880064199feaa75e021440b415f9c62b17f89d67aa87bbdfdd"
+    }
+  ],
+  "originalPeOracle": {
+    "cases": 630,
+    "normalReturns": 630,
+    "instructions": 27796,
+    "passed": true,
+    "originalExecutions": 0,
+    "entry": "00462420",
+    "boundaries": "최대HP4adcb0/현재가상98·삭제/공통44b900은 명시 경계. 부모127BYTE/최종float32는 실제 PE 전체 실행.",
+    "sha256": {
+      "originals/Netstorm.exe": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "tools/decomp_decoration_regular.py": "dc81a8d243b5cfa66147957280cba0ccc6fe9f8a9125b18e4715fe393a8e9c39",
+      "cpppj/tests/fixtures/decoration-regular-x86.tsv": "552870876337dc3537316360b670987faeb84f836f6e2645b210d228694d3477"
+    }
+  },
+  "staticAudit": {
+    "unit": 1235,
+    "knownAssetPrePost": 83,
+    "knownAssetNotices": 83,
+    "builtinFormDeletionConnected": 4,
+    "builtinFormDeletionTotal": 4,
+    "regularVtables": 87,
+    "connectedRegularVtables": 68,
+    "remainingRegularVtables": 19,
+    "remainingRegularFunctions": 16,
+    "remainingRows": [
+      {
+        "vtable": "005075d8",
+        "regular": "0044a3a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005076b8",
+        "regular": "0044a5e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00507770",
+        "regular": "00448e00",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00507950",
+        "regular": "0044b150",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00508cc8",
+        "regular": "00450fa0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509148",
+        "regular": "004549c0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509210",
+        "regular": "004549c0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005096a0",
+        "regular": "0045a250",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509810",
+        "regular": "0045a8e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050a050",
+        "regular": "0045e8b0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050e668",
+        "regular": "0048c6e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050e738",
+        "regular": "0048ea30",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050ee08",
+        "regular": "00490810",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050f210",
+        "regular": "00494580",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050f540",
+        "regular": "0049a4e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005196f0",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005197a8",
+        "regular": "004dcf00",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00519860",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00519918",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      }
+    ],
+    "bombGroupVtables": 16,
+    "connectedBombVtables": [
+      "00502370",
+      "00502448",
+      "00502510",
+      "005025d8",
+      "005026a0",
+      "00502778",
+      "00502840",
+      "00502908",
+      "005029d0",
+      "00502aa8",
+      "00502b70",
+      "00502e68",
+      "00502f30",
+      "00502ff8",
+      "005030c0",
+      "00503188"
+    ],
+    "remainingBombVtables": 0,
+    "fullBombDispatchConnected": true,
+    "fullBombGroupComplete": false,
+    "originalAssetRefreshEntries": {
+      "00501dd0": "004ad500",
+      "00501ea0": "004ad500",
+      "00502370": "004ad500",
+      "00502448": "004ad500",
+      "00502510": "004ad500",
+      "005025d8": "004ad500",
+      "005026a0": "004ad500",
+      "00502778": "004ad500",
+      "00502840": "004ad500",
+      "00502908": "004ad500",
+      "005029d0": "004ad500",
+      "00502aa8": "004ad500",
+      "00502b70": "004ad500",
+      "00502c38": "004ad500",
+      "00502cf0": "004ad500",
+      "00502db0": "004ad500",
+      "00502e68": "004ad500",
+      "00502f30": "004ad500",
+      "00502ff8": "004ad500",
+      "005030c0": "004ad500",
+      "00503188": "004ad500",
+      "00503360": "004ad500",
+      "005034c8": "004ad500",
+      "00503d80": "004ad500",
+      "00503e50": "004ad500",
+      "00503f20": "004ad500",
+      "00503ff0": "004ad500",
+      "005040c0": "004ad500",
+      "00504198": "004ad500",
+      "00506d98": "004ad500",
+      "00506e50": "004ad500",
+      "00506f08": "004ad500",
+      "005070c0": "004ad500",
+      "005075d8": "004ad500",
+      "005076b8": "004ad500",
+      "00507770": "004ad500",
+      "00507950": "004ad500",
+      "00508cc8": "004ad500",
+      "00509148": "004ad500",
+      "00509210": "004ad500",
+      "005092d0": "004ad500",
+      "00509388": "004ad500",
+      "00509470": "004ad500",
+      "005096a0": "004ad500",
+      "00509758": "004ad500",
+      "00509810": "0045ac90",
+      "00509930": "004ad500",
+      "005099e8": "004ad500",
+      "00509aa0": "004ad500",
+      "00509b98": "004ad500",
+      "0050a050": "004ad500",
+      "0050a1e8": "004ad500",
+      "0050a388": "004ad500",
+      "0050a748": "004ad500",
+      "0050a820": "004ad500",
+      "0050a8e8": "004ad500",
+      "0050b570": "004ad500",
+      "0050b6e8": "004ad500",
+      "0050b7c0": "004ad500",
+      "0050b888": "004ad500",
+      "0050b9b8": "004ad500",
+      "0050bad0": "004ad500",
+      "0050c3b0": "00473770",
+      "0050c9f0": "004787c0",
+      "0050cc08": "004791b0",
+      "0050da88": "004ad500",
+      "0050db78": "004ad500",
+      "0050dc30": "004ad500",
+      "0050e568": "004ad500",
+      "0050e668": "004ad500",
+      "0050e738": "004ad500",
+      "0050e888": "004ad500",
+      "0050e940": "004ad500",
+      "0050ea08": "004ad500",
+      "0050ead0": "004ad500",
+      "0050eb98": "004ad500",
+      "0050ee08": "004ad500",
+      "0050f210": "004ad500",
+      "0050f540": "004ad500",
+      "005196f0": "004ad500",
+      "005197a8": "004ad500",
+      "00519860": "004ad500",
+      "00519918": "004ad500"
+    },
+    "remainingKnownRefresh": [],
+    "refreshLimitation": "표시88의 알려진83VT 분배는 연결됐으며 큰 AI/다른 Regular/Fort 상위 Finish·전수 caller/owner 감사는 남는다.",
+    "originalTreasonTable": {
+      "+5c": "0041e6a0",
+      "+a0": "0041c0f0",
+      "+a4": "0041e3d0",
+      "+b4": "0041e3c0",
+      "+bc": "0041ff20",
+      "+c0": "0041ff90"
+    },
+    "initialRoleGlobals": {
+      "005412cc": 157,
+      "005411a8": 84,
+      "00541278": 136,
+      "005411a0": 82,
+      "005412c4": 155,
+      "00541200": 106
+    },
+    "currentRoleOwnerConnected": true,
+    "sameActualOwnershipDisplayFenceSupportTraceFlareConnected": true,
+    "pointFinderRefreshUsesSameCurrentCandidate": true,
+    "manoCenterCorrectionMaintained": "core.neighbors.Center / 004adea0",
+    "dedicatedAirUnitExecutions": 0,
+    "multiplayerExecutionTests": 0,
+    "newDecompilation": 0,
+    "lastClientDecompile": "2026-11-03 / HJOW-Athlon",
+    "lastRootDecompile": "2026-11-07 / HJOW-Athlon",
+    "fullNoWorldComplete": false,
+    "fullM6Complete": false,
+    "allKnownAssetRefreshVtablesDispatched": 83,
+    "spriteOriginalTable": {
+      "+5c": "004794b0",
+      "+88": "004791b0",
+      "+8c": "004ad670"
+    },
+    "spriteAllowsDestroyLookup": true,
+    "metaRetainsDestroyDiagnostic": true,
+    "currentSpriteSlotMutatedAfterDirty": true,
+    "sameNativeAndSessionSpriteRegular": true,
+    "carrierDirectVtables": [
+      "00503d80",
+      "00503e50",
+      "00503f20",
+      "00503ff0",
+      "005040c0",
+      "0050e568"
+    ],
+    "carrierCurrentTypeGetters": true,
+    "carrierPreviewHostLogicLifetimeConnected": true,
+    "carrierSelectedWholeRuntimePinAndFunctionCopy": true,
+    "currentSoundAndPreviewRoleShared": true,
+    "next": "Factory2VT/4549c0의 현재 프레임/난수/업그레이드 장기 연결",
+    "decorationDirectTables": [
+      "0050a820",
+      "0050a8e8"
+    ],
+    "decorationNativeCurrentMaximumAndWholeHitDispatch": true,
+    "previousNextLabelCorrection": "1234의 Geyser2VT/462420은 장식/가장자리 팜2VT/462420의 잘못된 이름이었다. 실제 간헐천은50da88/485640이다."
+  },
+  "sourceReview": "첫 빌드의 새 worldHooks 사용 위치를 선언 뒤로 옮겼다. 빌드 중 수정하지 않았고 최초 실패 로그/소스를 보존했다. 새 실제 HP 검사의 DamageableHitState에는 더 오래 사는 실제 PriestDamageState 참조를 연결했다. 같은 기존 가상98 분배기를 재사용했으며 일반 HP/body와 원문 기대값/관문을 약화하지 않았다.",
+  "liveTutorial": {
+    "passed": true,
+    "unit": 1235,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1235\\live-tutorial4\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "6f6833d738e804bd155c94228d5b1acfeff222eedab5fde5c719c628100fa6f7",
+    "exeSha256After": "6f6833d738e804bd155c94228d5b1acfeff222eedab5fde5c719c628100fa6f7",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1235\\live-tutorial4\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1235\\live-tutorial4\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.446,
+        "gameTimeAfter": 23.655,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "일반 Tutorial4 UI 진입·생산·건설 요청·600프레임 대기·정상 종료만 확인했다. MP/포획/희생/특정 공격/승리/공중3종 전용/직접 상태 주입은 실행하지 않았다."
+  },
+  "protectedFiles": 2805,
+  "protectedUnchanged": true,
+  "newDecompilation": 0,
+  "scope": "비MP132건(기존126+새 원문/게으른 경계2+장기 통합4), 새 독립 PE630입력과 기존 Carrier837/타이머957/Strike1420/Sprite225입력의 실제 C++ 재생, Tutorial4 생산/건설 요청 후 대기다.",
+  "correctedPreviousNextLabel": "제품1234의 Geyser2VT/462420 다음 작업 이름은 장식/가장자리 팜이었다. 주소/대상2VT와 이전 확정 제품의 코드/검증은 변하지 않는다.",
+  "remaining": "Regular19VT/16함수·큰 AI/배치/Fort 상위 Finish·전수 caller/owner 감사·지연큐/JoinTestBattle·M7/M8·K/S/B는 남는다. 다음은 Factory2VT/4549c0이다.",
+  "excluded": [
+    "포획/희생·특정 적 공격·승리/자연 완주",
+    "공중3종 전용 생성/생산/행동",
+    "MP 단위/패킷/게임/통신/기록·메타 전용 실행",
+    "사용자 직접 확인 항목"
+  ]
+}

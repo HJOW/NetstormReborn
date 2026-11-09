@@ -301,6 +301,8 @@ target_sources(netstorm PRIVATE o/RawContentPreviewProcess.cpp o/RawContentPrevi
 
 # 실제 Carrier42a750 전체 사건과 내용물 교대 표시다.
 target_sources(netstorm PRIVATE o/RawCarrierRegular.cpp o/RawCarrierRegular.h client/RawSurfaceCarrier.cpp)
+# 장식/가장자리 팜의 실제462420과 같은 장기 HP/삭제 본문을 공유한다.
+target_sources(netstorm PRIVATE o/RawDecorationRegular.cpp o/RawDecorationRegular.h client/RawSurfaceDecoration.cpp)
 
 # 너겟의실제전체484f90예약/난수/기본처리다.
 target_sources(netstorm PRIVATE o/RawNuggetPostPop.cpp o/RawNuggetPostPop.h)

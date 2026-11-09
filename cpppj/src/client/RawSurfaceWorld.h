@@ -101,6 +101,10 @@ struct RawSurfaceCarrierBindings { // 선택된 큰 이동/낙하와 전용 owne
     std::function<void(o::Sid,std::uint32_t)> setOwner; // 사제/메타의 전용 가상74는 기존 전체 소유권 분배를 쓴다.
     std::function<std::shared_ptr<void>()> pin; // 선택 호출의 정상/예외 반환까지 실제 전체 Runtime을 보유한다.
 };
+struct RawSurfaceDamageableBindings { // 현재 큰 가상98 분배만 World 수명으로 빌린다.
+    std::function<std::int32_t(o::Sid,std::uint32_t,std::int32_t,std::uint32_t)> hitPoints; // 기존 Session의 실제 가상98 전체 분배기다.
+    std::function<std::shared_ptr<void>()> pin; // 선택된 효과가 정상/예외 반환할 때까지 실제 전체 Runtime을 보유한다.
+};
 struct RawSurfaceBombBindings { // 실제 현재 큰 주문 후단만 weak로 빌리고 정기 본문/메모리는 Client가 보유한다.
     std::function<void(o::Sid,std::uint32_t,std::uint32_t)> notice; // 실제45a6c0의 시전 플레어와 같은 현재 Session 본문이다.
     std::function<std::uint32_t(o::Sid,std::span<std::uint32_t>)> targets; // 기존41e4b0 전체 검색/현재 가상bc를 실행한다.
@@ -194,6 +198,7 @@ private:
     RawSurfaceResourceDevices resourceDevices_; //실제Client장치만보관하며짧은Session주소를저장하지않는다.
     RawSurfaceContentDevices contentDevices_; // 같은 Client 전역 alias와 현재 장치를 본체보다 오래 유지한다.
     std::weak_ptr<const RawSurfaceCarrierBindings> carrierRuntime_; // 큰 선택 효과만 약하게 빌려 죽은 Session을 역소유하지 않는다.
+    std::weak_ptr<const RawSurfaceDamageableBindings> damageableRuntime_; // 선택한 가상98만 약하게 빌려 Session 역소유를 피한다.
     std::weak_ptr<const RawSurfaceBombBindings> bombRuntime_; // 큰 주문 후단만 현재 World 수명으로 빌려 오래된 Session을 강하게 보유하지 않는다.
     std::weak_ptr<const RawSurfaceContentBindings> contentRuntime_; // 파생 Session 효과만 빌려 반납 뒤 죽은 콜백을 보유하지 않는다.
     RawSurfaceProcessDevices processDevices_; //실제Native선택/정리장치만보관하며World/Session을캡처하지않는다.
@@ -310,6 +315,8 @@ public:
     o::RawCarrierRegular& CarrierRegular(); // 현재 TYPE/권한/내용물과 같은 Host를 연결하는 유일한 Native 본문이다.
     bool HasCarrierRegular(o::Sid sid) const; // 실제42a750의 직접6VT만 분배한다.
     void BindCarrierRuntime(const std::shared_ptr<const RawSurfaceCarrierBindings>& runtime); // 현재 큰 하위의 실제 대여만 연결한다.
+    float DecorationRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 두 실제VT의462420을 현재 HP/권한/같은 공통 부모에 연결한다.
+    void BindDamageableRuntime(const std::shared_ptr<const RawSurfaceDamageableBindings>& runtime); // 현재 큰 가상98의 실제 대여만 연결한다.
     void BindBombRuntime(const std::shared_ptr<const RawSurfaceBombBindings>& runtime); // 현재 후단 대여만 연결하고 본문/상태를 초기화하지 않는다.
     bool HasBombRegular(o::Sid sid) const; // 실제 현재 VT가 장기 연결한 연결한7VT인지 직접 확인한다.
     std::size_t BombSearchReservations() const; // 실제 확보한400BYTE 버퍼 개수를 진단하며 별도 성공 카운터를 만들지 않는다.
@@ -598,6 +605,7 @@ struct RawWorldRuntimeHooks {
     o::DependFormNotice dependencyNotice; // watcher의 실제 가상+34다. 누락 시 기존 ProcessForm 통지를 사용한다.
     std::function<void(const o::BridgeLifecycleEvent&)> bridgeEffect; // 실제 세션의 다리 파편/위치 소리 소비자이며 runtime 설치 전에 필수로 공급한다.
     RawSurfaceCarrierBindings carrierRegular; // 현재 큰 Carrier 하위만 실제 World pin과 함께 공개한다.
+    RawSurfaceDamageableBindings damageable; // 원문의 현재 가상98 전체 분배를 실제 World pin과 함께 공개한다.
     RawSurfaceBombBindings bombRegular; // 현재 큰 시전/검색/수신만 World 수명으로 제공하며 실제 pin은 같은 World가 연결한다.
     o::ContentFormNotice contentNotice; // 현재 Session의 파생 부모 통지이며 실제 빈 부모는 장기 분배기가 직접 처리한다.
     o::ContentPriestNotice capturedContent; // 기존 전체 포획 안내 본문을 선택된 현재 Runtime으로 전달한다.

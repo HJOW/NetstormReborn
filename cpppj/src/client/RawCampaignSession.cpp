@@ -197,6 +197,7 @@
 #include "o/RawPlayerCoreRefresh.h"
 #include "o/RawStateMetaBattleDescription.h" //일반 수신의71h도 같은 실제 observer/CS 부모를 등록한다.
 #include "o/RawSquidSelection.h"
+#include "o/RawDecorationRegular.h" // 장식/가장자리 팜의 같은462420 본문을 typed/Native가 공유한다.
 #include "o/RawCarrierRegular.h"
 #include "o/RawContentPreviewProcess.h"
 #include "o/RawNuggetPostPop.h"
@@ -720,6 +721,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawPriestTakenNotice> priestTakenNotice; // 현재 참여/Player 이름/소리/Tell과 Client 기한을 연결한다.
     std::unique_ptr<ContentFormHost> localContentForms; // 독립 typed Session만 기존 지역 정렬 본문을 소유한다.
     ContentFormHost* contentForms{}; // ProcessForm과 다른 실제 Form6의 정렬 부착 몸체다.
+    std::function<std::int32_t(Sid,std::uint32_t,std::int32_t,std::uint32_t)> decorationHit; // typed도 같은 현재 가상98 분배를 실제 선택 시점에 재사용한다.
     std::vector<CarrierRegularType> carrierRegularTypes; // 같은 실제 TYPE 정의의 기본 프레임/casttime이다.
     std::unique_ptr<RawContentPreviewProcess> contentPreviewProcess; // 같은 현재 시계/공유47타입의 일시 표시 수명이다.
     std::unique_ptr<ContentPreviewProcess> pendingContentPreview; // 원본 new18 성공 뒤 생성/부착까지의 단일 소유권이다.
@@ -1577,8 +1579,10 @@ struct RawCampaignSession::Impl {
         assetEffects.postPop.rainAviaryPostPop=[this](Sid sid,std::uint32_t flags) { if (!rainAviary) throw std::logic_error("현재 맨오워 풀 PostPop 미설치");rainAviary->PostPop(sid,flags); }; // 같은 실제 TYPE143의 가상 후처리다.
         assetEffects.postPop.windAviaryPostPop=[this](Sid sid,std::uint32_t flags) { if (!windAviary) throw std::logic_error("현재 데빌메이커 PostPop 미설치");windAviary->PostPop(sid,flags); }; // TYPE139의실제45edf0이다.
         assetEffects.postPop.sunFencePostPop=[this](Sid sid,std::uint32_t flags) { fencePostPop->PostPop(sid,flags); }; // 공간 쓰기 전에 전체 펜스 후처리를 조립한다.
+        decorationHit=assetEffects.regular.hitPoints; // 같은 실제 현재 가상98 본문을 복제하지 않고 대여한다.
         assetBindings=std::make_unique<RawCampaignAssetBindings>(world,*carrier,assetState,random,*islands,players,playerState,RawCampaignAssetGlobals{regularState,gunState,elements,archerCommand,{85,87,126,&gameplayGlobals->FirstTimerFactoryType(),&gameplayGlobals->SecondTimerFactoryType(),&researchOutpost}},std::move(assetEffects));assetBindings->ActivatePostPop(); // 세 TYPE는 같은 실제 Client 주소를 빌리고 Session 사본으로 바꾸지 않는다.
         RawWorldRuntimeHooks worldHooks;
+        worldHooks.damageable.hitPoints=decorationHit; // 선언 뒤 같은 실제 가상98 본문만 현재 대여로 공개한다.
         worldHooks.squidPacket=services.formPacket; //일반Squid와Form은같은버퍼/현재방송분배기를사용한다.
         worldHooks.squidConnected=[this](std::int32_t target) { return target>0 && target<9 && (players[static_cast<std::size_t>(target)*180+0x50]&1U); }; //0048f4b0은 실제 소켓 존재 대신 현재 Player 접속 비트만 읽는다.
         worldHooks.squidSend=[this](std::int32_t target,auto packet) { if (target<0 || target>=9) throw std::out_of_range("현재 대상별 Squid 연결 범위");const auto send=services.battlePeers[static_cast<std::size_t>(target)];if (send) send(packet); }; //004e2dc0은 현재 NULL 연결을 자연 생략한다.
@@ -1750,6 +1754,13 @@ struct RawCampaignSession::Impl {
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             try {
                 if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
+                if (const auto table=Read(core.pool.Slot(sid),0);table==0x50a820U || table==0x50a8e8U) {
+                    if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->DecorationRegular(sid,event,count,payload);
+                    DecorationRegularHooks hooks;hooks.maxHitPoints=[this](auto parent) { return hp.MaxHitPoints(parent); };
+                    hooks.hitPoints=[this](auto parent,auto amount,auto owner,auto attacker) { const auto call=decorationHit;if (!call) throw std::logic_error("장식의 현재 가상98 미연결");static_cast<void>(call(parent,std::bit_cast<std::uint32_t>(amount),std::bit_cast<std::int32_t>(owner),attacker)); };
+                    hooks.destroy=[this](auto parent,auto flags) { static_cast<void>(world.Destroy(parent,flags)); };hooks.damageable=[this](auto parent,auto code,auto times,auto value) { return assetBindings->Regular().DamageableHandle(parent,code,times,value); };
+                    return RunDecorationRegular(core.pool,assetState.Boss(),sid,event,count,payload,hooks);
+                }
                 if (const auto table=Read(core.pool.Slot(sid),0);table==0x502cf0U || table==0x502db0U) return HandleHealBurstRegular(core.pool,core.frames,core.frame,core.processes,[this](auto object) { core.display.Update(core.pool.Slot(object),0); },[this](auto object,auto flags) { world.Destroy(object,flags); },sid,count,payload); //Native/독립 typed의 힐/미티어가 같은 실제41f9d0과 현재 Host를 사용한다.
                 if (Read(core.pool.Slot(sid),0)==0x502c38U) return HandleGravityBurstRegular(core.pool,core.frames,core.frame,core.processes,[this](auto object) { core.display.Update(core.pool.Slot(object),0); },[this](auto object,auto flags) { world.Destroy(object,flags); },sid,count,payload); //그라비테이션의 진행/역방향/후속 예약은 별도의 실제41f760이다.
                 if (dudeRegular && dudeRegular->Handles(sid)) return dudeRegular->Handle(sid,event,count,payload);
