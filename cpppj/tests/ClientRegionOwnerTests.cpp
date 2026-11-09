@@ -14,6 +14,7 @@
 #include "o/RawAiObjectNotice.h" //실제Player의NULL brain은기존전체통지본문의자연반환으로처리한다.
 #include "o/RawBombHeal.h" //힐의 실제 대상 자격/HP/현재 가상 효과를 패킷 없이 검증한다.
 #include "o/RawBombHardener.h" //강화 후보/난수/프레임·플레어 순서를 독립 PE 입력으로 검증한다.
+#include "o/RawBombTreason.h" //원본 독립 관찰과 현재 소유권/받침 전파를 패킷 없이 검증한다.
 #include "o/RawBombStrike.h" //직접 피해의 생성/Pop 뒤 현재 권한/TYPE 재조회를 검증한다.
 #include "client/RawBombBlastBindings.h" //하드너의 같은41e3d0 추가 그림도 실제 현재 TYPE/프레임으로 분배한다.
 #include "RawSceneSupport.h" //새 하드너 원문 TSV의 입력과 실제 관찰 결과만 읽는다.
@@ -1263,10 +1264,10 @@ TEST_CASE(ClientBombOwner_GetterKeepsCurrentStatePoolAndFactory) { // getter는 
 TEST_CASE(ClientBombOwner_CastTimesKeepSameMutableStorage) { // 같은 TYPE+1b8 표를 다시 조회/본문 구성/대여할 때 현재 값을 덮지 않는다.
     BombOwnerScene f;auto& s=f.scene;auto values=s.storage->BombCastTimes();CHECK(values.size()==188 && values[0]==0 && values[69]==0);values[113]=-123;auto* body=&s.storage->BombRegular();CHECK(s.storage->BombCastTimes().data()==values.data() && values[113]==-123 && body==&s.storage->BombRegular());
 }
-TEST_CASE(ClientBombOwner_PreviousTablesStayRegisteredAndTreasonStaysRejected) { //기존12VT와 미연결 트리즌만 실제 생성자로 검사한다. 공중 소환3VT는 사용자 제외로 정적 감사한다.
+TEST_CASE(ClientBombOwner_PreviousTablesAndTreasonStayRegistered) { //기존12VT와 연결한 트리즌만 실제 생성자로 검사한다. 공중 소환3VT는 사용자 제외로 정적 감사한다.
     BombOwnerScene f;auto& s=f.scene;
     for (const auto table:{0x502908U,0x502b70U,0x5029d0U,0x502aa8U,0x5030c0U,0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}) { const auto sid=f.Bomb(table);CHECK(s.storage->HasBombRegular(sid)); } // 연결된 실제 클래스만 조회한다.
-    const auto sid=f.Bomb(0x503188U);CHECK(!s.storage->HasBombRegular(sid)); //같은 원문+5c라도 미연결 트리즌을 완료로 세지 않는다.
+    const auto sid=f.Bomb(0x503188U);CHECK(s.storage->HasBombRegular(sid)); //같은 원문+5c인 트리즌도 실제 자격/효과 연결 뒤 등록한다.
 }
 TEST_CASE(ClientBombOwner_CountZeroUsesActualFirstFrameAndFullPayload) { // carrier0의 첫 호출은 실제 프레임을 쓰고 현재 Boss0이면 원래 NaN payload를 보존한다.
     BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();s.gameplay->Authority()->boss=false;const auto type=s.storage->pool.Slot(sid)[10];const auto first=s.storage->frames[type].Run('A').first;const auto payload=std::bit_cast<float>(0x7fc12345U);
@@ -1495,4 +1496,69 @@ TEST_CASE(ClientBombOwner_SpawnsUseSameCurrentStorageAcrossWorldLoan) { //공통
 TEST_CASE(ClientBombOwner_SpawnsGetterKeepsCurrentRandomAndSp) { //속성 getter는 현재 권한/난수/SP/Player를 초기화하지 않으며 재조회로 현재값을 덮지 않는다.
     RegionScene s;const auto random=s.random->Game().State();const auto boss=s.gameplay->Authority()->boss;const auto free=s.storage->pool.FreeCount();auto counts=s.storage->BombSpawns();counts[113]=2147483647;
     CHECK(s.storage->BombSpawns()[113]==2147483647 && s.random->Game().State()==random && s.gameplay->Authority()->boss==boss && s.storage->pool.FreeCount()==free && !s.sp->Store().Initialized() && s.players->Base()==0);
+}
+
+namespace { //독립 트리즌 PE 입력과 같은 raw 슬롯/현재 행/장치 관찰을 이 검사에 한정한다.
+struct TreasonOwnerScene { //새 게임/패킷/공중 유닛 없이 명시 입력과 실제 지점 finder를 준비한다.
+    netstorm::test::rawscene::Scene scene{OriginalEdition::Patch1078}; //독립 실행기와 같은5~127 입력 슬롯/네 단계 해시다.
+    std::array<std::uint32_t,6> roles{157,84,136,82,155,106}; //현재 역할 배열이며 효과마다 다시 읽는다.
+    bool mutate{},first{true}; //첫 소유권 효과에서 현재 시전자/대상 VT를 바꾸는 명시 입력이다.
+    explicit TreasonOwnerScene(const std::vector<std::string>& row) { //TSV 입력만 공급하고 기대값을 계산하지 않는다.
+        using namespace netstorm::test::rawscene;const auto kind=Number(row[2]),side=Number(row[4]);mutate=Number(row[7])!=0;
+        for (std::size_t type=0;type<188;++type) { //현재 TYPE 이름/발자국/방향의 명시 행이다.
+            scene.types[type].name="T"+std::to_string(type);scene.types[type].footX=scene.types[type].footY=1;scene.frames[type]=RiftTypeFrames({{static_cast<std::uint8_t>(side),65,0,0}});
+        }
+        scene.types[kind].flags2=Number(row[1]);scene.types[120].flags2=0x10040000U;
+        for (const auto sid:{50,60,61,70,71}) { //모든 읽기/쓰기는 확보한50BYTE 입력 범위에 한정한다.
+            auto raw=scene.pool.AllocatedBytes(Sid{static_cast<std::uint16_t>(sid)});std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,0x11010000U);raw[34]=sid==50 || Number(row[3]) ? 2:1;
+        }
+        auto parent=scene.pool.AllocatedBytes(Sid{50}),target=scene.pool.AllocatedBytes(Sid{60}),beneath=scene.pool.AllocatedBytes(Sid{61});parent[10]=182;target[10]=static_cast<std::uint8_t>(kind);beneath[10]=157;
+        Put(parent,12,Number(row[5]) ? 60:0,2);Put(target,14,std::bit_cast<std::uint32_t>(100.25F));Put(target,18,std::bit_cast<std::uint32_t>(200.75F));Put(beneath,14,std::bit_cast<std::uint32_t>(101.5F));Put(beneath,18,std::bit_cast<std::uint32_t>(201.5F));
+        if (Number(row[8])) {
+            for (const auto sid:{71,70}) { //고정 결과 대신 실제 해시/선저장 next로70→71을 순회한다.
+                auto raw=scene.pool.AllocatedBytes(Sid{static_cast<std::uint16_t>(sid)});raw[10]=sid==70 ? static_cast<std::uint8_t>(kind==82 ? 155:120):121;const float y=kind==82 ? 199.0F:200.0F;
+                Put(raw,14,std::bit_cast<std::uint32_t>(100.0F));Put(raw,18,std::bit_cast<std::uint32_t>(y));auto& head=scene.hash.Bucket(1,100,y);Put(raw,4,head,2);head=static_cast<std::uint16_t>(sid);
+            }
+        }
+    }
+    BombTreasonHooks Hooks(bool found) { //원문 장치 경계의 실제 인자/순서만 기록한다.
+        using namespace netstorm::test::rawscene;BombTreasonHooks hooks;hooks.role=[this](auto role) { return roles.at(static_cast<std::size_t>(role)); };
+        hooks.owner=[this](Sid sid,std::uint32_t table,std::uint8_t owner) { scene.events.push_back("O:"+std::to_string(sid.value)+':'+std::to_string(table)+':'+std::to_string(owner));scene.pool.AllocatedBytes(sid)[34]=owner;
+            if (mutate && first) { scene.pool.AllocatedBytes(Sid{50})[34]=7;scene.pool.AllocatedBytes(Sid{60})[10]=136;Put(scene.pool.AllocatedBytes(Sid{60}),0,0x11010200U); }first=false;
+        };
+        hooks.refresh=[this](Sid sid,std::uint32_t table) { scene.events.push_back("R:"+std::to_string(sid.value)+':'+std::to_string(table)); };
+        hooks.fence=[this](Sid sid,bool rebuild) { scene.events.push_back("F:"+std::to_string(sid.value)+':'+std::to_string(rebuild)); };
+        hooks.trace=[this](auto level,std::string_view text) { CHECK(level==4);scene.events.push_back("L:"+Hex({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); };
+        hooks.find=[this,found](float x,float y,std::uint32_t type) { scene.events.push_back("Q:"+std::to_string(std::bit_cast<std::uint32_t>(x))+':'+std::to_string(std::bit_cast<std::uint32_t>(y))+':'+std::to_string(type));return Sid{static_cast<std::uint16_t>(found ? 61:0)}; };
+        hooks.support=[this](float x,float y,std::uint8_t owner) { scene.events.push_back("P:"+std::to_string(std::bit_cast<std::uint32_t>(x))+':'+std::to_string(std::bit_cast<std::uint32_t>(y))+':'+std::to_string(owner)); };
+        hooks.assertion=[this](auto,auto file,auto line) { CHECK(file=="\\Ns\\O\\Bomb.cpp");scene.events.push_back("D:"+std::to_string(line)); };
+        hooks.flare=[this](Sid sid,auto count,auto event,auto type,auto direction) { scene.events.push_back("V:"+std::to_string(sid.value)+':'+std::to_string(count)+':'+std::to_string(event)+':'+std::to_string(type)+':'+std::to_string(direction)); };return hooks;
+    }
+};
+}
+TEST_CASE(ClientBombTreasonOwner_IndependentPeEligibilityAndEffects) { //157개 원본 관찰을 현재 자격/장치/진단 복귀와 실제 칸 위 탐색에 대조한다.
+    using namespace netstorm::test::rawscene;const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/bomb-treason-x86.tsv").string();std::size_t count{};
+    for (const auto& row:LoadFixture(path.c_str()).rows) { //행마다 이전 효과가 남지 않는 새 명시 입력을 사용한다.
+        TreasonOwnerScene f(row);auto& s=f.scene;RawBombTreason body(s.pool,s.hash,s.types,s.frames,f.Hooks(Number(row[6])!=0));
+        if (row[0]=="E") { s.pool.AllocatedBytes(Sid{60})[11]=3;CHECK(body.MayTarget(Sid{50},Sid{60})==(Number(row[9])!=0)); }else body.Apply(Sid{50},Sid{60});
+        CHECK(s.pool.Slot(Sid{60})[34]==Number(row[10]) && (s.events.empty() ? "-":s.Events())==row[11]);++count;
+    }
+    CHECK(count==157);
+}
+TEST_CASE(ClientBombTreasonOwner_NoWorldHostUsesSameCurrentBody) { //실제 트리즌VT의 정기도 같은 장기 Pool/Host/프레임·권한을 사용한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x503188U);s.gameplay->Authority()->boss=false;auto raw=s.storage->pool.AllocatedBytes(sid);raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]&=static_cast<std::uint8_t>(~1U);s.Index(sid);
+    auto* body=&s.storage->BombRegular();auto* task=s.storage->Processes().Host().AddRegular(sid,0x1234,0.125F);CHECK(task);if (!task) return;task->RunFrame();CHECK(s.storage->HasBombRegular(sid) && task->Count()==1 && task->Payload()==0.125F && body==&s.storage->BombRegular() && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombTreasonOwner_AdditionalDrawUsesCurrentTypeFrame) { //트리즌도 같은 실제41e3d0의 현재 TYPE/프레임을 그린다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x503188U);auto raw=s.storage->pool.AllocatedBytes(sid);RegionPut(raw,36,0x12345678);std::uint32_t calls{};
+    DrawDevastationAdditional(s.storage->pool,sid,12,34,[&](auto type,auto frame,auto x,auto y) { CHECK(type==raw[10] && frame==0x12345678 && x==12 && y==34);++calls; });CHECK(calls==1);
+}
+TEST_CASE(ClientBombTreasonOwner_RoleGlobalsKeepSameCurrentOwner) { //두 신규 DWORD는 World 교체가 원래 번호로 덮지 않으며 같은 저장소를 빌린다.
+    RegionScene s;auto aux=s.gameplay->GameAux();auto* fence=&aux->SunFenceType();auto* flare=&aux->BombFlareType();aux->SunFenceType()=0x12340088U;aux->BombFlareType()=0x5678006aU;
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(fence==&world.Storage()->GameAux()->SunFenceType() && flare==&world.Storage()->GameAux()->BombFlareType()); }
+    CHECK(*fence==0x12340088U && *flare==0x5678006aU && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombTreasonOwner_MissingRefreshKeepsOwnershipEffect) { //누락한 후단은 실제 owner 쓰기를 되돌리거나 플레어 성공으로 숨기지 않는다.
+    std::vector<std::string> row{"A","0","94","0","72","0","0","0","0"};TreasonOwnerScene f(row);auto hooks=f.Hooks(false);hooks.refresh={};auto& s=f.scene;RawBombTreason body(s.pool,s.hash,s.types,s.frames,std::move(hooks));bool rejected{};
+    try { body.Apply(Sid{50},Sid{60}); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && s.pool.Slot(Sid{60})[34]==2 && s.events.size()==2 && !f.first);
 }

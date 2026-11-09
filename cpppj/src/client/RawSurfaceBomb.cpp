@@ -11,8 +11,8 @@
 #include <utility>
 
 namespace netstorm::client { // 장기 본문은 World/Session을 만들거나 현재 게임 상태를 초기화하지 않는다.
-namespace { //실제 자격/효과를 연결한 열다섯 VT만 Native 정기 분배에 등록한다.
-constexpr std::array<std::uint32_t,15> kConnectedBombTables{0x5026a0U,0x502778U,0x502840U,0x502908U,0x502b70U,0x5029d0U,0x502aa8U,0x5030c0U,0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}; //트리즌1VT는 별도 복원 대상이다.
+namespace { //실제 자격/효과를 연결한 열여섯 VT만 Native 정기 분배에 등록한다.
+constexpr std::array<std::uint32_t,16> kConnectedBombTables{0x503188U,0x5026a0U,0x502778U,0x502840U,0x502908U,0x502b70U,0x5029d0U,0x502aa8U,0x5030c0U,0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}; //원문41e6a0을 공유하는16VT의 실제 자격/효과가 연결됐다.
 }
 // 큰 후단은 같은 World가 실제 외곽 pin과 함께 공개하며 Storage는 약하게만 빌린다.
 void RawSurfaceStorage::BindBombRuntime(const std::shared_ptr<const RawSurfaceBombBindings>& runtime) {

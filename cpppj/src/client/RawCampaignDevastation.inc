@@ -5,14 +5,14 @@ bool WindSpellTable(std::uint32_t table) const { return table==0x5025d8U || tabl
 bool ManoSpellTable(std::uint32_t table) const { return table==0x5026a0U || table==0x502778U || table==0x502840U; }
 //실제 피해/입자/음향·필수 효과 정기까지 연결한 네 직접 피해 주문만 선택한다.
 bool DirectStrikeTable(std::uint32_t table) const { return table==0x502908U || table==0x502b70U || table==0x5029d0U || table==0x502aa8U; }
-//같은 공용 시전/수신을 사용하는 실제 열다섯 가상 표만 허용한다.
-bool ConnectedBombTable(std::uint32_t table) const { return ManoSpellTable(table) || DirectStrikeTable(table) || table==0x5030c0U || table==0x502448U || table==0x502370U || table==0x502510U || table==0x502ff8U || WindSpellTable(table); }
+//같은 공용 시전/수신을 사용하는 실제 열여섯 가상 표만 허용한다.
+bool ConnectedBombTable(std::uint32_t table) const { return table==0x503188U || ManoSpellTable(table) || DirectStrikeTable(table) || table==0x5030c0U || table==0x502448U || table==0x502370U || table==0x502510U || table==0x502ff8U || WindSpellTable(table); }
 // 상태 주문/만료의 현재 타입 진단 부모를 거쳐 같은 기존 펜스 몸체를 실행한다.
 void DispatchFenceType(Sid sid,FenceTypeOperation operation) {
     FenceTypeParentHooks hooks; // 같은 Session의 현재 진단 서비스와 전체 자식이다.
     hooks.assertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { if (!services.ai.assertion) throw std::logic_error("펜스 타입 원문 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); };
     hooks.body=[this,operation](Sid target) { if (operation==FenceTypeOperation::Rebuild) fenceRebuild->Rebuild(target);else fenceLifetime->Refresh(target); };
-    RunFenceTypeParent(core.pool.Slot(sid),sid,gunTargetState.sunFenceType,gunState.checking,operation,hooks);
+    RunFenceTypeParent(core.pool.Slot(sid),sid,gameplayGlobals->GameAux()->SunFenceType(),gunState.checking,operation,hooks);
 }
 // 상태 효과의 적용/만료는 동일한 실제 가상 배치·표시·펜스 소비자를 사용한다.
 BombEffectTimerHooks MakeBombTimerHooks() {
@@ -80,6 +80,16 @@ void ConnectDevastation() {
     };
     mano.center=[this](Sid carrier) { return core.neighbors.Center(carrier); };mano.pop=[this](Sid created,std::uint32_t,float x,float y,std::uint32_t flags) { world.Pop(created,x,y,flags); }; //헤더 뒤 원문4adea0 발자국 중심과 새 객체의 실제 가상90을 사용한다. 대상 검색용 스냅/클램프를 넣지 않는다.
     manoSpell=std::make_unique<RawManoSpell>(core.pool,core.processState.Server(),spellCounts,std::move(mano)); //같은 실제 풀/서버·현재 spawns와 Runtime 장치를 빌리며 공통 시전/수신을 복제하지 않는다.
+    BombTreasonHooks treason; //현재 역할/가상 소유권과 실제 공간·진단/로그만 연결한다.
+    treason.role=[this](BombTreasonRole role) { auto& aux=*gameplayGlobals->GameAux();switch (role) {
+        case BombTreasonRole::NoIsland:return core.bridgeState.noIslandType;case BombTreasonRole::EmptyGeyser:return aux.EmptyGeyserType();case BombTreasonRole::Fence:return aux.SunFenceType();
+        case BombTreasonRole::Bridge:return core.bridgeState.bridgeType;case BombTreasonRole::Connector:return core.bridgeState.connectorType;case BombTreasonRole::Flare:return aux.BombFlareType();
+    }throw std::logic_error("트리즌 실제 역할 선택 오류"); };
+    treason.owner=[this](Sid sid,std::uint32_t,std::uint8_t owner) { ownership->SetOwner(sid,owner); };treason.refresh=[this](Sid sid,std::uint32_t) { core.display.Update(core.pool.Slot(sid),0); }; //원문의 현재74/88을 기존 실제 분배기에 맡긴다.
+    treason.fence=[this](Sid sid,bool rebuild) { DispatchFenceType(sid,rebuild ? FenceTypeOperation::Rebuild:FenceTypeOperation::Refresh); };treason.find=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); };
+    treason.support=[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); };treason.assertion=[this](auto expression,auto file,auto line) { world.Storage()->AssertDisplay(expression,file,line); };
+    treason.trace=[this](auto level,auto text) { world.Storage()->TraceGraph(level,text); };treason.flare=[this](auto sid,auto count,auto event,auto type,auto direction) { flare->SpawnDirection(sid,count,event,type,direction); };
+    bombTreason=std::make_unique<RawBombTreason>(core.pool,core.hash,core.types,core.frames,std::move(treason)); //동일한 현재 해시/TYPE/프레임을 빌리며 임시 Session/세계나 효과 사본을 만들지 않는다.
     BombHealHooks heal;heal.hasHitPoints=[this](Sid target) { return hp.HasHitPoints(target); };heal.maximumHitPoints=[this](Sid target) { return hp.MaxHitPoints(target); };
     heal.fenceType=[this] { return gunTargetState.sunFenceType; };heal.burstType=[this] { return healBurstType; }; //현재 전역은 효과가 도달한 위치에서 읽는다.
     heal.fence=[this](Sid target) { DispatchFenceType(target,FenceTypeOperation::Rebuild); };
@@ -103,7 +113,7 @@ void ConnectDevastation() {
     BombTargetHooks targets;
     // 실제502370의b4는41e3c0이며 다른 표의 반경으로 대체하지 않는다.
     targets.radius=[this](Sid parent,std::uint32_t table) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 반경 표 오류");return devastationTargets->DefaultRadius(parent); };
-    targets.eligible=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 자격 표 오류");PrepareDevastation();if (ManoSpellTable(table)) return manoSpell->MayTarget(parent,target);if (DirectStrikeTable(table)) return bombStrike->MayTarget(parent,target)!=0;if (table==0x5030c0U) return bombHardener->MayTarget(target)!=0;if (table==0x502448U) return bombHeal->MayTarget(target)!=0;return WindSpellTable(table) ? windSpell->MayTarget(parent) : table==0x502370U ? devastationBlast->MayTarget(target) : bombStatus->MayTarget(parent,target); };
+    targets.eligible=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 자격 표 오류");PrepareDevastation();if (table==0x503188U) return bombTreason->MayTarget(parent,target);if (ManoSpellTable(table)) return manoSpell->MayTarget(parent,target);if (DirectStrikeTable(table)) return bombStrike->MayTarget(parent,target)!=0;if (table==0x5030c0U) return bombHardener->MayTarget(target)!=0;if (table==0x502448U) return bombHeal->MayTarget(target)!=0;return WindSpellTable(table) ? windSpell->MayTarget(parent) : table==0x502370U ? devastationBlast->MayTarget(target) : bombStatus->MayTarget(parent,target); };
     targets.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Devastation 권한 진단 "+std::to_string(line)); };
     devastationTargets=std::make_unique<RawBombTargets>(core.pool,core.hash,core.types,devastationTargetState,std::move(targets)); //같은원문TYPE+44를직접읽어펜스용사거리사본/조립순서에의존하지않는다.
     devastationBlast=std::make_unique<RawBombBlast>(core.pool,core.types,core.frames,*devastationTargets,devastationBlastState,MakeCampaignBombBlastHooks(world,*hits,*devastationTargets));
@@ -140,7 +150,7 @@ void ConnectDevastation() {
         }
     };
     effect.allocate=[this](std::uint32_t bytes) { try { if (!devastationEffectMemory) devastationEffectMemory=std::make_unique<std::uint8_t[]>(bytes);else { if (bytes!=40 || pendingBombTimerStorage || pendingBombTimer) throw std::logic_error("상태 타이머 확보 순서 오류");pendingBombTimerStorage.reset(::operator new(sizeof(BombEffectTimerProcess))); }return true; }catch (const std::bad_alloc&) { return false; } };
-    effect.apply=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 효과 표 오류");PrepareDevastation();if (ManoSpellTable(table)) return;/*0040b380은 원본 자체의 빈ret4다. 자격 소환과 혼용하지 않는다.*/if (DirectStrikeTable(table)) bombStrike->Apply(parent,target);else if (table==0x5030c0U) bombHardener->Apply(parent,target);else if (table==0x502448U) bombHeal->Apply(parent,target);else if (table==0x502370U) devastationBlast->Apply(parent,target);else if (table!=0x5025d8U) bombStatus->Apply(parent,target); };
+    effect.apply=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 효과 표 오류");PrepareDevastation();if (ManoSpellTable(table)) return;/*0040b380은 원본 자체의 빈ret4다. 자격 소환과 혼용하지 않는다.*/if (table==0x503188U) bombTreason->Apply(parent,target);else if (DirectStrikeTable(table)) bombStrike->Apply(parent,target);else if (table==0x5030c0U) bombHardener->Apply(parent,target);else if (table==0x502448U) bombHeal->Apply(parent,target);else if (table==0x502370U) devastationBlast->Apply(parent,target);else if (table!=0x5025d8U) bombStatus->Apply(parent,target); };
     effect.construct=[this](std::int32_t delay,std::uint32_t,std::span<const std::uint32_t> members,std::uint32_t flags) { if (!pendingBombTimerStorage || pendingBombTimer) throw std::logic_error("상태 타이머 생성 메모리 누락");auto* process=::new (pendingBombTimerStorage.get()) BombEffectTimerProcess(core.pool,core.types,core.processState.Now(),delay,members,flags,MakeBombTimerHooks());static_cast<void>(pendingBombTimerStorage.release());pendingBombTimer.reset(process);return 1U; };
     effect.argument=[this](std::uint32_t x,std::uint32_t y) { if (x || y) throw std::logic_error("상태 타이머 예약 인자 오류");return std::uint32_t(BombTimerParent(core.pool,core.types,assetState.Residences().Items()).value); };
     effect.attach=[this](std::uint32_t token,std::uint32_t type,std::uint32_t parent,std::uint32_t form,std::uint32_t flags) { if (token!=1 || !pendingBombTimer || parent>65535 || form>65535) throw std::logic_error("상태 타이머 예약 객체/인자 오류");static_cast<void>(core.processes.Attach(std::move(pendingBombTimer),type,Sid{static_cast<std::uint16_t>(parent)},flags,Sid{static_cast<std::uint16_t>(form)})); };

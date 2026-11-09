@@ -175,6 +175,10 @@ public:
     const std::uint32_t& MeteorEffectType() const { return meteorEffectType_; } //현재 같은 Client의 실제 DWORD를 읽기 전용으로 빌린다.
     std::uint32_t& ManoSpellType(std::size_t level) { return manoSpellTypes_.at(level); } //00541324/328/32c의 현재 세 주문 TYPE를 전체 DWORD로 선택한다.
     const std::uint32_t& ManoSpellType(std::size_t level) const { return manoSpellTypes_.at(level); } //현재 같은 역할 배열을 Session/World 교체 후에도 읽는다.
+    std::uint32_t& SunFenceType() { return sunFenceType_; } //00541278의 현재 펜스 역할을 효과 전후 비교/부모에 공유한다.
+    const std::uint32_t& SunFenceType() const { return sunFenceType_; } //같은 장기 DWORD를 현재 호출 위치에서 읽는다.
+    std::uint32_t& BombFlareType() { return bombFlareType_; } //00541200의 현재 방향 플레어 TYPE를 마지막 생성 직전에 읽는다.
+    const std::uint32_t& BombFlareType() const { return bombFlareType_; } //Session 교체가106의 사본을 다시 만들지 않는다.
     std::uint32_t& RainFlyerType() { return rainFlyerType_; } //00541298의 현재 맨 오 워 TYPE를 비행/삭제가 공유한다.
     const std::uint32_t& RainFlyerType() const { return rainFlyerType_; } // Session 이후에도 같은 현재 번호다.
     std::uint32_t& RainWalkerType() { return rainWalkerType_; } //005412c8의 현재 크리스탈 크랩 TYPE를 이동/내용물/드롭이 공유한다.
@@ -310,6 +314,7 @@ private:
     std::int32_t worldGeyserMargin_{2}; //보호 PE00542654의 실제 초기 DWORD다.
     std::uint32_t gravityEffectType_{174},meteorEffectType_{177}; //보호 PE00541310/31c의 최초 효과 TYPE이며 일반 월드 초기화는 현재 값을 보존한다.
     std::array<std::uint32_t,3> manoSpellTypes_{179,180,181}; //보호 PE00541324/328/32c의 초기값이며 현재 TYPE 선택을 Session에 복제하지 않는다.
+    std::uint32_t sunFenceType_{136},bombFlareType_{106}; //보호 PE00541278/00541200의 현재 역할 DWORD이며 일반 월드 준비가 초기화하지 않는다.
     std::array<std::uint32_t,4> worldDecorationTypes_{100,184,101,185}; //실제 treeTwo/RUIN/treeThree/Monument 타입 순서다.
 };
 static_assert(sizeof(std::uint32_t)==4 && sizeof(std::int32_t)==4 && sizeof(float)==4 && sizeof(double)==8); // 각 Native폭만 보증하며 클래스가17주소의 연속 image라는 주장은 아니다.
