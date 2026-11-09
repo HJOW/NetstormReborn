@@ -13818,9 +13818,38 @@
       "bytes": 94814,
       "lines": 289,
       "fixtureCommit": "860030e7",
-      "webCommit": "worktree",
+      "webCommit": "4311fadc",
       "cpppjBasis": {
         "cpppj/src/o/RawDudeSpawn.cpp": "654ee45a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E207",
+      "id": "dudenotice",
+      "path": "cpppj/tests/fixtures/dudenotice-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Dude 충돌 반응 00451470/00450db0·최근접 거주 구역 0048fd30·표적 진입점 004505a0 의 상태/task/Regular/종속 표식/거주 구역/경로 결과/속도·프레임·시각 입력과 반환·호출 순서·슬롯·Regular·속도·진입점(10.78 207행·CD 207행)",
+      "consumers": [
+        "webpj/tests/dude-notice.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dude-notice.js"
+      ],
+      "doc": "docs/webpj-dude-notice-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDudeNotice.cpp"
+      ],
+      "scope": "10.78 207입력 전부(originalCD 207행은 범위 밖, 시험 장면 표식 가상 표만 웹 교정)",
+      "text": true,
+      "sha256": "54cedc3262991f058a91104e8df1ecd8a71bde01fd4db14258b07b78784e20ad",
+      "bytes": 102101,
+      "lines": 415,
+      "fixtureCommit": "a4b63270",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDudeNotice.cpp": "e210c755"
       }
     }
   ]
