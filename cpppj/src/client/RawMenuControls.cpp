@@ -219,7 +219,7 @@ struct RawMenuControls::Impl {
         for (std::size_t index=0;index<picturePalette.size();++index) { const auto color=assets.Palette().Color(static_cast<std::uint8_t>(index));picturePalette[index]=color.red|(static_cast<std::uint32_t>(color.green)<<8)|(static_cast<std::uint32_t>(color.blue)<<16); }
         pictureColors=BuildSpriteColorMaps(picturePalette).shadow;
         decorationState.backgroundType=backgroundType;decorationState.backgroundFrame=0;decorationState.cornerType=backgroundType;
-        sliderWidgetState.defaultType=backgroundType;sliderWidgetState.defaultFrame=1;titleState.sliderType=backgroundType;titleState.sliderFrame=1;
+        sliderWidgetState.defaultType=backgroundType;sliderWidgetState.defaultFrame=1; // Slider 자신의 홈/손잡이 배경은 fortGump 프레임1이다. ScrollingText의 Slider 색 인자는 SetPalette가 현재 팔레트에서 채운다.
         drawState.backgroundType=backgroundType;drawState.backgroundFrame=1;drawState.markerType=backgroundType;
         inputState.requestEvent=0x0200000d;inputState.closedEvent=0x020000be; // PE0054272c/005429ec의 초기 DWORD다.
         sliderState={0x0200002c,0x0200002f,0x0200002e,0x02000036}; // PE005427a8/b4/b0/d0의 현재 사건이다.
@@ -1096,6 +1096,9 @@ void RawMenuControls::SetPalette(const PaletteColorTable& palette) {
     const auto information=std::find_if(palette.named.begin(),palette.named.end(),[](const NamedPaletteColor& color) { return color.red==219 && color.green==213 && color.blue==203; }); // 원본005b5dc8과 CD 대응의 실제 기본 설명 색이다.
     if (information==palette.named.end()) throw std::invalid_argument("원본 설명 기본색 전역 없음");
     auto& s=*impl_;s.palette=palette;s.hintState.white=palette.basic[7];s.hintState.black=palette.basic[0];s.helpState.color=s.bodyState.color=information->index;s.helpState.buttonUnused=palette.named.at(9).index;s.widgetState.foreground=palette.basic[7];s.widgetState.shadow=dim->index;s.drawState.foreground=palette.basic[7];s.drawState.disabled=dim->index;SetGumpBackgroundColors(s.backgroundState,palette);if (s.textEntries) s.textEntries->SetPalette(palette); // 같은 현재 팔레트를 편집 배경/선택에도 공급한다.
+    // 원문 ScrollingText(149767행)는 Slider에 현재 갈색(005acd24, 색 표9)과 검정(005a4058, 기본0)을 넘긴다. 검정이 화살표 삼각형 색이다.
+    // 2026-11-09: fortGump TYPE/프레임1을 넘겨 화살표가 팔레트1번(붉은 갈색)으로 그려지던 차이를 고쳤다(webpj WB02-H 오라클 대조 보고).
+    s.titleState.sliderType=palette.named.at(9).index;s.titleState.sliderFrame=palette.basic[0];
 }
 // 현재 노드를 원본 수집·정렬 순서로 같은8비트 표면에 출력한다.
 void RawMenuControls::Draw(std::span<std::uint8_t> pixels,int pitch,int height,const PaletteColorTable& palette,const GumpShadeMaps& maps,std::optional<ScreenRect> clip) {

@@ -22,6 +22,8 @@ cpppj는 메뉴와 미션 플레이가 가능하다. 최근 확인은 Tutorial4�
 
 읽는 순서: **[단계별 현황](#1-단계별-현황과-진행-순서) → [바로 이어갈 M6](#2-바로-이어갈-m6) → [검증 제외](#5-검증-제외와-미해결-한계)**. 현행 작업 순서는 이 문서가 기준이다. 만료된 다음 작업·완료 상세·옛 정리 이력은 [1221까지 보관본](LEFT_JOBS.old.md#archive-20261109-through-1221), DN/WB는 [dotnetpj 인계](LEFT_JOBS.dotnetpj.md)·[webpj 인계](LEFT_JOBS.webpj.md)를 따른다.
 
+**webpj 요청 cpppj 작업 (2026-11-10, CP 일시 중지 중 사용자 지시로 별도 처리 · 제품 번호 미부여):** 제품 1226 소스 위에서 webpj/dotnetpj가 남긴 cpppj 몫을 처리했다([처리 기록](docs/exe/cpp-webpj-requests-20261109.md)). ① 시험 결함 4건 수정: `DudeNotice` 원본 재생 2건(표식 실제 ProcessForm VT)·`process_attach_guards`·`ProcessForm_RejectsInvalidNamedFormsAfterRegistration`(옛 …BeforeRegistration, 원문 0041bd20의 등록 뒤 거부)·`rawProcessRemoval_native_mixed_form_filter`(raw 노드 실제 VT). ② 원본 차이 2건 수정: General Help 스크롤 화살표 색(ScrollingText Slider 인자를 현재 팔레트 갈색 005acd24/검정 005a4058로)·Demo 버튼 Tell 이름 `Demoville`(두 판본 원문). ③ 검사 전용 기능: UI 스크립트 `session-dump`(실제 Session/World TSV)와 `--fixed-frame-ms` 고정 시각 실행(`client/ClientTimeSource`, 기본은 기존 OS 시계 그대로) — [형식·결정론](docs/exe/cpp-session-state-dump-20261109.md). 같은 PC 기준 빌드 대비 `netstorm_pop_context_tests`·`netstorm_main_popup_tests`의 새 실패는 0이다(남은 실패는 기준과 같은 기존 실패). **dotnetpj 재반영 대상:** `HostMainMenu.cs`의 `("Tell","DEMOVILLE")`, `HostHtmlText.cs`의 `SliderType=menu.BackgroundType, SliderFrame=1`, `HostStartupSceneTests`의 DEMOVILLE 단언은 옛 cpppj 값을 옮긴 것이다. 다음 CP 제품 단위(1227)는 이 변경을 포함해 번호를 매긴다. 디컴파일은 새로 하지 않았다(기존 HJOW-Athlon 산출물 읽기만).
+
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
 AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품 1226, DN은 0.261, WB는 열람 당시 병행 작업 인계의 WB04-E201 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.

@@ -51,6 +51,7 @@
 #endif
 #include <windows.h>
 #include <mmsystem.h>
+#include "client/ClientTimeSource.h" // Client 시각 공급원이다(2026-11-09 추가).
 #endif
 
 namespace netstorm::client { // 현재 연결을 만드는 효과는 원문 Serve/Connect 위치에 남긴다.
@@ -309,7 +310,7 @@ std::shared_ptr<CompositeMissionTransport> MakeClientCampaignTransport(Client& c
     hooks.players=[players=globals->players] { return std::span<const std::uint8_t>(players->Records()); }; //State 정리/재초기화 뒤에도 원문 송신은 현재 Player base를 읽는다.
     hooks.now=[clock=globals->clock]() -> std::uint32_t {
 #ifdef _WIN32
-        return static_cast<std::uint32_t>(clock->WallSeconds(timeGetTime())); // 기존 Login과 같은 현재 OS 밀리초/원점 계산이며 프레임 시각 사본을 읽지 않는다.
+        return static_cast<std::uint32_t>(clock->WallSeconds(ClientMilliseconds())); // 2026-11-09: Client 시각 공급원을 거친다(기본은 timeGetTime 그대로). // 기존 Login과 같은 현재 OS 밀리초/원점 계산이며 프레임 시각 사본을 읽지 않는다.
 #else
         throw std::logic_error("현재 Client 전송의 OS 벽시계 미연결");
 #endif

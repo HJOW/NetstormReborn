@@ -110,6 +110,9 @@ public:
     void Event(InputEvent event);
     // 자동 검사에서 화면과 활성 상태를 읽는다.
     std::string Report(bool cameraOnly=false) const; //카메라 검사 전용 간결 관측은 큰 월드 덤프를 생략하며 게임 상태를 바꾸지 않는다.
+    // 검사 전용: 현재 Session/World 상태를 판번호 TSV로 읽는다(client/SessionStateDump). 미션 월드가 없으면 world 0 덤프다. 게임 상태를 바꾸지 않는다.
+    // 2026-11-09: webpj/dotnetpj L2·L3 대조용 ui-script session-dump 단계에서 쓰려고 추가했다. Session 선택은 InputSession()과 같다.
+    std::string SessionStateDump() const;
     // 버튼/목록의 실제 위치를 라벨로 찾는다. 없으면 빈 값.
     std::optional<ScreenPoint> ControlPoint(std::string_view label) const;
     bool QuitRequested() const { return quit_; } // 실제 QuitApp/사용자 종료 요청만 읽으며 검사 프레임 제한 종료와 구별한다.

@@ -5,6 +5,7 @@
 // 범위: 창 만들기, 설정 읽기, 화면 장치, 메시지·입력 큐, 프레임 제한과 내보내기까지.
 //       Renderer·원본 글꼴/커서·메뉴와 저장 미션의 기본 지형/객체·선택/이동을 연결했다. 건설/전투는 후속이다.
 #include "client/ClientMain.h"
+#include "client/ClientTimeSource.h" // OS 밀리초는 단일 공급원에서 읽는다(기본 timeGetTime, 검사 전용 고정 시각 모드). 2026-11-09 추가.
 #include "client/ClientCursorStateCleanup.h" // Content 삭제의447390은 같은 원문 커서 취소 leaf만 호출한다.
 #include "client/CurrentAllocationBytes.h" // 원문 수입 예약의 미작성 다섯째 BYTE를 기존 호스트 입력으로 보존한다.
 #include "client/ClientConstructionGlobals.h" // Native 건설 상태를 Session 재생성보다 오래 보유한다.
@@ -353,7 +354,7 @@ int Client::Run() {
     else screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition); // CD호스트의기존값형입구는별도판본으로유지한다.
     if (options_.edition==o::OriginalEdition::Patch1078) registeredMessages_.message=RegisterWindowMessageA("NETSTORMOOGABOOGA"); //00438dc0의 팔레트 뒤 원문 위치다. 서버 시작 통지도 같은 ID로 받는다.
     // [원본] 설치 검사(GameInstalledTest)·zacket·프로토콜 검사는 아직 연결하지 않았다.
-    *clock_ = o::GameClock(timeGetTime()); // "init full time"(FUN_00461090)의 시작 시각.
+    *clock_ = o::GameClock(ClientMilliseconds()); // "init full time"(FUN_00461090)의 시작 시각.
     if (options_.edition==o::OriginalEdition::Patch1078) clock_->BindSynchronizationTicks(localStateGlobals_->GameTicks(),localStateGlobals_); // 같은 실제0055b4ac와 owner를 보유하여 외부 공유 시계가 Client보다 오래 남아도 주소 대여를 유지한다.
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientPlayerRecords(*this); //0043952c의 실제 초기화이며 그 다음00439537 ColorSort 입력보다 앞선다.
     //00439537의초기ColorSort입력위치다.이캡처만으로미연결43b430검색/색띠전체를성공시킨것은아니다.
@@ -498,7 +499,7 @@ int Client::Run() {
             [owner=std::weak_ptr<ClientConstructionGlobals>(constructionGlobals_)](auto sid,auto flags) { const auto current=owner.lock();if (!current) throw std::logic_error("장기 신전 owner 반납 뒤 삭제 선택");current->VortexPre().PreDestroy(sid,flags); },
             [owner=std::weak_ptr<ClientConstructionGlobals>(constructionGlobals_)](auto x,auto y) { const auto current=owner.lock();if (!current) throw std::logic_error("장기 영역 owner 반납 뒤 갱신 선택");current->Regions().UpdateNative(x,y); }); //Storage→owner는약하게빌려참조순환없이실제선택호출만pin한다.
     } //첫메뉴/Session전에실제장치/backing만보유하며SP/Player/World를초기화하지않는다.
-    surfaceStorage_->BindGraphClock([this] { return clock_->GameSeconds(timeGetTime()); }); // 삭제 Graph의 두 시각 읽기도 같은 현재 Client 시계를 쓴다.
+    surfaceStorage_->BindGraphClock([this] { return clock_->GameSeconds(ClientMilliseconds()); }); // 삭제 Graph의 두 시각 읽기도 같은 현재 Client 시계를 쓴다.
     surfaceStorage_->BindAllocationDiagnostics([this] { DumpObjectDiagnostics(); },[this](std::string_view name) { if (name!="BridgesKilled" || !menu_) throw std::logic_error("CD SID 회수의 현재 Tell UI 미연결");menu_->ShowSidRecoveryNotice(); }); //CD 소진의 객체/상세/대화상자는 기존 Client 부모를 공유한다.
     surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.
     BindClientKernelDiagnostics(kernel_,surfaceStorage_,gameplayGlobals_,options_.userData ? options_.userData->Diagnostics() : options_.gameDirectory,options_.userData.has_value()); // 소진은 요약만 쓰고 빈 슬롯 단언은 같은 현재 Client 장치에 정상 복귀한다.
@@ -532,8 +533,9 @@ int Client::Run() {
         const int current = GetThreadPriority(GetCurrentThread());
         const auto priority=PlanNativeThreadPriority(wanted,current);
         if (priority.change) SetNativeThreadPriority(priority.priority); //원문처럼 GetCurrentThread를 다시 조회하고 OS BOOL 반환은 검사하지 않는다.
-        // 1. 시각 고정(FUN_00460e90).
-        *time_ = clock_->Capture(timeGetTime());
+        // 1. 시각 고정(FUN_00460e90). 검사 전용 고정 시각 모드에서는 먼저 가상 시계를 한 프레임 전진한다(기본 OS 시계에서는 아무것도 하지 않는다, 2026-11-09 추가).
+        AdvanceFixedClientTime();
+        *time_ = clock_->Capture(ClientMilliseconds());
         if (menu_) { try { menu_->Tick(); }catch (const TitleBitmapQuit&) { return 0; } } //시작435b30의실제WM_QUIT만정상종료로연결한다.파일/표시예외는숨기지않는다.
         // 3. 재생 중인 효과음 수를 다시 센다(FUN_004a8e60). 2는 위 실제 상태 전환 부분이다.
         if (audio_) audio_->CountPlaying();
@@ -629,7 +631,7 @@ void Client::InitializeNativeAudio() {
             return MakeDiskSoundResolver(primary,secondary)(pattern,alternate); //현재FindFirstFile/WAVE의우선순위와부재/실패반환을그대로사용한다.
         };
         audio_ = std::make_unique<ClientAudio>(options_.gameDirectory, options_.edition, std::string(OriginalLanguageName(audioLanguage)),
-            [this]() { return clock_->WallSeconds(timeGetTime()); },randomGlobals_->Game(),std::move(scene),std::move(effectFiles)); // 원문 전투 음악도 게임/SP/AI와 같은00532710을 소비한다.
+            [this]() { return clock_->WallSeconds(ClientMilliseconds()); },randomGlobals_->Game(),std::move(scene),std::move(effectFiles)); // 원문 전투 음악도 게임/SP/AI와 같은00532710을 소비한다.
         audio_->SetSceneTints(screen_->Colors().weather);
         audio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
         audio_->Initialize(reinterpret_cast<std::uintptr_t>(window_), ReadAudioOptions());
@@ -637,7 +639,7 @@ void Client::InitializeNativeAudio() {
     } else {
         // 생성자/이름표 초기화는 OS 장치와 음악 스레드를 열지 않는다. 실제 Play가 미초기화 상태에서 0을 반환한다.
         disabledAudio_=std::make_unique<ClientAudio>(options_.gameDirectory,options_.edition,std::string(OriginalLanguageName(audioLanguage)),
-            [this] { return clock_->WallSeconds(timeGetTime()); },randomGlobals_->Game()); // 장치 없는 검사도 같은 난수 소비 계약을 유지한다.
+            [this] { return clock_->WallSeconds(ClientMilliseconds()); },randomGlobals_->Game()); // 장치 없는 검사도 같은 난수 소비 계약을 유지한다.
         disabledAudio_->Names().Initialize();disabledAudio_->SetView({0,0,0,0,screenWidth_,screenHeight_});
     }
     if (options_.edition==o::OriginalEdition::Patch1078) WorldAudio().BindCurrentView([this] { return CurrentSoundView(); }); // 원문497220/4c6b30은 소리 계산마다 현재 전역을 읽는다. 10.72의 기존 명시 어댑터는 이번 분석 범위에 넣지 않는다.
@@ -886,9 +888,10 @@ void Client::Frame() {
     // [원본] 창이 비활성이고 전체화면이면 그리지 않는다(FUN_004977e0) — 전체화면을 옮기면 더한다.
     if (!clock_->IsPaused()) {
         // 바쁜 대기: 직전 그리기 뒤로 1 / maxFPS 초가 지날 때까지 벽시계를 다시 읽는다.
-        while (clock_->WallSeconds(timeGetTime()) - lastDraw_ < frameInterval_) {}
+        // 검사 전용 고정 시각 모드는 프레임 사이에 가상 시계가 흐르지 않으므로 대기하지 않는다(2026-11-09 추가). 기본 OS 시계는 기존과 같다.
+        while (!FixedClientTimeEnabled() && clock_->WallSeconds(ClientMilliseconds()) - lastDraw_ < frameInterval_) {}
     }
-    lastDraw_ = clock_->WallSeconds(timeGetTime());
+    lastDraw_ = clock_->WallSeconds(ClientMilliseconds());
     PresentScene(true);
     if (menu_) menu_->ApplyCameraFrame(); //499fe0 말미의 목표 제한/497960 적용은 화면 출력 뒤·마지막 snapshot 복사 앞이다.
     gameplayGlobals_->Camera().CopyRendererSnapshot(); //00436532: 프레임 말미 현재 논리 Renderer의16DWORD를 복사한다.
@@ -1000,9 +1003,9 @@ void Client::Pause(bool paused) {
     uiPaused_=paused;
 }
 // 원본 미션 정지는 메뉴 정지 여부와 무관하게 실제 같은 시계 깊이를 한 번 증가시킨다.
-void Client::PushGamePause() { clock_->Pause(timeGetTime()); }
+void Client::PushGamePause() { clock_->Pause(ClientMilliseconds()); }
 // 원본 미션 재개는 실제 같은 시계의 마지막 깊이가 해제될 때만 시간을 진행한다.
-void Client::PopGamePause() { clock_->Resume(timeGetTime());if (!clock_->IsPaused()) uiPaused_=false; } //실제 마지막 정지가 풀리면 호스트 UI의 보유 표식도 반납한다. Native State의 전체 Resume 뒤 다음 모달이 다시 정지할 수 있어야 한다.
+void Client::PopGamePause() { clock_->Resume(ClientMilliseconds());if (!clock_->IsPaused()) uiPaused_=false; } //실제 마지막 정지가 풀리면 호스트 UI의 보유 표식도 반납한다. Native State의 전체 Resume 뒤 다음 모달이 다시 정지할 수 있어야 한다.
 // 자동 검사는 표시 단계와 실제 시계 정지를 함께 검사한다.
 bool Client::Paused() const { return clock_->IsPaused(); }
 // 실제 Client 시계의 기존 Reset만 호출하며 시각 조회/프레임 재캡처/중첩 정지 반납을 추가하지 않는다.
@@ -1182,6 +1185,8 @@ std::string Client::ScreenDiagnostics() const {
 }
 // 원본 00435b30. 원본은 WM_QUIT을 받으면 곧바로 프로세스를 끝낸다(_exit).
 bool Client::PumpMessages() {
+    // 검사 전용 고정 시각 모드: 메인 루프 밖 대기(시작·타이틀 그림)는 이 펌프를 반복하며 벽시각 기한을 기다리므로, 펌프마다 가상 시계를 한 프레임만큼 전진해 대기가 같은 횟수로 끝나게 한다(기본 OS 시계에서는 효과 없음, 2026-11-09 추가).
+    AdvanceFixedClientTime();
     MSG message;
     // 쌓인 메시지를 모두 처리한다.
     while (PeekMessageA(&message, nullptr, 0, 0, PM_REMOVE | PM_NOYIELD)) {
@@ -1460,8 +1465,8 @@ const o::FrameTime& Client::Time() const { return *time_; }
 // 정지와 무관한 실제 원본 벽 시계를 조회한다. 부착/idle의 여러 읽기도 각각 OS 눈금을 사용한다.
 // 장기 전송의 현재 시계 조회가 Client의 실제 시계 저장소를 함께 보유하게 한다.
 const std::shared_ptr<o::GameClock>& Client::GameClockOwner() const { return clock_; }
-double Client::WallSeconds() const { return clock_->WallSeconds(timeGetTime()); }
-double Client::GameSeconds() const { return clock_->GameSeconds(timeGetTime()); } // 시간 패킷의 서버 응답은 현재 프레임 시각보다 실제 새 시계를 사용한다.
+double Client::WallSeconds() const { return clock_->WallSeconds(ClientMilliseconds()); }
+double Client::GameSeconds() const { return clock_->GameSeconds(ClientMilliseconds()); } // 시간 패킷의 서버 응답은 현재 프레임 시각보다 실제 새 시계를 사용한다.
 // 창이 활성인가.
 bool Client::Active() const { return active_; }
 // 번역표가 없거나 영어면 원문 그대로다.

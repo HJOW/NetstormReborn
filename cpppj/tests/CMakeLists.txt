@@ -3813,3 +3813,10 @@ target_sources(netstorm_construction_owner_tests PRIVATE GunImpactTests.cpp Disc
 
 # 실제 Content의 기존 비MP 원문/현재값/혼합 수명 검사를 장기 owner 집중 대상에서도 빌드한다.
 target_sources(netstorm_construction_owner_tests PRIVATE ContentLifetimeTests.cpp)
+
+# 검사 전용 Session 상태 덤프의 순수 서식·분산 SP 복호·풀 해시를 확인한다(2026-11-09, webpj/dotnetpj L2·L3 대조용).
+target_sources(netstorm_tests PRIVATE SessionStateDumpTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE SessionStateDumpTests.cpp)
+# Client 시각 공급원의 기본 OS 시계와 검사 전용 고정 시각 모드 계약이다(2026-11-09, 결정론 대조용).
+target_sources(netstorm_tests PRIVATE ClientTimeSourceTests.cpp)
+target_sources(netstorm_pop_context_tests PRIVATE ClientTimeSourceTests.cpp)

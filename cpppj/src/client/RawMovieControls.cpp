@@ -7,6 +7,7 @@
 #include "client/MovieTimer.h"
 #include <windows.h>
 #include <mmsystem.h>
+#include "client/ClientTimeSource.h" // Client 시각 공급원이다(2026-11-09 추가).
 #include <cmath>
 #include <algorithm>
 #include <bit>
@@ -32,7 +33,7 @@ struct RawMovieControls::Impl { // 실제 공통 저장소와 singleton/디코�
         if (common.create.collection.edition!=o::OriginalEdition::Patch1078 || !context.now || !context.invalidate || !context.clearAndPresent) throw std::invalid_argument("MovieGump 실제10.78/시계/표시 장치 필요");
     }
     Movie* Node(std::uint32_t token) const { const auto it=nodes.find(token);return it==nodes.end() ? nullptr : it->second.get(); } // 죽은 노드도 scalar 반납 전에는 같은 주소를 반환한다.
-    std::uint32_t Milliseconds() const { return context.milliseconds ? context.milliseconds() : timeGetTime(); } // 실제 SDK와 같은 밀리초 장치 또는 명시 검사 입력이다.
+    std::uint32_t Milliseconds() const { return context.milliseconds ? context.milliseconds() : ClientMilliseconds(); } // 2026-11-09: 기본 장치도 Client 시각 공급원을 거친다(기본은 timeGetTime 그대로). // 실제 SDK와 같은 밀리초 장치 또는 명시 검사 입력이다.
     bool AtEnd(const Movie& node) const { return node.decoder && node.decoder->FrameIndex()==node.decoder->Info().frameCount-1U; } //004838d0의 실제0기반 마지막 프레임 비교다.
     void Prepare(Movie& node) { // 원본 NextFrame이 준비하던 다음 자료를 별도64비트 디코더에서 미리 해제하되 아직 표시/재생하지 않는다.
         node.timer.ready=0;const auto status=node.decoder->Next();if (status!=SmackerFrameStatus::More && status!=SmackerFrameStatus::Last) throw std::runtime_error("영상 다음 프레임 해제 실패");

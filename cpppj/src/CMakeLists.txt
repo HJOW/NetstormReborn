@@ -355,6 +355,10 @@ target_sources(netstorm PRIVATE o/RawBombStrike.cpp o/RawBombStrike.h)
 
 # 힐 주문의 실제 자격/회복/상태 해제와 버스트 생성 부모다.
 target_sources(netstorm PRIVATE o/RawBombHeal.cpp o/RawBombHeal.h)
+# 검사 전용 실제 Session/World 상태 덤프(ui-script session-dump)다. 2026-11-09 webpj/dotnetpj L2·L3 대조 요청으로 추가했다.
+target_sources(netstorm PRIVATE client/SessionStateDump.h client/SessionStateDump.cpp)
+# Client OS 시각의 단일 공급원과 검사 전용 고정 시각 모드(--fixed-frame-ms)다. 2026-11-09 결정론 대조용으로 추가했다.
+target_sources(netstorm PRIVATE client/ClientTimeSource.h client/ClientTimeSource.cpp)
 
 # 오벨리스크의 실제 임시Deck 추첨과 보상 변환이다.
 target_sources(netstorm PRIVATE o/RawDeckDraw.cpp o/RawDeckDraw.h o/RawGemReward.cpp o/RawGemReward.h)

@@ -27,6 +27,8 @@
 #include "client/GameWorld.h"
 #include "client/Mission.h"
 #include "client/UberGump.h"
+#include "client/SessionStateDump.h"
+#include "client/ClientTimeSource.h"
 #include "client/GifImage.h"
 #include "o/BaseFile.h"
 #include "o/RawFileName.h"
@@ -596,6 +598,7 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
     std::string view;
     bool renderStats = false;
     std::filesystem::path uiScript, uiReport;
+    netstorm::client::FixedClientTime fixedTime; // 검사 전용 고정 시각 설정이다. frameMilliseconds 0이면 기본 OS 시계를 쓴다(2026-11-09 추가).
     bool mcpMode = false; // 4차 새 옵션: stdio MCP 서버로 게임을 조작/관찰한다(원본에 없는 분석용 기능).
     // 나머지 인자: 원본 명령줄의 "window"에 해당하는 것과 검사용 옵션.
     for (std::size_t i = 1; i < arguments.size(); ++i) {
@@ -615,6 +618,9 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
         else if (argument == "--mute-audio") options.audioMute = true;
         else if (argument == "--audio-report") options.audioReport = value();
         else if (argument == "--mcp") mcpMode = true;
+        // 검사 전용 고정 시각 모드: 프레임마다 N ms만 전진하는 가상 시계(원본에 없는 결정론 대조 기능, 2026-11-09 추가). --fixed-unix-seconds는 가상 원점의 유닉스 초다.
+        else if (argument == "--fixed-frame-ms") fixedTime.frameMilliseconds = static_cast<std::uint32_t>(std::stoul(value()));
+        else if (argument == "--fixed-unix-seconds") fixedTime.unixSeconds = static_cast<std::int32_t>(std::stol(value()));
         else if (argument == "--ui-script") uiScript = value();
         else if (argument == "--ui-report") uiReport = value();
         else if (argument == "--test-bridge-patterns") options.testBridgePatterns=value(); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다.
@@ -626,6 +632,8 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
     if (mcpMode && (!uiScript.empty() || !view.empty())) throw std::invalid_argument("--mcp cannot be combined with --ui-script or --view");
     std::unique_ptr<netstorm::app::McpServer> mcp; // 4차: Client가 stdout에 쓰기 전에 stdout을 MCP 전용으로 분리한다.
     if (mcpMode) { mcp = std::make_unique<netstorm::app::McpServer>(); mcp->Start(); }
+    if (fixedTime.frameMilliseconds) netstorm::client::EnableFixedClientTime(fixedTime); // Client 시계 원점보다 먼저 켠다.
+    else if (fixedTime.unixSeconds!=netstorm::client::FixedClientTime{}.unixSeconds) throw std::invalid_argument("--fixed-unix-seconds는 --fixed-frame-ms와 함께만 사용");
     netstorm::client::Client client(std::move(options));
     std::optional<netstorm::app::InspectView> inspect;
     if (!view.empty()) inspect.emplace(client, view);
@@ -669,7 +677,8 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
                     if (operation!="click" && operation!="click-if" && operation!="up-if" && operation!="down" && operation!="up" && operation!="right" && operation!="outside" && operation!="pointer" && operation!="esc" && operation!="key" && operation!="keyup") throw std::invalid_argument("UI when supports input operations only");
                     step.operation=operation;step.argument=argument;
                 }
-                if (step.operation == "snapshot" || step.operation=="snapshot-presented" || step.operation=="snapshot-output" || step.operation == "report" || step.operation=="report-presented" || step.operation=="refresh") continue;
+                // 그리기 뒤 관측 단계는 입력 큐에 넣지 않는다. session-dump는 2026-11-09 webpj/dotnetpj L2·L3 대조용으로 추가한 상태 덤프다.
+                if (step.operation == "snapshot" || step.operation=="snapshot-presented" || step.operation=="snapshot-output" || step.operation == "report" || step.operation=="report-presented" || step.operation=="refresh" || step.operation=="session-dump") continue;
                 // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 이미 생성된 조각은 바꾸지 않는다.
                 if (step.operation=="test-state-hud") { if (step.argument=="clear") { c.Menu()->KillGumpsForState();c.Menu()->CleanupGumpsForState(); }else if (step.argument=="replace") c.Menu()->ReplaceHudForState();else if (step.argument=="sp") c.Menu()->RefreshStormPower();else if (step.argument=="normal") c.Menu()->ApplyHudModeForState(3);else if (step.argument=="editor") c.Menu()->ApplyHudModeForState(4);else throw std::invalid_argument("State HUD 검사 동작은 clear/replace/sp/normal/editor만 허용");continue; } //검사 전용 실제 Native 자식 호출이며 State 전환/loaded 성공을 만들지 않는다.
                 if (step.operation=="test-state-world") { if (step.argument!="0") throw std::invalid_argument("전체 State 검사 reason0만 허용");c.Menu()->CleanupNativeStateWorld(0);continue; } //검사 전용 명시 호출이다. 자연 Edit 예약/State 확정을 대신하지 않는다.
@@ -783,6 +792,13 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
                 const auto& step = steps[next++];
                 if (step.operation == "snapshot") c.Capture(step.argument);
                 if (step.operation=="snapshot-output") c.CapturePresentation(step.argument); // 검사 전용 실제 Win32 출력이며 논리 캡처와 구별한다.
+                // 검사 전용: 같은 프레임 그리기 뒤 현재 Session/World 상태를 판번호 TSV로 쓴다. 원본에 없는 읽기 전용 관측이며 게임 상태를 바꾸지 않는다.
+                // 2026-11-09: webpj(LEFT_JOBS.webpj.md 3.5절 1번)·dotnetpj(이식 계획 8절 요청 1)의 실제 Session 덤프 요청으로 추가했다.
+                if (step.operation=="session-dump") {
+                    if (step.argument.empty()) throw std::invalid_argument("UI session-dump 출력 경로가 비어 있음");
+                    const auto dump=c.Menu() ? c.Menu()->SessionStateDump() : netstorm::client::DumpSessionState(c,nullptr); // 미션 월드가 없으면 world 0 덤프다.
+                    netstorm::platform::WriteFileBytes(step.argument,std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(dump.data()),dump.size()));
+                }
                 if (step.operation == "report") {
                     report += "frame\t" + std::to_string(step.frame) + "\t" + step.argument + "\n" + c.Menu()->Report(step.argument.starts_with("camera:")); //검사 전용 접두는 같은 현재 카메라/프레임의 간결 관측만 선택한다.
                     saveUiReport(); // 구동 테스트가 중단돼도 직전 실제 관측을 남긴다. 게임 상태를 바꾸는 동작은 아니다.

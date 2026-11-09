@@ -1,5 +1,6 @@
 #include <cstdio> //원문좌표로그의실제%f서식을사용한다.
 #include "client/RawProductionControls.h"
+#include "client/SessionStateDump.h" // 검사 전용 Session 상태 덤프(2026-11-09 추가)다.
 #include "client/RawCameraPan.h"
 #include "client/MoveDialog.h" //HTML 명령의 같은 실제 모달 위치 처리를 사용한다.
 #include "client/RawEdgeScroll.h"
@@ -1893,8 +1894,9 @@ void UberGump::Compose() {
         const int x = width / 2 - 156, y = height / 2 - 73;
         const std::string campaign = client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? "UCampaign" : Script("tell").Section("UCampaign") ? "UCampaign" : "Campaign"; // 원문10.78 MainMenu의 고정 target이며 영구 tell Config를 새로 등록하지 않는다.
         // 원본 10.78의 기본8개·감지 성공 시 Intro를 포함한9개 버튼이다. 원문 순서대로 두 행에 배치한다.
+        // Demo의 Tell 이름은 두 판본 원문 모두 대소문자 그대로 "Demoville"이다. 2026-11-09: 기록 이름(priorTell 등)이 "DEMOVILLE"로 남던 차이를 고쳤다(webpj WB02-H 오라클 대조 보고).
         std::vector<DialogItem> buttons{
-            {"Campaign", {"Tell", campaign}}, {"Multiplayer", {"Multiplayer", ""}}, {"Demo", {"Tell", "DEMOVILLE"}}, {"Help", {"Menu", "help"}},
+            {"Campaign", {"Tell", campaign}}, {"Multiplayer", {"Multiplayer", ""}}, {"Demo", {"Tell", "Demoville"}}, {"Help", {"Menu", "help"}},
             {"Edit", {"AskEditFort", "0"}}};
         if (client_.Edition()==o::OriginalEdition::Patch1078 && client_.LocalStateGlobals()->IntroAvailable()) buttons.push_back({"Intro",{"PlayIntro","0"}}); // 원문0054db98의 최초 감지값이며 매 Compose마다 파일을 재검사하지 않는다.
         buttons.insert(buttons.end(),{{"Credits", {"Tell", "Credits"}}, {"Options", {"Menu", "options"}}, {"Quit", {"RequestQuitApp", "0"}}});
@@ -2121,6 +2123,8 @@ std::string UberGump::Report(bool cameraOnly) const {
     }
     return out.str();
 }
+// 검사 전용 Session 덤프는 입력과 같은 현재 Session 선택을 쓰고 읽기만 한다(2026-11-09 webpj/dotnetpj L2·L3 대조용 추가).
+std::string UberGump::SessionStateDump() const { return DumpSessionState(client_,InputSession()); }
 //부모가현재battle/showTime을확인한뒤같은board를호출한다.
 void UberGump::ShowGameTimeMessage() { warnings_->GameTimeStatus(); }
 // CD의 SID 회수 완료 알림도 현재 미션/일반 Tell 검색과 같은 모달 수명을 사용한다.

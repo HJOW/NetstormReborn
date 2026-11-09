@@ -111,20 +111,34 @@ TEST_CASE(ProcessForm_ReplaysCd) { ReplayForm("originalCD"); }
 // 별도 10.37 PE의 모든 지정 form/분배 관찰이다.
 TEST_CASE(ProcessForm_ReplaysExtra1037) { ReplayForm("original1037"); }
 
-// 잘못된 지정 form과 체인은 Kernel/목록/부모를 바꾸기 전에 거부한다.
-TEST_CASE(ProcessForm_RejectsInvalidNamedFormsBeforeRegistration) {
+// 잘못된 지정 form은 원문 0041bd20 순서대로 Kernel 등록(패치는 타입 순환도 전진) 뒤 소비 위치에서 거부되며 부분 효과를 되돌리지 않는다.
+// client 번호는 Take(004af610)의 첫 서버 범위 진단에서, 물리 범위 밖 번호는 슬롯 조회에서 멈추므로 부모·목록·사건은 바뀌지 않는다.
+// 예약 머리(predictableFirst)는 원문 Take의 서버 범위(FIRST_SERVER_SID 이상) 안이라 허용되어 같은 부모에 부착된다.
+// 사용 중 지정 슬롯과 부모 머리가 지정 form인 체인은 지정 슬롯 getter/연결 위치에서 거부된다.
+// 2026-11-09: 20261105-42(fbdcb4df)의 원문 순서 복원 뒤에도 "등록 전 거부"를 기대하던 옛 시험(…BeforeRegistration)을 원문 부분 효과로 고치고 이름을 바꿨다(webpj WB04-D5c 보고).
+TEST_CASE(ProcessForm_RejectsInvalidNamedFormsAfterRegistration) {
     // 두 판본의 서로 다른 서버 범위와 예약 머리를 모두 검사한다.
     for (auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) {
-        FormScene scene(edition);const auto first=scene.pool.Layout().serverFirst;const auto before=Meta(scene.pool);const auto parent=Hex(scene.pool.Slot(Sid{20000}));
-        // client/예약/범위 밖 번호에는 Take를 허용하지 않는다.
-        for (auto value:{std::uint32_t{5},static_cast<std::uint32_t>(scene.pool.Layout().predictableFirst),kFormCapacity}) {
+        const bool patch=edition==OriginalEdition::Patch1078; // 타입 순환은 패치 Kernel 등록만 전진한다.
+        // client/물리 범위 밖 번호는 새 장면마다 거부되고 등록 1개와 패치 회전 1만 남는다.
+        for (auto value:{std::uint32_t{5},kFormCapacity}) {
+            FormScene scene(edition);const auto before=Meta(scene.pool);const auto parent=Hex(scene.pool.Slot(Sid{20000}));
             CHECK(Throws([&] { scene.host.Attach(std::make_unique<TaggedProcess>(scene.events),30,Sid{20000},0x10,Sid{static_cast<std::uint16_t>(value)}); }));
+            CHECK(scene.kernel.Size()==1 && scene.events.empty() && scene.state.typeRotation==(patch ? 1U : 0U) && Meta(scene.pool)==before && Hex(scene.pool.Slot(Sid{20000}))==parent);
         }
+        {
+            // 예약 머리는 서버 범위 안이므로 원문 Take가 허용하고 실제 부착 통지까지 진행한다.
+            FormScene scene(edition);const Sid reserved{static_cast<std::uint16_t>(scene.pool.Layout().predictableFirst)};
+            auto* process=scene.host.Attach(std::make_unique<TaggedProcess>(scene.events),30,Sid{20000},0x10,reserved);
+            CHECK(process!=nullptr && process->Form()==reserved && process->Parent()==Sid{20000} && scene.kernel.Size()==1 && scene.events.size()==1);
+        }
+        FormScene scene(edition);const auto first=scene.pool.Layout().serverFirst;
         auto raw=InputRaw(scene.pool,Sid{static_cast<std::uint16_t>(first)});raw[11]=0;
         CHECK(Throws([&] { scene.host.Attach(std::make_unique<TaggedProcess>(scene.events),30,Sid{20000},0x10,Sid{static_cast<std::uint16_t>(first)}); }));raw[11]=1;
         Put(InputRaw(scene.pool,Sid{20000}),6,first,2);
         CHECK(Throws([&] { scene.host.Attach(std::make_unique<TaggedProcess>(scene.events),30,Sid{20000},0x10,Sid{static_cast<std::uint16_t>(first)}); }));
-        Put(InputRaw(scene.pool,Sid{20000}),6,0,2);CHECK(scene.kernel.Size()==0 && scene.events.empty() && scene.state.typeRotation==0 && Meta(scene.pool)==before && Hex(scene.pool.Slot(Sid{20000}))==parent);
+        // 두 호출 모두 부모 상태 확인 뒤 Kernel에 등록됐고 가상 부착 통지에는 도달하지 않았다.
+        CHECK(scene.kernel.Size()==2 && scene.events.empty() && scene.state.typeRotation==(patch ? 2U : 0U));
     }
 }
 

@@ -2,6 +2,7 @@
 #include "FormTypeInputs.h" // 공통 ProcessForm 생성이 읽는 원문 내장 생성자 주소를 입력에 명시한다.
 #include "RawSceneSupport.h"
 #include "o/RawDudeNotice.h"
+#include "o/SquidForms.h" // 종속 Burning/경로 표식에 판본별 실제 ProcessForm 생성자 가상 표를 쓴다.
 #include <cstdio>
 #include <tuple>
 
@@ -54,7 +55,10 @@ struct DudeScene {
         if (Number(row[1])==2) types[89].flags2=std::array<std::uint32_t,4>{0,0x40000000,0x10000000,0x40000}.at(mode);
     }
     // 관찰된기존typed Form 또는미복원burning ctor경계의체인효과만공급한다.
-    void Marker(Sid sid,std::uint8_t type,Sid next) { auto raw=pool.AllocatedBytes(sid);std::fill(raw.begin(),raw.end(),std::uint8_t{});raw[10]=type;raw[11]=8;Put(raw,4,next.value,2); }
+    // 원본 Burning(14)/경로(24) 표식은 ProcessForm이므로 가상 표에 판본별 실제 ProcessForm 생성자 값(10.78 0x512098, 10.72 0x505990)을 넣는다.
+    // Host 조회는 TYPE으로 Regular만 고르므로 표식을 Regular로 오인하지 않는다.
+    // 2026-11-09: 가상 표 0 표식이 d678fcad 뒤 엄격한 공통 contained 링크 선택(FormLinkLayoutAtTable)에서 거부되어 원본 재생 2건이 실패하던 시험 장면 결함을 고쳤다(webpj WB04-E207 보고).
+    void Marker(Sid sid,std::uint8_t type,Sid next) { auto raw=pool.AllocatedBytes(sid);std::fill(raw.begin(),raw.end(),std::uint8_t{});Put(raw,0,SquidForms(pool).Vtable(2));raw[10]=type;raw[11]=8;Put(raw,4,next.value,2); }
     // 실제Host Regular만연결하고burning/path/Frame은native와같은명시관찰경계다.
     DudeNoticeHooks Hooks() {
         auto hooks=MakeDudeNoticeHostHooks(pool,host,{});auto find=std::move(hooks.taskRegular),add=std::move(hooks.addTaskRegular);

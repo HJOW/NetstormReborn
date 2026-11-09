@@ -46,8 +46,9 @@ private:
 struct ScrollingTextGumpWidgetState {
     // alignment: +20의 종류 BYTE이며 +28 위치 정렬과 구별한다.
     std::int8_t alignment{46};
-    // sliderType: 스크롤바 타입.
-    // sliderFrame: 스크롤바 프레임.
+    // sliderType: Slider 생성자(004a64b0)의 넷째 인자. 원문 ScrollingText는 갈색 색 번호(005acd24)를 넘기며 화살표 돌 버튼의 미사용 인자와 손잡이 보조 칸에 저장된다.
+    // sliderFrame: Slider 생성자의 다섯째 인자. 원문은 검정 색 번호(005a4058)를 넘기며 위/아래 화살표 삼각형의 색이 된다.
+    // 2026-11-09: 이름과 달리 TYPE/프레임이 아니라 현재 팔레트 색 번호임을 원문 ScrollingText 생성(149767행)과 색 표 초기화(130623·130642행)로 확인했다(webpj WB02-H 오라클 대조 보고).
     std::uint32_t sliderType{},sliderFrame{};
     // changeEvent: 값이 변경됐음을 알리는 이벤트 ID.
     // stepEvent: 스크롤 이동을 요청하는 이벤트 ID.

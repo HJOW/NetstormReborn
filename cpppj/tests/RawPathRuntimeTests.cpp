@@ -6,6 +6,7 @@
 #include "o/SquidPop.h"
 #include "o/SquidPostPop.h"
 #include "o/RawProcessRemoval.h"
+#include "o/SquidForms.h" // 혼합 목록 raw 노드에 실제 ContentForm 생성자 가상 표를 쓴다.
 #include "DudeSpawnSupport.h"
 
 using namespace netstorm::o;
@@ -329,7 +330,9 @@ TEST_CASE(rawProcessRemoval_native_mixed_form_filter) {
                 }),type,scene.parent,0x10);
                 CHECK(process!=nullptr);nodes.push_back(process->Form());
             } else {
-                const auto form=scene.pool.Allocate(2);scene.pool.AllocatedBytes(form)[10]=static_cast<std::uint8_t>(type);nodes.push_back(form);
+                // 원문 공통 contained getter/setter는 현재 가상 표로 링크 배치를 고르므로 70 미만은 실제 ContentForm 생성자 VT, 70 이상은 10.78 지원 자산 VT(0x00501dd0)를 넣는다.
+                // 2026-11-09: 가상 표 0 raw 노드가 FormLinkLayoutAtTable에서 거부되어 실패하던 시험 입력을 고쳤다(webpj WB04-D5c 보고). 필터·삭제 순서·flags 비교는 같다.
+                const auto form=scene.pool.Allocate(2);const auto raw=scene.pool.AllocatedBytes(form);Put(raw,0,type<70 ? SquidForms(scene.pool).Vtable(6) : 0x00501dd0U);raw[10]=static_cast<std::uint8_t>(type);nodes.push_back(form);
             }
         }
         Put(scene.pool.AllocatedBytes(scene.parent),6,nodes.empty() ? 0 : nodes.front().value,2);

@@ -318,14 +318,20 @@ TEST_CASE(process_form_unpop_keeps_chain_while_parent_is_dying) {
         }
     }
 }
-// 잘못된 타입·전송이 필요한 flags·CD의 죽은 부모는 등록 전에 거부하고, 패치의 죽은 부모는 조용히 건너뛴다.
+// 잘못된 타입과 CD의 죽은 부모는 원문 진단 위치(Kernel 등록 전)에서 거부하고, 패치의 죽은 부모는 조용히 건너뛴다.
+// 전송이 필요한 flags는 원문 0041bd20 순서대로 Kernel 등록과 타입 순환 전진 뒤 Form 생성(writer 미연결)에서 거부되며 부분 효과를 되돌리지 않는다.
+// 2026-11-09: 20261105-42(fbdcb4df)의 원문 순서 복원 뒤에도 전송 flags를 "등록 전 거부"로 기대하던 단언을 원문 부분 효과로 고쳤다(webpj WB04-D5c 보고).
 TEST_CASE(process_attach_guards) {
     Scene patch(true,true,true,0.0,7);
     const auto parent=Sid{static_cast<std::uint16_t>(patch.Apply("P:2:82:4:0"))};
     CHECK(Throws([&] { patch.host.Attach(std::make_unique<RegularProcess>(1,1.0f),9,parent,0x50); }));
     CHECK(Throws([&] { patch.host.Attach(std::make_unique<RegularProcess>(1,1.0f),63,parent,0x50); }));
-    CHECK(Throws([&] { patch.host.Attach(std::make_unique<RegularProcess>(1,1.0f),46,parent,0); }));
     CHECK(patch.kernel.Size()==0);CHECK(patch.state.typeRotation==7);
+    // 전송 flags는 별도 패치 장면에서 등록 1개·회전 8이 남는 원문 부분 효과를 관찰한다.
+    Scene sending(true,true,true,0.0,7);
+    const auto sendingParent=Sid{static_cast<std::uint16_t>(sending.Apply("P:2:82:4:0"))};
+    CHECK(Throws([&] { sending.host.Attach(std::make_unique<RegularProcess>(1,1.0f),46,sendingParent,0); }));
+    CHECK(sending.kernel.Size()==1);CHECK(sending.state.typeRotation==8);
     patch.Apply("D:0:0");
     CHECK(patch.host.AddRegular(parent,1,1.0f)==nullptr);CHECK(patch.kernel.Size()==0);
     Scene cd(false,true,true,0.0,0);
