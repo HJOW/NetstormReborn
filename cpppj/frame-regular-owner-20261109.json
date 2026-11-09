@@ -1,0 +1,545 @@
+{
+  "unit": 1219,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "accepted": true,
+  "summary": "충돌 anim과 썬 디스크 Regular를 같은 장기 프레임/삭제 본문과 현재 TYPE 방향·클러스터 수에 연결하고 Native Session도 공유한다.",
+  "sourceSha256": {
+    "cpppj/src/o/RiftType.h": "1524692c5704de222669d3c88495a02eeea2a644d85f53d0a9c68a7a933c940a",
+    "cpppj/src/o/RiftTypeTable.cpp": "e1e1fee2eb52135c4d4363f1de612da2253cce752e071cd3feaa997c6727d91b",
+    "cpppj/src/o/RawGunImpact.h": "63b49a657545c3f6d777b34c216c3365e7ae61870e552574c1a05d7f52e6259e",
+    "cpppj/src/o/RawGunImpact.cpp": "76cbe5fb137667167cdffd26d5903255606fc8796759706479671f101d3cca16",
+    "cpppj/src/o/RawDiscRegular.h": "1b2b5a62de0a962f14db688ccb4d901c7724e56528b46cc2068af8f22a6fada8",
+    "cpppj/src/o/RawDiscRegular.cpp": "7b432bdaa3fa016acd84b915558a56a8bb6d6376a5c01991eeb0734390e9f03e",
+    "cpppj/src/client/RawSurfaceWorld.h": "e5784f336ea166843911511c013b0883c94de49de36a94645554b2c91b89a1e1",
+    "cpppj/src/client/RawSurfaceFrameRegular.cpp": "3f456c49785cad592a354c0f04ba76d3cc37c27c789383984f30f08a9568ceb1",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "d2aa6fa8d26975637b79f22c1fc023480a9680c6b4af88cb2caadb8a5e3b9884",
+    "cpppj/src/client/CMakeLists.txt": "e669edf484dced9e47796a3a5a6f7699ffd20f8c41de387180eb7ea7a35aa8b4",
+    "cpppj/src/client/RawCampaignSession.cpp": "4e817a57a37459826f0a48388bad3f916edc011c6e0852fd19e776aabe523a0e",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "b87e4003cfb9c447121d0e37212bc3f6957c2b23352245c5b98f33dd82e51f3e",
+    "cpppj/tests/RiftTypeTests.cpp": "4a71b439413cae10d9c5e28a5e5349c2b17173670c3d8584f7dc7a627eb13818",
+    "cpppj/tests/CMakeLists.txt": "32f9bb859172b98b055708de0556f3965226a4afeedf522e741c7ec36d4cc7d5",
+    "cpppj/tests/fixtures/disc-regular-boundary-1219-x86.tsv": "34d2fb87ef83e3675c1467bb993922a36453394b6fc5c5989a14cb7133792b9e"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13949952,
+      "sha256": "e58ed51bc5412b459d548fa545e221c353cf22aa1330095820ac8decf35d910c"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "701388e687878965d7823b8315112be185992b7a6c0a24cd6303d1e5432ed814"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 32.70297074317932,
+    "sourcesUnchanged": true,
+    "handle": 9073,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 350,
+    "passed": 350,
+    "newFrameAndTypeCases": 11,
+    "previousNonMpCases": 328,
+    "additionalExistingImpactDiscTypeCases": 11,
+    "groups": {
+      "netstorm_construction_owner_tests": 276,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "seconds": 63.059099197387695,
+    "handle": 62023
+  },
+  "newBoundaryFixture": {
+    "inputs": 70,
+    "returns": 47,
+    "divideErrors": 23,
+    "fixture": "cpppj/tests/fixtures/disc-regular-boundary-1219-x86.tsv",
+    "sha256": "34d2fb87ef83e3675c1467bb993922a36453394b6fc5c5989a14cb7133792b9e",
+    "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "nativeCalls": {
+      "00469540": 70,
+      "004ac550": 70,
+      "0049a840": 70
+    },
+    "gameExecutions": 0,
+    "multiplayerExecutions": 0,
+    "sourceChanges": 0
+  },
+  "oldArcherMetadataRowsPerEdition": 22,
+  "corrections": {
+    "firstBuildHandle": 57012,
+    "firstBuildExitCode": 1,
+    "cause": "새 golden 검사 두 곳의 LoadFixture(const char*)에 std::string 전달(C2664)",
+    "description": "최초 빌드 C2664는 새 golden 검사의 경로 인자 형식 불일치였다. 동기 읽기 함수에 c_str()로 전달하도록 교정했으며 제품 본문/원문 fixture/검사 기대값은 유지했다. 최초 집중349/350의 신규 만료 사례는 live 부모의 Hash 입력을 빠뜨려 원문 Squid.cpp:1629 found 단언이 검출했다. Host 부모3개의 실제 현재 프레임 저장 단계/Hash 등록 입력을 준비했으며 풀 반납·자기 Regular 소멸·깊이 등 기대는 유지했다.",
+    "expectationsWeakened": false,
+    "firstTestFailures": [
+      {
+        "target": "netstorm_construction_owner_tests",
+        "name": "ClientFrameRegular_ImpactExpiryRemovesActualParentAndProcess",
+        "exitCode": 1,
+        "pass": false
+      }
+    ],
+    "configuredBuildHandle": 54732,
+    "configuredBuildExitCode": 0,
+    "firstTestHandle": 62674,
+    "firstTestCases": 350,
+    "firstTestPassed": 349,
+    "inputCorrection": "실제 Host 부모의 live 입력을 준비하면서 Hash 등록을 생략했다. StoreLevel 뒤 같은 실제 SHP/TYPE로 Scene.Index를 적용해 원문 Unpop found 관문 입력을 준비한다."
+  },
+  "staticAudit": {
+    "unit": 1219,
+    "sourceVtables": 87,
+    "connectedRegularVtables": 39,
+    "remainingRegularVtables": 48,
+    "remainingRegularFunctions": 23,
+    "remainingRows": [
+      {
+        "vtable": "00502370",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502448",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502510",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005025d8",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005026a0",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502778",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502840",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502908",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005029d0",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502aa8",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502b70",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502c38",
+        "regular": "0041f760",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502cf0",
+        "regular": "0041f9d0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502db0",
+        "regular": "0041f9d0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502e68",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502f30",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00502ff8",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005030c0",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503188",
+        "regular": "0041e6a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503d80",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503e50",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503f20",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00503ff0",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005040c0",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005075d8",
+        "regular": "0044a3a0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005076b8",
+        "regular": "0044a5e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00507770",
+        "regular": "00448e00",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00507950",
+        "regular": "0044b150",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00508cc8",
+        "regular": "00450fa0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509148",
+        "regular": "004549c0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509210",
+        "regular": "004549c0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005096a0",
+        "regular": "0045a250",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00509810",
+        "regular": "0045a8e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050a050",
+        "regular": "0045e8b0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050a820",
+        "regular": "00462420",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050a8e8",
+        "regular": "00462420",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050cc08",
+        "regular": "004794b0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050e568",
+        "regular": "0042a750",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050e668",
+        "regular": "0048c6e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050e738",
+        "regular": "0048ea30",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050ee08",
+        "regular": "00490810",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050f210",
+        "regular": "00494580",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "0050f540",
+        "regular": "0049a4e0",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00512208",
+        "regular": "004af070",
+        "kind": "Content",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005196f0",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "005197a8",
+        "regular": "004dcf00",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00519860",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      },
+      {
+        "vtable": "00519918",
+        "regular": "004dc220",
+        "kind": "asset",
+        "status": "remaining"
+      }
+    ],
+    "implementedEntries": [
+      "0045a6e0",
+      "00469540"
+    ],
+    "cdEntries": [
+      "0047c810",
+      "00437290"
+    ],
+    "preservedFunctions": 6,
+    "currentVtables": [
+      "00509758",
+      "0050b570"
+    ],
+    "sameExistingBodies": true,
+    "currentTypeFields": [
+      "+110 directions",
+      "+114 frameCount"
+    ],
+    "nativeSessionSameBodies": true,
+    "boundaryEvidence": {
+      "inputs": 70,
+      "returns": 47,
+      "divideErrors": 23,
+      "fixture": "cpppj/tests/fixtures/disc-regular-boundary-1219-x86.tsv",
+      "sha256": "34d2fb87ef83e3675c1467bb993922a36453394b6fc5c5989a14cb7133792b9e",
+      "peSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+      "nativeCalls": {
+        "00469540": 70,
+        "004ac550": 70,
+        "0049a840": 70
+      },
+      "gameExecutions": 0,
+      "multiplayerExecutions": 0,
+      "sourceChanges": 0
+    },
+    "fullNoWorldComplete": false,
+    "remainingFormDeletionClasses": 3,
+    "newDecompilation": 0,
+    "originalDecompilationChanges": 0,
+    "lastClientDecompilation": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    },
+    "multiplayerExecutions": 0
+  },
+  "tutorial4": {
+    "passed": true,
+    "exitCode": 0,
+    "handle": 41330,
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.577,
+        "gameTimeAfter": 24.137,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "waitFrames": 600,
+    "imageInspected": "015-generator-settled.png",
+    "raw": "extracted/cpp-resume-1219/live-tutorial4/summary.json"
+  },
+  "editor": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0,
+    "passed": true,
+    "handle": 40713,
+    "sameClientRoundTrips": 2,
+    "observations": 11,
+    "screen": [
+      800,
+      600
+    ]
+  },
+  "protectedFilesUnchanged": 2800,
+  "allStartedBuildTestGuiTerminal": true,
+  "originalGameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "flyerDedicatedExecutions": 0,
+  "aviaryNoticeExecutions": 0,
+  "decompilerSourceChanges": 0,
+  "remainingUpperPlanIds": [
+    "M6",
+    "M7",
+    "M8",
+    "K1",
+    "K2",
+    "K3",
+    "K4",
+    "K5",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "B1",
+    "B2",
+    "B3",
+    "B4"
+  ],
+  "knownBugsRegistered": 34,
+  "limitations": [
+    "장기 Regular 분배39/87VT와 잔여48VT/23함수는 큰 하위/전체 NoWorld 완료 수가 아니다.",
+    "내장 Form 삭제3종·큰 비영 AI·배치/Fort 상위 Finish·호출자/owner 전수 감사·M6-l/m·M7 독립5건/M8·K/S/B 상위16계획과 등록34버그가 남는다.",
+    "제품644 전체34진입/검증645·최신ZIP1092·최신 전체 솔루션 통과 없음과 사용자 제외 검증은 유지한다."
+  ],
+  "raw": "extracted/cpp-resume-1219/"
+}

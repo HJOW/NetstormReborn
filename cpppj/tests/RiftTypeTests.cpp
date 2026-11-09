@@ -1,5 +1,7 @@
 // TYPE+44의 현재 사거리를 실제 자산 로딩과 속성 순서로 확인한다.
 #include "DudeSpawnSupport.h"
+#include "RawSceneSupport.h" // 기대 방향/클러스터 수는 기존 실제 PE metadata fixture에서 읽는다.
+#include <filesystem> // 원문 metadata 파일을 현재 검사 소스의 실제 위치에서 읽는다.
 
 namespace { //보호 자산의 실제 정의와 TYPE 기록을 독립 경계에서 대조한다.
 using namespace netstorm::o; //제품의 실제 타입/판본을 사용한다.
@@ -28,3 +30,29 @@ TEST_CASE(RiftTypeRange_DefaultDuplicateOrderAndFloatBits) {
         const RiftTypeTable table(edition,sources);CHECK(std::bit_cast<std::uint32_t>(table.Types()[70].range)==0xc0f00000U && table.Types()[71].range==0.0F);
     }
 }
+
+
+namespace { // 방향/클러스터 기대는 기존 실제 TYPE callback 관측에서 읽는다.
+// 원문 callback 입력 텍스트만 복원하고 기대 출력은 별도 metadata 칸에서 읽는다.
+std::string TypeAnimationInput(std::string_view hex) {
+    std::string text;for (std::size_t offset=0;offset<hex.size();offset+=2) text+=static_cast<char>(std::stoul(std::string(hex.substr(offset,2)),nullptr,16)); // 입력의 각 BYTE를 순서대로 복원한다.
+    return text;
+}
+// 양판본 Table의 실제 초기화/속성 적용을 거쳐 첫 자산의 두 새 DWORD를 원문 metadata와 대조한다.
+void CheckTypeAnimationRecord(OriginalEdition edition,std::string_view name) {
+    const auto fixture=std::filesystem::path(__FILE__).parent_path()/"fixtures/archertype-x86.tsv";const RiftTypeDefinition empty;std::size_t count{};
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(fixture.string().c_str()).rows) { // 각판본 접두1/전체callback21의 기존 관측을 모두 사용한다.
+        if (row[0]!=name) continue;CHECK(row.size()==8);RiftTypeDefinition definition;if (row[1]!="prefix") definition=RiftTypeDefinition::Parse(TypeAnimationInput(row[4]));
+        const auto order=TypeLoadOrder(edition);std::vector<RiftTypeSource> sources;for (std::size_t index=0;index<order.size();++index) sources.push_back({order[index],index ? &empty:&definition}); // 원본 전체 이름/TYPE 수를 유지하고 첫 자산만 명시 입력으로 바꾼다.
+        const RiftTypeTable table(edition,sources);const auto comma=row[5].find(',');CHECK(comma!=std::string::npos);
+        CHECK(table.Types()[70].directions==std::stoi(row[5]) && table.Types()[70].frameCount==std::stoi(row[5].substr(comma+1)));
+        for (std::size_t type=0;type<70;++type) CHECK(table.Types()[type].directions==0 && table.Types()[type].frameCount==0); // 내장 TYPE의 원래 미작성 초기0도 유지한다.
+        ++count;
+    }
+    CHECK(count==22);
+}
+}
+// PATCH의 현재 공통 TYPE 기록을 기존 기계어 callback22입력과 비교한다.
+TEST_CASE(RiftTypeAnimation_PatchGoldenMetadata) { CheckTypeAnimationRecord(OriginalEdition::Patch1078,"originals"); }
+// CD의 별도 초기화/구조 크기에서도 같은 두 의미 DWORD를 기존22입력과 비교한다.
+TEST_CASE(RiftTypeAnimation_CdGoldenMetadata) { CheckTypeAnimationRecord(OriginalEdition::Cd1072,"originalCD"); }

@@ -252,6 +252,8 @@ float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std
     constexpr std::array<std::uint32_t,16> kBaseRegularVtables{0x00501dd0U,0x00503360U,0x00506d98U,0x00506e50U,0x00506f08U,0x005070c0U,0x005092d0U,0x00509388U,0x00509b98U,0x0050c3b0U,0x0050c9f0U,0x0050db78U,0x0050eb98U,0x00512098U,0x00512110U,0x00512188U}; //보호PE87VT를조회해+5c=00496e70인16개만보존한불변메타데이터다.
     const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //가상선택은현재VT4BYTE이며현재TYPE별추측으로바꾸지않는다.
     if (table==0x5034c8U) return BridgeRegular().Handle(sid,event,count,payload); // 실제422740은 World와 같은 장기 본문/현재 전역을 사용한다.
+    if (table==0x509758U) return ImpactRegular(sid,event,count,payload); // 실제45a6e0의 프레임 지정/종료다.
+    if (table==0x50b570U) return DiscRegular(sid,event,count,payload); // 실제469540의 현재TYPE signed modulo다.
     if (table==0x50da88U) return o::RunNativeGeyserRegular(pool,types,sid,event,count,payload,[this](auto object,auto flags) { Display().Update(pool.Slot(object),flags); },[this](auto object,auto code,auto times,auto value) { return ResourceDamageableRegular(object,code,times,value); });
     if (table==0x50dc30U) return ResourceNuggetRegular().Handle(sid,event,count,payload);
     if (table==0x504198U) return BalloonRegular(sid,event,count,payload); // 사건3은 실제 프레임, 다른 사건은 현재 큰 Carrier 부모를 요구한다.

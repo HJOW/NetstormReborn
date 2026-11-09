@@ -36,6 +36,7 @@ public:
     void Ground(float x,float y) const;
     // 0045a6e0/CD0047c810: 유효 count의 실제 SquidFrame.Set 또는 Destroy0/반환-1이다.
     float Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const;
+    static float HandleIn(SidPool& pool,std::span<const RiftTypeFrames> frames,const SquidFrame& setter,const std::function<void(Sid,std::uint32_t)>& destroy,Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 실제 가상 진입 뒤의 동일 프레임/종료 본문이며 장기 Native는 불필요한 생성/난수 상태를 구성하지 않는다.
     // 현재 raw 가상 표가 실제 anim인지 확인하며 타입 번호만으로 추측하지 않는다.
     bool Handles(Sid sid) const;
     // 현재 anim만 분배하고 다른 부모의 기존 처리기를 보존한다.

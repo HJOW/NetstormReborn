@@ -4,6 +4,7 @@
 //       비용 +0xc4도 읽는다. 사거리 등 전투 수치·요구 에너지 문자열(+0xa0)·최대 사거리 집계는 후속이다.
 // 검증: 이름 해시 표가 실제 .fort의 `TypeNames` 섹션과 같음을 tools/cpp_fort_smoke.py가 두 판본에서 확인한다.
 #include "o/RiftType.h"
+#include "o/RawArcherTypeData.h" // 같은 원본 callback의 float AST 절삭/클러스터 수를 공통 현재 TYPE에 보관한다.
 #include "o/OriginalText.h"
 #include <array>
 #include <cmath>
@@ -151,6 +152,7 @@ std::int32_t ThemeNumber(std::string_view text,OriginalEdition edition) {
 // 0049c3b0/CD004460f0의 플래그·속성 부분: 정의에서 타입 구조체의 필드를 채운다.
 void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition,OriginalEdition edition) {
     type.defaultFrame=definition.specialFrames.defaultFrame; // 파싱이 선택한+128을 같은 현재 TYPE 표에 보관하여 실제 표시 소비자에게 전달한다.
+    const auto animation=ReadRawArcherTypeData(definition);type.directions=animation.directions;type.frameCount=animation.frameCount; // 별도 Session 표를 만들지 않고 실제 두 DWORD의 현재 초기값을 쓴다.
     type.footX = 1;
     type.footY = 1;
     type.flags1 = 0;

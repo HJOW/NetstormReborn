@@ -49,9 +49,14 @@ void RawGunImpact::Ground(float x,float y) const {
 }
 // 현재 실제 anim 가상 표만 지원하며 count DWORD를 signed int로 해석한다.
 float RawGunImpact::Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
-    if (!Handles(sid)) throw std::invalid_argument("충돌 효과 실제 anim Handle 가상 표 오류");const auto run=Run(pool_.Slot(sid)[10],event);const auto index=std::bit_cast<std::int32_t>(count);
-    if (index>=0 && index<run.count) { setter_.Set(sid,std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(run.first)+count),0);return payload; }
-    if (!hooks_.destroy) throw std::logic_error("충돌 효과 실제 anim 종료 삭제 누락");hooks_.destroy(sid,0);return -1.0f;
+    if (!Handles(sid)) throw std::invalid_argument("충돌 효과 실제 anim Handle 가상 표 오류");return HandleIn(pool_,frames_,setter_,hooks_.destroy,sid,event,count,payload);
+}
+// 현재 TYPE의 글자 구간과 signed count를 읽고 실제 Frame.Set 또는 현재 가상 삭제만 선택한다.
+float RawGunImpact::HandleIn(SidPool& pool,std::span<const RiftTypeFrames> frames,const SquidFrame& setter,const std::function<void(Sid,std::uint32_t)>& destroy,Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
+    const auto type=pool.Slot(sid)[10];if (type>=frames.size() || event>=16) throw std::out_of_range("충돌 효과 실제 글자 구간 오류");
+    const auto run=frames[type].Run(static_cast<std::uint8_t>('A'+event));const auto index=std::bit_cast<std::int32_t>(count);
+    if (index>=0 && index<run.count) { setter.Set(sid,std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(run.first)+count),0);return payload; }
+    const auto current=destroy;if (!current) throw std::logic_error("충돌 효과 실제 anim 종료 삭제 누락");current(sid,0);return -1.0f;
 }
 // 주소를 호스트에서 역참조하지 않고 현재 raw 기록값으로 확인한다.
 bool RawGunImpact::Handles(Sid sid) const { return sid.value && sid.value<pool_.Capacity() && ReadImpact(pool_.Slot(sid),0)==(pool_.Edition()==OriginalEdition::Patch1078 ? kPatchAnimTable : kCdAnimTable); }

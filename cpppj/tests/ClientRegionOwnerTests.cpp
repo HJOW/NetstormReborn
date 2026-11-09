@@ -13,6 +13,8 @@
 #include "o/RawAiWallet.h" //삭제환불의실제owner0/NULL brain지갑관문을그대로사용한다.
 #include "o/RawAiObjectNotice.h" //실제Player의NULL brain은기존전체통지본문의자연반환으로처리한다.
 #include "o/RawBombTargets.h" //같은TYPE사거리를쓰던기존다른소비자의연결도확인한다.
+#include "o/RawDiscRegular.h" // 원문의 IDIV/감김은 새 실제 PE 경계 자료와 직접 대조한다.
+#include <filesystem> // 새 경계 fixture를 이 검사 파일의 실제 위치에서 읽는다.
 #include <bit>
 #include <optional>
 #include <iostream> //최초실패의실제삭제깊이/현재필드를보존한다.
@@ -936,4 +938,83 @@ TEST_CASE(ClientBridgeRegular_ActualHostReadsCurrentVtable) {
     auto* process=host.AddRegular(sid,kBridgeDestroyEvent,0.25F,0x52U);CHECK(process);if (!process) return;
     RegionPut(scene.storage->pool.AllocatedBytes(sid),0,0x50eb98U);process->RunFrame();
     CHECK(host.FindEvent(sid,kBridgeDestroyEvent)==process && process->Count()==1 && process->Payload()==0.25F && !scene.storage->Borrowed());
+}
+
+
+// 두 프레임 본문은 같은 현재 장기 상태를 읽고 Player/SP/난수/풀을 초기화하지 않는다.
+TEST_CASE(ClientFrameRegular_ImpactUsesCurrentFrameTableAndPayload) {
+    RegionScene scene;const auto sid=scene.Asset(0x509758U);scene.Position(sid);const auto type=scene.storage->pool.Slot(sid)[10];const auto run=scene.storage->frames[type].Run('A');CHECK(run.count>1);if (run.count<2) return;
+    RegionPut(scene.storage->pool.AllocatedBytes(sid),36,static_cast<std::uint32_t>(run.first));scene.storage->Frame().StoreLevel(sid);const auto seed=scene.random->Game().State(),free=scene.storage->pool.FreeCount();
+    const auto result=scene.storage->ImpactRegular(sid,0,1,std::bit_cast<float>(0x7fc12345U));
+    CHECK(std::bit_cast<std::uint32_t>(result)==0x7fc12345U && RegionRead(scene.storage->pool.Slot(sid),36)==static_cast<std::uint32_t>(run.first+1));
+    CHECK(scene.storage->pool.FreeCount()==free && scene.random->Game().State()==seed && scene.players->Base()==0 && !scene.sp->Store().Initialized() && !scene.storage->Borrowed());
+}
+
+// 범위 끝과 signed 음수 count는 같은 실제 client SID를 flags0으로 삭제하고-1을 반환한다.
+TEST_CASE(ClientFrameRegular_ImpactBothExpiryBranchesUseActualDelete) {
+    for (const bool negative:{false,true}) { // 원문의 signed 비교 양쪽 종료를 독립 Pool에서 확인한다.
+        RegionScene scene;const auto sid=scene.Asset(0x509758U);scene.Position(sid);const auto type=scene.storage->pool.Slot(sid)[10];const auto count=negative ? 0xffffffffU:static_cast<std::uint32_t>(scene.storage->frames[type].Run('A').count);const auto free=scene.storage->pool.FreeCount();
+        CHECK(scene.storage->ImpactRegular(sid,0,count,0.125F)==-1.0F);
+        CHECK(scene.storage->pool.FreeCount()==free+1 && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+    }
+}
+
+// 실제 Host 기본 분배도 현재 anim VT를 선택하고 원래 payload/횟수로 다시 예약한다.
+TEST_CASE(ClientFrameRegular_ImpactActualHostUsesSameBody) {
+    RegionScene scene;const auto sid=scene.Asset(0x509758U);scene.Position(sid);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[40]=8;raw[11]&=static_cast<std::uint8_t>(~4U);scene.storage->Frame().StoreLevel(sid);
+    scene.Index(sid); // live 부모의 실제 현재 저장 단계/같은 SHP/TYPE에 맞는 공간 해시를 준비한다.
+    auto& host=scene.storage->Processes().Host();auto* process=host.AddRegular(sid,0,0.125F,0x52U);CHECK(process);if (!process) return;process->RunFrame();
+    CHECK(host.FindEvent(sid,0)==process && process->Count()==1 && process->Payload()==0.125F && !scene.storage->Borrowed());
+}
+
+// 종료 중 부모가 자기 Regular도 삭제하면 기존 Host의 실제 PID 소멸 관문으로 돌아간다.
+TEST_CASE(ClientFrameRegular_ImpactExpiryRemovesActualParentAndProcess) {
+    RegionScene scene;const auto sid=scene.Asset(0x509758U);scene.Position(sid);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[40]=8;raw[11]&=static_cast<std::uint8_t>(~4U);
+    scene.storage->Frame().StoreLevel(sid);scene.Index(sid); // 실제 삭제의 Unpop found 관문이 요구하는 live 부모 공간 입력이다.
+    auto& host=scene.storage->Processes().Host();auto* process=host.AddRegular(sid,0,0.125F,0x52U);CHECK(process);if (!process) return;
+    process->SetInitialCount(static_cast<std::uint32_t>(scene.storage->frames[raw[10]].Run('A').count));const auto free=scene.storage->pool.FreeCount();process->RunFrame();
+    CHECK(host.FindEvent(sid,0)==nullptr && scene.storage->pool.FreeCount()==free+2 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 현재 방향/클러스터 DWORD를 바꾸면 다음 호출이 새 값으로 modulo를 계산하며 소스 사본을 만들지 않는다.
+TEST_CASE(ClientFrameRegular_DiscReadsBothCurrentTypeFields) {
+    RegionScene scene;const auto sid=scene.Asset(0x50b570U);scene.Position(sid);const auto type=scene.storage->pool.Slot(sid)[10];auto& record=scene.storage->types[type];record.frameCount=4;record.directions=1;
+    RegionPut(scene.storage->pool.AllocatedBytes(sid),36,0);scene.storage->Frame().StoreLevel(sid);const auto seed=scene.random->Game().State();
+    CHECK(std::bit_cast<std::uint32_t>(scene.storage->DiscRegular(sid,0xffffffffU,0xffffffffU,std::bit_cast<float>(0x7fc12345U)))==0x7fc12345U && RegionRead(scene.storage->pool.Slot(sid),36)==1);
+    record.directions=4;scene.storage->DiscRegular(sid,17,99,0.25F);CHECK(RegionRead(scene.storage->pool.Slot(sid),36)==1);
+    record.frameCount=8;scene.storage->DiscRegular(sid,17,99,0.25F);CHECK(RegionRead(scene.storage->pool.Slot(sid),36)==0 && scene.random->Game().State()==seed && scene.players->Base()==0 && !scene.sp->Store().Initialized() && !scene.storage->Borrowed());
+}
+
+// 음수 방향 수는 원문의 정상 IDIV 피연산자이며 Native에서 typed 사전 거부로 바꾸지 않는다.
+TEST_CASE(ClientFrameRegular_DiscNativeSignedDirectionsReachActualFrame) {
+    RegionScene scene;const auto sid=scene.Asset(0x50b570U);scene.Position(sid);const auto type=scene.storage->pool.Slot(sid)[10];scene.storage->types[type].frameCount=4;scene.storage->types[type].directions=-1;
+    RegionPut(scene.storage->pool.AllocatedBytes(sid),36,0);scene.storage->Frame().StoreLevel(sid);CHECK(scene.storage->DiscRegular(sid,0,0,0.5F)==0.5F && RegionRead(scene.storage->pool.Slot(sid),36)==1);
+}
+
+// 원문 IDIV 오류는 프레임 지정 전에 명시 예외로 나타나며 기존 물리/난수/풀을 유지한다.
+TEST_CASE(ClientFrameRegular_DiscDivideErrorPreservesPrefix) {
+    RegionScene scene;const auto sid=scene.Asset(0x50b570U);const auto type=scene.storage->pool.Slot(sid)[10];scene.storage->types[type].frameCount=4;scene.storage->types[type].directions=0;
+    const auto frame=RegionRead(scene.storage->pool.Slot(sid),36),free=scene.storage->pool.FreeCount(),seed=scene.random->Game().State();bool rejected{};
+    try { scene.storage->DiscRegular(sid,0,0,0.5F); }catch (const std::domain_error&) { rejected=true; }
+    CHECK(rejected && RegionRead(scene.storage->pool.Slot(sid),36)==frame && scene.storage->pool.FreeCount()==free && scene.random->Game().State()==seed && scene.traces==0);
+}
+
+// 실제 Host의 썬 디스크 분배는 현재 TYPE를 쓰고 event/count 종류와 무관하게 payload를 유지한다.
+TEST_CASE(ClientFrameRegular_DiscActualHostUsesSameCurrentType) {
+    RegionScene scene;const auto sid=scene.Asset(0x50b570U);scene.Position(sid);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[40]=8;raw[11]&=static_cast<std::uint8_t>(~4U);scene.storage->types[raw[10]].frameCount=4;scene.storage->types[raw[10]].directions=1;RegionPut(raw,36,0);scene.storage->Frame().StoreLevel(sid);
+    scene.Index(sid); // 실제 Host의 live 부모는 현재 Frame 저장 단계와 같은 해시에도 존재한다.
+    auto& host=scene.storage->Processes().Host();auto* process=host.AddRegular(sid,99,0.25F,0x52U);CHECK(process);if (!process) return;process->RunFrame();
+    CHECK(host.FindEvent(sid,99)==process && process->Count()==1 && process->Payload()==0.25F && RegionRead(scene.storage->pool.Slot(sid),36)==1 && !scene.storage->Borrowed());
+}
+
+// 새 기대값은 실제 PATCH Handle의 독립 명령 실행70입력만 읽으며 산술식을 검사 안에 복제하지 않는다.
+TEST_CASE(ClientFrameRegular_DiscNativeIntegerBoundaryGolden) {
+    const auto fixture=std::filesystem::path(__FILE__).parent_path()/"fixtures/disc-regular-boundary-1219-x86.tsv";std::size_t count{},faults{};
+    for (const auto& row:netstorm::test::rawscene::LoadFixture(fixture.string().c_str()).rows) { // 원문 정상47/IDIV오류23 모두 같은 입력으로 대조한다.
+        CHECK(row.size()==8);const auto current=static_cast<std::int32_t>(std::stoll(row[0])),frames=static_cast<std::int32_t>(std::stoll(row[1])),directions=static_cast<std::int32_t>(std::stoll(row[2]));
+        if (row[3]=="divide-error") { bool rejected{};try { RawDiscRegular::NextFrameNative(current,frames,directions); }catch (const std::domain_error&) { rejected=true; }CHECK(rejected);++faults; }
+        else { const auto frame=RawDiscRegular::NextFrameNative(current,frames,directions);CHECK(static_cast<std::uint32_t>(frame)==std::stoul(row[4]));CHECK(std::stoul(row[5])==0 && std::stoul(row[6])==0x3d800000U); }
+        ++count;
+    }
+    CHECK(count==70 && faults==23);
 }

@@ -245,6 +245,8 @@ public:
     o::RawSquidDestroyDispatch& VirtualDestroy(); // 현재 Pool/Graph/boss/editor를 읽는 같은 장기 가상10 몸체다.
     o::RawSurfaceLifecycle& SurfaceLifetime(); // 같은 공통 삭제/Host/TYPE를 사용하는 실제 표면 수명이다.
     o::RawBridgeEvents& BridgeRegular(); // 현재 권한/디버그/다리 TYPE와 같은 이웃·공장·소유/Pop·삭제를 사용하는 장기 다리 Regular다.
+    float ImpactRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 실제 충돌 anim의 현재 프레임/가상 삭제 본문을 같은 장기 물리에서 실행한다.
+    float DiscRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 실제 썬 디스크의 현재 TYPE 방향/클러스터 수와 프레임 지정기를 공유한다.
     o::RawSquidDestroy& BaseDestroy(); //Native공통삭제깊이/Unpop/Pool의장기실제owner다.
     void BroadcastProcessForm(std::int32_t length); //실제writer의양수반환뒤같은공통2048BYTE를Native대상별가상송신에넘긴다.
     o::RawSquidTransmission& Transmission(); //공통2048BYTE/헤더/압축전역과실제현재FormHost를장기로공유한다.
