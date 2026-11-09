@@ -1,0 +1,67 @@
+{
+  "unit": 1210,
+  "kind": "현행 인계 정리·만료 이력 보관·AGENTS 변경 재확인",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "productUnit": 1209,
+  "productCommit": "d0e7fe1dfe4704244e14af15a257497c96861016",
+  "archive": {
+    "anchor": "archive-20261109-through-1209",
+    "originalPrefixBytes": 3925287,
+    "originalPrefixSha256": "8ba616be59f68cda115e6d7af454862b12bcca91235a0b973c6ba657c0b25ae3",
+    "archivedCurrentBytes": 27804,
+    "archivedCurrentSha256": "b6ad684b3cf3feb2854345b0208c716a845a30f8d4424e7bb09afb42786633a6",
+    "prefixPreserved": true,
+    "currentBeforePreservedVerbatim": true
+  },
+  "current": {
+    "bytesBefore": 27804,
+    "bytesAfter": 28848,
+    "sha256": "4535b69991f32320641b9570362980ac597ba0b53324d33ea55577447e9d7baf",
+    "remainingUpperPlanIds": [
+      "M6",
+      "M7",
+      "M8",
+      "K1",
+      "K2",
+      "K3",
+      "K4",
+      "K5",
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "upperPlanCount": 16,
+    "knownBugsRegistered": 34,
+    "knownBugRootCauseInvestigation": "34건 미착수",
+    "next": "M6-n 잔여12부모/6통지·큰 하위 본체/호출자/owner 수명의 연결과 감사"
+  },
+  "agentsChanges": {
+    "551d27ae": "세 프로젝트의 실행·플레이와 원본 동일성을 각각 평가",
+    "b5197d48": "9차 수정34건을 B1~B4/NB01~NB34에 등록하고 수정 완료와 구분",
+    "3051892a": "AGENTS와 README 개요 보호"
+  },
+  "checks": {
+    "localLinks": 39,
+    "legacyAnchors": 4,
+    "utf8": true,
+    "currentCrlfPreserved": true,
+    "protectedFilesUnchanged": 2805,
+    "productSourceFilesUnchanged": 23,
+    "productBinariesUnchanged": 2,
+    "previousReviewEvidenceUnchanged": true
+  },
+  "newExecutions": {
+    "build": 0,
+    "game": 0,
+    "multiplayerTests": 0,
+    "decompilation": 0,
+    "remotePush": 0
+  }
+}
