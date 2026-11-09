@@ -15114,6 +15114,66 @@
       "cpppjBasis": {
         "cpppj/src/o/RawSquidNeighbors.cpp": "99ff1a5f"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E245",
+      "id": "bridge-collapse",
+      "path": "cpppj/tests/fixtures/bridge-collapse-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다리 wrapper 종류 2와 보호 60프레임 × 소유자 0/9색의 ShapeToBuffer 캡처 메타데이터 16바이트·전체 픽셀",
+      "consumers": [
+        "webpj/tests/bridge-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bridge-draw.js",
+        "webpj/www/render/raw-shape-to-buffer.js"
+      ],
+      "doc": "docs/webpj-bridge-draw-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBridgeDraw.h"
+      ],
+      "scope": "603행 전부 사용(wrapper 3·캡처 600)",
+      "text": true,
+      "sha256": "69cd1dd8de485d4fdc6b7b517441c21be1dde160315bedc9bfcd2861acef8083",
+      "bytes": 760262,
+      "lines": 604,
+      "fixtureCommit": "2a0963d3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBridgeDraw.h": "2a0963d3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E245",
+      "id": "bridge-extra-capture",
+      "path": "cpppj/tests/fixtures/bridge-extra-capture-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다리 실제 extra 2(기본 프레임 getter·기본 0 수명 숫자)의 60프레임 × 소유자 색 캡처 메타데이터·전체 픽셀",
+      "consumers": [
+        "webpj/tests/bridge-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bridge-draw.js",
+        "webpj/www/render/raw-shape-to-buffer.js"
+      ],
+      "doc": "docs/webpj-bridge-draw-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBridgeDraw.h"
+      ],
+      "scope": "600행 전부 사용",
+      "text": true,
+      "sha256": "927198ff3a7979b50e1c57e63349f1740aa99aae11eb8714f1dfd2dff6dfd5c1",
+      "bytes": 759044,
+      "lines": 601,
+      "fixtureCommit": "2a0963d3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBridgeDraw.h": "2a0963d3"
+      }
     }
   ]
 }
