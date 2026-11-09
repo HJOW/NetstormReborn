@@ -79,7 +79,7 @@ struct RawPriestWorldBindings::Impl {
     // fieldPost: 사용: 같은 풀의 실제 예약 훅을 구성한 뒤 SquidPostPop::SetForcefieldPostPop에 등록한다 (std::unique_ptr<o::RawForcefieldPostPop>).
     std::unique_ptr<o::RawForcefieldPostPop> fieldPost;
     // fieldRegular: 사용: Handle을 Regular 처리기에 연결하고 advance/destroy를 같은 월드의 실제 모듈로 공급한다 (std::unique_ptr<o::RawForcefieldRegular>).
-    std::unique_ptr<o::RawForcefieldRegular> fieldRegular;
+    std::unique_ptr<o::RawForcefieldRegular> localFieldRegular;o::RawForcefieldRegular* fieldRegular{}; // 독립 typed만 지역 소유하고 Native는 같은 장기 정기를 빌린다.
     // regen: 사제 HP 회복과 SP 갱신을 처리하는 자료.
     std::unique_ptr<o::RawPriestRegen> regen;
     // spawn: 사제의 생성·배치·등록 처리 자료.
@@ -144,8 +144,9 @@ struct RawPriestWorldBindings::Impl {
                 throw std::logic_error("보호막 Regular 현재 사제 TYPE 소유자 불일치");
             state.forcefieldRegular.sharedPriestType=&state.movement.priest; // 접두/HP와 같은 장기005412d0을 검색 시점에 읽는다(단위864).
         }
-        fieldRegular=std::make_unique<o::RawForcefieldRegular>(core.pool,core.hash,core.types,state.forcefieldRegular,
-            o::MakeForcefieldFrameHooks(core.pool,*advance,o::ForcefieldRegularHooks{{},effects.destroy,effects.forcefieldAssertion,effects.findTypeAt}));
+        if (effects.sharedForcefieldRegular) { if (&effects.sharedForcefieldRegular->Pool()!=&core.pool) throw std::invalid_argument("사제/장기 보호막 정기 Pool 불일치");fieldRegular=effects.sharedForcefieldRegular; }
+        else { localFieldRegular=std::make_unique<o::RawForcefieldRegular>(core.pool,core.hash,core.types,state.forcefieldRegular,
+            o::MakeForcefieldFrameHooks(core.pool,*advance,o::ForcefieldRegularHooks{{},effects.destroy,effects.forcefieldAssertion,effects.findTypeAt}));fieldRegular=localFieldRegular.get(); }
         contained=std::make_unique<o::RawContainedLookup>(core.pool,effects.destroy);
         auto regeneration=effects.regen;
         regeneration.damageable=[this](o::Sid sid) { DamageableRefresh(sid); };

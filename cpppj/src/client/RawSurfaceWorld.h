@@ -2,6 +2,8 @@
 #pragma once
 #include "o/RawBoardAngle.h"
 #include "o/RawManaBoltRegular.h" // 같은 장기 대상 검색/정기 상태를 Session보다 오래 유지한다.
+#include "o/RawRitualRegular.h" // 의식계의 같은 분기 본문과 현재 제단 상태를 장기로 공유한다.
+#include "o/RawForcefieldLifecycle.h" // 보호막 정기는 현재 사제 역할/진단과 같은 Host를 사용한다.
 #include "o/RawSquidContainedUnpop.h" // 같은 실제 SID 풀의 종속 해제와 UpdateContents 예약을 연결한다.
 #include "o/RawAmbientWind.h"
 #include "o/GameClock.h"
@@ -122,6 +124,12 @@ struct RawSurfaceFactoryBindings { // 큰 업그레이드/플레어만 현재 Wo
     std::function<void(o::Sid,std::int32_t,std::uint32_t)> flare; // 실제 현재 플레어 생성기다.
     std::function<std::shared_ptr<void>()> pin; // 선택 호출 동안 실제 전체 Runtime을 보유한다.
 };
+struct RawSurfaceRitualBindings { // 선택된 큰 의식만 실제 현재 Runtime 수명으로 대여한다.
+    std::function<void(o::Sid)> progress,release,removeAnimation,ritual; // 실제 다이스 진행·해방·애니메이션 제거·사제 검색/의식 본문이다.
+    std::function<void(o::Sid,std::uint32_t)> escapeFrame; // 실제 다이스 이탈의 가상Count/프레임/난수 본문이다.
+    std::function<float(o::Sid)> sacrificeAdvance; // 실제44a200의 현재 코드표/완료 처리다.
+    std::function<std::shared_ptr<void>()> pin; // 선택 호출의 정상/예외 복귀까지 실제 전체 Runtime을 보유한다.
+};
 struct RawSurfaceDamageableBindings { // 현재 큰 가상98 분배만 World 수명으로 빌린다.
     std::function<std::int32_t(o::Sid,std::uint32_t,std::int32_t,std::uint32_t)> hitPoints; // 기존 Session의 실제 가상98 전체 분배기다.
     std::function<std::shared_ptr<void>()> pin; // 선택된 효과가 정상/예외 반환할 때까지 실제 전체 Runtime을 보유한다.
@@ -235,6 +243,7 @@ private:
     std::weak_ptr<const o::TerrainBitmapState> residenceTerrain_; // 실제 현재 fringeType 저장소의 약한 대여다.
     std::function<std::uint32_t()> residenceTheme_; // 실제 장기 설정 owner를 선택 호출할 장치다.
     std::weak_ptr<const RawSurfaceFactoryBindings> factoryRegularRuntime_; // 현재 큰 후단만 약하게 빌리고 프레임/난수는 장기 현재값을 사용한다.
+    std::weak_ptr<const RawSurfaceRitualBindings> ritualRuntime_; // 장기 분기 본문은 Session을 강하게 역소유하지 않는다.
     std::weak_ptr<const RawSurfaceDamageableBindings> damageableRuntime_; // 선택한 가상98만 약하게 빌려 Session 역소유를 피한다.
     std::weak_ptr<const RawSurfaceBombBindings> bombRuntime_; // 큰 주문 후단만 현재 World 수명으로 빌려 오래된 Session을 강하게 보유하지 않는다.
     std::weak_ptr<const RawSurfaceContentBindings> contentRuntime_; // 파생 Session 효과만 빌려 반납 뒤 죽은 콜백을 보유하지 않는다.
@@ -361,6 +370,10 @@ public:
     o::ManaBoltRegularState& ManaState(); // 같은00532750 간격/005325e0 배치 간격을 재대여 뒤에도 유지한다.
     o::RawManaBoltArrival& ManaArrival(); // 같은 실제 finder·Host·현재 프로세스 역할과 도착 본문이다.
     o::RawManaBoltRegular& ManaRegular(); // 현재 TYPE/프레임/SHP·카메라·가상 공간을 공유하는 유일한 Native 정기다.
+    o::AltarSacrificeState& AltarState(); //00532698/69c의 같은 현재 지연/확률을 Session과 공유한다.
+    void BindRitualRuntime(const std::shared_ptr<const RawSurfaceRitualBindings>& runtime); // 선택된 큰 의식의 현재 대여와 pin만 공개한다.
+    float RitualRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // Rune/제단/보호막/다이스의 원문 네 VT를 같은 현재 부모로 분배한다.
+    o::RawForcefieldRegular& ForcefieldRegular(); // 현재 사제TYPE/진단/프레임/검색/삭제를 공유하는 같은 보호막 정기다.
     o::RawDudeBehavior& DudeBehavior(); // 같은 지면/현재 task/종속 삭제의 장기 부모다.
     o::RawDudeTask& DudeTask(); // 같은 실제 Host/시각/WORD의 장기 작업 예약기다.
     void SetDudeWord(o::Sid sid,std::uint32_t value); //4ac220의 현재 WORD 저장 뒤 실제 Bridge 통지다.
@@ -571,6 +584,10 @@ private:
     std::unique_ptr<o::RawManaBoltArrival> manaArrival_; // 같은 대상 검색/도착 본문은 정기보다 오래 유지한다.
     std::unique_ptr<o::RawManaBoltRegular> manaRegular_; // Host 정리까지 현재 장기 대상 검색과 물리를 빌린다.
     std::unique_ptr<void,void(*)(void*)> manaReservation_{nullptr,[](void* memory) { ::operator delete(memory); }}; // 실제 new28 확보부터 같은 주소의 Regular 구성까지 소유한다.
+    o::AltarSacrificeState altarState_; // 제단의 현재 두 전역은 Session 대여에서 기본값으로 재설정하지 않는다.
+    o::ForcefieldRegularState forcefieldState_; // 현재 사제 역할/진단의 장기 참조를 보관한다.
+    std::unique_ptr<o::RawForcefieldRegular> forcefieldRegular_; // 같은 실제 검색/프레임과 Host 정리가 끝날 때까지 유지한다.
+    std::unique_ptr<void,void(*)(void*)> ritualReservation_{nullptr,[](void* memory) { ::operator delete(memory); }}; // SharedRegular의 원문 new28 확보부터 같은 주소의 구성까지 소유한다.
     std::unique_ptr<o::SquidFormDispatch> processForms_; //장기Host와같은Pool의실제ProcessForm경로이며UI/내용물가짜처리기는등록하지않는다.
     std::unique_ptr<o::RawSquidTransmission> transmission_; //같은Pool/현재TYPE/GameAux보다먼저반납하는공통실제송신기다.
     std::unique_ptr<RawProcessHostStorage> processes_; // 실제 Pool/TYPE 뒤에 선언하여 그 참조보다 먼저 최종 반납한다.
@@ -678,6 +695,7 @@ struct RawWorldRuntimeHooks {
     RawSurfaceDudeBindings dude; // 현재 기존 전체 경로 이동/진입점의 실제 Runtime이다.
     RawSurfaceResidenceBindings residence; // 기존 실제 Dude 생성/진입점/작업의 현재 Runtime 대여다.
     RawSurfaceFactoryBindings factoryRegular; // 현재 전체 업그레이드/플레어를 실제 World pin과 공개한다.
+    RawSurfaceRitualBindings ritualRegular; // 실제 큰 의식만 같은 전체 Runtime pin과 함께 공개한다.
     o::GumpFormNotice gumpNotice; // 현재 Session이 제공한 실제 UI 가상 통지이며 미연결이면 장기 실제 UI 등록표를 사용한다.
 };
 // 같은 SID 풀·공간 지도에서 표면 객체의 생성·등록·수명·표시를 관리하는 월드이다.

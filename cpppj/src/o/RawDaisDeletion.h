@@ -23,6 +23,7 @@ public:
     void DaisPost(Sid sid,std::uint32_t flags) const; // PATCH의 현재 Player SID 쌍 정리 뒤 전체 Damageable에 직접 위임한다.
     const SidPool& Pool() const; // 장기 owner와 독립 객체의 실제 물리 정체성을 확인한다.
     static Sid FindTypeAt(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,Sid source,std::uint32_t type); // 원문4b1fa0의 현재 좌표/typed 점 조회이며 추가 상태/owner 필터가 없다.
+    static Sid FindTypeAt(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,float x,float y,std::uint32_t type); // 이미 저장한 좌표 인자로 같은 실제 typed 검색 본문을 사용한다.
     static void FinishForms(const SidPool& pool,SquidProcessHost& host,Sid dais,Sid altar,const std::uint32_t& regularType,
         const std::uint32_t& sharedType,const std::function<void(Sid)>& finish); // 저장한 next와 현재 전체 역할/실제 Kernel을 원문 순서로 읽는다.
 private:

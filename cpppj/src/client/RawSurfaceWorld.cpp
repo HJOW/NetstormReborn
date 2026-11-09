@@ -119,6 +119,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     std::shared_ptr<RawSurfaceDudeBindings> dudeRuntime; // 실제 현재 큰 이동 하위의 수명이다.
     std::shared_ptr<RawSurfaceResidenceBindings> residenceRuntime; // 같은 실제 전체 Runtime의 선택된 Dude 후단이다.
     std::shared_ptr<RawSurfaceFactoryBindings> factoryRegularRuntime; // 실제 현재 큰 Factory 후단과 전체 Runtime pin의 수명이다.
+    std::shared_ptr<RawSurfaceRitualBindings> ritualRuntime; // 실제 현재 큰 의식 후단과 전체 Runtime pin을 World가 소유한다.
     std::shared_ptr<RawSurfaceDamageableBindings> damageableRuntime; // 기존 전체 가상98와 같은 현재 Runtime pin만 World가 소유한다.
     std::shared_ptr<RawSurfaceBombBindings> bombRuntime; // 실제 현재 큰 주문 후단과 전체 Runtime pin의 수명이다.
     std::shared_ptr<RawSurfaceContentBindings> contentRuntime; // 실제 현재 파생 통지/포획과 전체 Runtime pin만 보유한다.
@@ -326,6 +327,7 @@ void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
         auto dude=std::make_shared<RawSurfaceDudeBindings>(s.runtime.dude);dude->pin=s.runtimePin;s.dudeRuntime=dude;s.storage->BindDudeRuntime(dude); // 순수 장기 Dude 상태는 유지하고 현재 이동 효과만 대여한다.
         auto residence=std::make_shared<RawSurfaceResidenceBindings>(s.runtime.residence);residence->pin=s.runtimePin;s.residenceRuntime=residence;s.storage->BindResidenceRuntime(residence); // 장기 상태는 유지하고 현재 생성 효과만 대여한다.
         auto factory=std::make_shared<RawSurfaceFactoryBindings>(s.runtime.factoryRegular);factory->pin=s.runtimePin;s.factoryRegularRuntime=factory;s.storage->BindFactoryRegularRuntime(factory); // 순수 장기 본문은 유지하고 큰 후단만 현재 대여로 보존한다.
+        auto ritual=std::make_shared<RawSurfaceRitualBindings>(s.runtime.ritualRegular);ritual->pin=s.runtimePin;s.ritualRuntime=ritual;s.storage->BindRitualRuntime(ritual); // 의식 분기/상태는 장기에 두고 선택된 큰 후단만 현재 대여로 유지한다.
         auto damageable=std::make_shared<RawSurfaceDamageableBindings>(s.runtime.damageable);damageable->pin=s.runtimePin;s.damageableRuntime=damageable;s.storage->BindDamageableRuntime(damageable); // 장기 원문은 유지하고 선택된 큰 가상98만 현재 대여로 보존한다.
         auto bomb=std::make_shared<RawSurfaceBombBindings>(s.runtime.bombRegular);bomb->pin=s.runtimePin;s.bombRuntime=bomb;s.storage->BindBombRuntime(bomb); // 같은 실제 Session 후단만 weak로 공개하고 장기 정기 본문은 유지한다.
         auto content=std::make_shared<RawSurfaceContentBindings>();content->notice=s.runtime.contentNotice;content->captured=s.runtime.capturedContent;content->pin=s.runtimePin;s.contentRuntime=content;s.storage->BindContentRuntime(content); // 같은 실제 부모 소비자만 weak로 빌리며 정렬/삭제 본문은 바꾸지 않는다.
@@ -342,6 +344,7 @@ void RawSurfaceWorld::BindRuntimePin(std::function<std::shared_ptr<void>()> pin)
     if (state.dudeRuntime) state.dudeRuntime->pin=state.runtimePin; // 같은 실제 전체 Runtime 수명으로 이동 하위를 공개한다.
     if (state.residenceRuntime) state.residenceRuntime->pin=state.runtimePin; // 선택된 Dude 효과도 같은 전체 owner의 공개를 따른다.
     if (state.factoryRegularRuntime) state.factoryRegularRuntime->pin=state.runtimePin; // 같은 실제 전체 owner 공개/반납을 따른다.
+    if (state.ritualRuntime) state.ritualRuntime->pin=state.runtimePin; // 큰 의식도 같은 실제 전체 owner의 공개/반납을 따른다.
     if (state.damageableRuntime) state.damageableRuntime->pin=state.runtimePin; // 실제 가상98도 같은 전체 owner 공개/반납을 따른다.
     if (state.bombRuntime) state.bombRuntime->pin=state.runtimePin; // 주문 후단도 실제 외곽 owner의 공개/반납 수명을 따른다.
     if (state.contentRuntime) state.contentRuntime->pin=state.runtimePin; // 내용물 파생 통지도 같은 실제 외곽 owner 공개/반납을 따른다.

@@ -1,5 +1,6 @@
 // Dais 의식의 각 하위 효과 뒤 현재 프레임/owner/player 전역을 다시 읽는다.
 #include "o/RawDaisRegular.h"
+#include "o/RawRitualRegular.h" // 장기 Native도 같은 304/305/306/307 분기를 사용한다.
 #include "o/RawSquidWord.h"
 #include "o/RawAssetRegular.h"
 #include "o/RawPathAnimation.h"
@@ -13,7 +14,7 @@ namespace {
 template<class F> F DaisNeed(const F& function) { if (!function) throw std::logic_error("다이스의 선택된 실제 장치 미연결");return function; } // 선택한 callable을 복사해 실제 호출 중 연결 교체에도 수명을 유지한다.
 std::span<std::uint8_t> DaisRaw(SidPool& pool,Sid sid) { if (pool.Edition()!=OriginalEdition::Patch1078) return pool.AllocatedBytes(sid);const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // 의식의 plain 쓰기는 PATCH에서 도달한 현재 물리 슬롯을 사용하며 CD 계약은 유지한다.
 constexpr std::array<std::int32_t,4> kUpgradeFirst{{3,64,120,0}}; // 원본 DAT532624/CD52e2b8[count]의 다음 첫 프레임이다.
-constexpr float kInitialDelay=0.01F,kCollapseDelay=0.1F,kSacrificeDelay=0.11999999731779099F; //305/306/altar24의 실제 float 비트다.
+constexpr float kInitialDelay=0.01F,kSacrificeDelay=0.11999999731779099F; // 최초예약/altar24의 실제 float 비트다.305 반환은 공용 분기 본문에 둔다.
 constexpr double kThunderDelay=2.799999952316284; // 원본 double DAT507918/CD504048의 지연이다.
 constexpr std::uint32_t kSoundFlags=0xc,kConsumedFlags=0x400048; // 지연 전역소리의flags와 포획 내용물의 실제 가상삭제flags다.
 // 비정렬 현재 raw 필드를 원본 폭만큼 읽는다.
@@ -107,12 +108,11 @@ Sid RawDaisRegular::FindDaisAt(Sid sid) const {
 float RawDaisRegular::Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
     if (!Handles(sid)) throw std::invalid_argument("Dais/Rune Handle 타입/가상표 오류");
     if (pool_.Edition()==OriginalEdition::Patch1078 ? Read(pool_.Slot(sid),0)==kPatchRuneVtable : pool_.Slot(sid)[10]==state_.rune.RuneType()) {
-        if (event!=0x304) return payload;const auto dais=rune_.FindOwnedDais(sid);if (dais.value && dais.value<pool_.Capacity()) Progress(dais);DaisNeed(hooks_.destroy)(sid,0x48);return -1.0F;
+        return RunRuneRegular(pool_,sid,event,payload,{[this](auto rune) { return rune_.FindOwnedDais(rune); },[this](auto dais) { Progress(dais); },[this](auto rune,auto flags) { DaisNeed(hooks_.destroy)(rune,flags); }});
     }
-    if (event==0x305) { const auto frame=CurrentFrame(sid);const auto next=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(frame)+1);const auto nextStage=ritual_.Stage(sid,next),stage=ritual_.Stage(sid,frame);DaisNeed(hooks_.setFrame)(sid,next,0);return stage==nextStage ? kCollapseDelay : 0; }
-    if (event==0x306) return SacrificeAdvance(sid);
-    if (event==0x307 && count) { const auto priest=ritual_.FindStrongOwnedPriest(sid);ritual_.Ritual(sid,priest,1);return 0; }
-    return DaisNeed(hooks_.damageable)(sid,event,count,payload);
+    DaisHandleHooks current;current.stage=[this](auto dais,auto frame) { return ritual_.Stage(dais,frame); };current.frame=[this](auto dais,auto frame,auto flags) { DaisNeed(hooks_.setFrame)(dais,frame,flags); };current.sacrificeAdvance=[this](auto dais) { return SacrificeAdvance(dais); };
+    current.ritual=[this](auto dais) { const auto priest=ritual_.FindStrongOwnedPriest(dais);ritual_.Ritual(dais,priest,1); };current.damageable=[this](auto dais,auto code,auto number,auto value) { return DaisNeed(hooks_.damageable)(dais,code,number,value); };
+    return RunDaisHandle(pool_,sid,event,count,payload,current);
 }
 // 현재K..O에서만604한개를삭제하고현재타입E첫프레임으로복귀한다.
 void RawDaisRegular::StopPriestRitual(Sid priest) const {

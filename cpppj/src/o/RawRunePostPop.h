@@ -40,6 +40,7 @@ public:
     void PostPop(Sid rune,std::uint32_t flags) const;
     // 거의올림한Rune위치±1의일반finder에서현재같은owner의첫dais를읽는다.
     Sid FindOwnedDais(Sid rune) const;
+    static Sid FindOwnedDaisIn(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,const std::uint32_t& daisType,Sid rune); // 같은 현재 역할·owner의 반경1 검색을 Native 정기와 공유한다.
     // 전달한 객체 기준점의 첫 altar를 같은 typed finder에서 읽는다. Rune 시간/실제 Dais 의식이 공유한다.
     Sid AltarAt(Sid sid) const;
     // 전달한 객체 기준점의 첫 altar 원래ownerWORD/playerFlags와 현재 전역으로7/10/25초를 읽는다.

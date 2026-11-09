@@ -14,10 +14,7 @@ namespace netstorm::o {
 namespace {
 template<class F> F AltarNeed(const F& function) { if (!function) throw std::logic_error("제단의 선택된 실제 장치 미연결");return function; } // 선택한 callable을 복사해 실제 호출 중 연결 교체에도 수명을 유지한다.
 std::span<std::uint8_t> AltarRaw(SidPool& pool,Sid sid) { if (pool.Edition()!=OriginalEdition::Patch1078) return pool.AllocatedBytes(sid);const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // Unpop/해방 콜백 뒤 PATCH plain frame은 같은 물리 슬롯을 쓰며 CD 계약은 유지한다.
-constexpr float kStrugglePayload=0.08F,kFinishedDelay=3.0F,kReleaseOffset=0.5F; // 실제PE 3da3d70a/40400000/3f000000 비트다.
-constexpr std::uint32_t kSacrificeDestroy=0x400000; // 최종 희생 완료의 실제 flags이며 제단48 삭제는 공유 전처리 본문에 있다.
-constexpr std::array<std::string_view,5> kChains{{"chainRattle23.wav","chainRattle24.wav","chainRattle25.wav","chainRattle26.wav","chainRattle27.wav"}}; // 두 판본의 실제 선택표 첫5개다.
-constexpr std::array<std::string_view,3> kStruggles{{"priestStruggleFade01.wav","priestStruggleFade02.wav","priestStruggleFade03.wav"}}; // 원본 난수/1000 선택표다.
+constexpr float kReleaseOffset=0.5F; // 해방 위치의 실제3f000000 비트이며 정기 전용 상수는 공용 분기 본문에 둔다.
 // 비정렬 little endian의 필요한 필드 폭만 읽는다.
 std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::size_t width=4) {
     std::uint32_t value=0;
@@ -135,20 +132,13 @@ void RawAltarSacrifice::DaisPreDestroy(Sid dais,std::uint32_t flags) const {
 }
 // 최상위 Regular 분배도 호출 효과 뒤 같은 풀/전역을 다시 읽는다.
 float RawAltarSacrifice::Handle(Sid altar,std::uint32_t event,std::uint32_t count,float payload) const {
-    if (!Handles(altar)) throw std::invalid_argument("제단 Handle 타입/가상표 오류");auto dais=DaisAt(altar);std::array<float,2> center{};const bool hasDais=Valid(dais);if (hasDais) { const auto point=Position(dais);center={static_cast<float>(static_cast<double>(point[0])-kFinishedDelay),static_cast<float>(static_cast<double>(point[1])-kFinishedDelay)}; }
-    if (event==21) {
-        if (pool_.Edition()==OriginalEdition::Patch1078) { const auto captured=ContainedPriest(dais);if (Boss() && Valid(captured)) { const std::uint32_t oldOwner=pool_.Slot(captured)[12]&127,owner=pool_.Slot(dais)[34];if (oldOwner>kPlayerCount || owner>kPlayerCount) throw std::out_of_range("제단 자동 해방 동맹 인덱스");if (daisState_.alliances[oldOwner+owner*(kPlayerCount+1)]) { ReleaseFromAltar(altar);return -1.0F; } } }
-        if (Direction(altar)==15) return payload;std::uint32_t nextEvent=20;if (AltarNeed(hooks_.randomInt)(0,100000)/1000<state_.escapePercent) { nextEvent=22;advance_.Advance(altar,-1,0); }if (AltarNeed(hooks_.reserveShared)()) AltarNeed(hooks_.addShared)(altar,nextEvent,kStrugglePayload);
-        if (hasDais && Direction(dais)!=10) { const auto chain=AltarNeed(hooks_.randomInt)(0,5);if (chain<0 || chain>=static_cast<std::int32_t>(kChains.size())) throw std::out_of_range("제단 chain 난수 범위");AltarNeed(hooks_.playAt)(center[0],center[1],kChains[static_cast<std::size_t>(chain)],0);const auto struggle=AltarNeed(hooks_.randomInt)(0,3000)/1000;if (struggle<0 || struggle>=static_cast<std::int32_t>(kStruggles.size())) throw std::out_of_range("제단 struggle 난수 범위");AltarNeed(hooks_.playAt)(center[0],center[1],kStruggles[static_cast<std::size_t>(struggle)],0); }
-        return static_cast<float>(static_cast<double>(AltarNeed(hooks_.randomFloat)(0,2))+state_.struggleSeconds);
-    }
-    if (event==20 || event==22) { if (Direction(altar)!=14) return 0;const std::int32_t delta=event==20 ? 1 : -1;if (advance_.Advance(altar,delta,0)) { if (delta==-1) advance_.Advance(altar,1,0);return 0; }return payload; }
-    if (event==23) return payload;if (event!=24) return AltarNeed(hooks_.damageable)(altar,event,count,payload);dais=DaisAt(altar);if (!Valid(dais)) throw std::logic_error("제단24 원본의 다이스0 프레임읽기 경계");
-    if (Direction(dais)==10) { if (Boss()) { AltarNeed(hooks_.destroy)(dais,kSacrificeDestroy);return -1.0F; }return payload; }
-    if (!advance_.Advance(altar,1,0)) {
-        if (count<3 || AltarNeed(hooks_.randomInt)(0,100000)/1000<50) { if (Valid(dais)) EscapeFrame(dais,count); }if (AltarNeed(hooks_.randomFloat)(0,1)<payload) { const auto point=Position(altar);AltarNeed(hooks_.playAt)(point[0],point[1],"altarBurnCollapse.wav",0); }return payload;
-    }
-    dais=DaisAt(altar);if (!Valid(dais)) return payload;if (Boss()) { const auto captured=ContainedPriest(dais);if (captured.value) AltarNeed(hooks_.destroy)(captured,8); }AltarNeed(hooks_.removeAnimation)(altar);const auto point=Position(altar);AltarNeed(hooks_.playAt)(point[0],point[1],"explosion.wav",0);AltarNeed(hooks_.setFrame)(dais,First(dais,'K'),0);AltarNeed(hooks_.setFrame)(altar,First(altar,'M'),0);return kFinishedDelay;
+    if (!Handles(altar)) throw std::invalid_argument("제단 Handle 타입/가상표 오류");AltarRegularHooks current;
+    current.dais=[this](auto sid) { return DaisAt(sid); };current.priest=[this](auto sid) { return ContainedPriest(sid); };current.boss=[this] { return Boss(); };current.alliance=[this](auto original,auto owner) { return daisState_.alliances[original+owner*(kPlayerCount+1)]; };
+    current.release=[this](auto sid) { ReleaseFromAltar(sid); };current.escapeFrame=[this](auto sid,auto number) { EscapeFrame(sid,number); };current.advance=[this](auto sid,auto delta,auto flags) { return advance_.Advance(sid,delta,flags); };
+    current.frame=[this](auto sid,auto value,auto flags) { AltarNeed(hooks_.setFrame)(sid,value,flags); };current.destroy=[this](auto sid,auto flags) { AltarNeed(hooks_.destroy)(sid,flags); };current.reserveShared=[this] { return AltarNeed(hooks_.reserveShared)(); };current.addShared=[this](auto sid,auto code,auto value) { AltarNeed(hooks_.addShared)(sid,code,value); };
+    current.randomInt=[this](auto low,auto high) { return AltarNeed(hooks_.randomInt)(low,high); };current.randomFloat=[this](auto low,auto high) { return AltarNeed(hooks_.randomFloat)(low,high); };current.sound=[this](auto x,auto y,auto name,auto flags) { AltarNeed(hooks_.playAt)(x,y,name,flags); };
+    current.removeAnimation=[this](auto sid) { AltarNeed(hooks_.removeAnimation)(sid); };current.damageable=[this](auto sid,auto code,auto number,auto value) { return AltarNeed(hooks_.damageable)(sid,code,number,value); };
+    return RunAltarRegular(pool_,frames_,altar,event,count,payload,state_,current);
 }
 // 현재풀참조를후속 실제 등록에 제공한다.
 const SidPool& RawAltarSacrifice::Pool() const { return pool_; }

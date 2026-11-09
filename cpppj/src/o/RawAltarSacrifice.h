@@ -1,17 +1,13 @@
 // 제단20~24 사건과 다이스의 희생 완료·사제 해방·삭제 전처리를 같은 raw 월드에 연결한다.
 #pragma once
 #include "o/RawDaisRegular.h"
+#include "o/RawRitualRegular.h" // Native/typed가 같은 현재 제단 상태와 분기 본문을 공유한다.
 #include "o/RawDamageablePreDestroy.h"
 #include "o/RawFrameAdvance.h"
 
 namespace netstorm::o {
 class SquidFactory; // 해방 사제의 기존 실제 생성자를 사용한다.
 inline constexpr std::uint32_t kPatchAltarVtable=0x005076b8,kCdAltarVtable=0x00504200; // 실제164 최종 가상표의+5c는0044a5e0/CD00483800이며+80은0044a480/CD00483670이다.
-// 원본의 조절 가능한 사제 저항 주기/확률 전역이다.
-struct AltarSacrificeState {
-    float struggleSeconds{3.0F}; // patch00532698/CD0052e344의 현재 지연이다.
-    std::int32_t escapePercent{40}; // patch0053269c/CD0052e348: 0..100000 난수/1000과 비교한다.
-};
 // 파생 공간/삭제 및 UI·음향·난수 경계다. PATCH는 선택 시, CD는 기존 생성 단계에서 필수 효과를 요구한다.
 struct AltarSacrificeHooks {
     std::function<void(Sid,std::int32_t,std::uint32_t)> setFrame; // 같은 실제 SquidFrame의 지정이다.

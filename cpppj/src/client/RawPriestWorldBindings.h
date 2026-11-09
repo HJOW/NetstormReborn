@@ -131,6 +131,7 @@ struct RawPriestWorldEffects {
     std::function<void(std::string_view,std::string_view,std::uint32_t)> ownerAssertion; // 현재 Client의 사제Owner 진단과 정상 복귀를 연결한다.
     o::RawCarrierPreDestroy* sharedCarrier{}; //Native는같은Storage의실제장기Carrier를빌리고독립typed는지역몸체를유지한다.
     o::RawPriestForcefield* sharedForcefield{}; // Native의 Shield/낙하/조회도 같은 장기 현재 TYPE/역할을 빌린다.
+    o::RawForcefieldRegular* sharedForcefieldRegular{}; // Native는 현재 TYPE/진단/Host를 사용하는 같은 장기 정기를 빌린다.
     o::RawPriestPreDestroy* sharedPriestPre{}; // Native 삭제 분배는 같은 장기 사제 목록/가상 삭제/Carrier 본체를 사용한다.
 };
 // 사용 순서: 생성→ProcessHost(RegularHandler/DestroyHooks) 생성→BindProcesses→후속 모듈 Bind다.

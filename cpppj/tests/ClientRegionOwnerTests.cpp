@@ -1771,3 +1771,46 @@ TEST_CASE(ClientManaOwner_TargetFilteringAndActualPopUseCurrentCamera) { // 실�
 TEST_CASE(ClientManaOwner_ArrivalUsesActualHostAndSameCurrentDelay) { // 현재 두 프로세스 제거 뒤 동일 간격으로 실제 new28/Regular를 부착한다.
     RegionScene s;const auto parent=ManaOwnerAsset(s);static_cast<void>(ManaOwnerTarget(s));int sounds{};BindManaOwnerDevices(s,[&](auto x,auto y,auto name) { CHECK(x==100 && y==100 && name=="sunCannonRaiseLower5.wav");++sounds;s.storage->ManaState().interval=0.25F; });CHECK(s.storage->Processes().Host().AddRegular(parent,2,9));CHECK(s.storage->ManaArrival().Arrive(parent)==1000);auto* process=s.storage->Processes().Host().FindEvent(parent,1);CHECK(process && process->Count()==0 && process->Payload()==0.25F && !s.storage->Processes().Host().FindEvent(parent,2) && sounds==1 && !s.storage->Borrowed());
 }
+
+namespace { // 실제 네 의식계 자산의 현재 raw/공간 입력만 준비한다.
+Sid RitualOwnerAsset(RegionScene& scene,std::uint32_t table,std::uint8_t owner=1) { // 실제 Factory 생성자/현재 SHP/Host용 해시를 같은 저장소에 둔다.
+    const auto sid=scene.Asset(table);scene.Position(sid);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[11]=0;raw[34]=owner;raw[40]=(table==0x507950U || table==0x50f210U) ? 0U:8U;RegionPut(raw,36,0);scene.storage->Frame().StoreLevel(sid);scene.Index(sid);return sid; // 검색 대상인 다이스/사제에는 finder가 제외하는 매장bit8을 넣지 않는다.
+}
+}
+TEST_CASE(ClientRitualOwner_WorldLoanPreservesCurrentAltarStateAndForcefield) { // 같은 현재 두 전역과 보호막 본문은 Session 대여/반납 뒤에도 남는다.
+    RegionScene s;auto* state=&s.storage->AltarState();state->struggleSeconds=7.25F;state->escapePercent=-9;auto* body=&s.storage->ForcefieldRegular();const auto seed=s.random->Game().State();
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->AltarState()==state && &world.Storage()->ForcefieldRegular()==body); }
+    CHECK(state->struggleSeconds==7.25F && state->escapePercent==-9 && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientRitualOwner_RuneOtherEventKeepsPayloadWithoutRoleOrRuntime) { //304 밖은 무효 현재 역할을 미리 읽지 않고 원문 base의 비트를 반환한다.
+    RegionScene s;const auto rune=RitualOwnerAsset(s,0x5075d8U);s.storage->GameAux()->DaisType()=0xffffffffU;const auto seed=s.random->Game().State();const auto payload=std::bit_cast<float>(0x7fc12345U);CHECK(std::bit_cast<std::uint32_t>(s.storage->RitualRegular(rune,0x303,0xffffffffU,payload))==0x7fc12345U && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientRitualOwner_RuneNoDaisDeletesActualHostAndSlot) { // 같은 현재 검색에서 대상이 없으면 큰 Runtime 없이 실제48 삭제와 Host 해제를 수행한다.
+    RegionScene s;const auto rune=RitualOwnerAsset(s,0x5075d8U);auto* process=s.storage->Processes().Host().AddRegular(rune,0x304,0.01F);CHECK(process);if (!process) return;process->RunFrame();CHECK((s.storage->pool.Slot(rune)[11]&1U) && !s.storage->Processes().Host().FindEvent(rune,0x304) && !s.storage->Borrowed());
+}
+TEST_CASE(ClientRitualOwner_RuneSelectedProgressPinsOwnerAndFunction) { // 실제 검색 뒤의 진행은 전체 owner와 함수 사본을 복귀까지 유지하고 이후 Rune을 삭제한다.
+    RegionScene s;const auto rune=RitualOwnerAsset(s,0x5075d8U),dais=RitualOwnerAsset(s,0x507950U);auto runtime=std::make_shared<RawSurfaceRitualBindings>();auto owner=std::make_shared<int>(7);const auto weak=std::weak_ptr<int>(owner);runtime->pin=[weak] { return weak.lock(); };bool called{};
+    runtime->progress=[&](auto selected) { CHECK(selected==dais);runtime->progress={};runtime.reset();owner.reset();CHECK(!weak.expired());called=true; };s.storage->BindRitualRuntime(runtime);CHECK(s.storage->RitualRegular(rune,0x304,0,9)==-1 && called && weak.expired() && (s.storage->pool.Slot(rune)[11]&1U) && !s.storage->Borrowed());
+}
+TEST_CASE(ClientRitualOwner_RuneMissingSelectedProgressPreservesPrefix) { // 대상이 있는304의 미연결 진행은 실제 삭제에 도달하기 전에 명시 실패한다.
+    RegionScene s;const auto rune=RitualOwnerAsset(s,0x5075d8U);static_cast<void>(RitualOwnerAsset(s,0x507950U));bool failed{};try { s.storage->RitualRegular(rune,0x304,0,9); }catch (const std::logic_error&) { failed=true; }CHECK(failed && !(s.storage->pool.Slot(rune)[11]&1U) && !s.storage->Borrowed());
+}
+TEST_CASE(ClientRitualOwner_DaisActualHostCrossesOriginalStageBoundary) { // 실제 가상Count/305가 같은 프레임14와 원문 종료0으로 Host를 정리한다.
+    RegionScene s;const auto dais=RitualOwnerAsset(s,0x507950U);auto raw=s.storage->pool.AllocatedBytes(dais);RegionPut(raw,36,13);auto* process=s.storage->Processes().Host().AddRegular(dais,0x305,9);CHECK(process);if (!process) return;process->RunFrame();CHECK(RegionRead(raw,36)==14 && !s.storage->Processes().Host().FindEvent(dais,0x305) && !s.storage->Borrowed());
+}
+TEST_CASE(ClientRitualOwner_DaisSelectedRitualPinsOwnerAndFunction) { //307의 count0은 공통 부모, 양수 count만 같은 실제 큰 후단을 선택한다.
+    RegionScene s;const auto dais=RitualOwnerAsset(s,0x507950U);CHECK(s.storage->RitualRegular(dais,0x307,0,0.75F)==0.75F);auto runtime=std::make_shared<RawSurfaceRitualBindings>();auto owner=std::make_shared<int>(9);const auto weak=std::weak_ptr<int>(owner);runtime->pin=[weak] { return weak.lock(); };bool called{};
+    runtime->ritual=[&](auto selected) { CHECK(selected==dais);runtime->ritual={};runtime.reset();owner.reset();CHECK(!weak.expired());called=true; };s.storage->BindRitualRuntime(runtime);CHECK(s.storage->RitualRegular(dais,0x307,1,0.75F)==0 && called && weak.expired() && !s.storage->Borrowed());
+}
+TEST_CASE(ClientRitualOwner_AltarLookupPrecedesUnchangedPayload) { //23도 현재 typed 다이스 조회를 먼저 수행하며 난수/큰 효과를 소비하지 않는다.
+    RegionScene s;const auto altar=RitualOwnerAsset(s,0x5076b8U);const auto seed=s.random->Game().State();const auto payload=std::bit_cast<float>(0x7fc12345U);CHECK(std::bit_cast<std::uint32_t>(s.storage->RitualRegular(altar,23,0,payload))==0x7fc12345U && s.random->Game().State()==seed);s.storage->GameAux()->DaisType()=188;bool failed{};try { s.storage->RitualRegular(altar,23,0,payload); }catch (const std::out_of_range&) { failed=true; }CHECK(failed && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientRitualOwner_SelectedRitualRejectsMissingActualOwner) { // 선택된 큰 효과는 실제 전체 owner를 확보하지 못하면 콜백에 도달하지 않는다.
+    RegionScene s;const auto dais=RitualOwnerAsset(s,0x507950U);auto runtime=std::make_shared<RawSurfaceRitualBindings>();bool called{};runtime->ritual=[&](auto) { called=true; };s.storage->BindRitualRuntime(runtime);bool missing{},returned{};try { s.storage->RitualRegular(dais,0x307,1,1); }catch (const std::logic_error&) { missing=true; }runtime->pin=[] { return std::shared_ptr<void>{}; };try { s.storage->RitualRegular(dais,0x307,1,1); }catch (const std::logic_error&) { returned=true; }CHECK(missing && returned && !called && !s.storage->Borrowed());
+}
+TEST_CASE(ClientRitualOwner_ForcefieldActualHostAdvancesSameFrame) { // 실제 Host의 사건1은 같은 현재 프레임을 진행하고0.08로 재예약한다.
+    RegionScene s;const auto shield=RitualOwnerAsset(s,0x507770U);const auto seed=s.random->Game().State();auto* process=s.storage->Processes().Host().AddRegular(shield,1,9);CHECK(process);if (!process) return;process->RunFrame();CHECK(RegionRead(s.storage->pool.Slot(shield),36)==1 && process->Count()==1 && process->Payload()==std::bit_cast<float>(0x3da3d70aU) && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientRitualOwner_ForcefieldCurrentRoleAndMissingPriestUseActualDelete) { // 같은 현재 사제DWORD로 찾고 대상이 없으면 실제 삭제/Host 해제로 끝난다.
+    RegionScene s;const auto shield=RitualOwnerAsset(s,0x507770U),priest=RitualOwnerAsset(s,0x50f210U,2);CHECK(s.storage->RitualRegular(shield,2,0,9)==std::bit_cast<float>(0x3c23d70aU));s.storage->GameAux()->PriestType()=75;CHECK(s.storage->RitualRegular(shield,2,0,9)==-1 && (s.storage->pool.Slot(shield)[11]&1U) && !(s.storage->pool.Slot(priest)[11]&1U) && !s.storage->Borrowed());
+}

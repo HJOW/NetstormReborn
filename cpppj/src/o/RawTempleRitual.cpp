@@ -74,7 +74,11 @@ std::uint32_t RawTempleRitual::VirtualCount(Sid temple) const {
 // frame-1의 현재 프레임도 가상 조회 전에 저장한다. 조회 뒤에는 반환 count로만 원문 표를 선택한다.
 std::uint32_t RawTempleRitual::Stage(Sid temple,std::int32_t frame) const {
     if (frame==-1) frame=CurrentFrame(temple);const auto count=VirtualCount(temple);
-    const auto& first=pool_.Edition()==OriginalEdition::Patch1078 ? kCountFirst : kCdCountFirst;
+    return StageFromCount(pool_.Edition(),frame,count);
+}
+// 가상 조회의 부작용 뒤 저장한 frame/count만 소비하며 새로운 조회를 추가하지 않는다.
+std::uint32_t RawTempleRitual::StageFromCount(OriginalEdition edition,std::int32_t frame,std::uint32_t count) {
+    const auto& first=edition==OriginalEdition::Patch1078 ? kCountFirst : kCdCountFirst;
     if (count>=first.size()) throw std::out_of_range("의식 Stage의 가상 count 첫 프레임 표 범위 오류");
     const auto relative=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(frame)-static_cast<std::uint32_t>(first[count]));
     if (relative<11) return 0;if (relative<22) return 1;if (relative<33) return 2;if (relative<44) return 3;return relative<=54 ? 4U : 5U;

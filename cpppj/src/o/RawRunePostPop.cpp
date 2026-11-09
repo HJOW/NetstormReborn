@@ -43,9 +43,13 @@ std::array<float,2> RawRunePostPop::Position(Sid sid) const { const auto raw=poo
 std::uint32_t RawRunePostPop::Owner(Sid sid) const { return pool_.Slot(sid)[pool_.Edition()==OriginalEdition::Patch1078 ? 34 : 32]; }
 // 반경1의기존일반finder를같은해시의현재후보에적용한다.
 Sid RawRunePostPop::FindOwnedDais(Sid rune) const {
-    const auto point=Position(rune);const auto x=Cell(static_cast<double>(point[0])+kFinderBias),y=Cell(static_cast<double>(point[1])+kFinderBias);RawSquidFinder finder(pool_,hash_,types_);
+    return FindOwnedDaisIn(pool_,hash_,types_,state_.DaisType(),rune);
+}
+// 실제 같은 풀/현재 역할을 조회하며 추가 생명/할당 필터를 넣지 않는다.
+Sid RawRunePostPop::FindOwnedDaisIn(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,const std::uint32_t& daisType,Sid rune) {
+    const auto raw=pool.Slot(rune);const auto x=Cell(static_cast<double>(std::bit_cast<float>(Read(raw,14)))+kFinderBias),y=Cell(static_cast<double>(std::bit_cast<float>(Read(raw,18)))+kFinderBias);RawSquidFinder finder(pool,hash,types);const auto ownerOffset=pool.Edition()==OriginalEdition::Patch1078 ? 34U:32U;
     // free/dead/abstract는추가필터가아니며genericfinder가buried를제외한다.
-    for (auto sid=finder.Begin({x-1,y-1,x+1,y+1});sid.value;sid=finder.Next()) if (pool_.Slot(sid)[10]==state_.DaisType() && Owner(sid)==Owner(rune)) return sid;
+    for (auto sid=finder.Begin({x-1,y-1,x+1,y+1});sid.value;sid=finder.Next()) if (pool.Slot(sid)[10]==daisType && pool.Slot(sid)[ownerOffset]==pool.Slot(rune)[ownerOffset]) return sid;
     return {};
 }
 // 기존 시간 helper의 typed altar 조회 본문을 같은 풀의 의식 소비자에 공개한다.

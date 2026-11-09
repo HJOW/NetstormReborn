@@ -82,7 +82,11 @@ void RawDaisDeletion::FinishForms(const SidPool& pool,SquidProcessHost& host,Sid
 const SidPool& RawDaisDeletion::Pool() const { return pool_; } // 같은 물리 정체성만 공개한다.
 // 현재 타입 인자를 한 번 저장하고 같은 일반 finder의 현재 발자국/버킷/매장 조건을 사용한다.
 Sid RawDaisDeletion::FindTypeAt(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,Sid source,std::uint32_t type) {
-    const auto raw=pool.Slot(source);const auto x=Cell(std::bit_cast<float>(Read(raw,14))),y=Cell(std::bit_cast<float>(Read(raw,18)));
+    const auto raw=pool.Slot(source);return FindTypeAt(pool,hash,types,std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),type);
+}
+// 좌표를 원문 절삭한 뒤 같은 TYPE별 시작 단계/첫 일치를 사용한다.
+Sid RawDaisDeletion::FindTypeAt(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,float px,float py,std::uint32_t type) {
+    const auto x=Cell(px),y=Cell(py);
     if (type>=types.size()) throw std::out_of_range("다이스 삭제의 현재 typed 조회 TYPE 범위");RawSquidFinder finder(pool,hash,types);
     for (auto current=finder.Begin({x,y,x,y},(types[type].flags2&6U)==0 ? 1U:0U);current.value;current=finder.Next()) if (pool.Slot(current)[10]==type) return current; // 첫 일치에서 즉시 반환한다.
     return {};

@@ -587,7 +587,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawRunePostPop> runePostPop; // 같은 실제 룬 건설/304 후처리다.
     std::unique_ptr<DaisRegularState> daisState; // 현재 원본 상태 참조와 방향별 동맹이다.
     double& loginEnd{localStateGlobals->LoginEnd()}; // 실제005c85f0을 Login/Dais/효과와 같은 장기 주소에서 직접 읽고 쓴다.
-    AltarSacrificeState altarState; // 실제 제단 저항 주기/확률이며 난수는 같은 게임 저장소를 사용한다.
+    AltarSacrificeState typedAltarState; // 독립 typed만 기존 지역 제단 저항 상태를 소유한다.
+    AltarSacrificeState& altarState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->AltarState():typedAltarState}; // Native는 같은00532698/69c 주소를 장기 정기와 공유한다.
     std::unique_ptr<RawFrameAdvance> ritualAdvance; // 같은 SquidFrame으로 제단20/22/24 프레임을 진행한다.
     std::unique_ptr<RawAltarSacrifice> altarSacrifice; // 같은 포획/해방/저항과 다이스 파생 전처리다.
     std::unique_ptr<DaisLifecycleState> daisLifecycleState; // 실제 로그인/로딩 및 공유 Player 기록을 빌린다.
@@ -1187,7 +1188,7 @@ struct RawCampaignSession::Impl {
         if (!priestEffects.ownerNotice) priestEffects.ownerNotice=[this](Sid sid) { core.building.NotifySurface(sid); };
         priestEffects.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         priestEffects.dependentFound=[this] { ReplenishNuggets(); };
-        if (world.Storage()->UsesNativeTransmissionDevices()) { priestEffects.sharedCarrier=&world.Storage()->CarrierPre();priestEffects.sharedForcefield=&world.Storage()->PriestForcefield();priestEffects.sharedPriestPre=&world.Storage()->PriestPre(); } // Native의 삭제/Shield/낙하가 같은 장기 조회·현재 역할·목록·Carrier를 빌린다.
+        if (world.Storage()->UsesNativeTransmissionDevices()) { priestEffects.sharedCarrier=&world.Storage()->CarrierPre();priestEffects.sharedForcefield=&world.Storage()->PriestForcefield();priestEffects.sharedForcefieldRegular=&world.Storage()->ForcefieldRegular();priestEffects.sharedPriestPre=&world.Storage()->PriestPre(); } // Native의 삭제/Shield/정기/낙하가 같은 장기 조회·현재 역할·목록·Carrier를 빌린다.
         priestEffects.reserveRegular=[] { return true; };
         priestEffects.shield.reserveSound=[] { return true; };
         sounds=std::make_unique<SoundProcessSystem>(core.processes,soundState,services.sound);
@@ -1596,6 +1597,9 @@ struct RawCampaignSession::Impl {
         worldHooks.dude.movementType=[this](auto type) { return priests->MovementProcessType(type); };worldHooks.dude.entrance=[this](auto target) { const auto point=hits->Dudes().ResidencePoint(target);return RawPathPoint{point[0],point[1]}; };worldHooks.dude.move=[this](auto parent,auto point,auto quickly) { return hits->Dudes().Move(parent,{point.x,point.y},quickly); }; // 기존 전체 이동/진입점만 현재 실제 Runtime에 공개한다.
         worldHooks.residence.entrance=residenceDudeEffects.entrance;worldHooks.residence.spawn=residenceDudeEffects.spawn;worldHooks.residence.task=residenceDudeEffects.task; // 실제 생성 하위만 현재 전체 Runtime과 공개한다.
         worldHooks.factoryRegular.begin=assetEffectsFactoryBegin;worldHooks.factoryRegular.finish=assetEffectsFactoryFinish;worldHooks.factoryRegular.flare=assetEffectsFactoryFlare; // move 전 보관한 같은 실제 큰 후단만 공개한다.
+        worldHooks.ritualRegular.progress=[this](auto sid) { if (!daisState || !daisRegular) throw std::logic_error("실제 룬 진행 설치 전 호출");PrepareRitual();daisRegular->Progress(sid); };worldHooks.ritualRegular.release=[this](auto sid) { if (!daisState || !altarSacrifice) throw std::logic_error("실제 제단 해방 설치 전 호출");PrepareRitual();altarSacrifice->ReleaseFromAltar(sid); };
+        worldHooks.ritualRegular.removeAnimation=[this](auto sid) { const auto remove=ritualExplosion;if (!remove) throw std::logic_error("실제 제단 애니메이션 제거 미설치");remove(sid); };worldHooks.ritualRegular.escapeFrame=[this](auto sid,auto number) { if (!daisState || !altarSacrifice) throw std::logic_error("실제 다이스 이탈 설치 전 호출");PrepareRitual();altarSacrifice->EscapeFrame(sid,number); };worldHooks.ritualRegular.sacrificeAdvance=[this](auto sid) { if (!daisState || !daisRegular) throw std::logic_error("실제 희생 진행 설치 전 호출");PrepareRitual();return daisRegular->SacrificeAdvance(sid); };
+        worldHooks.ritualRegular.ritual=[this](auto sid) { if (!daisState || !templeRitual) throw std::logic_error("실제 다이스 의식 설치 전 호출");PrepareRitual();const auto priest=templeRitual->FindStrongOwnedPriest(sid);templeRitual->Ritual(sid,priest,1); }; // 선택된 기존 큰 본문만 현재 World의 전체 Runtime pin 뒤 호출한다.
         worldHooks.damageable.hitPoints=decorationHit; // 선언 뒤 같은 실제 가상98 본문만 현재 대여로 공개한다.
         worldHooks.squidPacket=services.formPacket; //일반Squid와Form은같은버퍼/현재방송분배기를사용한다.
         worldHooks.squidConnected=[this](std::int32_t target) { return target>0 && target<9 && (players[static_cast<std::size_t>(target)*180+0x50]&1U); }; //0048f4b0은 실제 소켓 존재 대신 현재 Player 접속 비트만 읽는다.
@@ -1767,7 +1771,7 @@ struct RawCampaignSession::Impl {
         // 실제 사건이 실패하면 당시 부모/사건/횟수를 남기고 같은 예외를 전파한다. 성공/상태 되돌림으로 대신하지 않는다.
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             try {
-                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x508cc8U) return world.Storage()->DudeRegular().Handle(sid,event,count,payload);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
+                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x5075d8U || table==0x5076b8U || table==0x507770U || table==0x507950U) return world.Storage()->RitualRegular(sid,event,count,payload);if (table==0x508cc8U) return world.Storage()->DudeRegular().Handle(sid,event,count,payload);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
                 if (const auto table=Read(core.pool.Slot(sid),0);table==0x50a820U || table==0x50a8e8U) {
                     if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->DecorationRegular(sid,event,count,payload);
                     DecorationRegularHooks hooks;hooks.maxHitPoints=[this](auto parent) { return hp.MaxHitPoints(parent); };

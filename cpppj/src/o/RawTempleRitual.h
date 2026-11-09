@@ -50,6 +50,7 @@ public:
     std::uint32_t Count(Sid temple) const;
     // 현재 count별 첫 프레임을 빼고11/22/33/44/55 경계로0..5를 읽는다. frame-1은 현재 raw 프레임이다.
     std::uint32_t Stage(Sid temple,std::int32_t frame=-1) const;
+    static std::uint32_t StageFromCount(OriginalEdition edition,std::int32_t frame,std::uint32_t count); // 이미 저장한 frame과 실제 가상Count로 원문 단계 표를 조회한다.
     // 원본00447aa0/CD00481c80: 신전 좌표+첫단계의SHP 핫스폿이다. 정상stage0..4만 받는다.
     TempleRitualPoint StageAnchor(Sid temple,std::uint32_t stage) const;
     // Anchor+룬SHP 핫스폿이며stage4의 절삭 칸 spot6/!8이면(-9,-6)픽셀 보정한다.
