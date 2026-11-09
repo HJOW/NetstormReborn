@@ -15,7 +15,7 @@ float Coordinate(std::span<const std::uint8_t> raw,std::size_t offset) {
 // 실제41d770의 _ftol 하위DWORD를 signed로 재해석한다.
 std::int32_t Cell(float value) { if (!std::isfinite(value) || std::fabs(static_cast<double>(value))>=9223372036854775808.0) return 0;return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::uint64_t>(static_cast<std::int64_t>(value)))); }
 // 도달한 실제 효과가 미연결이면 생략하지 않는다.
-template<class F> const F& Need(const F& f) { if (!f) throw std::logic_error("실제 마나 볼트 도착 경계 미연결");return f; }
+template<class F> F Need(const F& f) { if (!f) throw std::logic_error("실제 마나 볼트 도착 경계 미연결");return f; } // 선택한 함수는 호출 중 장치가 교체돼도 복귀까지 유지한다.
 }
 // 현재 PATCH 필드만 사용하며 CD의 다른 raw 폭은 별도 복원이 필요하다.
 RawManaBoltArrival::RawManaBoltArrival(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,ManaBoltArrivalState& state,ManaBoltArrivalHooks hooks)
@@ -29,7 +29,7 @@ Sid RawManaBoltArrival::Target(Sid bolt) const {
 // 부모 삭제가 경로 자신도 지울 수 있으므로 가상 삭제 뒤에는 현재 객체를 읽지 않는다.
 std::uint32_t RawManaBoltArrival::Arrive(Sid bolt) const {
     const auto raw=pool_.Slot(bolt);Need(hooks_.sound)(Coordinate(raw,14),Coordinate(raw,18),"sunCannonRaiseLower5.wav");
-    if (Target(bolt).value) { Need(hooks_.removeProcesses)(bolt,state_.RegularType());Need(hooks_.removeProcesses)(bolt,state_.SharedRegularType());if (Need(hooks_.reserveRegular)()) Need(hooks_.addRegular)(bolt,1,state_.delay);return 1000; } // 도달한 각 제거 위치의 같은 현재 번호를 읽으며 첫 제거 뒤 변경도 반영한다.
+    if (Target(bolt).value) { Need(hooks_.removeProcesses)(bolt,state_.RegularType());Need(hooks_.removeProcesses)(bolt,state_.SharedRegularType());if (Need(hooks_.reserveRegular)()) Need(hooks_.addRegular)(bolt,1,state_.Delay());return 1000; } // 도달한 각 제거/생성 위치에서 같은 현재 번호와 간격을 읽는다.
     Need(hooks_.destroy)(bolt,0);return 1001;
 }
 // 연결 시 같은 풀의 정체성을 확인한다.

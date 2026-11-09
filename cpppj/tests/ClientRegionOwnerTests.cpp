@@ -27,6 +27,7 @@
 #include "o/RawDudeTask.h" // 같은 실제 Host 작업 예약을 관찰한다.
 #include "o/RawDudeBehavior.h" // 같은 지면/낙하 부모를 호출한다.
 #include "o/RawFlare.h" // 실제 장기 생성/정기/Host 예약을 호출한다.
+#include "client/RawCursorPosition.h" // 현재 카메라의 분수 원점을 같은 Native 투영과 역투영에 공급한다.
 #include "client/ClientLocalStateGlobals.h" // 같은005c85f0의 실제 owner와 주소를 검증한다.
 
 #include "o/RawDamageableBurning.h"
@@ -1733,4 +1734,40 @@ TEST_CASE(ClientFlareOwner_NoWorldExpiryUsesActualDeletionAndHost) { // 마지�
 }
 TEST_CASE(ClientFlareOwner_SpawnUsesCurrentTypeRealPopAndAttachedRegular) { // 생성은 현재 공유 TYPE와 같은 실제 공장/소유/Pop·new28 예약/Host를 사용한다.
     RegionScene s;BindFactoryOwnerDevices(s);auto local=std::make_shared<ClientLocalStateGlobals>();s.storage->BindFlareDevices({std::shared_ptr<const double>(local,&local->LoginEnd()),RegionForbidden<void,float,float,std::string_view,std::uint32_t>()});s.storage->LoadingDepth()=0;const auto parent=s.Asset(0x50f540U);s.Position(parent);auto raw=s.storage->pool.AllocatedBytes(parent);RegionPut(raw,36,0);raw[35]=20;const auto first=s.storage->pool.FirstFree(true);const auto size=s.storage->Processes().Kernel().Size();const auto seed=s.random->Game().State();s.storage->GameAux()->BombFlareType()=106;s.storage->Flare().Spawn(parent,1,2);const auto child=s.storage->pool.Slot(first);auto* process=s.storage->Processes().Host().FindEvent(first,2);CHECK(child[10]==106 && child[34]==0 && child[35]==19 && !(child[11]&5U) && (child[40]&8U) && process && process->Payload()>=0.05F && process->Payload()<=0.12F && s.storage->Processes().Kernel().Size()==size+1 && s.random->Game().State()!=seed && !s.storage->Borrowed());
+}
+
+namespace { // Fountain의 실제 자산과 공간을 만드는 공용 검사 입력이다.
+Sid ManaOwnerAsset(RegionScene& scene) { // 실제509810 생성자와 현재 A구간을 사용하며 가짜 Host를 만들지 않는다.
+    const auto parent=scene.Asset(0x509810U);scene.Position(parent);auto raw=scene.storage->pool.AllocatedBytes(parent);raw[11]=0;raw[40]=8;raw[34]=1;RegionPut(raw,36,static_cast<std::uint32_t>(scene.storage->frames[raw[10]].Run('A').first));scene.storage->Frame().StoreLevel(parent);scene.Index(parent);return parent;
+}
+Sid ManaOwnerTarget(RegionScene& scene) { // 같은 칸/owner의 실제 건설 대상만 finder에 등록한다.
+    const auto target=scene.Asset(0x50f540U);scene.Position(target);auto raw=scene.storage->pool.AllocatedBytes(target);raw[11]=0;raw[34]=1;raw[40]=1;RegionPut(raw,36,0);scene.storage->Frame().StoreLevel(target);scene.Index(target);return target;
+}
+void BindManaOwnerDevices(RegionScene& scene,std::function<void(float,float,std::string_view)> sound) { // 실제 공유 카메라 owner만 연결하고 현재 값은 바꾸지 않는다.
+    scene.storage->BindManaDevices({std::shared_ptr<const RawCameraViewState>(scene.gameplay,&scene.gameplay->Camera().Snapshot()),std::move(sound)});
+}
+}
+TEST_CASE(ClientManaOwner_GettersAndWorldLoanKeepSameCurrentBody) { // 같은 간격/대상 검색/정기는 World 반납 뒤에도 주소와 현재값을 유지한다.
+    RegionScene s;auto* regular=&s.storage->ManaRegular();auto* arrival=&s.storage->ManaArrival();auto* state=&s.storage->ManaState();state->interval=0.125F;state->spacing=-9;const auto seed=s.random->Game().State();
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->ManaRegular()==regular && &world.Storage()->ManaArrival()==arrival); }
+    CHECK(&s.storage->ManaState()==state && state->interval==0.125F && state->spacing==-9 && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientManaOwner_ActualHostReadsCurrentFrameAndIntervalWithoutWorld) { // 실제 Host는 미선택 음향/카메라 없이 프레임과 현재 주기를 갱신한다.
+    RegionScene s;const auto parent=ManaOwnerAsset(s);auto raw=s.storage->pool.Slot(parent);const auto first=s.storage->frames[raw[10]].Run('A').first;s.storage->ManaState().interval=0.125F;const auto seed=s.random->Game().State();auto* process=s.storage->Processes().Host().AddRegular(parent,2,9);CHECK(process);if (!process) return;process->RunFrame();CHECK(process->Count()==1 && process->Payload()==0.125F && RegionRead(raw,36)==static_cast<std::uint32_t>(first) && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientManaOwner_CurrentVtableDoesNotRequireOriginalTypeByte) { // 현재 가상 표는 같은 본문을 선택하고 변경된 TYPE의 글자/프레임을 읽는다.
+    RegionScene s;const auto parent=ManaOwnerAsset(s);auto raw=s.storage->pool.AllocatedBytes(parent);const auto old=raw[10];s.storage->frames[100]=s.storage->frames[old];s.storage->shapes[100]=s.storage->shapes[old];s.storage->types[100]=s.storage->types[old];raw[10]=100;s.storage->ManaState().interval=0.25F;CHECK(s.storage->ManaRegular().Handles(parent));CHECK(s.storage->ManaRegular().Run(parent,2,3)==0.25F && !s.storage->Borrowed());
+}
+TEST_CASE(ClientManaOwner_FirstSoundMutationUsesCurrentInterval) { // count0의 실제 음향 뒤에 읽는 현재 주기는 앞선 사본으로 고정되지 않는다.
+    RegionScene s;const auto parent=ManaOwnerAsset(s);int sounds{};BindManaOwnerDevices(s,[&](auto x,auto y,auto name) { CHECK(x==100 && y==100 && name=="influenceIcon.wav");++sounds;s.storage->ManaState().interval=0.375F; });CHECK(s.storage->ManaRegular().Run(parent,0,0)==0.375F && sounds==1);CHECK(s.storage->ManaRegular().Run(parent,2,0)==0.375F && sounds==1 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientManaOwner_MissingTargetActuallyDeletesHostAndSlot) { // 현재 대상 부재는 카메라를 요구하기 전에 같은 삭제/Host/풀을 정리한다.
+    RegionScene s;const auto parent=ManaOwnerAsset(s);CHECK(s.storage->Processes().Host().AddRegular(parent,1,9));CHECK(s.storage->ManaRegular().Run(parent,1,0)==-1 && (s.storage->pool.Slot(parent)[11]&1U) && !s.storage->Processes().Host().FindEvent(parent,1) && !s.storage->Borrowed());
+}
+TEST_CASE(ClientManaOwner_TargetFilteringAndActualPopUseCurrentCamera) { // 실제 finder/공간 이동은 현재 카메라를 사용하고 대상의 owner/preview를 그대로 판정한다.
+    RegionScene s;BindFactoryOwnerDevices(s);const auto parent=ManaOwnerAsset(s),target=ManaOwnerTarget(s);auto targetRaw=s.storage->pool.AllocatedBytes(target);targetRaw[40]=9;CHECK(!s.storage->ManaArrival().Target(parent).value);targetRaw[40]=1;targetRaw[34]=2;CHECK(!s.storage->ManaArrival().Target(parent).value);targetRaw[34]=1;CHECK(s.storage->ManaArrival().Target(parent)==target);
+    BindManaOwnerDevices(s,RegionForbidden<void,float,float,std::string_view>());auto& camera=s.gameplay->Camera().Snapshot();camera.pixels={319,127};camera.worldBits=RawCursorPosition::CameraFromPixels(319,127);s.storage->ManaState().spacing=0;CHECK(s.storage->ManaRegular().Run(parent,1,1)==0.05F);const auto raw=s.storage->pool.Slot(parent);CHECK(!(raw[11]&5U) && s.storage->ManaArrival().Target(parent).value==0 && s.storage->postPopState.depth==0 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientManaOwner_ArrivalUsesActualHostAndSameCurrentDelay) { // 현재 두 프로세스 제거 뒤 동일 간격으로 실제 new28/Regular를 부착한다.
+    RegionScene s;const auto parent=ManaOwnerAsset(s);static_cast<void>(ManaOwnerTarget(s));int sounds{};BindManaOwnerDevices(s,[&](auto x,auto y,auto name) { CHECK(x==100 && y==100 && name=="sunCannonRaiseLower5.wav");++sounds;s.storage->ManaState().interval=0.25F; });CHECK(s.storage->Processes().Host().AddRegular(parent,2,9));CHECK(s.storage->ManaArrival().Arrive(parent)==1000);auto* process=s.storage->Processes().Host().FindEvent(parent,1);CHECK(process && process->Count()==0 && process->Payload()==0.25F && !s.storage->Processes().Host().FindEvent(parent,2) && sounds==1 && !s.storage->Borrowed());
 }

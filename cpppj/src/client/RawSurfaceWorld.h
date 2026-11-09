@@ -1,6 +1,7 @@
 // 본섬 표면·noIsland·다리와 파생 받침을 실제 raw 풀/Graph/Kernel로 소유하는 새 월드 연결부다.
 #pragma once
 #include "o/RawBoardAngle.h"
+#include "o/RawManaBoltRegular.h" // 같은 장기 대상 검색/정기 상태를 Session보다 오래 유지한다.
 #include "o/RawSquidContainedUnpop.h" // 같은 실제 SID 풀의 종속 해제와 UpdateContents 예약을 연결한다.
 #include "o/RawAmbientWind.h"
 #include "o/GameClock.h"
@@ -173,6 +174,11 @@ struct RawSurfaceFlareDevices { // 실제 Client의 억제 시각과 같은 위�
     std::shared_ptr<const double> suppression; // 같은 ClientLocalStateGlobals005c85f0 주소를 aliasing owner로 보존한다.
     std::function<void(float,float,std::string_view,std::uint32_t)> sound; // 실제 SoundPlayer의 위치 소리를 선택 시 재생한다.
 };
+struct RawCameraViewState; // 카메라의 실제 물리는 ClientCameraGlobals가 소유한다.
+struct RawSurfaceManaDevices { // 같은 현재 카메라 주소와 위치 소리를 Client 수명으로 빌린다.
+    std::shared_ptr<const RawCameraViewState> camera; // 같은0059a900 snapshot이며 픽셀/float 원점을 복사하지 않는다.
+    std::function<void(float,float,std::string_view)> sound; // 선택한 위치 소리만 실제 SoundPlayer에 전달한다.
+};
 struct RawSurfaceProcessDevices { //실제Client현재선택/선택해제부모만장기로빌린다.
     std::function<std::uint32_t()> selected; //현재전체DWORD선택전역이며Form이라는이유로0/WORD를합성하지않는다.
     std::function<void()> clearSelection; //실제현재Client선택정리부모를선택된효과위치에서호출한다.
@@ -221,6 +227,7 @@ private:
     RawSurfaceRewardDevices rewardDevices_; // 같은 실제 SP/모드 owner를 처리기보다 오래 보관한다.
     RawSurfaceResourceDevices resourceDevices_; //실제Client장치만보관하며짧은Session주소를저장하지않는다.
     RawSurfaceFlareDevices flareDevices_; // 현재 억제/음향 owner는 효과 본문과 Host보다 오래 유지한다.
+    RawSurfaceManaDevices manaDevices_; // 현재 카메라 owner와 소리 장치는 정기/도착 본문보다 오래 유지한다.
     RawSurfaceContentDevices contentDevices_; // 같은 Client 전역 alias와 현재 장치를 본체보다 오래 유지한다.
     std::weak_ptr<const RawSurfaceCarrierBindings> carrierRuntime_; // 큰 선택 효과만 약하게 빌려 죽은 Session을 역소유하지 않는다.
     std::weak_ptr<const RawSurfaceDudeBindings> dudeRuntime_; // 실제 현재 큰 이동 효과만 약하게 대여한다.
@@ -350,6 +357,10 @@ public:
     o::RawDudeRegular& DudeRegular(); // 같은 공급원/순환/현재 사건/난수/프레임의 장기 정기 본문이다.
     void BindFlareDevices(RawSurfaceFlareDevices devices); // 첫 효과 전에 실제 억제 시각/소리 장치만 결합한다.
     o::RawFlare& Flare(); // 같은 현재 TYPE/프레임·난수/생성·공간·Host의 유일한 Native 효과 본문이다.
+    void BindManaDevices(RawSurfaceManaDevices devices); // 첫 효과 전에 같은 현재 카메라와 위치 음향만 연결한다.
+    o::ManaBoltRegularState& ManaState(); // 같은00532750 간격/005325e0 배치 간격을 재대여 뒤에도 유지한다.
+    o::RawManaBoltArrival& ManaArrival(); // 같은 실제 finder·Host·현재 프로세스 역할과 도착 본문이다.
+    o::RawManaBoltRegular& ManaRegular(); // 현재 TYPE/프레임/SHP·카메라·가상 공간을 공유하는 유일한 Native 정기다.
     o::RawDudeBehavior& DudeBehavior(); // 같은 지면/현재 task/종속 삭제의 장기 부모다.
     o::RawDudeTask& DudeTask(); // 같은 실제 Host/시각/WORD의 장기 작업 예약기다.
     void SetDudeWord(o::Sid sid,std::uint32_t value); //4ac220의 현재 WORD 저장 뒤 실제 Bridge 통지다.
@@ -555,6 +566,11 @@ private:
     std::unique_ptr<o::RawBombRegular> bombRegular_; // 상태/TYPE/프레임/실제 장치보다 먼저 반납하는 같은 정기 본문이다.
     std::unique_ptr<o::RawFlare> flare_; // Host가 잔류 Regular를 정리할 때까지 같은 효과 본문을 유지한다.
     std::unique_ptr<void,void(*)(void*)> flareReservation_{nullptr,[](void* memory) { ::operator delete(memory); }}; // new28부터 실제 Regular 생성까지 같은 확보 메모리 한 개다.
+    o::ManaBoltRegularState manaState_; // 실제 간격과 spacing은 Session 생성/반납에서 재설정하지 않는다.
+    o::ManaBoltArrivalState manaArrivalState_; // 현재 프로세스 종류와 같은 간격 주소를 도착 본문에 공급한다.
+    std::unique_ptr<o::RawManaBoltArrival> manaArrival_; // 같은 대상 검색/도착 본문은 정기보다 오래 유지한다.
+    std::unique_ptr<o::RawManaBoltRegular> manaRegular_; // Host 정리까지 현재 장기 대상 검색과 물리를 빌린다.
+    std::unique_ptr<void,void(*)(void*)> manaReservation_{nullptr,[](void* memory) { ::operator delete(memory); }}; // 실제 new28 확보부터 같은 주소의 Regular 구성까지 소유한다.
     std::unique_ptr<o::SquidFormDispatch> processForms_; //장기Host와같은Pool의실제ProcessForm경로이며UI/내용물가짜처리기는등록하지않는다.
     std::unique_ptr<o::RawSquidTransmission> transmission_; //같은Pool/현재TYPE/GameAux보다먼저반납하는공통실제송신기다.
     std::unique_ptr<RawProcessHostStorage> processes_; // 실제 Pool/TYPE 뒤에 선언하여 그 참조보다 먼저 최종 반납한다.

@@ -926,9 +926,11 @@ struct RawCampaignSession::Impl {
     ConstructionArrivalState buildArrivalState; // 실제134의 예측 대기/서버 건설 시작 전역이다.
     std::unique_ptr<RawConstructionArrival> buildArrival; // 같은 풀/해시에서 건설 대상을 찾는다.
     ManaBoltArrivalState manaArrivalState{.currentRegularType=&gameplayGlobals->GameAux()->RegularProcessType(),.currentSharedRegularType=&gameplayGlobals->GameAux()->SharedRegularProcessType()}; // 실제105의 도착 뒤 두 프로세스 종류/예약 간격이다.
-    std::unique_ptr<RawManaBoltArrival> manaArrival; // 같은 풀에서 비행 도착의 실제 분기를 실행한다.
+    std::unique_ptr<RawManaBoltArrival> localManaArrival; // 독립 typed 경로만 기존 지역 도착 본문을 소유한다.
+    RawManaBoltArrival* manaArrival{}; // Native는 같은 장기 대상 검색/도착 본문을 빌린다.
     ManaBoltRegularState manaRegularState; // 실제105 주기의 현재0.05/간격16 전역이다.
-    std::unique_ptr<RawManaBoltRegular> manaRegular; // 같은 Target/Frame/현재 카메라/가상 공간을 연결한다.
+    std::unique_ptr<RawManaBoltRegular> localManaRegular; // 독립 typed 경로의 기존 정기 본문만 소유한다.
+    RawManaBoltRegular* manaRegular{}; // Native는 같은 장기 Target/Frame/현재 카메라/가상 공간을 빌린다.
     std::unique_ptr<RegularProcess> manaPendingRegular; // new28 성공 뒤 실제 부착까지 소유하는 예약이다.
     RawPathDataHeader typedPathHeader; //독립typedSession의기존지역초기헤더계약을유지한다.
     RawPathDataHeader& pathHeader{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->GameAux()->PathPacketHeader():typedPathHeader}; //Native의실제기존writer만같은장기두BYTE/DWORD를소비한다.
@@ -3678,13 +3680,14 @@ struct RawCampaignSession::Impl {
         buildHooks.removeContained=[this](Sid sid,std::uint32_t type) { RawContainedLookup lookup(core.pool,[this](Sid target,std::uint32_t flags) { world.Destroy(target,flags); });static_cast<void>(lookup.Find(sid,type,0,true)); };
         buildHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         buildArrival=std::make_unique<RawConstructionArrival>(core.pool,core.hash,core.types,buildArrivalState,std::move(buildHooks));
-        ManaBoltArrivalHooks manaHooks;
+        if (world.Storage()->UsesNativeTransmissionDevices()) { manaArrival=&world.Storage()->ManaArrival();manaRegular=&world.Storage()->ManaRegular(); } // Session 생성/반납은 장기 간격이나 카메라를 초기화하지 않는다.
+        else { ManaBoltArrivalHooks manaHooks; // 독립 typed 검사에서 명시한 지역 장치와 기존 소유권을 유지한다.
         manaHooks.sound=[this](float x,float y,std::string_view name) { services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
         manaHooks.removeProcesses=[this](Sid sid,std::uint32_t type) { RemoveAttachedProcesses(core.processes,sid,type); };
         manaHooks.reserveRegular=[this] { try { manaPendingRegular=std::make_unique<RegularProcess>(1,manaArrivalState.delay);return true; }catch (const std::bad_alloc&) { return false; } };
         manaHooks.addRegular=[this](Sid sid,std::uint32_t event,float delay) { if (!manaPendingRegular || delay!=manaArrivalState.delay) throw std::logic_error("마나 볼트 Regular 예약 누락");auto* regular=static_cast<RegularProcess*>(core.processes.AttachRegular(std::move(manaPendingRegular),sid));regular->ResetTask(event,core.processState.Now()); };
         manaHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
-        manaArrival=std::make_unique<RawManaBoltArrival>(core.pool,core.hash,core.types,manaArrivalState,std::move(manaHooks));
+        localManaArrival=std::make_unique<RawManaBoltArrival>(core.pool,core.hash,core.types,manaArrivalState,std::move(manaHooks));manaArrival=localManaArrival.get();
         ManaBoltRegularHooks regularHooks;
         regularHooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
         regularHooks.sound=[this](float x,float y,std::string_view name) { services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
@@ -3693,7 +3696,7 @@ struct RawCampaignSession::Impl {
         regularHooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };
         regularHooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         regularHooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
-        manaRegular=std::make_unique<RawManaBoltRegular>(core.pool,core.types,core.frames,core.shapes,*manaArrival,manaRegularState,std::move(regularHooks));
+        localManaRegular=std::make_unique<RawManaBoltRegular>(core.pool,core.types,core.frames,core.shapes,*manaArrival,manaRegularState,std::move(regularHooks));manaRegular=localManaRegular.get(); }
         motionState.halt.battle=true;anchorState.graphReady=1;anchorState.fenceType=90;anchorState.windArcherType=140;
         anchor=std::make_unique<RawPlayerPlacementAnchor>(core.pool,core.types,core.hash.Entries(0),core.bookkeeping,additional,contentFinder,anchorState);
         auto effects=services.motion;

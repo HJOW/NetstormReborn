@@ -3,7 +3,7 @@
 #include "o/RawManaBoltArrival.h"
 #include "o/SquidDisplay.h"
 #include "o/SquidProcess.h"
-namespace netstorm::o {
+namespace netstorm::o { // 원본 마나 볼트 정기를 같은 raw 자료와 선택된 장치로 실행한다.
 // 주기 함수가 읽는 실제 간격 전역이다. 카메라는 별도 현재 투영 경계에서 읽는다.
 struct ManaBoltRegularState {
     float interval{0.05f}; // 00532750의 다음 실행 간격이다.
@@ -17,13 +17,14 @@ struct ManaBoltRegularHooks {
     std::function<std::array<float,2>(std::int32_t,std::int32_t)> inverse; // 4971e0의 현재 float 카메라 역투영이다.
     std::function<void(Sid,std::uint32_t)> unpop,destroy; // 실제 가상+48/+10이며 flags0이다.
     std::function<void(Sid,float,float,std::uint32_t)> pop; // 실제 가상+90이며 flags0이다.
+    std::function<SquidDisplayFrame(std::uint32_t)> frameZero; // 실제 Client는 선택한 현재 TYPE의 frameCheck 진단/복귀 뒤 SHP0을 읽는다.
 };
 // 45a8e0을 같은 TYPE/프레임/SHP/대상 검색에 적용한다. 미복원 다른 파생은 처리하지 않는다.
 class RawManaBoltRegular {
 public:
     RawManaBoltRegular(const SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,
         std::span<const SquidDisplayShape> shapes,const RawManaBoltArrival& arrival,ManaBoltRegularState& state,ManaBoltRegularHooks hooks); // 모든 참조는 이 모듈보다 오래 살아야 한다.
-    bool Handles(Sid sid) const; // 실제105/509810 쌍만 현재 Regular 분배에서 받는다.
+    bool Handles(Sid sid) const; // 현재 가상 표509810만 선택하며 변경된 TYPE 바이트를 별도 선검사하지 않는다.
     float Run(Sid sid,std::uint32_t event,std::uint32_t count) const; // 현재 프레임→대상/위치→0.05 또는 삭제 후-1이다.
     const SidPool& Pool() const; // 다른 월드의 분배기에 연결하지 않게 한다.
 private:

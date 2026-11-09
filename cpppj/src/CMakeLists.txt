@@ -306,6 +306,7 @@ target_sources(netstorm PRIVATE o/RawDecorationRegular.cpp o/RawDecorationRegula
 # 두 Factory VT의 같은 정기 본문과 실제 현재 장기 장치를 공유한다.
 target_sources(netstorm PRIVATE client/RawSurfaceDudeRegular.cpp)
 target_sources(netstorm PRIVATE client/RawSurfaceFlare.cpp) # 현재 생성/난수/Host와 같은 플레어 본문을 장기로 공유한다.
+target_sources(netstorm PRIVATE client/RawSurfaceMana.cpp) # 같은 현재 카메라/대상 검색/Host를 사용하는 Fountain 본문을 공유한다.
 target_sources(netstorm PRIVATE o/RawResidenceRegular.cpp o/RawResidenceRegular.h client/RawSurfaceResidenceRegular.cpp)
 target_sources(netstorm PRIVATE o/RawFactoryRegular.cpp o/RawFactoryRegular.h client/RawSurfaceFactoryRegular.cpp)
 

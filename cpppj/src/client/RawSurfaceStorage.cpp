@@ -266,6 +266,7 @@ float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std
     if (table==0x502c38U) return o::HandleGravityBurstRegular(pool,frames,Frame(),Processes().Host(),[this](auto object) { Display().Update(pool.Slot(object),0); },[this](auto object,auto flags) { DestroyAsset(object,flags); },sid,count,payload); //그라비테이션의 필수41f760도 같은 실제 풀/프레임/Host를 사용한다.
     if (table==0x508cc8U) return DudeRegular().Handle(sid,event,count,payload); // 실제450fa0의 현재 장기 본문이다.
     if (table==0x5096a0U) return Flare().Handle(sid,event,count,payload); // 실제45a250도 같은 장기/Session 본문을 사용한다.
+    if (table==0x509810U) return ManaRegular().Run(sid,event,count); // 실제45a8e0은 payload를 읽지 않고 같은 현재 장기 본문을 사용한다.
     if (table==0x50f540U) return ResidenceRegular(sid,event,count,payload); // 같은 현재 거주 구역 정기 본문이다.
     if (table==0x509148U || table==0x509210U) return FactoryRegular(sid,event,count,payload); // 실제4549c0의 두 직접 가상 표다.
     if (table==0x50a820U || table==0x50a8e8U) return DecorationRegular(sid,event,count,payload); // 실제462420의 장식/가장자리 팜 수명 감소다.
