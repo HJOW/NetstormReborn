@@ -12,6 +12,10 @@ void PostPopGrowingIce(const SidPool& pool,std::span<const RiftTypeFrames> frame
 // 현재 원본 TYPE/로딩 전역이다. 모든 효과 뒤에도 같은 저장소를 읽는다.
 struct IceTowerTypes {
     std::uint32_t ice{147},growing{150},noIsland{157}; //5412a4/5412b0/5412cc의 실제 현재값이다.
+    const std::uint32_t* sharedIce{};const std::uint32_t* sharedGrowing{};const std::uint32_t* sharedNoIsland{}; //Native는같은실제GameAux/표면TYPE의주소를빌리고독립입력만앞의값을쓴다.
+    std::uint32_t Ice() const { return sharedIce ? *sharedIce:ice; } //현재완성형TYPE는원문선택위치마다읽는다.
+    std::uint32_t Growing() const { return sharedGrowing ? *sharedGrowing:growing; } //생성직전현재성장형TYPE를읽는다.
+    std::uint32_t NoIsland() const { return sharedNoIsland ? *sharedNoIsland:noIsland; } //지면조회뒤현재noIslandTYPE를읽는다.
 };
 // 게임 세계의 실제 생성·공간·소유자·삭제와 공통 후처리를 공급한다.
 struct IceTowerHooks {

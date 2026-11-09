@@ -42,6 +42,8 @@ void RawSurfaceStorage::EmitDefaultAssetEffect(const o::SquidDestroyEvent& event
     if (!pre && event.effect!=o::SquidDestroyEffect::PostDestroy) throw std::logic_error("장기 자산의 가상 삭제 효과 종류 오류");
     const auto method=pre ? entry.pre:entry.post;
     switch (method) {
+    case 0x0048edf0U:IceTower().PostDestroy(event.sid,event.flags);return; //실제완성형세VT의현재역할/로딩/표면/재성장과Damageable부모다.
+    case 0x0048eb80U:IceTower().GrowingPostDestroy(event.sid,event.flags);return; //성장형은일반Damageable후처리를추가하지않는다.
     case 0x004dca50U: { //네실제신전은같은전체장기부모를선택한다.
         const auto preBody=vortexPre_;if (!preBody) throw std::logic_error("장기 신전의 실제 삭제 전처리 미결합");preBody(event.sid,event.flags);return;
     }

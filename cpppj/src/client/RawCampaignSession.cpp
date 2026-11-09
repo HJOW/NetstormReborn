@@ -747,9 +747,9 @@ struct RawCampaignSession::Impl {
     AcidFenceTypes acidFenceTypes; //현재 비행체/벌룬의 여섯 TYPE 전역이다.
     std::unique_ptr<RegularProcess> pendingAcidRegular; //new40 성공부터 전용 애니메이션 부착까지 소유한다.
     std::unique_ptr<RawAcidFence> acidFence; //145의13영역 자동 포획과 전용 주기다.
-    IceTowerTypes iceTowerTypes; //현재147/150/157의 같은 원본 전역이다.
+    IceTowerTypes localIceTowerTypes;IceTowerTypes& iceTowerTypes{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->IceTowerGlobals():localIceTowerTypes}; //Native는같은현재역할주소를빌리고독립typed는기존값을쓴다.
     std::unique_ptr<RegularProcess> pendingIceRegular; //성장형의new40 성공부터부착까지 소유한다.
-    std::unique_ptr<RawIceTower> iceTower; //완성형 파괴/성장형 주기와 최종147 재생성이다.
+    std::unique_ptr<RawIceTower> localIceTower;RawIceTower* iceTower{}; //Native는같은장기파괴/성장/최종생성본문을빌린다.
     CarrierTransferState carrierTransferState; // 미등록187 분기의 공유 주기/재시도/마지막 기증자와 현재 헤더다.
     std::unique_ptr<RawCarrierTransfer> carrierTransfer; // 실제 내용물 재부착/491/송신/이동 삭제와 연결한다.
     BoardTargetState& boardTargetState{world.Storage()->boardTargetState}; //실제 Pool 정리가 쓴 같은 장기 실패점을 Board와 AI 다이스 접근점이 직접 읽는다.
@@ -2022,6 +2022,7 @@ struct RawCampaignSession::Impl {
     }
     // 완성형 삭제와 성장형을 같은 실제 세계/공통장부/시계에 연결한다.
     void ConnectIceTower() {
+        if (world.Storage()->UsesNativeTransmissionDevices()) { iceTower=&world.Storage()->IceTower();return; } //같은장기Host/현재TYPE/부모를이미결합했으며Session사본을만들지않는다.
         IceTowerHooks hooks;
         hooks.reserveRegular=[this] { try { pendingIceRegular=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
         hooks.regular=[this](Sid sid,std::uint32_t event,float period) {
@@ -2040,14 +2041,14 @@ struct RawCampaignSession::Impl {
         hooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         hooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };
         hooks.word=[this](Sid sid,std::uint16_t value) { auto raw=core.pool.AllocatedBytes(sid);raw[12]=static_cast<std::uint8_t>(value);raw[13]=static_cast<std::uint8_t>(value>>8);if (raw[10]==core.bridgeState.bridgeType) core.building.NotifySurface(sid); };
-        hooks.owner=[this](Sid sid,std::uint8_t owner) { core.owner.Set(sid,owner); };
+        hooks.owner=[this](Sid sid,std::uint8_t owner) { ownership->SetOwner(sid,owner); }; //현재TYPE의실제가상74를유지한다.
         hooks.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         hooks.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         hooks.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { PrepareBuilding(core.processState.Now());buildingEffects->DropIsland(x,y,flags,owner); };
         hooks.damageablePost=[this](Sid sid,std::uint32_t flags) { PrepareDamageablePost();damageablePost->PostDestroy(sid,flags); };
         hooks.basePost=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PostDestroy(sid,flags); };
         hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
-        iceTower=std::make_unique<RawIceTower>(core.pool,core.frames,iceTowerTypes,assetState.inBattle,assetState.Boss(),objectState.loadingDepth,std::move(hooks));
+        localIceTower=std::make_unique<RawIceTower>(core.pool,core.frames,iceTowerTypes,assetState.Server(),assetState.Boss(),objectState.loadingDepth,std::move(hooks));iceTower=localIceTower.get(); //원문540bc0은서버전역이며전투여부사본을읽지않는다.
     }
     // 실제145의 양축/13영역·사제피해·포획패킷과 애니메이션을 같은 Host에 연결한다.
     void ConnectAcidFence() {

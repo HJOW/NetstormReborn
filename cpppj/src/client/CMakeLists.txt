@@ -7,6 +7,7 @@ target_sources(netstorm PRIVATE
     ClientConstructionRandomPlacement.cpp #실제단일난수배치와오벨리스크배치부모를장기로공유한다.
     ClientConstructionPlacement.cpp #같은실제장기상태로완전한게임MayPlace를구성한다.
     RawSurfaceAssetDeletion.cpp AssetDeletionVtables.inc #실제83VT의Pre/Post/부모통지를같은장기삭제몸체에연결한다.
+    RawSurfaceIce.cpp #같은현재TYPE/Host/물리로전체아이스파괴와성장을World없이연결한다.
     NativeFortSaveVirtual.cpp NativeFortSaveVirtual.h #같은 장기 물리의 저장/보상 가상 조회를 실제 호출자가 공유한다.
     ClientChatPacketReceiver.cpp ClientChatPacketReceiver.h #현재 Client의41h 장기 중계와 현재 Chat 수신을 연결한다.
     ClientMetaPacketReceivers.cpp ClientMetaPacketReceivers.h #장기 Client의 Meta 8F·현재 표시/NSInfo를 공통 기본표에 설치한다.

@@ -1,0 +1,349 @@
+{
+  "unit": 1207,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "accepted": true,
+  "summary": "아이스 타워 4본문·현재 역할/서버·가상Owner와 실제Host를 같은 장기 저장소에 연결하고 Native Session이 빌리도록 했다.",
+  "sourceSha256": {
+    "cpppj/src/o/RawIceTower.h": "29f65b934a0a49928fd052746a1085f832ce4ff28d83fcabf7bc5ab3e05830d7",
+    "cpppj/src/o/RawIceTower.cpp": "ef7d3958800c4e0d257a889ff75d6b6f61f2690655a7814b67af4a1344b2f340",
+    "cpppj/src/client/RawSurfaceWorld.h": "be44d72492e0f26cca1ecb2ae0ecfd174bda792103b963f4b99cfec07f009d4f",
+    "cpppj/src/client/RawSurfaceIce.cpp": "4ec501e9d005432fd071523fa92465f72d3c502c1b7846f6a9cef2b339809753",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "bcdd2154e7978a13ac0ad4012d0956d8b2447d4e1005b60084940a59e3dea31a",
+    "cpppj/src/client/RawSurfaceAssetDeletion.cpp": "80a9f6865a9aecdf62c9789eafc04aecfbae1a118fe2455e023c91a5f88976ed",
+    "cpppj/src/o/SquidPostPop.cpp": "6ca11aa1e613823cb5d5a35c3f36aefb78ca08664cbc802128ac256f4bcc2102",
+    "cpppj/src/client/RawCampaignSession.cpp": "feb9acbe007646cfeaa65af46d748f7f3340952922517818ad84c7729872e140",
+    "cpppj/src/client/CMakeLists.txt": "9a40409aeccf6f1b77feca323934787ccc8545f0d892d090751854904c1467b8",
+    "cpppj/tests/CMakeLists.txt": "593db628eeb4c97c9080ff22ec199125f392bb837b408662e703cd668736abb1",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "6437b3b0c615cae2cbb9dbd677f42379bb1799633b5fa2b9e4fbb191f4800f51"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13831680,
+      "sha256": "13e1853a8a7d940df955c8db9cf9c3c74856d985b290f239bb98257e09df6bf9"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "6ef9d656fa7e2a076412b1760828c8fa1495015c621865fa745dabe25cf655f1"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 42.95102405548096,
+    "sourcesUnchanged": true,
+    "handle": 89137,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 194,
+    "passed": 194,
+    "newCases": 10,
+    "additionalExistingNonMpCases": 1,
+    "originalFixtureRows": 1426,
+    "groups": {
+      "netstorm_construction_owner_tests": 120,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "seconds": 44.22881197929382,
+    "handle": 16289,
+    "raw": "extracted/cpp-resume-1207/tests.json"
+  },
+  "corrections": {
+    "firstObserved": {
+      "cases": 194,
+      "passed": 191,
+      "failed": [
+        {
+          "target": "netstorm_construction_owner_tests",
+          "name": "ClientIce_GrowingDeletePreservesSelectedDropFailure",
+          "exitCode": 1,
+          "pass": false
+        },
+        {
+          "target": "netstorm_construction_owner_tests",
+          "name": "ClientIce_RegrowthCreatesCurrentRoleBeforeExternalFailure",
+          "exitCode": 1,
+          "pass": false
+        },
+        {
+          "target": "netstorm_construction_owner_tests",
+          "name": "ClientIce_RegrowthUsesVirtualOwnerOfCurrentRole",
+          "exitCode": 1,
+          "pass": false
+        }
+      ]
+    },
+    "firstBuildAudit": "원문540bc0 서버와594fbc 전투를 구별하고 새 자식의가상74를연결했다. 최초성공빌드를최종검증으로세지않았다.",
+    "actualRootType": "같은50e940을공유하는TYPE78을선택하던입력을현재역할147의실제Factory생성으로교정했다. 서버/전투독립관문도같은147을검사한다.",
+    "actualFinderInput": "매몰noIsland/hash0대신실제TYPE94·보통extra·현재SHP의ObjectLevel/Bucket을쓰고실제GenusAt도단언한다. finder/원문기대는변경하지않았다.",
+    "virtualAuditTool": "보조감사의 공통Owner 주소기대 오기4ac1d0을 실제PE와기존RawCommonOwner/SquidOwner의4adf00으로교정했다. 제품은변경하지않았고첫실패로그와도구원시를보존했다.",
+    "headlessTypeDump": "extracted/cpp-resume-1207/current-types.txt",
+    "preservedRaw": [
+      "first-observed-tests.json",
+      "first-observed-test-*.log",
+      "diagnostic-*.log",
+      "before-diagnostic-*",
+      "corrected-input-*",
+      "first-virtual-audit.log",
+      "before-common-owner-address-virtual-audit.py"
+    ]
+  },
+  "staticAudit": {
+    "sourceVtables": 83,
+    "connectedPrePost": 70,
+    "remainingPrePost": 13,
+    "remainingNotices": 6,
+    "addedVtables": [
+      "0050e888",
+      "0050e940",
+      "0050ea08",
+      "0050ead0"
+    ],
+    "remainingRows": [
+      {
+        "vt": "00502370",
+        "destroy": "004af780",
+        "pre": "0041e960",
+        "post": "004b0840",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "005040c0",
+        "destroy": "004af780",
+        "pre": "0042ae80",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "00504198",
+        "destroy": "004af780",
+        "pre": "0042ae80",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "005076b8",
+        "destroy": "004af780",
+        "pre": "0044a4d0",
+        "post": "00448b60",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "00507950",
+        "destroy": "004af780",
+        "pre": "0044afd0",
+        "post": "00449580",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "00508cc8",
+        "destroy": "004af780",
+        "pre": "004b0950",
+        "post": "00450920",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "00509470",
+        "destroy": "004af780",
+        "pre": "00457990",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050a050",
+        "destroy": "004af780",
+        "pre": "0045e7e0",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050a1e8",
+        "destroy": "004af780",
+        "pre": "0045e7e0",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050a388",
+        "destroy": "004af780",
+        "pre": "0045e7e0",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050ee08",
+        "destroy": "004af780",
+        "pre": "004906c0",
+        "post": "004b0840",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050f210",
+        "destroy": "004af780",
+        "pre": "004919b0",
+        "post": "0044b9e0",
+        "notice": "0041c100"
+      },
+      {
+        "vt": "0050f540",
+        "destroy": "004af780",
+        "pre": "004b0950",
+        "post": "0049a4a0",
+        "notice": "0041c100"
+      }
+    ],
+    "reviewedFunctions": 9,
+    "decompilerSourceChanges": 0,
+    "lastClientDecompilation": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    },
+    "lastRDecompilation": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-07"
+    },
+    "unpopOwnerPopVtables": [
+      {
+        "table": "0050e888",
+        "48": "004afe50",
+        "74": "004adf00",
+        "90": "004b02d0"
+      },
+      {
+        "table": "0050e940",
+        "48": "004afe50",
+        "74": "004adf00",
+        "90": "004b02d0"
+      },
+      {
+        "table": "0050ea08",
+        "48": "004afe50",
+        "74": "004adf00",
+        "90": "004b02d0"
+      },
+      {
+        "table": "0050ead0",
+        "48": "004afe50",
+        "74": "004adf00",
+        "90": "004b02d0"
+      }
+    ]
+  },
+  "tutorial4": {
+    "passed": true,
+    "exitCode": 0,
+    "handle": 68423,
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.645,
+        "gameTimeAfter": 24.199,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "waitFrames": 600,
+    "protectedUnchanged": true,
+    "dataUnchanged": true,
+    "imageInspected": "015-generator-settled.png",
+    "raw": "extracted/cpp-resume-1207/live-tutorial4/summary.json"
+  },
+  "editor": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0,
+    "passed": true,
+    "handle": 77116,
+    "sameClientRoundTrips": 2,
+    "observations": 11,
+    "screen": [
+      800,
+      600
+    ],
+    "raw": "extracted/cpp-resume-1207/live-editor-fixed/summary.json"
+  },
+  "protectedFilesUnchanged": 2800,
+  "allStartedBuildTestGuiTerminal": true,
+  "remainingRuntimeEffects": 16,
+  "clientConstructionDevices": 10,
+  "originalGameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "decompilerSourceChanges": 0,
+  "remainingUpperPlanIds": [
+    "M6",
+    "M7",
+    "M8",
+    "K1",
+    "K2",
+    "K3",
+    "K4",
+    "K5",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "B1",
+    "B2",
+    "B3",
+    "B4"
+  ],
+  "knownBugsRegistered": 34,
+  "limitations": [
+    "70/83은부모분배이며전체NoWorld하위완료수가아니다. 전용13부모/6통지·큰비영AI·다른Form/Regular/배치Caller/Fort상위Finish가남는다.",
+    "큰섬드롭은여전히실제Runtime이필요할수있다. 전체재성장·NB33원인조사/수정완료로세지않는다.",
+    "M6-l/m·M7/M8·K/S/B와16상위계획/34버그는유지한다. 다음은썬펜스이웃/표식/연결선/재생성/수명묶음이다.",
+    "GUI는건물완성/TestBattle/전체자연완주검증이아니다. 전체34진입644/검증645·최신ZIP1092·최신전체솔루션통과없음은유지한다.",
+    "사용자제외포획/희생·특정공격·승리·공중3종전용관측·MP단위/패킷/통신/게임/기록검사는실행하지않았다."
+  ],
+  "raw": "extracted/cpp-resume-1207/"
+}

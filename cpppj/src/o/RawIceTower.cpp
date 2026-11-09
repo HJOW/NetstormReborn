@@ -27,7 +27,7 @@ void PostPopGrowingIce(const SidPool& pool,std::span<const RiftTypeFrames> frame
     }
     Need(base)(parent,flags);
 }
-// 소유자/공간/프레임과 전투상태를 현재 세션에 연결한다.
+// 소유자/공간/프레임과 현재 서버·최종생성 권한을 연결한다. 기존 battle 인자 이름의 실제 원문 전역은 00540bc0이다.
 RawIceTower::RawIceTower(SidPool& pool,std::span<const RiftTypeFrames> frames,const IceTowerTypes& types,
     const bool& battle,const bool& boss,const std::uint32_t& loadingDepth,IceTowerHooks hooks)
     :pool_(pool),frames_(frames),types_(types),battle_(battle),boss_(boss),loadingDepth_(loadingDepth),hooks_(std::move(hooks)) {
@@ -40,13 +40,13 @@ void RawIceTower::PostPop(Sid parent,std::uint32_t flags) const { PostPopGrowing
 // 완성형은먼저공간을비우고현재WORD/QA/owner/좌표의순서로그대로성장형에전달한다.
 void RawIceTower::PostDestroy(Sid parent,std::uint32_t flags) const {
     const auto raw=pool_.Slot(parent);
-    if (raw[10]==types_.ice && !(raw[40]&9U) && !(flags&0x200000U) && !loadingDepth_) {
+    if (raw[10]==types_.Ice() && !(raw[40]&9U) && !(flags&0x200000U) && !loadingDepth_) {
         const auto point=Position(parent);const auto surface=Need(hooks_.grid)(point[0],point[1]);
-        if (surface.value && pool_.Slot(surface)[10]==types_.noIsland && (flags&0x8000000U)) {
+        if (surface.value && pool_.Slot(surface)[10]==types_.NoIsland() && (flags&0x8000000U)) {
             const auto at=Position(parent);Need(hooks_.dropIsland)(at[0],at[1],flags,pool_.Slot(parent)[34]);Need(hooks_.damageablePost)(parent,flags);return;
         }
         if (battle_) {
-            Need(hooks_.unpop)(parent,0);const auto born=Need(hooks_.create)(types_.growing,0);
+            Need(hooks_.unpop)(parent,0);const auto born=Need(hooks_.create)(types_.Growing(),0);
             Need(hooks_.word)(born,static_cast<std::uint16_t>(Read(pool_.Slot(parent),12,2)));pool_.AllocatedBytes(born)[35]=pool_.Slot(parent)[35];
             Need(hooks_.owner)(born,pool_.Slot(parent)[34]);WriteFrame(pool_,born,0);const auto at=Position(parent);Need(hooks_.pop)(born,at[0],at[1],0);
         }
@@ -67,7 +67,7 @@ float RawIceTower::Handle(Sid parent,std::uint32_t event,std::uint32_t count,flo
         const auto next=Read(pool_.Slot(parent),36)+1U;const auto last=static_cast<std::uint32_t>(FrameCount(pool_,frames_,parent))-1U;
         if (std::bit_cast<std::int32_t>(next)<std::bit_cast<std::int32_t>(last)) Need(hooks_.setFrame)(parent,std::bit_cast<std::int32_t>(next),0);
         else if (boss_) {
-            const auto born=Need(hooks_.create)(types_.ice,0);Need(hooks_.owner)(born,pool_.Slot(parent)[34]);const auto point=Position(parent);
+            const auto born=Need(hooks_.create)(types_.Ice(),0);Need(hooks_.owner)(born,pool_.Slot(parent)[34]);const auto point=Position(parent);
             Need(hooks_.destroy)(parent,0);Need(hooks_.pop)(born,point[0],point[1],0);return -1.0F;
         }
     }

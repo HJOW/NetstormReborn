@@ -13,6 +13,7 @@
 #include "o/RawDamageableRelease.h" // 실제 현재 권한/TYPE/공간으로 종속을 해방한다.
 #include "o/RawDamageablePostDestroy.h" // 같은 HP/Graph/목록/Host로 후처리한다.
 #include "o/RawGeyserLifetime.h" // 실제 간헐천 고유 수명 접두를 보존한다.
+#include "o/RawIceTower.h" //실제아이스파괴/성장/후처리를같은물리와Host에연결한다.
 #include "o/RawAssetPostPop.h" //장기Geyser가현재TYPE/목록과같은기존원문몸체를빌린다.
 #include "o/RawNuggetRegular.h" //너겟의기존왕복/낙하/현재가상삭제를장기기본Host에연결한다.
 #include "o/RawNuggetPostPop.h" //실제두Regular확보와같은Host의기본부모다.
@@ -190,6 +191,8 @@ public:
     o::RawDamageableRelease& DamageableRelease(); // 현재 물리의 실제 해방 몸체를 공유한다.
     o::RawDamageablePostDestroy& DamageablePost(); // 현재 실제 후처리/공통 Post를 공유한다.
     o::RawGeyserLifetime& GeyserLifetime(); // 같은 지면 목록/기본프레임/현재 편집 모드를 사용한다.
+    o::IceTowerTypes& IceTowerGlobals(); //같은현재완성형/성장형/noIsland TYPE주소만빌리며값을초기화하지않는다.
+    o::RawIceTower& IceTower(); //전체파괴/성장형후처리/주기를World없이같은현재Pool/Host에조립한다.
     void BindDeletionDevices(RawSurfaceDeletionDevices devices); // 첫 공통 삭제 전에 실제 UI/소리 장치만 연결한다.
     void BindDeletionRuntime(const std::shared_ptr<const RawSurfaceDeletionBindings>& runtime); // 현재 World의 실제 파생 종단만 짧게 빌린다.
     o::SquidDestroyLifecycle& CommonDeletion(); // 같은 장기 공통 깊이/장부/Graph/보상을 실제 Native caller가 공유한다.
@@ -332,6 +335,8 @@ private:
     std::function<void(float,float)> regionChanged_; //Outpost가두목록제거뒤같은장기투표/도장을선택한다.
     std::unique_ptr<o::RawDamageablePostDestroy> damageablePost_; // 같은 HP/목록/공통 Post를 빌린다.
     std::unique_ptr<o::RawGeyserLifetime> geyserLifetime_; // 같은 피해가능 객체 수명보다 먼저 반납한다.
+    o::IceTowerTypes iceTowerTypes_; //현재GameAux/표면역할의동일주소를본체보다오래보유한다.
+    std::unique_ptr<o::RawIceTower> iceTower_; //같은전역/Pool/Host를빌리며World/Session을캡처하지않는다.
     std::unique_ptr<NativeFortSaveVirtual> fortSaveVirtual_; //같은 Storage/GameAux를 빌리는 실제 조회기이며 해당 소유자보다 먼저 반납한다.
     std::unique_ptr<o::RawNuggetPostPop> resourceNugget_; //같은Host/난수/확보메모리의너겟후처리다.
     std::shared_ptr<o::GameRandom> buriedRandom_; //실제Client난수의aliasowner로참조수명을보증하고별도seed를만들지않는다.

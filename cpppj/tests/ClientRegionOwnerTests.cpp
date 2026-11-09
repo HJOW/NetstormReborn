@@ -7,6 +7,8 @@
 #include "client/ClientRandomGlobals.h"
 #include "client/ClientSpGlobals.h"
 #include "client/RawCampaignOwnership.h"
+#include "client/RawProcessHostStorage.h" //같은실제Host의성장Regular부착/실행을직접관찰한다.
+#include "o/SquidProcess.h" //실제Regular의사건/횟수/주기를검사하며가짜예약을만들지않는다.
 #include "o/RawPlayerParticipation.h" //공개Player초기화의동맹mask자식도기존실제본문을사용한다.
 #include "o/RawAiWallet.h" //삭제환불의실제owner0/NULL brain지갑관문을그대로사용한다.
 #include "o/RawAiObjectNotice.h" //실제Player의NULL brain은기존전체통지본문의자연반환으로처리한다.
@@ -42,17 +44,17 @@ struct RegionScene { //게임실행기없이실제장기owner/보호자산/물�
     std::unique_ptr<RawAiWallet> wallet; //기존실제현재Player지갑본문이며비영AI선택은금지한다.
     RawAiBrainMemory aiMemory{0x26000000U,RegionForbidden<void,std::span<std::uint8_t>>("영역 검사 비영 AI 할당 금지")}; //빈실제메모리owner이며가짜brain을할당하지않는다.
     double now{};std::uint32_t outpostType{126}; //NULL brain통지가읽지않는현재시각/원문TYPE입력이다.
-    std::uint32_t spRefreshes{},walletCalls{},aiNotices{},lostSounds{}; //실제공통환불/통지/표시장치의선택수를관찰한다.
+    std::uint32_t spRefreshes{},walletCalls{},aiNotices{},lostSounds{},postPopSelections{}; //실제공통환불/통지/표시장치의선택수를관찰한다.
     // 최초 결합은 원문 게임/Player 초기화·패킷·월드 대여를 실행하지 않는다.
-    RegionScene() {
-        storage->BindTransmissionDevices({RegionForbidden<void,std::span<std::uint8_t>>(),RegionForbidden<bool,std::int32_t>(),RegionForbidden<void,std::int32_t,std::span<std::uint8_t>>()});
+    explicit RegionScene(bool observePostPop=false) {
+        storage->BindTransmissionDevices({RegionForbidden<void,std::span<std::uint8_t>>("영역 검사 금지 Native 방송"),RegionForbidden<bool,std::int32_t>(),RegionForbidden<void,std::int32_t,std::span<std::uint8_t>>()});
         storage->BindSerializationGlobals(std::make_shared<FortSerializationGlobals>());
         storage->BindDisplayDiagnostics(detail,[](auto,auto,auto) { throw std::logic_error("유효 영역 입력에서 원문 단언 발생"); });
         storage->BindGraphTrace([this](auto,std::string_view) { ++traces; });storage->EnablePatchDestroyDiagnostics();
         RawSurfaceDisplayBindings display;display.view=[] { return SquidDisplayView{0,0,65536,{0,0,1024,768}}; };display.suppressed=[] { return true; };display.invalidate=RegionForbidden<void,SquidDisplayRect,std::uint32_t>();storage->BindDisplayDevices(std::move(display));
         wallet=std::make_unique<RawAiWallet>(RegionForbidden<AiWalletMemoryAccess>("영역 검사 비영 AI 지갑 대여 금지"),[this]()->std::span<const std::uint8_t> { return players->Records(); },AiWalletReads{[this] { return storage->ownerMode.challenge; },RegionForbidden<bool>()});
         storage->BindRewardDevices({std::shared_ptr<ScrambledSpStore>(sp,&sp->Store()),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->world.editor),[this] { ++spRefreshes; },[this](auto player,auto amount) { ++walletCalls;wallet->Credit(player,amount); }});
-        storage->BindPostPopDevices({[this](auto player,auto sid,auto added) { ++aiNotices;if (storage->ownerMode.challenge || std::bit_cast<std::int32_t>(player)<1) return;RawAiObjectNotice body(aiMemory,storage->pool,storage->types,players->Records(),now,outpostType,[this] { return storage->ownerMode.challenge; },{});body.Notice(player,sid,added); },[current=gameplay] { return current->player.battleOwner; },RegionForbidden<void>("영역 검사 금지 PostPop UI")});
+        storage->BindPostPopDevices({[this](auto player,auto sid,auto added) { ++aiNotices;if (storage->ownerMode.challenge || std::bit_cast<std::int32_t>(player)<1) return;RawAiObjectNotice body(aiMemory,storage->pool,storage->types,players->Records(),now,outpostType,[this] { return storage->ownerMode.challenge; },{});body.Notice(player,sid,added); },[current=gameplay] { return current->player.battleOwner; },[this,observePostPop] { if (!observePostPop) RegionForbidden<void>("영역 검사 금지 PostPop UI")();CHECK(gameplay->selection.mouseType==0);++postPopSelections; }});
         storage->BindDeletionDevices({[](auto,auto,auto) {},[this](Sid sid) { ++lostSounds;CHECK(storage->pool.Slot(sid)[34]==gameplay->player.battleOwner); }});storage->BindProcessDevices({[this] { return gameplay->selection.selected; },[this] { ++clears;gameplay->selection.selected=0; }});
         storage->BindDamageableDevices({std::shared_ptr<ContainedFinderState>(gameplay,&gameplay->finder),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->FortKeepGenus()),RegionForbidden<void,Sid>("영역 검사 금지 붕괴"),RegionForbidden<void,Sid>("영역 검사 금지 폭발"),RegionForbidden<void,const DamageableSoundEvent&>("영역 검사 금지 피해 소리"),RegionForbidden<void,float,float,std::uint32_t,std::uint16_t>("영역 검사 금지 해방 사제 생성"),RegionForbidden<void,Sid,std::int32_t,bool>("영역 검사 금지 Dude 드롭"),RegionForbidden<void,float,float,std::uint32_t,std::uint32_t>("영역 검사 금지 섬 드롭")});
         storage->links.bridgeType=82;storage->links.islandType=94;storage->links.stalagType=95;storage->links.connectorType=155;storage->links.noIslandType=157;
@@ -212,4 +214,86 @@ TEST_CASE(ClientRegions_VortexPreSkipsNegativeCurrentOutposts) {
     RegionScene scene;const auto region=scene.Island();scene.Surface(region);const auto sid=scene.Asset(0x5196f0U);scene.Position(sid);scene.storage->pool.AllocatedBytes(sid)[40]=0;
     scene.owner->Islands().Temple(static_cast<std::int32_t>(region),sid.value);scene.storage->sidLists.temples.entries={sid.value};scene.storage->sidLists.temples.count=1;scene.storage->sidLists.outposts.count=0xffffffffU;
     CHECK(scene.Destroy(sid));CHECK(scene.refreshes==2 && scene.storage->sidLists.outposts.count==0xffffffffU && scene.storage->sidLists.temples.count==0 && scene.players->Base()==0);
+}
+
+// 같은실제세역할주소와본문을월드없이보유하며Player/난수/로딩값을초기화하지않는다.
+TEST_CASE(ClientIce_LongBodySharesCurrentRolesWithoutWorld) {
+    RegionScene scene;const auto seed=scene.random->Game().State();scene.storage->LoadingDepth()=7;auto& types=scene.storage->IceTowerGlobals();auto* body=&scene.storage->IceTower();
+    types.ice=70;types.growing=71;types.noIsland=72;scene.storage->GameAux()->RainBlockerType()=148;scene.storage->GameAux()->GrowingRainBlockerType()=149;scene.storage->links.noIslandType=94;
+    CHECK(&scene.storage->IceTower()==body && &scene.storage->IceTowerGlobals()==&types && types.Ice()==148 && types.Growing()==149 && types.NoIsland()==94);
+    CHECK(scene.players->Base()==0 && !scene.sp->Store().Initialized() && scene.random->Game().State()==seed && scene.storage->LoadingDepth()==7 && !scene.storage->Borrowed() && scene.storage->Generation()==0);
+}
+
+// 실제네생성자VT의후처리는성장형의공통부모와완성형의Damageable부모를구별한다.
+TEST_CASE(ClientIce_FourActualPostParentsWithoutRuntime) {
+    for (const auto table:{0x50e888U,0x50e940U,0x50ea08U,0x50ead0U}) { //추상입력의미선택성장/드롭/MP효과를추가하지않는다.
+        RegionScene scene;const auto sid=scene.Asset(table);const auto before=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(sid,0x10));
+        CHECK(scene.storage->pool.FreeCount()==before+1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0 && scene.traces==1 && scene.players->Base()==0);
+    }
+}
+
+// 최초성장형Pop은같은Host에실제Regular를부착하고기본실행도같은장기본문으로돌아온다.
+TEST_CASE(ClientIce_NoWorldPopSchedulesActualGrowthRegular) {
+    RegionScene scene(true);const auto sid=scene.storage->CreateAsset(150,0);scene.storage->pool.AllocatedBytes(sid)[40]|=0x20U;
+    CHECK(scene.storage->PopAsset(sid,128,128,0x10)==RawPopResult::Registered);auto* process=scene.storage->Processes().Host().FindEvent(sid,0x3a6);CHECK(process);if (!process) return;
+    const auto expected=static_cast<float>(40.0/static_cast<double>(scene.storage->frames[150].Codes().size()));const auto frame=RegionRead(scene.storage->pool.Slot(sid),36);
+    CHECK(process->Count()==0 && process->Payload()==expected && !process->Shared() && scene.storage->PostPop().ActivationDepth()==0 && scene.aiNotices==1 && scene.postPopSelections==1);
+    process->RunFrame();CHECK(process->Count()==1 && process->Payload()==expected && RegionRead(scene.storage->pool.Slot(sid),36)==frame && scene.players->Base()==0 && !scene.storage->Borrowed());
+}
+
+// 성장사건이아니면프레임/TYPE/권한을읽는하위없이원래payload비트만돌려준다.
+TEST_CASE(ClientIce_UnknownEventPreservesPayloadAndCurrentState) {
+    RegionScene scene;const auto sid=scene.Asset(0x50e888U);RegionPut(scene.storage->pool.AllocatedBytes(sid),36,0xffffffffU);const auto seed=scene.random->Game().State();
+    const auto payload=std::bit_cast<float>(0x7fc12345U);const auto result=scene.storage->IceTower().Handle(sid,17,0xffffffffU,payload);
+    CHECK(std::bit_cast<std::uint32_t>(result)==0x7fc12345U && RegionRead(scene.storage->pool.Slot(sid),36)==0xffffffffU && scene.random->Game().State()==seed && scene.players->Base()==0);
+}
+
+// 최종생성권한이없으면마지막프레임에도새타워를만들지않고현재프레임수의주기를읽는다.
+TEST_CASE(ClientIce_CurrentFrameCountAndAuthorityGate) {
+    RegionScene scene;const auto sid=scene.Asset(0x50e888U);const auto count=scene.storage->frames[150].Codes().size();RegionPut(scene.storage->pool.AllocatedBytes(sid),36,static_cast<std::uint32_t>(count-2));scene.gameplay->Boss()=false;
+    const auto free=scene.storage->pool.FreeCount();const auto delay=scene.storage->IceTower().Handle(sid,0x3a6,9,0.5F);
+    CHECK(delay==static_cast<float>(40.0/static_cast<double>(count)) && scene.storage->pool.FreeCount()==free && RegionRead(scene.storage->pool.Slot(sid),36)==count-2);
+}
+
+// 현재지면에받침이없으면성장형의드롭조건은본문을생략하고실제공통Post까지끝난다.
+TEST_CASE(ClientIce_GrowingDeleteQueriesActualEmptySurfaceAndCompletes) {
+    RegionScene scene;const auto sid=scene.Asset(0x50e888U);scene.Position(sid);scene.storage->pool.AllocatedBytes(sid)[40]=0;
+    const auto before=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(sid,0x200010U));
+    CHECK(scene.storage->pool.FreeCount()==before+1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0 && scene.players->Base()==0 && !scene.sp->Store().Initialized());
+}
+
+// 실제받침을찾은성장형은선택된큰드롭미연결을숨기지않고앞선삭제접두만보존한다.
+TEST_CASE(ClientIce_GrowingDeletePreservesSelectedDropFailure) {
+    RegionScene scene;const auto surface=scene.storage->CreateAsset(94,2);scene.Position(surface);scene.storage->pool.AllocatedBytes(surface)[40]=0;
+    const auto size=scene.storage->Display().FrameSize(OriginalEdition::Patch1078,scene.storage->pool.Slot(surface),0);const auto level=SquidHash::ObjectLevel(scene.storage->types[94].flags2,size[0],size[1]); //실제SHP와genus로검색대상의hash단계를선택한다.
+    scene.storage->hash.Bucket(level,100,100)=surface.value;CHECK(level>0 && scene.storage->DamageablePost().GenusAt(100,100,0x1000000U)==surface);
+    const auto sid=scene.Asset(0x50e888U);scene.Position(sid);scene.storage->pool.AllocatedBytes(sid)[40]=0;const auto before=scene.storage->pool.FreeCount();bool rejected{};
+    try { scene.storage->DestroyAsset(sid,0x200010U); }catch (const std::logic_error& error) { std::cerr<<"ICE DROP: "<<error.what()<<" type="<<unsigned(scene.storage->pool.Slot(sid)[10])<<" extra="<<unsigned(scene.storage->pool.Slot(surface)[40])<<'\n';rejected=std::string_view(error.what())=="영역 검사 금지 섬 드롭"; }
+    CHECK(rejected && scene.storage->pool.FreeCount()==before && (scene.storage->pool.Slot(sid)[11]&3U)==2U && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==1);
+}
+
+// 현재성장형TYPE를선택한실제생성/WORD/QA/owner뒤금지된Native외부효과의부분상태를보존한다.
+TEST_CASE(ClientIce_RegrowthCreatesCurrentRoleBeforeExternalFailure) {
+    RegionScene scene;scene.PlayerBlock();scene.gameplay->Server()=true;scene.storage->GameAux()->GrowingRainBlockerType()=70;
+    const auto sid=scene.storage->CreateAsset(scene.storage->GameAux()->RainBlockerType(),2);scene.Position(sid);auto raw=scene.storage->pool.AllocatedBytes(sid);CHECK(raw[10]==147 && RegionRead(raw,0)==0x50e940U);raw[40]=0;raw[34]=1;raw[35]=0xe2;raw[12]=0x5a;raw[13]=0xa5;bool rejected{}; //VT를공유하는TYPE78과구별해현재역할147을실제생성한다.
+    try { scene.storage->DestroyAsset(sid,0x10); }catch (const std::logic_error& error) { std::cerr<<"ICE GROW: "<<error.what()<<" type="<<unsigned(scene.storage->pool.Slot(sid)[10])<<" role="<<scene.storage->GameAux()->RainBlockerType()<<" depth="<<scene.storage->BaseDestroy().PreDepth()<<'/'<<scene.storage->BaseDestroy().PostDepth()<<'\n';rejected=std::string_view(error.what())=="영역 검사 금지 Native 방송"; }
+    std::uint32_t created{};for (std::uint32_t value=5;value<scene.storage->pool.Capacity();++value) { //현재같은Pool에서실제새TYPE70만찾고성공결과를만들지않는다.
+        const Sid current{static_cast<std::uint16_t>(value)};const auto object=scene.storage->pool.Slot(current);if (current!=sid && !(object[11]&1U) && object[10]==70) { ++created;CHECK(object[12]==0x5a && object[13]==0xa5 && object[35]==0xe2 && object[34]==1 && RegionRead(object,36)==0); }
+    }
+    CHECK(rejected && created==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==1 && !scene.storage->Borrowed());
+}
+
+// 재성장조건은전투모드와별개인실제서버전역이며클라이언트에서는현재풀을반납한다.
+TEST_CASE(ClientIce_RegrowthServerGateIsIndependentOfBattleMode) {
+    RegionScene scene;scene.PlayerBlock();scene.gameplay->Server()=false;scene.storage->ownerMode.battle=true;const auto sid=scene.storage->CreateAsset(scene.storage->GameAux()->RainBlockerType(),2);scene.Position(sid);auto raw=scene.storage->pool.AllocatedBytes(sid);CHECK(raw[10]==147 && RegionRead(raw,0)==0x50e940U);raw[40]=0;raw[34]=1;
+    const auto before=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(sid,0x10));CHECK(scene.storage->pool.FreeCount()==before+1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 현재생성TYPE가신전이면가상74의실제Player등록/생산갱신뒤에만Pop외부효과를선택한다.
+TEST_CASE(ClientIce_RegrowthUsesVirtualOwnerOfCurrentRole) {
+    RegionScene scene;scene.PlayerBlock();scene.gameplay->Server()=true;scene.storage->ownerMode.battle=false;scene.storage->GameAux()->GrowingRainBlockerType()=124;
+    const auto sid=scene.storage->CreateAsset(scene.storage->GameAux()->RainBlockerType(),2);scene.Position(sid);auto raw=scene.storage->pool.AllocatedBytes(sid);CHECK(raw[10]==147 && RegionRead(raw,0)==0x50e940U);raw[40]=0;raw[34]=1;bool rejected{};
+    try { scene.storage->DestroyAsset(sid,0x10); }catch (const std::logic_error& error) { std::cerr<<"ICE OWNER: "<<error.what()<<" type="<<unsigned(scene.storage->pool.Slot(sid)[10])<<" role="<<scene.storage->GameAux()->RainBlockerType()<<" depth="<<scene.storage->BaseDestroy().PreDepth()<<'/'<<scene.storage->BaseDestroy().PostDepth()<<'\n';rejected=std::string_view(error.what())=="영역 검사 금지 Native 방송"; }
+    const auto value=scene.PlayerRead(1,0x7c);CHECK(value && value<scene.storage->pool.Capacity());if (!value || value>=scene.storage->pool.Capacity()) return;const Sid born{static_cast<std::uint16_t>(value)};
+    CHECK(rejected && scene.storage->pool.Slot(born)[10]==124 && scene.storage->pool.Slot(born)[34]==1 && scene.PlayerRead(1,0x80)==value && scene.refreshes==1 && scene.gameplay->MapRevision()==1);
 }
