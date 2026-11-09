@@ -1,0 +1,94 @@
+{
+  "unit": 1205,
+  "kind": "현행 인계 정리·AGENTS 최근 변경 반영",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "productUnit": 1204,
+  "productCommit": "ffb485bc32170df299b4d8a0f1de66717463a0ed",
+  "archive": {
+    "anchor": "archive-20261109-through-1204",
+    "originalPrefixBytes": 3868665,
+    "originalPrefixSha256": "3e5ce8f5c5eff17ba72056b2e3e0f98e2ce636103464d4f63cc63bb2e28fc79c",
+    "archivedCurrentBytes": 28276,
+    "archivedCurrentSha256": "cf90fb2d3abad209ad4aea0437ca00076151ad18fb06c24bf3736d0601251455",
+    "prefixPreserved": true,
+    "currentBeforePreservedVerbatim": true
+  },
+  "current": {
+    "bytesBefore": 28276,
+    "bytesAfter": 26933,
+    "sha256": "6002eeca0ae676818e0b1374b5022e42bb54787a315aaf4c6d51ced7a4e858e5",
+    "upperPlanIdsRemaining": 16,
+    "remaining": {
+      "thirdStage": [
+        "M6",
+        "M7",
+        "M8"
+      ],
+      "korean": [
+        "K1",
+        "K2",
+        "K3",
+        "K4",
+        "K5"
+      ],
+      "scenario": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "knownBugs": [
+        "B1",
+        "B2",
+        "B3",
+        "B4"
+      ]
+    },
+    "next": "M6-n 전용22부모/6통지·다른 Form/Regular·큰 AI·다른 배치 호출자/Fort 상위 Finish"
+  },
+  "movedToArchive": [
+    "과거 M1~M5 세부 완료 링크",
+    "정리1196/1199 상세 이력",
+    "중복된1204 완료 설명"
+  ],
+  "agentsChangesApplied": {
+    "551d27ae": "CPP/DN/WB 각각의 플레이 가능성과 원본 동일성 평가",
+    "b5197d48": "9차34건 NB01~NB34와 B1~B4 유지; 원인조사/수정은 미착수",
+    "3051892a": "README.md 개요 보호 명시 및 불변 확인"
+  },
+  "verification": {
+    "unchangedProtectedFiles": 2800,
+    "unchangedTrackedFilesOutsideHandoffs": 23688,
+    "bugRowsInAgentsAndInventory": 34,
+    "localLinksChecked": 36,
+    "preservedInboundAnchors": [
+      "agents-reflection-20261102",
+      "0-재개-전-확인-사항",
+      "인수인계-문서-임시-분할"
+    ],
+    "utf8AndExistingCrLfPreserved": true,
+    "defaultDiffCheckExit": 2,
+    "crlfAwareDiffCheckExit": 0,
+    "diffCheckExplanation": "기존 CRLF를 보존하고 일회성 cr-at-eol 지정으로 실제 후행 공백이 없음을 확인했다. 저장소/전역 설정은 변경하지 않았다.",
+    "buildExecutions": 0,
+    "unitTestExecutions": 0,
+    "gameExecutions": 0,
+    "multiplayerExecutions": 0,
+    "decompilations": 0
+  },
+  "productsUnchanged": {
+    "Netstorm.exe": {
+      "bytes": 13764608,
+      "sha256": "77c4163bdc4e2ae960da5d2834fcc5b6497926826dd9c6d62f4e1272e9c66d43"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "092ad2b94fcb4b3ec8c56f645ae0a5e21716fd76ac475cdd0eaadcaa1af8066a"
+    }
+  },
+  "limitationsPreserved": true,
+  "otherProjects": "DN/WB 인계·코드·스테이징 변경 없음",
+  "raw": "extracted/cpp-resume-1205/"
+}
