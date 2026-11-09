@@ -57,6 +57,9 @@ export class RawSquidDestroy {
     // 같은 실제 풀이다.
     get pool() { return this.#pool; }
 
+    // 삭제 장부(SquidDestroyLifecycle)의 Graph 가 이 삭제기의 공간 해제 어댑터와 같은 해시/spot 을 읽는지 확인한다(다른 지도에 Graph 를 갱신하는 연결을 막는다). (2026-11-10 WB04-E213: 삭제 장부 이식으로 추가)
+    validateGraph(graph) { this.#unpop.validateGraph(graph); }
+
     // 같은 TYPE 표이다(복사하지 않음).
     get types() { return this.#types; }
 

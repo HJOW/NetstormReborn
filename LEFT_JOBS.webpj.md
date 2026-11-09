@@ -4,17 +4,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업·�
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-10, WB04-E212 완료)
+### 0.1 현재 값 (2026-11-10, WB04-E213 완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. WB04에서 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴·대화상자 일부는 원본 스크린샷과 대조했다. **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)은 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 WB04 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료**(시작→메인 메뉴, cpppj 화면 대조 완료) · **M2 진행 중**(순서3 월드 부품 단계, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 424(47.3%)·partial 95(10.6%)·todo 377(42.1%)**. 기준선 소스 줄 수로는 129,840줄 중 port 47,062(36.2%)·partial 26,035(20.1%)·todo 56,743(43.7%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E212** (이 커밋, `20261110-03 WB`) 보호막 수명 `raw-forcefield-lifecycle.js`(후처리 접두 00448d20 flags 비트 1 의 사건 1 0.08f·사건 2 0.01f 독립 예약·Regular 사건 1 프레임 진행 (1,0)·사건 2 사제 검색 성공 0.01f/실패 destroy(0) 뒤 -1·그 밖은 checking 비영일 때 Dais.cpp 0x479 진단 뒤 0·장기 사제 DWORD 와 raw float 의 타입별 finder 전달·독립 일반 finder 0 방향 절삭 칸)를 원본 10.78 1208행 전부와 cpppj `PostPrefixCurrent_*`·`ForcefieldRegularCurrent_*`·`ForcefieldLifecycle_RequiresBinding…` 계약으로 대조([문서](docs/webpj-forcefield-lifecycle-20261110.md)). cpppj 실행 파일(`netstorm_tests.exe --filter Forcefield`) 17건 통과 확인. 그 앞은 **WB04-E211** (`dc80649c / 20261109-118 WB`). 완료 단위 전체는 2.2절 |
-| 다음 작업 | **WB04-E213** — 3.1절 "총·피해·삭제 수명" 묶음의 SquidDestroyLifecycle(공통 pre/postDestroy 의 비전투 선택·공급/작업장 목록·타입 통계·비용 장부, 기준선 뒤 변경 없음)을 옮기고, E212 가 미룬 보호막 조합 시험(`ForcefieldLifecycle_ComposesSpaceProcessesAndSelfDeletion`)을 `forcefield-lifecycle-integration` 으로 닫는다. 이어서 RawDamageablePreDestroy·RawDamageablePostDestroy·RawDamageableRelease·RawGunImpact·RawDiscRegular 와 "비행·이동 유닛" 묶음의 선행 RawFlyerProcess 는 기준선 뒤 변경이 있어 옮길 때 3.6절 판정을 함께 한다. E207 에서 확인한 cpppj `DudeNoticeTests` 시험 장면 결함은 2026-11-10 cpppj 가 고쳤다(3.4절). "그림·캡처" 묶음의 남은 RawPlainAssetDraw·RawPlainWorkshopCapture·RawPlainUnitCapture·RawColorMapCache(adapt)는 순서5 Session 연결과 함께 판단한다. 순서3을 마감하기 전에 3.6절의 기준선 뒤 변경 판정 대기(웹 이식분 54단위)를 처리한다 |
-| 마지막 전체 검사 | WB04-E212의 Node v24.21.0, **2038/2038 통과·실패/건너뜀0**(신규 forcefield-lifecycle 21; WB04-E211 2017), 약140초 |
+| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 425(47.4%)·partial 95(10.6%)·todo 376(42.0%)**. 기준선 소스 줄 수로는 129,840줄 중 port 47,338(36.5%)·partial 26,035(20.1%)·todo 56,467(43.5%). 영역별 남은 양은 0.3절 |
+| 마지막 구현 커밋 | **WB04-E213** (이 커밋, `20261110-06 WB`) 공통 삭제 장부 `squid-destroy-lifecycle.js`(preDestroy 004b0950 의 선택 복구·배치 기억·Graph 분할/Free·소유자 작업장 제거·보상·현재/전역 수·소리/손실 좌표·공급원 제거·현재 AI 통지·전체 작업장 제거와 postDestroy 004b0840 의 주변 표면 Add·패치 비용 인코딩 차감·DWORD 감김, 사전 검사의 쓰기 전 거부)를 원본 10.78 destroylifecycle 576행·destroygraph 576행·island-graph-frame 행과 cpppj `DestroyLifecycle_*`·`DestroyGraph_*`·`GameAux_Deletion*` 계약으로 대조하고, E212 가 미룬 보호막 조합 시험(`ForcefieldLifecycle_ComposesSpaceProcessesAndSelfDeletion`)을 실제 Factory/Owner/Pop/Unpop/Display/Frame/ProcessHost/Kernel 조립으로 닫음([문서](docs/webpj-squid-destroy-lifecycle-20261110.md)). 기준선 뒤 cpppj 3커밋의 실제 PATCH(Native) 분기는 3.6절 ③ 표로 올림. 그 앞은 **WB04-E212** (`9d39ef38 / 20261110-03 WB`). 완료 단위 전체는 2.2절 |
+| 다음 작업 | **WB04-E214** — 3.1절 "총·피해·삭제 수명" 묶음에서 기준선 뒤 변경이 없는 RawSquidDestroyDispatch 를 먼저 권한다(RawFrameChoose·RawGeyserMined·RawRitualChoice 도 변경 없음). RawDamageablePreDestroy·RawDamageablePostDestroy·RawDamageableRelease·RawGunImpact·RawDiscRegular 와 "비행·이동 유닛" 묶음의 선행 RawFlyerProcess 는 기준선 뒤 변경이 있어 옮길 때 E213 문서 3절과 같은 Native 분기 판정(3.6절)을 함께 한다. "그림·캡처" 묶음의 남은 RawPlainAssetDraw·RawPlainWorkshopCapture·RawPlainUnitCapture·RawColorMapCache(adapt)는 순서5 Session 연결과 함께 판단한다. 순서3을 마감하기 전에 3.6절의 기준선 뒤 변경 판정 대기(웹 이식분 54단위)를 처리한다 |
+| 마지막 전체 검사 | WB04-E213의 Node v24.21.0, **2056/2056 통과·실패/건너뜀0**(신규 squid-destroy-lifecycle 17·forcefield-lifecycle-integration 1; WB04-E212 2038), 약136초 |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 실행 순서 진행판
@@ -25,7 +25,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업·�
 | --- | --- | --- | --- | --- |
 | 1 | WB02-G 이식 대응표·기준선 재반영 | **완료** (2026-11-07) | 선행 | 984단위 분류·미분류 0, 3.6절 9곳 판정 |
 | 2 | WB02-H 무브라우저 실행·cpppj 오라클 기반 | **완료** (2026-11-07) | M1 대조 | M1 8장면 기록 밖 차이 0 |
-| 3 | WB04 월드 핵심 부품 | **진행 중** | M2 선행 | A~D5c·E1~E212 완료(2절). `o/`는 단위 72.3%·줄 64.8%가 port. 남은 후보 3.1절 |
+| 3 | WB04 월드 핵심 부품 | **진행 중** | M2 선행 | A~D5c·E1~E213 완료(2절). `o/`는 단위 72.5%·줄 65.2%가 port. 남은 후보 3.1절 |
 | 4 | WB05-A/B 월드 조립과 미션 시작 | 미착수 | M2 | 세션·로그인·전송(0.3절 A 영역)과 Fort 적재·지형/섬(B 영역) 대부분 todo |
 | 5 | WB03-M2/WB05-C 월드 표시·카메라·HUD | 미착수 | M2 | 렌더러·카메라·HUD(J 영역) todo. 메뉴/대화상자 UI(L 영역)는 M1 범위만 partial |
 | 6 | WB06~08 입력·경제·건설 | 부품 일부 | M3 | 건설/배치·운반 부품(E90~E160)은 port. 커서·객체 메뉴(K)·생산 UI는 todo |
@@ -33,23 +33,23 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업·�
 | 8 | WB11·WB13·WB15 미션 수명·안내·소리 | 미착수 | M4 | 튜토리얼·미션 결과·소리/음악·채팅(G·H·I 영역) 대부분 todo |
 | 9 | WB16 표시 품질·배포 | 미착수 | M5 | 60/120 표시·브라우저/OS 확인·정적 배포 |
 
-### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E212 기준)
+### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E213 기준)
 
 줄 수는 기준선 `1f00a25a`의 단위 파일(`.cpp/.h/.inc`) 줄 합계다(주석 포함). partial 줄 수는 일부만 옮긴 파일의 전체 줄이므로 남은 양의 상한이다. 단위·줄 수는 대략적인 척도일 뿐이며, 순서4~5의 연결·통합(실제 세션에서 부품을 같은 월드로 묶고 cpppj 오라클과 비교)은 이 수치에 드러나지 않는 큰 작업이다.
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 896단위 / 129,840줄 | 424 (47.3%) / 47,062줄 (36.2%) | 95 (10.6%) / 26,035줄 (20.1%) | 377 (42.1%) / 56,743줄 (43.7%) |
-| `o/` 월드·규칙 | 517단위 / 67,779줄 | 374 (72.3%) / 43,888줄 (64.8%) | 33 (6.4%) / 8,752줄 (12.9%) | 110 (21.3%) / 15,139줄 (22.3%) |
+| 전체 | 896단위 / 129,840줄 | 425 (47.4%) / 47,338줄 (36.5%) | 95 (10.6%) / 26,035줄 (20.1%) | 376 (42.0%) / 56,467줄 (43.5%) |
+| `o/` 월드·규칙 | 517단위 / 67,779줄 | 375 (72.5%) / 44,164줄 (65.2%) | 33 (6.4%) / 8,752줄 (12.9%) | 109 (21.1%) / 14,863줄 (21.9%) |
 | `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 50 (13.2%) / 3,174줄 (5.2%) | 62 (16.4%) / 17,283줄 (28.0%) | 266 (70.4%) / 41,165줄 (66.8%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 439줄 | 0 | 0 | 1 / 439줄 |
 
-남은 472단위(todo 377·partial 95)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 cpppj 의존 관계로 정한다. `*`는 partial이다.
+남은 471단위(todo 376·partial 95)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 cpppj 의존 관계로 정한다. `*`는 partial이다.
 
 | 영역 | 주 순서 | todo 단위 / 줄 | partial 단위 / 줄 | 큰 단위(줄) |
 | --- | --- | --- | --- | --- |
 | A 세션·로그인·패킷·전송·클라이언트 전역 | 4 | 71 / 13,580 | 2 / 1,907 | RawCampaignSession 5,715 · ClientMain* 1,797 · CampaignTemplateStorage 695 · LocalMissionTransport 439 |
-| B 월드·Fort 적재·지형/섬·객체 공통 수명 | 3·4 | 38 / 6,914 | 13 / 4,052 | GameWorld 1,153 · RawSurfaceWorld 804 · SquidPostPop* 675 · RawGraph* 626 |
+| B 월드·Fort 적재·지형/섬·객체 공통 수명 | 3·4 | 37 / 6,638 | 13 / 4,052 | GameWorld 1,153 · RawSurfaceWorld 804 · SquidPostPop* 675 · RawGraph* 626 |
 | C 시각 효과·입자 | 3·5 | 5 / 678 | 0 | RawCampaignParticles 513 · ParticlePaletteMemory 65 · ConstructionVisualRenderer 57 · ThunderProcess 32 |
 | D 전투·유닛 이동·경로 | 3·7 | 31 / 4,309 | 7 / 1,470 | RawGunProcess 421 · RawGunTarget* 399 · RawMissile* 392 · RawPathProcess 360 |
 | E 경제·생산·건설·자원 | 3·6 | 24 / 4,139 | 1 / 142 | RawProductionControls 393 · RawDaisRegular 372 · RawAssetRegular 352 · RawCampaignFactoryDisplay 329 |
@@ -70,8 +70,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업·�
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 이식 원본은 언제나 기준선 판(`git show 1f00a25a:경로`)이고, 기준선 뒤 cpppj 변경은 3.6절 절차로만 반영한다. 같은 작업 트리에서 CP 세션이 cpppj를 계속 커밋하므로(LAN 3차·`Actual*` 실제 연결 경로·`shared*` 공유 전역 추가 등) cpppj 상태는 커밋과 소스로 판단한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27, 미분류 0**. 상태: **port 424·partial 95·todo 377·제외(-) 88**, session/oracle 0. 웹 모듈 470개 중 465개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 360개, 도구(`webpj/tools`) 오라클 관련 4개다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` 475항목(original-x86 447·independent 7·screenshot 13·source 5·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E212에서 forcefieldpostpop 1개 추가). original-x86 447개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27, 미분류 0**. 상태: **port 425·partial 95·todo 376·제외(-) 88**, session/oracle 0. 웹 모듈 471개 중 466개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 362개, 도구(`webpj/tools`) 오라클 관련 4개다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` 478항목(original-x86 450·independent 7·screenshot 13·source 5·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E213에서 destroylifecycle·destroygraph·island-graph-frame 3개 추가). original-x86 450개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
 | 마지막 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트). 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -130,14 +130,14 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업·�
 | WB04-C1~C3 | 장기 난수 전역·게임 시계·Kernel / 게임 보조 전역 `GameAuxState`(보호 PE 초기값 51칸 대조) / 원본 40칸 입력 큐와 메인 루프 순서 실행기 `MainLoop` | [세션 장기 상태1](docs/webpj-session-runtime-20261105.md)·[세션 장기 상태2](docs/webpj-game-aux-state-20261105.md)·[큐/메인 루프](docs/webpj-main-loop-20261105.md) |
 | WB04-D1~D5c | 공통 공간 해제 부모 / `SquidUnpop` 처리기·삭제기 / 공통 Form 층 / `SquidFactory`(생성자 188칸) / Depend·Gump·Content Form 호스트 / Form 분배·Content 수명·보상/SP 저장소 / Process 호스트·Regular 공통 | [공통 공간 해제](docs/webpj-squid-unpop-20261105.md)·[Unpop·삭제기](docs/webpj-squid-destroy-20261105.md)·[공통 Form 층](docs/webpj-squid-forms-20261106.md)·[SquidFactory](docs/webpj-squid-factory-20261106.md)·[Form 호스트](docs/webpj-form-hosts-20261106.md)·[분배기·Content 수명](docs/webpj-content-lifetime-20261107.md)·[Process 호스트](docs/webpj-process-host-20261108.md) |
 
-### 2.2 WB04-E 월드 핵심 부품 (E1~E212, 영역별)
+### 2.2 WB04-E 월드 핵심 부품 (E1~E213, 영역별)
 
 새 단위를 마치면 해당 영역 행 끝에 `· [E번호](단위 문서) 제목`을 붙이고 단위 수를 고친다. 맞는 영역이 없으면 행을 새로 만든다.
 
 | 영역 | 단위 수 | 단위(단위 문서 링크) |
 | --- | --- | --- |
 | Player·소유자·State | 13 | [E2](docs/webpj-squid-owner-20261108.md) 소유자/레벨/섬 번호/작은 setter · [E3](docs/webpj-player-core-20261108.md) Player Core 묶음 · [E4](docs/webpj-player-identity-20261108.md) Player 식별자 · [E5](docs/webpj-player-participation-20261108.md) Player 참여 · [E6](docs/webpj-chat-channels-20261108.md) Chat 채널 기록 · [E7](docs/webpj-player-initialization-20261108.md) Player 전체 초기화 · [E8](docs/webpj-player-notices-20261108.md) Player 정리·알림 · [E9](docs/webpj-player-content-notice-20261108.md) Player 내용물 통지 · [E11](docs/webpj-state-resets-20261108.md) State 정리 소형 몸체 · [E13](docs/webpj-technology-color-20261108.md) 기술 획득·테마 기술·소유자 색 · [E55](docs/webpj-player-world-regular-20261108.md) Player 월드 연결·Regular 처리기·Template State · [E56](docs/webpj-player-technology-contained-20261108.md) 내용물 검색기·Carrier 삭제 준비·Player 기술 목록 · [E57](docs/webpj-player-geyser-anchor-20261108.md) Player 간헐천 범위·배치 기준점 |
-| 객체 공통 수명·표시·명령 | 11 | [E1](docs/webpj-squid-pop-20261108.md) 공통 Pop · [E14](docs/webpj-small-bodies-20261108.md) 소형 몸체 네 개 · [E15](docs/webpj-small-parents-20261108.md) 소형 부모 다섯 개 · [E24](docs/webpj-squid-postpop-parent-20261108.md) 공통 postPop 부모 · [E26](docs/webpj-region-sid-lists-20261108.md) 표면 소유자·SID 건전성·정적 SID 목록·TYPE 요구 에너지 · [E41](docs/webpj-squid-postpop-20261108.md) 공통 후처리 처리기 SquidPostPop · [E58](docs/webpj-squid-display-name-selection-20261108.md) 객체 표시 부모·이름·방어·선택 · [E59](docs/webpj-squid-display-frame-20261108.md) 객체 표시·프레임 지정·프레임 연결 · [E60](docs/webpj-post-pop-buried-carrier-fence-20261108.md) buried·Carrier·썬 바리케이드 후처리 · [E61](docs/webpj-rune-factory-post-pop-20261108.md) Rune·Factory 후처리·자산 후처리 공유 상태 · [E123](docs/webpj-object-command-20261108.md) 공통 객체 명령·Template 수명 |
+| 객체 공통 수명·표시·명령 | 12 | [E1](docs/webpj-squid-pop-20261108.md) 공통 Pop · [E14](docs/webpj-small-bodies-20261108.md) 소형 몸체 네 개 · [E15](docs/webpj-small-parents-20261108.md) 소형 부모 다섯 개 · [E24](docs/webpj-squid-postpop-parent-20261108.md) 공통 postPop 부모 · [E26](docs/webpj-region-sid-lists-20261108.md) 표면 소유자·SID 건전성·정적 SID 목록·TYPE 요구 에너지 · [E41](docs/webpj-squid-postpop-20261108.md) 공통 후처리 처리기 SquidPostPop · [E58](docs/webpj-squid-display-name-selection-20261108.md) 객체 표시 부모·이름·방어·선택 · [E59](docs/webpj-squid-display-frame-20261108.md) 객체 표시·프레임 지정·프레임 연결 · [E60](docs/webpj-post-pop-buried-carrier-fence-20261108.md) buried·Carrier·썬 바리케이드 후처리 · [E61](docs/webpj-rune-factory-post-pop-20261108.md) Rune·Factory 후처리·자산 후처리 공유 상태 · [E123](docs/webpj-object-command-20261108.md) 공통 객체 명령·Template 수명 · [E213](docs/webpj-squid-destroy-lifecycle-20261110.md) 공통 삭제 장부(SquidDestroyLifecycle)와 보호막 조합 시험 |
 | 기반 유틸리티·입력 분배 | 13 | [E18](docs/webpj-static-factory-20261108.md) 임시 문자열 고리·Factory 입력 · [E19](docs/webpj-data-manager-names-20261108.md) 토큰·SNART·Template 이름표·DataManager 초기화 · [E20](docs/webpj-key-inputs-20261108.md) 일반 입력 분배 세 개 · [E21](docs/webpj-script-command-inputs-20261108.md) 대본 일반 입력 분배 · [E22](docs/webpj-selection-keys-20261108.md) 선택 관련 키 입력 · [E23](docs/webpj-client-input-commands-20261108.md) 선택 키·AI 일반 명령·편집 객체 취득 · [E25](docs/webpj-view-utility-inputs-20261108.md) 표시·유틸리티·글꼴/음질·시나리오 표시 입력 · [E27](docs/webpj-command-inputs-20261108.md) 설정·송금·AI 진단·시나리오 객체·저장 카메라 입력 · [E28](docs/webpj-file-name-20261108.md) 경로 이름 작성기 · [E33](docs/webpj-menu-small-inputs-20261108.md) 소형 일반 입력·메뉴 부모 여섯 개 · [E34](docs/webpj-language-title-time-20261108.md) 언어 요청·창 제목·게임 시간 표시 · [E35](docs/webpj-salvage-ritual-technology-20261108.md) 회수 명령·GetTechnology·의식 선택 입력 · [E36](docs/webpj-production-shortcuts-20261108.md) 생산 단축키 |
 | 대본 명령·미션 설정 | 5 | [E30](docs/webpj-add-random-destroy-at-20261108.md) AddRandom·DestroyAt 부모 · [E31](docs/webpj-create-at-20261108.md) CreateAt 생성 부모 · [E32](docs/webpj-make-ai-20261108.md) 일반 MakeAi·AI 설정 · [E37](docs/webpj-pool-reset-battle-options-20261108.md) 월드 Pool 정리·미션 전투 옵션 · [E38](docs/webpj-tutorial-init-20261108.md) 미션 Tutorial Init |
 | Graph·다리·섬 | 10 | [E12](docs/webpj-graph-20261108.md) 표면 이웃 탐색·Graph · [E39](docs/webpj-squid-neighbors-20261108.md) raw 풀 연결 이웃 탐색 · [E40](docs/webpj-raw-graph-20261108.md) 월드 Graph 연결 RawGraph · [E42](docs/webpj-bridge-connect-20261108.md) 다리/섬 연결 RawBridgeConnect · [E43](docs/webpj-bridge-events-20261108.md) 다리 이벤트 RawBridgeEvents · [E44](docs/webpj-bridge-decay-20261108.md) 다리 붕괴 순수 논리 Bridge · [E45](docs/webpj-raw-bridge-decay-20261108.md) raw 풀 위 다리 붕괴 RawBridgeDecay · [E46](docs/webpj-bridge-carriers-20261108.md) 다리 위 이동체 대피 RawBridgeCarriers · [E47](docs/webpj-island-post-pop-20261108.md) noIsland 후처리 RawIslandPostPop · [E161](docs/webpj-island-runtime-20261109.md) 섬 런타임 |
@@ -161,14 +161,14 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업·�
 - **생성 자료:** 생성자·vtable·타입·패킷 길이처럼 큰 표는 cpppj 소스에서 생성 스크립트로 만들고 `--check`로 재생성 결과가 같은지 검사한다(WB04-D4 `squid-constructors.js` 방식).
 - **수직 진행:** 범위를 넓히기 전에 Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 통과시킨다. 그다음 Early Missions·캠페인 1-1/1-2, 34경로 순으로 넓히며, 각 단계에 필요한 파일만 PORT_MAP에서 골라 옮긴다.
 
-### 3.1 순서3(WB04) 남은 후보 — E213부터
+### 3.1 순서3(WB04) 남은 후보 — E214부터
 
 `o/`의 남은 단위(todo 145·partial 33) 가운데 순서4 이후 몫(아래 마지막 항목)을 뺀 것이 순서3의 남은 범위다. 묶음 안에서는 적힌 순서와 대괄호의 선행 관계를 따른다. 완료한 항목은 이 목록에서 지운다. `*`는 partial이며 PORT_MAP 메모의 "남음:" 부분만 해당한다. 순서3 완료 기준은 3.2절 순서3 행이다.
 
 - **입자 표시(E183~E201 완료: 공통 표시 저장소·연기 E192, 분해 E193, 건설 E194, 불꽃 꼬리 E195, 빔 E196, 파편 E197, EvilRay E198, ShapeToBuffer·VFX 그리기·Squid 그림 헤더 E199, Burning 프레임 E200, Burning 표시 시스템 E201):** 일반 Host 부착 `*VisualSystem` 8종을 모두 옮겼다. 남은 입자/표시 client 단위(`RawCampaignParticles`·`ConstructionVisualRenderer`·`ParticlePaletteMemory`(adapt)·`ThunderProcess`·`SpellFrameVisibility`)는 실제 Session 의 소유자와 dirty/선/픽셀/팔레트 소비자 연결이므로 순서5(WB03-M2/WB05-C) 표시 연결에서 옮기고, 그때 cpppj Session 시험(`DamageableBurningSessionTests` 등)으로 전용 시험 없이 웹 조립 검사만 한 파편(E197)·EvilRay(E198)·Burning(E201) 시스템을 다시 대조한다.
 - **비행·이동 유닛(E209 완료: RawBalloonFrame·RawBulfFrame·RawWalkerFrame):** RawFlyerProcess·RawFlyerFrame·RawFlyerTarget → RawSunAviaryProcess·RawRainAviaryProcess·RawSunFlyerFrame·RawWindFlyer[RawFlyerProcess의 비행 프로세스 선행].
 - **경로:** RawPathProcess·RawPathStart·RawPathData(기준선 뒤 변경 있음, 이식 때 판정)·RawPathSearch*. E159 경로 정리와의 한 장면 통합 시험이 남아 있다.
-- **총·피해·삭제 수명(E210 완료: RawDamageableHit, E211 완료: RawGunGroundTarget, E212 완료: RawForcefieldLifecycle[조합 시험은 SquidDestroyLifecycle 뒤]):** RawGunProcess(+MakeGunTargetHooks)·RawGunImpact·RawGunTarget* → Missile Host 팩토리[RawGunProcess 뒤]·RawMissile*·RawProjectileGeometry*. RawDamageablePreDestroy·RawDamageablePostDestroy(RawCarrierArrival의 `genusAt` 실제 연결 포함)·RawDamageableRelease·CampaignDamageVtables, SquidDestroyLifecycle·RawSquidDestroyDispatch, RawDiscRegular·RawFrameChoose*.
+- **총·피해·삭제 수명(E210 완료: RawDamageableHit, E211 완료: RawGunGroundTarget, E212 완료: RawForcefieldLifecycle, E213 완료: SquidDestroyLifecycle[기준선 typed 경로, Native 분기는 3.6절 ③]):** RawGunProcess(+MakeGunTargetHooks)·RawGunImpact·RawGunTarget* → Missile Host 팩토리[RawGunProcess 뒤]·RawMissile*·RawProjectileGeometry*. RawDamageablePreDestroy·RawDamageablePostDestroy(RawCarrierArrival의 `genusAt` 실제 연결 포함)·RawDamageableRelease·CampaignDamageVtables, RawSquidDestroyDispatch, RawDiscRegular·RawFrameChoose*.
 - **다리:** RawBridgeLifecycle*·RawBridgeFallParent*·RawBridgeDraw.
 - **자원·생산·건설 명령:** RawLocalGeyser·RawGeyserMined*·RawAssetRegular·RawAssetPostPop*(Gun·제네레이터·거주 구역·바리케이드·간헐천·신전 분배 본체와 AssetPostPopHooks)·RawDaisRegular·RawDaisLifecycle·RawDaisContentNotice·EnergyProviderVtables. RawProductionDeck·RawProductionSync·RawFactoryResearch·RawFactoryUpgrade·RawFactoryUpgradeCommand·RawSpStoreNoticeBindings. RawPacketDispatch → RawConstructionCommand. RawManaBoltRegular[클라이언트 투영 선행].
 - **의식·신전:** RawTempleRitual·RawAltarSacrifice·RawRitualChoice·RawVortexAscend*·RawForeignRitualReward*.
@@ -182,7 +182,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업·�
 | --- | --- | --- | --- |
 | 1 · [x] | **WB02-G 이식 대응표·기준선 재반영 (2026-11-07 완료)** | 기준선 트리에서 단위 984개 생성·규칙 31개 분류, 기존 웹 모듈 대응, 3.6절 9곳 판정([문서](docs/webpj-port-map-20261106.md)) | 달성: 미분류 0·웹 모듈 미대응 0 |
 | 2 · [x] | **WB02-H 무브라우저 실행·cpppj 오라클 기반 (2026-11-07 완료)** | `tools/headless.mjs`·`tools/cpp-oracle.mjs`·`tools/screen-compare.mjs`, M1 8장면 대조([문서](docs/webpj-cpp-oracle-20261107.md)) | 달성: 기록 밖 차이 0·원인 기록 5종·웹 결함 2건 수정. 웹 검사는 저장된 오라클만 읽는다 |
-| 3 · [ ] | **WB04 월드 핵심 부품 마감** (A~D5c·E1~E212 완료, E213 이후 3.1절) | 3.1절 후보. 앞 단위가 미룬 연결: 보상의 삭제 장부 연결(`reward_lifecycle_*`, D5b)은 E 부품 연결 때, World 장기 호스트 대여·Client 접합 장면(`ProcessHostStorage`·Kernel procSumm, D5c)은 WB05, 패킷 분배(processform Dispatch 행)는 RawPacketDispatch 단위. 순서3을 마감하기 전에 3.6절 판정 대기(웹 이식분 54단위)를 정리한다 | 해당 cpppj 검사와 원본 fixture 통과, PORT_MAP `port`. 효과 뒤 현재 TYPE/VT/슬롯·진단 복귀·부분 쓰기 순서 보존 |
+| 3 · [ ] | **WB04 월드 핵심 부품 마감** (A~D5c·E1~E213 완료, E214 이후 3.1절) | 3.1절 후보. 앞 단위가 미룬 연결: 보상의 삭제 장부 연결(`reward_lifecycle_*`, D5b)은 E 부품 연결 때, World 장기 호스트 대여·Client 접합 장면(`ProcessHostStorage`·Kernel procSumm, D5c)은 WB05, 패킷 분배(processform Dispatch 행)는 RawPacketDispatch 단위. 순서3을 마감하기 전에 3.6절 판정 대기(웹 이식분 54단위)를 정리한다 | 해당 cpppj 검사와 원본 fixture 통과, PORT_MAP `port`. 효과 뒤 현재 TYPE/VT/슬롯·진단 복귀·부분 쓰기 순서 보존 |
 | 4 · [ ] | **WB05-A/B 월드 조립과 미션 시작** | `RawSurfaceWorld`/`RawWorldCore`·`RawCampaignSession`과 1절의 내부 미션 전송·패킷·미션 로그인 경로, `RawFortWorldLoad`·지형/섬 Builder 계열, Player/동맹/기술/SP/Deck/AI 초기화, Start/Guide·State 전환을 cpppj 부모의 호출 순서로 조립한다. 기존 판독/영역/지형(WB03-U~AB)과 WB04 부품을 같은 월드에 연결하고, 웹 타입 로더의 `zorder`/생성자 주소를 Factory에 넘긴다. 첫 대상은 Tutorial1 | Tutorial1에서 cpppj와 같은 Load/Start 관측(보고서·첫 프레임 논리 화면). Session 덤프가 없으면 3.5절 1번이 정해질 때까지 보고서 범위로 기록한다. 임시 Player/AI/색 번호로 시작 성공을 만들지 않는다 |
 | 5 · [ ] | **WB03-M2/WB05-C 월드 표시·카메라·HUD** | `Renderer`·`DrawSort`·타입별 Draw·시각 시스템·`KenCloud`·팔레트 전환, 실제 카메라·가장자리 스크롤, `UberHud`·덱·미니맵·`FloatingSpGump`·커서, `MissionBegin`·`StartDemo`·환영 창 명령 | **M2:** Tutorial1 진입 직후와 N프레임 뒤 논리 화면이 cpppj와 차이 0(L4a). 영어 4:3 다음 16:9/16:10·한국어. `?map=` 개발 화면과 구분 |
 | 6 · [ ] | **WB06~08 입력·경제·건설** | `UserInput`·선택/커서·QWASZX·ESC 메뉴·우클릭 메뉴, SP 저장/비용/회수/지갑·Deck/재충전/에너지, 사제 상태/이동/경로/수확/운반, 다리/건물 배치·빌더/생산·취소/실체화 | 같은 입력 단계표에서 cpppj와 같은 상태·화면(L3). **M3:** Tutorial1·2와 캠페인 1-1·1-2를 사용자가 브라우저에서 검증할 수 있음 |
@@ -252,6 +252,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업·�
 | `1f00a25a` 뒤 `b8cadde1`: `o/RawFormPacket.cpp/.h` | `core/squid-vtables.js`(VT 칸만) | 삭제 패킷 writer 의 헤더 선기록·client SID 진단 정상 복귀 → **패킷 writer 이식 때**. VT 4종 칸은 ①. base `b8cadde1` |
 | `9cb0547f` 뒤 ~`11fbb988`: `o/RawGameAuxState.h` | `core/game-aux-state.js` | 새 장기 전역 칸(StateNotifyType 82·Spell/Income·프로세스 TYPE·건설 헤더·미션 설정 7칸·Quick 건설 등)과 지정 칸 의미 갱신 → **각 소비자 이식 단위에서 보호 PE 초기값과 함께 추가**. 기존 웹 칸의 값/폭 변화 없음. base `11fbb988` |
 | 기준선 뒤 `02b00b12`: `o/SquidProcess.cpp/.h` | `core/squid-process.js` | (2026-11-08 WB04-D5c) 발사/회전 애니메이션 프로세스 TYPE 두 칸(`fireAnimationType`·`rotateAnimationType`, 0x005410fc/00541100) → **애니메이션 소비자(`RawCampaignArcherBindings`) 이식 때 `GameAuxState`와 함께 추가**. 나머지 변경은 ①. base `02b00b12` |
+| 기준선 뒤 `541624a9`·`417f22d2`·`7ba0130b`: `o/SquidDestroyLifecycle.cpp/.h` | `core/squid-destroy-lifecycle.js` | (2026-11-10 WB04-E213) 실제 PATCH(Native) 전용 분기(`destroy_.HasPatchDiagnostics()`): 현재 전역 getter(`selectedRaw`·`localOwner`·loading 깊이·fort 모드·silent/특수/대체/대형 표면 TYPE)·자산 pre `!isForm()` 0x771 진단·`rememberPlacement`(UI 기억점 원시 좌표 비트)·0040ea00 DWORD 감김 압축 제거·현재 TYPE 표 빌림·최초 로딩 비용 표 소비·선행 `ValidatePre/Post` 생략 → **WB05 World 수명·삭제 UI 전역 연결 때** 같은 시기 `RawSquidDestroy`(+143/−2)·`SquidPostPop`(+35/−1)·`SquidReward`(+6/−3) 변경과 함께 반영. 웹은 기준선 typed 경로만 옮겼다. base `1f00a25a` |
 
 ## 4. 이관해도 남겨야 할 미해결 한계
 

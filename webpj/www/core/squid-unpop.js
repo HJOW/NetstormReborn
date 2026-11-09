@@ -179,6 +179,9 @@ export class SquidUnpop {
     // 같은 풀을 쓰는지 확인하기 위한 실제 풀이다.
     get pool() { return this.#pool; }
 
+    // Graph 가 이 공간 해제 처리기와 같은 해시/spot 지도를 읽는지 확인한다(cpppj `SquidUnpop::ValidateGraph`). (2026-11-10 WB04-E213: 삭제 장부 이식으로 추가)
+    validateGraph(graph) { graph.validateSpace(this.#hash, this.#spots); }
+
     // 같은 Client 의 현재 진단과 전체 TYPE 표를 연결한다. checking 은 현재 DWORD 를 돌려주는 함수, types 는 188칸 표(없으면 Unpop 인자 TYPE 사용)이다.
     bindDiagnostics({ checking = () => 0, assertion = null, types = null } = {}) {
         if (typeof checking !== 'function') throw new TypeError('Unpop 진단 DWORD 공급자는 함수여야 합니다.');

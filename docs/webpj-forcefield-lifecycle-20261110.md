@@ -45,10 +45,10 @@
 
 ## 3. 경계와 남은 것
 
-- 연결하지 않았다. 보호막 생성(`RawPriestShield`, E63)이 쓰는 Pop·Process 호스트와 이 접두/Regular 를 한 장면으로 묶는 cpppj `ForcefieldLifecycle_ComposesSpaceProcessesAndSelfDeletion` 은 `SquidDestroyLifecycle`(삭제 훅 공통 Pre/PostDestroy)이 있어야 하므로 **SquidDestroyLifecycle 이식(E213) 뒤 `forcefield-lifecycle-integration` 시험으로 닫는다.**
+- 보호막 생성(`RawPriestShield`, E63)이 쓰는 Pop·Process 호스트와 이 접두/Regular 를 한 장면으로 묶는 cpppj `ForcefieldLifecycle_ComposesSpaceProcessesAndSelfDeletion` 은 `SquidDestroyLifecycle`(삭제 훅 공통 Pre/PostDestroy)이 있어야 해서 이 단위에서 미뤘고, **E213 에서 `tests/forcefield-lifecycle-integration.test.mjs` 로 닫았다**([문서](webpj-squid-destroy-lifecycle-20261110.md)).
 - 실제 월드의 타입별 단계 선택(004b1fa0) 연결(`findTypeAt`)과 장기 전역(사제 TYPE 005412d0·checking 005e4794) 연결, 실제 Process 호스트·프레임 진행기를 쓴 `makeForcefield*Hooks` 사용은 순서4~5 몫이다(PORT_MAP session 0).
 - CD 10.72 는 웹 범위 밖이다. 이식 때 10.72 비교가 필요해지면 `forcefieldpostpop-x86.tsv` 의 originalCD 행과 cpppj `ForcefieldLifecycle_ReplaysCd` 를 근거로 한다.
 
 ## 4. 다음 시작점
 
-WB04-E213 은 `SquidDestroyLifecycle`(공통 pre/postDestroy 의 비전투 선택·공급/작업장 목록·타입 통계·비용 장부)이다. 기준선 뒤 변경이 없고, 선행 모듈(`squid-destroy.js` RawSquidDestroy·`raw-graph.js`·`squid-reward.js`·`squid-postpop-state.js`)이 이미 있다. 끝나면 이 단위가 미룬 보호막 조합 시험(`ForcefieldLifecycle_ComposesSpaceProcessesAndSelfDeletion`)을 `tests/forcefield-lifecycle-integration.test.mjs` 로 옮긴다.
+WB04-E213 은 `SquidDestroyLifecycle`(공통 pre/postDestroy 의 비전투 선택·공급/작업장 목록·타입 통계·비용 장부)이다. 선행 모듈(`squid-destroy.js` RawSquidDestroy·`raw-graph.js`·`squid-reward.js`·`squid-postpop-state.js`)이 이미 있다. 이 단위가 미룬 보호막 조합 시험(`ForcefieldLifecycle_ComposesSpaceProcessesAndSelfDeletion`)은 E213 에서 닫았다. (처음 이 문서에 적은 "기준선 뒤 변경이 없다"는 SquidDestroyLifecycle 에는 틀렸고 E213 문서 3절에서 정정·판정했다.)

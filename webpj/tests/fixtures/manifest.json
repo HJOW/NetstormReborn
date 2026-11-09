@@ -14030,9 +14030,98 @@
       "bytes": 608426,
       "lines": 3626,
       "fixtureCommit": "6a3aafb8",
-      "webCommit": "worktree",
+      "webCommit": "9d39ef38",
       "cpppjBasis": {
         "cpppj/src/o/RawForcefieldLifecycle.cpp": "fcf47cc2"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E213",
+      "id": "destroylifecycle",
+      "path": "cpppj/tests/fixtures/destroylifecycle-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 공통 pre/postDestroy 장부(Graph 비활성·AI null·보상/소리/UI/전파 대체)의 직접 Pre/Post 한 쌍(Pair)과 공통 destroy→장부 pre→Unpop→장부 post→SID 반납 통합(Destroy). 외부 효과 순서·대상/주변 일곱 슬롯 바이트·풀 카운터/free 머리·꼬리·풀/해시/spot/삭제 기록 Adler·선택·pre/post 깊이·장부(비용·더티·깊이·통계 세 표·목록 전체)·배치/손실 좌표(10.78·CD·10.37 각 두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/squid-destroy-lifecycle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-destroy-lifecycle.js"
+      ],
+      "doc": "docs/webpj-squid-destroy-lifecycle-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidDestroyLifecycle.cpp"
+      ],
+      "scope": "10.78 576행 전부(Pair 384·Destroy 192, 두 정밀도, originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "c3200decd6f3028dcfcefb84429e37f05a6d162fedb969fd331e711fb0846a19",
+      "bytes": 1608479,
+      "lines": 1729,
+      "fixtureCommit": "e0169cba",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidDestroyLifecycle.cpp": "7ba0130b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E213",
+      "id": "destroygraph",
+      "path": "cpppj/tests/fixtures/destroygraph-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 공통 삭제 Graph/공간/장부(Pre 분할·Free·특수 H 치환, Post 발자국 경계·네 해시 단계·순차 Add, Destroy 전체). 위 destroylifecycle 의 관측에 Graph 기록 255행(부호 있는 WORD)과 flood 스택 Adler 를 더함(10.78·CD·10.37 각 두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/squid-destroy-lifecycle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-destroy-lifecycle.js",
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-squid-destroy-lifecycle-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidDestroyLifecycle.cpp"
+      ],
+      "scope": "10.78 576행 전부(Pre·Post·Destroy 각 192, 두 정밀도, originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "db0ba2bb8c75258cc85319647d4b839abd4d33edaebde67d83cb37fe0219b9a4",
+      "bytes": 12597854,
+      "lines": 1729,
+      "fixtureCommit": "67070e23",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidDestroyLifecycle.cpp": "7ba0130b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E213",
+      "id": "island-graph-frame",
+      "path": "cpppj/tests/fixtures/island-graph-frame-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 157(H=8 물리 프레임 9개)→162(단일 프레임) 치환에서 공통 pre/Destroy 의 풀·장부·Graph 전체 상태(10.78·CD·10.37 두 x87 정밀도)",
+      "consumers": [
+        "webpj/tests/squid-destroy-lifecycle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-destroy-lifecycle.js",
+        "webpj/www/core/raw-graph.js"
+      ],
+      "doc": "docs/webpj-squid-destroy-lifecycle-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidDestroyLifecycle.cpp"
+      ],
+      "scope": "10.78 행 전부(originalCD·original1037 행은 범위 밖)",
+      "text": true,
+      "sha256": "f35b9ff0a1fe7390012f28ad8c7a8008864c8277f83cee850a54457cf6a5efd1",
+      "bytes": 178212,
+      "lines": 25,
+      "fixtureCommit": "a726b49f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidDestroyLifecycle.cpp": "7ba0130b"
       }
     }
   ]
