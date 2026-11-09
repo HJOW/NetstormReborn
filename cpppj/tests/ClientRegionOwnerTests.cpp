@@ -1238,3 +1238,84 @@ TEST_CASE(ClientContentOwner_NativeWorldBorrowsSameBodyAndReturnsIt) { // World 
     { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,links,94,nullptr,s.storage);CHECK(body==&world.Storage()->ContentForms() && life==&world.Storage()->ContentLifetime()); }
     CHECK(body==&s.storage->ContentForms() && life==&s.storage->ContentLifetime() && state==&s.storage->ContentState() && state->notice==0x4321 && !s.storage->Borrowed());
 }
+
+
+namespace { // 실제 같은 원본 자산/공장/프레임과 Client 장기 owner를 사용한다.
+struct BombOwnerScene {
+    RegionScene scene; // 기존 실제 Native Pool/TYPE/표시/장치와 현재 권한을 소유한다.
+    Sid Bomb(std::uint32_t table=0x502370U) {
+        const auto sid=scene.Asset(table);scene.Position(sid);scene.storage->Frame().StoreLevel(sid);return sid;
+    } // 실제 생성자와 현재 좌표/프레임 공간을 준비하며 Pop/송신은 실행하지 않는다.
+};
+}
+TEST_CASE(ClientBombOwner_GetterKeepsCurrentStatePoolAndFactory) { // getter는 게임/Player/SP/난수를 초기화하지 않고 같은 본문/상태를 보유한다.
+    BombOwnerScene f;auto& s=f.scene;const auto free=s.storage->pool.FreeCount(),random=s.random->Game().State();auto* body=&s.storage->BombRegular();auto* state=&s.storage->BombState();
+    CHECK(body==&s.storage->BombRegular() && state==&s.storage->BombState() && &body->Pool()==&s.storage->pool);s.gameplay->Authority()->boss=false;state->boss=1;s.gameplay->player.battleOwner=0xfedc1234U;
+    CHECK(!state->Boss() && state->LocalOwner()==0xfedc1234U && state->effect.message==0x5f && state->effect.protocol==1 && state->effect.length==0 && s.storage->BombSearchReservations()==0);
+    CHECK(s.storage->pool.FreeCount()==free && s.random->Game().State()==random && s.players->Base()==0 && !s.sp->Store().Initialized() && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombOwner_CastTimesKeepSameMutableStorage) { // 같은 TYPE+1b8 표를 다시 조회/본문 구성/대여할 때 현재 값을 덮지 않는다.
+    BombOwnerScene f;auto& s=f.scene;auto values=s.storage->BombCastTimes();CHECK(values.size()==188 && values[0]==0 && values[69]==0);values[113]=-123;auto* body=&s.storage->BombRegular();CHECK(s.storage->BombCastTimes().data()==values.data() && values[113]==-123 && body==&s.storage->BombRegular());
+}
+TEST_CASE(ClientBombOwner_OnlyActualSixVtablesAreRegistered) { // 현재6VT와 별도 복원10VT를 실제 생성자 기준으로 구별한다.
+    BombOwnerScene f;auto& s=f.scene;
+    for (const auto table:{0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}) { const auto sid=f.Bomb(table);CHECK(s.storage->HasBombRegular(sid)); } // 연결된 실제 클래스만 조회한다.
+    for (const auto table:{0x502448U,0x5026a0U,0x502778U,0x502840U,0x502908U,0x5029d0U,0x502aa8U,0x502b70U,0x5030c0U,0x503188U}) { const auto sid=f.Bomb(table);CHECK(!s.storage->HasBombRegular(sid)); } // 같은 원문+5c라도 아직 연결하지 않은 후단은 완료로 세지 않는다.
+}
+TEST_CASE(ClientBombOwner_CountZeroUsesActualFirstFrameAndFullPayload) { // carrier0의 첫 호출은 실제 프레임을 쓰고 현재 Boss0이면 원래 NaN payload를 보존한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();s.gameplay->Authority()->boss=false;const auto type=s.storage->pool.Slot(sid)[10];const auto first=s.storage->frames[type].Run('A').first;const auto payload=std::bit_cast<float>(0x7fc12345U);
+    CHECK(std::bit_cast<std::uint32_t>(s.storage->BombRegular().Handle(sid,0xffffffffU,0,payload))==0x7fc12345U && RegionRead(s.storage->pool.Slot(sid),36)==static_cast<std::uint32_t>(first) && s.storage->BombSearchReservations()==0);
+}
+TEST_CASE(ClientBombOwner_LaterCountUsesSameActualFrameAdvance) { // 비영 count는 실제 프레임 진행을 사용하며 Boss0에서 큰 후단/난수를 선택하지 않는다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();s.gameplay->Authority()->boss=false;const auto random=s.random->Game().State();CHECK(s.storage->BombRegular().Handle(sid,17,3,0.125F)==0.125F && s.storage->BombSearchReservations()==0 && s.random->Game().State()==random && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombOwner_StrictCastTimeEqualityReturnsPayload) { // 원문 fcomp의 동일 경계에서는400BYTE 확보/대상 검색으로 가지 않는다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();const auto type=s.storage->pool.Slot(sid)[10];s.storage->BombCastTimes()[type]=1;s.gameplay->Authority()->boss=true;CHECK(s.storage->BombRegular().Handle(sid,0,4,0.25F)==0.25F && s.storage->BombSearchReservations()==0);
+}
+TEST_CASE(ClientBombOwner_SignedCountKeepsNegativeElapsed) { // 전체 count DWORD를 unsigned 큰 시간으로 바꾸지 않고 원문 FILD signed 입력으로 소비한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();s.storage->BombCastTimes()[s.storage->pool.Slot(sid)[10]]=0;s.gameplay->Authority()->boss=true;CHECK(s.storage->BombRegular().Handle(sid,0,0xffffffffU,0.25F)==0.25F && s.storage->BombSearchReservations()==0);
+}
+TEST_CASE(ClientBombOwner_NanElapsedNeverSelectsTargetOrPacket) { // NaN 비교는 원문처럼 base payload를 반환하고 방송/대상 장치를 선택하지 않는다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();s.storage->BombCastTimes()[s.storage->pool.Slot(sid)[10]]=-1;s.gameplay->Authority()->boss=true;const auto payload=std::bit_cast<float>(0x7fc13579U);CHECK(std::bit_cast<std::uint32_t>(s.storage->BombRegular().Handle(sid,0,1,payload))==0x7fc13579U && s.storage->BombSearchReservations()==0);
+}
+TEST_CASE(ClientBombOwner_MissingTargetThrowsAndFreesRealAllocation) { // 시전 경과 뒤 실제 Runtime 부재를 성공으로 숨기지 않고 new400을 예외 복귀 때 반납한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();s.storage->BombCastTimes()[s.storage->pool.Slot(sid)[10]]=-1;s.gameplay->Authority()->boss=true;
+    for (int pass=0;pass<2;++pass) { bool rejected{};try { s.storage->BombRegular().Handle(sid,0,1,0.25F); }catch (const std::logic_error& error) { rejected=std::string(error.what()).find("Runtime")!=std::string::npos; }CHECK(rejected && s.storage->BombSearchReservations()==0); } // 같은 실제 본문을 재호출해 미해제 확보가 남지 않음을 확인한다.
+}
+TEST_CASE(ClientBombOwner_NoticeReadsCurrentBossAfterEffect) { // 실제 시전 안내의6/두 배 시간 인자 뒤 바뀐 현재 Boss를 읽고 큰 대상을 생략한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(),carrier=s.Asset(0x5092d0U);DependWord(s.storage->pool,sid,12,carrier.value);const auto type=s.storage->pool.Slot(sid)[10];s.storage->BombCastTimes()[type]=7;s.gameplay->Authority()->boss=true;std::uint32_t notices{};
+    auto binding=std::make_shared<RawSurfaceBombBindings>();binding->notice=[&](auto parent,auto count,auto event) { CHECK(parent==carrier && count==6 && event==14);++notices;s.storage->BombCastTimes()[type]=-1;s.gameplay->Authority()->boss=false; };s.storage->BindBombRuntime(binding);
+    CHECK(s.storage->BombRegular().Handle(sid,0,0,0.125F)==0.125F && notices==1 && s.storage->BombSearchReservations()==0);
+}
+TEST_CASE(ClientBombOwner_NoticeMutationUsesNewCurrentType) { // 안내가 바꾼 raw TYPE를 A 첫 프레임과 casttime 조회에서 다시 읽는다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(),carrier=s.Asset(0x5092d0U);DependWord(s.storage->pool,sid,12,carrier.value);const auto old=s.storage->pool.Slot(sid)[10];s.storage->BombCastTimes()[old]=7;s.storage->BombCastTimes()[117]=100;s.gameplay->Authority()->boss=true;
+    auto binding=std::make_shared<RawSurfaceBombBindings>();binding->notice=[&](auto,auto,auto) { s.storage->pool.AllocatedBytes(sid)[10]=117; };s.storage->BindBombRuntime(binding);
+    CHECK(s.storage->BombRegular().Handle(sid,0,0,0.125F)==0.125F && RegionRead(s.storage->pool.Slot(sid),36)==static_cast<std::uint32_t>(s.storage->frames[117].Run('A').first) && s.storage->BombSearchReservations()==0);
+}
+TEST_CASE(ClientBombOwner_NoticePinsActualWorldUntilReturn) { // 선택한 실제 World를 callback이 반납해도 함수 사본/전체 pin은 안내 복귀까지 유지한다.
+    BombOwnerScene f;auto& s=f.scene;auto world=std::make_shared<RawSurfaceWorld>(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);std::weak_ptr<RawSurfaceWorld> weak=world;
+    const auto sid=f.Bomb(),carrier=s.Asset(0x5092d0U);DependWord(s.storage->pool,sid,12,carrier.value);s.gameplay->Authority()->boss=false;auto binding=std::make_shared<RawSurfaceBombBindings>();binding->pin=[weak]()->std::shared_ptr<void> { return weak.lock(); };
+    binding->notice=[&](auto,auto,auto) { binding.reset();world.reset();CHECK(!weak.expired() && s.storage->Borrowed()); };s.storage->BindBombRuntime(binding);CHECK(s.storage->BombRegular().Handle(sid,0,0,0.125F)==0.125F && weak.expired() && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombOwner_ActualDefaultHostUsesLongBody) { // 실제 NoWorld Host의 현재 VT+5c가 장기 본문으로 들어가며 첫 count의 payload를 재예약한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();auto raw=s.storage->pool.AllocatedBytes(sid);raw[40]&=static_cast<std::uint8_t>(~1U);raw[11]&=static_cast<std::uint8_t>(~4U);s.Index(sid);s.gameplay->Authority()->boss=false;
+    auto& host=s.storage->Processes().Host();auto* regular=host.AddRegular(sid,17,0.125F,0x52U);CHECK(regular);if (!regular) return;regular->RunFrame();CHECK(regular->Count()==1 && regular->Payload()==0.125F && host.FindEvent(sid,17)==regular && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombOwner_WorldBorrowsSameBodyAndCurrentHeader) { // World 대여/반납 뒤 같은 본문/시전 표/현재 헤더의 주소와 값이 유지된다.
+    BombOwnerScene f;auto& s=f.scene;auto* body=&s.storage->BombRegular();auto* state=&s.storage->BombState();auto values=s.storage->BombCastTimes();state->effect.length=0x1234;values[113]=42;
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(body==&world.Storage()->BombRegular() && state==&world.Storage()->BombState()); }
+    CHECK(body==&s.storage->BombRegular() && state->effect.length==0x1234 && values.data()==s.storage->BombCastTimes().data() && values[113]==42 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientBombOwner_LegacySpanStillUsesTypedInputs) { // 독립 typed 생성자의 기존 span/권한 입력과 원문 초기화 순서를 유지한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(),carrier=s.Asset(0x5092d0U);DependWord(s.storage->pool,sid,12,carrier.value);std::array<BombRegularType,188> types{};const auto kind=s.storage->pool.Slot(sid)[10];types[kind]={3,7};BombRegularState state{0,1,{0x5f,1,10}};std::string order;
+    BombRegularHooks hooks;hooks.notice=[&](auto parent,auto count,auto event) { CHECK(parent==carrier && count==6 && event==14);order+='N';types[kind].firstFrame=4; };hooks.frame=[&](auto parent,auto frame,auto flags) { CHECK(parent==sid && frame==4 && flags==0);order+='F'; };
+    RawBombRegular body(s.storage->pool,types,state,std::move(hooks));CHECK(body.Handle(sid,0,0,0.125F)==0.125F && order=="NF" && state.effect.length==10);
+}
+
+TEST_CASE(ClientBombOwner_TargetSearchUsesActualAllocatedArrayAndReleasesOnThrow) { // 확보한 실제 배열을 검색에 넘기며 패킷 실행 전 예외에서 같은 메모리를 반납한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();std::unique_ptr<std::uint32_t[]> memory;BombRegularState state{1,1};bool saw{},released{};
+    BombRegularHooks hooks;hooks.animate=[](auto,auto,auto) {};hooks.allocate=[&](auto bytes) { CHECK(bytes==400);memory=std::make_unique<std::uint32_t[]>(100);return true; };
+    hooks.targetBuffer=[&] { return std::span<std::uint32_t>(memory.get(),100); };hooks.targets=[&](auto parent,auto output)->std::uint32_t { CHECK(parent==sid && output.data()==memory.get() && output.size()==100);output[99]=0xfedc1234U;saw=true;throw std::logic_error("검색 경계 확인"); };
+    hooks.release=[&](auto bytes) { CHECK(bytes==400 && saw && memory && memory[99]==0xfedc1234U);memory.reset();released=true; };
+    RawBombRegular body(s.storage->pool,state,std::move(hooks),[](auto) { return BombRegularType{0,-1}; });bool rejected{};try { body.Handle(sid,0,1,0.25F); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && saw && released && !memory);
+}

@@ -115,6 +115,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     // lifecycle: 수명.
     std::shared_ptr<RawSurfaceLifetimeBindings> surfaceLifetimeRuntime; // 실제 큰 효과만 World 수명으로 소유한다.
     std::shared_ptr<RawSurfaceDependBindings> dependRuntime; // 현재 감시 알림만 소유하며 Storage가 실제 외곽 pin과 함께 weak로 빌린다.
+    std::shared_ptr<RawSurfaceBombBindings> bombRuntime; // 실제 현재 큰 주문 후단과 전체 Runtime pin의 수명이다.
     std::shared_ptr<RawSurfaceContentBindings> contentRuntime; // 실제 현재 파생 통지/포획과 전체 Runtime pin만 보유한다.
     std::shared_ptr<RawSurfaceGumpBindings> gumpRuntime; // 현재 Session의 실제 UI 통지 소비자만 World 수명으로 보유한다.
     std::unique_ptr<o::RawSurfaceLifecycle> localLifecycle;o::RawSurfaceLifecycle* lifecycle{};std::unique_ptr<o::RawBridgeEvents> localEvents; // 독립 typed의 다리 Regular만 World가 소유한다.
@@ -272,7 +273,7 @@ RawSurfaceWorld::RawSurfaceWorld(o::OriginalEdition edition,std::span<const o::R
     std::span<const o::RiftTypeFrames> frames,std::span<const o::SquidDisplayShape> shapes,o::BridgeConnectState links,std::uint32_t terrainType,o::Kernel* processKernel,std::shared_ptr<RawSurfaceStorage> storage,bool adoptPrepared,bool* sharedSavedGame,std::shared_ptr<o::RawAuthorityState> authority,std::shared_ptr<o::RawGameAuxState> gameAux,std::shared_ptr<o::FortSerializationGlobals> serialization)
     :impl_(std::make_unique<Impl>(edition,types,frames,shapes,links,terrainType,processKernel,std::move(storage),adoptPrepared,sharedSavedGame,std::move(authority),std::move(gameAux),std::move(serialization))) {}
 // 프로세스가 빌린 raw 데이터보다 먼저 반납되며 외부 Client Kernel 자체는 파괴하지 않는다.
-RawSurfaceWorld::~RawSurfaceWorld() { BindRuntimePin({});impl_->DrainCurrentProcessesForShutdown();impl_->deletionRuntime.reset();impl_->surfaceLifetimeRuntime.reset();impl_->dependRuntime.reset();impl_->gumpRuntime.reset();impl_->contentRuntime.reset();impl_->postPop->ReleaseRuntimeBindings(); } // 현재 대여의 생성 실패/일반 종료만 반납하며 이전 Native 잔류의 최종 소유자는 Storage다.
+RawSurfaceWorld::~RawSurfaceWorld() { BindRuntimePin({});impl_->DrainCurrentProcessesForShutdown();impl_->deletionRuntime.reset();impl_->surfaceLifetimeRuntime.reset();impl_->dependRuntime.reset();impl_->gumpRuntime.reset();impl_->contentRuntime.reset();impl_->bombRuntime.reset();impl_->postPop->ReleaseRuntimeBindings(); } // 현재 대여의 생성 실패/일반 종료만 반납하며 이전 Native 잔류의 최종 소유자는 Storage다.
 // 이 뷰는 내부 모듈의 현재 참조만 돌려주며 새 배열/풀을 만들지 않는다.
 RawWorldCore RawSurfaceWorld::Core() {
     auto& s=*impl_;return {s.pool,s.hash,s.spots,s.types,s.frames,s.shapes,s.bookkeeping,s.ownerMode,
@@ -316,6 +317,7 @@ void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
     if (s.storage->UsesNativeTransmissionDevices()) {
         auto binding=std::make_shared<RawSurfaceLifetimeBindings>();binding->fallWalker=[fall=s.runtime.walkerFall](auto sid) { if (!fall(sid)) throw std::logic_error("월드 낙하 처리 실패"); };binding->bridgeEffect=s.runtime.bridgeEffect;binding->pin=s.runtimePin;s.surfaceLifetimeRuntime=binding;s.storage->BindSurfaceLifetimeRuntime(binding); // 전체 현재 효과의 실제 소유자는 기존 World/Session이며 Storage는 weak로만 빌린다.
         auto depend=std::make_shared<RawSurfaceDependBindings>();depend->notice=s.runtime.dependencyNotice;depend->pin=s.runtimePin;s.dependRuntime=depend;s.storage->BindDependRuntime(depend); // 현재 실제 통지 소비자는 보존하고 감시 본체/공장/TYPE를 교체하지 않는다.
+        auto bomb=std::make_shared<RawSurfaceBombBindings>(s.runtime.bombRegular);bomb->pin=s.runtimePin;s.bombRuntime=bomb;s.storage->BindBombRuntime(bomb); // 같은 실제 Session 후단만 weak로 공개하고 장기 정기 본문은 유지한다.
         auto content=std::make_shared<RawSurfaceContentBindings>();content->notice=s.runtime.contentNotice;content->captured=s.runtime.capturedContent;content->pin=s.runtimePin;s.contentRuntime=content;s.storage->BindContentRuntime(content); // 같은 실제 부모 소비자만 weak로 빌리며 정렬/삭제 본문은 바꾸지 않는다.
         auto gump=std::make_shared<RawSurfaceGumpBindings>();gump->notice=s.runtime.gumpNotice;gump->pin=s.runtimePin;s.gumpRuntime=gump;s.storage->BindGumpRuntime(gump); // UI 등록표 본체는 Client가 보유하며 명시 Session 소비자의 전체 owner만 현재 대여로 보존한다.
     }
@@ -326,6 +328,7 @@ void RawSurfaceWorld::BindRuntimePin(std::function<std::shared_ptr<void>()> pin)
     auto& state=*impl_;state.runtimePin=std::move(pin);if (state.factoryRuntime) state.factoryRuntime->pin=state.runtimePin;if (state.displayRuntime) state.displayRuntime->pin=state.runtimePin;if (state.popRuntime) state.popRuntime->pin=state.runtimePin;
     if (state.surfaceLifetimeRuntime) state.surfaceLifetimeRuntime->pin=state.runtimePin; // 표면의 큰 파생 효과도 같은 실제 외곽 소유권을 따른다.
     if (state.dependRuntime) state.dependRuntime->pin=state.runtimePin; // 감시 알림도 같은 전체 Runtime의 공개/반납 수명을 따른다.
+    if (state.bombRuntime) state.bombRuntime->pin=state.runtimePin; // 주문 후단도 실제 외곽 owner의 공개/반납 수명을 따른다.
     if (state.contentRuntime) state.contentRuntime->pin=state.runtimePin; // 내용물 파생 통지도 같은 실제 외곽 owner 공개/반납을 따른다.
     if (state.gumpRuntime) state.gumpRuntime->pin=state.runtimePin; // 실제 UI 통지도 같은 현재 Session의 공개/반납 수명을 따른다.
     if (state.deletionRuntime) state.deletionRuntime->pin=state.runtimePin; // 같은 파생 종단도 실제 외곽 owner 공개/반납을 따른다.

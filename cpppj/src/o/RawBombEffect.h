@@ -6,6 +6,9 @@
 #include <functional>
 
 namespace netstorm::o {
+// 실제40aca0은 송신 비영일 때만 DWORD-1 진단 후 현재 low WORD로 길이를 쓴다. 정상 복귀 진단의 변경도 다시 읽는다.
+void ObserveBombEffectPacket(std::span<std::uint8_t> packet,std::uint32_t sending,const std::function<void()>& invalidCount);
+// 기존 독립 typed의 물리 범위 검증 계약을 유지하는 길이 마무리다.
 // 40aca0의 송신 observer다. writing이 비영일 때 현재 대상수로 길이WORD를 확정하고 나머지 바이트는 보존한다.
 void FinalizeBombEffectPacket(std::span<std::uint8_t> packet,bool writing);
 // 기존 TYPE 표에서 이 수신부가 읽는 비용·소리·지연 시간이다.

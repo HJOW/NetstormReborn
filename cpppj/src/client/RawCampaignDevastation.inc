@@ -28,8 +28,9 @@ void ReceiveBombTimer(std::span<const std::uint8_t> packet) {
 }
 // 외부 효과 뒤 다시 들어오는 실제 몸체마다 현재 권한/로컬 owner/동맹을 공급한다.
 void PrepareDevastation() {
-    devastationTargetState.boss=devastationBlastState.boss=devastationRegularState.boss=devastationEffectState.boss=assetState.Boss();
-    devastationRegularState.localOwner=playerState.battleOwner;devastationBlastState.alliances=alliances;
+    devastationTargetState.boss=devastationBlastState.boss=devastationEffectState.boss=assetState.Boss();
+    if (!world.Storage()->UsesNativeTransmissionDevices()) devastationRegularState.boss=assetState.Boss(); // Native 정기는 같은 현재 권한 주소를 직접 읽는다.
+    if (!world.Storage()->UsesNativeTransmissionDevices()) devastationRegularState.localOwner=playerState.battleOwner;devastationBlastState.alliances=alliances;
 }
 // 아직 복원하지 않은 파생을 다른 효과로 실행하지 않으며 free/dead의 원본 조기 반환은 유지한다.
 void CheckDevastationPacket(std::span<const std::uint8_t> packet) const {
@@ -44,10 +45,10 @@ void ReceiveDevastationEffect(std::span<const std::uint8_t> packet) { CheckDevas
 // 최초 게임 프레임 이전에 기존 복원 몸체를 조립한다. 저장 자료나 UI 성공 상태를 주입하지 않는다.
 void ConnectDevastation() {
     if (devastationRegular) throw std::logic_error("Devastation Session 중복 설치");
-    devastationRegularTypes.resize(core.types.size());devastationEffectTypes.resize(core.types.size());
+    if (!world.Storage()->UsesNativeTransmissionDevices()) devastationRegularTypes.resize(core.types.size());devastationEffectTypes.resize(core.types.size());
     // 실제 불변 타입 표의 번호와 같은 슬롯에 원래 속성만 공급한다.
     for (std::size_t type=0;type<core.types.size();++type) {
-        devastationRegularTypes[type]={core.frames[type].Run('A').first,carrierRegularTypes[type].castTime};devastationEffectTypes[type].cost=core.types[type].cost;
+        if (!world.Storage()->UsesNativeTransmissionDevices()) devastationRegularTypes[type]={core.frames[type].Run('A').first,carrierRegularTypes[type].castTime};devastationEffectTypes[type].cost=core.types[type].cost;
     }
     // 자산 로드 목록은188TYPE 전체와 길이가 다르므로 실제 block 번호로만 음향을 보충한다.
     for (const auto& asset:assets.game.Types()) { const auto name=asset.definition.String("fireSound");auto& type=devastationEffectTypes.at(70+asset.block);type.sound=name && !name->empty() ? soundNames.Lookup(*name) : 0;type.delay=static_cast<std::int32_t>(asset.definition.Number("effecttime").value_or(0)); }
@@ -88,7 +89,8 @@ void ConnectDevastation() {
     };
     regular.receive=[this](std::uint32_t,std::uint32_t,std::span<const std::uint8_t> packet) { ReceiveDevastationEffect(packet); };
     regular.release=[this](std::uint32_t bytes) { if (bytes!=400 || !devastationSearchMemory) throw std::logic_error("Devastation 검색 배열 해제 순서 오류");devastationSearchMemory.reset(); };
-    devastationRegular=std::make_unique<RawBombRegular>(core.pool,devastationRegularTypes,devastationRegularState,std::move(regular));
+    if (world.Storage()->UsesNativeTransmissionDevices()) devastationRegular=&world.Storage()->BombRegular();
+    else { localDevastationRegular=std::make_unique<RawBombRegular>(core.pool,devastationRegularTypes,devastationRegularState,std::move(regular));devastationRegular=localDevastationRegular.get(); } // 기존 독립 Session만 지역 정기 본문을 소유한다.
     BombEffectHooks effect;
     // 425f50은 현재 첫493을 매번 다시 찾는다. 다른 사건이나 내용물 Form을 임의 삭제하지 않는다.
     effect.stopCast=[this](Sid carrier) {

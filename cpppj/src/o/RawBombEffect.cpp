@@ -29,6 +29,12 @@ std::uint32_t CostLow(float value) {
     return static_cast<std::uint32_t>(static_cast<std::uint64_t>(static_cast<std::int64_t>(wide)));
 }
 }
+// 실제 원문은 수신 방향에서 payload를 읽지 않고 진단이 복귀한 뒤 현재 count low WORD를 다시 읽는다.
+void ObserveBombEffectPacket(std::span<std::uint8_t> packet,std::uint32_t sending,const std::function<void()>& invalidCount) {
+    if (!sending) return;
+    if (Bytes(packet,6,4)==0xffffffffU) { const auto call=invalidCount;if (!call) throw std::logic_error("Bomb 효과 count 원문 진단 장치 미연결");call(); }
+    const auto length=(Bytes(packet,6,2)+5U)*2U;packet[2]=static_cast<std::uint8_t>(length);packet[3]=static_cast<std::uint8_t>(length>>8);
+}
 // 원본 쓰기 관문을 먼저 지키고 실제 버퍼 범위 안에서 길이WORD만 변경한다.
 void FinalizeBombEffectPacket(std::span<std::uint8_t> packet,bool writing) {
     if (!writing) return;

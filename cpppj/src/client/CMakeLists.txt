@@ -9,6 +9,7 @@ target_sources(netstorm PRIVATE
     RawSurfaceAssetDeletion.cpp AssetDeletionVtables.inc #실제83VT의Pre/Post/부모통지를같은장기삭제몸체에연결한다.
     RawSurfaceAssetNotice.cpp #실제세홈통지는장기같은Host의현재필드와기존본문을공유한다.
     RawSurfaceFrameRegular.cpp #두실제프레임Regular와현재TYPE방향/클러스터수를World없이공유한다.
+    RawSurfaceBomb.cpp # 공통 주문 Regular의 같은 장기 본문/현재 전역과 실제 큰 후단을 공유한다.
     RawSurfaceContent.cpp # 같은 Content 정렬/Regular/수명과 현재 전역·장치를 장기 공유한다.
     RawSurfaceDepend.cpp # 같은 현재 공장/TYPE·감시 쌍·가상 통지와 삭제를 장기 Storage에 연결한다.
     RawSurfaceGump.cpp # 실제 UI 등록표/owner 수명과 같은 현재 공장/가상 삭제를 장기 Gump에 연결한다.

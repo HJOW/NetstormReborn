@@ -812,10 +812,11 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawDamageableRelease> localDamageableRelease;RawDamageableRelease* damageableRelease{}; // 같은 풀/내용물/사제 실제 생성으로 해방한다.
     std::unique_ptr<RawBombPreDestroy> localBombPre;RawBombPreDestroy* bombPre{}; //Native는같은장기41e960을빌리며독립typed만기존본문을소유한다.
     BombTargetState devastationTargetState;BombBlastState devastationBlastState; // 같은 현재 권한/동맹을 각 실제 자격/효과 위치에 공급한다.
-    BombRegularState devastationRegularState;BombEffectState devastationEffectState; // 주기/수신 상태와 실제 비용 누적을 같은 Session에서 소유한다.
+    BombRegularState localDevastationRegularState; // 독립 typed Session만 기존 값형 상태를 보유한다.
+    BombRegularState& devastationRegularState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->BombState():localDevastationRegularState};BombEffectState devastationEffectState; // 주기/수신 상태와 실제 비용 누적을 같은 Session에서 소유한다.
     std::vector<BombRegularType> devastationRegularTypes;std::vector<BombEffectType> devastationEffectTypes; // 기존188TYPE의A프레임/casttime/cost/fireSound만 보충한다.
     std::unique_ptr<RawBombTargets> devastationTargets;std::unique_ptr<RawBombBlast> devastationBlast; // 같은 네 공간 해시/현재 피해/지면/다리 효과 몸체다.
-    std::unique_ptr<RawBombActivation> devastationActivation;std::unique_ptr<RawBombRegular> devastationRegular;std::unique_ptr<RawBombEffect> devastationEffect; // 0x5c/주기/0x5f의 실제 공용 몸체를 연결한다.
+    std::unique_ptr<RawBombActivation> devastationActivation;std::unique_ptr<RawBombRegular> localDevastationRegular;RawBombRegular* devastationRegular{};std::unique_ptr<RawBombEffect> devastationEffect; // 0x5c/주기/0x5f의 실제 공용 몸체를 연결한다.
     MeltdownState meltdownState;std::unique_ptr<RawMeltdown> meltdown; // 같은 풀/해시/권한/동맹의 실제76h 요청과75h 효과다.
     std::unique_ptr<RegularProcess> pendingDevastationRegular; // 실제 활성화 확보부터 SharedRegular 부착까지 한 객체를 보관한다.
     std::unique_ptr<std::uint8_t[]> devastationSearchMemory,devastationEffectMemory; // 각각 원본new400/대상배열의 실제 확보와 해제 수명을 보존한다.
@@ -1590,6 +1591,9 @@ struct RawCampaignSession::Impl {
             if (VisualDummy(watcher)) { world.Destroy(watcher,0);return; }
             core.processes.NotifyDependency(watcher,watched,form);
         };
+        worldHooks.bombRegular.notice=[this](auto parent,auto count,auto event) { flare->Spawn(parent,std::bit_cast<std::int32_t>(count),event); };
+        worldHooks.bombRegular.targets=[this](auto parent,auto storage) { PrepareDevastation();BombTargetList result{storage,static_cast<std::int32_t>(storage.size()),0};devastationTargets->Find(parent,result);return static_cast<std::uint32_t>(result.count); };
+        worldHooks.bombRegular.receive=[this](auto,auto,auto packet) { ReceiveDevastationEffect(packet); }; // 원문은 sender/connection을 읽지 않는 같은420bf0 전체 본문이다.
         InstallContents(worldHooks.assets);
         ConnectFlare(); // 최초 내용물 부착 전에 실제 연구 효과의 수명/Kernel을 연결한다.
         ConnectConstruction(); // 실제공통삭제후설치뒤같은noIsland VT의표면가상분배를첫객체전등록한다.
@@ -5129,7 +5133,8 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     dispatch.Register(0x61,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->acidZap->Receive(owner,0,packet); });
     dispatch.Observe(0x5c,{});dispatch.Version(0x5c,1,0);dispatch.RequireLength(0x5c,6);
     dispatch.Register(0x5c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationActivation(packet); });
-    dispatch.Observe(0x5f,{});dispatch.Version(0x5f,1,0);dispatch.RequireLength(0x5f,0xffff);
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) dispatch.ObservePacket(0x5f,[storage=impl_->world.Storage()](auto packet,auto sending) { ObserveBombEffectPacket(packet,sending,[storage] { storage->AssertDisplay("count != (int)-1","\\Ns\\O\\_p_packets.cpp",0x96b); }); });else dispatch.Observe(0x5f,{}); //Native는같은원문40aca0을유지하고독립typed의기존관측계약은보존한다.
+    dispatch.Version(0x5f,1,0);dispatch.RequireLength(0x5f,0xffff);
     dispatch.Register(0x5f,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationEffect(packet); });
     if (impl_->world.Storage()->UsesNativeTransmissionDevices()) dispatch.ObservePacket(0x7d,[](auto packet,auto sending) { FinalizeBombTimerPacket(packet,sending!=0); });else dispatch.Observe(0x7d,{}); //Native의실제송신gate뒤한번만선언WORD를정하며typed의기존Nullobserver는유지한다.
     dispatch.Version(0x7d,1,0);dispatch.RequireLength(0x7d,0xffff);

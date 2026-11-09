@@ -35,6 +35,7 @@
 #include "o/RawTechnologyTypesPacket.h" //69h는 같은Client의장기목록/현재Session표시와Client관찰기진단을사용한다.
 #include "o/RawPathData.h" //장기NoWorld/lease반납뒤에도실제40a660송신observer를사용한다.
 #include "o/RawSquidCompressedReceive.h" //공통Squid7a의실제40b2a0길이관찰기를공유한다.
+#include "o/RawBombEffect.h" //5fh의 실제40aca0을 같은 Client 등록표에 장기 보관한다.
 #include "o/RawBombTimerPacket.h" //7d의실제40b390은같은mutable버퍼의현재count로길이를정한다.
 #include "o/RawMissionClientPackets.h" //2a/2b/67/81의 같은 순수 가변 길이 관찰기 본체를 재사용한다.
 #include <array> //같은 네 송신 관찰기와 Client 기본18행의 고정 목록이다.
@@ -280,6 +281,7 @@ void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) 
     dispatch.Version(0x3f,1,0);dispatch.RequireLength(0x3f,0xffff); // receiver만 Session 대여에 맡기며 원문 기본 metadata/observer는 반납 뒤에도 남긴다.
     dispatch.ObservePacket(0x30,[storage](auto packet,auto sending) { o::ObservePathData(packet,sending,[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); });dispatch.Version(0x30,1,0);dispatch.RequireLength(0x30,0xffff); //40a660은현재nodeCount재조회뒤같은WORD를쓰며receiver는추가하지않는다.
     dispatch.ObservePacket(0x7a,[storage](auto packet,auto sending) { o::ObserveCompressedSquid(packet,sending,[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); });dispatch.Version(0x7a,1,0);dispatch.RequireLength(0x7a,0xffff); //40b2a0은dataLength진단복귀뒤현재BYTE를읽고같은버퍼의길이를정한다.
+    dispatch.ObservePacket(0x5f,[storage](auto packet,auto sending) { o::ObserveBombEffectPacket(packet,sending,[storage] { storage->AssertDisplay("count != (int)-1","\\Ns\\O\\_p_packets.cpp",0x96b); }); });dispatch.Version(0x5f,1,0);dispatch.RequireLength(0x5f,0xffff); //실제Source송신때만현재WORD를쓰며Session반납뒤에도같은observer를사용한다.
     dispatch.ObservePacket(0x7d,[](auto packet,auto sending) { o::FinalizeBombTimerPacket(packet,sending!=0); });dispatch.Version(0x7d,1,0);dispatch.RequireLength(0x7d,0xffff); //40b390은송신때만현재count WORD로길이를정하며lease반납뒤에도남는다.
     for (const auto& entry:kClientPacketDefaults) { //이18종만 version1/policy0/보호 PE 길이에 맞추고 다른 등록에는 손대지 않는다.
         if (entry.mutableObserver) dispatch.ObservePacket(entry.type,[storage,type=entry.type](auto packet,auto sending) { ObserveClientPacketDefault(type,packet,sending,storage); });

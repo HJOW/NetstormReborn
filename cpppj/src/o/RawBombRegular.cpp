@@ -26,10 +26,10 @@ RawBombRegular::RawBombRegular(const SidPool& pool,std::span<const BombRegularTy
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188) throw std::invalid_argument("Bomb Regular 판본/TYPE 오류");
 }
 // 효과 후 변경된 현재 TYPE를 검사하여 조회한다.
-const BombRegularType& RawBombRegular::Type(Sid parent) const {
+BombRegularType RawBombRegular::Type(Sid parent) const {
     const auto type=pool_.Slot(parent)[10];
-    if (type>=types_.size()) throw std::out_of_range("Bomb Regular 현재TYPE 범위");
-    return types_[type];
+    const auto read=currentType_;if (type>=(read ? 188U:types_.size())) throw std::out_of_range("Bomb Regular 현재TYPE 범위");
+    return read ? read(type):types_[type];
 }
 // event 종류와 무관하게 count0에서 초기화하고 매 반복에서 현재 권한/시간을 확인한다.
 float RawBombRegular::Handle(Sid parent,std::uint32_t event,std::uint32_t count,float payload) const {
@@ -40,13 +40,15 @@ float RawBombRegular::Handle(Sid parent,std::uint32_t event,std::uint32_t count,
         if (carrier.value) Need(hooks_.notice)(carrier,6,std::bit_cast<std::uint32_t>(Type(parent).castTime)*2U);
         Need(hooks_.frame)(parent,std::bit_cast<std::uint32_t>(Type(parent).firstFrame),0);
     } else Need(hooks_.animate)(parent,1,0);
-    if (!state_.boss) return payload;
+    if (!state_.Boss()) return payload;
     const float elapsed=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(count))*static_cast<double>(payload)); // 원본x87 곱의float32 저장 뒤 비교다.
     if (!(static_cast<double>(Type(parent).castTime)<static_cast<double>(elapsed))) return payload;
     if (!Need(hooks_.allocate)(400)) throw std::bad_alloc(); // 원본의NULL 쓰기 대신 실패를 명시하며 시전 성공으로 세지 않는다.
-    std::array<std::uint32_t,kTargetCount> targets{};
+    std::array<std::uint32_t,kTargetCount> localTargets{}; // 기존 독립 typed 입력의 지역 배열 계약만 보존한다.
     std::array<std::uint8_t,kPacketSize> packet;
     try {
+        const auto buffer=hooks_.targetBuffer;auto targets=buffer ? buffer():std::span<std::uint32_t>(localTargets);
+        if (targets.size()!=kTargetCount) throw std::logic_error("Bomb Regular 실제 확보 대상 배열 크기 오류");
         const auto countTargets=Need(hooks_.targets)(parent,targets);
         if (countTargets>targets.size()) throw std::out_of_range("Bomb Regular 대상100개 초과");
         packet.fill(0xff);
@@ -58,7 +60,7 @@ float RawBombRegular::Handle(Sid parent,std::uint32_t event,std::uint32_t count,
         // 디컴파일에서 누락된실제40ace0 반복으로 대상DWORD의낮은WORD만 복사한다.
         for (std::size_t i=0;i<countTargets;++i) Put(packet,10+2*i,targets[i],2);
         Need(hooks_.broadcast)(packet);
-        Need(hooks_.receive)(state_.localOwner,0,packet);
+        Need(hooks_.receive)(state_.LocalOwner(),0,packet);
     } catch (...) {
         Need(hooks_.release)(400);
         throw;
@@ -66,6 +68,11 @@ float RawBombRegular::Handle(Sid parent,std::uint32_t event,std::uint32_t count,
     const bool stopped=(pool_.Slot(parent)[11]&7U)!=0; // free 이전에 캡처하며 free의재진입 변화는 반환값에 영향을 주지 않는다.
     Need(hooks_.release)(400);
     return stopped ? -1.0F : 0.0F;
+}
+// Native는 현재 실제 TYPE getter만 보유하고 독립 span의 가상 입력 표를 확보하지 않는다.
+RawBombRegular::RawBombRegular(const SidPool& pool,BombRegularState& state,BombRegularHooks hooks,std::function<BombRegularType(std::uint32_t)> read)
+    :pool_(pool),state_(state),currentType_(std::move(read)),hooks_(std::move(hooks)) {
+    if (pool.Edition()!=OriginalEdition::Patch1078 || !currentType_) throw std::invalid_argument("Bomb Native 판본/실제 현재 TYPE reader 계약");
 }
 // 같은 세션 연결 여부를 조회한다.
 const SidPool& RawBombRegular::Pool() const { return pool_; }
