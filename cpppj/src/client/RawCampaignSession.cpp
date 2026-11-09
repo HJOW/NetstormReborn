@@ -623,7 +623,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCampaignOwnership> ownership; // 실제 Vortex/섬/Player/지역 연결이다.
     CarrierPostPopState carrierState; // Damageable의 실제 로딩 전역이다.
     std::unique_ptr<RawCarrierPostPop> carrier; // 같은 공통 장부와 실제 지면 소유자 경계다.
-    std::unique_ptr<RawBalloonBody> balloonBody; //같은 풀/실제 그림자/전용 후처리와 그림자 우선 삭제다.
+    std::unique_ptr<RawBalloonBody> localBalloonBody;RawBalloonBody* balloonBody{}; // Native는 같은 장기 그림자/후처리/삭제 본체를 빌리고 독립 typed만 소유한다.
     std::unique_ptr<void,void(*)(void*)> pendingCloudRegular{nullptr,[](void* storage) { ::operator delete(storage); }}; // 클라우드 플로터의 실제 Regular 확보와 생성 사이 메모리다.
     AssetRegularState regularState; // 실제 예약 사건의 현재 전역이다.
     VortexAscendState vortexAscendState; // 같은 현재 noIsland TYPE를 기존 Tick/삭제 후보와 공유한다.
@@ -821,7 +821,7 @@ struct RawCampaignSession::Impl {
     std::array<std::uint8_t,222> typedBombTimerPacket{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
     std::span<std::uint8_t> bombTimerPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedBombTimerPacket)};bool writingBombTimer{}; // 최대100개 WORD 대상의 실제7d 송신 버퍼다.
     std::unique_ptr<RawDamageablePreDestroy> localDamageablePre;RawDamageablePreDestroy* damageablePre{}; // 공통 삭제와 같은 깊이/Graph/장부를 사용한다.
-    std::unique_ptr<RawFlyerPreDestroy> flyerPre; //144의 현재+8 WORD 대상 삭제 뒤 실제 Damageable Pre다.
+    std::unique_ptr<RawFlyerPreDestroy> localFlyerPre;RawFlyerPreDestroy* flyerPre{}; // Native는 같은 장기 WORD 대상 정리/부모를 빌린다.
     std::unique_ptr<RawDamageablePostDestroy> localDamageablePost;RawDamageablePostDestroy* damageablePost{}; // 같은 실제 예약/다리/공통 후처리다.
     std::unique_ptr<RawVortexPreDestroy> localVortexPre;RawVortexPreDestroy* vortexPre{}; //Native는같은장기신전전처리를빌린다.
     std::unique_ptr<RawBuriedPostPop> localBuriedPostPop;RawBuriedPostPop* buriedPostPop{}; //Native의현재전역/두Regular/공통부모는같은장기Storage몸체다.
@@ -1230,7 +1230,9 @@ struct RawCampaignSession::Impl {
             if (!pendingCloudRegular) throw std::logic_error("클라우드 플로터 Regular 실제 예약 누락");auto* storage=pendingCloudRegular.release();auto* process=new(storage) RegularProcess(event,delay);
             auto* attached=static_cast<RegularProcess*>(core.processes.AttachRegular(std::unique_ptr<RegularProcess>(process),parent));if (attached) attached->ResetTask(event,core.processState.Now());
         }; // 실제496e80은 부착 후 현재 시각을 쓴다.
-        balloonBody=std::make_unique<RawBalloonBody>(core.pool,core.types,core.spots,assetState.Boss(),*carrier,priests->Carrier(),std::move(balloon));core.postPop.SetBalloonPostPop(balloonBody.get());
+        if (world.Storage()->UsesNativeTransmissionDevices()) balloonBody=&world.Storage()->BalloonBody();
+        else { localBalloonBody=std::make_unique<RawBalloonBody>(core.pool,core.types,core.spots,assetState.Boss(),*carrier,priests->Carrier(),std::move(balloon));balloonBody=localBalloonBody.get(); } // 독립 typed의 기존 그림자/Regular 소유 계약을 보존한다.
+        core.postPop.SetBalloonPostPop(balloonBody);
         // 빈/내장 타입을 포함해 실제 TYPE+98의 판본 초기값과 파싱값을 같은 번호의 모든 소비자에게 전달한다.
         for (std::size_t type=0;type<core.types.size();++type) {
             gunTypes[type].theme=core.types[type].theme;themes[type]=std::bit_cast<std::uint32_t>(core.types[type].theme);elements[type]=core.types[type].theme;
@@ -1678,9 +1680,9 @@ struct RawCampaignSession::Impl {
             if (Read(raw,0)==0x50e738U) return acidFence->Handle(sid,event,count,payload); //48ea30은첫count0부터공격하며공통Regular를호출하지않는다.
             if (GrowingIce(sid)) return iceTower->Handle(sid,event,count,payload); //48ebe0의event3a6과현재numFrames/40초주기다.
             if (Read(raw,0)==0x50a050U) return windFlyer->Handle(sid,event,count,payload); // 실제45e8b0의주기범위공격이다.
-            if (Read(raw,0)==0x504198U) return balloonBody->CloudRegular(sid,event,count,payload,
+            if (Read(raw,0)==0x504198U) { if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->BalloonRegular(sid,event,count,payload);return balloonBody->CloudRegular(sid,event,count,payload,
                 [this](Sid parent,std::int32_t delta,std::uint32_t flags) { RawFrameAdvance advance(core.pool,core.frames,core.frame);static_cast<void>(advance.Advance(parent,delta,flags)); },
-                [this](Sid parent,std::uint32_t code,std::uint32_t number,float value) { return carrierRegular->Handle(parent,code,number,value); }); // 가상5c의42af60만 전용 event3을 처리한다.
+                [this](Sid parent,std::uint32_t code,std::uint32_t number,float value) { return carrierRegular->Handle(parent,code,number,value); }); } // 가상5c의42af60만 전용 event3을 처리한다.
             // 실제 ContentForm+5c(4af070)는 count0에서 payload를 반환하고 양수count에서 선택을 풀어 재부착한다.
             // 기존 ContentFormHost::Damage는 이 원본 몸체의 보존 API명이며 피해를 전달하는 경로가 아니다.
             if (Read(raw,0)==0x512208U) return contentForms->Damage(sid,std::bit_cast<std::int32_t>(count),payload);
@@ -2548,7 +2550,8 @@ struct RawCampaignSession::Impl {
         if (world.Storage()->UsesNativeTransmissionDevices()) bombPre=&world.Storage()->BombPre();
         else { localBombPre=std::make_unique<RawBombPreDestroy>(core.pool,BombPreDestroyHooks{pre.explosion,[this](float x,float y) { if (!services.sound.playOnceAt) throw std::logic_error("Bomb 실제폭발음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup("explosion.wav"),0,0); },pre.base});bombPre=localBombPre.get(); } //독립typed도원문의큰폭발/현재좌표/공통전처리를유지한다.
         collapseEffect=pre.collapse;ritualExplosion=pre.explosion;if (world.Storage()->UsesNativeTransmissionDevices()) damageablePre=&world.Storage()->DamageablePre();else { localDamageablePre=std::make_unique<RawDamageablePreDestroy>(core.pool,core.spots,contentFinder,damageablePreState,std::move(pre));damageablePre=localDamageablePre.get(); }priests->BindDamageable(*damageablePre);
-        flyerPre=std::make_unique<RawFlyerPreDestroy>(core.pool,FlyerPreDestroyHooks{[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); },[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); }});
+        if (world.Storage()->UsesNativeTransmissionDevices()) flyerPre=&world.Storage()->FlyerPre();
+        else { localFlyerPre=std::make_unique<RawFlyerPreDestroy>(core.pool,FlyerPreDestroyHooks{[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); },[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); }});flyerPre=localFlyerPre.get(); } // 독립 typed도 같은 기존 두 하위 호출을 유지한다.
         auto post=services.damageablePost;
         if (!post.dropDude) post.dropDude=[this](Sid source,std::int32_t index,bool randomPoint) { dudeDrop->Drop(source,index,randomPoint); };
         if (!post.dropIsland) post.dropIsland=[this](float x,float y,std::uint32_t flags,std::uint32_t owner) { if (!buildingEffects) throw std::logic_error("파괴 후 실제 받침 정리 설치 전 호출");PrepareBuilding(core.processState.Now());buildingEffects->DropIsland(x,y,flags,owner); };
@@ -4470,6 +4473,7 @@ o::AiWalletMemoryAccess RawCampaignSession::BorrowAiWalletMemory() { return {&im
 // 선택된 큰 효과의 실제 같은 Session 모듈만 사용한다. Client caller가 실제 Runtime pin을 보유한다.
 void RawCampaignSession::EmitDamageableCollapse(o::Sid sid) { if (!impl_->collapseEffect) throw std::logic_error("실제 붕괴 효과 미연결");impl_->collapseEffect(sid); }
 void RawCampaignSession::EmitDamageableExplosion(o::Sid sid) { const auto explosion=impl_->ritualExplosion;if (!explosion) throw std::logic_error("실제 폭발 효과 미연결");explosion(sid); } //Client의실제Runtime pin안에서선택한함수사본을호출끝까지보유하며같은Impact/파편본문을사용한다.
+float RawCampaignSession::HandleCarrierResourceRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) { if (!impl_->carrierRegular) throw std::logic_error("실제 Carrier Regular 설치 전 호출");return impl_->carrierRegular->Handle(sid,event,count,payload); } // Client가 pin한 현재 전체 Runtime의 기존42a750 본체만 실행한다.
 void RawCampaignSession::SpawnReleasedPriest(float x,float y,std::uint32_t type,std::uint16_t word) { impl_->priests->Spawn().Spawn(x,y,type,word); } // 현재 권한/공간/원문 WORD의 실제 사제 생성이다.
 void RawCampaignSession::DropDamageableDude(o::Sid sid,std::int32_t index,bool random) { impl_->dudeDrop->Drop(sid,index,random); } // 같은 실제 생성/작업/통지 목록을 사용한다.
 void RawCampaignSession::DropDamageableIsland(float x,float y,std::uint32_t flags,std::uint32_t owner) { if (!impl_->buildingEffects) throw std::logic_error("실제 받침 정리 모듈 미연결");impl_->PrepareBuilding(impl_->core.processState.Now());impl_->buildingEffects->DropIsland(x,y,flags,owner); } // 실제 현재 건설 정리기를 같은 인자로 호출한다.

@@ -85,7 +85,7 @@ TEST_CASE(SurfaceAssetDeletion_CurrentSelectionClearedOnce) {
 
 // 미연결 고유 Pre는 앞선 dead/로그/깊이 효과를 남기며 공통 성공이나 Session 우회로 처리하지 않는다.
 TEST_CASE(SurfaceAssetDeletion_UnrestoredSpecialPrePreservesPartialEffects) {
-    DeletionScene scene;const auto sid=scene.Asset(0x5040c0U);const auto free=scene.storage->pool.FreeCount();bool rejected{}; //복원한Point Blast대신실제미연결42ae80부모를선택하며실패기대는유지한다.
+    DeletionScene scene;const auto sid=scene.Asset(0x5076b8U);const auto free=scene.storage->pool.FreeCount();bool rejected{}; // 복원한 벌룬 대신 실제 미연결44a4d0 부모를 선택하며 실패 단언은 유지한다.
     try { scene.storage->DestroyAsset(sid,0x10); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).find("전용 삭제 몸체 미연결")!=std::string_view::npos; }
     CHECK(rejected && (scene.storage->pool.Slot(sid)[11]&3U)==2U);CHECK(scene.traces==1 && scene.legacyDeletes==0 && scene.storage->pool.FreeCount()==free);CHECK(scene.storage->BaseDestroy().PreDepth()==1 && scene.storage->BaseDestroy().PostDepth()==0);
 }

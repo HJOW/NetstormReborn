@@ -107,6 +107,76 @@ struct RegionScene { //게임실행기없이실제장기owner/보호자산/물�
 };
 }
 
+// 전체 벌룬 본체를 조립해도 현재 물리·Player·SP·난수와 대여 상태를 초기화하지 않는다.
+TEST_CASE(ClientBalloon_LongBodyDoesNotResetOwners) {
+    RegionScene scene;const auto random=scene.random->Game().State();const auto free=scene.storage->pool.FreeCount();
+    auto* body=&scene.storage->BalloonBody();CHECK(&scene.storage->BalloonBody()==body && &body->Pool()==&scene.storage->pool);
+    CHECK(scene.storage->pool.FreeCount()==free && scene.random->Game().State()==random && scene.players->Base()==0 && !scene.sp->Store().Initialized() && !scene.storage->Borrowed());
+}
+
+// 실제 두 생성자 VT의 고유 Pre와 공통 Post가 World 없이 같은 풀을 반납한다.
+TEST_CASE(ClientBalloon_TwoNoWorldDeleteParents) {
+    for (const auto table:{0x5040c0U,0x504198U}) { // 그림자가 없는 두 실제 부모를 독립 저장소에서 확인한다.
+        RegionScene scene;const auto sid=scene.Asset(table);const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->BalloonBody().Handles(sid));
+        CHECK(scene.storage->DestroyAsset(sid,0x10U));CHECK(scene.storage->pool.FreeCount()==free+1 && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+    }
+}
+
+// 현재 WORD 그림자를 실제 가상 삭제한 뒤 부모를 삭제하며 TYPE/상태의 높은 WORD를 대상에 섞지 않는다.
+TEST_CASE(ClientBalloon_ShadowIsDeletedBeforeParent) {
+    RegionScene scene;const auto parent=scene.Asset(0x5040c0U),shadow=scene.Asset(0x504198U);auto raw=scene.storage->pool.AllocatedBytes(parent);raw[8]=static_cast<std::uint8_t>(shadow.value);raw[9]=static_cast<std::uint8_t>(shadow.value>>8);
+    const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(parent,0x10U));
+    CHECK(scene.storage->pool.FreeCount()==free+2 && scene.traces==2 && (scene.storage->pool.Slot(shadow)[11]&1U) && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 자기 WORD 대상의 재진입은 원래 dead 관문으로 반환하고 부모 깊이와 풀 반납을 중복하지 않는다.
+TEST_CASE(ClientBalloon_SelfShadowUsesExistingDeadGuard) {
+    RegionScene scene;const auto sid=scene.Asset(0x5040c0U);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[8]=static_cast<std::uint8_t>(sid.value);raw[9]=static_cast<std::uint8_t>(sid.value>>8);
+    const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(sid,0x10U));
+    CHECK(scene.storage->pool.FreeCount()==free+1 && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 그림자에서 고유 미복원 Pre가 실패하면 부모 Carrier 효과보다 앞의 두 실제 삭제 깊이를 보존한다.
+TEST_CASE(ClientBalloon_ShadowFailurePreservesBothDepths) {
+    RegionScene scene;const auto parent=scene.Asset(0x5040c0U),shadow=scene.Asset(0x5076b8U);auto raw=scene.storage->pool.AllocatedBytes(parent);raw[8]=static_cast<std::uint8_t>(shadow.value);raw[9]=static_cast<std::uint8_t>(shadow.value>>8);scene.gameplay->selection.selected=parent.value;
+    const auto free=scene.storage->pool.FreeCount();bool rejected{};
+    try { scene.storage->DestroyAsset(parent,0x10U); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).find("전용 삭제 몸체 미연결")!=std::string_view::npos; }
+    CHECK(rejected && scene.storage->pool.FreeCount()==free && scene.traces==2 && scene.clears==0 && scene.gameplay->selection.selected==parent.value);
+    CHECK((scene.storage->pool.Slot(parent)[11]&3U)==2U && (scene.storage->pool.Slot(shadow)[11]&3U)==2U && scene.storage->BaseDestroy().PreDepth()==2 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 실제 최초 Pop은 현재 TYPE로 그림자를 만들고 같은 장기 재귀 PostPop/공통 깊이를 끝낸다.
+TEST_CASE(ClientBalloon_FirstPopCreatesCurrentActualShadow) {
+    RegionScene scene(true);scene.gameplay->Server()=true;const auto sid=scene.Asset(0x5040c0U);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[40]=0;RegionPut(raw,36,0);const auto type=raw[10];
+    CHECK((scene.storage->types[type].flags1&0x400000U)!=0);const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->PopAsset(sid,128,128,0x10U)==RawPopResult::Registered);
+    const auto current=scene.storage->pool.Slot(sid);const Sid shadow{static_cast<std::uint16_t>(current[8]|std::uint16_t(current[9])<<8)};CHECK(shadow.value!=0 && scene.storage->pool.FreeCount()==free-1);if (!shadow.value) return;
+    const auto image=scene.storage->pool.Slot(shadow);CHECK(image[10]==type && (image[40]&8U) && !(image[11]&1U) && scene.storage->PostPop().ActivationDepth()==0 && !scene.storage->Borrowed());
+}
+
+// Cloud Floater의 최초 Pop은 실제 동일 Host에 사건3/0.1초 주기를 부착한다.
+TEST_CASE(ClientBalloon_CloudFirstPopUsesRealRegular) {
+    RegionScene scene(true);scene.gameplay->Server()=true;const auto sid=scene.Asset(0x504198U);scene.storage->pool.AllocatedBytes(sid)[40]&=0xf6U; // 검사용 추상/그림자 비트9만 끄고 원문의 일반 최초 Pop 관문을 사용한다.
+    CHECK(scene.storage->PopAsset(sid,128,128,0x10U)==RawPopResult::Registered);
+    auto* process=scene.storage->Processes().Host().FindEvent(sid,3);CHECK(process);if (!process) return;
+    CHECK(process->Count()==0 && process->Payload()==0.1F && !process->Shared() && scene.storage->PostPop().ActivationDepth()==0 && !scene.storage->Borrowed());
+    const auto frame=RegionRead(scene.storage->pool.Slot(sid),36);process->RunFrame(); // 실제 Host의 NoWorld 분배가 사건3·프레임·그림자 재귀 Pop까지 수행한다.
+    CHECK(process->Count()==1 && process->Payload()==0.1F && RegionRead(scene.storage->pool.Slot(sid),36)==frame+1 && scene.storage->PostPop().ActivationDepth()==0);
+}
+
+// 사건3은 큰 Carrier Runtime 없이 실제 프레임을 진행하며 payload의 NaN 비트도 보존한다.
+TEST_CASE(ClientBalloon_CloudEvent3UsesActualFrameAdvance) {
+    RegionScene scene;scene.gameplay->Server()=true;const auto sid=scene.Asset(0x504198U);RegionPut(scene.storage->pool.AllocatedBytes(sid),36,0);const auto type=scene.storage->pool.Slot(sid)[10];CHECK(scene.storage->frames[type].Codes().size()>1);
+    const auto value=scene.storage->BalloonRegular(sid,3,17,std::bit_cast<float>(0x7fc12345U));
+    CHECK(std::bit_cast<std::uint32_t>(value)==0x7fc12345U && RegionRead(scene.storage->pool.Slot(sid),36)==1 && !scene.storage->Borrowed());
+}
+
+// 다른 사건은 실제 Carrier Runtime이 없을 때 payload 성공으로 대신하지 않는다.
+TEST_CASE(ClientBalloon_NonFrameEventRequiresActualCarrierRuntime) {
+    RegionScene scene;const auto sid=scene.Asset(0x504198U);const auto before=RegionRead(scene.storage->pool.Slot(sid),36);bool rejected{};
+    try { scene.storage->BalloonRegular(sid,2,17,0.25F); }catch (const std::logic_error& error) { rejected=std::string_view(error.what())=="장기 벌룬 현재 Carrier Regular 미연결"; }
+    CHECK(rejected && RegionRead(scene.storage->pool.Slot(sid),36)==before && !scene.storage->Borrowed());
+}
+
 // 고유Bomb본문구성은Player/SP/난수/현재TYPE를초기화하거나World를대여하지않는다.
 TEST_CASE(ClientBomb_LongBodySharesCurrentPhysicalOwner) {
     RegionScene scene;const auto random=scene.random->Game().State();scene.storage->types[113].range=19.75F;

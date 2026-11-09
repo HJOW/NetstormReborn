@@ -11,6 +11,8 @@
 #include "o/RawGameAuxState.h"
 #include "o/RawDamageablePreDestroy.h" // 같은 장기 피해가능 객체 전처리/검색 상태를 공유한다.
 #include "o/RawBombPreDestroy.h" //Point Blast의고유전처리도같은물리/현재폭발과공통부모를공유한다.
+#include "o/RawBalloonBody.h" // 벌룬의 실제 그림자·후처리·삭제 본체를 같은 장기 물리에 연결한다.
+#include "o/RawFlyerPreDestroy.h" // Flyer의 현재 WORD 대상 삭제와 Damageable 부모를 공유한다.
 #include "o/RawDamageableRelease.h" // 실제 현재 권한/TYPE/공간으로 종속을 해방한다.
 #include "o/RawDamageablePostDestroy.h" // 같은 HP/Graph/목록/Host로 후처리한다.
 #include "o/RawGeyserLifetime.h" // 실제 간헐천 고유 수명 접두를 보존한다.
@@ -99,6 +101,7 @@ struct RawSurfaceResourceDevices { //같은Client게임난수와선택된큰자�
     std::function<void(o::Sid)> startConstruction; //실제abstract/현재Form조회뒤건설Start만선택해호출한다.
     std::function<bool(o::Sid,std::uint32_t)> destroy; //선택된 현재 가상 삭제의 수락/거부를 그대로 반환하며 NoWorld 미복원을 성공으로 꾸미지 않는다.
     std::function<void(o::Sid,std::uint32_t)> geyserRegistration; //현재Player9/brain순회의실제416720등록부모다.
+    o::RegularHandler carrierRegular; // 벌룬의 비3 사건에서만 현재 실제 Carrier 본체와 전체 Runtime을 빌린다.
 };
 struct RawSurfaceProcessDevices { //실제Client현재선택/선택해제부모만장기로빌린다.
     std::function<std::uint32_t()> selected; //현재전체DWORD선택전역이며Form이라는이유로0/WORD를합성하지않는다.
@@ -200,6 +203,9 @@ public:
     o::RawDamageableRelease& DamageableRelease(); // 현재 물리의 실제 해방 몸체를 공유한다.
     o::RawDamageablePostDestroy& DamageablePost(); // 현재 실제 후처리/공통 Post를 공유한다.
     o::RawBombPreDestroy& BombPre(); //현재502370의41e960을World없이같은장기폭발/소리/공통부모에연결한다.
+    o::RawFlyerPreDestroy& FlyerPre(); // 현재 +8 WORD 대상 삭제 뒤 같은 장기 Damageable 전처리를 실행한다.
+    o::RawBalloonBody& BalloonBody(); // 실제 두 VT의 그림자·Robust·PostPop·Pre를 같은 장기 본체에 조립한다.
+    float BalloonRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // Cloud Floater 사건3은 같은 프레임, 나머지는 현재 Carrier Runtime으로 전달한다.
     o::RawGeyserLifetime& GeyserLifetime(); // 같은 지면 목록/기본프레임/현재 편집 모드를 사용한다.
     o::IceTowerTypes& IceTowerGlobals(); //같은현재완성형/성장형/noIsland TYPE주소만빌리며값을초기화하지않는다.
     o::RawIceTower& IceTower(); //전체파괴/성장형후처리/주기를World없이같은현재Pool/Host에조립한다.
@@ -349,7 +355,9 @@ private:
     std::unique_ptr<o::RawDamageableRelease> damageableRelease_; // Pool/TYPE/검색 전역보다 먼저 반납한다.
     std::unique_ptr<o::RawDamageablePreDestroy> damageablePre_; // 장기 실제 효과 장치와 같은 공통 Pre를 빌린다.
     std::unique_ptr<o::RawBombPreDestroy> bombPre_; //같은현재폭발장치와공통부모보다먼저반납할Point Blast전처리다.
+    std::unique_ptr<o::RawFlyerPreDestroy> flyerPre_; // Pool과 Damageable보다 먼저 반납하는 실제 전처리다.
     std::unique_ptr<o::RawCarrierPreDestroy> carrierPre_; //같은finder/Damageable보다먼저반납하는실제장기Carrier전처리다.
+    std::unique_ptr<o::RawBalloonBody> balloonBody_; // 역순 파괴로 참조하는 Carrier 전처리/후처리·공간·프레임보다 먼저 반납한다.
     std::function<void()> carrierReplenishment_; //실제장기보충owner를약하게빌리는Client장치이며Session을소유하지않는다.
     std::function<void(o::Sid,std::uint32_t)> vortexOwner_; //실제신전가상74의장기owner를약하게빌린다.
     std::function<void(o::Sid,std::uint32_t)> vortexPre_; //네신전의현재삭제전처리를선택할때만owner를pin한다.

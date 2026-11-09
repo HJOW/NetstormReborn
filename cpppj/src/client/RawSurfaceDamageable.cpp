@@ -63,6 +63,14 @@ o::RawBombPreDestroy& RawSurfaceStorage::BombPre() {
     }
     return *bombPre_;
 }
+// 원문45e7e0은 현재 WORD 대상의 실제 가상 삭제 뒤 같은 Damageable Pre를 호출한다.
+o::RawFlyerPreDestroy& RawSurfaceStorage::FlyerPre() {
+    static_cast<void>(DamageablePreGlobals()); // 장치의 최초 결합만 확인하고 게임 값이나 현재 대상은 읽지 않는다.
+    if (!flyerPre_) flyerPre_=std::make_unique<o::RawFlyerPreDestroy>(pool,o::FlyerPreDestroyHooks{
+        [this](auto target,auto flags) { DestroyAsset(target,flags); },
+        [this](auto sid,auto flags) { DamageablePre().PreDestroy(sid,flags); }});
+    return *flyerPre_;
+}
 // 실제 같은 HP/목록/공간/Host로 드롭·피해 예약·다리 약화·공통 Post를 연결한다.
 o::RawDamageablePostDestroy& RawSurfaceStorage::DamageablePost() {
     static_cast<void>(DamageablePostGlobals()); // 실제 같은 장기 전역이 있어야 한다.

@@ -211,6 +211,7 @@ o::RawNuggetRegular& RawSurfaceStorage::ResourceNuggetRegular() { //같은실제
 void RawSurfaceStorage::DefaultResourcePostPop(o::Sid sid,std::uint32_t flags) { //보호PE의실제현재+20만선택하고전용미복원을base성공으로넘기지않는다.
     const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //현재물리VT4BYTE만해석한다.
     if (table==0x503d80U || table==0x503e50U || table==0x50e568U) { ResourceCarrierPostPop().PostPop(sid,flags);return; }
+    if (table==0x5040c0U || table==0x504198U) { BalloonBody().PostPop(sid,flags);return; } // 같은 실제 그림자 생성·표시와 Carrier/Damageable 부모다.
     if (table==0x50a820U || table==0x50a8e8U) { ResourceCarrierPostPop().DamageablePostPop(sid,flags);return; }
     if (table==0x50a748U) { BuriedPostPop().PostPop(sid,flags);return; } //실제현재+20=462170을선택하고공통성공으로넘기지않는다.
     if (table==0x50e888U) { IceTower().PostPop(sid,flags);return; } //성장형의실제48ead0은정기예약뒤같은공통PostPop만호출한다.
@@ -252,6 +253,7 @@ float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std
     const auto raw=pool.Slot(sid);std::uint32_t table{};for (std::size_t byte=0;byte<4;++byte) table|=std::uint32_t(raw[byte])<<(byte*8); //가상선택은현재VT4BYTE이며현재TYPE별추측으로바꾸지않는다.
     if (table==0x50da88U) return o::RunNativeGeyserRegular(pool,types,sid,event,count,payload,[this](auto object,auto flags) { Display().Update(pool.Slot(object),flags); },[this](auto object,auto code,auto times,auto value) { return ResourceDamageableRegular(object,code,times,value); });
     if (table==0x50dc30U) return ResourceNuggetRegular().Handle(sid,event,count,payload);
+    if (table==0x504198U) return BalloonRegular(sid,event,count,payload); // 사건3은 실제 프레임, 다른 사건은 현재 큰 Carrier 부모를 요구한다.
     if (table==0x50a748U) return BuriedRegular().Handle(sid,event,count,payload); //실제+5c=4622f0은사건1도원문payload를반환한다.
     if (table==0x50e888U) return IceTower().Handle(sid,event,count,payload); //실제48ebe0의성장사건/현재프레임/권한을같은장기본문으로보낸다.
     if (table==0x509470U) return FenceRegular().Handle(sid,event,count,payload); //같은장기본체가실제Host재진입도처리한다.
