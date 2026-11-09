@@ -1,0 +1,70 @@
+{
+  "unit": 1241,
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "kind": "인계 정리·원문 보관",
+  "productUnit": 1240,
+  "fullGoalComplete": false,
+  "archive": {
+    "anchor": "archive-20261110-through-1240",
+    "prefixBytes": 4141179,
+    "prefixSha256": "cfb997bdc0827c63ddff9e4d7184580ac85f33307ef4a87685f71b290e350e3c",
+    "prefixPreserved": true,
+    "beforeBytes": 38937,
+    "beforeSha256": "53ceb59028e94ff307ddfe57cbddd6ce0d9c354621d7cdf48cfd2f9b178ec4bf",
+    "beforePreservedVerbatim": true
+  },
+  "current": {
+    "bytesBefore": 38937,
+    "bytesAfter": 31422,
+    "linesBefore": 262,
+    "linesAfter": 208,
+    "upperPlanIds": [
+      "M6",
+      "M7",
+      "M8",
+      "K1",
+      "K2",
+      "K3",
+      "K4",
+      "K5",
+      "S1",
+      "S2",
+      "S3",
+      "S4",
+      "B1",
+      "B2",
+      "B3",
+      "B4"
+    ],
+    "productUnchanged": true,
+    "next": "M6-n Fountain1VT/0045a8e0",
+    "regularConnected": 73,
+    "regularRemainingVtables": 14,
+    "regularRemainingFunctions": 12,
+    "sha256": "2149aee1e952e0e0ecb892af99dd5876f9083d56beec73f5c05f75fa73525626"
+  },
+  "checks": {
+    "protectedAndProductFilesUnchanged": 2821,
+    "localLinks": 50,
+    "legacyAnchors": 19,
+    "utf8": true,
+    "crlf": true,
+    "beforeAndArchivePrefixMatchHead": true,
+    "localAnchorTargetsValid": true
+  },
+  "moved": [
+    "만료된 일시 중지 지시",
+    "1227 요청 처리 상세",
+    "Regular/Form 단위별 완료 상세",
+    "과거 문서 정리1220 지시/완료 이력"
+  ],
+  "retained": [
+    "16개 상위 계획/순서/완료 조건",
+    "M6 집계 밖 최초 후처리/큰 하위/전수 감사",
+    "실행 제외/사용자 확인/기존 한계",
+    "현재 owner/호출/해제/제품/외부접속 계약"
+  ],
+  "validation": "문서 구조·링크·앵커·HEAD 원문 보관·보호파일/현재 소스·제품 불변 확인. 게임/단위 검사·빌드·새 디컴파일은 실행하지 않음.",
+  "reviewCorrection": "최초 검증에서 아직 기록 전인 자체 보고서 링크를 검사해 실패. 보고서 생성 후 링크 전체와 HEAD 보관 원문을 재검증했다."
+}

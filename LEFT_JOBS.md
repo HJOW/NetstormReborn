@@ -1,32 +1,26 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품1240 / 11.01 · 사용자 요청으로 이 단위 문서·커밋 후 목표 일시 중지 · 전체 목표 미완료**
+**목표 진행 중 · 확정 제품 1240 / 11.01 · 문서 정리 1241 (2026-11-10, HJOW-Athlon)**
 
-**사용자 지시(2026-11-10): LEFT_JOBS의 모든 cpppj 작업을 우선순위대로 재개한다.** 단위마다 인계 갱신·로컬 커밋을 수행하며 커밋 실패 시에도 계속한다. 지정한 MP·자연 완주·포획/희생·특정 공격·사용자 직접 확인 검사의 제외는 계속 유효하다. **이후 사용자 지시: 현재 Flare1240 단위의 문서 반영·로컬 커밋을 마치면 목표를 일시 중지한다. 재개 요청 전에는 다음 단위에 착수하지 않는다.**
+이 문서는 cpppj의 **현재 상태·남은 작업·실행 제외·유효한 계약**을 담는다. 사용자 지시에 따라 아래 우선순위의 모든 cpppj 작업을 계속하며, 단위마다 인계 갱신과 로컬 커밋을 남긴다. 커밋 실패 시에도 계속하며 push하지 않는다.
 
-cpppj는 메뉴와 미션 플레이가 가능하다. 최근 확인은 Tutorial4의 생산·건설 요청 → 실제 객체 생성 → 대기와 Edit 왕복까지다. 전체 시나리오·화면·음향의 원본 동일성은 미확정이다.
+**바로 다음: M6-n Fountain1VT / `0045a8e0` 장기 연결.** 현재 Regular 연결은 **73/87VT**, 잔여는 **14VT / 고유 함수 12개**다. 이 수량 밖의 최초 후처리·큰 Path/AI·배치/Fort 상위 Finish·전수 caller/owner 감사도 계속 작업 대상이다.
 
-**현재 위치:** AGENTS 1~9차 중 **1·2·4·5·7차는 정해진 구현 범위 마감**, **3·6·8·9차가 남아 있다.** 단계 마감은 전체 플레이·다른 물리 환경까지 검증했다는 뜻이 아니다.
-
-| 우선순위 | 남은 영역 | 남은 양과 현재 상태 |
+| 우선순위 | 남은 상위 계획 | 현재 상태와 다음 목표 |
 | --- | --- | --- |
-| **1** | **LAN·Outpost — M6·M7·M8** | **3개 상위 계획.** M6는 장기 연결·수명/전수 감사·지연큐·JoinTestBattle의 4갈래, M7은 독립 5건, M8은 최종 감사·배포다. |
-| **2** | **한국어 — K1~K5** | **5개 상위 계획.** 번역 502 등 일부 구현. 후보 41 코드·배포·검사파일/44자산 병합, 입력/IME·본문·그림·검수가 남는다. |
-| **3** | **시나리오 편집 — S1~S4** | **4개 상위 계획.** 전용 UI 미구현. 모델 병합·기본 english/부재 Test Battle 수정·화면 편집·저장/진입 확인이 남는다. |
-| **4** | **알려진 버그 — B1~B4** | **4개 상위 계획.** NB01~NB34 **34건 등록만 완료**. 원인·현행 적용 여부 조사와 수정·건별 마감은 미착수다. |
-| **합계** | **16개 상위 계획** | 각 계획에 여러 구현·검증·커밋이 포함된다. 버그 34건은 B1~B4의 대상이므로 합계에 별도로 더하지 않는다. |
+| **1. LAN·Outpost** | **M6 → M7 → M8** (3개) | M6의 장기 연결·호출자/수명 감사·지연큐·JoinTestBattle, M7 독립 5건, M8 최종 감사·배포. [2절](#2-바로-이어갈-m6)·[3절](#3-m7-독립-5건과-m8-마감). |
+| **2. 한국어** | **K1 → K2 → K3 → K4 → K5** (5개) | 번역 502 등 일부 구현. 후보 선별 병합·IME/입력·본문·그림·검수. [4.1절](#41-한국어-k1k5). |
+| **3. 시나리오 편집** | **S1 → S2 → S3 → S4** (4개) | 전용 UI 미구현. 모델·기본 english/부재 Test Battle 수정·UI·저장/진입 검증. [4.2절](#42-시나리오-편집-s1s4). |
+| **4. 알려진 버그** | **B1 → B2/B3 → B4** (4개) | NB01~NB34는 등록만 완료. 원인·현행 적용 여부 조사와 수정/건별 마감. [4.3절](#43-알려진-버그-b1b4). |
+| **합계** | **16개 상위 계획** | 여러 구현·검증 단위를 포함한다. 완료율이나 예상 소요일로 환산하지 않는다. |
 
-**재개 시 다음 제품 작업:** M6-n **Fountain1VT/45a8e0**의 현재 정기 처리를 장기 연결한다.1240 Flare1VT/45a250과 방향별 생성은 같은 현재 TYPE/억제·로딩·난수/Host·실제 생성/공간/프레임/수명을 공유한다. **잔여 Regular14VT/고유12함수**와 전체 최초 후처리·큰 Path/AI/배치/Fort 상위 Finish·전수 caller/owner 감사·지연큐/JoinTestBattle은 남는다. 지정 실행 제외를 유지한다.
+**검증 원칙:** 단순 비MP 미션 진입·대기·생산·건설은 수행한다. 포획/희생·특정 적 공격·승리·자연 완주·기타 사용자 직접 확인과 MP 실행 검사는 건너뛴다. 제외된 검사만 남으면 다음 단계로 진행한다. 세부 제외는 [5절](#5-검증-제외와-미해결-한계)을 먼저 확인한다.
 
-이 수치는 일부 분배의 연결량이며 **전체 완료율·예상 소요일로 환산하지 않는다.** 60/120프레임·CD 10.72 복원은 별도 후순위다.
-
-읽는 순서: **[단계별 현황](#1-단계별-현황과-진행-순서) → [바로 이어갈 M6](#2-바로-이어갈-m6) → [검증 제외](#5-검증-제외와-미해결-한계)**. 현행 작업 순서는 이 문서가 기준이다. 만료된 다음 작업·완료 상세·옛 정리 이력은 [1221까지 보관본](LEFT_JOBS.old.md#archive-20261109-through-1221), DN/WB는 [dotnetpj 인계](LEFT_JOBS.dotnetpj.md)·[webpj 인계](LEFT_JOBS.webpj.md)를 따른다.
-
-**webpj 요청 cpppj 작업 (2026-11-10, CP 일시 중지 중 별도 처리 후 제품1227에 포함 완료):** 제품 1226 소스 위에서 webpj/dotnetpj가 남긴 cpppj 몫을 처리했다([처리 기록](docs/exe/cpp-webpj-requests-20261109.md)). ① 시험 결함 4건 수정: `DudeNotice` 원본 재생 2건(표식 실제 ProcessForm VT)·`process_attach_guards`·`ProcessForm_RejectsInvalidNamedFormsAfterRegistration`(옛 …BeforeRegistration, 원문 0041bd20의 등록 뒤 거부)·`rawProcessRemoval_native_mixed_form_filter`(raw 노드 실제 VT). ② 원본 차이 2건 수정: General Help 스크롤 화살표 색(ScrollingText Slider 인자를 현재 팔레트 갈색 005acd24/검정 005a4058로)·Demo 버튼 Tell 이름 `Demoville`(두 판본 원문). ③ 검사 전용 기능: UI 스크립트 `session-dump`(실제 Session/World TSV)와 `--fixed-frame-ms` 고정 시각 실행(`client/ClientTimeSource`, 기본은 기존 OS 시계 그대로) — [형식·결정론](docs/exe/cpp-session-state-dump-20261109.md). 같은 PC 기준 빌드 대비 `netstorm_pop_context_tests`·`netstorm_main_popup_tests`의 새 실패는 0이다(남은 실패는 기준과 같은 기존 실패). **dotnetpj 재반영 대상:** `HostMainMenu.cs`의 `("Tell","DEMOVILLE")`, `HostHtmlText.cs`의 `SliderType=menu.BackgroundType, SliderFrame=1`, `HostStartupSceneTests`의 DEMOVILLE 단언은 옛 cpppj 값을 옮긴 것이다. 제품1227에 이 변경을 포함했다. 디컴파일은 새로 하지 않았다(기존 HJOW-Athlon 산출물 읽기만).
+현재 순서는 이 문서가 기준이다. 만료된 지시·완료 상세는 [제품1240 시점 보관본](LEFT_JOBS.old.md#archive-20261110-through-1240), 각 단위 근거는 [7절](#7-근거와-보관)을 본다. DN/WB는 [dotnetpj 인계](LEFT_JOBS.dotnetpj.md)·[webpj 인계](LEFT_JOBS.webpj.md)가 기준이다.
 
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
-AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품 1240, DN은 0.261, WB는 열람 당시 병행 작업 인계의 WB04-E201 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
+AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품 1240, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
@@ -45,12 +39,9 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj�
 | M6 감사 기준 | checking 잔여 목록 0, 태그 25/활성 88/무태그 63F, 지연큐 OFF. checking 0과 자산 Pre/Post·통지 83/83을 MP/전체 NoWorld 완료로 세지 않는다. |
 | 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1240 새 디컴파일/원문 변경0, 보호 원본/CD/fixture·AGENTS **2,807파일 불변**. |
 
-<!-- 과거 1207 진행 중 인계의 직접 링크를 보존한다. 현재 제품은 위 0.1절이 기준이다. -->
-<a id="02-진행-중인-1207--완료-처리-금지"></a>
+<a id="02-진행-중인-1207--완료-처리-금지"></a><a id="agents-reflection-20261102"></a>
 
 ## 1. 단계별 현황과 진행 순서
-
-<a id="agents-reflection-20261102"></a>
 
 AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 전체 플레이/물리 환경 검증 완료를 구별한다.
 
@@ -85,55 +76,23 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1240 구현 문서](docs/exe/cpp-flare-regular-owner-20261110.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
-**재개 시 다음 한 단위 — Fountain1VT/45a8e0:** [1240 Flare](docs/exe/cpp-flare-regular-owner-20261110.md)의 현재 정기/생성 연결을 마쳤다. 현재는 사용자 요청으로 이 단위 이후 일시 중지한다. 재개 시 Fountain을 같은 장기 저장소에 연결하고 다른Regular14VT/12함수·전체 최초 후처리·큰 하위/전수 감사를 계속한다. 지정 실행 제외를 유지한다.
+**다음 한 단위 — Fountain1VT / `0045a8e0`:** 기존 `RawManaBoltRegular`와 실제 PE/정밀 C를 대조한 뒤, 현재 TYPE·프레임·SHP·대상 검색·카메라 투영·Host와 같은 장기 소유자를 연결한다. 제품1240의 Flare 연결은 완료이며 다시 만들지 않는다. 변경 관련 허용 검증 후 잔여 Regular와 집계 밖의 큰 하위·전수 감사를 계속한다.
 
 ### 2.2 다음 구현의 출발점과 유지할 계약
 
-| 범위 | 현재 연결 / 유지 조건 |
+완료 상세는 [보관본의 2.2절](LEFT_JOBS.old.md#archive-20261110-through-1240)과 각 단위 문서에 있다. 아래는 후속 구현이 유지할 계약이다.
+
+| 범위 | 현재 상태와 유지 조건 |
 | --- | --- |
-| 장기 건설·배치 | `ClientConstructionGlobals`는 같은 SP/HP/Canon/Chunks·최근/전체 목록·현재 Player/Bounds를 보유한다. 전체 MayPlace·단일 난수/너겟 배치·Gem/오벨리스크 하위에 이어 1206의 실제 섬/신전/투표/도장도 같은 장기 본체를 사용한다. Native Session은 본체·캐시·영향 목록을 빌린다. |
-| 자산 삭제 | **Pre/Post분배83/83·통지분배83/83·알려진 부모/통지 잔여0**이다. 1215 다이스/제단의 같은 Player·참여/전체 부모와 1216 전용6통지를 공유한다. Native Session3호출자도 같은 장기 본문을 쓴다. 홈3은 정적/컴파일 전용이다. 큰449b30은 실제 Client Runtime pin 뒤 기존 전체 처리기로 전달하며 다른 Form/Regular·큰 AI·전수 Caller/owner 감사는 남는다. |
-| 감시 Form | **Depend 장기 연결1221 완료.** Native World/Core·NoWorld가 같은 공장/현재 TYPE·감시 쌍·현재 상대 VT 삭제를 사용한다. 알림은 weak 대여→실제 Runtime pin→함수 사본→호출이며, 공통 선택 DWORD와 검색/제거 진단의 정상 복귀·현재 필드/선저장 next를 유지한다. Gump/Content는 각각1222/1223에서 같은 장기 삭제에 연결했다. |
-| UI Form | **Gump 장기 연결1222 완료.** 같은 `containedGumpType` DWORD를 Native 생성/메뉴·Player/contained 통지가 공유한다. 실제 UI 등록표는 첫 메뉴 전 weak 대여·실제 RawButtonControls 저장소 pin으로 연결하고 현재 World 소비자는 전체 Runtime pin/함수 사본을 유지한다. Source별 TYPE 사본이나 임시 Session을 만들지 않는다. |
-| Content Form | **장기 정렬/Regular/삭제1223 완료.** Native World/Core/Session·NoWorld가 같은 공장/현재 finder TYPE/cursor·로컬 owner/권한/너겟·Reward와 실제 입력/소리/전송 장치를 공유한다. 파생 부모/포획 통지는 현재 실제 Runtime pin/함수 사본이며 Session 콜백은 장기 본문에 남기지 않는다. |
-| Flare Regular/생성 | **직접1VT 장기 연결1240 완료.** 현재 억제/로딩·공유 효과 TYPE·단일 게임 난수·실제 생성/공간/소유·프레임/표시/삭제와 동일 new28 예약/Host를 공유하며 Session은 같은 본문을 빌린다. |
-| Dude Regular/지면/작업 | **직접1VT 장기 연결1239 완료.** 현재 GameAux poll/경로/순환값·Host/작업·공급원/지면·프레임/난수를 공유한다. 선택된 큰 이동은 현재 실제 Runtime pin/함수 사본으로 호출한다. standalone 최초 후처리·큰 Path/전체 caller-owner 마감은 별도다. |
-| 거주 구역 Regular | **직접1VT 장기 연결1237 완료.** 같은 현재 주민/장식·지형 fringe TYPE/신전/현재 테마·난수/Host와 signed 최대 조사를 공유한다. Fort는 실제 Dude count 대 Provider count를 먼저 비교하고 선택된 기존 생성/작업만 Runtime pin/함수 사본으로 호출한다. 1237의 잘못된 비교 목록은1238에서 고쳤다. 최초 후처리/큰 Dude 전수 마감은 별도다. |
-| Factory Regular/후처리 | **직접2VT 장기 연결1236 완료.** 같은 현재 레벨/TYPE프레임·실제 난수/Host·현재 타이머 역할/목록/가상 owner/Depend를 공유한다. 큰 Begin/Finish/플레어는 실제 Runtime pin/함수 사본 뒤 기존 전체 본문을 사용한다. 일반 워크샾 UI 업그레이드1→2/1000SP를 확인했고 Outpost 전용 실행은 제외했다. |
-| 장식/가장자리 팜 Regular | **직접2VT 장기 연결1235 완료.** 현재 최대HP/제단 역할·signed count와 DWORD 곱 감김·같은 HP/기존 가상98·권한별 최종 삭제를 공유한다. 큰 가상98만 현재 Runtime pin/함수 사본 뒤 원래 전체 분배를 사용한다.1234 다음 이름 Geyser는 오기였다. |
-| Carrier Regular | **공통6VT 장기 연결1234 완료.** 같은 현재 TYPE+118/1b8·실제 finder/Factory/Owner/Pop/Display·현재 게임 시각/공유 SoundProcessType·Host 타이머를 Native Session과 공유한다. 순수 위험 칸은 현재 표를 직접 읽으며 이동/낙하/전용 owner의 선택 효과만 실제 Runtime pin/함수 사본 뒤 기존 전체 본문을 호출한다. |
-| Bomb Regular | **공통16VT와 필수 효과 정기3VT 연결1232 완료.**1225~1231의 현재 TYPE/권한·시전/검색/5Fh·상태/직접 피해·소환과 실제 발자국 중심을 유지한다.1232 트리즌은 현재 여섯 역할/owner/가상 표·실제 소유권/표시/펜스/받침/지점finder/로그/플레어를 빌린다. 큰 후단은 weak 대여→실제 Runtime pin→함수 사본이다. 공중 소환 전용 실행 제외와 다른 Regular·큰 하위/전수 감사는 별도다. |
-| 수명 | 건설 큰 효과 **16개**는 weak 대여 → 실제 Runtime pin → 함수 사본 → 호출이다. Client 장치 **10개**는 첫 메뉴/Session 전에 결합한다. 섬/영역/신전은 같은 Player getter·Kencloud redraw·난수/목록을 빌리며 Storage→영역 callback도 weak 선택 pin이다. 펜스는 현재 TYPE.range/두 역할·Player 동맹 weak 선택 pin을 사용한다. 결합 시 Player/상태/캐시를 초기화하지 않는다. |
-| 해제 | body를 State/backing보다 먼저 반납하고 참조 순환을 피한다. 세 Runtime 공개 경로·Host 반납 순서를 유지한다. 실제 Menu/Session/Host 정리 뒤 최종 Client 장치를 끊는다. 강한 Session 역참조·임시 World/Player/reset·성공 fallback을 넣지 않는다. |
-| 기존 LAN | M1~M5, Pop/저장복구/78h/선택적 기록은 재작성하지 않는다. checking `004b02d0/004dc220`은 1157에서 같은 기존 본체/DWORD 연결을 확인했다. 중앙 assertion의 새 누락은 M7.5다. |
-| R/주소 | 1062~1093의 실제 새 R/TCP·UDP/등록표/시계/Config/주소/기록 owner를 유지한다. 제공 R10.71의 3BYTE 존과 Client10.78의 47BYTE 존은 1093 compact 호환 범위다. 원본 R 복사/실행으로 대체하지 않는다. |
-| 외부 기능 | 요청 DWORD `0054dbac`는 reset0/1ah·1bh read 근거만 있다. 새 Config/CLI/writer를 발명하지 않는다. 폐기 CD7f/80·온라인 유효성검증·PIRATE quota는 복구하지 않는다. IPX/SPX 명시 미지원, 1163 hostname OS조회/첫 LAN IPv4·숫자주소 TCP/UDP 유지. 원문에 없는 원격 관리 포트를 추가하지 않는다. |
+| 장기 저장소 | `ClientConstructionGlobals`의 SP/HP/Canon/Chunks·최근/전체 목록·현재 Player/Bounds를 공유한다. Native Session은 같은 본체·캐시·영향 목록을 빌린다. 임시 World/Player나 TYPE·난수 사본을 만들지 않는다. |
+| 자산·Form 삭제 | 자산 Pre/Post·통지 각83/83, 기본 Process/Depend/Gump/Content 삭제4/4 연결 완료. Depend는 현재 공장/TYPE·감시 쌍, Gump는 같은 contained DWORD·실제 UI 등록표, Content는 같은 finder/cursor·owner/권한·너겟/Reward·입력/음향/전송을 사용한다. 큰449b30과 파생 통지는 실제 Runtime을 pin한다. |
+| Regular 완료 범위 | Bomb 공통16VT+효과3VT(1232), Carrier6VT(1234), 장식/가장자리 팜2VT(1235), Factory2VT/후처리(1236), 거주 구역1VT(1237/1238 교정), Dude1VT(1239), Flare1VT/생성(1240)을 장기 연결했다. **최초 후처리 전체·큰 Path/AI/배치/Fort 상위 Finish·전수 caller/owner는 미완료**다. |
+| 실제 현재값 | 선택된 효과 위치에서 현재 TYPE/역할·Player·게임 시각·단일 게임 난수를 읽는다. 거주 구역 Fort 생성은 실제 Dude count 대 Provider count를 먼저 비교한다. Flare 억제005c85f0/로딩005c89b8/효과TYPE00541200은 같은 장기 전역을 사용하며 Session 생성/반납이 초기화하지 않는다. |
+| 호출·해제 수명 | weak 대여 → 실제 Runtime pin → 함수 사본 → 호출을 유지한다. Client 장치는 첫 메뉴/Session 전에 결합한다. body를 State/backing보다 먼저 반납하고 실제 Menu/Session/Host 정리 뒤 장치를 끊는다. 강한 Session 역참조·빈 callback·성공 상수를 넣지 않는다. |
+| LAN·R | M1~M5·M6-a~k·Pop/저장복구/78h/기록·기존 checking 본체를 재작성하지 않는다. 새 R/TCP·UDP/등록표/시계/Config/주소/기록 owner를 유지한다. R10.71 3BYTE 존/Client10.78 47BYTE 존은1093 compact 호환 범위다. 원본 R 실행/복사로 대체하지 않는다. |
+| 외부 기능 | 요청DWORD0054dbac은 reset0/1ah·1bh read 근거뿐이며 새 writer/CLI를 발명하지 않는다. 폐기CD7f/80·온라인 유효성검증·PIRATE quota를 복구하지 않는다. IPX/SPX 명시 미지원, hostname OS조회/첫 LAN IPv4·숫자 TCP/UDP는 유지하며 원문에 없는 관리 포트를 추가하지 않는다. |
 
-<a id="23-장기-regularform-잔여-집계1219--큰-하위-완료와-구분"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1219-기준"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1221-기준"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1222-기준"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1223-기준"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1225-기준"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1226-기준"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1227-기준"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1228-기준"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1229-기준"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1230-기준"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1231-기준"></a>
-
-<a id="23-수량을-확정한-연결-범위--제품-1232-기준"></a>
+<a id="23-장기-regularform-잔여-집계1219--큰-하위-완료와-구분"></a><a id="23-수량을-확정한-연결-범위--제품-1219-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1221-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1222-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1223-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1225-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1226-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1227-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1228-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1229-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1230-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1231-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1232-기준"></a>
 
 ### 2.3 수량을 확정한 연결 범위 — 제품 1240 기준
 
@@ -213,9 +172,9 @@ AGENTS 최근 변경 `b5197d48`의 **34건 전체**는 [NB01~NB34 목록](docs/e
 - **정밀도:** 32비트 FILE/FileSpec/포인터·SEH/스택·미작성값 자체 일치, 임의 외부 heap→SID, 실제 OS 고갈/물리 디스크 장애·UNC/드라이브 CWD·CD 전체 dump/trace/Retype·x87 전체 입력/픽셀은 호스트/후순위 경계다. 부분 I/O/버퍼 실패/복구 966·new_handler/종료 979를 미착수로 되돌리지 않는다. 활성 호출자 미연결을 이 경계로 숨기지 않는다.
 - **음향/그림:** PCM 936은 HJOW-Athlon 프로세스 WASAPI 101653프레임/비무음99726과 영상/소리 합성을 확인했다. 청취/다른 장치/실제 CD/활성 전체화면까지 검증한 것은 아니다. 덱 검은띠 981과 사용자 보류 연녹색 사각형을 혼동하지 않는다.
 
-## 6. 착수·검증·커밋 운영 규칙
-
 <a id="0-재개-전-확인-사항"></a>
+
+## 6. 착수·검증·커밋 운영 규칙
 
 1. **착수:** AGENTS.md·이 문서·LEFT_JOBS.dotnetpj.md를 다시 읽고 git status/log로 다른 세션 변경을 확인한다. 현재 호스트가 0.1의 마지막 디컴파일 호스트와 다르면 CPP 작업/원문 분석 전에 `tools/ghidra/refine_all.ps1`을 다시 실행한다. R 원문은 필요 시 `tools/ghidra/refine_root_server.ps1`도 실행하고 기록에 호스트를 갱신한다. HJOW-X3D의 2026-10-27 중단 산출물은 완성본으로 쓰지 않는다.
 2. **단위 종료:** 0.1의 확정 제품·관련 M/K/S/B의 미완료 경계·checking과 해당 M/K/S/B 완료 조건을 갱신한다. 확정 제품과 작업 중 바이너리를 구별한다. 긴 완료 로그는 단위 문서/보고서에 둔다. 준비본/정적 대조/컴파일/단위 실행/GUI/실물 확인을 구별한다.
@@ -232,31 +191,18 @@ AGENTS 최근 변경 `b5197d48`의 **34건 전체**는 [NB01~NB34 목록](docs/e
 cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --parallel 4 -- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true
 ```
 
-<a id="7-근거와-보관"></a>
+<a id="7-근거와-보관"></a><a id="인수인계-문서-임시-분할"></a><a id="agentsmd-최근-변경-반영"></a>
 
 ## 7. 근거·보관·AGENTS 최근 변경 반영
 
-| 확인할 범위 | 기준 문서 |
+| 범위 | 기준 자료 |
 | --- | --- |
-| 현재 제품·현재 잔여 목록 | [1240 구현 문서](docs/exe/cpp-flare-regular-owner-20261110.md)·[보고서](cpppj/flare-regular-owner-20261110.json), 원시`extracted/cpp-resume-1240/` |
-| Bomb Regular 실제 후단/다음 구현 | [1224 조사](docs/exe/cpp-bomb-regular-audit-20261109.md)·[16VT/19TYPE 행렬](cpppj/bomb-regular-audit-20261109.json), 원시 `extracted/cpp-resume-1224/`. 현행은1240 연결73·잔여14/12이며 Fountain을 포함한 다른 Regular/큰 하위와 전수 감사를 계속한다. |
-| M6 전체 잔여와 최초 Regular 조사 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[최초 1217 조사](docs/exe/cpp-no-world-regular-audit-20261109.md). 각 문서의 과거 “없음/다음”보다 현행 2절을 우선한다. |
-| 비MP 구현 마감 | [UI 929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit 943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션 956](docs/exe/cpp-mission-state-scope-20261106.md)·[내부 수명 980](docs/exe/cpp-internal-lifetime-closure-20261106.md) |
-| 디컴파일·이식 근거 | [디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md) |
-| 제품 계약·경로 | [11.01](docs/exe/cpp-product-1101-20261101.md)·[TODO](TODO.md)·[미션 대응표](docs/gameplay/demo-campaign-map.md) |
-| 과거 이력 | [1221까지 보관본](LEFT_JOBS.old.md#archive-20261109-through-1221). 이전 보관 구간은 그대로 유지한다. 해소된 최초 실패·교정과 제품별 상세는 각 단위 문서/보고서에 남아 있다. |
-| 이번 문서 정리 | [1220 검증 보고서](docs/exe/cpp-handoff-review-1220-20261109.json). 정리 전 본문 원문 보관·기존 보관본 보존·링크/앵커·제품과 보호 파일 불변을 확인한다. |
+| 현재 제품·Regular 잔여 | [1240 Flare 구현](docs/exe/cpp-flare-regular-owner-20261110.md)·[보고서 remainingRows](cpppj/flare-regular-owner-20261110.json), 원시 `extracted/cpp-resume-1240/`. |
+| M6 전체 감사·최초 조사 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[Regular1217](docs/exe/cpp-no-world-regular-audit-20261109.md)·[Bomb1224](docs/exe/cpp-bomb-regular-audit-20261109.md)·[16VT/19TYPE 행렬](cpppj/bomb-regular-audit-20261109.json). 과거 “다음/없음”보다 현행2절을 우선한다. |
+| 비MP 마감 근거 | [UI929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션956](docs/exe/cpp-mission-state-scope-20261106.md)·[수명980](docs/exe/cpp-internal-lifetime-closure-20261106.md). |
+| 디컴파일·소스 | [마지막 디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md). |
+| 제품·서비스 계약 | [11.01](docs/exe/cpp-product-1101-20261101.md)·[외부 서비스](docs/exe/cpp-external-services-20261101.md)·[TODO](TODO.md)·[미션 대응](docs/gameplay/demo-campaign-map.md). |
+| 타 프로젝트 요청 처리 | [제품1227 포함 완료](docs/exe/cpp-webpj-requests-20261109.md)·[session-dump/고정 시각](docs/exe/cpp-session-state-dump-20261109.md). DN의 DEMOVILLE/Help Slider 옛 값 재반영 요청은 유지하며 DN 자체 변경은 이 작업에서 하지 않는다. |
+| 이력·문서 정리 | [1240까지 원문 보관](LEFT_JOBS.old.md#archive-20261110-through-1240)·[1241 정리 검증](docs/exe/cpp-handoff-review-1241-20261110.json). 기존 보관본은 보존하고 이번 정리 전 원문을 추가했다. 제품은1240 그대로다. |
 
-<a id="인수인계-문서-임시-분할"></a>
-
-<a id="agentsmd-최근-변경-반영"></a>
-
-### AGENTS.md 최근 변경 반영 — 2026-11-09 재확인
-
-| 변경 | 적용 |
-| --- | --- |
-| `551d27ae` — 진행 요약에 webpj 추가 | 0절에서 **cpppj·dotnetpj·webpj 각각 실행·플레이 / 원본 동일성**을 구분한다. 다른 프로젝트의 현행 인계를 읽고 기준 단위를 명시했으며 이번에 새로 실행한 결과로 표시하지 않는다. |
-| `b5197d48` — 9차 알려진 버그 추가 | 1절 9차와 4.3절 **B1~B4·NB01~NB34**에 전체 34건을 연결한다. 등록과 원인 조사·수정·검증 완료를 구별한다. |
-| `3051892a` — 루트 README 개요 보호 | 6절에서 **AGENTS.md·README.md 개요 보호**, README.en.md Overview 번역 허용을 유지한다. 해당 원문은 수정하지 않는다. |
-
-**최근 완료1240 / 재개 지점:** Flare1VT/45a250과 방향별 생성을 같은 현재 전역·난수·물리/Host·실제 생성/예약/수명에 연결했다. 비MP181/181·원본PE199입력/398회·Tutorial4 정상 생산/건설 요청 후 대기와 일반 UI 업그레이드/정상 종료·PNG 확인을 마쳤다. 문서·커밋 뒤 사용자 요청으로 목표를 일시 중지하며 재개 시Fountain1VT/45a8e0이다. Regular14VT/12함수·큰 하위/전수 감사·16상위계획과 지정 실행 제외를 유지한다. 전체 목표는 미완료다.
+**AGENTS.md 재확인(2026-11-10):** 세 프로젝트를 실행/플레이·원본 동일성으로 구분하고(`551d27ae`), 9차34건을 B1~B4/NB01~NB34로 유지하며(`b5197d48`), AGENTS/README 개요 보호·영문 Overview 번역 허용을 지킨다(`3051892a`). 현재 호스트는 마지막 디컴파일과 같은 HJOW-Athlon이다.
