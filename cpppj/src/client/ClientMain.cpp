@@ -461,6 +461,9 @@ int Client::Run() {
         [this](auto x,auto y,auto type,auto word) { auto& current=gameplayGlobals_->RequireSession();const auto pin=gameplayGlobals_->PinCurrentRuntime(current);current.SpawnReleasedPriest(x,y,type,word); },
         [this](auto sid,auto index,auto random) { auto& current=gameplayGlobals_->RequireSession();const auto pin=gameplayGlobals_->PinCurrentRuntime(current);current.DropDamageableDude(sid,index,random); },
         [this](auto x,auto y,auto flags,auto owner) { auto& current=gameplayGlobals_->RequireSession();const auto pin=gameplayGlobals_->PinCurrentRuntime(current);current.DropDamageableIsland(x,y,flags,owner); }}); // 자연 관문은 장기 몸체가 처리하며 실제 큰 효과만 선택 위치에서 현재 전체 owner를 요구한다.
+    if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindDaisFinish([this](auto sid) {
+        auto& current=gameplayGlobals_->RequireSession();const auto pin=gameplayGlobals_->PinCurrentRuntime(current);current.FinishDaisSacrificeForDeletion(sid);
+    }); // 실제 제단24가 선택될 때만 같은 전체 Runtime을 보유하고 기존449b30 전체 본문을 호출한다.
     surfaceStorage_->BindSavedGame(localStateGlobals_->SavedGame()); //현재저장게임관문도World없는받침prefix와같은주소를빌린다.
     surfaceStorage_->BindContentCommand([this](auto code,auto x,auto y) { Input().PushCommand(code,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); }); //실제내용물UI통지는같은입력큐에예약한다.
     rendererFrame_->BindSurfaceDisplay(); //첫World전자체Renderer/카메라의현재getter만설치하며그리기/카메라/게임진행은실행하지않는다.

@@ -612,7 +612,7 @@ struct RawCampaignSession::Impl {
     std::int32_t noRegion{127}; // 정상 지형 생성의 실제 현재 지역없음 번호다.
     std::unique_ptr<RawIslandRuntime> localIslands;RawIslandRuntime* islands{}; //Native는같은장기실행기를빌리고독립typed는기존본체를소유한다.
     std::unique_ptr<RawPriestWorldBindings> priests; // 저장 사제의 실제 Owner/PostPop/보호막 분배기다.
-    std::unique_ptr<RawPriestParticipation> priestParticipation; // 같은 현재live/Carrier/typedDais와기존ownerState의로그인종료조회다.
+    std::unique_ptr<RawPriestParticipation> localPriestParticipation;RawPriestParticipation* priestParticipation{}; // Native는 장기 같은 목록/참여 조회를 빌리고 독립 typed만 지역 본체를 소유한다.
     std::unique_ptr<RawPlayerWorld> player; // 최초152 생성자/실제 PostPop/9기록을 연결한다.
     std::unique_ptr<RawPlayerRegular> playerRegular; // 현재 Player의 실제 사건1/2를 처리한다.
     std::unique_ptr<RawPlayerTemplateState> templateState; // 같은Template header/원본State28BYTE를 직접 읽는다.
@@ -1187,8 +1187,9 @@ struct RawCampaignSession::Impl {
         priests=std::make_unique<RawPriestWorldBindings>(RawPriestWorldCore{core.pool,core.hash,core.types,core.frames,core.spots,core.hash.Entries(0),hp,random,core.factory,core.owner,core.ownerMode,core.postPop,core.frame},priestState,std::move(priestEffects));
         priests->BindProcesses(core.processes);priests->BindAuthority(*gameplayGlobals->Authority());priests->BindPlayerRecords(players);priests->SetLocalPlayer(1); // 현재 boss와 Player 신전 SID를 같은 장기 주소에서 읽고 Prepare의 복사를 기다리지 않는다.
         // 첫객체전에같은실제Carrier/목록과현재타입참조만연결하며ownerState는여기서갱신하지않는다.
-        priestParticipation=std::make_unique<RawPriestParticipation>(core.pool,core.hash,core.types,priests->Priests(),priests->Carrier(),
-            PriestParticipationState{priestState.movement.priest,runeState.AltarType(),runeState.DaisType()});
+        if (world.Storage()->UsesNativeTransmissionDevices()) priestParticipation=&world.Storage()->PriestParticipation();
+        else { localPriestParticipation=std::make_unique<RawPriestParticipation>(core.pool,core.hash,core.types,priests->Priests(),priests->Carrier(),
+            PriestParticipationState{priestState.movement.priest,runeState.AltarType(),runeState.DaisType()});priestParticipation=localPriestParticipation.get(); }
         PlayerWorldHooks playerHooks;
         playerHooks.assertion=[this](PlayerWorldAssertion kind) { const auto assertion=services.ai.assertion;if (!assertion) throw std::logic_error("Player 실제 진단 장치 미연결");assertion(kind==PlayerWorldAssertion::PlayerAlreadyExists ? "!findSquid(bc,playerType)" : "playerIdKnown"); }; // 같은 Client 진단이 복귀하면 생성/명시 Technology 조회를 원문 위치에서 계속한다.
         playerHooks.find=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); }; //004b1fa0의 현재 타입 genus에 따른 시작 단계와 같은 typed finder를 재사용한다.
@@ -1611,6 +1612,11 @@ struct RawCampaignSession::Impl {
         worldHooks.assets.emit=[this,previous=std::move(previousEffects)](const SquidDestroyEvent& event) {
             if (world.Storage()->UsesNativeTransmissionDevices() && (event.effect==SquidDestroyEffect::PreDestroy || event.effect==SquidDestroyEffect::PostDestroy)) {
                 const auto table=Read(core.pool.Slot(event.sid),0); // 실제 Native 가상 선택은 TYPE 이름과 별개인 현재 VT다.
+                if (table==kPatchAltarVtable || table==kPatchDaisVtable) {
+                    if (event.effect==SquidDestroyEffect::PreDestroy) { if (table==kPatchAltarVtable) world.Storage()->DaisDeletion().AltarPre(event.sid,event.flags);else world.Storage()->DaisDeletion().DaisPre(event.sid,event.flags); }
+                    else if (table==kPatchAltarVtable) world.Storage()->DamageablePost().PostDestroy(event.sid,event.flags);else world.Storage()->DaisDeletion().DaisPost(event.sid,event.flags);
+                    return;
+                } // Native 삭제는 PrepareRitual/Player snapshot 없이 같은 장기 고유/전체 부모를 호출한다.
                 if (event.effect==SquidDestroyEffect::PreDestroy && table==0x50ee08U) { world.Storage()->PlayerPreDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy && table==0x50f540U) { world.Storage()->ResidencePostDestroy(event.sid,event.flags);return; }
                 if (event.effect==SquidDestroyEffect::PostDestroy && table==0x508cc8U) { world.Storage()->DudePostDestroy(event.sid,event.flags);return; }
@@ -4482,6 +4488,10 @@ o::AiWalletMemoryAccess RawCampaignSession::BorrowAiWalletMemory() { return {&im
 // 선택된 큰 효과의 실제 같은 Session 모듈만 사용한다. Client caller가 실제 Runtime pin을 보유한다.
 void RawCampaignSession::EmitDamageableCollapse(o::Sid sid) { if (!impl_->collapseEffect) throw std::logic_error("실제 붕괴 효과 미연결");impl_->collapseEffect(sid); }
 void RawCampaignSession::EmitDamageableExplosion(o::Sid sid) { const auto explosion=impl_->ritualExplosion;if (!explosion) throw std::logic_error("실제 폭발 효과 미연결");explosion(sid); } //Client의실제Runtime pin안에서선택한함수사본을호출끝까지보유하며같은Impact/파편본문을사용한다.
+// 다이스 삭제가 실제 제단24를 선택한 경우에만 기존 전체449b30을 같은 현재 Session에서 실행한다.
+void RawCampaignSession::FinishDaisSacrificeForDeletion(o::Sid sid) {
+    if (!impl_->daisRegular) throw std::logic_error("다이스 삭제의 실제 희생 완료 설치 전 호출");impl_->PrepareRitual();impl_->daisRegular->FinishSacrifice(sid);
+}
 float RawCampaignSession::HandleCarrierResourceRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) { if (!impl_->carrierRegular) throw std::logic_error("실제 Carrier Regular 설치 전 호출");return impl_->carrierRegular->Handle(sid,event,count,payload); } // Client가 pin한 현재 전체 Runtime의 기존42a750 본체만 실행한다.
 void RawCampaignSession::SpawnReleasedPriest(float x,float y,std::uint32_t type,std::uint16_t word) { impl_->priests->Spawn().Spawn(x,y,type,word); } // 현재 권한/공간/원문 WORD의 실제 사제 생성이다.
 void RawCampaignSession::DropDamageableDude(o::Sid sid,std::int32_t index,bool random) { impl_->dudeDrop->Drop(sid,index,random); } // 같은 실제 생성/작업/통지 목록을 사용한다.

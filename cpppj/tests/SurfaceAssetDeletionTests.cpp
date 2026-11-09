@@ -4,7 +4,9 @@
 #include "client/ClientRandomGlobals.h"
 #include "client/ClientSpGlobals.h"
 #include "client/RawSurfaceWorld.h"
+#include "client/RawProcessHostStorage.h" // 실제 로컬24 Form/Kernel이 큰 완료를 선택하는 위치를 확인한다.
 #include <functional>
+#include <bit> // 실제 float 좌표의 DWORD 입력을 원본 비트로 지정한다.
 #include <memory>
 #include <optional>
 #include <string>
@@ -83,10 +85,13 @@ TEST_CASE(SurfaceAssetDeletion_CurrentSelectionClearedOnce) {
     CHECK(scene.storage->DestroyAsset(sid,0x10));CHECK(scene.clears==1 && scene.remembered==1 && scene.gameplay->selection.selected==0 && scene.legacyDeletes==0);
 }
 
-// 미연결 고유 Pre는 앞선 dead/로그/깊이 효과를 남기며 공통 성공이나 Session 우회로 처리하지 않는다.
-TEST_CASE(SurfaceAssetDeletion_UnrestoredSpecialPrePreservesPartialEffects) {
-    DeletionScene scene;const auto sid=scene.Asset(0x5076b8U);const auto free=scene.storage->pool.FreeCount();bool rejected{}; // 복원한 벌룬 대신 실제 미연결44a4d0 부모를 선택하며 실패 단언은 유지한다.
-    try { scene.storage->DestroyAsset(sid,0x10); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).find("전용 삭제 몸체 미연결")!=std::string_view::npos; }
+// 모든 고유 Pre 연결 뒤에도 선택된 큰 완료 장치 누락은 dead/로그/깊이를 남기며 가짜 성공으로 우회하지 않는다.
+TEST_CASE(SurfaceAssetDeletion_DaisMissingFinishDevicePreservesPartialEffects) {
+    DeletionScene scene;const auto sid=scene.Asset(0x507950U),altar=scene.Asset(0x5076b8U);
+    for (const auto object:{sid,altar}) { auto raw=scene.storage->pool.AllocatedBytes(object);DeletionPut(raw,14,std::bit_cast<std::uint32_t>(100.0F));DeletionPut(raw,18,std::bit_cast<std::uint32_t>(100.0F)); } // 원문 typed 점 조회의 실제 입력만 지정한다.
+    scene.storage->pool.AllocatedBytes(sid)[40]=0;scene.storage->pool.AllocatedBytes(altar)[40]=1;scene.storage->hash.Bucket(1,100,100)=altar.value;CHECK(scene.storage->Processes().Host().AddRegular(altar,24,0.1F)!=nullptr);
+    const auto free=scene.storage->pool.FreeCount();bool rejected{};
+    try { scene.storage->DestroyAsset(sid,0x400010U); }catch (const std::logic_error& error) { rejected=std::string_view(error.what())=="장기 다이스 희생 완료의 실제 Client 장치 미연결"; }
     CHECK(rejected && (scene.storage->pool.Slot(sid)[11]&3U)==2U);CHECK(scene.traces==1 && scene.legacyDeletes==0 && scene.storage->pool.FreeCount()==free);CHECK(scene.storage->BaseDestroy().PreDepth()==1 && scene.storage->BaseDestroy().PostDepth()==0);
 }
 

@@ -42,6 +42,10 @@ void RawSurfaceStorage::EmitDefaultAssetEffect(const o::SquidDestroyEvent& event
     if (!pre && event.effect!=o::SquidDestroyEffect::PostDestroy) throw std::logic_error("장기 자산의 가상 삭제 효과 종류 오류");
     const auto method=pre ? entry.pre:entry.post;
     switch (method) {
+    case 0x0044a4d0U:DaisDeletion().AltarPre(event.sid,event.flags);return; // 제단의 현재 다이스/추상 룬 정리 뒤 실제 부모다.
+    case 0x0044afd0U:DaisDeletion().DaisPre(event.sid,event.flags);return; // 다이스의 현재 제단/604/참여 상태와 실제 부모다.
+    case 0x00449580U:DaisDeletion().DaisPost(event.sid,event.flags);return; // 실제 Player SID 두 쌍을 정리한 뒤 전체 Damageable이다.
+    case 0x00448b60U:DamageablePost().PostDestroy(event.sid,event.flags);return; // 실제 제단 Post의 단일 tail jump를 그대로 공유한다.
     case 0x004919b0U:PriestPre().PreDestroy(event.sid,event.flags);return; // 현재 사제 목록/보호막 조회와 실제 Carrier 부모를 공유한다.
     case 0x004906c0U:PlayerPreDestroy(event.sid,event.flags);return; // 공통 Pre 앞뒤에 실제 현재 Player SID/flags를 다시 읽고 쓴다.
     case 0x0049a4a0U:ResidencePostDestroy(event.sid,event.flags);return; // 같은 실제50칸 거주 구역 목록과 공통 Post다.

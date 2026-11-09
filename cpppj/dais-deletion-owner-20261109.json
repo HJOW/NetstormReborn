@@ -1,0 +1,295 @@
+{
+  "unit": 1215,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "accepted": true,
+  "summary": "다이스·제단의 네 고유 삭제를 같은 현재 Player/역할·장기 참여 조회·전체 Damageable에 연결하고 Native Session도 같은 본체를 호출한다.",
+  "sourceSha256": {
+    "cpppj/src/o/RawDaisDeletion.h": "892374691c3f3334795e2bd13e779e28c70a4e0d3ea4401598775bccfed46a4b",
+    "cpppj/src/o/RawDaisDeletion.cpp": "46e339598328f310a184a91c9dc69bbf1f1836d021eb19217ea4a5debcaa8d30",
+    "cpppj/src/o/RawDaisLifecycle.cpp": "a3c7e12613356a21660209698db602023883b7ed94619f68fa89a88230d22c40",
+    "cpppj/src/o/RawAltarSacrifice.cpp": "a43a2404249645a59ac5aaa03f646c0cf4440de411effaa9421c2f9d822d9d7a",
+    "cpppj/src/o/RawTempleRitual.h": "fd0a0005fcae236f62ed84617698067692ae551cc8f4c96159fa0bb1eea69d17",
+    "cpppj/src/o/RawTempleRitual.cpp": "e0fbe733ba82f840fd4473ac098f0b868cf769aa5a9d40c4092ffcc9cff23ca4",
+    "cpppj/src/o/RawDaisRegular.h": "d13d71137e82725affee90fdc41873c8b592035d65ddd09bf5b47b435d590684",
+    "cpppj/src/o/RawDaisRegular.cpp": "75d1cc267702e7ec1bb18341404979e3e2b76a0be3c96f541b11b098ba36b39b",
+    "cpppj/src/client/RawSurfaceWorld.h": "b7a39954b2aaa0cf71a164d7ec2cb0ff5448b9d30b123eb4e9e6c3579a63d9bb",
+    "cpppj/src/client/RawSurfaceDaisDeletion.cpp": "886f2e9dc1855daf13b96d8d117b26debf9d86951d824711777f132dd15dc0bf",
+    "cpppj/src/client/RawSurfaceAssetDeletion.cpp": "28dffa6e172e790731b09fc867762e510bb6cb109ea424e8c561596c18ea7b5b",
+    "cpppj/src/client/CMakeLists.txt": "3140ca426397b5f4bafd5d8236a65011438956b747919f031f7688c801ba3055",
+    "cpppj/src/o/CMakeLists.txt": "85d877e04cec473e55da579ff5e35f24f57eb4e7ac270a4415e667540bc1c928",
+    "cpppj/src/client/RawCampaignSession.cpp": "82a123cbe40824d3ad61bb211437421358aa0044b6a33b0d902c3a38ea6de759",
+    "cpppj/src/client/RawCampaignSession.h": "883631bec7467b6db8dda41d37c20fe621d45b194e285afe03a76b9555074bf1",
+    "cpppj/src/client/ClientMain.cpp": "10c5b7d3091331bfc6cf31396126fbc4a79b5cafc72b5fa2c9381176f2b039f1",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "e16a95642d4a2d38a321bb2fd6f0ba3a94f53c91634ec290c92eccf413d108ed",
+    "cpppj/tests/SurfaceAssetDeletionTests.cpp": "afcc6c505e1209f212480b262527fcf5ff57caa6da6b967bc3a18028c1452d70",
+    "cpppj/tests/CMakeLists.txt": "78c47aae91c09294a871341baec6c30138917201030f0212a4f1a7373e2ae0b1"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13930496,
+      "sha256": "f296bd1eb0d46f0e439597870cf64d9955ebb3a3756017a9485b0d7b497ef3b4"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "0cbf8e5bcdb29cd448d94ced60852dd308459f962fa052be8b54b69ebe82ac9e"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 32.094809770584106,
+    "sourcesUnchanged": true,
+    "handle": 28799,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 306,
+    "passed": 306,
+    "newDaisCases": 15,
+    "additionalExistingNonMpCases": 4,
+    "existingDaisLifecycleRowsPerCase": 1928,
+    "existingAltarFixtureRows": 2866,
+    "groups": {
+      "netstorm_construction_owner_tests": 232,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "seconds": 58.52889275550842,
+    "handle": 93146,
+    "raw": "extracted/cpp-resume-1215/tests.json"
+  },
+  "corrections": {
+    "firstFailures": [
+      {
+        "handle": 39475,
+        "passed": 304,
+        "cases": 306,
+        "names": [
+          "ClientDais_PreStopsActualPriest604",
+          "ClientBalloon_ShadowFailurePreservesBothDepths"
+        ]
+      }
+    ],
+    "expectationsWeakened": false,
+    "description": "최초306사례는304통과/2실패였다. 604 사례는 원문 squid.h:291 n != getSid() 진단으로 수동 해시/void 입력의 저장 단계 불일치를 확인하고 실제 K프레임 StoreLevel을 먼저 적용해 self-next 재Pop 입력을 고쳤다. 벌룬은 이제 복원된 제단을 미복원으로 기대하던 사례를 실제 child 로그 뒤 현재 VT 재조회 실패로 옮겼다. 처음부터 미지 VT를 넣으면 가상10 진입 전 거부되어 깊이 기대를 재현하지 못한 진단 중간 결과도 보존했다. 두 깊이·dead·무반납·선택 유지·Session 우회 금지 기대와 원문 fixture는 약화하지 않았고 최종306/306을 확인했다.",
+    "diagnostic": {
+      "buildHandle": 95015,
+      "failureExpression": "c:\\ns\\o\\squid.h:291 n != getSid()",
+      "balloonReason": "미지 VT를 처음부터 설정하면 가상10 분배가 child Pre 이전에 거부하므로 두 깊이 기대를 재현하지 못했다."
+    },
+    "finalBuildHandle": 28799,
+    "finalTestsHandle": 93146,
+    "diagnosticBuildHandle": 95015,
+    "firstBuildHandle": 23985
+  },
+  "staticAudit": {
+    "sourceVtables": 83,
+    "connectedPrePost": 83,
+    "remainingPrePost": 0,
+    "remainingNotices": 6,
+    "addedVtables": [
+      "005076b8",
+      "00507950"
+    ],
+    "remainingRows": [],
+    "noticeRows": [
+      {
+        "vt": "00509148",
+        "destroy": "004af780",
+        "pre": "0044b4b0",
+        "post": "0044b9e0",
+        "notice": "0048f0a0"
+      },
+      {
+        "vt": "00509210",
+        "destroy": "004af780",
+        "pre": "00455840",
+        "post": "0044b9e0",
+        "notice": "0048f0a0"
+      },
+      {
+        "vt": "00509930",
+        "destroy": "004af780",
+        "pre": "0044b4b0",
+        "post": "0044b9e0",
+        "notice": "0045b4a0"
+      },
+      {
+        "vt": "005099e8",
+        "destroy": "004af780",
+        "pre": "0044b4b0",
+        "post": "0044b9e0",
+        "notice": "0045b5b0"
+      },
+      {
+        "vt": "00509aa0",
+        "destroy": "004af780",
+        "pre": "0044b4b0",
+        "post": "0044b9e0",
+        "notice": "0045b680"
+      },
+      {
+        "vt": "0050eb98",
+        "destroy": "004af780",
+        "pre": "004b0950",
+        "post": "004b0840",
+        "notice": "0048f0a0"
+      }
+    ],
+    "preservedFunctions": 14,
+    "refinedFunctions": 13,
+    "boundedOnlyFunction": {
+      "entry": "00449580",
+      "first": "00449580",
+      "lastInclusive": "0044965f",
+      "bytes": 224,
+      "sha256": "2fa74d81644b2ff864432f19a7d8e0c713d3039492d2f35d41d52520067c9781",
+      "refinedMetadataMissing": true,
+      "sourceSynthesized": false
+    },
+    "implementedEntries": [
+      "0044a4d0",
+      "0044afd0",
+      "00449580",
+      "00448b60"
+    ],
+    "sharedExistingEntries": [
+      "004479c0",
+      "00491b60",
+      "00495060",
+      "0041bff0",
+      "004b1fa0",
+      "0041def0",
+      "0044b4b0",
+      "0044b9e0"
+    ],
+    "nativeSessionSameBodies": true,
+    "nativeCurrentTypesAndRole": true,
+    "sameLongParticipation": true,
+    "weakPlayerCurrentBase": true,
+    "actualRuntimePinForFinish": true,
+    "fullNoWorldComplete": false,
+    "newDecompilation": 0,
+    "originalDecompilationChanges": 0,
+    "lastClientDecompilation": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    },
+    "multiplayerExecutions": 0
+  },
+  "tutorial4": {
+    "passed": true,
+    "exitCode": 0,
+    "handle": 16890,
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.405,
+        "gameTimeAfter": 23.982,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "waitFrames": 600,
+    "protectedUnchanged": true,
+    "dataUnchanged": true,
+    "imageInspected": "015-generator-settled.png",
+    "raw": "extracted/cpp-resume-1215/live-tutorial4/summary.json"
+  },
+  "editor": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0,
+    "passed": true,
+    "handle": 11900,
+    "sameClientRoundTrips": 2,
+    "observations": 11,
+    "screen": [
+      800,
+      600
+    ],
+    "raw": "extracted/cpp-resume-1215/live-editor-fixed/summary.json"
+  },
+  "protectedFilesUnchanged": 2800,
+  "allStartedBuildTestGuiTerminal": true,
+  "originalGameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "flyerDedicatedExecutions": 0,
+  "decompilerSourceChanges": 0,
+  "remainingUpperPlanIds": [
+    "M6",
+    "M7",
+    "M8",
+    "K1",
+    "K2",
+    "K3",
+    "K4",
+    "K5",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "B1",
+    "B2",
+    "B3",
+    "B4"
+  ],
+  "knownBugsRegistered": 34,
+  "limitations": [
+    "83/83은 실제83VT의 Pre/Post 분배 수다. 전용 통지6·큰 비영 AI·다른 Form/Regular·다른 배치/Fort 상위 Finish·전수 Caller/owner 감사가 남아 전체 NoWorld 완료가 아니다.",
+    "큰449b30은 실제 Client가 현재 전체 Runtime을 pin해 기존 전체 FinishSacrifice를 호출한다. 모든 의식 Regular/획득/음향/UI의 장기 owner 완료나 MP·포획/희생 실제 플레이 통과를 뜻하지 않는다.",
+    "정밀 C/metadata가 없는449580은 PE00449580..0044965f의224BYTE만 별도 bounded로 검토했다. 정밀 C 합성/원문 변경은 없다.",
+    "모든 알려진 Pre 연결 뒤 구 미복원Pre 검사는 실제 제단24의 미결합 완료 장치 및 child 로그 뒤 미지VT 재조회로 이전했다. dead/깊이/무반납/선택 유지/Session 우회 금지 기대를 유지했다.",
+    "M6-l/m·M7/M8·K/S/B 상위16계획/등록34버그와 전체34진입 제품644/검증645·최신ZIP1092·최신 전체 솔루션 통과 없음은 유지한다."
+  ],
+  "raw": "extracted/cpp-resume-1215/"
+}

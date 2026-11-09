@@ -37,6 +37,8 @@
 #include "o/ChunkMap.h"
 #include "o/RawPriestPostPop.h"
 #include "o/RawPriestForcefield.h" // 사제 고유 삭제와 보호막 조회를 같은 장기 본체로 조립한다.
+#include "o/RawDaisDeletion.h" // 다이스/제단의 고유 삭제 순서와 현재 Player 정리를 공유한다.
+#include "o/RawPriestParticipation.h" // 삭제 뒤1..8 참여 상태를 같은 현재 목록/Carrier로 갱신한다.
 #include "o/RawBridgeConnect.h"
 #include "o/SquidDisplay.h"
 #include "o/RawBridgeEvents.h"
@@ -215,6 +217,9 @@ public:
     void DudePostDestroy(o::Sid sid,std::uint32_t flags); // 기존450920 본체를 같은 장기30칸 population에 연결한다.
     o::RawPriestForcefield& PriestForcefield(); // 현재 TYPE/역할/Pool/해시의 동일 조회기를 Session 없이 사용한다.
     o::RawPriestPreDestroy& PriestPre(); // 같은 장기 사제 목록·보호막 가상 삭제·Carrier 부모를 공유한다.
+    o::RawPriestParticipation& PriestParticipation(); // 같은 장기 목록/원소유자 상태와 실제 Carrier를 사용하는 전체 참여 조회다.
+    o::RawDaisDeletion& DaisDeletion(); // 같은 현재 역할·공간·Player/부모로 네 고유 삭제 본문을 분배한다.
+    void BindDaisFinish(std::function<void(o::Sid)> finish); // 최초 Client의 실제 희생 완료 진입만 연결하고 Runtime/게임 상태는 읽지 않는다.
     o::RawBalloonBody& BalloonBody(); // 실제 두 VT의 그림자·Robust·PostPop·Pre를 같은 장기 본체에 조립한다.
     float BalloonRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // Cloud Floater 사건3은 같은 프레임, 나머지는 현재 Carrier Runtime으로 전달한다.
     o::RawGeyserLifetime& GeyserLifetime(); // 같은 지면 목록/기본프레임/현재 편집 모드를 사용한다.
@@ -371,6 +376,9 @@ private:
     o::PriestPostPopState priestDeletionState_; // 고유 목록/owner 상태는 앞의 장기 실제 저장소 주소만 빌린다.
     std::unique_ptr<o::RawPriestForcefield> priestForcefield_; //Pool/TYPE/현재 역할보다 먼저 반납할 실제 조회기다.
     std::unique_ptr<o::RawPriestPreDestroy> priestPre_; // 역순 파괴로 참조하는 조회/목록/Carrier보다 먼저 반납한다.
+    std::unique_ptr<o::RawPriestParticipation> priestParticipation_; // 같은 사제 목록/Carrier/역할보다 먼저 반납하는 실제 조회다.
+    std::function<void(o::Sid)> daisFinish_; // 선택된 실제 Client 장치가 현재 전체 Runtime을 pin하며 Session을 저장하지 않는다.
+    std::unique_ptr<o::RawDaisDeletion> daisDeletion_; // 고유 삭제 실행기는 참조하는 실제 물리/Player/참여 조회보다 먼저 반납한다.
     std::unique_ptr<o::RawBalloonBody> balloonBody_; // 역순 파괴로 참조하는 Carrier 전처리/후처리·공간·프레임보다 먼저 반납한다.
     std::function<void()> carrierReplenishment_; //실제장기보충owner를약하게빌리는Client장치이며Session을소유하지않는다.
     std::function<void(o::Sid,std::uint32_t)> vortexOwner_; //실제신전가상74의장기owner를약하게빌린다.

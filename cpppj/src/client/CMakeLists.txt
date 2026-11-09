@@ -12,6 +12,7 @@ target_sources(netstorm PRIVATE
     RawSurfaceBalloon.cpp # 실제 그림자·현재 TYPE·Carrier 부모와 Cloud Floater 주기를 같은 장기 저장소에 연결한다.
     RawSurfaceRegistryDeletion.cpp # 현재 Player 기록과 거주 구역·Dude 목록의 실제 고유 삭제를 장기 저장소에 연결한다.
     RawSurfacePriestDeletion.cpp # 사제 전처리와 현재 TYPE/역할의 실제 보호막 조회를 장기로 공유한다.
+    RawSurfaceDaisDeletion.cpp # 다이스/제단 네 고유 삭제를 실제 현재 Player·역할·공통 부모에 장기로 연결한다.
     NativeFortSaveVirtual.cpp NativeFortSaveVirtual.h #같은 장기 물리의 저장/보상 가상 조회를 실제 호출자가 공유한다.
     ClientChatPacketReceiver.cpp ClientChatPacketReceiver.h #현재 Client의41h 장기 중계와 현재 Chat 수신을 연결한다.
     ClientMetaPacketReceivers.cpp ClientMetaPacketReceivers.h #장기 Client의 Meta 8F·현재 표시/NSInfo를 공통 기본표에 설치한다.

@@ -675,6 +675,7 @@ public:
     const o::SquidReward& HitPoints() const;
     void EmitDamageableCollapse(o::Sid sid); // 실제 선택된 같은 붕괴 파편 효과다. caller가 전체 Runtime을 보유한다.
     void EmitDamageableExplosion(o::Sid sid); // 같은 실제 Impact/폭발 파편 효과를 사용한다.
+    void FinishDaisSacrificeForDeletion(o::Sid sid); // 원문 다이스 삭제의 제단24가 선택한 기존 전체 희생 완료다. caller가 같은 전체 Runtime을 보유한다.
     float HandleCarrierResourceRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 장기 Cloud Floater가 선택한 같은 실제 Carrier 사건을 전체 Runtime 수명 안에서 실행한다.
     void SpawnReleasedPriest(float x,float y,std::uint32_t type,std::uint16_t word); // 현재 실제 사제 나선 생성기에 원문 인자를 넘긴다.
     void DropDamageableDude(o::Sid sid,std::int32_t index,bool random); // 현재 실제 Dude 드롭 몸체를 호출한다.

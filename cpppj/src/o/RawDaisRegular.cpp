@@ -116,8 +116,14 @@ float RawDaisRegular::Handle(Sid sid,std::uint32_t event,std::uint32_t count,flo
 }
 // 현재K..O에서만604한개를삭제하고현재타입E첫프레임으로복귀한다.
 void RawDaisRegular::StopPriestRitual(Sid priest) const {
-    const auto direction=RawPathAnimation::Direction(frames_[pool_.Slot(priest)[10]],CurrentFrame(priest));if (direction<=9 || direction>=15) return;
-    if (auto* process=host_.FindEvent(priest,604)) host_.Kill(*process,0);DaisNeed(hooks_.setFrame)(priest,First(priest,'E'),0);
+    StopPriestRitualIn(pool_,frames_,host_,priest,hooks_.setFrame);
+}
+// 현재 방향 조회→첫604 실제 삭제→다시 현재 TYPE의 E 프레임 조회/지정 순서를 보존한다.
+void RawDaisRegular::StopPriestRitualIn(const SidPool& pool,std::span<const RiftTypeFrames> frames,SquidProcessHost& host,Sid priest,
+    const std::function<void(Sid,std::int32_t,std::uint32_t)>& setFrame) {
+    const auto raw=pool.Slot(priest);const auto frame=pool.Edition()==OriginalEdition::Patch1078 ? std::bit_cast<std::int32_t>(Read(raw,36)):std::int32_t(raw[34]);
+    const auto direction=RawPathAnimation::Direction(frames[raw[10]],frame);if (direction<=9 || direction>=15) return;
+    if (auto* process=host.FindEvent(priest,604)) host.Kill(*process,0);DaisNeed(setFrame)(priest,frames[pool.Slot(priest)[10]].Run('E').first,0);
 }
 // new/Shared효과뒤현재단계와좌표를다시읽는다.
 void RawDaisRegular::Collapse(Sid dais) const {

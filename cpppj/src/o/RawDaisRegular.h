@@ -85,6 +85,8 @@ public:
     float Handle(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const; // Rune304/Dais305·306·307 및 기존 fallback의 전체 분배다.
     void Progress(Sid dais) const; // 현재 stage/사제604 취소→다음 목표/collapse 또는 희생 음향/시작·altar 이탈이다.
     void StopPriestRitual(Sid priest) const; // 현재K..O이면 첫604를 실제로 지우고 현재 타입E 첫 프레임을 지정한다.
+    static void StopPriestRitualIn(const SidPool& pool,std::span<const RiftTypeFrames> frames,SquidProcessHost& host,Sid priest,
+        const std::function<void(Sid,std::int32_t,std::uint32_t)>& setFrame); // 장기 삭제도 같은 현재 Host/Frame의604 중지 본문을 공유한다.
     void Collapse(Sid dais) const; // new/Shared305 이후 현재 단계 목표점의 위치 음향이다.
     void StartSacrifice(Sid dais) const; // extra2/altarM/개수별Dais0·45/Shared306을 원본 순서대로 실행한다.
     float SacrificeAdvance(Sid dais) const; // 현재 sacrificeType169 코드 구간에서 다음 프레임/0.12 또는 종료0이다.

@@ -119,12 +119,18 @@ SquidSearchArea RawTempleRitual::SearchArea(const SquidFootprint& area) const {
 }
 // 기존 실제 발자국만±1 확장하고 후보의 signed 현재HP와현재 최대HP를 비교한다.
 Sid RawTempleRitual::FindStrongOwnedPriest(Sid temple) const {
-    auto area=footprint_.Footprint(temple);area.left-=1;area.top-=1;area.right+=1;area.bottom+=1;RawSquidFinder finder(pool_,hash_,types_);
+    return FindStrongOwnedPriestIn(pool_,hash_,types_,footprint_,hitPoints_,state_.PriestType(),temple);
+}
+// 의식 실행기/효과를 새로 만들지 않고 조회에 실제로 필요한 같은 현재 자료만 사용한다.
+Sid RawTempleRitual::FindStrongOwnedPriestIn(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,const RawSquidNeighbors& footprint,
+    const SquidReward& hitPoints,const std::uint32_t& priestType,Sid temple) {
+    auto area=footprint.Footprint(temple);area.left-=1;area.top-=1;area.right+=1;area.bottom+=1;RawSquidFinder finder(pool,hash,types);
+    const auto owner=pool.Edition()==OriginalEdition::Patch1078 ? 34U:32U; // 판본별 owner BYTE의 현재 위치다.
     // 일반finder 순서에서 현재 type/owner/HP를 읽는다. 사제 자체extra/state는 조건이 아니다.
-    for (auto sid=finder.Begin(SearchArea(area));sid.value;sid=finder.Next()) {
-        const auto raw=pool_.Slot(sid);if (raw[10]!=state_.PriestType() || Owner(sid)!=Owner(temple)) continue;
-        const auto hp=pool_.Edition()==OriginalEdition::Patch1078 ? std::bit_cast<std::int32_t>(Read(raw,26)) : static_cast<std::int32_t>(std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(Read(raw,26,2))));
-        if (hp>=hitPoints_.MaxHitPoints(sid)/2) return sid;
+    for (auto sid=finder.Begin({Cell(area.left),Cell(area.top),Cell(static_cast<double>(area.right)+kAlmostCeil),Cell(static_cast<double>(area.bottom)+kAlmostCeil)});sid.value;sid=finder.Next()) {
+        const auto raw=pool.Slot(sid);if (raw[10]!=priestType || raw[owner]!=pool.Slot(temple)[owner]) continue;
+        const auto hp=pool.Edition()==OriginalEdition::Patch1078 ? std::bit_cast<std::int32_t>(Read(raw,26)) : static_cast<std::int32_t>(std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(Read(raw,26,2))));
+        if (hp>=hitPoints.MaxHitPoints(sid)/2) return sid;
     }
     return {};
 }

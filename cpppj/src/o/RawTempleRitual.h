@@ -58,6 +58,8 @@ public:
     Sid RuneAt(Sid temple,TempleRitualPoint point) const;
     // 신전 발자국±1의 일반 finder에서 같은 owner이며HP>=현재 최대HP/2인 첫 사제를 찾는다.
     Sid FindStrongOwnedPriest(Sid temple) const;
+    static Sid FindStrongOwnedPriestIn(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,const RawSquidNeighbors& footprint,
+        const SquidReward& hitPoints,const std::uint32_t& priestType,Sid temple); // 삭제의 장기 owner도 같은 현재 발자국/소유자/HP 조회 본문을 빌린다.
     // 신전 발자국의 첫 현재 runeType 중extra1인 후보가 있는지 실제 finder로 읽는다.
     bool HasAbstractRune(Sid temple) const;
     // 생성→HP0→현재stage 프레임→void assert→abstract1→현재owner→다시현재stage Anchor→Pop 순서다.

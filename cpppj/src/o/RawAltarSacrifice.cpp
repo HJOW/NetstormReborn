@@ -1,5 +1,6 @@
 // 실제 제단 사건과 다이스 전처리를 복원하고 기존 조회/프레임/Host/공통 삭제를 재사용한다.
 #include "o/RawAltarSacrifice.h"
+#include "o/RawDaisDeletion.h" // 실제 전처리와 제단24 순회를 장기 Native 삭제와 공유한다.
 #include "o/RawSquidWord.h"
 #include "o/RawAltarReleaseParent.h" // 패치의 실제 진단 복귀/저장 검색 결과를 공유한다.
 #include "o/RawAssetRegular.h"
@@ -14,7 +15,7 @@ namespace {
 template<class F> F AltarNeed(const F& function) { if (!function) throw std::logic_error("제단의 선택된 실제 장치 미연결");return function; } // 선택한 callable을 복사해 실제 호출 중 연결 교체에도 수명을 유지한다.
 std::span<std::uint8_t> AltarRaw(SidPool& pool,Sid sid) { if (pool.Edition()!=OriginalEdition::Patch1078) return pool.AllocatedBytes(sid);const auto raw=pool.Slot(sid);return {const_cast<std::uint8_t*>(raw.data()),raw.size()}; } // Unpop/해방 콜백 뒤 PATCH plain frame은 같은 물리 슬롯을 쓰며 CD 계약은 유지한다.
 constexpr float kStrugglePayload=0.08F,kFinishedDelay=3.0F,kReleaseOffset=0.5F; // 실제PE 3da3d70a/40400000/3f000000 비트다.
-constexpr std::uint32_t kSacrificeDestroy=0x400000,kAltarDestroy=0x48; // 최종 희생 완료와 제단 삭제의 실제 flags다.
+constexpr std::uint32_t kSacrificeDestroy=0x400000; // 최종 희생 완료의 실제 flags이며 제단48 삭제는 공유 전처리 본문에 있다.
 constexpr std::array<std::string_view,5> kChains{{"chainRattle23.wav","chainRattle24.wav","chainRattle25.wav","chainRattle26.wav","chainRattle27.wav"}}; // 두 판본의 실제 선택표 첫5개다.
 constexpr std::array<std::string_view,3> kStruggles{{"priestStruggleFade01.wav","priestStruggleFade02.wav","priestStruggleFade03.wav"}}; // 원본 난수/1000 선택표다.
 // 비정렬 little endian의 필요한 필드 폭만 읽는다.
@@ -122,26 +123,15 @@ void RawAltarSacrifice::ReleasePriest(Sid dais) const {
 }
 // 다음 링크는 원본처럼 현재 후보를 반환하기 전에 저장한다.
 void RawAltarSacrifice::FinishOnAltarForms(Sid dais,Sid altar) const {
-    Sid current{static_cast<std::uint16_t>(Read(pool_.Slot(altar),6,2))};std::unordered_set<std::uint16_t> visited;
-    // 파괴 중에도 원본은 Form을 하나씩 현재 Host에서 읽고 Finish를 매24마다 호출한다.
-    while (current.value) {
-        if (!Valid(current) || !visited.insert(current.value).second) throw std::logic_error("다이스 제단 프로세스 체인 손상");const auto raw=pool_.Slot(current);const Sid next{static_cast<std::uint16_t>(Read(raw,4,2))};
-        if (raw[10]<=69) { if (raw[10]<10 || raw[10]>=host_.ProcessTypeEnd()) throw std::logic_error("다이스 제단 process finder isProcess assert");auto* process=host_.FromForm(current);if (!process) throw std::logic_error("다이스 제단 실제 Kernel 프로세스 누락");const auto* regular=dynamic_cast<const RegularProcess*>(process);if (regular && regular->Event()==24) dais_.FinishSacrifice(dais); }
-        current=next;
-    }
+    RawDaisDeletion::FinishForms(pool_,host_,dais,altar,daisState_.clock.RegularType(),daisState_.clock.SharedRegularType(),[this](Sid sid) { dais_.FinishSacrifice(sid); });
 }
 // 다이스 파생 전처리는extra를최초한번만검사하며 마지막 공통 몸체는 항상 호출한다.
 void RawAltarSacrifice::DaisPreDestroy(Sid dais,std::uint32_t flags) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto raw=patch ? pool_.Slot(dais) : pool_.AllocatedBytes(dais);if ((!patch && raw[10]!=daisState_.rune.DaisType()) || Read(raw,0)!=(patch ? kPatchDaisVtable : kCdDaisVtable)) throw std::invalid_argument("다이스 파생 전처리 타입/가상표 오류");
-    if (!(raw[patch ? 40 : 35]&9)) {
-        if (flags&kSacrificeDestroy) { const auto altar=rune_.AltarAt(dais);if (!Valid(altar)) throw std::logic_error("다이스 삭제의 제단 프로세스 부모 누락");FinishOnAltarForms(dais,altar); }
-        const auto priest=temple_.FindStrongOwnedPriest(dais);if (Valid(priest)) dais_.StopPriestRitual(priest);const auto area=footprint_.Footprint(dais);RawSquidFinder finder(pool_,hash_,types_);
-        // float 발자국을 원본 CRT로 절삭하고 각현재제단을 실제 파생삭제한다.
-        for (auto current=finder.Begin({Cell(area.left),Cell(area.top),Cell(area.right),Cell(area.bottom)},0);current.value;current=finder.Next()) if (pool_.Slot(current)[10]==daisState_.rune.AltarType()) AltarNeed(hooks_.destroy)(current,kAltarDestroy);
-        // 원본의1..8 현재 플레이어 갱신 순서다.
-        for (std::uint32_t owner=1;owner<=kPlayerCount;++owner) AltarNeed(hooks_.refreshOwner)(owner);
-    }
-    damageable_.PreDestroy(dais,flags);
+    DaisDeletionHooks hooks;hooks.findAltar=[this](Sid sid) { return rune_.AltarAt(sid); };hooks.findPriest=[this](Sid sid) { return temple_.FindStrongOwnedPriest(sid); };
+    hooks.finishForms=[this](Sid sid,Sid altar) { if (!Valid(altar)) throw std::logic_error("다이스 삭제의 제단 프로세스 부모 누락");FinishOnAltarForms(sid,altar); }; // 독립 typed의 기존 손상 입력 계약은 유지한다.
+    hooks.stopPriest=[this](Sid sid) { dais_.StopPriestRitual(sid); };hooks.destroy=hooks_.destroy;hooks.refreshOwner=hooks_.refreshOwner;hooks.pre=[this](Sid sid,std::uint32_t value) { damageable_.PreDestroy(sid,value); };
+    RawDaisDeletion(pool_,hash_,types_,footprint_,daisState_.rune.AltarType(),daisState_.ritual.RuneType(),std::move(hooks)).DaisPre(dais,flags);
 }
 // 최상위 Regular 분배도 호출 효과 뒤 같은 풀/전역을 다시 읽는다.
 float RawAltarSacrifice::Handle(Sid altar,std::uint32_t event,std::uint32_t count,float payload) const {

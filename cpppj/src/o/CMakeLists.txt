@@ -167,6 +167,7 @@ target_sources(netstorm PRIVATE
     RawDaisProcessData.cpp RawDaisProcessData.h
     RawAltarSacrifice.cpp RawAltarSacrifice.h
     RawDaisLifecycle.cpp RawDaisLifecycle.h
+    RawDaisDeletion.cpp RawDaisDeletion.h # 현재 역할/Player/목록을 사용하는 같은 고유 삭제 순서다.
     RawIslandBuilder.cpp RawIslandBuilder.h
     RawIslandPlacement.cpp RawIslandPlacement.h # 편집기의 실제 임시 지도 충돌 판정이다.
     RawFortMoneyLoad.cpp RawFortMoneyLoad.h

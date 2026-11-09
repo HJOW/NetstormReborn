@@ -1,5 +1,6 @@
 // 원본생성자+20/+14/+18의실제몸체를같은공통후처리및현재Player상태에연결한다.
 #include "o/RawDaisLifecycle.h"
+#include "o/RawDaisDeletion.h" // Native 장기 owner와 동일한 고유 삭제 순서/현재 룬 후보를 공유한다.
 #include "o/SquidFactory.h"
 #include "o/SquidOwner.h"
 #include <bit>
@@ -17,8 +18,6 @@ std::uint32_t Read(std::span<const std::uint8_t> raw,std::size_t offset,std::siz
     for (std::size_t index=0;index<width;++index) value|=static_cast<std::uint32_t>(raw[offset+index])<<(index*8);
     return value;
 }
-// 정상지도좌표를원본CRT의0방향절삭으로읽는다.
-int Cell(float value) { if (!std::isfinite(value) || static_cast<double>(value)<-2147483648.0 || static_cast<double>(value)>=2147483648.0) throw std::out_of_range("다이스 수명 좌표절삭범위");return static_cast<int>(value); }
 }
 // 필수몸체와상태를서로다른월드에연결하면아직효과가없을때거부한다.
 RawDaisLifecycle::RawDaisLifecycle(SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
@@ -92,14 +91,16 @@ void RawDaisLifecycle::PostPop(Sid sid,std::uint32_t flags) const {
 }
 // 제단삭제가같은살아있는다이스삭제를요청해도공통Destroy의dead재진입차단을재사용한다.
 void RawDaisLifecycle::AltarPreDestroy(Sid altar,std::uint32_t flags) const {
-    if (!Handles(altar) || IsDais(altar)) throw std::invalid_argument("제단 파생전처리 타입/가상표오류");if (!(flags&0x400000)) { const auto dais=altar_.DaisAt(altar);if (dais.value && dais.value<pool_.Capacity() && !(pool_.Slot(dais)[11]&2)) LifecycleNeed(hooks_.destroy)(dais,flags); }
-    const auto area=footprint_.Footprint(altar);RawSquidFinder finder(pool_,hash_,types_);
-    // 다음링크저장/현재extra/boss또는client번호권한의원본순서다.
-    for (auto current=finder.Begin({Cell(area.left),Cell(area.top),Cell(area.right),Cell(area.bottom)},0);current.value;current=finder.Next()) if (pool_.Slot(current)[10]==daisState_.ritual.RuneType() && (pool_.Slot(current)[pool_.Edition()==OriginalEdition::Patch1078 ? 40 : 35]&1) && (Boss() || (current.value>4 && current.value<pool_.Layout().serverFirst))) LifecycleNeed(hooks_.destroy)(current,0);
-    preDestroy_.PreDestroy(altar,flags);
+    if (!Handles(altar) || IsDais(altar)) throw std::invalid_argument("제단 파생전처리 타입/가상표오류");
+    DaisDeletionHooks hooks;hooks.findDais=[this](Sid sid) { return altar_.DaisAt(sid); };hooks.boss=[this] { return Boss(); };hooks.destroy=hooks_.destroy;hooks.pre=[this](auto sid,auto value) { preDestroy_.PreDestroy(sid,value); };
+    RawDaisDeletion(pool_,hash_,types_,footprint_,daisState_.rune.AltarType(),daisState_.ritual.RuneType(),std::move(hooks)).AltarPre(altar,flags);
 }
 // 현재owner와정확히일치하는SID쌍만지운다. 마지막전체Damageable의flags는그대로전달한다.
 void RawDaisLifecycle::PostDestroy(Sid sid,std::uint32_t flags) const {
+    if (pool_.Edition()==OriginalEdition::Patch1078 && !daisState_.playerRecords.empty() && Handles(sid) && IsDais(sid)) {
+        DaisDeletionHooks hooks;hooks.players=[this] { return PlayerRecordAccess{{},daisState_.playerRecords}; };hooks.post=hooks_.damageablePostDestroy;
+        RawDaisDeletion(pool_,hash_,types_,footprint_,daisState_.rune.AltarType(),daisState_.ritual.RuneType(),std::move(hooks)).DaisPost(sid,flags);return;
+    } // 독립 배열/CD의 기존 필드 계약은 아래에서 유지한다.
     if (!Handles(sid)) throw std::invalid_argument("다이스 수명 삭제후처리 타입/가상표오류");if (IsDais(sid) && Owner(sid)) { Player(Owner(sid));if (PlayerField(Owner(sid),2)==sid.value) { SetPlayerField(Owner(sid),2,0);SetPlayerField(Owner(sid),3,0); }if (PlayerField(Owner(sid),0)==sid.value) { SetPlayerField(Owner(sid),0,0);SetPlayerField(Owner(sid),1,0); } }LifecycleNeed(hooks_.damageablePostDestroy)(sid,flags);
 }
 // 후속가상등록의같은풀검증이다.

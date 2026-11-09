@@ -44,6 +44,7 @@ struct RegionScene { //게임실행기없이실제장기owner/보호자산/물�
     std::uint32_t refreshes{},traces{},clears{},themes{1},themeReads{}; //외부선택장치의실제호출을관찰한다.
     std::function<void()> onRefresh; //실제UI선택뒤base/장치변경을관찰한다.
     std::function<void()> onClear; // 실제 공통 Pre의 선택 해제 뒤 owner/base 변경 순서를 관찰한다.
+    std::function<void()> onTrace; // 실제 공통 삭제 로그 뒤 현재 VT 재조회와 부분 실패 위치를 관찰한다.
     std::unique_ptr<RawAiWallet> wallet; //기존실제현재Player지갑본문이며비영AI선택은금지한다.
     RawAiBrainMemory aiMemory{0x26000000U,RegionForbidden<void,std::span<std::uint8_t>>("영역 검사 비영 AI 할당 금지")}; //빈실제메모리owner이며가짜brain을할당하지않는다.
     double now{};std::uint32_t outpostType{126}; //NULL brain통지가읽지않는현재시각/원문TYPE입력이다.
@@ -53,8 +54,8 @@ struct RegionScene { //게임실행기없이실제장기owner/보호자산/물�
         storage->BindTransmissionDevices({RegionForbidden<void,std::span<std::uint8_t>>("영역 검사 금지 Native 방송"),RegionForbidden<bool,std::int32_t>(),RegionForbidden<void,std::int32_t,std::span<std::uint8_t>>()});
         storage->BindFenceAlliances([weak=std::weak_ptr<ClientPlayerRecords>(players)](auto row,auto column) { const auto current=weak.lock();if (!current) throw std::logic_error("검사 실제 Player 반납 뒤 동맹 선택");return current->Alliances().at(row*9+column); }); //게임/Player초기화없이실제동맹배열만선택호출동안pin한다.
         storage->BindSerializationGlobals(std::make_shared<FortSerializationGlobals>());
-        storage->BindDisplayDiagnostics(detail,[](auto,auto,auto) { throw std::logic_error("유효 영역 입력에서 원문 단언 발생"); });
-        storage->BindGraphTrace([this](auto,std::string_view) { ++traces; });storage->EnablePatchDestroyDiagnostics();
+        storage->BindDisplayDiagnostics(detail,[](auto expression,auto file,auto line) { throw std::logic_error("유효 영역 입력에서 원문 단언 발생: "+std::string(file)+":"+std::to_string(line)+" "+std::string(expression)); }); // 최초 실패의 실제 원문 위치/표현을 숨기지 않는다.
+        storage->BindGraphTrace([this](auto,std::string_view) { ++traces;if (onTrace) onTrace(); });storage->EnablePatchDestroyDiagnostics();
         RawSurfaceDisplayBindings display;display.view=[] { return SquidDisplayView{0,0,65536,{0,0,1024,768}}; };display.suppressed=[] { return true; };display.invalidate=RegionForbidden<void,SquidDisplayRect,std::uint32_t>();storage->BindDisplayDevices(std::move(display));
         wallet=std::make_unique<RawAiWallet>(RegionForbidden<AiWalletMemoryAccess>("영역 검사 비영 AI 지갑 대여 금지"),[this]()->std::span<const std::uint8_t> { return players->Records(); },AiWalletReads{[this] { return storage->ownerMode.challenge; },RegionForbidden<bool>()});
         storage->BindRewardDevices({std::shared_ptr<ScrambledSpStore>(sp,&sp->Store()),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->world.editor),[this] { ++spRefreshes; },[this](auto player,auto amount) { ++walletCalls;wallet->Credit(player,amount); }});
@@ -196,6 +197,113 @@ TEST_CASE(ClientRegistry_PostRereadsExtraAfterEarlierCommonPre) {
     CHECK(scene.storage->DestroyAsset(sid,0x200810U));CHECK(scene.clears==1 && list.count==1 && list.entries[0]==sid.value && scene.storage->BaseDestroy().PostDepth()==0);
 }
 
+// 장기 삭제/참여 본체는 현재 목록/원소유자/역할/SP/Player/난수를 초기화하지 않는다.
+TEST_CASE(ClientDais_LongBodiesKeepActualOwners) {
+    RegionScene scene;const auto random=scene.random->Game().State(),free=scene.storage->pool.FreeCount();scene.storage->priestOwnerState[3]=77;scene.storage->sidLists.priests.count=0;
+    auto* body=&scene.storage->DaisDeletion();auto* participation=&scene.storage->PriestParticipation();CHECK(&scene.storage->DaisDeletion()==body && &scene.storage->PriestParticipation()==participation && &body->Pool()==&scene.storage->pool);
+    CHECK(scene.storage->priestOwnerState[3]==77 && scene.storage->pool.FreeCount()==free && scene.random->Game().State()==random && scene.players->Base()==0 && !scene.sp->Store().Initialized() && !scene.storage->Borrowed());
+}
+
+// 실제 두 VT의 네 고유 Pre/Post가 World 없이 같은 전체 부모와 삭제 깊이를 끝낸다.
+TEST_CASE(ClientDais_BothActualParentsBeforeWorld) {
+    for (const auto table:{0x5076b8U,0x507950U}) { // 실제 제단과 다이스를 별도 현재 물리에서 확인한다.
+        RegionScene scene;const auto sid=scene.Asset(table);scene.Position(sid);const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(sid,0x10U));
+        CHECK(scene.storage->pool.FreeCount()==free+1 && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0 && !scene.storage->Borrowed());
+    }
+}
+
+// 전체 DWORD가 일치하는 primary와 mirror만 지우고 높은 비트가 다른 SID 쌍은 유지한다.
+TEST_CASE(ClientDais_PostClearsOnlyMatchingDwords) {
+    RegionScene scene;scene.PlayerBlock();const auto sid=scene.Asset(0x507950U);scene.Position(sid);scene.storage->pool.AllocatedBytes(sid)[34]=1;
+    scene.PlayerWrite(1,0x94,sid.value);scene.PlayerWrite(1,0x98,0xaaaaaaaaU);scene.PlayerWrite(1,0x8c,0x10000U|sid.value);scene.PlayerWrite(1,0x90,0xbbbbbbbbU);
+    CHECK(scene.storage->DestroyAsset(sid,0x10U));CHECK(scene.PlayerRead(1,0x94)==0 && scene.PlayerRead(1,0x98)==0 && scene.PlayerRead(1,0x8c)==(0x10000U|sid.value) && scene.PlayerRead(1,0x90)==0xbbbbbbbbU);
+}
+
+// 서로 다른 SID 두 쌍과 mirror는 삭제 대상이 아니며 다른 Player 행도 그대로다.
+TEST_CASE(ClientDais_PostKeepsUnmatchedPairs) {
+    RegionScene scene;scene.PlayerBlock();const auto sid=scene.Asset(0x507950U);scene.Position(sid);scene.storage->pool.AllocatedBytes(sid)[34]=1;
+    scene.PlayerWrite(1,0x94,7);scene.PlayerWrite(1,0x98,8);scene.PlayerWrite(1,0x8c,9);scene.PlayerWrite(1,0x90,10);scene.PlayerWrite(2,0x94,sid.value);
+    CHECK(scene.storage->DestroyAsset(sid,0x10U));CHECK(scene.PlayerRead(1,0x94)==7 && scene.PlayerRead(1,0x98)==8 && scene.PlayerRead(1,0x8c)==9 && scene.PlayerRead(1,0x90)==10 && scene.PlayerRead(2,0x94)==sid.value);
+}
+
+// owner0 관문은 현재 Player base가 아직 없어도 기록 owner나 배열을 읽지 않는다.
+TEST_CASE(ClientDais_PostOwnerZeroNeedsNoRecords) {
+    RegionScene scene;const auto sid=scene.Asset(0x507950U);scene.Position(sid);CHECK(scene.storage->pool.Slot(sid)[34]==0 && scene.players->Base()==0);
+    CHECK(scene.storage->DestroyAsset(sid,0x10U));CHECK(scene.players->Base()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// owner1의 미초기화 base는 Post의 실제 소비 위치에서 실패하며 완료된 Pre를 되돌리지 않는다.
+TEST_CASE(ClientDais_PostWithoutRecordsKeepsEarlierEffects) {
+    RegionScene scene;const auto sid=scene.Asset(0x507950U);scene.Position(sid);scene.storage->pool.AllocatedBytes(sid)[34]=1;const auto free=scene.storage->pool.FreeCount();bool rejected{};
+    try { scene.storage->DestroyAsset(sid,0x10U); }catch (const std::out_of_range& error) { rejected=std::string_view(error.what())=="다이스 삭제의 현재 Player 물리 범위"; }
+    CHECK(rejected && scene.players->Base()==0 && scene.storage->pool.FreeCount()==free && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==1 && (scene.storage->pool.Slot(sid)[11]&2U));
+}
+
+// 공통 Pre가 실제 Player 배열/owner를 바꿔도 Post는 그때의 새 base/행에서 두 SID 쌍을 정리한다.
+TEST_CASE(ClientDais_PostRereadsPlayersAfterCommonPre) {
+    RegionScene scene;const auto old=scene.PlayerBlock();const auto sid=scene.Asset(0x507950U);scene.Position(sid);scene.storage->pool.AllocatedBytes(sid)[34]=1;scene.gameplay->selection.selected=sid.value;
+    scene.onClear=[&] { scene.PlayerBlock();scene.storage->pool.AllocatedBytes(sid)[34]=2;scene.PlayerWrite(1,0x94,99);scene.PlayerWrite(2,0x94,sid.value);scene.PlayerWrite(2,0x98,1);scene.PlayerWrite(2,0x8c,sid.value);scene.PlayerWrite(2,0x90,2); };
+    CHECK(scene.storage->DestroyAsset(sid,0x10U));CHECK(scene.players->Base()!=old && scene.clears==1 && scene.PlayerRead(1,0x94)==99 && scene.PlayerRead(2,0x94)==0 && scene.PlayerRead(2,0x98)==0 && scene.PlayerRead(2,0x8c)==0 && scene.PlayerRead(2,0x90)==0);
+}
+
+// 제단은 flags400000이 없을 때만 살아 있는 현재 다이스를 같은 flags로 실제 가상 삭제한다.
+TEST_CASE(ClientDais_AltarDeletesDaisUnlessSacrificeFlag) {
+    for (const auto flags:{0x10U,0x400010U}) { // 단순 삭제/희생 삭제 구분만 확인하고 희생 동작이나 포획을 실행하지 않는다.
+        RegionScene scene;const auto altar=scene.Asset(0x5076b8U),dais=scene.Asset(0x507950U);scene.Position(altar);scene.Position(dais);scene.storage->pool.AllocatedBytes(dais)[40]=1;scene.Index(dais);
+        CHECK(scene.storage->DestroyAsset(altar,flags));CHECK(bool(scene.storage->pool.Slot(dais)[11]&1U)==!(flags&0x400000U));CHECK(scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+    }
+}
+
+// 제단의 extra9는 룬 정리를 생략하지 않으며 소수 우하단은 원문처럼 거의 올림한다.
+TEST_CASE(ClientDais_AltarExtraKeepsFractionalRuneCleanup) {
+    RegionScene scene;const auto altar=scene.Asset(0x5076b8U),rune=scene.Asset(0x5075d8U);scene.Position(altar,100.25F,100.25F);scene.Position(rune,101,101);scene.storage->pool.AllocatedBytes(rune)[40]=1;scene.Index(rune);
+    CHECK(scene.storage->DestroyAsset(altar,0x10U));CHECK((scene.storage->pool.Slot(rune)[11]&1U) && scene.traces==2 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 비boss는 서버 SID 룬을 남기고 실제 client SID의 추상 룬만 지운다. 송신 장치는 금지 상태다.
+TEST_CASE(ClientDais_AltarAuthoritySkipsServerRune) {
+    RegionScene scene;const auto altar=scene.Asset(0x5076b8U),local=scene.Asset(0x5075d8U),remote=scene.storage->CreateAsset(scene.gameplay->GameAux()->RuneType(),0);scene.Position(altar);scene.Position(local);scene.Position(remote);
+    scene.storage->pool.AllocatedBytes(local)[40]=1;scene.storage->pool.AllocatedBytes(remote)[40]=1;scene.Index(local);scene.Index(remote);scene.gameplay->Authority()->boss=false;
+    CHECK(scene.storage->DestroyAsset(altar,0x10U));CHECK((scene.storage->pool.Slot(local)[11]&1U) && !(scene.storage->pool.Slot(remote)[11]&1U) && scene.traces==2);
+}
+
+// 앞선 다이스 삭제의 실제 선택 해제가 역할/후보 TYPE를 바꾸면 뒤 룬 정리는 새 현재 값을 쓴다.
+TEST_CASE(ClientDais_AltarReadsRoleAfterNestedDaisDelete) {
+    RegionScene scene;scene.PlayerBlock();const auto altar=scene.Asset(0x5076b8U),dais=scene.Asset(0x507950U),rune=scene.Asset(0x5075d8U);scene.Position(altar);scene.Position(dais);scene.Position(rune);
+    scene.storage->pool.AllocatedBytes(dais)[40]=1;scene.storage->pool.AllocatedBytes(dais)[34]=1;scene.storage->pool.AllocatedBytes(rune)[40]=1;scene.Index(rune);scene.Index(dais);scene.gameplay->selection.selected=dais.value;
+    scene.onClear=[&] { scene.gameplay->GameAux()->RuneType()=70;scene.storage->pool.AllocatedBytes(rune)[10]=70; };
+    CHECK(scene.storage->DestroyAsset(altar,0x10U));CHECK(scene.clears==1 && scene.traces==3 && (scene.storage->pool.Slot(dais)[11]&1U) && (scene.storage->pool.Slot(rune)[11]&1U));
+}
+
+// 일반 다이스의1..8 갱신은 같은 장기 사제 목록과9DWORD 상태를 사용하며0번은 바꾸지 않는다.
+TEST_CASE(ClientDais_OrdinaryPreRefreshesSameLongParticipation) {
+    RegionScene scene;const auto dais=scene.Asset(0x507950U),priest=scene.Asset(0x50f210U);scene.Position(dais);scene.Position(priest);scene.storage->pool.AllocatedBytes(dais)[40]=0;scene.storage->pool.AllocatedBytes(priest)[34]=1;
+    scene.storage->sidLists.priests.count=1;scene.storage->sidLists.priests.entries[0]=priest.value;scene.storage->priestOwnerState.fill(99);
+    CHECK(scene.storage->DestroyAsset(dais,0x810U));CHECK(scene.storage->priestOwnerState[0]==99 && scene.storage->priestOwnerState[1]==0 && scene.storage->PriestParticipation().Find(1)==priest.value);
+    for (std::uint32_t owner=2;owner<=8;++owner) CHECK(scene.storage->priestOwnerState[owner]==2); // 원문의 현재 owner별 조회 결과를 확인한다.
+}
+
+// 강한 같은 owner 사제의 첫604를 실제 Host에서 제거한 뒤 현재 E 프레임을 지정한다.
+TEST_CASE(ClientDais_PreStopsActualPriest604) {
+    RegionScene scene;scene.PlayerBlock();const auto dais=scene.Asset(0x507950U),priest=scene.Asset(0x50f210U);scene.Position(dais);scene.Position(priest);auto d=scene.storage->pool.AllocatedBytes(dais),p=scene.storage->pool.AllocatedBytes(priest);d[40]=0;d[34]=1;p[40]=1;p[34]=1;
+    RegionPut(p,26,static_cast<std::uint32_t>(scene.storage->Reward().MaxHitPoints(priest)));RegionPut(p,36,static_cast<std::uint32_t>(scene.storage->frames[p[10]].Run('K').first));scene.storage->Frame().StoreLevel(priest);scene.Index(priest);auto& host=scene.storage->Processes().Host();CHECK(host.AddRegular(priest,604,0.1F)!=nullptr);const auto frame=scene.storage->frames[p[10]].Run('E').first; // 수동 해시 입력도 실제 K프레임의 저장 단계와 일치시켜 불필요한 void 재Pop/self-next 입력을 만들지 않는다.
+    CHECK(scene.storage->DestroyAsset(dais,0x810U));CHECK(host.FindEvent(priest,604)==nullptr && RegionRead(scene.storage->pool.Slot(priest),36)==static_cast<std::uint32_t>(frame) && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 실제 Form type BYTE와 전체 Regular 역할 DWORD가 다르면24여도 희생 완료를 선택하지 않는다.
+TEST_CASE(ClientDais_FinishFormComparesFullCurrentRoles) {
+    RegionScene scene;const auto dais=scene.Asset(0x507950U),altar=scene.Asset(0x5076b8U);scene.Position(dais);scene.Position(altar);scene.storage->pool.AllocatedBytes(dais)[40]=0;scene.storage->pool.AllocatedBytes(altar)[40]=1;scene.Index(dais);scene.Index(altar);
+    CHECK(scene.storage->Processes().Host().AddRegular(altar,24,0.1F)!=nullptr);scene.gameplay->GameAux()->RegularProcessType()+=256;scene.gameplay->GameAux()->SharedRegularProcessType()+=256;
+    CHECK(scene.storage->DestroyAsset(dais,0x400810U));CHECK((scene.storage->pool.Slot(altar)[11]&1U) && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 장기 삭제의 Player 연결은 weak이며 owner 반납 뒤 Post에서 가짜 배열을 만들지 않는다.
+TEST_CASE(ClientDais_CurrentPlayerOwnerIsWeak) {
+    RegionScene scene;scene.PlayerBlock();const auto sid=scene.Asset(0x507950U);scene.Position(sid);scene.storage->pool.AllocatedBytes(sid)[34]=1;static_cast<void>(scene.storage->DaisDeletion());const auto weak=std::weak_ptr<ClientPlayerRecords>(scene.players);scene.owner.reset();scene.players.reset();CHECK(weak.expired());bool rejected{};
+    try { scene.storage->DestroyAsset(sid,0x10U); }catch (const std::logic_error& error) { rejected=std::string_view(error.what())=="장기 다이스 삭제의 현재 Player owner 미연결"; }
+    CHECK(rejected && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==1);
+}
+
 // 장기 사제 본체 조립은 목록/역할/난수/SP/Player를 초기화하거나 World를 대여하지 않는다.
 TEST_CASE(ClientPriest_LongBodiesKeepActualOwners) {
     RegionScene scene;const auto random=scene.random->Game().State();auto& list=scene.storage->sidLists.priests;list.count=1;list.entries[0]=123;scene.gameplay->GameAux()->PriestForcefieldType()=0x1234U;
@@ -313,11 +421,12 @@ TEST_CASE(ClientBalloon_SelfShadowUsesExistingDeadGuard) {
     CHECK(scene.storage->pool.FreeCount()==free+1 && scene.traces==1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
 }
 
-// 그림자에서 고유 미복원 Pre가 실패하면 부모 Carrier 효과보다 앞의 두 실제 삭제 깊이를 보존한다.
+// 모든 알려진 Pre 연결 뒤에도 그림자의 미지 VT가 실패하면 두 실제 삭제 깊이와 부모 선택을 보존한다.
 TEST_CASE(ClientBalloon_ShadowFailurePreservesBothDepths) {
     RegionScene scene;const auto parent=scene.Asset(0x5040c0U),shadow=scene.Asset(0x5076b8U);auto raw=scene.storage->pool.AllocatedBytes(parent);raw[8]=static_cast<std::uint8_t>(shadow.value);raw[9]=static_cast<std::uint8_t>(shadow.value>>8);scene.gameplay->selection.selected=parent.value;
+    scene.onTrace=[&] { if (scene.traces==2) RegionPut(scene.storage->pool.AllocatedBytes(shadow),0,0x12345678U); }; // 실제 child 가상10/로그가 시작된 뒤 VT를 바꿔 현재 Pre 재조회의 실패를 선택한다.
     const auto free=scene.storage->pool.FreeCount();bool rejected{};
-    try { scene.storage->DestroyAsset(parent,0x10U); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).find("전용 삭제 몸체 미연결")!=std::string_view::npos; }
+    try { scene.storage->DestroyAsset(parent,0x10U); }catch (const std::logic_error& error) { rejected=std::string_view(error.what())=="PATCH 현재 삭제 가상 효과의 미지 VT"; }
     CHECK(rejected && scene.storage->pool.FreeCount()==free && scene.traces==2 && scene.clears==0 && scene.gameplay->selection.selected==parent.value);
     CHECK((scene.storage->pool.Slot(parent)[11]&3U)==2U && (scene.storage->pool.Slot(shadow)[11]&3U)==2U && scene.storage->BaseDestroy().PreDepth()==2 && scene.storage->BaseDestroy().PostDepth()==0);
 }
