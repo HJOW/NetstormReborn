@@ -14654,9 +14654,38 @@
       "bytes": null,
       "lines": null,
       "fixtureCommit": "e2dd58a8",
-      "webCommit": "worktree",
+      "webCommit": "6cf9789f",
       "cpppjBasis": {
         "cpppj/src/o/RawPacketLengths.h": "e2dd58a8"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E233",
+      "id": "missionoutcome",
+      "path": "cpppj/tests/fixtures/missionoutcome-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 미션 승패 조건 Check/Event/PriestDead/PriestCaptured. 입력(로컬 번호·데모·Tell 차단·섹션 발견·콜백 변이·영역 소유자·플레이어 9명 활성/신전/사제 상태·방향별 9×9 동맹·43개 사건 잠금·사제 목록·슬롯 raw)에서 종료 입력/잠금 문자열·효과 호출 순서와 당시 상태·반환값 (10.78 364행 + CD 364행)",
+      "consumers": [
+        "webpj/tests/mission-outcome.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mission-outcome.js"
+      ],
+      "doc": "docs/webpj-mission-outcome-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissionOutcome.cpp"
+      ],
+      "scope": "10.78 364행 전부(CD 10.72 364행은 웹 범위 밖)",
+      "text": true,
+      "sha256": "3059eb7c9ee92f98eec042032d608707e5d1db506d0a6e3e08b175909b1aab16",
+      "bytes": 1220797,
+      "lines": 729,
+      "fixtureCommit": "a5afdafb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissionOutcome.cpp": "da6c61ae"
       }
     }
   ]

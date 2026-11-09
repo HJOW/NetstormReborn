@@ -784,7 +784,7 @@ cpppj/src/o/RawMissionGuide.cpp	port			todo	[o-default]
 cpppj/src/o/RawMissionLogin.cpp	port			todo	[o-default]
 cpppj/src/o/RawMissionLoginPackets.cpp	port			todo	[o-default]
 cpppj/src/o/RawMissionLoginTimer.cpp	port			todo	[o-default]
-cpppj/src/o/RawMissionOutcome.cpp	port			todo	[o-default]
+cpppj/src/o/RawMissionOutcome.cpp	port	www/core/raw-mission-outcome.js	1f00a25a	port	[o-default] WB04-E233: 미션 승패 조건 Check 004c36c0(활성 플레이어 1~8 순서로 ai<번호> TempleHalfDead(HP 먼저 읽고 < 최대 HP/2 0 방향 절삭)·TempleDead(없음 또는 raw dead 비트)·PriestDead·PriestCaptured·PriestSaved(lookup 사제 영역 소유자 == 호출 직전 로컬) 뒤 사제 생존이면 두 방향 동맹으로 우리/적 팀 집계 후 GoodTeamDead·BadTeamDead·Failed), Event 004c3940(조건·잠금 0·데모 접두 이름·Tell 차단 0 일 때 section→임시 Gump 정리→가상 통지·콜백 뒤 잠금 1), priestDead/priestCaptured 004922e0(범위 밖 진단 인자 unsigned·ownerState 2/1), bindCurrentInputs(실제 9×180 Player 원문·81 DWORD 동맹·로컬/데모/차단 getter), makeMissionOutcomeHooks(같은 풀 SquidReward 최대 HP). fixture missionoutcome 10.78 364행(일반 재생+실연결 8행 재생) 전부와 cpppj 계약 3건 및 웹 계약 1건(음수 최대 HP 절삭·진단 unsigned·로컬 번호 9·입력 길이/getter). 남음: RawMissionFrameGate checkOutcome 연결·사건 섹션/Gump/통지/영역 소유자 실제 하위·CD 364행은 범위 밖
 cpppj/src/o/RawMissionServerPackets.cpp	port			todo	[o-default] 중앙섬 metadata 분기는 단독 관문을 그대로 옮긴다
 cpppj/src/o/RawMissionSettingsPacket.cpp	port			todo	[o-default]
 cpppj/src/o/RawMissionStart.cpp	port			todo	[o-default]
