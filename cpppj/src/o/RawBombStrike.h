@@ -8,6 +8,11 @@ namespace netstorm::o {
 // 큰 효과 뒤 원본 위치에서 다시 읽는 같은 세션의 현재 전역이다.
 struct BombStrikeState {
     std::uint32_t boss{},specialType{138},firstEffectType{174},hailEffectType{177}; // 540bc4 권한과541280/541310/54131c의 현재 종류다.
+    std::function<std::uint32_t()> currentBoss,currentSpecialType,currentFirstEffectType,currentHailEffectType; //Native는 같은 장기 전역을 소비 위치마다 읽고 독립 typed 입력은 기존 값을 유지한다.
+    std::uint32_t Boss() const { return currentBoss ? currentBoss():boss; } //효과 생성/Pop 뒤 현재 권한을 다시 읽는다.
+    std::uint32_t SpecialType() const { return currentSpecialType ? currentSpecialType():specialType; } //현재 대상 TYPE와 비교할 때만 같은541280을 읽는다.
+    std::uint32_t FirstEffectType() const { return currentFirstEffectType ? currentFirstEffectType():firstEffectType; } //그라비테이션의 실제 생성 직전541310을 조회한다.
+    std::uint32_t HailEffectType() const { return currentHailEffectType ? currentHailEffectType():hailEffectType; } //미티어 반복의 각 생성 직전54131c를 조회한다.
 };
 // 실제 월드/음향/빔/투영은 같은 세션의 기존 몸체로 연결한다.
 struct BombStrikeHooks {

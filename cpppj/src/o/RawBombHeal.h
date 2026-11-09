@@ -7,8 +7,10 @@
 #include <functional>
 
 namespace netstorm::o { // 패킷/정기 예약과 분리된 실제 대상 가상 함수 본문이다.
-//41f9d0의 실제 버스트 정기다. 호출자는 현재 힐 버스트 VT만 분배하며 같은 본문을 공유하는 미티어는 별도 복원 대상이다.
+//41f9d0의 실제 공통 버스트 정기다. 힐/미티어의 현재 VT가 같은 Pool·Frame·Host 본문을 공유한다.
 float HandleHealBurstRegular(SidPool& pool,std::span<const RiftTypeFrames> frames,const SquidFrame& setter,SquidProcessHost& host,const std::function<void(Sid)>& refresh,const std::function<void(Sid,std::uint32_t)>& destroy,Sid sid,std::uint32_t count,float payload);
+//41f760의 그라비테이션 정기다. 진행 뒤 역방향 프레임과0프레임 종료·일반 Regular2 부착을 보존한다.
+float HandleGravityBurstRegular(SidPool& pool,std::span<const RiftTypeFrames> frames,const SquidFrame& setter,SquidProcessHost& host,const std::function<void(Sid)>& refresh,const std::function<void(Sid,std::uint32_t)>& destroy,Sid sid,std::uint32_t count,float payload);
 struct BombHealHooks { // 큰 효과와 현재 전역만 같은 실제 Runtime에서 빌린다.
     std::function<bool(Sid)> hasHitPoints; //004adc60의 현재 HP 보유 여부이며 현재HP 수치 관문이 아니다.
     std::function<std::int32_t(Sid)> maximumHitPoints; //004adcb0 호출 전에 실제 현재HP를 저장한다.

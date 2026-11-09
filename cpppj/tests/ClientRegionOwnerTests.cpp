@@ -14,6 +14,7 @@
 #include "o/RawAiObjectNotice.h" //실제Player의NULL brain은기존전체통지본문의자연반환으로처리한다.
 #include "o/RawBombHeal.h" //힐의 실제 대상 자격/HP/현재 가상 효과를 패킷 없이 검증한다.
 #include "o/RawBombHardener.h" //강화 후보/난수/프레임·플레어 순서를 독립 PE 입력으로 검증한다.
+#include "o/RawBombStrike.h" //직접 피해의 생성/Pop 뒤 현재 권한/TYPE 재조회를 검증한다.
 #include "client/RawBombBlastBindings.h" //하드너의 같은41e3d0 추가 그림도 실제 현재 TYPE/프레임으로 분배한다.
 #include "RawSceneSupport.h" //새 하드너 원문 TSV의 입력과 실제 관찰 결과만 읽는다.
 #include "o/RawSquidHitPoints.h" //현재HP의 원문 비가상 DWORD setter를 같은 풀에서 쓴다.
@@ -1262,10 +1263,10 @@ TEST_CASE(ClientBombOwner_GetterKeepsCurrentStatePoolAndFactory) { // getter는 
 TEST_CASE(ClientBombOwner_CastTimesKeepSameMutableStorage) { // 같은 TYPE+1b8 표를 다시 조회/본문 구성/대여할 때 현재 값을 덮지 않는다.
     BombOwnerScene f;auto& s=f.scene;auto values=s.storage->BombCastTimes();CHECK(values.size()==188 && values[0]==0 && values[69]==0);values[113]=-123;auto* body=&s.storage->BombRegular();CHECK(s.storage->BombCastTimes().data()==values.data() && values[113]==-123 && body==&s.storage->BombRegular());
 }
-TEST_CASE(ClientBombOwner_OnlyActualTenVtablesAreRegistered) { // 현재10VT와 별도 복원6VT를 실제 생성자 기준으로 구별한다.
+TEST_CASE(ClientBombOwner_OnlyActualTwelveVtablesAreRegistered) { // 현재12VT와 별도 복원4VT를 실제 생성자 기준으로 구별한다.
     BombOwnerScene f;auto& s=f.scene;
-    for (const auto table:{0x5029d0U,0x502aa8U,0x5030c0U,0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}) { const auto sid=f.Bomb(table);CHECK(s.storage->HasBombRegular(sid)); } // 연결된 실제 클래스만 조회한다.
-    for (const auto table:{0x5026a0U,0x502778U,0x502840U,0x502908U,0x502b70U,0x503188U}) { const auto sid=f.Bomb(table);CHECK(!s.storage->HasBombRegular(sid)); } // 같은 원문+5c라도 아직 연결하지 않은 후단은 완료로 세지 않는다.
+    for (const auto table:{0x502908U,0x502b70U,0x5029d0U,0x502aa8U,0x5030c0U,0x502448U,0x502370U,0x502510U,0x5025d8U,0x502e68U,0x502f30U,0x502ff8U}) { const auto sid=f.Bomb(table);CHECK(s.storage->HasBombRegular(sid)); } // 연결된 실제 클래스만 조회한다.
+    for (const auto table:{0x5026a0U,0x502778U,0x502840U,0x503188U}) { const auto sid=f.Bomb(table);CHECK(!s.storage->HasBombRegular(sid)); } // 같은 원문+5c라도 아직 연결하지 않은 후단은 완료로 세지 않는다.
 }
 TEST_CASE(ClientBombOwner_CountZeroUsesActualFirstFrameAndFullPayload) { // carrier0의 첫 호출은 실제 프레임을 쓰고 현재 Boss0이면 원래 NaN payload를 보존한다.
     BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb();s.gameplay->Authority()->boss=false;const auto type=s.storage->pool.Slot(sid)[10];const auto first=s.storage->frames[type].Run('A').first;const auto payload=std::bit_cast<float>(0x7fc12345U);
@@ -1428,17 +1429,61 @@ TEST_CASE(ClientBombHardenerOwner_AdditionalDrawUsesActualCurrentTypeFrame) { //
     BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x5030c0U);auto raw=s.storage->pool.AllocatedBytes(sid);RegionPut(raw,36,0xffffffffU);std::uint32_t calls{};
     DrawDevastationAdditional(s.storage->pool,sid,123,-45,[&](auto type,auto frame,auto x,auto y) { CHECK(type==119 && frame==-1 && x==123 && y==-45);++calls; });CHECK(calls==1);
 }
-TEST_CASE(ClientBombStrikeOwner_TwoNativeHostsUseCurrentLongBody) { //두 실제 주문의 NoWorld Host가 같은 현재 풀/프레임/권한의 공통 정기를 빌린다.
-    for (const auto table:{0x5029d0U,0x502aa8U}) { //다른 직접 피해 두 주문의 미연결 장치/효과를 호출하지 않는다.
+TEST_CASE(ClientBombStrikeOwner_FourNativeHostsUseCurrentLongBody) { //네 실제 주문의 NoWorld Host가 같은 현재 풀/프레임/권한의 공통 정기를 빌린다.
+    for (const auto table:{0x502908U,0x502b70U,0x5029d0U,0x502aa8U}) { //장기 정기의 권한0 관문 뒤 큰 장치/효과를 호출하지 않는다.
         BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(table);s.gameplay->Authority()->boss=false;auto raw=s.storage->pool.AllocatedBytes(sid);raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]&=static_cast<std::uint8_t>(~1U);s.Index(sid);
         auto* body=&s.storage->BombRegular();auto* task=s.storage->Processes().Host().AddRegular(sid,0x1234,0.125F);CHECK(task);if (!task) continue;task->RunFrame();CHECK(s.storage->HasBombRegular(sid) && task->Count()==1 && task->Payload()==0.125F && body==&s.storage->BombRegular() && !s.storage->Borrowed());
     }
 }
-TEST_CASE(ClientBombStrikeOwner_TwoAdditionalDrawsUseCurrentTypeFrame) { //같은 실제 추가 그림41e3d0의 TYPE/프레임과 좌표 인자를 그대로 전달한다.
+TEST_CASE(ClientBombStrikeOwner_FourAdditionalDrawsUseCurrentTypeFrame) { //같은 실제 추가 그림41e3d0의 TYPE/프레임과 좌표 인자를 그대로 전달한다.
     BombOwnerScene f;auto& s=f.scene;std::uint32_t calls{};
-    for (const auto table:{0x5029d0U,0x502aa8U}) { //두 현재 가상 표를 각각 실제 생성자에서 만든다.
+    for (const auto table:{0x502908U,0x502b70U,0x5029d0U,0x502aa8U}) { //네 현재 가상 표를 각각 실제 생성자에서 만든다.
         const auto sid=f.Bomb(table);const auto raw=s.storage->pool.Slot(sid);const auto expected=std::bit_cast<std::int32_t>(RegionRead(raw,36));
         DrawDevastationAdditional(s.storage->pool,sid,-12,34,[&](auto type,auto frame,auto x,auto y) { CHECK(type==raw[10] && frame==expected && x==-12 && y==34);++calls; });
     }
-    CHECK(calls==2);
+    CHECK(calls==4);
+}
+TEST_CASE(ClientBombBurstOwner_GravityRegularMatchesIndependentPe122Inputs) { //signed 횟수·프레임 감김/역방향·종료와NaN 반환을 원본 명령 관찰에 대조한다.
+    using namespace netstorm::test::rawscene;const auto path=(std::filesystem::path(__FILE__).parent_path()/"fixtures/bomb-gravity-regular-x86.tsv").string();BombOwnerScene f;auto& s=f.scene;auto& host=s.storage->Processes().Host();s.storage->types[174].flags2=4;std::size_t rows{};
+    for (const auto& row:LoadFixture(path.c_str()).rows) { //동일 실제 풀/Host의 서로 다른 부모에 각 독립 입력을 공급한다.
+        const auto sid=s.Asset(0x502c38U);auto raw=s.storage->pool.AllocatedBytes(sid);raw[33]=0;RegionPut(raw,36,Number(row[2]));s.storage->frames[174]=RiftTypeFrames(std::vector<FrameCode>(Number(row[0]),FrameCode{65,65,0,0}));std::string trace;std::uint32_t updates{};
+        SquidFrameHooks hooks;hooks.frameSize=RegionForbidden<std::array<float,2>,Sid,std::int32_t>();hooks.unpop=RegionForbidden<void,Sid,std::uint32_t>();hooks.pop=RegionForbidden<void,Sid,float,float,std::uint32_t>();hooks.update=[&](auto parent,auto flags) { CHECK(parent==sid && flags==0);if (++updates==2) trace+='S'; };SquidFrame setter(s.storage->pool,s.storage->types,std::move(hooks));
+        const auto result=HandleGravityBurstRegular(s.storage->pool,s.storage->frames,setter,host,[&](auto parent) { CHECK(parent==sid && updates==2);trace+='R'; },[&](auto parent,auto flags) { const auto* next=host.FindEvent(sid,2);CHECK(parent==sid && flags==0x100048U && next && next->Payload()==0.05F && next->Count()==0);trace+="ND"; },sid,Number(row[1]),std::bit_cast<float>(Number(row[3])));
+        CHECK(RegionRead(raw,36)==Number(row[4]) && std::bit_cast<std::uint32_t>(result)==Number(row[5]) && trace==row[6]);++rows;
+    }
+    CHECK(rows==122);
+}
+TEST_CASE(ClientBombBurstOwner_GravityNoWorldReversesAndActuallyDeletes) { //같은 실제 Host의 진행/역방향 프레임과 일반 Regular2 선행 뒤 전체 삭제를 확인한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x502c38U);auto raw=s.storage->pool.AllocatedBytes(sid);raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]&=static_cast<std::uint8_t>(~1U);s.Index(sid);CHECK(RegionRead(raw,36)==0);const auto frames=s.storage->frames[raw[10]].Run('A').count;auto& host=s.storage->Processes().Host();CHECK(host.AddRegular(sid,0x12345678U,0.05F));std::int32_t calls{};
+    while (!(s.storage->pool.Slot(sid)[11]&3U) && calls<frames*2+2) { //실제 예약의 시각/횟수만 따라가며 현재 프레임/성공을 직접 주입하지 않는다.
+        auto* task=host.FindEvent(sid,0x12345678U);CHECK(task);if (!task) break;s.storage->Processes().State().Now()=task->Time();task->RunFrame();++calls;
+    }
+    CHECK(calls==frames*2 && (s.storage->pool.Slot(sid)[11]&3U)!=0 && !s.storage->Borrowed() && s.storage->BaseDestroy().PreDepth()==0 && s.storage->BaseDestroy().PostDepth()==0);
+}
+TEST_CASE(ClientBombBurstOwner_MeteorNoWorldUsesSharedBurstAndDeletes) { //미티어도 힐과 같은 실제41f9d0 프레임/예약/삭제 본문을 사용한다.
+    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(0x502db0U);auto raw=s.storage->pool.AllocatedBytes(sid);raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]&=static_cast<std::uint8_t>(~1U);s.Index(sid);auto& host=s.storage->Processes().Host();const auto frames=s.storage->frames[raw[10]].Run('A').count;CHECK(host.AddRegular(sid,0x12345678U,0.05F));
+    for (int step=0;step<frames;++step) { //같은 실제 예약의 시각/횟수로 끝 프레임까지 진행한다.
+        auto* task=host.FindEvent(sid,0x12345678U);CHECK(task);if (!task) break;s.storage->Processes().State().Now()=task->Time();task->RunFrame();
+    }
+    CHECK((s.storage->pool.Slot(sid)[11]&3U)!=0 && !s.storage->Borrowed() && s.storage->BaseDestroy().PreDepth()==0 && s.storage->BaseDestroy().PostDepth()==0);
+}
+TEST_CASE(ClientBombStrikeOwner_GravityReadsCurrentGlobalsAfterPop) { //현재 효과TYPE를 생성 전에, 특별 대상/권한은 실제 Pop 뒤에 다시 읽는다.
+    BombOwnerScene f;auto& s=f.scene;const auto parent=f.Bomb(0x502908U),target=s.Asset(0x5092d0U),born=s.Asset(0x502db0U);auto& aux=*s.gameplay->GameAux();aux.GravityEffectType()=177;s.gameplay->Authority()->boss=false;BombStrikeState state;std::string trace;
+    state.currentFirstEffectType=[&] { return aux.GravityEffectType(); };state.currentSpecialType=[&] { return aux.WindFlyerType(); };state.currentBoss=[&] { return std::uint32_t(s.gameplay->Authority()->boss); };
+    BombStrikeHooks hooks;hooks.create=[&](auto kind,auto flags) { CHECK(kind==177 && flags==2);trace+='C';aux.GravityEffectType()=174;return born; };hooks.pop=[&](auto sid,auto table,float,float,auto flags) { CHECK(sid==born && table==RegionRead(s.storage->pool.Slot(born),0) && flags==0);trace+='P';aux.WindFlyerType()=s.storage->pool.Slot(target)[10];s.gameplay->Authority()->boss=true; };
+    hooks.damage=RegionForbidden<void,Sid,std::uint32_t,std::int32_t,std::uint8_t,Sid>();hooks.destroy=[&](auto sid,auto table,auto flags) { CHECK(sid==target && table==RegionRead(s.storage->pool.Slot(target),0) && flags==0x100008U);trace+='D'; };
+    RawBombStrike body(s.storage->pool,s.storage->types,s.random->Game(),state,std::move(hooks));body.Apply(parent,target);CHECK(trace=="CPD" && aux.GravityEffectType()==174 && &body.Pool()==&s.storage->pool);
+}
+TEST_CASE(ClientBombStrikeOwner_MeteorReadsCurrentTypeBeforeEachSpawn) { //이전 Pop이 바꾼 현재 효과TYPE를 다음 성공 난수의 실제 생성 직전에 읽는다.
+    BombOwnerScene f;auto& s=f.scene;const auto parent=f.Bomb(0x502b70U),target=s.Asset(0x5092d0U),born=s.Asset(0x502db0U);RegionPut(s.storage->pool.AllocatedBytes(target),26,100000);auto& aux=*s.gameplay->GameAux();aux.MeteorEffectType()=177;s.random->Game().SetState(55);BombStrikeState state;state.currentHailEffectType=[&] { return aux.MeteorEffectType(); };std::uint32_t made{},hits{};
+    BombStrikeHooks hooks;hooks.create=[&](auto kind,auto flags) { CHECK(kind==(made ? 174U:177U) && flags==2);++made;return born; };hooks.pop=[&](auto,auto,float,float,auto) { aux.MeteorEffectType()=174; };hooks.damage=[&](auto sid,auto,auto amount,auto,auto) { CHECK(sid==target && amount>=20 && amount<50);++hits; };
+    RawBombStrike body(s.storage->pool,s.storage->types,s.random->Game(),state,std::move(hooks));body.Apply(parent,target);CHECK(made>=2 && made==hits && aux.MeteorEffectType()==174);
+}
+TEST_CASE(ClientBombStrikeOwner_CarrierReturnsBeforeCurrentGlobals) { //QA 대상은 현재 TYPE/권한 getter나 실제 장치를 선택하기 전에 반환한다.
+    BombOwnerScene f;auto& s=f.scene;const auto parent=f.Bomb(0x502908U),target=s.Asset(0x5092d0U);DependWord(s.storage->pool,parent,12,target.value);BombStrikeState state;state.currentBoss=RegionForbidden<std::uint32_t>();state.currentSpecialType=RegionForbidden<std::uint32_t>();state.currentFirstEffectType=RegionForbidden<std::uint32_t>();RawBombStrike body(s.storage->pool,s.storage->types,s.random->Game(),state,{});body.Apply(parent,target);
+}
+TEST_CASE(ClientBombStrikeOwner_EffectGlobalsKeepSameOwnerAcrossWorldLoan) { //신규 두 효과TYPE는 같은 장기 저장소의 주소/현재값이며 World 교체로 초기화하지 않는다.
+    RegionScene s;auto aux=s.gameplay->GameAux();CHECK(aux==s.storage->GameAux());auto* gravity=&aux->GravityEffectType();auto* meteor=&aux->MeteorEffectType();aux->GravityEffectType()=0x123400aeU;aux->MeteorEffectType()=0x567800b1U;
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(gravity==&world.Storage()->GameAux()->GravityEffectType() && meteor==&world.Storage()->GameAux()->MeteorEffectType()); }
+    CHECK(*gravity==0x123400aeU && *meteor==0x567800b1U && !s.storage->Borrowed());
 }

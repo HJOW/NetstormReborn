@@ -1,9 +1,9 @@
 // Impl 안에서 포함하여 폭발/은신/마비 주문의 실제 월드·Host·경제·음향을 연결한다.
 // 세 Wind 소환 주문은 bc의 소환 부수 효과와 별도 c0를 사용한다.
 bool WindSpellTable(std::uint32_t table) const { return table==0x5025d8U || table==0x502e68U || table==0x502f30U; }
-//실제 피해/입자/음향까지 연결한 두 라이트닝 주문만 선택한다. 나머지 직접 피해 두 종류는 별도다.
-bool DirectStrikeTable(std::uint32_t table) const { return table==0x5029d0U || table==0x502aa8U; }
-// 같은 공용 시전/수신을 사용하는 정확한 열 가상 표만 허용한다.
+//실제 피해/입자/음향·필수 효과 정기까지 연결한 네 직접 피해 주문만 선택한다.
+bool DirectStrikeTable(std::uint32_t table) const { return table==0x502908U || table==0x502b70U || table==0x5029d0U || table==0x502aa8U; }
+// 같은 공용 시전/수신을 사용하는 정확한 열두 가상 표만 허용한다.
 bool ConnectedBombTable(std::uint32_t table) const { return DirectStrikeTable(table) || table==0x5030c0U || table==0x502448U || table==0x502370U || table==0x502510U || table==0x502ff8U || WindSpellTable(table); }
 // 상태 주문/만료의 현재 타입 진단 부모를 거쳐 같은 기존 펜스 몸체를 실행한다.
 void DispatchFenceType(Sid sid,FenceTypeOperation operation) {
@@ -70,12 +70,17 @@ void ConnectDevastation() {
     heal.pop=[this](Sid created,std::uint32_t,float x,float y,std::uint32_t flags) { world.Pop(created,x,y,flags); };bombHeal=std::make_unique<RawBombHeal>(core.pool,core.types,std::move(heal));
     bombHardener=std::make_unique<RawBombHardener>(core.pool,core.types,core.frames,random,core.frame,[this](Sid target,std::int32_t count,std::uint32_t event) { flare->Spawn(target,count,event); }); //별도 강화 프레임/난수 사본 없이 같은 실제 현재 장치에 연결한다.
     BombStrikeHooks strike;const auto hit=hits->DamageHooks({}).damage; //기존 가상98의 현재 피해 분배를 복제 없이 빌린다.
+    bombStrikeState.currentBoss=[this] { return assetState.Boss(); };bombStrikeState.currentSpecialType=[this] { return gameplayGlobals->GameAux()->WindFlyerType(); }; //효과 뒤 같은 권한/특별 대상 전역을 다시 읽는다.
+    bombStrikeState.currentFirstEffectType=[this] { return gameplayGlobals->GameAux()->GravityEffectType(); };bombStrikeState.currentHailEffectType=[this] { return gameplayGlobals->GameAux()->MeteorEffectType(); }; //각 생성 직전에 같은 장기 효과TYPE를 조회한다.
+    strike.create=[this](std::uint32_t type,std::uint32_t flags) { return core.factory.Create(type,flags); }; //4af530만 실행하고 World::Create의 추가 접두를 넣지 않는다.
+    strike.pop=[this](Sid created,std::uint32_t,float x,float y,std::uint32_t flags) { world.Pop(created,x,y,flags); }; //현재 새 객체의 실제 공간/표시·예약 Pop이다.
+    strike.destroy=[this](Sid target,std::uint32_t,std::uint32_t flags) { static_cast<void>(world.Destroy(target,flags)); }; //특별 대상은 현재 가상 삭제와 정확한100008h를 사용한다.
     strike.damage=[hit](Sid target,std::uint32_t,std::int32_t amount,std::uint8_t owner,Sid parent) { if (!hit) throw std::logic_error("라이트닝 주문 실제 가상 피해 미연결");hit(target,amount,owner,parent); };
     strike.sound=[this](float x,float y) { const auto call=services.sound.playOnceAt;if (!call) throw std::logic_error("라이트닝 주문 실제 위치 음향 미연결");static_cast<void>(call(x,y,soundNames.Lookup("thunderCrack.wav"),0,0)); };
     strike.beam=[this](Sid source,Sid target) { static_cast<void>(particles->AddBeam(source,target,std::string{"shortZap.wav"})); }; //472700 생성자는 실제 shortZap.wav를 별도로 재생한다.
     strike.project=[this](float x,float y) { return ProjectCameraView(gameplayGlobals->Camera().Snapshot(),x,y); }; //각497220은 같은 현재 카메라 snapshot을 다시 읽는다.
     strike.column=[this](Sid target,std::array<std::int32_t,2> from,std::array<std::int32_t,2> to,float life) { static_cast<void>(particles->AddScreenBolt(target,from,to,life)); }; //472770의 실제 표시/Host 수명을 공유한다.
-    bombStrike=std::make_unique<RawBombStrike>(core.pool,core.types,random,bombStrikeState,std::move(strike)); //생성/특별삭제가 필요한 미연결 두 주문의 장치는 빈 성공으로 공급하지 않는다.
+    bombStrike=std::make_unique<RawBombStrike>(core.pool,core.types,random,bombStrikeState,std::move(strike)); //같은 현재 난수·장기 전역/실제 하위를 네 주문이 함께 빌린다.
     BombTargetHooks targets;
     // 실제502370의b4는41e3c0이며 다른 표의 반경으로 대체하지 않는다.
     targets.radius=[this](Sid parent,std::uint32_t table) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 반경 표 오류");return devastationTargets->DefaultRadius(parent); };

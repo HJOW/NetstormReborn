@@ -816,7 +816,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawBombPreDestroy> localBombPre;RawBombPreDestroy* bombPre{}; //Native는같은장기41e960을빌리며독립typed만기존본문을소유한다.
     std::uint32_t healBurstType{176};std::unique_ptr<RawBombHeal> bombHeal; //00541318의 현재 힐 버스트 TYPE와 같은 실제 대상 효과 본문이다.
     std::unique_ptr<RawBombHardener> bombHardener; //현재 풀/TYPE/코드·단일 게임 난수와 프레임/플레어를 빌리는 실제 대상 본문이다.
-    BombStrikeState bombStrikeState;std::unique_ptr<RawBombStrike> bombStrike; //현재 두 라이트닝 주문만 사용하며 그라비톤/미티어의 별도 전역/정기는 아직 연결하지 않는다.
+    BombStrikeState bombStrikeState;std::unique_ptr<RawBombStrike> bombStrike; //네 직접 피해 주문이 같은 현재 권한/효과 TYPE·실제 생성/피해/입자 본문을 공유한다.
     BombTargetState devastationTargetState;BombBlastState devastationBlastState; // 같은 현재 권한/동맹을 각 실제 자격/효과 위치에 공급한다.
     BombRegularState localDevastationRegularState; // 독립 typed Session만 기존 값형 상태를 보유한다.
     BombRegularState& devastationRegularState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->BombState():localDevastationRegularState};BombEffectState devastationEffectState; // 주기/수신 상태와 실제 비용 누적을 같은 Session에서 소유한다.
@@ -1737,7 +1737,8 @@ struct RawCampaignSession::Impl {
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             try {
                 if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
-                if (Read(core.pool.Slot(sid),0)==0x502cf0U) return HandleHealBurstRegular(core.pool,core.frames,core.frame,core.processes,[this](auto object) { core.display.Update(core.pool.Slot(object),0); },[this](auto object,auto flags) { world.Destroy(object,flags); },sid,count,payload); //Native/독립 typed도 같은 실제 버스트 본문과 현재 Host를 사용한다.
+                if (const auto table=Read(core.pool.Slot(sid),0);table==0x502cf0U || table==0x502db0U) return HandleHealBurstRegular(core.pool,core.frames,core.frame,core.processes,[this](auto object) { core.display.Update(core.pool.Slot(object),0); },[this](auto object,auto flags) { world.Destroy(object,flags); },sid,count,payload); //Native/독립 typed의 힐/미티어가 같은 실제41f9d0과 현재 Host를 사용한다.
+                if (Read(core.pool.Slot(sid),0)==0x502c38U) return HandleGravityBurstRegular(core.pool,core.frames,core.frame,core.processes,[this](auto object) { core.display.Update(core.pool.Slot(object),0); },[this](auto object,auto flags) { world.Destroy(object,flags); },sid,count,payload); //그라비테이션의 진행/역방향/후속 예약은 별도의 실제41f760이다.
                 if (dudeRegular && dudeRegular->Handles(sid)) return dudeRegular->Handle(sid,event,count,payload);
                 if (devastationRegular && ConnectedBombTable(Read(core.pool.Slot(sid),0))) { PrepareDevastation();return devastationRegular->Handle(sid,event,count,payload); }
                 return handler(sid,event,count,payload);

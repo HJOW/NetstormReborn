@@ -65,9 +65,9 @@ void RawBombStrike::Apply(Sid parent,Sid target) const {
     const auto table=Read(parent,0);if (!Handles(parent)) throw std::invalid_argument("직접 피해 주문 효과 가상 표 오류");
     if (target.value==Read(parent,12,2)) return;
     if (table==kTables[0]) {
-        Spawn(target,state_.firstEffectType);
-        if (Read(target,10,1)!=state_.specialType) Hit(parent,target,2000);
-        else if (state_.boss) Need(hooks_.destroy)(target,Read(target,0),0x100008);
+        Spawn(target,state_.FirstEffectType());
+        if (Read(target,10,1)!=state_.SpecialType()) Hit(parent,target,2000);
+        else if (state_.Boss()) Need(hooks_.destroy)(target,Read(target,0),0x100008);
         return;
     }
     if (table==kTables[1]) {
@@ -97,7 +97,7 @@ void RawBombStrike::Apply(Sid parent,Sid target) const {
     // 마지막 계열은 초기dead 관문이 없고 성공 난수마다 생성/Pop을 피해 판단보다 먼저 실행한다.
     for (std::uint32_t i=0;i<count;++i) {
         if (random_.Next(2)) {
-            Spawn(target,state_.hailEffectType);const auto amount=static_cast<std::int32_t>(random_.Next(30)+20);const auto hp=std::bit_cast<std::int32_t>(Read(target,26));
+            Spawn(target,state_.HailEffectType());const auto amount=static_cast<std::int32_t>(random_.Next(30)+20);const auto hp=std::bit_cast<std::int32_t>(Read(target,26));
             if (hp<1) return;
             Hit(parent,target,amount);if (hp<amount) return;
         }

@@ -70,7 +70,7 @@ def main():
         result=sample(pe,mode,genus,seed,qa,current,codes)
         rows.append([mode,str(genus),str(seed),str(qa),str(current),bytes(v for c in codes for v in c).hex(),*result])
     fixture=ROOT/'cpppj/tests/fixtures/bomb-hardener-x86.tsv'
-    fixture.write_text('# mode genus seed qa current codes result frame state effects\n'+'\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8')
+    fixture.write_text('# mode genus seed qa current codes result frame state effects\n'+'\n'.join('\t'.join(row) for row in rows)+'\n',encoding='utf-8',newline='\n')
     report=dict(passed=True,cases=len(rows),fixture=str(fixture.relative_to(ROOT)),fixtureSha256=hashlib.sha256(fixture.read_bytes()).hexdigest(),originalPeSha256=hashlib.sha256((ROOT/'originals/Netstorm.exe').read_bytes()).hexdigest(),originalExecutions=0,multiplayerExecutions=0,emulatedFunctions=['0041fe90','0041feb0','004ad680','0049aa90','004558c0'],deviceBoundaries=['TYPE lookup','operator_new/free','SquidFrame.Set','RawFlare.Spawn'])
     (out/'oracle.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8');print(json.dumps(report))
 

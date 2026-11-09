@@ -169,6 +169,10 @@ public:
     const std::uint32_t& BulfType() const { return bulfType_; } // Native owner의 주소를 World 교체 때 다시 만들지 않는다.
     std::uint32_t& WindFlyerType() { return windFlyerType_; } //00541280의 현재 더스트 데빌 TYPE를 비행/드롭 판정이 함께 읽는다.
     const std::uint32_t& WindFlyerType() const { return windFlyerType_; } // 현재 전체 DWORD를 BYTE로 미리 줄이지 않는다.
+    std::uint32_t& GravityEffectType() { return gravityEffectType_; } //00541310의 현재 그라비테이션 효과 TYPE를 생성 시점에 읽는다.
+    const std::uint32_t& GravityEffectType() const { return gravityEffectType_; } //Session/World 교체로174의 사본을 다시 만들지 않는다.
+    std::uint32_t& MeteorEffectType() { return meteorEffectType_; } //0054131c의 현재 미티어 효과 TYPE를 각 반복 생성 직전에 읽는다.
+    const std::uint32_t& MeteorEffectType() const { return meteorEffectType_; } //현재 같은 Client의 실제 DWORD를 읽기 전용으로 빌린다.
     std::uint32_t& RainFlyerType() { return rainFlyerType_; } //00541298의 현재 맨 오 워 TYPE를 비행/삭제가 공유한다.
     const std::uint32_t& RainFlyerType() const { return rainFlyerType_; } // Session 이후에도 같은 현재 번호다.
     std::uint32_t& RainWalkerType() { return rainWalkerType_; } //005412c8의 현재 크리스탈 크랩 TYPE를 이동/내용물/드롭이 공유한다.
@@ -302,6 +306,7 @@ private:
     std::uint32_t emptyGeyserType_{84}; // 보호 PE005411a8의 최초 TYPE 번호다.
     std::int32_t firstLocalGeyserQuantity_{3},lastLocalGeyserQuantity_{4}; // 보호 PE00540bd4/d8의 최초 signed 요청 수다.
     std::int32_t worldGeyserMargin_{2}; //보호 PE00542654의 실제 초기 DWORD다.
+    std::uint32_t gravityEffectType_{174},meteorEffectType_{177}; //보호 PE00541310/31c의 최초 효과 TYPE이며 일반 월드 초기화는 현재 값을 보존한다.
     std::array<std::uint32_t,4> worldDecorationTypes_{100,184,101,185}; //실제 treeTwo/RUIN/treeThree/Monument 타입 순서다.
 };
 static_assert(sizeof(std::uint32_t)==4 && sizeof(std::int32_t)==4 && sizeof(float)==4 && sizeof(double)==8); // 각 Native폭만 보증하며 클래스가17주소의 연속 image라는 주장은 아니다.

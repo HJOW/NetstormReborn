@@ -56,4 +56,21 @@ float HandleHealBurstRegular(SidPool& pool,std::span<const RiftTypeFrames> frame
     if (next) host.AttachRegular(std::move(next),sid,false,0x50); //원문 일반496e80의 같은 생성자/부착/현재 시각 저장을 실행한다.
     HealNeed(destroy)(sid,0x100048U);return -1.0F;
 }
+//원문은 종료 횟수만으로 삭제하지 않고 그 시점의 실제 현재 프레임0을 먼저 검사한다.
+float HandleGravityBurstRegular(SidPool& pool,std::span<const RiftTypeFrames> frames,const SquidFrame& setter,SquidProcessHost& host,const std::function<void(Sid)>& refresh,const std::function<void(Sid,std::uint32_t)>& destroy,Sid sid,std::uint32_t count,float payload) {
+    if (pool.Edition()!=OriginalEdition::Patch1078 || frames.size()!=188 || &host.Pool()!=&pool || &setter.Pool()!=&pool) throw std::invalid_argument("그라비테이션 실제 풀/프레임/Host 계약 오류");
+    const auto raw=pool.Slot(sid);const auto type=raw[10];if (type>=frames.size()) throw std::out_of_range("그라비테이션 현재 TYPE 범위 오류");
+    const auto total=std::bit_cast<std::uint32_t>(frames[type].Run('A').count);const auto limit=std::bit_cast<std::int32_t>(total-1U);std::uint32_t frame{};
+    for (std::size_t byte=0;byte<4;++byte) frame|=std::uint32_t(raw[36+byte])<<(8*byte); //첫 방향 비교 뒤 실제 현재 프레임을DWORD로 읽는다.
+    std::uint32_t next=frame+1U; //진행 중에는 현재 프레임에1을 더하며 첫 프레임으로 초기화하지 않는다.
+    if (std::bit_cast<std::int32_t>(count)>=limit) {
+        if (frame==0) {
+            auto task=std::unique_ptr<RegularProcess>(new(std::nothrow) RegularProcess(2,0.05F)); //현재 Host에 붙일 실제 일반 Regular를 확보한다.
+            if (task) host.AttachRegular(std::move(task),sid,false,0x50); //원문 생성 실패는 새 예약만 생략하고 삭제를 계속한다.
+            HealNeed(destroy)(sid,0x100048U);return -1.0F;
+        }
+        next=total+total-count-2U; //원문SUB/LEA의32비트 감김과 역방향 프레임 계산을 유지한다.
+    }
+    setter.Set(sid,std::bit_cast<std::int32_t>(next),0);HealNeed(refresh)(sid);return payload;
+}
 }
