@@ -13401,9 +13401,97 @@
       "bytes": 10483,
       "lines": 97,
       "fixtureCommit": "3fda610d",
-      "webCommit": "worktree",
+      "webCommit": "58817b5b",
       "cpppjBasis": {
         "cpppj/src/o/RenderProcessSystem.cpp": "c258c7f3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E199",
+      "id": "vfxgraphics",
+      "path": "cpppj/tests/fixtures/graphics-x86.tsv",
+      "producer": "cpppj 원본 x86 그리기 관측: VFX DrawShape 00401d92 반환값·화면 전체(색 0/255·모든 방향 클리핑·원점 이동·-1/-2/-3/-4, 두 판본 공통 709행)",
+      "consumers": [
+        "webpj/tests/vfx-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/vfx-draw.js"
+      ],
+      "doc": "docs/webpj-shape-to-buffer-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/client/VFXDraw.cpp"
+      ],
+      "scope": "709입력 전부",
+      "text": true,
+      "sha256": "bdf284fe5e73d0258d0a84ed35956e499063ae65a01a7bf22d31cfd35d8cf75c",
+      "bytes": 1881547,
+      "lines": 710,
+      "fixtureCommit": "128f8b95",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/VFXDraw.cpp": "3725d58b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E199",
+      "id": "shapetobuffer",
+      "path": "cpppj/tests/fixtures/shape-to-buffer-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: ShapeToBuffer 004a7db0 보호 Dude main·SHP/plain RLE 메타데이터·전체 버퍼(현재 raw/배율/기준점/상태 입력, 10.78 80행·CD 84행)",
+      "consumers": [
+        "webpj/tests/shape-to-buffer.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/render/squid-renderer.js"
+      ],
+      "doc": "docs/webpj-shape-to-buffer-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawShapeToBuffer.cpp"
+      ],
+      "scope": "10.78 80입력 전부(originalCD 84행은 범위 밖)",
+      "text": true,
+      "sha256": "99361986f4c00fee75839e3862b8f4dbfd92cd33c4f2d69b3beec695fff97ebd",
+      "bytes": 100503,
+      "lines": 165,
+      "fixtureCommit": "ab9361f1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d17"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E199",
+      "id": "supportcapture",
+      "path": "cpppj/tests/fixtures/support-capture-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 섬 조각 islandStalag/noIsland 의 ShapeToBuffer 기본/추가 그림·소유자 0/1/8·TYPE 기준점(−2, 3) 메타데이터와 전체 픽셀(10.78 162행, 53/64 두 정밀도 일치)",
+      "consumers": [
+        "webpj/tests/shape-to-buffer.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-shape-to-buffer.js"
+      ],
+      "doc": "docs/webpj-shape-to-buffer-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawShapeToBuffer.cpp"
+      ],
+      "scope": "10.78 162입력 전부",
+      "text": true,
+      "sha256": "507e26dcc4eca8d731180b9713a14c91b7eb12285ad092095cd2bf6c62d6dfc2",
+      "bytes": 662508,
+      "lines": 163,
+      "fixtureCommit": "a726b49f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d17"
       }
     }
   ]

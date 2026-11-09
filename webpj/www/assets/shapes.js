@@ -132,6 +132,14 @@ export class ShapeDatabase {
         });
     }
 
+    // VFX 프레임 앞의 원본 36바이트를 복사해 돌려준다(cpppj ShapeDatabase::SquidHeader). 마지막 두 WORD(+32/+34)는 포구 좌표이며 정규화하지 않는다.
+    // 추가 헤더가 없는 순수 VFX/글꼴 프레임은 squidMetrics 와 같은 오류로 거부한다. (2026-11-09 WB04-E199: SquidRenderer 그림 헤더의 포구 좌표를 위해 추가)
+    squidHeader(blockIndex, frameIndex) {
+        const offset = this.frame(blockIndex, frameIndex).offset;
+        if (offset < this.headerEnd || offset - this.headerEnd < SQUID_PREFIX_SIZE) throw new Error('Squid SHP 추가 헤더가 없습니다.');
+        return this.bytes.slice(offset - SQUID_PREFIX_SIZE, offset);
+    }
+
     // 프레임의 RLE 를 풀어 { width, height, left, top, indices, opacity } 를 돌려준다(캐시됨).
     // left/top 은 기준점 기준 그림 왼쪽 위 좌표(rect.left/top)이며, 화면의 기준점 위치에 더해 그린다.
     // opacity 는 실제로 기록된 픽셀만 255 이고 건너뛴 픽셀은 0 이다. 특수 레코드는 오류다.
