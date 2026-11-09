@@ -1,7 +1,7 @@
 // 실제 ShapeToBuffer 캡처(raw-shape-to-buffer.js)와 표시 그림 헤더/렌더러 어댑터(squid-renderer.js)를 원본 x86 fixture 로 대조한다(cpppj ShapeToBufferTests 의 10.78 범위).
 //  - shape-to-buffer-x86.tsv originals 80행: 보호 Dude(TYPE 70) frame·fixed16 배율·TYPE 기준점 옵션·free/dead 상태 입력의 메타데이터와 전체 plain RLE 버퍼.
 //  - support-capture-x86.tsv 162행: 섬 조각 두 TYPE(95 islandStalag·157 noIsland)의 기본/추가 그림(TYPE baseFrame)·소유자 0/1/8·TYPE 기준점(−2, 3) 보정.
-//  - 각 행은 입력(raw 슬롯·상태)만 설치하고 모듈이 계산한다. 기대 열은 비교에만 쓴다. CD(10.72) 행과 Factory/ThunderCannon/SunAviary/Geyser 캡처 행은 해당 파생 그림 단위 몫이다.
+//  - 각 행은 입력(raw 슬롯·상태)만 설치하고 모듈이 계산한다. 기대 열은 비교에만 쓴다. CD(10.72) 행은 범위 밖이고, Factory/ThunderCannon/SunAviary/Geyser 캡처 행은 shape-to-buffer-derived.test.mjs 가 대조한다(2026-11-09 WB04-E202).
 //  - 거부·mapped·추가 그림 계약과 SquidRenderer 어댑터는 웹 계약 검사다. 실제 게임·브라우저 실행이 아니다. (2026-11-09 WB04-E199: ShapeToBuffer 이식과 함께 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';

@@ -13520,10 +13520,130 @@
       "bytes": 519796,
       "lines": 427,
       "fixtureCommit": "ab9361f1",
-      "webCommit": "worktree",
+      "webCommit": "81f6f9ab",
       "cpppjBasis": {
         "cpppj/src/o/RawBurningFrame.cpp": "e5a198df",
         "cpppj/src/client/BurningFrameCapture.cpp": "ab9361f1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E202",
+      "id": "factorycapture",
+      "path": "cpppj/tests/fixtures/factory-capture-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Factory/아웃포스트 두 VT 의 ShapeToBuffer 기본 그림 +78·추가 그림 +a4 메타데이터와 전체 plain RLE 버퍼(Level 0..7·extra 2/3/10·frame·TYPE 기준점 옵션·배율 3종, 10.78 200행)",
+      "consumers": [
+        "webpj/tests/shape-to-buffer-derived.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-factory-draw.js",
+        "webpj/www/render/raw-shape-to-buffer.js"
+      ],
+      "doc": "docs/webpj-derived-capture-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFactoryDraw.cpp"
+      ],
+      "scope": "10.78 200입력 전부(머리 행 제외)",
+      "text": true,
+      "sha256": "32585f459ba4896ebffb6c0321394b8cd8ec0c0ba8b5ed9031c100d19c0104d5",
+      "bytes": 6482293,
+      "lines": 201,
+      "fixtureCommit": "e6c41d17",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFactoryDraw.cpp": "16ca2d8b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E202",
+      "id": "thundercannoncapture",
+      "path": "cpppj/tests/fixtures/thunder-cannon-capture-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬더 캐논 TYPE 131/VT 0x50bad0 의 37프레임 × extra 0/2/3 × 소유자 0/1/8 ShapeToBuffer 메타데이터와 전체 픽셀(TYPE 기준점 −2/3, 10.78 333행, 두 정밀도 일치)",
+      "consumers": [
+        "webpj/tests/shape-to-buffer-derived.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-thunder-cannon-capture.js",
+        "webpj/www/render/raw-shape-to-buffer.js"
+      ],
+      "doc": "docs/webpj-derived-capture-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawThunderCannonCapture.cpp"
+      ],
+      "scope": "10.78 333입력 전부",
+      "text": true,
+      "sha256": "a3b6b3be0465e1fff09e898b1ced54ebed9a65fb189026aa9474b70f033f28e7",
+      "bytes": 8341264,
+      "lines": 334,
+      "fixtureCommit": "16ca2d8b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawThunderCannonCapture.cpp": "16ca2d8b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E202",
+      "id": "sunaviarycapture",
+      "path": "cpppj/tests/fixtures/sun-aviary-capture-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 훨리베이스 TYPE 72/VT 0x509930 의 32프레임 생산/추가/매몰/그림자 경계 × extra × 소유자 ShapeToBuffer 메타데이터와 전체 픽셀(TYPE 기준점 −2/3, 10.78 384행, 두 정밀도 일치)",
+      "consumers": [
+        "webpj/tests/shape-to-buffer-derived.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-sun-aviary-capture.js",
+        "webpj/www/render/raw-shape-to-buffer.js"
+      ],
+      "doc": "docs/webpj-derived-capture-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSunAviaryCapture.cpp"
+      ],
+      "scope": "10.78 384입력 전부",
+      "text": true,
+      "sha256": "3777792bda24138c1be404474a78ec531a01a9963d0a6f3fd7a2b40999d0f268",
+      "bytes": 6912732,
+      "lines": 385,
+      "fixtureCommit": "078e4c84",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSunAviaryCapture.cpp": "078e4c84"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E202",
+      "id": "geysercapture",
+      "path": "cpppj/tests/fixtures/geyser-capture-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 간헐천 TYPE 122/VT 0x50da88 의 51프레임 × extra 0/2/3 × 소유자 0/1/8 ShapeToBuffer 고정 본체·현재 그림 메타데이터와 전체 픽셀(TYPE 기준점 −2/3, 10.78 459행, 두 x87 정밀도 일치)",
+      "consumers": [
+        "webpj/tests/shape-to-buffer-derived.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-geyser-capture.js",
+        "webpj/www/render/raw-shape-to-buffer.js"
+      ],
+      "doc": "docs/webpj-derived-capture-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGeyserCapture.cpp"
+      ],
+      "scope": "10.78 459입력 전부",
+      "text": true,
+      "sha256": "ddc9e3afe1aee3a566896de584f5320863902382e1eb8a8e50726e1972959d86",
+      "bytes": 5077839,
+      "lines": 460,
+      "fixtureCommit": "87c3f91f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGeyserCapture.cpp": "ce5a3884"
       }
     }
   ]

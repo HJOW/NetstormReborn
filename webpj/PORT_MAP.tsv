@@ -665,7 +665,7 @@ cpppj/src/o/RawEnergySupply.cpp	port	www/core/raw-energy-supply.js	1f00a25a	port
 cpppj/src/o/RawEvilRayFrame.cpp	port	www/core/raw-evil-ray-frame.js	1f00a25a	port	[o-default] WB04-E190: EvilRay 프레임 00453290(source 진단·폭 조회 뒤 현재 좌표·전체 delta 한 번·방출 기한/시작 음향(0 이면 저장 부모)·끝 꼬리 방출·±8 영역·0 이하 끝 음향·빈 중단 kill)·출력 00453540(진단→clip→세 색 타원 반경 −2/−1/0), 정수화 signed64 하위 DWORD(범위 밖 0). fixture evilrayframe 10.78 기본 18행 전부. 남음: EvilRayVisualSystem Host 부착·실제 폭/음향 번호·타원 래스터 연결
 cpppj/src/o/RawEvilRayLifetime.cpp	port	www/core/raw-evil-ray-lifetime.js	1f00a25a	port	[o-default] WB04-E190: 생성 004530b0(TYPE 등록 전·source 등록 뒤 현재 값·1200 확보 50입자·공유 색 없을 때만 8 확보/생성/단일 3색 띠 binary64 상수)·Stop 00453240(mode 3 만 중단, 다른 mode/이미 중단 진단)·소멸(입자→등록→객체, 공유 색 보존). fixture evilraylifetime 10.78 생성 기본 12·Stop 기본 5행 전부. 남음: 실제 Host 부착/Stop 호출자·공유 색 장기 owner 연결
 cpppj/src/o/RawExistingEditorInstallOuter.cpp	exclude-edit			-	[edit-editor]
-cpppj/src/o/RawFactoryDraw.cpp	port			todo	[o-default]
+cpppj/src/o/RawFactoryDraw.cpp	port	www/core/raw-factory-draw.js	1f00a25a	port	[o-default] WB04-E202: Factory 0x509148·아웃포스트 0x509210 두 VT 만 받는 handles·10.78 풀/188칸 FrameCodeTable 생성 검사·mainFrame 00454cd0(상태 BYTE 상위 3비트 Level 의 A..H 첫 번호, 없으면 -1)·additional 00454cf0(extra&9·dead 생략, getter 뒤 현재 슬롯 재읽기, signed 현재≠기본일 때만 0044c180 소비자 1회)·미복원 VT/표 밖 TYPE 거부. fixture factorycapture 200행 전부(추가 그림 60회). 남음: 실제 Squid 가상 분배·Session 캡처 소비자 연결
 cpppj/src/o/RawFactoryInput.cpp	port	www/core/raw-factory-input.js	1f00a25a	port	[o-default] WB04-E18: 004547d0 Factory 가상 입력(순환·업그레이드 자금 관문·연구/부모 위임). 원본 관측 없음, cpppj 독립 계약 검사 이식
 cpppj/src/o/RawFactoryPostPop.cpp	port	www/core/raw-factory-post-pop.js	1f00a25a	port	[o-default] WB04-E61: Factory/아웃포스트 후처리(예약 세 개·상태 프레임 보정·중복 워크샾 경고/삭제·setState). fixture factorypostpop 10.78 498행 전부. 아웃포스트 wrapper 는 멀티플레이 전용 객체라 단독 연결은 하지 않음(분기는 대조 결과대로 보존)
 cpppj/src/o/RawFactoryResearch.cpp	port			todo	[o-default]
@@ -733,7 +733,7 @@ cpppj/src/o/RawGameAuxState.h	port	www/core/game-aux-state.js	11fbb988	port	[o-d
 cpppj/src/o/RawGameRandomSeed.cpp	port	www/core/random.js;www/assets/terrain-tiles.js	1f00a25a	port	[o-default] WB04-C1(시드 Initialize/Reseed)
 cpppj/src/o/RawGemReward.cpp	port	www/core/raw-gem-reward.js	1f00a25a	port	[o-default] WB04-E105: 오벨리스크 보상 선택 461f00(레벨별 가중 Deck)·공개 4620c0(생성→현재 좌표 배치→원 객체 삭제). fixture gem-reward 1250행 전부(10.78 전용 파일). 생성/배치/삭제는 훅 경계
 cpppj/src/o/RawGeyserAiRegistration.cpp	port	www/core/raw-geyser-ai-registration.js	1f00a25a	port	[o-default] WB04-E78: 간헐천 AI 등록 00416720(Player 0xb4 의 1..8 +0xb0 포인터 번호순 재조회·연결된 004153c0 하위 호출·미연결 nonnull 은 첫 요청 경계 거부). fixture geyser-ai-registration 10.78 302행 전부(CD 302행은 웹 범위 밖). 004153c0 AI 갱신 본체와 Player 저장소 실제 연결은 RawAiBrain 단위에서
-cpppj/src/o/RawGeyserCapture.cpp	port			todo	[o-default]
+cpppj/src/o/RawGeyserCapture.cpp	port	www/core/raw-geyser-capture.js	1f00a25a	port	[o-default] WB04-E202: TYPE 122/VT 0x50da88 판정·추가 그림 00485480(현재 TYPE/프레임 1회, 본체와 같아도 제출, 소비자 누락 거부). 기본 프레임은 호출자가 TYPE baseFrame(4acfe0)으로 공급. fixture geysercapture 459행 전부와 cpppj 손검사. 남음: 실제 Squid 가상 분배·Session 캡처 소비자 연결
 cpppj/src/o/RawGeyserLifetime.cpp	port	www/core/raw-geyser-lifetime.js	1f00a25a	port	[o-default] WB04-E75: 간헐천 고유 수명 전처리 485580·후처리 485540(기본 프레임 직접 쓰기·AI 제거·지면 목록 중복 제거·편집 모드 섬 정리). fixture geyser-lifetime 2016행 전부(10.78 전용 파일). 기본 프레임 getter/표시/AI/Damageable/섬 정리 본체는 해당 파일 단위에서
 cpppj/src/o/RawGeyserMined.cpp	port	www/core/raw-geyser-mined.js	1f00a25a	partial	[o-default] WB04-E108: 간헐천 채집 통지 처리기 004266c0(소리 난수·수량 WORD cost 차감·bridge assert·고갈 삭제·emptyGeyser 생성/Pop). fixture geysermined originals 1156행 전부. 남음: RegisterGeyserMined(패킷 분배기 등록)과 실제 factory/삭제/Pop/공간 연결 시험(RawPacketDispatch 이식 뒤)
 cpppj/src/o/RawGraph.cpp	port	www/core/raw-graph.js	1f00a25a	partial	[o-default] WB04-E40: 사전 계산(Add·Flood·Region·RegionAdd·Detach·Rebuild·Allocate·Inspect·Pop 예측)·영역 통지·삭제 연결·PostDestroy 사본·Free/Frame/Reset. fixture graph-reset 16·graphforms 32·graphlookup 128·graphrebuild 96·graph-reference-checking 360·graph-sentinel-checking 540. Pop/PostPop/Unpop·SquidDisplay를 함께 쓰는 rawgraph/regiongraph/graphremove/graphrecovery 대조는 SquidPostPop 처리기 단위에서(Commit은 실제 실행이 쓰지 않아 제외)
@@ -914,7 +914,7 @@ cpppj/src/o/RawStateWorldCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawStateZoneReset.cpp	port	www/core/raw-state-zone-reset.js	1f00a25a	port	[o-default] WB04-E11: 004bfd60 State Zone 정확히 6 BYTE 쓰기. fixture state-zone-reset 10.78 10행 + 길이 0..8 경계
 cpppj/src/o/RawStaticStrings.cpp	port	www/core/raw-static-strings.js	1f00a25a	port	[o-default] WB04-E18: Staticstring.cpp 외곽(004b92b0 초기화·004b9320 예약·004b9390 서식). fixture static-string-runtime 10.78 204행 전부. ClientStaticStrings 통합은 Client 단위에서
 cpppj/src/o/RawSubscriberIdGenerate.cpp	exclude-edit			-	[edit-existing-fort]
-cpppj/src/o/RawSunAviaryCapture.cpp	port			todo	[o-default]
+cpppj/src/o/RawSunAviaryCapture.cpp	port	www/core/raw-sun-aviary-capture.js	1f00a25a	port	[o-default] WB04-E202: TYPE 72/VT 0x509930 판정·기본 프레임 0045b530(extra&9 현재, signed 20..26→10, 11..19→현재-9, 그 밖 -1)·추가 그림 0045b560(extra&9 소비자 없이 생략). fixture sunaviarycapture 384행 전부와 cpppj 생략/거부 손검사. 남음: 실제 Squid 가상 분배·Session 캡처 소비자 연결
 cpppj/src/o/RawSunAviaryProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawSunFlyerFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawSurfaceLifecycle.cpp	port			todo	[o-default]
@@ -929,7 +929,7 @@ cpppj/src/o/RawTerrainGrowth.cpp	port			todo	[o-default]
 cpppj/src/o/RawTerrainStamp.cpp	port	www/assets/terrain-fringe.js;www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] WB03-X/Y 지면/fringe 계산
 cpppj/src/o/RawTextToken.cpp	port	www/core/raw-text-token.js	1f00a25a	port	[o-default] WB04-E19: 00487620 원본 80 바이트 토큰 읽기. fixture script-command Token 128행 전부(Config/Command/Ring 행은 각 단위)
 cpppj/src/o/RawThemeTechnology.cpp	port	www/core/raw-theme-technology.js	1f00a25a	port	[o-default] WB04-E13: 00492ae0 CheatAllTechnology 테마 지급(타입 필터·현재 개수/부모 재조회). fixture theme-technology 10.78 1200행 전부
-cpppj/src/o/RawThunderCannonCapture.cpp	port			todo	[o-default]
+cpppj/src/o/RawThunderCannonCapture.cpp	port	www/core/raw-thunder-cannon-capture.js	1f00a25a	port	[o-default] WB04-E202: TYPE 131/VT 0x50bad0 판정·기본 프레임 0046ae10(현재 프레임 코드의 방향 글자 구간 첫 번호, 부호 없는 범위 밖 RangeError)·추가 그림 0046ae30(생략 없이 현재 TYPE/프레임 1회). fixture thundercannoncapture 333행 전부와 cpppj 거부 손검사. 남음: 실제 Squid 가상 분배·Session 캡처 소비자 연결
 cpppj/src/o/RawTotalMade.cpp	port			todo	[o-default]
 cpppj/src/o/RawTransportPolling.h	port			todo	[o-default] LocalMissionTransport 가 쓰는 현재 ID 순회
 cpppj/src/o/RawTutorialLater.cpp	port			todo	[o-default]
