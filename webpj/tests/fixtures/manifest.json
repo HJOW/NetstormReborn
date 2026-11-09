@@ -14416,9 +14416,39 @@
       "bytes": 399192,
       "lines": 33,
       "fixtureCommit": "fa7762f9",
-      "webCommit": "worktree",
+      "webCommit": "0f838a5b",
       "cpppjBasis": {
         "cpppj/src/o/RawFortBadgesGlobals.cpp": "fa7762f9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E226",
+      "id": "fortmeta",
+      "path": "cpppj/tests/fixtures/fortmeta-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Fort 메타 로더 Badges setter/검색/읽기와 Technology wrapper. 입력 12 DWORD(종류·type·count·장부 프로필·Template·slot·present·end·깊이·옛/새 변환표·변이)에서 결과·stream pos/end·깊이·변환표·하위 효과 순서·28×220 BYTE 장부 전체(RLE)·진단 수 (10.78 470행 + CD 480행)",
+      "consumers": [
+        "webpj/tests/fort-meta-load.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-meta-load.js",
+        "webpj/www/core/raw-fort-badges-globals.js"
+      ],
+      "doc": "docs/webpj-fort-meta-load-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortMetaLoad.cpp"
+      ],
+      "scope": "10.78 470행 전부(CD 10.72 480행은 웹 범위 밖)",
+      "text": true,
+      "sha256": "47c1ad6441ef2a9b62e010f32862171cb7ead5f174c4f7edbad81f037c2fe4a9",
+      "bytes": 532060,
+      "lines": 951,
+      "fixtureCommit": "db9b626c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortMetaLoad.cpp": "9f401229"
       }
     }
   ]
