@@ -4,7 +4,7 @@
 
 **현재:** 메뉴·미션 플레이가 가능하다. 최근에는 Tutorial4 생산·건설 요청 → 실제 객체 생성 → 대기와 Edit 왕복을 확인했다. 전체 원본 동일성은 미확정이다.
 
-**다음:** M6-n의 다른 Form/Regular·큰 비영 AI·배치 호출자/Fort 상위 Finish를 같은 장기 owner에 연결한다. 이어서 M6 잔여 → M7 → M8 → 한국어 → 시나리오 편집 → 알려진 버그 수정 순서로 진행한다.
+**다음:** M6-n의 장기 Regular 미연결51VT/26함수와 내장 Form 삭제3종을 실제 NoWorld caller·같은 owner에 연결한다. 다리00422740부터 조사하며 큰 비영 AI·배치 호출자/Fort 상위 Finish도 남는다. 이어서 M6 잔여 → M7 → M8 → 한국어 → 시나리오 편집 → 알려진 버그 수정 순서로 진행한다.
 
 | 남은 영역 | 상위 계획 | 현재 상태와 남은 양 |
 | --- | --- | --- |
@@ -90,6 +90,15 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 | 기존 LAN | M1~M5, Pop/저장복구/78h/선택적 기록은 재작성하지 않는다. checking `004b02d0/004dc220`은 1157에서 같은 기존 본체/DWORD 연결을 확인했다. 중앙 assertion의 새 누락은 M7.5다. |
 | R/주소 | 1062~1093의 실제 새 R/TCP·UDP/등록표/시계/Config/주소/기록 owner를 유지한다. 제공 R10.71의 3BYTE 존과 Client10.78의 47BYTE 존은 1093 compact 호환 범위다. 원본 R 복사/실행으로 대체하지 않는다. |
 | 외부 기능 | 요청 DWORD `0054dbac`는 reset0/1ah·1bh read 근거만 있다. 새 Config/CLI/writer를 발명하지 않는다. 폐기 CD7f/80·온라인 유효성검증·PIRATE quota는 복구하지 않는다. IPX/SPX 명시 미지원, 1163 hostname OS조회/첫 LAN IPv4·숫자주소 TCP/UDP 유지. 원문에 없는 원격 관리 포트를 추가하지 않는다. |
+
+### 2.3 정적 잔여 집계1217 — 구현 완료 수와 구분
+
+| 이번에 수량을 확정한 범위 | 연결 | 남은 범위 |
+| --- | --- | --- |
+| 실제 자산83+내장 Form4의 장기 Regular(+5c) 분배 | **36/87VT**(base16·Damageable14·고유6) | **51VT/26고유함수**(자산50+Content1). 같은 함수 공유를 중복 작업으로 세지 않는다. |
+| Storage 기본 내장 Form 삭제 분배 | Process1종 | **Depend·Gump·Content3종**. 실제 NoWorld caller/현재 owner·하위 장치/수명 감사가 필요하다. |
+
+[26함수 목록과 범위](docs/exe/cpp-no-world-regular-audit-20261109.md)·[87VT 전체 JSON](cpppj/no-world-regular-audit-20261109.json). **1217은 정적 조사이며 제품1216/313검사·GUI 기준은 그대로다.** 분배 존재를 큰 하위/실행 검증 완료로 합산하지 않는다. 프로세스 전체 클래스/PID/VT·큰 AI·배치/Fort·전수 caller 감사와 l/m은 이87개 조사 밖에 남는다. 다음은 다리00422740의 기존 본문/같은 장기 섬·표면·삭제 장치를 조사한다.
 
 ## 3. M7 독립 5건과 M8 마감
 
@@ -182,6 +191,7 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 
 | 확인할 범위 | 기준 문서 |
 | --- | --- |
+| 최근 정적 잔여 조사 | [1217 Regular·Form 조사](docs/exe/cpp-no-world-regular-audit-20261109.md)·[87VT JSON](cpppj/no-world-regular-audit-20261109.json). 제품/빌드·검사 수는1216 그대로다. |
 | 확정 제품·원시 | [1216 문서](docs/exe/cpp-asset-notice-owner-20261109.md)·[1216 보고서](cpppj/asset-notice-owner-20261109.json), `extracted/cpp-resume-1216/` |
 | 직전 제품 | [1215 다이스·제단 삭제 문서](docs/exe/cpp-dais-deletion-owner-20261109.md)·[1215 보고서](cpppj/dais-deletion-owner-20261109.json). 상세 완료·최초 실패와 교정은 각 마감 결과를 따른다. |
 | 비MP 구현 마감 | [UI 929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit 943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션 956](docs/exe/cpp-mission-state-scope-20261106.md)·[내부 수명 980](docs/exe/cpp-internal-lifetime-closure-20261106.md) |

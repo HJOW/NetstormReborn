@@ -1,0 +1,939 @@
+{
+  "unit": 1217,
+  "productUnchanged": 1216,
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "sourceHead": "0b1b7c73ae495ef548219f25e30e8c85be16f76b",
+  "scope": "실제 자산83VT와 내장 Form4VT의 +5c/장기 HandleDefaultRegular 분배",
+  "vtables": 87,
+  "assets": 83,
+  "forms": 4,
+  "connected": 36,
+  "connectedAssetCount": 33,
+  "connectedFormCount": 3,
+  "base": 16,
+  "damageable": 14,
+  "special": 6,
+  "remainingVtables": 51,
+  "remainingFunctions": 26,
+  "remainingGroups": [
+    {
+      "entry": "0041e6a0",
+      "vtCount": 16,
+      "vtables": [
+        "00502370",
+        "00502448",
+        "00502510",
+        "005025d8",
+        "005026a0",
+        "00502778",
+        "00502840",
+        "00502908",
+        "005029d0",
+        "00502aa8",
+        "00502b70",
+        "00502e68",
+        "00502f30",
+        "00502ff8",
+        "005030c0",
+        "00503188"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawBombRegular.h"
+      ]
+    },
+    {
+      "entry": "0041f760",
+      "vtCount": 1,
+      "vtables": [
+        "00502c38"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": []
+    },
+    {
+      "entry": "0041f9d0",
+      "vtCount": 2,
+      "vtables": [
+        "00502cf0",
+        "00502db0"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": []
+    },
+    {
+      "entry": "00422740",
+      "vtCount": 1,
+      "vtables": [
+        "005034c8"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawBridgeEvents.h"
+      ]
+    },
+    {
+      "entry": "0042a750",
+      "vtCount": 6,
+      "vtables": [
+        "00503d80",
+        "00503e50",
+        "00503f20",
+        "00503ff0",
+        "005040c0",
+        "0050e568"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawCarrierRegular.cpp",
+        "cpppj/src/o/RawBalloonBody.h",
+        "cpppj/src/o/RawCarrierRegular.h"
+      ]
+    },
+    {
+      "entry": "00448e00",
+      "vtCount": 1,
+      "vtables": [
+        "00507770"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": []
+    },
+    {
+      "entry": "0044a3a0",
+      "vtCount": 1,
+      "vtables": [
+        "005075d8"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": []
+    },
+    {
+      "entry": "0044a5e0",
+      "vtCount": 1,
+      "vtables": [
+        "005076b8"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawAltarSacrifice.h"
+      ]
+    },
+    {
+      "entry": "0044b150",
+      "vtCount": 1,
+      "vtables": [
+        "00507950"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": []
+    },
+    {
+      "entry": "00450fa0",
+      "vtCount": 1,
+      "vtables": [
+        "00508cc8"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawDudeRegular.cpp",
+        "cpppj/src/o/RawDudeRegular.h"
+      ]
+    },
+    {
+      "entry": "004549c0",
+      "vtCount": 2,
+      "vtables": [
+        "00509148",
+        "00509210"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawAssetRegular.cpp",
+        "cpppj/src/o/RawFactoryUpgrade.h"
+      ]
+    },
+    {
+      "entry": "0045a250",
+      "vtCount": 1,
+      "vtables": [
+        "005096a0"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawFlare.h"
+      ]
+    },
+    {
+      "entry": "0045a6e0",
+      "vtCount": 1,
+      "vtables": [
+        "00509758"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawGunImpact.h"
+      ]
+    },
+    {
+      "entry": "0045a8e0",
+      "vtCount": 1,
+      "vtables": [
+        "00509810"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawManaBoltRegular.h"
+      ]
+    },
+    {
+      "entry": "0045e8b0",
+      "vtCount": 1,
+      "vtables": [
+        "0050a050"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawWindFlyer.h"
+      ]
+    },
+    {
+      "entry": "00462420",
+      "vtCount": 2,
+      "vtables": [
+        "0050a820",
+        "0050a8e8"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": []
+    },
+    {
+      "entry": "00469540",
+      "vtCount": 1,
+      "vtables": [
+        "0050b570"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawDiscRegular.h"
+      ]
+    },
+    {
+      "entry": "004794b0",
+      "vtCount": 1,
+      "vtables": [
+        "0050cc08"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": []
+    },
+    {
+      "entry": "0048c6e0",
+      "vtCount": 1,
+      "vtables": [
+        "0050e668"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawArcSpire.h"
+      ]
+    },
+    {
+      "entry": "0048ea30",
+      "vtCount": 1,
+      "vtables": [
+        "0050e738"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawAcidFence.h"
+      ]
+    },
+    {
+      "entry": "00490810",
+      "vtCount": 1,
+      "vtables": [
+        "0050ee08"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawPlayerRegular.h"
+      ]
+    },
+    {
+      "entry": "00494580",
+      "vtCount": 1,
+      "vtables": [
+        "0050f210"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawPriestRegen.cpp",
+        "cpppj/src/o/RawPriestFall.h",
+        "cpppj/src/o/RawPriestPrayer.h"
+      ]
+    },
+    {
+      "entry": "0049a4e0",
+      "vtCount": 1,
+      "vtables": [
+        "0050f540"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": [
+        "cpppj/src/o/RawAssetRegular.cpp"
+      ]
+    },
+    {
+      "entry": "004af070",
+      "vtCount": 1,
+      "vtables": [
+        "00512208"
+      ],
+      "kind": [
+        "Content"
+      ],
+      "addressMentionCandidates": []
+    },
+    {
+      "entry": "004dc220",
+      "vtCount": 3,
+      "vtables": [
+        "005196f0",
+        "00519860",
+        "00519918"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": []
+    },
+    {
+      "entry": "004dcf00",
+      "vtCount": 1,
+      "vtables": [
+        "005197a8"
+      ],
+      "kind": [
+        "asset"
+      ],
+      "addressMentionCandidates": []
+    }
+  ],
+  "rows": [
+    {
+      "vtable": "00501dd0",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "00501ea0",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "00502370",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502448",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502510",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "005025d8",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "005026a0",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502778",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502840",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502908",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "005029d0",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502aa8",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502b70",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502c38",
+      "regular": "0041f760",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502cf0",
+      "regular": "0041f9d0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502db0",
+      "regular": "0041f9d0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502e68",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502f30",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00502ff8",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "005030c0",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00503188",
+      "regular": "0041e6a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00503360",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "005034c8",
+      "regular": "00422740",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00503d80",
+      "regular": "0042a750",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00503e50",
+      "regular": "0042a750",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00503f20",
+      "regular": "0042a750",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00503ff0",
+      "regular": "0042a750",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "005040c0",
+      "regular": "0042a750",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00504198",
+      "regular": "0042af60",
+      "kind": "asset",
+      "status": "special"
+    },
+    {
+      "vtable": "00506d98",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "00506e50",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "00506f08",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "005070c0",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "005075d8",
+      "regular": "0044a3a0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "005076b8",
+      "regular": "0044a5e0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00507770",
+      "regular": "00448e00",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00507950",
+      "regular": "0044b150",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00508cc8",
+      "regular": "00450fa0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00509148",
+      "regular": "004549c0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00509210",
+      "regular": "004549c0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "005092d0",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "00509388",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "00509470",
+      "regular": "00457a50",
+      "kind": "asset",
+      "status": "special"
+    },
+    {
+      "vtable": "005096a0",
+      "regular": "0045a250",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00509758",
+      "regular": "0045a6e0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00509810",
+      "regular": "0045a8e0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00509930",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "005099e8",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "00509aa0",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "00509b98",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "0050a050",
+      "regular": "0045e8b0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "0050a1e8",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "0050a388",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "0050a748",
+      "regular": "004622f0",
+      "kind": "asset",
+      "status": "special"
+    },
+    {
+      "vtable": "0050a820",
+      "regular": "00462420",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "0050a8e8",
+      "regular": "00462420",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "0050b570",
+      "regular": "00469540",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "0050b6e8",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "0050b7c0",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "0050b888",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "0050b9b8",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "0050bad0",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "0050c3b0",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "0050c9f0",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "0050cc08",
+      "regular": "004794b0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "0050da88",
+      "regular": "00485640",
+      "kind": "asset",
+      "status": "special"
+    },
+    {
+      "vtable": "0050db78",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "0050dc30",
+      "regular": "00485230",
+      "kind": "asset",
+      "status": "special"
+    },
+    {
+      "vtable": "0050e568",
+      "regular": "0042a750",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "0050e668",
+      "regular": "0048c6e0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "0050e738",
+      "regular": "0048ea30",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "0050e888",
+      "regular": "0048ebe0",
+      "kind": "asset",
+      "status": "special"
+    },
+    {
+      "vtable": "0050e940",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "0050ea08",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "0050ead0",
+      "regular": "0044b900",
+      "kind": "asset",
+      "status": "damageable"
+    },
+    {
+      "vtable": "0050eb98",
+      "regular": "00496e70",
+      "kind": "asset",
+      "status": "base"
+    },
+    {
+      "vtable": "0050ee08",
+      "regular": "00490810",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "0050f210",
+      "regular": "00494580",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "0050f540",
+      "regular": "0049a4e0",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00512098",
+      "regular": "00496e70",
+      "kind": "Process",
+      "status": "base"
+    },
+    {
+      "vtable": "00512110",
+      "regular": "00496e70",
+      "kind": "Depend",
+      "status": "base"
+    },
+    {
+      "vtable": "00512188",
+      "regular": "00496e70",
+      "kind": "Gump",
+      "status": "base"
+    },
+    {
+      "vtable": "00512208",
+      "regular": "004af070",
+      "kind": "Content",
+      "status": "remaining"
+    },
+    {
+      "vtable": "005196f0",
+      "regular": "004dc220",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "005197a8",
+      "regular": "004dcf00",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00519860",
+      "regular": "004dc220",
+      "kind": "asset",
+      "status": "remaining"
+    },
+    {
+      "vtable": "00519918",
+      "regular": "004dc220",
+      "kind": "asset",
+      "status": "remaining"
+    }
+  ],
+  "implementationComplete": false,
+  "fullNoWorldComplete": false,
+  "bodyCandidateIsCompletion": false,
+  "executions": 0,
+  "newDecompilation": 0,
+  "decompilerSourceChanges": 0,
+  "lastClientDecompilation": {
+    "host": "HJOW-Athlon",
+    "date": "2026-11-03"
+  },
+  "defaultFormDeletion": {
+    "registered": [
+      {
+        "type": 2,
+        "name": "Process",
+        "vtable": "00512098"
+      }
+    ],
+    "unregistered": [
+      {
+        "type": 1,
+        "name": "Depend",
+        "vtable": "00512110"
+      },
+      {
+        "type": 3,
+        "name": "Gump",
+        "vtable": "00512188"
+      },
+      {
+        "type": 6,
+        "name": "Content",
+        "vtable": "00512208"
+      }
+    ],
+    "scope": "Storage 기본 분배기의 직접 등록; 실제 NoWorld caller/owner/하위 장치 감사는 별도"
+  },
+  "firstHelperFailure": {
+    "scope": "보조 집계 스크립트",
+    "cause": "함수 종료점의 전역 검색이 시작보다 앞을 골라 빈 본문이 됨",
+    "correction": "현재 함수 시작 이후의 다음 void 함수로 한정",
+    "productChanges": 0,
+    "expectationsWeakened": false,
+    "raw": "extracted/cpp-resume-1217/inventory-first-error.txt"
+  }
+}
