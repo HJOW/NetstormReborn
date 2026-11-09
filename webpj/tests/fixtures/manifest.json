@@ -6069,19 +6069,21 @@
       "consumers": [
         "webpj/tests/bridge-events.test.mjs",
         "webpj/tests/bridge-decay.test.mjs",
-        "webpj/tests/raw-bridge-decay.test.mjs"
+        "webpj/tests/raw-bridge-decay.test.mjs",
+        "webpj/tests/surface-lifecycle.test.mjs"
       ],
       "modules": [
         "webpj/www/core/raw-bridge-events.js",
         "webpj/www/core/bridge-decay.js",
-        "webpj/www/core/raw-bridge-decay.js"
+        "webpj/www/core/raw-bridge-decay.js",
+        "webpj/www/core/raw-surface-lifecycle.js"
       ],
       "doc": "docs/webpj-bridge-decay-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawBridgeDecay.cpp",
         "cpppj/src/o/Bridge.cpp"
       ],
-      "scope": "bridge-decay.test.mjs는 Cell·Life·Destroy·Crack·Normal·Weaken·Restore·Init·Scan 전 행(세 PE)을 사용, bridge-events.test.mjs는 Frames 0 행(실제 bridge.type 프레임 60개)만 사용 · raw-bridge-decay.test.mjs는 Cell 4241·Life 3264행과 Frames 0 행을 raw 풀 위에서 재생",
+      "scope": "bridge-decay.test.mjs는 Cell·Life·Destroy·Crack·Normal·Weaken·Restore·Init·Scan 전 행(세 PE)을 사용, bridge-events.test.mjs는 Frames 0 행(실제 bridge.type 프레임 60개)만 사용 · raw-bridge-decay.test.mjs는 Cell 4241·Life 3264행과 Frames 0 행을 raw 풀 위에서 재생 · surface-lifecycle.test.mjs는 Frames 0 행(실제 bridge.type 프레임 60개)을 표면 삭제 통합 장면의 다리 프레임 표로 사용",
       "text": true,
       "sha256": "1009c82b63b6b655bde417aeecf287fd43099b3a75295cd28ac6b474cdd4b638",
       "bytes": 2413945,

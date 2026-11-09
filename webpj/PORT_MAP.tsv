@@ -917,7 +917,7 @@ cpppj/src/o/RawSubscriberIdGenerate.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/o/RawSunAviaryCapture.cpp	port	www/core/raw-sun-aviary-capture.js	1f00a25a	port	[o-default] WB04-E202: TYPE 72/VT 0x509930 판정·기본 프레임 0045b530(extra&9 현재, signed 20..26→10, 11..19→현재-9, 그 밖 -1)·추가 그림 0045b560(extra&9 소비자 없이 생략). fixture sunaviarycapture 384행 전부와 cpppj 생략/거부 손검사. 남음: 실제 Squid 가상 분배·Session 캡처 소비자 연결
 cpppj/src/o/RawSunAviaryProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawSunFlyerFrame.cpp	port			todo	[o-default]
-cpppj/src/o/RawSurfaceLifecycle.cpp	port			todo	[o-default]
+cpppj/src/o/RawSurfaceLifecycle.cpp	port	www/core/raw-surface-lifecycle.js	712e7224	port	[o-default] WB04-E248: 섬·다리·noIsland 삭제 훅 분배기(실제 가상 표 기록값으로 다리 pre/post·섬 pre·noIsland post 분배, 나머지는 공통 훅). cpppj SurfaceLifecycleTests 8건을 실제 Factory/Pop/Display/Frame/BridgeConnect/IslandPostPop/BridgeEvents/Destroy/Dispatch/DestroyLifecycle/ProcessHost/Kernel/Graph 조립으로 재현(교체·고립·hard·Keep·walker·Graph 활성·Native). 기준선 뒤 712e7224 의 BindCurrentConnectorType 을 ② 재반영(getter). CD 판본·Renderer 합성·InspectSurfaceLifecycle 은 범위 밖
 cpppj/src/o/RawTemplateLifetime.cpp	port	www/core/raw-template-lifetime.js	1f00a25a	port	[o-default] WB04-E123: Template9 헤더 초기화 004bd2e0·단일 반납 004bf690·전역 정리 004bfb00. fixture template-lifetime-v2 240행 전부(10.78 전용). DataManager 소멸/할당 반납은 훅 경계. 캠페인 템플릿 저장소(State 섹션 확장 포함)는 별도 client 단위
 cpppj/src/o/RawTemplateLoad.cpp	port			todo	[o-default]
 cpppj/src/o/RawTemplateSectionNames.cpp	port	www/core/raw-template-section-names.js	1f00a25a	port	[o-default] WB04-E19: 004bccb0 Template 구역 이름표 lazy 생성(277 BYTE). fixture template-section-names 12행 전부
