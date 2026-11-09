@@ -13847,9 +13847,41 @@
       "bytes": 102101,
       "lines": 415,
       "fixtureCommit": "a4b63270",
-      "webCommit": "worktree",
+      "webCommit": "9fd22013",
       "cpppjBasis": {
         "cpppj/src/o/RawDudeNotice.cpp": "e210c755"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E208",
+      "id": "dudedrop",
+      "path": "cpppj/tests/fixtures/dudedrop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Dude 드롭 두 부모 00450b30/00450c20 의 종류·index·부모 발자국/genus/소유자/상태·source·난수 seed·population·시각 입력과 결과·새 SID·Regular 호출 순서·Regular·난수 상태·population·슬롯·장부·변경 사각형(실제 보호 Dude 장면, 10.78 154행·CD 154행)",
+      "consumers": [
+        "webpj/tests/dude-drop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dude-drop.js",
+        "webpj/www/core/raw-dude-spawn.js",
+        "webpj/www/core/raw-dude-task.js",
+        "webpj/www/core/raw-dude-notice.js"
+      ],
+      "doc": "docs/webpj-dude-drop-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDudeDrop.cpp"
+      ],
+      "scope": "10.78 154입력 전부(originalCD 154행은 범위 밖)",
+      "text": true,
+      "sha256": "b04626ca72666e6ace44e5d5940f613757d93966eb3f1148e0ec335cab1fec55",
+      "bytes": 133834,
+      "lines": 309,
+      "fixtureCommit": "860030e7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDudeDrop.cpp": "860030e7"
       }
     }
   ]
