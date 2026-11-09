@@ -14358,9 +14358,38 @@
       "bytes": 756982,
       "lines": 119,
       "fixtureCommit": "afe4ce5b",
-      "webCommit": "worktree",
+      "webCommit": "0fdac3af",
       "cpppjBasis": {
         "cpppj/src/o/RawIslandPopulation.cpp": "afe4ce5b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E224",
+      "id": "islandlifecycle",
+      "path": "cpppj/tests/fixtures/islandlifecycle-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 섬 받침 preDestroy·noIsland postDestroy. 장면(받침 SID 50 의 이웃 다리·walker·상태·extra·좌표 float 비트·해시 단계)과 삭제 flags 에서 지연 낙하 예약·walker 낙하·공통 pre/postDestroy 호출 순서와 인자 (IslandPre 260·SurfacePost 260, 10.78 행 520개)",
+      "consumers": [
+        "webpj/tests/island-lifecycle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-island-lifecycle.js"
+      ],
+      "doc": "docs/webpj-island-lifecycle-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawIslandLifecycle.cpp"
+      ],
+      "scope": "10.78 520행 전부(CD 10.72·10.37 행은 웹 범위 밖)",
+      "text": true,
+      "sha256": "27bf7b2a9427a9885886272359f9ddff38fdf813d984082bc870dc9ba1fef9fe",
+      "bytes": 295394,
+      "lines": 2058,
+      "fixtureCommit": "6a0907de",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawIslandLifecycle.cpp": "6a0907de"
       }
     }
   ]
