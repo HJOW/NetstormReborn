@@ -14238,9 +14238,39 @@
       "bytes": 506376,
       "lines": 1445,
       "fixtureCommit": "db9b626c",
-      "webCommit": "worktree",
+      "webCommit": "3dacf1d2",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisContentNotice.cpp": "efcd13e4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E220",
+      "id": "islandqueries",
+      "path": "cpppj/tests/fixtures/islandqueries-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 mutable 섬 목록(count DWORD + 100개 32 BYTE 기록)의 세 검색(FindOwnerTerritory·FindTerritory·CountOwned). 입력 12칸(count·존재 패턴·존재값·현재 owner·원래 owner·지역·owner 인자·지역 인자·fort·special·chaff·추가 존재 위치)에서 반환·전체 3204 BYTE Adler-32·세 모드(10.78 4245행·CD 4245행)",
+      "consumers": [
+        "webpj/tests/island-queries.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-island-queries.js",
+        "webpj/www/core/raw-island-runtime.js"
+      ],
+      "doc": "docs/webpj-island-queries-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawIslandQueries.cpp"
+      ],
+      "scope": "10.78 4245입력 전부(originalCD 4245행은 범위 밖)",
+      "text": true,
+      "sha256": "9a95feaf0093fe87a35d095f4d9233a8a560aff5e225e649e6bd4e8e8e359ebb",
+      "bytes": 682534,
+      "lines": 8491,
+      "fixtureCommit": "5b10ce82",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawIslandQueries.cpp": "5b10ce82"
       }
     }
   ]
