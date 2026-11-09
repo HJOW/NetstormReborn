@@ -723,7 +723,8 @@ struct RawCampaignSession::Impl {
     std::vector<CarrierRegularType> carrierRegularTypes; // 같은 실제 TYPE 정의의 기본 프레임/casttime이다.
     std::unique_ptr<RawContentPreviewProcess> contentPreviewProcess; // 같은 현재 시계/공유47타입의 일시 표시 수명이다.
     std::unique_ptr<ContentPreviewProcess> pendingContentPreview; // 원본 new18 성공 뒤 생성/부착까지의 단일 소유권이다.
-    std::unique_ptr<RawCarrierRegular> carrierRegular; // 실제 내용물/자산/표시/기본Handle에 연결한 Carrier 부모다.
+    std::unique_ptr<RawCarrierRegular> localCarrierRegular; // 독립 typed Session만 기존 지역 본문을 소유한다.
+    RawCarrierRegular* carrierRegular{}; // 실제 내용물/자산/표시/기본Handle에 연결한 Carrier 부모다.
     std::unique_ptr<RawNuggetPostPop> nuggetPostPop; // 너겟의 실제 두 예약/난수/기본 처리다.
     std::unique_ptr<RegularProcess> pendingNuggetRegular; // 원본 new28과 생성자를 같은 실제 할당으로 연결한다.
     std::vector<std::int32_t> nuggetAFrames; // 같은188TYPE의A구간실제프레임수다.
@@ -1075,6 +1076,7 @@ struct RawCampaignSession::Impl {
         // 각 원문 소비자가 같은 005e4794를 다시 읽으며 Session 사본/강제 활성값을 만들지 않는다.
         archerState.angles=world.Storage()->AngleDiagnostics();gunTargetState.angles=archerState.angles; // 네 방향 소비자가 같은 현재 Client 진단을 사용한다.
         process.checking.Bind(gameplayGlobals->AiDebug().Checking()); // 실제 Path의 자기 삭제 뒤에도 Client의 현재 진단 DWORD를 읽는다.
+        if (world.Storage()->UsesNativeTransmissionDevices()) soundState.sharedProcessType=&gameplayGlobals->GameAux()->SoundProcessType(); // 같은 소리/내용물 타이머 역할 주소를 빌린다.
         gunState.checking.Bind(gameplayGlobals->AiDebug().Checking());gunTargetState.checking.Bind(gameplayGlobals->AiDebug().Checking());rewardState.debugAsserts.Bind(gameplayGlobals->AiDebug().Checking());missionAiSettings.checkingAsserts.Bind(gameplayGlobals->AiDebug().Checking());soundState.debug.Bind(gameplayGlobals->AiDebug().Checking());buildArrivalState.checking.Bind(gameplayGlobals->AiDebug().Checking());geyserMinedState.checking.Bind(gameplayGlobals->AiDebug().Checking());assetState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());regularState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());motionState.carrier.debug.Bind(gameplayGlobals->AiDebug().Checking());motionState.cleanup.checking.Bind(gameplayGlobals->AiDebug().Checking());generalDamageState.checking.Bind(gameplayGlobals->AiDebug().Checking());burningState.checking.Bind(gameplayGlobals->AiDebug().Checking());priestState.spawn.checkingPlacement.Bind(gameplayGlobals->AiDebug().Checking());priestState.forcefieldRegular.debug.Bind(gameplayGlobals->AiDebug().Checking());carrierDropState.checking.Bind(gameplayGlobals->AiDebug().Checking());
         if (localMetadata) {
             metadata.geometry.decoderDiagnostics.checking.Bind(gameplayGlobals->AiDebug().Checking()); // 독립 typed 반복자만 기존 진단 연결을 사용한다.
@@ -1614,6 +1616,11 @@ struct RawCampaignSession::Impl {
         ConnectBombPostPop(); // 첫 효과174/176/177 Pop 전에 중복 조회/예약을 실제 Host에 연결한다.
         ConnectAcidZap(); //최초61h 수신 전에 실제 분해18/현재 가상 삭제를 연결한다.
         ConnectAcidFence(); //첫145 Pop 전에 전용 주기/포획의 같은 세계를 연결한다.
+        worldHooks.carrierRegular.movementType=[this](auto type) { return priests->MovementProcessType(type); };
+        worldHooks.carrierRegular.hasPath=[this](auto sid,auto type) { RawContainedLookup lookup(core.pool,[this](auto target,auto flags) { static_cast<void>(world.Destroy(target,flags)); });return lookup.Find(sid,type).value!=0; };
+        worldHooks.carrierRegular.escape=[this](auto sid,auto delay,auto event) { const auto call=services.motion.carrier.escape;if (!call) throw std::logic_error("현재 Carrier 회피429010 미연결");static_cast<void>(call(sid,delay,event)); };
+        worldHooks.carrierRegular.falling=[this](auto sid,auto count) { return carrierFalling->Fall(sid,count); };
+        worldHooks.carrierRegular.setOwner=[this](auto sid,auto owner) { ownership->SetOwner(sid,owner); };
         ConnectCarrierRegular(); // 첫491예약/프레임 전에 같은 내용물 그림과 만료 삭제를 연결한다.
         ConnectSunAviary(); // 실제 타입32/flags8 부착과 현재48BYTE 필드를 같은 Kernel에 등록한다.
         ConnectWindAviary(); // 첫저장객체Pop전에타입59의전용생산기를설치한다.
@@ -2166,7 +2173,7 @@ struct RawCampaignSession::Impl {
         post.createSound=[this](Sid parent,std::uint32_t sound,std::uint32_t alternate,std::uint32_t flags) {
             if (!pendingSunFlyerSound) throw std::logic_error("훨리기그 Sound47 실제 예약 누락");auto* storage=pendingSunFlyerSound.release();SoundProcess* process{}; // 같은 확보의 소유권을 생성자로 옮긴다.
             try { process=new(storage) SoundProcess(*sounds,sound,alternate,flags); }catch (...) { ::operator delete(storage);throw; }
-            static_cast<void>(core.processes.Attach(std::unique_ptr<SoundProcess>(process),soundState.processType,parent,0x10));
+            static_cast<void>(core.processes.Attach(std::unique_ptr<SoundProcess>(process),soundState.ProcessType(),parent,0x10));
         };
         post.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };post.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
         post.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };post.initializeUnit=[this](Sid sid) { gunHit->SetTime(sid,core.processState.Now()); };
@@ -2256,7 +2263,7 @@ struct RawCampaignSession::Impl {
         sun.baseParentDying=[this](FlyerProcessFields& fields) { flyerFrame->ParentDying(fields); };
         std::vector<SunFlyerFrameType> bombs(core.types.size()); // +170은A개수,+134는B첫번호,+174는B개수의 원본 값 그대로다.
         for (std::size_t type=0;type<bombs.size();++type) bombs[type]={core.frames[type].Run('A').count,core.frames[type].Run('B').first,core.frames[type].Run('B').count,missileTypes[type].firingSound}; // end를first+count로 교체하지 않는다.
-        flyerFrame=std::make_unique<RawFlyerFrame>(core.pool,core.types,details,std::span(soundState.typeFrames).first(core.types.size()),FlyerFrameGlobals{core.processState.Server(),assetState.Boss(),gunState.checking,core.processState.Now(),soundState.frame,sunFlyerType,windFlyerType,rainFlyerType,sunAviaryType,soundState.processType},std::move(hooks));
+        flyerFrame=std::make_unique<RawFlyerFrame>(core.pool,core.types,details,std::span(soundState.typeFrames).first(core.types.size()),FlyerFrameGlobals{core.processState.Server(),assetState.Boss(),gunState.checking,core.processState.Now(),soundState.frame,sunFlyerType,windFlyerType,rainFlyerType,sunAviaryType,soundState.ProcessType()},std::move(hooks));
         sunFlyerFrame=std::make_unique<RawSunFlyerFrame>(core.pool,core.shapes,bombs,SunFlyerFrameGlobals{assetState.Boss(),flyerPaused,core.processState.Now(),sunBombType},std::move(sun));
         WindFlyerHooks wind; // 같은실제프레임표와효과를전용처리기에연결한다.
         wind.runCount=[this](Sid sid) { const auto raw=core.pool.Slot(sid);const auto frame=std::bit_cast<std::int32_t>(Read(raw,36));const auto& table=core.frames[raw[10]];if (frame<0 || static_cast<std::size_t>(frame)>=table.Codes().size()) throw std::out_of_range("더스트 데빌글자프레임범위");return table.Run(table.Codes()[static_cast<std::size_t>(frame)].side).count; };
@@ -2409,6 +2416,7 @@ struct RawCampaignSession::Impl {
         for (std::size_t type=0;type<nuggetAFrames.size();++type) nuggetAFrames[type]=core.frames[type].Run('A').count;
         nuggetRegular=std::make_unique<RawNuggetRegular>(core.pool,nuggetAFrames,core.spots,assetState.Boss(),std::move(nuggetEvents));
         nuggetPostPop=std::make_unique<RawNuggetPostPop>(core.pool,std::move(nugget));
+        if (!world.Storage()->UsesNativeTransmissionDevices()) { // Native는 현재 TYPE 장기 표를 직접 읽으며 정의 사본/타이머 로직을 만들지 않는다.
         carrierRegularTypes.resize(core.types.size());
         // 원본 타입 로더의 기본0과 실제 자산 정의의118/1b8을 같은 번호로 보충한다.
         for (std::size_t index=0;index<assets.game.Types().size();++index) {
@@ -2423,10 +2431,11 @@ struct RawCampaignSession::Impl {
         };
         preview.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
         preview.assertion=SessionMissing<void>();
-        contentPreviewProcess=std::make_unique<RawContentPreviewProcess>(core.pool,core.processState.Now(),soundState.processType,std::move(preview));
+        contentPreviewProcess=std::make_unique<RawContentPreviewProcess>(core.pool,core.processState.Now(),soundState.ProcessType(),std::move(preview));
+        }
         CarrierRegularHooks hooks;
         hooks.find=[this](Sid parent,std::uint32_t mask,std::uint32_t kind,std::uint32_t index) { return priests->Carrier().FindContained(parent,mask,kind,index); };
-        hooks.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
+        hooks.create=[this](std::uint32_t type,std::uint32_t flags) { return core.factory.Create(type,flags); };
         // 실제4ac220은 하위WORD 저장 뒤 현재 타입이 다리일 때만 기존 표면 통지를 호출한다.
         hooks.setWord=[this](Sid sid,std::uint32_t value) { auto raw=core.pool.AllocatedBytes(sid);raw[12]=static_cast<std::uint8_t>(value);raw[13]=static_cast<std::uint8_t>(value>>8);if (raw[10]==core.bridgeState.bridgeType) core.building.NotifySurface(sid); };
         hooks.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); };
@@ -2478,7 +2487,8 @@ struct RawCampaignSession::Impl {
         hooks.escape=[this](Sid sid,float delay,std::uint32_t event) { if (!services.motion.carrier.escape) throw std::logic_error("현재 Carrier 회피429010 미연결");static_cast<void>(services.motion.carrier.escape(sid,delay,event)); };
         hooks.falling=[this](Sid sid,std::uint32_t count) { return carrierFalling->Fall(sid,count); };
         hooks.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { return assetBindings->Regular().DamageableHandle(sid,event,count,payload); };
-        carrierRegular=std::make_unique<RawCarrierRegular>(core.pool,core.types,carrierRegularTypes,assetState.Boss(),std::move(hooks));
+        if (world.Storage()->UsesNativeTransmissionDevices()) carrierRegular=&world.Storage()->CarrierRegular();
+        else { localCarrierRegular=std::make_unique<RawCarrierRegular>(core.pool,core.types,carrierRegularTypes,assetState.Boss(),std::move(hooks));carrierRegular=localCarrierRegular.get(); }
     }
     // 기술과 객체가 동일한 실제 Form6 저장 경계를 사용하며 stream은 값으로 보관한다.
     FortContentSaveHooks ContentWriter(TemplateWriteStream stream) {
@@ -2999,7 +3009,7 @@ struct RawCampaignSession::Impl {
         if (!carrierEffects.create) carrierEffects.create=[this](std::uint32_t reservation,Sid parent,std::uint32_t sound,std::uint32_t alternate,std::uint32_t flags) {
             if (reservation!=1 || !pendingPickupSound) throw std::logic_error("획득Sound47 실제예약 누락");auto* storage=pendingPickupSound.release();SoundProcess* process{}; // 같은성공예약의소유권을생성자로넘긴다.
             try { process=new(storage) SoundProcess(*sounds,sound,alternate,flags); }catch (...) { ::operator delete(storage);throw; }
-            auto* attached=dynamic_cast<SoundProcess*>(core.processes.Attach(std::unique_ptr<SoundProcess>(process),soundState.processType,parent,0x10));return attached ? std::uint32_t(attached->Form().value) : 0U;
+            auto* attached=dynamic_cast<SoundProcess*>(core.processes.Attach(std::unique_ptr<SoundProcess>(process),soundState.ProcessType(),parent,0x10));return attached ? std::uint32_t(attached->Form().value) : 0U;
         };
         if (!carrierEffects.duration) carrierEffects.duration=[this](std::uint32_t token,float delay) {
             if (token>65535) throw std::out_of_range("획득Sound47 Form번호범위");auto* process=dynamic_cast<SoundProcess*>(core.processes.FromForm(Sid{static_cast<std::uint16_t>(token)}));if (!process) throw std::logic_error("획득Sound47 현재객체 누락");process->Delay(delay);

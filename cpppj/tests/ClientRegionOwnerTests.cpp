@@ -15,6 +15,7 @@
 #include "o/RawBombHeal.h" //힐의 실제 대상 자격/HP/현재 가상 효과를 패킷 없이 검증한다.
 #include "o/RawBombHardener.h" //강화 후보/난수/프레임·플레어 순서를 독립 PE 입력으로 검증한다.
 #include "o/RawBombTreason.h" //원본 독립 관찰과 현재 소유권/받침 전파를 패킷 없이 검증한다.
+#include "client/SoundProcess.h" //같은 실제 소리/미리보기 역할 주소를 검증한다.
 #include "client/NativeMetaSpriteRefresh.h" //일반 Sprite의 실제 파생 갱신도 같은 장기 표시/Host에 연결한다.
 #include "o/RawBombStrike.h" //직접 피해의 생성/Pop 뒤 현재 권한/TYPE 재조회를 검증한다.
 #include "client/RawBombBlastBindings.h" //하드너의 같은41e3d0 추가 그림도 실제 현재 TYPE/프레임으로 분배한다.
@@ -1580,4 +1581,39 @@ TEST_CASE(ClientSpriteOwner_NoWorldHostUsesCurrentTypeAndActualDerivedRefresh) {
     auto* task=s.storage->Processes().Host().AddRegular(sid,0x1234,0.125F);CHECK(task);if (!task) return;task->RunFrame();
     if (task->Count()!=1 || task->Payload()!=0.125F || RegionRead(raw,36)!=1 || raw[10]!=type || raw[35]!=20 || state->updates!=2 || state->dirty!=2 || s.storage->Borrowed()) std::cerr<<"Sprite owner count="<<task->Count()<<" payload="<<task->Payload()<<" frame="<<RegionRead(raw,36)<<" type="<<int(raw[10])<<" expectedType="<<type<<" byte35="<<int(raw[35])<<" updates="<<state->updates<<" dirty="<<state->dirty<<" borrowed="<<s.storage->Borrowed()<<'\n'; //원본 기대/강한 단언은 유지하고 최초 실패의 실제 상태를 출력한다.
     CHECK(task->Count()==1);CHECK(task->Payload()==0.125F);CHECK(RegionRead(raw,36)==1);CHECK(raw[10]==type);CHECK(raw[35]==20);CHECK(state->updates==2);CHECK(state->dirty==2);CHECK(!s.storage->Borrowed());
+}
+
+TEST_CASE(ClientCarrierOwner_NoWorldCurrentCastAndHost) { //빈 표시의 자연 반환 뒤 실제 현재 내용물의 casttime과 같은 NoWorld Host를 확인한다.
+    RegionScene s;const auto parent=s.Asset(0x503d80U);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]&=static_cast<std::uint8_t>(~4U);raw[40]&=static_cast<std::uint8_t>(~9U);s.gameplay->Authority()->boss=false;auto& body=s.storage->CarrierRegular();const auto free=s.storage->pool.FreeCount();
+    CHECK(&body.Pool()==&s.storage->pool && body.Handles(parent) && s.storage->HasCarrierRegular(parent));
+    CHECK(body.Handle(parent,0x491U,0,0.25F)==0.0F); //두 내용물 모두 없으면 표시/큰 효과를 선택하지 않는다.
+    const auto form=s.storage->Factory().Create(6,2);auto content=s.storage->pool.AllocatedBytes(form);netstorm::test::rawscene::Put(raw,6,form.value,2);netstorm::test::rawscene::Put(content,14,0,2);netstorm::test::rawscene::Put(content,16,parent.value,2);netstorm::test::rawscene::Put(content,18,155,2);netstorm::test::rawscene::Put(content,20,1,2);s.storage->BombCastTimes()[155]=4;
+    CHECK(body.Handle(parent,0x493U,40,0.25F)==0.25F && body.Handle(parent,0x493U,41,0.25F)==0.0F);s.storage->BombCastTimes()[155]=-1;CHECK(body.Handle(parent,0x493U,0,0.25F)==0.0F);
+    auto* task=s.storage->Processes().Host().AddRegular(parent,0x492U,0.25F);CHECK(task);if (task) { task->RunFrame();CHECK(task->Count()==1 && task->Payload()==0.25F); }
+    CHECK(s.storage->pool.FreeCount()==free-2 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientCarrierOwner_SelectedRuntimePinsWholeOwnerAndFunction) { //선택한 낙하 후단만 pin하고 함수 교체/대여 반납 뒤 현재 호출을 안전하게 마친다.
+    RegionScene s;const auto parent=s.Asset(0x503d80U);auto& body=s.storage->CarrierRegular();auto owner=std::make_shared<int>(7);std::weak_ptr<int> weak=owner;auto binding=std::make_shared<RawSurfaceCarrierBindings>();std::uint32_t pins{},calls{};
+    binding->pin=[&] { ++pins;return owner; };binding->falling=[&](auto sid,auto count) { owner.reset();binding->falling={};binding.reset();CHECK(!weak.expired() && sid==parent && count==123);++calls;return 0.125F; };s.storage->BindCarrierRuntime(binding);
+    CHECK(body.Handle(parent,0x5105U,123,9.0F)==0.125F && pins==1 && calls==1 && weak.expired());bool failed{};try { body.Handle(parent,0x5105U,123,9.0F); }catch (const std::logic_error&) { failed=true; }CHECK(failed && calls==1);
+    s.gameplay->Authority()->boss=false;CHECK(body.Handle(parent,0x492U,1,0.25F)==0.25F);CHECK(!s.storage->Borrowed());
+}
+TEST_CASE(ClientCarrierOwner_CurrentDangerCellUsesSameFrame) { //Player/Session 없이 현재 표면·TYPE·프레임을 실제4225b0에서 조회한다.
+    RegionScene s;const auto parent=s.Asset(0x503d80U),bridge=s.Asset(0x5034c8U);auto raw=s.storage->pool.AllocatedBytes(parent);RegionPut(raw,14,std::bit_cast<std::uint32_t>(20.5F));RegionPut(raw,18,std::bit_cast<std::uint32_t>(21.25F));const auto type=s.storage->pool.Slot(bridge)[10];s.storage->hash.Bucket(0,21.0F,22.0F)=bridge.value;RegionPut(s.storage->pool.AllocatedBytes(bridge),36,0);s.storage->types[type].flags2|=4;
+    s.storage->frames[type]=RiftTypeFrames({{0,65,0,0x20}});auto& body=s.storage->CarrierRegular();s.gameplay->Authority()->boss=true;bool failed{};try { body.Handle(parent,0x492U,0,0.5F); }catch (const std::logic_error&) { failed=true; }CHECK(failed); //현재 위험 칸은 실제 이동 모듈 부재를 드러낸다.
+    s.storage->frames[type]=RiftTypeFrames({{0,65,0,0}});CHECK(body.Handle(parent,0x492U,0,0.5F)==0.5F);CHECK(!s.storage->Borrowed());
+}
+TEST_CASE(ClientCarrierOwner_PreviewUsesCurrentFrameOwnerAndSharedType) { //실제 Factory/Pop/Host 타이머가 현재 프레임과 같은 소리 역할을 읽는다.
+    RegionScene s;const auto parent=s.Asset(0x503d80U);auto raw=s.storage->pool.AllocatedBytes(parent);RegionPut(raw,14,std::bit_cast<std::uint32_t>(100.0F));RegionPut(raw,18,std::bit_cast<std::uint32_t>(100.0F));raw[35]=33;raw[34]=0;s.gameplay->Authority()->boss=false;
+    const auto form=s.storage->Factory().Create(6,2);auto content=s.storage->pool.AllocatedBytes(form);netstorm::test::rawscene::Put(raw,6,form.value,2);netstorm::test::rawscene::Put(content,14,0,2);netstorm::test::rawscene::Put(content,16,parent.value,2);netstorm::test::rawscene::Put(content,18,154,2);netstorm::test::rawscene::Put(content,20,1,2);netstorm::test::rawscene::Put(content,12,17,2);
+    s.storage->types[154].defaultFrame=3;auto& body=s.storage->CarrierRegular();auto& host=s.storage->Processes().Host();auto& state=s.storage->Processes().State();state.now=7.25;s.gameplay->GameAux()->SoundProcessType()=48;
+    const auto prior=s.OfType(154);CHECK(body.Handle(parent,0x491U,0,0.25F)==0.25F);const auto after=s.OfType(154);CHECK(after.size()==prior.size()+1);if (after.size()!=prior.size()+1) return;
+    Sid ghost{};for (const auto candidate:after) { if (std::find(prior.begin(),prior.end(),candidate)==prior.end()) ghost=candidate; } //현재 풀의 실제 새 미리보기만 선택한다.
+    const auto image=s.storage->pool.Slot(ghost);CHECK(RegionRead(image,36)==3 && image[35]==32 && image[34]==0 && (image[40]&8U) && (RegionRead(image,12)&0xffffU)==17);
+    auto* timer=dynamic_cast<ContentPreviewProcess*>(host.FromForm(Sid{static_cast<std::uint16_t>(RegionRead(image,6)&0xffffU)}));CHECK(timer);if (timer) { CHECK(timer->Fields().Parent()==ghost && timer->Fields().Deadline()==7.5);timer->Notify(1,2,3);state.now=7.499;timer->RunFrame();CHECK(!(s.storage->pool.Slot(ghost)[11]&1U));state.now=7.5;timer->RunFrame();CHECK(s.storage->pool.Slot(ghost)[11]&1U); }
+    CHECK(!s.storage->Borrowed());
+}
+TEST_CASE(ClientCarrierOwner_SoundRoleKeepsSameCurrentAddress) { //기존 독립 소리 입력과 Native 공유 역할이 같은 getter 계약을 사용한다.
+    RegionScene s;SoundProcessState state;state.processType=99;CHECK(state.ProcessType()==99);state.sharedProcessType=&s.gameplay->GameAux()->SoundProcessType();const auto* address=&state.ProcessType();CHECK(*address==47);s.gameplay->GameAux()->SoundProcessType()=63;CHECK(state.ProcessType()==63);
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(address==&world.Storage()->GameAux()->SoundProcessType() && state.ProcessType()==63); }CHECK(state.ProcessType()==63 && !s.storage->Borrowed());
 }

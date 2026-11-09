@@ -300,7 +300,7 @@ target_sources(netstorm PRIVATE o/RawSquidSelection.cpp o/RawSquidSelection.h o/
 target_sources(netstorm PRIVATE o/RawContentPreviewProcess.cpp o/RawContentPreviewProcess.h)
 
 # 실제 Carrier42a750 전체 사건과 내용물 교대 표시다.
-target_sources(netstorm PRIVATE o/RawCarrierRegular.cpp o/RawCarrierRegular.h)
+target_sources(netstorm PRIVATE o/RawCarrierRegular.cpp o/RawCarrierRegular.h client/RawSurfaceCarrier.cpp)
 
 # 너겟의실제전체484f90예약/난수/기본처리다.
 target_sources(netstorm PRIVATE o/RawNuggetPostPop.cpp o/RawNuggetPostPop.h)

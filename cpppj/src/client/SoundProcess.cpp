@@ -118,7 +118,7 @@ SoundProcessSystem::SoundProcessSystem(o::SquidProcessHost& host,SoundProcessSta
 // 타입 번호는 부착하는 순간의 전역 값을 쓴다. 번호가 프로세스 타입 범위 밖이면 Attach가 거부한다.
 SoundProcess* SoundProcessSystem::Add(o::Sid parent,SoundHandle sound,SoundHandle alternate,std::uint32_t flags) {
     auto process=std::make_unique<SoundProcess>(*this,sound,alternate,flags);
-    return static_cast<SoundProcess*>(host_.Attach(std::move(process),state_.processType,parent,kAttachFlags));
+    return static_cast<SoundProcess*>(host_.Attach(std::move(process),state_.ProcessType(),parent,kAttachFlags));
 }
 
 // 프로세스 host가 쓰는 풀이다.

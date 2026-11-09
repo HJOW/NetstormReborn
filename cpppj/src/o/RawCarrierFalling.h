@@ -21,6 +21,7 @@ class RawCarrierFalling {
 public:
     RawCarrierFalling(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::span<const std::uint16_t> surface,std::span<const std::uint8_t> players,const bool& boss,RawCheckingFlag checking,const std::uint32_t& priestType,const std::int32_t& mapLimit,CarrierFallingHooks hooks); // 같은 풀/188TYPE/65536hash0/Player 기록을 받는다.
     std::uint32_t NeedsEscape(float x,float y) const; // 거의 올림의 signed 좌표 범위 뒤 현재 다리 framecode&20을 반환한다.
+    static std::uint32_t NeedsEscapeIn(const SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::span<const std::uint16_t> surface,float x,float y); // 같은 순수4225b0을 Player/Session 생성 없이 현재 장기 표에서 실행한다.
     float Fall(Sid parent,std::uint32_t count) const; // signed count와 권한에 따라 낙하/사제 해방/삭제를 실행한다.
     void ReleasePriest(Sid parent) const; // 현재 내용물 WORD와 이전 소유자의 사제 위치로 실제 사제를 복원한다.
     bool ValidPoint(float x,float y) const; // 40e800의 엄격한 내부 좌표/단정도 mapLimit 비교다.

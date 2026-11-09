@@ -20,7 +20,7 @@ void Put(std::span<std::uint8_t> raw,std::size_t at,std::uint32_t value) {
     for (std::size_t i=0;i<4;++i) raw[at+i]=static_cast<std::uint8_t>(value>>(8*i));
 }
 // 선택한 외부 효과만 필수다. 조기 반환 경로에 없는 효과를 미리 요구하지 않는다.
-template<class Function> const Function& Need(const Function& function) {
+template<class Function> Function Need(const Function& function) {
     if (!function) throw std::logic_error("Carrier 실제 Regular 하위 몸체 미연결");
     return function;
 }
@@ -31,6 +31,13 @@ RawCarrierRegular::RawCarrierRegular(SidPool& pool,std::span<const RiftTypeRecor
     :pool_(pool),types_(types),details_(details),boss_(boss),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || details.size()!=types.size()) throw std::invalid_argument("Carrier Regular는 같은 PATCH188 TYPE가 필요합니다");
 }
+// Native는 현재188TYPE와 선택 getter만 보유하며 Session의 정의 사본을 참조하지 않는다.
+RawCarrierRegular::RawCarrierRegular(SidPool& pool,std::span<const RiftTypeRecord> types,const bool& boss,CarrierRegularHooks hooks)
+    :pool_(pool),types_(types),boss_(boss),hooks_(std::move(hooks)) {
+    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || !hooks_.defaultFrame || !hooks_.castTime) throw std::invalid_argument("Carrier 현재 TYPE getter 미연결");
+}
+std::int32_t RawCarrierRegular::DefaultFrame(std::uint32_t type) const { if (type>=types_.size()) throw std::out_of_range("Carrier 현재 프레임 TYPE 범위 오류");return hooks_.defaultFrame ? Need(hooks_.defaultFrame)(type):details_[type].defaultFrame; }
+std::int32_t RawCarrierRegular::CastTime(std::uint32_t type) const { if (type>=types_.size()) throw std::out_of_range("Carrier 현재 시전 TYPE 범위 오류");return hooks_.castTime ? Need(hooks_.castTime)(type):details_[type].castTime; }
 bool RawCarrierRegular::Handles(Sid parent) const {
     const auto table=Read(pool_.Slot(parent),0);
     // 가상 표만 비교하며 genus/타입 번호로 파생 범위를 넓히지 않는다.
@@ -41,8 +48,8 @@ float RawCarrierRegular::Handle(Sid parent,std::uint32_t event,std::uint32_t cou
     if (std::bit_cast<std::int32_t>(event)<0x494) {
         if (event==0x493U) {
             const auto form=Need(hooks_.find)(parent,1,0,0);const auto kind=Read(pool_.Slot(form),18,2); // 원본은 빈 결과도 물리0번 슬롯에서 kind를 읽는다.
-            if (kind>=details_.size()) throw std::out_of_range("Carrier 시전 내용물 TYPE 범위 오류");
-            const auto limit=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(details_[kind].castTime)*10U);
+            if (kind>=types_.size()) throw std::out_of_range("Carrier 시전 내용물 TYPE 범위 오류");
+            const auto limit=std::bit_cast<std::int32_t>(std::bit_cast<std::uint32_t>(CastTime(kind))*10U);
             if (limit<std::bit_cast<std::int32_t>(count)) return 0.0F;
         } else if (event==0x491U) {
             const float limit=1.5F/payload;const float elapsed=static_cast<float>(std::bit_cast<std::int32_t>(count));std::uint32_t found{}; // 두 값 모두 실제 float 저장 경계를 거친다.
@@ -57,8 +64,8 @@ float RawCarrierRegular::Handle(Sid parent,std::uint32_t event,std::uint32_t cou
                 ++found;
                 if ((index==0 && (count&1U)) || (index==1 && !(count&1U))) {
                     const auto ghost=Need(hooks_.create)(kind,2);auto raw=pool_.AllocatedBytes(ghost);
-                    if (raw[10]>=details_.size()) throw std::out_of_range("Carrier 새 표시 TYPE 범위 오류");
-                    Put(raw,36,std::bit_cast<std::uint32_t>(details_[raw[10]].defaultFrame));raw[35]=static_cast<std::uint8_t>(pool_.Slot(parent)[35]-1U);raw[40]|=8;
+                    if (raw[10]>=types_.size()) throw std::out_of_range("Carrier 새 표시 TYPE 범위 오류");
+                    Put(raw,36,std::bit_cast<std::uint32_t>(DefaultFrame(raw[10])));raw[35]=static_cast<std::uint8_t>(pool_.Slot(parent)[35]-1U);raw[40]|=8;
                     Need(hooks_.setWord)(ghost,Read(pool_.Slot(form),12,2));Need(hooks_.setOwner)(ghost,pool_.Slot(parent)[34]);
                     const auto current=pool_.Slot(parent);const float x=std::bit_cast<float>(Read(current,14));const float y=std::bit_cast<float>(Read(current,18))-(index==0 ? 0.8F : 1.2F);
                     Need(hooks_.pop)(ghost,Clamp(x),Clamp(y),0);

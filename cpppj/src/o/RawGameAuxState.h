@@ -185,6 +185,8 @@ public:
     const std::uint32_t& RainWalkerType() const { return rainWalkerType_; } // 현재 번호를 최초156 사본으로 덮지 않는다.
     std::uint32_t& EmptyCarrierType() { return emptyCarrierType_; } //00541344의 추가 빈 TYPE를 이동/전달/드롭이 공유한다.
     const std::uint32_t& EmptyCarrierType() const { return emptyCarrierType_; } // 숨은 미등록187 분기도 같은 현재 번호를 읽는다.
+    std::uint32_t& SoundProcessType() { return soundProcessType_; } //0054112c의 현재 DWORD를 소리/내용물 타이머가 함께 읽는다.
+    const std::uint32_t& SoundProcessType() const { return soundProcessType_; } //일반 World 대여/반납으로47을 다시 쓰지 않는다.
     std::uint32_t& PriestType() { return priestType_; } //005412d0/CD0051cbbc의 같은 현재 사제 TYPE를 HP/이동/회복이 공유한다.
     const std::uint32_t& PriestType() const { return priestType_; } // Session 교체/일반 월드 준비로158을 다시 쓰지 않는다.
     std::uint32_t& PriestForcefieldType() { return priestForcefieldType_; } //005412f4의 현재 보호막 역할을 실제 조회/생성에 공유한다.
@@ -300,6 +302,7 @@ private:
     std::uint32_t fenceMarkerType_{90},fenceShieldType_{170}; //내부 표식과 화면 포스 필드의 별도 원문 역할이며 월드 준비로 초기화하지 않는다.
     std::uint32_t runeType_{166}; // 보호 PE005412f0의 초기 DWORD이며 ResetForGeneralWorld는 현재 번호를 유지한다.
     FormPacketHeader contentIncomeHeader_{0x5a,1,5}; // 보호 PE의 실제 초기4BYTE이며 작성하지 않는 다섯째 바이트와 구별한다.
+    std::uint32_t soundProcessType_{47}; //0054112c의 PE 초기값47을 Client 수명에 한 번 소유한다.
     std::uint32_t nuggetType_{154}; //005412c0의 최초154를 한 번만 소유하고 Session 재대여로 덮어쓰지 않는다.
     std::uint32_t verifySid_{}; //0054d4d8의 최초 BSS0을 Session/World 교체에서 초기화하지 않는다.
     std::uint32_t previousVerifySid_{}; //0054d4dc의 최초 BSS0이며 현재 검증 SID의0 저장과 별도로 유지한다.

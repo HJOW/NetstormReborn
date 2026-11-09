@@ -27,12 +27,15 @@ RawCarrierFalling::RawCarrierFalling(SidPool& pool,std::span<const RiftTypeRecor
     :pool_(pool),types_(types),frames_(frames),surface_(surface),players_(players),boss_(boss),checking_(checking),priestType_(priestType),mapLimit_(mapLimit),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || frames.size()!=188 || surface.size()!=65536 || players.size()%0xb4) throw std::invalid_argument("캐리어 낙하 PATCH 자료 크기 오류");
 }
-std::uint32_t RawCarrierFalling::NeedsEscape(float x,float y) const {
+std::uint32_t RawCarrierFalling::NeedsEscape(float x,float y) const { return NeedsEscapeIn(pool_,types_,frames_,surface_,x,y); }
+// 원문과 같은 좌표/현재 표면/TYPE/프레임 순서이며 낙하의 Player 기록을 요구하지 않는다.
+std::uint32_t RawCarrierFalling::NeedsEscapeIn(const SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const RiftTypeFrames> frames,std::span<const std::uint16_t> surface,float x,float y) {
+    if (types.size()!=188 || frames.size()!=188 || surface.size()!=65536) throw std::invalid_argument("Carrier 현재 위험 칸 표 범위 오류");
     const auto ix=Cell(x),iy=Cell(y);if (ix<0 || iy<0 || ix>=256 || iy>=256) return 0;
-    const Sid sid{surface_[static_cast<std::size_t>(iy*256+ix)]};if (!sid.value) return 0;
-    const auto raw=pool_.Slot(sid);const auto type=raw[10];if (type>=types_.size()) throw std::out_of_range("캐리어 다리 TYPE 오류");
-    if (!(types_[type].flags2&4U)) return 0;
-    const auto frame=Read(raw,36);const auto codes=frames_[type].Codes();if (frame>=codes.size()) throw std::out_of_range("캐리어 다리 프레임 코드 범위 오류");
+    const Sid sid{surface[static_cast<std::size_t>(iy*256+ix)]};if (!sid.value) return 0;
+    const auto raw=pool.Slot(sid);const auto type=raw[10];if (type>=types.size()) throw std::out_of_range("캐리어 다리 TYPE 오류");
+    if (!(types[type].flags2&4U)) return 0;
+    const auto frame=Read(raw,36);const auto codes=frames[type].Codes();if (frame>=codes.size()) throw std::out_of_range("캐리어 다리 프레임 코드 범위 오류");
     return codes[frame].flags&0x20U;
 }
 bool RawCarrierFalling::ValidPoint(float x,float y) const {

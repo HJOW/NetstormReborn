@@ -26,6 +26,6 @@ o::RawBalloonBody& RawSurfaceStorage::BalloonBody() {
 float RawSurfaceStorage::BalloonRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
     return BalloonBody().CloudRegular(sid,event,count,payload,
         [this](auto parent,auto delta,auto flags) { o::RawFrameAdvance advance(pool,frames,Frame());static_cast<void>(advance.Advance(parent,delta,flags)); },
-        [this](auto parent,auto code,auto times,auto value) { const auto regular=resourceDevices_.carrierRegular;if (!regular) throw std::logic_error("장기 벌룬 현재 Carrier Regular 미연결");return regular(parent,code,times,value); });
+        [this](auto parent,auto code,auto times,auto value) { return CarrierRegular().Handle(parent,code,times,value); });
 }
 }

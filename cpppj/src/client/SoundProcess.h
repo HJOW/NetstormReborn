@@ -32,6 +32,8 @@ struct SoundProcessState {
     std::uint32_t frame{};
     // 부착할 때 쓰는 프로세스 타입 번호다(DAT_0054112c / CD 0051ca1c).
     std::uint32_t processType{kSoundProcessType};
+    const std::uint32_t* sharedProcessType{}; // Native는 GameAux의 같은0054112c를 빌리고 독립 입력은 기존 값을 쓴다.
+    const std::uint32_t& ProcessType() const { return sharedProcessType ? *sharedProcessType:processType; } //실제 부착 시점의 현재 역할을 조회한다.
     // 패치판 debug 전역(DAT_005e4794)이다. 켜져 있으면 flags 조합을 검사해 assert를 보고한다. CD판은 읽지 않는다.
     o::RawCheckingFlag debug{};
     // 타입마다 마지막으로 소리를 낸 프레임 번호다. 같은 프레임에 같은 타입의 소리가 여러 번 시작되지 않게 막는다.

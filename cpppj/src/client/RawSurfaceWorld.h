@@ -49,6 +49,8 @@
 #include "o/SquidFactory.h"
 #include "o/SquidFormDispatch.h"
 #include "o/DependFormHost.h" // 장기 감시 본체와 현재 World 알림 경계를 명시적으로 선언한다.
+#include "o/RawCarrierRegular.h" // 현재 내용물/기한 본문을 장기 보유한다.
+#include "o/RawContentPreviewProcess.h" // 같은 실제 Host 타이머보다 로직이 오래 살아야 한다.
 #include "o/RawBombRegular.h" // 같은 공통 주문 Regular와 실제 현재 TYPE/권한을 장기 공유한다.
 #include "o/ContentFormLifetime.h" // 실제 정렬/삭제 본문과 현재 경제 상태를 Client 수명으로 공유한다.
 #include "o/GumpFormHost.h" // 같은 장기 UI Form과 실제 현재 등록표 알림을 연결한다.
@@ -90,6 +92,14 @@ struct RawSurfaceDependBindings { // 현재 World의 실제 감시 알림만 짧
 struct RawSurfaceGumpBindings { // 실제 UI 등록표 또는 현재 World의 가상 UI 통지 소비자를 그 owner 수명으로 빌린다.
     o::GumpFormNotice notice; // 전체 등록ID와 현재 부모 WORD를 기존 실제 UI 가상+4에 전달한다.
     std::function<std::shared_ptr<void>()> pin; // 현재 UI 저장소/전체 World를 선택 호출의 정상·예외 복귀까지 보유한다.
+};
+struct RawSurfaceCarrierBindings { // 선택된 큰 이동/낙하와 전용 owner만 실제 현재 Runtime에서 빌린다.
+    std::function<std::uint32_t(std::uint32_t)> movementType; // 기존488fe0의 현재 이동 프로세스 선택이다.
+    std::function<bool(o::Sid,std::uint32_t)> hasPath; // 같은 실제 풀의4b1a90 조회다.
+    std::function<void(o::Sid,float,std::uint32_t)> escape; // 기존429010의 전체 회피 본문이다.
+    std::function<float(o::Sid,std::uint32_t)> falling; // 기존426ef0의 전체 낙하/해방 본문이다.
+    std::function<void(o::Sid,std::uint32_t)> setOwner; // 사제/메타의 전용 가상74는 기존 전체 소유권 분배를 쓴다.
+    std::function<std::shared_ptr<void>()> pin; // 선택 호출의 정상/예외 반환까지 실제 전체 Runtime을 보유한다.
 };
 struct RawSurfaceBombBindings { // 실제 현재 큰 주문 후단만 weak로 빌리고 정기 본문/메모리는 Client가 보유한다.
     std::function<void(o::Sid,std::uint32_t,std::uint32_t)> notice; // 실제45a6c0의 시전 플레어와 같은 현재 Session 본문이다.
@@ -183,6 +193,7 @@ private:
     RawSurfaceRewardDevices rewardDevices_; // 같은 실제 SP/모드 owner를 처리기보다 오래 보관한다.
     RawSurfaceResourceDevices resourceDevices_; //실제Client장치만보관하며짧은Session주소를저장하지않는다.
     RawSurfaceContentDevices contentDevices_; // 같은 Client 전역 alias와 현재 장치를 본체보다 오래 유지한다.
+    std::weak_ptr<const RawSurfaceCarrierBindings> carrierRuntime_; // 큰 선택 효과만 약하게 빌려 죽은 Session을 역소유하지 않는다.
     std::weak_ptr<const RawSurfaceBombBindings> bombRuntime_; // 큰 주문 후단만 현재 World 수명으로 빌려 오래된 Session을 강하게 보유하지 않는다.
     std::weak_ptr<const RawSurfaceContentBindings> contentRuntime_; // 파생 Session 효과만 빌려 반납 뒤 죽은 콜백을 보유하지 않는다.
     RawSurfaceProcessDevices processDevices_; //실제Native선택/정리장치만보관하며World/Session을캡처하지않는다.
@@ -296,6 +307,9 @@ public:
     std::span<std::int32_t> BombCastTimes(); // TYPE+1b8의 같은 장기188DWORD를 최초 로딩 뒤 공유한다.
     std::span<std::int32_t> BombSpawns(); //TYPE+1c8의 같은 장기188DWORD를 소환/후속 조회가 직접 공유한다.
     o::RawBombRegular& BombRegular(); // 현재 프레임/시전 시간과 실제 큰 후단을 사용하는 같은 정기 본문이다.
+    o::RawCarrierRegular& CarrierRegular(); // 현재 TYPE/권한/내용물과 같은 Host를 연결하는 유일한 Native 본문이다.
+    bool HasCarrierRegular(o::Sid sid) const; // 실제42a750의 직접6VT만 분배한다.
+    void BindCarrierRuntime(const std::shared_ptr<const RawSurfaceCarrierBindings>& runtime); // 현재 큰 하위의 실제 대여만 연결한다.
     void BindBombRuntime(const std::shared_ptr<const RawSurfaceBombBindings>& runtime); // 현재 후단 대여만 연결하고 본문/상태를 초기화하지 않는다.
     bool HasBombRegular(o::Sid sid) const; // 실제 현재 VT가 장기 연결한 연결한7VT인지 직접 확인한다.
     std::size_t BombSearchReservations() const; // 실제 확보한400BYTE 버퍼 개수를 진단하며 별도 성공 카운터를 만들지 않는다.
@@ -480,6 +494,9 @@ private:
     bool bombSpawnsLoaded_{}; //최초 자산 속성만 한 번 로드하고 이후 현재값을 보존한다.
     o::BombRegularState bombState_{.effect={0x5f,1,0}}; // 보호 PE 헤더5f01과00544c6c의 최초 BSS WORD0을 유지한다.
     std::vector<std::unique_ptr<std::uint32_t[]>> bombSearchMemory_; // 실제 new400의 중첩 호출별 확보/해제 소유권을 LIFO로 보유한다.
+    std::unique_ptr<o::RawContentPreviewProcess> contentPreviewLogic_; // 같은 Host의 모든 타이머보다 오래 살며 Session을 참조하지 않는다.
+    std::unique_ptr<o::ContentPreviewProcess> pendingContentPreview_; // 원문new18 성공부터 부착까지의 단일 확보 소유권이다.
+    std::unique_ptr<o::RawCarrierRegular> carrierRegular_; // 현재 필드 getter와 실제 Client 장치를 빌린다.
     std::unique_ptr<o::RawBombRegular> bombRegular_; // 상태/TYPE/프레임/실제 장치보다 먼저 반납하는 같은 정기 본문이다.
     std::unique_ptr<o::SquidFormDispatch> processForms_; //장기Host와같은Pool의실제ProcessForm경로이며UI/내용물가짜처리기는등록하지않는다.
     std::unique_ptr<o::RawSquidTransmission> transmission_; //같은Pool/현재TYPE/GameAux보다먼저반납하는공통실제송신기다.
@@ -580,6 +597,7 @@ struct RawWorldRuntimeHooks {
     std::function<void(std::int32_t,std::span<const std::uint8_t>)> squidSend; // 같은 현재 대상의 연결 객체로만 패킷을 보낸다.
     o::DependFormNotice dependencyNotice; // watcher의 실제 가상+34다. 누락 시 기존 ProcessForm 통지를 사용한다.
     std::function<void(const o::BridgeLifecycleEvent&)> bridgeEffect; // 실제 세션의 다리 파편/위치 소리 소비자이며 runtime 설치 전에 필수로 공급한다.
+    RawSurfaceCarrierBindings carrierRegular; // 현재 큰 Carrier 하위만 실제 World pin과 함께 공개한다.
     RawSurfaceBombBindings bombRegular; // 현재 큰 시전/검색/수신만 World 수명으로 제공하며 실제 pin은 같은 World가 연결한다.
     o::ContentFormNotice contentNotice; // 현재 Session의 파생 부모 통지이며 실제 빈 부모는 장기 분배기가 직접 처리한다.
     o::ContentPriestNotice capturedContent; // 기존 전체 포획 안내 본문을 선택된 현재 Runtime으로 전달한다.

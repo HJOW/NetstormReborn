@@ -22,6 +22,7 @@ struct CarrierRegularHooks {
     std::function<std::uint32_t(std::uint32_t)> movementType; // 488fe0(type,0,0)의 현재 프로세스 타입이다.
     std::function<bool(Sid,std::uint32_t)> hasPath; // 4b1a90의 현재 부착 프로세스 존재다.
     std::function<void(Sid,float,std::uint32_t)> escape; // 429010(parent,1.0,ffffffff)의 실제 회피다.
+    std::function<std::int32_t(std::uint32_t)> defaultFrame,castTime; // Native는 선택된 현재 TYPE+118/1b8만 직접 읽고 별도 사본을 만들지 않는다.
     RegularHandler damageable; // 44b900의 실제 기본 사건 처리기다.
     std::function<float(Sid,std::uint32_t)> falling; // 426ef0의 실제5105 처리와 반환이다.
 };
@@ -29,11 +30,14 @@ struct CarrierRegularHooks {
 class RawCarrierRegular {
 public:
     RawCarrierRegular(SidPool& pool,std::span<const RiftTypeRecord> types,std::span<const CarrierRegularType> details,const bool& boss,CarrierRegularHooks hooks); // 같은188TYPE/권한/풀의 장기 참조를 받는다.
+    RawCarrierRegular(SidPool& pool,std::span<const RiftTypeRecord> types,const bool& boss,CarrierRegularHooks hooks); // Native 현재 필드 getter가 두 TYPE 확장 필드를 제공한다.
     bool Handles(Sid parent) const; // 실제+5c가42a750인 여섯 VT만 직접 받는다.
     float Handle(Sid parent,std::uint32_t event,std::uint32_t count,float payload) const; // 사제 등 파생 부모가 실제 기본 호출로도 사용할 수 있다.
     RegularHandler Handler(RegularHandler fallback={}) const; // 여섯 직접 VT 이외의 파생은 caller 분배를 보존한다.
     const SidPool& Pool() const; // 같은 Session/Host 연결을 확인한다.
 private:
+    std::int32_t DefaultFrame(std::uint32_t type) const; // 선택한 ghost의 현재 프레임만 조회한다.
+    std::int32_t CastTime(std::uint32_t type) const; // 선택한 내용물의 현재 기한만 조회한다.
     SidPool& pool_; // Carrier/내용물/새 미리보기의 동일 raw 풀이다.
     std::span<const RiftTypeRecord> types_; // 현재 내용물 genus를 읽는188TYPE다.
     std::span<const CarrierRegularType> details_; // 같은 TYPE 번호의 기본 프레임/casttime이다.

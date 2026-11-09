@@ -3792,7 +3792,7 @@ target_sources(netstorm_construction_owner_tests PRIVATE LightningScreenTests.cp
 #같은 직접 피해 주문 본문의 기존 독립 PE1420입력만 비MP 집중 대상에서 실행한다.
 target_sources(netstorm_construction_owner_tests PRIVATE BombStrikeTests.cpp)
 #일반 Sprite의 원본 표시/정기와 현재 Form 갱신만 비MP로 검증한다.
-target_sources(netstorm_construction_owner_tests PRIVATE SpriteRefreshTests.cpp)
+target_sources(netstorm_construction_owner_tests PRIVATE SpriteRefreshTests.cpp CarrierRegularTests.cpp ContentPreviewProcessTests.cpp) # 기존 Carrier837/타이머957 원문과 실제 Host 수명을 선택 검증한다.
 target_sources(netstorm_construction_owner_tests PRIVATE BalloonPathTests.cpp) # 기존 그림자489입력/Robust 사례만 선택 실행하며 공중3종·MP 실행은 추가하지 않는다.
 target_sources(netstorm_construction_owner_tests PRIVATE DudeBehaviorTests.cpp) # 기존450920을 포함한 독립 원문410입력을 같은 실제 본체와 대조한다.
 target_sources(netstorm_construction_owner_tests PRIVATE PriestPreDestroyTests.cpp PriestForcefieldTests.cpp) # 사제 삭제/조회 원문 fixture와 독립 계약만 선택하며 포획/희생 플레이·MP 검사는 실행하지 않는다.
