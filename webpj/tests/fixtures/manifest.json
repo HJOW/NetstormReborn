@@ -14835,9 +14835,41 @@
       "bytes": 40301,
       "lines": 104,
       "fixtureCommit": "e5efcf6f",
-      "webCommit": "worktree",
+      "webCommit": "4c440536",
       "cpppjBasis": {
         "cpppj/src/o/RawObjectTrace.cpp": "e5efcf6f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E237",
+      "id": "tutorial-one",
+      "path": "cpppj/tests/fixtures/tutorial-one-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Totalmade 두 판본 몸체(Total 연산 여덟 종 × 입력의 반환값·진단·네 표 1024 BYTE 전체)와 Early1 PATCH 실제 switch(Stage: 단계·이벤트·제작 수·Graph 목록·SP 비트·전투 표시에서 반환값과 호출 순서) (10.78 Total 52행·Stage 266행, CD Total 52행)",
+      "consumers": [
+        "webpj/tests/tutorial-one.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-total-made.js",
+        "webpj/www/core/raw-tutorial-one.js"
+      ],
+      "doc": "docs/webpj-tutorial-one-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTotalMade.cpp",
+        "cpppj/src/o/RawTutorialOne.cpp"
+      ],
+      "scope": "10.78 Total 52행·Stage 266행 전부(CD 10.72 Total 52행은 웹 범위 밖)",
+      "text": true,
+      "sha256": "d94e94513402c9421861b686bff8aa2b1f3033f1f2e61b7a6c13e9330d96c27c",
+      "bytes": 866222,
+      "lines": 371,
+      "fixtureCommit": "c3a294ed",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTotalMade.cpp": "0365fa99",
+        "cpppj/src/o/RawTutorialOne.cpp": "c3a294ed"
       }
     }
   ]
