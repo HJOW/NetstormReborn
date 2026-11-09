@@ -14747,7 +14747,7 @@
       "bytes": 231693,
       "lines": 374,
       "fixtureCommit": "a5c411c3",
-      "webCommit": "worktree",
+      "webCommit": "948e16b1",
       "cpppjBasis": {
         "cpppj/src/o/RawObjectTraceMain.cpp": "a5c411c3"
       }
@@ -14776,7 +14776,7 @@
       "bytes": 3162,
       "lines": 88,
       "fixtureCommit": "a5c411c3",
-      "webCommit": "worktree",
+      "webCommit": "948e16b1",
       "cpppjBasis": {
         "cpppj/src/o/RawObjectTraceMain.cpp": "a5c411c3"
       }
@@ -14805,9 +14805,39 @@
       "bytes": 37878,
       "lines": 888,
       "fixtureCommit": "a5c411c3",
-      "webCommit": "worktree",
+      "webCommit": "948e16b1",
       "cpppjBasis": {
         "cpppj/src/o/RawObjectTraceMain.cpp": "a5c411c3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E236",
+      "id": "object-trace",
+      "path": "cpppj/tests/fixtures/object-trace-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 객체 trace 재귀(0044dab0). 입력(시작 번호·논리 끝 번호·깊이·들여쓰기·checking·메타맵·boss·로그 직후 변경 번호·노드 목록 번호,TYPE,상태,head,next)에서 가상 호출/들여쓰기/로그/dead 부모 assert 의 순서와 인자·최종 깊이/들여쓰기 (103행)",
+      "consumers": [
+        "webpj/tests/object-trace.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-trace.js",
+        "webpj/www/core/raw-object-trace-main.js"
+      ],
+      "doc": "docs/webpj-object-trace-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawObjectTrace.cpp"
+      ],
+      "scope": "10.78 103행 전부",
+      "text": true,
+      "sha256": "8a6ce033d1662ce0c528c0b7eaa40bdbdbf83749dcc60def530151f9ab7abc7f",
+      "bytes": 40301,
+      "lines": 104,
+      "fixtureCommit": "e5efcf6f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawObjectTrace.cpp": "e5efcf6f"
       }
     }
   ]
