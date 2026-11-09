@@ -15261,7 +15261,7 @@
       "bytes": null,
       "lines": null,
       "fixtureCommit": "5bd2e807",
-      "webCommit": "worktree",
+      "webCommit": "59736d10",
       "cpppjBasis": {
         "cpppj/src/o/EnergyProviderVtables.inc": "5bd2e807"
       }
@@ -15291,9 +15291,40 @@
       "bytes": null,
       "lines": null,
       "fixtureCommit": "c3cfc98f",
-      "webCommit": "worktree",
+      "webCommit": "59736d10",
       "cpppjBasis": {
         "cpppj/src/o/CampaignDamageVtables.inc": "c3cfc98f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E251",
+      "id": "damageablepredestroy",
+      "path": "cpppj/tests/fixtures/damageablepredestroy-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Damageable 소리 접두·contained 순회·Carrier 전체 반환(효과 순서·현재 전역 세 값·다섯 입력 슬롯 전체 바이트)",
+      "consumers": [
+        "webpj/tests/damageable-pre-destroy.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-damageable-pre-destroy.js",
+        "webpj/www/core/raw-carrier-pre-destroy.js",
+        "webpj/www/core/raw-contained-finder.js"
+      ],
+      "doc": "docs/webpj-damageable-pre-destroy-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDamageablePreDestroy.cpp"
+      ],
+      "scope": "4,896행 중 10.78(originals) 1,632행 전부를 typed·Native 두 경로로 사용(originalCD·original1037 3,264행은 범위 밖)",
+      "text": true,
+      "sha256": "a0dd75327aa55f130acabb28d848a86c8f4beee563aadcfa1d2784442d50db8c",
+      "bytes": 2720071,
+      "lines": 4898,
+      "fixtureCommit": "eabb45d0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDamageablePreDestroy.cpp": "241b013e"
       }
     }
   ]
