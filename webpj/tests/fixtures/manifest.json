@@ -14505,7 +14505,7 @@
       "bytes": 3422079,
       "lines": 296,
       "fixtureCommit": "d207940c",
-      "webCommit": "worktree",
+      "webCommit": "291708ea",
       "cpppjBasis": {
         "cpppj/src/o/RawStateWorldCleanup.cpp": "a18bf611"
       }
@@ -14534,9 +14534,38 @@
       "bytes": 1967,
       "lines": 17,
       "fixtureCommit": "a18bf611",
-      "webCommit": "worktree",
+      "webCommit": "291708ea",
       "cpppjBasis": {
         "cpppj/src/o/RawStateWorldCleanup.cpp": "a18bf611"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E229",
+      "id": "chat-manager-prefix",
+      "path": "cpppj/tests/fixtures/chat-manager-prefix-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Chat manager 생성·초기화·랭크 prefix setter/formatter/wrapper. 입력 13칸(진입점·seed·현재 manager·활성·랭크·subscriber·할당 실패 프로필·아이콘 개수·최대 랭크·반복·Config 길이·변이)에서 상태·외부 출력 256 BYTE·두 manager 0xa98 BYTE 전체·두 내부 0x80 BYTE 전체·하위 호출 trace (644행: 정상 524·fault 94·중단 26)",
+      "consumers": [
+        "webpj/tests/chat-manager-prefix.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-chat-manager-prefix.js"
+      ],
+      "doc": "docs/webpj-chat-manager-prefix-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawChatManagerPrefix.cpp"
+      ],
+      "scope": "10.78 644행 전부",
+      "text": true,
+      "sha256": "5999267e1ed10d5b5a2ea0bdd73fa952ad22dc28d21daf733d56b6bb6e222033",
+      "bytes": 7733012,
+      "lines": 645,
+      "fixtureCommit": "2ede4027",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawChatManagerPrefix.cpp": "2ede4027"
       }
     }
   ]
