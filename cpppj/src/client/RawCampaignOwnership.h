@@ -9,6 +9,7 @@
 #include <memory>
 
 namespace netstorm::client {
+class ClientConstructionGlobals; //Native의같은장기섬/투표/신전본체를빌린다.
 // 다른 파생 Owner와 생산/UI 진단의 실제 소비자는 상위 캠페인이 공급한다.
 struct CampaignOwnershipEffects {
     std::function<void(o::Sid,std::uint32_t)> otherOwner; // 사제/일반/표면의 실제 가상 소유자 분배기다.
@@ -25,6 +26,7 @@ public:
         std::span<const std::uint32_t> themes,o::GameRandom& random,o::RegionPaintState& paint,
         o::RegionOwnershipState& ownership,std::uint32_t& vortexRevision,std::uint32_t terrainType,
         std::uint32_t edgeFarmType,CampaignOwnershipEffects effects);
+    RawCampaignOwnership(std::shared_ptr<ClientConstructionGlobals> owner,std::function<void(o::Sid,std::uint32_t)> otherOwner); //Native는기존장기본체를그대로빌리고사제분배만현재짧은Session에남긴다.
     // 이 모듈을 참조하는 AssetPostPop/Regular와 프로세스는 상위 월드가 먼저 해제한다.
     ~RawCampaignOwnership();
     RawCampaignOwnership(const RawCampaignOwnership&)=delete; // 훅이 빌린 내부 모듈 주소를 유지한다.
@@ -40,5 +42,7 @@ public:
 private:
     struct Impl; // 같은 Core와 실제 지면/신전 모듈을 고정 주소에 소유한다.
     std::unique_ptr<Impl> impl_; // 상위 월드의 저장소가 이 연결보다 오래 살아야 한다.
+    std::shared_ptr<ClientConstructionGlobals> native_; //실제Client장기본체를보유하며역방향Session캡처는하지않는다.
+    std::function<void(o::Sid,std::uint32_t)> otherOwner_; //사제의현재실제파생분배는이짧은wrapper수명에만보관한다.
 };
 }

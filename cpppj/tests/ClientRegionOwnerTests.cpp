@@ -1,0 +1,215 @@
+// 같은 Client의 섬/신전/영역을 World·Session·MP·패킷 실행 없이 조립해 실제 수명을 확인한다.
+#include "DudeSpawnSupport.h"
+#include "client/ClientConstructionGlobals.h"
+#include "client/ClientGameplayGlobals.h"
+#include "client/ClientKencloudGlobals.h"
+#include "client/ClientPlayerRecords.h"
+#include "client/ClientRandomGlobals.h"
+#include "client/ClientSpGlobals.h"
+#include "client/RawCampaignOwnership.h"
+#include "o/RawPlayerParticipation.h" //공개Player초기화의동맹mask자식도기존실제본문을사용한다.
+#include "o/RawAiWallet.h" //삭제환불의실제owner0/NULL brain지갑관문을그대로사용한다.
+#include "o/RawAiObjectNotice.h" //실제Player의NULL brain은기존전체통지본문의자연반환으로처리한다.
+#include <bit>
+#include <optional>
+#include <iostream> //최초실패의실제삭제깊이/현재필드를보존한다.
+
+namespace { //명시입력/장치관찰은게임본문이나원본기대값을대체하지않는다.
+using namespace netstorm::client;using namespace netstorm::o; //제품의실제동일부품을사용한다.
+// 선택하지 않은 네트워크/효과를 성공 대용으로 처리하지 않는다.
+template<class Result,class... Args> std::function<Result(Args...)> RegionForbidden(std::string_view label="영역 공통 검사에서 선택 금지된 외부 효과") {
+    return [label](Args...)->Result { throw std::logic_error(std::string(label)); };
+}
+// 실제 원문 폭만 써 슬롯/섬/Player의 이웃 바이트를 보존한다.
+void RegionPut(std::span<std::uint8_t> bytes,std::size_t offset,std::uint32_t value) {
+    for (std::size_t index=0;index<4;++index) bytes[offset+index]=static_cast<std::uint8_t>(value>>(index*8)); //정렬되지않은지정DWORD만기록한다.
+}
+// 실제 현재 필드의 DWORD 비트만 읽는다.
+std::uint32_t RegionRead(std::span<const std::uint8_t> bytes,std::size_t offset) {
+    std::uint32_t result{};for (std::size_t index=0;index<4;++index) result|=std::uint32_t(bytes[offset+index])<<(index*8);return result; //이웃필드를섞지않고little endian으로조합한다.
+}
+struct RegionScene { //게임실행기없이실제장기owner/보호자산/물리와선택장치를소유한다.
+    std::shared_ptr<ClientGameplayGlobals> gameplay{std::make_shared<ClientGameplayGlobals>()}; //같은현재권한/전역이다.
+    std::shared_ptr<RawSurfaceStorage> storage{MakeRawSurfaceStorage(netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game,gameplay->Authority(),gameplay->GameAux())}; //실제원본자산의유일Pool/Hash다.
+    std::shared_ptr<ClientRandomGlobals> random{std::make_shared<ClientRandomGlobals>()}; //같은현재게임난수다.
+    std::shared_ptr<ClientSpGlobals> sp{std::make_shared<ClientSpGlobals>(random,[] { return 123U; })}; //초기화하지않은실제분산SP다.
+    std::shared_ptr<ClientPlayerRecords> players{std::make_shared<ClientPlayerRecords>()}; //처음base0인실제Player할당owner다.
+    std::shared_ptr<ClientKencloudGlobals> kencloud{std::make_shared<ClientKencloudGlobals>()}; //같은실제redrawDWORD다.
+    std::shared_ptr<ClientConstructionGlobals> owner{std::make_shared<ClientConstructionGlobals>()}; //같은본문/상태를보유할장기owner다.
+    std::optional<std::string> detail; //원문진단상세의실제수명이다.
+    std::uint32_t refreshes{},traces{},clears{},themes{1},themeReads{}; //외부선택장치의실제호출을관찰한다.
+    std::function<void()> onRefresh; //실제UI선택뒤base/장치변경을관찰한다.
+    std::unique_ptr<RawAiWallet> wallet; //기존실제현재Player지갑본문이며비영AI선택은금지한다.
+    RawAiBrainMemory aiMemory{0x26000000U,RegionForbidden<void,std::span<std::uint8_t>>("영역 검사 비영 AI 할당 금지")}; //빈실제메모리owner이며가짜brain을할당하지않는다.
+    double now{};std::uint32_t outpostType{126}; //NULL brain통지가읽지않는현재시각/원문TYPE입력이다.
+    std::uint32_t spRefreshes{},walletCalls{},aiNotices{},lostSounds{}; //실제공통환불/통지/표시장치의선택수를관찰한다.
+    // 최초 결합은 원문 게임/Player 초기화·패킷·월드 대여를 실행하지 않는다.
+    RegionScene() {
+        storage->BindTransmissionDevices({RegionForbidden<void,std::span<std::uint8_t>>(),RegionForbidden<bool,std::int32_t>(),RegionForbidden<void,std::int32_t,std::span<std::uint8_t>>()});
+        storage->BindSerializationGlobals(std::make_shared<FortSerializationGlobals>());
+        storage->BindDisplayDiagnostics(detail,[](auto,auto,auto) { throw std::logic_error("유효 영역 입력에서 원문 단언 발생"); });
+        storage->BindGraphTrace([this](auto,std::string_view) { ++traces; });storage->EnablePatchDestroyDiagnostics();
+        RawSurfaceDisplayBindings display;display.view=[] { return SquidDisplayView{0,0,65536,{0,0,1024,768}}; };display.suppressed=[] { return true; };display.invalidate=RegionForbidden<void,SquidDisplayRect,std::uint32_t>();storage->BindDisplayDevices(std::move(display));
+        wallet=std::make_unique<RawAiWallet>(RegionForbidden<AiWalletMemoryAccess>("영역 검사 비영 AI 지갑 대여 금지"),[this]()->std::span<const std::uint8_t> { return players->Records(); },AiWalletReads{[this] { return storage->ownerMode.challenge; },RegionForbidden<bool>()});
+        storage->BindRewardDevices({std::shared_ptr<ScrambledSpStore>(sp,&sp->Store()),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->world.editor),[this] { ++spRefreshes; },[this](auto player,auto amount) { ++walletCalls;wallet->Credit(player,amount); }});
+        storage->BindPostPopDevices({[this](auto player,auto sid,auto added) { ++aiNotices;if (storage->ownerMode.challenge || std::bit_cast<std::int32_t>(player)<1) return;RawAiObjectNotice body(aiMemory,storage->pool,storage->types,players->Records(),now,outpostType,[this] { return storage->ownerMode.challenge; },{});body.Notice(player,sid,added); },[current=gameplay] { return current->player.battleOwner; },RegionForbidden<void>("영역 검사 금지 PostPop UI")});
+        storage->BindDeletionDevices({[](auto,auto,auto) {},[this](Sid sid) { ++lostSounds;CHECK(storage->pool.Slot(sid)[34]==gameplay->player.battleOwner); }});storage->BindProcessDevices({[this] { return gameplay->selection.selected; },[this] { ++clears;gameplay->selection.selected=0; }});
+        storage->BindDamageableDevices({std::shared_ptr<ContainedFinderState>(gameplay,&gameplay->finder),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->FortKeepGenus()),RegionForbidden<void,Sid>("영역 검사 금지 붕괴"),RegionForbidden<void,Sid>("영역 검사 금지 폭발"),RegionForbidden<void,const DamageableSoundEvent&>("영역 검사 금지 피해 소리"),RegionForbidden<void,float,float,std::uint32_t,std::uint16_t>("영역 검사 금지 해방 사제 생성"),RegionForbidden<void,Sid,std::int32_t,bool>("영역 검사 금지 Dude 드롭"),RegionForbidden<void,float,float,std::uint32_t,std::uint32_t>("영역 검사 금지 섬 드롭")});
+        storage->links.bridgeType=82;storage->links.islandType=94;storage->links.stalagType=95;storage->links.connectorType=155;storage->links.noIslandType=157;
+        owner->Bind(storage,gameplay,{});owner->BindBacking(sp,players,gameplay->BattleOptionsOwner());owner->BindRandom(random);owner->BindRegionContext(kencloud);owner->BindDevices(Devices());
+        storage->BindRegionLifecycle(
+            [weak=std::weak_ptr<ClientConstructionGlobals>(owner)](auto sid,auto player) { const auto current=weak.lock();if (!current) throw std::logic_error("검사 실제 영역 owner 반납 뒤 선택");current->VortexOwner().Set(sid,player); },
+            [weak=std::weak_ptr<ClientConstructionGlobals>(owner)](auto sid,auto flags) { const auto current=weak.lock();if (!current) throw std::logic_error("검사 실제 영역 owner 반납 뒤 선택");current->VortexPre().PreDestroy(sid,flags); },
+            [weak=std::weak_ptr<ClientConstructionGlobals>(owner)](auto x,auto y) { const auto current=weak.lock();if (!current) throw std::logic_error("검사 실제 영역 owner 반납 뒤 선택");current->Regions().UpdateNative(x,y); });
+    }
+    ~RegionScene() { owner.reset();storage.reset(); } //관찰기가살아있는동안실제Host와장치를먼저반납한다.
+    // 필수 장치는 선택 시 실패하게 하고 영역 UI/설정의 작은 외부 경계만 관찰한다.
+    ClientConstructionDevices Devices() {
+        ClientConstructionDevices devices{RegionForbidden<std::int32_t,std::string_view,std::int32_t>(),RegionForbidden<double>(),RegionForbidden<void>(),RegionForbidden<void>(),RegionForbidden<void,PlayerGeyserBoundsAssertion>(),RegionForbidden<std::string,std::string_view,std::string_view>(),RegionForbidden<void,std::string_view>()};
+        devices.refreshProduction=[this] { ++refreshes;if (onRefresh) onRefresh(); };devices.themeMode=[this] { ++themeReads;return themes; };return devices;
+    }
+    // 공개된 실제 초기화 부모로 이전 배열을 반납하고 새 Player/factory와 동맹표를 준비한다.
+    std::uint32_t PlayerBlock() {
+        PlayerParticipationState state;std::array<std::uint8_t,9> hidden{}; //원문현재known0과초기화자식의같은지역입력이다.
+        players->Initialize([this,&state,&hidden](auto player,auto mask) { RawPlayerParticipation child(OriginalEdition::Patch1078,players->Records(),players->Alliances(),hidden,state,{});child.SetAlliance(player,mask); });return players->Base();
+    }
+    void PlayerWrite(std::uint32_t player,std::size_t field,std::uint32_t value) { RegionPut(players->Records(),player*0xb4+field,value); } //공개Records의지정현재필드만입력한다.
+    std::uint32_t PlayerRead(std::uint32_t player,std::size_t field) { return RegionRead(players->Records(),player*0xb4+field); } //공개Records에서현재필드의실제비트를읽는다.
+    // 지정한 실제 생성자 VT를 원본 TYPE 표에서 찾아 실제 Factory에 전달한다.
+    Sid Asset(std::uint32_t table) {
+        for (std::uint32_t type=70;type<storage->types.size();++type) { //사용할수없는실제생성자는선택후보가아니다.
+            std::uint32_t current{};try { current=storage->Factory().ConstructorVtable(storage->types[type]); }catch (const std::logic_error&) { continue; }
+            if (current==table) { const auto sid=storage->CreateAsset(type,2);storage->pool.AllocatedBytes(sid)[40]|=9U;return sid; }
+        }
+        throw std::logic_error("실제 영역 자산 생성자 VT 부재");
+    }
+    // 실제 단일 지면의 raw 지역/좌표와 hash0 입력을 연결한다. Pop·송신은 실행하지 않는다.
+    Sid Surface(std::uint32_t region,int x=100,int y=100) {
+        const auto sid=storage->CreateAsset(storage->GameAux()->TerrainType(),2);auto raw=storage->pool.AllocatedBytes(sid);raw[40]|=9U;
+        raw[8]=static_cast<std::uint8_t>(region);raw[9]=static_cast<std::uint8_t>(region>>8);RegionPut(raw,14,std::bit_cast<std::uint32_t>(float(x)));RegionPut(raw,18,std::bit_cast<std::uint32_t>(float(y)));storage->hash.Cell(0,x,y)=sid.value;return sid;
+    }
+    // 실제 섬 실행기의 원문 Add/Bounds로 한 기록만 준비한다.
+    std::uint32_t Island() { owner->Islands().Reset();const auto result=owner->Islands().Add(0,0);owner->Islands().Bounds(static_cast<std::int32_t>(result),{90,90,110,110});return result; }
+    // 현재 슬롯의 원문 두 float 좌표만 지정한다.
+    void Position(Sid sid,float x=100,float y=100) { auto raw=storage->pool.AllocatedBytes(sid);RegionPut(raw,14,std::bit_cast<std::uint32_t>(x));RegionPut(raw,18,std::bit_cast<std::uint32_t>(y)); }
+    // 실패는숨기지않고실제현재필드/삭제깊이를기록한뒤같은예외를다시전달한다.
+    bool Destroy(Sid sid) { try { return storage->DestroyAsset(sid,0x10); }catch (...) { const auto raw=storage->pool.Slot(sid);std::cerr<<"type="<<std::uint32_t(raw[10])<<" state="<<std::uint32_t(raw[11])<<" extra="<<std::uint32_t(raw[40])<<" pre="<<storage->BaseDestroy().PreDepth()<<" post="<<storage->BaseDestroy().PostDepth()<<" ui="<<refreshes<<'\n';throw; } }
+};
+}
+
+// 전체 장기 본체를 구성해도 Player base/난수/섬/장기 캐시는 초기화하지 않는다.
+TEST_CASE(ClientRegions_NoWorldBindDoesNotReadPlayersOrResetState) {
+    RegionScene scene;const auto random=scene.random->Game().State();scene.kencloud->WorldRedraw()=19;scene.gameplay->MapRevision()=23;
+    auto* islands=&scene.owner->Islands();auto* votes=&scene.owner->Regions();auto* vortex=&scene.owner->VortexOwner();auto* pre=&scene.owner->VortexPre();
+    scene.owner->RegionPaintGlobals().coreVariants.emplace().fill(17);scene.owner->RegionVoteGlobals().affected.push_back({1,2,3});scene.owner->BindRegionContext(scene.kencloud);
+    CHECK(&scene.owner->Islands()==islands && &scene.owner->Regions()==votes && &scene.owner->VortexOwner()==vortex && &scene.owner->VortexPre()==pre);
+    CHECK(scene.players->Base()==0 && scene.random->Game().State()==random && scene.kencloud->WorldRedraw()==19 && scene.gameplay->MapRevision()==23);
+    CHECK(scene.owner->RegionPaintGlobals().coreVariants->at(0)==17 && scene.owner->RegionVoteGlobals().affected.size()==1 && !scene.storage->Borrowed() && scene.storage->Generation()==0);
+    const auto lifetime=std::weak_ptr<ClientConstructionGlobals>(scene.owner);scene.owner.reset();CHECK(lifetime.expired()); //Storage의세callback이강한역참조순환을만들지않는다.
+}
+
+// 실제4f530 편향으로 다음 칸을 선택하며 Player/월드 없이 같은 hash0를 읽는다.
+TEST_CASE(ClientRegions_CurrentGetterUsesOriginalSnapAndSameHash) {
+    RegionScene scene;const auto surface=scene.Surface(2,101,101);CHECK(scene.owner->IslandNumber(100.25F,100.25F)==2);
+    scene.storage->pool.AllocatedBytes(surface)[8]=7;CHECK(scene.owner->IslandNumber(100.25F,100.25F)==7 && scene.owner->IslandNumber(256,256)==127 && scene.players->Base()==0);
+}
+
+// 모든실제신전/Outpost는NoWorld가상10에서같은부모를거쳐깊이/풀을반납한다.
+TEST_CASE(ClientRegions_FiveActualDeletionParentsWithoutRuntime) {
+    for (const auto table:{0x5196f0U,0x5197a8U,0x519860U,0x519918U,0x509210U}) { //공중3종/전투/MP는선택하지않는다.
+        RegionScene scene;const auto sid=scene.Asset(table);const auto before=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(sid,0x10));
+        CHECK(scene.storage->pool.FreeCount()==before+1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0 && scene.traces==1);
+        CHECK(scene.players->Base()==0 && scene.refreshes==0 && !scene.storage->Borrowed());
+    }
+}
+
+// Player base가바뀐뒤이전신전해제와새신전등록은새블록만사용한다.
+TEST_CASE(ClientRegions_VortexOwnerReadsActualCurrentPlayerBase) {
+    RegionScene scene;auto& body=scene.owner->VortexOwner();const auto sid=scene.Asset(0x5196f0U);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[40]=0;raw[34]=1;
+    const auto oldBase=scene.PlayerBlock();scene.PlayerWrite(1,0x7c,sid.value);scene.PlayerWrite(1,0x80,sid.value);
+    scene.PlayerBlock();scene.PlayerWrite(1,0x7c,sid.value);scene.PlayerWrite(1,0x80,sid.value);scene.gameplay->MapRevision()=41;
+    scene.storage->SetAssetOwner(sid,2);CHECK(&body==&scene.owner->VortexOwner() && scene.storage->pool.Slot(sid)[34]==2);
+    CHECK(scene.PlayerRead(1,0x7c)==0 && scene.PlayerRead(1,0x80)==0 && scene.PlayerRead(2,0x7c)==sid.value && scene.PlayerRead(2,0x80)==sid.value);
+    CHECK(scene.players->Base()!=oldBase && scene.refreshes==1 && scene.gameplay->MapRevision()==42);
+}
+
+// 전체섬Owner는실제지면owner를거주구역에전파하고현재Player첫지역만쓴다.
+TEST_CASE(ClientRegions_IslandOwnerPropagatesResidenceAndCurrentFirstRegion) {
+    RegionScene scene;auto& islands=scene.owner->Islands();const auto region=scene.Island();const auto surface=scene.Surface(region);scene.storage->pool.AllocatedBytes(surface)[34]=2;
+    const auto residence=scene.storage->CreateAsset(scene.owner->FinishOwnerState().residenceType,2);scene.Position(residence);scene.storage->pool.AllocatedBytes(residence)[40]|=9U;
+    scene.storage->sidLists.residences.entries={residence.value};scene.storage->sidLists.residences.count=1;const auto oldBase=scene.PlayerBlock();scene.PlayerWrite(2,0x78,127);
+    scene.PlayerBlock();scene.PlayerWrite(2,0x78,127);scene.kencloud->WorldRedraw()=30;scene.gameplay->MapRevision()=99;islands.Owner(static_cast<std::int32_t>(region),2);
+    CHECK(islands.Owner(static_cast<std::int32_t>(region))==2 && scene.storage->pool.Slot(residence)[34]==2 && scene.PlayerRead(2,0x78)==region);
+    CHECK(scene.players->Base()!=oldBase && scene.kencloud->WorldRedraw()==31 && scene.gameplay->MapRevision()==1);
+}
+
+// 실제Outpost두목록압축뒤전체투표/도장이같은지면을중립으로바꾼다.
+TEST_CASE(ClientRegions_OutpostDeletionRunsActualPaintAfterLists) {
+    RegionScene scene;const auto region=scene.Island();const auto surface=scene.Surface(region);scene.storage->pool.AllocatedBytes(surface)[34]=2;
+    const auto sid=scene.Asset(0x509210U);scene.Position(sid);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[40]=0;raw[34]=1;
+    scene.storage->sidLists.outposts.entries={sid.value,sid.value};scene.storage->sidLists.outposts.count=2;scene.storage->sidLists.residences.entries={sid.value};scene.storage->sidLists.residences.count=1;
+    scene.PlayerBlock();scene.kencloud->WorldRedraw()=10;scene.gameplay->MapRevision()=77;CHECK(scene.Destroy(sid));
+    CHECK(scene.storage->sidLists.outposts.count==0 && scene.storage->sidLists.residences.count==0 && scene.storage->pool.Slot(surface)[34]==0);
+    CHECK(scene.kencloud->WorldRedraw()==13 && scene.gameplay->MapRevision()==1 && scene.players->Base()!=0 && scene.refreshes==0 && scene.owner->RegionPaintGlobals().coreVariants.has_value());
+    CHECK(scene.sp->Store().Initialized() && scene.spRefreshes==1 && scene.walletCalls==1 && scene.aiNotices==1 && scene.aiMemory.Allocations().empty());
+}
+
+// 신전삭제는실제섬/도장/공통부모뒤UI가바꾼현재Player를정리한다.
+TEST_CASE(ClientRegions_VortexDeletionUsesCurrentPlayersAfterUi) {
+    RegionScene scene;const auto region=scene.Island();const auto surface=scene.Surface(region);scene.storage->pool.AllocatedBytes(surface)[34]=2;
+    const auto sid=scene.Asset(0x5196f0U);scene.Position(sid);auto raw=scene.storage->pool.AllocatedBytes(sid);raw[40]=0;raw[34]=1;
+    scene.owner->Islands().Temple(static_cast<std::int32_t>(region),sid.value);scene.storage->sidLists.temples.entries={sid.value};scene.storage->sidLists.temples.count=1;scene.storage->sidLists.residences.entries={sid.value};scene.storage->sidLists.residences.count=1;
+    const auto oldBase=scene.PlayerBlock();scene.PlayerWrite(1,0x7c,sid.value);scene.PlayerWrite(1,0x84,sid.value);
+    scene.onRefresh=[&] { if (scene.refreshes==2) { scene.PlayerBlock();scene.storage->pool.AllocatedBytes(sid)[34]=2;scene.PlayerWrite(2,0x7c,sid.value);scene.PlayerWrite(2,0x80,sid.value);scene.PlayerWrite(2,0x84,sid.value);scene.PlayerWrite(2,0x88,sid.value); } };
+    scene.kencloud->WorldRedraw()=20;scene.gameplay->MapRevision()=77;CHECK(scene.Destroy(sid));
+    CHECK(scene.refreshes==2 && scene.storage->sidLists.temples.count==0 && scene.storage->sidLists.residences.count==0 && scene.owner->Islands().Temple(static_cast<std::int32_t>(region))==0);
+    CHECK(scene.storage->pool.Slot(surface)[34]==0 && scene.kencloud->WorldRedraw()==24 && scene.gameplay->MapRevision()==1);
+    CHECK(scene.PlayerRead(2,0x7c)==0 && scene.PlayerRead(2,0x80)==0 && scene.PlayerRead(2,0x84)==0 && scene.PlayerRead(2,0x88)==0 && scene.players->Base()!=oldBase);
+    CHECK(scene.sp->Store().Initialized() && scene.spRefreshes==1 && scene.walletCalls==1 && scene.aiNotices==1 && scene.aiMemory.Allocations().empty());
+}
+
+// 실제소유자wrapper는같은장기신전/상태를빌리고다른사제분배는짧은수명에남긴다.
+TEST_CASE(ClientRegions_WrapperSharesBodyAndCurrentDevicesPinSelectedCall) {
+    RegionScene scene;const auto sid=scene.Asset(0x5196f0U);std::uint32_t others{};RawCampaignOwnership wrapper(scene.owner,[&](auto object,auto player) { CHECK(object==sid && player==8);++others; });CHECK(&wrapper.Vortex()==&scene.owner->VortexOwner());
+    std::weak_ptr<int> watch;auto next=scene.Devices();std::uint32_t oldCalls{},newCalls{};next.refreshProduction=[&] { ++newCalls; };
+    { auto token=std::make_shared<int>(1);watch=token;auto first=scene.Devices();first.refreshProduction=[&,token] { ++oldCalls;scene.owner->BindDevices(next);CHECK(!watch.expired()); };scene.owner->BindDevices(std::move(first)); }
+    wrapper.SetOwner(sid,1);CHECK(watch.expired() && oldCalls==1 && newCalls==0);wrapper.SetOwner(sid,2);CHECK(newCalls==1 && others==0);
+    RegionPut(scene.storage->pool.AllocatedBytes(sid),0,0x503360U);wrapper.SetOwner(sid,8);CHECK(others==1); //비신전은현재실제상위분배를유지한다.
+}
+
+// 같은투표본문이선택한현재TYPE테마와현재설정을매호출다시읽는다.
+TEST_CASE(ClientRegions_VotesUseCurrentTypeThemeAndActualPaintState) {
+    RegionScene scene;const auto region=scene.Island();const auto surface=scene.Surface(region);const auto temple=scene.Asset(0x5196f0U);scene.Position(temple);scene.storage->pool.AllocatedBytes(temple)[34]=1;
+    scene.storage->sidLists.temples.entries={temple.value};scene.storage->sidLists.temples.count=1;auto& type=scene.storage->types[scene.storage->pool.Slot(temple)[10]];auto* votes=&scene.owner->Regions();
+    type.theme=1;votes->UpdateNative(100,100);CHECK(scene.owner->RegionPaintGlobals().theme==3 && scene.storage->pool.Slot(surface)[34]==1 && scene.themeReads==1);
+    type.theme=2;votes->UpdateNative(100,100);CHECK(&scene.owner->Regions()==votes && scene.owner->RegionPaintGlobals().theme==1 && scene.themeReads==2);
+    scene.themes=0;votes->UpdateNative(100,100);CHECK(scene.owner->RegionPaintGlobals().theme==0 && scene.themeReads==3 && scene.players->Base()==0);
+}
+
+// 원문signed음수목록은물리선검사없이건너뛰고도장/현재두DWORD의후단은실행한다.
+TEST_CASE(ClientRegions_NegativeNativeCountsSkipListsAndKeepPaint) {
+    RegionScene scene;scene.storage->sidLists.outposts.count=0xffffffffU;scene.storage->sidLists.temples.count=0x80000000U;scene.kencloud->WorldRedraw()=71;scene.gameplay->MapRevision()=99;
+    scene.owner->Regions().UpdateNative(100,100);CHECK(scene.kencloud->WorldRedraw()==74 && scene.gameplay->MapRevision()==1 && scene.players->Base()==0 && scene.themeReads==0);
+}
+
+// 실제Player선택실패는앞선공통Owner쓰기만남기고임시배열/UI성공을만들지않는다.
+TEST_CASE(ClientRegions_MissingSelectedPlayerPreservesOriginalOwnerPrefix) {
+    RegionScene scene;const auto sid=scene.Asset(0x5196f0U);scene.storage->pool.AllocatedBytes(sid)[40]=0;scene.gameplay->MapRevision()=19;bool rejected{};
+    try { scene.storage->SetAssetOwner(sid,2); }catch (const std::invalid_argument&) { rejected=true; }
+    CHECK(rejected && scene.storage->pool.Slot(sid)[34]==2 && scene.players->Base()==0 && scene.refreshes==0 && scene.gameplay->MapRevision()==19);
+}
+
+// 반납된장기owner는성공으로우회하지않고원문두목록제거/삭제접두뒤명시실패한다.
+TEST_CASE(ClientRegions_ExpiredOwnerKeepsOutpostDeletionPrefix) {
+    RegionScene scene;const auto sid=scene.Asset(0x509210U);scene.storage->pool.AllocatedBytes(sid)[40]=0;scene.storage->sidLists.outposts.entries={sid.value};scene.storage->sidLists.outposts.count=1;scene.storage->sidLists.residences.entries={sid.value};scene.storage->sidLists.residences.count=1;
+    const auto before=scene.storage->pool.FreeCount();scene.owner.reset();bool rejected{};try { scene.storage->DestroyAsset(sid,0x10); }catch (const std::logic_error& error) { rejected=std::string_view(error.what())=="검사 실제 영역 owner 반납 뒤 선택"; }
+    CHECK(rejected && scene.storage->sidLists.outposts.count==0 && scene.storage->sidLists.residences.count==0 && scene.storage->pool.FreeCount()==before && (scene.storage->pool.Slot(sid)[11]&3U)==2U);
+    CHECK(scene.storage->BaseDestroy().PreDepth()==1 && scene.storage->BaseDestroy().PostDepth()==0 && scene.traces==1);
+}
+
+// 신전Pre의현재signed음수Outpost개수도같은실제영역부모와UI후단을통과한다.
+TEST_CASE(ClientRegions_VortexPreSkipsNegativeCurrentOutposts) {
+    RegionScene scene;const auto region=scene.Island();scene.Surface(region);const auto sid=scene.Asset(0x5196f0U);scene.Position(sid);scene.storage->pool.AllocatedBytes(sid)[40]=0;
+    scene.owner->Islands().Temple(static_cast<std::int32_t>(region),sid.value);scene.storage->sidLists.temples.entries={sid.value};scene.storage->sidLists.temples.count=1;scene.storage->sidLists.outposts.count=0xffffffffU;
+    CHECK(scene.Destroy(sid));CHECK(scene.refreshes==2 && scene.storage->sidLists.outposts.count==0xffffffffU && scene.storage->sidLists.temples.count==0 && scene.players->Base()==0);
+}

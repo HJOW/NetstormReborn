@@ -1,5 +1,6 @@
 // 기존 지역 getter/투표/도장/신전 몸체를 재사용하며 외부 효과를 생략하지 않는다.
 #include "client/RawCampaignOwnership.h"
+#include "client/ClientConstructionGlobals.h" //Native는같은장기섬/투표/신전가상몸체를선택한다.
 #include <bit>
 #include <cmath>
 #include <limits>
@@ -70,15 +71,19 @@ RawCampaignOwnership::RawCampaignOwnership(RawSurfaceWorld& world,o::RawIslandRu
     :impl_(std::make_unique<Impl>(world,islands,assets,players,frames,themes,random,paint,ownership,revision,terrain,edge,std::move(effects))) {}
 // 상위 Kernel/Asset 콜백이 먼저 종료된 뒤 같은 내부 모듈만 해제한다.
 RawCampaignOwnership::~RawCampaignOwnership()=default;
+// 실제장기본체를한번빌리고기존독립typed/CD의조립방식은바꾸지않는다.
+RawCampaignOwnership::RawCampaignOwnership(std::shared_ptr<ClientConstructionGlobals> owner,std::function<void(o::Sid,std::uint32_t)> otherOwner)
+    :native_(std::move(owner)),otherOwner_(std::move(otherOwner)) { if (!native_ || !otherOwner_) throw std::invalid_argument("Native 소유권의 같은 장기 owner/현재 파생 분배 필요"); }
 // 원본 신전 가상 재정의의 Player/섬/지역 효과를 공통 Owner로 축약하지 않는다.
 void RawCampaignOwnership::SetOwner(o::Sid sid,std::uint32_t owner) const {
+    if (const auto current=native_) { if (current->VortexOwner().Handles(sid)) current->VortexOwner().Set(sid,owner);else { const auto other=otherOwner_;other(sid,owner); }return; } //선택한실제owner/함수는외부효과가wrapper를반납해도호출끝까지살아있다.
     if (impl_->vortex->Handles(sid)) impl_->vortex->Set(sid,owner);else impl_->effects.otherOwner(sid,owner);
 }
 // 실제 getter를 상위 같은 월드의 자산 조회에 제공한다.
-std::int32_t RawCampaignOwnership::IslandNumber(float x,float y) const { return impl_->IslandNumber(x,y); }
+std::int32_t RawCampaignOwnership::IslandNumber(float x,float y) const { return native_ ? native_->IslandNumber(x,y):impl_->IslandNumber(x,y); }
 // Factory/신전의 같은 mode0 지역 갱신을 제공한다.
-void RawCampaignOwnership::UpdateRegion(float x,float y) const { impl_->ownership->Update(x,y); }
-void RawCampaignOwnership::UpdateRegionNative(float x,float y) const { impl_->ownership->UpdateNative(x,y); } //기존Pop/typed/CD경로는UpdateRegion을유지하며새투표/도장사본을만들지않는다.
+void RawCampaignOwnership::UpdateRegion(float x,float y) const { if (native_) native_->Regions().UpdateNative(x,y);else impl_->ownership->Update(x,y); }
+void RawCampaignOwnership::UpdateRegionNative(float x,float y) const { if (native_) native_->Regions().UpdateNative(x,y);else impl_->ownership->UpdateNative(x,y); } //Native현재signed목록은같은장기투표/도장을사용하고기존typed/CD는기존계약을유지한다.
 // 같은 Player 주소/Pool과 원본 몸체를 읽기 전용으로 제공한다.
-const o::RawVortexOwner& RawCampaignOwnership::Vortex() const { return *impl_->vortex; }
+const o::RawVortexOwner& RawCampaignOwnership::Vortex() const { return native_ ? native_->VortexOwner():*impl_->vortex; }
 }

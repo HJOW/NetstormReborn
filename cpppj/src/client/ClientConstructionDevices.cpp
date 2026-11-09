@@ -7,6 +7,7 @@
 #include "client/CurrentAllocationBytes.h" //기존Native Deck과같은미작성바이트입력을공유한다.
 #include "o/OriginalText.h" //원문 표시 바이트만 현재 UTF-8 UI 경계에서 변환한다.
 #include <array>
+#include <bit> //원문의theammode signed정수를DWORD비트로전달한다.
 #include <iostream>
 #include <stdexcept>
 
@@ -14,6 +15,8 @@ namespace netstorm::client { //실제 Client 장치를 빌리며 World/Session�
 // 구성 시 조회/입력/그리기 없이 현재 Client를 선택하는 함수만 만든다.
 ClientConstructionDevices MakeClientConstructionDevices(Client& client) {
     ClientConstructionDevices devices; //실제 current getter를 보유하며 Renderer/UI 객체 자체를 고정하지 않는다.
+    devices.refreshProduction=[&client] { if (!client.Menu()) throw std::logic_error("영역 생산 갱신의 실제 현재 메뉴 미연결");client.Menu()->RefreshProduction(); };
+    devices.themeMode=[&client] { std::int32_t value=1;client.Configuration().ReadInt("theammode",value);return std::bit_cast<std::uint32_t>(value); }; //원문철자와현재기본1을유지한다.
     devices.allocationBytes=CurrentAllocationBytes; //결합시할당하지않고실제스택Deck이선택한위치에서만현재입력을공급한다.
     devices.configInt=[&client](std::string_view key,std::int32_t fallback) { client.Configuration().ReadInt(key,fallback);return fallback; }; //누락 시 전달값을 보존하는 원문 ReadInt다.
     devices.wallSeconds=[&client] { return client.WallSeconds(); }; //같은 실제 벽시각이며 새로운 시계/시드를 만들지 않는다.

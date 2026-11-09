@@ -36,8 +36,12 @@ RawRegionOwnership::RawRegionOwnership(const SidPool& pool,SquidPostPopList& add
     std::span<const std::uint32_t> themes,RegionOwnershipState& state,RegionOwnershipHooks hooks)
     :pool_(pool),additional_(additional),temples_(temples),themes_(themes),state_(state),hooks_(std::move(hooks)) {
     if (&additional==&temples || !hooks_.regionAt || !hooks_.paint ||
-        (pool.Edition()==OriginalEdition::Patch1078 && (!hooks_.themeMode || themes.size()<188)))
+        (pool.Edition()==OriginalEdition::Patch1078 && (!hooks_.themeMode || (!hooks_.typeTheme && themes.size()<188))))
         throw std::invalid_argument("지역 소유 목록/테마/필수 효과 연결 오류");
+}
+// 실제 TYPE 참조는 같은 장기 저장소에 있고 기존 fixture는 원래 입력표를 유지한다.
+std::uint32_t RawRegionOwnership::Theme(std::uint32_t type) const {
+    if (hooks_.typeTheme) return hooks_.typeTheme(type);if (type>=themes_.size()) throw std::out_of_range("지역 테마 타입 오류");return themes_[type];
 }
 // getter 호출 뒤의 현재 소유자를 읽으며 query 지역은 항목마다 다시 조회한다.
 void RawRegionOwnership::Vote(SquidPostPopList& list,float x,float y,std::array<std::int32_t,9>& votes,
@@ -83,8 +87,7 @@ void RawRegionOwnership::Update(float x,float y,std::uint32_t mode) const {
             for (std::size_t i=0;i<temples_.Items().size();++i) {
                 const auto number=temples_.Items()[i];if (number>65535) throw std::out_of_range("지역 테마 SID 범위 오류");
                 const auto raw=pool_.Slot(Sid{static_cast<std::uint16_t>(number)});if (raw[34]!=owner) continue;
-                if (raw[10]>=themes_.size()) throw std::out_of_range("지역 테마 타입 오류");
-                const auto kind=themes_[raw[10]];const auto enabled=hooks_.themeMode();
+                const auto kind=Theme(raw[10]);const auto enabled=hooks_.themeMode();
                 theme=!enabled ? 0U : kind==0 ? 2U : kind==1 ? 3U : kind==2 ? 1U : 0U;
             }
         }
@@ -122,8 +125,7 @@ void RawRegionOwnership::UpdateNative(float x,float y,std::uint32_t mode) const 
             for (std::uint32_t index=0;std::bit_cast<std::int32_t>(index)<std::bit_cast<std::int32_t>(temples_.Count());++index) { //현재신전signed개수와포인터를매항목선택한다.
                 const auto number=NativeListValue(temples_,index);if (number>65535U) throw std::out_of_range("지역Native테마의실제DWORD SID물리범위");
                 const auto raw=pool_.Slot(Sid{static_cast<std::uint16_t>(number)});if (raw[34]!=owner) continue;
-                if (raw[10]>=themes_.size()) throw std::out_of_range("지역Native테마의현재TYPE물리범위");
-                const auto kind=themes_[raw[10]];const auto enabled=hooks_.themeMode();theme=!enabled ? 0U:kind==0 ? 2U:kind==1 ? 3U:kind==2 ? 1U:0U;
+                const auto kind=Theme(raw[10]);const auto enabled=hooks_.themeMode();theme=!enabled ? 0U:kind==0 ? 2U:kind==1 ? 3U:kind==2 ? 1U:0U;
             }
         }
         paint(0,0);

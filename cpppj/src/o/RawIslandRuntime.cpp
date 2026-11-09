@@ -65,7 +65,7 @@ RawIslandRuntime::RawIslandRuntime(const SidPool& pool,const SquidHash& hash,std
     FortFinishOwnerState& modes,SquidPostPopList& residences,std::uint32_t& worldRedraw,std::uint32_t& mapRevision,
     IslandRuntimeHooks hooks,std::int32_t worldExtent)
     :pool_(pool),hash_(hash),records_(records),modes_(modes),residences_(residences),worldRedraw_(worldRedraw),mapRevision_(mapRevision),hooks_(std::move(hooks)),worldExtent_(worldExtent) {
-    if (records.size()!=kBytes || !hooks_.setResidenceOwner || !hooks_.assertion) throw std::invalid_argument("IslandRuntime 실제기록/필수효과누락");
+    if (records.size()!=kBytes || !hooks_.setResidenceOwner || (!hooks_.assertion && !hooks_.assertionAt)) throw std::invalid_argument("IslandRuntime 실제기록/필수효과누락");
 }
 // raw필드의낮은바이트부터결합한다.
 std::uint32_t RawIslandRuntime::Read(std::size_t offset,std::size_t width) const {
@@ -96,9 +96,14 @@ std::uint32_t RawIslandRuntime::Exists(std::int32_t island) const {
     return RawIslandExists(records_,island); //Pool/효과 없이 같은 현재 count/존재DWORD를 조회한다.
 }
 // missing진단뒤현재Exists를다시읽어callback의원본상태변경도보존한다.
-bool RawIslandRuntime::Require(std::int32_t island,bool bothEditions) const {
-    if (!Exists(island) && (bothEditions || pool_.Edition()==OriginalEdition::Patch1078)) hooks_.assertion(IslandRuntimeAssertion::MissingIsland);
+bool RawIslandRuntime::Require(std::int32_t island,bool bothEditions,std::uint32_t line) const {
+    if (!Exists(island) && (bothEditions || pool_.Edition()==OriginalEdition::Patch1078)) Assert(IslandRuntimeAssertion::MissingIsland,line);
     return Exists(island)!=0;
+}
+// PATCH의원문위치를전달하고기존두판본fixture는원래enum소비자를유지한다.
+void RawIslandRuntime::Assert(IslandRuntimeAssertion where,std::uint32_t line) const {
+    if (hooks_.assertionAt) hooks_.assertionAt(where==IslandRuntimeAssertion::InvalidBounds ? "bcr.isValid()":"exists( islandId )",line);
+    else hooks_.assertion(where);
 }
 // 원본Add의EAX는양판본모두이전count이며나머지Temple/bounds/padding은유지한다.
 std::uint32_t RawIslandRuntime::Add(std::uint32_t owner,std::uint8_t territory) {
@@ -106,7 +111,7 @@ std::uint32_t RawIslandRuntime::Add(std::uint32_t owner,std::uint8_t territory) 
     const auto record=Record(static_cast<std::int32_t>(index));Write(0,index+1);Write(record+8,owner);Write(record+13,owner,1);Write(record+4,1);Write(record+12,territory,1);return index;
 }
 // 삭제는기록만초기화하고count/원래번호재사용정책을변경하지않는다.
-void RawIslandRuntime::Delete(std::int32_t island) { if (Require(island)) ResetRecord(island); }
+void RawIslandRuntime::Delete(std::int32_t island) { if (Require(island,false,0x285)) ResetRecord(island); }
 // currentowner가바뀌어도일반모드의원래ownerBYTE는유지된다.
 bool RawIslandRuntime::Matches(std::int32_t island,std::int32_t owner,std::int32_t territory) const {
     if (!Exists(island)) return false;const auto record=Record(island);
@@ -115,18 +120,18 @@ bool RawIslandRuntime::Matches(std::int32_t island,std::int32_t owner,std::int32
     return SignedByte(Read(record+12,1))==territory;
 }
 // 신전getter는패치진단뒤기록이여전히없으면0이다.
-std::uint32_t RawIslandRuntime::Temple(std::int32_t island) const { return Require(island) ? Read(Record(island)) : 0; }
+std::uint32_t RawIslandRuntime::Temple(std::int32_t island) const { return Require(island,false,0x2dd) ? Read(Record(island)) : 0; }
 // 현재record신전DWORD를원본그대로대입한다.
-void RawIslandRuntime::Temple(std::int32_t island,std::uint32_t temple) { if (Require(island)) Write(Record(island),temple); }
+void RawIslandRuntime::Temple(std::int32_t island,std::uint32_t temple) { if (Require(island,false,0x2f2)) Write(Record(island),temple); }
 // ownergetter는원래ownerBYTE를반환하지않는다.
-std::uint32_t RawIslandRuntime::Owner(std::int32_t island) const { return RawIslandOwner(records_,island,[this] { if (pool_.Edition()==OriginalEdition::Patch1078) hooks_.assertion(IslandRuntimeAssertion::MissingIsland); }); }
+std::uint32_t RawIslandRuntime::Owner(std::int32_t island) const { return RawIslandOwner(records_,island,[this] { if (pool_.Edition()==OriginalEdition::Patch1078) Assert(IslandRuntimeAssertion::MissingIsland,0x2fb); }); }
 // 논리부재진단뒤에도물리100기록안의원본float4개는읽는다.
 FortRandomRectangle RawIslandRuntime::Bounds(std::int32_t island) const {
-    return RawIslandBounds(records_,island,[this] { hooks_.assertion(IslandRuntimeAssertion::MissingIsland); });
+    return RawIslandBounds(records_,island,[this] { Assert(IslandRuntimeAssertion::MissingIsland,0x2ba); });
 }
 // 실제float비트만대입하며경계유효성검사는owner변경시별도실행한다.
 void RawIslandRuntime::Bounds(std::int32_t island,const FortRandomRectangle& bounds) {
-    if (!Require(island)) return;const auto record=Record(island);const std::array values{bounds.left,bounds.top,bounds.right,bounds.bottom};
+    if (!Require(island,false,0x2c0)) return;const auto record=Record(island);const std::array values{bounds.left,bounds.top,bounds.right,bounds.bottom};
     // 전달받은네float를그대로대입한다.
     for (std::size_t index=0;index<values.size();++index) Write(record+16+index*4,std::bit_cast<std::uint32_t>(values[index]));
 }
@@ -145,10 +150,10 @@ bool RawIslandRuntime::Contains(const FortRandomRectangle& bounds,float x,float 
 }
 // owner변경의각전역쓰기/현재목록/가상효과/Player첫지역을원본순서로처리한다.
 void RawIslandRuntime::Owner(std::int32_t island,std::uint32_t owner) {
-    if (!Require(island) || (modes_.fort && !modes_.special)) return;
+    if (!Require(island,false,0x28f) || (modes_.fort && !modes_.special)) return;
     const auto record=Record(island);Write(record+8,owner);++worldRedraw_;if (pool_.Edition()==OriginalEdition::Patch1078) mapRevision_=1;
     const FortRandomRectangle bounds{std::bit_cast<float>(Read(record+16)),std::bit_cast<float>(Read(record+20)),std::bit_cast<float>(Read(record+24)),std::bit_cast<float>(Read(record+28))};
-    if (!ValidBounds(bounds)) hooks_.assertion(IslandRuntimeAssertion::InvalidBounds);
+    if (!ValidBounds(bounds)) Assert(IslandRuntimeAssertion::InvalidBounds,0x2a4);
     const auto ownerOffset=pool_.Edition()==OriginalEdition::Patch1078 ? 34U : 32U;
     // 원본은목록count/SID/type/좌표와표면WORD를매반복다시읽고free/dead필터를추가하지않는다.
     for (std::uint32_t index=0;std::bit_cast<std::int32_t>(index)<std::bit_cast<std::int32_t>(residences_.count);++index) {
@@ -176,25 +181,34 @@ const SidPool& RawIslandRuntime::Pool() const { return pool_; }
 // 잘못된 물리크기를 쓰기 전에 거부하고 같은 Player 주소만 빌린다.
 void RawIslandRuntime::BindPlayerRecords(std::span<std::uint8_t> players) {
     const auto stride=pool_.Edition()==OriginalEdition::Patch1078 ? 0xb4U : 0xacU; // 실제 판본별 한 기록의 크기다.
-    if (players.size()!=9*stride) throw std::invalid_argument("IslandRuntime 실제9 Player 크기 오류");players_=players;
+    if (players.size()!=9*stride) throw std::invalid_argument("IslandRuntime 실제9 Player 크기 오류");players_=players;currentPlayers_={};
+}
+// 실제 Native owner는 장기 본체보다 오래 살며 결합 때 Player를 만들지 않는다.
+void RawIslandRuntime::BindCurrentPlayers(std::function<std::span<std::uint8_t>()> players) { if (!players) throw std::invalid_argument("IslandRuntime 현재 Player getter 미결합");currentPlayers_=std::move(players); }
+// 별도 Player가 없는 기존 독립 입력만 빈 span을 허용하고 Native는 현재9기록을 요구한다.
+std::span<std::uint8_t> RawIslandRuntime::CurrentPlayers() const {
+    if (!currentPlayers_) return players_;const auto current=currentPlayers_();const auto stride=pool_.Edition()==OriginalEdition::Patch1078 ? 0xb4U:0xacU; //원문 현재 base와 판본별9기록이다.
+    if (current.size()!=9*stride) throw std::invalid_argument("IslandRuntime 실제 현재9 Player 크기 오류");return current;
 }
 // 외부 residence callback 뒤의 현재 Player DWORD를 다시 읽는다.
 std::int32_t RawIslandRuntime::FirstRegion(std::uint32_t owner) const {
-    if (players_.empty()) return modes_.playerRegions.at(owner);
+    const auto players=CurrentPlayers();if (players.empty()) return modes_.playerRegions.at(owner);
+    if (owner>8) throw std::out_of_range("IslandRuntime 실제 Player 첫 지역 범위 오류");
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 첫 지역의 판본별 위치를 선택한다.
     const auto field=owner*(patch ? 0xb4U : 0xacU)+(patch ? 0x78U : 0x70U); // 현재owner의 물리DWORD 주소다.
     std::uint32_t value=0; // 현재 기록에서 읽은 원본 비트다.
     // 정확한 네BYTE만 조합한다.
-    for (std::size_t index=0;index<4;++index) value|=static_cast<std::uint32_t>(players_[field+index])<<(index*8);
+    for (std::size_t index=0;index<4;++index) value|=static_cast<std::uint32_t>(players[field+index])<<(index*8);
     return std::bit_cast<std::int32_t>(value);
 }
 // 공유기록 모드에서는 첫 지역 필드만 저장한다. 다른 Player 메모리와 독립 상태는 보존한다.
 void RawIslandRuntime::FirstRegion(std::uint32_t owner,std::int32_t region) {
-    if (players_.empty()) { modes_.playerRegions.at(owner)=region;return; }
+    const auto players=CurrentPlayers();if (players.empty()) { modes_.playerRegions.at(owner)=region;return; }
+    if (owner>8) throw std::out_of_range("IslandRuntime 실제 Player 첫 지역 범위 오류");
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 실제 저장폭은 두 판본 모두DWORD다.
     const auto field=owner*(patch ? 0xb4U : 0xacU)+(patch ? 0x78U : 0x70U); // 현재owner의 첫 지역 주소다.
     const auto value=std::bit_cast<std::uint32_t>(region); // 부호와 무관하게 원본 비트를 저장한다.
     // 인접 신전/거주 구역 필드를 바꾸지 않는다.
-    for (std::size_t index=0;index<4;++index) players_[field+index]=static_cast<std::uint8_t>(value>>(index*8));
+    for (std::size_t index=0;index<4;++index) players[field+index]=static_cast<std::uint8_t>(value>>(index*8));
 }
 }

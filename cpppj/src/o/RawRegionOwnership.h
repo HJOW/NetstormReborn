@@ -36,6 +36,7 @@ struct RegionOwnershipHooks {
     std::function<void(const RegionOwnershipPaint&)> paint;
     //패치의theammode정수조회다.같은소유자의신전마다새로조회한다.
     std::function<std::uint32_t()> themeMode;
+    std::function<std::uint32_t(std::uint32_t)> typeTheme; //Native는선택한TYPE의현재+98DWORD를읽고Session테마사본을사용하지않는다.
 };
 //outpost·신전지역투표와판본별도장요청순서를복원한다.
 class RawRegionOwnership {
@@ -49,6 +50,7 @@ public:
     // 실제 outpost/terrain과 같은 풀을 사용하는지 검사하는 참조다.
     const SidPool& Pool() const;
 private:
+    std::uint32_t Theme(std::uint32_t type) const; //현재TYPE장치또는기존독립입력표에서선택한원소만읽는다.
     // 현재 목록 순서로 지역과 소유자를 읽고 같은 표 배열에 누적한다.
     void Vote(SquidPostPopList& list,float x,float y,std::array<std::int32_t,9>& votes,
         const std::size_t* affectedIndex) const;

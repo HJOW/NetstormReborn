@@ -4,6 +4,7 @@
 #include "o/RawPathSearch.h"
 #include <array>
 #include <span>
+#include <string_view> //Native원문진단의실제식문자열을빌린다.
 
 namespace netstorm::o {
 // 실행기와 callback 없이 같은 countDWORD·100개32BYTE 기록만 장기 보관한다.
@@ -29,6 +30,7 @@ struct IslandRuntimeHooks {
     std::function<void(Sid,std::uint32_t)> setResidenceOwner;
     // assertion: 원본 진단 뒤 계속 진행하는 경계를 보존한다. 빈효과로 복원 완료를 주장하지 않는다.
     std::function<void(IslandRuntimeAssertion)> assertion;
+    std::function<void(std::string_view,std::uint32_t)> assertionAt; //Native는선택된원문식/행을같은중앙진단장치에전달한다.
 };
 // 패치0046edf0..0046f320와 CD004bd3f0..004bda70의 mutable IslandList 몸체다.
 class RawIslandRuntime {
@@ -69,7 +71,9 @@ public:
     const SidPool& Pool() const;
     // 실제9 Player BYTE의 첫 지역DWORD를 직접 공유한다. 연결 뒤 modes.playerRegions 사본은 쓰지 않는다.
     void BindPlayerRecords(std::span<std::uint8_t> players);
+    void BindCurrentPlayers(std::function<std::span<std::uint8_t>()> players); //실제 현재 base getter만 결합하며 원문 첫 지역 선택 전에는 할당/조회하지 않는다.
 private:
+    std::span<std::uint8_t> CurrentPlayers() const; //현재 원문 첫 지역 DWORD의 실제9기록을 선택한다.
     // 현재owner의 PATCH+78/CD+70 첫 지역DWORD를 읽고 쓴다.
     std::int32_t FirstRegion(std::uint32_t owner) const;
     void FirstRegion(std::uint32_t owner,std::int32_t region);
@@ -82,7 +86,8 @@ private:
     // 현재기록 한 개를 원본의 필드별Reset로 지운다.
     void ResetRecord(std::int32_t island);
     // missing진단이 판본/해당getter에서 필요한지 결정하고 현재존재를 반환한다.
-    bool Require(std::int32_t island,bool bothEditions=false) const;
+    bool Require(std::int32_t island,bool bothEditions=false,std::uint32_t line=0) const;
+    void Assert(IslandRuntimeAssertion where,std::uint32_t line) const; //기존독립진단또는원문식/행진단을선택한다.
     // 실제 네float의 경계검사를 판본별 x87/정수비트 조건으로 수행한다.
     bool ValidBounds(const FortRandomRectangle& bounds) const;
     // candidate의 현재float가 원본bounds 안인지 판본별 unordered조건을 보존한다.
@@ -106,5 +111,6 @@ private:
     // worldExtent_: 실제isValid에서float로 읽는 원본월드상한DWORD다.
     std::int32_t worldExtent_;
     std::span<std::uint8_t> players_; // 생성/신전/경제와 같은 실제9 Player 기록이다. 미연결 독립 검사는 기존 상태를 쓴다.
+    std::function<std::span<std::uint8_t>()> currentPlayers_; //Native의현재Player base이며실제getter가있으면독립모드배열로대체하지않는다.
 };
 }

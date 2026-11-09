@@ -610,14 +610,14 @@ struct RawCampaignSession::Impl {
     std::uint32_t& randomMode{services.randomGlobals ? services.randomGlobals->GameMode() : localRandomMode}; //기존Seed/Reseed도Client의같은현재005c89a8을빌린다.
     RawGameRandomSeed seed; // 같은 CRT/게임 난수와 실제 Unix 초 입력을 연결한다.
     std::int32_t noRegion{127}; // 정상 지형 생성의 실제 현재 지역없음 번호다.
-    std::unique_ptr<RawIslandRuntime> islands; // 위3204BYTE와 동일 Pool을 공유한다.
+    std::unique_ptr<RawIslandRuntime> localIslands;RawIslandRuntime* islands{}; //Native는같은장기실행기를빌리고독립typed는기존본체를소유한다.
     std::unique_ptr<RawPriestWorldBindings> priests; // 저장 사제의 실제 Owner/PostPop/보호막 분배기다.
     std::unique_ptr<RawPriestParticipation> priestParticipation; // 같은 현재live/Carrier/typedDais와기존ownerState의로그인종료조회다.
     std::unique_ptr<RawPlayerWorld> player; // 최초152 생성자/실제 PostPop/9기록을 연결한다.
     std::unique_ptr<RawPlayerRegular> playerRegular; // 현재 Player의 실제 사건1/2를 처리한다.
     std::unique_ptr<RawPlayerTemplateState> templateState; // 같은Template header/원본State28BYTE를 직접 읽는다.
-    RegionPaintState paint{.sharedWorldRedraw=&worldRedraw}; // 실제 지형 도장도0059a8b0을 증가시킨다.
-    RegionOwnershipState votes{.sharedWorldRedraw=&worldRedraw,.sharedMapRevision=&revision}; // 투표 wrapper의 월드 증가/미니맵1쓰기는 같은 두 실제 주소를 직접 사용한다.
+    RegionPaintState localPaint{.sharedWorldRedraw=&worldRedraw};RegionPaintState& paint{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->RegionPaintGlobals():localPaint}; //Native도장캐시는메뉴/전환과같은장기주소다.
+    RegionOwnershipState localVotes{.sharedWorldRedraw=&worldRedraw,.sharedMapRevision=&revision};RegionOwnershipState& votes{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->RegionVoteGlobals():localVotes}; //Native영향목록과실제두DWORD를같은owner에서빌린다.
     std::vector<std::uint32_t> themes; // 현재 TYPE의 같은 원소 번호다.
     std::vector<std::int32_t> elements; // 자산 Regular가 읽는 같은 원소 번호다.
     std::unique_ptr<RawCampaignOwnership> ownership; // 실제 Vortex/섬/Player/지역 연결이다.
@@ -823,7 +823,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawDamageablePreDestroy> localDamageablePre;RawDamageablePreDestroy* damageablePre{}; // 공통 삭제와 같은 깊이/Graph/장부를 사용한다.
     std::unique_ptr<RawFlyerPreDestroy> flyerPre; //144의 현재+8 WORD 대상 삭제 뒤 실제 Damageable Pre다.
     std::unique_ptr<RawDamageablePostDestroy> localDamageablePost;RawDamageablePostDestroy* damageablePost{}; // 같은 실제 예약/다리/공통 후처리다.
-    std::unique_ptr<RawVortexPreDestroy> vortexPre; // 실제 신전의 목록/섬/Player 정리를 담당한다.
+    std::unique_ptr<RawVortexPreDestroy> localVortexPre;RawVortexPreDestroy* vortexPre{}; //Native는같은장기신전전처리를빌린다.
     std::unique_ptr<RawBuriedPostPop> localBuriedPostPop;RawBuriedPostPop* buriedPostPop{}; //Native의현재전역/두Regular/공통부모는같은장기Storage몸체다.
     std::unique_ptr<RawBuriedRegular> localBuriedRegular;RawBuriedRegular* buriedRegular{}; //Native의현재Frame/전역난수는같은장기Storage몸체다.
     std::vector<float> fenceRanges; // 현재 불변 TYPE 표에서 읽은188개 실제 사거리다.
@@ -1142,8 +1142,9 @@ struct RawCampaignSession::Impl {
         gunTargetState.playerFlagsRead=[this](std::uint32_t owner) {
             if (owner>=9) throw std::out_of_range("실제 세션 현재 Player flag 번호 오류");return static_cast<std::uint32_t>(players[owner*0xb4+0x50]);
         };
-        islands=std::make_unique<RawIslandRuntime>(core.pool,core.hash,islandBytes,finishState,assetState.Residences(),worldRedraw,revision,
-            IslandRuntimeHooks{[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); },SessionMissing<void,IslandRuntimeAssertion>()});
+        if (world.Storage()->UsesNativeTransmissionDevices()) islands=&services.constructionGlobals->Islands();
+        else { localIslands=std::make_unique<RawIslandRuntime>(core.pool,core.hash,islandBytes,finishState,assetState.Residences(),worldRedraw,revision,
+            IslandRuntimeHooks{[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); },SessionMissing<void,IslandRuntimeAssertion>()});islands=localIslands.get(); }
         // 일반 Acquire의 fresh 호환 준비 또는 실제 앞 cleanup/prefix가 같은 섬 물리를 준비한다. prepared 생성자는 다시 Reset하지 않는다.
         auto priestEffects=services.priest;
         priestEffects.forcefieldAssertion=[this](std::string_view expression,std::string_view,std::uint32_t line) { const auto assertion=services.ai.assertion;if (!assertion) throw std::logic_error("보호막 Regular 실제 진단 장치 미연결 "+std::to_string(line));assertion(expression); }; // 원문 진단이 정상 복귀하면0 반환을 계속한다(단위864).
@@ -1217,7 +1218,8 @@ struct RawCampaignSession::Impl {
                 [&storage](auto text) { storage.RecordAssertionDetail(text); },
                 [&storage](auto expression,auto file,auto line) { storage.AssertDisplay(expression,file,line); }});
         }; // 진단이 정상 복귀하면 기존 신전 부모의 IslandList/지역/공통Owner 후단을 계속한다.
-        ownership=std::make_unique<RawCampaignOwnership>(world,*islands,assetState,players,metadata.frames,themes,random,paint,votes,revision,terrainType,gameplayGlobals->GameAux()->EdgeFarmType(),std::move(ownerEffects)); // 진단과 같은 현재 두 TYPE를 설치 시점에 읽는다.
+        if (world.Storage()->UsesNativeTransmissionDevices()) ownership=std::make_unique<RawCampaignOwnership>(services.constructionGlobals,std::move(ownerEffects.otherOwner));
+        else ownership=std::make_unique<RawCampaignOwnership>(world,*islands,assetState,players,metadata.frames,themes,random,paint,votes,revision,terrainType,gameplayGlobals->GameAux()->EdgeFarmType(),std::move(ownerEffects)); //Native는실제장기본체를빌리고독립typed/CD는기존조립을유지한다.
         carrier=std::make_unique<RawCarrierPostPop>(core.pool,core.types,carrierState,
             MakeCarrierPostPopHooks(core.pool,core.postPop,[this](Sid sid) { static_cast<void>(priests->CheckCarrier(sid)); },[this](float x,float y,std::uint8_t owner) { world.SetSupportOwner(x,y,owner); }));
         carrier->BindCurrentTypes(core.types); //생성뒤수정된실제TYPE속성도현재Damageable하위에서소비한다.
@@ -2550,13 +2552,14 @@ struct RawCampaignSession::Impl {
         post.displayUpdate=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };post.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
         post.base=[this](Sid sid,std::uint32_t flags) { world.CommonDeletion().PostDestroy(sid,flags); };
         if (world.Storage()->UsesNativeTransmissionDevices()) damageablePost=&world.Storage()->DamageablePost();else { localDamageablePost=std::make_unique<RawDamageablePostDestroy>(core.pool,core.hash,core.types,core.frames,hp,core.neighbors,damageablePostState,std::move(post));damageablePost=localDamageablePost.get(); }
-        VortexPreDestroyHooks vortex;vortex.islandNumber=[this](float x,float y) { return ownership->IslandNumber(x,y); };vortex.islandExists=[this](std::int32_t island) { return islands->Exists(island)!=0; };
+        if (world.Storage()->UsesNativeTransmissionDevices()) vortexPre=&services.constructionGlobals->VortexPre();
+        else { VortexPreDestroyHooks vortex;vortex.islandNumber=[this](float x,float y) { return ownership->IslandNumber(x,y); };vortex.islandExists=[this](std::int32_t island) { return islands->Exists(island)!=0; };
         vortex.islandTemple=[this](std::int32_t island) { return islands->Temple(island); };
         vortex.clearIslandTemple=[this](std::int32_t island) { if (!islands->Exists(island)) throw std::logic_error("신전 삭제의 실제 섬 부재 진단");islands->Temple(island,0);services.ownership.refreshProduction(); };
         vortex.islandOwner=[this](std::int32_t island,std::uint32_t owner) { islands->Owner(island,owner); };vortex.regionOwnership=[this](float x,float y) { ownership->UpdateRegion(x,y); };
         vortex.damageablePre=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };vortex.refreshProduction=services.ownership.refreshProduction;
         vortex.assertion=SessionMissing<void,std::uint32_t>();
-        vortexPre=std::make_unique<RawVortexPreDestroy>(core.pool,players,assetState.Temples(),assetState.Residences(),assetState.Outposts(),objectState.loadingDepth,std::move(vortex));
+        localVortexPre=std::make_unique<RawVortexPreDestroy>(core.pool,players,assetState.Temples(),assetState.Residences(),assetState.Outposts(),objectState.loadingDepth,std::move(vortex));vortexPre=localVortexPre.get(); }
         GeyserLifetimeHooks geyser;
         geyser.defaultFrame=[this](Sid sid) { const auto type=core.pool.Slot(sid)[10];if (type<70 || type-70>=assets.game.Types().size()) throw std::out_of_range("간헐천 기본 프레임 TYPE 오류");return static_cast<std::uint32_t>(assets.game.Types()[type-70].definition.specialFrames.defaultFrame); };
         geyser.update=[this](Sid sid) { core.display.Update(core.pool.Slot(sid)); };

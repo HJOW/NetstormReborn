@@ -1781,6 +1781,8 @@ void UberGump::Frame() {
 }
 // UI 합성을 예약하고 이미 제출된 정적 픽셀도 다시 그리게 한다.
 void UberGump::Refresh() { rebuild_=true;client_.GetRenderer().InvalidateAll(); }
+// 현재실제Gump트리의기존생산갱신본문을사용하고새UI나Session을만들지않는다.
+void UberGump::RefreshProduction() { if (!rawButtons_) throw std::logic_error("현재 생산 갱신 Gump 트리 미연결");rawButtons_->RefreshProduction(); }
 // 새 RGB를 월드에 공급한 뒤 UI의 장식·글자·선택 색도 다시 합성한다.
 void UberGump::PaletteChanged() {
     if (world_) world_->SetPalette(client_.GetScreen().Palette(),client_.ColorSortInput()->Logical(),&client_.ColorSortInput()->Maps());

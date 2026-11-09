@@ -29,16 +29,23 @@ float Position(std::span<const std::uint8_t> raw,std::size_t offset) { return st
 // 같은 풀/실제9기록/필수 효과를 최초 쓰기 전에 확인한다.
 RawVortexOwner::RawVortexOwner(SidPool& pool,SquidOwner& base,std::span<std::uint8_t> players,
     SquidPostPopList& outposts,std::uint32_t& revision,VortexOwnerHooks hooks)
-    :pool_(pool),base_(base),players_(players),outposts_(outposts),revision_(revision),hooks_(std::move(hooks)) {
-    const auto stride=pool.Edition()==OriginalEdition::Patch1078 ? 0xb4U : 0xacU; // 실제 Player 기록의 크기다.
-    if (&base.Pool()!=&pool || players.size()!=9*stride || !hooks_.islandNumber || !hooks_.islandExists ||
+    :RawVortexOwner(pool,base,[players] { return players; },outposts,revision,std::move(hooks)) { static_cast<void>(Records()); }
+// 현재 getter 정체성만 결합하고 실제 Player 필드를 읽기 전에는 배열을 요구하지 않는다.
+RawVortexOwner::RawVortexOwner(SidPool& pool,SquidOwner& base,std::function<std::span<std::uint8_t>()> players,
+    SquidPostPopList& outposts,std::uint32_t& revision,VortexOwnerHooks hooks)
+    :pool_(pool),base_(base),players_(std::move(players)),outposts_(outposts),revision_(revision),hooks_(std::move(hooks)) {
+    if (&base.Pool()!=&pool || !players_ || !hooks_.islandNumber || !hooks_.islandExists ||
         !hooks_.setIslandOwner || !hooks_.regionOwnership || !hooks_.refreshProduction || !hooks_.missingIsland)
         throw std::invalid_argument("신전 Owner의 실제 Pool/9기록/필수 효과 누락");
 }
 // 현재 원본 가상 표를 직접 조회한다.
 bool RawVortexOwner::Handles(Sid sid) const {
-    const auto tables=pool_.Edition()==OriginalEdition::Patch1078 ? std::span<const std::uint32_t>(kPatchTables) : std::span<const std::uint32_t>(kCdTables);
-    return std::ranges::find(tables,Read(pool_.Slot(sid),0))!=tables.end();
+    return HandlesRawVortexOwner(pool_,sid);
+}
+// 실제Owner몸체와가상분배가같은보호PE표를읽고TYPE이름을추정하지않는다.
+bool HandlesRawVortexOwner(const SidPool& pool,Sid sid) {
+    const auto tables=pool.Edition()==OriginalEdition::Patch1078 ? std::span<const std::uint32_t>(kPatchTables):std::span<const std::uint32_t>(kCdTables);
+    return std::ranges::find(tables,Read(pool.Slot(sid),0))!=tables.end();
 }
 // PATCH+7c/+80 및 CD+74/+78의 같은 초기 신전 두DWORD다.
 std::size_t RawVortexOwner::TempleField(std::uint32_t owner,bool copy) const {
@@ -52,8 +59,8 @@ void RawVortexOwner::Set(Sid sid,std::uint32_t owner) const {
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078; // 패치에만 별도 목록 순회와 revision 쓰기가 있다.
     const auto ownerOffset=patch ? 34U : 32U,extraOffset=patch ? 40U : 35U; // 실제 객체 필드 위치다.
     const auto previous=pool_.Slot(sid)[ownerOffset],extra=pool_.Slot(sid)[extraOffset]; // 외부 호출 전 원본 초기 조건이다.
-    if (!(extra&8) && previous && Read(players_,TempleField(previous))==sid.value) {
-        Write(players_,TempleField(previous),0);Write(players_,TempleField(previous,true),0);
+    if (!(extra&8) && previous && Read(Records(),TempleField(previous))==sid.value) {
+        Write(Records(),TempleField(previous),0);Write(Records(),TempleField(previous,true),0);
     }
     if (!(pool_.Slot(sid)[11]&4) && !(extra&9)) {
         const auto island=hooks_.islandNumber(Position(pool_.Slot(sid),14),Position(pool_.Slot(sid),18)); // 현재 지면 지역이다.
@@ -72,13 +79,16 @@ void RawVortexOwner::Set(Sid sid,std::uint32_t owner) const {
     }
     base_.Set(sid,owner);
     const auto current=pool_.Slot(sid)[ownerOffset]; // 공통 몸체 이후의 실제 소유자 BYTE다.
-    if (!(pool_.Slot(sid)[extraOffset]&9) && current && !Read(players_,TempleField(current))) {
-        Write(players_,TempleField(current),sid.value);Write(players_,TempleField(current,true),sid.value);
+    if (!(pool_.Slot(sid)[extraOffset]&9) && current && !Read(Records(),TempleField(current))) {
+        Write(Records(),TempleField(current),sid.value);Write(Records(),TempleField(current,true),sid.value);
     }
     hooks_.refreshProduction();if (patch) ++revision_;
 }
 // 조립 시 같은 월드인지 확인한다.
 const SidPool& RawVortexOwner::Pool() const { return pool_; }
 // 같은9기록을 참조하며 별도 Player 복사본을 돌려주지 않는다.
-std::span<std::uint8_t> RawVortexOwner::Records() const { return players_; }
+std::span<std::uint8_t> RawVortexOwner::Records() const {
+    const auto current=players_();const auto stride=pool_.Edition()==OriginalEdition::Patch1078 ? 0xb4U:0xacU; // 실제 선택된 현재 판본의9기록이다.
+    if (current.size()!=9*stride) throw std::invalid_argument("신전 Owner의 실제 현재9 Player 크기 오류");return current;
+}
 }

@@ -77,6 +77,7 @@ public:
     void RefreshMinimap(); // 원본00481320의커널앞위치에서실제같은HUD큐를소비한다.
     // 호스트 장면 합성을 예약한다. 원문0043dad0의 예산 재부착은 RefreshStormPower로 구별한다.
     void Refresh();
+    void RefreshProduction(); //장기영역/신전도현재실제버튼트리에원문02000003사건을보낸다.
     std::uint32_t NativeMissionDemo() const; //00463b50의 현재 미션 포인터/+68만 읽으며 미션이 없으면0이다.
     void RefreshStormPower(); //0043dad0의 실제 현재 예산 serial Push/Attach/깊이 복원이다.
     void ForwardDiagnosticChat(std::uint32_t enabled,std::string_view format); //434f40의 실제 로그를 같은 현재 Chat UI/팔레트에 전달한다.

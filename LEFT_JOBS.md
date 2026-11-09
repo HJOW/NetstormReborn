@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품 1204 / 11.01 / `ffb485bc` (`20261109-84 CP`). 문서 정리 1205: 2026-11-09. 전체 목표 진행 중.**
+**제품 1206 / 11.01(이 문서와 같은 구현 커밋). 인계 갱신: 2026-11-09. 문서 정리 1205의 구조를 유지하며 전체 목표는 진행 중이다.**
 
 - **지금 가능한 것:** 메뉴·미션 플레이. 최근에는 Tutorial4 생산·건설 요청, 실제 객체 생성과 대기, Edit 왕복을 확인했다. 전체 원본 동일성은 미확정이다.
 - **다음 구현:** M6-n의 미션 월드 없는 구간(NoWorld) 자산 삭제·AI 처리 연결. 이후 M6 잔여 → M7 → M8 → 한국어 → 시나리오 편집 → 알려진 버그 수정 순서다.
@@ -14,7 +14,7 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. DN/WB�
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
-| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품 1204의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
+| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품 1206의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
 | **dotnetpj** | 기존 `Netstorm.Game`/`Netstorm.exe`는 1-1·1-2 근사 플레이가 가능하다. 새 `Netstorm.Client.Host`는 메뉴 일부까지이며 미션 플레이가 불가능하다. | 새 경로의 실제 메뉴·게임 캡처 비교는 0건이다. R3 진행/R4 일부 이식이며 부품 fixture 통과를 전체 동일성으로 합산하지 않는다. |
 | **webpj** | 클릭하여 시작·메뉴/목록·도움말/옵션·Credits·개발용 지형 미리보기까지다. 실제 미션 플레이는 불가능하다. | cpppj 오라클 M1 메뉴 8장면은 기록한 원인 밖 픽셀 차이 0이다. 구름 등 차이가 남고 실제 미션 L2/L3·전체 화면/음향·자연 완주는 미검증이다. |
 
@@ -22,13 +22,13 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. DN/WB�
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 최신 제품 | **1204 / `ffb485bc`**. [구현 문서](docs/exe/cpp-buried-resource-owner-20261109.md)·[검증 보고서](cpppj/buried-resource-owner-20261109.json). 직전 1203은 `f7f58f5a / 20261109-83 CP`다. 문서 정리 1205는 제품 변경이 아니다. |
-| 최근 완료 2건 | **1203:** 단일 난수/너겟 배치 부모·현재 상태와 섬 getter. **1204:** Gem/제외 목록·오벨리스크 PostPop/두 실제 Regular/기본 Host 공유, 보충의 Runtime 대여 제거, 점프 부모 4개 연결. 현재 **삭제 부모 분배 61/83, 전용 부모 잔여 22, 통지 잔여 6**이다. 이 수치는 큰 하위 효과까지 NoWorld 연결을 마쳤다는 뜻이 아니다. |
-| 최신 빌드·집중 검사 | 1204 Release/x64 제품 2·집중 5대상 종료 0, 경고·오류 0. **비MP 155/155 통과**. 신규 5·기존 대여 검사 1개 교체·부모 검사 1개 확장·기존 비MP 14개 추가 실행. 최초 실패/교정과 고정 소스는 보고서·`extracted/cpp-resume-1204/`에 보존했다. |
-| 최신 실제 실행 | 1204 Tutorial4의 위 생성/대기와 같은 Client 800×600 Edit TEST01→Main 왕복 2회, 모두 종료 0. 건물 완성·Test Battle·모든 NoWorld 호출자·큰 AI 검증은 아니다. 시작한 빌드·집중 검사·GUI는 모두 종료했다. |
-| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 1204 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
+| 최신 제품 | **1206 / 11.01(현재 구현 커밋)**. [섬·영역·신전 장기 연결](docs/exe/cpp-region-owner-20261109.md)·[보고서](cpppj/region-owner-20261109.json). 직전 제품 1204는 `ffb485bc / 20261109-84 CP`, 문서 정리 1205는 `d7c6f013 / 20261109-85 CP`다. |
+| 최근 완료 2건 | **1204:** Gem/제외 목록·오벨리스크 PostPop/두 Regular/기본 Host 공유와 Runtime 없는 보충. **1206:** 같은 장기 섬/영역 투표·도장/현재 Player·신전 Owner/Pre, Outpost Pre 연결. Native Session도 같은 본체/캐시를 빌린다. 현재 **삭제 부모 분배 66/83, 전용 부모 잔여 17, 통지 잔여 6**이다. 큰 하위까지 전체 NoWorld 완료를 뜻하지 않는다. |
+| 최신 빌드·집중 검사 | 1206 Release/x64 제품 2·집중 5대상 종료 0, 경고·오류 0. **비MP 183/183 통과**(신규 13·기존 관련 15 추가). 실제 Player 초기화/재할당·현재 TYPE/Config·전체 도장/공통 환불·약한 수명/부분 실패를 확인했다. 최초 컴파일/실행 실패와 교정은 보고서·`extracted/cpp-resume-1206/`에 보존했다. |
+| 최신 실제 실행 | 1206 Tutorial4 생산·건설 요청 → 실제 TYPE75/owner1·요청 증가 → 600프레임 대기, 같은 EXE/Client 800×600 Edit TEST01→Main 왕복 2회 모두 종료 0. 큰 비영 AI·모든 NoWorld 호출자·건물 완성/Test Battle 검증은 아니다. 시작한 빌드·집중 검사·GUI는 모두 종료했다. |
+| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 1206 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
 | M6 감사 기준 | checking 잔여 목록 0, 태그 25/활성 88/무태그 63F, 지연큐 OFF. checking 0은 MP 구현 완료나 MP 검사 통과를 뜻하지 않는다. |
-| 디컴파일·보호 | 마지막 정밀 디컴파일: **Client 양판본 2026-11-03 / HJOW-Athlon(192.168.0.94), R 전용 2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md). 제품 1204의 원본/CD/fixture·AGENTS 2,800파일 불변 기록을 유지한다. |
+| 디컴파일·보호 | 마지막 정밀 디컴파일: **Client 양판본 2026-11-03 / HJOW-Athlon(192.168.0.94), R 전용 2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md). 1206에서 원문 변경/새 디컴파일 0, 보호 원본/CD/fixture·AGENTS 2,800파일 불변을 확인했다. |
 
 ## 1. 단계별 현황과 진행 순서
 
@@ -60,20 +60,20 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 | 순서 / ID | 해야 할 일 | 완료 조건과 주의점 |
 | --- | --- | --- |
-| **1. M6-n: NoWorld·자산 삭제/AI** | 전용 삭제 부모 22/통지 6, 다른 Form/Regular, 큰 AI, 다른 배치 호출자/Fort 상위 Finish를 장기로 연결한다. | 미션 월드가 없는 메뉴·전환 구간도 **같은 실제 Pool/목록/TYPE/현재 전역**을 사용해야 한다. 현재 61부모 분배를 전체 NoWorld 삭제 완료로 세지 않는다. |
+| **1. M6-n: NoWorld·자산 삭제/AI** | 전용 삭제 부모 17/통지 6, 다른 Form/Regular, 큰 AI, 다른 배치 호출자/Fort 상위 Finish를 장기로 연결한다. | 미션 월드가 없는 메뉴·전환 구간도 **같은 실제 Pool/목록/TYPE/현재 전역**을 사용해야 한다. 현재 66부모 분배를 전체 NoWorld 삭제 완료로 세지 않는다. |
 | **2. M6-n: 호출자·owner 전수 감사** | Source/listener/두 등록표/Poll/송수신·선택적 기록, 25태그 전 scope·무태그 63F, Snapshot/debugBurst를 대조한다. | 원문 등록 92행/모든 실제 process VT, 현재 receiver/observer/version/길이·파일/해제 수명을 연결한다. 없는 큰 장치·빈 효과를 숨기지 않는다. l/m 구현 후 최종 감사를 다시 닫는다. |
 | **3. M6-l: 실제 지연큐** | Client 장기 분포·OS시계/CRT rand·각 노드 queue·현재 20BYTE 주소·실제 전송/등록 수명을 연결한다. | 원문 `4def40/4df010/4dee60/4def20/4df5e0/4dfc00`. FIFO·엄격한 `deadline < now`·난수 소비·observer/기록·닫힘/해제를 보존한다. queue=false로 완료 처리하지 않는다. |
 | **4. M6-m: JoinTestBattle** | 개발자 4이름 제한·현재 주소·server0/current29 뒤 기존 1bh 전체 수신을 직접 호출한다. | 원문 `4b8be0 → 4b8b20`, 입력 `0200002b`의 선행 `4b3620` 보존. Edit TestBattle(c2)와 구별하고 새 수신 본문을 복제하지 않는다. |
 
-세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1204 구현 문서](docs/exe/cpp-buried-resource-owner-20261109.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
+세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1206 구현 문서](docs/exe/cpp-region-owner-20261109.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
 ### 2.2 다음 구현의 출발점과 유지할 계약
 
 | 범위 | 현재 연결 / 유지 조건 |
 | --- | --- |
-| 장기 건설·배치 | `ClientConstructionGlobals`는 같은 SP/HP/Canon/Chunks·최근/전체 목록·현재 Player/Bounds를 보유한다. 전체 MayPlace·단일 난수/너겟 배치·Gem/제외 목록·오벨리스크 PostPop/두 Regular/기본 Host를 공유하며 보충은 Runtime 없이 직접 배치한다. |
-| 자산 삭제 | `RawSurfaceAssetDeletion.cpp`/`RawSurfaceStorage.cpp`와 실제 가상표 분배가 출발점이다. 연결 61/잔여 22와 통지 6은 0.1절 기준이다. 구현한 부모 분배와 미연결 하위 효과를 구별한다. |
-| 수명 | 건설 큰 효과 **16개**는 weak 대여 → 실제 Runtime pin → 함수 사본 → 호출이다. Client 장치 **8개**는 첫 메뉴/Session 전에 결합하되 초기화·조회·창 생성을 하지 않는다. Storage는 실제 난수 alias와 약한 보상 owner를 보유한다. |
+| 장기 건설·배치 | `ClientConstructionGlobals`는 같은 SP/HP/Canon/Chunks·최근/전체 목록·현재 Player/Bounds를 보유한다. 전체 MayPlace·단일 난수/너겟 배치·Gem/오벨리스크 하위에 이어 1206의 실제 섬/신전/투표/도장도 같은 장기 본체를 사용한다. Native Session은 본체·캐시·영향 목록을 빌린다. |
+| 자산 삭제 | `RawSurfaceAssetDeletion.cpp`/`RawSurfaceStorage.cpp`와 실제 가상표 분배가 출발점이다. 연결 66/잔여 17과 통지 6은 0.1절 기준이다. 네 신전과 Outpost 부모 5쌍을 추가했다. 분배와 큰 하위 효과의 전체 연결을 구별한다. |
+| 수명 | 건설 큰 효과 **16개**는 weak 대여 → 실제 Runtime pin → 함수 사본 → 호출이다. Client 장치 **10개**는 첫 메뉴/Session 전에 결합한다. 섬/영역/신전은 같은 Player getter·Kencloud redraw·난수/목록을 빌리며 Storage→영역 callback도 weak 선택 pin이다. 결합 시 Player/상태/캐시를 초기화하지 않는다. |
 | 해제 | body를 State/backing보다 먼저 반납하고 참조 순환을 피한다. 세 Runtime 공개 경로·Host 반납 순서를 유지한다. 실제 Menu/Session/Host 정리 뒤 최종 Client 장치를 끊는다. 강한 Session 역참조·임시 World/Player/reset·성공 fallback을 넣지 않는다. |
 | 기존 LAN | M1~M5, Pop/저장복구/78h/선택적 기록은 재작성하지 않는다. checking `004b02d0/004dc220`은 1157에서 같은 기존 본체/DWORD 연결을 확인했다. 중앙 assertion의 새 누락은 M7.5다. |
 | R/주소 | 1062~1093의 실제 새 R/TCP·UDP/등록표/시계/Config/주소/기록 owner를 유지한다. 제공 R10.71의 3BYTE 존과 Client10.78의 47BYTE 존은 1093 compact 호환 범위다. 원본 R 복사/실행으로 대체하지 않는다. |
@@ -172,7 +172,7 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 
 | 확인할 범위 | 기준 문서 |
 | --- | --- |
-| 최신 제품·원시 | [1204 문서](docs/exe/cpp-buried-resource-owner-20261109.md)·[1204 보고서](cpppj/buried-resource-owner-20261109.json), `extracted/cpp-resume-1204/` |
+| 최신 제품·원시 | [1206 문서](docs/exe/cpp-region-owner-20261109.md)·[1206 보고서](cpppj/region-owner-20261109.json), `extracted/cpp-resume-1206/` |
 | 비MP 구현 마감 | [UI 929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit 943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션 956](docs/exe/cpp-mission-state-scope-20261106.md)·[내부 수명 980](docs/exe/cpp-internal-lifetime-closure-20261106.md) |
 | 디컴파일/소스 | [디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md) |
 | 제품 계약·경로 | [11.01](docs/exe/cpp-product-1101-20261101.md)·[TODO](TODO.md)·[미션 대응표](docs/gameplay/demo-campaign-map.md) |

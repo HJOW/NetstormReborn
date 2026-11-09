@@ -1,5 +1,6 @@
 // 현재 자산의 실제 VT+14/+18/+34를 같은 장기 삭제 부모에 연결한다.
 #include "client/RawSurfaceWorld.h"
+#include "o/RawOutpostLifecycle.h" //두목록제거와현재영역갱신뒤실제Damageable부모를재사용한다.
 #include <array> // 보호 PE에서 읽은83개 생성자 VT를 고정 메타데이터로 보관한다.
 #include <stdexcept>
 #include <string>
@@ -23,6 +24,12 @@ const NativeAssetDeletionEntry& CurrentAssetDeletionEntry(const o::SidPool& pool
 }
 }
 
+// 최초메뉴에서약한실제장치만연결하고이미선택된함수의수명은각호출이보유한다.
+void RawSurfaceStorage::BindRegionLifecycle(std::function<void(o::Sid,std::uint32_t)> vortexOwner,std::function<void(o::Sid,std::uint32_t)> vortexPre,std::function<void(float,float)> region) {
+    if (!UsesNativeTransmissionDevices() || borrowed_ || !vortexOwner || !vortexPre || !region || vortexOwner_ || vortexPre_ || regionChanged_) throw std::invalid_argument("장기 영역의 최초 Native 가상 장치 중복/누락");
+    vortexOwner_=std::move(vortexOwner);vortexPre_=std::move(vortexPre);regionChanged_=std::move(region);
+}
+
 // 공통/표면/피해가능 객체/간헐천은 기존 실제 몸체를 재사용하고 전용 미연결은 선택 위치에서 알린다.
 void RawSurfaceStorage::EmitDefaultAssetEffect(const o::SquidDestroyEvent& event) {
     if (!UsesNativeTransmissionDevices()) throw std::logic_error("장기 자산 가상 효과의 Native 판본 계약");
@@ -35,6 +42,14 @@ void RawSurfaceStorage::EmitDefaultAssetEffect(const o::SquidDestroyEvent& event
     if (!pre && event.effect!=o::SquidDestroyEffect::PostDestroy) throw std::logic_error("장기 자산의 가상 삭제 효과 종류 오류");
     const auto method=pre ? entry.pre:entry.post;
     switch (method) {
+    case 0x004dca50U: { //네실제신전은같은전체장기부모를선택한다.
+        const auto preBody=vortexPre_;if (!preBody) throw std::logic_error("장기 신전의 실제 삭제 전처리 미결합");preBody(event.sid,event.flags);return;
+    }
+    case 0x00455840U: { //Outpost는실제두목록제거뒤에만현재투표/부모를선택한다.
+        o::OutpostPreDestroyHooks hooks;hooks.regionChanged=[this](auto x,auto y) { const auto update=regionChanged_;if (!update) throw std::logic_error("장기 Outpost의 실제 영역 갱신 미결합");update(x,y); };
+        hooks.damageablePre=[this](auto sid,auto flags) { DamageablePre().PreDestroy(sid,flags); };
+        o::RawOutpostLifecycle::PreDestroyNative(pool,sidLists.outposts,sidLists.residences,event.sid,event.flags,hooks);return;
+    }
     case 0x0041f910U: //실제오벨리스크의단일jmp는현재공통Pre와동일한인자/순서를사용한다.
     case 0x004b0950U:CommonDeletion().PreDestroy(event.sid,event.flags);return;
     case 0x004b0840U:CommonDeletion().PostDestroy(event.sid,event.flags);return;

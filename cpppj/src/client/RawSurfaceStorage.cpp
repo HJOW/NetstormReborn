@@ -1,5 +1,6 @@
 // Client의 실제 배열을 Session보다 오래 보관하고 같은 물리를 두 월드에 중복 설치하지 않는다.
 #include "client/RawSurfaceWorld.h"
+#include "o/RawVortexOwner.h" //장기신전가상74는같은원문VT표와실제영역owner로분배한다.
 #include "client/NativeFortSaveVirtual.h" //완전 형식의 조회기 생성/반납을 Storage 구현에서만 수행한다.
 #include "o/RawAssetRegular.h" //현재NativeGeyser의독립실제본문을같은Storage에서사용한다.
 #include "o/RawBuriedPostPop.h" //실제오벨리스크전용후처리를같은장기저장소에서선택한다.
@@ -308,7 +309,12 @@ o::SquidFrame& RawSurfaceStorage::Frame() { if (!frame_) { auto frame=std::make_
 //장기물리조회뒤기존World와동일한공통Unpop을수행하며실제하위대여의pin은각실행기가선택한다.
 void RawSurfaceStorage::UnpopAsset(o::Sid sid,std::uint32_t flags) { Unpop().Unpop(sid,types.at(pool.Slot(sid)[10]),flags);NoteChanged(); }
 //기존World와같은가상owner부모를공유하여생산dirty·섬받침/종유석과공통접두분배를보존한다.
-void RawSurfaceStorage::SetAssetOwner(o::Sid sid,std::uint32_t owner) { const auto set=o::MakeAssetOwnerDispatch(pool,links,postPopState.productionDirty,[this](auto object,auto player) { Owner().Set(object,player); });set(sid,owner);NoteChanged(); }
+void RawSurfaceStorage::SetAssetOwner(o::Sid sid,std::uint32_t owner) {
+    const auto set=o::MakeAssetOwnerDispatch(pool,links,postPopState.productionDirty,[this](auto object,auto player) { //표면특수부모뒤실제현재신전가상74를분배한다.
+        if (UsesNativeTransmissionDevices() && o::HandlesRawVortexOwner(pool,object)) { const auto body=vortexOwner_;if (!body) throw std::logic_error("장기 신전의 실제 가상 소유자 미결합");body(object,player); }
+        else Owner().Set(object,player);
+    });set(sid,owner);NoteChanged();
+}
 o::RawPopResult RawSurfaceStorage::PopAsset(o::Sid sid,float x,float y,std::uint32_t flags) {
     if (pool.Edition()==o::OriginalEdition::Patch1078) { const auto result=Pop().PopCurrent(sid,x,y,flags);if (result!=o::RawPopResult::Unchanged) NoteChanged();return result; }
     const auto raw=pool.Slot(sid);const auto size=Display().FrameSize(pool.Edition(),raw,raw[34]);const auto result=Pop().Pop(sid,types[raw[10]],size[0],size[1],x,y,flags);if (result!=o::RawPopResult::Unchanged) NoteChanged();return result; //CD의기존BYTE프레임/사전크기계약이다.

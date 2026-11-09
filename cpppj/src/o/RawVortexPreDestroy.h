@@ -21,6 +21,9 @@ public:
     // 입력은 같은 PATCH Pool/Player/temple/residence/outpost와 현재 loading DWORD여야 한다.
     RawVortexPreDestroy(SidPool& pool,std::span<std::uint8_t> players,SquidPostPopList& temples,
         SquidPostPopList& residences,const SquidPostPopList& outposts,const std::uint32_t& loading,VortexPreDestroyHooks hooks);
+    // 장기 Native 본체는 실제 현재 Player getter만 결합하고 선택한 필드에서만 조회한다.
+    RawVortexPreDestroy(SidPool& pool,std::function<std::span<std::uint8_t>()> players,SquidPostPopList& temples,
+        SquidPostPopList& residences,const SquidPostPopList& outposts,const std::uint32_t& loading,VortexPreDestroyHooks hooks);
     // 004dca50 전체의 목록 제거→지역→공통 Damageable→현재 UI→현재 Player4필드 순서다.
     void PreDestroy(Sid sid,std::uint32_t flags) const;
 private:
@@ -30,8 +33,9 @@ private:
     std::array<float,2> Position(Sid sid) const;
     // 현재 raw 소유자의 해당 PlayerDWORD 주소이며 범위 밖은 호스트 오류다.
     std::size_t Field(Sid sid,std::size_t field) const;
+    std::span<std::uint8_t> Records() const; //현재 실제 base/9기록을 원문 필드 선택 위치에서만 요구한다.
     SidPool& pool_; // 삭제되는 신전과 outpost가 공유하는 실제 풀이다.
-    std::span<std::uint8_t> players_; // 원본9×0xb4의 같은 Player 기록이다.
+    std::function<std::span<std::uint8_t>()> players_; //원본0059534c의 현재 base를 매번 읽는 실제 owner다.
     SquidPostPopList& temples_; SquidPostPopList& residences_; // 현재 두 원본 등록 목록이다.
     const SquidPostPopList& outposts_; // 효과 뒤의 현재 count/owner/좌표를 읽는다.
     const std::uint32_t& loading_; // 005c89b8의 실제 로딩 깊이다.

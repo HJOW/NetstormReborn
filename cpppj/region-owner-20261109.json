@@ -1,0 +1,242 @@
+{
+  "unit": 1206,
+  "version": "11.01",
+  "date": "2026-11-09",
+  "host": "HJOW-Athlon",
+  "fullGoalComplete": false,
+  "summary": "같은 장기 섬/현재Player/전체 영역 투표·도장/신전 Owner·Pre와 Outpost Pre를 연결했다. Native Session도 같은 본체/캐시를 빌린다.",
+  "sourceSha256": {
+    "cpppj/src/client/ClientConstructionGlobals.h": "192dfecb6c583c28c28621be6ec5dcfc3a927c3bd9e3bec28c065b24251fc1d3",
+    "cpppj/src/client/ClientConstructionRegions.cpp": "8f6ddbeac898247ba8ca9773628ae8fd54c6a8841868d23045170201a5fb98c3",
+    "cpppj/src/client/ClientConstructionDevices.cpp": "27a2ee2830bc99d6eb4626c0b402d28e99491020fea24cc8818e11319a0d5185",
+    "cpppj/src/client/ClientMain.cpp": "21fde93c0b6252aae7e9ced1af2905f2cb3b2f8b1f27ee3f61a320c6b3dfe873",
+    "cpppj/src/client/UberGump.h": "fb765cd1ce0a2a068da9b5ec7e3a4925c7cf9cc42ae410a6cf74729c7547757a",
+    "cpppj/src/client/UberGump.cpp": "4e79b69d744725fac8529981d77fd58453975e45a9972fccc88b1fde531b3048",
+    "cpppj/src/client/RawSurfaceWorld.h": "e6b533446e066cfb3679439c829066a1d577d96bcf18ccc1bc666ed613908571",
+    "cpppj/src/client/RawSurfaceAssetDeletion.cpp": "cb51451f2c0aa893a8048f357a2689ae3d4698c61dc3ae3ccdabec59d13bcef7",
+    "cpppj/src/client/RawCampaignSession.cpp": "7d2f3bc525f044d4604364edfb39474aa57f80576a1dfca8e12c8dd2ff4d206f",
+    "cpppj/src/client/RawCampaignOwnership.h": "4fdb3dd002c022c2cbc2daaa07605ed4ba336bee240adc4535f79fa7896e3591",
+    "cpppj/src/client/RawCampaignOwnership.cpp": "c4755a9fc42a6239ecec30c1a2486c90022f38a3689524c1a35e0894d81c76ed",
+    "cpppj/src/o/RawVortexOwner.h": "48f2e6705071e07e29574c5981d99e5c5587536b5675e733cc632a501c80e078",
+    "cpppj/src/o/RawVortexOwner.cpp": "76cff38301c02c504c3a4d3e8b36d8c5565645d14cd345332819a2f18edb84a1",
+    "cpppj/src/o/RawVortexPreDestroy.h": "4fc1b1625cd7caf1a9b9b47cb6110617bb774aeb2421af56b2bfcc4fa4705cf0",
+    "cpppj/src/o/RawVortexPreDestroy.cpp": "d1f85ab38e436540d869519c5e47821cfe4f0144d1a2664d5991f39e8abc795c",
+    "cpppj/src/o/RawIslandRuntime.h": "37416eb514c026d733a75f2ee80292e85b3813d54f86be1fd207bebf0b37d781",
+    "cpppj/src/o/RawIslandRuntime.cpp": "cffd4acbc0292affc294c72c8f8f58bef7e330a621fca185ddd83fb94ec521b4",
+    "cpppj/src/o/RawRegionOwnership.h": "1314d096a177a56a987182be564a2d4d368ffdcbe017e7a47aa77b29be902135",
+    "cpppj/src/o/RawRegionOwnership.cpp": "131d9b994e2e5bdc3ac8236137646cf566a61941d5a92990211a2a18ed53e1c5",
+    "cpppj/src/client/CMakeLists.txt": "c35a89d18c4a21f703ac7ed598aeefe283e832e287e2fb491308a86495120c4a",
+    "cpppj/tests/CMakeLists.txt": "0a58a0a8529263be8a84a41d5387838d5d7769eddb6c48a9102dfb29cec7fe78",
+    "cpppj/tests/ConstructionOwnerStateTests.cpp": "eef783c54a2322a1e9aec8c7edb19a8c591c464f061dcb3eacff4ee7b71ea6d2",
+    "cpppj/tests/SurfaceAssetDeletionTests.cpp": "e6da7790a5ab641cd128de0f68f2363be6749568ccf9cbf87e3591e37334cdb6",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "45f7ea993d9de25b21cc3314b28e244913cc7a6c0f20c8b54763e665f3ef7e76",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "18e793f725107408e2de5d797e9518a8a4538e99e3bb007c10a0fdcaf44fe47e"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 13818368,
+      "sha256": "d00b61caa57e366498d943351b65ed72df63d92f8af5de362073cf6d0089d974"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "d04eb3233991b9e638b425053143b2649cc6a4f14ddfd3c29f5cd6ac771189e4"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "netstorm_carrier_replenish_tests",
+      "netstorm_damageable_lifetime_tests",
+      "netstorm_common_deletion_tests",
+      "netstorm_surface_lifetime_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true"
+    ],
+    "exitCode": 0,
+    "seconds": 30.5390944480896,
+    "sourcesUnchanged": true
+  },
+  "tests": {
+    "cases": 183,
+    "passed": 183,
+    "newCases": 13,
+    "additionalExistingNonMpCases": 15,
+    "groups": {
+      "netstorm_construction_owner_tests": 109,
+      "netstorm_carrier_replenish_tests": 8,
+      "netstorm_damageable_lifetime_tests": 22,
+      "netstorm_common_deletion_tests": 18,
+      "netstorm_surface_lifetime_tests": 26
+    },
+    "seconds": 37.78371024131775,
+    "raw": "extracted/cpp-resume-1206/tests.json"
+  },
+  "corrections": {
+    "firstBuild": {
+      "command": [
+        "cmake",
+        "--build",
+        "cpppj/build",
+        "--config",
+        "Release",
+        "--target",
+        "NetstormCpp",
+        "NetstormRoot",
+        "netstorm_construction_owner_tests",
+        "netstorm_carrier_replenish_tests",
+        "netstorm_damageable_lifetime_tests",
+        "netstorm_common_deletion_tests",
+        "netstorm_surface_lifetime_tests",
+        "--parallel",
+        "4",
+        "--",
+        "/p:UseMultiToolTask=true",
+        "/p:MultiProcMaxCount=4",
+        "/p:EnforceProcessCountAcrossBuilds=true"
+      ],
+      "exitCode": 1,
+      "seconds": 426.5169005393982,
+      "sourcesUnchanged": true
+    },
+    "firstBuildReason": "새 검사에서 비공개 Player Allocate/WriteBase/Read/Write와 const Entries 쓰기를 사용했다. 공개 실제 Initialize/Records/Hash Cell로 교정했다.",
+    "playerSetup": "실제 재초기화는 이전 Player/factory를 해제한다. 해제된 span을 읽는 초안 대신 새 base와 실제 현재 필드를 검사하고 동맹 mask 자식도 기존 실제 RawPlayerParticipation에 연결했다.",
+    "firstRuntime": {
+      "cases": 183,
+      "passed": 180,
+      "failed": [
+        {
+          "target": "netstorm_construction_owner_tests",
+          "name": "ClientRegions_OutpostDeletionRunsActualPaintAfterLists",
+          "exitCode": 1,
+          "pass": false
+        },
+        {
+          "target": "netstorm_construction_owner_tests",
+          "name": "ClientRegions_VortexDeletionUsesCurrentPlayersAfterUi",
+          "exitCode": 1,
+          "pass": false
+        },
+        {
+          "target": "netstorm_construction_owner_tests",
+          "name": "ClientRegions_VortexPreSkipsNegativeCurrentOutposts",
+          "exitCode": 1,
+          "pass": false
+        }
+      ]
+    },
+    "runtimeReason": "실제 삭제 Pre의 공통 Refund가 검사에서 금지한 Player 보상 callback을 선택했다. 장치별 진단으로 확인했다.",
+    "runtimeCorrection": "유효한 일반 owner1 입력에는 실제 공개 Player 초기화가 필요하다. 실제 RawAiWallet/RawAiObjectNotice의 NULL brain 자연 반환과 실제 분산SP 환불을 사용했다. UI/소리는 호출 관찰이며 큰 AI/드롭/통신은 계속 금지한다. 기존 기대를 가짜 성공으로 대체하지 않았다.",
+    "raw": [
+      "first-build.log",
+      "first-build.json",
+      "first-tests.json",
+      "first-test-*.log",
+      "diagnostic-ClientRegions*.log",
+      "before-alliance-child-tests.cpp",
+      "before-real-refund-devices-tests.cpp"
+    ]
+  },
+  "staticAudit": {
+    "sourceVtables": 83,
+    "connectedPrePost": 66,
+    "remainingPrePost": 17,
+    "remainingNotices": 6,
+    "addedVtables": [
+      "00509210",
+      "005196f0",
+      "005197a8",
+      "00519860",
+      "00519918"
+    ],
+    "originalSnapBiasHex": "58ff7f3f",
+    "lastClientDecompilation": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-03"
+    },
+    "lastRDecompilation": {
+      "host": "HJOW-Athlon",
+      "date": "2026-11-07"
+    },
+    "decompilerSourceChanges": 0,
+    "reviewedFunctions": 24
+  },
+  "tutorial4": {
+    "exitCode": 0,
+    "passed": true,
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.24,
+        "gameTimeAfter": 23.468,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "waitFrames": 600,
+    "protectedUnchanged": true,
+    "dataUnchanged": true,
+    "imageInspected": "015-generator-settled.png",
+    "raw": "extracted/cpp-resume-1206/live-tutorial4/summary.json"
+  },
+  "editor": {
+    "exitCode": 0,
+    "protectedUnchanged": true,
+    "exeUnchanged": true,
+    "multiplayer": 0,
+    "testBattle": 0,
+    "passed": true,
+    "sameClientRoundTrips": 2,
+    "observations": 11,
+    "screen": [
+      800,
+      600
+    ],
+    "raw": "extracted/cpp-resume-1206/live-editor-fixed/summary.json"
+  },
+  "protectedFilesUnchanged": 2800,
+  "originalGameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "decompilerSourceChanges": 0,
+  "remainingRuntimeEffects": 16,
+  "limitations": [
+    "전체목표 미완료; M6-n 전용17부모/6통지·다른 Form/Regular·큰 비영AI·다른 배치 Caller/Fort 상위Finish·전수 Caller/owner 감사 잔여",
+    "M6-l 실제 지연큐/M6-m JoinTestBattle·M7의5건/M8·K1~K5/S1~S4/B1~B4 상위16계획·버그34건 유지",
+    "66/83은 실제 Pre/Post 부모 분배 수이며 선택될 수 있는 큰 하위 효과 전체의 NoWorld 연결 완료 수가 아님",
+    "사용자 제외 실제 포획/희생·특정 적 공격·승리·공중3종/사용자 확인·MP 단위/패킷/통신/게임/기록 검사는 실행하지 않음",
+    "이번 GUI는 건물 완성/Test Battle/전체 자연 완주 검증이 아님; 전체34진입은 제품644/검증645, 최신ZIP1092/최신전체검사통과없음"
+  ],
+  "raw": "extracted/cpp-resume-1206/"
+}

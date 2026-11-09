@@ -183,6 +183,7 @@ public:
     o::RawDamageablePreDestroy& DamageablePre(); // 현재 실제 전처리/해방/공통 Pre를 World 없이 제공한다.
     void BindCarrierReplenishment(std::function<void()> replenish); //최초Carrier앞에실제Client보충부모만결합하며호출하지않는다.
     o::RawCarrierPreDestroy& CarrierPre(); //현재finder·Damageable·보충부모를같은장기물리에서사용한다.
+    void BindRegionLifecycle(std::function<void(o::Sid,std::uint32_t)> vortexOwner,std::function<void(o::Sid,std::uint32_t)> vortexPre,std::function<void(float,float)> region); //실제장기owner의약한연결만보유하며신전/도장/Player를호출하지않는다.
     void BindBuriedResource(std::shared_ptr<o::GameRandom> random,std::function<std::uint32_t(std::uint32_t)> choose); //같은난수alias와약한실제보상owner만결합하고배치/추첨은실행하지않는다.
     o::RawBuriedPostPop& BuriedPostPop(); //같은현재boss/로딩/BridgeTYPE·Host/공통부모를장기로제공한다.
     o::RawBuriedRegular& BuriedRegular(); //현재프레임/같은전역난수의실제오벨리스크사건0/1을제공한다.
@@ -326,6 +327,9 @@ private:
     std::unique_ptr<o::RawDamageablePreDestroy> damageablePre_; // 장기 실제 효과 장치와 같은 공통 Pre를 빌린다.
     std::unique_ptr<o::RawCarrierPreDestroy> carrierPre_; //같은finder/Damageable보다먼저반납하는실제장기Carrier전처리다.
     std::function<void()> carrierReplenishment_; //실제장기보충owner를약하게빌리는Client장치이며Session을소유하지않는다.
+    std::function<void(o::Sid,std::uint32_t)> vortexOwner_; //실제신전가상74의장기owner를약하게빌린다.
+    std::function<void(o::Sid,std::uint32_t)> vortexPre_; //네신전의현재삭제전처리를선택할때만owner를pin한다.
+    std::function<void(float,float)> regionChanged_; //Outpost가두목록제거뒤같은장기투표/도장을선택한다.
     std::unique_ptr<o::RawDamageablePostDestroy> damageablePost_; // 같은 HP/목록/공통 Post를 빌린다.
     std::unique_ptr<o::RawGeyserLifetime> geyserLifetime_; // 같은 피해가능 객체 수명보다 먼저 반납한다.
     std::unique_ptr<NativeFortSaveVirtual> fortSaveVirtual_; //같은 Storage/GameAux를 빌리는 실제 조회기이며 해당 소유자보다 먼저 반납한다.
