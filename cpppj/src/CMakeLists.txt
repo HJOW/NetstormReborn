@@ -652,3 +652,5 @@ target_sources(netstorm PRIVATE client/NativeMetaBattleCreate.h client/NativeMet
 
 # 메타전투의실제현재팩터리/QA·Pool/가상Pop장치를원문생성부모에바인딩한다.
 target_sources(netstorm PRIVATE client/ClientMetaBattleObjects.h client/ClientMetaBattleObjects.cpp)
+
+target_sources(netstorm PRIVATE o/RawPriestRegular.cpp client/RawSurfacePriest.cpp) # 사제의 같은 정기 분기와 장기 상태/후단 수명을 함께 연결한다.

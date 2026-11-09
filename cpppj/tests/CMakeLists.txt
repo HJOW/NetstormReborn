@@ -3843,3 +3843,4 @@ target_sources(netstorm_construction_owner_tests PRIVATE DudeRegularTests.cpp Du
 target_sources(netstorm_construction_owner_tests PRIVATE FlareTests.cpp) # 보호 원문139입력과 방향60입력을 같은 Native/typed 본문으로 비교한다.
 target_sources(netstorm_construction_owner_tests PRIVATE ManaBoltRegularTests.cpp ConstructionArrivalTests.cpp) # 같은 원본 정기/도착 입력만 실행하며 네트워크/직접 플레이는 실행하지 않는다.
 target_sources(netstorm_construction_owner_tests PRIVATE DaisRegularTests.cpp ForcefieldLifecycleTests.cpp ForcefieldRegularCurrentTests.cpp RunePostPopTests.cpp) # 기존 독립 정기/검색 원문만 선택하며 SharedRegular 통신 실행은 추가하지 않는다.
+target_sources(netstorm_construction_owner_tests PRIVATE PriestRegenTests.cpp PriestFallTests.cpp PriestPrayerTests.cpp PriestRitualFrameTests.cpp) # 비MP의 기존 원문/고유 사건 검사만 같은 집중 대상에 등록한다.

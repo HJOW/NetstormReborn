@@ -54,7 +54,7 @@ float RawPriestRegen::Handle(Sid sid,std::uint32_t event,std::uint32_t count,flo
     if (event!=kPriestRegenEvent) throw std::invalid_argument("미복원 사제 이벤트");
     const bool patch=pool_.Edition()==OriginalEdition::Patch1078;
     const auto raw=pool_.Slot(sid);
-    if (raw[10]!=kPriestType || Vtable(raw)!=(patch ? kPatchPriestVtable : kCdPriestVtable))
+    if (Vtable(raw)!=(patch ? kPatchPriestVtable : kCdPriestVtable)) // 원본 가상 진입은 현재 TYPE BYTE가158인지 별도 검사하지 않는다.
         throw std::invalid_argument("사제 회복 타입/가상 표 오류");
     if (patch) {
         state_.patch.Sample()=random_.Next(9);

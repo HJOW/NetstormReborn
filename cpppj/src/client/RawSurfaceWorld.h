@@ -75,6 +75,7 @@ namespace netstorm::o { class RawFlare;class RawDudeRegular;class RawDudeBehavio
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
 class ClientPlayerRecords; // 현재 Player 배열을 조회할 때만 수명을 pin하는 실제 장기 owner다.
+struct RawPriestWorldState; // 현재 사제 전역의 장기 단일 저장소를 전방 선언한다.
 struct PriestPlacementAssets; // 실제 Canon/핫스폿/SHP와 진단을 Native Client 수명에 한 번 보관한다.
 class NativeFortSaveVirtual; //저장/보상 가상 조회가 같은 현재 Pool/TYPE/Hash를 빌리는 순수 장치다.
 // 실제 분산 SP와 현재 편집 모드의 owner를 보존하며 Session/World를 소유하지 않는다.
@@ -123,6 +124,10 @@ struct RawSurfaceFactoryBindings { // 큰 업그레이드/플레어만 현재 Wo
     std::function<float(o::Sid)> finish; // 기존 전체 완료/현재AI 통지 본문이다.
     std::function<void(o::Sid,std::int32_t,std::uint32_t)> flare; // 실제 현재 플레어 생성기다.
     std::function<std::shared_ptr<void>()> pin; // 선택 호출 동안 실제 전체 Runtime을 보유한다.
+};
+struct RawSurfacePriestBindings { // 큰 회복/추락/기도/의식 프레임만 실제 현재 Runtime으로 빌린다.
+    o::RegularHandler unique; // 기존602~605 실제 몸체와 전체 후단을 선택한다.
+    std::function<std::shared_ptr<void>()> pin; // 선택한 호출의 정상/예외 반환까지 전체 Runtime을 보유한다.
 };
 struct RawSurfaceRitualBindings { // 선택된 큰 의식만 실제 현재 Runtime 수명으로 대여한다.
     std::function<void(o::Sid)> progress,release,removeAnimation,ritual; // 실제 다이스 진행·해방·애니메이션 제거·사제 검색/의식 본문이다.
@@ -243,6 +248,7 @@ private:
     std::weak_ptr<const o::TerrainBitmapState> residenceTerrain_; // 실제 현재 fringeType 저장소의 약한 대여다.
     std::function<std::uint32_t()> residenceTheme_; // 실제 장기 설정 owner를 선택 호출할 장치다.
     std::weak_ptr<const RawSurfaceFactoryBindings> factoryRegularRuntime_; // 현재 큰 후단만 약하게 빌리고 프레임/난수는 장기 현재값을 사용한다.
+    std::weak_ptr<const RawSurfacePriestBindings> priestRuntime_; // 전체 Session을 강하게 역소유하지 않는 현재 고유 후단이다.
     std::weak_ptr<const RawSurfaceRitualBindings> ritualRuntime_; // 장기 분기 본문은 Session을 강하게 역소유하지 않는다.
     std::weak_ptr<const RawSurfaceDamageableBindings> damageableRuntime_; // 선택한 가상98만 약하게 빌려 Session 역소유를 피한다.
     std::weak_ptr<const RawSurfaceBombBindings> bombRuntime_; // 큰 주문 후단만 현재 World 수명으로 빌려 오래된 Session을 강하게 보유하지 않는다.
@@ -371,6 +377,9 @@ public:
     o::RawManaBoltArrival& ManaArrival(); // 같은 실제 finder·Host·현재 프로세스 역할과 도착 본문이다.
     o::RawManaBoltRegular& ManaRegular(); // 현재 TYPE/프레임/SHP·카메라·가상 공간을 공유하는 유일한 Native 정기다.
     o::AltarSacrificeState& AltarState(); //00532698/69c의 같은 현재 지연/확률을 Session과 공유한다.
+    RawPriestWorldState& PriestState(); // 현재 사제 전역을 재초기화 없이 Session/NoWorld에 빌린다.
+    void BindPriestRuntime(const std::shared_ptr<const RawSurfacePriestBindings>& runtime); // 고유602~605의 실제 현재 Runtime을 weak로 공개한다.
+    float PriestRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 실제494580의 같은 분기/현재 Carrier를 실행한다.
     void BindRitualRuntime(const std::shared_ptr<const RawSurfaceRitualBindings>& runtime); // 선택된 큰 의식의 현재 대여와 pin만 공개한다.
     float RitualRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // Rune/제단/보호막/다이스의 원문 네 VT를 같은 현재 부모로 분배한다.
     o::RawForcefieldRegular& ForcefieldRegular(); // 현재 사제TYPE/진단/프레임/검색/삭제를 공유하는 같은 보호막 정기다.
@@ -528,6 +537,7 @@ private:
     std::unique_ptr<o::RawBombPreDestroy> bombPre_; //같은현재폭발장치와공통부모보다먼저반납할Point Blast전처리다.
     std::unique_ptr<o::RawFlyerPreDestroy> flyerPre_; // Pool과 Damageable보다 먼저 반납하는 실제 전처리다.
     std::unique_ptr<o::RawCarrierPreDestroy> carrierPre_; //같은finder/Damageable보다먼저반납하는실제장기Carrier전처리다.
+    std::shared_ptr<RawPriestWorldState> priestState_; // 현재 사제 상태는 Host보다 나중에 반납하고 Session 역참조를 넣지 않는다.
     o::PriestPostPopState priestDeletionState_; // 고유 목록/owner 상태는 앞의 장기 실제 저장소 주소만 빌린다.
     std::unique_ptr<o::RawPriestForcefield> priestForcefield_; //Pool/TYPE/현재 역할보다 먼저 반납할 실제 조회기다.
     std::unique_ptr<o::RawPriestPreDestroy> priestPre_; // 역순 파괴로 참조하는 조회/목록/Carrier보다 먼저 반납한다.
@@ -695,6 +705,7 @@ struct RawWorldRuntimeHooks {
     RawSurfaceDudeBindings dude; // 현재 기존 전체 경로 이동/진입점의 실제 Runtime이다.
     RawSurfaceResidenceBindings residence; // 기존 실제 Dude 생성/진입점/작업의 현재 Runtime 대여다.
     RawSurfaceFactoryBindings factoryRegular; // 현재 전체 업그레이드/플레어를 실제 World pin과 공개한다.
+    RawSurfacePriestBindings priestRegular; // 큰 고유 후단만 기존 Session 전체 수명으로 공개한다.
     RawSurfaceRitualBindings ritualRegular; // 실제 큰 의식만 같은 전체 Runtime pin과 함께 공개한다.
     o::GumpFormNotice gumpNotice; // 현재 Session이 제공한 실제 UI 가상 통지이며 미연결이면 장기 실제 UI 등록표를 사용한다.
 };

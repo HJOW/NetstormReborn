@@ -7,6 +7,9 @@
 #include "client/ClientRandomGlobals.h"
 #include "client/ClientSpGlobals.h"
 #include "client/RawCampaignOwnership.h"
+#include "o/RawPriestRegular.h" // 원본601/603/604/부모 진입 관찰을 같은 제품 분기로 대조한다.
+#include <filesystem> // 실행 cwd와 무관하게 같은 소스 옆 고정 fixture를 읽는다.
+#include "client/RawPriestWorldBindings.h" // Session 대여 전후 같은 현재 사제 상태의 주소와 값을 검증한다.
 #include "client/RawProcessHostStorage.h" //같은실제Host의성장Regular부착/실행을직접관찰한다.
 #include "o/SquidProcess.h" //실제Regular의사건/횟수/주기를검사하며가짜예약을만들지않는다.
 #include "o/RawPlayerParticipation.h" //공개Player초기화의동맹mask자식도기존실제본문을사용한다.
@@ -1813,4 +1816,47 @@ TEST_CASE(ClientRitualOwner_ForcefieldActualHostAdvancesSameFrame) { // 실제 H
 }
 TEST_CASE(ClientRitualOwner_ForcefieldCurrentRoleAndMissingPriestUseActualDelete) { // 같은 현재 사제DWORD로 찾고 대상이 없으면 실제 삭제/Host 해제로 끝난다.
     RegionScene s;const auto shield=RitualOwnerAsset(s,0x507770U),priest=RitualOwnerAsset(s,0x50f210U,2);CHECK(s.storage->RitualRegular(shield,2,0,9)==std::bit_cast<float>(0x3c23d70aU));s.storage->GameAux()->PriestType()=75;CHECK(s.storage->RitualRegular(shield,2,0,9)==-1 && (s.storage->pool.Slot(shield)[11]&1U) && !(s.storage->pool.Slot(priest)[11]&1U) && !s.storage->Borrowed());
+}
+
+TEST_CASE(ClientPriestOwner_StateAddressSurvivesWorldLoan) { // 같은 현재 사제 역할/회복 추적/목록 설정을 Session 없는 대여가 초기화하지 않는다.
+    RegionScene s;auto* state=&s.storage->PriestState();state->regen.patch.remaining=37;state->regen.modeBlocked=true;s.storage->GameAux()->PriestType()=75;
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->PriestState()==state); }
+    CHECK(&s.storage->PriestState()==state && state->movement.priest==75 && state->regen.patch.remaining==37 && state->regen.modeBlocked && !s.storage->Borrowed());
+}
+TEST_CASE(ClientPriestOwner_First601UsesActualHostAndOriginalThreeSeconds) { //601의 첫count는 큰 Runtime/난수 없이 같은 Host에서3초로 재예약한다.
+    RegionScene s;const auto priest=RitualOwnerAsset(s,0x50f210U);const auto seed=s.random->Game().State();auto* process=s.storage->Processes().Host().AddRegular(priest,601,0.1F);CHECK(process);if (!process) return;process->RunFrame();CHECK(process->Count()==1 && process->Payload()==3 && !(s.storage->pool.Slot(priest)[11]&1U) && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientPriestOwner_Direct601AbstractDeletesActualSlotAndHost) { // 추상·매장 입력의 직접 가상601 진입은 실제 부모/슬롯/Form을 삭제한다. 일반 Host의 추상 선행관문 통과를 주장하지 않는다.
+    RegionScene s;const auto priest=RitualOwnerAsset(s,0x50f210U);auto* process=s.storage->Processes().Host().AddRegular(priest,601,0.1F);CHECK(process);if (!process) return;process->RunFrame();CHECK(process->Count()==1 && process->Payload()==3);s.storage->pool.AllocatedBytes(priest)[40]=9;CHECK(s.storage->PriestRegular(priest,601,1,3)==-1);CHECK((s.storage->pool.Slot(priest)[11]&1U) && !s.storage->Processes().Host().FindEvent(priest,601) && !s.storage->Borrowed());
+}
+TEST_CASE(ClientPriestOwner_Later601OrdinaryRequiresActualExplosion) { // 비매장601은 실제 폭발 장치를 요구하며 금지 장치의 실패와 수행된 공통삭제 접두를 숨기지 않는다.
+    RegionScene s;const auto priest=RitualOwnerAsset(s,0x50f210U);auto* process=s.storage->Processes().Host().AddRegular(priest,601,0.1F);CHECK(process);if (!process) return;process->RunFrame();s.storage->Processes().State().Now()=process->Time();bool failed{};try { process->RunFrame(); }catch (const std::logic_error& error) { failed=std::string_view(error.what())=="영역 검사 금지 폭발"; }const auto raw=s.storage->pool.Slot(priest);CHECK(failed && (raw[11]&2U) && !(raw[11]&1U) && process->Count()==1 && s.storage->Processes().Host().FindEvent(priest,601)==process && s.storage->BaseDestroy().PreDepth()==1 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientPriestOwner_ParentKeepsNaNPayloadWithoutUniqueRuntime) { // 고유 사건 밖은 같은 직접Carrier와Damageable를 거쳐 payload비트를 보존한다.
+    RegionScene s;const auto priest=RitualOwnerAsset(s,0x50f210U);const auto payload=std::bit_cast<float>(0x7fc12345U);CHECK(std::bit_cast<std::uint32_t>(s.storage->PriestRegular(priest,0xffffffffU,77,payload))==0x7fc12345U && !s.storage->Borrowed());
+}
+TEST_CASE(ClientPriestOwner_EachUniqueEventPinsCurrentOwnerAndFunction) { //602~605는 선택한 실제 후단/전체owner를 복귀까지 유지하며 TYPE158 필터를 추가하지 않는다.
+    RegionScene s;const auto priest=RitualOwnerAsset(s,0x50f210U);auto raw=s.storage->pool.AllocatedBytes(priest);raw[10]=75;
+    for (std::uint32_t event=602;event<=605;++event) { // 네 고유 사건마다 독립 대여와 실제 owner 반납을 관찰한다.
+        auto runtime=std::make_shared<RawSurfacePriestBindings>();auto owner=std::make_shared<int>(7);const auto weak=std::weak_ptr<int>(owner);runtime->pin=[weak] { return weak.lock(); };bool called{};
+        runtime->unique=[&](auto selected,auto code,auto count,auto payload) { CHECK(selected==priest && code==event && count==0xffffffffU && payload==0.25F);runtime->unique={};runtime.reset();owner.reset();CHECK(!weak.expired());called=true;return 0.75F; };s.storage->BindPriestRuntime(runtime);CHECK(s.storage->PriestRegular(priest,event,0xffffffffU,0.25F)==0.75F && called && weak.expired() && !s.storage->Borrowed());
+    }
+}
+TEST_CASE(ClientPriestOwner_SelectedUniqueRejectsMissingCurrentRuntime) { // 고유 사건은 미연결 현재 후단을 성공 상수로 숨기지 않는다.
+    RegionScene s;const auto priest=RitualOwnerAsset(s,0x50f210U);bool failed{};try { s.storage->PriestRegular(priest,604,0,1); }catch (const std::logic_error&) { failed=true; }CHECK(failed && !(s.storage->pool.Slot(priest)[11]&1U) && !s.storage->Borrowed());
+}
+TEST_CASE(ClientPriestOwner_SelectedUniqueRejectsMissingActualOwner) { // pin함수/반환owner/선택본문의 누락은 모두 호출 전에 진단한다.
+    RegionScene s;const auto priest=RitualOwnerAsset(s,0x50f210U);auto runtime=std::make_shared<RawSurfacePriestBindings>();bool called{};runtime->unique=[&](auto,auto,auto,auto) { called=true;return 0.0F; };s.storage->BindPriestRuntime(runtime);std::uint32_t failures{};
+    try { s.storage->PriestRegular(priest,602,0,1); }catch (const std::logic_error&) { ++failures; }runtime->pin=[] { return std::shared_ptr<void>{}; };try { s.storage->PriestRegular(priest,603,0,1); }catch (const std::logic_error&) { ++failures; }auto owner=std::make_shared<int>(1);runtime->pin=[owner] { return owner; };runtime->unique={};try { s.storage->PriestRegular(priest,605,0,1); }catch (const std::logic_error&) { ++failures; }CHECK(failures==3 && !called && !s.storage->Borrowed());
+}
+
+TEST_CASE(ClientPriestOwner_OriginalDispatch384) { // 원본PE384입력의 반환비트와 가상삭제/직접부모 호출인수를 그대로 비교한다.
+    const auto fixture=(std::filesystem::path(__FILE__).parent_path()/"fixtures/priest-regular-dispatch-x86.tsv").string();std::size_t cases{};
+    for (const auto& row:LoadFixture(fixture.c_str()).rows) { // 고정 원본 관찰만 소비하며 기대 반환이나 사건을 재계산하지 않는다.
+        CHECK(row.size()==6);if (row.size()!=6) continue;const auto event=static_cast<std::uint32_t>(std::stoul(row[0])),count=static_cast<std::uint32_t>(std::stoul(row[1])),payload=static_cast<std::uint32_t>(std::stoul(row[2])),effect=static_cast<std::uint32_t>(std::stoul(row[3]));std::string trace;
+        PriestRegularHooks hooks;hooks.destroy=[&](auto sid,auto flags) { CHECK(sid.value==60);std::array<std::uint8_t,4> args{};RegionPut(args,0,flags);trace="destroy:"+Hex(args); };
+        hooks.unique=[&](auto sid,auto code,auto number,auto value) { CHECK(sid.value==60 && code==event && number==count && std::bit_cast<std::uint32_t>(value)==payload);trace=code==603 ? "fall:" : "ritual:";return std::bit_cast<float>(effect); };
+        hooks.carrier=[&](auto sid,auto code,auto number,auto value) { CHECK(sid.value==60);std::array<std::uint8_t,12> args{};RegionPut(args,0,code);RegionPut(args,4,number);RegionPut(args,8,std::bit_cast<std::uint32_t>(value));trace="carrier:"+Hex(args);return std::bit_cast<float>(effect); };
+        const auto result=RunPriestRegular(Sid{60},event,count,std::bit_cast<float>(payload),hooks);CHECK(std::bit_cast<std::uint32_t>(result)==std::stoul(row[4]) && trace==row[5]);++cases;
+    }CHECK(cases==384);
 }

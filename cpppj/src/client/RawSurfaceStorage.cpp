@@ -271,6 +271,7 @@ float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std
     if (table==0x50f540U) return ResidenceRegular(sid,event,count,payload); // 같은 현재 거주 구역 정기 본문이다.
     if (table==0x509148U || table==0x509210U) return FactoryRegular(sid,event,count,payload); // 실제4549c0의 두 직접 가상 표다.
     if (table==0x50a820U || table==0x50a8e8U) return DecorationRegular(sid,event,count,payload); // 실제462420의 장식/가장자리 팜 수명 감소다.
+    if (table==0x50f210U) return PriestRegular(sid,event,count,payload); // 사제 고유 분기와 Carrier 부모는 같은 현재 장기 본문이다.
     if (HasCarrierRegular(sid)) return CarrierRegular().Handle(sid,event,count,payload); // 공통6VT는 World/NoWorld에서 같은 실제42a750을 쓴다.
     if (HasBombRegular(sid)) return BombRegular().Handle(sid,event,count,payload); //현재 원문41e6a0의 연결16VT만 같은 장기 본문으로 보낸다.
     if (table==0x512208U) return ContentForms().Damage(sid,std::bit_cast<std::int32_t>(count),payload); // 실제4af070은 사건과 무관하게 signed count만 판정한다.

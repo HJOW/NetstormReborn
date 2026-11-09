@@ -174,6 +174,7 @@ public:
     // 0044c060/CD 00462480의 free/damageEffect 0 반환을 실행하고 nonzero 전체 burning 경계를 요청한다.
     void DamageableRefresh(o::Sid sid) const;
     // 사제 0x25a/0x25b와 보호막 사건 1/2를 실제 타입으로 분배한다. 기타 사건만 fallback에 넘긴다.
+    float UniqueRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) const; // 기존 회복/추락의 같은 현재 몸체를 직접 실행한다.
     o::RegularHandler RegularHandler(o::RegularHandler fallback={}) const;
     // 사제 preDestroy만 실제 목록/보호막/Carrier로 분배하며 나머지 공통/폼 훅은 보존한다.
     o::SquidDestroyHooks DestroyHooks(o::SquidDestroyHooks fallback) const;

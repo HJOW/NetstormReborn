@@ -2,6 +2,7 @@
 #include "client/RawPriestWorldBindings.h"
 #include "o/RawGameAuxState.h" // Native 이동/삭제가 같은 TYPE 번호 주소를 빌린다.
 #include "o/RawContainedLookup.h"
+#include "o/RawPriestRegular.h" // typed도 Native와 같은601~605 선택 본문을 사용한다.
 #include <stdexcept>
 #include <utility>
 
@@ -272,6 +273,9 @@ bool RawPriestWorldBindings::FallWalker(o::Sid sid) const {
 std::uint32_t RawPriestWorldBindings::MovementProcessType(std::uint32_t type) const { return impl_->MovementProcessType(type); }
 // 원본의 자연 반환과 아직 외부에 있는 nonzero 전체 body를 구별한다.
 void RawPriestWorldBindings::DamageableRefresh(o::Sid sid) const { impl_->DamageableRefresh(sid); }
+float RawPriestWorldBindings::UniqueRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) const { // 회복/추락의 기존 몸체를 선택하며 다른 사건은 명시 진단한다.
+    if (event==o::kPriestRegenEvent) return impl_->regen->Handle(sid,event,count,payload);if (event==o::kPriestFallEvent) return impl_->fall->Handle(sid,event,count,payload);throw std::invalid_argument("다른 사제 회복/추락 사건");
+}
 // 보호막은 다른 자산과 같은 사건 번호 1/2를 사용하므로 vtable/타입을 먼저 검사한다.
 o::RegularHandler RawPriestWorldBindings::RegularHandler(o::RegularHandler fallback) const {
     auto* implementation=impl_.get();
@@ -280,10 +284,10 @@ o::RegularHandler RawPriestWorldBindings::RegularHandler(o::RegularHandler fallb
         const bool patch=implementation->core.pool.Edition()==o::OriginalEdition::Patch1078;
         const auto table=Vtable(raw);
         if (raw[10]==o::kPriestType && table==(patch ? o::kPatchPriestVtable : o::kCdPriestVtable)) {
-            if (event==o::kPriestRegenEvent) return implementation->regen->Handle(sid,event,count,payload);
-            if (event==o::kPriestFallEvent) return implementation->fall->Handle(sid,event,count,payload);
-            if (fallback) return fallback(sid,event,count,payload);
-            throw std::invalid_argument("사제 월드 미복원 Regular 사건");
+            o::PriestRegularHooks hooks;hooks.destroy=implementation->effects.destroy;hooks.carrier=fallback;
+            hooks.unique=[implementation,&fallback](auto parent,auto code,auto number,auto value) { // 같은 분기에서 선택된 기존 회복/추락만 먼저 실행한다.
+                if (code==o::kPriestRegenEvent) return implementation->regen->Handle(parent,code,number,value);if (code==o::kPriestFallEvent) return implementation->fall->Handle(parent,code,number,value);if (!fallback) throw std::logic_error("사제 월드 고유 정기 미연결");return fallback(parent,code,number,value);
+            };return o::RunPriestRegular(sid,event,count,payload,hooks);
         }
         if ((patch || raw[10]==o::kForcefieldType) && table==(patch ? o::kPatchForcefieldVtable : o::kCdForcefieldVtable))
             return implementation->fieldRegular->Handle(sid,event,count,payload);

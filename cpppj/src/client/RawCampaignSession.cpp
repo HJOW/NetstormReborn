@@ -575,7 +575,8 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawMissionOutcome> outcome; // 같은 Player9/동맹/사제/HP/영역의 현재 입력을 매 조회 읽는다.
     FortFinishOwnerState localFinishState;FortFinishOwnerState& finishState{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->FinishOwnerState():localFinishState}; //Native섬/후처리는장기같은상태를빌리고독립typed는기존지역상태를쓴다.
     AssetPostPopState assetState; // 실제 신전/거주 구역/간헐천/아웃포스트 목록이다.
-    RawPriestWorldState priestState{&gameplayGlobals->GameAux()->PriestType(),world.Storage()->UsesNativeTransmissionDevices() ? gameplayGlobals->GameAux().get():nullptr}; // HP/이동/회복의 사제 번호는 World보다 오래 사는 같은 Client 전역을 빌린다.
+    RawPriestWorldState localPriestState{&gameplayGlobals->GameAux()->PriestType()}; // 독립 typed의 기존 지역 전역만 소유한다.
+    RawPriestWorldState& priestState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->PriestState():localPriestState}; // HP/이동/회복의 사제 번호는 World보다 오래 사는 같은 Client 전역을 빌린다.
     RunePostPopState runeState; // PATCH005412e8/ec/f0의 현재Altar164/Dais165/Rune166이며 후속 실제 의식도 같은 저장소를 사용한다.
     TempleRitualState ritualState; // 같은 현재 권한/사제/룬 타입의 의식 상태다.
     std::unique_ptr<RawContainedLookup> ritualLookup; // 의식과 내용물 제거가 같은 실제 종속 체인을 읽는다.
@@ -1737,6 +1738,12 @@ struct RawCampaignSession::Impl {
             if (NativeOutpostLifetime(sid) || BridgeLifetime(sid) || BridgeConnector(sid) || geyserLifetime->Handles(sid) || Vortex(sid) || FenceCommon(sid) || Flyer(sid) || balloonBody->Handles(sid) || VisualDummy(sid) || PlainDamageable(sid) || BlockerLifetime(sid) || GrowingIce(sid) || SunFence(sid) || Nugget(sid) || (daisLifecycle && daisLifecycle->Handles(sid)) || (dudeBehavior && dudeBehavior->Handles(sid)) || PriestForcefield(sid) || PlainCarrierLifetime(sid) || PriestDeletionLifetime(sid) || BuriedLifetime(sid) || BombLifetime(sid) || RuneLifetime(sid)) return core.virtualDestroy.Destroy(sid,flags,hooks);return previous(sid,flags,hooks);
         };
         if (world.Storage()->UsesNativeTransmissionDevices()) buriedRegular=&world.Storage()->BuriedRegular();else { localBuriedRegular=std::make_unique<RawBuriedRegular>(core.pool,core.frames,core.frame,random);buriedRegular=localBuriedRegular.get(); } //Native는World반납뒤에도같은현재Frame/난수를사용한다.
+        worldHooks.priestRegular.unique=[this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { // 실제 고유 후단은 현재 같은 모듈을 호출하고 누락을 성공으로 바꾸지 않는다.
+            if (event==602 || event==603) { if (!priests) throw std::logic_error("사제 회복/추락 몸체 설치 전 호출");return priests->UniqueRegular(sid,event,count,payload); }
+            if (event==604) { if (!priestRitualFrame) throw std::logic_error("사제604 몸체 설치 전 호출");return priestRitualFrame->Tick(sid); }
+            if (event==605) { if (!priestPrayer) throw std::logic_error("사제605 몸체 설치 전 호출");return priestPrayer->Tick(sid,count,payload); }
+            throw std::logic_error("다른 사제 고유 정기 사건");
+        };
         auto actualRegular=hits->Handler(combat->Handler(assetBindings->Handler(buriedRegular->Handler(priests->RegularHandler([this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             if (daisRegular && daisRegular->Handles(sid)) { PrepareRitual();return daisRegular->Handle(sid,event,count,payload); }
             if (altarSacrifice && altarSacrifice->Handles(sid)) { PrepareRitual();return altarSacrifice->Handle(sid,event,count,payload); }
@@ -1771,7 +1778,7 @@ struct RawCampaignSession::Impl {
         // 실제 사건이 실패하면 당시 부모/사건/횟수를 남기고 같은 예외를 전파한다. 성공/상태 되돌림으로 대신하지 않는다.
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             try {
-                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x5075d8U || table==0x5076b8U || table==0x507770U || table==0x507950U) return world.Storage()->RitualRegular(sid,event,count,payload);if (table==0x508cc8U) return world.Storage()->DudeRegular().Handle(sid,event,count,payload);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
+                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50f210U) return world.Storage()->PriestRegular(sid,event,count,payload);if (table==0x5075d8U || table==0x5076b8U || table==0x507770U || table==0x507950U) return world.Storage()->RitualRegular(sid,event,count,payload);if (table==0x508cc8U) return world.Storage()->DudeRegular().Handle(sid,event,count,payload);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
                 if (const auto table=Read(core.pool.Slot(sid),0);table==0x50a820U || table==0x50a8e8U) {
                     if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->DecorationRegular(sid,event,count,payload);
                     DecorationRegularHooks hooks;hooks.maxHitPoints=[this](auto parent) { return hp.MaxHitPoints(parent); };
