@@ -13909,7 +13909,7 @@
       "bytes": 200983,
       "lines": 689,
       "fixtureCommit": "6cbb7fdb",
-      "webCommit": "worktree",
+      "webCommit": "290e023d",
       "cpppjBasis": {
         "cpppj/src/o/RawBalloonFrame.cpp": "6cbb7fdb"
       }
@@ -13939,7 +13939,7 @@
       "bytes": 109838,
       "lines": 315,
       "fixtureCommit": "fc85f3c9",
-      "webCommit": "worktree",
+      "webCommit": "290e023d",
       "cpppjBasis": {
         "cpppj/src/o/RawBulfFrame.cpp": "fc85f3c9"
       }
@@ -13969,9 +13969,41 @@
       "bytes": 132876,
       "lines": 349,
       "fixtureCommit": "dc95d35e",
-      "webCommit": "worktree",
+      "webCommit": "290e023d",
       "cpppjBasis": {
         "cpppj/src/o/RawWalkerFrame.cpp": "dc95d35e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E210",
+      "id": "damageablehit",
+      "path": "cpppj/tests/fixtures/damageablehit-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 자산 BaseHit/Damageable Hit 의 반환·가상 방어/삭제/소유자 통지/unrealize/지면 조회/실제 시각/섬 피격 경고/burning 조회·생성·삭제 순서·피해자 50바이트 raw·사망 전역·경고 마감(10.78 2923행·CD 2923행)",
+      "consumers": [
+        "webpj/tests/damageable-hit.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-damageable-hit.js",
+        "webpj/www/core/raw-damageable-burning.js",
+        "webpj/www/core/raw-priest-damage.js",
+        "webpj/www/core/squid-reward.js"
+      ],
+      "doc": "docs/webpj-damageable-hit-20261109.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDamageableHit.cpp"
+      ],
+      "scope": "10.78 2923입력 전부(originalCD 2923행은 범위 밖)",
+      "text": true,
+      "sha256": "3d11d4352baddf6fea7dd85bc8fd9b158437dd838c10eeb0b2df2590ee858e3c",
+      "bytes": 1238683,
+      "lines": 5847,
+      "fixtureCommit": "5b10ce82",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDamageableHit.cpp": "c3cfc98f"
       }
     }
   ]
