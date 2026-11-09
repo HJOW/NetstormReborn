@@ -14328,9 +14328,39 @@
       "bytes": 557818,
       "lines": 1157,
       "fixtureCommit": "5bdb5bed",
-      "webCommit": "worktree",
+      "webCommit": "27afb789",
       "cpppjBasis": {
         "cpppj/src/o/RawIslandBuilder.cpp": "2a8f937e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E223",
+      "id": "island-population",
+      "path": "cpppj/tests/fixtures/island-population-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 섬 population Residence·Populate·ReplaceInitial. 입력(모드·사각형 프로필·local seed·Fort 모드·권한·진단 중 권한 변경·primary/fallback TYPE·HP 유무·성공 시도·외부 효과의 지도 변경)에서 호출 순서·새 객체 프레임/HP·전체 청크 지도(헤더+256청크 12 BYTE)·배치 호출 수 118행",
+      "consumers": [
+        "webpj/tests/island-population.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-island-population.js",
+        "webpj/www/core/raw-fort-finish-owner.js"
+      ],
+      "doc": "docs/webpj-island-population-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawIslandPopulation.cpp"
+      ],
+      "scope": "10.78 118입력 전부",
+      "text": true,
+      "sha256": "f63a926ccb280a96078a97dc8f025f9fcae9c22fffe947bf9f53cc27006e0f13",
+      "bytes": 756982,
+      "lines": 119,
+      "fixtureCommit": "afe4ce5b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawIslandPopulation.cpp": "afe4ce5b"
       }
     }
   ]
