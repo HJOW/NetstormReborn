@@ -15231,9 +15231,69 @@
       "bytes": 457879,
       "lines": 1322,
       "fixtureCommit": "f8a2a0ef",
-      "webCommit": "worktree",
+      "webCommit": "81f719f4",
       "cpppjBasis": {
         "cpppj/src/o/RawRegionOwnership.cpp": "f0d065dc"
+      }
+    },
+    {
+      "kind": "source",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E250",
+      "id": "src-energy-provider-vtables",
+      "path": "cpppj/src/o/EnergyProviderVtables.inc",
+      "producer": "cpppj 복원 소스(실제 PE 가상 표 83개의 +a0 에너지 공급 진입)",
+      "consumers": [
+        "webpj/tests/vtable-tables.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/energy-provider-vtables.js",
+        "webpj/www/core/raw-energy-supply.js"
+      ],
+      "doc": "docs/webpj-vtable-tables-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/EnergyProviderVtables.inc"
+      ],
+      "scope": "83쌍 전부를 순서까지 대조(생성기 --check 포함)",
+      "text": null,
+      "sha256": null,
+      "bytes": null,
+      "lines": null,
+      "fixtureCommit": "5bd2e807",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/EnergyProviderVtables.inc": "5bd2e807"
+      }
+    },
+    {
+      "kind": "source",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E250",
+      "id": "src-campaign-damage-vtables",
+      "path": "cpppj/src/o/CampaignDamageVtables.inc",
+      "producer": "cpppj 복원 소스(실제 PE 가상 표 83개의 +98 피격·+9c 방어 진입)",
+      "consumers": [
+        "webpj/tests/vtable-tables.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/campaign-damage-vtables.js",
+        "webpj/www/core/raw-damageable-hit.js"
+      ],
+      "doc": "docs/webpj-vtable-tables-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/CampaignDamageVtables.inc"
+      ],
+      "scope": "피격 83쌍·방어 83쌍 전부를 순서까지 대조(생성기 --check 포함)",
+      "text": null,
+      "sha256": null,
+      "bytes": null,
+      "lines": null,
+      "fixtureCommit": "c3cfc98f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/CampaignDamageVtables.inc": "c3cfc98f"
       }
     }
   ]
