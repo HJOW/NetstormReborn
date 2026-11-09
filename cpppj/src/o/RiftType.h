@@ -180,6 +180,7 @@ struct RiftTypeRecord {
     bool fromAsset{};                   // .type 파일에서 읽은 타입인가.
     std::int32_t hotspotX{},hotspotY{};  // 패치 +0x1dc/+0x1e0, CD +0x1bc/+0x1c0. 초기값은 0이다.
     std::int32_t defaultFrame{};       // 양판본+0x128: 가상78이 읽는 현재 기본 외형이다. 정의의 별도 baseFrame(+0x134)과 구별한다.
+    float range{};                    // 양판본+0x44: 초기0 뒤 속성 순서대로 기록하는 현재 사거리이며 장기 펜스가 직접 읽는다.
 };
 
 // .type 한 개를 타입 표에 넣을 때 쓰는 입력.

@@ -826,19 +826,18 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawVortexPreDestroy> localVortexPre;RawVortexPreDestroy* vortexPre{}; //Native는같은장기신전전처리를빌린다.
     std::unique_ptr<RawBuriedPostPop> localBuriedPostPop;RawBuriedPostPop* buriedPostPop{}; //Native의현재전역/두Regular/공통부모는같은장기Storage몸체다.
     std::unique_ptr<RawBuriedRegular> localBuriedRegular;RawBuriedRegular* buriedRegular{}; //Native의현재Frame/전역난수는같은장기Storage몸체다.
-    std::vector<float> fenceRanges; // 현재 불변 TYPE 표에서 읽은188개 실제 사거리다.
-    std::uint32_t fenceShieldType{170}; //PATCH00541300의 실제 포스 필드(fenceShield) 타입이다.
-    std::uint32_t fenceNodeType{90}; //PATCH005411c0의 별도 내부 fencemark 타입이다.
-    std::unique_ptr<RawFenceNeighbors> fenceNeighbors; // 같은 해시/타입/현재 방향별 동맹의 실제 최근접 검색이다.
-    std::unique_ptr<RawFenceLine> fenceLine; // 실제 기존 연결선 검색과 같은 월드의 가상 삭제다.
-    std::unique_ptr<RawFencePostPop> fencePostPop; // 같은 공통 장부/이웃/연결선/Regular의 전체 펜스 접두다.
-    std::unique_ptr<RawFenceRegular> fenceRegular; // 같은 현재 프레임/소유자/연결수의 실제 Regular 제어다.
-    std::unique_ptr<RawFenceLifetime> fenceLifetime; // 실제 연결 정리/동맹 이웃 갱신/펜스 PreDestroy다.
+    std::uint32_t& fenceShieldType{world.Storage()->GameAux()->FenceShieldType()}; //PATCH00541300의동일장기역할주소다.
+    std::uint32_t& fenceNodeType{world.Storage()->GameAux()->FenceMarkerType()}; //PATCH005411c0의동일장기표식역할이다.
+    std::unique_ptr<RawFenceNeighbors> localFenceNeighbors;RawFenceNeighbors* fenceNeighbors{}; //Native는같은현재TYPE/동맹검색기를빌린다.
+    std::unique_ptr<RawFenceLine> localFenceLine;RawFenceLine* fenceLine{}; //Native는동일연결선정리본체를빌린다.
+    std::unique_ptr<RawFencePostPop> localFencePostPop;RawFencePostPop* fencePostPop{}; //같은최초후처리를공유한다.
+    std::unique_ptr<RawFenceRegular> localFenceRegular;RawFenceRegular* fenceRegular{}; //같은실제Host의본체를빌린다.
+    std::unique_ptr<RawFenceLifetime> localFenceLifetime;RawFenceLifetime* fenceLifetime{}; //같은현재전처리를공유한다.
     std::unique_ptr<RegularProcess> fencePendingRegular; // 원본 new28 성공 뒤 부착 전의 단일 실제 예약 객체다.
-    std::unique_ptr<RawFenceMarkerClear> fenceMarkerClear; //같은 hash/가상 삭제의 기존 fencemark 제거다.
-    std::unique_ptr<RawFenceMarkerCreate> fenceMarkerCreate; //같은 실제 중심/생성/통지의 내부 표식 생성이다.
-    std::unique_ptr<RawFenceShieldCreate> fenceShieldCreate; //같은 현재TYPE/프레임의 화면 포스 필드 생성이다.
-    std::unique_ptr<RawFenceRebuild> fenceRebuild; //같은 동맹 최근접/사거리/두 생성기로 연결을 재생성한다.
+    std::unique_ptr<RawFenceMarkerClear> localFenceMarkerClear;RawFenceMarkerClear* fenceMarkerClear{}; //같은실제중심/태그정리다.
+    std::unique_ptr<RawFenceMarkerCreate> localFenceMarkerCreate;RawFenceMarkerCreate* fenceMarkerCreate{}; //같은실제표식생성이다.
+    std::unique_ptr<RawFenceShieldCreate> localFenceShieldCreate;RawFenceShieldCreate* fenceShieldCreate{}; //같은현재포스필드생성이다.
+    std::unique_ptr<RawFenceRebuild> localFenceRebuild;RawFenceRebuild* fenceRebuild{}; //같은전체재생성을빌린다.
     std::unique_ptr<RawSunAviaryProcess> sunAviary; // 같은 현재 Kernel/시계/풀의 실제 훨리베이스 프로세스 몸체다.
     std::unique_ptr<RawRainAviaryProcess> rainAviary; // 같은 현재 Kernel/풀의 맨 오 워 풀 전용 상태 기계다.
     std::unique_ptr<RawWindAviaryProcess> windAviary; // 같은실제Kernel의데빌메이커80BYTE 생산기다.
@@ -1794,55 +1793,59 @@ struct RawCampaignSession::Impl {
     }
     // 전체 최초 펜스 몸체를 같은 현재 해시/TYPE/동맹/가상 삭제/공통 장부에 연결한다.
     void ConnectFence() {
-        fenceRanges.resize(gunTypes.size());
-        for (std::size_t type=0;type<gunTypes.size();++type) fenceRanges[type]=gunTypes[type].range; // 로드가 끝난 같은 불변 TYPE 사거리를 공급한다.
-        fenceNeighbors=std::make_unique<RawFenceNeighbors>(core.pool,core.hash,core.types,fenceRanges,alliances);
-        fenceLine=std::make_unique<RawFenceLine>(core.pool,core.hash,core.types,core.frames,fenceShieldType,
-            [this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); });
+        if (world.Storage()->UsesNativeTransmissionDevices()) { //Native는최초메뉴부터같은현재본체를소유하고Session사본을만들지않는다.
+            auto& storage=*world.Storage();fenceNeighbors=&storage.FenceNeighbors();fenceLine=&storage.FenceLine();fencePostPop=&storage.FencePostPop();fenceRegular=&storage.FenceRegular();fenceLifetime=&storage.FenceLifetime();
+            fenceMarkerClear=&storage.FenceMarkerClear();fenceMarkerCreate=&storage.FenceMarkers();fenceShieldCreate=&storage.FenceShields();fenceRebuild=&storage.FenceRebuild();return;
+        }
+        const auto reserveFence=[this] { try { fencePendingRegular=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } }; //독립경로도원문각new의실제성공/실패를공유한다.
+        const auto attachFence=[this](Sid sid,std::uint32_t event,float payload) { //같은확보주소에서생성한뒤실제Host에부착한다.
+            if (!fencePendingRegular) throw std::logic_error("펜스 실제 예약 객체 누락");auto* reserved=fencePendingRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,payload);
+            auto* process=dynamic_cast<RegularProcess*>(core.processes.AttachRegular(std::move(fencePendingRegular),sid));if (!process) throw std::logic_error("펜스 Regular 부모 부착 실패");process->ResetTask(event,core.processState.Now());
+        };
+        localFenceNeighbors=std::make_unique<RawFenceNeighbors>(core.pool,core.hash,core.types,[this](auto type) { return core.types[type].range; },[this](auto row,auto column) { return alliances.at(row*9+column); });fenceNeighbors=localFenceNeighbors.get();
+        localFenceLine=std::make_unique<RawFenceLine>(core.pool,core.hash,core.types,core.frames,fenceShieldType,
+            [this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); });fenceLine=localFenceLine.get();
         FencePostPopHooks hooks;
         hooks.theme=[this](Sid sid) { return themes.at(core.pool.Slot(sid)[10]); };
         hooks.neighbor=[this](Sid sid,std::uint32_t direction) { return fenceNeighbors->Neighbor(sid,direction); };
-        hooks.reserveRegular=[] { return true; }; // 실제 Host의 할당 실패는 다음 AddRegular가 예외로 전달한다.
-        hooks.addRegular=[this](Sid sid,std::uint32_t event,float payload) { SessionCheck(core.processes.AddRegular(sid,event,payload)!=nullptr); };
+        hooks.reserveRegular=reserveFence;hooks.addRegular=attachFence; //확보실패는그예약만생략하고다음원문효과를계속한다.
         hooks.clearLine=[this](std::array<float,4> endpoints) { fenceLine->Clear(endpoints); };
         hooks.connections=[this](Sid sid) { return fenceNeighbors->Connections(sid); };
         hooks.validateBase=[this](Sid sid,std::uint32_t flags,const RawGraphPop* projected) { core.postPop.ValidateBase(sid,flags,projected); };
         hooks.damageable=[this](Sid sid,std::uint32_t flags) { carrier->DamageablePostPop(sid,flags); };
-        fencePostPop=std::make_unique<RawFencePostPop>(core.pool,std::move(hooks));
+        localFencePostPop=std::make_unique<RawFencePostPop>(core.pool,std::move(hooks));fencePostPop=localFencePostPop.get();
         FenceCreateHooks create;
         create.create=[this](std::uint32_t type,std::uint32_t flags) { return world.Create(type,flags); };
         create.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
-        create.setOwner=[this](Sid sid,std::uint32_t owner) { core.owner.Set(sid,owner); }; //두 실제 생성 가상 표의+74는 공통004adf00이다.
+        create.setOwner=[this](Sid sid,std::uint32_t owner) { ownership->SetOwner(sid,owner); }; //현재역할의실제가상74를보존하며다른파생TYPE도공통Owner로축약하지않는다.
         create.pop=[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); };
-        fenceMarkerCreate=std::make_unique<RawFenceMarkerCreate>(core.pool,*gunTarget,fenceNodeType,create);
-        fenceShieldCreate=std::make_unique<RawFenceShieldCreate>(core.pool,core.frames,fenceShieldType,std::move(create));
+        localFenceMarkerCreate=std::make_unique<RawFenceMarkerCreate>(core.pool,*gunTarget,fenceNodeType,create);fenceMarkerCreate=localFenceMarkerCreate.get();
+        localFenceShieldCreate=std::make_unique<RawFenceShieldCreate>(core.pool,core.frames,fenceShieldType,std::move(create));fenceShieldCreate=localFenceShieldCreate.get();
         FenceRebuildHooks rebuilding;
         rebuilding.neighbor=[this](Sid sid,std::uint32_t direction) { return fenceNeighbors->Neighbor(sid,direction,true); };
         rebuilding.withinRange=[this](Sid sid,std::array<float,4> points) { return fenceNeighbors->WithinRange(sid,points); };
         rebuilding.markers=[this](Sid sid,Sid other) { fenceMarkerCreate->Create(sid,other); };
         rebuilding.shields=[this](std::array<float,4> points,std::uint32_t a,std::uint32_t b,std::int32_t first,std::int32_t second) { fenceShieldCreate->Create(points,a,b,first,second); };
-        fenceRebuild=std::make_unique<RawFenceRebuild>(core.pool,std::move(rebuilding));
+        localFenceRebuild=std::make_unique<RawFenceRebuild>(core.pool,std::move(rebuilding));fenceRebuild=localFenceRebuild.get();
         FenceRegularHooks regular;
         regular.neighbor=[this](Sid sid,std::uint32_t direction) { return fenceNeighbors->Neighbor(sid,direction); };
-        fenceMarkerClear=std::make_unique<RawFenceMarkerClear>(core.pool,core.hash,core.types,*gunTarget,fenceNodeType,[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); });
+        localFenceMarkerClear=std::make_unique<RawFenceMarkerClear>(core.pool,core.hash,core.types,*gunTarget,fenceNodeType,[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); });fenceMarkerClear=localFenceMarkerClear.get();
         regular.clearMarkers=[this](Sid sid,Sid other) { fenceMarkerClear->Clear(sid,other); };
         regular.clearLine=[this](std::array<float,4> endpoints) { fenceLine->Clear(endpoints); };
         regular.connections=[this](Sid sid) { return fenceNeighbors->Connections(sid); };
-        regular.reserveRegular=[] { return true; }; //실제 Host 할당 실패는 다음 AddRegular에서 예외로 보존한다.
-        regular.addRegular=[this](Sid sid,std::uint32_t event,float payload) { SessionCheck(core.processes.AddRegular(sid,event,payload)!=nullptr); };
+        regular.reserveRegular=reserveFence;regular.addRegular=attachFence; //원문new실패와동일확보메모리를보존한다.
         regular.refreshNeighbors=[this](Sid sid) { fenceLifetime->Refresh(sid); };
         regular.rebuild=[this](Sid sid) { fenceRebuild->Rebuild(sid); };
         regular.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float payload) { return assetBindings->Regular().DamageableHandle(sid,event,count,payload); };
-        fenceRegular=std::make_unique<RawFenceRegular>(core.pool,core.frames,core.frame,std::move(regular));
+        localFenceRegular=std::make_unique<RawFenceRegular>(core.pool,core.frames,core.frame,std::move(regular));fenceRegular=localFenceRegular.get();
         FenceLifetimeHooks lifetimeHooks;
         lifetimeHooks.neighbor=[this](Sid sid,std::uint32_t direction,bool allied) { return fenceNeighbors->Neighbor(sid,direction,allied); };
         lifetimeHooks.clearMarkers=[this](Sid sid,Sid other) { fenceMarkerClear->Clear(sid,other); };
         lifetimeHooks.clearLine=[this](std::array<float,4> points,std::uint32_t,std::uint32_t,Sid,Sid) { fenceLine->Clear(points); }; // 실제455b20(mode0)은 두 owner/SID를 사용하지 않는다.
         lifetimeHooks.unpop=[this](Sid sid,std::uint32_t flags) { world.Unpop(sid,flags); };lifetimeHooks.repop=[this](Sid sid,std::uint32_t flags) { world.Repop(sid,flags); };
         lifetimeHooks.rebuild=[this](Sid sid) { fenceRebuild->Rebuild(sid); };
-        lifetimeHooks.reserveRegular=[this] { try { fencePendingRegular=std::make_unique<RegularProcess>(2,0.10000000149011612f);return true; }catch (const std::bad_alloc&) { return false; } };
-        lifetimeHooks.addRegular=[this](Sid sid,std::uint32_t event,float) { if (!fencePendingRegular) throw std::logic_error("펜스 실제 예약 객체 누락");auto* process=dynamic_cast<RegularProcess*>(core.processes.AttachRegular(std::move(fencePendingRegular),sid));if (!process) throw std::logic_error("펜스 Regular 부모 부착 실패");process->ResetTask(event,core.processState.Now()); };
-        lifetimeHooks.damageable=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };fenceLifetime=std::make_unique<RawFenceLifetime>(core.pool,std::move(lifetimeHooks));
+        lifetimeHooks.reserveRegular=reserveFence;lifetimeHooks.addRegular=attachFence;
+        lifetimeHooks.damageable=[this](Sid sid,std::uint32_t flags) { damageablePre->PreDestroy(sid,flags); };localFenceLifetime=std::make_unique<RawFenceLifetime>(core.pool,std::move(lifetimeHooks));fenceLifetime=localFenceLifetime.get();
     }
     // 가상 주소를 호출하지 않고 검증한 일반 Damageable의 실제 표만 선택한다.
     bool NativeOutpostLifetime(Sid sid) const { return core.destroy.HasPatchDiagnostics() && Read(core.pool.Slot(sid),0)==0x509210U; } //실제PATCH현재VT만고르며TYPE126/모드/owner/extra를추가자격으로사용하지않는다.
@@ -1862,7 +1865,7 @@ struct RawCampaignSession::Impl {
     // Rune166/VT5075d8의+14/+18은 공통4b0950/4b0840이다. Damageable 전처리/드롭으로 대체하지 않는다.
     bool RuneLifetime(Sid sid) const { return Read(core.pool.Slot(sid),0)==0x5075d8U; } // 실제 Rune의 가상 삭제/후처리는 현재 표시 TYPE와 독립적으로 분배한다.
     // 썬 바리케이드의 특수457990 전처리는 다른 일반 Damageable에 적용하지 않는다.
-    bool SunFence(Sid sid) const { const auto raw=core.pool.Slot(sid);return raw[10]==136 && Read(raw,0)==0x509470; }
+    bool SunFence(Sid sid) const { return Read(core.pool.Slot(sid),0)==0x509470; } //실제가상부모에없는추가TYPE136조건을넣지않는다.
     // 보호50dc30의+14는484f80→44b4b0 thunk이며+18/+10도기존Damageable/공통삭제다. 메뉴 범위와는 별개다.
     bool Nugget(Sid sid) const { return Read(core.pool.Slot(sid),0)==0x50dc30U; } // 원문 파생 가상표의 삭제/후처리이며 표시 TYPE154 사본을 추가로 요구하지 않는다.
     // 실제 사제 보호막167/507770의 공통 수명만 추가한다. 펜스 보호막170과 구별한다.

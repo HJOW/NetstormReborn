@@ -14,6 +14,14 @@
 #include "o/RawDamageablePostDestroy.h" // 같은 HP/Graph/목록/Host로 후처리한다.
 #include "o/RawGeyserLifetime.h" // 실제 간헐천 고유 수명 접두를 보존한다.
 #include "o/RawIceTower.h" //실제아이스파괴/성장/후처리를같은물리와Host에연결한다.
+#include "o/RawFenceNeighbors.h" //현재TYPE/동맹의실제방향별최근접검색을공유한다.
+#include "o/RawFenceLine.h" //기존연결선의같은물리탐색/삭제다.
+#include "o/RawFenceCreate.h" //내부표식과화면포스필드의실제생성이다.
+#include "o/RawFenceMarkerClear.h" //현재끝점태그의실제표식정리다.
+#include "o/RawFenceRebuild.h" //현재동맹/사거리의전체연결재생성이다.
+#include "o/RawFencePostPop.h" //최초후처리의실제예약/공통부모다.
+#include "o/RawFenceRegular.h" //같은Host에서프레임/연결갱신을수행한다.
+#include "o/RawFenceLifetime.h" //삭제전처리와이웃갱신이같은장기본체를사용한다.
 #include "o/RawAssetPostPop.h" //장기Geyser가현재TYPE/목록과같은기존원문몸체를빌린다.
 #include "o/RawNuggetRegular.h" //너겟의기존왕복/낙하/현재가상삭제를장기기본Host에연결한다.
 #include "o/RawNuggetPostPop.h" //실제두Regular확보와같은Host의기본부모다.
@@ -193,6 +201,16 @@ public:
     o::RawGeyserLifetime& GeyserLifetime(); // 같은 지면 목록/기본프레임/현재 편집 모드를 사용한다.
     o::IceTowerTypes& IceTowerGlobals(); //같은현재완성형/성장형/noIsland TYPE주소만빌리며값을초기화하지않는다.
     o::RawIceTower& IceTower(); //전체파괴/성장형후처리/주기를World없이같은현재Pool/Host에조립한다.
+    void BindFenceAlliances(std::function<std::uint32_t(std::uint32_t,std::uint32_t)> read); //첫메뉴전실제Player의약한현재행/열getter만연결한다.
+    o::RawFenceNeighbors& FenceNeighbors(); //현재TYPE사거리/Player동맹을같은실제검색기에서읽는다.
+    o::RawFenceLine& FenceLine(); //현재포스필드역할의기존연결선을같은가상삭제로정리한다.
+    o::RawFenceMarkerCreate& FenceMarkers(); //같은중심/현재역할/실제Factory로내부표식을만든다.
+    o::RawFenceShieldCreate& FenceShields(); //현재역할/프레임의화면포스필드를실제생성한다.
+    o::RawFenceMarkerClear& FenceMarkerClear(); //같은표식역할/중심/해시의현재연결태그를정리한다.
+    o::RawFenceRebuild& FenceRebuild(); //동맹/거리/표식/포스필드의전체원문재생성을공유한다.
+    o::RawFencePostPop& FencePostPop(); //실제Regular확보뒤최초접두와Damageable부모를호출한다.
+    o::RawFenceRegular& FenceRegular(); //장기Host의같은현재프레임/재생성/부모를제공한다.
+    o::RawFenceLifetime& FenceLifetime(); //삭제전처리의스냅샷/정리/실제두예약/부모를공유한다.
     void BindDeletionDevices(RawSurfaceDeletionDevices devices); // 첫 공통 삭제 전에 실제 UI/소리 장치만 연결한다.
     void BindDeletionRuntime(const std::shared_ptr<const RawSurfaceDeletionBindings>& runtime); // 현재 World의 실제 파생 종단만 짧게 빌린다.
     o::SquidDestroyLifecycle& CommonDeletion(); // 같은 장기 공통 깊이/장부/Graph/보상을 실제 Native caller가 공유한다.
@@ -337,6 +355,16 @@ private:
     std::unique_ptr<o::RawGeyserLifetime> geyserLifetime_; // 같은 피해가능 객체 수명보다 먼저 반납한다.
     o::IceTowerTypes iceTowerTypes_; //현재GameAux/표면역할의동일주소를본체보다오래보유한다.
     std::unique_ptr<o::RawIceTower> iceTower_; //같은전역/Pool/Host를빌리며World/Session을캡처하지않는다.
+    std::function<std::uint32_t(std::uint32_t,std::uint32_t)> fenceAlliances_; //실제Player를선택호출동안만pin하는현재동맹장치다.
+    std::unique_ptr<o::RawFenceNeighbors> fenceNeighbors_; //현재TYPE/Playergetter를빌리는동일검색기다.
+    std::unique_ptr<o::RawFenceLine> fenceLine_; //같은현재포스필드역할/가상삭제다.
+    std::unique_ptr<o::RawFenceMarkerCreate> fenceMarkers_; //같은현재중심/Factory의실제표식생성기다.
+    std::unique_ptr<o::RawFenceShieldCreate> fenceShields_; //현재프레임표/포스필드역할을빌린다.
+    std::unique_ptr<o::RawFenceMarkerClear> fenceMarkerClear_; //같은실제물리와표식역할을공유한다.
+    std::unique_ptr<o::RawFenceRebuild> fenceRebuild_; //앞선실제검색/생성/정리본체를호출한다.
+    std::unique_ptr<o::RawFencePostPop> fencePostPop_; //같은Host와공통장부의최초후처리다.
+    std::unique_ptr<o::RawFenceRegular> fenceRegular_; //같은현재프레임과선택된일반부모다.
+    std::unique_ptr<o::RawFenceLifetime> fenceLifetime_; //나머지펜스하위보다먼저반납되는수명부모다.
     std::unique_ptr<NativeFortSaveVirtual> fortSaveVirtual_; //같은 Storage/GameAux를 빌리는 실제 조회기이며 해당 소유자보다 먼저 반납한다.
     std::unique_ptr<o::RawNuggetPostPop> resourceNugget_; //같은Host/난수/확보메모리의너겟후처리다.
     std::shared_ptr<o::GameRandom> buriedRandom_; //실제Client난수의aliasowner로참조수명을보증하고별도seed를만들지않는다.

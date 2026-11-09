@@ -32,6 +32,11 @@ RawBombTargets::RawBombTargets(const SidPool& pool,const SquidHash& hash,std::sp
     :pool_(pool),hash_(hash),types_(types),ranges_(ranges),state_(state),hooks_(std::move(hooks)) {
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || ranges.size()!=types.size()) throw std::invalid_argument("Bomb 대상 판본/TYPE 오류");
 }
+// Native/typed 세션 모두 같은 현재 TYPE 사거리 필드를 원문 조회 시점에 읽는다.
+RawBombTargets::RawBombTargets(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,BombTargetState& state,BombTargetHooks hooks)
+    :pool_(pool),hash_(hash),types_(types),state_(state),hooks_(std::move(hooks)) {
+    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188) throw std::invalid_argument("Bomb 현재 TYPE 판본/크기 오류");
+}
 // 물리 필드의 원본 폭만 읽고 상태 필터를 추가하지 않는다.
 std::uint32_t RawBombTargets::Read(Sid sid,std::size_t offset,std::size_t width) const {
     const auto raw=pool_.Slot(sid);std::uint32_t value{};
@@ -48,8 +53,8 @@ const RiftTypeRecord& RawBombTargets::Type(Sid sid) const {
 // 현재TYPE의실제반경을 정수화하며 caller의가상분배를 대체하지 않는다.
 std::int32_t RawBombTargets::DefaultRadius(Sid parent) const {
     const auto kind=Read(parent,10,1);
-    if (kind>=ranges_.size()) throw std::out_of_range("Bomb 반경 현재TYPE 범위");
-    return Truncate(ranges_[kind]);
+    if (kind>=types_.size()) throw std::out_of_range("Bomb 반경 현재TYPE 범위");
+    return Truncate(ranges_.empty() ? types_[kind].range:ranges_[kind]);
 }
 // 대상 검색과 폭발이 같은 원본 중심 계산을 재사용한다.
 std::array<float,2> RawBombTargets::Center(Sid parent) const {

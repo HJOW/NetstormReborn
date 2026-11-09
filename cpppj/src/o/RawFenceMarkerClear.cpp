@@ -21,13 +21,18 @@ int MarkerInt(double value) { if (!std::isfinite(value) || value<-2147483648.0 |
 // 다른 판본/월드의 가상 공간을 하나의 원본 처리기로 혼합하지 않는다.
 RawFenceMarkerClear::RawFenceMarkerClear(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
     const RawGunTarget& target,const std::uint32_t& markerType,std::function<void(Sid,std::uint32_t)> destroy)
-    :pool_(pool),hash_(hash),types_(types),target_(target),markerType_(markerType),destroy_(std::move(destroy)) {
-    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || &target.Pool()!=&pool)
-        throw std::invalid_argument("fencemark 기존 표식 삭제 판본/TYPE/풀 불일치");
+    :RawFenceMarkerClear(pool,hash,types,markerType,std::move(destroy),[&target](Sid sid) { return target.Center(sid); }) {
+    if (&target.Pool()!=&pool) throw std::invalid_argument("fencemark 기존 표식 삭제 판본/TYPE/풀 불일치");
+}
+// 같은 원문 중심 getter를 표식 생성과 공유하고 실제 후보/삭제 본문은 유지한다.
+RawFenceMarkerClear::RawFenceMarkerClear(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
+    const std::uint32_t& markerType,std::function<void(Sid,std::uint32_t)> destroy,std::function<std::array<float,2>(Sid)> center)
+    :pool_(pool),hash_(hash),types_(types),center_(std::move(center)),markerType_(markerType),destroy_(std::move(destroy)) {
+    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || !center_) throw std::invalid_argument("fencemark 기존 표식 삭제 판본/TYPE/중심 미결합");
 }
 // 원본은 다른 끝점 중심을 먼저 읽고 Rect의 들어오는 corner만1..255로 clamp한다.
 SquidSearchArea RawFenceMarkerClear::Bounds(Sid parent,Sid other) const {
-    const auto second=target_.Center(other),first=target_.Center(parent);
+    const auto second=center_(other),first=center_(parent);
     if (!std::isfinite(first[0]) || !std::isfinite(first[1]) || !std::isfinite(second[0]) || !std::isfinite(second[1])) throw std::out_of_range("fencemark 비유한 중심 좌표");
     const auto x=std::clamp(second[0],1.0f,255.0f),y=std::clamp(second[1],1.0f,255.0f);
     const bool valid=first[0]>0 && first[1]>0 && first[0]<256 && first[1]<256;

@@ -29,8 +29,13 @@ void RequireFencePoints(std::array<float,4> points) {
 }
 //현재 프레임/중심의 다른 월드를 섞지 않는다.
 RawFenceMarkerCreate::RawFenceMarkerCreate(SidPool& pool,const RawGunTarget& target,const std::uint32_t& type,FenceCreateHooks hooks)
-    :pool_(pool),target_(target),type_(type),hooks_(std::move(hooks)) {
-    if (pool.Edition()!=OriginalEdition::Patch1078 || &target.Pool()!=&pool) throw std::invalid_argument("fencemark 생성 판본/풀 불일치");
+    :RawFenceMarkerCreate(pool,type,std::move(hooks),[&target](Sid sid) { return target.Center(sid); }) {
+    if (&target.Pool()!=&pool) throw std::invalid_argument("fencemark 생성 판본/풀 불일치");
+}
+// 원문 중심만 필요한 장기 생성기가 같은 Pool의 본문을 공유한다.
+RawFenceMarkerCreate::RawFenceMarkerCreate(SidPool& pool,const std::uint32_t& type,FenceCreateHooks hooks,std::function<std::array<float,2>(Sid)> center)
+    :pool_(pool),center_(std::move(center)),type_(type),hooks_(std::move(hooks)) {
+    if (pool.Edition()!=OriginalEdition::Patch1078 || !center_) throw std::invalid_argument("fencemark 생성 판본/중심 미결합");
 }
 //스냅한 구간은 이동 전 위치에서 구하고 생성 좌표는 한 걸음 이동한 뒤의float다.
 std::vector<std::array<float,2>> RawFenceMarkerCreate::Points(std::array<float,4> centers) {
@@ -50,7 +55,7 @@ std::vector<std::array<float,2>> RawFenceMarkerCreate::Points(std::array<float,4
 }
 //원본 생성자는 QA WORD를 쓴 뒤 통지하고 끝점의 high8/low8을 분리해서 기록한다.
 void RawFenceMarkerCreate::Create(Sid parent,Sid other) const {
-    const auto second=target_.Center(other),first=target_.Center(parent);
+    const auto second=center_(other),first=center_(parent);
     for (const auto& point:Points({first[0],first[1],second[0],second[1]})) { //부모/대상 좌표의 이후 변경은 이미 정해진 로컬 이동 경로를 바꾸지 않는다.
         const auto created=NeedFenceCreate(hooks_.create)(type_,2);if (!created.value) throw std::logic_error("fencemark 생성의 실제 새 SID 누락");
         FenceCreatePut(pool_.AllocatedBytes(created),12,parent.value,2);NeedFenceCreate(hooks_.notifySurface)(created);

@@ -29,6 +29,7 @@ struct BombTargetHooks {
 class RawBombTargets {
 public:
     RawBombTargets(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,std::span<const float> ranges,BombTargetState& state,BombTargetHooks hooks); // 현재10.78/188TYPE와 네 해시를 빌린다.
+    RawBombTargets(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,BombTargetState& state,BombTargetHooks hooks); //실제 현재 TYPE+44를 직접 빌려 펜스 사거리 사본에 의존하지 않는다.
     std::int32_t DefaultRadius(Sid parent) const; // 실제41e3c0의 현재TYPE+44→_ftol 하위DWORD 몸체다. 가상b4 분배는 호출자가 확인한다.
     std::array<float,2> Center(Sid parent) const; // 실제41e460과 검색이 공유하는 스냅/0.5차감/보드 제한 중심이다.
     BombTargetGeometry Find(Sid parent,BombTargetList& output) const; // 현재 자격/목록을 읽으며 실제 RawSquidFinder로 순회한다.
@@ -39,7 +40,7 @@ private:
     const SidPool& pool_; // 부모/후보의 현재 물리50바이트 저장소다.
     const SquidHash& hash_; // 실제 네 단계의 현재 머리/체인 입력이다.
     std::span<const RiftTypeRecord> types_; // 효과 뒤 바뀐 후보 발자국도 여기서 다시 읽는다.
-    std::span<const float> ranges_; // 현재TYPE+44의 float 반경이다.
+    std::span<const float> ranges_; //독립원문fixture의명시사거리이며현재TYPE생성자는빈span으로직접필드를읽는다.
     BombTargetState& state_; // 실제 권한 전역을 빌린다.
     BombTargetHooks hooks_; // 실제 도달한 파생/진단만 요구한다.
 };

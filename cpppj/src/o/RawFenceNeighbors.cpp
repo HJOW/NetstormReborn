@@ -5,6 +5,7 @@
 #include <cmath>
 #include <limits>
 #include <stdexcept>
+#include <utility>
 
 namespace netstorm::o {
 namespace {
@@ -38,6 +39,12 @@ RawFenceNeighbors::RawFenceNeighbors(const SidPool& pool,const SquidHash& hash,s
     if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || ranges.size()!=188 || alliances.size()!=81)
         throw std::invalid_argument("펜스 이웃의 PATCH 타입/동맹 크기 불일치");
 }
+// 실제 장기 owner를 원문 선택 시점에만 읽어 메뉴/Player 재할당 전에 별도 상태를 만들지 않는다.
+RawFenceNeighbors::RawFenceNeighbors(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
+    std::function<float(std::uint32_t)> range,std::function<std::uint32_t(std::uint32_t,std::uint32_t)> alliance)
+    :pool_(pool),hash_(hash),types_(types),rangeRead_(std::move(range)),allianceRead_(std::move(alliance)) {
+    if (pool.Edition()!=OriginalEdition::Patch1078 || types.size()!=188 || !rangeRead_ || !allianceRead_) throw std::invalid_argument("펜스 현재 TYPE/동맹 getter 누락");
+}
 // free를 임의 필터링하지 않고 원본처럼 SID1부터 유효한 현재 슬롯을 허용한다.
 std::span<const std::uint8_t> RawFenceNeighbors::Slot(Sid sid) const {
     if (!sid.value || sid.value>=pool_.Capacity()) throw std::out_of_range("펜스 이웃 SID 범위 오류");
@@ -50,7 +57,9 @@ std::array<float,2> RawFenceNeighbors::Center(Sid sid) const {
     const auto point=Position(sid);const auto& type=types_[Slot(sid)[10]];return {static_cast<float>(static_cast<double>(point[0])-type.footX*0.5),static_cast<float>(static_cast<double>(point[1])-type.footY*0.5)};
 }
 // 현재 TYPE 사거리를 매번 읽는다.
-std::int32_t RawFenceNeighbors::Range(Sid sid) const { return FenceTruncate(ranges_[Slot(sid)[10]]); }
+float RawFenceNeighbors::CurrentRange(Sid sid) const { const auto number=Slot(sid)[10];return rangeRead_ ? rangeRead_(number):ranges_[number]; }
+// 정수 검색 범위는 원문 조회 위치에서 현재 float 사거리를 절삭한다.
+std::int32_t RawFenceNeighbors::Range(Sid sid) const { return FenceTruncate(CurrentRange(sid)); }
 // float Rect 구성은 타입 발자국을 뺀 지점에 원본 정수 사거리의 방향 벡터를 더한다.
 std::array<float,4> RawFenceNeighbors::SearchBounds(Sid sid,std::uint32_t direction) const {
     if (direction>=8) throw std::out_of_range("펜스 방향 범위 오류");
@@ -74,7 +83,7 @@ Sid RawFenceNeighbors::Select(Sid sid,std::span<const Sid> candidates,bool allie
     if (result.value && allied) {
         const auto owner=Slot(sid)[34],other=Slot(result)[34]; // 최근접 선택 뒤 현재 원문 소유자를 읽는다.
         if (owner>=9 || other>=9) throw std::out_of_range("펜스 동맹 소유자 범위 오류");
-        if (owner!=other && alliances_[other*9+owner]==0) return {};
+        if (owner!=other && (allianceRead_ ? allianceRead_(other,owner):alliances_[other*9+owner])==0) return {};
     }
     return result;
 }
@@ -87,7 +96,7 @@ Sid RawFenceNeighbors::Neighbor(Sid sid,std::uint32_t direction,bool allied) con
 // 수직이면 Y차, 그 외에는 X차의 절댓값을 절삭한 뒤 원본float 사거리와 비교한다.
 bool RawFenceNeighbors::WithinRange(Sid sid,std::array<float,4> endpoints) const {
     const auto distance=endpoints[0]==endpoints[2] ? std::abs(static_cast<double>(endpoints[1])-endpoints[3]) : std::abs(static_cast<double>(endpoints[0])-endpoints[2]);
-    return static_cast<float>(FenceTruncate(distance))<=ranges_[Slot(sid)[10]];
+    return static_cast<float>(FenceTruncate(distance))<=CurrentRange(sid);
 }
 // 로컬/적대의 다른 가까운 후보로 대체하지 않고 각 실제 동맹 이웃을 한 번씩 센다.
 std::uint32_t RawFenceNeighbors::Connections(Sid sid) const {

@@ -9,6 +9,9 @@ class RawFenceNeighbors {
 public:
     RawFenceNeighbors(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
         std::span<const float> ranges,std::span<const std::uint32_t> alliances); // PATCH의 실제 타입/행렬 크기를 확인한다.
+    RawFenceNeighbors(const SidPool& pool,const SquidHash& hash,std::span<const RiftTypeRecord> types,
+        std::function<float(std::uint32_t)> range,std::function<std::uint32_t(std::uint32_t,std::uint32_t)> alliance); //현재 TYPE/Player의 선택 시 getter를 빌리며 결합 시 조회하지 않는다.
+    std::array<float,2> Center(Sid sid) const; //004adea0의 현재 float 중심을 표식 생성/정리도 같은 본문으로 읽는다.
     std::array<float,4> SearchBounds(Sid sid,std::uint32_t direction) const; // 원본 Rect min/max의 현재 float 경계다.
     Sid Select(Sid sid,std::span<const Sid> candidates,bool allied) const; // finder가 반환한 순서대로 엄격한 최근접 한 개를 선택한다.
     Sid Neighbor(Sid sid,std::uint32_t direction,bool allied=false) const; // 00456220 또는00455fb0을 같은 실제 finder로 실행한다.
@@ -17,12 +20,14 @@ public:
 private:
     std::span<const std::uint8_t> Slot(Sid sid) const; // 원본 유효 포인터 범위와 현재 타입을 확인한다.
     std::array<float,2> Position(Sid sid) const; // 실제 Pop 좌표를 읽는다.
-    std::array<float,2> Center(Sid sid) const; // TYPE 발자국 반쪽을 뺀 실제 float 중심이다.
+    float CurrentRange(Sid sid) const; //독립 span 또는 장기 현재 TYPE getter에서 같은 사거리를 읽는다.
     std::int32_t Range(Sid sid) const; // TYPE+44의 현재 float를 원본 CRT 절삭한다.
     const SidPool& pool_; // 동적 후보의 같은50BYTE 풀이다.
     const SquidHash& hash_; // 후보 순서를 정하는 같은4단계 해시다.
     std::span<const RiftTypeRecord> types_; // 현재 발자국/타입 번호 표다.
     std::span<const float> ranges_; // 실제 TYPE+44를 타입 번호로 조회한다.
     std::span<const std::uint32_t> alliances_; // 후보 소유자 행→원본 소유자 열의 현재81DWORD다.
+    std::function<float(std::uint32_t)> rangeRead_; //장기 본체는 사거리 배열 사본 없이 현재 TYPE+44를 읽는다.
+    std::function<std::uint32_t(std::uint32_t,std::uint32_t)> allianceRead_; //현재 Player의 실제81DWORD에서 선택한 행/열만 읽는다.
 };
 }

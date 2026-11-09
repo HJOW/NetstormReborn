@@ -63,7 +63,7 @@ void ConnectDevastation() {
     targets.radius=[this](Sid parent,std::uint32_t table) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 반경 표 오류");return devastationTargets->DefaultRadius(parent); };
     targets.eligible=[this](Sid parent,std::uint32_t table,Sid target) { if (!ConnectedBombTable(table)) throw std::logic_error("주문 자격 표 오류");PrepareDevastation();return WindSpellTable(table) ? windSpell->MayTarget(parent) : table==0x502370U ? devastationBlast->MayTarget(target) : bombStatus->MayTarget(parent,target); };
     targets.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Devastation 권한 진단 "+std::to_string(line)); };
-    devastationTargets=std::make_unique<RawBombTargets>(core.pool,core.hash,core.types,fenceRanges,devastationTargetState,std::move(targets));
+    devastationTargets=std::make_unique<RawBombTargets>(core.pool,core.hash,core.types,devastationTargetState,std::move(targets)); //같은원문TYPE+44를직접읽어펜스용사거리사본/조립순서에의존하지않는다.
     devastationBlast=std::make_unique<RawBombBlast>(core.pool,core.types,core.frames,*devastationTargets,devastationBlastState,MakeCampaignBombBlastHooks(world,*hits,*devastationTargets));
     BombActivationHooks activation;
     activation.cost=[this](std::uint32_t kind) { return hp.TypeCostUnits(kind); };activation.subtract=[this](std::uint32_t owner,float amount) { hp.AddSp(owner,amount); };

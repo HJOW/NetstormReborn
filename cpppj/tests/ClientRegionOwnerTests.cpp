@@ -12,6 +12,7 @@
 #include "o/RawPlayerParticipation.h" //공개Player초기화의동맹mask자식도기존실제본문을사용한다.
 #include "o/RawAiWallet.h" //삭제환불의실제owner0/NULL brain지갑관문을그대로사용한다.
 #include "o/RawAiObjectNotice.h" //실제Player의NULL brain은기존전체통지본문의자연반환으로처리한다.
+#include "o/RawBombTargets.h" //같은TYPE사거리를쓰던기존다른소비자의연결도확인한다.
 #include <bit>
 #include <optional>
 #include <iostream> //최초실패의실제삭제깊이/현재필드를보존한다.
@@ -48,6 +49,7 @@ struct RegionScene { //게임실행기없이실제장기owner/보호자산/물�
     // 최초 결합은 원문 게임/Player 초기화·패킷·월드 대여를 실행하지 않는다.
     explicit RegionScene(bool observePostPop=false) {
         storage->BindTransmissionDevices({RegionForbidden<void,std::span<std::uint8_t>>("영역 검사 금지 Native 방송"),RegionForbidden<bool,std::int32_t>(),RegionForbidden<void,std::int32_t,std::span<std::uint8_t>>()});
+        storage->BindFenceAlliances([weak=std::weak_ptr<ClientPlayerRecords>(players)](auto row,auto column) { const auto current=weak.lock();if (!current) throw std::logic_error("검사 실제 Player 반납 뒤 동맹 선택");return current->Alliances().at(row*9+column); }); //게임/Player초기화없이실제동맹배열만선택호출동안pin한다.
         storage->BindSerializationGlobals(std::make_shared<FortSerializationGlobals>());
         storage->BindDisplayDiagnostics(detail,[](auto,auto,auto) { throw std::logic_error("유효 영역 입력에서 원문 단언 발생"); });
         storage->BindGraphTrace([this](auto,std::string_view) { ++traces; });storage->EnablePatchDestroyDiagnostics();
@@ -94,6 +96,12 @@ struct RegionScene { //게임실행기없이실제장기owner/보호자산/물�
     std::uint32_t Island() { owner->Islands().Reset();const auto result=owner->Islands().Add(0,0);owner->Islands().Bounds(static_cast<std::int32_t>(result),{90,90,110,110});return result; }
     // 현재 슬롯의 원문 두 float 좌표만 지정한다.
     void Position(Sid sid,float x=100,float y=100) { auto raw=storage->pool.AllocatedBytes(sid);RegionPut(raw,14,std::bit_cast<std::uint32_t>(x));RegionPut(raw,18,std::bit_cast<std::uint32_t>(y)); }
+    // 실제136 생성자를 사용하고 명시 원문 슬롯 입력만 지정한다. Pop/송신은 실행하지 않는다.
+    Sid Fence(float x=100,float y=100,std::uint8_t player=0,std::uint8_t extra=0) { const auto sid=storage->CreateAsset(136,2);Position(sid,x,y);auto raw=storage->pool.AllocatedBytes(sid);raw[34]=player;raw[40]=extra;CHECK(RegionRead(raw,0)==0x509470U);return sid; }
+    // 원문 finder 입력의 실제 SHP/TYPE 단계와 next 체인을 같은 물리에 설치한다.
+    void Index(Sid sid) { const auto raw=storage->pool.Slot(sid);const auto size=storage->Display().FrameSize(OriginalEdition::Patch1078,raw,RegionRead(raw,36));const auto level=SquidHash::ObjectLevel(storage->types[raw[10]].flags2,size[0],size[1]);auto& head=storage->hash.Bucket(level,std::bit_cast<float>(RegionRead(raw,14)),std::bit_cast<float>(RegionRead(raw,18)));auto bytes=storage->pool.AllocatedBytes(sid);bytes[4]=static_cast<std::uint8_t>(head);bytes[5]=static_cast<std::uint8_t>(head>>8);head=sid.value; }
+    // 실제 생존 슬롯만 세며 새 객체의 수명 비트를 성공값으로 바꾸지 않는다.
+    std::vector<Sid> OfType(std::uint32_t type) { std::vector<Sid> result;for (std::uint32_t value=5;value<storage->pool.Capacity();++value) { const Sid sid{static_cast<std::uint16_t>(value)};const auto raw=storage->pool.Slot(sid);if (!(raw[11]&1U) && raw[10]==type) result.push_back(sid); }return result; } //현재같은Pool의할당범위만순회한다.
     // 실패는숨기지않고실제현재필드/삭제깊이를기록한뒤같은예외를다시전달한다.
     bool Destroy(Sid sid) { try { return storage->DestroyAsset(sid,0x10); }catch (...) { const auto raw=storage->pool.Slot(sid);std::cerr<<"type="<<std::uint32_t(raw[10])<<" state="<<std::uint32_t(raw[11])<<" extra="<<std::uint32_t(raw[40])<<" pre="<<storage->BaseDestroy().PreDepth()<<" post="<<storage->BaseDestroy().PostDepth()<<" ui="<<refreshes<<'\n';throw; } }
 };
@@ -296,4 +304,107 @@ TEST_CASE(ClientIce_RegrowthUsesVirtualOwnerOfCurrentRole) {
     try { scene.storage->DestroyAsset(sid,0x10); }catch (const std::logic_error& error) { std::cerr<<"ICE OWNER: "<<error.what()<<" type="<<unsigned(scene.storage->pool.Slot(sid)[10])<<" role="<<scene.storage->GameAux()->RainBlockerType()<<" depth="<<scene.storage->BaseDestroy().PreDepth()<<'/'<<scene.storage->BaseDestroy().PostDepth()<<'\n';rejected=std::string_view(error.what())=="영역 검사 금지 Native 방송"; }
     const auto value=scene.PlayerRead(1,0x7c);CHECK(value && value<scene.storage->pool.Capacity());if (!value || value>=scene.storage->pool.Capacity()) return;const Sid born{static_cast<std::uint16_t>(value)};
     CHECK(rejected && scene.storage->pool.Slot(born)[10]==124 && scene.storage->pool.Slot(born)[34]==1 && scene.PlayerRead(1,0x80)==value && scene.refreshes==1 && scene.gameplay->MapRevision()==1);
+}
+
+// 전체펜스본체구성은현재역할/Player/SP/난수를조회하거나초기화하지않는다.
+TEST_CASE(ClientFence_LongBodiesShareCurrentStateWithoutWorld) {
+    RegionScene scene;const auto random=scene.random->Game().State();scene.storage->GameAux()->FenceMarkerType()=70;scene.storage->GameAux()->FenceShieldType()=171;
+    auto* neighbors=&scene.storage->FenceNeighbors();auto* line=&scene.storage->FenceLine();auto* markers=&scene.storage->FenceMarkers();auto* shields=&scene.storage->FenceShields();auto* clear=&scene.storage->FenceMarkerClear();
+    auto* rebuild=&scene.storage->FenceRebuild();auto* post=&scene.storage->FencePostPop();auto* regular=&scene.storage->FenceRegular();auto* lifetime=&scene.storage->FenceLifetime();
+    CHECK(&scene.storage->FenceNeighbors()==neighbors && &scene.storage->FenceLine()==line && &scene.storage->FenceMarkers()==markers && &scene.storage->FenceShields()==shields && &scene.storage->FenceMarkerClear()==clear);
+    CHECK(&scene.storage->FenceRebuild()==rebuild && &scene.storage->FencePostPop()==post && &scene.storage->FenceRegular()==regular && &scene.storage->FenceLifetime()==lifetime);
+    CHECK(scene.storage->GameAux()->FenceMarkerType()==70 && scene.storage->GameAux()->FenceShieldType()==171 && scene.players->Base()==0 && !scene.sp->Store().Initialized() && scene.random->Game().State()==random && !scene.storage->Borrowed());
+}
+
+// 펜스 사거리 사본을 쓰던 주문 반경도 같은 현재 TYPE+44의 절삭값을 읽는다.
+TEST_CASE(ClientFence_SharedRangeFeedsExistingBombRadius) {
+    RegionScene scene;const auto sid=scene.Fence();BombTargetState state;RawBombTargets body(scene.storage->pool,scene.storage->hash,scene.storage->types,state,{});
+    scene.storage->types[136].range=12.75F;CHECK(body.DefaultRadius(sid)==12);scene.storage->types[136].range=-7.5F;CHECK(body.DefaultRadius(sid)==-7 && scene.players->Base()==0 && !scene.storage->Borrowed());
+}
+
+// 같은일반finder가현재TYPE사거리와방향별동맹을다음조회에즉시반영한다.
+TEST_CASE(ClientFence_CurrentRangeAndDirectionalAllianceBeforePlayers) {
+    RegionScene scene;const auto parent=scene.Fence(100,100,1),other=scene.Fence(100,90,2);scene.Index(other);auto& body=scene.storage->FenceNeighbors();scene.storage->types[136].range=20;
+    CHECK(body.Neighbor(parent,0)==other && body.Neighbor(parent,0,true)==Sid{});scene.players->Alliances()[2*9+1]=1;
+    CHECK(body.Neighbor(parent,0,true)==other && body.Connections(parent)==1 && body.WithinRange(parent,{100,100,100,90}));
+    scene.storage->types[136].range=4;CHECK(body.Neighbor(parent,0)==Sid{} && !body.WithinRange(parent,{100,100,100,90}));
+    scene.storage->types[136].range=20;scene.players->Alliances()[2*9+1]=0;scene.players->Alliances()[1*9+2]=1;
+    CHECK(body.Neighbor(parent,0,true)==Sid{} && scene.players->Base()==0 && !scene.sp->Store().Initialized());
+}
+
+// Storage가Player를강하게역참조하지않으며반납뒤선택된동맹은명시실패한다.
+TEST_CASE(ClientFence_CurrentPlayerLeaseHasNoStorageCycle) {
+    RegionScene scene;const auto parent=scene.Fence(100,100,1),other=scene.Fence(100,90,2);scene.storage->types[136].range=20;const std::array candidates{other};
+    auto& body=scene.storage->FenceNeighbors();std::weak_ptr<ClientPlayerRecords> weak=scene.players;scene.owner.reset();scene.players.reset();CHECK(weak.expired());bool rejected{};
+    try { static_cast<void>(body.Select(parent,candidates,true)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what())=="검사 실제 Player 반납 뒤 동맹 선택"; }
+    CHECK(rejected && !scene.storage->Borrowed());
+}
+
+// 실제VT457990전처리와Damageable후처리가월드없이같은공통삭제깊이를끝낸다.
+TEST_CASE(ClientFence_ActualPrePostParentsBeforeWorld) {
+    RegionScene scene;const auto sid=scene.Fence(100,100,0,9);const auto free=scene.storage->pool.FreeCount();CHECK(scene.Destroy(sid));
+    CHECK(scene.storage->pool.FreeCount()==free+1 && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0 && scene.players->Base()==0 && scene.traces==1);
+}
+
+// 실제네방향검색후원문의처음두이웃에만같은Host의event2를예약한다.
+TEST_CASE(ClientFence_PreDestroySchedulesOnlyFirstTwoNeighbors) {
+    RegionScene scene;scene.storage->types[136].range=20;const auto parent=scene.Fence(100,100,1,9);
+    const std::array others{scene.Fence(100,90,2),scene.Fence(110,100,2),scene.Fence(100,110,2),scene.Fence(90,100,2)};
+    for (const auto sid:others) scene.Index(sid); //실제원문순서0/2/4/6의적대이웃을같은물리에입력한다.
+    CHECK(scene.Destroy(parent));auto& host=scene.storage->Processes().Host();auto* north=host.FindEvent(others[0],2);auto* east=host.FindEvent(others[1],2);
+    CHECK(north && east && !host.FindEvent(others[2],2) && !host.FindEvent(others[3],2));if (!north || !east) return;
+    CHECK(north->Count()==0 && east->Count()==0 && north->Payload()==0.1F && east->Payload()==0.1F && !north->Shared() && !east->Shared() && scene.players->Base()==0 && !scene.storage->Borrowed());
+}
+
+// 실제최초Pop가현재theme3의event0과event2를예약하고Host도같은본체로재진입한다.
+TEST_CASE(ClientFence_NoWorldFirstPopAndActualRegularHost) {
+    RegionScene scene(true);scene.storage->types[136].theme=3;const auto sid=scene.Fence(128,128,0,0x20);CHECK(scene.storage->PopAsset(sid,128,128,0x10)==RawPopResult::Registered);
+    auto& host=scene.storage->Processes().Host();auto* animation=host.FindEvent(sid,0);auto* rebuilding=host.FindEvent(sid,2);CHECK(animation && rebuilding);if (!animation || !rebuilding) return;
+    const auto frame=RegionRead(scene.storage->pool.Slot(sid),36);animation->RunFrame();CHECK(animation->Count()==1 && animation->Payload()==0.1F && rebuilding->Count()==0 && RegionRead(scene.storage->pool.Slot(sid),36)==frame);
+    CHECK(RegionRead(scene.storage->pool.Slot(sid),42)==0 && RegionRead(scene.storage->pool.Slot(sid),46)==0 && scene.storage->PostPop().ActivationDepth()==0 && scene.postPopSelections==1 && scene.players->Base()==0);
+}
+
+// 다른사건은현재캐시/프레임을바꾸지않고같은일반부모의payload비트를보존한다.
+TEST_CASE(ClientFence_UnknownEventPreservesPayloadAndCaches) {
+    RegionScene scene;const auto sid=scene.Fence();auto raw=scene.storage->pool.AllocatedBytes(sid);RegionPut(raw,42,0x12345678);RegionPut(raw,46,0x87654321);RegionPut(raw,36,0xffffffffU);
+    const auto result=scene.storage->FenceRegular().Handle(sid,0x76543210,0xffffffffU,std::bit_cast<float>(0x7fc12345U));
+    CHECK(std::bit_cast<std::uint32_t>(result)==0x7fc12345U && RegionRead(scene.storage->pool.Slot(sid),36)==0xffffffffU && RegionRead(scene.storage->pool.Slot(sid),42)==0x12345678 && RegionRead(scene.storage->pool.Slot(sid),46)==0x87654321);
+}
+
+// 현재역할참조를유지한실제표식생성은WORD/QB/owner/Pop40과같은해시까지끝난다.
+TEST_CASE(ClientFence_MarkerCreateUsesCurrentRoleAndActualPop) {
+    RegionScene scene(true);scene.PlayerBlock();const auto parent=scene.Fence(100,100,1),other=scene.Fence(100,110,2);scene.storage->GameAux()->FenceMarkerType()=70;auto& body=scene.storage->FenceMarkers();scene.storage->GameAux()->FenceMarkerType()=90;
+    const auto free=scene.storage->pool.FreeCount();body.Create(parent,other);const auto markers=scene.OfType(90);CHECK(markers.size()==4 && scene.storage->pool.FreeCount()==free-4);
+    for (const auto sid:markers) { const auto raw=scene.storage->pool.Slot(sid);CHECK((RegionRead(raw,12)&0xffffU)==parent.value && ((RegionRead(raw,26)<<8)|raw[30])==other.value && raw[34]==1 && !(raw[11]&5U)); } //실제생성된각표식의원문끝점태그와등록상태다.
+    CHECK(scene.storage->PostPop().ActivationDepth()==0 && !scene.storage->Borrowed());
+}
+
+// 현재포스필드역할/J첫프레임/서명있는SID의owner선택과실제Pop를확인한다.
+TEST_CASE(ClientFence_ShieldCreateUsesCurrentRoleFrameAndOwner) {
+    RegionScene scene(true);scene.PlayerBlock();scene.storage->GameAux()->FenceShieldType()=70;auto& body=scene.storage->FenceShields();scene.storage->GameAux()->FenceShieldType()=170;
+    const auto free=scene.storage->pool.FreeCount();body.Create({100,100,100,110},2,3,-1,5);const auto shields=scene.OfType(170);CHECK(shields.size()==8 && scene.storage->pool.FreeCount()==free-8);
+    const auto expected=static_cast<std::uint32_t>(scene.storage->frames[170].Run('J').first);
+    for (const auto sid:shields) { const auto raw=scene.storage->pool.Slot(sid);CHECK(raw[34]==3 && RegionRead(raw,36)==expected && !(raw[11]&5U)); } //같은현재프레임표와가상owner의실제결과만읽는다.
+    CHECK(scene.storage->PostPop().ActivationDepth()==0);
+}
+
+// 같은이웃이라도현재사거리밖에서는생성하지않고범위확장뒤표식/포스필드를실제로만든다.
+TEST_CASE(ClientFence_RebuildUsesLiveRangeAndBothActualCreators) {
+    RegionScene scene(true);scene.PlayerBlock();const auto parent=scene.Fence(100,100,1),other=scene.Fence(100,110,2);scene.Index(parent);scene.Index(other);scene.players->Alliances()[2*9+1]=1;
+    scene.storage->types[136].range=6;const auto free=scene.storage->pool.FreeCount();scene.storage->FenceRebuild().Rebuild(parent);CHECK(scene.storage->pool.FreeCount()==free);
+    scene.storage->types[136].range=20;scene.storage->FenceRebuild().Rebuild(parent);CHECK(scene.OfType(90).size()==4 && scene.OfType(170).size()==8 && scene.storage->pool.FreeCount()==free-12);
+}
+
+// 현재역할이아닐때는남기고복원뒤실제생성표식의태그와가상삭제를사용한다.
+TEST_CASE(ClientFence_MarkerClearReadsCurrentRoleAndActualTags) {
+    RegionScene scene(true);scene.PlayerBlock();const auto parent=scene.Fence(100,100,1),other=scene.Fence(100,110,2);const auto free=scene.storage->pool.FreeCount();scene.storage->FenceMarkers().Create(parent,other);CHECK(scene.OfType(90).size()==4);
+    scene.storage->GameAux()->FenceMarkerType()=170;scene.storage->FenceMarkerClear().Clear(parent,other);CHECK(scene.OfType(90).size()==4);
+    scene.storage->GameAux()->FenceMarkerType()=90;scene.storage->FenceMarkerClear().Clear(parent,other);CHECK(scene.OfType(90).empty() && scene.storage->pool.FreeCount()==free && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+
+// 현재역할과실제J방향프레임으로만생성된연결선을찾아같은물리에서삭제한다.
+TEST_CASE(ClientFence_LineClearReadsCurrentRoleAndFrameDirection) {
+    RegionScene scene(true);scene.PlayerBlock();const auto free=scene.storage->pool.FreeCount();scene.storage->FenceShields().Create({100,100,100,110},1,1,5,6);CHECK(scene.OfType(170).size()==8);
+    scene.storage->GameAux()->FenceShieldType()=90;scene.storage->FenceLine().Clear({100,100,100,110});CHECK(scene.OfType(170).size()==8);
+    scene.storage->GameAux()->FenceShieldType()=170;scene.storage->FenceLine().Clear({100,100,100,110});CHECK(scene.OfType(170).empty() && scene.storage->pool.FreeCount()==free && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
 }

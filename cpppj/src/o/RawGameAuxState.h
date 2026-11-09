@@ -183,6 +183,10 @@ public:
     const std::uint32_t& RainBlockerType() const { return rainBlockerType_; } // 성장형 비용 별칭도 같은 현재 DWORD를 읽는다.
     std::uint32_t& GrowingRainBlockerType() { return growingRainBlockerType_; } //005412b0의 현재 성장형 TYPE이며 비용 별칭/환불 제외를 선택한다.
     const std::uint32_t& GrowingRainBlockerType() const { return growingRainBlockerType_; } // 현재150 초기값의 사본을 Session마다 만들지 않는다.
+    std::uint32_t& FenceMarkerType() { return fenceMarkerType_; } //005411c0의 현재 내부 표식 TYPE를 생성/삭제가 공유한다.
+    const std::uint32_t& FenceMarkerType() const { return fenceMarkerType_; } //세션 전환으로90 사본을 만들지 않는다.
+    std::uint32_t& FenceShieldType() { return fenceShieldType_; } //00541300의 현재 화면 포스 필드 TYPE를 생성/연결선 정리가 공유한다.
+    const std::uint32_t& FenceShieldType() const { return fenceShieldType_; } //현재 역할의 동일 주소를 장기 본체가 빌린다.
     std::uint32_t& NuggetType() { return nuggetType_; } //005412c0의 현재 너겟 TYPE이며 보상 환불의 전액 단가 관문이다.
     const std::uint32_t& NuggetType() const { return nuggetType_; } // 같은 장기 owner를 후속 운반/채집 소비자도 빌릴 수 있다.
     std::uint32_t& VerifySid() { return verifySid_; } //0054d4d8의 BSS0이며 전체 객체 수신/검증 부모가 같은 DWORD를 쓴다.
@@ -278,6 +282,7 @@ private:
     std::uint32_t priestType_{158}; // 두 보호 PE의 최초158이며 실제 HP/이동 소비자가 같은 장기 주소를 빌린다.
     std::uint32_t fakeSurfaceType_{162}; // PATCH005412e0의 최초162이며 실제 생성 부모가 장기 주소를 빌린다.
     std::uint32_t rainBlockerType_{147},growingRainBlockerType_{150}; //005412a4/005412b0의 현재 두 TYPE 번호이며 TYPE 기록 표와 별개다.
+    std::uint32_t fenceMarkerType_{90},fenceShieldType_{170}; //내부 표식과 화면 포스 필드의 별도 원문 역할이며 월드 준비로 초기화하지 않는다.
     std::uint32_t runeType_{166}; // 보호 PE005412f0의 초기 DWORD이며 ResetForGeneralWorld는 현재 번호를 유지한다.
     std::uint32_t nuggetType_{154}; //005412c0의 최초154를 한 번만 소유하고 Session 재대여로 덮어쓰지 않는다.
     std::uint32_t verifySid_{}; //0054d4d8의 최초 BSS0을 Session/World 교체에서 초기화하지 않는다.

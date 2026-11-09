@@ -14,11 +14,13 @@ struct FenceCreateHooks {
 class RawFenceMarkerCreate {
 public:
     RawFenceMarkerCreate(SidPool& pool,const RawGunTarget& target,const std::uint32_t& type,FenceCreateHooks hooks); //같은 PATCH 풀/현재 중심/타입을 빌린다.
+    RawFenceMarkerCreate(SidPool& pool,const std::uint32_t& type,FenceCreateHooks hooks,
+        std::function<std::array<float,2>(Sid)> center); //같은 원문 중심 본문을 직접 빌려 별도 GunTarget 상태를 만들지 않는다.
     static std::vector<std::array<float,2>> Points(std::array<float,4> centers); //원본 방향·inclusive Rect·4칸 구간 변경 뒤의 현재float 지점이다.
     void Create(Sid parent,Sid other) const; //QA/통지/QB/graph/현재owner/Pop 순서를 보존한다.
 private:
     SidPool& pool_; //현재 두 끝점과 생성 표식의 실제 슬롯이다.
-    const RawGunTarget& target_; //004adea0의 같은 실제 중심 조회다.
+    std::function<std::array<float,2>(Sid)> center_; //004adea0의 현재 중심을 선택 시 조회한다.
     const std::uint32_t& type_; //DAT005411c0의 현재 fencemark 번호다.
     FenceCreateHooks hooks_; //실제 생성/표시 하위의 현재 소비자다.
 };
