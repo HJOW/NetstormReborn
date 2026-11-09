@@ -212,6 +212,7 @@ struct RawMenuControls::Impl {
             throw std::invalid_argument("실제 메뉴 판본/공통 트리/Client 연결 오류");
         const auto& fort=assets.Find("fortGump");const auto backgroundType=static_cast<std::uint32_t>(fort.block+o::kFirstAssetTypeNumber);
         widgetState.backgroundType=backgroundType;widgetState.backgroundFrame=1;widgetState.objectFormType=3;
+        widgetState.currentObjectFormType=[this] { if (!hooks.objectForms) throw std::logic_error("현재 메뉴 Gump TYPE 조회의 실제 Host 미연결");return hooks.objectForms().CurrentType(); }; // 첫 Reference의 인자도 생성 callback보다 먼저 현재 장기/typed Host에서 읽는다.
         helpState.backgroundType=backgroundType;helpState.backgroundFrame=0; //원본4c7160은5411c8의 fortGump TYPE와 프레임0을 Help의 공유 배경 전역에 쓴다.
         std::array<std::uint32_t,256> picturePalette{}; //원본557738 그림 치환표를 만드는 파일 팔레트 RGB다.
         // 일시 날씨 색 대신 이 자산 파일의 팔레트로 공유 그림자 표를 한 번 계산한다.

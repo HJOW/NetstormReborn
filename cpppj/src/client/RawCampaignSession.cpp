@@ -766,7 +766,8 @@ struct RawCampaignSession::Impl {
     CarrierEscapeState carrierEscapeState; // 실제 겹친 방향표17DWORD다.
     std::unique_ptr<RawCarrierEscape> carrierEscape; // 현재 경로 깊이/공간/임시BFS/새이동을 연결한다.
     std::unique_ptr<RegularProcess> pendingCarrierTask; // 원본 new28과 생성자가 공유하는 하나의 확보 메모리다.
-    std::unique_ptr<GumpFormHost> gumpForms; // 같은Pool의실제Form3와현재UI등록ID/부모삭제알림수명이다.
+    std::unique_ptr<GumpFormHost> localGumpForms; // 독립 typed Session의 기존 지역 Host 수명만 유지한다.
+    GumpFormHost* gumpForms{}; // Native는 같은 Storage의 장기 현재 Gump 본체를 빌린다.
     std::unique_ptr<RawContentParentNotice> contentNotice; // 부모의 실제 현재 VT로 기본/파생 +24를 분배한다.
     bool& contentSavedGame{localStateGlobals->SavedGame()}; // 내용물 통지/돈 관문도 Login/State와 같은005c85d4의 현재0/1을 직접 읽는다.
     std::array<std::int32_t,2>& contentScreenOrigin{gameplayGlobals->Camera().Snapshot().pixels}; // 같은 Client snapshot의 현재59a91c/920을 직접 빌린다.
@@ -776,7 +777,9 @@ struct RawCampaignSession::Impl {
 
     std::unique_ptr<RawContainedCreate> contained; // 실제 Factory/ContentFormHost의 저장 내용물 생성이다.
     ContentLifetimeState contentLifetimeState; // 같은 ContentForm의 커서·로컬 소유자·수입 명령 전역이다.
-    std::uint32_t contentGumpType{3},contentEvent{0x02000031}; // PATCH0054107c/005427bc의 실제 초기값이다.
+    std::uint32_t localContentGumpType{3}; // 독립 typed 입력의 기존0054107c 초기값이다.
+    std::uint32_t& contentGumpType{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->containedGumpType:localContentGumpType}; // Native의 생성/부모통지/UI 검색은 같은 현재 DWORD를 공유한다.
+    std::uint32_t contentEvent{0x02000031}; // PATCH005427bc의 실제 초기 사건이다.
     std::unique_ptr<RawPlayerContentNotice> playerContent; // 현재 SP 저장소/같은 Player 체인/실제 UI를 조회한다.
     std::unique_ptr<RawCampaignLifetimeBindings> lifetime; // 공통 삭제와 ContentForm의 같은 풀 수명을 등록한다.
     std::uint32_t contentUnpopEvent{0x02000039}; // 현재005427dc UpdateContents이며 Player 내용물 통지005427bc와 별개다.
@@ -1564,6 +1567,7 @@ struct RawCampaignSession::Impl {
         worldHooks.squidConnected=[this](std::int32_t target) { return target>0 && target<9 && (players[static_cast<std::size_t>(target)*180+0x50]&1U); }; //0048f4b0은 실제 소켓 존재 대신 현재 Player 접속 비트만 읽는다.
         worldHooks.squidSend=[this](std::int32_t target,auto packet) { if (target<0 || target>=9) throw std::out_of_range("현재 대상별 Squid 연결 범위");const auto send=services.battlePeers[static_cast<std::size_t>(target)];if (send) send(packet); }; //004e2dc0은 현재 NULL 연결을 자연 생략한다.
         worldHooks.formTransmit=services.dependencyTransmit;
+        worldHooks.gumpNotice=services.gumpNotice; // Native의 명시 실제 UI 소비자는 같은 World Runtime pin과 함께 빌린다.
         FillMissing(worldHooks.formTransmit);
         worldHooks.assets=services.deletion;FillMissing(worldHooks.assets.selected);
         // 공통 삭제의 -1/-2/0/flags 요청은 실제+58을 실행한다. 다른 파생/선택 효과는 실제 상위 소비자로 전달한다.
@@ -2901,8 +2905,9 @@ struct RawCampaignSession::Impl {
     }
     // 첫 실제 객체 이전에 같은 공통 삭제/내용물/Player 통지/기술 모듈을 한 번 연결한다.
     void InstallContents(const SquidDestroyHooks& deletion) {
-        gumpForms=std::make_unique<GumpFormHost>(core.pool,core.factory,core.types,core.destroy,
-            [this](std::uint32_t owner,Sid parent) { if (!services.gumpNotice) throw std::logic_error("현재Session GumpForm UI통지미연결");services.gumpNotice(owner,parent); },core.forms.Hooks());
+        if (world.Storage()->UsesNativeTransmissionDevices()) gumpForms=&world.Storage()->GumpForms();
+        else { localGumpForms=std::make_unique<GumpFormHost>(core.pool,core.factory,core.types,core.destroy,
+            [this](std::uint32_t owner,Sid parent) { if (!services.gumpNotice) throw std::logic_error("현재Session GumpForm UI통지미연결");services.gumpNotice(owner,parent); },core.forms.Hooks());gumpForms=localGumpForms.get(); }
         core.forms.Bind(*gumpForms); // 실제월드삭제의혼합Form체인이같은호스트로돌아온다.
         FillMissing(services.unitLost);
         world.BindDeletion(hp,deletion.selected,MakeCampaignDeletionEffects(deletion,services.unitLost));

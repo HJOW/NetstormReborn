@@ -20,7 +20,10 @@ struct MenuGumpConstructionEntry {
     std::uint32_t flags{},command{},parameter{},condition{1};
 };
 // +20 식별 BYTE의 두 PE 초기값은 26이다. 배경/색/객체 부착 Form 타입은 실제 초기화 전역을 공급한다.
-struct MenuGumpWidgetState { /* alignment: 항목의 좌우·상하 정렬을 선택하는 값. */ std::int8_t alignment{26};/* backgroundType: 배경을 출력할 타입 번호. */ /* backgroundFrame: 배경을 출력할 프레임 번호. */ /* foreground: 본문 출력의 팔레트 색 인덱스. */ /* shadow: 그림자. */ /* objectFormType: 객체 Form 타입. */ std::uint32_t backgroundType{},backgroundFrame{},foreground{},shadow{},objectFormType{}; };
+struct MenuGumpWidgetState { /* alignment: 항목의 좌우·상하 정렬을 선택하는 값. */ std::int8_t alignment{26};/* backgroundType: 배경을 출력할 타입 번호. */ /* backgroundFrame: 배경을 출력할 프레임 번호. */ /* foreground: 본문 출력의 팔레트 색 인덱스. */ /* shadow: 그림자. */ /* objectFormType: 독립 입력의 객체 Form 타입. */ std::uint32_t backgroundType{},backgroundFrame{},foreground{},shadow{},objectFormType{};
+    std::function<std::uint32_t()> currentObjectFormType; // 실제 메뉴는 연결 시 사본 대신 같은 현재 Gump TYPE를 생성 직전에 읽는다.
+    std::uint32_t ObjectFormType() const { return currentObjectFormType ? currentObjectFormType():objectFormType; } // 독립 typed 입력의 값형 계약은 유지한다.
+};
 // 호스트 Form 토큰과 실제 SID 풀 인덱스다. GumpFormBinding은 같은 SID를 양쪽에 공급하여 원본 stride 나눗셈과 맞춘다.
 struct MenuGumpObjectForm { /* token: 저장소나 분배기에서 대상을 구별하는 토큰. */ /* index: 목록이나 표에서 현재 항목을 찾는 인덱스. */ std::uint32_t token{},index{}; };
 // 같은 메뉴/기본 객체·요청 크기별 호스트 할당·실제 가상 Attach와 소멸 선택 콜백의 경계다.

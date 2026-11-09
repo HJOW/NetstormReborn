@@ -10,6 +10,7 @@ target_sources(netstorm PRIVATE
     RawSurfaceAssetNotice.cpp #실제세홈통지는장기같은Host의현재필드와기존본문을공유한다.
     RawSurfaceFrameRegular.cpp #두실제프레임Regular와현재TYPE방향/클러스터수를World없이공유한다.
     RawSurfaceDepend.cpp # 같은 현재 공장/TYPE·감시 쌍·가상 통지와 삭제를 장기 Storage에 연결한다.
+    RawSurfaceGump.cpp # 실제 UI 등록표/owner 수명과 같은 현재 공장/가상 삭제를 장기 Gump에 연결한다.
     RawSurfaceIce.cpp #같은현재TYPE/Host/물리로전체아이스파괴와성장을World없이연결한다.
     RawSurfaceFence.cpp #같은현재TYPE/Player/Host로전체펜스이웃/표식/연결선/재생성/수명을공유한다.
     RawSurfaceBalloon.cpp # 실제 그림자·현재 TYPE·Carrier 부모와 Cloud Floater 주기를 같은 장기 저장소에 연결한다.

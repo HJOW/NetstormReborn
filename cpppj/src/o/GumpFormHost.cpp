@@ -11,19 +11,23 @@ constexpr std::size_t kType=10,kState=11,kParent=16,kOwner=18;
 // 현재클래스/소유필드조회가실제로사용하는반납상태비트다.
 constexpr std::uint8_t kFree=1;
 }
-// 삭제/생성과 같은 풀을 사용하는지 확인하며 타입 메타데이터는 호출자 수명과 분리한다.
+// 삭제/생성과 같은 풀·판본 표 크기를 확인하며 사용하지 않는 TYPE 사본을 만들지 않는다.
 GumpFormHost::GumpFormHost(SidPool& pool,SquidFactory& factory,std::span<const RiftTypeRecord> types,
     RawSquidDestroy& destroy,GumpFormNotice notice,SquidDestroyHooks fallback)
-    :pool_(pool),factory_(factory),types_(types.begin(),types.end()),destroy_(destroy),
+    :pool_(pool),factory_(factory),destroy_(destroy),
      notice_(std::move(notice)),fallback_(std::move(fallback)) {
     if (&factory.Pool()!=&pool || &destroy.Pool()!=&pool) throw std::invalid_argument("GumpForm 생성/삭제 SID 풀이 다릅니다");
     if (types.size()!=(pool.Edition()==OriginalEdition::Patch1078 ? 188U : 171U))
         throw std::invalid_argument("GumpForm 타입 표의 판본/크기 오류");
 }
+void GumpFormHost::BindCurrent(const std::uint32_t& type,std::function<void(Sid,std::uint32_t)> destroy) {
+    if (pool_.Edition()!=OriginalEdition::Patch1078 || !destroy) throw std::invalid_argument("Native Gump의 실제 PATCH 현재 TYPE/가상 삭제 필요");currentType_=&type;virtualDestroy_=std::move(destroy); // 공장/풀·등록표를 새로 구성하거나 타입 표를 복사하지 않는다.
+}
+std::uint32_t GumpFormHost::CurrentType() const { return currentType_ ? *currentType_ : kGumpFormType; } // 생성과 Take·메뉴가 같은 전체 현재 번호를 읽는다.
 // 같은 공장의 현재 TYPE3 생성자와 실제 반환 VT+28을 사용하는 공통 Create에 연결한다.
-Sid GumpFormHost::Create(std::uint32_t flags) const { return factory_.CreateGumpForm(flags); }
+Sid GumpFormHost::Create(std::uint32_t flags) const { return currentType_ ? factory_.Create(CurrentType(),flags) : factory_.CreateGumpForm(flags); }
 // 같은 raw 풀의 지정 Take를 사용하여 부착된 Form의 링크 정리도 실제로 수행한다.
-Sid GumpFormHost::Take(Sid form) const { return factory_.Take(kGumpFormType,form); }
+Sid GumpFormHost::Take(Sid form) const { return factory_.Take(CurrentType(),form); }
 // 메뉴/수명 연결기가 실제 판본과 풀을 확인할 수 있게 제공한다.
 const SidPool& GumpFormHost::Pool() const { return pool_; }
 // 사용중클래스는현재VT로구별하고반납된슬롯의타입기록조회도보존한다.
@@ -51,15 +55,19 @@ void GumpFormHost::Put(Sid sid,std::size_t offset,std::uint32_t value,std::size_
 }
 // Gump 등록 ID는 정렬되지 않은 DWORD 전체다. 알림의 조건도 이 전체 값으로 판정한다.
 std::uint32_t GumpFormHost::Owner(Sid form) const {
-    const auto raw=Form(form);std::uint32_t owner=0;
+    const auto raw=currentType_ ? pool_.Slot(form) : Form(form);std::uint32_t owner=0;
     // 높은 두 바이트를 버리지 않고 원본 소유 ID를 조립한다.
     for (std::size_t index=0;index<4;++index) owner|=std::uint32_t(raw[kOwner+index])<<(index*8);
     return owner;
 }
 // 원본 Form getParent(+0x0)의 WORD를 반환한다.
-Sid GumpFormHost::Parent(Sid form) const { Form(form);return Sid{Word(form,kParent)}; }
+Sid GumpFormHost::Parent(Sid form) const { if (!currentType_) Form(form);return Sid{Word(form,kParent)}; } // 실제004ae9d0은 TYPE/상태/VT를 재검사하지 않고 현재+10 WORD를 읽는다.
 // 생성 후 소유 ID 쓰기는 아직 부모에 붙기 전에도 허용한다.
-void GumpFormHost::SetOwner(Sid form,std::uint32_t owner) const { Form(form);Put(form,kOwner,owner,4); }
+void GumpFormHost::SetOwner(Sid form,std::uint32_t owner) const {
+    if (!currentType_) { Form(form);Put(form,kOwner,owner,4);return; }
+    const auto raw=pool_.Slot(form);auto* bytes=const_cast<std::uint8_t*>(raw.data()); // 원문의 직접 DWORD 저장은 생성 callback 뒤 추가 클래스/free 선검사를 하지 않는다.
+    for (std::size_t index=0;index<4;++index) bytes[kOwner+index]=static_cast<std::uint8_t>(owner>>(index*8)); // 옆 부모 WORD와 payload는 유지한다.
+}
 // Gump의 실제 +74 thunk는 같은 현재 공장의 공통 부착 부모로 바로 진입한다.
 void GumpFormHost::Attach(Sid form,Sid parent,std::uint32_t flags) const { factory_.AttachForm(form,parent,flags); }
 // 살아 있는 부모에서는 링크를 고치지만 부모 삭제 중에는 저장한 next로 계속 순회하게 체인을 유지한다.
@@ -75,6 +83,7 @@ void GumpFormHost::Notify(Sid form) const {
 }
 // dead인 Form은 공통 몸체가 바로 반환한다. pre/post는 UI 삭제를 호출하지 않으며 반납은 기존 풀에 맡긴다.
 void GumpFormHost::Destroy(Sid form,std::uint32_t flags) const {
+    if (virtualDestroy_) { const auto selected=virtualDestroy_;selected(form,flags);return; } // UI가 보관한 SID의 현재 클래스 가상 삭제로 직접 재진입한다.
     if (!IsGumpForm(form)) throw std::logic_error("GumpForm 삭제 타입 오류");
     destroy_.Destroy(form,flags,Hooks());
 }
@@ -83,6 +92,7 @@ SquidDestroyHooks GumpFormHost::Hooks() const {
     SquidDestroyHooks hooks;
     // 기존 월드의 선택 번호를 유지하며 연결이 없으면 선택 없음으로 답한다.
     hooks.selected=fallback_.selected ? fallback_.selected : std::function<Sid()>([] { return Sid{}; });
+    hooks.selectedRaw=fallback_.selectedRaw; // Native 공통 삭제의 선택 비교는 전체 DWORD를 유지한다.
     // 공통 destroy가 실제 Unpop을 요청하면 GumpForm만 여기서 처리한다.
     hooks.unpopForm=[this](Sid sid) {
         if (IsGumpForm(sid)) Unpop(sid);

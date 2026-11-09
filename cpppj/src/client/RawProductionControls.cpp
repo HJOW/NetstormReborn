@@ -152,7 +152,7 @@ struct RawProductionControls::Impl {
     void ClearChildren(std::uint32_t token) { while (common.node(token)->child) common.lifetime.Kill(common.node(token)->child); }
     // 4644e0은0부모에 무동작이며 이전 Form을 먼저 지우지 않는다.
     void Bind(std::uint32_t token,std::uint32_t object) {
-        if (!object) return;auto& forms=Session().GumpForms();const auto form=forms.Create(2);auto& n=*common.node(token);forms.SetOwner(form,n.id);forms.Attach(form,{static_cast<std::uint16_t>(object)},0);n.flags|=0x40;n.object=object;n.form=form.value;
+        if (!object) return;auto& forms=context.storage->UsesNativeTransmissionDevices() ? context.storage->GumpForms():Session().GumpForms();const auto form=forms.Create(2);auto& n=*common.node(token);forms.SetOwner(form,n.id);forms.Attach(form,{static_cast<std::uint16_t>(object)},0);n.flags|=0x40;n.object=object;n.form=form.value; // Native의 Form 생성/연결은 Session 대체 상태 없이 같은 장기 공장을 사용한다.
     }
     // 같은 StyleText의 실제 소유 체인/문맥을 직접 변경한다.
     void Style(std::uint32_t token,std::string_view value) { auto& n=*Text(token);menus.StyleBackend().Parse(n.head,value,n.textContext); }

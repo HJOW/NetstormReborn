@@ -14,6 +14,10 @@
 #include "o/RawAiObjectNotice.h" //실제Player의NULL brain은기존전체통지본문의자연반환으로처리한다.
 #include "o/RawBombTargets.h" //같은TYPE사거리를쓰던기존다른소비자의연결도확인한다.
 #include "o/RawDiscRegular.h" // 원문의 IDIV/감김은 새 실제 PE 경계 자료와 직접 대조한다.
+#include "client/GumpFormBinding.h" // 실제 등록표 알림과 메뉴 Form 연결을 같은 Native 본체로 검사한다.
+#include "client/RawButtonControls.h" // 실제 Gump 등록표·트리·지연 삭제 큐를 소유한다.
+#include "client/RawMenuControls.h" // 실제 Floating SP의 Reference/등록ID/Form/가상 Kill을 사용한다.
+#include "client/BitmapFont.h" // UI 통합은 보호 자산과 실제 글꼴 저장소를 사용한다.
 #include <filesystem> // 새 경계 fixture를 이 검사 파일의 실제 위치에서 읽는다.
 #include <bit>
 #include <optional>
@@ -1089,4 +1093,75 @@ TEST_CASE(ClientDependOwner_NativeWorldBorrowsSameBodyAndReturnsIt) { // Native 
     RegionScene scene;auto* body=&scene.storage->DependForms();BridgeConnectState links;links.bridgeType=82;links.islandType=94;links.stalagType=95;links.connectorType=155;links.noIslandType=157;
     { RawSurfaceWorld world(OriginalEdition::Patch1078,scene.storage->types,scene.storage->frames,scene.storage->shapes,links,94,nullptr,scene.storage);CHECK(&world.Core().dependencies==body && scene.storage->Borrowed()); }
     CHECK(&scene.storage->DependForms()==body && !scene.storage->Borrowed());
+}
+
+namespace { // 실제 UI 등록표/지연 삭제를 소유하며 게임·Session·통신을 생성하지 않는다.
+struct GumpUiScene {
+    RegionScene& scene; // 같은 Native 물리/공장/현재 전역이다.
+    std::shared_ptr<RawButtonControls> controls; // 실제 등록표/노드/지연 삭제의 선택 pin 대상이다.
+    std::shared_ptr<RawSurfaceGumpBindings> binding; // Storage에 약하게 빌린 실제 UI 알림/owner 장치다.
+    explicit GumpUiScene(RegionScene& owner):scene(owner) {
+        RawButtonHooks hooks;hooks.deleteForm=[storage=scene.storage](auto form,auto flags) { storage->GumpForms().Destroy(Sid{static_cast<std::uint16_t>(form)},flags); };hooks.project=[storage=scene.storage,gameplay=scene.gameplay](auto object) { return ProjectGumpObject(storage->pool,gameplay->Camera().Snapshot(),object); };
+        controls=std::make_shared<RawButtonControls>(OriginalEdition::Patch1078,std::move(hooks));Page();binding=std::make_shared<RawSurfaceGumpBindings>();binding->notice=controls->ObjectNotice();binding->pin=[weak=std::weak_ptr<RawButtonControls>(controls)]()->std::shared_ptr<void> { const auto pin=weak.lock();if (!pin) throw std::logic_error("검사 실제 UI 반납 뒤 pin");return pin; };scene.storage->BindGumpUiRuntime(binding);
+    }
+    void Page() { const std::array<GumpControl,1> items{{{7,{10,20,85,40},false,true,false}}};const std::array<std::string,8> labels{{"","","","","","","","Menu"}};controls->SetControls(items,labels,640,480,RawButtonAssets{90,0,20,16,{7,255,13}}); } // 기존 실제 돌 버튼으로 비영 등록 ID를 만든다.
+    std::uint32_t Owner(std::uint32_t token) const {
+        for (std::uint32_t id=1;id<1000;++id) if (controls->RegisteredGump(id)==token) return id; // 실제 현재 등록 표에서만 ID를 얻는다.
+        throw std::logic_error("검사 실제 UI 등록 없음");
+    }
+};
+}
+TEST_CASE(ClientGumpOwner_GetterKeepsPoolCurrentTypeAndFactory) { // getter는 생성·대여·상태 복사 없이 같은 장기 본체를 반환한다.
+    RegionScene scene;scene.storage->containedGumpType=7;const auto free=scene.storage->pool.FreeCount();auto* factory=&scene.storage->Factory();auto* body=&scene.storage->GumpForms();CHECK(body==&scene.storage->GumpForms() && &body->Pool()==&scene.storage->pool && &scene.storage->Factory()==factory && body->CurrentType()==7 && scene.storage->pool.FreeCount()==free && !scene.storage->Borrowed());
+}
+TEST_CASE(ClientGumpOwner_CurrentConstructorAndWholeOwnerDword) { // 현재7의 실제 Gump 생성자와 전체 owner DWORD를 사용하고 별도 TYPE 사본을 쓰지 않는다.
+    RegionScene scene;scene.storage->types[7]=scene.storage->types[3];scene.storage->containedGumpType=7;auto& body=scene.storage->GumpForms();const auto free=scene.storage->pool.FreeCount();const auto form=body.Create(2);body.SetOwner(form,0xfedc1234U);CHECK(scene.storage->pool.Slot(form)[10]==7 && RegionRead(scene.storage->pool.Slot(form),0)==0x512188U && body.Owner(form)==0xfedc1234U && body.Parent(form).value==0);body.Destroy(form,0x10U);CHECK(scene.storage->pool.FreeCount()==free && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+TEST_CASE(ClientGumpOwner_TakeUsesCurrentTypeAndActualUnpop) { // 현재 번호로 같은 지정 Take를 실행해 부모 해제와 owner/payload 보존을 확인한다.
+    RegionScene scene;scene.storage->types[7]=scene.storage->types[3];scene.storage->containedGumpType=7;auto& body=scene.storage->GumpForms();const auto parent=scene.Asset(0x5092d0U),form=body.Create(0);body.SetOwner(form,0x12345678U);body.Attach(form,parent,0x10U);CHECK(form.value>=scene.storage->pool.Layout().serverFirst); // 실제 Take의 FIRST_SERVER_SID 이상 지정 번호와 일치하는 기존 TYPE7을 사용한다.
+    CHECK(body.Take(form)==form && scene.storage->pool.Slot(form)[10]==7 && body.Owner(form)==0x12345678U && body.Parent(form)==parent);CHECK((RegionRead(scene.storage->pool.Slot(parent),6)&0xffffU)==0 && (scene.storage->pool.Slot(form)[11]&12U)==4U);body.Destroy(form,0x10U); // 원문600입력/기존 연결 검사처럼 부모 WORD는 보존하고 contained/부모 head만 분리한다.
+}
+TEST_CASE(ClientGumpOwner_OutOfRangeCurrentTypeKeepsAllocationPrefix) { // 현재 DWORD를 BYTE나 고정3으로 줄이지 않고 원문 공통 할당 뒤 범위 실패를 유지한다.
+    RegionScene scene;scene.storage->containedGumpType=0xffffffffU;auto& body=scene.storage->GumpForms();const auto free=scene.storage->pool.FreeCount();bool failed{};try { body.Create(2); }catch (const std::out_of_range&) { failed=true; }CHECK(failed && scene.storage->pool.FreeCount()==free-1 && body.CurrentType()==0xffffffffU);
+}
+TEST_CASE(ClientGumpOwner_ZeroOwnerSkipsStateTypeAndAllUiDevices) { // 실제4ae9d0은 owner0이면 TYPE/free/부모/등록표를 읽지 않고 반환한다.
+    RegionScene scene;auto& body=scene.storage->GumpForms();const auto form=body.Create(2);auto raw=scene.storage->pool.AllocatedBytes(form);const auto state=raw[11];raw[10]=255;raw[11]|=1U;body.Notify(form);raw[10]=3;raw[11]=state;body.Destroy(form,0x10U);
+}
+TEST_CASE(ClientGumpOwner_NotifySavesFullOwnerAndCurrentParentBeforeCallback) { // 원문 통지는 전체 owner와 부모 WORD를 저장하고 callback 후 Form을 다시 읽지 않는다.
+    RegionScene scene;auto& body=scene.storage->GumpForms();const auto form=body.Create(2);body.SetOwner(form,0x80010001U);DependWord(scene.storage->pool,form,16,65534);auto binding=std::make_shared<RawSurfaceGumpBindings>();std::size_t calls{};
+    binding->notice=[&](auto owner,auto parent) { CHECK(owner==0x80010001U && parent.value==65534);++calls;body.Destroy(form,0x10U); };scene.storage->BindGumpRuntime(binding);body.Notify(form);CHECK(calls==1 && (scene.storage->pool.Slot(form)[11]&3U)==3U);
+}
+TEST_CASE(ClientGumpOwner_ActualUiRegistryKillIsDeferred) { // 같은 실제 등록표가 비영 ID를 조회해 Kill하고 scalar 반납은 기존 큐 정리에서 수행한다.
+    RegionScene scene;GumpUiScene ui(scene);auto& body=scene.storage->GumpForms();const auto parent=scene.Asset(0x5092d0U),form=body.Create(2);const auto token=ui.controls->ControlGump(7),id=ui.Owner(token);body.SetOwner(form,id);body.Attach(form,parent,0x10U);body.Notify(form);CHECK(ui.controls->RegisteredGump(id)==token);ui.controls->CleanupGumps();CHECK(ui.controls->RegisteredGump(id)==0);body.Destroy(form,0x10U);
+}
+TEST_CASE(ClientGumpOwner_RegistryLookupUsesCurrentReusedEntry) { // Form은 최초 UI 포인터를 보관하지 않고 재사용된 현재 등록 슬롯을 조회한다.
+    RegionScene scene;GumpUiScene ui(scene);auto& body=scene.storage->GumpForms();const auto form=body.Create(2);const auto old=ui.controls->ControlGump(7),id=ui.Owner(old);body.SetOwner(form,id);ui.Page();const auto current=ui.controls->ControlGump(7);CHECK(current!=old && ui.controls->RegisteredGump(id)==current);body.Notify(form);ui.controls->CleanupGumps();CHECK(ui.controls->RegisteredGump(id)==0);body.Destroy(form,0x10U);
+}
+TEST_CASE(ClientGumpOwner_UiPinKeepsActualRegistryUntilNoticeReturns) { // 실제 알림 중 UI 소유자/대여를 반납해도 선택 pin이 실제 트리와 큐를 유지한다.
+    RegionScene scene;GumpUiScene ui(scene);auto& body=scene.storage->GumpForms();const auto form=body.Create(2);body.SetOwner(form,ui.Owner(ui.controls->ControlGump(7)));std::weak_ptr<RawButtonControls> weak=ui.controls;const auto actual=ui.controls->ObjectNotice();bool called{};
+    ui.binding->notice=[&](auto owner,auto parent) { ui.controls.reset();ui.binding.reset();CHECK(!weak.expired());actual(owner,parent);called=true; };body.Notify(form);CHECK(called && weak.expired());body.Destroy(form,0x10U);
+}
+TEST_CASE(ClientGumpOwner_MissingUiIsExplicitAndOwnerZeroIsNotRequired) { // 비영 소유자의 미연결을 성공으로 바꾸지 않으며 owner0은 실제 원문 반환이다.
+    RegionScene scene;auto& body=scene.storage->GumpForms();const auto form=body.Create(2);body.Notify(form);body.SetOwner(form,1);bool failed{};try { body.Notify(form); }catch (const std::logic_error&) { failed=true; }CHECK(failed && !(scene.storage->pool.Slot(form)[11]&1U));body.Destroy(form,0x10U);
+}
+TEST_CASE(ClientGumpOwner_CurrentWorldNoticePinsAndExpiresToUiRegistry) { // 명시 World 소비자와 실제 UI의 수명을 보유하고 대여 만료 뒤 장기 실제 등록표를 사용한다.
+    RegionScene scene;GumpUiScene ui(scene);auto& body=scene.storage->GumpForms();const auto form=body.Create(2);const auto token=ui.controls->ControlGump(7),id=ui.Owner(token);body.SetOwner(form,id);auto owner=std::make_shared<int>(1);std::weak_ptr<int> weak=owner;auto binding=std::make_shared<RawSurfaceGumpBindings>();std::size_t calls{};
+    binding->pin=[weak]()->std::shared_ptr<void> { const auto pin=weak.lock();if (!pin) throw std::logic_error("검사 실제 World owner 반납 뒤 pin");return pin; };binding->notice=[&](auto actual,auto parent) { CHECK(actual==id && parent.value==0);++calls;owner.reset();binding.reset();CHECK(!weak.expired()); };scene.storage->BindGumpRuntime(binding);body.Notify(form);CHECK(calls==1 && weak.expired() && ui.controls->RegisteredGump(id)==token);body.Notify(form);ui.controls->CleanupGumps();CHECK(calls==1 && ui.controls->RegisteredGump(id)==0);body.Destroy(form,0x10U);
+}
+TEST_CASE(ClientGumpOwner_CommonSelectionUsesFullDword) { // 현재 전체 선택 DWORD가 일치할 때만 실제 Client 선택 정리로 이어진다.
+    RegionScene scene;auto& body=scene.storage->GumpForms();const auto first=body.Create(2);scene.gameplay->selection.selected=0x10000U|first.value;body.Destroy(first,0x10U);CHECK(scene.clears==0);const auto second=body.Create(2);scene.gameplay->selection.selected=second.value;body.Destroy(second,0x10U);CHECK(scene.clears==1 && scene.gameplay->selection.selected==0);
+}
+TEST_CASE(ClientGumpOwner_DestroyUsesCurrentDifferentFormVirtual) { // UI에 보관된 실제 SID의 현재 Depend VT를 고정 Gump 몸체로 삭제하지 않는다.
+    RegionScene scene;const auto form=scene.storage->Factory().Create(1,2);const auto free=scene.storage->pool.FreeCount();scene.storage->GumpForms().Destroy(form,0x10U);CHECK((scene.storage->pool.Slot(form)[11]&3U)==3U && scene.storage->pool.FreeCount()==free+1 && scene.storage->BaseDestroy().PreDepth()==0);
+}
+TEST_CASE(ClientGumpOwner_DependantPeerUsesActualGumpDeletion) { // 감시 Pre의 현재 상대 Gump+10도 장기 기본 혼합 분배를 통과한다.
+    RegionScene scene;const auto parent=scene.Asset(0x5092d0U),gump=scene.storage->GumpForms().Create(2),depend=scene.storage->Factory().Create(1,2);scene.storage->GumpForms().Attach(gump,parent,0x10U);scene.storage->Factory().AttachForm(depend,parent,0x10U);DependWord(scene.storage->pool,depend,20,gump.value);const auto free=scene.storage->pool.FreeCount();scene.storage->DependForms().Destroy(depend,0x10U);CHECK(scene.storage->pool.FreeCount()==free+2 && (scene.storage->pool.Slot(gump)[11]&3U)==3U && scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
+}
+TEST_CASE(ClientGumpOwner_ParentDeletionReachesRealUiAndReleasesForm) { // 실제 부모 삭제의 종속 통지가 같은 UI 등록표와 Gump 반납을 모두 수행한다.
+    RegionScene scene;GumpUiScene ui(scene);auto& body=scene.storage->GumpForms();const auto parent=scene.Asset(0x5092d0U),form=body.Create(2);const auto token=ui.controls->ControlGump(7),id=ui.Owner(token);body.SetOwner(form,id);body.Attach(form,parent,0x10U);const auto free=scene.storage->pool.FreeCount();CHECK(scene.storage->DestroyAsset(parent,0x10U));ui.controls->CleanupGumps();CHECK(ui.controls->RegisteredGump(id)==0 && scene.storage->pool.FreeCount()==free+2 && (scene.storage->pool.Slot(form)[11]&3U)==3U);
+}
+TEST_CASE(ClientGumpOwner_ActualFloatingMenuUsesCurrentTypeAndUiFormReentry) { // 실제 Reference→owner/Attach→부모 삭제 통지→UI Kill의 Form 재삭제를 같은 본체에서 수행한다.
+    RegionScene scene;const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);FontStore fonts(assets.files,"Arial");fonts.SetUserCacheDirectory(std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"extracted/cpp-resume-1222/font-cache"); // 새 글꼴 캐시는 보호 원본 밖의 이번 단위 임시 폴더에만 쓴다.
+    GumpUiScene ui(scene);RawMenuHooks hooks;hooks.command=RegionForbidden<void,std::uint32_t,std::uint32_t,std::uint32_t>();hooks.readInt=[](auto,std::int32_t&) {};hooks.sound=RegionForbidden<void,std::string_view>();hooks.poll=RegionForbidden<InputEvent,std::uint32_t>();hooks.cursor=RegionForbidden<void,std::uint32_t>();hooks.objectForms=[&]()->GumpFormHost& { return scene.storage->GumpForms(); };hooks.gameSeconds=[] { return 0.0; };auto& menus=ui.controls->EnableMenus(assets.game,fonts,std::move(hooks));
+    scene.storage->types[7]=scene.storage->types[3];scene.storage->containedGumpType=7;const auto parent=scene.Asset(0x5092d0U);const auto popup=menus.ShowSp(100,10,20,parent.value);const Sid form{static_cast<std::uint16_t>(RegionRead(scene.storage->pool.Slot(parent),6)&0xffffU)};CHECK(popup && form.value && scene.storage->pool.Slot(form)[10]==7 && scene.storage->GumpForms().Owner(form)>0);const auto free=scene.storage->pool.FreeCount();scene.storage->GumpForms().Notify(form);CHECK((scene.storage->pool.Slot(form)[11]&3U)==3U && scene.storage->pool.FreeCount()==free+1);ui.controls->CleanupGumps();CHECK(scene.storage->BaseDestroy().PreDepth()==0 && scene.storage->BaseDestroy().PostDepth()==0);
 }

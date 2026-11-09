@@ -3787,6 +3787,7 @@ add_executable(netstorm_construction_owner_tests FocusedTestMain.cpp Constructio
 target_sources(netstorm_construction_owner_tests PRIVATE RiftTypeTests.cpp FenceNeighborsTests.cpp FenceLineTests.cpp FenceMarkerClearTests.cpp FenceCreateTests.cpp FenceLifetimeTests.cpp FencePostPopTests.cpp FenceRegularTests.cpp) #현재TYPE/동맹/전체펜스조립과기존비MP원문fixture를집중실행한다.
 target_sources(netstorm_construction_owner_tests PRIVATE BombTargetsTests.cpp) #같은현재TYPE사거리의기존소비자를원문300입력으로대조한다.
 target_sources(netstorm_construction_owner_tests PRIVATE DependCreateCurrentTests.cpp) # 기존 감시 생성의 원문1620입력과 실제 공장/현재 TYPE 계약만 실행한다.
+target_sources(netstorm_construction_owner_tests PRIVATE FormTakeTests.cpp FormCreationCurrentTests.cpp MenuGumpTests.cpp) # 기존 비MP Gump 생성/Take/현재 클래스와 메뉴 원문·수명 검사만 선택한다.
 target_sources(netstorm_construction_owner_tests PRIVATE LightningScreenTests.cpp) #Bomb고유전처리의기존원문96입력검사만선택실행하며다른화면/MP사례는실행하지않는다.
 target_sources(netstorm_construction_owner_tests PRIVATE BalloonPathTests.cpp) # 기존 그림자489입력/Robust 사례만 선택 실행하며 공중3종·MP 실행은 추가하지 않는다.
 target_sources(netstorm_construction_owner_tests PRIVATE DudeBehaviorTests.cpp) # 기존450920을 포함한 독립 원문410입력을 같은 실제 본체와 대조한다.

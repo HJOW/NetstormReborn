@@ -362,17 +362,20 @@ UberGump::UberGump(Client& client) : client_(client),missionOptions_(client.Game
     RawButtonHooks buttonHooks{
         [this] { return client_.WallSeconds(); },[this](auto code) { return client_.Poll(code); },
         [this] { if (client_.Audio()) client_.Audio()->Sounds().PlayByName("button.wav",0,0,0,0,0); },
-        [this](std::uint32_t form,std::uint32_t flags) {
+        [client=&client_](std::uint32_t form,std::uint32_t flags) {
             if (form>65535U) throw std::logic_error("현재Client UI Form삭제의SID오류");
-            client_.GameplayGlobals()->RequireSession().GumpForms().Destroy(o::Sid{static_cast<std::uint16_t>(form)},flags);
+            auto& forms=client->SurfaceStorage()->UsesNativeTransmissionDevices() ? client->SurfaceStorage()->GumpForms():client->GameplayGlobals()->RequireSession().GumpForms();forms.Destroy(o::Sid{static_cast<std::uint16_t>(form)},flags); // 실제 Native UI의 종료도 같은 장기 현재 가상 삭제를 사용한다.
         }};
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) {
         buttonHooks.invalidate=[this](auto rectangle,auto flags) { client_.GetRenderer().Invalidate(rectangle,flags); }; //장치 교체 뒤에도 같은 현재 Renderer의 원문 dirty 저장소에 전달한다.
         buttonHooks.invalidateAll=[this] { client_.GetRenderer().InvalidateAll(); }; //영역 정보가 없는 기존 적응 계층 요청은 각 소비자의 원문 영역 복원 전까지 이전 그림을 지운다.
-        buttonHooks.project=[this](auto object) { return ProjectGumpObject(client_.GameplayGlobals()->RequireSession().Core().pool,client_.GameplayGlobals()->Camera().Snapshot(),object); }; // 미션/Editor/메타 교체와 카메라 이동 뒤에도 같은 현재 Pool/497220을 조회한다.
+        buttonHooks.project=[client=&client_](auto object) { const auto storage=client->SurfaceStorage();const auto& pool=storage->UsesNativeTransmissionDevices() ? storage->pool:client->GameplayGlobals()->RequireSession().Core().pool;return ProjectGumpObject(pool,client->GameplayGlobals()->Camera().Snapshot(),object); }; // Native UI는 Session 밖에서도 같은 장기 Pool/현재 카메라를 쓰고 독립 typed 경로는 기존 Session 관문을 유지한다.
     }
-    rawButtons_=std::make_unique<RawButtonControls>(client_.Assets().Edition(),std::move(buttonHooks),&client_.GameplayGlobals()->MapRevision()); //전체 HUD와 같은 현재 원본 DWORD를 첫 미니맵 생성 전부터 빌린다.
+    rawButtons_=std::make_shared<RawButtonControls>(client_.Assets().Edition(),std::move(buttonHooks),&client_.GameplayGlobals()->MapRevision()); // 전체 HUD와 같은 현재 DWORD를 빌리고 실제 통지 동안만 같은 UI 저장소를 pin한다.
     rawButtons_->BindChecking(o::RawCheckingFlag{client_.GameplayGlobals()->AiDebug().Checking()},&client_.GameplayGlobals()->AiDebug().AssertionDetail()); //기본 UI 생성/메뉴보다 먼저 같은 Client 진단 DWORD와 부착 오류 상세를 연결한다.
+    if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) {
+        auto binding=std::make_shared<RawSurfaceGumpBindings>();binding->notice=rawButtons_->ObjectNotice();binding->pin=[weak=std::weak_ptr<RawButtonControls>(rawButtons_)]()->std::shared_ptr<void> { const auto owner=weak.lock();if (!owner) throw std::logic_error("현재 Gump UI 저장소 반납 뒤 통지");return owner; };gumpUiRuntime_=binding;client_.SurfaceStorage()->BindGumpUiRuntime(binding); // 첫 메뉴/Session보다 먼저 실제 등록표와 저장소만 weak로 연결한다.
+    }
     rawButtons_->BindMainMenu({[this] { return client_.LocalStateGlobals()->AutoDemo(); },[this] { return std::bit_cast<std::int32_t>(client_.HtmlWindowGlobals()->window.instances); },[this](auto command,auto first,auto second) { const auto x=scriptStrings_.Store(first),y=first==second ? x : scriptStrings_.Store(second);client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(x),std::bit_cast<std::int32_t>(y)); },[this] { client_.ClearFullScreenState(); }}); //같은 원문 정적 문자열의 두 인자는 같은80칸 고리 별칭으로 일반 큐에 보낸다. 시작 표식은 실제 부모 callback에서 지운다.
     rawButtons_->ConfigureTestBridgePatterns(client_.TestBridgePatterns()); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다. 첫 조각 생성 전에 명시 CLI만 반영한다.
     if (!client_.TestBridgePatterns().empty()) std::clog<<"테스트 전용 다리 조각 순서: "<<client_.TestBridgePatterns()<<" (원본 분석 결과 아님)\n";
@@ -392,7 +395,7 @@ UberGump::UberGump(Client& client) : client_(client),missionOptions_(client.Game
     menuHooks.readInt=[this](std::string_view key,std::int32_t& value) { value=client_.Configuration().GetInt(key); };
     menuHooks.sound=[this](std::string_view name) { client_.WorldAudio().Sounds().PlayByName(name,0,0,0,0,0); };
     menuHooks.poll=[this](auto code) { return client_.Poll(code); };menuHooks.cursor=[this](auto number) { client_.GetCursor().Set(static_cast<int>(number)); };
-    menuHooks.objectForms=[this]() -> o::GumpFormHost& { return client_.GameplayGlobals()->RequireSession().GumpForms(); }; //게임 GameWorld 또는 명시 메타 Session의 같은 실제 호스트만 조회한다.
+    menuHooks.objectForms=[client=&client_]() -> o::GumpFormHost& { return client->SurfaceStorage()->UsesNativeTransmissionDevices() ? client->SurfaceStorage()->GumpForms():client->GameplayGlobals()->RequireSession().GumpForms(); }; // Native의 첫 메뉴/World 전환도 같은 장기 Host를 사용한다.
     menuHooks.gameSeconds=[this] { return client_.Time().game; }; // 비용 표시도 같은 프레임의 게임 시각을 읽는다.
     menuHooks.wallSeconds=[this] { return client_.WallSeconds(); };menuHooks.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); }; //공통 안내는 실제 벽시계와 같은 한 번의 번역/표시 경계를 사용한다.
     rawButtons_->EnableMenus(client_.Assets(),client_.Fonts(),std::move(menuHooks)).SetPalette(client_.GetScreen().Colors());

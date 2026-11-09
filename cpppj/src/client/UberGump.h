@@ -25,6 +25,7 @@
 
 namespace netstorm::client {
 class Client;
+struct RawSurfaceGumpBindings; // 실제 현재 UI 등록표와 저장소 pin을 Storage에 약하게 빌린다.
 class GameWorld;
 class RawCampaignSession; // State1의 현재 Guide Subscriber 요청을 같은 Session에 연결한다.
 class RawCampaignFactoryDisplay; //메타도같은Pool/현재가상표를사용하는공통SpriteDraw출력기를소유한다.
@@ -265,7 +266,8 @@ private:
     void FinishLanBattleWorld(); // 실제 phase14/Player 참여 뒤에만 사용자 입력·커서·표시를 연다.
     std::uint32_t multiplayerOptionsToken_{}; // 현재 일반 옵션의 실제 Gump token이며 닫힌 창의 serial을 새 창으로 대신하지 않는다.
     std::shared_ptr<const TextClipboard> textClipboard_; //최초 Chat과 뒤 Save as의 두 callback이 같은 OS 장치 수명을 공유한다.
-    std::unique_ptr<RawButtonControls> rawButtons_; // 돌 버튼은 실제 공유 트리/수명/캡처를 사용한다. input_은 메뉴 행/판정 보고용이다.
+    std::shared_ptr<RawSurfaceGumpBindings> gumpUiRuntime_; // 실제 UI 등록표의 대여는 그 저장소 정리가 끝날 때까지 유지한다.
+    std::shared_ptr<RawButtonControls> rawButtons_; // 실제 트리/등록표/지연 삭제의 저장소이며 선택된 Gump 통지 동안만 추가 pin한다.
     WarningMessages* warnings_{}; // rawButtons가 소유하는 같은 실제 Gump/StyleText의10초 안내를 빌린다.
     ScriptStringRing scriptStrings_; // 입력 큐에 예약한 문자열의 원본80칸 수명이며 페이지가 바뀌어도 보존한다.
     SoloMapFileSpec& mapFileSpec_; // 같은 Client의9BYTE FileSpec 키를 페이지/Session 교체 뒤에도 직접 빌린다.

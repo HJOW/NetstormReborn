@@ -49,6 +49,7 @@
 #include "o/SquidFactory.h"
 #include "o/SquidFormDispatch.h"
 #include "o/DependFormHost.h" // 장기 감시 본체와 현재 World 알림 경계를 명시적으로 선언한다.
+#include "o/GumpFormHost.h" // 같은 장기 UI Form과 실제 현재 등록표 알림을 연결한다.
 #include "o/SquidFrameBinding.h"
 #include "o/SquidDestroyLifecycle.h"
 #include "o/SquidOwner.h"
@@ -83,6 +84,10 @@ struct RawSurfaceLifetimeBindings {
 struct RawSurfaceDependBindings { // 현재 World의 실제 감시 알림만 짧게 소유하며 장기 감시 쌍/공장과 구별한다.
     o::DependFormNotice notice; // 기존 Session의 가상+34 소비자이며 비어 있으면 장기 현재 VT 분배를 직접 사용한다.
     std::function<std::shared_ptr<void>()> pin; // 선택한 알림이 정상/예외 반환할 때까지 실제 전체 Runtime을 보유한다.
+};
+struct RawSurfaceGumpBindings { // 실제 UI 등록표 또는 현재 World의 가상 UI 통지 소비자를 그 owner 수명으로 빌린다.
+    o::GumpFormNotice notice; // 전체 등록ID와 현재 부모 WORD를 기존 실제 UI 가상+4에 전달한다.
+    std::function<std::shared_ptr<void>()> pin; // 현재 UI 저장소/전체 World를 선택 호출의 정상·예외 복귀까지 보유한다.
 };
 // 현재 Client의 순수 UI 기억/전역 소리를 공통 삭제의 장기 장치로 빌린다.
 struct RawSurfaceDeletionDevices {
@@ -150,6 +155,8 @@ private:
     std::weak_ptr<const RawSurfacePopBindings> popRuntime_; //현재typed장치/외부Kernel만짧게빌리고반납뒤장기기본전송을사용한다.
     std::weak_ptr<const RawSurfaceLifetimeBindings> surfaceLifetimeRuntime_; // 현재 World 반납 뒤 큰 파생 종단 주소를 남기지 않는다.
     std::weak_ptr<const RawSurfaceDependBindings> dependRuntime_; // World의 실제 알림 callback을 강하게 역소유하지 않는다.
+    std::weak_ptr<const RawSurfaceGumpBindings> gumpRuntime_; // 현재 World의 실제 UI 통지 소비자는 강하게 역소유하지 않는다.
+    std::weak_ptr<const RawSurfaceGumpBindings> gumpUiRuntime_; // Session 밖에서도 같은 현재 UI 등록표를 실제 UI owner 수명으로만 빌린다.
     RawSurfaceDamageableDevices damageableDevices_; // 실제 Client와 장기 전역만 소유하며 Session 주소를 저장하지 않는다.
     std::weak_ptr<ClientPlayerRecords> playerRecords_; // 현재 실제 Player owner만 약하게 빌리며 span/base를 캐시하지 않는다.
     bool playerRecordsBound_{}; // 최초 Client 결합만 허용하며 owner 반납을 새 초기화로 대체하지 않는다.
@@ -250,6 +257,9 @@ public:
     void BindSurfaceLifetimeRuntime(const std::shared_ptr<const RawSurfaceLifetimeBindings>& runtime); // 현재 같은 World의 실제 큰 효과만 짧게 빌린다.
     void BindDependRuntime(const std::shared_ptr<const RawSurfaceDependBindings>& runtime); // 현재 World의 실제 알림/수명만 weak로 빌리며 감시 본체는 바꾸지 않는다.
     o::DependFormHost& DependForms(); // 같은 Pool·현재 공장/TYPE·가상 삭제를 World 밖에서도 사용하는 장기 감시 본체다.
+    o::GumpFormHost& GumpForms(); // 같은 공장/현재 TYPE·가상 삭제와 실제 UI 등록표를 사용하는 장기 Gump 본체다.
+    void BindGumpRuntime(const std::shared_ptr<const RawSurfaceGumpBindings>& runtime); // 현재 World의 실제 UI 통지를 weak로 빌리며 장기 Form 본체를 바꾸지 않는다.
+    void BindGumpUiRuntime(const std::shared_ptr<const RawSurfaceGumpBindings>& runtime); // 첫 메뉴 이전 실제 UI 등록표와 그 저장소 pin을 weak로 연결한다.
     void NotifyDependency(o::Sid watcher,o::Sid watched,o::Sid form); // 현재 자산83개와 내장 Form 네 클래스의 실제+34를 직접 선택한다.
     o::RawSquidDestroyDispatch& VirtualDestroy(); // 현재 Pool/Graph/boss/editor를 읽는 같은 장기 가상10 몸체다.
     o::RawSurfaceLifecycle& SurfaceLifetime(); // 같은 공통 삭제/Host/TYPE를 사용하는 실제 표면 수명이다.
@@ -352,6 +362,7 @@ private:
     void NotifyAviaryHome(o::Sid home,std::uint32_t method); // 서버 관문 뒤 같은 장기 Pool/Host/현재 TYPE/시각/난수로 실제 세 홈 통지 본문을 공유한다.
     o::SquidDestroyHooks DefaultProcessAssetHooks(); //실제선택/전송과자산가상효과를같은장기부모에연결한다.
     void DeliverDependNotice(o::Sid watcher,o::Sid watched,o::Sid form); // 현재 World 알림의 실제 pin/함수 사본을 선택하거나 장기 가상34를 직접 실행한다.
+    void DeliverGumpNotice(std::uint32_t owner,o::Sid parent); // 현재 World/실제 UI owner를 pin한 뒤 기존 등록표 통지의 함수 사본을 호출한다.
     o::SquidFormDispatch& ProcessFormDispatch(); // 같은 공통 삭제 깊이에 실제 자산 가상10과 Process/Depend Form을 등록한다.
     float HandleDefaultRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); //PE의현재VT+5c가복원된원문base인경우만해당본문을실행한다.
     std::int32_t WriteDefaultForm(o::SquidProcess& process,bool parentChanged,std::uint32_t force); //Dais/Construction의실제writer를같은공통버퍼로분배하며다른파생누락은선택위치에서드러낸다.
@@ -424,6 +435,7 @@ private:
     std::unique_ptr<o::RegularProcess> resourceRegular_; //할당과생성사이동일new28의소유권만보존한다.
     std::unique_ptr<o::RawSquidDestroy> baseDestroy_; //같은Native공통pre/post깊이를World반납뒤에도보존한다.
     std::unique_ptr<o::DependFormHost> dependForms_; // 장기 Host/분배기 정리가 끝날 때까지 같은 공장·삭제기보다 먼저 반납하지 않는다.
+    std::unique_ptr<o::GumpFormHost> gumpForms_; // 실제 Host와 분배기 정리까지 현재 공장/공통 삭제보다 짧은 장기 UI Form 수명이다.
     std::unique_ptr<o::SquidFormDispatch> processForms_; //장기Host와같은Pool의실제ProcessForm경로이며UI/내용물가짜처리기는등록하지않는다.
     std::unique_ptr<o::RawSquidTransmission> transmission_; //같은Pool/현재TYPE/GameAux보다먼저반납하는공통실제송신기다.
     std::unique_ptr<RawProcessHostStorage> processes_; // 실제 Pool/TYPE 뒤에 선언하여 그 참조보다 먼저 최종 반납한다.
@@ -523,6 +535,7 @@ struct RawWorldRuntimeHooks {
     std::function<void(std::int32_t,std::span<const std::uint8_t>)> squidSend; // 같은 현재 대상의 연결 객체로만 패킷을 보낸다.
     o::DependFormNotice dependencyNotice; // watcher의 실제 가상+34다. 누락 시 기존 ProcessForm 통지를 사용한다.
     std::function<void(const o::BridgeLifecycleEvent&)> bridgeEffect; // 실제 세션의 다리 파편/위치 소리 소비자이며 runtime 설치 전에 필수로 공급한다.
+    o::GumpFormNotice gumpNotice; // 현재 Session이 제공한 실제 UI 가상 통지이며 미연결이면 장기 실제 UI 등록표를 사용한다.
 };
 // 같은 SID 풀·공간 지도에서 표면 객체의 생성·등록·수명·표시를 관리하는 월드이다.
 class RawSurfaceWorld {

@@ -36,10 +36,10 @@ void ReleaseGumpObject(const GumpLifetime& lifetime,std::uint32_t token,o::Sid) 
 // +0x28에는 같은 풀의 SID를 기록한다. 토큰/index를 동일 번호로 제공하면 원본 stride 나눗셈과 같은 결과다.
 void BindMenuGumpForms(GumpCreateState& create,MenuGumpWidgetState& state,MenuGumpWidgetHooks& hooks,o::GumpFormHost& forms) {
     if (create.collection.edition!=forms.Pool().Edition()) throw std::invalid_argument("메뉴와 GumpForm 판본이 다릅니다");
-    state.objectFormType=o::kGumpFormType;
+    state.objectFormType=forms.CurrentType();if (!state.currentObjectFormType) state.currentObjectFormType=[&forms] { return forms.CurrentType(); }; // 실제 메뉴의 매 호출 현재 Host getter를 보존하고 독립 연결만 같은 고정 Host를 빌린다.
     // 원본 타입 전역의 다른 값은 별도 Form 재정의가 필요하므로 GumpForm 생성에서 거부한다.
     hooks.objectForm=[&forms](std::uint32_t type,std::uint32_t flags) {
-        if (type!=o::kGumpFormType) throw std::invalid_argument("메뉴 객체 부착 GumpForm 타입 오류");
+        if (type!=forms.CurrentType()) throw std::invalid_argument("메뉴 객체 부착 GumpForm 현재 타입 오류");
         const auto form=forms.Create(flags);return MenuGumpObjectForm{form.value,form.value};
     };
     // 등록 ID는 DWORD 전체를 기록하고 객체 SID는 원본 번호 범위를 확인해 부착한다.

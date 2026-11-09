@@ -16,6 +16,8 @@ public:
     // notice는 소유 ID가 비영일 때만 필요하다. 서로 다른 풀/판본 타입 표는 생성 단계에서 거부한다.
     GumpFormHost(SidPool& pool,SquidFactory& factory,std::span<const RiftTypeRecord> types,
         RawSquidDestroy& destroy,GumpFormNotice notice={},SquidDestroyHooks fallback={});
+    void BindCurrent(const std::uint32_t& type,std::function<void(Sid,std::uint32_t)> destroy); // Native는 같은 현재 TYPE DWORD와 실제 현재 가상 삭제를 빌린다.
+    std::uint32_t CurrentType() const; // 독립 typed 입력은 기존3, Native는 소비 시점의 전체 현재 번호를 반환한다.
     // 메뉴의 Form(type,2)을 실제 factory에 연결한다. 생성 자체는 부모/소유 ID를 쓰지 않는다.
     Sid Create(std::uint32_t flags=2) const;
     // 서버/예측 번호를 수신한다. 기존 GumpForm이면 부모에서 해제한 뒤 소유 ID/payload를 유지한다.
@@ -43,6 +45,8 @@ public:
     // 전체 월드 삭제도 이 훅을 사용해야 자산의 종속 GumpForm에 실제 UI 알림이 도달한다.
     SquidDestroyHooks Hooks() const;
 private:
+    const std::uint32_t* currentType_{}; // 같은 Client의 Gump TYPE 주소이며 생성/대여/화면 교체 때 초기화하지 않는다.
+    std::function<void(Sid,std::uint32_t)> virtualDestroy_; // Native는 현재 Form/자산 VT의 실제+10을 선택하고 typed는 기존 검사를 유지한다.
     // 원본 필드를 읽되 범위/타입/free 상태를 검사한다. dead는 공통 삭제 중에 필요하므로 허용한다.
     std::span<const std::uint8_t> Form(Sid form) const;
     std::uint16_t Word(Sid sid,std::size_t offset) const;
@@ -52,8 +56,6 @@ private:
     SidPool& pool_;
     // factory_: 타입에 맞는 객체를 생성하는 처리기.
     SquidFactory& factory_;
-    // types_: 타입 번호로 속성·플래그를 조회하는 타입 표.
-    std::vector<RiftTypeRecord> types_;
     // destroy_: 객체 삭제의 전처리·공간 해제·후처리를 실행하는 처리기.
     RawSquidDestroy& destroy_;
     // notice_: 통지.

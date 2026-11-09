@@ -163,7 +163,7 @@ std::uint32_t MenuGumpWidgets::DeleteScalar(std::uint32_t token,std::uint32_t fl
 void MenuGumpWidgets::Reference(std::uint32_t token,std::uint32_t object) const {
     if (object) {
         if (!hooks_.objectForm || !hooks_.formOwner || !hooks_.formObject) throw std::invalid_argument("메뉴 객체 부착 Form 경계 필요");
-        const auto form=hooks_.objectForm(state_.objectFormType,kObjectFormMode);
+        const auto form=hooks_.objectForm(state_.ObjectFormType(),kObjectFormMode);
         if (!form.token) throw std::runtime_error("메뉴 객체 부착 Form 생성 실패");
         hooks_.formOwner(form.token,Base(token).id);hooks_.formObject(form.token,object,0);
         if (create_.collection.edition==o::OriginalEdition::Patch1078) { Base(token).flags|=kObjectBinding;Base(token).object=object; }
