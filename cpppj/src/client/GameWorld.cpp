@@ -543,7 +543,11 @@ void GameWorld::SelectNextUnit(std::uint32_t add) {
 void GameWorld::SelectPriest(const std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)>& queue) {
     if (!campaign_ || !input_) throw std::logic_error("사제 단축키의 실제 월드/입력 없음");PriestSelectionShortcutHooks hooks;
     hooks.localOwner=[this] { return campaign_->LocalOwner(); };hooks.find=[this](auto owner) { return campaign_->FindPriestParticipation(owner); };hooks.select=[this](auto sid,auto force,auto activate) { static_cast<void>(input_->selection->Select(sid,force,activate)); };
-    hooks.viewCommand=[] { return GameMenuCommandValue(0x005429d4U).value(); };hooks.queue=queue;SelectPriestByKey(selected_,SelectionGlobals().priestSelections,hooks);changed_=true;
+    hooks.viewCommand=[] { return GameMenuCommandValue(0x005429d4U).value(); };hooks.queue=queue;
+    // 10차 NB20: 건설 준비 조각이 커서에 붙은 채 사제를 선택하면 조각이 남던 원문 결함을 막는다. 잠금 깊이 0과 미리보기가 있을 때만 취소한다.
+    hooks.pieceHeld=[this] { const auto& drop=campaign_->CursorDropSettings();return drop.lockDepth==0 && drop.preview!=0; };
+    hooks.cancelPiece=[this] { campaign_->Cursor().Cancel(); };
+    SelectPriestByKey(selected_,SelectionGlobals().priestSelections,hooks);changed_=true;
 }
 // 편집 우클릭은 선택 결과와 무관하게 같은 원래 클릭 객체의 owner를 후속으로 읽는다.
 void GameWorld::PrepareEditorObjectMenu(o::SquidId id) {
