@@ -41,6 +41,9 @@ public sealed class RawCampaignSession
     /// <summary>원본 자산 Battle 상태다. 설치 때만 참이 되며 현재는 거짓이다. 2026-11-10 F3 소유자 본체에서 추가됐다.</summary>
     private bool _inBattle;
 
+    /// <summary>원본 600바이트 AI 설정의 현재 기본값이다. 설치 본체가 갱신하며 AI 생성·시작이 같은 참조를 빌린다. 2026-11-10 F3 AI 설정 소유자 본체에서 추가됐다.</summary>
+    private readonly MissionAiSettingsState _aiSettings = new();
+
     /// <summary>원본 첫 목록(outposts)의 현재 항목이다. Fort 적재 본체가 채우기 전에는 비어 있다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
     private readonly RawPostPopList _outposts = new();
 
@@ -143,6 +146,9 @@ public sealed class RawCampaignSession
         get => _inBattle;
         set => _inBattle = value;
     }
+
+    /// <summary>원본 600바이트 AI 설정의 현재 기본값이다. 설치 본체가 갱신하며 AI 생성·시작이 같은 참조를 빌린다. 2026-11-10 F3 AI 설정 소유자 본체에서 추가됐다.</summary>
+    internal MissionAiSettingsState AiSettings => _aiSettings;
 
     /// <summary>원본 첫 목록(outposts)의 현재 항목이다. Fort 적재 본체가 채우며 게임 메뉴가 같은 참조를 읽는다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
     internal RawPostPopList Outposts => _outposts;
@@ -600,6 +606,8 @@ public sealed class RawCampaignSession
 
     /// <summary>같은 에디터 전송의 수신 폴링 효과다. 세션 조립 때 루프백 전송을 묶으며 그 전까지는 비어 있다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
     private Func<int>? _editorPoll;
+
+    /// <summary>같은 에디터 전송의 송신 효과다. 세션 조립 때 루프백 전송을 묶으며 그 전까지는 비어 있다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
 
     /// <summary>같은 에디터 전송의 송신 효과다. 세션 조립 때 루프백 전송을 묶으며 그 전까지는 비어 있다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
     private Func<int, byte[], bool>? _editorSend;

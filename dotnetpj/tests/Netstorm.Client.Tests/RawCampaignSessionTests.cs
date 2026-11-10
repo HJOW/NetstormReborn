@@ -619,4 +619,29 @@ public sealed class RawCampaignSessionTests
         Assert.Equal(0u, session.OwnedIslandCount(0u));
         Assert.Equal(0u, session.OwnedIslandCount(7u));
     }
+
+    /// <summary>새 세션의 AI 설정이 원본 기본값인지 검증한다. 2026-11-10 F3 AI 설정 소유자 본체에서 추가됐다.</summary>
+    [Fact]
+    public void AiSettingsStartWithOriginalDefaults()
+    {
+        // 원본 세션 Impl의 missionAiSettings 기본값과 같다.
+        var session = LoadableSession();
+        Assert.Equal(3, session.AiSettings.StuffRefreshRate);
+        Assert.Equal(2500, session.AiSettings.StartingSp);
+    }
+
+    /// <summary>세션 AI 설정 갱신이 같은 참조에 보이는지 검증한다. 2026-11-10 F3 AI 설정 소유자 본체에서 추가됐다.</summary>
+    [Fact]
+    public void AiSettingsShareSameReference()
+    {
+        // 설치 본체의 갱신이 AI 생성·시작에 그대로 보인다.
+        var session = LoadableSession();
+        MissionAiSettingsState first = session.AiSettings;
+        MissionAiSettingsState second = session.AiSettings;
+        Assert.Same(first, second);
+        first.StuffRefreshRate = 7;
+        first.StartingSp = 1000;
+        Assert.Equal(7, second.StuffRefreshRate);
+        Assert.Equal(1000, second.StartingSp);
+    }
 }
