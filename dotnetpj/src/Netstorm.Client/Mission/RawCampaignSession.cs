@@ -62,6 +62,9 @@ public sealed class RawCampaignSession
     /// <summary>같은 실제 AI 생성자의 생성 효과다. 세션 조립 때 실제 AI 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 AI 생성 본체에서 추가됐다.</summary>
     private Func<uint, byte[], uint>? _aiCreate;
 
+    /// <summary>같은 실제 AI 준비 몸체의 준비 효과다. 세션 조립 때 실제 AI 준비 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 AI 준비 본체에서 추가됐다.</summary>
+    private Func<uint, bool>? _aiPrepare;
+
     /// <summary>같은 자산·저장소·월드로 세션 껍데기를 만든다. Fort 적재 본체는 후속 단위에서 잇는다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
@@ -286,6 +289,42 @@ public sealed class RawCampaignSession
         }
 
         return _aiCreate(owner, settings);
+    }
+
+    /// <summary>같은 실제 AI 준비 몸체의 준비 효과를 묶는다. 원본 세션 설치의 AI 준비 몸체 연결만 둔다. 2026-11-10 F3 AI 준비 본체에서 추가됐다.</summary>
+    /// <param name="prepare">실제 AI 준비 효과다. 소유자 번호를 그대로 받고 준비된 brain이 있으면 참을 돌려준다.</param>
+    public void BindAiPrepare(Func<uint, bool> prepare)
+    {
+        ArgumentNullException.ThrowIfNull(prepare);
+        _aiPrepare = prepare;
+    }
+
+    /// <summary>같은 실제 AI 준비 몸체의 준비 효과를 묶었는지 확인한다. 2026-11-10 F3 AI 준비 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasAiPrepare() => _aiPrepare is not null;
+
+    /// <summary>원본 00416eb0의 준비된 brain 준비를 후속 AI 몸체와 공유한다. 준비된 brain이 없으면 거짓을 돌려준다. 묶은 실제 AI 효과가 없으면 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 AI 준비 본체에서 추가됐다.</summary>
+    /// <param name="owner">AI를 준비할 소유자 번호다. 원본 1..8 범위를 받는다.</param>
+    /// <returns>준비된 brain을 준비했으면 참, 없으면 거짓이다.</returns>
+    public bool PrepareAi(uint owner)
+    {
+        if (owner < 1u || owner > 8u)
+        {
+            throw new ArgumentOutOfRangeException(nameof(owner), owner, "AI 준비의 실제 소유자 1..8 범위 오류");
+        }
+
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 AI 준비입니다.");
+        }
+
+        // 원본 RawCampaignSession::PrepareAi의 적재·owner 관문과 brain 없음 거짓 경로를 직역한다. 실제 준비 몸체는 후속 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        if (_aiPrepare is null)
+        {
+            throw new InvalidOperationException("실제 AI 준비 미연결");
+        }
+
+        return _aiPrepare(owner);
     }
 
     /// <summary>같은 파서·생성 몸체의 위치 생성 효과다. 세션 조립 때 실제 생성 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>
