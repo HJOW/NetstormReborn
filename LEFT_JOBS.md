@@ -4,7 +4,7 @@
 
 이 문서는 cpppj와 공통 사항의 **현재 상태·남은 작업·유효한 규칙**만 둔다. 1254~1288 단위별 경과와 만료된 지시·순서는 [제품1288 시점 보관본](LEFT_JOBS.old.md#archive-20261111-through-1288)에 원문 그대로 있고, 각 단위의 상세는 [5.1절](#done) 색인과 [8절](#refs)의 근거 문서에 있다. dotnetpj·webpj의 현황과 계획은 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md)·[LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 원격 저장소에 push하지 않는다.
 
-**읽는 순서:** [0. 한눈에 보기](#now) → [1. 알려진 버그(진행 중)](#bugs) → 필요할 때 나머지 절.
+**읽는 순서:** [0. 한눈에 보기](#now) → [1. 알려진 버그(판정 마감, 사용자 결정/확인 잔여)](#bugs) → 필요할 때 나머지 절.
 
 <a id="now"></a>
 
