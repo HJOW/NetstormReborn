@@ -146,3 +146,4 @@ webpj/www의 JS 모듈 86개 중 83개를 126행에 대응했다. 나머지 3개
 | --- | --- | --- |
 | 판정-공통층 22단위 | [webpj-judge-common-20261110.md](webpj-judge-common-20261110.md) | ② 2(ContentFormHost 현재 가상+50 부착·`removeStateSidList`)·① 5·③ 12·혼합 3. ③ 은 4-D(Native World 대여·가상 분배)·4-B(Fort 적재 전역)·4-A(설정 버퍼·타입 레코드 칸)·5-B(표시 카메라 getter) |
 | 판정-Player·사제·신전 12단위 | [webpj-judge-player-priest-20261110.md](webpj-judge-player-priest-20261110.md) | ② 3(RawPriestPreDestroy 목록 제거 공유·RawPriestRegen TYPE 검사 제거·RawVortexPreDestroy signed 반복)·① 5·③ 4. ③ 은 4-D(Player 배열 장기 소유 Native 조회기/본체) |
+| 판정-섬·다리·자원 6단위 | [webpj-judge-island-resource-20261110.md](webpj-judge-island-resource-20261110.md) | ② 0·① 0·③ 6(모두 Native 연결이며 독립 typed 결과 동일). 코드·시험 변경 없음. ③ 은 4-D(다리/간헐천/너겟/섬 Native 전역·조회기)·4-B(섬 후처리 로딩 깊이 공유) |
