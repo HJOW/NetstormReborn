@@ -9,6 +9,7 @@
 | NB07 | 현행에 이미 반영 | `Create New Map`에 기존 이름을 넣으면 `Unique Name Required — A Fortress with that name already exists...` 안내가 뜨고 기존 fort를 열지 않는다. | 실제 화면(`extracted/cpp-resume-1278/nb07/`) |
 | NB08 | **수정 완료** | 세 겹의 원인을 실제 실행으로 찾아 교정했다. (1) `FileSpecDirectoryHooks`의 `root/path`가 `\D\guide*.english`처럼 루트 디렉터리만 있는 패턴에서 게임 폴더를 버리고 드라이브 루트(`H:\D\...`)를 검색해 디스크의 `Guide*.english`(사용자 캠페인)가 한 건도 목록에 오르지 않았다(`root/path.relative_path()`). (2) `BaseFileSystem::MatchFinder`의 결과 경로 접두 비교도 같은 이유로 버려졌다(같은 교정). (3) 원문 PE `4c8c12..36`의 `%` 인라인 목록 삽입이 합친 문자열 전체가 아니라 `replacement` 길이만 복사해 본문 뒤쪽의 목록이 잘렸다. `HtmlWindowMetadataHooks::repairInlineList`(제품에서만 켬, 기본 꺼짐)로 전체와 NUL을 쓰게 했다. | 실제 화면: `Campaign → User Made Campaigns`에 `Legendary Missions Of Ass` 등 목록과 스크롤바 표시 |
 | NB09 | **수정 완료**(MP 실행 검증 제외) | 참가자 이름표 `WriteNativeMetaParticipantLabel`이 길드 태그가 길어 CS 이름표 버퍼(`+d8`)를 넘으면 `out_of_range`로 클라이언트 전체가 종료했다(원문은 버퍼 훼손). 태그 끝 글자를 한 글자씩 줄여 서식에 맞추고, 길드 없이도 넘치는 경우만 명시 거부로 남겼다. | 단위 `KnownBug_NB09_LongGuildTagIsShortenedInsteadOfFailing` 통과. 존 실제 오른쪽 클릭 메뉴는 MP라 실행하지 않음(사용자 확인) |
+| NB11 | 현행 미재현 | 메인 `Demo`의 `The Storm Rages`·`Demo of "Guard My Back"`을 브리핑 `OK` 뒤 각 3600프레임(약 1분 게임 시간) 실행했다. 번개/캐논 교전이 진행되는 화면이고 종료·로그 없음. `RawAiDamage::Notice`는 brain 부재를 `invalid_argument`로 거부하는 구조라 AI 워크샾 대피해 때의 부재 brain 경로는 여전히 의심 지점이다. | 실제 실행(`extracted/cpp-resume-1278/nb11storm,nb11guard/`). `Dissolved Alliance` 데모와 더 긴 시간·AI 워크샾을 크게 파괴하는 경로는 사용자 확인 |
 | NB20 | **재현 의심 — 미완료** | 실제 Test Battle에서 지식 생산으로 `production:75`(윈드 제너레이터)를 커서에 건 뒤 사제 선택 키(F5/`priest`)를 눌러도 커서 설정 `raw_cursor`의 선택 TYPE(75)·모드가 그대로다(건설 준비 상태 유지). Tutorial4에서 `world:priest`를 클릭하면 사제 위치에 건물 고스트와 `400` 비용 표시가 남는다(이 클릭은 배치 시도일 수 있어 결함 판정은 보류). | 실제 실행(`extracted/cpp-resume-1278/nb20*/`). **다음:** 원문의 사제 선택 경로(HUD 사제 아이콘 클릭·F5)가 건설 준비(커서 piece)를 취소하는 지점 확인 후 `UberGump`/`RawCursor` 선택 경로에 취소를 연결 |
 | NB22 | 현행 미재현 | Test Battle에서 `P`/`R`/`F`의 다섯 조합(p,f / r,f / f,p / f,r / p,r,f)을 연속 입력했으나 종료/로그 없음. | 실제 실행(`extracted/cpp-resume-1278/nb22/`). 사용자 확인 잔여: 동시 눌림(chord)·다른 화면 |
 | NB24 | **수정 완료** | 긴 캠페인(Tell 파일) 제목이 80BYTE 지역 버퍼를 넘으면 원문처럼 `PhysicalLimitError`로 종료했다. `FitDisplayLimit`로 마지막 UTF-8 문자부터 줄여 표시한다(NB08 교정으로 목록이 열리며 즉시 노출된 같은 증상). | 실제 데이터에 80BYTE 이상 제목(`GuideHades` 86자, `GuideKQ` 102자: 아이콘 마크업 포함)이 있어 NB08 교정 직후 처음에는 `Tell 파일 목록의 원본 지역 NUL 범위 초과`로 종료했고, 교정 뒤 목록이 정상 표시되며 종료·로그 없음 |
@@ -22,7 +23,6 @@
 | NB04/NB28/NB29 | 시작/재생 간헐천 분배식 — `PatchFixs.txt`의 10.75 "시작 간헐천 수는 플레이어 수·맵 크기·간헐천 양을 반영" 항목과 `RawNuggetReplenish`·`00486440` 비교. 수정 기준이 되는 올바른 공식은 원문 자료에 없어 설계 결정 필요 |
 | NB06 | AI 신전 인식 — 비영 brain `RawAiBrainMemory`의 신전 탐색/생성 분기 |
 | NB10 | 싱글 미션의 잘못된 player side — 미션 Header(`myPlayer`/side) 검증과 `RawMissionStart` 단언 |
-| NB11 | 데모에서 AI 워크샾 대피해 — `Demo` 모드 Damageable/AI 통지 |
 | NB12/NB30/NB31/NB34 | MP 전용(입력 중 Battlemaster 시작, fort 적재 전 호스트 종료, 해상도 재시작 로그아웃, 클라이언트 체력 표시) — 디컴파일 대조만 가능하며 MP 실행 제외 |
 | NB13 | Cid 부동소수점 반올림(edge suck) — 이동/지형 가장자리 경계 계산 |
 | NB14 | 싱글 편집기에서 멀티플레이 fort 로드 — Edit 목록/`ReadFort` 경로의 파일 종류 구분 |
