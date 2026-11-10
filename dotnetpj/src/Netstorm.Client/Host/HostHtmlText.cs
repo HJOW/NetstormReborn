@@ -43,6 +43,12 @@ public sealed class HostHtmlText
     public ScrollingTextGumpMarkup Parser { get; }
     /// <summary>본문에 사용하는 파일 팔레트의 기본 흰색.</summary>
     private readonly uint _bodyColor;
+    /// <summary>ScrollingText 슬라이더 화살표에 전달하는 현재 팔레트의 갈색 색 번호.</summary>
+    public uint SliderArrowType { get; }
+    /// <summary>ScrollingText 슬라이더 화살표에 전달하는 현재 팔레트의 검정 색 번호.</summary>
+    public uint SliderArrowFrame { get; }
+    /// <summary>같은 본문 위젯이 슬라이더 생성에 쓰는 실제 상태(화살표 색 포함).</summary>
+    internal ScrollingTextGumpWidgetState WidgetState { get; }
 
     /// <summary>같은 메인 메뉴·화면·물리 폴링과 현재 호스트 효과를 사용한다.</summary>
     public HostHtmlText(HostMainMenu menu, HostHtmlWindows windows, Screen screen, Func<uint, InputEvent> poll,
@@ -87,13 +93,19 @@ public sealed class HostHtmlText
         StyleTextBufferStore.BindScrollingTextBuffers(textHooks, Buffers); ScrollGump.BindScrollingTextSlider(textHooks, slider);
         GumpDraw.SetGumpDrawClip(_clip, new(0, 0, screen.Width, screen.Height));
         Text = new ScrollingTextGump(_tree.Create, _tree.Collection, _clip, Fragments, style, textHooks);
-        var state = new ScrollingTextGumpWidgetState { SliderType = menu.BackgroundType, SliderFrame = 1,
+        // 원본 ScrollingText 생성(004a64b0 상당)은 슬라이더 너비 9·높이 100과 함께 현재 팔레트의 갈색(named 9)·검정(basic 0) 색 번호를 넘긴다.
+        // fortGump TYPE·프레임 1을 넘기면 화살표가 팔레트 1번(붉은 갈색)으로 그려지므로 원본과 같이 색 번호를 쓴다.
+        // 근거: cpppj/src/client/RawMenuControls.cpp의 RawMenuControls::SetPalette(2026-11-09 c91d9b84 수정 반영).
+        var palette = screen.Colors();
+        SliderArrowType = palette.Named[9].Index; SliderArrowFrame = palette.Basic[0];
+        var state = new ScrollingTextGumpWidgetState { SliderType = SliderArrowType, SliderFrame = SliderArrowFrame,
             ChangeEvent = sliderState.ChangeEvent, StepEvent = sliderState.StepEvent, RefreshEvent = 0x0200001b,
             CursorEvent = 0x0200003b, LeftTagEvent = 0x02000025, RightTagEvent = 0x02000026 };
         var widgetHooks = new ScrollingTextGumpWidgetHooks { Node = token => _tree.Node(token) as ScrollingTextGumpNode,
             Slider = token => _tree.Node(token) as ScrollGumpNode, Base = _tree.Node, Allocate = AllocateTextChild,
             Push = token => _tree.TreeHooks.Push!(token), Attach = (token, x, y, parent, mode) => _tree.TreeHooks.Attach!(token, x, y, parent, mode),
             Redraw = redraw, Cursor = cursor };
+        WidgetState = state;
         Widgets = new ScrollingTextGumpWidgets(_tree.Create, state, _tree.Factory, _tree.Tree, _tree.Lifetime,
             _tree.Events, _tree.Input, Fragments, Buffers, Text, sliderWidgets, widgetHooks);
         ScrollingTextGumpWidgets.BindScrollingTextGumpWidgets(_tree.TreeHooks, _tree.EventHooks, _tree.InputHooks,

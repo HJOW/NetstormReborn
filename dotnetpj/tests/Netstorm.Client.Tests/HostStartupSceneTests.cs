@@ -638,7 +638,7 @@ public sealed class HostStartupSceneTests
             Assert.NotEqual(0U, menu.Route(new(InputCode.LeftButton, x, y)));
             Assert.NotEqual(0U, menu.Route(new(InputCode.LeftButton | InputCode.Release, x, y)));
         }
-        Assert.Equal(new MainMenuAction[] { new("Tell", "UCampaign"), new("Tell", "NotImplemented"), new("Tell", "DEMOVILLE"),
+        Assert.Equal(new MainMenuAction[] { new("Tell", "UCampaign"), new("Tell", "NotImplemented"), new("Tell", "Demoville"),
             new("Menu", "help"), new("AskEditFort", "0"), new("Tell", "Credits"), new("Menu", "options"), new("RequestQuitApp", "0") }, actions);
         Assert.Equal(8, sounds);
         // 버튼 밖에서 떼면 캡처를 풀고 명령은 발생하지 않는다.
@@ -672,9 +672,34 @@ public sealed class HostStartupSceneTests
             menu.Route(new(InputCode.LeftButton, point.X, point.Y));
             menu.Route(new(InputCode.LeftButton | InputCode.Release, point.X, point.Y));
         }
-        Assert.Equal(new[] { "UCampaign", "DEMOVILLE", "Credits" }, names);
+        Assert.Equal(new[] { "UCampaign", "Demoville", "Credits" }, names);
         Assert.All(bodies, body => Assert.NotEmpty(body));
-        Assert.Equal("DEMOVILLE", startup.Configuration.SubstituteLocal("{global.priorTell}"));
+        Assert.Equal("Demoville", startup.Configuration.SubstituteLocal("{global.priorTell}"));
+    }
+
+    /// <summary>HTML 본문의 스크롤 화살표가 돌 버튼이 아닌 현재 팔레트의 갈색·검정 색 번호를 쓴다.</summary>
+    [Fact]
+    public void HtmlTextSliderArrowsUsePaletteBrownAndBlack()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        {
+            Now = () => 1, Poll = _ => new(InputCode.Release, 0, 0), Sound = () => { },
+            Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0
+        });
+        var queue = new InputQueue(); var windows = new HostHtmlWindows(menu, queue, () => 1, _ => { });
+        var text = new HostHtmlText(menu, windows, screen, _ => default, (_, _) => { }, _ => { }, _ => { });
+        // 원본 ScrollingText 생성 상당: 갈색(named 9)·검정(basic 0) 색 번호를 슬라이더에 넘긴다.
+        var palette = screen.Colors();
+        Assert.Equal(palette.Named[9].Index, text.SliderArrowType);
+        Assert.Equal(palette.Basic[0], text.SliderArrowFrame);
+        // 이전의 fortGump TYPE·프레임 1(붉은 갈색 화살표) 값과 다르면 원본 색을 쓴 것이다.
+        Assert.NotEqual(menu.BackgroundType, text.SliderArrowType);
+        // 실제 위젯 상태까지 같은 색 번호가 전달되는지 확인한다.
+        Assert.Equal(text.SliderArrowType, text.WidgetState.SliderType);
+        Assert.Equal(text.SliderArrowFrame, text.WidgetState.SliderFrame);
     }
 
     /// <summary>메뉴 생성 뒤 연결한 실제 Gump 경계로 스크립트 라벨 클릭이 상위 명령에 도달한다.</summary>

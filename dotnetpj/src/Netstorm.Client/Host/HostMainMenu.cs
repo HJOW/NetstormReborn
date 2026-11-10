@@ -19,7 +19,7 @@ public sealed class HostMainMenu : IUiControlLocator
     private static readonly string[] Labels = ["Campaign", "Multiplayer", "Demo", "Help", "Edit", "Credits", "Options", "Quit"];
     /// <summary>같은 버튼 순서로 원본 상위 메뉴에 전달하는 명령과 인자.</summary>
     private static readonly MainMenuAction[] Actions = [new("Tell", "UCampaign"), new("Tell", "NotImplemented"),
-        new("Tell", "DEMOVILLE"), new("Menu", "help"), new("AskEditFort", "0"), new("Tell", "Credits"),
+        new("Tell", "Demoville"), new("Menu", "help"), new("AskEditFort", "0"), new("Tell", "Credits"),
         new("Menu", "options"), new("RequestQuitApp", "0")];
     /// <summary>선택된 명령을 현재 상위 메뉴에 전달하는 실제 소비자.</summary>
     private readonly Action<MainMenuAction>? _activate;
