@@ -640,3 +640,5 @@ cpppj/src/client/LocalTcpTransport.h	Netstorm.Net/LocalTcpTransport.cs	a76499e35
 cpppj/src/client/LocalTcpTransport.cpp	Netstorm.Net/LocalTcpTransport.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
 cpppj/src/client/LocalUdpTransport.h	Netstorm.Net/LocalUdpTransport.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
 cpppj/src/client/LocalUdpTransport.cpp	Netstorm.Net/LocalUdpTransport.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
+cpppj/src/client/RawTerrainWorldBinding.h	Netstorm.Core/Original/RawTerrainWorldBinding.cs	552656c0c8bb46b48637b26a1acb59213edc1de1	port
+cpppj/src/client/RawTerrainWorldBinding.cpp	Netstorm.Core/Original/RawTerrainWorldBinding.cs	552656c0c8bb46b48637b26a1acb59213edc1de1	port
