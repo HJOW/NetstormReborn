@@ -65,7 +65,7 @@ void SquidPop::SetBuildingSpace(const RawBuildingSpace* space) {
 // 실제 PE에서 공통 firstPop/postPop을 확인한 vtable만 허용한다.
 bool SquidPop::Supports(OriginalEdition edition,std::uint32_t vtable,std::uint32_t flags) {
     // 마나는 공통 공간 Pop을 사용한다.134의4429f0 후처리 접두는 SquidPostPop이12 빛 꼬리 생성 뒤 공통 장부로 연결한다.
-    if (edition==OriginalEdition::Patch1078 && (vtable==0x50c3b0 || vtable==0x509810 || vtable==0x5070c0)) return SquidUnpop::SupportsDisplay(edition,vtable,flags); // 134도 실제7c/80/84가41c0b0/4ad0f0/4ad110인 정확한 공통 쌍이다.
+    if (edition==OriginalEdition::Patch1078 && (vtable==0x50c3b0 || vtable==0x509810 || vtable==0x5070c0 || vtable==0x50c9f0 || vtable==0x50cc08)) return SquidUnpop::SupportsDisplay(edition,vtable,flags); // 1267: 메타/일반 Sprite 두 VT도 PE의 +20=004b0d30, +7c/80/84=41c0b0/4ad0f0/4ad110 공통 쌍이라 공통 후처리를 허용한다(+88만 SupportsDisplay가 구별). // 134도 실제7c/80/84가41c0b0/4ad0f0/4ad110인 정확한 공통 쌍이다.
     const auto values=edition==OriginalEdition::Patch1078 ? std::span<const std::uint32_t>(kPatchPopVtables) :
         std::span<const std::uint32_t>(kCdPopVtables);
     // 선택적으로 켠 표시도 공통 가상 경로만 지원한다.

@@ -2102,3 +2102,43 @@ TEST_CASE(ClientInitialPostPop_BombBodySurvivesWorldReturn) { // Session과 NoWo
     { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->BombPostPop()==body); }
     const auto parent=s.Asset(0x502c38U);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(parent,1);auto* const task=s.storage->Processes().Host().FindEvent(parent,1);CHECK(task && task->Payload()==0.05F && s.storage->postPopState.depth==0 && &s.storage->BombPostPop()==body && !s.storage->Borrowed());
 }
+
+// 1267: World 없는 자산 전용 후처리 다섯 VT를 같은 장기 Host/확보 메모리/공통 장부로 분배한다.
+TEST_CASE(ClientAssetPostPop_ForcefieldReservesTwoEventsThenCommonDepth) { // 보호막 최초는 frame0.08/check0.01 두 예약을 하고 공통 깊이를 한 번만 줄인다.
+    RegionScene s;const auto parent=s.Asset(0x507770U);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(parent,1);
+    auto* const frame=s.storage->Processes().Host().FindEvent(parent,1);auto* const check=s.storage->Processes().Host().FindEvent(parent,2);CHECK(frame!=nullptr && check!=nullptr);if (!frame || !check) return;
+    CHECK(std::bit_cast<std::uint32_t>(frame->Payload())==0x3da3d70aU && std::bit_cast<std::uint32_t>(check->Payload())==0x3c23d70aU && s.storage->postPopState.depth==0 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientAssetPostPop_ForcefieldNonFirstOnlyEndsCommonDepth) { // 최초가 아니면 두 예약을 만들지 않고 같은 공통 깊이만 끝낸다.
+    RegionScene s;const auto parent=s.Asset(0x507770U);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;const auto size=s.storage->Processes().Kernel().Size();s.storage->PostPop().PostPopVirtual(parent,0);
+    CHECK(!s.storage->Processes().Host().FindEvent(parent,1) && !s.storage->Processes().Host().FindEvent(parent,2) && s.storage->Processes().Kernel().Size()==size && s.storage->postPopState.depth==0);
+}
+TEST_CASE(ClientAssetPostPop_ForcefieldBodySurvivesWorldReturn) { // Session 대여와 반납 뒤에도 같은 보호막 본문이 NoWorld 분배에서 계속 쓰인다.
+    RegionScene s;auto* const body=&s.storage->ForcefieldPostPop();
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->ForcefieldPostPop()==body); }
+    const auto parent=s.Asset(0x507770U);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(parent,1);
+    CHECK(s.storage->Processes().Host().FindEvent(parent,1) && s.storage->Processes().Host().FindEvent(parent,2) && s.storage->postPopState.depth==0 && &s.storage->ForcefieldPostPop()==body && !s.storage->Borrowed());
+}
+TEST_CASE(ClientAssetPostPop_GeneratorOnlyReadsThemeAndEndsDepth) { // Generator는 Regular 예약 없이 공통 Damageable 부모로 깊이를 한 번 줄인다.
+    RegionScene s;const auto parent=s.Asset(0x501ea0U);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;const auto size=s.storage->Processes().Kernel().Size();s.storage->PostPop().PostPopVirtual(parent,1);
+    CHECK(s.storage->Processes().Kernel().Size()==size && s.storage->postPopState.depth==0 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientAssetPostPop_DecorationGunReservesEventZeroOnFirstOnly) { // 장식 Gun은 최초에만 event0을 0.05로 예약하고 비최초는 공통 부모만 실행한다.
+    RegionScene s;const auto first=s.Asset(0x50b570U);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(first,1);
+    auto* const task=s.storage->Processes().Host().FindEvent(first,0);CHECK(task!=nullptr && s.storage->postPopState.depth==0);if (!task) return;CHECK(task->Payload()==0.05F && task->Event()==0);
+    const auto again=s.Asset(0x50b570U);s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(again,0);CHECK(!s.storage->Processes().Host().FindEvent(again,0) && s.storage->postPopState.depth==0 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientAssetPostPop_ArcAndAcidReserveOnlyWhenExtraAllows) { // Arc/Acid는 extra의 abstract/buried 비트가 없을 때 최초에만 1.0/0.3 예약을 한다.
+    for (const auto [table,expected] : {std::pair{0x50e668U,1.0F},std::pair{0x50e738U,0.3F}}) { // 실제 두 VT를 각각 같은 NoWorld 분배로 실행한다.
+        RegionScene s;const auto allowed=s.Asset(table);s.storage->pool.AllocatedBytes(allowed)[40]&=static_cast<std::uint8_t>(~9U);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(allowed,1);
+        auto* const task=s.storage->Processes().Host().FindEvent(allowed,0);CHECK(task!=nullptr && s.storage->postPopState.depth==0);if (task) CHECK(task->Payload()==expected);
+        const auto blocked=s.Asset(table);s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(blocked,1);CHECK(!s.storage->Processes().Host().FindEvent(blocked,0) && s.storage->postPopState.depth==0 && !s.storage->Borrowed());
+    }
+}
+TEST_CASE(ClientAssetPostPop_MetaSpritePairUsesCommonPostPopWithoutWorld) { // 메타/일반 Sprite 두 VT는 PE의 공통 +20 하나로 NoWorld 후처리 깊이를 끝낸다.
+    for (const auto table : {0x50cc08U,0x50c9f0U}) { // 두 실제 가상 표를 같은 분배로 실행한다.
+        RegionScene s;const auto sid=s.Asset(0x50cc08U);auto raw=s.storage->pool.AllocatedBytes(sid);RegionPut(raw,0,table);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;
+        CHECK(SquidPop::Supports(OriginalEdition::Patch1078,table,0) && SquidPop::Supports(OriginalEdition::Patch1078,table,0x2000));
+        s.storage->PostPop().PostPopVirtual(sid,0);CHECK(s.storage->postPopState.depth==0 && RegionRead(s.storage->pool.Slot(sid),0)==table && !s.storage->Borrowed());
+    }
+}

@@ -406,6 +406,8 @@ public:
     o::RawDudeRegular& DudeRegular(); // 같은 공급원/순환/현재 사건/난수/프레임의 장기 정기 본문이다.
     o::RawDudePostPop& DudePostPop(); // 최초 QA/30칸 목록/I 프레임과 공통 후처리를 Session 없이 제공한다.
     o::RawBombPostPop& BombPostPop(); // 세 효과의 중복 검사/실제 할당/현재 난수/예약 접두를 제공한다.
+    o::RawAssetPostPop& ResourceAssetPostPop(); // Geyser·Generator·장식 Gun·Arc·Acid가 공유하는 장기 자산 전용 후처리 본문이다(1267).
+    o::RawForcefieldPostPop& ForcefieldPostPop(); // 보호막 최초 두 예약(frame0.08/check0.01)을 Session 없이 제공한다(1267).
     void BindFlareDevices(RawSurfaceFlareDevices devices); // 첫 효과 전에 실제 억제 시각/소리 장치만 결합한다.
     o::RawFlare& Flare(); // 같은 현재 TYPE/프레임·난수/생성·공간·Host의 유일한 Native 효과 본문이다.
     void BindManaDevices(RawSurfaceManaDevices devices); // 첫 효과 전에 같은 현재 카메라와 위치 음향만 연결한다.
@@ -583,6 +585,7 @@ private:
     std::unique_ptr<o::RawFactoryPostPop> resourceFactoryPostPop_; // 같은 장기 상태를 빌리고 Host보다 먼저 반납하지 않는다.
     std::unique_ptr<o::RawCarrierPostPop> resourceCarrier_; //같은공통PostPop을직접호출하는장기실제부모다.
     std::unique_ptr<o::RawAssetPostPop> resourceGeyser_; //Geyser전용본문만공유하며다른자산의가상등록을합성하지않는다.
+    std::unique_ptr<o::RawForcefieldPostPop> resourceForcefield_; //보호막의 두 독립 new40 시도를 같은 장기 확보 메모리/Host로 수행한다(1267).
     std::unique_ptr<o::RawNuggetRegular> resourceNuggetRegular_; //장기기본Host의실제왕복/낙하본문이며현재Sessionoverride를보존한다.
     o::SquidRewardState rewardState_; // Session 이후에도 같은 현재 장기 모드/TYPE/비율을 읽는다.
     std::unique_ptr<o::SquidReward> reward_; // Pool/TYPE/장부보다 먼저 반납하며 지역 Session callback을 저장하지 않는다.

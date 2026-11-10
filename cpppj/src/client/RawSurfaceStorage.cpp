@@ -233,15 +233,25 @@ void RawSurfaceStorage::DefaultResourcePostPop(o::Sid sid,std::uint32_t flags) {
     if (table==0x508cc8U) { DudePostPop().PostPop(sid,flags);return; } // 같은450cd0 전체 본문이 최초 QA/목록/프레임과 공통 부모를 처리한다.
     if (table==0x502c38U || table==0x502cf0U || table==0x502db0U) { BombPostPop().Prefix(sid,flags);PostPop().PostPopBase(sid,flags);return; } // 실제 세 예약 접두 뒤 공통 깊이는 한 번만 감소한다.
     if (table==0x50f540U && !(flags&1U)) { PostPop().PostPopBase(sid,flags);return; } // 원문 Residence의 최초가 아닌 재Pop은 실제 공통 부모만 호출한다. 최초 후처리는 기존 현재 자산 모듈이 담당한다.
-    if (table==0x50da88U) {
+    if (table==0x50da88U) { ResourceAssetPostPop().GeyserPostPop(sid,flags);return; } // 간헐천 전용 본문은 같은 장기 자산 후처리를 빌린다.
+    if (table==0x501ea0U || table==0x50b570U || table==0x50e668U || table==0x50e738U) { ResourceAssetPostPop().PostPop(sid,flags);return; } // Generator·장식 Gun·Arc·Acid는 같은 장기 Damageable/Host 예약만 요구하는 실제 전용 본문이다(1267).
+    if (table==0x507770U) { ForcefieldPostPop().Prefix(sid,flags);PostPop().PostPopBase(sid,flags);return; } // 보호막의 두 독립 예약 뒤 공통 깊이는 한 번만 감소한다(1267).
+    throw std::logic_error("World없는현재VT의전용자원PostPop몸체미설치");
+}
+o::RawAssetPostPop& RawSurfaceStorage::ResourceAssetPostPop() { // 장기 자산 전용 후처리 본문을 한 번만 구성하고 World 반납 뒤에도 유지한다.
+    {
         if (!resourceGeyser_) { resourceAssetState_.sharedGeysers=&sidLists.geysers;resourceAssetState_.currentBridgeType=&links.bridgeType;resourceAssetState_.currentIslandType=&links.islandType;resourceAssetState_.currentStalagType=&links.stalagType;
             o::AssetPostPopHooks hooks;hooks.reserveRegular=[this] { return AllocateResourceRegular(); };hooks.addRegular=[this](auto parent,auto event,auto payload) { ConstructResourceRegular(parent,event,payload); };
             hooks.geyserRegistration=[this](auto parent,auto operation) { const auto registration=resourceDevices_.geyserRegistration;if (!registration) throw std::logic_error("장기간헐천의현재PlayerAI등록미연결");registration(parent,operation); };hooks.notifySurface=[this](auto parent) { Building().NotifySurface(parent); };
             hooks.unpop=[this](auto parent,auto value) { UnpopAsset(parent,value); };hooks.repop=[this](auto parent,auto value) { RepopAsset(parent,value); };hooks.visitAtPosition=o::MakeAssetPostPopFinder(pool,hash,types,true);
             resourceGeyser_=std::make_unique<o::RawAssetPostPop>(pool,types,PostPop(),ResourceCarrierPostPop(),resourceAssetState_,std::move(hooks));
-        }resourceGeyser_->GeyserPostPop(sid,flags);return;
+        }return *resourceGeyser_;
     }
-    throw std::logic_error("World없는현재VT의전용자원PostPop몸체미설치");
+}
+o::RawForcefieldPostPop& RawSurfaceStorage::ForcefieldPostPop() { // 두 예약을 각각 독립 new40 시도로 보고 실패해도 다음 시도를 계속한다.
+    if (!UsesNativeTransmissionDevices() || pool.Edition()!=o::OriginalEdition::Patch1078) throw std::logic_error("보호막 최초 후처리의 실제 PATCH 장치 미연결");
+    if (!resourceForcefield_) resourceForcefield_=std::make_unique<o::RawForcefieldPostPop>(pool,o::ForcefieldPostPopHooks{[this] { return AllocateResourceRegular(); },[this](auto sid,auto event,auto payload) { ConstructResourceRegular(sid,event,payload); }});
+    return *resourceForcefield_;
 }
 void RawSurfaceStorage::BindProcessDevices(RawSurfaceProcessDevices devices) { //실제장기선택장치만초기연결하며게임전역값은쓰지않는다.
     if (!UsesNativeTransmissionDevices() || borrowed_ || processes_ || baseDestroy_ || processDevices_.selected || !devices.selected || !devices.clearSelection) throw std::invalid_argument("장기Process기본선택장치의최초Native계약");processDevices_=std::move(devices);
