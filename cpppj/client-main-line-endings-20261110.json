@@ -1,0 +1,23 @@
+{
+  "unit": 1256,
+  "date": "2026-11-10",
+  "productUnit": 1255,
+  "lineEndingOnly": true,
+  "normalizedSourceUnchanged": true,
+  "oldMixedSourceEqualsPreviousGitBase": true,
+  "source": "cpppj/src/client/ClientMain.cpp",
+  "sourceBeforeSha256": "97a75c9f727ea39d77fbe72646a624f1597926d62be6f54d8a9c78fce511258c",
+  "sourceAfterSha256": "7dfd8ce3540fd0377ac50e41beafd9e21a2c6949b09ef15bbd3c612008f10087",
+  "normalizedSourceSha256": "97a75c9f727ea39d77fbe72646a624f1597926d62be6f54d8a9c78fce511258c",
+  "beforeCRLF": 0,
+  "afterCRLF": 1429,
+  "lfLines": 1536,
+  "protectedFiles": 2808,
+  "protectedUnchanged": true,
+  "newBuild": false,
+  "newTests": 0,
+  "newLiveRun": false,
+  "fullGoalComplete": false,
+  "Netstorm.exe": "3ce88495bdf5538f58b5c26ed060721fadf2d5ccfb9f0e915b6fe4b357897bcf",
+  "R.exe": "fdda924e013cf181ee678370eaa53d347a41e19354b1431cc2f32aecba596371"
+}

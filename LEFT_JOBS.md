@@ -6,6 +6,8 @@
 
 **1254 직접 소유 경계 감사 완료(제품 변경 없음):** 표시/전송·건설의 선택적 pin은 실제 World 생성자/직접 로드의 부모 보유와 공개 이후 실제 RuntimeCall을 구분했다. [감사](docs/exe/cpp-direct-runtime-owner-audit-20261110.md)·[보고서](cpppj/direct-runtime-owner-audit-20261110.json). 원문/보호2,808·제품 소스 불변·새 빌드/실행0이다. 임의 callback/전체 process 감사 완료는 아니다.
 
+**1256 줄바꿈 정리 완료(제품1255 유지):** ClientMain.cpp의 기존 `-text` 혼합 줄바꿈을 복원했다. 정규화 본문/줄 수·Netstorm/R 바이트 동일·새 빌드/검사/GUI0이다. [근거](docs/exe/cpp-client-main-line-endings-20261110.md)·[보고서](cpppj/client-main-line-endings-20261110.json). Native 재등록 작업은 아래대로 계속한다.
+
 **1255 구현 단계 완료 — M6-l 전체는 미완료:** 기본 FIFO·실제 TCP/UDP Poll·같은 frame wall/CRT·저장 type/F·주소/반납 순서를 연결했다. Release·기존 비MP300·Tutorial4 생산/건설 요청/600프레임 대기를 확인했다. [근거](docs/exe/cpp-packet-delay-queue-20261110.md). **다음 필수:** Native Session 재등록이 고정 canonical F를 짧은 this로 덮는 범위를 교정한다. 큐는 이를 명시 거부하며 old Session/lease pin을 보관하지 않는다. MP 실행0이다.
 
 **다음: M6-l Native Session 재등록을 같은 고정 F 대여로 연결.** RegisterConstructionCommands/RegisterCarrierCommands/RegisterFactoryResearchCommands와 실제 ConnectionActivity/Chat/BattleLeave 범위의 F·observer·version·길이/lease 반납을 대조한다. 독립 typed/CD·전용 대기실 표는 구분한다. 그 뒤 M6-m·M6-n 전수 재감사와 큰 NoWorld/최초 후처리·Path/AI/배치/Fort Finish를 계속한다.
@@ -199,7 +201,7 @@ AGENTS 최근 변경 `b5197d48`의 **34건 전체**는 [NB01~NB34 목록](docs/e
 6. **보호/실행:** AGENTS.md·원본/CD 기존 파일·루트 README.md의 **개요**를 수정하지 않는다(최근 변경 `3051892a`). 원본 실행 전후 해시/허용 설정 복원, 시작한 프로세스만 종료, CHEAT/검사 옵션과 기본 AI/프로필 분리를 유지한다. GUI 실행 확인은 AGENTS의 예외를 적용하며 현재 HJOW-Athlon은 예외 호스트다.
 7. **제품:** Windows `Netstorm.exe`, 대상 NetstormCpp/OUTPUT_NAME Netstorm/ARCHIVE_OUTPUT_NAME NetstormCpp, 버전 11.01·세 번째 Patch Credits(HJOW·AI), 무인자 GUI/--help/--run/분석 CLI를 유지한다. 전체 34경로(Early6·Training9·캠페인16·데모3), EXE 옆 `game/netstorm.tarc` 우선을 유지하고 cwd의 다른 게임/보호 원본을 자동 탐색하지 않는다. 배포 스크립트의 무인자 경로 입력·빈 값 취소·필수 에셋 동봉 계약도 유지한다.
 8. **외부 접속:** 로컬 TCP/IP 외 외부 도메인/IP 기능은 [외부 정책](docs/exe/cpp-external-services-20261101.md)·[주소 목록](cpppj/external-endpoints-20261101.json)에 문서화하고 폐기 온라인 유효성검증은 비활성화한다. 새 활성 호출자도 감사한다.
-9. **언어/인코딩:** 새 문서/코드는 UTF-8, 응답·새 코드의 네임스페이스/상수/함수/클래스/구조체/멤버/반복문 설명은 한국어다. AGENTS의 D2Coding·번역 명칭을 따른다. 두 인계 MD의 기존 CRLF·원시 로그/fixture 인코딩은 보존한다. PowerShell 5.1 stdin은 `$OutputEncoding = [System.Text.UTF8Encoding]::new($false)`, 필요 시 Python UTF-8 모드를 쓴다.
+9. **언어/인코딩:** 새 문서/코드는 UTF-8, 응답·새 코드의 네임스페이스/상수/함수/클래스/구조체/멤버/반복문 설명은 한국어다. AGENTS의 D2Coding·번역 명칭을 따른다. 두 인계 MD의 기존 CRLF·원시 로그/fixture 인코딩은 보존한다. ClientMain.cpp 등 `-text` 소스의 혼합 줄바꿈도 bytes 국소 수정/apply_patch로 보존하고 Python read_text/write_text 전면 재작성은 피한다. PowerShell 5.1 stdin은 `$OutputEncoding = [System.Text.UTF8Encoding]::new($false)`, 필요 시 Python UTF-8 모드를 쓴다.
 10. **현행 기준:** 세 프로젝트별 실행/플레이·원본 동일성 평가(`551d27ae`)와 9차 버그 34건(`b5197d48`)을 계속 반영한다. 옛 로드맵·단위 보고서의 “다음”보다 이 문서의 현재 계획을 우선한다.
 
 ```powershell
