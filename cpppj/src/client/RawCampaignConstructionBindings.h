@@ -101,6 +101,7 @@ public:
     bool Request(const o::ConstructionConfirmRequest& request) const;
     // 같은 실제0x3e 수신의 비용 선검사와 실패 환불을 실행한다.
     void Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const;
+    void ReceiveCommandPacket(std::uint32_t sender,std::span<const std::uint8_t> packet) const; //기존3e 등록과 같은 raw command로 직접 들어가며 추가 ValidateState를 선행하지 않는다.
     void ReceiveNotice(std::span<const std::uint8_t> packet) const; //현재 전역을 준비한 caller와 실제3fh 등록이 같은 BYTE 통지 본체를 호출한다.
     void Refund(std::uint32_t type,std::uint32_t owner) const; // 다른 실제 서버 요청도 같은442a40 비용 환불/통지를 사용한다.
     void Reject(std::uint32_t type,std::uint32_t owner,float x,float y,std::uint32_t argument,std::uint32_t direction) const; //00442af0의현재환불/취소패킷수명을공유한다.

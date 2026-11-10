@@ -6,6 +6,7 @@
 #include "o/RawSquidRegion.h" // 같은 TYPE 진단과 raw 지역 WORD의 getter/setter를 공유한다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/NativeConstructionPacketReceivers.h" //건설/연구의 Native 대여는 이전 Session closure 대신 같은 고정F를 유지한다.
 #include "client/NativeFortSaveVirtual.h" //Native 저장·보상은 같은 장기 가상 조회기를 공유한다.
 #include "client/ClientBuildReplay.h" // 실제 건설 확정과 재생 프로세스가 같은 현재 객체/playing을 사용한다.
 #include "client/CompositeMissionTransport.h" // 현재 ID 복합 전송과 실제 전체 Runtime 등록 대여를 연결한다.
@@ -4158,7 +4159,7 @@ void RawCampaignSession::BroadcastConnectionPlayer(std::uint32_t owner) {
 }
 void RawCampaignSession::RunConnectionLoginTimer() { if (impl_->login) impl_->login->timer->Run(false); } // timer 자체의 현재 LoginEnd 관문을 사용한다.
 // 실제 로그인의 같은 분배기에58h 연구를 등록한다. 중간 직접 수신/가짜 확정은 없다.
-void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 연구 수신 등록");o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }
+void RawCampaignSession::RegisterFactoryResearchCommands(RawPacketDispatch& dispatch) { if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 연구 수신 등록");if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeFactoryResearchReceiver(dispatch);else o::RegisterFactoryResearchCommand(dispatch,*impl_->factoryResearch); }
 // 현재 메뉴 부모와 signedWORD 종류를 원문 입력 몸체에 전달한다.
 std::uint32_t RawCampaignSession::SelectFactoryKnowledge(Sid parent,std::uint32_t code,std::uint32_t parameter) {
     return CommandFactory(parent,code,parameter);
@@ -4862,8 +4863,9 @@ bool RawCampaignSession::MayPlaceConstruction(const CanonPlacementQuery& query) 
 bool RawCampaignSession::RequestConstruction(const ConstructionConfirmRequest& request) { if (!impl_->loaded) throw std::logic_error("미설치 Session의 건설 요청");impl_->PrepareConstruction();return impl_->construction->Request(request); }
 // 기존 실제 패킷 분배기/로컬 전송이 같은 서버 수신 몸체를 호출한다.
 void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatch) {
-    if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 건설 수신 등록");impl_->construction->Register(dispatch,[this] { impl_->PrepareConstruction(); });
-    if (!impl_->buildingData) throw std::logic_error("실제 건설 상태 수신 본체 미설치");dispatch.RequireLength(0x37,0xffff);RegisterConstructionData(dispatch,*impl_->buildingData); // 실제37h의 NULL observer/버전1/정책0·가변 길이 등록과 같은 수명이다.
+    if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 건설 수신 등록");
+    const bool native=impl_->world.Storage()->UsesNativeTransmissionDevices();if (native) BindNativeConstructionCommandReceivers(dispatch);else impl_->construction->Register(dispatch,[this] { impl_->PrepareConstruction(); });
+    if (!impl_->buildingData) throw std::logic_error("실제 건설 상태 수신 본체 미설치");if (native) BindNativeConstructionDataReceiver(dispatch);else { dispatch.RequireLength(0x37,0xffff);RegisterConstructionData(dispatch,*impl_->buildingData); } //현재buildingData 확인 뒤 같은37h의 원문 metadata/F를 대여한다.
     // 원본 등록 표의54h 버전1/정책0/8바이트/빈 observer와 같은 수신이다.
     dispatch.Observe(0x54,{});dispatch.Version(0x54,1,0);dispatch.RequireLength(0x54,8);
     dispatch.Register(0x54,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->salvageCommand->Receive(sender,packet); });
@@ -4883,6 +4885,16 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
         if (packet[4]==s.playerState.battleOwner && !packet[6]) notice(4,packet[5],amount()); // 실제 이름/현재 금액의 원문 송금 안내이며 로그로 대체하지 않는다.
         if (s.core.processState.Server()) s.broadcast->Send(packet);
     });
+}
+//저장된 Native 코드값으로 기존 모듈을 직접 호출하며 typed 등록도 쓰는 같은 실제 본문/선행 준비를 유지한다.
+void RawCampaignSession::ReceiveFixedConstructionPacket(std::uint32_t entry,std::uint32_t sender,std::span<const std::uint8_t> packet) {
+    switch (entry) {
+    case 0x00444af0U:impl_->PrepareConstruction();impl_->construction->ReceiveCommandPacket(sender,packet);return;
+    case 0x004441b0U:impl_->PrepareConstruction();impl_->construction->ReceiveNotice(packet);return;
+    case 0x004427b0U:if (!impl_->buildingData) throw std::logic_error("Native37h의 실제 현재 건설 데이터 본문 미연결");impl_->buildingData->Receive(packet);return;
+    case 0x00453d70U:if (!impl_->factoryResearch) throw std::logic_error("Native58h의 실제 현재 연구 본문 미연결");impl_->factoryResearch->Receive(sender,packet);return;
+    default:throw std::invalid_argument("건설/연구의 알 수 없는 Native F 코드값");
+    }
 }
 // 현재 Client 전역과 같은 세계를 사용한다. 알려진 미접합 진단 분기는 성공으로 삼키지 않는다.
 void RawCampaignSession::Impl::ExecuteDeveloperCommand(std::string_view text) {

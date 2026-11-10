@@ -219,6 +219,8 @@ o::ConstructionLocalHooks RawCampaignConstructionBindings::BindLocal(o::Construc
 bool RawCampaignConstructionBindings::Request(const o::ConstructionConfirmRequest& value) const { impl_->ValidateState();return impl_->requestBody->Request(value); }
 // 원본 수신은 요청 실패 때 같은 실제 Place에서 환불/취소를 요청한다.
 void RawCampaignConstructionBindings::Receive(std::uint32_t sender,std::span<const std::uint8_t> packet) const { impl_->ValidateState();impl_->command->Receive(sender,packet); }
+//Native 고정F도 원래 RegisterConstructionCommand가 선택한 동일 command 본문을 사용한다.
+void RawCampaignConstructionBindings::ReceiveCommandPacket(std::uint32_t sender,std::span<const std::uint8_t> packet) const { impl_->command->Receive(sender,packet); }
 // 실제3fh는 요청/받침 ValidateState를 선행하지 않고 같은 현재 BYTE 통지 본문으로 들어간다.
 void RawCampaignConstructionBindings::ReceiveNotice(std::span<const std::uint8_t> packet) const { impl_->notice->ActualHandle(packet); }
 // Cast/Drop의 잘못된 소유자도 기존 원본 환불 몸체를 사용한다.

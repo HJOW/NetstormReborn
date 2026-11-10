@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**목표 재개 · 확정 제품1255 / 11.01 · 작업 계속 · 정적감사1254 · 인계 갱신2026-11-10, HJOW-Athlon**
+**목표 재개 · 확정 제품1257 / 11.01 · 작업 계속 · 정적감사1254 · 인계 갱신2026-11-10, HJOW-Athlon**
 
 이 문서는 cpppj의 **현재 상태·남은 작업·실행 제외·유효한 계약**을 담는다. 2026-11-10 사용자 `/goal` 요청에 따라 우선순위의 모든 cpppj 작업을 재개했다. 전체 목표는 미완료다. 아래 우선순위의 모든 cpppj 작업을 계속하고 단위마다 인계 갱신과 로컬 커밋을 남긴다. push하지 않는다.
 
@@ -8,9 +8,9 @@
 
 **1256 줄바꿈 정리 완료(제품1255 유지):** ClientMain.cpp의 기존 `-text` 혼합 줄바꿈을 복원했다. 정규화 본문/줄 수·Netstorm/R 바이트 동일·새 빌드/검사/GUI0이다. [근거](docs/exe/cpp-client-main-line-endings-20261110.md)·[보고서](cpppj/client-main-line-endings-20261110.json). Native 재등록 작업은 아래대로 계속한다.
 
-**1255 구현 단계 완료 — M6-l 전체는 미완료:** 기본 FIFO·실제 TCP/UDP Poll·같은 frame wall/CRT·저장 type/F·주소/반납 순서를 연결했다. Release·기존 비MP300·Tutorial4 생산/건설 요청/600프레임 대기를 확인했다. [근거](docs/exe/cpp-packet-delay-queue-20261110.md). **다음 필수:** Native Session 재등록이 고정 canonical F를 짧은 this로 덮는 범위를 교정한다. 큐는 이를 명시 거부하며 old Session/lease pin을 보관하지 않는다. MP 실행0이다.
+**1257 건설/연구4F 연결 완료:** 37/3e/3f/58의 실제 고정F/metadata를 Source 기본표에 설치하고 Native Session은 같은 F를 lease한다. 기존 수신 본문/준비 순서와 typed/CD를 유지했다. [근거](docs/exe/cpp-native-construction-receivers-20261110.md)·Release·기존 비MP300·Tutorial4 생산/건설 요청/600프레임 대기 확인. **나머지 미태그F/Native 등록·NoWorld/M6-l 전체는 미완료**, MP 실행0이다.
 
-**다음: M6-l Native Session 재등록을 같은 고정 F 대여로 연결.** RegisterConstructionCommands/RegisterCarrierCommands/RegisterFactoryResearchCommands와 실제 ConnectionActivity/Chat/BattleLeave 범위의 F·observer·version·길이/lease 반납을 대조한다. 독립 typed/CD·전용 대기실 표는 구분한다. 그 뒤 M6-m·M6-n 전수 재감사와 큰 NoWorld/최초 후처리·Path/AI/배치/Fort Finish를 계속한다.
+**다음: M6-l 나머지 Native 고정F/등록 연결.** 우선 같은 건설 범위54h/51h/2fh/6ch의 전역 고정F와 기존 본문·metadata를 공유하고 Session의 짧은 재등록을 없앤다. 나머지 Carrier/ConnectionActivity/Chat/BattleLeave 등 실제 caller도 이어 대조한다. 그 뒤 M6-m/n과 큰 NoWorld/최초 후처리·Path/AI/배치/Fort Finish를 계속한다.
 
 | 우선순위 | 남은 상위 계획 | 현재 상태와 다음 목표 |
 | --- | --- | --- |
@@ -26,11 +26,11 @@
 
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
-AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1255, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
+AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1257, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
-| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품1255의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
+| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품1257의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
 | **dotnetpj** | 기존 `Netstorm.Game`/`Netstorm.exe`는 1-1·1-2 근사 플레이가 가능하다. 새 `Netstorm.Client.Host`는 메뉴 일부까지이며 미션 플레이가 불가능하다. | 새 경로의 실제 메뉴·게임 캡처 비교는 0건이다. R3 진행/R4 일부 이식이며 부품 fixture 통과를 전체 동일성으로 합산하지 않는다. |
 | **webpj** | 클릭하여 시작·메뉴/목록·도움말/옵션·Credits·개발용 지형 미리보기까지다. 실제 미션 플레이는 불가능하다. | cpppj 오라클 M1 메뉴 8장면은 기록한 원인 밖 픽셀 차이 0이다. 구름 등 차이가 남고 실제 미션 L2/L3·전체 화면/음향·자연 완주는 미검증이다. |
 
@@ -38,12 +38,12 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj�
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품·소스 | **1255 / 11.01**. [지연 FIFO 단계](docs/exe/cpp-packet-delay-queue-20261110.md)·[보고서](cpppj/packet-delay-queue-20261110.json). 실제 TCP/UDP/장기 전역 연결·Native 재등록 잔여. **M6-l/NoWorld/M6 전체 미완료**, Regular87/87 유지. |
-| 최근 빌드·집중 검사 |1255 Release/x64 제품2·집중1대상 최종644.173초/종료0·경고/오류0·고정13파일. 기존 **비MP300/300**. 지연큐 자체 MP 단위/패킷/통신/게임/기록 실행0·원문/PE 정적8행 대조. |
-| 최근 실제 실행 |1255 EXE Tutorial4 정상 UI 생산·건설 요청→TYPE75/owner1 생성→600프레임 대기·정상 종료0/PNG 확인. 특정 적 공격·포획/희생·승리/자연 완주·공중3종 전용·MP 실행은 제외했다.1240 업그레이드/1225 Edit 왕복은 별도 제품 증거다. |
-| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품1255 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
-| M6 감사 기준 | checking 잔여 목록 0, 태그 25/활성 88/무태그 63F, 1255 기본 지연 FIFO/실제 소켓 연결·Native 재등록 잔여(MP 실행 제외). checking 0과 자산 Pre/Post·통지 83/83을 MP/전체 NoWorld 완료로 세지 않는다. |
-| 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1255 새 디컴파일/원문 변경0, 현행75e4eed9e 기준 보호 원본/CD/fixture·AGENTS **2,808파일 불변**. 사용자 글꼴 지침 반영은5.3절. |
+| 확정 제품·소스 | **1257 / 11.01**. [Native 건설/연구4F](docs/exe/cpp-native-construction-receivers-20261110.md)·[보고서](cpppj/native-construction-receivers-20261110.json). 같은 원문 본문·고정 F 대여. **나머지 Native 등록/M6-l/NoWorld/M6 전체 미완료**, Regular87/87 유지. |
+| 최근 빌드·집중 검사 |1257 Release/x64 제품2·집중1대상 최종426.478초/종료0·경고/오류0·고정8파일. 기존 **비MP300/300**. 원문4F/metadata와 PE 길이4WORD 대조·새 MP 실행0. |
+| 최근 실제 실행 |1257 EXE Tutorial4 정상 UI 생산·건설 요청→TYPE75/owner1 생성→600프레임 대기·정상 종료0/PNG 확인. 특정 적 공격·포획/희생·승리/자연 완주·공중3종 전용·MP 실행은 제외했다.1240 업그레이드/1225 Edit 왕복은 별도 제품 증거다. |
+| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품1257 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
+| M6 감사 기준 | checking 잔여 목록 0, 태그 25/활성 88/무태그 63F, 1255 기본 지연 FIFO/실제 소켓 연결·1257 건설/연구4F 연결·나머지 Native 고정F/등록 잔여(MP 실행 제외). checking 0과 자산 Pre/Post·통지 83/83을 MP/전체 NoWorld 완료로 세지 않는다. |
+| 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1257 새 디컴파일/원문 변경0, 현행75e4eed9e 기준 보호 원본/CD/fixture·AGENTS **2,808파일 불변**. 사용자 글꼴 지침 반영은5.3절. |
 
 <a id="02-진행-중인-1207--완료-처리-금지"></a><a id="agents-reflection-20261102"></a>
 
@@ -77,14 +77,14 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 | --- | --- | --- |
 | **1. M6-n: NoWorld·자산 삭제/AI** | 알려진83VT의 Pre/Post와 통지를 모두 분배했다. 기본4Form 삭제1223·알려진 Regular87VT/장기 상승1249를 연결했다. 큰 하위/AI·다른 배치 호출자/Fort 상위 Finish의 장기 연결이 남는다. | 미션 월드가 없는 메뉴·전환에서도 같은 실제 Pool/목록/TYPE/현재 전역을 사용한다. 큰449b30 등 실제 Runtime이 필요한 하위를 빈 성공으로 숨기지 않는다. 83/83을 전체 NoWorld 완료로 세지 않는다. |
 | **2. M6-n: 호출자·owner 전수 감사** | Source/listener/두 등록표/Poll/송수신·선택적 기록, 25태그 전 scope·무태그 63F, Snapshot/debugBurst를 대조한다. | 원문 등록 92행/모든 실제 process VT, 현재 receiver/observer/version/길이·파일/해제 수명을 연결한다. 없는 큰 장치·빈 효과를 숨기지 않는다. l/m 구현 후 최종 감사를 다시 닫는다. |
-| **3. M6-l: 실제 지연큐** |1255 FIFO·Client 분포/실제frame wall/CRT·TCP/UDP Poll을 연결했다. **Native Session 재등록이 기존 고정 F를 짧은 this로 덮는 범위**를 교정한다. | 각 실제 Native 등록의 F·observer·version·길이·lease 반납을 대조하고 같은 canonical F 대여를 유지한다. 독립 typed/CD/대기실 표는 구분한다. FIFO/주소/닫힘 순서 구현은 정적/컴파일 범위이며 MP 실행0이다. |
+| **3. M6-l: 실제 지연큐** |1255 FIFO/실제 소켓·1257 건설/연구4F를 연결했다. 나머지 미태그F의 전역 고정값과 Native Session 재등록을 교정한다. | 우선54/51/2f/6c, 이어 나머지 Carrier/Activity/Chat/BattleLeave의 같은 본문/F·observer·version·길이·lease 반납. typed/CD/전용 대기실 표는 구분하고 MP 실행0을 유지한다. |
 | **4. M6-m: JoinTestBattle** | 개발자 4이름 제한·현재 주소·server0/current29 뒤 기존 1bh 전체 수신을 직접 호출한다. | 원문 `4b8be0 → 4b8b20`, 입력 `0200002b`의 선행 `4b3620` 보존. Edit TestBattle(c2)와 구별하고 새 수신 본문을 복제하지 않는다. |
 
 세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1246 연결](docs/exe/cpp-arc-acid-regular-owner-20261110.md)·[1247 피해율 교정](docs/exe/cpp-type-damage-rate-correction-20261110.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
-**다음 한 단위 — M6-l Native Session의 고정 F 재등록 연결:** 실제 RegisterConstructionCommands/RegisterCarrierCommands/RegisterFactoryResearchCommands 및 ConnectionActivity/Chat/BattleLeave caller가 현재 canonical F를 지우는 범위를 정적 대조한다. 같은 Native F·observer/version/길이·등록/반납을 유지하며 old Session closure/lease pin을 enqueue하지 않는다. 독립 typed/CD/전용 대기실 표는 별도 계약이다. MP 단위/패킷/통신/게임/기록 실행은 제외한다.
+**다음 한 단위 — M6-l 나머지 Native 건설4F:** 54h/51h/2fh/6ch의 원문 F4436f0/dc050/4332c0/4d56f0와 observer40b380·version1/policy0·각 길이를 실제 기존 본문과 공유한다. 같은 Source 기본표/Native Session lease를 사용하며 짧은 Session closure를 enqueue하지 않는다. 원시는1257의 next-construction-family.json이다.
 
-1255 원시는 `extracted/cpp-resume-1255/`다. FIFO/실제 소켓 단계만 마감했으며 M6-l/전체 NoWorld/M6는 미완료다. Native 재등록 뒤 M6-m/n과 큰 하위/최초 후처리·Path/AI/배치/Fort Finish를 계속한다.
+1257은37/3e/3f/58만 마감했다. 나머지 미태그 F/Native 등록·현재 Runtime 없는 본문의 장기화·M6-l/m/n 전체는 미완료다. MP 단위/패킷/통신/게임/기록 실행 제외와 큰 하위/최초 후처리·Path/AI/배치/Fort Finish 잔여를 유지한다.
 
 ### 2.2 다음 구현의 출발점과 유지할 계약
 
@@ -102,7 +102,7 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 <a id="23-장기-regularform-잔여-집계1219--큰-하위-완료와-구분"></a><a id="23-수량을-확정한-연결-범위--제품-1219-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1221-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1222-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1223-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1225-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1226-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1227-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1228-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1229-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1230-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1231-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1232-기준"></a>
 
-### 2.3 수량을 확정한 연결 범위 — 제품1255 기준
+### 2.3 수량을 확정한 연결 범위 — 제품1257 기준
 
 | 범위 | 연결 완료 | 남은 범위 |
 | --- | --- | --- |
@@ -188,7 +188,7 @@ AGENTS 최근 변경 `b5197d48`의 **34건 전체**는 [NB01~NB34 목록](docs/e
 
 - cpppj의 **M8 배포 관문**에 실행 파일 리소스/생성 소스의 글꼴 내장 여부, 외부 fonts 적재, ZIP의 필수 글꼴/라이선스 동봉·바이트 정합성 확인을 추가한다. 위반이 발견되면 배포 전에 수정한다.
 - **K1/K4/K5**에서 새 글꼴 자산을 선별하고 D2Coding 한글 표시·외부 경로·배포/설치 후 적재를 확인한다. 기존 fonts 자산을 exe에 합치는 방식은 사용하지 않는다.
-- 현재1255까지 신전/음향·네 종류 정기 owner를 검증했으나 **새 글꼴 계약에 대한 제품/ZIP 준수 여부는 아직 미확정**이다. 이 요구를 기존 "구현 범위 마감"이나 준비 자산 존재만으로 완료 처리하지 않는다.
+- 현재1257까지 신전/음향·네 종류 정기 owner를 검증했으나 **새 글꼴 계약에 대한 제품/ZIP 준수 여부는 아직 미확정**이다. 이 요구를 기존 "구현 범위 마감"이나 준비 자산 존재만으로 완료 처리하지 않는다.
 - AGENTS.md는 이 작업에서 수정하지 않았다. 최초 보호 해시와 외부 커밋 이후 해시를 구별해 보존하며, 원본/CD/fixture에는 변화가 없다. 새 기준을 읽은 뒤 현재1248 검증·인계·커밋을 마치고 M6 우선순위 작업을 계속한다.
 
 ## 6. 착수·검증·커밋 운영 규칙
@@ -215,7 +215,7 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 | 범위 | 기준 자료 |
 | --- | --- |
 | 직접 소유 경계 감사 |1254 정적 대조만 완료·제품1253 유지. [감사](docs/exe/cpp-direct-runtime-owner-audit-20261110.md)·[보고서](cpppj/direct-runtime-owner-audit-20261110.json). 새 빌드/검사/GUI0이며 M6-l/m과 전수 마감은 미완료다. |
-| 현재 제품·Regular 잔여 | [1255 지연 FIFO 단계](docs/exe/cpp-packet-delay-queue-20261110.md)·[보고서](cpppj/packet-delay-queue-20261110.json), 원시 `extracted/cpp-resume-1255/`. Native 재등록→M6-m/n과 큰 NoWorld 잔여는2.1절. Regular87/87/1250~1253 owner 교정 유지. |
+| 현재 제품·Regular 잔여 | [1257 건설/연구4F](docs/exe/cpp-native-construction-receivers-20261110.md)·[보고서](cpppj/native-construction-receivers-20261110.json), 원시 `extracted/cpp-resume-1257/`.1255 지연 FIFO·나머지 Native F/등록→M6-m/n과 큰 NoWorld 잔여는2.1절. Regular87/87 유지. |
 | M6 전체 감사·최초 조사 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[Regular1217](docs/exe/cpp-no-world-regular-audit-20261109.md)·[Bomb1224](docs/exe/cpp-bomb-regular-audit-20261109.md)·[16VT/19TYPE 행렬](cpppj/bomb-regular-audit-20261109.json). 과거 “다음/없음”보다 현행2절을 우선한다. |
 | 비MP 마감 근거 | [UI929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션956](docs/exe/cpp-mission-state-scope-20261106.md)·[수명980](docs/exe/cpp-internal-lifetime-closure-20261106.md). |
 | 디컴파일·소스 | [마지막 디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md). |

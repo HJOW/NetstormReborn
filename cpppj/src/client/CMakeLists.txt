@@ -2,6 +2,7 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    NativeConstructionPacketReceivers.cpp NativeConstructionPacketReceivers.h #같은 실제 건설/연구4F의 장기 기본표와 Native Session 대여다.
     ClientConstructionGem.cpp #같은장기Deck/제외목록/난수와실제오벨리스크보상을연결한다.
     ClientConstructionRegions.cpp #같은섬/Player/투표/도장과신전부모를World없이공유한다.
     ClientConstructionRandomPlacement.cpp #실제단일난수배치와오벨리스크배치부모를장기로공유한다.

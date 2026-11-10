@@ -514,6 +514,7 @@ public:
     bool RequestConstruction(const o::ConstructionConfirmRequest& request);
     // 같은 실제0x3e 수신을 기존 RawPacketDispatch 또는 LocalMissionTransport.Dispatch에 등록한다.
     void RegisterConstructionCommands(o::RawPacketDispatch& dispatch);
+    void ReceiveFixedConstructionPacket(std::uint32_t entry,std::uint32_t sender,std::span<const std::uint8_t> packet); //37/3e/3f/58의 저장된 Native F값으로 기존 본문을 직접 호출하며 표/packet종류를 재선택하지 않는다.
     // 실제44c420의 현재 제단/금지 관문을 거쳐54h만 요청한다. 환불/삭제는 등록된 서버 수신에서 실행한다.
     void RequestSalvage(std::uint32_t sid);
     // 같은 실제58h 수신과 현재 입력의signedWORD 지식 선택을 연결한다.
