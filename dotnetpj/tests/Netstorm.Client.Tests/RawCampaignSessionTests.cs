@@ -1196,4 +1196,22 @@ public sealed class RawCampaignSessionTests
         Assert.Equal(OriginalConstructors.TypeCount, session.TypeCount);
         Assert.Equal(session.Types.Count, session.TypeCount);
     }
+
+    /// <summary>세션 소유자 지정이 실제 월드 슬롯에 닿는지 검증한다. 2026-11-11 F3 실제 호스트·월드 조립(소유자 연결) 이식에서 추가됐다.</summary>
+    [Fact]
+    public void SetObjectOwnerReachesWorldSlot()
+    {
+        // 실제 호스트·월드 조립의 첫 관문이다. 세션 대리자를 월드 소유권 몸체에 묶으면 끝까지 간다.
+        // PATCH 슬롯의 소유자 바이트 위치는 34다(원본 0x22).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        session.BindSetObjectOwner((sid, owner) => session.World().SetAssetOwner(sid, owner));
+        int sid = session.World().Objects()[0].Sid;
+        byte before = session.World().Core().Pool.Slot(sid)[34];
+        uint next = before == 8u ? 1u : (uint)(before + 1u);
+        session.SetObjectOwner(sid, next);
+        byte after = session.World().Core().Pool.Slot(sid)[34];
+        Assert.NotEqual(before, after);
+        Assert.Equal(next, after);
+    }
 }
