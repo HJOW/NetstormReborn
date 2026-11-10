@@ -36,12 +36,14 @@ std::int32_t WorldGeyserSpacing(std::uint8_t selection) {
     if (selection>=values.size()) throw std::out_of_range("세계 간헐천 간격의 원문 표 범위");return values[selection];
 }
 // flags50/지역/AI를 세는 다른 Player 관문과 합치지 않는다.
-std::int32_t WorldGeyserBudget(OriginalEdition edition,bool battle,std::span<const std::uint8_t> players,std::span<const std::uint8_t> options) {
+std::int32_t WorldGeyserBudget(OriginalEdition edition,bool battle,std::span<const std::uint8_t> players,std::span<const std::uint8_t> options,std::uint32_t assumedPlayers,bool monotone) {
     if (edition!=OriginalEdition::Patch1078 || players.size()!=9*kPlayerStride || options.size()!=87) throw std::invalid_argument("세계 간헐천 예산의 PATCH Player/옵션 물리 범위");
     std::int32_t count{};
     if (battle) for (std::size_t owner=1;owner<=8;++owner) { // 실제 Player1~8의 현재+2c를 먼저 읽고 필요한 숨김 BYTE만 검사한다.
         if (Word(players,owner*kPlayerStride+kPresence) && options[kHidden+owner-1]==0) ++count;
     }
+    if (!battle && assumedPlayers) count=static_cast<std::int32_t>(std::min<std::uint32_t>(assumedPlayers,8U)); // 스커미시처럼 전투 모드가 아닌 게임의 참가자 수다.
+    if (monotone && count>6) return 6*count; // 6명에서 이어 붙여 인원이 늘면 예산도 늘게 한다(연속: 6명 36, 7명 42, 8명 48).
     return (12-count)*count;
 }
 // edition만 생성 시 고정하며 실제 하위는 그 분기에 도달했을 때 요구한다.

@@ -9,6 +9,9 @@ struct WorldGeyserState {
     const bool& battle; //00594fbc의 현재 전투 관문이다.
     std::span<const std::uint8_t> options; //0052f7e0의 같은87BYTE이며9/18을 반복 중 재조회한다.
     std::span<const std::uint32_t,4> decorationTypes; //현재treeTwo/RUIN/treeThree/Monument의 네 DWORD다.
+    // shuffleEvenCells: 10차 NB04(Even 모드에서 아래 모서리 플레이어가 간헐천을 마지막에 받음) 제품 전용 스위치다.
+    // 켜면 Even 모드의 아홉 구역(원문은 1..9 고정 순서)을 현재 벽시각 시드로 섞은 순서로 처리해 마지막 구역이 매 게임 달라진다. 기본은 꺼짐(원문 순서)이다.
+    bool shuffleEvenCells{};
 };
 // 실제 큰 세계 하위만 경계로 두며 선택되지 않은 분기의 기본 성공을 만들지 않는다.
 struct WorldGeyserHooks {

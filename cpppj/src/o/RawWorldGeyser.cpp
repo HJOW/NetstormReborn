@@ -1,5 +1,6 @@
 // 원본의 두 local 난수·현재 option/type 재조회·부동소수 예산 절삭·부분 효과를 보존한다.
 #include "o/RawWorldGeyser.h"
+#include <array>
 #include <bit>
 #include <cmath>
 #include <stdexcept>
@@ -49,7 +50,12 @@ void RawWorldGeyser::Generate() const {
     const double sizeAddition=spacing==3 ? -0.2 : spacing==4 ? -0.1 : spacing==6 ? 0.1 : 0.0; //ROM005066b8/005066d0/00501960/00500460이다.
     const auto corner=Truncate(sizeAddition*original+adjusted)/2/4,edge=Signed(static_cast<std::uint32_t>(corner)+1U),center=edge/2;
     if (state_.options[18]==2) {
-        for (std::int32_t cell=1;cell<=9;++cell) { //원본은 분할 시작을 선택한 뒤 옵션18이 바뀌어도 아홉 요청을 끝낸다.
+        std::array<std::int32_t,9> order{1,2,3,4,5,6,7,8,9}; //원문은 1..9 고정 순서다. 10차 NB04: 스위치가 켜지면 시간 시드로 섞어 마지막 구역이 매번 같은 모서리가 되지 않게 한다.
+        if (state_.shuffleEvenCells) {
+            GameRandom ordering(0);ordering.SetState(RawFortFinishOwner::TimeSeed(Need(hooks_.wallSeconds)())); //배치 난수(random)와 별개라 구역 안 배치 순서는 영향받지 않는다.
+            for (std::size_t index=order.size()-1;index>0;--index) std::swap(order[index],order[static_cast<std::size_t>(ordering.Next(static_cast<std::uint32_t>(index+1)))]); //Fisher-Yates 섞기다.
+        }
+        for (const auto cell:order) { //원본은 분할 시작을 선택한 뒤 옵션18이 바뀌어도 아홉 요청을 끝낸다.
             const bool middle=cell==5,cornerCell=cell==1 || cell==3 || cell==7 || cell==9;
             const auto rectangle=Need(hooks_.partition)(cell,3);
             Need(hooks_.populate)(middle ? center : cornerCell ? corner : edge,random,rectangle,{1,middle ? 0U : 1U,1});

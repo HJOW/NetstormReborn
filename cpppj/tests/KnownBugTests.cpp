@@ -4,6 +4,9 @@
 #include "client/PriestSelectionShortcut.h"
 #include "o/RawCarrierPickup.h"
 #include "o/RawTerrainGrowth.h"
+#include "o/RawWorldGeyser.h"
+#include <set>
+#include <algorithm>
 #include <random>
 #include "client/StyleTextMarkup.h"
 
@@ -78,6 +81,43 @@ TEST_CASE(KnownBug_NB18_CarrierHoldingContentRefusesPriestPickup) {
     state.refuseHeldPriest=true;sent=queued=0;
     pickup.Request(Sid{50});pickup.Receive(0,0,packet);CHECK(sent==0 && queued==0); // 내용물을 든 채 사제를 줍는 요청/수신을 모두 거부한다.
     holding=false;pickup.Request(Sid{50});pickup.Receive(0,0,packet);CHECK(sent==1 && queued==1); // 빈 손이면 정상 포획 요청은 그대로다.
+}
+
+// NB04: Even 간헐천 모드(옵션 18 = 2)의 아홉 구역은 원문에서 1..9 고정 순서라 마지막 구역(아래 모서리)이 늘 같았다.
+// 제품 스위치가 켜지면 매 게임 시각 시드로 섞은 순열을 처리하고, 꺼져 있으면 원문 순서를 유지한다.
+TEST_CASE(KnownBug_NB04_EvenGeyserCellOrderIsShuffledOnlyWhenEnabled) {
+    using namespace netstorm::o;
+    const bool battle = false;std::array<std::uint8_t, 87> options{};options[18] = 2;std::array<std::uint32_t, 4> types{};
+    double now = 0;std::vector<int> cells;
+    WorldGeyserHooks hooks;
+    hooks.log = [](std::string_view) {};hooks.local = [] {};hooks.configInt = [](std::string_view, std::int32_t) { return 1; };hooks.wallSeconds = [&] { return now; };
+    hooks.budget = [] { return 32; };hooks.density = [] { return 0; };hooks.spacing = [] { return 4; };
+    hooks.partition = [&](std::int32_t cell, std::int32_t) { cells.push_back(cell);return FortRandomRectangle{}; };
+    hooks.populate = [](std::int32_t, GameRandom&, FortRandomRectangle, GeyserPlacementOptions) {};
+    RawWorldGeyser(OriginalEdition::Patch1078, {battle, options, types}, hooks).Generate();
+    CHECK(cells == (std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9})); // 스위치가 꺼져 있으면 원문 고정 순서다.
+    std::set<int> lastCells;bool allPermutations = true,changed = false;
+    // 시각 시드를 바꿔 가며 순서를 확인한다.
+    for (int second = 0; second < 200; ++second) {
+        now = 1000.0 + second * 7.0;cells.clear();
+        RawWorldGeyser(OriginalEdition::Patch1078, {battle, options, types, true}, hooks).Generate();
+        auto sorted = cells;std::sort(sorted.begin(), sorted.end());
+        allPermutations = allPermutations && sorted == std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9};
+        changed = changed || cells != std::vector<int>{1, 2, 3, 4, 5, 6, 7, 8, 9};lastCells.insert(cells.back());
+    }
+    CHECK(allPermutations && changed && lastCells.size() >= 6); // 아홉 구역을 한 번씩 처리하고 마지막 구역이 여러 곳으로 퍼진다.
+}
+
+// NB29: 시작 간헐천 예산 공식. 원문 (12-n)*n은 6명에서 최대이고 7명 35·8명 32로 내려가는 오류가 있다. monotone이면 6명에서 이어 붙여 6n(42, 48)이 된다.
+// 스커미시처럼 전투 모드가 아닌 게임은 참가자 수를 받아 같은 공식을 쓴다.
+TEST_CASE(KnownBug_NB29_GeyserBudgetDoesNotShrinkWithMorePlayers) {
+    using namespace netstorm::o;
+    std::array<std::uint8_t, 1620> players{};std::array<std::uint8_t, 87> options{};
+    const auto original = [](int n) { return (12 - n) * n; };
+    for (const int n : {1, 2, 4, 6}) CHECK(WorldGeyserBudget(OriginalEdition::Patch1078, false, players, options, static_cast<std::uint32_t>(n), false) == original(n) && WorldGeyserBudget(OriginalEdition::Patch1078, false, players, options, static_cast<std::uint32_t>(n), true) == original(n)); // 6명 이하는 원문과 같다.
+    CHECK(WorldGeyserBudget(OriginalEdition::Patch1078, false, players, options, 7, false) == 35 && WorldGeyserBudget(OriginalEdition::Patch1078, false, players, options, 8, false) == 32); // 원문 공식은 내려간다.
+    CHECK(WorldGeyserBudget(OriginalEdition::Patch1078, false, players, options, 7, true) == 42 && WorldGeyserBudget(OriginalEdition::Patch1078, false, players, options, 8, true) == 48 && WorldGeyserBudget(OriginalEdition::Patch1078, false, players, options, 99, true) == 48); // 연속이고 늘어난다(상한 8명).
+    CHECK(WorldGeyserBudget(OriginalEdition::Patch1078, false, players, options) == 0); // 참가자 수를 주지 않은 일반 미션은 원문 그대로 0이다.
 }
 
 // NB23: 드문 섬 생성 종료. 일반 지형 성장(RunNormal)을 무작위 청크 배치·시드·범위로 많이 돌려 예외(종료 원인)가 없는지 확인한다.

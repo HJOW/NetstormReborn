@@ -117,6 +117,10 @@ void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
         static_cast<void>(client.ChatChannels().AddToChannel(subscriber,name,channel));
     };
     // 11차 난이도: 옵션 메뉴가 저장한 difficulty 설정을 AI 생성 시점마다 읽는다. 값이 없으면 0이라 보통이다.
+    ai.skirmishPlayers=[&client]()->std::uint32_t { // 12차: 스커미시 실행 중이면 사람 1명+AI 수다.
+        auto& config=client.Configuration();
+        return config.GetInt("skirmishRun")!=0 ? 1U+static_cast<std::uint32_t>(std::clamp(config.GetInt("skirmishAiCount"),1,7)) : 0U;
+    };
     ai.difficulty=[&client](std::uint32_t owner,bool enemy)->std::uint32_t {
         auto& config=client.Configuration();
         if (config.GetInt("skirmishRun")!=0 && owner>=2 && owner<=8) return static_cast<std::uint32_t>(config.GetInt("skirmishAi"+std::to_string(owner)+"Diff")); // 12차: 스커미시는 AI별 난이도를 옵션 난이도 대신 쓴다(동맹 AI 포함).

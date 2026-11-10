@@ -146,6 +146,7 @@ struct CampaignAiServices {
     o::RawAiBrainMemory::Fill allocationBytes; // 실제 host 할당 직후의 입력 바이트다. 누락을 임의 0채움 성공으로 바꾸지 않는다.
     o::RawAiBrainMemory::Fill bridgeScratchBytes; //검색caller의초기8BYTE를별도로공급한다.본문힙할당입력이나임의성공좌표와합치지않는다.
     std::function<std::string()> defaultName; // 현재 defaultAiName 설정의 원본 좁은문자열을 반환한다.
+    std::function<std::uint32_t()> skirmishPlayers; // 12차: 스커미시 실행 중이면 사람+AI 참가자 수, 아니면 0이다(세계 간헐천 예산에만 쓴다).
     std::function<std::uint32_t(std::uint32_t,bool)> difficulty; // 11차: owner AI의 난이도 설정값(1쉬움/2보통/3어려움, 0=보통)이다. 두 번째 인자는 이 AI가 로컬 플레이어의 적인지 여부다. 없으면 모든 AI가 보통이다.
     std::function<void(std::uint32_t,std::uint32_t)> changeColor; // 실제0043ca70의 표/섬 프레임 변경을 마친 뒤 보내는 선택형 화면 통지다.
     o::PlayerParticipationHooks participation; // 실제 Chat/동맹 송신/연결·진단이다. brain 소멸/반납은 Session의 실제 소유자로 교체한다.

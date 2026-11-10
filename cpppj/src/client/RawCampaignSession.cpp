@@ -5641,13 +5641,13 @@ void RawCampaignSession::GenerateWorldGeysers() {
     o::WorldGeyserHooks hooks;
     hooks.log=[](std::string_view text) { std::clog<<text; }; //004a68e0의 같은 원문 로그를 현재 실행 로그에 전달한다.
     hooks.local=[this] { GenerateLocalGeysers(); };hooks.configInt=s.services.construction.configInt;hooks.wallSeconds=s.services.construction.wallSeconds;
-    hooks.budget=[&s] { return o::WorldGeyserBudget(s.core.pool.Edition(),s.core.ownerMode.battle,s.players,s.battleOptions); };
+    hooks.budget=[&s] { return o::WorldGeyserBudget(s.core.pool.Edition(),s.core.ownerMode.battle,s.players,s.battleOptions,s.services.ai.skirmishPlayers ? s.services.ai.skirmishPlayers() : 0U,true); }; // 10차 NB29/12차: 인원이 늘면 예산이 줄지 않게 하고 스커미시 참가자 수를 쓴다.
     hooks.density=[&s] { return o::WorldGeyserDensity(s.battleOptions[17]); };hooks.spacing=[&s] { return o::WorldGeyserSpacing(s.battleOptions[6]); };
     hooks.demo=[&s] { if (!s.services.missionOutcome.demo) throw std::logic_error("세계 간헐천의 실제 현재 Guide demo 조회 미연결");return s.services.missionOutcome.demo()!=0 ? 1U : 0U; };
     hooks.whole=[&bounds] { return bounds.Whole(); };hooks.partition=[&bounds](auto cell,auto grid) { return bounds.Partition(cell,grid); };
     hooks.decorate=[&placement](o::GameRandom& random,auto rectangle,auto region,auto quantity,auto type,auto force) { static_cast<void>(placement.PlaceRandom(random,rectangle,region,quantity,type,force)); };
     hooks.populate=[&s](std::int32_t quantity,o::GameRandom& random,auto rectangle,auto options) { s.PrepareConstruction();s.construction->PopulateGeysers(quantity,random,rectangle,options); };
-    o::RawWorldGeyser(s.core.pool.Edition(),{s.core.ownerMode.battle,s.battleOptions,s.gameplayGlobals->GameAux()->WorldDecorationTypes()},std::move(hooks)).Generate();
+    o::RawWorldGeyser(s.core.pool.Edition(),{s.core.ownerMode.battle,s.battleOptions,s.gameplayGlobals->GameAux()->WorldDecorationTypes(),true},std::move(hooks)).Generate(); // 10차 NB04: 실제 세션만 Even 구역 순서를 섞는다.
 }
 //00486bc0의 현재 자원 전역과 실제 장치를 연결하며 로그인 기한/모드의 원문 관문을 먼저 실행한다.
 void RawCampaignSession::RunBattleResources() {
@@ -5656,7 +5656,7 @@ void RawCampaignSession::RunBattleResources() {
     o::RawWorldGeyserBounds bounds(s.core.pool.Edition(),{s.globals.missionPost,s.gameplayGlobals->WorldCells(),aux.WorldGeyserMargin()},std::move(geometry));o::BattleResourceFrameHooks hooks;
     hooks.replenish=[&s] { s.ReplenishNuggets(); };hooks.income=[this](auto owner,auto source,auto value) { std::array<std::uint8_t,11> packet{1,0x6c,11,0,static_cast<std::uint8_t>(owner),static_cast<std::uint8_t>(source),2};for (std::size_t byte=0;byte<4;++byte) packet[7+byte]=static_cast<std::uint8_t>(std::bit_cast<std::uint32_t>(value)>>(byte*8));SendLocalPacket(9,packet); }; // 원문 비정렬 signed 금액의 네BYTE를 쓰고 같은 실제9 송신을 사용한다.
     hooks.predictable=[&s] { if (!s.services.construction.configInt) throw std::logic_error("자원 프레임의 현재 Config 장치 미연결");return s.services.construction.configInt("predictableGeysers",0)==1; };hooks.wallSeconds=s.services.construction.wallSeconds;
-    hooks.budget=[&s] { return o::WorldGeyserBudget(s.core.pool.Edition(),s.core.ownerMode.battle,s.players,s.battleOptions); };hooks.density=[&s] { return o::WorldGeyserDensity(s.battleOptions[17]); };hooks.spacing=[&s] { return o::WorldGeyserSpacing(s.battleOptions[6]); };
+    hooks.budget=[&s] { return o::WorldGeyserBudget(s.core.pool.Edition(),s.core.ownerMode.battle,s.players,s.battleOptions,s.services.ai.skirmishPlayers ? s.services.ai.skirmishPlayers() : 0U,true); };hooks.density=[&s] { return o::WorldGeyserDensity(s.battleOptions[17]); };hooks.spacing=[&s] { return o::WorldGeyserSpacing(s.battleOptions[6]); };
     hooks.whole=[&bounds] { return bounds.Whole(); };hooks.partition=[&bounds](auto cell) { return bounds.Partition(cell,3); };
     hooks.count=[&s,&aux](auto area) { const auto lower=RawCursorPosition::TruncatePoint({area.left,area.top}),upper=RawCarrierDropPoint::Snap({area.right,area.bottom});RawSquidFinder finder(s.core.pool,s.core.hash,s.core.types);std::uint32_t count{};for (auto sid=finder.Begin({FortSaveCoordinate(lower[0]),FortSaveCoordinate(lower[1]),FortSaveCoordinate(upper[0]),FortSaveCoordinate(upper[1])},1);sid.value;sid=finder.Next()) if (s.core.pool.Slot(sid)[10]==aux.GeyserType()) ++count;return count; }; // 원문 flags1 finder의 순서/중복과 현재TYPE를 그대로 센다.
     hooks.geyserCount=[&s] { return s.assetState.Geysers().Count(); };hooks.typeCost=[&s,&aux] { if (aux.GeyserType()>=s.core.types.size()) throw std::out_of_range("자원 프레임의 현재 TYPE 범위");return s.core.types[aux.GeyserType()].cost; };hooks.choose=[&s](auto count) { return s.random.Next(count); };

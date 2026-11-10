@@ -18,7 +18,9 @@ struct WorldGeyserBoundsHooks {
 // 원문 표의 유효 옵션0~3을 간격3/4/5/6으로 읽는다. 물리 표 밖은 호스트 오류다.
 std::int32_t WorldGeyserSpacing(std::uint8_t selection);
 //0041c8e0: battle에서 Player1~8의+2c 비영/숨김BYTE0인 수를 n으로 세어(12-n)*n을 반환한다.
-std::int32_t WorldGeyserBudget(OriginalEdition edition,bool battle,std::span<const std::uint8_t> players,std::span<const std::uint8_t> options);
+// 10차 NB29/12차 스커미시: assumedPlayers가 0이 아니고 battle이 아니면 그 수를 참가자 수로 쓴다(스커미시의 사람+AI 수). monotone이 참이면 7명 이상에서 예산이 줄지 않게
+// 인당 6개로 이어 붙인다(원문 (12-n)*n은 6명에서 최대 36이고 7명 35·8명 32로 내려간다). 기본(0,거짓)은 원문 공식 그대로다.
+std::int32_t WorldGeyserBudget(OriginalEdition edition,bool battle,std::span<const std::uint8_t> players,std::span<const std::uint8_t> options,std::uint32_t assumedPlayers=0,bool monotone=false);
 // 큰 지도 생성 부모00486440이 사용하는 실제00485bc0/00485cc0이다.
 class RawWorldGeyserBounds {
 public:

@@ -12,7 +12,7 @@
 | 금지 유닛(선택, 최대 5개, Outpost 포함) | 27개 후보(발전기·발사기·캐논·블로커·바리케이드·공중 유닛과 생산 건물·지상 유닛·Bulf·**Outpost**). 항목을 고르면 `[X]`로 표시하고 같은 항목을 다시 고르면 해제한다. **6번째는 무시**하고 5개가 되면 안내 문구가 나온다. `Clear all` 제공. 내부 타입 이름을 같이 보여 짝이 틀린 영어 이름이 있어도 구별된다. |
 | AI별 난이도와 동맹 | 각 AI마다 난이도(Easy/Normal/Hard, 옵션 난이도 대신)와 진영(Enemy/Ally)을 고른다. 난이도는 11차의 AI 단위 값(`services.ai.difficulty(owner,enemy)`)을 쓰며 **스커미시 실행 중에는 동맹 AI도 자기 난이도**를 쓴다(`skirmishRun`). |
 | 시작/취소 | `Start`: 설정으로 미션 대본과 fort를 만들어 로딩 뒤 바로 시작한다. `Cancel`: Campaign 메뉴로 돌아간다. |
-| 랜덤 섬 배치·간헐천 | **간헐천:** 생성 대본에 `randGeysers=1`(멀티플레이어의 전체 간헐천 생성 `GenerateWorldGeysers`)·`moreGeysers=1`. **섬 배치:** 기존 다인용 fort 가운데 소유자가 1~N+1이고 AI N명 대본이 있는 맵(`SkirmishMapList.inc`, 318개: AI 1명 68·2명 47·3명 65·4명 50·5명 22·6명 16·7명 50)에서 **무작위로 하나를 고른다.** → 아래 한계 참고. |
+| 랜덤 섬 배치·간헐천 | **간헐천:** 생성 대본에 `randGeysers=1`(멀티플레이어의 전체 간헐천 생성 `GenerateWorldGeysers`)·`moreGeysers=1`. 원문 예산(`WorldGeyserBudget`)은 전투 모드가 아니면 참가자 수를 0으로 세어 예산이 0이므로, 스커미시는 **사람+AI 참가자 수**(`CampaignAiServices::skirmishPlayers`)로 같은 공식을 쓴다(1293 이후 보강, 제품 1296: 인원 수에 따라 맵 기본 간헐천 위에 더해진다). **섬 배치:** 기존 다인용 fort 가운데 소유자가 1~N+1이고 AI N명 대본이 있는 맵(`SkirmishMapList.inc`, 318개: AI 1명 68·2명 47·3명 65·4명 50·5명 22·6명 16·7명 50)에서 **무작위로 하나를 고른다.** → 아래 한계 참고. |
 | 설정 저장 | `skirmishAiCount`/`skirmishAi{2..8}Diff`·`...Ally`/`skirmishBans`를 설정 파일에 저장한다(다음 실행에도 유지). |
 
 ## 2. 시작 흐름(생성 미션)
