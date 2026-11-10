@@ -97,7 +97,7 @@ target_sources(netstorm PRIVATE
     RawTutorialOne.cpp RawTutorialOne.h RawTotalMade.cpp RawTotalMade.h
     RawTutorialTwo.cpp RawTutorialTwo.h
     RawLocalGeyser.cpp RawLocalGeyser.h
-    RawMissionStart.cpp RawMissionStart.h RawMissionAiSettings.cpp RawMissionAiSettings.h RawAiCreate.cpp RawAiCreate.h
+    RawMissionStart.cpp RawMissionStart.h RawMissionAiSettings.cpp RawMissionAiSettings.h RawAiCreate.cpp RawAiCreate.h AiDifficulty.cpp AiDifficulty.h
     RawTextToken.cpp RawTextToken.h
     RawPlayerTechnology.cpp RawPlayerTechnology.h
     RawPlayerGeyserBounds.cpp RawPlayerGeyserBounds.h

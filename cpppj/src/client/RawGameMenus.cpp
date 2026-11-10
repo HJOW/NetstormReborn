@@ -130,6 +130,11 @@ std::uint32_t RawGameMenus::Options() const {
         for (const auto& language:hooks_.compatibilityLanguages) Check(language.checked ? 1U : 0U,language.label,0x542988,language.number); // 항목 이름은 번역하지 않고 각 언어 자신의 표기를 쓴다.
         label=Text("Language");child=Need(hooks_.take)();Need(hooks_.submenu)(label,child,1,0);
     }
+    if (!hooks_.compatibilityDifficulty.empty()) { // 11차 난이도: 원본에 없는 Difficulty 하위 메뉴이며 항목은 번역하고, 선택은 Tell 구간 Patch1101.SetDifficulty(값)이 difficulty 설정을 쓴다.
+        Need(hooks_.vertical)();
+        for (const auto& level:hooks_.compatibilityDifficulty) Check(level.checked ? 1U : 0U,Text(level.label),0x542948,std::string("Patch1101.SetDifficulty(")+std::to_string(level.number)+')'); // 현재 난이도에 체크한다.
+        label=Text("Difficulty");child=Need(hooks_.take)();Need(hooks_.submenu)(label,child,1,0);
+    }
     Need(hooks_.separator)();
     Toggle("sound","Sound On",0x5c7b14);Toggle("music","Play Music",0x5c7b14);Toggle("playWind","Wind Noise",0x5c7b14);Toggle("swapLeftRightSpeakers","Speaker Swap L/R",0x5c7b14);
     // 각음량하위는현재전역을매행조회하고제목번역뒤현재장치활성을읽는다.

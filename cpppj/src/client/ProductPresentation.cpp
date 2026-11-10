@@ -18,7 +18,11 @@ AI was used to assist analysis, programming, documentation, and verification.<br
 The original game creators are acknowledged in the original Credits entries.
 $Button=Back,Tell,Credits
 $Button=Cancel,Tell,Blank
-)"; // 요청한 제목/HJOW 개발/AI 사용 설명을 현재 영문 UI 글꼴로 표시한다.
+
+[SetDifficulty]
+<$Config,difficulty={param.1}>
+<$MenuJustClosed,0>
+)"; // 요청한 제목/HJOW 개발/AI 사용 설명을 현재 영문 UI 글꼴로 표시한다. 11차: 같은 객체에 옵션 메뉴 난이도 선택 구간(Patch1101.SetDifficulty(1|2|3))을 둔다.
 // 한국어 모드의 11.01 패치 크레딧 본문이다. 영어 본문과 같은 구성이며 새 항목 이름과 제목은 사용자 지정 표기를 따른다.
 constexpr std::string_view kPatchCreditsKorean=R"(<background="nsstart">
 <h2>{H2}NetStorm 11.01 패치 크레딧</h2>

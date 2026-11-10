@@ -3878,6 +3878,11 @@ target_sources(netstorm_tests PRIVATE KnownBugTests.cpp)
 add_executable(netstorm_known_bug_tests FocusedTestMain.cpp KnownBugTests.cpp)
 target_link_libraries(netstorm_known_bug_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_known_bug_tests)
+# 11차 난이도: AI 설정 600BYTE의 쉬움/보통/어려움 배율 계산 검사(창 없는 일반 검사, 1292).
+target_sources(netstorm_tests PRIVATE AiDifficultyTests.cpp)
+add_executable(netstorm_ai_difficulty_tests FocusedTestMain.cpp AiDifficultyTests.cpp)
+target_link_libraries(netstorm_ai_difficulty_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_ai_difficulty_tests)
 # 11차 일본어: 가나/한자 부호화와 일본어 번역표 계약 검사(창 없는 일반 검사, 1287).
 target_sources(netstorm_tests PRIVATE JapaneseTextTests.cpp)
 target_sources(netstorm_korean_text_tests PRIVATE JapaneseTextTests.cpp)

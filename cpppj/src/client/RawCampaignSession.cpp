@@ -2804,6 +2804,13 @@ struct RawCampaignSession::Impl {
         createHooks.destroyTemple=[this](std::uint32_t sid,std::uint32_t flags) {
             if (sid>65535 || sid>=core.pool.Capacity()) throw std::out_of_range("실제 Session AI 신전 SID 범위 오류");world.Destroy(Sid{static_cast<std::uint16_t>(sid)},flags);
         };
+        // 11차 난이도: 데모와 로컬 플레이어/동맹의 AI는 적이 아니므로 보통으로 두고, 나머지 AI에만 클라이언트가 공급한 난이도를 쓴다.
+        createHooks.difficulty=[this](std::uint32_t owner)->std::uint32_t {
+            if (!services.ai.difficulty || owner>=9 || services.missionOutcome.demo()!=0) return 0;
+            const auto local=playerState.battleOwner;
+            if (owner==local || (local<9 && (Read(players,local*0xb4+0x54)&(1U<<owner)))) return 0; // Player+54는 소유자별 동맹 비트 마스크다.
+            return services.ai.difficulty(owner);
+        };
         createHooks.construct=[this](std::uint32_t owner,std::span<const std::uint8_t> settings,std::size_t bytes) { return aiConstructor->Construct(owner,settings,bytes); };
         createHooks.initialUpdate=[this](std::uint32_t token,std::span<const std::uint8_t> settings) { aiInitial->Update(token,settings); };
         aiCreate=std::make_unique<RawAiCreate>(core.pool.Edition(),*participation,std::move(createHooks));

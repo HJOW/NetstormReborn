@@ -1,5 +1,6 @@
 // 검사 관찰 콜백을 사용하지 않고 현재 클라이언트의 실제 서비스를 빌린다.
 #include "client/CampaignClientServices.h"
+#include "o/AiDifficulty.h" //11차: 난이도 설정 키와 값 규칙을 쓴다.
 #include "client/ClientMetaBattleDescription.h" //일반71h도 같은 실제 Client의 설명/표시 장치를 빌린다.
 #include "client/NativeMetaBattleOptions.h" //일반 로그인67h도 실제 CS 수신 자식과 같은 현재 장치를 사용한다.
 #include "client/MissionFortRequest.h"
@@ -115,6 +116,8 @@ void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
     ai.participation.addChat=[&client](std::uint32_t subscriber,std::string_view name,std::uint32_t channel) {
         static_cast<void>(client.ChatChannels().AddToChannel(subscriber,name,channel));
     };
+    // 11차 난이도: 옵션 메뉴가 저장한 difficulty 설정을 AI 생성 시점마다 읽는다. 값이 없으면 0이라 보통이다.
+    ai.difficulty=[&client](std::uint32_t) { return static_cast<std::uint32_t>(client.Configuration().GetInt(std::string(o::kDifficultyConfigKey))); };
     // Xlat 키로 바꾸지 않는다. 현재 언어 Config/치환 결과를 매 요청마다 원본 Windows-1252로 인코딩한다.
     ai.defaultName=[&client] {
         const auto bytes=o::EncodeDisplayText(client.Configuration().PathSpec("defaultAiName")); // 현재 언어 교체/설정 변경을 반영한 실제 좁은 바이트다.

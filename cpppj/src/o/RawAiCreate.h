@@ -1,5 +1,6 @@
 // PATCH00417e50의 실제 AI 생성/기존 소유자/NoTemple 순서를 엄격한 생성자 경계로 복원한다.
 #pragma once
+#include "o/AiDifficulty.h"
 #include "o/RawMissionAiSettings.h"
 #include "o/RawPlayerParticipation.h"
 
@@ -12,6 +13,9 @@ struct AiCreateHooks {
     std::function<void(std::uint32_t,std::uint32_t)> destroyTemple; // 실제 신전가상삭제(SID,0x400000)다.
     std::function<std::uint32_t(std::uint32_t,std::span<const std::uint8_t>,std::size_t)> construct; // 실제 new(0xb08)→00416860이며 반환0은 안전한 호출 계약에서 거부한다.
     std::function<void(std::uint32_t,std::span<const std::uint8_t>)> initialUpdate; // 00414710의 실제 기술/분류 초기화 전체다.
+    // difficulty: 11차 난이도. owner의 AI 난이도(설정 파일 값 1쉬움/2보통/3어려움)를 돌려준다. 선택 사항이며 없거나 보통이면 설정을 그대로 쓴다.
+    // 적이 아닌 AI(동맹/데모)는 호출자가 보통(2 또는 0)으로 돌려준다.
+    std::function<std::uint32_t(std::uint32_t)> difficulty;
 };
 // 이 wrapper는 brain을 합성하지 않는다. 생성자와 initialUpdate가 없으면 flags20을 켜지 않는다.
 class RawAiCreate {

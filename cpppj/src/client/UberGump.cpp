@@ -68,6 +68,7 @@
 #include "client/ConfigurationCommandInput.h" //원문 모드별 palette와 공유 priority/State 일반 명령을 기존 부모에 연결한다.
 #include "client/RendererDiagnostics.h" //명시특수전역뒤원문7/10/13키의현재DWORD만토글한다.
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
+#include "o/AiDifficulty.h" //11차: 옵션 메뉴 Difficulty 하위 메뉴의 단계 값이다.
 #include "client/LanguageOptions.h" //6차: 옵션 메뉴 Language 하위 메뉴가 한국어 번호(kKoreanLanguageNumber)를 쓴다.
 #include "client/DisplayTextInput.h" // 확정 Unicode 사건은 같은 Gump 입력에만 전달한다.
 #include "client/GameMenuActions.h"
@@ -290,6 +291,11 @@ std::string FontBytes(std::string_view text) {
 // 6차 한국어: 옵션 메뉴 Language 하위 메뉴 항목이다. 영어(원문 번호0/1)와 한국어(7)를 각 언어 자신의 이름으로 보이고 현재 언어에 체크한다.
 std::vector<GameMenuLanguage> LanguageMenuChoices(int current) {
     return {{FontBytes("English"),0U,current==0 || current==1},{FontBytes("한국어"),kKoreanLanguageNumber,current==static_cast<int>(kKoreanLanguageNumber)},{FontBytes("日本語"),kJapaneseLanguageNumber,current==static_cast<int>(kJapaneseLanguageNumber)}}; // 11차 일본어: 각 언어 자신의 표기로 보인다.
+}
+// 11차: 옵션 메뉴 Difficulty 하위 메뉴 항목이다. label은 번역 키이고 설정값이 없거나 범위 밖이면 보통(기본값)에 체크한다.
+std::vector<GameMenuLanguage> DifficultyMenuChoices(std::int32_t current) {
+    const auto level=o::AiDifficultyFromValue(static_cast<std::uint32_t>(current));
+    return {{"Easy",1U,level==o::AiDifficulty::Easy},{"Normal",2U,level==o::AiDifficulty::Normal},{"Hard",3U,level==o::AiDifficulty::Hard}};
 }
 // 7차: 후처리 장치가 있으면 옵션 메뉴 훅에 FSR 해상도, 표시 크기 조회, Anti-Aliasing/FSR 토글을 연결한다. 장치가 없으면 원문 구성 그대로 둔다.
 }
@@ -1117,6 +1123,7 @@ GameMenusHooks UberGump::CurrentGameMenuHooks() {
     hooks.editingMission=[this] { return missionRuntime_ ? missionRuntime_->mode64 : 0U; };hooks.demo=[this] { return missionRuntime_ ? missionRuntime_->gate.demo : 0U; }; //원문 Guide getter는 현재 미션이 없으면0을 돌려준다.
     hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른 Windows10/11 호환 화면비 추가이며 기본 원문 세 해상도는 유지한다.
     hooks.compatibilityLanguages=LanguageMenuChoices(client_.LanguageNumber()); // 6차: 옵션 메뉴 Language 하위 메뉴(영어/한국어)다.
+    hooks.compatibilityDifficulty=DifficultyMenuChoices(client_.Configuration().GetInt(std::string(o::kDifficultyConfigKey))); // 11차: 옵션 메뉴 Difficulty 하위 메뉴(쉬움/보통/어려움)다.
     ConnectPostProcessMenu(hooks); // 7차: 후처리 장치가 있으면 FSR 해상도와 Anti-Aliasing/FSR 토글을 추가한다.
     return hooks;
 }
@@ -1155,6 +1162,7 @@ void UberGump::OpenGameMenu(bool playerList) {
         if (client_.GameplayGlobals()->world.editor) hooks.scenarioCommand=kEditorScenarioOpen; // 일반 전투/캠페인 메뉴에는 노출하지 않는다.
         hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른Windows10/11 DIB 호환 화면비만 명시 추가하며 기본 원문 검사는 빈 목록을 유지한다.
         hooks.compatibilityLanguages=LanguageMenuChoices(client_.LanguageNumber()); // 6차: 게임 중 옵션 메뉴에도 같은 Language 하위 메뉴를 둔다.
+        hooks.compatibilityDifficulty=DifficultyMenuChoices(client_.Configuration().GetInt(std::string(o::kDifficultyConfigKey))); // 11차: 게임 중 옵션 메뉴에도 같은 Difficulty 하위 메뉴를 둔다(다음 AI 생성부터 적용).
         ConnectPostProcessMenu(hooks); // 7차: 게임 중 옵션 메뉴에도 같은 후처리 항목을 둔다.
         RawGameMenus children(std::move(hooks));
         if (playerList) return children.Players(true); // 원본004d8a56은 명령 인자와 무관하게 fancy=1을 넘기며 현재 루트 중앙에 직접 부착한다.
