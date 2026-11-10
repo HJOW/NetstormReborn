@@ -1,0 +1,1300 @@
+{
+  "unit": 1262,
+  "product": 1261,
+  "host": "HJOW-Athlon",
+  "originalReceiverRows": 92,
+  "originalReceiverEntryAddresses": 86,
+  "originalMetadataRows": 104,
+  "retiredTypes": [
+    "7f",
+    "80"
+  ],
+  "enabledOriginalReceiverRows": 91,
+  "enabledOriginalReceiverEntryAddresses": 85,
+  "enabledOriginalMetadataRows": 102,
+  "observerOnlyRows": 11,
+  "c3Rows": 7,
+  "nullObserverRows": 9,
+  "rows": [
+    {
+      "type": "0b",
+      "entry": "004b3af0",
+      "length": 65535,
+      "observer": "00409fe0",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 303,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "0c",
+      "entry": "004437f0",
+      "length": 65535,
+      "observer": "0040a020",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "c3"
+    },
+    {
+      "type": "0f",
+      "entry": "004b4250",
+      "length": 65535,
+      "observer": "0040a070",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 223,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "10",
+      "entry": null,
+      "length": 8,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "observer-only"
+    },
+    {
+      "type": "11",
+      "entry": null,
+      "length": 12,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "observer-only"
+    },
+    {
+      "type": "12",
+      "entry": null,
+      "length": 12,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "observer-only"
+    },
+    {
+      "type": "16",
+      "entry": null,
+      "length": 65535,
+      "observer": "0040a190",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "observer-only"
+    },
+    {
+      "type": "17",
+      "entry": null,
+      "length": 14,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "observer-only"
+    },
+    {
+      "type": "1a",
+      "entry": "004b4df0",
+      "length": 65535,
+      "observer": "0040a1e0",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 170,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "1b",
+      "entry": "004b8b20",
+      "length": 38,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 179,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "1c",
+      "entry": null,
+      "length": 65535,
+      "observer": "0040a270",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "observer-only"
+    },
+    {
+      "type": "1d",
+      "entry": "004b8ac0",
+      "length": 13,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 196,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "1e",
+      "entry": null,
+      "length": 14,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "observer-only"
+    },
+    {
+      "type": "1f",
+      "entry": null,
+      "length": 12,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "observer-only"
+    },
+    {
+      "type": "20",
+      "entry": "004b4710",
+      "length": 65535,
+      "observer": "0040a340",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientMetaPacketReceivers.cpp",
+      "line": 168,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "21",
+      "entry": "004b46d0",
+      "length": 65535,
+      "observer": "0040a390",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientMetaPacketReceivers.cpp",
+      "line": 175,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "22",
+      "entry": "004b4820",
+      "length": 17,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientMetaPacketReceivers.cpp",
+      "line": 170,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "23",
+      "entry": "004b4640",
+      "length": 20,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientMetaPacketReceivers.cpp",
+      "line": 177,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "24",
+      "entry": "004b4600",
+      "length": 5,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientMetaPacketReceivers.cpp",
+      "line": 179,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "25",
+      "entry": "004b47e0",
+      "length": 8,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientMetaPacketReceivers.cpp",
+      "line": 181,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "26",
+      "entry": "004b45a0",
+      "length": 65535,
+      "observer": "0040a3e0",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 225,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "27",
+      "entry": "004a7800",
+      "length": 65535,
+      "observer": "0040a450",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 27,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "28",
+      "entry": "004b8940",
+      "length": 18,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 29,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "29",
+      "entry": "004b3b40",
+      "length": 34,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 27,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "2a",
+      "entry": "004b3d30",
+      "length": 65535,
+      "observer": "0040a540",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 28,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "2b",
+      "entry": "004912d0",
+      "length": 65535,
+      "observer": "0040a590",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 28,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "2c",
+      "entry": "00433c30",
+      "length": 35,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 22,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "2d",
+      "entry": "004327b0",
+      "length": 18,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 23,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "2e",
+      "entry": "00433170",
+      "length": 8,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 24,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "2f",
+      "entry": "004332c0",
+      "length": 15,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeConstructionPacketReceivers.cpp",
+      "line": 18,
+      "registrationKind": "global-fixed-construction"
+    },
+    {
+      "type": "30",
+      "entry": "00489ee0",
+      "length": 65535,
+      "observer": "0040a660",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 25,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "31",
+      "entry": "0044dba0",
+      "length": 65535,
+      "observer": "0040a6b0",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 26,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "32",
+      "entry": "0044dc20",
+      "length": 32,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 283,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "33",
+      "entry": "004a71c0",
+      "length": 18,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 27,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "34",
+      "entry": "004333f0",
+      "length": 12,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 28,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "35",
+      "entry": "0046e940",
+      "length": 20,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 29,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "37",
+      "entry": "004427b0",
+      "length": 65535,
+      "observer": null,
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeConstructionPacketReceivers.cpp",
+      "line": 18,
+      "registrationKind": "global-fixed-construction"
+    },
+    {
+      "type": "38",
+      "entry": "0045e410",
+      "length": 65535,
+      "observer": null,
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 30,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "39",
+      "entry": "0045e2b0",
+      "length": 65535,
+      "observer": null,
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 31,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "3a",
+      "entry": "0046a0c0",
+      "length": 65535,
+      "observer": null,
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 32,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "3b",
+      "entry": "00466d30",
+      "length": 65535,
+      "observer": null,
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 33,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "3c",
+      "entry": "00466b60",
+      "length": 65535,
+      "observer": null,
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 34,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "3d",
+      "entry": "00491220",
+      "length": 9,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 30,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "3e",
+      "entry": "00444af0",
+      "length": 25,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeConstructionPacketReceivers.cpp",
+      "line": 18,
+      "registrationKind": "global-fixed-construction"
+    },
+    {
+      "type": "3f",
+      "entry": "004441b0",
+      "length": 65535,
+      "observer": "0040a800",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeConstructionPacketReceivers.cpp",
+      "line": 18,
+      "registrationKind": "global-fixed-construction"
+    },
+    {
+      "type": "40",
+      "entry": "00428570",
+      "length": 18,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 22,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "41",
+      "entry": "0042dc90",
+      "length": 65535,
+      "observer": "0040a8d0",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/RawChatRelay.cpp",
+      "line": 61,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "42",
+      "entry": "004437f0",
+      "length": 12,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "c3"
+    },
+    {
+      "type": "4a",
+      "entry": "00432710",
+      "length": 7,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 35,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "4b",
+      "entry": "004326e0",
+      "length": 6,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 36,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "4d",
+      "entry": "004437f0",
+      "length": 10,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "c3"
+    },
+    {
+      "type": "4f",
+      "entry": "00426520",
+      "length": 9,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 22,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "50",
+      "entry": "00444bc0",
+      "length": 9,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 22,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "51",
+      "entry": "004dc050",
+      "length": 8,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeConstructionPacketReceivers.cpp",
+      "line": 18,
+      "registrationKind": "global-fixed-construction"
+    },
+    {
+      "type": "52",
+      "entry": "004a71a0",
+      "length": 5,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 31,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "53",
+      "entry": "004436b0",
+      "length": 6,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 37,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "54",
+      "entry": "004436f0",
+      "length": 8,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeConstructionPacketReceivers.cpp",
+      "line": 18,
+      "registrationKind": "global-fixed-construction"
+    },
+    {
+      "type": "55",
+      "entry": "004437f0",
+      "length": 65535,
+      "observer": "0040aae0",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "c3"
+    },
+    {
+      "type": "56",
+      "entry": "004437f0",
+      "length": 65535,
+      "observer": "0040ab20",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "c3"
+    },
+    {
+      "type": "57",
+      "entry": "004437f0",
+      "length": 65535,
+      "observer": "0040ab60",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "c3"
+    },
+    {
+      "type": "58",
+      "entry": "00453d70",
+      "length": 16,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeConstructionPacketReceivers.cpp",
+      "line": 18,
+      "registrationKind": "global-fixed-construction"
+    },
+    {
+      "type": "5a",
+      "entry": "004437f0",
+      "length": 5,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "c3"
+    },
+    {
+      "type": "5b",
+      "entry": "004266c0",
+      "length": 6,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 38,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "5c",
+      "entry": "0041e860",
+      "length": 6,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 23,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "5f",
+      "entry": "00420bf0",
+      "length": 65535,
+      "observer": "0040aca0",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 24,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "60",
+      "entry": "004267c0",
+      "length": 10,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 23,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "61",
+      "entry": "0048bfe0",
+      "length": 11,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 23,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "62",
+      "entry": "00433120",
+      "length": 65535,
+      "observer": "0040ad70",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 39,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "63",
+      "entry": "004a7510",
+      "length": 8,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 27,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "64",
+      "entry": "004b6180",
+      "length": 5,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 31,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "65",
+      "entry": "00432850",
+      "length": 13,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 40,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "66",
+      "entry": "004b8a10",
+      "length": 12,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 203,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "67",
+      "entry": "004b4900",
+      "length": 65535,
+      "observer": "0040ae80",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientMetaPacketReceivers.cpp",
+      "line": 172,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "68",
+      "entry": null,
+      "length": 5,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "observer-only"
+    },
+    {
+      "type": "69",
+      "entry": "004b49e0",
+      "length": 65535,
+      "observer": "0040af10",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/o/RawTechnologyTypesPacket.cpp",
+      "line": 42,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "6a",
+      "entry": "0044a280",
+      "length": 65535,
+      "observer": null,
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 41,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "6b",
+      "entry": "00448e90",
+      "length": 10,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 24,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "6c",
+      "entry": "004d56f0",
+      "length": 11,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeConstructionPacketReceivers.cpp",
+      "line": 18,
+      "registrationKind": "global-fixed-construction"
+    },
+    {
+      "type": "6d",
+      "entry": "00493f80",
+      "length": 8,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 25,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "6e",
+      "entry": "004a7050",
+      "length": 8,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 30,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "6f",
+      "entry": "004900e0",
+      "length": 6,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 21,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "70",
+      "entry": "004cf980",
+      "length": 65535,
+      "observer": "0040b090",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 42,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "71",
+      "entry": "004b49c0",
+      "length": 65535,
+      "observer": "0040b0d0",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 233,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "72",
+      "entry": "004b3bc0",
+      "length": 65535,
+      "observer": "0040b110",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 30,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "73",
+      "entry": "0045e5d0",
+      "length": 65535,
+      "observer": null,
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 43,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "74",
+      "entry": "0045e4f0",
+      "length": 65535,
+      "observer": null,
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 44,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "75",
+      "entry": "004205f0",
+      "length": 65535,
+      "observer": "0040b150",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 25,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "76",
+      "entry": "004207a0",
+      "length": 6,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 25,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "77",
+      "entry": "0048f7f0",
+      "length": 6,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 21,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "78",
+      "entry": "0048f880",
+      "length": 6,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 31,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "79",
+      "entry": "0048f8f0",
+      "length": 6,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 21,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "7a",
+      "entry": "00434080",
+      "length": 65535,
+      "observer": "0040b2a0",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 45,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "7b",
+      "entry": "004b4790",
+      "length": 65535,
+      "observer": "0040b2f0",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 288,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "7c",
+      "entry": "004b2cc0",
+      "length": 28,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 264,
+      "registrationKind": "existing-global-fixed"
+    },
+    {
+      "type": "7d",
+      "entry": "0041e320",
+      "length": 65535,
+      "observer": "0040b390",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeCarrierPacketReceivers.cpp",
+      "line": 24,
+      "registrationKind": "global-fixed-carrier"
+    },
+    {
+      "type": "7e",
+      "entry": "00497030",
+      "length": 28,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 46,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "81",
+      "entry": "004b3e90",
+      "length": 65535,
+      "observer": "0040b460",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 29,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "84",
+      "entry": "004a6f30",
+      "length": 8,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeLoginPacketReceivers.cpp",
+      "line": 29,
+      "registrationKind": "global-fixed-login"
+    },
+    {
+      "type": "85",
+      "entry": null,
+      "length": 65535,
+      "observer": "0040aed0",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "observer-only"
+    },
+    {
+      "type": "86",
+      "entry": "00426490",
+      "length": 20,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/NativeGameplayPacketReceivers.cpp",
+      "line": 47,
+      "registrationKind": "global-fixed-gameplay"
+    },
+    {
+      "type": "87",
+      "entry": null,
+      "length": 274,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "line": 70,
+      "registrationKind": "observer-only"
+    },
+    {
+      "type": "88",
+      "entry": "004b4680",
+      "length": 98,
+      "observer": "0040b380",
+      "version": 1,
+      "policy": 0,
+      "source": "cpppj/src/client/ClientMetaPacketReceivers.cpp",
+      "line": 183,
+      "registrationKind": "existing-global-fixed"
+    }
+  ],
+  "extraOutsideOriginal": [
+    {
+      "type": "01",
+      "entry": "004e2f00",
+      "installation": "실제 TCP/내부/Editor 생성자의 bootstrap",
+      "defaultInstaller": false
+    },
+    {
+      "type": "02",
+      "entry": "004b6660",
+      "installation": "실제 Client 기본 설치 부모",
+      "defaultInstaller": true
+    },
+    {
+      "type": "05",
+      "entry": "004c1f60",
+      "installation": "원문 InitializeServer/Attach 시점만; PersistCanonicalBaseline",
+      "defaultInstaller": false
+    }
+  ],
+  "allThreeOutsideOriginalIncluded": {
+    "receiverMessageKeys": 94,
+    "receiverEntryAddresses": 88,
+    "unconditionalDefaultTable": false
+  },
+  "lengthWordsCompared": 138,
+  "fullNativeDefaultRegistrySourceComparison": true,
+  "fullEveryProcessOwnerAudit": false,
+  "fullNoWorldComplete": false,
+  "fullM6Complete": false,
+  "allGoalComplete": false,
+  "sourceFilesCompared": 2283,
+  "protectedFilesCompared": 2808,
+  "productsSha256": {
+    "Netstorm.exe": "badaadd75687f500407acbbb5f467f4b240f0ea4df176b7978e531ca0ce0e385",
+    "R.exe": "128ce531b94def4a92bb6dcebcb0c94c4693d7aac1940d381b0ddc85b2df54f7"
+  },
+  "newSourceChanges": 0,
+  "newBuilds": 0,
+  "newTests": 0,
+  "newRuntimeExecutions": 0,
+  "newMpExecutions": 0,
+  "newDecompilation": false,
+  "writerInventoryFiles": 55,
+  "writerInventoryLines": 336,
+  "rawDirectory": "extracted/cpp-resume-1262/",
+  "date": "2026-11-10",
+  "version": "11.01",
+  "sourceAndProductsUnchanged": true,
+  "protectedUnchanged": true,
+  "m6lImplementationAndStaticRegistryAuditComplete": true,
+  "m6nEveryProcessOwnerAuditComplete": false,
+  "newMpTests": 0,
+  "newZip": false,
+  "manualSourceTraces": [
+    {
+      "path": "cpppj/src/client/ClientCampaignTransport.cpp",
+      "scope": "MakeClientCampaignTransport",
+      "finding": "공유 Registry/표·현재 Client 전역·실제 장기 기록 owner를 사용하고 Publish 뒤 BindSession 전에 기본 F를 설치한다."
+    },
+    {
+      "path": "cpppj/src/client/MetaConnectionRuntime.cpp",
+      "scope": "생성자",
+      "finding": "실제 TCP/UDP가 같은 등록표/Registry를 공유한다. 기본 설치 뒤16/1c/1e/1f의 기존 metadata만 다시 쓴다."
+    },
+    {
+      "path": "cpppj/src/client/UberEditor.inc",
+      "scope": "Editor 생성",
+      "finding": "실제 Editor 생성 뒤 Open 전에 같은 기본 설치 부모를 호출한다."
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSession.cpp",
+      "scope": "Native gameplay/Editor 등록과 반납",
+      "finding": "알려진50행은 같은 F를 빌린다. Editor64/50행/41/52를 실제 저장 baseline으로 복구한다. typed의 short 등록은 별도 자연 분기다."
+    },
+    {
+      "path": "cpppj/src/client/RawCampaignSessionLogin.inc",
+      "scope": "Login 등록",
+      "finding": "31/27/63/Client8/72/3d/78의 Native 등록은 같은 고정 F를 대여하며32/71은 기존 long F를 빌린다."
+    },
+    {
+      "path": "cpppj/src/client/CampaignTransportServices.cpp",
+      "scope": "BindCompositeCampaignTransport",
+      "finding": "실제 전체 owner lease를 만들고2/69는 같은 F를 먼저 복사해 재등록한다. 독립 typed fallback을 Native F로 포장하지 않는다."
+    },
+    {
+      "path": "cpppj/src/o/PacketRegistrationTable.cpp",
+      "scope": "BindSession/Detach/PersistCanonicalBaseline",
+      "finding": "현재 전체 owner를 실행 중만 pin하고 touched 슬롯만 복구한다. clock5의 실제 전역 등록만 반환 baseline으로 승격한다."
+    },
+    {
+      "path": "cpppj/src/o/RawClockSynchronization.cpp",
+      "scope": "InitializeServer/Attach",
+      "finding": "원문 밖5는 실제 초기화 때만 설치한다. F는 LocalState·실제 Client 시계/Registry만 보유하며 과거 Login this를 저장하지 않는다."
+    },
+    {
+      "path": "cpppj/src/o/RawPacketDispatch.cpp",
+      "scope": "SnapshotReceiver/DeliverReceiver",
+      "finding": "queue에는 immutable F만 보관하며 short closure를 거부한다. 직접 배송의 실제 lease pin과 enqueue된 F를 구별한다."
+    },
+    {
+      "path": "cpppj/src/o/RawPacketDelay.cpp",
+      "scope": "Enqueue/Pump",
+      "finding": "같은 Client 분포/CRT/wall과 실제 node/address를 사용한다. F를 observer1 전에 고르고 현재 선언 길이를 복사한다. FIFO/strict deadline/주소·깊이 복구를 유지한다."
+    },
+    {
+      "path": "cpppj/src/client/ClientPacketSources.cpp",
+      "scope": "Resolve/Shutdown",
+      "finding": "weak 실제 Source 경로를 저장하고 선택 배송/최종 정리 때만 실제 device controlblock을 보유한다. 종료는 node 뒤 listener/weak 장부 순서다."
+    },
+    {
+      "path": "cpppj/src/client/ClientConnectionGlobals.cpp",
+      "scope": "BindDevicePin/ShutdownDevices",
+      "finding": "같은 node의 실제 Source를 보유하며 queue에 World/Session pin을 붙이지 않는다. App 최종 경계에서 순환을 끊는다."
+    },
+    {
+      "path": "cpppj/src/client/CompositeMissionTransport.cpp",
+      "scope": "Poll/Send",
+      "finding": "coordinator 전체를 Poll 중 보유하고 모든 backend의 Begin/End를 정상·예외 모두 처리한다. pending은 각1회/현재 정상22칸은 sentinel까지 읽는다."
+    },
+    {
+      "path": "cpppj/src/client/LocalTcpTransport.cpp",
+      "scope": "소켓/node/지연큐",
+      "finding": "같은 node에서 queue를 pump한다. activeCalls/depth와 retired 상태를 구별하고 queue를 실제 release 때 비운 뒤 최외곽 Poll에서 node를 수거한다."
+    },
+    {
+      "path": "cpppj/src/client/LocalUdpTransport.cpp",
+      "scope": "소켓/node/지연큐",
+      "finding": "실제12번 노드의 저장 주소로 배송 뒤 원래 recvfrom을 진행한다. queue/reset·소켓/노드 반납은 같은 실제 owner가 담당한다."
+    },
+    {
+      "path": "cpppj/src/client/ClientPacketRecord.cpp",
+      "scope": "Open/Write/Close",
+      "finding": "장기 FILE와 실제 FrameTime을 공유한다. 방향/현재 wall/frame/address/sender의21BYTE 접두 뒤 현재 선언 길이 본문을 기록하고 홈 경로에 쓴다."
+    },
+    {
+      "path": "cpppj/src/client/ClientMain.cpp",
+      "scope": "현재 표 공개/최종 소멸",
+      "finding": "현재 표는 Client의 실제 shared_ptr다. Source/queue/Session 정리 뒤 nativePacketTable을 반납하며 짧은 Source 수명과 혼동하지 않는다."
+    },
+    {
+      "path": "cpppj/src/client/LanBattleLobby.cpp",
+      "scope": "독립89h",
+      "finding": "별도 CLI 대기실 계약/queue OFF의 short receiver이며 원문92행에 합산하지 않는다."
+    },
+    {
+      "path": "cpppj/src/root/PacketRegistration.cpp",
+      "scope": "R 전용",
+      "finding": "R의 RegisterDirect/ResetCallbacks를 Client 활성표 writer로 세지 않는다."
+    }
+  ],
+  "excluded": [
+    "MP 단위/패킷/통신/게임/기록 실행",
+    "공격/포획/희생/승리·자연 완주",
+    "사용자 직접 확인",
+    "새 GUI/테스트/빌드"
+  ],
+  "next": "M6-m JoinTestBattle 실제 입력/현재 Source→기존1bh 직접 호출; M6-n 큰 NoWorld와 전수 process/caller 감사"
+}
