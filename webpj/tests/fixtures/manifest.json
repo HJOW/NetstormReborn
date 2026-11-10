@@ -1162,7 +1162,8 @@
       "required": false,
       "producer": "cpppj 복원 소스(타입 116개 적재 순서)",
       "consumers": [
-        "webpj/tests/picture.test.mjs"
+        "webpj/tests/picture.test.mjs",
+        "webpj/tests/data-lookup-order.test.mjs"
       ],
       "modules": [
         "webpj/www/assets/type-table.js"
@@ -1172,15 +1173,15 @@
       "cpppjSources": [
         "cpppj/src/o/TypeLoadOrder.cpp"
       ],
-      "scope": "TYPE_LOAD_ORDER 116개 교차 확인",
+      "scope": "TYPE_LOAD_ORDER 116개 교차 확인(picture), .type 읽기 순서(data-lookup-order, WB04-E273)",
       "text": null,
       "sha256": null,
       "bytes": null,
       "lines": null,
-      "fixtureCommit": "128f8b95",
-      "webCommit": "725dabf9",
+      "fixtureCommit": "128f8b956",
+      "webCommit": "cab321a7a",
       "cpppjBasis": {
-        "cpppj/src/o/TypeLoadOrder.cpp": "128f8b95"
+        "cpppj/src/o/TypeLoadOrder.cpp": "128f8b956"
       }
     },
     {
@@ -15755,7 +15756,7 @@
       "bytes": 84126,
       "lines": 4656,
       "fixtureCommit": "e5a1e7d1b",
-      "webCommit": "worktree",
+      "webCommit": "ae877f1f3",
       "cpppjBasis": {
         "cpppj/src/client/LanguageOptions.cpp": "5a2cd0474"
       }
@@ -15842,7 +15843,7 @@
       "bytes": 1063380,
       "lines": 101,
       "fixtureCommit": "b8deab82e",
-      "webCommit": "worktree",
+      "webCommit": "ae877f1f3",
       "cpppjBasis": {
         "cpppj/src/client/FontCacheFile.cpp": "b8deab82e"
       }

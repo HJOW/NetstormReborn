@@ -191,7 +191,7 @@ cpppj/src/client/MessageGump.cpp	port			todo	[client-default]
 cpppj/src/client/MetaImageGump.cpp	port			todo	[client-default]
 cpppj/src/client/MetaImageList.cpp	port			todo	[client-default]
 cpppj/src/client/MinimapGeometry.cpp	port			todo	[client-default]
-cpppj/src/client/Mission.cpp	port			todo	[client-default]
+cpppj/src/client/Mission.cpp	port			todo	[client-default] WB04-E273: 4-D 이월 — MissionScript(AppendArguments @파일·SectionNames·Set·CreateGuideMissionScript)는 웹 Config 확장과 Session 조립과 함께. 조회 순서(missionSpec 스크립트→loadFort→fortSpec .fort)는 tests/data-lookup-order.test.mjs 가 GameData 로 고정
 cpppj/src/client/MissionFortRequest.cpp	port			todo	[client-default]
 cpppj/src/client/MissionFortSource.h	port			todo	[client-default]
 cpppj/src/client/MissionGuideInput.cpp	port			todo	[client-default]
@@ -981,7 +981,7 @@ cpppj/src/o/StartupArchiveFiles.cpp	adapt	www/assets/game-data.js	1f00a25a	port	
 cpppj/src/o/Template.cpp	port	www/assets/fort.js	1f00a25a	partial	[o-default] WB03-U .fort 섹션 판독. Template manager 수명은 WB05
 cpppj/src/o/TerrainBuilder.cpp	port	www/assets/terrain-mask.js;www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] WB03-W/X 본섬 마스크·지면
 cpppj/src/o/TypeConstructors.inc	port	www/core/squid-constructors.js	1f00a25a	port	[o-default] WB04-D4(생성자 주소 188칸, cpppj .inc 에서 생성)
-cpppj/src/o/TypeLoadOrder.cpp	port	www/assets/type-table.js	1f00a25a	port	[o-default] WB03-T 로딩 순서
+cpppj/src/o/TypeLoadOrder.cpp	port	www/assets/type-table.js	1f00a25a	port	[o-default] WB03-T 로딩 순서 / WB04-E273: cpppj 목록 116개와 이름·순서 일치, .type 을 그 순서로 한 번씩만 읽음. tests/data-lookup-order.test.mjs
 cpppj/src/o/TypeParser.cpp	port	www/assets/type-table.js	1f00a25a	port	[o-default] .type 정의 해석(프레임 코드·특수 프레임·기준점·문법). WB04-E267: 기준선 판과 대조해 클러스터 images(파일+번호)·속성 조회(typeProperty/Number/String)·발자국(typeFootprint)을 더하고 AssetTests TypeParser 두 시험(샘플 정의 전부·거부 5종)과 숫자 토큰/주석/NUL 절단을 재현(tests/type-parser.test.mjs 6건, 변형 11개 전부 탐지). 기준선 뒤 변경 없음
 cpppj/src/o/UnpopVtables.inc	port	www/core/squid-vtables.js	1f00a25a	port	[o-default] WB04-D2(지원 자산 VT 83칸)
 cpppj/src/o/Win32FileError.cpp	exclude-host			-	[host-win32]

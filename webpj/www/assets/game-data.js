@@ -275,10 +275,12 @@ export class GameData {
             if (body !== null) return body;
         }
         // 현재 언어의 tell 스크립트를 먼저, 섹션이 없으면 영어 tell 스크립트를 찾는다. 본문이 비어 있는 섹션은 있는 것으로 본다.
-        for (const text of [this.tellText, this.fallbackTellText]) {
-            if (text === null) continue;
-            const range = sectionRange(text, name);
-            if (range) return text.slice(range.start, range.start + range.length);
+        // 영어 tell 스크립트는 현재 언어 tell 에 섹션이 없을 때만 읽는다(배열로 둘을 한꺼번에 평가하면 섹션이 있어도 영어 파일을 읽는다). (2026-11-10 WB04-E273: 조회 순서 시험에서 발견해 지연 평가로 고침)
+        for (const text of [() => this.tellText, () => this.fallbackTellText]) {
+            const script = text();
+            if (script === null) continue;
+            const range = sectionRange(script, name);
+            if (range) return script.slice(range.start, range.start + range.length);
         }
         return null;
     }
