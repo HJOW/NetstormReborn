@@ -6,6 +6,7 @@
 #include "o/RawSquidRegion.h" // 같은 TYPE 진단과 raw 지역 WORD의 getter/setter를 공유한다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/NativeGameplayPacketReceivers.h" //이동/Squid/문자열의 같은 실제 고정 F를 사용한다.
 #include "client/NativeCarrierPacketReceivers.h" //Carrier 계열의 고정 F와 실제 현재 본문을 공유한다.
 #include "client/NativeConstructionPacketReceivers.h" //건설/연구의 Native 대여는 이전 Session closure 대신 같은 고정F를 유지한다.
 #include "client/NativeFortSaveVirtual.h" //Native 저장·보상은 같은 장기 가상 조회기를 공유한다.
@@ -5148,77 +5149,110 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
         if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,type);
         else { dispatch.Observe(type,[](std::uint32_t) {});dispatch.Version(type,1,0);dispatch.RequireLength(type,6);dispatch.RegisterDirect(type,[this,entry](std::uint32_t sender,PacketConnection*,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(entry,sender,packet); }); }
     }
-    RegisterDeveloperCommandPacket(dispatch,[this](auto text) { impl_->ExecuteDeveloperCommand(text); },[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); //31h의 현재 수신은 일반/단독/Editor가 같은 본체를 사용한다.
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x31);
+    else {
+        RegisterDeveloperCommandPacket(dispatch,[this](auto text) { impl_->ExecuteDeveloperCommand(text); },[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); //31h의 현재 수신은 일반/단독/Editor가 같은 본체를 사용한다.
+    }
     RegisterMissionSettingsPacket(dispatch,impl_->gameplayGlobals->GameAux()->MissionSettings()); // Login 밖에서도 현재7DWORD에 직접 저장한다.
     // 세 원문 observer0040b380은 송수신 모두 자연 반환하며 버전1/정책0이다. 고정 길이는 보호 PE 표와 같다.
-    for (const auto entry:std::array<std::pair<std::uint32_t,std::uint16_t>,3>{{{0x33U,std::uint16_t{18}},{0x34U,std::uint16_t{12}},{0x35U,std::uint16_t{20}}}}) { dispatch.Observe(entry.first,{});dispatch.Version(entry.first,1,0);dispatch.RequireLength(entry.first,entry.second); }
-    dispatch.Register(0x33,[this](auto,auto&,auto packet) { //4a71c0: 예약 SID를 제외하고 현재 살아 있는 자산만 실제 Unpop/직접frame/Pop한다.
-        if (packet.size()<6) throw std::out_of_range("위치 수신의 WORD SID 부족");const auto number=std::uint16_t(packet[4])|(std::uint16_t(packet[5])<<8);if (number>=5 && number<15000) return;
-        auto& s=*impl_;const Sid sid{static_cast<std::uint16_t>(number)};if (s.core.pool.Slot(sid)[11]&7U) return;s.world.Unpop(sid,0);
-        Put(s.core.pool.AllocatedBytes(sid),36,Read(packet,14)); // 가상 Unpop 뒤 현재 패킷 frame을 raw+24에 직접 저장하며 SetFrame을 호출하지 않는다.
-        const auto x=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,6)))*0x1p-16); // PE의 FILD32×정확한2^-16→FSTP32이며 먼저float로 축소하지 않는다.
-        const auto y=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,10)))*0x1p-16); // X 저장 뒤 Y를 해석하며 두 signed DWORD의16.16 소수부를 보존한다.
-        s.world.Pop(sid,x,y,0);
-    });
-    dispatch.Register(0x34,[this](auto,auto&,auto packet) { //4333f0: float 비트를 그대로497f20에 넘기고 목표/재구성 카운터만 변경한다.
-        const auto y=std::bit_cast<float>(Read(packet,8));const auto x=std::bit_cast<float>(Read(packet,4));auto& s=*impl_;
-        if (!s.services.cameraScreenSize) throw std::logic_error("카메라 수신의 현재 논리 화면 크기 장치 미연결");const auto size=s.services.cameraScreenSize();RequestCameraCenter(x,y,size.x,size.y);
-    });
-    dispatch.Register(0x35,[this](auto,auto&,auto packet) { //46e940: 현재 섬 정리 본체가 권한/전파/표시/파생 삭제/진단을 순서대로 수행한다.
-        const auto rawX=std::bit_cast<std::int32_t>(Read(packet,4));const auto owner=Read(packet,16);const auto flags=Read(packet,12);
-        const auto x=static_cast<float>(static_cast<double>(rawX)*0x1p-16);const auto y=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,8)))*0x1p-16); // 두 FILD32×2^-16→FSTP32 좌표를 기존 DropIsland에 전달한다.
-        auto& s=*impl_;if (!s.buildingEffects) throw std::logic_error("섬 정리 수신의 실제 건설 효과 미설치");s.PrepareBuilding(s.core.processState.Now());s.buildingEffects->DropIsland(x,y,flags,owner);
-    });
-    dispatch.ObservePacket(0x30,[storage=impl_->world.Storage()](auto packet,auto sending) { ObservePathData(packet,sending,[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); });dispatch.Version(0x30,1,0);dispatch.RequireLength(0x30,0xffff);dispatch.Register(0x30,[this](auto,auto&,auto packet) { if (!impl_->motion) throw std::logic_error("Path 수신의 실제 이동 본체 미연결");impl_->motion->Paths().ReceivePacket(packet); }); //40a660 observer와489ee0 receiver를 같은 실제 등록표에 연결한다.
-    if (impl_->core.pool.Edition()==OriginalEdition::Patch1078) { dispatch.Observe(0x6a,{});dispatch.Version(0x6a,1,0);dispatch.RequireLength(0x6a,0xffff);dispatch.Register(0x6a,[this](auto,auto&,auto packet) { impl_->ReceiveDaisPacket(packet); }); } // 보호10.78의6ah observer는 NULL이며 CD 등록을 대신하지 않고 가짜 finalizer/ACK도 추가하지 않는다.
-    dispatch.Observe(0x2c,{});dispatch.Version(0x2c,1,0);dispatch.RequireLength(0x2c,35);dispatch.Register(0x2c,[this](auto,auto&,auto packet) { impl_->ReceiveSquid(packet); });
-    dispatch.Observe(0x3a,{});dispatch.Version(0x3a,1,0);dispatch.RequireLength(0x3a,0xffff);dispatch.Register(0x3a,[this](auto,auto&,auto packet) { impl_->ReceiveGunPacket(packet); }); // 원문3ah는 observer NULL/버전1/정책0이다.
-    dispatch.Observe(0x39,{});dispatch.Version(0x39,1,0);dispatch.RequireLength(0x39,0xffff);dispatch.Register(0x39,[this](auto,auto&,auto packet) { impl_->ReceiveFlyerPacket(packet); }); // 원문39h도 observer NULL/버전1/정책0/가변 길이다.
-    dispatch.Observe(0x86,[](std::uint32_t) {});dispatch.Version(0x86,1,0);dispatch.RequireLength(0x86,20);
-    dispatch.RegisterDirect(0x86,[this](std::uint32_t,PacketConnection*,std::span<const std::uint8_t> packet) { impl_->ReceiveFlyerCommand(packet); }); //426490은sender/connection을읽지않으며40b380비NULL빈observer를유지한다.
-    for (const auto type:{0x3bU,0x3cU}) { dispatch.Observe(type,{});dispatch.Version(type,1,0);dispatch.RequireLength(type,0xffff);dispatch.Register(type,[this,type](auto,auto&,auto packet) { if (!impl_->combat) throw std::logic_error("애니메이션 수신의 실제 전투 본체 미연결");impl_->combat->ReceiveAnimationPacket(type,packet); }); } // 두 원문 등록은 observer NULL/버전1/정책0/가변 길이다.
-    for (const auto type:{0x38U,0x73U,0x74U}) { dispatch.Observe(type,{});dispatch.Version(type,1,0);dispatch.RequireLength(type,0xffff);dispatch.Register(type,[this,type](auto,auto&,auto packet) { impl_->ReceiveAviaryPacket(type,packet); }); } // 세 원문 receiver 모두 observer NULL/버전1/정책0/가변 길이다.
+    if (!impl_->world.Storage()->UsesNativeTransmissionDevices()) for (const auto entry:std::array<std::pair<std::uint32_t,std::uint16_t>,3>{{{0x33U,std::uint16_t{18}},{0x34U,std::uint16_t{12}},{0x35U,std::uint16_t{20}}}}) { dispatch.Observe(entry.first,{});dispatch.Version(entry.first,1,0);dispatch.RequireLength(entry.first,entry.second); }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x33);
+    else {
+        dispatch.Register(0x33,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x004a71c0U,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x34);
+    else {
+        dispatch.Register(0x34,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x004333f0U,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x35);
+    else {
+        dispatch.Register(0x35,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x0046e940U,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x30);
+    else {
+        dispatch.ObservePacket(0x30,[storage=impl_->world.Storage()](auto packet,auto sending) { ObservePathData(packet,sending,[storage](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); });dispatch.Version(0x30,1,0);dispatch.RequireLength(0x30,0xffff);dispatch.Register(0x30,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x00489ee0U,packet); }); //40a660 observer와489ee0 receiver를 같은 실제 등록표에 연결한다.
+    }
+    if (impl_->core.pool.Edition()==OriginalEdition::Patch1078) { //CD의 기존 등록 조건을 변경하지 않는다.
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x6a);
+    else {
+        dispatch.Observe(0x6a,{});dispatch.Version(0x6a,1,0);dispatch.RequireLength(0x6a,0xffff);dispatch.Register(0x6a,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x0044a280U,packet); });
+    }
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x2c);
+    else {
+        dispatch.Observe(0x2c,{});dispatch.Version(0x2c,1,0);dispatch.RequireLength(0x2c,35);dispatch.Register(0x2c,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x00433c30U,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x3a);
+    else {
+        dispatch.Observe(0x3a,{});dispatch.Version(0x3a,1,0);dispatch.RequireLength(0x3a,0xffff);dispatch.Register(0x3a,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x0046a0c0U,packet); }); // 원문3ah는 observer NULL/버전1/정책0이다.
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x39);
+    else {
+        dispatch.Observe(0x39,{});dispatch.Version(0x39,1,0);dispatch.RequireLength(0x39,0xffff);dispatch.Register(0x39,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x0045e2b0U,packet); }); // 원문39h도 observer NULL/버전1/정책0/가변 길이다.
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x86);
+    else {
+        dispatch.Observe(0x86,[](std::uint32_t) {});dispatch.Version(0x86,1,0);dispatch.RequireLength(0x86,20);
+        dispatch.RegisterDirect(0x86,[this](auto,auto*,auto packet) { ReceiveFixedGameplayPacket(0x00426490U,packet); }); //426490은sender/connection을읽지않으며40b380비NULL빈observer를유지한다.
+    }
+    for (const auto [type,code]:std::array<std::pair<std::uint32_t,std::uint32_t>,2>{{{0x3b,0x00466d30U},{0x3c,0x00466b60U}}}) { //원문 순서대로 기존 같은 본문을 등록한다.
+        if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,type);
+        else { dispatch.Observe(type,{});dispatch.Version(type,1,0);dispatch.RequireLength(type,0xffff);dispatch.Register(type,[this,code](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(code,packet); }); }
+    }
+    for (const auto [type,code]:std::array<std::pair<std::uint32_t,std::uint32_t>,3>{{{0x38,0x0045e410U},{0x73,0x0045e5d0U},{0x74,0x0045e4f0U}}}) { //원문 순서대로 기존 같은 본문을 등록한다.
+        if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,type);
+        else { dispatch.Observe(type,{});dispatch.Version(type,1,0);dispatch.RequireLength(type,0xffff);dispatch.Register(type,[this,code](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(code,packet); }); }
+    }
     const auto assertion=[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; // 같은 현재 Client 진단을 송신 관찰기에도 공급한다.
     // 53h의 원문40b380은 NULL이 아닌 빈 observer다. 수신은 sender/연결을 새 조건으로 읽지 않는다.
-    dispatch.Observe(0x53,[](std::uint32_t) {});dispatch.Version(0x53,1,0);dispatch.RequireLength(0x53,6);
-    dispatch.Register(0x53,[this](auto,auto&,auto packet) { auto& s=*impl_;ReceiveRemoteDeletedSquid(s.core.pool,packet,[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); }); });
-    dispatch.ObservePacket(0x62,[assertion](auto packet,auto sending) { ObserveRemoteDeletedSquids(packet,sending,assertion); });dispatch.Version(0x62,1,0);dispatch.RequireLength(0x62,0xffff);
-    dispatch.Register(0x62,[this](auto,auto&,auto packet) { auto& s=*impl_;ReceiveRemoteDeletedSquids(s.core.pool,packet,[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); }); }); //00433120의 flags0을 그대로 현재 World에 전달하며 flags8을 덧붙이지 않는다.
-    const auto verify=[this,assertion](auto packet,bool freePacket) { // 실제 현재 Pool/TYPE와 두 장기 DWORD를 직접 빌린다.
-        auto& s=*impl_;SquidVerificationHooks hooks;hooks.assertion=assertion;hooks.log=s.services.player.log;
-        hooks.typeName=[&s](auto sid) { const auto type=s.core.pool.Slot(sid)[10];if (type>=s.core.types.size()) throw std::out_of_range("검증 간격의 현재 TYPE 물리 범위");const auto& name=s.core.types[type].name;return name.substr(0,name.find('\0')); };
-        auto& aux=*s.gameplayGlobals->GameAux();SquidVerificationState state{aux.VerifySid(),aux.PreviousVerifySid()};if (freePacket) ReceiveFreeSquidVerification(s.core.pool,packet,state,hooks);else BeginSquidVerification(s.core.pool,packet,state,hooks);
-    };
-    dispatch.Observe(0x4a,{});dispatch.Version(0x4a,1,0);dispatch.RequireLength(0x4a,7);dispatch.Register(0x4a,[verify](auto,auto&,auto packet) { verify(packet,true); });
-    dispatch.Observe(0x4b,{});dispatch.Version(0x4b,1,0);dispatch.RequireLength(0x4b,6);dispatch.Register(0x4b,[verify](auto,auto&,auto packet) { verify(packet,false); });
-    const auto mutation=[this,assertion](auto packet,std::uint32_t kind) { //0내용물/1삭제/2감시의 실제 현재 World 장치와 원문 가상을 선택한다.
-        auto& s=*impl_;SquidMutationHooks hooks;hooks.assertion=assertion;hooks.boss=[&s] { return s.core.processState.Boss(); };hooks.log=s.services.player.log;
-        hooks.contentType=[&s] { return s.gameplayGlobals->finder.containedType; };hooks.dependType=[&s] { return s.gameplayGlobals->GameAux()->DependFormType(); };hooks.take=[&s](auto type,auto sid) { return s.core.factory.Take(type,sid); };
-        hooks.word=[&s](auto sid,auto word) { SetRawSquidWord(s.core.pool,sid,word,s.core.bridgeState.bridgeType,[&s](auto value) { s.core.building.NotifySurface(value); }); };
-        hooks.firstPop=[&s](auto sid) { const auto table=Read(s.core.pool.Slot(sid),0);const SquidForms forms(s.core.pool);for (const auto type:{1U,2U,3U,6U}) if (table==forms.Vtable(type)) return 1U; /* 네 Form VT+30은435060의1 반환이다. */ if (!SquidFactory::SupportsConstructedVtable(OriginalEdition::Patch1078,table)) throw std::logic_error("내용물 수신의 현재 가상30 미연결");return s.core.factory.FirstPopFlags(sid); };
-        hooks.attach=[&s](auto sid,auto parent,auto flags) { const auto table=Read(s.core.pool.Slot(sid),0);const SquidForms forms(s.core.pool);if (table==forms.Vtable(6)) { s.contentForms->Attach(sid,parent,flags);return; }for (const auto type:{1U,2U,3U}) if (table==forms.Vtable(type)) { s.core.factory.AttachForm(sid,parent,flags);return; } /* 반복은 현재 네 Form 가상50만 선택한다. */ if (!SquidFactory::SupportsConstructedVtable(OriginalEdition::Patch1078,table)) throw std::logic_error("내용물 수신의 현재 가상50 미연결");s.world.AttachBaseAsset(sid,parent,flags); };
-        hooks.dependencyAttach=[&s](auto sid,auto parent,auto flags) { const SquidForms forms(s.core.pool);if (Read(s.core.pool.Slot(sid),0)!=forms.Vtable(1)) throw std::logic_error("감시 수신의 현재 가상74 미연결");s.core.factory.AttachForm(sid,parent,flags); }; // 실제4af160은4ac800으로 직접 점프한다.
-        hooks.refund=[&s](auto sid,auto owner) { static_cast<void>(s.hp.Refund(sid,owner,true)); };hooks.destroy=[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); };
-        hooks.typeName=[&s](auto sid) { const auto type=s.core.pool.Slot(sid)[10];if (type>=s.core.types.size()) throw std::out_of_range("삭제 수신의 현재 TYPE 물리 범위");const auto& name=s.core.types[type].name;return name.substr(0,name.find('\0')); };
-        hooks.auditSp=[&s] { //33170 꼬리는 첫 sample을 보관하고 조건부 SP 조회 뒤에만 새 sample을 읽는다.
-            auto& patch=s.priestState.regen.patch;auto& diagnostic=s.gameplayGlobals->PatchDiagnostic();const auto expected=std::bit_cast<std::uint32_t>(s.sp.TrackingOffsetCurrent());const auto actual=s.sp.OffsetCurrent();auto fallback=patch.Sample();if (actual!=expected) diagnostic=fallback;
-            if (patch.remaining) { if (s.playerState.playerKnown) { const auto money=std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner));fallback=patch.Sample();if (money>7000.0F) diagnostic=fallback; }--patch.remaining; }
-            if (!s.sp.FirstPoolCurrent()) diagnostic=fallback;if (s.sp.Permutation()[0]==-1) diagnostic=fallback;
-        };
-        if (kind==1) ReceiveDeletedSquid(s.core.pool,packet,hooks);else if (kind==2) ReceiveDependencySquid(s.core.pool,packet,hooks);else ReceiveContentSquid(s.core.pool,packet,hooks);
-    };
-    dispatch.Observe(0x2d,{});dispatch.Version(0x2d,1,0);dispatch.RequireLength(0x2d,18);dispatch.Register(0x2d,[mutation](auto,auto&,auto packet) { mutation(packet,0); });
-    dispatch.Observe(0x2e,{});dispatch.Version(0x2e,1,0);dispatch.RequireLength(0x2e,8);dispatch.Register(0x2e,[mutation](auto,auto&,auto packet) { mutation(packet,1); });
-    dispatch.Observe(0x65,{});dispatch.Version(0x65,1,0);dispatch.RequireLength(0x65,13);dispatch.Register(0x65,[mutation](auto,auto&,auto packet) { mutation(packet,2); });
-    dispatch.Observe(0x7e,{});dispatch.Version(0x7e,1,0);dispatch.RequireLength(0x7e,28);dispatch.Register(0x7e,[this](auto,auto&,auto packet) { static_cast<void>(impl_->core.processes.ReceiveSharedRegular(packet)); }); // 원문 배정 실패는 새 객체 없이 정상 복귀한다.
-    dispatch.ObservePacket(0x7a,[assertion](auto packet,auto sending) { ObserveCompressedSquid(packet,sending,assertion); });dispatch.Version(0x7a,1,0);dispatch.RequireLength(0x7a,0xffff);
-    dispatch.Register(0x7a,[this,assertion](auto,auto&,auto packet) { auto& s=*impl_;SquidCompressedReceiveHooks hooks;hooks.assertion=assertion;hooks.defaultType=[&s] { return s.core.bridgeState.bridgeType; };
-        hooks.type=[&s](std::uint32_t type)->const RiftTypeRecord& { if (type>=s.core.types.size()) throw std::out_of_range("압축 객체의 현재 TYPE 물리 범위");return s.core.types[type]; };hooks.maximumHp=[&s](const RiftTypeRecord& selected) { return s.core.factory.ReadSelectedHitPoints(selected,s.core.types); };
-        const auto image=DecodeCompressedSquid(packet,s.gameplayGlobals->GameAux()->SquidTransmission(),hooks);s.ReceiveSquid(image); // 가짜 packet 재분배나 새 캐시 없이 원문 직접 호출한다.
-    });
-    RegisterGeyserMined(dispatch,*impl_->geyserMined);
-    RegisterRemoteTellPacket(dispatch,[this](auto text) { if (!impl_->services.factoryTell) throw std::logic_error("원격 Tell의 실제 현재 cf730 미연결");impl_->services.factoryTell(DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); },[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); // 표시부호화는현재실제UI의UTF-8경계에서만변환한다.
-    dispatch.Register(0x5b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveGeyserMined(packet); });
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x53);
+    else {
+        dispatch.Observe(0x53,[](std::uint32_t) {});dispatch.Version(0x53,1,0);dispatch.RequireLength(0x53,6);
+        dispatch.Register(0x53,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x004436b0U,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x62);
+    else {
+        dispatch.ObservePacket(0x62,[assertion](auto packet,auto sending) { ObserveRemoteDeletedSquids(packet,sending,assertion); });dispatch.Version(0x62,1,0);dispatch.RequireLength(0x62,0xffff);
+        dispatch.Register(0x62,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x00433120U,packet); }); //00433120의 flags0을 그대로 현재 World에 전달하며 flags8을 덧붙이지 않는다.
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x4a);
+    else {
+        dispatch.Observe(0x4a,{});dispatch.Version(0x4a,1,0);dispatch.RequireLength(0x4a,7);dispatch.Register(0x4a,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x00432710U,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x4b);
+    else {
+        dispatch.Observe(0x4b,{});dispatch.Version(0x4b,1,0);dispatch.RequireLength(0x4b,6);dispatch.Register(0x4b,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x004326e0U,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x2d);
+    else {
+        dispatch.Observe(0x2d,{});dispatch.Version(0x2d,1,0);dispatch.RequireLength(0x2d,18);dispatch.Register(0x2d,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x004327b0U,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x2e);
+    else {
+        dispatch.Observe(0x2e,{});dispatch.Version(0x2e,1,0);dispatch.RequireLength(0x2e,8);dispatch.Register(0x2e,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x00433170U,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x65);
+    else {
+        dispatch.Observe(0x65,{});dispatch.Version(0x65,1,0);dispatch.RequireLength(0x65,13);dispatch.Register(0x65,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x00432850U,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x7e);
+    else {
+        dispatch.Observe(0x7e,{});dispatch.Version(0x7e,1,0);dispatch.RequireLength(0x7e,28);dispatch.Register(0x7e,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x00497030U,packet); }); // 원문 배정 실패는 새 객체 없이 정상 복귀한다.
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x7a);
+    else {
+        dispatch.ObservePacket(0x7a,[assertion](auto packet,auto sending) { ObserveCompressedSquid(packet,sending,assertion); });dispatch.Version(0x7a,1,0);dispatch.RequireLength(0x7a,0xffff);
+        dispatch.Register(0x7a,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x00434080U,packet); });
+    }
+    if (!impl_->world.Storage()->UsesNativeTransmissionDevices()) RegisterGeyserMined(dispatch,*impl_->geyserMined);
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x70);
+    else {
+        RegisterRemoteTellPacket(dispatch,[this](auto text) { if (!impl_->services.factoryTell) throw std::logic_error("원격 Tell의 실제 현재 cf730 미연결");impl_->services.factoryTell(DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); },[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); // 표시부호화는현재실제UI의UTF-8경계에서만변환한다.
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(dispatch,0x5b);
+    else {
+        dispatch.Register(0x5b,[this](auto,auto&,auto packet) { ReceiveFixedGameplayPacket(0x004266c0U,packet); });
+    }
     if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x40);
     else {
         dispatch.Observe(0x40,{});dispatch.Version(0x40,1,0);dispatch.RequireLength(0x40,18);
@@ -5280,6 +5314,124 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     else {
         dispatch.Observe(0x76,{});dispatch.Version(0x76,1,0);dispatch.RequireLength(0x76,6);
         dispatch.Register(0x76,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x004207a0U,sender,packet); });
+    }
+}
+// 저장된 고정 코드값으로만 같은 실제 본문을 선택하며 sender/nullable 연결과 현재 등록표를 조회하지 않는다.
+void RawCampaignSession::ReceiveFixedGameplayPacket(std::uint32_t entry,std::span<const std::uint8_t> packet) {
+    switch (entry) {
+    case 0x004a71c0U: { //4a71c0: 예약 SID를 제외하고 현재 살아 있는 자산만 실제 Unpop/직접frame/Pop한다.
+        if (packet.size()<6) throw std::out_of_range("위치 수신의 WORD SID 부족");const auto number=std::uint16_t(packet[4])|(std::uint16_t(packet[5])<<8);if (number>=5 && number<15000) return;
+        auto& s=*impl_;const Sid sid{static_cast<std::uint16_t>(number)};if (s.core.pool.Slot(sid)[11]&7U) return;s.world.Unpop(sid,0);
+        Put(s.core.pool.AllocatedBytes(sid),36,Read(packet,14)); // 가상 Unpop 뒤 현재 패킷 frame을 raw+24에 직접 저장하며 SetFrame을 호출하지 않는다.
+        const auto x=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,6)))*0x1p-16); // PE의 FILD32×정확한2^-16→FSTP32이며 먼저float로 축소하지 않는다.
+        const auto y=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,10)))*0x1p-16); // X 저장 뒤 Y를 해석하며 두 signed DWORD의16.16 소수부를 보존한다.
+        s.world.Pop(sid,x,y,0);
+        return;
+    }
+    case 0x004333f0U: { //4333f0: float 비트를 그대로497f20에 넘기고 목표/재구성 카운터만 변경한다.
+        const auto y=std::bit_cast<float>(Read(packet,8));const auto x=std::bit_cast<float>(Read(packet,4));auto& s=*impl_;
+        if (!s.services.cameraScreenSize) throw std::logic_error("카메라 수신의 현재 논리 화면 크기 장치 미연결");const auto size=s.services.cameraScreenSize();RequestCameraCenter(x,y,size.x,size.y);
+        return;
+    }
+    case 0x0046e940U: { //46e940: 현재 섬 정리 본체가 권한/전파/표시/파생 삭제/진단을 순서대로 수행한다.
+        const auto rawX=std::bit_cast<std::int32_t>(Read(packet,4));const auto owner=Read(packet,16);const auto flags=Read(packet,12);
+        const auto x=static_cast<float>(static_cast<double>(rawX)*0x1p-16);const auto y=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,8)))*0x1p-16); // 두 FILD32×2^-16→FSTP32 좌표를 기존 DropIsland에 전달한다.
+        auto& s=*impl_;if (!s.buildingEffects) throw std::logic_error("섬 정리 수신의 실제 건설 효과 미설치");s.PrepareBuilding(s.core.processState.Now());s.buildingEffects->DropIsland(x,y,flags,owner);
+        return;
+    }
+    case 0x00489ee0U: { if (!impl_->motion) throw std::logic_error("Path 수신의 실제 이동 본체 미연결");impl_->motion->Paths().ReceivePacket(packet);
+        return;
+    }
+    case 0x0044a280U: { impl_->ReceiveDaisPacket(packet);
+        return;
+    }
+    case 0x00433c30U: { impl_->ReceiveSquid(packet);
+        return;
+    }
+    case 0x0046a0c0U: { impl_->ReceiveGunPacket(packet);
+        return;
+    }
+    case 0x0045e2b0U: { impl_->ReceiveFlyerPacket(packet);
+        return;
+    }
+    case 0x00497030U: { static_cast<void>(impl_->core.processes.ReceiveSharedRegular(packet));
+        return;
+    }
+    case 0x00426490U: { impl_->ReceiveFlyerCommand(packet);
+        return;
+    }
+    case 0x004436b0U: { auto& s=*impl_;ReceiveRemoteDeletedSquid(s.core.pool,packet,[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); });
+        return;
+    }
+    case 0x00433120U: { auto& s=*impl_;ReceiveRemoteDeletedSquids(s.core.pool,packet,[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); });
+        return;
+    }
+    case 0x00434080U: {
+        const auto assertion=[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; //압축 해제의 기존 현재 Client 진단이다.
+ auto& s=*impl_;SquidCompressedReceiveHooks hooks;hooks.assertion=assertion;hooks.defaultType=[&s] { return s.core.bridgeState.bridgeType; };
+        hooks.type=[&s](std::uint32_t type)->const RiftTypeRecord& { if (type>=s.core.types.size()) throw std::out_of_range("압축 객체의 현재 TYPE 물리 범위");return s.core.types[type]; };hooks.maximumHp=[&s](const RiftTypeRecord& selected) { return s.core.factory.ReadSelectedHitPoints(selected,s.core.types); };
+        const auto image=DecodeCompressedSquid(packet,s.gameplayGlobals->GameAux()->SquidTransmission(),hooks);s.ReceiveSquid(image); // 가짜 packet 재분배나 새 캐시 없이 원문 직접 호출한다.
+        return;
+    }
+    case 0x00466d30U:
+    case 0x00466b60U:
+    {
+        const auto type=entry==0x00466d30U ? 0x3bU:0x3cU; //저장된 불변 코드값만 기존 공통 본문에 연결한다.
+ if (!impl_->combat) throw std::logic_error("애니메이션 수신의 실제 전투 본체 미연결");impl_->combat->ReceiveAnimationPacket(type,packet);
+        return;
+    }
+    case 0x0045e410U:
+    case 0x0045e5d0U:
+    case 0x0045e4f0U:
+    {
+        const auto type=entry==0x0045e410U ? 0x38U:entry==0x0045e5d0U ? 0x73U:0x74U; //저장된 불변 코드값만 기존 공통 본문에 연결한다.
+ impl_->ReceiveAviaryPacket(type,packet);
+        return;
+    }
+    case 0x00432710U:
+    case 0x004326e0U:
+    {
+        const bool freePacket=entry==0x00432710U; //같은 고정 F 두 개의 기존 검증 방향이다.
+        const auto assertion=[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; //이 선택 본문의 기존 현재 Client 진단이다.
+ // 실제 현재 Pool/TYPE와 두 장기 DWORD를 직접 빌린다.
+        auto& s=*impl_;SquidVerificationHooks hooks;hooks.assertion=assertion;hooks.log=s.services.player.log;
+        hooks.typeName=[&s](auto sid) { const auto type=s.core.pool.Slot(sid)[10];if (type>=s.core.types.size()) throw std::out_of_range("검증 간격의 현재 TYPE 물리 범위");const auto& name=s.core.types[type].name;return name.substr(0,name.find('\0')); };
+        auto& aux=*s.gameplayGlobals->GameAux();SquidVerificationState state{aux.VerifySid(),aux.PreviousVerifySid()};if (freePacket) ReceiveFreeSquidVerification(s.core.pool,packet,state,hooks);else BeginSquidVerification(s.core.pool,packet,state,hooks);
+        return;
+    }
+    case 0x004327b0U:
+    case 0x00433170U:
+    case 0x00432850U:
+    {
+        const auto kind=entry==0x00433170U ? 1U:entry==0x00432850U ? 2U:0U; //삭제/감시/내용물의 세 고정 코드값이다.
+        const auto assertion=[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }; //이 선택 본문의 기존 현재 Client 진단이다.
+ //0내용물/1삭제/2감시의 실제 현재 World 장치와 원문 가상을 선택한다.
+        auto& s=*impl_;SquidMutationHooks hooks;hooks.assertion=assertion;hooks.boss=[&s] { return s.core.processState.Boss(); };hooks.log=s.services.player.log;
+        hooks.contentType=[&s] { return s.gameplayGlobals->finder.containedType; };hooks.dependType=[&s] { return s.gameplayGlobals->GameAux()->DependFormType(); };hooks.take=[&s](auto type,auto sid) { return s.core.factory.Take(type,sid); };
+        hooks.word=[&s](auto sid,auto word) { SetRawSquidWord(s.core.pool,sid,word,s.core.bridgeState.bridgeType,[&s](auto value) { s.core.building.NotifySurface(value); }); };
+        hooks.firstPop=[&s](auto sid) { const auto table=Read(s.core.pool.Slot(sid),0);const SquidForms forms(s.core.pool);for (const auto type:{1U,2U,3U,6U}) if (table==forms.Vtable(type)) return 1U; /* 네 Form VT+30은435060의1 반환이다. */ if (!SquidFactory::SupportsConstructedVtable(OriginalEdition::Patch1078,table)) throw std::logic_error("내용물 수신의 현재 가상30 미연결");return s.core.factory.FirstPopFlags(sid); };
+        hooks.attach=[&s](auto sid,auto parent,auto flags) { const auto table=Read(s.core.pool.Slot(sid),0);const SquidForms forms(s.core.pool);if (table==forms.Vtable(6)) { s.contentForms->Attach(sid,parent,flags);return; }for (const auto type:{1U,2U,3U}) if (table==forms.Vtable(type)) { s.core.factory.AttachForm(sid,parent,flags);return; } /* 반복은 현재 네 Form 가상50만 선택한다. */ if (!SquidFactory::SupportsConstructedVtable(OriginalEdition::Patch1078,table)) throw std::logic_error("내용물 수신의 현재 가상50 미연결");s.world.AttachBaseAsset(sid,parent,flags); };
+        hooks.dependencyAttach=[&s](auto sid,auto parent,auto flags) { const SquidForms forms(s.core.pool);if (Read(s.core.pool.Slot(sid),0)!=forms.Vtable(1)) throw std::logic_error("감시 수신의 현재 가상74 미연결");s.core.factory.AttachForm(sid,parent,flags); }; // 실제4af160은4ac800으로 직접 점프한다.
+        hooks.refund=[&s](auto sid,auto owner) { static_cast<void>(s.hp.Refund(sid,owner,true)); };hooks.destroy=[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); };
+        hooks.typeName=[&s](auto sid) { const auto type=s.core.pool.Slot(sid)[10];if (type>=s.core.types.size()) throw std::out_of_range("삭제 수신의 현재 TYPE 물리 범위");const auto& name=s.core.types[type].name;return name.substr(0,name.find('\0')); };
+        hooks.auditSp=[&s] { //33170 꼬리는 첫 sample을 보관하고 조건부 SP 조회 뒤에만 새 sample을 읽는다.
+            auto& patch=s.priestState.regen.patch;auto& diagnostic=s.gameplayGlobals->PatchDiagnostic();const auto expected=std::bit_cast<std::uint32_t>(s.sp.TrackingOffsetCurrent());const auto actual=s.sp.OffsetCurrent();auto fallback=patch.Sample();if (actual!=expected) diagnostic=fallback;
+            if (patch.remaining) { if (s.playerState.playerKnown) { const auto money=std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner));fallback=patch.Sample();if (money>7000.0F) diagnostic=fallback; }--patch.remaining; }
+            if (!s.sp.FirstPoolCurrent()) diagnostic=fallback;if (s.sp.Permutation()[0]==-1) diagnostic=fallback;
+        };
+        if (kind==1) ReceiveDeletedSquid(s.core.pool,packet,hooks);else if (kind==2) ReceiveDependencySquid(s.core.pool,packet,hooks);else ReceiveContentSquid(s.core.pool,packet,hooks);
+        return;
+    }
+    case 0x0044dba0U: { ReceiveDeveloperCommandPacket(packet,[this](auto text) { impl_->ExecuteDeveloperCommand(text); });
+        return;
+    }
+    case 0x004cf980U: { ReceiveRemoteTellPacket(packet,[this](auto text) { if (!impl_->services.factoryTell) throw std::logic_error("원격 Tell의 실제 현재 cf730 미연결");impl_->services.factoryTell(DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); });
+        return;
+    }
+    case 0x004266c0U: { impl_->ReceiveGeyserMined(packet);
+        return;
+    }
+    default:throw std::invalid_argument("알 수 없는 고정 gameplay 수신 본문");
     }
 }
 // 불변 F의 코드값으로 같은 실제 모듈을 호출하며 packet종류/현재 등록표를 재조회하지 않는다.

@@ -19,6 +19,9 @@ void ObserveRemoteTellPacket(std::span<std::uint8_t> packet,std::uint32_t sendin
 }
 void RegisterRemoteTellPacket(RawPacketDispatch& dispatch,std::function<void(std::string_view)> tell,RemoteTellAssertion assertion) {
     dispatch.Version(0x70,1,0);dispatch.RequireLength(0x70,0xffff);dispatch.ObservePacket(0x70,[assertion=std::move(assertion)](auto packet,auto sending) { ObserveRemoteTellPacket(packet,sending,assertion); });
-    dispatch.Register(0x70,[tell=std::move(tell)](auto,auto&,auto packet) { if (packet.size()<9) throw std::out_of_range("원격 Tell 실제 문자열 물리 누락");const auto body=packet.subspan(8);const auto end=std::find(body.begin(),body.end(),0);if (end==body.end()) throw std::out_of_range("원격 Tell 실제 NUL 누락");Need(tell)({reinterpret_cast<const char*>(body.data()),static_cast<std::size_t>(end-body.begin())}); }); // cf980은sender/lengthDWORD를읽지않는다.
+    dispatch.Register(0x70,[tell=std::move(tell)](auto,auto&,auto packet) { ReceiveRemoteTellPacket(packet,tell); }); // cf980은sender/lengthDWORD를읽지않는다.
 }
+// 기존 등록과 Native 고정 F가 같은 첫 NUL/물리 범위/현재 문자열 효과 본문을 공유한다.
+void ReceiveRemoteTellPacket(std::span<const std::uint8_t> packet,const std::function<void(std::string_view)>& tell) { if (packet.size()<9) throw std::out_of_range("원격 Tell 실제 문자열 물리 누락");const auto body=packet.subspan(8);const auto end=std::find(body.begin(),body.end(),0);if (end==body.end()) throw std::out_of_range("원격 Tell 실제 NUL 누락");Need(tell)({reinterpret_cast<const char*>(body.data()),static_cast<std::size_t>(end-body.begin())}); }
+
 }

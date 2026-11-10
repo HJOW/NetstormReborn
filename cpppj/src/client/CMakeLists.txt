@@ -3,6 +3,7 @@
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
     NativeConstructionPacketReceivers.cpp NativeConstructionPacketReceivers.h #같은 실제 건설계8F의 장기 기본표와 Native Session 대여다.
+    NativeGameplayPacketReceivers.cpp NativeGameplayPacketReceivers.h #남은26F의 같은 본문과 Native 대여다.
     NativeCarrierPacketReceivers.cpp NativeCarrierPacketReceivers.h #동맹/Carrier/의식15F의 같은 본문과 현재 Session 대여다.
     ClientConstructionGem.cpp #같은장기Deck/제외목록/난수와실제오벨리스크보상을연결한다.
     ClientConstructionRegions.cpp #같은섬/Player/투표/도장과신전부모를World없이공유한다.

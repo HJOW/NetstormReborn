@@ -1,0 +1,1225 @@
+{
+  "unit": 1260,
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "acceptedImplementationStage": true,
+  "newNativeGameplayRows": 26,
+  "previousNativeConstructionRows": 8,
+  "previousNativeCarrierRows": 15,
+  "preservedLongSettingsRows": 1,
+  "knownEditorGameplayRows": 50,
+  "knownEditorGameplayFixedRows": 50,
+  "fullNativeRegistryComplete": false,
+  "fullM6lComplete": false,
+  "fullNoWorldComplete": false,
+  "fullGoalComplete": false,
+  "sourceSha256": {
+    "cpppj/src/client/NativeGameplayPacketReceivers.h": "5e2afc04291939532bfa0da33b4ded196b32820c8bf013d092a845c231e770f1",
+    "cpppj/src/client/NativeGameplayPacketReceivers.cpp": "01470f68070b034fe8b53ad0602c9b0ed3c46de3d61054915d90c906596328a7",
+    "cpppj/src/client/RawCampaignSession.h": "de4ce6c5e9fabde81af7205f870d03d7a9e52594ac52182ff195331a0b1bba65",
+    "cpppj/src/client/RawCampaignSession.cpp": "35b6ab5f438e2726fa2e38b5e9776ff0816a1c1efdd0594d9e4e48d473fa3b44",
+    "cpppj/src/client/ClientCampaignTransport.cpp": "73fab3cb83186077f828900217862f97f71608223a697db138d81eb2eae23335",
+    "cpppj/src/client/CMakeLists.txt": "03037b74a2572d488732ea60ec1678c33860f630e9b6df49f26a51069b1d8185",
+    "cpppj/src/o/RawDeveloperCommandPacket.h": "61e0b5179ad71ab975c0f2b39835de494a5bb35297123c174e5e771957510cc2",
+    "cpppj/src/o/RawDeveloperCommandPacket.cpp": "85b37bb05b3a0d60d20be8dcf92360919942f820f621ed3d2c2882333b7b5ac1",
+    "cpppj/src/o/RawRemoteTellPacket.h": "4c51f5220aa67d443905d51a51e242899581e95ad9c735600a7a629a20b02ccc",
+    "cpppj/src/o/RawRemoteTellPacket.cpp": "3c044182c21b805df0d37db0d36d4b1304a3163a684a0c6850f1ecb3258d5da6",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "960a80de54128921f94b6357e83c4fc5e03a6fcfdf8c0e1b94c369056779cc35"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 14484992,
+      "sha256": "ce8e0a4a0e4a0e8948658391c298200318c4109a99b9e05e258b4aea6022c5d9"
+    },
+    "R.exe": {
+      "bytes": 681472,
+      "sha256": "b8dfeaecd5239286157e77f73ae37043dca04216603b692f115e915825be437c"
+    }
+  },
+  "firstBuild": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true",
+      "/bl:H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1260\\build.binlog"
+    ],
+    "exitCode": 0,
+    "seconds": 355.7959554195404,
+    "sourcesUnchanged": true
+  },
+  "firstLive": {
+    "passed": false,
+    "unit": 1260,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1260\\live-tutorial4-final\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "795a5562ba0dcde72b545ca1cb7be048d15bcb8654f2a60d90c259202cbc3273",
+    "exeSha256After": "795a5562ba0dcde72b545ca1cb7be048d15bcb8654f2a60d90c259202cbc3273",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1260\\live-tutorial4-final\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1260\\live-tutorial4-final\\user-data",
+    "entryConfirmed": false,
+    "quitRequested": false,
+    "exitCode": 1,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2"
+    ],
+    "checks": [],
+    "commandErrors": [],
+    "failure": "서버가 응답 없이 종료됨: 로컬 미션 상태 9\n로컬 미션 상태 10\nNo Central Island.\n로컬 Fort 전송\n로컬 연결 큐/소켓 종료\n로컬 연결 반납\n로컬 연결 큐/소켓 종료\n로컬 연결 반납\n지연 receiver의 장기 고정본문 전환 미완료\nunable to open: H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1260\\live-tutorial4-final\\user-data\\Cache\\!color.dat",
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "liveCorrection": {
+    "firstRun": "live-tutorial4-final/summary.json",
+    "firstPassed": false,
+    "rootCause": "RawCampaignSessionLogin.inc constructor overwrote canonical31h with short Login closure before Session rebind",
+    "correction": "same Native BindNativeGameplayPacketReceiver at original Login registration location; typed preserved",
+    "firstProductsAccepted": false,
+    "expectationsWeakened": false,
+    "mpExecutionAdded": false
+  },
+  "summaryPathCorrection": {
+    "secondProcessExitCode": 0,
+    "secondActualSummary": "live-tutorial4-retry/summary.json",
+    "consoleHadReadOldFirstSummary": true,
+    "scriptSummaryReadPathCorrected": true,
+    "productChanged": false,
+    "rerunRequired": false
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true",
+      "/bl:H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1260\\build.binlog"
+    ],
+    "exitCode": 0,
+    "seconds": 127.9387640953064,
+    "sourcesUnchanged": true,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 300,
+    "passed": 300,
+    "failed": [],
+    "seconds": 39.624815464019775
+  },
+  "staticAudit": {
+    "compiledButNotExecutedPlayerRegularCases": [
+      "PlayerRegular_PatchNativeStateAndActualHost",
+      "PlayerRegular_CdNativeStateAndActualHost",
+      "PlayerRegular_SameWorldInitialFiveAndSixtySecondChain"
+    ],
+    "regularVtables": 87,
+    "connectedRegularVtables": 87,
+    "remainingRegularVtables": 0,
+    "remainingRows": [],
+    "knownAssetPrePost": 83,
+    "knownAssetNotices": 83,
+    "unit": 1260,
+    "baselineCommit": "7c7c6c20b0626eb88ef1bae6249a30607f05b501",
+    "newNativeRows": [
+      {
+        "type": "2c",
+        "receivers": [
+          "FUN_00433c30"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 35
+      },
+      {
+        "type": "2d",
+        "receivers": [
+          "FUN_004327b0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 18
+      },
+      {
+        "type": "2e",
+        "receivers": [
+          "FUN_00433170"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 8
+      },
+      {
+        "type": "30",
+        "receivers": [
+          "FUN_00489ee0"
+        ],
+        "observers": [
+          "FUN_0040a660"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "31",
+        "receivers": [
+          "FUN_0044dba0"
+        ],
+        "observers": [
+          "FUN_0040a6b0"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "33",
+        "receivers": [
+          "FUN_004a71c0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 18
+      },
+      {
+        "type": "34",
+        "receivers": [
+          "FUN_004333f0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 12
+      },
+      {
+        "type": "35",
+        "receivers": [
+          "FUN_0046e940"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 20
+      },
+      {
+        "type": "38",
+        "receivers": [
+          "FUN_0045e410"
+        ],
+        "observers": [
+          "0"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "39",
+        "receivers": [
+          "FUN_0045e2b0"
+        ],
+        "observers": [
+          "0"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "3a",
+        "receivers": [
+          "FUN_0046a0c0"
+        ],
+        "observers": [
+          "0"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "3b",
+        "receivers": [
+          "FUN_00466d30"
+        ],
+        "observers": [
+          "0"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "3c",
+        "receivers": [
+          "FUN_00466b60"
+        ],
+        "observers": [
+          "0"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "4a",
+        "receivers": [
+          "FUN_00432710"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 7
+      },
+      {
+        "type": "4b",
+        "receivers": [
+          "FUN_004326e0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 6
+      },
+      {
+        "type": "53",
+        "receivers": [
+          "FUN_004436b0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 6
+      },
+      {
+        "type": "5b",
+        "receivers": [
+          "FUN_004266c0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 6
+      },
+      {
+        "type": "62",
+        "receivers": [
+          "FUN_00433120"
+        ],
+        "observers": [
+          "FUN_0040ad70"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "65",
+        "receivers": [
+          "FUN_00432850"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 13
+      },
+      {
+        "type": "6a",
+        "receivers": [
+          "FUN_0044a280"
+        ],
+        "observers": [
+          "0"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "70",
+        "receivers": [
+          "FUN_004cf980"
+        ],
+        "observers": [
+          "FUN_0040b090"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "73",
+        "receivers": [
+          "FUN_0045e5d0"
+        ],
+        "observers": [
+          "0"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "74",
+        "receivers": [
+          "FUN_0045e4f0"
+        ],
+        "observers": [
+          "0"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "7a",
+        "receivers": [
+          "FUN_00434080"
+        ],
+        "observers": [
+          "FUN_0040b2a0"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "7e",
+        "receivers": [
+          "FUN_00497030"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 28
+      },
+      {
+        "type": "86",
+        "receivers": [
+          "FUN_00426490"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 20
+      }
+    ],
+    "existingLongRow32": {
+      "type": "32",
+      "receivers": [
+        "FUN_0044dc20"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 32
+    },
+    "fullM6lComplete": false,
+    "fullGoalComplete": false,
+    "receiverRowsMatchedOriginal": 26,
+    "previousLong32Preserved": true,
+    "editorGameplayKnownRows": 50,
+    "editorGameplayFixedRows": 50,
+    "editorGameplayPreparedRowsRemaining": 0,
+    "sharedSessionBodies": 20,
+    "sharedStringBodies": 2,
+    "sharedBodyCopies": 1,
+    "bodyTrailingWhitespaceOnlyRemoved": true,
+    "typedContractsPreserved": true,
+    "nativeNullObserverRows": 8,
+    "nativeEmptyObserverRows": 13,
+    "nativeMutableObserverRows": 5,
+    "unchangedBodyModules": [
+      "cpppj/src/o/RawPathData.cpp",
+      "cpppj/src/o/RawSquidMutationReceive.cpp",
+      "cpppj/src/o/RawSquidCompressedReceive.cpp",
+      "cpppj/src/o/RawMissionSettingsPacket.cpp"
+    ],
+    "noOldSessionWorldLeaseOrEnqueuePinCaptured": true,
+    "selectedActualRuntimePinAtDelivery": true,
+    "fullNoWorldComplete": false,
+    "fullM6Complete": false,
+    "newMpUnitPacketNetworkGameRecordExecutions": 0,
+    "next": "actual other scopes/caller-owner inventory, Activity/Chat/BattleLeave; M6-m/n and large NoWorld remain",
+    "actualLogin31FixedAtOriginalRegistrationSite": true,
+    "firstLiveFailurePreserved": "live-tutorial4-final/summary.json"
+  },
+  "registrationFacts": [
+    {
+      "type": "2c",
+      "receivers": [
+        "FUN_00433c30"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 35
+    },
+    {
+      "type": "2d",
+      "receivers": [
+        "FUN_004327b0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 18
+    },
+    {
+      "type": "2e",
+      "receivers": [
+        "FUN_00433170"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 8
+    },
+    {
+      "type": "30",
+      "receivers": [
+        "FUN_00489ee0"
+      ],
+      "observers": [
+        "FUN_0040a660"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "31",
+      "receivers": [
+        "FUN_0044dba0"
+      ],
+      "observers": [
+        "FUN_0040a6b0"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "32",
+      "receivers": [
+        "FUN_0044dc20"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 32
+    },
+    {
+      "type": "33",
+      "receivers": [
+        "FUN_004a71c0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 18
+    },
+    {
+      "type": "34",
+      "receivers": [
+        "FUN_004333f0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 12
+    },
+    {
+      "type": "35",
+      "receivers": [
+        "FUN_0046e940"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 20
+    },
+    {
+      "type": "38",
+      "receivers": [
+        "FUN_0045e410"
+      ],
+      "observers": [
+        "0"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "39",
+      "receivers": [
+        "FUN_0045e2b0"
+      ],
+      "observers": [
+        "0"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "3a",
+      "receivers": [
+        "FUN_0046a0c0"
+      ],
+      "observers": [
+        "0"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "3b",
+      "receivers": [
+        "FUN_00466d30"
+      ],
+      "observers": [
+        "0"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "3c",
+      "receivers": [
+        "FUN_00466b60"
+      ],
+      "observers": [
+        "0"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "4a",
+      "receivers": [
+        "FUN_00432710"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 7
+    },
+    {
+      "type": "4b",
+      "receivers": [
+        "FUN_004326e0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 6
+    },
+    {
+      "type": "53",
+      "receivers": [
+        "FUN_004436b0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 6
+    },
+    {
+      "type": "5b",
+      "receivers": [
+        "FUN_004266c0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 6
+    },
+    {
+      "type": "62",
+      "receivers": [
+        "FUN_00433120"
+      ],
+      "observers": [
+        "FUN_0040ad70"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "65",
+      "receivers": [
+        "FUN_00432850"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 13
+    },
+    {
+      "type": "6a",
+      "receivers": [
+        "FUN_0044a280"
+      ],
+      "observers": [
+        "0"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "70",
+      "receivers": [
+        "FUN_004cf980"
+      ],
+      "observers": [
+        "FUN_0040b090"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "73",
+      "receivers": [
+        "FUN_0045e5d0"
+      ],
+      "observers": [
+        "0"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "74",
+      "receivers": [
+        "FUN_0045e4f0"
+      ],
+      "observers": [
+        "0"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "7a",
+      "receivers": [
+        "FUN_00434080"
+      ],
+      "observers": [
+        "FUN_0040b2a0"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "7e",
+      "receivers": [
+        "FUN_00497030"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 28
+    },
+    {
+      "type": "86",
+      "receivers": [
+        "FUN_00426490"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 20
+    }
+  ],
+  "movedBodies": {
+    "session": [
+      {
+        "types": [
+          "33"
+        ],
+        "body": " //4a71c0: 예약 SID를 제외하고 현재 살아 있는 자산만 실제 Unpop/직접frame/Pop한다.\n        if (packet.size()<6) throw std::out_of_range(\"위치 수신의 WORD SID 부족\");const auto number=std::uint16_t(packet[4])|(std::uint16_t(packet[5])<<8);if (number>=5 && number<15000) return;\n        auto& s=*impl_;const Sid sid{static_cast<std::uint16_t>(number)};if (s.core.pool.Slot(sid)[11]&7U) return;s.world.Unpop(sid,0);\n        Put(s.core.pool.AllocatedBytes(sid),36,Read(packet,14)); // 가상 Unpop 뒤 현재 패킷 frame을 raw+24에 직접 저장하며 SetFrame을 호출하지 않는다.\n        const auto x=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,6)))*0x1p-16); // PE의 FILD32×정확한2^-16→FSTP32이며 먼저float로 축소하지 않는다.\n        const auto y=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,10)))*0x1p-16); // X 저장 뒤 Y를 해석하며 두 signed DWORD의16.16 소수부를 보존한다.\n        s.world.Pop(sid,x,y,0);",
+        "sha256": "9f7edf69fea8a20219e00e4483d5cb7ba323168eda62bfec8a8f0bf0f4e97aec"
+      },
+      {
+        "types": [
+          "34"
+        ],
+        "body": " //4333f0: float 비트를 그대로497f20에 넘기고 목표/재구성 카운터만 변경한다.\n        const auto y=std::bit_cast<float>(Read(packet,8));const auto x=std::bit_cast<float>(Read(packet,4));auto& s=*impl_;\n        if (!s.services.cameraScreenSize) throw std::logic_error(\"카메라 수신의 현재 논리 화면 크기 장치 미연결\");const auto size=s.services.cameraScreenSize();RequestCameraCenter(x,y,size.x,size.y);",
+        "sha256": "1e65ec316e3a6b70a9797c4df69f0d464bc88035ebc6994ea78ad7a997d82f2c"
+      },
+      {
+        "types": [
+          "35"
+        ],
+        "body": " //46e940: 현재 섬 정리 본체가 권한/전파/표시/파생 삭제/진단을 순서대로 수행한다.\n        const auto rawX=std::bit_cast<std::int32_t>(Read(packet,4));const auto owner=Read(packet,16);const auto flags=Read(packet,12);\n        const auto x=static_cast<float>(static_cast<double>(rawX)*0x1p-16);const auto y=static_cast<float>(static_cast<double>(std::bit_cast<std::int32_t>(Read(packet,8)))*0x1p-16); // 두 FILD32×2^-16→FSTP32 좌표를 기존 DropIsland에 전달한다.\n        auto& s=*impl_;if (!s.buildingEffects) throw std::logic_error(\"섬 정리 수신의 실제 건설 효과 미설치\");s.PrepareBuilding(s.core.processState.Now());s.buildingEffects->DropIsland(x,y,flags,owner);",
+        "sha256": "13bff4935391dab35670038ba66d60699c7b793949627687d959318cb3d33c20"
+      },
+      {
+        "types": [
+          "30"
+        ],
+        "body": " if (!impl_->motion) throw std::logic_error(\"Path 수신의 실제 이동 본체 미연결\");impl_->motion->Paths().ReceivePacket(packet);",
+        "sha256": "bd7e2172d53fc3ef12c96b53bfc623df0db81731e3e244424bf2be6b6c7bf5ce"
+      },
+      {
+        "types": [
+          "6a"
+        ],
+        "body": " impl_->ReceiveDaisPacket(packet);",
+        "sha256": "69c571e037bfbf18c173fe7ff4d350f05e620b3c077ebe32a3cad3eb47f42863"
+      },
+      {
+        "types": [
+          "2c"
+        ],
+        "body": " impl_->ReceiveSquid(packet);",
+        "sha256": "baf0ac6c667b8cb4cca591aa86888e06576b0e67266608aa8aa5cbe4a5e12d76"
+      },
+      {
+        "types": [
+          "3a"
+        ],
+        "body": " impl_->ReceiveGunPacket(packet);",
+        "sha256": "d58f77dfd199dfc614723346a71b9857f92127ca0e99271f3aecc1842b045fe2"
+      },
+      {
+        "types": [
+          "39"
+        ],
+        "body": " impl_->ReceiveFlyerPacket(packet);",
+        "sha256": "17e3730a277b712a52ea628f0e9fc4b93ab9f47c40ddb4e68ae9a53925817dfa"
+      },
+      {
+        "types": [
+          "7e"
+        ],
+        "body": " static_cast<void>(impl_->core.processes.ReceiveSharedRegular(packet));",
+        "sha256": "8b06e385edd946a5565659da90de61fe24a014b0c1fbbac6da3677ab20c41783"
+      },
+      {
+        "types": [
+          "86"
+        ],
+        "body": " impl_->ReceiveFlyerCommand(packet);",
+        "sha256": "0fb95d361c682ce7d5c66b327343903b567d2d816a0963d6ade6f44a4c40da79"
+      },
+      {
+        "types": [
+          "53"
+        ],
+        "body": " auto& s=*impl_;ReceiveRemoteDeletedSquid(s.core.pool,packet,[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); });",
+        "sha256": "80a3f1ee5c13ee9799919f28dc5b897dd5f51bdaff4d637c27373d7b96c46548"
+      },
+      {
+        "types": [
+          "62"
+        ],
+        "body": " auto& s=*impl_;ReceiveRemoteDeletedSquids(s.core.pool,packet,[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); });",
+        "sha256": "601af1dd94cdedf4b17a32202e2acb2c53393633b0907a92cf7a03335454d29e"
+      },
+      {
+        "types": [
+          "7a"
+        ],
+        "body": " auto& s=*impl_;SquidCompressedReceiveHooks hooks;hooks.assertion=assertion;hooks.defaultType=[&s] { return s.core.bridgeState.bridgeType; };\n        hooks.type=[&s](std::uint32_t type)->const RiftTypeRecord& { if (type>=s.core.types.size()) throw std::out_of_range(\"압축 객체의 현재 TYPE 물리 범위\");return s.core.types[type]; };hooks.maximumHp=[&s](const RiftTypeRecord& selected) { return s.core.factory.ReadSelectedHitPoints(selected,s.core.types); };\n        const auto image=DecodeCompressedSquid(packet,s.gameplayGlobals->GameAux()->SquidTransmission(),hooks);s.ReceiveSquid(image); // 가짜 packet 재분배나 새 캐시 없이 원문 직접 호출한다.",
+        "sha256": "66724b9eea4533b2e65e41fc7f3691d4849599d629f8bcb7381301f427fb619e"
+      },
+      {
+        "types": [
+          "3b",
+          "3c"
+        ],
+        "body": " if (!impl_->combat) throw std::logic_error(\"애니메이션 수신의 실제 전투 본체 미연결\");impl_->combat->ReceiveAnimationPacket(type,packet);",
+        "sha256": "fddba6008d7596bfed36daab97f877235ce78eef9752c3a7f4acae5343d1283d"
+      },
+      {
+        "types": [
+          "38",
+          "73",
+          "74"
+        ],
+        "body": " impl_->ReceiveAviaryPacket(type,packet);",
+        "sha256": "97ea472294ec2c79e91fd7a6d2be04c236e8d78dfecc64b6e89c390187a62137"
+      },
+      {
+        "types": [
+          "4a",
+          "4b"
+        ],
+        "body": " // 실제 현재 Pool/TYPE와 두 장기 DWORD를 직접 빌린다.\n        auto& s=*impl_;SquidVerificationHooks hooks;hooks.assertion=assertion;hooks.log=s.services.player.log;\n        hooks.typeName=[&s](auto sid) { const auto type=s.core.pool.Slot(sid)[10];if (type>=s.core.types.size()) throw std::out_of_range(\"검증 간격의 현재 TYPE 물리 범위\");const auto& name=s.core.types[type].name;return name.substr(0,name.find('\\0')); };\n        auto& aux=*s.gameplayGlobals->GameAux();SquidVerificationState state{aux.VerifySid(),aux.PreviousVerifySid()};if (freePacket) ReceiveFreeSquidVerification(s.core.pool,packet,state,hooks);else BeginSquidVerification(s.core.pool,packet,state,hooks);",
+        "sha256": "1d3c00f80a5d24edc538bf7607c06ba7cb591ff741162cb5b5909194307751ff"
+      },
+      {
+        "types": [
+          "2d",
+          "2e",
+          "65"
+        ],
+        "body": " //0내용물/1삭제/2감시의 실제 현재 World 장치와 원문 가상을 선택한다.\n        auto& s=*impl_;SquidMutationHooks hooks;hooks.assertion=assertion;hooks.boss=[&s] { return s.core.processState.Boss(); };hooks.log=s.services.player.log;\n        hooks.contentType=[&s] { return s.gameplayGlobals->finder.containedType; };hooks.dependType=[&s] { return s.gameplayGlobals->GameAux()->DependFormType(); };hooks.take=[&s](auto type,auto sid) { return s.core.factory.Take(type,sid); };\n        hooks.word=[&s](auto sid,auto word) { SetRawSquidWord(s.core.pool,sid,word,s.core.bridgeState.bridgeType,[&s](auto value) { s.core.building.NotifySurface(value); }); };\n        hooks.firstPop=[&s](auto sid) { const auto table=Read(s.core.pool.Slot(sid),0);const SquidForms forms(s.core.pool);for (const auto type:{1U,2U,3U,6U}) if (table==forms.Vtable(type)) return 1U; /* 네 Form VT+30은435060의1 반환이다. */ if (!SquidFactory::SupportsConstructedVtable(OriginalEdition::Patch1078,table)) throw std::logic_error(\"내용물 수신의 현재 가상30 미연결\");return s.core.factory.FirstPopFlags(sid); };\n        hooks.attach=[&s](auto sid,auto parent,auto flags) { const auto table=Read(s.core.pool.Slot(sid),0);const SquidForms forms(s.core.pool);if (table==forms.Vtable(6)) { s.contentForms->Attach(sid,parent,flags);return; }for (const auto type:{1U,2U,3U}) if (table==forms.Vtable(type)) { s.core.factory.AttachForm(sid,parent,flags);return; } /* 반복은 현재 네 Form 가상50만 선택한다. */ if (!SquidFactory::SupportsConstructedVtable(OriginalEdition::Patch1078,table)) throw std::logic_error(\"내용물 수신의 현재 가상50 미연결\");s.world.AttachBaseAsset(sid,parent,flags); };\n        hooks.dependencyAttach=[&s](auto sid,auto parent,auto flags) { const SquidForms forms(s.core.pool);if (Read(s.core.pool.Slot(sid),0)!=forms.Vtable(1)) throw std::logic_error(\"감시 수신의 현재 가상74 미연결\");s.core.factory.AttachForm(sid,parent,flags); }; // 실제4af160은4ac800으로 직접 점프한다.\n        hooks.refund=[&s](auto sid,auto owner) { static_cast<void>(s.hp.Refund(sid,owner,true)); };hooks.destroy=[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); };\n        hooks.typeName=[&s](auto sid) { const auto type=s.core.pool.Slot(sid)[10];if (type>=s.core.types.size()) throw std::out_of_range(\"삭제 수신의 현재 TYPE 물리 범위\");const auto& name=s.core.types[type].name;return name.substr(0,name.find('\\0')); };\n        hooks.auditSp=[&s] { //33170 꼬리는 첫 sample을 보관하고 조건부 SP 조회 뒤에만 새 sample을 읽는다.\n            auto& patch=s.priestState.regen.patch;auto& diagnostic=s.gameplayGlobals->PatchDiagnostic();const auto expected=std::bit_cast<std::uint32_t>(s.sp.TrackingOffsetCurrent());const auto actual=s.sp.OffsetCurrent();auto fallback=patch.Sample();if (actual!=expected) diagnostic=fallback;\n            if (patch.remaining) { if (s.playerState.playerKnown) { const auto money=std::bit_cast<float>(s.sp.Get(s.playerState.battleOwner));fallback=patch.Sample();if (money>7000.0F) diagnostic=fallback; }--patch.remaining; }\n            if (!s.sp.FirstPoolCurrent()) diagnostic=fallback;if (s.sp.Permutation()[0]==-1) diagnostic=fallback;\n        };\n        if (kind==1) ReceiveDeletedSquid(s.core.pool,packet,hooks);else if (kind==2) ReceiveDependencySquid(s.core.pool,packet,hooks);else ReceiveContentSquid(s.core.pool,packet,hooks);",
+        "sha256": "145c14ba829fa4f4fcffd7cf1f28ad85ad27f634c1349a99cc87fe570f2b5d31"
+      },
+      {
+        "types": [
+          "31"
+        ],
+        "body": " ReceiveDeveloperCommandPacket(packet,[this](auto text) { impl_->ExecuteDeveloperCommand(text); });",
+        "sha256": "f6e295df7cfed32cc0249876c01c1171dc9c7d3a7af9556c8dae3cd5ee4fe038"
+      },
+      {
+        "types": [
+          "70"
+        ],
+        "body": " ReceiveRemoteTellPacket(packet,[this](auto text) { if (!impl_->services.factoryTell) throw std::logic_error(\"원격 Tell의 실제 현재 cf730 미연결\");impl_->services.factoryTell(DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); });",
+        "sha256": "e9c100ae0fdcb8c08056fb1f00ac06b7543aeaa3e7ed1d3cb4da46a37d99e76e"
+      },
+      {
+        "types": [
+          "5b"
+        ],
+        "body": " impl_->ReceiveGeyserMined(packet);",
+        "sha256": "a4180c62f40c169495d0659d3f32046531d20fe49b72a5d7f41b73688aeb33b3"
+      }
+    ],
+    "strings": [
+      {
+        "path": "cpppj/src/o/RawDeveloperCommandPacket.cpp",
+        "function": "ReceiveDeveloperCommandPacket",
+        "body": " //44dba0→40a6f0(packet,0)은 sender/len DWORD를 읽지 않는다.\n        if (packet.size()<9) throw std::out_of_range(\"개발자 명령 문자열 물리 부족\");const auto body=packet.subspan(8);const auto end=std::find(body.begin(),body.end(),0);if (end==body.end()) throw std::out_of_range(\"개발자 명령 문자열 NUL 누락\");\n        if (!execute) throw std::logic_error(\"개발자 명령 실제 해석기 미연결\");execute({reinterpret_cast<const char*>(body.data()),static_cast<std::size_t>(end-body.begin())});\n    ",
+        "sha256": "d24f2e73f1986c9f27182af6196f2c63f9bb0f149fe862015ab361e8eb7cc1c0"
+      },
+      {
+        "path": "cpppj/src/o/RawRemoteTellPacket.cpp",
+        "function": "ReceiveRemoteTellPacket",
+        "body": " if (packet.size()<9) throw std::out_of_range(\"원격 Tell 실제 문자열 물리 누락\");const auto body=packet.subspan(8);const auto end=std::find(body.begin(),body.end(),0);if (end==body.end()) throw std::out_of_range(\"원격 Tell 실제 NUL 누락\");Need(tell)({reinterpret_cast<const char*>(body.data()),static_cast<std::size_t>(end-body.begin())}); ",
+        "sha256": "edb86e85e7705b37bfd4b8579fec9bae323e73377efb90f141107d009a74c7c4"
+      }
+    ]
+  },
+  "setupCorrection": {
+    "stage": "before first build/test",
+    "issues": [
+      "scope end variable was reused for a local registration end: single-copy gate rejected candidate before Session write",
+      "session-only retry lacked string metadata: Session body written, metadata reconstructed from exact before snapshots"
+    ],
+    "correction": "scopeEnd is separate; reconstruct from before snapshot plus exact include; single-copy and brace gates unchanged; only body-ending whitespace removed",
+    "expectationsWeakened": false
+  },
+  "agentsUserChange": {
+    "userCommit": "8661e106076a9bd5d0fddd747ade8cba5c30522e",
+    "previousSha256": "591bb07b34a17c62fe6cd836f187cad3f2602656699d4a78a4a2c532142bb9e2",
+    "currentSha256": "c8bd1b262c36ec0cf7dc58e6c4f87c80fd01e53ad2ca2ea4bb254da007a4bc34",
+    "matchesUserCommitAfterLineEndingNormalization": true,
+    "otherProtectedFilesUnchanged": 2807,
+    "agentModifiedAgents": false,
+    "decision": "오류/예외·로그10차→7차 확정; AA8차/Editor9차/버그10차; 현재 작업을 먼저 마친 뒤 계획 반영"
+  },
+  "userPriorityDecision": {
+    "stage7ErrorLoggingConfirmed": true,
+    "continueCurrentM6First": true,
+    "remainingOrder": "M6/M7/M8 -> K1..K5 -> E1..E3 -> S1..S4 -> B1..B4 -> L1..L3"
+  },
+  "live": {
+    "passed": true,
+    "unit": 1260,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1260\\live-tutorial4-retry\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "ce8e0a4a0e4a0e8948658391c298200318c4109a99b9e05e258b4aea6022c5d9",
+    "exeSha256After": "ce8e0a4a0e4a0e8948658391c298200318c4109a99b9e05e258b4aea6022c5d9",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1260\\live-tutorial4-retry\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1260\\live-tutorial4-retry\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.511,
+        "gameTimeAfter": 23.52,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "screenshotReview": {
+    "reviewed": true,
+    "path": "extracted/cpp-resume-1260/live-tutorial4-retry/015-generator-settled.png",
+    "width": 1920,
+    "height": 1080,
+    "finding": "수정한 최종 EXE에서 Tutorial4 섬·건물·사제·생산 덱·미니맵이 표시되고 오류창이 없다. 생산/건설 요청 후600프레임 대기 화면을 확인했다. 원본 전체 픽셀 동일성·완공·청취 검증은 아니다."
+  },
+  "protectedFiles": 2808,
+  "protectedUnchanged": true,
+  "newMpTests": 0,
+  "newDecompilation": false,
+  "newZip": false,
+  "rawDirectory": "extracted/cpp-resume-1260/"
+}

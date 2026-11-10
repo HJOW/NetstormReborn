@@ -14,9 +14,12 @@ void ObserveDeveloperCommandPacket(std::span<std::uint8_t> packet,std::uint32_t 
 }
 void RegisterDeveloperCommandPacket(RawPacketDispatch& dispatch,std::function<void(std::string_view)> execute,RemoteTellAssertion assertion) {
     dispatch.Version(0x31,1,0);dispatch.RequireLength(0x31,0xffff);dispatch.ObservePacket(0x31,[assertion=std::move(assertion)](auto packet,auto sending) { ObserveDeveloperCommandPacket(packet,sending,assertion); });
-    dispatch.Register(0x31,[execute=std::move(execute)](auto,auto&,auto packet) { //44dba0→40a6f0(packet,0)은 sender/len DWORD를 읽지 않는다.
+    dispatch.Register(0x31,[execute=std::move(execute)](auto,auto&,auto packet) { ReceiveDeveloperCommandPacket(packet,execute); });
+}
+// 기존 등록과 Native 고정 F가 같은 첫 NUL/물리 범위/현재 문자열 효과 본문을 공유한다.
+void ReceiveDeveloperCommandPacket(std::span<const std::uint8_t> packet,const std::function<void(std::string_view)>& execute) { //44dba0→40a6f0(packet,0)은 sender/len DWORD를 읽지 않는다.
         if (packet.size()<9) throw std::out_of_range("개발자 명령 문자열 물리 부족");const auto body=packet.subspan(8);const auto end=std::find(body.begin(),body.end(),0);if (end==body.end()) throw std::out_of_range("개발자 명령 문자열 NUL 누락");
         if (!execute) throw std::logic_error("개발자 명령 실제 해석기 미연결");execute({reinterpret_cast<const char*>(body.data()),static_cast<std::size_t>(end-body.begin())});
-    });
-}
+    }
+
 }

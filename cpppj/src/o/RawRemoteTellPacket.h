@@ -11,4 +11,6 @@ using RemoteTellAssertion=std::function<void(std::string_view,std::string_view,s
 std::array<std::uint8_t,264> WriteRemoteTellPacket(std::string_view text,const RemoteTellAssertion& assertion,std::uint32_t line); // Native264BYTE ff fill/헤더/길이DWORD/NUL 복사이며 line은4ef/4fb다.
 void ObserveRemoteTellPacket(std::span<std::uint8_t> packet,std::uint32_t sending,const RemoteTellAssertion& assertion); // 송신에서만 현재tellLength 진단 뒤 헤더WORD를감겨쓴다.
 void RegisterRemoteTellPacket(RawPacketDispatch& dispatch,std::function<void(std::string_view)> tell,RemoteTellAssertion assertion); // 실제70h/version1/정책0/가변길이/관찰기와현재cf730 장치를 등록한다.
+void ReceiveRemoteTellPacket(std::span<const std::uint8_t> packet,const std::function<void(std::string_view)>& tell); //선언 길이와 별개인 첫 NUL 문자열을 같은 실제 소비자에 전달하며 sender/연결은 조회하지 않는다.
+
 }
