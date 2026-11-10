@@ -25,6 +25,12 @@ public sealed class HostOptions
     /// <summary>실행할 프레임 수. 0이면 창을 닫을 때까지 돈다. --frames 로 정한다.</summary>
     public ulong Frames { get; private set; }
 
+    /// <summary>고정 시각 모드의 프레임당 가상 밀리초(1~60000). 0이면 기본 OS 시계다. --fixed-frame-ms 로 정한다.</summary>
+    public uint FixedFrameMs { get; private set; }
+
+    /// <summary>고정 시각 원점의 유닉스 초. null이면 기본 2000-01-01이다. --fixed-unix-seconds 로 정하며 --fixed-frame-ms 없이 단독으로 쓸 수 없다.</summary>
+    public int? FixedUnixSeconds { get; private set; }
+
     /// <summary>UI 스크립트 경로. 없으면 null이다. --ui-script 로 정한다.</summary>
     public string? UiScriptPath { get; private set; }
 
@@ -91,6 +97,12 @@ public sealed class HostOptions
                 case "--frames":
                     options.Frames = TakeNonNegativeLong(args, ref i, "--frames");
                     break;
+                case "--fixed-frame-ms":
+                    options.FixedFrameMs = TakeFixedFrameMs(args, ref i);
+                    break;
+                case "--fixed-unix-seconds":
+                    options.FixedUnixSeconds = TakeUnixSeconds(args, ref i);
+                    break;
                 case "--ui-script":
                     options.UiScriptPath = TakeValue(args, ref i, "--ui-script");
                     break;
@@ -105,12 +117,32 @@ public sealed class HostOptions
             }
         }
         // 화면 크기와 프레임 속도는 --set 과 직접 인자 중 뒤에 나온 값이 이긴다
+        if (options.FixedUnixSeconds.HasValue && options.FixedFrameMs == 0)
+            throw new ArgumentException("호스트 인자 --fixed-unix-seconds 는 --fixed-frame-ms 와 함께 사용해야 합니다", nameof(args));
         return options;
     }
 
     /// <summary>사용법을 돌려준다. 오류 종료 때 그대로 출력한다.</summary>
     public static string Usage() =>
-        "사용법: NetstormClientHost [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N] [--ui-script steps.tsv] [--ui-report report.tsv] [--set \"k=v;k=v...\"]";
+        "사용법: NetstormClientHost [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N] [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--set \"k=v;k=v...\"]";
+
+    /// <summary>고정 시각 프레임 밀리초(1~60000)를 읽는다.</summary>
+    private static uint TakeFixedFrameMs(string[] args, ref int index)
+    {
+        string value = TakeValue(args, ref index, "--fixed-frame-ms");
+        if (!uint.TryParse(value, out uint number) || number == 0 || number > HostTimeSource.MaxFrameMilliseconds)
+            throw new ArgumentException($"호스트 인자 --fixed-frame-ms 는 1~60000이어야 합니다: {value}", nameof(args));
+        return number;
+    }
+
+    /// <summary>고정 시각 원점의 유닉스 초(0 이상)를 읽는다.</summary>
+    private static int TakeUnixSeconds(string[] args, ref int index)
+    {
+        string value = TakeValue(args, ref index, "--fixed-unix-seconds");
+        if (!int.TryParse(value, out int number) || number < 0)
+            throw new ArgumentException($"호스트 인자 --fixed-unix-seconds 는 0 이상이어야 합니다: {value}", nameof(args));
+        return number;
+    }
 
     /// <summary>다음 인자를 양의 정수로 읽는다.</summary>
     private static int TakePositiveInt(string[] args, ref int index, string flag)

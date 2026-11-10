@@ -29,25 +29,31 @@ public sealed class HostFrameDriver
     /// <summary>UI 스크립트 실행기. 스크립트가 없으면 null이다.</summary>
     private readonly UiScriptRunner? _runner;
 
+    /// <summary>프레임마다 전진시키는 현재 시각 공급원. null이면 시각을 전진시키지 않는다.</summary>
+    private readonly HostTimeSource? _clock;
+
     /// <summary>
     /// 화면·큐·실행기를 묶는다. 화면 크기는 호출자가 정한다.
     /// </summary>
     /// <param name="screen">논리 화면.</param>
     /// <param name="input">입력 큐.</param>
     /// <param name="runner">UI 스크립트 실행기(없으면 null).</param>
-    public HostFrameDriver(Screen screen, InputQueue input, UiScriptRunner? runner = null)
+    /// <param name="clock">프레임마다 전진시킬 시각 공급원(없으면 null).</param>
+    public HostFrameDriver(Screen screen, InputQueue input, UiScriptRunner? runner = null, HostTimeSource? clock = null)
     {
         ArgumentNullException.ThrowIfNull(screen);
         ArgumentNullException.ThrowIfNull(input);
         Screen = screen;
         Input = input;
         _runner = runner;
+        _clock = clock;
     }
 
-    /// <summary>프레임 번호를 올리고 스크립트의 이번 프레임 입력 단계를 큐에 넣는다. 실제 입력 펌프보다 먼저 부른다.</summary>
+    /// <summary>프레임 번호를 올리고 시각을 한 프레임 전진시킨 뒤 스크립트의 이번 프레임 입력 단계를 큐에 넣는다. 실제 입력 펌프보다 먼저 부른다.</summary>
     public void BeginFrame()
     {
         Frame++;
+        _clock?.Advance();
         _runner?.BeforeInput(Frame);
     }
 

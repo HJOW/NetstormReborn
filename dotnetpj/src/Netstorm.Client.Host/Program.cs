@@ -8,7 +8,7 @@ namespace Netstorm.Client.Host;
 /// <summary>
 /// MonoGame 출력 호스트의 별도 진입. 기존 <c>Netstorm.Game</c> 실행은 건드리지 않고 이 진입으로만 돈다.
 /// 인자: [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N]
-/// [--ui-script steps.tsv] [--ui-report report.tsv] [--set "k=v;..."].
+/// [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--set "k=v;..."].
 /// 종료 코드 0(정상)·1(실행 오류)·2(인자 오류).
 /// 근거: cpppj/src/app/main.cpp 의 --run 진입. (R1-2a, 2026-10-28)
 /// </summary>
@@ -54,8 +54,13 @@ internal static class Program
             var screen = new Screen(options.Width, options.Height);
             var input = new InputQueue();
             UiScriptRunner? runner = options.UiScriptPath is null ? null : new UiScriptRunner(UiScript.ParseFile(options.UiScriptPath), input, screen);
-            driver = new HostFrameDriver(screen, input, runner);
-            using var game = new ClientHostGame(driver, options, startup);
+            // 고정 시각 모드는 호스트 시계 원점보다 먼저 켠다. 기본 모드에서는 OS 시계를 그대로 읽는다.
+            // 근거: cpppj/src/app/main.cpp 의 --fixed-frame-ms 연결. (2026-11-10 L2·L3 장치에서 추가했다)
+            var clock = new HostTimeSource();
+            if (options.FixedFrameMs != 0)
+                clock.EnableFixed(new HostFixedTime(options.FixedFrameMs, UnixSeconds: options.FixedUnixSeconds ?? HostTimeSource.DefaultUnixSeconds));
+            driver = new HostFrameDriver(screen, input, runner, clock);
+            using var game = new ClientHostGame(driver, options, startup, clock);
             game.Run();
         }
         catch (Exception exception)

@@ -64,8 +64,8 @@ public sealed class ClientHostGame : Game
     /// <summary>HTML과 상위 메뉴가 공유할 원본 80칸 스크립트 문자열 고리.</summary>
     private readonly ScriptStringRing _scriptStrings = new();
 
-    /// <summary>메뉴 버튼이 쓰는 단조 실시간 시계.</summary>
-    private readonly Stopwatch _wallClock = Stopwatch.StartNew();
+    /// <summary>메뉴 버튼이 쓰는 현재 시각 공급원이다. 고정 모드에서는 프레임마다 전진하는 가상 시계다.</summary>
+    private readonly HostTimeSource _clock;
 
     /// <summary>메뉴 효과음의 MonoGame 장치 경계.</summary>
     private HostButtonSound? _buttonSound;
@@ -100,13 +100,15 @@ public sealed class ClientHostGame : Game
     /// <param name="driver">프레임 골격.</param>
     /// <param name="options">실행 인자.</param>
     /// <param name="startup">실제 파일에서 읽은 시작 화면.</param>
-    public ClientHostGame(HostFrameDriver driver, HostOptions options, HostStartupScene? startup = null)
+    /// <param name="clock">메뉴·위젯이 쓰는 현재 시각 공급원(없으면 기본 OS 시계).</param>
+    public ClientHostGame(HostFrameDriver driver, HostOptions options, HostStartupScene? startup = null, HostTimeSource? clock = null)
     {
         ArgumentNullException.ThrowIfNull(driver);
         ArgumentNullException.ThrowIfNull(options);
         _driver = driver;
         _options = options;
         _startup = startup;
+        _clock = clock ?? new HostTimeSource();
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsFixedTimeStep = true;
@@ -160,13 +162,13 @@ public sealed class ClientHostGame : Game
             _cursor = new HostOriginalCursor(_startup);
             _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
             {
-                Now = () => _wallClock.Elapsed.TotalSeconds,
+                Now = () => _clock.NowSeconds,
                 Poll = Poll,
                 Sound = _buttonSound.Play,
                 Redraw = (_, _) => _menuDirty = true,
                 HandleBase = (_, _, _, _) => 0
             }, action => (_menuInput ?? throw new InvalidOperationException("메인 메뉴 입력 소유자 미연결")).Post(action));
-            _htmlWindows = new HostHtmlWindows(_mainMenu, _driver.Input, () => _wallClock.Elapsed.TotalSeconds,
+            _htmlWindows = new HostHtmlWindows(_mainMenu, _driver.Input, () => _clock.NowSeconds,
                 _ => throw new InvalidOperationException("HTML 링크 명령 소비자 미연결"));
             _htmlWindows.BindParser(_startup, raw => ScriptCommand.QueueScriptCommand(raw, _driver.Input, _scriptStrings,
                 new ScriptCommandHooks { Lookup = DialogScriptCommands.Lookup, Unknown = name => Debug.WriteLine("HTML 스크립트 명령 미연결: " + name) }));
@@ -174,11 +176,11 @@ public sealed class ClientHostGame : Game
                 cursor => _cursor.Set((GameCursor)cursor), _buttonSound.PlayByName);
             _htmlText.Bind(_htmlWindows);
             _textEntry = new HostTextEntry(_mainMenu, _htmlWindows, _htmlText, _driver.Screen,
-                () => _wallClock.Elapsed.TotalSeconds, (_, _) => _menuDirty = true);
+                () => _clock.NowSeconds, (_, _) => _menuDirty = true);
             _htmlMenus = new HostHtmlMenus(_mainMenu, _htmlWindows, _htmlText, _startup, _driver.Screen, (_, _) => _menuDirty = true);
             _htmlMenus.BindInput(_driver.Input, _buttonSound.PlayByName, (_, _) => _menuDirty = true);
             _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
-                _scriptStrings, () => _wallClock.Elapsed.TotalSeconds, _ => 0,
+                _scriptStrings, () => _clock.NowSeconds, _ => 0,
                 name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
             _menuInput = new HostMenuInput(_mainMenu, _htmlWindows, _htmlFactory, _driver.Input, _scriptStrings,
                 () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));

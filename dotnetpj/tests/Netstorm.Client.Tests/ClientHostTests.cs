@@ -64,6 +64,72 @@ public sealed class ClientHostTests
         Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--fps", "-1"]));
         Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--set", "SCREENW"]));
         Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--set", "maxFPS=0"]));
+        Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--fixed-frame-ms"]));
+        Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--fixed-frame-ms", "0"]));
+        Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--fixed-frame-ms", "60001"]));
+        Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--fixed-unix-seconds", "-1"]));
+        Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--fixed-unix-seconds", "5"]));
+    }
+
+    /// <summary>고정 시각 인자는 기본 꺼짐이며 --fixed-frame-ms 와 함께 쓸 때만 받는다.</summary>
+    [Fact]
+    public void ParsesFixedFrameOptions()
+    {
+        HostOptions defaults = HostOptions.Parse([]);
+        Assert.Equal(0u, defaults.FixedFrameMs);
+        Assert.Null(defaults.FixedUnixSeconds);
+        HostOptions options = HostOptions.Parse(["--fixed-frame-ms", "25", "--fixed-unix-seconds", "946684900"]);
+        Assert.Equal(25u, options.FixedFrameMs);
+        Assert.Equal(946684900, options.FixedUnixSeconds);
+    }
+
+    /// <summary>기본 시각 공급원은 OS 시계를 읽고 전진 호출은 아무것도 하지 않는다.</summary>
+    [Fact]
+    public void TimeSourceDefaultsToOperatingSystemClock()
+    {
+        var clock = new HostTimeSource();
+        Assert.False(clock.FixedEnabled);
+        long before = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        clock.Advance();
+        int seconds = clock.UnixSeconds;
+        long after = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        Assert.InRange(seconds, before, after);
+    }
+
+    /// <summary>고정 모드는 원점에서 시작해 프레임마다 같은 밀리초씩 전진하고 유닉스 초는 경과 초 내림을 따른다.</summary>
+    [Fact]
+    public void FixedTimeSourceAdvancesOnlyPerFrame()
+    {
+        var clock = new HostTimeSource();
+        clock.EnableFixed(new HostFixedTime(25, 4294967000u, 946684800));
+        Assert.True(clock.FixedEnabled);
+        Assert.Equal(4294967000u, clock.Milliseconds);
+        Assert.Equal(4294967000u, clock.Milliseconds);
+        Assert.Equal(946684800, clock.UnixSeconds);
+        // 40프레임(1000ms) 전진 뒤 값과 unsigned 32비트 감김을 확인한다
+        for (int frame = 0; frame < 40; frame++) clock.Advance();
+        Assert.Equal(unchecked((uint)(4294967000ul + 1000ul)), clock.Milliseconds);
+        Assert.Equal(946684801, clock.UnixSeconds);
+        Assert.Throws<InvalidOperationException>(() => clock.EnableFixed(new HostFixedTime(25)));
+        var fresh = new HostTimeSource();
+        Assert.Throws<ArgumentException>(() => fresh.EnableFixed(new HostFixedTime(0)));
+        Assert.Throws<ArgumentException>(() => fresh.EnableFixed(new HostFixedTime(60001)));
+        Assert.Throws<ArgumentException>(() => fresh.EnableFixed(new HostFixedTime(25, 0, -1)));
+        Assert.False(fresh.FixedEnabled);
+    }
+
+    /// <summary>프레임 골격은 연결된 시각 공급원을 프레임마다 한 번씩 전진시킨다.</summary>
+    [Fact]
+    public void FrameDriverAdvancesFixedClock()
+    {
+        var screen = new Screen(64, 48); var input = new InputQueue();
+        var clock = new HostTimeSource();
+        clock.EnableFixed(new HostFixedTime(25));
+        var driver = new HostFrameDriver(screen, input, null, clock);
+        driver.BeginFrame(); driver.BeginFrame();
+        Assert.Equal(HostTimeSource.DefaultOriginMilliseconds + 50u, clock.Milliseconds);
+        Assert.Equal(1000.05, clock.NowSeconds, 9);
+        driver.Finish();
     }
 
     /// <summary>인덱스 사각형을 현재 팔레트의 RGBA로 푼다. 행 간격을 넘어 읽지 않는다.</summary>
