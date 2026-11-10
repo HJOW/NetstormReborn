@@ -1,0 +1,10 @@
+{
+  "unit": "1285 B1/B2 NB07 NB08 NB24",
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "NB07": "already handled (Unique Name Required dialog) - live verified",
+  "NB08": {"status": "fixed", "causes": ["FileSpecDirectoryHooks root/path with rooted pattern dropped game dir", "BaseFileSystem::MatchFinder result prefix compare same cause", "% inline list copy only replacement length (PE 4c8c12..36) - repairInlineList flag, product on, default off"]},
+  "NB24": {"status": "fixed", "cause": "80-byte local title buffer overflow rejection (GuideHades 86, GuideKQ 102) -> FitDisplayLimit truncation"},
+  "tests": {"netstorm_product_ui_tests": "24/24", "netstorm_solo_map_list_tests": "6/6", "netstorm_editor_file_tests": "45/45", "netstorm_basefile_io_tests": "19/19", "netstorm_file_directory_tests": "3 failed checks identical to baseline (StartupFileNames_ActualClientUnicodeStartupSaveAndReload)"},
+  "live": "Campaign -> User Made Campaigns lists user campaigns with scrollbar; exit 0, no log"
+}

@@ -412,7 +412,7 @@ std::vector<std::string> BaseFileSystem::MatchFinder(std::string_view pattern) c
         const auto absoluteRoot=std::filesystem::absolute(root).lexically_normal();auto prefix=PathText(absoluteRoot);std::replace(prefix.begin(),prefix.end(),'/','\\');while (!prefix.empty() && prefix.back()=='\\') prefix.pop_back(); //끝 구분자는 반환 상대 이름에 한 번만 남기며 UTF-8 바이트를 보존한다.
         auto nativePattern=std::string(pattern);std::replace(nativePattern.begin(),nativePattern.end(),'/','\\'); // 현대 VFS의 '/' 경로 확장만 caller에서 native로 변환하며 원문 FileSpec 입력 계약은 바꾸지 않는다.
         const BaseFileSystem finder(root);for (const auto& name:finder.MatchDisk(nativePattern)) { // 디렉터리 속성도 FileSpec과 같이 제외하지 않는다.
-            const auto path=NativePath(name);auto absolute=PathText(std::filesystem::absolute(path.is_absolute()?path:root/path).lexically_normal());std::replace(absolute.begin(),absolute.end(),'/','\\');
+            const auto path=NativePath(name);auto absolute=PathText(std::filesystem::absolute(path.is_absolute()?path:root/path.relative_path()).lexically_normal()); /* NB08: 드라이브 없는 루트 경로(\\D\\x 형태)의 결과를 현재 드라이브 루트가 아니라 게임 폴더 기준으로 해석한다(디스크의 사용자 캠페인이 목록에서 빠지던 원인). */std::replace(absolute.begin(),absolute.end(),'/','\\');
             if (absolute.size()>prefix.size() && absolute.compare(0,prefix.size(),prefix)==0 && absolute[prefix.size()]=='\\') append(absolute.substr(prefix.size())); // 원문처럼 경로 접두부 비교는 대소문자를 바꾸지 않는다.
         }
     };

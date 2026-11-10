@@ -46,7 +46,13 @@ std::uint32_t HtmlWindowMetadata::Process(std::uint32_t token,std::span<char> bu
         const auto start=static_cast<std::size_t>(match.position());const auto currentLength=Length(buffer);if (start>currentLength) throw std::out_of_range("HTML 메타 현재 일치 시작 범위 초과");auto end=start+(buffer[start]=='$' ? 1U : 0U);
         while (end<currentLength && buffer[end]!='\n' && buffer[end]!='$') ++end; // 캡처 끝이 아니라 현재 다음 LF/$/NUL까지 지운다.
         if (end<currentLength && buffer[end]=='\n') ++end;std::memmove(buffer.data()+start,buffer.data()+end,currentLength-end+1);
-        if (insert) { std::string merged(buffer.data(),Length(buffer));merged.insert(start,replacement);if (replacement.size()>buffer.size()) throw std::length_error("HTML 메타 원문 치환 복사 범위 초과");std::copy_n(merged.data(),replacement.size(),buffer.data()); } // PE4c8c12..36은 replacement 길이만 복사하며 NUL/전체 merged 길이를 추가하지 않는다.
+        if (insert && hooks_.repairInlineList) { // 알려진 버그 NB08: 원문 PE4c8c12..36은 합친 문자열 전체가 아니라 replacement 길이만 앞에서부터 복사하고 NUL도 쓰지 않아,
+            // $Menu=%… 줄이 본문 뒤쪽(start>0)에 있으면 삽입한 목록이 잘려 "User Made Campaigns"가 항상 비어 있었다. 합친 전체와 끝 NUL을 쓰고
+            // 8192BYTE 버퍼를 넘는 꼬리만 자른다(물리 범위 안에서만 쓴다).
+            std::string merged(buffer.data(),Length(buffer));merged.insert(start,replacement);
+            if (merged.size()+1>buffer.size()) merged.resize(buffer.size()-1); // 버퍼 용량을 넘는 목록 꼬리는 버린다(오버런 방지).
+            std::copy_n(merged.data(),merged.size(),buffer.data());buffer[merged.size()]='\0';
+        } else if (insert) { std::string merged(buffer.data(),Length(buffer));merged.insert(start,replacement);if (replacement.size()>buffer.size()) throw std::length_error("HTML 메타 원문 치환 복사 범위 초과");std::copy_n(merged.data(),replacement.size(),buffer.data()); } // PE4c8c12..36은 replacement 길이만 복사하며 NUL/전체 merged 길이를 추가하지 않는다(repairInlineList 꺼짐).
     }
     return buttons || Node(token).menuColumns ? 1U : 0U;
 }

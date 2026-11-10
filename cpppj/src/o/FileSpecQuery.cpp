@@ -22,7 +22,7 @@ FileSpecQueryHooks FileSpecDirectoryHooks(std::filesystem::path directory) { // 
     hooks.find=[directory](std::string_view name) { // 원래 패턴은 FileSpec에 남기고 OS에 전달하는 상대 경로만 게임 폴더에 붙인다.
         const auto root=std::filesystem::absolute(directory).lexically_normal();auto path=platform::PathFromUtf8(name);const auto drive=path.root_name(); // 드라이브 상대 이름과 루트/UNC 이름을 구별하며 검색 시에만 게임 폴더를 확정한다.
         if (!path.is_absolute()) {
-            if (!path.has_root_name()) path=root/path;
+            if (!path.has_root_name()) path=root/path.relative_path(); // NB08: "\\D\\x"처럼 루트 디렉터리만 있는 패턴을 filesystem operator/가 게임 폴더를 버리고 현재 드라이브 루트로 해석하던 문제를 막는다(디스크 사용자 캠페인이 목록에서 빠지던 원인).
             else if (!path.has_root_directory() && drive.native().size()==2 && drive.native()[1]==L':' && ::CompareStringOrdinal(drive.c_str(),-1,root.root_name().c_str(),-1,TRUE)==CSTR_EQUAL) path=root/path.relative_path();
         }
         return WindowsFind(platform::PathToUtf8(path));

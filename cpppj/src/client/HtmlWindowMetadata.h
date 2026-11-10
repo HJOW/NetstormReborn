@@ -12,6 +12,7 @@ struct HtmlWindowMetadataHooks { // 게임 계산 결과 대신 실제 공통 UI
     std::function<void(std::string_view,std::uint32_t&)> maps;std::function<void(std::uint32_t)> tech;std::function<void(std::uint32_t,std::int32_t)> themeTech; // 실제 맵/기술 목록이며 열 수는 같은 부모 필드를 빌린다.
     std::function<void(std::string_view,std::uint32_t,std::string_view)> namedList,fileList; // @/#의 현재 키·명령·원시 인자다.
     std::function<std::string(std::string_view,std::string_view,std::string_view)> inlineList; // %의 현재 키·원시 명령/인자로 반환된 실제 문자열이다.
+    bool repairInlineList{}; // true이면 알려진 버그 NB08을 고쳐 %목록을 본문 전체에 삽입한다. 기본 false는 PE 4c8c12..36 관측과 같은 원문 동작(replacement 길이만 복사)을 보존한다.
     std::function<double()> wallSeconds;std::function<void(std::uint32_t,bool)> idle;std::function<std::uint32_t(std::uint32_t)> read; // 현재 시각/정상 idle 등록/실제 전역 DWORD다.
     std::function<void(std::int32_t,std::string_view,std::string_view)> input;std::function<void(std::string_view,std::string_view,std::string_view)> send; //4d3ed0의mode/제목/후속Tell과원문Zsend패킷의선택경계다.
     std::function<void(std::uint32_t,std::uint32_t,std::uint32_t)> queue; // Input 뒤 현재 MenuJustClosed raw 사건을 그대로 예약한다.

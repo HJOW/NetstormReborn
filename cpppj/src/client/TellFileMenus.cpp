@@ -19,7 +19,15 @@ std::string FileName(std::string_view path) { //59c40(1)의 첫 점부터 제거
     const auto separator=path.find_last_of("\\/:");auto name=std::string(path.substr(separator==path.npos ? 0 : separator+1));const auto dot=name.find('.');if (dot!=name.npos) name.resize(dot);return name;
 }
 std::string ObjectName(const o::Config& object) { auto name=object.Prefix();if (name.empty()) throw std::logic_error("Tell 파일 목록의 실제 이름 prefix 없음");name.pop_back();return name; } // 정렬한 원문 prefix에서 마지막 점 하나만 제거한다.
-std::string Title(o::ConfigInterface& config,std::string_view name,bool fallback) { auto label=config.SubstituteLocal("{{local.1}.title}",name);Limit(label,80);if (fallback && label.empty()) { label=name;Limit(label,80); }return label; } // 실제 지역80BYTE 복사 뒤 @/%만 빈 제목을 이름으로 바꾼다.
+// 표시 바이트(NUL 포함 capacity)를 넘지 않도록 마지막 UTF-8 문자부터 줄인다. 원문은 80BYTE 지역 버퍼를 넘는 긴 캠페인 제목을 그대로 복사해 종료했다(알려진 버그 NB24).
+std::string FitDisplayLimit(std::string value,std::size_t capacity) {
+    while (!value.empty() && Narrow(value).size()>=capacity) { // 한 번에 한 문자씩 줄여 표시 확장열이 중간에 잘리지 않게 한다.
+        auto last=value.size();do { --last; } while (last>0 && (static_cast<unsigned char>(value[last])&0xC0U)==0x80U); // 마지막 문자의 선두 바이트를 찾는다.
+        value.resize(last);
+    }
+    return value;
+}
+std::string Title(o::ConfigInterface& config,std::string_view name,bool fallback) { auto label=FitDisplayLimit(config.SubstituteLocal("{{local.1}.title}",name),80);if (fallback && label.empty()) label=FitDisplayLimit(std::string(name),80);return label; } // NB24: 긴 제목은 종료하지 않고 80BYTE 안으로 줄여 표시한다. // 실제 지역80BYTE 복사 뒤 @/%만 빈 제목을 이름으로 바꾼다.
 }
 TellFileMenus::TellFileMenus(o::ConfigInterface& config,std::function<std::vector<std::string>(std::string_view)> enumerate):config_(config),enumerate_(std::move(enumerate)) {} // 생성 시 파일이나 메뉴를 만들지 않는다.
 void TellFileMenus::InvalidateLanguageFiles() { // 현재안내의officalN.Overview참조가살아있도록같은등록객체를유지한다.
