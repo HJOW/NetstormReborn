@@ -436,6 +436,8 @@ public sealed class RawPostPop : IRawPopPostPop
 
     /// <summary>
     /// 비전투 Activate 에서 postPop 을 호출하는 깊이 증가·감소를 보존한다. 파생 몸체가 없으므로 바로 공통 몸체로 간다.
+    /// Player는 가상 분배 진입으로 실제 몸체가 후처리한다(원본 Activate→DispatchPostPop 상당).
+    /// 2026-11-10 F3 실제 호스트·월드 조립(0.305)에서 추가됐다.
     /// </summary>
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     /// <param name="flags">Pop 이 정규화한 호출 플래그.</param>
@@ -444,7 +446,7 @@ public sealed class RawPostPop : IRawPopPostPop
         Validate(sid, flags, default);
         uint before = _state.Depth;
         _state.Depth = unchecked(before + 1);
-        PostPop(sid, flags);
+        PostPopVirtual(sid, flags);
         // 파생 몸체가 없으므로 공통 몸체가 깊이를 정확히 1 줄였는지 여기서 보장된다
         if (_state.Depth != before)
         {

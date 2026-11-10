@@ -105,6 +105,9 @@ public sealed class RawPopTests
         /// <summary>지정한 대로 처리 가능 여부를 돌려준다(기본 true).</summary>
         public bool HandlesDerived(int sid) => handles?.Invoke(sid) ?? true;
 
+        /// <summary>Player 몸체를 쓰지 않으므로 항상 거짓이다.</summary>
+        public bool HandlesPlayer(int sid) => false;
+
         /// <summary>호출 기록.</summary>
         public void Validate(int sid, uint flags, in PopProjection projection) => log.Add($"PostValidate:{flags:X}");
 

@@ -185,6 +185,8 @@ cpppj TSV fixture 279개를 영역별로 묶어 이식 단위 W01~W20으로 나�
 
 **(2026-11-10 dotnetpj 쪽 해결 기록 — 요청 1·2):** cpppj에 `session-dump` 단계·`--fixed-frame-ms`가 들어간 뒤(cpppj `c91d9b84`), dotnetpj 호스트에도 같은 문법·형식의 장치를 만들었다(단위 0.283·0.284: `HostTimeSource`·`HostOptions`·`HostFrameDriver`·`SessionStateDump.FormatWorld0`·`HostSessionDump`·`UiScriptRunner`의 `session-dump` 단계, world 0 덤프까지). 요청 3~5는 남는다.
 
+6. **정리 뒤 정기 조회(`PlayerWorld_SameSurfaceCoreRecordsAndInitialRegular` 꼬리, 0.305):** 오라클 바이너리(`cpppj/build/bin/Release/netstorm_pop_context_tests.exe`, 2026-11-10 빌드·트리 청정)에서 해당 케이스가 실패한다. `world.ClearProcesses()`(커널만 비움) 뒤 `FindEvent(sid,1)`가 빈 검색(null)이 아니라 미등록 진단을 낸다. C++ `Kernel::Remove`·기본 소멸자는 종속 사슬을 풀지 않으므로 C# 이식은 원본 동작 그대로 두었다. 정리 때 사슬을 푸는 것이 의도라면 cpppj 쪽에서 `ClearProcesses`·소멸 경로를 확인해 달라. 요청 3~5는 남는다.
+
 ## 9. 실행·검증 규칙
 
 - **DESKTOP-HJOW:** `dotnet build`·`dotnet test`(헤드리스)만 실행한다. 클론 창·원본 게임은 실행하지 않는다. 10분 이상 걸릴 재생성·변이 검사는 인수인계로 넘긴다.

@@ -735,4 +735,69 @@ public sealed class RawPlayerWorldTests
         Assert.True(records.AsSpan().SequenceEqual(before));
         Assert.Equal(1u, book.Depth);
     }
+
+    /// <summary>같은 표면 월드의 실제 공장·풀·해시와 두 소유자·현재 9기록·호스트로 Player를 생성·후처리한다. 2026-11-10 F3 실제 호스트·월드 조립(0.305)에서 추가됐다.</summary>
+    [Fact]
+    public void SameSurfaceCoreRecordsAndInitialRegular()
+    {
+        // cpp `PlayerWorld_SameSurfaceCoreRecordsAndInitialRegular`의 PATCH 절반이다. CD는 공장·표시 152 지원과 함께 잇는다.
+        List<OriginalTypeRecord> types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        types[152].ConstructorAddress = OriginalConstructors.Address(OriginalEdition.Patch1078, 152);
+        types[152].FootX = 1;
+        types[152].FootY = 1;
+        // 정기 예약의 Form 생성은 자산 80번에 폼 2번 생성자를 빌린다(예약 검사와 같은 부모·폼 구성).
+        types[80].ConstructorAddress = OriginalConstructors.Address(OriginalEdition.Patch1078, 2);
+        List<RiftTypeFrames> frames = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new RiftTypeFrames([])).ToList();
+        List<SquidDisplayShape> shapes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new SquidDisplayShape()).ToList();
+        shapes[152].FrameCount = 1;
+        shapes[152].Loaded = true;
+        shapes[152].Frames.Add(new SquidDisplayFrame { Width = 10, Height = 12, HotspotX = 2, HotspotY = 3, CellWidth = 1f, CellHeight = 1f });
+        var storage = new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes);
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, storage.Links.IslandType, storage, frames);
+        RawWorldCore core = world.Core();
+        byte[] records = new byte[9 * 0xb4];
+        var state = new PlayerWorldState { PlayerKnown = 1u, BattleOwner = 1u, TemplateOwner = 8u, PlayerType = 152u };
+        uint diagnostics = 0;
+        core.ProcessState.Now = 17.25;
+        core.ProcessState.CurrentProcessFormType = new UIntBox { Value = 80u };
+        var hooks = new PlayerWorldHooks
+        {
+            Assertion = _ => diagnostics++,
+            Find = (x, y, type) => world.Find(x, y, type),
+            Create = (type, flags) => world.Create(type, flags),
+            SetOwner = (sid, owner) => core.Owner.Set(sid, owner),
+            Pop = (sid, x, y, flags) => world.Pop(sid, x, y, flags),
+            ReserveRegular = () => true,
+            AddRegular = (sid, ev, payload) => core.Processes.AddRegular(sid, ev, payload),
+        };
+        var player = new RawPlayerWorld(core.Pool, core.PostPop, records, state, hooks);
+        core.PostPop.SetPlayerPostPop(player);
+        int sid = player.Create(1);
+        RegularProcess? regular = core.Processes.FindEvent(sid, 1);
+        Assert.Equal(5, sid);
+        Assert.Equal(5u, player.CurrentTechnology());
+        Assert.Equal(5u, player.Technology(1));
+        Assert.Equal(0u, player.Technology(8));
+        Assert.Equal(8u, state.TemplateOwner);
+        Assert.Equal(0u, diagnostics);
+        Assert.NotNull(regular);
+        Assert.Equal(17.25, regular.Time());
+        Assert.Equal(5.0f, regular.Payload());
+        Assert.Equal(0u, regular.Count());
+        Assert.Equal(1, core.Kernel.Size());
+        Assert.Same(regular, core.Processes.FromForm(regular.Form()));
+        Span<byte> raw = core.Pool.AllocatedBytes(sid);
+        Assert.Equal(152, raw[10]);
+        Assert.Equal(11.0f, BitConverter.ToSingle(raw.Slice(14, 4)));
+        Assert.Equal(1.0f, BitConverter.ToSingle(raw.Slice(18, 4)));
+        Assert.Equal(0u, core.Bookkeeping.Depth);
+        Assert.Same(core.Pool, player.Pool());
+        Assert.Same(core.Pool, core.PostPop.Pool);
+        world.ClearProcesses();
+        Assert.Equal(0, core.Kernel.Size());
+        // 정리 뒤 조회는 원본처럼 빈 검색이 아니라 미등록 진단을 낸다. 오라클(`netstorm_pop_context_tests`)도 같은 꼬리에서 실패하므로
+        // 원본 동작 그대로 두며(결정 6), cpppj 쪽 재확인은 이식 계획 8절 요청 6으로 전달한다.
+        Assert.ThrowsAny<Exception>(() => core.Processes.FindEvent(sid, 1));
+        core.PostPop.SetPlayerPostPop(null);
+    }
 }

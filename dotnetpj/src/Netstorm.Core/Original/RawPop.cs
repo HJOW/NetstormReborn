@@ -62,6 +62,10 @@ public interface IRawPopPostPop
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     bool HandlesDerived(int sid);
 
+    /// <summary>묶은 Player 몸체가 이 SID 를 처리하는지 돌려준다. Pop 의 지원 표 검사가 실패했을 때 함께 확인한다. 2026-11-10 F3 실제 호스트·월드 조립(0.305)에서 추가됐다.</summary>
+    /// <param name="sid">오브젝트 슬롯 번호.</param>
+    bool HandlesPlayer(int sid);
+
     /// <summary>좌표·화면 좌표·spot·체인 쓰기 전에 이 등록을 처리할 수 있는지 검사한다. 처리할 수 없으면 예외를 던진다.</summary>
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     /// <param name="flags">정규화한 Pop 호출 플래그(최초 Pop 비트와 Activate 비트 0x10 포함).</param>
@@ -283,8 +287,10 @@ public sealed class RawPop
             throw new InvalidOperationException("Pop 건물 부착 공간이 연결되지 않았습니다");
         }
         uint vtable = Read(old, 0, 4);
+        // Player 몸체는 등록된 실제 몸체를 재사용한다. 그 밖의 파생 표는 미복원으로 둔다
         if (!OriginalPopDisplay.Supports(_pool.Edition, vtable, flags)
-            && !(_postPop is not null && _postPop.HandlesDerived(sid) && OriginalUnpopDisplay.Supports(_pool.Edition, vtable, flags)))
+            && !(_postPop is not null && _postPop.HandlesDerived(sid) && OriginalUnpopDisplay.Supports(_pool.Edition, vtable, flags))
+            && !(_postPop is not null && _postPop.HandlesPlayer(sid) && OriginalUnpopDisplay.Supports(_pool.Edition, vtable, flags)))
         {
             throw new InvalidOperationException("Pop 파생 등록 효과를 아직 지원하지 않습니다");
         }
