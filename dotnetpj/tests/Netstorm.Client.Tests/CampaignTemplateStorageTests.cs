@@ -125,6 +125,49 @@ public sealed class CampaignTemplateStorageTests
         Assert.Equal(0, storage.OwnedImages);
     }
 
+    /// <summary>파싱 사본이 아닌 현재 원시 Subscriber 섹션과 원본 signed 문자열 경계를 읽는다. 2026-11-10 F3 미뤄 둔 전수 재생(0.302)에서 추가됐다.</summary>
+    [Fact]
+    public void CurrentSubscriberSectionReadsLiveBytes()
+    {
+        // cpp `SoloMapCatalogTests.cpp`의 `CurrentSubscriberSection`을 옮겼다.
+        FortTemplate fort = EmptyFort();
+        fort.Sections[0] = RawSectionBuffer.FromBytes([7, 0, 0, 0, 5, 0, (byte)'A', 0, (byte)'B', (byte)'C', (byte)'D']);
+        fort.Subscriber = new FortSubscriber { Id = 7, Name = "stale" };
+        CampaignTemplateStorage storage = new();
+        storage.Install(0, fort, "sample");
+        storage.Borrow(8, 0);
+        Assert.Equal("A", storage.ReadSubscriberName(8));
+        Assert.Equal("Subscriber", storage.CurrentSection(0));
+        // 같은 현재 버퍼를 직접 바꾸면 다음 조회에 그대로 보인다.
+        storage.Template(0).Sections[0] = RawSectionBuffer.FromBytes([1, 0, 0, 0, 2, 0, (byte)'N', (byte)'e']);
+        Assert.Equal("Ne", storage.ReadSubscriberName(0));
+        // signed 길이 0xffff는 거부한다.
+        RawSectionBuffer bytes = storage.Template(0).Sections[0];
+        bytes.Span[4] = 0xff;
+        bytes.Span[5] = 0xff;
+        Assert.ThrowsAny<Exception>(() => storage.ReadSubscriberName(8));
+        // 길이 0은 빈 이름이다.
+        storage.Template(0).Sections[0] = RawSectionBuffer.FromBytes([1, 0, 0, 0, 0, 0]);
+        Assert.Equal("", storage.ReadSubscriberName(0));
+        // 길이 255는 255바이트를 그대로 읽는다.
+        byte[] big = new byte[261];
+        big[0] = 1;
+        big[4] = 0xff;
+        Array.Fill(big, (byte)'x', 6, 255);
+        storage.Template(0).Sections[0] = RawSectionBuffer.FromBytes(big);
+        Assert.Equal(new string('x', 255), storage.ReadSubscriberName(8));
+        // 길이 256은 목록 256바이트 출력을 넘어 거부한다.
+        bytes = storage.Template(0).Sections[0];
+        bytes.Span[4] = 0;
+        bytes.Span[5] = 1;
+        bytes.Resize(262);
+        bytes.Span[261] = (byte)'x';
+        Assert.ThrowsAny<Exception>(() => storage.ReadSubscriberName(0));
+        // 비운 버퍼는 거부한다.
+        bytes.Clear();
+        Assert.ThrowsAny<Exception>(() => storage.ReadSubscriberName(8));
+    }
+
     /// <summary>Player State getter가 같은 목록/current를 선택하고 빌린 헤더와 같은 커서를 공유한다.</summary>
     [Fact]
     public void PlayerSelectsCurrentSectionAndSharedCursor()
