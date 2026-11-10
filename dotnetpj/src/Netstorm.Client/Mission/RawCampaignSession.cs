@@ -481,22 +481,63 @@ public sealed class RawCampaignSession
         return owned;
     }
 
-    /// <summary>로컬 패킷을 보낸다. 사전 구현에서는 전송기가 없어 명시 오류로 멈춘다. 3차 로컬 구현 때 루프백 전송과 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
+    /// <summary>같은 에디터 전송의 수신 폴링 효과다. 세션 조립 때 루프백 전송을 묶으며 그 전까지는 비어 있다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
+    private Func<int>? _editorPoll;
+
+    /// <summary>같은 에디터 전송의 송신 효과다. 세션 조립 때 루프백 전송을 묶으며 그 전까지는 비어 있다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
+    private Func<int, byte[], bool>? _editorSend;
+
+    /// <summary>로컬 패킷을 보낸다. 묶은 에디터 전송이 없으면 명시 오류로 멈춘다. 3차 로컬 구현 때 루프백 전송과 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐고 2026-11-10 멀티플레이 사전 구현에서 에디터 전송 분기를 이었다.</summary>
     /// <param name="target">받을 소유자 번호다.</param>
     /// <param name="packet">보낼 패킷이다.</param>
     public void SendLocalPacket(int target, byte[] packet)
     {
-        _ = target;
         ArgumentNullException.ThrowIfNull(packet);
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 로컬 송신입니다.");
+        }
 
-        // 원본 세션 송신의 실제 로컬 전송 본체는 3차 로컬 구현 때 잇는다(결정 6 — 성공을 합성하지 않는다).
+        // 원본 세션 송신의 Login 분기는 실제 Login 몸체 쪽에서 잇는다. 에디터 분기는 같은 물리 큐에 그대로 쓴다(결정 6 — 성공을 합성하지 않는다).
+        if (_editorSend is not null)
+        {
+            _ = _editorSend(target, packet);
+            return;
+        }
+
         throw new InvalidOperationException("실제 로컬 연결 전송 미연결");
     }
 
-    /// <summary>송수신 큐와 로그인 타이머를 진행한다. 사전 구현에서는 전송기가 없어 명시 오류로 멈춘다. 3차 로컬 구현 때 루프백 펌프와 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
+    /// <summary>송수신 큐와 로그인 타이머를 진행한다. 묶은 에디터 전송이 없으면 명시 오류로 멈춘다. 3차 로컬 구현 때 루프백 펌프와 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐고 2026-11-10 멀티플레이 사전 구현에서 에디터 전송 분기를 이었다.</summary>
     public void PumpLocalConnection()
     {
-        // 원본 세션 펌프의 실제 큐·타이머 본체는 3차 로컬 구현 때 잇는다(결정 6 — 성공을 합성하지 않는다).
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 로컬 펌프입니다.");
+        }
+
+        // 원본 세션 펌프의 Login 분기는 실제 Login 몸체 쪽에서 잇는다. 에디터 분기는 같은 unbuffered 큐만 폴링한다(결정 6 — 성공을 합성하지 않는다).
+        if (_editorPoll is not null)
+        {
+            _ = _editorPoll();
+            return;
+        }
+
         throw new InvalidOperationException("실제 로컬 연결 펌프 미연결");
     }
+
+    /// <summary>같은 루프백 에디터 전송의 송수신 효과를 묶는다. 외부 주소 바인딩은 전송 쪽 정책이 거부한다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <param name="poll">묶을 수신 폴링 효과다. 분배한 프레임 수를 돌려준다.</param>
+    /// <param name="send">묶을 송신 효과다. 받아들였으면 참을 돌려준다.</param>
+    public void BindLocalEditorTransport(Func<int> poll, Func<int, byte[], bool> send)
+    {
+        ArgumentNullException.ThrowIfNull(poll);
+        ArgumentNullException.ThrowIfNull(send);
+        _editorPoll = poll;
+        _editorSend = send;
+    }
+
+    /// <summary>같은 루프백 에디터 전송을 묶었는지 확인한다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasLocalEditorTransport() => _editorPoll is not null && _editorSend is not null;
 }
