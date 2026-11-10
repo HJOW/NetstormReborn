@@ -15544,7 +15544,7 @@
       "bytes": 419217,
       "lines": 1977,
       "fixtureCommit": "8abd00ac3",
-      "webCommit": "worktree",
+      "webCommit": "826591c67",
       "cpppjBasis": {
         "cpppj/src/o/RawAssetRegular.cpp": "c102cdbf3"
       }
@@ -15574,7 +15574,7 @@
       "bytes": 441239,
       "lines": 1729,
       "fixtureCommit": "0b7bc959e",
-      "webCommit": "worktree",
+      "webCommit": "826591c67",
       "cpppjBasis": {
         "cpppj/src/o/RawAssetRegular.cpp": "c102cdbf3"
       }
@@ -15603,9 +15603,67 @@
       "bytes": 126505,
       "lines": 657,
       "fixtureCommit": "3c5f50923",
-      "webCommit": "worktree",
+      "webCommit": "826591c67",
       "cpppjBasis": {
         "cpppj/src/o/RawFactoryRegular.cpp": "3c5f50923"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E256",
+      "id": "local-geyser",
+      "path": "cpppj/tests/fixtures/local-geyser-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 로컬 간헐천의 후보(T)·요청(P)·전체 생성(G) 결과·마지막 좌표·난수·최근 목록 전체 칸·자원 pool·수량·생성 횟수·외부 효과 순서(10.78)",
+      "consumers": [
+        "webpj/tests/local-geyser.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-local-geyser.js"
+      ],
+      "doc": "docs/webpj-local-geyser-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawLocalGeyser.cpp"
+      ],
+      "scope": "10.78 221행 전부(PATCH 단독 파일)를 독립 값·공유 자원 상자·장기 owner·현재 Player base·deferred 로 사용",
+      "text": true,
+      "sha256": "6bb5a9dd5d7d909b61b967523a4da4dc8cea6c652f367f007155206651bad639",
+      "bytes": 42640,
+      "lines": 222,
+      "fixtureCommit": "7477610d2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawLocalGeyser.cpp": "5f4b9d304"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E256",
+      "id": "geyser-placement",
+      "path": "cpppj/tests/fixtures/geyser-placement-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 간헐천 요청의 허용 지형/허공·균일 지형·제외 영역·현재 Player 재조회 결과와 Player 9기록 전체 바이트(10.78)",
+      "consumers": [
+        "webpj/tests/local-geyser.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-local-geyser.js"
+      ],
+      "doc": "docs/webpj-local-geyser-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawLocalGeyser.cpp"
+      ],
+      "scope": "10.78 183행 전부",
+      "text": true,
+      "sha256": "48ac1014e689de4e37bb7a55556a464605af6a23484aa8dd953c0bbed86af0a1",
+      "bytes": 624869,
+      "lines": 184,
+      "fixtureCommit": "31db9957a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawLocalGeyser.cpp": "5f4b9d304"
       }
     }
   ]
