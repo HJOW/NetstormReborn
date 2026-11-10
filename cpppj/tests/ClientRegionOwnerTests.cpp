@@ -1953,3 +1953,22 @@ TEST_CASE(ClientFactoryOwner_MissingWholePinRejectsAllThreeEffects) { // begin/f
         }
     }CHECK(checked==6);
 }
+
+TEST_CASE(ClientDecorationOwner_MissingWholeOwnerRejectsSelectedHit) { // 장식의 현재HP 계산 뒤 가상98은 전체 pin/owner가 없으면 콜백 전에 거부한다.
+    for (const auto emptyOwner:{false,true}) { // pin 함수 부재와 반환 owner 부재를 각각 검사한다.
+        RegionScene s;const auto parent=s.Asset(0x50a820U);auto raw=s.storage->pool.AllocatedBytes(parent);s.storage->types[raw[10]].maxHitPoints=100;RegionPut(raw,26,100);auto runtime=std::make_shared<RawSurfaceDamageableBindings>();std::uint32_t calls{};runtime->hitPoints=[&](auto,auto,auto,auto) { ++calls;return 1; };if (emptyOwner) runtime->pin=[] { return std::shared_ptr<void>{}; };s.storage->BindDamageableRuntime(runtime);bool rejected{};
+        try { static_cast<void>(s.storage->DecorationRegular(parent,0,1,0.25f)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).starts_with("장식의 실제 전체"); }CHECK(rejected && calls==0 && RegionRead(raw,26)==100 && !s.storage->Borrowed());
+    }
+}
+TEST_CASE(ClientDudeOwner_MissingWholeOwnerKeepsOriginalRandomPrefix) { // 공급원 선택의 원문 난수 뒤 큰 이동 진입점은 실제 전체 owner가 없으면 호출하지 않는다.
+    for (const auto emptyOwner:{false,true}) { // 두 누락 형태에서도 앞선 난수 소비를 되돌리지 않는다.
+        RegionScene s;BindFactoryOwnerDevices(s);const auto parent=s.Asset(0x508cc8U),target=s.Asset(0x50f540U);s.storage->sidLists.providers.entries={target.value};s.storage->sidLists.providers.count=1;s.storage->GameAux()->DudeProviderIndex()=0;s.random->Game().SetState(1);GameRandom expected(1);static_cast<void>(expected.Next(1));auto runtime=std::make_shared<RawSurfaceDudeBindings>();std::uint32_t calls{};runtime->entrance=[&](auto) { ++calls;return RawPathPoint{12,24}; };runtime->move=[&](auto,auto,bool) { ++calls;return true; };if (emptyOwner) runtime->pin=[] { return std::shared_ptr<void>{}; };s.storage->BindDudeRuntime(runtime);bool rejected{};
+        try { static_cast<void>(s.storage->DudeRegular().Wander(parent,0,true)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).starts_with("Dude의 실제 전체"); }CHECK(rejected && calls==0 && s.random->Game().State()==expected.State() && s.storage->GameAux()->DudeProviderIndex()==0 && !s.storage->Borrowed());
+    }
+}
+TEST_CASE(ClientResidenceOwner_MissingWholeOwnerRejectsDudeEffects) { // Fort 공급원 관문 뒤 Dude 진입점/생성/작업은 실제 전체 owner가 없으면 실행하지 않는다.
+    for (const auto emptyOwner:{false,true}) { // pin 함수 부재와 빈 owner에서 동일한 큰 효과 차단을 확인한다.
+        RegionScene s;s.storage->ownerMode.fort=true;s.storage->sidLists.providers.count=1;const auto parent=s.Asset(0x50f540U),born=s.storage->CreateAsset(70,2);s.storage->pool.AllocatedBytes(parent)[34]=1;s.storage->pool.AllocatedBytes(born)[11]=4;auto runtime=std::make_shared<RawSurfaceResidenceBindings>();std::uint32_t calls{};runtime->entrance=[&](auto) { ++calls;return std::array<float,2>{12,24}; };runtime->spawn=[&](auto,auto,auto) { ++calls;return born; };runtime->task=[&](auto,auto,auto) { ++calls; };if (emptyOwner) runtime->pin=[] { return std::shared_ptr<void>{}; };s.storage->BindResidenceRuntime(runtime);bool rejected{};
+        try { static_cast<void>(s.storage->ResidenceRegular(parent,2,0,9)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).starts_with("거주 구역 Dude의 실제 전체"); }CHECK(rejected && calls==0 && !s.storage->Borrowed());
+    }
+}

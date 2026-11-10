@@ -11,9 +11,10 @@ float RawSurfaceStorage::DecorationRegular(o::Sid sid,std::uint32_t event,std::u
     if (!UsesNativeTransmissionDevices()) throw std::logic_error("장식 Regular의 실제 Native 장치 미연결");
     o::DecorationRegularHooks hooks;
     hooks.maxHitPoints=[this](auto parent) { return Reward().MaxHitPoints(parent); };
+    // 선택된 가상98은 실제 전체 owner를 보유한 뒤 함수 사본으로 호출한다.
     hooks.hitPoints=[this](auto parent,auto amount,auto owner,auto attacker) {
         const auto current=damageableRuntime_.lock();if (!current) throw std::logic_error("장식의 실제 현재 가상98 Runtime 미연결");
-        const auto pin=current->pin;const auto hold=pin ? pin():std::shared_ptr<void>{};const auto call=current->hitPoints;
+        const auto pin=current->pin;if (!pin) throw std::logic_error("장식의 실제 전체 pin 미연결");const auto hold=pin();if (!hold) throw std::logic_error("장식의 실제 전체 owner 반납");const auto call=current->hitPoints;
         if (!call) throw std::logic_error("장식의 선택된 실제 현재 가상98 본문 미연결");static_cast<void>(call(parent,std::bit_cast<std::uint32_t>(amount),std::bit_cast<std::int32_t>(owner),attacker));
     };
     hooks.destroy=[this](auto parent,auto flags) { DestroyAsset(parent,flags); };

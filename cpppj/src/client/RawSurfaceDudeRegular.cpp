@@ -10,9 +10,10 @@
 #include <utility>
 namespace netstorm::client { // 같은 실제 Pool/지도/목록/Host를 재구성하거나 초기화하지 않는다.
 namespace { // 실제 선택된 함수와 전체 Runtime의 호출 수명만 유지한다.
+// 현재 큰 이동 함수는 실제 전체 owner를 호출 끝까지 보유할 수 있을 때만 실행한다.
 template<class Function,class... Args>
 decltype(auto) DudeCall(const std::weak_ptr<const RawSurfaceDudeBindings>& weak,Function RawSurfaceDudeBindings::* member,Args&&... args) {
-    const auto current=weak.lock();if (!current) throw std::logic_error("Dude의 실제 현재 이동 Runtime 미연결");const auto pin=current->pin;const auto hold=pin ? pin():std::shared_ptr<void>{};const auto call=current.get()->*member;if (!call) throw std::logic_error("Dude의 선택된 실제 이동 본문 미연결");return call(std::forward<Args>(args)...);
+    const auto current=weak.lock();if (!current) throw std::logic_error("Dude의 실제 현재 이동 Runtime 미연결");const auto pin=current->pin;if (!pin) throw std::logic_error("Dude의 실제 전체 pin 미연결");const auto hold=pin();if (!hold) throw std::logic_error("Dude의 실제 전체 owner 반납");const auto call=current.get()->*member;if (!call) throw std::logic_error("Dude의 선택된 실제 이동 본문 미연결");return call(std::forward<Args>(args)...);
 }
 }
 void RawSurfaceStorage::BindDudeRuntime(const std::shared_ptr<const RawSurfaceDudeBindings>& runtime) { // 현재 큰 효과만 약하게 공개한다.

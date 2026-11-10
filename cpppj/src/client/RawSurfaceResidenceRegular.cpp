@@ -8,9 +8,10 @@
 #include <utility>
 namespace netstorm::client { // 상태 복제나 Session 생성 없이 장기 저장소에 연결한다.
 namespace { // 현재 선택한 함수와 실제 전체 Runtime만 이 호출 동안 유지한다.
+// 선택된 Dude 효과는 실제 전체 owner를 보유한 뒤 현재 함수 사본으로 호출한다.
 template<class Function,class... Args>
 decltype(auto) ResidenceCall(const std::weak_ptr<const RawSurfaceResidenceBindings>& weak,Function RawSurfaceResidenceBindings::* member,Args&&... args) {
-    const auto current=weak.lock();if (!current) throw std::logic_error("거주 구역 Dude의 실제 현재 Runtime 미연결");const auto pin=current->pin;const auto hold=pin ? pin():std::shared_ptr<void>{};const auto call=current.get()->*member;if (!call) throw std::logic_error("거주 구역 Dude의 선택된 실제 본문 미연결");return call(std::forward<Args>(args)...);
+    const auto current=weak.lock();if (!current) throw std::logic_error("거주 구역 Dude의 실제 현재 Runtime 미연결");const auto pin=current->pin;if (!pin) throw std::logic_error("거주 구역 Dude의 실제 전체 pin 미연결");const auto hold=pin();if (!hold) throw std::logic_error("거주 구역 Dude의 실제 전체 owner 반납");const auto call=current.get()->*member;if (!call) throw std::logic_error("거주 구역 Dude의 선택된 실제 본문 미연결");return call(std::forward<Args>(args)...);
 }
 }
 void RawSurfaceStorage::BindResidenceDevices(const std::shared_ptr<const o::TerrainBitmapState>& terrain,std::function<std::uint32_t()> theme) { // 첫 메뉴 전 실제 현재 owner만 약하게 공개한다.

@@ -1,14 +1,14 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**목표 재개 · 확정 제품1250 / 11.01 · 작업 계속 · 인계 갱신2026-11-10, HJOW-Athlon**
+**목표 재개 · 확정 제품1251 / 11.01 · 작업 계속 · 인계 갱신2026-11-10, HJOW-Athlon**
 
 이 문서는 cpppj의 **현재 상태·남은 작업·실행 제외·유효한 계약**을 담는다. 2026-11-10 사용자 `/goal` 요청에 따라 우선순위의 모든 cpppj 작업을 재개했다. 전체 목표는 미완료다. 아래 우선순위의 모든 cpppj 작업을 계속하고 단위마다 인계 갱신과 로컬 커밋을 남긴다. push하지 않는다.
 
-**다음 caller/owner 감사의 구체적 발견(1250, 미수정):** 같은 선택적 pin 패턴이 `RawSurfaceDecoration.cpp`의 가상98, `RawSurfaceDudeRegular.cpp`의 큰 이동, `RawSurfaceResidenceRegular.cpp`의 Dude 생성/작업에 남는다. 세 곳을 실제 활성 호출자/효과 순서와 함께 회귀·수정한다.1250 FactoryCall 누락은 완료했다. MP/Outpost 전용 실행은 제외한다.
+**다음 caller/owner 감사의 구체적 발견(1251, 미수정):** `RawSurfaceCarrier.cpp` 큰 이동/낙하/소유권, `RawSurfaceBomb.cpp` 큰 플레어/검색/수신, `RawSurfaceContent.cpp` 포획/파생 통지, `RawSurfaceDepend.cpp` 현재 통지/fallback에 선택적 pin이 남는다. 실제 활성 caller/효과 순서와 함께 감사·수정한다. 초기 생성/독립 대여의 부모 보유 경계는 별도 분류한다. MP/패킷·직접 포획 실행 제외를 유지한다.
 
-**1250 완료:** FactoryCall의 실제 pin 함수/owner를 필수화했다. 수정 전6입력/8단언 실패를 보존하고 수정 후 비MP288·Release·Tutorial4 생산/건설 요청/600프레임 대기를 확인했다. [근거](docs/exe/cpp-factory-runtime-owner-guard-20261110.md). 알려진 Regular87/87은 유지하며 전체 NoWorld/M6는 미완료다.
+**1251 완료:** 장식 가상98·Dude 큰 이동·거주 구역 Dude 효과의 실제 pin/owner를 필수화했다. 수정 전3사례/6입력/6단언 실패를 보존하고 비MP291·Release·Tutorial4 생산/건설 요청/600프레임 대기를 확인했다. [근거](docs/exe/cpp-regular-runtime-owner-guards-20261110.md). Regular87/87 유지·전체 NoWorld/M6 미완료다.
 
-**다음: M6-n 장식/Dude/거주 구역의 실제 pin/owner와 전수 감사.** 이 세 누락을 먼저 교정한 뒤 나머지 process/호출자/owner·큰 후단·최초 후처리·Path/AI/배치/Fort Finish·M6-l/m을 계속한다.1248 음향/피해율·1249 신전/상승·1250 Factory owner 연결은 유지한다.
+**다음: M6-n Carrier/Bomb/Content/Depend의 실제 owner·선택·fallback 감사.** 이 구체 누락을 교정하고 나머지 전수 process/호출자/owner·큰 후단/최초 후처리·Path/AI/배치/Fort Finish·M6-l/m을 계속한다.1250 Factory와1251 세 정기 후단 교정은 유지한다.
 
 | 우선순위 | 남은 상위 계획 | 현재 상태와 다음 목표 |
 | --- | --- | --- |
@@ -24,11 +24,11 @@
 
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
-AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1250, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
+AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1251, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
-| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품1250의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
+| **cpppj** | 무인자 GUI·메뉴·미션 플레이 경로가 있다. 제품1251의 Tutorial4 생산·건설 요청 → TYPE75/owner1 생성 → 600프레임 대기와 정상 종료를 확인했다. | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이며 전체 복원 완료가 아니다. |
 | **dotnetpj** | 기존 `Netstorm.Game`/`Netstorm.exe`는 1-1·1-2 근사 플레이가 가능하다. 새 `Netstorm.Client.Host`는 메뉴 일부까지이며 미션 플레이가 불가능하다. | 새 경로의 실제 메뉴·게임 캡처 비교는 0건이다. R3 진행/R4 일부 이식이며 부품 fixture 통과를 전체 동일성으로 합산하지 않는다. |
 | **webpj** | 클릭하여 시작·메뉴/목록·도움말/옵션·Credits·개발용 지형 미리보기까지다. 실제 미션 플레이는 불가능하다. | cpppj 오라클 M1 메뉴 8장면은 기록한 원인 밖 픽셀 차이 0이다. 구름 등 차이가 남고 실제 미션 L2/L3·전체 화면/음향·자연 완주는 미검증이다. |
 
@@ -36,12 +36,12 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj�
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품·소스 | **1250 / 11.01**. [Factory owner 검증](docs/exe/cpp-factory-runtime-owner-guard-20261110.md)·[보고서](cpppj/factory-runtime-owner-guard-20261110.json). 실제 큰 Factory 세 후단의 pin/owner 누락을 거부한다. 알려진 Regular87/87 유지, 전체 NoWorld/M6 미완료다. |
-| 최근 빌드·집중 검사 |1250 Release/x64 제품2·집중1대상 최종47.358초/종료0·경고/오류0·고정2파일. **비MP288/288**. 수정 전6입력/8단언 실패와 수정 뒤 실제 owner/함수 수명·효과 전 거부/불변을 확인했다. |
-| 최근 실제 실행 |1250 EXE Tutorial4 정상 UI 생산·건설 요청→TYPE75/owner1 생성→600프레임 대기·정상 종료0/PNG 확인. 특정 적 공격·포획/희생·승리/자연 완주·공중3종 전용·MP 실행은 제외했다.1240 업그레이드/1225 Edit 왕복은 별도 제품 증거다. |
-| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품1250 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
+| 확정 제품·소스 | **1251 / 11.01**. [세 정기 owner 교정](docs/exe/cpp-regular-runtime-owner-guards-20261110.md)·[보고서](cpppj/regular-runtime-owner-guards-20261110.json). 장식/Dude/거주 구역의 실제 pin/owner를 필수화했다. Regular87/87 유지·전체 NoWorld/M6 미완료다. |
+| 최근 빌드·집중 검사 |1251 Release/x64 제품2·집중1대상 최종35.955초/종료0·경고/오류0·고정4파일. **비MP291/291**. 수정 전3사례/6입력/6단언 실패와 효과 전 거부·원문 난수 prefix·유효 owner/함수 수명을 확인했다. |
+| 최근 실제 실행 |1251 EXE Tutorial4 정상 UI 생산·건설 요청→TYPE75/owner1 생성→600프레임 대기·정상 종료0/PNG 확인. 특정 적 공격·포획/희생·승리/자연 완주·공중3종 전용·MP 실행은 제외했다.1240 업그레이드/1225 Edit 왕복은 별도 제품 증거다. |
+| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품1251 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
 | M6 감사 기준 | checking 잔여 목록 0, 태그 25/활성 88/무태그 63F, 지연큐 OFF. checking 0과 자산 Pre/Post·통지 83/83을 MP/전체 NoWorld 완료로 세지 않는다. |
-| 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1250 새 디컴파일/원문 변경0, 현행75e4eed9e 기준 보호 원본/CD/fixture·AGENTS **2,808파일 불변**. 사용자 글꼴 지침 반영은5.3절. |
+| 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1251 새 디컴파일/원문 변경0, 현행75e4eed9e 기준 보호 원본/CD/fixture·AGENTS **2,808파일 불변**. 사용자 글꼴 지침 반영은5.3절. |
 
 <a id="02-진행-중인-1207--완료-처리-금지"></a><a id="agents-reflection-20261102"></a>
 
@@ -80,9 +80,9 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1246 연결](docs/exe/cpp-arc-acid-regular-owner-20261110.md)·[1247 피해율 교정](docs/exe/cpp-type-damage-rate-correction-20261110.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
-**다음 한 단위 — 장식/Dude/거주 구역의 실제 전체 pin/owner:** `RawSurfaceDecoration.cpp`·`RawSurfaceDudeRegular.cpp`·`RawSurfaceResidenceRegular.cpp`의 같은 선택적 pin을 회귀로 재현한 뒤 실제 owner를 필수화한다. 비선택 장치의 선행 조회/가짜 owner·성공 상수를 넣지 않는다.1250 FactoryCall은 수정·검증 완료다.
+**다음 한 단위 — Carrier/Bomb/Content/Depend의 실제 owner/선택/fallback:** 네 파일의 선택적 pin과 현재 기본 장기 경로·큰 후단을 실제 caller별로 대조한다. 노출된 큰 Runtime 호출은 실제 pin/owner를 보유하고, 독립 생성/초기 대여에서 부모가 실제로 보유한 경계는 구별한다. MP/패킷·직접 포획 실행은 제외한다.1250/1251의 owner 교정은 완료다.
 
-1250 원시는 `extracted/cpp-resume-1250/`다. 이3곳 뒤에도 전수 caller/owner와 큰 후단/최초 후처리/Path/AI/배치/Fort Finish·M6-l/m을 계속하며 직접 플레이·공중3종 전용·MP 실행 제외를 유지한다.
+1251 원시는 `extracted/cpp-resume-1251/`다. 이후에도 큰 후단/최초 후처리·전수 process/caller/owner·Path/AI/배치/Fort Finish·M6-l/m과 나머지 상위 계획을 계속한다.
 
 ### 2.2 다음 구현의 출발점과 유지할 계약
 
@@ -100,7 +100,7 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 <a id="23-장기-regularform-잔여-집계1219--큰-하위-완료와-구분"></a><a id="23-수량을-확정한-연결-범위--제품-1219-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1221-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1222-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1223-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1225-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1226-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1227-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1228-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1229-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1230-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1231-기준"></a><a id="23-수량을-확정한-연결-범위--제품-1232-기준"></a>
 
-### 2.3 수량을 확정한 연결 범위 — 제품1250 기준
+### 2.3 수량을 확정한 연결 범위 — 제품1251 기준
 
 | 범위 | 연결 완료 | 남은 범위 |
 | --- | --- | --- |
@@ -186,7 +186,7 @@ AGENTS 최근 변경 `b5197d48`의 **34건 전체**는 [NB01~NB34 목록](docs/e
 
 - cpppj의 **M8 배포 관문**에 실행 파일 리소스/생성 소스의 글꼴 내장 여부, 외부 fonts 적재, ZIP의 필수 글꼴/라이선스 동봉·바이트 정합성 확인을 추가한다. 위반이 발견되면 배포 전에 수정한다.
 - **K1/K4/K5**에서 새 글꼴 자산을 선별하고 D2Coding 한글 표시·외부 경로·배포/설치 후 적재를 확인한다. 기존 fonts 자산을 exe에 합치는 방식은 사용하지 않는다.
-- 현재1250까지 신전/음향·Factory owner를 검증했으나 **새 글꼴 계약에 대한 제품/ZIP 준수 여부는 아직 미확정**이다. 이 요구를 기존 "구현 범위 마감"이나 준비 자산 존재만으로 완료 처리하지 않는다.
+- 현재1251까지 신전/음향·네 종류 정기 owner를 검증했으나 **새 글꼴 계약에 대한 제품/ZIP 준수 여부는 아직 미확정**이다. 이 요구를 기존 "구현 범위 마감"이나 준비 자산 존재만으로 완료 처리하지 않는다.
 - AGENTS.md는 이 작업에서 수정하지 않았다. 최초 보호 해시와 외부 커밋 이후 해시를 구별해 보존하며, 원본/CD/fixture에는 변화가 없다. 새 기준을 읽은 뒤 현재1248 검증·인계·커밋을 마치고 M6 우선순위 작업을 계속한다.
 
 ## 6. 착수·검증·커밋 운영 규칙
@@ -212,7 +212,7 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 
 | 범위 | 기준 자료 |
 | --- | --- |
-| 현재 제품·Regular 잔여 | [1250 Factory owner](docs/exe/cpp-factory-runtime-owner-guard-20261110.md)·[보고서](cpppj/factory-runtime-owner-guard-20261110.json), 원시 `extracted/cpp-resume-1250/`. Regular87/87/상승은1249에서 유지하며 다음 owner 누락3곳은2.1절이다. |
+| 현재 제품·Regular 잔여 | [1251 세 정기 owner](docs/exe/cpp-regular-runtime-owner-guards-20261110.md)·[보고서](cpppj/regular-runtime-owner-guards-20261110.json), 원시 `extracted/cpp-resume-1251/`. Regular87/87/상승은1249·Factory 교정은1250에서 유지한다. 다음 구체 owner 감사는2.1절이다. |
 | M6 전체 감사·최초 조사 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[Regular1217](docs/exe/cpp-no-world-regular-audit-20261109.md)·[Bomb1224](docs/exe/cpp-bomb-regular-audit-20261109.md)·[16VT/19TYPE 행렬](cpppj/bomb-regular-audit-20261109.json). 과거 “다음/없음”보다 현행2절을 우선한다. |
 | 비MP 마감 근거 | [UI929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션956](docs/exe/cpp-mission-state-scope-20261106.md)·[수명980](docs/exe/cpp-internal-lifetime-closure-20261106.md). |
 | 디컴파일·소스 | [마지막 디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md). |
