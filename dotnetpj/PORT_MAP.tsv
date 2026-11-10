@@ -636,3 +636,7 @@ cpppj/src/client/ClientTimeSource.h	Netstorm.Client/Host/HostTimeSource.cs	c91d9
 cpppj/src/client/ClientTimeSource.cpp	Netstorm.Client/Host/HostTimeSource.cs	c91d9b849ac193a5d00ce3c6986e9bbb7328bd3e	port
 cpppj/src/client/SessionStateDump.h	Netstorm.Client/Automation/SessionStateDump.cs	c91d9b849ac193a5d00ce3c6986e9bbb7328bd3e	port
 cpppj/src/client/SessionStateDump.cpp	Netstorm.Client/Automation/SessionStateDump.cs	c91d9b849ac193a5d00ce3c6986e9bbb7328bd3e	port
+cpppj/src/client/LocalTcpTransport.h	Netstorm.Net/LocalTcpTransport.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
+cpppj/src/client/LocalTcpTransport.cpp	Netstorm.Net/LocalTcpTransport.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
+cpppj/src/client/LocalUdpTransport.h	Netstorm.Net/LocalUdpTransport.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
+cpppj/src/client/LocalUdpTransport.cpp	Netstorm.Net/LocalUdpTransport.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port

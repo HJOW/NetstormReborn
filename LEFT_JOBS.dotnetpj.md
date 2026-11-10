@@ -12,7 +12,7 @@
 
 <a id="dotnet-overview"></a>
 
-## 한눈에 보기 — dotnetpj 진행 상황 (2026-11-10, 단위 0.286 기준)
+## 한눈에 보기 — dotnetpj 진행 상황 (2026-11-10, 단위 0.287 기준)
 
 ### 실행·플레이 가능 여부와 원본과의 동일성
 
@@ -41,10 +41,10 @@ AGENTS.md(`551d27ae`)의 두 기준으로 평가한다. dotnetpj에는 실행 �
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 커밋 | 0.286 `20261110-91 DN`(F3 소유자 본체) |
-| PORT_MAP | 638줄(자료 633행: L1 329 · port 304) |
+| 마지막 커밋 | 0.287 `20261110-92 DN`(LAN TCP/UDP 루프백 사전 구현) |
+| PORT_MAP | 642줄(자료 637행: L1 329 · port 308) |
 | 원본 fixture | 연결 232개(`cpp_sync.py` 0종료). `reflected-commit`은 영향 검토 전이라 `f95a8db2` |
-| 마지막 전체 검사 완주 | Core **1,831개**(0.285)·Client **906개**(0.286)·Assets **366개**(0.280, 실패 0) |
+| 마지막 전체 검사 완주 | Core **1,831개**(0.285)·Client **906개**(0.286)·Assets **366개**(0.280, 실패 0). 0.287은 지시대로 검사 없이 사전 구현만 했다 |
 | cpppj 기준 | cpppj는 확정 제품1248 / 표시 11.01(2026-11-10). dotnetpj가 마지막으로 영향 검토를 맞춘 시점은 단위861(2026-11-04) 이전이다 |
 
 ### 남은 일 — 순서대로
@@ -73,13 +73,13 @@ AGENTS.md(`551d27ae`)의 두 기준으로 평가한다. dotnetpj에는 실행 �
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | 0.286까지 커밋됐다. 전체 목표는 미완료다. 다음 단위(0.287)는 R4 F3 본체 계속(메뉴·Fort 적재 본체) 또는 멀티플레이어 사전 구현부터 시작한다. |
+| 진행 상태 | 0.287까지 커밋됐다. 전체 목표는 미완료다. 다음 단위(0.288)는 R4 F3 본체 계속(메뉴·Fort 적재 본체)부터 시작한다. |
 | 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 진행 중(완료 범위는 0.9의 체크 목록과 1절 색인), R5 이후 미착수. |
 | 실행·플레이 가능 여부 | 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)은 1-1·1-2 근사 플레이가 가능하다. 새 경로 `Netstorm.Client.Host`는 메뉴 계열 일부까지이고 미션 월드가 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.286 `20261110-91 DN`(F3 소유자 본체). |
-| 검사 | 마지막 전체 완주는 Core 1,831개(0.285)·Client 906개(0.286)·Assets 366개(0.280)이며 모두 실패 0이다. |
-| 포트 맵 | `PORT_MAP.tsv` 총 638줄(자료 633행: L1 329, port 304). 0.284의 `SessionStateDump.h/.cpp` → `SessionStateDump.cs` 2행(port)이 마지막 추가다. |
+| 마지막 구현 커밋 | 0.287 `20261110-92 DN`(LAN TCP/UDP 루프백 사전 구현). |
+| 검사 | 마지막 전체 완주는 Core 1,831개(0.285)·Client 906개(0.286)·Assets 366개(0.280)이며 모두 실패 0이다. 0.287은 지시대로 검사를 건너뛰고 Release 빌드(경고·오류 0)만 확인했다. |
+| 포트 맵 | `PORT_MAP.tsv` 총 642줄(자료 637행: L1 329, port 308). 0.287의 `LocalTcpTransport.h/.cpp`·`LocalUdpTransport.h/.cpp` → `LocalTcpTransport.cs`·`LocalUdpTransport.cs` 4행(port)이 마지막 추가다. |
 | fixture | 연결 232개(개별 OK, `cpp_sync.py`는 미반영분 때문에 0종료 아님). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다. 영향 검토 전이라 `reflected-commit`과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값(2026-11-10 확정 제품1248, 작업 중 1249)은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
 | 디컴파일 | 마지막 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트, LEFT_JOBS.md 0.1절)이다. 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 호스트를 확인하고 재디컴파일한다. |
@@ -319,9 +319,11 @@ AGENTS.md는 "cpppj의 **4~8차** 목표 내용이 dotnetpj 후순위 요구사�
 
 <a id="dotnet-unit-records"></a>
 
-### 0.10 단위 기록 (0.287부터)
+### 0.10 단위 기록 (0.288부터)
 
 문서가 없는 작은 단위만 아래에 최신순으로 짧게 적는다. 한 기록에는 범위, 구현(새 파일·수정 파일), C#에서 달라진 모양, 검증(집중·전체·변이), PORT_MAP·fixture 변화, 보호·실행·외부 접속 관점, 남은 것을 적는다(0.6). 0.11~0.279는 이관 파일에 있다: [0.11~0.65](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073), [0.66~0.126](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126), [0.127~0.153](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154), [0.154~0.279](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279).
+
+**0.287 — LAN TCP/UDP 루프백 사전 구현 (2026-11-10, HJOW-Athlon, 검사 없음).** 범위: 목표 지시의 멀티플레이 사전 구현. 근거: cpppj `LocalTcpTransport.h/.cpp`·`LocalUdpTransport.h/.cpp`(base `a76499e3`)만 읽고 미커밋 변경은 쓰지 않았다. 구현: 새 `Netstorm.Net/LocalTcpTransport.cs`(리스너·수락 pending -1~-31·트랜시버 0~21·Connect·AssignConnection·Send·Flush·Poll·Status·20바이트 주소, 4바이트 헤더+선언 WORD·집합 type4·폐기 0x7f/0x80·부분 송신 꼬리·would-block 순서 보존), 새 `Netstorm.Net/LocalUdpTransport.cs`(12번 단일 노드·Open·Broadcast·Send·Poll·LocalAddress). C#에서 달라진 모양: Winsock 대신 .NET 소켓, 연결 등록표·분배·observer·hostname LAN 조회는 세션 연결 때 잇는다(분배 경계는 `LocalMissionTransport.FrameDispatch`로 받는다). cpppj의 RFC1918·link-local 허용과 달리 dotnetpj는 `LocalNetworkPolicy`의 루프백 전용을 적용하고, UDP 브로드캐스트는 루프백 목적지로만 보낸다. 검증: 지시대로 검사를 건너뛰고 Release 솔루션 빌드 경고·오류 0만 확인했다. 실제 루프백 송수신 검사는 3차 로컬 구현 때 한다. PORT_MAP 4행 추가(port, L1 아님). fixture 변화 없음. 보호: 원본/CD·AGENTS.md 미수정, 게임 실행 없음. 외부 접속 변화 없음(루프백 강제 유지). 남은 것: F3 본체 계속(0.288)부터 계속한다.
 
 **0.286 — F3 소유자 본체 (2026-11-10, HJOW-Athlon).** 범위: 0.9 R4 'F3 본체' 중 ownership 3종. 근거 확인: cpppj `LocalOwner`→`gameplayGlobals->player.battleOwner`, `TemplateOwner`→`templateOwner`, `BattleActive`→`assetState.inBattle`(원본 00594fbc, 표시 상태 없음). `PlayerWorldState` 기본값(battleOwner·templateOwner 1)이 원본과 같음을 확인했다. 구현: `RawCampaignSession.cs`에 `_player`·`_inBattle` 소유 상태와 설치 본체용 내부 `PlayerState`·`InBattle`을 두고 3개 Stub 본체를 읽기로 교체(적재 관문 유지). 나머지 5종은 필요 상태(사제·장식·지형·간헐천·비행선 TYPE, outposts/temples 목록, Deck, 파서·배치 파이프라인)가 세션에 없어 Stub으로 둔다(결정 6). 검증: Release 빌드 경고·오류 0, `RawCampaignSessionTests` 34건(기존 거부 1건을 값 읽기 1건으로 교체: 기본값 1/1/0과 갱신 반영) 통과, Client 전체 906건 실패 0(`--no-incremental` 재빌드 뒤). 대표 변이(LocalOwner가 templateOwner 반환)가 새 검사에서 검출됨을 확인하고 원복했다. PORT_MAP·fixture 변화 없음(이미 있는 `RawCampaignSession` 행의 base는 두지 않았다). 보호: 원본/CD·AGENTS.md 미수정, 게임 실행 없음. 외부 접속 변화 없음. 남은 것: F3 본체 계속(메뉴·Fort 적재) 또는 멀티플레이어 사전 구현(0.287)부터 계속한다.
 
