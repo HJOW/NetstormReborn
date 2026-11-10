@@ -100,7 +100,49 @@ export class FrameCodeTable {
     // codes 는 [{ side, variant, flags }](글자는 문자 코드, 플래그는 부호 없는 바이트)이다. 배열을 복사해 얼린다.
     constructor(codes) {
         // 프레임 코드 목록이다(읽기 전용).
-        this.codes = Object.freeze(codes.map((code) => Object.freeze({ side: code.side, variant: code.variant, flags: code.flags })));
+        // 원본 코드는 정확히 4바이트(방향·변형·번호·플래그)이다. 번호는 2026-11-10 WB04-E266 에서 FindNumber/FindMasked 를 위해 보관한다(미지정 입력은 0).
+        this.codes = Object.freeze(codes.map((code) => Object.freeze({ side: code.side, variant: code.variant, number: code.number ?? 0, flags: code.flags })));
+    }
+
+    // 원본 0049a9a0(B)/CD 00444350: 방향·변형·번호가 모두 같은 첫 코드의 위치를 돌려준다(없으면 -1). 중복 프레임은 저장 순서의 첫 번째가 이긴다. 인자는 BYTE 이다.
+    // (2026-11-10 WB04-E266: cpppj RiftTypeFrames::FindNumber)
+    findNumber(side, variant, number) {
+        // 첫 일치를 반환하므로 중복 프레임의 원본 순서가 유지된다.
+        for (let i = 0; i < this.codes.length; i += 1) {
+            const code = this.codes[i];
+            if (code.side === (side & 0xff) && code.variant === (variant & 0xff) && code.number === (number & 0xff)) return i;
+        }
+        return -1;
+    }
+
+    // 원본 0049a9e0(B)/CD 00444410: 방향·변형·번호를 확인한 뒤 플래그를 signed 8비트에서 32비트로 부호 확장해 mask(DWORD)와 AND 한 값이 0 이 아닌 첫 코드의 위치이다.
+    // (2026-11-10 WB04-E266: cpppj RiftTypeFrames::FindMasked)
+    findMasked(side, variant, number, mask) {
+        // 원본처럼 방향·변형·번호를 확인한 뒤 마스크를 검사한다.
+        for (let i = 0; i < this.codes.length; i += 1) {
+            const code = this.codes[i];
+            if (code.side === (side & 0xff) && code.variant === (variant & 0xff) && code.number === (number & 0xff) && (((code.flags << 24) >> 24) & (mask >>> 0)) !== 0) return i;
+        }
+        return -1;
+    }
+
+    // 원본 0049aa30(A)/CD 00444460(A): 방향·변형과 부호 확장한 플래그가 정확히 같은 첫 코드의 위치이다. 번호는 이 검색의 조건이 아니다.
+    // (2026-11-10 WB04-E266: cpppj RiftTypeFrames::FindFlags)
+    findFlags(side, variant, flags) {
+        // 정확한 플래그 값까지 일치하는 첫 코드를 찾는다.
+        for (let i = 0; i < this.codes.length; i += 1) {
+            const code = this.codes[i];
+            if (code.side === (side & 0xff) && code.variant === (variant & 0xff) && ((code.flags << 24) >> 24) === (flags | 0)) return i;
+        }
+        return -1;
+    }
+
+    // 원본이 글자 16개('A'~'P')를 차례로 보며 첫 번호가 처음 정해질 때마다 올리는 +0x12c 값, 곧 구간이 하나라도 있는 글자의 수이다. (2026-11-10 WB04-E266: cpppj RiftTypeFrames::LetterKinds)
+    letterKinds() {
+        let kinds = 0;
+        // 글자 'A'~'P' 를 하나씩 확인한다.
+        for (let letter = 0x41; letter <= 0x50; letter += 1) if (this.run(String.fromCharCode(letter)).first !== -1) kinds += 1;
+        return kinds;
     }
 
     // 타입 정의(parseTypeDefinition 의 결과)의 클러스터 코드에서 표를 만든다.
