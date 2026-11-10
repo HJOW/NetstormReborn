@@ -10,6 +10,7 @@ constexpr std::string_view kPatchCredits=R"([Credits]
 <p>{Text}
 Version: {version}<br>
 Development and NetStorm 11.01 patch: HJOW.<br>
+Copyright 2026 HJOW<br>
 <p>
 Developed with AI assistance using OpenAI Codex and ChatGPT.<br>
 AI was used to assist analysis, programming, documentation, and verification.<br>
@@ -24,6 +25,7 @@ constexpr std::string_view kPatchCreditsKorean=R"(<background="nsstart">
 <p>{Text}
 버전: {version}<br>
 개발 및 NetStorm 11.01 패치: HJOW.<br>
+Copyright 2026 HJOW<br>
 <p>
 OpenAI Codex와 ChatGPT를 활용한 AI 지원으로 개발했습니다.<br>
 AI는 분석, 프로그래밍, 문서화, 검증을 돕는 데 사용했습니다.<br>
@@ -38,6 +40,7 @@ constexpr std::string_view kPatchCreditsJapanese=R"(<background="nsstart">
 <p>{Text}
 バージョン: {version}<br>
 開発およびNetStorm 11.01パッチ: HJOW。<br>
+Copyright 2026 HJOW<br>
 <p>
 OpenAI CodexとChatGPTを活用したAI支援で開発しました。<br>
 AIは分析、プログラミング、ドキュメント作成、検証の補助に使用しました。<br>
