@@ -25,6 +25,16 @@ void RawSurfaceStorage::DudeAssert(std::uint32_t line) { // 원문의 같은 표
 void RawSurfaceStorage::SetDudeWord(o::Sid sid,std::uint32_t value) { // 실제4ac220의 저장 뒤 현재 TYPE를 다시 읽는다.
     const auto current=pool.Slot(sid);auto* raw=const_cast<std::uint8_t*>(current.data());raw[12]=static_cast<std::uint8_t>(value);raw[13]=static_cast<std::uint8_t>(value>>8);if (pool.Slot(sid)[10]==links.bridgeType) Building().NotifySurface(sid);
 }
+// 같은 최초 후처리 인스턴스를 빌린다. QA 저장·목록 추가·I 프레임·공통 깊이는 기존450cd0 본문이 처리한다.
+o::RawDudePostPop& RawSurfaceStorage::DudePostPop() {
+    if (!UsesNativeTransmissionDevices() || pool.Edition()!=o::OriginalEdition::Patch1078) throw std::logic_error("Dude 최초 후처리의 실제 PATCH 장치 미연결");
+    if (!dudePostPop_) {
+        if (!dudePostPopState_) dudePostPopState_=std::make_unique<o::DudeSpawnState>(sidLists.dudes);
+        auto hooks=o::MakeDudePostPopHooks(pool,Frame(),PostPop());hooks.notifySurface=[this](auto parent) { Building().NotifySurface(parent); };
+        dudePostPop_=std::make_unique<o::RawDudePostPop>(pool,frames,*dudePostPopState_,std::move(hooks),links.bridgeType);
+    }
+    return *dudePostPop_;
+}
 o::RawDudeTask& RawSurfaceStorage::DudeTask() { // 같은 Host의 masked Regular/현재 시각/WORD를 장기로 제공한다.
     if (!UsesNativeTransmissionDevices()) throw std::logic_error("Dude task의 실제 Native 장치 미연결");
     if (!dudeTask_) {

@@ -230,7 +230,8 @@ void RawSurfaceStorage::DefaultResourcePostPop(o::Sid sid,std::uint32_t flags) {
             hooks.construct=[this](auto parent,auto event,auto payload) { ConstructResourceRegular(parent,event,payload); };hooks.damageable=[this](auto parent,auto value) { ResourceCarrierPostPop().DamageablePostPop(parent,value); };resourceNugget_=std::make_unique<o::RawNuggetPostPop>(pool,std::move(hooks));
         }resourceNugget_->PostPop(sid,flags);return;
     }
-    if (table==0x508cc8U && !(flags&1U)) { PostPop().PostPopBase(sid,flags);return; } // 원문 Dude도 최초가 아닌 가상20은 같은 공통 부모만 호출한다.
+    if (table==0x508cc8U) { DudePostPop().PostPop(sid,flags);return; } // 같은450cd0 전체 본문이 최초 QA/목록/프레임과 공통 부모를 처리한다.
+    if (table==0x502c38U || table==0x502cf0U || table==0x502db0U) { BombPostPop().Prefix(sid,flags);PostPop().PostPopBase(sid,flags);return; } // 실제 세 예약 접두 뒤 공통 깊이는 한 번만 감소한다.
     if (table==0x50f540U && !(flags&1U)) { PostPop().PostPopBase(sid,flags);return; } // 원문 Residence의 최초가 아닌 재Pop은 실제 공통 부모만 호출한다. 최초 후처리는 기존 현재 자산 모듈이 담당한다.
     if (table==0x50da88U) {
         if (!resourceGeyser_) { resourceAssetState_.sharedGeysers=&sidLists.geysers;resourceAssetState_.currentBridgeType=&links.bridgeType;resourceAssetState_.currentIslandType=&links.islandType;resourceAssetState_.currentStalagType=&links.stalagType;

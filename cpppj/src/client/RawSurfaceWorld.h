@@ -61,6 +61,8 @@
 #include "o/RawCarrierRegular.h" // 현재 내용물/기한 본문을 장기 보유한다.
 #include "o/RawContentPreviewProcess.h" // 같은 실제 Host 타이머보다 로직이 오래 살아야 한다.
 #include "o/RawBombRegular.h" // 같은 공통 주문 Regular와 실제 현재 TYPE/권한을 장기 공유한다.
+#include "o/RawBombPostPop.h" // 세 주문 효과의 최초 예약도 같은 장기 난수와 Host를 빌린다.
+#include "o/RawDudeSpawn.h" // 최초 Dude 후처리는 같은 population과 실제 프레임을 공유한다.
 #include "o/ContentFormLifetime.h" // 실제 정렬/삭제 본문과 현재 경제 상태를 Client 수명으로 공유한다.
 #include "o/GumpFormHost.h" // 같은 장기 UI Form과 실제 현재 등록표 알림을 연결한다.
 #include "o/SquidFrameBinding.h"
@@ -402,6 +404,8 @@ public:
     o::RawFactoryPostPop& FactoryPostPop(); //현재 목록/TYPE/역할과 장기 예약·공통 후처리를 같은 본체로 공유한다.
     void BindDudeRuntime(const std::shared_ptr<const RawSurfaceDudeBindings>& runtime); // 큰 현재 이동 하위만 대여하며 게임 상태는 초기화하지 않는다.
     o::RawDudeRegular& DudeRegular(); // 같은 공급원/순환/현재 사건/난수/프레임의 장기 정기 본문이다.
+    o::RawDudePostPop& DudePostPop(); // 최초 QA/30칸 목록/I 프레임과 공통 후처리를 Session 없이 제공한다.
+    o::RawBombPostPop& BombPostPop(); // 세 효과의 중복 검사/실제 할당/현재 난수/예약 접두를 제공한다.
     void BindFlareDevices(RawSurfaceFlareDevices devices); // 첫 효과 전에 실제 억제 시각/소리 장치만 결합한다.
     o::RawFlare& Flare(); // 같은 현재 TYPE/프레임·난수/생성·공간·Host의 유일한 Native 효과 본문이다.
     void BindManaDevices(RawSurfaceManaDevices devices); // 첫 효과 전에 같은 현재 카메라와 위치 음향만 연결한다.
@@ -571,6 +575,9 @@ private:
     o::CarrierPostPopState resourceCarrierState_; //현재원문권한/로딩/간헐천TYPE주소만빌리며지역기본값으로복제하지않는다.
     o::AssetPostPopState resourceAssetState_; //장기Geyser경로가소비하는실제목록/표면TYPE주소이며다른자산용사본은사용하지않는다.
     std::unique_ptr<o::RawDudeRegular> dudeRegular_; // 같은 장기 물리/현재 전역만 빌리는 정기 본문이다.
+    std::unique_ptr<o::DudeSpawnState> dudePostPopState_; // 후처리가 소비하는 population 참조이며 PATCH에서 생성용 값형 필드는 사용하지 않는다.
+    std::unique_ptr<o::RawDudePostPop> dudePostPop_; // 같은 최초 후처리를 현재 Session과 NoWorld 분배가 함께 빌린다.
+    std::unique_ptr<o::RawBombPostPop> bombPostPop_; // 실제 장기 난수와 Host만 빌리며 Session 반납 뒤에도 유지한다.
     std::unique_ptr<o::RawDudeBehavior> dudeBehavior_; // 같은 지도와 population/작업기를 빌린다.
     std::unique_ptr<o::RawDudeTask> dudeTask_; // 같은 실제 Host/시각을 빌리고 Host 정리 때까지 유지한다.
     std::unique_ptr<o::RawFactoryPostPop> resourceFactoryPostPop_; // 같은 장기 상태를 빌리고 Host보다 먼저 반납하지 않는다.

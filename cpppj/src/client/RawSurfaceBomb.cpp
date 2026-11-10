@@ -18,6 +18,17 @@ constexpr std::array<std::uint32_t,16> kConnectedBombTables{0x503188U,0x5026a0U,
 void RawSurfaceStorage::BindBombRuntime(const std::shared_ptr<const RawSurfaceBombBindings>& runtime) {
     if (!UsesNativeTransmissionDevices() || !runtime || !bombRuntime_.expired()) throw std::invalid_argument("현재 Bomb 후단 대여 중복/누락");bombRuntime_=runtime;
 }
+// 실제 세 접두의 예약만 장기 Host로 연결하며 주문 시전·공격 프레임을 실행하지 않는다.
+o::RawBombPostPop& RawSurfaceStorage::BombPostPop() {
+    if (!UsesNativeTransmissionDevices() || pool.Edition()!=o::OriginalEdition::Patch1078) throw std::logic_error("주문 최초 후처리의 실제 PATCH 장치 미연결");
+    if (!bombPostPop_) {
+        const auto random=resourceDevices_.random;if (!random) throw std::logic_error("주문 최초 후처리의 같은 게임 난수 미연결");
+        o::BombPostPopHooks hooks;hooks.hasRegular=[this](auto parent,auto event) { return Processes().Host().FindEvent(parent,event)!=nullptr; };
+        hooks.reserveRegular=[this] { return AllocateResourceRegular(); };hooks.addRegular=[this](auto parent,auto event,auto delay) { ConstructResourceRegular(parent,event,delay); };
+        bombPostPop_=std::make_unique<o::RawBombPostPop>(pool,random(),std::move(hooks));
+    }
+    return *bombPostPop_;
+}
 // 호출 전에 현재 권한/owner 값을 복사하지 않고 원문이 소비하는 위치에서 같은 실제 주소를 읽는다.
 o::BombRegularState& RawSurfaceStorage::BombState() {
     if (!UsesNativeTransmissionDevices() || pool.Edition()!=o::OriginalEdition::Patch1078) throw std::logic_error("장기 Bomb의 실제 PATCH Client 장치 미연결");

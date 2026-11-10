@@ -34,6 +34,7 @@
 #include "o/RawFlare.h" // 실제 장기 생성/정기/Host 예약을 호출한다.
 #include "client/RawCursorPosition.h" // 현재 카메라의 분수 원점을 같은 Native 투영과 역투영에 공급한다.
 #include "client/ClientLocalStateGlobals.h" // 같은005c85f0의 실제 owner와 주소를 검증한다.
+#include "o/RawBombPostPop.h" // 최초 예약을 실제 장기 Host와 독립 PE 기대값으로 대조한다.
 
 #include "o/RawDamageableBurning.h"
 #include "o/RawSquidHitPoints.h" //현재HP의 원문 비가상 DWORD setter를 같은 풀에서 쓴다.
@@ -2059,4 +2060,45 @@ TEST_CASE(ClientResidenceOwner_MissingWholeOwnerRejectsDudeEffects) { // Fort �
         RegionScene s;s.storage->ownerMode.fort=true;s.storage->sidLists.providers.count=1;const auto parent=s.Asset(0x50f540U),born=s.storage->CreateAsset(70,2);s.storage->pool.AllocatedBytes(parent)[34]=1;s.storage->pool.AllocatedBytes(born)[11]=4;auto runtime=std::make_shared<RawSurfaceResidenceBindings>();std::uint32_t calls{};runtime->entrance=[&](auto) { ++calls;return std::array<float,2>{12,24}; };runtime->spawn=[&](auto,auto,auto) { ++calls;return born; };runtime->task=[&](auto,auto,auto) { ++calls; };if (emptyOwner) runtime->pin=[] { return std::shared_ptr<void>{}; };s.storage->BindResidenceRuntime(runtime);bool rejected{};
         try { static_cast<void>(s.storage->ResidenceRegular(parent,2,0,9)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).starts_with("거주 구역 Dude의 실제 전체"); }CHECK(rejected && calls==0 && !s.storage->Borrowed());
     }
+}
+
+TEST_CASE(ClientInitialPostPop_DudeUsesSameBodyAfterWorldReturn) { // 최초 QA/목록/I 프레임이 실제 World 대여와 반납 뒤 같은 본문에서 처리된다.
+    RegionScene s;auto* const body=&s.storage->DudePostPop();
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->DudePostPop()==body); }
+    const auto parent=s.Asset(0x508cc8U);auto slot=s.storage->pool.AllocatedBytes(parent);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;
+    const auto used=s.storage->sidLists.dudes.Count();s.storage->PostPop().PostPopVirtual(parent,1);
+    CHECK(RegionRead(slot,12)%65536==0x5101 && s.storage->sidLists.dudes.Count()==used+1 && s.storage->sidLists.dudes.Items().back()==parent.value);
+    CHECK(RegionRead(slot,36)==static_cast<std::uint32_t>(s.storage->frames[slot[10]].Run('I').first) && s.storage->postPopState.depth==0 && !s.storage->Borrowed() && &s.storage->DudePostPop()==body);
+}
+TEST_CASE(ClientInitialPostPop_DudeNonFirstSkipsInvalidCurrentFrame) { // 최초가 아니면 QA/목록/없는 I Run을 소비하지 않고 같은 공통 깊이만 끝낸다.
+    RegionScene s;const auto parent=s.Asset(0x508cc8U);auto slot=s.storage->pool.AllocatedBytes(parent);RegionPut(slot,12,0x12345678);RegionPut(slot,36,0xabcdef12);s.storage->frames[slot[10]]=RiftTypeFrames({});s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;
+    const auto used=s.storage->sidLists.dudes.Count();s.storage->PostPop().PostPopVirtual(parent,0);
+    CHECK(RegionRead(slot,12)==0x12345678 && RegionRead(slot,36)==0xabcdef12 && s.storage->sidLists.dudes.Count()==used && s.storage->postPopState.depth==0 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientInitialPostPop_DudeFullPopulationStillWritesFrame) { // 원문30칸이 가득 차면 등록만 생략하고 QA/I 프레임/공통 부모는 유지한다.
+    RegionScene s;const auto parent=s.Asset(0x508cc8U);auto& list=s.storage->sidLists.dudes;list.SetCount(static_cast<std::uint32_t>(list.Capacity()));const auto saved=std::vector<std::uint32_t>(list.Storage().begin(),list.Storage().end());s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(parent,1);
+    CHECK(list.Count()==list.Capacity() && std::equal(saved.begin(),saved.end(),list.Storage().begin()) && s.storage->postPopState.depth==0);
+    const auto slot=s.storage->pool.Slot(parent);CHECK(RegionRead(slot,12)%65536==0x5101 && RegionRead(slot,36)==static_cast<std::uint32_t>(s.storage->frames[slot[10]].Run('I').first));
+}
+TEST_CASE(ClientInitialPostPop_BombActualHostMatchesIndependentPrefixes) { // 실제 예약이 가능한 PE54행을 같은 장기 Host의 event/float/난수와 대조한다.
+    const auto fixture=netstorm::test::rawscene::LoadFixture((std::filesystem::path(__FILE__).parent_path()/"fixtures/bomb-postpop-x86.tsv").string().c_str());std::uint32_t checked{};
+    for (const auto& row:fixture.rows) { // 실제 new 성공·중복 없는 최초 행만 예약과 공통 부모까지 비교한다.
+        const auto number=netstorm::test::rawscene::Number;const auto flags=number(row[1]);if (!(flags&1U) || number(row[2]) || !number(row[3])) continue;
+        RegionScene s;BindFactoryOwnerDevices(s);s.random->Game().SetState(number(row[4]));const auto table=std::array{0x502c38U,0x502cf0U,0x502db0U}.at(number(row[0]));const auto parent=s.Asset(table);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(parent,flags);
+        auto* const task=s.storage->Processes().Host().FindEvent(parent,1);CHECK(task!=nullptr);if (!task) return;
+        const auto marker=row[5].find("regular:1:50:");CHECK(marker!=std::string::npos);if (marker==std::string::npos) return;const auto start=marker+13;const auto end=row[5].find('|',start);const auto expected=static_cast<std::uint32_t>(std::stoul(row[5].substr(start,end-start)));
+        CHECK(std::bit_cast<std::uint32_t>(task->Payload())==expected && task->Event()==1 && task->Count()==0 && s.random->Game().State()==number(row[6]) && s.storage->postPopState.depth==0 && !s.storage->Borrowed());++checked;
+    }
+    CHECK(checked==54);
+}
+TEST_CASE(ClientInitialPostPop_BombDuplicateAndNonFirstDoNotConsumeRandom) { // 3종 모두 기존 event1과 최초가 아닌 경로에서 예약/난수를 추가하지 않는다.
+    for (const auto table:{0x502c38U,0x502cf0U,0x502db0U}) { // 실제 세 가상 표를 각각 같은 NoWorld Host로 분배한다.
+        RegionScene s;BindFactoryOwnerDevices(s);const auto parent=s.Asset(table);s.random->Game().SetState(55);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(parent,0);CHECK(!s.storage->Processes().Host().FindEvent(parent,1) && s.random->Game().State()==55 && s.storage->postPopState.depth==0);
+        auto* const task=s.storage->Processes().Host().AddRegular(parent,1,9);const auto size=s.storage->Processes().Kernel().Size();s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(parent,1);CHECK(s.storage->Processes().Host().FindEvent(parent,1)==task && task->Payload()==9 && s.storage->Processes().Kernel().Size()==size && s.random->Game().State()==55 && s.storage->postPopState.depth==0);
+    }
+}
+TEST_CASE(ClientInitialPostPop_BombBodySurvivesWorldReturn) { // Session과 NoWorld가 빌리는 같은 본문은 반납 뒤 실제 event1 예약을 계속 수행한다.
+    RegionScene s;BindFactoryOwnerDevices(s);auto* const body=&s.storage->BombPostPop();
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->BombPostPop()==body); }
+    const auto parent=s.Asset(0x502c38U);s.storage->ownerMode.challenge=true;s.storage->postPopState.depth=1;s.storage->PostPop().PostPopVirtual(parent,1);auto* const task=s.storage->Processes().Host().FindEvent(parent,1);CHECK(task && task->Payload()==0.05F && s.storage->postPopState.depth==0 && &s.storage->BombPostPop()==body && !s.storage->Borrowed());
 }

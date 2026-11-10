@@ -673,7 +673,8 @@ struct RawCampaignSession::Impl {
     std::int32_t& dudeProviderIndex{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->GameAux()->DudeProviderIndex():localDudeProviderIndex}; //0055a4fc의현재공급자 보행 순환 전역이며 초기값은0이다.
     DudeSpawnState dudeSpawnState{dudePopulation}; // 생성과 최초 Pop이 같은 현재 목록을 사용한다.
     std::unique_ptr<RawDudeSpawn> dudeSpawn; // 실제 factory/owner/가상Pop 생성 몸체다.
-    std::unique_ptr<RawDudePostPop> dudePostPop; // 같은 population/idle/I 프레임과 공통 후처리다.
+    std::unique_ptr<RawDudePostPop> localDudePostPop; // 독립 typed 월드의 기존 최초 후처리 수명을 소유한다.
+    RawDudePostPop* dudePostPop{}; // Native는 같은 Storage의 population/idle/I 프레임 본문을 빌린다.
     std::unique_ptr<RawDudeTask> localDudeTask; // 독립 typed만 기존 지역 작업기를 소유한다.
     RawDudeTask* dudeTask{}; // 같은 Host의 masked Regular 조회/생성과 float 지연이다.
     std::unique_ptr<RawDudeBehavior> localDudeBehavior; // 독립 typed만 기존 지역 부모를 소유한다.
@@ -761,7 +762,8 @@ struct RawCampaignSession::Impl {
     std::uint32_t stealHaltCounter{}; // 모든 크랩이 공유하는00545428이다.
     FormPacketHeader stealHeader{0x60,1,10}; // 실제40acf0의 현재 포획 헤더다.
     std::unique_ptr<RawCarrierSteal> carrierSteal; // 같은 내용물/공간/방향 동맹/이동/전역 음향의 실제 포획이다.
-    std::unique_ptr<RawBombPostPop> bombPostPop; // 같은 장기 난수와 실제 Host를 사용하는 세 주문 효과 접두다.
+    std::unique_ptr<RawBombPostPop> localBombPostPop; // 독립 typed 월드의 기존 주문 예약 접두를 소유한다.
+    RawBombPostPop* bombPostPop{}; // Native는 같은 장기 난수와 Host의 실제 접두를 빌린다.
     std::unique_ptr<RegularProcess> pendingBombPopRegular; // new0x28 성공 뒤 생성/부착할 같은 메모리를 보관한다.
     AcidZapState typedAcidState;AcidZapState& acidZapState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->AcidState():typedAcidState}; //현재 제단/성장 중 아이스 타워의 수신 제외TYPE다.
     FormPacketHeader typedAcidHeader{0x61,1,11};FormPacketHeader& acidZapHeader{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->AcidHeader():typedAcidHeader}; //52ee42의message/protocol/선언길이다. wire는01/61 순서다.
@@ -2425,6 +2427,7 @@ struct RawCampaignSession::Impl {
     }
     // 세 효과의 최초 예약만 연결한다. 시전/공격 Frame은 기존 주기 분배가 담당한다.
     void ConnectBombPostPop() {
+        if (world.Storage()->UsesNativeTransmissionDevices()) { bombPostPop=&world.Storage()->BombPostPop();core.postPop.SetBombPostPop(bombPostPop);return; } // Native 최초 예약은 메뉴와 같은 장기 본문이다.
         BombPostPopHooks post; // 중복과 할당 실패에서는 게임 난수와 생성자를 실행하지 않는다.
         post.hasRegular=[this](Sid sid,std::uint32_t event) { return core.processes.FindEvent(sid,event)!=nullptr; };
         post.reserveRegular=[this] { if (pendingBombPopRegular) throw std::logic_error("주문 효과 Regular 중복 예약");try { pendingBombPopRegular=std::make_unique<RegularProcess>(0,0.0F);return true; }catch (const std::bad_alloc&) { return false; } };
@@ -2432,7 +2435,7 @@ struct RawCampaignSession::Impl {
             if (!pendingBombPopRegular) throw std::logic_error("주문 효과 Regular 확보 누락");auto* reserved=pendingBombPopRegular.get();std::destroy_at(reserved);std::construct_at(reserved,event,delay); // 난수 계산 뒤에도 확보한 같은 메모리를 사용한다.
             auto* process=static_cast<RegularProcess*>(core.processes.AttachRegular(std::move(pendingBombPopRegular),sid));process->ResetTask(event,core.processState.Now());
         };
-        bombPostPop=std::make_unique<RawBombPostPop>(core.pool,random,std::move(post));core.postPop.SetBombPostPop(bombPostPop.get());
+        localBombPostPop=std::make_unique<RawBombPostPop>(core.pool,random,std::move(post));bombPostPop=localBombPostPop.get();core.postPop.SetBombPostPop(bombPostPop);
     }
     // 원본48bfe0의음향→현재픽셀캡처/18→같은대상의가상삭제를연결한다.
     void ConnectAcidZap() {
@@ -2614,7 +2617,7 @@ struct RawCampaignSession::Impl {
         if (dudeDrop) throw std::logic_error("실제 Dude 드롭 중복 연결");
         dudeSpawn=std::make_unique<RawDudeSpawn>(core.pool,core.factory,core.owner,dudeSpawnState,DudeSpawnHooks{[this](Sid sid,float x,float y,std::uint32_t flags) { world.Pop(sid,x,y,flags); }});
         auto dudePostHooks=MakeDudePostPopHooks(core.pool,core.frame,core.postPop);dudePostHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); }; // QA 저장 뒤에만 현재 Bridge 통지와 실제 프레임/공통 부모를 같은 World에 연결한다.
-        dudePostPop=std::make_unique<RawDudePostPop>(core.pool,core.frames,dudeSpawnState,std::move(dudePostHooks),core.bridgeState.bridgeType);core.postPop.SetDudePostPop(dudePostPop.get());
+        if (world.Storage()->UsesNativeTransmissionDevices()) dudePostPop=&world.Storage()->DudePostPop();else { localDudePostPop=std::make_unique<RawDudePostPop>(core.pool,core.frames,dudeSpawnState,std::move(dudePostHooks),core.bridgeState.bridgeType);dudePostPop=localDudePostPop.get(); }core.postPop.SetDudePostPop(dudePostPop); // Native는 같은 장기 목록/프레임 본문을 대여하고 typed/CD는 기존 소유를 유지한다.
         DudeTaskHooks task;task.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };if (world.Storage()->UsesNativeTransmissionDevices()) dudeTask=&world.Storage()->DudeTask();else { localDudeTask=std::make_unique<RawDudeTask>(core.pool,DudeTaskState{core.processState,core.bridgeState.bridgeType},MakeDudeTaskHostHooks(core.pool,core.processes,std::move(task)));dudeTask=localDudeTask.get(); }
         DudeBehaviorHooks behavior; // 450e80/450960/450920의 효과는 모두 기존 같은 Session 몸체다.
         behavior.task=[this](Sid sid,std::uint32_t event,float delay) { dudeTask->Set(sid,event,delay); };
