@@ -18,6 +18,8 @@
 #include "o/RawFactoryPostPop.h" // 같은 Factory 후처리/레벨 보정을 장기 보유한다.
 #include "o/RawBalloonBody.h" // 벌룬의 실제 그림자·후처리·삭제 본체를 같은 장기 물리에 연결한다.
 #include "o/RawFlyerPreDestroy.h" // Flyer의 현재 WORD 대상 삭제와 Damageable 부모를 공유한다.
+#include "client/SoundProcess.h" // TYPE별 중복 소리 장부는 Client 수명으로 공유한다.
+#include "o/RawWindFlyer.h" // 같은 장기 풀/현재 피해율의 더스트 데빌 정기를 사용한다.
 #include "o/RawAcidFence.h" // 아크/애시드의 같은 전체 정기·검색과 현재 역할을 장기로 조립한다.
 #include "o/RawPlayerRegular.h" // Player 정기가 같은 현재 전역과 실제 장기 Host를 직접 사용한다.
 #include "o/RawPlayerWorld.h" // 실제 Player 전처리도 같은 현재 기록과 공통 삭제를 사용한다.
@@ -128,6 +130,7 @@ struct RawSurfaceFactoryBindings { // 큰 업그레이드/플레어만 현재 Wo
     std::function<std::shared_ptr<void>()> pin; // 선택 호출 동안 실제 전체 Runtime을 보유한다.
 };
 struct RawSurfaceAttackBindings { // 선택된 큰 빔/피해/분해 효과만 실제 현재 Runtime으로 빌린다.
+    std::function<bool(o::Sid,o::Sid)> mayTarget; // 현재 Gun 문맥/Player+54/친군사격을 기존 실제 표적 본문으로 판정한다.
     std::function<void(o::Sid,o::Sid)> beam; // 기존472700의 shortZap 빔/소리 전체다.
     std::function<void(o::Sid,std::int32_t,std::uint8_t,o::Sid)> damage; // 기존 피격 분배기의 현재 가상98 전체다.
     std::function<void(o::Sid,o::Sid,o::Sid,std::int32_t)> dissolve; // 기존450510의 실제 화면/18 프로세스 전체다.
@@ -393,6 +396,11 @@ public:
     o::RawManaBoltRegular& ManaRegular(); // 현재 TYPE/프레임/SHP·카메라·가상 공간을 공유하는 유일한 Native 정기다.
     o::AltarSacrificeState& AltarState(); //00532698/69c의 같은 현재 지연/확률을 Session과 공유한다.
     void BindAttackRuntime(const std::shared_ptr<const RawSurfaceAttackBindings>& runtime); // 현재 큰 효과만 weak로 공개한다.
+    SoundProcessState& SoundState(); // 같은 현재 프레임/TYPE별 중복 장부를 모든 Native 소리 호출자에게 빌린다.
+    void BindAttackSound(SoundList& names,std::function<void(float,float,std::uint32_t)> sound); // 첫 Session 전에 같은 실제 이름표와 위치 소리 장치만 결합한다.
+    std::span<std::uint32_t> ActiveSounds(); // 원문 TYPE+6c의 현재 토큰을 주소 복사 없이 공유한다.
+    float AttackDamageRate(o::Sid source,o::Sid target) const; // 가상bc=4d4d40의 현재 TYPE+1b0/+1b4/+48을 읽는다.
+    o::RawWindFlyer& WindFlyer(); // 기존45e8b0/45e9a0을 같은 장기 물리와 현재 큰 후단에 연결한다.
     o::RawArcSpire& ArcSpire(); // 같은 현재 TYPE/프레임/동맹/편집/Hash와 실제 부모를 사용하는 정기다.
     o::RawAcidFence& AcidFence(); // 같은 현재 권한/친군사격/여섯 역할/Host와 검색을 사용하는 정기다.
     o::RawAcidZap& AcidZap(); // 같은 현재 역할/헤더·소리/실제삭제와 큰 분해 수신 부모다.
@@ -629,6 +637,11 @@ private:
     o::AcidFenceTypes acidTypes_;o::AcidZapState acidState_; // 장기 현재 역할 포인터 뷰이며 값 사본으로 바꾸지 않는다.
     o::FormPacketHeader acidHeader_{0x61,1,11}; //0052ee42의 실제 최초 message/protocol/length를 보존한다.
     std::unique_ptr<o::RawAcidZap> acidZap_; // 참조하는 상태/헤더보다 먼저 반납하고 모든 정기보다 오래 유지한다.
+    SoundProcessState soundState_; // Session 대여/반납으로 초기화하지 않는 같은 TYPE+1f0/현재 프레임 장부다.
+    std::vector<std::uint32_t> activeSounds_; // 같은 TYPE+6c 토큰이며 최초 실제 이름표 결합에서만 적재한다.
+    SoundList* attackSoundNames_{}; // Client 소리 장치의 정체성만 확인하며 짧은 Session 주소는 저장하지 않는다.
+    std::function<void(float,float,std::uint32_t)> attackSound_; // 실제 Client 위치 재생 장치를 선택 시 호출한다.
+    std::unique_ptr<o::RawWindFlyer> windFlyer_; // 참조하는 TYPE/장부/큰 후단보다 먼저 반납하고 Host보다 오래 유지한다.
     std::unique_ptr<o::RawArcSpire> arcSpire_;std::unique_ptr<o::RawAcidFence> acidFence_; // 같은 장기 물리/상태와 실제 부모를 빌리며 Host 정리까지 생존한다.
     std::unique_ptr<void,void(*)(void*)> attackReservation_{nullptr,[](void* memory) { ::operator delete(memory); }}; // 실제 new28 확보부터 같은 주소의 구성까지 단일 소유한다.
     o::AltarSacrificeState altarState_; // 제단의 현재 두 전역은 Session 대여에서 기본값으로 재설정하지 않는다.

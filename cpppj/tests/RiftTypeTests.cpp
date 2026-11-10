@@ -7,6 +7,15 @@ namespace { //보호 자산의 실제 정의와 TYPE 기록을 독립 경계에�
 using namespace netstorm::o; //제품의 실제 타입/판본을 사용한다.
 }
 
+TEST_CASE(RiftTypeAirDamage_PatchAssetsAndOrderedNumericStores) { // 원문 두 키의 실자산 양수·정수 절삭·중복 float 저장과 CD 미지원 경계를 확인한다.
+    const auto& game=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078).game;const auto types=game.TypeTable().Types();std::size_t enabled{},positive{}; // 기본0만 비교하여 잘못된 키를 놓치지 않게 실제 비영 선언을 센다.
+    for (const auto& asset:game.Types()) { const auto mode=static_cast<std::int32_t>(asset.definition.Number("useairdamage").value_or(0));const auto rate=static_cast<float>(asset.definition.Number("airdamage").value_or(0));CHECK(types[70+asset.block].useAirDamage==mode && types[70+asset.block].airDamagePerSecond==rate);if (mode) ++enabled;if (rate>0) ++positive; } // 보호 자산의 원래 선언을 기대값으로 사용한다.
+    CHECK(enabled==1 && positive==1 && types[71].useAirDamage==1 && types[71].airDamagePerSecond==20);std::printf("공중 피해율 실제 선언: 모드 %zu, 양수 %zu\n",enabled,positive);
+    for (std::size_t type=0;type<70;++type) CHECK(types[type].useAirDamage==0 && types[type].airDamagePerSecond==0); // 내장 타입 원문 초기0이다.
+    const auto empty=RiftTypeDefinition::Parse("typename empty {} A00:default:\"a.gif\"#0;");const auto changed=RiftTypeDefinition::Parse("typename air { useairdamage=2.9; USEAIRDAMAGE=-1.75; airdamage=3.25; AIRDAMAGE=-7.5; } A00:default:\"a.gif\"#0;");
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { const auto order=TypeLoadOrder(edition);std::vector<RiftTypeSource> sources;for (std::size_t index=0;index<order.size();++index) sources.push_back({order[index],index ? &empty:&changed});const RiftTypeTable table(edition,sources);CHECK(table.Types()[70].useAirDamage==(edition==OriginalEdition::Patch1078 ? -1:0));CHECK(std::bit_cast<std::uint32_t>(table.Types()[70].airDamagePerSecond)==(edition==OriginalEdition::Patch1078 ? 0xc0f00000U:0U));CHECK(table.Types()[71].useAirDamage==0 && table.Types()[71].airDamagePerSecond==0); } // CD 원문 parser에 없는 두 속성을 새 필드로 복원했다고 주장하지 않는다.
+}
+
 TEST_CASE(RiftTypeDamageRate_AssetsInitialZeroAndDuplicateFloatStore) { // 원문 hpPerSec와 양판본 실제 양수 피해율·대소문자·중복 float32 저장을 대조한다.
     std::size_t checked{}; // 두 판본 실제 자산을 빠짐없이 방문한 수다.
     for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 보호 자산의 원래 선언이 기대값이며 제품 키를 재사용하지 않는다.

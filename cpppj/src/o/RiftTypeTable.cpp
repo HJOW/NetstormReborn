@@ -199,6 +199,12 @@ void ApplyDefinition(RiftTypeRecord& type, const RiftTypeDefinition& definition,
         else if (is("hpPerSec")) {
             if (!number) throw std::invalid_argument("hpPerSec는 숫자여야 합니다");type.damagePerSecond=static_cast<float>(*number); // 실제+48 대입 순서와 마지막 중복값을 보존한다.
         }
+        else if (edition==OriginalEdition::Patch1078 && is("useairdamage")) {
+            if (!number) throw std::invalid_argument("useairdamage는 숫자여야 합니다");type.useAirDamage=ToInt(*number); // 원문6c DWORD의 절삭과 마지막 중복 대입이다.
+        }
+        else if (edition==OriginalEdition::Patch1078 && is("airdamage")) {
+            if (!number) throw std::invalid_argument("airdamage는 숫자여야 합니다");type.airDamagePerSecond=static_cast<float>(*number); // 원문6d DWORD의 float 저장이다.
+        }
         else if (is("damageEffect")) {
             // 실제 0049c3b0/CD Parse의 type +0xd4를 숫자 절삭으로 채운다. 누락된 속성은 초기 0이다.
             if (!number) throw std::invalid_argument("damageEffect는 숫자여야 합니다");

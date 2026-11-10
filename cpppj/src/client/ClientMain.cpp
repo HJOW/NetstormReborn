@@ -503,6 +503,7 @@ int Client::Run() {
             [owner=std::weak_ptr<ClientConstructionGlobals>(constructionGlobals_)](auto sid,auto flags) { const auto current=owner.lock();if (!current) throw std::logic_error("장기 신전 owner 반납 뒤 삭제 선택");current->VortexPre().PreDestroy(sid,flags); },
             [owner=std::weak_ptr<ClientConstructionGlobals>(constructionGlobals_)](auto x,auto y) { const auto current=owner.lock();if (!current) throw std::logic_error("장기 영역 owner 반납 뒤 갱신 선택");current->Regions().UpdateNative(x,y); }); //Storage→owner는약하게빌려참조순환없이실제선택호출만pin한다.
     } //첫메뉴/Session전에실제장치/backing만보유하며SP/Player/World를초기화하지않는다.
+    if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindAttackSound(WorldAudio().Names(),[this](auto x,auto y,auto token) { WorldAudio().Sounds().PlayOnceAt(x,y,token,0,0); }); // 첫 메뉴/Session 전에 실제 소리 토큰과 같은 Client 장치를 결합한다.
     surfaceStorage_->BindGraphClock([this] { return clock_->GameSeconds(ClientMilliseconds()); }); // 삭제 Graph의 두 시각 읽기도 같은 현재 Client 시계를 쓴다.
     surfaceStorage_->BindAllocationDiagnostics([this] { DumpObjectDiagnostics(); },[this](std::string_view name) { if (name!="BridgesKilled" || !menu_) throw std::logic_error("CD SID 회수의 현재 Tell UI 미연결");menu_->ShowSidRecoveryNotice(); }); //CD 소진의 객체/상세/대화상자는 기존 Client 부모를 공유한다.
     surfaceStorage_->Processes().BindDevices(kernel_,time_); // 첫 메뉴/World보다 먼저 실제 같은 Kernel/현재 프레임을 장기 Host에 연결한다.
@@ -540,6 +541,7 @@ int Client::Run() {
         // 1. 시각 고정(FUN_00460e90). 검사 전용 고정 시각 모드에서는 먼저 가상 시계를 한 프레임 전진한다(기본 OS 시계에서는 아무것도 하지 않는다, 2026-11-09 추가).
         AdvanceFixedClientTime();
         *time_ = clock_->Capture(ClientMilliseconds());
+        if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->SoundState().frame=static_cast<std::uint32_t>(time_->number); // NoWorld를 포함한 모든 호출자는 같은 현재 하위DWORD 프레임을 읽는다.
         if (menu_) { try { menu_->Tick(); }catch (const TitleBitmapQuit&) { return 0; } } //시작435b30의실제WM_QUIT만정상종료로연결한다.파일/표시예외는숨기지않는다.
         // 3. 재생 중인 효과음 수를 다시 센다(FUN_004a8e60). 2는 위 실제 상태 전환 부분이다.
         if (audio_) audio_->CountPlaying();

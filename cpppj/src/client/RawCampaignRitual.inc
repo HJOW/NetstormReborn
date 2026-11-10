@@ -119,7 +119,7 @@ void ConnectRitual() {
     dais.attachSound=[this](Sid sid,std::uint32_t sound,std::uint32_t alternate,std::uint32_t flags)->std::uintptr_t {
         if (!pendingRitualSound) throw std::logic_error("다이스 지연 소리 실제 예약 누락");auto* storage=pendingRitualSound.release();SoundProcess* process{}; // 같은 확보의 소유권을 실제 생성자로 넘긴다.
         try { process=new(storage) SoundProcess(*sounds,sound,alternate,flags); }catch (...) { ::operator delete(storage);throw; }
-        auto* attached=core.processes.Attach(std::unique_ptr<SoundProcess>(process),soundState.processType,sid,0x10);return attached ? std::uintptr_t(attached->Form().value) : 0;
+        auto* attached=core.processes.Attach(std::unique_ptr<SoundProcess>(process),soundState.ProcessType(),sid,0x10);return attached ? std::uintptr_t(attached->Form().value) : 0;
     };
     dais.wallSeconds=services.sound.wallSeconds;
     dais.setSoundStart=[this](std::uintptr_t form,double time) { if (form>65535) throw std::out_of_range("다이스 소리 Form 번호 범위");auto* process=dynamic_cast<SoundProcess*>(core.processes.FromForm(Sid{static_cast<std::uint16_t>(form)}));if (!process) throw std::logic_error("다이스 현재 Sound47 누락");process->SetStartTime(time); }; // 같은 절대 시각을 쓰며 벽시계를 다시 읽지 않는다.

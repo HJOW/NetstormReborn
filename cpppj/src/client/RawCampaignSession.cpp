@@ -679,7 +679,7 @@ struct RawCampaignSession::Impl {
     SoundList& soundNames; // 실제 보호막 파일명의 원본 이름표/opaque handle 조회다.
     std::unique_ptr<void,void(*)(void*)> pendingPickupSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // 원본new40 성공부터실제Sound47 생성까지의단일예약메모리다.
     std::unique_ptr<void,void(*)(void*)> pendingSunFlyerSound{nullptr,[](void* storage) { ::operator delete(storage); }}; // 훨리기그 첫Pop의new40 성공부터같은Sound47 생성까지의예약이다.
-    SoundProcessState soundState; // 실제47 프로세스의 현재 frame/TYPE 중복 재생 전역이다.
+    SoundProcessState localSoundState;SoundProcessState& soundState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->SoundState():localSoundState}; // 실제47 프로세스의 현재 frame/TYPE 중복 재생 전역이다.
     std::unique_ptr<SoundProcessSystem> sounds; // 같은 Host/Kernel의 실제 보호막 sound47 수명을 수행한다.
     std::vector<ArcherTypeData> archerTypes; // 원본 orientations/클러스터 수의 실제 보충 표다.
     std::vector<MissileTypeData> missileTypes; // 원본 투사체 사거리/방향/소리 입력이다.
@@ -869,7 +869,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawRainAviaryProcess> rainAviary; // 같은 현재 Kernel/풀의 맨 오 워 풀 전용 상태 기계다.
     std::unique_ptr<RawWindAviaryProcess> windAviary; // 같은실제Kernel의데빌메이커80BYTE 생산기다.
     std::unique_ptr<RawArcSpire> localArcSpire;RawArcSpire* arcSpire{}; // Native는 같은 장기 정기를 빌린다. //149의 전용 +X/+Y 동맹 이웃·연쇄 빔·Regular다.
-    std::unique_ptr<RawWindFlyer> windFlyer; // 더스트 데빌의전용104BYTE/애니메이션/범위공격이다.
+    std::unique_ptr<RawWindFlyer> localWindFlyer;RawWindFlyer* windFlyer{}; // 더스트 데빌의전용104BYTE/애니메이션/범위공격이다.
     std::vector<std::uint32_t> windActiveSounds; // 같은188TYPE의실제activeSound 토큰이다.
     std::uint32_t& windAviaryType{gameplayGlobals->GameAux()->WindAviaryProcessType()}; // 생성/검색/수신이 같은0054115c를 직접 빌린다.
     std::uint32_t windAviaryAsset{139}; // 실제 건물 TYPE이며 프로세스 전역과 구별한다.
@@ -1087,7 +1087,10 @@ struct RawCampaignSession::Impl {
         // 각 원문 소비자가 같은 005e4794를 다시 읽으며 Session 사본/강제 활성값을 만들지 않는다.
         archerState.angles=world.Storage()->AngleDiagnostics();gunTargetState.angles=archerState.angles; // 네 방향 소비자가 같은 현재 Client 진단을 사용한다.
         process.checking.Bind(gameplayGlobals->AiDebug().Checking()); // 실제 Path의 자기 삭제 뒤에도 Client의 현재 진단 DWORD를 읽는다.
-        if (world.Storage()->UsesNativeTransmissionDevices()) soundState.sharedProcessType=&gameplayGlobals->GameAux()->SoundProcessType(); // 같은 소리/내용물 타이머 역할 주소를 빌린다.
+        if (world.Storage()->UsesNativeTransmissionDevices()) {
+            soundState.sharedProcessType=&gameplayGlobals->GameAux()->SoundProcessType();
+            const auto play=services.sound.playOnceAt;world.Storage()->BindAttackSound(soundNames,[play](auto x,auto y,auto token) { if (!play) throw std::logic_error("Native 장기 공격 소리의 실제 위치 장치 미연결");static_cast<void>(play(x,y,token,0,0)); }); // 같은 실제 이름표 정체성/현재 토큰은 유지하며 Session 주소 없이 장치 함수만 보관한다.
+        } // 같은 소리/내용물 타이머 역할 주소를 빌린다.
         gunState.checking.Bind(gameplayGlobals->AiDebug().Checking());gunTargetState.checking.Bind(gameplayGlobals->AiDebug().Checking());rewardState.debugAsserts.Bind(gameplayGlobals->AiDebug().Checking());missionAiSettings.checkingAsserts.Bind(gameplayGlobals->AiDebug().Checking());soundState.debug.Bind(gameplayGlobals->AiDebug().Checking());buildArrivalState.checking.Bind(gameplayGlobals->AiDebug().Checking());geyserMinedState.checking.Bind(gameplayGlobals->AiDebug().Checking());assetState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());regularState.checkingForms.Bind(gameplayGlobals->AiDebug().Checking());motionState.carrier.debug.Bind(gameplayGlobals->AiDebug().Checking());motionState.cleanup.checking.Bind(gameplayGlobals->AiDebug().Checking());generalDamageState.checking.Bind(gameplayGlobals->AiDebug().Checking());burningState.checking.Bind(gameplayGlobals->AiDebug().Checking());priestState.spawn.checkingPlacement.Bind(gameplayGlobals->AiDebug().Checking());priestState.forcefieldRegular.debug.Bind(gameplayGlobals->AiDebug().Checking());carrierDropState.checking.Bind(gameplayGlobals->AiDebug().Checking());
         if (localMetadata) {
             metadata.geometry.decoderDiagnostics.checking.Bind(gameplayGlobals->AiDebug().Checking()); // 독립 typed 반복자만 기존 진단 연결을 사용한다.
@@ -1595,6 +1598,7 @@ struct RawCampaignSession::Impl {
         decorationHit=assetEffects.regular.hitPoints; // 같은 실제 현재 가상98 본문을 복제하지 않고 대여한다.
         assetBindings=std::make_unique<RawCampaignAssetBindings>(world,*carrier,assetState,random,*islands,players,playerState,RawCampaignAssetGlobals{regularState,gunState,elements,archerCommand,{85,87,126,&gameplayGlobals->FirstTimerFactoryType(),&gameplayGlobals->SecondTimerFactoryType(),&researchOutpost}},std::move(assetEffects));assetBindings->ActivatePostPop(); // 세 TYPE는 같은 실제 Client 주소를 빌리고 Session 사본으로 바꾸지 않는다.
         RawWorldRuntimeHooks worldHooks;
+        worldHooks.attacks.mayTarget=[this](Sid sid,Sid target) { const auto raw=core.pool.Slot(sid);const auto center=gunTarget->Center(sid);return gunTarget->MayTarget({std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),center[0],center[1],raw[10],std::bit_cast<std::int32_t>(gunMode->Get(sid)),raw[34],std::bit_cast<std::int32_t>(Read(raw,36))},target); }; // 기존 현재 표적 본문만 전체 Runtime pin 뒤 선택한다.
         worldHooks.attacks.damage=hits->DamageHooks({}).damage;worldHooks.attacks.beam=[this](auto source,auto target) { if (!particles) throw std::logic_error("아크의 실제 빔 몸체 설치 전 호출");static_cast<void>(particles->AddBeam(source,target,std::string{"shortZap.wav"})); };worldHooks.attacks.dissolve=[this](auto victim,auto first,auto second,auto orientation) { if (!particles) throw std::logic_error("애시드의 실제 분해 몸체 설치 전 호출");static_cast<void>(particles->AddDissolve(victim,first,second,orientation)); }; // 선택된 기존 큰 본문만 전체 Runtime 수명으로 공개한다.
         worldHooks.dude.movementType=[this](auto type) { return priests->MovementProcessType(type); };worldHooks.dude.entrance=[this](auto target) { const auto point=hits->Dudes().ResidencePoint(target);return RawPathPoint{point[0],point[1]}; };worldHooks.dude.move=[this](auto parent,auto point,auto quickly) { return hits->Dudes().Move(parent,{point.x,point.y},quickly); }; // 기존 전체 이동/진입점만 현재 실제 Runtime에 공개한다.
         worldHooks.residence.entrance=residenceDudeEffects.entrance;worldHooks.residence.spawn=residenceDudeEffects.spawn;worldHooks.residence.task=residenceDudeEffects.task; // 실제 생성 하위만 현재 전체 Runtime과 공개한다.
@@ -1780,7 +1784,7 @@ struct RawCampaignSession::Impl {
         // 실제 사건이 실패하면 당시 부모/사건/횟수를 남기고 같은 예외를 전파한다. 성공/상태 되돌림으로 대신하지 않는다.
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             try {
-                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50e668U) return world.Storage()->ArcSpire().Handle(sid,event,count,payload);if (table==0x50e738U) return world.Storage()->AcidFence().Handle(sid,event,count,payload);if (table==0x50ee08U) return world.Storage()->PlayerRegular(sid,event,count,payload);if (table==0x50f210U) return world.Storage()->PriestRegular(sid,event,count,payload);if (table==0x5075d8U || table==0x5076b8U || table==0x507770U || table==0x507950U) return world.Storage()->RitualRegular(sid,event,count,payload);if (table==0x508cc8U) return world.Storage()->DudeRegular().Handle(sid,event,count,payload);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
+                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50a050U) return world.Storage()->WindFlyer().Handle(sid,event,count,payload);if (table==0x50e668U) return world.Storage()->ArcSpire().Handle(sid,event,count,payload);if (table==0x50e738U) return world.Storage()->AcidFence().Handle(sid,event,count,payload);if (table==0x50ee08U) return world.Storage()->PlayerRegular(sid,event,count,payload);if (table==0x50f210U) return world.Storage()->PriestRegular(sid,event,count,payload);if (table==0x5075d8U || table==0x5076b8U || table==0x507770U || table==0x507950U) return world.Storage()->RitualRegular(sid,event,count,payload);if (table==0x508cc8U) return world.Storage()->DudeRegular().Handle(sid,event,count,payload);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
                 if (const auto table=Read(core.pool.Slot(sid),0);table==0x50a820U || table==0x50a8e8U) {
                     if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->DecorationRegular(sid,event,count,payload);
                     DecorationRegularHooks hooks;hooks.maxHitPoints=[this](auto parent) { return hp.MaxHitPoints(parent); };
@@ -2306,6 +2310,8 @@ struct RawCampaignSession::Impl {
         for (std::size_t type=0;type<bombs.size();++type) bombs[type]={core.frames[type].Run('A').count,core.frames[type].Run('B').first,core.frames[type].Run('B').count,missileTypes[type].firingSound}; // end를first+count로 교체하지 않는다.
         flyerFrame=std::make_unique<RawFlyerFrame>(core.pool,core.types,details,std::span(soundState.typeFrames).first(core.types.size()),FlyerFrameGlobals{core.processState.Server(),assetState.Boss(),gunState.checking,core.processState.Now(),soundState.frame,sunFlyerType,windFlyerType,rainFlyerType,sunAviaryType,soundState.ProcessType()},std::move(hooks));
         sunFlyerFrame=std::make_unique<RawSunFlyerFrame>(core.pool,core.shapes,bombs,SunFlyerFrameGlobals{assetState.Boss(),flyerPaused,core.processState.Now(),sunBombType},std::move(sun));
+        if (world.Storage()->UsesNativeTransmissionDevices()) windFlyer=&world.Storage()->WindFlyer(); // Native 정기/초기화/애니메이션은 같은 장기 몸체를 빌린다.
+        else {
         WindFlyerHooks wind; // 같은실제프레임표와효과를전용처리기에연결한다.
         wind.runCount=[this](Sid sid) { const auto raw=core.pool.Slot(sid);const auto frame=std::bit_cast<std::int32_t>(Read(raw,36));const auto& table=core.frames[raw[10]];if (frame<0 || static_cast<std::size_t>(frame)>=table.Codes().size()) throw std::out_of_range("더스트 데빌글자프레임범위");return table.Run(table.Codes()[static_cast<std::size_t>(frame)].side).count; };
         wind.assertion=SessionMissing<void,std::uint32_t>();wind.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float value) { return assetBindings->Regular().DamageableHandle(sid,event,count,value); };
@@ -2317,7 +2323,9 @@ struct RawCampaignSession::Impl {
         wind.weaken=[this](Sid sid) { PrepareDamageablePost();damageablePost->Weaken(sid); };
         windActiveSounds.resize(core.types.size());
         for (const auto& asset:assets.game.Types()) { const auto name=asset.definition.String("activeSound");windActiveSounds[70+asset.block]=name && !name->empty() ? soundNames.Lookup(*name) : 0U; } // 원본TYPE+6c 토큰을같은이름표에서읽는다.
-        windFlyer=std::make_unique<RawWindFlyer>(core.pool,core.hash,core.types,std::span(soundState.typeFrames).first(core.types.size()),windActiveSounds,core.processState.Now(),assetState.Boss(),soundState.frame,std::move(wind));
+        localWindFlyer=std::make_unique<RawWindFlyer>(core.pool,core.hash,core.types,std::span(soundState.typeFrames).first(core.types.size()),windActiveSounds,core.processState.Now(),assetState.Boss(),soundState.frame,std::move(wind));
+        windFlyer=localWindFlyer.get(); // 독립 Typed 입력의 기존 몸체 수명이다.
+        }
         ConnectFlyerTarget(); // 첫 Kernel 프레임 이전에 같은 표적 선택 본체를 설치한다.
     }
     // 원본의 일반 finder/의존 watcher/현재 Host 부모/표적 문맥을 동일 월드에 연결한다.

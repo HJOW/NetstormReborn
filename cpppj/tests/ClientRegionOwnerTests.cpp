@@ -1889,3 +1889,29 @@ TEST_CASE(ClientAttackOwner_SelectedBeamPinsOwnerAndFunction) { // 적이 없는
 TEST_CASE(ClientAttackOwner_SelectedBeamRejectsMissingActualOwner) { // 선택된 큰 빔은 빈 pin/반환owner를 성공으로 숨기지 않는다.
     RegionScene s;const auto parent=RitualOwnerAsset(s,0x50e668U),other=RitualOwnerAsset(s,0x50e668U);s.Position(other,104,100);auto runtime=std::make_shared<RawSurfaceAttackBindings>();bool called{};runtime->beam=[&](auto,auto) { called=true; };s.storage->BindAttackRuntime(runtime);std::uint32_t failures{};try { s.storage->ArcSpire().Strike(parent,std::array<Sid,1>{other},123); }catch (const std::logic_error&) { ++failures; }runtime->pin=[] { return std::shared_ptr<void>{}; };try { s.storage->ArcSpire().Strike(parent,std::array<Sid,1>{other},123); }catch (const std::logic_error&) { ++failures; }CHECK(failures==2 && !called && !s.storage->Borrowed());
 }
+
+TEST_CASE(ClientSoundOwner_StateAndRoleSurviveWorldLoan) { // 월드 대여/반납은 현재 장부·프레임·역할을 초기화하지 않는다.
+    RegionScene s;auto* state=&s.storage->SoundState();auto* frames=state->typeFrames.data();state->frame=123;state->typeFrames[100]=99;auto* role=&state->ProcessType();s.storage->GameAux()->SoundProcessType()=63;
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->SoundState()==state && state->frame==123 && state->typeFrames[100]==99 && role==&world.Storage()->GameAux()->SoundProcessType()); }
+    CHECK(&s.storage->SoundState()==state && frames==state->typeFrames.data() && state->ProcessType()==63 && state->frame==123 && !s.storage->Borrowed());
+}
+TEST_CASE(ClientSoundOwner_ActualProcessSharesCurrentTypeLedger) { // 일반 객체에 붙인 실제 Sound47은 장기 TYPE 장부로 같은 프레임 중복을 억제한다.
+    RegionScene s;const auto parent=s.Asset(0x509148U);auto& state=s.storage->SoundState();state.frame=123;std::uint32_t plays{}; // 소리 장치 호출만 기록하며 공중 유닛 생성/행동은 하지 않는다.
+    SoundProcessHooks hooks;hooks.wallSeconds=[] { return 1.0; };hooks.playLoopAt=RegionForbidden<SoundHandle,float,float,SoundHandle,SoundHandle>();hooks.playOnceAt=[&](auto,auto,auto token,auto loop,auto priority) { CHECK(token==77 && !loop && !priority);++plays;return SoundHandle{}; };hooks.play=RegionForbidden<SoundHandle,SoundHandle,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t>();hooks.stop=RegionForbidden<void,SoundHandle>();hooks.isPlaying=RegionForbidden<std::uint32_t,SoundHandle>();
+    SoundProcessSystem sound(s.storage->Processes().Host(),state,std::move(hooks));
+    CHECK(sound.Add(parent,77,0,kSoundPlayAt|kSoundPlayOnce)!=nullptr);s.storage->Processes().Kernel().RunFrame();CHECK(plays==1 && state.typeFrames[s.storage->pool.Slot(parent)[10]]==123);
+    CHECK(sound.Add(parent,77,0,kSoundPlayAt|kSoundPlayOnce)!=nullptr);s.storage->Processes().Kernel().RunFrame();CHECK(plays==1);++state.frame;
+    CHECK(sound.Add(parent,77,0,kSoundPlayAt|kSoundPlayOnce)!=nullptr);s.storage->Processes().Kernel().RunFrame();CHECK(plays==2 && state.typeFrames[s.storage->pool.Slot(parent)[10]]==124);
+}
+TEST_CASE(ClientSoundOwner_CurrentTokensKeepActualNameIdentity) { // 최초 실제 이름표 적재 뒤 재결합/World 반납은 현재 토큰을 덮어쓰지 않는다.
+    RegionScene s;SoundList names(OriginalEdition::Patch1078);names.Initialize();s.storage->BindAttackSound(names,[](auto,auto,auto) { CHECK(false); });const auto tokens=s.storage->ActiveSounds();std::size_t present{}; // 실제 자산 activeSound의 비어 있지 않은 선언 수도 확인한다.
+    for (const auto& asset:s.storage->Source()->Types()) { const auto name=asset.definition.String("activeSound");CHECK(tokens[70+asset.block]==(name && !name->empty() ? names.Lookup(*name):0U));if (name && !name->empty()) ++present; } // 원문 이름을 같은 이름표에 직접 대조한다.
+    CHECK(present>0);tokens[100]=0x12345678U;s.storage->BindAttackSound(names,[](auto,auto,auto) { CHECK(false); });auto* const body=&s.storage->WindFlyer(); // 로직 객체만 연결하며 유닛 생성/정기 실행은 하지 않는다.
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->WindFlyer()==body && world.Storage()->ActiveSounds().data()==tokens.data()); }
+    CHECK(s.storage->ActiveSounds()[100]==0x12345678U && &s.storage->WindFlyer()==body && !s.storage->Borrowed());SoundList other(OriginalEdition::Patch1078);other.Initialize();bool rejected{};try { s.storage->BindAttackSound(other,[](auto,auto,auto) {}); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected && s.storage->ActiveSounds()[100]==0x12345678U);
+}
+TEST_CASE(ClientAttackRate_CurrentSourceTargetAndAirMode) { // 가상bc의 현재 TYPE/공중 마스크/정수 비영 선택은 별도 유닛 행동 없이 직접 대조한다.
+    RegionScene s;const auto source=s.Asset(0x509148U),target=s.Asset(0x509148U);s.storage->pool.AllocatedBytes(source)[10]=100;s.storage->pool.AllocatedBytes(target)[10]=101;auto& first=s.storage->types[100];auto& second=s.storage->types[102];first.damagePerSecond=3.25f;first.useAirDamage=-1;first.airDamagePerSecond=7.5f;second.damagePerSecond=4.5f;second.useAirDamage=1;second.airDamagePerSecond=-9.25f;s.storage->types[101].flags2=0;
+    CHECK(s.storage->AttackDamageRate(source,target)==3.25f);s.storage->types[101].flags2=0x100000U;CHECK(s.storage->AttackDamageRate(source,target)==7.5f);s.storage->types[101].flags2=0x20000U;CHECK(s.storage->AttackDamageRate(source,target)==7.5f);first.useAirDamage=0;CHECK(s.storage->AttackDamageRate(source,target)==3.25f);
+    s.storage->pool.AllocatedBytes(source)[10]=102;CHECK(s.storage->AttackDamageRate(source,target)==-9.25f);s.storage->pool.AllocatedBytes(target)[10]=103;s.storage->types[103].flags2=0;CHECK(s.storage->AttackDamageRate(source,target)==4.5f);
+}
