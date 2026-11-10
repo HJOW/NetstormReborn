@@ -159,6 +159,32 @@ public sealed class RawNormalTerrainBindingTests
         }
     }
 
+    /// <summary>cpp 장면의 실제 조각 프레임 표를 만든다. 2026-11-10 F3 미뤄 둔 전수 재생(0.297)에서 추가됐다.</summary>
+    private static List<RiftTypeFrames> ScenePieceFrames()
+    {
+        var codes = new List<RiftFrameCode>();
+        // cpp 장면과 같은 16개 코드다. 방향 A~P·변형 'P'·번호 1만 둔다
+        for (byte side = (byte)'A'; side <= (byte)'P'; side++)
+        {
+            codes.Add(new RiftFrameCode(side, (byte)'P', 1, 0));
+        }
+
+        return [new RiftTypeFrames(codes)];
+    }
+
+    /// <summary>cpp 장면값({3,1,0,7,0,0}→3)을 실제 조각 프레임으로 재현한다. 2026-11-10 F3 미뤄 둔 전수 재생(0.297)에서 추가됐다.</summary>
+    [Fact]
+    public void PatternCountMatchesCppScenePieceValue()
+    {
+        // cpp `NormalTerrainWorldBindingTests.cpp`의 거부 검사 장면값이다. 회전 전·후 모두 3이다
+        List<RiftTypeFrames> frames = ScenePieceFrames();
+        byte[] record = [3, 1, 0, 7, 0, 0];
+        Assert.Equal(3u, RawNormalTerrainChecks.PatternCount(frames, 0u, record, OriginalEdition.Patch1078, null));
+        byte[] rotated = [3, 1, 0, 7, 0, 0];
+        rotated[0] |= 0xC0;
+        Assert.Equal(3u, RawNormalTerrainChecks.PatternCount(frames, 0u, rotated, OriginalEdition.Patch1078, null));
+    }
+
     /// <summary>첫 기록 조회의 섬 목록 장면을 만든다. 2026-11-07 F2d 첫 기록 이식에서 추가됐다.</summary>
     /// <param name="edition">섬 목록 풀 판본이다.</param>
     /// <param name="count">섬 목록 개수다.</param>
