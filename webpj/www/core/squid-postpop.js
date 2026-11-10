@@ -9,9 +9,14 @@
 // 파생 몸체 인터페이스(아직 옮기지 않은 종류가 후속 단위에서 연결한다): { pool, handles(sid) → boolean, validate(sid, flags, pop), postPop(sid, flags) } 이고
 //  접두형은 prefix(sid, flags), Carrier 는 damageablePostPop(sid, flags) 도 가진다. 접두 함수: setIslandPrefix/setSurfacePrefix/setTeleportPrefix((sid, flags) => void), 다리 연결 장치 bridgeConnector((sid) => void).
 // 이 모듈은 DOM 을 쓰지 않는다. CD 10.72 판본 분기(검증 호출 순서·28/32/35 오프셋)는 옮기지 않았다. (2026-11-08 WB04-E41: SquidPostPop 처리기 본체 이식으로 추가)
+import { RawAssetPostPop } from './raw-asset-post-pop.js';
 import { registerManaProvider } from './raw-mana-registration.js';
 import { SquidPop } from './squid-pop.js';
 import { runSquidPostPopParent } from './squid-postpop-parent.js';
+
+// 기본 장치가 연결된 장기 Client 에서 현재 파생 몸체가 없을 때 장기 자원 후처리(defaultResourcePostPop)로 보내는 가상 표이다: 벌룬 그림자·Factory 둘·0x5040c0·0x504198·buried·0x50e888·0x509470
+// (그리고 자산 전용 표와 Carrier/Damageable 직접 표). 이 표의 몸체가 미설치면 공통 성공으로 바꾸지 않고 실패한다. (2026-11-10 WB04-E258: cpppj 기준선 뒤 DispatchPostPop 선택 분기 재반영)
+const DEFAULT_RESOURCE_TABLES = new Set([0x508cc8, 0x509148, 0x509210, 0x5040c0, 0x504198, 0x50a748, 0x50e888, 0x509470]);
 
 // 슬롯 필드 위치(타입·상태·소유자·extra·그래프 번호)와 상태/extra 비트, 첫 자산 타입 번호, 타입 수이다. (2026-11-08 WB04-E41)
 const TYPE_OFFSET = 10;
@@ -95,6 +100,8 @@ export class SquidPostPop {
     #selectionRecheck = null;
     #localOwner = null;
     #manaDiagnostics = {};
+    #defaultDevices = null;
+    #defaultResourcePostPop = null;
 
     // 판본·크기와 Graph 의 풀/타입 일치를 확인한다.
     constructor(pool, types, state, graph = null, bridgeConnector = null) {
@@ -132,6 +139,29 @@ export class SquidPostPop {
 
     // 004166e0 의 실제 현재 Player/brain 통지다: (owner, sid, 생성 여부) => void. 빈 값은 분리한다.
     bindAiNotice(notice) { this.#aiNotice = notice; }
+
+    // 장기 기본 장치(실제 Client 자료/원문 큰 하위)를 결합한다: { aiNotice(owner, sid, created), localOwner(), recheckSelection() } 셋 다 필요하며 하나라도 없으면 거부한다.
+    // 현재 Session 이 개별로 연결한 통지/로컬 owner/선택 재검사가 있으면 그것이 먼저이고, 없을 때 이 기본 장치를 쓴다. 선택된 누락을 빈 성공으로 대체하지 않는다.
+    // (2026-11-10 WB04-E258: cpppj 기준선 뒤 BindDefaultPatchDevices 재반영)
+    bindDefaultPatchDevices(devices) {
+        if (typeof devices?.aiNotice !== 'function' || typeof devices.localOwner !== 'function' || typeof devices.recheckSelection !== 'function') throw new TypeError('기본 공통 후처리의 실제 Client 장치 누락');
+        this.#defaultDevices = { aiNotice: devices.aiNotice, localOwner: devices.localOwner, recheckSelection: devices.recheckSelection };
+    }
+
+    // 현재 Session 파생이 없을 때만 같은 장기 Storage 의 실제 자원 가상 몸체를 선택하는 분배를 결합한다: (sid, flags) => void. 함수가 아니면 거부한다. (2026-11-10 WB04-E258)
+    bindDefaultResourcePostPop(postPop) {
+        if (typeof postPop !== 'function') throw new TypeError('장기 자원 가상 PostPop 의 실제 PATCH 장치 필요');
+        this.#defaultResourcePostPop = postPop;
+    }
+
+    // 현재 World/Session 의 파생 몸체 열네 종과 AI 통지/로컬 owner/선택 재검사/Teleport 접두 연결만 반납한다. 장기 장부·섬/표면 접두·기본 장치·기본 자원 후처리·Graph 는 보존한다(Native 전역 reset 이 아니다). (2026-11-10 WB04-E258)
+    releaseRuntimeBindings() {
+        this.#aiNotice = null;
+        this.#selectionRecheck = null;
+        this.#localOwner = null;
+        this.#teleportPrefix = null;
+        this.#bodies = {};
+    }
 
     // 같은 Client 의 checking/마나 중복/공통 0x80b 정상 복귀 진단 장치를 빌린다: { checking(), assertion(식, 파일, 줄) }.
     bindManaDiagnostics(diagnostics) { this.#manaDiagnostics = diagnostics ?? {}; }
@@ -280,6 +310,15 @@ export class SquidPostPop {
     // 선택된 실제 파생 또는 공통 몸체를 호출한다. 깊이는 호출자가 소유하며 이 분배는 올리지 않는다.
     #dispatchPostPop(sid, flags) {
         const bodies = this.#bodies;
+        // 기본 장치가 연결된 장기 Client: 현재 파생 몸체가 없는 자원 가상 표는 장기 자원 후처리로 보낸다(미설치면 이 위치에서 실패).
+        const table = vtableOf(this.#pool.slot(sid));
+        if (this.#defaultDevices?.aiNotice && !this.handlesDerived(sid) &&
+            (DEFAULT_RESOURCE_TABLES.has(table) || RawAssetPostPop.hasDedicatedVtable(table) || POSTPOP_VTABLE.carrier.includes(table) || POSTPOP_VTABLE.damageable.includes(table))) {
+            const resource = this.#defaultResourcePostPop;
+            if (!resource) throw new Error('Native 전용 자산 후처리의 실제 장기 모듈 미설치');
+            resource(sid, flags);
+            return;
+        }
         // 몸체 안에서 공통 장부를 한 번 호출하는 종류를 원문 순서대로 고른다.
         for (const kind of ['balloon', 'flyer', 'player', 'buried', 'dude', 'dais', 'rune']) {
             if (this.#handlesBody(kind, sid)) { bodies[kind].postPop(sid, flags); return; }
@@ -316,7 +355,7 @@ export class SquidPostPop {
         const diagnostics = this.#manaDiagnostics;
         const graph = this.#graph;
         const hooks = {
-            suppressed: () => state.suppressed,
+            suppressed: () => state.readSuppressed(),
             graphsEnabled: () => state.graphsEnabled,
             type: (number) => this.#type(number),
             region: (object) => { if (!graph) throw new Error('실제 후처리 영역 그래프 미연결'); graph.invalidateRegion(object); },
@@ -333,17 +372,21 @@ export class SquidPostPop {
             },
             factory: (object) => { state.currentFactories().append(object); state.productionDirty = (state.productionDirty + 1) >>> 0; },
             aiNotice: (owner, object) => {
-                const notice = this.#aiNotice;
+                const notice = this.#aiNotice || this.#defaultDevices?.aiNotice;
                 if (notice) { notice(owner, object, true); return; }
                 if (owner >= state.aiAttached.length) throw new RangeError('공통 후처리 현재 AI owner 범위 오류');
                 if (owner && state.aiAttached[owner]) throw new Error('공통 후처리 실제 AI 통지 미연결');
             },
-            localOwner: () => (this.#localOwner ? this.#localOwner() : state.localOwner),
+            localOwner: () => {
+                const owner = this.#localOwner || this.#defaultDevices?.localOwner;
+                return owner ? owner() : state.localOwner;
+            },
             localCount: (number) => { state.localCounts()[number] += 1; state.localSecondaryCounts()[number] += 1; },
             globalCount: (number) => { state.globalCounts()[number] += 1; },
             // 독립 명시 입력의 mouseType 0 은 장치 없이 자연 반환한다.
             recheckSelection: () => {
-                if (this.#selectionRecheck) this.#selectionRecheck();
+                const recheck = this.#selectionRecheck || this.#defaultDevices?.recheckSelection;
+                if (recheck) recheck();
                 else if (state.pendingPlacement) throw new Error('공통 후처리 실제 선택 재검사 미연결');
             },
         };

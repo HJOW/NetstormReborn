@@ -23,8 +23,14 @@ export class SquidPostPopList {
     // 활성 항목 수이다(독립 목록).
     count = 0;
 
-    // 실제 Player 배열의 현재 +0/+4/+8 연결이다: { storage() → 배열형, capacity() → 용량, readCount() → 개수, writeCount(값) }. 연결하지 않으면 null.
+    // 실제 Player 배열의 현재 +0/+4/+8 연결이다: { storage() → 배열형, capacity() → 용량, readCount() → 개수, writeCount(값), sourceOwner?, sourceSlot? }. 연결하지 않으면 null.
+    // sourceOwner/sourceSlot 은 원본 값이 아닌 실제 저장소/행의 정체성이며 명시 Native 재사용만 matchesCurrentSource 로 비교한다. (2026-11-10 WB04-E258: cpppj 기준선 뒤 SquidPostPopList::MatchesCurrentSource 재반영)
     #current = null;
+
+    // 같은 실제 저장소/행의 기존 getter 묶음인지 확인한다(정체성은 null 이 아니어야 하며 물리 조회/쓰기는 실행하지 않는다). (2026-11-10 WB04-E258)
+    matchesCurrentSource(owner, slot) {
+        return Boolean(owner) && this.#current !== null && this.#current.sourceOwner === owner && this.#current.sourceSlot === slot;
+    }
 
     // 빈 독립 목록에 같은 실제 저장소의 조회/쓰기를 연결한다. 이미 자료가 있거나 이미 연결됐거나 장치가 빠졌으면 숨은 사본을 남기지 않고 거부한다.
     bindCurrent(binding) {
@@ -91,6 +97,12 @@ export class RawTotalMadeStorage {
 export class SquidPostPopState {
     // 표시·등록 후처리 억제 여부, Graph 활성 여부, 보류 배치 여부이다.
     suppressed = false;
+
+    // 실제 Client 의 현재 metamap 관문(00594fc8)을 돌려주는 함수이다. 없으면 null(독립 입력은 suppressed 를 쓴다). (2026-11-10 WB04-E258: cpppj 기준선 뒤 sharedSuppressed 재반영)
+    sharedSuppressed = null;
+
+    // 공통 후처리 진입이 읽는 현재 억제 값이다(공유 getter 가 있으면 그 값). (2026-11-10 WB04-E258)
+    readSuppressed() { return this.sharedSuppressed ? Boolean(this.sharedSuppressed()) : this.suppressed; }
     graphsEnabled = false;
     pendingPlacement = false;
 

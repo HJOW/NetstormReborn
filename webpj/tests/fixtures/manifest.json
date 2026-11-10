@@ -5823,26 +5823,29 @@
       "path": "cpppj/tests/fixtures/postpop-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 공통 후처리의 비용·목록·통계 장부와 Pop/Unpop·재등록",
       "consumers": [
-        "webpj/tests/squid-postpop.test.mjs"
+        "webpj/tests/squid-postpop.test.mjs",
+        "webpj/tests/squid-postpop-display.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/squid-postpop.js"
+        "webpj/www/core/squid-postpop.js",
+        "webpj/www/core/squid-display.js",
+        "webpj/www/render/dirty-regions.js"
       ],
-      "doc": "docs/webpj-squid-postpop-20261108.md",
+      "doc": "docs/webpj-squid-postpop-20261110.md",
       "cpppjSources": [
         "cpppj/src/o/SquidPostPop.cpp",
         "cpppj/src/o/SquidPostPopPatch.cpp"
       ],
-      "scope": "10.78(originals) 구간의 PostPop 384·Pop 72·Unpop 36행 사용(표시 dirty 열 제외, original1037·originalCD 구간은 범위 밖)",
+      "scope": "10.78(originals) 구간의 PostPop 384·Pop 72·Unpop 36행 사용(squid-postpop.test.mjs 는 장부, squid-postpop-display.test.mjs 는 표시 dirty 열까지 대조, original1037·originalCD 구간은 범위 밖)",
       "text": true,
       "sha256": "9ddeab230d993a9fbe77b0e46f2786900d9b28a3639a8a2cc02a4ed200dcac62",
       "bytes": 218979,
       "lines": 2141,
-      "fixtureCommit": "4ed429ca",
-      "webCommit": "e0cc9be6",
+      "fixtureCommit": "4ed429ca0",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/SquidPostPop.cpp": "b04fd743",
-        "cpppj/src/o/SquidPostPopPatch.cpp": "99ff1a5f"
+        "cpppj/src/o/SquidPostPop.cpp": "b1bf342d6",
+        "cpppj/src/o/SquidPostPopPatch.cpp": "be567d46b"
       }
     },
     {
@@ -15632,7 +15635,7 @@
       "bytes": 42640,
       "lines": 222,
       "fixtureCommit": "7477610d2",
-      "webCommit": "worktree",
+      "webCommit": "0022c59b5",
       "cpppjBasis": {
         "cpppj/src/o/RawLocalGeyser.cpp": "5f4b9d304"
       }
@@ -15661,7 +15664,7 @@
       "bytes": 624869,
       "lines": 184,
       "fixtureCommit": "31db9957a",
-      "webCommit": "worktree",
+      "webCommit": "0022c59b5",
       "cpppjBasis": {
         "cpppj/src/o/RawLocalGeyser.cpp": "5f4b9d304"
       }
