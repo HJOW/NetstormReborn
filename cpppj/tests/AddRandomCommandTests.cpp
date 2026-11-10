@@ -77,3 +77,14 @@ TEST_CASE(AddRandom_OnlyReachedDevicesAreRequired) {
     std::size_t clocks{};netstorm::o::AddRandomHooks hooks;hooks.wallSeconds=[&] { ++clocks;return 0.0; };
     missing=false;try { netstorm::o::AddRandomObjects(89,1,hooks); }catch (const std::logic_error&) { missing=true; }CHECK(missing && clocks==1);
 }
+
+// 반환값은 원문 0040dfd0이 eax로 넘기는 마지막 배치 결과이며 Fort 섬 채우기(0046e630)가 임시 객체 SID로 읽어 삭제한다(M6-n). 실패는 0이다.
+TEST_CASE(AddRandom_ReturnsLastPlacementResult) {
+    using namespace netstorm::o;
+    AddRandomHooks hooks;hooks.wallSeconds=[] { return 0.0; };hooks.local=[] { return 1U; };hooks.island=[](auto,auto) { return 0; };
+    std::uint32_t seenType{},seenQuantity{};
+    hooks.place=[&](auto&,const auto&,auto,auto amount,auto selected,auto) { seenType=selected;seenQuantity=amount;return 0x1234U; };
+    CHECK(AddRandomObjects(87,1,hooks)==0x1234U && seenType==87 && seenQuantity==1);
+    hooks.place=[](auto&,const auto&,auto,auto,auto,auto) { return 0U; };
+    CHECK(AddRandomObjects(87,1,hooks)==0U);
+}

@@ -1,0 +1,23 @@
+{
+  "unit": "1278 M6-n alternate Fort island populate (0046e630)",
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "originalChain": ["0046e630", "0040dfd0 AddRandom(005411b4,1)", "0046e000 Populate(0)", "vtable+0x10 Destroy(flags 0)"],
+  "defectsFixed": [
+    "campaign install populateIsland always threw (Multiplayer button terminated process)",
+    "line comment swallowed hooks.setOwner in PrepareExistingFortPriests (setOwner unconnected)"
+  ],
+  "build": {"config": "Release", "warnings": 0},
+  "tests": {
+    "netstorm_add_random_tests": {"total": 13, "failed": 0},
+    "netstorm_guide_fort_request_tests": {"total": 90, "failedChecks": 4, "baselineFailedChecks": 4, "sameFailureList": true}
+  },
+  "live": {
+    "flow": "main -> Multiplayer -> Player Name dialog + Multiplayer Options -> ESC",
+    "passed": true,
+    "exitCode": 0,
+    "logFileCreated": false,
+    "gameDirUnchanged": true
+  },
+  "unverified": ["lobby island object sprites (priest/residence) vs original screenshot"]
+}

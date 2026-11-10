@@ -61,7 +61,7 @@ struct RawCampaignWorldRuntime::Impl {
         territoryHooks.objects=[this](const o::FortTemplate& input,std::uint32_t slot) { objects->Load(input,static_cast<std::int32_t>(slot)); };
         // 캠페인 부모가 사용하지 않는 generic Fort 분기는 실제 미복원 경계로 남긴다.
         territoryHooks.money=territoryHooks.badges=territoryHooks.technology=[](const o::FortTemplate&,std::uint32_t) { throw std::logic_error("캠페인 설치에서 generic Fort 부모 후처리를 실행할 수 없습니다"); };
-        territoryHooks.populateIsland=[](const o::RawIslandBuilderState&,std::int32_t) { throw std::logic_error("캠페인 설치의 alternate Fort populate 미연결"); };
+        territoryHooks.populateIsland=effects.populateIsland ? effects.populateIsland : [](const o::RawIslandBuilderState&,std::int32_t) { throw std::logic_error("캠페인 설치의 alternate Fort populate 미연결"); }; // Session이 실제 섬 채우기를 연결한 경우에만 실행한다(M6-n).
         territoryHooks.rebuildGraph=[this](bool mode) { core.graph.Rebuild(mode); };
         if (data.existingFort) {
             existing=data.existingFort(*objects);

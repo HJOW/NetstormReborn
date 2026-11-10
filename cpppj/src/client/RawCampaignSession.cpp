@@ -3350,32 +3350,65 @@ struct RawCampaignSession::Impl {
         const FortDeckLoadGlobals deckGlobals{objectState.loadingDepth,fortTypeConversion->Current(),fullDeck}; // 현재global을 원문위치에서 직접조회한다.
         try { LoadFortDeck(static_cast<std::int32_t>(slot),deckGlobals,hooks); }catch (...) { UnwindFortDeckLoad(deckGlobals,hooks);throw; }
     }
+    // 같은 현재 Pool/지도/섬/Player로 원문 Islandbuilder의 거주 구역·초기 교체·생산 통지 부모(RawIslandPopulation)를 만들어 body에 한 번 빌려 준다.
+    // 사제 준비(0040e2b0)와 Fort 섬 채우기(0046e000)가 같은 장치를 쓰며 배치 소유자는 body가 끝날 때까지 유지된다. label은 장치 미연결/진단 메시지의 접두 설명이다. (M6-n에서 중복 제거)
+    void WithIslandPopulation(std::string_view label,const std::function<void(o::RawIslandPopulation&)>& body) {
+        auto& s=*this;const std::string name(label); // 메시지가 호출자별 원문 부모를 구별하도록 접두를 복사해 보관한다.
+        auto singleHooks=MakeNormalTerrainFarmWorldHooks(s.world,s.chunks,*s.islands,*s.pipeline,s.hp);
+        singleHooks.mayPlace=[&s](const o::CanonPlacementQuery& query) { return s.MayPlaceGameplay(query); }; // 현재 Editor/Player/동맹/섬·Graph를 읽는 실제 전체 MayPlace다. 생성 시 고정된 초기 관문을 재사용하지 않는다.
+        o::RawFortRandomPlacement single(s.core.pool,s.core.hash,s.core.spots,s.core.types,s.core.frames,s.random,s.randomPlacement,std::move(singleHooks));
+        o::FortFinishOwnerHooks finishHooks;
+        finishHooks.regionBounds=[&s](auto region) { const auto b=s.islands->Bounds(region);return o::FortRandomRectangle{b.left,b.top,b.right,b.bottom}; };
+        finishHooks.wallSeconds=[&s,name] { if (!s.services.sound.wallSeconds) throw std::logic_error(name+"의 실제 벽시각 미연결");return s.services.sound.wallSeconds(); };
+        finishHooks.invalidType=SessionMissing<void>();finishHooks=o::MakeFortSinglePlacementHook(s.core.pool,single,std::move(finishHooks));
+        o::RawFortFinishOwner localFinish(s.core.pool,s.core.types,s.assetState.Residences(),s.finishState,std::move(finishHooks));localFinish.BindPlayerRecords(s.players);
+        o::IslandPopulationHooks population;
+        population.assertion=[name](auto reason) { throw std::logic_error(name+" 원문 population 진단:"+std::to_string(static_cast<std::uint32_t>(reason))); }; // 원문 선택된 진단을 숨기지 않고 지역/권한/배치 실패의 종류를 보존한다.
+        population.wallSeconds=[&s,name] { if (!s.services.sound.wallSeconds) throw std::logic_error(name+" 교체의 실제 벽시각 미연결");return s.services.sound.wallSeconds(); };
+        population.position=[&s](auto sid) { return s.core.neighbors.Center(sid); };
+        population.destroy=[&s](auto sid,auto flags) { s.world.Destroy(sid,flags); };
+        population.create=[&s](auto type,auto flags) { return s.world.Create(type,flags); };
+        population.defaultFrame=[&s,name](auto type) { if (type<70 || type-70>=s.assets.game.Types().size()) throw std::out_of_range(name+" 현재 TYPE 기본 프레임 범위");return s.assets.game.Types()[type-70].definition.specialFrames.defaultFrame; };
+        population.typeHitPoints=[&s](auto type) { return s.hp.TypeHitPoints(type); };population.hasHitPoints=[&s](auto sid) { return s.hp.HasHitPoints(sid); };
+        population.setOwner=[&s](auto sid,auto owner) { s.ownership->SetOwner(sid,owner); };
+        population.pop=[&s](auto sid,float x,float y,auto flags) { s.world.Pop(sid,x,y,flags); };
+        population.refreshProduction=[&s,name] { if (!s.services.ownership.refreshProduction) throw std::logic_error(name+" 실제 생산 통지 미연결");s.services.ownership.refreshProduction(); };
+        o::RawIslandPopulation fill(s.core.pool,s.chunks,s.chunks,*s.islands,localFinish,
+            {s.gameplayGlobals->Authority()->boss,s.core.ownerMode.fort,s.finishState.residenceType,s.tutorialArcherType,s.templeProduct,s.rewardState.types.priest},std::move(population));
+        body(fill);
+    }
     // 원문0040e2b0의 초기 사제 배치는 기존 실제 배치/Factory/가상 owner/HP/Pop 장치를 사용한다.
     void PopulateInitialFortPriest(std::int32_t region) {
-        auto& s=*this;
-    auto singleHooks=MakeNormalTerrainFarmWorldHooks(s.world,s.chunks,*s.islands,*s.pipeline,s.hp);
-    singleHooks.mayPlace=[&s](const o::CanonPlacementQuery& query) { return s.MayPlaceGameplay(query); }; // 현재 Editor/Player/동맹/섬·Graph를 읽는 실제 전체 MayPlace다. 생성 시 고정된 초기 관문을 재사용하지 않는다.
-    o::RawFortRandomPlacement single(s.core.pool,s.core.hash,s.core.spots,s.core.types,s.core.frames,s.random,s.randomPlacement,std::move(singleHooks));
-    o::FortFinishOwnerHooks finishHooks;
-    finishHooks.regionBounds=[&s](auto region) { const auto b=s.islands->Bounds(region);return o::FortRandomRectangle{b.left,b.top,b.right,b.bottom}; };
-    finishHooks.wallSeconds=[&s] { if (!s.services.sound.wallSeconds) throw std::logic_error("Fort 사제 준비의 실제 벽시각 미연결");return s.services.sound.wallSeconds(); };
-    finishHooks.invalidType=SessionMissing<void>();finishHooks=o::MakeFortSinglePlacementHook(s.core.pool,single,std::move(finishHooks));
-    o::RawFortFinishOwner localFinish(s.core.pool,s.core.types,s.assetState.Residences(),s.finishState,std::move(finishHooks));localFinish.BindPlayerRecords(s.players);
-    o::IslandPopulationHooks population;
-    population.assertion=[](auto reason) { throw std::logic_error("Fort 사제 준비 원문 population 진단:"+std::to_string(static_cast<std::uint32_t>(reason))); }; // 원문 선택된 진단을 숨기지 않고 지역/권한/배치 실패의 종류를 보존한다.
-    population.wallSeconds=[&s] { if (!s.services.sound.wallSeconds) throw std::logic_error("Fort 사제 준비 교체의 실제 벽시각 미연결");return s.services.sound.wallSeconds(); };
-    population.position=[&s](auto sid) { return s.core.neighbors.Center(sid); };
-    population.destroy=[&s](auto sid,auto flags) { s.world.Destroy(sid,flags); };
-    population.create=[&s](auto type,auto flags) { return s.world.Create(type,flags); };
-    population.defaultFrame=[&s](auto type) { if (type<70 || type-70>=s.assets.game.Types().size()) throw std::out_of_range("Fort 사제 준비 현재 TYPE 기본 프레임 범위");return s.assets.game.Types()[type-70].definition.specialFrames.defaultFrame; };
-    population.typeHitPoints=[&s](auto type) { return s.hp.TypeHitPoints(type); };population.hasHitPoints=[&s](auto sid) { return s.hp.HasHitPoints(sid); };
-    population.setOwner=[&s](auto sid,auto owner) { s.ownership->SetOwner(sid,owner); };
-    population.pop=[&s](auto sid,float x,float y,auto flags) { s.world.Pop(sid,x,y,flags); };
-    population.refreshProduction=[&s] { if (!s.services.ownership.refreshProduction) throw std::logic_error("Fort 사제 준비 실제 생산 통지 미연결");s.services.ownership.refreshProduction(); };
-    o::RawIslandPopulation fill(s.core.pool,s.chunks,s.chunks,*s.islands,localFinish,
-        {s.gameplayGlobals->Authority()->boss,s.core.ownerMode.fort,s.finishState.residenceType,s.tutorialArcherType,s.templeProduct,s.rewardState.types.priest},std::move(population));
-        const auto rect=s.chunks.Bounds(region);const auto cell=[](std::int32_t value) { return static_cast<float>(std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)<<4)); }; //0040d900의 DWORD 감김16배 뒤 float32 저장이다.
-        fill.ReplaceInitial({cell(rect.left),cell(rect.top),cell(rect.right),cell(rect.bottom)},region);
+        WithIslandPopulation("Fort 사제 준비",[&](o::RawIslandPopulation& fill) {
+            const auto rect=chunks.Bounds(region);const auto cell=[](std::int32_t value) { return static_cast<float>(std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)<<4)); }; //0040d900의 DWORD 감김16배 뒤 float32 저장이다.
+            fill.ReplaceInitial({cell(rect.left),cell(rect.top),cell(rect.right),cell(rect.bottom)},region);
+        });
+    }
+    // 원문 0046e630(CD 004906c0)의 Fort 섬 채우기다. 새 Fort의 섬0이 존재할 때 builder 사각형이 유효한지 확인한 뒤 현재 SecondTimerFactoryType(005411b4) 객체 1개를
+    // 0040dfd0 AddRandom으로 먼저 놓고, 0046e000 Populate(0)을 실행하며, 놓았던 임시 객체를 가상+10 전체 삭제(flags 0)로 지운다. 반환 SID가 0이면 삭제하지 않는다.
+    // 캠페인 설치 모드의 Multiplayer 버튼(alternate Fort)이 이 부모에 도달한다. (M6-n 잔여 처리)
+    void PopulateAlternateFortIsland(const o::RawIslandBuilderState& builder) {
+        auto& s=*this;const auto& cell=builder.bounds;
+        if (cell.left==-1 || cell.top==-1 || cell.right==-1 || cell.bottom==-1) { if (!s.services.ai.assertion) throw std::logic_error("Fort 섬 채우기의 실제 진단 미연결");s.services.ai.assertion("cRect.isValid()"); } // 원문은 보고 뒤 계속하며 미연결 진단은 숨기지 않는다.
+        std::uint32_t created{}; // 0040dfd0이 eax로 넘기는 마지막 배치 SID다.
+        {
+            auto singleHooks=MakeNormalTerrainFarmWorldHooks(s.world,s.chunks,*s.islands,*s.pipeline,s.hp);
+            singleHooks.mayPlace=[&s](const o::CanonPlacementQuery& query) { return s.MayPlaceGameplay(query); };
+            o::RawFortRandomPlacement single(s.core.pool,s.core.hash,s.core.spots,s.core.types,s.core.frames,s.random,s.randomPlacement,std::move(singleHooks));
+            o::FortFinishOwnerHooks finishHooks;
+            finishHooks.regionBounds=[&s](auto region) { const auto bounds=s.islands->Bounds(region);return o::FortRandomRectangle{bounds.left,bounds.top,bounds.right,bounds.bottom}; };
+            finishHooks.wallSeconds=[&s] { if (!s.services.sound.wallSeconds) throw std::logic_error("Fort 섬 채우기 AddRandom의 실제 벽시각 미연결");return s.services.sound.wallSeconds(); };
+            finishHooks.invalidType=[&s] { if (!s.services.player.log) throw std::logic_error("Fort 섬 채우기 AddRandom의 실제 잘못된 타입 로그 미연결");s.services.player.log(0x1d,"AddRandom: Invalid Type\n"); }; // 원문은 로그 뒤 0을 반환하며 성공을 합성하지 않는다.
+            finishHooks=o::MakeFortSinglePlacementHook(s.core.pool,single,std::move(finishHooks));
+            o::RawFortFinishOwner addRandomPlacement(s.core.pool,s.core.types,s.assetState.Residences(),s.finishState,std::move(finishHooks));addRandomPlacement.BindPlayerRecords(s.players);
+            o::AddRandomHooks hooks;hooks.wallSeconds=[&s] { if (!s.services.sound.wallSeconds) throw std::logic_error("Fort 섬 채우기 AddRandom의 실제 벽시각 미연결");return s.services.sound.wallSeconds(); };
+            hooks.local=[&s] { return s.playerState.battleOwner; }; // 0040dfd0이 시각 seed 뒤 읽는 00540c70 현재 로컬 소유자(Session::LocalOwner와 같은 값)다.
+            hooks.island=[&s](auto owner,auto territory) { return o::FindFortTerritoryIsland(s.islands->Bytes(),s.core.ownerMode.fort,std::bit_cast<std::int32_t>(owner),territory); };
+            hooks.place=[&addRandomPlacement](auto& random,const auto& rectangle,auto region,auto count,auto selected,auto force) { return addRandomPlacement.PlaceRandom(random,rectangle,region,count,selected,force); };
+            created=o::AddRandomObjects(s.gameplayGlobals->SecondTimerFactoryType(),1,hooks);
+        }
+        WithIslandPopulation("Fort 섬 채우기",[](o::RawIslandPopulation& fill) { fill.Populate(0); }); // 원문 0046e000(this,0)이다.
+        if (created) { if (created>65535U || created>=core.pool.Capacity()) throw std::out_of_range("Fort 섬 채우기 임시 객체의 현재 SID 물리 범위");world.Destroy(o::Sid{static_cast<std::uint16_t>(created)},0); }
     }
     // 실제 Runtime이 현재 모드에서 선택한004923e0을 같은 Player/목록/Template에 연결한다.
     void PrepareExistingFortPriests() {
@@ -3388,7 +3421,8 @@ struct RawCampaignSession::Impl {
         hooks.templatePresent=[this](auto owner) { if (owner>=9) throw std::out_of_range("Fort 사제 준비 현재 Template owner");return Read(templateStorage->Headers(),owner*20)!=0; };
         hooks.state=[this](auto owner) { return templateState->Get(owner); };hooks.territory=[this](auto owner,auto bytes) { runtime->ReadTerritory(owner,bytes); };
         hooks.island=[this](auto owner,auto index) { return FindFortTerritoryIsland(islands->Bytes(),core.ownerMode.fort,std::bit_cast<std::int32_t>(owner),std::bit_cast<std::int32_t>(index)); };
-        hooks.region=[this](float x,float y) { const auto integer=[](double value) { if (!std::isfinite(value) || value<-2147483648.0 || value>=2147483648.0) throw std::out_of_range("Fort 사제 지역 좌표 signed 범위");return static_cast<std::int32_t>(value); };const auto snap=[integer](float value) { return integer(static_cast<float>(integer(double(value)+0.99999F))); };return std::bit_cast<std::int32_t>(motion->Terrain().RegionAt(snap(x),snap(y))); }; // 원문0046f530의0041d7a0 저장/절삭 경계를 유지한다.hooks.setOwner=[this,sid](auto value,auto owner) { ownership->SetOwner(sid(value),owner); };
+        hooks.region=[this](float x,float y) { const auto integer=[](double value) { if (!std::isfinite(value) || value<-2147483648.0 || value>=2147483648.0) throw std::out_of_range("Fort 사제 지역 좌표 signed 범위");return static_cast<std::int32_t>(value); };const auto snap=[integer](float value) { return integer(static_cast<float>(integer(double(value)+0.99999F))); };return std::bit_cast<std::int32_t>(motion->Terrain().RegionAt(snap(x),snap(y))); }; // 원문0046f530의0041d7a0 저장/절삭 경계를 유지한다.
+        hooks.setOwner=[this,sid](auto value,auto owner) { ownership->SetOwner(sid(value),owner); }; // 같은 줄 주석이 이 대입을 삼켜 setOwner가 미연결이던 결함을 Multiplayer 실제 실행에서 발견해 분리했다(M6-n).
         hooks.populate=[this](auto region) { PopulateInitialFortPriest(region); };
         hooks.tellPriests=[this](auto count) {
             if (!services.editorPlayerUi.translate || !services.install.setConfig) throw std::logic_error("Fort 사제 수의 실제 번역/설정 장치 미연결");
@@ -3407,6 +3441,7 @@ struct RawCampaignSession::Impl {
         hooks.builderAssertion=SessionMissing<void,RawIslandBuilderAssertion>();hooks.territoryAssertion=SessionMissing<void,FortWorldLoadAssertion>();
         hooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         hooks.setState=[this](Sid sid,std::uint32_t value) { assetBindings->SetState(sid,value); };
+        hooks.populateIsland=[this](const RawIslandBuilderState& builder,std::int32_t) { PopulateAlternateFortIsland(builder); }; // 원문 0046e630의 Fort 섬 채우기를 같은 Session 장치로 연결한다(M6-n).
         hooks.virtualCount=[this](Sid sid) { return std::bit_cast<std::int32_t>(VirtualCount(sid)); }; // 초기 설치도 같은 실제 가상80 몸체를 사용한다.
         RawCampaignInstallData data{{},{},headers,handle,[this](auto slot)->const FortTemplate& { return templateStorage->Template(slot); },[this](auto slot)->FortTerritoryStream& { return templateStorage->SelectTerritory(slot); }};
         data.campaignObjects=[this](const RawFortObjectLoad& objects,auto slot) { ReadFortObjectStreams(objects,slot); }; // 초기 사본/로그인 재적재와 무관하게 실제 현재 manager를 같은 원문 부모로 읽는다.
