@@ -23,7 +23,9 @@ std::uint32_t CarrierTable(std::span<const std::uint8_t> bytes) {
 template<class Function,class... Args>
 decltype(auto) CarrierCall(const std::weak_ptr<const RawSurfaceCarrierBindings>& weak,Function RawSurfaceCarrierBindings::* member,Args&&... args) {
     const auto current=weak.lock();if (!current) throw std::logic_error("Carrier의 현재 실제 큰 Runtime 미연결");
-    const auto pin=current->pin;const auto owner=pin ? pin():std::shared_ptr<void>{};const auto call=current.get()->*member;
+    const auto pin=current->pin;if (!pin) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime pin 미연결");
+    const auto owner=pin();if (!owner) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime owner 반납"); // 선택된 함수의 정상/예외 복귀까지 실제 소유자를 보유한다.
+    const auto call=current.get()->*member;
     if (!call) throw std::logic_error("Carrier의 선택된 실제 큰 본문 미연결");
     return call(std::forward<Args>(args)...);
 }

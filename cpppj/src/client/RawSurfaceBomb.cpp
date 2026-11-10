@@ -65,7 +65,9 @@ o::RawBombRegular& RawSurfaceStorage::BombRegular() {
         static_cast<void>(BombCastTimes());o::BombRegularHooks hooks;
         hooks.notice=[this](auto parent,auto count,auto event) {
             const auto current=bombRuntime_.lock();if (!current) throw std::logic_error("장기 Bomb의 실제 현재 시전 플레어 Runtime 미연결");
-            const auto pin=current->pin;const auto owner=pin ? pin():std::shared_ptr<void>{};const auto call=current->notice;
+            const auto pin=current->pin;if (!pin) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime pin 미연결");
+            const auto owner=pin();if (!owner) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime owner 반납"); // 선택된 함수의 정상/예외 복귀까지 실제 소유자를 보유한다.
+            const auto call=current->notice;
             if (!call) throw std::logic_error("장기 Bomb의 실제 시전 플레어 본문 미연결");call(parent,count,event);
         };
         hooks.frame=[this](auto sid,auto frame,auto flags) { Frame().Set(sid,std::bit_cast<std::int32_t>(frame),flags); };
@@ -77,13 +79,17 @@ o::RawBombRegular& RawSurfaceStorage::BombRegular() {
         hooks.targetBuffer=[this]()->std::span<std::uint32_t> { if (bombSearchMemory_.empty()) throw std::logic_error("장기 Bomb의 실제 확보 검색 배열 미연결");return {bombSearchMemory_.back().get(),100}; }; // 검색과 패킷 대상 복사는 같은 실제400BYTE를 읽고 쓴다.
         hooks.targets=[this](auto parent,auto output) {
             const auto current=bombRuntime_.lock();if (!current) throw std::logic_error("장기 Bomb의 실제 현재 대상 Runtime 미연결");
-            const auto pin=current->pin;const auto owner=pin ? pin():std::shared_ptr<void>{};const auto call=current->targets;
+            const auto pin=current->pin;if (!pin) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime pin 미연결");
+            const auto owner=pin();if (!owner) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime owner 반납"); // 선택된 함수의 정상/예외 복귀까지 실제 소유자를 보유한다.
+            const auto call=current->targets;
             if (!call) throw std::logic_error("장기 Bomb의 실제 전체 대상 검색 미연결");return call(parent,output);
         };
         hooks.broadcast=[this](auto packet) { BroadcastAssetPacket(packet); }; // 각 현재 Source의 실제 observer/송신만 길이를 마무리한다.
         hooks.receive=[this](auto player,auto connection,auto packet) {
             const auto current=bombRuntime_.lock();if (!current) throw std::logic_error("장기 Bomb의 실제 현재 효과 Runtime 미연결");
-            const auto pin=current->pin;const auto owner=pin ? pin():std::shared_ptr<void>{};const auto call=current->receive;
+            const auto pin=current->pin;if (!pin) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime pin 미연결");
+            const auto owner=pin();if (!owner) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime owner 반납"); // 선택된 함수의 정상/예외 복귀까지 실제 소유자를 보유한다.
+            const auto call=current->receive;
             if (!call) throw std::logic_error("장기 Bomb의 실제 전체 효과 수신 미연결");call(player,connection,packet);
         };
         hooks.release=[this](auto bytes) { if (bytes!=400 || bombSearchMemory_.empty()) throw std::logic_error("장기 Bomb의 실제 검색 메모리 해제 순서 오류");bombSearchMemory_.pop_back(); };

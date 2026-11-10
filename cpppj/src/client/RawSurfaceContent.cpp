@@ -36,7 +36,9 @@ o::ContentFormHost& RawSurfaceStorage::ContentForms() {
         auto body=std::make_unique<o::ContentFormHost>(pool,types,[this](auto parent,auto form,auto reason) { NoticeContent(parent,form,reason); },o::FormPopTransmit{},&contentFormState_,
             [this](auto parent,auto previous) {
                 const auto current=contentRuntime_.lock();if (!current) throw std::logic_error("Content의 실제 현재 포획 안내 Runtime 미연결");
-                const auto pin=current->pin;const auto owner=pin ? pin():std::shared_ptr<void>{};const auto captured=current->captured;
+                const auto pin=current->pin;if (!pin) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime pin 미연결");
+                const auto owner=pin();if (!owner) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime owner 반납"); // 선택된 함수의 정상/예외 복귀까지 실제 소유자를 보유한다.
+                const auto captured=current->captured;
                 if (!captured) throw std::logic_error("Content의 실제 현재 포획 안내 장치 미연결");captured(parent,previous);
             });
         body->BindCurrentTypes(types);body->BindPop([this](auto sid,auto flags) { Factory().PopForm(sid,flags); });body->BindUnpop([this](auto sid) { Factory().UnpopForm(sid); });
@@ -66,7 +68,9 @@ o::ContentFormLifetime& RawSurfaceStorage::ContentLifetime() {
 void RawSurfaceStorage::NoticeContent(o::Sid parent,o::Sid form,std::uint32_t reason) {
     o::RawContentParentNotice notice(pool,[this](auto selectedParent,auto selectedForm,auto selectedReason) {
         const auto current=contentRuntime_.lock();if (!current) throw std::logic_error("Content의 실제 현재 파생 부모 Runtime 미연결");
-        const auto pin=current->pin;const auto owner=pin ? pin():std::shared_ptr<void>{};const auto call=current->notice;
+        const auto pin=current->pin;if (!pin) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime pin 미연결");
+        const auto owner=pin();if (!owner) throw std::logic_error("선택된 큰 후단의 실제 전체 Runtime owner 반납"); // 선택된 함수의 정상/예외 복귀까지 실제 소유자를 보유한다.
+        const auto call=current->notice;
         if (!call) throw std::logic_error("Content의 실제 현재 파생 부모 가상24 미연결");call(selectedParent,selectedForm,selectedReason);
     });notice.Notice(parent,form,reason);
 }

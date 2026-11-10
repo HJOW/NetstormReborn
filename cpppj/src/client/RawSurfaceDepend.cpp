@@ -32,7 +32,11 @@ void RawSurfaceStorage::NotifyDependency(o::Sid watcher,o::Sid watched,o::Sid fo
 // 약한 대여를 선택한 뒤 실제 외곽 pin과 함수 사본을 호출 종료까지 유지한다.
 void RawSurfaceStorage::DeliverDependNotice(o::Sid watcher,o::Sid watched,o::Sid form) {
     const auto current=dependRuntime_.lock();
-    if (current && current->notice) { const auto pin=current->pin;const auto runtimeOwner=pin ? pin():std::shared_ptr<void>{};const auto notice=current->notice;notice(watcher,watched,form);return; }
+    if (current && current->notice) {
+        const auto pin=current->pin;if (!pin) throw std::logic_error("Depend 통지의 실제 전체 Runtime pin 미연결");
+        const auto runtimeOwner=pin();if (!runtimeOwner) throw std::logic_error("Depend 통지의 실제 전체 Runtime owner 반납"); // 빈 통지는 이 경계를 선택하지 않고 원래 장기 가상34로 간다.
+        const auto notice=current->notice;notice(watcher,watched,form);return;
+    }
     NotifyDependency(watcher,watched,form);
 }
 }

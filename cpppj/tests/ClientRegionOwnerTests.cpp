@@ -1308,13 +1308,15 @@ TEST_CASE(ClientBombOwner_MissingTargetThrowsAndFreesRealAllocation) { // 시전
     for (int pass=0;pass<2;++pass) { bool rejected{};try { s.storage->BombRegular().Handle(sid,0,1,0.25F); }catch (const std::logic_error& error) { rejected=std::string(error.what()).find("Runtime")!=std::string::npos; }CHECK(rejected && s.storage->BombSearchReservations()==0); } // 같은 실제 본문을 재호출해 미해제 확보가 남지 않음을 확인한다.
 }
 TEST_CASE(ClientBombOwner_NoticeReadsCurrentBossAfterEffect) { // 실제 시전 안내의6/두 배 시간 인자 뒤 바뀐 현재 Boss를 읽고 큰 대상을 생략한다.
-    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(),carrier=s.Asset(0x5092d0U);DependWord(s.storage->pool,sid,12,carrier.value);const auto type=s.storage->pool.Slot(sid)[10];s.storage->BombCastTimes()[type]=7;s.gameplay->Authority()->boss=true;std::uint32_t notices{};
-    auto binding=std::make_shared<RawSurfaceBombBindings>();binding->notice=[&](auto parent,auto count,auto event) { CHECK(parent==carrier && count==6 && event==14);++notices;s.storage->BombCastTimes()[type]=-1;s.gameplay->Authority()->boss=false; };s.storage->BindBombRuntime(binding);
+    auto owned=std::make_shared<BombOwnerScene>();auto& f=*owned;auto& s=f.scene;const auto sid=f.Bomb(),carrier=s.Asset(0x5092d0U);DependWord(s.storage->pool,sid,12,carrier.value);const auto type=s.storage->pool.Slot(sid)[10];s.storage->BombCastTimes()[type]=7;s.gameplay->Authority()->boss=true;std::uint32_t notices{};
+    auto binding=std::make_shared<RawSurfaceBombBindings>();binding->pin=[weak=std::weak_ptr<BombOwnerScene>(owned)]()->std::shared_ptr<void> { return weak.lock(); }; // 안내가 실제로 변경하는 Pool/TYPE/권한 전체를 보유한다.
+    binding->notice=[&](auto parent,auto count,auto event) { CHECK(parent==carrier && count==6 && event==14);++notices;s.storage->BombCastTimes()[type]=-1;s.gameplay->Authority()->boss=false; };s.storage->BindBombRuntime(binding);
     CHECK(s.storage->BombRegular().Handle(sid,0,0,0.125F)==0.125F && notices==1 && s.storage->BombSearchReservations()==0);
 }
 TEST_CASE(ClientBombOwner_NoticeMutationUsesNewCurrentType) { // 안내가 바꾼 raw TYPE를 A 첫 프레임과 casttime 조회에서 다시 읽는다.
-    BombOwnerScene f;auto& s=f.scene;const auto sid=f.Bomb(),carrier=s.Asset(0x5092d0U);DependWord(s.storage->pool,sid,12,carrier.value);const auto old=s.storage->pool.Slot(sid)[10];s.storage->BombCastTimes()[old]=7;s.storage->BombCastTimes()[117]=100;s.gameplay->Authority()->boss=true;
-    auto binding=std::make_shared<RawSurfaceBombBindings>();binding->notice=[&](auto,auto,auto) { s.storage->pool.AllocatedBytes(sid)[10]=117; };s.storage->BindBombRuntime(binding);
+    auto owned=std::make_shared<BombOwnerScene>();auto& f=*owned;auto& s=f.scene;const auto sid=f.Bomb(),carrier=s.Asset(0x5092d0U);DependWord(s.storage->pool,sid,12,carrier.value);const auto old=s.storage->pool.Slot(sid)[10];s.storage->BombCastTimes()[old]=7;s.storage->BombCastTimes()[117]=100;s.gameplay->Authority()->boss=true;
+    auto binding=std::make_shared<RawSurfaceBombBindings>();binding->pin=[weak=std::weak_ptr<BombOwnerScene>(owned)]()->std::shared_ptr<void> { return weak.lock(); }; // 안내가 읽고 쓰는 실제 현재 장면을 선택 호출 동안 보유한다.
+    binding->notice=[&](auto,auto,auto) { s.storage->pool.AllocatedBytes(sid)[10]=117; };s.storage->BindBombRuntime(binding);
     CHECK(s.storage->BombRegular().Handle(sid,0,0,0.125F)==0.125F && RegionRead(s.storage->pool.Slot(sid),36)==static_cast<std::uint32_t>(s.storage->frames[117].Run('A').first) && s.storage->BombSearchReservations()==0);
 }
 TEST_CASE(ClientBombOwner_NoticePinsActualWorldUntilReturn) { // 선택한 실제 World를 callback이 반납해도 함수 사본/전체 pin은 안내 복귀까지 유지한다.
@@ -1613,6 +1615,51 @@ TEST_CASE(ClientCarrierOwner_SelectedRuntimePinsWholeOwnerAndFunction) { //선�
     binding->pin=[&] { ++pins;return owner; };binding->falling=[&](auto sid,auto count) { owner.reset();binding->falling={};binding.reset();CHECK(!weak.expired() && sid==parent && count==123);++calls;return 0.125F; };s.storage->BindCarrierRuntime(binding);
     CHECK(body.Handle(parent,0x5105U,123,9.0F)==0.125F && pins==1 && calls==1 && weak.expired());bool failed{};try { body.Handle(parent,0x5105U,123,9.0F); }catch (const std::logic_error&) { failed=true; }CHECK(failed && calls==1);
     s.gameplay->Authority()->boss=false;CHECK(body.Handle(parent,0x492U,1,0.25F)==0.25F);CHECK(!s.storage->Borrowed());
+}
+TEST_CASE(ClientCarrierOwner_MissingWholeOwnerRejectsFalling) { // 선택된 낙하는 pin 부재와 빈 실제 owner 모두 본문 실행 전에 거부한다.
+    for (const bool empty:{false,true}) { // 두 누락 형태는 별도 실제 Pool에서 같은 사건을 선택한다.
+        RegionScene s;const auto parent=s.Asset(0x503d80U);auto binding=std::make_shared<RawSurfaceCarrierBindings>();std::uint32_t calls{};
+        if (empty) binding->pin=[]()->std::shared_ptr<void> { return {}; };
+        binding->falling=[&](auto,auto) { ++calls;return 0.125F; };s.storage->BindCarrierRuntime(binding);bool rejected{};
+        try { s.storage->CarrierRegular().Handle(parent,0x5105U,123,9.0F); }catch (const std::logic_error&) { rejected=true; }
+        CHECK(rejected && calls==0);
+    }
+}
+TEST_CASE(ClientContentOwner_MissingWholeOwnerRejectsDerivedNotice) { // 빈 기본 가상24와 구별해 파생 부모 통지만 실제 전체 owner를 요구한다.
+    for (const bool empty:{false,true}) { // 누락 입력별로 파생 부모와 빈 기본 Form을 따로 만든다.
+        ContentOwnerScene f;auto& s=f.scene;const auto parent=s.Asset(0x503d80U),base=s.storage->Factory().Create(6,2);auto binding=std::make_shared<RawSurfaceContentBindings>();std::uint32_t calls{};
+        if (empty) binding->pin=[]()->std::shared_ptr<void> { return {}; };
+        binding->notice=[&](auto,auto,auto) { ++calls; };s.storage->BindContentRuntime(binding);s.storage->NoticeContent(base,Sid{65535},17);bool rejected{};
+        try { s.storage->NoticeContent(parent,Sid{65535},17); }catch (const std::logic_error&) { rejected=true; }
+        CHECK(rejected && calls==0);
+    }
+}
+TEST_CASE(ClientDependOwner_MissingWholeOwnerKeepsUnselectedFallback) { // 빈 현재 통지는 실제 장기 가상34로 가고 선택된 통지는 실제 owner가 없으면 거부한다.
+    for (const bool empty:{false,true}) { // 같은 감시 쌍에서 빈 통지와 선택 통지의 순서를 확인한다.
+        RegionScene s;const auto watched=s.Asset(0x5092d0U),watcher=s.storage->Factory().Create(3,2);auto& body=s.storage->DependForms();const auto pair=body.Create(watched,watcher);auto binding=std::make_shared<RawSurfaceDependBindings>();std::uint32_t calls{};
+        if (empty) binding->pin=[]()->std::shared_ptr<void> { return {}; };
+        s.storage->BindDependRuntime(binding);body.Notify(pair.watchedForm,watched);binding->notice=[&](auto,auto,auto) { ++calls; };bool rejected{};
+        try { body.Notify(pair.watchedForm,watched); }catch (const std::logic_error&) { rejected=true; }
+        CHECK(rejected && calls==0);binding->notice={};body.Remove(watcher,watched,0x10U);
+    }
+}
+TEST_CASE(ClientBombOwner_MissingWholeOwnerStopsBeforeNoticeAndFrame) { // 시전 안내는 실제 owner 확보 전에 프레임/후단을 실행하지 않는다. 포획·송수신은 선택하지 않는다.
+    for (const bool empty:{false,true}) { // pin 함수 부재와 빈 반환을 독립된 원본 자산으로 확인한다.
+        BombOwnerScene f;auto& s=f.scene;const auto parent=f.Bomb(),carrier=s.Asset(0x5092d0U);DependWord(s.storage->pool,parent,12,carrier.value);s.gameplay->Authority()->boss=false;RegionPut(s.storage->pool.AllocatedBytes(parent),36,12345);auto binding=std::make_shared<RawSurfaceBombBindings>();std::uint32_t calls{};
+        if (empty) binding->pin=[]()->std::shared_ptr<void> { return {}; };
+        binding->notice=[&](auto,auto,auto) { ++calls; };s.storage->BindBombRuntime(binding);bool rejected{};
+        try { s.storage->BombRegular().Handle(parent,0,0,0.125F); }catch (const std::logic_error&) { rejected=true; }
+        CHECK(rejected && calls==0 && RegionRead(s.storage->pool.Slot(parent),36)==12345 && s.storage->BombSearchReservations()==0);
+    }
+}
+TEST_CASE(ClientBombOwner_MissingWholeOwnerReleasesSearchBeforePacket) { // 검색 경계의 누락 owner를 거부하고 실제400BYTE를 반납한다. 패킷 생성/방송/수신은 실행하지 않는다.
+    for (const bool empty:{false,true}) { // 두 누락 입력 모두 같은 원문 animate 접두 뒤 확보 배열을 해제한다.
+        BombOwnerScene f;auto& s=f.scene;const auto parent=f.Bomb();s.storage->BombCastTimes()[s.storage->pool.Slot(parent)[10]]=-1;s.gameplay->Authority()->boss=true;auto binding=std::make_shared<RawSurfaceBombBindings>();std::uint32_t calls{};
+        if (empty) binding->pin=[]()->std::shared_ptr<void> { return {}; };
+        binding->targets=[&](auto,auto)->std::uint32_t { ++calls;throw std::logic_error("패킷 이전 검색 실행 금지"); };s.storage->BindBombRuntime(binding);bool rejected{};
+        try { s.storage->BombRegular().Handle(parent,0,1,0.125F); }catch (const std::logic_error&) { rejected=true; }
+        CHECK(rejected && calls==0 && s.storage->BombSearchReservations()==0);
+    }
 }
 TEST_CASE(ClientCarrierOwner_CurrentDangerCellUsesSameFrame) { //Player/Session 없이 현재 표면·TYPE·프레임을 실제4225b0에서 조회한다.
     RegionScene s;const auto parent=s.Asset(0x503d80U),bridge=s.Asset(0x5034c8U);auto raw=s.storage->pool.AllocatedBytes(parent);RegionPut(raw,14,std::bit_cast<std::uint32_t>(20.5F));RegionPut(raw,18,std::bit_cast<std::uint32_t>(21.25F));const auto type=s.storage->pool.Slot(bridge)[10];s.storage->hash.Bucket(0,21.0F,22.0F)=bridge.value;RegionPut(s.storage->pool.AllocatedBytes(bridge),36,0);s.storage->types[type].flags2|=4;

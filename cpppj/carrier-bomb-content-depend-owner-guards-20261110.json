@@ -1,0 +1,283 @@
+{
+  "unit": 1252,
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "accepted": true,
+  "fullGoalComplete": false,
+  "sourceSha256": {
+    "cpppj/src/client/RawSurfaceCarrier.cpp": "f174f9b31f82f75462f090c3684dfdd76ecc66648f2c6fe4b08fddf9691a084f",
+    "cpppj/src/client/RawSurfaceBomb.cpp": "e5ec7d5a33e5b4a3e062dac050041aafe0c4079d639e1eb55a0b0138e01dbb8c",
+    "cpppj/src/client/RawSurfaceContent.cpp": "3212ff997f88c31bac07be720e5dcec1262423efbb9e76de9aa8a2e88493e1e2",
+    "cpppj/src/client/RawSurfaceDepend.cpp": "b03aa530b4cba9ba6bde2aca317f02632d079a43591e055957f09e447885d19c",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "eb42577243406167c3dc1ba80b78e78994787aa3e6f1b8de4129f7bb3a316c7f"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 14444544,
+      "sha256": "5f3395ed80d776a2144a7e3dbb92b78feb8733a57247d5a61bee62b720f699dd"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "a94250f834216054cd1445752fa36de788171fdbaeba99beda9ca7281f95f0d6"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true",
+      "/bl:H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1252\\build.binlog"
+    ],
+    "exitCode": 0,
+    "seconds": 37.92693614959717,
+    "sourcesUnchanged": true,
+    "warnings": 0,
+    "errors": 0
+  },
+  "regressionBeforeFix": [
+    {
+      "name": "ClientCarrierOwner_MissingWholeOwnerRejectsFalling",
+      "exitCode": 1,
+      "failedAsExpected": true
+    },
+    {
+      "name": "ClientContentOwner_MissingWholeOwnerRejectsDerivedNotice",
+      "exitCode": 1,
+      "failedAsExpected": true
+    },
+    {
+      "name": "ClientDependOwner_MissingWholeOwnerKeepsUnselectedFallback",
+      "exitCode": 1,
+      "failedAsExpected": true
+    },
+    {
+      "name": "ClientBombOwner_MissingWholeOwnerStopsBeforeNoticeAndFrame",
+      "exitCode": 1,
+      "failedAsExpected": true
+    },
+    {
+      "name": "ClientBombOwner_MissingWholeOwnerReleasesSearchBeforePacket",
+      "exitCode": 1,
+      "failedAsExpected": true
+    }
+  ],
+  "tests": {
+    "cases": 296,
+    "passed": 296,
+    "failed": [],
+    "seconds": 41.522867918014526
+  },
+  "staticAudit": {
+    "unit": 1252,
+    "baselineCommit": "6b292335c",
+    "knownAssetPrePost": 83,
+    "knownAssetNotices": 83,
+    "builtinFormDeletionConnected": 4,
+    "builtinFormDeletionTotal": 4,
+    "regularVtables": 87,
+    "connectedRegularVtables": 87,
+    "remainingRegularVtables": 0,
+    "remainingRows": [],
+    "compiledButNotExecutedPlayerRegularCases": [
+      "PlayerRegular_PatchNativeStateAndActualHost",
+      "PlayerRegular_CdNativeStateAndActualHost",
+      "PlayerRegular_SameWorldInitialFiveAndSixtySecondChain"
+    ],
+    "fullNoWorldComplete": false,
+    "fullM6Complete": false,
+    "selectedGuards": {
+      "CarrierCall": [
+        "movementType",
+        "hasPath",
+        "escape",
+        "falling",
+        "setOwner"
+      ],
+      "Bomb": [
+        "notice",
+        "targets",
+        "receive"
+      ],
+      "Content": [
+        "captured",
+        "notice"
+      ],
+      "Depend": [
+        "selected notice; empty notice uses original NotifyDependency"
+      ]
+    },
+    "guardLocations": 7,
+    "wholeOwnerBeforeFunctionCopy": true,
+    "actualCallers": [
+      "RawCampaignSession.cpp:1616-1617 contentNotice/priestTakenNotice",
+      "RawCampaignSession.cpp:1631 current Native NotifyDependency; typed path unchanged",
+      "RawCampaignSession.cpp:1637-1639 flare/Devastation targets and existing receive",
+      "RawCampaignSession.cpp:1649-1653 Carrier movement/path/escape/falling/ownership",
+      "RawSurfaceWorld.cpp:329-341 weak publication",
+      "RawSurfaceWorld.cpp:350-362 current actual Runtime pin updates",
+      "ClientGameplayGlobals.cpp:62-66 actual full Runtime owner publication"
+    ],
+    "excludedNewExecutions": [
+      "Bomb receive/packet/broadcast",
+      "Content captured/priest capture notice",
+      "multiplayer",
+      "specific enemy attack",
+      "victory/natural finish",
+      "dedicated three flyers"
+    ],
+    "nextFindings": [
+      "RawSurfaceDeletion.cpp selected forward optional pin",
+      "RawSurfaceLifetime.cpp fallWalker/bridgeEffect optional pin",
+      "RawSurfaceStorage.cpp display/pop/transport optional pin: classify each active caller and real direct creation/loading owner",
+      "ClientConstructionGlobals CurrentConstructionCall documents real direct caller holding prepublication owner; do not blanket change"
+    ]
+  },
+  "live": {
+    "passed": true,
+    "unit": 1252,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1252\\live-tutorial4-final\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "5f3395ed80d776a2144a7e3dbb92b78feb8733a57247d5a61bee62b720f699dd",
+    "exeSha256After": "5f3395ed80d776a2144a7e3dbb92b78feb8733a57247d5a61bee62b720f699dd",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1252\\live-tutorial4-final\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1252\\live-tutorial4-final\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.435,
+        "gameTimeAfter": 23.578,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "screenshotReview": {
+    "reviewed": true,
+    "path": "live-tutorial4-final/015-generator-settled.png",
+    "observed": "1920x1080의 정상 Tutorial4 섬/메뉴와 제네레이터 요청 뒤 장면. 완공/청취/전체 동일성은 단정하지 않음"
+  },
+  "setupCorrection": {
+    "issue": "단위 번호 치환이 복사 manifest의 SHA 일부까지 바꾼 것을 비교 관문에서 발견",
+    "affectedCasesExecuted": 0,
+    "protectedFilesModified": 0,
+    "correction": "원본 manifest 바이트 그대로 재복사 후 2808개 확인"
+  },
+  "protectedFiles": 2808,
+  "protectedUnchanged": true,
+  "newDecompilation": false,
+  "newZip": false,
+  "rawDirectory": "extracted/cpp-resume-1252/"
+}
