@@ -7,6 +7,17 @@ namespace { //보호 자산의 실제 정의와 TYPE 기록을 독립 경계에�
 using namespace netstorm::o; //제품의 실제 타입/판본을 사용한다.
 }
 
+TEST_CASE(RiftTypeDamageRate_AssetsInitialZeroAndDuplicateFloatStore) { // 양판본의 실제 hpPerSecond 대입과 중복/미지정/float32를 같은 Table 로더에서 확인한다.
+    std::size_t checked{};
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { // 기존 보호 자료를 읽고 내장 타입의 실제 초기0도 확인한다.
+        const auto& game=netstorm::test::dudespawn::Assets(edition).game;const auto types=game.TypeTable().Types();for (const auto& asset:game.Types()) { CHECK(types[70+asset.block].damagePerSecond==static_cast<float>(asset.definition.Number("hpPerSecond").value_or(0)));++checked; } // 각 실제 자산의 원래 선언을 소비한다.
+        for (std::size_t type=0;type<70;++type) CHECK(types[type].damagePerSecond==0); // 내장 타입의 미지정 피해율이다.
+        const auto empty=RiftTypeDefinition::Parse("typename empty {} A00:default:\"a.gif\"#0;");const auto changed=RiftTypeDefinition::Parse("typename damage { hpPerSecond=3.25; hpPerSecond=-7.5; } A00:default:\"a.gif\"#0;");const auto order=TypeLoadOrder(edition);std::vector<RiftTypeSource> sources;
+        for (std::size_t index=0;index<order.size();++index) sources.push_back({order[index],index ? &empty:&changed}); // 중복 속성은 첫 자산에만 넣는다.
+        const RiftTypeTable table(edition,sources);CHECK(std::bit_cast<std::uint32_t>(table.Types()[70].damagePerSecond)==0xc0f00000U && table.Types()[71].damagePerSecond==0);
+    }CHECK(checked==217);
+}
+
 // 양판본 모든 자산의 사거리와 내장 타입의 초기0을 실제 같은 Table 로더로 확인한다.
 TEST_CASE(RiftTypeRange_OriginalAssetsAndBuiltinZero) {
     std::size_t checked{}; //양판본 실제 자산을 빠짐없이 방문한 개수다.

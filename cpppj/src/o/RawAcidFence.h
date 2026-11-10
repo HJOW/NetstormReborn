@@ -12,6 +12,18 @@ void PostPopAcidFence(const SidPool& pool,Sid parent,std::uint32_t flags,const s
 struct AcidFenceTypes {
     std::uint32_t rainFlyer{144},sunFlyer{73},windFlyer{138}; //541298/54117c/541280의 개별 비행체다.
     std::uint32_t rainBalloon{146},windBalloon{141},sunBalloon{111}; //5412a0/54128c/541214의 운반체다.
+    const std::uint32_t* sharedRainFlyer{}; // Native의 같은 현재 rainFlyer DWORD 주소이며 독립 입력은 기존 값을 쓴다.
+    const std::uint32_t& RainFlyer() const { return sharedRainFlyer ? *sharedRainFlyer:rainFlyer; } // 각 후보 비교가 현재값을 읽고 원문 주소 수명을 보존한다.
+    const std::uint32_t* sharedSunFlyer{}; // Native의 같은 현재 sunFlyer DWORD 주소이며 독립 입력은 기존 값을 쓴다.
+    const std::uint32_t& SunFlyer() const { return sharedSunFlyer ? *sharedSunFlyer:sunFlyer; } // 각 후보 비교가 현재값을 읽고 원문 주소 수명을 보존한다.
+    const std::uint32_t* sharedWindFlyer{}; // Native의 같은 현재 windFlyer DWORD 주소이며 독립 입력은 기존 값을 쓴다.
+    const std::uint32_t& WindFlyer() const { return sharedWindFlyer ? *sharedWindFlyer:windFlyer; } // 각 후보 비교가 현재값을 읽고 원문 주소 수명을 보존한다.
+    const std::uint32_t* sharedRainBalloon{}; // Native의 같은 현재 rainBalloon DWORD 주소이며 독립 입력은 기존 값을 쓴다.
+    const std::uint32_t& RainBalloon() const { return sharedRainBalloon ? *sharedRainBalloon:rainBalloon; } // 각 후보 비교가 현재값을 읽고 원문 주소 수명을 보존한다.
+    const std::uint32_t* sharedWindBalloon{}; // Native의 같은 현재 windBalloon DWORD 주소이며 독립 입력은 기존 값을 쓴다.
+    const std::uint32_t& WindBalloon() const { return sharedWindBalloon ? *sharedWindBalloon:windBalloon; } // 각 후보 비교가 현재값을 읽고 원문 주소 수명을 보존한다.
+    const std::uint32_t* sharedSunBalloon{}; // Native의 같은 현재 sunBalloon DWORD 주소이며 독립 입력은 기존 값을 쓴다.
+    const std::uint32_t& SunBalloon() const { return sharedSunBalloon ? *sharedSunBalloon:sunBalloon; } // 각 후보 비교가 현재값을 읽고 원문 주소 수명을 보존한다.
 };
 // 순서 있는 검색/예약/피해/전송은 같은 실제 세션에 연결한다.
 struct AcidFenceHooks {

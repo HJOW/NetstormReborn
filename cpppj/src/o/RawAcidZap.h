@@ -11,6 +11,9 @@ namespace netstorm::o {
 struct AcidZapState {
     std::uint32_t altar{164}; //5412e8의 포획 제외 제단이다.
     std::uint32_t growingIceTower{150}; //5412b0의 포획 제외 성장 중 아이스 타워다.
+    const std::uint32_t* sharedAltar{};const std::uint32_t* sharedGrowingIce{}; // Native는 장기 실제 역할 주소만 빌리고 독립 입력은 기존 값을 쓴다.
+    const std::uint32_t& AltarType() const { return sharedAltar ? *sharedAltar:altar; } // 수신 시점의 같은 현재 제단 번호다.
+    const std::uint32_t& GrowingIceType() const { return sharedGrowingIce ? *sharedGrowingIce:growingIceTower; } // 수신 효과 전의 현재 성장형 번호다.
 };
 // 실제 소리/캡처18/가상 삭제는 같은 월드에 연결한다.
 struct AcidZapHooks {

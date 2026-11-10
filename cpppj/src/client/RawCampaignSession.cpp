@@ -758,12 +758,12 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawCarrierSteal> carrierSteal; // 같은 내용물/공간/방향 동맹/이동/전역 음향의 실제 포획이다.
     std::unique_ptr<RawBombPostPop> bombPostPop; // 같은 장기 난수와 실제 Host를 사용하는 세 주문 효과 접두다.
     std::unique_ptr<RegularProcess> pendingBombPopRegular; // new0x28 성공 뒤 생성/부착할 같은 메모리를 보관한다.
-    AcidZapState acidZapState; //현재 제단/성장 중 아이스 타워의 수신 제외TYPE다.
-    FormPacketHeader acidZapHeader{0x61,1,11}; //52ee42의message/protocol/선언길이다. wire는01/61 순서다.
-    std::unique_ptr<RawAcidZap> acidZap; //실제18 캡처와 같은 가상 삭제를 사용하는 포획 수신이다.
-    AcidFenceTypes acidFenceTypes; //현재 비행체/벌룬의 여섯 TYPE 전역이다.
+    AcidZapState typedAcidState;AcidZapState& acidZapState{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->AcidState():typedAcidState}; //현재 제단/성장 중 아이스 타워의 수신 제외TYPE다.
+    FormPacketHeader typedAcidHeader{0x61,1,11};FormPacketHeader& acidZapHeader{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->AcidHeader():typedAcidHeader}; //52ee42의message/protocol/선언길이다. wire는01/61 순서다.
+    std::unique_ptr<RawAcidZap> localAcidZap;RawAcidZap* acidZap{}; // Native는 장기 현재 수신 부모만 빌린다. //실제18 캡처와 같은 가상 삭제를 사용하는 포획 수신이다.
+    AcidFenceTypes typedAcidTypes;AcidFenceTypes& acidFenceTypes{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->AcidTypes():typedAcidTypes}; //현재 비행체/벌룬의 여섯 TYPE 전역이다.
     std::unique_ptr<RegularProcess> pendingAcidRegular; //new40 성공부터 전용 애니메이션 부착까지 소유한다.
-    std::unique_ptr<RawAcidFence> acidFence; //145의13영역 자동 포획과 전용 주기다.
+    std::unique_ptr<RawAcidFence> localAcidFence;RawAcidFence* acidFence{}; // Native는 같은 장기 정기를 빌린다. //145의13영역 자동 포획과 전용 주기다.
     IceTowerTypes localIceTowerTypes;IceTowerTypes& iceTowerTypes{world.Storage()->UsesNativeTransmissionDevices() ? world.Storage()->IceTowerGlobals():localIceTowerTypes}; //Native는같은현재역할주소를빌리고독립typed는기존값을쓴다.
     std::unique_ptr<RegularProcess> pendingIceRegular; //성장형의new40 성공부터부착까지 소유한다.
     std::unique_ptr<RawIceTower> localIceTower;RawIceTower* iceTower{}; //Native는같은장기파괴/성장/최종생성본문을빌린다.
@@ -868,7 +868,7 @@ struct RawCampaignSession::Impl {
     std::unique_ptr<RawSunAviaryProcess> sunAviary; // 같은 현재 Kernel/시계/풀의 실제 훨리베이스 프로세스 몸체다.
     std::unique_ptr<RawRainAviaryProcess> rainAviary; // 같은 현재 Kernel/풀의 맨 오 워 풀 전용 상태 기계다.
     std::unique_ptr<RawWindAviaryProcess> windAviary; // 같은실제Kernel의데빌메이커80BYTE 생산기다.
-    std::unique_ptr<RawArcSpire> arcSpire; //149의 전용 +X/+Y 동맹 이웃·연쇄 빔·Regular다.
+    std::unique_ptr<RawArcSpire> localArcSpire;RawArcSpire* arcSpire{}; // Native는 같은 장기 정기를 빌린다. //149의 전용 +X/+Y 동맹 이웃·연쇄 빔·Regular다.
     std::unique_ptr<RawWindFlyer> windFlyer; // 더스트 데빌의전용104BYTE/애니메이션/범위공격이다.
     std::vector<std::uint32_t> windActiveSounds; // 같은188TYPE의실제activeSound 토큰이다.
     std::uint32_t& windAviaryType{gameplayGlobals->GameAux()->WindAviaryProcessType()}; // 생성/검색/수신이 같은0054115c를 직접 빌린다.
@@ -895,7 +895,7 @@ struct RawCampaignSession::Impl {
     std::array<std::uint8_t,64> typedRainAviaryPacket{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
     std::span<std::uint8_t> rainAviaryPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedRainAviaryPacket)};bool writingRainAviary{}; // 실제0x73 writer와 송신이 공유하는 버퍼/분배 표식이다.
     std::uint32_t& sunAviaryType{gameplayGlobals->GameAux()->SunAviaryProcessType()}; // 생성/검색/수신이 같은005410f0을 직접 빌린다.
-    std::uint32_t sunFlyerType{73}; // PATCH0054117c의 플라이어 TYPE다.
+    std::uint32_t localSunFlyerType{73};std::uint32_t& sunFlyerType{world.Storage()->UsesNativeTransmissionDevices() ? gameplayGlobals->GameAux()->SunFlyerType():localSunFlyerType}; // PATCH0054117c의 플라이어 TYPE다.
     std::array<std::uint8_t,64> typedSunAviaryPacket{}; //독립typed의기존지역예약/초기바이트/관측크기계약을보존한다.
     std::span<std::uint8_t> sunAviaryPacket{world.Storage()->UsesNativeTransmissionDevices() ? std::span<std::uint8_t>(world.Storage()->GameAux()->SquidTransmission().buffer):std::span<std::uint8_t>(typedSunAviaryPacket)};bool writingSunAviary{}; // 현재 writer/송신이 공유하는 패킷과 분배 표식이다.
     std::array<std::uint8_t,64> localHandle{};std::array<std::uint8_t,64>& handle{services.subscriberGlobals ? services.subscriberGlobals->Handle():localHandle}; // 실제 Client는 같은 장기PTR00540ca8을 빌리고 독립 Session만 기존 지역64BYTE를 소유한다.
@@ -1595,6 +1595,7 @@ struct RawCampaignSession::Impl {
         decorationHit=assetEffects.regular.hitPoints; // 같은 실제 현재 가상98 본문을 복제하지 않고 대여한다.
         assetBindings=std::make_unique<RawCampaignAssetBindings>(world,*carrier,assetState,random,*islands,players,playerState,RawCampaignAssetGlobals{regularState,gunState,elements,archerCommand,{85,87,126,&gameplayGlobals->FirstTimerFactoryType(),&gameplayGlobals->SecondTimerFactoryType(),&researchOutpost}},std::move(assetEffects));assetBindings->ActivatePostPop(); // 세 TYPE는 같은 실제 Client 주소를 빌리고 Session 사본으로 바꾸지 않는다.
         RawWorldRuntimeHooks worldHooks;
+        worldHooks.attacks.damage=hits->DamageHooks({}).damage;worldHooks.attacks.beam=[this](auto source,auto target) { if (!particles) throw std::logic_error("아크의 실제 빔 몸체 설치 전 호출");static_cast<void>(particles->AddBeam(source,target,std::string{"shortZap.wav"})); };worldHooks.attacks.dissolve=[this](auto victim,auto first,auto second,auto orientation) { if (!particles) throw std::logic_error("애시드의 실제 분해 몸체 설치 전 호출");static_cast<void>(particles->AddDissolve(victim,first,second,orientation)); }; // 선택된 기존 큰 본문만 전체 Runtime 수명으로 공개한다.
         worldHooks.dude.movementType=[this](auto type) { return priests->MovementProcessType(type); };worldHooks.dude.entrance=[this](auto target) { const auto point=hits->Dudes().ResidencePoint(target);return RawPathPoint{point[0],point[1]}; };worldHooks.dude.move=[this](auto parent,auto point,auto quickly) { return hits->Dudes().Move(parent,{point.x,point.y},quickly); }; // 기존 전체 이동/진입점만 현재 실제 Runtime에 공개한다.
         worldHooks.residence.entrance=residenceDudeEffects.entrance;worldHooks.residence.spawn=residenceDudeEffects.spawn;worldHooks.residence.task=residenceDudeEffects.task; // 실제 생성 하위만 현재 전체 Runtime과 공개한다.
         worldHooks.factoryRegular.begin=assetEffectsFactoryBegin;worldHooks.factoryRegular.finish=assetEffectsFactoryFinish;worldHooks.factoryRegular.flare=assetEffectsFactoryFlare; // move 전 보관한 같은 실제 큰 후단만 공개한다.
@@ -1779,7 +1780,7 @@ struct RawCampaignSession::Impl {
         // 실제 사건이 실패하면 당시 부모/사건/횟수를 남기고 같은 예외를 전파한다. 성공/상태 되돌림으로 대신하지 않는다.
         worldHooks.regular=[this,handler=std::move(actualRegular)](Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
             try {
-                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50ee08U) return world.Storage()->PlayerRegular(sid,event,count,payload);if (table==0x50f210U) return world.Storage()->PriestRegular(sid,event,count,payload);if (table==0x5075d8U || table==0x5076b8U || table==0x507770U || table==0x507950U) return world.Storage()->RitualRegular(sid,event,count,payload);if (table==0x508cc8U) return world.Storage()->DudeRegular().Handle(sid,event,count,payload);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
+                if (world.Storage()->UsesNativeTransmissionDevices()) { const auto table=Read(core.pool.Slot(sid),0);if (table==0x50e668U) return world.Storage()->ArcSpire().Handle(sid,event,count,payload);if (table==0x50e738U) return world.Storage()->AcidFence().Handle(sid,event,count,payload);if (table==0x50ee08U) return world.Storage()->PlayerRegular(sid,event,count,payload);if (table==0x50f210U) return world.Storage()->PriestRegular(sid,event,count,payload);if (table==0x5075d8U || table==0x5076b8U || table==0x507770U || table==0x507950U) return world.Storage()->RitualRegular(sid,event,count,payload);if (table==0x508cc8U) return world.Storage()->DudeRegular().Handle(sid,event,count,payload);if (table==0x50f540U) return world.Storage()->ResidenceRegular(sid,event,count,payload);if (table==0x509148U || table==0x509210U) return world.Storage()->FactoryRegular(sid,event,count,payload);if (table==0x509758U) return world.Storage()->ImpactRegular(sid,event,count,payload);if (table==0x50b570U) return world.Storage()->DiscRegular(sid,event,count,payload); } // Native의 두 가상 진입은 같은 장기 프레임/현재 TYPE 본문을 사용한다.
                 if (const auto table=Read(core.pool.Slot(sid),0);table==0x50a820U || table==0x50a8e8U) {
                     if (world.Storage()->UsesNativeTransmissionDevices()) return world.Storage()->DecorationRegular(sid,event,count,payload);
                     DecorationRegularHooks hooks;hooks.maxHitPoints=[this](auto parent) { return hp.MaxHitPoints(parent); };
@@ -2100,6 +2101,7 @@ struct RawCampaignSession::Impl {
     }
     // 실제 원본149/50e668의 전용 공격을 같은 finder/피해/빔/시계에 연결한다.
     void ConnectArcSpire() {
+        if (world.Storage()->UsesNativeTransmissionDevices()) { arcSpire=&world.Storage()->ArcSpire();return; } // 같은 현재 TYPE/동맹/검색의 실제 장기 본문이다.
         ArcSpireHooks hooks;
         hooks.range=[this](Sid sid) { return static_cast<float>(assets.game.Types()[core.pool.Slot(sid)[10]-70].definition.Number("range").value()); };
         hooks.damageRate=[this](Sid sid) { return hitTypes.at(core.pool.Slot(sid)[10]).damagePerSecond; };
@@ -2112,7 +2114,7 @@ struct RawCampaignSession::Impl {
         hooks.damage=hits->DamageHooks({}).damage;
         hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
         hooks.damageable=[this](Sid sid,std::uint32_t event,std::uint32_t count,float value) { return assetBindings->Regular().DamageableHandle(sid,event,count,value); };
-        arcSpire=std::make_unique<RawArcSpire>(core.pool,core.types,core.frames,core.spots,alliances,globals.editor,std::move(hooks));
+        localArcSpire=std::make_unique<RawArcSpire>(core.pool,core.types,core.frames,core.spots,alliances,globals.editor,std::move(hooks));arcSpire=localArcSpire.get();
     }
     // 완성형 삭제와 성장형을 같은 실제 세계/공통장부/시계에 연결한다.
     void ConnectIceTower() {
@@ -2146,6 +2148,7 @@ struct RawCampaignSession::Impl {
     }
     // 실제145의 양축/13영역·사제피해·포획패킷과 애니메이션을 같은 Host에 연결한다.
     void ConnectAcidFence() {
+        if (world.Storage()->UsesNativeTransmissionDevices()) { acidFence=&world.Storage()->AcidFence();return; } // 같은 현재 친군사격/역할/수신/Host를 공유한다.
         AcidFenceHooks hooks;
         hooks.range=[this](Sid sid) { return static_cast<float>(assets.game.Types()[core.pool.Slot(sid)[10]-70].definition.Number("range").value()); };
         hooks.find=[this](float x,float y,std::uint32_t type) { return world.Find(x,y,type); };
@@ -2162,7 +2165,7 @@ struct RawCampaignSession::Impl {
         hooks.broadcast=[this](std::span<std::uint8_t> packet) { broadcast->Send(packet); };
         hooks.assertion=SessionMissing<void,std::uint32_t>();
         hooks.setFrame=[this](Sid sid,std::int32_t frame,std::uint32_t flags) { core.frame.Set(sid,frame,flags); };
-        acidFence=std::make_unique<RawAcidFence>(core.pool,core.types,core.frames,core.spots,alliances,assetState.Boss(),globals.editor,gunTargetState.friendlyFire,playerState.battleOwner,acidFenceTypes,*acidZap,std::move(hooks));
+        localAcidFence=std::make_unique<RawAcidFence>(core.pool,core.types,core.frames,core.spots,alliances,assetState.Boss(),globals.editor,gunTargetState.friendlyFire,playerState.battleOwner,acidFenceTypes,*acidZap,std::move(hooks));acidFence=localAcidFence.get();
     }
     // 같은 현재 Host에 기본 비행 생성자와 맨 오 워 전체 Pop을 연결한다.
     void ConnectFlyer() {
@@ -2418,11 +2421,12 @@ struct RawCampaignSession::Impl {
     }
     // 원본48bfe0의음향→현재픽셀캡처/18→같은대상의가상삭제를연결한다.
     void ConnectAcidZap() {
+        if (world.Storage()->UsesNativeTransmissionDevices()) { acidZap=&world.Storage()->AcidZap();return; } // 같은 장기 현재 헤더/제외 역할/실제 삭제를 사용한다.
         AcidZapHooks hooks;
         hooks.sound=[this](float x,float y,std::string_view name,std::uint32_t loop) { if (loop || !services.sound.playOnceAt) throw std::logic_error("애시드 실제 단발 위치 음향 미연결");services.sound.playOnceAt(x,y,soundNames.Lookup(name),0,0); };
         hooks.dissolve=[this](Sid victim,Sid first,Sid second,std::int32_t orientation) { static_cast<void>(particles->AddDissolve(victim,first,second,orientation)); };
         hooks.destroy=[this](Sid victim,std::uint32_t flags) { static_cast<void>(world.Destroy(victim,flags)); };
-        acidZap=std::make_unique<RawAcidZap>(core.pool,core.types,acidZapState,acidZapHeader,std::move(hooks));
+        localAcidZap=std::make_unique<RawAcidZap>(core.pool,core.types,acidZapState,acidZapHeader,std::move(hooks));acidZap=localAcidZap.get();
     }
     // 실제 Carrier 내용물 그림/표시/타이머를 현재 Session의 한 풀·시계·공유 타입에 연결한다.
     void ConnectCarrierRegular() {
@@ -4489,7 +4493,7 @@ std::uint32_t RawCampaignSession::MetaMenuType(std::uint32_t address) const {
     case 0x5412d0:return s.priestState.movement.priest;case 0x54126c:return s.templeProduct;
     case 0x5411e8:return aux.WorldDecorationTypes()[0];case 0x5411ec:return aux.WorldDecorationTypes()[2];case 0x5411f0:return game.TerrainBitmaps().fringeType;
     case 0x5411a8:return s.geyserMinedState.emptyGeyserType;case 0x541240:return aux.GeyserType();case 0x54123c:return aux.EdgeFarmType();
-    case 0x541280:return s.windFlyerType;case 0x541298:return s.rainFlyerType;case 0x5412b0:return aux.GrowingRainBlockerType();case 0x54117c:return s.sunFlyerType;case 0x5412f8:return s.carrierPickupState.silentType;
+    case 0x541280:return s.windFlyerType;case 0x541298:return s.rainFlyerType;case 0x5412b0:return aux.GrowingRainBlockerType();case 0x54117c:return s.sunFlyerType;case 0x541214:return aux.SunBalloonType();case 0x54128c:return aux.WindBalloonType();case 0x5412a0:return aux.RainBalloonType();case 0x5412f8:return s.carrierPickupState.silentType;
     default:throw std::out_of_range("메타 제외 메뉴의 알려지지 않은 현재 TYPE 별칭");
     }
 }

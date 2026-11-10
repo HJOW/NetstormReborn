@@ -119,6 +119,7 @@ struct RawSurfaceWorld::Impl final:o::SquidDisplaySink {
     std::shared_ptr<RawSurfaceDudeBindings> dudeRuntime; // 실제 현재 큰 이동 하위의 수명이다.
     std::shared_ptr<RawSurfaceResidenceBindings> residenceRuntime; // 같은 실제 전체 Runtime의 선택된 Dude 후단이다.
     std::shared_ptr<RawSurfaceFactoryBindings> factoryRegularRuntime; // 실제 현재 큰 Factory 후단과 전체 Runtime pin의 수명이다.
+    std::shared_ptr<RawSurfaceAttackBindings> attackRuntime; // 실제 큰 공격 효과를 현재 World가 소유하고 장기는 weak로 빌린다.
     std::shared_ptr<RawSurfacePlayerBindings> playerRegularRuntime; // 실제 Template 후단과 전체 Runtime pin의 현재 대여다.
     std::shared_ptr<RawSurfacePriestBindings> priestRuntime; // 현재 큰 사제 후단을 World가 보유한다.
     std::shared_ptr<RawSurfaceRitualBindings> ritualRuntime; // 실제 현재 큰 의식 후단과 전체 Runtime pin을 World가 소유한다.
@@ -329,6 +330,7 @@ void RawSurfaceWorld::BindRuntime(RawWorldRuntimeHooks hooks) {
         auto dude=std::make_shared<RawSurfaceDudeBindings>(s.runtime.dude);dude->pin=s.runtimePin;s.dudeRuntime=dude;s.storage->BindDudeRuntime(dude); // 순수 장기 Dude 상태는 유지하고 현재 이동 효과만 대여한다.
         auto residence=std::make_shared<RawSurfaceResidenceBindings>(s.runtime.residence);residence->pin=s.runtimePin;s.residenceRuntime=residence;s.storage->BindResidenceRuntime(residence); // 장기 상태는 유지하고 현재 생성 효과만 대여한다.
         auto factory=std::make_shared<RawSurfaceFactoryBindings>(s.runtime.factoryRegular);factory->pin=s.runtimePin;s.factoryRegularRuntime=factory;s.storage->BindFactoryRegularRuntime(factory); // 순수 장기 본문은 유지하고 큰 후단만 현재 대여로 보존한다.
+        auto attacks=std::make_shared<RawSurfaceAttackBindings>(s.runtime.attacks);attacks->pin=s.runtimePin;s.attackRuntime=attacks;s.storage->BindAttackRuntime(attacks); // 순수 정기/현재 전역은 유지하고 큰 후단만 대여한다.
         auto player=std::make_shared<RawSurfacePlayerBindings>(s.runtime.playerRegular);player->pin=s.runtimePin;s.playerRegularRuntime=player;s.storage->BindPlayerRegularRuntime(player); // 장기 본문은 유지하고 선택된 실제 Template만 대여한다.
         auto priest=std::make_shared<RawSurfacePriestBindings>(s.runtime.priestRegular);priest->pin=s.runtimePin;s.priestRuntime=priest;s.storage->BindPriestRuntime(priest); // 장기 분기와 고유 큰 후단의 실제 수명을 연결한다.
         auto ritual=std::make_shared<RawSurfaceRitualBindings>(s.runtime.ritualRegular);ritual->pin=s.runtimePin;s.ritualRuntime=ritual;s.storage->BindRitualRuntime(ritual); // 의식 분기/상태는 장기에 두고 선택된 큰 후단만 현재 대여로 유지한다.
@@ -348,6 +350,7 @@ void RawSurfaceWorld::BindRuntimePin(std::function<std::shared_ptr<void>()> pin)
     if (state.dudeRuntime) state.dudeRuntime->pin=state.runtimePin; // 같은 실제 전체 Runtime 수명으로 이동 하위를 공개한다.
     if (state.residenceRuntime) state.residenceRuntime->pin=state.runtimePin; // 선택된 Dude 효과도 같은 전체 owner의 공개를 따른다.
     if (state.factoryRegularRuntime) state.factoryRegularRuntime->pin=state.runtimePin; // 같은 실제 전체 owner 공개/반납을 따른다.
+    if (state.attackRuntime) state.attackRuntime->pin=state.runtimePin; // 선택된 빔/피해/분해도 같은 전체 owner 공개/반납을 따른다.
     if (state.playerRegularRuntime) state.playerRegularRuntime->pin=state.runtimePin; // Get/State쓰기/Notify 전체의 실제 owner를 공개/반납한다.
     if (state.priestRuntime) state.priestRuntime->pin=state.runtimePin; // 사제 고유 후단도 같은 전체 owner 공개/반납을 따른다.
     if (state.ritualRuntime) state.ritualRuntime->pin=state.runtimePin; // 큰 의식도 같은 실제 전체 owner의 공개/반납을 따른다.

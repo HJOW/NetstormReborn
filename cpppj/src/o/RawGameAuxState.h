@@ -48,6 +48,14 @@ public:
     const std::uint16_t& Packet0cInitialLength() const { return packet0cInitialLength_; } //설정키나성공토글없이현재공용생성길이만빌린다.
     std::uint32_t& StateNotifyType() { return stateNotifyType_; } //005411a0:004ac220이 상태WORD 변경 뒤 표면 통지를 선택하는 현재 TYPE다.
     const std::uint32_t& StateNotifyType() const { return stateNotifyType_; } // World/Session 교체에서82로 다시 쓰지 않는다.
+    std::uint32_t& SunFlyerType() { return sunFlyerType_; } //0054117c의 현재73을 애시드/비행 비교가 같은 주소에서 읽는다.
+    const std::uint32_t& SunFlyerType() const { return sunFlyerType_; } // Session 대여/반납으로 초기값을 다시 쓰지 않는다.
+    std::uint32_t& RainBalloonType() { return rainBalloonType_; } //005412a0의 현재146을 애시드/비행 비교가 같은 주소에서 읽는다.
+    const std::uint32_t& RainBalloonType() const { return rainBalloonType_; } // Session 대여/반납으로 초기값을 다시 쓰지 않는다.
+    std::uint32_t& WindBalloonType() { return windBalloonType_; } //0054128c의 현재141을 애시드/비행 비교가 같은 주소에서 읽는다.
+    const std::uint32_t& WindBalloonType() const { return windBalloonType_; } // Session 대여/반납으로 초기값을 다시 쓰지 않는다.
+    std::uint32_t& SunBalloonType() { return sunBalloonType_; } //00541214의 현재111을 애시드/비행 비교가 같은 주소에서 읽는다.
+    const std::uint32_t& SunBalloonType() const { return sunBalloonType_; } // Session 대여/반납으로 초기값을 다시 쓰지 않는다.
     RawGameAuxState()=default; // PE의 BSS+0과 명시25/2000/122·세계여백2/장식타입4개를 한 번 구성한다.
     RawGameAuxState(const RawGameAuxState&)=delete;RawGameAuxState& operator=(const RawGameAuxState&)=delete; // 살아 있는 실제 참조 주소를 복제하지 않는다.
     std::uint32_t& OrdinaryGeysers() { return ordinaryGeysers_; } //005950ac: Start가 moreGeysers 부정을 쓴다.
@@ -327,6 +335,7 @@ private:
     std::uint32_t gravityEffectType_{174},meteorEffectType_{177}; //보호 PE00541310/31c의 최초 효과 TYPE이며 일반 월드 초기화는 현재 값을 보존한다.
     std::array<std::uint32_t,3> manoSpellTypes_{179,180,181}; //보호 PE00541324/328/32c의 초기값이며 현재 TYPE 선택을 Session에 복제하지 않는다.
     std::uint32_t sunFenceType_{136},bombFlareType_{106}; //보호 PE00541278/00541200의 현재 역할 DWORD이며 일반 월드 준비가 초기화하지 않는다.
+    std::uint32_t sunFlyerType_{73},rainBalloonType_{146},windBalloonType_{141},sunBalloonType_{111}; // 보호 PE 네 DWORD 최초값이며 모든 Runtime보다 오래 같은 주소를 유지한다.
     std::array<std::uint32_t,4> worldDecorationTypes_{100,184,101,185}; //실제 treeTwo/RUIN/treeThree/Monument 타입 순서다.
 };
 static_assert(sizeof(std::uint32_t)==4 && sizeof(std::int32_t)==4 && sizeof(float)==4 && sizeof(double)==8); // 각 Native폭만 보증하며 클래스가17주소의 연속 image라는 주장은 아니다.

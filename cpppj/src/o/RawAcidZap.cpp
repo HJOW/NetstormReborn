@@ -30,7 +30,7 @@ std::array<std::uint8_t,11> RawAcidZap::Build(Sid victim,Sid first,Sid second,st
 void RawAcidZap::Receive(std::uint32_t owner,std::uint32_t flags,std::span<const std::uint8_t> packet) const {
     (void)owner;(void)flags;if (packet.size()<11) throw std::invalid_argument("애시드 포획 명령 길이 오류");
     const Sid victim{static_cast<std::uint16_t>(Read(packet,4,2))},first{static_cast<std::uint16_t>(Read(packet,6,2))};const auto raw=pool_.Slot(victim);
-    if ((raw[11]&3) || (pool_.Slot(first)[11]&1) || raw[10]==state_.altar || raw[10]==state_.growingIceTower) return;
+    if ((raw[11]&3) || (pool_.Slot(first)[11]&1) || raw[10]==state_.AltarType() || raw[10]==state_.GrowingIceType()) return;
     if (raw[10]>=types_.size()) throw std::out_of_range("애시드 대상 TYPE 범위 오류");if (types_[raw[10]].flags2&kPriest) return;
     hooks_.sound(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)),"dissolve.wav",0);
     hooks_.dissolve(Sid{static_cast<std::uint16_t>(Read(packet,4,2))},Sid{static_cast<std::uint16_t>(Read(packet,6,2))},Sid{static_cast<std::uint16_t>(Read(packet,8,2))},std::bit_cast<std::int8_t>(packet[10]));

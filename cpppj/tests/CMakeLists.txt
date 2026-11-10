@@ -3846,3 +3846,5 @@ target_sources(netstorm_construction_owner_tests PRIVATE DaisRegularTests.cpp Fo
 target_sources(netstorm_construction_owner_tests PRIVATE PriestRegenTests.cpp PriestFallTests.cpp PriestPrayerTests.cpp PriestRitualFrameTests.cpp) # 비MP의 기존 원문/고유 사건 검사만 같은 집중 대상에 등록한다.
 
 target_sources(netstorm_construction_owner_tests PRIVATE PlayerRegularTests.cpp) # 기존 MP 관련 인터페이스는 컴파일만 확인하며 새 실행 대상에는 넣지 않는다.
+
+target_sources(netstorm_construction_owner_tests PRIVATE ArcSpireTests.cpp AcidFenceTests.cpp) # 기존 비MP 부품 원문 관측만 사용하며 소켓/MP 실행 대상을 추가하지 않는다.

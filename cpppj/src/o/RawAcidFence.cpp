@@ -62,7 +62,7 @@ void RawAcidFence::Strike(Sid parent,std::span<const Sid> neighbors,std::int32_t
         Scan(parent,other,{Stored(static_cast<double>(source[0])-1),ly,Stored(static_cast<double>(target[0])-1),hy},0x50100,nullptr,victims,count);
         for (std::size_t region=0;region<6;++region) { //144/73/138각각의부모와이웃발자국영역이다.
             const auto point=Position(region%2 ? other : parent);const auto& record=types_[pool_.Slot(parent)[10]];auto lowX=Stored(static_cast<double>(point[0])-Stored(record.footX));auto lowY=Stored(static_cast<double>(point[1])-Stored(record.footY));auto highY=point[1];
-            const auto* type=region<2 ? &special_.rainFlyer : region<4 ? &special_.sunFlyer : &special_.windFlyer;
+            const auto* type=region<2 ? &special_.RainFlyer() : region<4 ? &special_.SunFlyer() : &special_.WindFlyer();
             if (region<2) lowX=Stored(static_cast<double>(lowX)+1);
             else if (region<4) { lowX=Stored(static_cast<double>(lowX)+2);lowY=Stored(static_cast<double>(lowY)-4);if (xOriented) highY=Stored(static_cast<double>(highY)-2); }
             Scan(parent,other,{lowX,lowY,point[0],highY},0x100000,type,victims,count);
@@ -71,22 +71,22 @@ void RawAcidFence::Strike(Sid parent,std::span<const Sid> neighbors,std::int32_t
             source=Position(parent);target=Position(other);float lowX{},lowY{},highX{},highY{};const std::uint32_t* type{};const std::uint32_t genus=region<3 ? 0x100000U : 0x20000U; //타입전역의주소를보관하여finder뒤현재값을읽는다.
             if (region==0) {
                 lowX=Stored(static_cast<double>(source[0])-2);lowY=Stored(static_cast<double>(source[1])-3);if (xOriented) lowY=Stored(static_cast<double>(lowY)+1);else lowX=Stored(static_cast<double>(lowX)+.5);
-                highX=xOriented ? target[0] : Stored(static_cast<double>(target[0])-.5);highY=Stored(static_cast<double>(target[1])-1);if (xOriented) highY=Stored(static_cast<double>(highY)-1.5);type=&special_.rainFlyer;
+                highX=xOriented ? target[0] : Stored(static_cast<double>(target[0])-.5);highY=Stored(static_cast<double>(target[1])-1);if (xOriented) highY=Stored(static_cast<double>(highY)-1.5);type=&special_.RainFlyer();
             } else if (region==1) {
                 lowX=Stored(static_cast<double>(source[0])-2.5);lowY=Stored(static_cast<double>(source[1])-1);highX=Stored(static_cast<double>(target[0])-1);highY=Stored(static_cast<double>(target[1])-1);
-                if (xOriented) { lowX=Stored(static_cast<double>(lowX)+2.5);lowY=Stored((static_cast<double>(lowY)-3)+.5);highX=Stored(static_cast<double>(highX)-1);highY=Stored(static_cast<double>(highY)-1.5); }type=&special_.windFlyer;
+                if (xOriented) { lowX=Stored(static_cast<double>(lowX)+2.5);lowY=Stored((static_cast<double>(lowY)-3)+.5);highX=Stored(static_cast<double>(highX)-1);highY=Stored(static_cast<double>(highY)-1.5); }type=&special_.WindFlyer();
             } else if (region==2) {
                 lowX=Stored(static_cast<double>(source[0])-1);lowY=Stored(static_cast<double>(source[1])-1);highX=Stored(static_cast<double>(target[0])+1);highY=Stored(static_cast<double>(target[1])-1);
-                if (xOriented) { lowX=Stored(static_cast<double>(lowX)+1);lowY=Stored((static_cast<double>(lowY)-7)+1.5);highX=Stored(static_cast<double>(highX)-3);highY=Stored((static_cast<double>(highY)-kHighFlyerOffset)-.5); }type=&special_.sunFlyer;
+                if (xOriented) { lowX=Stored(static_cast<double>(lowX)+1);lowY=Stored((static_cast<double>(lowY)-7)+1.5);highX=Stored(static_cast<double>(highX)-3);highY=Stored((static_cast<double>(highY)-kHighFlyerOffset)-.5); }type=&special_.SunFlyer();
             } else if (region==3) {
                 lowY=Stored(static_cast<double>(source[1])-1);if (xOriented) lowY=Stored((static_cast<double>(lowY)-2)+.5);lowX=Stored((static_cast<double>(source[0])-2.5)+(xOriented ? 2.5 : 1));
-                highX=Stored(static_cast<double>(target[0])-1);if (xOriented) highX=Stored(static_cast<double>(highX)-1);highY=Stored((static_cast<double>(target[1])-1)-(xOriented ? 1 : 5));type=&special_.rainBalloon;
+                highX=Stored(static_cast<double>(target[0])-1);if (xOriented) highX=Stored(static_cast<double>(highX)-1);highY=Stored((static_cast<double>(target[1])-1)-(xOriented ? 1 : 5));type=&special_.RainBalloon();
             } else if (region==4) {
                 lowY=Stored(static_cast<double>(source[1])-1);if (xOriented) lowY=Stored(static_cast<double>(lowY)+.5);lowX=Stored((static_cast<double>(source[0])-2.5)+(xOriented ? 2.5 : 2));
-                highX=Stored(static_cast<double>(target[0])-1);if (xOriented) highX=Stored(static_cast<double>(highX)-1);highY=Stored((static_cast<double>(target[1])-1)-(xOriented ? 1 : 6));type=&special_.windBalloon;
+                highX=Stored(static_cast<double>(target[0])-1);if (xOriented) highX=Stored(static_cast<double>(highX)-1);highY=Stored((static_cast<double>(target[1])-1)-(xOriented ? 1 : 6));type=&special_.WindBalloon();
             } else {
                 lowX=Stored(static_cast<double>(source[0])-2.5);lowY=Stored(static_cast<double>(source[1])-1);highX=Stored(static_cast<double>(target[0])-1);highY=Stored(static_cast<double>(target[1])-1);
-                if (xOriented) { lowX=Stored(static_cast<double>(lowX)+2.5);lowY=Stored((static_cast<double>(lowY)-2)+.5);highX=Stored(static_cast<double>(highX)-1); }else highY=Stored(static_cast<double>(highY)-5);type=&special_.sunBalloon;
+                if (xOriented) { lowX=Stored(static_cast<double>(lowX)+2.5);lowY=Stored((static_cast<double>(lowY)-2)+.5);highX=Stored(static_cast<double>(highX)-1); }else highY=Stored(static_cast<double>(highY)-5);type=&special_.SunBalloon();
             }
             Scan(parent,other,{lowX,lowY,highX,highY},genus,type,victims,count);
         }

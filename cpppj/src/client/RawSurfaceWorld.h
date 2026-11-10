@@ -18,6 +18,7 @@
 #include "o/RawFactoryPostPop.h" // 같은 Factory 후처리/레벨 보정을 장기 보유한다.
 #include "o/RawBalloonBody.h" // 벌룬의 실제 그림자·후처리·삭제 본체를 같은 장기 물리에 연결한다.
 #include "o/RawFlyerPreDestroy.h" // Flyer의 현재 WORD 대상 삭제와 Damageable 부모를 공유한다.
+#include "o/RawAcidFence.h" // 아크/애시드의 같은 전체 정기·검색과 현재 역할을 장기로 조립한다.
 #include "o/RawPlayerRegular.h" // Player 정기가 같은 현재 전역과 실제 장기 Host를 직접 사용한다.
 #include "o/RawPlayerWorld.h" // 실제 Player 전처리도 같은 현재 기록과 공통 삭제를 사용한다.
 #include "o/RawDamageableRelease.h" // 실제 현재 권한/TYPE/공간으로 종속을 해방한다.
@@ -125,6 +126,12 @@ struct RawSurfaceFactoryBindings { // 큰 업그레이드/플레어만 현재 Wo
     std::function<float(o::Sid)> finish; // 기존 전체 완료/현재AI 통지 본문이다.
     std::function<void(o::Sid,std::int32_t,std::uint32_t)> flare; // 실제 현재 플레어 생성기다.
     std::function<std::shared_ptr<void>()> pin; // 선택 호출 동안 실제 전체 Runtime을 보유한다.
+};
+struct RawSurfaceAttackBindings { // 선택된 큰 빔/피해/분해 효과만 실제 현재 Runtime으로 빌린다.
+    std::function<void(o::Sid,o::Sid)> beam; // 기존472700의 shortZap 빔/소리 전체다.
+    std::function<void(o::Sid,std::int32_t,std::uint8_t,o::Sid)> damage; // 기존 피격 분배기의 현재 가상98 전체다.
+    std::function<void(o::Sid,o::Sid,o::Sid,std::int32_t)> dissolve; // 기존450510의 실제 화면/18 프로세스 전체다.
+    std::function<std::shared_ptr<void>()> pin; // 정상/예외 복귀까지 실제 전체 Runtime을 보유한다.
 };
 struct RawSurfacePlayerBindings { // State getter와 Notify의 기존 큰 본문만 현재 전체 Runtime 수명으로 대여한다.
     std::function<std::span<std::uint8_t>(std::uint32_t)> state; // 같은 현재 manager의 실제 State getter다.
@@ -254,6 +261,7 @@ private:
     std::weak_ptr<const o::TerrainBitmapState> residenceTerrain_; // 실제 현재 fringeType 저장소의 약한 대여다.
     std::function<std::uint32_t()> residenceTheme_; // 실제 장기 설정 owner를 선택 호출할 장치다.
     std::weak_ptr<const RawSurfaceFactoryBindings> factoryRegularRuntime_; // 현재 큰 후단만 약하게 빌리고 프레임/난수는 장기 현재값을 사용한다.
+    std::weak_ptr<const RawSurfaceAttackBindings> attackRuntime_; // 장기 물리는 Session을 강하게 역소유하지 않는다.
     std::weak_ptr<const RawSurfacePlayerBindings> playerRegularRuntime_; // Session을 강하게 역소유하지 않는 현재 Template 후단이다.
     std::weak_ptr<const RawSurfacePriestBindings> priestRuntime_; // 전체 Session을 강하게 역소유하지 않는 현재 고유 후단이다.
     std::weak_ptr<const RawSurfaceRitualBindings> ritualRuntime_; // 장기 분기 본문은 Session을 강하게 역소유하지 않는다.
@@ -384,6 +392,15 @@ public:
     o::RawManaBoltArrival& ManaArrival(); // 같은 실제 finder·Host·현재 프로세스 역할과 도착 본문이다.
     o::RawManaBoltRegular& ManaRegular(); // 현재 TYPE/프레임/SHP·카메라·가상 공간을 공유하는 유일한 Native 정기다.
     o::AltarSacrificeState& AltarState(); //00532698/69c의 같은 현재 지연/확률을 Session과 공유한다.
+    void BindAttackRuntime(const std::shared_ptr<const RawSurfaceAttackBindings>& runtime); // 현재 큰 효과만 weak로 공개한다.
+    o::RawArcSpire& ArcSpire(); // 같은 현재 TYPE/프레임/동맹/편집/Hash와 실제 부모를 사용하는 정기다.
+    o::RawAcidFence& AcidFence(); // 같은 현재 권한/친군사격/여섯 역할/Host와 검색을 사용하는 정기다.
+    o::RawAcidZap& AcidZap(); // 같은 현재 역할/헤더·소리/실제삭제와 큰 분해 수신 부모다.
+    o::AcidFenceTypes& AcidTypes(); // 원문 여섯 현재 TYPE DWORD의 주소를 빌린다.
+    o::AcidZapState& AcidState(); // 원문 제단/성장형 제외 TYPE 주소를 빌린다.
+    o::FormPacketHeader& AcidHeader(); // Session 생성/반납에 덮이지 않는 현재 메시지/프로토콜/길이다.
+    bool ReserveAttackRegular(); // 같은 실제 확보 메모리의 성공/실패만 반환한다.
+    void ConstructAttackRegular(o::Sid sid,std::uint32_t event,float payload); // 확보한 같은 주소에 Regular를 구성하고 현재 Host에 붙인다.
     void BindPlayerRegularState(std::shared_ptr<o::PlayerWorldState> state); // 첫 메뉴 전에 같은 Client의 현재 두 owner 주소만 alias로 보유한다.
     void BindPlayerRegularRuntime(const std::shared_ptr<const RawSurfacePlayerBindings>& runtime); // 선택된 실제 Template 후단만 weak로 공개한다.
     float PlayerRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 같은 현재 Player·battle·로그/진단·실제 확보/Host 본문을 실행한다.
@@ -608,6 +625,12 @@ private:
     std::unique_ptr<void,void(*)(void*)> manaReservation_{nullptr,[](void* memory) { ::operator delete(memory); }}; // 실제 new28 확보부터 같은 주소의 Regular 구성까지 소유한다.
     std::shared_ptr<o::PlayerWorldState> playerRegularState_; // 현재 Client Player 전역의 alias owner이며 값 사본을 만들지 않는다.
     std::unique_ptr<void,void(*)(void*)> playerRegularReservation_{nullptr,[](void* memory) { ::operator delete(memory); }}; // new28부터 같은 주소의 구성까지 실제 확보 메모리를 보유한다.
+    std::shared_ptr<ClientPlayerRecords> attackAlliancesOwner_; // 고정81DWORD BSS 동맹표의 실제 owner만 보유하며 Player base/span을 캐시하지 않는다.
+    o::AcidFenceTypes acidTypes_;o::AcidZapState acidState_; // 장기 현재 역할 포인터 뷰이며 값 사본으로 바꾸지 않는다.
+    o::FormPacketHeader acidHeader_{0x61,1,11}; //0052ee42의 실제 최초 message/protocol/length를 보존한다.
+    std::unique_ptr<o::RawAcidZap> acidZap_; // 참조하는 상태/헤더보다 먼저 반납하고 모든 정기보다 오래 유지한다.
+    std::unique_ptr<o::RawArcSpire> arcSpire_;std::unique_ptr<o::RawAcidFence> acidFence_; // 같은 장기 물리/상태와 실제 부모를 빌리며 Host 정리까지 생존한다.
+    std::unique_ptr<void,void(*)(void*)> attackReservation_{nullptr,[](void* memory) { ::operator delete(memory); }}; // 실제 new28 확보부터 같은 주소의 구성까지 단일 소유한다.
     o::AltarSacrificeState altarState_; // 제단의 현재 두 전역은 Session 대여에서 기본값으로 재설정하지 않는다.
     o::ForcefieldRegularState forcefieldState_; // 현재 사제 역할/진단의 장기 참조를 보관한다.
     std::unique_ptr<o::RawForcefieldRegular> forcefieldRegular_; // 같은 실제 검색/프레임과 Host 정리가 끝날 때까지 유지한다.
@@ -719,6 +742,7 @@ struct RawWorldRuntimeHooks {
     RawSurfaceDudeBindings dude; // 현재 기존 전체 경로 이동/진입점의 실제 Runtime이다.
     RawSurfaceResidenceBindings residence; // 기존 실제 Dude 생성/진입점/작업의 현재 Runtime 대여다.
     RawSurfaceFactoryBindings factoryRegular; // 현재 전체 업그레이드/플레어를 실제 World pin과 공개한다.
+    RawSurfaceAttackBindings attacks; // 큰 빔/피해/분해만 현재 전체 Runtime 수명으로 공개한다.
     RawSurfacePlayerBindings playerRegular; // 현재 Template getter/Notify만 실제 전체 Runtime과 함께 공개한다.
     RawSurfacePriestBindings priestRegular; // 큰 고유 후단만 기존 Session 전체 수명으로 공개한다.
     RawSurfaceRitualBindings ritualRegular; // 실제 큰 의식만 같은 전체 Runtime pin과 함께 공개한다.
