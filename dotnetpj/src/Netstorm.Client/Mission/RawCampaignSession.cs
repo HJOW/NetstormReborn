@@ -35,6 +35,12 @@ public sealed class RawCampaignSession
     /// <summary>Fort 적재가 끝났는지다. 껍데기에서는 놓지 않는다. 2026-11-10 F3 세션 껍데기 이식에서 추가됐다.</summary>
     private bool _loaded;
 
+    /// <summary>로컬 연결의 현재 단계다. 사전 구현에서는 항상 0(미접속)이다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
+    private uint _localPhase = 0u;
+
+    /// <summary>수신한 로컬 패킷 목록이다. 사전 구현에서는 항상 비어 있다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
+    private readonly List<byte[]> _localPackets = new();
+
     /// <summary>같은 자산·저장소·월드로 세션 껍데기를 만든다. Fort 적재 본체는 후속 단위에서 잇는다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
@@ -166,5 +172,36 @@ public sealed class RawCampaignSession
 
         // 원본 세션 실행의 AI·건설 효과 분기는 후속 단위에서 잇는다(결정 6 — 월드 스캔·준비·커널만 둔다).
         _world.RunFrame(time, paused);
+    }
+
+    /// <summary>현재 연결 단계를 읽는다. 사전 구현에서는 항상 0(미접속)이다. 3차 로컬 구현 때 실제 전송과 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
+    /// <returns>연결 단계다.</returns>
+    public uint LocalConnectionPhase() => _localPhase;
+
+    /// <summary>수신한 로컬 패킷 목록을 빌린다. 사전 구현에서는 항상 비어 있다. 3차 로컬 구현 때 실제 분배기와 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
+    /// <returns>수신 패킷 목록이다.</returns>
+    public IReadOnlyList<byte[]> LocalConnectionPackets() => _localPackets.AsReadOnly();
+
+    /// <summary>다음 연결 상태를 한 번 소비했는지 조회한다. 사전 구현에서는 항상 거짓이다. 3차 로컬 구현 때 실제 큐와 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
+    /// <returns>소비했으면 참이다.</returns>
+    public bool PollLocalConnectionState() => false;
+
+    /// <summary>로컬 패킷을 보낸다. 사전 구현에서는 전송기가 없어 명시 오류로 멈춘다. 3차 로컬 구현 때 루프백 전송과 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
+    /// <param name="target">받을 소유자 번호다.</param>
+    /// <param name="packet">보낼 패킷이다.</param>
+    public void SendLocalPacket(int target, byte[] packet)
+    {
+        _ = target;
+        ArgumentNullException.ThrowIfNull(packet);
+
+        // 원본 세션 송신의 실제 로컬 전송 본체는 3차 로컬 구현 때 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 로컬 연결 전송 미연결");
+    }
+
+    /// <summary>송수신 큐와 로그인 타이머를 진행한다. 사전 구현에서는 전송기가 없어 명시 오류로 멈춘다. 3차 로컬 구현 때 루프백 펌프와 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
+    public void PumpLocalConnection()
+    {
+        // 원본 세션 펌프의 실제 큐·타이머 본체는 3차 로컬 구현 때 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 로컬 연결 펌프 미연결");
     }
 }
