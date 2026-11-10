@@ -920,6 +920,9 @@ public sealed class RawCampaignSession
     /// <summary>같은 에디터 전송의 송신 효과다. 세션 조립 때 루프백 전송을 묶으며 그 전까지는 비어 있다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
     private Func<int, byte[], bool>? _editorSend;
 
+    /// <summary>같은 실제 Chat 가변 패킷의 송신 효과다. 세션 조립 때 실제 Chat 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-11 F3 가변 로컬 패킷 송신 본체에서 추가됐다.</summary>
+    private Action<int, byte[]>? _sendChatMutable;
+
     /// <summary>로컬 패킷을 보낸다. 묶은 에디터 전송이 없으면 명시 오류로 멈춘다. 3차 로컬 구현 때 루프백 전송과 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐고 2026-11-10 멀티플레이 사전 구현에서 에디터 전송 분기를 이었다.</summary>
     /// <param name="target">받을 소유자 번호다.</param>
     /// <param name="packet">보낼 패킷이다.</param>
@@ -973,4 +976,32 @@ public sealed class RawCampaignSession
     /// <summary>같은 루프백 에디터 전송을 묶었는지 확인한다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
     /// <returns>묶었으면 참이다.</returns>
     public bool HasLocalEditorTransport() => _editorPoll is not null && _editorSend is not null;
+
+    /// <summary>같은 실제 Chat 가변 패킷의 송신 효과를 묶는다. 원본 세션 설치의 Chat 몸체 연결만 둔다. 2026-11-11 F3 가변 로컬 패킷 송신 본체에서 추가됐다.</summary>
+    /// <param name="send">실제 Chat 가변 송신 효과다. 받을 번호와 가변 packet을 그대로 받는다.</param>
+    public void BindSendChatMutable(Action<int, byte[]> send)
+    {
+        ArgumentNullException.ThrowIfNull(send);
+        _sendChatMutable = send;
+    }
+
+    /// <summary>같은 실제 Chat 가변 패킷의 송신 효과를 묶었는지 확인한다. 2026-11-11 F3 가변 로컬 패킷 송신 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasSendChatMutable() => _sendChatMutable is not null;
+
+    /// <summary>원본 가변 로컬 패킷 송신을 후속 Chat 몸체와 공유한다. 묶은 실제 Chat 효과가 없으면 본체 미연결로 멈춘다. 원본처럼 적재 관문 없이 곧바로 Chat 몸체로 넘긴다. 2026-11-11 F3 가변 로컬 패킷 송신 본체에서 추가됐다.</summary>
+    /// <param name="target">받을 소유자 번호다.</param>
+    /// <param name="packet">보낼 가변 packet이다. 호출자가 소유한다.</param>
+    public void SendMutableLocalPacket(int target, byte[] packet)
+    {
+        ArgumentNullException.ThrowIfNull(packet);
+
+        // 원본 RawCampaignSession::SendMutableLocalPacket은 적재 관문 없이 SendChatMutable로 넘긴다. 실제 Chat 몸체는 후속 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        if (_sendChatMutable is null)
+        {
+            throw new InvalidOperationException("실제 Chat 가변 송신 미연결");
+        }
+
+        _sendChatMutable(target, packet);
+    }
 }

@@ -1145,4 +1145,44 @@ public sealed class RawCampaignSessionTests
         Assert.Throws<ArgumentNullException>(() => session.BindAiAdvanceBridge(null!));
         Assert.False(session.HasAiAdvanceBridge());
     }
+
+    /// <summary>미적재 가변 로컬 패킷 송신을 본체 미연결로 거부하는지 검증한다. 2026-11-11 F3 가변 로컬 패킷 송신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void SendMutableLocalPacketRejectsWhenUnconnected()
+    {
+        // 원본처럼 적재 관문 없이 곧바로 Chat 몸체로 넘긴다. 묶기 전에는 미연결로 멈춘다.
+        var session = LoadableSession();
+        Assert.False(session.HasSendChatMutable());
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.SendMutableLocalPacket(9, [1, 2, 3]));
+        Assert.Contains("미연결", error.Message);
+    }
+
+    /// <summary>묶은 실제 Chat 효과에 번호·packet을 그대로 넘기는지 검증한다. 2026-11-11 F3 가변 로컬 패킷 송신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void SendMutableLocalPacketForwardsToBoundDevice()
+    {
+        // 원본 세션 설치의 Chat 몸체 연결만 둔다. 적재 전에도 묶었으면 보낸다.
+        var session = LoadableSession();
+        var calls = new List<(int Target, byte[] Packet)>();
+        byte[] packet = [1, 2, 3];
+        session.BindSendChatMutable((target, given) => calls.Add((target, given)));
+        Assert.True(session.HasSendChatMutable());
+        session.SendMutableLocalPacket(9, packet);
+        Assert.Single(calls);
+        Assert.Equal(9, calls[0].Target);
+        Assert.Same(packet, calls[0].Packet);
+        session.LoadSeeds(LoadableSeeds());
+        session.SendMutableLocalPacket(1, packet);
+        Assert.Equal([(9, packet), (1, packet)], calls);
+    }
+
+    /// <summary>빈 Chat 가변 송신 묶기를 거부하는지 검증한다. 2026-11-11 F3 가변 로컬 패킷 송신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BindSendChatMutableRejectsNull()
+    {
+        // 묶지 않은 세션은 미연결로 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentNullException>(() => session.BindSendChatMutable(null!));
+        Assert.False(session.HasSendChatMutable());
+    }
 }
