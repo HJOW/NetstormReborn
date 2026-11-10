@@ -554,7 +554,7 @@ struct RawMenuControls::Impl {
     // 빈 요청/정적 themeHelp/현재 HTML 링크/입력 문자열 고리의 실제 수명을 구별한다.
     std::string HelpText(std::uint32_t token) const {
         if (const auto found=helpStrings.find(token);found!=helpStrings.end()) return found->second;
-        if (!token) return {};if (token==0x61000001U) return "themeHelp";if (token==0x61000002U) { if (!helpHooks.helpWord) return helpHooks.translate("Help");const auto word=helpHooks.helpWord();if (!word) throw std::logic_error("BaseHelp의 0054db38 helpWord NULL 접근");return *word; } // M7.1: 제목 callback 뒤의 현재 캐시를 해석 시점에 읽으며 번역 기본값으로 대체하지 않는다.if (token==0x61000003U) return "F1Help";if (token==0x61000004U) return helpHooks.translate("Sky Overview");if (token==0x61000005U) return "minimapGump";
+        if (!token) return {};if (token==0x61000001U) return "themeHelp";if (token==0x61000002U) { if (!helpHooks.helpWord) return helpHooks.translate("Help");const auto word=helpHooks.helpWord();if (!word) throw std::logic_error("BaseHelp의 0054db38 helpWord NULL 접근");return *word; }if (token==0x61000003U) return "F1Help";if (token==0x61000004U) return helpHooks.translate("Sky Overview");if (token==0x61000005U) return "minimapGump"; // M7.1: 제목 callback 뒤의 현재 캐시를 해석 시점에 읽으며 번역 기본값으로 대체하지 않는다. 주석은 줄 끝에만 둔다(1268 회귀 교정, 1275).
         // 링크 토큰은 소유 HTML 부모가 아직 살아 있는 경우에만 해석한다.
         for (const auto& [body,links]:helpLinks) if (!(common.node(body)->flags&0x10000) && token>=links.base && token-links.base<links.bytes.size()) return std::string(ResolveHtmlLink(links,token));
         return helpHooks.text(token);

@@ -1,0 +1,29 @@
+{
+  "unit": 1275,
+  "date": "2026-11-11",
+  "regressionOf": 1268,
+  "fix": "HelpText 줄 끝 주석으로 61000003~05 복구",
+  "newTest": "RawMenuControls_StaticHelpTokensResolveWithoutScriptRing",
+  "koreanScreens": [
+    "main-korean.png",
+    "help-korean.png(popup)",
+    "help-window-korean.png"
+  ],
+  "f1": {
+    "english": "ok",
+    "korean": "ok",
+    "logFileCreated": false
+  },
+  "popupTests": {
+    "total": 168,
+    "failedCases": 3
+  },
+  "protectedFiles": {
+    "count": 2808,
+    "unchanged": true
+  },
+  "sourceSha256": {
+    "cpppj/src/client/RawMenuControls.cpp": "7e1d65f9add33eaef7e50e9aaa5429ea6010a7d44e1df0af515f41af6cac41e5",
+    "cpppj/tests/RawMenuControlsTests.cpp": "18323da08ec042f03faba43e2c169fb09900e2afd72dd39508fdb079c9f6ce2d"
+  }
+}

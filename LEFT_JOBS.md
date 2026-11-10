@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**작업 재개 · 확정 제품1272 / 11.01(문서 단위1273) · 정적감사1262 · 인계 갱신2026-11-11, HJOW-Athlon**
+**작업 재개 · 확정 제품1275 / 11.01 · 정적감사1262 · 인계 갱신2026-11-11, HJOW-Athlon**
 
 이 문서는 cpppj의 **현재 상태·남은 작업·실행 제외·유효한 계약**을 담는다. 2026-11-10 사용자의 재개 요청으로1265 뒤의 후보 접합을 진행했다. **전체 목표와 M6-n은 미완료다.** 아래 우선순위를 따르고 단위마다 인계·로컬 커밋을 남긴다. push하지 않는다.
 
@@ -29,6 +29,8 @@
 1266의 제품·인계 파일은 동시 webpj 세션이 공유 인덱스를 커밋하면서 `93d891ac8`의 WB 커밋에 함께 들어갔다. 기록을 다시 쓰지 않고 이 사실을 CP 후속 커밋에 남긴다. 해당 WB 변경은 이 작업에서 수정하지 않았다.
 
 **순서 지시(사용자 2026-11-11):** M6·M7은 미루지 않는다. 6차 이후(K/S/B/L)는 추가 구현이라 dotnetpj에 영향이 없지만 3차(LAN·Outpost) 지연은 dotnetpj를 함께 지연시킨다. 따라서 **남은 순서는 M6-n 잔여 → ~~M7.2~~(1273 정적 판정) ~~M7.3~~ ~~M7.4~~(1271 완료) → M8 → K2~K5 → S1~S4 → B1~B4 → L1~L3**이다. 이미 끝난 K1·E1~E3·M7.1·M7.5는 완료로 유지한다.
+
+**1275 내 M7.1(1268) 회귀 교정·한국어 화면 확인:** `HelpText`의 같은 줄 주석이 정적 Help 토큰 `61000003`(F1Help)/`04`/`05` 분기를 가려 **F1 키가 "해제되었거나 잘못된 토큰"으로 종료**하던 결함을 한국어 화면 시험과 1269 오류 로그로 발견해 고쳤다(회귀 검사 추가, 내 1268 이후 편집 줄 전수 재점검). 실제 클론의 한국어 메인 메뉴 8버튼·도움말 팝업·도움말 창이 D2Coding으로 정상 렌더링됨을 화면으로 확인했다. [근거](docs/exe/cpp-help-regression-korean-screens-20261111.md)·[보고서](cpppj/help-regression-korean-screens-20261111.json). K2(물리 IME/입력창)·K3~K5·M8 최종 관문 미완료, MP 실행0.
 
 **1274 M8 글꼴·배포 ZIP 선행 점검:** 최종 exe에 글꼴 시그니처 0·글꼴은 `AddFontResourceExW(FR_PRIVATE)`로 exe 옆 `fonts\` 파일에서만 등록함을 확인했고, 실제 생성한 배포 ZIP(1430항목)의 한국어 자산 44개·D2Coding .ttc·exe를 저장소 파일과 SHA-256 46개 대조해 모두 일치했다. **결함 발견·교정:** 배포 스크립트가 옛 이름 `fonts\License.txt`를 못 찾으면 조용히 건너뛰어 D2Coding 라이선스가 ZIP에서 빠져 있었다 → `D2Coding-License.txt` 필수 동봉으로 교정. [근거](docs/exe/cpp-m8-font-zip-precheck-20261111.md). M8 최종 관문(최종 ZIP 실행·checking 목록·외부 접속 전수)은 미완료.
 
@@ -64,7 +66,7 @@
 
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
-AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1272, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
+AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1275, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
@@ -76,7 +78,7 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj�
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품·소스 | **1272 / 11.01**. [M6-n 호출자 감사](docs/exe/cpp-m6n-fort-callers-noworld-audit-20261111.md). 1271 [M7.3·M7.4](docs/exe/cpp-early-sacrifice-marker-20261111.md). 1270 [K1 한국어 병합](docs/exe/cpp-korean-k1-merge-20261111.md). 1269 [오류 로그 7차](docs/exe/cpp-error-log-20261111.md). 1268 [helpWord 캐시 M7.1](docs/exe/cpp-help-word-cache-20261111.md). 1267 [NoWorld 자산 후처리](docs/exe/cpp-asset-postpop-noworld-20261111.md). 1266 [Fort Snapshot·준비 접합](docs/exe/cpp-native-fort-snapshot-20261110.md).1265 [로그인 debugBurst](docs/exe/cpp-login-debug-burst-20261110.md),1264 [최초후처리4VT](docs/exe/cpp-initial-postpop-owner-20261110.md),1262 Native 표/연결 owner 정적 마감 유지. **큰 NoWorld/M6-n/M6 미완료**, Regular87/87 유지. |
+| 확정 제품·소스 | **1275 / 11.01**. [F1 회귀·한국어 화면](docs/exe/cpp-help-regression-korean-screens-20261111.md). 1272 [M6-n 호출자 감사](docs/exe/cpp-m6n-fort-callers-noworld-audit-20261111.md). 1271 [M7.3·M7.4](docs/exe/cpp-early-sacrifice-marker-20261111.md). 1270 [K1 한국어 병합](docs/exe/cpp-korean-k1-merge-20261111.md). 1269 [오류 로그 7차](docs/exe/cpp-error-log-20261111.md). 1268 [helpWord 캐시 M7.1](docs/exe/cpp-help-word-cache-20261111.md). 1267 [NoWorld 자산 후처리](docs/exe/cpp-asset-postpop-noworld-20261111.md). 1266 [Fort Snapshot·준비 접합](docs/exe/cpp-native-fort-snapshot-20261110.md).1265 [로그인 debugBurst](docs/exe/cpp-login-debug-burst-20261110.md),1264 [최초후처리4VT](docs/exe/cpp-initial-postpop-owner-20261110.md),1262 Native 표/연결 owner 정적 마감 유지. **큰 NoWorld/M6-n/M6 미완료**, Regular87/87 유지. |
 | 최근 빌드·집중 검사 |1266 Release/x64 제품2 및 편집 집중 대상 빌드 성공. 기존 비MP 관련 **6/6** 통과. Session 없는 전체 저장·Battle/MP 실행은 미검증이다. |
 | 최근 실제 실행 |1266 일반 Edit에서 TEST01 저장→메인 메뉴 복귀·재진입을 2회, 사용자 경로 파일 생성·종료0·데이터 사본 불변을 확인했다.1265 Tutorial4 생산/건설·600프레임은 이전 제품 증거다. MP/Join/Test Battle·공격/포획/희생/승리/자연 완주/공중3종 전용은 제외했다. |
 | 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품1266 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |

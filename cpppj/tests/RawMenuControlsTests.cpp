@@ -504,3 +504,12 @@ TEST_CASE(RawMenuControls_UrlInputSharesActualHelpScriptAndExternal) {
 }
 
 #include "RawMenuMainPopupTests.inc"
+
+// 1275: 1268(M7.1)의 같은 줄 주석이 가렸던 정적 Help 토큰 61000003(F1Help)/04(Sky Overview)/05(minimapGump)가
+// 소유 문자열 고리 없이 해석되어야 한다. 해석하지 못하면 실제 F1 키가 "해제되었거나 잘못된 토큰"으로 종료한다.
+TEST_CASE(RawMenuControls_StaticHelpTokensResolveWithoutScriptRing) {
+    for (const auto staticToken:{0x61000003U,0x61000004U,0x61000005U}) { // 고리에 저장하지 않은 정적 주제 세 개를 각각 새 클라이언트에서 연다.
+        MenuClient client;client.EnableHelp();const auto token=client.menus->OpenHelp(staticToken);
+        CHECK(token!=0 && client.menus->HelpOpen());
+    }
+}
