@@ -269,14 +269,15 @@ public sealed class RawCampaignSession
         throw new InvalidOperationException("실제 위치 삭제 미연결");
     }
 
-    /// <summary>원본 455380의 실제 mode0 지역 투표·지형 갱신을 같은 ownership 몸체로 실행한다. 껍데기에서는 ownership 본체 미연결로 멈춘다. 좌표는 원문 float 비트다. 2026-11-10 F3 세션 지형 갱신 Stub 이식에서 추가됐다.</summary>
+    /// <summary>같은 ownership 몸체의 지역 투표·지형 갱신 효과다. 세션 조립 때 실제 지형 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 지형 갱신 본체에서 추가됐다.</summary>
+    private Action<float, float>? _reloadTheam;
+
+    /// <summary>원본 455380의 실제 mode0 지역 투표·지형 갱신을 같은 ownership 몸체로 실행한다. 묶은 ownership 효과가 없으면 본체 미연결로 멈춘다. 좌표는 원문 float 비트다. 2026-11-10 F3 세션 지형 갱신 Stub 이식에서 추가됐고 2026-11-10 F3 지형 갱신 본체에서 본체를 이었다.</summary>
     /// <param name="x">갱신할 X 좌표의 float 비트다.</param>
     /// <param name="y">갱신할 Y 좌표의 float 비트다.</param>
     /// <param name="mode">원본 mode0만 받는다. 0이 아니면 거부한다.</param>
     public void ReloadTheamAt(uint x, uint y, uint mode = 0u)
     {
-        _ = x;
-        _ = y;
         if (mode != 0u)
         {
             throw new ArgumentException("게임메뉴 ReloadTheams의 원본 mode0 필요", nameof(mode));
@@ -287,9 +288,27 @@ public sealed class RawCampaignSession
             throw new InvalidOperationException("캠페인 세션의 미적재 지형 갱신입니다.");
         }
 
-        // 원본 ownership의 실제 투표·지형 갱신 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 지형 갱신 미연결");
+        // 원본 ownership의 실제 투표·지형 갱신 본체는 Fort 본체 단위에서 잇는다. 묶은 효과가 없으면 성공을 합성하지 않는다(결정 6).
+        if (_reloadTheam is null)
+        {
+            throw new InvalidOperationException("실제 지형 갱신 미연결");
+        }
+
+        // 원본처럼 uint 비트를 float으로 재해석해 넘긴다.
+        _reloadTheam(BitConverter.UInt32BitsToSingle(x), BitConverter.UInt32BitsToSingle(y));
     }
+
+    /// <summary>같은 ownership 몸체의 지역 투표·지형 갱신 효과를 묶는다. 원본 세션 설치의 지형 몸체 연결만 둔다. 2026-11-10 F3 지형 갱신 본체에서 추가됐다.</summary>
+    /// <param name="reload">실제 지형 갱신 효과다. float 좌표를 그대로 받는다.</param>
+    public void BindReloadTheam(Action<float, float> reload)
+    {
+        ArgumentNullException.ThrowIfNull(reload);
+        _reloadTheam = reload;
+    }
+
+    /// <summary>같은 ownership 몸체의 지역 투표·지형 갱신 효과를 묶었는지 확인한다. 2026-11-10 F3 지형 갱신 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasReloadTheam() => _reloadTheam is not null;
 
     /// <summary>원본 0040dfd0의 고정 범위·지역 난수를 같은 완전 배치·섬·Factory에 연결한다. 껍데기에서는 배치 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 무작위 배치 Stub 이식에서 추가됐다.</summary>
     /// <param name="type">배치할 객체 종류 번호다.</param>

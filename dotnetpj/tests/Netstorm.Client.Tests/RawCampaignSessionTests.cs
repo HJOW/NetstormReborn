@@ -343,15 +343,40 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미적재", error.Message);
     }
 
-    /// <summary>적재 뒤 지형 갱신을 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 지형 갱신 Stub 이식에서 추가됐다.</summary>
+    /// <summary>적재 뒤 지형 갱신을 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 지형 갱신 Stub 이식에서 추가됐고 2026-11-10 F3 지형 갱신 본체에서 묶기 전 관문으로 유지했다.</summary>
     [Fact]
     public void ReloadTheamRejectsWhenUnconnected()
     {
         // 실제 ownership 투표·지형 갱신 본체는 Fort 본체 단위에서 잇는다(결정 6).
         var session = LoadableSession();
         session.LoadSeeds(LoadableSeeds());
+        Assert.False(session.HasReloadTheam());
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.ReloadTheamAt(0u, 0u));
         Assert.Contains("미연결", error.Message);
+    }
+
+    /// <summary>묶은 ownership 효과에 float 비트 재해석 좌표를 그대로 넘기는지 검증한다. 2026-11-10 F3 지형 갱신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void ReloadTheamForwardsBitsAsFloat()
+    {
+        // 원본처럼 uint 비트를 float으로 재해석한다. 묶기 전 관문은 그대로 둔다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        var calls = new List<(float X, float Y)>();
+        session.BindReloadTheam((x, y) => calls.Add((x, y)));
+        Assert.True(session.HasReloadTheam());
+        session.ReloadTheamAt(0x3F800000u, 0x40000000u);
+        Assert.Equal([(1f, 2f)], calls);
+    }
+
+    /// <summary>빈 지형 갱신 묶기를 거부하는지 검증한다. 2026-11-10 F3 지형 갱신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BindReloadTheamRejectsNull()
+    {
+        // 묶지 않은 세션은 미연결로 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentNullException>(() => session.BindReloadTheam(null!));
+        Assert.False(session.HasReloadTheam());
     }
 
     /// <summary>미적재 무작위 배치를 적재 관문에서 거부하는지 검증한다. 2026-11-10 F3 세션 무작위 배치 Stub 이식에서 추가됐다.</summary>
