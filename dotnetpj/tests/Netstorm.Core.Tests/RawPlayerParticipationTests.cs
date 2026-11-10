@@ -401,4 +401,52 @@ public sealed class RawPlayerParticipationTests
         Put(scene.Players, 180 + 0xb0, 0u);
         Put(scene.Players, 2 * 180 + 0xb0, 0u);
     }
+
+    /// <summary>동맹 해제가 battle에서 bit·칸을 지우고 현재 마스크를 서버에 요청하는지 검증한다. 2026-11-11 F3 동맹 해제 본체에서 추가됐다.</summary>
+    [Fact]
+    public void RemoveAllyClearsBitAndSendsMaskInBattle()
+    {
+        // 원본 48f710의 battle 송신 경로만 둔다. PlayerKnown 0이라 Chat은 닿지 않는다.
+        string trace = "";
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            new PlayerParticipationState { Battle = true },
+            new PlayerParticipationHooks { SendAlliance = (server, owner, mask) => trace += $"S,{server},{owner},{mask}" });
+        runtime.SetAlliance(1u, 0xfu);
+        Assert.Equal("", trace);
+        runtime.RemoveAlly(1u, 2u);
+        Assert.Equal("S,9,1,11", trace);
+    }
+
+    /// <summary>동맹 해제가 battle이 아닐 때는 송신 없이 bit·칸만 지우는지 검증한다. 2026-11-11 F3 동맹 해제 본체에서 추가됐다.</summary>
+    [Fact]
+    public void RemoveAllyStaysSilentWhenNotBattle()
+    {
+        // 같은 마스크에서 battle 끔으로 지운 뒤 battle 켜고 다시 지워 지속을 확인한다.
+        string trace = "";
+        var state = new PlayerParticipationState();
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            state,
+            new PlayerParticipationHooks { SendAlliance = (server, owner, mask) => trace += $"S,{server},{owner},{mask}" });
+        runtime.SetAlliance(1u, 0xfu);
+        runtime.RemoveAlly(1u, 2u);
+        Assert.Equal("", trace);
+        state.Battle = true;
+        runtime.RemoveAlly(1u, 3u);
+        Assert.Equal("S,9,1,3", trace);
+    }
+
+    /// <summary>방향성 표 범위를 벗어난 동맹 해제를 거부하는지 검증한다. 2026-11-11 F3 동맹 해제 본체에서 추가됐다.</summary>
+    [Fact]
+    public void RemoveAllyRejectsCellOutOfRange()
+    {
+        // 원본의 방향성 표 범위 검사를 그대로 둔다. 소유자 9는 Player 경계에서 먼저 멈춘다.
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            new PlayerParticipationState(),
+            new PlayerParticipationHooks());
+        Assert.Throws<ArgumentOutOfRangeException>(() => runtime.RemoveAlly(8u, 9u));
+        Assert.Throws<ArgumentOutOfRangeException>(() => runtime.RemoveAlly(9u, 0u));
+    }
 }

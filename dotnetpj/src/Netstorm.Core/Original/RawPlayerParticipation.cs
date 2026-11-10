@@ -320,6 +320,41 @@ public sealed class RawPlayerParticipation
     }
 
     /// <summary>
+    /// 지정 방향의 한 bit·한 칸만 끄며 battle이면 현재 마스크를 서버에 요청한다.
+    /// 근거: cpppj `o/RawPlayerParticipation.cpp`의 `RemoveAlly`(48f710). 2026-11-11 F3 동맹 해제 본체에서 추가됐다.
+    /// </summary>
+    /// <param name="owner">소유자 번호다.</param>
+    /// <param name="target">끊을 상대 번호다.</param>
+    /// <exception cref="ArgumentOutOfRangeException">소유자·상대 방향성 표 범위 오류다.</exception>
+    public void RemoveAlly(uint owner, uint target)
+    {
+        Put(owner, AlliesOffset, Read(owner, AlliesOffset) & ~(1u << (int)(target & 31u)));
+        if (Metamap())
+        {
+            Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
+        }
+
+        bool battle = Battle();
+        long cell = (long)owner * Count + target;
+        // 원본의 방향성 표 범위 검사를 그대로 둔다. 2026-11-11 F3 동맹 해제 본체에서 추가됐다.
+        if (cell < 0 || cell >= _allies.Length)
+        {
+            throw new ArgumentOutOfRangeException(nameof(owner), "Player 참여 동맹 방향성 표 범위 오류");
+        }
+
+        _allies[(int)cell] = 0u;
+        if (battle)
+        {
+            if (Metamap())
+            {
+                Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
+            }
+
+            Require(_hooks.SendAlliance)(9u, owner, Read(owner, AlliesOffset));
+        }
+    }
+
+    /// <summary>
     /// 같은 수신 packet의 자기 bit→Player 마스크→방향표·Chat→broadcast 순서를 보존한다.
     /// </summary>
     /// <param name="packet">쓸 수신 버퍼다. 9바이트 이상이다.</param>
