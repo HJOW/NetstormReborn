@@ -457,4 +457,37 @@ public sealed class RawPostPopTests
 
         return value;
     }
+
+    /// <summary>CD 가상 분배 진입은 사전 검사 뒤 Player를 실제 몸체로 후처리한다. 2026-11-10 F3 실제 호스트·월드 조립(0.306)에서 추가됐다.</summary>
+    [Fact]
+    public void PostPopVirtualRoutesCdPlayerAfterValidation()
+    {
+        var pool = new RawSidPool(32768, false, null, OriginalEdition.Cd1072);
+        OriginalTypeRecord[] types = Types();
+        var state = new RawPostPopState { Suppressed = true, Depth = 1 };
+        var post = new RawPostPop(pool, types, state);
+        byte[] records = new byte[9 * 0xac];
+        // CD 생성자는 7개 효과를 모두 요구하므로 빈 효과로 묶는다. flags 0 호출에서는 호출되지 않는다.
+        var player = new RawPlayerWorld(pool, post, records, new PlayerWorldState(), new PlayerWorldHooks
+        {
+            Assertion = _ => { },
+            Find = (x, y, type) => 0,
+            Create = (type, flags) => 0,
+            SetOwner = (sid, owner) => { },
+            Pop = (sid, x, y, flags) => { },
+            ReserveRegular = () => false,
+            AddRegular = (sid, ev, payload) => { },
+        });
+        post.SetPlayerPostPop(player);
+        int sid = pool.Allocate(SidAllocation.Client);
+        Span<byte> raw = pool.AllocatedBytes(sid);
+        raw.Clear();
+        Put(raw, 0, 0x5002a8u);
+        raw[10] = (byte)TestType;
+        raw[32] = 1;
+        // 사전 검사를 먼저 돌고 실제 몸체가 CD 위치에 기록한다
+        post.PostPopVirtual(sid, 0u);
+        Assert.Equal((uint)sid, Get(records, 0xac + 0x94));
+        Assert.Equal(0u, state.Depth);
+    }
 }
