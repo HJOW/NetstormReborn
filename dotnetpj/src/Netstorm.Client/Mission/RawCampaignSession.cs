@@ -35,6 +35,12 @@ public sealed class RawCampaignSession
     /// <summary>Fort 적재가 끝났는지다. 껍데기에서는 놓지 않는다. 2026-11-10 F3 세션 껍데기 이식에서 추가됐다.</summary>
     private bool _loaded;
 
+    /// <summary>로그인·기술·AI가 공유하는 현재 원본 Player 상태다. 원본 battleOwner·templateOwner 기본값은 둘 다 1이다. 2026-11-10 F3 소유자 본체에서 추가됐다.</summary>
+    private readonly PlayerWorldState _player = new();
+
+    /// <summary>원본 자산 Battle 상태다. 설치 때만 참이 되며 현재는 거짓이다. 2026-11-10 F3 소유자 본체에서 추가됐다.</summary>
+    private bool _inBattle;
+
     /// <summary>로컬 연결의 현재 단계다. 사전 구현에서는 항상 0(미접속)이다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
     private uint _localPhase = 0u;
 
@@ -118,6 +124,16 @@ public sealed class RawCampaignSession
     /// <summary>Fort 적재가 끝났는지다. 씨앗 적재 뒤에는 참이다. 2026-11-10 F3 세션 껍데기 이식에서 추가됐고 2026-11-10 F3 Fort 씨앗 적재 이식에서 갱신했다.</summary>
     /// <returns>적재됐으면 참이다.</returns>
     public bool IsLoaded() => _loaded;
+
+    /// <summary>로그인·기술·AI가 공유하는 현재 원본 Player 상태다. 설치 본체가 battleOwner·templateOwner를 갱신하며 여러 몸체가 같은 참조를 빌린다. 2026-11-10 F3 소유자 본체에서 추가됐다.</summary>
+    internal PlayerWorldState PlayerState => _player;
+
+    /// <summary>원본 자산 Battle 상태다. 설치 본체가 켜고 끈다. 2026-11-10 F3 소유자 본체에서 추가됐다.</summary>
+    internal bool InBattle
+    {
+        get => _inBattle;
+        set => _inBattle = value;
+    }
 
     /// <summary>실제 부모 설치를 한 번 실행한다. 껍데기에서는 Fort 적재 미연결로 멈춘다. 2026-11-10 F3 세션 껍데기 이식에서 추가됐다.</summary>
     public void Load()
@@ -338,7 +354,7 @@ public sealed class RawCampaignSession
         throw new InvalidOperationException("실제 재장전 항목 미연결");
     }
 
-    /// <summary>로그인·기술·AI가 공유하는 현재 원본 로컬 Player 번호다. 껍데기에서는 Player 상태 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
+    /// <summary>로그인·기술·AI가 공유하는 현재 원본 로컬 Player 번호다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐고 2026-11-10 F3 소유자 본체에서 본체를 이었다.</summary>
     /// <returns>로컬 소유자 번호다.</returns>
     public uint LocalOwner()
     {
@@ -347,11 +363,11 @@ public sealed class RawCampaignSession
             throw new InvalidOperationException("캠페인 세션의 미적재 소유자 조회입니다.");
         }
 
-        // 원본 세션 Player 상태의 실제 battleOwner 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 로컬 소유자 미연결");
+        // 원본 세션 Player 상태의 battleOwner를 그대로 읽는다. 설치 본체가 갱신하기 전에는 기본값 1이다.
+        return _player.BattleOwner;
     }
 
-    /// <summary>원본 정보 설명이 읽는 같은 PlayerWorld 템플릿 소유자다. 껍데기에서는 Player 상태 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
+    /// <summary>원본 정보 설명이 읽는 같은 PlayerWorld 템플릿 소유자다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐고 2026-11-10 F3 소유자 본체에서 본체를 이었다.</summary>
     /// <returns>템플릿 소유자 번호다.</returns>
     public uint TemplateOwner()
     {
@@ -360,11 +376,11 @@ public sealed class RawCampaignSession
             throw new InvalidOperationException("캠페인 세션의 미적재 소유자 조회입니다.");
         }
 
-        // 원본 세션 Player 상태의 실제 templateOwner 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 템플릿 소유자 미연결");
+        // 원본 세션 Player 상태의 templateOwner를 그대로 읽는다. 설치 본체가 갱신하기 전에는 기본값 1이다.
+        return _player.TemplateOwner;
     }
 
-    /// <summary>원본 00594fbc의 현재 실제 자산 Battle 관문이다. 껍데기에서는 자산 상태 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
+    /// <summary>원본 00594fbc의 현재 실제 자산 Battle 관문이다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐고 2026-11-10 F3 소유자 본체에서 본체를 이었다.</summary>
     /// <returns>전투 중이면 1u, 아니면 0u이다.</returns>
     public uint BattleActive()
     {
@@ -373,8 +389,8 @@ public sealed class RawCampaignSession
             throw new InvalidOperationException("캠페인 세션의 미적재 전투 조회입니다.");
         }
 
-        // 원본 세션 자산 상태의 실제 inBattle 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 전투 상태 미연결");
+        // 원본 세션 자산 상태의 inBattle을 그대로 읽으며 표시 상태는 만들지 않는다.
+        return _inBattle ? 1u : 0u;
     }
 
     /// <summary>현재 연결 단계를 읽는다. 사전 구현에서는 항상 0(미접속)이다. 3차 로컬 구현 때 실제 전송과 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>

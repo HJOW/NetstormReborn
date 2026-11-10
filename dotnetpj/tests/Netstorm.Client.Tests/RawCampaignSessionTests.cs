@@ -267,16 +267,23 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미적재", Assert.Throws<InvalidOperationException>(() => session.BattleActive()).Message);
     }
 
-    /// <summary>적재 뒤 소유자·전투 조회를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
+    /// <summary>적재 뒤 소유자·전투 조회가 세션 Player·자산 상태를 읽는지 검증한다. 2026-11-10 F3 소유자 본체에서 추가됐다.</summary>
     [Fact]
-    public void OwnerQueriesRejectWhenUnconnected()
+    public void OwnerQueriesReadSessionState()
     {
-        // 실제 Player·자산 상태 본체는 Fort 본체 단위에서 잇는다(결정 6).
+        // 설치 본체가 갱신하기 전의 기본값은 battleOwner·templateOwner 1, 전투 끔이다.
         var session = LoadableSession();
         session.LoadSeeds(LoadableSeeds());
-        Assert.Contains("미연결", Assert.Throws<InvalidOperationException>(() => session.LocalOwner()).Message);
-        Assert.Contains("미연결", Assert.Throws<InvalidOperationException>(() => session.TemplateOwner()).Message);
-        Assert.Contains("미연결", Assert.Throws<InvalidOperationException>(() => session.BattleActive()).Message);
+        Assert.Equal(1u, session.LocalOwner());
+        Assert.Equal(1u, session.TemplateOwner());
+        Assert.Equal(0u, session.BattleActive());
+        // 설치 본체의 갱신이 조회에 그대로 보인다.
+        session.PlayerState.BattleOwner = 3u;
+        session.PlayerState.TemplateOwner = 5u;
+        session.InBattle = true;
+        Assert.Equal(3u, session.LocalOwner());
+        Assert.Equal(5u, session.TemplateOwner());
+        Assert.Equal(1u, session.BattleActive());
     }
 
     /// <summary>원본 mode0이 아닌 지형 갱신을 거부하는지 검증한다. 2026-11-10 F3 세션 지형 갱신 Stub 이식에서 추가됐다.</summary>
