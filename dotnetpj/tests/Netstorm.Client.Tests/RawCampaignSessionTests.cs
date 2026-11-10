@@ -208,6 +208,27 @@ public sealed class RawCampaignSessionTests
         Assert.Equal(110.0, session.CurrentTime().Game);
     }
 
+    /// <summary>미적재 건설 시작을 적재 관문에서 거부하는지 검증한다. 2026-11-10 F3 세션 건설 시작 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void StartConstructionRejectsWhenNotLoaded()
+    {
+        // 적재 전 건설 시작은 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.StartConstruction(5, 0f));
+        Assert.Contains("미적재", error.Message);
+    }
+
+    /// <summary>적재 뒤 건설 시작을 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 건설 시작 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void StartConstructionRejectsWhenUnconnected()
+    {
+        // 실제 빌더 본체는 Fort 본체 단위에서 잇는다(결정 6).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.StartConstruction(5, 10f));
+        Assert.Contains("미연결", error.Message);
+    }
+
     /// <summary>보고서가 월드와 같은 첫 줄을 보이는지 검증한다. 2026-11-10 F3 세션 보고서 위임 이식에서 추가됐다.</summary>
     [Fact]
     public void ReportDelegatesToWorld()

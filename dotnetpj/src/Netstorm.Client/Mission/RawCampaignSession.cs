@@ -174,6 +174,22 @@ public sealed class RawCampaignSession
         _world.RunFrame(time, paused);
     }
 
+    /// <summary>원본 건설 시작을 후속 배치와 공유한다. 껍데기에서는 건설 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 건설 시작 Stub 이식에서 추가됐다.</summary>
+    /// <param name="parent">건설할 부모 번호다.</param>
+    /// <param name="duration">건설 기간이다. 0이면 원본 기본 10초다.</param>
+    public void StartConstruction(int parent, float duration)
+    {
+        _ = parent;
+        _ = duration;
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 건설 시작입니다.");
+        }
+
+        // 원본 세션 건설의 실제 빌더 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 건설 시작 미연결");
+    }
+
     /// <summary>현재 연결 단계를 읽는다. 사전 구현에서는 항상 0(미접속)이다. 3차 로컬 구현 때 실제 전송과 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
     /// <returns>연결 단계다.</returns>
     public uint LocalConnectionPhase() => _localPhase;
