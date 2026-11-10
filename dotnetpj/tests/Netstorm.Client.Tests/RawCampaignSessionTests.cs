@@ -279,6 +279,36 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미연결", Assert.Throws<InvalidOperationException>(() => session.BattleActive()).Message);
     }
 
+    /// <summary>원본 mode0이 아닌 지형 갱신을 거부하는지 검증한다. 2026-11-10 F3 세션 지형 갱신 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReloadTheamRejectsBadMode()
+    {
+        // 원본 mode 검사는 적재 관문보다 먼저 동작한다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentException>(() => session.ReloadTheamAt(0u, 0u, 1u));
+    }
+
+    /// <summary>미적재 지형 갱신을 적재 관문에서 거부하는지 검증한다. 2026-11-10 F3 세션 지형 갱신 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReloadTheamRejectsWhenNotLoaded()
+    {
+        // 적재 전 지형 갱신은 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.ReloadTheamAt(0u, 0u));
+        Assert.Contains("미적재", error.Message);
+    }
+
+    /// <summary>적재 뒤 지형 갱신을 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 지형 갱신 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReloadTheamRejectsWhenUnconnected()
+    {
+        // 실제 ownership 투표·지형 갱신 본체는 Fort 본체 단위에서 잇는다(결정 6).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.ReloadTheamAt(0u, 0u));
+        Assert.Contains("미연결", error.Message);
+    }
+
     /// <summary>보고서가 월드와 같은 첫 줄을 보이는지 검증한다. 2026-11-10 F3 세션 보고서 위임 이식에서 추가됐다.</summary>
     [Fact]
     public void ReportDelegatesToWorld()

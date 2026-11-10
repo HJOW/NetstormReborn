@@ -218,6 +218,28 @@ public sealed class RawCampaignSession
         throw new InvalidOperationException("실제 위치 삭제 미연결");
     }
 
+    /// <summary>원본 455380의 실제 mode0 지역 투표·지형 갱신을 같은 ownership 몸체로 실행한다. 껍데기에서는 ownership 본체 미연결로 멈춘다. 좌표는 원문 float 비트다. 2026-11-10 F3 세션 지형 갱신 Stub 이식에서 추가됐다.</summary>
+    /// <param name="x">갱신할 X 좌표의 float 비트다.</param>
+    /// <param name="y">갱신할 Y 좌표의 float 비트다.</param>
+    /// <param name="mode">원본 mode0만 받는다. 0이 아니면 거부한다.</param>
+    public void ReloadTheamAt(uint x, uint y, uint mode = 0u)
+    {
+        _ = x;
+        _ = y;
+        if (mode != 0u)
+        {
+            throw new ArgumentException("게임메뉴 ReloadTheams의 원본 mode0 필요", nameof(mode));
+        }
+
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 지형 갱신입니다.");
+        }
+
+        // 원본 ownership의 실제 투표·지형 갱신 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 지형 갱신 미연결");
+    }
+
     /// <summary>로그인·기술·AI가 공유하는 현재 원본 로컬 Player 번호다. 껍데기에서는 Player 상태 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
     /// <returns>로컬 소유자 번호다.</returns>
     public uint LocalOwner()
