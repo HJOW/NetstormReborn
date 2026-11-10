@@ -15426,7 +15426,7 @@
       "bytes": 327868,
       "lines": 1637,
       "fixtureCommit": "a5afdafbe",
-      "webCommit": "worktree",
+      "webCommit": "930825676",
       "cpppjBasis": {
         "cpppj/src/o/RawAssetPostPop.cpp": "417f22d29"
       }
@@ -15455,7 +15455,7 @@
       "bytes": 1927769,
       "lines": 577,
       "fixtureCommit": "cfa283a63",
-      "webCommit": "worktree",
+      "webCommit": "930825676",
       "cpppjBasis": {
         "cpppj/src/o/RawAssetPostPop.cpp": "417f22d29"
       }
@@ -15484,7 +15484,7 @@
       "bytes": 280122,
       "lines": 1345,
       "fixtureCommit": "a8f87f622",
-      "webCommit": "worktree",
+      "webCommit": "930825676",
       "cpppjBasis": {
         "cpppj/src/o/RawAssetPostPop.cpp": "417f22d29"
       }
@@ -15513,9 +15513,99 @@
       "bytes": 282662,
       "lines": 937,
       "fixtureCommit": "b9831cc47",
-      "webCommit": "worktree",
+      "webCommit": "930825676",
       "cpppjBasis": {
         "cpppj/src/o/RawAssetPostPop.cpp": "417f22d29"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E255",
+      "id": "assetregular",
+      "path": "cpppj/tests/fixtures/assetregular-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 거주 구역·간헐천·신전·Damageable 단독 부모의 정기 사건별 반환·난수·최대 장식 조사·하위 효과 순서·슬롯 50 전체·이웃 프레임(10.78)",
+      "consumers": [
+        "webpj/tests/asset-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-asset-regular.js",
+        "webpj/www/core/raw-residence-regular.js",
+        "webpj/www/core/raw-factory-regular.js"
+      ],
+      "doc": "docs/webpj-asset-regular-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAssetRegular.cpp"
+      ],
+      "scope": "1,976행 중 10.78(originals) 1,054행 전부를 독립·공유 권한·공유 신전 목록·분리 본문(Native)으로 사용(originalCD 행은 범위 밖)",
+      "text": true,
+      "sha256": "8e54f5ff7ad6a766a862bddd1ea1e476dadf474bfa2e81e9dd4bfddaf741654c",
+      "bytes": 419217,
+      "lines": 1977,
+      "fixtureCommit": "8abd00ac3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAssetRegular.cpp": "c102cdbf3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E255",
+      "id": "residence-coordinates",
+      "path": "cpppj/tests/fixtures/residence-coordinates-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 거주 구역 장식 조사의 축 교차/경계 좌표(해시 1단계 체인 재등록 장면)의 결과·난수·최대 조사·호출·슬롯·이웃 프레임(10.78)",
+      "consumers": [
+        "webpj/tests/asset-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-asset-regular.js",
+        "webpj/www/core/raw-residence-regular.js"
+      ],
+      "doc": "docs/webpj-asset-regular-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAssetRegular.cpp"
+      ],
+      "scope": "1,728행 중 10.78(originals) 864행 전부(originalCD 864행은 범위 밖)",
+      "text": true,
+      "sha256": "300c31e61c97d0a51c95bac788675e54223547cfd74cf35ae84f74ab0e9d7777",
+      "bytes": 441239,
+      "lines": 1729,
+      "fixtureCommit": "0b7bc959e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAssetRegular.cpp": "c102cdbf3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E255",
+      "id": "factory-regular-current",
+      "path": "cpppj/tests/fixtures/factory-regular-current-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Factory 정기 4549c0 의 현재 레벨/첫 프레임/프레임 수 조회·실제 난수·0범위 예외·최종 슬롯(10.78)",
+      "consumers": [
+        "webpj/tests/asset-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-factory-regular.js"
+      ],
+      "doc": "docs/webpj-asset-regular-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFactoryRegular.cpp"
+      ],
+      "scope": "10.78 656행 전부(오류 128행 포함)",
+      "text": true,
+      "sha256": "2465de5655f422f8f9e526c37c43ee70eb65387dbefb06f8b108f38f6345b42e",
+      "bytes": 126505,
+      "lines": 657,
+      "fixtureCommit": "3c5f50923",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFactoryRegular.cpp": "3c5f50923"
       }
     }
   ]
