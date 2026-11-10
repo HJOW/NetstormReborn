@@ -1,5 +1,6 @@
 // 일반지형 바인딩 계약의 분기·범위·연결 검사를 검증한다.
 using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Tests;
 
@@ -611,5 +612,176 @@ public sealed class RawNormalTerrainBindingTests
         Assert.Equal(2, farm.CurrentSpan());
         inputs.Archipelago.Value = 5u;
         Assert.True(farm.CurrentArchipelago());
+    }
+
+    /// <summary>도장 월드 효과를 기록한다. 2026-11-10 R4 F2c 정상 생성 본체에서 추가됐다.</summary>
+    private sealed class StampWorldSpy
+    {
+        /// <summary>생성 슬롯을 빌릴 실제 풀이다.</summary>
+        private readonly RawSidPool _pool;
+
+        /// <summary>생성 호출 횟수다.</summary>
+        public int Creates;
+
+        /// <summary>같은 풀에서 SID를 할당하는 스파이를 만든다.</summary>
+        /// <param name="pool">생성 슬롯을 빌릴 실제 풀이다.</param>
+        public StampWorldSpy(RawSidPool pool) => _pool = pool;
+
+        /// <summary>도장에 넘길 월드 효과다. ChunkRegion·Assertion은 바인딩이 덮는다.</summary>
+        public TerrainStampHooks Hooks => new()
+        {
+            Create = (type, predictable) =>
+            {
+                int sid = _pool.Allocate(SidAllocation.Client);
+                Span<byte> raw = _pool.AllocatedBytes(sid);
+                raw.Clear();
+                raw[10] = unchecked((byte)type);
+                Creates++;
+                return sid;
+            },
+            SetOwner = (_, _) => { },
+            Pop = (_, _, _, _) => { },
+            SetRegion = (_, _) => { },
+            ChunkRegion = (_, _) => 127,
+            Assertion = _ => { },
+        };
+    }
+
+    /// <summary>도장까지 도는 묶음 장면을 만든다. 2026-11-10 R4 F2c 정상 생성 본체에서 추가됐다.</summary>
+    private static (RawNormalTerrainWorldBinding Binding, FarmClusterState Farm, RawSidPool Pool) GenerateScene()
+    {
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, _, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        // 성장 통로가 읽는 청크 방향을 유효 문자(A~P)로 둔다.
+        chunks.At(2, 2).Side = (sbyte)'A';
+        var frames = Enumerable.Repeat(CoveringFrames()[0], OriginalConstructors.TypeCount).ToList();
+        diagnostics.Context = _ => { };
+        diagnostics.Stamp = _ => { };
+        var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        var farm = new FarmClusterState();
+        binding.BindGenerationInputs(farm, GenerationScene());
+        return (binding, farm, pool);
+    }
+
+    /// <summary>일반 생성의 분기·범위·연결 누락을 거부한다. 2026-11-10 R4 F2c 정상 생성 본체에서 추가됐다.</summary>
+    [Fact]
+    public void GenerateGuards()
+    {
+        (RawNormalTerrainWorldBinding binding, _, RawSidPool pool) = GenerateScene();
+        var request = new NormalTerrainRequest(1u, new ChunkRect(1, 1, 5, 5), 127, NormalTerrainBranch.Normal);
+        var random = new NetstormRandom(1u);
+        var crt = new UIntBox();
+        var world = new StampWorldSpy(pool).Hooks;
+        var spy = new PlaceSpy();
+        Assert.Throws<InvalidOperationException>(() => binding.Generate(request with { Branch = NormalTerrainBranch.Archipelago }, random, crt, world, spy.Place));
+        Assert.Throws<ArgumentOutOfRangeException>(() => binding.Generate(request with { Bounds = new ChunkRect(0, 3, 5, 5) }, random, crt, world, spy.Place));
+        Assert.Throws<ArgumentNullException>(() => binding.Generate(request, null!, crt, world, spy.Place));
+        Assert.Throws<ArgumentNullException>(() => binding.Generate(request, random, null!, world, spy.Place));
+        Assert.Throws<ArgumentNullException>(() => binding.Generate(request, random, crt, null!, spy.Place));
+        Assert.Throws<ArgumentNullException>(() => binding.Generate(request, random, crt, world, null!));
+        Assert.Throws<ArgumentNullException>(() => binding.StampContext(null!, random, crt, world));
+        // 생성 입력 없이 묶은 바인딩은 군집 미연결로 거부한다.
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool barePool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var bare = Bind(chunks, islands, globals, placement, stamp, types, barePool, piece, frames, diagnostics);
+        Assert.Throws<InvalidOperationException>(() => bare.Generate(request, random, crt, world, spy.Place));
+    }
+
+    /// <summary>도장 진단이 없으면 도장 효과 누락으로 거부한다. 2026-11-10 R4 F2c 정상 생성 본체에서 추가됐다.</summary>
+    [Fact]
+    public void StampContextGuardsDiagnostics()
+    {
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, _, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var frames = Enumerable.Repeat(CoveringFrames()[0], OriginalConstructors.TypeCount).ToList();
+        diagnostics.Context = _ => { };
+        var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        var context = new RawTerrainContext(pool.Edition, 1u, 127, new ChunkRect(1, 1, 5, 5), globals, _ => { });
+        Assert.Throws<ArgumentException>(() => binding.StampContext(context, new NetstormRandom(1u), new UIntBox(), new StampWorldSpy(pool).Hooks));
+    }
+
+    /// <summary>일반 생성은 성장·도장·후처리를 순서대로 돌리고 같은 입력에 같은 SID를 돌려준다. 2026-11-10 R4 F2c 정상 생성 본체에서 추가됐다.</summary>
+    [Fact]
+    public void GenerateRunsGrowthStampAndPostprocess()
+    {
+        (RawNormalTerrainWorldBinding first, _, RawSidPool firstPool) = GenerateScene();
+        (RawNormalTerrainWorldBinding second, _, RawSidPool secondPool) = GenerateScene();
+        var request = new NormalTerrainRequest(1u, new ChunkRect(1, 1, 5, 5), 127, NormalTerrainBranch.Normal);
+        var firstSpy = new PlaceSpy();
+        var firstWorld = new StampWorldSpy(firstPool);
+        int firstSid = first.Generate(request, new NetstormRandom(1u), new UIntBox { Value = 1u }, firstWorld.Hooks, firstSpy.Place);
+        var secondSpy = new PlaceSpy();
+        int secondSid = second.Generate(request, new NetstormRandom(1u), new UIntBox { Value = 1u }, new StampWorldSpy(secondPool).Hooks, secondSpy.Place);
+        // 같은 입력의 두 장면이 같은 결과를 낸다.
+        Assert.Equal(secondSid, firstSid);
+        Assert.Equal(secondSpy.Calls.Count, firstSpy.Calls.Count);
+        Assert.NotEmpty(firstSpy.Calls);
+        // 도장이 월드에 생성을 요청했고 후처리가 배치를 불렀다.
+        Assert.NotEqual(0, firstWorld.Creates);
+        for (int index = 0; index < secondSpy.Calls.Count; ++index)
+            Assert.Equal(secondSpy.Calls[index], firstSpy.Calls[index]);
+    }
+
+    /// <summary>원본 생성은 입력 없이 거부하고 일반 분기에서는 같은 입력에 같은 SID를 돌려준다. 2026-11-10 R4 F2c 정상 생성 본체에서 추가됐다.</summary>
+    [Fact]
+    public void GenerateOriginalRunsNormalBranch()
+    {
+        static (int Sid, int Places) RunOnce()
+        {
+            (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+                List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, _, NormalTerrainDiagnostics diagnostics) = BindingScene();
+            chunks.At(2, 2).Side = (sbyte)'A';
+            var frames = Enumerable.Repeat(CoveringFrames()[0], OriginalConstructors.TypeCount).ToList();
+            diagnostics.Context = _ => { };
+            diagnostics.Stamp = _ => { };
+            var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+            var farm = new FarmClusterState();
+            TerrainGenerationInputs inputs = GenerationScene();
+            inputs.Layout = () => (byte)1;
+            binding.BindGenerationInputs(farm, inputs);
+            var spy = new PlaceSpy();
+            // Battle이 꺼져 후보가 아니므로 일반 성장을 돈다.
+            int sid = binding.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new NetstormRandom(1u), new UIntBox { Value = 1u }, new StampWorldSpy(pool).Hooks, spy.Place);
+            return (sid, spy.Calls.Count);
+        }
+
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var bare = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        // 보관한 입력이 없으면 거부한다.
+        Assert.Throws<InvalidOperationException>(() => bare.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new NetstormRandom(1u), new UIntBox(), new StampWorldSpy(pool).Hooks, new PlaceSpy().Place));
+        (int firstSid, int firstPlaces) = RunOnce();
+        (int secondSid, int secondPlaces) = RunOnce();
+        Assert.NotEqual(0, firstPlaces);
+        Assert.Equal(firstSid, secondSid);
+        Assert.Equal(firstPlaces, secondPlaces);
+    }
+
+    /// <summary>원본 생성의 군도 분기는 범위를 넓히고 백분율을 기록한 뒤 군도 표시를 남긴다. 2026-11-10 R4 F2c 정상 생성 본체에서 추가됐다.</summary>
+    [Fact]
+    public void GenerateOriginalRunsArchipelagoBranch()
+    {
+        (ChunkMap chunks, RawIslandRuntime islands, TerrainContextGlobals globals, FortRandomPlacementState placement, TerrainStampState stamp,
+            List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, _, NormalTerrainDiagnostics diagnostics) = BindingScene();
+        var frames = Enumerable.Repeat(CoveringFrames()[0], OriginalConstructors.TypeCount).ToList();
+        diagnostics.Context = _ => { };
+        diagnostics.Stamp = _ => { };
+        var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
+        var farm = new FarmClusterState();
+        TerrainGenerationInputs inputs = GenerationScene();
+        inputs.Battle = new RawCheckingFlag(true);
+        inputs.Layout = () => (byte)0;
+        inputs.Spacing = () => 4;
+        var percents = new List<int>();
+        inputs.LogPercent = percents.Add;
+        inputs.Subscriber = _ => 0u;
+        binding.BindGenerationInputs(farm, inputs);
+        var spy = new PlaceSpy();
+        binding.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new NetstormRandom(1u), new UIntBox { Value = 1u }, new StampWorldSpy(pool).Hooks, spy.Place);
+        // spacing 4는 span 2를 쓰고 군도 표시를 남긴다.
+        Assert.Equal(2, binding.GenerationInputs().Span.Value);
+        Assert.Equal(1u, binding.GenerationInputs().Archipelago.Value);
+        Assert.Single(percents);
+        Assert.NotEmpty(spy.Calls);
     }
 }

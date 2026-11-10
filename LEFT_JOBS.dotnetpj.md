@@ -12,7 +12,7 @@
 
 <a id="dotnet-overview"></a>
 
-## 한눈에 보기 — dotnetpj 진행 상황 (2026-11-10, 단위 0.284 기준)
+## 한눈에 보기 — dotnetpj 진행 상황 (2026-11-10, 단위 0.285 기준)
 
 ### 실행·플레이 가능 여부와 원본과의 동일성
 
@@ -41,10 +41,10 @@ AGENTS.md(`551d27ae`)의 두 기준으로 평가한다. dotnetpj에는 실행 �
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 커밋 | 0.284 `20261110-89 DN`(`session-dump` 단계·world 0 덤프) |
+| 마지막 커밋 | 0.285 `20261110-90 DN`(F2c 정상 생성·도장 본체) |
 | PORT_MAP | 638줄(자료 633행: L1 329 · port 304) |
 | 원본 fixture | 연결 232개(`cpp_sync.py` 0종료). `reflected-commit`은 영향 검토 전이라 `f95a8db2` |
-| 마지막 전체 검사 완주 | Core **1,826개**·Client **895개**·Assets **366개**(0.280, 실패 0). 이전 기준선은 Core 1,576개(0.211), Client 858개·Assets 366개(0.157)였다 |
+| 마지막 전체 검사 완주 | Core **1,831개**(0.285)·Client **906개**(0.284)·Assets **366개**(0.280, 실패 0) |
 | cpppj 기준 | cpppj는 확정 제품1248 / 표시 11.01(2026-11-10). dotnetpj가 마지막으로 영향 검토를 맞춘 시점은 단위861(2026-11-04) 이전이다 |
 
 ### 남은 일 — 순서대로
@@ -73,12 +73,12 @@ AGENTS.md(`551d27ae`)의 두 기준으로 평가한다. dotnetpj에는 실행 �
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | 0.284까지 커밋됐다. 전체 목표는 미완료다. 다음 단위(0.285)는 R4 F2c 나머지(정상 지형 생성 본체·`RawFortWorldLoadBinding`)부터 시작한다. |
+| 진행 상태 | 0.285까지 커밋됐다. 전체 목표는 미완료다. 다음 단위(0.286)는 R4 F3 본체(Stub 8종의 실제 본체·Fort 적재·메뉴)부터 시작한다. |
 | 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 진행 중(완료 범위는 0.9의 체크 목록과 1절 색인), R5 이후 미착수. |
 | 실행·플레이 가능 여부 | 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)은 1-1·1-2 근사 플레이가 가능하다. 새 경로 `Netstorm.Client.Host`는 메뉴 계열 일부까지이고 미션 월드가 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.284 `20261110-89 DN`(`session-dump` 단계·world 0 덤프). |
-| 검사 | 마지막 전체 완주는 0.280(합계 3,087개, 실패 0)이다. 0.282는 Client 전체 896개, 0.283은 900개, 0.284는 906개(기존 900+새 6) 실패 0을 확인했다(Core·Assets는 0.280 기준선 유지). |
+| 마지막 구현 커밋 | 0.285 `20261110-90 DN`(F2c 정상 생성·도장 본체). |
+| 검사 | 마지막 전체 완주는 Core 1,831개(0.285)·Client 906개(0.284)·Assets 366개(0.280)이며 모두 실패 0이다. |
 | 포트 맵 | `PORT_MAP.tsv` 총 638줄(자료 633행: L1 329, port 304). 0.284의 `SessionStateDump.h/.cpp` → `SessionStateDump.cs` 2행(port)이 마지막 추가다. |
 | fixture | 연결 232개(개별 OK, `cpp_sync.py`는 미반영분 때문에 0종료 아님). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다. 영향 검토 전이라 `reflected-commit`과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값(2026-11-10 확정 제품1248, 작업 중 1249)은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
@@ -275,7 +275,7 @@ AGENTS.md는 "cpppj의 **4~8차** 목표 내용이 dotnetpj 후순위 요구사�
   - [x] F3 세션 껍데기·Fort 씨앗 적재·프레임/보고서 위임·섬 개수 2종(0.265~0.271), 세션 연결 사전 구현(0.268, 검사 없음)
   - [x] F3 Stub 관문 8종(0.272~0.279): `StartConstruction`, `CreateAt`/`DestroyAt`, `LocalOwner`/`TemplateOwner`/`BattleActive`, `ReloadTheamAt`, `AddRandomObjects`, `GameMenuReloadCount`/`GameMenuReloadSid`, `SynchronizeProductionContents`, `MetaMenuType`. **주소·미적재·본체 미연결의 명시 오류만 있고 본체는 없다**(결정 6).
 - 남은 항목:
-  - [ ] **F2c 나머지:** 정상 지형 생성·도장 본체(`Generate`·`GenerateOriginal`·`StampContext`, 0.217·0.225 잔여)와 `RawFortWorldLoadBinding`(정상 바인딩 본체 필요).
+  - [x] **F2c 정상 생성 본체(0.285):** `RawNormalTerrainWorldBinding`에 `Generate`·`GenerateOriginal`·`StampContext` 본체를 넣었다(cpppj `RawNormalTerrainWorldBinding.cpp` 직역, `port`). 월드 장치(난수·CRT·도장 효과·군집 배치)는 호출자가 넘기고 군집은 생성 입력 연결 때 보관한다. 32비트 감김·signed 나눗셈은 unchecked로 원본 비트 해석을 따른다. `RawFortWorldLoadBinding`은 대리자 주입 껍데기 그대로이며 실제 본체 연결은 F3 실제 호스트·월드 조립에서 한다.
   - [ ] **F3 본체:** 위 Stub 8종의 실제 본체(Fort 적재 본체·ownership·위치 명령 파서·완전 배치·outposts/temples 목록·Deck 동기화·메타메뉴 별칭 조회), 메뉴, 세션 진단의 AI·연결·메뉴 부분(0.269). 네트워크 연결(0.268)은 3차 범위다. 미션 Fort 적재와 Edit 진입은 F3까지 끝나야 동작한다.
   - [ ] **AI:** AI 설정의 Session 소유자, 실제 AI 생성자·초기 갱신·전략 AI(0.71·0.72).
   - [ ] **실제 호스트·월드 조립:** 미션 객체, Fort reader, Guide 교체·수명, 미션 제어 입력, 공통 Start, AI 설정·생성, Guide 단계·Lifecycle은 이식과 L1 대조를 마쳤지만 검사에서는 명시 효과로만 연결돼 있다. 실제 호스트에 분배기를 설치하고 같은 Player·제한 표·메뉴·월드 효과에 연결한다(0.66, 0.68, 0.69, 0.75~0.79). Tutorial Init의 실제 템플릿/옵션 소유자·요새 선택·상태 실행·실제 타입 조회·호스트 단계 연결(0.105~0.110), Start의 실제 Config·Player·SP·AI·Gump 효과(0.70), `PlayerParticipation`의 실제 세션 바인딩과 동맹 수신 `ReceiveAlliance` 등(0.74)이 남았다.
@@ -318,9 +318,11 @@ AGENTS.md는 "cpppj의 **4~8차** 목표 내용이 dotnetpj 후순위 요구사�
 
 <a id="dotnet-unit-records"></a>
 
-### 0.10 단위 기록 (0.285부터)
+### 0.10 단위 기록 (0.286부터)
 
 문서가 없는 작은 단위만 아래에 최신순으로 짧게 적는다. 한 기록에는 범위, 구현(새 파일·수정 파일), C#에서 달라진 모양, 검증(집중·전체·변이), PORT_MAP·fixture 변화, 보호·실행·외부 접속 관점, 남은 것을 적는다(0.6). 0.11~0.279는 이관 파일에 있다: [0.11~0.65](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073), [0.66~0.126](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126), [0.127~0.153](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154), [0.154~0.279](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279).
+
+**0.285 — F2c 정상 생성·도장 본체 (2026-11-10, HJOW-Athlon).** 범위: 0.9 R4 'F2c 나머지'. 구현: `RawNormalTerrainBinding.cs`의 `RawNormalTerrainWorldBinding`에 `Generate`·`StampContext`·`GenerateOriginal` 본체(cpppj `RawNormalTerrainWorldBinding.cpp` 직역, `port`), `BindGenerationInputs`에서 군집 보관(`_farm`), `using Netstorm.Core.Simulation` 추가. C#에서 달라진 모양: 월드 장치(NetstormRandom·CRT 상자·도장 효과·군집 배치 효과)는 인자로 받고, `RawFortWorldLoadBinding`의 대리자 주입 구조와 같은 방식이다. 32비트 감김·signed 나눗셈은 unchecked, `area == 0`은 DivideByZeroException, 게임 시각·세션 연결은 F3로 미룬다. 검증: Release 빌드 경고·오류 0, `RawNormalTerrainBindingTests` 28건(새 5건: 거부 2건·일반 성장 1건·원본 일반 1건·원본 군도 1건, 같은 입력 두 장면 동일 SID) 통과, Core 전체 1,831건 실패 0(`--no-incremental` 재빌드 뒤). 대표 변이(군도 조건 `==0`→`!=0`)가 원본 군도 검사에서 검출됨을 확인하고 원복했다. 이관 과정에서 빈 `Create` 스텁(SID 0)과 청크 `Side` 0·범위 밖 bounds가 실패를 냈으며 풀 할당 스텁·유효 방향·포함 bounds로 고쳤다. PORT_MAP·fixture 변화 없음(이미 있는 `RawNormalTerrainWorldBinding` 행의 base는 두지 않았다). 보호: 원본/CD·AGENTS.md 미수정, 게임 실행 없음. 외부 접속 변화 없음. 남은 것: F3 본체(0.286)부터 계속한다.
 
 **0.284 — `session-dump` 단계·world 0 덤프 (2026-11-10, HJOW-Athlon).** 범위: 0.9 '재개 준비' L2·L3 장치 나머지. 구현: 새 `Netstorm.Client/Automation/SessionStateDump.cs`(cpppj `SessionStateDump.h/.cpp` 중 world 0 서식·FNV-1a 64 직역), 새 `Netstorm.Client/Host/HostSessionDump.cs`(호스트 소유 Kernel·GameRandom·CrtRandom·프레임 읽기, 비Squid 행은 pid/0/0, 게임 시각 0), `UiScriptRunner`에 `session-dump` 관측 단계·`BindSessionDump`(빈 경로 거부·미연결 명시 예외), `HostFrameDriver.BindSessionDump`, `ClientHostGame` 소유·연결. C#에서 달라진 모양: world 1 행(pool·slot·object·player·sp·graph·totals)은 세션 조립 때 늘린다. 검증: Release 빌드 경고·오류 0, 새 `SessionStateDumpTests` 5건(판번호 1 정확 문자열 2건·판본 거부·FNV 공개값·파일 바이트 일치)과 `CaptureAndScriptTests` 1건(단계·거부 3종) 통과, Client 전체 906건 실패 0(`--no-incremental` 재빌드 뒤). 대표 변이(world 행 0→1)가 3건에서 검출됨을 확인하고 원복했다. PORT_MAP 2행 추가(`SessionStateDump.h/.cpp`→`SessionStateDump.cs`, base `c91d9b84`, port). fixture 변화 없음. 보호: 원본/CD·AGENTS.md 미수정, 게임 실행 없음. 외부 접속 변화 없음. 남은 것: R4 F2c 나머지(0.285)부터 계속한다.
 

@@ -1,4 +1,6 @@
 // 일반 지형 소비자의 분기·범위·타입 연결 계약을 공유한다.
+using Netstorm.Core.Simulation;
+
 namespace Netstorm.Core.Original;
 
 // 일반지형 바인딩 계약 모듈을 담는 네임스페이스다. 2026-11-07 F2d 지형 바인딩 계약 이식에서 추가됐다.
@@ -312,6 +314,9 @@ public sealed class RawNormalTerrainWorldBinding
     /// <summary>원문 상위의 비소유 전역 참조·선택 장치 묶음이며 모드나 Player 사본이 아니다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
     private TerrainGenerationInputs? _generation;
 
+    /// <summary>같은 군도·확장 owner를 공유하는 군집 상태다. 생성 입력 연결 때 함께 보관하며 일반 생성의 군도 검사가 읽는다. 2026-11-10 R4 F2c 정상 생성 본체에서 추가됐다.</summary>
+    private FarmClusterState? _farm;
+
     /// <summary>같은 실제 저장소를 묶고 타입·지역 연결을 확인한다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
     /// <param name="chunks">같은 실제 월드의 청크 지도다.</param>
     /// <param name="islands">같은 실제 월드의 섬 목록이다.</param>
@@ -388,6 +393,70 @@ public sealed class RawNormalTerrainWorldBinding
         PostprocessCurrentFarms(selectedRegion, place);
     }
 
+    /// <summary>
+    /// 원본 일반 context의 성장·초기 도장까지이며 군집 postpass 전에 끝난다.
+    /// 근거: cpppj/src/client/RawNormalTerrainWorldBinding.cpp Generate. (2026-11-10 R4 F2c 정상 생성 본체에서 추가했다)
+    /// </summary>
+    /// <param name="request">소유자·청크 범위·선택 지역과 확인한 정상 분기다.</param>
+    /// <param name="random">도장이 소비하는 게임 난수다. 월드 조립 때 실제 난수를 넘긴다.</param>
+    /// <param name="crt">도장이 소비하는 공유 CRT holdrand 상자다. 월드 조립 때 실제 상자를 넘긴다.</param>
+    /// <param name="world">도장의 생성·owner·Pop·지역 효과다. ChunkRegion·Assertion은 현재 지도·진단으로 덮는다.</param>
+    /// <param name="place">같은 군집 몸체의 배치 효과다.</param>
+    /// <returns>도장이 만든 마지막 SID다.</returns>
+    public int Generate(NormalTerrainRequest request, NetstormRandom random, UIntBox crt, TerrainStampHooks world, Action<FortRandomRectangle, int, uint> place)
+    {
+        ArgumentNullException.ThrowIfNull(random);
+        ArgumentNullException.ThrowIfNull(crt);
+        ArgumentNullException.ThrowIfNull(world);
+        ArgumentNullException.ThrowIfNull(place);
+        RawNormalTerrainChecks.RequireBranch(request);
+        if (_farm is null)
+            throw new InvalidOperationException("실제 지형 생성 군집 미연결");
+        RequireNormal(_farm);
+        RawNormalTerrainChecks.RequireBounds(request);
+        if (_diagnostics.Context is null)
+            throw new InvalidOperationException("실제 지형 context 진단 미연결");
+        var context = new RawTerrainContext(_pool.Edition, request.Owner, request.SelectedRegion, request.Bounds, _globals, _diagnostics.Context);
+        var growth = new RawTerrainGrowth(context, _chunks, _globals);
+        growth.RunNormal();
+        int last = StampContext(context, random, crt, world);
+        PostprocessCurrentFarms(request.SelectedRegion, place);
+        return last;
+    }
+
+    /// <summary>
+    /// context를 도장·보정하고 같은 실제 월드에 실행한다.
+    /// 근거: cpppj/src/client/RawNormalTerrainWorldBinding.cpp StampContext. (2026-11-10 R4 F2c 정상 생성 본체에서 추가했다)
+    /// C# 도장은 GameRandom 대신 NetstormRandom과 CRT 읽기·쓰기 대리자를 받으므로 호출자가 넘긴다.
+    /// </summary>
+    /// <param name="context">도장할 성장 context다.</param>
+    /// <param name="random">도장이 소비하는 게임 난수다.</param>
+    /// <param name="crt">도장이 소비하는 공유 CRT holdrand 상자다.</param>
+    /// <param name="world">도장의 생성·owner·Pop·지역 효과다. ChunkRegion·Assertion은 현재 지도·진단으로 덮는다.</param>
+    /// <returns>도장이 만든 마지막 SID다.</returns>
+    public int StampContext(RawTerrainContext context, NetstormRandom random, UIntBox crt, TerrainStampHooks world)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(random);
+        ArgumentNullException.ThrowIfNull(crt);
+        ArgumentNullException.ThrowIfNull(world);
+        context.MarkEdges('x', (byte)'=');
+        var effects = new TerrainStampHooks
+        {
+            Create = world.Create,
+            SetOwner = world.SetOwner,
+            Pop = world.Pop,
+            SetRegion = world.SetRegion,
+            ChunkRegion = (x, y) => unchecked((sbyte)_chunks.At(x, y).Island),
+            Assertion = _diagnostics.Stamp,
+        };
+        var stamp = new RawTerrainStamp(_pool, _types, _frames, context.Map, random,
+            () => crt.Value, value => crt.Value = value, _stamp, effects);
+        stamp.Stamp((sbyte)'x');
+        context.NormalizeAfterStamp();
+        return context.Map.LastSid;
+    }
+
     /// <summary>현재 장기 전역·Player 장치의 수명은 이 소비자보다 길어야 하며 누락 분기를 일반으로 대신하지 않는다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.</summary>
     /// <param name="farm">같은 군도·확장 owner를 공유할 군집 상태다. 기존 빌림은 첫 연결 때 덮어쓴다(단일 owner 한계).</param>
     /// <param name="inputs">보관할 상위 입력 묶음이다. 상자·대리자·성장은 공유하고 플래그는 복사한다.</param>
@@ -409,6 +478,7 @@ public sealed class RawNormalTerrainWorldBinding
         // 원문처럼 군집의 두 포인터를 입력의 같은 주소로 교체한다. 기존 Func 빌림은 첫 연결 때 덮어쓴다.
         farm.SharedArchipelago = () => inputs.Archipelago.Value;
         farm.SharedArchipelagoSpan = () => inputs.Span.Value;
+        _farm = farm;
         _generation = inputs.Clone();
     }
 
@@ -420,4 +490,113 @@ public sealed class RawNormalTerrainWorldBinding
     /// <returns>보관한 입력 묶음이다.</returns>
     public TerrainGenerationInputs GenerationInputs() =>
         _generation ?? throw new InvalidOperationException("실제 지형 생성 상위의 현재 전역/장치 미연결");
+
+    /// <summary>
+    /// 후보 조건보다 먼저 캐시하고 PATCH layout·두 spacing과 constructor 뒤 현재값을 쓴다.
+    /// 근거: cpppj/src/client/RawNormalTerrainWorldBinding.cpp GenerateOriginal. (2026-11-10 R4 F2c 정상 생성 본체에서 추가했다)
+    /// 32비트 감김 곱셈·뺄셈과 signed 나눗셈은 원본 비트 해석 그대로 unchecked에서 계산한다.
+    /// </summary>
+    /// <param name="owner">생성 요청 소유자다.</param>
+    /// <param name="bounds">청크 범위다.</param>
+    /// <param name="selectedRegion">현재 noRegion이면 모든 섬의 후처리를 실행한다.</param>
+    /// <param name="random">도장이 소비하는 게임 난수다.</param>
+    /// <param name="crt">도장이 소비하는 공유 CRT holdrand 상자다.</param>
+    /// <param name="world">도장의 생성·owner·Pop·지역 효과다. ChunkRegion·Assertion은 현재 지도·진단으로 덮는다.</param>
+    /// <param name="place">같은 군집 몸체의 배치 효과다.</param>
+    /// <returns>도장이 만든 마지막 SID다.</returns>
+    public int GenerateOriginal(uint owner, ChunkRect bounds, int selectedRegion, NetstormRandom random, UIntBox crt, TerrainStampHooks world, Action<FortRandomRectangle, int, uint> place)
+    {
+        ArgumentNullException.ThrowIfNull(random);
+        ArgumentNullException.ThrowIfNull(crt);
+        ArgumentNullException.ThrowIfNull(world);
+        ArgumentNullException.ThrowIfNull(place);
+        TerrainGenerationInputs input = GenerationInputs();
+        bool candidate = input.Enabled.IsEnabled && input.Battle.IsEnabled && !input.Mission.IsEnabled && _islands.Count() == 1u;
+        RequireStorage();
+        if (_diagnostics.Context is null)
+            throw new InvalidOperationException("실제 지형 context 진단 미연결");
+        var context = new RawTerrainContext(_pool.Edition, owner, selectedRegion, bounds, _globals, _diagnostics.Context);
+        var growth = new RawTerrainGrowth(context, _chunks, _globals, input.Growth);
+        bool cd = _pool.Edition == OriginalEdition.Cd1072;
+        if (!cd && input.Layout is null)
+            throw new InvalidOperationException("지형 root의 현재 layout 미연결");
+        bool archipelago = cd ? candidate : input.Layout!() == 0 && candidate;
+        if (archipelago)
+        {
+            int extension;
+            if (cd)
+            {
+                // CD는 기존 span을 쓰고 mapSize를 따로 조회하지 않는다.
+                extension = input.Span.Value;
+            }
+            else
+            {
+                if (input.Spacing is null)
+                    throw new InvalidOperationException("지형 root의 현재 spacing 조회 미연결");
+                extension = unchecked((int)unchecked(unchecked((uint)input.Spacing()) - 2u));
+                int spacing = input.Spacing();
+                input.Span.Value = spacing == 3 ? 1 : spacing == 4 ? 2 : 3;
+            }
+
+            context.ArchipelagoMode = 1u;
+            ChunkRect before = context.Chunks;
+            context.SetBounds(new ChunkRect(
+                unchecked((int)unchecked(unchecked((uint)before.Left) - unchecked((uint)extension) + 1u)),
+                unchecked((int)unchecked(unchecked((uint)before.Top) - unchecked((uint)extension) + 1u)),
+                unchecked((int)unchecked(unchecked((uint)before.Right) + unchecked((uint)extension))),
+                unchecked((int)unchecked(unchecked((uint)before.Bottom) + unchecked((uint)extension)))));
+            uint scatterWidth = unchecked(unchecked((uint)input.Span.Value) * 2u + 2u);
+            growth.Scatter(unchecked(unchecked((int)unchecked(scatterWidth * scatterWidth * 0x55u)) / 0x19));
+            uint seed = unchecked(growth.FirstChunkSeed() * 0x1bbu);
+            ChunkRect grown = context.Chunks;
+            uint area = unchecked(unchecked(unchecked((uint)grown.Bottom) - unchecked((uint)grown.Top)) * unchecked(unchecked((uint)grown.Right) - unchecked((uint)grown.Left)) * 0x100u);
+            uint target;
+            if (input.Percent.Value == 0u)
+            {
+                int high = unchecked((int)unchecked(unchecked((uint)input.Maximum.Value) * area)) / 200;
+                int low = unchecked((int)unchecked(unchecked((uint)input.Minimum.Value) * area)) / 200;
+                int first = growth.NextRange(ref seed, low, high);
+                int second = growth.NextRange(ref seed, low, high);
+                target = unchecked(unchecked((uint)first) + unchecked((uint)second));
+            }
+            else
+            {
+                target = unchecked((uint)unchecked(unchecked((int)unchecked(input.Percent.Value * area)) / 100));
+            }
+
+            if (input.LogPercent is null)
+                throw new InvalidOperationException("지형 root의 현재 백분율 로그 미연결");
+            if (area == 0u)
+                throw new DivideByZeroException("지형 root의 원문 백분율 0 나눗셈");
+            input.LogPercent(unchecked(unchecked((int)unchecked(target * 100u)) / unchecked((int)area)));
+            growth.GrowRectangle(0, context.Chunks, unchecked((int)target), ref seed);
+            if (input.Subscriber is null)
+                throw new InvalidOperationException("지형 root의 현재 Player 미연결");
+            // 매 반복에서 현재 Player base의 subscriber를 다시 읽는다.
+            for (int player = 1; player <= 8; player++)
+            {
+                if (input.Subscriber(player) == 0u)
+                    continue;
+                if (input.Placement is null)
+                    throw new InvalidOperationException("지형 root의 선택 칸 실제 배치 미연결");
+                // 원문 0x107/WORD0의 정확한 BYTE이며 추가 DWORD 상위16을 포함하지 않는다.
+                byte[] record = [7, 1, 0, 0, 0, 0];
+                ChunkRect placement = input.Placement(player, record);
+                growth.ClearPlacement(placement);
+            }
+
+            growth.FixGaps(1);
+            growth.RemoveSparse();
+        }
+        else
+        {
+            growth.RunNormal();
+        }
+
+        int last = StampContext(context, random, crt, world);
+        if (archipelago)
+            input.Archipelago.Value = 1u;
+        PostprocessCurrentFarms(selectedRegion, place);
+        return last;
+    }
 }
