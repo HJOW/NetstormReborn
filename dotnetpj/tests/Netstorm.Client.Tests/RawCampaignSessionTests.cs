@@ -351,6 +351,27 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미연결", Assert.Throws<InvalidOperationException>(() => session.GameMenuReloadSid(true, 0u)).Message);
     }
 
+    /// <summary>미적재 생산 동기화를 적재 관문에서 거부하는지 검증한다. 2026-11-10 F3 세션 생산 동기화 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ProductionSyncRejectsWhenNotLoaded()
+    {
+        // 적재 전 생산 동기화는 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.SynchronizeProductionContents());
+        Assert.Contains("미적재", error.Message);
+    }
+
+    /// <summary>적재 뒤 생산 동기화를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 생산 동기화 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ProductionSyncRejectsWhenUnconnected()
+    {
+        // 실제 Deck 동기화 본체는 Fort 본체 단위에서 잇는다(결정 6).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.SynchronizeProductionContents());
+        Assert.Contains("미연결", error.Message);
+    }
+
     /// <summary>보고서가 월드와 같은 첫 줄을 보이는지 검증한다. 2026-11-10 F3 세션 보고서 위임 이식에서 추가됐다.</summary>
     [Fact]
     public void ReportDelegatesToWorld()

@@ -271,6 +271,18 @@ public sealed class RawCampaignSession
         throw new InvalidOperationException("실제 재장전 목록 미연결");
     }
 
+    /// <summary>같은 실제 Deck의 생산 동기화만 같은 실제 후반 HUD 설치에 허용한다. 껍데기에서는 Deck 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 생산 동기화 Stub 이식에서 추가됐다.</summary>
+    public void SynchronizeProductionContents()
+    {
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 생산 동기화입니다.");
+        }
+
+        // 원본 43ec00의 실제 Deck 동기화 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 생산 동기화 미연결");
+    }
+
     /// <summary>원본 첫 목록 또는 두 번째 목록의 현재 저장소 뷰에서 지정 번호를 읽는다. 껍데기에서는 목록 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 게임메뉴 재장전 Stub 이식에서 추가됐다.</summary>
     /// <param name="second">참이면 두 번째 목록(temples), 거짓이면 첫 목록(outposts)이다.</param>
     /// <param name="index">읽을 번호다.</param>
