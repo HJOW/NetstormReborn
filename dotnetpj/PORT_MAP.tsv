@@ -667,3 +667,5 @@ cpppj/src/client/RawChatPacket.cpp	Netstorm.Client/Chat/RawChatPacket.cs	3667594
 cpppj/src/client/RawChatPacket.h	Netstorm.Client/Chat/RawChatPacket.cs	3667594cde709036189e41f5afbd1d82b770afbf	port
 cpppj/src/client/RawChatReceive.cpp	Netstorm.Client/Chat/RawChatReceive.cs	fc5bec1cce4358a9173b304384389e5a746a703d	port
 cpppj/src/client/RawChatReceive.h	Netstorm.Client/Chat/RawChatReceive.cs	fc5bec1cce4358a9173b304384389e5a746a703d	port
+cpppj/src/client/ChatNameCompletion.cpp	Netstorm.Client/Chat/ChatNameCompletion.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port
+cpppj/src/client/ChatNameCompletion.h	Netstorm.Client/Chat/ChatNameCompletion.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port
