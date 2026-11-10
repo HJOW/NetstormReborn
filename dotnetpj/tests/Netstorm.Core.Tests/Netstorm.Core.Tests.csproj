@@ -222,6 +222,7 @@
     <None Include="../../../cpppj/tests/fixtures/player-core-refresh-guard-x86.tsv" Link="X86/player-core-refresh-guard-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/bridgeconnect-x86.tsv" Link="X86/bridgeconnect-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/islandlifecycle-x86.tsv" Link="X86/islandlifecycle-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/islandpostpop-x86.tsv" Link="X86/islandpostpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/canonterrain-x86.tsv" Link="X86/canonterrain-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/priestterrain-x86.tsv" Link="X86/priestterrain-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/saved-state-read-x86.tsv" Link="X86/saved-state-read-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
