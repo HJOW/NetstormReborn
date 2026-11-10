@@ -982,7 +982,7 @@ cpppj/src/o/Template.cpp	port	www/assets/fort.js	1f00a25a	partial	[o-default] WB
 cpppj/src/o/TerrainBuilder.cpp	port	www/assets/terrain-mask.js;www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] WB03-W/X 본섬 마스크·지면
 cpppj/src/o/TypeConstructors.inc	port	www/core/squid-constructors.js	1f00a25a	port	[o-default] WB04-D4(생성자 주소 188칸, cpppj .inc 에서 생성)
 cpppj/src/o/TypeLoadOrder.cpp	port	www/assets/type-table.js	1f00a25a	port	[o-default] WB03-T 로딩 순서
-cpppj/src/o/TypeParser.cpp	port	www/assets/type-table.js	1f00a25a	partial	[o-default] .type 정의 해석(프레임 코드·특수 프레임·기준점)
+cpppj/src/o/TypeParser.cpp	port	www/assets/type-table.js	1f00a25a	port	[o-default] .type 정의 해석(프레임 코드·특수 프레임·기준점·문법). WB04-E267: 기준선 판과 대조해 클러스터 images(파일+번호)·속성 조회(typeProperty/Number/String)·발자국(typeFootprint)을 더하고 AssetTests TypeParser 두 시험(샘플 정의 전부·거부 5종)과 숫자 토큰/주석/NUL 절단을 재현(tests/type-parser.test.mjs 6건, 변형 11개 전부 탐지). 기준선 뒤 변경 없음
 cpppj/src/o/UnpopVtables.inc	port	www/core/squid-vtables.js	1f00a25a	port	[o-default] WB04-D2(지원 자산 VT 83칸)
 cpppj/src/o/Win32FileError.cpp	exclude-host			-	[host-win32]
 cpppj/src/o/Xlat.cpp	port	www/assets/xlat.js	cd63f421	partial	[o-default] 용어표 조회. 10.78 다중 장부(RawXlat)는 www/core/raw-xlat.js 로 WB04-E242 에서 별도 이식(웹 assets/xlat.js 는 UTF-8 용어표 계층으로 남김) / 3-E 판정(WB04-E259, 기준 4789039e): ① — TranslateView(string_view 반환)는 C++ 메뉴 포인터 정체성 보존용이며 JS 문자열에는 해당 없음

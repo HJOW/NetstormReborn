@@ -192,6 +192,41 @@ function readFrameCode(label, lexer) {
     return { side: label.charCodeAt(0), variant: letters === 1 ? 0x50 : label.charCodeAt(1), number: frameNumber(number), flags: 0 };
 }
 
+// 정의의 속성을 이름(ASCII 대소문자 무시)으로 조회한다. 같은 이름이 여러 번이면 마지막 지정값이 이기고 없으면 null 이다(cpppj RiftTypeDefinition::Property). (2026-11-10 WB04-E267)
+export function typeProperty(definition, name) {
+    const lower = name.toLowerCase();
+    // 뒤에서 찾으면 같은 속성의 마지막 지정값을 얻는다.
+    for (let i = definition.properties.length - 1; i >= 0; i -= 1) {
+        if (definition.properties[i].name.toLowerCase() === lower) return definition.properties[i];
+    }
+    return null;
+}
+
+// 숫자형 속성만 돌려준다(문자형은 자동 변환하지 않고 null). (2026-11-10 WB04-E267: cpppj RiftTypeDefinition::Number)
+export function typeNumber(definition, name) {
+    const property = typeProperty(definition, name);
+    return property && typeof property.value === 'number' ? property.value : null;
+}
+
+// 문자형 속성만 돌려준다(숫자형은 자동 변환하지 않고 null). (2026-11-10 WB04-E267: cpppj RiftTypeDefinition::String)
+export function typeString(definition, name) {
+    const property = typeProperty(definition, name);
+    return property && typeof property.value === 'string' ? property.value : null;
+}
+
+// 정의의 foot_x/foot_y 를 0 쪽으로 버린 정수 [x, y] 로 돌려준다(없으면 0, 정상 정수 범위 밖은 오류, foot_y 6 은 8). (2026-11-10 WB04-E267: cpppj RiftTypeDefinition::Footprint)
+export function typeFootprint(definition) {
+    const result = [0, 0];
+    // 두 축을 원본처럼 버림 변환한다.
+    ['foot_x', 'foot_y'].forEach((name, axis) => {
+        const number = Math.trunc(typeNumber(definition, name) ?? 0);
+        if (number < -2147483648 || number > 2147483647) throw new Error('발자국이 정수 범위를 벗어났습니다.');
+        result[axis] = number;
+    });
+    if (result[1] === 6) result[1] = 8;
+    return result;
+}
+
 // `.type` 문법 하나를 읽어 정의로 만든다(원본 0049c3b0 의 문법·프레임 코드·특수 프레임 부분).
 // 반환: { name, constructorWords, flags[], properties[{ name, value }], clusters[{ name, code, imageCount }], defaultFrame, gumpFrame, helpFrame, baseFrame }.
 // 읽는 순서: `typename 이름 [단어…] [typeflags 단어… ;] { 키 = 값 ; … }` 다음에 클러스터 줄들이 파일 끝까지 이어진다.
@@ -246,17 +281,16 @@ export function parseTypeDefinition(text) {
                 hasHelp = true;
             }
         }
-        // 그림 참조(`: "파일.gif" #번호`)가 하나 이상 이어진다. 이름은 빌드용 참조일 뿐이라 개수만 센다(레이어 수).
-        let imageCount = 0;
+        // 그림 참조(`: "파일.gif" #번호`)가 하나 이상 이어진다. 파일 이름과 번호는 참조로 보관하고(cpppj TypeCluster.images, 2026-11-10 WB04-E267), 개수가 레이어 수이다.
+        const images = [];
         do {
             lexer.expect(':');
-            lexer.take('string');
+            const file = lexer.take('string');
             lexer.expect('#');
-            lexer.takeNumber();
-            imageCount += 1;
+            images.push({ file, number: lexer.takeNumber() });
         } while (lexer.current.kind === 'punct' && lexer.current.text === ':');
         lexer.expect(';');
-        type.clusters.push({ name: label, code, imageCount });
+        type.clusters.push({ name: label, code, imageCount: images.length, images });
     }
     return type;
 }
