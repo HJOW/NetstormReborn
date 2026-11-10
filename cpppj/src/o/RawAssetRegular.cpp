@@ -224,47 +224,53 @@ float RawAssetRegular::Geyser(Sid sid,std::uint32_t event,std::uint32_t count,fl
     return DamageableHandle(sid,event,count,payload);
 }
 // 실제 신전의 event0 Ascend 정리·event1/2 애니메이션·event3/4 이탈 처리를 같은 필드/목록으로 실행한다.
-float RawAssetRegular::Vortex(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
-    const bool patch=pool_.Edition()==OriginalEdition::Patch1078;const auto ownerOffset=patch ? 34U : 32U;
-    if (event==0) { Require(hooks_.ascendTick,"신전 Ascend 정리 Handle 누락");return hooks_.ascendTick(sid,count) ? payload : -1.0f; }
+float RunVortexRegular(SidPool& pool,std::span<const RiftTypeFrames> frames,AssetRegularState& state,const AssetRegularHooks& hooks,const VortexRegularDevices& devices,const RegularHandler& damageable,Sid sid,std::uint32_t event,std::uint32_t count,float payload) {
+    const auto currentFrame=[&pool,sid] { return pool.Edition()==OriginalEdition::Patch1078 ? std::bit_cast<std::int32_t>(Read(pool.Slot(sid),36)):static_cast<std::int32_t>(pool.Slot(sid)[34]); }; // 현재 raw 프레임 폭만 읽으며 표시 장치는 조회하지 않는다.
+    const bool patch=pool.Edition()==OriginalEdition::Patch1078;const auto ownerOffset=patch ? 34U : 32U;
+    if (event==0) { Require(hooks.ascendTick,"신전 Ascend 정리 Handle 누락");return hooks.ascendTick(sid,count) ? payload : -1.0f; }
     if (event==1) {
         auto delta=1;
-        if (state_.fortMode) { const auto type=pool_.Slot(sid)[10];const auto side=RawPathAnimation::Side(frames_[type],CurrentFrame(sid));delta=Add(frames_[type].Run(static_cast<std::uint8_t>(side)).count,-1); }
-        advance_.Advance(sid,delta,kFrameUpdateAlternate);return payload;
+        if (state.FortMode()) { const auto type=pool.Slot(sid)[10];const auto side=RawPathAnimation::Side(frames[type],currentFrame());delta=Add(frames[type].Run(static_cast<std::uint8_t>(side)).count,-1); }
+        Require(devices.advance,"신전 현재 프레임 진행 미연결");devices.advance(sid,delta,kFrameUpdateAlternate);return payload;
     }
     if (event==2) {
-        if ((count&31U)==31U) { setter_.Set(sid,0,kFrameUpdateAlternate);return 2.0f; }
-        if (!CurrentFrame(sid)) setter_.Set(sid,1,kFrameUpdateAlternate);
-        advance_.Advance(sid,static_cast<std::int32_t>(random_.Next(2)+1),kFrameUpdateAlternate);return 0.1f;
+        if ((count&31U)==31U) { Require(devices.frame,"신전 현재 프레임 지정 미연결");devices.frame(sid,0,kFrameUpdateAlternate);return 2.0f; }
+        if (!currentFrame()) { Require(devices.frame,"신전 현재 프레임 지정 미연결");devices.frame(sid,1,kFrameUpdateAlternate); }
+        Require(devices.random,"신전 현재 게임 난수 미연결");Require(devices.advance,"신전 현재 프레임 진행 미연결");devices.advance(sid,static_cast<std::int32_t>(devices.random(2)+1),kFrameUpdateAlternate);return 0.1f;
     }
     if (event==3) {
         const auto signedCount=std::bit_cast<std::int32_t>(count);
-        if (!count && Read(pool_.Slot(sid),12,2)==2) return 0.0f;
-        Require(hooks_.countForeignOwnedIslands,"신전 이탈 다른 소유자 섬 조회 누락");
-        if (!count) { Require(hooks_.playerLeavingNotice,"신전 이탈 알림 누락");if (hooks_.state) hooks_.state(sid,2);else Write(pool_.AllocatedBytes(sid),12,2,2);hooks_.playerLeavingNotice(pool_.Slot(sid)[ownerOffset]); }
-        static_cast<void>(hooks_.countForeignOwnedIslands(pool_.Slot(sid)[ownerOffset]));
-        if (signedCount<(state_.Boss() ? 3 : 23)) return 1.0f;
-        if (!(hooks_.suppressLeaveRequest ? hooks_.suppressLeaveRequest() : state_.suppressLeaveRequest)) {
-            Require(hooks_.islandNumber,"신전 이탈 섬 조회 누락");Require(hooks_.requestLeave,"신전 이탈 요청 누락");
-            const auto raw=pool_.Slot(sid);const auto island=hooks_.islandNumber(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
-            hooks_.requestLeave(sid,island&255U);if (pool_.Slot(sid)[11]&1U) return -1.0f;
+        if (!count && Read(pool.Slot(sid),12,2)==2) return 0.0f;
+        Require(hooks.countForeignOwnedIslands,"신전 이탈 다른 소유자 섬 조회 누락");
+        if (!count) { Require(hooks.playerLeavingNotice,"신전 이탈 알림 누락");if (hooks.state) hooks.state(sid,2);else Write(pool.AllocatedBytes(sid),12,2,2);hooks.playerLeavingNotice(pool.Slot(sid)[ownerOffset]); }
+        static_cast<void>(hooks.countForeignOwnedIslands(pool.Slot(sid)[ownerOffset]));
+        if (signedCount<(state.Boss() ? 3 : 23)) return 1.0f;
+        if (!(hooks.suppressLeaveRequest ? hooks.suppressLeaveRequest() : state.suppressLeaveRequest)) {
+            Require(hooks.islandNumber,"신전 이탈 섬 조회 누락");Require(hooks.requestLeave,"신전 이탈 요청 누락");
+            const auto raw=pool.Slot(sid);const auto island=hooks.islandNumber(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
+            hooks.requestLeave(sid,island&255U);if (pool.Slot(sid)[11]&1U) return -1.0f;
         }
         return 0.0f;
     }
     if (event==4) {
         const auto signedCount=std::bit_cast<std::int32_t>(count);
-        if (!count) { if (hooks_.state) hooks_.state(sid,4);else Write(pool_.AllocatedBytes(sid),12,4,2); }
-        if (!state_.checkingForms && static_cast<float>(signedCount)<=4.0f) return 1.0f;
-        const auto raw=pool_.Slot(sid);
-        if (hooks_.descend) hooks_.descend(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
+        if (!count) { if (hooks.state) hooks.state(sid,4);else Write(pool.AllocatedBytes(sid),12,4,2); }
+        if (!state.checkingForms && static_cast<float>(signedCount)<=4.0f) return 1.0f;
+        const auto raw=pool.Slot(sid);
+        if (hooks.descend) hooks.descend(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
         else { // 기존 독립 fixture의 명시 입력 경계만 보존한다. 실제 Client는 위의 Descend 본체를 사용한다.
-            Require(hooks_.regionNumber,"신전 event4 지역 조회 누락");Require(hooks_.removeAnimation,"신전 event4 통지 누락");
-            const auto region=hooks_.regionNumber(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
-            const auto token=(state_.regionGeneration<<16)|region;hooks_.removeAnimation(state_.animationType,token);
+            Require(hooks.regionNumber,"신전 event4 지역 조회 누락");Require(hooks.removeAnimation,"신전 event4 통지 누락");
+            const auto region=hooks.regionNumber(std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18)));
+            const auto token=(state.regionGeneration<<16)|region;hooks.removeAnimation(state.animationType,token);
         }
-        if (hooks_.state) hooks_.state(sid,0);else Write(pool_.AllocatedBytes(sid),12,0,2);return 0.0f;
+        if (hooks.state) hooks.state(sid,0);else Write(pool.AllocatedBytes(sid),12,0,2);return 0.0f;
     }
-    return DamageableHandle(sid,event,count,payload);
+    Require(damageable,"신전 현재 Damageable 부모 미연결");return damageable(sid,event,count,payload);
+}
+// 독립 Typed는 기존 효과와 같은 현재 멤버를 읽고 공통 원문 본문에만 위임한다.
+float RawAssetRegular::Vortex(Sid sid,std::uint32_t event,std::uint32_t count,float payload) const {
+    VortexRegularDevices devices;devices.frame=[this](auto parent,auto frame,auto flags) { setter_.Set(parent,frame,flags); };devices.advance=[this](auto parent,auto delta,auto flags) { static_cast<void>(advance_.Advance(parent,delta,flags)); };devices.random=[this](auto limit) { return random_.Next(limit); };
+    return RunVortexRegular(pool_,frames_,state_,hooks_,devices,[this](auto parent,auto code,auto times,auto value) { return DamageableHandle(parent,code,times,value); },sid,event,count,payload);
 }
 // Damageable의 기본 사건만 payload 반환을 사용한다. 지정된 두 사건은 실제 하위 효과를 요구한다.
 float RawAssetRegular::DamageRegular(Sid sid,std::uint32_t count,bool native) const { //사건판정뒤실제피해지면/HP/현재genus본문을같은원문순서로공유한다.

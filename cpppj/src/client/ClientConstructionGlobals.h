@@ -7,6 +7,8 @@
 #include "o/RawIslandRuntime.h" //신전/영역삭제가같은섬실행기와현재Player를공유한다.
 #include "o/RawRegionPaint.h" //도장캐시/영향목록과실제전체투표를장기로보유한다.
 #include "o/RawVortexOwner.h" //신전의실제Player/섬/투표가상소유자부모다.
+#include "o/RawVortexAscend.h" // 신전 상승도 같은 장기 섬/난수/삭제를 사용한다.
+#include <vector> // 중첩 상승 Tick의 실제 후보 버퍼를 각각 보유한다.
 #include "o/RawVortexPreDestroy.h" //네신전의실제전체삭제전처리를공유한다.
 
 namespace netstorm::client { // Session 상태를 복제하지 않고 같은 Client 저장소에 결합한다.
@@ -16,6 +18,7 @@ class ClientSpGlobals; //초기화/난수 소비 없이 같은 실제 SP 저장�
 class ClientPlayerRecords; //현재 Player base를 원문 선택 위치에서만 읽는 실제 할당 owner다.
 class ClientRandomGlobals; //메뉴/SP/현재게임과같은실제난수한개를보유한다.
 class ClientKencloudGlobals; //같은실제0059a8b0의수명을섬/영역본체보다오래유지한다.
+struct RawSurfaceVortexDevices; // 장기 신전 정기가 같은 실제 Construction owner를 빌리는 장치다.
 class Client; //현재 Config/시계/Renderer/Tell을 실제 Client 장치로 연결한다.
 // Session/World 없이 소비할 수 있는 실제 현재 Client 장치다. 큰 게임 효과와 분리한다.
 struct ClientConstructionDevices {
@@ -71,6 +74,8 @@ public:
     o::RawRegionOwnership& Regions(); //같은실제두목록과현재TYPE/도장으로전체투표를한번조립한다.
     o::RawVortexOwner& VortexOwner(); //같은현재Player/섬/영역/생산장치의실제신전가상74다.
     o::RawVortexPreDestroy& VortexPre(); //현재두목록/섬/영역/실제Damageable/Player후처리를공유한다.
+    o::RawVortexAscend& VortexAscend(); // 같은 실제 섬/난수/현재 noIsland 역할과 가상 삭제를 공유한다.
+    o::VortexAscendState& VortexAscendGlobals(); // Session 생성/반납으로 초기화하지 않는 현재 역할 뷰다.
     std::int32_t IslandNumber(float x,float y); //원문4f530의편향/snap뒤현재hash0지역을조회한다.
     std::uint32_t PlaceRandomSingle(o::GameRandom& random,const o::FortRandomPlaceRequest& request); //원문의단일전체배치를같은장기Factory/HP/가상owner/Pop에연결한다.
     void PlaceBattleNuggets(o::FortRandomRectangle rectangle,std::uint32_t quantity); //원문의현재시각/지역seed와1000회반복단일배치를World없이조립한다.
@@ -108,9 +113,13 @@ private:
     std::unique_ptr<o::RawCanonPlacementTerrain> regionTerrain_; //같은metadata/hash/현재타입보다먼저반납한다.
     std::unique_ptr<o::RawRegionOwnership> regions_; //현재두목록/도장상태의주소를고정한다.
     std::unique_ptr<o::RawVortexOwner> vortexOwner_; //같은Player/섬/투표를빌리며Session주소를보유하지않는다.
+    o::VortexAscendState vortexAscendState_; // 현재 noIsland 역할을 장기 Storage에서 빌린다.
+    std::vector<std::unique_ptr<std::uint8_t[]>> vortexCandidateBuffers_; // 각 중첩 Tick의 실제80BYTE 확보/반납을 별도로 보존한다.
+    std::unique_ptr<o::RawVortexAscend> vortexAscend_; // 장기 섬/물리/난수/버퍼보다 먼저 반납한다.
     std::unique_ptr<o::RawVortexPreDestroy> vortexPre_; //동일실제Damageable/목록/현재Player를선택한다.
     std::unique_ptr<RawCampaignConstructionBindings> body_; //전체 건설/Bounds/최근 목록 본체를 Client 수명에 보유하고 State/backing보다 먼저 반납한다.
     std::unique_ptr<o::RawCanonPlacementPipeline> placementPipeline_; //같은상태/물리보다먼저반납하며World/Session을캡처하지않는다.
     std::unique_ptr<o::RawGemReward> gemReward_; //같은난수/제외목록/전역보다먼저반납하며Session주소를보유하지않는다.
 };
+RawSurfaceVortexDevices MakeClientVortexDevices(const std::shared_ptr<ClientConstructionGlobals>& owner); // 첫 메뉴/Session 전에 weak 장치만 만들고 실제 섬/후처리/게임은 실행하지 않는다.
 }

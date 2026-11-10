@@ -75,7 +75,7 @@
 #include <vector>
 #include <optional>
 
-namespace netstorm::o { class RawFlare;class RawDudeRegular;class RawDudeBehavior;class RawDudeTask;struct TerrainBitmapState;class RawBuriedPostPop;class RawBuriedRegular; } //장기본문의완전형식은Storage구현에서만필요하다.
+namespace netstorm::o { struct AssetRegularState;class RawFlare;class RawDudeRegular;class RawDudeBehavior;class RawDudeTask;struct TerrainBitmapState;class RawBuriedPostPop;class RawBuriedRegular; } //장기본문의완전형식은Storage구현에서만필요하다.
 namespace netstorm::client {
 class GameAssets; // 실제 Client가 먼저 읽은 자산의 정체성을 물리 저장소와 공유한다.
 class ClientPlayerRecords; // 현재 Player 배열을 조회할 때만 수명을 pin하는 실제 장기 owner다.
@@ -128,6 +128,17 @@ struct RawSurfaceFactoryBindings { // 큰 업그레이드/플레어만 현재 Wo
     std::function<float(o::Sid)> finish; // 기존 전체 완료/현재AI 통지 본문이다.
     std::function<void(o::Sid,std::int32_t,std::uint32_t)> flare; // 실제 현재 플레어 생성기다.
     std::function<std::shared_ptr<void>()> pin; // 선택 호출 동안 실제 전체 Runtime을 보유한다.
+};
+struct RawSurfaceVortexDevices { // 같은 장기 Construction owner를 실제 선택 호출 동안만 pin한다.
+    std::function<bool(o::Sid,std::uint32_t)> ascend; // 기존 전체 RawVortexAscend::Tick이다.
+    std::function<std::uint32_t(std::uint32_t)> foreignIslands; // 실제 현재 섬 count/존재/owner 순회를 사용한다.
+    std::function<std::uint32_t(float,float)> islandNumber; // 같은 현재 Hash0/지형의 원문 지역 getter다.
+};
+struct RawSurfaceVortexBindings { // 큰 이탈 UI/실제 송수신/Descend만 현재 전체 Runtime으로 빌린다.
+    std::function<void(std::uint32_t)> leavingNotice; // 현재 Player 이름과 실제 로그/채팅 안내다.
+    std::function<void(o::Sid,std::uint32_t)> leave; // 기존 방송 뒤 같은51h 수신 본문을 직접 호출한다.
+    std::function<void(float,float)> descend; // 기존 Fort 지역/현재 서버/명령 큐 본문이다.
+    std::function<std::shared_ptr<void>()> pin; // 선택된 큰 호출의 정상/예외 반환까지 전체 owner를 보유한다.
 };
 struct RawSurfaceAttackBindings { // 선택된 큰 빔/피해/분해 효과만 실제 현재 Runtime으로 빌린다.
     std::function<bool(o::Sid,o::Sid)> mayTarget; // 현재 Gun 문맥/Player+54/친군사격을 기존 실제 표적 본문으로 판정한다.
@@ -264,6 +275,9 @@ private:
     std::weak_ptr<const o::TerrainBitmapState> residenceTerrain_; // 실제 현재 fringeType 저장소의 약한 대여다.
     std::function<std::uint32_t()> residenceTheme_; // 실제 장기 설정 owner를 선택 호출할 장치다.
     std::weak_ptr<const RawSurfaceFactoryBindings> factoryRegularRuntime_; // 현재 큰 후단만 약하게 빌리고 프레임/난수는 장기 현재값을 사용한다.
+    RawSurfaceVortexDevices vortexDevices_; // Session을 캡처하지 않는 같은 장기 Construction 장치다.
+    std::weak_ptr<const RawSurfaceVortexBindings> vortexRuntime_; // 실제 현재 큰 후단만 약하게 대여한다.
+    std::unique_ptr<o::AssetRegularState> vortexState_; // 신전의 현재 모드/진단 참조를 같은 주소에 보존한다.
     std::weak_ptr<const RawSurfaceAttackBindings> attackRuntime_; // 장기 물리는 Session을 강하게 역소유하지 않는다.
     std::weak_ptr<const RawSurfacePlayerBindings> playerRegularRuntime_; // Session을 강하게 역소유하지 않는 현재 Template 후단이다.
     std::weak_ptr<const RawSurfacePriestBindings> priestRuntime_; // 전체 Session을 강하게 역소유하지 않는 현재 고유 후단이다.
@@ -395,6 +409,10 @@ public:
     o::RawManaBoltArrival& ManaArrival(); // 같은 실제 finder·Host·현재 프로세스 역할과 도착 본문이다.
     o::RawManaBoltRegular& ManaRegular(); // 현재 TYPE/프레임/SHP·카메라·가상 공간을 공유하는 유일한 Native 정기다.
     o::AltarSacrificeState& AltarState(); //00532698/69c의 같은 현재 지연/확률을 Session과 공유한다.
+    void BindVortexDevices(RawSurfaceVortexDevices devices); // 최초 메뉴 전에 실제 장기 상승/섬 getter만 결합한다.
+    void BindVortexRuntime(const std::shared_ptr<const RawSurfaceVortexBindings>& runtime); // 큰 이탈/Descend 후단을 초기화 없이 약하게 공개한다.
+    o::AssetRegularState& VortexState(); // 현재 fort/권한/진단 주소를 빌리며 값 사본을 만들지 않는다.
+    float VortexRegular(o::Sid sid,std::uint32_t event,std::uint32_t count,float payload); // 네 VT의4dc220/thunk 정기를 한 원문 본문으로 실행한다.
     void BindAttackRuntime(const std::shared_ptr<const RawSurfaceAttackBindings>& runtime); // 현재 큰 효과만 weak로 공개한다.
     SoundProcessState& SoundState(); // 같은 현재 프레임/TYPE별 중복 장부를 모든 Native 소리 호출자에게 빌린다.
     void BindAttackSound(SoundList& names,std::function<void(float,float,std::uint32_t)> sound); // 첫 Session 전에 같은 실제 이름표와 위치 소리 장치만 결합한다.
@@ -755,6 +773,7 @@ struct RawWorldRuntimeHooks {
     RawSurfaceDudeBindings dude; // 현재 기존 전체 경로 이동/진입점의 실제 Runtime이다.
     RawSurfaceResidenceBindings residence; // 기존 실제 Dude 생성/진입점/작업의 현재 Runtime 대여다.
     RawSurfaceFactoryBindings factoryRegular; // 현재 전체 업그레이드/플레어를 실제 World pin과 공개한다.
+    RawSurfaceVortexBindings vortexRegular; // 신전의 큰 현재 후단만 같은 전체 Runtime 수명으로 공개한다.
     RawSurfaceAttackBindings attacks; // 큰 빔/피해/분해만 현재 전체 Runtime 수명으로 공개한다.
     RawSurfacePlayerBindings playerRegular; // 현재 Template getter/Notify만 실제 전체 Runtime과 함께 공개한다.
     RawSurfacePriestBindings priestRegular; // 큰 고유 후단만 기존 Session 전체 수명으로 공개한다.

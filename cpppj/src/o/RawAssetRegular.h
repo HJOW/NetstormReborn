@@ -24,6 +24,8 @@ struct AssetRegularState {
     RawAuthorityState* sharedAuthority{}; // Session/물리 저장소와 같은 권한만 공유하며 예약/목록은 실행기에 남긴다.
     bool& Boss() { return sharedAuthority ? sharedAuthority->boss : boss; } // 신전 이탈 대기의 실제 비교 위치에서 읽는다.
     const bool& Boss() const { return sharedAuthority ? sharedAuthority->boss : boss; } // 독립 raw 입력의 bool fallback을 보존한다.
+    const bool* sharedFortMode{}; // Native 신전은 같은 Client의 현재00594fb8을 빌리고 독립 입력은 기존 bool을 쓴다.
+    const bool& FortMode() const { return sharedFortMode ? *sharedFortMode:fortMode; } // 사건1의 실제 분기 위치에서 현재 모드를 읽는다.
 };
 // 아직 독립 하위 모듈로 연결해야 하는 효과다. 누락 시 해당 사건을 거부하며 무효 반환으로 대신하지 않는다.
 struct AssetRegularHooks {
@@ -52,6 +54,12 @@ struct AssetRegularHooks {
     std::function<void(float,float)> descend; // event4의 실제 Fort 지역 조회→현재 서버/Descend 명령 큐다. 독립 기존 입력만 아래의 지역/애니메이션 훅을 사용한다.
     std::function<std::int32_t(Sid)> virtualCount; // PATCH Factory의 실제 현재 가상80이며 독립 입력만 확인된 base getter를 쓴다.
 };
+struct VortexRegularDevices { // 선택되지 않은 프레임/난수 장치를 선행 조회하지 않는다.
+    std::function<void(Sid,std::int32_t,std::uint32_t)> frame; // 같은 실제 Frame 지정기다.
+    std::function<void(Sid,std::int32_t,std::uint32_t)> advance; // 같은 현재 TYPE/글자 구간의 프레임 진행기다.
+    std::function<std::uint32_t(std::uint32_t)> random; // 선택 시 같은 단일 GameRandom을 소비한다.
+};
+float RunVortexRegular(SidPool& pool,std::span<const RiftTypeFrames> frames,AssetRegularState& state,const AssetRegularHooks& hooks,const VortexRegularDevices& devices,const RegularHandler& damageable,Sid sid,std::uint32_t event,std::uint32_t count,float payload); //4dc220/4dcf00의 한 원문 본문을 Native/독립 Typed가 공유한다.
 float RunNativeGeyserRegular(SidPool& pool,std::span<const RiftTypeRecord> types,Sid sid,std::uint32_t event,std::uint32_t count,float payload,const std::function<void(Sid,std::uint32_t)>& display,const RegularHandler& damageable); //485640의실제표시접두/현재비용·프레임/후행Damageable을typed본문과분리해장기owner에제공한다.
 // +5c 가상 표의 실제 주소로 몸체를 선택하고 공통 Damageable의 event 분배까지 복원한다.
 class RawAssetRegular {

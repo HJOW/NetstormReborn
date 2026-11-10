@@ -8,12 +8,16 @@
         if (core.pool.Slot(sid)[10]==gameplayGlobals->GameAux()->StateNotifyType()) core.building.NotifySurface(sid);
     }
     void InstallVortexDeparture() { // 같은 실제 자산 모듈을 만들기 전에 상승 Tick/수신/완료의 공통 하위를 구성한다.
+        if (world.Storage()->UsesNativeTransmissionDevices()) { world.Storage()->BindVortexDevices(MakeClientVortexDevices(services.constructionGlobals));vortexAscend=&services.constructionGlobals->VortexAscend(); } // 같은 장기 상태/섬/난수/가상 삭제를 빌린다.
+        else {
         vortexAscendState.sharedNoIslandType=&core.bridgeState.noIslandType;
         VortexAscendHooks ascend;ascend.islandNumber=[this](float x,float y) { return ownership->IslandNumber(x,y); };
         ascend.reserveCandidateBuffer=[this] { auto memory=std::unique_ptr<std::uint8_t[]>(new(std::nothrow) std::uint8_t[0x50]);const bool allocated=memory!=nullptr;vortexCandidateBuffers.push_back(std::move(memory));return allocated; }; // 각 중첩 Tick의 실제80BYTE 할당 수명을 별도로 보관한다.
         ascend.releaseCandidateBuffer=[this] { if (vortexCandidateBuffers.empty()) throw std::logic_error("신전 상승 후보 버퍼의 실제 수명 불일치");vortexCandidateBuffers.pop_back(); };
         ascend.destroy=[this](Sid sid,std::uint32_t flags) { world.Destroy(sid,flags); };
-        vortexAscend=std::make_unique<RawVortexAscend>(core.pool,core.hash,core.spots,core.types,*islands,random,vortexAscendState,std::move(ascend));
+        localVortexAscend=std::make_unique<RawVortexAscend>(core.pool,core.hash,core.spots,core.types,*islands,random,vortexAscendState,std::move(ascend));
+        vortexAscend=localVortexAscend.get(); // 독립 Typed의 기존 몸체 수명만 유지한다.
+        }
         VortexDepartureHooks departure;departure.assertion=[storage=world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); };
         departure.state=[this](Sid sid,std::uint16_t state) { SetVortexState(sid,state); };
         departure.readTerritory=[this](auto owner,auto records) { if (!runtime) throw std::logic_error("신전 상승의 실제 Territory reader 미설치");runtime->ReadTerritory(owner,records); };

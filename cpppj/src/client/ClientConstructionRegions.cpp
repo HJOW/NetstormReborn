@@ -7,9 +7,27 @@
 #include "client/PriestPlacementAssets.h"
 #include "o/RawVortexOwnerDiagnostic.h"
 #include <bit>
+#include <new> // 원문 new0x50의 확보 실패를 같은 선택 위치에서 보존한다.
 #include <stdexcept>
 
 namespace netstorm::client { //실제참조/함수수명만보유하고임시월드/Player를만들지않는다.
+o::VortexAscendState& ClientConstructionGlobals::VortexAscendGlobals() { // 현재 noIsland 역할의 실제 주소만 연결하며 기존 상태를 초기화하지 않는다.
+    if (!storage_) throw std::logic_error("장기 신전 상승의 실제 물리 미결합");vortexAscendState_.sharedNoIslandType=&storage_->links.noIslandType;return vortexAscendState_;
+}
+o::RawVortexAscend& ClientConstructionGlobals::VortexAscend() { // 같은 현재 섬/물리/난수와 실제 가상 삭제를 사용하는 한 본문이다.
+    if (!storage_ || !random_) throw std::logic_error("장기 신전 상승의 실제 물리/난수 owner 미결합");
+    if (!vortexAscend_) {
+        o::VortexAscendHooks hooks;hooks.islandNumber=[this](auto x,auto y) { return IslandNumber(x,y); };
+        hooks.reserveCandidateBuffer=[this] { auto memory=std::unique_ptr<std::uint8_t[]>(new(std::nothrow) std::uint8_t[0x50]);const bool allocated=memory!=nullptr;vortexCandidateBuffers_.push_back(std::move(memory));return allocated; }; // 중첩 호출별 실제80BYTE 확보 수명을 별도로 유지한다.
+        hooks.releaseCandidateBuffer=[this] { if (vortexCandidateBuffers_.empty()) throw std::logic_error("장기 신전 상승 후보 버퍼의 반납 순서 불일치");vortexCandidateBuffers_.pop_back(); };
+        hooks.destroy=[this](auto sid,auto flags) { storage_->DestroyAsset(sid,flags); }; // 실제 현재 가상 삭제를 선택하며 임시 World/성공값을 만들지 않는다.
+        vortexAscend_=std::make_unique<o::RawVortexAscend>(storage_->pool,storage_->hash,storage_->spots,storage_->types,Islands(),random_->Game(),VortexAscendGlobals(),std::move(hooks));
+    }return *vortexAscend_;
+}
+RawSurfaceVortexDevices MakeClientVortexDevices(const std::shared_ptr<ClientConstructionGlobals>& owner) { // weak 대여는 실제 선택 호출 끝까지 같은 전체 Construction을 보유한다.
+    if (!owner) throw std::invalid_argument("장기 신전의 실제 Construction owner 누락");const auto acquire=[weak=std::weak_ptr<ClientConstructionGlobals>(owner)] { const auto current=weak.lock();if (!current) throw std::logic_error("장기 신전의 실제 Construction owner 반납");return current; }; // 같은 장기 owner만 조회하고 본체/상태를 초기화하지 않는다.
+    RawSurfaceVortexDevices devices;devices.ascend=[acquire](auto sid,auto count) { const auto hold=acquire();return hold->VortexAscend().Tick(sid,count); };devices.foreignIslands=[acquire](auto ownerId) { const auto hold=acquire();return hold->VortexAscend().CountForeignOwnedIslands(ownerId); };devices.islandNumber=[acquire](auto x,auto y) { const auto hold=acquire();return std::bit_cast<std::uint32_t>(hold->IslandNumber(x,y)); };return devices;
+}
 // 최초 메뉴 전에 현재 실제 DWORD 주소만 연결하며 재결합은 같은 owner만 허용한다.
 void ClientConstructionGlobals::BindRegionContext(std::shared_ptr<ClientKencloudGlobals> kencloud) {
     if (!storage_ || !gameplay_ || !kencloud || (kencloud_ && kencloud_!=kencloud)) throw std::invalid_argument("장기 영역의 같은 실제 redraw owner 필요");

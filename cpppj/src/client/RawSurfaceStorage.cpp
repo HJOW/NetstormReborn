@@ -271,6 +271,7 @@ float RawSurfaceStorage::HandleDefaultRegular(o::Sid sid,std::uint32_t event,std
     if (table==0x50f540U) return ResidenceRegular(sid,event,count,payload); // 같은 현재 거주 구역 정기 본문이다.
     if (table==0x509148U || table==0x509210U) return FactoryRegular(sid,event,count,payload); // 실제4549c0의 두 직접 가상 표다.
     if (table==0x50a820U || table==0x50a8e8U) return DecorationRegular(sid,event,count,payload); // 실제462420의 장식/가장자리 팜 수명 감소다.
+    if (table==0x5196f0U || table==0x5197a8U || table==0x519860U || table==0x519918U) return VortexRegular(sid,event,count,payload); // 신전 네 VT의 공통4dc220/thunk를 같은 장기 현재 본문에 분배한다.
     if (table==0x50a050U) return WindFlyer().Handle(sid,event,count,payload); //45e8b0의 같은 장기 정기/현재 음향 장부다.
     if (table==0x50e668U) return ArcSpire().Handle(sid,event,count,payload); //48c6e0의 같은 현재 정기/검색과 직접 부모다.
     if (table==0x50e738U) return AcidFence().Handle(sid,event,count,payload); //48ea30은 count0 공격과 공통부모 미호출을 보존한다.

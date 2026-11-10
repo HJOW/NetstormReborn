@@ -3849,3 +3849,4 @@ target_sources(netstorm_construction_owner_tests PRIVATE PlayerRegularTests.cpp)
 
 target_sources(netstorm_construction_owner_tests PRIVATE ArcSpireTests.cpp AcidFenceTests.cpp) # 기존 비MP 부품 원문 관측만 사용하며 소켓/MP 실행 대상을 추가하지 않는다.
 target_sources(netstorm_construction_owner_tests PRIVATE SoundProcessTests.cpp) # 같은 TYPE별 소리 장부의 기존 비MP 원문 관측만 집중 실행한다.
+target_sources(netstorm_construction_owner_tests PRIVATE VortexAscendTests.cpp) # 기존 상승의 순수 finder/후보/버퍼 원문만 비교하며 이탈/MP 패킷은 실행하지 않는다.

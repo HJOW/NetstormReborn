@@ -1,6 +1,7 @@
 // 같은 Client의 섬/신전/영역을 World·Session·MP·패킷 실행 없이 조립해 실제 수명을 확인한다.
 #include "DudeSpawnSupport.h"
 #include "client/ClientConstructionGlobals.h"
+#include "o/RawAssetRegular.h" // 신전 정기의 현재 모드 뷰를 직접 확인한다.
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientKencloudGlobals.h"
 #include "client/ClientPlayerRecords.h"
@@ -94,6 +95,7 @@ struct RegionScene { //게임실행기없이실제장기owner/보호자산/물�
         storage->BindDamageableDevices({std::shared_ptr<ContainedFinderState>(gameplay,&gameplay->finder),std::shared_ptr<const std::uint32_t>(gameplay,&gameplay->FortKeepGenus()),RegionForbidden<void,Sid>("영역 검사 금지 붕괴"),RegionForbidden<void,Sid>("영역 검사 금지 폭발"),RegionForbidden<void,const DamageableSoundEvent&>("영역 검사 금지 피해 소리"),RegionForbidden<void,float,float,std::uint32_t,std::uint16_t>("영역 검사 금지 해방 사제 생성"),RegionForbidden<void,Sid,std::int32_t,bool>("영역 검사 금지 Dude 드롭"),RegionForbidden<void,float,float,std::uint32_t,std::uint32_t>("영역 검사 금지 섬 드롭")});
         storage->links.bridgeType=82;storage->links.islandType=94;storage->links.stalagType=95;storage->links.connectorType=155;storage->links.noIslandType=157;
         owner->Bind(storage,gameplay,{});owner->BindBacking(sp,players,gameplay->BattleOptionsOwner());owner->BindRandom(random);owner->BindRegionContext(kencloud);owner->BindDevices(Devices());
+        storage->BindVortexDevices(MakeClientVortexDevices(owner)); // 실제 장기 Construction만 대여하며 MP/게임을 실행하지 않는다.
         storage->BindRegionLifecycle(
             [weak=std::weak_ptr<ClientConstructionGlobals>(owner)](auto sid,auto player) { const auto current=weak.lock();if (!current) throw std::logic_error("검사 실제 영역 owner 반납 뒤 선택");current->VortexOwner().Set(sid,player); },
             [weak=std::weak_ptr<ClientConstructionGlobals>(owner)](auto sid,auto flags) { const auto current=weak.lock();if (!current) throw std::logic_error("검사 실제 영역 owner 반납 뒤 선택");current->VortexPre().PreDestroy(sid,flags); },
@@ -1914,4 +1916,28 @@ TEST_CASE(ClientAttackRate_CurrentSourceTargetAndAirMode) { // 가상bc의 현�
     RegionScene s;const auto source=s.Asset(0x509148U),target=s.Asset(0x509148U);s.storage->pool.AllocatedBytes(source)[10]=100;s.storage->pool.AllocatedBytes(target)[10]=101;auto& first=s.storage->types[100];auto& second=s.storage->types[102];first.damagePerSecond=3.25f;first.useAirDamage=-1;first.airDamagePerSecond=7.5f;second.damagePerSecond=4.5f;second.useAirDamage=1;second.airDamagePerSecond=-9.25f;s.storage->types[101].flags2=0;
     CHECK(s.storage->AttackDamageRate(source,target)==3.25f);s.storage->types[101].flags2=0x100000U;CHECK(s.storage->AttackDamageRate(source,target)==7.5f);s.storage->types[101].flags2=0x20000U;CHECK(s.storage->AttackDamageRate(source,target)==7.5f);first.useAirDamage=0;CHECK(s.storage->AttackDamageRate(source,target)==3.25f);
     s.storage->pool.AllocatedBytes(source)[10]=102;CHECK(s.storage->AttackDamageRate(source,target)==-9.25f);s.storage->pool.AllocatedBytes(target)[10]=103;s.storage->types[103].flags2=0;CHECK(s.storage->AttackDamageRate(source,target)==4.5f);
+}
+
+TEST_CASE(ClientVortexOwner_StateAndAscendSurviveWorldLoan) { // 같은 정기 상태/상승 몸체/현재 역할은 World 대여/반납으로 초기화하지 않는다.
+    RegionScene s;const auto seed=s.random->Game().State();auto* state=&s.storage->VortexState();auto* ascend=&s.owner->VortexAscend();auto* role=s.owner->VortexAscendGlobals().sharedNoIslandType;state->maxDecorationScan=123;
+    { RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->VortexState()==state && &s.owner->VortexAscend()==ascend && state->maxDecorationScan==123); }
+    CHECK(role==&s.storage->links.noIslandType && s.random->Game().State()==seed && !s.storage->Borrowed());s.storage->ownerMode.fort=true;CHECK(state->FortMode());s.storage->ownerMode.fort=false;CHECK(!state->FortMode());s.gameplay->Authority()->boss=false;CHECK(!state->Boss());s.gameplay->Authority()->boss=true;
+}
+TEST_CASE(ClientVortexOwner_Frame31SkipsRandomAndLargeRuntime) { // 순수 사건2/count31과 일반 부모는 난수/큰 Runtime을 선행 요구하지 않는다.
+    RegionScene s;const auto parent=RitualOwnerAsset(s,0x5196f0U);RegionPut(s.storage->pool.AllocatedBytes(parent),36,1);const auto seed=s.random->Game().State();CHECK(s.storage->VortexRegular(parent,2,31,7)==2);CHECK(RegionRead(s.storage->pool.Slot(parent),36)==0 && s.random->Game().State()==seed);
+    const auto value=std::bit_cast<float>(0x7fc12345U);CHECK(std::bit_cast<std::uint32_t>(s.storage->VortexRegular(parent,123,7,value))==0x7fc12345U && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientVortexOwner_ActualHostUsesSameRandomAndCurrentClock) { // 실제 비공유 Regular의 사건2는 같은 한 난수/현재 Host 시각으로 재예약한다.
+    RegionScene s;BindFactoryOwnerDevices(s);const auto parent=RitualOwnerAsset(s,0x5196f0U);GameRandom expected(s.random->Game().State());static_cast<void>(expected.Next(2));auto& processState=s.storage->Processes().State();processState.now=0.25;auto* process=s.storage->Processes().Host().AddRegular(parent,2,5);CHECK(process!=nullptr);if (!process) return;processState.now=0.5;s.storage->Processes().Kernel().RunFrame();
+    CHECK(process->Count()==1 && process->Payload()==0.1f && process->Time()==0.5+static_cast<double>(0.1f));CHECK(s.random->Game().State()==expected.State() && !s.storage->Borrowed());
+}
+TEST_CASE(ClientVortexOwner_EmptyAscendUsesActualNoWorldFinder) { // 빈 상승 단계는 같은 실제 finder/80BYTE 버퍼/반납 경계를 사용하고 삭제나 난수를 실행하지 않는다.
+    RegionScene s;const auto parent=RitualOwnerAsset(s,0x5196f0U);const auto seed=s.random->Game().State();CHECK(s.storage->VortexRegular(parent,0,0,0.25f)==0.25f);CHECK(s.storage->VortexRegular(parent,0,33,0.25f)==-1.0f);CHECK(s.random->Game().State()==seed && !(s.storage->pool.Slot(parent)[11]&1U) && !s.storage->Borrowed());
+}
+TEST_CASE(ClientVortexOwner_ForeignCountReadsCurrentActualIslands) { // 같은 실제 IslandList의 현재 존재/owner를 읽으며 Player 배열·난수·Runtime을 요구하지 않는다.
+    RegionScene s;s.PlayerBlock();const auto first=s.Island(),second=s.owner->Islands().Add(0,0),third=s.owner->Islands().Add(0,0);auto& islands=s.owner->Islands();islands.Bounds(static_cast<std::int32_t>(second),{90,90,110,110});islands.Bounds(static_cast<std::int32_t>(third),{90,90,110,110});islands.Owner(static_cast<std::int32_t>(first),1);islands.Owner(static_cast<std::int32_t>(second),2);islands.Owner(static_cast<std::int32_t>(third),0);const auto seed=s.random->Game().State();auto& body=s.owner->VortexAscend();CHECK(body.CountForeignOwnedIslands(1)==1);
+    islands.Owner(static_cast<std::int32_t>(second),1);CHECK(body.CountForeignOwnedIslands(1)==0);islands.Owner(static_cast<std::int32_t>(third),3);islands.BindCurrentPlayers(RegionForbidden<std::span<std::uint8_t>>("순수 신전 섬 집계의 Player 조회 금지"));CHECK(body.CountForeignOwnedIslands(1)==1 && body.CountForeignOwnedIslands(2)==3 && s.random->Game().State()==seed && !s.storage->Borrowed());
+}
+TEST_CASE(ClientVortexOwner_DevicesDoNotRetainExpiredConstruction) { // 장기 Storage의 콜백은 Construction을 강하게 역소유하지 않고 반납 뒤 선택을 거부한다.
+    RegionScene s;const auto weak=std::weak_ptr<ClientConstructionGlobals>(s.owner);auto devices=MakeClientVortexDevices(s.owner);s.owner.reset();CHECK(weak.expired());bool rejected{};try { static_cast<void>(devices.foreignIslands(1)); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && !s.storage->Borrowed());
 }

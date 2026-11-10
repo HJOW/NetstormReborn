@@ -230,3 +230,15 @@ TEST_CASE(AssetRegular_ResidencePatchOnly) { // 기존 원본 기대값 중 거�
         CHECK(std::bit_cast<std::uint32_t>(result)==Number(row[2]));CHECK(scene.random.State()==Number(row[3]));CHECK(scene.state.maxDecorationScan==Number(row[4]));CHECK(events==row[5]);CHECK(Hex(scene.pool.Slot(kSource))==row[6]);CHECK(neighbors==row[7]);++count;
     }CHECK(count>0);
 }
+
+TEST_CASE(AssetRegular_VortexFramesOnly198) { // 양판본 원문 중 패킷/이탈 없는 신전 프레임 사건1/2만 독립 기대값으로 비교한다.
+    std::size_t count{}; // 원문에서 선별한 양판본99개씩의 프레임 관찰 수다.
+    for (const auto edition:{OriginalEdition::Patch1078,OriginalEdition::Cd1072}) { AssetRegularScene scene(edition);const auto name=edition==OriginalEdition::Patch1078 ? "originals":"originalCD"; // 판본마다 원문99입력만 별도 상태로 비교한다.
+        for (const auto& row:Rows()) { // 이탈/상승/Descend·통신 사건은 실행 목록에서 제외한다.
+            if (row[0]!=name || (!row[1].starts_with("2,1,") && !row[1].starts_with("2,2,"))) continue;scene.Prepare(row);const auto& input=scene.input;const auto result=scene.regular->Handle(kSource,input[1],input[2],std::bit_cast<float>(input[3]));std::string events;
+            for (const auto& event:scene.events) { if (!events.empty()) events+=';';events+=event; } // 실제 효과 순서를 원문 문자열과 비교한다.
+            if (events.empty()) events="-";const auto neighbors=std::to_string(scene.Frame(Sid{60}))+','+std::to_string(scene.Frame(Sid{61}))+','+std::to_string(scene.Frame(Sid{62}));
+            CHECK(std::bit_cast<std::uint32_t>(result)==Number(row[2]));CHECK(scene.random.State()==Number(row[3]));CHECK(scene.state.maxDecorationScan==Number(row[4]));CHECK(events==row[5]);CHECK(Hex(scene.pool.Slot(kSource))==row[6]);CHECK(neighbors==row[7]);++count;
+        }
+    }CHECK(count==198);
+}

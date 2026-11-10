@@ -658,3 +658,5 @@ target_sources(netstorm PRIVATE o/RawPriestRegular.cpp client/RawSurfacePriest.c
 target_sources(netstorm PRIVATE client/RawSurfacePlayerRegular.cpp) # Player 정기의 실제 장기 전역과 확보/Template 수명을 연결한다.
 
 target_sources(netstorm PRIVATE client/RawSurfaceAttack.cpp) # 아크/애시드의 전체 정기와 현재 역할·큰 후단 수명을 장기로 연결한다.
+
+target_sources(netstorm PRIVATE client/RawSurfaceVortex.cpp) # 같은 신전 정기·현재 모드/난수와 실제 큰 후단을 장기 연결한다.
