@@ -431,7 +431,7 @@ cpppj/src/client/ViewKeyInput.cpp	port	www/core/view-key-input.js	1f00a25a	port	
 cpppj/src/client/WarningMessages.cpp	port			todo	[client-default]
 cpppj/src/client/WindowTitle.cpp	adapt	www/core/window-title.js	1f00a25a	port	[adapt-screen] WB04-E34: 00460730 창 제목 선택(설정 조회 순서·미션 title 시점). fixture window-title 10.78 576행(originalCD 제외). 실제 창 적용은 웹 소비자(document.title)로 대체
 cpppj/src/client/XlatFileRead.cpp	adapt	www/core/raw-xlat.js	1f00a25a	port	[adapt-file] WB04-E270: CRT FILE 열기·길이·읽기·정규화·닫기 순서와 부분 실패 정리는 브라우저에 없다. 웹은 initializeRawXlat(german(3)→english(1)→portuguese(6), 부재 로그 후 다음 파일)의 hooks.exists/read 로 대체하고 읽은 바이트의 정규화·병합·조회는 RawXlat.load(E242, xlat-file-read-x86.tsv 의 번역 칸 대조)가 맡는다
-cpppj/src/o/BaseFile.cpp	adapt	www/assets/game-files.js;www/assets/taff.js;www/assets/asset-loader.js	1f00a25a	partial	[adapt-file] 느슨한 파일→TAFF 조회(웹 대체, docs/formats/vfs.md)
+cpppj/src/o/BaseFile.cpp	adapt	www/assets/game-files.js;www/assets/taff.js;www/assets/asset-loader.js	1f00a25a	port	[adapt-file] 느슨한 파일→TAFF 조회(웹 대체, docs/formats/vfs.md) / 읽기 순서(디스크→TAFF→보조)는 웹에서 느슨한 파일→등록 순서 아카이브(GameFiles.read), MatchFinder 는 GameFiles.find(첫 대소문자 무시 중복·정렬 없음). 보조/CD·Probe 출처 번호·ReadOnly·절대 경로 직접 읽기는 웹 제외. WB04-E271: tests/game-files-contract.test.mjs
 cpppj/src/o/BaseProcess.cpp	port	www/core/kernel.js	1f00a25a	port	[o-default] WB04-C1(BaseProcess 기반)·WB04-D5c(Process/BaseProcess 부착은 squid-process.js 호스트)
 cpppj/src/o/Bridge.cpp	port	www/core/surface-finder.js;www/core/bridge-decay.js	1f00a25a	port	[o-default] WB04-E44(+E12 Connects): 열린 방향·방문 목록·수명 감소·프레임 전환·destroy 재정의·한 칸 처리·스캔. fixture bridgedecay Cell 4241·Life 3264·Destroy 1152·Crack 348·Normal 174·Weaken/Restore 696·Init 12·Scan 3941. raw 풀 위의 실행기(RawBridgeDecay/Scan/Carriers)는 별도 단위
 cpppj/src/o/BurningVisualSystem.cpp	port	www/core/burning-visual-system.js	1f00a25a	port	[o-default] WB04-E201: Burning process 14 의 장치/판본/캡처 확인·피해 0/중첩 거부·대기 객체 → 실제 Host 부착(null/예외 실패 즉시 소멸)·150입자/첫 색 표·생성 실패 정리·487940 프레임 gate 뒤 배율 검사와 RawBurningFrame·현재 clip 5점 출력(배율 미검사)·빈 notify(480260)·Form 삭제 dirty·이미지→행→소리→입자→등록→객체 반납·dispose. cpppj 전용 시험 없음 → SmokeVisualSystemTests 방식의 웹 조립 검사 4건(실제 보호 캡처). 남음: RawCampaignParticles·DamageableBurningSession 시험 재대조·실제 색띠/소리/전역·Session 월드 연결
@@ -454,7 +454,7 @@ cpppj/src/o/DissolveVisualSystem.cpp	port	www/core/dissolve-visual-system.js	1f0
 cpppj/src/o/EnergyProviderVtables.inc	port	www/core/energy-provider-vtables.js	1f00a25a	port	[o-default] WB04-E250: 실제 PE 가상 표 83개의 +a0 에너지 공급 진입. tools/make-vtable-tables.mjs 로 생성(--check), raw-energy-supply.js 가 import. 세 표 순서·집합 불변식과 energyProviderEntry 83쌍 대조
 cpppj/src/o/EvilRayVisualSystem.cpp	port	www/core/evil-ray-visual-system.js	1f00a25a	port	[o-default] WB04-E198: EvilRay process 10 의 반납 관찰/배율 검사·대기 객체 → 실제 Host 부착(null/예외 실패 즉시 소멸)·부모 0 시스템 보관·생성 실패 정리·준비 완료 프레임(kill=Host 삭제)/출력(현재 공유 3색)·notify→Stop·Form 삭제 dirty·소멸 순서·dispose. cpppj 전용 시험 없음 → SmokeVisualSystemTests 방식의 웹 조립 검사 4건. 남음: RawCampaignParticles 소비자 이식 때 cpppj 시험 재대조·실제 SHP/음향 번호·래스터·Session 월드 연결
 cpppj/src/o/FieryTailVisualSystem.cpp	port	www/core/fiery-tail-visual-system.js	1f00a25a	port	[o-default] WB04-E195: 불꽃 꼬리 process 11/12 의 수명 몸체 연결·경계/배율 검사·대기 객체 → 실제 client Form 부착(null/예외 실패 즉시 소멸)·생성 실패 정리·준비 완료 프레임·현재 부모 끝점 출력·Form 삭제 dirty·소멸 순서·dispose. cpppj FieryTailVisualSystemTests 4건(공통 수집 정렬은 draw-sort 로 시험 쪽 조립, 삭제 영역 fixture 는 E192). 남음: 실제 Session 월드·Streak 호출자·끝점 장치·래스터·client DrawSubmission
-cpppj/src/o/FileSpecQuery.cpp	adapt			todo	[adapt-file]
+cpppj/src/o/FileSpecQuery.cpp	adapt	www/assets/game-files.js	1f00a25a	port	[adapt-file] FindFirst/FindNext 핸들 열거는 GameFiles.find(pattern) 목록으로 대체(* 0개 이상·? 한 글자·폴더를 넘지 않음). WB04-E271: tests/game-files-contract.test.mjs
 cpppj/src/o/FortSerializationGlobals.h	port			todo	[o-default]
 cpppj/src/o/GameClock.cpp	port	www/core/game-clock.js	3e9dc2c7	port	[o-default] WB04-C1 / 3.6③(3e9dc2c7, WB04-D5b 판정): 시간 동기화 보정 0055b4ac 바인딩과 (ms−origin−보정) 감산. 보정 0 이면 기준선과 같은 결과 → WB05 시간 패킷(5번)의 단독 도달 확인 때
 cpppj/src/o/Graph.cpp	port	www/core/graph.js	1f00a25a	port	[o-default] WB04-E12: Graph 정수 연산(Allocate·Flood·Add·Detach·Rebuild·Remove·Free·진단 복귀). fixture graph 10.78 구간 1280개 검사 지점 + 독립 6건. RawGraph/RawGraphLive 연결은 이후 단위
@@ -519,10 +519,10 @@ cpppj/src/o/RawAuthorityState.h	port	www/core/raw-authority-state.js	1f00a25a	po
 cpppj/src/o/RawAuxiliaryDraw.cpp	port	www/core/raw-auxiliary-draw.js	1f00a25a	port	[o-default] WB04-E84: 메타 배율 표시 00479340(숨김 조기 반환·16.16 배율 0 은 1배)과 고정 추상색 추가 Draw 00485f90. fixture auxiliary-draw 1728행 전부(10.78 전용 파일). 실제 VFX 출력/SHP 조회 본체는 표시 단위에서
 cpppj/src/o/RawBalloonBody.cpp	port	www/core/raw-balloon-body.js	1f00a25a	port	[o-default] WB04-E94: 벌룬 그림자 후처리 42ac90/42aed0·그림자 우선 삭제 42ae80·클라우드 Regular 42af60·저장 검사 42ae60(그림자 생성/Pop 보정/WORD 재조회/표시 깊이). fixture balloon-body 233행+balloon-body-height 256행 전부(10.78 전용 파일). 벌룬 이륙/경로/걸음(RawBalloonFrame 계열)과 Damageable/내용물 본체는 해당 단위에서
 cpppj/src/o/RawBalloonFrame.cpp	port	www/core/raw-balloon-frame.js	1f00a25a	port	[o-default] WB04-E209: 벌룬 경로 프레임 0048ad60(완료/halt 반환·Step 뒤 watch·남은 시각 float 저장·구간 길이 0.001f 하한·이륙 max/착륙 min 고도 ftol 하위 DWORD·고도 0 이고 현재 TYPE 벌룬이면 화염·Step 완료면 도착만·화염 뒤 현재 좌표가 바뀐 때만 Unpop→고도 BYTE→Pop 0x40). fixture balloon-path 10.78 688행 전부(생성자·비행 Init 포함)와 남은 시각 float 저장 계약. 남음: RawPathProcess 가상 42 호출자·Step/Halt/도착/소리 World 연결
-cpppj/src/o/RawBaseFileIO.cpp	adapt			todo	[adapt-file]
-cpppj/src/o/RawBaseFileOpenPolicy.cpp	adapt			todo	[adapt-file]
-cpppj/src/o/RawBaseFileReadPolicy.cpp	adapt			todo	[adapt-file]
-cpppj/src/o/RawBaseFileWholeRead.cpp	adapt			todo	[adapt-file]
+cpppj/src/o/RawBaseFileIO.cpp	adapt	www/assets/game-files.js	1f00a25a	port	[adapt-file] FILE 열기/쓰기/닫기 상태 기계와 키 필드는 브라우저에 없다(읽기 결과는 GameFiles.read 가 바이트로 줌). WB04-E271: 웹 제외 adapt
+cpppj/src/o/RawBaseFileOpenPolicy.cpp	adapt	www/assets/game-files.js	1f00a25a	port	[adapt-file] FILE 열기 정책(생성/모드)은 브라우저에 없다. WB04-E271: 웹 제외 adapt
+cpppj/src/o/RawBaseFileReadPolicy.cpp	adapt	www/assets/game-files.js	1f00a25a	port	[adapt-file] FILE 읽기 정책(길이·부분 읽기·키 해독 전환)은 GameFiles.read 의 전체 바이트와 taff.js xorDecode 로 대체. WB04-E271: 웹 제외 adapt
+cpppj/src/o/RawBaseFileWholeRead.cpp	adapt	www/assets/game-files.js	1f00a25a	port	[adapt-file] 전체 읽기의 최소 할당·조건부 해독·정리 순서는 GameFiles.read 와 Config.loadBytes 의 XOR 판정으로 대체. WB04-E271: 웹 제외 adapt
 cpppj/src/o/RawBaseProcessAttach.cpp	port	www/core/raw-process-attach.js	1f00a25a	port	[o-default] WB04-D5c: 신규 로컬/지정 Form 부착 부모. fixture baseprocess-attach-current-local 24행(10.78)
 cpppj/src/o/RawBattleBroadcast.cpp	port			todo	[o-default]
 cpppj/src/o/RawBoardAngle.cpp	port	www/core/raw-board-angle.js	1f00a25a	port	[o-default] WB04-E15: 0041cdb0 Boardcoord 각도 정규화(10.78 경로). fixture board-angle-hardware originals 544행 전부
@@ -598,7 +598,7 @@ cpppj/src/o/RawColorMapCache.cpp	adapt			todo	[adapt-file]
 cpppj/src/o/RawColorSortPrimary.cpp	port	www/core/raw-color-sort-primary.js	1f00a25a	port	[o-default] WB04-E205: 439de0 기본 53비트 primary(0x3800 초기 할당 그대로 소유·첫 순회 R→G→번호(B 선캡처)→B 와 503608 상수·둘째 순회 저장 RGB 에서 합/명도/채도(≤0.5 분모, (2-최대)-최소)/색상(×60, 음수 +360, 회색 S0 H-1)·store checkpoint 와 예외 부분 효과·alias 현재 입력·constructed 표식·명도 비트 getter). fixture colorsortprimary 027f 40행 전부와 037f 차이 감사. 남음: E77 construct hook 연결·검색/qsort·Session 수명, 037f 는 범위 밖
 cpppj/src/o/RawColorSortStartup.cpp	port	www/core/raw-color-sort-startup.js	1f00a25a	port	[o-default] WB04-E77: ColorSort 시작 43b430(로드 진단 451·두 슬롯 해제/0·primary 생성·검색 생성/vtable 0x506658/qsort·search 캡처 대입·count 10)·43b300(색띠 해제/할당/현재 count/60B 인자). fixture colorsort-startup 116행 전부. 생성·정렬·색띠 계산 본체는 RawColorSortPrimary 등 해당 단위에서
 cpppj/src/o/RawCommonOwner.cpp	port	www/core/raw-common-owner.js	1f00a25a	port	[o-default] WB04-E2: 004adf00 공통 소유자 지정(범위 진단 0x9ff/0xa02·작업장 목록 제거/추가)
-cpppj/src/o/RawConfigFileLoad.cpp	adapt			todo	[adapt-file]
+cpppj/src/o/RawConfigFileLoad.cpp	adapt	www/assets/config.js	1f00a25a	port	[adapt-file] 설정 파일 전체 읽기: 첫째·셋째 바이트가 0 이면 XOR 해독·끝 NUL·Append 는 Config.loadBytes(config-x86.tsv 2,440행). WB04-E271: tests/game-files-contract.test.mjs
 cpppj/src/o/RawConnectionActivity.cpp	port			todo	[o-default]
 cpppj/src/o/RawConnectionCleanup.cpp	port			todo	[o-default]
 cpppj/src/o/RawConnectionRegistration.cpp	port			todo	[o-default]
@@ -977,7 +977,7 @@ cpppj/src/o/SquidProcess.cpp	port	www/core/squid-process.js	417f22d2	port	[o-def
 cpppj/src/o/SquidReward.cpp	port	www/core/squid-reward.js	2b048419	port	[o-default] WB04-D5b(0044c2f0 보상·SP 가산 비트·AI 지갑·최대 HP, reward 2400행·sp-add-bits 504행·HP 579행). 장부는 SquidPostPopState(WB04-E)의 localOwner/aiAttached 를 읽음. WB04-E166: cpppj 2b048419 의 SP 고정 두 모드 현재값(currentFixedSpA/B·share) 보정
 cpppj/src/o/SquidSpatial.cpp	exclude-legacy			-	[legacy-spatial] WB04-E246: raw 풀 이전의 옛 std::map 공간 등록 모델. production 소비자 없음(CMake 등록·SpatialTests·PopTests 마지막 시험뿐). SquidPop/SquidUnpop(raw 풀)이 대체해 웹은 raw 구현을 pop-x86·unpop-x86 계열 fixture 로 대조했다. 옛 fixture spatial-x86 는 웹 대조에 쓰지 않음
 cpppj/src/o/SquidUnpop.cpp	port	www/core/squid-unpop.js;www/core/squid-vtables.js	2c6ab7cc	port	[o-default] WB04-D2(현재 TYPE 표·진단 연결) / 3-E 판정(WB04-E259, 기준 4789039e): ① — SupportsDisplay 의 메타/일반 Sprite VT 두 개 추가(메타 섬·일반 전투 웹 제외)
-cpppj/src/o/StartupArchiveFiles.cpp	adapt			todo	[adapt-file]
+cpppj/src/o/StartupArchiveFiles.cpp	adapt	www/assets/game-data.js	1f00a25a	port	[adapt-file] 시작 때 *.tarc 를 열거 순서로 등록하는 일은 GameData.build 가 netstorm.tarc 를 addArchive 로 등록하는 것으로 대체(CD/보조 root·열거 순서는 웹 제외). WB04-E271
 cpppj/src/o/Template.cpp	port	www/assets/fort.js	1f00a25a	partial	[o-default] WB03-U .fort 섹션 판독. Template manager 수명은 WB05
 cpppj/src/o/TerrainBuilder.cpp	port	www/assets/terrain-mask.js;www/assets/terrain-tiles.js	1f00a25a	partial	[o-default] WB03-W/X 본섬 마스크·지면
 cpppj/src/o/TypeConstructors.inc	port	www/core/squid-constructors.js	1f00a25a	port	[o-default] WB04-D4(생성자 주소 188칸, cpppj .inc 에서 생성)
