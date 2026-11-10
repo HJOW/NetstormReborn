@@ -196,6 +196,11 @@ void EnableModernScreenDpi() {
 //   DAT_005318d8 = 0x4b; FUN_00441270("maxFPS", &DAT_005318d8);
 //   _DAT_005318e0 = 0.0; if (0 < DAT_005318d8) _DAT_005318e0 = 1.0 / (double)DAT_005318d8;
 // 이 간격은 FUN_00436450 의 바쁜 대기(`벽시계 - 직전 그리기 시각 < 간격`)에서 쓰인다.
+// 후순위 F2: Sleep(1)이 약 1ms로 깨도록 Windows 타이머 해상도를 1ms로 요청하는 RAII다. 생성자가 올리고 소멸자가 되돌린다.
+struct FrameTimerResolution {
+    FrameTimerResolution() { timeBeginPeriod(1); }
+    ~FrameTimerResolution() { timeEndPeriod(1); }
+};
 double FrameIntervalSeconds(int maxFps) {
     if (maxFps > 0) {
         return 1.0 / static_cast<double>(maxFps);
@@ -931,9 +936,15 @@ void Client::InitializeNativeRendererView() { gameplayGlobals_->Camera().Initial
 void Client::Frame() {
     // [원본] 창이 비활성이고 전체화면이면 그리지 않는다(FUN_004977e0) — 전체화면을 옮기면 더한다.
     if (!clock_->IsPaused()) {
-        // 바쁜 대기: 직전 그리기 뒤로 1 / maxFPS 초가 지날 때까지 벽시계를 다시 읽는다.
+        // 대기: 직전 그리기 뒤로 1 / maxFPS 초가 지날 때까지 벽시계를 다시 읽는다.
         // 검사 전용 고정 시각 모드는 프레임 사이에 가상 시계가 흐르지 않으므로 대기하지 않는다(2026-11-09 추가). 기본 OS 시계는 기존과 같다.
-        while (!FixedClientTimeEnabled() && clock_->WallSeconds(ClientMilliseconds()) - lastDraw_ < frameInterval_) {}
+        // 후순위 F2: 남은 시간이 3ms를 넘는 동안은 Sleep(1)로 CPU를 양보하고, 마지막 3ms만 기존처럼 벽시계를 다시 읽어 정밀하게 맞춘다(60/120프레임에서 한 코어 점유를 줄임).
+        static const FrameTimerResolution timerResolution; // 첫 프레임에서 1ms 타이머 해상도를 요청하고 프로세스 종료 때 되돌린다.
+        while (!FixedClientTimeEnabled()) {
+            const double remaining=frameInterval_-(clock_->WallSeconds(ClientMilliseconds())-lastDraw_);
+            if (!(remaining>0.0)) break;
+            if (remaining>0.003) Sleep(1);
+        }
     }
     lastDraw_ = clock_->WallSeconds(ClientMilliseconds());
     PresentScene(true);
