@@ -12,6 +12,9 @@
     "prepare-assets": "node tools/prepare-assets.js",
     "check-assets": "node tools/prepare-assets.js --check"
   },
+  "engines": {
+    "node": ">=22"
+  },
   "devDependencies": {
     "@playwright/test": "^1.64.1"
   }

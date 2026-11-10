@@ -5,6 +5,7 @@
 //  - 계약: 부족한 버퍼 길이는 필드/패킷 변경 전에 거부(선언 길이는 읽기 판단에 쓰지 않음), 잘못된 새/기존 수신·할당 실패·필수 경계 누락은 부착 전에 거부, 실제 host 의 전체/부분 전송→수신→Kernel 진행→지연 완료,
 //    다른 프로세스(Regular)·상위 비트 Kernel 번호가 건설 필드를 덮어쓰지 못함, 실제 새 소유 수신(logic+host)의 부착과 잘못된 부모/풀 거부.
 // 실제 게임·브라우저 실행이 아니다. (2026-11-09 WB04-E141: 건설 상태 메시지 이식과 함께 추가)
+import './nan-exact.mjs'; // NaN 비트 대조는 최적화 JIT 를 끈 프로세스에서만 Node v22/v24/v26 에서 같다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';

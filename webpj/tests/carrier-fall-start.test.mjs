@@ -3,6 +3,7 @@
 //    종료 상태(ok / null=확보 실패), 하위 호출 순서(Q 조회 / A 확보 / C 생성 / ! 진단 / H·M·D·S·K·R 시작), 프로세스 event/count/payload/기한/현재 시각/권한/사제 종류/Player 기록 Adler-32, 부모와 Form 의 raw. NULL 실패 480행 포함.
 //  - 계약: CarrierFallStart_LazyBoundaries(이미 낙하 중이면 다른 경계 없이 반환, 미연결 task 하위 거부, 물리 Player 범위는 쓰기 전에 검증). 웜40 경로 객체(RawPathRuntime)는 해당 파일 이식 때 대조한다.
 // 실제 게임·브라우저 실행이 아니다. (2026-11-08 WB04-E72: Carrier task·낙하 시작 이식과 함께 추가)
+import './nan-exact.mjs'; // NaN 비트 대조는 최적화 JIT 를 끈 프로세스에서만 Node v22/v24/v26 에서 같다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';

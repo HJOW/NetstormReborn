@@ -48,6 +48,23 @@ export function resetRegisteredStateSidLists(headers, resetCount) {
     }
 }
 
+// PATCH 0040ea00 의 signed count 반복이다: 현재 count 아래의 각 DWORD 를 순서대로 읽어 일치하면 세고 아니면 앞으로 압축한다(일치가 여럿이면 모두 제거).
+//  선검사·꼬리 지우기를 하지 않으므로 비활성 꼬리·용량·등록 표는 보존하고, 음수 count 는 읽기/쓰기 없이 지나가며 마지막에만 count 에서 제거 수를 뺀다(DWORD 감김).
+//  count 가 가리키는 위치가 배열 밖이면 그 위치의 현재 물리 범위 오류로 멈춘다. (2026-11-10 WB04-E259: cpppj RemoveStateSidList 재반영 — 거주 구역·인간형·사제 삭제가 쓴다)
+export function removeStateSidList(list, sid) {
+    const target = sid >>> 0;
+    const count = list.count | 0;
+    let removed = 0;
+    // 현재 signed count 아래의 항목을 읽기 위치 순서대로 압축한다.
+    for (let index = 0; index < count; index += 1) {
+        if (index >= list.entries.length) throw new RangeError('SID 목록 제거의 현재 물리 범위');
+        const value = list.entries[index] >>> 0;
+        if (value === target) removed += 1;
+        else list.entries[index - removed] = value;
+    }
+    list.count = (list.count - removed) >>> 0;
+}
+
 // 정적 목록 여덟 개와 등록 표를 Session 보다 오래 유지한다. (2026-11-08 WB04-E26)
 export class RawStateSidLists {
     // 목록 여덟 개(SquidPostPopList)이다. entries.length 가 원문 용량이다.

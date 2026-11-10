@@ -248,18 +248,23 @@ export class ContentFormHost {
         this.unpop(form);
         pool.physical(form)[LIST_FLAGS + 1] &= 0xfe;
         // Unpop 이 장치를 바꿀 수 있으므로 소비 위치에서 고른다.
-        const reattach = this.#reattach;
-        if (reattach) reattach(form, parent, 0x10);
-        else {
-            if (vtableOf(pool.slot(form)) !== SQUID_FORM_VTABLES.content) throw new Error('ContentForm 현재 가상 재부착 장치 미연결');
-            this.attach(form, parent, 0x10);
-        }
+        this.#attachCurrent(form, parent, 0x10);
         return 0;
     }
 
-    // 기존 contained 생성기의 TYPE 6 생성(같은 공장)과 마지막 부착만 이 호스트로 연결한다.
+    // 선택한 마지막 가상 부착(+50)이다: 생성/통지 또는 Unpop 이 바꾼 현재 장치(bindReattach)를 호출 순간에 읽는다. 장치가 없으면 현재 VT 가 Content(6)일 때만
+    //   기존 정렬 부착을 쓰고, 다른 미설치 가상 표는 앞선 생성/필드 쓰기 뒤에 거부한다(TYPE BYTE 를 VT 의 대용으로 쓰지 않는다).
+    //   (2026-11-10 WB04-E259: cpppj ContentFormHost::AttachCurrent 3f766a97 재반영 — Regular 재부착과 contained 생성의 마지막 부착이 같은 선택을 쓴다)
+    #attachCurrent(form, parent, flags) {
+        const attach = this.#reattach;
+        if (attach) { attach(form, parent, flags); return; }
+        if (vtableOf(this.#pool.slot(form)) !== SQUID_FORM_VTABLES.content) throw new Error('ContentForm 현재 가상+50 부착 장치 미연결');
+        this.attach(form, parent, flags);
+    }
+
+    // 기존 contained 생성기의 TYPE 6 생성(같은 공장)과 필드 쓰기/표면 통지 뒤 마지막 현재 가상+50 부착만 이 호스트로 연결한다.
     bindCreate(factory, hooks = {}) {
         const bound = makeContainedCreateHooks(this.#pool, factory, hooks);
-        return { ...bound, attach: (form, parent, flags) => this.attach(form, parent, flags) };
+        return { ...bound, attach: (form, parent, flags) => this.#attachCurrent(form, parent, flags) };
     }
 }

@@ -4,7 +4,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-10, WB04-E258 완료)
+### 0.1 현재 값 (2026-11-10, WB04-E259 완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
@@ -12,9 +12,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(현재 단계 **3-E**, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 895단위(제외 89 별도) 중 **port 473(52.8%)·partial 89(9.9%)·todo 333(37.2%)**. 기준선 소스 줄 수로는 129,541줄 중 port 54,744(42.3%)·partial 24,239(18.7%)·todo 50,558(39.0%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E258** (이 커밋, `20261110-111 WB`) 공통 후처리 SquidPostPop 마감: postpop 원본 10.78 관측의 표시 dirty 열(전체 갱신·변경 사각형, PostPop 384·Pop 72·Unpop 36행)을 SquidDisplay·DirtyRegions 연결로 대조하고, 기준선 뒤 장기 Client 진입(공유 metamap·기본 장치·기본 자원 후처리·반납·목록 정체성)을 ② 재반영했으며 3-A~3-C 몸체(buried·carrierSteal 신규 확인 포함)의 연결을 점검해 3-D 를 마쳤다([문서](docs/webpj-squid-postpop-20261110.md)). 그 앞은 **WB04-E257** (`98c445f2 / 20261110-110 WB`). 단위 색인은 2절·3.1절 |
-| 다음 작업 | **3-E 첫 항목 판정-공통층**(3.1절, 22단위: ConfigInterface·ContentFormHost·ContentFormLifetime·DependFormHost·GumpFormHost·RawFortObjectLoad·RawGameAuxState 외): 착수 때 판정 기준 커밋을 정하고 `node webpj/tools/port-map.mjs` 의 단위별 기준선 뒤 변경을 ①(웹 결과 영향 없음)/②(재반영)/③(4-D 이후 연결)로 판정해 행 base 를 올린다. 3-E 는 순서3 마감 관문이다 |
-| 마지막 전체 검사 | WB04-E258의 Node v24.21.0, **2359/2359 통과·실패/건너뜀0**(신규 squid-postpop-display 1·squid-postpop-native 7; WB04-E257 2351), 약163초 |
+| 마지막 구현 커밋 | **WB04-E259** (이 커밋, `20261110-113 WB`) 3-E 첫 항목 판정-공통층 22단위를 판정했다: 기준선 뒤 cpppj 변경 전부(약 700줄)와 새 API 의 소비자를 읽어 ② 재반영 2건(ContentFormHost 현재 가상+50 부착·RawStateSidLists 의 removeStateSidList), ① 5·③ 12·혼합 3 으로 가르고 행 base 를 올렸으며 ③ 은 3.6절에 4-A·4-B·4-D·5-B 시점으로 적었다([문서](docs/webpj-judge-common-20261110.md)). 그 앞은 **WB04-E258** (`4789039e / 20261110-111 WB`). 단위 색인은 2절·3.1절 |
+| 다음 작업 | **3-E 두 번째 항목 판정-Player·사제·신전**(3.1절, 12단위: RawPlayerContentNotice·RawPlayerGeyserBounds·RawPlayerIdentity·RawPlayerParticipation·RawPlayerWorld·RawPriestDamage·RawPriestForcefield·RawPriestPreDestroy·RawPriestRegen·RawVortexAscend·RawVortexOwner·RawVortexPreDestroy): 단위별 기준선 뒤 변경과 새 API 소비자를 읽어 ①/②/③ 으로 판정하고 행 base 를 올린다. RawPriestPreDestroy 는 E259 의 `removeStateSidList` 를 소비하므로 ② 로 맞춘다. 3-E 는 순서3 마감 관문이다 |
+| 마지막 전체 검사 | WB04-E259의 Node v26.13.0 **2366/2366 통과·실패/건너뜀0**(신규 judge-common-layer 7; WB04-E258 2359), 약358초. 같은 시점 Node v22.23.3(`C:\Program Files\nodejs22`)도 2366/2366(약421초). Node v24 는 이 PC 에 없어 확인하지 못했다 |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -28,7 +28,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 〃 | 3-B | 다리·표면·영역 공통 수명 | 완료 8/8 | `o/` 8단위 · 1,288줄 (+68) |
 | 〃 | 3-C | 자산 정기 처리·피해/삭제 수명 | 완료 8/8 | `o/` 8단위 · 1,931줄 (+269) |
 | 〃 | 3-D | 공통 후처리(SquidPostPop)·Graph 조합 마감 | 완료 2/2 | `o/` 2단위 · 1,305줄 (+36) |
-| 〃 | 3-E | 기준선 뒤 cpppj 변경 판정(3.6절) — 순서3 마감 관문 | **다음** 0/6 | 판정 79단위 |
+| 〃 | 3-E | 기준선 뒤 cpppj 변경 판정(3.6절) — 순서3 마감 관문 | **진행 중** 1/6 | 판정 57단위 |
 | 4 M2 | 4-A | 자료·파일·설정·타입 표 | 미착수 | `o/` 15단위 · 3,135줄 (+24) + client M |
 | 〃 | 4-B | Fort·지형·섬 적재 | 미착수 | `o/` 26단위 · 3,916줄 (+47) + client B |
 | 〃 | 4-C | 패킷·로그인·내부 미션 전송 | 미착수 | `o/` 20단위 · 2,578줄 (+548) + `zacket/` 1 + client A 일부 |
@@ -46,9 +46,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 9 M5 | 9 | 표시 품질·배포 | 미착수 | — |
 | 10 후순위 | 10 | AGENTS.md 2026-11-10 추가: cpppj 6~11차 목표 중 웹 해당분(3.2절 10행·3.5절 5번) | 미착수 | — |
 
-**순서3 마감 조건은 3-B~3-E**다. 3-A 뒤 남은 순서3은 3-B~3-D 의 `o/` 18단위와 3-E 의 판정 82단위였고, 3-B~3-D 를 모두 마쳐 이제 3-E 판정 79단위만 남았다(RawBridgeLifecycle·RawAssetPostPop·SquidPostPop·SquidPostPopPatch 는 옮기며 판정). 6-P·7-P1~P3은 M2에 직접 필요하지 않아 순서3에서 이월한 부품이며 순서3 마감 조건이 아니다(1절 단계 분할 결정, 3.1절).
+**순서3 마감 조건은 3-B~3-E**다. 3-A 뒤 남은 순서3은 3-B~3-D 의 `o/` 18단위와 3-E 의 판정 82단위였고, 3-B~3-D 를 모두 마쳐 3-E 는 판정-공통층 22단위를 마쳐 이제 판정 57단위만 남았다(RawBridgeLifecycle·RawAssetPostPop·SquidPostPop·SquidPostPopPatch 는 옮기며 판정). 6-P·7-P1~P3은 M2에 직접 필요하지 않아 순서3에서 이월한 부품이며 순서3 마감 조건이 아니다(1절 단계 분할 결정, 3.1절).
 
-### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E258 기준)
+### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E259 기준)
 
 줄 수는 기준선 `1f00a25a`의 단위 파일(`.cpp/.h/.inc`) 줄 합계다(주석 포함). partial 줄 수는 일부만 옮긴 파일의 전체 줄이므로 남은 양의 상한이다. 단위·줄 수는 대략적인 척도일 뿐이며, 순서4~5의 연결·통합(실제 세션에서 부품을 같은 월드로 묶고 cpppj 오라클과 비교)은 이 수치에 드러나지 않는 큰 작업이다.
 
@@ -85,8 +85,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 이식 원본은 언제나 기준선 판(`git show 1f00a25a:경로`)이고, 기준선 뒤 cpppj 변경은 3.6절 절차로만 반영한다. 같은 작업 트리에서 CP 세션이 cpppj를 계속 커밋하므로(LAN 3차·`Actual*` 실제 연결 경로·`shared*` 공유 전역 추가 등) cpppj 상태는 커밋과 소스로 판단한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 851·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 473·partial 89·todo 333·제외(-) 89**, session/oracle 0. 웹 모듈 516개 중 511개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 408개, 도구(`webpj/tools`) 오라클 관련 4개다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` 529항목(original-x86 498·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E258에서 추가 없음(직전 추가는 WB04-E256 local-geyser·geyser-placement 2개; postpop 항목 소비자 1개 보강)). original-x86 498개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 851·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 473·partial 89·todo 333·제외(-) 89**, session/oracle 0. 웹 모듈 516개 중 511개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 409개, 도구(`webpj/tools`) 오라클 관련 4개다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` 529항목(original-x86 498·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E259에서 추가 없음(직전 추가는 WB04-E256 local-geyser·geyser-placement 2개)). original-x86 498개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
 | 마지막 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트). 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -219,11 +219,11 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] **RawGraph** (partial 628줄) — 남은 조합 대조(rawgraph·regiongraph·graphremove·graphrecovery)는 E41 SquidPostPop 시험이 재생했다고 메모돼 있으므로 확인 후 port 로 올린다(Commit 은 실제 실행이 쓰지 않아 제외) → [E257](docs/webpj-raw-graph-20261110.md) RawGraph 조합 대조 마감과 실제 Pop 실패 효과 시험 2건
 - [x] **SquidPostPop** (partial 677줄, +36) — 표시 dirty 열, 3-A~3-C 몸체의 setBody/set*Prefix 연결, 섬/표면/Teleport 접두 → [E258](docs/webpj-squid-postpop-20261110.md) SquidPostPop 표시 열·Native 진입·몸체 연결 점검, 3-D 마감
 
-#### 3-E 기준선 뒤 cpppj 변경 판정 — 순서3 마감 관문 (0/6)
+#### 3-E 기준선 뒤 cpppj 변경 판정 — 순서3 마감 관문 (1/6)
 
 2026-11-10 `node webpj/tools/port-map.mjs` 보고(HEAD `d4b82c30`)의 "②/③ 판정 필요" 87단위 가운데 `o/` 82단위와 `client/RawChatChannels`다. 나머지 client UI 4단위(ClientMain·UberGump·MenuGumpWidgets·ScrollingTextGumpWidgets)는 4-D·5 연결 때 판정한다. 착수 때 판정 기준 커밋을 하나 정해 그 커밋까지의 변경만 판정하고 행 base 를 그 커밋으로 올린다(CP 세션이 계속 커밋하므로 그 뒤 변경은 다음 단계 착수 때 다시 본다). 3-B~3-D 에서 옮기며 판정한 단위는 빠진다. 대부분 CP 의 `Actual*`/`shared*` 장기 연결이라 ③(4-D 연결 때)일 가능성이 높지만, 단독 결과가 바뀌는 ②는 `재반영`을 명시한 단위로 옮긴다. 묶음마다 결과를 3.6절 표와 [대응표 문서](docs/webpj-port-map-20261106.md) 판정 절에 남긴다.
 
-- [ ] **판정-공통층** 22단위 — ConfigInterface·ContentFormHost·ContentFormLifetime·DependFormHost·GumpFormHost·RawFortObjectLoad·RawGameAuxState·RawMissionBattleOptions·RawSquidContainedUnpop·RawSquidDestroy·RawStateSidLists·RiftType·RiftTypeTable·SidPool·SquidDestroyLifecycle·SquidDisplay·SquidFactory·SquidFormDispatch·SquidFrame·SquidProcess·SquidUnpop·Xlat
+- [x] **판정-공통층** 22단위 — ConfigInterface·ContentFormHost·ContentFormLifetime·DependFormHost·GumpFormHost·RawFortObjectLoad·RawGameAuxState·RawMissionBattleOptions·RawSquidContainedUnpop·RawSquidDestroy·RawStateSidLists·RiftType·RiftTypeTable·SidPool·SquidDestroyLifecycle·SquidDisplay·SquidFactory·SquidFormDispatch·SquidFrame·SquidProcess·SquidUnpop·Xlat → [E259](docs/webpj-judge-common-20261110.md) 3-E 판정-공통층 22단위 판정과 ② 재반영 2건
 - [ ] **판정-Player·사제·신전** 12단위 — RawPlayerContentNotice·RawPlayerGeyserBounds·RawPlayerIdentity·RawPlayerParticipation·RawPlayerWorld·RawPriestDamage·RawPriestForcefield·RawPriestPreDestroy·RawPriestRegen·RawVortexAscend·RawVortexOwner·RawVortexPreDestroy
 - [ ] **판정-섬·다리·자원** 6단위 — RawBridgeEvents·RawIslandPostPop·RawIslandRuntime·RawGeyserLifetime·RawNuggetRegular·RawNuggetReplenish
 - [ ] **판정-건설·운반·Dude** 15단위 — RawBuildingSpace·RawCanonPlacementCollision·RawConstructionClear·RawConstructionConfirm·RawConstructionPlace·RawConstructionProcess·RawConstructionRequest·RawCarrierFalling·RawCarrierPreDestroy·RawCarrierRegular·RawCarrierTransfer·RawDudeBehavior·RawDudeNotice·RawDudeRegular·RawDudeTask
@@ -340,7 +340,7 @@ M2(Tutorial1 Load/Start/표시)에 직접 필요하지 않아 순서6/7 몫으�
 | cpppj 소스(웹 기준 → 기준선 사이 커밋) | 웹 모듈 | ③ 반영 시점과 내용 |
 | --- | --- | --- |
 | `client/TellSection` `6dd8d803` → `2ca39d0b`·`5a2cd047` | `ui/tell-parameters.js`·`game-data.js` | 대체 tell 적재가 `config.LoadFile` 경로 → **4-D 현재 미션 Tell 연결 때 반영**. `DisplayText` 교체는 cpppj 6차 표시 부호화라 웹은 ① |
-| `o/RiftTypeTable`(+`RiftType.h`) `700475b5` → `fbc27346` | `assets/type-flags.js` 외 | 타입 레코드 `defaultFrame`(+0x128). 웹 type-table 정의에는 있으나 Factory용 레코드에 없음 → **4-A 타입 레코드·5-A Draw 연결 때** |
+| `o/RiftTypeTable`(+`RiftType.h`) `700475b5` → `fbc27346` | `assets/type-flags.js` 외 | 타입 레코드 `defaultFrame`(+0x128). 웹 type-table 정의에는 있으나 Factory용 레코드에 없음. 같은 파일의 새 칸 6개(`range`·`useAirDamage`·`airDamagePerSecond`·`damagePerSecond`·`directions`·`frameCount`, 3-E 판정-공통층 WB04-E259)와 속성 파서(`range`/`hpPerSec`/`useairdamage`/`airdamage`·`ReadRawArcherTypeData`)도 같은 시점 → **4-A 타입 레코드·5-A Draw 연결 때** |
 | `o/RawTerrainContext` `552656c0` → `3eec0830`·`1fe5fae7` | `assets/terrain-mask.js`·`terrain-fringe.js` | `Edition()`·`ArchipelagoMode()` 접근자 → **4-B 군도 지형 이식 때** |
 | `o/SidPool.cpp/.h` `6035f810`/`b7065914` → `90ffe7e5`·`7b78cc20`·`435cfa1d` | `core/sid-pool.js` | (WB04-D3 판정 유지) 패치판 할당 진단 정상 복귀(`disallowSquidAllocation`·각 free 진단)·소진 시 boss의 현재 World 다리 회수(최대 50, `BindAllocation`)·물리 슬롯 friend. 정상 할당 결과는 같음. 웹은 소진/진단에서 오류로 멈춘다 → **4-D World 수명 때** |
 | `9cb0547f`(일반 전투섬·중앙섬/군도): `client/UberGump.cpp` | `ui/main-menu.js` 등 partial | 로그인 중 "Creating Islands." 안내(일반 전투섬 생성 경로) → **4-C/4-D 로그인 이식 때 단독 도달 여부 확인**. base `9cb0547f` |
@@ -348,9 +348,13 @@ M2(Tutorial1 Load/Start/표시)에 직접 필요하지 않아 순서6/7 몫으�
 | `9cb0547f` 뒤 ~`11fbb988`: `client/UberGump.cpp` | `ui/main-menu.js` 등 partial | ①: LAN 대기실·재접속·Multiplayer 옵션/메뉴(웹 제외). ③: `ShowLoginProgress` 단독 안내(Initializing./Starting Mission...)·`PollBattleResources`(486bc0)·F7/Ctrl+F6 건설 기록 재생 입력 → **4-C/4-D 로그인·6 입력 때**. base `11fbb988` |
 | `1f00a25a` 뒤 ~`3e9dc2c7`: `o/GameClock.cpp/.h` | `core/game-clock.js` | 시간 동기화 보정(0055b4ac) 바인딩과 `(ms−origin−보정)` 감산. 보정 0 이면 기준선과 같은 결과 → **4-C 시간 패킷(5번) 단독 도달 확인 때**. base `3e9dc2c7` |
 | `1f00a25a` 뒤 `b8cadde1`: `o/RawFormPacket.cpp/.h` | `core/squid-vtables.js`(VT 칸만) | 삭제 패킷 writer 의 헤더 선기록·client SID 진단 정상 복귀 → **4-C 패킷 writer 이식 때**. VT 4종 칸은 ①. base `b8cadde1` |
-| `9cb0547f` 뒤 ~`11fbb988`: `o/RawGameAuxState.h` | `core/game-aux-state.js` | 새 장기 전역 칸(StateNotifyType 82·Spell/Income·프로세스 TYPE·건설 헤더·미션 설정 7칸·Quick 건설 등)과 지정 칸 의미 갱신 → **각 소비자 이식 단위에서 보호 PE 초기값과 함께 추가**. 기존 웹 칸의 값/폭 변화 없음. base `11fbb988` |
+| `9cb0547f` 뒤 ~`11fbb988`: `o/RawGameAuxState.h` | `core/game-aux-state.js` | 새 장기 전역 칸(StateNotifyType 82·Spell/Income·프로세스 TYPE·건설 헤더·미션 설정 7칸·Quick 건설 등)과 지정 칸 의미 갱신 → **각 소비자 이식 단위에서 보호 PE 초기값과 함께 추가**. 기존 웹 칸의 값/폭 변화 없음(3-E 판정-공통층 WB04-E259: 기준선 뒤 19커밋도 기존 51칸 값/폭 변화 0 확인). base `8defb347` |
 | 기준선 뒤 `02b00b12`: `o/SquidProcess.cpp/.h` | `core/squid-process.js` | (2026-11-08 WB04-D5c) 발사/회전 애니메이션 프로세스 TYPE 두 칸(`fireAnimationType`·`rotateAnimationType`, 0x005410fc/00541100) → **애니메이션 소비자(`RawCampaignArcherBindings`) 이식 때 `GameAuxState`와 함께 추가**. 나머지 변경은 ①. base `02b00b12` |
 | 기준선 뒤 `541624a9`·`417f22d2`·`7ba0130b`: `o/SquidDestroyLifecycle.cpp/.h` | `core/squid-destroy-lifecycle.js` | (2026-11-10 WB04-E213) 실제 PATCH(Native) 전용 분기(`destroy_.HasPatchDiagnostics()`): 현재 전역 getter(`selectedRaw`·`localOwner`·loading 깊이·fort 모드·silent/특수/대체/대형 표면 TYPE)·자산 pre `!isForm()` 0x771 진단·`rememberPlacement`(UI 기억점 원시 좌표 비트)·0040ea00 DWORD 감김 압축 제거·현재 TYPE 표 빌림·최초 로딩 비용 표 소비·선행 `ValidatePre/Post` 생략 → **4-D World 수명·삭제 UI 전역 연결 때** 같은 시기 `RawSquidDestroy`(+143/−2)·`SquidPostPop`(+35/−1)·`SquidReward`(+6/−3) 변경과 함께 반영. 웹은 기준선 typed 경로만 옮겼다. base `1f00a25a` |
+| `o/SquidDestroyLifecycle` `7ba0130b`·`RawSquidDestroy` `417f22d2`·`SquidFormDispatch` `417f22d2`·`SquidProcess` `417f22d2`·`SquidFactory`·`SquidFrame` `be567d46`·`DependFormHost` `5635f21a`·`GumpFormHost` `4ee69f4f`·`ContentFormLifetime` `cfbd6420` | `core/squid-destroy*.js`·`squid-form-dispatch.js`·`squid-process.js`·`squid-factory.js`·`squid-frame.js`·`depend-form-host.js`·`gump-form-host.js`·`content-form-lifetime.js` | (2026-11-10 WB04-E259 판정-공통층) 실제 PATCH World 의 Native 분기: 공통 삭제 `DestroyPatch`(dead 선기록·진단 복귀·level 0x27 로그·`ReleasePatch`)·`selectedRaw`·현재 VT 로 고르는 Form/자산 가상 +10·Depend `BindVirtualDestroy`·Gump `BindCurrent`·Content `LocalOwner`·Factory `BindRuntime`/`BindUnpop`·Frame `BindCurrentTypes`·ProcessHost 기본 장치(`BindDefault*`)·World 없는 폴백 → **4-D World 수명 때** 위 E213 행과 한 묶음으로 cpppj `DestroyLifecycleTests` 등과 대조. typed/CD 경로 결과는 변하지 않는다. 공유 Regular 수신·`WriteFormPacket` 은 LAN ①이나 4-C 패킷 writer 이식 때 단독 도달 재확인 |
+| `o/RawFortObjectLoad` `0d276d0d` | `core/fort-object-load.js` | (E259) `FortSerializationGlobals` 대여 생성자: `loadingDepth`·`scope`·두 저장 mask 를 실제 Client 의 장기 전역에서 빌림. 독립 typed 생성자는 로컬 값이라 결과 동일 → **4-B Fort 적재 때** |
+| `o/ConfigInterface` `eefded86` | `assets/config.js` | (E259) `ReadStringBytes`: 고정 C 문자열 목적 버퍼의 첫 불일치 뒤 NUL 복사(소비자 `ClientMain`·`ClientLocalStateGlobals`). 웹은 JS 문자열 저장소라 소비자가 바이트 버퍼를 쓸 때만 → **4-A Config 이식 때** |
+| `o/SquidDisplay` `2c6ab7cc` | `core/squid-display.js` | (E259) `BindView`/`CurrentView`: 투영·clip 위치마다 현재 Client 카메라/viewport 를 재조회. 웹 `setView` 는 값 복사 → **5-B 카메라 연결 때** getter 로 교체. 메타/일반 Sprite VT 분배는 ① |
 
 ## 4. 이관해도 남겨야 할 미해결 한계
 
@@ -397,7 +401,9 @@ M2(Tutorial1 Load/Start/표시)에 직접 필요하지 않아 순서6/7 몫으�
 ```powershell
 # 저장소 루트에서 정적 개발 서버를 실행한다(공개 루트 webpj/www, 포트9803).
 npm --prefix webpj start
-# Node 내장 전체 검사. 부품 작업 중에는 관련 tests/*.test.mjs만 집중 실행할 수 있다(webpj 폴더에서 node --test 도 같다).
+# Node 내장 전체 검사. 부품 작업 중에는 관련 tests/*.test.mjs만 집중 실행할 수 있다(webpj 폴더에서 node --test "tests/*.test.mjs" 도 같다).
+# Node v22·v24·v26 모두에서 통과해야 한다(사용자 지시, 2026-11-10). HJOW-Athlon 의 기본 node 는 v26, Node 22 는 C:\Program Files\nodejs22\node.exe:
+#   & "C:\Program Files\nodejs22\node.exe" --test "tests/*.test.mjs"   (webpj 폴더에서; Node 22 는 인자 없는 --test 의 탐색 범위가 달라 glob 을 준다)
 npm --prefix webpj test
 # 이식 추적 목록 검사(해시 비교·대응표 base 뒤 cpppj 근거 소스 변경 보고). 전체 --write 는 수 분~십수 분이 걸리므로 단위마다 --only 를 쓴다.
 node webpj/tools/fixture-manifest.mjs
@@ -432,6 +438,7 @@ npm --prefix webpj run test:e2e
 ## 7. 문서 정리 기록
 
 - **기록 방식:** 단위마다 0.5절 5번의 칸만 고치고 단위별 기록 줄은 이 절에 쌓지 않는다(단위 문서와 커밋 메시지가 기록이다). 이 절에는 문서 정리·사용자 결정·작업 중단 같은 단위 밖 사건만 적는다.
+- **2026-11-10, HJOW-Athlon, Node.js 버전 지원(사용자 요청, WB04-E259 중):** 이 PC 의 기본 Node 가 v24.21.0 에서 v26.13.0 으로 올라 시험 2건(`carrier-fall-start`·`construction-data`)이 실패했다(클린 HEAD 에서도 같음). 원인은 Node v26 의 V8 최적화 JIT(TurboFan·Maglev)가 함수가 데워진 뒤 JS double 의 신호 NaN quiet 비트를 켜고 NaN 연산의 페이로드 선택 순서를 바꾸는 것이다(반복 수에 따라 실패하는 비결정적 동작). 두 시험 파일이 `tests/nan-exact.mjs`(`v8.setFlagsFromString('--no-turbofan'/'--no-maglev')`)를 가장 먼저 가져오게 해 해당 프로세스에서만 최적화 JIT 를 끈다. NaN 비교를 느슨하게 하지 않았다. **웹 코드·시험은 Node v22·v24·v26 모두에서 통과해야 한다**: v26.13.0·v22.23.3 에서 2366/2366 을 확인했고 v24 는 이 PC 에 설치돼 있지 않다. `webpj/package.json` 에 `engines`(`>=22`)를 적었다. 새 시험이 NaN 비트를 대조하면 같은 import 를 쓴다.
 - **2026-11-10, HJOW-Athlon, AGENTS.md 목표 추가 반영(사용자 커밋 `8136df49`·`b5117f52`·`8661e106`, 문서만):** cpppj 에 오류/예외 처리·로깅 공통 구조와 기타 언어 목표가 생기고 "cpppj 6~11차 목표가 webpj 후순위 요구에도 포함(로깅은 브라우저 console)"이 추가됐다. 세 번째 커밋이 번호를 바꿔 현재 7차 로깅·8차 AA/FSR·9차 편집기 시나리오·10차 알려진 버그 수정·11차 기타 언어다. 0.2절 진행판에 순서 10 행, 3.2절에 10행, 3.5절에 5번을 더했다. 뒤이은 사용자 커밋 `22a0877c`(webpj 작업 예외 명시)가 "8차와 9차는 webpj 작업에서 제외"를 확정해(2026-11-10, WB04-E255 착수 때 반영) 3.2절 10행과 3.5절 5번의 8·9차 확인 대상 표현을 확정 제외로 바꿨다. 현재 진행 중인 M2(순서 3~5)의 순서와 범위는 바뀌지 않는다.
 - **2026-11-10, HJOW-Athlon, 글꼴 라이선스 파일 이름 변경 반영(WB04-E252 전체 검사에서 발견):** 사용자 커밋 `75e4eed9`(글꼴 관련 사항 명시)가 `fonts/License.txt` 를 `fonts/D2Coding-License.txt` 로 바꿔 자산 검사 2건(`assets`·`korean`)이 실패했다. 준비 도구 `tools/prepare-assets.js`·`www/assets/korean-assets.js` 의 경로와 `www/data/fonts/` 복사본·`www/data/manifest.json` 을 새 이름으로 맞추고, `.gitattributes` 의 `fonts/License.txt -text` 한 줄을 새 이름으로 고쳤다(원본과 복사본의 바이트·SHA-256 을 체크아웃마다 같게 하는 기존 결정 유지, 이 PC 의 작업 사본은 저장소 blob 과 같은 LF 로 다시 꺼냄). 파일 내용은 바꾸지 않았다. 같은 커밋의 AGENTS.md 글꼴 규칙(다른 언어 글꼴·Google Fonts CDN)은 4절 "다른 언어 글꼴"에 남겼다. 수정 커밋은 `0dc00017 / 20261110-99 WB`다.
 - **2026-11-10, HJOW-Athlon, 사용자 요청(인계 문서 정리·M2 선행 작업 단계 분할, 문서만):** `bf156eea / 20261110-46 WB` 시점 원문 전체를 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261110-through-wb04-e242)에 바이트 그대로(94,455바이트, SHA-256 `5d518ed6…27d652`) 보존했다. 순서3을 3-A(완료, E1~E242)와 3-B~3-E로 나누고, M2에 직접 필요하지 않은 경로·비행·총·의식 부품을 6-P·7-P1~P3로 이월했으며, 순서4·5를 4-A~4-D·5-A~5-C로 나눴다(1절 단계 분할 결정). 남은 `o/` 109단위를 모두 단계에 배정했다(3-B~3-D 18·4-A~4-C 61·5-A/5-B 5·6-P 4·7-P 20·8 1). 2.2절 단위 링크 색인은 영역별 번호 범위로 줄이고 링크는 보관본에 남겼다. 3.1절 완료 표시·3.4절과 4절의 해소 행·7절의 2026-11-09 상세 기록을 보관본으로 옮기고, 3.6절 판정 대기를 2026-11-10 보고(87단위)로 새로 적었다. 규모 수치는 `PORT_MAP.tsv`·기준선 `1f00a25a` 소스·`git diff --numstat` 로 계산했다. 코드·검사·자산·PORT_MAP 은 바꾸지 않았고 게임·브라우저·cpppj 실행과 디컴파일은 하지 않았다.
