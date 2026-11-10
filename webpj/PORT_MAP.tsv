@@ -430,7 +430,7 @@ cpppj/src/client/VFXTransform.cpp	port			todo	[client-default]
 cpppj/src/client/ViewKeyInput.cpp	port	www/core/view-key-input.js	1f00a25a	port	[client-default] WB04-E25: 4d9670~4d998c F2/F3/F7/F8 표시 키. fixture view-key-input 10.78 310행 전부
 cpppj/src/client/WarningMessages.cpp	port			todo	[client-default]
 cpppj/src/client/WindowTitle.cpp	adapt	www/core/window-title.js	1f00a25a	port	[adapt-screen] WB04-E34: 00460730 창 제목 선택(설정 조회 순서·미션 title 시점). fixture window-title 10.78 576행(originalCD 제외). 실제 창 적용은 웹 소비자(document.title)로 대체
-cpppj/src/client/XlatFileRead.cpp	adapt			todo	[adapt-file]
+cpppj/src/client/XlatFileRead.cpp	adapt	www/core/raw-xlat.js	1f00a25a	port	[adapt-file] WB04-E270: CRT FILE 열기·길이·읽기·정규화·닫기 순서와 부분 실패 정리는 브라우저에 없다. 웹은 initializeRawXlat(german(3)→english(1)→portuguese(6), 부재 로그 후 다음 파일)의 hooks.exists/read 로 대체하고 읽은 바이트의 정규화·병합·조회는 RawXlat.load(E242, xlat-file-read-x86.tsv 의 번역 칸 대조)가 맡는다
 cpppj/src/o/BaseFile.cpp	adapt	www/assets/game-files.js;www/assets/taff.js;www/assets/asset-loader.js	1f00a25a	partial	[adapt-file] 느슨한 파일→TAFF 조회(웹 대체, docs/formats/vfs.md)
 cpppj/src/o/BaseProcess.cpp	port	www/core/kernel.js	1f00a25a	port	[o-default] WB04-C1(BaseProcess 기반)·WB04-D5c(Process/BaseProcess 부착은 squid-process.js 호스트)
 cpppj/src/o/Bridge.cpp	port	www/core/surface-finder.js;www/core/bridge-decay.js	1f00a25a	port	[o-default] WB04-E44(+E12 Connects): 열린 방향·방문 목록·수명 감소·프레임 전환·destroy 재정의·한 칸 처리·스캔. fixture bridgedecay Cell 4241·Life 3264·Destroy 1152·Crack 348·Normal 174·Weaken/Restore 696·Init 12·Scan 3941. raw 풀 위의 실행기(RawBridgeDecay/Scan/Carriers)는 별도 단위
@@ -985,5 +985,5 @@ cpppj/src/o/TypeLoadOrder.cpp	port	www/assets/type-table.js	1f00a25a	port	[o-def
 cpppj/src/o/TypeParser.cpp	port	www/assets/type-table.js	1f00a25a	port	[o-default] .type 정의 해석(프레임 코드·특수 프레임·기준점·문법). WB04-E267: 기준선 판과 대조해 클러스터 images(파일+번호)·속성 조회(typeProperty/Number/String)·발자국(typeFootprint)을 더하고 AssetTests TypeParser 두 시험(샘플 정의 전부·거부 5종)과 숫자 토큰/주석/NUL 절단을 재현(tests/type-parser.test.mjs 6건, 변형 11개 전부 탐지). 기준선 뒤 변경 없음
 cpppj/src/o/UnpopVtables.inc	port	www/core/squid-vtables.js	1f00a25a	port	[o-default] WB04-D2(지원 자산 VT 83칸)
 cpppj/src/o/Win32FileError.cpp	exclude-host			-	[host-win32]
-cpppj/src/o/Xlat.cpp	port	www/assets/xlat.js	cd63f421	partial	[o-default] 용어표 조회. 10.78 다중 장부(RawXlat)는 www/core/raw-xlat.js 로 WB04-E242 에서 별도 이식(웹 assets/xlat.js 는 UTF-8 용어표 계층으로 남김) / 3-E 판정(WB04-E259, 기준 4789039e): ① — TranslateView(string_view 반환)는 C++ 메뉴 포인터 정체성 보존용이며 JS 문자열에는 해당 없음
+cpppj/src/o/Xlat.cpp	port	www/assets/xlat.js	cd63f421	port	[o-default] 용어표 조회. 10.78 다중 장부(RawXlat)는 www/core/raw-xlat.js 로 WB04-E242 에서 별도 이식(웹 assets/xlat.js 는 UTF-8 용어표 계층). 3-E 판정(WB04-E259): ① TranslateView 는 JS 문자열에 해당 없음. WB04-E270: XlatTable 규칙(CR 제거·줄 첫 글자 구분·줄바꿈 하나만 trim·끝나지 않은 블록 버림·중복 덮어쓰기·대소문자 구분)을 tests/xlat-table.test.mjs 5건으로 고정하고 translate 에 언어 0·1 우회 인자 추가(변형 9개 전부 탐지)
 cpppj/src/zacket/LocalMissionTransport.cpp	port			todo	[zacket-default] 단독 미션 Zone/로그인 바이트와 로컬 두 연결

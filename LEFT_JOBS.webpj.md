@@ -4,17 +4,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-10, WB04-E269 완료)
+### 0.1 현재 값 (2026-11-10, WB04-E270 완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(현재 단계 **4-A**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 895단위(제외 89 별도) 중 **port 478(53.4%)·partial 84(9.4%)·todo 333(37.2%)**. 기준선 소스 줄 수로는 129,541줄 중 port 56,367(43.5%)·partial 22,616(17.5%)·todo 50,558(39.0%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E269** (이 커밋, `20261110-125 WB`) 4-A 다섯 번째 항목 OriginalText: Windows-1252 해독 256바이트를 표준과 대조하고 엄격한 인코딩 encodeOriginalText(표 밖 문자 거부·C1 제어 문자 5개 왕복)를 옮겼으며 4바이트 한글 확장 시퀀스는 UTF-16 + D2Coding 로 대체되는 웹 제외로 판정했다([문서](docs/webpj-original-text-20261110.md)). 그 앞은 **WB04-E268** (`7aa45755 / 20261110-124 WB`). 단위 색인은 2절·3.1절 |
-| 다음 작업 | **4-A 여섯 번째 항목 Xlat**(3.1절, partial) + client `XlatFileRead`: cpppj `Xlat.cpp` 용어표와 TARC 읽기를 웹 `assets/xlat.js`·`core/raw-xlat.js` 에 대조하고 E242 `RawXlat` 연결(xlat-file-read fixture 253행)을 마감한다. 이어서 BaseFile 계열(adapt)·client 자료 읽기 계열·자료 조회 순서 시험 순서로 3.1절 4-A 목록을 진행한다 |
-| 마지막 전체 검사 | WB04-E269의 Node v26.13.0·v22.23.3, **2397/2397 통과·실패/건너뜀0**(신규 original-text 3; WB04-E268 2394), 약265초(Node v22.23.3 도 2397/2397, 약299초; v24 는 미설치) |
+| 이식 진행도 | 대상 895단위(제외 89 별도) 중 **port 480(53.6%)·partial 83(9.3%)·todo 332(37.1%)**. 기준선 소스 줄 수로는 129,541줄 중 port 56,553(43.7%)·partial 22,553(17.4%)·todo 50,435(38.9%). 영역별 남은 양은 0.3절 |
+| 마지막 구현 커밋 | **WB04-E270** (이 커밋, `20261110-126 WB`) 4-A 여섯 번째 항목 Xlat: 웹 XlatTable 을 cpppj XlatTable 규칙 시험으로 고정하고 translate 에 언어 0·1 우회 인자를 더했으며 XlatFileRead 의 FILE 열기/정리는 initializeRawXlat 의 읽기 hooks 로 대체되는 웹 adapt 로 판정했다([문서](docs/webpj-xlat-table-20261110.md)). 그 앞은 **WB04-E269** (`57b49619 / 20261110-125 WB`). 단위 색인은 2절·3.1절 |
+| 다음 작업 | **4-A 일곱 번째 항목 BaseFile 계열**(3.1절, adapt 8단위: BaseFile·RawBaseFileIO·RawBaseFileOpenPolicy·RawBaseFileReadPolicy·RawBaseFileWholeRead·FileSpecQuery·StartupArchiveFiles·RawConfigFileLoad): cpppj 의 파일 열기/읽기 정책·검색 순서와 웹 `GameFiles`/`asset-loader`/TAFF 조회를 비교해 조회 순서·정책을 시험으로 고정하고 웹 제외/대체를 문서화한다. 이어서 client 자료 읽기 계열·자료 조회 순서 시험 순서로 3.1절 4-A 목록을 진행한다 |
+| 마지막 전체 검사 | WB04-E270의 Node v26.13.0·v22.23.3, **2402/2402 통과·실패/건너뜀0**(신규 xlat-table 5; WB04-E269 2397), 약253초(Node v22.23.3 도 2402/2402, 약292초; v24 는 미설치) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -29,7 +29,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 〃 | 3-C | 자산 정기 처리·피해/삭제 수명 | 완료 8/8 | `o/` 8단위 · 1,931줄 (+269) |
 | 〃 | 3-D | 공통 후처리(SquidPostPop)·Graph 조합 마감 | 완료 2/2 | `o/` 2단위 · 1,305줄 (+36) |
 | 〃 | 3-E | 기준선 뒤 cpppj 변경 판정(3.6절) — 순서3 마감 관문 | 완료 6/6 | 판정 79단위(완료) |
-| 4 M2 | 4-A | 자료·파일·설정·타입 표 | **진행 중** 5/9 | `o/` 15단위 · 3,135줄 (+24) + client M |
+| 4 M2 | 4-A | 자료·파일·설정·타입 표 | **진행 중** 6/9 | `o/` 15단위 · 3,135줄 (+24) + client M |
 | 〃 | 4-B | Fort·지형·섬 적재 | 미착수 | `o/` 26단위 · 3,916줄 (+47) + client B |
 | 〃 | 4-C | 패킷·로그인·내부 미션 전송 | 미착수 | `o/` 20단위 · 2,578줄 (+548) + `zacket/` 1 + client A 일부 |
 | 〃 | 4-D | Session 조립·Tutorial1 Load/Start(L2) | 미착수 | client A 나머지(RawCampaignSession 5,715줄 등) |
@@ -48,18 +48,18 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 **순서3(M2 선행 부품)은 3-B~3-E 를 모두 마쳐 2026-11-10 WB04-E264 에서 마감됐다**(3-A E1~E242, 3-B~3-D `o/` 18단위 E243~E258, 3-E 판정 79단위 E259~E264). 6-P·7-P1~P3은 M2에 직접 필요하지 않아 순서3에서 이월한 부품이며 순서3 마감 조건이 아니었다(1절 단계 분할 결정, 3.1절). 다음은 순서4 **4-A** 이며, 착수할 때 3.1절에 4-A 체크 항목 목록을 펼친다.
 
-### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E269 기준)
+### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E270 기준)
 
 줄 수는 기준선 `1f00a25a`의 단위 파일(`.cpp/.h/.inc`) 줄 합계다(주석 포함). partial 줄 수는 일부만 옮긴 파일의 전체 줄이므로 남은 양의 상한이다. 단위·줄 수는 대략적인 척도일 뿐이며, 순서4~5의 연결·통합(실제 세션에서 부품을 같은 월드로 묶고 cpppj 오라클과 비교)은 이 수치에 드러나지 않는 큰 작업이다.
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 895단위 / 129,541줄 | 478 (53.4%) / 56,367줄 (43.5%) | 84 (9.4%) / 22,616줄 (17.5%) | 333 (37.2%) / 50,558줄 (39.0%) |
-| `o/` 월드·규칙 | 516단위 / 67,480줄 | 428 (82.9%) / 53,193줄 (78.8%) | 22 (4.3%) / 5,333줄 (7.9%) | 66 (12.8%) / 8,954줄 (13.3%) |
-| `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 50 (13.2%) / 3,174줄 (5.2%) | 62 (16.4%) / 17,283줄 (28.0%) | 266 (70.4%) / 41,165줄 (66.8%) |
+| 전체 | 895단위 / 129,541줄 | 480 (53.6%) / 56,553줄 (43.7%) | 83 (9.3%) / 22,553줄 (17.4%) | 332 (37.1%) / 50,435줄 (38.9%) |
+| `o/` 월드·규칙 | 516단위 / 67,480줄 | 429 (83.1%) / 53,256줄 (78.9%) | 21 (4.1%) / 5,270줄 (7.8%) | 66 (12.8%) / 8,954줄 (13.3%) |
+| `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 51 (13.5%) / 3,297줄 (5.4%) | 62 (16.4%) / 17,283줄 (28.0%) | 265 (70.1%) / 41,042줄 (66.6%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 439줄 | 0 | 0 | 1 / 439줄 |
 
-남은 417단위(todo 333·partial 84)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
+남은 415단위(todo 332·partial 83)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
 
 | 영역 | 주 단계 | todo 단위 / 줄 | partial 단위 / 줄 | 큰 단위(줄) |
 | --- | --- | --- | --- | --- |
@@ -75,18 +75,18 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | J 렌더러·카메라·HUD·미니맵 | 5-A·5-B | 44 / 5,142 | 8 / 2,232 | Screen* 816 · Renderer* 492 · SpriteDraw* 468 · PreviewDraw 363 |
 | K 게임 입력·커서·선택·객체 메뉴 | 6 | 36 / 4,806 | 2 / 149 | RawCursorMana 289 · RawCampaignCursor 283 · RawCursorRange 283 · CampaignObjectMenuClient 240 |
 | L 메뉴·대화상자·Gump·글자 UI | 5·6 | 39 / 6,948 | 37 / 10,315 | UberGump* 2,207 · RawMenuControls 1,341 · RawButtonControls 797 · StyleText* 519 |
-| M 자료·파일·설정·언어(웹 적응 포함) | 4-A | 21 / 1,536 | 6 / 1,299 | BaseFile* 586 · ConfigInterface* 343 · ClientOptionsDisk* 165 · RawBaseFileIO 139 |
+| M 자료·파일·설정·언어(웹 적응 포함) | 4-A | 20 / 1,413 | 5 / 1,236 | BaseFile* 586 · ConfigInterface* 343 · ClientOptionsDisk* 165 · RawBaseFileIO 139 |
 | N 진단·추적 | 각 단계 | 3 / 284 | 0 | GifScreenshot 114 · ClientDiagnostics 99 · RawTraceLog 71 |
 
-분류(class)별로는 port 851(이식 대상)·adapt 44(웹 대체가 필요한 플랫폼 경계, port 2·partial 9·todo 33)·제외 89(exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1)이다. 이와 별도로 기준선 뒤 cpppj 변경 판정 대기가 있다(3.6절).
+분류(class)별로는 port 851(이식 대상)·adapt 44(웹 대체가 필요한 플랫폼 경계, port 3·partial 9·todo 32)·제외 89(exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1)이다. 이와 별도로 기준선 뒤 cpppj 변경 판정 대기가 있다(3.6절).
 
 ### 0.4 기준 값
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 이식 원본은 언제나 기준선 판(`git show 1f00a25a:경로`)이고, 기준선 뒤 cpppj 변경은 3.6절 절차로만 반영한다. 같은 작업 트리에서 CP 세션이 cpppj를 계속 커밋하므로(LAN 3차·`Actual*` 실제 연결 경로·`shared*` 공유 전역 추가 등) cpppj 상태는 커밋과 소스로 판단한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 851·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 478·partial 84·todo 333·제외(-) 89**, session/oracle 0. 웹 모듈 516개 중 511개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 414개, 도구(`webpj/tools`) 오라클 관련 4개다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` 531항목(original-x86 500·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E269에서 추가 없음(직전 추가는 WB04-E266 originalx86 1개)). original-x86 500개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 851·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 480·partial 83·todo 332·제외(-) 89**, session/oracle 0. 웹 모듈 516개 중 511개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 415개, 도구(`webpj/tools`) 오라클 관련 4개다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` 531항목(original-x86 500·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E270에서 추가 없음(직전 추가는 WB04-E266 originalx86 1개)). original-x86 500개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
 | 마지막 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트). 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -190,7 +190,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 
 3-B(8/8)·3-C(8/8)·3-D(2/2)·3-E(6/6)의 체크 항목과 단위 링크 전체는 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261110-through-wb04-e264)에 있다. 단위 문서는 `grep -l "WB04-E259" docs/webpj-*.md` 처럼 번호로 찾는다(E243~E264 모두 검색됨). 3-E 판정 79단위의 요약(② 재반영 6건)은 [판정-기타 문서 2절](docs/webpj-judge-misc-20261110.md)과 3.6절 표에 있다.
 
-#### 4-A 자료·파일·설정·타입 표 (5/9)
+#### 4-A 자료·파일·설정·타입 표 (6/9)
 
 완료 기준(3.2절): 미션 자료(Tell·`.fort`·타입 표)를 cpppj 와 같은 순서로 조회하고, cpppj `SquidFactory_TypeLoader_ConnectsHpDepthAndConstructorMetadata` 대응 검사를 통과한다. 선행: 3-E(완료). adapt 단위는 브라우저 자료 조회로 대체하므로 cpppj 의 조회 순서·열기/읽기 정책·실패 경계와 웹 `GameFiles`/`asset-loader` 를 비교한 결과를 단위 문서와 PORT_MAP 에 남기고, 코드가 필요한 곳만 고친다.
 
@@ -199,7 +199,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] **TypeParser** (partial) — `.type` 정의 해석의 나머지(프레임 코드·특수 프레임·기준점)를 cpppj 시험으로 대조 → [E267](docs/webpj-type-parser-20261110.md) `.type` 정의 해석 마감(그림 참조·속성 조회·발자국)
 - [x] **Config·ConfigInterface** (partial, ConfigInterface 3-E ③ 4-A 몫 `ReadStringBytes`) — 설정 파서·인터페이스의 남은 부분 → [E268](docs/webpj-config-interface-20261110.md) 설정 층 마감(Config 270행·타입 접근자)
 - [x] **OriginalText** (partial) — 원문 인코딩 계층의 남은 부분 → [E269](docs/webpj-original-text-20261110.md) 원문 인코딩 계층(엄격한 인코딩·1252 대조)
-- [ ] **Xlat** (partial) + client `XlatFileRead` — TARC 읽기와 E242 `RawXlat` 연결(xlat-file-read fixture 253행)
+- [x] **Xlat** (partial) + client `XlatFileRead` — TARC 읽기와 E242 `RawXlat` 연결(xlat-file-read fixture 253행) → [E270](docs/webpj-xlat-table-20261110.md) 번역표 마감(XlatTable 규칙·언어 0·1 우회)
 - [ ] **BaseFile 계열** (adapt 8단위: BaseFile·RawBaseFileIO·RawBaseFileOpenPolicy·RawBaseFileReadPolicy·RawBaseFileWholeRead·FileSpecQuery·StartupArchiveFiles·RawConfigFileLoad) — 브라우저 자료 조회와의 대응·조회 순서 문서화
 - [ ] **client 자료 읽기 계열** (adapt/port: TypeFileRead·ConfigFileRead·GifFileRead·PaletteFileRead·QuickHelpFileRead·DataManagerFileRead·FontCacheFile·LanguageOptions·ClientTemplateSectionNames·GameAssets·ClientFortGlobals 등 client M 영역) — 필요한 부분만 판정·이식
 - [ ] **자료 조회 순서 시험** — 미션 자료(Tell·`.fort`·타입 표)를 cpppj 와 같은 순서로 조회하는 통합 시험으로 4-A 를 마감

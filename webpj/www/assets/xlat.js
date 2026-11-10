@@ -43,8 +43,10 @@ export class XlatTable {
         return this.entries.size;
     }
 
-    // 원문에 대응하는 번역문을 돌려준다. 번역이 없으면 원문 그대로다(원본 004de9a0).
-    translate(original) {
+    // 원문에 대응하는 번역문을 돌려준다. 번역이 없으면 원문 그대로다(원본 004de9a0). 언어 번호(languageNumber)를 주면 0·1(영어 계열)은 표를 보지 않고 원문을 돌려준다
+    // (원본 004de9a0 의 언어 0·1 우회, cpppj XlatTable::Translate). 언어 번호를 생략하면(undefined) 우회하지 않는다. (2026-11-10 WB04-E270: 언어 번호 인자 추가)
+    translate(original, languageNumber = undefined) {
+        if (languageNumber === 0 || languageNumber === 1) return original;
         return this.entries.get(original) ?? original;
     }
 
