@@ -8,6 +8,9 @@ namespace netstorm::o {
 struct CarrierPickupState {
     FormPacketHeader request{0x4f,1,9}; //40a9a0의현재BYTE/BYTE/WORD다.
     std::uint32_t command{0x030000b1},silentType{168}; //5429b8의입력명령과5412f8의기존내용물삭제후보충생략타입이다.
+    // refuseHeldPriest: 10차 NB18 제품 전용 방어다. 켜면 이미 내용물(너겟 등)을 든 운반체가 사제(genus 0x200000)를 줍는 요청/수신을 거부한다.
+    // 기본 꺼짐이라 독립 원문 fixture의 호출 기록은 그대로이며, 실제 세션이 조립할 때만 켠다.
+    bool refuseHeldPriest{};
 };
 // 큰게임하위와장치경계만빌리며서버객체의dead와종속이동순서는본문이소유한다.
 struct CarrierPickupHooks {
@@ -33,6 +36,7 @@ public:
     const SidPool& Pool() const; //다른월드의생성·수명처리기를섞지않는다.
 private:
     std::uint32_t Genus(Sid sid) const; //현재BYTE TYPE의실제flags2를읽는다.
+    bool RefusesHeldPriest(Sid parent,Sid target) const; //NB18: 내용물을 든 운반체가 사제를 줍는지 판정한다(스위치가 꺼져 있으면 항상 거짓).
     void Dead(Sid sid,bool value) const; //유효물리슬롯의+11에현재다른비트를보존해bit2만쓴다.
     SidPool& pool_; //실제지도객체/내용물의단일물리저장소다.
     std::span<const RiftTypeRecord> types_; //효과뒤현재TYPE를다시조회한다.

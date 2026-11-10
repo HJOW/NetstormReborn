@@ -2,6 +2,7 @@
 #include "TestSupport.h"
 #include "client/NativeMetaParticipantName.h"
 #include "client/PriestSelectionShortcut.h"
+#include "o/RawCarrierPickup.h"
 #include "client/StyleTextMarkup.h"
 
 // NB02: 채팅 글자의 엠보스 오프셋 ~[E.x# y#]는 두 좌표가 모두 -4..4 안일 때만 적용한다.
@@ -48,4 +49,31 @@ TEST_CASE(KnownBug_NB20_PriestKeyCancelsHeldBuildPiece) {
     PriestSelectionShortcutHooks original=hooks;original.pieceHeld={};original.cancelPiece={};held=true;trace.clear();selected=0;repeated=0;
     SelectPriestByKey(selected,repeated,original);
     CHECK(trace=="FS" && held); // 장치가 없으면 원문 10.78의 호출 순서 그대로다(독립 원문 fixture 보존).
+}
+
+// NB18: 너겟 같은 내용물을 이미 든 운반체(벌프)가 사제를 줍지 못한다. 요청(클라이언트)과 수신(서버)이 같은 조건으로 거부하며,
+// 제품 스위치(refuseHeldPriest)가 꺼져 있으면 독립 원문 검사처럼 기존 동작을 유지한다.
+TEST_CASE(KnownBug_NB18_CarrierHoldingContentRefusesPriestPickup) {
+    using namespace netstorm::o;
+    SidPool pool{OriginalEdition::Patch1078,24000,true};
+    std::vector<RiftTypeRecord> types(188);ContainedFinderState contained;bool boss=true,single=false;CarrierPickupState state;
+    auto raw=[&](Sid sid) { auto bytes=pool.Slot(sid);return std::span<std::uint8_t>(const_cast<std::uint8_t*>(bytes.data()),bytes.size()); };
+    for (const auto sid:{Sid{50},Sid{60},Sid{81}}) { auto bytes=raw(sid);std::fill(bytes.begin(),bytes.end(),std::uint8_t{0}); } // 부모(50)·사제 대상(60)·새 내용물(81) 슬롯이다.
+    raw(Sid{50})[10]=6;raw(Sid{60})[10]=20;types[6].flags2=0x30000;types[20].flags2=0x200000; // 20번 TYPE을 사제(genus 0x200000)로 둔다.
+    int sent=0,queued=0;bool holding=true;
+    CarrierPickupHooks hooks;
+    hooks.candidate=[](Sid,float,float) { return std::pair<Sid,bool>{Sid{60},true}; };
+    hooks.send=[&](std::int32_t,std::span<const std::uint8_t>) { ++sent; };
+    hooks.assertion=[](std::uint32_t) {};hooks.reveal=[](Sid sid) { return sid; };
+    hooks.queue=[&](std::uint32_t,std::int32_t,std::int32_t) { ++queued; };
+    hooks.find=[&](Sid,std::uint32_t,std::uint32_t,std::uint32_t) { return holding ? Sid{52} : Sid{0}; };
+    hooks.afterDiscard=[] {};hooks.create=[](Sid,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { return Sid{81}; };
+    hooks.destroy=[](Sid,std::uint32_t) {};hooks.detach=[](Sid,std::uint32_t) {};hooks.attach=[](Sid,Sid,std::uint32_t) {};
+    RawCarrierPickup pickup(pool,types,contained,boss,single,state,hooks);
+    std::array<std::uint8_t,9> packet{0x4f,1,9,0,50,0,60,0,20}; // 부모 50이 대상 60(TYPE 20)을 줍는 요청 패킷이다.
+    pickup.Request(Sid{50});CHECK(sent==1); // 스위치가 꺼져 있으면 원문처럼 내용물을 들고도 요청한다.
+    pickup.Receive(0,0,packet);CHECK(queued==1);
+    state.refuseHeldPriest=true;sent=queued=0;
+    pickup.Request(Sid{50});pickup.Receive(0,0,packet);CHECK(sent==0 && queued==0); // 내용물을 든 채 사제를 줍는 요청/수신을 모두 거부한다.
+    holding=false;pickup.Request(Sid{50});pickup.Receive(0,0,packet);CHECK(sent==1 && queued==1); // 빈 손이면 정상 포획 요청은 그대로다.
 }

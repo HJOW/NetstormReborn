@@ -25,12 +25,20 @@ RawCarrierPickup::RawCarrierPickup(SidPool& pool,std::span<const RiftTypeRecord>
 }
 // 현재TYPE getter를호출전순수조회로대체하며반환genus를보관하지않는다.
 std::uint32_t RawCarrierPickup::Genus(Sid sid) const { const auto type=pool_.Slot(sid)[10];if (type>=types_.size()) throw std::out_of_range("포획현재TYPE 범위오류");return types_[type].flags2; }
+// 10차 NB18: 너겟을 든 벌프가 사제를 주우면 사제가 또 하나의 너겟으로 바뀌던 원문 결함을 막는다.
+// 스위치(state_.refuseHeldPriest)가 켜져 있고 대상이 사제(genus 0x200000)이며 부모가 이미 내용물(4ac9f0 mask1)을 들고 있으면 참이다.
+bool RawCarrierPickup::RefusesHeldPriest(Sid parent,Sid target) const {
+    if (!state_.refuseHeldPriest || !(Genus(target)&0x200000U)) return false;
+    return Need(hooks_.find)(parent,1,0,0).value!=0;
+}
 // 생성효과가free/void 등을바꾸어도원본처럼현재물리BYTE의dead만해제한다.
 void RawCarrierPickup::Dead(Sid sid,bool value) const { auto& state=pool_.bytes_[pool_.Offset(sid)+11];state=static_cast<std::uint8_t>(value ? state|2U : state&~2U); }
 // 후보는권한검사전에조회한다.내부이름/후보bool로다른프로토콜을고르지않는다.
 void RawCarrierPickup::Request(Sid parent) const {
     const auto raw=pool_.Slot(parent);const auto found=Need(hooks_.candidate)(parent,std::bit_cast<float>(Read(raw,14)),std::bit_cast<float>(Read(raw,18))).first;
-    if (!found.value || !boss_) return;const auto target=pool_.Slot(found);
+    if (!found.value || !boss_) return;
+    if (RefusesHeldPriest(parent,found)) return; //NB18: 내용물을 든 채로는 사제를 줍지 못하므로 서버에 요청하지 않는다.
+    const auto target=pool_.Slot(found);
     if (!single_) static_cast<void>(Genus(found));if (!boss_) return;
     std::array<std::uint8_t,9> packet{static_cast<std::uint8_t>(state_.request.protocol&0x7f),state_.request.message,static_cast<std::uint8_t>(state_.request.length),static_cast<std::uint8_t>(state_.request.length>>8)};
     Put(packet,4,parent.value);Put(packet,6,found.value);packet[8]=target[10];Need(hooks_.send)(9,packet);
@@ -46,6 +54,7 @@ void RawCarrierPickup::Receive(std::uint32_t owner,std::uint32_t flags,std::span
     const Sid parent{static_cast<std::uint16_t>(Read(packet,4,2))};Sid target{static_cast<std::uint16_t>(Read(packet,6,2))};
     if (!boss_) { Need(hooks_.assertion)(0x20c);if (!boss_) return; }
     if ((pool_.Slot(target)[11]&3) || (pool_.Slot(parent)[11]&3) || pool_.Slot(target)[10]!=packet[8]) return;
+    if (RefusesHeldPriest(parent,target)) return; //NB18: 서버/수신 쪽도 같은 조건으로 거부해 변형된 요청이 내용물을 사제로 바꾸지 못하게 한다.
     if (Genus(target)&0x2000U) target=Need(hooks_.reveal)(target);
     Need(hooks_.queue)(state_.command,target.value,static_cast<std::int32_t>(Read(packet,4,2)));
     if (Genus(target)&0x2100U) Discard(parent);

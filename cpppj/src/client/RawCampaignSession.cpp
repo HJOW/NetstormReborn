@@ -3802,6 +3802,7 @@ struct RawCampaignSession::Impl {
         pickup.destroy=[this](Sid sid,std::uint32_t flags) { static_cast<void>(world.Destroy(sid,flags)); };
         pickup.detach=[this](Sid form,std::uint32_t flags) { if (flags) throw std::logic_error("포획종속Unpop flags오류");contentForms->Unpop(form); };
         pickup.attach=[this](Sid form,Sid parent,std::uint32_t flags) { contentForms->Attach(form,parent,flags); };
+        carrierPickupState.refuseHeldPriest=true; //10차 NB18: 실제 세션에서만 내용물을 든 운반체의 사제 줍기를 거부한다.
         carrierPickup=std::make_unique<RawCarrierPickup>(core.pool,core.types,priestState.contained,assetState.Boss(),globals.missionPost,carrierPickupState,std::move(pickup));
         effects.carrier.pickup=[this](Sid sid) { carrierPickup->Request(sid); };
         boardTarget=std::make_unique<RawBoardTarget>(boardTargetState,[](std::uint32_t line) { throw std::logic_error("원본 Boardcoord.cpp 대상 접근 진단 "+std::to_string(line)); });
