@@ -4,10 +4,15 @@
 #include <functional>
 #include <memory>
 #include <span>
+#include <optional>
+#include <string>
+#include <string_view>
 
 namespace netstorm::client { // 공통 TextEntry가 빌리는 클립보드의 원문 부모다.
 struct RawTextEntryContext; // 기존 공통 문자 UI 문맥을 정의의 복제 없이 빌린다.
 struct TextClipboardDevices { // OS 반환은 원문이 검사하는 위치에서만 해석한다.
+    std::function<std::optional<std::u16string>()> readUnicode; // 클론 실제 장치만 제공한다. 형식이 없으면 nullopt로 CF_TEXT 경로를 계속한다.
+    std::function<void(std::u16string_view)> writeUnicode; // 한글 토큰이 있는 선택만 실제 CF_UNICODETEXT로 보낸다.
     std::function<std::uint32_t(std::uint32_t)> formatAvailable; // IsClipboardFormatAvailable(1)의 비영 여부다.
     std::function<std::uint32_t(std::uintptr_t)> open; // 원문 HWND는 고정 NULL이며 현재 게임 창 핸들을 대신 전달하지 않는다.
     std::function<std::uintptr_t(std::uint32_t)> get; // GetClipboardData(CF_TEXT)의 실제 HANDLE이다.
@@ -27,5 +32,7 @@ private:
     TextClipboardDevices devices_; // 창이나 Config보다 독립적인 실제 OS/검사 장치의 수명이다.
 };
 TextClipboardDevices Win32TextClipboardDevices(); // 실제 Win32 API를 연결한다. 호출 자체는 클립보드를 열거나 수정하지 않는다.
+// 한국어 확정 입력용 실제 창 소유자와 Unicode 형식을 더한다. 기본/fixture 장치는 원문 CF_TEXT 그대로다.
+TextClipboardDevices Win32DisplayTextClipboardDevices(std::uintptr_t window);
 void BindTextClipboard(RawTextEntryContext& context,std::shared_ptr<const TextClipboard> clipboard); // 실제 같은 장치 수명을 두 callback이 공유하며 다른 now/Console callback은 보존한다.
 }

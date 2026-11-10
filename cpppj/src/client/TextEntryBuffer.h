@@ -54,7 +54,8 @@ public:
     //00451b10: 빈선택은전체선택으로바꾼뒤복사→null삽입→dirty1이다.
     void Cut() const;
     //00451800: 실제clipboard256BYTE에서제외문자들을지운뒤비어있지않으면삽입한다.
-    void Paste(std::span<const char> excluded={}) const;
+    // 한글 표시토큰이 있을 때만 maxLength의 물리 BYTE 상한과 완전한 문자 경계를 함께 적용한다. 기본0/순수 BYTE는 원문 동작이다.
+    void Paste(std::span<const char> excluded={},std::int32_t maxLength=0) const;
     // 같은실제상태의현재필드를TextEntry/Console이직접재조회한다.
     TextEntryBufferState& State() const;
     // 현재주소의실제남은저장범위다.원문문자열/선택/Draw가같은바이트를사용한다.

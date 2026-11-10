@@ -1,8 +1,12 @@
 // 실제 OS의 실패 반환을 성공으로 바꾸지 않고 원문의 검사/무시/Close 위치를 유지한다.
 #include "client/TextClipboard.h"
+#include "client/DisplayTextInput.h" // 확장 BYTE를 외부 클립보드에 제어문자로 내보내지 않는다.
+#include "o/OriginalText.h"
 #include "client/RawTextEntryContext.h"
+#include <algorithm>
 #include <cstring>
 #include <limits>
+#include <new>
 #include <stdexcept>
 #include <utility>
 #ifdef _WIN32
@@ -24,6 +28,13 @@ template<class Function> const Function& Need(const Function& function) { if (!f
 TextClipboard::TextClipboard(TextClipboardDevices devices):devices_(std::move(devices)) {} // 소유만 넘기며 아직 OS 효과를 만들지 않는다.
 void TextClipboard::Read(std::span<char> output) const { // 원문 최대256BYTE 호출 외에도 같은 명시 capacity를 받는다.
     if (output.empty() || output.size()>std::numeric_limits<std::uint32_t>::max()) throw std::out_of_range("TextClipboard 읽기의 실제 출력 물리 범위");
+    if (devices_.readUnicode) if (const auto text=devices_.readUnicode()) {
+        try {
+            for (const auto scalar:*text) if ((scalar<0x20 && scalar!=9 && scalar!=10 && scalar!=13) || scalar==0x7f) throw std::invalid_argument("Unicode 클립보드 제어문자 거부"); // 외부 U+001F를 내부 토큰 선두로 해석하지 않는다.
+            const auto bytes=o::EncodeDisplayText(CommittedUtf16ToUtf8(*text));const std::string_view input(reinterpret_cast<const char*>(bytes.data()),bytes.size());
+            const auto filtered=FilterDisplayText(input,{},output.size()-1);std::fill(output.begin(),output.end(),0);std::copy(filtered.begin(),filtered.end(),output.begin()); }
+        catch (const std::invalid_argument&) { std::fill(output.begin(),output.end(),0); }return; // 지원하지 않는 외부 Unicode는 일부 붙이지 않고 빈 입력으로 거부한다.
+    }
     output[0]=0;if (!Need(devices_.formatAvailable)(kTextFormat)) return;if (!Need(devices_.open)(0)) return;
     const auto handle=Need(devices_.get)(kTextFormat);
     if (handle) {
@@ -38,6 +49,7 @@ void TextClipboard::Read(std::span<char> output) const { // 원문 최대256BYTE
     static_cast<void>(Need(devices_.close)());
 }
 void TextClipboard::Write(std::span<const char> input) const { // 선택한 본문 길이에 첫NUL 절단을 추가하지 않는다.
+    if (devices_.writeUnicode && HasExtendedDisplayText({input.data(),input.size()})) { devices_.writeUnicode(DisplayTextToUtf16(input));return; } // ASCII/원문 BYTE 복사는 기존 장치 순서를 유지한다.
     if (input.size()>=std::numeric_limits<std::uint32_t>::max()) throw std::out_of_range("TextClipboard 쓰기의 호스트 할당 물리 범위");
     if (!Need(devices_.open)(0)) return;static_cast<void>(Need(devices_.empty)());
     const auto handle=Need(devices_.allocate)(kAllocateFlags,static_cast<std::uint32_t>(input.size()+1));
@@ -45,6 +57,33 @@ void TextClipboard::Write(std::span<const char> input) const { // 선택한 본�
     auto* target=Need(devices_.lock)(handle);if (!target) throw std::out_of_range("원문 TextClipboard 쓰기의 NULL GlobalLock 물리 접근"); // 원문은 이곳에서 접근 실패한다. 성공/Close/Free로 위장하지 않는다.
     if (!input.empty()) std::memcpy(target,input.data(),input.size());target[input.size()]=0;
     static_cast<void>(Need(devices_.unlock)(handle));static_cast<void>(Need(devices_.set)(kTextFormat,handle));static_cast<void>(Need(devices_.close)());
+}
+// Unicode 확장만 GMEM_MOVEABLE/실제 창을 사용한다. 원문 장치 플래그/NULL HWND는 별도 경로에 보존한다.
+TextClipboardDevices Win32DisplayTextClipboardDevices(std::uintptr_t window) {
+    auto devices=Win32TextClipboardDevices();
+#ifdef _WIN32
+    devices.readUnicode=[window]()->std::optional<std::u16string> {
+        if (!IsClipboardFormatAvailable(CF_UNICODETEXT)) return std::nullopt;
+        if (!OpenClipboard(reinterpret_cast<HWND>(window))) throw std::runtime_error("Unicode 클립보드 열기 실패");
+        struct Close { ~Close() { CloseClipboard(); } };const Close close; // 성공한 Open은 모든 반환에서 반납한다.
+        const HANDLE data=GetClipboardData(CF_UNICODETEXT);if (!data) throw std::runtime_error("Unicode 클립보드 본문 없음");
+        const auto capacity=GlobalSize(data)/sizeof(char16_t);const auto* text=static_cast<const char16_t*>(GlobalLock(data));if (!text) throw std::runtime_error("Unicode 클립보드 잠금 실패");
+        struct Unlock { HANDLE data;~Unlock() { GlobalUnlock(data); } };const Unlock unlock{data}; // 시스템 소유 본문을 수정하거나 반납하지 않는다.
+        const auto end=std::find(text,text+capacity,char16_t{});if (end==text+capacity) throw std::length_error("Unicode 클립보드 NUL 범위");return std::u16string(text,end);
+    };
+    devices.writeUnicode=[window](std::u16string_view text) {
+        if (!window || !OpenClipboard(reinterpret_cast<HWND>(window))) throw std::runtime_error("Unicode 클립보드 실제 창/열기 실패");
+        struct Close { ~Close() { CloseClipboard(); } };const Close close; // 결과와 무관하게 현재 창의 클립보드 잠금을 반납한다.
+        if (text.size()>(std::numeric_limits<SIZE_T>::max()/sizeof(char16_t))-1) throw std::length_error("Unicode 클립보드 할당 범위");
+        const auto bytes=(text.size()+1)*sizeof(char16_t);const HGLOBAL memory=GlobalAlloc(GMEM_MOVEABLE,bytes);if (!memory) throw std::bad_alloc();
+        auto* target=static_cast<char16_t*>(GlobalLock(memory));if (!target) { GlobalFree(memory);throw std::runtime_error("Unicode 클립보드 쓰기 잠금 실패"); }
+        std::copy(text.begin(),text.end(),target);target[text.size()]=0;GlobalUnlock(memory);
+        if (!EmptyClipboard() || !SetClipboardData(CF_UNICODETEXT,memory)) { GlobalFree(memory);throw std::runtime_error("Unicode 클립보드 게시 실패"); } // 성공한 Set만 OS로 소유권을 넘긴다.
+    };
+#else
+    static_cast<void>(window);
+#endif
+    return devices;
 }
 TextClipboardDevices Win32TextClipboardDevices() { // HWND NULL과 CF_TEXT를 원문 그대로 User32/Kernel32에 전달한다.
 #ifdef _WIN32

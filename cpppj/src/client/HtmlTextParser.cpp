@@ -1,5 +1,6 @@
 // 태그의 원문 규칙·조건별 현재 상태 재조회·원본 출력 바이트 순서를 유지한다.
 #include "client/HtmlTextParser.h"
+#include "o/OriginalText.h"
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
@@ -126,7 +127,9 @@ std::string HtmlTextParser::Parse(std::string_view source,std::int32_t capacity)
             if (state_.shown) {
                 if (std::bit_cast<std::int32_t>(state_.textAllowed)<1 ||
                     static_cast<std::int64_t>(state_.output.size())>static_cast<std::int64_t>(capacity)-kOutputReserve) break;
-                if (byte>0x1f) {
+                if (globals_.extendedText && o::DecodeExtendedSequence({reinterpret_cast<const std::uint8_t*>(source.data()),source.size()},state_.inputOffset)) {
+                    Append(source.substr(state_.inputOffset,o::kExtendedTextLength),capacity);state_.inputOffset+=o::kExtendedTextLength-1;state_.afterHeading=0; // 제어BYTE네개를통째로보존하고하위숫자를일반공백/태그로재해석하지않는다.
+                } else if (byte>0x1f) {
                     Append(source.substr(state_.inputOffset,1),capacity);
                     if (state_.afterHeading) state_.afterHeading=Byte(source,state_.inputOffset)==' ';
                 }

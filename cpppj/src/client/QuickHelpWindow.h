@@ -52,6 +52,7 @@ public:
     QuickHelpWindow(QuickHelpWindowState& state,QuickHelpPopupState& popup,QuickHelpWindowHooks hooks); // 같은 캐시/현재 표식과 실제 트리를 빌린다.
     std::uint32_t Construct(std::uint32_t token,std::uint32_t learnType) const; // 전용 자식/라벨/파일 캐시·450×350·등록 serial을 설치한다.
     void Attach(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) const; // 그림/선택 버튼/본문/정보의 현재 크기를 원본 순서로 배치한다.
+    void InvalidateCache() const; // 언어전환뒤성공본문을반납하고다음생성에서같은FILE/해독경계를다시사용한다.
     void Reset(std::uint32_t token) const; // 그림/본문 자식/이전 정보 pane을 정리하고 새 정보 pane을 만든다.
     void Show(std::uint32_t token,std::uint32_t type,std::string_view topic) const; // 기본 주제/파생 HTML·치환·그림·실제 본문을 갱신한다.
 private:

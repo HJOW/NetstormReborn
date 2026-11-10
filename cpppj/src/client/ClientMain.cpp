@@ -27,6 +27,7 @@
 #include "client/LanguageOptions.h" //원문 언어 이름/OS 영어 변형과 용어표 재조회 순서를 공유한다.
 #include "client/LanguageRequest.h" //SetLanguage는같은현재언어/설정/입력큐와공유카운터를사용한다.
 #include "client/KoreanResources.h" //6차: 한국어 번역표와 D2Coding 글꼴 파일 탐색이다.
+#include "client/DisplayTextInput.h" // IME/MCP 확정 문자와 기존 BYTE 큐를 안전하게 연결한다.
 #include "client/GpuPresenter.h" //7차: 후처리 장치 가용성 확인이다.
 #include "platform/PortableStartup.h" //6차: 실행 파일 폴더로 클론 데이터(lang, fonts) 위치를 찾는다.
 #include "o/RawXlat.h" //시작 때 함께 읽은 세 언어의 번역을 선택 변경 뒤에도 보존한다.
@@ -103,6 +104,7 @@
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <windows.h>
+#include <imm.h> // 실제 ANSI 창에서 UTF-16 조합 결과를 가져오는 Windows10/11 호환 장치다.
 #include <dwmapi.h>
 #include <mmsystem.h>
 
@@ -219,7 +221,7 @@ struct Client::ChatState {
 // 파일 시스템·설정·전역 Chat 저장소만 만든다. 창과 화면은 Run에서 원본 순서대로 만든다.
 Client::Client(ClientOptions options)
     : options_(std::move(options)), files_(options_.gameDirectory,{},options_.startupFileNames),
-      configuration_([this](std::string_view path) { return files_.TryRead(path); },files_.FileNameOwner(),options_.edition==o::OriginalEdition::Patch1078 ? MakeConfigFileSearchHooks([this] { return options_.gameDirectory; }):o::FileSpecQueryHooks{},options_.edition==o::OriginalEdition::Patch1078 ? MakeConfigFileReadHooks(files_):o::ConfigFileLoadHooks{}), // Config파일만명시Native장치를쓰고공유Fort/Editor Reader와CD는기존계약을유지한다.
+      configuration_([this](std::string_view path) { return ReadLocalizedGameFile(path); },files_.FileNameOwner(),options_.edition==o::OriginalEdition::Patch1078 ? MakeConfigFileSearchHooks([this] { return options_.gameDirectory; }):o::FileSpecQueryHooks{},options_.edition==o::OriginalEdition::Patch1078 ? MakeConfigFileReadHooks(files_,[this](auto name) { return ResolveKoreanBuiltinFile(name); }):o::ConfigFileLoadHooks{}), // Config파일만명시Native장치를쓰고공유Fort/Editor Reader와CD는기존계약을유지한다.
       fortBadges_(std::make_shared<o::RawFortBadgesGlobals>()),
       fortTypeConversion_(std::make_shared<FortTypeConversionStorage>()),
       subscriberGlobals_(std::make_shared<ClientSubscriberGlobals>()),
@@ -245,6 +247,7 @@ Client::Client(ClientOptions options)
       dotCommandGlobals_(std::make_shared<ClientDotCommandGlobals>()),
       chat_(std::make_unique<ChatState>(*this,options_.edition)),kernel_(std::make_shared<o::Kernel>(options_.edition==o::OriginalEdition::Patch1078 ? o::kProcessCapacity:o::kCdProcessCapacity)),trace_(std::make_unique<ClientTraceGlobals>()) { // 실제장기Kernel도원문의PATCH39999/CD3999상한을사용한다.
     if (options_.edition==o::OriginalEdition::Patch1078) files_.DeferPrimaryArchiveRegistration();else files_.RegisterArchives(); // 원본10.78은441790의setup탐색뒤에등록한다. 독립조회는첫TAFF접근까지예약하고10.72기존초기화는유지한다.
+    htmlWindowGlobals_->text.extendedText=true; // 클론의UTF8/BOM/IME표시토큰을모든UI언어에서보존한다. 번역선택과원문독립파서의기본false는별개다(K1).
     rendererFrame_=std::make_unique<ClientRendererFrame>(*this); //생성은 BSS0 owner/참조만 준비하며 아직 화면/파일/난수를 사용하지 않는다.
     const auto packetDelays=connectionGlobals_->PacketDelays();packetDelays->wall=[clock=time_] { return clock->wall; };packetDelays->random=[random=randomGlobals_] { return random->Crt().Next(); }; //OS Capture가 갱신하는 같은0055b4d8 프레임 벽시각/CRT owner를 보유하며 enqueue마다 시각 사본이나 새 난수 스트림을 만들지 않는다.
     captureSequence_=std::make_unique<ClientCaptureSequence>(*this); //원문BSS0처럼파일/화면 없이 장기 상태만 준비한다.
@@ -781,6 +784,7 @@ void Client::InterpretLanguageOptions() {
     hooks.read=[this] { std::string name;configuration_.ReadString("currentLanguage",name);return name; };
     hooks.load=[this](auto name) { configuration_.LoadLanguage(name); };
     const bool languageChanged=ApplyOriginalLanguageOption(detectedLanguage_,currentLanguage_,languageNumber_,hooks);
+    htmlWindowGlobals_->text.extendedText=true; // 같은재사용클론전역은언어변경뒤에도유효한표시4BYTE를보존한다. 영어원문파일선택/바이트와독립fixture의기본false는그대로다.
     LoadKoreanTranslations(); // 6차: 현재 언어가 korean이면 번역표를 읽고 다른 언어가 되면 비운다(원문 세 언어 장부는 건드리지 않는다).
     if (languageChanged && options_.edition!=o::OriginalEdition::Patch1078) {
         translations_.reset(); //CD 어댑터만 기존 단일 표를 사용한다.10.78은 최초 다중 장부를 언어 변경 때 비우지 않는다.
@@ -1234,6 +1238,10 @@ bool Client::PumpMessages() {
 // 원본 00436020: 글자가 되는 키는 WM_CHAR에서 넣으므로 여기서는 건너뛴다.
 void Client::KeyEvent(NativeHandle windowHandle, unsigned message, std::uintptr_t wParam, std::intptr_t lParam) {
     const HWND window = static_cast<HWND>(windowHandle);
+    if (imeComposing_ || wParam==VK_PROCESSKEY) {
+        if (message==WM_KEYDOWN || message==WM_SYSKEYDOWN) { imeKeyConsumed_=true;imeKeyToken_=(std::uint64_t(static_cast<std::uint32_t>(GetMessageTime()))<<32)|(static_cast<std::uint32_t>(lParam)&0x01ffffffU); } // 같은 조합 키에서 TranslateMessage가 만든 지연 WM_CHAR도 삼킨다.
+        return; // IME 자체의 처리와 기본 조합 UI는 창 프로시저가 계속 호출한다.
+    }
     const std::uint32_t release = message == WM_KEYUP || message == WM_MBUTTONUP || message == WM_SYSKEYUP ? InputCode::kRelease : 0;
     const std::uint32_t modifiers = ModifierBits();
     POINT cursor{};
@@ -1250,11 +1258,29 @@ void Client::KeyEvent(NativeHandle windowHandle, unsigned message, std::uintptr_
     input_.Push((static_cast<std::uint32_t>(wParam) << InputCode::kVirtualKeyShift) | modifiers | release, x, y);
 }
 // 원본 00436190: 글자 코드를 아래 비트에 넣는다.
-void Client::CharacterEvent(NativeHandle windowHandle, std::uintptr_t wParam) {
+void Client::CharacterEvent(NativeHandle windowHandle, std::uintptr_t wParam,std::intptr_t lParam) {
+    const auto keyToken=(std::uint64_t(static_cast<std::uint32_t>(GetMessageTime()))<<32)|(static_cast<std::uint32_t>(lParam)&0x01ffffffU); // 조합 종료 뒤 도착한 동일 키 문자도 버퍼 제출/삭제로 중복 실행하지 않는다.
+    if (imeComposing_ || (imeKeyConsumed_ && imeKeyToken_==keyToken)) return;
     POINT cursor{};
     GetCursorPos(&cursor);
     ScreenToClient(static_cast<HWND>(windowHandle),&cursor);const auto point=screen_ ? screen_->ToLogicalPoint({cursor.x,cursor.y}) : ScreenPoint{cursor.x,cursor.y};
     input_.Push(ModifierBits() | static_cast<std::uint32_t>(wParam),point.x,point.y);
+}
+// 일반 창 메시지와 MCP가 같은 검증/원자 큐 API를 사용한다. 큐 거부는 기존 내용과 새 본문을 모두 보존한다.
+bool Client::QueueCommittedText(std::string_view utf8,std::int32_t x,std::int32_t y) { const auto events=MakeCommittedTextEvents(utf8,x,y);return input_.TryPushBatch(events); }
+// 크기는 UTF-16 문자 수가 아닌 BYTE이며, 결과 플래그는 호출자가 기본 창 프로시저에 넘기지 않는다.
+void Client::ImeResultEvent(NativeHandle windowHandle) {
+    const HWND window=static_cast<HWND>(windowHandle);const HIMC context=ImmGetContext(window);if (!context) return;
+    struct Release { HWND window;HIMC context;~Release() { ImmReleaseContext(window,context); } }; // 모든 실패/예외에서 같은 IMM 문맥을 반납한다.
+    const Release release{window,context};
+    try {
+        const LONG length=ImmGetCompositionStringW(context,GCS_RESULTSTR,nullptr,0);
+        if (length<0 || (length%static_cast<LONG>(sizeof(char16_t)))!=0 || length>65536) throw std::length_error("IME 확정 결과의 UTF-16 BYTE 범위");
+        std::u16string text(static_cast<std::size_t>(length)/sizeof(char16_t),0);
+        if (length && ImmGetCompositionStringW(context,GCS_RESULTSTR,text.data(),static_cast<DWORD>(length))!=length) throw std::runtime_error("IME 확정 결과 읽기 실패");
+        POINT cursor{};GetCursorPos(&cursor);ScreenToClient(window,&cursor);const auto point=screen_ ? screen_->ToLogicalPoint({cursor.x,cursor.y}) : ScreenPoint{cursor.x,cursor.y};
+        if (!QueueCommittedText(CommittedUtf16ToUtf8(text),point.x,point.y)) throw std::length_error("IME 입력 큐 공간 부족: 한 번에 최대39문자");
+    } catch (const std::exception& error) { WriteDiagnosticLog(29,error.what());MessageBeep(MB_ICONWARNING); } // 창 프로시저 밖으로 예외를 내보내지 않고 실패한 본문 전체를 거부한다.
 }
 
 // 원본 00452e00.
@@ -1291,6 +1317,26 @@ std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message,
         DispatchRegisteredMessage(registeredMessages_,message,static_cast<std::uint32_t>(lParam),hooks); // 등록 메시지도 아래의 일반 WndProc/DefWindowProc 처리를 계속한다.
     }
     switch (message) {
+    case WM_IME_STARTCOMPOSITION:
+        imeComposing_=true;break; // 미완성 조합과 후보는 기본 IME 창에서 표시한다(K1).
+    case WM_IME_ENDCOMPOSITION:
+        imeComposing_=false;break; // 취소/확정 모두 미완성 본문을 편집 버퍼에 남기지 않는다.
+    case WM_KILLFOCUS: {
+        if (imeComposing_) { const HIMC context=ImmGetContext(window);if (context) { ImmNotifyIME(context,NI_COMPOSITIONSTR,CPS_CANCEL,0);ImmReleaseContext(window,context); }imeComposing_=false; }break; // 다른 창으로 이동할 때 미완성 조합만 취소한다.
+    }
+    case WM_IME_COMPOSITION:
+        if (lParam&GCS_RESULTSTR) {
+            ImeResultEvent(window);
+            const auto remainder=lParam&~static_cast<std::intptr_t>(GCS_RESULTSTR|GCS_RESULTREADSTR|GCS_RESULTCLAUSE|GCS_RESULTREADCLAUSE); // 직접 받은 결과에서 ANSI WM_IME_CHAR/WM_CHAR가 재생성되지 않게 한다.
+            return remainder ? DefWindowProcA(window,message,wParam,remainder) : 0;
+        }
+        break; // GCS_COMPSTR 등 미완성 조합은 OS 기본 UI가 맡는다.
+    case WM_IME_CHAR:
+        return 0; // GCS_RESULTSTR에서 직접 받은 문자와 ANSI DBCS 분해가 중복되지 않게 한다.
+    case WM_UNICHAR:
+        if (wParam==UNICODE_NOCHAR) return TRUE;
+        try { if (wParam>0xffffU) throw std::invalid_argument("표시 인코딩 미지원 Unicode 문자");const char16_t scalar=static_cast<char16_t>(wParam);if (!QueueCommittedText(CommittedUtf16ToUtf8({&scalar,1}))) MessageBeep(MB_ICONWARNING); }
+        catch (const std::exception& error) { WriteDiagnosticLog(29,error.what());MessageBeep(MB_ICONWARNING); }return 0;
     case WM_KEYDOWN:
     case WM_KEYUP:
         KeyEvent(window, message, wParam, lParam);
@@ -1368,7 +1414,7 @@ std::intptr_t Client::HandleMessage(NativeHandle windowHandle, unsigned message,
         if (wParam == SC_KEYMENU) return 0; // Alt가 메뉴를 열지 않게 한다.
         break;
     case WM_CHAR:
-        CharacterEvent(window, wParam);
+        CharacterEvent(window, wParam,lParam);
         break;
     case WM_SYSKEYDOWN:
     case WM_SYSKEYUP:
@@ -1556,5 +1602,17 @@ void Client::MonitorMetaParticipantName(std::span<const std::uint8_t> name) {
     const auto own=text(gameplayGlobals_->Subscribers()->Handle());const bool mine=_stricmp(text(name).data(),own.data())==0;const auto source=configuration_.PathSpec("monitorMessage");const auto encoded=o::EncodeOriginalText(source);const std::string message(encoded.begin(),encoded.end());std::array<char,256> line;
     const auto length=mine ? std::snprintf(line.data(),line.size(),"EVERYONE: %s\n",message.c_str()):std::snprintf(line.data(),line.size(),"%s: %s\n",text(name).data(),message.c_str());if (length<0 || static_cast<std::size_t>(length)>=line.size()) throw std::out_of_range("입장 모니터의 원문256BYTE 서식 범위");
     const auto currentFormat=configuration_.PathSpec("monitorFormat");const auto formatBytes=o::EncodeOriginalText(currentFormat);if (!menu_) throw std::logic_error("입장 모니터의 실제 Chat 제출 owner 없음");menu_->SubmitMonitorChat(std::string_view(reinterpret_cast<const char*>(formatBytes.data()),formatBytes.size()),std::string_view(line.data(),static_cast<std::size_t>(length)));
+}
+}
+
+namespace netstorm::client { // 실제Client수명과현재게임root에서만클론언어번들을선택한다.
+std::optional<std::filesystem::path> Client::ResolveKoreanBuiltinFile(std::string_view name) const {
+    return FindBuiltinKoreanFile(files_,CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path()),name); // 후보검사가영어/명시사용자경로를먼저거부한다.
+}
+std::optional<std::vector<std::uint8_t>> Client::ReadLocalizedGameFile(std::string_view name) const {
+    return netstorm::client::ReadLocalizedGameFile(files_,CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path()),name); // Config/Script용이며Fort/그래픽원문요청은같은VFS로통과한다.
+}
+std::vector<std::string> Client::MatchLocalizedGameFiles(std::string_view pattern) const {
+    return netstorm::client::MatchLocalizedGameFiles(files_,CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path()),pattern); // 영어열거결과와명시작업namespace는바꾸지않는다.
 }
 }

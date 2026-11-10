@@ -1,0 +1,145 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 1200
+myTech = "sunWalker;windBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon"
+
+// This if for the demo ONLY.
+ai1Name = "Player"
+ai1Tech = "sunWalker;windBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon"
+ai1TimeBetweenMoves = 3
+ai1AllyList = "2"
+
+
+// This is your friend.
+ai2Name = "Minister of Sun"
+ai2Tech = "sunWalker;windBattery;sunArcher;sunCannon;sunBlocker;sunAviary"
+ai2StartMoney = 8000
+ai2GeyserAttachments = 2
+ai2Collectors = 4
+ai2TimeBetweenMoves = 4
+ai2AllyList = "1"
+ai2Color = purple
+
+// This is your friend's enemy.
+ai3Name = "Marquis de Thunder
+ai3Tech = "sunWalker;thunderBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon"
+ai3StartMoney = 8000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 4
+ai3AllyList = "4"
+ai3Enemy = 2
+ai3Color = orange
+
+// This is your enemy
+ai4Name = "Knight of Rain"
+ai4Tech = "sunWalker;rainBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon"
+ai4StartMoney = 4000
+ai4GeyserAttachments = 3
+ai4Collectors = 4
+ai4TimeBetweenMoves = 4
+ai4AllyList = "3"
+ai4Color = red
+
+demoRestartTimer = 360
+
+title="내 등을 지켜라"
+
+[A.]
+<h2>내 등을 지켜라</h2>
+<i>"사람은 전투에서 가장 두렵고 가장 외롭다.<br>
+하지만 그만큼 용감하고 충성스럽고 진실한 때도 없다."<br>
+--레시스 그레텔템 대위.</i>
+<p>
+마흔 섬의 거대한 전투가 시작되었습니다.
+엄청난 폭풍이 몰아치고, 갑자기 당신은 썬의 대신만을 의지한 채
+노출된 곳에 고립되었습니다.
+<p>
+이제 서로 등을 맞대고 싸웁니다.
+살아남을 유일한 희망인 친구가 벌룬으로 메시지를 보냅니다.
+<p>
+<i>"서둘러 적을 끝내고
+<br>
+함께 승리를 위해
+<br>
+잔을 들자!"</i>
+
+$Button=지식 확인,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Ai2TempleHalf][Ai2PriestCaptured]
+<h2>대신에게서 온 메시지</h2>
+<p>
+<i>"친구여, 도와다오!
+<br>
+자네의 도움이
+<br>
+절실히 필요하다!"
+</i>
+$Timeout=15,DoNothing,0
+
+[Ai3TempleDead]
+<h2>대신에게서 온 메시지</h2>
+<p>
+<i>"북쪽의 적을 격파했다!
+<br>
+용감한 동맹이여,
+<br>
+승리가 눈앞이다!"
+</i>
+$Timeout=15,DoNothing,0
+
+[Ai4TempleDead]
+<h2>대신에게서 온 메시지</h2>
+<p>
+<i>"훌륭하군!
+<br>
+조금만 더 버티면
+<br>
+다른 적도 격파하겠어!"
+</i>
+$Timeout=15,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+공동의 승리를 축하하는 요란한 환호와 종소리 속에
+썬의 대신이 당신의 섬에 도착합니다!
+영원한 충성의 표시로 그의 손을 맞잡자
+백성들이 형제 같은 동맹에 열렬히 환호합니다.
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,Surrounded
+
+
+[ai2PriestDead][Failed]
+<h2>실패!</h2>
+<p>
+짧은 시간이었지만 선량하고 충성스러운 친구였던 썬의 대신을 잃었습니다.
+마지막 순간 그의 고문은 당신과 맺은 동맹을 저주했지만,
+대신은 고문을 칼로 꿰뚫었습니다.
+그는 당신의 전투 능력과 우정을 끝까지 믿었습니다.
+하지만 당신은 그를 실망시켰고,
+이제 당신이 죽을 차례도 다가왔습니다.
+$Button=계속,Tell,TryAgain
+
+
+[Demo]
+<h2>NetStorm 데모</h2>
+<p>
+이번 시연에서는 두 섬이 등을 맞대고
+적과 싸우는 모습을 보여 줍니다.
+<p>
+실제 게임처럼 유닛을 배치하여
+두 섬이 승리하도록 도울 수 있습니다.
+$Timeout=15,DoNothing,0
+
+
+
+[END]
+																		 
+																		 

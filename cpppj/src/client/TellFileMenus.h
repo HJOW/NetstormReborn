@@ -9,6 +9,7 @@ struct TellFileMenuItem { // 라벨과 인자는 원본 글꼴/고리의 좁은 
 };
 class TellFileMenus { // 한 Client에서 적재한 이름별 Config를 페이지보다 오래 보유한다.
 public:
+    void InvalidateLanguageFiles(); // 같은언어전환알림에서소유한목록Config의언어내용만재적재하고등록주소/index/열린안내링크는유지한다.
     TellFileMenus(o::ConfigInterface& config,std::function<std::vector<std::string>(std::string_view)> enumerate); // 실제 파일 열거는 UTF-8 경로를 원문 OS 순서로 공급한다.
     ~TellFileMenus(); // 소유 Config를 같은 실제 Registry에서 반납한다.
     TellFileMenus(const TellFileMenus&)=delete;TellFileMenus& operator=(const TellFileMenus&)=delete; // 등록된 고정 Config 주소를 복제하지 않는다.

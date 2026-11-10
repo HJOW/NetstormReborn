@@ -10,6 +10,7 @@ struct HtmlWindowFactoryHooks { // 부모와 파서/Config/메뉴·공통 입력
     std::function<std::uint32_t(std::uint32_t,std::span<char>)> metadata;std::function<double()> wallSeconds; //4c83b0과 현재 벽 시각이다.
     std::function<void(std::uint32_t,std::string_view)> body;std::function<void(std::uint32_t,float,float,std::uint32_t,std::uint32_t)> attach; // 실제 본문 생성과 전체 Fit 가상 부착이다.
     std::function<void(std::uint32_t,bool)> modal;std::function<void(std::uint32_t)> kill;std::function<std::uint32_t(std::uint32_t)> read; // 같은 공통 모달/수명·현재 화면/루트 전역이다.
+    std::function<bool(std::string_view)> localizedContent; // 실제클론언어에서만확장문자를내용으로인정한다. 원문fixture는빈장치로ASCII관문을유지한다.
 };
 class HtmlWindowFactory { // 부분 미션 안내를 대체할 원문 전체 공장 본체다.
 public:

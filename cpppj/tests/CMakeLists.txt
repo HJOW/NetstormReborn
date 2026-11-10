@@ -3862,3 +3862,7 @@ target_sources(netstorm_tests PRIVATE ErrorLogTests.cpp)
 add_executable(netstorm_error_log_tests FocusedTestMain.cpp ErrorLogTests.cpp)
 target_link_libraries(netstorm_error_log_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_error_log_tests)
+
+# 한국어 입력/본문의 창 없는 검사이며 기존 원문 fixture 파일은 그대로다(K1, 1270).
+target_sources(netstorm_tests PRIVATE DisplayTextInputTests.cpp KoreanResourcesIntegrationTests.cpp)
+target_sources(netstorm_korean_text_tests PRIVATE DisplayTextInputTests.cpp KoreanResourcesIntegrationTests.cpp)

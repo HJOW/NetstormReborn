@@ -1,0 +1,200 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 2400
+myTech = "bulf;thunderBattery;thunderArcher;thunderCannon"
+
+ai1Name = "Knight of Thunder"
+ai1Tech = "sunWalker;thunderArcher;thunderBattery;thunderCannon;bulf"
+ai1StartMoney = 2000
+ai1GeyserAttachments = 4
+ai1Collectors = 5
+ai1TimeBetweenMoves = 2
+
+ai2Name = "Marquis de Man o' War"
+ai2Tech = "sunWalker;rainBattery;rainAviary;sunAviary;sunCannon;rainWalker"
+ai2StartMoney = 5000
+ai2GeyserAttachments = 8
+ai2Collectors = 5
+ai2TimeBetweenMoves = 2
+
+title="썬더링 파워!"
+
+[A.]
+<h2>썬더링 파워!</h2>
+<i>"천둥을 벗으로 삼으려면 스스로 번개가 되어라."
+--님버스의 격언</i>
+<p>
+동맹인 선량한 썬더 공작이
+맨 오 워 후작의 공격을 받고 있습니다.
+<p>
+방어를 지휘하기 위해 공작의 섬으로 향하면서 한 가지가 분명해집니다.
+이 동맹을 잃으면 썬더 계열의 힘이 사라지고
+전쟁 전체가 위태로워질 수도 있습니다.
+
+$Button=다음,Tell,A1.
+
+[A1.]
+<h2>썬더링 파워!</h2>
+<p>
+이 후작의 이야기는 전에도 들었습니다.
+그는 당신의 전투 능력을 경멸하는 만큼이나
+날카로운 독설로도 유명합니다.
+<p>
+이번이 그의 입을 영원히 다물게 할 기회입니다!
+
+$Button=지식 확인,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[@20]
+후작에게서 편지가 왔습니다.
+<p>
+<i>
+인사와 축하를 전하오!
+<p>
+그대가 유능한 통치자라고 믿도록
+백성들을 속이는 데 성공한 모양이군.
+<p>
+성실한 님버스의 시민으로서, 그대를 흠씬 두들겨
+그들의 착각을 깨뜨리는 것이 내 의무라고 생각하오.
+</i>
+$Button=계속 싸운다,DoNothing,0
+
+[@120]
+후작에게서 편지가 왔습니다.
+<p>
+<i>
+오늘 죽을 자들의 가족을 생각하시오.
+그대 나라의 선량한 여인들을 과부로 만들지 마시오.
+남편을 잃더라도 그대에게 위로를 구하지는 않을 것이니.
+<p>
+그 소중한 목숨들을 구하지 않겠소?
+</i>
+$Button=항복,Tell,Surrender
+$Button=계속 싸운다,DoNothing,0
+
+
+
+[@360]
+후작에게서 편지가 왔습니다.
+<p>
+<i>
+그대의 전술은 그 제국을 지탱하는 거짓말만큼이나
+속이 훤히 들여다보이는군.
+</i>
+$Button=계속 싸운다,DoNothing,0
+
+[@500]
+후작에게서 편지가 왔습니다.
+<p>
+<i>
+그대의 전투 방식은 그대의 명예와 비슷하군.
+진정한 도전이 나타나면
+언제나 부족함을 드러내지.
+</i>
+$Button=답장,Tell,Wife
+$Button=무시,DoNothing,0
+
+[Wife]
+답장을 보냅니다.
+<p>
+<i>
+그렇다면 내 명예는
+그대 아내의 명예보다는 훨씬 높겠군.
+</i>
+
+[@700]
+후작에게서 편지가 왔습니다.
+<p>
+<i>
+지금 당장 이 전투를 끝낼 수 있소.
+그대가 비열한 겁쟁이라고 인정한다면
+즉시 병력을 철수하겠소.
+</i>
+$Button=나는 겁쟁이다,DoNothing,0
+$Button=지옥에나 가라,DoNothing,0
+
+[@900]
+후작에게서 편지가 왔습니다.
+<p>
+<i>
+전황은 분명 내 쪽으로 기울었소.
+지금 항복하면 눈물을 훔칠
+최고급 비단 손수건을 보내 주겠소.
+</i>
+$Button=항복,Tell,Surrender
+$Button=계속 싸운다,DoNothing,0
+
+
+
+[Surrender]
+당신이 항복을 명령하자 병사들이 싸움을 멈춥니다.
+그들은 당신이 백기를 높이 들고 나아가는 모습을
+놀란 눈으로 바라봅니다.
+<p>
+마지막 병사를 지나갈 때 그가 발밑에 침을 뱉습니다.
+<p>
+<i>"겁쟁이."</i>
+$Button=불명예스럽게 떠난다,LeaveBattle,1
+$Button=저 병사를 죽인다,Tell,KillSoldier
+$Button=싸운다,Tell,FightAgain
+
+[KillSoldier]
+그 병사를 향해 손을 올리자 옆의 병사가 당신을 넘어뜨립니다.
+순식간에 모두 달려들어 당신의 가문과 이름을 저주합니다.
+<p>
+결코 세워지지 않을 당신의 묘비에는 이렇게 적혔을 것입니다.
+<p>
+"자신의 부하에게 살해되다"
+$Button=비참하게 죽는다,LeaveBattle,1
+
+[FightAgain]
+당신이 백기를 내던지자 병사들이
+천둥 같은 함성으로 환호합니다.
+<p>
+그들은 항복이 자비의 행동임을 알았습니다.
+양쪽의 부상자들이 전장에서 안전하게 빠져나왔습니다.
+<p>
+당신의 온정에 감화된 병사들은
+새로운 열의로 전투에 나섭니다.
+$Button=계속 싸운다!,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+후작을 격파했습니다!
+$Button=후작에게 편지를 보낸다,Tell,VictoryNote
+
+[VictoryNote]
+후작에게 편지를 보냅니다.
+<p>
+<i>
+말이 가장 많은 자에게
+사랑하는 이가 가장 적다는 말을 들었소.
+<p>
+그대가 그 말을 증명하는군.
+천 명처럼 떠들면서도
+사랑하는 것은 자신뿐이니.
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,DissolvedAlliance
+
+[Failed]
+후작에게서 편지가 왔습니다.
+<p>
+<i>
+내 말대로 되었군. 이제 그대에게 낭비할 재치도 없소.
+승리하고 나면 상대를 놀리는 재미도
+시시해지고 만다니까.
+<p>
+그대에게 쏟을 것을 다 쏟았으니
+이제 그대는 내게 아무 쓸모가 없소.
+$Button=계속,Tell,TryAgain
+
+
+[END]
+																		 
+																		 

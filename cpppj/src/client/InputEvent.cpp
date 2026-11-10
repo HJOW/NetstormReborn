@@ -17,6 +17,14 @@ void InputQueue::Push(std::uint32_t code, std::int32_t x, std::int32_t y) {
     write_ = (write_ + 1) % kCapacity;
     if (write_ == read_) write_ = (write_ + kCapacity - 1) % kCapacity;
 }
+// 단일 확정 본문의 일부만 들어가거나 네 BYTE 토큰이 잘리는 상태를 만들지 않는다.
+bool InputQueue::TryPushBatch(std::span<const InputEvent> events) {
+    if (events.size()>FreeSlots()) return false;
+    for (const auto& event:events) Push(event.code,event.x,event.y); // 검증한 남은 칸 안에서 원래 쓰기 위치를 순서대로 사용한다.
+    return true;
+}
+// 읽기/쓰기 위치가 감기는 경우에도 한 칸을 항상 비워 둔다.
+std::size_t InputQueue::FreeSlots() const { return (read_+kCapacity-write_-1)%kCapacity; }
 // 코드만 다듬고 같은 방식으로 넣는다.
 void InputQueue::PushCommand(std::uint32_t code, std::int32_t x, std::int32_t y) {
     Push((code & kCommandCodeMask) | InputCode::kCommand, x, y);

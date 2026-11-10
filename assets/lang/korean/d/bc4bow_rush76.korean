@@ -1,0 +1,79 @@
+﻿[Header]
+missiontype="tutorial"
+
+missionnumber=4
+moregeysers=0
+
+mystartmoney=3000
+mytech="windBattery;windArcher"
+myallylist=""
+
+title="크로스보우 급습"
+
+ai2name="Lord Ice"
+ai2tech="rainCannon;rainBattery"
+ai2startmoney=3000
+ai2geyserattachments=3
+ai2collectors=4
+ai2timebetweenmoves= 4
+ai2allylist="3;4"
+ai2color=lightblue
+ai2bridgedrawrate= 1
+
+ai3name="Count Thunder"
+ai3tech="thunderCannon;thunderBattery"
+ai3startmoney=3000
+ai3geyserattachments=3
+ai3collectors=4
+ai3timebetweenmoves= 4
+ai3allylist="2;4"
+ai3color=purple
+ai3bridgedrawrate= 1
+
+ai4name="Mr Sun"
+ai4tech="sunCannon;windBattery;sunArcher"
+ai4startmoney=3000
+ai4geyserattachments=3
+ai4collectors=4
+ai4timebetweenmoves= 4
+ai4allylist="2;3"
+ai4color=yellow
+ai4bridgedrawrate= 1
+
+[Options]
+
+[A.]
+<h2>크로스보우 급습</h2>
+<i>~y"돌겨어어어어어억!!!"<br>
+-님버스의 장군</i>
+<p>~w세 적에게 포위되어 위험에 빠졌습니다! 사용할 수 있는 지식은 윈드 제네레이터와 크로스보우뿐입니다. 재빨리 움직여 모두 격파해야 합니다!!
+<p>~B~E~r목표:~.~B~w  크로스보우로 적이 위협이 되기 전에 빠르게 제거하십시오.
+<p>~B~E~o도움말:~.~B~w 내버려 두면 가장 큰 위협이 될 적부터 공격하는 것이 좋습니다. 공격을 받기 시작해도 걱정하지 말고 크로스보우로 효율적으로 파괴한 뒤 적의 신전과 워크샾을 재빨리 공격하십시오.
+<p><!"windarcher.*">
+<p>"크로스보우"
+$Button=사용 가능한 지식,ShowTechnology,55
+$Button=시작하겠습니다!,DoNothing,0
+</?>
+
+[succeeded][badteamdead]
+<h2>축하합니다!</h2>
+<p>이 치명적인 기술을 익혔습니다... 사람들이 두려움에 당신의 이름을 외치게 하십시오.
+<$Config,Done{mission.fileName}=1>
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+$Button=다음,MissionBegin,bc5walkers76
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[Failed]
+<h2>실패...</h2>
+<p>적은 크로스보우 방어를 뚫고 당신을 쓰러뜨렸습니다. 아직 준비가 부족했던 것 같습니다......
+
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[END]

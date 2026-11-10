@@ -1,5 +1,6 @@
 // 원본 메뉴 계층의 실제 처리기를 단일 Client 등록표·트리·입력·표면에 조립한다.
 #include "client/RawMenuControls.h"
+#include "client/DisplayTextInput.h" // 입력agent의유효4BYTE판별을HTML공장도공유한다.
 #include "client/HelpLinkPolicy.h" //원래 토큰/접두 비교를 Help와 전체 HTML 링크가 함께 사용한다.
 #include "client/TraceChat.h" // 원문 진단 전달도 같은 실제 Chat 공장을 빌린다.
 #include "client/TellFileMenus.h"
@@ -785,6 +786,7 @@ void RawMenuControls::CloseHtmlSerial(std::uint32_t& serial) { auto& s=*impl_;if
 // 자동 검사도 그림과 같은 실제 공통 경계를 읽는다.
 std::optional<ScreenRect> RawMenuControls::MissionLoadingBounds() const { const auto& s=*impl_;if (const auto token=s.LoadingRoot()) return s.common.collection.Bounds(token);return {}; }
 bool RawMenuControls::HelpOpen() const { const auto token=impl_->Reference(impl_->helpState.id);return token && (impl_->common.node(token)->flags&1) && impl_->common.node(token)->parent; } // 현재 등록/표시를 직접 읽는다.
+void RawMenuControls::InvalidateHelpLanguage() { if (!impl_->helpWindow || !impl_->helpState.helpData) return;CloseHelp();impl_->helpWindow->InvalidateCache(); } // 캐시반납은queued언어알림에서만수행해현재메뉴클릭을재진입삭제하지않는다.
 void RawMenuControls::CloseHelp() { if (const auto token=impl_->Reference(impl_->helpState.id)) impl_->common.lifetime.Kill(token);impl_->common.lifetime.Cleanup();impl_->common.changed(); } // Session보다 먼저 삭제한다.
 // 공통 생성과 분배는 별도 기본 노드 복사본을 만들지 않는다.
 GumpCreateNode* RawMenuControls::Node(std::uint32_t token) const { return impl_->Node(token); }

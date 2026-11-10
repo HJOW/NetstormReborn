@@ -662,3 +662,7 @@ target_sources(netstorm PRIVATE client/RawSurfaceAttack.cpp) # 아크/애시드�
 target_sources(netstorm PRIVATE client/RawSurfaceVortex.cpp) # 같은 신전 정기·현재 모드/난수와 실제 큰 후단을 장기 연결한다.
 
 target_sources(netstorm PRIVATE client/ClientHelpWord.cpp client/ClientHelpWord.h) # 원문 0054db38 helpWord 캐시의 NULL/빈 값/대소문자 동일 갱신 규칙을 Client 수명으로 보유한다(M7.1).
+
+# 한국어 확정입력/문자경계 공통부품과 실제 Windows IME 결과조회다(K1, 1270).
+target_sources(netstorm PRIVATE client/DisplayTextInput.cpp client/DisplayTextInput.h)
+target_link_libraries(netstorm PUBLIC imm32)

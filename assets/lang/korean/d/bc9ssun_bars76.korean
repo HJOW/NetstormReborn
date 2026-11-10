@@ -1,0 +1,61 @@
+﻿[Header]
+missiontype="tutorial"
+
+missionnumber=9
+moregeysers=1
+
+mystartmoney=10000
+mytech="sunFence;windBattery;sunArcher"
+myallylist=""
+
+title="썬 바리케이드"
+
+ai2name="Duke Offense"
+ai2tech="windBattery;rainBattery;thunderBattery;windArcher;sunArcher;sunCannon;thunderCannon;rainCannon;thunderBlocker"
+ai2startmoney=10000
+ai2GeysersAttachments=2
+ai2Collectors=5
+ai2TimeBetweenMoves=4
+
+[Options]
+
+[A.]
+<h2>썬 바리케이드</h2>
+<i>~y"좋은 공격을 시작하기 전에 좋은 방어부터 갖추어라."<br>
+-안전을 중시하는 님버스인</i>
+<p>~w잡았습니다! 움직이지 못하는 사제 주위로 다리를 둘렀고 그 다리는 파괴되지 않습니다. 하지만 급히 움직이느라 무기를 제대로 준비하지 못했습니다. 가진 것이 거의 없습니다. 골렘이 사제를 데려올 때까지 다리를 지킬 수만 있다면.......
+<p>~B~E~r목표:~.~B~w  적 사제를 희생시키십시오.
+
+$Button=사용 가능한 지식,ShowTechnology,55
+$Button=시작하겠습니다!,DoNothing,0
+</?>
+
+[ai2priestcaptured]
+<h2>잡았습니다!</h2>
+때로는 간단한 유닛을 영리하게 쓰는 것이 다양한 지식보다 낫습니다.
+<p>자신의 힘을 과시하고 싶은 것이 아니라면 듀크 오펜스의 섬을 파괴할 필요는 없습니다. 원할 때 희생시키십시오!
+
+[ai2templedead]
+<h2>신전 함락!</h2>
+<p>~w님버스가 당신의 발아래에서 떨고 있습니다. 극히 제한된 지식으로 신전을 파괴한 당신의 이야기는 전설이 될 것입니다!
+
+[succeeded][badteamdead]
+<h2>성공</h2>
+<p>~w불가능해 보이던 일을 해냈으며 그 과정에서 매우 유용한 기술을 익혔습니다!
+<$Config,Done{mission.fileName}=1>
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[Failed]
+<h2>실패</h2>
+<p>적이 너무 강했던 것 같습니다....
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[END]

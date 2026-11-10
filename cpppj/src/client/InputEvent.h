@@ -3,6 +3,7 @@
 #pragma once
 #include <array>
 #include <cstdint>
+#include <span>
 
 namespace netstorm::client {
 // 사건 코드의 비트(창 프로시저 FUN_00436550·FUN_00436020이 만든다).
@@ -37,6 +38,10 @@ public:
     static constexpr std::size_t kCapacity = 40;
     // 원본 FUN_00452f90: 끝에 넣는다. 가득 차면 방금 넣은 사건을 버린다.
     void Push(std::uint32_t code, std::int32_t x, std::int32_t y);
+    // 한국어 확정 본문을 원자적으로 넣는다. 공간이 부족하면 기존 큐와 새 본문을 모두 보존하고 false다.
+    bool TryPushBatch(std::span<const InputEvent> events);
+    // 원문 39사건 중 현재 비어 있는 칸 수다. 일반 Push의 버림 정책은 바꾸지 않는다.
+    std::size_t FreeSlots() const;
     // 원본 FUN_00452fe0: 명령 사건을 넣는다(코드는 0x0100ffff만 남기고 명령 표시를 붙인다).
     void PushCommand(std::uint32_t code, std::int32_t x, std::int32_t y);
     // 원본 FUN_00452f00: 하나 꺼낸다. 비었으면 0으로 채운 사건이다.

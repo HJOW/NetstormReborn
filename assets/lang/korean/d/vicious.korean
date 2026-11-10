@@ -1,0 +1,66 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 7000
+myTech = "sunWalker;thunderBattery;rainBattery;rainFence;sunFence;sunCannon;thunderFence;thunderBlocker;thunderArcher"
+
+aiName = "Duke of the Furies"
+aiTech = "rainWalker;rainBattery;windBattery;thunderBattery;sunArcher;sunCannon;windArcher;rainCannon;thunderCannon"
+aiStartMoney = 10000
+aiGeyserAttachments = 4
+aiCollectors = 4
+aiTimeBetweenMoves = 2
+
+title = "잔혹!"
+
+[A.]
+<h2>잔혹!</h2>
+<i>"섬들은 어둡고 귀먹은 하늘을 향해 자신들의 상처를 울부짖었다."<br>
+--님버스의 서</i>
+<p>
+적은 "폭풍의 섬"이라는 끔찍한 괴물을 만들었습니다.
+윈드, 레인, 썬더가 그곳에 모여
+막을 수 없는 힘을 이루었습니다.
+<p>
+각 계열의 잔혹하고 해로운 힘을 모두 담은 요새가
+당신을 향해 다가옵니다.
+
+$Button=다음,Tell,A1.
+
+[A1.]
+<h2>잔혹!</h2>
+<p>
+공격 목표는 우리의 새 무기 개발 시설이 들어설 곳입니다.
+그곳에 세울 시설은 무장이 약하므로 시제 무기로 공격자를 물리치고
+적 사제를 처단해야 합니다!
+
+$Button=지식 확인,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+기적적으로 폭풍의 섬을 격파했습니다!
+이제 님버스의 최고 지배자가 될 준비가 되었습니다.
+어둠의 군주들을 이번에야말로 완전히 정복할 수 있겠습니까?
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,EnemyTerritory
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+폭풍의 섬이 당신의 병력을 짓밟아 산산이 흩어 놓았습니다.
+<p>
+적은 새 무기의 설계도를 빼앗았습니다.
+그것을 우리에게 겨누어 제국을 파괴할 것입니다!
+$Button=계속,Tell,TryAgain
+
+
+[END]
+																		 
+																		 

@@ -1,0 +1,81 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 1200
+myTech = "all"
+
+aiName = "Player"
+aiMoneyRechargeRate = 8    // About 3 minutes to get from 0 to reasonable wealth.
+aiTimeBetweenMoves = 2
+aiCollectors = 3
+aiGeyserAttachments = 3
+aiAllyList = "2;3;4;5"
+
+// First enemy to the upper right
+ai2Name = "Lord of Thunder"
+ai2Tech = "thunderBattery;bulf;thunderCannon;thunderBlocker;thunderArcher"
+ai2StartMoney = 0
+
+// Second enemy in the middle of the map
+ai3Name = "Lord of Rain"
+ai3Tech = "rainBattery;rainWalker;rainCannon;rainAviary;rainBlocker;rainBalloon"
+ai3StartMoney = 0
+
+// Lower-right corner enemy
+ai4Name = "Lord of Wind"
+ai4Tech = "windBattery;windWalker;windArcher;windAviary;windBlocker;windBalloon"
+ai4StartMoney = 0
+ai4Ability = "!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+
+// Lower-right corner enemy
+ai5Name = "Storm Lord"
+ai5Tech = "sunWalker;thunderBlocker"
+ai5Collectors = 0
+ai5GeyserAttachments = 0
+ai5StartMoney = 0
+ai5Ability = "!COLLECT_STORM_POWER;!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+
+title="최후의 대결"
+
+[A.]
+<h2>최후의 대결</h2>
+<i>"요새에 다가갈 때 모든 것은 고요했다. 하지만 공기는 이미 다가올 전투와
+임박한 죽음의 악취로 묘하게 짙어져 있었다."<br>
+--트린 허스퍼린츠의 일기</i>
+<p>
+대담한 기동으로 당신의 섬은 적의 영토 깊숙이,
+사악한 제국의 심장부까지 들어왔습니다!
+<p>
+마침내 윈드, 레인, 썬더의 어둠의 왕자들의 최후 요새를 찾았습니다.
+전투에서 그들을 격파하고
+궁극의 승리를 거머쥐십시오!
+
+$Button=지식 확인,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+이제 당신만이 님버스를 지배함을 알리십시오!
+온 세계가 당신의 절대 권력 아래 서게 하십시오!
+어둠의 군주들이 배를 깔고 기어와 목숨을 구걸하게 하십시오!
+퓨리들이 영원히 당신의 뜻을 따르게 하십시오!
+<$Config,Done{mission.fileName}=1>
+$Button=확인,MissionAbort,1
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+당신은 궁극의 어둠에서 님버스를 구할 마지막 희망이었지만 실패했습니다.
+어둠의 군주들은 당신의 오만을 벌하기 위해
+모든 님버스인에게 영원한 가난과 질병,
+노예의 삶을 선고했습니다.
+$Button=계속,Tell,TryAgain
+
+[END]
+																		 
+																		 

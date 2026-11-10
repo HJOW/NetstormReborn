@@ -1,0 +1,65 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 2000
+myTech = "sunWalker;rainBattery;sunBlocker;sunCannon;sunBalloon"
+
+aiName = "Prince of Wind"
+aiTech = "sunArcher;sunWalker;windBattery"
+aiStartMoney = 1000
+aiGeyserAttachments = 1
+aiCollectors = 3
+aiTimeBetweenMoves = 2
+aiAbility="!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+
+title="위태로운 행운!"
+
+[Options]
+
+[A.]
+<h2>위태로운 행운!</h2>
+<i>"진흙에서 일어나!<br>
+탑으로 올라라!<br>
+바로 오늘이다!<br>
+바로 지금이다!"<br>
+--불가능한 열세를 이겨 낸 윈드의 알투스의 함성.</i>
+<p>
+정찰 섬 "패스파인더"가 막대한 스톰 파워 저장지를 발견했습니다.
+하지만 윈드의 어둠의 왕자가 이미 도착하여 채취를 시작했습니다.
+그가 병력을 강화하지 못하게 막아야 합니다!
+<p>
+정찰 보고에 따르면 적은 취약한 경로로 스톰 파워를 모으고 있습니다.
+캐논으로 간헐천을 향해 가는 적 골렘을 파괴하십시오!
+
+$Button=지식 확인,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+윈드의 어둠의 왕자의 전선에 구멍을 뚫고
+그의 병력을 전멸시킬 만큼 스톰 파워를 빼앗았습니다!
+패스파인더와 승무원은 성대한 축하 속에 귀환합니다.
+남녀노소 모두 며칠 동안 거리에서 춤을 춥니다.
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,ThunderingPower
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+윈드의 어둠의 왕자가 당신의 시도를 꺾었고
+패스파인더는 사악한 적의 손에 넘어갔습니다.
+왕자는 복수하기 위해 패스파인더를 타고 본거지에 침투하여
+제국의 심장부를 짓밟습니다.
+$Button=계속,Tell,TryAgain
+
+
+[END]
+																		 
+																		 

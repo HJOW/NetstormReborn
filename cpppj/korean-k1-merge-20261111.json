@@ -1,0 +1,158 @@
+{
+  "unit": 1270,
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "milestone": "K1 한국어 후보 선별 병합",
+  "candidate": "docs/exe/handoffs/cpp-pause-20261106/korean/final.patch",
+  "applied": {
+    "directly": 36,
+    "manualHunkMerge": [
+      "package-cpppj.ps1",
+      "src/client/ClientMain.cpp",
+      "src/client/UberGump.cpp",
+      "src/CMakeLists.txt",
+      "tests/CMakeLists.txt"
+    ],
+    "assetsCopiedByteExact": 44,
+    "assetHashMismatches": 0
+  },
+  "candidateDefectsFixed": [
+    "DisplayTextInput.cpp cp 이름 충돌",
+    "KoreanResourcesIntegrationTests ConfigInterface 생성/condition 효과 미연결",
+    "QuickHelpWindowTests fileSpec 중복 선언",
+    "help.korean battleOptionsHelp 7940바이트 절단(Game Type 문단 축약, 7797바이트)"
+  ],
+  "build": {
+    "firstAttemptFailedSeconds": 708.7,
+    "finalIncrementalSeconds": 186.4,
+    "exitCode": 0,
+    "warnings": 0
+  },
+  "tests": {
+    "korean_text": {
+      "total": 33,
+      "failed": 0
+    },
+    "file": {
+      "total": 639,
+      "failedCases": 6,
+      "baselineDirectlyVerified": false
+    },
+    "menu_session": {
+      "failedCases": 6,
+      "sameNamesAs1269": true
+    },
+    "main_popup": {
+      "failedCases": 3,
+      "sameNamesAs1269": true
+    }
+  },
+  "live": {
+    "mission": "tutorial4",
+    "gameTimeSeconds": [
+      13.667,
+      24.366
+    ],
+    "exitCode": 0,
+    "commandErrors": []
+  },
+  "protectedFiles": {
+    "count": 2808,
+    "unchanged": true
+  },
+  "excluded": "포획/희생·특정 적 공격·승리·공중3종·MP 실행 없음",
+  "remainingKorean": [
+    "K2 물리 IME/클립보드 실입력",
+    "K3 본문 용어/잘림 검수",
+    "K4 한글 버튼 그림/이동행/누락 문구",
+    "K5 한국어 화면·배포 ZIP 검수"
+  ],
+  "sourceSha256": {
+    "assets/lang/korean/xlat.korean": "8fa749b8b3b72ef228148e8f48c0c0e678235e37ed50561b0aa55339a5820cd9",
+    "cpppj/package-cpppj.ps1": "9b90379e77feea5aa1e891300f8e836930a893d67f00319ada3fe8ab2c240bf1",
+    "cpppj/src/CMakeLists.txt": "e8b258c5dd87b68998c323b6711bcdc15c4615076ff1bb829b192d4c511cc083",
+    "cpppj/src/app/McpServer.cpp": "1b434bdddb24f79ad193ad84e2f2abe361ba958db03213268746a8dce0984dba",
+    "cpppj/src/app/main.cpp": "37bc63cdef68f702edb5c4db9af13c4bf8db9759b565aed2b8ea11c807fa15fe",
+    "cpppj/src/client/ClientMain.cpp": "9b24219a3acf088a699e5514c3f672d4885498e3eeef120f344c2e29c92ab62f",
+    "cpppj/src/client/ClientMain.h": "43b22c3c9137ff02328e70187a929935335e5cf68969060ae416e098af7aacb9",
+    "cpppj/src/client/ConfigFileRead.cpp": "b0d8d906ed41988fd5c0e8a71856b9727913fd46b6c44562f4f30c4a690f0289",
+    "cpppj/src/client/ConfigFileRead.h": "07f10045d9d533620e1bac2a46de68faa530a27e90a91c5abae2e124edc9fbaa",
+    "cpppj/src/client/HtmlTextParser.cpp": "7cbf727fbe8b97d43a8175981d971e2f8680169a73f5e4fe507663197b282fc5",
+    "cpppj/src/client/HtmlTextParser.h": "8bc8a894c3fa0a974b5faf3e220f476e686fbc30d8b2f5dcc3de54a7990a88b2",
+    "cpppj/src/client/HtmlWindowFactory.cpp": "504ba5efeb412476921d3cc0a525b863b8efa9daa0d567af8edea36b45ca774e",
+    "cpppj/src/client/HtmlWindowFactory.h": "d316dcc2fe2d348d8760690dd3fa4e723d27b1c98c7661cdff71bbff5344abc1",
+    "cpppj/src/client/InputEvent.cpp": "a456e35d286c008acd304b0fd9a47dd6d8458824baca92e4626d70c919b98f26",
+    "cpppj/src/client/InputEvent.h": "77d40e5dcdc01e98f8a474115cba87af1de00c3c3e403b241beed7cc139799a2",
+    "cpppj/src/client/KoreanResources.cpp": "755965c09e0ec51ebe323684d2c3927e5410a4db1fcb002e9d25cef1c20822f4",
+    "cpppj/src/client/KoreanResources.h": "1b0f863607630f70e4d6b9376df3c30d485b7cf3b62f4a34f1a1e708a3e244ff",
+    "cpppj/src/client/Mission.cpp": "3adfcc068974dbc15e6b6de792fe72017bc533a41b04bfa8385431d362b6b82f",
+    "cpppj/src/client/Mission.h": "626d35549aec5a03969aa9b19e2c70f9aff8b04e857702b79a351154e4924ec6",
+    "cpppj/src/client/QuickHelpFileRead.cpp": "5e11072a14b3489935c1a8614b991d307733c8b82b80f98e6794691f99de4060",
+    "cpppj/src/client/QuickHelpWindow.cpp": "648a69c062ee46d86ca020c891a68b9b2a8adf1cdaedfb26fc1466471f05fc24",
+    "cpppj/src/client/QuickHelpWindow.h": "a8a30edf6c64c7c606c7d22d9552b81b7a90dd723d19b279adebeb9f1e843345",
+    "cpppj/src/client/RawButtonControls.cpp": "9335eb88719938a37fa2ec9cb20ab2f3f2328a0b0e944fc7182a1381de4d55c9",
+    "cpppj/src/client/RawMenuControls.cpp": "6a1e393646452e428ce7c79e42a286ac9da49e8ff78948289ccb8c926e593d17",
+    "cpppj/src/client/RawMenuControls.h": "be82e8909a695146f38d013a7e685aaa4fc04dcc6487d43d8a12aefac0c82aee",
+    "cpppj/src/client/RawMenuHtml.inc": "822896ed9611b187722ed98e04a68c6232e0aac6679abb7dbd5b04e22eb3cae1",
+    "cpppj/src/client/TellFileMenus.cpp": "290ce7ab4d5beabe5523edc3eb321a29e59314932dfc0ef131abf1ca2a9d82e0",
+    "cpppj/src/client/TellFileMenus.h": "3d98ab163c908bdd7766eb98f70824f373a592668c3fde079e3efa1d7ceaa66d",
+    "cpppj/src/client/TextClipboard.cpp": "c158e06a492ecec1ae9e43adf6db8ed766b8c1599fdb7fbe40ca57553c6b9609",
+    "cpppj/src/client/TextClipboard.h": "81d1b4b8bd3487dbd4ee465da0e73bfed91c77f4e398813b2302509feffb67ea",
+    "cpppj/src/client/TextEntryBuffer.cpp": "6f53dd26f45b1da041ed75125ed7cef89efc5edd9185702b32bed6cbf9f942cf",
+    "cpppj/src/client/TextEntryBuffer.h": "3b747761c9059a65184c4285eb07d2250593754fbdae28377cc928606d559967",
+    "cpppj/src/client/TextEntryGump.cpp": "9e1222f4cd94dc5ef823dedaebb0c8cb8850c787dbebadf0e3d6969b4860d1c7",
+    "cpppj/src/client/UberGump.cpp": "df8e1a4e044320533a8b4cb8a428d086feef7cb9f6381e83fa53133edbea0c0d",
+    "cpppj/src/o/BaseFile.cpp": "f3cdc645dc51d319231ac03ace2196edf6bdfa314a2ad3a3a07b2356f7159c1d",
+    "cpppj/src/o/BaseFile.h": "ac9db161b1550e536371b22521d2f7a10c00b7c7caba387246e47741bea201c4",
+    "cpppj/tests/CMakeLists.txt": "bf082fc1d75baaf4e08d8843ad3e2bf31be835a73d3eb96dcfaf670a6ebe662f",
+    "cpppj/tests/QuickHelpWindowTests.cpp": "ffc2da3446031902349280965a2910f6ddc404e36201ff5bcfd5bd132d2798a9",
+    "assets/lang/korean/d/bc1menu76.korean": "79d090e1ef2ed0aa72aa7eb90d8229fb61c6b5aef39d97544f8c8f1a16890e83",
+    "assets/lang/korean/d/bc2bridging76.korean": "44e977cf4fa754295f44fb04dd383a5847f31f18acf86d852ac9c17d8eca920a",
+    "assets/lang/korean/d/bc3acid_bar76.korean": "38dec43a41af6f408bce794f4dc17d1c42233c1a47375a2dc969cb5aa45330b0",
+    "assets/lang/korean/d/bc4bow_rush76.korean": "458a1da66dfe1cfd802a8641356a1bfba34acab27bfac118eb6c80902ec12957",
+    "assets/lang/korean/d/bc5walkers76.korean": "aa0792c06cb03913eefad8f355144639fa4bb592fff0ba8837bb617b9cd3edc8",
+    "assets/lang/korean/d/bc6mows76.korean": "4873c9661d021b0367e6e7a675c80a780b211684ea28c84d75579819d6a1d0d6",
+    "assets/lang/korean/d/bc7sun_bars76.korean": "6c18ae772f2aa6a7b5ca8fba8a53896232fd1d535aacbfec94869891d552d43f",
+    "assets/lang/korean/d/bc8fury76.korean": "9f495a16d372c686988cb1053f1b84b3b03ca7c45107c9228a86f80103302bb9",
+    "assets/lang/korean/d/bc9ssun_bars76.korean": "0871f5d5001727f2b9bbb0002ae6bdf7e819fba56901b651aa46de67cbd1c748",
+    "assets/lang/korean/d/breakingthrough.korean": "c1de2baa6da625b7a8a5d66215d4b9a61dbfa0ccb8d8147c6eb821e7627745c5",
+    "assets/lang/korean/d/config.korean": "02694d17d6ce5c2d8017a0d820747781e376d38c2bbb867a9934a24d85714254",
+    "assets/lang/korean/d/demostormrages.korean": "169508eb3523cdde164a66fe5eae2fabfe07fde856b4fef6edaf4fd0d024f43d",
+    "assets/lang/korean/d/dissolvedalliance.korean": "c88be8e1d26324d6a84001391f086244eb213221e3c62c292604346bef47dc70",
+    "assets/lang/korean/d/enemyterritory.korean": "812cf7ff53929c7682bba8759de0f000ec23440ecbdabe01aadbbb2f59a40fa8",
+    "assets/lang/korean/d/finalconfrontation.korean": "232a0cd9074facd93b395e2fe674ce36f185502a0624801b5626f2faeba61d52",
+    "assets/lang/korean/d/fragilefortune.korean": "0cd00400fd056753194106ae3a7cc2864816b69131442e6870d402e36bf297f0",
+    "assets/lang/korean/d/guardmyback.korean": "8ad3f105d287624c5754337f6f54cf075a99a353657be3711a8596aa06f519cf",
+    "assets/lang/korean/d/help.korean": "47e37418ea5091218bf89949407e259e77bd792304398b102af3deed247e59ef",
+    "assets/lang/korean/d/masterofwhirligigs.korean": "7ff1d8c83bf9ae202b90cbd9c8370053efd9359cbb1caeddc898b357f6533dff",
+    "assets/lang/korean/d/offical1.korean": "4a05d551a807b14eb42980919431b99836c0c4ba9cc9d63e9cf874db919b44a8",
+    "assets/lang/korean/d/offical2.korean": "a8e8d03f3c369b514634445c808d78a376972171666f8e6b82405aa2d25c210f",
+    "assets/lang/korean/d/offical2sep.korean": "57aff422a777bcd810e52bfbd852c112098daffad4fc23bdec986c0ae9d4eb34",
+    "assets/lang/korean/d/offical3.korean": "df88f6c3c21023fa8175dffbc794bcfc0c2833a0f216674e10fe47c9fae0ad4e",
+    "assets/lang/korean/d/offical4.korean": "d2cab43b1215b0e1d6b48138ff2099fd0b8abd03ee75020e30b74a751d054a68",
+    "assets/lang/korean/d/offical5.korean": "a4e68772e128e4e3983d838d42bb1b089dab4b90f84cef14bde4ad7a33c41203",
+    "assets/lang/korean/d/offical5sep.korean": "57aff422a777bcd810e52bfbd852c112098daffad4fc23bdec986c0ae9d4eb34",
+    "assets/lang/korean/d/offical6.korean": "84ab636b0bdc7fd3a8c7b832ce1440d01dfefe550991750b2a175959d10ab7c9",
+    "assets/lang/korean/d/rainvsrain.korean": "6b1b30283aa0685e1fbe553cc7cf0ec35482f33929e3345c07fb2ddc82bb54e0",
+    "assets/lang/korean/d/runforit.korean": "95fcc0ae8a11d7b3e630d59419dc666c295a94f9b16b3237079932a5a56a728d",
+    "assets/lang/korean/d/savetheisland.korean": "1806d782979302137df0647d13cb02ef8173d854ea4142c5fc78285fff7163b4",
+    "assets/lang/korean/d/surrounded.korean": "7cb7c2085faed610cd6a75104ef3d729cf0d6785ec87fa65d200aaf9eb41adb4",
+    "assets/lang/korean/d/tell.korean": "0024324bafc9edf14570f4697ec3bcdcd96ed81b47e913bc830ff79228f05223",
+    "assets/lang/korean/d/thenoose.korean": "18ab34b3eba0495e556f9fee16fdc948b4f73680969f0216c67e03986c0af2f8",
+    "assets/lang/korean/d/thewarbegins.korean": "ca844bf5b738a92388d735297db8e28ea0a2928d72439c94bf844ab77b99e9c9",
+    "assets/lang/korean/d/thunderingpower.korean": "ec5ec665eb3696f561eff487e5a3dbdde57665a3465e3a3790b1e392d2e1a24e",
+    "assets/lang/korean/d/totherescue.korean": "4914419b5c18037a5f68777eb67b61b8d81e42d4e3193dbac99a86cdcd2e6eef",
+    "assets/lang/korean/d/tutorial1.korean": "9a4c0567eef45e7fa2ede596528e01b763790b66308b770eb4d7a9e7557c705b",
+    "assets/lang/korean/d/tutorial2.korean": "28693a4081809be9a0d12f9eda57efe616bf8c0cd46a97b8d285dd318fc19d0c",
+    "assets/lang/korean/d/tutorial3.korean": "fb0b33c47e2b3c763bbcc7c7a8c5ffb1741a385e763d3b62720ca1c639937919",
+    "assets/lang/korean/d/tutorial4.korean": "b7471624a01ee813594e8903cdd888f0b8a734b5279c5388a862a29af0085d61",
+    "assets/lang/korean/d/tutorial5.korean": "330befe8a58f4a87af2c0596b9959cb1abc7c65b1f4af8250b0530f18265f260",
+    "assets/lang/korean/d/tutorial6.korean": "6b029f7292f8c24e6c9b2358d943dfa0b7d7a546b72bcba91de919f81baa74ad",
+    "assets/lang/korean/d/vicious.korean": "3cc5c3fb1c8f065468ab278092a59379895b41cca50a8189373f4902072edbfb",
+    "cpppj/src/client/DisplayTextInput.cpp": "d11aa9a45bdee9f44e7ba4a8ed96c6c43b09c6faeb9f842478256c36aa84f343",
+    "cpppj/src/client/DisplayTextInput.h": "6a1983016f253f85a79aa7f60560b174c058380ebfcf3bbb5d64771cd174b519",
+    "cpppj/tests/DisplayTextInputTests.cpp": "1116889f946bf6e8c7b762c9a18426d31ff62b90c25b0147e44f93936fcb13ee",
+    "cpppj/tests/KoreanResourcesIntegrationTests.cpp": "f76d68f7d4d76325a35e33ad41753a48ef94ab0dd194df9fc2ad646fb2992797"
+  }
+}

@@ -1,0 +1,102 @@
+﻿[Header]
+missiontype="tutorial"
+
+missionnumber=6
+moregeysers=1
+
+mytech="rainBattery;rainAviary;sunFence;outpost"
+mystartmoney=3000
+
+title="맨 오 워와 바리케이드"
+
+ai2name="Lord Ice"
+ai2tech="rainCannon;rainBattery;rainBlocker;rainWalker"
+ai2startmoney=3000
+ai2geyserattachments=2
+ai2collectors=4
+ai2timebetweenmoves= 5
+ai2color=lightblue
+ai2bridgedrawrate= 1
+ai2allylist="3;4;5;6"
+
+ai3name="Count Thunder"
+ai3tech="thunderCannon;thunderBattery;bulf"
+ai3startmoney=3000
+ai3geyserattachments=2
+ai3collectors=4
+ai3timebetweenmoves= 5
+ai3color=Purple
+ai3bridgedrawrate= 1
+ai3stuffRefreshRate=1
+ai3allylist="2;4;5;6"
+
+ai4name="Sir Vortex"
+ai4tech="windArcher;windBattery;windBlocker;windWalker;;"
+ai4startmoney=3000
+ai4geyserattachments=2
+ai4collectors=4
+ai4timebetweenmoves= 6
+ai4color=Green
+ai4bridgedrawrate= 1
+ai4allylist="2;3;5;6"
+
+ai5name="Baron Death"
+ai5tech="sunCannon;sunArcher;sunFence;sunBlocker;windArcher;windBattery;windBlocker;windWalker;thunderCannon;thunderBattery;bulf;rainCannon;rainBattery;rainBlocker;rainWalker"
+ai5startmoney=3000
+ai5geyserattachments=2
+ai5collectors=4
+ai5timebetweenmoves= 3
+ai5color=Red
+ai5bridgedrawrate= 1
+ai5stuffRefreshRate=1
+ai5allylist="2;3;4;6"
+
+ai6name="Mr Sun"
+ai6tech="sunCannon;windBattery;sunArcher;sunFence;sunBlocker"
+ai6startmoney=3000
+ai6geyserattachments=2
+ai6collectors=4
+ai6timebetweenmoves= 5
+ai6color=Yellow
+ai6bridgedrawrate= 1
+ai6stuffRefreshRate=1
+ai6allylist="2;3;4;5"
+
+[Options]
+
+[A.]
+<h2>맨 오 워</h2>
+<i>~y"이 놀라운 생물들은 액체 웅덩이에서 태어나 적을 무자비하게 추적한다."<br>
+-님버스의 과학자</i>
+<p>~w외딴 곳에 고립된 당신을 적대적인 사제들이 에워쌌습니다. 쉽게 이길 수 있다고 생각해 몰려옵니다. 당신과 싸울 때 쉬운 승리란 없다는 것을 보여 주십시오!
+<p>~B~E~r목표:~.~B~w  썬 바리케이드로 맨 오 워를 보호하며 적을 파괴하십시오.
+<p>~B~E~o도움말:~.~B~w 맨 오 워의 "생성 웅덩이"는 약합니다. 공격받지 않도록 먼저 썬 바리케이드를 놓고 그 뒤에 맨 오 워를 배치하십시오.
+<p>아웃포스트도 사용할 수 있습니다. (사제를 오른쪽 클릭하고 "아웃포스트 건설(Build Outpost)" 선택)
+<p><!"rainaviary.*"><!"rainflyer.*">                               <!"sunfence.*">
+<p>"맨 오 워"                          "썬 바리케이드"
+$Button=사용 가능한 지식,ShowTechnology,55
+$Button=시작하겠습니다!,DoNothing,0
+</?>
+
+[succeeded][badteamdead]
+<h2>축하합니다!</h2>
+<p>님버스에서 유용하게 쓸 또 다른 전술을 익혔습니다!"
+<$Config,Done{mission.fileName}=1>
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+$Button=다음,MissionBegin,bc7sun_bars76
+
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[Failed]
+<h2>실패...</h2>
+<p>적은 맨 오 워를 비웃으며 방어를 뚫고 당신의 섬을 짓밟았습니다......
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[END]

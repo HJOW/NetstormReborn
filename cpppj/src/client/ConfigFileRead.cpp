@@ -40,9 +40,10 @@ struct ConfigFileReader { // 원문 지역 File 완료 뒤 정리와 호스트�
 };
 }
 // 실제Client는Config파일에만이장치를설치한다.공유Reader의값/snapshot은유지한다.
-o::ConfigFileLoadHooks MakeConfigFileReadHooks(const o::BaseFileSystem& files) {
-    o::ConfigFileLoadHooks hooks;hooks.probe=[&files](auto name) { return files.Probe(name); };
-    hooks.load=[&files](o::Config& config,std::string_view name) {
+o::ConfigFileLoadHooks MakeConfigFileReadHooks(const o::BaseFileSystem& files,ConfigFilePathResolver resolve) {
+    o::ConfigFileLoadHooks hooks;hooks.probe=[&files,resolve](auto name) { const auto selected=resolve ? resolve(name):std::nullopt;return files.Probe(selected ? platform::PathToUtf8(*selected):std::string(name)); }; // 한국어번들만직접물리경로로바꾸고영어는원래query를그대로쓴다.
+    hooks.load=[&files,resolve](o::Config& config,std::string_view name) {
+        const auto selected=resolve ? resolve(name):std::nullopt;const auto physicalName=selected ? platform::PathToUtf8(*selected):std::string(name); // 실제FILE/키/해독/정리의원문부모는그대로사용한다.
         ConfigFileReader reader;std::vector<std::uint8_t> allocation;o::BaseFileWholeReadHooks whole;o::ConfigFileLoadBodyHooks body; // Append복귀까지같은물리할당을소유한다.
         whole.probe=[&](auto physical) { return files.Probe({reinterpret_cast<const char*>(physical.data()),physical.size()}); };
         whole.open=[&](auto& file,auto physical,auto mode,auto create) { files.Open(file,{reinterpret_cast<const char*>(physical.data()),physical.size()},mode,create,reader.io); };
@@ -50,7 +51,7 @@ o::ConfigFileLoadHooks MakeConfigFileReadHooks(const o::BaseFileSystem& files) {
         body.buffer=[&](auto token) { if (token!=1) throw std::logic_error("Config 실제 할당 토큰");if (!reader.complete) throw std::runtime_error("Config 전체읽기의 실제 부분 I/O");return std::span(allocation); };
         body.append=[&](auto,std::span<const std::uint8_t> bytes) { config.AppendDecodedBytes(bytes); }; // 원문XOR는40380에서끝났으므로기존LoadBytes로두번해독하지않는다.
         body.release=[&](auto token) { if (token!=1) throw std::logic_error("Config 실제 반납 토큰");std::vector<std::uint8_t>{}.swap(allocation); }; // Append가정상복귀한뒤에만원문free를연결한다.
-        std::string input(name.substr(0,name.find('\0')));input+='\0';std::array<std::uint8_t,4096> scratch{};o::LoadConfigFile(reader.state,{reinterpret_cast<const std::uint8_t*>(input.data()),input.size()},reader.io,whole,body,scratch); // 호스트예외의남은할당은지역RAII로추가반납하며원문예외ABI와구별한다.
+        std::string input(physicalName.substr(0,physicalName.find('\0')));input+='\0';std::array<std::uint8_t,4096> scratch{};o::LoadConfigFile(reader.state,{reinterpret_cast<const std::uint8_t*>(input.data()),input.size()},reader.io,whole,body,scratch); // 호스트예외의남은할당은지역RAII로추가반납하며원문예외ABI와구별한다.
     };return hooks;
 }
 // 원문chdir대신검색시점의현재게임CWD를사용하며FindClose/Next는같은Windows핸들을소비한다.

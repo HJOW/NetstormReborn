@@ -194,6 +194,10 @@ public:
     void RebuildColorSortMaps(); //43c010의고정초기RGB/현재빨강9표만생성하며소비자갱신과구별한다.
     void RefreshPaletteConsumers(); //기존AudioTints/커서/월드/UI소비자를이후maps경계에서갱신한다.
     InputQueue& Input();
+    // IME와 MCP text가 공유하는 일반 입력 경계다. 미지원 UTF-8은 예외, 큐 공간 부족은 무효과 false다.
+    bool QueueCommittedText(std::string_view utf8,std::int32_t x=0,std::int32_t y=0);
+    // Unicode 클립보드가 실제 게임 창을 소유자로 사용하도록 핸들만 빌린다.
+    NativeHandle InputWindowHandle() const { return window_; }
     o::ConfigInterface& Configuration();
     // 원본0054db30의 Client 수명 DWORD를 빌린다. 저장할 때 설정을 다시 조회하지 않는다.
     const std::uint32_t& ReadOnlyForts() const;
@@ -229,6 +233,9 @@ public:
     const std::shared_ptr<ClientStaticStrings>& StaticStrings() const; // 같은 고리의 실제 수명을 빌리며 조회 자체는 예약/할당하지 않는다.
     const std::shared_ptr<ClientDotCommandGlobals>& DotCommandGlobals() const; //최초 say를 보존하는 같은 장기 등록 표를 빌린다.
     const o::BaseFileSystem& Files() const;
+    std::optional<std::filesystem::path> ResolveKoreanBuiltinFile(std::string_view name) const; // 현재VFS의정확파일뒤에공식한국어번들을찾으며사용자/영어경로는빈값이다.
+    std::optional<std::vector<std::uint8_t>> ReadLocalizedGameFile(std::string_view name) const; // Config값형reader도같은본문선택을쓰되BOM/AI설정은기존해독부모에넘긴다.
+    std::vector<std::string> MatchLocalizedGameFiles(std::string_view pattern) const; // guide목록의공식한국어논리이름만같은FileFinder순서에합친다.
     void InitializeNativeSecondaryFiles(std::string_view directory); //00441790의 CD 탐색 뒤 보조 root/TAFF 등록을 같은 장기 VFS에 연결한다. 빈 결과는 기본 root이며 별도 목록은 만들지 않는다.
     StartupFileLocations InitializeNativeStartupFiles(const std::function<std::string()>& findCd); //10.78실제시작과창없는집중검사가같은설정탐색/CD/등록순서를호출한다. 반환검색객체는설정Load뒤반납한다.
     const std::optional<platform::UserDataRoot>& UserData() const { return options_.userData; } // 5차: 사용자 홈 저장 정책이 켜졌는지와 그 루트를 읽는다(없으면 설치 폴더 동작).
@@ -330,7 +337,9 @@ private:
     void PresentScene(bool captureFrame); //Draw/Finish 뒤 일반 Frame만 수집한다. 로딩 즉시 출력은 수집하지 않는다.
     // 원본 FUN_00436020 / FUN_00436190: 키·글자 사건을 큐에 넣는다.
     void KeyEvent(NativeHandle window, unsigned message, std::uintptr_t wParam, std::intptr_t lParam);
-    void CharacterEvent(NativeHandle window, std::uintptr_t wParam);
+    void CharacterEvent(NativeHandle window, std::uintptr_t wParam,std::intptr_t lParam);
+    // ANSI 창에서도 IMM의 UTF-16 확정 결과를 직접 가져온다. 미완성 조합은 OS 기본 UI에 남긴다.
+    void ImeResultEvent(NativeHandle window);
     // 원본 FUN_00435b30: 초기화 도중 쌓인 창 메시지를 처리한다. WM_QUIT이면 거짓.
     bool PumpMessages();
     // 화면을 BMP로 저장한다(새 검사 기능).
@@ -421,6 +430,9 @@ private:
     bool sceneVisible_{};
     // input_: 처리할 입력 또는 입력 분배기.
     InputQueue input_;
+    bool imeComposing_{}; // 미완성 IME 조합이 BYTE 편집 버퍼/게임 단축키를 변경하지 않게 한다.
+    bool imeKeyConsumed_{}; // 아래 식별자가 실제 조합 키에서 작성되었는지 구별한다.
+    std::uint64_t imeKeyToken_{}; // 조합을 끝낸 Enter/Backspace의 동일 WM_CHAR를 시간/scan/repeat로 구별한다.
     // clock_: 같은 원점·정지 상태를 프레임과 장기 전송이 공유하는 실제 시계 소유자다.
     std::shared_ptr<o::GameClock> clock_{std::make_shared<o::GameClock>()};
     bool uiPaused_{}; // 메뉴/브리핑의 단일 정지 소유 표식이다. 원본 미션 scriptPaused와 별도로 유지한다.

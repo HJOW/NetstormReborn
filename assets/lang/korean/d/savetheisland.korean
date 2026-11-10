@@ -1,0 +1,64 @@
+﻿[Header]
+missionType = "Tutorial"
+aid=1
+
+loadFort = "SaveTheIsland"
+
+missionNumber = 1
+
+myStartMoney = 2000
+myTech = "sunWalker;rainBattery;sunArcher;sunCannon;sunBlocker;sunAviary"
+
+aiName = "Earl of Thunder"
+aiTech = "sunWalker;thunderBattery;thunderCannon;sunArcher;thunderArcher;sunBalloon"
+aiStartMoney = 2000
+aiGeyserAttachments = 1
+aiCollectors = 1
+aiTimeBetweenMoves = 4
+
+title="섬을 구하라!"
+
+[Options]
+
+[A.]
+<h2>섬을 구하라!</h2>
+<i>"우리는 본래 잔인한 민족이 아니다. 끝없이 이어지는 필요가 우리를 그렇게 만들었다."
+--압스테크 볼티킨 장군</i>
+<p>
+하이드러스 대사의 섬이 갑작스러운 공격을 받았습니다.
+골렘들이 가까스로 제때 모여 썬 배리어를 세워
+섬이 완전히 파괴되는 것을 막았습니다.
+<p>
+자원도 부족하고 궁지에 몰린 대사가
+절박한 순간을 구해 줄 당신의 뛰어난 지략을 요청했습니다.
+<p>
+이 섬을 구한다면 대사는 귀중한 동맹이 될 것입니다!
+
+$Button=지식 확인,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+당신의 지략은 이제 전설이 되었습니다!
+대사는 영원한 감사의 표시로 당신을 아들이자 후계자로 삼습니다.
+<p>
+그의 백성은 영원한 충성을 맹세하고, 당신의 제국이 탄생합니다!
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,FragileFortune
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+대사가 당신을 믿은 것은 분명한 실수였습니다!
+잔인한 적이 그의 섬을 유린하도록 내버려 두었습니다.
+대사는 마지막 행동으로 직접 당신의 목숨을 거둡니다.
+$Button=계속,Tell,TryAgain
+
+
+[END]
+																		 
+																		 

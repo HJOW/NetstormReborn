@@ -1,0 +1,138 @@
+﻿[Header]
+missiontype="tutorial"
+
+missionnumber=8
+moregeysers=1
+
+mytech="outpost;windBattery"
+mystartmoney=5000
+
+title="퓨리 전쟁"
+
+ai2name="Sir Vortex"
+ai2tech="windArcher;windBattery;windBlocker;windAviary;windballoon;windWalker;outpost"
+ai2startmoney=3000
+ai2geyserattachments=3
+ai2collectors=3
+ai2timebetweenmoves= 2
+ai2color=Green
+ai2bridgedrawrate= 2
+ai2stuffRefreshRate=6
+ai2allylist="3;4;5"
+
+ai3name="Lord Ice"
+ai3tech="rainCannon;rainBattery;rainBlocker;rainAviary;rainballoon;rainWalker;rainFence;outpost"
+ai3startmoney=2000
+ai3geyserattachments=3
+ai3collectors=3
+ai3timebetweenmoves= 2
+ai3color=lightblue
+ai3bridgedrawrate=2
+ai3stuffRefreshRate=5
+ai3allylist="2;4;5"
+
+ai4name="Count Thunder"
+ai4tech="thunderCannon;thunderBattery;outpost;thunderArcher;thunderBlocker;thunderFence;bulf"
+ai4startmoney=2000
+ai4geyserattachments=3
+ai4collectors=3
+ai4timebetweenmoves= 2
+ai4color=Purple
+ai4bridgedrawrate= 2
+ai4stuffRefreshRate=6
+ai4allylist="2;3;5"
+
+ai5name="Mr Sun"
+ai5tech="sunCannon;windBattery;sunArcher;sunAviary;sunBalloon;sunFence;sunBlocker;outpost"
+ai5startmoney=3000
+ai5geyserattachments=3
+ai5collectors=3
+ai5timebetweenmoves= 2
+ai5color=Yellow
+ai5bridgedrawrate= 2
+ai5stuffRefreshRate=4
+ai5allylist="2;3;4"
+
+[Options]
+
+[A.]
+<h2>퓨리 전쟁</h2>
+<i>~y"퓨리들의 전쟁은 결코 끝나지 않는다."<br>
+-최고위 대사제</i>
+<p>~B~E~r목표:~.~B~w  원하는 퓨리의 힘으로 방금 당신을 괴롭힌 적들을 파괴하십시오. 또는 썬으로 자신의 실력을 증명하십시오!
+<p>그들을 격파하려면 지금까지의 훈련을 모두 활용해야 합니다!
+<p>~o~B~E도움말:  ~.~B~w아웃포스트를 사용할 수 있습니다.
+$Button=시작하겠습니다!,DoNothing,0
+</?>
+
+[@1]
+<h2>메시지</h2>
+<p>사용할 지식을 선택하십시오.
+<p><!"mana.8">                  <!"mana.9">                  <!"mana.10">                  <!"mana.11">
+
+$Button= 윈드,tell,W
+$Button= 레인,tell,R
+$Button= 썬더,tell,T
+$Button= 썬,tell,S
+
+[W]
+<$CheatAllTechnology,0>
+
+[R]
+<$CheatAllTechnology,1>
+
+[T]
+<$CheatAllTechnology,2>
+
+[S]
+<$CheatAllTechnology,3>
+
+[ai2priestdead]
+<h2>~r퓨리들이 기뻐합니다!<h2>
+<p>~g서 볼텍스를 제물로 바쳤습니다!
+<p>~w그의 지식은 이제 당신의 것입니다!
+<p><!"windarcher.*">
+<$CheatAllTechnology,0>
+
+[ai3priestdead]
+<h2>~r퓨리들이 기뻐합니다!<h2>
+<p>~l로드 아이스를 제물로 바쳤습니다!
+<p>~w그의 지식은 이제 당신의 것입니다!
+<p><!"raincannon.*">
+<$CheatAllTechnology,1>
+
+[ai4priestdead]
+<h2>~r퓨리들이 기뻐합니다!<h2>
+<p>~m카운트 썬더를 제물로 바쳤습니다!
+<p>~w그의 지식은 이제 당신의 것입니다!
+<p><!"thundercannon.*">
+<$CheatAllTechnology,2>
+
+[ai5priestdead]
+<h2>~r퓨리들이 기뻐합니다!<h2>
+<p>~y미스터 썬을 제물로 바쳤습니다!
+<p>~w그의 지식은 이제 당신의 것입니다!
+<p><!"sunarcher.*">
+<$CheatAllTechnology,3>
+
+[Failed]
+<h2>실패...</h2>
+<p>그래도 그동안 즐거우셨기를 바랍니다!
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[Success][badteamdead]
+<h2>승리!</h2>
+<p>당신은 진정한 달인입니다!
+<p>이제 훈련을 모두 마쳤습니다.
+<$Config,Done{mission.fileName}=1>
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[END]

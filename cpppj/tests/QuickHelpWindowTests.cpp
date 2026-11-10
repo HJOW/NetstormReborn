@@ -1,4 +1,5 @@
 #include "client/QuickHelpFileRead.h"
+#include "o/OriginalText.h"
 #include "QuickHelpFileReadTestSupport.h"
 #include "o/RawColorMapCache.h"
 #include "o/RawFileName.h"
@@ -34,6 +35,7 @@ struct WindowFixtureScene {
     float scale{1};bool script{},empty{},failure{};std::int32_t lineCount{1},frame{3};std::string trace,helpText="<a name=\"unitType\"><info><p>BODY</a>\nEND"; // 독립 GUI/파일/Config 입력이다.
     std::function<void(std::uint32_t)> backgroundCreated; //질감 자식 생성 뒤 원본 전역이 바뀐 경우의 현재 값 재조회를 검사한다.
     std::function<std::optional<std::string>(std::string_view)> fileRead; // 선택한 실제/명시 FILE reader를 기존 창 몸체에 공급한다.
+    std::function<std::string()> fileSpec; // 언어cache추가검사만현재파일키를공급하며기존fixture의기본영문키는그대로다.
     std::function<void(std::string_view)> fileError; // NULL 반환의 원문 로그와 실제 Open 예외를 구별한다.
     // 첫 관측과 같은 현재 노드/기본 전역을 공급하고 제품 처리기만 조립한다.
     WindowFixtureScene() {
@@ -52,7 +54,7 @@ struct WindowFixtureScene {
         h.constructButton=[this](auto token,auto width,auto height,std::string_view label,auto unused,auto context) { Event("Stone,"+std::to_string(token)+','+std::to_string(width)+','+std::to_string(height)+','+TextHex(label)+','+std::to_string(unused)+','+std::to_string(context));Fill(token,60,20,0); };h.fitButton=[this](auto token) { Event("Fit,"+std::to_string(token)); };
         h.constructInformation=[this](auto token,auto width,auto height,auto font,auto color) { ConstructText(token,width,height,font,color); };
         h.constructPicture=[this](auto token,auto type,auto image,auto mode) { Event("Picture,"+std::to_string(token)+','+std::to_string(type)+','+std::to_string(image)+','+std::to_string(mode));Fill(token,99,88,1); };
-        h.translate=[](std::string_view value) { return std::string(value); };h.config=[this](std::string_view key) { Event("Config,"+TextHex(key));return std::string("d/help.english"); };
+        h.translate=[](std::string_view value) { return std::string(value); };h.config=[this](std::string_view key) { Event("Config,"+TextHex(key));return fileSpec ? fileSpec():std::string("d/help.english"); };
         h.load=[this](std::string_view name) -> std::optional<std::string> { Event("Load,"+TextHex(name)+",0,2");if (fileRead) return fileRead(name);return failure ? std::nullopt : std::optional<std::string>(helpText); };h.loadError=[this](std::string_view name) { Event("LoadError,9,"+TextHex(name));if (fileError) fileError(name); };
         h.substitute=[this](std::string_view text) { Event("Substitute,"+TextHex(text)+",8192");return empty ? std::string{} : std::string(text); };h.nearestColor=[this](auto red,auto green,auto blue) { Event("Color,"+std::to_string(red)+','+std::to_string(green)+','+std::to_string(blue));return 35U; };h.scripted=[this] { Event("Script");return script; };
         h.kill=[this](auto token) { Kill(token); };h.push=[this](auto token) { Push(token); };h.clearBody=[this](auto token) { html->Clear(token); };h.attach=[this](auto token,float x,float y,auto parent,auto mode) { Attach(token,x,y,parent,mode); };h.baseAttach=[this](auto token,float x,float y,auto parent,auto mode) { BaseAttach(token,x,y,parent,mode); };h.lines=[this](auto token) { CHECK(token==kInfo);return lineCount; };
@@ -182,4 +184,13 @@ TEST_CASE(QuickHelpFileRead_ActualMissingThrowsBeforeCacheAndEmptyFileCanRetry) 
     using namespace netstorm::test::helpread;const auto root=Work();std::filesystem::create_directories(root);netstorm::client::Client instance(Options(root));WindowFixtureScene scene;scene.state.helpData.reset();std::size_t errors{};scene.fileRead=[&](auto name) { return ReadClientQuickHelpFile(instance,name); };scene.fileError=[&](auto) { ++errors; };bool rejected{};
     try { scene.help->Construct(kWindow,0); }catch (const netstorm::o::ColorCacheUnableToOpen&) { rejected=true; }
     CHECK(rejected && !scene.state.helpData && scene.state.id==0 && errors==0 && scene.window.body==kBody && scene.window.backButton==kBack);Text(root/"d/help.english","");scene.allocations.clear();scene.help->Construct(kWindow,0);CHECK(scene.state.helpData==std::string("\n") && scene.state.helpData->c_str()[1]==0 && scene.state.id==scene.window.serial && errors==0);
+}
+
+TEST_CASE(KoreanIntegration_ActualHelpCacheReloadsAcrossLanguageInvalidation) { // 같은실제창/cache와FILE해독을영어/한국어/영어순서로대조한다.
+    using namespace netstorm::test::helpread;const auto root=Work();const std::string english="<h2>English Help</h2>";Text(root/"d/help.english",english);Text(root/"d/help.korean","\xef\xbb\xbf<h2>한국어 도움말</h2>");netstorm::client::Client instance(Options(root));WindowFixtureScene scene;scene.state.helpData.reset();std::string selected="d/help.english";std::size_t reads{}; // fixture기대값을바꾸지않는새독립입력이다.
+    scene.fileSpec=[&] { return selected; };scene.fileRead=[&](auto name) { ++reads;return ReadClientQuickHelpFile(instance,name); };scene.help->Construct(kWindow,0);CHECK(scene.state.helpData==english+"\n" && reads==1);
+    selected="d/help.korean";scene.allocations.clear();scene.help->Construct(kWindow,0);CHECK(scene.state.helpData==english+"\n" && reads==1); // 기존성공cache는명시무효화전까지유지된다.
+    scene.help->InvalidateCache();CHECK(!scene.state.helpData);scene.allocations.clear();scene.help->Construct(kWindow,0);CHECK(scene.state.helpData && reads==2);
+    if (scene.state.helpData) CHECK(netstorm::o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(scene.state.helpData->data()),scene.state.helpData->size()})=="<h2>한국어 도움말</h2>\n");
+    selected="d/help.english";scene.help->InvalidateCache();scene.allocations.clear();scene.help->Construct(kWindow,0);CHECK(scene.state.helpData==english+"\n" && reads==3);CHECK(netstorm::o::ReadFileBytes(root/"d/help.english")==std::vector<std::uint8_t>(english.begin(),english.end()));
 }

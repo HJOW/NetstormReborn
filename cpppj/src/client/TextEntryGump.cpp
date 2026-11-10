@@ -1,5 +1,6 @@
 // 실제0x28 편집 버퍼와 두 Slider를 공유하며 원본의 현재 필드 재조회/사건 순서를 유지한다.
 #include "client/TextEntryGump.h"
+#include "client/DisplayTextInput.h" // 확정 한글과 BYTE 선택/삭제가 같은 문자 경계를 사용한다.
 #include <algorithm>
 #include <bit>
 #include <cmath>
@@ -132,7 +133,10 @@ void TextEntryGump::SetScroll(std::uint32_t token,std::int32_t line,std::int32_t
     hooks_.sliderRange(node.horizontalSlider,0,Sub(count,1));hooks_.sliderPage(node.horizontalSlider,columns);hooks_.sliderPosition(node.horizontalSlider,column);
     node.scrollColumn=Slider(node.horizontalSlider).position;
     const auto lines=Buffer(token).LineCount();hooks_.sliderRange(node.verticalSlider,0,Sub(lines,1));hooks_.sliderPage(node.verticalSlider,rows);hooks_.sliderPosition(node.verticalSlider,line);
-    node.scrollLine=Slider(node.verticalSlider).position;Redraw(token);
+    node.scrollLine=Slider(node.verticalSlider).position;
+    const auto currentLine=DisplayTextLine(Buffer(token).Text(),node.scrollLine); // 두 실제 Slider가 확정한 줄에서만 BYTE 열을 문자 경계로 보정한다.
+    if (HasExtendedDisplayText(currentLine)) { node.scrollColumn=static_cast<std::int32_t>(DisplayTextFloor(currentLine,static_cast<std::size_t>(std::max(0,node.scrollColumn))));hooks_.sliderPosition(node.horizontalSlider,node.scrollColumn); }
+    Redraw(token);
 }
 // 원본 delta는 각각 현재 signed DWORD와 감김 덧셈한다.
 void TextEntryGump::RelativeScroll(std::uint32_t token,std::int32_t line,std::int32_t column) const {
@@ -180,22 +184,27 @@ void TextEntryGump::Destruct(std::uint32_t token,bool console) const {
 std::uint32_t TextEntryGump::Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
     auto& node=Node(token);auto value=event;std::uint32_t result{};const auto code=event&kCodeMask; // Enter만 전달 value를 LF10으로 바꿀 수 있다.
     if (!(event&kCommand) && code!=0x10000 && code!=0x20000 && !node.readOnly && !(event&kRelease)) {
+        const bool extended=HasExtendedDisplayText(Buffer(token).Text()); // 기존 순수 BYTE fixture는 원문 계산/통지 경로를 그대로 사용한다.
+        if (extended) { auto& buffer=Buffer(token);const auto text=buffer.Text();const auto begin=DisplayTextFloor(text,static_cast<std::size_t>(buffer.State().selectionBegin));const auto end=buffer.State().selectionBegin==buffer.State().selectionEnd ? begin : DisplayTextCeil(text,static_cast<std::size_t>(buffer.State().selectionEnd));buffer.Select(static_cast<std::int32_t>(begin),static_cast<std::int32_t>(end));node.shiftAnchor=static_cast<std::int32_t>(DisplayTextFloor(text,static_cast<std::size_t>(std::max(0,node.shiftAnchor))));node.shiftEnd=static_cast<std::int32_t>(DisplayTextFloor(text,static_cast<std::size_t>(std::max(0,node.shiftEnd)))); } // 외부선택뒤stale Shift기준도토큰내부를가리키지않는다.
+        // 현재 버퍼를 매번 다시 읽으므로 Insert 재할당 뒤의 오래된 뷰를 보유하지 않는다.
+        const auto previous=[&](std::int32_t at) { return extended ? static_cast<std::int32_t>(PreviousDisplayText(Buffer(token).Text(),static_cast<std::size_t>(std::max(0,at)))) : Sub(at,1); };
+        const auto next=[&](std::int32_t at) { return extended ? static_cast<std::int32_t>(NextDisplayText(Buffer(token).Text(),static_cast<std::size_t>(std::max(0,at)))) : Add(at,1); };
         result=1;bool notify=true; // 인식하지 않는 문자/키는 공통 Redraw 뒤 반환0이다.
         switch (code) {
         case 0x250000: { // 왼쪽: 선택이 있어도 shift가 없으면 현재 begin−1 한 칸으로 옮긴다.
             const auto begin=Buffer(token).State().selectionBegin,end=Buffer(token).State().selectionEnd;
-            if (!(event&kShift)) Buffer(token).Select(Sub(begin,1),Sub(begin,1));
-            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=Sub(node.shiftEnd,1);Buffer(token).Select(node.shiftAnchor,node.shiftEnd); }break;
+            if (!(event&kShift)) Buffer(token).Select(previous(begin),previous(begin));
+            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=previous(node.shiftEnd);Buffer(token).Select(node.shiftAnchor,node.shiftEnd); }break;
         }
         case 0x270000: { // 오른쪽은 현재 end+1을 기준으로 삼는다.
             const auto begin=Buffer(token).State().selectionBegin,end=Buffer(token).State().selectionEnd;
-            if (!(event&kShift)) Buffer(token).Select(Add(end,1),Add(end,1));
-            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=Add(node.shiftEnd,1);Buffer(token).Select(node.shiftAnchor,node.shiftEnd); }break;
+            if (!(event&kShift)) Buffer(token).Select(next(end),next(end));
+            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=next(node.shiftEnd);Buffer(token).Select(node.shiftAnchor,node.shiftEnd); }break;
         }
         case 0x230000: { // End는 length+1로 Select한 뒤 원문처럼 +dc 기준의 열 delta를 전달한다.
             const auto begin=Buffer(token).State().selectionBegin,end=Buffer(token).State().selectionEnd;
-            if (!(event&kShift)) { const auto at=Add(Buffer(token).State().length,1);Buffer(token).Select(at,at);RelativeScroll(token,0,node.shiftEnd); }
-            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=Add(Buffer(token).State().length,1);Buffer(token).Select(node.shiftAnchor,node.shiftEnd);RelativeScroll(token,0,node.shiftEnd); }break;
+            if (!(event&kShift)) { const auto at=extended ? Buffer(token).State().length:Add(Buffer(token).State().length,1);Buffer(token).Select(at,at);RelativeScroll(token,0,node.shiftEnd); }
+            else { if (begin==end) { node.shiftAnchor=begin;node.shiftEnd=end; }node.shiftEnd=extended ? Buffer(token).State().length:Add(Buffer(token).State().length,1);Buffer(token).Select(node.shiftAnchor,node.shiftEnd);RelativeScroll(token,0,node.shiftEnd); }break;
         }
         case 0x240000: { // Home의 shift 선택과 열0 요청은 서로 다른 상태를 사용한다.
             const auto begin=Buffer(token).State().selectionBegin,end=Buffer(token).State().selectionEnd;
@@ -205,7 +214,7 @@ std::uint32_t TextEntryGump::Handle(std::uint32_t token,std::uint32_t event,std:
         }
         case 8: { // Ctrl+Backspace는 단어 삭제가 아니라 전체 Reset이다.
             if (event&kControl) Buffer(token).Reset();
-            else { auto begin=Buffer(token).State().selectionBegin;const auto end=Buffer(token).State().selectionEnd;if (begin==end) begin=Sub(begin,1);Buffer(token).Select(begin,end);Buffer(token).Insert(); }break;
+            else { auto begin=Buffer(token).State().selectionBegin;const auto end=Buffer(token).State().selectionEnd;if (begin==end) begin=previous(begin);Buffer(token).Select(begin,end);Buffer(token).Insert(); }break;
         }
         case 13: { // multiline일 때만 LF를 삽입하나 Enter 부모 통지는 항상 보낸다.
             if (node.multiline) { value=10;const std::array<char,2> newline{10,0};Buffer(token).Insert(newline); }
@@ -213,14 +222,22 @@ std::uint32_t TextEntryGump::Handle(std::uint32_t token,std::uint32_t event,std:
         }
         case 9:case 27:case 0x260000:case 0x280000:result=0;notify=false;break; // Tab/ESC/위/아래는 이 기본 입력기에서 처리하지 않는다.
         case 0x2d0000: // Insert는 Ctrl 복사 우선이며 shift가 있으면 붙여넣는다.
-            if (event&kControl) Buffer(token).Copy();else if (event&kShift) Buffer(token).Paste(Excluded(token));break;
+            if (event&kControl) Buffer(token).Copy();else if (event&kShift) Buffer(token).Paste(Excluded(token),node.maxLength);break;
         case 0x2e0000: { // Shift+Delete는 Cut, 일반 Delete는 현재 선택 또는 오른쪽 한 문자다.
             if (event&kShift) Buffer(token).Cut();
-            else { const auto begin=Buffer(token).State().selectionBegin;auto end=Buffer(token).State().selectionEnd;if (begin==end) end=Add(end,1);Buffer(token).Select(begin,end);Buffer(token).Insert(); }break;
+            else { const auto begin=Buffer(token).State().selectionBegin;auto end=Buffer(token).State().selectionEnd;if (begin==end) end=next(end);Buffer(token).Select(begin,end);Buffer(token).Insert(); }break;
         }
         default: {
+            if (IsCommittedTextInput(event)) {
+                const auto bytes=CommittedTextBytes(event);auto& buffer=Buffer(token);const auto& state=buffer.State();
+                const auto excluded=Excluded(token);if (std::find(excluded.begin(),excluded.end(),static_cast<char>(0x1f))!=excluded.end()) { result=0;notify=false;break; } // 숫자 전용창의 기존 제외목록은 확장 토큰 전체에도 적용한다.
+                const auto size=std::int64_t(state.length)-(state.selectionEnd-state.selectionBegin)+static_cast<std::int64_t>(bytes.size()); // 길이 제한은 기존 물리 BYTE 상한이고 새 문자만 완전한 토큰으로 판정한다.
+                if (node.maxLength<1 || size<node.maxLength) buffer.Insert(Terminated(bytes));else { result=0;notify=false; }
+                break;
+            }
             if (code<0x20 || code>=0x100) { result=0;notify=false;break; }
-            if (node.maxLength<1 || Add(Buffer(token).State().length,1)<node.maxLength) {
+            const auto& current=Buffer(token).State();const auto length=extended ? std::int64_t(current.length)-(current.selectionEnd-current.selectionBegin)+1 : std::int64_t(Add(current.length,1)); // 원문 순수 BYTE의 선택 미차감 규칙은 유지한다.
+            if (node.maxLength<1 || length<node.maxLength) {
                 const auto excluded=Excluded(token); // 문자 제한은 현재 선택 길이를 빼지 않고 전체length+1로 판정한다.
                 if (!excluded.empty() && std::find(excluded.begin(),excluded.end(),static_cast<char>(value))!=excluded.end()) { result=0;notify=false;break; }
                 const std::array<char,2> character{static_cast<char>(value),0};Buffer(token).Insert(character);
@@ -253,9 +270,10 @@ std::uint32_t TextEntryGump::HandleConsole(std::uint32_t token,std::uint32_t eve
                 std::optional<std::string_view> word; // null은 이전 단어의 다음/이전 후보를 뜻한다.
                 if (node.resetWord) {
                     node.wordStart=static_cast<std::uint32_t>(begin);const auto data=Buffer(token).Data(); // 실제 현재 선택과 같은 바이트다.
-                    while (node.wordStart>0) { // 공백/콜론 바로 뒤까지 단어 시작을 역방향으로 찾는다.
-                        const auto at=node.wordStart-1;if (at>=data.size()) throw std::runtime_error("Console 단어 선택 범위");
-                        const auto value=data[at];if (Space(value) || value==':') break;--node.wordStart;
+                    const auto text=Buffer(token).Text();const bool extended=HasExtendedDisplayText(text); // 토큰 숫자 BYTE를 공백으로 오해하지 않는다.
+                    while (node.wordStart>0) { // 공백/콜론 바로 뒤까지 문자 경계로 단어 시작을 역방향으로 찾는다.
+                        const auto at=extended ? PreviousDisplayText(text,node.wordStart) : node.wordStart-1;if (at>=data.size()) throw std::runtime_error("Console 단어 선택 범위");
+                        const auto value=data[at];if (node.wordStart-at==1 && (Space(value) || value==':')) break;node.wordStart=static_cast<std::uint32_t>(at);
                     }
                     node.wordLength=std::uint32_t(begin)-node.wordStart;
                     if (node.wordStart>=data.size()) throw std::runtime_error("Console 단어 시작 범위");
@@ -287,11 +305,18 @@ void TextEntryGump::Draw(std::uint32_t token) const {
     };
     for (auto index=node.scrollLine;index<Buffer(token).LineCount();index=Add(index,1)) { // 줄 수는 각 반복 끝의 현재 문자 버퍼에서 다시 읽는다.
         if (limit<=Sub(index,node.scrollLine)) return;
-        const auto length=Buffer(token).CopyLine(index,line,selection); // 수평 잘라내기 뒤에도 원문의 선택/길이 쌍을 임의 보정하지 않는다.
+        auto length=Buffer(token).CopyLine(index,line,selection); // 순수 BYTE는 원문을 유지하고 한글 줄만 선택/스크롤 경계를 보정한다.
         if (length==0xffffffffU) { if (hooks_.assertion) hooks_.assertion(0x2ae);throw std::runtime_error("TextEntry 원본 줄 복사 범위 거부"); }
+        const std::string_view original(line.data(),length);const bool extended=HasExtendedDisplayText(original); // 복사된 현재 줄의 토큰만 검사한다.
+        const auto removedColumn=extended ? DisplayTextFloor(original,static_cast<std::size_t>(std::max(0,node.scrollColumn))) : static_cast<std::size_t>(std::max(0,node.scrollColumn)); // 표시 원점이 한글 중간에 놓이지 않게 한다.
+        if (extended && selection[0]>=0 && selection[1]>=0) { const auto begin=DisplayTextFloor(original,static_cast<std::size_t>(selection[0]));const auto end=selection[0]==selection[1] ? begin : DisplayTextCeil(original,static_cast<std::size_t>(selection[1]));selection={static_cast<std::int32_t>(begin),static_cast<std::int32_t>(end)}; }
         if (node.scrollColumn>0 && node.scrollColumn<1024) {
-            const auto visible=CString(line).size()-1,removed=static_cast<std::size_t>(node.scrollColumn); // 원본 String::erase는 요청 수가 길이를 넘으면 아무것도 바꾸지 않는다.
+            const auto visible=CString(line).size()-1,removed=removedColumn; // 원본 String::erase는 요청 수가 길이를 넘으면 아무것도 바꾸지 않는다.
             if (removed<=visible) std::memmove(line.data(),line.data()+removed,visible-removed+1);
+            if (extended && removed<=visible) {
+                length-=static_cast<std::uint32_t>(removed);
+                if (selection[0]>=0) { const auto offset=static_cast<std::int32_t>(removed);if (selection[1]<offset || (selection[1]==offset && selection[0]!=selection[1])) selection={-1,-1};else { selection[0]=std::max(0,selection[0]-offset);selection[1]=std::max(0,selection[1]-offset); } } // 화면 왼쪽에서 끝난 선택을 가짜 caret로 바꾸지 않는다.
+            }
         }
         if (length) { if (length>line.size()) throw std::runtime_error("TextEntry 줄 끝 범위");if (line[length-1]=='\n') line[length-1]=' '; }
         else { line[0]=' ';line[1]=0; }

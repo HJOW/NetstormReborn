@@ -1,5 +1,6 @@
 // 원본 편집 버퍼의 부분실패/현재 재조회/선택과 LF 줄offset을 유지한다.
 #include "client/TextEntryBuffer.h"
+#include "client/DisplayTextInput.h" // 확장 토큰의 숫자를 제외문자와 혼동하거나 중간에서 자르지 않는다.
 #include <algorithm>
 #include <bit>
 #include <cstring>
@@ -130,8 +131,15 @@ void TextEntryBuffer::Cut() const {
     if (state_.selectionBegin==state_.selectionEnd) { state_.selectionBegin=0;state_.selectionEnd=state_.length; }Copy();Insert();state_.dirty=1;
 }
 // clipboard읽기뒤현재state에같은Insert를적용하고빈clipboard도dirty1을남긴다.
-void TextEntryBuffer::Paste(std::span<const char> excluded) const {
+void TextEntryBuffer::Paste(std::span<const char> excluded,std::int32_t maxLength) const {
     if (!hooks_.clipboardRead) throw std::runtime_error("편집버퍼 실제clipboard읽기 없음");std::array<char,256> text{};hooks_.clipboardRead(text);const auto length=CStringLength(text);
+    const std::string_view incoming(text.data(),length); // 실제 읽은 본문만 확장 경계에 넘긴다.
+    if (HasExtendedDisplayText(incoming) || HasExtendedDisplayText(Text())) { // 기존한글본문에긴ASCII를붙이는경우도최종BYTE상한을우회하지않는다.
+        const auto current=Text();const auto begin=DisplayTextFloor(current,static_cast<std::size_t>(state_.selectionBegin));const auto end=state_.selectionBegin==state_.selectionEnd ? begin : DisplayTextCeil(current,static_cast<std::size_t>(state_.selectionEnd));
+        const auto kept=std::int64_t(state_.length)-static_cast<std::int64_t>(end-begin);const auto available=maxLength>0 ? std::max<std::int64_t>(0,std::int64_t(maxLength)-1-kept) : 255; // 원문 고정 출력과 BYTE 제한 중 작은 범위다.
+        const auto excludedLength=excluded.empty() ? 0U : CStringLength(excluded);auto filtered=FilterDisplayText(incoming,{excluded.data(),excludedLength},static_cast<std::size_t>(available));
+        if (!filtered.empty()) { Select(static_cast<std::int32_t>(begin),static_cast<std::int32_t>(end));filtered.push_back(0);Insert(filtered); }state_.dirty=1;return;
+    }
     if (!excluded.empty()) {
         const auto excludedLength=CStringLength(excluded);std::size_t index{};
         while (index<text.size() && text[index]) { // 원문은제외문자삭제시현재칸을다시검사한다.

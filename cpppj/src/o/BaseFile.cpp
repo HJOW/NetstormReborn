@@ -308,6 +308,13 @@ bool BaseFileSystem::ContainsArchiveOnly(std::string_view name,bool secondary) c
     return false;
 }
 // 원문 rb 열기/닫기와 TAFF 이름 조회만 사용한다. Windows10/11의 한글 경로는 기존 UTF-8/W 경계로 처리한다.
+// 클론 언어 어댑터의 정확 조회만 대체를 억제하고 예외/중첩 뒤에도 종전 상태로 복원한다.
+std::uint32_t BaseFileSystem::ProbeExact(std::string_view name) const {
+    const bool previous=suppressEnglishFallback; // 같은 스레드의 바깥 정확 조회를 덮어쓰지 않는다.
+    suppressEnglishFallback=true;
+    try { const auto result=ProbeWithDiskName(name,{});suppressEnglishFallback=previous;return result; }
+    catch (...) { suppressEnglishFallback=previous;throw; }
+}
 std::uint32_t BaseFileSystem::Probe(std::string_view name) const {
     return ProbeWithDiskName(name,{}); // 기존 존재조회 소비자는 새 인코딩 장치를 요구하지 않는다.
 }

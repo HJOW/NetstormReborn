@@ -1,6 +1,7 @@
 // 원문 Help의41baa0 호출을 같은 실제 VFS·Unicode FILE·키 반납에 연결한다.
 #include "client/QuickHelpFileRead.h"
 #include "client/ClientMain.h"
+#include "client/KoreanResources.h"
 #include "platform/Utf8Path.h"
 #include <array>
 #include <cstdio>
@@ -47,9 +48,10 @@ std::optional<std::string> ReadClientQuickHelpFile(const Client& client,std::str
     HelpFileReader reader;std::vector<std::uint8_t> allocation;std::int32_t length{};o::BaseFileWholeReadHooks whole; // 추가2/최소4 물리는 본문과 구별해 소유한다.
     whole.open=[&](auto& file,auto physical,auto mode,auto create) { client.Files().Open(file,{reinterpret_cast<const char*>(physical.data()),physical.size()},mode,create,reader.io); };
     whole.allocate=[&](auto size) { allocation.resize(size);return o::BaseFileWholeAllocation{1,allocation}; }; // vector의 초기0 padding은 반환하지 않으며 원문 미정 할당의 값으로 주장하지 않는다.
-    std::string input(name.substr(0,name.find('\0')));input+='\0';std::array<std::uint8_t,4096> scratch{}; // 짧은 암호 읽기의 원문 미정 scratch는 호스트에서 초기화하되 결과 문자열은 거부한다.
+    const auto selected=client.ResolveKoreanBuiltinFile(name);const auto physical=selected ? platform::PathToUtf8(*selected):std::string(name); // 기존Help원문파일이있으면resolver는빈값이다.
+    std::string input(physical.substr(0,physical.find('\0')));input+='\0';std::array<std::uint8_t,4096> scratch{}; // 짧은 암호 읽기의 원문 미정 scratch는 호스트에서 초기화하되 결과 문자열은 거부한다.
     const auto result=ReadQuickHelpFileBytes(reader.state,{reinterpret_cast<const std::uint8_t*>(input.data()),input.size()},length,reader.io,whole,scratch);
     if (!reader.complete) throw std::runtime_error("Help 전체읽기의 실제 부분 I/O");if (!result) return {};
-    return std::string(reinterpret_cast<const char*>(allocation.data()),static_cast<std::size_t>(length)); // 기존 창이 LF를 한 번 더하고 std::string의 NUL로 원문 추가2BYTE의 논리 끝을 보존한다.
+    return DecodeQuickHelpDisplaySource({reinterpret_cast<const char*>(allocation.data()),static_cast<std::size_t>(length)}); // 기존 창이 LF를 한 번 더하고 std::string의 NUL로 원문 추가2BYTE의 논리 끝을 보존한다.
 }
 }

@@ -41,6 +41,7 @@ public:
     // 실제 미션 Config의004404e0(key,value)다. 전역 설정이 아닌 현재 mission 객체에 값을 기록한다.
     bool Set(std::string_view key,std::string_view value);
 private:
+    std::unique_ptr<o::Config> LocalizedDisplayScript() const; // 언어파일경로가바뀐경우만동일source로익명임시Config를읽는다. 실행AI/SP/상태와원문키는수정하지않는다.
     // configuration_: 현재 언어와 실행 설정을 조회하는 인터페이스.
     o::ConfigInterface& configuration_;
     // name_: 이름으로 조회·표시할 때 사용하는 문자열.

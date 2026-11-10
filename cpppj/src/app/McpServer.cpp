@@ -1,6 +1,7 @@
 // 4차 로컬 MCP 서버 구현이다. 프로토콜 처리(McpProtocol)와 stdio/게임 스레드 연결(McpServer)을 나눠 앞쪽만 게임 없이 검사한다.
 #include "app/McpServer.h"
 #include "client/ClientMain.h"
+#include "client/DisplayTextInput.h" // UTF-8 text 동작을 실행 전에 전체 검증한다.
 #include "client/Screen.h"
 #include "client/UberGump.h"
 #include "platform/Png.h"
@@ -25,7 +26,7 @@ constexpr const char* kDefaultProtocol = "2024-11-05";                          
 constexpr std::uint64_t kMaxWaitFrames = 36000;                                     // 한 번의 대기 호출이 허용하는 최대 프레임 수다.
 constexpr std::size_t kMaxActions = 200;                                            // 한 번의 입력 호출이 허용하는 최대 동작 수다.
 // 입력 도구가 허용하는 UI 스크립트 동작이다. 검사 전용(test-*)/상태 합성 동작은 노출하지 않는다.
-const std::set<std::string> kAllowedOperations{"click", "click-if", "down", "up", "up-if", "right", "outside", "pointer", "esc", "key", "keyup", "script-command", "command"};
+const std::set<std::string> kAllowedOperations{"click", "click-if", "down", "up", "up-if", "right", "outside", "pointer", "esc", "key", "keyup", "text", "script-command", "command"};
 // 도구 이름 목록이다(tools/list와 tools/call 검증이 같은 표를 쓴다).
 const std::set<std::string> kToolNames{"netstorm_status", "netstorm_report", "netstorm_screenshot", "netstorm_input", "netstorm_wait_frames", "netstorm_record_start", "netstorm_record_stop", "netstorm_quit"};
 
@@ -61,7 +62,7 @@ Json McpProtocol::ToolsList() {
     tools.Push(Tool("netstorm_report", "게임 내부 관측 보고서(메뉴/월드/카탈로그/카메라 등 탭 구분 텍스트)를 돌려준다.", std::move(reportProperties)));
     Json screenshotProperties; screenshotProperties.Set("presented", Property("boolean", "true이면 논리 화면 대신 GPU 후처리(안티앨리어싱/FSR 1.0)가 실제로 표시한 클라이언트 영역 전체를 RGBA PNG로 돌려준다. 후처리가 꺼져 있으면 논리 화면이다."));
     tools.Push(Tool("netstorm_screenshot", "현재 게임 화면을 PNG 이미지로 돌려준다(기본은 논리 화면 버퍼, 원본 팔레트 색 그대로).", std::move(screenshotProperties)));
-    Json action; action.Set("type", "object").Set("properties", Json::MakeObject().Set("op", Property("string", "동작: click, click-if, down, up, up-if, right, outside, pointer, esc, key, keyup, script-command, command")).Set("arg", Property("string", "동작 인자. click은 컨트롤 라벨 또는 screen:x,y, key는 문자/키 이름(예: enter, f5, shift+a), script-command는 'Tell,Blank' 같은 원문 명령.")));
+    Json action; action.Set("type", "object").Set("properties", Json::MakeObject().Set("op", Property("string", "동작: click, click-if, down, up, up-if, right, outside, pointer, esc, key, keyup, text, script-command, command")).Set("arg", Property("string", "동작 인자. click은 컨트롤 라벨 또는 screen:x,y, key는 문자/키 이름(예: enter, f5, shift+a), text는 UTF-8 확정 본문(제어문자 제외·최대39문자), script-command는 'Tell,Blank' 같은 원문 명령.")));
     Json actions; actions.Set("type", "array").Set("items", std::move(action)).Set("description", "프레임마다 하나씩 순서대로 실행할 입력 동작 목록이다.");
     Json inputProperties;
     inputProperties.Set("actions", std::move(actions)).Set("wait_frames", Property("integer", "마지막 동작 뒤 더 기다릴 프레임 수(기본 3).")).Set("screenshot", Property("boolean", "true이면 완료 뒤 화면 PNG를 함께 돌려준다(기본 true)."));
@@ -330,6 +331,7 @@ std::vector<std::pair<std::string, std::string>> McpServer::BeforeInput(client::
                 for (const auto& item : list) { // 허용된 동작만 받는다.
                     const auto op = item["op"].AsString();
                     if (!kAllowedOperations.contains(op)) { Send(McpProtocol::TextResult(call.id, "허용되지 않는 동작: " + op, true)); valid = false; break; }
+                    if (op=="text") { const auto events=netstorm::client::MakeCommittedTextEvents(item["arg"].AsString());if (events.size()>=netstorm::client::InputQueue::kCapacity) throw std::length_error("text는 한 동작에 최대39문자이며 더 긴 본문은 여러 동작으로 전달해야 함"); } // 잘못된 UTF-8/미지원 문자는 첫 동작 이전에 호출 전체를 거부한다.
                     pending.actions.emplace_back(op, item["arg"].AsString());
                 }
                 if (!valid) continue;

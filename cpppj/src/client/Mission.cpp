@@ -30,6 +30,7 @@ MissionScript::MissionScript(o::ConfigInterface& configuration, std::string_view
 }
 // 원본은 미션 설정 객체를 this로 FUN_004409d0을 부른다. 스크립트를 읽지 못했으면 찾지 못한다.
 std::optional<std::string> MissionScript::Get(std::string_view key) {
+    if (key=="title") if (auto display=LocalizedDisplayScript()) if (auto title=display->Get("title")) return title; // 표시제목만현재언어를읽고AI/SP등의실행키는기존객체를유지한다.
     return script_.Get(std::string(kMissionPrefix) + std::string(key));
 }
 // 미션 이름을 돌려준다.
@@ -73,6 +74,7 @@ o::ConfigInterface::FileReader MissionScript::FileSource() const { return explic
 std::string MissionScript::MissionType() { return Get("missionType").value_or(std::string()); }
 // Section은 등록 객체의 접두어를 붙이지 않는 원본 본문 조회다.
 std::optional<std::string> MissionScript::Section(std::string_view name) const {
+    if (auto display=LocalizedDisplayScript()) if (const auto body=display->Section(name)) return std::string(*body); // 명시CustomMaps reader도그대로사용하고부재는기존본문으로돌아간다.
     const auto section = script_.Section(name);
     return section ? std::optional<std::string>(std::string(*section)) : std::nullopt;
 }
@@ -87,5 +89,14 @@ std::unique_ptr<MissionScript> CreateGuideMissionScript(o::ConfigInterface& conf
 // 원문00483210/00483260은 보유 Config 해제 뒤 Native0,그 뒤 global.inMission0을 공개한다.
 void ReleaseGuideMissionScript(std::unique_ptr<MissionScript>& mission,bool& missionMode,o::ConfigInterface& configuration) {
     if (!mission) return;mission.reset();missionMode=false;configuration.Set("global.inMission","0"); //전체 State cleanup이나 Editor prefix에서 원문에 없는 모드 초기화를 추가하지 않는다.
+}
+}
+
+namespace netstorm::client { // 표시언어가바뀌어도현재월드의실행대본을교체하지않는다.
+std::unique_ptr<o::Config> MissionScript::LocalizedDisplayScript() const {
+    const auto path=configuration_.PathSpec("missionSpec",name_);if (path.empty() || path==scriptPath_) return {}; // 같은파일은기존캐시/원문조회만사용한다.
+    auto display=std::make_unique<o::Config>(configuration_.Registry()); // 익명객체라현재mission의등록이름/우선권을덮지않는다.
+    if (explicitSource_) { if (source_) if (const auto bytes=source_(path)) display->LoadBytes(*bytes); }else configuration_.LoadFile(*display,path); // 명시작업source의부재를공식번들로우회하지않는다.
+    return display->IsValid() ? std::move(display):std::unique_ptr<o::Config>{};
 }
 }

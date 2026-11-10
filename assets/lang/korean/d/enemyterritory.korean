@@ -1,0 +1,103 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+allowAnyCapture = 1
+
+myStartMoney = 10000
+myTech = "sunWalker;windBattery;windWalker;windArcher;sunBlocker;sunAviary;sunCannon"
+
+aiMoneyRechargeRate = 8    // One sun cannon per minute
+
+// The guy you're saving
+ai2Name = "The Traitor"
+ai2Tech = "sunWalker"
+ai2StartMoney = 0
+ai2TimeBetweenMoves = 4
+ai2AllyList = "1"
+ai2Ability = "!COLLECT_STORM_POWER;!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+ai2Color = white
+
+ai3Name = "Duke of Wind"
+ai3Tech = "sunWalker;sunArcher;sunCannon;windBattery;windAviary;windBlocker;windArcher"
+ai3StartMoney = 6000
+ai3TimeBetweenMoves = 4
+ai3AllyList = "4"
+ai3Ability = "!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+ai3Color = red
+
+ai4Name = "Duke of Rain"
+ai4Tech = "sunWalker;sunArcher;sunCannon;rainBattery;rainCannon;rainAviary;rainBlocker"
+ai4StartMoney = 6000
+ai4TimeBetweenMoves = 4
+ai4AllyList = "3"
+ai4Ability = "!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+ai4Color = orange
+
+title="적의 영토!"
+
+[Options]
+
+[A.]
+<h2>적의 영토!</h2>
+<i>"내 벗은 오직 내 적의 적뿐이다."<br>
+--세틴 호르크 사령관</i>
+<p>
+적진에 배신할 사제가 있습니다!
+썬더 공작의 부하가 적의 전선 안에서 구출되기를 원합니다.
+그의 섬은 적의 방어선 근처에 있습니다.
+<p>
+방어선을 뚫고 작은 섬에서 그를 구하십시오.
+그는 적 제국의 심장부로 이어지는
+경비가 없는 비밀 통로를 안다고 주장합니다!
+
+$Button=지식 확인,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+[Ai2PriestCaptured]
+<h2>구출!</h2>
+<p>
+<i>"제때 와 주셔서 다행입니다.
+저를 당신의 섬에 내려 안전한 곳으로 데려가 주십시오.
+그러면 비밀 계획을 알려 드리겠습니다!"
+</i>
+$Button=계속,DoNothing,0
+
+
+[Succeeded][Ai2PriestSaved]
+<h2>성공!</h2>
+<p>
+배신자를 자신의 섬으로 데려왔습니다!
+<p>
+그는 어둠의 제국 심장부를 직접 공격할 수 있는
+적 영토 안의 비밀 통로를 알려 줍니다.
+궁극의 승리가 눈앞에 다가왔을지도 모릅니다!
+
+<$Config,Done{mission.fileName}=1>
+
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,FinalConfrontation
+
+[Ai2PriestDead]
+<h2>실패!</h2>
+<p>
+적이 배신한 사제를 죽였습니다.
+그의 비밀을 모르면 어둠의 제국 심장부를
+결코 뚫을 수 없습니다!
+$Button=계속,Tell,TryAgain
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+적이 섬을 짓밟고 당신의 사제를 죽였습니다.
+<p>
+배신자가 알려 줄 수 있었던 중요한 정보 없이는
+결코 성공할 수 없습니다!
+$Button=계속,Tell,TryAgain
+
+
+[END]
+																		 
+																		 

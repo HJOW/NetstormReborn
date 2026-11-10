@@ -1,0 +1,60 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 2000
+myTech = "sunWalker;sunArcher;rainBattery;rainAviary;rainCannon;rainBalloon;rainBlocker;rainWalker;rainFence"
+
+aiName = "Prince of Rain"
+aiTech = "sunWalker;sunArcher;rainBattery;rainAviary;rainCannon;rainBalloon;rainBlocker;rainWalker;rainFence;sunBalloon"
+aiStartMoney = 6000
+aiGeyserAttachments = 4
+aiCollectors = 4
+aiTimeBetweenMoves = 3
+
+title="레인 대 레인!"
+
+[Options]
+
+[A.]
+<h2>레인 대 레인!</h2>
+<i>"그러니 비가 그대의 무시무시한 분노의 화환을 되살리게 하라."<br>
+--할무크 펠리탄 대사</i>
+<p>
+마지막 대결의 순간입니다.
+가장 강력한 레인 신전을 이끌고
+레인의 어둠의 왕자의 본거지를 공격해야 합니다.
+<p>
+그의 사악한 신전에는 님버스인의 영혼 일만이 갇혀 있습니다.
+신전을 파괴하고 사제를 희생시켜
+일만의 죽음에 복수하십시오!
+
+$Button=지식 확인,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+어둠의 왕자의 사제를 처단하고 신전을 파괴하여
+님버스인의 영혼 일만을 저 너머로 해방했습니다.
+그들은 영원히 당신의 이름을 찬양하며 감사할 것입니다.
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,RunForIt
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+용감하고 충성스러운 님버스의 병력이
+레인의 어둠의 왕자에게 짓밟혔습니다!
+그들과 당신의 영혼은 사악한 신전에 갇혀
+영원한 고통을 받게 되었습니다.
+$Button=계속,Tell,TryAgain
+
+
+[END]
+																		 
+																		 

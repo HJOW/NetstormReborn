@@ -81,6 +81,7 @@ public:
     std::optional<std::vector<std::uint8_t>> TryReadWithDiskName(std::string_view name,const std::function<std::optional<std::string>(std::string_view)>& diskName) const; //명시 ACP 글꼴 소비자만 디스크 이름을UTF-8로 변환한다. raw TAFF/방문순서/고리소비는 그대로다.
     std::optional<std::vector<std::uint8_t>> TryReadArchiveOnly(std::string_view name,bool secondary=false) const; //선택한 목록만 등록 순서로 읽고 다른 목록/디스크로 fallback하지 않는다.
     bool ContainsArchiveOnly(std::string_view name,bool secondary=false) const; //선택한41a340 목록의 이름 메타데이터만 조회하며 내용/복호화/디스크를 읽지 않는다.
+    std::uint32_t ProbeExact(std::string_view name) const; // 클론 추가 한국어를 찾기 전에 현재 disk/TAFF의 같은 이름만 조회하며 영어 대체를 잠시 억제한다.
     std::uint32_t Probe(std::string_view name) const; //0041ab10의 출처0..5를 내용 읽기 없이 조회한다. 직접 경로 실패는 상대/TAFF로 fallback하지 않는다.
     std::uint32_t ProbeWithDiskName(std::string_view name,const std::function<std::optional<std::string>(std::string_view)>& diskName) const; // 같은 raw출처 순서에서 disk query만 변환하며 변환 실패도 다음 raw TAFF를 막지 않는다.
     // 캠페인 목록의 와일드카드: 디스크/TAFF/보조 경로를 합쳐 중복을 제거하고 이름순으로 반환한다.

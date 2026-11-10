@@ -271,7 +271,15 @@ void RawButtonControls::SetControls(std::span<const GumpControl> controls,std::s
     state.stoneState.palette=assets.palette;state.stoneState.backgroundType=assets.type;state.stoneState.backgroundFrame=assets.frame;
     state.create.screenWidth=width;state.create.screenHeight=height;auto& root=*state.Node(state.root);
     root.baseWidth=root.width=static_cast<float>(width);root.baseHeight=root.height=static_cast<float>(height);
-    if (existingMain) { auto& node=*state.Node(existingMain);node.baseWidth=node.width=static_cast<float>(width);node.baseHeight=node.height=static_cast<float>(height);state.Changed();return; } //재합성/안내창 복귀는 같은 부모와 버튼을 재사용해45초 기한을 새로 시작하지 않는다.
+    if (existingMain) {
+        auto& node=*state.Node(existingMain);node.baseWidth=node.width=static_cast<float>(width);node.baseHeight=node.height=static_cast<float>(height);
+        for (const auto& control:controls) if (!control.menu) { // 언어가 바뀐 라벨만 같은 실제 돌 버튼에서 다시 측정하며 부모/45초 기한을 재생성하지 않는다.
+            const auto found=state.controls.find(control.id);if (found==state.controls.end()) throw std::logic_error("메인 재사용의 실제 버튼 누락");
+            auto& button=*state.stones.at(found->second);const auto& label=labels[static_cast<std::size_t>(control.id)];
+            if (std::string_view(button.label.data())!=label) state.stone->SetLabel(found->second,label.c_str());
+        }
+        state.Changed();return;
+    } //재합성/안내창 복귀는 같은 부모와 버튼을 재사용해45초 기한을 새로 시작하지 않는다.
     const auto previousToken=state.nextToken; // 메인 생성 전의 다른 UI와 이번 부분 가족을 구별한다.
     try {
     if (mainMenuParent) {

@@ -730,6 +730,7 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
                     c.CdGlobals()->RecheckSerial()=serial;continue;
                 }
                 if (step.operation == "esc") { c.Input().Push(0x1b, 0, 0); continue; }
+                if (step.operation=="text") { if (!c.QueueCommittedText(step.argument)) throw std::length_error("text 입력 큐 공간 부족: 한 번에 최대39문자");continue; } // IME와 같은 검증/일반 큐를 사용한다. TextEntry 상태나 파일을 직접 바꾸지 않는다.
                 if (step.operation=="key" || step.operation=="keyup") {
                     if (step.argument.size()==1 && static_cast<unsigned char>(step.argument[0])>=0x20 && static_cast<unsigned char>(step.argument[0])<0x7f) {
                         c.Input().Push(static_cast<unsigned char>(step.argument[0])|(step.operation=="keyup" ? InputCode::kRelease : 0),0,0);continue; // WM_CHAR와 같은 하위 문자 코드를 넣는다. 가상 키 번호로 바꾸지 않는다.

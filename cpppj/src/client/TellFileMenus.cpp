@@ -2,6 +2,7 @@
 #include "client/TellFileMenus.h"
 #include "o/OriginalText.h"
 #include <algorithm>
+#include <array>
 #include <stdexcept>
 
 namespace netstorm::client { //4ce1b0과4ce580의 공통 수명과 제목 폴백 차이를 유지한다.
@@ -21,6 +22,19 @@ std::string ObjectName(const o::Config& object) { auto name=object.Prefix();if (
 std::string Title(o::ConfigInterface& config,std::string_view name,bool fallback) { auto label=config.SubstituteLocal("{{local.1}.title}",name);Limit(label,80);if (fallback && label.empty()) { label=name;Limit(label,80); }return label; } // 실제 지역80BYTE 복사 뒤 @/%만 빈 제목을 이름으로 바꾼다.
 }
 TellFileMenus::TellFileMenus(o::ConfigInterface& config,std::function<std::vector<std::string>(std::string_view)> enumerate):config_(config),enumerate_(std::move(enumerate)) {} // 생성 시 파일이나 메뉴를 만들지 않는다.
+void TellFileMenus::InvalidateLanguageFiles() { // 현재안내의officalN.Overview참조가살아있도록같은등록객체를유지한다.
+    const auto language=config_.Configuration().Get("currentLanguage").value_or(""); // 실제Client가확정한현재설정이며빈독립입력은다음수집에서재생성한다.
+    if (language.empty()) { owned_.clear();return; }
+    constexpr std::array<std::string_view,7> languages{"english","french","german","spanish","japanese","portuguese","korean"}; // 언어확장자만교체하며일반cfg/프로필파일명은바꾸지않는다.
+    if (std::find(languages.begin(),languages.end(),language)==languages.end()) return;
+    for (auto& object:owned_) { // 소유한목록Config만교체하고mission/사용자다른객체에는접근하지않는다.
+        const auto path=object->GetRaw("path");if (!path) continue;const auto dot=path->find_last_of('.');if (dot==path->npos) continue;
+        const auto previous=o::AsciiLower(std::string_view(*path).substr(dot+1));if (std::find(languages.begin(),languages.end(),previous)==languages.end()) continue;
+        const auto selected=path->substr(0,dot+1)+language;if (selected==*path) continue;
+        const auto name=object->GetRaw("fileName").value_or(ObjectName(*object)),index=object->GetRaw("index").value_or("0"); // prefix주소와원래index/파일이름은보존한다.
+        object->Clear();object->Append("path="+selected);object->Append("fileName="+name);object->Append("index="+index);config_.LoadFile(*object,selected); // 실제Config FILE/본문해독만사용하며AI/SP실행을다시시작하지않는다.
+    }
+}
 TellFileMenus::~TellFileMenus()=default; // 실제 Config 소멸자가 등록을 반납한다.
 std::vector<o::Config*> TellFileMenus::Collect(std::string_view pattern,std::size_t capacity) {
     if (!enumerate_) throw std::logic_error("Tell 파일 목록의 실제 열거 미연결");const auto spec=Decode(CString(pattern));Limit(spec,256);std::vector<o::Config*> objects;std::uint32_t index=1;

@@ -49,6 +49,7 @@ std::uint32_t QuickHelpWindow::Construct(std::uint32_t token,std::uint32_t learn
     state_.id=Node(token).serial;Width(token,450);Height(token,350);Node(token).flags|=0x800;Node(token).picture=0;return token;
 }
 // 현재 그림/표시 자식을 먼저 반납하고 새 정보 pane을 실제 다중 줄로 생성한다.
+void QuickHelpWindow::InvalidateCache() const { state_.helpData.reset(); } // 캐시이외원문전역/이력/스크립트/현재실행대본은변경하지않는다.
 void QuickHelpWindow::Reset(std::uint32_t token) const {
     if (Node(token).picture) { Need(hooks_.kill)(Node(token).picture);Node(token).picture=0; }Need(hooks_.clearBody)(Node(token).body);if (Node(token).information) Need(hooks_.kill)(Node(token).information);
     const auto pane=Allocate(0xd8);Need(hooks_.constructInformation)(pane,0,0,5,state_.color);Node(token).information=pane;Need(hooks_.attach)(Node(token).information,0,0,token,0);

@@ -446,7 +446,7 @@ function New-ReadmeText {
         '  Netstorm-SavedMode.bat  저장된 화면 모드로 실행',
         '  third-party\fsr1\   AMD FidelityFX FSR 1.0 헤더/라이선스(MIT)와 출처 설명',
         '  fonts\              한국어 글꼴(D2Coding)과 라이선스',
-        '  lang\               한국어 번역표(xlat.korean). 옵션 > 언어(Language)에서 한국어를 고릅니다.',
+        '  lang\               한국어 번역표와 본문44개(lang\korean). 옵션 > 언어(Language)에서 한국어를 고릅니다.',
         '  game\               게임 데이터 (원본 Netstorm 10.78)',
         '    netstorm.tarc, d\, sound\, music\, MOVIE\ (영상 원천이 있을 때)',
         '    Admin.server, Update.server, Guild.server  로컬 서버 명령 페이지',
@@ -474,7 +474,7 @@ function New-ReadmeText {
         '3. Requires Windows 10/11 x64. The Visual C++ runtime DLLs are bundled in this folder.',
         '4. game\Netstorm.exe is the original executable. The clone only reads its icon/cursor resources; do not run it directly.',
         '5. Delete %USERPROFILE%\Saved Games\Netstorm\Saves\options.cfg and fullscreenStateFile.dat to reset settings.',
-        '6. Korean: fonts\ (D2Coding) and lang\xlat.korean are bundled; pick Options > Language > Korean.',
+        '6. Korean: fonts\ (D2Coding) and lang\korean\xlat.korean and all 43 Korean bodies are bundled; pick Options > Language > Korean.',
         '7. Optional Anti-Aliasing and AMD FidelityFX Super Resolution 1.0 (MIT, see third-party\fsr1\) are in Options (off by default); 2560x1440/3840x2160 appear when a Direct3D 11 device exists.',
         '8. The rebuilt LAN server R.exe is bundled. Multiplayer remains under development and has not been verified.')
     return (($lines -join "`r`n") + "`r`n")
@@ -871,7 +871,14 @@ try {
     if (Test-Path -LiteralPath $fontLicense -PathType Leaf) { Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/License.txt') -Source $fontLicense }
     $koreanTable = Join-Path $RepoRoot 'assets\lang\korean\xlat.korean'
     if (-not (Test-Path -LiteralPath $koreanTable -PathType Leaf)) { throw "한국어 번역표를 찾을 수 없습니다: ${koreanTable}" }
-    Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/xlat.korean') -Source $koreanTable
+    Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/korean/xlat.korean') -Source $koreanTable
+    # 공통11/공식32본문은원문game자료와분리하며원본파일을덮어쓰지않는다(K1).
+    $koreanBodyDirectory = Join-Path $RepoRoot 'assets\lang\korean\d'
+    $koreanBodies = @(Get-ChildItem -LiteralPath $koreanBodyDirectory -Filter '*.korean' -File -ErrorAction Stop | Sort-Object Name)
+    if ($koreanBodies.Count -ne 43) { throw "공식 한국어 본문 43개가 필요합니다: $($koreanBodies.Count)" }
+    foreach ($koreanBody in $koreanBodies) { # 실행파일옆언어namespace로본문만동봉하며AI/SP설정이나BOM을다시쓰지않는다.
+        Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/korean/d/' + $koreanBody.Name) -Source $koreanBody.FullName
+    }
 
     # 세 서버 페이지는 사용자가 지정한 게임 원천에 있으면 보존하고, 없으면 클론의 호환 콘텐츠를 동봉한다.
     foreach ($serverPageName in @('Admin.server', 'Update.server', 'Guild.server')) {

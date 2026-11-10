@@ -69,6 +69,7 @@
 #include "client/RendererDiagnostics.h" //명시특수전역뒤원문7/10/13키의현재DWORD만토글한다.
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "client/LanguageOptions.h" //6차: 옵션 메뉴 Language 하위 메뉴가 한국어 번호(kKoreanLanguageNumber)를 쓴다.
+#include "client/DisplayTextInput.h" // 확정 Unicode 사건은 같은 Gump 입력에만 전달한다.
 #include "client/GameMenuActions.h"
 #include <ctime> //동맹 요청 제한은게임/벽시각대신실제CRT clock32를각원문위치에서읽는다.
 #include "client/ViewKeyInput.h"
@@ -324,7 +325,7 @@ bool UberGump::PollCameraPan(const InputEvent& pointer) {
 // 원본 GIF는 색 표의 RGB를 쓰지 않고 파일의 번호를 화면 팔레트에 바로 쓴다(00419ec0→004dae60).
 UberGump::UberGump(Client& client) : client_(client),missionOptions_(client.GameplayGlobals()->BattleOptionsOwner()),initLoginSubscriber_(client.SubscriberGlobals()->MySubscriber()),initialSubscriber_(client.SubscriberGlobals()->LoginSubscriber()),mapFileSpec_(client.FortGlobals()->FileSpec()),fortSelectionMode_(client.FortGlobals()->SelectionMode()),htmlGlobals_(client.HtmlWindowGlobals()->text),hideBuildings_(client.GameplayGlobals()->HideBuildings()),worldRedraw_(client.KencloudGlobals()->WorldRedraw()),menuConfigRevision_(client.FortGlobals()->Catalog().dirty),commandGump_(client.ChatWindowGlobals()->window.current) {
     scripts_.emplace(std::string(kProductCreditsObject),MakeProductCreditsConfig(client_.Configuration().Registry())); // 원본 파일 대신 UI 수명의 등록 Config로 추가 Credits를 제공한다.
-    textClipboard_=std::make_shared<TextClipboard>(Win32TextClipboardDevices()); //API를 연결만 하며 이 생성은 OS 클립보드를 열거나 변경하지 않는다.
+    textClipboard_=std::make_shared<TextClipboard>(Win32DisplayTextClipboardDevices(reinterpret_cast<std::uintptr_t>(client_.InputWindowHandle()))); //한글 선택만 Unicode로 복사하고 기본 BYTE 경로는 보존한다. 생성 중에는 OS를 열지 않는다.
     serializationGlobals_=std::make_shared<o::FortSerializationGlobals>(); // 원본BSS와같은한DWORD를모든manager/객체소비자보다오래소유한다.
     client_.SurfaceStorage()->BindSerializationGlobals(serializationGlobals_); //첫World/메뉴자원프레임전같은장기005c89b8을실제표면에연결하며값/reset/Host대여는없다.
     templateStorage_=std::make_shared<CampaignTemplateStorage>(serializationGlobals_); // 시작 초기화와 미션별 명시 정리를 별개 수명으로 유지한다.
@@ -451,7 +452,7 @@ UberGump::UberGump(Client& client) : client_(client),missionOptions_(client.Game
     warnings_=&rawButtons_->EnableWarnings([this] { return client_.WallSeconds(); },[this] {
         client_.WorldAudio().Sounds().PlayByName("newWarnMessage.wav",0,0,0,0,0);
     },std::move(pauseContext),[this] { return client_.GameplayGlobals()->world.missionPost; }); //원문의현재00594fa4를같은장기owner에서매Show진입에읽는다.
-    fileMenus_=std::make_shared<TellFileMenus>(client_.Configuration(),[this](auto pattern) { return client_.Files().MatchFinder(pattern); }); // 실제 FileFinder의 디스크/TAFF/보조 순서와 장기 Config 수명을 공유한다.
+    fileMenus_=std::make_shared<TellFileMenus>(client_.Configuration(),[this](auto pattern) { return client_.MatchLocalizedGameFiles(pattern); }); // 실제 FileFinder의 디스크/TAFF/보조 순서와 장기 Config 수명을 공유한다.
     o::MissionGuideHooks guideHooks; // 같은 실제 현재 미션/전환 큐/창과 복원한 Guide 반복 몸체다.
     guideHooks.current=[this]() -> o::MissionStartState* { return missionRuntime_ && missionRuntime_->guided ? &missionRuntime_->state : nullptr; };
     guideHooks.pending=[this] { return state_.Pending() || client_.LocalStateGlobals()->State().next[0] || (world_ && world_->Connecting() && missionRuntime_ && worldMissionToken_==missionRuntime_->saveToken) ? 1U : 0U; }; // 현재 Native 다음 상태와 같은 미션의 설치 대여도 Guide보다 먼저 소비한다.
@@ -612,7 +613,7 @@ o::Config& UberGump::Script(std::string_view name) {
     if (const auto found = scripts_.find(key); found != scripts_.end()) return *found->second;
     auto script = std::make_unique<o::Config>(client_.Configuration().Registry(), key);
     const auto path = client_.Configuration().PathSpec("missionSpec", key);
-    script->LoadBytes(client_.Files().Read(path)); script->Set("fileName", key);
+    const auto bytes=client_.ReadLocalizedGameFile(path);if (!bytes) throw std::runtime_error("Game file not found: "+path);script->LoadBytes(*bytes); script->Set("fileName", key);
     const auto [it, inserted] = scripts_.emplace(key, std::move(script)); (void)inserted;
     return *it->second;
 }
@@ -1318,6 +1319,7 @@ void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
 }
 // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
 void UberGump::Event(InputEvent event) {
+    if (IsCommittedTextInput(event.code)) { const auto routed=rawButtons_->RouteInput(event);if (routed.consumed) rebuild_=true;return; } // 새 확정 문자도 일반 focus/dialog/root를 사용하며 입력창이 없으면 게임 단축키로 바꾸지 않는다.
     if (DispatchScreenMouseKey(event,[this] { return client_.GetScreen().Flags(); },[this](auto mode) { client_.ChangeScreenMode(mode); })) rebuild_=true; // 원본 DirectDraw 호출은 Windows10/11에서 borderless/DIB 호환 장치로 실행한다. 같은 사건은 Guide/모달에 계속 전달한다.
     if (const auto* movie=rawButtons_->Menus()->Movies();movie && movie->Active()) { const auto routed=rawButtons_->RouteInput(event);if (routed.consumed) { rebuild_=true;return; } } // 실제 MovieGump 모달을 일반 ESC/키 처리보다 먼저 같은 Gump Route에 전달한다.
     const auto transitionCode=event.code&0x03ffffffU; // 원본 Guide 제어 사건은 일반 입력/프레임보다 먼저 소비한다.
@@ -1622,7 +1624,7 @@ void UberGump::Event(InputEvent event) {
     if (transitionCode==kProductionBridgeCommand) {
         if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // Guide/현재 모달 뒤 같은 Gump 트리로 전달한다. 정지/활성 커서 관문을 추가하지 않는다.
     }
-    if (DispatchLanguageChanged(event,worldUiRouted,[this](const auto& notification) { static_cast<void>(rawButtons_->RouteInput(notification)); })) { rebuild_=true;return; } //Chat의기존Push/Attach를같은실제트리에서한번만실행한다.
+    if (DispatchLanguageChanged(event,worldUiRouted,[this](const auto& notification) { static_cast<void>(rawButtons_->RouteInput(notification)); })) { rawButtons_->Menus()->InvalidateHelpLanguage();if (fileMenus_) fileMenus_->InvalidateLanguageFiles();std::erase_if(scripts_,[](const auto& item) { return item.first!=kProductCreditsObject; });if (state_.phase==ClientPhase::MainMenu) RebuildControls();rebuild_=true;return; } //클론본문캐시반납뒤Chat의기존Push/Attach를같은실제트리에서한번만실행한다.
     if (transitionCode==0x02000088U) {
         if (!worldUiRouted) static_cast<void>(rawButtons_->Event(event));rebuild_=true;return; // 원본 하단 전환은 HUD 효과 뒤 기본 반환0이다. 이미 실행한 Route를 반복하거나 미구현 메뉴 오류로 바꾸지 않는다.
     }
@@ -1978,7 +1980,7 @@ void UberGump::Compose() {
         if (state_.phase!=ClientPhase::LoadingMission) rawButtons_->Menus()->CloseMissionLoading();
         std::vector<std::string> originalLabels;originalLabels.reserve(labels_.size());
         // 원본 돌 버튼의 63바이트 라벨은 UTF-8가 아닌 기존 게임 글꼴 바이트를 사용한다.
-        for (const auto& label:labels_) originalLabels.push_back(FontBytes(label));
+        for (const auto& label:labels_) originalLabels.push_back(FontBytes(state_.phase==ClientPhase::MainMenu && client_.LanguageNumber()==static_cast<int>(kKoreanLanguageNumber) ? client_.Translate(label) : label)); //한국어 메인 버튼만 기존 돌 UI/D2Coding으로 표시하며 영어 라벨/원본 자산은 유지한다.
         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
             static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr || (rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current()) || client_.HtmlWindowGlobals()->window.instances!=0,client_.HtmlWindowGlobals()->window.instances!=0,
             state_.phase==ClientPhase::MainMenu && client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? std::optional<std::int32_t>{-83} : std::nullopt,
@@ -2043,7 +2045,7 @@ std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const 
     if (world_ && !world_->Connecting() && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:") || label.starts_with("placement-near:") || label.starts_with("placement-reach:") || label.starts_with("placement-fire:"))) return world_->Point(label);
     if (rawButtons_->Menus()->HasMenus() || rawButtons_->Menus()->HtmlWindowsOpen() || rawButtons_->CurrentDialog() || state_.phase==ClientPhase::LoadingMission) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
     // 동일 라벨의 첫 영역을 선택한다.
-    for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label)
+    for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label || (state_.phase==ClientPhase::MainMenu && client_.LanguageNumber()==static_cast<int>(kKoreanLanguageNumber) && client_.Translate(labels_.at(static_cast<std::size_t>(control.id)))==label))
         return ScreenPoint{(control.rect.left + control.rect.right) / 2, (control.rect.top + control.rect.bottom) / 2};
     return {};
 }

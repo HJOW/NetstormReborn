@@ -196,6 +196,7 @@ public:
     bool MissionLoadingOpen() const; // 같은 현재 transient serial의 실제 안내 노드가 있는지만 조회한다. Kill/등록/소멸을 성공 플래그로 대신하지 않는다.
     std::optional<ScreenRect> MissionLoadingBounds() const; // 살아 있는 원본 부모의 현재 화면 경계다.
     bool HelpOpen() const; // 현재 serial/등록/visible/dead를 조회한다.
+    void InvalidateHelpLanguage(); // 실제언어알림에서기존도움말창을닫고성공본문캐시를반납한다. 다음열기는같은FILE/생성부모를다시쓴다.
     void CloseHelp(); // Session 해제 전에 같은 창과 지연 삭제 큐를 정리한다.
     // 공통 기본 생성/가상 분배에서 현재 파생 노드를 직접 조회한다. 없는 토큰은 nullptr다.
     GumpCreateNode* Node(std::uint32_t token) const;

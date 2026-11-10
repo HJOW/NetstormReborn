@@ -21,6 +21,7 @@ struct HtmlTextParserState {
 struct HtmlTextParserGlobals {
     std::uint32_t suppressParagraph{}; // PATCH00565ec0/CD00536368: 다음 P에서 출력 대신0으로 돌아간다.
     std::array<char,80> background{}; // PATCH00565e70..565ebf의 실제 이름 저장소다. 페이지 교체와 짧은 덮어쓰기에서 나머지 바이트를 보존한다.
+    bool extendedText{}; // 실제클론의모든UI언어에서유효한표시4BYTE를원자문자로보존한다. 원문집계초기화/fixture는기본false다.
 };
 // 조건/명령/그림/링크/배경 및 TextHtml 파생 동작은 실제 공급자가 필요하다.
 struct HtmlTextParserHooks {
