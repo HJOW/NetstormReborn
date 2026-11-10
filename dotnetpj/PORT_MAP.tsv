@@ -657,3 +657,5 @@ cpppj/src/o/RawConnectionCleanup.cpp	Netstorm.Net/ConnectionCleanup.cs	b76bb541e
 cpppj/src/o/RawConnectionCleanup.h	Netstorm.Net/ConnectionCleanup.cs	b76bb541e8865b219223ec65b2917fe97558e083	port
 cpppj/src/o/RawConnectionEnded.cpp	Netstorm.Net/ConnectionEnded.cs	269de895190a3c30cea4e88af88719ea78d9c013	port
 cpppj/src/o/RawConnectionEnded.h	Netstorm.Net/ConnectionEnded.cs	269de895190a3c30cea4e88af88719ea78d9c013	port
+cpppj/src/client/RawChatFormat.cpp	Netstorm.Client/Chat/RawChatFormat.cs	5ed5c1acdf23079269bb711eef9e7b356b07ddb1	port
+cpppj/src/client/RawChatFormat.h	Netstorm.Client/Chat/RawChatFormat.cs	5ed5c1acdf23079269bb711eef9e7b356b07ddb1	port
