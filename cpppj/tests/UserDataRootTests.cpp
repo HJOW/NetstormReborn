@@ -350,3 +350,24 @@ TEST_CASE(MapList_TellMenuScrollsFiftyRowWindowsAndKeepsCacheOnScroll) {
     CHECK(tail.first == 80 && tail.rows.front() == 80 && tail.rows.back() == 129 && tail.rows.size() == 50); // 마지막 창은 항상 50행이다.
     CHECK(tail.scrolls.size() == 1 && tail.scrolls[0].second == -50 && tail.scrolls[0].first.find("Previous") != std::string::npos);
 }
+
+// 이동 행의 고정 단어(Previous/Next/of)는 번역 장치가 있으면 현재 언어로 바뀌고 없으면 영어 그대로다(K4 잔여 교정).
+TEST_CASE(MapList_ScrollRowsTranslateFixedWords) {
+    using netstorm::client::AppendTellMapMenus;
+    std::uint32_t menus = 0;
+    MenuProbe translated;
+    translated.total = 130;
+    translated.first = 50;
+    translated.keep = true;
+    auto hooks = translated.Hooks();
+    hooks.translate = [](auto key) { return key == "Next" ? std::string("N!") : key == "Previous" ? std::string("P!") : key == "of" ? std::string("/") : std::string(key); };
+    CHECK(AppendTellMapMenus("*FORTLIST*", menus, hooks));
+    CHECK(translated.scrolls.size() == 2 && translated.scrolls[0].first == "~o< P! 50  (1-50 / 130)" && translated.scrolls[1].first == "~oN! 50 >  (101-130 / 130)");
+    MenuProbe plain;
+    plain.total = 130;
+    plain.first = 50;
+    plain.keep = true;
+    menus = 0;
+    CHECK(AppendTellMapMenus("*FORTLIST*", menus, plain.Hooks()));
+    CHECK(plain.scrolls.size() == 2 && plain.scrolls[0].first == "~o< Previous 50  (1-50 of 130)" && plain.scrolls[1].first == "~oNext 50 >  (101-130 of 130)");
+}

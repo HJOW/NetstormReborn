@@ -20,6 +20,7 @@ struct TellMapMenuHooks {
     std::function<bool()> takeKeepCache; // 스크롤 이동 뒤 재표시이면 true이며 일회성 표시를 소비한다. true이면 목록을 다시 열거하지 않는다.
     std::function<void()> reuseCache; // 캐시 재사용 때 직전 목록 구성이 끝에 건 dirty(다음 새 열기용 재열거 요청)를 지워 같은 목록을 다시 열거하지 않게 한다.
     std::function<void(std::string_view,std::int32_t)> appendScroll; // 이전/다음 이동 행(문구, 이동할 행 수)을 현재 열에 추가한다.
+    std::function<std::string(std::string_view)> translate; // 이동 행의 고정 단어(Previous/Next/of)만 현재 언어로 바꾼다. 비어 있으면 영어 그대로다(K4 잔여 교정).
 };
 // 004c86fe..004c88c5의 공통 메뉴 생성/맵 분기를 수행한다. 비맵도 첫 열 생성 효과 뒤false다.
 bool AppendTellMapMenus(std::string_view label,std::uint32_t& menuCount,const TellMapMenuHooks& hooks);

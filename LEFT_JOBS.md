@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**작업 재개 · 확정 제품1278 / 11.01 · 정적감사1262 · 인계 갱신2026-11-11, HJOW-Athlon**
+**작업 재개 · 확정 제품1281 / 11.01 · 정적감사1262 · 인계 갱신2026-11-11, HJOW-Athlon**
 
 이 문서는 cpppj의 **현재 상태·남은 작업·실행 제외·유효한 계약**을 담는다. 2026-11-10 사용자의 재개 요청으로1265 뒤의 후보 접합을 진행했다. **전체 목표와 M6-n은 미완료다.** 아래 우선순위를 따르고 단위마다 인계·로컬 커밋을 남긴다. push하지 않는다.
 
@@ -49,6 +49,8 @@
 **1268 M7.1 helpWord 캐시 완료:** 원문 0054db38 캐시(4413c0/441300 규칙: 키 부재/빈 값은 기존 유지, 대소문자만 다르면 옛 표기 유지, 다르면 교체)를 `ClientHelpWord`/`ClientLocalStateGlobals::HelpWord()` 단일 소유자로 구현하고 `InterpretOptions`·객체/Factory/풀숲/Inventory/메타/게임 메뉴·BaseHelp 토큰 61000002를 모두 같은 캐시에 연결했다. [근거](docs/exe/cpp-help-word-cache-20261111.md)·[보고서](cpppj/help-word-cache-20261111.json). Release·새 검사 8건 통과·Tutorial4 생산/건설/600프레임을 확인했다. 메뉴 세션 검사 6건 실패는 helpWord와 무관한 메시지이나 기준선 직접 비교는 하지 않았다. **M7.2~M7.5·M8 미완료**, MP 실행0이다.
 
 **1267 NoWorld 자산 후처리 7VT 연결:** 보호막(00507770)·Generator(00501ea0)·장식 Gun(0050b570)·Arc(0050e668)·Acid(0050e738)를 같은 장기 확보 메모리/Host/공통 장부에 연결하고, 메타/일반 Sprite(0050c9f0/0050cc08)를 PE의 공통 +20/+7c/+80/+84 근거로 공통 Pop 허용에 추가했다. [근거](docs/exe/cpp-asset-postpop-noworld-20261111.md)·[보고서](cpppj/asset-postpop-noworld-20261111.json). Release·집중 641건(새7 통과, 기존 실패2)·pop_context 기준선과 실패 25건 동일·Tutorial4 생산/건설/600프레임을 확인했다. **남은 최초 후처리: Crab2·Teleport(flags1)·Rune·Altar·Dais·Aviary3·Flyer3·Gun5·Blocker3·Player·Priest·Residence(flags1)·Temple4**(Session 소유 장치 이전 필요), 큰 NoWorld/M6-n 미완료, MP 실행0이다.
+
+**1281 K4 잔여 3건 교정·K5 마감:** 옵션 메뉴 끝 `Pass Server Diagnostic`(후행 공백 키 포함)·맵 목록 이동 행(`다음 50 > (51-100 / 432)`, `TellMapMenuHooks::translate`)을 번역하고, 한국어 크레딧 창 제목 잘림은 제목을 `크레딧`으로 줄여 한 줄에 맞췄다(영문+한글 혼합 H2 제목의 줄바꿈 근본 원인은 미확정). **새로 발견:** 크레딧 목록 세 번째 항목과 11.01 패치 크레딧 본문이 한국어 모드에서도 영어였던 것을 `ProductTellBody(korean)`로 한국어화했다. 집중 `netstorm_korean_text_tests` 34/34·user_data_root 12/12·solo_map_list 6/6 통과, 실제 화면(432맵 목록·크레딧 3항목·본문) 확인. [근거](docs/exe/cpp-korean-k4-k5-closure-20261111.md)·[보고서](cpppj/korean-k4-k5-closure-20261111.json). **K4/K5 완료.** 남음: K2 물리 IME/OS 클립보드(사용자), K3 전체 문장 교정(사람 검수). 줄 중간 `//` 주석이 코드를 삼킨 실수를 컴파일 오류로 즉시 발견해 교정했다.
 
 **1280 M8 최종 관문 1차 통과:** 실제 배포 ZIP(1430항목)의 모든 항목을 새 도구 `tools/verify_cpp_package.py`로 원천과 SHA-256 대조(1423 일치·생성 4·런타임 3, 누락/금지/exe 글꼴 시그니처 0, BUILD_INFO 해시 일치, 압축 해제 1430파일/242,045,169바이트 동일)하고, 푼 배포본의 `Netstorm.exe`로 영어(Edit 432맵 페이지 이동→TEST01→Scenario 패널)와 한국어(외부 D2Coding 메인 메뉴) 실행을 확인했다(종료 코드0·로그 없음·게임 폴더 불변). 외부 접속 재감사: WinINet/WinHTTP/URLMon import 0, `master.`/`security.dat`/`Not Validated`/`PIRATE`/`bugs@` 0, `titanic`은 CD 표식 이름뿐. checking 목록 0 유지. [근거](docs/exe/cpp-m8-final-gate-20261111.md)·[보고서](cpppj/m8-final-gate-20261111.json). **한계:** 설치 경로 약 200자 초과 시 원문 256BYTE 경로 작성기 한계로 시작 종료(원문 보존, 오류 로그가 원인 지목). **남음:** 다른 언어 글꼴(L), K/S/B/L 뒤 최종 출시 직전 같은 도구 재실행, 읽기 전용 설치(S4).
 
@@ -190,8 +192,8 @@ Native 전체표/연결 owner·M6-l은1262에서 정적 마감했다. 모든 pro
 | K1 | **완료(1270)** — 986 한국어 후보의 기준/현행 차이를 검토해 **41 코드·배포·검사파일과 44 별도 자산**을 선별 병합한다. 옛 patch 일괄 적용/덮어쓰기는 하지 않는다. [근거](docs/exe/cpp-korean-k1-merge-20261111.md) |
 | K2 | **구현·실화면 확인 완료(1270/1276), 물리 IME/OS 클립보드만 사용자 확인** — `EncodeOriginalText`와 표시 부호화 경계를 유지하고 한글 입력/IME/클립보드를 구현·집중 검증한다. 시나리오 UI보다 먼저다. |
 | K3 | **제공·표본 확인 완료(1270/1276), 전수 교정은 사람 검수** — 미션 브리핑·팁·도움말 `.korean` 본문과 대체 경로를 제공한다. 영어의 AI/SP/시나리오 선언은 보존한다. 준비 자산을 전체 번역 완료로 세지 않는다. |
-| K4 | **대부분 확인(1276), 잔여 3건** — 원본 스타일/크기·D2Coding·AGENTS 명칭으로 한글 메인 버튼 그림·맵 목록 이동행·누락 UI 문구를 적용하고 해당 화면에서 확인한다. 메인 버튼/팝업/캠페인/편집/옵션/도움말은 한국어로 정상이다. **잔여:** ① 옵션 메뉴 끝 `Pass Server Diagnostic` 영어 잔재(번역표에 키 없음), ② **한국어 크레딧 창 제목 `NetStorm 크레딧`이 창 너비 때문에 줄바꿈되며 첫 줄이 `NetStor`로 잘려 표시**(영어 `NetStorm Credits`는 한 줄 정상), ③ 맵 목록 이동행(이전/다음) 화면은 맵이 적은 사본이라 미확인. [근거](docs/exe/cpp-korean-screens-input-verification-20261111.md) |
-| K5 | 기존 번역 502와 새 본문/그림/입력을 구별해 검수한다. 관련 집중 검사·단순 비MP 진입·배포 정합성을 마친다. 자연 완주/공격/희생 검사는 제외한다. |
+| K4 | **완료(1281)** — 아래 잔여 3건은 모두 교정·확인(상세는 1281 단락). 이전 기록: — 원본 스타일/크기·D2Coding·AGENTS 명칭으로 한글 메인 버튼 그림·맵 목록 이동행·누락 UI 문구를 적용하고 해당 화면에서 확인한다. 메인 버튼/팝업/캠페인/편집/옵션/도움말은 한국어로 정상이다. **잔여:** ① 옵션 메뉴 끝 `Pass Server Diagnostic` 영어 잔재(번역표에 키 없음), ② **한국어 크레딧 창 제목 `NetStorm 크레딧`이 창 너비 때문에 줄바꿈되며 첫 줄이 `NetStor`로 잘려 표시**(영어 `NetStorm Credits`는 한 줄 정상), ③ 맵 목록 이동행(이전/다음) 화면은 맵이 적은 사본이라 미확인. [근거](docs/exe/cpp-korean-screens-input-verification-20261111.md) |
+| K5 | **완료(1281)** — 집중 검사·푼 배포본 한국어 실행·배포 정합성 확인([근거](docs/exe/cpp-korean-k4-k5-closure-20261111.md)). 기존 번역 502와 새 본문/그림/입력을 구별해 검수한다. 관련 집중 검사·단순 비MP 진입·배포 정합성을 마친다. 자연 완주/공격/희생 검사는 제외한다. |
 
 <a id="44-오류예외와-상세-로그-e1e3"></a>
 

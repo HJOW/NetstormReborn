@@ -743,7 +743,7 @@ $Button=뒤로,Tell,Blank
 [***********************************************************]
 [Credits]
 <background="nsstart">
-<h2>{H2}NetStorm 크레딧</h2>
+<h2>{H2}크레딧</h2>
 $Menu=NetStorm 10.72 패치 크레딧,Tell,CreditsNew
 $Menu=NetStorm 오리지널 크레딧,Tell,Creditsold
 $Button=취소,Tell,Blank

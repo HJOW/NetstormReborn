@@ -27,13 +27,14 @@ bool AppendTellMapMenus(std::string_view label,std::uint32_t& menuCount,const Te
         const auto total=Need(hooks.count)();
         auto first=std::clamp<std::int32_t>(hooks.windowFirst(),0,total-kMapListPageRows);hooks.setWindowFirst(first); // 마지막 창은 항상 꽉 채운다.
         const auto last=first+kMapListPageRows;
-        if (first>0) hooks.appendScroll("~o< Previous "+std::to_string(kMapListPageRows)+"  ("+std::to_string(std::max(1,first-kMapListPageRows+1))+"-"+std::to_string(first)+" of "+std::to_string(total)+")",-kMapListPageRows);
+        const auto word=[&hooks](std::string_view key) { return hooks.translate ? hooks.translate(key) : std::string(key); }; // 번역 장치가 없거나 키가 없으면 영어 원문 그대로다.
+        if (first>0) hooks.appendScroll("~o< "+word("Previous")+" "+std::to_string(kMapListPageRows)+"  ("+std::to_string(std::max(1,first-kMapListPageRows+1))+"-"+std::to_string(first)+" "+word("of")+" "+std::to_string(total)+")",-kMapListPageRows);
         std::int32_t shown=0; // 이번 창에서 추가한 행 수다.
         for (std::int32_t item=first;item<last;++item) { // 창의 모든 행을 순서대로 추가하고 절반에서 두 번째 열을 만든다.
             if (!Need(hooks.appendRow)(item)) break;
             if (++shown==kMapListPageRows/2) begin();
         }
-        if (last<total) hooks.appendScroll("~oNext "+std::to_string(kMapListPageRows)+" >  ("+std::to_string(last+1)+"-"+std::to_string(std::min(total,last+kMapListPageRows))+" of "+std::to_string(total)+")",kMapListPageRows);
+        if (last<total) hooks.appendScroll("~o"+word("Next")+" "+std::to_string(kMapListPageRows)+" >  ("+std::to_string(last+1)+"-"+std::to_string(std::min(total,last+kMapListPageRows))+" "+word("of")+" "+std::to_string(total)+")",kMapListPageRows);
     } else {
         std::int32_t index=0;
         // Refresh의 과거 개수 대신 각 성공 행 추가 뒤 현재 개수로 분할 지점을 검사한다.

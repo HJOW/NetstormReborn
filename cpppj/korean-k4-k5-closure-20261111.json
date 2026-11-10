@@ -1,0 +1,14 @@
+{
+  "unit": "1281 K4 residuals + K5 closure",
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "fixes": [
+    "xlat.korean: Pass Server Diagnostic (with and without trailing space), Previous, Next, of",
+    "tell.korean [Credits] title shortened to 크레딧 (mixed ASCII+Hangul H2 title clipped in narrow window)",
+    "TellMapMenuHooks::translate for map list move rows",
+    "ProductTellBody(korean): 11.01 patch credits entry and body in Korean"
+  ],
+  "tests": {"netstorm_korean_text_tests": {"total": 34, "failed": 0}, "netstorm_user_data_root_tests": {"total": 12, "failed": 0}, "netstorm_solo_map_list_tests": {"total": 6, "failed": 0}},
+  "live": {"korean credits list (3 items)": "ok", "korean 11.01 credits body": "ok", "edit list move row": "다음 50 > (51-100 / 432)"},
+  "remaining": ["K2 physical IME/OS clipboard (user)", "K3 full proofreading (human)", "mixed ASCII+Hangul H2 wrap root cause"]
+}

@@ -14,5 +14,6 @@ void ApplyProductVersion(o::ConfigInterface& config);
 // 기존 Config 등록/섹션 수명을 사용하는 제품 Credits 객체를 만든다. 호출자가 Client UI 수명 동안 소유한다.
 std::unique_ptr<o::Config> MakeProductCreditsConfig(o::ConfigRegistry& registry);
 // 메인 Credits 목록에 세 번째 항목만 덧붙이며 다른 Tell/원문 Credits 내용은 보존한다.
-std::string ProductTellBody(std::string_view target,std::string_view original);
+// korean이 true이면 새 항목 이름과 11.01 패치 크레딧 본문을 한국어로 제공한다(K4 잔여 교정). 영어는 기존 표기를 그대로 쓴다.
+std::string ProductTellBody(std::string_view target,std::string_view original,bool korean=false);
 }

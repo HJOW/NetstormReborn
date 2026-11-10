@@ -159,6 +159,8 @@ TEST_CASE(KoreanTranslation_RepositoryFileIsFoundParsedAndEncodable) {
     CHECK(table.Size() >= 500);
     CHECK(table.Translate("Cancel", 7) == "취소");
     CHECK(table.Translate("Rain Temple", 7) == "레인 신전");
+    CHECK(table.Translate("Pass Server Diagnostic ", 7) == "서버 진단 통과 " && table.Translate("Pass Server Diagnostic", 7) == "서버 진단 통과"); // 옵션 메뉴 끝 영어 잔재(K4)를 후행 공백 키까지 번역한다.
+    CHECK(table.Translate("Previous", 7) == "이전" && table.Translate("Next", 7) == "다음" && table.Translate("of", 7) == "/"); // 맵 목록 이동 행의 고정 단어(K4).
     CHECK(table.Translate("Warning, you are low on virtual memory.  You may have problems running NetStorm.\nFree disk space on your hard drive to increase virtual memory.", 7).starts_with("경고:")); // 여러 줄 키도 맞는다.
     CHECK(table.Translate("No such key in the table", 7) == "No such key in the table"); // 없는 키는 영어 원문이다.
     std::istringstream lines(*text);

@@ -772,7 +772,7 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
         [this](auto section)->std::optional<std::string> { return mission_ ? mission_->Section(section) : std::nullopt; },
         [this,&target](auto body,auto mode,auto width,auto height) { // 원문의 UTF-8 본문을 실제 좁은 HTML 공장에 한 번만 전달한다.
             const auto screenWidth=client_.GetScreen().Width(),screenHeight=client_.GetScreen().Height();
-            return rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext({mission_ ? 85 : 0,0,screenWidth,screenHeight}),FontBytes(ProductTellBody(target,body)),mode,width,height); // 사용자 요청의 세 번째 항목도 같은 원문 HTML 창/메뉴/입력 장치를 사용한다.
+            return rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext({mission_ ? 85 : 0,0,screenWidth,screenHeight}),FontBytes(ProductTellBody(target,body,static_cast<std::uint32_t>(client_.LanguageNumber())==kKoreanLanguageNumber)),mode,width,height); // 사용자 요청의 세 번째 항목도 같은 원문 HTML 창/메뉴/입력 장치를 사용한다.
         });
     if (!result.found) return false;rebuild_=true;
     if (!result.serial) return true; // 빈 부모/창 생략은 기존 표시 부모나 phase를 교체하지 않는다.

@@ -18,6 +18,20 @@ The original game creators are acknowledged in the original Credits entries.
 $Button=Back,Tell,Credits
 $Button=Cancel,Tell,Blank
 )"; // 요청한 제목/HJOW 개발/AI 사용 설명을 현재 영문 UI 글꼴로 표시한다.
+// 한국어 모드의 11.01 패치 크레딧 본문이다. 영어 본문과 같은 구성이며 새 항목 이름과 제목은 사용자 지정 표기를 따른다.
+constexpr std::string_view kPatchCreditsKorean=R"(<background="nsstart">
+<h2>{H2}NetStorm 11.01 패치 크레딧</h2>
+<p>{Text}
+버전: {version}<br>
+개발 및 NetStorm 11.01 패치: HJOW.<br>
+<p>
+OpenAI Codex와 ChatGPT를 활용한 AI 지원으로 개발했습니다.<br>
+AI는 분석, 프로그래밍, 문서화, 검증을 돕는 데 사용했습니다.<br>
+<p>
+원작 제작자는 원본 크레딧 항목에서 확인할 수 있습니다.
+$Button=뒤로,Tell,Credits
+$Button=취소,Tell,Blank
+)"; // 한국어 UI 글꼴로 표시하며 K4에서 영어 잔재로 남아 있던 세 번째 항목을 번역했다.
 }
 // Startup의 원문 v주.부 정수 표기 뒤 제품 표기11.01의 선행0을 명시적으로 보존한다.
 void ApplyProductVersion(o::ConfigInterface& config) {
@@ -29,10 +43,11 @@ std::unique_ptr<o::Config> MakeProductCreditsConfig(o::ConfigRegistry& registry)
     auto credits=std::make_unique<o::Config>(registry,kProductCreditsObject);credits->Append(kPatchCredits);return credits;
 }
 // 원문 두 항목/Cancel을 유지하고 중복 확장도 피한다. 새 항목의 대소문자는 사용자 지정 표기다.
-std::string ProductTellBody(std::string_view target,std::string_view original) {
+std::string ProductTellBody(std::string_view target,std::string_view original,bool korean) {
+    if (korean && o::AsciiLower(target)==o::AsciiLower(kProductCreditsTarget)) return std::string(kPatchCreditsKorean); // 한국어의 새 항목 본문은 고정 번역본이다.
     std::string body(original);
     if (o::AsciiLower(target)=="credits" && original.find(kProductCreditsTarget)==original.npos)
-        body+="\n$Menu=Netstorm 11.01 Patch Credits,Tell,Patch1101.Credits\n";
+        body+=korean ? "\n$Menu=NetStorm 11.01 패치 크레딧,Tell,Patch1101.Credits\n" : "\n$Menu=Netstorm 11.01 Patch Credits,Tell,Patch1101.Credits\n";
     return body;
 }
 }
