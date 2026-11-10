@@ -262,9 +262,10 @@ void BaseFileSystem::SetSecondaryDirectory(std::filesystem::path directory) {
 std::optional<std::string> EnglishFallbackName(std::string_view name) {
     if (suppressEnglishFallback) return std::nullopt; // 정확한 존재 검사 중에는 대체하지 않는다.
     name=name.substr(0,name.find('\0')); // 첫 NUL 뒤는 원문 C문자열 경계 밖이다.
-    constexpr std::string_view korean=".korean";
-    if (name.size()<korean.size() || AsciiLower(name.substr(name.size()-korean.size()))!=korean) return std::nullopt;
-    return std::string(name.substr(0,name.size()-korean.size()))+".english";
+    for (const std::string_view extension:{std::string_view(".korean"),std::string_view(".japanese")}) { // 11차 일본어: 번역 본문이 없는 .japanese도 같은 영어 대체를 쓴다.
+        if (name.size()>=extension.size() && AsciiLower(name.substr(name.size()-extension.size()))==extension) return std::string(name.substr(0,name.size()-extension.size()))+".english";
+    }
+    return std::nullopt;
 }
 // 원본 FUN_0041b4c0의 상대 경로 읽기 순서를 복원한다.
 std::optional<std::vector<std::uint8_t>> BaseFileSystem::TryRead(std::string_view name) const { return TryReadWithDiskName(name,{}); }

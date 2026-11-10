@@ -17,6 +17,10 @@ std::vector<std::filesystem::path> CloneDataRoots(const std::filesystem::path& g
 std::filesystem::path FindKoreanFontFile(const std::vector<std::filesystem::path>& roots);
 // 탐색 폴더 아래 lang/xlat.korean, assets/lang/korean/xlat.korean 순서로 첫 파일을 UTF-8 텍스트(BOM 제거)로 읽는다. 없으면 빈 값이다.
 std::optional<std::string> ReadKoreanTranslationFile(const std::vector<std::filesystem::path>& roots);
+// 11차 일본어: 같은 규칙으로 언어 이름(korean/japanese)의 lang/<이름>/xlat.<이름>, lang/xlat.<이름>, assets/lang/<이름>/xlat.<이름> 순서로 읽는다.
+std::optional<std::string> ReadLanguageTranslationFile(const std::vector<std::filesystem::path>& roots,std::string_view languageName);
+// 11차 일본어: fonts 폴더에서 NotoSansJP*.ttf 중 이름순 마지막 파일을 돌려준다. 없으면 빈 경로다.
+std::filesystem::path FindJapaneseFontFile(const std::vector<std::filesystem::path>& roots);
 }
 
 namespace netstorm::client { // 클론이 추가한 한국어 본문만 별도 배포 namespace로 연결한다.

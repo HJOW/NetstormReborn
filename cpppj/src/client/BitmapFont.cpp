@@ -238,7 +238,7 @@ const FontGlyph* BitmapFont::ExtendedGlyph(std::uint32_t codePoint) const {
 }
 int BitmapFont::ExtendedAdvance() const {
     if (!HasExtended()) return 0;
-    if (extendedAdvance_ < 0) { const auto* glyph = ExtendedGlyph(0xac00); extendedAdvance_ = glyph ? glyph->advance : 0; } // 모노스페이스라 대표 글자('가') 하나의 폭이 모든 확장 문자의 폭이다.
+    if (extendedAdvance_ < 0) { const auto* glyph = ExtendedGlyph(extended_.face.find("Noto Sans JP")!=std::string::npos ? 0x3042U : 0xac00U); extendedAdvance_ = glyph ? glyph->advance : 0; /* 11차 일본어: 일본어 글꼴은 히라가나 'あ'의 전각 폭을 대표로 쓴다 */ } // 모노스페이스라 대표 글자('가') 하나의 폭이 모든 확장 문자의 폭이다.
     return extendedAdvance_;
 }
 // 측정 경로는 그리기 경로와 달리 첫 번째 폭 표를 사용한다. 6차: 확장 설정이 있으면 4바이트 시퀀스를 한 글자 폭으로 센다.

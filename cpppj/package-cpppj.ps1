@@ -870,6 +870,17 @@ try {
     $fontLicense = Join-Path $fontsDir 'D2Coding-License.txt' # 저장소 fonts의 D2Coding 라이선스 이름이다(과거 License.txt에서 바뀌어 조용히 빠지던 결함을 M8 점검에서 발견해 교정).
     if (-not (Test-Path -LiteralPath $fontLicense -PathType Leaf)) { throw "D2Coding 글꼴 라이선스를 찾을 수 없습니다: ${fontLicense}" }
     Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/D2Coding-License.txt') -Source $fontLicense
+    # 11차 일본어: Noto Sans JP 글꼴(가장 새 NotoSansJP*.ttf 하나)과 라이선스, 일본어 번역표를 exe 옆 fonts\, lang\ 에 넣는다. 글꼴은 exe에 내장하지 않는다. (2026-11-11 신규)
+    $japaneseFonts = @(Get-ChildItem -LiteralPath $fontsDir -Filter 'NotoSansJP*.ttf' -File -ErrorAction SilentlyContinue | Sort-Object Name)
+    if (-not $japaneseFonts.Count) { throw "일본어 글꼴(NotoSansJP*.ttf)을 찾을 수 없습니다: ${fontsDir}" }
+    $japaneseFont = $japaneseFonts[$japaneseFonts.Count - 1]
+    Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/' + $japaneseFont.Name) -Source $japaneseFont.FullName
+    $japaneseLicense = Join-Path $fontsDir 'NotoSansJP-License.txt'
+    if (-not (Test-Path -LiteralPath $japaneseLicense -PathType Leaf)) { throw "일본어 글꼴 라이선스를 찾을 수 없습니다: ${japaneseLicense}" }
+    Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/NotoSansJP-License.txt') -Source $japaneseLicense
+    $japaneseTable = Join-Path $RepoRoot 'assets\lang\japanese\xlat.japanese'
+    if (-not (Test-Path -LiteralPath $japaneseTable -PathType Leaf)) { throw "일본어 번역표를 찾을 수 없습니다: ${japaneseTable}" }
+    Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/japanese/xlat.japanese') -Source $japaneseTable
     $koreanTable = Join-Path $RepoRoot 'assets\lang\korean\xlat.korean'
     if (-not (Test-Path -LiteralPath $koreanTable -PathType Leaf)) { throw "한국어 번역표를 찾을 수 없습니다: ${koreanTable}" }
     Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/korean/xlat.korean') -Source $koreanTable

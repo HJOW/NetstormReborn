@@ -1,0 +1,3182 @@
+﻿// NetStorm 11.01 일본어 번역표(UTF-8).
+// 형식은 원문 xlat 파일과 같다: "***" 줄 다음이 영어 원문, "---" 다음이 번역, "===" 줄이 끝이다.
+// 서식 코드(~색, %s/%d, {Focus} 등)와 줄바꿈 위치는 영어 원문과 같게 유지한다. 키가 없는 문구는 영어 원문이 그대로 표시된다.
+// 일본어 글꼴은 exe에 내장하지 않고 fonts 폴더의 Noto Sans JP 파일을 쓴다.
+
+***
+EVERYONE
+---
+全員
+===
+
+***
+ALLIES
+---
+同盟
+===
+
+***
+BATTLE
+---
+バトル
+===
+
+***
+Save Fortress As?
+---
+要塞に名前を付けて保存?
+===
+
+***
+New Save-Game Name?
+---
+新しいセーブデータ名?
+===
+
+***
+%s (~rCORRUPT~.)
+---
+%s (~r破損~.)
+===
+
+***
+Loading
+---
+読み込み中
+===
+
+***
+Please Wait
+---
+しばらくお待ちください
+===
+
+***
+Warning, you are low on virtual memory.  You may have problems running NetStorm.
+Free disk space on your hard drive to increase virtual memory.
+---
+警告: 仮想メモリが不足しています。 NetStormが正常に動作しない可能性があります。
+ハードディスクの空き容量を増やして仮想メモリを確保してください。
+===
+
+***
+Low Memory
+---
+メモリ不足
+===
+
+***
+You may not run more than one copy of NetStorm simultaneously.
+---
+NetStormを同時に2つ以上起動することはできません。
+===
+
+***
+Sorry...
+---
+申し訳ありません...
+===
+
+***
+Activision and Titanic Entertainment Present: NetStorm
+---
+Activision and Titanic Entertainment Present: NetStorm
+===
+
+***
+The game is not properly installed.
+Please re-run setup.
+
+---
+ゲームが正しくインストールされていません。
+セットアップをもう一度実行してください。
+
+===
+
+***
+Fatal Error
+---
+致命的なエラー
+===
+
+***
+Unrecoverable Exception!
+---
+回復できない例外が発生しました!
+===
+
+***
+NetStorm will now shutdown.
+---
+NetStormを終了します。
+===
+
+***
+Everyone
+---
+全員
+===
+
+***
+Allies
+---
+同盟
+===
+
+***
+Friends
+---
+フレンド
+===
+
+***
+Battle
+---
+バトル
+===
+
+***
+~y~ESend To:
+---
+~y~E送信先:
+===
+
+***
+Cost: ~i%d~[IfortGump.3]~.
+
+---
+コスト: ~i%d~[IfortGump.3]~.
+
+===
+
+***
+~r~ENeed more Storm Power to Build!
+
+---
+~r~E建設にはストームパワーが足りません!
+
+===
+
+***
+Salvage for %d~[IfortGump.3]
+---
+%d~[IfortGump.3]で売却
+===
+
+***
+Storm Power Available
+---
+使用可能なストームパワー
+===
+
+***
+Production Window
+---
+生産ウィンドウ
+===
+
+***
+Priest can't get here.
+---
+司祭はここに行けません。
+===
+
+***
+Must be placed over constructing artifact
+---
+建設中のアーティファクトの上に置く必要があります
+===
+
+***
+Cannot place here
+---
+ここには置けません
+===
+
+***
+Energy not satisfied
+---
+エネルギーが足りません
+===
+
+***
+Only on Controlled Island
+---
+支配している島の上のみ
+===
+
+***
+ Level %s
+---
+ レベル %s
+===
+
+***
+None
+---
+なし
+===
+
+***
+Put Knowledge into Production
+---
+知識を生産に回す
+===
+
+***
+Knowledge Available
+
+---
+利用可能な知識
+
+===
+
+***
+Production Slots Available: %s
+
+---
+利用可能な生産スロット: %s
+
+===
+
+***
+ Again
+---
+ 再び
+===
+
+***
+All Knowledge is in Production
+---
+すべての知識が生産中です
+===
+
+***
+Upgrade costs %s%d~[IfortGump.3]
+---
+アップグレード費用 %s%d~[IfortGump.3]
+===
+
+***
+Cancel
+---
+キャンセル
+===
+
+***
+Your Description Here
+---
+ここに説明を入力
+===
+
+***
+New battle description:
+---
+新しいバトルの説明:
+===
+
+***
+Please type in your player name.
+---
+プレイヤー名を入力してください。
+===
+
+***
+New Player SubId?
+---
+新しいプレイヤーSubId?
+===
+
+***
+Player %s
+
+---
+プレイヤー %s
+
+===
+
+***
+Status: ~iOnline~.
+
+---
+状態: ~iオンライン~.
+
+===
+
+***
+Status: ~r~EDISCONNECTED~.
+
+---
+状態: ~r~E接続切断~.
+
+===
+
+***
+Priest: ~i%s~.
+
+---
+司祭: ~i%s~.
+
+===
+
+***
+Dead
+---
+死亡
+===
+
+***
+Captured
+---
+捕獲
+===
+
+***
+Alive
+---
+生存
+===
+
+***
+Allied with ~i%s~.
+---
+~i%s~.と同盟中。
+===
+
+***
+(One-Way)
+---
+(片方向)
+===
+
+***
+Allied with nobody.
+
+---
+同盟なし。
+
+===
+
+***
+Reliability: ~i%d%%~.
+
+---
+信頼度: ~i%d%%~.
+
+===
+
+***
+Games Played: ~i%d~.
+
+---
+プレイ回数: ~i%d~.
+
+===
+
+***
+View Player Info
+---
+プレイヤー情報を見る
+===
+
+***
+Ignore chat
+---
+チャットを無視
+===
+
+***
+Find Priest!
+---
+司祭を探す!
+===
+
+***
+Send %s1000~[IfortGump.3]
+---
+%s1000~[IfortGump.3]を送る
+===
+
+***
+Un-mark as Friend
+---
+フレンド解除
+===
+
+***
+Mark as Friend
+---
+フレンド登録
+===
+
+***
+Break Alliance
+---
+同盟を解除
+===
+
+***
+Request Alliance
+---
+同盟を申請
+===
+
+***
+Hide/Show chat - ~iF3~.
+---
+チャットの表示/非表示 - ~iF3~.
+===
+
+***
+Refresh Zones
+---
+ゾーン更新
+===
+
+***
+Hide buildings - ~iF2~.
+---
+建物を隠す - ~iF2~.
+===
+
+***
+View Home Temple - ~iF4~.
+---
+本拠地の神殿を見る - ~iF4~.
+===
+
+***
+View Your Priest - ~iF5~.
+---
+自分の司祭を見る - ~iF5~.
+===
+
+***
+View Knowledge - ~iF6~.
+---
+知識を見る - ~iF6~.
+===
+
+***
+Hide Island Ownership - ~iF7~.
+---
+島の所有表示を隠す - ~iF7~.
+===
+
+***
+Review Mission Objectives - ~iF8~.
+---
+ミッション目標を確認 - ~iF8~.
+===
+
+***
+View Player List - ~iF9~.
+---
+プレイヤー一覧を見る - ~iF9~.
+===
+
+***
+Find Local Server
+---
+ローカルサーバーを探す
+===
+
+***
+~E~Select Server
+
+---
+~Eサーバー選択
+
+===
+
+***
+Kickoff "%s"?
+
+---
+"%s"を追放しますか?
+
+===
+
+***
+Failed
+---
+失敗
+===
+
+***
+Add New Server...
+---
+新しいサーバーを追加...
+===
+
+***
+Adjust Direct Draw
+---
+Direct Drawを調整
+===
+
+***
+Window Mode
+---
+ウィンドウモード
+===
+
+***
+Direct Draw / Full Screen
+---
+Direct Draw / フルスクリーン
+===
+
+***
+Sound On
+---
+サウンド オン
+===
+
+***
+Play Music
+---
+音楽を再生
+===
+
+***
+Wind Noise
+---
+風の音
+===
+
+***
+Speaker Swap L/R
+---
+スピーカー左右入れ替え
+===
+
+***
+Default
+---
+標準
+===
+
+***
+Low
+---
+低
+===
+
+***
+Medium
+---
+中
+===
+
+***
+High
+---
+高
+===
+
+***
+Sound Quality
+---
+音質
+===
+
+***
+Volume 1
+---
+音量 1
+===
+
+***
+Volume 2
+---
+音量 2
+===
+
+***
+Volume 3
+---
+音量 3
+===
+
+***
+Volume 4
+---
+音量 4
+===
+
+***
+Volume 5
+---
+音量 5
+===
+
+***
+Sound Effect Volume
+---
+効果音の音量
+===
+
+***
+Music Volume
+---
+音楽の音量
+===
+
+***
+Edge Scroll in Fullscreen
+---
+フルスクリーンでの端スクロール
+===
+
+***
+Cursor Snap To Grid
+---
+カーソルをグリッドに合わせる
+===
+
+***
+Auto-Demo
+---
+オートデモ
+===
+
+***
+Tell Tips at Startup
+---
+起動時にヒントを表示
+===
+
+***
+Pause - ~iShift-F9~.
+---
+一時停止 - ~iShift-F9~.
+===
+
+***
+Select Language
+---
+言語を選択
+===
+
+***
+Zacket Record During Battle
+---
+バトル中にZacketを記録
+===
+
+***
+Force server death
+---
+サーバーを強制終了
+===
+
+***
+Allow Reconnect
+---
+再接続を許可
+===
+
+***
+Stall for 12 seconds
+---
+12秒間待機
+===
+
+***
+Stall for 15 seconds
+---
+15秒間待機
+===
+
+***
+%s (Level %d)
+---
+%s (レベル %d)
+===
+
+***
+~y%s - not available in demo
+---
+~y%s - デモでは利用できません
+===
+
+***
+Altar at Max Level
+---
+祭壇は最大レベルです
+===
+
+***
+Upgrade Altar to Level %d
+---
+祭壇をレベル %dにアップグレード
+===
+
+***
+ADVANCE TO RANK %s!!
+---
+ランク %sに昇格!!
+===
+
+***
+Get 5,000 ~[IfortGump.3]
+---
+5,000 ~[IfortGump.3]を入手
+===
+
+***
+Save as...
+---
+名前を付けて保存...
+===
+
+***
+Add Island
+---
+島を追加
+===
+
+***
+Cracked
+---
+ひび割れ
+===
+
+***
+Normal
+---
+通常
+===
+
+***
+Hard
+---
+硬い
+===
+
+***
+Test Battle
+---
+テストバトル
+===
+
+***
+Main Menu
+---
+メインメニュー
+===
+
+***
+Return to Editing
+---
+編集に戻る
+===
+
+***
+Restart Demo
+---
+デモを再開
+===
+
+***
+Exit Demo
+---
+デモを終了
+===
+
+***
+Restart Mission
+---
+ミッションをやり直す
+===
+
+***
+Leave Mission
+---
+ミッションを離れる
+===
+
+***
+Leave Battle In Shame
+---
+恥をさらしてバトルを離れる
+===
+
+***
+Leave Battle Honorably
+---
+名誉あるバトルの離脱
+===
+
+***
+Declare a Draw
+---
+引き分けを宣言
+===
+
+***
+Quit Game
+---
+ゲームを終了
+===
+
+***
+Player List
+
+---
+プレイヤー一覧
+
+===
+
+***
+, Level %d
+---
+, レベル %d
+===
+
+***
+ - SERVER
+---
+ - サーバー
+===
+
+***
+Game
+---
+ゲーム
+===
+
+***
+Edit
+---
+編集
+===
+
+***
+View
+---
+表示
+===
+
+***
+Options
+---
+オプション
+===
+
+***
+Players
+---
+プレイヤー
+===
+
+***
+General Help - ~iF1~.
+---
+一般ヘルプ - ~iF1~.
+===
+
+***
+Technical Help
+---
+技術ヘルプ
+===
+
+***
+Version
+---
+バージョン
+===
+
+***
+Debug
+---
+デバッグ
+===
+
+***
+Cheat
+---
+チート
+===
+
+***
+Ignore Energy
+---
+エネルギーを無視
+===
+
+***
+Get 10,000
+---
+10,000を入手
+===
+
+***
+Font
+---
+フォント
+===
+
+***
+Cheats ON
+---
+チート オン
+===
+
+***
+Get 10,000~[IfortGump.3]
+---
+10,000~[IfortGump.3]を入手
+===
+
+***
+Make me an AI
+---
+自分をAIにする
+===
+
+***
+Set 0~[IfortGump.3]
+---
+0~[IfortGump.3]に設定
+===
+
+***
+Get Full Deck
+---
+フルデッキを入手
+===
+
+***
+Get a free island
+---
+無料の島を入手
+===
+
+***
+Edit Local Config...
+---
+ローカル設定を編集...
+===
+
+***
+Telnet to Master...
+---
+マスターにTelnet...
+===
+
+***
+Flag as Multiplayer
+---
+マルチプレイとして設定
+===
+
+***
+Flag as Mission
+---
+ミッションとして設定
+===
+
+***
+Flag as PlayerMade
+---
+プレイヤー作成として設定
+===
+
+***
+~w~3~EMultiplayer Options
+---
+~w~3~Eマルチプレイヤー設定
+===
+
+***
+Connect!
+---
+接続!
+===
+
+***
+~ySave Game: ~w%s
+---
+~yセーブ: ~w%s
+===
+
+***
+~yPlayer Name: ~w%s
+---
+~yプレイヤー名: ~w%s
+===
+
+***
+~yServer: ~w%s
+---
+~yサーバー: ~w%s
+===
+
+***
+~yProtocol: ~w%s
+---
+~yプロトコル: ~w%s
+===
+
+***
+Unnamed
+---
+名前なし
+===
+
+***
+Select LAN Protocol
+
+---
+LANプロトコルを選択
+
+===
+
+***
+New Server Address?
+---
+新しいサーバーアドレス?
+===
+
+***
+New Server Port Number?
+---
+新しいサーバーポート番号?
+===
+
+***
+New Server Nickname?
+---
+新しいサーバーのニックネーム?
+===
+
+***
+Campaign
+---
+キャンペーン
+===
+
+***
+Multiplayer
+---
+マルチプレイヤー
+===
+
+***
+Demo
+---
+デモ
+===
+
+***
+Help
+---
+ヘルプ
+===
+
+***
+Intro
+---
+イントロ
+===
+
+***
+Credits
+---
+クレジット
+===
+
+***
+Quit
+---
+終了
+===
+
+***
+~wServer not responding
+---
+~wサーバーが応答しません
+===
+
+***
+~w%s not responding
+---
+~w%s が応答しません
+===
+
+***
+~w%s has disconnected
+---
+~w%s が切断しました
+===
+
+***
+~w%s is present
+---
+~w%s が参加しています
+===
+
+***
+~w%s sent you Storm Power
+---
+~w%s がストームパワーを送りました
+===
+
+***
+~w%s wishes to declare a Draw
+---
+~w%s が引き分けを申し出ています
+===
+
+***
+~w%s and %s are now Allies
+---
+~w%s と %s が同盟を結びました
+===
+
+***
+~w%s and %s have broken their Alliance.
+---
+~w%s と %s が同盟を解消しました。
+===
+
+***
+~wGame started!
+---
+~wゲーム開始!
+===
+
+***
+~wGame completed!
+---
+~wゲーム終了!
+===
+
+***
+~wGame Paused!
+---
+~wゲーム一時停止!
+===
+
+***
+your game name here
+---
+ここにゲーム名を入力
+===
+
+***
+Battle Island
+
+---
+バトル島
+
+===
+
+***
+Sail to here
+---
+ここへ航行
+===
+
+***
+Game Server disconnected.  Reconnecting to new Game Server.
+---
+ゲームサーバーが切断されました。 新しいゲームサーバーに再接続しています。
+===
+
+***
+Initializing.
+---
+初期化中。
+===
+
+***
+Connecting to Game Server. %s
+---
+ゲームサーバーに接続中。 %s
+===
+
+***
+Game Server disconnected; reconnecting.
+---
+ゲームサーバーが切断されました。再接続中。
+===
+
+***
+Reconnecting to Game Server %s
+---
+ゲームサーバー %s に再接続中
+===
+
+***
+Contacting Game Server.
+---
+ゲームサーバーに問い合わせ中。
+===
+
+***
+Connecting to Game Server %s
+---
+ゲームサーバー %s に接続中
+===
+
+***
+Server login failure.
+---
+サーバーへのログインに失敗しました。
+===
+
+***
+Game Server disconnected; reconnecting. Countdown %d.
+---
+ゲームサーバーが切断されました。再接続中。 カウントダウン %d。
+===
+
+***
+Reconnecting to Game Server %s - Countdown %d.
+---
+ゲームサーバー %s に再接続中 - カウントダウン %d。
+===
+
+***
+Contacting Game Server. Countdown %d.
+---
+ゲームサーバーに問い合わせ中。 カウントダウン %d。
+===
+
+***
+Connecting to Game Server %s - Countdown %d.
+---
+ゲームサーバー %s に接続中 - カウントダウン %d。
+===
+
+***
+Connection to Game Server lost.
+---
+ゲームサーバーとの接続が切れました。
+===
+
+***
+Login to server denied.
+---
+サーバーへのログインが拒否されました。
+===
+
+***
+Searching for local %s server.
+---
+ローカル %s サーバーを検索中。
+===
+
+***
+Local %s server found.
+---
+ローカル %s サーバーが見つかりました。
+===
+
+***
+Becoming local %s server.
+---
+ローカル %s サーバーになります。
+===
+
+***
+Root Server login failure.
+---
+ルートサーバーへのログインに失敗しました。
+===
+
+***
+Failed to connect.
+---
+接続に失敗しました。
+===
+
+***
+Contacting Root Server.
+---
+ルートサーバーに問い合わせ中。
+===
+
+***
+Root Server connected. Awaiting login reply.
+---
+ルートサーバーに接続しました。ログイン応答を待っています。
+===
+
+***
+Contacting Challenge Server.
+---
+チャレンジサーバーに問い合わせ中。
+===
+
+***
+Challenge Server login failure.
+---
+チャレンジサーバーへのログインに失敗しました。
+===
+
+***
+Challenge Server connected. Awaiting login reply.
+---
+チャレンジサーバーに接続しました。ログイン応答を待っています。
+===
+
+***
+Challenge server login denied:%s
+---
+チャレンジサーバーがログインを拒否しました:%s
+===
+
+***
+Challenge Server connection lost.
+---
+チャレンジサーバーとの接続が切れました。
+===
+
+***
+Communicating with Challenge Server.
+---
+チャレンジサーバーと通信中。
+===
+
+***
+Creating Islands.
+---
+島を作成中。
+===
+
+***
+You
+---
+あなた
+===
+
+***
+Battle can not be restarted because there is no one to reconnect to.
+---
+再接続先がないため、バトルを再開できません。
+===
+
+***
+Yes
+---
+はい
+===
+
+***
+No
+---
+いいえ
+===
+
+***
+A battle was started %2.1f minutes ago, but was not cleanly exited.  Attempt to reconnect?%s
+---
+%2.1f分前にバトルが開始されましたが、正常に終了していません。 再接続しますか?%s
+===
+
+***
+Starting Mission...
+---
+ミッションを開始しています...
+===
+
+***
+Reconnecting to new Game Server. Transferring.
+---
+新しいゲームサーバーに再接続中。 転送中。
+===
+
+***
+Connected to server %s - Transferring.
+---
+サーバー %s に接続しました - 転送中。
+===
+
+***
+: ~iReady~.
+---
+: ~i準備完了~.
+===
+
+***
+: ~iTransferring~.
+---
+: ~i転送中~.
+===
+
+***
+: ~iDisconnected~.
+---
+: ~i切断~.
+===
+
+***
+: ~iPending~.
+---
+: ~i保留中~.
+===
+
+***
+: ~iConnecting~.
+---
+: ~i接続中~.
+===
+
+***
+
+
+There may be Internet traffic, or the Server
+may have a slow Internet connection which is
+taking longer than expected. You can abort
+this game, or continue waiting to get in. Most
+games reconnect correctly even after long delays.
+$ButtonInstant=Abort,LeaveBattle,3
+
+---
+
+
+インターネットの混雑、またはサーバーの
+インターネット接続が遅いために、
+予想より時間がかかっている可能性があります。
+このゲームを中止するか、そのまま参加を待つことができます。
+ほとんどのゲームは長い遅延の後でも正しく再接続します。
+$ButtonInstant=中止,LeaveBattle,3
+
+===
+
+***
+
+
+Some players are not connected and may
+not make it back. Press Start to begin now.$ButtonInstant=Start,ServerForceBattleStart,0 
+---
+
+
+接続していないプレイヤーがいて、
+戻ってこられない可能性があります。今すぐ開始するには「開始」を押してください。$ButtonInstant=開始,ServerForceBattleStart,0 
+===
+
+***
+~.~3%s~*~.
+
+%s
+Time Remaining: ~i%d~.%s
+---
+~.~3%s~*~.
+
+%s
+残り時間: ~i%d~.%s
+===
+
+***
+Becoming Server
+---
+サーバーになります
+===
+
+***
+Starting Game
+---
+ゲーム開始中
+===
+
+***
+(unknown)
+---
+(不明)
+===
+
+***
+(demo)
+---
+(デモ)
+===
+
+***
+(beta)
+---
+(ベータ)
+===
+
+***
+Leave this Battle
+---
+このバトルを離れる
+===
+
+***
+View your Player Info
+---
+自分のプレイヤー情報を見る
+===
+
+***
+Change Description...
+---
+説明を変更...
+===
+
+***
+Incompatible
+---
+互換性なし
+===
+
+***
+Challenge Area (id %d)
+
+---
+チャレンジエリア (id %d)
+
+===
+
+***
+~yNum Players:~.%d
+
+---
+~y参加人数:~.%d
+
+===
+
+***
+~yNum Friends:~.%d
+
+---
+~yフレンド人数:~.%d
+
+===
+
+***
+Decend to this Level
+---
+このレベルに降りる
+===
+
+***
+About
+---
+バージョン情報
+===
+
+***
+Refresh Information
+---
+情報を更新
+===
+
+***
+BATTLEMASTER
+
+---
+バトルマスター
+
+===
+
+***
+Players:%d  Avg Level:%d
+---
+プレイヤー:%d  平均レベル:%d
+===
+
+***
+Empty
+---
+空き
+===
+
+***
+Friends:%d
+---
+フレンド:%d
+===
+
+***
+~r~EBATTLEMASTER
+---
+~r~Eバトルマスター
+===
+
+***
+Start Battle
+---
+バトル開始
+===
+
+***
+~w~E~3Exclude which unit:
+---
+~w~E~3除外するユニット:
+===
+
+***
+~y~EExcluded Units:
+---
+~y~E除外したユニット:
+===
+
+***
+Remove exclusion of %s?
+
+---
+%sの除外を解除しますか?
+
+===
+
+***
+~w~E%s
+Players in Zone %d
+
+---
+~w~E%s
+ゾーン %d のプレイヤー
+
+===
+
+***
+LAN Server
+---
+LANサーバー
+===
+
+***
+BATTLEMASTER
+
+
+---
+バトルマスター
+
+
+===
+
+***
+~w~E%s
+Players in Battle (Zone %d)
+
+---
+~w~E%s
+バトル中のプレイヤー (ゾーン %d)
+
+===
+
+***
+Battle Status Window
+---
+バトル状況ウィンドウ
+===
+
+***
+Player List Window
+---
+プレイヤー一覧ウィンドウ
+===
+
+***
+Dismiss
+---
+閉じる
+===
+
+***
+Place New Islands
+
+---
+新しい島を配置
+
+===
+
+***
+To the Beyond
+---
+彼方へ
+===
+
+***
+Alignment: <c>%s</c>
+---
+属性: <c>%s</c>
+===
+
+***
+Alignment: <c>None</c>
+---
+属性: <c>なし</c>
+===
+
+***
+Class: <c>%s</c>
+---
+分類: <c>%s</c>
+===
+
+***
+Hits: <c>%d</c>
+---
+耐久: <c>%d</c>
+===
+
+***
+Hits: <c>Invulnerable</c>
+---
+耐久: <c>無敵</c>
+===
+
+***
+Range: <c>%d</c>
+---
+射程: <c>%d</c>
+===
+
+***
+Range: <c>n/a</c>
+---
+射程: <c>なし</c>
+===
+
+***
+Damage: <c>%d</c>
+---
+ダメージ: <c>%d</c>
+===
+
+***
+Damage: <c>special</c>
+---
+ダメージ: <c>特殊</c>
+===
+
+***
+Damage: <c>n/a</c>
+---
+ダメージ: <c>なし</c>
+===
+
+***
+Cost in Storm Power: <c>%d</c>~[IfortGump.3]
+---
+ストームパワーのコスト: <c>%d</c>~[IfortGump.3]
+===
+
+***
+Cost in Storm Power: <c>n/a</c>
+---
+ストームパワーのコスト: <c>なし</c>
+===
+
+***
+%s to Build: <c>%s</c>
+---
+%sの建設: <c>%s</c>
+===
+
+***
+%s to Build: <c>n/a</c>
+---
+%sの建設: <c>なし</c>
+===
+
+***
+%s to Build: <c>None</c>
+---
+%sの建設: <c>なし</c>
+===
+
+***
+Sacrifice
+---
+生贄
+===
+
+***
+OK
+---
+OK
+===
+
+***
+Back
+---
+戻る
+===
+
+***
+No help information available
+---
+ヘルプ情報はありません
+===
+
+***
+Type
+---
+種類
+===
+
+***
+Chat Window
+---
+チャットウィンドウ
+===
+
+***
+Select chat view
+---
+チャット表示を選択
+===
+
+***
+Select help view
+---
+ヘルプ表示を選択
+===
+
+***
+Select research view
+---
+研究表示を選択
+===
+
+***
+Select friend status view
+---
+フレンド状況表示を選択
+===
+
+***
+Current Production
+
+---
+現在の生産
+
+===
+
+***
+No Production Yet.
+
+---
+まだ生産していません。
+
+===
+
+***
+View Current Production
+---
+現在の生産を見る
+===
+
+***
+Construct Building
+
+---
+建物を建設
+
+===
+
+***
+%sTemple
+---
+%s神殿
+===
+
+***
+Workshop
+---
+ワークショップ
+===
+
+***
+%sConstruct~.
+---
+%s建設~.
+===
+
+***
+Prayer
+
+---
+祈り
+
+===
+
+***
+Pray for Devastation Spell
+---
+破壊の呪文を祈る
+===
+
+***
+%sPray~.
+---
+%s祈る~.
+===
+
+***
+View Learned Knowledge
+---
+習得した知識を見る
+===
+
+***
+%d Priest%s
+---
+司祭 %d%s
+===
+
+***
+~y~EExcluded
+---
+~y~E除外
+===
+
+***
+WIND
+---
+風
+===
+
+***
+RAIN
+---
+雨
+===
+
+***
+THUN.
+---
+雷
+===
+
+***
+SUN
+---
+太陽
+===
+
+***
+~0~w~ENot enough Storm Power to build this
+---
+~0~w~Eこれを建設するにはストームパワーが足りません
+===
+
+***
+~0~w~ENone in inventory
+---
+~0~w~E所持していません
+===
+
+***
+Sky Overview
+---
+空の概観
+===
+
+***
+Unspecified reason
+---
+理由不明
+===
+
+***
+Login successful
+---
+ログイン成功
+===
+
+***
+Initial info sent
+---
+初期情報を送信しました
+===
+
+***
+Player already logged in
+---
+すでにログインしているプレイヤーです
+===
+
+***
+Name length is bad
+---
+名前の長さが不正です
+===
+
+***
+The server is full
+---
+サーバーが満員です
+===
+
+***
+Unknown error
+---
+不明なエラー
+===
+
+***
+~g~3~E%s just arrived!
+
+---
+~g~3~E%s が到着しました!
+
+===
+
+***
+%s
+%s%s%sLevel %d
+
+---
+%s
+%s%s%sレベル %d
+
+===
+
+***
+You have been kicked off!
+---
+追放されました!
+===
+
+***
+ERROR: Invalid battle id
+---
+エラー: 無効なバトルIDです
+===
+
+***
+ERROR: Invalid battle slot id
+---
+エラー: 無効なバトルスロットIDです
+===
+
+***
+That battle began before you got there
+---
+参加する前にそのバトルは開始されました
+===
+
+***
+A NetStorm CD is required to play in that battle.
+---
+そのバトルに参加するにはNetStormのCDが必要です。
+===
+
+***
+Salvage
+---
+売却
+===
+
+***
+Salvage gains %d~[IfortGump.3]
+---
+売却で %d~[IfortGump.3]を獲得
+===
+
+***
+Salvage costs %d~[IfortGump.3]
+---
+売却に %d~[IfortGump.3]が必要
+===
+
+***
+Human Player
+---
+人間のプレイヤー
+===
+
+***
+Player
+---
+プレイヤー
+===
+
+***
+Computer #%d
+---
+コンピューター #%d
+===
+
+***
+english
+---
+英語
+===
+
+***
+french
+---
+フランス語
+===
+
+***
+german
+---
+ドイツ語
+===
+
+***
+spanish
+---
+スペイン語
+===
+
+***
+japanese
+---
+日本語
+===
+
+***
+portuguese
+---
+ポルトガル語
+===
+
+***
+Wind
+---
+風
+===
+
+***
+Rain
+---
+雨
+===
+
+***
+Thunder
+---
+雷
+===
+
+***
+Sun
+---
+太陽
+===
+
+***
+archer
+---
+アーチャー
+===
+
+***
+cannon
+---
+キャノン
+===
+
+***
+blocker
+---
+ブロッカー
+===
+
+***
+aviary
+---
+アビアリー
+===
+
+***
+flyer
+---
+フライヤー
+===
+
+***
+battery
+---
+バッテリー
+===
+
+***
+fence
+---
+フェンス
+===
+
+***
+walker
+---
+ウォーカー
+===
+
+***
+balloon
+---
+バルーン
+===
+
+***
+misc
+---
+その他
+===
+
+***
+CHEAT Set Owner
+---
+チート オーナー設定
+===
+
+***
+Nobody
+---
+なし
+===
+
+***
+Owner
+---
+オーナー
+===
+
+***
+Enemy
+---
+敵
+===
+
+***
+Ally
+---
+味方
+===
+
+***
+
+Alignment: ~i%s~.
+---
+
+属性: ~i%s~.
+===
+
+***
+
+Class: ~i%s~.
+---
+
+分類: ~i%s~.
+===
+
+***
+~y~[I%d.*]Invisible!~.
+
+---
+~y~[I%d.*]不可視!~.
+
+===
+
+***
+~y~[I%d.*]Paralyzed!~.
+
+---
+~y~[I%d.*]麻痺!~.
+
+===
+
+***
+Meltdown!
+---
+メルトダウン!
+===
+
+***
+NetStorm has failed an assertion and can't continue. Please submit this info to http://www.titanic.com/netstorm/bugreport.cgi
+(To copy, select with mouse, then hit Ctrl-ins. Then hit Shift-Ins in your web browser.)
+---
+NetStormでアサーションエラーが発生し、続行できません。 この情報を http://www.titanic.com/netstorm/bugreport.cgi に送信してください。
+(コピーするにはマウスで選択して Ctrl-Ins を押し、ブラウザで Shift-Ins を押してください。)
+===
+
+***
+NetStorm Assertion Failed
+---
+NetStorm アサーション失敗
+===
+
+***
+N
+---
+北
+===
+
+***
+NE
+---
+北東
+===
+
+***
+E
+---
+東
+===
+
+***
+SE
+---
+南東
+===
+
+***
+S
+---
+南
+===
+
+***
+SW
+---
+南西
+===
+
+***
+W
+---
+西
+===
+
+***
+NW
+---
+北西
+===
+
+***
+ for %s%d~[IfortGump.3]
+---
+ %s%d~[IfortGump.3]で
+===
+
+***
+Build Level %d %s%s
+---
+レベル %d %s%sを建設
+===
+
+***
+Build %s%s
+---
+%s%sを建設
+===
+
+***
+Create %s for %s%d~[IfortGump.3]
+---
+%sを作成 %s%d~[IfortGump.3]
+===
+
+***
+Clear away
+---
+片付ける
+===
+
+***
+~wNothing
+---
+~w何もなし
+===
+
+***
+~wUnknown
+---
+~w不明
+===
+
+***
+~r~E(Not while paralyzed)
+---
+~r~E(麻痺中は不可)
+===
+
+***
+~r~E(Not while flying)
+---
+~r~E(飛行中は不可)
+===
+
+***
+~r~E(Not here)
+---
+~r~E(ここでは不可)
+===
+
+***
+for %s%d~[IfortGump.3]
+---
+%s%d~[IfortGump.3]で
+===
+
+***
+%sCast~. ~i%s~.~[I%d.*] %s
+---
+%s詠唱~. ~i%s~.~[I%d.*] %s
+===
+
+***
+About %s
+---
+%sについて
+===
+
+***
+Carrying: ~i%s~.
+
+---
+運搬中: ~i%s~.
+
+===
+
+***
+%sDrop~. ~i%s~. %s
+---
+%s落とす~. ~i%s~. %s
+===
+
+***
+~yCapturable!~.
+
+---
+~y捕獲可能!~.
+
+===
+
+***
+~yNot Connected!~.
+
+---
+~y未接続!~.
+
+===
+
+***
+Storm Power: ~i%d~.
+
+---
+ストームパワー: ~i%d~.
+
+===
+
+***
+Slow
+---
+遅い
+===
+
+***
+Fast
+---
+速い
+===
+
+***
+Individual
+---
+個別
+===
+
+***
+Shared
+---
+共有
+===
+
+***
+Short
+---
+短い
+===
+
+***
+Long
+---
+長い
+===
+
+***
+Bridge Slots
+---
+橋スロット
+===
+
+***
+Unit Rate
+---
+ユニット速度
+===
+
+***
+Knowledge
+---
+知識
+===
+
+***
+Generator Range
+---
+ジェネレーター範囲
+===
+
+***
+Kill Reward
+---
+撃破報酬
+===
+
+***
+Breakable Alliances
+---
+解消可能な同盟
+===
+
+***
+~[IfortGump.3] per Geyser
+---
+間欠泉ごとの~[IfortGump.3]
+===
+
+***
+%s Available
+
+---
+利用可能な%s
+
+===
+
+***
+All %s is in Production
+---
+すべての%sが生産中です
+===
+
+***
+Put %s into Production
+---
+%sを生産に回す
+===
+
+***
+Aerial Attack
+---
+空中攻撃
+===
+
+***
+Aerial Transport
+---
+空中輸送
+===
+
+***
+Air Attack Base
+---
+空襲基地
+===
+
+***
+Altar
+---
+祭壇
+===
+
+***
+Bridge
+---
+橋
+===
+
+***
+Defense
+---
+防御
+===
+
+***
+Defensive Spell
+---
+防御呪文
+===
+
+***
+Energy
+---
+エネルギー
+===
+
+***
+Ground Transport
+---
+地上輸送
+===
+
+***
+High Priest
+---
+大司祭
+===
+
+***
+Offensive Spell
+---
+攻撃呪文
+===
+
+***
+Production
+---
+生産
+===
+
+***
+Residence
+---
+居住区
+===
+
+***
+Shooter
+---
+シューター
+===
+
+***
+Source of Energy
+---
+エネルギー源
+===
+
+***
+Spell
+---
+呪文
+===
+
+***
+Source of Storm Power
+---
+ストームパワーの源
+===
+
+***
+Bridge Harden
+---
+橋の強化
+===
+
+***
+Challenge Ring
+---
+チャレンジリング
+===
+
+***
+Heal
+---
+回復
+===
+
+***
+Large Farm
+---
+大農場
+===
+
+***
+Outpost
+---
+前哨基地
+===
+
+***
+Paralysis
+---
+麻痺
+===
+
+***
+Small Farm
+---
+小農場
+===
+
+***
+Treason
+---
+反逆
+===
+
+***
+Tree
+---
+木
+===
+
+***
+Water Wheel
+---
+水車
+===
+
+***
+Acid Barricade
+---
+アシッドバリケード
+===
+
+***
+Air Ship
+---
+飛行船
+===
+
+***
+Arc Spire
+---
+アークスパイア
+===
+
+***
+Artifact
+---
+アーティファクト
+===
+
+***
+Balloon
+---
+バルーン
+===
+
+***
+Banner
+---
+バナー
+===
+
+***
+Bulf
+---
+ブルフ
+===
+
+***
+Bulwark
+---
+ブルワーク
+===
+
+***
+City Gate
+---
+城門
+===
+
+***
+Cloud Floater
+---
+クラウドフローター
+===
+
+***
+Crossbow
+---
+クロスボウ
+===
+
+***
+Crystal Crab
+---
+クリスタルクラブ
+===
+
+***
+Decimation
+---
+デシメーション
+===
+
+***
+Devastation
+---
+デバステーション
+===
+
+***
+Devil Maker
+---
+デビルメーカー
+===
+
+***
+Dust Devil
+---
+ダストデビル
+===
+
+***
+Edge Farm
+---
+エッジファーム
+===
+
+***
+Embassy
+---
+大使館
+===
+
+***
+Empty Storm Geyser
+---
+空の間欠泉
+===
+
+***
+Force Field
+---
+フォースフィールド
+===
+
+***
+Fountain
+---
+噴水
+===
+
+***
+Golem
+---
+ゴーレム
+===
+
+***
+Grove
+---
+木立
+===
+
+***
+Growing Ice Tower
+---
+成長するアイスタワー
+===
+
+***
+Homestead
+---
+ホームステッド
+===
+
+***
+Ice Cannon
+---
+アイスキャノン
+===
+
+***
+Ice Tower
+---
+アイスタワー
+===
+
+***
+Invisibility
+---
+不可視化
+===
+
+***
+Island
+---
+島
+===
+
+***
+Man o'War Pool
+---
+マンオブウォープール
+===
+
+***
+Man o'War
+---
+マンオブウォー
+===
+
+***
+Mansion
+---
+邸宅
+===
+
+***
+Nimbian
+---
+ニンビアン
+===
+
+***
+Obelisk
+---
+オベリスク
+===
+
+***
+Player Stub
+---
+プレイヤースタブ
+===
+
+***
+Point Blast
+---
+ポイントブラスト
+===
+
+***
+Rain Generator
+---
+レインジェネレーター
+===
+
+***
+Rain Temple
+---
+レインテンプル
+===
+
+***
+Rain Workshop
+---
+レインワークショップ
+===
+
+***
+Rain {Focus}
+---
+レイン{Focus}
+===
+
+***
+River
+---
+川
+===
+
+***
+Sail Skater
+---
+セイルスケーター
+===
+
+***
+Stone Tower
+---
+ストーンタワー
+===
+
+***
+Storm Crystal
+---
+ストームクリスタル
+===
+
+***
+Storm Geyser
+---
+ストーム間欠泉
+===
+
+***
+Sun Barricade
+---
+サンバリケード
+===
+
+***
+Sun Cannon
+---
+サンキャノン
+===
+
+***
+Sun Disc Thrower
+---
+サンディスクスロワー
+===
+
+***
+Sun Generator
+---
+サンジェネレーター
+===
+
+***
+Sun Workshop
+---
+サンワークショップ
+===
+
+***
+Sun {Focus}
+---
+サン{Focus}
+===
+
+***
+Thunder Cannon
+---
+サンダーキャノン
+===
+
+***
+Thunder Generator
+---
+サンダージェネレーター
+===
+
+***
+Thunder Temple
+---
+サンダーテンプル
+===
+
+***
+Thunder Workshop
+---
+サンダーワークショップ
+===
+
+***
+Thunder {Focus}
+---
+サンダー{Focus}
+===
+
+***
+Trees
+---
+木々
+===
+
+***
+Vander Tower
+---
+ヴァンダータワー
+===
+
+***
+Wall
+---
+壁
+===
+
+***
+Whirlibase
+---
+ワーリベース
+===
+
+***
+Whirligig
+---
+ワーリギグ
+===
+
+***
+Wind Generator
+---
+ウィンドジェネレーター
+===
+
+***
+Wind Temple
+---
+ウィンドテンプル
+===
+
+***
+Wind Tower
+---
+ウィンドタワー
+===
+
+***
+Wind Workshop
+---
+ウィンドワークショップ
+===
+
+***
+Wind {Focus}
+---
+ウィンド{Focus}
+===
+
+***
+Platform
+---
+プラットフォーム
+===
+
+***
+Language
+---
+言語
+===
+
+***
+Resolution
+---
+解像度
+===
+
+***
+Anti-Aliasing
+---
+アンチエイリアシング
+===
+
+***
+FSR 1.0 Upscaling
+---
+FSR 1.0 アップスケーリング
+===
+
+***
+Pass Server Diagnostic 
+---
+サーバー診断に合格 
+===
+
+***
+Pass Server Diagnostic
+---
+サーバー診断に合格
+===
+
+***
+Previous
+---
+前へ
+===
+
+***
+Next
+---
+次へ
+===
+
+***
+of
+---
+/
+===

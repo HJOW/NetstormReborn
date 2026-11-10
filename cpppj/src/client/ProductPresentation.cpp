@@ -32,6 +32,20 @@ AI는 분석, 프로그래밍, 문서화, 검증을 돕는 데 사용했습니�
 $Button=뒤로,Tell,Credits
 $Button=취소,Tell,Blank
 )"; // 한국어 UI 글꼴로 표시하며 K4에서 영어 잔재로 남아 있던 세 번째 항목을 번역했다.
+// 일본어 모드의 11.01 패치 크레딧 본문이다. 한국어 본문과 같은 구성이며 제목/버튼 이름만 일본어다(11차 일본어).
+constexpr std::string_view kPatchCreditsJapanese=R"(<background="nsstart">
+<h2>{H2}NetStorm 11.01 パッチ クレジット</h2>
+<p>{Text}
+バージョン: {version}<br>
+開発およびNetStorm 11.01パッチ: HJOW。<br>
+<p>
+OpenAI CodexとChatGPTを活用したAI支援で開発しました。<br>
+AIは分析、プログラミング、ドキュメント作成、検証の補助に使用しました。<br>
+<p>
+原作の制作者は、元のクレジット項目で確認できます。
+$Button=戻る,Tell,Credits
+$Button=キャンセル,Tell,Blank
+)";
 }
 // Startup의 원문 v주.부 정수 표기 뒤 제품 표기11.01의 선행0을 명시적으로 보존한다.
 void ApplyProductVersion(o::ConfigInterface& config) {
@@ -43,11 +57,13 @@ std::unique_ptr<o::Config> MakeProductCreditsConfig(o::ConfigRegistry& registry)
     auto credits=std::make_unique<o::Config>(registry,kProductCreditsObject);credits->Append(kPatchCredits);return credits;
 }
 // 원문 두 항목/Cancel을 유지하고 중복 확장도 피한다. 새 항목의 대소문자는 사용자 지정 표기다.
-std::string ProductTellBody(std::string_view target,std::string_view original,bool korean) {
+std::string ProductTellBody(std::string_view target,std::string_view original,std::uint32_t language) {
+    const bool korean=language==7U,japanese=language==5U; // 원문 언어 번호(LanguageOptions.h의 한국어 7, 일본어 5)다.
     if (korean && o::AsciiLower(target)==o::AsciiLower(kProductCreditsTarget)) return std::string(kPatchCreditsKorean); // 한국어의 새 항목 본문은 고정 번역본이다.
+    if (japanese && o::AsciiLower(target)==o::AsciiLower(kProductCreditsTarget)) return std::string(kPatchCreditsJapanese); // 11차 일본어: 같은 구성의 고정 번역본이다.
     std::string body(original);
     if (o::AsciiLower(target)=="credits" && original.find(kProductCreditsTarget)==original.npos)
-        body+=korean ? "\n$Menu=NetStorm 11.01 패치 크레딧,Tell,Patch1101.Credits\n" : "\n$Menu=Netstorm 11.01 Patch Credits,Tell,Patch1101.Credits\n";
+        body+=korean ? "\n$Menu=NetStorm 11.01 패치 크레딧,Tell,Patch1101.Credits\n" : japanese ? "\n$Menu=NetStorm 11.01 パッチ クレジット,Tell,Patch1101.Credits\n" : "\n$Menu=Netstorm 11.01 Patch Credits,Tell,Patch1101.Credits\n";
     return body;
 }
 }

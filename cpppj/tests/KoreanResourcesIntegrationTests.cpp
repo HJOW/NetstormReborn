@@ -7,6 +7,7 @@
 #include "client/HtmlTextParser.h"
 #include "client/HtmlWindowFactory.h"
 #include "client/HtmlConditionEffect.h" // 실제 Help와 같은 condition 효과를 검사 파서에 연결한다(K1).
+#include "client/LanguageOptions.h"
 #include "client/ProductPresentation.h" // 11.01 패치 크레딧 한국어 항목 시험(K4).
 #include "client/QuickHelpHtml.h"
 #include "client/TellFileMenus.h"
@@ -142,13 +143,13 @@ TEST_CASE(KoreanIntegration_EnglishHelpBytesAndOutputStayIdentical) { // 실제�
 TEST_CASE(KoreanIntegration_ProductCreditsEntryAndBodyFollowLanguage) {
     using namespace netstorm::client;
     const std::string list="<h2>{H2}NetStorm Credits</h2>\n$Menu=NetStorm 10.72 Patch Credits,Tell,CreditsNew\n";
-    const auto english=ProductTellBody("Credits",list,false);
+    const auto english=ProductTellBody("Credits",list,0U);
     CHECK(english.find("$Menu=Netstorm 11.01 Patch Credits,Tell,Patch1101.Credits")!=std::string::npos);
-    const auto korean=ProductTellBody("credits",list,true);
+    const auto korean=ProductTellBody("credits",list,kKoreanLanguageNumber);
     CHECK(korean.find("$Menu=NetStorm 11.01 패치 크레딧,Tell,Patch1101.Credits")!=std::string::npos && korean.find("Netstorm 11.01 Patch Credits")==std::string::npos);
-    CHECK(ProductTellBody("Credits",english,false)==english); // 이미 들어 있으면 두 번 덧붙이지 않는다.
-    const auto body=ProductTellBody("Patch1101.Credits","original",true);
+    CHECK(ProductTellBody("Credits",english,0U)==english); // 이미 들어 있으면 두 번 덧붙이지 않는다.
+    const auto body=ProductTellBody("Patch1101.Credits","original",kKoreanLanguageNumber);
     CHECK(body.find("<h2>{H2}NetStorm 11.01 패치 크레딧</h2>")!=std::string::npos && body.find("HJOW")!=std::string::npos && body.find("AI")!=std::string::npos);
-    CHECK(ProductTellBody("Patch1101.Credits","original",false)=="original"); // 영어 본문은 등록된 영어 Config 본문을 그대로 쓴다.
-    CHECK(ProductTellBody("Other","x",true)=="x");
+    CHECK(ProductTellBody("Patch1101.Credits","original",0U)=="original"); // 영어 본문은 등록된 영어 Config 본문을 그대로 쓴다.
+    CHECK(ProductTellBody("Other","x",kKoreanLanguageNumber)=="x");
 }

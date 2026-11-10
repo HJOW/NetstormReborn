@@ -387,7 +387,7 @@ int Client::Run() {
     configuration_.ReadString("fontFaceName", fontFace);
     fonts_ = std::make_unique<FontStore>(files_, FontFaceFromUtf8(fontFace));
     if (options_.userData) fonts_->SetUserCacheDirectory(options_.userData->Cache()); // 5차: 글꼴 캐시를 설치 폴더가 아닌 사용자 Cache에 둔다.
-    fonts_->SetExtendedFace("D2Coding", FindKoreanFontFile(CloneDataRoots(options_.gameDirectory, platform::CurrentExecutableFile().parent_path()))); // 6차 한국어: 한글 글리프는 D2Coding 파일(없으면 같은 이름의 시스템 글꼴)로 요청 때 만든다.
+    ApplyExtendedFontForLanguage(); // 11차 일본어: 현재 언어에 맞는 외부 글꼴을 설정한다(한국어/기타는 D2Coding, 일본어는 Noto Sans JP). // 6차 한국어: 한글 글리프는 D2Coding 파일(없으면 같은 이름의 시스템 글꼴)로 요청 때 만든다.
     fonts_->Get();
     // "init screen mode": startInFullScreen이면 workingFullScreenFlags, 아니면 windowScreenFlags.
     std::uint32_t flags = static_cast<std::uint32_t>(configuration_.GetInt("workingFullScreenFlags"));
@@ -795,9 +795,16 @@ void Client::InterpretLanguageOptions() {
 // 6차 한국어: 현재 언어가 korean이면 xlat.korean(UTF-8)을 읽어 번역표로 쓰고 아니면 비운다. 파일이 없으면 영어 원문을 유지한다.
 void Client::LoadKoreanTranslations() {
     koreanTranslations_.reset();
-    if (currentLanguage_!=static_cast<std::int32_t>(kKoreanLanguageNumber)) return;
-    auto text=ReadKoreanTranslationFile(CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path())); // 휴대 배포의 lang 또는 개발 저장소의 assets/lang에서 찾는다.
+    ApplyExtendedFontForLanguage(); // 11차 일본어: 언어를 바꾸면 확장 글리프 글꼴도 그 언어의 외부 글꼴로 바꾼다.
+    if (!IsExtendedLanguageNumber(static_cast<std::uint32_t>(currentLanguage_))) return;
+    auto text=ReadLanguageTranslationFile(CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path()),OriginalLanguageName(static_cast<std::uint32_t>(currentLanguage_))); // 휴대 배포의 lang 또는 개발 저장소의 assets/lang에서 찾는다(한국어/일본어 공통).
     if (text) koreanTranslations_.emplace(std::move(*text));
+}
+// 11차 일본어: 현재 언어가 일본어이면 Noto Sans JP, 그 밖에는 D2Coding을 확장 글리프 글꼴로 설정한다. 글꼴은 exe가 아닌 fonts 폴더의 파일을 쓴다.
+void Client::ApplyExtendedFontForLanguage() {
+    if (!fonts_) return;const auto roots=CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path());
+    if (currentLanguage_==static_cast<std::int32_t>(kJapaneseLanguageNumber)) fonts_->SetExtendedFace("Noto Sans JP",FindJapaneseFontFile(roots));
+    else fonts_->SetExtendedFace("D2Coding",FindKoreanFontFile(roots));
 }
 // 원문441790의 시작/등록 메시지 재적재를 공유한다. 빈 명령줄은 처음 실행 인자를 재사용하지 않는다.
 void Client::LoadNativeConfiguration(std::string_view commandLine,bool detectLanguage) {
@@ -1551,7 +1558,7 @@ double Client::GameSeconds() const { return clock_->GameSeconds(ClientMillisecon
 bool Client::Active() const { return active_; }
 // 번역표가 없거나 영어면 원문 그대로다.
 std::string Client::Translate(std::string_view text) const {
-    if (currentLanguage_==static_cast<std::int32_t>(kKoreanLanguageNumber)) return koreanTranslations_ ? koreanTranslations_->Translate(text,currentLanguage_) : std::string(text); // 6차 한국어: 클론 추가 번역표이며 없는 키/파일은 영어 원문이다.
+    if (IsExtendedLanguageNumber(static_cast<std::uint32_t>(currentLanguage_))) return koreanTranslations_ ? koreanTranslations_->Translate(text,currentLanguage_) : std::string(text); // 6차 한국어: 클론 추가 번역표이며 없는 키/파일은 영어 원문이다.
     if (nativeTranslations_) {
         if (currentLanguage_==0 || currentLanguage_==1) return std::string(text); //원문5435b4를 읽으며 아직 갱신 전일 수 있는 공개542384를 쓰지 않는다.
         std::vector<std::uint8_t> bytes;
@@ -1565,7 +1572,7 @@ std::string Client::Translate(std::string_view text) const {
 std::uint64_t Client::TranslationIdentity(std::string_view text,std::uint32_t sourceAddress) const {
     constexpr std::uint64_t kOwnedText=std::uint64_t{1}<<63; //호스트번역포인터와보호PE의32비트원문주소영역을구별한다.
     const auto identity=[sourceAddress](std::string_view input,std::string_view output) { return input.data()==output.data() ? std::uint64_t(sourceAddress):kOwnedText|static_cast<std::uint64_t>(reinterpret_cast<std::uintptr_t>(output.data())); }; //폴백입력뷰의임시주소는외부에노출하지않는다.
-    if (currentLanguage_==static_cast<std::int32_t>(kKoreanLanguageNumber)) return koreanTranslations_ ? identity(text,koreanTranslations_->TranslateView(text,currentLanguage_)):sourceAddress;
+    if (IsExtendedLanguageNumber(static_cast<std::uint32_t>(currentLanguage_))) return koreanTranslations_ ? identity(text,koreanTranslations_->TranslateView(text,currentLanguage_)):sourceAddress;
     if (nativeTranslations_) {
         if (currentLanguage_==0 || currentLanguage_==1) return sourceAddress;std::vector<std::uint8_t> bytes;
         try { bytes=o::EncodeOriginalText(text); }catch (const std::invalid_argument&) { return sourceAddress; }

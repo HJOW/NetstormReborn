@@ -37,6 +37,34 @@ std::filesystem::path FindKoreanFontFile(const std::vector<std::filesystem::path
     }
     return {};
 }
+// 11차 일본어: Noto Sans JP 가변 글꼴은 이름순 마지막(NotoSansJP*.ttf)을 쓴다. 한국어 D2Coding과 같은 탐색 규칙이다.
+std::filesystem::path FindJapaneseFontFile(const std::vector<std::filesystem::path>& roots) {
+    for (const auto& root : roots) { // 가까운 폴더의 fonts를 먼저 본다.
+        std::error_code error;const auto directory = root / "fonts";
+        if (!std::filesystem::is_directory(directory, error)) continue;
+        std::filesystem::path newest;
+        for (const auto& entry : std::filesystem::directory_iterator(directory, error)) {
+            const auto name = entry.path().filename().string();
+            if (name.starts_with("NotoSansJP") && entry.path().extension() == ".ttf" && entry.path() > newest) newest = entry.path();
+        }
+        if (!newest.empty()) return newest;
+    }
+    return {};
+}
+// 11차 일본어: 언어 이름별 번역표(lang/<이름>/xlat.<이름> 등)를 읽는다. 한국어 함수와 같은 규칙이며 BOM을 제거한다.
+std::optional<std::string> ReadLanguageTranslationFile(const std::vector<std::filesystem::path>& roots, std::string_view languageName) {
+    const std::string file = "xlat." + std::string(languageName), name(languageName);
+    const std::filesystem::path relatives[] = {std::filesystem::path("lang") / name / file, std::filesystem::path("lang") / file, std::filesystem::path("assets") / "lang" / name / file};
+    for (const auto& root : roots) for (const auto& relative : relatives) {
+        std::error_code error;const auto path = root / relative;
+        if (!std::filesystem::is_regular_file(path, error)) continue;
+        std::ifstream stream(path, std::ios::binary);if (!stream) continue;
+        std::string text((std::istreambuf_iterator<char>(stream)), std::istreambuf_iterator<char>());
+        if (text.starts_with("\xEF\xBB\xBF")) text.erase(0, 3);
+        return text;
+    }
+    return std::nullopt;
+}
 // 번역표는 UTF-8 텍스트이며 BOM이 있으면 제거해 첫 줄의 구분 문자가 줄 첫 글자가 되게 한다.
 std::optional<std::string> ReadKoreanTranslationFile(const std::vector<std::filesystem::path>& roots) {
     const std::filesystem::path relatives[] = {std::filesystem::path("lang") / "korean" / "xlat.korean", std::filesystem::path("lang") / "xlat.korean", std::filesystem::path("assets") / "lang" / "korean" / "xlat.korean"};

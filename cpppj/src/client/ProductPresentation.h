@@ -15,5 +15,6 @@ void ApplyProductVersion(o::ConfigInterface& config);
 std::unique_ptr<o::Config> MakeProductCreditsConfig(o::ConfigRegistry& registry);
 // 메인 Credits 목록에 세 번째 항목만 덧붙이며 다른 Tell/원문 Credits 내용은 보존한다.
 // korean이 true이면 새 항목 이름과 11.01 패치 크레딧 본문을 한국어로 제공한다(K4 잔여 교정). 영어는 기존 표기를 그대로 쓴다.
-std::string ProductTellBody(std::string_view target,std::string_view original,bool korean=false);
+// 11차 일본어: 마지막 인자는 현재 원문 언어 번호다(0/1 영어, 5 일본어, 7 한국어). 일본어도 같은 방식으로 새 항목/본문을 제공한다.
+std::string ProductTellBody(std::string_view target,std::string_view original,std::uint32_t language=0);
 }

@@ -289,7 +289,7 @@ std::string FontBytes(std::string_view text) {
 }
 // 6차 한국어: 옵션 메뉴 Language 하위 메뉴 항목이다. 영어(원문 번호0/1)와 한국어(7)를 각 언어 자신의 이름으로 보이고 현재 언어에 체크한다.
 std::vector<GameMenuLanguage> LanguageMenuChoices(int current) {
-    return {{FontBytes("English"),0U,current==0 || current==1},{FontBytes("한국어"),kKoreanLanguageNumber,current==static_cast<int>(kKoreanLanguageNumber)}};
+    return {{FontBytes("English"),0U,current==0 || current==1},{FontBytes("한국어"),kKoreanLanguageNumber,current==static_cast<int>(kKoreanLanguageNumber)},{FontBytes("日本語"),kJapaneseLanguageNumber,current==static_cast<int>(kJapaneseLanguageNumber)}}; // 11차 일본어: 각 언어 자신의 표기로 보인다.
 }
 // 7차: 후처리 장치가 있으면 옵션 메뉴 훅에 FSR 해상도, 표시 크기 조회, Anti-Aliasing/FSR 토글을 연결한다. 장치가 없으면 원문 구성 그대로 둔다.
 }
@@ -772,7 +772,7 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
         [this](auto section)->std::optional<std::string> { return mission_ ? mission_->Section(section) : std::nullopt; },
         [this,&target](auto body,auto mode,auto width,auto height) { // 원문의 UTF-8 본문을 실제 좁은 HTML 공장에 한 번만 전달한다.
             const auto screenWidth=client_.GetScreen().Width(),screenHeight=client_.GetScreen().Height();
-            return rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext({mission_ ? 85 : 0,0,screenWidth,screenHeight}),FontBytes(ProductTellBody(target,body,static_cast<std::uint32_t>(client_.LanguageNumber())==kKoreanLanguageNumber)),mode,width,height); // 사용자 요청의 세 번째 항목도 같은 원문 HTML 창/메뉴/입력 장치를 사용한다.
+            return rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext({mission_ ? 85 : 0,0,screenWidth,screenHeight}),FontBytes(ProductTellBody(target,body,static_cast<std::uint32_t>(client_.LanguageNumber()))),mode,width,height); // 사용자 요청의 세 번째 항목도 같은 원문 HTML 창/메뉴/입력 장치를 사용한다.
         });
     if (!result.found) return false;rebuild_=true;
     if (!result.serial) return true; // 빈 부모/창 생략은 기존 표시 부모나 phase를 교체하지 않는다.
@@ -1997,7 +1997,7 @@ void UberGump::Compose() {
         if (state_.phase!=ClientPhase::LoadingMission) rawButtons_->Menus()->CloseMissionLoading();
         std::vector<std::string> originalLabels;originalLabels.reserve(labels_.size());
         // 원본 돌 버튼의 63바이트 라벨은 UTF-8가 아닌 기존 게임 글꼴 바이트를 사용한다.
-        for (const auto& label:labels_) originalLabels.push_back(FontBytes(state_.phase==ClientPhase::MainMenu && client_.LanguageNumber()==static_cast<int>(kKoreanLanguageNumber) ? client_.Translate(label) : label)); //한국어 메인 버튼만 기존 돌 UI/D2Coding으로 표시하며 영어 라벨/원본 자산은 유지한다.
+        for (const auto& label:labels_) originalLabels.push_back(FontBytes(state_.phase==ClientPhase::MainMenu && IsExtendedLanguageNumber(static_cast<std::uint32_t>(client_.LanguageNumber())) ? client_.Translate(label) : label)); //한국어 메인 버튼만 기존 돌 UI/D2Coding으로 표시하며 영어 라벨/원본 자산은 유지한다.
         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
             static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr || (rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current()) || client_.HtmlWindowGlobals()->window.instances!=0,client_.HtmlWindowGlobals()->window.instances!=0,
             state_.phase==ClientPhase::MainMenu && client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? std::optional<std::int32_t>{-83} : std::nullopt,
@@ -2062,7 +2062,7 @@ std::optional<ScreenPoint> UberGump::ControlPoint(std::string_view label) const 
     if (world_ && !world_->Connecting() && (label.starts_with("world:") || label.starts_with("cell:") || label.starts_with("placement:") || label.starts_with("placement-near:") || label.starts_with("placement-reach:") || label.starts_with("placement-fire:"))) return world_->Point(label);
     if (rawButtons_->Menus()->HasMenus() || rawButtons_->Menus()->HtmlWindowsOpen() || rawButtons_->CurrentDialog() || state_.phase==ClientPhase::LoadingMission) if (const auto point=rawButtons_->Menus()->Point(FontBytes(label))) return point;
     // 동일 라벨의 첫 영역을 선택한다.
-    for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label || (state_.phase==ClientPhase::MainMenu && client_.LanguageNumber()==static_cast<int>(kKoreanLanguageNumber) && client_.Translate(labels_.at(static_cast<std::size_t>(control.id)))==label))
+    for (const auto& control : input_.Controls()) if (labels_.at(static_cast<std::size_t>(control.id)) == label || (state_.phase==ClientPhase::MainMenu && IsExtendedLanguageNumber(static_cast<std::uint32_t>(client_.LanguageNumber())) && client_.Translate(labels_.at(static_cast<std::size_t>(control.id)))==label))
         return ScreenPoint{(control.rect.left + control.rect.right) / 2, (control.rect.top + control.rect.bottom) / 2};
     return {};
 }

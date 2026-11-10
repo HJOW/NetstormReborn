@@ -1,4 +1,7 @@
 // 새로 쓰는 코드: 게임 로직을 바꾸지 않고 원본 문자 인코딩을 UTF-8로 바꾼다.
+#include <mutex>
+#include <vector>
+#include <algorithm>
 #include "o/OriginalText.h"
 #include <array>
 #include <algorithm>
@@ -17,7 +20,13 @@ namespace { // 확장 시퀀스의 숫자 표와 코드 포인트 구간 표다.
 constexpr std::array<std::uint8_t, 25> kExtendedDigits{1, 2, 3, 4, 5, 6, 7, 8, 0x0b, 0x0c, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1c, 0x1d, 0x1e};
 // 확장 대상 코드 포인트 구간이다. 각 구간은 이어 붙인 인덱스 공간의 연속 구간이 된다(합 11424 < 25^3).
 struct ExtendedRange { std::uint32_t first, last; };
-constexpr std::array<ExtendedRange, 4> kExtendedRanges{{{0xac00, 0xd7a3}, {0x3131, 0x318e}, {0x3000, 0x303f}, {0xff01, 0xff5e}}}; // 한글 음절, 호환 자모, CJK 기호, 전각 ASCII다.
+// 11차 일본어: 앞 네 구간의 인덱스는 6차 한국어와 같아야 하므로 새 구간은 뒤에만 붙인다(정적 합 11679 < 25^3).
+constexpr std::array<ExtendedRange, 6> kExtendedRanges{{{0xac00, 0xd7a3}, {0x3131, 0x318e}, {0x3000, 0x303f}, {0xff01, 0xff5e}, {0x3040, 0x30ff}, {0xff61, 0xff9f}}}; // 한글 음절, 호환 자모, CJK 기호, 전각 ASCII, 히라가나·가타카나, 반각 가타카나다.
+// 11차 일본어: CJK 통합 한자(0x4e00..0x9fff) 약 2만 자는 정적 구간에 담을 수 없어 처음 쓰인 순서대로 남은 인덱스(25^3-11679=3946개)에 배정한다.
+// 표시 바이트는 파일/설정에 저장하지 않는 화면 전용 경계이므로 같은 프로세스 안의 배정 표만 일치하면 된다. 용량이 소진되면 한자는 확장되지 않고 원문 규칙('?')으로 남는다.
+constexpr std::uint32_t kStaticExtendedCount=11679, kDynamicFirst=0x4e00, kDynamicLast=0x9fff, kExtendedCapacity=25*25*25;
+std::mutex& DynamicLock() { static std::mutex lock;return lock; } // 배정 표 접근을 보호한다(UI 외 스레드의 부호화 대비).
+std::vector<std::uint32_t>& DynamicIdeographs() { static std::vector<std::uint32_t> table;return table; } // 인덱스 순서대로 배정한 한자 코드 포인트다.
 // 숫자 바이트의 값(0..24)이다. 숫자가 아니면 -1이다.
 int DigitValue(std::uint8_t byte) {
     for (std::size_t value = 0; value < kExtendedDigits.size(); ++value) if (kExtendedDigits[value] == byte) return static_cast<int>(value); // 25개 중 일치하는 위치가 값이다.
@@ -36,6 +45,13 @@ std::optional<std::array<std::uint8_t, kExtendedTextLength>> EncodeExtendedCodeP
         }
         base += range.last - range.first + 1;
     }
+    if (codePoint >= kDynamicFirst && codePoint <= kDynamicLast) { // 11차 일본어: 정적 구간 밖의 한자는 처음 쓰일 때 남은 인덱스를 배정한다.
+        const std::lock_guard<std::mutex> guard(DynamicLock());auto& table=DynamicIdeographs();
+        auto found=std::find(table.begin(),table.end(),codePoint);
+        if (found==table.end()) { if (kStaticExtendedCount+table.size()>=kExtendedCapacity) return std::nullopt;table.push_back(codePoint);found=table.end()-1; }
+        const std::uint32_t index=kStaticExtendedCount+static_cast<std::uint32_t>(found-table.begin());
+        return std::array<std::uint8_t, kExtendedTextLength>{kExtendedTextLead, kExtendedDigits[index / 625], kExtendedDigits[(index / 25) % 25], kExtendedDigits[index % 25]};
+    }
     return std::nullopt;
 }
 
@@ -49,6 +65,8 @@ std::optional<std::uint32_t> DecodeExtendedSequence(std::span<const std::uint8_t
         if (index < size) return range.first + index;
         index -= size;
     }
+    { const std::lock_guard<std::mutex> guard(DynamicLock());const auto& table=DynamicIdeographs(); // 11차 일본어: 배정된 한자 인덱스다. 배정 전 인덱스는 시퀀스가 아니다.
+        if (index < table.size()) return table[index]; }
     return std::nullopt; // 구간 밖의 숫자 조합은 시퀀스가 아니다.
 }
 

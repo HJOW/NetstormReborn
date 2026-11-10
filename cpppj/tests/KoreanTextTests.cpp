@@ -47,7 +47,7 @@ TEST_CASE(KoreanText_EveryExtendedCodePointRoundTripsWithUniqueSequences) {
         ++count;
     }
     CHECK(count == 11172 + 94 + 64 + 94);
-    CHECK(!EncodeExtendedCodePoint(0x4e2d) && !EncodeExtendedCodePoint('A') && !EncodeExtendedCodePoint(0xabff) && !EncodeExtendedCodePoint(0xd7a4) && !EncodeExtendedCodePoint(0x20ac)); // 대상 밖이다.
+    CHECK(!EncodeExtendedCodePoint(0x3400) && !EncodeExtendedCodePoint('A') && !EncodeExtendedCodePoint(0xabff) && !EncodeExtendedCodePoint(0xd7a4) && !EncodeExtendedCodePoint(0x20ac)); // 대상 밖이다(11차: 0x4e00..0x9fff 한자는 동적 배정 구간이 되어 CJK 확장 A 0x3400으로 대체).
 }
 
 // 한글과 1252 문자가 섞인 UTF-8 문장은 부호화 뒤 복호화에서 같은 UTF-8로 돌아오고, 한글은 4바이트·라틴은 1바이트가 된다.
@@ -73,7 +73,7 @@ TEST_CASE(KoreanText_MalformedSequencesStayPlainBytesAndOtherCharactersStillReje
     const std::vector<std::uint8_t> offset{'x', kExtendedTextLead, 1, 1, 1};
     CHECK(DecodeExtendedSequence(View(offset), 1) == 0xac00u && !DecodeExtendedSequence(View(offset), 0)); // 위치 인자는 시퀀스의 시작이어야 한다.
     bool rejected = false; // 확장 대상이 아닌 문자는 표시용에서도 기존처럼 거부한다.
-    try { static_cast<void>(EncodeDisplayText(Utf8(0x4e2d))); } catch (const std::invalid_argument&) { rejected = true; }
+    try { static_cast<void>(EncodeDisplayText(Utf8(0x3400))); } catch (const std::invalid_argument&) { rejected = true; }
     CHECK(rejected);
     bool strict = false; // 원문용은 한글도 거부한다(설정 저장/유니코드 경로 정책이 이 거부에 의존한다).
     try { static_cast<void>(EncodeOriginalText(Utf8(0xd55c))); } catch (const std::invalid_argument&) { strict = true; }

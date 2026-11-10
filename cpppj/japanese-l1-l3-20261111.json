@@ -1,0 +1,12 @@
+{
+  "unit": "1288 L1-L3 Japanese first pass",
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "translationTable": {"path": "assets/lang/japanese/xlat.japanese", "entries": 509, "tokenParityVerified": true},
+  "encoding": {"staticRanges": ["0x3040-0x30ff", "0xff61-0xff9f"], "ideographs": "dynamic, capacity 3946"},
+  "font": {"face": "Noto Sans JP", "file": "fonts/NotoSansJP-VariableFont_wght.ttf", "embeddedInExe": false},
+  "tests": {"netstorm_korean_text_tests": {"total": 39, "failed": 0}},
+  "live": {"devBuild": "ja main menu + language switch ok", "packagedExe": "ja main menu ok", "zipEntries": 1433, "zipVerified": true},
+  "untranslated": ["mission/tutorial/help/tell bodies (english fallback)", "help 128 topics", "credits list"],
+  "userVerify": ["Japanese IME", "translation quality", "NotoSansJP-License.txt copyright line vs original OFL.txt"]
+}
