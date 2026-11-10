@@ -26,6 +26,8 @@
 
 **1266 Fort Snapshot/준비 후보 접합:** 같은 장기 Template/Deck/Pool/Player/파일 장치에 Fort/Battle 저장·Notify 및 실제 입력/State 호출자를 연결했다. Release 빌드·관련 비MP 집중6건·일반 Edit 저장과 재진입 2회를 확인했다. [근거와 범위](docs/exe/cpp-native-fort-snapshot-20261110.md). **Session 없는 직접 저장·Battle·Join/Test Battle 및 MP 실행은 미검증이며 전체 NoWorld/M6는 미완료다.**
 
+1266의 제품·인계 파일은 동시 webpj 세션이 공유 인덱스를 커밋하면서 `93d891ac8`의 WB 커밋에 함께 들어갔다. 기록을 다시 쓰지 않고 이 사실을 CP 후속 커밋에 남긴다. 해당 WB 변경은 이 작업에서 수정하지 않았다.
+
 **다음: M6-n 나머지 Fort 호출자·최초 후처리/AI·전수 process/caller 감사.** `FortEditEffects` 섬 개수, `RequestFortEditState` Battle 판정, 일반 Descend 등 남은 실제 부모와 수명을 살핀다.1265 debugBurst와1266에서 연결한 저장 본문을 다시 만들지 않는다. MP 실행은 제외한다.
 
 | 우선순위 | 남은 상위 계획 | 현재 상태와 다음 목표 |
