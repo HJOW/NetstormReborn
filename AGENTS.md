@@ -70,18 +70,23 @@
                        추가로, 메인 메뉴에서 Edit 선택 시 나타나는 커스텀 맵 목록에 스크롤을 도입하고 출력 갯수 제한을 무제한으로 변경한다.
                        이 사항은 단순히 저장 디렉토리를 변경하는 것이 아니다. 게임을 관리자 권한 없이는 파일 수정이 안되는 곳에 설치했을 때에도 게임이 정상 동작하도록 하기 위한 것이기도 하다. 게임 구동 시 자동 생성되어야 하는 모든 파일과 디렉토리가 %USERPROFILE%\Saved Games\Netstorm\ 하위로 들어가야 하며, 해당 파일을 읽는 코드도 그에 맞게 수정되어야 한다.
                  6차 - 한국어 지원 작업
-                 7차 - 안티앨리어싱 및 FSR 1.0 선택사항으로 추가
+                 7차 - 오류/예외 처리 및 로깅 공통 구조 마련
+                        작업 미비로 연결 안된 경우 등 게임 비정상 종료가 발생하더라도 종료 직전 로그를 상세히 출력할 수 있는 구조 마련
+                        로그 경로는 %USERPROFILE%\Saved Games\Netstorm\logs 로 한다.
+                        로그 파일명 규칙은 yyyyMMddHHmmss.log 구조로 한다. (예: 20261110141502.log)
+                        로그에는 오류 원인을 추적하기에 충분한 정보가 담겨야 한다.
+                 8차 - 안티앨리어싱 및 FSR 1.0 선택사항으로 추가
                        메인 메뉴 - Options 에서 안티앨리어싱 및 FSR 1.0 을 선택적으로 켤 수 있도록 기능 추가 (기본값으로는 꺼져 있어야 함)
                        게임 내에 해당 기능 적용
                        (FSR 은 FidelityFX 의 Super Resolution 기능으로 https://github.com/GPUOpen-Effects/FidelityFX-FSR 참고, 해상도 업스케일링 기능 사용)
                        FSR 1.0 지원 가능한 환경에서는 옵션 내 해상도 목록에서 2560 * 1440 및 3840 * 2160 또한 지원되어야 한다. 
                        (이 두 해상도 사용 시 FSR 1.0 이 자동으로 켜지도록 하며, 이 경우 실질 해상도는 1920 * 1080 으로 하며 이를 FSR 로 업스케일링하여 목표 해상도를 구현한다.)
-                 8차 - 커스텀 맵 에디터 (메인 메뉴 - Edit 선택 시) 에서 맵과 구성요소 (유닛 등) 배치 뿐만 아니라 시나리오 자체를
+                 9차 - 커스텀 맵 에디터 (메인 메뉴 - Edit 선택 시) 에서 맵과 구성요소 (유닛 등) 배치 뿐만 아니라 시나리오 자체를
                        수정할 수 있는 기능 구현
                        english 파일이 없는 상태에서 Test Battle 진입 시 게임이 튕기는 문제 수정
                        (새 맵 생성 시 english 파일 기본 컨텐츠로 자동 생성)
                        편집 모드 전용 별도의 UI를 마련하여, 편집 모드인 경우 시나리오 구성 (플레이어 초기 자본과 테크, 적 구성과 동맹 등) 을 화면 내에서 편집할 수 있도록 새 기능을 구현해야 함
-                 9차 - 기존 게임에서 알려져 있던 버그 수정
+                 10차 - 기존 게임에서 알려져 있던 버그 수정
                        10.78 에 다음 버그가 있다고 함. 이를 확인 및 수정.
                           Mission Bug Where the game would suddenly crash after an hour of game play on replenishing geyser spawn maps. This bug was the result of an AI update which expanded geyser connection capability but neglected to change the parameter in all incidents.
                           Bug that allowed players to exploit the Emboss offset System and move there text further back than it was intended.
@@ -117,11 +122,6 @@
                           Crash caused by Ice Cannons attacking units adjacent to a Workshop or Temple.
                           Ice Tower islands not destroyed properly in the editor. 
                           Unit health incorrectly appearing to reset to full on client-side. Especially Whirlibases.
-                 10차 - 오류/예외 처리 및 로깅 공통 구조 마련
-                        작업 미비로 연결 안된 경우 등 게임 비정상 종료가 발생하더라도 종료 직전 로그를 상세히 출력할 수 있는 구조 마련
-                        로그 경로는 %USERPROFILE%\Saved Games\Netstorm\logs 로 한다.
-                        로그 파일명 규칙은 yyyyMMddHHmmss.log 구조로 한다. (예: 20261110141502.log)
-                        로그에는 오류 원인을 추적하기에 충분한 정보가 담겨야 한다.
                  11차 - 기타 언어 지원 (일본어 등)
              cpppj 는 Windows 10/11 대상으로 개발한다. 
              (x86-64, AMD64 플랫폼 대상으로 개발하되, ARM 플랫폼용 Windows 11 지원도 고려한다.)
@@ -136,7 +136,7 @@
           웹 플랫폼 특성상 화면 내부를 1회 클릭하지 않으면 사운드 재생 등이 불가능하므로, 메인 메뉴 화면을 보이기 전 "클릭하여 시작" 화면을 도입한다.
           에셋이 필요한 경우 webpj/www 내부로 에셋을 복사해 사용한다.
           cpppj 의 6~11차 목표 내용이 webpj 후순위 요구사항에도 포함된다. 
-          (단 10차의 경우 로그를 파일로 저장하는 대신 브라우저 console 출력)
+          (단 7차의 경우 로그를 파일로 저장하는 대신 브라우저 console 출력)
 * cpppj, dotnetpj 모두, Windows 용 게임 실행 파일의 이름은 Netstorm.exe 로 생성되어야 한다.
 * 멀티플레이어의 로컬 서버 접속 기능을 제외한, 외부 도메인이나 IP 에 접속하는 기능 (클라이언트 유효성 검사 기능 등) 은 모두 찾아 따로 문서화하여야 하며,
   특히 클라이언트 유효성 검사 기능은 비활성화하여야 한다. (해당 서버 도메인이 서비스 종료하였기 때문에 의미가 없어졌다.)
