@@ -201,6 +201,10 @@ public sealed class RawCampaignSession
         return _battleOptions[offset];
     }
 
+    /// <summary>같은 87바이트 중 숨은 Chat 표시 9바이트의 현재 뷰이다. 0x3e부터 9칸이며 전투 옵션과 같은 저장소를 본다. 2026-11-11 F3 숨은 플레이어 뷰 본체에서 추가됐다.</summary>
+    /// <returns>숨은 Chat 표시 9바이트 뷰이다.</returns>
+    internal Span<byte> HiddenPlayers() => _battleOptions.AsSpan(0x3e, 9);
+
     /// <summary>원본 첫 목록(outposts)의 현재 항목이다. Fort 적재 본체가 채우며 게임 메뉴가 같은 참조를 읽는다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
     internal RawPostPopList Outposts => _outposts;
 

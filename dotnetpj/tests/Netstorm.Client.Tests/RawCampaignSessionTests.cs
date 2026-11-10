@@ -998,6 +998,28 @@ public sealed class RawCampaignSessionTests
         Assert.Equal(0, session.BattleOption(86));
     }
 
+    /// <summary>숨은 플레이어 뷰가 0x3e부터 9바이트인지 검증한다. 2026-11-11 F3 숨은 플레이어 뷰 본체에서 추가됐다.</summary>
+    [Fact]
+    public void HiddenPlayersViewsNineBytesAt0x3e()
+    {
+        // 원본 세션의 hiddenPlayers span 범위와 같다.
+        var session = LoadableSession();
+        Assert.Equal(9, session.HiddenPlayers().Length);
+        Assert.All(session.HiddenPlayers().ToArray(), value => Assert.Equal(0, value));
+    }
+
+    /// <summary>숨은 플레이어 뷰가 전투 옵션과 같은 저장소를 보는지 검증한다. 2026-11-11 F3 숨은 플레이어 뷰 본체에서 추가됐다.</summary>
+    [Fact]
+    public void HiddenPlayersSharesBattleOptionsStorage()
+    {
+        // 뷰에 쓰면 전투 옵션 읽기에 그대로 보인다.
+        var session = LoadableSession();
+        session.HiddenPlayers()[3] = 0x5a;
+        Assert.Equal(0x5a, session.BattleOption(0x41));
+        session.BattleOptions[0x3e] = 0x33;
+        Assert.Equal(0x33, session.HiddenPlayers()[0]);
+    }
+
     /// <summary>미적재 AI 다리 경로 전진을 적재 관문에서 거부하는지 검증한다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
     [Fact]
     public void AdvanceAiBridgeRejectsWhenNotLoaded()

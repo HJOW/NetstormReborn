@@ -4,7 +4,7 @@
 
 **읽는 순서:** [한눈에 보기](#dotnet-overview) → [0.9 바로 다음 작업](#09-바로-다음-작업) → 필요할 때 0절의 나머지. [0절 현행 계획](#dotnet-current-plan-20261028)이 이 문서와 [이식 계획 문서](docs/dotnet-cpp-port-plan-20261016.md)의 순서·구조 결정보다 우선한다. 1절은 완료 범위 색인, 2·3절은 계속 유효한 사용자 결정, 4·5절은 검증 명령과 참고 문서, 6절은 이관 기록이다.
 
-**단위를 마치면:** 한눈에 보기의 표, 0.1의 값, 0.9의 체크 항목을 갱신한다. 상세는 `docs/dotnet-*.md` 단위 문서에 남기고, 문서가 없는 작은 단위만 [0.10 단위 기록](#dotnet-unit-records)에 짧게 적는다(다음 번호 **0.320**). 0.279 이하의 단위 기록은 이관 파일에 있다.
+**단위를 마치면:** 한눈에 보기의 표, 0.1의 값, 0.9의 체크 항목을 갱신한다. 상세는 `docs/dotnet-*.md` 단위 문서에 남기고, 문서가 없는 작은 단위만 [0.10 단위 기록](#dotnet-unit-records)에 짧게 적는다(다음 번호 **0.321**). 0.279 이하의 단위 기록은 이관 파일에 있다.
 
 **2026-11-10 정리:** 단위 기록 0.154~0.279와 0.9의 단위별 완료 체크 목록을 [이관 파일](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279)에 원문 그대로 옮기고, 완료 범위는 묶음으로 줄여 0.9와 1절에 남겼다. 그동안 반영되지 않았던 AGENTS.md 변경(8차 시나리오 편집·5차 확장·9차 알려진 버그·글꼴 외부 배포·세 프로젝트 평가 기준)과 cpppj의 새 오라클 기능(`session-dump`·`--fixed-frame-ms`)·재반영 요청을 0.5·0.7·0.8·0.9에 넣었다. 상세는 6절 첫 항목이다.
 
@@ -12,7 +12,7 @@
 
 <a id="dotnet-overview"></a>
 
-## 한눈에 보기 — dotnetpj 진행 상황 (2026-11-11, 단위 0.319 기준)
+## 한눈에 보기 — dotnetpj 진행 상황 (2026-11-11, 단위 0.320 기준)
 
 ### 실행·플레이 가능 여부와 원본과의 동일성
 
@@ -41,10 +41,10 @@ AGENTS.md(`551d27ae`)의 두 기준으로 평가한다. dotnetpj에는 실행 �
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 커밋 | 0.319 `20261111-124 DN`(F3 전투 옵션 소유자) |
+| 마지막 커밋 | 0.320 `20261111-125 DN`(F3 숨은 플레이어 뷰 본체) |
 | PORT_MAP | 646줄(자료 641행: L1 333 · port 308) |
 | 원본 fixture | 연결 234개(`cpp_sync.py` 0종료 아님, 개별 OK). `reflected-commit`은 영향 검토 전이라 `f95a8db2` |
-| 마지막 전체 검사 완주 | Core **1,852개**(0.301)·Client **906개**(0.288)·Assets **366개**(0.280, 실패 0). 0.287·0.293·0.307은 지시대로 검사 없이 사전 구현, 0.291은 집중 검사만 했고, 0.292는 `RawCampaignSessionTests` 37건만, 0.294는 `RawCampaignSessionTests` 39건만, 0.295는 `RawCampaignSessionTests` 41건만, 0.296은 `RawCampaignSessionTests` 43건만, 0.297은 `RawNormalTerrainBindingTests` 29건만, 0.298은 `RawPlayerWorldTests` 17건만, 0.299는 `RawPlayerWorldTests` 21건만, 0.300은 `FortMoneyLoadTests` 5건만 집중 검사했다. 0.301은 공유 기반 변경이라 Core 전체 회귀를 완주로 확정했고, 0.302는 `CampaignTemplateStorageTests` 20건만, 0.303은 `RawPlayerWorldTests` 24건만, 0.304는 `RawPostPopTests`·`RawPlayerWorldTests` 37건만, 0.305는 `RawPostPopTests`·`RawPlayerWorldTests`·`RawPopTests` 48건만, 0.306은 `RawCampaignSessionTests` 45건만, 0.308은 `RawCampaignSessionTests` 50건만, 0.309는 `RawCampaignSessionTests` 55건만, 0.310은 `RawCampaignSessionTests` 60건만, 0.311은 `RawCampaignSessionTests` 65건만, 0.312는 `RawCampaignSessionTests` 69건만, 0.313은 `RawCampaignSessionTests` 71건만, 0.314는 `RawCampaignSessionTests` 76건만, 0.315는 `RawPlayerParticipationTests` 11건만, 0.316은 `RawPlayerParticipationTests` 16건만, 0.317은 `RawPlayerParticipationTests` 20건만, 0.318은 `RawPlayerParticipationTests` 25건만, 0.319는 `RawCampaignSessionTests` 79건만 집중 검사했다. |
+| 마지막 전체 검사 완주 | Core **1,852개**(0.301)·Client **906개**(0.288)·Assets **366개**(0.280, 실패 0). 0.287·0.293·0.307은 지시대로 검사 없이 사전 구현, 0.291은 집중 검사만 했고, 0.292는 `RawCampaignSessionTests` 37건만, 0.294는 `RawCampaignSessionTests` 39건만, 0.295는 `RawCampaignSessionTests` 41건만, 0.296은 `RawCampaignSessionTests` 43건만, 0.297은 `RawNormalTerrainBindingTests` 29건만, 0.298은 `RawPlayerWorldTests` 17건만, 0.299는 `RawPlayerWorldTests` 21건만, 0.300은 `FortMoneyLoadTests` 5건만 집중 검사했다. 0.301은 공유 기반 변경이라 Core 전체 회귀를 완주로 확정했고, 0.302는 `CampaignTemplateStorageTests` 20건만, 0.303은 `RawPlayerWorldTests` 24건만, 0.304는 `RawPostPopTests`·`RawPlayerWorldTests` 37건만, 0.305는 `RawPostPopTests`·`RawPlayerWorldTests`·`RawPopTests` 48건만, 0.306은 `RawCampaignSessionTests` 45건만, 0.308은 `RawCampaignSessionTests` 50건만, 0.309는 `RawCampaignSessionTests` 55건만, 0.310은 `RawCampaignSessionTests` 60건만, 0.311은 `RawCampaignSessionTests` 65건만, 0.312는 `RawCampaignSessionTests` 69건만, 0.313은 `RawCampaignSessionTests` 71건만, 0.314는 `RawCampaignSessionTests` 76건만, 0.315는 `RawPlayerParticipationTests` 11건만, 0.316은 `RawPlayerParticipationTests` 16건만, 0.317은 `RawPlayerParticipationTests` 20건만, 0.318은 `RawPlayerParticipationTests` 25건만, 0.319는 `RawCampaignSessionTests` 79건만, 0.320은 `RawCampaignSessionTests` 81건만 집중 검사했다. |
 | cpppj 기준 | cpppj는 확정 제품1248 / 표시 11.01(2026-11-10). dotnetpj가 마지막으로 영향 검토를 맞춘 시점은 단위861(2026-11-04) 이전이다 |
 
 ### 남은 일 — 순서대로
@@ -69,16 +69,16 @@ AGENTS.md(`551d27ae`)의 두 기준으로 평가한다. dotnetpj에는 실행 �
 
 ## 0. 2026-10-28 현행 계획 — cpppj 그래픽 복원분을 기준으로 dotnetpj 재구성
 
-### 0.1 현재 값 (2026-11-11, 단위 0.319 기준)
+### 0.1 현재 값 (2026-11-11, 단위 0.320 기준)
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | 0.319까지 커밋됐다. 전체 목표는 미완료다. 다음 단위(0.320)는 미뤄 둔 전수 재생 계속 또는 실제 호스트·월드 조립부터 시작한다. |
+| 진행 상태 | 0.320까지 커밋됐다. 전체 목표는 미완료다. 다음 단위(0.321)는 미뤄 둔 전수 재생 계속 또는 실제 호스트·월드 조립부터 시작한다. |
 | 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 진행 중(완료 범위는 0.9의 체크 목록과 1절 색인), R5 이후 미착수. |
 | 실행·플레이 가능 여부 | 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)은 1-1·1-2 근사 플레이가 가능하다. 새 경로 `Netstorm.Client.Host`는 메뉴 계열 일부까지이고 미션 월드가 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.319 `20261111-124 DN`(F3 전투 옵션 소유자). |
-| 검사 | 마지막 전체 완주는 Core 1,852개(0.301)·Client 906개(0.288)·Assets 366개(0.280)이며 모두 실패 0이다. 0.287·0.293·0.307은 지시대로 검사를 건너뛰고 Release 빌드(경고·오류 0)만 확인했고, 0.291은 새 2건만, 0.292는 `RawCampaignSessionTests` 37건만, 0.294는 `RawCampaignSessionTests` 39건만, 0.295는 `RawCampaignSessionTests` 41건만, 0.296은 `RawCampaignSessionTests` 43건만, 0.297은 `RawNormalTerrainBindingTests` 29건만, 0.298은 `RawPlayerWorldTests` 17건만, 0.299는 `RawPlayerWorldTests` 21건만, 0.300은 `FortMoneyLoadTests` 5건만 집중 검사했다. 0.301은 공유 기반 변경이라 Core 전체 1,852건 완주(13분 28초)로 회귀를 확정했고, 0.302는 `CampaignTemplateStorageTests` 20건만, 0.303은 `RawPlayerWorldTests` 24건만, 0.304는 `RawPostPopTests`·`RawPlayerWorldTests` 37건만, 0.305는 `RawPostPopTests`·`RawPlayerWorldTests`·`RawPopTests` 48건만, 0.306은 `RawCampaignSessionTests` 45건만, 0.308은 `RawCampaignSessionTests` 50건만, 0.309는 `RawCampaignSessionTests` 55건만, 0.310은 `RawCampaignSessionTests` 60건만, 0.311은 `RawCampaignSessionTests` 65건만, 0.312는 `RawCampaignSessionTests` 69건만, 0.313은 `RawCampaignSessionTests` 71건만, 0.314는 `RawCampaignSessionTests` 76건만, 0.315는 `RawPlayerParticipationTests` 11건만, 0.316은 `RawPlayerParticipationTests` 16건만, 0.317은 `RawPlayerParticipationTests` 20건만, 0.318은 `RawPlayerParticipationTests` 25건만, 0.319는 `RawCampaignSessionTests` 79건만 집중 검사했다. |
+| 마지막 구현 커밋 | 0.320 `20261111-125 DN`(F3 숨은 플레이어 뷰 본체). |
+| 검사 | 마지막 전체 완주는 Core 1,852개(0.301)·Client 906개(0.288)·Assets 366개(0.280)이며 모두 실패 0이다. 0.287·0.293·0.307은 지시대로 검사를 건너뛰고 Release 빌드(경고·오류 0)만 확인했고, 0.291은 새 2건만, 0.292는 `RawCampaignSessionTests` 37건만, 0.294는 `RawCampaignSessionTests` 39건만, 0.295는 `RawCampaignSessionTests` 41건만, 0.296은 `RawCampaignSessionTests` 43건만, 0.297은 `RawNormalTerrainBindingTests` 29건만, 0.298은 `RawPlayerWorldTests` 17건만, 0.299는 `RawPlayerWorldTests` 21건만, 0.300은 `FortMoneyLoadTests` 5건만 집중 검사했다. 0.301은 공유 기반 변경이라 Core 전체 1,852건 완주(13분 28초)로 회귀를 확정했고, 0.302는 `CampaignTemplateStorageTests` 20건만, 0.303은 `RawPlayerWorldTests` 24건만, 0.304는 `RawPostPopTests`·`RawPlayerWorldTests` 37건만, 0.305는 `RawPostPopTests`·`RawPlayerWorldTests`·`RawPopTests` 48건만, 0.306은 `RawCampaignSessionTests` 45건만, 0.308은 `RawCampaignSessionTests` 50건만, 0.309는 `RawCampaignSessionTests` 55건만, 0.310은 `RawCampaignSessionTests` 60건만, 0.311은 `RawCampaignSessionTests` 65건만, 0.312는 `RawCampaignSessionTests` 69건만, 0.313은 `RawCampaignSessionTests` 71건만, 0.314는 `RawCampaignSessionTests` 76건만, 0.315는 `RawPlayerParticipationTests` 11건만, 0.316은 `RawPlayerParticipationTests` 16건만, 0.317은 `RawPlayerParticipationTests` 20건만, 0.318은 `RawPlayerParticipationTests` 25건만, 0.319는 `RawCampaignSessionTests` 79건만, 0.320은 `RawCampaignSessionTests` 81건만 집중 검사했다. |
 | 포트 맵 | `PORT_MAP.tsv` 총 646줄(자료 641행: L1 333, port 308). 0.307의 `LocalMissionTransport.h/.cpp` → `LocalMissionZone.cs` 2행(port)이 마지막 추가다. |
 | fixture | 연결 234개(`islandlifecycle-x86.tsv` 2055행·`islandpostpop-x86.tsv` 1988행 신규, `cpp_sync.py --update --add` 등록). `cpp_sync.py`는 미반영분 때문에 0종료 아님. 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다. 영향 검토 전이라 `reflected-commit`과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값(2026-11-10 확정 제품1248, 작업 중 1249)은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
@@ -300,6 +300,7 @@ AGENTS.md는 "cpppj의 **4~8차** 목표 내용이 dotnetpj 후순위 요구사�
   - [x] **F3 동맹 협상 수신 본체(0.316):** `ReceiveAllianceRequest`·`ReceiveBrokenAlliance`를 넣었다. `AllianceNegotiationHooks`(boss·ignoredSubscriber·tell·status·broadcast·gameSeconds) 묶음과 `AlliancePacketByte`·`AllianceTellColor(~l·~r·~w·~u·~s·~y·~d·~a·~q)` 도우미를 함께 둔다(cpppj `o/RawPlayerParticipation.cpp`, `port`, 기존 L1 행 유지). 방장 relay·자신 Tell·제3자 상태(8, 첫째, 둘째)·양쪽 `RemoveAlly` 경로를 직역한다. 무승부 마감(`ReceiveDraw`, `AllianceRequestState`·`HandleAllianceRequestInput`)은 후속 단위에서 잇는다.
   - [x] **F3 동맹 요청 입력 처리 본체(0.318):** 정적 `HandleAllianceRequestInput`+`AllianceRequestState`(계수 9·시각 9쌍·초기화·묶음 초·한도)+`AllianceRequestInputHooks`(clock·localOwner·send·tell)를 넣었다. fb·fa·7e·db 선별·high bit 직행·modifier 마스크·메시지 매핑(0x77·0x79·0x78·0x6f)·fb 첫 clock 저장·경과 signed초/1000 묶음·한도 초과 `AllianceSpam(한도,색,이름)` Tell·송신 packet(`1·메시지·6·0·소유자·db?1:목표`)을 직역한다(cpppj `o/RawPlayerParticipation.cpp`, `port`, 기존 L1 행 유지). 이로써 0.74의 동맹 수신 5종(`ReceiveAlliance` 기존·`RemoveAlly`·`ReceiveAllianceRequest`·`ReceiveBrokenAlliance`·`ReceiveDraw`·`HandleAllianceRequestInput`)이 모두 연결됐다.
   - [x] **F3 전투 옵션 소유자(0.319):** 세션이 87바이트 전투 옵션(`_battleOptions`, 0 초기화, 원본 `localBattleOptions` 상당)을 소유하며 설치·공통 Start·AI·SP 본체가 갱신할 내부 `BattleOptions`와 `BattleOption(offset)` 읽기(`at()` 경계 직역)를 둔다(cpppj `RawCampaignSession::BattleOption`, `port`). 원본의 서비스 바인딩(`services.missionOptions` 선택)은 실제 설치 조립 때 잇는다.
+  - [x] **F3 숨은 플레이어 뷰 본체(0.320):** `HiddenPlayers()`를 넣었다. 87바이트 중 0x3e부터 9바이트 span을 전투 옵션과 같은 저장소로 본다(cpppj `RawCampaignSession::HiddenPlayers`, `port`). 숨은 Chat 표시 바이트를 읽고 쓰는 통로다.
   - [ ] **AI 나머지:** 실제 전략 AI의 나머지(0.71·0.72)의 세션 연결. 남은 공개 표면은 `CrankAiMoney`·`SetAiParameter`(players·aiMemory 필요), `ResetAiForState`·`ReturnAiForState`(participation 필요)이며 모두 세션이 아직 소유하지 않은 상태가 필요해 실제 호스트·월드 조립과 함께 다룬다.
   - [ ] **실제 호스트·월드 조립:** 미션 객체, Fort reader, Guide 교체·수명, 미션 제어 입력, 공통 Start, AI 설정·생성, Guide 단계·Lifecycle은 이식과 L1 대조를 마쳤지만 검사에서는 명시 효과로만 연결돼 있다. 실제 호스트에 분배기를 설치하고 같은 Player·제한 표·메뉴·월드 효과에 연결한다(0.66, 0.68, 0.69, 0.75~0.79). Tutorial Init의 실제 템플릿/옵션 소유자·요새 선택·상태 실행·실제 타입 조회·호스트 단계 연결(0.105~0.110), Start의 실제 Config·Player·SP·AI·Gump 효과(0.70), `PlayerParticipation`의 실제 세션 바인딩과 동맹 수신 `ReceiveAlliance` 등(0.74)이 남았다.
   - [ ] **미뤄 둔 전수 재생(진행 중, 0.289~0.290에서 섬 2종, 0.297에서 지형 패턴 장면값, 0.298에서 Player CD 분기, 0.299에서 Player 후처리 순서 계약, 0.300에서 Money 월드 공유, 0.301에서 공통 몸체 실패 순서, 0.302에서 Subscriber 현재 읽기, 0.303에서 Player 잔여 순서 계약 완료):** `islandlifecycle-x86.tsv` 2055행·`islandpostpop-x86.tsv` 1988행 전수 재생을 연결하고 해당 PORT_MAP 행(`RawIslandLifecycle.cpp/.h`, `RawIslandPostPop.cpp/.h`)을 L1로 올렸다. 0.297에서 cpp 장면값(`{3,1,0,7,0,0}`→3, 실제 조각 프레임) 재생을 연결했다. 0.298에서 `RawPlayerWorld`의 CD 분기(0xac 기록·0x94 위치·소유자 32·프레임 34 폭 1·가상표 0x5002a8·7개 필수 효과·후처리 선검증)를 직접 검사로 연결했다. 0.299에서 cpp 직접 검사의 후처리 순서 계약 4종(확보 실패 뒤 현재 special 프레임·예약 성공 뒤 장치 실패 보존·생성 변이 뒤 재검사 없음·DWORD 257 비교)을 직접 검사로 연결했다. 0.300에서 F3 연기 검사(`FortMoneyLoad_SharesCurrentWorldOwnerStoreAndRandom`)를 실제 월드 장부·저장소·난수 공유 검사로 연결했다. 0.302에서 F3 연기 검사(`CurrentSubscriberSection`)를 파싱 사본이 아닌 현재 원시 Subscriber 섹션·signed 경계 검사로 연결했다. 0.303에서 cpp 직접 검사의 잔여 순서 계약 2종(fort·비최초 예약 면제, 빈 슬롯 검증 거부)을 직접 검사로 연결했다. 가상 분배 진입(`PostPopVirtual`)은 기반 몸체 작업으로 남긴다. 남은 것: `player-world-x86.tsv` 1680행 전수 재생(월드 스택 하네스 필요), 0.154에서 옮기지 않은 cpp 검사(`FortWorldLoadBindingTests`·`NormalTerrainWorldBindingTests`의 전체 월드 장면 등), 0.134~0.139에서 F3로 미룬 검사(`CampaignMissionFortPathTests`·`CampaignLoginObjectStreamTests`·`CampaignMissionReloadSourceTests`·`TemplateDiagnosticClientTests` 일부·`SoloMapCatalogTests`·`CampaignNewFortTests`·`CampaignNewFortConfigTests`).
@@ -341,9 +342,11 @@ AGENTS.md는 "cpppj의 **4~8차** 목표 내용이 dotnetpj 후순위 요구사�
 
 <a id="dotnet-unit-records"></a>
 
-### 0.10 단위 기록 (0.320부터)
+### 0.10 단위 기록 (0.321부터)
 
 문서가 없는 작은 단위만 아래에 최신순으로 짧게 적는다. 한 기록에는 범위, 구현(새 파일·수정 파일), C#에서 달라진 모양, 검증(집중·전체·변이), PORT_MAP·fixture 변화, 보호·실행·외부 접속 관점, 남은 것을 적는다(0.6). 0.11~0.279는 이관 파일에 있다: [0.11~0.65](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073), [0.66~0.126](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126), [0.127~0.153](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154), [0.154~0.279](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279).
+
+**0.320 — F3 숨은 플레이어 뷰 본체 (2026-11-11, HJOW-Athlon).** 범위: 0.9 R4 '실제 호스트·월드 조립' 중 숨은 표시 뷰 1종. 근거: cpppj `RawCampaignSession::HiddenPlayers`(87바이트 중 0x3e부터 9바이트 span). 구현: `Netstorm.Client/Mission/RawCampaignSession.cs`에 내부 `HiddenPlayers()` 뷰(`_battleOptions.AsSpan(0x3e, 9)`, 같은 저장소)를 둔다. `RawCampaignSessionTests.cs`에 2건(0x3e부터 9바이트·같은 저장소 공유). C#에서 달라진 모양: cpp span 멤버 대신 호출 때마다 같은 배열 구간을 보는 메서드다. 검증: Release 솔루션 빌드 경고·오류 0, `RawCampaignSessionTests` 81건(기존 79건+새 2건) 통과. 개발 중 오류 2건(CS0266 uint 리터럴→byte 대입 2곳)을 빌드가 잡아 고쳤다. 대표 변이(뷰 길이 9→8)가 길이 검사에서 검출됨을 확인하고 원복했다. PORT_MAP·fixture 변화 없음(이미 있는 `RawCampaignSession` 행의 base는 두지 않았다). 보호: 원본/CD·AGENTS.md 미수정, 게임 실행 없음(사제 포획/희생·적 공격·승리 재현 검사 없음). 외부 접속 변화 없음. 남은 것: `player-world-x86.tsv` 1680행 전수 재생(월드 스택 하네스 필요) 또는 실제 호스트·월드 조립(0.321)부터 계속한다.
 
 **0.319 — F3 전투 옵션 소유자 (2026-11-11, HJOW-Athlon).** 범위: 0.9 R4 '실제 호스트·월드 조립' 중 전투 옵션 소유자. 근거: cpppj `RawCampaignSession::BattleOption`(87바이트 `at()` 읽기). 구현: `Netstorm.Client/Mission/RawCampaignSession.cs`에 `_battleOptions`(87바이트 0 초기화) 소유 상태와 설치·공통 Start·AI·SP 본체용 내부 `BattleOptions`, `BattleOption(offset)` 읽기(at() 경계 직역)를 둔다. `RawCampaignSessionTests.cs`에 3건(87바이트 0 기본값·같은 참조 공유·범위 밖 거부). C#에서 달라진 모양: cpp 공유 참조(`services.missionOptions` 선택) 대신 내부 소유 배열이다(실제 설치 바인딩은 후속 단위). 검증: Release 솔루션 빌드 경고·오류 0, `RawCampaignSessionTests` 79건(기존 76건+새 3건) 통과. 개발 중 오류 2건(CS0266 uint 리터럴→byte 대입 2곳)을 빌드가 잡아 고쳤다. 대표 변이(경계 `>=`→`>`)가 범위 검사에서 검출됨을 확인하고 원복했다. PORT_MAP·fixture 변화 없음(이미 있는 `RawCampaignSession` 행의 base는 두지 않았다). 보호: 원본/CD·AGENTS.md 미수정, 게임 실행 없음(사제 포획/희생·적 공격·승리 재현 검사 없음). 외부 접속 변화 없음. 남은 것: `player-world-x86.tsv` 1680행 전수 재생(월드 스택 하네스 필요) 또는 실제 호스트·월드 조립(0.320)부터 계속한다.
 
