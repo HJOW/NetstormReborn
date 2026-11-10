@@ -499,6 +499,48 @@ public sealed class RawPlayerParticipation
     }
 
     /// <summary>
+    /// 무승부 packet을 거절이면 Tell·전원 flag 해제로, 수락이면 flag·상태·방장 방송·마감 시각으로 잇는다.
+    /// 근거: cpppj `o/RawPlayerParticipation.cpp`의 `ReceiveDraw`. 2026-11-11 F3 무승부 마감 수신 본체에서 추가됐다.
+    /// </summary>
+    /// <param name="packet">받을 무승부 packet이다. 6바이트 이상이다.</param>
+    /// <param name="deadline">방장이 정하는 무승부 마감 시각이다. 호출자가 소유한다.</param>
+    /// <param name="hooks">묶은 협상 효과다. 도달한 분기마다 필수로 요구한다.</param>
+    /// <exception cref="ArgumentNullException">협상 효과가 비었다.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">동맹 수신의 실제 packet BYTE 범위 오류다.</exception>
+    /// <exception cref="InvalidOperationException">도달한 실제 외부 효과 미연결이다.</exception>
+    public void ReceiveDraw(ReadOnlySpan<byte> packet, ref double deadline, AllianceNegotiationHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        if (AlliancePacketByte(packet, 5) == 0)
+        {
+            if ((Read(LocalOwner(), FlagsOffset) & 0x80u) != 0u)
+            {
+                Require(hooks.Tell)("DrawNotAccepted");
+            }
+
+            // Tell 뒤바뀜과 무관하게 1..8 전원의 0x80 bit를 지우는 반복문이다. 2026-11-11 F3 무승부 마감 수신 본체에서 추가됐다.
+            for (uint target = 1u; target < Count; ++target)
+            {
+                Put(target, FlagsOffset, Read(target, FlagsOffset) & ~0x80u);
+            }
+
+            return;
+        }
+
+        uint owner = AlliancePacketByte(packet, 4);
+        Put(owner, FlagsOffset, Read(owner, FlagsOffset) | 0x80u);
+        Require(hooks.Status)(6u, AlliancePacketByte(packet, 4), 0u);
+        if (Require(hooks.Boss)())
+        {
+            Require(hooks.Broadcast)(packet);
+            if (AlliancePacketByte(packet, 5) != 0)
+            {
+                deadline = Require(hooks.GameSeconds)() + 20.0;
+            }
+        }
+    }
+
+    /// <summary>
     /// 실제 생성 소유자가 전달한 brain을 기록하고 flags를 켠다.
     /// </summary>
     /// <param name="owner">소유자 번호다.</param>

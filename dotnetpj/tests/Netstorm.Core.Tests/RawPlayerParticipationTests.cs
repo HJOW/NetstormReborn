@@ -552,5 +552,102 @@ public sealed class RawPlayerParticipationTests
         var hooks = new AllianceNegotiationHooks { Boss = () => true };
         Assert.Throws<ArgumentOutOfRangeException>(() => runtime.ReceiveAllianceRequest(new byte[2], hooks));
         Assert.Throws<ArgumentOutOfRangeException>(() => runtime.ReceiveBrokenAlliance(new byte[2], hooks));
+        double deadline = 0.0;
+        Assert.Throws<ArgumentOutOfRangeException>(() => runtime.ReceiveDraw(new byte[2], ref deadline, hooks));
+    }
+
+    /// <summary>무승부 수락이 flag·상태·방장 방송·마감 시각을 잇는지 검증한다. 2026-11-11 F3 무승부 마감 수신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void ReceiveDrawAcceptSetsFlagAndDeadline()
+    {
+        // 원본 0x6f 수신의 수락 경로만 둔다. 마감 시각은 게임 시각+20초다.
+        string trace = "";
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            new PlayerParticipationState(),
+            new PlayerParticipationHooks());
+        var hooks = new AllianceNegotiationHooks
+        {
+            Status = (kind, first, second) => trace += $"T,{kind},{first},{second};",
+            Boss = () => true,
+            Broadcast = packet => trace += "B," + Convert.ToHexString(packet).ToLowerInvariant() + ";",
+            GameSeconds = () => 100.0,
+        };
+        double deadline = 0.0;
+        byte[] packet = [1, 0x6f, 9, 0, 2, 9];
+        runtime.ReceiveDraw(packet, ref deadline, hooks);
+        Assert.Equal("T,6,2,0;B,016f09000209;", trace);
+        Assert.Equal(120.0, deadline);
+    }
+
+    /// <summary>무승부 거절이 Tell 뒤 전원 flag를 지우는지 검증한다. 2026-11-11 F3 무승부 마감 수신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void ReceiveDrawRefusalTellsAndClearsFlags()
+    {
+        // 수락으로 flag를 세운 뒤 거절하면 Tell 뒤 1..8 전원의 0x80 bit가 지워진다.
+        string trace = "";
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            new PlayerParticipationState(),
+            new PlayerParticipationHooks());
+        var hooks = new AllianceNegotiationHooks
+        {
+            Status = (kind, first, second) => trace += $"T,{kind},{first},{second};",
+            Boss = () => true,
+            Broadcast = packet => trace += "B;",
+            GameSeconds = () => 100.0,
+            Tell = text => trace += "T," + text + ";",
+        };
+        double deadline = 0.0;
+        runtime.ReceiveDraw([1, 0x6f, 9, 0, 1, 9], ref deadline, hooks);
+        Assert.Equal(120.0, deadline);
+        runtime.ReceiveDraw([1, 0x6f, 9, 0, 0, 0], ref deadline, hooks);
+        Assert.Equal("T,6,1,0;B;T,DrawNotAccepted;", trace);
+        Assert.Equal(120.0, deadline);
+    }
+
+    /// <summary>무승부 거절이 flag가 없으면 조용히 넘어가는지 검증한다. 2026-11-11 F3 무승부 마감 수신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void ReceiveDrawRefusalStaysSilentWhenFlagClear()
+    {
+        // 전원 flag가 비었으면 Tell 없이 그대로 둔다.
+        string trace = "";
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            new PlayerParticipationState(),
+            new PlayerParticipationHooks());
+        var hooks = new AllianceNegotiationHooks
+        {
+            Boss = () => true,
+            Broadcast = packet => trace += "B;",
+            Tell = text => trace += "T," + text,
+        };
+        double deadline = 7.0;
+        runtime.ReceiveDraw([1, 0x6f, 9, 0, 0, 0], ref deadline, hooks);
+        Assert.Equal("", trace);
+        Assert.Equal(7.0, deadline);
+    }
+
+    /// <summary>무승부 수락이 방장이 아니면 방송·마감 없이 상태만 남기는지 검증한다. 2026-11-11 F3 무승부 마감 수신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void ReceiveDrawAcceptWithoutBossSkipsBroadcastAndDeadline()
+    {
+        // 방장이 거짓이면 flag·상태까지만 잇고 방송·마감은 건너뛴다.
+        string trace = "";
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            new PlayerParticipationState(),
+            new PlayerParticipationHooks());
+        var hooks = new AllianceNegotiationHooks
+        {
+            Status = (kind, first, second) => trace += $"T,{kind},{first},{second}",
+            Boss = () => false,
+            Broadcast = packet => trace += "B;",
+            GameSeconds = () => { trace += "G;"; return 100.0; },
+        };
+        double deadline = 7.0;
+        runtime.ReceiveDraw([1, 0x6f, 9, 0, 2, 9], ref deadline, hooks);
+        Assert.Equal("T,6,2,0", trace);
+        Assert.Equal(7.0, deadline);
     }
 }
