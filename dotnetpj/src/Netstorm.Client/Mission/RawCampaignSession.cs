@@ -59,6 +59,9 @@ public sealed class RawCampaignSession
     /// <summary>같은 실제 빌더의 건설 시작 효과다. 세션 조립 때 실제 건설 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 건설 시작 본체에서 추가됐다.</summary>
     private Action<int, float>? _constructionStart;
 
+    /// <summary>같은 실제 AI 생성자의 생성 효과다. 세션 조립 때 실제 AI 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 AI 생성 본체에서 추가됐다.</summary>
+    private Func<uint, byte[], uint>? _aiCreate;
+
     /// <summary>같은 자산·저장소·월드로 세션 껍데기를 만든다. Fort 적재 본체는 후속 단위에서 잇는다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
@@ -245,6 +248,44 @@ public sealed class RawCampaignSession
         }
 
         _constructionStart(parent, duration);
+    }
+
+    /// <summary>같은 실제 AI 생성자의 생성 효과를 묶는다. 원본 세션 설치의 AI 몸체 연결만 둔다. 2026-11-10 F3 AI 생성 본체에서 추가됐다.</summary>
+    /// <param name="create">실제 AI 생성 효과다. 소유자 번호와 600바이트 설정을 그대로 받는다.</param>
+    public void BindAiCreate(Func<uint, byte[], uint> create)
+    {
+        ArgumentNullException.ThrowIfNull(create);
+        _aiCreate = create;
+    }
+
+    /// <summary>같은 실제 AI 생성자의 생성 효과를 묶었는지 확인한다. 2026-11-10 F3 AI 생성 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasAiCreate() => _aiCreate is not null;
+
+    /// <summary>원본 Stage3 1..8 방문 순서의 AI 생성을 후속 AI 몸체와 공유한다. 묶은 실제 AI 효과가 없으면 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 600바이트 검사는 실제 AI 몸체 쪽에서 잇는다. 2026-11-10 F3 AI 생성 본체에서 추가됐다.</summary>
+    /// <param name="owner">AI를 만들 소유자 번호다. 원본 1..8 범위를 받는다.</param>
+    /// <param name="settings">600바이트 AI 설정이다. 호출자가 소유하며 세션은 빌려서 넘긴다.</param>
+    /// <returns>만든 brain 토큰이다.</returns>
+    public uint CreateAi(uint owner, byte[] settings)
+    {
+        ArgumentNullException.ThrowIfNull(settings);
+        if (owner < 1u || owner > 8u)
+        {
+            throw new ArgumentOutOfRangeException(nameof(owner), owner, "AI 생성의 실제 소유자 1..8 범위 오류");
+        }
+
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 AI 생성입니다.");
+        }
+
+        // 원본 RawCampaignSession::CreateAi의 적재·owner 관문을 직역한다. 설치·600바이트 본체는 실제 AI 몸체 쪽에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        if (_aiCreate is null)
+        {
+            throw new InvalidOperationException("실제 AI 생성 미연결");
+        }
+
+        return _aiCreate(owner, settings);
     }
 
     /// <summary>같은 파서·생성 몸체의 위치 생성 효과다. 세션 조립 때 실제 생성 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>
