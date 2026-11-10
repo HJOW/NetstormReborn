@@ -1762,16 +1762,19 @@ public sealed class RawSurfaceWorldTests
         Assert.Contains("프레임", error.Message);
     }
 
-    /// <summary>전체 월드의 Core 조회가 감시 쌍 미연결로 멈추는지 검증한다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐고 2026-11-10 월드 본체 조립 수명·사건 이식에서 수명·사건 연결 뒤 감시 쌍 잔여로 갱신했다.</summary>
+    /// <summary>전체 월드의 Core 조회가 감시 쌍까지 연결돼 성공하는지 검증한다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐고 2026-11-10 월드 본체 조립 수명·사건·감시 쌍 이식에서 전부 연결돼 성공으로 갱신했다.</summary>
     [Fact]
     public void CoreOnFullWorldRequiresLifecycle()
     {
-        // 수명·사건까지 연결된 전체 월드에서는 다음 잔여인 감시 쌍에서 멈춘다.
+        // 수명·사건·감시 쌍까지 연결된 전체 월드는 Core 보기를 돌려준다.
         var types = Types188();
         var frames = Frames188();
         var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullStorage(types, frames), frames);
-        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => world.Core());
-        Assert.Contains("감시", error.Message);
+        RawWorldCore core = world.Core();
+        Assert.NotNull(core.Surfaces);
+        Assert.NotNull(core.BridgeEvents);
+        Assert.NotNull(core.Dependencies);
+        Assert.NotNull(core.Forms);
     }
 
     /// <summary>연결부 타입이 범위를 벗어나면 수명 분배기 생성을 거부하는지 검증한다. 2026-11-10 F2d 월드 본체 조립 수명 이식에서 추가됐다.</summary>
@@ -1805,6 +1808,36 @@ public sealed class RawSurfaceWorldTests
         // 껍데기 월드는 이웃·사건이 없어 같은 지점에서 멈춘다.
         var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
         Assert.Throws<InvalidOperationException>(() => world.BridgeEventBridgeType());
+    }
+
+    /// <summary>감시 쌍 생성·조회·제거가 같은 풀에서 동작하는지 검증한다. 2026-11-10 F2d 월드 본체 조립 감시 쌍 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DependFormsCreateHasRemove()
+    {
+        // 원본 Impl 독립 경로의 감시 쌍 풀·삭제기 결합을 검증한다. 전송을 건너뛰도록 클라이언트 부모를 쓴다.
+        var world = DisplayPopWorld();
+        int watcher = world.Create(70u, 2u);
+        int watched = world.Create(70u, 2u);
+        RawWorldCore core = world.Core();
+        DependFormPair pair = core.Dependencies.Create(watched, watcher);
+        Assert.True(core.Dependencies.Has(watched, watcher));
+        Assert.True(pair.WatchedForm != 0 && pair.WatcherForm != 0);
+        core.Dependencies.Remove(watcher, watched);
+        Assert.False(core.Dependencies.Has(watched, watcher));
+    }
+
+    /// <summary>감시 Form 삭제가 월드 분배기를 통해 동작하는지 검증한다. 2026-11-10 F2d 월드 본체 조립 감시 쌍 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DependFormsDestroyViaWorld()
+    {
+        // 원본 Impl 독립 경로의 Form 분배기 감시 쌍 등록을 검증한다. 전송을 건너뛰도록 클라이언트 부모를 쓴다.
+        var world = DisplayPopWorld();
+        int watcher = world.Create(70u, 2u);
+        int watched = world.Create(70u, 2u);
+        RawWorldCore core = world.Core();
+        DependFormPair pair = core.Dependencies.Create(watched, watcher);
+        Assert.True(world.Destroy(pair.WatcherForm));
+        Assert.False(core.Dependencies.Has(watched, watcher));
     }
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>

@@ -355,6 +355,32 @@ public sealed class RawSurfaceWorld
                     Pop = (sid, x, y, flags) => Pop(sid, x, y, flags),
                 };
                 _events = new RawBridgeEvents(_storage.Pool, _eventState, eventHooks);
+                // 감시 쌍은 같은 풀·공통 삭제·Form 분배 훅으로 독립 관찰 계약을 유지한다. 원본 Impl 독립 typed 경로의 감시 쌍 생성을 직역한다. 2026-11-10 F2d 월드 본체 조립 감시 쌍 이식에서 추가됐다.
+                RawSquidDestroy dependDestroy = baseDestroy;
+                SquidDestroyHooks dependFallback = _formDispatch.Hooks();
+                DependFormNotice dependNotice = (watcher, watched, form) =>
+                {
+                    // 원본 Impl 독립 경로의 감시 알림 분기를 직역한다. 런타임 전에는 장기 호스트 통지로 간다.
+                    if (_runtime?.DependencyNotice is not null)
+                    {
+                        _runtime.DependencyNotice(watcher, watched, form);
+                        return;
+                    }
+
+                    _storage.Processes().Host().NotifyDependency(watcher, watched, form);
+                };
+                Action<int, uint> dependTransmit = (form, flags) =>
+                {
+                    // 원본 Impl 독립 경로의 DependForm 서버 전송 분기를 직역한다. 런타임 전에는 명시 오류로 멈춘다.
+                    if (_runtime?.FormTransmit is null)
+                    {
+                        throw new InvalidOperationException("실제 DependForm 서버 전송 미연결");
+                    }
+
+                    _runtime.FormTransmit(form, flags);
+                };
+                _dependencies = new RawDependFormHost(_storage.Pool, dependDestroy, dependNotice, dependFallback, dependTransmit);
+                _formDispatch.Bind(_dependencies);
             }
         }
 
