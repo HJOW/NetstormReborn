@@ -256,6 +256,38 @@ public sealed class RawCampaignSession
         throw new InvalidOperationException("실제 무작위 배치 미연결");
     }
 
+    /// <summary>원본 첫 목록(outposts) 또는 두 번째 목록(temples)의 현재 개수다. 껍데기에서는 목록 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 게임메뉴 재장전 Stub 이식에서 추가됐다.</summary>
+    /// <param name="second">참이면 두 번째 목록(temples), 거짓이면 첫 목록(outposts)이다.</param>
+    /// <returns>목록 개수다.</returns>
+    public int GameMenuReloadCount(bool second)
+    {
+        _ = second;
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 재장전 조회입니다.");
+        }
+
+        // 원본 게임메뉴 재장전 목록의 실제 outposts·temples 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 재장전 목록 미연결");
+    }
+
+    /// <summary>원본 첫 목록 또는 두 번째 목록의 현재 저장소 뷰에서 지정 번호를 읽는다. 껍데기에서는 목록 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 게임메뉴 재장전 Stub 이식에서 추가됐다.</summary>
+    /// <param name="second">참이면 두 번째 목록(temples), 거짓이면 첫 목록(outposts)이다.</param>
+    /// <param name="index">읽을 번호다.</param>
+    /// <returns>해당 번호의 SID다.</returns>
+    public uint GameMenuReloadSid(bool second, uint index)
+    {
+        _ = second;
+        _ = index;
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 재장전 조회입니다.");
+        }
+
+        // 원본 게임메뉴 재장전 항목의 실제 목록 뷰 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 재장전 항목 미연결");
+    }
+
     /// <summary>로그인·기술·AI가 공유하는 현재 원본 로컬 Player 번호다. 껍데기에서는 Player 상태 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
     /// <returns>로컬 소유자 번호다.</returns>
     public uint LocalOwner()
