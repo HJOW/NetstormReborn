@@ -1,14 +1,14 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**목표 재개 · 확정 제품1253 / 11.01 · 작업 계속 · 인계 갱신2026-11-10, HJOW-Athlon**
+**목표 재개 · 확정 제품1253 / 11.01 · 작업 계속 · 정적감사1254 · 인계 갱신2026-11-10, HJOW-Athlon**
 
 이 문서는 cpppj의 **현재 상태·남은 작업·실행 제외·유효한 계약**을 담는다. 2026-11-10 사용자 `/goal` 요청에 따라 우선순위의 모든 cpppj 작업을 재개했다. 전체 목표는 미완료다. 아래 우선순위의 모든 cpppj 작업을 계속하고 단위마다 인계 갱신과 로컬 커밋을 남긴다. push하지 않는다.
 
-**다음 caller/owner 감사의 구체적 발견(1253, 미수정):** RawSurfaceStorage의 NoteChanged/현재 표시·Pop/전송 선택적 pin과 ClientConstructionGlobals의 공개 전 직접 생성/로딩을 실제 caller별로 분류한다. RawSurfaceWorld 생성자 안에서 Display를 사용하는 실제 경계를 무조건 pin 부재 실패로 바꾸지 않는다. MP/패킷 실행 제외를 유지한다.
+**1254 직접 소유 경계 감사 완료(제품 변경 없음):** 표시/전송·건설의 선택적 pin은 실제 World 생성자/직접 로드의 부모 보유와 공개 이후 실제 RuntimeCall을 구분했다. [감사](docs/exe/cpp-direct-runtime-owner-audit-20261110.md)·[보고서](cpppj/direct-runtime-owner-audit-20261110.json). 원문/보호2,808·제품 소스 불변·새 빌드/실행0이다. 임의 callback/전체 process 감사 완료는 아니다.
 
 **1253 완료:** 공통 삭제의 파생 forward와 표면 fallWalker/bridgeEffect의 실제 pin/owner를 필수화했다. 수정 전3사례/6입력/6단언 실패·비MP300·Release·Tutorial4 생산/건설 요청/600프레임 대기를 확인했다. [근거](docs/exe/cpp-surface-lifetime-owner-guards-20261110.md). Regular87/87 유지·전체 NoWorld/M6 미완료다.
 
-**다음: M6-n 표시/전송·건설 직접 생성/로딩의 실제 부모 수명 분류.** 그 뒤 큰 후단/최초 후처리·전수 process/호출자/owner·Path/AI/배치/Fort Finish·M6-l/m을 계속한다.1250~1253 교정은 유지한다.
+**다음: M6-l 실제 기본 활성 지연큐.** 실제 Client 장기 분포·OS시각/CRT rand·각 연결 FIFO·저장 receiver/현재20BYTE주소·등록/해제 수명을 연결한다. MP 검사는 실행하지 않는다. 이어 M6-m·M6-n 전수 재감사와 큰 NoWorld/최초 후처리·Path/AI/배치/Fort Finish를 계속한다.
 
 | 우선순위 | 남은 상위 계획 | 현재 상태와 다음 목표 |
 | --- | --- | --- |
@@ -80,9 +80,9 @@ AGENTS.md 1~9차의 **구현 범위**를 기준으로 한다. 구현 마감과 �
 
 세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1246 연결](docs/exe/cpp-arc-acid-regular-owner-20261110.md)·[1247 피해율 교정](docs/exe/cpp-type-damage-rate-correction-20261110.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
-**다음 한 단위 — 표시/전송·건설 직접 생성/로딩의 실제 부모 수명 분류:** RawSurfaceStorage의 NoteChanged/현재 표시·Pop/전송 선택적 pin과 ClientConstructionGlobals의 공개 전 직접 생성/로딩을 실제 caller별로 분류한다. RawSurfaceWorld 생성자 안에서 Display를 사용하는 실제 경계를 무조건 pin 부재 실패로 바꾸지 않는다.1250~1253 교정과 MP/패킷 실행 제외를 유지한다.
+**다음 한 단위 — M6-l 기본 활성 지연큐:** 원문4def40/4df010/4dee60/4def20/4df5e0/4dfc00을 현재 Client 장기 분포·OS시각/CRT rand·각 실제 연결/등록과 연결한다. FIFO·엄격한 deadline<now·현재20BYTE주소 복원·관찰/기록/닫힘과 해제를 보존한다. MP 단위/패킷/통신/게임/기록 실행은 제외한다.
 
-1253 원시는 `extracted/cpp-resume-1253/`다. 큰 후단/최초 후처리·전수 process/caller/owner·Path/AI/배치/Fort Finish·M6-l/m과 나머지 상위 계획을 계속한다.
+1254 정적 감사 원시는 `extracted/cpp-resume-1254/`, 확정 제품1253 원시는 `extracted/cpp-resume-1253/`다. 전체 NoWorld/M6는 미완료이며 l/m 뒤 전수 감사를 다시 닫는다.
 
 ### 2.2 다음 구현의 출발점과 유지할 계약
 
@@ -212,6 +212,7 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 
 | 범위 | 기준 자료 |
 | --- | --- |
+| 직접 소유 경계 감사 |1254 정적 대조만 완료·제품1253 유지. [감사](docs/exe/cpp-direct-runtime-owner-audit-20261110.md)·[보고서](cpppj/direct-runtime-owner-audit-20261110.json). 새 빌드/검사/GUI0이며 M6-l/m과 전수 마감은 미완료다. |
 | 현재 제품·Regular 잔여 | [근거](docs/exe/cpp-surface-lifetime-owner-guards-20261110.md)·[보고서](cpppj/surface-lifetime-owner-guards-20261110.json), 원시 `extracted/cpp-resume-1253/`. Regular87/87/상승1249·1250~1253 owner 교정 유지. 다음 감사는2.1절이다. |
 | M6 전체 감사·최초 조사 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[Regular1217](docs/exe/cpp-no-world-regular-audit-20261109.md)·[Bomb1224](docs/exe/cpp-bomb-regular-audit-20261109.md)·[16VT/19TYPE 행렬](cpppj/bomb-regular-audit-20261109.json). 과거 “다음/없음”보다 현행2절을 우선한다. |
 | 비MP 마감 근거 | [UI929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션956](docs/exe/cpp-mission-state-scope-20261106.md)·[수명980](docs/exe/cpp-internal-lifetime-closure-20261106.md). |

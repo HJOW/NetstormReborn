@@ -1,0 +1,69 @@
+{
+  "unit": 1254,
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "auditOnly": true,
+  "acceptedAudit": true,
+  "productUnit": 1253,
+  "newBuild": false,
+  "newTests": 0,
+  "newLiveRun": false,
+  "newDecompilation": false,
+  "newZip": false,
+  "sourceSha256": {
+    "cpppj/src/client/RawSurfaceStorage.cpp": "b9e188ab69e218f8786405ab272c180aa84cf3242248267a684e2c1c2f280111",
+    "cpppj/src/client/RawSurfaceWorld.cpp": "a7fb1c1b68177a2084881a2b96b6fe5c844c97f1d10b1c73ded90dc4ee2939b5",
+    "cpppj/src/client/ClientConstructionGlobals.cpp": "f6ce91e57931d5dca1e427bbb074894bbd9d7ec732752f66bdc69d24fa763f99",
+    "cpppj/src/client/ClientGameplayGlobals.cpp": "cc232effd6ec4a29cf350d45dff4a92cc6e62bd09e40b35c9ef79359e9d61fb3",
+    "cpppj/src/client/RawCampaignSession.cpp": "b28c1a1287b9e0e83e18f92b930e0229d0faeb4ff203fd34a46130242dc8ca01"
+  },
+  "protectedFiles": 2808,
+  "protectedUnchanged": true,
+  "rows": [
+    {
+      "site": "RawSurfaceStorage::NoteChanged",
+      "kind": "직접 소유의 작은 변경 관측",
+      "decision": "현행 유지",
+      "reason": "World 생성자에서 최초 사용 가능하다. 실제 callback은 같은 Impl의 changed=true만 수행하며 외부 함수 호출이나 자기 대여 교체가 없다."
+    },
+    {
+      "site": "CurrentDisplayView/Suppressed/Invalidate",
+      "kind": "생성/로드 및 공개후 표시",
+      "decision": "현행 유지",
+      "reason": "World Impl162~164에서 displayRuntime 결합 직후 같은 생성자의 Display()가 CurrentDisplayView를 소비한다. 공개 전 실제 C++ 호출자가 owner를 보유한다. 공개 후 실제 pin은 종료/교체 시 throw하거나 실제 RuntimeCall을 반환한다. 함수 사본은 getter/쓰기 전에 선택한다."
+    },
+    {
+      "site": "MetaRefresh",
+      "kind": "선택한 파생 표시/Client fallback",
+      "decision": "현행 유지",
+      "reason": "현재 대여에 실제 metaRefresh가 있을 때만 선택하며 없으면 같은 Client장치를 쓴다. 선택 Runtime은 공개후pin/직접 호출자 수명을 따른다."
+    },
+    {
+      "site": "Transmission connected/broadcast/send",
+      "kind": "Native장치 우선/독립 typed fallback",
+      "decision": "현행 유지·실행 제외",
+      "reason": "Native의 실제 transmissionDevices가 우선이다. 잔여 대여는 독립 typed/직접 생성자 부모 수명을 따르며 상시 pin 필수로 바꾸면 기존 독립 계약을 깨뜨린다. MP/패킷 실행은 하지 않는다."
+    },
+    {
+      "site": "Transmission processPacket",
+      "kind": "현재 World Host 또는 장기 Host",
+      "decision": "현행 유지·실행 제외",
+      "reason": "현재 대여가 있으면 같은 실제 Host의 기존 writer를 쓴다. 대여가 없으면 장기 Processes Host의 실제 PID/현재 buffer를 쓰며 가짜 반환을 넣지 않는다."
+    },
+    {
+      "site": "TransmitPop",
+      "kind": "현재 전송 본문 또는 장기 직접 writer",
+      "decision": "현행 유지·실행 제외",
+      "reason": "현재 World lambda는 장기 RawSquidTransmission::Pop을 호출하며 Storage::TransmitPop으로 재귀하지 않는다. 공개 후 같은 실제 pin을 사용하고 공개 전 실제 직접 caller가 보유한다."
+    },
+    {
+      "site": "CurrentConstructionCall",
+      "kind": "공개 전 직접 생성/로드/최종 정리",
+      "decision": "현행 유지",
+      "reason": "기존 주석과 실제 World/Session caller의 소유를 따른다. 공개된 경로는 ClientGameplayGlobals::BindRuntimeOwner→BindRuntimePin→PinCurrentRuntime으로 실제 전체 GameWorld 수명을 유지한다. actual pin은 무효 owner를 성공NULL로 반환하지 않는다."
+    }
+  ],
+  "fullM6Complete": false,
+  "fullGoalComplete": false,
+  "next": "M6-l 실제 기본 활성 지연큐 연결 뒤 M6-m 및 M6-n 전수 재감사; 큰 NoWorld 잔여도 유지"
+}
