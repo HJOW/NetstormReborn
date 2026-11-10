@@ -1674,7 +1674,7 @@ TEST_CASE(ClientFactoryOwner_SelectedFinishPinsActualOwnerAndFunction) { //선�
     CHECK(s.storage->FactoryRegular(parent,3,1,9.0F)==0.125F && calls==1 && pins==1 && weak.expired());CHECK(s.storage->FactoryRegular(parent,4,1,9.0F)==0.0F);bool failed{};try { s.storage->FactoryRegular(parent,3,1,9.0F); }catch (const std::logic_error&) { failed=true; }CHECK(failed && calls==1);
 }
 TEST_CASE(ClientFactoryOwner_CurrentLevelSelectsOnlyRealFlare) { //현재 레벨2는 큰 장치를 요구하지 않고3에서만 원문2/1 플레어를 선택한다.
-    RegionScene s;const auto parent=s.Asset(0x509148U);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]=static_cast<std::uint8_t>((raw[11]&31U)|(2U<<5));CHECK(s.storage->FactoryRegular(parent,5,0,0.25F)==0.25F);auto binding=std::make_shared<RawSurfaceFactoryBindings>();std::uint32_t calls{};binding->flare=[&](auto target,auto count,auto event) { CHECK(target==parent && count==2 && event==1);++calls; };s.storage->BindFactoryRegularRuntime(binding);raw[11]=static_cast<std::uint8_t>((raw[11]&31U)|(3U<<5));CHECK(s.storage->FactoryRegular(parent,5,0,0.25F)==0.25F && calls==1 && !s.storage->Borrowed());
+    RegionScene s;const auto parent=s.Asset(0x509148U);auto raw=s.storage->pool.AllocatedBytes(parent);raw[11]=static_cast<std::uint8_t>((raw[11]&31U)|(2U<<5));CHECK(s.storage->FactoryRegular(parent,5,0,0.25F)==0.25F);auto binding=std::make_shared<RawSurfaceFactoryBindings>();const auto calls=std::make_shared<std::uint32_t>(0);binding->pin=[weak=std::weak_ptr<std::uint32_t>(calls)] { return weak.lock(); };binding->flare=[&](auto target,auto count,auto event) { CHECK(target==parent && count==2 && event==1);++*calls; };s.storage->BindFactoryRegularRuntime(binding);raw[11]=static_cast<std::uint8_t>((raw[11]&31U)|(3U<<5));CHECK(s.storage->FactoryRegular(parent,5,0,0.25F)==0.25F && *calls==1 && !s.storage->Borrowed());
 }
 TEST_CASE(ClientFactoryOwner_PostPopKeepsSameBodyAfterWorldReturn) { //같은 장기 가상20을 World 반납 뒤에도 실제 공통 깊이와 사용한다.
     RegionScene s(true);BindFactoryOwnerDevices(s);auto* const body=&s.storage->FactoryPostPop();{ RawSurfaceWorld world(OriginalEdition::Patch1078,s.storage->types,s.storage->frames,s.storage->shapes,s.storage->links,94,nullptr,s.storage);CHECK(&world.Storage()->FactoryPostPop()==body); }
@@ -1940,4 +1940,16 @@ TEST_CASE(ClientVortexOwner_ForeignCountReadsCurrentActualIslands) { // 같은 �
 }
 TEST_CASE(ClientVortexOwner_DevicesDoNotRetainExpiredConstruction) { // 장기 Storage의 콜백은 Construction을 강하게 역소유하지 않고 반납 뒤 선택을 거부한다.
     RegionScene s;const auto weak=std::weak_ptr<ClientConstructionGlobals>(s.owner);auto devices=MakeClientVortexDevices(s.owner);s.owner.reset();CHECK(weak.expired());bool rejected{};try { static_cast<void>(devices.foreignIslands(1)); }catch (const std::logic_error&) { rejected=true; }CHECK(rejected && !s.storage->Borrowed());
+}
+
+TEST_CASE(ClientFactoryOwner_MissingWholePinRejectsAllThreeEffects) { // begin/finish/flare는 pin 함수나 실제 owner가 없으면 큰 콜백/후속 프레임 전에 거부한다.
+    std::uint32_t checked{}; // 세 선택 경로와 두 누락 형태를 모두 비교한 수다.
+    for (const auto kind:{0U,1U,2U}) { // 실제 Factory 정기의 시작/완료/상위 플레어 경로만 선택한다.
+        for (const auto emptyOwner:{false,true}) { // pin 함수 부재와 pin 반환 owner 부재를 별도로 검증한다.
+            RegionScene s;const auto parent=s.Asset(0x509148U);auto raw=s.storage->pool.AllocatedBytes(parent);if (kind==2) raw[11]=static_cast<std::uint8_t>((raw[11]&31U)|(3U<<5));const std::vector<std::uint8_t> before(raw.begin(),raw.end());auto runtime=std::make_shared<RawSurfaceFactoryBindings>();std::uint32_t calls{};
+            runtime->begin=[&](auto,float) { ++calls; };runtime->finish=[&](auto) { ++calls;return 1.0f; };runtime->flare=[&](auto,auto,auto) { ++calls; };if (emptyOwner) runtime->pin=[] { return std::shared_ptr<void>{}; };s.storage->BindFactoryRegularRuntime(runtime);bool rejected{};
+            try { static_cast<void>(s.storage->FactoryRegular(parent,kind==2 ? 5U:3U,kind==1 ? 1U:0U,0.25f)); }catch (const std::logic_error& error) { rejected=std::string_view(error.what()).starts_with("Factory의 실제 전체"); }
+            CHECK(rejected && calls==0);CHECK(std::equal(before.begin(),before.end(),raw.begin()) && !s.storage->Borrowed());++checked;
+        }
+    }CHECK(checked==6);
 }

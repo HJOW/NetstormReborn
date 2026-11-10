@@ -8,10 +8,12 @@
 #include <utility>
 namespace netstorm::client { // World/Session 생성이나 상태 초기화 없이 같은 본문을 공유한다.
 namespace { // 실제 선택된 큰 후단의 현재 수명만 이 호출 동안 보유한다.
+// 큰 Factory 효과는 실제 전체 owner를 보유한 뒤 현재 함수 사본으로 호출한다.
 template<class Function,class... Args>
 decltype(auto) FactoryCall(const std::weak_ptr<const RawSurfaceFactoryBindings>& weak,Function RawSurfaceFactoryBindings::* member,Args&&... args) {
     const auto current=weak.lock();if (!current) throw std::logic_error("Factory의 실제 현재 큰 Runtime 미연결");
-    const auto pin=current->pin;const auto hold=pin ? pin():std::shared_ptr<void>{};const auto call=current.get()->*member;
+    const auto pin=current->pin;if (!pin) throw std::logic_error("Factory의 실제 전체 pin 미연결");
+    const auto hold=pin();if (!hold) throw std::logic_error("Factory의 실제 전체 owner 반납");const auto call=current.get()->*member;
     if (!call) throw std::logic_error("Factory의 선택된 실제 큰 본문 미연결");return call(std::forward<Args>(args)...);
 }
 // 레벨 조회 뒤에만 현재 TYPE/글자 구간을 읽고 범위를 확인한다.
