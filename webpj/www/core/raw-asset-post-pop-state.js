@@ -89,4 +89,19 @@ export class AssetPostPopState {
     readBridgeType() {
         return this.currentBridgeType ? this.currentBridgeType() >>> 0 : this.bridgeType;
     }
+
+    // 실제 장기 간헐천이 finder 효과 뒤 읽는 표면 TYPE 번호의 getter 이다(없으면 null: 독립 값 islandType·stalagType 을 쓴다).
+    // (2026-11-10 WB04-E254: cpppj 기준선 뒤 be567d46·417f22d2 의 currentIslandType·currentStalagType 재반영)
+    currentIslandType = null;
+    currentStalagType = null;
+
+    // 현재 후보의 TYPE 비교 위치에서 읽는 섬 TYPE 의 전체 DWORD 이다. (2026-11-10 WB04-E254)
+    readIslandType() {
+        return this.currentIslandType ? this.currentIslandType() >>> 0 : this.islandType;
+    }
+
+    // 섬이 아닌 후보에서 읽는 종유석 TYPE 의 전체 DWORD 이다. (2026-11-10 WB04-E254)
+    readStalagType() {
+        return this.currentStalagType ? this.currentStalagType() >>> 0 : this.stalagType;
+    }
 }

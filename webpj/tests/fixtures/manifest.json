@@ -6250,10 +6250,12 @@
       "path": "cpppj/tests/fixtures/arc-spire-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 아크 스파이어 다섯 몸체(후처리·Regular·Collect·Attack·Strike)의 효과 순서와 슬롯·반환·개수·버퍼",
       "consumers": [
-        "webpj/tests/arc-spire.test.mjs"
+        "webpj/tests/arc-spire.test.mjs",
+        "webpj/tests/asset-post-pop.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-arc-spire.js"
+        "webpj/www/core/raw-arc-spire.js",
+        "webpj/www/core/raw-asset-post-pop.js"
       ],
       "doc": "docs/webpj-arc-spire-20261108.md",
       "cpppjSources": [
@@ -6279,10 +6281,12 @@
       "path": "cpppj/tests/fixtures/acid-fence-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 애시드 울타리 네 진입점(후처리·Regular·Attack·Strike)의 효과 순서와 47개 슬롯·반환",
       "consumers": [
-        "webpj/tests/acid-fence.test.mjs"
+        "webpj/tests/acid-fence.test.mjs",
+        "webpj/tests/asset-post-pop.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-acid-fence.js"
+        "webpj/www/core/raw-acid-fence.js",
+        "webpj/www/core/raw-asset-post-pop.js"
       ],
       "doc": "docs/webpj-acid-fence-20261108.md",
       "cpppjSources": [
@@ -9977,10 +9981,12 @@
       "path": "cpppj/tests/fixtures/ice-tower-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 아이스 타워 네 몸체(P/R/D/G)의 외부 효과 순서·부모/표면/생성물 세 슬롯 전체 raw·반환 float(1426행)",
       "consumers": [
-        "webpj/tests/ice-tower.test.mjs"
+        "webpj/tests/ice-tower.test.mjs",
+        "webpj/tests/asset-post-pop.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-ice-tower.js"
+        "webpj/www/core/raw-ice-tower.js",
+        "webpj/www/core/raw-asset-post-pop.js"
       ],
       "doc": "docs/webpj-ice-tower-20261108.md",
       "cpppjSources": [
@@ -15388,9 +15394,128 @@
       "bytes": 3253663,
       "lines": 4413,
       "fixtureCommit": "db9b626c0",
-      "webCommit": "worktree",
+      "webCommit": "7c7c6c20b",
       "cpppjBasis": {
         "cpppj/src/o/RawDamageablePostDestroy.cpp": "079f170e3"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E254",
+      "id": "assetpostpop",
+      "path": "cpppj/tests/fixtures/assetpostpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 초기 요새 자산 postPop 열두 가상 표의 입력과 관찰(사건 순서·슬롯 전체·세 목록·Player 신전 필드·신전 개수·이웃 프레임)",
+      "consumers": [
+        "webpj/tests/asset-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-asset-post-pop.js",
+        "webpj/www/core/raw-asset-post-pop-state.js",
+        "webpj/www/core/raw-carrier-post-pop.js",
+        "webpj/www/core/squid-postpop.js"
+      ],
+      "doc": "docs/webpj-asset-post-pop-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAssetPostPop.cpp"
+      ],
+      "scope": "1,636행 중 10.78(originals) 818행 전부를 독립 진입·공유 권한·공유 Player 9기록·실제 가상 진입으로 사용(originalCD 818행은 범위 밖)",
+      "text": true,
+      "sha256": "706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741",
+      "bytes": 327868,
+      "lines": 1637,
+      "fixtureCommit": "a5afdafbe",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAssetPostPop.cpp": "417f22d29"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E254",
+      "id": "asset-player",
+      "path": "cpppj/tests/fixtures/asset-player-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 신전 후처리의 현재 Player·콜백 뒤 owner(Player 9기록 전체 바이트)",
+      "consumers": [
+        "webpj/tests/asset-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-asset-post-pop.js"
+      ],
+      "doc": "docs/webpj-asset-post-pop-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAssetPostPop.cpp"
+      ],
+      "scope": "576행 중 10.78(originals) 288행 전부(originalCD 288행은 범위 밖)",
+      "text": true,
+      "sha256": "9562745a755606ed0492e8a457d1c5f97822f073896882db282e04bbb992c3a4",
+      "bytes": 1927769,
+      "lines": 577,
+      "fixtureCommit": "cfa283a63",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAssetPostPop.cpp": "417f22d29"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E254",
+      "id": "gun-postpop-checking",
+      "path": "cpppj/tests/fixtures/gun-postpop-checking-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 네 Gun PostPop 의 checking·로딩·편집 진단 순서와 복귀(10.78)",
+      "consumers": [
+        "webpj/tests/asset-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-asset-post-pop.js"
+      ],
+      "doc": "docs/webpj-asset-post-pop-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAssetPostPop.cpp"
+      ],
+      "scope": "10.78 1,344행 전부",
+      "text": true,
+      "sha256": "4ba2d249d9fa997b9c620d723b442e3af9c9013cee6dfe432ce53c75b4c42101",
+      "bytes": 280122,
+      "lines": 1345,
+      "fixtureCommit": "a8f87f622",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAssetPostPop.cpp": "417f22d29"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E254",
+      "id": "vortex-current",
+      "path": "cpppj/tests/fixtures/vortex-current-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 신전 후처리의 진단·WORD·중복 없는 목록·Player 9기록(10.78)",
+      "consumers": [
+        "webpj/tests/asset-post-pop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-asset-post-pop.js"
+      ],
+      "doc": "docs/webpj-asset-post-pop-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAssetPostPop.cpp"
+      ],
+      "scope": "10.78 936행 전부",
+      "text": true,
+      "sha256": "8f7ae62fd72c778d5b03f460115534b2d3091c88a9deb1e074a1740ce6b27638",
+      "bytes": 282662,
+      "lines": 937,
+      "fixtureCommit": "b9831cc47",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAssetPostPop.cpp": "417f22d29"
       }
     }
   ]
