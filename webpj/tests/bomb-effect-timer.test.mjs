@@ -306,3 +306,22 @@ test('bomb-effect-timer: 호스트가 없는 프로세스는 만료 때 자기 �
     assert.equal(get(packet, 4, 2), 0);
     assert.equal(get(packet, 6, 2), 0);
 });
+
+// 선언 길이는 현재 DWORD 입력이다(cpppj 기준선 뒤 RawBombTimerPacket, WB04-E263 재반영): 4 미만이면 4, 그 외는 DWORD 값 그대로 비교한 뒤 하위 WORD 만 쓴다.
+//  옛 WORD 매개변수처럼 먼저 16비트로 자르면 0x10001 이 4 로 올려지지만, 실제로는 하위 WORD 1 이 그대로 쓰인다.
+test('bomb-timer-packet: 선언 길이는 DWORD 로 비교하고 하위 WORD 만 쓴다', () => {
+    const fields = new BombEffectTimerFields();
+    const header = (declared) => {
+        const packet = new Uint8Array(22);
+        writeBombTimerPacket(fields, 50, 60, packet, declared);
+        return packet[2] | (packet[3] << 8);
+    };
+    assert.equal(header(0), 4);
+    assert.equal(header(3), 4);
+    assert.equal(header(4), 4);
+    assert.equal(header(0x1234), 0x1234);
+    // 하위 WORD 만 쓰이므로 상위 비트가 서 있으면 DWORD 비교를 통과한 값의 하위 16비트가 그대로 남는다(4 로 올려지지 않는다).
+    assert.equal(header(0x10001), 1);
+    assert.equal(header(0x10010), 0x10);
+    assert.equal(header(0xffffffff), 0xffff);
+});

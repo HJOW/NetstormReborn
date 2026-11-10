@@ -50,7 +50,8 @@ export function writeBombTimerPacket(fields, form, parent, packet, declaredLengt
     if (packet.length < length) throw new RangeError('상태 타이머 출력 버퍼 부족');
     write(packet, 0, protocol & 0x7f, 1);
     write(packet, 1, message, 1);
-    write(packet, 2, Math.max(MIN_DECLARED, declaredLength & 0xffff), 2);
+    // 선언 길이는 현재 DWORD 입력이다: 4 미만이면 4, 그 외는 DWORD 값을 그대로 비교한 뒤 하위 WORD 만 쓴다(옛 WORD 매개변수처럼 먼저 16비트로 자르지 않는다). (2026-11-10 WB04-E263: cpppj 기준선 뒤 RawBombTimerPacket 재반영)
+    write(packet, 2, Math.max(MIN_DECLARED, declaredLength >>> 0), 2);
     write(packet, 4, form, 2);
     write(packet, 6, parent, 2);
     write(packet, 18, fields.flags, 4);

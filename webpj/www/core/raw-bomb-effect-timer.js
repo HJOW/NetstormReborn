@@ -188,7 +188,8 @@ export class BombEffectTimerProcess extends SquidProcess {
     }
 
     // 현재 호스트 Form/부모를 실제 41e280 에 전달하고 반환 길이를 돌려준다. (2026-11-08 WB04-E52)
-    writePacket(packet, declaredLength) {
-        return writeBombTimerPacket(this.#fields, this.form, this.parent, packet, declaredLength);
+    //  선언 길이는 DWORD 이고 헤더 BYTE(protocol 기본 1, message 기본 0x7d)는 호출자가 고를 수 있다. (2026-11-10 WB04-E263: cpppj 기준선 뒤 RawBombEffectTimer 재반영)
+    writePacket(packet, declaredLength, protocol = 1, message = 0x7d) {
+        return writeBombTimerPacket(this.#fields, this.form, this.parent, packet, declaredLength, protocol, message);
     }
 }
