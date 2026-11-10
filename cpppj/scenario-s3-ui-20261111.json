@@ -1,0 +1,13 @@
+{
+  "unit": "1283 S3 scenario UI live verification",
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "sourceChanged": false,
+  "live": {
+    "pages": ["Player start", "General", "Briefing", "AI common", "Player 1", "AI 2~8", "File", "Save", "Discard"],
+    "edit": {"myStartMoney": "50000 -> 7777, saved as myStartMoney=\"7777\" with other bytes unchanged, Test Battle HUD SP 7777", "ai2Name": "Hangul name saved as UTF-8"},
+    "exitCode": 0, "logFileCreated": false, "gameDirUnchanged": true
+  },
+  "uxLimits": ["input dialog keeps current value (erase first)", "very large start money shown differently by HUD (original float/width limit)", "Ability shown as flag integer"],
+  "remaining": ["S4 user-home / read-only install verification"]
+}
