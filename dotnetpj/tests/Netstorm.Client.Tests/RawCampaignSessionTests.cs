@@ -964,4 +964,69 @@ public sealed class RawCampaignSessionTests
         Assert.Equal(5u, second.LocalOwner);
         Assert.Equal(-1, second.DenySalvage);
     }
+
+    /// <summary>미적재 AI 다리 경로 전진을 적재 관문에서 거부하는지 검증한다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
+    [Fact]
+    public void AdvanceAiBridgeRejectsWhenNotLoaded()
+    {
+        // 적재 전 AI 다리 경로 전진은 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        session.BindAiAdvanceBridge((uint owner, RawPathPoint target, ref RawPathPoint endpoint) => true);
+        var endpoint = new RawPathPoint { X = 1f, Y = 2f };
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.AdvanceAiBridge(1u, new RawPathPoint { X = 3f, Y = 4f }, ref endpoint));
+        Assert.Contains("미적재", error.Message);
+    }
+
+    /// <summary>원본 1..8 범위를 벗어난 소유자를 거부하는지 검증한다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
+    [Fact]
+    public void AdvanceAiBridgeRejectsBadOwner()
+    {
+        // 원본 세션의 owner 관문을 그대로 둔다. 적재 관문보다 먼저 동작한다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        session.BindAiAdvanceBridge((uint owner, RawPathPoint target, ref RawPathPoint endpoint) => true);
+        var endpoint = new RawPathPoint { X = 1f, Y = 2f };
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.AdvanceAiBridge(0u, new RawPathPoint { X = 3f, Y = 4f }, ref endpoint));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.AdvanceAiBridge(9u, new RawPathPoint { X = 3f, Y = 4f }, ref endpoint));
+    }
+
+    /// <summary>적재 뒤 AI 다리 경로 전진을 본체 미연결로 거부하는지 검증한다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
+    [Fact]
+    public void AdvanceAiBridgeRejectsWhenUnconnected()
+    {
+        // 실제 전략 AI 몸체는 후속 단위에서 잇는다(결정 6).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        Assert.False(session.HasAiAdvanceBridge());
+        var endpoint = new RawPathPoint { X = 1f, Y = 2f };
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.AdvanceAiBridge(1u, new RawPathPoint { X = 3f, Y = 4f }, ref endpoint));
+        Assert.Contains("미연결", error.Message);
+    }
+
+    /// <summary>묶은 실제 AI 효과의 다리 경로 전진 결과를 그대로 돌려주는지 검증한다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
+    [Fact]
+    public void AdvanceAiBridgeForwardsToBoundDevice()
+    {
+        // 원본 세션 설치의 전략 AI 몸체 연결만 둔다. 끝점 버퍼 고치기와 brain 없음 거짓 경로도 위임한다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        var calls = new List<(uint Owner, RawPathPoint Target)>();
+        session.BindAiAdvanceBridge((uint owner, RawPathPoint target, ref RawPathPoint endpoint) => { calls.Add((owner, target)); endpoint = new RawPathPoint { X = 9f, Y = 1f }; return owner == 8u; });
+        Assert.True(session.HasAiAdvanceBridge());
+        var endpoint = new RawPathPoint { X = 1f, Y = 2f };
+        Assert.True(session.AdvanceAiBridge(8u, new RawPathPoint { X = 3f, Y = 4f }, ref endpoint));
+        Assert.Equal(new RawPathPoint { X = 9f, Y = 1f }, endpoint);
+        Assert.False(session.AdvanceAiBridge(7u, new RawPathPoint { X = 5f, Y = 6f }, ref endpoint));
+        Assert.Equal([(8u, new RawPathPoint { X = 3f, Y = 4f }), (7u, new RawPathPoint { X = 5f, Y = 6f })], calls);
+    }
+
+    /// <summary>빈 AI 다리 경로 전진 묶기를 거부하는지 검증한다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BindAiAdvanceBridgeRejectsNull()
+    {
+        // 묶지 않은 세션은 미연결로 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentNullException>(() => session.BindAiAdvanceBridge(null!));
+        Assert.False(session.HasAiAdvanceBridge());
+    }
 }

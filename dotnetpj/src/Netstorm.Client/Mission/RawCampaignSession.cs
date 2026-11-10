@@ -5,6 +5,13 @@ namespace Netstorm.Client.Mission;
 
 // 캠페인 세션 모듈을 담는 네임스페이스다. 2026-11-10 F3 세션 껍데기 이식에서 추가됐다.
 
+// 실제 전략 AI 다리 경로 전진 몸체의 전진 효과 형식이다. 소유자 번호·목표 점을 받고 끝점 버퍼를 고쳐 쓴다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.
+/// <param name="owner">다리 경로를 전진할 소유자 번호다.</param>
+/// <param name="target">전진할 목표 점이다.</param>
+/// <param name="endpoint">실제 몸체가 고쳐 쓰는 끝점 버퍼다.</param>
+/// <returns>다리 경로를 전진했으면 참, 준비된 brain이 없으면 거짓이다.</returns>
+public delegate bool AiAdvanceBridgeEffect(uint owner, RawPathPoint target, ref RawPathPoint endpoint);
+
 // 초기 객체 생성부터 Kernel 해제까지 동일 주소에서 실제 모듈과 상태를 소유하는 세션 껍데기다. Fort 적재·AI·메뉴·연결 본체 조립은 후속 단위에서 잇는다. 2026-11-10 F3 세션 껍데기 이식에서 추가됐다.
 public sealed class RawCampaignSession
 {
@@ -73,6 +80,9 @@ public sealed class RawCampaignSession
 
     /// <summary>같은 실제 전략 AI 다리 갱신 몸체의 갱신 효과다. 세션 조립 때 실제 전략 AI 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-11 F3 AI 다리 갱신 본체에서 추가됐다.</summary>
     private Func<uint, bool>? _aiRefreshBridges;
+
+    /// <summary>같은 실제 전략 AI 다리 경로 전진 몸체의 전진 효과다. 세션 조립 때 실제 전략 AI 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
+    private AiAdvanceBridgeEffect? _aiAdvanceBridge;
 
     /// <summary>같은 실제 AI 지갑의 잔액 조회 효과다. 세션 조립 때 실제 AI 지갑 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
     private Func<uint, int>? _aiMoney;
@@ -412,6 +422,44 @@ public sealed class RawCampaignSession
         }
 
         return _aiRefreshBridges(owner);
+    }
+
+    /// <summary>같은 실제 전략 AI 다리 경로 전진 몸체의 전진 효과를 묶는다. 원본 세션 설치의 전략 AI 몸체 연결만 둔다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
+    /// <param name="advance">실제 전략 AI 다리 경로 전진 효과다. 소유자 번호·목표 점을 그대로 받고 끝점을 고쳐 쓴 뒤 전진했으면 참을 돌려준다.</param>
+    public void BindAiAdvanceBridge(AiAdvanceBridgeEffect advance)
+    {
+        ArgumentNullException.ThrowIfNull(advance);
+        _aiAdvanceBridge = advance;
+    }
+
+    /// <summary>같은 실제 전략 AI 다리 경로 전진 몸체의 전진 효과를 묶었는지 확인한다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasAiAdvanceBridge() => _aiAdvanceBridge is not null;
+
+    /// <summary>원본 다리 경로 전진을 후속 AI 몸체와 공유한다. 준비된 brain이 없으면 거짓을 돌려준다. 묶은 실제 AI 효과가 없으면 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 끝점 버퍼 고치기와 경로 본체는 실제 AI 몸체 쪽에서 잇는다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
+    /// <param name="owner">다리 경로를 전진할 소유자 번호다. 원본 1..8 범위를 받는다.</param>
+    /// <param name="target">전진할 목표 점이다. 호출자가 소유하며 세션은 빌려서 넘긴다.</param>
+    /// <param name="endpoint">실제 몸체가 고쳐 쓰는 끝점 버퍼다. 호출자가 소유한다.</param>
+    /// <returns>다리 경로를 전진했으면 참, 준비된 brain이 없으면 거짓이다.</returns>
+    public bool AdvanceAiBridge(uint owner, RawPathPoint target, ref RawPathPoint endpoint)
+    {
+        if (owner < 1u || owner > 8u)
+        {
+            throw new ArgumentOutOfRangeException(nameof(owner), owner, "AI 다리 경로 전진의 실제 소유자 1..8 범위 오류");
+        }
+
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 AI 다리 경로 전진입니다.");
+        }
+
+        // 원본 RawCampaignSession::AdvanceAiBridge의 적재·owner 관문과 brain 없음 거짓 경로를 직역한다. 실제 전략 AI 몸체는 후속 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        if (_aiAdvanceBridge is null)
+        {
+            throw new InvalidOperationException("실제 AI 다리 경로 전진 미연결");
+        }
+
+        return _aiAdvanceBridge(owner, target, ref endpoint);
     }
 
     /// <summary>같은 실제 AI 지갑의 잔액 조회 효과를 묶는다. 원본 세션 설치의 AI 지갑 몸체 연결만 둔다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
