@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**작업 재개 · 확정 제품1282 / 11.01 · 정적감사1262 · 인계 갱신2026-11-11, HJOW-Athlon**
+**작업 재개 · 확정 제품1285 / 11.01 · 정적감사1262 · 인계 갱신2026-11-11, HJOW-Athlon**
 
 이 문서는 cpppj의 **현재 상태·남은 작업·실행 제외·유효한 계약**을 담는다. 2026-11-10 사용자의 재개 요청으로1265 뒤의 후보 접합을 진행했다. **전체 목표와 M6-n은 미완료다.** 아래 우선순위를 따르고 단위마다 인계·로컬 커밋을 남긴다. push하지 않는다.
 
@@ -49,6 +49,8 @@
 **1268 M7.1 helpWord 캐시 완료:** 원문 0054db38 캐시(4413c0/441300 규칙: 키 부재/빈 값은 기존 유지, 대소문자만 다르면 옛 표기 유지, 다르면 교체)를 `ClientHelpWord`/`ClientLocalStateGlobals::HelpWord()` 단일 소유자로 구현하고 `InterpretOptions`·객체/Factory/풀숲/Inventory/메타/게임 메뉴·BaseHelp 토큰 61000002를 모두 같은 캐시에 연결했다. [근거](docs/exe/cpp-help-word-cache-20261111.md)·[보고서](cpppj/help-word-cache-20261111.json). Release·새 검사 8건 통과·Tutorial4 생산/건설/600프레임을 확인했다. 메뉴 세션 검사 6건 실패는 helpWord와 무관한 메시지이나 기준선 직접 비교는 하지 않았다. **M7.2~M7.5·M8 미완료**, MP 실행0이다.
 
 **1267 NoWorld 자산 후처리 7VT 연결:** 보호막(00507770)·Generator(00501ea0)·장식 Gun(0050b570)·Arc(0050e668)·Acid(0050e738)를 같은 장기 확보 메모리/Host/공통 장부에 연결하고, 메타/일반 Sprite(0050c9f0/0050cc08)를 PE의 공통 +20/+7c/+80/+84 근거로 공통 Pop 허용에 추가했다. [근거](docs/exe/cpp-asset-postpop-noworld-20261111.md)·[보고서](cpppj/asset-postpop-noworld-20261111.json). Release·집중 641건(새7 통과, 기존 실패2)·pop_context 기준선과 실패 25건 동일·Tutorial4 생산/건설/600프레임을 확인했다. **남은 최초 후처리: Crab2·Teleport(flags1)·Rune·Altar·Dais·Aviary3·Flyer3·Gun5·Blocker3·Player·Priest·Residence(flags1)·Temple4**(Session 소유 장치 이전 필요), 큰 NoWorld/M6-n 미완료, MP 실행0이다.
+
+**1285 B 단계 시작 — NB07 확인·NB08/NB24 수정:** [판정 현황표](docs/exe/cpp-known-bugs-status-20261111.md)를 새로 만들어 34건을 한 행씩 채운다(현재 3행). NB07(기존 이름 새 맵) 이미 반영(안내 창, 실제 화면). **NB08 수정:** User Made Campaigns가 비어 있던 원인을 실제 실행으로 세 겹 찾았다 — FileSpec 검색이 `\D\x` 패턴에서 게임 폴더를 버리고 드라이브 루트를 보던 `root/path`(FileSpecQuery·MatchFinder), 원문 PE `4c8c12..36`의 `%` 인라인 목록이 `replacement` 길이만 복사하던 삽입(제품에서만 `repairInlineList`). **NB24 수정:** 80BYTE 초과 제목(GuideHades/GuideKQ)이 `PhysicalLimitError` 종료를 일으키던 것을 `FitDisplayLimit` 줄임으로 교정. 관련 집중 검사 통과(`file_directory` 3실패는 기준선과 동일). [보고서](cpppj/known-bugs-nb08-nb24-20261111.json). **NB01~06·09~23·25~34 미조사.**
 
 **1284 S4 읽기 전용 설치·실제 사용자 홈 확인 완료(코드 변경 없음):** 새 배포 ZIP(1430항목, 전수 SHA-256 일치)을 풀고 설치 폴더에 쓰기 거부 ACL을 건 상태에서, 환경 변수 없이 실제 `%USERPROFILE%\Saved Games\Netstorm`을 쓰게 하여 메인→Edit(첫 Edit 원본 433맵 복사)→TEST01→Scenario 편집/Save→Test Battle 진입·대기를 통과했다(종료 코드0, 로그 없음, 설치 폴더 1430파일/242,052,004바이트 불변, 홈에 Cache·CustomMaps\D 434파일·Editor·Saves 생성, 편집한 `myStartMoney="6666"` 기록). 시험 산물인 홈 폴더(원래 없었음)는 삭제하고 ACL을 풀었다. 첫 시도는 교정 전 ZIP의 exe로 Test Battle 오류가 났고(오류 로그는 홈에 정확히 기록) 새 ZIP으로 통과 — 코드 수정마다 ZIP 재생성 필요. [근거](docs/exe/cpp-scenario-s4-readonly-home-20261111.md)·[보고서](cpppj/scenario-s4-readonly-home-20261111.json). 한계: ACL로 모의한 읽기 전용이며 실제 Program Files/UAC는 사용자 확인. **S1~S4 전부 완료.**
 
