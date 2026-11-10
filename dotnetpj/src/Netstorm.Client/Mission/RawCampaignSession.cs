@@ -240,6 +240,22 @@ public sealed class RawCampaignSession
         throw new InvalidOperationException("실제 지형 갱신 미연결");
     }
 
+    /// <summary>원본 0040dfd0의 고정 범위·지역 난수를 같은 완전 배치·섬·Factory에 연결한다. 껍데기에서는 배치 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 무작위 배치 Stub 이식에서 추가됐다.</summary>
+    /// <param name="type">배치할 객체 종류 번호다.</param>
+    /// <param name="quantity">배치할 수량이다.</param>
+    public void AddRandomObjects(uint type, uint quantity)
+    {
+        _ = type;
+        _ = quantity;
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 무작위 배치입니다.");
+        }
+
+        // 원본 무작위 배치의 실제 범위·지역 난수·완전 배치 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 무작위 배치 미연결");
+    }
+
     /// <summary>로그인·기술·AI가 공유하는 현재 원본 로컬 Player 번호다. 껍데기에서는 Player 상태 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
     /// <returns>로컬 소유자 번호다.</returns>
     public uint LocalOwner()
