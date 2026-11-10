@@ -651,3 +651,5 @@ cpppj/src/o/RawBattleBroadcast.h	Netstorm.Net/RawBattleBroadcast.cs	77a0c3a47d5e
 cpppj/src/o/PacketRegistrationTable.cpp	Netstorm.Net/PacketRegistrations.cs	899c934dcca17ce113218a4fe2a45ae059f22270	port
 cpppj/src/o/PacketRegistrationTable.h	Netstorm.Net/PacketRegistrations.cs	899c934dcca17ce113218a4fe2a45ae059f22270	port
 cpppj/src/o/RawPacketLengths.h	Netstorm.Net/PacketRegistrations.cs	e2dd58a8d12f2dbf62ceecc164e97fdbe413f8cd	port
+cpppj/src/o/RawConnectionRegistration.cpp	Netstorm.Net/ConnectionRegistration.cs	0c50d6684e5cc2e2b2e910c9230102602b601a5d	port
+cpppj/src/o/RawConnectionRegistration.h	Netstorm.Net/ConnectionRegistration.cs	0c50d6684e5cc2e2b2e910c9230102602b601a5d	port
