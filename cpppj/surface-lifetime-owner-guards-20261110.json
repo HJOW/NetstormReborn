@@ -1,0 +1,252 @@
+{
+  "unit": 1253,
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "accepted": true,
+  "fullGoalComplete": false,
+  "summary": "공통 삭제의 파생 forward와 표면 fallWalker/bridgeEffect의 실제 pin/owner를 필수화했다.",
+  "sourceSha256": {
+    "cpppj/src/client/RawSurfaceDeletion.cpp": "16678226d3f0598a0c53ce2b0ea237a1244e4a710b8c9048ad007bdfdd6aa688",
+    "cpppj/src/client/RawSurfaceLifetime.cpp": "7f9397f379dded07996fe7101ba51e50787dfa0a323eebc6c6e3a6d18f47c0a6",
+    "cpppj/tests/ClientRegionOwnerTests.cpp": "efbb94d3688ca86f6ceb72260acbb3336021db3b18fae18f0a16bb66879e1b94"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 14445056,
+      "sha256": "b73a8abde175cb3f48947531b01a06c1652b239e438040bfd8476c38d64c3a7b"
+    },
+    "R.exe": {
+      "bytes": 677376,
+      "sha256": "82e4a0802cc3b80b92754af838f5b71942175a9cc008efe6512d48056a206d38"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true",
+      "/bl:H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1253\\build.binlog"
+    ],
+    "exitCode": 0,
+    "seconds": 55.904003381729126,
+    "sourcesUnchanged": true,
+    "warnings": 0,
+    "errors": 0
+  },
+  "regressionBeforeFix": [
+    {
+      "name": "ClientSurfaceOwner_MissingWholeOwnerRejectsDerivedForward",
+      "exitCode": 1,
+      "failedAsExpected": true
+    },
+    {
+      "name": "ClientSurfaceOwner_MissingWholeOwnerRejectsBridgeEffect",
+      "exitCode": 1,
+      "failedAsExpected": true
+    },
+    {
+      "name": "ClientSurfaceOwner_MissingWholeOwnerRejectsActualWalkerFall",
+      "exitCode": 1,
+      "failedAsExpected": true
+    }
+  ],
+  "tests": {
+    "cases": 300,
+    "passed": 300,
+    "failed": [],
+    "seconds": 38.74734282493591
+  },
+  "staticAudit": {
+    "unit": 1253,
+    "baselineCommit": "9a52071f1",
+    "knownAssetPrePost": 83,
+    "knownAssetNotices": 83,
+    "builtinFormDeletionConnected": 4,
+    "builtinFormDeletionTotal": 4,
+    "regularVtables": 87,
+    "connectedRegularVtables": 87,
+    "remainingRegularVtables": 0,
+    "remainingRows": [],
+    "compiledButNotExecutedPlayerRegularCases": [
+      "PlayerRegular_PatchNativeStateAndActualHost",
+      "PlayerRegular_CdNativeStateAndActualHost",
+      "PlayerRegular_SameWorldInitialFiveAndSixtySecondChain"
+    ],
+    "fullNoWorldComplete": false,
+    "fullM6Complete": false,
+    "guardLocations": 3,
+    "selectedGuards": [
+      "RawSurfaceDeletion forward",
+      "RawSurfaceLifetime fallWalker",
+      "RawSurfaceLifetime bridgeEffect"
+    ],
+    "originalAlgorithmsUnchanged": [
+      "cpppj/src/o/RawSurfaceLifecycle.cpp",
+      "cpppj/src/o/RawBridgeLifecycle.cpp",
+      "cpppj/src/o/RawIslandLifecycle.cpp",
+      "cpppj/src/o/SquidDestroyLifecycle.cpp"
+    ],
+    "actualCallerEvidence": [
+      "RawSurfaceWorld BindDeletion supplies existing Session deletion forward",
+      "RawSurfaceWorld BindRuntime supplies existing walkerFall and bridgeEffect",
+      "RawSurfaceWorld BindRuntimePin updates these same bindings",
+      "ClientGameplayGlobals BindRuntimeOwner publishes actual full Runtime before Load/Prepare",
+      "RawCampaignSession destructor unpublishes and Impl drains its own processes before releasing runtime bindings; construction direct caller boundary retained"
+    ],
+    "newRegressionCases": 3,
+    "newRegressionInputs": 6,
+    "newRegressionFailedChecks": 6,
+    "validOwnerCaseCoversThreeEffectsAndExceptionUnwind": true,
+    "packetCaptureAttackVictoryExecution": false,
+    "next": [
+      "RawSurfaceStorage NoteChanged/display/Pop/transmission current optional pin and direct load/shutdown caller classification",
+      "ClientConstructionGlobals direct constructor/load caller ownership classification",
+      "all active process/caller/owner audit",
+      "large damage/beam/dissolve/Template, initial PostPop, Path/AI/placement/Fort Finish",
+      "M6-l actual delay queues",
+      "M6-m JoinTestBattle"
+    ]
+  },
+  "live": {
+    "passed": true,
+    "unit": 1253,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1253\\live-tutorial4-final\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "b73a8abde175cb3f48947531b01a06c1652b239e438040bfd8476c38d64c3a7b",
+    "exeSha256After": "b73a8abde175cb3f48947531b01a06c1652b239e438040bfd8476c38d64c3a7b",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1253\\live-tutorial4-final\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1253\\live-tutorial4-final\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.804,
+        "gameTimeAfter": 24.291,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "screenshotReview": {
+    "reviewed": true,
+    "path": "live-tutorial4-final/015-generator-settled.png",
+    "observed": "1920x1080의 Tutorial4 일반 생산/건설 요청 후 섬과 메뉴 정상 표시. 건물 완공/청취/전체 동일성은 단정하지 않음"
+  },
+  "protectedFiles": 2808,
+  "protectedUnchanged": true,
+  "newDecompilation": false,
+  "newZip": false,
+  "rawDirectory": "extracted/cpp-resume-1253/"
+}

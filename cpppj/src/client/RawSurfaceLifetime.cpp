@@ -6,6 +6,16 @@
 #include <utility>
 
 namespace netstorm::client { // World 생성/Acquire/값 초기화 없이 실제 현재 장치를 연결한다.
+namespace { // 선택된 큰 표면 효과의 현재 외곽 수명만 보유한다.
+// 실제 전체 owner를 보유한 뒤 현재 함수 사본을 호출하며 원문의 선행 효과/후속 분배는 변경하지 않는다.
+template<class Function,class... Args>
+decltype(auto) SurfaceLifetimeCall(const std::weak_ptr<const RawSurfaceLifetimeBindings>& weak,Function RawSurfaceLifetimeBindings::* member,Args&&... args) {
+    const auto current=weak.lock();if (!current) throw std::logic_error("표면의 선택된 실제 큰 Runtime 미연결");
+    const auto pin=current->pin;if (!pin) throw std::logic_error("표면의 선택된 실제 전체 Runtime pin 미연결");
+    const auto owner=pin();if (!owner) throw std::logic_error("표면의 선택된 실제 전체 Runtime owner 반납");
+    const auto call=current.get()->*member;if (!call) throw std::logic_error("표면의 선택된 실제 큰 효과 미연결");return call(std::forward<Args>(args)...);
+}
+}
 // 짧은 World의 실제 효과 소유권만 연결하며 다른 활성 대여가 있으면 거부한다.
 void RawSurfaceStorage::BindSurfaceLifetimeRuntime(const std::shared_ptr<const RawSurfaceLifetimeBindings>& runtime) {
     if (!UsesNativeTransmissionDevices() || !runtime || !runtime->fallWalker || !runtime->bridgeEffect || !surfaceLifetimeRuntime_.expired()) throw std::invalid_argument("현재 표면 수명 실제 종단의 중복/누락");surfaceLifetimeRuntime_=runtime;
@@ -23,8 +33,8 @@ o::RawSurfaceLifecycle& RawSurfaceStorage::SurfaceLifetime() {
         o::SurfaceLifecycleHooks hooks;
         hooks.scheduleFall=[this](auto sid,auto x,auto y) { o::ScheduleBridgeFallChecked(Processes().Host(),pool,types,sid,x,y,Checking()); };
         hooks.destroy=[this](auto sid,auto flags) { DestroyAsset(sid,flags); }; //중첩된실제연결객체도현재World또는같은장기VT분배를다시선택한다.
-        hooks.fallWalker=[this](auto sid) { const auto current=surfaceLifetimeRuntime_.lock();if (!current) throw std::logic_error("표면의 선택된 실제 이동 유닛 낙하 owner 미연결");const auto pin=current->pin ? current->pin():std::shared_ptr<void>{};const auto fall=current->fallWalker;fall(sid); };
-        hooks.bridgeEffect=[this](const auto& event) { const auto current=surfaceLifetimeRuntime_.lock();if (!current) throw std::logic_error("표면의 선택된 실제 파편/소리 owner 미연결");const auto pin=current->pin ? current->pin():std::shared_ptr<void>{};const auto effect=current->bridgeEffect;effect(event); };
+        hooks.fallWalker=[this](auto sid) { SurfaceLifetimeCall(surfaceLifetimeRuntime_,&RawSurfaceLifetimeBindings::fallWalker,sid); };
+        hooks.bridgeEffect=[this](const auto& event) { SurfaceLifetimeCall(surfaceLifetimeRuntime_,&RawSurfaceLifetimeBindings::bridgeEffect,event); };
         auto body=std::make_unique<o::RawSurfaceLifecycle>(pool,Neighbors(),links.connectorType,CommonDeletion().Hooks(),std::move(hooks));body->BindCurrentConnectorType(links.connectorType);surfaceLifetime_=std::move(body);
     }
     return *surfaceLifetime_;

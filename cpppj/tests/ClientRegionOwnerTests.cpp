@@ -2,6 +2,7 @@
 #include "DudeSpawnSupport.h"
 #include "client/ClientConstructionGlobals.h"
 #include "o/RawAssetRegular.h" // 신전 정기의 현재 모드 뷰를 직접 확인한다.
+#include "o/RawSurfaceLifecycle.h" // 실제 표면 삭제 분배의 선택 후단과 호출 수명을 검증한다.
 #include "client/ClientGameplayGlobals.h"
 #include "client/ClientKencloudGlobals.h"
 #include "client/ClientPlayerRecords.h"
@@ -1623,6 +1624,46 @@ TEST_CASE(ClientCarrierOwner_MissingWholeOwnerRejectsFalling) { // 선택된 낙
         binding->falling=[&](auto,auto) { ++calls;return 0.125F; };s.storage->BindCarrierRuntime(binding);bool rejected{};
         try { s.storage->CarrierRegular().Handle(parent,0x5105U,123,9.0F); }catch (const std::logic_error&) { rejected=true; }
         CHECK(rejected && calls==0);
+    }
+}
+TEST_CASE(ClientSurfaceOwner_MissingWholeOwnerRejectsDerivedForward) { // 선택된 종속 통지의 실제 외곽 owner가 없으면 파생 전달을 실행하지 않는다.
+    for (const bool empty:{false,true}) { // 두 누락 형태를 실제 기본 Form의 같은 비전송 통지로 확인한다.
+        RegionScene s;const auto sid=s.storage->Factory().Create(3,2);auto binding=std::make_shared<RawSurfaceDeletionBindings>();std::uint32_t calls{};
+        if (empty) binding->pin=[]()->std::shared_ptr<void> { return {}; };
+        binding->hooks.forward=[&](const auto&) { ++calls; };s.storage->BindDeletionRuntime(binding);bool rejected{};
+        try { s.storage->CommonDeletion().Hooks().emit({SquidDestroyEffect::ReleaseDependent,sid,{},0}); }catch (const std::logic_error&) { rejected=true; }
+        CHECK(rejected && calls==0);
+    }
+}
+TEST_CASE(ClientSurfaceOwner_MissingWholeOwnerRejectsBridgeEffect) { // 원문의 첫 제거 통지 위치에서 누락 owner를 거부하고 뒤 소리/공통Post로 진행하지 않는다.
+    for (const bool empty:{false,true}) { // pin 부재와 빈 owner 모두 같은 실제 Bridge VT를 사용한다.
+        RegionScene s;const auto sid=s.Asset(kPatchBridgeVtable);s.Position(sid);s.storage->pool.AllocatedBytes(sid)[40]&=static_cast<std::uint8_t>(~9U);auto binding=std::make_shared<RawSurfaceLifetimeBindings>();std::uint32_t calls{};
+        if (empty) binding->pin=[]()->std::shared_ptr<void> { return {}; };
+        binding->fallWalker=RegionForbidden<void,Sid>();binding->bridgeEffect=[&](const auto&) { ++calls;throw std::logic_error("뒤 공통Post 이전 종료"); };s.storage->BindSurfaceLifetimeRuntime(binding);bool rejected{};
+        try { s.storage->SurfaceLifetime().Hooks().emit({SquidDestroyEffect::PostDestroy,sid,{},0}); }catch (const std::logic_error&) { rejected=true; }
+        CHECK(rejected && calls==0);
+    }
+}
+TEST_CASE(ClientSurfaceOwner_MissingWholeOwnerRejectsActualWalkerFall) { // 실제 NoIsland 뒤 같은 칸의 walker만 선택하며 큰 낙하의 누락 owner를 거부한다.
+    for (const bool empty:{false,true}) { // 실제 TYPE/그림/Hash에서 후보를 찾고 후속 공통Post는 실행하지 않는다.
+        RegionScene s;const auto surface=s.storage->CreateAsset(157,2),walker=s.Asset(0x508cc8U);s.Position(surface);s.Position(walker);s.storage->pool.AllocatedBytes(surface)[40]&=static_cast<std::uint8_t>(~9U);auto raw=s.storage->pool.AllocatedBytes(walker);raw[11]&=static_cast<std::uint8_t>(~7U);raw[40]&=static_cast<std::uint8_t>(~9U);s.storage->types[raw[10]].flags2|=0x10000U;s.Index(walker);
+        auto binding=std::make_shared<RawSurfaceLifetimeBindings>();std::uint32_t calls{};if (empty) binding->pin=[]()->std::shared_ptr<void> { return {}; };
+        binding->fallWalker=[&](auto target) { CHECK(target==walker);++calls;throw std::logic_error("후속 공통Post 이전 종료"); };binding->bridgeEffect=RegionForbidden<void,const BridgeLifecycleEvent&>();s.storage->BindSurfaceLifetimeRuntime(binding);bool rejected{};
+        try { s.storage->SurfaceLifetime().Hooks().emit({SquidDestroyEffect::PostDestroy,surface,{},0}); }catch (const std::logic_error&) { rejected=true; }
+        CHECK(rejected && calls==0);
+    }
+}
+TEST_CASE(ClientSurfaceOwner_SelectedEffectsPinActualReceiverAndFunction) { // 세 실제 분배에서 자기 대여/수신자를 반납해도 선택 함수와 수신자 owner가 예외 복귀까지 살아 있다.
+    for (const int effect:{0,1,2}) { // 종속 전달·다리 첫 제거 통지·실제 같은 칸 walker 낙하를 각각 선택한다.
+        RegionScene s;const auto parent=s.storage->CreateAsset(effect==1 ? 82U:157U,2);s.Position(parent);s.storage->pool.AllocatedBytes(parent)[40]&=static_cast<std::uint8_t>(~9U);Sid walker{};
+        if (effect==2) { walker=s.Asset(0x508cc8U);s.Position(walker);auto raw=s.storage->pool.AllocatedBytes(walker);raw[11]&=static_cast<std::uint8_t>(~7U);raw[40]&=static_cast<std::uint8_t>(~9U);s.storage->types[raw[10]].flags2|=0x10000U;s.Index(walker); }
+        auto receiver=std::make_shared<std::uint32_t>(0);std::weak_ptr<std::uint32_t> weak=receiver;auto deletion=std::make_shared<RawSurfaceDeletionBindings>();auto lifetime=std::make_shared<RawSurfaceLifetimeBindings>();std::uint32_t calls{};
+        const auto consume=[&] { ++*receiver;++calls;receiver.reset();deletion.reset();lifetime.reset();CHECK(!weak.expired());throw std::logic_error("선택 수신자 예외 복귀 확인"); }; // 호출자가 실제 사용하는 카운터가 pin의 수신자이며 미사용 토큰이 아니다.
+        const auto pin=[weak]()->std::shared_ptr<void> { return weak.lock(); };
+        if (effect==0) { deletion->pin=pin;deletion->hooks.forward=[&](const auto& event) { CHECK(event.sid==parent && event.effect==SquidDestroyEffect::ReleaseDependent);consume(); };s.storage->BindDeletionRuntime(deletion); }
+        else { lifetime->pin=pin;lifetime->fallWalker=[&](auto target) { CHECK(effect==2 && target==walker);consume(); };lifetime->bridgeEffect=[&](const auto& event) { CHECK(effect==1 && event.sid==parent && event.effect==BridgeLifecycleEffect::NotifyRemoval);consume(); };s.storage->BindSurfaceLifetimeRuntime(lifetime); }
+        bool rejected{};try { if (effect==0) s.storage->CommonDeletion().Hooks().emit({SquidDestroyEffect::ReleaseDependent,parent,{},0});else s.storage->SurfaceLifetime().Hooks().emit({SquidDestroyEffect::PostDestroy,parent,{},0}); }catch (const std::logic_error& error) { rejected=std::string_view(error.what())=="선택 수신자 예외 복귀 확인"; }
+        CHECK(rejected && calls==1 && weak.expired());
     }
 }
 TEST_CASE(ClientContentOwner_MissingWholeOwnerRejectsDerivedNotice) { // 빈 기본 가상24와 구별해 파생 부모 통지만 실제 전체 owner를 요구한다.

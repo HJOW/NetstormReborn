@@ -31,7 +31,11 @@ o::SquidDestroyLifecycle& RawSurfaceStorage::CommonDeletion() {
             throw std::logic_error("장기 공통 삭제 Refund는 같은 실제 HP/보상만 사용합니다");
         };
         hooks.forward=[this](const o::SquidDestroyEvent& event) {
-            if (const auto current=deletionRuntime_.lock()) { const auto pin=current->pin ? current->pin():std::shared_ptr<void>{};const auto forward=current->hooks.forward;forward(event);return; }
+            if (const auto current=deletionRuntime_.lock()) {
+                const auto pin=current->pin;if (!pin) throw std::logic_error("공통 삭제 파생 전달의 실제 전체 Runtime pin 미연결");
+                const auto owner=pin();if (!owner) throw std::logic_error("공통 삭제 파생 전달의 실제 전체 Runtime owner 반납"); // 선택된 파생 함수 사본의 정상/예외 복귀까지 실제 소유자를 보유한다.
+                const auto forward=current->hooks.forward;if (!forward) throw std::logic_error("공통 삭제의 선택된 실제 파생 전달 미연결");forward(event);return;
+            }
             DefaultProcessAssetHooks().emit(event); // NoWorld의 실제 전송/선택은 실행하며 아직 없는 파생 종속 삭제는 해당 위치에서 명시 실패한다.
         };
         auto common=std::make_unique<o::SquidDestroyLifecycle>(pool,types,postPopState,deletionState,BaseDestroy(),std::move(hooks),&Graph(),&Reward());
