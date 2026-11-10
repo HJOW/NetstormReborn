@@ -449,4 +449,108 @@ public sealed class RawPlayerParticipationTests
         Assert.Throws<ArgumentOutOfRangeException>(() => runtime.RemoveAlly(8u, 9u));
         Assert.Throws<ArgumentOutOfRangeException>(() => runtime.RemoveAlly(9u, 0u));
     }
+
+    /// <summary>동맹 요청이 방장이면 방송하고 대상이 자신이면서 무시 구독자가 아니면 Tell하는지 검증한다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void ReceiveAllianceRequestTellsLocalTarget()
+    {
+        // 원본 0x77 수신의 방장 relay·자신 판정·Tell 경로만 둔다. 이름·구독자는 0바이트라 빈 값이다.
+        string trace = "";
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            new PlayerParticipationState(),
+            new PlayerParticipationHooks());
+        var hooks = new AllianceNegotiationHooks
+        {
+            Boss = () => true,
+            Broadcast = packet => trace += "B," + Convert.ToHexString(packet).ToLowerInvariant() + ";",
+            IgnoredSubscriber = subscriber => { trace += $"I,{subscriber};"; return false; },
+            Tell = text => trace += "T," + text,
+        };
+        byte[] packet = [1, 0x77, 9, 0, 2, 1];
+        runtime.ReceiveAllianceRequest(packet, hooks);
+        Assert.Equal("B,017709000201;I,0;T,AllianceRequested(~r,,2)", trace);
+    }
+
+    /// <summary>동맹 요청이 방장도 대상도 아니면 조용히 넘어가는지 검증한다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void ReceiveAllianceRequestStaysSilentForOthers()
+    {
+        // 방장이 거짓이고 목표가 자신이 아니면 어떤 효과도 부르지 않는다.
+        string trace = "";
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            new PlayerParticipationState(),
+            new PlayerParticipationHooks());
+        var hooks = new AllianceNegotiationHooks
+        {
+            Boss = () => false,
+            Broadcast = packet => trace += "B;",
+            IgnoredSubscriber = subscriber => { trace += "I;"; return false; },
+            Tell = text => trace += "T;",
+        };
+        byte[] packet = [1, 0x77, 9, 0, 2, 3];
+        runtime.ReceiveAllianceRequest(packet, hooks);
+        Assert.Equal("", trace);
+    }
+
+    /// <summary>동맹 파기가 방장이면 양쪽을 해제·방송하고 제3자면 상태를 남기는지 검증한다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void ReceiveBrokenAllianceBossClearsBothAndStatusesThirdParty()
+    {
+        // 원본 0x79 수신의 방장 양쪽 해제·방송·제3자 상태 경로만 둔다. PlayerKnown 0이라 Chat은 닿지 않는다.
+        string trace = "";
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            new PlayerParticipationState { Battle = true },
+            new PlayerParticipationHooks { SendAlliance = (server, owner, mask) => trace += $"S,{server},{owner},{mask};" });
+        runtime.SetAlliance(2u, 0xffu);
+        runtime.SetAlliance(3u, 0xffu);
+        var hooks = new AllianceNegotiationHooks
+        {
+            Boss = () => true,
+            Broadcast = packet => trace += "B," + Convert.ToHexString(packet).ToLowerInvariant() + ";",
+            Tell = text => trace += "T," + text + ";",
+            Status = (kind, first, second) => trace += $"T,{kind},{first},{second}",
+        };
+        byte[] packet = [1, 0x79, 9, 0, 2, 3];
+        runtime.ReceiveBrokenAlliance(packet, hooks);
+        Assert.Equal("S,9,2,247;S,9,3,251;B,017909000203;T,8,2,3", trace);
+    }
+
+    /// <summary>동맹 파기가 자신이 당사자면 Tell하는지 검증한다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void ReceiveBrokenAllianceTellsLocalParty()
+    {
+        // 방장이 아니면 해제·방송 없이 현지 Tell만 한다. 이름은 0바이트라 빈 값이다.
+        string trace = "";
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            new PlayerParticipationState(),
+            new PlayerParticipationHooks());
+        var hooks = new AllianceNegotiationHooks
+        {
+            Boss = () => false,
+            Broadcast = packet => trace += "B;",
+            Tell = text => trace += "T," + text,
+            Status = (kind, first, second) => trace += "T;",
+        };
+        byte[] packet = [1, 0x79, 9, 0, 1, 2];
+        runtime.ReceiveBrokenAlliance(packet, hooks);
+        Assert.Equal("T,AllianceBroken(,~r)", trace);
+    }
+
+    /// <summary>짧은 협상 packet을 거부하는지 검증한다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void ReceiveNegotiationRejectsShortPacket()
+    {
+        // 원본 packet BYTE 범위 검사를 그대로 둔다. 효과 묶음보다 먼저 동작한다.
+        var runtime = new RawPlayerParticipation(
+            OriginalEdition.Patch1078, new byte[1620], new uint[81], new byte[9],
+            new PlayerParticipationState(),
+            new PlayerParticipationHooks());
+        var hooks = new AllianceNegotiationHooks { Boss = () => true };
+        Assert.Throws<ArgumentOutOfRangeException>(() => runtime.ReceiveAllianceRequest(new byte[2], hooks));
+        Assert.Throws<ArgumentOutOfRangeException>(() => runtime.ReceiveBrokenAlliance(new byte[2], hooks));
+    }
 }

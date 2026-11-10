@@ -84,6 +84,28 @@ public sealed class PlayerParticipationHooks
     public Action<uint>? FreeBrain { get; set; }
 }
 
+// 동맹 협상 수신(요청·파기)의 외부 효과 묶음이다. 무승부 마감 시각은 후속 단위에서 잇는다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.
+public sealed class AllianceNegotiationHooks
+{
+    /// <summary>방장 여부다. 방장이면 수신 packet을 방송한다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    public Func<bool>? Boss { get; set; }
+
+    /// <summary>무시할 구독자인지 묻는다. 참이면 Tell을 건너뛴다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    public Func<uint, bool>? IgnoredSubscriber { get; set; }
+
+    /// <summary>요청·파기 Tell 문자열이다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    public Action<string>? Tell { get; set; }
+
+    /// <summary>제3자 파기 상태(8, 첫째, 둘째)다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    public Action<uint, uint, uint>? Status { get; set; }
+
+    /// <summary>방장의 relay 방송이다. 원본 packet을 그대로 넘긴다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    public Action<ReadOnlySpan<byte>>? Broadcast { get; set; }
+
+    /// <summary>무승부 마감 게임 시각이다. 무승부 수신 단위에서 잇는다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    public Func<double>? GameSeconds { get; set; }
+}
+
 // 9×0xb4 Player와 원본 9×9 DWORD 표를 참조한다. 2026-11-07 F2d Player 이식에서 추가됐다.
 public sealed class RawPlayerParticipation
 {
@@ -385,6 +407,95 @@ public sealed class RawPlayerParticipation
         Put(owner, AlliesOffset, mask);
         SetAlliance(owner, mask);
         Require(broadcast)(packet);
+    }
+
+    /// <summary>동맹 패킷의 원본 BYTE를 읽는다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    /// <param name="packet">읽을 패킷이다.</param>
+    /// <param name="offset">읽을 위치다.</param>
+    /// <exception cref="ArgumentOutOfRangeException">동맹 수신의 실제 packet BYTE 범위 오류다.</exception>
+    private static byte AlliancePacketByte(ReadOnlySpan<byte> packet, int offset)
+    {
+        if (offset < 0 || offset >= packet.Length)
+        {
+            throw new ArgumentOutOfRangeException(nameof(offset), "동맹 수신의 실제 packet BYTE 범위 오류");
+        }
+
+        return packet[offset];
+    }
+
+    /// <summary>원본 Tell 색 이름(~l·~r·~w·~u·~s·~y·~d·~a, 그 밖은 ~q)이다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.</summary>
+    /// <param name="owner">색을 찾을 소유자 번호다.</param>
+    private static string AllianceTellColor(uint owner)
+    {
+        string[] colors = ["~l", "~r", "~w", "~u", "~s", "~y", "~d", "~a"];
+        return owner >= 1u && owner <= 8u ? colors[(int)owner - 1] : "~q";
+    }
+
+    /// <summary>
+    /// 동맹 요청 packet을 방장이면 방송하고 대상이 자신이면서 무시 구독자가 아니면 Tell한다.
+    /// 근거: cpppj `o/RawPlayerParticipation.cpp`의 `ReceiveAllianceRequest`. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.
+    /// </summary>
+    /// <param name="packet">받을 요청 packet이다. 6바이트 이상이다.</param>
+    /// <param name="hooks">묶은 협상 효과다. 도달한 분기마다 필수로 요구한다.</param>
+    /// <exception cref="ArgumentNullException">협상 효과가 비었다.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">동맹 수신의 실제 packet BYTE 범위 오류다.</exception>
+    /// <exception cref="InvalidOperationException">도달한 실제 외부 효과 미연결이다.</exception>
+    public void ReceiveAllianceRequest(ReadOnlySpan<byte> packet, AllianceNegotiationHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        bool boss = Require(hooks.Boss)();
+        uint requester = AlliancePacketByte(packet, 4);
+        if (boss)
+        {
+            Require(hooks.Broadcast)(packet);
+        }
+
+        if (AlliancePacketByte(packet, 5) == LocalOwner() && !Require(hooks.IgnoredSubscriber)(Read(requester, SubscriberOffset)))
+        {
+            string color = AllianceTellColor(AlliancePacketByte(packet, 4));
+            string name = Name(requester);
+            Require(hooks.Tell)($"AllianceRequested({color},{name},{AlliancePacketByte(packet, 4)})");
+        }
+    }
+
+    /// <summary>
+    /// 동맹 파기 packet을 방장이면 양쪽 해제·방송하고 자신이 당사자면 Tell, 제3자면 상태를 남긴다.
+    /// 근거: cpppj `o/RawPlayerParticipation.cpp`의 `ReceiveBrokenAlliance`. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.
+    /// </summary>
+    /// <param name="packet">받을 파기 packet이다. 6바이트 이상이다.</param>
+    /// <param name="hooks">묶은 협상 효과다. 도달한 분기마다 필수로 요구한다.</param>
+    /// <exception cref="ArgumentNullException">협상 효과가 비었다.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">동맹 수신의 실제 packet BYTE 범위 오류다.</exception>
+    /// <exception cref="InvalidOperationException">도달한 실제 외부 효과 미연결이다.</exception>
+    public void ReceiveBrokenAlliance(ReadOnlySpan<byte> packet, AllianceNegotiationHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        uint first = AlliancePacketByte(packet, 4);
+        uint second = AlliancePacketByte(packet, 5);
+        string firstColor = AllianceTellColor(first);
+        string secondColor = AllianceTellColor(second);
+        if (Require(hooks.Boss)())
+        {
+            RemoveAlly(first, second);
+            RemoveAlly(second, first);
+            Require(hooks.Broadcast)(packet);
+        }
+
+        // 원본 relay 뒤 현지 판정을 그대로 둔다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.
+        uint local = LocalOwner();
+        if (local == first)
+        {
+            Require(hooks.Tell)($"AllianceBroken({Name(second)},{secondColor})");
+            return;
+        }
+
+        if (local == second)
+        {
+            Require(hooks.Tell)($"AllianceBroken({Name(first)},{firstColor})");
+            return;
+        }
+
+        Require(hooks.Status)(8u, first, second);
     }
 
     /// <summary>
