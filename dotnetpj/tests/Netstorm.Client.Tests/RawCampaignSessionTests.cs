@@ -218,15 +218,53 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미적재", error.Message);
     }
 
-    /// <summary>적재 뒤 건설 시작을 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 건설 시작 Stub 이식에서 추가됐다.</summary>
+    /// <summary>적재 뒤 건설 시작을 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 건설 시작 Stub 이식에서 추가됐고 2026-11-10 F3 건설 시작 본체에서 묶기 전 관문으로 유지했다.</summary>
     [Fact]
     public void StartConstructionRejectsWhenUnconnected()
     {
-        // 실제 빌더 본체는 Fort 본체 단위에서 잇는다(결정 6).
+        // 실제 빌더 효과를 묶기 전에는 Fort 본체 단위에서 잇는다(결정 6).
         var session = LoadableSession();
         session.LoadSeeds(LoadableSeeds());
+        Assert.False(session.HasConstructionStart());
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.StartConstruction(5, 10f));
         Assert.Contains("미연결", error.Message);
+    }
+
+    /// <summary>묶은 실제 빌더 효과에 부모·기간을 그대로 넘기는지 검증한다. 2026-11-10 F3 건설 시작 본체에서 추가됐다.</summary>
+    [Fact]
+    public void StartConstructionForwardsToBoundDevice()
+    {
+        // 원본 세션 설치의 건설 몸체 연결만 둔다. 준비 시각 대입은 빌더 몸체 쪽에서 잇는다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        var calls = new List<(int Parent, float Duration)>();
+        session.BindConstructionStart((parent, duration) => calls.Add((parent, duration)));
+        Assert.True(session.HasConstructionStart());
+        session.StartConstruction(5, 10f);
+        session.StartConstruction(7, 0f);
+        Assert.Equal([(5, 10f), (7, 0f)], calls);
+    }
+
+    /// <summary>원본 SID 폭을 벗어난 부모 번호를 거부하는지 검증한다. 2026-11-10 F3 건설 시작 본체에서 추가됐다.</summary>
+    [Fact]
+    public void StartConstructionRejectsParentOutOfSidRange()
+    {
+        // 원본 Sid의 uint16 폭을 그대로 둔다. 적재 관문보다 먼저 동작한다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        session.BindConstructionStart((_, _) => { });
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.StartConstruction(-1, 10f));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.StartConstruction(65536, 10f));
+    }
+
+    /// <summary>빈 빌더 묶기를 거부하는지 검증한다. 2026-11-10 F3 건설 시작 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BindConstructionStartRejectsNull()
+    {
+        // 묶지 않은 세션은 미연결로 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentNullException>(() => session.BindConstructionStart(null!));
+        Assert.False(session.HasConstructionStart());
     }
 
     /// <summary>미적재 위치 명령을 적재 관문에서 거부하는지 검증한다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐다.</summary>

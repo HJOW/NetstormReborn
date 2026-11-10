@@ -53,6 +53,9 @@ public sealed class RawCampaignSession
     /// <summary>수신한 로컬 패킷 목록이다. 사전 구현에서는 항상 비어 있다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
     private readonly List<byte[]> _localPackets = new();
 
+    /// <summary>같은 실제 빌더의 건설 시작 효과다. 세션 조립 때 실제 건설 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 건설 시작 본체에서 추가됐다.</summary>
+    private Action<int, float>? _constructionStart;
+
     /// <summary>같은 자산·저장소·월드로 세션 껍데기를 만든다. Fort 적재 본체는 후속 단위에서 잇는다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
@@ -202,20 +205,40 @@ public sealed class RawCampaignSession
         _world.RunFrame(time, paused);
     }
 
-    /// <summary>원본 건설 시작을 후속 배치와 공유한다. 껍데기에서는 건설 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 건설 시작 Stub 이식에서 추가됐다.</summary>
-    /// <param name="parent">건설할 부모 번호다.</param>
+    /// <summary>같은 실제 빌더의 건설 시작 효과를 묶는다. 원본 세션 설치의 건설 몸체 연결만 둔다. 2026-11-10 F3 건설 시작 본체에서 추가됐다.</summary>
+    /// <param name="start">실제 빌더 시작 효과다. 부모 번호와 기간을 그대로 받는다.</param>
+    public void BindConstructionStart(Action<int, float> start)
+    {
+        ArgumentNullException.ThrowIfNull(start);
+        _constructionStart = start;
+    }
+
+    /// <summary>같은 실제 빌더의 건설 시작 효과를 묶었는지 확인한다. 2026-11-10 F3 건설 시작 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasConstructionStart() => _constructionStart is not null;
+
+    /// <summary>원본 건설 시작을 후속 배치와 공유한다. 묶은 실제 빌더 효과가 없으면 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 건설 시작 Stub 이식에서 추가됐고 2026-11-10 F3 건설 시작 본체에서 본체를 이었다.</summary>
+    /// <param name="parent">건설할 부모 번호다. 원본 SID 폭(0~65535)을 받는다.</param>
     /// <param name="duration">건설 기간이다. 0이면 원본 기본 10초다.</param>
     public void StartConstruction(int parent, float duration)
     {
-        _ = parent;
-        _ = duration;
+        if (parent < 0 || parent > 65535)
+        {
+            throw new ArgumentOutOfRangeException(nameof(parent), parent, "건설 시작의 실제 부모 SID 범위 오류");
+        }
+
         if (!_loaded)
         {
             throw new InvalidOperationException("캠페인 세션의 미적재 건설 시작입니다.");
         }
 
-        // 원본 세션 건설의 실제 빌더 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 건설 시작 미연결");
+        // 원본 RawCampaignSession::StartConstruction의 설치·빌더 관문을 직역한다. 준비 시각 대입(PrepareBuilding)은 실제 빌더 몸체 쪽에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        if (_constructionStart is null)
+        {
+            throw new InvalidOperationException("실제 건설 시작 미연결");
+        }
+
+        _constructionStart(parent, duration);
     }
 
     /// <summary>같은 파서로 위치 문자열을 해석해 실제 Runtime에 생성한다. 껍데기에서는 파서·생성 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐다.</summary>
