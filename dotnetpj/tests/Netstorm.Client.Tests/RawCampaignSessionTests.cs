@@ -229,6 +229,33 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미연결", error.Message);
     }
 
+    /// <summary>미적재 위치 명령을 적재 관문에서 거부하는지 검증한다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LocationCommandsRejectWhenNotLoaded()
+    {
+        // 적재 전 생성·삭제 명령은 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentNullException>(() => session.CreateAt(null!));
+        Assert.Throws<ArgumentNullException>(() => session.DestroyAt(null!));
+        InvalidOperationException createError = Assert.Throws<InvalidOperationException>(() => session.CreateAt("70,10,10"));
+        Assert.Contains("미적재", createError.Message);
+        InvalidOperationException destroyError = Assert.Throws<InvalidOperationException>(() => session.DestroyAt("70,10,10"));
+        Assert.Contains("미적재", destroyError.Message);
+    }
+
+    /// <summary>적재 뒤 위치 명령을 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LocationCommandsRejectWhenUnconnected()
+    {
+        // 실제 파서·생성·삭제 본체는 Fort 본체·규칙 단위에서 잇는다(결정 6).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        InvalidOperationException createError = Assert.Throws<InvalidOperationException>(() => session.CreateAt("70,10,10"));
+        Assert.Contains("미연결", createError.Message);
+        InvalidOperationException destroyError = Assert.Throws<InvalidOperationException>(() => session.DestroyAt("70,10,10"));
+        Assert.Contains("미연결", destroyError.Message);
+    }
+
     /// <summary>보고서가 월드와 같은 첫 줄을 보이는지 검증한다. 2026-11-10 F3 세션 보고서 위임 이식에서 추가됐다.</summary>
     [Fact]
     public void ReportDelegatesToWorld()

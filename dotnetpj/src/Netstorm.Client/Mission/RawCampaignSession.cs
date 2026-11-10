@@ -190,6 +190,34 @@ public sealed class RawCampaignSession
         throw new InvalidOperationException("실제 건설 시작 미연결");
     }
 
+    /// <summary>같은 파서로 위치 문자열을 해석해 실제 Runtime에 생성한다. 껍데기에서는 파서·생성 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐다.</summary>
+    /// <param name="location">생성 위치 문자열이다.</param>
+    public void CreateAt(string location)
+    {
+        ArgumentNullException.ThrowIfNull(location);
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 생성 명령입니다.");
+        }
+
+        // 원본 0044c660의 파서·지면·가상 소유자·HP·Pop 본체는 Fort 본체·규칙 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 위치 생성 미연결");
+    }
+
+    /// <summary>같은 파서로 위치 문자열을 해석해 같은 월드의 가상 삭제로 지운다. 껍데기에서는 파서·삭제 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐다.</summary>
+    /// <param name="location">삭제 위치 문자열이다.</param>
+    public void DestroyAt(string location)
+    {
+        ArgumentNullException.ThrowIfNull(location);
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 삭제 명령입니다.");
+        }
+
+        // 원본 0044c790의 점검·타입·소유자 필터·가상 삭제 본체는 Fort 본체·규칙 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 위치 삭제 미연결");
+    }
+
     /// <summary>현재 연결 단계를 읽는다. 사전 구현에서는 항상 0(미접속)이다. 3차 로컬 구현 때 실제 전송과 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
     /// <returns>연결 단계다.</returns>
     public uint LocalConnectionPhase() => _localPhase;
