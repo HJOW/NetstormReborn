@@ -266,8 +266,8 @@
       "use": "한국어 UI 글꼴 D2Coding 굵은체(woff2, 굵은 글꼴 슬롯·굵게 스타일)"
     },
     {
-      "path": "fonts/License.txt",
-      "source": "fonts/License.txt",
+      "path": "fonts/D2Coding-License.txt",
+      "source": "fonts/D2Coding-License.txt",
       "bundle": "korean",
       "size": 4006,
       "sha256": "5755b8a0eefddc5e728b1d1090a08fbfef9656baed3104644cca7f86d112530e",

@@ -81,7 +81,7 @@ const ASSET_FILES = Object.freeze([
     { path: 'music/ser22.mus', bundle: 'menu-music', use: '메인 메뉴(전투 밖) 음악, RIFF WAV PCM' },
     { path: 'fonts/D2Coding.woff2', source: 'fonts/D2Coding.woff2', bundle: 'korean', use: '한국어 UI 글꼴 D2Coding 보통체(woff2, 사용자 제공, FontFace 로 등록해 Canvas 로 글리프를 만듦)' },
     { path: 'fonts/D2CodingBold.woff2', source: 'fonts/D2CodingBold.woff2', bundle: 'korean', use: '한국어 UI 글꼴 D2Coding 굵은체(woff2, 굵은 글꼴 슬롯·굵게 스타일)' },
-    { path: 'fonts/License.txt', source: 'fonts/License.txt', bundle: 'korean', use: 'D2Coding 글꼴 사용 허가(SIL Open Font License 1.1). 글꼴과 함께 배포한다.' },
+    { path: 'fonts/D2Coding-License.txt', source: 'fonts/D2Coding-License.txt', bundle: 'korean', use: 'D2Coding 글꼴 사용 허가(SIL Open Font License 1.1). 글꼴과 함께 배포한다.' },
     { path: 'd/xlat.korean', source: 'webpj/translations/xlat.korean', bundle: 'korean', use: '한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메인 메뉴 버튼·Help·Options 펼침 메뉴 라벨, 일반 도움말 창 Back·OK' },
     ...KOREAN_LANGUAGE_FILES.map(({ name, use }) => ({ path: `d/${name}`, source: `webpj/translations/${name}`, bundle: 'korean', use })),
 ]);

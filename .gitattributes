@@ -2343,7 +2343,7 @@ cpppj/tests/fixtures/basefile-read-policy-x86.tsv -text whitespace=-blank-at-eol
 
 # webpj 한국어 번역표 원본과 D2Coding 글꼴 라이선스도 webpj/www/data 복사본과 같은 바이트를 유지해 check-assets 의 SHA-256 비교가 체크아웃마다 같게 한다.
 webpj/translations/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab
-fonts/License.txt -text
+fonts/D2Coding-License.txt -text
 
 # 단위678의 translated 커널 최초 CPU 전체 표면은 줄바꿈 변환 없이 보존한다.
 cpppj/tests/fixtures/translated-pixels-x86.tsv -text whitespace=-blank-at-eol

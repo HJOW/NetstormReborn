@@ -14,11 +14,11 @@ import { XlatTable } from './xlat.js';
 export const KOREAN_BUNDLE = 'korean';
 
 // 한국어 자산의 데이터 폴더 기준 경로이다. 글꼴 파일 이름은 프로젝트 fonts/ 의 사용자 제공 woff2 와 같다(2026-10-31 사용자 지시: woff2 를 webpj 안으로 복사해 사용).
-// license 는 글꼴 사용 허가 문서로 글꼴과 함께 배포한다. (2026-10-31 WB03-N)
+// license 는 글꼴 사용 허가 문서로 글꼴과 함께 배포한다. (2026-10-31 WB03-N; 2026-11-10: 저장소 fonts/ 의 이름 변경에 맞춰 D2Coding-License.txt)
 export const KOREAN_ASSET_PATHS = Object.freeze({
     regular: 'fonts/D2Coding.woff2',
     bold: 'fonts/D2CodingBold.woff2',
-    license: 'fonts/License.txt',
+    license: 'fonts/D2Coding-License.txt',
     translations: 'd/xlat.korean',
 });
 
