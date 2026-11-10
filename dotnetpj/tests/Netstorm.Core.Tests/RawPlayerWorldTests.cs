@@ -690,4 +690,49 @@ public sealed class RawPlayerWorldTests
         Assert.Equal(1u, book.GlobalCounts[74]);
         Assert.Equal(1u, book.Depth);
     }
+
+    /// <summary>fort 또는 최초 비트가 없는 입력은 예약 장치 없이 현재 기록과 공통 부모를 갱신한다. 2026-11-10 F3 미뤄 둔 전수 재생(0.303)에서 추가됐다.</summary>
+    [Fact]
+    public void PostPopFortAndNonFirstNeedNoReservation()
+    {
+        // cpp `PlayerParentCurrent_FortAndNonFirstNeedNoReservation`의 순서 계약이다.
+        foreach (uint flags in new uint[] { 1u, 2u })
+        {
+            var pool = Pool();
+            var types = Types();
+            var book = new RawPostPopState { Suppressed = true, Depth = 1u };
+            var inner = Base(pool, types, book);
+            var records = Records();
+            var state = new PlayerWorldState { FortMode = flags == 1, Special = flags == 2 ? 1u : 0u };
+            var body = new RawPlayerWorld(pool, inner, records, state, new PlayerWorldHooks());
+            Fill(pool, PlayerVtable);
+            body.PostPop(Source, flags);
+            Assert.Equal((uint)Source, Get(records, 0xb4 + 0x9c));
+            Assert.Equal(0xdeadbeefu, Get(pool.AllocatedBytes(Source), FrameOffset));
+            Assert.Equal(0u, book.Depth);
+        }
+    }
+
+    /// <summary>빈 슬롯 바이트의 실제 Player 가상표는 조회만 되고 검증은 공간 변경 전에 거부한다. 2026-11-10 F3 미뤄 둔 전수 재생(0.303)에서 추가됐다.</summary>
+    [Fact]
+    public void ValidateRejectsFreedSlotBeforeBase()
+    {
+        // cpp `PlayerParentCurrent_PhysicalVtableNoFirstAndNoUnusedDevices`의 검증 절반이다. 가상 분배 진입은 기반 몸체 작업으로 남긴다.
+        var pool = Pool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true, Depth = 1u };
+        var inner = Base(pool, types, book);
+        var records = Records();
+        var body = new RawPlayerWorld(pool, inner, records, new PlayerWorldState(), new PlayerWorldHooks());
+        Fill(pool, PlayerVtable);
+        // 빈 비트를 세우면 이후 AllocatedBytes가 거부하므로 쓰기 span을 먼저 잡는다(원본의 같은 물리 슬롯 직접 읽기 상당).
+        Span<byte> raw = pool.AllocatedBytes(Source);
+        raw[11] = 1;
+        raw[40] = 8;
+        Assert.True(body.Handles(Source));
+        byte[] before = (byte[])records.Clone();
+        Assert.ThrowsAny<Exception>(() => body.Validate(Source, 0u));
+        Assert.True(records.AsSpan().SequenceEqual(before));
+        Assert.Equal(1u, book.Depth);
+    }
 }
