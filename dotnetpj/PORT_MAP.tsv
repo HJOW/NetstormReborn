@@ -669,3 +669,5 @@ cpppj/src/client/RawChatReceive.cpp	Netstorm.Client/Chat/RawChatReceive.cs	fc5be
 cpppj/src/client/RawChatReceive.h	Netstorm.Client/Chat/RawChatReceive.cs	fc5bec1cce4358a9173b304384389e5a746a703d	port
 cpppj/src/client/ChatNameCompletion.cpp	Netstorm.Client/Chat/ChatNameCompletion.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port
 cpppj/src/client/ChatNameCompletion.h	Netstorm.Client/Chat/ChatNameCompletion.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port
+cpppj/src/o/RawPlayerIdentity.cpp	Netstorm.Core/Original/RawPlayerIdentity.cs	9f7c0604d47eba3a6240fd2a50dec49cf1302d70	port
+cpppj/src/o/RawPlayerIdentity.h	Netstorm.Core/Original/RawPlayerIdentity.cs	9f7c0604d47eba3a6240fd2a50dec49cf1302d70	port
