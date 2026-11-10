@@ -826,4 +826,64 @@ public sealed class RawCampaignSessionTests
         Assert.Throws<ArgumentNullException>(() => session.BindAiInitialize(null!));
         Assert.False(session.HasAiInitialize());
     }
+
+    /// <summary>미적재 AI 다리 갱신을 적재 관문에서 거부하는지 검증한다. 2026-11-11 F3 AI 다리 갱신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void RefreshAiBridgesRejectsWhenNotLoaded()
+    {
+        // 적재 전 AI 다리 갱신은 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        session.BindAiRefreshBridges(owner => true);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.RefreshAiBridges(1u));
+        Assert.Contains("미적재", error.Message);
+    }
+
+    /// <summary>원본 1..8 범위를 벗어난 소유자를 거부하는지 검증한다. 2026-11-11 F3 AI 다리 갱신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void RefreshAiBridgesRejectsBadOwner()
+    {
+        // 원본 세션의 owner 관문을 그대로 둔다. 적재 관문보다 먼저 동작한다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        session.BindAiRefreshBridges(owner => true);
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.RefreshAiBridges(0u));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.RefreshAiBridges(9u));
+    }
+
+    /// <summary>적재 뒤 AI 다리 갱신을 본체 미연결로 거부하는지 검증한다. 2026-11-11 F3 AI 다리 갱신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void RefreshAiBridgesRejectsWhenUnconnected()
+    {
+        // 실제 전략 AI 몸체는 후속 단위에서 잇는다(결정 6).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        Assert.False(session.HasAiRefreshBridges());
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.RefreshAiBridges(1u));
+        Assert.Contains("미연결", error.Message);
+    }
+
+    /// <summary>묶은 실제 AI 효과의 다리 갱신 결과를 그대로 돌려주는지 검증한다. 2026-11-11 F3 AI 다리 갱신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void RefreshAiBridgesForwardsToBoundDevice()
+    {
+        // 원본 세션 설치의 전략 AI 몸체 연결만 둔다. brain 없음 거짓 경로도 위임한다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        var calls = new List<uint>();
+        session.BindAiRefreshBridges(owner => { calls.Add(owner); return owner == 6u; });
+        Assert.True(session.HasAiRefreshBridges());
+        Assert.True(session.RefreshAiBridges(6u));
+        Assert.False(session.RefreshAiBridges(7u));
+        Assert.Equal([6u, 7u], calls);
+    }
+
+    /// <summary>빈 AI 다리 갱신 묶기를 거부하는지 검증한다. 2026-11-11 F3 AI 다리 갱신 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BindAiRefreshBridgesRejectsNull()
+    {
+        // 묶지 않은 세션은 미연결로 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentNullException>(() => session.BindAiRefreshBridges(null!));
+        Assert.False(session.HasAiRefreshBridges());
+    }
 }
