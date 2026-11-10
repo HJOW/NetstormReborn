@@ -241,7 +241,13 @@ public sealed class RawCampaignSession
         _constructionStart(parent, duration);
     }
 
-    /// <summary>같은 파서로 위치 문자열을 해석해 실제 Runtime에 생성한다. 껍데기에서는 파서·생성 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐다.</summary>
+    /// <summary>같은 파서·생성 몸체의 위치 생성 효과다. 세션 조립 때 실제 생성 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>
+    private Action<string>? _createAt;
+
+    /// <summary>같은 파서·삭제 몸체의 위치 삭제 효과다. 세션 조립 때 실제 삭제 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>
+    private Action<string>? _destroyAt;
+
+    /// <summary>같은 파서로 위치 문자열을 해석해 실제 Runtime에 생성한다. 묶은 생성 효과가 없으면 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐고 2026-11-10 F3 위치 명령 본체에서 본체를 이었다.</summary>
     /// <param name="location">생성 위치 문자열이다.</param>
     public void CreateAt(string location)
     {
@@ -251,11 +257,16 @@ public sealed class RawCampaignSession
             throw new InvalidOperationException("캠페인 세션의 미적재 생성 명령입니다.");
         }
 
-        // 원본 0044c660의 파서·지면·가상 소유자·HP·Pop 본체는 Fort 본체·규칙 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 위치 생성 미연결");
+        // 원본 0044c660의 파서·지면·가상 소유자·HP·Pop 본체는 Fort 본체·규칙 단위에서 잇는다. 묶은 효과가 없으면 성공을 합성하지 않는다(결정 6).
+        if (_createAt is null)
+        {
+            throw new InvalidOperationException("실제 위치 생성 미연결");
+        }
+
+        _createAt(location);
     }
 
-    /// <summary>같은 파서로 위치 문자열을 해석해 같은 월드의 가상 삭제로 지운다. 껍데기에서는 파서·삭제 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐다.</summary>
+    /// <summary>같은 파서로 위치 문자열을 해석해 같은 월드의 가상 삭제로 지운다. 묶은 삭제 효과가 없으면 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐고 2026-11-10 F3 위치 명령 본체에서 본체를 이었다.</summary>
     /// <param name="location">삭제 위치 문자열이다.</param>
     public void DestroyAt(string location)
     {
@@ -265,9 +276,38 @@ public sealed class RawCampaignSession
             throw new InvalidOperationException("캠페인 세션의 미적재 삭제 명령입니다.");
         }
 
-        // 원본 0044c790의 점검·타입·소유자 필터·가상 삭제 본체는 Fort 본체·규칙 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 위치 삭제 미연결");
+        // 원본 0044c790의 점검·타입·소유자 필터·가상 삭제 본체는 Fort 본체·규칙 단위에서 잇는다. 묶은 효과가 없으면 성공을 합성하지 않는다(결정 6).
+        if (_destroyAt is null)
+        {
+            throw new InvalidOperationException("실제 위치 삭제 미연결");
+        }
+
+        _destroyAt(location);
     }
+
+    /// <summary>같은 파서·생성 몸체의 위치 생성 효과를 묶는다. 원본 세션 설치의 생성 몸체 연결만 둔다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>
+    /// <param name="create">실제 위치 생성 효과다. 위치 문자열을 그대로 받는다.</param>
+    public void BindCreateAt(Action<string> create)
+    {
+        ArgumentNullException.ThrowIfNull(create);
+        _createAt = create;
+    }
+
+    /// <summary>같은 파서·삭제 몸체의 위치 삭제 효과를 묶는다. 원본 세션 설치의 삭제 몸체 연결만 둔다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>
+    /// <param name="destroy">실제 위치 삭제 효과다. 위치 문자열을 그대로 받는다.</param>
+    public void BindDestroyAt(Action<string> destroy)
+    {
+        ArgumentNullException.ThrowIfNull(destroy);
+        _destroyAt = destroy;
+    }
+
+    /// <summary>같은 파서·생성 몸체의 위치 생성 효과를 묶었는지 확인한다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasCreateAt() => _createAt is not null;
+
+    /// <summary>같은 파서·삭제 몸체의 위치 삭제 효과를 묶었는지 확인한다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasDestroyAt() => _destroyAt is not null;
 
     /// <summary>같은 ownership 몸체의 지역 투표·지형 갱신 효과다. 세션 조립 때 실제 지형 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 지형 갱신 본체에서 추가됐다.</summary>
     private Action<float, float>? _reloadTheam;

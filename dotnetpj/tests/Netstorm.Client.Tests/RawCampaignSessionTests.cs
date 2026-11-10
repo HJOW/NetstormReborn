@@ -281,17 +281,50 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미적재", destroyError.Message);
     }
 
-    /// <summary>적재 뒤 위치 명령을 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐다.</summary>
+    /// <summary>적재 뒤 위치 명령을 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 위치 명령 Stub 이식에서 추가됐고 2026-11-10 F3 위치 명령 본체에서 묶기 전 관문으로 유지했다.</summary>
     [Fact]
     public void LocationCommandsRejectWhenUnconnected()
     {
         // 실제 파서·생성·삭제 본체는 Fort 본체·규칙 단위에서 잇는다(결정 6).
         var session = LoadableSession();
         session.LoadSeeds(LoadableSeeds());
+        Assert.False(session.HasCreateAt());
+        Assert.False(session.HasDestroyAt());
         InvalidOperationException createError = Assert.Throws<InvalidOperationException>(() => session.CreateAt("70,10,10"));
         Assert.Contains("미연결", createError.Message);
         InvalidOperationException destroyError = Assert.Throws<InvalidOperationException>(() => session.DestroyAt("70,10,10"));
         Assert.Contains("미연결", destroyError.Message);
+    }
+
+    /// <summary>묶은 생성·삭제 효과에 위치 문자열을 그대로 넘기는지 검증한다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>
+    [Fact]
+    public void LocationCommandsForwardToBoundDevices()
+    {
+        // 원본 세션 설치의 생성·삭제 몸체 연결만 둔다. 파서·지면·Pop 본체는 Fort 본체·규칙 단위에서 잇는다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        var created = new List<string>();
+        var destroyed = new List<string>();
+        session.BindCreateAt(location => created.Add(location));
+        session.BindDestroyAt(location => destroyed.Add(location));
+        Assert.True(session.HasCreateAt());
+        Assert.True(session.HasDestroyAt());
+        session.CreateAt("70,10,10");
+        session.DestroyAt("70,10,10");
+        Assert.Equal(["70,10,10"], created);
+        Assert.Equal(["70,10,10"], destroyed);
+    }
+
+    /// <summary>빈 위치 명령 묶기를 거부하는지 검증한다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BindLocationCommandsRejectNull()
+    {
+        // 묶지 않은 세션은 미연결로 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentNullException>(() => session.BindCreateAt(null!));
+        Assert.Throws<ArgumentNullException>(() => session.BindDestroyAt(null!));
+        Assert.False(session.HasCreateAt());
+        Assert.False(session.HasDestroyAt());
     }
 
     /// <summary>미적재 소유자·전투 조회를 적재 관문에서 거부하는지 검증한다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
