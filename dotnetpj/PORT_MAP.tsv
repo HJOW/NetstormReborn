@@ -659,3 +659,5 @@ cpppj/src/o/RawConnectionEnded.cpp	Netstorm.Net/ConnectionEnded.cs	269de895190a3
 cpppj/src/o/RawConnectionEnded.h	Netstorm.Net/ConnectionEnded.cs	269de895190a3c30cea4e88af88719ea78d9c013	port
 cpppj/src/client/RawChatFormat.cpp	Netstorm.Client/Chat/RawChatFormat.cs	5ed5c1acdf23079269bb711eef9e7b356b07ddb1	port
 cpppj/src/client/RawChatFormat.h	Netstorm.Client/Chat/RawChatFormat.cs	5ed5c1acdf23079269bb711eef9e7b356b07ddb1	port
+cpppj/src/client/TraceChat.cpp	Netstorm.Client/Chat/TraceChat.cs	c3625c33e1dca2dba7618e041e708464df53124b	port
+cpppj/src/client/TraceChat.h	Netstorm.Client/Chat/TraceChat.cs	c3625c33e1dca2dba7618e041e708464df53124b	port
