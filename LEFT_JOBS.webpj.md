@@ -4,17 +4,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-10, WB04-E264 완료)
+### 0.1 현재 값 (2026-11-10, WB04-E265 완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(현재 단계 **4-A**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 895단위(제외 89 별도) 중 **port 473(52.8%)·partial 89(9.9%)·todo 333(37.2%)**. 기준선 소스 줄 수로는 129,541줄 중 port 54,744(42.3%)·partial 24,239(18.7%)·todo 50,558(39.0%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E264** (이 커밋, `20261110-120 WB`) 3-E 마지막 항목 판정-기타 6단위를 판정해 3-E(기준선 뒤 cpppj 변경 판정 79단위, E259~E264)를 마감했다: 6단위는 ② 0·① 2·혼합 1·③ 3 이며 ② 재반영은 3-E 전체에서 6건(웹 코드 변경 + 시험)이다. 순서3(M2 선행 부품)이 마감되어 3.1절 3-B~3-E 완료 목록을 보관본으로 옮기고 4-A 를 다음 단계로 바꿨다([문서](docs/webpj-judge-misc-20261110.md)). 그 앞은 **WB04-E263** (`ba0a999b / 20261110-119 WB`). 단위 색인은 2절·3.1절 |
-| 다음 작업 | **순서4 첫 단계 4-A 자료·파일·설정·타입 표**(3.2절): 3.1절에 4-A 체크 항목 목록을 펼친 뒤(`o/` 15단위: adapt 8·Config*·ConfigInterface*·OriginalText*·Xlat*·RiftType*·RiftTypeTable*·TypeParser*, client M 영역) 위에서부터 진행한다. 3-E 에서 정한 4-A 몫 ③(ConfigInterface 문자열 버퍼 `ReadStringBytes`·RiftType 새 칸 6개와 속성 파서·`defaultFrame`)을 같은 단계에서 반영하고, 웹 타입 로더가 `zorder`/생성자 주소를 Factory 레코드에 채우는 연결(4절 "타입 표 생성 메타")을 포함한다 |
-| 마지막 전체 검사 | WB04-E264의 Node v26.13.0·v22.23.3, **2369/2369 통과·실패/건너뜀0**(신규 없음(문서·대응표만 변경); WB04-E263 2369), 약256초(Node v22.23.3 도 2369/2369, 약286초; v24 는 미설치) |
+| 이식 진행도 | 대상 895단위(제외 89 별도) 중 **port 474(53.0%)·partial 88(9.8%)·todo 333(37.2%)**. 기준선 소스 줄 수로는 129,541줄 중 port 55,092(42.5%)·partial 23,891(18.4%)·todo 50,558(39.0%). 영역별 남은 양은 0.3절 |
+| 마지막 구현 커밋 | **WB04-E265** (이 커밋, `20261110-121 WB`) 4-A 첫 단위: 웹 타입 레코드를 cpppj RiftTypeTable 수준으로 완성했다 — maxHitPoints·zorder(이름+오프셋/숫자)·cost(생략 비용 후처리 포함)·range·hpPerSec·useairdamage·airdamage·damageEffect·techBit·기준점·level·theme·종류·기본 프레임·방향/물리 프레임 수와 타입별 생성자 주소를 buildTypeRecords 가 채우고, cpppj SquidFactory_TypeLoader_ConnectsHpDepthAndConstructorMetadata·TypeDefaultCost 원본 10.78 1500행·RiftType 실자산/중복/아처 22행 대조를 통과했다([문서](docs/webpj-type-records-20261110.md)). 그 앞은 **WB04-E264** (`66602d97 / 20261110-120 WB`). 단위 색인은 2절·3.1절 |
+| 다음 작업 | **4-A 두 번째 항목 RiftType**(3.1절, partial): `FrameCodeTable` 에 프레임 코드 번호와 FindNumber/FindMasked/FindFlags/LetterKinds 를 더하고 소비자(RawBridgeEvents 훅·IslandBuilder·InventoryItemGump)와 연결해 port 로 올린다. 이어서 TypeParser·Config·ConfigInterface·OriginalText·Xlat·BaseFile 계열(adapt)·client 자료 읽기 계열 순서로 3.1절 4-A 목록을 진행한다 |
+| 마지막 전체 검사 | WB04-E265의 Node v26.13.0·v22.23.3, **2380/2380 통과·실패/건너뜀0**(신규 type-record-complete 11; WB04-E264 2369), 약333초(Node v22.23.3 도 2380/2380, 약369초; v24 는 미설치) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -29,7 +29,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 〃 | 3-C | 자산 정기 처리·피해/삭제 수명 | 완료 8/8 | `o/` 8단위 · 1,931줄 (+269) |
 | 〃 | 3-D | 공통 후처리(SquidPostPop)·Graph 조합 마감 | 완료 2/2 | `o/` 2단위 · 1,305줄 (+36) |
 | 〃 | 3-E | 기준선 뒤 cpppj 변경 판정(3.6절) — 순서3 마감 관문 | 완료 6/6 | 판정 79단위(완료) |
-| 4 M2 | 4-A | 자료·파일·설정·타입 표 | **다음** | `o/` 15단위 · 3,135줄 (+24) + client M |
+| 4 M2 | 4-A | 자료·파일·설정·타입 표 | **진행 중** 1/9 | `o/` 15단위 · 3,135줄 (+24) + client M |
 | 〃 | 4-B | Fort·지형·섬 적재 | 미착수 | `o/` 26단위 · 3,916줄 (+47) + client B |
 | 〃 | 4-C | 패킷·로그인·내부 미션 전송 | 미착수 | `o/` 20단위 · 2,578줄 (+548) + `zacket/` 1 + client A 일부 |
 | 〃 | 4-D | Session 조립·Tutorial1 Load/Start(L2) | 미착수 | client A 나머지(RawCampaignSession 5,715줄 등) |
@@ -48,18 +48,18 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 **순서3(M2 선행 부품)은 3-B~3-E 를 모두 마쳐 2026-11-10 WB04-E264 에서 마감됐다**(3-A E1~E242, 3-B~3-D `o/` 18단위 E243~E258, 3-E 판정 79단위 E259~E264). 6-P·7-P1~P3은 M2에 직접 필요하지 않아 순서3에서 이월한 부품이며 순서3 마감 조건이 아니었다(1절 단계 분할 결정, 3.1절). 다음은 순서4 **4-A** 이며, 착수할 때 3.1절에 4-A 체크 항목 목록을 펼친다.
 
-### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E264 기준)
+### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E265 기준)
 
 줄 수는 기준선 `1f00a25a`의 단위 파일(`.cpp/.h/.inc`) 줄 합계다(주석 포함). partial 줄 수는 일부만 옮긴 파일의 전체 줄이므로 남은 양의 상한이다. 단위·줄 수는 대략적인 척도일 뿐이며, 순서4~5의 연결·통합(실제 세션에서 부품을 같은 월드로 묶고 cpppj 오라클과 비교)은 이 수치에 드러나지 않는 큰 작업이다.
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 895단위 / 129,541줄 | 473 (52.8%) / 54,744줄 (42.3%) | 89 (9.9%) / 24,239줄 (18.7%) | 333 (37.2%) / 50,558줄 (39.0%) |
-| `o/` 월드·규칙 | 516단위 / 67,480줄 | 423 (82.0%) / 51,570줄 (76.4%) | 27 (5.2%) / 6,956줄 (10.3%) | 66 (12.8%) / 8,954줄 (13.3%) |
+| 전체 | 895단위 / 129,541줄 | 474 (53.0%) / 55,092줄 (42.5%) | 88 (9.8%) / 23,891줄 (18.4%) | 333 (37.2%) / 50,558줄 (39.0%) |
+| `o/` 월드·규칙 | 516단위 / 67,480줄 | 424 (82.2%) / 51,918줄 (76.9%) | 26 (5.0%) / 6,608줄 (9.8%) | 66 (12.8%) / 8,954줄 (13.3%) |
 | `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 50 (13.2%) / 3,174줄 (5.2%) | 62 (16.4%) / 17,283줄 (28.0%) | 266 (70.4%) / 41,165줄 (66.8%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 439줄 | 0 | 0 | 1 / 439줄 |
 
-남은 422단위(todo 333·partial 89)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
+남은 421단위(todo 333·partial 88)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
 
 | 영역 | 주 단계 | todo 단위 / 줄 | partial 단위 / 줄 | 큰 단위(줄) |
 | --- | --- | --- | --- | --- |
@@ -75,7 +75,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | J 렌더러·카메라·HUD·미니맵 | 5-A·5-B | 44 / 5,142 | 8 / 2,232 | Screen* 816 · Renderer* 492 · SpriteDraw* 468 · PreviewDraw 363 |
 | K 게임 입력·커서·선택·객체 메뉴 | 6 | 36 / 4,806 | 2 / 149 | RawCursorMana 289 · RawCampaignCursor 283 · RawCursorRange 283 · CampaignObjectMenuClient 240 |
 | L 메뉴·대화상자·Gump·글자 UI | 5·6 | 39 / 6,948 | 37 / 10,315 | UberGump* 2,207 · RawMenuControls 1,341 · RawButtonControls 797 · StyleText* 519 |
-| M 자료·파일·설정·언어(웹 적응 포함) | 4-A | 21 / 1,536 | 11 / 2,922 | BaseFile* 586 · Config* 586 · RiftTypeTable* 348 · ConfigInterface* 343 |
+| M 자료·파일·설정·언어(웹 적응 포함) | 4-A | 21 / 1,536 | 10 / 2,574 | BaseFile* 586 · Config* 586 · ConfigInterface* 343 · RiftType* 286 |
 | N 진단·추적 | 각 단계 | 3 / 284 | 0 | GifScreenshot 114 · ClientDiagnostics 99 · RawTraceLog 71 |
 
 분류(class)별로는 port 851(이식 대상)·adapt 44(웹 대체가 필요한 플랫폼 경계, port 2·partial 9·todo 33)·제외 89(exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1)이다. 이와 별도로 기준선 뒤 cpppj 변경 판정 대기가 있다(3.6절).
@@ -85,8 +85,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 이식 원본은 언제나 기준선 판(`git show 1f00a25a:경로`)이고, 기준선 뒤 cpppj 변경은 3.6절 절차로만 반영한다. 같은 작업 트리에서 CP 세션이 cpppj를 계속 커밋하므로(LAN 3차·`Actual*` 실제 연결 경로·`shared*` 공유 전역 추가 등) cpppj 상태는 커밋과 소스로 판단한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 851·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 473·partial 89·todo 333·제외(-) 89**, session/oracle 0. 웹 모듈 516개 중 511개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 409개, 도구(`webpj/tools`) 오라클 관련 4개다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` 529항목(original-x86 498·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E264에서 추가 없음(직전 추가는 WB04-E256 local-geyser·geyser-placement 2개)). original-x86 498개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 851·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 474·partial 88·todo 333·제외(-) 89**, session/oracle 0. 웹 모듈 516개 중 511개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 410개, 도구(`webpj/tools`) 오라클 관련 4개다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` 530항목(original-x86 499·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E265에서 추가 없음(직전 추가는 WB04-E256 local-geyser·geyser-placement 2개; type-default-cost·archertype 항목 소비자는 manifest 보강 필요시 아래 참조)). original-x86 499개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
 | 마지막 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트). 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -189,6 +189,20 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 #### 3-B~3-E 순서3 마감 (완료, 2026-11-10)
 
 3-B(8/8)·3-C(8/8)·3-D(2/2)·3-E(6/6)의 체크 항목과 단위 링크 전체는 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261110-through-wb04-e264)에 있다. 단위 문서는 `grep -l "WB04-E259" docs/webpj-*.md` 처럼 번호로 찾는다(E243~E264 모두 검색됨). 3-E 판정 79단위의 요약(② 재반영 6건)은 [판정-기타 문서 2절](docs/webpj-judge-misc-20261110.md)과 3.6절 표에 있다.
+
+#### 4-A 자료·파일·설정·타입 표 (1/9)
+
+완료 기준(3.2절): 미션 자료(Tell·`.fort`·타입 표)를 cpppj 와 같은 순서로 조회하고, cpppj `SquidFactory_TypeLoader_ConnectsHpDepthAndConstructorMetadata` 대응 검사를 통과한다. 선행: 3-E(완료). adapt 단위는 브라우저 자료 조회로 대체하므로 cpppj 의 조회 순서·열기/읽기 정책·실패 경계와 웹 `GameFiles`/`asset-loader` 를 비교한 결과를 단위 문서와 PORT_MAP 에 남기고, 코드가 필요한 곳만 고친다.
+
+- [x] **RiftTypeTable** (partial, 3-E ③ 4-A 몫) — 속성 파서 전부·생략 비용·생성자 주소·zOrder 를 `buildTypeRecords` 에 완성하고 Factory 에 연결 → [E265](docs/webpj-type-records-20261110.md) 타입 레코드 완성(RiftTypeTable 속성·생략 비용·생성자 주소)과 Factory 연결
+- [ ] **RiftType** (partial, 3-E ③ 4-A 몫) — `FrameCodeTable` 에 프레임 코드 번호와 FindNumber/FindMasked/FindFlags/LetterKinds 를 더하고 소비자(RawBridgeEvents 훅·IslandBuilder·InventoryItemGump)와 연결
+- [ ] **TypeParser** (partial) — `.type` 정의 해석의 나머지(프레임 코드·특수 프레임·기준점)를 cpppj 시험으로 대조
+- [ ] **Config·ConfigInterface** (partial, ConfigInterface 3-E ③ 4-A 몫 `ReadStringBytes`) — 설정 파서·인터페이스의 남은 부분
+- [ ] **OriginalText** (partial) — 원문 인코딩 계층의 남은 부분
+- [ ] **Xlat** (partial) + client `XlatFileRead` — TARC 읽기와 E242 `RawXlat` 연결(xlat-file-read fixture 253행)
+- [ ] **BaseFile 계열** (adapt 8단위: BaseFile·RawBaseFileIO·RawBaseFileOpenPolicy·RawBaseFileReadPolicy·RawBaseFileWholeRead·FileSpecQuery·StartupArchiveFiles·RawConfigFileLoad) — 브라우저 자료 조회와의 대응·조회 순서 문서화
+- [ ] **client 자료 읽기 계열** (adapt/port: TypeFileRead·ConfigFileRead·GifFileRead·PaletteFileRead·QuickHelpFileRead·DataManagerFileRead·FontCacheFile·LanguageOptions·ClientTemplateSectionNames·GameAssets·ClientFortGlobals 등 client M 영역) — 필요한 부분만 판정·이식
+- [ ] **자료 조회 순서 시험** — 미션 자료(Tell·`.fort`·타입 표)를 cpppj 와 같은 순서로 조회하는 통합 시험으로 4-A 를 마감
 
 #### 순서3에서 이월한 선행 부품 (순서3 마감 조건 아님)
 
@@ -300,7 +314,6 @@ M2(Tutorial1 Load/Start/표시)에 직접 필요하지 않아 순서6/7 몫으�
 | cpppj 소스(웹 기준 → 기준선 사이 커밋) | 웹 모듈 | ③ 반영 시점과 내용 |
 | --- | --- | --- |
 | `client/TellSection` `6dd8d803` → `2ca39d0b`·`5a2cd047` | `ui/tell-parameters.js`·`game-data.js` | 대체 tell 적재가 `config.LoadFile` 경로 → **4-D 현재 미션 Tell 연결 때 반영**. `DisplayText` 교체는 cpppj 6차 표시 부호화라 웹은 ① |
-| `o/RiftTypeTable`(+`RiftType.h`) `700475b5` → `fbc27346` | `assets/type-flags.js` 외 | 타입 레코드 `defaultFrame`(+0x128). 웹 type-table 정의에는 있으나 Factory용 레코드에 없음. 같은 파일의 새 칸 6개(`range`·`useAirDamage`·`airDamagePerSecond`·`damagePerSecond`·`directions`·`frameCount`, 3-E 판정-공통층 WB04-E259)와 속성 파서(`range`/`hpPerSec`/`useairdamage`/`airdamage`·`ReadRawArcherTypeData`)도 같은 시점 → **4-A 타입 레코드·5-A Draw 연결 때** |
 | `o/RawTerrainContext` `552656c0` → `3eec0830`·`1fe5fae7` | `assets/terrain-mask.js`·`terrain-fringe.js` | `Edition()`·`ArchipelagoMode()` 접근자 → **4-B 군도 지형 이식 때** |
 | `o/SidPool.cpp/.h` `6035f810`/`b7065914` → `90ffe7e5`·`7b78cc20`·`435cfa1d` | `core/sid-pool.js` | (WB04-D3 판정 유지) 패치판 할당 진단 정상 복귀(`disallowSquidAllocation`·각 free 진단)·소진 시 boss의 현재 World 다리 회수(최대 50, `BindAllocation`)·물리 슬롯 friend. 정상 할당 결과는 같음. 웹은 소진/진단에서 오류로 멈춘다 → **4-D World 수명 때** |
 | `9cb0547f`(일반 전투섬·중앙섬/군도): `client/UberGump.cpp` | `ui/main-menu.js` 등 partial | 로그인 중 "Creating Islands." 안내(일반 전투섬 생성 경로) → **4-C/4-D 로그인 이식 때 단독 도달 여부 확인**. base `9cb0547f` |
@@ -333,7 +346,7 @@ M2(Tutorial1 Load/Start/표시)에 직접 필요하지 않아 순서6/7 몫으�
 | 실제 지형/소유권 | 미리보기의 중립색·가운데 카메라·고정 구름은 개발 정책. 저장 noIsland.owner를 최종 owner로 오해하지 않음. 신전 원소 투표/themeMode·도장/flood 순서·실제 카메라 시작/제한/스크롤은 4-B~5-B에서 연결 |
 | 지형 난수/색표 | `buildTerrainFrames`와 절벽의 게임/CRT 난수는 실제 세션에서 공유. 절벽 제외 0x10/0x18의 선택, 최초 팔레트/ColorSort 시점·`useBanners` 기본값, 소유자→색 번호를 4-B·5-A에서 확정 |
 | edgeFarm | spots·finder·MayPlace·지면 Retype 뒤 실제 월드에 구현. `RawFarmCluster`의 3×77 별도 시드/30000실패 한도 등 원본 순서를 유지. 타입121에 isle 색표가 있다고 추정하지 않음([근거6절](docs/webpj-terrain-extras-20261102.md)) |
-| 타입 표 생성 메타 | 2026-11-06 WB04-D4: Factory는 `{constructorAddress, zOrder, maxHitPoints, flags1, flags2, footX/Y, name}` 레코드 배열을 받는다. 웹 타입 로더(`buildTypeRecords`)는 아직 `zorder`(cpppj `RiftTypeTable.cpp`의 23개 이름 상수+오프셋)와 `constructorAddress`(`typeConstructorAddress`)를 채우지 않는다. 실제 미션 TYPE 표를 Factory에 넘기는 4-A에서 cpppj `SquidFactory_TypeLoader_ConnectsHpDepthAndConstructorMetadata`와 같이 연결·검사한다 |
+| 타입 표 생성 메타 | **해소(2026-11-10 WB04-E265):** `buildTypeRecords` 가 `zOrder`(23개 이름 상수+오프셋/숫자)·`maxHitPoints`·`constructorAddress` 와 나머지 속성을 모두 채우고 Factory 가 같은 레코드를 받는다([문서](docs/webpj-type-records-20261110.md)). 남은 일은 실제 미션 TYPE 표를 Session 에 연결하는 4-D 뿐이다 |
 | 보상/SP 세션 연결 | 2026-11-07 WB04-D5b: `SquidReward`·`ScrambledSpStore`·`ContentFormLifetime`은 부품 대조까지다. SP 재시드 원천(004559d0 시각)·사제 추적 offset 소유자(0054d4e0)·실제 지갑(`bindPatchWallet`, brain+2d8)·수입 알림/원격 패킷/위치 소리 장치·Client 커서/boss/현재 너겟 getter·`SquidRewardState.bindGameAux`와 World 절반 HP 모드·같은 World TYPE/로딩 비용표 대여는 4-D·6에서 연결한다. 장부는 `SquidPostPopState`(WB04-E)와 같은 객체여야 한다 |
 | 영역 회전 | 기존 실제 파일은 방향0. 회전2/3의 실제 저장 사례가 생기면 원본 결과와 추가 대조. 독립 기하 계산 통과를 실제 파일 관측으로 세지 않음 |
 | 입력/커서 | 커서2~14·17·18은 쓰는 미션 입력과 함께 추가. 본문 끌기/캡처 중 Overlay의 원문 입력(`004d62b0` 계열) 계약은 미확정. 2026-11-07 WB02-H: 원본처럼 매 프레임 마지막 포인터 위치를 메인 메뉴에 다시 알리게 했다(정지 포인터 아래 펼침 메뉴 행 강조, cpppj 오라클 일치). 미션 입력(UserInput)도 같은 폴링 계약으로 이식한다 |

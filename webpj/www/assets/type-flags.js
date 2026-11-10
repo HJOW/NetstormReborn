@@ -1,11 +1,14 @@
 // 원본 타입 구조체(188개)의 이름·플래그·그룹·발자국을 `.type` 정의에서 만드는 모듈이다. `.fort` 오브젝트 레코드는 타입마다 저장하는 필드가 달라서
 // (프레임·수량·다리·작업장 상태·소유자·내용물) 타입 플래그가 있어야 읽을 수 있고, 파일 속 타입 번호를 현재 번호로 바꾸는 `TypeNames` 해시에는 모든 타입의 이름이 필요하다.
 // 복원 기준: cpppj `RiftTypeTable.cpp`(플래그 단어 48개·속성 읽기 0049c3b0, 후처리 0049b0d0, 이름 해시 004bd6f0/004bd800)의 10.78 패치판 경로이다.
-// 옮긴 범위: 플래그 1·2, 그릇/내용물 목록 플래그, `group`, 발자국(`foot_x`·`foot_y`), 이름(내장 타입·프로세스 타입 이름 포함). 비용·체력·사거리·깊이 같은 수치와
-// 생성자 주소는 옮기지 않았다(웹 판독기가 쓰지 않음, 타입 표의 그림 규칙은 type-table.js 가 맡는다).
+// 옮긴 범위: 플래그 1·2, 그릇/내용물 목록 플래그, `group`, 발자국(`foot_x`·`foot_y`), 이름(내장 타입·프로세스 타입 이름 포함). 2026-11-10 WB04-E265 에서 나머지 속성
+// 전부(체력·깊이 zorder·비용과 생략 비용·사거리·피해율·공중 피해율·피해 효과·techBit·기준점·레벨·테마·종류·기본 프레임·방향/물리 프레임 수)와 타입별 생성자 주소를 더했다.
+// 타입 표의 그림 규칙은 type-table.js 가 맡는다.
 // 이 모듈은 DOM 을 쓰지 않아 Node 에서도 불러와 검사할 수 있다.
 // (2026-11-01 WB03-U: `.fort` 판독기를 위해 추가)
 import { FIRST_ASSET_TYPE_NUMBER, PATCH_TYPE_COUNT, TYPE_LOAD_ORDER } from './type-table.js';
+import { typeConstructorAddress } from '../core/squid-constructors.js';
+import { readRawArcherTypeData } from '../core/raw-archer-type-data.js';
 
 // 타입 플래그 1(원본 타입 구조체 +0xe8)의 비트 중 이름이 붙은 것이다(cpppj TypeFlag1). (2026-11-01 WB03-U)
 export const TypeFlag1 = Object.freeze({
@@ -82,6 +85,67 @@ const FLAG_WORDS = Object.freeze([
     ['predictable', 0, 0],
 ].map(([word, flags1, flags2]) => Object.freeze({ word: word.toLowerCase(), flags1, flags2 })));
 
+// 종류 필드(+0xf0)에 단어를 복사하는 플래그 단어이다(cpppj FlagWord.kind). 8글자까지 덮어쓰고 종료 문자는 쓰지 않는다. (2026-11-10 WB04-E265)
+const KIND_WORDS = Object.freeze(new Set(['buried', 'nugget', 'bomb', 'bridge', 'walker', 'balloon', 'island', 'factory', 'vortex', 'edgefarm', 'focus', 'guy', 'geyser', 'residence']));
+const KIND_BYTES = 8;
+
+// 가격 후처리에서 명시 비용도 지우는 사제 타입 번호이다(cpppj kCostExemptPriestType). (2026-11-10 WB04-E265)
+const COST_EXEMPT_PRIEST_TYPE = 158;
+
+// zorder 문자열의 깊이 이름 23개와 값이다(패치 00540d10). 이름 비교는 대소문자를 구분하는 부분 문자열(strstr)이고 표 순서의 첫 일치를 쓴다. (2026-11-10 WB04-E265)
+const Z_ORDER_NAMES = Object.freeze([
+    ['zoNONE', -127], ['zoFALLING', 30], ['zoSTALAG', 20], ['zoCHALRING', 20], ['zoBATTLE', 10],
+    ['zoEDGEFARM', 0], ['zoISLAND', 0], ['zoBRIDGE', 0], ['zoBRIDGE_CONNECTOR', -10], ['zoARTIFACTS', -15],
+    ['zoEMPLACEMENTS', -20], ['zoILLEGAL_DITHER', -21], ['zoFLARES', -22], ['zoMISSILES', -25],
+    ['zoFLYER_SHADOWS', -26], ['zoFLYERS', -30], ['zoFENCE', -35], ['zoMANAICON', -36],
+    ['zoUBERGUMP', -40], ['zoMENUGUMP', -60], ['zoDIALOGGUMP', -80], ['zoLOOKGUMP', -100], ['zoRISING', -31],
+]);
+
+// zorder 문자열을 깊이 값으로 바꾼다: 첫 식별자를 찾아 표의 부분 문자열 일치(표 순서의 첫 항목)를 고르고, 뒤의 '식별자 +/- 숫자' 식이 있으면 DWORD 로 가감한다.
+// 이름이 없거나 표에 없으면 거부하고 오프셋이 2147483647 을 넘으면 범위 오류이다. (2026-11-10 WB04-E265: cpppj RiftTypeTable.cpp ZOrder)
+function zOrderFromText(text) {
+    const word = /([A-Za-z0-9_]+)[ \t]*/.exec(text);
+    if (!word) throw new Error('zorder 이름이 없습니다.');
+    // 표 순서대로 첫 부분 문자열 일치를 고른다.
+    for (const [name, base] of Z_ORDER_NAMES) {
+        if (!name.includes(word[1])) continue;
+        let value = base >>> 0;
+        const offset = /[ \t]*([A-Za-z0-9_]+)[ \t]*(\+|-)[ \t]*([0-9]+)/.exec(text);
+        if (offset) {
+            const delta = Number(offset[3]);
+            if (delta > 2147483647) throw new RangeError('zorder 오프셋 범위 오류');
+            value = offset[2] === '+' ? (value + delta) >>> 0 : (value - delta) >>> 0;
+        }
+        return value | 0;
+    }
+    throw new Error('알 수 없는 zorder 이름입니다.');
+}
+
+// techBit 숫자는 float32 로 줄인 뒤 CRT _ftol 의 signed 64 비트로 절삭해 낮은 DWORD 만 저장한다(비유한/범위 밖은 0). (2026-11-10 WB04-E265)
+function techBitNumber(value) {
+    const number = Math.fround(value);
+    if (!Number.isFinite(number) || number < -9223372036854775808 || number >= 9223372036854775808) return 0;
+    return Number(BigInt.asIntN(32, BigInt(Math.trunc(number))));
+}
+
+// theme 문자열의 첫 BYTE 로 TYPE+98 조회 표를 읽는다(패치: 'wrtsWRTS.?>' 앞 10글자가 인덱스 % 5, 첫 90 미만 BYTE 의 기본 5, 그 외 0). 122 이상이면 표 밖이라 거부한다. (2026-11-10 WB04-E265)
+function themeNumber(text) {
+    const first = text.length === 0 ? 0 : text.charCodeAt(0) & 0xff;
+    if (first >= 122) throw new RangeError('TYPE theme 의 원본 초기화 표 범위 초과');
+    let value = first < 90 ? 5 : 0;
+    const letters = 'wrtsWRTS.?>';
+    // 초기화 몸체와 같은 순서로 지정 글자의 DWORD 를 덮어쓴다.
+    for (let i = 0; i < 10; i += 1) if (first === letters.charCodeAt(i)) value = i % 5;
+    return value;
+}
+
+// hotFootRatioX/Y 를 기준점 정수로 바꾼다: float32 비율에 16(가로)/11(세로)을 곱해 0 쪽으로 절삭하고 int32 범위 밖은 거부한다. (2026-11-10 WB04-E265)
+function typeHotFootOffset(ratio, vertical) {
+    const value = Math.trunc(Math.fround(ratio) * (vertical ? 11 : 16));
+    if (!Number.isFinite(value) || value < -2147483648 || value > 2147483647) throw new RangeError('타입 기준점의 32비트 정수 범위 초과');
+    return value;
+}
+
 // 이름 해시를 낸다(원본 004bd6f0). 글자를 부호 있는 8비트로 읽어 `(위치 % 4) × 8` 비트 왼쪽으로 밀어 32비트로 감기게 더한다.
 // 이름은 20글자에서 자르지 않는다(타입 구조체의 이름 필드를 NUL 까지 읽는다). 사용: nameHash('mana') → 부호 없는 32비트 정수. (2026-11-01 WB03-U)
 export function nameHash(name) {
@@ -106,13 +170,20 @@ function toInt(value) {
     return Math.trunc(value);
 }
 
-// `.type` 정의 하나의 플래그·속성을 타입 레코드에 적용한다(원본 0049c3b0 의 플래그 단어와 `group`·`foot_x/y`·사용량·`maxHitPoints` 부분).
-// definition 은 parseTypeDefinition 의 결과이고 null 이면 읽지 못한 타입이라 아무것도 켜지 않는다. 원본 assert 세 가지는 오류로 던진다. (2026-11-01 WB03-U)
+// `.type` 정의 하나의 플래그·속성을 타입 레코드에 적용한다(원본 0049c3b0 의 플래그 단어와 `maxHitPoints`·`zorder`·`cost`·`range`·`hpPerSec`·`useairdamage`·`airdamage`·`damageEffect`·`techBit`·사용량·`foot_x/y`·`hotFootRatioX/Y`·`level`·`theme`·`description`·`group`).
+// definition 은 parseTypeDefinition 의 결과이고 null 이면 읽지 못한 타입이라 아무것도 켜지 않는다(발자국 1×1 초기화만). 원본 assert 와 거부 속성은 오류로 던진다.
+// 속성은 파일에 나온 순서대로 적용하며 같은 이름이 여러 번이면 뒤의 값이 남는다. 수치는 원문 float32 AST 폭(Math.fround)이나 0 쪽 절삭 정수로 저장한다.
+// (2026-11-01 WB03-U: 플래그·그룹·발자국·사용량. 2026-11-10 WB04-E265: cpppj RiftTypeTable.cpp ApplyDefinition 전체 — HP·깊이·비용·사거리·피해율·기준점·레벨·테마·종류·방향/프레임 수)
 function applyDefinition(record, definition) {
     record.footX = 1;
     record.footY = 1;
     if (!definition) return;
-    let hasHitPoints = false;
+    // 파싱이 고른 기본 프레임(+128)과 아처 소비자의 방향 수/물리 프레임 수(TYPE+110/+114)를 같은 표에 보관한다.
+    record.defaultFrame = definition.defaultFrame;
+    const animation = readRawArcherTypeData(definition);
+    record.directions = animation.directions;
+    record.frameCount = animation.frameCount;
+    const kind = new Array(KIND_BYTES).fill('\0');
     // 플래그 단어마다 표의 비트를 켠다. 표에 없는 단어는 원본처럼 조용히 지나간다.
     for (const word of definition.flags) {
         const lower = word.toLowerCase();
@@ -122,27 +193,62 @@ function applyDefinition(record, definition) {
             if (entry.word !== lower) continue;
             record.flags1 = (record.flags1 | entry.flags1) >>> 0;
             record.flags2 = (record.flags2 | entry.flags2) >>> 0;
+            // 종류 단어는 8글자까지 종류 필드에 덮어쓴다(종료 문자는 쓰지 않아 짧은 단어는 이전 내용의 뒤가 남는다).
+            if (KIND_WORDS.has(lower)) for (let i = 0; i < KIND_BYTES && i < word.length; i += 1) kind[i] = word[i];
         }
     }
     // 원본은 shadow 와 flyershadow 가 함께 있으면 assert 한다.
     if ((record.flags1 & 0x40000) !== 0 && (record.flags1 & 0x400000) !== 0) throw new Error('shadow 와 flyershadow 는 함께 쓸 수 없습니다.');
-    // 사용량 속성(원소 순서: 비·천둥·바람)이다. 0 이 아닌 값이 하나라도 있으면 usesPower 가 켜진다.
-    const minUsage = [0, 0, 0];
-    const maxUsage = [0, 0, 0];
     // 속성은 파일에 나온 순서대로 적용한다. 같은 이름이 여러 번이면 뒤의 값이 남는다.
     for (const property of definition.properties) {
         const number = typeof property.value === 'number' ? property.value : null;
         const text = typeof property.value === 'string' ? property.value : null;
         if (isProperty(property, 'maxhitpoints')) {
             if (number === null) throw new Error('maxHitPoints 는 숫자여야 합니다.');
-            hasHitPoints = true;
-        } else if (isProperty(property, 'minusage') && number !== null) minUsage[0] = Math.fround(number);
-        else if ((isProperty(property, 'maxusage') || isProperty(property, 'maxrainbattleusage')) && number !== null) maxUsage[0] = Math.fround(number);
-        else if (isProperty(property, 'maxthunderbattleusage') && number !== null) maxUsage[1] = Math.fround(number);
-        else if (isProperty(property, 'maxwindbattleusage') && number !== null) maxUsage[2] = Math.fround(number);
+            if (record.maxHitPoints !== 0) throw new Error('maxHitPoints == 0');
+            record.flags1 = (record.flags1 | TypeFlag1.hasHitPoints) >>> 0;
+            record.maxHitPoints = toInt(number);
+        } else if (isProperty(property, 'zorder')) {
+            if (number !== null) record.zOrder = toInt(number);
+            else if (text !== null) record.zOrder = zOrderFromText(text);
+        } else if (isProperty(property, 'cost')) {
+            if (number === null) throw new Error('cost 는 숫자여야 합니다.');
+            record.cost = Math.fround(number);
+        } else if (isProperty(property, 'range')) {
+            if (number === null) throw new Error('range 는 숫자여야 합니다.');
+            record.range = Math.fround(number);
+        } else if (isProperty(property, 'hppersec')) {
+            if (number === null) throw new Error('hpPerSec 는 숫자여야 합니다.');
+            record.damagePerSecond = Math.fround(number);
+        } else if (isProperty(property, 'useairdamage')) {
+            if (number === null) throw new Error('useairdamage 는 숫자여야 합니다.');
+            record.useAirDamage = toInt(number);
+        } else if (isProperty(property, 'airdamage')) {
+            if (number === null) throw new Error('airdamage 는 숫자여야 합니다.');
+            record.airDamagePerSecond = Math.fround(number);
+        } else if (isProperty(property, 'damageeffect')) {
+            if (number === null) throw new Error('damageEffect 는 숫자여야 합니다.');
+            record.damageEffect = toInt(number);
+        } else if (isProperty(property, 'techbit')) {
+            if (number === null) throw new Error('techBit 는 숫자여야 합니다.');
+            record.techBitIndex = techBitNumber(number);
+        } else if (isProperty(property, 'minusage') && number !== null) record.minUsage[0] = Math.fround(number);
+        else if ((isProperty(property, 'maxusage') || isProperty(property, 'maxrainbattleusage')) && number !== null) record.maxUsage[0] = Math.fround(number);
+        else if (isProperty(property, 'maxthunderbattleusage') && number !== null) record.maxUsage[1] = Math.fround(number);
+        else if (isProperty(property, 'maxwindbattleusage') && number !== null) record.maxUsage[2] = Math.fround(number);
         else if ((isProperty(property, 'foot_x') || isProperty(property, 'footx')) && number !== null) record.footX = toInt(number);
         else if ((isProperty(property, 'foot_y') || isProperty(property, 'footy')) && number !== null) record.footY = toInt(number);
-        else if (isProperty(property, 'group') && text !== null) {
+        else if (isProperty(property, 'hotfootratiox') || isProperty(property, 'hotfootratioy')) {
+            if (number === null) throw new Error('hotFootRatio 는 숫자여야 합니다.');
+            const vertical = isProperty(property, 'hotfootratioy');
+            if (vertical) record.hotspotY = typeHotFootOffset(number, true);
+            else record.hotspotX = typeHotFootOffset(number, false);
+        } else if (isProperty(property, 'hotfootx') || isProperty(property, 'hotfooty')) throw new Error('원본이 거부하는 hotFootX/Y 속성입니다.');
+        else if (isProperty(property, 'level') && number !== null) record.level = (toInt(number) - 1) | 0;
+        else if (isProperty(property, 'theme')) {
+            if (text === null) throw new Error('theme 은 문자열이어야 합니다.');
+            record.theme = themeNumber(text);
+        } else if (isProperty(property, 'group') && text !== null) {
             record.group = -1;
             // 이름 표에서 첫 일치의 위치가 그룹 번호이다.
             for (let i = 0; i < GROUP_NAMES.length; i += 1) {
@@ -156,11 +262,13 @@ function applyDefinition(record, definition) {
             record.hasDescription = true;
         }
     }
-    if (hasHitPoints) record.flags1 = (record.flags1 | TypeFlag1.hasHitPoints) >>> 0;
     // 원본 0049ad00/0049ad60: 사용량을 0 이 아닌 값으로 정하면 usesPower 가 켜진다.
     for (let i = 0; i < 3; i += 1) {
-        if (minUsage[i] !== 0 || maxUsage[i] !== 0) record.flags1 = (record.flags1 | TypeFlag1.usesPower) >>> 0;
+        if (record.minUsage[i] !== 0 || record.maxUsage[i] !== 0) record.flags1 = (record.flags1 | TypeFlag1.usesPower) >>> 0;
     }
+    // 종류 필드는 8글자까지 채우고 첫 종료 문자(없으면 전체)까지를 문자열로 읽는다.
+    const end = kind.indexOf('\0');
+    record.kind = kind.slice(0, end < 0 ? KIND_BYTES : end).join('');
 }
 
 // 후처리(원본 0049b0d0)가 켜는 파생 플래그이다. 내장·빈 타입을 포함한 모든 타입에 번호순으로 적용한다. (2026-11-01 WB03-U)
@@ -187,8 +295,16 @@ function postProcess(record) {
     if ((finalFlags2 & TypeFlag2.emplacement) !== 0 && (finalFlags2 & 0x4200) === 0 && record.footX === 3 && record.footY === 3) record.flags1 = (record.flags1 | 6) >>> 0;
     if ((finalFlags2 & 0x408100) !== 0) record.flags1 = (record.flags1 | TypeFlag1.mayDropOnIsle) >>> 0;
     if ((finalFlags2 & 0x70000) !== 0 && (finalFlags2 & TypeFlag2.factory) === 0) record.flags1 = (record.flags1 | 0x8000) >>> 0;
+    // 비용 생략 보정: 그룹이 있는 타입이 비용 0 이면 (레벨 + 1) × 일반 200 / 운반(워커·벌룬) 400 을 float32 로 저장한다. 내부 level 은 자료 level − 1 이고 DWORD 감김으로 더한다. (2026-11-10 WB04-E265)
+    if (record.group !== NO_GROUP && record.cost === 0) {
+        const level = (record.level + 1) | 0;
+        const unit = (finalFlags2 & 0x30000) !== 0 ? 400 : 200;
+        record.cost = Math.fround(level * unit);
+    }
     // 원본: foot_y 6 은 8 로 바꾼다.
     if (record.footY === 6) record.footY = 8;
+    // 사제 타입과 guy 부류는 명시 비용도 마지막에 지운다. (2026-11-10 WB04-E265)
+    if (record.number === COST_EXEMPT_PRIEST_TYPE || (finalFlags2 & 0x400) !== 0) record.cost = 0;
 }
 
 // 비어 있는 타입 레코드(모든 필드 0, 그룹 없음)를 만든다. (2026-11-01 WB03-U)
@@ -196,6 +312,10 @@ function emptyRecord(number) {
     return {
         number, name: '', assetName: null, description: '', hasDescription: false, fromAsset: false,
         flags1: 0, flags2: 0, containerListFlags: 0, contentListFlags: 0, group: NO_GROUP, footX: 0, footY: 0,
+        // 2026-11-10 WB04-E265: 원본 전체 TYPE 초기화(0 으로 지우고 +98 에 패치 5)와 RiftTypeTable 의 나머지 필드. 수치는 float32/int32 로 저장된 값이다.
+        maxHitPoints: 0, zOrder: 0, cost: 0, range: 0, damagePerSecond: 0, useAirDamage: 0, airDamagePerSecond: 0, damageEffect: 0, techBitIndex: 0,
+        minUsage: [0, 0, 0], maxUsage: [0, 0, 0], level: 0, theme: 5, hotspotX: 0, hotspotY: 0, defaultFrame: 0, directions: 0, frameCount: 0, kind: '',
+        constructorAddress: 0,
     };
 }
 
@@ -225,6 +345,8 @@ export function buildTypeRecords(definitions) {
     for (const [number, name] of Object.entries(BUILTIN_NAMES)) records[Number(number)].name = name;
     // 후처리는 번호순으로 모든 타입에 적용한다.
     for (const record of records) postProcess(record);
+    // 원본은 로딩/후처리 뒤 생성자 표를 대입한다. 주소는 Factory 가 미복원 파생 분배를 감지하는 메타데이터이다. (2026-11-10 WB04-E265)
+    for (const record of records) record.constructorAddress = typeConstructorAddress(record.number);
     return records.map((record) => Object.freeze(record));
 }
 

@@ -5842,7 +5842,7 @@
       "bytes": 218979,
       "lines": 2141,
       "fixtureCommit": "4ed429ca0",
-      "webCommit": "worktree",
+      "webCommit": "4789039e2",
       "cpppjBasis": {
         "cpppj/src/o/SquidPostPop.cpp": "b1bf342d6",
         "cpppj/src/o/SquidPostPopPatch.cpp": "be567d46b"
@@ -10894,10 +10894,12 @@
       "path": "cpppj/tests/fixtures/archertype-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 아처 TYPE 초기화 접두와 35클러스터 callback/후처리의 의미 필드·4바이트 프레임 코드·글자 구간(두 판본 44행)",
       "consumers": [
-        "webpj/tests/archer-type-data.test.mjs"
+        "webpj/tests/archer-type-data.test.mjs",
+        "webpj/tests/type-record-complete.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-archer-type-data.js"
+        "webpj/www/core/raw-archer-type-data.js",
+        "webpj/www/assets/type-flags.js"
       ],
       "doc": "docs/webpj-archer-type-data-20261108.md",
       "cpppjSources": [
@@ -15667,6 +15669,35 @@
       "webCommit": "0022c59b5",
       "cpppjBasis": {
         "cpppj/src/o/RawLocalGeyser.cpp": "5f4b9d304"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E265",
+      "id": "typedefaultcost",
+      "path": "cpppj/tests/fixtures/type-default-cost-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 그룹·flags2(운반/일반/사제/사람)·레벨·명시 비용 비트 조합의 TYPE 후처리 생략 비용 결과(두 판본 3000행)",
+      "consumers": [
+        "webpj/tests/type-record-complete.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/type-flags.js"
+      ],
+      "doc": "docs/webpj-type-records-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RiftTypeTable.cpp"
+      ],
+      "scope": "10.78(originals) 1500행 전부, originalCD 1500행은 범위 밖",
+      "text": true,
+      "sha256": "caf8aa3f2956b2c420e14316c9b7a029c8638e6724f8309429c47d80d7720ff7",
+      "bytes": 117941,
+      "lines": 3001,
+      "fixtureCommit": "700475b5f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RiftTypeTable.cpp": "513b6e85b"
       }
     }
   ]
