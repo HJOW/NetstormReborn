@@ -321,6 +321,16 @@ public sealed class RawPostPop : IRawPopPostPop
     /// <param name="projection">등록 좌표·단계·타입(Graph 연결이 있을 때 넘긴다).</param>
     public void ValidateBase(int sid, uint flags, in PopProjection projection = default)
     {
+        ValidateBaseCore(sid, flags, in projection, checkPending: true);
+    }
+
+    /// <summary>원본 사전 검사 본체다. 보류 배치 검사의 위치만 호출자가 고른다. 2026-11-10 F3 미뤄 둔 전수 재생(0.301)에서 추가됐다.</summary>
+    /// <param name="sid">오브젝트 슬롯 번호.</param>
+    /// <param name="flags">호출 플래그.</param>
+    /// <param name="projection">등록 좌표·단계·타입.</param>
+    /// <param name="checkPending">보류 배치를 여기서 거부하면 참이다. PATCH 공통 몸체는 원본 부모 실행처럼 통계 뒤 끝에서 검사하므로 거짓으로 둔다.</param>
+    private void ValidateBaseCore(int sid, uint flags, in PopProjection projection, bool checkPending)
+    {
         ReadOnlySpan<byte> slot = _pool.Slot(sid);
         // 번호·빈·내용물·자산 타입 밖이면 공통 장부의 대상이 아니다
         if (sid < RawSidPool.FirstOrdinary || (slot[RawSidPool.StateOffset] & (FreeBit | ContainedBit)) != 0
@@ -369,7 +379,7 @@ public sealed class RawPostPop : IRawPopPostPop
             throw new InvalidOperationException("postPop AI 생성 통지 미복원");
         }
         // 보류 배치가 있으면 선택 해제의 미복원 효과다
-        if (_state.PendingPlacement)
+        if (checkPending && _state.PendingPlacement)
         {
             throw new InvalidOperationException("postPop 배치 선택 해제 미복원");
         }
@@ -420,13 +430,15 @@ public sealed class RawPostPop : IRawPopPostPop
     /// <summary>
     /// 공통 후처리의 순서: Graph 생성 → 비용 → 공급·작업장 목록 → 소유자 조건 통계 → 깊이 감소다.
     /// 직접 base 호출도 공통 상태·효과의 검사와 깊이 감소를 그대로 수행한다.
+    /// PATCH는 원본 부모 실행처럼 보류 배치를 통계 뒤 끝에서 검사하므로 깊이를 줄이지 않고 멈춘다.
     /// </summary>
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     /// <param name="flags">호출 플래그.</param>
     /// <param name="projection">등록 좌표·단계·타입(Graph 연결이 있을 때 넘긴다).</param>
     public void PostPopBase(int sid, uint flags, in PopProjection projection = default)
     {
-        ValidateBase(sid, flags, in projection);
+        bool patch = _pool.Edition == OriginalEdition.Patch1078;
+        ValidateBaseCore(sid, flags, in projection, checkPending: !patch);
         // 억제 경로도 깊이는 1 줄인다
         if (_state.Suppressed)
         {
@@ -477,6 +489,11 @@ public sealed class RawPostPop : IRawPopPostPop
                 _state.LocalSecondaryCounts[number] = unchecked(_state.LocalSecondaryCounts[number] + 1);
             }
             _state.GlobalCounts[number] = unchecked(_state.GlobalCounts[number] + 1);
+            // 원본 부모 실행의 끝 선택 재검사다. 보류 배치가 있으면 통계를 남기고 깊이를 줄이지 않는다.
+            if (patch && _state.PendingPlacement)
+            {
+                throw new InvalidOperationException("postPop 배치 선택 해제 미복원");
+            }
         }
         _state.Depth = unchecked(_state.Depth - 1);
     }

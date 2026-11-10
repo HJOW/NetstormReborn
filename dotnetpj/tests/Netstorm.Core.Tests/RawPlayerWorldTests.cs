@@ -664,4 +664,30 @@ public sealed class RawPlayerWorldTests
         Assert.Equal((uint)Source, Get(records, 0xb4 + 0x9c));
         Assert.Equal(0u, book.Depth);
     }
+
+    /// <summary>공통 몸체의 늦은 실패 앞에 실제 기록·확보·special 쓰기와 공통 통계가 남는다. 2026-11-10 F3 미뤄 둔 전수 재생(0.301)에서 추가됐다.</summary>
+    [Fact]
+    public void PostPopLateCommonFailureKeepsTechnologyReservationAndFrame()
+    {
+        // cpp `PlayerParentCurrent_LateCommonFailureKeepsLinkReservationAndFrame`의 순서 계약이다.
+        var pool = Pool();
+        var types = Types();
+        var book = new RawPostPopState { Depth = 1u, PendingPlacement = true, LocalOwner = 1 };
+        var inner = Base(pool, types, book);
+        var records = Records();
+        var state = new PlayerWorldState { Special = 1u };
+        var events = new List<string>();
+        var hooks = new PlayerWorldHooks
+        {
+            ReserveRegular = () => { events.Add("N"); return false; },
+        };
+        var body = new RawPlayerWorld(pool, inner, records, state, hooks);
+        Fill(pool, PlayerVtable);
+        Assert.ThrowsAny<Exception>(() => body.PostPop(Source, 0x2000001u));
+        Assert.Equal(["N"], events);
+        Assert.Equal((uint)Source, Get(records, 0xb4 + 0x9c));
+        Assert.Equal(1u, Get(pool.AllocatedBytes(Source), FrameOffset));
+        Assert.Equal(1u, book.GlobalCounts[74]);
+        Assert.Equal(1u, book.Depth);
+    }
 }
