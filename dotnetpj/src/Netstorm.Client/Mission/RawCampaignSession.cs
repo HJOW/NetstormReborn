@@ -54,6 +54,9 @@ public sealed class RawCampaignSession
     /// <summary>원본 미션 시작 공용 설정의 현재 기본값이다. 설치 본체가 갱신하며 공통 Start가 같은 참조를 빌린다. 2026-11-11 F3 미션 시작 설정 소유자 본체에서 추가됐다.</summary>
     private readonly MissionStartGlobals _missionStart = new();
 
+    /// <summary>원본 87바이트 전투 옵션의 현재 값이다. 설치 본체가 갱신하며 공통 Start·AI·SP가 같은 참조를 빌린다. 2026-11-11 F3 전투 옵션 소유자 본체에서 추가됐다.</summary>
+    private readonly byte[] _battleOptions = new byte[87];
+
     /// <summary>원본 첫 목록(outposts)의 현재 항목이다. Fort 적재 본체가 채우기 전에는 비어 있다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
     private readonly RawPostPopList _outposts = new();
 
@@ -180,6 +183,23 @@ public sealed class RawCampaignSession
 
     /// <summary>원본 미션 시작 공용 설정의 현재 기본값이다. 설치 본체가 갱신하며 공통 Start가 같은 참조를 빌린다. 2026-11-11 F3 미션 시작 설정 소유자 본체에서 추가됐다.</summary>
     internal MissionStartGlobals MissionStartSettings => _missionStart;
+
+    /// <summary>원본 87바이트 전투 옵션의 현재 값이다. 설치 본체가 갱신하며 공통 Start·AI·SP가 같은 참조를 빌린다. 2026-11-11 F3 전투 옵션 소유자 본체에서 추가됐다.</summary>
+    internal byte[] BattleOptions => _battleOptions;
+
+    /// <summary>원본 87바이트 전투 옵션에서 지정 위치의 한 바이트를 읽는다. 적재 여부와 무관하게 읽을 수 있다. 2026-11-11 F3 전투 옵션 소유자 본체에서 추가됐다.</summary>
+    /// <param name="offset">읽을 위치다. 원본 0..86 범위를 받는다.</param>
+    /// <exception cref="ArgumentOutOfRangeException">원본 87바이트 범위 오류다.</exception>
+    public byte BattleOption(int offset)
+    {
+        // 원본 RawCampaignSession::BattleOption의 at() 경계를 직역한다.
+        if (offset < 0 || offset >= _battleOptions.Length)
+        {
+            throw new ArgumentOutOfRangeException(nameof(offset), offset, "전투 옵션의 실제 87바이트 범위 오류");
+        }
+
+        return _battleOptions[offset];
+    }
 
     /// <summary>원본 첫 목록(outposts)의 현재 항목이다. Fort 적재 본체가 채우며 게임 메뉴가 같은 참조를 읽는다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
     internal RawPostPopList Outposts => _outposts;

@@ -965,6 +965,39 @@ public sealed class RawCampaignSessionTests
         Assert.Equal(-1, second.DenySalvage);
     }
 
+    /// <summary>새 세션의 전투 옵션이 87바이트 0인지 검증한다. 2026-11-11 F3 전투 옵션 소유자 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BattleOptionsStartWith87ZeroBytes()
+    {
+        // 원본 세션 Impl의 localBattleOptions 0 초기화와 같다.
+        var session = LoadableSession();
+        Assert.Equal(87, session.BattleOptions.Length);
+        Assert.All(session.BattleOptions, value => Assert.Equal(0, value));
+        Assert.Equal(0, session.BattleOption(6));
+    }
+
+    /// <summary>세션 전투 옵션 갱신이 같은 참조에 보이는지 검증한다. 2026-11-11 F3 전투 옵션 소유자 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BattleOptionsShareSameReference()
+    {
+        // 설치 본체의 갱신이 공통 Start·AI·SP에 그대로 보인다.
+        var session = LoadableSession();
+        Assert.Same(session.BattleOptions, session.BattleOptions);
+        session.BattleOptions[6] = (byte)0xab;
+        Assert.Equal((byte)0xab, session.BattleOption(6));
+    }
+
+    /// <summary>원본 87바이트 범위를 벗어난 전투 옵션 조회를 거부하는지 검증한다. 2026-11-11 F3 전투 옵션 소유자 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BattleOptionRejectsOutOfRange()
+    {
+        // 원본 at() 경계를 그대로 둔다. 적재 여부와 무관하게 동작한다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.BattleOption(-1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.BattleOption(87));
+        Assert.Equal(0, session.BattleOption(86));
+    }
+
     /// <summary>미적재 AI 다리 경로 전진을 적재 관문에서 거부하는지 검증한다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
     [Fact]
     public void AdvanceAiBridgeRejectsWhenNotLoaded()
