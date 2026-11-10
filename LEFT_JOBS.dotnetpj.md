@@ -12,7 +12,7 @@
 
 <a id="dotnet-overview"></a>
 
-## 한눈에 보기 — dotnetpj 진행 상황 (2026-11-10, 단위 0.280 기준)
+## 한눈에 보기 — dotnetpj 진행 상황 (2026-11-10, 단위 0.281 기준)
 
 ### 실행·플레이 가능 여부와 원본과의 동일성
 
@@ -41,7 +41,7 @@ AGENTS.md(`551d27ae`)의 두 기준으로 평가한다. dotnetpj에는 실행 �
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 커밋 | 0.280 `20261110-85 DN`(전체 회귀 재기준선, 문서만) |
+| 마지막 커밋 | 0.281 `20261110-86 DN`(cpppj 영향 확인, 문서만) |
 | PORT_MAP | 634줄(자료 629행: L1 329 · port 300) |
 | 원본 fixture | 연결 232개(`cpp_sync.py` 0종료). `reflected-commit`은 영향 검토 전이라 `f95a8db2` |
 | 마지막 전체 검사 완주 | Core **1,826개**·Client **895개**·Assets **366개**(0.280, 실패 0). 이전 기준선은 Core 1,576개(0.211), Client 858개·Assets 366개(0.157)였다 |
@@ -73,12 +73,12 @@ AGENTS.md(`551d27ae`)의 두 기준으로 평가한다. dotnetpj에는 실행 �
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | 0.280까지 커밋됐다. 전체 목표는 미완료다. 다음 단위(0.281)는 0.9의 '재개 준비' cpppj 영향 확인부터 시작한다. |
+| 진행 상태 | 0.281까지 커밋됐다. 전체 목표는 미완료다. 다음 단위(0.282)는 0.9의 '재개 준비' cpppj 재반영 2건부터 시작한다. |
 | 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 진행 중(완료 범위는 0.9의 체크 목록과 1절 색인), R5 이후 미착수. |
 | 실행·플레이 가능 여부 | 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)은 1-1·1-2 근사 플레이가 가능하다. 새 경로 `Netstorm.Client.Host`는 메뉴 계열 일부까지이고 미션 월드가 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.280 `20261110-85 DN`(전체 회귀 재기준선, 문서만). |
-| 검사 | 마지막 전체 완주는 0.280: Core 1,826개·Client 895개·Assets 366개(합계 3,087개, 실패 0)다. 이전 기준선은 Core 1,576개(0.211), Client 858개·Assets 366개(0.157)였다. |
+| 마지막 구현 커밋 | 0.281 `20261110-86 DN`(cpppj 영향 확인, 문서만). |
+| 검사 | 마지막 전체 완주는 0.280: Core 1,826개·Client 895개·Assets 366개(합계 3,087개, 실패 0)다. 0.281은 코드·검사 변경 없이 영향 목록만 만들었다. |
 | 포트 맵 | `PORT_MAP.tsv` 총 634줄(자료 629행: L1 329, port 300). 0.265의 `RawCampaignSession.h/.cpp` → `RawCampaignSession.cs` 2행(port)이 마지막 추가다. |
 | fixture | 연결 232개(개별 OK, `cpp_sync.py`는 미반영분 때문에 0종료 아님). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다. 영향 검토 전이라 `reflected-commit`과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값(2026-11-10 확정 제품1248, 작업 중 1249)은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
@@ -251,7 +251,7 @@ AGENTS.md는 "cpppj의 **4~8차** 목표 내용이 dotnetpj 후순위 요구사�
 **재개 준비 (다음 단위 0.280부터, 이 순서로):**
 
 - [x] **전체 회귀 재기준선(0.280):** `dotnet test dotnetpj/Netstorm.sln -c Release` 완주 — Assets 366개·Client 895개·Core 1,826개(합계 3,087개) 실패 0. 이전 기준선(Core 1,576개/0.211, Client 858개·Assets 366개/0.157) 이후 68단위(0.212~0.279) 동안의 증가분(250·37개)을 흡수했다.
-- [ ] **cpppj 영향 확인:** `python dotnetpj/tools/cpp_sync.py`와 `--ports`로 변경 영향을 본다(`--ports`는 0.147 이후 계속 시간 초과였으므로 안 되면 이식한 cpppj 파일별 `git log`로 확인). cpppj는 dotnetpj가 영향 검토를 마친 시점 뒤로 단위861(11-04)에서 확정 제품1247(11-10)까지 진행했다(예: 1246·1247의 TYPE 피해율 키 `hpPerSec` 교정, M6 장기 연결). PORT_MAP의 이식 행 가운데 cpppj 쪽 파일이 바뀐 행을 골라 재대조 목록을 만들고, 영향 검토가 끝난 범위만 `reflected-commit`·`base`를 올린다.
+- [x] **cpppj 영향 확인(0.281):** `git diff --name-only f95a8db2..HEAD -- cpppj/`로 PORT_MAP 대조 — 자료 629행 중 458행이 영향(L1 247·port 211, 고유 cpppj 파일 387개, 변경 파일 4,323개). 영역은 `o/` 282행·`client/` 170행·`app/` 4행·`zacket/` 2행이다. R4 우선 65행(ClientMain·RawMenuControls·Renderer·Screen 계열·RawBridge·RawIsland·RawMissionStart·RawPlayer·RawSurfaceWorld·RawNormalTerrainWorldBinding 등)을 목록으로 뽑았다. `reflected-commit`·`base`는 올리지 않았다(재대조 완료 범위만 올린다는 규칙). 재대조는 R4 작업에서 파일을 건드릴 때 늦게 하는 방식으로 한다. 기능 교정 중 dotnetpj와 직접 닿는 것은 `hpPerSec` TYPE 피해율(1246·1247, 기존 경로 `BattleSession`만 사용하므로 새 경로 이식 때 반영)·재반영 2건(0.282)·`session-dump`·`--fixed-frame-ms`(0.283 이후)다. `--ports`는 0.147 이후 시간 초과라 쓰지 않았다. 작업 트리의 미커밋 cpppj 변경(1249 작업 중)은 보지 않았다.
 - [ ] **cpppj 재반영 요청 2건**([cpp-webpj-requests-20261109.md](docs/exe/cpp-webpj-requests-20261109.md) 3·4절, cpppj가 원문 기준으로 바꾼 것):
   - Demo 버튼 Tell 이름: `Netstorm.Client/Host/HostMainMenu.cs`의 `("Tell","DEMOVILLE")`를 원문과 같은 `("Tell","Demoville")`로 바꾸고 `HostStartupSceneTests`의 `DEMOVILLE` 단언(`priorTell` 포함)을 고친다. `tell.english`의 섹션 머리 `[DEMOVILLE]`은 자료라 그대로이며, 섹션 조회는 대소문자를 가리지 않는다.
   - Help 스크롤 화살표 색: `Netstorm.Client/Host/HostHtmlText.cs`가 ScrollingText 화살표에 `SliderType=menu.BackgroundType, SliderFrame=1`을 넘겨 팔레트 1번(붉은 갈색)으로 그린다. 원문처럼 현재 팔레트의 갈색(named 9)·검정(basic 0) 색 번호를 넘긴다(cpppj `RawMenuControls::SetPalette`).
@@ -316,9 +316,11 @@ AGENTS.md는 "cpppj의 **4~8차** 목표 내용이 dotnetpj 후순위 요구사�
 
 <a id="dotnet-unit-records"></a>
 
-### 0.10 단위 기록 (0.281부터)
+### 0.10 단위 기록 (0.282부터)
 
 문서가 없는 작은 단위만 아래에 최신순으로 짧게 적는다. 한 기록에는 범위, 구현(새 파일·수정 파일), C#에서 달라진 모양, 검증(집중·전체·변이), PORT_MAP·fixture 변화, 보호·실행·외부 접속 관점, 남은 것을 적는다(0.6). 0.11~0.279는 이관 파일에 있다: [0.11~0.65](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073), [0.66~0.126](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126), [0.127~0.153](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154), [0.154~0.279](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279).
+
+**0.281 — cpppj 영향 확인 (2026-11-10, HJOW-Athlon, 문서만).** 범위: 0.9 '재개 준비' 두 번째 항목. 구현: 코드 변경 없음, 0.1·0.9만 갱신. 방법: `git diff --name-only f95a8db2..HEAD -- cpppj/`(HEAD 기준, 미커밋 1249 변경 제외)와 PORT_MAP 629행 교차. 결과: 영향 458행(L1 247·port 211, 고유 387파일), 영역 `o/` 282·`client/` 170·`app/` 4·`zacket/` 2, R4 우선 65행 목록 확정. 검증: 빌드·검사 실행 없음(0.280 기준선 유지). PORT_MAP·fixture 변화 없음(`reflected-commit` 유지). 보호: 원본/CD·AGENTS.md 미수정, 게임 실행 없음. 외부 접속 변화 없음. 남은 것: 재반영 2건(0.282)부터 계속한다.
 
 **0.280 — 전체 회귀 재기준선 (2026-11-10, HJOW-Athlon, 문서만).** 범위: 0.9 '재개 준비' 첫 항목. 구현: 코드 변경 없음, `LEFT_JOBS.dotnetpj.md`의 0.1·0.9만 갱신. 검증: `dotnet test dotnetpj/Netstorm.sln -c Release` 완주 — Assets 366개·Client 895개·Core 1,826개(합계 3,087개) 실패 0, 기간 약 18분. PORT_MAP·fixture 변화 없음(연결 232개 개별 OK, `cpp_sync.py`는 미반영분으로 0종료 아님, `reflected-commit` 유지). 보호: 원본/CD·AGENTS.md 미수정, 게임 실행 없음(빌드·정적 검사만 해당되는 실행 확인 면제 범위). 외부 접속 변화 없음. 남은 것: cpppj 영향 확인(0.281)부터 계속한다.
 
