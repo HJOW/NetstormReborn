@@ -84,3 +84,13 @@ TEST_CASE(ObjectMenu_RequiresReachedDependencies) {
     scene.state.helpWord="AboutType";scene.hooks.playerMenu={};failed=false;
     try { scene.Menu().Open(Sid{50}); } catch (const std::logic_error&) { failed=true; }CHECK(failed);CHECK(scene.trace.find("P,")==std::string::npos);
 }
+// M7.1: 실제 Client의 helpWord 현재 캐시(helpWordRead)가 값형 fixture보다 우선하고, 읽는 시점마다 최신 값/NULL을 구별한다.
+TEST_CASE(ObjectMenu_HelpWordReadUsesCurrentCacheAtItemTime) {
+    const auto rows=LoadFixture(NETSTORM_OBJECT_MENU_FIXTURE).rows;ObjectScene scene(OriginalEdition::Patch1078,rows.at(1));
+    std::optional<std::string> cache=std::string("Info");scene.state.helpWordRead=[&cache] { return cache; };
+    scene.Menu().Open(Sid{50});CHECK(scene.trace.find(TextHex("Info"))!=std::string::npos && scene.trace.find(TextHex("AboutType"))==std::string::npos);
+    ObjectScene again(OriginalEdition::Patch1078,rows.at(1));again.state.helpWordRead=[&cache] { return cache; };cache.reset();bool failed=false;
+    try { again.Menu().Open(Sid{50}); } catch (const std::logic_error&) { failed=true; }CHECK(failed && again.trace.empty()); // NULL 캐시는 값형 대체값으로 성공 처리하지 않는다.
+    ObjectScene empty(OriginalEdition::Patch1078,rows.at(1));empty.state.helpWordRead=[] { return std::optional<std::string>(std::string()); };empty.Menu().Open(Sid{50});
+    CHECK(empty.trace.find("I,,")!=std::string::npos); // 비영 빈 문자열은 NULL이 아니라 정상 항목 문자열이다.
+}

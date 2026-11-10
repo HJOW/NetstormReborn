@@ -20,7 +20,7 @@ bool InputClientMetaObject(Client& client,RawMenuControls& menus,std::uint32_t s
     auto& storage=*client.SurfaceStorage();if (sid>65535U || sid>=storage.pool.Capacity()) throw std::out_of_range("메타 객체 입력의 현재 SID 물리 범위");const o::Sid object{static_cast<std::uint16_t>(sid)};
     NativeMetaObjectInputHooks hooks;menus.BindMetaObjectInput(hooks);
     hooks.typeName=[&client,object] { return client.GameplayGlobals()->RequireSession().ObjectBaseName(object); };
-    hooks.helpWord=[&client]()->std::optional<std::string> { const auto word=client.Configuration().Configuration().Get("helpWord");if (!word) return {};const auto bytes=o::EncodeDisplayText(*word);return std::string(bytes.begin(),bytes.end()); }; //실제 Config의 존재 조회로 ReadString의 변경 여부0과 빈 문자열을 NULL로 혼동하지 않는다.
+    hooks.helpWord=[&client]()->std::optional<std::string> { return client.LocalStateGlobals()->HelpWord().Get(); }; // M7.1: Config 존재 조회 대신 0054db38 현재 캐시(NULL/빈 문자열 구별)를 읽는다. 이전 설명: //실제 Config의 존재 조회로 ReadString의 변경 여부0과 빈 문자열을 NULL로 혼동하지 않는다.
     hooks.command=[](auto address) { const auto value=MetaObjectInputCommandValue(address);if (!value) throw std::logic_error("메타 객체 입력의 실제 명령 주소 미등록");return *value; };
     hooks.descriptionParameter=[&client](auto battle) { return EncodeClientMetaDescriptionAddress(*client.ChallengeGlobals(),battle*0x124U+0x101U); }; //원문 CS+전투*124+101 주소를 메뉴 작성 위치에서 표식화하고 고리 문자열과 혼동하지 않는다.
     hooks.translate=[&client](auto key) { const auto bytes=o::EncodeDisplayText(client.Translate(key));return std::string(bytes.begin(),bytes.end()); };

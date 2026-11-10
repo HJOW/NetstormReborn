@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**작업 재개 · 확정 제품1267 / 11.01 · 정적감사1262 · 인계 갱신2026-11-11, HJOW-Athlon**
+**작업 재개 · 확정 제품1268 / 11.01 · 정적감사1262 · 인계 갱신2026-11-11, HJOW-Athlon**
 
 이 문서는 cpppj의 **현재 상태·남은 작업·실행 제외·유효한 계약**을 담는다. 2026-11-10 사용자의 재개 요청으로1265 뒤의 후보 접합을 진행했다. **전체 목표와 M6-n은 미완료다.** 아래 우선순위를 따르고 단위마다 인계·로컬 커밋을 남긴다. push하지 않는다.
 
@@ -28,6 +28,8 @@
 
 1266의 제품·인계 파일은 동시 webpj 세션이 공유 인덱스를 커밋하면서 `93d891ac8`의 WB 커밋에 함께 들어갔다. 기록을 다시 쓰지 않고 이 사실을 CP 후속 커밋에 남긴다. 해당 WB 변경은 이 작업에서 수정하지 않았다.
 
+**1268 M7.1 helpWord 캐시 완료:** 원문 0054db38 캐시(4413c0/441300 규칙: 키 부재/빈 값은 기존 유지, 대소문자만 다르면 옛 표기 유지, 다르면 교체)를 `ClientHelpWord`/`ClientLocalStateGlobals::HelpWord()` 단일 소유자로 구현하고 `InterpretOptions`·객체/Factory/풀숲/Inventory/메타/게임 메뉴·BaseHelp 토큰 61000002를 모두 같은 캐시에 연결했다. [근거](docs/exe/cpp-help-word-cache-20261111.md)·[보고서](cpppj/help-word-cache-20261111.json). Release·새 검사 8건 통과·Tutorial4 생산/건설/600프레임을 확인했다. 메뉴 세션 검사 6건 실패는 helpWord와 무관한 메시지이나 기준선 직접 비교는 하지 않았다. **M7.2~M7.5·M8 미완료**, MP 실행0이다.
+
 **1267 NoWorld 자산 후처리 7VT 연결:** 보호막(00507770)·Generator(00501ea0)·장식 Gun(0050b570)·Arc(0050e668)·Acid(0050e738)를 같은 장기 확보 메모리/Host/공통 장부에 연결하고, 메타/일반 Sprite(0050c9f0/0050cc08)를 PE의 공통 +20/+7c/+80/+84 근거로 공통 Pop 허용에 추가했다. [근거](docs/exe/cpp-asset-postpop-noworld-20261111.md)·[보고서](cpppj/asset-postpop-noworld-20261111.json). Release·집중 641건(새7 통과, 기존 실패2)·pop_context 기준선과 실패 25건 동일·Tutorial4 생산/건설/600프레임을 확인했다. **남은 최초 후처리: Crab2·Teleport(flags1)·Rune·Altar·Dais·Aviary3·Flyer3·Gun5·Blocker3·Player·Priest·Residence(flags1)·Temple4**(Session 소유 장치 이전 필요), 큰 NoWorld/M6-n 미완료, MP 실행0이다.
 
 **다음: M6-n 나머지 Fort 호출자·최초 후처리/AI·전수 process/caller 감사.** `FortEditEffects` 섬 개수, `RequestFortEditState` Battle 판정, 일반 Descend 등 남은 실제 부모와 수명을 살핀다.1265 debugBurst와1266에서 연결한 저장 본문을 다시 만들지 않는다. MP 실행은 제외한다.
@@ -48,7 +50,7 @@
 
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
-AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1267, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
+AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1268, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
@@ -60,7 +62,7 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj�
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품·소스 | **1267 / 11.01**. [NoWorld 자산 후처리](docs/exe/cpp-asset-postpop-noworld-20261111.md). 1266 [Fort Snapshot·준비 접합](docs/exe/cpp-native-fort-snapshot-20261110.md).1265 [로그인 debugBurst](docs/exe/cpp-login-debug-burst-20261110.md),1264 [최초후처리4VT](docs/exe/cpp-initial-postpop-owner-20261110.md),1262 Native 표/연결 owner 정적 마감 유지. **큰 NoWorld/M6-n/M6 미완료**, Regular87/87 유지. |
+| 확정 제품·소스 | **1268 / 11.01**. [helpWord 캐시 M7.1](docs/exe/cpp-help-word-cache-20261111.md). 1267 [NoWorld 자산 후처리](docs/exe/cpp-asset-postpop-noworld-20261111.md). 1266 [Fort Snapshot·준비 접합](docs/exe/cpp-native-fort-snapshot-20261110.md).1265 [로그인 debugBurst](docs/exe/cpp-login-debug-burst-20261110.md),1264 [최초후처리4VT](docs/exe/cpp-initial-postpop-owner-20261110.md),1262 Native 표/연결 owner 정적 마감 유지. **큰 NoWorld/M6-n/M6 미완료**, Regular87/87 유지. |
 | 최근 빌드·집중 검사 |1266 Release/x64 제품2 및 편집 집중 대상 빌드 성공. 기존 비MP 관련 **6/6** 통과. Session 없는 전체 저장·Battle/MP 실행은 미검증이다. |
 | 최근 실제 실행 |1266 일반 Edit에서 TEST01 저장→메인 메뉴 복귀·재진입을 2회, 사용자 경로 파일 생성·종료0·데이터 사본 불변을 확인했다.1265 Tutorial4 생산/건설·600프레임은 이전 제품 증거다. MP/Join/Test Battle·공격/포획/희생/승리/자연 완주/공중3종 전용은 제외했다. |
 | 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품1266 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
@@ -144,7 +146,7 @@ Native 전체표/연결 owner·M6-l은1262에서 정적 마감했다. 모든 pro
 
 | ID | 남은 작업과 완료 조건 |
 | --- | --- |
-| M7.1 | helpWord 캐시: 빈 Config일 때 기존 cache 유지·현재 정체성 연결. |
+| M7.1 | **완료(1268)** — helpWord 캐시: 빈 Config일 때 기존 cache 유지·현재 정체성 연결. [근거](docs/exe/cpp-help-word-cache-20261111.md) |
 | M7.2 | 메타커서 실제 본문/장치 설치, 상태 Lock/Unlock과 장치 선행 순서 연결. |
 | M7.3 | 조기/원격 희생 안내 구현. 정적 대조만 하고 사용자 제외 희생/MP 실행 검사는 하지 않는다. |
 | M7.4 | marker 실제 표시·갱신. |

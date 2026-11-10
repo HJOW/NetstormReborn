@@ -1,0 +1,38 @@
+{
+  "unit": 1268,
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "milestone": "M7.1 helpWord cache",
+  "originalAddresses": {"cache": "0054db38", "interpret": "004413c0", "configGet": "00441300", "callsite": "00435220"},
+  "sourceSha256": {
+    "cpppj/src/CMakeLists.txt": "b9fe74c16ee64b60a1da86be4fb0dca4adf20cb5c30ac97f8a5d4b969a92219a",
+    "cpppj/src/client/CampaignObjectMenuClient.cpp": "c0572c81e508bd601b1f136fa378d2ad4c6e381f84d15037fc0e69016b905bce",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "a9d2516c69b55dc4f32fd6351f2c7b4a4c1da3cf1c6516faaeeba888f6c1c1d5",
+    "cpppj/src/client/ClientMain.cpp": "42cc6be9063b358f913b6152b6b061415889da93904002a9c3794d7c9303d7a4",
+    "cpppj/src/client/ClientMetaObjectInput.cpp": "5e237b4c0daa2c3d705fa18d38de37e4256a3766a3b33d49e2467e1037d9bd6b",
+    "cpppj/src/client/RawMenuControls.cpp": "cde9662a01d73e1149cbefafbd094c83315fde6689d4e1f35c89a76355090ebd",
+    "cpppj/src/client/RawMenuControls.h": "620e21f92ed85ec047a7b1ad85567c842c4d89c5387358fa3c91df07280225de",
+    "cpppj/src/client/RawObjectMenu.cpp": "1bd82c9b98a4b1b5f8bdedd888076069ac90e8b9efa7461ed0dbe200ce772b82",
+    "cpppj/src/client/RawObjectMenu.h": "d56c93adeb27ff67efb7058e6041a16c5355eab05d5f738a2aea4f635014f512",
+    "cpppj/src/client/UberGump.cpp": "14ad883dcf7441e24a8ee6e17d2025667a584e62c747909ae740a0dda57e28b5",
+    "cpppj/src/client/ClientHelpWord.cpp": "7bd5b5e5fc00d4de8685c98c15bb8f6db822996b298c7e67048ab23544d4e28e",
+    "cpppj/src/client/ClientHelpWord.h": "644ccba88488ce9fe7434a0507f821476b77ed701400af633d8f22a132740acf",
+    "cpppj/tests/CMakeLists.txt": "b20417ec3ca1460c497e319de50d4e3e8acee9670895e61111b786401bb3b939",
+    "cpppj/tests/CampaignObjectMenuTests.cpp": "7f5892a4cae22086aa850b13ac35dcb974fbd150b49896e76b8f9a4196d5a224",
+    "cpppj/tests/ObjectMenuTests.cpp": "bba1c869319979b99e66fcab5d13139fdf34acc83544be4815916966bd4b1711",
+    "cpppj/tests/ClientHelpWordTests.cpp": "de008aafefe61d8fcef7786530fffa7a132f569728199227213383567042a2fb"
+  },
+  "consumers": ["ObjectMenuState.helpWordRead", "ui.factory.helpWord", "ui.variants.helpWord", "InventoryAboutMenu helpWord", "ClientMetaObjectInput helpWord", "UberGump bar.about", "BaseHelp token 61000002 (RawHelpHooks::helpWord)"],
+  "build": {"seconds": 191.97, "exitCode": 0, "warningsOrErrors": 0, "firstAttemptFailedSeconds": 356.7, "firstAttemptCause": "새 검사 파일의 주석이 같은 줄 선언을 가린 실수"},
+  "tests": {
+    "help_word": {"total": 7, "failed": 0},
+    "menu_session": {"total": 254, "failedBeforeTestFix": 25, "failedAfterTestFix": 6, "remainingNotHelpWordRelated": true, "baselineDirectlyVerified": false},
+    "main_popup": {"total": 167, "failedCases": 3, "failedChecks": 4},
+    "newObjectMenuCase": "ObjectMenu_HelpWordReadUsesCurrentCacheAtItemTime passed"
+  },
+  "live": {"mission": "tutorial4", "producedType": 75, "owner": 1, "constructionRequests": [0, 1], "gameTimeSeconds": [13.618, 24.216], "exitCode": 0, "commandErrors": []},
+  "protectedFiles": {"count": 2808, "unchanged": true},
+  "excluded": "포획/희생·특정 적 공격·승리·공중3종·MP/Join/Test Battle 실행 없음",
+  "remainingM7": ["M7.2", "M7.3", "M7.4", "M7.5"]
+}

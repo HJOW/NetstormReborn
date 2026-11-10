@@ -405,6 +405,7 @@ UberGump::UberGump(Client& client) : client_(client),missionOptions_(client.Game
     rawButtons_->EnableMenus(client_.Assets(),client_.Fonts(),std::move(menuHooks)).SetPalette(client_.GetScreen().Colors());
     rawButtons_->Menus()->BindColorMaps([owner=client_.ColorSortInput()]() -> const std::array<ColorMap,9>& { return owner->Maps(); }); // 메뉴 그림/도움말도 현재9표를 사용하며 파일 hit 뒤 재계산하지 않는다.
     RawHelpHooks help;help.globals=&htmlGlobals_; // Tell과 같은 HTML 전역/Config/입력 고리를 빌린다.
+    help.helpWord=[this]()->std::optional<std::string> { return client_.LocalStateGlobals()->HelpWord().Get(); }; // 61000002 토큰이 0054db38 현재 캐시를 해석 시점마다 읽는다(M7.1).
     help.translate=[this](auto text) { return FontBytes(client_.Translate(text)); };help.config=[this](auto key) { return FontBytes(client_.Configuration().PathSpec(key)); };
     help.substitute=[this](auto text) { const auto decoded=o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()});return FontBytes(client_.Configuration().SubstituteLocal(decoded)); };
     help.load=[this](auto name) { return ReadClientQuickHelpFile(client_,name); }; //원문check0/extra2이며LF/NUL/성공cache는기존전용창이소유한다.
@@ -1155,7 +1156,7 @@ void UberGump::OpenGameMenu(bool playerList) {
             }
             throw std::logic_error("게임메뉴조회종류오류");
         };
-        bar.about=[this] { const auto value=client_.Configuration().Configuration().Get("helpWord");if (!value) throw std::logic_error("게임메뉴현재helpWord포인터없음");return FontBytes(*value); };
+        bar.about=[this] { const auto& value=client_.LocalStateGlobals()->HelpWord().Get();if (!value) throw std::logic_error("게임메뉴현재helpWord포인터없음");return *value; }; // 0054db38 현재 캐시의 표시 바이트이며 FontBytes/Translate로 다시 변환하지 않는다(M7.1).
         bar.technicalHelp=[this] { return ClientTechnicalHelpAvailable(client_) ? 1U : 0U; };
         bar.child=[&](GameMenuBarChild child) {
             switch (child) {

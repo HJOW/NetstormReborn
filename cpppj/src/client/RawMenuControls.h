@@ -79,6 +79,7 @@ struct RawHelpHooks {
     std::function<std::string(std::string_view)> translate,config,substitute; // 현재 언어/파일 설정과 원본 바이트 치환이다.
     std::function<std::optional<std::string>(std::string_view)> load; // 현재 VFS 파일의 바이트와 실패를 구별한다.
     std::function<std::string(std::uint32_t)> text,typeName,description; // 실제 호스트 문자열/현재 TYPE 이름·설명이다.
+    std::function<std::optional<std::string>()> helpWord; // 0054db38 현재 캐시(NULL과 빈 문자열 구별)이며 특수 토큰 61000002가 해석 시점에 읽는다. 비어 있으면 기존 번역 "Help"를 쓴다(M7.1).
     std::function<std::uint32_t(std::string_view)> storeText; // 입력 큐와 같은80칸 문자열 고리다.
     std::function<QuickHelpTypeInfo(std::uint32_t)> type; // 실제 Session/TYPE/AST 후처리의 현재 값이다.
     std::function<std::int32_t(std::uint32_t)> hitPoints,helpFrame; // 실제 최대HP/TYPE+120이다.

@@ -49,8 +49,9 @@ void RawObjectMenu::Open(o::Sid sid) const {
         Required(hooks_.item)("CHEAT Destroy",state_.destroyCommand,std::uint32_t(sid.value));
         Required(hooks_.item)("CHEAT Make Yours",state_.makeYoursCommand,std::uint32_t(sid.value));
     }
-    if (!state_.helpWord) throw std::logic_error("원본 객체 메뉴 helpWord NULL");
-    Required(hooks_.item)(*state_.helpWord,state_.helpCommand,std::uint32_t(Raw(sid)[10]));
+    const auto help=state_.helpWordRead ? state_.helpWordRead():state_.helpWord; // 앞선 항목 작성 효과 뒤의 현재 0054db38 캐시를 이 위치에서 읽는다(M7.1).
+    if (!help) throw std::logic_error("원본 객체 메뉴 helpWord NULL");
+    Required(hooks_.item)(*help,state_.helpCommand,std::uint32_t(Raw(sid)[10]));
     if (Editor() || Special()) {
         const auto label=Format("CHEAT Set Owner");Required(hooks_.item)(label,state_.tellCommand,std::string("SetOwner"));
     }

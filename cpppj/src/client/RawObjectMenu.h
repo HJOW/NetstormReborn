@@ -16,6 +16,7 @@ struct ObjectMenuState {
     std::uint32_t hurtCommand{0x030000e2},destroyCommand{0x03000015},makeYoursCommand{0x030000af}; // 원본 직접 객체 명령이다.
     std::uint32_t helpCommand{0x02000017},tellCommand{0x02000095},salvageCommand{0x0200005d}; // 원본 도움말/문자열 안내/회수 명령이다.
     std::optional<std::string> helpWord; // PATCH0054db38/CD0052e8cc의 NUL 포인터와 실제 문자열을 구별한다.
+    std::function<std::optional<std::string>()> helpWordRead; // 실제 Client의 0054db38 현재 캐시를 항목 작성 위치에서 읽는다. 비어 있으면 위 값형 helpWord(독립 fixture)를 쓴다(M7.1).
     std::function<std::uint32_t()> localOwnerRead,denySalvageRead; // 실제 세션의 현재 소유자/회수 금지 전역을 각 분기에서 읽는다.
     std::function<bool()> editorRead,specialRead,chargeBlockedRead; // 현재 DWORD/모드를 값형 fixture와 구별하여 직접 조회한다.
 };

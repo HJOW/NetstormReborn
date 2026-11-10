@@ -831,6 +831,11 @@ void Client::InterpretOptions() {
     }
     configuration_.ReadInt("highPriorityValue", highPriority_);
     configuration_.ReadInt("initWindowPos", initWindowPos_);
+    { // 435220이 SoundDir/MusicDir 뒤에 호출하는 4413c0("helpWord",&0054db38)이다. 키 부재/빈 값은 캐시를 바꾸지 않고, 대소문자만 다르면 옛 표기를 유지한다(M7.1, 1268).
+        const auto configured=configuration_.Configuration().Get("helpWord");std::optional<std::string> display; // 표시 바이트는 한 번만 부호화해 캐시가 소유한다.
+        if (configured) { const auto bytes=o::EncodeDisplayText(*configured);display=std::string(bytes.begin(),bytes.end()); }
+        static_cast<void>(localStateGlobals_->HelpWord().Interpret(display)); // 반환값은 원문 4413c0의 성공 여부이며 호출 순서만 보존한다.
+    }
     PacketRecordOwner()->Requested()=0; //435220은sound 설정을 읽기 전에0054dbac 요청만0으로 재설정한다. 이미 열린 기록 FILE/enabled는 닫거나 지우지 않는다.
     localStateGlobals_->DebugBurst()=0; //435220의 디버그DWORD reset을 같은 옵션 부모에 연결하며 외부 활성화 키를 만들지 않는다.
     static_cast<void>(ReadAudioOptions());InterpretMainMenuOptions(); //원문의 음질/음량/maxSimulSounds ReadInt 뒤 tellTips를 읽는다. 이 부분 부모는 음향 장치 적용이나 전체435220 완료를 대신하지 않는다.
