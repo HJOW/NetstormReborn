@@ -283,6 +283,44 @@ public sealed class RawCampaignSession
         throw new InvalidOperationException("실제 생산 동기화 미연결");
     }
 
+    /// <summary>메타 제외 메뉴의 13개 현재 TYPE 별칭을 같은 실제 세션·저장소에서 조회한다. 껍데기에서는 주소 검증 뒤 본체 미연결로 멈춘다. 2026-11-10 F3 세션 메타메뉴 별칭 Stub 이식에서 추가됐다.</summary>
+    /// <param name="address">조회할 원본 주소다.</param>
+    /// <returns>해당 주소의 현재 TYPE 별칭이다.</returns>
+    public uint MetaMenuType(uint address)
+    {
+        // 원본 별칭 주소 16개를 그대로 둔다. 임의 주소는 세션 상태와 무관하게 거부한다.
+        switch (address)
+        {
+            case 0x5412d0u:
+            case 0x54126cu:
+            case 0x5411e8u:
+            case 0x5411ecu:
+            case 0x5411f0u:
+            case 0x5411a8u:
+            case 0x541240u:
+            case 0x54123cu:
+            case 0x541280u:
+            case 0x541298u:
+            case 0x5412b0u:
+            case 0x54117cu:
+            case 0x541214u:
+            case 0x54128cu:
+            case 0x5412a0u:
+            case 0x5412f8u:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(address), address, "메타 제외 메뉴의 알려지지 않은 현재 TYPE 별칭");
+        }
+
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 메타메뉴 조회입니다.");
+        }
+
+        // 원본 별칭의 실제 사제·장식·지형·간헐천·비행선 TYPE 조회 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 메타메뉴 별칭 미연결");
+    }
+
     /// <summary>원본 첫 목록 또는 두 번째 목록의 현재 저장소 뷰에서 지정 번호를 읽는다. 껍데기에서는 목록 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 게임메뉴 재장전 Stub 이식에서 추가됐다.</summary>
     /// <param name="second">참이면 두 번째 목록(temples), 거짓이면 첫 목록(outposts)이다.</param>
     /// <param name="index">읽을 번호다.</param>

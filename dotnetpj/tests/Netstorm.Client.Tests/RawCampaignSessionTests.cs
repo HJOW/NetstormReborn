@@ -372,6 +372,36 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미연결", error.Message);
     }
 
+    /// <summary>알려지지 않은 별칭 주소를 거부하는지 검증한다. 2026-11-10 F3 세션 메타메뉴 별칭 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void MetaMenuTypeRejectsBadAddress()
+    {
+        // 원본 별칭 주소가 아니면 세션 상태와 무관하게 거부한다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.MetaMenuType(0x12345678u));
+    }
+
+    /// <summary>미적재 별칭 조회를 적재 관문에서 거부하는지 검증한다. 2026-11-10 F3 세션 메타메뉴 별칭 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void MetaMenuTypeRejectsWhenNotLoaded()
+    {
+        // 알려진 주소라도 적재 전에는 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.MetaMenuType(0x5412d0u));
+        Assert.Contains("미적재", error.Message);
+    }
+
+    /// <summary>적재 뒤 별칭 조회를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 메타메뉴 별칭 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void MetaMenuTypeRejectsWhenUnconnected()
+    {
+        // 실제 사제·장식·지형 TYPE 조회 본체는 Fort 본체 단위에서 잇는다(결정 6).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.MetaMenuType(0x5412d0u));
+        Assert.Contains("미연결", error.Message);
+    }
+
     /// <summary>보고서가 월드와 같은 첫 줄을 보이는지 검증한다. 2026-11-10 F3 세션 보고서 위임 이식에서 추가됐다.</summary>
     [Fact]
     public void ReportDelegatesToWorld()
