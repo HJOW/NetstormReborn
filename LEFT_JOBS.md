@@ -30,6 +30,8 @@
 
 **순서 지시(사용자 2026-11-11):** M6·M7은 미루지 않는다. 6차 이후(K/S/B/L)는 추가 구현이라 dotnetpj에 영향이 없지만 3차(LAN·Outpost) 지연은 dotnetpj를 함께 지연시킨다. 따라서 **남은 순서는 M6-n 잔여 → ~~M7.2~~(1273 정적 판정) ~~M7.3~~ ~~M7.4~~(1271 완료) → M8 → K2~K5 → S1~S4 → B1~B4 → L1~L3**이다. 이미 끝난 K1·E1~E3·M7.1·M7.5는 완료로 유지한다.
 
+**1274 M8 글꼴·배포 ZIP 선행 점검:** 최종 exe에 글꼴 시그니처 0·글꼴은 `AddFontResourceExW(FR_PRIVATE)`로 exe 옆 `fonts\` 파일에서만 등록함을 확인했고, 실제 생성한 배포 ZIP(1430항목)의 한국어 자산 44개·D2Coding .ttc·exe를 저장소 파일과 SHA-256 46개 대조해 모두 일치했다. **결함 발견·교정:** 배포 스크립트가 옛 이름 `fonts\License.txt`를 못 찾으면 조용히 건너뛰어 D2Coding 라이선스가 ZIP에서 빠져 있었다 → `D2Coding-License.txt` 필수 동봉으로 교정. [근거](docs/exe/cpp-m8-font-zip-precheck-20261111.md). M8 최종 관문(최종 ZIP 실행·checking 목록·외부 접속 전수)은 미완료.
+
 **1273 M7.2 메타 맵 활성 커서 재판정(코드 변경 없음):** 원문 `Lock(00446a10)`/`Unlock(00446a40)`의 호출자는 각 1곳(카메라 커밋 `00497960`)이고 메타 맵 열기 `004789b0`/`00479390`은 커서 깊이 `005325c8`·`00446e70`·`00447000`을 전혀 참조하지 않아, 메타 맵의 카메라 커밋은 깊이 1→2→1로만 움직이며 깊이 0(활성 커서 본문) 분기에 도달하지 않음을 C·PE로 확인했다. 현재 구현의 깊이 비영 경로가 원문과 같고 깊이 0은 명시 오류로 남긴다. [근거](docs/exe/cpp-meta-cursor-reachability-20261111.md). **한계:** 정적 증거이며 MP 메타 맵 실행으로 확인하지 않았다(반례가 나오면 해당 경로의 `00447000` 효과를 구현). M6-n 잔여·M8 미완료, MP 실행0.
 
 **1272 M6-n Fort 선택 호출자·Player 수명·NoWorld 도달성 감사:** `RequestFortEditState`/Fort 선택의 Battle 판정(`00594fbc`)과 `FortEditEffects`의 소유 섬 개수(`0046f430`)가 Session이 없으면 0/예외였던 것을 Native 장기 소유자(`ownerMode.battle`, `ClientConstructionGlobals` 섬 목록)로 교정했다. **실제 크래시 교정:** 장기 사제 상태가 이전 Session의 Player9 기록 span을 계속 쥐어 둘째 Edit 진입에서 `invalid_argument`로 종료하던 수명 결함(이전에는 힙 주소 재사용으로 우연히 통과)을 1269 오류 로그가 잡아 `~RawPriestWorldBindings`에서 반납하도록 고쳤다. Session 없는 Pop의 객체 종류는 메타 TYPE 108/109/161(VT `0050c9f0`/`0050cc08`, 1267 연결)뿐임을 호출자·PE 초기값으로 확정해, 남은 Session 소유 VT 행은 도달 불가·명시 오류로 기록했다. [근거](docs/exe/cpp-m6n-fort-callers-noworld-audit-20261111.md)·[보고서](cpppj/m6n-fort-callers-noworld-audit-20261111.json). Edit 왕복 2회·Tutorial4·메뉴/팝업 실패 목록 동일 확인. **큰 AI 장기 소유자·일반 Descend·배치 호출자·Fort 상위 Finish 전수는 미완료**, M7.2·M8 미완료, MP 실행0.
@@ -163,7 +165,7 @@ Native 전체표/연결 owner·M6-l은1262에서 정적 마감했다. 모든 pro
 | M7.3 | **완료(1271)** — 조기/원격 희생 안내 구현. 정적 대조만 하고 사용자 제외 희생/MP 실행 검사는 하지 않는다. [근거](docs/exe/cpp-early-sacrifice-marker-20261111.md) |
 | M7.4 | **완료(1271)** — marker 실제 표시·갱신(`00434970`/`004a46d0`). 개발용 전역을 켜는 새 CLI/Config는 만들지 않았다. |
 | M7.5 | **완료(1269)** — 공통 assertion 창/파일 중앙화. 초기 registry 진단도 같은 장치에 통합. 파일은 `ErrorLog`, 모달 창은 `NETSTORM_ASSERT_WINDOW=1`일 때만(무인 실행 보호). [근거](docs/exe/cpp-error-log-20261111.md) |
-| M8 | **추가 필수: 글꼴 exe 내장 금지·exe 옆 fonts 외부 적재/배포/라이선스·ZIP 바이트 확인(5.3절, AGENTS 75e4eed9e).** M1~M7의 활성 호출자·같은 owner·수명, checking 목록 0/새 누락, 외부 검증 비활성화 전수 감사. Release 빌드와 필요한 최종 ZIP의 실제 Netstorm/R/에셋 바이트 정합성 확인. |
+| M8 | **추가 필수: 글꼴 exe 내장 금지·exe 옆 fonts 외부 적재/배포/라이선스·ZIP 바이트 확인(5.3절, AGENTS 75e4eed9e) — 한국어 글꼴 선행 점검과 라이선스 누락 교정은 1274 완료, 다른 언어 글꼴·최종 관문은 남음.** M1~M7의 활성 호출자·같은 owner·수명, checking 목록 0/새 누락, 외부 검증 비활성화 전수 감사. Release 빌드와 필요한 최종 ZIP의 실제 Netstorm/R/에셋 바이트 정합성 확인. |
 
 [M7.1/2 차이 준비](docs/exe/cpp-help-cursor-remaining-audit-20261108.md)는 구현/실행 통과가 아니다. 작은 단위마다 전체 검사/ZIP을 반복하지 않는다. 사용자 제외 MP 실행이나 자연 완주만 남으면 다음 단계로 간다.
 

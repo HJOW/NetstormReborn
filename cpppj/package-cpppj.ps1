@@ -867,8 +867,9 @@ try {
     if (-not $koreanFonts.Count) { throw "한국어 글꼴(D2Coding*.ttc)을 찾을 수 없습니다: ${fontsDir}" }
     $koreanFont = $koreanFonts[$koreanFonts.Count - 1]
     Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/' + $koreanFont.Name) -Source $koreanFont.FullName
-    $fontLicense = Join-Path $fontsDir 'License.txt'
-    if (Test-Path -LiteralPath $fontLicense -PathType Leaf) { Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/License.txt') -Source $fontLicense }
+    $fontLicense = Join-Path $fontsDir 'D2Coding-License.txt' # 저장소 fonts의 D2Coding 라이선스 이름이다(과거 License.txt에서 바뀌어 조용히 빠지던 결함을 M8 점검에서 발견해 교정).
+    if (-not (Test-Path -LiteralPath $fontLicense -PathType Leaf)) { throw "D2Coding 글꼴 라이선스를 찾을 수 없습니다: ${fontLicense}" }
+    Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/D2Coding-License.txt') -Source $fontLicense
     $koreanTable = Join-Path $RepoRoot 'assets\lang\korean\xlat.korean'
     if (-not (Test-Path -LiteralPath $koreanTable -PathType Leaf)) { throw "한국어 번역표를 찾을 수 없습니다: ${koreanTable}" }
     Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/korean/xlat.korean') -Source $koreanTable
