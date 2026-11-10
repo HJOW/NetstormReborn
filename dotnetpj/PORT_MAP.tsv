@@ -630,3 +630,5 @@ cpppj/src/o/RawRiftShapeAccess.h	Netstorm.Core/Original/RawRiftShapeAccess.cs	56
 cpppj/src/o/RawRiftShapeAccess.cpp	Netstorm.Core/Original/RawRiftShapeAccess.cs	5626fa85b1ef8883ebe2d84b15bf8f742f74965b	port
 cpppj/src/o/SquidDisplay.h	Netstorm.Core/Original/RawSquidDisplay.cs	739b04e5ba1d73bb9a42a7049120836107dda130	port
 cpppj/src/o/SquidDisplay.cpp	Netstorm.Core/Original/RawSquidDisplay.cs	739b04e5ba1d73bb9a42a7049120836107dda130	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Mission/RawCampaignSession.cs	4ee213870fe6716f970ee9df7c5c1effd7f85c13	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Mission/RawCampaignSession.cs	800ff40cdf869f9e36a256a180397e48ac156702	port
