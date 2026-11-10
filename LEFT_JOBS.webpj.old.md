@@ -2,6 +2,56 @@
 
 완료 이력·대체된 계획·지난 단위의 다음 작업 예고를 보존한다. 이 문서의 “현재/다음/미구현/확인 필요”는 당시 기록이며 새 작업의 기준이 아니다. 현행 상태와 작업 순서는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
+## 2026-11-10 이관 — 순서3 3-B~3-E 완료 항목 목록(WB04-E264 마감 시점)
+
+<a id="archive-webpj-20261110-through-wb04-e264"></a>
+
+순서3(M2 선행 부품)을 마감하면서(WB04-E264) 현행 문서 3.1절의 3-B~3-E 단계 머리글·완료 기준·체크 항목(24개)과 단위 링크를 원문 그대로 옮겼다. 단위별 근거는 각 `docs/webpj-*.md` 단위 문서(E243~E264)와 `webpj/PORT_MAP.tsv` 메모가 기준이다.
+
+#### 3-B 다리·표면·영역 공통 수명 (8/8)
+
+완료 기준: 8항목이 PORT_MAP `port`(또는 대응 없음 사유를 남긴 분류 판정)이고 해당 cpppj 검사·fixture를 통과한다. 예외: `Squid` 는 옛 struct 잔여(GroundGrid 의존)를 4-B 로 이월하고 partial 을 유지한다([E246](docs/webpj-squid-legacy-20261110.md)).
+
+- [x] **RawSquidNeighbors** (partial 296줄) — 남은 시험(일반 해시 flag 0/4 의 다리 이벤트 장면, 울타리 장면)이 E43·E88 에서 이미 재생됐는지 확인하고 남은 장면만 옮겨 port 로 올린다 → [E243](docs/webpj-neighbor-first-20261110.md) 일반 해시 첫 이웃·다리 끝 칸 변환 원본 10.78 576행 대조
+- [x] **RawBridgeFallParent** (partial 48줄) — 남은 ScheduleBridgeFallChecked(SquidProcessHost 연결) → [E244](docs/webpj-bridge-fall-parent-host-20261110.md) 다리 낙하 진단 부모의 실제 Host 연결
+- [x] **RawBridgeDraw** 38줄 → [E245](docs/webpj-bridge-draw-20261110.md) 다리 캡처 가상 그림 몸체와 원본 1200행 대조
+- [x] **Squid** (partial 115줄) — 저장 필드·공간 단계의 나머지 → [E246](docs/webpj-squid-legacy-20261110.md) Squid 소비자 확인(옛 struct 4-B 이월)과 SquidSpatial exclude-legacy 분류
+- [x] **SquidSpatial** 301줄 — 옛 구조 모델이라 웹 대응이 없다고 판단해 둔 단위다. 실제 소비자를 확인해 port 하거나, 대응이 필요 없으면 `tools/port-map.mjs` 규칙·사유를 고쳐 분류한다(3.0절) → [E246](docs/webpj-squid-legacy-20261110.md) Squid 소비자 확인(옛 struct 4-B 이월)과 SquidSpatial exclude-legacy 분류
+- [x] **RawBridgeLifecycle** (partial 180줄, +8) — WB04-D2 삭제 훅 뒤 남은 다리 가상 삭제 분배(E214 RawSquidDestroyDispatch 위) → [E247](docs/webpj-bridge-lifecycle-20261110.md) 다리 삭제 전후 훅 원본 2806행 대조와 Native 연결 TYPE 경로
+- [x] **RawSurfaceLifecycle** 127줄(+6) [RawBridgeLifecycle 뒤] → [E248](docs/webpj-surface-lifecycle-20261110.md) 표면 삭제 훅 분배기와 통합 장면 9건
+- [x] **RawRegionOwnership** 183줄(+54) — outpost 분기는 RawOutpostLifecycle(exclude-mp)로 명시 웹 제외 → [E249](docs/webpj-region-ownership-20261110.md) 지역 소유 투표 원본 440행 대조와 Native 몸체
+
+#### 3-C 자산 정기 처리·피해/삭제 수명 (8/8)
+
+완료 기준: 8항목이 PORT_MAP `port`이고 해당 cpppj 검사·fixture를 통과한다.
+
+- [x] **EnergyProviderVtables** 87줄 → [E250](docs/webpj-vtable-tables-20261110.md) 에너지 공급·캠페인 피해 가상 표 자료와 생성기
+- [x] **CampaignDamageVtables** 175줄 → [E250](docs/webpj-vtable-tables-20261110.md) 에너지 공급·캠페인 피해 가상 표 자료와 생성기
+- [x] **RawDamageablePreDestroy** 141줄(+36) → [E251](docs/webpj-damageable-pre-destroy-20261110.md) Damageable 삭제 전처리 원본 1632행 대조와 Native 몸체
+- [x] **RawDamageableRelease** 162줄(+38) [RawDamageablePreDestroy 뒤] → [E252](docs/webpj-damageable-release-20261110.md) Damageable 종속 해방 원본 1504행 대조와 Native 진입, 사제 합성 시험 2건
+- [x] **RawDamageablePostDestroy** 216줄(+19) — RawCarrierArrival 의 `genusAt` 실제 연결 포함 → [E253](docs/webpj-damageable-post-destroy-20261110.md) Damageable 삭제 후처리 원본 2246행 대조와 공유 전역 소유자, Carrier 도착 genusAt 실제 연결
+- [x] **RawAssetPostPop** (partial 525줄, +30) — Gun·제네레이터·거주 구역·바리케이드·간헐천·신전 분배 본체와 AssetPostPopHooks → [E254](docs/webpj-asset-post-pop-20261110.md) 자산 후처리 분배 본체와 원본 10.78 다섯 관측(818·288·1344·936·312행) 대조
+- [x] **RawAssetRegular** 354줄(+72) [RawAssetPostPop 뒤] → [E255](docs/webpj-asset-regular-20261110.md) 자산 정기 처리 분배와 원본 10.78 세 관측(1,054·864·656행) 대조
+- [x] **RawLocalGeyser** 271줄(+74) → [E256](docs/webpj-local-geyser-20261110.md) 로컬 간헐천 생성과 원본 10.78 두 관측(221·183행) 대조, 3-C 마감
+
+#### 3-D 공통 후처리·Graph 조합 마감 (2/2)
+
+완료 기준: 3-A~3-C 에서 옮긴 몸체까지 연결·대조한다. 아직 없는 몸체(비행·Dais·Player 등 이월/순서4 몫)는 PORT_MAP "남음:"으로 남기고 partial 을 유지해도 이 단계는 완료로 본다.
+
+- [x] **RawGraph** (partial 628줄) — 남은 조합 대조(rawgraph·regiongraph·graphremove·graphrecovery)는 E41 SquidPostPop 시험이 재생했다고 메모돼 있으므로 확인 후 port 로 올린다(Commit 은 실제 실행이 쓰지 않아 제외) → [E257](docs/webpj-raw-graph-20261110.md) RawGraph 조합 대조 마감과 실제 Pop 실패 효과 시험 2건
+- [x] **SquidPostPop** (partial 677줄, +36) — 표시 dirty 열, 3-A~3-C 몸체의 setBody/set*Prefix 연결, 섬/표면/Teleport 접두 → [E258](docs/webpj-squid-postpop-20261110.md) SquidPostPop 표시 열·Native 진입·몸체 연결 점검, 3-D 마감
+
+#### 3-E 기준선 뒤 cpppj 변경 판정 — 순서3 마감 관문 (6/6)
+
+2026-11-10 `node webpj/tools/port-map.mjs` 보고(HEAD `d4b82c30`)의 "②/③ 판정 필요" 87단위 가운데 `o/` 82단위와 `client/RawChatChannels`다. 나머지 client UI 4단위(ClientMain·UberGump·MenuGumpWidgets·ScrollingTextGumpWidgets)는 4-D·5 연결 때 판정한다. 착수 때 판정 기준 커밋을 하나 정해 그 커밋까지의 변경만 판정하고 행 base 를 그 커밋으로 올린다(CP 세션이 계속 커밋하므로 그 뒤 변경은 다음 단계 착수 때 다시 본다). 3-B~3-D 에서 옮기며 판정한 단위는 빠진다. 대부분 CP 의 `Actual*`/`shared*` 장기 연결이라 ③(4-D 연결 때)일 가능성이 높지만, 단독 결과가 바뀌는 ②는 `재반영`을 명시한 단위로 옮긴다. 묶음마다 결과를 3.6절 표와 [대응표 문서](docs/webpj-port-map-20261106.md) 판정 절에 남긴다.
+
+- [x] **판정-공통층** 22단위 — ConfigInterface·ContentFormHost·ContentFormLifetime·DependFormHost·GumpFormHost·RawFortObjectLoad·RawGameAuxState·RawMissionBattleOptions·RawSquidContainedUnpop·RawSquidDestroy·RawStateSidLists·RiftType·RiftTypeTable·SidPool·SquidDestroyLifecycle·SquidDisplay·SquidFactory·SquidFormDispatch·SquidFrame·SquidProcess·SquidUnpop·Xlat → [E259](docs/webpj-judge-common-20261110.md) 3-E 판정-공통층 22단위 판정과 ② 재반영 2건
+- [x] **판정-Player·사제·신전** 12단위 — RawPlayerContentNotice·RawPlayerGeyserBounds·RawPlayerIdentity·RawPlayerParticipation·RawPlayerWorld·RawPriestDamage·RawPriestForcefield·RawPriestPreDestroy·RawPriestRegen·RawVortexAscend·RawVortexOwner·RawVortexPreDestroy → [E260](docs/webpj-judge-player-priest-20261110.md) 3-E 판정-Player·사제·신전 12단위 판정과 ② 재반영 3건
+- [x] **판정-섬·다리·자원** 6단위 — RawBridgeEvents·RawIslandPostPop·RawIslandRuntime·RawGeyserLifetime·RawNuggetRegular·RawNuggetReplenish → [E261](docs/webpj-judge-island-resource-20261110.md) 3-E 판정-섬·다리·자원 6단위 판정
+- [x] **판정-건설·운반·Dude** 15단위 — RawBuildingSpace·RawCanonPlacementCollision·RawConstructionClear·RawConstructionConfirm·RawConstructionPlace·RawConstructionProcess·RawConstructionRequest·RawCarrierFalling·RawCarrierPreDestroy·RawCarrierRegular·RawCarrierTransfer·RawDudeBehavior·RawDudeNotice·RawDudeRegular·RawDudeTask → [E262](docs/webpj-judge-construction-dude-20261110.md) 3-E 판정-건설·운반·Dude 15단위 판정
+- [x] **판정-전투** 18단위 — RawBombEffect·RawBombEffectTimer·RawBombRegular·RawBombStrike·RawBombTargets·RawBombTimerPacket·RawArcherAnimation·RawCannonFire·RawCrossbowAnimation·RawGunAnimation·RawGunHit·RawGunTarget·RawIceCannonFire·RawMissile·RawAcidFence·RawFenceCreate·RawFenceMarkerClear·RawFenceNeighbors → [E263](docs/webpj-judge-combat-20261110.md) 3-E 판정-전투 18단위 판정과 ② 재반영 1건
+- [x] **판정-기타** 6단위 — RawFlare·RawIceTower·RawPathRuntime·RawWindAviaryProcess·RawWindAviaryState·client/RawChatChannels → [E264](docs/webpj-judge-misc-20261110.md) 3-E 판정-기타 6단위 판정과 3-E·순서3 마감
+
 ## 2026-11-10 이관 — WB04-E242까지(단계 분할 재구성 전)
 
 <a id="archive-webpj-20261110-through-wb04-e242"></a>

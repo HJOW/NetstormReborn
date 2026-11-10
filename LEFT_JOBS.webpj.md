@@ -4,17 +4,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-10, WB04-E263 완료)
+### 0.1 현재 값 (2026-11-10, WB04-E264 완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
-| 마일스톤 | **M1 완료** · **M2 진행 중**(현재 단계 **3-E**, 0.2절) · M3~M5 미착수 |
+| 마일스톤 | **M1 완료** · **M2 진행 중**(현재 단계 **4-A**, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 895단위(제외 89 별도) 중 **port 473(52.8%)·partial 89(9.9%)·todo 333(37.2%)**. 기준선 소스 줄 수로는 129,541줄 중 port 54,744(42.3%)·partial 24,239(18.7%)·todo 50,558(39.0%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E263** (이 커밋, `20261110-119 WB`) 3-E 다섯 번째 항목 판정-전투 18단위를 판정했다: 기준선 뒤 변경 약 330줄과 새 API 소비자를 읽어 ② 재반영 1건(상태 타이머 패킷 writer 의 선언 길이 DWORD 비교와 protocol/message 전달)과 ① 1·혼합 2·③ 13 으로 가르고 행 base 를 올렸으며 ③ 은 3.6절에 4-D·4-C·4-A·7-P2 시점으로 적었다([문서](docs/webpj-judge-combat-20261110.md)). 그 앞은 **WB04-E262** (`93d891ac / 20261110-117 WB`). 단위 색인은 2절·3.1절 |
-| 다음 작업 | **3-E 마지막 항목 판정-기타**(3.1절, 6단위: RawFlare·RawIceTower·RawPathRuntime·RawWindAviaryProcess·RawWindAviaryState·client/RawChatChannels): 단위별 기준선 뒤 변경과 새 API 소비자를 읽어 ①/②/③ 으로 판정하고 행 base 를 올린다. 이 항목을 마치면 3-E 가 닫혀 순서3(M2 선행 부품)이 마감되므로 0.2절(4-A **다음**)·3.1절 완료 목록 보관을 정리한다 |
-| 마지막 전체 검사 | WB04-E263의 Node v26.13.0·v22.23.3, **2369/2369 통과·실패/건너뜀0**(신규 bomb-effect-timer 1; WB04-E262 2368), 약279초(Node v22.23.3 도 2369/2369, 약310초; v24 는 미설치) |
+| 마지막 구현 커밋 | **WB04-E264** (이 커밋, `20261110-120 WB`) 3-E 마지막 항목 판정-기타 6단위를 판정해 3-E(기준선 뒤 cpppj 변경 판정 79단위, E259~E264)를 마감했다: 6단위는 ② 0·① 2·혼합 1·③ 3 이며 ② 재반영은 3-E 전체에서 6건(웹 코드 변경 + 시험)이다. 순서3(M2 선행 부품)이 마감되어 3.1절 3-B~3-E 완료 목록을 보관본으로 옮기고 4-A 를 다음 단계로 바꿨다([문서](docs/webpj-judge-misc-20261110.md)). 그 앞은 **WB04-E263** (`ba0a999b / 20261110-119 WB`). 단위 색인은 2절·3.1절 |
+| 다음 작업 | **순서4 첫 단계 4-A 자료·파일·설정·타입 표**(3.2절): 3.1절에 4-A 체크 항목 목록을 펼친 뒤(`o/` 15단위: adapt 8·Config*·ConfigInterface*·OriginalText*·Xlat*·RiftType*·RiftTypeTable*·TypeParser*, client M 영역) 위에서부터 진행한다. 3-E 에서 정한 4-A 몫 ③(ConfigInterface 문자열 버퍼 `ReadStringBytes`·RiftType 새 칸 6개와 속성 파서·`defaultFrame`)을 같은 단계에서 반영하고, 웹 타입 로더가 `zorder`/생성자 주소를 Factory 레코드에 채우는 연결(4절 "타입 표 생성 메타")을 포함한다 |
+| 마지막 전체 검사 | WB04-E264의 Node v26.13.0·v22.23.3, **2369/2369 통과·실패/건너뜀0**(신규 없음(문서·대응표만 변경); WB04-E263 2369), 약256초(Node v22.23.3 도 2369/2369, 약286초; v24 는 미설치) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -28,8 +28,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 〃 | 3-B | 다리·표면·영역 공통 수명 | 완료 8/8 | `o/` 8단위 · 1,288줄 (+68) |
 | 〃 | 3-C | 자산 정기 처리·피해/삭제 수명 | 완료 8/8 | `o/` 8단위 · 1,931줄 (+269) |
 | 〃 | 3-D | 공통 후처리(SquidPostPop)·Graph 조합 마감 | 완료 2/2 | `o/` 2단위 · 1,305줄 (+36) |
-| 〃 | 3-E | 기준선 뒤 cpppj 변경 판정(3.6절) — 순서3 마감 관문 | **진행 중** 5/6 | 판정 6단위 |
-| 4 M2 | 4-A | 자료·파일·설정·타입 표 | 미착수 | `o/` 15단위 · 3,135줄 (+24) + client M |
+| 〃 | 3-E | 기준선 뒤 cpppj 변경 판정(3.6절) — 순서3 마감 관문 | 완료 6/6 | 판정 79단위(완료) |
+| 4 M2 | 4-A | 자료·파일·설정·타입 표 | **다음** | `o/` 15단위 · 3,135줄 (+24) + client M |
 | 〃 | 4-B | Fort·지형·섬 적재 | 미착수 | `o/` 26단위 · 3,916줄 (+47) + client B |
 | 〃 | 4-C | 패킷·로그인·내부 미션 전송 | 미착수 | `o/` 20단위 · 2,578줄 (+548) + `zacket/` 1 + client A 일부 |
 | 〃 | 4-D | Session 조립·Tutorial1 Load/Start(L2) | 미착수 | client A 나머지(RawCampaignSession 5,715줄 등) |
@@ -46,9 +46,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 9 M5 | 9 | 표시 품질·배포 | 미착수 | — |
 | 10 후순위 | 10 | AGENTS.md 2026-11-10 추가: cpppj 6~11차 목표 중 웹 해당분(3.2절 10행·3.5절 5번) | 미착수 | — |
 
-**순서3 마감 조건은 3-B~3-E**다. 3-A 뒤 남은 순서3은 3-B~3-D 의 `o/` 18단위와 3-E 의 판정 82단위였고, 3-B~3-D 를 모두 마쳐 3-E 는 판정-공통층 22단위·판정-Player·사제·신전 12단위·판정-섬·다리·자원 6단위·판정-건설·운반·Dude 15단위·판정-전투 18단위를 마쳐 이제 판정 6단위만 남았다(RawBridgeLifecycle·RawAssetPostPop·SquidPostPop·SquidPostPopPatch 는 옮기며 판정). 6-P·7-P1~P3은 M2에 직접 필요하지 않아 순서3에서 이월한 부품이며 순서3 마감 조건이 아니다(1절 단계 분할 결정, 3.1절).
+**순서3(M2 선행 부품)은 3-B~3-E 를 모두 마쳐 2026-11-10 WB04-E264 에서 마감됐다**(3-A E1~E242, 3-B~3-D `o/` 18단위 E243~E258, 3-E 판정 79단위 E259~E264). 6-P·7-P1~P3은 M2에 직접 필요하지 않아 순서3에서 이월한 부품이며 순서3 마감 조건이 아니었다(1절 단계 분할 결정, 3.1절). 다음은 순서4 **4-A** 이며, 착수할 때 3.1절에 4-A 체크 항목 목록을 펼친다.
 
-### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E263 기준)
+### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E264 기준)
 
 줄 수는 기준선 `1f00a25a`의 단위 파일(`.cpp/.h/.inc`) 줄 합계다(주석 포함). partial 줄 수는 일부만 옮긴 파일의 전체 줄이므로 남은 양의 상한이다. 단위·줄 수는 대략적인 척도일 뿐이며, 순서4~5의 연결·통합(실제 세션에서 부품을 같은 월드로 묶고 cpppj 오라클과 비교)은 이 수치에 드러나지 않는 큰 작업이다.
 
@@ -86,7 +86,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | --- | --- |
 | cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 이식 원본은 언제나 기준선 판(`git show 1f00a25a:경로`)이고, 기준선 뒤 cpppj 변경은 3.6절 절차로만 반영한다. 같은 작업 트리에서 CP 세션이 cpppj를 계속 커밋하므로(LAN 3차·`Actual*` 실제 연결 경로·`shared*` 공유 전역 추가 등) cpppj 상태는 커밋과 소스로 판단한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다 |
 | 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 851·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 473·partial 89·todo 333·제외(-) 89**, session/oracle 0. 웹 모듈 516개 중 511개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 409개, 도구(`webpj/tools`) 오라클 관련 4개다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` 529항목(original-x86 498·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E263에서 추가 없음(직전 추가는 WB04-E256 local-geyser·geyser-placement 2개)). original-x86 498개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` 529항목(original-x86 498·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E264에서 추가 없음(직전 추가는 WB04-E256 local-geyser·geyser-placement 2개)). original-x86 498개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
 | 마지막 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트). 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -179,56 +179,16 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 
 ### 3.1 단계별 항목 목록
 
-순서3의 남은 단계(3-B~3-E)와 순서3에서 이월한 순서6/7 선행 부품(6-P·7-P1~P3)의 항목이다.
+순서3은 3-B~3-E 로 마감됐다(아래 요약과 보관본). 이 절에는 순서3에서 이월한 순서6/7 선행 부품(6-P·7-P1~P3)과, 착수할 때 펼치는 순서4 이후 단계의 체크 항목을 둔다.
 
 - **진행 방법:** 단계는 0.2절 순서대로, 단계 안에서는 위에서부터 진행하고 대괄호 `[… 뒤]` 선행 관계를 지킨다. 항목을 끝내면 `- [ ]`를 `- [x]`로 바꾸고 끝에 ` → [E번호](단위 문서) 요약`을 붙인다. 한 항목을 여러 단위로 나누면 링크를 이어 붙이고 마지막 단위에서 체크한다. 단계 머리글의 `(n/m)`과 0.2절 진행 칸을 함께 고친다.
 - **수치:** 줄 수는 기준선 소스 줄(partial은 파일 전체 줄), `(+N)`은 기준선(또는 행 base) 뒤 cpppj 변경 줄 수다. partial 항목은 PORT_MAP 메모의 "남음:" 부분만 해당한다.
 - **기준선 뒤 변경:** `(+N)`이 있는 항목은 **기준선 판을 옮기고** 바뀐 부분을 3.6절 ①/②/③으로 판정해 단위 문서·PORT_MAP base·메모에 남긴다(E213 선례: 기준선 typed 경로를 옮기고 Native 분기는 3.6절 ③ 표에 적음). 변경이 있다는 이유로 건너뛰지 않는다.
 - **목록 밖 단위:** 다른 단계 몫을 끼워 넣지 않는다. 항목이 선행 미완료로 막히면 사유를 그 항목에 적고 같은 단계의 다음 항목으로 간다. 단계 전체가 막히면 사유를 0.1절 다음 작업에 적고, 선행이 갖춰진 이월 부품(6-P·7-P) 항목을 진행할 수 있다. 목록에 없던 단위가 꼭 필요하면 해당 단계 목록 끝에 항목을 추가하고 이유를 적는다.
 
-#### 3-B 다리·표면·영역 공통 수명 (8/8)
+#### 3-B~3-E 순서3 마감 (완료, 2026-11-10)
 
-완료 기준: 8항목이 PORT_MAP `port`(또는 대응 없음 사유를 남긴 분류 판정)이고 해당 cpppj 검사·fixture를 통과한다. 예외: `Squid` 는 옛 struct 잔여(GroundGrid 의존)를 4-B 로 이월하고 partial 을 유지한다([E246](docs/webpj-squid-legacy-20261110.md)).
-
-- [x] **RawSquidNeighbors** (partial 296줄) — 남은 시험(일반 해시 flag 0/4 의 다리 이벤트 장면, 울타리 장면)이 E43·E88 에서 이미 재생됐는지 확인하고 남은 장면만 옮겨 port 로 올린다 → [E243](docs/webpj-neighbor-first-20261110.md) 일반 해시 첫 이웃·다리 끝 칸 변환 원본 10.78 576행 대조
-- [x] **RawBridgeFallParent** (partial 48줄) — 남은 ScheduleBridgeFallChecked(SquidProcessHost 연결) → [E244](docs/webpj-bridge-fall-parent-host-20261110.md) 다리 낙하 진단 부모의 실제 Host 연결
-- [x] **RawBridgeDraw** 38줄 → [E245](docs/webpj-bridge-draw-20261110.md) 다리 캡처 가상 그림 몸체와 원본 1200행 대조
-- [x] **Squid** (partial 115줄) — 저장 필드·공간 단계의 나머지 → [E246](docs/webpj-squid-legacy-20261110.md) Squid 소비자 확인(옛 struct 4-B 이월)과 SquidSpatial exclude-legacy 분류
-- [x] **SquidSpatial** 301줄 — 옛 구조 모델이라 웹 대응이 없다고 판단해 둔 단위다. 실제 소비자를 확인해 port 하거나, 대응이 필요 없으면 `tools/port-map.mjs` 규칙·사유를 고쳐 분류한다(3.0절) → [E246](docs/webpj-squid-legacy-20261110.md) Squid 소비자 확인(옛 struct 4-B 이월)과 SquidSpatial exclude-legacy 분류
-- [x] **RawBridgeLifecycle** (partial 180줄, +8) — WB04-D2 삭제 훅 뒤 남은 다리 가상 삭제 분배(E214 RawSquidDestroyDispatch 위) → [E247](docs/webpj-bridge-lifecycle-20261110.md) 다리 삭제 전후 훅 원본 2806행 대조와 Native 연결 TYPE 경로
-- [x] **RawSurfaceLifecycle** 127줄(+6) [RawBridgeLifecycle 뒤] → [E248](docs/webpj-surface-lifecycle-20261110.md) 표면 삭제 훅 분배기와 통합 장면 9건
-- [x] **RawRegionOwnership** 183줄(+54) — outpost 분기는 RawOutpostLifecycle(exclude-mp)로 명시 웹 제외 → [E249](docs/webpj-region-ownership-20261110.md) 지역 소유 투표 원본 440행 대조와 Native 몸체
-
-#### 3-C 자산 정기 처리·피해/삭제 수명 (8/8)
-
-완료 기준: 8항목이 PORT_MAP `port`이고 해당 cpppj 검사·fixture를 통과한다.
-
-- [x] **EnergyProviderVtables** 87줄 → [E250](docs/webpj-vtable-tables-20261110.md) 에너지 공급·캠페인 피해 가상 표 자료와 생성기
-- [x] **CampaignDamageVtables** 175줄 → [E250](docs/webpj-vtable-tables-20261110.md) 에너지 공급·캠페인 피해 가상 표 자료와 생성기
-- [x] **RawDamageablePreDestroy** 141줄(+36) → [E251](docs/webpj-damageable-pre-destroy-20261110.md) Damageable 삭제 전처리 원본 1632행 대조와 Native 몸체
-- [x] **RawDamageableRelease** 162줄(+38) [RawDamageablePreDestroy 뒤] → [E252](docs/webpj-damageable-release-20261110.md) Damageable 종속 해방 원본 1504행 대조와 Native 진입, 사제 합성 시험 2건
-- [x] **RawDamageablePostDestroy** 216줄(+19) — RawCarrierArrival 의 `genusAt` 실제 연결 포함 → [E253](docs/webpj-damageable-post-destroy-20261110.md) Damageable 삭제 후처리 원본 2246행 대조와 공유 전역 소유자, Carrier 도착 genusAt 실제 연결
-- [x] **RawAssetPostPop** (partial 525줄, +30) — Gun·제네레이터·거주 구역·바리케이드·간헐천·신전 분배 본체와 AssetPostPopHooks → [E254](docs/webpj-asset-post-pop-20261110.md) 자산 후처리 분배 본체와 원본 10.78 다섯 관측(818·288·1344·936·312행) 대조
-- [x] **RawAssetRegular** 354줄(+72) [RawAssetPostPop 뒤] → [E255](docs/webpj-asset-regular-20261110.md) 자산 정기 처리 분배와 원본 10.78 세 관측(1,054·864·656행) 대조
-- [x] **RawLocalGeyser** 271줄(+74) → [E256](docs/webpj-local-geyser-20261110.md) 로컬 간헐천 생성과 원본 10.78 두 관측(221·183행) 대조, 3-C 마감
-
-#### 3-D 공통 후처리·Graph 조합 마감 (2/2)
-
-완료 기준: 3-A~3-C 에서 옮긴 몸체까지 연결·대조한다. 아직 없는 몸체(비행·Dais·Player 등 이월/순서4 몫)는 PORT_MAP "남음:"으로 남기고 partial 을 유지해도 이 단계는 완료로 본다.
-
-- [x] **RawGraph** (partial 628줄) — 남은 조합 대조(rawgraph·regiongraph·graphremove·graphrecovery)는 E41 SquidPostPop 시험이 재생했다고 메모돼 있으므로 확인 후 port 로 올린다(Commit 은 실제 실행이 쓰지 않아 제외) → [E257](docs/webpj-raw-graph-20261110.md) RawGraph 조합 대조 마감과 실제 Pop 실패 효과 시험 2건
-- [x] **SquidPostPop** (partial 677줄, +36) — 표시 dirty 열, 3-A~3-C 몸체의 setBody/set*Prefix 연결, 섬/표면/Teleport 접두 → [E258](docs/webpj-squid-postpop-20261110.md) SquidPostPop 표시 열·Native 진입·몸체 연결 점검, 3-D 마감
-
-#### 3-E 기준선 뒤 cpppj 변경 판정 — 순서3 마감 관문 (5/6)
-
-2026-11-10 `node webpj/tools/port-map.mjs` 보고(HEAD `d4b82c30`)의 "②/③ 판정 필요" 87단위 가운데 `o/` 82단위와 `client/RawChatChannels`다. 나머지 client UI 4단위(ClientMain·UberGump·MenuGumpWidgets·ScrollingTextGumpWidgets)는 4-D·5 연결 때 판정한다. 착수 때 판정 기준 커밋을 하나 정해 그 커밋까지의 변경만 판정하고 행 base 를 그 커밋으로 올린다(CP 세션이 계속 커밋하므로 그 뒤 변경은 다음 단계 착수 때 다시 본다). 3-B~3-D 에서 옮기며 판정한 단위는 빠진다. 대부분 CP 의 `Actual*`/`shared*` 장기 연결이라 ③(4-D 연결 때)일 가능성이 높지만, 단독 결과가 바뀌는 ②는 `재반영`을 명시한 단위로 옮긴다. 묶음마다 결과를 3.6절 표와 [대응표 문서](docs/webpj-port-map-20261106.md) 판정 절에 남긴다.
-
-- [x] **판정-공통층** 22단위 — ConfigInterface·ContentFormHost·ContentFormLifetime·DependFormHost·GumpFormHost·RawFortObjectLoad·RawGameAuxState·RawMissionBattleOptions·RawSquidContainedUnpop·RawSquidDestroy·RawStateSidLists·RiftType·RiftTypeTable·SidPool·SquidDestroyLifecycle·SquidDisplay·SquidFactory·SquidFormDispatch·SquidFrame·SquidProcess·SquidUnpop·Xlat → [E259](docs/webpj-judge-common-20261110.md) 3-E 판정-공통층 22단위 판정과 ② 재반영 2건
-- [x] **판정-Player·사제·신전** 12단위 — RawPlayerContentNotice·RawPlayerGeyserBounds·RawPlayerIdentity·RawPlayerParticipation·RawPlayerWorld·RawPriestDamage·RawPriestForcefield·RawPriestPreDestroy·RawPriestRegen·RawVortexAscend·RawVortexOwner·RawVortexPreDestroy → [E260](docs/webpj-judge-player-priest-20261110.md) 3-E 판정-Player·사제·신전 12단위 판정과 ② 재반영 3건
-- [x] **판정-섬·다리·자원** 6단위 — RawBridgeEvents·RawIslandPostPop·RawIslandRuntime·RawGeyserLifetime·RawNuggetRegular·RawNuggetReplenish → [E261](docs/webpj-judge-island-resource-20261110.md) 3-E 판정-섬·다리·자원 6단위 판정
-- [x] **판정-건설·운반·Dude** 15단위 — RawBuildingSpace·RawCanonPlacementCollision·RawConstructionClear·RawConstructionConfirm·RawConstructionPlace·RawConstructionProcess·RawConstructionRequest·RawCarrierFalling·RawCarrierPreDestroy·RawCarrierRegular·RawCarrierTransfer·RawDudeBehavior·RawDudeNotice·RawDudeRegular·RawDudeTask → [E262](docs/webpj-judge-construction-dude-20261110.md) 3-E 판정-건설·운반·Dude 15단위 판정
-- [x] **판정-전투** 18단위 — RawBombEffect·RawBombEffectTimer·RawBombRegular·RawBombStrike·RawBombTargets·RawBombTimerPacket·RawArcherAnimation·RawCannonFire·RawCrossbowAnimation·RawGunAnimation·RawGunHit·RawGunTarget·RawIceCannonFire·RawMissile·RawAcidFence·RawFenceCreate·RawFenceMarkerClear·RawFenceNeighbors → [E263](docs/webpj-judge-combat-20261110.md) 3-E 판정-전투 18단위 판정과 ② 재반영 1건
-- [ ] **판정-기타** 6단위 — RawFlare·RawIceTower·RawPathRuntime·RawWindAviaryProcess·RawWindAviaryState·client/RawChatChannels
+3-B(8/8)·3-C(8/8)·3-D(2/2)·3-E(6/6)의 체크 항목과 단위 링크 전체는 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261110-through-wb04-e264)에 있다. 단위 문서는 `grep -l "WB04-E259" docs/webpj-*.md` 처럼 번호로 찾는다(E243~E264 모두 검색됨). 3-E 판정 79단위의 요약(② 재반영 6건)은 [판정-기타 문서 2절](docs/webpj-judge-misc-20261110.md)과 3.6절 표에 있다.
 
 #### 순서3에서 이월한 선행 부품 (순서3 마감 조건 아님)
 
@@ -334,7 +294,7 @@ M2(Tutorial1 Load/Start/표시)에 직접 필요하지 않아 순서6/7 몫으�
 
 - **기준선:** `1f00a25a`(제품985). 분류는 ① 웹 결과 영향 없음(구조 정리·진단·웹 제외 기능) ② 웹 반영 필요 ③ 아직 웹에 없는 후속 단계 몫이다. cpppj fixture가 바뀌었으면 해당 웹 검사를 먼저 다시 돌린다.
 - **기준선 이후의 변경:** 매 단위 착수 때 `node webpj/tools/port-map.mjs`의 `cpppj 변경` 줄을 본다(행 base 뒤 커밋을 단위별로 보고하고 안내를 붙인다). `exclude-*` 행은 ①로 기록만 하고, `port`/`adapt` 행은 ②/③을 판정해 ②는 `재반영`을 명시한 WB 단위로 반영한다. 판정을 마치면 그 행 base를 판정한 커밋으로 올리고 근거를 메모(①이라도)와 단위 문서에 남긴다. `fixture-manifest.mjs`도 같은 base 뒤 변경만 보고한다. 기준선 뒤 새로 생긴 파일은 `새 파일`로 보고되며 재기준선 때 분류한다.
-- **판정 대기 (2026-11-10, HEAD `d4b82c30` 의 `port-map.mjs` 보고):** `cpppj 변경` 196건 — **②/③ 판정 필요(웹에 이식분 있음) 87단위**(`o/` 82·client 5), 이식 때 판정(아직 웹에 없음) 100단위(`o/` 37·client 62·zacket 1), ① 자동(제외 분류) 9단위. 새 파일은 253파일(145단위, 대응표 밖)이다. 2026-11-09의 54단위에서 늘었다(웹 이식이 진행되는 동안 CP 세션이 같은 파일에 `Actual*` 실제 연결·`shared*` 공유 전역·진단 복귀를 계속 더함). 87단위 처리는 3-E(`o/` 82·RawChatChannels)와 4-D·5(client UI 4)로 나눴다. 목록은 `node webpj/tools/port-map.mjs`의 `②/③ 판정 필요` 줄이다.
+- **판정 대기 (2026-11-10, HEAD `d4b82c30` 의 `port-map.mjs` 보고):** `cpppj 변경` 196건 — **②/③ 판정 필요(웹에 이식분 있음) 87단위**(`o/` 82·client 5), 이식 때 판정(아직 웹에 없음) 100단위(`o/` 37·client 62·zacket 1), ① 자동(제외 분류) 9단위. 새 파일은 253파일(145단위, 대응표 밖)이다. 2026-11-09의 54단위에서 늘었다(웹 이식이 진행되는 동안 CP 세션이 같은 파일에 `Actual*` 실제 연결·`shared*` 공유 전역·진단 복귀를 계속 더함). 87단위 처리는 3-E(`o/` 82·RawChatChannels)와 4-D·5(client UI 4)로 나눴다. **3-E 의 판정 79단위는 WB04-E259~E264 에서 모두 마쳤다**(② 재반영 6건, 나머지는 ①/③; 결과는 [대응표 문서 9절](docs/webpj-port-map-20261106.md)과 단위 문서 6개). 남은 client UI 4단위는 4-D·5 연결 때 판정한다. 목록은 `node webpj/tools/port-map.mjs`의 `②/③ 판정 필요` 줄이다.
 - **판정을 마치고 반영 시점만 남은 ③ (아래 표):** 해당 단위에서 반영하면 이 표에서 지우고 대응표 메모를 고친다. 판정 완료(①·②반영)된 9곳(WB02-G~WB04-E59 판정)과 그 근거는 [2026-11-09 보관본 3.6절](LEFT_JOBS.webpj.old.md#archive-webpj-20261109-through-wb04-e187)과 [대응표 문서5절](docs/webpj-port-map-20261106.md)에 있고, base는 `PORT_MAP.tsv`에 기록돼 있다.
 
 | cpppj 소스(웹 기준 → 기준선 사이 커밋) | 웹 모듈 | ③ 반영 시점과 내용 |
@@ -362,6 +322,7 @@ M2(Tutorial1 Load/Start/표시)에 직접 필요하지 않아 순서6/7 몫으�
 | `o/RawConstructionConfirm` `cc562ccf`·`RawConstructionPlace` `ed29febb` | `core/raw-construction-confirm.js`·`raw-construction-place.js` | (E262) 건설 실제 wire 경로: `ActualConfirm`(444590: 512BYTE 초기 헤더 lazy wire→Create→WORD store→20개 진단 복귀→mutable 통지 송신+직접 수신→기록기 첫 SID)·`ActualPlace`(442c80: 비용→조각→후행 진단, 현재 SID reader)·`BindCurrentPlayers`·shared getters → **4-C** 패킷 writer(`RawConstructionPacket`·`RawFormPacket`)와 **6** 건설 연결 때 한 묶음. typed `Confirm`/`Place` 결과는 변하지 않는다 |
 | `o/RawArcherAnimation`·`RawCannonFire`·`RawCrossbowAnimation`·`RawGunAnimation`·`RawIceCannonFire` `02b00b12`·`RawMissile` `cc562ccf`·`RawBombRegular` `01ec27ae`·`RawBombStrike` `473e1247`·`RawAcidFence` `800ff40c`·`RawFenceCreate`·`RawFenceMarkerClear`·`RawFenceNeighbors` `d0e7fe1d` | 각 `core/raw-*.js` | (2026-11-10 WB04-E263 판정-전투) Native 역할/TYPE shared getter·생성자: Sun/Wind Archer·Sun 캐논·윈드 아처·썬더/레인 캐논·플라이어/벌룬·무기 역할 DWORD 를 소비 위치마다 읽는 getter, 폭탄 Regular 의 현재 TYPE reader·sharedBoss·currentLocalOwner·targetBuffer, 폭탄 Strike 의 current* 전역, 펜스 중심/사거리/동맹 getter 생성자(`RawFenceMarkerCreate`·`RawFenceMarkerClear`·`RawFenceNeighbors`)·발사/회전 애니메이션 프로세스 TYPE 두 칸(`host.AnimationProcessType`) → **4-D** 장기 owner 를 묶을 때 cpppj 시험과 한 묶음 대조. typed 결과는 변하지 않는다 |
 | `o/RawBombEffect` `01ec27ae`·`RawBombTargets` `d0e7fe1d`·`RawGunHit` `230528e3` | `core/raw-bomb-effect.js`·`raw-bomb-targets.js`·`raw-gun-hit.js` | (E263) `ObserveBombEffectPacket`(송신 observer: DWORD -1 진단 뒤 현재 low WORD 로 길이 확정) → **4-C** 패킷 observer 이식 때. `RawBombTargets` 의 현재 TYPE+44 사거리 직접 읽기 → **4-A** 타입 레코드 `range` 칸과 같은 시점. `RawGunHit.applyOverride`(Rain 45f940 오버라이드) → **7-P2** 총·투사체 부품 때 |
+| `o/RawFlare` `6a136e89`·`RawIceTower` `56f3c80f`·`RawWindAviaryProcess` `0b1b7c73`·`RawWindAviaryState` `8b15b357` | `core/raw-flare.js`·`raw-ice-tower.js`·`raw-wind-aviary-process.js`·`raw-wind-aviary-state.js` | (2026-11-10 WB04-E264 판정-기타) Native getter·통지: 플레어의 `state.native`·억제 시각/난수 owner getter, 아이스 타워의 완성형/성장형/noIsland TYPE shared 주소, 아비어리 `FlyerDiedIn`(AP2/dirty4 본문) → **4-D**. 아비어리 `ReadProcess`(0045b210 실제 수신, NULL this 표현)·`WritePacket` 동기화 force/protocol/message → **4-C** 패킷 수신·writer. typed 결과는 변하지 않는다. `RawPathRuntime` 의 `friend RawPathData` 는 6-P `RawPathData` 이식 때 웹 대응을 본다 |
 
 ## 4. 이관해도 남겨야 할 미해결 한계
 
