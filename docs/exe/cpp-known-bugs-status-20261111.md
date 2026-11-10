@@ -4,8 +4,12 @@
 
 | ID | 판정 | 근거·조치 | 검증 |
 | --- | --- | --- | --- |
+| NB02 | **수정 완료** | `StyleTextMarkup::Option('E')`가 오프셋 범위(-4..4) 검사를 `||`로 해서 **한 좌표만 범위 안이면 다른 좌표를 임의로 크게** 적용할 수 있었다(글자를 뒤로 밀어내는 악용). 새 `StyleTextOffsetAllowed(x,y)`로 두 좌표가 모두 범위 안일 때만 적용한다. | 단위 `KnownBug_NB02_EmbossOffsetRequiresBothCoordinatesInRange`(`netstorm_known_bug_tests`) 통과 |
+| NB05 | 현행 미재현 | Test Battle 채팅 줄에 936자를 입력해 전송했으나 입력줄이 상한(약 87자)에서 멈추고 메시지가 정상 전송되며 종료/로그 없음. | 실제 실행(`extracted/cpp-resume-1278/nb05/`). 사용자 확인 잔여: 존/MP 채팅의 긴 입력 |
 | NB07 | 현행에 이미 반영 | `Create New Map`에 기존 이름을 넣으면 `Unique Name Required — A Fortress with that name already exists...` 안내가 뜨고 기존 fort를 열지 않는다. | 실제 화면(`extracted/cpp-resume-1278/nb07/`) |
 | NB08 | **수정 완료** | 세 겹의 원인을 실제 실행으로 찾아 교정했다. (1) `FileSpecDirectoryHooks`의 `root/path`가 `\D\guide*.english`처럼 루트 디렉터리만 있는 패턴에서 게임 폴더를 버리고 드라이브 루트(`H:\D\...`)를 검색해 디스크의 `Guide*.english`(사용자 캠페인)가 한 건도 목록에 오르지 않았다(`root/path.relative_path()`). (2) `BaseFileSystem::MatchFinder`의 결과 경로 접두 비교도 같은 이유로 버려졌다(같은 교정). (3) 원문 PE `4c8c12..36`의 `%` 인라인 목록 삽입이 합친 문자열 전체가 아니라 `replacement` 길이만 복사해 본문 뒤쪽의 목록이 잘렸다. `HtmlWindowMetadataHooks::repairInlineList`(제품에서만 켬, 기본 꺼짐)로 전체와 NUL을 쓰게 했다. | 실제 화면: `Campaign → User Made Campaigns`에 `Legendary Missions Of Ass` 등 목록과 스크롤바 표시 |
+| NB09 | **수정 완료**(MP 실행 검증 제외) | 참가자 이름표 `WriteNativeMetaParticipantLabel`이 길드 태그가 길어 CS 이름표 버퍼(`+d8`)를 넘으면 `out_of_range`로 클라이언트 전체가 종료했다(원문은 버퍼 훼손). 태그 끝 글자를 한 글자씩 줄여 서식에 맞추고, 길드 없이도 넘치는 경우만 명시 거부로 남겼다. | 단위 `KnownBug_NB09_LongGuildTagIsShortenedInsteadOfFailing` 통과. 존 실제 오른쪽 클릭 메뉴는 MP라 실행하지 않음(사용자 확인) |
+| NB22 | 현행 미재현 | Test Battle에서 `P`/`R`/`F`의 다섯 조합(p,f / r,f / f,p / f,r / p,r,f)을 연속 입력했으나 종료/로그 없음. | 실제 실행(`extracted/cpp-resume-1278/nb22/`). 사용자 확인 잔여: 동시 눌림(chord)·다른 화면 |
 | NB24 | **수정 완료** | 긴 캠페인(Tell 파일) 제목이 80BYTE 지역 버퍼를 넘으면 원문처럼 `PhysicalLimitError`로 종료했다. `FitDisplayLimit`로 마지막 UTF-8 문자부터 줄여 표시한다(NB08 교정으로 목록이 열리며 즉시 노출된 같은 증상). | 실제 데이터에 80BYTE 이상 제목(`GuideHades` 86자, `GuideKQ` 102자: 아이콘 마크업 포함)이 있어 NB08 교정 직후 처음에는 `Tell 파일 목록의 원본 지역 NUL 범위 초과`로 종료했고, 교정 뒤 목록이 정상 표시되며 종료·로그 없음 |
 
 (나머지 행은 조사 진행에 따라 이 표에 추가한다.)

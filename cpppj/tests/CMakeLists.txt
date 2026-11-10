@@ -3872,3 +3872,9 @@ target_sources(netstorm_tests PRIVATE ScenarioDocumentTests.cpp EditorScenarioIn
 add_executable(netstorm_editor_scenario_tests FocusedTestMain.cpp ScenarioDocumentTests.cpp EditorScenarioIntegrationTests.cpp)
 target_link_libraries(netstorm_editor_scenario_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_editor_scenario_tests)
+
+# 10차 알려진 버그 NB01~NB34 중 작은 경계로 확인할 수 있는 교정의 회귀 검사다(창 없는 일반 검사, 1286).
+target_sources(netstorm_tests PRIVATE KnownBugTests.cpp)
+add_executable(netstorm_known_bug_tests FocusedTestMain.cpp KnownBugTests.cpp)
+target_link_libraries(netstorm_known_bug_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_known_bug_tests)

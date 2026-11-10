@@ -15,6 +15,10 @@ constexpr std::size_t kCaptureBytes=80;
 constexpr std::array<char,6> kCommandOrder{'I','S','T','C','B','E'};
 // 원본 E 좌표의 허용 범위다. 어느 한 축만 이 범위에 있어도 두 값을 함께 적용한다.
 constexpr std::int32_t kOffsetMinimum=-4,kOffsetMaximum=4;
+}
+// 위 헤더 설명대로 두 좌표가 모두 -4..4 안일 때만 허용한다.
+bool StyleTextOffsetAllowed(std::int32_t x,std::int32_t y) { return x>=kOffsetMinimum && x<=kOffsetMaximum && y>=kOffsetMinimum && y<=kOffsetMaximum; }
+namespace {
 // CD 다중 줄은 W 두 캡처를 소리 이름 첫 캡처로 소비한다. 제한 그림은 너비 99999/높이 12에 맞춘다.
 constexpr std::array<char,3> kCdScrollingOrder{'I','W','T'};
 constexpr std::int32_t kRestrictedWidth=99999,kRestrictedHeight=12;
@@ -166,7 +170,7 @@ void StyleTextMarkup::Option(char code,std::string_view first,std::string_view s
     case 'E':
         if (state_.allowOffset) {
             const auto x=Number(first),y=Number(second);
-            if ((x>=kOffsetMinimum && x<=kOffsetMaximum) || (y>=kOffsetMinimum && y<=kOffsetMaximum)) {
+            if (StyleTextOffsetAllowed(static_cast<std::int32_t>(x),static_cast<std::int32_t>(y))) { // NB02: 원문은 두 좌표 중 하나만 범위 안이면 적용했다.
                 if (!hooks_.black) throw std::invalid_argument("StyleText 대괄호 검정색 경계 필요");
                 context[0]|=2U;context[5]=hooks_.black();
                 context[6]=static_cast<std::uint32_t>(x);context[7]=static_cast<std::uint32_t>(y);

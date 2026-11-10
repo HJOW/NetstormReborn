@@ -16,6 +16,9 @@ struct StyleTextMarkupState {
     // fitHeight: 맞춤 높이.
     std::int32_t fitWidth{65},fitHeight{60};
 };
+// 채팅 글자의 ~[E.x# y#] 엠보스 오프셋이 허용 범위(-4..4) 안인지 판정한다. 원문은 두 좌표 중 하나만 범위 안이어도 둘 다 적용해
+// 다른 좌표를 임의로 크게 줘서 글자를 뒤로 밀 수 있었다(알려진 버그 NB02). 두 좌표가 모두 범위 안일 때만 적용한다.
+bool StyleTextOffsetAllowed(std::int32_t x,std::int32_t y);
 // 원본 타입 +114/+118/+11c/+12c/+130의 그림 선택 필드다. 글자 표의 빈 칸은 -1이다.
 struct StyleTextMarkupType {
     // frameCount: 사용 가능한 프레임 개수.

@@ -21,9 +21,15 @@ std::string_view Text(std::span<const std::uint8_t> bytes,std::size_t at) { //�
 void WriteNativeMetaParticipantLabel(std::span<std::uint8_t> record,std::string_view prefix,const NativeMetaParticipantNameHooks& h) {
     const auto warning=(Read(record,0x64)&0x800U) ? "~[IfortGump.L1]":"";
     const auto pattern=Need(h.translate)("~j%s%s~w%s\n~yLevel ~w%d ~yRank ~w%d\n");
-    const auto rank=Read(record,0x58,1)+1U;const auto level=Need(h.weight)(record.subspan(0x54,10));const std::string name(Text(record,0x26)),guild(prefix);
-    const auto destination=record.subspan(0xd8);const auto count=std::snprintf(reinterpret_cast<char*>(destination.data()),destination.size(),pattern.c_str(),guild.c_str(),warning,name.c_str(),static_cast<int>(level),static_cast<int>(rank));
-    if (count<0 || static_cast<std::size_t>(count)>=destination.size()) throw std::out_of_range("메타 참가자 이름표의 실제 CS 문자열 물리 초과"); //원문 범위 밖 메모리 훼손은 실제 할당 경계에서 거부하며 앞선 복사는 되돌리지 않는다.
+    const auto rank=Read(record,0x58,1)+1U;const auto level=Need(h.weight)(record.subspan(0x54,10));const std::string name(Text(record,0x26));std::string guild(prefix);
+    const auto destination=record.subspan(0xd8);
+    for (;;) { // 알려진 버그 NB09: 최대 길이를 넘는 길드 태그는 원문에서 이름표 버퍼를 넘어 종료를 일으켰다. 태그 끝 글자를 한 글자씩 줄여 버퍼에 맞춘다.
+        const auto count=std::snprintf(reinterpret_cast<char*>(destination.data()),destination.size(),pattern.c_str(),guild.c_str(),warning,name.c_str(),static_cast<int>(level),static_cast<int>(rank));
+        if (count>=0 && static_cast<std::size_t>(count)<destination.size()) return;
+        if (guild.size()>3 && guild.back()==':') guild.erase(guild.size()-2,1); // "~a태그:" 형식은 콜론 바로 앞 글자를 줄인다(접두 "~a"는 보존).
+        else if (!guild.empty()) guild.clear(); // 형식을 알 수 없으면 길드 표시를 생략한다.
+        else throw std::out_of_range("메타 참가자 이름표의 실제 CS 문자열 물리 초과"); // 길드 없이도 넘치는 이름/서식은 원문처럼 명시 거부한다.
+    }
 }
 // 길드 접두사는 기록+8을 사용하며 참가자의 정제된 이름+26과 구별한다.
 void RebuildNativeMetaParticipantLabel(std::span<std::uint8_t> record,const NativeMetaParticipantNameHooks& h) {
