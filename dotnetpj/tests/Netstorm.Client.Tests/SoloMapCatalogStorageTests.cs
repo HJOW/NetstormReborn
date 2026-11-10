@@ -467,4 +467,33 @@ public sealed class SoloMapCatalogStorageTests
         Assert.True(customRow.Checked && customRow.Enabled);
         Assert.Equal("TEST01", customRow.Name);
     }
+
+    /// <summary>빈 디스크에 아카이브만 있으면 목록은 비고 아카이브 분류는 같은 값을 내는지 검증한다. 2026-11-11 F3 미뤄 둔 전수 재생(아카이브 열거) 이식에서 추가됐다.</summary>
+    [Fact]
+    public void DiskEnumerationAndArchiveRead()
+    {
+        // 원본 SoloMapCatalog_DiskEnumerationAndArchiveRead와 같다. 기본 디스크에는 Fort가 없고
+        // 보조 아카이브(netstorm.tarc) 내용은 목록에 뜨지 않지만 분류·읽기에는 그대로 쓴다.
+        // C# MatchDisk·MatchFinder는 역슬래시를 슬래시로 접으므로 기대값도 슬래시로 둔다(원본과 표기만 다름).
+        string? data = GameDataLocator.FindDataDirectory();
+        Assert.NotNull(data);
+        using EditorTempRoot temp = new();
+        GameFileSystem files = GameFileSystem.Open(temp.Root, data);
+        Assert.Empty(files.MatchDisk("d/*.fort"));
+        SoloMapCatalog catalog = new(files, Config("d/{local.1}.fort"), Effects(() => "", () => { }));
+        Assert.Equal(0, catalog.List.Refresh(2));
+        int reads = 0;
+        foreach (string path in files.MatchFinder("d/*.fort"))
+        {
+            List<byte[]> sections = FileSections(files.ReadAllBytes(path));
+            byte[] state = sections[1];
+            byte kind = state.Length > 17 ? state[17] : (byte)0;
+            string stem = Path.GetFileNameWithoutExtension(path.Replace('\\', '/'));
+            Assert.Equal(kind, catalog.Kind(stem));
+            ++reads;
+        }
+
+        Assert.True(reads > 0);
+        Assert.Equal(["d/absent.fort"], files.MatchDisk("d\\absent.fort"));
+    }
 }
