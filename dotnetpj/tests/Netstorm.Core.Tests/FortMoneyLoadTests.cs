@@ -292,4 +292,48 @@ public sealed class FortMoneyLoadTests
         PlayerSpSetReads reads = new() { ClientActive = () => 0u, LocalOwner = () => 1u, Editor = () => 0u };
         Assert.Equal(0.0f, RawFortMoneyLoad.ReadPlayerSpAmount(0, store, reads));
     }
+
+    /// <summary>
+    /// 실제 월드의 장부와 같은 저장소·난수를 참조해 현재 소유자·모드가 즉시 반영되는지 검증한다.
+    /// cpppj <c>FortMoneyLoad_SharesCurrentWorldOwnerStoreAndRandom</c>을 옮겼다. F3 연기 검사였다.
+    /// 2026-11-10 F3 미뤄 둔 전수 재생(0.300)에서 추가됐다.
+    /// </summary>
+    [Fact]
+    public void SharesCurrentWorldOwnerStoreAndRandom()
+    {
+        // Money가 읽지 않는 월드 형식의 타입표이며 실제 자산 대조로 세지 않는다.
+        List<OriginalTypeRecord> types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
+        List<RiftTypeFrames> frames = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new RiftTypeFrames([])).ToList();
+        List<SquidDisplayShape> shapes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new SquidDisplayShape()).ToList();
+        var storage = new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes);
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, storage.Links.IslandType, storage, frames);
+        RawWorldCore core = world.Core();
+        var reward = new SquidRewardState();
+        var state = new FortMoneyState { ClientActive = true };
+        var random = new NetstormRandom();
+        var store = new RawSpStore(random, () => 42u);
+        byte[] records = new byte[9 * 0xb4];
+        world.SetLoadingDepth(3u);
+        int refreshes = 0;
+        core.Bookkeeping.LocalOwner = 1;
+        var money = new RawFortMoneyLoad(OriginalEdition.Patch1078, reward, core.Bookkeeping, records,
+            world.LoadingDepth, world.SetLoadingDepth, state, store,
+            new FortMoneyHooks
+            {
+                Assertion = _ => throw new InvalidOperationException("정상 Money 소비자의 진단"),
+                LoadingDepthChanged = value => world.SetLoadingDepth(value),
+                RefreshSp = () => refreshes++,
+            });
+        money.SetPlayerSp(1, 7000);
+        Assert.Equal(BitConverter.SingleToUInt32Bits(7000f), store.Get(1));
+        Assert.Equal(1, refreshes);
+        // 같은 장부의 현재 소유자를 바꾸면 다음 지정에 즉시 반영된다.
+        core.Bookkeeping.LocalOwner = 2;
+        reward.FixedSpB = true;
+        money.SetPlayerSp(2, 3000);
+        Assert.Equal(BitConverter.SingleToUInt32Bits(194162f), store.Get(2));
+        Assert.Equal(2, refreshes);
+        Assert.NotEqual(0u, random.State);
+        Assert.Equal(3u, world.LoadingDepth());
+    }
 }
