@@ -143,6 +143,7 @@ public interface IRawPostPopGraph
 /// 영역 무효화·Graph 생성 → 비용 누적 → 공급원·작업장 목록 → 소유자 조건 통계 → 깊이 감소(PostPopBase)"다.
 /// 파생 몸체(사제·운반체·자산·공장·룬·다이스·다리 등)는 아직 연결하지 않으므로 <see cref="HandlesDerived"/> 는 항상 거짓이며,
 /// 그 효과가 필요한 가상 표의 등록은 풀·공간을 바꾸기 전에 거부한다.
+/// Player 몸체만 <see cref="SetPlayerPostPop"/> 으로 따로 묶어 분배한다(F3 실제 호스트·월드 조립, 2026-11-10 0.304).
 /// 기준 판본은 10.78 뿐이다(CD 10.72 는 소유자·추가 비트 위치와 비용 누적 방식이 달라서 옮기지 않았다).
 /// 근거: cpppj/src/o/SquidPostPop.cpp (W02 PostPop 조각, 2026-10-20).
 /// </summary>
@@ -211,6 +212,9 @@ public sealed class RawPostPop : IRawPopPostPop
     /// <summary>표면 Graph. 연결 전이면 null 이며 영역·표면 등록은 거부된다.</summary>
     private readonly IRawPostPopGraph? _graph;
 
+    /// <summary>같은 풀에 명시 등록한 실제 Player 최초 기록·예약 몸체다. 없으면 Player 가상표도 공통 경로로 간다. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.</summary>
+    private RawPlayerWorld? _playerPostPop;
+
     /// <summary>공통 후처리 모듈을 만든다.</summary>
     /// <param name="pool">슬롯 풀.</param>
     /// <param name="types">타입 번호 순서의 타입 레코드. 10.78 은 188개여야 한다.</param>
@@ -273,9 +277,34 @@ public sealed class RawPostPop : IRawPopPostPop
     /// <summary>
     /// 이 모듈이 처리할 수 있는 파생 postPop 인지 돌려준다.
     /// 파생 몸체(사제·운반체·자산·공장·룬·다이스·다리 등)를 아직 연결하지 않으므로 항상 거짓이다.
+    /// Player 몸체는 별도 등록(<see cref="SetPlayerPostPop"/>)으로 분배하며 여기서 세지 않는다.
     /// </summary>
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     public bool HandlesDerived(int sid) => false;
+
+    /// <summary>
+    /// 실제 Player 최초 기록·예약 몸체를 같은 풀에만 명시 등록한다. null이면 등록을 해제한다.
+    /// 근거: cpppj `o/SquidPostPop.cpp`의 `SetPlayerPostPop`. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.
+    /// </summary>
+    /// <param name="player">등록할 Player 몸체다. null이면 해제한다.</param>
+    /// <exception cref="ArgumentException">Player Pop/후처리 풀 불일치다.</exception>
+    public void SetPlayerPostPop(RawPlayerWorld? player)
+    {
+        if (player is not null && !ReferenceEquals(player.Pool(), _pool))
+        {
+            throw new ArgumentException("Player Pop/후처리 풀 불일치", nameof(player));
+        }
+
+        _playerPostPop = player;
+    }
+
+    /// <summary>
+    /// 실제 생성자의 가상 표 판단은 등록된 Player 몸체를 재사용한다.
+    /// 근거: cpppj `o/SquidPostPop.cpp`의 `HandlesPlayer`. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.
+    /// </summary>
+    /// <param name="sid">오브젝트 슬롯 번호.</param>
+    /// <returns>묶은 Player 몸체가 처리하면 참이다.</returns>
+    public bool HandlesPlayer(int sid) => _playerPostPop is not null && _playerPostPop.Handles(sid);
 
     /// <summary>Pop 과 같은 해시·점유 지도를 보는지 확인한다. Graph 가 없으면 검사할 것이 없어 그대로 둔다.</summary>
     /// <param name="hash">Pop 이 쓰는 공간 해시.</param>
@@ -304,10 +333,15 @@ public sealed class RawPostPop : IRawPopPostPop
             throw new InvalidOperationException("postPop raw 자산 상태 오류");
         }
         uint vtable = Read(slot, 0, 4);
-        // 공통 지원 표에 없고 파생 몸체도 없으면 미복원 효과다
-        if (!OriginalPopDisplay.Supports(vtable, flags) && !HandlesDerived(sid))
+        // 공통 지원 표에 없고 파생 몸체도 없으면 미복원 효과다. Player 몸체는 등록된 실제 몸체를 재사용한다
+        if (!OriginalPopDisplay.Supports(vtable, flags) && !HandlesDerived(sid) && !HandlesPlayer(sid))
         {
             throw new InvalidOperationException("파생 postPop 미복원");
+        }
+        // Player는 현재 9기록·SID와 조건부 예약을 가진 실제 몸체가 검사한다
+        if (HandlesPlayer(sid))
+        {
+            _playerPostPop!.Validate(sid, flags);
         }
         ValidateBase(sid, flags, in projection);
     }
@@ -424,6 +458,31 @@ public sealed class RawPostPop : IRawPopPostPop
     public void PostPop(int sid, uint flags)
     {
         Validate(sid, flags, default);
+        PostPopBase(sid, flags, default);
+    }
+
+    /// <summary>
+    /// 가상 분배 진입이다. Player는 현재 9기록·SID와 조건부 예약을 가진 실제 몸체가 후처리하고,
+    /// 그 밖은 파생 분배 없이 공통 몸체로 간다. PATCH는 사전 검사를 삽입하지 않는다.
+    /// 근거: cpppj `o/SquidPostPop.cpp`의 `PostPopVirtual`·`DispatchPostPop` 중 Player 분기.
+    /// 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.
+    /// </summary>
+    /// <param name="sid">오브젝트 슬롯 번호.</param>
+    /// <param name="flags">호출 플래그.</param>
+    public void PostPopVirtual(int sid, uint flags)
+    {
+        if (_pool.Edition != OriginalEdition.Patch1078)
+        {
+            Validate(sid, flags, default);
+        }
+
+        // Player는 자기 몸체에서 공통 장부를 한 번 호출하므로 여기서 끝낸다
+        if (HandlesPlayer(sid))
+        {
+            _playerPostPop!.PostPop(sid, flags);
+            return;
+        }
+
         PostPopBase(sid, flags, default);
     }
 

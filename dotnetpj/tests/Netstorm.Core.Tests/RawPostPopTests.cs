@@ -351,4 +351,110 @@ public sealed class RawPostPopTests
         Assert.Throws<ArgumentException>(() => RawPostPop.BridgePrefix(pool, 50, 1, null));
         Assert.Equal(before, pool.Bytes.ToArray());
     }
+
+    /// <summary>실제 Player 가상표다. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.</summary>
+    private const uint PlayerVtable = 0x50ee08u;
+
+    /// <summary>Player 슬롯을 만든다. 팩토리가 만든 슬롯에 Player 가상표·소유자를 덮는다. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.</summary>
+    /// <param name="factory">팩토리.</param>
+    /// <param name="pool">슬롯 풀.</param>
+    /// <param name="owner">소유자 바이트.</param>
+    private static int PlayerSlot(RawSquidFactory factory, RawSidPool pool, byte owner)
+    {
+        int sid = factory.Create(TestType);
+        Span<byte> bytes = pool.AllocatedBytes(sid);
+        Put(bytes, 0, PlayerVtable);
+        bytes[34] = owner;
+        return sid;
+    }
+
+    /// <summary>같은 풀·장부에 Player 몸체를 묶는다. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.</summary>
+    /// <param name="pool">슬롯 풀.</param>
+    /// <param name="post">공통 몸체.</param>
+    /// <param name="records">현재 9기록.</param>
+    private static RawPlayerWorld PlayerBody(RawSidPool pool, RawPostPop post, byte[] records) =>
+        new(pool, post, records, new PlayerWorldState(), new PlayerWorldHooks());
+
+    /// <summary>Player 몸체 등록은 같은 풀만 받고 해제는 허용한다. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.</summary>
+    [Fact]
+    public void SetPlayerPostPopGuardsPool()
+    {
+        var pool = new RawSidPool(32768);
+        OriginalTypeRecord[] types = Types();
+        var state = new RawPostPopState { Depth = 3 };
+        var post = new RawPostPop(pool, types, state);
+        int sid = PlayerSlot(new RawSquidFactory(pool, types), pool, 1);
+        // 묶기 전에는 Player 가상표도 Player 몸체로 보지 않는다
+        Assert.False(post.HandlesPlayer(sid));
+        post.SetPlayerPostPop(null);
+        Assert.False(post.HandlesPlayer(sid));
+        // 다른 풀의 몸체와는 묶지 않는다
+        var other = new RawSidPool(32768);
+        var otherPost = new RawPostPop(other, types, new RawPostPopState());
+        var foreign = new RawPlayerWorld(other, otherPost, new byte[9 * 0xb4], new PlayerWorldState(), new PlayerWorldHooks());
+        Assert.Throws<ArgumentException>(() => post.SetPlayerPostPop(foreign));
+        Assert.False(post.HandlesPlayer(sid));
+        // 같은 풀의 몸체는 묶이고 Player 가상표만 본다
+        post.SetPlayerPostPop(PlayerBody(pool, post, new byte[9 * 0xb4]));
+        Assert.True(post.HandlesPlayer(sid));
+        int plain = VoidSlot(new RawSquidFactory(pool, types), pool);
+        Assert.False(post.HandlesPlayer(plain));
+    }
+
+    /// <summary>Player 검증은 실제 몸체가 9기록 밖 소유자를 공통 검사 전에 거부한다. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.</summary>
+    [Fact]
+    public void ValidateRoutesPlayerBody()
+    {
+        var pool = new RawSidPool(32768);
+        OriginalTypeRecord[] types = Types();
+        var state = new RawPostPopState { Suppressed = true, Depth = 3 };
+        var post = new RawPostPop(pool, types, state);
+        byte[] records = new byte[9 * 0xb4];
+        post.SetPlayerPostPop(PlayerBody(pool, post, records));
+        int sid = PlayerSlot(new RawSquidFactory(pool, types), pool, 9);
+        byte[] before = (byte[])records.Clone();
+        // 실제 몸체의 소유자 범위 검사가 공통 장부보다 먼저 멈춘다
+        Assert.ThrowsAny<Exception>(() => post.Validate(sid, 0, default));
+        Assert.True(records.AsSpan().SequenceEqual(before));
+        Assert.Equal(3u, state.Depth);
+    }
+
+    /// <summary>가상 분배 진입은 Player를 실제 몸체로 후처리하고 그 밖은 공통 경로로 간다. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.</summary>
+    [Fact]
+    public void PostPopVirtualRoutesPlayerBody()
+    {
+        var pool = new RawSidPool(32768);
+        OriginalTypeRecord[] types = Types();
+        var state = new RawPostPopState { Suppressed = true, Depth = 1 };
+        var post = new RawPostPop(pool, types, state);
+        byte[] records = new byte[9 * 0xb4];
+        post.SetPlayerPostPop(PlayerBody(pool, post, records));
+        int sid = PlayerSlot(new RawSquidFactory(pool, types), pool, 1);
+        // 실제 몸체가 기록을 쓰고 공통 장부를 정확히 한 번 호출한다
+        post.PostPopVirtual(sid, 0u);
+        Assert.Equal((uint)sid, Get(records, 0xb4 + 0x9c));
+        Assert.Equal(0u, state.Depth);
+        // 묶지 않은 가상표는 공통 경로로만 간다
+        var plainState = new RawPostPopState { Suppressed = true, Depth = 1 };
+        var plain = new RawPostPop(pool, types, plainState);
+        int plainSid = PlayerSlot(new RawSquidFactory(pool, types), pool, 1);
+        plain.PostPopVirtual(plainSid, 0u);
+        Assert.Equal(0u, plainState.Depth);
+        Assert.Equal(0u, plainState.GlobalCounts[TestType]);
+    }
+
+    /// <summary>바이트를 리틀 엔디언으로 읽는다. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.</summary>
+    /// <param name="bytes">읽을 바이트.</param>
+    /// <param name="offset">읽기 시작 위치.</param>
+    private static uint Get(ReadOnlySpan<byte> bytes, int offset)
+    {
+        uint value = 0u;
+        // 낮은 바이트부터 모으는 반복문이다
+        for (int i = 0; i < 4; i++)
+        {
+            value |= (uint)bytes[offset + i] << (i * 8);
+        }
+
+        return value;
+    }
 }
