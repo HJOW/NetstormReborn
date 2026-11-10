@@ -109,7 +109,7 @@ public sealed class RawCampaignSession
     /// <returns>월드와 같은 수명의 실제 월드 자료 보기다.</returns>
     public RawWorldCore Core() => _world.Core();
 
-    /// <summary>Fort 적재가 끝났는지다. 껍데기에서는 항상 거짓이다. 2026-11-10 F3 세션 껍데기 이식에서 추가됐다.</summary>
+    /// <summary>Fort 적재가 끝났는지다. 씨앗 적재 뒤에는 참이다. 2026-11-10 F3 세션 껍데기 이식에서 추가됐고 2026-11-10 F3 Fort 씨앗 적재 이식에서 갱신했다.</summary>
     /// <returns>적재됐으면 참이다.</returns>
     public bool IsLoaded() => _loaded;
 
@@ -118,5 +118,20 @@ public sealed class RawCampaignSession
     {
         // 원본 RawCampaignSession::Load의 Fort 적재 본체는 후속 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
         throw new InvalidOperationException("실제 미션 Fort 적재 미연결");
+    }
+
+    /// <summary>Fort 씨앗 목록을 같은 월드에 적재하고 세션을 적재됨으로 표시한다. 원본 Fort 순서의 지면·무인도·다리 씨앗 경로만 둔다. 2026-11-10 F3 Fort 씨앗 적재 이식에서 추가됐다.</summary>
+    /// <param name="seeds">초기 위치 목록이다.</param>
+    public void LoadSeeds(IReadOnlyList<SurfaceSeed> seeds)
+    {
+        ArgumentNullException.ThrowIfNull(seeds);
+        if (_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 Fort 중복 적재입니다.");
+        }
+
+        // 원본 표면 월드 적재 순서·검증을 그대로 빌리며 성공 뒤에만 세션을 적재됨으로 표시한다.
+        _world.Load(seeds);
+        _loaded = true;
     }
 }

@@ -85,4 +85,90 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미연결", error.Message);
         Assert.False(session.IsLoaded());
     }
+
+    /// <summary>적재 가능한 프레임 목록을 만든다. 지면 94·무인도 157·다리 82에 코드 1개를 둔다. 2026-11-10 F3 Fort 씨앗 적재 이식에서 추가됐다.</summary>
+    private static List<RiftTypeFrames> LoadableFrames()
+    {
+        // 월드 적재 검증의 프레임 범위 관문을 통과한다.
+        var frames = Frames188();
+        foreach (int type in new int[] { 82, 94, 157 })
+        {
+            frames[type] = new RiftTypeFrames([new RiftFrameCode((byte)'A', (byte)'P', 0, 0)]);
+        }
+
+        return frames;
+    }
+
+    /// <summary>적재 가능한 셰이프 목록을 만든다. 지면 94·무인도 157·다리 82에 그림 1개를 둔다. 2026-11-10 F3 Fort 씨앗 적재 이식에서 추가됐다.</summary>
+    private static List<SquidDisplayShape> LoadableShapes()
+    {
+        // 월드 표시 수집의 셰이프 표 관문을 통과한다.
+        var shapes = Shapes188();
+        foreach (int type in new int[] { 82, 94, 157 })
+        {
+            shapes[type].FrameCount = 1;
+            shapes[type].Loaded = true;
+            shapes[type].Frames.Add(new SquidDisplayFrame { Width = 10, Height = 12, HotspotX = 2, HotspotY = 3, CellWidth = 8f, CellHeight = 6f });
+        }
+
+        return shapes;
+    }
+
+    /// <summary>적재 가능한 세션을 만든다. 2026-11-10 F3 Fort 씨앗 적재 이식에서 추가됐다.</summary>
+    private static RawCampaignSession LoadableSession()
+    {
+        // 저장소 링크의 지면 94·무인도 157·다리 82와 같은 씨앗 종류를 쓴다.
+        var types = Types188();
+        var frames = LoadableFrames();
+        var shapes = LoadableShapes();
+        return new RawCampaignSession(OriginalEdition.Patch1078, types, frames, shapes, "TEST01", "1-1", FullStorage(types, frames, shapes));
+    }
+
+    /// <summary>세 종류 씨앗 목록을 만든다. 2026-11-10 F3 Fort 씨앗 적재 이식에서 추가됐다.</summary>
+    private static List<SurfaceSeed> LoadableSeeds() =>
+    [
+        new SurfaceSeed(82u, 5u, 0, 20f, 20f),
+        new SurfaceSeed(157u, 3u, 0, 10f, 10f),
+        new SurfaceSeed(94u, 7u, 0, 30f, 30f),
+    ];
+
+    /// <summary>씨앗 적재가 월드에 놓고 세션을 적재됨으로 표시하는지 검증한다. 2026-11-10 F3 Fort 씨앗 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LoadSeedsPlacesSeedsAndMarksLoaded()
+    {
+        // Fort 순서의 지면·무인도·다리 씨앗 경로만 둔다.
+        var session = LoadableSession();
+        Assert.False(session.IsLoaded());
+        session.LoadSeeds(LoadableSeeds());
+        Assert.True(session.IsLoaded());
+        List<SurfaceSnapshot> objects = session.World().Objects();
+        Assert.Equal(3, objects.Count);
+        SurfaceSnapshot bridge = Assert.Single(objects, snapshot => snapshot.Object.Type == 82u);
+        Assert.Equal(5u, bridge.Object.Owner);
+        SurfaceSnapshot noIsland = Assert.Single(objects, snapshot => snapshot.Object.Type == 157u);
+        Assert.Equal(3u, noIsland.Object.Owner);
+        SurfaceSnapshot terrain = Assert.Single(objects, snapshot => snapshot.Object.Type == 94u);
+        Assert.Equal(7u, terrain.Object.Owner);
+    }
+
+    /// <summary>미지원 씨앗 타입을 거부하고 미적재로 남는지 검증한다. 2026-11-10 F3 Fort 씨앗 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LoadSeedsRejectsBadType()
+    {
+        // 월드 적재 검증의 지원 타입 관문을 그대로 빌린다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentException>(() => session.LoadSeeds([new SurfaceSeed(999u, 0u, 0, 10f, 10f)]));
+        Assert.False(session.IsLoaded());
+    }
+
+    /// <summary>중복 씨앗 적재를 거부하는지 검증한다. 2026-11-10 F3 Fort 씨앗 적재 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LoadSeedsRejectsDuplicate()
+    {
+        // 세션·월드 두 중복 관문 중 먼저 걸리는 쪽에서 멈춘다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        Assert.Throws<InvalidOperationException>(() => session.LoadSeeds(LoadableSeeds()));
+        Assert.True(session.IsLoaded());
+    }
 }
