@@ -38,7 +38,7 @@ void CleanupClientStateWorld(std::uint32_t reason,ClientStateWorldContext c,std:
     o::StateWorldCleanupHooks hooks;
     hooks.disconnect=[&](auto owner) { c.client.ConnectionGlobals()->Disconnect(static_cast<std::int32_t>(owner)); };
     hooks.assertion=devices.assertion;hooks.pauseDepth=[&] { return c.client.Paused() ? 1U : 0U; }; //부모는 비영만 검사하고 매 반복의 실제 정지 상태를 다시 읽는다.
-    hooks.saveFort=[&](auto slot) { game.RequireSession().SnapshotFort(slot); };hooks.saveBattle=devices.saveBattle;
+    hooks.saveFort=[&](auto slot) { if (devices.saveFort) devices.saveFort(slot);else game.RequireSession().SnapshotFort(slot); };hooks.saveBattle=devices.saveBattle;
     hooks.resetAi=[&](auto owner) { runtime.ResetAi(owner); };hooks.resetPriest=[&](auto owner) { o::ResetPriestOwnerState(storage->priestOwnerState,owner); };
     hooks.resetOtherPlayer=[&](auto owner,auto amount) { o::SetPlayerSpAmount(std::bit_cast<std::int32_t>(owner),std::bit_cast<std::int32_t>(amount),sp,{[&] { return game.player.playerKnown; },[&] { return game.player.battleOwner; },[&] { return game.world.editor; }},[&] { NeedState(devices.refreshSp)(); }); };
     hooks.setSp=[&](auto owner,float value) { sp.Set(owner,std::bit_cast<std::uint32_t>(value)); };

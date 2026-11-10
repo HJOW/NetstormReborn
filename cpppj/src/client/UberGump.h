@@ -152,6 +152,9 @@ private:
     void Execute(const DialogAction& action);
     bool ScrollMapList(const InputEvent& event); // 5차: 맵 목록의 이전/다음 이동 행을 처리한다. 표시 창 첫 번호를 바꾸고 같은 대화창을 캐시 재사용으로 다시 연다.
     bool FortSelectionEvent(const InputEvent& event); // 실제 AskEditFort/ReadFort를 같은 pending 이름·목록·숫자 nextState에 분배한다.
+    void SnapshotNativeCurrentMap(bool onlyIfPresent); // 현재 장기 Template과 파일 장치로 조건부 또는 독립 두 저장을 수행한다.
+    void SnapshotNativeFortSlot(std::uint32_t slot); // 지정 슬롯의 실제 Fort 전체 저장을 수행한다.
+    void NotifyNativeFortSlot(std::uint32_t slot); // 지정 슬롯의 실제 State 변경 통지만 수행한다.
     void SelectCurrentFortName(std::string_view name); // 원문 MissionFortRequest.selectFort 위치에서 전체 현재 이름 부모를 실제 Client/Template에 연결한다.
     EditorFortFileDevices& EnsureEditorFortFiles(); // World/State 설치 전에 실제 현재 파일 경계가 필요할 때만 장기 작업본 장치를 준비한다.
     FortSelectionHooks FortEditEffects(); //실제 선택된 Battle14의 파일/State 보존 경계도 같은 현재 World와 작업 파일에 연결한다.

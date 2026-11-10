@@ -11,6 +11,7 @@ struct ClientStateWorldDevices {
     std::function<void()> refreshSp; //0043dad0의 현재 예산 serial Push/Attach를 같은 공통 UI에 실행한다.
     std::function<void()> retireRuntime; //이미 정상 반환한 실제 Session과 이를 빌리는 UI/Guide/입력 소비자를 반납한다. 게임 전역을 다시 초기화하지 않는다.
     std::function<void()> leaveMetamap; //실제 metamap 비영에서만 필요한004795a0이며 누락을 빈 성공으로 처리하지 않는다.
+    std::function<void(std::uint32_t)> saveFort; // Fort 정리 시 현재 장기 저장 장치를 호출한다.
     std::function<void(std::uint32_t)> saveBattle; //비mission 전투 phase14에서만 필요한004bf880의 실제 현재 snapshot이다.
     std::function<void(std::uint32_t)> assertion; //원문 중복 모드 진단을 같은 호출 위치에서 보고한다.
 };

@@ -1,8 +1,8 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**목표 일시중지 인계 · 확정 제품1265 / 11.01 · 사용자 요청 · 정적감사1262 · 정적감사1254 · 인계 갱신2026-11-10, HJOW-Athlon**
+**작업 재개 · 확정 제품1266 / 11.01 · 정적감사1262 · 인계 갱신2026-11-10, HJOW-Athlon**
 
-이 문서는 cpppj의 **현재 상태·남은 작업·실행 제외·유효한 계약**을 담는다. 2026-11-10 사용자 요청으로 현재1265의 검증·문서·로컬 커밋 뒤 목표를 일시중지한다. **전체 목표는 미완료이며1266 제품 접합/새 단위는 시작하지 않았다.** 재개 지시 전에는 작업을 계속하지 않는다. 재개 후 아래 우선순위를 따르고 단위마다 인계·로컬 커밋을 남긴다. push하지 않는다.
+이 문서는 cpppj의 **현재 상태·남은 작업·실행 제외·유효한 계약**을 담는다. 2026-11-10 사용자의 재개 요청으로1265 뒤의 후보 접합을 진행했다. **전체 목표와 M6-n은 미완료다.** 아래 우선순위를 따르고 단위마다 인계·로컬 커밋을 남긴다. push하지 않는다.
 
 **1254 직접 소유 경계 감사 완료(제품 변경 없음):** 표시/전송·건설의 선택적 pin은 실제 World 생성자/직접 로드의 부모 보유와 공개 이후 실제 RuntimeCall을 구분했다. [감사](docs/exe/cpp-direct-runtime-owner-audit-20261110.md)·[보고서](cpppj/direct-runtime-owner-audit-20261110.json). 원문/보호2,808·제품 소스 불변·새 빌드/실행0이다. 임의 callback/전체 process 감사 완료는 아니다.
 
@@ -22,9 +22,11 @@
 
 **1264 Dude·세 효과 최초 후처리 연결 마감:**450cd0과41f870/920/fab0의 실제4VT를 같은 장기 Pool/목록/Frame/게임 난수/Host 본문으로 연결하고 Native Session이 공유한다. [근거](docs/exe/cpp-initial-postpop-owner-20261110.md)·[보고서](cpppj/initial-postpop-owner-20261110.json). Release·비MP306/306·Tutorial4 생산/건설/600프레임을 확인했다. **큰 NoWorld·M6-n/전체 목표 미완료·MP 실행0**이다.
 
-**1265 로그인 debugBurst 구현/정적 대조 마감·일시중지:** 원문63012BYTE 예약·63000BYTE 패턴·현재0ch 헤더·같은대상3회 송신과 같은 Client DWORD/reset을 연결했다. [근거](docs/exe/cpp-login-debug-burst-20261110.md)·[보고서](cpppj/login-debug-burst-20261110.json). Release/비MP306/306·Tutorial4 생산/건설/600프레임을 확인했다. **debugBurst/MP 실행0·큰 NoWorld/M6-n/전체 목표 미완료**다. [미적용 Snapshot/준비 후보와 부분 감사 인계](docs/exe/handoffs/cpp-pause-20261110/README.md)는 제품 완료가 아니다.
+**1265 로그인 debugBurst 구현/정적 대조 마감·일시중지:** 원문63012BYTE 예약·63000BYTE 패턴·현재0ch 헤더·같은대상3회 송신과 같은 Client DWORD/reset을 연결했다. [근거](docs/exe/cpp-login-debug-burst-20261110.md)·[보고서](cpppj/login-debug-burst-20261110.json). Release/비MP306/306·Tutorial4 생산/건설/600프레임을 확인했다. **debugBurst/MP 실행0·큰 NoWorld/M6-n/전체 목표 미완료**다. 당시 [미적용 후보와 부분 감사 인계](docs/exe/handoffs/cpp-pause-20261110/README.md)의 Snapshot 후보는1266에서 접합했고 나머지 감사는 여전히 미완료다.
 
-**재개 후 다음: M6-n NoWorld Fort Snapshot·최초 후처리/AI·전수 process/caller 감사.**1265의 debugBurst 본문은 다시 만들지 않는다. 우선 동결 후보/현재 제품 차이를 검토해 같은 장기 Template/Deck/Pool/Player/파일 장치에 접합하고 원문 입력 부모를 연결한다. 나머지 최초 후처리·AI와 모든 process/호출자 감사도 남는다. MP 실행은 제외한다.
+**1266 Fort Snapshot/준비 후보 접합:** 같은 장기 Template/Deck/Pool/Player/파일 장치에 Fort/Battle 저장·Notify 및 실제 입력/State 호출자를 연결했다. Release 빌드·관련 비MP 집중6건·일반 Edit 저장과 재진입 2회를 확인했다. [근거와 범위](docs/exe/cpp-native-fort-snapshot-20261110.md). **Session 없는 직접 저장·Battle·Join/Test Battle 및 MP 실행은 미검증이며 전체 NoWorld/M6는 미완료다.**
+
+**다음: M6-n 나머지 Fort 호출자·최초 후처리/AI·전수 process/caller 감사.** `FortEditEffects` 섬 개수, `RequestFortEditState` Battle 판정, 일반 Descend 등 남은 실제 부모와 수명을 살핀다.1265 debugBurst와1266에서 연결한 저장 본문을 다시 만들지 않는다. MP 실행은 제외한다.
 
 | 우선순위 | 남은 상위 계획 | 현재 상태와 다음 목표 |
 | --- | --- | --- |
@@ -42,7 +44,7 @@
 
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
-AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1265, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
+AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1266, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
@@ -54,12 +56,12 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj�
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품·소스 | **1265 / 11.01**. [로그인 debugBurst](docs/exe/cpp-login-debug-burst-20261110.md)·[보고서](cpppj/login-debug-burst-20261110.json).1264의 [최초후처리4VT](docs/exe/cpp-initial-postpop-owner-20261110.md)·비MP306/306. 1263의 [JoinTestBattle](docs/exe/cpp-native-join-test-battle-20261110.md)·[보고서](cpppj/native-join-test-battle-20261110.json). 같은 Fort 준비/1bh 본문·실제 입력/현재 Source.1262 전체 Native 표/연결 owner·M6-l 정적 마감 유지. **큰 NoWorld/M6-n/M6 미완료**, Regular87/87 유지. |
-| 최근 빌드·집중 검사 |1265 Release/x64 제품2·집중1대상390.695초·종료0·경고/오류0·고정5파일. **비MP306/306**. 원문63012/63000/3회 본문·직접2참조·같은DWORD/0ch헤더를 정적 대조했다. 새 MP/패킷 실행0. |
-| 최근 실제 실행 |1265 최종 EXE Tutorial4 생산/건설 요청→TYPE75/owner1→600프레임·정상 종료0/PNG 확인. 일반Edit2회는1261의 같은Client 증거로 유지한다. MP/Join/Test Battle·공격/포획/희생/승리/자연 완주/공중3종 전용은 제외했다. |
-| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품1265 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
-| M6 감사 기준 |1262 정적 대조: 원문92행/86주소→활성91행/85주소·metadata102행·길이138WORD 일치. 표 밖1/2/5는 별도이며 모두 포함94메시지/88주소를 무조건 활성표 수로 보지 않는다. M6-l 구현/연결 owner 정적 마감·1263 M6-m 구현 마감·MP 실행0. 큰 NoWorld/모든 process/caller·Snapshot/debugBurst는 M6-n 잔여다. |
-| 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1265 새 디컴파일/원문 변경0, 현행22a0877c3 기준 보호 원본/CD/fixture·AGENTS **2,808파일 불변**. 사용자 글꼴 지침 반영은5.3/5.4절. |
+| 확정 제품·소스 | **1266 / 11.01**. [Fort Snapshot·준비 접합](docs/exe/cpp-native-fort-snapshot-20261110.md).1265 [로그인 debugBurst](docs/exe/cpp-login-debug-burst-20261110.md),1264 [최초후처리4VT](docs/exe/cpp-initial-postpop-owner-20261110.md),1262 Native 표/연결 owner 정적 마감 유지. **큰 NoWorld/M6-n/M6 미완료**, Regular87/87 유지. |
+| 최근 빌드·집중 검사 |1266 Release/x64 제품2 및 편집 집중 대상 빌드 성공. 기존 비MP 관련 **6/6** 통과. Session 없는 전체 저장·Battle/MP 실행은 미검증이다. |
+| 최근 실제 실행 |1266 일반 Edit에서 TEST01 저장→메인 메뉴 복귀·재진입을 2회, 사용자 경로 파일 생성·종료0·데이터 사본 불변을 확인했다.1265 Tutorial4 생산/건설·600프레임은 이전 제품 증거다. MP/Join/Test Battle·공격/포획/희생/승리/자연 완주/공중3종 전용은 제외했다. |
+| 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품1266 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |
+| M6 감사 기준 |1262 정적 대조: 원문92행/86주소→활성91행/85주소·metadata102행·길이138WORD 일치. 표 밖1/2/5는 별도이며 모두 포함94메시지/88주소를 무조건 활성표 수로 보지 않는다. M6-l 구현/연결 owner 정적 마감·1263 M6-m 구현 마감·MP 실행0. 큰 NoWorld/모든 process/caller와 남은 Snapshot 호출자는 M6-n 잔여다. |
+| 마지막 디컴파일 | **Client 양판본2026-11-03 / HJOW-Athlon(192.168.0.94), R전용2026-11-07 / 같은 호스트**. 현재도 같은 호스트다. [기록](docs/exe/cpp-decompilation-20261103.md).1266 새 디컴파일/원문 변경0, 현행22a0877c3 기준 보호 원본/CD/fixture·AGENTS **2,808파일 불변**. 사용자 글꼴 지침 반영은5.3/5.4절. |
 
 <a id="02-진행-중인-1207--완료-처리-금지"></a><a id="agents-reflection-20261102"></a>
 
@@ -100,7 +102,7 @@ AGENTS.md 1~11차의 **구현 범위**를 기준으로 한다. 구현 마감과 
 
 세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1246 연결](docs/exe/cpp-arc-acid-regular-owner-20261110.md)·[1247 피해율 교정](docs/exe/cpp-type-damage-rate-correction-20261110.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
-**재개 후 첫 단위 — M6-n NoWorld Fort Snapshot/준비 후보 접합:** [동결 후보/부분 감사 인계](docs/exe/handoffs/cpp-pause-20261110/README.md)를 먼저 읽는다. 준비본은 제품 미적용·전체 링크/실행 미검증이다. 원문의 독립 Battle/Fort/manager0 부모, 현재 Player 기술+9c, 같은 장기 Deck/Template/파일/현재 Content TYPE를 유지한다. 이후 나머지 최초 후처리·큰 AI·배치/Fort Finish·전수 process/caller/owner를 계속한다.1264 최초4VT와1265 debugBurst는 마감 범위를 유지한다.
+**1266 완료 범위 — M6-n Fort Snapshot/준비 후보 접합:** [연결·검증 기록](docs/exe/cpp-native-fort-snapshot-20261110.md)과 [후보의 원문 장부](docs/exe/handoffs/cpp-pause-20261110/snapshot/HANDOFF.md)를 따른다. 독립 Battle/Fort/manager0 부모, Player 기술+9c, 같은 장기 Deck/Template/파일/현재 Content TYPE를 유지한다. Session 없는 직접 저장 등은 미검증이다. 다음은 남은 Fort 호출자와 나머지 최초 후처리·큰 AI·배치/Fort Finish·전수 process/caller/owner다.1264 최초4VT와1265 debugBurst는 마감 범위를 유지한다.
 
 **M6-m 구현 마감(1263):** 원문4d74c2의 준비-only→4b8be0→같은4b8b20/1bh 직접 본문과 현재 장기 주소/헤더/이름·실제 Source 생성-only를 연결했다. phase29/current7을 구별하고 기존 Descend next19/일반 입력 꼬리를 유지했다. MP/Join/Editor Test Battle 실행은0이다.
 
@@ -269,7 +271,7 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 | 범위 | 기준 자료 |
 | --- | --- |
 | 직접 소유 경계 감사 |1254 정적 대조만 완료·제품1253 유지. [감사](docs/exe/cpp-direct-runtime-owner-audit-20261110.md)·[보고서](cpppj/direct-runtime-owner-audit-20261110.json). 새 빌드/검사/GUI0이며 M6-l/m과 전수 마감은 미완료다. |
-| 현재 제품·Regular 잔여 | [1265 로그인debugBurst](docs/exe/cpp-login-debug-burst-20261110.md)·[보고서](cpppj/login-debug-burst-20261110.json), 원시 `extracted/cpp-resume-1265/`. [1264 최초후처리4VT](docs/exe/cpp-initial-postpop-owner-20261110.md)·[보고서](cpppj/initial-postpop-owner-20261110.json), 원시 `extracted/cpp-resume-1264/`. [1263 JoinTestBattle](docs/exe/cpp-native-join-test-battle-20261110.md)·[보고서](cpppj/native-join-test-battle-20261110.json), 원시 `extracted/cpp-resume-1263/`. [1262 전체표/연결 감사](docs/exe/cpp-native-registry-owner-audit-20261110.md)·[보고서](cpppj/native-registry-owner-audit-20261110.json). M6-n·큰 NoWorld 잔여는2.1절. Regular87/87 유지. |
+| 현재 제품·Regular 잔여 | [1266 Fort Snapshot](docs/exe/cpp-native-fort-snapshot-20261110.md), 원시 `extracted/cpp-resume-1266/`. [1265 로그인debugBurst](docs/exe/cpp-login-debug-burst-20261110.md)·[보고서](cpppj/login-debug-burst-20261110.json), [1264 최초후처리4VT](docs/exe/cpp-initial-postpop-owner-20261110.md), [1263 JoinTestBattle](docs/exe/cpp-native-join-test-battle-20261110.md), [1262 전체표/연결 감사](docs/exe/cpp-native-registry-owner-audit-20261110.md). M6-n·큰 NoWorld 잔여는2.1절. Regular87/87 유지. |
 | M6 전체 감사·최초 조사 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[Regular1217](docs/exe/cpp-no-world-regular-audit-20261109.md)·[Bomb1224](docs/exe/cpp-bomb-regular-audit-20261109.md)·[16VT/19TYPE 행렬](cpppj/bomb-regular-audit-20261109.json). 과거 “다음/없음”보다 현행2절을 우선한다. |
 | 비MP 마감 근거 | [UI929](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit943](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션956](docs/exe/cpp-mission-state-scope-20261106.md)·[수명980](docs/exe/cpp-internal-lifetime-closure-20261106.md). |
 | 디컴파일·소스 | [마지막 디컴파일](docs/exe/cpp-decompilation-20261103.md)·[신뢰도](docs/exe/decompile-reliability.md)·[SOURCE_MAP](cpppj/SOURCE_MAP.md)·[모듈](docs/exe/modules.md). |

@@ -6,6 +6,8 @@
 #include "client/RawEdgeScroll.h"
 #include "client/RawMinimapControls.h"
 #include "client/CampaignUserInputServices.h"
+#include "client/NativeFortSnapshot.h" // 현재 장기 저장소의 Fort/Battle 저장과 통지다.
+#include "client/NativeFortPreparation.h" // Session 없이 같은 현재 Fort 진입 자료를 준비한다.
 #include "client/NativeJoinTestBattle.h" //개발자2bh는 같은 현재 Fort 준비 뒤 기존1bh 직접 본문을 호출한다.
 #include "client/ClientCampaignTransport.h" // 같은 실제 World/장기 전역과 공유 전송 수명을 로그인 전에 연결한다.
 #include "client/RitualChoiceInput.h" //의식선택은실제일반명령에서6b요청만작성한다.
@@ -549,6 +551,10 @@ void UberGump::CleanupNativeStateWorld(std::uint32_t reason,std::shared_ptr<Meta
     if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaWorld && editor_->metaWorld->ConnectionCallbackActive()) || (editor_ && editor_->metaTransport && editor_->metaTransport->CallbackActive() && editor_->metaTransport!=handoff)) throw std::logic_error("패킷 콜백 실행 중 Native/LAN 정리 금지");CloseLanLobby(); //제어 연결이 빌린 Player 주소를 재할당하기 전에 현재 callback 대여부터 확인한다.
     ClientStateWorldDevices devices;devices.cancelInitialCursor=[this] { CancelClientCursorForState(client_,*client_.SurfaceStorage()); };
     devices.killGumps=[this] { KillGumpsForState(); };devices.cleanupGumps=[this] { CleanupGumpsForState(); };devices.replaceUber=[this] { ReplaceHudForState(); };devices.refreshSp=[this] { RefreshStormPower(); };
+    if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) {
+        devices.saveFort=[this](auto slot) { SnapshotNativeFortSlot(slot); };
+        devices.saveBattle=[this](auto slot) { SnapshotNativeBattle(client_,templateStorage_,*missionOptions_,*missionRestrictions_,FortMissionSaveEffects(),editorCatalog_->Files(),slot); };
+    }
     devices.retireRuntime=[this] { RetireWorldForState(); };devices.assertion=[](auto line) { throw std::logic_error("원문 State 중복 모드 진단:"+std::to_string(line)); };
     devices.leaveMetamap=[this] {
         NativeMetaDisplayHooks hooks;hooks.destroy=[this](auto sid,auto flags) {
@@ -644,11 +650,26 @@ void UberGump::ActivatePageAction(DialogAction action) {
     if (GameMenuScriptCode(action.command)!=0xffffffffU) { QueueScriptCommand(action.command+','+action.argument,client_.Input(),scriptStrings_,{GameMenuScriptCode,{}});return; } // 메인 Quit도 원문 버튼처럼 현재 일반 입력 큐에 예약하여 확인/종료음/반환을 같은 처리기에 맡긴다.
     state_.Post(std::move(action));
 }
-// Mission Init의 원문 이름 선택 위치에서 실제 두 버퍼/고정Template/Config/dirty를 사용한다.
+// 현재 manager 관문 또는 독립 Battle/Fort 선택으로 같은 장기 저장소를 저장한다.
+void UberGump::SnapshotNativeCurrentMap(bool onlyIfPresent) {
+    SnapshotNativeCurrent(client_,templateStorage_,*missionOptions_,*missionRestrictions_,FortMissionSaveEffects(),editorCatalog_->Files(),onlyIfPresent);
+}
+// 현재 Client의 지정 Fort 슬롯을 같은 Template과 사용자 작업 파일에 저장한다.
+void UberGump::SnapshotNativeFortSlot(std::uint32_t slot) {
+    SnapshotNativeFort(client_,templateStorage_,*missionOptions_,*missionRestrictions_,FortMissionSaveEffects(),editorCatalog_->Files(),slot);
+}
+// 현재 Client의 지정 슬롯만 통지하며 별도의 전체 저장은 실행하지 않는다.
+void UberGump::NotifyNativeFortSlot(std::uint32_t slot) {
+    NotifyNativeFortTemplate(client_,templateStorage_,*missionOptions_,*missionRestrictions_,FortMissionSaveEffects(),editorCatalog_->Files(),slot);
+}
+// Mission Init의 원문 이름 선택 위치에서 실제 두 버퍼와 고정 Template을 사용한다.
 void UberGump::SelectCurrentFortName(std::string_view name) {
     auto& names=*client_.FortGlobals();auto& gameplay=*client_.GameplayGlobals();o::FortCurrentNameHooks hooks; // 현재 게임 하위가 필요할 때만 같은 실제 Session에 연결한다.
     hooks.assertion=[](auto line) { std::clog<<"Fort 현재 이름 진단 "<<line<<'\n'; };hooks.refreshTitle=[this] { RefreshWindowTitle(); };
-    if (world_) hooks=world_->Session().BindFortCurrentName(std::move(hooks)); // 전체 Battle snapshot이나 미설치 저장은 해당 원문 선택 위치에서 거부한다.
+    if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) {
+        hooks.snapshot=[this] { SnapshotNativeCurrentMap(false); };hooks.notify=[this](auto slot) { NotifyNativeFortSlot(slot); };
+        hooks.state=[this](auto slot)->std::span<const std::uint8_t> { return GetNativeFortTemplateState(client_,templateStorage_,slot); };
+    } else if (world_) hooks=world_->Session().BindFortCurrentName(std::move(hooks)); // 전체 Battle snapshot이나 미설치 저장은 해당 원문 선택 위치에서 거부한다.
     o::FortCurrentNameGlobals globals{[&gameplay] { return gameplay.player.templateOwner; },[this] { return client_.SurfaceStorage()->ownerMode.fort ? 1U : 0U; },
         [&gameplay] { return gameplay.world.editor; },[this] { return mission_ ? 1U : 0U; },names.Catalog().dirty}; // 현재 owner/모드는 원문 각 callback 위치에서 재조회한다.
     const EditorFiles* work=editor_ && gameplay.world.editor ? &editor_->files : nullptr; //실제 Editor의 rename/snapshot/old 삭제는 같은 보호 작업본 장치만 사용한다.
@@ -679,9 +700,9 @@ FortSelectionHooks UberGump::FortEditEffects() {
         load.currentSlot=[this] { return client_.GameplayGlobals()->player.templateOwner; };load.refreshTitle=[this] { RefreshWindowTitle(); };
         templateStorage_->LoadFile(slot,{},path,editor_->paths->BindLoad(std::move(load))); //Request 부모는 raw State만 사용한다. 뒤 State1은 작업 파일을 다시 해석해 새 World를 설치한다.
     };
-    hooks.core=[this](auto slot) { if (!world_) throw std::logic_error("편집 복귀의 실제 State Session 없음");return world_->Session().MutableFortState(slot); };
+    hooks.core=[this](auto slot) { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) return GetNativeFortTemplateState(client_,templateStorage_,slot);if (!world_) throw std::logic_error("편집 복귀의 실제 State Session 없음");return world_->Session().MutableFortState(slot); };
     hooks.ownedIslands=[this](auto owner) { if (!world_) throw std::logic_error("편집 복귀의 실제 섬 목록 없음");return static_cast<std::int32_t>(world_->Session().OwnedIslandCount(owner)); };
-    hooks.notify=[this](auto slot) { if (!world_) throw std::logic_error("편집 복귀의 실제 Notify Session 없음");world_->Session().BindFortCurrentName({}).notify(slot); };
+    hooks.notify=[this](auto slot) { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) { NotifyNativeFortSlot(slot);return; }if (!world_) throw std::logic_error("편집 복귀의 실제 Notify Session 없음");world_->Session().BindFortCurrentName({}).notify(slot); };
     return hooks;
 }
 // 5차: 이전/다음 행의 인자(이동할 행 수)만큼 표시 창을 옮기고 같은 Tell 대화창을 목록 재열거 없이 다시 연다.
@@ -1163,8 +1184,8 @@ bool UberGump::GameMenuCommand(const InputEvent& event) {
         configured.palette=[this](auto name) { const std::string owned(name);client_.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(owned.c_str()),owned.size()+1}); }; //공유 설정 고리의 재진입과 별개인 NUL 수명이다.
         configured.thread=[this](auto priority) { client_.SetNativeThreadPriority(priority); };
         configured.config=[this](auto assignment) { ApplyScriptConfig(assignment,client_.Configuration()); };
-        configured.state=[this](auto slot) { if (!world_) throw std::logic_error("SetFortType의실제State Session 없음");return world_->Session().MutableFortState(slot); }; //같은 Client TemplateStorage의 새 현재 manager/State를 getter가 조회한다.
-        configured.notify=[this](auto slot) { if (!world_) throw std::logic_error("SetFortType의실제Notify Session 없음");world_->Session().BindFortCurrentName({}).notify(slot); }; //콜백마다 현재 Session을 읽고 같은 기존 Notify/파일 장치를 쓴다.
+        configured.state=[this](auto slot) { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) return GetNativeFortTemplateState(client_,templateStorage_,slot);if (!world_) throw std::logic_error("SetFortType의실제State Session 없음");return world_->Session().MutableFortState(slot); }; //같은 Client TemplateStorage의 새 현재 manager/State를 getter가 조회한다.
+        configured.notify=[this](auto slot) { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) { NotifyNativeFortSlot(slot);return; }if (!world_) throw std::logic_error("SetFortType의실제Notify Session 없음");world_->Session().BindFortCurrentName({}).notify(slot); }; //콜백마다 현재 Session을 읽고 같은 기존 Notify/파일 장치를 쓴다.
         configured.assertion=[](auto line) { std::clog<<"원문 SetFortType 입력 진단 "<<line<<'\n'; }; //원문 진단의 정상 복귀를 일반 모드 거부로 바꾸지 않는다.
         static_cast<void>(DispatchConfigurationCommandInput(event,{[&modes] { return modes.battle ? 1U : 0U; },[&modes] { return modes.challenge ? 1U : 0U; },[&game] { return game.world.editor; },[&game] { return game.player.templateOwner; },client_.ThreadPriorityValue()},configured));Refresh();return true;
     }
@@ -1419,7 +1440,7 @@ void UberGump::Event(InputEvent event) {
     }
     if (transitionCode==kDialogDoNothing) return; // 원본 명령 자체는 효과가 없으며 HTML 부모는 발화 시 이미 Kill되었다.
     if (transitionCode==kEditorTestBattleCommand) {
-        EditorTestBattleHooks hooks;hooks.snapshot=[this] { if (!world_) throw std::logic_error("Test Battle의 실제 Editor Session 없음");world_->Session().SaveCurrentMap(); };
+        EditorTestBattleHooks hooks;hooks.snapshot=[this] { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) { SnapshotNativeCurrentMap(true);return; }if (!world_) throw std::logic_error("Test Battle의 실제 Editor Session 없음");world_->Session().SaveCurrentMap(); };
         hooks.currentFortName=[this] { const auto bytes=client_.FortGlobals()->CurrentBytes();return std::string_view(reinterpret_cast<const char*>(bytes.data()),bytes.size()); }; //늦은 이름 복사는 같은 실제256BYTE의 NUL까지 읽는다.
         hooks.guide=MissionTransitionEffects();hooks.guide.create=[this,workspace=editorCatalog_](auto name) { CreateMission(std::string(name),0,0,[workspace](auto path) { return workspace->Read(path); }); }; //실제 편집 작업본의 동일 namespace를 Script/별칭 Fort/재로드까지 소유한다.
         hooks.pending=FortEditEffects().pending;hooks.requestEdit=[this] { RequestFortEditState(); };
@@ -1467,7 +1488,7 @@ void UberGump::Event(InputEvent event) {
         context.random=[this](auto limit) { return client_.RandomGlobals()->Game().Next(limit); };context.camera=[this](float x,float y) { world_->CenterCamera(x,y); };context.revision=[this] { ++client_.GameplayGlobals()->MapRevision(); };context.pulseRegistered=[this](auto id) { static_cast<void>(rawButtons_->PulseRegisteredIfIdle(id)); };
         rawButtons_->Menus()->ShowEditorIslandWindow(std::move(context));rebuild_=true;
     })) return; // release는 소비만 하고 press는 실제 공장/부착/모달 등록을 수행한다.
-    if (DispatchEditorSaveGoMain(event,client_.LocalStateGlobals()->State().next[0],[this] { if (!world_) throw std::logic_error("SaveGoMain의 현재 Session 없음");world_->Session().SaveCurrentMap(); })) return;
+    if (DispatchEditorSaveGoMain(event,client_.LocalStateGlobals()->State().next[0],[this] { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) { SnapshotNativeCurrentMap(true);return; }if (!world_) throw std::logic_error("SaveGoMain의 현재 Session 없음");world_->Session().SaveCurrentMap(); })) return;
     if (transitionCode==0x02000079U) {
         if (!(event.code&InputCode::kRelease)) OpenSaveFortNameDialog(std::bit_cast<std::uint32_t>(event.y));
         rebuild_=true;return; //실제 일반 입력의 fortMode 숫자와 고정 canCancel1을 같은 모달 부모에 전달한다.
@@ -1517,7 +1538,7 @@ void UberGump::Event(InputEvent event) {
     })) { rebuild_=true;return; } // 일반 객체 입력과 같은 뗌/대상0 처리이며 확인WORD를 버리지 않는다.
     if (transitionCode==client_.LocalStateGlobals()->JoinTestBattleCommand()) {
         if (event.code&InputCode::kRelease) return;
-        { const auto current=world_;if (!current) throw std::logic_error("JoinTestBattle 준비의 실제 현재 Fort Session 없음");static_cast<void>(current->Session().PrepareFortDescend(event.y)); } //전체 signed y로 저장을 먼저 마치며 실제 준비 owner는 Join/State 정리 전에 반납한다.
+        { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) static_cast<void>(PrepareNativeFortDescend(client_,*templateStorage_,*rawButtons_,event.y,[this](auto slot) { SnapshotNativeFortSlot(slot); }));else { const auto current=world_;if (!current) throw std::logic_error("JoinTestBattle 준비의 실제 현재 Fort Session 없음");static_cast<void>(current->Session().PrepareFortDescend(event.y)); } } //전체 signed y로 저장을 먼저 마치며 실제 준비 owner는 Join/State 정리 전에 반납한다.
         JoinNativeTestBattle(client_,[this] { const auto current=CurrentNativeBattleSource();if (current.network.tcp) return current;const auto source=EnsureMetaConnectionSource();return NativeBattleSource{source->SharedNetwork(),source,source}; }); //원래1bh run이 선택된 시점에만 기존 TCP Source 또는 실제 생성 장치를 확보한다.
         recentCommandHandled=true; //이름 거부도 선행 저장을 되돌리지 않고 같은 일반 입력 꼬리로 진행한다.
     }
