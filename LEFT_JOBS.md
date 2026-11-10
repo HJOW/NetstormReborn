@@ -50,6 +50,8 @@
 
 **1267 NoWorld 자산 후처리 7VT 연결:** 보호막(00507770)·Generator(00501ea0)·장식 Gun(0050b570)·Arc(0050e668)·Acid(0050e738)를 같은 장기 확보 메모리/Host/공통 장부에 연결하고, 메타/일반 Sprite(0050c9f0/0050cc08)를 PE의 공통 +20/+7c/+80/+84 근거로 공통 Pop 허용에 추가했다. [근거](docs/exe/cpp-asset-postpop-noworld-20261111.md)·[보고서](cpppj/asset-postpop-noworld-20261111.json). Release·집중 641건(새7 통과, 기존 실패2)·pop_context 기준선과 실패 25건 동일·Tutorial4 생산/건설/600프레임을 확인했다. **남은 최초 후처리: Crab2·Teleport(flags1)·Rune·Altar·Dais·Aviary3·Flyer3·Gun5·Blocker3·Player·Priest·Residence(flags1)·Temple4**(Session 소유 장치 이전 필요), 큰 NoWorld/M6-n 미완료, MP 실행0이다.
 
+**1284 S4 읽기 전용 설치·실제 사용자 홈 확인 완료(코드 변경 없음):** 새 배포 ZIP(1430항목, 전수 SHA-256 일치)을 풀고 설치 폴더에 쓰기 거부 ACL을 건 상태에서, 환경 변수 없이 실제 `%USERPROFILE%\Saved Games\Netstorm`을 쓰게 하여 메인→Edit(첫 Edit 원본 433맵 복사)→TEST01→Scenario 편집/Save→Test Battle 진입·대기를 통과했다(종료 코드0, 로그 없음, 설치 폴더 1430파일/242,052,004바이트 불변, 홈에 Cache·CustomMaps\D 434파일·Editor·Saves 생성, 편집한 `myStartMoney="6666"` 기록). 시험 산물인 홈 폴더(원래 없었음)는 삭제하고 ACL을 풀었다. 첫 시도는 교정 전 ZIP의 exe로 Test Battle 오류가 났고(오류 로그는 홈에 정확히 기록) 새 ZIP으로 통과 — 코드 수정마다 ZIP 재생성 필요. [근거](docs/exe/cpp-scenario-s4-readonly-home-20261111.md)·[보고서](cpppj/scenario-s4-readonly-home-20261111.json). 한계: ACL로 모의한 읽기 전용이며 실제 Program Files/UAC는 사용자 확인. **S1~S4 전부 완료.**
+
 **1283 S3 시나리오 편집 UI 실제 왕복 확인(코드 변경 없음):** 실제 Editor에서 `Edit`→`Scenario...` 패널의 모든 페이지(Player start/General/Briefing/AI common/Player 1/AI 2~8/File/Save/Discard)가 표시되고, `myStartMoney`를 입력창으로 7777로 바꿔 저장하면 사용자 작업 폴더 `TEST01.english`의 그 줄만 바뀌며(나머지 바이트 보존) Test Battle HUD SP가 7777로 시작함을 확인했다. AI 2 이름을 한글로 바꿔 저장하면 UTF-8로 기록된다. 종료 코드0·로그 없음·게임 폴더 불변. [근거](docs/exe/cpp-scenario-s3-ui-20261111.md)·[보고서](cpppj/scenario-s3-ui-20261111.json). 한계: 모든 필드를 일일이 편집하지 않았고(모델 시험 20건이 필드 검증), 매우 큰 시작 자본은 HUD가 다르게 표시. **S4 미완료.**
 
 **1282 S2 완료·Test Battle 종료 결함 교정:** 새 맵 저장 때 기본 `.english`(208바이트)가 사용자 작업 폴더에 자동 생성되고, english가 없는 기존 맵의 Test Battle도 같은 기본 대본을 만들어 정상 진행·`Return to Editing` 복귀하며, 기존 수동 대본은 그대로 쓰임을 실제 실행으로 확인했다. **실행 중 발견한 결함:** english 유무와 무관하게 Editor→Test Battle이 State 8에서 `복합 전송이 소유하지 않은 현재 수신 노드`로 항상 종료(Test Battle 첫 실제 실행)했다 — Editor의 server 끝이 pending -1에 남은 채 새 전투 composite가 Poll하면서 소유 backend가 없어 던졌다. `CompositeMissionTransport::ReceiveOne`이 등록표가 인정한 다른 전송의 노드는 건너뛰도록(원문은 각 노드가 스스로 수신) 교정하고 오류 메시지에 등록표 토큰 목록을 추가했다. Test Battle 진입·300프레임 대기·복귀·Tutorial4 회귀 통과. [근거](docs/exe/cpp-scenario-s2-test-battle-20261111.md)·[보고서](cpppj/scenario-s2-test-battle-20261111.json). **한계:** composite 직접 단위 시험 없음(실행으로만 확인). **S3·S4 미완료.**
@@ -71,7 +73,7 @@
 | **1. LAN·Outpost** | **M6 → M7 → M8** (3개) | M6의 큰 NoWorld·전수 호출자/수명 감사, M7 독립 5건, M8 최종 감사·배포. [2절](#2-바로-이어갈-m6)·[3절](#3-m7-독립-5건과-m8-마감). |
 | **2. 한국어** | ~~K1~~ **완료(1270)** → K2 → K3 → K4 → K5 (4개) | 후보 병합 완료. 실제 IME/입력·본문 검수·그림·검수가 남는다. **M6-n·M7.2~M7.4·M8 뒤**에 진행한다(사용자 2026-11-11). [4.1절](#41-한국어-k1k5). |
 | **3. 오류/예외·로그** | ~~E1 → E2 → E3~~ **완료(1269)** | 공통 `ErrorLog`·홈 logs 파일·최상위/비정상 종료 경계 구현과 실제 8종 시험. 한계는 [근거](docs/exe/cpp-error-log-20261111.md). [4.2절](#42-오류예외와-상세-로그-e1e3). |
-| **4. 시나리오 편집** | ~~S1~~ **완료(1277)** → ~~S2~~ **완료(1282)** → ~~S3~~ **완료(1283)** → S4 (1개) | 모델 병합·Edit 메뉴 패널 열기/닫기 완료, 필드 편집 왕복·기본 english·저장/진입 검증은 남음. 모델·기본 english/부재 Test Battle 수정·UI·저장/진입 검증. [4.3절](#43-시나리오-편집-s1s4). |
+| **4. 시나리오 편집** | ~~S1~~ **완료(1277)** → ~~S2~~ **완료(1282)** → ~~S3~~ **완료(1283)** → ~~S4~~ **완료(1284)** (시나리오 편집 묶음 전체 완료) | 모델 병합·Edit 메뉴 패널 열기/닫기 완료, 필드 편집 왕복·기본 english·저장/진입 검증은 남음. 모델·기본 english/부재 Test Battle 수정·UI·저장/진입 검증. [4.3절](#43-시나리오-편집-s1s4). |
 | **5. 알려진 버그** | **B1 → B2/B3 → B4** (4개) | NB01~NB34는 등록만 완료. 원인·현행 적용 여부 조사와 수정/건별 마감. [4.4절](#44-알려진-버그-b1b4). |
 | **6. 기타 언어** | **L1 → L2 → L3** (3개) | 사용자 새11차. 일본어 등 언어/자산 목록·표시/입력·번역과 배포 검수. [4.5절](#45-기타-언어-지원-l1l3). |
 | **합계** | **22개 상위 계획** | 여러 구현·검증 단위를 포함한다. 완료율이나 예상 소요일로 환산하지 않는다. |
@@ -220,7 +222,7 @@ AGENTS 사용자 커밋 `8136df49e`/`b5117f524`의 요구를 `8661e1060`에서7�
 | ~~S1~~ | **완료(1277):** 986 시나리오 모델 5파일·코드를 현행 편집기에 병합/등록하고 Edit 메뉴 `Scenario...`로 실제 패널 열기/ESC 닫기를 확인했다. [근거](docs/exe/cpp-scenario-s1-merge-20261111.md). |
 | ~~S2~~ | **완료(1282):** 새 맵 기본 `.english` 자동 생성·english 부재 Test Battle 정상 진행·기존 수동 대본 보존을 실제 실행으로 확인했고, 이 과정에서 Test Battle 자체가 항상 종료하던 composite 전송 결함을 교정했다. [근거](docs/exe/cpp-scenario-s2-test-battle-20261111.md) |
 | ~~S3~~ | **완료(1283):** 편집 모드 전용 패널의 페이지 표시·필드 편집·저장·Test Battle 반영을 실제 화면으로 확인했다(초기 자본/AI 이름 등). [근거](docs/exe/cpp-scenario-s3-ui-20261111.md) |
-| S4 | 실제 사용자 홈·읽기 전용 설치에서 저장/불러오기·Editor/Test Battle 진입을 확인한다. 진입/대기/기본 조작으로 마치며 승리/포획/희생은 재현하지 않는다. |
+| ~~S4~~ | **완료(1284):** 쓰기 거부 ACL의 읽기 전용 설치와 실제 사용자 홈에서 Edit/Scenario 저장/Test Battle 진입을 확인했다. [근거](docs/exe/cpp-scenario-s4-readonly-home-20261111.md) |
 
 **986 준비본(현행 미적용 후보):** [안내](docs/exe/handoffs/cpp-pause-20261106/README.md)·[MANIFEST](docs/exe/handoffs/cpp-pause-20261106/MANIFEST.json)·[한국어 계획](docs/exe/handoffs/cpp-pause-20261106/korean/FINAL_PLAN.md)·[시나리오 계획](docs/exe/handoffs/cpp-pause-20261106/scenario/PLAN.md). 총 237파일 중 한국어/시나리오 후보는 **제품 미적용·미컴파일·미실행**이다. 한국어 final.patch에는 44자산이 없고 새 검사 24개는 초안이다. 시나리오는 24파일(변경23)/기준18/통합9·모델10검사 초안, 모델 5파일은 scenario/base에 있다. shadow 패치 개행 일치를 컴파일 통과로 세지 않는다. **원격 Fort 준비분만은 987에서 별도 구현 완료**했으므로 미적용으로 되돌리지 않는다.
 

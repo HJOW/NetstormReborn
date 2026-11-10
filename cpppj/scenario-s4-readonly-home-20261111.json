@@ -1,0 +1,12 @@
+{
+  "unit": "1284 S4 read-only install + real home",
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "sourceChanged": false,
+  "install": {"files": 1430, "bytes": 242052004, "sameAsZip": true, "writeDenied": true},
+  "home": ["Cache/!color.dat", "CustomMaps/D (434 files)", "Editor/catalog-v1.dat", "Editor/catalog.lock", "Saves/options.cfg"],
+  "edit": "TEST01 myStartMoney=6666 saved in home CustomMaps/D/TEST01.english",
+  "run": {"exitCode": 0, "logFile": false, "testBattle": "entered"},
+  "cleanup": "test home folder removed (did not exist before), ACL deny removed",
+  "limits": ["ACL deny simulates read-only; real Program Files/UAC not exercised"]
+}
