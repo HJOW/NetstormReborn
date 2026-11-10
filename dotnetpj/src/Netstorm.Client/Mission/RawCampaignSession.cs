@@ -41,6 +41,12 @@ public sealed class RawCampaignSession
     /// <summary>원본 자산 Battle 상태다. 설치 때만 참이 되며 현재는 거짓이다. 2026-11-10 F3 소유자 본체에서 추가됐다.</summary>
     private bool _inBattle;
 
+    /// <summary>원본 첫 목록(outposts)의 현재 항목이다. Fort 적재 본체가 채우기 전에는 비어 있다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
+    private readonly RawPostPopList _outposts = new();
+
+    /// <summary>원본 두 번째 목록(temples)의 현재 항목이다. Fort 적재 본체가 채우기 전에는 비어 있다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
+    private readonly RawPostPopList _temples = new();
+
     /// <summary>로컬 연결의 현재 단계다. 사전 구현에서는 항상 0(미접속)이다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
     private uint _localPhase = 0u;
 
@@ -134,6 +140,12 @@ public sealed class RawCampaignSession
         get => _inBattle;
         set => _inBattle = value;
     }
+
+    /// <summary>원본 첫 목록(outposts)의 현재 항목이다. Fort 적재 본체가 채우며 게임 메뉴가 같은 참조를 읽는다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
+    internal RawPostPopList Outposts => _outposts;
+
+    /// <summary>원본 두 번째 목록(temples)의 현재 항목이다. Fort 적재 본체가 채우며 게임 메뉴가 같은 참조를 읽는다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
+    internal RawPostPopList Temples => _temples;
 
     /// <summary>실제 부모 설치를 한 번 실행한다. 껍데기에서는 Fort 적재 미연결로 멈춘다. 2026-11-10 F3 세션 껍데기 이식에서 추가됐다.</summary>
     public void Load()
@@ -272,19 +284,18 @@ public sealed class RawCampaignSession
         throw new InvalidOperationException("실제 무작위 배치 미연결");
     }
 
-    /// <summary>원본 첫 목록(outposts) 또는 두 번째 목록(temples)의 현재 개수다. 껍데기에서는 목록 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 게임메뉴 재장전 Stub 이식에서 추가됐다.</summary>
+    /// <summary>원본 첫 목록(outposts) 또는 두 번째 목록(temples)의 현재 개수다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 게임메뉴 재장전 Stub 이식에서 추가됐고 2026-11-10 F3 재장전 본체에서 본체를 이었다.</summary>
     /// <param name="second">참이면 두 번째 목록(temples), 거짓이면 첫 목록(outposts)이다.</param>
     /// <returns>목록 개수다.</returns>
     public int GameMenuReloadCount(bool second)
     {
-        _ = second;
         if (!_loaded)
         {
             throw new InvalidOperationException("캠페인 세션의 미적재 재장전 조회입니다.");
         }
 
-        // 원본 게임메뉴 재장전 목록의 실제 outposts·temples 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 재장전 목록 미연결");
+        // 원본처럼 목록 count DWORD를 signed로 읽는다. Fort 적재 본체가 채우기 전에는 0이다.
+        return unchecked((int)(second ? _temples : _outposts).Count);
     }
 
     /// <summary>같은 실제 Deck의 생산 동기화만 같은 실제 후반 HUD 설치에 허용한다. 껍데기에서는 Deck 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 생산 동기화 Stub 이식에서 추가됐다.</summary>
@@ -337,21 +348,22 @@ public sealed class RawCampaignSession
         throw new InvalidOperationException("실제 메타메뉴 별칭 미연결");
     }
 
-    /// <summary>원본 첫 목록 또는 두 번째 목록의 현재 저장소 뷰에서 지정 번호를 읽는다. 껍데기에서는 목록 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 게임메뉴 재장전 Stub 이식에서 추가됐다.</summary>
+    /// <summary>원본 첫 목록 또는 두 번째 목록의 현재 저장소 뷰에서 지정 번호를 읽는다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 게임메뉴 재장전 Stub 이식에서 추가됐고 2026-11-10 F3 재장전 본체에서 본체를 이었다.</summary>
     /// <param name="second">참이면 두 번째 목록(temples), 거짓이면 첫 목록(outposts)이다.</param>
     /// <param name="index">읽을 번호다.</param>
     /// <returns>해당 번호의 SID다.</returns>
     public uint GameMenuReloadSid(bool second, uint index)
     {
-        _ = second;
-        _ = index;
         if (!_loaded)
         {
             throw new InvalidOperationException("캠페인 세션의 미적재 재장전 조회입니다.");
         }
 
-        // 원본 게임메뉴 재장전 항목의 실제 목록 뷰 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 재장전 항목 미연결");
+        // 원본처럼 목록 뷰의 번호가 범위를 넘으면 거부한다.
+        ReadOnlySpan<uint> items = (second ? _temples : _outposts).Items();
+        if (index >= (uint)items.Length)
+            throw new ArgumentOutOfRangeException(nameof(index), index, "재장전 목록 번호 범위 오류");
+        return items[(int)index];
     }
 
     /// <summary>로그인·기술·AI가 공유하는 현재 원본 로컬 Player 번호다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐고 2026-11-10 F3 소유자 본체에서 본체를 이었다.</summary>

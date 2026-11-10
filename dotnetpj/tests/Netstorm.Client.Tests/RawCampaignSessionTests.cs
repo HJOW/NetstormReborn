@@ -347,15 +347,28 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미적재", Assert.Throws<InvalidOperationException>(() => session.GameMenuReloadSid(false, 0u)).Message);
     }
 
-    /// <summary>적재 뒤 재장전 조회를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 게임메뉴 재장전 Stub 이식에서 추가됐다.</summary>
+    /// <summary>적재 뒤 재장전 조회가 세션 목록을 읽는지 검증한다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
     [Fact]
-    public void ReloadQueriesRejectWhenUnconnected()
+    public void ReloadQueriesReadSessionLists()
     {
-        // 실제 outposts·temples 목록 본체는 Fort 본체 단위에서 잇는다(결정 6).
+        // Fort 적재 본체가 채우기 전의 두 목록은 비어 있다.
         var session = LoadableSession();
         session.LoadSeeds(LoadableSeeds());
-        Assert.Contains("미연결", Assert.Throws<InvalidOperationException>(() => session.GameMenuReloadCount(true)).Message);
-        Assert.Contains("미연결", Assert.Throws<InvalidOperationException>(() => session.GameMenuReloadSid(true, 0u)).Message);
+        Assert.Equal(0, session.GameMenuReloadCount(false));
+        Assert.Equal(0, session.GameMenuReloadCount(true));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.GameMenuReloadSid(false, 0u));
+        // Fort 적재 본체의 채움이 조회에 그대로 보인다.
+        session.Outposts.Entries = [11u, 23u];
+        session.Outposts.Count = 2u;
+        session.Temples.Entries = [37u];
+        session.Temples.Count = 1u;
+        Assert.Equal(2, session.GameMenuReloadCount(false));
+        Assert.Equal(1, session.GameMenuReloadCount(true));
+        Assert.Equal(11u, session.GameMenuReloadSid(false, 0u));
+        Assert.Equal(23u, session.GameMenuReloadSid(false, 1u));
+        Assert.Equal(37u, session.GameMenuReloadSid(true, 0u));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.GameMenuReloadSid(false, 2u));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.GameMenuReloadSid(true, 1u));
     }
 
     /// <summary>미적재 생산 동기화를 적재 관문에서 거부하는지 검증한다. 2026-11-10 F3 세션 생산 동기화 Stub 이식에서 추가됐다.</summary>
