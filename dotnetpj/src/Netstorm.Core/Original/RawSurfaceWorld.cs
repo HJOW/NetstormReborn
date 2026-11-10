@@ -36,6 +36,9 @@ public sealed class RawSurfaceWorld
     /// <summary>붕괴 처리가 읽는 원본 실행 상태 전역이다. 원본 Impl.mode에 대응하며 초기값은 싱글 플레이(로컬이 서버) 전투 화면이다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
     private BridgeDecayMode _mode = BridgeDecayMode.SinglePlayer;
 
+    /// <summary>다리 사건 처리기가 읽는 원본 전역이다. 원본 Impl.eventState에 대응하며 다리 타입은 생성 때 저장소 링크에서 가져온다. 2026-11-10 F2d 월드 본체 조립 사건 이식에서 추가됐다.</summary>
+    private readonly BridgeEventState _eventState = new();
+
     /// <summary>런타임 경계를 설치했는지다. 원본 Impl.runtimeBound에 대응한다. 첫 객체 생성 전 한 번만 연결하며 BeginLoad·FinishLoad·BindRuntime 단위에서 갱신한다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
     private bool _runtimeBound = false;
 
@@ -336,6 +339,22 @@ public sealed class RawSurfaceWorld
                 };
                 _lifecycle = new RawSurfaceLifecycle(_storage.Pool, _neighbors, _storage.Links.ConnectorType, common, surfaceHooks);
                 _formDispatch.SetAssets(_lifecycle.Hooks(), (sid, flags, hooks) => virtualDestroy.Destroy(sid, flags, hooks));
+                // 다리 사건 처리기는 같은 풀·이웃·표면 알림·생성·삭제·소유자·Pop으로 독립 관찰 계약을 유지한다. 원본 Impl 독립 typed 경로의 사건 생성을 직역한다. 2026-11-10 F2d 월드 본체 조립 사건 이식에서 추가됐다.
+                _eventState.BridgeType = _storage.Links.BridgeType;
+                RawSquidNeighbors eventNeighbors = _neighbors;
+                RawBuildingSpace eventBuilding = _building!;
+                RawSquidFactory eventFactory = factory;
+                var eventHooks = new BridgeEventHooks
+                {
+                    Frames = type => eventNeighbors.Frames((int)type),
+                    FirstNeighbor = sid => eventNeighbors.First(sid),
+                    NotifySurface = sid => eventBuilding.NotifySurface(sid),
+                    Create = type => eventFactory.Create(type),
+                    Destroy = (sid, flags) => { _ = Destroy(sid, flags); },
+                    SetOwner = (sid, owner) => SetAssetOwner(sid, owner),
+                    Pop = (sid, x, y, flags) => Pop(sid, x, y, flags),
+                };
+                _events = new RawBridgeEvents(_storage.Pool, _eventState, eventHooks);
             }
         }
 
@@ -430,7 +449,7 @@ public sealed class RawSurfaceWorld
     /// <returns>월드와 같은 수명의 실제 월드 자료 보기다.</returns>
     public RawWorldCore Core()
     {
-        // 원본 RawSurfaceWorld::Core의 참조 순서대로 확인한다. 수명·사건·감시 쌍은 월드 본체 조립 단위에서 잇는다.
+        // 원본 RawSurfaceWorld::Core의 참조 순서대로 확인한다. 감시 쌍은 월드 본체 조립 단위에서 잇는다.
         if (_factory is null)
         {
             throw new InvalidOperationException("실제 공장 생성이 연결되지 않았습니다.");
@@ -615,6 +634,18 @@ public sealed class RawSurfaceWorld
     /// <summary>현재 붕괴 처리 실행 상태 전역을 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
     /// <returns>현재 실행 상태 전역이다.</returns>
     public BridgeDecayMode DecayMode() => _mode;
+
+    /// <summary>다리 사건 처리기가 읽는 다리 타입 번호를 돌려준다. 사건 미연결 월드는 거부한다. 원본에 없는 C# 조회이며 검사 연결용이다. 2026-11-10 F2d 월드 본체 조립 사건 이식에서 추가됐다.</summary>
+    /// <returns>사건 전역의 다리 타입 번호다.</returns>
+    public uint BridgeEventBridgeType()
+    {
+        if (_events is null)
+        {
+            throw new InvalidOperationException("실제 다리 사건 처리기가 연결되지 않았습니다.");
+        }
+
+        return _eventState.BridgeType;
+    }
 
     /// <summary>빈·죽음·무효·포함 상태를 동시에 거르는 마스크다. 2026-11-07 F2d 월드 본체 Objects 이식에서 추가됐다.</summary>
     private const byte InactiveMask = 15;

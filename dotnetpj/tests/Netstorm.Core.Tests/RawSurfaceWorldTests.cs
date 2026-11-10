@@ -1762,16 +1762,16 @@ public sealed class RawSurfaceWorldTests
         Assert.Contains("프레임", error.Message);
     }
 
-    /// <summary>전체 월드의 Core 조회가 사건 미연결로 멈추는지 검증한다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐고 2026-11-10 월드 본체 조립 수명 이식에서 수명 연결 뒤 사건 잔여로 갱신했다.</summary>
+    /// <summary>전체 월드의 Core 조회가 감시 쌍 미연결로 멈추는지 검증한다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐고 2026-11-10 월드 본체 조립 수명·사건 이식에서 수명·사건 연결 뒤 감시 쌍 잔여로 갱신했다.</summary>
     [Fact]
     public void CoreOnFullWorldRequiresLifecycle()
     {
-        // 수명 분배기까지 연결된 전체 월드에서는 다음 잔여인 다리 사건에서 멈춘다.
+        // 수명·사건까지 연결된 전체 월드에서는 다음 잔여인 감시 쌍에서 멈춘다.
         var types = Types188();
         var frames = Frames188();
         var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullStorage(types, frames), frames);
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => world.Core());
-        Assert.Contains("사건", error.Message);
+        Assert.Contains("감시", error.Message);
     }
 
     /// <summary>연결부 타입이 범위를 벗어나면 수명 분배기 생성을 거부하는지 검증한다. 2026-11-10 F2d 월드 본체 조립 수명 이식에서 추가됐다.</summary>
@@ -1784,6 +1784,27 @@ public sealed class RawSurfaceWorldTests
         var storage = FullStorage(types, frames);
         storage.Links.ConnectorType = 0u;
         Assert.Throws<ArgumentOutOfRangeException>(() => new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, storage, frames));
+    }
+
+    /// <summary>사건 전역의 다리 타입이 저장소 링크와 같은지 검증한다. 2026-11-10 F2d 월드 본체 조립 사건 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BridgeEventBridgeTypeMatchesLinks()
+    {
+        // 원본 Impl 독립 경로의 사건 전역 다리 타입 대입을 검증한다.
+        var types = Types188();
+        var frames = Frames188();
+        var storage = FullStorage(types, frames);
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, storage, frames);
+        Assert.Equal(storage.Links.BridgeType, world.BridgeEventBridgeType());
+    }
+
+    /// <summary>사건 미연결 월드의 다리 타입 조회를 거부하는지 검증한다. 2026-11-10 F2d 월드 본체 조립 사건 이식에서 추가됐다.</summary>
+    [Fact]
+    public void BridgeEventBridgeTypeRejectsMissingEvents()
+    {
+        // 껍데기 월드는 이웃·사건이 없어 같은 지점에서 멈춘다.
+        var world = new RawSurfaceWorld(OriginalEdition.Patch1078, Types188(), 97u);
+        Assert.Throws<InvalidOperationException>(() => world.BridgeEventBridgeType());
     }
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
