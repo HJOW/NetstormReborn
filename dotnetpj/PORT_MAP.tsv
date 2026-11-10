@@ -653,3 +653,5 @@ cpppj/src/o/PacketRegistrationTable.h	Netstorm.Net/PacketRegistrations.cs	899c93
 cpppj/src/o/RawPacketLengths.h	Netstorm.Net/PacketRegistrations.cs	e2dd58a8d12f2dbf62ceecc164e97fdbe413f8cd	port
 cpppj/src/o/RawConnectionRegistration.cpp	Netstorm.Net/ConnectionRegistration.cs	0c50d6684e5cc2e2b2e910c9230102602b601a5d	port
 cpppj/src/o/RawConnectionRegistration.h	Netstorm.Net/ConnectionRegistration.cs	0c50d6684e5cc2e2b2e910c9230102602b601a5d	port
+cpppj/src/o/RawConnectionCleanup.cpp	Netstorm.Net/ConnectionCleanup.cs	b76bb541e8865b219223ec65b2917fe97558e083	port
+cpppj/src/o/RawConnectionCleanup.h	Netstorm.Net/ConnectionCleanup.cs	b76bb541e8865b219223ec65b2917fe97558e083	port
