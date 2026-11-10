@@ -84,6 +84,41 @@ public sealed class PlayerParticipationHooks
     public Action<uint>? FreeBrain { get; set; }
 }
 
+// 동맹 요청 입력(fb·fa·7e·db)의 스팸 계수·시각 상태다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.
+public sealed class AllianceRequestState
+{
+    /// <summary>소유자별 누적 요청 횟수 9칸이다. 세션 수명 동안 초기화하지 않는다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    public uint[] Counters { get; } = new uint[9];
+
+    /// <summary>소유자별 sampled·start 시각 9쌍이다. 첫 요청에 9회 clock 저장 뒤 1로 센다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    public uint[,] Clocks { get; } = new uint[9, 2];
+
+    /// <summary>초기 BSS 0이며 첫 fb 입력에 1이 된다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    public uint Initialized { get; set; }
+
+    /// <summary>묶음·풀림 경계의 signed 초 단위다. 초기값 60이다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    public int WindowSeconds { get; set; } = 60;
+
+    /// <summary>안내 한도의 signed 횟수다. 초기값 3이다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    public int Limit { get; set; } = 3;
+}
+
+// 동맹 요청 입력이 쓰는 Client 쪽 clock·소유자·송신·Tell 효과다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.
+public sealed class AllianceRequestInputHooks
+{
+    /// <summary>CRT clock 32비트다. 경과·묶음 시각을 잰다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    public Func<uint>? Clock { get; set; }
+
+    /// <summary>540c70 현재 소유자다. 송신 packet 4번에 둔다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    public Func<uint>? LocalOwner { get; set; }
+
+    /// <summary>실제 9바이트 송신이다. ACK·응답을 기다리지 않는다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    public Action<byte[]>? Send { get; set; }
+
+    /// <summary>스팸 안내 문자열이다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    public Action<string>? Tell { get; set; }
+}
+
 // 동맹 협상 수신(요청·파기)의 외부 효과 묶음이다. 무승부 마감 시각은 후속 단위에서 잇는다. 2026-11-11 F3 동맹 협상 수신 본체에서 추가됐다.
 public sealed class AllianceNegotiationHooks
 {
@@ -496,6 +531,102 @@ public sealed class RawPlayerParticipation
         }
 
         Require(hooks.Status)(8u, first, second);
+    }
+
+    /// <summary>
+    /// fb·fa·7e·db 입력을 처리하고 실제 송신·안내 효과를 부른다. fb가 아니면 거짓을 돌려준다.
+    /// 근거: cpppj `o/RawPlayerParticipation.cpp`의 `HandleAllianceRequestInput`. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.
+    /// </summary>
+    /// <param name="event">받은 입력 사건 번호다. 상위 modifier·high bit를 먼저 가린다.</param>
+    /// <param name="target">자를 상대 번호다. fb 안내 한도 검사용이다.</param>
+    /// <param name="state">스팸 계수·시각 상태다. 호출자가 소유한다.</param>
+    /// <param name="players">이름을 읽는 9×0xb4 Player 바이트다.</param>
+    /// <param name="hooks">묶은 입력 효과다. 도달한 분기마다 필수로 요구한다.</param>
+    /// <exception cref="ArgumentNullException">상태·효과가 비었다.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">안내 이름 NUL·범위 오류다.</exception>
+    /// <exception cref="InvalidOperationException">도달한 실제 외부 효과 미연결이다.</exception>
+    public static bool HandleAllianceRequestInput(uint @event, int target, AllianceRequestState state, ReadOnlySpan<byte> players, AllianceRequestInputHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(state);
+        ArgumentNullException.ThrowIfNull(hooks);
+        uint command = @event & 0x03ffffffu;
+        if (command != 0x020000fbu && command != 0x020000fau && command != 0x0200007eu && command != 0x020000dbu)
+        {
+            return false;
+        }
+
+        if ((@event & 0x80000000u) != 0u)
+        {
+            return true;
+        }
+
+        byte message = command == 0x020000fau ? (byte)0x79u : command == 0x0200007eu ? (byte)0x78u : command == 0x020000dbu ? (byte)0x6fu : (byte)0x77u;
+        if (command == 0x020000fbu)
+        {
+            if (state.Initialized == 0u)
+            {
+                // 첫 start는 9회 clock 저장 뒤 1로 세며 sampled는 손대지 않는다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.
+                for (uint slot = 0u; slot < Count; ++slot)
+                {
+                    state.Clocks[slot, 1] = Require(hooks.Clock)();
+                    state.Counters[slot] = 0u;
+                }
+
+                state.Initialized = 1u;
+            }
+            else
+            {
+                // 4a68b0처럼 clock을 sample하고 경과 signed초/1000으로 묶음을 가린다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.
+                for (uint slot = 0u; slot < Count; ++slot)
+                {
+                    state.Clocks[slot, 0] = Require(hooks.Clock)();
+                    int elapsed = unchecked((int)(state.Clocks[slot, 0] - state.Clocks[slot, 1])) / 1000;
+                    if (elapsed >= state.WindowSeconds)
+                    {
+                        state.Clocks[slot, 1] = Require(hooks.Clock)();
+                        state.Counters[slot] = 0u;
+                    }
+                }
+            }
+
+            int limit = state.Limit;
+            if (target < 1 || target > 8)
+            {
+                return true;
+            }
+
+            uint owner = unchecked((uint)target);
+            uint count = state.Counters[owner] + 1u;
+            state.Counters[owner] = count;
+            if (unchecked((int)count) > limit)
+            {
+                int offset = (int)owner * Stride + NameOffset;
+                if (offset < 0 || offset > players.Length - NameWidth)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(players), "동맹 요청 안내의 실제 Player 이름 범위 오류");
+                }
+
+                // 원본처럼 32바이트에서 첫 NUL까지 읽는다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.
+                int length = 0;
+                while (length < NameWidth && players[offset + length] != 0)
+                {
+                    ++length;
+                }
+
+                if (length == NameWidth)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(players), "동맹 요청 안내의 실제 이름 NUL 누락");
+                }
+
+                string text = "AllianceSpam(" + limit + "," + AllianceTellColor(owner) + "," + Encoding.Latin1.GetString(players.Slice(offset, length)) + ")";
+                Require(hooks.Tell)(text);
+                return true;
+            }
+        }
+
+        byte[] packet = [1, message, 6, 0, (byte)Require(hooks.LocalOwner)(), command == 0x020000dbu ? (byte)1 : unchecked((byte)target)];
+        Require(hooks.Send)(packet);
+        return true;
     }
 
     /// <summary>

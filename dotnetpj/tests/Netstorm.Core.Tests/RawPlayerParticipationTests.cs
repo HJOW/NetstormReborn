@@ -556,6 +556,88 @@ public sealed class RawPlayerParticipationTests
         Assert.Throws<ArgumentOutOfRangeException>(() => runtime.ReceiveDraw(new byte[2], ref deadline, hooks));
     }
 
+    /// <summary>fb·fa·7e·db가 아닌 입력은 무시하는지 검증한다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    [Fact]
+    public void HandleAllianceRequestInputIgnoresOtherEvents()
+    {
+        // 네 명령이 아니면 어떤 효과도 부르지 않고 거짓을 돌려준다.
+        var state = new AllianceRequestState();
+        var hooks = new AllianceRequestInputHooks();
+        Assert.False(RawPlayerParticipation.HandleAllianceRequestInput(0x02000000u, 2, state, ReadOnlySpan<byte>.Empty, hooks));
+        Assert.Equal(0u, state.Initialized);
+    }
+
+    /// <summary>high bit는 바로 받고 modifier는 벗겨 동작하는지 검증한다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    [Fact]
+    public void HandleAllianceRequestInputReleasesModifierAndHighBit()
+    {
+        // high bit는 효과를 부르기 전에 참을 돌려준다.
+        var state = new AllianceRequestState();
+        var hooks = new AllianceRequestInputHooks();
+        Assert.True(RawPlayerParticipation.HandleAllianceRequestInput(0x820000fbu, 2, state, ReadOnlySpan<byte>.Empty, hooks));
+        Assert.Equal(0u, state.Initialized);
+        // modifier가 붙어도 fb 명령으로 동작하며 첫 start에 9회 clock을 저장한다.
+        var state2 = new AllianceRequestState();
+        int clocks = 0;
+        var hooks2 = new AllianceRequestInputHooks { Clock = () => { ++clocks; return 5000u; } };
+        Assert.True(RawPlayerParticipation.HandleAllianceRequestInput(0x7e0000fbu, 0, state2, ReadOnlySpan<byte>.Empty, hooks2));
+        Assert.Equal(1u, state2.Initialized);
+        Assert.Equal(9, clocks);
+    }
+
+    /// <summary>fb 한도 초과가 스팸 안내를 띄우는지 검증한다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    [Fact]
+    public void HandleAllianceRequestInputSpamWarnsOverLimit()
+    {
+        // 한도 1에서 두 번째 fb는 송신 없이 AllianceSpam Tell만 한다.
+        string trace = "";
+        var state = new AllianceRequestState { Limit = 1, WindowSeconds = 3600 };
+        var hooks = new AllianceRequestInputHooks
+        {
+            Clock = () => 5000u,
+            LocalOwner = () => 1u,
+            Send = packet => trace += "S," + Convert.ToHexString(packet).ToLowerInvariant() + ";",
+            Tell = text => trace += "T," + text,
+        };
+        byte[] players = new byte[1620];
+        players[372] = (byte)'A';
+        players[373] = (byte)'B';
+        Assert.True(RawPlayerParticipation.HandleAllianceRequestInput(0x020000fbu, 2, state, players, hooks));
+        Assert.Equal("S,017706000102;", trace);
+        Assert.True(RawPlayerParticipation.HandleAllianceRequestInput(0x020000fbu, 2, state, players, hooks));
+        Assert.Equal("S,017706000102;T,AllianceSpam(1,~r,AB)", trace);
+    }
+
+    /// <summary>db 입력이 무승부 선언 packet을 만드는지 검증한다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    [Fact]
+    public void HandleAllianceRequestInputBuildsDrawPacket()
+    {
+        // db는 목표와 무관하게 끝자리 1의 0x6f packet을 송신한다.
+        string trace = "";
+        var state = new AllianceRequestState();
+        var hooks = new AllianceRequestInputHooks
+        {
+            Clock = () => 5000u,
+            LocalOwner = () => 4u,
+            Send = packet => trace += "S," + Convert.ToHexString(packet).ToLowerInvariant(),
+        };
+        Assert.True(RawPlayerParticipation.HandleAllianceRequestInput(0x020000dbu, 5, state, ReadOnlySpan<byte>.Empty, hooks));
+        Assert.Equal("S,016f06000401", trace);
+    }
+
+    /// <summary>NUL 없는 안내 이름을 거부하는지 검증한다. 2026-11-11 F3 동맹 요청 입력 처리 본체에서 추가됐다.</summary>
+    [Fact]
+    public void HandleAllianceRequestInputRejectsNameWithoutNul()
+    {
+        // 한도 0에서 첫 fb부터 이름 경로로 가며 NUL 없으면 멈춘다.
+        var state = new AllianceRequestState { Limit = 0 };
+        var hooks = new AllianceRequestInputHooks { Clock = () => 5000u };
+        byte[] players = new byte[1620];
+        Array.Fill(players, (byte)'X', 552, 32);
+        Assert.Throws<ArgumentOutOfRangeException>(() => RawPlayerParticipation.HandleAllianceRequestInput(0x020000fbu, 3, state, players, hooks));
+        Assert.Equal(1u, state.Initialized);
+    }
+
     /// <summary>무승부 수락이 flag·상태·방장 방송·마감 시각을 잇는지 검증한다. 2026-11-11 F3 무승부 마감 수신 본체에서 추가됐다.</summary>
     [Fact]
     public void ReceiveDrawAcceptSetsFlagAndDeadline()
