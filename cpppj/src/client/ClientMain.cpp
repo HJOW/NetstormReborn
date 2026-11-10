@@ -1177,6 +1177,10 @@ bool Client::PostProcessAvailable() {
 }
 // 7차: 설정 antiAliasing/fsr1과 표시 해상도가 요구하는 후처리를 Screen에 적용한다. 둘 다 필요 없으면 GDI 출력으로 되돌린다.
 void Client::ApplyPresentationOptions() {
+    { // 후순위 F1: 옵션에서 바꾼 maxFPS를 즉시 프레임 상한에 반영한다(없거나 범위 밖이면 현재 값을 유지한다).
+        std::int32_t rate=maxFps_;
+        if (configuration_.ReadInt("maxFPS",rate) && rate>=1 && rate<=1000) { maxFps_=rate;frameInterval_=FrameIntervalSeconds(maxFps_); }
+    }
     if (!screen_) return;
     const bool fsrResolution = IsFsrScreenResolution(presentWidth_, presentHeight_); // FSR 해상도는 FSR이 자동으로 켜진다.
     const bool antiAliasing = configuration_.GetInt("antiAliasing") != 0;

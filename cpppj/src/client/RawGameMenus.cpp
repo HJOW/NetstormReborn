@@ -130,6 +130,11 @@ std::uint32_t RawGameMenus::Options() const {
         for (const auto& language:hooks_.compatibilityLanguages) Check(language.checked ? 1U : 0U,language.label,0x542988,language.number); // 항목 이름은 번역하지 않고 각 언어 자신의 표기를 쓴다.
         label=Text("Language");child=Need(hooks_.take)();Need(hooks_.submenu)(label,child,1,0);
     }
+    if (!hooks_.compatibilityFrameRates.empty()) { // 후순위 F1: Frame Rate 하위 메뉴이며 선택은 Tell 구간 대신 UberGump가 maxFPS 설정에 쓰고 즉시 반영한다.
+        Need(hooks_.vertical)();
+        for (const auto& rate:hooks_.compatibilityFrameRates) Check(rate.checked ? 1U : 0U,rate.label,0x542948,std::string("Patch1101.SetFrameRate(")+std::to_string(rate.number)+')'); // 현재 상한에 체크한다.
+        label=Text("Frame Rate");child=Need(hooks_.take)();Need(hooks_.submenu)(label,child,1,0);
+    }
     if (!hooks_.compatibilityDifficulty.empty()) { // 11차 난이도: 원본에 없는 Difficulty 하위 메뉴이며 항목은 번역하고, 선택은 Tell 구간 Patch1101.SetDifficulty(값)이 difficulty 설정을 쓴다.
         Need(hooks_.vertical)();
         for (const auto& level:hooks_.compatibilityDifficulty) Check(level.checked ? 1U : 0U,Text(level.label),0x542948,std::string("Patch1101.SetDifficulty(")+std::to_string(level.number)+')'); // 현재 난이도에 체크한다.

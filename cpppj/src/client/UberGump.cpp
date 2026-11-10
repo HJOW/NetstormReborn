@@ -70,6 +70,7 @@
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "o/AiDifficulty.h" //11차: 옵션 메뉴 Difficulty 하위 메뉴의 단계 값이다.
 #include "client/SkirmishSetup.h" //12차: Campaign 스커미시 설정 화면과 시작 대본이다.
+#include "client/FrameRateOption.h" // 후순위 F1: 옵션 메뉴 Frame Rate 선택지와 Tell 대상 해석이다.
 #include <cctype> // 12차: 스커미시 가상 파일 경로 비교.
 #include <random> // 12차: 스커미시 맵 선택 난수.
 #include "client/LanguageOptions.h" //6차: 옵션 메뉴 Language 하위 메뉴가 한국어 번호(kKoreanLanguageNumber)를 쓴다.
@@ -300,6 +301,14 @@ bool IsSkirmishFortFile(std::string_view path) {
     const auto slash=path.find_last_of("\\/");
     const auto name=path.substr(slash==std::string_view::npos ? 0 : slash+1);
     return o::AsciiLower(name)=="skirmish.fort";
+}
+// 후순위 F1: 옵션 메뉴 Frame Rate 하위 메뉴 항목이다. 설정 maxFPS가 없거나 범위 밖이면 원본 기본(75)에 체크한다.
+std::vector<GameMenuLanguage> FrameRateMenuChoices(std::int32_t configured) {
+    std::vector<GameMenuLanguage> choices;
+    const auto current=NormalizeFrameRate(configured);
+    // 선택지마다 항목을 만든다(원본 기본 75에는 Original 표시를 붙인다).
+    for (const auto rate:kFrameRateChoices) choices.push_back({std::to_string(rate)+" FPS"+(rate==kOriginalFrameRate ? " (Original)" : ""),static_cast<std::uint32_t>(rate),rate==current});
+    return choices;
 }
 // 11차: 옵션 메뉴 Difficulty 하위 메뉴 항목이다. label은 번역 키이고 설정값이 없거나 범위 밖이면 보통(기본값)에 체크한다.
 std::vector<GameMenuLanguage> DifficultyMenuChoices(std::int32_t current) {
@@ -783,6 +792,7 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
         else { state_.phase=ClientPhase::MainMenu;pageName_="main";page_={};input_.Cancel();RefreshWindowTitle(); }
         client_.Pause(false);RebuildControls();return true;
     }
+    if (const auto rate=ParseFrameRateTarget(target)) { client_.Configuration().SetInt("maxFPS",*rate);client_.ApplyPresentationOptions();return true; } // 후순위 F1: 프레임 상한을 저장하고 바로 반영한다.
     if (const auto skirmish=ParseSkirmishTarget(target);skirmish.kind==SkirmishScreen::Set || skirmish.kind==SkirmishScreen::Start) { // 12차 스커미시: 설정 변경과 시작은 창 본문 없이 먼저 처리한다.
         auto settings=CurrentSkirmishSettings();
         if (skirmish.kind==SkirmishScreen::Set) { const auto next=ApplySkirmishAction(settings,skirmish.args);StoreSkirmishSettings(settings);return TryTell(next,briefing,windowCreated,suppress); } // 변경 뒤 알맞은 화면을 다시 연다.
@@ -1181,6 +1191,7 @@ GameMenusHooks UberGump::CurrentGameMenuHooks() {
     hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른 Windows10/11 호환 화면비 추가이며 기본 원문 세 해상도는 유지한다.
     hooks.compatibilityLanguages=LanguageMenuChoices(client_.LanguageNumber()); // 6차: 옵션 메뉴 Language 하위 메뉴(영어/한국어)다.
     hooks.compatibilityDifficulty=DifficultyMenuChoices(client_.Configuration().GetInt(std::string(o::kDifficultyConfigKey))); // 11차: 옵션 메뉴 Difficulty 하위 메뉴(쉬움/보통/어려움)다.
+    hooks.compatibilityFrameRates=FrameRateMenuChoices(client_.Configuration().GetInt("maxFPS")); // 후순위 F1: 옵션 메뉴 Frame Rate 하위 메뉴(60/75/120)다.
     ConnectPostProcessMenu(hooks); // 7차: 후처리 장치가 있으면 FSR 해상도와 Anti-Aliasing/FSR 토글을 추가한다.
     return hooks;
 }
@@ -1220,6 +1231,7 @@ void UberGump::OpenGameMenu(bool playerList) {
         hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른Windows10/11 DIB 호환 화면비만 명시 추가하며 기본 원문 검사는 빈 목록을 유지한다.
         hooks.compatibilityLanguages=LanguageMenuChoices(client_.LanguageNumber()); // 6차: 게임 중 옵션 메뉴에도 같은 Language 하위 메뉴를 둔다.
         hooks.compatibilityDifficulty=DifficultyMenuChoices(client_.Configuration().GetInt(std::string(o::kDifficultyConfigKey))); // 11차: 게임 중 옵션 메뉴에도 같은 Difficulty 하위 메뉴를 둔다(다음 AI 생성부터 적용).
+        hooks.compatibilityFrameRates=FrameRateMenuChoices(client_.Configuration().GetInt("maxFPS")); // 후순위 F1: 게임 중 옵션 메뉴에도 같은 Frame Rate 하위 메뉴를 둔다.
         ConnectPostProcessMenu(hooks); // 7차: 게임 중 옵션 메뉴에도 같은 후처리 항목을 둔다.
         RawGameMenus children(std::move(hooks));
         if (playerList) return children.Players(true); // 원본004d8a56은 명령 인자와 무관하게 fancy=1을 넘기며 현재 루트 중앙에 직접 부착한다.

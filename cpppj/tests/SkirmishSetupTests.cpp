@@ -1,6 +1,7 @@
 // 12차 스커미시: 설정 저장, Tell 대상 해석, 화면 본문, 시작 대본/맵 선택, Campaign 목록 항목을 게임 실행 없이 검사한다.
 #include "TestSupport.h"
 #include "client/ProductPresentation.h"
+#include "client/FrameRateOption.h"
 #include "client/SkirmishSetup.h"
 #include <map>
 
@@ -118,6 +119,13 @@ TEST_CASE(Skirmish_ScreenBodies) {
     CHECK(Has(BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.SkirmishBans(2)"), settings, 0, translate), "Outpost!") && Has(BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.SkirmishBans(2)"), settings, 0, translate), "$Menu=Previous page,"));
     settings.bans = {"windBattery", "rainBattery", "thunderBattery", "sunArcher", "windArcher"};
     CHECK(Has(BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.SkirmishBans(0)"), settings, 0, translate), "Five units are banned"));
+}
+
+// 후순위 F1: Frame Rate 옵션은 60/75/120만 받고 설정이 없으면 원본 기본 75로 본다.
+TEST_CASE(FrameRateOption_ParseAndNormalize) {
+    CHECK(ParseFrameRateTarget("Patch1101.SetFrameRate(120)") == 120 && ParseFrameRateTarget("patch1101.setframerate(60)") == 60 && ParseFrameRateTarget("Patch1101.SetFrameRate(75)") == 75);
+    CHECK(!ParseFrameRateTarget("Patch1101.SetFrameRate(90)") && !ParseFrameRateTarget("Patch1101.SetFrameRate(abc)") && !ParseFrameRateTarget("Patch1101.SetFrameRate(") && !ParseFrameRateTarget("Patch1101.Skirmish"));
+    CHECK(NormalizeFrameRate(0) == 75 && NormalizeFrameRate(-3) == 75 && NormalizeFrameRate(5000) == 75 && NormalizeFrameRate(120) == 120 && NormalizeFrameRate(60) == 60);
 }
 
 // Campaign 목록(UCampaign)에는 Skirmish 항목이 Back 버튼 앞에 한 번만 들어가고 다른 대상은 건드리지 않는다.

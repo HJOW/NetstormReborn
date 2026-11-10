@@ -36,6 +36,7 @@ struct GameMenusHooks {
     std::function<void(std::string_view,std::uint32_t,std::uint32_t,std::uint32_t)> submenu; //label/token/enabled/checked다.
     std::function<const GumpCreateNode*(std::uint32_t)> node; // fancy배치의현재기본폭/높이를읽는다.
     std::function<void(std::int32_t,std::int32_t,std::uint32_t)> attachCurrent; // 실제가운데좌표/현재루트로controlled메뉴를부착한다.
+    std::vector<GameMenuLanguage> compatibilityFrameRates; // 후순위 F1: 원본에 없는 Frame Rate 하위 메뉴 항목(number는 프레임 상한, label은 숫자 표기)이다. 비어 있으면 하위 메뉴를 만들지 않는다.
     std::vector<GameMenuLanguage> compatibilityDifficulty; // 11차: 원본에 없는 Difficulty 하위 메뉴 항목(label은 영어 키, number는 설정값 1쉬움/2보통/3어려움)이다. 비어 있으면 하위 메뉴를 만들지 않는다.
     std::vector<GameMenuLanguage> compatibilityLanguages; // 6차: 원본에 없는 Language 하위 메뉴 항목이다. 비어 있으면 하위 메뉴를 만들지 않아 원문 메뉴 구성/조회 순서를 그대로 둔다.
     std::span<const std::array<std::uint32_t,2>> fsrResolutions; // 7차: FSR 1.0으로 만드는 표시 해상도(2560x1440, 3840x2160)이며 후처리 장치가 있을 때만 채운다. 비면 원문 구성 그대로다.

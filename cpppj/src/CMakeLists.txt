@@ -505,6 +505,8 @@ target_sources(netstorm PRIVATE o/RawAuxiliaryDraw.cpp o/RawAuxiliaryDraw.h)
 target_sources(netstorm PRIVATE client/ProductPresentation.cpp client/ProductPresentation.h client/ProductVersion.h)
 # 12차 스커미시: 설정 화면/시작 대본 로직을 둔다.
 target_sources(netstorm PRIVATE client/SkirmishSetup.cpp client/SkirmishSetup.h client/SkirmishMapList.inc)
+# 후순위 F1: 옵션 메뉴 Frame Rate(60/75/120) 선택지와 Tell 대상 해석을 둔다.
+target_sources(netstorm PRIVATE client/FrameRateOption.cpp client/FrameRateOption.h)
 
 #현재 Fort Subscriber 변경의 원문 관문·현재값 재조회 몸체다(713).
 target_sources(netstorm PRIVATE o/RawFortSubscriberChange.cpp o/RawFortSubscriberChange.h)
