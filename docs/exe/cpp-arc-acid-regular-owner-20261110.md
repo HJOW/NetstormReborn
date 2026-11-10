@@ -1,5 +1,7 @@
 # 아크/애시드 정기의 현재 장기 소유자 연결 — 제품1246
 
+> **피해율 정정1247:** 아래 `hpPerSecond` 연결 및 그 검사 충분성은 오류였다. 원문 `hpPerSec`·양판본 실제 양수 값을 복구한 [1247 교정](cpp-type-damage-rate-correction-20261110.md)을 따른다.1246 최초267 통과 기록은 그 오류를 검출하지 못한 당시 결과로 보존한다.
+
 제품1245 뒤 `ArcSpire 0050e668/0048c6e0`, `AcidFence 0050e738/0048ea30`의 전체 정기·검색을 장기 연결했다. [확정 보고서](../../cpppj/arc-acid-regular-owner-20261110.json)·원시 `extracted/cpp-resume-1246/`가 근거다. 전체 목표/M6/NoWorld는 진행 중이다.
 
 ## 현재 같은 본문과 전역
