@@ -422,3 +422,25 @@ test('PriestRegen: 네 추적 조건은 지역 fixture 사본을 건드리지 �
         assert.ok(scene.state.patch.sample <= 8);
     }
 });
+
+// 원본 가상 진입은 현재 TYPE BYTE 가 158 인지 검사하지 않고 가상 표만 본다(cpppj 기준선 뒤 PriestRegen, WB04-E260 재반영). TYPE 이 다른 사제 가상 표 슬롯도 회복 분기를 계속한다.
+test('PriestRegen: 사제 가상 표이면 TYPE BYTE 가 158 이 아니어도 가상 표 오류 없이 회복 분기를 실행한다', { skip: !rows && '원본 fixture 없음' }, () => {
+    const scene = new RegenScene();
+    scene.prepare(rows[0]);
+    const baseline = scene.regen.handle(SOURCE, PRIEST_REGEN_EVENT, Number(rows[0][13]), bitsToFloat(Number(rows[0][14])));
+    assert.equal(typeof baseline, 'number');
+    scene.prepare(rows[0]);
+    scene.pool.allocated(SOURCE)[10] = 74;
+    let failure = null;
+    try {
+        scene.regen.handle(SOURCE, PRIEST_REGEN_EVENT, Number(rows[0][13]), bitsToFloat(Number(rows[0][14])));
+    } catch (error) {
+        failure = error;
+    }
+    // 이후 하위 몸체(사제 HP 변경 등)의 자체 TYPE 검사로 멈출 수는 있으나 회복 자신의 가상 표 오류로 거부해서는 안 된다.
+    assert.ok(!(failure instanceof TypeError && /사제 회복/.test(failure.message)), String(failure));
+    // 가상 표가 사제가 아니면 여전히 회복 자신이 거부한다.
+    scene.prepare(rows[0]);
+    put(scene.pool.allocated(SOURCE), 0, COMMON_VTABLE);
+    assert.throws(() => scene.regen.handle(SOURCE, PRIEST_REGEN_EVENT, 0, 1), /사제 회복 가상 표 오류/);
+});

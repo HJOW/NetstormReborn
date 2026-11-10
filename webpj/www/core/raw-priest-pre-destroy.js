@@ -5,6 +5,7 @@
 
 import { PRIEST_TYPE, PRIEST_VTABLE } from './raw-priest-owner.js';
 import { SQUID_DESTROY_EFFECT } from './squid-destroy.js';
+import { removeStateSidList } from './raw-state-sid-lists.js';
 
 // 슬롯의 상태/extra 위치, 무효 상태 비트(free+contained), 접두를 건너뛰는 extra 비트이다. (2026-11-08 WB04-E63)
 const STATE_OFFSET = 11;
@@ -50,13 +51,9 @@ export class RawPriestPreDestroy {
         if (ordinary) list.items();
         this.#hooks.validateCarrier(sid, flags);
         if (ordinary) {
-            let removed = 0;
             // 모든 일치 항목을 지우고 남은 활성 DWORD 만 압축한다. 비활성 꼬리는 원본처럼 지우지 않는다.
-            for (let index = 0; index < list.count; index += 1) {
-                if (list.entries[index] === sid) removed += 1;
-                else list.entries[index - removed] = list.entries[index];
-            }
-            list.count -= removed;
+            //  PATCH 0040ea00 의 signed count 반복을 쓴다(음수 count 는 읽기/쓰기 없이 지나감, 물리 범위 밖은 그 칸에서 오류). (2026-11-10 WB04-E260: cpppj RemoveStateSidList 공유 재반영)
+            removeStateSidList(list, sid);
             const forcefield = this.#hooks.findForcefield(sid);
             // 원본은 SID 1~4 도 주소 범위 안으로 인정한다. 타입/free/dead 를 여기서 추가로 검사하지 않는다.
             if (forcefield >= 1 && forcefield < this.#pool.capacity) this.#hooks.destroyForcefield(forcefield, 0);

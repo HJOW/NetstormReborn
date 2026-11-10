@@ -148,3 +148,17 @@ test('VortexPreDestroy: 필수 Damageable 이 없으면 앞선 실제 효과를 
     wide.outposts.entries = [30000, 61];
     assert.ok(throws(() => wide.body.preDestroy(50, 0)));
 });
+
+// 원문 outpost 반복은 index 와 count 를 signed 로 비교한다: count 의 상위 비트가 서 있으면(음수) 한 번도 반복하지 않아 풀 밖 항목에도 도달하지 않는다(WB04-E260, cpppj 기준선 뒤 VortexPreDestroy 재반영).
+test('VortexPreDestroy: 음수로 읽히는 outpost count 는 반복하지 않고 양수 count 의 풀 밖 항목만 거부한다', () => {
+    const negative = new VortexScene(196, 0);
+    negative.outposts.entries = [30000, 61];
+    negative.outposts.count = 0x80000001;
+    negative.body.preDestroy(50, 0);
+    // count 는 읽기만 하므로 그대로 남는다.
+    assert.equal(negative.outposts.count, 0x80000001);
+    const positive = new VortexScene(196, 0);
+    positive.outposts.entries = [30000, 61];
+    positive.outposts.count = 2;
+    assert.ok(throws(() => positive.body.preDestroy(50, 0)));
+});

@@ -96,7 +96,8 @@ export class RawVortexPreDestroy {
             raw = pool.slot(sid);
             need(hooks.regionOwnership)(float(raw, X_AT), float(raw, Y_AT));
             // outpost 목록 count 와 부모/후보 owner 를 효과 이후 현재 값으로 검사한다.
-            for (let index = 0; index < this.#outposts.readCount(); index += 1) {
+            //  원문 반복은 index 와 count 를 signed 로 비교한다(count 의 상위 비트가 서 있으면 반복하지 않는다). (2026-11-10 WB04-E260: cpppj 기준선 뒤 VortexPreDestroy 재반영)
+            for (let index = 0; (index | 0) < (this.#outposts.readCount() | 0); index += 1) {
                 const value = this.#outposts.storage()[index];
                 if (value >= pool.capacity || value > 65535) throw new RangeError('신전 삭제의 outpost SID 범위 오류');
                 if (pool.slot(value)[OWNER] === pool.slot(sid)[OWNER]) {

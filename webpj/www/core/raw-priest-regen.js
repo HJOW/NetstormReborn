@@ -137,7 +137,8 @@ export class RawPriestRegen {
         void count;
         if (event !== PRIEST_REGEN_EVENT) throw new RangeError('미복원 사제 이벤트');
         const raw = this.#pool.slot(sid);
-        if (raw[TYPE_OFFSET] !== PRIEST_TYPE || vtableOf(raw) !== PRIEST_VTABLE) throw new TypeError('사제 회복 타입/가상 표 오류');
+        // 원본 가상 진입은 현재 TYPE BYTE 가 158 인지 별도 검사하지 않고 가상 표만 본다. (2026-11-10 WB04-E260: cpppj 기준선 뒤 PriestRegen 재반영)
+        if (vtableOf(raw) !== PRIEST_VTABLE) throw new TypeError('사제 회복 가상 표 오류');
         const hooks = this.#hooks;
         const patch = this.#state.patch;
         const reads = hooks.spReads;
