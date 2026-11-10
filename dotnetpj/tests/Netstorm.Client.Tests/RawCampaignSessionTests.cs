@@ -229,4 +229,23 @@ public sealed class RawCampaignSessionTests
         var session = LoadableSession();
         Assert.Equal(session.World().Report(), session.Report());
     }
+
+    /// <summary>새 세션의 섬 개수가 0인지 검증한다. 2026-11-10 F3 세션 섬 개수 조회 이식에서 추가됐다.</summary>
+    [Fact]
+    public void IslandCountStartsAtZero()
+    {
+        // 현재 IslandList의 count DWORD 직접 읽기를 검증한다.
+        var session = LoadableSession();
+        Assert.Equal(0u, session.IslandCount());
+    }
+
+    /// <summary>씨앗 적재 뒤에도 섬 개수가 그대로인지 검증한다. 2026-11-10 F3 세션 섬 개수 조회 이식에서 추가됐다.</summary>
+    [Fact]
+    public void IslandCountUnchangedBySeeds()
+    {
+        // 표면 씨앗 적재는 섬 목록을 바꾸지 않는다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        Assert.Equal(0u, session.IslandCount());
+    }
 }

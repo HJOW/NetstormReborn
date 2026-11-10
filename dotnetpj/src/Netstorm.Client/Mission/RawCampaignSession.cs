@@ -190,6 +190,14 @@ public sealed class RawCampaignSession
     /// <returns>원본 CLI 관측과 같은 여러 줄 보고서다.</returns>
     public string Report() => _world.Report();
 
+    /// <summary>현재 섬 목록의 개수를 읽는다. 설치 중 Add Island 관문도 같은 3204바이트 목록의 count DWORD를 직접 읽는다. 2026-11-10 F3 세션 섬 개수 조회 이식에서 추가됐다.</summary>
+    /// <returns>섬 개수다.</returns>
+    public uint IslandCount()
+    {
+        // 원본 세션 섬 개수 조회가 현재 IslandList의 count DWORD를 직접 읽는 모양을 직역한다.
+        return BitConverter.ToUInt32(_storage.Islands.Records, 0);
+    }
+
     /// <summary>로컬 패킷을 보낸다. 사전 구현에서는 전송기가 없어 명시 오류로 멈춘다. 3차 로컬 구현 때 루프백 전송과 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
     /// <param name="target">받을 소유자 번호다.</param>
     /// <param name="packet">보낼 패킷이다.</param>
