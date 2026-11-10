@@ -1,0 +1,828 @@
+{
+  "unit": 1258,
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "acceptedImplementationStage": true,
+  "nativeConstructionRows": 8,
+  "fullM6lComplete": false,
+  "fullM6Complete": false,
+  "fullGoalComplete": false,
+  "sourceSha256": {
+    "cpppj/src/client/NativeConstructionPacketReceivers.h": "0259957e3de8c533f0cce758b5a76469f29be87b8336d1929f29d41c71e64d99",
+    "cpppj/src/client/NativeConstructionPacketReceivers.cpp": "9bee9cd2e62faf3b9ad8ff63581e52f8ed643e2951660e38cc0b6ffd12700cd5",
+    "cpppj/src/client/RawCampaignSession.h": "25dcfbf806431ea8016bc14dbc41aa63978eb7e15fc53082099d1115ec83e2bc",
+    "cpppj/src/client/RawCampaignSession.cpp": "b5cfeab0b35a9ec06851f59cc838d7ac9bc064f12364b708abf46c0e4fa9f9a0",
+    "cpppj/src/client/ClientCampaignTransport.cpp": "1dee33b8e440c29aec58e3f8092fd907f1dcbe91c5410604e6a3c6c7cc9381b3"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 14466560,
+      "sha256": "383bc0ae734878db8cf58412090aaf4661387707b7e434d5981614e2c7c58050"
+    },
+    "R.exe": {
+      "bytes": 681472,
+      "sha256": "d1e72e7a011499c9637a5bbf07383a9275d1628590b1276bb6190eb52969ac42"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true",
+      "/bl:H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1258\\build.binlog"
+    ],
+    "exitCode": 0,
+    "seconds": 339.14391040802,
+    "sourcesUnchanged": true,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 300,
+    "passed": 300,
+    "failed": [],
+    "seconds": 39.903424978256226
+  },
+  "staticAudit": {
+    "compiledButNotExecutedPlayerRegularCases": [
+      "PlayerRegular_PatchNativeStateAndActualHost",
+      "PlayerRegular_CdNativeStateAndActualHost",
+      "PlayerRegular_SameWorldInitialFiveAndSixtySecondChain"
+    ],
+    "regularVtables": 87,
+    "connectedRegularVtables": 87,
+    "remainingRegularVtables": 0,
+    "remainingRows": [],
+    "knownAssetPrePost": 83,
+    "knownAssetNotices": 83,
+    "unit": 1258,
+    "baselineCommit": "bbcd59296",
+    "newNativeRows": [
+      {
+        "type": "54",
+        "receivers": [
+          "FUN_004436f0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ]
+      },
+      {
+        "type": "51",
+        "receivers": [
+          "FUN_004dc050"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ]
+      },
+      {
+        "type": "2f",
+        "receivers": [
+          "FUN_004332c0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ]
+      },
+      {
+        "type": "6c",
+        "receivers": [
+          "FUN_004d56f0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ]
+      }
+    ],
+    "peLengths": [
+      {
+        "type": "54",
+        "length": 8
+      },
+      {
+        "type": "51",
+        "length": 8
+      },
+      {
+        "type": "2f",
+        "length": 15
+      },
+      {
+        "type": "6c",
+        "length": 11
+      }
+    ],
+    "knownNativeConstructionRows": 8,
+    "allNativeConstructionCommandsNowBindFixedF": true,
+    "typedAndNativeMovedBodiesIdenticalAndSingleCopy": true,
+    "movedMoneyUtf8Bytes": 2108,
+    "movedRejectUtf8Bytes": 318,
+    "originalAlgorithmFilesUnchanged": [
+      "cpppj/src/o/RawConstructionFailurePackets.cpp",
+      "cpppj/src/o/RawSalvageCommand.cpp",
+      "cpppj/src/o/RawVortexDeparture.cpp"
+    ],
+    "originalRegistrationOrderPreserved": true,
+    "noOldSessionWorldLeaseOrEnqueuePinCaptured": true,
+    "selectedActualRuntimePinAtDelivery": true,
+    "fullNoWorldComplete": false,
+    "fullM6lComplete": false,
+    "fullM6Complete": false,
+    "fullGoalComplete": false,
+    "newMpUnitPacketNetworkGameRecordExecutions": 0,
+    "next": "RegisterCarrierCommands와 다른 실제 Native scope의 전역F/등록·NoWorld 수명, M6-m/n",
+    "remainingEditorGameplayScopePreparation": {
+      "preparationOnly": true,
+      "editorScopeRows": 50,
+      "constructionFamilyRows": 8,
+      "remainingScopeRows": 42,
+      "rows": [
+        {
+          "type": "2c",
+          "receivers": [
+            "FUN_00433c30"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "2d",
+          "receivers": [
+            "FUN_004327b0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "2e",
+          "receivers": [
+            "FUN_00433170"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "30",
+          "receivers": [
+            "FUN_00489ee0"
+          ],
+          "observers": [
+            "FUN_0040a660"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "31",
+          "receivers": [
+            "FUN_0044dba0"
+          ],
+          "observers": [
+            "FUN_0040a6b0"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "32",
+          "receivers": [
+            "FUN_0044dc20"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "33",
+          "receivers": [
+            "FUN_004a71c0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "34",
+          "receivers": [
+            "FUN_004333f0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "35",
+          "receivers": [
+            "FUN_0046e940"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "38",
+          "receivers": [
+            "FUN_0045e410"
+          ],
+          "observers": [
+            "0"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "39",
+          "receivers": [
+            "FUN_0045e2b0"
+          ],
+          "observers": [
+            "0"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "3a",
+          "receivers": [
+            "FUN_0046a0c0"
+          ],
+          "observers": [
+            "0"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "3b",
+          "receivers": [
+            "FUN_00466d30"
+          ],
+          "observers": [
+            "0"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "3c",
+          "receivers": [
+            "FUN_00466b60"
+          ],
+          "observers": [
+            "0"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "40",
+          "receivers": [
+            "FUN_00428570"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "4a",
+          "receivers": [
+            "FUN_00432710"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "4b",
+          "receivers": [
+            "FUN_004326e0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "4f",
+          "receivers": [
+            "FUN_00426520"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "50",
+          "receivers": [
+            "FUN_00444bc0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "53",
+          "receivers": [
+            "FUN_004436b0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "5b",
+          "receivers": [
+            "FUN_004266c0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "5c",
+          "receivers": [
+            "FUN_0041e860"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "5f",
+          "receivers": [
+            "FUN_00420bf0"
+          ],
+          "observers": [
+            "FUN_0040aca0"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "60",
+          "receivers": [
+            "FUN_004267c0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "61",
+          "receivers": [
+            "FUN_0048bfe0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "62",
+          "receivers": [
+            "FUN_00433120"
+          ],
+          "observers": [
+            "FUN_0040ad70"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "65",
+          "receivers": [
+            "FUN_00432850"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "6a",
+          "receivers": [
+            "FUN_0044a280"
+          ],
+          "observers": [
+            "0"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "6b",
+          "receivers": [
+            "FUN_00448e90"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "6d",
+          "receivers": [
+            "FUN_00493f80"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "6f",
+          "receivers": [
+            "FUN_004900e0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "70",
+          "receivers": [
+            "FUN_004cf980"
+          ],
+          "observers": [
+            "FUN_0040b090"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "73",
+          "receivers": [
+            "FUN_0045e5d0"
+          ],
+          "observers": [
+            "0"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "74",
+          "receivers": [
+            "FUN_0045e4f0"
+          ],
+          "observers": [
+            "0"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "75",
+          "receivers": [
+            "FUN_004205f0"
+          ],
+          "observers": [
+            "FUN_0040b150"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "76",
+          "receivers": [
+            "FUN_004207a0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "77",
+          "receivers": [
+            "FUN_0048f7f0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "79",
+          "receivers": [
+            "FUN_0048f8f0"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "7a",
+          "receivers": [
+            "FUN_00434080"
+          ],
+          "observers": [
+            "FUN_0040b2a0"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "7d",
+          "receivers": [
+            "FUN_0041e320"
+          ],
+          "observers": [
+            "FUN_0040b390"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "7e",
+          "receivers": [
+            "FUN_00497030"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        },
+        {
+          "type": "86",
+          "receivers": [
+            "FUN_00426490"
+          ],
+          "observers": [
+            "FUN_0040b380"
+          ],
+          "versions": [
+            "1,0"
+          ]
+        }
+      ],
+      "note": "현재50행 Editor/Session gameplay 목록에서 이번 건설계8을 뺀 정적 준비. 실제 등록본문/다른scope/전체88행 완료를 뜻하지 않음."
+    }
+  },
+  "peLengths": [
+    {
+      "type": "54",
+      "length": 8
+    },
+    {
+      "type": "51",
+      "length": 8
+    },
+    {
+      "type": "2f",
+      "length": 15
+    },
+    {
+      "type": "6c",
+      "length": 11
+    }
+  ],
+  "setupCorrection": {
+    "issue": "국소 변환 스크립트의 CRLF 가정이 실제 LF와 달라 본문 찾기 관문에서 정지",
+    "correction": "원시 LF 확인 뒤 같은 LF를 보존해 국소 변환",
+    "firstAttemptSessionSourceModified": false,
+    "affectedTestsExecuted": 0
+  },
+  "live": {
+    "passed": true,
+    "unit": 1258,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1258\\live-tutorial4-final\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "383bc0ae734878db8cf58412090aaf4661387707b7e434d5981614e2c7c58050",
+    "exeSha256After": "383bc0ae734878db8cf58412090aaf4661387707b7e434d5981614e2c7c58050",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1258\\live-tutorial4-final\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1258\\live-tutorial4-final\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.557,
+        "gameTimeAfter": 23.115,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "screenshotReview": {
+    "reviewed": true,
+    "path": "live-tutorial4-final/015-generator-settled.png",
+    "observed": "1920x1080의 정상 Tutorial4 생산/건설 요청 뒤 섬/메뉴. 완공/MP·지연 배송·음향·전체 동일성은 단정하지 않음"
+  },
+  "protectedFiles": 2808,
+  "protectedUnchanged": true,
+  "newMpTests": 0,
+  "newDecompilation": false,
+  "newZip": false,
+  "rawDirectory": "extracted/cpp-resume-1258/"
+}

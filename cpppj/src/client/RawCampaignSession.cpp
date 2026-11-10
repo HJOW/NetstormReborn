@@ -4867,13 +4867,33 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
     const bool native=impl_->world.Storage()->UsesNativeTransmissionDevices();if (native) BindNativeConstructionCommandReceivers(dispatch);else impl_->construction->Register(dispatch,[this] { impl_->PrepareConstruction(); });
     if (!impl_->buildingData) throw std::logic_error("실제 건설 상태 수신 본체 미설치");if (native) BindNativeConstructionDataReceiver(dispatch);else { dispatch.RequireLength(0x37,0xffff);RegisterConstructionData(dispatch,*impl_->buildingData); } //현재buildingData 확인 뒤 같은37h의 원문 metadata/F를 대여한다.
     // 원본 등록 표의54h 버전1/정책0/8바이트/빈 observer와 같은 수신이다.
+    if (native) BindNativeConstructionReceiver(dispatch,0x54);else {
     dispatch.Observe(0x54,{});dispatch.Version(0x54,1,0);dispatch.RequireLength(0x54,8);
     dispatch.Register(0x54,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->salvageCommand->Receive(sender,packet); });
+    }
+    if (native) BindNativeConstructionReceiver(dispatch,0x51);else {
     dispatch.Observe(0x51,{});dispatch.Version(0x51,1,0);dispatch.RequireLength(0x51,8); //40b380 빈 observer/실제51h 버전1·정책0·8BYTE다.
     dispatch.Register(0x51,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->vortexDeparture->Receive(std::bit_cast<std::int32_t>(sender),packet); }); // 같은 Session 대여로 시작 중계/완료 부모를 소비한다.
-    dispatch.Observe(0x2f,{});dispatch.Version(0x2f,1,0);dispatch.RequireLength(0x2f,15);dispatch.Register(0x2f,[this](auto,auto&,auto packet) { auto& s=*impl_;s.PrepareConstruction();ReceiveConstructionReject(packet,{s.core.pool,s.core.hash,s.core.types,s.metadata.frames,s.constructionState.clear.patternTypes,s.core.bridgeState.noIslandType,&s.metadata.geometry.decoderDiagnostics},[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); }); }); //4332c0의모든칸/모든후보정리다.
-    dispatch.Observe(0x6c,{});dispatch.Version(0x6c,1,0);dispatch.RequireLength(0x6c,11); //40af90/4d56f0의 원래 송금/보상 메시지다.
-    dispatch.Register(0x6c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) {
+    }
+    if (native) BindNativeConstructionReceiver(dispatch,0x2f);else {
+    dispatch.Observe(0x2f,{});dispatch.Version(0x2f,1,0);dispatch.RequireLength(0x2f,15);dispatch.Register(0x2f,[this](auto sender,auto&,auto packet) { ReceiveFixedConstructionPacket(0x004332c0U,sender,packet); });
+    }
+    if (native) BindNativeConstructionReceiver(dispatch,0x6c);else {
+    dispatch.Observe(0x6c,{});dispatch.Version(0x6c,1,0);dispatch.RequireLength(0x6c,11);
+    dispatch.Register(0x6c,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedConstructionPacket(0x004d56f0U,sender,packet); });
+    }
+}
+//저장된 Native 코드값으로 기존 모듈을 직접 호출하며 typed 등록도 쓰는 같은 실제 본문/선행 준비를 유지한다.
+void RawCampaignSession::ReceiveFixedConstructionPacket(std::uint32_t entry,std::uint32_t sender,std::span<const std::uint8_t> packet) {
+    switch (entry) {
+    case 0x00444af0U:impl_->PrepareConstruction();impl_->construction->ReceiveCommandPacket(sender,packet);return;
+    case 0x004441b0U:impl_->PrepareConstruction();impl_->construction->ReceiveNotice(packet);return;
+    case 0x004427b0U:if (!impl_->buildingData) throw std::logic_error("Native37h의 실제 현재 건설 데이터 본문 미연결");impl_->buildingData->Receive(packet);return;
+    case 0x00453d70U:if (!impl_->factoryResearch) throw std::logic_error("Native58h의 실제 현재 연구 본문 미연결");impl_->factoryResearch->Receive(sender,packet);return;
+    case 0x004436f0U:impl_->salvageCommand->Receive(sender,packet);return;
+    case 0x004dc050U:impl_->vortexDeparture->Receive(std::bit_cast<std::int32_t>(sender),packet);return;
+    case 0x004332c0U: { auto& s=*impl_;s.PrepareConstruction();ReceiveConstructionReject(packet,{s.core.pool,s.core.hash,s.core.types,s.metadata.frames,s.constructionState.clear.patternTypes,s.core.bridgeState.noIslandType,&s.metadata.geometry.decoderDiagnostics},[&s](auto sid,auto flags) { static_cast<void>(s.world.Destroy(sid,flags)); });return; }
+    case 0x004d56f0U: {
         if (packet.size()<11) throw std::out_of_range("SP 통지11BYTE 부족");auto& s=*impl_;auto h=MoneyInputHooks();const auto amount=[packet] { return std::bit_cast<std::int32_t>(Read(packet,7)); }; // 각 원문 위치에서 현재 비정렬 signed 금액을 읽는다.
         const auto notice=[&s](std::uint32_t message,std::uint32_t player,std::int32_t value) { if (!s.services.localLogin || !s.services.localLogin->status) throw std::logic_error("SP 통지의 실제 MessageBoard 장치 미연결");s.services.localLogin->status(message,player,std::bit_cast<std::uint32_t>(value)); }; // 원문4d3090의 표시1/빈문자열/현재 종류4·18이다.
         if (!packet[6]) {
@@ -4884,15 +4904,8 @@ void RawCampaignSession::RegisterConstructionCommands(RawPacketDispatch& dispatc
         const auto recipient=packet[4];const auto current=static_cast<float>(amount());if (recipient==s.playerState.battleOwner) h.addLocal(current);else h.addOwner(recipient,current);
         if (packet[4]==s.playerState.battleOwner && !packet[6]) notice(4,packet[5],amount()); // 실제 이름/현재 금액의 원문 송금 안내이며 로그로 대체하지 않는다.
         if (s.core.processState.Server()) s.broadcast->Send(packet);
-    });
-}
-//저장된 Native 코드값으로 기존 모듈을 직접 호출하며 typed 등록도 쓰는 같은 실제 본문/선행 준비를 유지한다.
-void RawCampaignSession::ReceiveFixedConstructionPacket(std::uint32_t entry,std::uint32_t sender,std::span<const std::uint8_t> packet) {
-    switch (entry) {
-    case 0x00444af0U:impl_->PrepareConstruction();impl_->construction->ReceiveCommandPacket(sender,packet);return;
-    case 0x004441b0U:impl_->PrepareConstruction();impl_->construction->ReceiveNotice(packet);return;
-    case 0x004427b0U:if (!impl_->buildingData) throw std::logic_error("Native37h의 실제 현재 건설 데이터 본문 미연결");impl_->buildingData->Receive(packet);return;
-    case 0x00453d70U:if (!impl_->factoryResearch) throw std::logic_error("Native58h의 실제 현재 연구 본문 미연결");impl_->factoryResearch->Receive(sender,packet);return;
+        return;
+    }
     default:throw std::invalid_argument("건설/연구의 알 수 없는 Native F 코드값");
     }
 }

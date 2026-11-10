@@ -1,6 +1,6 @@
 // 지난 Login의 raw this를 장기 backend에 저장하지 않고 실제 현재 World와 장기 전역을 빌린다.
 #include "client/ClientCampaignTransport.h"
-#include "client/NativeConstructionPacketReceivers.h" //첫 Session 전부터 같은 건설/연구4F를 장기 기본표에 설치한다.
+#include "client/NativeConstructionPacketReceivers.h" //같은 건설계 고정F를 실제 Source의 장기 기본표에 설치한다.
 #include "client/ClientChatPacketReceiver.h" //41h도 현재 Client의 같은 장기 중계/표시 처리를 사용한다.
 #include "client/ClientMetaPacketReceivers.h" //Meta 전용 Source 없이 같은 Client 기본 8F를 설치한다.
 #include "o/RawMissionSettingsPacket.h" //장기 GameAux의 같은7DWORD를32h 기본F가 직접 쓴다.
