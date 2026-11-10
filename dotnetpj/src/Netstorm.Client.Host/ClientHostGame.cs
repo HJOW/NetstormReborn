@@ -7,6 +7,7 @@ using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
 using Netstorm.Client.Scripting;
+using Netstorm.Core.Original;
 using Netstorm.Core.Rules;
 
 namespace Netstorm.Client.Host;
@@ -66,6 +67,15 @@ public sealed class ClientHostGame : Game
 
     /// <summary>메뉴 버튼이 쓰는 현재 시각 공급원이다. 고정 모드에서는 프레임마다 전진하는 가상 시계다.</summary>
     private readonly HostTimeSource _clock;
+
+    /// <summary>상태 덤프가 읽는 현재 Kernel이다. F3 세션이 생기면 같은 인스턴스를 세션에 넘긴다.</summary>
+    private readonly Kernel _kernel = new();
+
+    /// <summary>상태 덤프가 읽는 게임 난수다. F3 세션이 생기면 같은 인스턴스를 세션에 넘긴다.</summary>
+    private readonly GameRandom _gameRandom = new();
+
+    /// <summary>상태 덤프가 읽는 CRT 난수다. F3 세션이 생기면 같은 인스턴스를 세션에 넘긴다.</summary>
+    private readonly CrtRandom _crtRandom = new();
 
     /// <summary>메뉴 효과음의 MonoGame 장치 경계.</summary>
     private HostButtonSound? _buttonSound;
@@ -196,6 +206,10 @@ public sealed class ClientHostGame : Game
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen, _textEntry);
             _driver.BindControlLocator(_mainMenu);
             _driver.BindInputHandler(_menuInput.Dispatch);
+            // 미션 월드가 없을 때의 world 0 덤프(머리·난수·Kernel)부터 맞춘다. 게임 시각은 세션 시계 미연결 상태라 0이다.
+            // 근거: cpppj SessionStateDump.cpp의 DumpSessionState(world 0 부분). (2026-11-10 L2·L3 장치에서 추가했다)
+            var sessionDump = new HostSessionDump(_kernel, _gameRandom, _crtRandom, () => _driver.Frame, () => 0ul);
+            _driver.BindSessionDump(sessionDump.Write);
             _gumpDrawing.Draw();
             _menuDirty = false;
         }

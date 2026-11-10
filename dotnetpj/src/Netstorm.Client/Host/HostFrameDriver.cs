@@ -65,6 +65,14 @@ public sealed class HostFrameDriver
         _runner?.BindControls(controls);
     }
 
+    /// <summary>session-dump 단계의 실제 상태 저장 장치를 연결한다. 실행기가 없으면 아무것도 하지 않는다.</summary>
+    /// <param name="dump">덤프 경로를 받아 파일을 쓰는 장치.</param>
+    public void BindSessionDump(Action<string> dump)
+    {
+        ArgumentNullException.ThrowIfNull(dump);
+        _runner?.BindSessionDump(dump);
+    }
+
     /// <summary>자동 입력이 지정한 현재 포인터를 호스트 폴링에 제공한다. 자동 입력이 없으면 null이다.</summary>
     public InputEvent? ScriptPointer => _runner?.ScriptPointer;
 

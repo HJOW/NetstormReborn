@@ -63,7 +63,7 @@ public static class UiScript
 /// <summary>
 /// UI 스크립트 실행기. 클라이언트 프레임 루프가 프레임마다 <see cref="BeforeInput"/>(입력 주입)과 <see cref="AfterFrame"/>(그리기 뒤 캡처)을 부른다.
 /// 모든 입력은 실제 <see cref="InputQueue"/>로만 보내며 게임 상태를 직접 바꾸지 않는다. 같은 스크립트를 cpppj와 dotnetpj가 각자 돌려 캡처를 비교한다.
-/// 현재 지원하는 동작: esc, key, keyup, pointer, click/down/up/right/click-if/up-if/outside(좌표 "screen:x,y" 또는 라벨 조회기), snapshot.
+/// 현재 지원하는 동작: esc, key, keyup, pointer, click/down/up/right/click-if/up-if/outside(좌표 "screen:x,y" 또는 라벨 조회기), snapshot, session-dump(연결된 저장 장치가 있을 때).
 /// report·refresh는 cpppj 내부 상태 보고라 dotnetpj에서는 관측 없이 건너뛰며 <see cref="SkippedObservations"/>에 남긴다.
 /// 그 밖의 동작(kernel-tell, require, when, snapshot-output, test-* 등)은 해당 계층을 옮기기 전까지 <see cref="NotSupportedException"/>이다.
 /// 근거: cpppj/src/app/main.cpp 의 beforeInput/afterFrame. (2026-10-28 R1-2에서 이식)
@@ -91,6 +91,9 @@ public sealed class UiScriptRunner
     /// <summary>snapshot 동작의 저장 방식. 기본은 <see cref="ScreenCapture.WriteBitmap"/>이다.</summary>
     private readonly Action<string> _snapshot;
 
+    /// <summary>session-dump 동작의 저장 방식. 없으면 해당 단계를 거부한다.</summary>
+    private Action<string>? _sessionDump;
+
     /// <summary>다음에 실행할 단계의 위치. AfterFrame에서만 앞으로 간다.</summary>
     private int _next;
 
@@ -116,6 +119,10 @@ public sealed class UiScriptRunner
     /// <param name="controls">현재 화면의 라벨 조회기.</param>
     public void BindControls(IUiControlLocator controls) => _controls = controls ?? throw new ArgumentNullException(nameof(controls));
 
+    /// <summary>session-dump 단계의 실제 상태 저장 장치를 연결한다. 호스트가 세션 장치를 만든 뒤에 부른다.</summary>
+    /// <param name="sessionDump">덤프 경로를 받아 파일을 쓰는 장치.</param>
+    public void BindSessionDump(Action<string> sessionDump) => _sessionDump = sessionDump ?? throw new ArgumentNullException(nameof(sessionDump));
+
     /// <summary>
     /// 검사 폴링이 쓰는 마우스 상태. pointer·클릭·outside가 바꾸며 입력 큐에는 넣지 않는다.
     /// 호스트의 폴링 구현이 실제 마우스 대신 이 값을 읽는다. 값이 없으면 null이다.
@@ -139,7 +146,7 @@ public sealed class UiScriptRunner
         while (_nextInput < _steps.Count && _steps[_nextInput].Frame <= frame)
         {
             UiStep step = _steps[_nextInput];
-            bool observation = step.Operation is "snapshot" or "report" or "refresh";
+            bool observation = step.Operation is "snapshot" or "report" or "refresh" or "session-dump";
             if (step.Frame < frame && !observation) return;
             if (step.Frame == frame && !observation) Input(step);
             _nextInput++;
@@ -157,8 +164,18 @@ public sealed class UiScriptRunner
         {
             UiStep step = _steps[_next++];
             if (step.Operation == "snapshot") _snapshot(step.Argument);
+            else if (step.Operation == "session-dump") Dump(step);
             else if (step.Operation is "report" or "refresh") SkippedObservations.Add($"{step.Frame}:{step.Operation}");
         }
+    }
+
+    /// <summary>session-dump 단계를 처리한다. 빈 경로는 거부하고 미연결 장치는 미이식으로 알린다.</summary>
+    /// <param name="step">덤프 경로를 인자로 가진 단계.</param>
+    private void Dump(UiStep step)
+    {
+        if (string.IsNullOrEmpty(step.Argument))
+            throw new ArgumentException("UI session-dump 출력 경로가 비어 있습니다");
+        (_sessionDump ?? throw new NotSupportedException("UI 동작 미이식: session-dump (해당 계층을 옮긴 뒤 지원한다)"))(step.Argument);
     }
 
     /// <summary>모든 단계를 실행하지 못했으면 예외를 던진다. 프레임 제한이나 오류로 남은 단계를 조용히 지나치지 않기 위한 마무리 검사다.</summary>

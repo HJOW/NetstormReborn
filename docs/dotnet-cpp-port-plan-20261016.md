@@ -183,6 +183,8 @@ cpppj TSV fixture 279개를 영역별로 묶어 이식 단위 W01~W20으로 나�
 4. **연결 상태표:** 모듈별로 "독립 대조만 / 실제 Session 연결 / GUI 연결"을 한 표로 유지해 주면 이식 순서를 정확히 고를 수 있다.
 5. **기존 전달 사항(2026-10-09, 아직 남음):** `cpppj/tests/GraphTests.cpp:105`의 Setup이 객체 열 `v[10]`·`v[11]`을 죽음·매장으로 읽는다. `graph-x86.tsv` 객체는 정수 11개(0~10)라 `v[11]`은 범위 밖이다.
 
+**(2026-11-10 dotnetpj 쪽 해결 기록 — 요청 1·2):** cpppj에 `session-dump` 단계·`--fixed-frame-ms`가 들어간 뒤(cpppj `c91d9b84`), dotnetpj 호스트에도 같은 문법·형식의 장치를 만들었다(단위 0.283·0.284: `HostTimeSource`·`HostOptions`·`HostFrameDriver`·`SessionStateDump.FormatWorld0`·`HostSessionDump`·`UiScriptRunner`의 `session-dump` 단계, world 0 덤프까지). 요청 3~5는 남는다.
+
 ## 9. 실행·검증 규칙
 
 - **DESKTOP-HJOW:** `dotnet build`·`dotnet test`(헤드리스)만 실행한다. 클론 창·원본 게임은 실행하지 않는다. 10분 이상 걸릴 재생성·변이 검사는 인수인계로 넘긴다.

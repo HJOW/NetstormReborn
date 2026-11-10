@@ -634,3 +634,5 @@ cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Mission/RawCampaignSession
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Mission/RawCampaignSession.cs	800ff40cdf869f9e36a256a180397e48ac156702	port
 cpppj/src/client/ClientTimeSource.h	Netstorm.Client/Host/HostTimeSource.cs	c91d9b849ac193a5d00ce3c6986e9bbb7328bd3e	port
 cpppj/src/client/ClientTimeSource.cpp	Netstorm.Client/Host/HostTimeSource.cs	c91d9b849ac193a5d00ce3c6986e9bbb7328bd3e	port
+cpppj/src/client/SessionStateDump.h	Netstorm.Client/Automation/SessionStateDump.cs	c91d9b849ac193a5d00ce3c6986e9bbb7328bd3e	port
+cpppj/src/client/SessionStateDump.cpp	Netstorm.Client/Automation/SessionStateDump.cs	c91d9b849ac193a5d00ce3c6986e9bbb7328bd3e	port

@@ -12,7 +12,7 @@
 
 <a id="dotnet-overview"></a>
 
-## 한눈에 보기 — dotnetpj 진행 상황 (2026-11-10, 단위 0.283 기준)
+## 한눈에 보기 — dotnetpj 진행 상황 (2026-11-10, 단위 0.284 기준)
 
 ### 실행·플레이 가능 여부와 원본과의 동일성
 
@@ -41,8 +41,8 @@ AGENTS.md(`551d27ae`)의 두 기준으로 평가한다. dotnetpj에는 실행 �
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 커밋 | 0.283 `20261110-88 DN`(고정 시각 실행 장치) |
-| PORT_MAP | 636줄(자료 631행: L1 329 · port 302) |
+| 마지막 커밋 | 0.284 `20261110-89 DN`(`session-dump` 단계·world 0 덤프) |
+| PORT_MAP | 638줄(자료 633행: L1 329 · port 304) |
 | 원본 fixture | 연결 232개(`cpp_sync.py` 0종료). `reflected-commit`은 영향 검토 전이라 `f95a8db2` |
 | 마지막 전체 검사 완주 | Core **1,826개**·Client **895개**·Assets **366개**(0.280, 실패 0). 이전 기준선은 Core 1,576개(0.211), Client 858개·Assets 366개(0.157)였다 |
 | cpppj 기준 | cpppj는 확정 제품1248 / 표시 11.01(2026-11-10). dotnetpj가 마지막으로 영향 검토를 맞춘 시점은 단위861(2026-11-04) 이전이다 |
@@ -73,13 +73,13 @@ AGENTS.md(`551d27ae`)의 두 기준으로 평가한다. dotnetpj에는 실행 �
 
 | 항목 | 값 |
 | --- | --- |
-| 진행 상태 | 0.283까지 커밋됐다. 전체 목표는 미완료다. 다음 단위(0.284)는 0.9의 '재개 준비' L2·L3 장치 중 `session-dump` 단계·world 0 덤프부터 시작한다. |
+| 진행 상태 | 0.284까지 커밋됐다. 전체 목표는 미완료다. 다음 단위(0.285)는 R4 F2c 나머지(정상 지형 생성 본체·`RawFortWorldLoadBinding`)부터 시작한다. |
 | 현재 단계 | R0·R1 완료, R2 본체 완료, R3 진행 중, R4 진행 중(완료 범위는 0.9의 체크 목록과 1절 색인), R5 이후 미착수. |
 | 실행·플레이 가능 여부 | 기존 경로 `Netstorm.Game`(`Netstorm.exe`, 0.96)은 1-1·1-2 근사 플레이가 가능하다. 새 경로 `Netstorm.Client.Host`는 메뉴 계열 일부까지이고 미션 월드가 없어 플레이할 수 없다. 기존 코드·검사 은퇴는 0건이다. |
 | 원본과의 동일성 | 실제 메뉴·게임 캡처 비교는 0건이다. 오라클 메인 메뉴 캡처의 결정성만 확인했다([문서 5절](docs/dotnet-client-screen-20261028.md)). L1(원본 x86 fixture) 통과를 L2 이상으로 합산하지 않는다(0.6). |
-| 마지막 구현 커밋 | 0.283 `20261110-88 DN`(고정 시각 실행 장치). |
-| 검사 | 마지막 전체 완주는 0.280(합계 3,087개, 실패 0)이다. 0.282는 Client 전체 896개 실패 0, 0.283은 Client 전체 900개(기존 896+새 4) 실패 0을 확인했다(Core·Assets는 0.280 기준선 유지). |
-| 포트 맵 | `PORT_MAP.tsv` 총 636줄(자료 631행: L1 329, port 302). 0.283의 `ClientTimeSource.h/.cpp` → `HostTimeSource.cs` 2행(port)이 마지막 추가다. |
+| 마지막 구현 커밋 | 0.284 `20261110-89 DN`(`session-dump` 단계·world 0 덤프). |
+| 검사 | 마지막 전체 완주는 0.280(합계 3,087개, 실패 0)이다. 0.282는 Client 전체 896개, 0.283은 900개, 0.284는 906개(기존 900+새 6) 실패 0을 확인했다(Core·Assets는 0.280 기준선 유지). |
+| 포트 맵 | `PORT_MAP.tsv` 총 638줄(자료 633행: L1 329, port 304). 0.284의 `SessionStateDump.h/.cpp` → `SessionStateDump.cs` 2행(port)이 마지막 추가다. |
 | fixture | 연결 232개(개별 OK, `cpp_sync.py`는 미반영분 때문에 0종료 아님). 반영 커밋(`reflected-commit`)은 영향 검토 전이라 `f95a8db2`에 그대로 둔다. |
 | cpppj 기준 | 이식은 단위마다 cpppj HEAD의 해당 파일만 읽고 미커밋 변경은 쓰지 않는다. 영향 검토 전이라 `reflected-commit`과 PORT_MAP 기존 행의 `base`는 올리지 않았다(신규 행만 파일별 HEAD). cpppj 현재 값(2026-11-10 확정 제품1248, 작업 중 1249)은 [LEFT_JOBS.md](LEFT_JOBS.md) 0.1절을 따른다. |
 | 디컴파일 | 마지막 정밀 디컴파일은 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트, LEFT_JOBS.md 0.1절)이다. 이식 근거는 cpppj 소스·fixture·문서이므로 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 호스트를 확인하고 재디컴파일한다. |
@@ -255,8 +255,9 @@ AGENTS.md는 "cpppj의 **4~8차** 목표 내용이 dotnetpj 후순위 요구사�
 - [x] **cpppj 재반영 요청 2건(0.282)**([cpp-webpj-requests-20261109.md](docs/exe/cpp-webpj-requests-20261109.md) 3·4절, cpppj `c91d9b84`가 원문 기준으로 바꾼 것):
   - Demo 버튼 Tell 이름: `Netstorm.Client/Host/HostMainMenu.cs`의 `("Tell","DEMOVILLE")`를 원문과 같은 `("Tell","Demoville")`로 바꿨고 `HostStartupSceneTests`의 `DEMOVILLE` 단언(`priorTell` 포함)을 고쳤다. `tell.english`의 섹션 머리 `[DEMOVILLE]`은 자료라 그대로이며, 섹션 조회는 대소문자를 가리지 않는다(`Config.Section` ASCII 소문자 비교).
   - Help 스크롤 화살표 색: `Netstorm.Client/Host/HostHtmlText.cs`가 ScrollingText 화살표에 `SliderType=menu.BackgroundType, SliderFrame=1`을 넘겨 팔레트 1번(붉은 갈색)으로 그렸다. 원본처럼 현재 팔레트의 갈색(named 9)·검정(basic 0) 색 번호를 넘긴다(cpppj `RawMenuControls::SetPalette`, `titleState.sliderType/sliderFrame`). 새 `SliderArrowType`·`SliderArrowFrame` 읽기 속성과 내부 `WidgetState` 노출로 검사에 연결했다.
-- [ ] **L2·L3 장치(진행 중):** cpppj의 ui-script `session-dump` 단계(판번호 1 형식)와 `--fixed-frame-ms` 고정 시각 실행을 `Netstorm.Client.Host`에도 같은 문법·형식으로 만든다([형식](docs/exe/cpp-session-state-dump-20261109.md)). 미션 월드가 없을 때의 `world 0` 덤프(머리·난수·Kernel까지)부터 맞추고 세션 조립이 진행될 때마다 행을 늘린다. 이식 계획 8절 요청 1·2는 해결로 표시한다(요청 3~5는 남음).
-  - [x] **고정 시각 실행(0.283):** `--fixed-frame-ms N`(1~60000)·`--fixed-unix-seconds S`(단독 사용 거부)를 `HostOptions`에 받고, `HostTimeSource`(기본 OS 시계·고정 가상 시계, 원점 1,000,000ms·946684800초, uint32 감김)를 `HostFrameDriver.BeginFrame`마다 전진·`ClientHostGame` 메뉴 시각에 연결했다. `Program`은 호스트 시계 원점보다 먼저 켠다. cpppj 전역과 달리 호스트 소유 인스턴스다.
+- [x] **L2·L3 장치(0.283·0.284):** cpppj의 ui-script `session-dump` 단계(판번호 1 형식)와 `--fixed-frame-ms` 고정 시각 실행을 `Netstorm.Client.Host`에도 같은 문법·형식으로 만들었다([형식](docs/exe/cpp-session-state-dump-20261109.md)). 미션 월드가 없을 때의 `world 0` 덤프(머리·난수·Kernel까지)부터 맞추고 세션 조립이 진행될 때마다 행을 늘린다. 이식 계획 8절 요청 1·2의 dotnetpj 쪽은 해결로 표시한다(요청 3~5는 남음).
+  - **고정 시각 실행(0.283):** `--fixed-frame-ms N`(1~60000)·`--fixed-unix-seconds S`(단독 사용 거부)를 `HostOptions`에 받고, `HostTimeSource`(기본 OS 시계·고정 가상 시계, 원점 1,000,000ms·946684800초, uint32 감김)를 `HostFrameDriver.BeginFrame`마다 전진·`ClientHostGame` 메뉴 시각에 연결했다. `Program`은 호스트 시계 원점보다 먼저 켠다. cpppj 전역과 달리 호스트 소유 인스턴스다.
+  - **`session-dump`·world 0 덤프(0.284):** `UiScriptRunner`에 `session-dump` 관측 단계(그리기 뒤 저장, 빈 경로 거부·미연결 장치 명시 예외)와 `BindSessionDump`를 넣고, `SessionStateDump.FormatWorld0`(판번호 1·ASCII·LF·탭, float/double 비트 정수, FNV-1a 64 포함)과 `HostSessionDump`(호스트 소유 Kernel·GameRandom·CrtRandom·프레임의 world 0 쓰기, 게임 시각은 세션 시계 미연결이라 0)를 `ClientHostGame`에 연결했다. `HostFrameDriver.BindSessionDump`로 늦게 묶는다.
 
 **R4 월드 세션 조립 (재개 지점):**
 
@@ -317,9 +318,11 @@ AGENTS.md는 "cpppj의 **4~8차** 목표 내용이 dotnetpj 후순위 요구사�
 
 <a id="dotnet-unit-records"></a>
 
-### 0.10 단위 기록 (0.284부터)
+### 0.10 단위 기록 (0.285부터)
 
 문서가 없는 작은 단위만 아래에 최신순으로 짧게 적는다. 한 기록에는 범위, 구현(새 파일·수정 파일), C#에서 달라진 모양, 검증(집중·전체·변이), PORT_MAP·fixture 변화, 보호·실행·외부 접속 관점, 남은 것을 적는다(0.6). 0.11~0.279는 이관 파일에 있다: [0.11~0.65](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073), [0.66~0.126](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126), [0.127~0.153](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154), [0.154~0.279](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279).
+
+**0.284 — `session-dump` 단계·world 0 덤프 (2026-11-10, HJOW-Athlon).** 범위: 0.9 '재개 준비' L2·L3 장치 나머지. 구현: 새 `Netstorm.Client/Automation/SessionStateDump.cs`(cpppj `SessionStateDump.h/.cpp` 중 world 0 서식·FNV-1a 64 직역), 새 `Netstorm.Client/Host/HostSessionDump.cs`(호스트 소유 Kernel·GameRandom·CrtRandom·프레임 읽기, 비Squid 행은 pid/0/0, 게임 시각 0), `UiScriptRunner`에 `session-dump` 관측 단계·`BindSessionDump`(빈 경로 거부·미연결 명시 예외), `HostFrameDriver.BindSessionDump`, `ClientHostGame` 소유·연결. C#에서 달라진 모양: world 1 행(pool·slot·object·player·sp·graph·totals)은 세션 조립 때 늘린다. 검증: Release 빌드 경고·오류 0, 새 `SessionStateDumpTests` 5건(판번호 1 정확 문자열 2건·판본 거부·FNV 공개값·파일 바이트 일치)과 `CaptureAndScriptTests` 1건(단계·거부 3종) 통과, Client 전체 906건 실패 0(`--no-incremental` 재빌드 뒤). 대표 변이(world 행 0→1)가 3건에서 검출됨을 확인하고 원복했다. PORT_MAP 2행 추가(`SessionStateDump.h/.cpp`→`SessionStateDump.cs`, base `c91d9b84`, port). fixture 변화 없음. 보호: 원본/CD·AGENTS.md 미수정, 게임 실행 없음. 외부 접속 변화 없음. 남은 것: R4 F2c 나머지(0.285)부터 계속한다.
 
 **0.283 — 고정 시각 실행 장치 (2026-11-10, HJOW-Athlon).** 범위: 0.9 '재개 준비' L2·L3 장치 중 고정 시각 절반. 구현: 새 `Netstorm.Client/Host/HostTimeSource.cs`(cpppj `ClientTimeSource.h/.cpp` 직역, 전역 대신 호스트 소유 인스턴스), `HostOptions`에 `--fixed-frame-ms`·`--fixed-unix-seconds`(단독 거부), `HostFrameDriver`에 선택 시계·`BeginFrame` 전진, `ClientHostGame`의 메뉴 시각 4곳을 시계로 교체, `Program`에서 시계 원점보다 먼저 켜고 driver·game에 전달. C#에서 달라진 모양: 기본 모드는 기존 Stopwatch/TickCount 상당이라 동작이 같고, 고정 모드에서만 프레임당 N ms 전진·maxFPS 대기는 호스트 몫으로 남는다(PumpMessages 상당의 별도 대기 없음). 검증: Release 빌드 경고·오류 0, `ClientHostTests` 19건(새 4건: 인자·기본 OS 시계·고정 전진/감김/거부·드라이버 전진) 통과, Client 전체 900건 실패 0(`--no-incremental` 재빌드 뒤). 대표 변이(전진 조건을 `_elapsed != 0`으로 좁힘)가 2건에서 검출됨을 확인하고 원복했다. PORT_MAP 2행 추가(`ClientTimeSource.h/.cpp`→`HostTimeSource.cs`, base `c91d9b84`, port). fixture 변화 없음. 보호: 원본/CD·AGENTS.md 미수정, 게임 실행 없음. 외부 접속 변화 없음. 남은 것: `session-dump` 단계·world 0 덤프(0.284)부터 계속한다.
 

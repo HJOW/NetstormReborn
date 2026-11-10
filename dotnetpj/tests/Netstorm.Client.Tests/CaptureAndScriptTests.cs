@@ -230,6 +230,29 @@ public sealed class CaptureAndScriptTests
         Assert.Throws<InvalidOperationException>(runner.RequireFinished);
     }
 
+    /// <summary>session-dump는 그리기 뒤에 연결된 장치로 저장하고, 입력을 막지 않으며, 빈 경로·미연결 장치는 거부한다.</summary>
+    [Fact]
+    public void RunnerDumpsSessionAfterFrame()
+    {
+        var dumped = new List<string>();
+        var runner = new UiScriptRunner(
+            UiScript.Parse(["2\tsession-dump\tdump.tsv", "2\tsnapshot\tout.bmp"]), new InputQueue(), new Screen(8, 8),
+            snapshot: _ => { });
+        runner.BindSessionDump(dumped.Add);
+        runner.BeforeInput(2); // 관측 단계는 입력 위치를 막지 않는다.
+        runner.AfterFrame(2);
+        Assert.Equal(["dump.tsv"], dumped);
+        runner.RequireFinished();
+        // 빈 경로는 거부한다.
+        var empty = new UiScriptRunner(UiScript.Parse(["1\tsession-dump"]), new InputQueue(), new Screen(8, 8));
+        empty.BindSessionDump(_ => { });
+        Assert.Throws<ArgumentException>(() => empty.AfterFrame(1));
+        // 미연결 장치는 미이식으로 알린다.
+        var unbound = new UiScriptRunner(UiScript.Parse(["1\tsession-dump\tdump.tsv"]), new InputQueue(), new Screen(8, 8));
+        Assert.Throws<NotSupportedException>(() => unbound.AfterFrame(1));
+        Assert.Throws<ArgumentNullException>(() => runner.BindSessionDump(null!));
+    }
+
     /// <summary>항상 같은 좌표를 돌려주는 검사용 컨트롤 조회기.</summary>
     private sealed class FixedLocator(ScreenPoint point) : IUiControlLocator
     {
