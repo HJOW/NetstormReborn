@@ -1033,6 +1033,54 @@ public sealed class RawCampaignSessionTests
         Assert.Equal(0x33, session.HiddenPlayers()[0]);
     }
 
+    /// <summary>미적재 객체 소유자 지정을 적재 관문에서 거부하는지 검증한다. 2026-11-11 F3 객체 소유자 지정 본체에서 추가됐다.</summary>
+    [Fact]
+    public void SetObjectOwnerRejectsWhenNotLoaded()
+    {
+        // 적재 전 객체 소유자 지정은 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        session.BindSetObjectOwner((sid, owner) => { });
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.SetObjectOwner(5, 1u));
+        Assert.Contains("미적재", error.Message);
+    }
+
+    /// <summary>적재 뒤 객체 소유자 지정을 본체 미연결로 거부하는지 검증한다. 2026-11-11 F3 객체 소유자 지정 본체에서 추가됐다.</summary>
+    [Fact]
+    public void SetObjectOwnerRejectsWhenUnconnected()
+    {
+        // 실제 소유권 본체는 후속 단위에서 잇는다(결정 6).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        Assert.False(session.HasSetObjectOwner());
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.SetObjectOwner(5, 1u));
+        Assert.Contains("미연결", error.Message);
+    }
+
+    /// <summary>묶은 실제 소유권 효과에 슬롯·소유자를 그대로 넘기는지 검증한다. 2026-11-11 F3 객체 소유자 지정 본체에서 추가됐다.</summary>
+    [Fact]
+    public void SetObjectOwnerForwardsToBoundDevice()
+    {
+        // 원본 세션 설치의 소유권 몸체 연결만 둔다. 범위 본체는 Fort 본체·규칙 단위에서 잇는다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        var calls = new List<(int Sid, uint Owner)>();
+        session.BindSetObjectOwner((sid, owner) => calls.Add((sid, owner)));
+        Assert.True(session.HasSetObjectOwner());
+        session.SetObjectOwner(5, 1u);
+        session.SetObjectOwner(9, 3u);
+        Assert.Equal([(5, 1u), (9, 3u)], calls);
+    }
+
+    /// <summary>빈 객체 소유자 지정 묶기를 거부하는지 검증한다. 2026-11-11 F3 객체 소유자 지정 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BindSetObjectOwnerRejectsNull()
+    {
+        // 묶지 않은 세션은 미연결로 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentNullException>(() => session.BindSetObjectOwner(null!));
+        Assert.False(session.HasSetObjectOwner());
+    }
+
     /// <summary>미적재 AI 다리 경로 전진을 적재 관문에서 거부하는지 검증한다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
     [Fact]
     public void AdvanceAiBridgeRejectsWhenNotLoaded()

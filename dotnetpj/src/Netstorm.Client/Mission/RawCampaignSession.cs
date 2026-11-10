@@ -87,6 +87,9 @@ public sealed class RawCampaignSession
     /// <summary>같은 실제 전략 AI 다리 경로 전진 몸체의 전진 효과다. 세션 조립 때 실제 전략 AI 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-11 F3 AI 다리 경로 전진 본체에서 추가됐다.</summary>
     private AiAdvanceBridgeEffect? _aiAdvanceBridge;
 
+    /// <summary>같은 실제 소유권 몸체의 소유자 지정 효과다. 세션 조립 때 실제 소유권 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-11 F3 객체 소유자 지정 본체에서 추가됐다.</summary>
+    private Action<int, uint>? _setObjectOwner;
+
     /// <summary>같은 실제 AI 지갑의 잔액 조회 효과다. 세션 조립 때 실제 AI 지갑 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
     private Func<uint, int>? _aiMoney;
 
@@ -484,6 +487,37 @@ public sealed class RawCampaignSession
         }
 
         return _aiAdvanceBridge(owner, target, ref endpoint);
+    }
+
+    /// <summary>같은 실제 소유권 몸체의 소유자 지정 효과를 묶는다. 원본 세션 설치의 소유권 몸체 연결만 둔다. 2026-11-11 F3 객체 소유자 지정 본체에서 추가됐다.</summary>
+    /// <param name="setOwner">실제 소유자 지정 효과다. 슬롯 번호와 소유자 번호를 그대로 받는다.</param>
+    public void BindSetObjectOwner(Action<int, uint> setOwner)
+    {
+        ArgumentNullException.ThrowIfNull(setOwner);
+        _setObjectOwner = setOwner;
+    }
+
+    /// <summary>같은 실제 소유권 몸체의 소유자 지정 효과를 묶었는지 확인한다. 2026-11-11 F3 객체 소유자 지정 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasSetObjectOwner() => _setObjectOwner is not null;
+
+    /// <summary>원본 일반 입력의 객체 owner 지정을 후속 소유권 몸체와 공유한다. 묶은 실제 소유권 효과가 없으면 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 실제 소유권 본체는 후속 단위에서 잇는다. 2026-11-11 F3 객체 소유자 지정 본체에서 추가됐다.</summary>
+    /// <param name="sid">지정할 객체 슬롯 번호다. 원본 SID 값을 그대로 받는다.</param>
+    /// <param name="owner">지정할 소유자 번호다.</param>
+    public void SetObjectOwner(int sid, uint owner)
+    {
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 객체 소유자 지정입니다.");
+        }
+
+        // 원본 RawCampaignSession::SetObjectOwner의 적재 관문을 직역한다. 실제 소유권 몸체는 후속 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        if (_setObjectOwner is null)
+        {
+            throw new InvalidOperationException("실제 객체 소유자 지정 미연결");
+        }
+
+        _setObjectOwner(sid, owner);
     }
 
     /// <summary>같은 실제 AI 지갑의 잔액 조회 효과를 묶는다. 원본 세션 설치의 AI 지갑 몸체 연결만 둔다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
