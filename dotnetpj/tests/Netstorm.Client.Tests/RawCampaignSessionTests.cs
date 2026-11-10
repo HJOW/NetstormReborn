@@ -934,4 +934,34 @@ public sealed class RawCampaignSessionTests
         Assert.Throws<ArgumentNullException>(() => session.BindAiMoney(null!));
         Assert.False(session.HasAiMoney());
     }
+
+    /// <summary>새 세션의 미션 시작 설정이 원본 기본값인지 검증한다. 2026-11-11 F3 미션 시작 설정 소유자 본체에서 추가됐다.</summary>
+    [Fact]
+    public void MissionStartSettingsStartWithOriginalDefaults()
+    {
+        // 원본 세션 Impl의 missionStart 기본값과 같다(localOwner 1, 나머지 0).
+        var session = LoadableSession();
+        Assert.Equal(1u, session.MissionStartSettings.LocalOwner);
+        Assert.Equal(0u, session.MissionStartSettings.PlayerKnown);
+        Assert.Equal(0u, session.MissionStartSettings.Editor);
+        Assert.Equal(0, session.MissionStartSettings.DenySalvage);
+        Assert.Equal(0, session.MissionStartSettings.DenyAscend);
+        Assert.Equal(0, session.MissionStartSettings.Aux.AllowAnyCapture);
+        Assert.Equal(0u, session.MissionStartSettings.Aux.OrdinaryGeysers);
+    }
+
+    /// <summary>세션 미션 시작 설정 갱신이 같은 참조에 보이는지 검증한다. 2026-11-11 F3 미션 시작 설정 소유자 본체에서 추가됐다.</summary>
+    [Fact]
+    public void MissionStartSettingsShareSameReference()
+    {
+        // 설치 본체의 갱신이 공통 Start에 그대로 보인다.
+        var session = LoadableSession();
+        MissionStartGlobals first = session.MissionStartSettings;
+        MissionStartGlobals second = session.MissionStartSettings;
+        Assert.Same(first, second);
+        first.LocalOwner = 5u;
+        first.DenySalvage = -1;
+        Assert.Equal(5u, second.LocalOwner);
+        Assert.Equal(-1, second.DenySalvage);
+    }
 }

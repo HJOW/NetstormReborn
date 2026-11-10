@@ -44,6 +44,9 @@ public sealed class RawCampaignSession
     /// <summary>원본 600바이트 AI 설정의 현재 기본값이다. 설치 본체가 갱신하며 AI 생성·시작이 같은 참조를 빌린다. 2026-11-10 F3 AI 설정 소유자 본체에서 추가됐다.</summary>
     private readonly MissionAiSettingsState _aiSettings = new();
 
+    /// <summary>원본 미션 시작 공용 설정의 현재 기본값이다. 설치 본체가 갱신하며 공통 Start가 같은 참조를 빌린다. 2026-11-11 F3 미션 시작 설정 소유자 본체에서 추가됐다.</summary>
+    private readonly MissionStartGlobals _missionStart = new();
+
     /// <summary>원본 첫 목록(outposts)의 현재 항목이다. Fort 적재 본체가 채우기 전에는 비어 있다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
     private readonly RawPostPopList _outposts = new();
 
@@ -164,6 +167,9 @@ public sealed class RawCampaignSession
 
     /// <summary>원본 600바이트 AI 설정의 현재 기본값이다. 설치 본체가 갱신하며 AI 생성·시작이 같은 참조를 빌린다. 2026-11-10 F3 AI 설정 소유자 본체에서 추가됐다.</summary>
     internal MissionAiSettingsState AiSettings => _aiSettings;
+
+    /// <summary>원본 미션 시작 공용 설정의 현재 기본값이다. 설치 본체가 갱신하며 공통 Start가 같은 참조를 빌린다. 2026-11-11 F3 미션 시작 설정 소유자 본체에서 추가됐다.</summary>
+    internal MissionStartGlobals MissionStartSettings => _missionStart;
 
     /// <summary>원본 첫 목록(outposts)의 현재 항목이다. Fort 적재 본체가 채우며 게임 메뉴가 같은 참조를 읽는다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
     internal RawPostPopList Outposts => _outposts;
