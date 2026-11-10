@@ -376,4 +376,181 @@ public sealed class RawPlayerWorldTests
         Assert.Equal(8, pool.Slot(Source)[OwnerOffset]);
         Assert.Equal(0u, Get(pool.Slot(Source), FrameOffset));
     }
+
+    /// <summary>CD 풀을 만든다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    /// <returns>준비된 CD 풀이다.</returns>
+    private static RawSidPool CdPool()
+    {
+        var pool = new RawSidPool(24000, false, null, OriginalEdition.Cd1072);
+        // 원본 관찰의 첫 번호가 5번이 되도록 클라이언트 영역을 확보한다.
+        for (int id = 5; id <= 127; id++)
+        {
+            Assert.Equal(id, pool.Allocate(SidAllocation.Client));
+        }
+
+        return pool;
+    }
+
+    /// <summary>CD의 실제 Player 가상표다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    private const uint CdPlayerVtable = 0x5002a8u;
+
+    /// <summary>슬롯 안 CD 소유자 바이트의 위치다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    private const int CdOwnerOffset = 32;
+
+    /// <summary>슬롯 안 CD 직접 프레임 위치다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    private const int CdFrameOffset = 34;
+
+    /// <summary>현재 9기록(9×0xac)을 만든다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    /// <returns>9기록 바이트다.</returns>
+    private static byte[] CdRecords() => new byte[9 * 0xac];
+
+    /// <summary>CD 기본 슬롯(CD 가상표·74번·소유자 1번)을 채운다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    /// <param name="pool">슬롯 풀이다.</param>
+    /// <param name="vtable">가상표 값이다.</param>
+    private static void FillCd(RawSidPool pool, uint vtable)
+    {
+        Span<byte> raw = pool.AllocatedBytes(Source);
+        raw.Clear();
+        Put(raw, 0, vtable);
+        raw[RawSidPool.TypeOffset] = 74;
+        raw[RawSidPool.StateOffset] = 0;
+        raw[CdOwnerOffset] = 1;
+        Put(raw, CdFrameOffset, 0xdeadbeefu);
+    }
+
+    /// <summary>CD 필수 효과 7종을 묶는다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    /// <returns>효과 묶음이다.</returns>
+    private static PlayerWorldHooks FullHooks() => new()
+    {
+        Assertion = _ => { },
+        Find = (x, y, type) => 0,
+        Create = (type, flags) => Source,
+        SetOwner = (sid, owner) => { },
+        Pop = (sid, x, y, flags) => { },
+        ReserveRegular = () => false,
+        AddRegular = (sid, ev, payload) => { },
+    };
+
+    /// <summary>CD 생성자는 0xac 9기록과 7개 효과를 요구한다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    [Fact]
+    public void ConstructorAcceptsCdRecordsAndRequiresHooks()
+    {
+        var pool = CdPool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true };
+        var inner = Base(pool, types, book);
+        var state = new PlayerWorldState();
+        _ = new RawPlayerWorld(pool, inner, CdRecords(), state, FullHooks());
+        // PATCH 크기 9기록은 CD에서 받지 않는다.
+        Assert.ThrowsAny<Exception>(() => new RawPlayerWorld(pool, inner, Records(), state, FullHooks()));
+        // CD는 빠진 효과가 하나라도 있으면 묶지 않는다.
+        var missing = FullHooks();
+        missing.Pop = null;
+        Assert.ThrowsAny<Exception>(() => new RawPlayerWorld(pool, inner, CdRecords(), state, missing));
+    }
+
+    /// <summary>CD 실제 Player 가상표만 처리 대상으로 인정한다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    [Fact]
+    public void HandlesChecksCdVtable()
+    {
+        var pool = CdPool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true };
+        var inner = Base(pool, types, book);
+        var body = new RawPlayerWorld(pool, inner, CdRecords(), new PlayerWorldState(), FullHooks());
+        FillCd(pool, 0x11111111u);
+        Assert.False(body.Handles(Source));
+        FillCd(pool, CdPlayerVtable);
+        Assert.True(body.Handles(Source));
+    }
+
+    /// <summary>CD 0xac 기록의 0x94 위치를 읽는다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    [Fact]
+    public void TechnologyReadsCdOffsets()
+    {
+        var pool = CdPool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true };
+        var inner = Base(pool, types, book);
+        var records = CdRecords();
+        var state = new PlayerWorldState { PlayerKnown = 1u, BattleOwner = 8u };
+        var body = new RawPlayerWorld(pool, inner, records, state, FullHooks());
+        Put(records.AsSpan(), 8 * 0xac + 0x94, 0x12345678u);
+        Assert.Equal(0x12345678u, body.Technology(8));
+        Assert.Equal(0x12345678u, body.CurrentTechnology());
+    }
+
+    /// <summary>CD 후처리는 검증 뒤 기록·1바이트 프레임을 쓴다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    [Fact]
+    public void PostPopWritesCdTechnologyAndFrameByte()
+    {
+        var pool = CdPool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true, Depth = 1u };
+        var inner = Base(pool, types, book);
+        var records = CdRecords();
+        var state = new PlayerWorldState { Special = 1u };
+        var events = new List<string>();
+        var hooks = FullHooks();
+        hooks.ReserveRegular = () => { events.Add("N"); return true; };
+        hooks.AddRegular = (sid, ev, payload) => { Assert.Equal(Source, sid); Assert.Equal(1u, ev); Assert.Equal(5.0f, payload); events.Add("R"); };
+        var body = new RawPlayerWorld(pool, inner, records, state, hooks);
+        FillCd(pool, CdPlayerVtable);
+        body.PostPop(Source, 1u);
+        Assert.Equal(new[] { "N", "R" }, events);
+        Assert.Equal((uint)Source, Get(records, 0xac + 0x94));
+        // 1바이트 쓰기이므로 34번만 바뀌고 35번은 그대로다.
+        Assert.Equal(1, pool.AllocatedBytes(Source)[CdFrameOffset]);
+        Assert.Equal(0xbe, pool.AllocatedBytes(Source)[CdFrameOffset + 1]);
+        Assert.Equal(0u, book.Depth);
+    }
+
+    /// <summary>CD 9기록 밖 소유자는 물리 저장 직전에 거부한다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    [Fact]
+    public void ValidateRejectsCdBadOwner()
+    {
+        var pool = CdPool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true, Depth = 1u };
+        var inner = Base(pool, types, book);
+        var records = CdRecords();
+        var body = new RawPlayerWorld(pool, inner, records, new PlayerWorldState(), FullHooks());
+        FillCd(pool, CdPlayerVtable);
+        pool.AllocatedBytes(Source)[CdOwnerOffset] = 9;
+        byte[] before = (byte[])records.Clone();
+        Assert.ThrowsAny<Exception>(() => body.Validate(Source, 0u));
+        Assert.True(records.AsSpan().SequenceEqual(before));
+        Assert.Equal(1u, book.Depth);
+    }
+
+    /// <summary>CD 생성은 소유자 바이트 32 뒤 1바이트 프레임 0을 쓴다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    [Fact]
+    public void CreateWritesCdFrameByte()
+    {
+        var pool = CdPool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true };
+        var inner = Base(pool, types, book);
+        var records = CdRecords();
+        var state = new PlayerWorldState { PlayerKnown = 1u };
+        var hooks = new PlayerWorldHooks
+        {
+            Assertion = _ => { },
+            Find = (x, y, type) => 0,
+            Create = (type, flags) => Source,
+            SetOwner = (sid, owner) =>
+            {
+                pool.AllocatedBytes(sid)[CdOwnerOffset] = (byte)owner;
+            },
+            // CD 생성자는 Pop 효과도 요구하므로 호출 때 미연결로 멈춘다.
+            Pop = (sid, x, y, flags) => throw new InvalidOperationException("실제 공간 Pop 미연결"),
+            ReserveRegular = () => false,
+            AddRegular = (sid, ev, payload) => { },
+        };
+        pool.AllocatedBytes(Source).Clear();
+        var body = new RawPlayerWorld(pool, inner, records, state, hooks);
+        Assert.ThrowsAny<Exception>(() => body.Create(8));
+        Assert.Equal(8, pool.Slot(Source)[CdOwnerOffset]);
+        Assert.Equal(0, pool.Slot(Source)[CdFrameOffset]);
+    }
 }

@@ -44,20 +44,35 @@ public sealed class RawPlayerWorld
     /// <summary>실제 Player 한 기록 크기다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     private const int Stride = 0xb4;
 
+    /// <summary>CD의 실제 Player 한 기록 크기다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    private const int CdStride = 0xac;
+
     /// <summary>실제 Player 수다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     private const int Count = 9;
 
     /// <summary>실제 Technology DWORD 위치다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     private const int TechnologyField = 0x9c;
 
+    /// <summary>CD의 실제 Technology DWORD 위치다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    private const int CdTechnologyField = 0x94;
+
     /// <summary>슬롯 안 소유자 바이트 위치다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     private const int OwnerOffset = 34;
+
+    /// <summary>CD의 슬롯 안 소유자 바이트 위치다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    private const int CdOwnerOffset = 32;
 
     /// <summary>슬롯 안 직접 프레임 위치다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     private const int FrameOffset = 36;
 
+    /// <summary>CD의 슬롯 안 직접 프레임 위치다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    private const int CdFrameOffset = 34;
+
     /// <summary>실제 Player152 생성자가 쓰는 PE 가상표다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     private const uint PatchPlayerVtable = 0x50ee08u;
+
+    /// <summary>CD의 실제 Player152 생성자가 쓰는 PE 가상표다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.</summary>
+    private const uint CdPlayerVtable = 0x5002a8u;
 
     /// <summary>실제 Factory·Pop·Host와 같은 살아 있는 원시 풀이다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     private readonly RawSidPool _pool;
@@ -75,7 +90,8 @@ public sealed class RawPlayerWorld
     private readonly PlayerWorldHooks _hooks;
 
     /// <summary>
-    /// 같은 풀·실제 9기록을 확인한다. 이 첫 구현은 PATCH 전용이며 CD 판본·전수 장면 재생은 후속 단위에서 잇는다.
+    /// 같은 풀·실제 9기록을 확인한다. CD 판본은 7개 효과를 모두 요구한다.
+    /// 근거: cpppj `o/RawPlayerWorld.cpp`의 생성자(판본별 기록 크기·필수 효과). 2026-11-07 F2d Player 이식에서 추가됐고 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 CD 분기를 이었다.
     /// </summary>
     /// <param name="pool">실제 Factory·Pop·Host와 같은 살아 있는 원시 풀이다.</param>
     /// <param name="inner">실제 마지막 공통 장부 몸체다.</param>
@@ -90,7 +106,11 @@ public sealed class RawPlayerWorld
         ArgumentNullException.ThrowIfNull(playerRecords);
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(hooks);
-        if (!ReferenceEquals(inner.Pool, pool) || playerRecords.Length != Count * Stride || pool.Edition != OriginalEdition.Patch1078)
+        bool patch = pool.Edition == OriginalEdition.Patch1078;
+        int stride = patch ? Stride : CdStride;
+        if (!ReferenceEquals(inner.Pool, pool) || playerRecords.Length != Count * stride ||
+            (!patch && (hooks.Assertion is null || hooks.Find is null || hooks.Create is null ||
+                hooks.SetOwner is null || hooks.Pop is null || hooks.ReserveRegular is null || hooks.AddRegular is null)))
         {
             throw new ArgumentException("Player 실제 같은 풀·9기록·판본 누락");
         }
@@ -124,7 +144,8 @@ public sealed class RawPlayerWorld
 
         int sid = Need(_hooks.Create)(_state.PlayerType, 2u);
         Need(_hooks.SetOwner)(sid, unchecked((uint)owner));
-        Write(_pool.AllocatedBytes(sid), FrameOffset, 0u, 4);
+        bool patchFrame = _pool.Edition == OriginalEdition.Patch1078;
+        Write(_pool.AllocatedBytes(sid), patchFrame ? FrameOffset : CdFrameOffset, 0u, patchFrame ? 4 : 1);
         Need(_hooks.Pop)(sid, x, y, 0u);
         return sid;
     }
@@ -136,9 +157,18 @@ public sealed class RawPlayerWorld
     /// <param name="flags">호출 플래그다.</param>
     public void PostPop(int sid, uint flags)
     {
+        // CD는 원본처럼 후처리 전에 검증을 먼저 돈다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.
+        if (_pool.Edition != OriginalEdition.Patch1078)
+        {
+            Validate(sid, flags);
+        }
+
+        bool patch = _pool.Edition == OriginalEdition.Patch1078;
+        int ownerOffset = patch ? OwnerOffset : CdOwnerOffset;
+        int frameOffset = patch ? FrameOffset : CdFrameOffset;
         Span<byte> raw = _pool.AllocatedBytes(sid);
-        Write(_players.AsSpan(), TechnologyOffset(raw[OwnerOffset]), unchecked((uint)sid), 4);
-        if ((flags & 1u) != 0u && raw[OwnerOffset] == _state.BattleOwner && !_state.FortMode)
+        Write(_players.AsSpan(), TechnologyOffset(raw[ownerOffset]), unchecked((uint)sid), 4);
+        if ((flags & 1u) != 0u && raw[ownerOffset] == _state.BattleOwner && !_state.FortMode)
         {
             if (Need(_hooks.ReserveRegular)())
             {
@@ -148,17 +178,23 @@ public sealed class RawPlayerWorld
 
         if ((flags & 1u) != 0u && _state.Special != 0u)
         {
-            Write(_pool.AllocatedBytes(sid), FrameOffset, 1u, 4);
+            Write(_pool.AllocatedBytes(sid), frameOffset, 1u, patch ? 4 : 1);
         }
 
         _base.PostPopBase(sid, flags);
     }
 
-    /// <summary>실제 Player 가상표를 확인한다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
+    /// <summary>실제 Player 가상표를 확인한다. 2026-11-07 F2d Player 이식에서 추가됐고 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 CD 분기를 이었다.</summary>
     /// <param name="sid">오브젝트 슬롯 번호다.</param>
     /// <returns>Player면 참이다.</returns>
     public bool Handles(int sid)
     {
+        // CD는 원본처럼 할당 바이트와 CD 가상표로 확인한다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.
+        if (_pool.Edition != OriginalEdition.Patch1078)
+        {
+            return Read(_pool.AllocatedBytes(sid), 0) == CdPlayerVtable;
+        }
+
         return Read(_pool.Slot(sid), 0) == PatchPlayerVtable;
     }
 
@@ -176,7 +212,7 @@ public sealed class RawPlayerWorld
         }
 
         Span<byte> raw = _pool.AllocatedBytes(sid);
-        TechnologyOffset(raw[OwnerOffset]);
+        TechnologyOffset(raw[_pool.Edition == OriginalEdition.Patch1078 ? OwnerOffset : CdOwnerOffset]);
         _base.ValidateBase(sid, flags);
     }
 
@@ -214,15 +250,21 @@ public sealed class RawPlayerWorld
     /// <returns>현재 전역이다.</returns>
     public PlayerWorldState State() => _state;
 
-    /// <summary>실제 9기록 안의 Technology DWORD 위치를 계산한다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
+    /// <summary>실제 9기록 안의 Technology DWORD 위치를 계산한다. 2026-11-07 F2d Player 이식에서 추가됐고 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 CD 분기를 이었다.</summary>
     /// <param name="owner">소유자 번호다.</param>
     /// <returns>기록 안 위치다.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Player Technology 소유자의 실제 9기록 범위 오류다.</exception>
-    private static int TechnologyOffset(uint owner)
+    private int TechnologyOffset(uint owner)
     {
         if (owner >= (uint)Count)
         {
             throw new ArgumentOutOfRangeException(nameof(owner), "Player Technology 소유자의 실제 9기록 범위 오류");
+        }
+
+        // CD는 0xac 기록에 0x94 위치를 쓴다. 2026-11-10 F3 미뤄 둔 전수 재생(0.298)에서 추가됐다.
+        if (_pool.Edition != OriginalEdition.Patch1078)
+        {
+            return unchecked((int)(owner * CdStride + CdTechnologyField));
         }
 
         return unchecked((int)(owner * Stride + TechnologyField));
