@@ -57,6 +57,9 @@ public sealed class RawCampaignSession
     /// <summary>원본 87바이트 전투 옵션의 현재 값이다. 설치 본체가 갱신하며 공통 Start·AI·SP가 같은 참조를 빌린다. 2026-11-11 F3 전투 옵션 소유자 본체에서 추가됐다.</summary>
     private readonly byte[] _battleOptions = new byte[87];
 
+    /// <summary>원본 방향별 9×9 동맹 DWORD의 현재 값이다. 설치 본체가 갱신하며 동맹·AI가 같은 참조를 빌린다. 2026-11-11 F3 동맹 표 소유자 본체에서 추가됐다.</summary>
+    private readonly uint[] _alliances = new uint[81];
+
     /// <summary>원본 첫 목록(outposts)의 현재 항목이다. Fort 적재 본체가 채우기 전에는 비어 있다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
     private readonly RawPostPopList _outposts = new();
 
@@ -215,6 +218,25 @@ public sealed class RawCampaignSession
     /// <summary>같은 87바이트 중 숨은 Chat 표시 9바이트의 현재 뷰이다. 0x3e부터 9칸이며 전투 옵션과 같은 저장소를 본다. 2026-11-11 F3 숨은 플레이어 뷰 본체에서 추가됐다.</summary>
     /// <returns>숨은 Chat 표시 9바이트 뷰이다.</returns>
     internal Span<byte> HiddenPlayers() => _battleOptions.AsSpan(0x3e, 9);
+
+    /// <summary>원본 방향별 9×9 동맹 DWORD의 현재 값이다. 설치 본체가 갱신하며 동맹·AI가 같은 참조를 빌린다. 2026-11-11 F3 동맹 표 소유자 본체에서 추가됐다.</summary>
+    /// <returns>81 DWORD 동맹 표다.</returns>
+    internal uint[] Alliances => _alliances;
+
+    /// <summary>원본 방향별 9×9 동맹 표에서 지정 방향의 한 칸을 읽는다. 적재 여부와 무관하게 읽을 수 있다. 2026-11-11 F3 동맹 표 소유자 본체에서 추가됐다.</summary>
+    /// <param name="owner">읽을 소유자 번호다. 원본 0..8 범위를 받는다.</param>
+    /// <param name="other">읽을 상대 번호다. 원본 0..8 범위를 받는다.</param>
+    /// <exception cref="ArgumentOutOfRangeException">원본 9×9 방향성 표 범위 오류다.</exception>
+    public uint Alliance(uint owner, uint other)
+    {
+        // 원본 세션 Impl의 alliances[owner*9+other] 참조를 직역한다.
+        if (owner >= 9u || other >= 9u)
+        {
+            throw new ArgumentOutOfRangeException(nameof(owner), "동맹 표의 실제 9×9 방향성 범위 오류");
+        }
+
+        return _alliances[(int)(owner * 9u + other)];
+    }
 
     /// <summary>원본 첫 목록(outposts)의 현재 항목이다. Fort 적재 본체가 채우며 게임 메뉴가 같은 참조를 읽는다. 2026-11-10 F3 재장전 본체에서 추가됐다.</summary>
     internal RawPostPopList Outposts => _outposts;

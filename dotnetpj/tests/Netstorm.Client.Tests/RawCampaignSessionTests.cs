@@ -1214,4 +1214,34 @@ public sealed class RawCampaignSessionTests
         Assert.NotEqual(before, after);
         Assert.Equal(next, after);
     }
+
+    /// <summary>동맹 표가 81칸 0으로 시작하고 같은 참조를 공유하는지 검증한다. 2026-11-11 F3 동맹 표 소유자 본체에서 추가됐다.</summary>
+    [Fact]
+    public void SessionAlliancesShareZeroTable()
+    {
+        // 독립 세션의 자체 저장소이며 설치 본체가 갱신하기 전에는 모두 0이다.
+        var session = LoadableSession();
+        Assert.Equal(81, session.Alliances.Length);
+        Assert.Same(session.Alliances, session.Alliances);
+        // 모든 방향 칸이 0인지 확인하는 반복문이다.
+        for (int index = 0; index < session.Alliances.Length; ++index)
+        {
+            Assert.Equal(0u, session.Alliances[index]);
+        }
+    }
+
+    /// <summary>동맹 표 읽기가 같은 저장소를 보고 범위를 검사하는지 검증한다. 2026-11-11 F3 동맹 표 소유자 본체에서 추가됐다.</summary>
+    [Fact]
+    public void AllianceReadsSameStorageAndGuardsRange()
+    {
+        // 같은 참조의 쓰기가 읽기에도 그대로 보인다.
+        var session = LoadableSession();
+        session.Alliances[1 * 9 + 2] = 7u;
+        session.Alliances[8 * 9 + 8] = 9u;
+        Assert.Equal(7u, session.Alliance(1u, 2u));
+        Assert.Equal(9u, session.Alliance(8u, 8u));
+        Assert.Equal(0u, session.Alliance(0u, 0u));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.Alliance(9u, 0u));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.Alliance(0u, 9u));
+    }
 }
