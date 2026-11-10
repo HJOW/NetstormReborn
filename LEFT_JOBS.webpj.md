@@ -4,17 +4,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-10, WB04-E274 완료)
+### 0.1 현재 값 (2026-11-10, WB04-E275 완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(현재 단계 **4-B**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 895단위(제외 89 별도) 중 **port 503(56.2%)·partial 82(9.2%)·todo 310(34.6%)**. 기준선 소스 줄 수로는 129,541줄 중 port 58,700(45.3%)·partial 22,017(17.0%)·todo 48,824(37.7%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E274** (이 커밋, `20261110-130 WB`) 4-B 첫 묶음 DataManager 스트림(RawMemStream·RawDataManagerLifetime·RawDataManagerList): MemStream 할당·대입·쓰기·압축과 DataManager 소멸·연결 목록 추가/제거를 `core/raw-mem-stream.js`·`raw-data-manager-lifetime.js`·`raw-data-manager-list.js` 로 옮겨 datamanager-streams 404행·datamanager-lifetime 392행의 전체 메모리와 외부 효과 순서를 전부 대조했다([문서](docs/webpj-data-manager-streams-20261110.md)). 그 앞은 **WB04-E273** (`5425c0ae / 20261110-129 WB`). 단위 색인은 2절·3.1절 |
-| 다음 작업 | **4-B 네 번째 항목 RawFortObjectStream**(3.1절 4-B 체크 목록, 121줄): 이어서 RawFortImage→RawFortMoneyLoad→RawFortObjectLoad(partial)→Template·RawTemplateLoad→RawDataManagerImage/Resize/Selection→…→지형·섬 부품→RawSurfaceWorld. 기준선 뒤 변경은 착수 때 git diff 1f00a25a..HEAD 로 확인한다 |
-| 마지막 전체 검사 | WB04-E274의 Node v26.13.0·v22.23.3, **2424/2424 통과·실패/건너뜀0**(신규 data-manager-streams 5; WB04-E273 2419), 약146초(Node v22.23.3 도 2424/2424, 약166초; v24 는 미설치) |
+| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 504(56.3%)·partial 82(9.2%)·todo 310(34.6%)**. 기준선 소스 줄 수로는 129,653줄 중 port 58,812(45.4%)·partial 22,017(17.0%)·todo 48,824(37.7%). 영역별 남은 양은 0.3절 |
+| 마지막 구현 커밋 | **WB04-E275** (이 커밋, `20261110-131 WB`) 4-B 내용물 원시 읽기 RawFortContentsLoad: 원본 004bd130 의 개수→변환표→QA/QB→listFlags→즉시 Create→container 재귀를 `core/raw-fort-contents-load.js` 로 옮겨 fort-contents-load 668행(정상 622·중단 44·변환 0 실패 2)의 cursor·Create·현재 변환·재귀·조기 반환을 전부 대조했고, 일반 Objects 적재가 쓰므로 `edit-existing-fort` 분류에서 빼 `port` 로 올렸다([문서](docs/webpj-fort-contents-load-20261110.md)). 그 앞은 **WB04-E274** (`a73557a4 / 20261110-130 WB`). 단위 색인은 2절·3.1절 |
+| 다음 작업 | **4-B RawFortObjectStream**(3.1절 4-B 체크 목록, 121줄): `RawFortObjectLoad::ObjectStream/ChunkStream/SectionStream/LoadStream` 을 `core/fort-object-load.js` 의 FortObjectLoad 위에 옮기고 `fortobjectload-x86.tsv` 원본 609행(객체 573·전체 순회 36)을 stream 경로로 재생한다(contents 훅은 RawFortContentsLoad). 이어서 RawFortImage→RawFortMoneyLoad→RawFortObjectLoad(partial)→Template·RawTemplateLoad→RawDataManagerImage/Resize/Selection→… |
+| 마지막 전체 검사 | WB04-E275의 Node v26.13.0·v22.23.3, **2426/2426 통과·실패/건너뜀0**(신규 fort-contents-load 2; WB04-E274 2424), 약141초(Node v22.23.3 도 2426/2426, 약159초; v24 는 미설치) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -30,7 +30,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 〃 | 3-D | 공통 후처리(SquidPostPop)·Graph 조합 마감 | 완료 2/2 | `o/` 2단위 · 1,305줄 (+36) |
 | 〃 | 3-E | 기준선 뒤 cpppj 변경 판정(3.6절) — 순서3 마감 관문 | 완료 6/6 | 판정 79단위(완료) |
 | 4 M2 | 4-A | 자료·파일·설정·타입 표 | 완료 9/9 | `o/` 15단위 · 3,135줄 (+24) + client M |
-| 〃 | 4-B | Fort·지형·섬 적재 | **진행 중** 3/29 | `o/` 26단위 · 3,916줄 (+47) + client B |
+| 〃 | 4-B | Fort·지형·섬 적재 | **진행 중** 4/30 | `o/` 26단위 · 3,916줄 (+47) + client B |
 | 〃 | 4-C | 패킷·로그인·내부 미션 전송 | 미착수 | `o/` 20단위 · 2,578줄 (+548) + `zacket/` 1 + client A 일부 |
 | 〃 | 4-D | Session 조립·Tutorial1 Load/Start(L2) | 미착수 | client A 나머지(RawCampaignSession 5,715줄 등) |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 미착수 | `o/` 4단위 · 216줄 + client C·J 일부 |
@@ -48,14 +48,14 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 **순서3(M2 선행 부품)은 3-B~3-E 를 모두 마쳐 2026-11-10 WB04-E264 에서 마감됐다**(3-A E1~E242, 3-B~3-D `o/` 18단위 E243~E258, 3-E 판정 79단위 E259~E264). 6-P·7-P1~P3은 M2에 직접 필요하지 않아 순서3에서 이월한 부품이며 순서3 마감 조건이 아니었다(1절 단계 분할 결정, 3.1절). 다음은 순서4 **4-A** 이며, 착수할 때 3.1절에 4-A 체크 항목 목록을 펼친다.
 
-### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E274 기준)
+### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E275 기준)
 
 줄 수는 기준선 `1f00a25a`의 단위 파일(`.cpp/.h/.inc`) 줄 합계다(주석 포함). partial 줄 수는 일부만 옮긴 파일의 전체 줄이므로 남은 양의 상한이다. 단위·줄 수는 대략적인 척도일 뿐이며, 순서4~5의 연결·통합(실제 세션에서 부품을 같은 월드로 묶고 cpppj 오라클과 비교)은 이 수치에 드러나지 않는 큰 작업이다.
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 895단위 / 129,541줄 | 503 (56.2%) / 58,700줄 (45.3%) | 82 (9.2%) / 22,017줄 (17.0%) | 310 (34.6%) / 48,824줄 (37.7%) |
-| `o/` 월드·규칙 | 516단위 / 67,480줄 | 440 (85.3%) / 54,549줄 (80.8%) | 20 (3.9%) / 4,684줄 (6.9%) | 56 (10.9%) / 8,247줄 (12.2%) |
+| 전체 | 896단위 / 129,653줄 | 504 (56.3%) / 58,812줄 (45.4%) | 82 (9.2%) / 22,017줄 (17.0%) | 310 (34.6%) / 48,824줄 (37.7%) |
+| `o/` 월드·규칙 | 517단위 / 67,592줄 | 441 (85.3%) / 54,661줄 (80.9%) | 20 (3.9%) / 4,684줄 (6.9%) | 56 (10.8%) / 8,247줄 (12.2%) |
 | `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 63 (16.7%) / 4,151줄 (6.7%) | 62 (16.4%) / 17,333줄 (28.1%) | 253 (66.9%) / 40,138줄 (65.1%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 439줄 | 0 | 0 | 1 / 439줄 |
 
@@ -85,8 +85,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 이식 원본은 언제나 기준선 판(`git show 1f00a25a:경로`)이고, 기준선 뒤 cpppj 변경은 3.6절 절차로만 반영한다. 같은 작업 트리에서 CP 세션이 cpppj를 계속 커밋하므로(LAN 3차·`Actual*` 실제 연결 경로·`shared*` 공유 전역 추가 등) cpppj 상태는 커밋과 소스로 판단한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 851·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 503·partial 82·todo 310·제외(-) 89**, session/oracle 0. 웹 모듈 520개 중 515개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 420개, 도구(`webpj/tools`) 오라클 관련 4개다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` 537항목(original-x86 506·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E274에서 datamanager-streams·datamanager-lifetime 2개 추가). original-x86 506개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 851·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 504·partial 82·todo 310·제외(-) 88**, session/oracle 0. 웹 모듈 521개 중 516개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 421개, 도구(`webpj/tools`) 오라클 관련 4개다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` 538항목(original-x86 507·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E275에서 fort-contents-load 1개 추가). original-x86 507개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
 | 마지막 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트). 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -204,12 +204,13 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] **client 자료 읽기 계열** (adapt/port: TypeFileRead·ConfigFileRead·GifFileRead·PaletteFileRead·QuickHelpFileRead·DataManagerFileRead·FontCacheFile·LanguageOptions·ClientTemplateSectionNames·GameAssets·ClientFortGlobals 등 client M 영역) — 필요한 부분만 판정·이식 → [E272](docs/webpj-client-data-read-20261110.md) client 자료 읽기 계열 LanguageOptions 이식과 파일 읽기 값 대조
 - [x] **자료 조회 순서 시험** — 미션 자료(Tell·`.fort`·타입 표)를 cpppj 와 같은 순서로 조회하는 통합 시험으로 4-A 를 마감 → [E273](docs/webpj-data-lookup-order-20261110.md) 자료 조회 순서 시험과 Tell 영어 파일 지연 읽기
 
-#### 4-B Fort·지형·섬 적재 (3/29)
+#### 4-B Fort·지형·섬 적재 (4/30)
 
 완료 기준(3.2절): Tutorial1 Fort 적재 결과(객체·지형·섬)가 cpppj 와 같다(`--inspect-fort`·session-dump 범위). 선행: 4-A(완료). 줄 수는 기준선 소스이고, 기준선 뒤 변경은 착수할 때 `git diff 1f00a25a..HEAD -- <파일>` 로 확인해 3.6절 ①/②/③ 으로 판정한다. `(partial)` 은 이미 일부 이식된 단위이며 남은 부분만 옮긴다. 앞 항목이 뒷 항목의 입력이므로 위에서부터 진행한다.
 
 - [x] **RawMemStream** 94줄 — Fort 파일 바이트 스트림(읽기 소유 범위·부분 읽기) → [E274](docs/webpj-data-manager-streams-20261110.md) DataManager 스트림 묶음 MemStream·소멸·연결 목록 이식
-- [ ] **RawFortObjectStream** 121줄 [RawMemStream 뒤]
+- [x] **RawFortContentsLoad** 79줄 — 원본 004bd130 원시 stream 내용물 읽기(분류를 edit-existing-fort 에서 port 로 변경, E275) → [E275](docs/webpj-fort-contents-load-20261110.md) Fort 내용물 원시 읽기 RawFortContentsLoad 이식과 분류 변경
+- [ ] **RawFortObjectStream** 121줄 [RawMemStream·RawFortContentsLoad 뒤]
 - [ ] **RawFortImage** 87줄
 - [ ] **RawFortMoneyLoad** 163줄
 - [ ] **RawFortObjectLoad** (partial 283줄) — E218 `fort-object-load.js` 이후 남은 부분

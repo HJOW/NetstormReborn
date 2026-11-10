@@ -15875,7 +15875,7 @@
       "bytes": 1685688,
       "lines": 405,
       "fixtureCommit": "78625d3d6",
-      "webCommit": "worktree",
+      "webCommit": "a73557a44",
       "cpppjBasis": {
         "cpppj/src/o/RawMemStream.cpp": "c2a3fa5e2",
         "cpppj/src/o/RawDataManagerList.cpp": "78625d3d6"
@@ -15905,9 +15905,38 @@
       "bytes": 1499429,
       "lines": 393,
       "fixtureCommit": "4a0f58436",
-      "webCommit": "worktree",
+      "webCommit": "a73557a44",
       "cpppjBasis": {
         "cpppj/src/o/RawDataManagerLifetime.cpp": "4a0f58436"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E275",
+      "id": "fort-contents-load",
+      "path": "cpppj/tests/fixtures/fort-contents-load-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Fort 원시 Contents 읽기의 cursor·변환표·TYPE·Create·재귀·중단 668행",
+      "consumers": [
+        "webpj/tests/fort-contents-load.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-contents-load.js"
+      ],
+      "doc": "docs/webpj-fort-contents-load-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortContentsLoad.cpp"
+      ],
+      "scope": "668행 전부 사용",
+      "text": true,
+      "sha256": "22851fa72e8905ac9465aadb64cb5669695dfd7d2847435fb0dcb25d4048948e",
+      "bytes": 252643,
+      "lines": 669,
+      "fixtureCommit": "a9af29da7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortContentsLoad.cpp": "a9af29da7"
       }
     }
   ]

@@ -699,7 +699,7 @@ cpppj/src/o/RawFormPop.cpp	port	www/core/squid-forms.js	1f00a25a	port	[o-default
 cpppj/src/o/RawFortBadgesGlobals.cpp	port	www/core/raw-fort-badges-globals.js	1f00a25a	port	[o-default] WB04-E225: Badges 전역 장부 CRT 004fcbe0(6160 BYTE 28개×220 기록별 0 지움·첫 기록 +4..+11 8 BYTE 입력 보존·앞 27개 PE 상수 타입 DWORD+15 BYTE 칸 7행 ASCII 도안·28번째 기록 전체 0)과 reset 0047d860(count DWORD +216 만 0·나머지 6048 BYTE 보존), 한 Client 수명 BSS 0→CRT 한 번의 소유자 RawFortBadgesGlobals(records() 같은 배열). 짧은/긴/비-Uint8Array 장부 거부. fixture fort-badges-globals 10.78 32행 전부와 cpppj 계약(소유자 주소 보존·count 외 6048 BYTE 불변·길이 거부). 남음: 로더/SetBadge/LoadBadges 와 같은 장부를 쓰는 cpppj 세 번째 시험은 RawFortMetaLoad 이식 때(RawFortBadgesSave 는 편집/저장 파일이라 웹 제외)·Client 시작 reset 호출과 수명 연결은 순서4·5
 cpppj/src/o/RawFortBadgesSave.cpp	exclude-edit			-	[edit-fort-save]
 cpppj/src/o/RawFortContentSave.cpp	exclude-edit			-	[edit-fort-save]
-cpppj/src/o/RawFortContentsLoad.cpp	exclude-edit			-	[edit-existing-fort]
+cpppj/src/o/RawFortContentsLoad.cpp	port	www/core/raw-fort-contents-load.js	1f00a25a	port	[o-default] WB04-E275: 004bd130 원시 stream 내용물 읽기(개수→변환→QA/QB→listFlags→즉시 Create→container 재귀). 분류를 edit-existing-fort 에서 일반 Objects 적재(RawCampaignSession 3201)용 port 로 바꿈. 기준선 뒤 변경 없음(3.6절 ①). fixture fort-contents-load 668행 전부. tests/fort-contents-load.test.mjs
 cpppj/src/o/RawFortCoreWrite.cpp	exclude-edit			-	[edit-fort-save]
 cpppj/src/o/RawFortCurrentName.cpp	exclude-edit			-	[edit-fort-name]
 cpppj/src/o/RawFortDeckLoad.cpp	exclude-edit			-	[edit-existing-fort]

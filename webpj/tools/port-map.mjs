@@ -61,8 +61,8 @@ export const RULES = Object.freeze([
     },
     {
         id: 'edit-existing-fort', class: 'exclude-edit',
-        names: ['RawFortTypeNamesLoad', 'RawFortContentsLoad', 'RawFortDeckLoad', 'RawDeckRestore', 'RawFortTerritoryRecover', 'FortTypeConversionStorage', 'RawFortSubscriberLoad', 'RawSubscriberIdGenerate', 'RawFortSubscriberChange'],
-        reason: '기존 Fort Editor 설치의 타입 변환·Deck·Subscriber·지형 회복(RawCampaignSession 의 "기존Editor" 경로). 미션 적재는 RawCampaignWorldLoad/RawFortWorldLoad 를 쓴다',
+        names: ['RawFortTypeNamesLoad', 'RawFortDeckLoad', 'RawDeckRestore', 'RawFortTerritoryRecover', 'FortTypeConversionStorage', 'RawFortSubscriberLoad', 'RawSubscriberIdGenerate', 'RawFortSubscriberChange'],
+        reason: '기존 Fort Editor 설치의 타입 변환·Deck·Subscriber·지형 회복(RawCampaignSession 의 "기존Editor" 경로). 미션 적재는 RawCampaignWorldLoad/RawFortWorldLoad 를 쓴다. 내용물 원시 읽기 RawFortContentsLoad 는 일반 Objects 적재(RawCampaignSession 3201)도 쓰므로 이 목록에서 뺐다(WB04-E275)',
     },
     { id: 'edit-new-fort', class: 'exclude-edit', names: ['RawNewFort', 'RawCampaignNewFort', 'NewFortManagerDevices'], reason: '새 맵 Template manager·보호 작업본 파일. cpppj 987 뒤로 원격 Fort(MP)도 같은 생성을 쓴다' },
     { id: 'edit-fort-name', class: 'exclude-edit', names: ['RawFortCurrentName', 'FortCurrentNameDevices'], reason: 'Editor 플레이어 초기화·현재 Fort 이름과 원격 Fort 경로(987)' },
