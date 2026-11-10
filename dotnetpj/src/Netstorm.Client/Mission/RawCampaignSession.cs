@@ -218,6 +218,45 @@ public sealed class RawCampaignSession
         throw new InvalidOperationException("실제 위치 삭제 미연결");
     }
 
+    /// <summary>로그인·기술·AI가 공유하는 현재 원본 로컬 Player 번호다. 껍데기에서는 Player 상태 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
+    /// <returns>로컬 소유자 번호다.</returns>
+    public uint LocalOwner()
+    {
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 소유자 조회입니다.");
+        }
+
+        // 원본 세션 Player 상태의 실제 battleOwner 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 로컬 소유자 미연결");
+    }
+
+    /// <summary>원본 정보 설명이 읽는 같은 PlayerWorld 템플릿 소유자다. 껍데기에서는 Player 상태 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
+    /// <returns>템플릿 소유자 번호다.</returns>
+    public uint TemplateOwner()
+    {
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 소유자 조회입니다.");
+        }
+
+        // 원본 세션 Player 상태의 실제 templateOwner 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 템플릿 소유자 미연결");
+    }
+
+    /// <summary>원본 00594fbc의 현재 실제 자산 Battle 관문이다. 껍데기에서는 자산 상태 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
+    /// <returns>전투 중이면 1u, 아니면 0u이다.</returns>
+    public uint BattleActive()
+    {
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 전투 조회입니다.");
+        }
+
+        // 원본 세션 자산 상태의 실제 inBattle 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        throw new InvalidOperationException("실제 전투 상태 미연결");
+    }
+
     /// <summary>현재 연결 단계를 읽는다. 사전 구현에서는 항상 0(미접속)이다. 3차 로컬 구현 때 실제 전송과 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
     /// <returns>연결 단계다.</returns>
     public uint LocalConnectionPhase() => _localPhase;

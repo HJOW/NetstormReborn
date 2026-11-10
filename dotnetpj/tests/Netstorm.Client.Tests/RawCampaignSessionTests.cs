@@ -256,6 +256,29 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미연결", destroyError.Message);
     }
 
+    /// <summary>미적재 소유자·전투 조회를 적재 관문에서 거부하는지 검증한다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void OwnerQueriesRejectWhenNotLoaded()
+    {
+        // 적재 전 소유자·전투 조회는 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        Assert.Contains("미적재", Assert.Throws<InvalidOperationException>(() => session.LocalOwner()).Message);
+        Assert.Contains("미적재", Assert.Throws<InvalidOperationException>(() => session.TemplateOwner()).Message);
+        Assert.Contains("미적재", Assert.Throws<InvalidOperationException>(() => session.BattleActive()).Message);
+    }
+
+    /// <summary>적재 뒤 소유자·전투 조회를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐다.</summary>
+    [Fact]
+    public void OwnerQueriesRejectWhenUnconnected()
+    {
+        // 실제 Player·자산 상태 본체는 Fort 본체 단위에서 잇는다(결정 6).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        Assert.Contains("미연결", Assert.Throws<InvalidOperationException>(() => session.LocalOwner()).Message);
+        Assert.Contains("미연결", Assert.Throws<InvalidOperationException>(() => session.TemplateOwner()).Message);
+        Assert.Contains("미연결", Assert.Throws<InvalidOperationException>(() => session.BattleActive()).Message);
+    }
+
     /// <summary>보고서가 월드와 같은 첫 줄을 보이는지 검증한다. 2026-11-10 F3 세션 보고서 위임 이식에서 추가됐다.</summary>
     [Fact]
     public void ReportDelegatesToWorld()
