@@ -12,7 +12,7 @@
 // 제품 표기(11.01 버전 줄·세 번째 Patch Credits)는 product.js 의 경계를 따르며, product 가 false 이면 원본 10.78 표기 그대로 둔다(원본 스크린샷·자료 대조용).
 // 이 모듈은 DOM 을 쓰지 않아 Node 에서도 불러와 검사할 수 있다.
 // (2026-10-28 WB02-D: 메뉴 대화상자 본문 조회를 위해 추가. 2026-10-30 WB03-H: 값 쓰기와 변경 통지 추가. 2026-11-05 WB03-AC: 제품 11.01 표기와 Patch Credits 객체 추가)
-import { Config, ConfigRegistry, asciiLower, sectionRange } from './config.js';
+import { Config, ConfigRegistry, asciiLower, configParseLong, sectionRange } from './config.js';
 import { GameFiles } from './game-files.js';
 import { PRODUCT_CREDITS_OBJECT, PRODUCT_MAJOR_VERSION, PRODUCT_MINOR_VERSION, PRODUCT_VERSION_VALUE, productCreditsText, productTellBody } from './product.js';
 import { decodeOriginalText } from './text-encoding.js';
@@ -179,6 +179,34 @@ export class GameData {
             }
         }
         return existed;
+    }
+
+    // 원본 GetInt: 키의 값을 C 의 long 규칙(configParseLong)으로 읽는다. 값이 없으면 빈 문자열을 읽어 0 이다. 사용: data.getInt('SCREENW'). (2026-11-10 WB04-E268: cpppj ConfigInterface::GetInt)
+    getInt(key) {
+        return configParseLong(this.configuration.get(key) ?? '');
+    }
+
+    // 원본 ReadInt(00441300 계열): "찾았고 지금 값과 다르다"일 때만 { changed: true, value: 새 값 } 이고, 키가 없거나 같은 값이면 { changed: false, value: 현재 값 } 이다.
+    // 사용: const { changed, value } = data.readInt('SCREENW', width). (2026-11-10 WB04-E268: cpppj ConfigInterface::ReadInt)
+    readInt(key, current) {
+        const text = this.configuration.get(key);
+        if (text === null || text === undefined) return { changed: false, value: current };
+        const parsed = configParseLong(text);
+        if (parsed === (current | 0)) return { changed: false, value: current };
+        return { changed: true, value: parsed };
+    }
+
+    // 원본 ReadString: 문자열 비교는 대소문자를 구분한다(원본의 바이트 비교). 키가 없거나 같은 값이면 { changed: false, value: 현재 값 } 이다. (2026-11-10 WB04-E268: cpppj ConfigInterface::ReadString)
+    readString(key, current) {
+        const text = this.configuration.get(key);
+        if (text === null || text === undefined || text === current) return { changed: false, value: current };
+        return { changed: true, value: text };
+    }
+
+    // 원본 IntEquals(00441470): 지역 변수 초기값 0 에서 ReadInt 가 값을 바꿨고 그 값이 expected 면 참이다. 그래서 expected 가 0 이면 항상 거짓이다(원본 그대로). (2026-11-10 WB04-E268)
+    intEquals(key, expected) {
+        const { changed, value } = this.readInt(key, 0);
+        return changed && value === (expected | 0);
     }
 
     // 정수 값을 십진 문자열로 써 넣는다(원본 SetInt, 서식 "%d"). 정수가 아니면 RangeError 이다. 나머지는 set 과 같다. (2026-10-30 WB03-H)
