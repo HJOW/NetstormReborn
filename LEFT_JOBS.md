@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**작업 재개 · 확정 제품1271 / 11.01 · 정적감사1262 · 인계 갱신2026-11-11, HJOW-Athlon**
+**작업 재개 · 확정 제품1272 / 11.01 · 정적감사1262 · 인계 갱신2026-11-11, HJOW-Athlon**
 
 이 문서는 cpppj의 **현재 상태·남은 작업·실행 제외·유효한 계약**을 담는다. 2026-11-10 사용자의 재개 요청으로1265 뒤의 후보 접합을 진행했다. **전체 목표와 M6-n은 미완료다.** 아래 우선순위를 따르고 단위마다 인계·로컬 커밋을 남긴다. push하지 않는다.
 
@@ -30,6 +30,8 @@
 
 **순서 지시(사용자 2026-11-11):** M6·M7은 미루지 않는다. 6차 이후(K/S/B/L)는 추가 구현이라 dotnetpj에 영향이 없지만 3차(LAN·Outpost) 지연은 dotnetpj를 함께 지연시킨다. 따라서 **남은 순서는 M6-n 잔여 → M7.2 → ~~M7.3~~ ~~M7.4~~(1271 완료) → M8 → K2~K5 → S1~S4 → B1~B4 → L1~L3**이다. 이미 끝난 K1·E1~E3·M7.1·M7.5는 완료로 유지한다.
 
+**1272 M6-n Fort 선택 호출자·Player 수명·NoWorld 도달성 감사:** `RequestFortEditState`/Fort 선택의 Battle 판정(`00594fbc`)과 `FortEditEffects`의 소유 섬 개수(`0046f430`)가 Session이 없으면 0/예외였던 것을 Native 장기 소유자(`ownerMode.battle`, `ClientConstructionGlobals` 섬 목록)로 교정했다. **실제 크래시 교정:** 장기 사제 상태가 이전 Session의 Player9 기록 span을 계속 쥐어 둘째 Edit 진입에서 `invalid_argument`로 종료하던 수명 결함(이전에는 힙 주소 재사용으로 우연히 통과)을 1269 오류 로그가 잡아 `~RawPriestWorldBindings`에서 반납하도록 고쳤다. Session 없는 Pop의 객체 종류는 메타 TYPE 108/109/161(VT `0050c9f0`/`0050cc08`, 1267 연결)뿐임을 호출자·PE 초기값으로 확정해, 남은 Session 소유 VT 행은 도달 불가·명시 오류로 기록했다. [근거](docs/exe/cpp-m6n-fort-callers-noworld-audit-20261111.md)·[보고서](cpppj/m6n-fort-callers-noworld-audit-20261111.json). Edit 왕복 2회·Tutorial4·메뉴/팝업 실패 목록 동일 확인. **큰 AI 장기 소유자·일반 Descend·배치 호출자·Fort 상위 Finish 전수는 미완료**, M7.2·M8 미완료, MP 실행0.
+
 **1271 M7.3·M7.4 완료:** 조기/원격 희생 안내(원문 `0042a360` case 0x11 → 로컬 `4cf960("EarlySacrifice")` Tell, 원격 `4c9150` 70h Tell 패킷 = 기존 `SendPlayerTell`)와 이동 진단 marker(`00434970` 세 겹 사각형, `PathMarkerRectangles`)·커서 갱신(`004a46d0` = `PresentPaletteClear`)의 미연결 던지는 람다 4개를 연결했다. [근거](docs/exe/cpp-early-sacrifice-marker-20261111.md)·[보고서](cpppj/early-sacrifice-marker-20261111.json). 새 검사 2건 통과·메뉴 실패 목록 동일·Tutorial4 확인. 실제 희생 UI/패킷은 사용자 직접 확인 대상(재현 안 함). **M7.2·M8·M6-n 잔여 미완료**, MP 실행0.
 
 **1270 K1 한국어 후보 병합 완료:** 986 한국어 최종 후보 41파일(5파일은 hunk 직접 병합)과 한국어 자산 44개(바이트 일치)를 병합하고 처음 컴파일했다. 후보의 컴파일 결함 3건과 번역 자산 결함 1건(`battleOptionsHelp` 한국어 본문이 7,940바이트에서 잘려 끝 안내 소실 → `Game Type` 문단 축약)을 교정했다. [근거](docs/exe/cpp-korean-k1-merge-20261111.md)·[보고서](cpppj/korean-k1-merge-20261111.json). 한국어 검사 33/33·메뉴/팝업 실패 목록 동일·Tutorial4 확인. **K2~K5 미완료**(물리 IME 실입력·본문 검수·그림·화면/배포 검수), MP 실행0.
@@ -58,7 +60,7 @@
 
 ## 0. 세 프로젝트의 실행 가능성과 원본 동일성
 
-AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1271, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
+AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj는 제품1272, DN은 0.261, WB는 열람 당시 인계의 WB04-E242 기준이다. DN/WB를 이번 CPP 단위에서 새로 실행한 결과는 아니며, 해당 프로젝트의 최신 값과 커밋은 각 인계를 따른다.
 
 | 프로젝트 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
@@ -70,7 +72,7 @@ AGENTS.md 최근 변경 `551d27ae`의 두 평가 기준을 적용한다. cpppj�
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품·소스 | **1271 / 11.01**. [M7.3·M7.4](docs/exe/cpp-early-sacrifice-marker-20261111.md). 1270 [K1 한국어 병합](docs/exe/cpp-korean-k1-merge-20261111.md). 1269 [오류 로그 7차](docs/exe/cpp-error-log-20261111.md). 1268 [helpWord 캐시 M7.1](docs/exe/cpp-help-word-cache-20261111.md). 1267 [NoWorld 자산 후처리](docs/exe/cpp-asset-postpop-noworld-20261111.md). 1266 [Fort Snapshot·준비 접합](docs/exe/cpp-native-fort-snapshot-20261110.md).1265 [로그인 debugBurst](docs/exe/cpp-login-debug-burst-20261110.md),1264 [최초후처리4VT](docs/exe/cpp-initial-postpop-owner-20261110.md),1262 Native 표/연결 owner 정적 마감 유지. **큰 NoWorld/M6-n/M6 미완료**, Regular87/87 유지. |
+| 확정 제품·소스 | **1272 / 11.01**. [M6-n 호출자 감사](docs/exe/cpp-m6n-fort-callers-noworld-audit-20261111.md). 1271 [M7.3·M7.4](docs/exe/cpp-early-sacrifice-marker-20261111.md). 1270 [K1 한국어 병합](docs/exe/cpp-korean-k1-merge-20261111.md). 1269 [오류 로그 7차](docs/exe/cpp-error-log-20261111.md). 1268 [helpWord 캐시 M7.1](docs/exe/cpp-help-word-cache-20261111.md). 1267 [NoWorld 자산 후처리](docs/exe/cpp-asset-postpop-noworld-20261111.md). 1266 [Fort Snapshot·준비 접합](docs/exe/cpp-native-fort-snapshot-20261110.md).1265 [로그인 debugBurst](docs/exe/cpp-login-debug-burst-20261110.md),1264 [최초후처리4VT](docs/exe/cpp-initial-postpop-owner-20261110.md),1262 Native 표/연결 owner 정적 마감 유지. **큰 NoWorld/M6-n/M6 미완료**, Regular87/87 유지. |
 | 최근 빌드·집중 검사 |1266 Release/x64 제품2 및 편집 집중 대상 빌드 성공. 기존 비MP 관련 **6/6** 통과. Session 없는 전체 저장·Battle/MP 실행은 미검증이다. |
 | 최근 실제 실행 |1266 일반 Edit에서 TEST01 저장→메인 메뉴 복귀·재진입을 2회, 사용자 경로 파일 생성·종료0·데이터 사본 불변을 확인했다.1265 Tutorial4 생산/건설·600프레임은 이전 제품 증거다. MP/Join/Test Battle·공격/포획/희생/승리/자연 완주/공중3종 전용은 제외했다. |
 | 전체 회귀·배포 | 전체 34경로 진입은 **645에서 검증한 제품 644**가 마지막이다. 최신 전체 솔루션 검사 통과 기록은 없다. 최신 ZIP은 **1092**이며 제품1266 배포물이 아니다. 최종 정합성은 M8에서 확인한다. |

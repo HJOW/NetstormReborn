@@ -1,0 +1,55 @@
+{
+  "unit": 1272,
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "scope": "M6-n Fort 선택 호출자·Player 대여 수명·NoWorld 도달성",
+  "fixes": [
+    "UberGump::BattleGate (594fbc)",
+    "FortEditEffects.ownedIslands Session 없이 RawIslandQueries",
+    "~RawPriestWorldBindings가 hitPoints.playerRecords 반납"
+  ],
+  "noWorldTypes": {
+    "participantType 541208": 108,
+    "battleType 54120c": 109,
+    "glyphType 5412dc": 161,
+    "vtables": [
+      "0050c9f0",
+      "0050cc08"
+    ]
+  },
+  "build": {
+    "seconds": 176.6,
+    "incrementalSeconds": 53.9,
+    "exitCode": 0,
+    "warningsOrErrors": 0
+  },
+  "live": {
+    "editorRoundTrips": 2,
+    "beforeFix": "second entry crashed: invalid_argument 사제 HP의 같은 Player9 고정 기록 필요 (logged by ErrorLog)",
+    "afterFix": "passed, exit 0, no log file",
+    "tutorial4GameTime": [
+      13.839,
+      24.504
+    ]
+  },
+  "tests": {
+    "menu_session": {
+      "failedCases": 6,
+      "sameNamesAs1271": true
+    },
+    "main_popup": {
+      "failedCases": 3,
+      "sameNamesAs1271": true
+    }
+  },
+  "protectedFiles": {
+    "count": 2808,
+    "unchanged": true
+  },
+  "sourceSha256": {
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "e5481457985ff239425a9c015ada756a8e01822be57354c368361242a60bc2e9",
+    "cpppj/src/client/UberGump.cpp": "352aee49a684048f86d22c0667e8b5abc526e1bfd9133891363b60b6374fdd70",
+    "cpppj/src/client/UberGump.h": "6e816b0c8aadcd10be874519652a5daf914f27c8fab7cabf77f815df534c5811"
+  }
+}

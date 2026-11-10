@@ -109,6 +109,8 @@
 #include "client/TellMapMenus.h"
 #include "client/FortSelection.h"
 #include "client/ClientLocalStateGlobals.h"
+#include "client/ClientConstructionGlobals.h" // Native 섬 목록/Fort 모드를 Session 없이 읽는다(M6-n, 1272).
+#include "o/RawIslandQueries.h" // 0046f430 소유 섬 개수 검색이다.
 #include "client/ClientCdGlobals.h"
 #include "client/CdDirectory.h"
 #include "client/ClientFortGlobals.h"
@@ -679,8 +681,13 @@ void UberGump::SelectCurrentFortName(std::string_view name) {
     const std::string source(name.substr(0,name.find('\0')));devices.Set({reinterpret_cast<const std::uint8_t*>(source.c_str()),source.size()+1}); // 현재 요청의 안정된 NUL 입력을 동기 부모가 끝날 때까지 유지한다.
 }
 // 다음 상태를 먼저 쓰고 실제 Battle14의 파일/State/섬/Notify 하위를 같은 부모로 실행한다.
+// 원문 00594fbc의 현재 값이다. Native는 Session 대여가 끝나도 유지되는 Authority를 읽고, 독립 typed/CD는 기존 Session 값을 유지한다(M6-n, 1272).
+std::uint32_t UberGump::BattleGate() const {
+    if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) return client_.SurfaceStorage()->ownerMode.battle ? 1U : 0U;
+    return world_ ? world_->Session().BattleActive() : 0U;
+}
 void UberGump::RequestFortEditState() {
-    auto native=client_.LocalStateGlobals()->State();auto& player=client_.GameplayGlobals()->player;const std::uint32_t battle=world_ ? world_->Session().BattleActive() : 0U;
+    auto native=client_.LocalStateGlobals()->State();auto& player=client_.GameplayGlobals()->player;const std::uint32_t battle=BattleGate();
     RequestFortEdit({fortSelectionMode_,native.next[0],battle,native.phase[0],player.templateOwner,player.battleOwner},FortEditEffects());
 }
 // 일반 복구State7도 실제 pending/current 버퍼와 기존 전체 이름 부모를 사용한다.
@@ -703,7 +710,10 @@ FortSelectionHooks UberGump::FortEditEffects() {
         templateStorage_->LoadFile(slot,{},path,editor_->paths->BindLoad(std::move(load))); //Request 부모는 raw State만 사용한다. 뒤 State1은 작업 파일을 다시 해석해 새 World를 설치한다.
     };
     hooks.core=[this](auto slot) { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) return GetNativeFortTemplateState(client_,templateStorage_,slot);if (!world_) throw std::logic_error("편집 복귀의 실제 State Session 없음");return world_->Session().MutableFortState(slot); };
-    hooks.ownedIslands=[this](auto owner) { if (!world_) throw std::logic_error("편집 복귀의 실제 섬 목록 없음");return static_cast<std::int32_t>(world_->Session().OwnedIslandCount(owner)); };
+    hooks.ownedIslands=[this](auto owner) {
+        if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) { auto& construction=*client_.ConstructionGlobals();return static_cast<std::int32_t>(o::RawIslandQueries(construction.Islands(),construction.FinishOwnerState()).CountOwned(owner)); } // Native의 섬 목록/Fort 모드는 Session이 아닌 Client 장기 소유자라 Session 반납 뒤에도 0046f430을 그대로 실행한다(M6-n, 1272).
+        if (!world_) throw std::logic_error("편집 복귀의 실제 섬 목록 없음");return static_cast<std::int32_t>(world_->Session().OwnedIslandCount(owner));
+    };
     hooks.notify=[this](auto slot) { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) { NotifyNativeFortSlot(slot);return; }if (!world_) throw std::logic_error("편집 복귀의 실제 Notify Session 없음");world_->Session().BindFortCurrentName({}).notify(slot); };
     return hooks;
 }
@@ -726,7 +736,7 @@ bool UberGump::FortSelectionEvent(const InputEvent& event) {
     if (command==kScrollMapListCommand) return ScrollMapList(event); // 5차: 원본에 없는 목록 스크롤 행이며 ReadFort/AskEditFort 분배와 독립이다.
     if (command!=kAskEditFortCommand && command!=kReadFortCommand) return false;
     auto native=client_.LocalStateGlobals()->State();auto& player=client_.GameplayGlobals()->player;
-    const std::uint32_t battle=world_ ? world_->Session().BattleActive() : 0U; //원문 진입의 첫 관문만 캡처하고 owner/State는 같은 현재 저장소를 빌린다.
+    const std::uint32_t battle=BattleGate(); //원문 진입의 첫 관문만 캡처하고 owner/State는 같은 현재 저장소를 빌린다.
     const auto result=DispatchFortSelectionCommand(event,{fortSelectionMode_,native.next[0],battle,native.phase[0],player.templateOwner,player.battleOwner},FortEditEffects());
     if (result) Refresh();return result;
 }

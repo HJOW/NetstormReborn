@@ -206,6 +206,7 @@ RawPriestWorldBindings::RawPriestWorldBindings(RawPriestWorldCore core,RawPriest
 // 외부 공통 postPop에 남아 있는 사제/보호막 포인터를 제거한다.
 RawPriestWorldBindings::~RawPriestWorldBindings() {
     impl_->core.postPop.SetPriestPostPop(nullptr);impl_->core.postPop.SetForcefieldPostPop(nullptr);
+    impl_->state.hitPoints.playerRecords={}; // 장기 사제 상태가 이 Session이 대여한 Player9 기록 span을 다음 Session까지 쥐지 않게 반납한다. 다음 Session의 Player 블록은 다른 주소일 수 있다(M6-n, 1272).
 }
 // 같은 풀만 연결하고 기존 호스트의 의미가 바뀌는 재연결을 거부한다.
 void RawPriestWorldBindings::BindProcesses(o::SquidProcessHost& host) {
