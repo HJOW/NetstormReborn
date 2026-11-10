@@ -171,4 +171,40 @@ public sealed class RawCampaignSessionTests
         Assert.Throws<InvalidOperationException>(() => session.LoadSeeds(LoadableSeeds()));
         Assert.True(session.IsLoaded());
     }
+
+    /// <summary>미적재 세션의 준비·실행을 거부하는지 검증한다. 2026-11-10 F3 세션 프레임 위임 이식에서 추가됐다.</summary>
+    [Fact]
+    public void FrameRejectsWhenNotLoaded()
+    {
+        // 적재 전 프레임 준비·실행은 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<InvalidOperationException>(() => session.PrepareFrame(new FrameTime { Game = 100.0 }, false));
+        Assert.Throws<InvalidOperationException>(() => session.RunFrame(new FrameTime { Game = 100.0 }, false));
+        Assert.Equal(0.0, session.CurrentTime().Game);
+    }
+
+    /// <summary>준비된 시각이 월드에 그대로 보이는지 검증한다. 2026-11-10 F3 세션 프레임 위임 이식에서 추가됐다.</summary>
+    [Fact]
+    public void PrepareFrameForwardsTime()
+    {
+        // 세션 준비의 월드 시각 대입만 둔다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        session.PrepareFrame(new FrameTime { Game = 100.0 }, false);
+        Assert.Equal(100.0, session.CurrentTime().Game);
+        Assert.Equal(100.0, session.World().CurrentTime().Game);
+    }
+
+    /// <summary>정지 실행이 시각만 전진시키는지 검증한다. 2026-11-10 F3 세션 프레임 위임 이식에서 추가됐다.</summary>
+    [Fact]
+    public void RunFramePausedAdvancesTimeOnly()
+    {
+        // 다리 스캔·월드 준비는 돌리고 커널은 건드리지 않는다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        session.RunFrame(new FrameTime { Game = 100.0, Delta = 1.0 }, true);
+        Assert.Equal(100.0, session.CurrentTime().Game);
+        session.RunFrame(new FrameTime { Game = 110.0, Delta = 10.0 }, false);
+        Assert.Equal(110.0, session.CurrentTime().Game);
+    }
 }

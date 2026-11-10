@@ -134,4 +134,37 @@ public sealed class RawCampaignSession
         _world.Load(seeds);
         _loaded = true;
     }
+
+    /// <summary>현재 공급된 프레임 시각을 돌려준다. 원본에 없는 C# 조회이며 검사·소비자 연결용이다. 2026-11-10 F3 세션 프레임 위임 이식에서 추가됐다.</summary>
+    /// <returns>현재 프레임 시각이다.</returns>
+    public FrameTime CurrentTime() => _world.CurrentTime();
+
+    /// <summary>같은 시각을 월드에 공급한다. 적재 전에는 거부한다. 원본 세션 준비의 월드 시각 대입만 둔다. 2026-11-10 F3 세션 프레임 위임 이식에서 추가됐다.</summary>
+    /// <param name="time">공급할 프레임 시각이다.</param>
+    /// <param name="paused">정지 중이면 참이다. 월드 시각 공급에는 쓰지 않으며 AI·입자 연결 때 쓴다.</param>
+    public void PrepareFrame(FrameTime time, bool paused)
+    {
+        _ = paused;
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 프레임 준비입니다.");
+        }
+
+        // 원본 세션 준비의 AI·입자·소리·정지 분기는 후속 단위에서 잇는다(결정 6 — 월드 시각만 둔다).
+        _world.PrepareFrame(time);
+    }
+
+    /// <summary>같은 시각으로 다리 스캔·월드 준비·커널을 한 번 실행한다. 적재 전에는 거부한다. 원본 세션 실행의 월드·커널 부분만 둔다. 2026-11-10 F3 세션 프레임 위임 이식에서 추가됐다.</summary>
+    /// <param name="time">공급할 프레임 시각이다.</param>
+    /// <param name="paused">정지 중이면 참이다. 정지 중에는 커널을 실행하지 않는다.</param>
+    public void RunFrame(FrameTime time, bool paused)
+    {
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 프레임 실행입니다.");
+        }
+
+        // 원본 세션 실행의 AI·건설 효과 분기는 후속 단위에서 잇는다(결정 6 — 월드 스캔·준비·커널만 둔다).
+        _world.RunFrame(time, paused);
+    }
 }
