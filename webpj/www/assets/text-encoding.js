@@ -44,6 +44,9 @@ export function decodeWindows1252(bytes) {
     return chunks.join('');
 }
 
+// Windows-1252 에서 정의되지 않은 바이트(같은 값의 C1 제어 문자로 읽는다)이다. 엄격한 인코딩이 되돌릴 때 쓴다. (2026-11-10 WB04-E269)
+const UNDEFINED_CP1252_BYTES = new Set([0x81, 0x8d, 0x8f, 0x90, 0x9d]);
+
 // 원본·클론 텍스트 파일 바이트를 문자열로 읽는다. UTF-8 BOM 이 있거나 전체가 올바른 UTF-8 이면 UTF-8 로, 그 밖에는 Windows-1252 로 읽는다.
 // 원본 파일은 Windows-1252 이고 클론에서 새로 만드는 한국어 파일은 UTF-8 이라는 규칙이다(docs/formats/vfs.md 4절). 7비트 ASCII 만 있으면 어느 쪽이든 같다.
 // 사용: decodeOriginalText(bytes). (2026-10-28 WB02-D)
@@ -84,6 +87,24 @@ export function encodeWindows1252(text) {
         const code = character.codePointAt(0);
         if (code < 0x80 || (code >= 0xa0 && code <= 0xff)) output.push(code);
         else output.push(CP1252_EXTRA.get(code) ?? REPLACEMENT_BYTE);
+    }
+    return Uint8Array.from(output);
+}
+
+// 원본 설정/경로 경계의 엄격한 변환(cpppj EncodeOriginalText): 문자열을 Windows-1252 바이트로 바꾸되 나타낼 수 없는 문자는 '?' 로 바꾸지 않고 거부한다.
+// BOM 은 만들지 않는다. 짝이 맞지 않는 서로게이트도 거부한다. encodeWindows1252(글꼴 라벨용, '?' 대체)와 구별한다.
+// 사용: 설정 값을 원본 파일 바이트로 되돌리는 곳(저장 내보내기 등)에서 호출한다. (2026-11-10 WB04-E269: cpppj OriginalText.cpp EncodeBytes 의 원문 경로)
+export function encodeOriginalText(text) {
+    const output = [];
+    // 서로게이트 쌍을 하나의 코드 포인트로 읽도록 for...of 로 문자 단위 순회한다(짝 없는 서로게이트는 그대로 한 단위로 나온다).
+    for (const character of String(text ?? '')) {
+        const code = character.codePointAt(0);
+        if (code >= 0xd800 && code <= 0xdfff) throw new RangeError('올바르지 않은 텍스트(짝 없는 서로게이트)입니다.');
+        if (code < 0x80 || (code >= 0xa0 && code <= 0xff)) output.push(code);
+        else if (CP1252_EXTRA.has(code)) output.push(CP1252_EXTRA.get(code));
+        // 정의되지 않은 다섯 바이트(0x81·0x8d·0x8f·0x90·0x9d)는 원본 표에서 같은 값의 C1 제어 문자이므로 그대로 되돌린다.
+        else if (UNDEFINED_CP1252_BYTES.has(code)) output.push(code);
+        else throw new RangeError('Windows-1252 로 나타낼 수 없는 텍스트입니다.');
     }
     return Uint8Array.from(output);
 }
