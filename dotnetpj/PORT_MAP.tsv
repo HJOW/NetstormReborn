@@ -661,3 +661,5 @@ cpppj/src/client/RawChatFormat.cpp	Netstorm.Client/Chat/RawChatFormat.cs	5ed5c1a
 cpppj/src/client/RawChatFormat.h	Netstorm.Client/Chat/RawChatFormat.cs	5ed5c1acdf23079269bb711eef9e7b356b07ddb1	port
 cpppj/src/client/TraceChat.cpp	Netstorm.Client/Chat/TraceChat.cs	c3625c33e1dca2dba7618e041e708464df53124b	port
 cpppj/src/client/TraceChat.h	Netstorm.Client/Chat/TraceChat.cs	c3625c33e1dca2dba7618e041e708464df53124b	port
+cpppj/src/client/RawChatMessage.cpp	Netstorm.Client/Chat/RawChatMessage.cs	bcf1dd300ab7dbb8cf21206652da6a8208e68b16	port
+cpppj/src/client/RawChatMessage.h	Netstorm.Client/Chat/RawChatMessage.cs	bcf1dd300ab7dbb8cf21206652da6a8208e68b16	port
