@@ -248,4 +248,26 @@ public sealed class RawCampaignSessionTests
         session.LoadSeeds(LoadableSeeds());
         Assert.Equal(0u, session.IslandCount());
     }
+
+    /// <summary>새 세션의 소유자별 섬 개수가 모두 0인지 검증한다. 2026-11-10 F3 세션 소유자별 섬 개수 조회 이식에서 추가됐다.</summary>
+    [Fact]
+    public void OwnedIslandCountStartsAtZero()
+    {
+        // 원문대로 소유자 0도 비교하며 빈 목록에서는 모두 0이다.
+        var session = LoadableSession();
+        Assert.Equal(0u, session.OwnedIslandCount(0u));
+        Assert.Equal(0u, session.OwnedIslandCount(1u));
+        Assert.Equal(0u, session.OwnedIslandCount(8u));
+    }
+
+    /// <summary>씨앗 적재 뒤에도 소유자별 섬 개수가 그대로인지 검증한다. 2026-11-10 F3 세션 소유자별 섬 개수 조회 이식에서 추가됐다.</summary>
+    [Fact]
+    public void OwnedIslandCountUnchangedBySeeds()
+    {
+        // 표면 씨앗 적재는 섬 목록을 바꾸지 않는다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        Assert.Equal(0u, session.OwnedIslandCount(0u));
+        Assert.Equal(0u, session.OwnedIslandCount(7u));
+    }
 }

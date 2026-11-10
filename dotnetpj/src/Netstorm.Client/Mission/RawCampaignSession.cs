@@ -198,6 +198,35 @@ public sealed class RawCampaignSession
         return BitConverter.ToUInt32(_storage.Islands.Records, 0);
     }
 
+    /// <summary>지정 소유자의 실제 섬 개수를 읽는다. 소유자 0도 원문대로 비교한다. 2026-11-10 F3 세션 소유자별 섬 개수 조회 이식에서 추가됐다.</summary>
+    /// <param name="owner">셀 소유자 번호다.</param>
+    /// <returns>해당 소유자의 섬 개수다.</returns>
+    public uint OwnedIslandCount(uint owner)
+    {
+        // 원본 0046f430의 같은 현재 섬 목록 순회를 직역한다. 존재하지 않는 기록은 건너뛴다.
+        byte[] records = _storage.Islands.Records;
+        uint total = BitConverter.ToUInt32(records, 0);
+        int count = (int)Math.Min(total, 100u);
+        uint owned = 0u;
+        // 기록마다 존재 DWORD와 현재 소유자 DWORD를 읽는다.
+        for (int island = 0; island < count; island++)
+        {
+            int record = 4 + island * 32;
+            uint exists = BitConverter.ToUInt32(records, record + 4);
+            if (exists == 0u)
+            {
+                continue;
+            }
+
+            if (BitConverter.ToUInt32(records, record + 8) == owner)
+            {
+                owned++;
+            }
+        }
+
+        return owned;
+    }
+
     /// <summary>로컬 패킷을 보낸다. 사전 구현에서는 전송기가 없어 명시 오류로 멈춘다. 3차 로컬 구현 때 루프백 전송과 연결한다. 2026-11-10 F3 세션 연결 사전 구현에서 추가됐다.</summary>
     /// <param name="target">받을 소유자 번호다.</param>
     /// <param name="packet">보낼 패킷이다.</param>
