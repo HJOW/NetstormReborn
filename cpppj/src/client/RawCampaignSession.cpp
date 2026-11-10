@@ -2808,8 +2808,8 @@ struct RawCampaignSession::Impl {
         createHooks.difficulty=[this](std::uint32_t owner)->std::uint32_t {
             if (!services.ai.difficulty || owner>=9 || services.missionOutcome.demo()!=0) return 0;
             const auto local=playerState.battleOwner;
-            if (owner==local || (local<9 && (Read(players,local*0xb4+0x54)&(1U<<owner)))) return 0; // Player+54는 소유자별 동맹 비트 마스크다.
-            return services.ai.difficulty(owner);
+            const bool enemy=!(owner==local || (local<9 && (Read(players,local*0xb4+0x54)&(1U<<owner)))); // Player+54는 소유자별 동맹 비트 마스크다.
+            return services.ai.difficulty(owner,enemy); // 12차: 스커미시는 동맹 AI도 자기 난이도를 쓰므로 판정은 서비스에 맡긴다.
         };
         createHooks.construct=[this](std::uint32_t owner,std::span<const std::uint8_t> settings,std::size_t bytes) { return aiConstructor->Construct(owner,settings,bytes); };
         createHooks.initialUpdate=[this](std::uint32_t token,std::span<const std::uint8_t> settings) { aiInitial->Update(token,settings); };

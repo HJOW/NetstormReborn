@@ -117,7 +117,11 @@ void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
         static_cast<void>(client.ChatChannels().AddToChannel(subscriber,name,channel));
     };
     // 11차 난이도: 옵션 메뉴가 저장한 difficulty 설정을 AI 생성 시점마다 읽는다. 값이 없으면 0이라 보통이다.
-    ai.difficulty=[&client](std::uint32_t) { return static_cast<std::uint32_t>(client.Configuration().GetInt(std::string(o::kDifficultyConfigKey))); };
+    ai.difficulty=[&client](std::uint32_t owner,bool enemy)->std::uint32_t {
+        auto& config=client.Configuration();
+        if (config.GetInt("skirmishRun")!=0 && owner>=2 && owner<=8) return static_cast<std::uint32_t>(config.GetInt("skirmishAi"+std::to_string(owner)+"Diff")); // 12차: 스커미시는 AI별 난이도를 옵션 난이도 대신 쓴다(동맹 AI 포함).
+        return enemy ? static_cast<std::uint32_t>(config.GetInt(std::string(o::kDifficultyConfigKey))) : 0U; // 일반 게임의 옵션 난이도는 적 AI에만 쓴다.
+    };
     // Xlat 키로 바꾸지 않는다. 현재 언어 Config/치환 결과를 매 요청마다 원본 Windows-1252로 인코딩한다.
     ai.defaultName=[&client] {
         const auto bytes=o::EncodeDisplayText(client.Configuration().PathSpec("defaultAiName")); // 현재 언어 교체/설정 변경을 반영한 실제 좁은 바이트다.

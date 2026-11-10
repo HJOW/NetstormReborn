@@ -3,6 +3,8 @@
 #include "client/NativeMetaParticipantName.h"
 #include "client/PriestSelectionShortcut.h"
 #include "o/RawCarrierPickup.h"
+#include "o/RawTerrainGrowth.h"
+#include <random>
 #include "client/StyleTextMarkup.h"
 
 // NB02: 채팅 글자의 엠보스 오프셋 ~[E.x# y#]는 두 좌표가 모두 -4..4 안일 때만 적용한다.
@@ -76,4 +78,31 @@ TEST_CASE(KnownBug_NB18_CarrierHoldingContentRefusesPriestPickup) {
     state.refuseHeldPriest=true;sent=queued=0;
     pickup.Request(Sid{50});pickup.Receive(0,0,packet);CHECK(sent==0 && queued==0); // 내용물을 든 채 사제를 줍는 요청/수신을 모두 거부한다.
     holding=false;pickup.Request(Sid{50});pickup.Receive(0,0,packet);CHECK(sent==1 && queued==1); // 빈 손이면 정상 포획 요청은 그대로다.
+}
+
+// NB23: 드문 섬 생성 종료. 일반 지형 성장(RunNormal)을 무작위 청크 배치·시드·범위로 많이 돌려 예외(종료 원인)가 없는지 확인한다.
+// 청크 배치/성장 시드/선택 지역을 고정 난수로 만들며 게임 상태는 쓰지 않는다. 실패하면 첫 입력 조합을 출력한다.
+TEST_CASE(KnownBug_NB23_TerrainGrowthRandomShapesNeverThrow) {
+    using namespace netstorm::o;
+    std::mt19937 random(23);
+    int failures{};
+    // 서로 다른 모양/시드/범위 조합을 반복한다.
+    for (int round = 0; round < 1500; ++round) {
+        const int left = 1 + static_cast<int>(random() % 11), top = 1 + static_cast<int>(random() % 11); // 실제 섬 배치 범위는 청크 (1,1)~(15,15)이다.
+        const int right = std::min(15, left + 2 + static_cast<int>(random() % 4)), bottom = std::min(15, top + 2 + static_cast<int>(random() % 4));
+        TerrainContextGlobals globals;
+        RawTerrainContext context(OriginalEdition::Patch1078, 1, 127, {left, top, right, bottom}, globals, [](TerrainContextAssertion) {});
+        ChunkMap chunks;
+        const int count = 1 + static_cast<int>(random() % 7); // 섬을 이루는 청크 수다.
+        // 청크를 범위 안 임의 좌표에 놓고 방향 글자·시드 바이트를 무작위로 둔다.
+        for (int index = 0; index < count; ++index) {
+            auto& chunk = chunks.At(left + static_cast<int>(random() % (right - left)), top + static_cast<int>(random() % (bottom - top)));
+            chunk.island = static_cast<std::uint8_t>(random() % 3);
+            chunk.side = static_cast<char>('A' + random() % 16);
+            chunk.record[3] = static_cast<std::uint8_t>(random());
+        }
+        try { RawTerrainGrowth growth(context, chunks, globals); growth.RunNormal(); }
+        catch (const std::exception& error) { if (failures++ == 0) std::fprintf(stderr, "NB23 지형 성장 예외: round=%d bounds=%d,%d,%d,%d count=%d what=%s\n", round, left, top, right, bottom, count, error.what()); }
+    }
+    CHECK(failures == 0);
 }

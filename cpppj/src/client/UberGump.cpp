@@ -69,6 +69,9 @@
 #include "client/RendererDiagnostics.h" //명시특수전역뒤원문7/10/13키의현재DWORD만토글한다.
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "o/AiDifficulty.h" //11차: 옵션 메뉴 Difficulty 하위 메뉴의 단계 값이다.
+#include "client/SkirmishSetup.h" //12차: Campaign 스커미시 설정 화면과 시작 대본이다.
+#include <cctype> // 12차: 스커미시 가상 파일 경로 비교.
+#include <random> // 12차: 스커미시 맵 선택 난수.
 #include "client/LanguageOptions.h" //6차: 옵션 메뉴 Language 하위 메뉴가 한국어 번호(kKoreanLanguageNumber)를 쓴다.
 #include "client/DisplayTextInput.h" // 확정 Unicode 사건은 같은 Gump 입력에만 전달한다.
 #include "client/GameMenuActions.h"
@@ -291,6 +294,12 @@ std::string FontBytes(std::string_view text) {
 // 6차 한국어: 옵션 메뉴 Language 하위 메뉴 항목이다. 영어(원문 번호0/1)와 한국어(7)를 각 언어 자신의 이름으로 보이고 현재 언어에 체크한다.
 std::vector<GameMenuLanguage> LanguageMenuChoices(int current) {
     return {{FontBytes("English"),0U,current==0 || current==1},{FontBytes("한국어"),kKoreanLanguageNumber,current==static_cast<int>(kKoreanLanguageNumber)},{FontBytes("日本語"),kJapaneseLanguageNumber,current==static_cast<int>(kJapaneseLanguageNumber)}}; // 11차 일본어: 각 언어 자신의 표기로 보인다.
+}
+// 12차 스커미시: 생성한 가상 fort(Skirmish.fort)인지 판정한다. 디스크에 없으므로 읽기 전용 조회(stat)를 하지 않고 읽기 전용으로 취급한다.
+bool IsSkirmishFortFile(std::string_view path) {
+    const auto slash=path.find_last_of("\\/");
+    const auto name=path.substr(slash==std::string_view::npos ? 0 : slash+1);
+    return o::AsciiLower(name)=="skirmish.fort";
 }
 // 11차: 옵션 메뉴 Difficulty 하위 메뉴 항목이다. label은 번역 키이고 설정값이 없거나 범위 밖이면 보통(기본값)에 체크한다.
 std::vector<GameMenuLanguage> DifficultyMenuChoices(std::int32_t current) {
@@ -774,11 +783,16 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
         else { state_.phase=ClientPhase::MainMenu;pageName_="main";page_={};input_.Cancel();RefreshWindowTitle(); }
         client_.Pause(false);RebuildControls();return true;
     }
+    if (const auto skirmish=ParseSkirmishTarget(target);skirmish.kind==SkirmishScreen::Set || skirmish.kind==SkirmishScreen::Start) { // 12차 스커미시: 설정 변경과 시작은 창 본문 없이 먼저 처리한다.
+        auto settings=CurrentSkirmishSettings();
+        if (skirmish.kind==SkirmishScreen::Set) { const auto next=ApplySkirmishAction(settings,skirmish.args);StoreSkirmishSettings(settings);return TryTell(next,briefing,windowCreated,suppress); } // 변경 뒤 알맞은 화면을 다시 연다.
+        return StartSkirmish(settings);
+    }
     const auto result=ShowTellInConfig(client_.HtmlWindowGlobals()->tell,FontBytes(target),suppress,client_.Configuration(),
         [this](auto section)->std::optional<std::string> { return mission_ ? mission_->Section(section) : std::nullopt; },
         [this,&target](auto body,auto mode,auto width,auto height) { // 원문의 UTF-8 본문을 실제 좁은 HTML 공장에 한 번만 전달한다.
             const auto screenWidth=client_.GetScreen().Width(),screenHeight=client_.GetScreen().Height();
-            return rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext({mission_ ? 85 : 0,0,screenWidth,screenHeight}),FontBytes(ProductTellBody(target,body,static_cast<std::uint32_t>(client_.LanguageNumber()))),mode,width,height); // 사용자 요청의 세 번째 항목도 같은 원문 HTML 창/메뉴/입력 장치를 사용한다.
+            return rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext({mission_ ? 85 : 0,0,screenWidth,screenHeight}),FontBytes(SkirmishOrProductBody(target,body)),mode,width,height); // 사용자 요청의 세 번째 항목도 같은 원문 HTML 창/메뉴/입력 장치를 사용한다.
         });
     if (!result.found) return false;rebuild_=true;
     if (!result.serial) return true; // 빈 부모/창 생략은 기존 표시 부모나 phase를 교체하지 않는다.
@@ -786,6 +800,48 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
     state_.phase=briefing ? ClientPhase::Briefing : ClientPhase::Dialog;pageName_=o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(client_.HtmlWindowGlobals()->tell.current.data()),std::char_traits<char>::length(client_.HtmlWindowGlobals()->tell.current.data())});popup_.clear();
     if (mission_ && !(missionRuntime_ && missionRuntime_->tutorial)) client_.Pause(true);
     if (windowCreated) *windowCreated=true;RebuildControls();return true;
+}
+// 12차 스커미시: 설정 객체에서 현재 스커미시 설정을 읽는다(값이 없으면 기본값).
+SkirmishSettings UberGump::CurrentSkirmishSettings() {
+    return LoadSkirmishSettings([this](std::string_view key) { return client_.Configuration().PathSpec(key); });
+}
+// 12차 스커미시: 설정을 설정 객체에 쓴다(options.cfg 저장은 설정 객체의 변경 알림이 맡는다).
+void UberGump::StoreSkirmishSettings(const SkirmishSettings& settings) {
+    SaveSkirmishSettings([this](std::string_view key,std::string_view value) { static_cast<void>(client_.Configuration().Set(key,value)); },settings);
+}
+// 12차 스커미시: 스커미시 대상이면 화면 본문을 생성하고, 아니면 제품 전용 본문 규칙(11.01 Credits 등)을 쓴다.
+std::string UberGump::SkirmishOrProductBody(std::string_view target,std::string_view body) {
+    const auto language=static_cast<std::uint32_t>(client_.LanguageNumber());
+    const auto skirmish=ParseSkirmishTarget(target);
+    if (skirmish.kind==SkirmishScreen::None) return ProductTellBody(target,body,language);
+    return BuildSkirmishScreen(skirmish,CurrentSkirmishSettings(),language,[this](std::string_view text) { return client_.Translate(std::string(text)); }); // 금지 유닛 이름은 기존 번역표로 번역한다.
+}
+namespace { // 스커미시 가상 파일의 경로 비교 도우미다.
+// 경로 구분자와 대소문자를 무시하고 두 경로를 비교한다.
+bool SameSkirmishPath(std::string_view first,std::string_view second) {
+    const auto normalize=[](std::string_view text) { std::string result(text);for (auto& c : result) c=c=='/' ? '\\' : static_cast<char>(std::tolower(static_cast<unsigned char>(c)));return result; };
+    return normalize(first)==normalize(second);
+}
+}
+// 12차 스커미시: 설정으로 미션 대본과 fort를 만들어 일반 미션처럼 시작한다. 후보 맵이 없거나 fort를 읽지 못하면 거짓이고 화면은 그대로다.
+bool UberGump::StartSkirmish(const SkirmishSettings& settings) {
+    std::random_device device;
+    const auto launch=BuildSkirmishLaunch(settings,device());
+    if (launch.mapName.empty()) { std::clog<<"Skirmish: no map for "<<settings.aiCount<<" AI players.\n";return false; }
+    auto& config=client_.Configuration();
+    const auto sourceFortPath=config.PathSpec("fortSpec",launch.mapName);
+    const auto fort=config.Reader()(sourceFortPath);
+    if (!fort) { std::clog<<"Skirmish: cannot read fort "<<sourceFortPath<<".\n";return false; }
+    const auto scriptPath=config.PathSpec("missionSpec",std::string(kSkirmishMissionName));
+    const auto fortPath=config.PathSpec("fortSpec",std::string(kSkirmishMissionName));
+    std::vector<std::uint8_t> script(launch.script.begin(),launch.script.end());
+    skirmishSource_=[script=std::move(script),fort=*fort,scriptPath,fortPath](std::string_view path)->std::optional<std::vector<std::uint8_t>> { // 생성한 대본과 고른 fort만 서비스한다.
+        if (SameSkirmishPath(path,scriptPath)) return script;
+        if (SameSkirmishPath(path,fortPath)) return fort;
+        return std::nullopt;
+    };
+    BeginMission(std::string(kSkirmishMissionName));
+    return true;
 }
 // 메인 메뉴로 돌아올 때 미션 설정 객체도 등록 목록에서 제거한다.
 void UberGump::MainMenu() {
@@ -830,13 +886,14 @@ void UberGump::RefreshWindowTitle() {
 // 원본 Begin의 현재 finish/release 뒤 새 빈 미션을 만든다. StartDemo의 직접 지정값도 설치 전에 공급한다.
 void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mode) {
     if (const auto parent=rawButtons_->MainMenuToken()) rawButtons_->KillGump(parent); //원본에 없는 --mission 예약은 첫 Native State3보다 앞일 수 있다. 실제 Begin 시 일반 메인 버튼 선택과 같은 부모 Kill을 예약해 Guide의 dialogsClear를 막지 않게 한다.
-    auto source=mission_ ? mission_->FileSource() : o::ConfigInterface::FileReader{};auto effects=MissionTransitionEffects();effects.create=[this,demo,mode,source=std::move(source)](std::string_view target) { CreateMission(std::string(target),demo,mode,source); }; //기존 Guide를 해제하기 전에 명시 namespace를 소유 복사하며 다음 공장이 같은 source를 사용한다.
+    auto source=mission_ ? mission_->FileSource() : o::ConfigInterface::FileReader{};if (IsSkirmishMissionName(name) && skirmishSource_) source=skirmishSource_; /* 12차: 생성 스커미시는 가상 파일을 읽는다. */ auto effects=MissionTransitionEffects();effects.create=[this,demo,mode,source=std::move(source)](std::string_view target) { CreateMission(std::string(target),demo,mode,source); }; //기존 Guide를 해제하기 전에 명시 namespace를 소유 복사하며 다음 공장이 같은 source를 사용한다.
     BeginGuideMission(name,effects);
 }
 // Guide 공장의 현재 Client 소비자다. 이전 미션 해제는 호출자가 원본 순서로 마친 상태여야 한다.
 void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t mode,o::ConfigInterface::FileReader source) {
     if (mission_ || missionRuntime_) throw std::logic_error("Guide 새 미션 공장 전에 기존 현재가 남아 있음"); //기존 World는 새 Init 뒤 State7의 실제 cleanup 위치까지 살아 있을 수 있다.
     mission_ = CreateGuideMissionScript(client_.Configuration(),name,client_.SurfaceStorage()->links.mission,std::move(source));
+    client_.Configuration().SetInt("skirmishRun",IsSkirmishMissionName(name) ? 1 : 0); // 12차: 이 미션이 스커미시면 AI 난이도는 AI별 설정을 쓴다.
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
     const auto type = o::AsciiLower(mission_->MissionType());
     if (type != "tutorial" && type != "battle") throw std::runtime_error("Mission type pending: " + mission_->MissionType());
@@ -969,7 +1026,7 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
         services.missionFortFileSelect=[this,select=std::move(fortFileSelect)](auto) {
             const auto current=client_.FortGlobals()->Current();if (current.empty()) throw std::logic_error("현재 Fort 파일 선택의 원문 빈 이름 진단");
             return select(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(current.data()),current.size()})); //00460680은 각 지역/서버 읽기 시점의 같은 curFort를 재조회하며 최초 요청 이름으로 고정하지 않는다.
-        };services.missionFortLoad.readOnly=[this](auto path) { return client_.Files().ReadOnly(path); };
+        };services.missionFortLoad.readOnly=[this](auto path) { if (IsSkirmishFortFile(path)) return true; /* 12차: 가상 fort는 항상 읽기 전용이다. */ return client_.Files().ReadOnly(path); };
         if (!mission_->FileSource()) services.missionFortLoad=BindDataManagerFileRead(std::move(services.missionFortLoad),client_.Files()); //일반10.78만 연결하며 명시Editor 작업본/삭제 장부 namespace는 유지한다.
         services.missionFortLoad.tooManyTypes=[] { throw std::logic_error("미션 Template 파일의 numTypes<256 진단"); };
         services.missionFortLoad.rejectFile=[](auto path) { throw std::runtime_error("미션 Template 잘못된 서명의 원본 삭제 요청: 보호 파일은 삭제하지 않습니다: "+std::string(path)); }; // 원본 삭제 요청을 보호 자산에 자동 적용하지 않는다.

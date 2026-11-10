@@ -3883,6 +3883,11 @@ target_sources(netstorm_tests PRIVATE AiDifficultyTests.cpp)
 add_executable(netstorm_ai_difficulty_tests FocusedTestMain.cpp AiDifficultyTests.cpp)
 target_link_libraries(netstorm_ai_difficulty_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_ai_difficulty_tests)
+# 12차 스커미시: 설정/화면/대본/맵 선택 검사(창 없는 일반 검사, 1293).
+target_sources(netstorm_tests PRIVATE SkirmishSetupTests.cpp)
+add_executable(netstorm_skirmish_setup_tests FocusedTestMain.cpp SkirmishSetupTests.cpp)
+target_link_libraries(netstorm_skirmish_setup_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_skirmish_setup_tests)
 # 11차 일본어: 가나/한자 부호화와 일본어 번역표 계약 검사(창 없는 일반 검사, 1287).
 target_sources(netstorm_tests PRIVATE JapaneseTextTests.cpp)
 target_sources(netstorm_korean_text_tests PRIVATE JapaneseTextTests.cpp)

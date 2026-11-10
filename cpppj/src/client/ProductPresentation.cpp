@@ -22,6 +22,15 @@ $Button=Cancel,Tell,Blank
 [SetDifficulty]
 <$Config,difficulty={param.1}>
 <$MenuJustClosed,0>
+
+[Skirmish]
+<h2>Skirmish</h2>
+[SkirmishCount]
+<h2>Skirmish</h2>
+[SkirmishAi]
+<h2>Skirmish</h2>
+[SkirmishBans]
+<h2>Skirmish</h2>
 )"; // 요청한 제목/HJOW 개발/AI 사용 설명을 현재 영문 UI 글꼴로 표시한다. 11차: 같은 객체에 옵션 메뉴 난이도 선택 구간(Patch1101.SetDifficulty(1|2|3))을 둔다.
 // 한국어 모드의 11.01 패치 크레딧 본문이다. 영어 본문과 같은 구성이며 새 항목 이름과 제목은 사용자 지정 표기를 따른다.
 constexpr std::string_view kPatchCreditsKorean=R"(<background="nsstart">
@@ -46,10 +55,10 @@ constexpr std::string_view kPatchCreditsJapanese=R"(<background="nsstart">
 開発およびNetStorm 11.01パッチ: HJOW。<br>
 Copyright 2026 HJOW<br>
 <p>
-OpenAI CodexとChatGPTを活用したAI支援で開発しました。<br>
-AIは分析、プログラミング、ドキュメント作成、検証の補助に使用しました。<br>
+OpenAI Codexと<br>ChatGPTを活用した<br>AI支援で開発しました。<br>
+AIは分析、プログラミング、<br>ドキュメント作成、<br>検証の補助に使用しました。<br>
 <p>
-原作の制作者は、元のクレジット項目で確認できます。
+原作の制作者は、<br>元のクレジット項目で<br>確認できます。
 $Button=戻る,Tell,Credits
 $Button=キャンセル,Tell,Blank
 )";
@@ -69,6 +78,11 @@ std::string ProductTellBody(std::string_view target,std::string_view original,st
     if (korean && o::AsciiLower(target)==o::AsciiLower(kProductCreditsTarget)) return std::string(kPatchCreditsKorean); // 한국어의 새 항목 본문은 고정 번역본이다.
     if (japanese && o::AsciiLower(target)==o::AsciiLower(kProductCreditsTarget)) return std::string(kPatchCreditsJapanese); // 11차 일본어: 같은 구성의 고정 번역본이다.
     std::string body(original);
+    if (o::AsciiLower(target)=="ucampaign") { // 12차 스커미시: Campaign 목록에 Skirmish 항목을 더한다(원문 목록과 Back 버튼 사이).
+        const std::string entry=std::string("$Menu=")+(korean ? "스커미시" : japanese ? "スカーミッシュ" : "Skirmish")+",Tell,Patch1101.Skirmish\n";
+        const auto back=body.find("$Button=");
+        if (body.find("Patch1101.Skirmish")==body.npos) body.insert(back==body.npos ? body.size() : back,entry);
+    }
     if (o::AsciiLower(target)=="credits" && original.find(kProductCreditsTarget)==original.npos)
         body+=korean ? "\n$Menu=NetStorm 11.01 패치 크레딧,Tell,Patch1101.Credits\n" : japanese ? "\n$Menu=NetStorm 11.01 パッチ クレジット,Tell,Patch1101.Credits\n" : "\n$Menu=Netstorm 11.01 Patch Credits,Tell,Patch1101.Credits\n";
     return body;

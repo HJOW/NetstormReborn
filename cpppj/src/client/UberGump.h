@@ -1,6 +1,7 @@
 // 원본 Ubergump.cpp의 메인 메뉴·Tell·미션 진입을 현재 표시 기반과 연결한다.
 #pragma once
 #include "client/DialogExitCommand.h"
+#include "client/SkirmishSetup.h" // 12차: 스커미시 설정 구조체(StartSkirmish 등의 인자)다.
 #include "client/ClientPacketSources.h" //현재 실제 Native Source와 next7의 weak 인계값이다.
 #include "client/GumpPointerBoundary.h"
 #include "client/Gump.h"
@@ -295,6 +296,11 @@ private:
     std::string mapUserName_; // 원본 초기 빈 사용자 이름이며 두 Fort 이름 버퍼와 다르다.
     std::uint32_t& fortSelectionMode_; // 같은 Client005cae84이며 Ask의2와 진행State1을 구별한다.
     HtmlTextParserGlobals& htmlGlobals_; //Client 장기565e70 배경과565ec0 P 억제를 Tell/Help/로그인 상태가 같은 주소로 사용한다.
+    bool StartSkirmish(const SkirmishSettings& settings); // 12차 스커미시: 설정으로 대본/fort를 만들어 미션을 시작한다.
+    SkirmishSettings CurrentSkirmishSettings(); // 12차: 설정 객체에서 스커미시 설정을 읽는다.
+    void StoreSkirmishSettings(const SkirmishSettings& settings); // 12차: 스커미시 설정을 설정 객체에 쓴다.
+    std::string SkirmishOrProductBody(std::string_view target,std::string_view body); // 12차: 스커미시 화면 본문 또는 제품 전용 Tell 본문이다.
+    o::ConfigInterface::FileReader skirmishSource_; // 12차: 생성한 스커미시 대본/fort를 읽는 가상 파일 reader다(시작할 때 채운다).
     std::string lastTellTarget_; // 5차: 마지막으로 실제 창을 만든 Tell 섹션 이름이다. 맵 목록 스크롤이 같은 대화창을 다시 열 때 쓴다.
     ScreenRect htmlMapView_{};std::string htmlCurrentFortName_; // 각 조회에서 현재 뷰와 반환 문자열의 수명을 보존한다.
     std::uint32_t buttonTextureType_{},buttonTextureFrame_{}; // 실제 버튼 배경 생성자에 전달할 fortGump/A01 타입·프레임 번호다.

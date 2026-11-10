@@ -503,6 +503,8 @@ target_sources(netstorm PRIVATE o/RawAuxiliaryDraw.cpp o/RawAuxiliaryDraw.h)
 
 # 원본 파일과 내부 판본을 보존하며 제품11.01 표시와 추가 Credits를 같은 UI에 연결한다.
 target_sources(netstorm PRIVATE client/ProductPresentation.cpp client/ProductPresentation.h client/ProductVersion.h)
+# 12차 스커미시: 설정 화면/시작 대본 로직을 둔다.
+target_sources(netstorm PRIVATE client/SkirmishSetup.cpp client/SkirmishSetup.h client/SkirmishMapList.inc)
 
 #현재 Fort Subscriber 변경의 원문 관문·현재값 재조회 몸체다(713).
 target_sources(netstorm PRIVATE o/RawFortSubscriberChange.cpp o/RawFortSubscriberChange.h)
