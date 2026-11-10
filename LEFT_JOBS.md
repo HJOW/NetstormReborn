@@ -117,8 +117,8 @@ AGENTS.md 1~11차의 **구현 범위**를 기준으로 한다. 구현 마감과 
 
 | 순서 / ID | 해야 할 일 | 완료 조건과 주의점 |
 | --- | --- | --- |
-| **1. M6-n: NoWorld·자산 삭제/AI** | 알려진83VT의 Pre/Post와 통지를 모두 분배했다. 기본4Form 삭제1223·알려진 Regular87VT/장기 상승1249를 연결했다. 큰 하위/AI·다른 배치 호출자/Fort 상위 Finish의 장기 연결이 남는다. | 미션 월드가 없는 메뉴·전환에서도 같은 실제 Pool/목록/TYPE/현재 전역을 사용한다. 큰449b30 등 실제 Runtime이 필요한 하위를 빈 성공으로 숨기지 않는다. 83/83을 전체 NoWorld 완료로 세지 않는다. |
-| **2. M6-n: 호출자·owner 전수 감사** |1262 Native 표·Source/listener/등록/반납·Poll/송수신·선택적 기록/해제의 정적 범위는 마감했다. 모든 실제 process VT·Snapshot/debugBurst 등 전수 후단을 계속한다. | 새 표/가짜 효과로 미연결 하위를 숨기지 않는다. 원문92행·표 밖1/2/5의 현재 집계는1262가 기준이다. 1263 m 구현 마감 뒤 잔여 전수 감사를 닫는다. |
+| **1. M6-n: NoWorld·자산 삭제/AI** | 알려진83VT의 Pre/Post와 통지를 모두 분배했다. 기본4Form 삭제1223·알려진 Regular87VT/장기 상승1249를 연결했다. **1267/1272:** Session 없이 Pop되는 객체는 메타 TYPE 108/109/161(VT `0050c9f0`/`0050cc08`)뿐임을 호출자·PE 초기값으로 확정했고 그 VT와 보호막·Generator·장식 Gun·Arc·Acid의 NoWorld 후처리를 연결했다. 나머지 Session 소유 VT 행(Crab·Teleport·Rune·Altar·Dais·Aviary·Flyer·Gun 4·Blocker·Player·Priest·Residence·Temple)은 NoWorld에서 도달하지 않으며 명시 오류를 유지한다. **큰 AI 장기 소유자(비영 brain)·배치 호출자 전수·Fort 상위 Finish는 정상 NoWorld 도달 근거가 없어 구현하지 않았고 미감사로 남는다.** | 미션 월드가 없는 메뉴·전환에서도 같은 실제 Pool/목록/TYPE/현재 전역을 사용한다. 큰449b30 등 실제 Runtime이 필요한 하위를 빈 성공으로 숨기지 않는다. 83/83을 전체 NoWorld 완료로 세지 않는다. |
+| **2. M6-n: 호출자·owner 전수 감사** |1262 Native 표·Source/listener/등록/반납·Poll/송수신·선택적 기록/해제의 정적 범위는 마감했다. 모든 실제 process VT·Snapshot/debugBurst 등 전수 후단을 계속한다. | 새 표/가짜 효과로 미연결 하위를 숨기지 않는다. 원문92행·표 밖1/2/5의 현재 집계는1262가 기준이다. 1263 m 구현 마감 뒤 잔여 전수 감사를 닫는다. **1272:** `RequestFortEditState`/Fort 선택의 Battle 판정·소유 섬 개수를 Native 장기 소유자로 교정했고 Player9 기록 대여 수명 결함(실제 크래시)을 고쳤다. 일반 Descend·큰 AI·배치 호출자·Fort 상위 Finish의 전수는 위와 같이 미감사다. |
 
 세부 원문은 [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md), 현재 연결 상태는 [1246 연결](docs/exe/cpp-arc-acid-regular-owner-20261110.md)·[1247 피해율 교정](docs/exe/cpp-type-damage-rate-correction-20261110.md)를 본다. 감사 문서 본문의 초기 “없음” 판정은 당시 조사이며 현행 완료 범위보다 우선하지 않는다. **M6-a~k는 1173까지 완료**했으므로 다시 만들지 않는다.
 
