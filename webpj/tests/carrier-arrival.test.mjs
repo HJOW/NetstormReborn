@@ -4,6 +4,7 @@
 //    `originalCD` 행은 다른 판본이라 사용하지 않는다(이 fixture 에는 10.37 행이 없다).
 //  - 계약: 값형 Player AI 표 대신 실제 현재 Player 조회 getter 를 매 판정 읽음(생성 뒤 값이 바뀌어도 반대 표가 분기를 결정하지 않음), 같은 capture DWORD 의 0/음수 비0 가 건강한 동맹 사제 pickup 을 즉시 바꿈,
 //    필수 하위 경계 누락·다른 풀 거부.
+//  - 한 칸 genus 조회(genusAt)는 cpppj 시험 장면과 같이 실제 RawDamageablePostDestroy.genusAt 몸체를 쓴다(2026-11-10 WB04-E253: 시험 안의 대역 구현을 실제 몸체로 교체).
 // 실제 게임·브라우저 실행이 아니다. (2026-11-09 WB04-E160: 운반체 도착 이식과 함께 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -20,7 +21,7 @@ import { RawPriestState } from '../www/core/raw-priest-state.js';
 import { ContainedFinderState } from '../www/core/raw-contained-finder.js';
 import { RawContainedCreate } from '../www/core/contained-create.js';
 import { RawSquidNeighbors } from '../www/core/raw-squid-neighbors.js';
-import { RawSquidFinder } from '../www/core/raw-squid-finder.js';
+import { DamageablePostDestroyState, RawDamageablePostDestroy } from '../www/core/raw-damageable-post-destroy.js';
 import { RawCarrierPreDestroy } from '../www/core/raw-carrier-pre-destroy.js';
 import { PlayerPlacementAnchorState, RawPlayerPlacementAnchor } from '../www/core/raw-player-placement-anchor.js';
 import { RawPathRuntime } from '../www/core/raw-path-runtime.js';
@@ -98,10 +99,14 @@ class ArrivalScene {
         this.anchor = new RawPlayerPlacementAnchor(this.pool, this.types, this.hash.view(0), this.book, new SquidPostPopList(), this.containedState, this.anchorState);
         this.create = new RawContainedCreate(this.pool, undefined, { create: forbidden(), notifySurface: forbidden(), attach: forbidden() });
         this.footprint = new RawSquidNeighbors(this.pool, this.hash, this.spots, this.types, this.frames);
+        // 이미 이식한 공통 한 칸 genus 조회(004b2070) 몸체를 같은 풀·해시에서 공유한다(cpppj CarrierArrivalSupport 의 post). 삭제 후처리의 큰 하위 효과는 도달하면 실패한다. (2026-11-10 WB04-E253)
+        this.post = new RawDamageablePostDestroy(this.pool, this.hash, this.types, this.frames, this.reward, this.footprint, new DamageablePostDestroyState(), {
+            dropDude: forbidden(), dropIsland: forbidden(), regular: forbidden(), hasBridgeFall: forbidden(), notifySurface: forbidden(), displayUpdate: forbidden(), destroy: forbidden(), base: forbidden()
+        });
         this.arrival = new RawCarrierArrival(this.pool, this.hash, this.types, this.carrier, this.cleanup, this.priest, this.anchor, this.create, this.footprint, this.state, {
             ...(controlled ? { currentControlled: controlled } : {}),
             path: (sid) => { assert.equal(sid, PARENT); return this.actualPath ? this.actualPath(sid) : (this.value('path') ? this.runtime : null); },
-            genusAt: (x, y, genus) => this.genusAt(x, y, genus),
+            genusAt: (x, y, genus) => this.post.genusAt(x, y, genus),
             pickup: forbidden(),
             escape: (sid, delay, event) => {
                 assert.equal(sid, PARENT);
@@ -114,17 +119,6 @@ class ArrivalScene {
 
     // 입력값만 읽고 예상 분기/반환을 계산하지 않는다. (2026-11-09 WB04-E160)
     value(key) { return Number(this.input[key]) >>> 0; }
-
-    // 004b2070 의 공통 한 칸 genus 조회(기존 일반 탐색기의 plain truncate 와 skipSurface)이다: 첫 통과 후보만 반환하고 free/dead 필터를 추가하지 않는다. (2026-11-09 WB04-E160)
-    genusAt(x, y, genus) {
-        const ix = Math.trunc(x);
-        const iy = Math.trunc(y);
-        const finder = new RawSquidFinder(this.pool, this.hash, this.types);
-        for (let current = finder.begin({ left: ix, top: iy, right: ix, bottom: iy }, (genus & 6) === 0 ? 1 : 0); current !== 0; current = finder.next()) {
-            if (this.types[this.pool.slot(current)[10]].flags2 & genus) return current;
-        }
-        return 0;
-    }
 
     // Native 입력과 같은 합성 raw/발자국/버킷 등록이다. 전체 actual Pop 완료 근거가 아니다. (2026-11-09 WB04-E160)
     add(sid, type, x, y, width) {

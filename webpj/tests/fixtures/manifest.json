@@ -12060,7 +12060,8 @@
         "webpj/tests/carrier-arrival.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-carrier-arrival.js"
+        "webpj/www/core/raw-carrier-arrival.js",
+        "webpj/www/core/raw-damageable-post-destroy.js"
       ],
       "doc": "docs/webpj-carrier-arrival-20261109.md",
       "cpppjSources": [
@@ -15354,9 +15355,42 @@
       "bytes": 5475750,
       "lines": 4514,
       "fixtureCommit": "bc0dddbd6",
-      "webCommit": "worktree",
+      "webCommit": "5ddfa05b7",
       "cpppjBasis": {
         "cpppj/src/o/RawDamageableRelease.cpp": "230528e31"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E253",
+      "id": "damageablepostdestroy",
+      "path": "cpppj/tests/fixtures/damageablepostdestroy-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Damageable PostDestroy 와 첫 드롭의 전체 후보·count 와 명시 생성/공통 post 경계(하위 효과 순서·인자·일곱 슬롯 전체 바이트)",
+      "consumers": [
+        "webpj/tests/damageable-post-destroy.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-damageable-post-destroy.js",
+        "webpj/www/core/raw-squid-finder.js",
+        "webpj/www/core/raw-squid-neighbors.js",
+        "webpj/www/core/squid-reward.js",
+        "webpj/www/core/bridge-decay.js"
+      ],
+      "doc": "docs/webpj-damageable-post-destroy-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDamageablePostDestroy.cpp"
+      ],
+      "scope": "4,412행 중 10.78(originals) 2,246행 전부(Post 1,606·Drops 640)를 사용(originalCD 2,166행은 범위 밖)",
+      "text": true,
+      "sha256": "7cbf0b93162674cd8d1cf353068ad96b4e717f1167782c0b8fe98908b98a4c6b",
+      "bytes": 3253663,
+      "lines": 4413,
+      "fixtureCommit": "db9b626c0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDamageablePostDestroy.cpp": "079f170e3"
       }
     }
   ]
