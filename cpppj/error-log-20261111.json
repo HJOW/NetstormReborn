@@ -1,0 +1,38 @@
+{
+  "unit": 1269,
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "scope": "7차 E1~E3 + M7.5",
+  "sourceSha256": {
+    "cpppj/src/app/main.cpp": "5463324b24dc4a7a36d4fc7790b8a92dc7a188c1b1820d76dfbab20689f2a0fb",
+    "cpppj/src/client/ClientMain.cpp": "9a3eccc87540b2fdfa5fa400b6175e35c8ec7a20fb7cd5eecd9b5baa1a144512",
+    "cpppj/src/platform/CMakeLists.txt": "ad4396d0b9d1ebf266609a7be61a668c7370917b70901f3162adec2195408388",
+    "cpppj/src/platform/UserDataRoot.cpp": "53992245f0b96f51a917a55db5ca5bcaaaad24c45cc46bab92914544755e1ce5",
+    "cpppj/src/platform/UserDataRoot.h": "efce514369febf8ec56efe0a936ae8501205e951528d0e95345632ac44d4cec4",
+    "cpppj/tests/CMakeLists.txt": "545885e769137d2832a01326326ca23177ef58119d74710cae0a224d8db3c05c",
+    "cpppj/src/platform/ErrorLog.cpp": "318daf8a2e97bb89d88431910180bebb6d97adf8d1b56f3551a91eca5b9dc71e",
+    "cpppj/src/platform/ErrorLog.h": "09d9d4d35fe371d0891cccb4a4316ee3111db739e19ae7cf76098ddc66ac2ed0",
+    "cpppj/tests/ErrorLogTests.cpp": "6d7111ec73e7a54b6b7a5dc20832fd9b663b42f22897462b0d2e578b76ca07ac"
+  },
+  "logPath": "%USERPROFILE%\\Saved Games\\Netstorm\\logs\\yyyyMMddHHmmss.log",
+  "unitTests": {"netstorm_error_log_tests": {"total": 14, "failed": 0}},
+  "processTests": [
+    {"kind": "throw", "exitCode": 1, "passed": true},
+    {"kind": "terminate", "exitCode": 3, "passed": true},
+    {"kind": "access", "exitCode": 3221225477, "passed": true},
+    {"kind": "divzero", "exitCode": 3221225620, "passed": true},
+    {"kind": "abort", "exitCode": 3, "passed": true},
+    {"kind": "stack", "exitCode": 3221225725, "passed": true},
+    {"kind": "invalid", "exitCode": 3, "passed": true},
+    {"kind": "purecall", "exitCode": 3, "passed": true},
+    {"kind": "normal --version", "logsFolderCreated": false, "passed": true}
+  ],
+  "installFolderUnchanged": true,
+  "regression": {"menu_session": 6, "main_popup": 3, "construction_owner": 2, "namesIdenticalTo1268": true},
+  "live": {"mission": "tutorial4", "producedType": 75, "gameTimeSeconds": [13.547, 23.89], "exitCode": 0, "commandErrors": [], "logFileCreated": false},
+  "build": {"firstSeconds": 341.9, "incrementalSeconds": 25.0, "warningsOrErrors": 0},
+  "protectedFiles": {"count": 2808, "unchanged": true},
+  "excluded": "포획/희생·특정 적 공격·승리·공중3종·MP/Join/Test Battle 실행 없음",
+  "limits": ["던진 위치의 스택 추적 없음", "모듈+RVA(심볼 별도)", "ARM64 레지스터 덤프 미구현", "배포 ZIP/읽기 전용 설치 GUI 미확인"]
+}

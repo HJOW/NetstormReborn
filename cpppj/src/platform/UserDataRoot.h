@@ -13,6 +13,7 @@ inline constexpr std::string_view kUserEditorFolder = "Editor";        // Edit �
 inline constexpr std::string_view kUserCapturesFolder = "Captures";    // GIF 스크린샷·연속 BMP 캡처 폴더 이름이다.
 inline constexpr std::string_view kUserCacheFolder = "Cache";          // 다시 만들 수 있는 글꼴 캐시(!*.chfnt)와 도움말 목록 HTML 같은 생성물 폴더 이름이다.
 inline constexpr std::string_view kUserDiagnosticsFolder = "Diagnostics"; // squids.txt·procSumm.txt 같은 진단 덤프 폴더 이름이다.
+inline constexpr std::string_view kUserLogsFolder = "logs";             // 7차 요구: 비정상 종료/오류 상세 로그(yyyyMMddHHmmss.log) 폴더 이름이다. 소문자 logs가 요구 사양이다(1269).
 // 개발/검사에서 실제 사용자 홈 대신 임시 폴더를 쓰게 하는 환경 변수 이름이다. 값이 비어 있으면 무시한다.
 inline constexpr std::wstring_view kUserDataOverrideVariable = L"NETSTORM_USER_DATA";
 
@@ -38,6 +39,8 @@ public:
     std::filesystem::path Cache() const;
     // 진단 덤프 폴더(Root\Diagnostics)다.
     std::filesystem::path Diagnostics() const;
+    // 오류/비정상 종료 상세 로그 폴더(Root\logs)다. 파일 이름은 yyyyMMddHHmmss.log이며 폴더는 첫 기록 때 만든다(1269, 7차).
+    std::filesystem::path Logs() const;
     // 옵션 파일(Root\Saves\options.cfg)이다. 원본의 <설치>\d\options.cfg를 대신한다.
     std::filesystem::path OptionsFile() const;
     // 전투 체크포인트(Root\Saves\!state.dat)다. 원본의 <설치>\d\!state.dat를 대신한다.

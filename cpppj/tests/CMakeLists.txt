@@ -3856,3 +3856,9 @@ target_sources(netstorm_tests PRIVATE ClientHelpWordTests.cpp)
 add_executable(netstorm_help_word_tests FocusedTestMain.cpp ClientHelpWordTests.cpp)
 target_link_libraries(netstorm_help_word_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_help_word_tests)
+
+# 7차 공통 오류 로그: 파일 이름/지연 생성/이전 활동/예외 풀이/스레드 안전을 게임 없이 확인한다(1269).
+target_sources(netstorm_tests PRIVATE ErrorLogTests.cpp)
+add_executable(netstorm_error_log_tests FocusedTestMain.cpp ErrorLogTests.cpp)
+target_link_libraries(netstorm_error_log_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_error_log_tests)

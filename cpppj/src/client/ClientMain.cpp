@@ -39,6 +39,7 @@
 #include "client/StartupFiles.h"
 #include "platform/Utf8Path.h"
 #include "platform/LegacyRegistryValue.h" // Config의 {&경로}를 같은 프로세스의 실제 레지스트리 기본값 조회에 연결한다.
+#include "platform/ErrorLog.h" // 7차/M7.5: 원문 assertion과 처리되지 않은 예외를 사용자 홈 logs의 공통 로그에 남긴다.
 #include "platform/ScopedNewHandler.h" // 실제 Run 범위에서만 원문 new_handler를 등록하고 정상/예외 복귀에 이전 값을 복원한다.
 #include "client/CdDirectory.h"
 #include "client/ClientBridgeDecay.h"
@@ -139,14 +140,28 @@ Client* g_client = nullptr;
 
 // 원문435f50은 회복 불가능한 메모리 실패를 안내한 뒤 종료0으로 끝낸다.
 void ClientAllocationFailureHandler() {
+    platform::ErrorLog::RecordFatal("메모리 할당 실패","원문 435f50: 회복 불가능한 메모리 부족으로 정리 후 종료합니다"); // 7차: 종료 직전 원인을 먼저 남긴다.
     std::set_new_handler(nullptr); // 실패 정리의 추가 할당에서 같은 오류창/정리를 재귀 실행하지 않는 현대 호스트 경계다.
     try { if (g_client) g_client->HandleAllocationFailure(); }catch (...) {} // 정리 중 추가 실패도 원문의 치명적 종료 목적을 유지한다.
     std::_Exit(0);
 }
 
 // 정적 창 프로시저: 클라이언트가 있으면 넘기고, 없으면 기본 처리한다.
+// 7차: 창 프로시저에서 잡은 예외다. Win32 호출 경계를 예외가 넘지 않게 하고 메시지 펌프가 같은 예외를 다시 던진다.
+std::exception_ptr g_windowException;
+// 메시지 펌프가 DispatchMessage 뒤에 호출해 창 프로시저에서 잡은 예외를 원래 호출 흐름으로 되돌린다.
+void RethrowWindowException() {
+    if (g_windowException) { const auto error = std::exchange(g_windowException, nullptr); std::rethrow_exception(error); }
+}
 LRESULT CALLBACK WindowProcedure(HWND window, UINT message, WPARAM wParam, LPARAM lParam) {
-    if (g_client) return static_cast<LRESULT>(g_client->HandleMessage(window, message, wParam, lParam));
+    if (g_client) {
+        try { return static_cast<LRESULT>(g_client->HandleMessage(window, message, wParam, lParam)); }
+        catch (...) { // 첫 예외만 보관하고 로그에 남긴다(이후 같은 펌프 안의 연쇄 예외는 기록만 한다).
+            platform::ErrorLog::RecordException("창 메시지 처리 중 예외(message=0x" + std::to_string(message) + ")", std::current_exception());
+            if (!g_windowException) g_windowException = std::current_exception();
+            return 0;
+        }
+    }
     return DefWindowProcA(window, message, wParam, lParam);
 }
 
@@ -240,7 +255,7 @@ Client::Client(ClientOptions options)
         return platform::ReadLegacyRegistryValue(path,[this] { // 잘못된 HKEY의 원문 진단은 복귀 뒤 실제 조회를 계속하며 초기 자산 준비를 요구하지 않는다.
             const auto file=options_.edition==o::OriginalEdition::Patch1078 ? "\\Ns\\O\\Winutil.cpp":"\\Ns\\o\\winUtil.cpp"; // 두 판본 PE의 실제 원문 진단 파일 이름이다.
             const auto line=options_.edition==o::OriginalEdition::Patch1078 ? 0x2dbU:0x2d9U; // 10.78/CD10.72의 keyValue 진단 줄 번호다.
-            if (surfaceStorage_) surfaceStorage_->AssertDisplay("keyValue",file,line);else std::clog<<"원본 표시 진단: "<<file<<':'<<line<<" keyValue\n"; // 초기 Config는 아직 없는 SurfaceStorage를 요구하지 않고 현재 중앙 장치의 기존 복귀 로그 경계를 사용한다.
+            if (surfaceStorage_) surfaceStorage_->AssertDisplay("keyValue",file,line);else { platform::ErrorLog::RecordAssertion("keyValue",file,line);std::clog<<"원본 표시 진단: "<<file<<':'<<line<<" keyValue\n"; } // M7.5: 초기 registry 진단도 같은 중앙 장치에 기록한다. // 초기 Config는 아직 없는 SurfaceStorage를 요구하지 않고 현재 중앙 장치의 기존 복귀 로그 경계를 사용한다.
         });
     };
     if (options_.userData) { // 5차: 설정은 사용자 홈 Saves의 options.cfg를 먼저 읽고, 없을 때만 설치 폴더의 옛 d\options.cfg를 읽는다(기존 설정 이관, 설치 폴더는 쓰지 않는다).
@@ -417,7 +432,7 @@ int Client::Run() {
     screen_->BindColorMaps([owner=colorSortInput_] { const auto& maps=owner->Maps();return GumpShadeMaps{maps[4],maps[6]}; }); // 실제cache의두행을화면명암에도사용한다.
     surfaceStorage_=MakeRawSurfaceStorage(*assets_,gameplayGlobals_->Authority(),gameplayGlobals_->GameAux()); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
     surfaceStorage_->BindChecking(o::RawCheckingFlag{gameplayGlobals_->AiDebug().Checking()}); // 같은ClientDWORD를Editor/Session대여전부터빌리며새World에서0으로복제하지않는다.
-    surfaceStorage_->BindDisplayDiagnostics(gameplayGlobals_->AiDebug().AssertionDetail(),[](std::string_view expression,std::string_view file,std::uint32_t line) { std::clog<<"원본 표시 진단: "<<file<<':'<<line<<' '<<expression<<'\n'; }); // 첫 Editor/Session 이전부터 현재 상세 저장소와 복귀하는 기존 로그 진단을 연결한다.
+    surfaceStorage_->BindDisplayDiagnostics(gameplayGlobals_->AiDebug().AssertionDetail(),[](std::string_view expression,std::string_view file,std::uint32_t line) { platform::ErrorLog::RecordAssertion(expression,file,line);std::clog<<"원본 표시 진단: "<<file<<':'<<line<<' '<<expression<<'\n'; }); // M7.5: 모든 AssertDisplay가 이 중앙 장치를 거쳐 사용자 홈 logs 파일에 남는다. // 첫 Editor/Session 이전부터 현재 상세 저장소와 복귀하는 기존 로그 진단을 연결한다.
     surfaceStorage_->BindGraphTrace([this](auto level,auto text) { WriteDiagnosticLog(level,text); }); // Graph의 원문 로그도 현재 Client 필터/들여쓰기/FILE 수명을 직접 사용한다.
     if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->EnablePatchDestroyDiagnostics(); // 실제 첫 Editor/Session 전부터 원문 공통 삭제의 정상 복귀 진단을 같은 Client에 연결한다.
     if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindPostPopDevices({[this](auto owner,auto object,auto added) {
@@ -556,6 +571,7 @@ int Client::Run() {
             if (message.message == WM_QUIT) return static_cast<int>(message.wParam);
             TranslateMessage(&message);
             DispatchMessageA(&message);
+            RethrowWindowException(); // 7차: 창 프로시저에서 잡은 예외를 메인 루프의 같은 위치로 되돌린다.
         }
         // 8. 원본 튜토리얼 안내(FUN_00463f70)의 현재 프레임을 입력보다 먼저 실행한다.
         if (menu_) menu_->MissionFrame();
@@ -1210,6 +1226,7 @@ bool Client::PumpMessages() {
         if (message.message == WM_QUIT) return false;
         TranslateMessage(&message);
         DispatchMessageA(&message);
+        RethrowWindowException(); // 7차: 시작/대기 펌프도 같은 예외 경로를 쓴다.
     }
     return true;
 }

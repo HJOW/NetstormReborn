@@ -54,6 +54,7 @@ std::filesystem::path UserDataRoot::Editor() const { return root_ / std::filesys
 std::filesystem::path UserDataRoot::Captures() const { return root_ / std::filesystem::path(std::u8string(kUserCapturesFolder.begin(), kUserCapturesFolder.end())); }
 std::filesystem::path UserDataRoot::Cache() const { return root_ / std::filesystem::path(std::u8string(kUserCacheFolder.begin(), kUserCacheFolder.end())); }
 std::filesystem::path UserDataRoot::Diagnostics() const { return root_ / std::filesystem::path(std::u8string(kUserDiagnosticsFolder.begin(), kUserDiagnosticsFolder.end())); }
+std::filesystem::path UserDataRoot::Logs() const { return root_ / std::filesystem::path(std::u8string(kUserLogsFolder.begin(), kUserLogsFolder.end())); }
 std::filesystem::path UserDataRoot::OptionsFile() const { return Saves() / L"options.cfg"; }
 std::filesystem::path UserDataRoot::SavedStateFile() const { return Saves() / L"!state.dat"; }
 std::filesystem::path UserDataRoot::FullScreenStateFile() const { return Saves() / L"fullscreenStateFile.dat"; }

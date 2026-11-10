@@ -45,6 +45,7 @@
 #include "platform/FileOutput.h"
 #include "platform/PortableStartup.h"
 #include "platform/UserDataRoot.h"
+#include "platform/ErrorLog.h" // 7차: 최상위 오류/비정상 종료 상세 로그를 사용자 홈 logs에 남긴다.
 
 namespace {
 // 복원의 기준이 되는 원본 판본.
@@ -898,8 +899,27 @@ int RunConfigCommand(const std::string& command, std::vector<std::string> argume
 }
 
 // 무인자는 원본처럼 게임 GUI를 시작하고 명시적인 옵션은 기존 분석/검사 CLI로 분배한다.
+// 7차: 사용자 홈 logs 폴더로 공통 오류 로그를 구성하고 비정상 종료 핸들러와 표준 스트림 복제를 설치한다.
+// 사용자 폴더를 정할 수 없으면 설치 폴더에 쓰지 않고 로그 파일 없이 계속한다. 정상 실행에서는 경고 이상이 나올 때까지 파일을 만들지 않는다.
+void SetupErrorLog() {
+    try { netstorm::platform::ErrorLog::Configure(netstorm::platform::UserDataRoot::Resolve().Logs(), netstorm::client::kProductVersion); }
+    catch (const std::exception& error) { std::fprintf(stderr, "오류 로그 폴더를 정하지 못했습니다: %s\n", error.what()); }
+    netstorm::platform::ErrorLog::InstallCrashHandlers();
+    netstorm::platform::ErrorLog::CaptureStandardStreams();
+    netstorm::platform::ErrorLog::Note(std::string("시작: NetStorm ") + std::string(netstorm::client::kProductVersion));
+}
+// 최상위 예외를 로그에 치명 오류로 남기고, 파일이 만들어졌다면 그 경로를 안내 문구로 돌려준다.
+std::string RecordTopLevelFailure(std::string_view what) {
+    netstorm::platform::ErrorLog::RecordException("main 최상위", std::current_exception(), netstorm::platform::LogLevel::kFatal);
+    const auto file = netstorm::platform::ErrorLog::CurrentFile();
+    if (file.empty()) return std::string(what);
+    const auto text = file.u8string();
+    return std::string(what) + "\n\n자세한 로그: " + std::string(text.begin(), text.end());
+}
 int main(int argc, char** argv) {
+    SetupErrorLog();
     try {
+        if (argc == 3 && std::string(argv[1]) == "--log-crash-test") netstorm::platform::ErrorLog::CrashForTest(argv[2]); // 7차 검사용: 지정한 방식으로 의도적으로 비정상 종료해 로그 파일을 확인한다.
         if (argc == 1) {
             auto names=std::make_shared<netstorm::o::RawFileName>();const auto directory=netstorm::platform::PortableGameDirectory(netstorm::platform::CurrentExecutableFile(),names.get()); // 새 휴대 배포 배치이며 원본과 다른 Windows 10/11 경로 어댑터다.
             netstorm::platform::DetachOwnGuiConsole();
@@ -982,7 +1002,12 @@ int main(int argc, char** argv) {
         }
         PrintBuildInfo(); return 2;
     } catch (const std::exception& error) {
-        if (argc==1) netstorm::platform::ShowGuiStartupError(error.what()); // 탐색기 직접 실행 실패도 사용자가 읽을 수 있게 남긴다.
-        std::fprintf(stderr, "%s\n", error.what()); return 1;
+        const auto message = RecordTopLevelFailure(error.what()); // 7차: 종료 직전 원인과 이전 활동을 사용자 홈 logs에 남긴다.
+        if (argc==1) netstorm::platform::ShowGuiStartupError(message); // 탐색기 직접 실행 실패도 사용자가 읽을 수 있게 남긴다.
+        std::fprintf(stderr, "%s\n", message.c_str()); return 1;
+    } catch (...) {
+        const auto message = RecordTopLevelFailure("알 수 없는 형식의 예외로 종료합니다"); // std::exception이 아닌 예외도 같은 로그에 남긴다.
+        if (argc==1) netstorm::platform::ShowGuiStartupError(message);
+        std::fprintf(stderr, "%s\n", message.c_str()); return 1;
     }
 }

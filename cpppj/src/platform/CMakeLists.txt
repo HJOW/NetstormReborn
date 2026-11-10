@@ -9,6 +9,7 @@ target_sources(netstorm PRIVATE
     FileOutput.cpp FileOutput.h
     PortableStartup.cpp PortableStartup.h
     UserDataRoot.cpp UserDataRoot.h
+    ErrorLog.cpp ErrorLog.h # 7차: 오류/예외/비정상 종료의 상세 로그(yyyyMMddHHmmss.log)와 공통 assertion 파일을 사용자 홈 logs에 남긴다.
     Json.cpp Json.h
     Png.cpp Png.h
     AudioLoopback.cpp AudioLoopback.h
