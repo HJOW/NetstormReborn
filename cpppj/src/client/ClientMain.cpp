@@ -231,6 +231,7 @@ Client::Client(ClientOptions options)
       chat_(std::make_unique<ChatState>(*this,options_.edition)),kernel_(std::make_shared<o::Kernel>(options_.edition==o::OriginalEdition::Patch1078 ? o::kProcessCapacity:o::kCdProcessCapacity)),trace_(std::make_unique<ClientTraceGlobals>()) { // 실제장기Kernel도원문의PATCH39999/CD3999상한을사용한다.
     if (options_.edition==o::OriginalEdition::Patch1078) files_.DeferPrimaryArchiveRegistration();else files_.RegisterArchives(); // 원본10.78은441790의setup탐색뒤에등록한다. 독립조회는첫TAFF접근까지예약하고10.72기존초기화는유지한다.
     rendererFrame_=std::make_unique<ClientRendererFrame>(*this); //생성은 BSS0 owner/참조만 준비하며 아직 화면/파일/난수를 사용하지 않는다.
+    const auto packetDelays=connectionGlobals_->PacketDelays();packetDelays->wall=[clock=time_] { return clock->wall; };packetDelays->random=[random=randomGlobals_] { return random->Crt().Next(); }; //OS Capture가 갱신하는 같은0055b4d8 프레임 벽시각/CRT owner를 보유하며 enqueue마다 시각 사본이나 새 난수 스트림을 만들지 않는다.
     captureSequence_=std::make_unique<ClientCaptureSequence>(*this); //원문BSS0처럼파일/화면 없이 장기 상태만 준비한다.
     trace_->buildReplay=std::make_shared<ClientBuildReplayGlobals>(); // Native BSS 재생 전역의 같은 주소를 첫 메뉴와 모든 Session에 공유한다.
     playerRecords_->BindCoreData(coreDataGlobals_); // 같은 Native Player base가 바뀌면 실제 Core의 빌린 현재 Player 슬롯도 즉시 갱신한다.
@@ -522,6 +523,7 @@ int Client::Run() {
     if (audio_) audio_->StartScene(false);
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientChatManager(*this); //00439840의 실제 map mode 시작이며 메뉴/Session 생성보다 먼저 같은 현재 manager/명령표를 구성한다.
     fortBadges_->ResetCounts(); // 원본0043984a는 Chat 시작 다음의 같은 장부 count reset이며 매 Session 생성 때 반복하지 않는다.
+    if (options_.edition==o::OriginalEdition::Patch1078) connectionGlobals_->PacketDelays()->ResetDefault(); //439863의 최초 지도 모드에서 원문00543600을 선택하며 기존 연결 큐를 재설정하지 않는다.
     if (options_.edition==o::OriginalEdition::Patch1078) RequestInitialTitleBitmap(localStateGlobals_->State().next); //439859의원문startup42/next+8c0.호스트/CD메뉴캐시로대체하지않는다.
     nativeStartupComplete_=1; // 원문00439919의 초기화 완료는 첫10칸 카메라 위치 복사보다 먼저 기록한다.
     if (options_.edition==o::OriginalEdition::Patch1078) InitializeSavedCameraPositions(gameplayGlobals_->Camera().SavedPositions()); //00439928의 최초10칸 쓰기이며 일반 미션/Renderer 재시작에서는 반복하지 않는다.
@@ -737,6 +739,7 @@ void Client::InterpretMainMenuOptions() {
 }
 void Client::InterpretNetworkOptions() {
     auto value=std::bit_cast<std::int32_t>(gameplayGlobals_->GameServerPort());configuration_.ReadInt("gameServerPort",value);gameplayGlobals_->GameServerPort()=std::bit_cast<std::uint32_t>(value);
+    connectionGlobals_->PacketDelays()->SelectLag(configuration_.GetInt("lag")); //435220의1/2/3만 현재 선택 분포를 바꾸고 누락/다른 값은 보존한다.
 } //현재 DWORD를 signed ReadInt 임시값으로 전달하고 같은 비트를 쓰며 참조 별칭이나 누락 기본값 재설정을 만들지 않는다.
 // 최초 감지는 영상 내용을 읽거나 디코더를 열지 않는다. 감지 뒤 옵션 변경이 이 값을 자동으로 덮지 않는다.
 void Client::DetectIntroAvailability() { DetectIntroMovie(localStateGlobals_->IntroAvailable(),[this] { std::string path;configuration_.ReadString("introMovie",path);return path; },[this](auto name) { return files_.Probe(name); }); }

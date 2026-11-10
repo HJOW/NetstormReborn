@@ -8,6 +8,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include "client/LocalTcpTransport.h"
+#include "o/RawPacketDelay.h" //실제 소켓 Poll 앞에서만 기본 지연 FIFO를 설치/배송한다.
 #include "platform/LanIpv4Name.h" // 새 접속의 hostname만 같은 R 이름 조회/첫 IPv4 LAN 정책을 사용한다.
 #include <algorithm>
 #include <array>
@@ -153,7 +154,7 @@ LocalTcpTransport::Node& LocalTcpTransport::Adopt(std::uintptr_t socket,std::int
     const CallGuard call(activeCalls_);
     SocketOwner guard{Socket(socket)};auto node=std::make_unique<Node>();node->socket=static_cast<std::uintptr_t>(guard.Release());node->connection.sender=std::bit_cast<std::uint32_t>(id);node->connection.address=address;node->connection.flags=4U|kConnecting|(buffered ? kBuffered:0U);node->connection.received=hooks_.now();node->connection.heartbeat=hooks_.now();node->connecting=connecting;node->connected=!connecting;auto* pointer=node.get();nodes_.push_back(std::move(node));
     try {
-        pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(pointer->connection.sender),packet,packet,&pointer->connection)); },[this,pointer] { return SocketReadiness(*pointer); },[pointer] { pointer->connection.flags|=kBuffered;pointer->wire.clear();pointer->sent=0;pointer->aggregate.clear(); }); // 같은 실제 socket/가상 this이며 현재 Player/번호 gate를 반복하지 않는다.
+        pointer->token=registry_->Track(pointer->connection,[this,pointer] { const CallGuard callback(activeCalls_);CloseSocket(*pointer);hooks_.close(pointer->connection); },[this,pointer] { const CallGuard callback(activeCalls_);hooks_.release(pointer->connection);pointer->connection.delayQueue.reset();pointer->connection.delayed=false;pointer->retired=true; },[this,pointer](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(pointer->connection.sender),packet,packet,&pointer->connection)); },[this,pointer] { return SocketReadiness(*pointer); },[pointer] { pointer->connection.flags|=kBuffered;pointer->wire.clear();pointer->sent=0;pointer->aggregate.clear(); }); // 같은 실제 socket/가상 this이며 현재 Player/번호 gate를 반복하지 않는다.
         if (id<0) pointer->connection.sender=std::bit_cast<std::uint32_t>(registry_->Accept(pointer->token));else if (publishConnect) registry_->PublishConnect(id,pointer->token);else registry_->Register(id,pointer->token);
     } catch (...) { registry_->Forget(pointer->token);nodes_.pop_back();throw; }
     return *pointer;
@@ -234,8 +235,9 @@ void LocalTcpTransport::Notify(Node& node,std::uint8_t type) {
 // 한 번만 type2를 알리고 현재 depth0에서 같은 실제 close/free를 수행한다.
 void LocalTcpTransport::Fail(Node& node,std::int32_t error) {
     if (node.retired) return;node.error=error;if (error) lastError_=error;
-    if (!(node.connection.flags&kTerminated)) { node.connection.flags|=kTerminated;Notify(node,2); }
-    if (node.retired) return;hooks_.terminate(node.connection);node.connection.flags|=kClosed;CloseReady(node);
+    if (!(node.connection.flags&kTerminated) && (!node.connection.delayQueue || dispatcher_.Dispatch().Registration(2).receive)) { node.connection.flags|=kTerminated;Notify(node,2); }
+    if (node.retired || node.connection.delayQueue) return; //4df9f0의 지연된 실제2번 수신기가 닫힘을 처리하기 전에 큐를 강제 반납하지 않는다.
+    hooks_.terminate(node.connection);node.connection.flags|=kClosed;CloseReady(node);
 }
 // 실제 OS close 실패는 정상 반납으로 표시하지 않고 후속 정리에서 같은 핸들을 다시 선택할 수 있게 한다.
 void LocalTcpTransport::CloseSocket(Node& node) {
@@ -261,7 +263,9 @@ void LocalTcpTransport::CollectRetired() {
 }
 // 원문4BYTE header와 선언 길이를 TCP stream에서 정확히 한 프레임만 모은다.
 bool LocalTcpTransport::ReceiveOne(Node& node,bool* consumed) {
-    if (consumed) *consumed=false;if (!CompleteConnection(node)) return false;
+    if (consumed) *consumed=false;if (node.retired) return false;o::PreparePacketDelay(node.connection,hooks_.delay);
+    if (const auto queue=node.connection.delayQueue) { static_cast<void>(queue->Pump(node.connection));if (node.retired || (node.connection.flags&kClosed)) { CloseReady(node);return false; } } //같은 실제 노드/주소의 선두 배송 뒤 닫힘을 판정하며 내부 미션 Poll은 바꾸지 않는다.
+    if (!CompleteConnection(node)) return false;
     Drain(node);if (node.retired || (node.connection.flags&kClosed)) return false; // 아직 음수 pending인 unbuffered 가상 송신의 partial tail도 다음 실제 수신 폴링에서 전진시킨다. 정상22칸 Flush의 범위를 늘리지 않는다.
     for (;;) { // header/body가 나뉘어 오면 현재 부분 버퍼를 다음 Poll에 그대로 남긴다.
         std::size_t required=kHeader;if (node.input.size()>=kHeader) { required=Read(node.input,2,2);if (required<kHeader || required>kWireLimit) { Fail(node,WSAEMSGSIZE);return false; } }

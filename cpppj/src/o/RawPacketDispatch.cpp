@@ -1,5 +1,6 @@
 // 일반 분배의 현재 시각/기록/콜백 순서와 버전 차이를 무시하는 원본 정책을 유지한다.
 #include "o/RawPacketDispatch.h"
+#include "o/RawPacketDelay.h" // 같은 실제 연결의 지연 FIFO를 선택하며 저장된F를 현재G로 바꾸지 않는다.
 #include "o/RawPacketLengths.h"
 #include "o/PacketRegistrationTable.h"
 #include <stdexcept>
@@ -64,7 +65,7 @@ bool RawPacketDispatch::Validate(std::span<const std::uint8_t> packet) const {
 bool RawPacketDispatch::Dispatch(PacketConnection& connection,std::span<const std::uint8_t> packet) const {
     if (connection.flags&0x40) return false;
     if (!Validate(packet)) return true;const auto type=packet[1];
-    if (type==4 || connection.delayed) throw std::logic_error("집합 패킷/지연 분배는 아직 지원하지 않습니다");
+    if (type==4) throw std::logic_error("단일 분배의 집합 패킷은 공통 프레임 부모가 필요합니다");
     const auto incoming=packet[0]&0x7f;const auto& entry=registrations_->entries_[type];
     if (incoming!=entry.version) {
         const bool lower=incoming<entry.version;
@@ -75,15 +76,17 @@ bool RawPacketDispatch::Dispatch(PacketConnection& connection,std::span<const st
     const auto now=hooks_.now();if (type==6) connection.heartbeat=now;else connection.received=now;
     if (type>9) hooks_.record(connection,packet,Length(packet));
     // 기록 경계가 등록을 바꾸면 현재 처리기를 사용한다. 콜백의 재등록 중에도 실행 중인 함수 저장소를 유지한다.
-    const auto pin=entry.Pin();const auto receive=entry.receive; // 실제 Session 전체와 함수 사본을 함께 유지한다.
-    if (receive) {
-        ++connection.depth;
-        try { receive(connection.sender,connection,packet); }
-        catch (...) { --connection.depth;throw; }
-        --connection.depth;
-    }
+    static_cast<void>(DeliverReceiver(type,connection,packet)); //기록 전 저장한 type은 유지하고 그 슬롯의 현재F만 한 번 선택한다.
     if (!connection.depth && (connection.flags&0x40)) { hooks_.close(connection);hooks_.release(connection);return false; }
     return true;
+}
+// 지연 없는 내부/Editor는 기존 깊이/함수 사본을 사용하고 실제 소켓 큐는 고정F만 저장한다.
+std::int32_t RawPacketDispatch::DeliverReceiver(std::uint32_t type,PacketConnection& connection,std::span<const std::uint8_t> packet,std::int32_t delay) const {
+    const auto& entry=Registration(type);if (!entry.receive && !entry.directReceive) return 0;
+    if (const auto queue=connection.delayQueue) return queue->Enqueue(connection,SnapshotReceiver(type),*this,packet,delay);
+    if (connection.delayed) throw std::logic_error("지연 표시가 있는 연결의 실제 FIFO 미연결");
+    const auto pin=entry.Pin();const auto receive=entry.receive;if (!receive) return 0;++connection.depth;
+    try { receive(connection.sender,connection,packet); }catch (...) { --connection.depth;throw; }--connection.depth;return 0;
 }
 void RegisterConstructionData(RawPacketDispatch& dispatch,RawConstructionData& data) {
     dispatch.Observe(0x37,{});dispatch.Version(0x37,1,0);

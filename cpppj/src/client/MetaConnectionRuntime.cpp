@@ -112,6 +112,7 @@ MetaConnectionRuntime::MetaConnectionRuntime(Client& client,std::function<void(s
     if (!progress_ || !request_ || !processState_ || !battleState_ || !tell_ || !chatReceive_ || !refreshInfo_ || !options_ || !recreateHud_ || !client_.PlayerRecords()->Initialized()) throw std::invalid_argument("메타 연결의 현재 Client/Player/HTML/실제Run/전투Source/NSInfo/전역옵션/HUD/41h수신 장치 필요");
     o::PacketDispatchHooks hooks;hooks.now=[client=&client_] { return static_cast<std::uint32_t>(client->WallSeconds()); }; //실제 Client 현재 시각만 조회하고 짧은 Meta wrapper를 캡처하지 않는다.
     hooks.players=[players=client_.PlayerRecords()] { return std::span<const std::uint8_t>(players->Records()); }; //Native 송신이 선택한 시점의 현재 base이며 ctor의 낡은 span을 재사용하지 않는다.
+    hooks.delay=client_.ConnectionGlobals()->PacketDelays(); //메뉴/Meta와 뒤 실제 LAN이 같은 장기 선택 분포/시계/CRT를 공유한다.
     const auto record=client_.PacketRecordOwner();hooks.record=[record](auto& connection,auto packet,auto length) { record->Write(false,connection,packet,length); };hooks.sent=[record](auto& connection,auto packet,auto length) { record->Write(true,connection,packet,length); }; //World 없는 메타도 같은 현재 실제 프레임/주소/FILE를 사용하며 초기 disabled에서는 파일을 만들지 않는다.
     hooks.terminate=[](auto& connection) { connection.flags|=0x40U; }; //실제소켓/노드반납은각TCP/UDP소유자가수행한다.
     hooks.close=[](auto&) {};hooks.release=[](auto&) {}; //이 위치의 추가 외부 장치가 없으며 TCP 노드가 실제 close/free를 소유한다.

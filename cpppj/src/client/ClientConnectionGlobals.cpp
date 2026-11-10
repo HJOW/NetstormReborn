@@ -7,6 +7,8 @@
 
 namespace netstorm::client { //새 동기화 사본이나 Session별0표를 만들지 않는다.
 std::shared_ptr<ClientPacketSources> ClientConnectionGlobals::PacketSources() { if (!packetSources_) packetSources_=std::make_shared<ClientPacketSources>();return packetSources_; } //queue나 실제 Source를 생성하지 않는다.
+// 최초 호출은 분포만 준비하며 장치/큐를 실행하지 않는다.
+std::shared_ptr<o::PacketDelayGlobals> ClientConnectionGlobals::PacketDelays() { if (!packetDelays_) packetDelays_=std::make_shared<o::PacketDelayGlobals>();return packetDelays_; }
 //실제Source들을먼저동기호출동안보유하여Node해제뒤에도같은listener정리를완료한다.
 void ClientConnectionGlobals::ShutdownDevices() {
     if (packetSources_) packetSources_->Shutdown([this] { ShutdownTrackedDevices(); });else ShutdownTrackedDevices();

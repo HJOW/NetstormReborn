@@ -307,6 +307,7 @@ std::shared_ptr<CompositeMissionTransport> MakeClientCampaignTransport(Client& c
         throw std::invalid_argument("현재 Client/World/Player 물리의 복합 전송 수명 계약 오류");
     auto globals=std::make_shared<TransportGlobals>(TransportGlobals{client.PlayerRecords(),client.GameplayGlobals(),client.GameClockOwner()}); // 명목 토큰 대신 실제 세 소유권을 함께 보유한다.
     o::PacketDispatchHooks hooks;
+    hooks.delay=client.ConnectionGlobals()->PacketDelays(); //재진입한 TCP/UDP도 같은 실제 Client 분포/시계/CRT를 사용하며 내부 미션에는 큐를 설치하지 않는다.
     hooks.players=[players=globals->players] { return std::span<const std::uint8_t>(players->Records()); }; //State 정리/재초기화 뒤에도 원문 송신은 현재 Player base를 읽는다.
     hooks.now=[clock=globals->clock]() -> std::uint32_t {
 #ifdef _WIN32

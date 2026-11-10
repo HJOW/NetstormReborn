@@ -1,4 +1,4 @@
-// 패킷 등록·길이 검증·버전 정책·지연 없는 단일 패킷 분배를 원본 Zocket 몸체에서 복원한다.
+// 패킷 등록·길이 검증·버전 정책·즉시/지연 수신기 선택을 원본 Zocket 몸체에서 복원한다.
 #pragma once
 #include "o/RawConstructionData.h"
 #include <array>
@@ -6,6 +6,7 @@
 
 namespace netstorm::o {
 class PacketRegistrationTable;class PacketRegistrationLease; // backend별 hooks와 별개로 공유할 실제 등록표/Session 대여다.
+class RawPacketDelayQueue;struct PacketDelayGlobals; // 실제 소켓 노드의 지연 FIFO와 Client 장기 분포/시계/난수 장치다.
 // 원본 연결 객체에서 단일 분배가 읽고 쓰는 값이다. 호스트 소켓 포인터 대신 명시적인 참조를 전달한다.
 struct PacketConnection {
     std::uint32_t flags{}; // +0x34: bit 0x40이 켜진 연결에는 진입하지 않는다.
@@ -13,8 +14,9 @@ struct PacketConnection {
     std::uint32_t received{}; // +0x44: 일반 패킷의 마지막 수신 시각 기록이다.
     std::uint32_t heartbeat{}; // +0x48: 타입 6 패킷의 별도 시각 기록이다.
     std::uint32_t depth{}; // +0x8c: 즉시 콜백 중 증가하고 정상/예외 종료에서 복구하는 중첩 깊이다.
-    bool delayed{}; // +0x7c: 지연 분배 큐가 있으면 이 API에서는 거부한다.
+    bool delayed{}; // +0x7c의 큐 설치 관측값이며 true이면 같은 실제 delayQueue가 있어야 한다.
     std::array<std::uint8_t,20> address{}; // +0x4c..5f의 현재 주소20BYTE다. 실제 로컬 두 끝의 생성 값을 보관한다.
+    std::shared_ptr<RawPacketDelayQueue> delayQueue; // +74..88의 실제 소켓별 ring owner이며 내부 미션/Editor에는 임의 설치하지 않는다.
 };
 //원문 receiver 함수F의 코드 정체성과 장기 데이터만 담는 불변 본문값이다. 현재 타입표나 packet[1]로 G를 다시 선택하지 않는다.
 struct CanonicalPacketReceiver {
@@ -48,10 +50,11 @@ struct PacketDispatchHooks {
     std::function<void(PacketConnection&)> release; // 위 소멸 뒤 저장소를 해제한다. 호출 뒤 연결을 다시 읽지 않는다.
     std::function<void(PacketConnection&,std::span<const std::uint8_t>,std::uint16_t)> sent; //실제 가상 송신의 복사/쓰기 뒤 원문 방향1 기록이다. 수신 record와 구별하며 장치 없는 독립 전송은 비워 둔다.
     std::function<std::span<const std::uint8_t>()> players; //실제 Client는 Player 재할당 뒤에도 현재0059534c를 조회한다. 독립 고정뷰 장치는 기존 입력 span을 사용한다.
+    std::shared_ptr<PacketDelayGlobals> delay; // 실제 Client 장기 분포/벽시각/CRT를 TCP/UDP Poll만 선택하며 World마다 초기화하지 않는다.
 };
 bool PacketPlayerActive(std::span<const std::uint8_t> fallback,const std::function<std::span<const std::uint8_t>()>& current,std::uint32_t owner); //4e2dc0의 선택된 owner 기록+50 BYTE만 현재 실제 Player9에서 읽는다.
 // 004ded50/70/90·004df240·004df740·004df010 ↔ CD 00418bb0/bd0/bf0·004190a0·00419130·00418d40.
-// 단일 패킷과 즉시 콜백 분기만 지원한다. 타입 4 집합/지연 큐·소켓 송수신·연결 생성/종료 몸체는 후속이다.
+// 단일 검증/기록과 즉시·지연 수신기 선택을 수행하며 타입4의 순회는 공통 RawPacketFrame에 둔다.
 class RawPacketDispatch {
 public:
     // 판본별 최대 타입과 원본 고정 길이 표를 준비한다. 필수 시계/기록/수명 경계는 비울 수 없다.
@@ -79,6 +82,7 @@ public:
     // 닫힌 연결/버전 종료/콜백 뒤 소멸이면 false, 무시한 패킷/성공이면 true다. 실제 필드 길이는 처리기가 검사한다.
     // 선언 길이와 실제 span을 같게 강제하지 않는다. 콜백에 전달한 버퍼는 호출 동안만 유효하다.
     bool Dispatch(PacketConnection& connection,std::span<const std::uint8_t> packet) const;
+    std::int32_t DeliverReceiver(std::uint32_t type,PacketConnection& connection,std::span<const std::uint8_t> packet,std::int32_t delay=-1) const; //4df740이 효과 전에 저장한 type의 현재F를 선택하며 집합은 첫 반환 지연을 공유한다.
 private:
     // 잘못된 등록 번호가 다른 항목을 덮어쓰지 않게 한다.
     void CheckType(std::uint32_t type) const;

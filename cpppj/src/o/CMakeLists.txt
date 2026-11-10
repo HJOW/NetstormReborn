@@ -272,6 +272,7 @@ target_sources(netstorm PRIVATE
     RawConstructionArrival.cpp RawConstructionArrival.h
     RawConstructionData.cpp RawConstructionData.h
     RawPacketDispatch.cpp RawPacketDispatch.h RawPacketLengths.h
+    RawPacketDelay.cpp RawPacketDelay.h # 실제 Client 지연 분포와 각 소켓 FIFO를 같은 원문 분배에 연결한다.
     RawConstructionSelection.cpp RawConstructionSelection.h
     RawPriestLookup.cpp RawPriestLookup.h
     RawConstructionClear.cpp RawConstructionClear.h
