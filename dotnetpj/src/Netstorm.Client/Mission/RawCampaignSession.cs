@@ -350,20 +350,32 @@ public sealed class RawCampaignSession
     /// <returns>묶었으면 참이다.</returns>
     public bool HasReloadTheam() => _reloadTheam is not null;
 
-    /// <summary>원본 0040dfd0의 고정 범위·지역 난수를 같은 완전 배치·섬·Factory에 연결한다. 껍데기에서는 배치 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 무작위 배치 Stub 이식에서 추가됐다.</summary>
+    /// <summary>같은 완전 배치 몸체의 무작위 배치 효과다. 세션 조립 때 실제 배치 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 나머지 본체에서 추가됐다.</summary>
+    private Action<uint, uint>? _addRandomObjects;
+
+    /// <summary>같은 실제 Deck의 생산 동기화 효과다. 세션 조립 때 실제 생산 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 나머지 본체에서 추가됐다.</summary>
+    private Action? _synchronizeProduction;
+
+    /// <summary>같은 실제 세션·저장소의 메타메뉴 별칭 조회 효과다. 세션 조립 때 실제 조회 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 나머지 본체에서 추가됐다.</summary>
+    private Func<uint, uint>? _metaMenuType;
+
+    /// <summary>원본 0040dfd0의 고정 범위·지역 난수를 같은 완전 배치·섬·Factory에 연결한다. 묶은 배치 효과가 없으면 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 무작위 배치 Stub 이식에서 추가됐고 2026-11-10 F3 나머지 본체에서 본체를 이었다.</summary>
     /// <param name="type">배치할 객체 종류 번호다.</param>
     /// <param name="quantity">배치할 수량이다.</param>
     public void AddRandomObjects(uint type, uint quantity)
     {
-        _ = type;
-        _ = quantity;
         if (!_loaded)
         {
             throw new InvalidOperationException("캠페인 세션의 미적재 무작위 배치입니다.");
         }
 
-        // 원본 무작위 배치의 실제 범위·지역 난수·완전 배치 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 무작위 배치 미연결");
+        // 원본 무작위 배치의 실제 범위·지역 난수·완전 배치 본체는 Fort 본체 단위에서 잇는다. 묶은 효과가 없으면 성공을 합성하지 않는다(결정 6).
+        if (_addRandomObjects is null)
+        {
+            throw new InvalidOperationException("실제 무작위 배치 미연결");
+        }
+
+        _addRandomObjects(type, quantity);
     }
 
     /// <summary>원본 첫 목록(outposts) 또는 두 번째 목록(temples)의 현재 개수다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 게임메뉴 재장전 Stub 이식에서 추가됐고 2026-11-10 F3 재장전 본체에서 본체를 이었다.</summary>
@@ -380,7 +392,7 @@ public sealed class RawCampaignSession
         return unchecked((int)(second ? _temples : _outposts).Count);
     }
 
-    /// <summary>같은 실제 Deck의 생산 동기화만 같은 실제 후반 HUD 설치에 허용한다. 껍데기에서는 Deck 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 생산 동기화 Stub 이식에서 추가됐다.</summary>
+    /// <summary>같은 실제 Deck의 생산 동기화만 같은 실제 후반 HUD 설치에 허용한다. 묶은 동기화 효과가 없으면 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 생산 동기화 Stub 이식에서 추가됐고 2026-11-10 F3 나머지 본체에서 본체를 이었다.</summary>
     public void SynchronizeProductionContents()
     {
         if (!_loaded)
@@ -388,11 +400,16 @@ public sealed class RawCampaignSession
             throw new InvalidOperationException("캠페인 세션의 미적재 생산 동기화입니다.");
         }
 
-        // 원본 43ec00의 실제 Deck 동기화 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 생산 동기화 미연결");
+        // 원본 43ec00의 실제 Deck 동기화 본체는 Fort 본체 단위에서 잇는다. 묶은 효과가 없으면 성공을 합성하지 않는다(결정 6).
+        if (_synchronizeProduction is null)
+        {
+            throw new InvalidOperationException("실제 생산 동기화 미연결");
+        }
+
+        _synchronizeProduction();
     }
 
-    /// <summary>메타 제외 메뉴의 13개 현재 TYPE 별칭을 같은 실제 세션·저장소에서 조회한다. 껍데기에서는 주소 검증 뒤 본체 미연결로 멈춘다. 2026-11-10 F3 세션 메타메뉴 별칭 Stub 이식에서 추가됐다.</summary>
+    /// <summary>메타 제외 메뉴의 13개 현재 TYPE 별칭을 같은 실제 세션·저장소에서 조회한다. 묶은 조회 효과가 없으면 주소 검증 뒤 본체 미연결로 멈춘다. 2026-11-10 F3 세션 메타메뉴 별칭 Stub 이식에서 추가됐고 2026-11-10 F3 나머지 본체에서 본체를 이었다.</summary>
     /// <param name="address">조회할 원본 주소다.</param>
     /// <returns>해당 주소의 현재 TYPE 별칭이다.</returns>
     public uint MetaMenuType(uint address)
@@ -426,9 +443,50 @@ public sealed class RawCampaignSession
             throw new InvalidOperationException("캠페인 세션의 미적재 메타메뉴 조회입니다.");
         }
 
-        // 원본 별칭의 실제 사제·장식·지형·간헐천·비행선 TYPE 조회 본체는 Fort 본체 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
-        throw new InvalidOperationException("실제 메타메뉴 별칭 미연결");
+        // 원본 별칭의 실제 사제·장식·지형·간헐천·비행선 TYPE 조회 본체는 Fort 본체 단위에서 잇는다. 묶은 효과가 없으면 성공을 합성하지 않는다(결정 6).
+        if (_metaMenuType is null)
+        {
+            throw new InvalidOperationException("실제 메타메뉴 별칭 미연결");
+        }
+
+        return _metaMenuType(address);
     }
+
+    /// <summary>같은 완전 배치 몸체의 무작위 배치 효과를 묶는다. 원본 세션 설치의 배치 몸체 연결만 둔다. 2026-11-10 F3 나머지 본체에서 추가됐다.</summary>
+    /// <param name="place">실제 무작위 배치 효과다. 종류 번호와 수량을 그대로 받는다.</param>
+    public void BindAddRandomObjects(Action<uint, uint> place)
+    {
+        ArgumentNullException.ThrowIfNull(place);
+        _addRandomObjects = place;
+    }
+
+    /// <summary>같은 실제 Deck의 생산 동기화 효과를 묶는다. 원본 세션 설치의 생산 몸체 연결만 둔다. 2026-11-10 F3 나머지 본체에서 추가됐다.</summary>
+    /// <param name="synchronize">실제 생산 동기화 효과다.</param>
+    public void BindSynchronizeProductionContents(Action synchronize)
+    {
+        ArgumentNullException.ThrowIfNull(synchronize);
+        _synchronizeProduction = synchronize;
+    }
+
+    /// <summary>같은 실제 세션·저장소의 메타메뉴 별칭 조회 효과를 묶는다. 원본 세션 설치의 조회 몸체 연결만 둔다. 2026-11-10 F3 나머지 본체에서 추가됐다.</summary>
+    /// <param name="lookup">실제 별칭 조회 효과다. 원본 주소를 그대로 받는다.</param>
+    public void BindMetaMenuType(Func<uint, uint> lookup)
+    {
+        ArgumentNullException.ThrowIfNull(lookup);
+        _metaMenuType = lookup;
+    }
+
+    /// <summary>같은 완전 배치 몸체의 무작위 배치 효과를 묶었는지 확인한다. 2026-11-10 F3 나머지 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasAddRandomObjects() => _addRandomObjects is not null;
+
+    /// <summary>같은 실제 Deck의 생산 동기화 효과를 묶었는지 확인한다. 2026-11-10 F3 나머지 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasSynchronizeProductionContents() => _synchronizeProduction is not null;
+
+    /// <summary>같은 실제 세션·저장소의 메타메뉴 별칭 조회 효과를 묶었는지 확인한다. 2026-11-10 F3 나머지 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasMetaMenuType() => _metaMenuType is not null;
 
     /// <summary>원본 첫 목록 또는 두 번째 목록의 현재 저장소 뷰에서 지정 번호를 읽는다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 게임메뉴 재장전 Stub 이식에서 추가됐고 2026-11-10 F3 재장전 본체에서 본체를 이었다.</summary>
     /// <param name="second">참이면 두 번째 목록(temples), 거짓이면 첫 목록(outposts)이다.</param>

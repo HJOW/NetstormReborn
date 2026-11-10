@@ -422,13 +422,14 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미적재", error.Message);
     }
 
-    /// <summary>적재 뒤 무작위 배치를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 무작위 배치 Stub 이식에서 추가됐다.</summary>
+    /// <summary>적재 뒤 무작위 배치를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 무작위 배치 Stub 이식에서 추가됐고 2026-11-10 F3 나머지 본체에서 묶기 전 관문으로 유지했다.</summary>
     [Fact]
     public void AddRandomObjectsRejectsWhenUnconnected()
     {
         // 실제 범위·난수·완전 배치 본체는 Fort 본체 단위에서 잇는다(결정 6).
         var session = LoadableSession();
         session.LoadSeeds(LoadableSeeds());
+        Assert.False(session.HasAddRandomObjects());
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.AddRandomObjects(70u, 3u));
         Assert.Contains("미연결", error.Message);
     }
@@ -477,13 +478,14 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미적재", error.Message);
     }
 
-    /// <summary>적재 뒤 생산 동기화를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 생산 동기화 Stub 이식에서 추가됐다.</summary>
+    /// <summary>적재 뒤 생산 동기화를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 생산 동기화 Stub 이식에서 추가됐고 2026-11-10 F3 나머지 본체에서 묶기 전 관문으로 유지했다.</summary>
     [Fact]
     public void ProductionSyncRejectsWhenUnconnected()
     {
         // 실제 Deck 동기화 본체는 Fort 본체 단위에서 잇는다(결정 6).
         var session = LoadableSession();
         session.LoadSeeds(LoadableSeeds());
+        Assert.False(session.HasSynchronizeProductionContents());
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.SynchronizeProductionContents());
         Assert.Contains("미연결", error.Message);
     }
@@ -507,15 +509,52 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미적재", error.Message);
     }
 
-    /// <summary>적재 뒤 별칭 조회를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 메타메뉴 별칭 Stub 이식에서 추가됐다.</summary>
+    /// <summary>적재 뒤 별칭 조회를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 세션 메타메뉴 별칭 Stub 이식에서 추가됐고 2026-11-10 F3 나머지 본체에서 묶기 전 관문으로 유지했다.</summary>
     [Fact]
     public void MetaMenuTypeRejectsWhenUnconnected()
     {
         // 실제 사제·장식·지형 TYPE 조회 본체는 Fort 본체 단위에서 잇는다(결정 6).
         var session = LoadableSession();
         session.LoadSeeds(LoadableSeeds());
+        Assert.False(session.HasMetaMenuType());
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.MetaMenuType(0x5412d0u));
         Assert.Contains("미연결", error.Message);
+    }
+
+    /// <summary>묶은 배치·생산·별칭 효과에 인자를 그대로 넘기는지 검증한다. 2026-11-10 F3 나머지 본체에서 추가됐다.</summary>
+    [Fact]
+    public void RemainingBodiesForwardToBoundDevices()
+    {
+        // 원본 세션 설치의 배치·생산·조회 몸체 연결만 둔다. 범위·Deck·TYPE 본체는 Fort 본체 단위에서 잇는다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        var placed = new List<(uint Type, uint Quantity)>();
+        int synced = 0;
+        session.BindAddRandomObjects((type, quantity) => placed.Add((type, quantity)));
+        session.BindSynchronizeProductionContents(() => synced++);
+        session.BindMetaMenuType(address => address ^ 0xFFu);
+        Assert.True(session.HasAddRandomObjects());
+        Assert.True(session.HasSynchronizeProductionContents());
+        Assert.True(session.HasMetaMenuType());
+        session.AddRandomObjects(70u, 3u);
+        session.SynchronizeProductionContents();
+        Assert.Equal([(70u, 3u)], placed);
+        Assert.Equal(1, synced);
+        Assert.Equal(0x5412d0u ^ 0xFFu, session.MetaMenuType(0x5412d0u));
+    }
+
+    /// <summary>빈 나머지 묶기를 거부하는지 검증한다. 2026-11-10 F3 나머지 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BindRemainingRejectsNull()
+    {
+        // 묶지 않은 세션은 미연결로 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentNullException>(() => session.BindAddRandomObjects(null!));
+        Assert.Throws<ArgumentNullException>(() => session.BindSynchronizeProductionContents(null!));
+        Assert.Throws<ArgumentNullException>(() => session.BindMetaMenuType(null!));
+        Assert.False(session.HasAddRandomObjects());
+        Assert.False(session.HasSynchronizeProductionContents());
+        Assert.False(session.HasMetaMenuType());
     }
 
     /// <summary>보고서가 월드와 같은 첫 줄을 보이는지 검증한다. 2026-11-10 F3 세션 보고서 위임 이식에서 추가됐다.</summary>
