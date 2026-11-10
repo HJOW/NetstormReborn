@@ -2,7 +2,7 @@
 //  - 원본 관측: priestspawn-x86.tsv 10.78(originals) 408행 — 좌표·타입·WORD·spot·배치 응답 패턴·변이 단계·사후 genus → 다리 타입, 하위 호출 기록(Q 배치 검사 / N 생성 / O 소유자 / L Pop / S 표면 알림 / K Carrier 검사), 생성 슬롯 raw, 지도의 Adler-32.
 //    CD 10.72·10.37 행은 웹 범위(10.78) 밖이다.
 //  - 계약: priest_spawn_guards_and_failure_diagnostics(누락 경계·잘못된 지도/표 크기·비유한 좌표·타입 범위 거부, 132개 후보 소진 진단, 비 Carrier 검사 assert, 다른 풀 거부).
-//    종속 해방(RawDamageableRelease)과 실제 사제 소유자까지의 합성(priest_spawn_release_uses_real_factory_and_priest_owner)은 해방 파일 이식 때 대조한다.
+//    종속 해방(RawDamageableRelease)과 실제 사제 소유자까지의 합성(priest_spawn_release_uses_real_factory_and_priest_owner)은 tests/damageable-release-integration.test.mjs 가 대조한다(2026-11-10 WB04-E252).
 // 실제 게임·브라우저 실행이 아니다. (2026-11-08 WB04-E68: 사제 생성 이식과 함께 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';

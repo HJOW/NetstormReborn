@@ -4,17 +4,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-10, WB04-E251 완료)
+### 0.1 현재 값 (2026-11-10, WB04-E252 완료)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(현재 단계 **3-C**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 895단위(제외 89 별도) 중 **port 467(52.2%)·partial 91(10.2%)·todo 337(37.7%)**. 기준선 소스 줄 수로는 129,541줄 중 port 52,600(40.6%)·partial 25,388(19.6%)·todo 51,553(39.8%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E251** (이 커밋, `20261110-62 WB`) Damageable 삭제 전처리 RawDamageablePreDestroy(붕괴/폭발 효과·소리·spot 6 비트 내용물 순회의 사제 해방 소리·해방·공통 body, 기준선 뒤 Native 몸체)를 원본 10.78 damageablepredestroy 1632행을 typed·Native 두 경로로 대조해 port 로 올렸다([문서](docs/webpj-damageable-pre-destroy-20261110.md)). 그 앞은 **WB04-E250** (`59736d10 / 20261110-61 WB`). 단위 색인은 2절·3.1절 |
-| 다음 작업 | **3-C 넷째 항목 RawDamageableRelease**(3.1절, 162줄, +38) [RawDamageablePreDestroy 뒤 — 충족]: 해방 몸체를 기준선 판으로 옮기고 기준선 뒤 변경을 3.6절로 판정해 port 로 올린다. 이후 RawDamageablePostDestroy → RawAssetPostPop → RawAssetRegular → RawLocalGeyser 순으로 진행한다 |
-| 마지막 전체 검사 | WB04-E251의 Node v24.21.0, **2244/2244 통과·실패/건너뜀0**(신규 damageable-pre-destroy 5; WB04-E250 2239), 약383초 |
+| 이식 진행도 | 대상 895단위(제외 89 별도) 중 **port 468(52.3%)·partial 91(10.2%)·todo 336(37.5%)**. 기준선 소스 줄 수로는 129,541줄 중 port 52,760(40.7%)·partial 25,388(19.6%)·todo 51,393(39.7%). 영역별 남은 양은 0.3절 |
+| 마지막 구현 커밋 | **WB04-E252** (이 커밋, `20261110-100 WB`) Damageable 종속 해방 RawDamageableRelease(고정점 스냅·내용물 순회의 사제 생성/일반 자산 생성·WORD 복사·표면 알림·소유자·Pop, 기준선 뒤 Native 진입)를 원본 10.78 damageablerelease 1504행을 typed·Native 두 경로로 대조해 port 로 올리고, E63·E68 이 미룬 사제 삭제·사제 생성 합성 시험을 닫았다([문서](docs/webpj-damageable-release-20261110.md)). 그 앞은 **WB04-E251** (`1c25e7a2 / 20261110-62 WB`). 단위 색인은 2절·3.1절 |
+| 다음 작업 | **3-C 다섯째 항목 RawDamageablePostDestroy**(3.1절, 216줄, +19): 삭제 후처리 몸체를 기준선 판으로 옮기고 기준선 뒤 변경(241b013e·079f170e)을 3.6절로 판정해 port 로 올린다. RawCarrierArrival 의 `genusAt` 실제 연결을 포함한다. 이후 RawAssetPostPop → RawAssetRegular → RawLocalGeyser 순으로 진행한다 |
+| 마지막 전체 검사 | WB04-E252의 Node v24.21.0, **2251/2251 통과·실패/건너뜀0**(신규 damageable-release 4·damageable-release-integration 3; WB04-E251 2244), 약174초 |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -26,7 +26,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 1·2 선행 | WB02-G·H | 이식 대응표·기준선 재반영, 무브라우저 실행·cpppj 오라클 기반 | 완료 (2026-11-07) | — |
 | 3 M2 선행 부품 | 3-A | WB04-A~D5c·E1~E242: SID 풀·해시·Kernel·Form/Process 층과 종류별 월드 부품(2절) | 완료 (2026-11-10 마감) | 242+단위 |
 | 〃 | 3-B | 다리·표면·영역 공통 수명 | 완료 8/8 | `o/` 8단위 · 1,288줄 (+68) |
-| 〃 | 3-C | 자산 정기 처리·피해/삭제 수명 | **진행 중** 3/8 | `o/` 8단위 · 1,931줄 (+269) |
+| 〃 | 3-C | 자산 정기 처리·피해/삭제 수명 | **진행 중** 4/8 | `o/` 8단위 · 1,931줄 (+269) |
 | 〃 | 3-D | 공통 후처리(SquidPostPop)·Graph 조합 마감 | 대기 0/2 | `o/` 2단위 · 1,305줄 (+36) |
 | 〃 | 3-E | 기준선 뒤 cpppj 변경 판정(3.6절) — 순서3 마감 관문 | 대기 0/6 | 판정 82단위 |
 | 4 M2 | 4-A | 자료·파일·설정·타입 표 | 미착수 | `o/` 15단위 · 3,135줄 (+24) + client M |
@@ -47,23 +47,23 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 **순서3 마감 조건은 3-B~3-E**다. 3-A 뒤 남은 순서3은 `o/` 18단위·4,524줄과 판정 82단위다(RawBridgeLifecycle 은 E247 에서 판정). 6-P·7-P1~P3은 M2에 직접 필요하지 않아 순서3에서 이월한 부품이며 순서3 마감 조건이 아니다(1절 단계 분할 결정, 3.1절).
 
-### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E251 기준)
+### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-10 WB04-E252 기준)
 
 줄 수는 기준선 `1f00a25a`의 단위 파일(`.cpp/.h/.inc`) 줄 합계다(주석 포함). partial 줄 수는 일부만 옮긴 파일의 전체 줄이므로 남은 양의 상한이다. 단위·줄 수는 대략적인 척도일 뿐이며, 순서4~5의 연결·통합(실제 세션에서 부품을 같은 월드로 묶고 cpppj 오라클과 비교)은 이 수치에 드러나지 않는 큰 작업이다.
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 895단위 / 129,541줄 | 467 (52.2%) / 52,600줄 (40.6%) | 91 (10.2%) / 25,388줄 (19.6%) | 337 (37.7%) / 51,553줄 (39.8%) |
-| `o/` 월드·규칙 | 516단위 / 67,480줄 | 417 (80.8%) / 49,426줄 (73.2%) | 29 (5.6%) / 8,105줄 (12.0%) | 70 (13.6%) / 9,949줄 (14.7%) |
+| 전체 | 895단위 / 129,541줄 | 468 (52.3%) / 52,760줄 (40.7%) | 91 (10.2%) / 25,388줄 (19.6%) | 336 (37.5%) / 51,393줄 (39.7%) |
+| `o/` 월드·규칙 | 516단위 / 67,480줄 | 418 (81.0%) / 49,586줄 (73.5%) | 29 (5.6%) / 8,105줄 (12.0%) | 69 (13.4%) / 9,789줄 (14.5%) |
 | `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 50 (13.2%) / 3,174줄 (5.2%) | 62 (16.4%) / 17,283줄 (28.0%) | 266 (70.4%) / 41,165줄 (66.8%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 439줄 | 0 | 0 | 1 / 439줄 |
 
-남은 428단위(todo 337·partial 91)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
+남은 427단위(todo 336·partial 91)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
 
 | 영역 | 주 단계 | todo 단위 / 줄 | partial 단위 / 줄 | 큰 단위(줄) |
 | --- | --- | --- | --- | --- |
 | A 세션·로그인·패킷·전송·클라이언트 전역 | 4-C·4-D | 67 / 13,127 | 2 / 1,907 | RawCampaignSession 5,715 · ClientMain* 1,797 · CampaignTemplateStorage 695 · LocalMissionTransport 439 |
-| B 월드·Fort 적재·지형/섬·객체 공통 수명 | 3-B~3-D·4-B | 23 / 4,719 | 12 / 3,758 | GameWorld 1,153 · RawSurfaceWorld 804 · SquidPostPop* 675 · RawGraph* 626 |
+| B 월드·Fort 적재·지형/섬·객체 공통 수명 | 3-B~3-D·4-B | 22 / 4,559 | 12 / 3,758 | GameWorld 1,153 · RawSurfaceWorld 804 · SquidPostPop* 675 · RawGraph* 626 |
 | C 시각 효과·입자 | 5-A | 5 / 678 | 0 | RawCampaignParticles 513 · ParticlePaletteMemory 65 · ConstructionVisualRenderer 57 · ThunderProcess 32 |
 | D 전투·유닛 이동·경로 | 6-P·7-P·7 | 29 / 4,098 | 5 / 1,246 | RawGunProcess 421 · RawGunTarget* 399 · RawMissile* 392 · RawPathProcess 360 |
 | E 경제·생산·건설·자원 | 3-C·6 | 16 / 3,194 | 1 / 142 | RawProductionControls 393 · RawDaisRegular 372 · RawAssetRegular 352 · RawCampaignFactoryDisplay 329 |
@@ -84,8 +84,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 이식 원본은 언제나 기준선 판(`git show 1f00a25a:경로`)이고, 기준선 뒤 cpppj 변경은 3.6절 절차로만 반영한다. 같은 작업 트리에서 CP 세션이 cpppj를 계속 커밋하므로(LAN 3차·`Actual*` 실제 연결 경로·`shared*` 공유 전역 추가 등) cpppj 상태는 커밋과 소스로 판단한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 851·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 467·partial 91·todo 337·제외(-) 89**, session/oracle 0. 웹 모듈 509개 중 504개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 399개, 도구(`webpj/tools`) 오라클 관련 4개다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` 518항목(original-x86 487·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E251에서 damageablepredestroy 1개 추가). original-x86 487개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 851·adapt 44·exclude-mp 6·exclude-edit 55·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 468·partial 91·todo 336·제외(-) 89**, session/oracle 0. 웹 모듈 510개 중 505개 대응·5개 웹 전용. 웹 소스는 `www/` JS 약 6만 4천 줄(`www/data` 제외), 검사 파일 401개, 도구(`webpj/tools`) 오라클 관련 4개다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` 519항목(original-x86 488·independent 7·screenshot 13·source 6·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E252에서 damageablerelease 1개 추가). original-x86 488개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
 | 마지막 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트). 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -198,14 +198,14 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] **RawSurfaceLifecycle** 127줄(+6) [RawBridgeLifecycle 뒤] → [E248](docs/webpj-surface-lifecycle-20261110.md) 표면 삭제 훅 분배기와 통합 장면 9건
 - [x] **RawRegionOwnership** 183줄(+54) — outpost 분기는 RawOutpostLifecycle(exclude-mp)로 명시 웹 제외 → [E249](docs/webpj-region-ownership-20261110.md) 지역 소유 투표 원본 440행 대조와 Native 몸체
 
-#### 3-C 자산 정기 처리·피해/삭제 수명 (3/8)
+#### 3-C 자산 정기 처리·피해/삭제 수명 (4/8)
 
 완료 기준: 8항목이 PORT_MAP `port`이고 해당 cpppj 검사·fixture를 통과한다.
 
 - [x] **EnergyProviderVtables** 87줄 → [E250](docs/webpj-vtable-tables-20261110.md) 에너지 공급·캠페인 피해 가상 표 자료와 생성기
 - [x] **CampaignDamageVtables** 175줄 → [E250](docs/webpj-vtable-tables-20261110.md) 에너지 공급·캠페인 피해 가상 표 자료와 생성기
 - [x] **RawDamageablePreDestroy** 141줄(+36) → [E251](docs/webpj-damageable-pre-destroy-20261110.md) Damageable 삭제 전처리 원본 1632행 대조와 Native 몸체
-- [ ] **RawDamageableRelease** 162줄(+38) [RawDamageablePreDestroy 뒤]
+- [x] **RawDamageableRelease** 162줄(+38) [RawDamageablePreDestroy 뒤] → [E252](docs/webpj-damageable-release-20261110.md) Damageable 종속 해방 원본 1504행 대조와 Native 진입, 사제 합성 시험 2건
 - [ ] **RawDamageablePostDestroy** 216줄(+19) — RawCarrierArrival 의 `genusAt` 실제 연결 포함
 - [ ] **RawAssetPostPop** (partial 525줄, +30) — Gun·제네레이터·거주 구역·바리케이드·간헐천·신전 분배 본체와 AssetPostPopHooks
 - [ ] **RawAssetRegular** 354줄(+72) [RawAssetPostPop 뒤]
@@ -369,6 +369,7 @@ M2(Tutorial1 Load/Start/표시)에 직접 필요하지 않아 순서6/7 몫으�
 | Tell/언어 | `<background>`는 이름만 보관(`nsisles` 자료/사용 근거 미확정). 현재 미션·`{@미션.키}`·브리핑/안내 `.korean`·스크립트 도움말 Back은 4-D·8에서 연결. 한국어 영어대체/긴 줄/고DPI도 해당 화면과 확인 |
 | 메뉴 확장 | 두 열 메뉴는 범위 내 실제 소비자가 필요할 때 원본 계약으로 이식. `%{userSpec}`·User Made Campaigns는 제외이며 새 과제로 돌리지 않음 |
 | 입력/오디오/환경 | 실제 스피커 청취·모든 브라우저/GUI Linux·고DPI/모니터 이동은 미확인. 일부 Edge/Chromium 기록을 전체 플랫폼 지원으로 쓰지 않음 |
+| 다른 언어 글꼴 | 2026-11-10 AGENTS.md 추가 규칙: `fonts/` 에 일본어 등 다른 언어용 글꼴(NotoSans·NotoSansJP, TTF)이 들어왔고 "webpj 는 woff2 파일이 없는 글꼴은 Google Fonts CDN 을 대신 이용"한다. 웹의 현재 범위(영어·한국어)는 D2Coding woff2 만 쓰므로 아직 소비자가 없다. 다른 언어를 추가하는 단위에서 CDN 글꼴 요청을 [외부 접속 문서](docs/webpj-external-access-20261105.md)의 허용 목록과 `tests/external-access.test.mjs` 소스 감사에 함께 반영한다(현재 감사는 `./data/` 같은 출처 요청만 허용) |
 | README webpj 상태 | README.md·README.en.md의 webpj 상태는 2026-11-06 일괄 갱신(WB04-D5a, 검사 429개) 기준에 머물러 있고 "바깥 링크 미구현" 같은 지난 서술이 남아 있다. README는 공통 문서이므로 다음 공통 문서 일괄 갱신 때 WB02-G 이후 상태로 고친다(README.md "개요" 단락은 수정 금지) |
 | Credits AI 문구 | 2026-11-05 사용자 결정: 현행 문구(`OpenAI Codex, ChatGPT and Anthropic Claude Code`, 한국어 동일 취지)를 **유지하고 나중에 수정**한다. cpppj/dotnetpj 문구(Codex·ChatGPT만)와 다르며, 수정 지시가 오면 `www/assets/product.js`의 영어/한국어 섹션과 `tests/product.test.mjs`의 문구 검사를 함께 고친다. 한국어 행 이름 `NetStorm 11.01 패치 크레딧`은 확정 |
 
@@ -428,6 +429,7 @@ npm --prefix webpj run test:e2e
 ## 7. 문서 정리 기록
 
 - **기록 방식:** 단위마다 0.5절 5번의 칸만 고치고 단위별 기록 줄은 이 절에 쌓지 않는다(단위 문서와 커밋 메시지가 기록이다). 이 절에는 문서 정리·사용자 결정·작업 중단 같은 단위 밖 사건만 적는다.
+- **2026-11-10, HJOW-Athlon, 글꼴 라이선스 파일 이름 변경 반영(WB04-E252 전체 검사에서 발견):** 사용자 커밋 `75e4eed9`(글꼴 관련 사항 명시)가(수정 커밋 `0dc00017 / 20261110-99 WB`) `fonts/License.txt` 를 `fonts/D2Coding-License.txt` 로 바꿔 자산 검사 2건(`assets`·`korean`)이 실패했다. 준비 도구 `tools/prepare-assets.js`·`www/assets/korean-assets.js` 의 경로와 `www/data/fonts/` 복사본·`www/data/manifest.json` 을 새 이름으로 맞추고, `.gitattributes` 의 `fonts/License.txt -text` 한 줄을 새 이름으로 고쳤다(원본과 복사본의 바이트·SHA-256 을 체크아웃마다 같게 하는 기존 결정 유지, 이 PC 의 작업 사본은 저장소 blob 과 같은 LF 로 다시 꺼냄). 파일 내용은 바꾸지 않았다. 같은 커밋의 AGENTS.md 글꼴 규칙(다른 언어 글꼴·Google Fonts CDN)은 4절 "다른 언어 글꼴"에 남겼다.
 - **2026-11-10, HJOW-Athlon, 사용자 요청(인계 문서 정리·M2 선행 작업 단계 분할, 문서만):** `bf156eea / 20261110-46 WB` 시점 원문 전체를 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261110-through-wb04-e242)에 바이트 그대로(94,455바이트, SHA-256 `5d518ed6…27d652`) 보존했다. 순서3을 3-A(완료, E1~E242)와 3-B~3-E로 나누고, M2에 직접 필요하지 않은 경로·비행·총·의식 부품을 6-P·7-P1~P3로 이월했으며, 순서4·5를 4-A~4-D·5-A~5-C로 나눴다(1절 단계 분할 결정). 남은 `o/` 109단위를 모두 단계에 배정했다(3-B~3-D 18·4-A~4-C 61·5-A/5-B 5·6-P 4·7-P 20·8 1). 2.2절 단위 링크 색인은 영역별 번호 범위로 줄이고 링크는 보관본에 남겼다. 3.1절 완료 표시·3.4절과 4절의 해소 행·7절의 2026-11-09 상세 기록을 보관본으로 옮기고, 3.6절 판정 대기를 2026-11-10 보고(87단위)로 새로 적었다. 규모 수치는 `PORT_MAP.tsv`·기준선 `1f00a25a` 소스·`git diff --numstat` 로 계산했다. 코드·검사·자산·PORT_MAP 은 바꾸지 않았고 게임·브라우저·cpppj 실행과 디컴파일은 하지 않았다.
 - **2026-11-10, HJOW-Athlon, 사용자 요청(webpj 를 위한 cpppj 작업, CP 세션 일시 중지 중):** 웹 이식 중 "cpppj 몫"으로 남긴 항목을 cpppj 에서 처리했다(시험 결함 4건 수정·커서 폭 시험 확인, 원본 차이 2건 수정, `session-dump`·`--fixed-frame-ms` 추가). 웹 코드·검사·PORT_MAP 은 바꾸지 않았다. [cpppj 처리 기록](docs/exe/cpp-webpj-requests-20261109.md)
 - **2026-11-09, HJOW-Athlon, 사용자 요청(인계 문서 정리):** 진행 상황·남은 작업 중심으로 처음 재구성했다. 상세는 [2026-11-10 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261110-through-wb04-e242)의 7절에 있다.

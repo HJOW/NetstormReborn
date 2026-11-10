@@ -15321,10 +15321,42 @@
       "sha256": "a0dd75327aa55f130acabb28d848a86c8f4beee563aadcfa1d2784442d50db8c",
       "bytes": 2720071,
       "lines": 4898,
-      "fixtureCommit": "eabb45d0",
+      "fixtureCommit": "eabb45d07",
+      "webCommit": "1c25e7a2f",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDamageablePreDestroy.cpp": "241b013e0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E252",
+      "id": "damageablerelease",
+      "path": "cpppj/tests/fixtures/damageablerelease-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Damageable 종속 해방의 좌표·TYPE·WORD·순회 전체 반환(효과 순서·현재 전역 두 묶음·입력 슬롯 다섯 개와 새 슬롯 네 개 전체 바이트)",
+      "consumers": [
+        "webpj/tests/damageable-release.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-damageable-release.js",
+        "webpj/www/core/raw-damageable-pre-destroy.js",
+        "webpj/www/core/raw-carrier-pre-destroy.js",
+        "webpj/www/core/raw-contained-finder.js"
+      ],
+      "doc": "docs/webpj-damageable-release-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDamageableRelease.cpp"
+      ],
+      "scope": "4,512행 중 10.78(originals) 1,504행 전부를 typed·Native 두 경로로 사용(originalCD·original1037 3,008행은 범위 밖)",
+      "text": true,
+      "sha256": "7376852467ebdb675ed990df50fe893b6231e62bcba64376536ce2daab4b3e5e",
+      "bytes": 5475750,
+      "lines": 4514,
+      "fixtureCommit": "bc0dddbd6",
       "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawDamageablePreDestroy.cpp": "241b013e"
+        "cpppj/src/o/RawDamageableRelease.cpp": "230528e31"
       }
     }
   ]

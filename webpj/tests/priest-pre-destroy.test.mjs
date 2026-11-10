@@ -1,7 +1,7 @@
 // 사제 삭제 준비 raw-priest-pre-destroy.js(RawPriestPreDestroy·makePriestPreDestroyHooks)를 원본 10.78 관측과 cpppj 계약으로 대조한다.
 //  - 원본 관측: priestdestroy-x86.tsv 10.78(originals) 2184행(extra·상태·flags·목록 개수/항목·보호막 조회 결과·조회 중 변경 → 목록 압축 결과와 호출 기록·슬롯 50바이트). CD 10.72·10.37 행은 웹 범위(10.78) 밖이다.
 //  - 계약: priest_predestroy_guards_and_dispatch(잘못된 raw/목록/미연결 하위는 목록 변경·외부 호출 전 거부, 추상 사제는 목록을 읽지 않음, 분배기는 사제 사건만 가로채고 나머지는 fallback).
-//    실제 Damageable/Carrier/종속 form/Kernel 정리 통합(priest_predestroy_cleans_real_regen_form_kernel_and_common_bookkeeping)은 해당 부품의 통합 단위에서 대조한다.
+//    실제 Damageable/Carrier/종속 form/Kernel 정리 통합(priest_predestroy_cleans_real_regen_form_kernel_and_common_bookkeeping)은 tests/damageable-release-integration.test.mjs 가 대조한다(2026-11-10 WB04-E252).
 // 실제 게임·브라우저 실행이 아니다. (2026-11-08 WB04-E63: 사제 삭제 준비 이식과 함께 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';
