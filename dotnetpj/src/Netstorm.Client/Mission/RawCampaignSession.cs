@@ -167,6 +167,14 @@ public sealed class RawCampaignSession
     /// <returns>월드와 같은 수명의 실제 월드 자료 보기다.</returns>
     public RawWorldCore Core() => _world.Core();
 
+    /// <summary>호출자가 소유하는 같은 전역 TYPE 표다. 월드·저장소와 같은 수명으로 둔다. 2026-11-10 F3 세션 껍데기 이식에서 추가됐고 2026-11-11 F3 세션 TYPE 표 소유자 본체에서 내부 보기로 열었다.</summary>
+    /// <returns>호출자가 준 TYPE 표다.</returns>
+    internal IReadOnlyList<OriginalTypeRecord> Types => _types;
+
+    /// <summary>같은 전역 TYPE 표의 원본 개수다. 편집기 선택의 188 상수 대신 세션 표를 읽는다. 2026-11-11 F3 세션 TYPE 표 소유자 본체에서 추가됐다.</summary>
+    /// <returns>TYPE 표 항목 수다.</returns>
+    internal int TypeCount => _types.Count;
+
     /// <summary>Fort 적재가 끝났는지다. 씨앗 적재 뒤에는 참이다. 2026-11-10 F3 세션 껍데기 이식에서 추가됐고 2026-11-10 F3 Fort 씨앗 적재 이식에서 갱신했다.</summary>
     /// <returns>적재됐으면 참이다.</returns>
     public bool IsLoaded() => _loaded;

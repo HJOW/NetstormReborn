@@ -1185,4 +1185,15 @@ public sealed class RawCampaignSessionTests
         Assert.Throws<ArgumentNullException>(() => session.BindSendChatMutable(null!));
         Assert.False(session.HasSendChatMutable());
     }
+
+    /// <summary>세션 TYPE 표가 준 표와 같은 참조·개수인지 검증한다. 2026-11-11 F3 세션 TYPE 표 소유자 본체에서 추가됐다.</summary>
+    [Fact]
+    public void SessionTypeTableSharesConstructionTable()
+    {
+        // 설치 본체의 갱신 없이도 호출자가 준 표를 그대로 본다.
+        var session = LoadableSession();
+        Assert.Same(session.Types, session.Types);
+        Assert.Equal(OriginalConstructors.TypeCount, session.TypeCount);
+        Assert.Equal(session.Types.Count, session.TypeCount);
+    }
 }
