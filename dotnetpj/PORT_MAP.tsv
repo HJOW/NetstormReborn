@@ -655,3 +655,5 @@ cpppj/src/o/RawConnectionRegistration.cpp	Netstorm.Net/ConnectionRegistration.cs
 cpppj/src/o/RawConnectionRegistration.h	Netstorm.Net/ConnectionRegistration.cs	0c50d6684e5cc2e2b2e910c9230102602b601a5d	port
 cpppj/src/o/RawConnectionCleanup.cpp	Netstorm.Net/ConnectionCleanup.cs	b76bb541e8865b219223ec65b2917fe97558e083	port
 cpppj/src/o/RawConnectionCleanup.h	Netstorm.Net/ConnectionCleanup.cs	b76bb541e8865b219223ec65b2917fe97558e083	port
+cpppj/src/o/RawConnectionEnded.cpp	Netstorm.Net/ConnectionEnded.cs	269de895190a3c30cea4e88af88719ea78d9c013	port
+cpppj/src/o/RawConnectionEnded.h	Netstorm.Net/ConnectionEnded.cs	269de895190a3c30cea4e88af88719ea78d9c013	port
