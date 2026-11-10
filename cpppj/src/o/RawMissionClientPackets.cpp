@@ -154,19 +154,33 @@ void RawMissionClientPackets::Ready(std::uint32_t sender,std::span<const std::ui
 //원본등록이선택한실제작은몸체를분배한다.다른종류를무시하는성공은없다.
 void RawMissionClientPackets::Receive(std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) const {
     switch (Get(packet,1,1)) {
-    case 0x29:LoginBegin(packet);break;
-    case 0x67:Options(sender,packet);break;
-    case 0x2b:Player(sender,packet);break;
-    case 0x2a:Fort(packet);break;
-    case 0x28:Reply(packet);break;
-    case 0x81:Sp(packet);break;
-    case 0x84: {
+    case 0x29:ReceiveFixed(0x004b3b40U,sender,packet);return;
+    case 0x67:ReceiveFixed(0x004b4900U,sender,packet);return;
+    case 0x2b:ReceiveFixed(0x004912d0U,sender,packet);return;
+    case 0x2a:ReceiveFixed(0x004b3d30U,sender,packet);return;
+    case 0x28:ReceiveFixed(0x004b8940U,sender,packet);return;
+    case 0x81:ReceiveFixed(0x004b3e90U,sender,packet);return;
+    case 0x84:ReceiveFixed(0x004a6f30U,sender,packet);return;
+    case 0x6e:ReceiveFixed(0x004a7050U,sender,packet);return;
+    default:throw std::invalid_argument("미등록 미션 클라이언트 packet 종류");
+    }
+}
+// 저장된 원문 F값만 선택해 같은 본문을 실행하며 현재 packet종류/연결을 재조회하지 않는다.
+void RawMissionClientPackets::ReceiveFixed(std::uint32_t entry,std::uint32_t sender,std::span<const std::uint8_t> packet) const {
+    switch (entry) {
+    case 0x004b3b40U:LoginBegin(packet);break;
+    case 0x004b4900U:Options(sender,packet);break;
+    case 0x004912d0U:Player(sender,packet);break;
+    case 0x004b3d30U:Fort(packet);break;
+    case 0x004b8940U:Reply(packet);break;
+    case 0x004b3e90U:Sp(packet);break;
+    case 0x004a6f30U: {
         const auto ticks=std::bit_cast<std::int32_t>(Get(packet,4));state_.clockStamp=Need(hooks_.clock)();
         //004a6f50의double1000곱과fsubp는decomp본문에서누락됐다. 정수입력의정확한64비트차하위DWORD다.
         const auto difference=static_cast<std::int64_t>(std::bit_cast<std::int32_t>(state_.clockStamp))-static_cast<std::int64_t>(ticks)*1000;
         state_.baseClock=static_cast<std::uint32_t>(static_cast<std::uint64_t>(difference));break;
     }
-    case 0x6e:Ready(sender,packet);break;
+    case 0x004a7050U:Ready(sender,packet);break;
     default:throw std::invalid_argument("미등록 미션 클라이언트 packet 종류");
     }
 }
@@ -195,13 +209,13 @@ void ObserveMissionClientPacket(std::uint32_t type,std::span<std::uint8_t> packe
 void RawMissionClientPackets::Observe(std::uint32_t type,std::span<std::uint8_t> packet,std::uint32_t sending) const { ObserveMissionClientPacket(type,packet,sending,hooks_.observerAssertion); }
 //원본버전/정책과실제수신기를등록하며같은mutable전송버퍼를송신observer에전달한다.
 void RegisterMissionClientPackets(RawPacketDispatch& dispatch,RawMissionClientPackets& packets) {
-    constexpr std::array<std::uint32_t,8> types{0x29,0x67,0x2b,0x2a,0x28,0x81,0x84,0x6e}; //실제복원한8종등록번호다.
+    constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,8> types{{{0x29,0x004b3b40U},{0x67,0x004b4900U},{0x2b,0x004912d0U},{0x2a,0x004b3d30U},{0x28,0x004b8940U},{0x81,0x004b3e90U},{0x84,0x004a6f30U},{0x6e,0x004a7050U}}}; //실제복원한8종등록번호다.
     //각타입은버전1/정책0과동일처리기를가지며원본길이표는분배기가이미소유한다.
-    for (const auto type:types) {
+    for (const auto [type,entry]:types) {
         if (type==0x2a || type==0x2b || type==0x67 || type==0x81) dispatch.ObservePacket(type,[&packets,type](std::span<std::uint8_t> packet,std::uint32_t sending) { packets.Observe(type,packet,sending); });
         else dispatch.Observe(type,[](std::uint32_t) {}); //고정4종의진짜빈원문몸체는버퍼를읽지않으며거부응답등의기존const송신에도mutable포인터를요구하지않는다.
         dispatch.Version(type,1,0);
-        dispatch.Register(type,[&packets](std::uint32_t sender,PacketConnection& connection,std::span<const std::uint8_t> packet) { packets.Receive(sender,connection,packet); });
+        dispatch.Register(type,[&packets,entry](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { packets.ReceiveFixed(entry,sender,packet); });
     }
 }
 }

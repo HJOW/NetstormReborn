@@ -47,4 +47,5 @@ private:
 };
 // 실제0x72의 observer/version1/정책0/현재 수신기를 같은 분배기에 등록한다.
 void RegisterMissionMetadata(RawPacketDispatch& dispatch,RawMissionServerPackets& packets);
+void ObserveMissionMetadataPacket(std::span<std::uint8_t> packet,std::uint32_t sending,const std::function<void(std::string_view)>& assertion); //40b110은 송신 진단 복귀 뒤 현재 lowWORD+10만 선언WORD에 쓴다.
 }

@@ -66,9 +66,11 @@ void RawMissionServerPackets::ReceiveMetadata(std::span<const std::uint8_t> pack
     Need(hooks_.log)("predictableCount = "+std::to_string(std::bit_cast<std::int32_t>(Need(hooks_.predictableCount)()))+"\n");
 }
 // 실제 패킷을 가진 observer만 가변 길이를 기록하며 수신 방향0은 원문처럼 무동작이다.
-void RawMissionServerPackets::ObserveMetadata(std::span<std::uint8_t> packet,std::uint32_t sending) const {
-    if (!sending) return;if (Get(packet,6)==0xffffffffU) Need(hooks_.assertion)("len != (int)-1");Put(packet,2,Get(packet,6,2)+10U,2);
+void ObserveMissionMetadataPacket(std::span<std::uint8_t> packet,std::uint32_t sending,const std::function<void(std::string_view)>& assertion) {
+    if (!sending) return;if (Get(packet,6)==0xffffffffU) Need(assertion)("len != (int)-1");Put(packet,2,Get(packet,6,2)+10U,2);
 }
+// 같은 순수 observer를 사용하되 기존 caller의 진단 장치 수명은 유지한다.
+void RawMissionServerPackets::ObserveMetadata(std::span<std::uint8_t> packet,std::uint32_t sending) const { ObserveMissionMetadataPacket(packet,sending,hooks_.assertion); }
 // 실제$Random 작성→현재 자기 처리→현재 로컬 번호 비교→다른 대상 송신을 유지한다.
 void RawMissionServerPackets::SendMetadata(std::int32_t target) const {
     constexpr std::string_view name="$Random"; // 원본00511790의 실제 고정 좁은문자열이다.

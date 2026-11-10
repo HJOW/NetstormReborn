@@ -23,6 +23,7 @@ void ReceiveBattleLeave(std::uint32_t sender,std::span<std::uint8_t> players) {
 }
 // 등록된 span의 수명은 해당 Session의 수신 등록 해제보다 길어야 한다.
 void RegisterBattleLeavePacket(o::RawPacketDispatch& dispatch,std::span<std::uint8_t> players) {
+    const auto receiver=dispatch.Registration(0x52).canonicalReceive;if (receiver && receiver->nativeEntry==0x004a71a0U) { const auto& row=dispatch.Registration(0x52);if (row.version!=1 || row.mismatch!=0 || row.length!=5 || !row.observer || row.packetObserver) throw std::logic_error("Native 연결 수신의 같은 metadata 불일치");dispatch.RegisterCanonical(0x52,receiver);return; } //실제 Native F가 있으면 같은 값만 대여하고 독립 typed의 기존 등록을 유지한다.
     dispatch.Observe(0x52,[](std::uint32_t) {});dispatch.Version(0x52,1,0);
     dispatch.Register(0x52,[players](auto sender,auto&,auto) { ReceiveBattleLeave(sender,players); });
 }

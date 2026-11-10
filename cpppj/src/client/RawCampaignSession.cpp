@@ -6,6 +6,7 @@
 #include "o/RawSquidRegion.h" // 같은 TYPE 진단과 raw 지역 WORD의 getter/setter를 공유한다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/NativeLoginPacketReceivers.h" //실제 Login/Editor의 같은 고정 F를 빌린다.
 #include "client/NativeGameplayPacketReceivers.h" //이동/Squid/문자열의 같은 실제 고정 F를 사용한다.
 #include "client/NativeCarrierPacketReceivers.h" //Carrier 계열의 고정 F와 실제 현재 본문을 공유한다.
 #include "client/NativeConstructionPacketReceivers.h" //건설/연구의 Native 대여는 이전 Session closure 대신 같은 고정F를 유지한다.
@@ -442,6 +443,7 @@ struct RawCampaignSession::Impl {
     std::shared_ptr<FortTypeConversionStorage> fortTypeConversion{services.fortTypeConversion ? services.fortTypeConversion : std::make_shared<FortTypeConversionStorage>()}; // Client의 현재표를 빌리며 독립 Session만 같은 종류의 실제 소유자를 한 번 만든다.
     std::shared_ptr<ClientChatWindowGlobals> chatGlobals{services.chatGlobals ? services.chatGlobals : std::make_shared<ClientChatWindowGlobals>()}; // 실제 Client 또는 독립 Session의 같은 중계 마스크 수명이다.
     ChatRelayHooks ChatDevices(); // 같은 현재 Player/연결 표와 UI를 중계 부모에 공급한다.
+    void ReceiveFixedAlliancePacket(std::uint32_t entry,std::span<const std::uint8_t> packet); //Login/Editor가 같은 실제 동맹 본문과 현재 UI를 사용한다.
     o::AllianceNegotiationHooks AllianceDevices(); // 같은 Player/ignored subscriber/Tell/MessageBoard/현재게임시각을 협상 수신에 빌린다.
     o::RawBattleCompletion BattleGate() const; //현재Player/동맹/옵션과같은사제/서버객체를메뉴·Leave·종료판정이공유한다.
     void WriteReconnect(o::SavedStateWriteHooks hooks); //004b54e0의 같은 현재 SP/Player·복구 슬롯과 실제 FILE writer를 일반/메타에서 공유한다.
@@ -3933,7 +3935,7 @@ struct RawCampaignSession::Impl {
     }
     // 외부 콜백이 참조하는 모듈을 해제하기 전에 현재 Kernel을 비운다.
     void ReleaseEditorCommandReceivers() {
-        if (editorActivityRegisteredDispatch) { editorActivityRegisteredDispatch->Register(0x64,{});editorActivityRegisteredDispatch=nullptr; } //64h receive만 지우고 실제 observer/version/정책/길이는 유지한다.
+        if (editorActivityRegisteredDispatch) { const auto saved=std::find_if(editorCanonicalBaselines.begin(),editorCanonicalBaselines.end(),[](const auto& item) { return item.first==0x64U; });if (saved!=editorCanonicalBaselines.end()) editorActivityRegisteredDispatch->RegisterCanonical(0x64,saved->second);else editorActivityRegisteredDispatch->Register(0x64,{});editorActivityRegisteredDispatch=nullptr; } //64h receive만 지우고 실제 observer/version/정책/길이는 유지한다.
         if (!editorRegisteredDispatch) return;
         for (const auto type:kEditorGameplayMessages) { //각 짧은 수신만 반납하고 검토된 장기 기본 F는 같은 정체성으로 복구한다.
             const auto saved=std::find_if(editorCanonicalBaselines.begin(),editorCanonicalBaselines.end(),[type](const auto& item) { return item.first==type; });
@@ -3941,8 +3943,8 @@ struct RawCampaignSession::Impl {
         }
         const auto chat=std::find_if(editorCanonicalBaselines.begin(),editorCanonicalBaselines.end(),[](const auto& item) { return item.first==0x41U; }); //41h는 gameplay 목록과 다른 전역 Chat 기본값이다.
         if (chat!=editorCanonicalBaselines.end()) editorRegisteredDispatch->RegisterCanonical(0x41,chat->second);else editorRegisteredDispatch->Register(0x41,{}); //실제 long F가 없던 독립 Editor만 기존 short callback을 비운다.
-        editorCanonicalBaselines.clear(); //gameplay와 Chat의 동일 기본값 복구가 모두 끝난 뒤 사본을 반납한다.
-        editorRegisteredDispatch->Register(0x52,{}); // 같은 Player span을 빌리는 종료 통지도 Session보다 먼저 해제한다.
+        const auto leave=std::find_if(editorCanonicalBaselines.begin(),editorCanonicalBaselines.end(),[](const auto& item) { return item.first==0x52U; });if (leave!=editorCanonicalBaselines.end()) editorRegisteredDispatch->RegisterCanonical(0x52,leave->second);else editorRegisteredDispatch->Register(0x52,{}); //현재 Player 전역 F가 있으면 같은 값으로 복구하고 독립 typed만 비운다.
+        editorCanonicalBaselines.clear(); //gameplay/Chat/활동/전투 이탈의 같은 기본값 복구가 끝난 뒤 사본을 반납한다.
         editorRegisteredDispatch=nullptr;editorRegisteringCommands=false;
     }
     // 외부 등록표가 현재 Session을 더는 호출할 수 없게 한 뒤 기존 모듈/Kernel 정리를 수행한다.
@@ -3980,6 +3982,44 @@ struct RawCampaignSession::Impl {
 };
 #include "client/RawCampaignEditorIsland.inc" // 설치된 같은 Editor의 실제 Pool/지도에 섬 배치 부모를 연결한다.
 #include "client/RawCampaignSessionLogin.inc"
+
+// 동맹 쓰기/전체 분배 뒤 원문 위치에서 실제 안내를 선택하며 typed와 Native가 같은 본문을 공유한다.
+void RawCampaignSession::Impl::ReceiveFixedAlliancePacket(std::uint32_t entry,std::span<const std::uint8_t> packet) {
+    auto& s=*this;
+    switch (entry) {
+    case 0x00491220U:
+        s.participation->ReceiveAlliance({const_cast<std::uint8_t*>(packet.data()),packet.size()},[&s](std::span<const std::uint8_t> outbound) { s.broadcast->Send(outbound); });return;
+    case 0x0048f880U: {
+        const auto currentLogin=login; //배송 시점의 실제 Login만 반환까지 보유하며 Editor에는 새 Login을 만들지 않는다.
+        const auto owner=std::uint32_t(packet[4]),target=std::uint32_t(packet[5]);if (s.assetState.Boss()) { s.participation->AddAlly(owner,target);s.participation->AddAlly(target,owner);s.broadcast->Send(packet); }
+        if (currentLogin) Login::Need(currentLogin->effects.status)(7,owner,target);
+        else { if (!services.localLogin || !services.localLogin->status) throw std::logic_error("동맹 통지의 실제 MessageBoard 미연결");services.localLogin->status(7,owner,target); } //원문 실제 UI 효과가 선택된 이 위치에서만 같은 현재 장치를 요구한다.
+        return;
+    }
+    default:throw std::invalid_argument("알 수 없는 고정 동맹 수신 본문");
+    }
+}
+
+
+// 호출 시점의 실제 Login만 지역 소유하여 본문 중 상태 전환 뒤에도 선택된 모듈의 정상/예외 반환을 보장한다.
+void RawCampaignSession::ReceiveFixedLoginPacket(std::uint32_t entry,std::uint32_t sender,PacketConnection* connection,std::span<const std::uint8_t> packet) {
+    if (entry==0x00491220U || entry==0x0048f880U) { impl_->ReceiveFixedAlliancePacket(entry,packet);return; } //두 동맹 본문은 Editor에서도 실제 Session만 사용하고 Login을 새로 요구하지 않는다.
+    const auto login=impl_->login;if (!login) throw std::logic_error("고정 Login 수신의 실제 현재 Login 미연결");
+    switch (entry) {
+    case 0x004a7800U:login->server->ReceiveDirect(std::bit_cast<std::int32_t>(sender),connection,packet);return;
+    case 0x004a7510U:login->server->ReceiveReconnect(std::bit_cast<std::int32_t>(sender),packet);return;
+    case 0x004b3b40U:
+    case 0x004912d0U:
+    case 0x004b3d30U:
+    case 0x004b8940U:
+    case 0x004b3e90U:
+    case 0x004a6f30U:
+    case 0x004a7050U:login->client->ReceiveFixed(entry,sender,packet);return;
+    case 0x004b3bc0U:login->metadata->ReceiveMetadata(packet);return;
+    default:throw std::invalid_argument("알 수 없는 고정 Login 수신 본문");
+    }
+}
+
 //게임 Login이 없는 메타도 같은004b54e0의 진단·현재 값·저장 부분 효과를 실행한다.
 void RawCampaignSession::Impl::WriteReconnect(SavedStateWriteHooks hooks) {
     hooks.diagnose=[this] {
@@ -4317,9 +4357,10 @@ void RawCampaignSession::CommitExistingEditorInstall(ClientLocalStateGlobals& ow
         auto& dispatch=s.services.editorTransport->Dispatch();if (s.login || s.editorRegisteredDispatch || s.editorActivityRegisteredDispatch) throw std::logic_error("Editor 실제 전송의 중복 Login/수신 등록");
         for (const auto type:kEditorGameplayMessages) { const auto& entry=dispatch.Registration(type);if (entry.receive && (entry.leased || !entry.canonicalReceive)) throw std::logic_error("Editor 현재 수신 등록표의 다른 소유자 존재"); } //대여 중/짧은 다른 소유자는 거부하고 검토된 장기 기본 F만 보존 대여한다.
         const auto& chat=dispatch.Registration(0x41);if (chat.receive && (chat.leased || !chat.canonicalReceive || chat.canonicalReceive->nativeEntry!=0x0042dc90U)) throw std::logic_error("Editor 실제41h 수신 등록표의 다른 소유자 존재"); //검토된 비임대 장기 Chat만 허용한다.
-        if (dispatch.Registration(0x64).receive || dispatch.Registration(0x52).receive) throw std::logic_error("Editor 실제64h/52h 수신 등록표의 다른 소유자 존재"); // 모든 receive 충돌을 쓰기 전에 거부한다.
+        for (const auto [type,code]:std::array<std::pair<std::uint32_t,std::uint32_t>,2>{{{0x64,0x004b6180U},{0x52,0x004a71a0U}}}) { const auto& entry=dispatch.Registration(type);if (entry.receive && (entry.leased || !entry.canonicalReceive || entry.canonicalReceive->nativeEntry!=code)) throw std::logic_error("Editor 실제64h/52h 수신 등록표의 다른 소유자 존재"); } // 모든 receive 충돌을 쓰기 전에 거부한다.
         s.editorCanonicalBaselines.clear();for (const auto type:kEditorGameplayMessages) if (const auto receiver=dispatch.Registration(type).canonicalReceive) s.editorCanonicalBaselines.emplace_back(type,receiver); //전체 충돌 검사 뒤 실제 장기 기본값만 쓰기 전에 보존한다.
-        if (chat.canonicalReceive) s.editorCanonicalBaselines.emplace_back(0x41U,chat.canonicalReceive); //모든 충돌 검사 뒤 같은 실제 F를 값으로 보관하고 전역 observer/metadata는 덮지 않는다.
+        if (chat.canonicalReceive) s.editorCanonicalBaselines.emplace_back(0x41U,chat.canonicalReceive);
+        for (const auto type:{0x52U,0x64U}) if (const auto receiver=dispatch.Registration(type).canonicalReceive) s.editorCanonicalBaselines.emplace_back(type,receiver); //전체 충돌 검사 뒤 실제 두 전역 F도 같은 반납 목록에 보존한다. //모든 충돌 검사 뒤 같은 실제 F를 값으로 보관하고 전역 observer/metadata는 덮지 않는다.
         s.editorRegisteredDispatch=&dispatch;s.editorActivityRegisteredDispatch=&dispatch;s.editorRegisteringCommands=true;
         try { RegisterCarrierCommands(dispatch);RegisterConstructionCommands(dispatch);RegisterFactoryResearchCommands(dispatch);RegisterConnectionActivity(dispatch,*s.connectionActivity);RegisterChatPacket(dispatch,s.chatGlobals->receivedMask,s.ChatDevices());RegisterBattleLeavePacket(dispatch,s.players);s.editorRegisteringCommands=false; }
         catch (...) { s.ReleaseEditorCommandReceivers();throw; } // 부분 등록 예외도 살아 있는 Session 포인터를 외부 표에 남기지 않는다.

@@ -84,6 +84,7 @@ public:
         MissionClientPacketState state,MissionClientPacketHooks hooks);
     // 실제 등록된 타입을 처리한다. 모르는 타입이나 물리 범위 밖의 원본 메모리 손상은 거부한다.
     void Receive(std::uint32_t sender,PacketConnection& connection,std::span<const std::uint8_t> packet) const;
+    void ReceiveFixed(std::uint32_t entry,std::uint32_t sender,std::span<const std::uint8_t> packet) const; //고정 원문 F값으로8종의 같은 본문을 직접 선택하며 packet[1]과 연결은 읽지 않는다.
     //004a7800의 직접004b4900 호출도 같은 본문을 사용하며 관계없는 연결 객체를 요구하지 않는다.
     void Options(std::uint32_t sender,std::span<const std::uint8_t> packet) const;
     void Observe(std::uint32_t type,std::span<std::uint8_t> packet,std::uint32_t sending) const; //40a540/40a590/40ae80/40b460의현재송신필드검사와선언WORD재작성을실행하며수신방향에서는읽지않는다.

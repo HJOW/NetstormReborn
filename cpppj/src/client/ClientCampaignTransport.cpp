@@ -1,5 +1,6 @@
 // 지난 Login의 raw this를 장기 backend에 저장하지 않고 실제 현재 World와 장기 전역을 빌린다.
 #include "client/ClientCampaignTransport.h"
+#include "client/NativeLoginPacketReceivers.h" //실제 Login/Editor의 같은 고정 F를 빌린다.
 #include "client/NativeGameplayPacketReceivers.h" //이동/Squid/문자열의 같은 실제 고정 F를 사용한다.
 #include "client/NativeCarrierPacketReceivers.h" //Carrier 계열의 고정 F와 실제 현재 본문을 공유한다.
 #include "client/NativeConstructionPacketReceivers.h" //같은 건설계 고정F를 실제 Source의 장기 기본표에 설치한다.
@@ -263,6 +264,7 @@ void InstallClientMetaGameLoginReceiver(Client& client,o::RawPacketDispatch& dis
     dispatch.RegisterCanonicalDirect(0x7c,0x004b2cc0U,[client=&client](auto sender,auto*,auto packet) { ReceiveClientMetaGameLogin(*client,sender,packet); }); //NULLconnection/현재phase/known/CS0을선행검사하지않는다.
 }
 void InstallClientPacketDefaults(Client& client,o::RawPacketDispatch& dispatch) {
+    InstallNativeLoginPacketReceivers(client,dispatch); //현재 Session을 조회하지 않는14F이며 기존67h는 뒤의 같은 앱 전역 설치를 유지한다.
     InstallNativeGameplayPacketReceivers(dispatch,client.GameplayGlobals(),client.SurfaceStorage()); //26F는 장기 game만 보유하고 기존32h의 직접 전역 수신을 유지한다.
     InstallNativeCarrierPacketReceivers(dispatch,client.GameplayGlobals(),client.SurfaceStorage()); //현재 Session을 보유하지 않는15F와 원문 metadata를 같은 기본표에 둔다.
     InstallNativeConstructionPacketReceivers(dispatch,client.GameplayGlobals(),client.SurfaceStorage()); //수신기는 실제 현재 Runtime을 호출 시점에만 선택하며 이전 Session을 보관하지 않는다.

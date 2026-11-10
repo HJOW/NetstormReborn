@@ -74,6 +74,7 @@ public:
     RawMissionLogin(std::span<std::uint8_t> players,RawPlayerParticipation& participation,MissionLoginGlobals globals,MissionLoginHooks hooks);
     // 004a7800의 sender/실제 연결/0x27 버퍼를 처리한다. CheckLogin의 반환으로 원본에 없는 조기 반환을 만들지 않는다.
     void Receive(std::int32_t pending,PacketConnection& connection,std::span<const std::uint8_t> packet) const;
+    void ReceiveDirect(std::int32_t pending,PacketConnection* connection,std::span<const std::uint8_t> packet) const; //Native F의 nullable 두번째 인자를 거부 응답의 실제 사용 지점까지 보존한다.
     // 004a6920의 실제18바이트 응답을 보내며 참여 처리기의 거부 응답에도 사용할 수 있다.
     void SendReply(std::int32_t owner,std::uint8_t accepted) const;
     // 004a6f70의 현재 owner1..8 Ready mask를 실제0x6e 패킷으로 보낸다.0은 원본 전체분배다.

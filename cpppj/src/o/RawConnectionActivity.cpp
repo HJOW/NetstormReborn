@@ -32,6 +32,7 @@ void RawConnectionActivity::Receive(std::int32_t sender) const {
 
 // 실제0040be79..0040be97의 세 등록만 옮기며 길이5는 기존 PE 길이 표의 현재값이다.
 void RegisterConnectionActivity(RawPacketDispatch& dispatch,RawConnectionActivity& activity) {
+    const auto receiver=dispatch.Registration(0x64).canonicalReceive;if (receiver && receiver->nativeEntry==0x004b6180U) { const auto& row=dispatch.Registration(0x64);if (row.version!=1 || row.mismatch!=0 || row.length!=5 || !row.observer || row.packetObserver) throw std::logic_error("Native 연결 수신의 같은 metadata 불일치");dispatch.RegisterCanonical(0x64,receiver);return; } //실제 Native F가 있으면 같은 값만 대여하고 독립 typed의 기존 등록을 유지한다.
     dispatch.Observe(0x64,[](std::uint32_t) {}); //0040b380은 송신/수신 선택과 관계없이 아무 효과 없이 반환한다.
     dispatch.Version(0x64,1,0);
     dispatch.Register(0x64,[&activity](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t>) { activity.Receive(std::bit_cast<std::int32_t>(sender)); }); // 인접 connection/payload는 원문처럼 소비하지 않는다.

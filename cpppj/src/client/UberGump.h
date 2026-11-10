@@ -117,6 +117,7 @@ public:
     std::optional<ScreenPoint> ControlPoint(std::string_view label) const;
     bool QuitRequested() const { return quit_; } // 실제 QuitApp/사용자 종료 요청만 읽으며 검사 프레임 제한 종료와 구별한다.
     void CleanupGumps(); // 원본4662b0 위치에서 실제 전체 HTML/Warning을 포함한 같은 공통 큐를 정리한다.
+    void RemoveNativePacketMessage(std::int32_t kind,std::int32_t player,std::int32_t parameter); //같은 실제 WarningMessages.Remove와 UI 다시 그리기를 Native 전역/기존 Session이 공유한다.
     void ShowGameTimeMessage(); //00439b5f의kind16/player1/표시1을기존메시지20칸에전달한다.
     void PollConnectionHealth(); //00439ad8의 실제 활동/지연/자동 서버 이전과 뒤439ae3 로그인 타이머를 실행한다.
     void PollBattleCompletion(); //439b3e의44ac30을주기저장뒤·시간안내앞한번실행한다.

@@ -257,21 +257,29 @@ struct RawCampaignSession::Impl::Login {
         timer=std::make_unique<RawMissionLoginTimer>(OriginalEdition::Patch1078,MissionLoginTimerState{s.loginEnd,timeout,begin,scriptBreak,requestPhase,baseClock},counts,MissionLoginTimerReads{[this] { return saved; },[this] { return s.core.processState.Server(); },[this] { return s.objectState.mission; },[this] { return s.globals.missionPost; },[this] { return s.assetState.Boss(); },[this] { return s.gunState.checking; }},std::move(timing));
         if (s.world.Storage()->UsesNativeTransmissionDevices()) BindNativeGameplayPacketReceiver(*transport.dispatch,0x31); //Login의 선행 등록도 같은 고정 F/observer와 이번 lease를 사용한다.
         else RegisterDeveloperCommandPacket(*transport.dispatch,[this](auto text) { s.ExecuteDeveloperCommand(text); },[storage=s.world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); // Login 진행 중에도 같은31h 실제 해석기/observer를 사용한다.
-        RegisterMissionLogin((*transport.dispatch),*server);RegisterMissionClientPackets((*transport.dispatch),*client);RegisterMissionMetadata((*transport.dispatch),*metadata);RegisterMissionSettingsPacket((*transport.dispatch),*settings);
+        if (s.world.Storage()->UsesNativeTransmissionDevices()) { BindNativeLoginPacketReceiver(*transport.dispatch,0x27);BindNativeLoginPacketReceiver(*transport.dispatch,0x63); }
+        else RegisterMissionLogin((*transport.dispatch),*server);
+        if (s.world.Storage()->UsesNativeTransmissionDevices()) {
+            for (const auto type:std::array<std::uint32_t,8>{0x29,0x67,0x2b,0x2a,0x28,0x81,0x84,0x6e}) BindNativeLoginPacketReceiver(*transport.dispatch,type); //기존8종 등록 순서에서 같은 F를 대여한다.
+        } else RegisterMissionClientPackets((*transport.dispatch),*client);
+        if (s.world.Storage()->UsesNativeTransmissionDevices()) BindNativeLoginPacketReceiver(*transport.dispatch,0x72);
+        else RegisterMissionMetadata((*transport.dispatch),*metadata);
+        RegisterMissionSettingsPacket((*transport.dispatch),*settings);
         RegisterStateMetaBattleDescription(*transport.dispatch,outpost,effects.metaBattleDescription,[this](auto expression) { s.world.Storage()->AssertDisplay(expression,"\\Ns\\O\\_p_packets.cpp",0xae3); }); //같은 현재 CS 주소이며 건물 Outpost와 구별한다.
         RegisterConnectionActivity((*transport.dispatch),*s.connectionActivity); // 실제64h/version1/정책0/빈 observer를 같은 일반 수신 분배기에 등록한다.
         RegisterChatPacket((*transport.dispatch),s.chatGlobals->receivedMask,s.ChatDevices()); // 같은 단독 양끝의41h mutable observer와 중계를 실제 UI 수신에 등록한다.
         RegisterBattleLeavePacket((*transport.dispatch),s.players); // 실제 State3의 종료52h도 같은 큐에서 수신하며 직접 Player flag를 합성하지 않는다.
-        // 원본3d 등록의 observer는0040b380의 빈 반환이고 version1/mismatch0이다.
-        (*transport.dispatch).Observe(0x3d,[](std::uint32_t) {});(*transport.dispatch).Version(0x3d,1,0);
-        (*transport.dispatch).Register(0x3d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> bytes) {
-            // 모든 backend는 callback 동안 소유한 mutable 수신 frame을 제공한다. 같은 실제 버퍼에 원본 self bit를 쓴다.
-            s.participation->ReceiveAlliance({const_cast<std::uint8_t*>(bytes.data()),bytes.size()},[this](std::span<const std::uint8_t> packet) { s.broadcast->Send(packet); });
-        });
-        (*transport.dispatch).Observe(0x78,{});(*transport.dispatch).Version(0x78,1,0);(*transport.dispatch).RequireLength(0x78,6);
-        (*transport.dispatch).Register(0x78,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) {
-            const auto owner=std::uint32_t(packet[4]),target=std::uint32_t(packet[5]);if (s.assetState.Boss()) { s.participation->AddAlly(owner,target);s.participation->AddAlly(target,owner);s.broadcast->Send(packet); }Need(effects.status)(7,owner,target);
-        }); //0048f880은 현재 boss에서 양방향 AddAlly/전체분배를 하고 모든 수신자가 실제 종류7 안내를 연다.
+        if (s.world.Storage()->UsesNativeTransmissionDevices()) BindNativeLoginPacketReceiver(*transport.dispatch,0x3d);
+        else {
+            // 원본3d 등록의 observer는0040b380의 빈 반환이고 version1/mismatch0이다.
+            (*transport.dispatch).Observe(0x3d,[](std::uint32_t) {});(*transport.dispatch).Version(0x3d,1,0);
+            (*transport.dispatch).Register(0x3d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { s.ReceiveFixedAlliancePacket(0x00491220U,packet); });
+        }
+        if (s.world.Storage()->UsesNativeTransmissionDevices()) BindNativeLoginPacketReceiver(*transport.dispatch,0x78);
+        else {
+            (*transport.dispatch).Observe(0x78,{});(*transport.dispatch).Version(0x78,1,0);(*transport.dispatch).RequireLength(0x78,6);
+            (*transport.dispatch).Register(0x78,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { s.ReceiveFixedAlliancePacket(0x0048f880U,packet); }); //0048f880은 현재 boss에서 양방향 AddAlly/전체분배를 하고 모든 수신자가 실제 종류7 안내를 연다.
+        }
         rollback.armed=false; // 정상 생성 뒤에는 Login 소멸자가 하위 처리기보다 먼저 같은 대여를 반납한다.
     }
     MissionLoginPlayerCounts counts{OriginalEdition::Patch1078,s.players}; //같은 Player9의 현재 집계를 타이머에 공급한다.

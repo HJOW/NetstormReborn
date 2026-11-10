@@ -88,7 +88,9 @@ void RawMissionLogin::SendReady(std::uint32_t target) const {
     Write(bytes,4,mask);if (!target) Need(hooks_.broadcast)(bytes);else Need(hooks_.send)(static_cast<std::int32_t>(target),bytes);
 }
 //004a7800의 일반/미션 부모를 같은 현재 Player와 실제 선택 효과로 실행한다.
-void RawMissionLogin::Receive(std::int32_t pending,PacketConnection& connection,std::span<const std::uint8_t> packet) const {
+void RawMissionLogin::Receive(std::int32_t pending,PacketConnection& connection,std::span<const std::uint8_t> packet) const { ReceiveDirect(pending,&connection,packet); }
+// NULL 연결은 거부 응답이 실제 선택될 때만 요구하며 앞선 server/Player 부분 효과를 유지한다.
+void RawMissionLogin::ReceiveDirect(std::int32_t pending,PacketConnection* connection,std::span<const std::uint8_t> packet) const {
     if (!globals_.server) { Need(hooks_.disconnect)(pending);return; }
     const auto subscriber=ReadBytes(packet,8);std::uint32_t owner=1;
     // subscriber가 같은 현재 첫 실제 Player만 선택한다.
@@ -100,7 +102,7 @@ void RawMissionLogin::Receive(std::int32_t pending,PacketConnection& connection,
             globals_.currentCoreData=globals_.metamap ? globals_.cachedCoreData : players_.subspan(player*kStride+0x6c,10);
         }
     }
-    if (!owner) { const auto bytes=Reply(0,0);Need(hooks_.pendingReply)(connection,bytes);return; }
+    if (!owner) { const auto bytes=Reply(0,0);if (!connection) throw std::logic_error("선택된 Login 거부 응답의 실제 연결 미연결");Need(hooks_.pendingReply)(*connection,bytes);return; }
     if (globals_.simulconnect) {
         if (pending<0) Need(hooks_.disconnect)(static_cast<std::int32_t>(owner)); // 실제 새 pending을 이전 owner 연결과 구별하여 먼저 이전 끝만 닫는다.
         else if (pending<1 || pending>8) Need(hooks_.assertion)("FIRST_REAL_PLAYER <= pendingId && pendingId < END_REAL_PLAYERS"); // 원문 진단이 복귀하면 CheckLogin 순서를 계속한다.

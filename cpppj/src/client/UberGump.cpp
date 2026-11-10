@@ -914,7 +914,7 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
     // 1-1/1-2도 원본 missionType은 Tutorial이다. 지원 두 종류 모두 같은 실제 raw 월드를 생성한다.
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{
         [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); },
-        [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { warnings_->Remove(kind,player,parameter);rebuild_=true; },[this](auto packet) { ReceiveChatMessage(packet); }}); // 현재 클라이언트의 설정·음향·입력·UI다.
+        [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { RemoveNativePacketMessage(kind,player,parameter); },[this](auto packet) { ReceiveChatMessage(packet); }}); // 현재 클라이언트의 설정·음향·입력·UI다.
     services.adoptInitializedPlayers=nativePlayers; //앞선 실제 cleanup의 같은9기록을 대여하며 생성자에서 두 번째로 재할당하지 않는다. 일반 World/로그인 어댑터의 나머지 기존 경계는 유지한다.
     if (nativePlayers) services.localLogin->startingProgress=[this] { rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });rebuild_=true; }; // 실제 인자20/즉시8 예약 뒤 만들며 중첩 Compose/Present/프레임 대기를 추가하지 않는다.
     if (nativePlayers) services.localLogin->creatingIslands=[this] { rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Creating Islands.")),[this] { return FontBytes(client_.Translate("Cancel")); });rebuild_=true; }; // 원문cf570의 같은 안내 serial 재사용/본문 갱신을 사용한다.
@@ -2126,6 +2126,8 @@ std::string UberGump::Report(bool cameraOnly) const {
 // 검사 전용 Session 덤프는 입력과 같은 현재 Session 선택을 쓰고 읽기만 한다(2026-11-09 webpj/dotnetpj L2·L3 대조용 추가).
 std::string UberGump::SessionStateDump() const { return DumpSessionState(client_,InputSession()); }
 //부모가현재battle/showTime을확인한뒤같은board를호출한다.
+// 현재 실제 안내 처리기를 선택한 시점에만 요구하고 같은 UI 갱신을 남긴다.
+void UberGump::RemoveNativePacketMessage(std::int32_t kind,std::int32_t player,std::int32_t parameter) { if (!warnings_) throw std::logic_error("연결 안내 제거의 실제 WarningMessages 미연결");warnings_->Remove(kind,player,parameter);rebuild_=true; }
 void UberGump::ShowGameTimeMessage() { warnings_->GameTimeStatus(); }
 // CD의 SID 회수 완료 알림도 현재 미션/일반 Tell 검색과 같은 모달 수명을 사용한다.
 void UberGump::ShowSidRecoveryNotice() { Tell("BridgesKilled"); }
