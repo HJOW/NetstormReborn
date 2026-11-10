@@ -540,25 +540,29 @@
       "required": false,
       "producer": "cpppj 원본 저장 객체 적용·Terr→Chaff 순회 x86 관측(609입력)",
       "consumers": [
-        "webpj/tests/fort-object-load.test.mjs"
+        "webpj/tests/fort-object-load.test.mjs",
+        "webpj/tests/fort-object-stream.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/fort-object-load.js"
+        "webpj/www/core/fort-object-load.js",
+        "webpj/www/core/raw-fort-object-stream.js"
       ],
       "unit": "WB03-AB",
       "doc": "docs/webpj-fort-object-load-20261102.md",
       "cpppjSources": [
-        "cpppj/src/o/RawFortObjectLoad.cpp"
+        "cpppj/src/o/RawFortObjectLoad.cpp",
+        "cpppj/src/o/RawFortObjectStream.cpp"
       ],
-      "scope": "값형 로더·내용물 적용. 필수 생성/Pop/finder/소유자 장치가 없어 실제 월드 미연결",
+      "scope": "값형 로더·내용물 적용(fort-object-load, WB03-AB)과 같은 609행의 원시 stream 경로 재생(fort-object-stream, WB04-E276). 필수 생성/Pop/finder/소유자 장치가 없어 실제 월드 미연결",
       "text": true,
       "sha256": "31fb91aabb4fe3c403e9a9780e0f14f211508cbbce6523cef1b53a5bdf439519",
       "bytes": 374142,
       "lines": 1219,
-      "fixtureCommit": "ada85427",
-      "webCommit": "699421d7",
+      "fixtureCommit": "ada85427f",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawFortObjectLoad.cpp": "674e3202"
+        "cpppj/src/o/RawFortObjectLoad.cpp": "674e32020",
+        "cpppj/src/o/RawFortObjectStream.cpp": "c18205179"
       }
     },
     {
@@ -15934,7 +15938,7 @@
       "bytes": 252643,
       "lines": 669,
       "fixtureCommit": "a9af29da7",
-      "webCommit": "worktree",
+      "webCommit": "8c4bffa55",
       "cpppjBasis": {
         "cpppj/src/o/RawFortContentsLoad.cpp": "a9af29da7"
       }
