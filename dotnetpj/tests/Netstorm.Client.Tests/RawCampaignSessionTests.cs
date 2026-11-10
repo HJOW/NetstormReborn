@@ -338,6 +338,19 @@ public sealed class RawCampaignSessionTests
         Assert.Contains("미적재", Assert.Throws<InvalidOperationException>(() => session.BattleActive()).Message);
     }
 
+    /// <summary>현재 인지 조회가 적재 여부와 무관하게 세션 Player 상태를 읽는지 검증한다. 2026-11-11 F3 현재 인지 조회 본체에서 추가됐다.</summary>
+    [Fact]
+    public void PlayerKnownReadsSessionStateWithoutLoading()
+    {
+        // 원본 const 읽기와 같아 적재 관문이 없다. 설치 본체의 갱신이 그대로 보인다.
+        var session = LoadableSession();
+        Assert.Equal(0u, session.PlayerKnown());
+        session.PlayerState.PlayerKnown = 1u;
+        Assert.Equal(1u, session.PlayerKnown());
+        session.LoadSeeds(LoadableSeeds());
+        Assert.Equal(1u, session.PlayerKnown());
+    }
+
     /// <summary>적재 뒤 소유자·전투 조회가 세션 Player·자산 상태를 읽는지 검증한다. 2026-11-10 F3 소유자 본체에서 추가됐다.</summary>
     [Fact]
     public void OwnerQueriesReadSessionState()

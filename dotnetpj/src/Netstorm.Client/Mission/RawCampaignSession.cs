@@ -808,6 +808,10 @@ public sealed class RawCampaignSession
         return _player.TemplateOwner;
     }
 
+    /// <summary>로그인·기술·AI가 공유하는 현재 원본 Player 인지 값이다. 적재 여부와 무관하게 읽을 수 있다. 2026-11-11 F3 현재 인지 조회 본체에서 추가됐다.</summary>
+    /// <returns>현재 PlayerKnown 값이다.</returns>
+    public uint PlayerKnown() => _player.PlayerKnown;
+
     /// <summary>원본 00594fbc의 현재 실제 자산 Battle 관문이다. 적재 전에는 적재 관문에서 먼저 멈춘다. 2026-11-10 F3 세션 소유자 조회 Stub 이식에서 추가됐고 2026-11-10 F3 소유자 본체에서 본체를 이었다.</summary>
     /// <returns>전투 중이면 1u, 아니면 0u이다.</returns>
     public uint BattleActive()
