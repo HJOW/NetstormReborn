@@ -207,4 +207,26 @@ public sealed class RawCampaignSessionTests
         session.RunFrame(new FrameTime { Game = 110.0, Delta = 10.0 }, false);
         Assert.Equal(110.0, session.CurrentTime().Game);
     }
+
+    /// <summary>보고서가 월드와 같은 첫 줄을 보이는지 검증한다. 2026-11-10 F3 세션 보고서 위임 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportDelegatesToWorld()
+    {
+        // 세션 보고서의 월드 위임만 둔다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        string sessionReport = session.Report();
+        string worldReport = session.World().Report();
+        Assert.Equal(worldReport.Split('\n')[0], sessionReport.Split('\n')[0]);
+        Assert.Contains("raw_world", sessionReport);
+    }
+
+    /// <summary>미적재 보고서도 월드와 같은 줄을 보이는지 검증한다. 2026-11-10 F3 세션 보고서 위임 이식에서 추가됐다.</summary>
+    [Fact]
+    public void ReportBeforeLoadMatchesWorld()
+    {
+        // 적재 전 빈 월드의 보고서 위임을 검증한다.
+        var session = LoadableSession();
+        Assert.Equal(session.World().Report(), session.Report());
+    }
 }
