@@ -646,3 +646,5 @@ cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionZone.cs	50a5
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionZone.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
 cpppj/src/o/RawConnectionActivity.cpp	Netstorm.Net/RawConnectionActivity.cs	ee4e45c69171943ad99db6c2930574ee7747ba76	port
 cpppj/src/o/RawConnectionActivity.h	Netstorm.Net/RawConnectionActivity.cs	bd9ea8d37045e404e1f1892fb5fde9cea2653fdc	port
+cpppj/src/o/RawBattleBroadcast.cpp	Netstorm.Net/RawBattleBroadcast.cs	77a0c3a47d5e54547da7fb0bb242161c3cd8020b	port
+cpppj/src/o/RawBattleBroadcast.h	Netstorm.Net/RawBattleBroadcast.cs	77a0c3a47d5e54547da7fb0bb242161c3cd8020b	port
