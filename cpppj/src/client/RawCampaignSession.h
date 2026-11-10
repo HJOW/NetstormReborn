@@ -525,6 +525,7 @@ public:
     bool FactoryUpgrading(o::Sid parent) const; //00453c90의실제예측그림→event4→event3조회다.
     // 같은 실제0x4f 일반포획/0x5b 채취/0x60 크랩포획 수신을현재캠페인에등록한다.
     void RegisterCarrierCommands(o::RawPacketDispatch& dispatch);
+    void ReceiveFixedCarrierPacket(std::uint32_t entry,std::uint32_t sender,std::span<const std::uint8_t> packet); //저장된 Native F값으로 동맹/Carrier/의식의 같은 실제 본문만 직접 호출한다.
     // 실제427340은 선택 해제/연결·중복 검사 뒤40h만 송신한다. 경로 생성은 등록 수신에서 수행한다.
     void RequestCarrierMove(o::Sid parent,o::RawPathPoint destination,std::uint32_t sacrifice=0);
     void RequestCarrierDrop(o::Sid parent,o::Sid content={}); // 실제427070의비용/선택/9바이트송신만 실행하며 서버 수신을 직접 부르지 않는다.

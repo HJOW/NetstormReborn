@@ -86,5 +86,5 @@ void RawMeltdown::ReceiveEffect(std::span<const std::uint8_t> packet) const {
     }
 }
 // 원본은 쓰기 요청일 때만 현재 count로 WORD 길이를 갱신하며 count=-1을 진단한다.
-void RawMeltdown::FinalizePacket(std::span<std::uint8_t> packet,bool writing) { if (!writing) return;const auto count=Get(packet,16);if (count==0xffffffffU) throw std::logic_error("원본 Meltdown count 진단b23");Put(packet,2,(count+10U)*2U,2); }
+void RawMeltdown::FinalizePacket(std::span<std::uint8_t> packet,bool writing,const std::function<void()>& invalidCount) { if (!writing) return;if (Get(packet,16)==0xffffffffU) { if (invalidCount) invalidCount();else throw std::logic_error("원본 Meltdown count 진단b23"); }Put(packet,2,(Get(packet,16,2)+10U)*2U,2); }
 }

@@ -6,6 +6,7 @@ void ConnectMeltdown() {
     hooks.find=[this](float x,float y,std::int32_t radius,BombTargetList& list) { meltdown->Find(x,y,radius,list); };
     hooks.send=[this](auto target,std::span<const std::uint8_t> packet) { if (!services.carrierRequest) throw std::logic_error("Meltdown 실제 로컬 요청 전송 미설치");services.carrierRequest(target,packet); };
     hooks.broadcast=[this](std::span<std::uint8_t> packet) {
+        if (world.Storage()->UsesNativeTransmissionDevices()) { world.Storage()->BroadcastAssetPacket(packet);return; } //Native는 전체 예약을 실제 Source에 넘기며 대상별 송신 observer만 현재 길이를 정한다.
         for (std::uint32_t owner=1;owner<9;++owner) if ((players[owner*180+0x50]&1U) && services.battlePeers[owner] && owner!=playerState.battleOwner) { RawMeltdown::FinalizePacket(packet,true);break; } // 실제 송신 observer가 도달할 때만 선언 길이를 바꾼다.
         const auto length=std::uint32_t(packet[2])|(std::uint32_t(packet[3])<<8);if (length>packet.size()) throw std::out_of_range("Meltdown 실제 배포 범위");broadcast->Send(packet.first(length));
     };

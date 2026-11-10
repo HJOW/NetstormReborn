@@ -6,6 +6,7 @@
 #include "o/RawSquidRegion.h" // 같은 TYPE 진단과 raw 지역 WORD의 getter/setter를 공유한다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/NativeCarrierPacketReceivers.h" //Carrier 계열의 고정 F와 실제 현재 본문을 공유한다.
 #include "client/NativeConstructionPacketReceivers.h" //건설/연구의 Native 대여는 이전 Session closure 대신 같은 고정F를 유지한다.
 #include "client/NativeFortSaveVirtual.h" //Native 저장·보상은 같은 장기 가상 조회기를 공유한다.
 #include "client/ClientBuildReplay.h" // 실제 건설 확정과 재생 프로세스가 같은 현재 객체/playing을 사용한다.
@@ -5143,14 +5144,9 @@ void RawCampaignSession::Impl::ReceiveFlyerCommand(std::span<const std::uint8_t>
 void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     if (!impl_->loaded && !impl_->editorRegisteringCommands) throw std::logic_error("미설치 Session의 채취 수신 등록");
     //77/79/6f는 원문 비NULL40b380/version1/policy0/고정6BYTE이며 sender/nullable 연결을 사용하지 않는다.
-    for (const auto type:std::array<std::uint32_t,3>{0x77,0x79,0x6f}) {
-        dispatch.Observe(type,[](std::uint32_t) {});dispatch.Version(type,1,0);dispatch.RequireLength(type,6);
-        dispatch.RegisterDirect(type,[this,type](std::uint32_t,PacketConnection*,std::span<const std::uint8_t> packet) {
-            auto& s=*impl_;const auto hooks=s.AllianceDevices();
-            if (type==0x77) s.participation->ReceiveAllianceRequest(packet,hooks);
-            else if (type==0x79) s.participation->ReceiveBrokenAlliance(packet,hooks);
-            else s.participation->ReceiveDraw(packet,s.gameplayGlobals->GameAux()->ScheduledDrawDeadline(),hooks);
-        }); //기존 Session 대여/Editor48종의 검사·반납을 공유하며 별도 장기 this 등록을 남기지 않는다.
+    for (const auto [type,entry]:std::array<std::pair<std::uint32_t,std::uint32_t>,3>{{{0x77,0x0048f7f0U},{0x79,0x0048f8f0U},{0x6f,0x004900e0U}}}) { //원문 순서대로 동맹 세 행을 등록한다.
+        if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,type);
+        else { dispatch.Observe(type,[](std::uint32_t) {});dispatch.Version(type,1,0);dispatch.RequireLength(type,6);dispatch.RegisterDirect(type,[this,entry](std::uint32_t sender,PacketConnection*,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(entry,sender,packet); }); }
     }
     RegisterDeveloperCommandPacket(dispatch,[this](auto text) { impl_->ExecuteDeveloperCommand(text); },[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); //31h의 현재 수신은 일반/단독/Editor가 같은 본체를 사용한다.
     RegisterMissionSettingsPacket(dispatch,impl_->gameplayGlobals->GameAux()->MissionSettings()); // Login 밖에서도 현재7DWORD에 직접 저장한다.
@@ -5223,32 +5219,96 @@ void RawCampaignSession::RegisterCarrierCommands(RawPacketDispatch& dispatch) {
     RegisterGeyserMined(dispatch,*impl_->geyserMined);
     RegisterRemoteTellPacket(dispatch,[this](auto text) { if (!impl_->services.factoryTell) throw std::logic_error("원격 Tell의 실제 현재 cf730 미연결");impl_->services.factoryTell(DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()})); },[storage=impl_->world.Storage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); }); // 표시부호화는현재실제UI의UTF-8경계에서만변환한다.
     dispatch.Register(0x5b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveGeyserMined(packet); });
-    dispatch.Observe(0x40,{});dispatch.Version(0x40,1,0);dispatch.RequireLength(0x40,18);
-    dispatch.Register(0x40,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierMove->Receive(owner,packet); });
-    dispatch.Observe(0x4f,{});dispatch.Version(0x4f,1,0);dispatch.RequireLength(0x4f,9);
-    dispatch.Register(0x4f,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierPickup->Receive(owner,0,packet); });
-    dispatch.Observe(0x50,{});dispatch.Version(0x50,1,0);dispatch.RequireLength(0x50,9);
-    dispatch.Register(0x50,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->PrepareCarrierDrop();impl_->carrierDrop->Receive(owner,packet); });
-    dispatch.Observe(0x60,{});dispatch.Version(0x60,1,0);dispatch.RequireLength(0x60,10);
-    dispatch.Register(0x60,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->carrierSteal->Receive(owner,0,packet); });
-    dispatch.Observe(0x61,{});dispatch.Version(0x61,1,0);dispatch.RequireLength(0x61,11);
-    dispatch.Register(0x61,[this](std::uint32_t owner,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->acidZap->Receive(owner,0,packet); });
-    dispatch.Observe(0x5c,{});dispatch.Version(0x5c,1,0);dispatch.RequireLength(0x5c,6);
-    dispatch.Register(0x5c,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationActivation(packet); });
-    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) dispatch.ObservePacket(0x5f,[storage=impl_->world.Storage()](auto packet,auto sending) { ObserveBombEffectPacket(packet,sending,[storage] { storage->AssertDisplay("count != (int)-1","\\Ns\\O\\_p_packets.cpp",0x96b); }); });else dispatch.Observe(0x5f,{}); //Native는같은원문40aca0을유지하고독립typed의기존관측계약은보존한다.
-    dispatch.Version(0x5f,1,0);dispatch.RequireLength(0x5f,0xffff);
-    dispatch.Register(0x5f,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveDevastationEffect(packet); });
-    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) dispatch.ObservePacket(0x7d,[](auto packet,auto sending) { FinalizeBombTimerPacket(packet,sending!=0); });else dispatch.Observe(0x7d,{}); //Native의실제송신gate뒤한번만선언WORD를정하며typed의기존Nullobserver는유지한다.
-    dispatch.Version(0x7d,1,0);dispatch.RequireLength(0x7d,0xffff);
-    dispatch.Register(0x7d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->ReceiveBombTimer(packet); });
-    dispatch.Observe(0x6b,{});dispatch.Version(0x6b,1,0);dispatch.RequireLength(0x6b,10); //0040b380빈observer와원문등록표의6b/버전1/정책0이다.
-    dispatch.Register(0x6b,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveRitualChoice(impl_->core.pool,impl_->contentFinder,*impl_->contained,packet,[this](Sid form,std::uint32_t flags) { impl_->world.Destroy(form,flags); }); }); //00448e90은sender/owner검사를추가하지않는다.직접획득/희생완료를부르지않는다.
-    dispatch.Observe(0x6d,{});dispatch.Version(0x6d,1,0);dispatch.RequireLength(0x6d,8);
-    dispatch.Register(0x6d,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->priestPrayer->Receive(packet); }); // 원본493f80은송신자/두번째인수를기도관문에추가하지않는다.
-    dispatch.Observe(0x75,{});dispatch.Version(0x75,1,0);dispatch.RequireLength(0x75,0xffff); // 단일 분배기는 writer를 호출하지 않으며 실제 송신 경계에서 FinalizePacket을 실행한다.
-    dispatch.Register(0x75,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->meltdown->ReceiveEffect(packet); });
-    dispatch.Observe(0x76,{});dispatch.Version(0x76,1,0);dispatch.RequireLength(0x76,6);
-    dispatch.Register(0x76,[this](std::uint32_t,PacketConnection&,std::span<const std::uint8_t> packet) { impl_->meltdown->ReceiveRequest(packet); }); // 원문4207a0은 송신자를 새 권한 조건으로 쓰지 않는다.
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x40);
+    else {
+        dispatch.Observe(0x40,{});dispatch.Version(0x40,1,0);dispatch.RequireLength(0x40,18);
+        dispatch.Register(0x40,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x00428570U,sender,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x4f);
+    else {
+        dispatch.Observe(0x4f,{});dispatch.Version(0x4f,1,0);dispatch.RequireLength(0x4f,9);
+        dispatch.Register(0x4f,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x00426520U,sender,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x50);
+    else {
+        dispatch.Observe(0x50,{});dispatch.Version(0x50,1,0);dispatch.RequireLength(0x50,9);
+        dispatch.Register(0x50,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x00444bc0U,sender,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x60);
+    else {
+        dispatch.Observe(0x60,{});dispatch.Version(0x60,1,0);dispatch.RequireLength(0x60,10);
+        dispatch.Register(0x60,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x004267c0U,sender,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x61);
+    else {
+        dispatch.Observe(0x61,{});dispatch.Version(0x61,1,0);dispatch.RequireLength(0x61,11);
+        dispatch.Register(0x61,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x0048bfe0U,sender,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x5c);
+    else {
+        dispatch.Observe(0x5c,{});dispatch.Version(0x5c,1,0);dispatch.RequireLength(0x5c,6);
+        dispatch.Register(0x5c,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x0041e860U,sender,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x5f);
+    else {
+        dispatch.Observe(0x5f,{}); //독립 typed의 기존 NULL observer 계약을 유지한다.
+        dispatch.Version(0x5f,1,0);dispatch.RequireLength(0x5f,0xffff);
+        dispatch.Register(0x5f,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x00420bf0U,sender,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x7d);
+    else {
+        dispatch.Observe(0x7d,{}); //독립 typed의 기존 NULL observer 계약을 유지한다.
+        dispatch.Version(0x7d,1,0);dispatch.RequireLength(0x7d,0xffff);
+        dispatch.Register(0x7d,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x0041e320U,sender,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x6b);
+    else {
+        dispatch.Observe(0x6b,{});dispatch.Version(0x6b,1,0);dispatch.RequireLength(0x6b,10); //0040b380빈observer와원문등록표의6b/버전1/정책0이다.
+        dispatch.Register(0x6b,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x00448e90U,sender,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x6d);
+    else {
+        dispatch.Observe(0x6d,{});dispatch.Version(0x6d,1,0);dispatch.RequireLength(0x6d,8);
+        dispatch.Register(0x6d,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x00493f80U,sender,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x75);
+    else {
+        dispatch.Observe(0x75,{});dispatch.Version(0x75,1,0);dispatch.RequireLength(0x75,0xffff); // 단일 분배기는 writer를 호출하지 않으며 실제 송신 경계에서 FinalizePacket을 실행한다.
+        dispatch.Register(0x75,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x004205f0U,sender,packet); });
+    }
+    if (impl_->world.Storage()->UsesNativeTransmissionDevices()) BindNativeCarrierPacketReceiver(dispatch,0x76);
+    else {
+        dispatch.Observe(0x76,{});dispatch.Version(0x76,1,0);dispatch.RequireLength(0x76,6);
+        dispatch.Register(0x76,[this](std::uint32_t sender,PacketConnection&,std::span<const std::uint8_t> packet) { ReceiveFixedCarrierPacket(0x004207a0U,sender,packet); });
+    }
+}
+// 불변 F의 코드값으로 같은 실제 모듈을 호출하며 packet종류/현재 등록표를 재조회하지 않는다.
+void RawCampaignSession::ReceiveFixedCarrierPacket(std::uint32_t entry,std::uint32_t sender,std::span<const std::uint8_t> packet) {
+    switch (entry) {
+    case 0x0048f7f0U:
+    case 0x0048f8f0U:
+    case 0x004900e0U: {
+        const auto type=entry==0x0048f7f0U ? 0x77U:entry==0x0048f8f0U ? 0x79U:0x6fU; //저장된 세 코드값만 기존 동맹 본문에 연결한다.
+        auto& s=*impl_;const auto hooks=s.AllianceDevices();
+        if (type==0x77) s.participation->ReceiveAllianceRequest(packet,hooks);
+        else if (type==0x79) s.participation->ReceiveBrokenAlliance(packet,hooks);
+        else s.participation->ReceiveDraw(packet,s.gameplayGlobals->GameAux()->ScheduledDrawDeadline(),hooks);
+        return;
+    }
+    case 0x00428570U: { impl_->carrierMove->Receive(sender,packet);return; }
+    case 0x00426520U: { impl_->carrierPickup->Receive(sender,0,packet);return; }
+    case 0x00444bc0U: { impl_->PrepareCarrierDrop();impl_->carrierDrop->Receive(sender,packet);return; }
+    case 0x004267c0U: { impl_->carrierSteal->Receive(sender,0,packet);return; }
+    case 0x0048bfe0U: { impl_->acidZap->Receive(sender,0,packet);return; }
+    case 0x0041e860U: { impl_->ReceiveDevastationActivation(packet);return; }
+    case 0x00420bf0U: { impl_->ReceiveDevastationEffect(packet);return; }
+    case 0x0041e320U: { impl_->ReceiveBombTimer(packet);return; }
+    case 0x00448e90U: { ReceiveRitualChoice(impl_->core.pool,impl_->contentFinder,*impl_->contained,packet,[this](Sid form,std::uint32_t flags) { impl_->world.Destroy(form,flags); });return; }
+    case 0x00493f80U: { impl_->priestPrayer->Receive(packet);return; }
+    case 0x004205f0U: { impl_->meltdown->ReceiveEffect(packet);return; }
+    case 0x004207a0U: { impl_->meltdown->ReceiveRequest(packet);return; }
+    default:throw std::invalid_argument("알 수 없는 고정 Carrier 수신 본문");
+    }
 }
 // 요청은 실제 선택/중복 검사와 전송만 수행하고 직접 Start를 부르지 않는다.
 void RawCampaignSession::RequestCarrierMove(Sid parent,RawPathPoint destination,std::uint32_t sacrifice) { CarrierMove().Request(parent,destination,sacrifice); }

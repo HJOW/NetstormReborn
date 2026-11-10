@@ -1,0 +1,835 @@
+{
+  "unit": 1259,
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "acceptedImplementationStage": true,
+  "nativeCarrierRows": 15,
+  "previousNativeConstructionRows": 8,
+  "remainingPreparedGameplayRows": 27,
+  "fullM6lComplete": false,
+  "fullNoWorldComplete": false,
+  "fullGoalComplete": false,
+  "sourceSha256": {
+    "cpppj/src/client/NativeCarrierPacketReceivers.h": "97f0d1f91328156a5516f9fa7ec0dcb27a0d7221bf312b4d96bf4212491421f4",
+    "cpppj/src/client/NativeCarrierPacketReceivers.cpp": "c61f9a8959dcfba20861b3c149f69509b5f8e2a191d0d8bbf49232db95103a1d",
+    "cpppj/src/client/RawCampaignSession.h": "b7691bcb197e8716724a82b531bf3ac8fe6141a1af78c588caa0601c9ea3e4e9",
+    "cpppj/src/client/RawCampaignSession.cpp": "7c1a081ee24c0ae3f96a55966d52eddf63b6f13f3044b803cb7ee614483a9c83",
+    "cpppj/src/client/ClientCampaignTransport.cpp": "7df5c70a00c0c3ebb6bdd45ebec63757f08326a6766ad4c75dea2d08604ef5bf",
+    "cpppj/src/client/CMakeLists.txt": "21f5c39666b22ccea0bb07e956d1fc6a3f1163a480223f8da9970d9a906dc69b",
+    "cpppj/src/o/RawMeltdown.h": "14c96cd7930e68e6fcfbbca0dc9f8d24f3cd49ec7f4febfb95afc0f6da950fda",
+    "cpppj/src/o/RawMeltdown.cpp": "2836f1eb03379f0f8c3b25a17d618576ca29b29d6ac30f89f8471c44d5a14b3d",
+    "cpppj/src/client/RawCampaignMeltdown.inc": "dc213d47934443fa8ed9aea9d634e84172aaafca8d533af9c3ac84b588b0f734"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 14473216,
+      "sha256": "8b9d9b720dca43e793eecfac75ddab6fe48e284b72d6e878bceeb858db40b2fe"
+    },
+    "R.exe": {
+      "bytes": 681472,
+      "sha256": "c693f58abbe4c1953f3cded8cf18c1a44c2820c6826860bcf6bbc728c4a843ef"
+    }
+  },
+  "firstBuild": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true",
+      "/bl:H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1259\\build.binlog"
+    ],
+    "exitCode": 0,
+    "seconds": 362.48931193351746,
+    "sourcesUnchanged": true
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true",
+      "/bl:H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1259\\build.binlog"
+    ],
+    "exitCode": 0,
+    "seconds": 140.50924372673035,
+    "sourcesUnchanged": true,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 300,
+    "passed": 300,
+    "failed": [],
+    "seconds": 55.86093330383301
+  },
+  "staticAudit": {
+    "compiledButNotExecutedPlayerRegularCases": [
+      "PlayerRegular_PatchNativeStateAndActualHost",
+      "PlayerRegular_CdNativeStateAndActualHost",
+      "PlayerRegular_SameWorldInitialFiveAndSixtySecondChain"
+    ],
+    "regularVtables": 87,
+    "connectedRegularVtables": 87,
+    "remainingRegularVtables": 0,
+    "remainingRows": [],
+    "knownAssetPrePost": 83,
+    "knownAssetNotices": 83,
+    "unit": 1259,
+    "baselineCommit": "9beb8f31d22d16cd870e671b0c9449e3588195ff",
+    "newNativeRows": [
+      {
+        "type": "77",
+        "receivers": [
+          "FUN_0048f7f0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 6
+      },
+      {
+        "type": "79",
+        "receivers": [
+          "FUN_0048f8f0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 6
+      },
+      {
+        "type": "6f",
+        "receivers": [
+          "FUN_004900e0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 6
+      },
+      {
+        "type": "40",
+        "receivers": [
+          "FUN_00428570"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 18
+      },
+      {
+        "type": "4f",
+        "receivers": [
+          "FUN_00426520"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 9
+      },
+      {
+        "type": "50",
+        "receivers": [
+          "FUN_00444bc0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 9
+      },
+      {
+        "type": "60",
+        "receivers": [
+          "FUN_004267c0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 10
+      },
+      {
+        "type": "61",
+        "receivers": [
+          "FUN_0048bfe0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 11
+      },
+      {
+        "type": "5c",
+        "receivers": [
+          "FUN_0041e860"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 6
+      },
+      {
+        "type": "5f",
+        "receivers": [
+          "FUN_00420bf0"
+        ],
+        "observers": [
+          "FUN_0040aca0"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "7d",
+        "receivers": [
+          "FUN_0041e320"
+        ],
+        "observers": [
+          "FUN_0040b390"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "6b",
+        "receivers": [
+          "FUN_00448e90"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 10
+      },
+      {
+        "type": "6d",
+        "receivers": [
+          "FUN_00493f80"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 8
+      },
+      {
+        "type": "75",
+        "receivers": [
+          "FUN_004205f0"
+        ],
+        "observers": [
+          "FUN_0040b150"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 65535
+      },
+      {
+        "type": "76",
+        "receivers": [
+          "FUN_004207a0"
+        ],
+        "observers": [
+          "FUN_0040b380"
+        ],
+        "versions": [
+          "1,0"
+        ],
+        "length": 6
+      }
+    ],
+    "receiverRowsMatchedOriginal": 15,
+    "sharedBodyCopies": 1,
+    "typedContractsPreserved": true,
+    "nativeEmptyObserverRows": 12,
+    "nativeMutableObserverRows": 3,
+    "unchangedBodyModules": [
+      "cpppj/src/o/RawCarrierMove.cpp",
+      "cpppj/src/o/RawCarrierPickup.cpp",
+      "cpppj/src/o/RawCarrierDrop.cpp",
+      "cpppj/src/o/RawCarrierSteal.cpp",
+      "cpppj/src/o/RawAcidZap.cpp",
+      "cpppj/src/o/RawRitualChoice.cpp",
+      "cpppj/src/o/RawPlayerParticipation.cpp"
+    ],
+    "remainingPreparedGameplayRows": 27,
+    "nativeMeltdownBroadcast": "full mutable reservation -> existing BroadcastAssetPacket -> actual current Source observer",
+    "typedMeltdownBroadcast": "unchanged old peer gate and manual finalizer",
+    "nativeMeltdownObserver": "0040b150: sending-only, current DWORD diagnostic, returning assertion, reread current low WORD, wrapping WORD length",
+    "peLengths": [
+      {
+        "type": "77",
+        "length": 6
+      },
+      {
+        "type": "79",
+        "length": 6
+      },
+      {
+        "type": "6f",
+        "length": 6
+      },
+      {
+        "type": "40",
+        "length": 18
+      },
+      {
+        "type": "4f",
+        "length": 9
+      },
+      {
+        "type": "50",
+        "length": 9
+      },
+      {
+        "type": "60",
+        "length": 10
+      },
+      {
+        "type": "61",
+        "length": 11
+      },
+      {
+        "type": "5c",
+        "length": 6
+      },
+      {
+        "type": "5f",
+        "length": 65535
+      },
+      {
+        "type": "7d",
+        "length": 65535
+      },
+      {
+        "type": "6b",
+        "length": 10
+      },
+      {
+        "type": "6d",
+        "length": 8
+      },
+      {
+        "type": "75",
+        "length": 65535
+      },
+      {
+        "type": "76",
+        "length": 6
+      }
+    ],
+    "knownNativeConstructionRows": 8,
+    "knownNativeCarrierRows": 15,
+    "previousConstructionAudit": "cpppj/native-construction-completion-20261110.json",
+    "originalRegistrationOrderPreserved": true,
+    "noOldSessionWorldLeaseOrEnqueuePinCaptured": true,
+    "selectedActualRuntimePinAtDelivery": true,
+    "fullNoWorldComplete": false,
+    "fullM6lComplete": false,
+    "fullM6Complete": false,
+    "fullGoalComplete": false,
+    "newMpUnitPacketNetworkGameRecordExecutions": 0,
+    "next": "remaining prepared27 gameplay registrations and actual other scopes, then M6-m/n",
+    "remainingEditorGameplayScopePreparation": "extracted/cpp-resume-1259/next-native-gameplay-rows.json"
+  },
+  "registrationFacts": [
+    {
+      "type": "77",
+      "receivers": [
+        "FUN_0048f7f0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 6
+    },
+    {
+      "type": "79",
+      "receivers": [
+        "FUN_0048f8f0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 6
+    },
+    {
+      "type": "6f",
+      "receivers": [
+        "FUN_004900e0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 6
+    },
+    {
+      "type": "40",
+      "receivers": [
+        "FUN_00428570"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 18
+    },
+    {
+      "type": "4f",
+      "receivers": [
+        "FUN_00426520"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 9
+    },
+    {
+      "type": "50",
+      "receivers": [
+        "FUN_00444bc0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 9
+    },
+    {
+      "type": "60",
+      "receivers": [
+        "FUN_004267c0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 10
+    },
+    {
+      "type": "61",
+      "receivers": [
+        "FUN_0048bfe0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 11
+    },
+    {
+      "type": "5c",
+      "receivers": [
+        "FUN_0041e860"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 6
+    },
+    {
+      "type": "5f",
+      "receivers": [
+        "FUN_00420bf0"
+      ],
+      "observers": [
+        "FUN_0040aca0"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "7d",
+      "receivers": [
+        "FUN_0041e320"
+      ],
+      "observers": [
+        "FUN_0040b390"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "6b",
+      "receivers": [
+        "FUN_00448e90"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 10
+    },
+    {
+      "type": "6d",
+      "receivers": [
+        "FUN_00493f80"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 8
+    },
+    {
+      "type": "75",
+      "receivers": [
+        "FUN_004205f0"
+      ],
+      "observers": [
+        "FUN_0040b150"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 65535
+    },
+    {
+      "type": "76",
+      "receivers": [
+        "FUN_004207a0"
+      ],
+      "observers": [
+        "FUN_0040b380"
+      ],
+      "versions": [
+        "1,0"
+      ],
+      "length": 6
+    }
+  ],
+  "movedBodies": {
+    "alliance": "        auto& s=*impl_;const auto hooks=s.AllianceDevices();\n        if (type==0x77) s.participation->ReceiveAllianceRequest(packet,hooks);\n        else if (type==0x79) s.participation->ReceiveBrokenAlliance(packet,hooks);\n        else s.participation->ReceiveDraw(packet,s.gameplayGlobals->GameAux()->ScheduledDrawDeadline(),hooks);",
+    "receivers": [
+      {
+        "type": "40",
+        "entry": "00428570",
+        "oldBody": "impl_->carrierMove->Receive(owner,packet);",
+        "sharedBody": "impl_->carrierMove->Receive(sender,packet);",
+        "sha256": "88f0a1918bbd028e3bca510a135628ff3609e3b89dc694b52f422db2e5bb3bcc"
+      },
+      {
+        "type": "4f",
+        "entry": "00426520",
+        "oldBody": "impl_->carrierPickup->Receive(owner,0,packet);",
+        "sharedBody": "impl_->carrierPickup->Receive(sender,0,packet);",
+        "sha256": "394d3a770ee9a7134e2e45f8eb6189aaee83fadd8da4054d9f97091b2ce40cef"
+      },
+      {
+        "type": "50",
+        "entry": "00444bc0",
+        "oldBody": "impl_->PrepareCarrierDrop();impl_->carrierDrop->Receive(owner,packet);",
+        "sharedBody": "impl_->PrepareCarrierDrop();impl_->carrierDrop->Receive(sender,packet);",
+        "sha256": "d5d24764ee287df4c6b9412c0dd750aed3360a2d0d0567e191e3bbb2bcc76831"
+      },
+      {
+        "type": "60",
+        "entry": "004267c0",
+        "oldBody": "impl_->carrierSteal->Receive(owner,0,packet);",
+        "sharedBody": "impl_->carrierSteal->Receive(sender,0,packet);",
+        "sha256": "fd553bef449bebbdcc14ff3d0d433dc383090bd0faa7130ca9ed32dbd4c58a44"
+      },
+      {
+        "type": "61",
+        "entry": "0048bfe0",
+        "oldBody": "impl_->acidZap->Receive(owner,0,packet);",
+        "sharedBody": "impl_->acidZap->Receive(sender,0,packet);",
+        "sha256": "78079b12bd969ac0ede264a14a26ad2fac11bc56cfe81d544998e54f2d219d44"
+      },
+      {
+        "type": "5c",
+        "entry": "0041e860",
+        "oldBody": "impl_->ReceiveDevastationActivation(packet);",
+        "sharedBody": "impl_->ReceiveDevastationActivation(packet);",
+        "sha256": "8cbddeaac24a4349e665a3a4d1510366c53ee89be35db8b9572bddb8dbfcba87"
+      },
+      {
+        "type": "5f",
+        "entry": "00420bf0",
+        "oldBody": "impl_->ReceiveDevastationEffect(packet);",
+        "sharedBody": "impl_->ReceiveDevastationEffect(packet);",
+        "sha256": "3f8fb60c568be5f6432e8cff1ca74ebc8e76af89dc0f7d64f095ed380a5c39f4"
+      },
+      {
+        "type": "7d",
+        "entry": "0041e320",
+        "oldBody": "impl_->ReceiveBombTimer(packet);",
+        "sharedBody": "impl_->ReceiveBombTimer(packet);",
+        "sha256": "d24775249158509161f9522b4da228152d01e8135840db3ff33f2d5562a63518"
+      },
+      {
+        "type": "6b",
+        "entry": "00448e90",
+        "oldBody": "ReceiveRitualChoice(impl_->core.pool,impl_->contentFinder,*impl_->contained,packet,[this](Sid form,std::uint32_t flags) { impl_->world.Destroy(form,flags); });",
+        "sharedBody": "ReceiveRitualChoice(impl_->core.pool,impl_->contentFinder,*impl_->contained,packet,[this](Sid form,std::uint32_t flags) { impl_->world.Destroy(form,flags); });",
+        "sha256": "1149b0f96a8ea7790f5f3428f19d676ffad75afc7ad2ce368ddff73e612d0dc2"
+      },
+      {
+        "type": "6d",
+        "entry": "00493f80",
+        "oldBody": "impl_->priestPrayer->Receive(packet);",
+        "sharedBody": "impl_->priestPrayer->Receive(packet);",
+        "sha256": "d4bf0ff0ca208bc6a0358438a3bd68368a94f737196e620daf098cada15a705f"
+      },
+      {
+        "type": "75",
+        "entry": "004205f0",
+        "oldBody": "impl_->meltdown->ReceiveEffect(packet);",
+        "sharedBody": "impl_->meltdown->ReceiveEffect(packet);",
+        "sha256": "d0412ea0123e32595685f9622db3a8733550d0233fe515f7217944298b40b82b"
+      },
+      {
+        "type": "76",
+        "entry": "004207a0",
+        "oldBody": "impl_->meltdown->ReceiveRequest(packet);",
+        "sharedBody": "impl_->meltdown->ReceiveRequest(packet);",
+        "sha256": "ebedd9bd6de4a1173096857d2b816bddadcae7d51cb9b2b3314dbf3b5c21993a"
+      }
+    ]
+  },
+  "setupCorrection": {
+    "stage": "before first build or test",
+    "issue": "non-greedy source extraction stopped at nested RitualChoice lambda",
+    "correction": "restore full receiver body from exact old registration line",
+    "expectationsWeakened": false
+  },
+  "agentsUserChange": {
+    "userCommit": "b5117f524dacfd72127129214c25905abcda76fe",
+    "userCommits": [
+      "8136df49ea4e2e2df644d4636a90c6300c804c52",
+      "b5117f524dacfd72127129214c25905abcda76fe"
+    ],
+    "file": "AGENTS.md",
+    "previousSha256": "145edaa1994c433f72ff8db2e4717130cc4dda198cce4d28eda8251047a76c13",
+    "currentSha256": "591bb07b34a17c62fe6cd836f187cad3f2602656699d4a78a4a2c532142bb9e2",
+    "matchesUserCommitAfterLineEndingNormalization": true,
+    "otherProtectedFilesUnchanged": 2807,
+    "agentModifiedAgents": false
+  },
+  "userPriorityDecision": {
+    "stage10EarlierUnderConsideration": true,
+    "priorityChangeConfirmed": false,
+    "currentWork": "M6, existing order until user decides"
+  },
+  "live": {
+    "passed": true,
+    "unit": 1259,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1259\\live-tutorial4-final\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "8b9d9b720dca43e793eecfac75ddab6fe48e284b72d6e878bceeb858db40b2fe",
+    "exeSha256After": "8b9d9b720dca43e793eecfac75ddab6fe48e284b72d6e878bceeb858db40b2fe",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1259\\live-tutorial4-final\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1259\\live-tutorial4-final\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.734,
+        "gameTimeAfter": 24.125,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "screenshotReview": {
+    "reviewed": true,
+    "path": "extracted/cpp-resume-1259/live-tutorial4-final/015-generator-settled.png",
+    "width": 1920,
+    "height": 1080,
+    "finding": "Tutorial4 섬·건물·사제·생산 덱과 미니맵이 표시되며 오류창/종료 화면이 없다. 600프레임 대기 뒤 정상 미션 화면이다. 원본 픽셀 전체 동일성·건물 완공·청취를 확인한 것은 아니다."
+  },
+  "protectedFiles": 2808,
+  "protectedUnchanged": true,
+  "newMpTests": 0,
+  "newDecompilation": false,
+  "newZip": false,
+  "rawDirectory": "extracted/cpp-resume-1259/"
+}

@@ -35,7 +35,7 @@ public:
     void Apply(float x,float y,std::int32_t radius,std::uint32_t owner,Sid target,Sid parent) const; //4204f0의 피해/다리 삭제·끝 칸 순서다.
     void ReceiveRequest(std::span<const std::uint8_t> packet) const; //4207a0은 dead만 거르고 검색 결과 전체를75h에 복사한 뒤 배포·로컬효과·부모삭제한다.
     void ReceiveEffect(std::span<const std::uint8_t> packet) const; //4205f0의 세 시각효과·소리·현재 대상 목록 적용이다.
-    static void FinalizePacket(std::span<std::uint8_t> packet,bool writing); //40b150의 실제 가변 선언 길이 확정이다.
+    static void FinalizePacket(std::span<std::uint8_t> packet,bool writing,const std::function<void()>& invalidCount={}); //40b150의 진단 뒤 현재 count WORD로 길이를 확정하며 Native는 실제 복귀 가능한 진단을 전달한다.
 private:
     std::uint32_t Read(Sid sid,std::size_t offset,std::size_t width=4) const; // 현재 비정렬 raw 필드를 지정 폭으로 읽는다.
     const RiftTypeRecord& Type(Sid sid) const; // 효과 뒤 현재 TYPE를 다시 읽는다.
