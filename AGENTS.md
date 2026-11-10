@@ -117,17 +117,25 @@
                           Crash caused by Ice Cannons attacking units adjacent to a Workshop or Temple.
                           Ice Tower islands not destroyed properly in the editor. 
                           Unit health incorrectly appearing to reset to full on client-side. Especially Whirlibases.
+                 10차 - 오류/예외 처리 및 로깅 공통 구조 마련
+                        작업 미비로 연결 안된 경우 등 게임 비정상 종료가 발생하더라도 종료 직전 로그를 상세히 출력할 수 있는 구조 마련
+                        로그 경로는 %USERPROFILE%\Saved Games\Netstorm\logs 로 한다.
+                        로그 파일명에는 로그 발생한 날짜와 시간이 yyyyMMddHHmmss.log 구조로 한다. (예: 20261110141502.log)
+                 11차 - 기타 언어 지원 (일본어 등)
              cpppj 는 Windows 10/11 대상으로 개발한다. 
              (x86-64, AMD64 플랫폼 대상으로 개발하되, ARM 플랫폼용 Windows 11 지원도 고려한다.)
   dotnetpj - C# + MonoGame 기반으로 개발. cpppj 완성 후 이를 분석하여 개발.
              dotnetpj 또한 일단은 기존 게임과 완전히 동일하게 동작하는 것을 목표로 개발 후, 요구사항을 반영한다.
-             cpppj 의 4~8차 목표 내용이 dotnetpj 후순위 요구사항에도 포함된다.
+             cpppj 의 4~11차 목표 내용이 dotnetpj 후순위 요구사항에도 포함된다.
              리눅스용 개발은 후순위이다.
+             (리눅스의 경우 설정 및 캠페인, 로그 저장 경로에서 %USERPROFILE% 자리에 $HOME/.netstorm 을 대신 사용한다. )
   webpj - html + javascript 기반으로 개발. cpppj 완성 후 이를 분석하여 개발.
           dotnetpj 또한 일단은 기존 게임과 완전히 동일하게 동작하는 것을 목표로 개발 후, 요구사항을 반영한다.
           (단, 커스텀 맵 (Edit), 멀티플레이 기능 구현은 제외한다. 그리고 웹 환경과 맞지 않는 기능은 제외한다. 예를 들면 게임 종료, 옵션 내에서 해상도 설정이나 전체화면 모드 등.)
           웹 플랫폼 특성상 화면 내부를 1회 클릭하지 않으면 사운드 재생 등이 불가능하므로, 메인 메뉴 화면을 보이기 전 "클릭하여 시작" 화면을 도입한다.
           에셋이 필요한 경우 webpj/www 내부로 에셋을 복사해 사용한다.
+          cpppj 의 6~11차 목표 내용이 webpj 후순위 요구사항에도 포함된다. 
+          (단 10차의 경우 로그를 파일로 저장하는 대신 브라우저 console 출력)
 * cpppj, dotnetpj 모두, Windows 용 게임 실행 파일의 이름은 Netstorm.exe 로 생성되어야 한다.
 * 멀티플레이어의 로컬 서버 접속 기능을 제외한, 외부 도메인이나 IP 에 접속하는 기능 (클라이언트 유효성 검사 기능 등) 은 모두 찾아 따로 문서화하여야 하며,
   특히 클라이언트 유효성 검사 기능은 비활성화하여야 한다. (해당 서버 도메인이 서비스 종료하였기 때문에 의미가 없어졌다.)
