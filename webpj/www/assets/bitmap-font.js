@@ -45,7 +45,9 @@ export class BitmapFont {
     // .chfnt 파일 바이트를 읽는다. 서명·머리·표·글리프 블록이 맞지 않으면 오류를 던진다.
     static parse(bytes) {
         const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
-        const signature = String.fromCharCode(...bytes.subarray(0, FONT_SIGNATURE.length));
+        // 원본 004a3240 은 서명 16바이트를 읽은 뒤 마지막(열여섯째) 바이트를 0 으로 덮고 비교하므로 그 바이트는 무엇이어도 같은 서명이다
+        // (cpppj FontCacheFile `signature.back()=0`, font-cache-file-x86 시나리오 10). (2026-11-10 WB04-E272: 서명 비교를 원문과 같게 맞춤)
+        const signature = String.fromCharCode(...bytes.subarray(0, FONT_SIGNATURE.length - 1)) + '\0';
         if (bytes.length < PAYLOAD_START || signature !== FONT_SIGNATURE || view.getUint32(16, true) !== 1 || view.getUint32(32, true) !== 256) {
             throw new Error('비트맵 글꼴 머리가 잘못됐습니다.');
         }

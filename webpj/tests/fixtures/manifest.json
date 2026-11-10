@@ -15726,9 +15726,125 @@
       "bytes": 275374,
       "lines": 1807,
       "fixtureCommit": "73134971e",
-      "webCommit": "worktree",
+      "webCommit": "a82343eb2",
       "cpppjBasis": {
         "cpppj/src/o/RiftType.cpp": "9d1ed7e55"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E272",
+      "id": "language-options",
+      "path": "cpppj/tests/fixtures/language-options-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: LANGID 4096·언어 이름 13·옵션 해석 546(결과와 두 번 읽을 때의 전역·읽은 이름 기록)",
+      "consumers": [
+        "webpj/tests/language-options.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/language-options.js"
+      ],
+      "doc": "docs/webpj-client-data-read-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/client/LanguageOptions.cpp"
+      ],
+      "scope": "4,655행 전부 사용",
+      "text": true,
+      "sha256": "f000c79aaa9ebfae18cd77696f412db4ab9dec7a1c38e7a13b27f1237e8f255e",
+      "bytes": 84126,
+      "lines": 4656,
+      "fixtureCommit": "e5a1e7d1b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/LanguageOptions.cpp": "5a2cd0474"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E272",
+      "id": "palette-file-read",
+      "path": "cpppj/tests/fixtures/palette-file-read-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 팔레트 파일 읽기의 저장 칸 1024바이트·FILE 필드·효과열 92행",
+      "consumers": [
+        "webpj/tests/client-file-read.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/palette.js"
+      ],
+      "doc": "docs/webpj-client-data-read-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/client/PaletteFileRead.cpp"
+      ],
+      "scope": "92행 중 온전한 파일 20행(길이 0x308·0x400 RGB 12·잘못된 길이 진단 8)만 사용, FILE 효과열·부분 읽기·예외 시나리오는 웹 제외",
+      "text": true,
+      "sha256": "b9a765cbba5b7757bd74b5cf84fc637ad3dd17106088a22e6763cb6055004913",
+      "bytes": 402430,
+      "lines": 93,
+      "fixtureCommit": "15a914d3f",
+      "webCommit": "355677e66",
+      "cpppjBasis": {
+        "cpppj/src/client/PaletteFileRead.cpp": null
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E272",
+      "id": "gif-file-read",
+      "path": "cpppj/tests/fixtures/gif-file-read-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 배경 GIF 파일 읽기의 치수·FILE 필드·효과열·입력·픽셀 56행",
+      "consumers": [
+        "webpj/tests/client-file-read.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/gif.js"
+      ],
+      "doc": "docs/webpj-client-data-read-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/client/GifFileRead.cpp"
+      ],
+      "scope": "56행 중 온전한 입력 32행(해독 24·거부 8)만 사용, FILE 효과열·부분 읽기·후크 예외 시나리오는 웹 제외",
+      "text": true,
+      "sha256": "221737e8856e95c8c8e91e3d04ea75ec8c9864d76ea89b4adf8960070cfb8dc0",
+      "bytes": 7173,
+      "lines": 57,
+      "fixtureCommit": "750845400",
+      "webCommit": "355677e66",
+      "cpppjBasis": {
+        "cpppj/src/client/GifFileRead.cpp": null
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E272",
+      "id": "font-cache-file",
+      "path": "cpppj/tests/fixtures/font-cache-file-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 글꼴 캐시 reader·writer의 반환·FILE 필드·owner 표·글리프·효과열",
+      "consumers": [
+        "webpj/tests/client-file-read.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/bitmap-font.js"
+      ],
+      "doc": "docs/webpj-client-data-read-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/client/FontCacheFile.cpp"
+      ],
+      "scope": "reader 시나리오 7~10(글자 수·버전·서명) 반환값만 사용, writer·FILE 효과열·글리프 바이트는 웹 제외",
+      "text": true,
+      "sha256": "b08f9c1cbe5a4c62c7c88c89fc9f3d03611c2b1baa1cfec70e1ea86fedf315f5",
+      "bytes": 1063380,
+      "lines": 101,
+      "fixtureCommit": "b8deab82e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/FontCacheFile.cpp": "b8deab82e"
       }
     }
   ]
