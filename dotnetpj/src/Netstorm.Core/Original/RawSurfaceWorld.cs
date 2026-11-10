@@ -285,6 +285,57 @@ public sealed class RawSurfaceWorld
                         }
                     },
                 }, (sid, flags, hooks) => virtualDestroy.Destroy(sid, flags, hooks));
+                // 표면 수명 분배기는 같은 풀·이웃·연결부 타입으로 독립 관찰 계약을 유지한다. 원본 Impl 독립 typed 경로의 수명 분배 생성을 직역한다. 2026-11-10 F2d 월드 본체 조립 수명 이식에서 추가됐다.
+                SquidDestroyHooks common = new()
+                {
+                    Selected = () => _deletion.Selected,
+                    Emit = effect =>
+                    {
+                        _deletionRequests++;
+                        if (effect.Effect == SquidDestroyEffect.PreDestroy)
+                        {
+                            baseDestroy.CompletePreDestroy();
+                        }
+                        else if (effect.Effect == SquidDestroyEffect.PostDestroy)
+                        {
+                            baseDestroy.CompletePostDestroy();
+                        }
+                    },
+                };
+                var surfaceHooks = new SurfaceLifecycleHooks
+                {
+                    ScheduleFall = (sid, x, y) => { _ = SquidProcessHost.ScheduleBridgeFall(_storage.Processes().Host(), sid, x, y); },
+                    Destroy = (sid, flags) => { _ = Destroy(sid, flags); },
+                    FallWalker = sid =>
+                    {
+                        // 원본 Impl 독립 경로의 낙하 분기를 직역한다. 런타임 전에는 효과 요청으로 쌓는다.
+                        if (_runtimeBound && _runtime?.WalkerFall is not null)
+                        {
+                            if (!_runtime.WalkerFall(sid))
+                            {
+                                throw new InvalidOperationException("실제 월드 낙하 처리 실패");
+                            }
+                        }
+                        else
+                        {
+                            _effectRequests++;
+                        }
+                    },
+                    BridgeEffect = @event =>
+                    {
+                        // 원본 Impl 독립 경로의 파편·소리 분기를 직역한다. 런타임 전에는 효과 요청으로 쌓는다.
+                        if (_runtimeBound && _runtime?.BridgeEffect is not null)
+                        {
+                            _runtime.BridgeEffect(@event);
+                        }
+                        else
+                        {
+                            _effectRequests++;
+                        }
+                    },
+                };
+                _lifecycle = new RawSurfaceLifecycle(_storage.Pool, _neighbors, _storage.Links.ConnectorType, common, surfaceHooks);
+                _formDispatch.SetAssets(_lifecycle.Hooks(), (sid, flags, hooks) => virtualDestroy.Destroy(sid, flags, hooks));
             }
         }
 

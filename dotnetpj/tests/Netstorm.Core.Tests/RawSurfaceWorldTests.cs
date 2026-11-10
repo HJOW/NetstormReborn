@@ -1762,16 +1762,28 @@ public sealed class RawSurfaceWorldTests
         Assert.Contains("프레임", error.Message);
     }
 
-    /// <summary>전체 월드의 Core 조회가 수명 미연결로 멈추는지 검증한다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐다.</summary>
+    /// <summary>전체 월드의 Core 조회가 사건 미연결로 멈추는지 검증한다. 2026-11-08 F2d 월드 본체 Core 이식에서 추가됐고 2026-11-10 월드 본체 조립 수명 이식에서 수명 연결 뒤 사건 잔여로 갱신했다.</summary>
     [Fact]
     public void CoreOnFullWorldRequiresLifecycle()
     {
-        // 프레임까지 연결된 전체 월드에서는 다음 잔여인 표면 수명에서 멈춘다.
+        // 수명 분배기까지 연결된 전체 월드에서는 다음 잔여인 다리 사건에서 멈춘다.
         var types = Types188();
         var frames = Frames188();
         var world = new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, FullStorage(types, frames), frames);
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => world.Core());
-        Assert.Contains("수명", error.Message);
+        Assert.Contains("사건", error.Message);
+    }
+
+    /// <summary>연결부 타입이 범위를 벗어나면 수명 분배기 생성을 거부하는지 검증한다. 2026-11-10 F2d 월드 본체 조립 수명 이식에서 추가됐다.</summary>
+    [Fact]
+    public void LifecycleRejectsInvalidConnectorType()
+    {
+        // 원본 표면 삭제의 연결부 타입 계약(70 이상·타입 수 미만)을 검증한다.
+        var types = Types188();
+        var frames = Frames188();
+        var storage = FullStorage(types, frames);
+        storage.Links.ConnectorType = 0u;
+        Assert.Throws<ArgumentOutOfRangeException>(() => new RawSurfaceWorld(OriginalEdition.Patch1078, types, 97u, storage, frames));
     }
     // IList를 구현하지 않는 읽기 전용 TYPE 목록이다. 2026-11-07 F2d 월드 본체 MutableTypes 이식에서 추가됐다.
     private sealed class NonListTypes : IReadOnlyList<OriginalTypeRecord>
