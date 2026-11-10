@@ -6,7 +6,17 @@
 #include <stdexcept>
 #include <utility>
 
-namespace netstorm::client { // 서버 roster/미션/State 성공은 실제 상위 원문 소비자가 결정한다.
+namespace netstorm::client {
+namespace { // 오류 로그용 보조 함수다.
+// 현재 등록표의 0이 아닌 pending/정상 칸을 "p번호=토큰 번호=토큰" 형태로 모은다. 연결 소유자 불일치 오류의 원인 추적에 쓴다(M7 로그 구조).
+std::string DescribeRegistryTokens(o::RawConnectionRegistry& registry) {
+    auto table=registry.Cleanup();std::string text;
+    for (std::size_t slot=1;slot<table.pending.size();++slot) if (table.pending[slot]) text+="p"+std::to_string(slot)+"="+std::to_string(table.pending[slot])+" "; // 대기 칸이다.
+    for (std::size_t id=0;id<table.transceivers.size();++id) if (table.transceivers[id]) text+=std::to_string(id)+"="+std::to_string(table.transceivers[id])+" "; // 정상 칸이다.
+    return text.empty() ? std::string("없음") : text;
+}
+}
+// 서버 roster/미션/State 성공은 실제 상위 원문 소비자가 결정한다.
 // caller가 공유 owner를 받기 전에는 어떤 listener나 client도 만들지 않는다.
 std::shared_ptr<CompositeMissionTransport> CompositeMissionTransport::Create(CompositeTransportRole role,std::span<const std::uint8_t> players,const bool& server,o::PacketDispatchHooks hooks,std::shared_ptr<o::RawConnectionRegistry> registry,std::shared_ptr<void> globalsLifetime,MissionNetwork network) {
     return std::shared_ptr<CompositeMissionTransport>(new CompositeMissionTransport(role,players,server,std::move(hooks),std::move(registry),std::move(globalsLifetime),std::move(network)));
@@ -139,7 +149,11 @@ o::TransportPollResult CompositeMissionTransport::ReceiveOne(std::int32_t id) {
     case Backend::Internal:return internal_->ReceiveOne(id);
     case Backend::Editor:return editor_->ReceiveOne(id);
     case Backend::Missing:return {};
-    default:throw std::logic_error("복합 전송이 소유하지 않은 현재 수신 노드");
+    default: { // 같은 등록표의 다른 전송이 소유한 살아 있는 노드는 그 전송의 Poll이 자기 노드로서 처리한다(원문은 각 노드가 스스로 수신한다).
+        // 예: Test Battle 동안에도 남아 있는 Editor의 pending -1(양끝 중 닫힌 Editor client9의 peer)이다. 등록표에도 없는 별칭만 실제 오류다.
+        if (registry_->Owns(o::CurrentTransportToken(*registry_,id))) return {};
+        throw std::logic_error("복합 전송이 소유하지 않은 현재 수신 노드: id="+std::to_string(id)+" token="+std::to_string(o::CurrentTransportToken(*registry_,id))+" 역할="+std::to_string(static_cast<int>(role_))+" tcp/udp/내부/편집="+(tcp_ ? "1":"0")+(udp_ ? "1":"0")+(internal_ ? "1":"0")+(editor_ ? "1":"0")+" 등록표="+DescribeRegistryTokens(*registry_)); // 원인 추적에 필요한 슬롯/토큰/역할/백엔드 구성을 오류 로그에 남긴다(M7 로그 구조).
+    }
     }
 }
 // 최초 listener 수락 후 pending은 각1회, 정상은 ID별 sentinel까지 반복한다.

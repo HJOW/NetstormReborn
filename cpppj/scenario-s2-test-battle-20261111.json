@@ -1,0 +1,13 @@
+{
+  "unit": "1282 S2 default english + Test Battle fix",
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "live": {
+    "newMapEnglish": "CustomMaps/d/S2TEST.english auto-created (208 bytes)",
+    "testBattleWithoutEnglish": "default english auto-created, briefing Go!, battle runs, Return to Editing ok, exit 0, no log",
+    "testBattleWithManualEnglish": "original TEST01 briefing preserved",
+    "tutorial4Regression": "passed (13.66s -> 24.11s)"
+  },
+  "defectFixed": "CompositeMissionTransport::ReceiveOne threw for live nodes owned by another transport (Editor pending -1) during Test Battle; now skipped when registry Owns(token); diagnostics include registry token dump",
+  "limits": ["no direct composite unit test", "battle outcomes not reproduced"]
+}
