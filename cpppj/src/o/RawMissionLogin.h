@@ -1,6 +1,7 @@
 // PATCH 로그인004a7800의 현재 Player/일반 전투·미션/패킷/Ready 부모 순서를 복원한다.
 #pragma once
 #include <bit>
+#include <array> //현재0ch 생성 헤더 두BYTE의 실제 주소를 빌린다.
 #include "o/RawPlayerParticipation.h"
 #include "o/RawPlayerWorld.h"
 #include "o/RawPacketDispatch.h"
@@ -25,7 +26,7 @@ struct MissionLoginGlobals {
     std::uint32_t& begin; // 005c7a74의 실제 시작 전역이다.
     const std::uint32_t& beginSeed; // 005409c4의 LoginBegin DWORD다.
     const std::uint32_t& battleSeed; // 00595088의 LoginBegin 마지막 DWORD다.
-    const std::uint32_t& debugBurst; // 0054dbc4의 큰 디버그 패킷 선택이며 비제로는 아직 거부한다.
+    const std::uint32_t& debugBurst; // 0054dbc4의 현재DWORD가 비영이면63000BYTE 패턴 패킷을 세 번 전송한다.
     std::uint32_t& clockStamp; // 00594fb0의 CRT clock 저장 결과다.
     const std::uint32_t& baseClock; // 00594fb4의 이전 CRT clock이다.
     const double& captureEnd; // 005c8618의 현재 벽시계 마감이다.
@@ -36,6 +37,8 @@ struct MissionLoginGlobals {
     const std::int32_t* sharedBattleSeed{}; // signed 자원과 같은 DWORD를 빌리며 송신은 unsigned bits로 읽는다.
     const bool* savedGame{}; // 일반 자원 초기화가 선택될 때 같은005c85d4를 직접 빌려야 한다. 미션Post1의 기존 호출자는 생략할 수 있다.
     const bool* inBattle{}; // 일반 자원 초기화의 같은00594fbc이며 임의로 true를 공급하지 않는다.
+    const std::array<std::uint8_t,2>* debugPacketHeader{}; //0052ed54/55의 현재메시지/프로토콜을 각 debug 예약에서 읽는다.
+    const std::uint16_t* debugPacketInitialLength{}; //00544c24의 현재 생성길이WORD이며 실제 송신observer의 확정 길이와 구별한다.
     std::uint32_t BattleSeed() const { return sharedBattleSeed ? std::bit_cast<std::uint32_t>(*sharedBattleSeed) : battleSeed; } // 다른 타입의 ref를 만들지 않는다.
 };
 // 큰 외부 몸체는 선택된 실제 위치에서 필수다. 패킷을 버리는 성공 처리기를 공급하지 않는다.

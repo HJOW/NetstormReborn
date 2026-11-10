@@ -1,0 +1,152 @@
+{
+  "status": "사용자 요청 일시중지 인계 / 제품1265 / 미적용 후보와 부분 감사",
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "product": 1265,
+  "productApplied": false,
+  "newProductUnitStarted": false,
+  "files": [
+    {
+      "source": "extracted/cpp-resume-1265-candidate/cpppj/src/client/NativeFortPreparation.cpp",
+      "saved": "snapshot/cpppj/src/client/NativeFortPreparation.cpp",
+      "bytes": 9739,
+      "sha256": "1841b8c87735fa4f2a1878ba0337c6624cd3c8b116c33bd3f6b81027d3551ba2",
+      "lfNormalizedSha256": "1841b8c87735fa4f2a1878ba0337c6624cd3c8b116c33bd3f6b81027d3551ba2"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/cpppj/src/client/NativeFortPreparation.h",
+      "saved": "snapshot/cpppj/src/client/NativeFortPreparation.h",
+      "bytes": 830,
+      "sha256": "e675dbfb3576d12bc41c8212fd00022606503b2f7bcbee41fe3e46f0c6dbfef0",
+      "lfNormalizedSha256": "e675dbfb3576d12bc41c8212fd00022606503b2f7bcbee41fe3e46f0c6dbfef0"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/cpppj/src/client/NativeFortSnapshot.cpp",
+      "saved": "snapshot/cpppj/src/client/NativeFortSnapshot.cpp",
+      "bytes": 54831,
+      "sha256": "bb4cc9a0a78a2b16dfac0f345f51fbdadef17d512ccddcd7adabc1c325bec173",
+      "lfNormalizedSha256": "bb4cc9a0a78a2b16dfac0f345f51fbdadef17d512ccddcd7adabc1c325bec173"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/cpppj/src/client/NativeFortSnapshot.h",
+      "saved": "snapshot/cpppj/src/client/NativeFortSnapshot.h",
+      "bytes": 2256,
+      "sha256": "c60631169ceed21c096686566d3dc182f1c27fad61d86ba6223814326c263d2e",
+      "lfNormalizedSha256": "c60631169ceed21c096686566d3dc182f1c27fad61d86ba6223814326c263d2e"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/HANDOFF.md",
+      "saved": "snapshot/HANDOFF.md",
+      "bytes": 6250,
+      "sha256": "fa776d4317aaa0837110c090253484bf08a93ed80bf84ed4bbee35c27181a4cb",
+      "lfNormalizedSha256": "fa776d4317aaa0837110c090253484bf08a93ed80bf84ed4bbee35c27181a4cb"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/README.md",
+      "saved": "snapshot/README.md",
+      "bytes": 7572,
+      "sha256": "f909a2c04fd43befe7ecd41c830116fea6c285f1525adf749957f03a922c3328",
+      "lfNormalizedSha256": "f909a2c04fd43befe7ecd41c830116fea6c285f1525adf749957f03a922c3328"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/candidate-manifest.json",
+      "saved": "snapshot/candidate-manifest.json",
+      "bytes": 3569,
+      "sha256": "77557d107ae5c75302ff85d57eb387f0620d5ff5394f6056992ac2dae334e757",
+      "lfNormalizedSha256": "77557d107ae5c75302ff85d57eb387f0620d5ff5394f6056992ac2dae334e757"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/candidate-source-final-before-syntax.json",
+      "saved": "snapshot/candidate-source-final-before-syntax.json",
+      "bytes": 395,
+      "sha256": "3379e3c533a520c91589a3b3a1faa258521ba264a57c298b935d5b8ca3ff3b46",
+      "lfNormalizedSha256": "4f6e65a6d354afd6e1110cd2397fb59e8b34a032909999bc193b3435d18babd6"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/native-function-ledger.json",
+      "saved": "snapshot/native-function-ledger.json",
+      "bytes": 32534,
+      "sha256": "2ad5704b7a39d0d0b70bc0c85e264a6ca25e6fb63ae91a801e307fc866f2e4a9",
+      "lfNormalizedSha256": "2ad5704b7a39d0d0b70bc0c85e264a6ca25e6fb63ae91a801e307fc866f2e4a9"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/diagnostic-map.json",
+      "saved": "snapshot/diagnostic-map.json",
+      "bytes": 9510,
+      "sha256": "4242658e45bd061f9d1d8b6b3b5f8b11913fe40081497328692fa8cd27549913",
+      "lfNormalizedSha256": "4242658e45bd061f9d1d8b6b3b5f8b11913fe40081497328692fa8cd27549913"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/candidate-syntax-final.log",
+      "saved": "snapshot/candidate-syntax-final.log",
+      "bytes": 51,
+      "sha256": "efdb6748b768048d35842a26f8c09e4fbf65125ebf5ae98dd07f707f9911754c",
+      "lfNormalizedSha256": "a533b11e818bb41abd51c3837511733a4abe4ea3ea718fdad402f2fae7368aee"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/candidate-syntax-final-exit.txt",
+      "saved": "snapshot/candidate-syntax-final-exit.txt",
+      "bytes": 4,
+      "sha256": "9aca8dfce962538fb8131d73f84cada05e4dc79f5a0d3612c511b1150f3e33e2",
+      "lfNormalizedSha256": "41076331dd794a2a155e9a375f6d9227cb82906867adce1b5089aa553c4ccaa9"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/check-candidate-final.cmd",
+      "saved": "snapshot/check-candidate-final.cmd",
+      "bytes": 868,
+      "sha256": "9fc1b962a8ef7b7fe208ec86df7f90fbb62c70980b189bec2146a9195e45cbfe",
+      "lfNormalizedSha256": "6c555d03af3ed44f8067ee9fc86e85b51dace3227b19e6185438e2ccec61f754"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/snapshot-syntax-first-observation.txt",
+      "saved": "snapshot/snapshot-syntax-first-observation.txt",
+      "bytes": 323,
+      "sha256": "fc451535941eceac64efa6dfc2b13a279812e9d55af90c738c7a4aa0584dfb24",
+      "lfNormalizedSha256": "fc451535941eceac64efa6dfc2b13a279812e9d55af90c738c7a4aa0584dfb24"
+    },
+    {
+      "source": "extracted/cpp-resume-1265-candidate/syntax-concurrency-observation.txt",
+      "saved": "snapshot/syntax-concurrency-observation.txt",
+      "bytes": 448,
+      "sha256": "6104553080d0d79dfb653c50b6ea0df9c347527445576a91a4aa3322732f870c",
+      "lfNormalizedSha256": "58a97c615a2a9434d9fbb6e5ca95e59ef2d541e2fb90d528bc1c1d51dd546a86"
+    },
+    {
+      "source": "extracted/cpp-resume-ai-noworld-audit-20261110/HANDOFF.md",
+      "saved": "ai/HANDOFF.md",
+      "bytes": 7836,
+      "sha256": "2e3c7fcbf96f3b2e491dfa176dcb5f4584cd17d903c35f730af814f9e189dc56",
+      "lfNormalizedSha256": "2e3c7fcbf96f3b2e491dfa176dcb5f4584cd17d903c35f730af814f9e189dc56"
+    },
+    {
+      "source": "extracted/cpp-resume-ai-noworld-audit-20261110/audit.json",
+      "saved": "ai/audit.json",
+      "bytes": 4334,
+      "sha256": "4e4acd296ec7512be7524a2ab0c8d72eaf35a228a358c9bbbf70897468529793",
+      "lfNormalizedSha256": "38b292bc0e790509d22168c1ac3ec7285975ccdda32c9515e7246144cbf0d4ff"
+    },
+    {
+      "source": "extracted/cpp-resume-postpop-audit-20261110/HANDOFF.md",
+      "saved": "postpop/HANDOFF.md",
+      "bytes": 6885,
+      "sha256": "7208cdea26b3690c8e9db14eb435d5ae5e4e33a8f82e872d9e29ee734fa10e61",
+      "lfNormalizedSha256": "7208cdea26b3690c8e9db14eb435d5ae5e4e33a8f82e872d9e29ee734fa10e61"
+    },
+    {
+      "source": "extracted/cpp-resume-postpop-audit-20261110/inventory.json",
+      "saved": "postpop/inventory.json",
+      "bytes": 21029,
+      "sha256": "b3d2c7076da2295cddfbf0c0137f00b26e9598f7cbe9728e99077fc75db85e8f",
+      "lfNormalizedSha256": "b8e31c261a7293ae2fdaa06d3e056cde5e790ecd6af9f4b28f78253fca31e331"
+    },
+    {
+      "source": "extracted/cpp-resume-postpop-audit-20261110/inventory.py",
+      "saved": "postpop/inventory.py",
+      "bytes": 5135,
+      "sha256": "fddf5a61dbf7932e1e6872f9213cd63f557e0c2bf9d088e4ecf9689613e3a196",
+      "lfNormalizedSha256": "fddf5a61dbf7932e1e6872f9213cd63f557e0c2bf9d088e4ecf9689613e3a196"
+    }
+  ],
+  "readmeSha256": "bf14ac5d4b60a42e1af70d1459862eb4b7793e8b810cfd974396453186bf53fb",
+  "textHashPolicy": "sha256=작성 당시 원시 작업트리 바이트, lfNormalizedSha256=CRLF를 LF로 정규화한 보존본"
+}

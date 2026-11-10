@@ -1,0 +1,788 @@
+{
+  "host": "HJOW-Athlon",
+  "date": "2026-11-10",
+  "baseProduct": 1264,
+  "sourceSnapshot": {
+    "cpppj/src/o/SquidPostPop.cpp": "65e0cdcba25d3148f46597aa9a7a981269bdaf14848507bf3df8d289d453b770",
+    "cpppj/src/o/RawAssetPostPop.cpp": "315f89376fd6ea53741f8ddf0fb41c2fb85c4c45428a5916a8aa0c0e89fb32bb",
+    "cpppj/src/o/PopVtables.inc": "7e1989b0f2d13457b72388c7df9d231411b556aa7c47e1130e1616a3d5a7de16",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "206deb7a76253b39404d7d365e9f676073fccd417211052d7236bcf4f66053ae",
+    "cpppj/src/client/RawCampaignSession.cpp": "42d5be7ea9692a6c5d48c26efe0dc965aa13aea28dfb376a90c8fee3d7b7d640"
+  },
+  "originalSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "rows": [
+    {
+      "vtable": "00501dd0",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00501ea0",
+      "postPop": "0041c150",
+      "status": "missing",
+      "body": "kGenerator",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "00502370",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502448",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502510",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "005025d8",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "005026a0",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502778",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502840",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502908",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "005029d0",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502aa8",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502b70",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502c38",
+      "postPop": "0041f870",
+      "status": "long-entry",
+      "body": "BombPostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502cf0",
+      "postPop": "0041f920",
+      "status": "long-entry",
+      "body": "BombPostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502db0",
+      "postPop": "0041fab0",
+      "status": "long-entry",
+      "body": "BombPostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502e68",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502f30",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00502ff8",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "005030c0",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00503188",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00503360",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "005034c8",
+      "postPop": "00422150",
+      "status": "long-prefix",
+      "body": "BridgePrefix",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "00503d80",
+      "postPop": "00427720",
+      "status": "long-entry",
+      "body": "ResourceCarrierPostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "00503e50",
+      "postPop": "00427720",
+      "status": "long-entry",
+      "body": "ResourceCarrierPostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "00503f20",
+      "postPop": "0042abb0",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "00503ff0",
+      "postPop": "0042abb0",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "005040c0",
+      "postPop": "0042ac90",
+      "status": "long-entry",
+      "body": "BalloonBody",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "00504198",
+      "postPop": "0042aed0",
+      "status": "long-entry",
+      "body": "BalloonBody",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "00506d98",
+      "postPop": "004421c0",
+      "status": "long-prefix",
+      "body": "IslandPrefix",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "00506e50",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00506f08",
+      "postPop": "004423b0",
+      "status": "long-prefix",
+      "body": "SurfacePrefix",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "005070c0",
+      "postPop": "004429f0",
+      "status": "nonfirst-only",
+      "body": "Teleport",
+      "boundary": "flags1에서 teleportPrefix 미연결"
+    },
+    {
+      "vtable": "005075d8",
+      "postPop": "00448930",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "005076b8",
+      "postPop": "00448ad0",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "00507770",
+      "postPop": "00448d20",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "00507950",
+      "postPop": "00449320",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "00508cc8",
+      "postPop": "00450cd0",
+      "status": "long-entry",
+      "body": "DudePostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "00509148",
+      "postPop": "004538f0",
+      "status": "long-entry",
+      "body": "FactoryPostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "00509210",
+      "postPop": "004557c0",
+      "status": "long-entry",
+      "body": "FactoryPostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "005092d0",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00509388",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00509470",
+      "postPop": "00457560",
+      "status": "long-entry",
+      "body": "FencePostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "005096a0",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00509758",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00509810",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "00509930",
+      "postPop": "0045ec50",
+      "status": "missing",
+      "body": "kSunAviary",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "005099e8",
+      "postPop": "0045ed10",
+      "status": "missing",
+      "body": "kRainAviary",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "00509aa0",
+      "postPop": "0045edf0",
+      "status": "missing",
+      "body": "kWindAviary",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "00509b98",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "0050a050",
+      "postPop": "0045e810",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "0050a1e8",
+      "postPop": "0045ef30",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "0050a388",
+      "postPop": "0045fac0",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "0050a748",
+      "postPop": "00462170",
+      "status": "long-entry",
+      "body": "BuriedPostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "0050a820",
+      "postPop": "0044bf80",
+      "status": "long-entry",
+      "body": "DamageablePostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "0050a8e8",
+      "postPop": "0044bf80",
+      "status": "long-entry",
+      "body": "DamageablePostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "0050b570",
+      "postPop": "004694b0",
+      "status": "missing",
+      "body": "kGunDecoration",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "0050b6e8",
+      "postPop": "0046a520",
+      "status": "missing",
+      "body": "kGunAngle",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "0050b7c0",
+      "postPop": "0046a600",
+      "status": "missing",
+      "body": "kGunFirst",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "0050b888",
+      "postPop": "0046a810",
+      "status": "missing",
+      "body": "kGunArcher",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "0050b9b8",
+      "postPop": "0046aca0",
+      "status": "missing",
+      "body": "kGunSun",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "0050bad0",
+      "postPop": "0046aca0",
+      "status": "missing",
+      "body": "kGunSun",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "0050c3b0",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "0050c9f0",
+      "postPop": "004b0d30",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "0050cc08",
+      "postPop": "004b0d30",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "0050da88",
+      "postPop": "004852e0",
+      "status": "long-entry",
+      "body": "GeyserPostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "0050db78",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "0050dc30",
+      "postPop": "00484f90",
+      "status": "long-entry",
+      "body": "NuggetPostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "0050e568",
+      "postPop": "00427720",
+      "status": "long-entry",
+      "body": "ResourceCarrierPostPop",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "0050e668",
+      "postPop": "0048c080",
+      "status": "missing",
+      "body": "kArcSpire",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "0050e738",
+      "postPop": "0048c7a0",
+      "status": "missing",
+      "body": "kAcidFence",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "0050e888",
+      "postPop": "0048ead0",
+      "status": "long-entry",
+      "body": "IceTower",
+      "boundary": "선택된 큰 Runtime/AI 하위는 별도 감사"
+    },
+    {
+      "vtable": "0050e940",
+      "postPop": "0048eda0",
+      "status": "missing",
+      "body": "kBlocker",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "0050ea08",
+      "postPop": "0048eda0",
+      "status": "missing",
+      "body": "kBlocker",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "0050ead0",
+      "postPop": "0048eda0",
+      "status": "missing",
+      "body": "kBlocker",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "0050eb98",
+      "postPop": "004b0d30",
+      "status": "common-entry",
+      "body": "PostPopBase",
+      "boundary": "공통 AI/선택 재검사 큰 하위는 별도 감사"
+    },
+    {
+      "vtable": "0050ee08",
+      "postPop": "004905d0",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "0050f210",
+      "postPop": "004950f0",
+      "status": "missing",
+      "body": null,
+      "boundary": "현재가상후처리몸체미복원"
+    },
+    {
+      "vtable": "0050f540",
+      "postPop": "0049a2b0",
+      "status": "nonfirst-only",
+      "body": "Residence",
+      "boundary": "DefaultResourcePostPop의 flags1에서 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "005196f0",
+      "postPop": "004dce40",
+      "status": "missing",
+      "body": "kVortexRain",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "005197a8",
+      "postPop": "004dd020",
+      "status": "missing",
+      "body": "kVortexWind",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "00519860",
+      "postPop": "004dd020",
+      "status": "missing",
+      "body": "kVortexWind",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    },
+    {
+      "vtable": "00519918",
+      "postPop": "004dd1f0",
+      "status": "missing",
+      "body": "kVortexThunder",
+      "boundary": "DefaultResourcePostPop의 전용자원 몸체 미설치"
+    }
+  ],
+  "groups": {
+    "004b0d30": [
+      "00501dd0",
+      "00502370",
+      "00502448",
+      "00502510",
+      "005025d8",
+      "005026a0",
+      "00502778",
+      "00502840",
+      "00502908",
+      "005029d0",
+      "00502aa8",
+      "00502b70",
+      "00502e68",
+      "00502f30",
+      "00502ff8",
+      "005030c0",
+      "00503188",
+      "00503360",
+      "00506e50",
+      "005092d0",
+      "00509388",
+      "005096a0",
+      "00509758",
+      "00509810",
+      "00509b98",
+      "0050c3b0",
+      "0050c9f0",
+      "0050cc08",
+      "0050db78",
+      "0050eb98"
+    ],
+    "0041c150": [
+      "00501ea0"
+    ],
+    "0041f870": [
+      "00502c38"
+    ],
+    "0041f920": [
+      "00502cf0"
+    ],
+    "0041fab0": [
+      "00502db0"
+    ],
+    "00422150": [
+      "005034c8"
+    ],
+    "00427720": [
+      "00503d80",
+      "00503e50",
+      "0050e568"
+    ],
+    "0042abb0": [
+      "00503f20",
+      "00503ff0"
+    ],
+    "0042ac90": [
+      "005040c0"
+    ],
+    "0042aed0": [
+      "00504198"
+    ],
+    "004421c0": [
+      "00506d98"
+    ],
+    "004423b0": [
+      "00506f08"
+    ],
+    "004429f0": [
+      "005070c0"
+    ],
+    "00448930": [
+      "005075d8"
+    ],
+    "00448ad0": [
+      "005076b8"
+    ],
+    "00448d20": [
+      "00507770"
+    ],
+    "00449320": [
+      "00507950"
+    ],
+    "00450cd0": [
+      "00508cc8"
+    ],
+    "004538f0": [
+      "00509148"
+    ],
+    "004557c0": [
+      "00509210"
+    ],
+    "00457560": [
+      "00509470"
+    ],
+    "0045ec50": [
+      "00509930"
+    ],
+    "0045ed10": [
+      "005099e8"
+    ],
+    "0045edf0": [
+      "00509aa0"
+    ],
+    "0045e810": [
+      "0050a050"
+    ],
+    "0045ef30": [
+      "0050a1e8"
+    ],
+    "0045fac0": [
+      "0050a388"
+    ],
+    "00462170": [
+      "0050a748"
+    ],
+    "0044bf80": [
+      "0050a820",
+      "0050a8e8"
+    ],
+    "004694b0": [
+      "0050b570"
+    ],
+    "0046a520": [
+      "0050b6e8"
+    ],
+    "0046a600": [
+      "0050b7c0"
+    ],
+    "0046a810": [
+      "0050b888"
+    ],
+    "0046aca0": [
+      "0050b9b8",
+      "0050bad0"
+    ],
+    "004852e0": [
+      "0050da88"
+    ],
+    "00484f90": [
+      "0050dc30"
+    ],
+    "0048c080": [
+      "0050e668"
+    ],
+    "0048c7a0": [
+      "0050e738"
+    ],
+    "0048ead0": [
+      "0050e888"
+    ],
+    "0048eda0": [
+      "0050e940",
+      "0050ea08",
+      "0050ead0"
+    ],
+    "004905d0": [
+      "0050ee08"
+    ],
+    "004950f0": [
+      "0050f210"
+    ],
+    "0049a2b0": [
+      "0050f540"
+    ],
+    "004dce40": [
+      "005196f0"
+    ],
+    "004dd020": [
+      "005197a8",
+      "00519860"
+    ],
+    "004dd1f0": [
+      "00519918"
+    ]
+  },
+  "executions": 0,
+  "productChanges": 0,
+  "fullNoWorldComplete": false,
+  "counts": {
+    "common-entry": 28,
+    "missing": 32,
+    "long-entry": 18,
+    "long-prefix": 3,
+    "nonfirst-only": 2
+  },
+  "partialAuditOnly": true,
+  "activeCallerExhaustiveAuditComplete": false,
+  "implementationComplete": false,
+  "handoff": "extracted/cpp-resume-postpop-audit-20261110/HANDOFF.md",
+  "allFunctions": 46
+}

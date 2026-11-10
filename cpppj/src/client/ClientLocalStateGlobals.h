@@ -14,6 +14,8 @@ namespace netstorm::client {
 class ClientLocalStateGlobals {
 public:
     ClientLocalStateGlobals()=default; // 새 Client에서만 원문 BSS0과 명령표의 실제 초기값을 만든다.
+    std::uint32_t& DebugBurst() { return debugBurst_; } //0054dbc4의 BSS0을 같은 Client 로그인/옵션 재해석이 직접 공유한다.
+    const std::uint32_t& DebugBurst() const { return debugBurst_; } //Session 반납/재생성은 이 현재 DWORD를 재설정하지 않는다.
     std::uint32_t& JoinTestBattleCommand() { return joinTestBattleCommand_; } //005427a4의 현재 개발자2bh 명령이며 일반 입력이 비교 순간 읽는다.
     std::array<std::uint8_t,64>& TestBattleAddress() { return testBattleAddress_; } //0054dae4의 현재 옵션 BYTE를 장기 보유한다.64BYTE는 호스트 물리이며 직접 caller의 지역32BYTE와 구별한다.
     const std::array<std::uint8_t,64>& TestBattleAddress() const { return testBattleAddress_; } //설정 누락/Session 교체에서도 같은 주소/NUL을 보존한다.
@@ -125,6 +127,7 @@ public:
     std::array<std::uint32_t,255>& PlayerNoMakeWarnings() { return playerNoMakeWarnings_; } //0054d4e8의 타입별 경고 비트 표이며 SP 추적/TotalMade와 별개다.
     const std::array<std::uint32_t,255>& PlayerNoMakeWarnings() const { return playerNoMakeWarnings_; } //Session 대여 전후에도 같은 전체255DWORD를 조회한다.
 private:
+    std::uint32_t debugBurst_{}; //원문 최초 BSS0이며435220의 옵션 재해석만0을 다시 쓴다. 활성화 Config/CLI는 추가하지 않는다.
     std::uint32_t joinTestBattleCommand_{0x0200002b}; //보호 PE005427a4의 최초 값이며 일반 State 전환에서 초기화하지 않는다.
     std::array<std::uint8_t,64> testBattleAddress_{}; //보호 원문의 최초 loader BSS0을 보존하는 호스트 버퍼이며 Config ReadStringBytes만 현재 내용을 갱신한다.
     std::uint32_t viewMetaCommand_{0x02000013}; // 보호 PE의 최초 ViewMeta 명령이며 Runtime 대여/반납에서 다시 쓰지 않는다.

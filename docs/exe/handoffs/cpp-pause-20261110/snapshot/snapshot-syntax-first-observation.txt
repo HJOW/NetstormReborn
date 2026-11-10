@@ -1,0 +1,4 @@
+최초 구문 검사 tool 관측 보존(최종 raw 로그와 구별)
+NativeFortSnapshot.cpp
+NativeFortSnapshot.cpp(15): fatal error C1083: 포함 파일을 열 수 없습니다. o/RawCarrierDropPoint.h: No such file or directory
+교정: client/RawCarrierDropPoint.h 및 같은 client namespace의 RawCarrierDropPoint::Snap

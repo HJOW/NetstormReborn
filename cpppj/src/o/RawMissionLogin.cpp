@@ -58,7 +58,15 @@ void RawMissionLogin::SendReply(std::int32_t owner,std::uint8_t accepted) const 
 void RawMissionLogin::SendBegin(std::uint32_t owner) const {
     auto bytes=Packet(0x29,34);Write(bytes,4,owner);std::copy(globals_.zoneAddress.begin(),globals_.zoneAddress.end(),bytes.begin()+8);
     Write(bytes,22,globals_.beginSeed);Write(bytes,30,globals_.BattleSeed());Need(hooks_.send)(static_cast<std::int32_t>(owner),bytes);
-    if (globals_.debugBurst) throw std::logic_error("미션 로그인 디버그63000바이트3회 분기 미복원");
+    if (globals_.debugBurst) {
+        for (std::uint32_t repeat=0;repeat<3;++repeat) { // 같은 대상에 별도63012BYTE 예약/작성/송신을 정확히 세 번 수행한다.
+            if (!globals_.debugPacketHeader || !globals_.debugPacketInitialLength) throw std::logic_error("로그인 디버그의 현재0ch 생성 헤더 미연결");
+            const auto message=(*globals_.debugPacketHeader)[0],protocol=(*globals_.debugPacketHeader)[1];const auto initial=*globals_.debugPacketInitialLength;
+            std::vector<std::uint8_t> packet(63012,0xff);packet[1]=message;packet[0]=static_cast<std::uint8_t>(protocol&0x7fU);Write(packet,2,initial<4 ? 4:initial,2);Write(packet,8,63000);
+            for (std::uint32_t index=0;index<63000;++index) packet[12+index]=static_cast<std::uint8_t>(index); //40a060의 원문payload+12에 하위BYTE(index)만 저장한다.
+            Need(hooks_.send)(static_cast<std::int32_t>(owner),packet); //각 실제 송신 뒤 다음 예약에서 현재 헤더/길이를 다시 읽는다.
+        }
+    }
 }
 // 원본은 owner0 슬롯을ff로 남기며 현재1..8 float SP를 각각 절삭한다.
 void RawMissionLogin::SendSp(std::uint32_t owner) const {

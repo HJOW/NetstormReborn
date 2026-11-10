@@ -1,0 +1,469 @@
+{
+  "kind": "원문진단매핑 / 호스트물리오류는별도",
+  "rows": [
+    {
+      "id": "StateMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 508,
+      "native": [
+        "004bd550"
+      ]
+    },
+    {
+      "id": "NotifyDot",
+      "expression": "tm->fileName[0] != '.'",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 449,
+      "native": [
+        "004bd360"
+      ]
+    },
+    {
+      "id": "NotifyTransient",
+      "expression": "0",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 451,
+      "native": [
+        "004bd360"
+      ]
+    },
+    {
+      "id": "NotifyMission",
+      "expression": "!inMission",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 454,
+      "native": [
+        "004bd360"
+      ]
+    },
+    {
+      "id": "NotifyMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 455,
+      "native": [
+        "004bd360"
+      ]
+    },
+    {
+      "id": "NamesMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 586,
+      "native": [
+        "004bd6f0"
+      ]
+    },
+    {
+      "id": "NamesMine",
+      "expression": "isMine()",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 587,
+      "native": [
+        "004bd6f0"
+      ]
+    },
+    {
+      "id": "DeckMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1220,
+      "native": [
+        "004befd0"
+      ]
+    },
+    {
+      "id": "InlineWrite",
+      "expression": "pos+length <= alloc",
+      "file": "c:\\ns\\o\\memstream.h",
+      "line": 36,
+      "native": [
+        "004bd6f0",
+        "004befd0",
+        "004bcea0",
+        "004be430",
+        "004bf6d0",
+        "004be7f0",
+        "0044d640"
+      ]
+    },
+    {
+      "id": "ContentFlags",
+      "expression": "(f.s().getListFlags() & lf) == lf",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 278,
+      "native": [
+        "004bcea0"
+      ]
+    },
+    {
+      "id": "ObjectX",
+      "expression": "cx>=0 && cx<16",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 667,
+      "native": [
+        "004bd940"
+      ]
+    },
+    {
+      "id": "ObjectY",
+      "expression": "cy>=0 && cy<16",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 668,
+      "native": [
+        "004bd940"
+      ]
+    },
+    {
+      "id": "ObjectOwner",
+      "expression": "playerId>=INVALID_PLAYER_ID && playerId < MAX_PLAYERS",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 707,
+      "native": [
+        "004bd940"
+      ]
+    },
+    {
+      "id": "ObjectsMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 957,
+      "native": [
+        "004be430"
+      ]
+    },
+    {
+      "id": "ObjectsMine",
+      "expression": "isMine()",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 958,
+      "native": [
+        "004be430"
+      ]
+    },
+    {
+      "id": "TerritoryMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 521,
+      "native": [
+        "004bf6d0",
+        "004bd600"
+      ]
+    },
+    {
+      "id": "TerritoryReadMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 558,
+      "native": [
+        "004bd660"
+      ]
+    },
+    {
+      "id": "TerritoryReadEnd",
+      "expression": "pos<=end",
+      "file": "c:\\ns\\o\\memstream.h",
+      "line": 46,
+      "native": [
+        "004bd660"
+      ]
+    },
+    {
+      "id": "FortMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1328,
+      "native": [
+        "004bf9a0"
+      ]
+    },
+    {
+      "id": "FortMode",
+      "expression": "inFortMode",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1329,
+      "native": [
+        "004bf9a0"
+      ]
+    },
+    {
+      "id": "FortMine",
+      "expression": "isMine()",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1330,
+      "native": [
+        "004bf9a0"
+      ]
+    },
+    {
+      "id": "BattleMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1294,
+      "native": [
+        "004bf880"
+      ]
+    },
+    {
+      "id": "BattleMode",
+      "expression": "inBattleMode",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1295,
+      "native": [
+        "004bf880"
+      ]
+    },
+    {
+      "id": "BattleMine",
+      "expression": "isMine()",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1296,
+      "native": [
+        "004bf880"
+      ]
+    },
+    {
+      "id": "TechnologyMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1190,
+      "native": [
+        "004bf9a0",
+        "004bf880"
+      ]
+    },
+    {
+      "id": "MissionMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 488,
+      "native": [
+        "004bf9a0",
+        "004bf880"
+      ]
+    },
+    {
+      "id": "BadgesMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1042,
+      "native": [
+        "004be7f0"
+      ]
+    },
+    {
+      "id": "MissionNull",
+      "expression": "s",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 155,
+      "native": [
+        "004bcbf0"
+      ]
+    },
+    {
+      "id": "ImageTypes",
+      "expression": "numTypes < 256",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 218,
+      "native": [
+        "004bcd80"
+      ]
+    },
+    {
+      "id": "ImageCapacity",
+      "expression": "destStream.pos + s->end < destStream.alloc",
+      "file": "\\Ns\\O\\Datamanager.cpp",
+      "line": 190,
+      "native": [
+        "0044d640"
+      ]
+    },
+    {
+      "id": "DeckMode",
+      "expression": "inFortMode || inBattleMode",
+      "file": "\\Ns\\O\\Deck.cpp",
+      "line": 331,
+      "native": [
+        "0044f7c0"
+      ]
+    },
+    {
+      "id": "DeckDuplicate",
+      "expression": "entry[i].type != type",
+      "file": "\\Ns\\O\\Deck.cpp",
+      "line": 100,
+      "native": [
+        "0044f290"
+      ]
+    },
+    {
+      "id": "DeckCapacity",
+      "expression": "totalEntries < MAX_ENTRIES",
+      "file": "\\Ns\\O\\Deck.cpp",
+      "line": 102,
+      "native": [
+        "0044f290"
+      ]
+    },
+    {
+      "id": "DeckType",
+      "expression": "type==_type",
+      "file": "\\Ns\\O\\Deck.cpp",
+      "line": 45,
+      "native": [
+        "0044f160"
+      ]
+    },
+    {
+      "id": "DeckChance",
+      "expression": "chance==_chance",
+      "file": "\\Ns\\O\\Deck.cpp",
+      "line": 46,
+      "native": [
+        "0044f160"
+      ]
+    },
+    {
+      "id": "DeckPower",
+      "expression": "power==_power",
+      "file": "\\Ns\\O\\Deck.cpp",
+      "line": 47,
+      "native": [
+        "0044f160"
+      ]
+    },
+    {
+      "id": "DeckRemaining",
+      "expression": "numRemaining==_numRemaining",
+      "file": "\\Ns\\O\\Deck.cpp",
+      "line": 48,
+      "native": [
+        "0044f160"
+      ]
+    },
+    {
+      "id": "AllowedType",
+      "expression": "typeNum > 0 && typeNum < numTypes",
+      "file": "\\Ns\\O\\Totalmade.cpp",
+      "line": 29,
+      "native": [
+        "004c2400"
+      ]
+    },
+    {
+      "id": "CoreMissing",
+      "expression": "tm",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1119,
+      "native": [
+        "004beb30"
+      ]
+    },
+    {
+      "id": "CoreMetamap",
+      "expression": "!inMetamapMode",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1120,
+      "native": [
+        "004beb30"
+      ]
+    },
+    {
+      "id": "CorePlayer",
+      "expression": "getPlayerId() == myPlayerId()",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 1127,
+      "native": [
+        "004beb30"
+      ]
+    },
+    {
+      "id": "CorePointer",
+      "expression": "_myCoreData == &lastKnownCoreData",
+      "file": "\\Ns\\O\\Player.cpp",
+      "line": 85,
+      "native": [
+        "0048f0d0"
+      ]
+    },
+    {
+      "id": "CoreTechnology",
+      "expression": "techBitIndex >= 0 && techBitIndex < 32",
+      "file": "\\Ns\\O\\Ch.cpp",
+      "line": 346,
+      "native": [
+        "0042b280"
+      ]
+    },
+    {
+      "id": "ContainedDead",
+      "expression": "!p.isDead() || boss || yesIKnowThatIShouldntLookInsideMyselfDuringADestroy",
+      "file": "\\Ns\\O\\Squidfinder.cpp",
+      "line": 316,
+      "native": [
+        "004b2270"
+      ]
+    },
+    {
+      "id": "ChunkValid",
+      "expression": "isValid()",
+      "file": "\\Ns\\O\\Chunkmap.cpp",
+      "line": 183,
+      "native": [
+        "00432180"
+      ]
+    },
+    {
+      "id": "ChunkCoordinate",
+      "expression": "cc.x>=0 && cc.y>=0 && cc.x<xLen && cc.y<yLen",
+      "file": "\\Ns\\O\\Chunkmap.cpp",
+      "line": 184,
+      "native": [
+        "00432180"
+      ]
+    },
+    {
+      "id": "PreparationFort",
+      "expression": "inFortMode",
+      "file": ".\\State.cpp",
+      "line": 2331,
+      "native": [
+        "004b3620"
+      ]
+    },
+    {
+      "id": "PreparationRegion",
+      "expression": "terrId != invalidTerrId",
+      "file": ".\\State.cpp",
+      "line": 2332,
+      "native": [
+        "004b3620"
+      ]
+    },
+    {
+      "id": "PreparationIsland",
+      "expression": "islandList.exists(islandId)",
+      "file": "\\Ns\\O\\Chunkmap.cpp",
+      "line": 313,
+      "native": [
+        "004324e0"
+      ]
+    },
+    {
+      "id": "TerritoryWriteList",
+      "expression": "terrList",
+      "file": "\\Ns\\O\\Template.cpp",
+      "line": 522,
+      "native": [
+        "004bd600"
+      ]
+    }
+  ],
+  "stringEvidence": {
+    "00507d68": "s",
+    "0051476c": "tm",
+    "0050161c": "0"
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "unit": 1265,
+  "host": "HJOW-Athlon",
+  "date": "2026-11-10",
+  "sourceSha256": {
+    "cpppj/src/o/RawMissionLogin.cpp": "ff11fe740414bd546e7863d459379573975e09f52a39b97dbac78ad7435656f7",
+    "cpppj/src/o/RawMissionLogin.h": "fbbb0d5b920bcbdfee1f967816a72637390117ed264b26fe0ef2ecebdaf0a6b6",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "b151c37ff0d4610e1af384ed388993fa76d50f8eef309e3aef8f98d97e1c4a20",
+    "cpppj/src/client/ClientMain.cpp": "7a5108d05b87a05a34290a11df4a2f68e204683f8d21bf47d513fcf65767e445",
+    "cpppj/src/client/RawCampaignSessionLogin.inc": "defbc6cb3fbc2e92983cc4c1ab919d38d2d49a453b02b702c6349bc73b4c4754"
+  },
+  "headerBytes": "0c01",
+  "directDebugReferences": [
+    {
+      "address": "0x43552d",
+      "mnemonic": "mov",
+      "operands": "dword ptr [0x54dbc4], ebx"
+    },
+    {
+      "address": "0x4a69e2",
+      "mnemonic": "mov",
+      "operands": "eax, dword ptr [0x54dbc4]"
+    }
+  ],
+  "originalGeneratedCReferences": 2,
+  "staticDirectReferenceScopeOnly": true,
+  "noConfigOrCliActivationAdded": true,
+  "sharedClientDebugDword": true,
+  "sharedCurrentPacket0cHeader": true,
+  "reservationBytes": 63012,
+  "payloadBytes": 63000,
+  "sendCount": 3,
+  "protectedFiles": 2808,
+  "protectedUnchanged": true,
+  "newDecompilation": false,
+  "newMpUnitPacketNetworkGameExecutions": 0,
+  "fullM6Complete": false,
+  "fullNoWorldComplete": false,
+  "fullGoalComplete": false,
+  "compiledButNotExecutedPlayerRegularCases": [
+    "PlayerRegular_PatchNativeStateAndActualHost",
+    "PlayerRegular_CdNativeStateAndActualHost",
+    "PlayerRegular_SameWorldInitialFiveAndSixtySecondChain"
+  ],
+  "product": 1265,
+  "version": "11.01",
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true",
+      "/bl:H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1265\\build.binlog"
+    ],
+    "exitCode": 0,
+    "seconds": 390.69500970840454,
+    "sourcesUnchanged": true
+  },
+  "tests": {
+    "cases": 306,
+    "passed": 306,
+    "failed": [],
+    "seconds": 57.94617056846619
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 14514688,
+      "sha256": "7810b8d23f5d8c69066be9e2d55673b6fa43db1e7da4726dedb45c9146da370e"
+    },
+    "R.exe": {
+      "bytes": 681472,
+      "sha256": "eeb73df3be4602863fc980252d1cc9c26f1b358252caea7b24f6ab4789c19e3d"
+    }
+  },
+  "live": {
+    "passed": true,
+    "unit": 1265,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1265\\live-tutorial4-final\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "7810b8d23f5d8c69066be9e2d55673b6fa43db1e7da4726dedb45c9146da370e",
+    "exeSha256After": "7810b8d23f5d8c69066be9e2d55673b6fa43db1e7da4726dedb45c9146da370e",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1265\\live-tutorial4-final\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1265\\live-tutorial4-final\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.819,
+        "gameTimeAfter": 23.921,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "screenshotReview": {
+    "reviewed": true,
+    "unit": 1265,
+    "file": "015-generator-settled.png",
+    "sha256": "d5a9618a74e91ab70f84da86eb5ceb4f3b7cc80b4cb1d5a13a20cee5a656bf8b",
+    "width": 1920,
+    "height": 1080,
+    "observed": "신전·워크샾·섬·간헐천과 생산 UI 및600프레임 뒤 화면을 확인했다.",
+    "limits": "TYPE75/owner1·시간 진행은 MCP 상태 근거다. 이 PNG를 MP/debugBurst 분기·완공·음향·전체 동일성 증거로 쓰지 않는다."
+  },
+  "rawDirectory": "extracted/cpp-resume-1265/",
+  "newZip": false,
+  "userPauseRequested": true,
+  "unappliedHandoff": "docs/exe/handoffs/cpp-pause-20261110/README.md",
+  "next": "M6-n NoWorld Fort Snapshot 후보의 현행 접합·나머지 PostPop/AI/process 호출자 감사"
+}

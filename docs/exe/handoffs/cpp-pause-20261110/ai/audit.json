@@ -1,0 +1,91 @@
+{
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "kind": "partial-read-only-handoff",
+  "sourceSha256": {
+    "AGENTS.md": "57b3aee25801ab8ce7165c6a9b9f574e730264a6464cf492784f728f2ecdaa51",
+    "LEFT_JOBS.md": "9fc6ec0519eebe0d79c6a23300fdf62b14e074bf0b4acc6885ccebdf92525455",
+    "cpppj/src/client/ClientMain.cpp": "7a5108d05b87a05a34290a11df4a2f68e204683f8d21bf47d513fcf65767e445",
+    "cpppj/src/client/RawCampaignSession.cpp": "42d5be7ea9692a6c5d48c26efe0dc965aa13aea28dfb376a90c8fee3d7b7d640",
+    "cpppj/src/client/ClientStateRuntimeRetirement.cpp": "9e5b4018b78c73fbdb25b91209b48c20c016d329d010e9941445a8b5f4aad69d",
+    "cpppj/src/client/ClientStateWorldCleanup.cpp": "24d2783ffca5c3bb5e28355d4cfbc5e01158bac4ef1e50a7104975775613075f",
+    "cpppj/src/client/ClientGameplayGlobals.cpp": "cc232effd6ec4a29cf350d45dff4a92cc6e62bd09e40b35c9ef79359e9d61fb3",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "32b2b7ec2c9dcbf8325ad32ed734cc681414c441e57c3ba7f75fd3bc49a1634f",
+    "cpppj/src/o/RawAiBrain.h": "8be51d55642492fbd9360fdc572b44da8876a29447020b526a8451d88e069724",
+    "cpppj/src/o/RawAiBrain.cpp": "827c6d75630994df87f04bfe98814f2cebe1d8e0af4f1d78534a29a9852d37bd",
+    "cpppj/src/o/RawAiWallet.h": "d6fd6126fbdbf322961d22fa2ebd58cdc47e4f6cacfd15f9d50f8872956c63c2",
+    "cpppj/src/o/RawAiWallet.cpp": "33d8b293f770fa1cad4d240a63adbbc931f030b4ea2ebde512ca748dac9bf293",
+    "cpppj/src/o/RawAiObjectNotice.h": "dcebb8e9c08dc7f13e83a1d55e69f08cf3e91e92d96b239e4225440de52a67bc",
+    "cpppj/src/o/RawAiObjectNotice.cpp": "e8d662934de0d3bc990d48f169282e83dfb33a180bc3450e16714023c65e3a98",
+    "cpppj/src/o/RawAiWorldRegistration.h": "11dc14dc6073d4a5928b372f787d0eb626c0bb834885d1e69e5bd08325bbc62e",
+    "cpppj/src/o/RawAiWorldRegistration.cpp": "b649e403724ef4ca04093abac71292879041138c265b3641f704d9b8b3943b06",
+    "cpppj/src/o/RawGeyserAiRegistration.cpp": "dc5ca25a18747b0b2a90c410affd0b95d1923692059cba5ef312061f8045868b",
+    "cpppj/src/o/RawPlayerParticipation.cpp": "68bd1b237c7c6cc3fffbf5aceb172ea6c7d441ae144dc2dff852edeee5cdc043",
+    "cpppj/src/o/RawGunTarget.cpp": "f49de9efcff26fd4c1dfe6432c3b2784395dc82b5ce308874322ccae2d942f06",
+    "cpppj/src/o/RawSquidNeighbors.cpp": "1588d7273c9c0da1cdfce3a081c7f6dda43ad05c36bd7e39e450c0e47388a9f7"
+  },
+  "decompilationPath": "H:\\Workspace\\git\\NetstormReborn\\extracted\\refined\\originals\\Netstorm.c",
+  "decompilationSha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+  "extractedForResumeNotVerifiedComplete": [
+    {
+      "address": "004166e0",
+      "found": true,
+      "sha256": "b732d56ab43fd8d5b5bfef220e20f1500e30fb5b4db284c247b6e697d653a64e",
+      "line": 17589
+    },
+    {
+      "address": "00414de0",
+      "found": true,
+      "sha256": "d5b66b62329f38e0f97bdeaad6130debb2099771522f6980253c77db7f64d59a",
+      "line": 16649
+    },
+    {
+      "address": "00416720",
+      "found": true,
+      "sha256": "9c8a58913a276ccf9a99506eff8b556df3cb3831cf155e4209ce4d9986901c2b",
+      "line": 17606
+    },
+    {
+      "address": "004153c0",
+      "found": true,
+      "sha256": "7a044c809036772d075e19e3f42432d7f4ca0245f424a6e4a242197660215ab6",
+      "line": 16913
+    },
+    {
+      "address": "00413bb0",
+      "found": true,
+      "sha256": "72a78141c2a881800010a1e67b07996663ecd8a5c6d975a6e991c5e830538790",
+      "line": 15953
+    },
+    {
+      "address": "00413c20",
+      "found": true,
+      "sha256": "20b70db697b63967c5a5aa1f7f38c9c751132ee71c69e4c698d23746ce81cce0",
+      "line": 15979
+    },
+    {
+      "address": "00413ae0",
+      "found": true,
+      "sha256": "eefef2c773e58f8b75de1249008d48019e8e09ac66e73024812c62606bc509a0",
+      "line": 15891
+    },
+    {
+      "address": "00410100",
+      "found": true,
+      "sha256": "e2c8d041ec0617b49fd7351d56441e42b326e14da0386e03ead5054b2d8290fa",
+      "line": 13220
+    }
+  ],
+  "shippedExecutableSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "productFilesChanged": 0,
+  "trackedDocsChanged": 0,
+  "builds": 0,
+  "syntaxChecks": 0,
+  "tests": 0,
+  "gameExecutions": 0,
+  "mpPacketNetworkExecutions": 0,
+  "newDecompilation": 0,
+  "fullNoWorldComplete": false,
+  "fullM6Complete": false,
+  "candidateImplementation": false
+}

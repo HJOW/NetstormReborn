@@ -832,6 +832,7 @@ void Client::InterpretOptions() {
     configuration_.ReadInt("highPriorityValue", highPriority_);
     configuration_.ReadInt("initWindowPos", initWindowPos_);
     PacketRecordOwner()->Requested()=0; //435220은sound 설정을 읽기 전에0054dbac 요청만0으로 재설정한다. 이미 열린 기록 FILE/enabled는 닫거나 지우지 않는다.
+    localStateGlobals_->DebugBurst()=0; //435220의 디버그DWORD reset을 같은 옵션 부모에 연결하며 외부 활성화 키를 만들지 않는다.
     static_cast<void>(ReadAudioOptions());InterpretMainMenuOptions(); //원문의 음질/음량/maxSimulSounds ReadInt 뒤 tellTips를 읽는다. 이 부분 부모는 음향 장치 적용이나 전체435220 완료를 대신하지 않는다.
     configuration_.ReadInt("inputLineOff",chatWindowGlobals_->inputLineOff); //원문0054db18은 표시 여부 캐시가 아니라 프레임말 전환 요청이다. 설정 재해석마다 현재값을 읽는다.
     InterpretFortFileOptions(); // 원본처럼 sleepPerLoop/maxFPS보다 먼저 같은 저장 관문 DWORD를 읽는다.

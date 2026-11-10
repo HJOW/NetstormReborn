@@ -1,0 +1,1 @@
+앞선 /Zs 확인 두 명령의 로그 경로가 겹쳐 후속 cmd의 출력 redirection이 실패했다. 후속 unified exec 종료값은0이었으나 The process cannot access the file because it is being used by another process.를 출력했으므로 해당 명령을 구문 통과로 세지 않는다. 두 핸들의 종료를 확인한 뒤 별도의 최종 단일 /Zs 명령으로 네 후보 파일의 해시를 고정해 다시 확인한다.

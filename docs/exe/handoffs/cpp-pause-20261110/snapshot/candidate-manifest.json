@@ -1,0 +1,110 @@
+{
+  "status": "사용자 중단에 따른 최종 동결 후보 / 제품 미적용 / 최종 단일 Zs exit0 / 링크·실행0",
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "decompilation": "기존 Client 양판본 2026-11-03 HJOW-Athlon 재사용 / 새 디컴파일0",
+  "candidateFiles": {
+    "cpppj/src/client/NativeFortPreparation.cpp": "1841b8c87735fa4f2a1878ba0337c6624cd3c8b116c33bd3f6b81027d3551ba2",
+    "cpppj/src/client/NativeFortPreparation.h": "e675dbfb3576d12bc41c8212fd00022606503b2f7bcbee41fe3e46f0c6dbfef0",
+    "cpppj/src/client/NativeFortSnapshot.cpp": "bb4cc9a0a78a2b16dfac0f345f51fbdadef17d512ccddcd7adabc1c325bec173",
+    "cpppj/src/client/NativeFortSnapshot.h": "c60631169ceed21c096686566d3dc182f1c27fad61d86ba6223814326c263d2e"
+  },
+  "original": {
+    "path": "extracted\\refined\\originals\\Netstorm.c",
+    "sha256": "af7cbf0b68e9d8e5aeb7068382c88d66201d3906c2926c54909ae14de4ad5646",
+    "binary": "originals/Netstorm.exe",
+    "binarySha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+    "functions": [
+      "004bf9a0",
+      "004bf880",
+      "004bfac0",
+      "004bfb50",
+      "004bd6f0",
+      "004befd0",
+      "004bcea0",
+      "004bd940",
+      "004be020",
+      "004be230",
+      "004be350",
+      "004be430",
+      "004bf6d0",
+      "004bd660",
+      "004bd550",
+      "004bd360",
+      "004be7f0",
+      "004bcbf0",
+      "0044d640",
+      "004bcd80",
+      "004beb30",
+      "0044fc00",
+      "0048fc60",
+      "0048f0d0",
+      "0042b280",
+      "0044f7c0",
+      "0044f700",
+      "0044f160",
+      "0044f290",
+      "0044f3d0",
+      "0044f430",
+      "00475530",
+      "004752b0",
+      "004c2400",
+      "0046f200",
+      "0046f6e0",
+      "0046f680",
+      "00432430",
+      "004324e0",
+      "004b3620",
+      "00432180",
+      "004b2270",
+      "004b1b20",
+      "00455970",
+      "004559d0",
+      "004be960",
+      "004832c0",
+      "00463a80",
+      "00482c40",
+      "0047d7c0",
+      "004bd600"
+    ],
+    "excerptSha256": "1aa71293a8111d39d7608ac53d98efaf55d9c6f0c33e475cd77345d3f624c276"
+  },
+  "checks": {
+    "snapshotSyntax": {
+      "exit": 0,
+      "logSha256": "f3858d05091889cbc45befb50f35ed4f2daea4f5ba70022c8eb6e44b6f33d03d",
+      "productBuild": false,
+      "link": false
+    },
+    "preparationSyntax": {
+      "exit": 0,
+      "logSha256": "09d46fce2d0e929cd96e1953ecab3b6036b5d9fd2364eeb4710ef11a64465c49",
+      "productBuild": false,
+      "link": false
+    },
+    "game": 0,
+    "mp": 0,
+    "unit": 0,
+    "finalSyntax": {
+      "exit": 0,
+      "kind": "candidate-only /Zs two translation units",
+      "sourceBytesUnchanged": true,
+      "logSha256": "efdb6748b768048d35842a26f8c09e4fbf65125ebf5ae98dd07f707f9911754c",
+      "productBuild": false,
+      "link": false
+    },
+    "discardedConcurrentCommand": "같은로그잠금으로redirection실패한후속명령은통과로세지않음"
+  },
+  "protected": {
+    "AGENTS.md": "57b3aee25801ab8ce7165c6a9b9f574e730264a6464cf492784f728f2ecdaa51"
+  },
+  "limitations": [
+    "제품CMake/입력/이름/State연결미적용",
+    "링크/단순GUI/실제사용자저장미검증",
+    "원문모든processVT/수명전수감사범위밖"
+  ],
+  "nativeFunctionLedgerSha256": "2ad5704b7a39d0d0b70bc0c85e264a6ca25e6fb63ae91a801e307fc866f2e4a9",
+  "diagnosticMapSha256": "4242658e45bd061f9d1d8b6b3b5f8b11913fe40081497328692fa8cd27549913",
+  "handoffSha256": "fa776d4317aaa0837110c090253484bf08a93ed80bf84ed4bbee35c27181a4cb",
+  "readmeSha256": "f909a2c04fd43befe7ecd41c830116fea6c285f1525adf749957f03a922c3328"
+}
