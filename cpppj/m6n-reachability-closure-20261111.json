@@ -1,0 +1,13 @@
+{
+  "unit": "1279 M6-n residual reachability closure (static)",
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "codeChanged": false,
+  "items": {
+    "bigAiLongLivedOwner": {"verdict": "world-only", "evidence": ["FUN_00417e50 callers: FUN_00417f50, FUN_004c2d40", "FUN_00417fa0 guards on DAT_00594fbc (inBattleMode)", "FUN_004c2d40 <- FUN_004c2b20 (mission start)"]},
+    "generalDescend": {"verdict": "world-only", "evidence": ["Vortex.cpp asserts inBattleMode (0x2ef)", "Temple Regular process only"]},
+    "placementCallers": {"verdict": "all implemented in-world", "callers": ["0040dfd0", "0040e050", "0040e130", "0040e1a0", "0040e2b0", "00486440"]},
+    "fortTopLevelFinish": {"verdict": "implemented via State wrappers + LoadExistingFort", "wrappers": ["004b8810", "004b88c0", "004b8940", "004b8a10", "004b8ac0", "004b8b20", "004b8cb0", "004b9230"]}
+  },
+  "limits": ["static call graph only", "function-pointer-table-only callers are not in the graph", "no MP execution"]
+}
