@@ -71,6 +71,9 @@ public sealed class RawCampaignSession
     /// <summary>같은 실제 전략 AI 다리 갱신 몸체의 갱신 효과다. 세션 조립 때 실제 전략 AI 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-11 F3 AI 다리 갱신 본체에서 추가됐다.</summary>
     private Func<uint, bool>? _aiRefreshBridges;
 
+    /// <summary>같은 실제 AI 지갑의 잔액 조회 효과다. 세션 조립 때 실제 AI 지갑 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
+    private Func<uint, int>? _aiMoney;
+
     /// <summary>같은 자산·저장소·월드로 세션 껍데기를 만든다. Fort 적재 본체는 후속 단위에서 잇는다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
@@ -403,6 +406,37 @@ public sealed class RawCampaignSession
         }
 
         return _aiRefreshBridges(owner);
+    }
+
+    /// <summary>같은 실제 AI 지갑의 잔액 조회 효과를 묶는다. 원본 세션 설치의 AI 지갑 몸체 연결만 둔다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
+    /// <param name="query">실제 AI 자금 조회 효과다. 소유자 번호를 그대로 받고 signed 잔액을 돌려준다.</param>
+    public void BindAiMoney(Func<uint, int> query)
+    {
+        ArgumentNullException.ThrowIfNull(query);
+        _aiMoney = query;
+    }
+
+    /// <summary>같은 실제 AI 지갑의 잔액 조회 효과를 묶었는지 확인한다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasAiMoney() => _aiMoney is not null;
+
+    /// <summary>원본 세션의 AI 자금 읽기를 후속 AI 몸체와 공유한다. 묶은 실제 AI 효과가 없으면 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 실제 지갑 잔액 본체는 후속 단위에서 잇는다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
+    /// <param name="owner">자금을 읽을 소유자 번호다.</param>
+    /// <returns>해당 소유자의 AI 자금 signed 잔액이다.</returns>
+    public int AiMoney(uint owner)
+    {
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 AI 자금 조회입니다.");
+        }
+
+        // 원본 RawCampaignSession::AiMoney의 적재 관문을 직역한다. 실제 지갑 잔액 본체는 후속 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        if (_aiMoney is null)
+        {
+            throw new InvalidOperationException("실제 AI 자금 미연결");
+        }
+
+        return _aiMoney(owner);
     }
 
     /// <summary>같은 파서·생성 몸체의 위치 생성 효과다. 세션 조립 때 실제 생성 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>

@@ -886,4 +886,52 @@ public sealed class RawCampaignSessionTests
         Assert.Throws<ArgumentNullException>(() => session.BindAiRefreshBridges(null!));
         Assert.False(session.HasAiRefreshBridges());
     }
+
+    /// <summary>미적재 AI 자금 조회를 적재 관문에서 거부하는지 검증한다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
+    [Fact]
+    public void AiMoneyRejectsWhenNotLoaded()
+    {
+        // 적재 전 AI 자금 조회는 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        session.BindAiMoney(owner => 100);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.AiMoney(1u));
+        Assert.Contains("미적재", error.Message);
+    }
+
+    /// <summary>적재 뒤 AI 자금 조회를 본체 미연결로 거부하는지 검증한다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
+    [Fact]
+    public void AiMoneyRejectsWhenUnconnected()
+    {
+        // 실제 AI 지갑 본체는 후속 단위에서 잇는다(결정 6).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        Assert.False(session.HasAiMoney());
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.AiMoney(1u));
+        Assert.Contains("미연결", error.Message);
+    }
+
+    /// <summary>묶은 실제 AI 효과의 자금 잔액을 그대로 돌려주는지 검증한다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
+    [Fact]
+    public void AiMoneyForwardsToBoundDevice()
+    {
+        // 원본 세션 설치의 AI 지갑 몸체 연결만 둔다. signed 잔액 그대로 전달을 검증한다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        var calls = new List<uint>();
+        session.BindAiMoney(owner => { calls.Add(owner); return owner == 2u ? 3000 : -50; });
+        Assert.True(session.HasAiMoney());
+        Assert.Equal(3000, session.AiMoney(2u));
+        Assert.Equal(-50, session.AiMoney(3u));
+        Assert.Equal([2u, 3u], calls);
+    }
+
+    /// <summary>빈 AI 자금 묶기를 거부하는지 검증한다. 2026-11-11 F3 AI 자금 조회 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BindAiMoneyRejectsNull()
+    {
+        // 묶지 않은 세션은 미연결로 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentNullException>(() => session.BindAiMoney(null!));
+        Assert.False(session.HasAiMoney());
+    }
 }
