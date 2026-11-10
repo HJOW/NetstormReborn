@@ -642,8 +642,8 @@ cpppj/src/o/RawDataManagerDump.cpp	exclude-host			-	[host-dev-files]
 cpppj/src/o/RawDataManagerFileSave.cpp	exclude-edit			-	[edit-fort-save]
 cpppj/src/o/RawDataManagerImage.cpp	port			todo	[o-default]
 cpppj/src/o/RawDataManagerInitialize.cpp	port	www/core/raw-data-manager-initialize.js	1f00a25a	port	[o-default] WB04-E19: 0044d870 DataManager 초기화 제어. fixture data-manager-initialize 64행 전부
-cpppj/src/o/RawDataManagerLifetime.cpp	port			todo	[o-default]
-cpppj/src/o/RawDataManagerList.cpp	port			todo	[o-default]
+cpppj/src/o/RawDataManagerLifetime.cpp	port	www/core/raw-data-manager-lifetime.js	1f00a25a	port	[o-default] WB04-E274: 0044d040 MemStream 소멸·004bd330→0044da60 DataManager 소멸(head unlink·재조회). 기준선 뒤 변경 없음(3.6절 ①). fixture datamanager-lifetime 392행 전부. tests/data-manager-streams.test.mjs
+cpppj/src/o/RawDataManagerList.cpp	port	www/core/raw-data-manager-list.js	1f00a25a	port	[o-default] WB04-E274: 0044ce10 추가·0044d0f0 제거(선행 링크 진단 뒤 재조회). 기준선 뒤 변경 없음(3.6절 ①). datamanager-streams 404행의 P·R 140행 + 손 시험. tests/data-manager-streams.test.mjs
 cpppj/src/o/RawDataManagerResize.cpp	port			todo	[o-default]
 cpppj/src/o/RawDataManagerSelection.cpp	port			todo	[o-default]
 cpppj/src/o/RawDeckDraw.cpp	port	www/core/raw-deck-draw.js	1f00a25a	port	[o-default] WB04-E105: 352바이트 Deck 초기화 44f200·추가 44f290·열기/닫기 44f250/44f280·벽시각 난수 추첨 44f510·wallSeed 4bcab0. fixture gem-reward 1250행 중 직접 Draw 포함 전부(10.78 전용 파일). Player 소유 Deck 수명(RawProductionDeck)은 RawPlayerWorld 이식 뒤
@@ -771,7 +771,7 @@ cpppj/src/o/RawManaBoltRegular.cpp	port			todo	[o-default]
 cpppj/src/o/RawManaDraw.cpp	port	www/core/raw-mana-draw.js	1f00a25a	port	[o-default] WB04-E203: 00473710 TYPE 1회 선택·WORD 상태면 프레임→현재 SHP 순서로 읽은 그림자(+10 32비트 감김) 뒤 본체(프레임/SHP 재읽기, 바뀐 TYPE 미반영)·짧은 raw/소비자 누락 거부. fixture manaadditional 756행 전부. 남음: 실제 VFX 그림자 치환표 557738·현재 SHP 토큰·Session 표시 연결
 cpppj/src/o/RawManaRegistration.cpp	port	www/core/raw-mana-registration.js	1f00a25a	port	[o-default] WB04-E10: 00472f70 마나 공급원 등록(최초 개수 저장·중복 검색·checking 진단 복귀·productionDirty 감김). fixture mana-registration-hardware 10.78 542행 전부(originalCD 542행은 10.72라 제외). 실제 Client/World 통합 대조는 공통 PostPop 본체 단위에서
 cpppj/src/o/RawMeltdown.cpp	port	www/core/raw-meltdown.js	1f00a25a	port	[o-default] WB04-E111: 제네레이터 Meltdown 명령 41c290·자격 420340·검색 4203a0·피해 4204f0·요청 4207a0/효과 4205f0 패킷·길이 확정 40b150. fixture meltdown 442행 전부(10.78 전용 파일). RawGunImpact::Clamp 식은 이 모듈에 비공개로 두었고 RawGunImpact 이식 때 옮김. 검색/송신/배포/삭제/피해/지면 효과/끝 칸/시각 효과는 훅 경계
-cpppj/src/o/RawMemStream.cpp	port			todo	[o-default]
+cpppj/src/o/RawMemStream.cpp	port	www/core/raw-mem-stream.js	1f00a25a	port	[o-default] WB04-E274: 0044cc20/cc80/cce0/cd40 MemStream 할당·대입·쓰기·압축(signed 용량/end, DWORD 단위 겹침 복사). 기준선 뒤 변경 없음(3.6절 ①). fixture datamanager-streams 404행 전부 + 손 시험. tests/data-manager-streams.test.mjs
 cpppj/src/o/RawMetadisplayDirty.cpp	port	www/core/metadisplay-dirty.js	1f00a25a	port	[o-default] WB04-D2
 cpppj/src/o/RawMetaZoneCleanup.cpp	port	www/core/raw-meta-zone-cleanup.js	1f00a25a	port	[o-default] WB04-E77: 메타구역 정리 0042b1b0(진입 플래그 분기·자식 51회·7344B DWORD 표 쓰기와 짧은 물리 접두 보존)·마커 00479520(상태 signed·SID 관문·가상 삭제 뒤 같은 DWORD 0). fixture meta-zone-cleanup 38행 전부. 마커 가상 삭제 본체와 State 소유자 연결은 해당 단위에서
 cpppj/src/o/RawMinimapRaster.cpp	port	www/core/raw-minimap-raster.js	1f00a25a	port	[o-default] WB04-E204: 004808d0 셀 그림(2×2 검정 초기화·지면 4×4 Y 바깥/X 안쪽 0단계 머리만·해시 2단계→1단계 2×2→0단계 4×4 X 바깥/Y 안쪽 체인, 일반 flags2&6 좌표 절삭·&4 소유자 색 점(기본 246)·Challenge 두 표식 TYPE 짝수 2×2·색 억제 프레임 하위 BYTE·ftol 하위 DWORD 좌표 비유한 0)·bitmap/셀/픽셀/TYPE 범위·next 순환 거부. fixture minimapcell 4722행 전부. 남음: 전체 Refresh·RawMetadisplayDirtyState bitmap·실제 색 전역·미니맵 화면 연결

@@ -15847,6 +15847,68 @@
       "cpppjBasis": {
         "cpppj/src/client/FontCacheFile.cpp": "b8deab82e"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E274",
+      "id": "datamanager-streams",
+      "path": "cpppj/tests/fixtures/datamanager-streams-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: DataManager 스트림 할당·쓰기·압축·추가·제거 404행(전체 716바이트와 매 외부 효과 직전 메모리)",
+      "consumers": [
+        "webpj/tests/data-manager-streams.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mem-stream.js",
+        "webpj/www/core/raw-data-manager-list.js",
+        "webpj/www/core/raw-data-manager-lifetime.js"
+      ],
+      "doc": "docs/webpj-data-manager-streams-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMemStream.cpp",
+        "cpppj/src/o/RawDataManagerList.cpp"
+      ],
+      "scope": "404행 전부 사용",
+      "text": true,
+      "sha256": "4b35cf6de857af405ecc2e996241353717211193fb60f41d53f139126adb51b5",
+      "bytes": 1685688,
+      "lines": 405,
+      "fixtureCommit": "78625d3d6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMemStream.cpp": "c2a3fa5e2",
+        "cpppj/src/o/RawDataManagerList.cpp": "78625d3d6"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E274",
+      "id": "datamanager-lifetime",
+      "path": "cpppj/tests/fixtures/datamanager-lifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: MemStream·DataManager 소멸의 전체 412바이트와 free 직전 메모리 392행",
+      "consumers": [
+        "webpj/tests/data-manager-streams.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-data-manager-lifetime.js"
+      ],
+      "doc": "docs/webpj-data-manager-streams-20261110.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDataManagerLifetime.cpp"
+      ],
+      "scope": "392행 전부 사용",
+      "text": true,
+      "sha256": "59bfee5d3d997f72f60d2c61572e6b8460c418af84d553d69dab09b1f3aff607",
+      "bytes": 1499429,
+      "lines": 393,
+      "fixtureCommit": "4a0f58436",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDataManagerLifetime.cpp": "4a0f58436"
+      }
     }
   ]
 }
