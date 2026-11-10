@@ -6,6 +6,7 @@
 #include "client/RawEdgeScroll.h"
 #include "client/RawMinimapControls.h"
 #include "client/CampaignUserInputServices.h"
+#include "client/NativeJoinTestBattle.h" //개발자2bh는 같은 현재 Fort 준비 뒤 기존1bh 직접 본문을 호출한다.
 #include "client/ClientCampaignTransport.h" // 같은 실제 World/장기 전역과 공유 전송 수명을 로그인 전에 연결한다.
 #include "client/RitualChoiceInput.h" //의식선택은실제일반명령에서6b요청만작성한다.
 #include "client/NativeMetaSail.h" //의식 패킷6b와 구별되는 일반 입력6b/6c/e3/fe의 원문 항해 소비자다.
@@ -1514,6 +1515,12 @@ void UberGump::Event(InputEvent event) {
     if (DispatchVortexCommandInput(event,[this](o::Sid target,std::uint32_t code,std::uint16_t parameter) {
         if (!world_) throw std::logic_error("신전 명령의 실제 현재 Session 없음");static_cast<void>(world_->Session().CommandObject(target,code,parameter));
     })) { rebuild_=true;return; } // 일반 객체 입력과 같은 뗌/대상0 처리이며 확인WORD를 버리지 않는다.
+    if (transitionCode==client_.LocalStateGlobals()->JoinTestBattleCommand()) {
+        if (event.code&InputCode::kRelease) return;
+        { const auto current=world_;if (!current) throw std::logic_error("JoinTestBattle 준비의 실제 현재 Fort Session 없음");static_cast<void>(current->Session().PrepareFortDescend(event.y)); } //전체 signed y로 저장을 먼저 마치며 실제 준비 owner는 Join/State 정리 전에 반납한다.
+        JoinNativeTestBattle(client_,[this] { const auto current=CurrentNativeBattleSource();if (current.network.tcp) return current;const auto source=EnsureMetaConnectionSource();return NativeBattleSource{source->SharedNetwork(),source,source}; }); //원래1bh run이 선택된 시점에만 기존 TCP Source 또는 실제 생성 장치를 확보한다.
+        recentCommandHandled=true; //이름 거부도 선행 저장을 되돌리지 않고 같은 일반 입력 꼬리로 진행한다.
+    }
     if (DispatchViewMetaInput(event,client_.LocalStateGlobals()->ViewMetaCommand(),{
         [this] { return static_cast<std::int32_t>(client_.NsInfoGlobals()->servers.size()); },
         [this] { client_.WriteDiagnosticLog(19,"An invalid server is selected. Forcing number 0.\n");client_.Configuration().Set("curServer","0"); },

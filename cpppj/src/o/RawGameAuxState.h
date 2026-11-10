@@ -42,6 +42,8 @@ public:
     const std::uint32_t& TempleProductType() const { return templeProductType_; } //World 반납 뒤에도 같은 현재 DWORD를 읽는다.
     std::array<std::uint8_t,256>& TypeUse() { return typeUse_; } //005451f8의 NUL 종료 타입 사용 목록이며 Login/69h가 같은 장기256BYTE를 직접 빌린다.
     const std::array<std::uint8_t,256>& TypeUse() const { return typeUse_; } //World/Session 대여와 반납이 현재 목록을 복사하거나 초기화하지 않는다.
+    FormPacketHeader& BattleStartPeerHeader() { return battleStartPeerHeader_; } //0052ed78/79/7c의 현재1bh 생성자 BYTE/BYTE/WORD이며 수신 등록 metadata와 별개다.
+    const FormPacketHeader& BattleStartPeerHeader() const { return battleStartPeerHeader_; } //직접 Join도 같은 현재 생성자 헤더를 읽고 등록표로 대체하지 않는다.
     std::array<std::uint8_t,2>& Packet0cHeader() { return packet0cHeader_; } //0052ed54/55의현재0ch메시지/프로토콜이며원문버전조회/디버그burst의공용전역을보관한다.
     const std::array<std::uint8_t,2>& Packet0cHeader() const { return packet0cHeader_; } //Session/World교체뒤에도같은현재BYTE두개를읽는다.
     std::uint16_t& Packet0cInitialLength() { return packet0cInitialLength_; } //00544c24의BSS WORD0을생성순간읽으며실제송신observer의최종길이와구별한다.
@@ -256,6 +258,7 @@ private:
     std::array<std::uint8_t,256> typeUse_{}; //005451f8의 최초 BSS0이며 명시 ClearTypes만 정확256BYTE를0으로 쓴다.
     std::uint8_t battleFinishFrames_{}; //0055a44c를같은Client수명으로보관하며World/Session교체로초기화하지않는다.
     std::array<std::uint8_t,2> packet0cHeader_{0x0c,1}; //보호10.78 PE0052ed54/55의초기헤더이며일반월드fresh에서도덮어쓰지않는다.
+    FormPacketHeader battleStartPeerHeader_{0x1b,1,38}; //보호 PE0052ed78의1b/01과0052ed7c WORD38이며 원문 생성 순간만 읽는다.
     std::uint16_t packet0cInitialLength_{}; //00544c24의최초BSS0이며버전조회/디버그burst의현재생성WORD다.
     std::uint32_t stateNotifyType_{82}; // 보호10.78 PE005411a0의 초기 DWORD이며 실제 상태 변경 부모가 현재 번호를 읽는다.
     std::array<float,2> centralPosition_{}; // 원문 최초 BSS0이며 중앙섬 배치가 X→Y 순서로 쓴다.

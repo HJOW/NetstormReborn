@@ -402,3 +402,6 @@ target_sources(netstorm PRIVATE VortexCommandInput.h VortexCommandInput.cpp)
 
 # 메타 서비스의 같은 CS 포인터/실제 할당/좌표를 Client 수명으로 소유한다.
 target_sources(netstorm PRIVATE ClientChallengeGlobals.h ClientChallengeGlobals.cpp)
+
+# 개발자 전용 참가 입력은 같은 현재 전역/1bh 직접 본문을 공유한다.
+target_sources(netstorm PRIVATE NativeJoinTestBattle.h NativeJoinTestBattle.cpp)

@@ -14,6 +14,9 @@ namespace netstorm::client {
 class ClientLocalStateGlobals {
 public:
     ClientLocalStateGlobals()=default; // 새 Client에서만 원문 BSS0과 명령표의 실제 초기값을 만든다.
+    std::uint32_t& JoinTestBattleCommand() { return joinTestBattleCommand_; } //005427a4의 현재 개발자2bh 명령이며 일반 입력이 비교 순간 읽는다.
+    std::array<std::uint8_t,64>& TestBattleAddress() { return testBattleAddress_; } //0054dae4의 현재 옵션 BYTE를 장기 보유한다.64BYTE는 호스트 물리이며 직접 caller의 지역32BYTE와 구별한다.
+    const std::array<std::uint8_t,64>& TestBattleAddress() const { return testBattleAddress_; } //설정 누락/Session 교체에서도 같은 주소/NUL을 보존한다.
     std::uint32_t& ViewMetaCommand() { return viewMetaCommand_; } //00542744의 현재02000013 ViewMeta이며 신전 Descend event4가 큐 직전에 읽는다.
     std::int32_t& InvalidTerritory() { return invalidTerritory_; } //00540a30의 현재127이며004b3620의 진단에서 별도 지역없음 전역과 구별한다.
     ClientLocalStateGlobals(const ClientLocalStateGlobals&)=delete; // 같은 블록을 빌리는 State/패킷 소비자에게 사본을 만들지 않는다.
@@ -122,6 +125,8 @@ public:
     std::array<std::uint32_t,255>& PlayerNoMakeWarnings() { return playerNoMakeWarnings_; } //0054d4e8의 타입별 경고 비트 표이며 SP 추적/TotalMade와 별개다.
     const std::array<std::uint32_t,255>& PlayerNoMakeWarnings() const { return playerNoMakeWarnings_; } //Session 대여 전후에도 같은 전체255DWORD를 조회한다.
 private:
+    std::uint32_t joinTestBattleCommand_{0x0200002b}; //보호 PE005427a4의 최초 값이며 일반 State 전환에서 초기화하지 않는다.
+    std::array<std::uint8_t,64> testBattleAddress_{}; //보호 원문의 최초 loader BSS0을 보존하는 호스트 버퍼이며 Config ReadStringBytes만 현재 내용을 갱신한다.
     std::uint32_t viewMetaCommand_{0x02000013}; // 보호 PE의 최초 ViewMeta 명령이며 Runtime 대여/반납에서 다시 쓰지 않는다.
     std::int32_t invalidTerritory_{127}; // 보호 PE00540a30의 실제 초기 DWORD다. BattleTerritory와 구별한다.
     std::array<o::LocalMissionStateBlock,5> blocks_{}; //005c8630/8758/86c8/87e8/8878의 독립144BYTE 다섯 개다.

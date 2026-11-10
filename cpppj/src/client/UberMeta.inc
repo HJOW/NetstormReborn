@@ -74,17 +74,23 @@ std::uint32_t UberGump::ShowMetaTell(std::string_view section) {
     const auto result=ShowTellInConfig(client_.HtmlWindowGlobals()->tell,section,0,client_.Configuration(),[this](auto name)->std::optional<std::string> { return mission_ ? mission_->Section(name):std::nullopt; },[this](auto body,auto mode,auto width,auto height) { return rawButtons_->Menus()->ShowHtmlWindow(LoadingHtmlContext(CurrentMapView()),FontBytes(body),mode,width,height); });
     if (!result.found) client_.WriteDiagnosticLog(0x1d,"TELL cannot find \""+std::string(section)+"\".\n");rebuild_=true;return result.serial;
 } //같은 현재 HTML 공장의 실제 serial0도 보존하고 token/창 개수로 대신 쓰지 않는다.
+//실제 Source 생성만 분리하여 직접 Join이 원문에 없는 State19/29 부수 효과를 실행하지 않게 한다.
+std::shared_ptr<MetaConnectionRuntime> UberGump::EnsureMetaConnectionSource() {
+    EnsureNativeStateDispatcher();
+    if (!editor_->metaTransport) editor_->metaTransport=std::make_shared<MetaConnectionRuntime>(client_,[this](auto text) { static_cast<void>(ShowLoginWaiting(FontBytes(text))); },[this](auto next) { editor_->state->Request(next); },[this] { RunMetaRequestedState(); },[this](auto section) { static_cast<void>(ShowMetaTell(section)); },[this] { rawButtons_->Menus()->RefreshMetaNsInfo(*client_.NsInfoGlobals()); },missionOptions_,[this] { rawButtons_->RecreateUberRoot(); },[this](auto source,bool direct) { DispatchNativeBattleStart({source->SharedNetwork(),source,source},direct); },[this](auto packet) { ReceiveChatMessage(packet); }); //같은87BYTE/NSInfo/HUD와1ah예약·1bh동기의실제전체Source및서버페이지41h의현재HTML수신을결합한다.
+    client_.ConnectionGlobals()->PacketSources()->Publish(editor_->metaTransport); //shared 생성이 끝난 실제 Meta만 weak로 공개하며 대기 중 Source pin을 만들지 않는다.
+    return editor_->metaTransport; //같은 현재 Meta controlblock이며 생성 자체는 소켓 열기/Run을 하지 않는다.
+}
 //실제19의 World 정리 뒤 같은 Client 물리로 메타 연결 owner를 처음 만들고 현재 큰 부모를 분배한다.
 o::LocalMissionParentResult UberGump::InstallMetaConnectionState(std::uint32_t selected) {
     if (!editor_ || world_ || selected<20 || selected>38) throw std::logic_error("World 없는 실제 메타 연결/로그인/감시/검색 부모 계약");
-    if (!editor_->metaTransport) editor_->metaTransport=std::make_shared<MetaConnectionRuntime>(client_,[this](auto text) { static_cast<void>(ShowLoginWaiting(FontBytes(text))); },[this](auto next) { editor_->state->Request(next); },[this] { RunMetaRequestedState(); },[this](auto section) { static_cast<void>(ShowMetaTell(section)); },[this] { rawButtons_->Menus()->RefreshMetaNsInfo(*client_.NsInfoGlobals()); },missionOptions_,[this] { rawButtons_->RecreateUberRoot(); },[this](auto source,bool direct) { DispatchNativeBattleStart({source->SharedNetwork(),source,source},direct); },[this](auto packet) { ReceiveChatMessage(packet); }); //같은87BYTE/NSInfo/HUD와1ah예약·1bh동기의실제전체Source및서버페이지41h의현재HTML수신을결합한다.
-    client_.ConnectionGlobals()->PacketSources()->Publish(editor_->metaTransport); //shared 생성이 끝난 실제 Meta만 weak로 공개하며 대기 중 Source pin을 만들지 않는다.
+    const auto source=EnsureMetaConnectionSource(); //실제 기존 Source를 보유한 뒤에만 아래 원래 큰 State 부모를 실행한다.
     if (selected>=28 && selected<=33) {
         NativeMetaConnectedHooks ui;ui.tell=[this](auto section) { return ShowMetaTell(section); };ui.modalSerial=[this]()->std::optional<std::uint32_t> { const auto current=rawButtons_->CurrentDialog();if (!current) return {};return rawButtons_->GumpSerial(current); };ui.closeProgress=[this] { rawButtons_->Menus()->CloseMissionLoading(); };
         ui.resetCamera=[this] { if (!editor_->metaWorld) throw std::logic_error("메타 ResetCamera의 실제 Session 없음");auto& session=*editor_->metaWorld;const auto& camera=client_.GameplayGlobals()->Camera();CameraHomeState state;state.width=client_.GetScreen().Width();state.height=client_.GetScreen().Height();state.challengeType=client_.ChallengeGlobals()->ParticipantType();state.worldWidth=camera.Target().limits[0];state.worldHeight=camera.Target().limits[1];session.ResetCamera(state,[&session,&state](auto,auto) { session.CommitRequestedCamera(state.width,state.height); }); }; //4340d0의 현재 TYPE108/Renderer+48,+4c와 같은 로딩 깊이·497f20/497960을 사용한다.
-        return editor_->metaTransport->RunConnected(selected,ui);
+        return source->RunConnected(selected,ui);
     }
-    return editor_->metaTransport->Run(selected);
+    return source->Run(selected);
 }
 
 //getter는 현재 존재하는 실제 장치만 선택하며 이전 World를 호출 전체에 보유하지 않는다.

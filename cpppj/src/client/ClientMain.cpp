@@ -739,6 +739,7 @@ void Client::InterpretMainMenuOptions() {
 }
 void Client::InterpretNetworkOptions() {
     auto value=std::bit_cast<std::int32_t>(gameplayGlobals_->GameServerPort());configuration_.ReadInt("gameServerPort",value);gameplayGlobals_->GameServerPort()=std::bit_cast<std::uint32_t>(value);
+    configuration_.ReadStringBytes("testBattleAddress",localStateGlobals_->TestBattleAddress()); //435220의 현재 BYTE/NUL 해석이며 누락 키는 기존 주소를 보존하고 접속을 시작하지 않는다.
     connectionGlobals_->PacketDelays()->SelectLag(configuration_.GetInt("lag")); //435220의1/2/3만 현재 선택 분포를 바꾸고 누락/다른 값은 보존한다.
 } //현재 DWORD를 signed ReadInt 임시값으로 전달하고 같은 비트를 쓰며 참조 별칭이나 누락 기본값 재설정을 만들지 않는다.
 // 최초 감지는 영상 내용을 읽거나 디코더를 열지 않는다. 감지 뒤 옵션 변경이 이 값을 자동으로 덮지 않는다.

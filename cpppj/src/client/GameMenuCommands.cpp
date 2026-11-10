@@ -28,9 +28,10 @@
 namespace netstorm::client {
 namespace {
 // 00542xxx는원문주소식별자다. 런타임호스트포인터로역참조하지않는다.
-constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,63> kCommands{{
+constexpr std::array<std::pair<std::uint32_t,std::uint32_t>,64> kCommands{{
     {0x005429a8U,kCreateInitialGeysersCommand},{0x005429f8U,kBrainCrankMoneyCommand},{0x005428d8U,kAiParamSetCommand}, //772의원문세일반명령이다.
     {0x005429d0U,kMakeAiCommand}, //005429d0의 실제 초기 일반 명령이다.
+    {0x005427a4U,0x0200002bU}, //PE542ce0의 JoinTestBattle 이름표가 가리키는 실제 일반 입력 명령이다. 새 메뉴를 노출하지 않는다.
     {0x00542760U,kDrawWaterCommand}, //원문 후단 진단 명령이며 기본 메뉴 노출은 바꾸지 않는다.
     {0x542a34U,kAiReportingCommand},{0x542a38U,kDebugSwitchCommand}, //조건부AI메뉴의실제현재명령이다.
     {0x00542964U,kCreateHelpListCommand}, //원문 일반입력의 현재 전용Help 출력부모다.
@@ -110,6 +111,7 @@ std::uint32_t GameMenuScriptCode(std::string_view name) {
     const auto key=o::AsciiLower(name); // 이름비교만원문ASCII대소문자를무시한다.
     if (key=="metarefresh") return 0x020000c6U; //PE5431b8의 실제 이름이며 현재 모드 판정 뒤 기존16h/TCP11을 재요청한다.
     if (key=="battledesc") return 0x020000f3U; //PE543320의 실제 HTML 이름이며 양수 고리 토큰을 CS 논리 주소와 구별해 해석한다.
+    if (key=="jointestbattle") return 0x0200002bU; //보호 PE518d34→542ce0→5427a4의 원문 이름을 같은 허용표/입력 큐에 연결한다.
     if (key=="chalsailjoinbattle") return 0x0200006bU; //PE542ee0의 실제 이름이며 현재 진단 경고/좌석 참가 소비자에 연결한다.
     if (key=="chalsailpos") return 0x0200006cU; //PE542ee8의 실제 이름이며 packed 위치를 현재 항해 소비자가 읽는다.
     if (key=="chalforcejoinbattle") return 0x020000e3U; //PE5432a0의 실제 경고 확인은 옵션을 바꾸지 않고 직접 참가한다.

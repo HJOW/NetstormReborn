@@ -1,0 +1,253 @@
+{
+  "unit": 1263,
+  "product": 1263,
+  "date": "2026-11-10",
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "m6mImplementationComplete": true,
+  "m6lImplementationStaticAuditRetained": true,
+  "fullM6Complete": false,
+  "fullNoWorldComplete": false,
+  "fullGoalComplete": false,
+  "sourceSha256": {
+    "cpppj/src/client/NativeJoinTestBattle.h": "36fe41583b1093a7ced8c1046c6c1bc6515488e88c1959c9d865c95ceaf4f0f1",
+    "cpppj/src/client/NativeJoinTestBattle.cpp": "fae10a13c4a1c0f9eeccb0a121c3c805977c65a86dc79c0e28121ac94cc91a48",
+    "cpppj/src/client/CMakeLists.txt": "cf335499afb5f0acb1dd4bd3ae5a8396091b9810ea0b7396fc79211d224c6ab8",
+    "cpppj/src/client/ClientCampaignTransport.h": "1bf81dd86cb77526701f37abab22f6ccb2d4f2160409730be1cf1339057046d3",
+    "cpppj/src/client/ClientCampaignTransport.cpp": "83db9336bf3e6c88235f1ac057ca321212b7c9a20cceecee1e701301558ab5ed",
+    "cpppj/src/client/ClientLocalStateGlobals.h": "2275b4c62fc863d6ced3aa2297b2706aff19d6e943a20c36bd37c1d44c40ffe3",
+    "cpppj/src/client/ClientMain.cpp": "d7b8b0ebb20b5f9b4a299e340192c69248491345774225e771c6897cd45d76e2",
+    "cpppj/src/o/RawGameAuxState.h": "bfdd3b7d5d7e97eb430cda0cf351b003df84ff2259d38d86eb049d666cc658f2",
+    "cpppj/src/client/RawCampaignSession.h": "74e5ea14a8ba78c30ce2ef85d1111ff988d3a8cb3bba86a1660cdf6f1379ce21",
+    "cpppj/src/client/RawCampaignSession.cpp": "63317dc2b18c18544ddb52119768628237c3036de497548dd1e0c045a3519cc9",
+    "cpppj/src/client/UberGump.h": "d88473067c26f11da03d01d7dab3dd820a6b542c56034feeafd4c6af7b784549",
+    "cpppj/src/client/UberGump.cpp": "3a78ac257bf456e60a55da13dbea3586adb608f16d48c487203ed39d59547133",
+    "cpppj/src/client/UberMeta.inc": "2971c96d4128f3c5ab167110960eb24342fe4ee5dc236660edde41eedfcf79dd",
+    "cpppj/src/client/GameMenuCommands.cpp": "230b1b8161836a57f898ea9b1a16905aaf5d3115ce3e8d116adf7add53709d2f"
+  },
+  "products": {
+    "Netstorm.exe": {
+      "bytes": 14508544,
+      "sha256": "e91ff51183b1f91dd423171195e149b07edc5029e1e94b616ecd710477574335"
+    },
+    "R.exe": {
+      "bytes": 681472,
+      "sha256": "cca41734d60264c4629a16eb392be05aaea9714cd0153fa334577526263abeac"
+    }
+  },
+  "build": {
+    "command": [
+      "cmake",
+      "--build",
+      "cpppj/build",
+      "--config",
+      "Release",
+      "--target",
+      "NetstormCpp",
+      "NetstormRoot",
+      "netstorm_construction_owner_tests",
+      "--parallel",
+      "4",
+      "--",
+      "/p:UseMultiToolTask=true",
+      "/p:MultiProcMaxCount=4",
+      "/p:EnforceProcessCountAcrossBuilds=true",
+      "/bl:H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1263\\build.binlog"
+    ],
+    "exitCode": 0,
+    "seconds": 756.0519602298737,
+    "sourcesUnchanged": true,
+    "warnings": 0,
+    "errors": 0
+  },
+  "tests": {
+    "cases": 300,
+    "passed": 300,
+    "failed": [],
+    "seconds": 47.19563865661621
+  },
+  "staticAudit": {
+    "unit": 1263,
+    "selectedOriginalFunctions": [
+      "004d62b0/004d74c2",
+      "004b3620",
+      "004b8be0",
+      "0040a230",
+      "004b8b20"
+    ],
+    "sharedFortPreparationComparedExactly": true,
+    "descendKeepsNext19Tail": true,
+    "sourceSelectionOnlyAtOriginalRun": true,
+    "currentSourceOrRealMetaFactory": true,
+    "sharedPeerReceiverBodyCount": 1,
+    "crtNameComparisons": 4,
+    "localPacketPhysicalBytes": 40,
+    "localAddressPhysicalBytes": 32,
+    "hostAddressOwnerBytes": 64,
+    "currentPhaseWrite": 29,
+    "newCurrent29Write": false,
+    "noPacketDispatchObserverQueueOrWireSendAdded": true,
+    "mpExecutions": 0,
+    "protectedFiles": 2808,
+    "protectedUnchanged": true,
+    "otherProductSourcesUnchanged": true,
+    "fullM6Complete": false,
+    "fullNoWorldComplete": false,
+    "fullGoalComplete": false,
+    "compiledButNotExecutedPlayerRegularCases": [
+      "PlayerRegular_PatchNativeStateAndActualHost",
+      "PlayerRegular_CdNativeStateAndActualHost",
+      "PlayerRegular_SameWorldInitialFiveAndSixtySecondChain"
+    ]
+  },
+  "peFacts": {
+    "command": "2b000002",
+    "header": "1b0100002600",
+    "name": "JoinTestBattle",
+    "nameVa": "0x518d34",
+    "namePointerRows": [
+      {
+        "va": "0x542ce0",
+        "nextDword": "0x5427a4",
+        "bytes": "348d5100a4275400"
+      }
+    ]
+  },
+  "live": {
+    "passed": true,
+    "unit": 1263,
+    "mission": "tutorial4",
+    "command": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1263\\live-tutorial4-final\\game",
+      "--mcp",
+      "--window",
+      "--no-audio",
+      "--set",
+      "currentLanguage=english;SCREENW=1920;SCREENH=1080"
+    ],
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256Before": "e91ff51183b1f91dd423171195e149b07edc5029e1e94b616ecd710477574335",
+    "exeSha256After": "e91ff51183b1f91dd423171195e149b07edc5029e1e94b616ecd710477574335",
+    "game": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1263\\live-tutorial4-final\\game",
+    "userData": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-resume-1263\\live-tutorial4-final\\user-data",
+    "entryConfirmed": true,
+    "quitRequested": true,
+    "exitCode": 0,
+    "dataUnchanged": true,
+    "protectedUnchanged": true,
+    "protectedDifferences": [],
+    "events": [
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "click",
+        "arg": "Main Menu"
+      },
+      {
+        "op": "click",
+        "arg": "MORE"
+      },
+      {
+        "op": "click",
+        "arg": "OK"
+      },
+      {
+        "op": "right",
+        "arg": "world:sunFactory"
+      },
+      {
+        "op": "click",
+        "arg": "Put Knowledge into Production"
+      },
+      {
+        "op": "click",
+        "arg": "Wind Generator"
+      },
+      {
+        "op": "click",
+        "arg": "production:75"
+      },
+      {
+        "op": "pointer",
+        "arg": "0x80010000,960,635"
+      },
+      {
+        "op": "click",
+        "arg": "screen:960,635"
+      }
+    ],
+    "observations": [
+      "main-0",
+      "main-1",
+      "main-2",
+      "entry-0",
+      "entry-1",
+      "entry-2",
+      "ready",
+      "factory-menu",
+      "knowledge-menu",
+      "wind-production",
+      "generator-selected",
+      "generator-pointer",
+      "before-generator",
+      "after-generator",
+      "generator-settled",
+      "before-close"
+    ],
+    "checks": [
+      {
+        "before": "before-generator",
+        "after": "after-generator",
+        "type": 75,
+        "owner": 1,
+        "newLiveServerObjects": [
+          [
+            "15074",
+            "75",
+            "1",
+            "0",
+            "125",
+            "85"
+          ]
+        ],
+        "constructionRequestsBefore": 0,
+        "constructionRequestsAfter": 1,
+        "passed": true
+      },
+      {
+        "kind": "normal-entry-and-wait",
+        "before": "after-generator",
+        "after": "generator-settled",
+        "gameTimeBefore": 13.706,
+        "gameTimeAfter": 24.304,
+        "mission": "tutorial4",
+        "passed": true
+      }
+    ],
+    "commandErrors": [],
+    "failure": null,
+    "scope": "정상 미션 진입·대기 또는 관측 기반 정상 UI 건설/WM_CLOSE. MP·포획·희생·공격·승리·공중3종·강제패턴·직접Create·상태성공합성 실행 아님. 건물 완성/다중peer observer는 별도 관측 없이 단정하지 않음."
+  },
+  "screenshotReview": {
+    "reviewed": true,
+    "unit": 1263,
+    "file": "015-generator-settled.png",
+    "sha256": "f46f2c664e40818a9264dd8febb8aaa0c04aea006a17cf0323d22fcda96516bb",
+    "width": 1920,
+    "height": 1080,
+    "observed": "Tutorial4 섬/신전/워크샾·간헐천과 왼쪽 생산 UI가 표시된다. 600프레임 뒤 화면을 확인했다.",
+    "limits": "TYPE75/owner1 생성·600프레임 진행은 MCP 상태 근거다. 캡처 한 장으로 건물 완공/음향/MP/Join/전체 원본 동일성을 단정하지 않는다."
+  },
+  "protectedFiles": 2808,
+  "protectedUnchanged": true,
+  "newDecompilation": false,
+  "newMpUnitPacketNetworkGameRecordExecutions": 0,
+  "newEditorTestBattleExecutions": 0,
+  "newZip": false,
+  "rawDirectory": "extracted/cpp-resume-1263/",
+  "next": "M6-n 큰 NoWorld/자산·AI·최초후처리·배치/Fort Finish·모든 process/caller·Snapshot/debugBurst 감사"
+}

@@ -163,6 +163,13 @@ NativeBattleSource ResolveNativePacketSource(Client& client,o::PacketConnection*
     const auto source=client.ConnectionGlobals()->PacketSources()->Resolve(*connection);if (!source) throw std::logic_error("배송 connection의 실제 Source device 경로 누락");return *source; //sender/phase/마지막 생성 Source로 대체하지 않는다.
 }
 }
+//1bh의 기존 전체 본문과 현재 장치를 wire/직접 caller가 한 번만 공유한다.
+void ReceiveClientBattleStartPeer(Client& client,std::span<const std::uint8_t> packet,const std::function<NativeBattleSource()>& selectSource) {
+    auto& local=*client.LocalStateGlobals();auto& game=*client.GameplayGlobals();const auto record=client.PacketRecordOwner();o::StateBattleStartHooks hooks;
+    hooks.assertion=[&client](auto expression,auto file,auto line) { client.SurfaceStorage()->AssertDisplay(expression,file,line); };hooks.openRecord=[record](auto name) { record->Open(name); };
+    hooks.run=[&client,&selectSource] { if (!selectSource) throw std::logic_error("current7의 실제 Source 선택 장치 미연결");auto source=selectSource();if (!client.Menu()) throw std::logic_error("current7의 실제 UI State 부모 미연결");client.Menu()->DispatchNativeBattleStart(std::move(source),true); }; //주소/포트/current7 뒤에만 실제 전송을 선택하며 old Runtime을 보유하지 않는다.
+    o::ReceiveBattleStartPeer(packet,{local.State(),local.ZonePending(),game.GameServerPort(),game.Subscribers()->MySubscriber(),record->Requested(),client.SurfaceStorage()->Checking()},game.Server(),hooks);
+}
 //Global F는 Client 장기 데이터만 보유하고 Source는 원문의 실제 선택 지점에서만 빌린다.
 void InstallClientStateBattleStartReceivers(Client& client,o::RawPacketDispatch& dispatch) {
     client.PublishNativePacketTable(dispatch.Registrations()); //현재Client의실제표만공개하며저장F는이포인터변경과독립이다.
@@ -177,10 +184,7 @@ void InstallClientStateBattleStartReceivers(Client& client,o::RawPacketDispatch&
     });
     dispatch.Observe(0x1b,[](std::uint32_t) {});dispatch.Version(0x1b,1,0);dispatch.RequireLength(0x1b,38); //원문40b380의 실제 비NULL 빈 observer이며 ACK/성공효과가 아니다.
     dispatch.RegisterCanonicalDirect(0x1b,0x004b8b20U,[client=&client](auto,o::PacketConnection* connection,auto packet) { //server/pending 자연 반환 앞에 Source/Runtime을 요구하지 않는다.
-        auto& local=*client->LocalStateGlobals();auto& game=*client->GameplayGlobals();const auto record=client->PacketRecordOwner();o::StateBattleStartHooks hooks;
-        hooks.assertion=[client](auto expression,auto file,auto line) { client->SurfaceStorage()->AssertDisplay(expression,file,line); };hooks.openRecord=[record](auto name) { record->Open(name); };
-        hooks.run=[client,connection] { auto source=ResolveNativePacketSource(*client,connection);if (!client->Menu()) throw std::logic_error("current7의 실제 UI State 부모 미연결");client->Menu()->DispatchNativeBattleStart(std::move(source),true); }; //주소 NUL 포함 부분쓰기/port/current7 뒤에만 실제 Source를 선택하며 old Runtime은 보유하지 않는다.
-        o::ReceiveBattleStartPeer(packet,{local.State(),local.ZonePending(),game.GameServerPort(),game.Subscribers()->MySubscriber(),record->Requested(),client->SurfaceStorage()->Checking()},game.Server(),hooks);
+        ReceiveClientBattleStartPeer(*client,packet,[client,connection] { return ResolveNativePacketSource(*client,connection); }); //현재 실제 node의 Source 선택은 같은 본문의 run 위치까지 지연한다.
     });
 }
 //004b4160의 현재 Client 진단/Config/Tell만 사용하는 고정 버전 본문이다. 실제 Source나 Runtime을 요구하지 않는다.

@@ -179,6 +179,7 @@ private:
     void OpenMetaBattleDescription(std::uint32_t text); //표식된 현재 CS 주소·실제 HTML 고리 문자열·NULL 기본 문구를 구별하고 확정은 현재 메타 전송에 맡긴다.
     std::uint32_t ShowMetaTell(std::string_view section); //메타의 같은 Config/현재 미션 HTML을 열고 실제 반환 serial을 전달하며 호스트 phase를 바꾸지 않는다.
     RawCampaignFactoryDisplay* MetaSpriteDisplay() const; //Renderer가현재메타의실제출력기만빌린다.게임출력기/가짜장면을대신반환하지않는다.
+    std::shared_ptr<MetaConnectionRuntime> EnsureMetaConnectionSource(); //같은 실제 Meta/TCP/UDP만 확보/공개하며 World 정리나 State 실행/접속을 하지 않는다.
     o::LocalMissionParentResult InstallMetaConnectionState(std::uint32_t selected); //실제 메타20~27/검색34~38과TCP10/11·UDP12/현재HTML·Run을같은장기owner에접합한다.37의새서버실행은후속이다.
     o::StartupStateCheckHooks EditorStartupStateHooks(); //State1/3이 같은 실제 saved-state reader/벽시각을 사용한다. 기본 옵션을 강제로 바꾸지 않는다.
     void PublishNativeMainMenuState(); //실제 State3 공통 확정/다음4/world 반납을 확인한 뒤 Native 전역 재작성 없이 호스트 메뉴 표시만 공개한다.

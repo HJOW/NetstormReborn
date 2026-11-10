@@ -5527,9 +5527,9 @@ std::uint32_t RawCampaignSession::CommandObject(Sid parent,std::uint32_t command
     });
     return RawObjectConversion(current.core.pool,current.gemRewardState.buriedType,std::move(hooks)).Command(parent,command,body);
 }
-//004b3620/004b3760: 현재 Territory/원문 전체 Fort 저장이 끝난 뒤에만 next19의 명시 필드를 쓴다.
-void RawCampaignSession::RequestFortDescend(std::int32_t territory) {
-    auto& s=*impl_;if (!s.loaded || !s.runtime || !s.services.nsInfoGlobals) throw std::logic_error("Descend의 실제 설치/서버/현재 Territory 미연결");
+//004b3620: 현재 Territory/섬 갱신과 같은 전체 Fort 저장만 수행하고 보관한6BYTE를 돌려준다.
+std::array<std::uint8_t,6> RawCampaignSession::PrepareFortDescend(std::int32_t territory) {
+    auto& s=*impl_;if (!s.loaded || !s.runtime) throw std::logic_error("Descend의 실제 설치/현재 Territory 미연결");
     if (s.playerState.templateOwner>=9) throw std::out_of_range("Descend 현재 Template9의 물리 범위");
     if (Read(s.templateStorage->Headers(),s.playerState.templateOwner*20+8)) { if (!s.services.player.log) throw std::logic_error("Descend 읽기전용 경고의 실제 로그 미연결");s.services.player.log(29,"WARNING: You cannot descend with a read-only fort.\n"); }
     if (!s.core.ownerMode.fort) s.world.Storage()->AssertDisplay("inFortMode",".\\State.cpp",0x91b);
@@ -5540,10 +5540,14 @@ void RawCampaignSession::RequestFortDescend(std::int32_t territory) {
     const std::array<std::uint8_t,6> record{records[at],records[at+1],records[at+2],records[at+3],records[at+4],records[at+5]}; // 원문은 현재 지도 검색 전에 DWORD/WORD 인자를 보관한다.
     const auto island=RawIslandQueries(*s.islands,s.finishState).FindOwnerTerritory(std::bit_cast<std::int32_t>(s.playerState.battleOwner),territory);
     s.vortexDeparture->UpdateIslandRecord(static_cast<std::int32_t>(island),record);
-    s.WriteEditorTerritory(s.playerState.templateOwner,records);SnapshotFort(s.playerState.templateOwner);
-    auto& next=s.localStateGlobals->State().next;next[0]=19;next[0x48/4]=Read(records,at);
-    const auto tail=std::uint32_t(records[at+4])|(std::uint32_t(records[at+5])<<8);next[0x4c/4]=(next[0x4c/4]&0xffff0000U)|tail;
-    next[0x44/4]=std::bit_cast<std::uint32_t>(s.services.nsInfoGlobals->serverSelection); // 마지막 현재서버 store이며 다른 next BYTE는 보존한다.
+    s.WriteEditorTerritory(s.playerState.templateOwner,records);SnapshotFort(s.playerState.templateOwner);return record;
+}
+//004b3760: 같은 준비를 완료한 뒤에만 기존 next19/6BYTE/현재 서버 쓰기를 수행한다.
+void RawCampaignSession::RequestFortDescend(std::int32_t territory) {
+    const auto record=PrepareFortDescend(territory);auto& s=*impl_;
+    auto& next=s.localStateGlobals->State().next;next[0]=19;next[0x48/4]=Read(record,0);
+    const auto tail=std::uint32_t(record[4])|(std::uint32_t(record[5])<<8);next[0x4c/4]=(next[0x4c/4]&0xffff0000U)|tail;
+    if (!s.services.nsInfoGlobals) throw std::logic_error("Descend의 실제 현재 서버 선택 미연결");next[0x44/4]=std::bit_cast<std::uint32_t>(s.services.nsInfoGlobals->serverSelection); // 마지막 현재서버 store이며 다른 next BYTE는 보존한다.
 }
 // 일반 입력의 전체 owner 인자를 실제 신전/사제/공통 소유자 몸체에 전달한다.
 void RawCampaignSession::SetObjectOwner(Sid parent,std::uint32_t owner) { if (!impl_->loaded) throw std::logic_error("설치 전 실제 가상 소유자 변경");impl_->ownership->SetOwner(parent,owner); }

@@ -533,6 +533,7 @@ public:
     void RequestCarrierDrop(o::Sid parent,o::Sid content={}); // 실제427070의비용/선택/9바이트송신만 실행하며 서버 수신을 직접 부르지 않는다.
     std::uint32_t CommandCarrierDrop(o::Sid parent,std::uint32_t command,o::Sid listParent); // 실제42aa50 Cast/Drop 메뉴와 최초 내용물 선택 순서를 실행한다.
     std::uint32_t CommandObject(o::Sid parent,std::uint32_t command,std::uint16_t parameter=0); // 실제 가상6c에 명령과상위WORD 인자를 보존한다. 기존 두인자 호출은 원문 인자0이다.
+    std::array<std::uint8_t,6> PrepareFortDescend(std::int32_t territory); //004b3620의 경고/현재 기록/섬 갱신/전체 Fort 저장만 실행하고 next 상태는 쓰지 않는다.
     void RequestFortDescend(std::int32_t territory); //004b3620의 실제 현재 지형/저장 뒤004b3760의 next19/6BYTE/현재서버만 쓴다.
     void SetObjectOwner(o::Sid parent,std::uint32_t owner); // 실제 가상74의 신전·사제 재정의와 공통 소유자 변경을 같은 월드에서 분배한다.
     void FollowObjectOwner(std::uint32_t sid); //004d5290의 같은 Pool/Player Core 선택과0059a8b0 증가를 실행한다. 미니맵 갱신과 구별한다.
