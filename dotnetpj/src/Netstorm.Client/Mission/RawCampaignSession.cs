@@ -65,6 +65,9 @@ public sealed class RawCampaignSession
     /// <summary>같은 실제 AI 준비 몸체의 준비 효과다. 세션 조립 때 실제 AI 준비 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 AI 준비 본체에서 추가됐다.</summary>
     private Func<uint, bool>? _aiPrepare;
 
+    /// <summary>같은 실제 AI 초기화 몸체의 초기화 효과다. 세션 조립 때 실제 AI 초기화 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 AI 초기화 본체에서 추가됐다.</summary>
+    private Func<uint, bool>? _aiInitialize;
+
     /// <summary>같은 자산·저장소·월드로 세션 껍데기를 만든다. Fort 적재 본체는 후속 단위에서 잇는다.</summary>
     /// <param name="edition">월드가 따르는 원본 판본이다.</param>
     /// <param name="types">같은 전역 TYPE 표다. 비어 있으면 안 된다.</param>
@@ -325,6 +328,42 @@ public sealed class RawCampaignSession
         }
 
         return _aiPrepare(owner);
+    }
+
+    /// <summary>같은 실제 AI 초기화 몸체의 초기화 효과를 묶는다. 원본 세션 설치의 AI 초기화 몸체 연결만 둔다. 2026-11-10 F3 AI 초기화 본체에서 추가됐다.</summary>
+    /// <param name="initialize">실제 AI 초기화 효과다. 소유자 번호를 그대로 받고 258 완료면 참을 돌려준다.</param>
+    public void BindAiInitialize(Func<uint, bool> initialize)
+    {
+        ArgumentNullException.ThrowIfNull(initialize);
+        _aiInitialize = initialize;
+    }
+
+    /// <summary>같은 실제 AI 초기화 몸체의 초기화 효과를 묶었는지 확인한다. 2026-11-10 F3 AI 초기화 본체에서 추가됐다.</summary>
+    /// <returns>묶었으면 참이다.</returns>
+    public bool HasAiInitialize() => _aiInitialize is not null;
+
+    /// <summary>원본 00414af0의 초기 전략을 후속 AI 몸체와 공유한다. 준비된 brain이 없으면 거짓을 돌려준다. 묶은 실제 AI 효과가 없으면 본체 미연결로 멈춘다. 적재 전에는 적재 관문에서 먼저 멈춘다. 258 완료 판정은 실제 AI 몸체 쪽에서 잇는다. 2026-11-10 F3 AI 초기화 본체에서 추가됐다.</summary>
+    /// <param name="owner">AI를 초기화할 소유자 번호다. 원본 1..8 범위를 받는다.</param>
+    /// <returns>258 완료면 참, 준비된 brain이 없으면 거짓이다.</returns>
+    public bool InitializeAi(uint owner)
+    {
+        if (owner < 1u || owner > 8u)
+        {
+            throw new ArgumentOutOfRangeException(nameof(owner), owner, "AI 초기의 실제 소유자 1..8 범위 오류");
+        }
+
+        if (!_loaded)
+        {
+            throw new InvalidOperationException("캠페인 세션의 미적재 AI 초기화입니다.");
+        }
+
+        // 원본 RawCampaignSession::InitializeAi의 적재·owner 관문과 brain 없음 거짓 경로를 직역한다. 실제 초기화 몸체는 후속 단위에서 잇는다(결정 6 — 성공을 합성하지 않는다).
+        if (_aiInitialize is null)
+        {
+            throw new InvalidOperationException("실제 AI 초기화 미연결");
+        }
+
+        return _aiInitialize(owner);
     }
 
     /// <summary>같은 파서·생성 몸체의 위치 생성 효과다. 세션 조립 때 실제 생성 몸체를 묶으며 그 전까지는 비어 있다. 2026-11-10 F3 위치 명령 본체에서 추가됐다.</summary>

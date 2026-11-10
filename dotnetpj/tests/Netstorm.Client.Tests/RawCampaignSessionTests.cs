@@ -766,4 +766,64 @@ public sealed class RawCampaignSessionTests
         Assert.Throws<ArgumentNullException>(() => session.BindAiPrepare(null!));
         Assert.False(session.HasAiPrepare());
     }
+
+    /// <summary>미적재 AI 초기화를 적재 관문에서 거부하는지 검증한다. 2026-11-10 F3 AI 초기화 본체에서 추가됐다.</summary>
+    [Fact]
+    public void InitializeAiRejectsWhenNotLoaded()
+    {
+        // 적재 전 AI 초기화는 같은 세션 관문에서 멈춘다.
+        var session = LoadableSession();
+        session.BindAiInitialize(owner => true);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.InitializeAi(1u));
+        Assert.Contains("미적재", error.Message);
+    }
+
+    /// <summary>원본 1..8 범위를 벗어난 소유자를 거부하는지 검증한다. 2026-11-10 F3 AI 초기화 본체에서 추가됐다.</summary>
+    [Fact]
+    public void InitializeAiRejectsBadOwner()
+    {
+        // 원본 세션의 owner 관문을 그대로 둔다. 적재 관문보다 먼저 동작한다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        session.BindAiInitialize(owner => true);
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.InitializeAi(0u));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.InitializeAi(9u));
+    }
+
+    /// <summary>적재 뒤 AI 초기화를 본체 미연결로 거부하는지 검증한다. 2026-11-10 F3 AI 초기화 본체에서 추가됐다.</summary>
+    [Fact]
+    public void InitializeAiRejectsWhenUnconnected()
+    {
+        // 실제 AI 초기화 본체는 후속 단위에서 잇는다(결정 6).
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        Assert.False(session.HasAiInitialize());
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.InitializeAi(1u));
+        Assert.Contains("미연결", error.Message);
+    }
+
+    /// <summary>묶은 실제 AI 효과의 초기화 결과를 그대로 돌려주는지 검증한다. 2026-11-10 F3 AI 초기화 본체에서 추가됐다.</summary>
+    [Fact]
+    public void InitializeAiForwardsToBoundDevice()
+    {
+        // 원본 세션 설치의 AI 초기화 몸체 연결만 둔다. brain 없음 거짓 경로도 위임한다.
+        var session = LoadableSession();
+        session.LoadSeeds(LoadableSeeds());
+        var calls = new List<uint>();
+        session.BindAiInitialize(owner => { calls.Add(owner); return owner == 4u; });
+        Assert.True(session.HasAiInitialize());
+        Assert.True(session.InitializeAi(4u));
+        Assert.False(session.InitializeAi(5u));
+        Assert.Equal([4u, 5u], calls);
+    }
+
+    /// <summary>빈 AI 초기화 묶기를 거부하는지 검증한다. 2026-11-10 F3 AI 초기화 본체에서 추가됐다.</summary>
+    [Fact]
+    public void BindAiInitializeRejectsNull()
+    {
+        // 묶지 않은 세션은 미연결로 멈춘다.
+        var session = LoadableSession();
+        Assert.Throws<ArgumentNullException>(() => session.BindAiInitialize(null!));
+        Assert.False(session.HasAiInitialize());
+    }
 }
