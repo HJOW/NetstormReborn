@@ -142,4 +142,6 @@ std::optional<std::vector<std::uint8_t>> EditorCatalogWorkspace::Read(std::strin
     const auto key=impl_->Key(configuredPath);if (key.find_first_of("*?")==std::string::npos) { impl_->Import(key);if (impl_->entries.contains(o::AsciiLower(key))) return impl_->files->TryRead(key); }if (auto bytes=impl_->files->TryRead(key)) return bytes;
     return impl_->source.archiveOnly ? impl_->source.archiveOnly(key) : std::nullopt; //이관되지 않은 archive-only 내용은 loose 목록/장부에 추가하지 않는다.
 }
+// 없는 원본과 사용자가 지운 완료 항목을 구별한다. source/TAFF를 다시 가져오거나 장부를 바꾸지 않는다.
+bool EditorCatalogWorkspace::Deleted(std::string_view configuredPath) { const auto key=impl_->Key(configuredPath);impl_->Load();const auto found=impl_->entries.find(o::AsciiLower(key));return found!=impl_->entries.end() && found->second==kCompleted && !std::filesystem::exists(impl_->files->ResolvePath(key)); }
 }

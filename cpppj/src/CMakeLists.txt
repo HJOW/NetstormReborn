@@ -666,3 +666,6 @@ target_sources(netstorm PRIVATE client/ClientHelpWord.cpp client/ClientHelpWord.
 # 한국어 확정입력/문자경계 공통부품과 실제 Windows IME 결과조회다(K1, 1270).
 target_sources(netstorm PRIVATE client/DisplayTextInput.cpp client/DisplayTextInput.h)
 target_link_libraries(netstorm PUBLIC imm32)
+
+# S1: 시나리오 문서 모델과 Editor 전용 시나리오 UI·파일·Test Battle 연결이다(986 후보 병합, 1277).
+target_sources(netstorm PRIVATE client/ScenarioDocument.cpp client/ScenarioDocument.h client/EditorScenarioModel.cpp client/EditorScenarioModel.h client/EditorScenarioFiles.cpp client/EditorScenarioFiles.h client/EditorScenarioController.cpp client/EditorScenarioController.h client/UberScenario.inc)

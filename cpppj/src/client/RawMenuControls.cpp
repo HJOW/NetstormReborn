@@ -524,7 +524,7 @@ struct RawMenuControls::Impl {
         lastInput={token,event,first,second};
         if (islandRoots.contains(token)) return const_cast<Impl*>(this)->HandleIsland(token,{event,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)});
         if (imageLists.contains(token)) return imageList->Handle(token,event,first,second);
-        if (saveFortRoots.contains(token)) return saveFortDialog->Handle(token,event,first,second);
+        if (saveFortRoots.contains(token)) { const auto& context=saveFortContexts.at(token);if (context.editorAccept && context.editorMultiline && (event&0x03ffffffU)==0x02000038U) return 1;return saveFortDialog->Handle(token,event,first,second); } // Scenario 다중 줄 Enter는 줄바꿈만 하며 실제 OK 버튼에서 확정한다.
         if (htmlRoots.contains(token)) return htmlWindow->Handle(token,event,first,second);
         if (movies && movies->Node(token)) return movies->Handle(token,event);
         if (gifWindows && gifWindows->Node(token)) return gifWindows->Handle(token,event,first,second);
@@ -888,6 +888,12 @@ std::uint32_t RawMenuControls::ShowHtmlInputDialog(SaveFortNameDialogContext con
     auto& s=*impl_;if (!context.editor.now || !context.translate || !context.tell) throw std::invalid_argument("HTML 입력 창의 실제 문자/번역/Tell 장치 누락");context.htmlInput=true;EnableTextEntry(context.editor);s.BindSaveFortDialog();if (s.saveFortBuilding) throw std::logic_error("HTML 입력 창 생성 안의 재귀 생성 미지원");s.saveFortBuilding=&context;
     struct Reset { Impl& state;~Reset() { state.saveFortBuilding=nullptr; } }; //정상/예외반환에서생성중문맥만반납한다.
     Reset reset{s};return s.saveFortDialog->ShowInput(mode,title,continuation);
+}
+// 별도 Scenario 모달도 기존 공통 파생 저장소/시계/클립보드/수명에 연결한다.
+std::uint32_t RawMenuControls::ShowScenarioInputDialog(SaveFortNameDialogContext context,std::string_view title,std::string_view initial,std::int32_t maximum,bool multiline) {
+    auto& s=*impl_;if (!context.editorAccept || !context.editorCancel || !context.editor.now || !context.translate) throw std::invalid_argument("Scenario 입력창 실제 장치 누락");context.editorMultiline=multiline;EnableTextEntry(context.editor);s.BindSaveFortDialog();if (s.saveFortBuilding) throw std::logic_error("Scenario 입력창 재귀 생성");s.saveFortBuilding=&context;
+    struct Reset { Impl& state;~Reset() { state.saveFortBuilding=nullptr; } };const Reset reset{s}; // 부분 실패에서도 지역 문맥 별칭을 지운다.
+    const auto token=s.saveFortDialog->ShowScenarioInput(title,maximum,multiline);const auto entry=s.saveFortRoots.at(token)->entry;std::string text(initial);text.push_back(0);s.textEntries->Backend().SetText(entry,text);return token;
 }
 // 송금 숫자 창은 파일 장치를 요구하지 않고 같은 문자/Gump 수명에 전용 확정을 설치한다.
 std::uint32_t RawMenuControls::ShowSendMoneyDialog(SaveFortNameDialogContext context,std::uint32_t target) {

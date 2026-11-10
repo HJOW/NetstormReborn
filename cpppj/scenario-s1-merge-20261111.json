@@ -1,0 +1,19 @@
+{
+  "unit": "1277 S1 scenario model merge",
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "build": {"config": "Release", "warnings": 0},
+  "tests": {"target": "netstorm_editor_scenario_tests", "total": 20, "failed": 0, "regression": {"menu_session": "same as baseline", "main_popup": "same as baseline", "file": "same as baseline"}},
+  "live": {
+    "flow": "main -> Edit -> TEST01 -> Edit menu -> Scenario... -> panel -> ESC",
+    "passed": true,
+    "exitCode": 0,
+    "logFileCreated": false,
+    "gameDirUnchanged": true
+  },
+  "defectsFoundLive": [
+    "menu command gate rejected 0x0300e100 (terminated process)",
+    "CloseScenarioUi killed an already-closed gump token on world return (std::terminate)"
+  ],
+  "remaining": ["S2", "S3", "S4"]
+}

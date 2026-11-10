@@ -174,6 +174,7 @@
 #include "client/RawCampaignFactoryDisplay.h" //메타의같은가상표/배율그림도기존공통출력기를사용한다.
 #include "client/EditorSaveGoMain.h" //Yes/No의 실제 저장과 next3 예약을 일반 입력 뒤에 실행한다.
 #include "client/EditorTestBattle.h" //c2의 snapshot/Guide 교체와 편집 복귀 순서를 실제 일반 입력에 연결한다.
+#include "client/EditorScenarioController.h" // Editor의 별도 문서 UI와 같은 workspace/English 보장을 연결한다.
 #include "client/SaveFortNameDialog.h" //실제 TextEntry/두 버튼/전체 Fort 이름 부모를 사용하는 모달이다.
 #include "client/TellTip.h" //같은 현재 팁 번호와 실제 Config/Tell을 일반 입력에서 갱신한다.
 #include "client/TextClipboard.h" //최초 TextEntry 생성 전에 같은 CF_TEXT 장치를 준비한다.
@@ -305,6 +306,7 @@ std::string Field(std::string text) { std::replace(text.begin(), text.end(), '\t
 
 #include "client/UberHud.inc" // 같은 실제 소유자에 전체 HUD 루트/지도 전역과 네 자식 공장을 연결한다.
 #include "client/UberEditor.inc" //실제 Edit 선택의 Native State1/파일/후반 UI와 다음 Poll4를 연결한다.
+#include "client/UberScenario.inc" // 시나리오 편집은 원문 메뉴/Guide 몸체 밖의 명시 클론 확장이다.
 #include "client/UberMeta.inc" //실제 메타19도 World 정리 뒤 같은 장기 Client 장치를 사용한다.
 #include "client/UberLan.inc" // 같은 실제 Fort/대기실과 일반 State7/World 교체를 연결한다.
 #include "client/UberReconnect.inc" // 같은 실제 저장 reader/현재 Player와 서버 선택을 State15/7에 연결한다.
@@ -337,6 +339,7 @@ UberGump::UberGump(Client& client) : client_(client),missionOptions_(client.Game
     const auto catalogFiles=std::make_shared<EditorFiles>(editorRoots.work,editorRoots.protectedRoots,client_.Files().FileNameOwner()); // 생성은보호경로/같은Client경로소유자만연결한다. 목록의Template읽기와실제Editor가같은장치를공유한다.
     EditorCatalogSourceDevices catalogSource;catalogSource.root=client_.GameDirectory();catalogSource.metadataRoot=editorRoots.metadata;catalogSource.archiveOnly=[this](auto path) { return client_.Files().TryReadArchiveOnly(path); }; //실제 기존 등록순서의 TAFF만 읽어 완료키 삭제의 disk 우회를 막는다.
     editorCatalog_=std::make_shared<EditorCatalogWorkspace>(catalogFiles,std::move(catalogSource)); //한 장기 이관 owner를 목록과 실제 Editor 경로 모두에 공유한다.
+    scenarioFiles_=std::make_shared<EditorScenarioFiles>(editorCatalog_,client_.Configuration()); // 생성만으로 sidecar/현재 미션을 읽거나 쓰지 않는다.
     SoloMapCatalogEffects mapEffects; // 현재 실제 장치만 제공하며 목록 분류/행 처리는 기존 몸체를 사용한다.
     mapEffects.sectionNames=templateStorage_->SectionNamesOwner(); // 주Template/분류/메타가같은Client이름표와변환상태를빌린다.
     mapEffects.serializationGlobals=serializationGlobals_; // 목록의두임시MapProbe도실제manager생성자의같은전역0쓰기를공유한다.
@@ -395,7 +398,7 @@ UberGump::UberGump(Client& client) : client_(client),missionOptions_(client.Game
             // 실제 메뉴 항목이 선택한 미연결 명령은 여기서 거부한다. 돌 버튼의 별도 기본 클릭 통지와 구별한다.
             const auto& nsInfo=*client_.NsInfoGlobals(); // NSInfo 메뉴 작성기와 입력 소비자가 공유하는 현재 명령 owner를 선택 시점에 읽는다.
             const bool nsInfoCommand=command==nsInfo.kickoffCommand || command==nsInfo.sortOptionsCommand || command==nsInfo.setOptionCommand || command==nsInfo.excludeTypeCommand || command==nsInfo.restoreTypeCommand; // 추방과 정렬/설정/제외 메뉴의 실제 다섯 명령도 같은 공통 큐로 전달한다.
-            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x020000f3U && command!=0x020000e8U && !nsInfoCommand && !IsNativeMetaSailCommand(command) && !IsScenarioObjectCommand(command) && !IsScenarioEffectCommand(command) && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command)); //실제 메타 설명/항해/영역 확인 소비자까지 연결된 명령만 같은 메뉴→큐 경계에서 허용한다.
+            if (command!=0x02000060U && command!=0x03000080U && command!=0x03000032U && command!=0x03000063U && command!=0x0200005dU && command!=0x02000017U && command!=0x020000f3U && command!=0x020000e8U && !nsInfoCommand && !IsNativeMetaSailCommand(command) && !IsScenarioObjectCommand(command) && !IsScenarioEffectCommand(command) && command!=0x0300011aU && command!=0x03000076U && !IsGameMenuCommand(command) && !IsEditorScenarioCommand(command) && !IsTellMenuCommand(command) && !IsObjectMenuVariantCommand(command) && !IsSendMoneyCommand(command)) throw std::logic_error("현재 Client 원본 메뉴 항목 명령 미연결: "+std::to_string(command)); //실제 메타 설명/항해/영역 확인 소비자까지 연결된 명령만 같은 메뉴→큐 경계에서 허용한다.
             client_.Input().PushCommand(command,std::bit_cast<std::int32_t>(id),std::bit_cast<std::int32_t>(parameter));
         }
     };
@@ -500,6 +503,7 @@ void UberGump::ReleaseCurrentGuideMission() {
 }
 // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
+    CloseScenarioUi(true); // Session을 빌리는 Scenario 모달/보류 문서를 기존 실제 World보다 먼저 반납한다.
     CloseLanLobby();lan_.reset();state_.Cancel("LoadLanBattleWorld"); // Player 주소를 다시 만들기 전에 제어 연결과 이전 일반 시작 요청을 반납한다.
     if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaWorld && editor_->metaWorld->ConnectionCallbackActive())) throw std::logic_error("패킷 콜백 실행 중 전체 World 정리 재진입"); // UI/공유 저장소를 일부 반납하기 전에 전체 정리를 거부한다.
     if (rawButtons_ && rawButtons_->Menus()) rawButtons_->Menus()->CloseSaveFortNameDialogs(); // 숫자 창도 현재 Session의 확정 장치를 반납한 뒤 월드를 해제한다.
@@ -1148,6 +1152,7 @@ void UberGump::OpenGameMenu(bool playerList) {
         BindGameMenusControls(hooks,widgets,controls,menu,[this](auto text) { return scriptStrings_.Store(text); });
         hooks.node=[this](auto token) { return rawButtons_->Menus()->Node(token); };
         hooks=session.BindGameMenus(std::move(hooks));const auto globals=hooks.global;const auto translate=hooks.translate; // 바인더가교체한같은현재소유자의getter를빌린다.
+        if (client_.GameplayGlobals()->world.editor) hooks.scenarioCommand=kEditorScenarioOpen; // 일반 전투/캠페인 메뉴에는 노출하지 않는다.
         hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른Windows10/11 DIB 호환 화면비만 명시 추가하며 기본 원문 검사는 빈 목록을 유지한다.
         hooks.compatibilityLanguages=LanguageMenuChoices(client_.LanguageNumber()); // 6차: 게임 중 옵션 메뉴에도 같은 Language 하위 메뉴를 둔다.
         ConnectPostProcessMenu(hooks); // 7차: 게임 중 옵션 메뉴에도 같은 후처리 항목을 둔다.
@@ -1329,6 +1334,7 @@ void UberGump::OpenObjectMenu(o::SquidId id,const InputEvent& event) {
 }
 // 같은 실제 큐의 원본 정수 명령과 물리 사건을 분배한다.
 void UberGump::Event(InputEvent event) {
+    if (ScenarioEvent(event)) return; // 새 Editor 명령만 별도 실제 모달에 전달하고 나머지 원문 순서는 보존한다.
     if (IsCommittedTextInput(event.code)) { const auto routed=rawButtons_->RouteInput(event);if (routed.consumed) rebuild_=true;return; } // 새 확정 문자도 일반 focus/dialog/root를 사용하며 입력창이 없으면 게임 단축키로 바꾸지 않는다.
     if (DispatchScreenMouseKey(event,[this] { return client_.GetScreen().Flags(); },[this](auto mode) { client_.ChangeScreenMode(mode); })) rebuild_=true; // 원본 DirectDraw 호출은 Windows10/11에서 borderless/DIB 호환 장치로 실행한다. 같은 사건은 Guide/모달에 계속 전달한다.
     if (const auto* movie=rawButtons_->Menus()->Movies();movie && movie->Active()) { const auto routed=rawButtons_->RouteInput(event);if (routed.consumed) { rebuild_=true;return; } } // 실제 MovieGump 모달을 일반 ESC/키 처리보다 먼저 같은 Gump Route에 전달한다.
@@ -1453,11 +1459,11 @@ void UberGump::Event(InputEvent event) {
     }
     if (transitionCode==kDialogDoNothing) return; // 원본 명령 자체는 효과가 없으며 HTML 부모는 발화 시 이미 Kill되었다.
     if (transitionCode==kEditorTestBattleCommand) {
-        EditorTestBattleHooks hooks;hooks.snapshot=[this] { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) { SnapshotNativeCurrentMap(true);return; }if (!world_) throw std::logic_error("Test Battle의 실제 Editor Session 없음");world_->Session().SaveCurrentMap(); };
+        EditorTestBattleHooks hooks;hooks.snapshot=[this] { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) { SnapshotNativeCurrentMap(true);return; }if (!world_) throw std::logic_error("Test Battle의 실제 Editor Session 없음");world_->Session().SaveCurrentMap();PrepareScenarioTest(); }; // Fort snapshot 정상 복귀 뒤에만 보류 시나리오 문서와 사용자 English sidecar를 저장/보장한다(S1, 1277).
         hooks.currentFortName=[this] { const auto bytes=client_.FortGlobals()->CurrentBytes();return std::string_view(reinterpret_cast<const char*>(bytes.data()),bytes.size()); }; //늦은 이름 복사는 같은 실제256BYTE의 NUL까지 읽는다.
-        hooks.guide=MissionTransitionEffects();hooks.guide.create=[this,workspace=editorCatalog_](auto name) { CreateMission(std::string(name),0,0,[workspace](auto path) { return workspace->Read(path); }); }; //실제 편집 작업본의 동일 namespace를 Script/별칭 Fort/재로드까지 소유한다.
+        hooks.guide=MissionTransitionEffects();hooks.guide.create=[this,files=scenarioFiles_](auto name) { CreateMission(std::string(name),0,0,[files,map=std::string(name)](auto path) { return files->ReadForMission(map,path); }); }; // Script는 사용자 workspace의 English 대체를 포함해 읽고 Fort/추가 파일은 기존 reader를 쓴다(S1, 1277). //실제 편집 작업본의 동일 namespace를 Script/별칭 Fort/재로드까지 소유한다.
         hooks.pending=FortEditEffects().pending;hooks.requestEdit=[this] { RequestFortEditState(); };
-        static_cast<void>(DispatchEditorTestBattle(event,fortSelectionMode_,hooks));rebuild_=true;return;
+        try { static_cast<void>(DispatchEditorTestBattle(event,fortSelectionMode_,hooks)); }catch (const EditorScenarioPrepareError& error) { warnings_->Add(FontBytes(error.what())); }rebuild_=true;return; // sidecar 준비 실패는 Guide를 열기 전 snapshot에서만 경고로 처리한다(S1, 1277).
     }
     if (FortSelectionEvent(event)) return; // Guide와 실제 Gump 입력 뒤 원문 일반 부모의 같은 두 명령을 처리한다.
     if (MultiplayerOptionsEvent(event)) return; // 일반 옵션의 이름/연결 예약도 같은 Guide/Gump 뒤 일반 입력 큐에서 소비한다.
@@ -1501,6 +1507,7 @@ void UberGump::Event(InputEvent event) {
         context.random=[this](auto limit) { return client_.RandomGlobals()->Game().Next(limit); };context.camera=[this](float x,float y) { world_->CenterCamera(x,y); };context.revision=[this] { ++client_.GameplayGlobals()->MapRevision(); };context.pulseRegistered=[this](auto id) { static_cast<void>(rawButtons_->PulseRegisteredIfIdle(id)); };
         rawButtons_->Menus()->ShowEditorIslandWindow(std::move(context));rebuild_=true;
     })) return; // release는 소비만 하고 press는 실제 공장/부착/모달 등록을 수행한다.
+    if (transitionCode==kSaveGoMainCommand && !(event.code&InputCode::kRelease) && event.y && scenario_ && scenario_->Dirty()) { try { scenario_->Save(false); }catch (const std::exception& error) { warnings_->Add(FontBytes(error.what()));return; } } // sidecar 실패 전에 원문 nextState를 바꾸지 않아 보류 문서/현재 Editor를 유지한다.
     if (DispatchEditorSaveGoMain(event,client_.LocalStateGlobals()->State().next[0],[this] { if (client_.SurfaceStorage()->UsesNativeTransmissionDevices()) { SnapshotNativeCurrentMap(true);return; }if (!world_) throw std::logic_error("SaveGoMain의 현재 Session 없음");world_->Session().SaveCurrentMap(); })) return;
     if (transitionCode==0x02000079U) {
         if (!(event.code&InputCode::kRelease)) OpenSaveFortNameDialog(std::bit_cast<std::uint32_t>(event.y));

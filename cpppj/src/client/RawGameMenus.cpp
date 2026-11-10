@@ -81,6 +81,7 @@ std::uint32_t RawGameMenus::Game() const {
 // Editor행은SaveAs/NewFort 명령의인자1을보존하고다리수준0/1/2를별도하위메뉴로작성한다.
 std::uint32_t RawGameMenus::Edit() const {
     Need(hooks_.vertical)();Item("Save as...",0x5428dc,1U);Item("Add Island",0x542780);
+    if (hooks_.scenarioCommand) Need(hooks_.item)(Text("Scenario..."),*hooks_.scenarioCommand,0U,1,1); // 원문 Edit 메뉴 뒤에 명시 호환 기능만 더한다.
     Need(hooks_.vertical)();Item("Cracked",0x542a4c,0U);Item("Normal",0x542a4c,1U);Item("Hard",0x542a4c,2U);
     const auto bridge=Need(hooks_.take)();Need(hooks_.submenu)("Set All Bridge",bridge,1,0);return Need(hooks_.take)();
 }

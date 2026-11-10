@@ -46,11 +46,12 @@ void UberGump::OpenSaveFortNameDialog(std::uint32_t fortMode) {
     if (fortMode && (!world_ || !client_.GameplayGlobals()->world.editor)) throw std::logic_error("실제 Editor 밖의 Save as 파일 장치 미연결");
     if (!editor_) editor_=std::make_shared<EditorRuntime>(client_); // mode0 새 이름 창은 World/State1 이전에도 같은 작업 파일 장치를 빌린다.
     SaveFortNameDialogContext context;context.work=&editor_->files;context.currentName=client_.FortGlobals()->Current();context.editor.now=[this] { return client_.WallSeconds(); };
+    context.reportError=[this](auto error) { warnings_->Add(FontBytes(error)); }; // sidecar 충돌/권한 실패도 일반 이름 입력창을 닫지 않고 표시한다.
     BindTextClipboard(context.editor,textClipboard_); //최초 Chat이 이미 만든 공통 문자 UI와 같은 장치를 계속 빌린다.
     context.translate=[this](auto text) { return FontBytes(client_.Translate(o::DecodeOriginalText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };
     context.fortPath=[this](auto name) { mapFileSpec_.SelectFort();client_.FortGlobals()->SelectFileSpec();const auto configured=client_.Configuration().PathSpec(mapFileSpec_.Current(),name);return platform::PathToUtf8(editorCatalog_->Resolve(configured)); }; //같은 현재 FileSpec의 source/work 절대 경로도 명시 전체 매핑을 사용한다. Windows10/11 한글 경로는 원본 ANSI 대신 UTF-8다.
     context.header=[this] { const auto owner=client_.GameplayGlobals()->player.templateOwner;auto headers=templateStorage_->Headers();if (owner>=9 || headers.size()<static_cast<std::size_t>(owner+1U)*20U) throw std::out_of_range("Save as의 현재 Template 헤더 범위");return headers.subspan(static_cast<std::size_t>(owner)*20U,20); };
-    context.setName=[this](auto name) { SelectCurrentFortName(name); };context.tell=[this](auto section) { Tell(std::string(section)); };
+    context.setName=[this,fortMode](auto name) { if (fortMode && scenarioFiles_) { const auto current=std::string(client_.FortGlobals()->Current());if (scenario_ && scenario_->Map()==current && scenario_->Dirty()) scenario_->Save(true);scenarioFiles_->CopyAs(current,name); }SelectCurrentFortName(name);CloseScenarioUi(true); };context.tell=[this](auto section) { Tell(std::string(section)); }; // 명시 Save as만 sidecar를 복사하며 일반 ReadFort/이름 선택에는 섞지 않는다.
     context.readFort=[this](auto name) { const auto token=std::bit_cast<std::int32_t>(scriptStrings_.Store(name));client_.Input().PushCommand(kReadFortCommand,token,token); }; //원문 mode0은 같은 현재 이름 token을 두 인자에 복제하여 일반 입력 큐에 예약한다.
     rawButtons_->Menus()->ShowSaveFortNameDialog(std::move(context),fortMode,1); //원문 일반 입력은 event.y,1,NULL의 세 인자를 같은 공장에 전달한다.
 }
@@ -113,6 +114,7 @@ o::LocalMissionParentResult UberGump::InstallPreparedFortState(bool prefixHud,st
     checkpoint.invalid.erase=[&e](auto path) { e.files.Delete(path); }; // 원본 자산이 아닌 같은 작업본만 삭제한다.
     checkpoint.startup=EditorStartupStateHooks(); //State3과 같은 실제 기본 옵션/파일 부재 관문/벽시각 장치를 빌린다.
     if (!session.InstallExistingEditorCheckpoint(checkpoint,client_.ReadOnlyForts(),e.files)) return o::LocalMissionParentResult::ReturnWithoutCommit; // 원문 미션 분기는 공통 State1 확정도 생략한다.
+    if (client_.GameplayGlobals()->world.editor) { try { static_cast<void>(scenarioFiles_->EnsureEnglish(client_.FortGlobals()->Current())); }catch (const std::exception& error) { warnings_->Add(FontBytes(error.what())); } } // 정상 신규/기존 Editor 설치 뒤 사용자 work English만 생성한다. 삭제 표식/손상은 덮지 않는다.
     ExistingEditorAfterCheckpointEffects tail;tail.hud=[this](auto command) { rawButtons_->NotifyHudMode(command,1); };tail.wallSeconds=[this] { return client_.WallSeconds(); };
     tail.requestMusic=[this](auto name) { client_.WorldAudio().RequestMusic(name); };tail.fortPalette=[this] { const auto name=client_.Configuration().PathSpec("fortPal");client_.ChangeFortPalette({reinterpret_cast<const std::uint8_t*>(name.c_str()),name.size()+1}); };tail.islandCount=[&session] { return session.IslandCount(); };
     tail.battleOver=std::move(battleOver); // State6 앞단이 보관한 실제 결과/출처와 옵션 공장의 수명을 그대로 전달한다.

@@ -113,6 +113,17 @@ std::uint32_t SaveFortNameDialog::ShowInput(std::uint32_t mode,std::string_view 
     Buttons(token,Base(root.entry).y+Base(root.entry).baseHeight+15.0F);root.baseHeight+=4.0F;root.height=root.baseHeight*root.scale;root.baseWidth=std::max(root.baseWidth,Base(root.title).baseWidth+32.0F);root.width=root.baseWidth*root.scale;
     hooks_.attach(token,(static_cast<float>(state_.screenWidth)-root.baseWidth)*0.5F,(static_cast<float>(state_.screenHeight)-root.baseHeight)*0.5F,state_.entries[0],0);Need(hooks_.depth)(token,std::bit_cast<std::int32_t>(root.depth)-76);Need(hooks_.modal)(token);return token;
 }
+// 기존 ShowInput/Show/ShowMoney의 원문 기하·상한을 바꾸지 않는 Scenario 전용 생성이다.
+std::uint32_t SaveFortNameDialog::ShowScenarioInput(std::string_view title,std::int32_t maximum,bool multiline) const {
+    if (maximum<2 || maximum>16384) throw std::out_of_range("Scenario 입력 BYTE 상한 범위");
+    const auto width=static_cast<float>(std::clamp(state_.screenWidth-40,240,620)),height=static_cast<float>(multiline ? std::clamp(state_.screenHeight-100,160,360) : 120);
+    const auto token=Need(hooks_.allocate)(0x128);Need(hooks_.decoration)(token,width,height);auto& root=Node(token);root.vtable=0x00517d00U;root.command=68;root.fortMode=1;root.canCancel=1;
+    root.entry=hooks_.allocate(0x110);Need(hooks_.textEntry)(root.entry,static_cast<std::int32_t>(width)-36,multiline ? static_cast<std::int32_t>(height)-98 : 18,"");
+    auto* entry=Need(hooks_.entry)(root.entry);if (!entry) throw std::logic_error("Scenario 실제 편집 자식 없음");entry->maxLength=maximum;entry->multiline=multiline ? 1U : 0U;entry->showVertical=multiline ? 1U : 0U;entry->showHorizontal=1;
+    Need(hooks_.attach)(root.entry,18,42,token,0);const auto border=hooks_.allocate(0xb8);Need(hooks_.background)(border,Base(root.entry).baseWidth+8,Base(root.entry).baseHeight+4);hooks_.attach(border,14,40,token,0);
+    root.title=hooks_.allocate(0xa4);Need(hooks_.inputTitle)(root.title,width-28,Need(hooks_.translate)(title));hooks_.attach(root.title,14,10,token,0);Buttons(token,height-34);
+    hooks_.attach(token,(state_.screenWidth-width)*0.5F,(state_.screenHeight-height)*0.5F,state_.entries[0],0);Need(hooks_.depth)(token,std::bit_cast<std::int32_t>(root.depth)-76);Need(hooks_.modal)(token);return token;
+}
 // 실제 버튼 serial(+2c)과 Enter를 판정하고 callback 비영 복귀에서만 지연 Kill한다.
 std::uint32_t SaveFortNameDialog::Handle(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second) const {
     const auto code=event&0x03ffffffU;auto& root=Node(token);

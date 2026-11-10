@@ -1,5 +1,6 @@
 // 관찰 callback으로 게임 계산을 대신하지 않고 기존 원본 몸체의 실제 Session 소비자를 공급한다.
 #include "client/RawCampaignMissionStartBindings.h"
+#include "client/DisplayTextInput.h" // 기존 한국어 표시 토큰의 유효성을 공유한다.
 #include "o/OriginalText.h"
 #include <array>
 #include <cstdlib>
@@ -22,7 +23,7 @@ RawCampaignMissionStartBindings::RawCampaignMissionStartBindings(RawCampaignSess
 // 원본 atof의 좁은 문자열 변환과 현재 미션 문자열의 Windows-1252 경계를 사용한다.
 o::MissionAiSettingsHooks RawCampaignMissionStartBindings::AiHooks() {
     o::MissionAiSettingsHooks hooks;
-    hooks.get=[this](std::string_view key) { const auto bytes=o::EncodeOriginalText(script_.Get(key).value_or(std::string{}));return std::string(bytes.begin(),bytes.end()); };
+    hooks.get=[this](std::string_view key) { const auto name=o::AsciiLower(key);const bool display=name.size()>=4 && name.ends_with("name");const auto text=script_.Get(key).value_or(std::string{});const auto bytes=display ? o::EncodeDisplayText(text) : o::EncodeOriginalText(text);const std::string value(bytes.begin(),bytes.end());if (display && HasExtendedDisplayText(value) && bytes.size()>29) throw std::length_error("확장 AI 이름은 한글 표시토큰을 포함해29BYTE 이하여야 합니다");return value; }; // 새 확장 Name만 제한하고 기존 CP1252 대본의 원문 복사 규칙은 보존한다.
     hooks.parseFloat=[](std::string_view value) { const std::string text(value);return std::strtod(text.c_str(),nullptr); };
     hooks.unknownAbilityAssertion=[this](std::string_view name) { if (!effects_.unknownAbilityAssertion) throw std::logic_error("미션 AI의 실제 능력 이름 진단 미연결");effects_.unknownAbilityAssertion(name); };
     hooks.unknownAbilityLog=[this](std::string_view name) { if (!effects_.unknownAbilityLog) throw std::logic_error("미션 AI의 실제 능력 이름 기록 미연결");effects_.unknownAbilityLog(name); };

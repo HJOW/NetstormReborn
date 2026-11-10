@@ -26,6 +26,7 @@ public:
     std::filesystem::path Prepare(std::string_view configuredPath); //직접 Editor 진입도 같은 장부를 지키며 archive 실제 설치는 별도 명시 이관한다.
     std::vector<std::string> Enumerate(std::string_view configuredPattern); //이관 뒤 실제 work Win32 결과만 전달하며 논리 중복/디렉터리/명시 부재를 제거하지 않는다.
     std::optional<std::vector<std::uint8_t>> Read(std::string_view configuredPath); //분류/메타마다 현재 작업 파일을 읽고 완료 missing에서는 모든 source fallback을 막는다.
+    bool Deleted(std::string_view configuredPath); // 시나리오 자동 기본 생성도 완료 이관 후 삭제 표식을 우회하지 않게 한다.
 private:
     struct Impl; //source identity/검증된 metadata/잠금/버전 장부의 고정 owner다.
     std::unique_ptr<Impl> impl_; //World나 listener보다 오래 유지하는 실제 I/O 정책 수명이다.

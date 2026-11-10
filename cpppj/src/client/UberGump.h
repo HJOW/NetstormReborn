@@ -46,6 +46,7 @@ class TellFileMenus; // 실제 파일 목록의 등록 Config를 부모/미션�
 class TextClipboard; //같은 Client UI의 모든 문자 입력이 공유하는 실제 CF_TEXT 부모다.
 class EditorFortFileDevices; // 최초 캠페인 편집 요청에서도 같은 지연 작업 파일 장치를 사용한다.
 class EditorCatalogWorkspace; //목록/직접 Edit/이름 변경이 공유하는 장기 단일 namespace와 이관 장부다.
+class EditorScenarioFiles;class EditorScenarioController; // 실제 Editor 문서/사용자 파일과 별도 시나리오 UI owner다.
 struct LanLobbyBattle; // 대기실의 실제 명단/ACK 뒤 외부 State7으로 인계하는 요청이다.
 // 메뉴·브리핑·미션 페이지와 해당 UI 동작을 관리하는 처리기이다.
 class UberGump {
@@ -169,6 +170,11 @@ private:
     void PollEditorState(); //메인/Edit/인트로39~41과 후속4를 같은 Native State 분배기로 소비한다.
     o::LocalMissionParentResult InstallIntroNativeState(std::uint32_t selected); // 실제 Client 준비/영상 경계와 Native39~41 부모를 연결한다.
     void OpenSaveFortNameDialog(std::uint32_t fortMode); //현재 Editor의 실제 파일/헤더/이름 부모를 원문 fortMode 인자의 TextEntry 모달에 연결한다.
+    bool ScenarioEvent(const InputEvent& event); // Editor 전용 새 명령/ESC만 소비하고 원문 입력은 그대로 넘긴다.
+    void OpenScenarioPage(std::uint32_t page); // 현재 문서의 실효값/원문 필드 페이지를 실제 Gump에 작성한다.
+    void OpenScenarioField(std::uint32_t field); // 같은 TextEntry/IME/MCP 일반 입력 모달로 한 필드를 편집한다.
+    void CloseScenarioUi(bool discard); // 패널/편집 모달의 실제 토큰만 Kill하고 취소 시 보류 문서를 반납한다.
+    void PrepareScenarioTest(); // Fort snapshot 정상 복귀 뒤 같은 사용자 sidecar를 저장/보장한다.
     void OpenSendMoneyDialog(std::uint32_t target); // 원본 숫자 창의 대상·현재 입력·확정이 같은 월드를 빌린다.
     o::LocalMissionParentResult InstallExistingEditorState(std::uint32_t selected); //State1의 정리/prefix/현재 파일/UI tail을 실행하며 공통 확정은 분배기에 맡긴다.
     o::LocalMissionParentResult InstallPreparedFortState(bool prefixHud,std::function<void()> battleOver={}); // 같은 Native 앞단 뒤 파일/월드/꼬리를 연결한다. false는 State3의 HUD 중복을 피하고 현재6은 실제 후반 옵션/결과 장치를 요구한다.
@@ -282,6 +288,9 @@ private:
     SoloMapFileSpec& mapFileSpec_; // 같은 Client의9BYTE FileSpec 키를 페이지/Session 교체 뒤에도 직접 빌린다.
     std::unique_ptr<SoloMapCatalog> mapCatalog_; // 현재 파일 캐시/dirty/이름을 Client 수명에 소유한다.
     std::shared_ptr<EditorCatalogWorkspace> editorCatalog_; //World/listener 반납 뒤에도 같은 작업 폴더와 durable 삭제 상태를 유지한다.
+    std::shared_ptr<EditorScenarioFiles> scenarioFiles_; // Script/World 반납 뒤 TestBattle reader도 같은 작업 namespace를 유지한다.
+    std::unique_ptr<EditorScenarioController> scenario_; // 현재 맵의 보류 시나리오만 소유하며 월드 전환 때 반납한다.
+    std::uint32_t scenarioPage_{},scenarioToken_{}; // 실제 현재 페이지/모달 토큰이며 명령 ID나 성공 상태를 합성하지 않는다.
     std::shared_ptr<TellFileMenus> fileMenus_; // 기존 Tell과 실제 전체 HTML 메타가 같은 @/# Config를 공유한다.
     std::string mapUserName_; // 원본 초기 빈 사용자 이름이며 두 Fort 이름 버퍼와 다르다.
     std::uint32_t& fortSelectionMode_; // 같은 Client005cae84이며 Ask의2와 진행State1을 구별한다.

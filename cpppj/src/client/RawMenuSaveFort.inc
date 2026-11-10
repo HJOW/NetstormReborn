@@ -15,6 +15,9 @@ std::uint32_t AllocateSaveFort(std::size_t bytes) {
 // 현재 창의 실제 편집 버퍼와 동일 작업본 경로/헤더/전체 이름 부모를 묶는다.
 std::uint32_t AcceptSaveFort(std::uint32_t token) {
     const auto& context=saveFortContexts.at(token);auto& root=*saveFortRoots.at(token);SaveFortNameConfirmHooks effects;
+    if (context.editorAccept) {
+        const auto* node=textEntries->Node(root.entry);if (!node) throw std::logic_error("Scenario 확정의 실제 편집 노드 없음");const auto* buffer=textEntries->Storage().Find(node->buffer);if (!buffer) throw std::logic_error("Scenario 확정의 실제 문자 저장소 없음");return context.editorAccept(buffer->Text()) ? 1U : 0U;
+    } // Native256BYTE scratch 대신 같은 실제 버퍼의 명시 길이를 읽으며 임의 상태를 주입하지 않는다.
     if (context.battleDescription) { std::array<char,256> text;static_cast<void>(textEntries->Backend().CopyText(root.entry,text));context.battleDescription(ConfirmNativeMetaBattleDescription(text));return 1; } //004c92c0은 실제 CopyText→255번째NUL→LF→현재권한/전송 뒤 항상1을 반환한다.
     if (context.htmlInput) { HtmlInputConfirmHooks inputEffects;inputEffects.copyText=[this,&root](auto output) { static_cast<void>(textEntries->Backend().CopyText(root.entry,output)); };inputEffects.space=[](auto code) { return std::isspace(code); };inputEffects.parseLong=[](auto text) { return o::ConfigParseLong(text); };
         inputEffects.format=[](auto section,auto input) { std::array<char,256> text{};const std::string key(section),value(input);const auto count=std::snprintf(text.data(),text.size(),"%s(%s)",key.c_str(),value.c_str());if (count<0 || static_cast<std::size_t>(count)>=text.size()) throw std::length_error("HTML 입력 확인의256BYTE 서식 범위");return std::string(text.data(),static_cast<std::size_t>(count)); };inputEffects.tell=context.tell;return ConfirmHtmlInput(root.fortMode,root.inputSection,inputEffects); } //004cfae0의같은실제CopyText/CRT/Tell이다.설정에직접쓰지않는다.
@@ -23,7 +26,7 @@ std::uint32_t AcceptSaveFort(std::uint32_t token) {
     effects.alnum=[](auto value) { return std::isalnum(value); };effects.path=context.fortPath;
     effects.exists=[&context](auto path) { const auto relative=std::filesystem::path(path).is_absolute() ? std::string(path) : o::NormalizeGamePath(path);std::error_code error;return std::filesystem::exists(context.work->ResolvePath(relative),error) ? 1 : 0; }; // 원문 GetFileAttributesA처럼 디렉터리도 비영이며 작업본 경계는 동일하게 검사한다.
     effects.header=context.header;effects.setName=context.setName;effects.tell=context.tell;effects.readFort=context.readFort;
-    return ConfirmSaveFortName(root.fortMode,effects);
+    try { return ConfirmSaveFortName(root.fortMode,effects); }catch (const std::exception& error) { if (!context.reportError) throw;context.reportError(error.what());return 0; } // 명시 파일 실패는 원본/이전 파일을 보존하고 편집창에서 재시도하게 한다.
 }
 // 이미 복원된 공통 처리기에 하위 계산을 맡기고 새 파생 부모의 조회/수명만 추가한다.
 void BindSaveFortDialog() {
@@ -43,7 +46,7 @@ void BindSaveFortDialog() {
     h.stone=[this](auto token,auto text) { const std::string terminated(text);common.stones.Construct(token,70,18,terminated.c_str(),palette.named.at(8).index,nullptr); };
     h.fitTitle=[this](auto token) { costText->Fit(token); };h.fitStone=[this](auto token) { common.stones.FitToText(token); };h.push=[this](auto token) { common.tree.Push(token); };h.attach=common.attach;
     h.depth=[this](auto token,auto depth) { common.tree.AddDepth(token,std::bit_cast<std::uint32_t>(depth)); };h.modal=[this](auto token) { SetModal(token,true); };h.kill=[this](auto token) { common.lifetime.Kill(token); };
-    h.accept=[this](auto token) { return AcceptSaveFort(token); };h.cancel=[this](auto token) { const auto& root=*saveFortRoots.at(token);return CancelSaveFortName(root.canCancel,saveFortContexts.at(token).tell); };
+    h.accept=[this](auto token) { return AcceptSaveFort(token); };h.cancel=[this](auto token) { const auto& context=saveFortContexts.at(token);if (context.editorCancel) { context.editorCancel();return 1U; }const auto& root=*saveFortRoots.at(token);return CancelSaveFortName(root.canCancel,context.tell); };
     h.baseHandle=[this](auto token,auto event,auto first,auto second) { return BaseHelp(token,event,first,second); };
     h.translate=[this](auto text) { if (!saveFortBuilding || !saveFortBuilding->translate) throw std::logic_error("Save as 현재 번역 장치 미연결");return saveFortBuilding->translate(text); };
     saveFortDialog=std::make_unique<SaveFortNameDialog>(common.create,std::move(h));

@@ -4,6 +4,7 @@
 #include <array>
 #include <span>
 #include <variant>
+#include <optional>
 
 namespace netstorm::client {
 // 숫자DWORD와 NUL 종료 원문 문자열 인자를 구별한다. 실제 고리는 GUI 바인더가 공급한다.
@@ -12,6 +13,7 @@ using GameMenuParameter=std::variant<std::uint32_t,std::string>;
 struct GameMenuLanguage { std::string label; std::uint32_t number; bool checked; };
 // 상위 메뉴가 실제 원문 시점에 조회하는 게임·설정·GUI 의존이다.
 struct GameMenusHooks {
+    std::optional<std::uint32_t> scenarioCommand; // 실제 클론 Editor에만 주어지는 Scenario 행이다. 기본 없음이면 원문 메뉴/fixture를 보존한다.
     std::function<std::uint32_t(std::uint32_t)> global; // 주소로 지정한 원본 전역의 현재DWORD/BYTE다. 별도 캐시 모드로 대체하지 않는다.
     std::function<std::int32_t(std::string_view)> config; //00441090의 현재 GetInt다.
     std::function<void(std::string_view,std::int32_t&)> readInt; //00441270의 누락시기존값을보존하는ReadInt다.

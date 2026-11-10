@@ -3866,3 +3866,9 @@ netstorm_apply_compiler_options(netstorm_error_log_tests)
 # 한국어 입력/본문의 창 없는 검사이며 기존 원문 fixture 파일은 그대로다(K1, 1270).
 target_sources(netstorm_tests PRIVATE DisplayTextInputTests.cpp KoreanResourcesIntegrationTests.cpp)
 target_sources(netstorm_korean_text_tests PRIVATE DisplayTextInputTests.cpp KoreanResourcesIntegrationTests.cpp)
+
+# S1: 시나리오 문서 모델 10개와 Editor 시나리오 통합 9개 검사다(창 없는 일반 검사, 1277).
+target_sources(netstorm_tests PRIVATE ScenarioDocumentTests.cpp EditorScenarioIntegrationTests.cpp)
+add_executable(netstorm_editor_scenario_tests FocusedTestMain.cpp ScenarioDocumentTests.cpp EditorScenarioIntegrationTests.cpp)
+target_link_libraries(netstorm_editor_scenario_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_editor_scenario_tests)

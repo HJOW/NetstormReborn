@@ -27,6 +27,10 @@ std::uint32_t ConfirmSaveFortName(const std::uint32_t& fortMode,const SaveFortNa
 std::uint32_t CancelSaveFortName(const std::uint32_t& canCancel,const std::function<void(std::string_view)>& tell);
 // 실제 Client가 제공하는 현재 장치이며 매 창의 callback은 해당 모달보다 오래 살아야 한다.
 struct SaveFortNameDialogContext {
+    std::function<bool(std::string_view)> editorAccept; // 클론 Scenario 전용 확정이며 false면 같은 편집창을 유지한다.
+    std::function<void()> editorCancel; // Scenario 취소 후 실제 패널로 돌아가는 일반 명령을 예약한다.
+    bool editorMultiline{}; // Scenario 본문 Enter는 줄바꿈이고 OK 버튼으로만 확정한다.
+    std::function<void(std::string_view)> reportError; // 클론 파일 작업 실패를 같은 창에 안내한다. 기본 없음이면 원문 예외 계약이다.
     bool htmlInput{}; //파일/송금과 구별되는 HTML Input 형제 창이며 같은 Tell 확인을 선택한다.
     std::function<std::uint32_t(const std::uint32_t&,std::string_view)> sendMoney; // 원본+d4를 참조로 빌려 자금 조회 뒤 현재 대상을 저장하는 같은 숫자 확정을 사용한다.
     const EditorFiles* work{}; // 보호 원본과 구별된 실제 namespace를 반드시 지정한다.
@@ -60,6 +64,7 @@ struct SaveFortNameDialogHooks {
 // 원본004d3250/004d3490과00487460을 같은 저장소에 실행한다.
 class SaveFortNameDialog {
 public:
+    std::uint32_t ShowScenarioInput(std::string_view title,std::int32_t maximum,bool multiline) const; // 원문 공통 장식/편집/두 버튼을 재사용하는 별도 클론 대형 입력 모달이다.
     SaveFortNameDialog(GumpCreateState& state,SaveFortNameDialogHooks hooks); // 공통 등록표와 실제 장치를 빌린다.
     std::uint32_t Show(std::uint32_t fortMode,std::uint32_t canCancel,std::string_view current,std::optional<std::string_view> initial={}) const; // 실제 모달 root 토큰이다.
     std::uint32_t ShowMoney(std::uint32_t target) const; //004d3860/004d3b60의 숫자 전용 형제 창이며 공통 장식/두 버튼을 재사용한다.
