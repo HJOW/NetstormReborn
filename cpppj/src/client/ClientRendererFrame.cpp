@@ -297,7 +297,17 @@ void ClientRendererFrame::HighlightDeveloperPoint(float x,float y) {
     }
     screen.PresentPaletteClear(); //4a46d0만 실행하며 장면 재그리기/Frame/flip을 추가하지 않는다.
 }
+// 원문 434970: 497220으로 투영한 화면점(오른쪽 아래)과 현재 칸 크기(0059a908/90c)로 한 칸 사각형을 만들고, 한 겹씩 줄이며 세 번 4a2270으로 그린다(M7.4, 1271).
+void ClientRendererFrame::DrawPathMarker(float x,float y,std::uint32_t color) {
+    if (!client_.screen_) throw std::logic_error("이동 진단 표시의 현재 Screen 미설치");
+    const auto& view=client_.gameplayGlobals_->Camera().Snapshot();const auto point=ProjectCameraView(view,x,y);
+    for (const auto& rectangle:PathMarkerRectangles(point,view.cellPixels)) DrawOutlineRectangle(rectangle,color); // 같은 4a2270 장치로 세 겹을 차례로 그린다.
+}
+// 원문 4a46d0: 전체 viewport 출력과 clip 복구이며 장면 재그리기/Frame/flip은 하지 않는다(M7.4, 1271).
+void ClientRendererFrame::PresentCursorClear() { if (!client_.screen_) throw std::logic_error("커서 갱신의 현재 Screen 미설치");client_.screen_->PresentPaletteClear(); }
 // 실제 현재 Frame 장치가 동일 Screen의 private Native 출력 경계를 소유한다.
+void Client::DrawNativePathMarker(float x,float y,std::uint32_t color) { if (!rendererFrame_) throw std::logic_error("이동 진단 표시의 실제 Renderer owner 미설치");rendererFrame_->DrawPathMarker(x,y,color); } // M7.4(1271).
+void Client::PresentNativeCursorClear() { if (!rendererFrame_) throw std::logic_error("커서 갱신의 실제 Renderer owner 미설치");rendererFrame_->PresentCursorClear(); } // M7.4(1271).
 void Client::HighlightDeveloperPoint(float x,float y) { if (!rendererFrame_) throw std::logic_error("개발자 강조의 실제 Renderer owner 미설치");rendererFrame_->HighlightDeveloperPoint(x,y); }
 
 // 정상 Draw의 잠금 반납 뒤·Present 앞에서 원문4994b0 말미의 dirty 정리를 실행한다.

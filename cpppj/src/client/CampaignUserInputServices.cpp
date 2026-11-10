@@ -15,9 +15,11 @@ void BindCampaignUserInputServices(Client& client,GameWorld& world,std::function
     UserHighlightHooks highlight;highlight.selectCursor=selectCursor;CarrierInputHooks carrier;carrier.selectCursor=std::move(selectCursor); //선택강조/폴링/건설커서가 동일한 실제 장치를 쓴다.
     carrier.assertion=[](std::uint32_t line) { throw std::logic_error("원본 Carrier.cpp 사용자입력 진단 "+std::to_string(line)); };
     // 운반물 내려놓기427070의 게임 계산과 전송은 같은 Session의 MakeCarrierInput이 연결한다.
-    carrier.earlyLocal=[] { throw std::logic_error("원본4cf960 조기 희생 안내 UI 미연결"); };carrier.earlyRemote=[](std::uint32_t) { throw std::logic_error("원본 EarlySacrifice 원격 안내 미연결"); };
+    carrier.earlyLocal=[tell] { if (!tell) throw std::logic_error("원본4cf960 조기 희생 안내의 실제 Tell 미연결");tell("EarlySacrifice"); }; // 원문 42a538: 로컬 사제 소유자에게 4cf960("EarlySacrifice")=4cf730 Tell을 연다(M7.3, 1271). tell은 아래 showSacrifice가 이동하기 전에 복사한다.
+    carrier.earlyRemote=[&world](std::uint32_t owner) { world.Session().SendPlayerTell(owner,"EarlySacrifice"); }; // 원문 42a545: 다른 소유자에게 4c9150(owner,"EarlySacrifice")의 70h Tell 패킷을 보낸다(M7.3, 1271). MP 송수신 실행은 하지 않는다.
     carrier.showSacrifice=[&world,tell=std::move(tell)](auto target) { world.Session().ShowSacrificeMenu(target,tell); }; //원문미션관문을그대로두고비미션의같은Tell/전체기술메뉴를연결한다.신규MP검사는하지않는다.
-    carrier.marker=[](o::RawPathPoint,std::uint32_t) { throw std::logic_error("원본434970 이동 진단 표시 미연결"); };carrier.refreshCursor=[] { throw std::logic_error("원본4a46d0 이동 진단 커서 갱신 미연결"); };
+    carrier.marker=[&client](o::RawPathPoint point,std::uint32_t color) { client.DrawNativePathMarker(point.x,point.y,color); }; // 원문 434970 이동 진단 표시다(M7.4, 1271).
+    carrier.refreshCursor=[&client] { client.PresentNativeCursorClear(); }; // 원문 4a46d0 즉시 viewport 출력이다(M7.4, 1271).
     world.BindUserInput(std::move(selection),std::move(highlight),std::move(carrier));
 }
 }

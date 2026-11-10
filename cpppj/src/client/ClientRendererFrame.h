@@ -29,6 +29,8 @@ public:
     void DrawDiagnosticsAfterWater(); //같은부모의Board는DrawWater뒤·Present앞이다.
     void DrawWater(); //00436450의 capture 뒤·499fe0 앞에서00434dd0의 같은 현재 물리/Screen을 표시한다.
     void HighlightDeveloperPoint(float x,float y); // 현재 snapshot으로 투영한 좌표의 원문 세 겹 강조이며 Frame/난수는 진행하지 않는다.
+    void DrawPathMarker(float x,float y,std::uint32_t color); // 434970: 투영한 점을 오른쪽 아래로 하는 한 칸 크기 사각형을 세 겹으로 그린다(M7.4, 1271).
+    void PresentCursorClear(); // 4a46d0: 전체 viewport 즉시 출력과 clip 복구만 실행한다(M7.4, 1271).
     void UpdateMetaBattle(std::uint32_t battle); //현재 특정 전투만 같은 실제 표시 장치로 갱신하며 전체 Poll을 실행하지 않는다.
     void UpdateMetaParticipant(std::uint32_t participant,std::uint8_t mask); //현재 특정 참가자만 원문 마스크로 같은 CS/Pool/이름표에 갱신한다.
     void SetMetaParticipantStatus(std::int32_t kind,std::int32_t participant,bool enabled); //현재 실제 UI의 같은 MessageBoard에 참가자 상태 생성/제거를 전달한다.

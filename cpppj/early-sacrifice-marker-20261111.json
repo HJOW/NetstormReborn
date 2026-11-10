@@ -1,0 +1,58 @@
+{
+  "unit": 1271,
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "version": "11.01",
+  "scope": "M7.3 + M7.4",
+  "originalAddresses": {
+    "caller": "0042a360 case 0x11 (42a525..42a54f)",
+    "earlyLocal": "004cf960(\"EarlySacrifice\" @503d30)",
+    "earlyRemote": "004c9150(owner,\"EarlySacrifice\")",
+    "marker": "00434970",
+    "refreshCursor": "004a46d0",
+    "rectangle": "004a2270"
+  },
+  "build": {
+    "seconds": 356.0,
+    "exitCode": 0,
+    "warningsOrErrors": 0
+  },
+  "tests": {
+    "newPassed": [
+      "PathMarker_ThreeShrinkingCellRectanglesFollowOriginalOrder",
+      "PathMarker_WrapsSignedDwordWithoutUndefinedBehavior"
+    ],
+    "menu_session": {
+      "total": 256,
+      "failedCases": 6,
+      "sameNamesAs1270": true
+    }
+  },
+  "live": {
+    "mission": "tutorial4",
+    "gameTimeSeconds": [
+      13.801,
+      24.297
+    ],
+    "exitCode": 0,
+    "commandErrors": []
+  },
+  "protectedFiles": {
+    "count": 2808,
+    "unchanged": true
+  },
+  "excluded": "사제 희생/포획·특정 적 공격·승리·MP 송수신 실행 없음",
+  "limits": [
+    "조기 희생 안내 실제 UI/패킷은 사용자 직접 확인",
+    "marker 픽셀은 개발용 전역 필요로 미실행"
+  ],
+  "sourceSha256": {
+    "cpppj/src/client/CampaignUserInputServices.cpp": "b002f9479c1caf5bdfe1af3d7d82aef889dd5803a82fa3f45447e36a3cc6fb2b",
+    "cpppj/src/client/ClientMain.h": "8bb24555cb906aff1701b4b7c0918e620ea9b79cc1f0c7fd0806fd13bccdf417",
+    "cpppj/src/client/ClientRendererFrame.cpp": "97512c9d3c026c23483c24ac6cb9a1f9f1de5d5a609c80c494da61f3dd36c63b",
+    "cpppj/src/client/ClientRendererFrame.h": "0b3237242c8da110cd21358ca5cb7a7fece76152d9a23a14be1f4d92b536687b",
+    "cpppj/src/client/DrawWater.cpp": "d5175044b3e9b77213c87943da308d49f6e278a3907bc1af53f6e812855a7a4e",
+    "cpppj/src/client/DrawWater.h": "b2de715c08eca969c2c87164ec8e69cbe09dcaf3962a66b6b492c873541662af",
+    "cpppj/tests/DrawWaterTests.cpp": "edfa7c4f2ed70d4c9cf801a253785c156136ed46b9c21ae8c49002fe1134ffe8"
+  }
+}

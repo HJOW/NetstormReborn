@@ -86,3 +86,18 @@ TEST_CASE(DrawWater_PostSceneIndependentOfDirtyAndScreenClip) { //같은 실제 
     renderer.Draw(d.pixels,kPitch);renderer.Present([](auto) {});CHECK(renderer.CameraDirtyEntries().empty());
     std::uint32_t regularPresents{};renderer.Draw(d.pixels,kPitch);d.Draw();renderer.Present([&](auto) { ++regularPresents; });CHECK(!regularPresents && d.presents==1 && d.rects==0 && RectText(d.clip)=="5:7:91:73"); //후보0개/dirty0이어도 원문 즉시 viewport 출력은 별도이며 지형/배경 표시를 끄지 않는다.
 }
+
+// M7.4(1271): 원문 434970의 세 겹 사각형 좌표를 순서와 감김까지 확인한다.
+TEST_CASE(PathMarker_ThreeShrinkingCellRectanglesFollowOriginalOrder) {
+    const auto rectangles = netstorm::client::PathMarkerRectangles({100, 80}, {16, 11}); // 오른쪽 아래가 투영점이고 칸 크기 16x11이다.
+    CHECK(rectangles[0].left == 85 && rectangles[0].top == 70 && rectangles[0].right == 99 && rectangles[0].bottom == 79);
+    CHECK(rectangles[1].left == 86 && rectangles[1].top == 71 && rectangles[1].right == 98 && rectangles[1].bottom == 78);
+    CHECK(rectangles[2].left == 87 && rectangles[2].top == 72 && rectangles[2].right == 97 && rectangles[2].bottom == 77);
+}
+// 음수/경계 좌표도 signed DWORD 감김으로 정의된 값을 만든다.
+TEST_CASE(PathMarker_WrapsSignedDwordWithoutUndefinedBehavior) {
+    const auto rectangles = netstorm::client::PathMarkerRectangles({-2147483647 - 1, 2147483647}, {-1, 5});
+    CHECK(rectangles[0].right == 2147483647 && rectangles[0].bottom == 2147483646); // INT_MIN-1이 INT_MAX로 감긴다.
+    CHECK(rectangles[0].left == -2147483646); // 첫 겹 left는 point-cell+1이다: INT_MIN-(-1)+1.
+    CHECK(rectangles[2].bottom == 2147483644 && rectangles[2].top == 2147483647 - 5 + 3);
+}

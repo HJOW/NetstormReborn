@@ -45,6 +45,15 @@ void RawDrawWater::Draw(const RawCameraViewState& renderer,const RawCameraViewSt
     Need(hooks.present)(); //후보가0개여도 flag가 비영이면 전체 viewport 출력/clip 복구를 한 번 실행한다.
 }
 //원문 wrapper와 같은 상단/하단/왼쪽/오른쪽 순서이며 뒤 선이 같은 모서리를 다시 쓴다.
+// 434970의 do-while 세 번 반복을 좌표 계산만으로 옮긴다. 감김은 부호 없는 DWORD 연산으로 정의된 동작으로 보존한다(M7.4, 1271).
+std::array<ScreenRect,3> PathMarkerRectangles(std::array<std::int32_t,2> point,std::array<std::int32_t,2> cellPixels) {
+    const auto bits=[](std::int32_t value) { return std::bit_cast<std::uint32_t>(value); };const auto wrap=[](std::uint32_t value) { return std::bit_cast<std::int32_t>(value); };
+    std::int32_t right=point[0],bottom=point[1],left=wrap(bits(point[0])-bits(cellPixels[0])),top=wrap(bits(point[1])-bits(cellPixels[1])); // local_8/local_4와 iVar1/iVar2다.
+    std::array<ScreenRect,3> result{};
+    // 먼저 줄이고 기록하는 세 겹 반복이다.
+    for (auto& rectangle:result) { bottom=wrap(bits(bottom)-1U);right=wrap(bits(right)-1U);top=wrap(bits(top)+1U);left=wrap(bits(left)+1U);rectangle=ScreenRect{left,top,right,bottom}; }
+    return result;
+}
 void DrawWaterRectangle(std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect fullClip,ScreenRect rectangle,std::uint32_t color) {
     const auto right=Add(rectangle.right,0xffffffffU),bottom=Add(rectangle.bottom,0xffffffffU);
     DrawVfxLine(pixels,pitch,height,fullClip,{rectangle.left,rectangle.top},{right,rectangle.top},color);

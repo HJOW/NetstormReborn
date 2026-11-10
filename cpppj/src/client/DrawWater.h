@@ -30,4 +30,6 @@ private:
 };
 //원문004a2270의 네 선을 기존 실제 VFX로 그린다. right/bottom -1을 감김으로 보존하고 역전/0폭을 임의 생략하지 않는다.
 void DrawWaterRectangle(std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect fullClip,ScreenRect rectangle,std::uint32_t color);
+// 원문 434970의 세 겹 사각형 좌표다. 투영한 화면점을 오른쪽 아래로 하고 현재 칸 크기(0059a908/90c)만큼 왼쪽 위를 정한 뒤, 매 겹마다 먼저 한 픽셀씩 줄인다(signed DWORD 감김 보존, M7.4, 1271).
+std::array<ScreenRect,3> PathMarkerRectangles(std::array<std::int32_t,2> point,std::array<std::int32_t,2> cellPixels);
 }

@@ -250,6 +250,8 @@ public:
     void WriteDiagnosticLog(std::int32_t level,std::string_view text,std::size_t prefixBytes=0); // 서식 후 바이트를 같은 현재1024BYTE 로그에 전달한다.
     void TraceObject(std::uint32_t sid); // 선택한 실제 SID의 가상+70/모든 Form 재귀를 실행한다.
     void HighlightDeveloperPoint(float x,float y); //4345e0의 세 겹 노란 사각형과 즉시 viewport 출력을 같은 Renderer 장치에 요청한다.
+    void DrawNativePathMarker(float x,float y,std::uint32_t color); //434970의 이동 진단 사각형 세 겹을 같은 Renderer 장치에 요청한다(M7.4, 1271).
+    void PresentNativeCursorClear(); //4a46d0의 전체 viewport 즉시 출력/clip 복구를 같은 Renderer 장치에 요청한다(M7.4, 1271).
     void UpdateNativeMetaBattle(std::uint32_t battle); //현재 특정 전투만 기존00479c40/같은Renderer·CS·Gump 장치로 갱신한다.
     void UpdateNativeMetaParticipant(std::uint32_t participant,std::uint8_t mask); //0047d8c0의 지정한 참가자/마스크를 기존 실제 Frame 장치에 전달한다.
     void SetNativeMetaParticipantStatus(std::int32_t kind,std::int32_t participant,bool enabled); //004d3090의 같은20칸에 참가자 안내 생성/제거를 요청하며 매개변수0/빈 문자열을 사용한다.
