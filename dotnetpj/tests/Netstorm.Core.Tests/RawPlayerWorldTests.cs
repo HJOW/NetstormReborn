@@ -553,4 +553,115 @@ public sealed class RawPlayerWorldTests
         Assert.Equal(8, pool.Slot(Source)[CdOwnerOffset]);
         Assert.Equal(0, pool.Slot(Source)[CdFrameOffset]);
     }
+
+    /// <summary>확보 효과 뒤 바뀐 special을 읽고 직접 프레임 1을 쓴다. 2026-11-10 F3 미뤄 둔 전수 재생(0.299)에서 추가됐다.</summary>
+    [Fact]
+    public void PostPopFailedReserveUsesCurrentSpecialAndPhysicalFrame()
+    {
+        // cpp `PlayerParentCurrent_FailedReserveUsesCurrentSpecialAndPhysicalFrame`의 순서 계약이다.
+        var pool = Pool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true, Depth = 1u };
+        var inner = Base(pool, types, book);
+        var records = Records();
+        var state = new PlayerWorldState();
+        var events = new List<string>();
+        var hooks = new PlayerWorldHooks
+        {
+            ReserveRegular = () =>
+            {
+                events.Add("N");
+                // 먼저 쓴 Technology를 확인한 뒤 예약을 거절하고 special을 바꾼다.
+                Assert.Equal((uint)Source, Get(records, 0xb4 + 0x9c));
+                state.Special = 256u;
+                state.BattleOwner = 8u;
+                return false;
+            },
+            AddRegular = (sid, ev, payload) => events.Add("R"),
+        };
+        var body = new RawPlayerWorld(pool, inner, records, state, hooks);
+        Fill(pool, PlayerVtable);
+        body.PostPop(Source, 1u);
+        Assert.Equal(["N"], events);
+        Assert.Equal((uint)Source, Get(records, 0xb4 + 0x9c));
+        Assert.Equal(0u, Get(records, 8 * 0xb4 + 0x9c));
+        Assert.Equal(1u, Get(pool.AllocatedBytes(Source), FrameOffset));
+        Assert.Equal(0u, book.Depth);
+    }
+
+    /// <summary>성공한 확보 뒤 생성자 장치 실패는 기록·확보를 남긴다. 2026-11-10 F3 미뤄 둔 전수 재생(0.299)에서 추가됐다.</summary>
+    [Fact]
+    public void PostPopMissingAddRegularKeepsSuccessfulReservation()
+    {
+        // cpp `PlayerParentCurrent_MissingConstructorKeepsSuccessfulReservation`의 순서 계약이다.
+        var pool = Pool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true, Depth = 1u };
+        var inner = Base(pool, types, book);
+        var records = Records();
+        var state = new PlayerWorldState();
+        var events = new List<string>();
+        var hooks = new PlayerWorldHooks
+        {
+            ReserveRegular = () => { events.Add("N"); return true; },
+            AddRegular = null,
+        };
+        var body = new RawPlayerWorld(pool, inner, records, state, hooks);
+        Fill(pool, PlayerVtable);
+        Assert.ThrowsAny<Exception>(() => body.PostPop(Source, 1u));
+        Assert.Equal(["N"], events);
+        Assert.Equal((uint)Source, Get(records, 0xb4 + 0x9c));
+        Assert.Equal(1u, book.Depth);
+    }
+
+    /// <summary>생성 효과 뒤 special을 다시 읽으며 처음 관문을 재검사하지 않는다. 2026-11-10 F3 미뤄 둔 전수 재생(0.299)에서 추가됐다.</summary>
+    [Fact]
+    public void PostPopRegularMutationCanDisableLaterSpecialFrame()
+    {
+        // cpp `PlayerParentCurrent_RegularMutationCanDisableLaterSpecialFrame`의 순서 계약이다.
+        var pool = Pool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true, Depth = 1u };
+        var inner = Base(pool, types, book);
+        var records = Records();
+        var state = new PlayerWorldState { Special = 1u };
+        var events = new List<string>();
+        var hooks = new PlayerWorldHooks
+        {
+            ReserveRegular = () => { events.Add("N"); return true; },
+            AddRegular = (sid, ev, payload) =>
+            {
+                events.Add("R");
+                state.Special = 0u;
+                state.FortMode = true;
+            },
+        };
+        var body = new RawPlayerWorld(pool, inner, records, state, hooks);
+        Fill(pool, PlayerVtable);
+        body.PostPop(Source, 1u);
+        Assert.Equal(["N", "R"], events);
+        Assert.Equal(0xdeadbeefu, Get(pool.AllocatedBytes(Source), FrameOffset));
+        Assert.Equal((uint)Source, Get(records, 0xb4 + 0x9c));
+        Assert.Equal(0u, Get(records, 0x9c));
+        Assert.Equal(0u, book.Depth);
+    }
+
+    /// <summary>바이트 소유자 1과 현재 DWORD 257은 다르지만 special 프레임은 독립해서 실행한다. 2026-11-10 F3 미뤄 둔 전수 재생(0.299)에서 추가됐다.</summary>
+    [Fact]
+    public void PostPopFullLocalOwnerDwordDoesNotSelectReservation()
+    {
+        // cpp `PlayerParentCurrent_FullLocalOwnerDwordDoesNotSelectReservation`의 순서 계약이다.
+        var pool = Pool();
+        var types = Types();
+        var book = new RawPostPopState { Suppressed = true, Depth = 1u };
+        var inner = Base(pool, types, book);
+        var records = Records();
+        var state = new PlayerWorldState { BattleOwner = 257u, Special = 1u };
+        var body = new RawPlayerWorld(pool, inner, records, state, new PlayerWorldHooks());
+        Fill(pool, PlayerVtable);
+        body.PostPop(Source, 1u);
+        Assert.Equal(1u, Get(pool.AllocatedBytes(Source), FrameOffset));
+        Assert.Equal((uint)Source, Get(records, 0xb4 + 0x9c));
+        Assert.Equal(0u, book.Depth);
+    }
 }
