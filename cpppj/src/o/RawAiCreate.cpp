@@ -26,9 +26,11 @@ std::uint32_t RawAiCreate::Create(std::uint32_t owner,std::span<const std::uint8
     if (Field(settings,0x244)!=0) { const auto region=Need(hooks_.firstRegion,"AiCreate실제첫지역조회누락")(owner);const auto temple=Need(hooks_.islandTemple,"AiCreate실제지역신전조회누락")(region);if (temple!=0) Need(hooks_.destroyTemple,"AiCreate실제신전삭제누락")(temple,0x400000);return 0; }
     // 공급 누락으로 부착만 성공하지 않게 두 큰 몸체를 생성 전에 확인한다.
     Need(hooks_.construct,"AI실제생성자00416860미복원");Need(hooks_.initialUpdate,"AI실제초기갱신00414710미복원");
-    // 11차: 보통이 아니면 설정 복사본에 난이도 배율을 적용해 생성자와 초기 갱신에 같은 값을 넘긴다(입력 설정은 바꾸지 않는다).
+    // 10차 NB10: 강제 적 번호가 범위 밖이거나 자기 자신이면 자동 선택(0)으로 정리한 복사본을 쓴다.
     std::vector<std::uint8_t> adjusted;
-    if (hooks_.difficulty) { const auto level=AiDifficultyFromValue(hooks_.difficulty(owner));if (level!=AiDifficulty::Normal) { adjusted=ApplyAiDifficulty(settings,level);settings=adjusted; } }
+    if (auto cleaned=SanitizeAiForcedEnemy(settings,owner);!cleaned.empty()) { adjusted=std::move(cleaned);settings=adjusted; }
+    // 11차: 보통이 아니면 설정 복사본에 난이도 배율을 적용해 생성자와 초기 갱신에 같은 값을 넘긴다(입력 설정은 바꾸지 않는다).
+    if (hooks_.difficulty) { const auto level=AiDifficultyFromValue(hooks_.difficulty(owner));if (level!=AiDifficulty::Normal) { adjusted=ApplyAiDifficulty(settings,level);settings=adjusted; } } // adjusted를 다시 쓰므로 위의 정리 결과를 이어받은 settings에서 새 복사본을 만든다.
     const auto brain=hooks_.construct(owner,settings,0xb08);if (brain==0) throw std::runtime_error("AI실제생성소유자가NULL을반환했습니다");players_.AttachBrain(owner,brain);hooks_.initialUpdate(brain,settings);return brain;
 }
 }

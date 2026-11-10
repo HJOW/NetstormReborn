@@ -13,6 +13,8 @@ namespace { // 이 파일에서만 쓰는 오프셋과 작은 접근자다.
 constexpr std::array<std::size_t, 3> kCycleOffsets{0x220, 0x224, 0x228};
 // AI 설정의 채취 유닛 수(ai%sCollectors, signed long) 오프셋이다.
 constexpr std::size_t kCollectorsOffset = 0x234;
+// AI 설정의 강제 적 소유자(ai%sEnemy, signed long) 오프셋이다.
+constexpr std::size_t kForcedEnemyOffset = 0x240;
 // 설정 전체 크기이며 RawMissionAiSettings::kSize와 같다.
 constexpr std::size_t kSettingsBytes = 600;
 // 지정 위치의 DWORD를 little endian으로 읽는다.
@@ -34,6 +36,15 @@ AiDifficulty AiDifficultyFromValue(std::uint32_t value) {
 }
 // 열거값 그대로가 저장값이다.
 std::uint32_t AiDifficultyToValue(AiDifficulty level) { return static_cast<std::uint32_t>(level); }
+// 강제 적 번호가 1..8 밖이거나 자기 자신이면 0으로 정리한다. 0은 원래 "자동 선택"이라 그대로 둔다.
+std::vector<std::uint8_t> SanitizeAiForcedEnemy(std::span<const std::uint8_t> settings, std::uint32_t owner) {
+    if (settings.size() != kSettingsBytes) throw std::invalid_argument("AI 설정은 600바이트여야 한다");
+    const auto forced = ReadDword(settings, kForcedEnemyOffset);
+    if (forced == 0 || (forced <= 8 && forced != owner)) return {}; // 정상이거나 자동 선택이면 바꾸지 않는다.
+    std::vector<std::uint8_t> result(settings.begin(), settings.end());
+    WriteDword(result, kForcedEnemyOffset, 0);
+    return result;
+}
 // 주기 필드 세 개와 채취 유닛 수에 난이도를 적용한다.
 std::vector<std::uint8_t> ApplyAiDifficulty(std::span<const std::uint8_t> settings, AiDifficulty level) {
     if (settings.size() != kSettingsBytes) throw std::invalid_argument("AI 난이도: 설정은 600바이트여야 한다");

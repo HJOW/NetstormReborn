@@ -35,6 +35,21 @@ TEST_CASE(AiDifficulty_ValueMapping) {
     for (const auto level : {AiDifficulty::Easy, AiDifficulty::Normal, AiDifficulty::Hard}) CHECK(AiDifficultyFromValue(AiDifficultyToValue(level)) == level);
 }
 
+// NB10: 강제 적 번호가 범위 밖이거나 자기 자신이면 0으로 정리하고, 정상 값과 자동 선택(0)은 그대로 둔다.
+TEST_CASE(AiDifficulty_SanitizeForcedEnemy) {
+    auto settings = SampleSettings();
+    PutInt(settings, 0x240, 0); // 무늬로 채운 바이트를 자동 선택(0)으로 맞춘다.
+    CHECK(SanitizeAiForcedEnemy(settings, 2).empty()); // 0(자동 선택)은 그대로다.
+    PutInt(settings, 0x240, 3);
+    CHECK(SanitizeAiForcedEnemy(settings, 2).empty() && !SanitizeAiForcedEnemy(settings, 3).empty()); // 자기 자신(3)은 정리한다.
+    CHECK(GetInt(SanitizeAiForcedEnemy(settings, 3), 0x240) == 0);
+    for (const std::int32_t bad : {9, 100, -1, 0x7fffffff}) { PutInt(settings, 0x240, bad); CHECK(GetInt(SanitizeAiForcedEnemy(settings, 2), 0x240) == 0); } // 소유자 범위(1..8) 밖이다.
+    PutInt(settings, 0x240, 8);
+    CHECK(SanitizeAiForcedEnemy(settings, 2).empty()); // 경계 8은 정상이다.
+    const auto cleaned = SanitizeAiForcedEnemy(settings, 8);
+    for (std::size_t index = 0; index < settings.size(); ++index) if (index < 0x240 || index >= 0x244) CHECK(cleaned[index] == settings[index]); // 다른 바이트는 그대로다.
+}
+
 // 보통은 설정을 한 비트도 바꾸지 않는다(현행과 동일).
 TEST_CASE(AiDifficulty_NormalKeepsEveryByte) {
     const auto settings = SampleSettings();

@@ -27,4 +27,8 @@ std::uint32_t AiDifficultyToValue(AiDifficulty level);
 // 보통이면 입력과 같은 바이트의 복사본이다. 쉬움/어려움은 +0x220 다리 그리기 주기·+0x224 물건 갱신 주기·+0x228 이동 간격(float)에 배율을 곱하고,
 // 쉬움은 +0x234 채취 유닛 수가 1 이상일 때만 절반(내림, 최소 1)으로 줄인다. 비유한/0 이하 주기는 그대로 둔다.
 std::vector<std::uint8_t> ApplyAiDifficulty(std::span<const std::uint8_t> settings, AiDifficulty level);
+// 10차 NB10(싱글 미션의 잘못된 player side로 종료): 미션이 정한 강제 적(ai%sEnemy, 설정 +0x240)이 소유자 범위 밖(0 초과 8 미만이 아님)이거나 자기 자신이면
+// 원문은 이 값을 AI의 적 소유자(+0x264)로 그대로 써서 동맹 표 밖을 읽거나 자기와 싸우려 한다. 이런 값을 0(적 자동 선택)으로 바꾼 복사본을 돌려준다.
+// 바꿀 것이 없으면 빈 벡터를 돌려주며 입력은 바꾸지 않는다.
+std::vector<std::uint8_t> SanitizeAiForcedEnemy(std::span<const std::uint8_t> settings, std::uint32_t owner);
 }
