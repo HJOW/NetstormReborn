@@ -1,0 +1,13 @@
+{
+  "unit": "1280 M8 final gate (first pass)",
+  "date": "2026-11-11",
+  "host": "HJOW-Athlon",
+  "zip": {"entries": 1430, "verifiedByHash": 1423, "generatedNonEmpty": 4, "runtimeDlls": 3, "missingRequired": 0, "forbidden": 0, "fontSignaturesInExe": 0, "extractedFiles": 1430, "extractedBytes": 242045169, "passed": true},
+  "exeSha256": "2bacfa00b364a353ab229f8652f0bf9aea7cb586816566ee1de26437b239d196",
+  "rootExeSha256": "fc1d0d46398a981eca4b0e260b4ec872fea628edb0e41012182b14d4a6279aad",
+  "extractedRun": {"english": "main -> Edit(page to TEST01) -> editor -> Scenario panel -> ESC: exit 0, no log, game dir unchanged", "korean": "main menu 8 buttons rendered from external D2Coding; editor entered", "knownLimit": "install path > ~200 chars hits original 256-byte path builder (logged, original limit preserved)"},
+  "externalAudit": {"wininetWinhttpUrlmonImports": 0, "ws2_32": "ordinal imports (LAN)", "strings": {"master.": 0, "security.dat": 0, "Not Validated": 0, "PIRATE": 0, "bugs@": 0, "titanic": "cd marker filename only"}},
+  "checkingList": 0,
+  "tool": "tools/verify_cpp_package.py",
+  "remaining": ["other-language fonts (L)", "re-run before release", "read-only install (S4)"]
+}
