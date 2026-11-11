@@ -649,6 +649,37 @@ public sealed class HostSession
             | ((uint)PlayerRecords[offset + 3] << 24));
     }
 
+    /// <summary>세션이 소유한 군집 상태다. 입력 바인딩이 같은 군도·확장 상자를 공유한다.</summary>
+    /// <remarks>2026-11-12 0.454에서 지형 바인딩 드라이런 조립용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1829행 normal 바인딩의 farm.</remarks>
+    public FarmClusterState TerrainFarm { get; } = new();
+
+    /// <summary>세션 저장소를 묶은 지형 바인딩이다. 만들기 전까지 null이다.</summary>
+    /// <remarks>2026-11-12 0.454에서 지형 바인딩 드라이런 조립용으로 추가했다. Generate 호출 연결은 다음 단위다.</remarks>
+    public RawNormalTerrainWorldBinding? TerrainBinding { get; private set; }
+
+    /// <summary>세션 저장소로 지형 바인딩을 조립하고 생성 입력을 묶는다. 원문 normal 바인딩 조립의 세션 소유 결선이다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 패치판 188개·CD판 171개여야 한다.</param>
+    /// <param name="diagnostics">원본 진단 묶음이다. 복사해서 가진다.</param>
+    /// <param name="islandHooks">섬 런타임의 거주 구역·진단 효과다.</param>
+    /// <returns>군집·입력을 묶은 세션 바인딩이다. 같은 인스턴스를 TerrainBinding에 둔다.</returns>
+    /// <remarks>2026-11-12 0.454에서 지형 바인딩 드라이런 조립용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1829~1853행.
+    /// 바인딩 드라이런까지만 하며 Load.Generate 갈고리·도장 실제 효과 연결은 다음 단위다.</remarks>
+    public RawNormalTerrainWorldBinding BuildTerrainBinding(
+        IReadOnlyList<OriginalTypeRecord> types,
+        NormalTerrainDiagnostics diagnostics,
+        IslandRuntimeHooks islandHooks)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        ArgumentNullException.ThrowIfNull(diagnostics);
+        ArgumentNullException.ThrowIfNull(islandHooks);
+        var binding = new RawNormalTerrainWorldBinding(
+            World, BuildIslands(islandHooks), TerrainGlobals, PlacementState, StampState,
+            types, Pool, PuzzlePieceBox, WorldFrames, diagnostics);
+        binding.BindGenerationInputs(TerrainFarm, BuildTerrainGenerationInputs());
+        TerrainBinding = binding;
+        return binding;
+    }
+
     /// <summary>빈 프레임 표 188개를 만든다. 검사 하네스의 LoadScene과 같은 공유 빈 표다.</summary>
     /// <returns>프레임 표다.</returns>
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다.</remarks>

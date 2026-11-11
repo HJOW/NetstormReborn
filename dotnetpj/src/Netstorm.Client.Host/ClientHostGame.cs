@@ -300,6 +300,13 @@ public sealed class ClientHostGame : Game
         int avatarSid = session.Pool.Allocate(Netstorm.Core.Simulation.SidAllocation.Client);
         IReadOnlyList<RiftTypeDefinition> worldDefinitions = MissionFortLoad.LoadTypeDefinitions(_startup.Files);
         session.FillWorldFrames(worldDefinitions);
+        // 지형 바인딩 드라이런 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 덤프에 영향을 주지 않는다.
+        // Load.Generate 갈고리·도장 실제 효과 연결은 다음 단위다.
+        session.BuildTerrainBinding(types.Types, new NormalTerrainDiagnostics(), new IslandRuntimeHooks
+        {
+            SetResidenceOwner = (_, _) => throw new InvalidOperationException("시작 흐름은 Residence owner를 요청하지 않는다"),
+            Assertion = _ => throw new InvalidOperationException("시작 흐름의 Runtime 진단은 원본 분류와 불일치한다"),
+        });
         var worldOrder = new List<string>();
         RawCampaignWorldLoad worldLoad = session.BuildWorldLoad(
             new IslandRuntimeHooks
