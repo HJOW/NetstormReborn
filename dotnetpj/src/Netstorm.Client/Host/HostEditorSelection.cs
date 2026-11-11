@@ -47,6 +47,10 @@ public sealed class HostEditorSelection : IDisposable
             EnumeratePaths = Workspace.Enumerate,
             ReadFile = Workspace.Read
         });
+        // 5차: Edit 목록 개수 제한(원문 50)을 없앤다. 긴 목록은 50행 창으로 스크롤한다.
+        // 근거: cpppj/src/client/UberGump.cpp 379행(`UserData` 정책에서 int32 최대로 올린다).
+        // 2026-11-12 0.386에서 L4a menu-edit 비교(mover 행 누락)로 연결했다.
+        Catalog.State.Limit = int.MaxValue;
     }
 
     /// <summary>

@@ -1,0 +1,6 @@
+# L4a Edit 맵 목록 캡처(0.386). 줄 형식: 프레임<TAB>동작<TAB>인자. {OUT} 은 l4a_compare.ps1 이 면별 폴더로 바꾼다.
+# 메인 메뉴에서 Edit 버튼을 눌러 맵 목록을 열고 프레임 30·60·120 을 저장한다.
+5	click	Edit
+30	snapshot	{OUT}\edit-f030.bmp
+60	snapshot	{OUT}\edit-f060.bmp
+120	snapshot	{OUT}\edit-f120.bmp
