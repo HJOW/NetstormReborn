@@ -118,7 +118,33 @@ public sealed class MissionPlayersLoadTests
         Assert.Contains($"\nsp\t1\t{session.Sp.Offset}\t0\t1161527296\t0\t0\t0\t0\t0\t0\t0\n", text, StringComparison.Ordinal);
     }
 
-    /// <summary>thewarbegins 인공지능 설정이 대본 값으로 채워지는지 확인한다.</summary>
+    /// <summary>thewarbegins 참가자·동맹 채우기가 기준선과 같은 행을 내놓는지 확인한다.</summary>
+    [Fact]
+    public void StartsPlayersLikeBaseline()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        // 1번 핸들은 대본 이름이 아니라 실제 핸들이다. 값은 오라클 관측("Youpson")이며 출처는 Start 흐름 단위에서 잇는다.
+        session.StartPlayers(players, "Youpson");
+        string text = SessionStateDump.FormatWorld1(
+            "originals", 90, 0, 0, 0, 0, 39999, null, session.DumpPool(),
+            session.DumpPlayers(), session.DumpSp(), session.DumpGraph(), session.DumpTotals(), session.DumpTotalMade());
+        // 동맹 81칸은 대각선만 1이다(기준선과 바이트 동일).
+        var alliances = new System.Text.StringBuilder("\nalliances");
+        // 9×9 칸을 행 우선으로 쓴다.
+        for (int first = 0; first < 9; first++)
+            for (int second = 0; second < 9; second++)
+                alliances.Append(first == second ? "\t1" : "\t0");
+        alliances.Append('\n');
+        Assert.Contains(alliances.ToString(), text, StringComparison.Ordinal);
+        Assert.Contains("\nhidden_players\t000000000000000000\n", text, StringComparison.Ordinal);
+        // 2번 이름은 바이트 동일하다.
+        Assert.Contains("546865204a61696c657200", text, StringComparison.Ordinal);
+        // 1번 이름은 붙여 쓴다. 기준선은 바이트 15가 NUL("You\0pson")이라 로그인 쓰기 순서 잔여로 남긴다.
+        Assert.Contains("596f7570736f6e00", text, StringComparison.Ordinal);
+    }
     [Fact]
     public void PreparesAiSettingsLikeScript()
     {

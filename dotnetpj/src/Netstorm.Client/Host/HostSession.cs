@@ -160,6 +160,51 @@ public sealed class HostSession
         return 0;
     }
 
+    /// <summary>Player 기록의 이름 오프셋이다. RawPlayerParticipation과 같은 0xc다.</summary>
+    private const int PlayerNameOffset = 0xc;
+
+    /// <summary>Player 기록의 이름 폭이다. RawPlayerParticipation과 같은 32다.</summary>
+    private const int PlayerNameWidth = 32;
+
+    /// <summary>Player 기록 한 개의 바이트 수다. RawPlayerParticipation과 같은 0xb4다.</summary>
+    private const int PlayerRecordStride = 180;
+
+    /// <summary>참가자 이름·동맹을 미션 목록 값으로 채운다. 원본 로그인의 기록 쓰기와 같다.</summary>
+    /// <param name="players">미션 플레이어 목록.</param>
+    /// <param name="localHandle">로컬 1번의 핸들. 대본 이름("Player")이 아니라 실제 핸들을 쓴다.</param>
+    /// <remarks>2026-11-12 0.397에서 미션 값 채우기로 추가했다. 동맹 81칸은 원본과 바이트 동일하게 맞는다.
+    /// 이름은 Latin1+NUL을 0xc에 쓴다. 1번 바이트 15의 NUL(기준선 "You\0pson")은 로그인 쓰기 순서가 밝혀져야 재현되므로 남긴다.
+    /// 핸들 출처(메뉴·설정)는 Start 흐름 단위에서 잇는다.</remarks>
+    public void StartPlayers(MissionPlayers players, string localHandle)
+    {
+        ArgumentNullException.ThrowIfNull(players);
+        ArgumentException.ThrowIfNullOrEmpty(localHandle);
+        // 동맹 81칸을 채운다. 대각선(자기 자신)은 기준선과 대조로 항상 1이며, 나머지는 목록의 대칭 판정이다.
+        // 대각선 작성 주체는 Start 순서 단위에서 잇는다.
+        for (int index = 0; index < 9; index++) Alliances[index * 9 + index] = 1u;
+        for (int first = 1; first <= MissionPlayers.PlayerCount; first++)
+        {
+            for (int second = 1; second <= MissionPlayers.PlayerCount; second++)
+            {
+                if (!players.Allied(first, second)) continue;
+                Alliances[first * 9 + second] = 1u;
+                Alliances[second * 9 + first] = 1u;
+            }
+        }
+        // 이름은 비어 있지 않을 때만 쓴다. 1번은 대본 이름이 아니라 실제 핸들이다.
+        for (int owner = 0; owner <= MissionPlayers.PlayerCount; owner++)
+        {
+            string name = owner == 1 ? localHandle : players.Players[owner].Name;
+            if (name.Length == 0) continue;
+            byte[] bytes = System.Text.Encoding.Latin1.GetBytes(name);
+            if (bytes.Length + 1 > PlayerNameWidth)
+                throw new ArgumentException("참가자 이름이 기록 폭을 넘는다: " + name, nameof(localHandle));
+            int offset = owner * PlayerRecordStride;
+            Array.Clear(PlayerRecords, offset + PlayerNameOffset, PlayerNameWidth);
+            Array.Copy(bytes, 0, PlayerRecords, offset + PlayerNameOffset, bytes.Length);
+        }
+    }
+
     /// <summary>덤프용 Player 관측을 만든다. Start 순서 전까지 0이다.</summary>
     public SessionDumpPlayers DumpPlayers() =>
         new((byte[])PlayerRecords.Clone(), (byte[])HiddenPlayers.Clone(), (uint[])Alliances.Clone());
