@@ -144,7 +144,7 @@ public sealed class SoloMapCatalogStorageTests
             Assert.Equal(kindZero[index], catalog.State.Names[index]);
             Assert.Equal(kindZero[index] == "case-empty" ? 2u : 0u, catalog.State.Flags[index]);
         }
-        SoloMapRow? row = catalog.List.Row(Array.IndexOf(catalog.State.Names, "case-empty"), "", "CASE-EMPTY");
+        SoloMapRow? row = catalog.List.Row(catalog.State.Names.IndexOf("case-empty"), "", "CASE-EMPTY");
         Assert.NotNull(row);
         Assert.True(row.Checked);
         Assert.Equal("case-empty (~rCORRUPT~.)", row.Label.Replace("%s", "case-empty"));

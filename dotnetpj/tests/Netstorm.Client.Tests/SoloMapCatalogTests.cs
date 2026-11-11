@@ -37,8 +37,8 @@ public sealed class SoloMapCatalogTests
             });
             Assert.Equal(0, catalog.Kind("empty")); Assert.Equal(0, catalog.Kind("short")); Assert.Equal(1, allocated);
             Assert.Equal(2, catalog.List.Refresh(0));
-            Assert.Equal(2u, catalog.State.Flags[Array.IndexOf(catalog.State.Names, "empty")]);
-            Assert.Equal(0u, catalog.State.Flags[Array.IndexOf(catalog.State.Names, "short")]);
+            Assert.Equal(2u, catalog.State.Flags[catalog.State.Names.IndexOf("empty")]);
+            Assert.Equal(0u, catalog.State.Flags[catalog.State.Names.IndexOf("short")]);
             Assert.Equal(3, allocated); Assert.Throws<InvalidOperationException>(() => catalog.Kind("missing"));
         }
         finally { Directory.Delete(root, true); }

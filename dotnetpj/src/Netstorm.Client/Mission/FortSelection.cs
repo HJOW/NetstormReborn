@@ -40,6 +40,9 @@ public sealed class FortSelectionHooks
 public static class FortSelection
 {
     public const uint AskEditFort = 0x020000c9, ReadFort = 0x020000ca;
+    /// <summary>5차 새 명령: 맵 목록 메뉴의 이전·다음 창 이동 행이다. 인자는 이동할 행 수의 10진 문자열이며 원본에는 없다.</summary>
+    /// <remarks>2026-11-11 0.363에서 cpppj FortSelection.h의 5차 상수를 반영했다.</remarks>
+    public const uint ScrollMapList = 0x02000134U;
     private static T Need<T>(T? effect) where T : Delegate => effect ?? throw new InvalidOperationException("Fort 선택의 실제 효과 미연결");
     private static Memory<byte> Core(FortSelectionHooks hooks, uint slot) { Memory<byte> bytes = Need(hooks.Core)(slot); return bytes.Length >= 16 ? bytes : throw new ArgumentOutOfRangeException(nameof(slot)); }
     private static uint TimeInteger(double value) => !double.IsFinite(value) || value >= 9223372036854775808.0 || value < -9223372036854775808.0 ? 0u : unchecked((uint)(long)value);

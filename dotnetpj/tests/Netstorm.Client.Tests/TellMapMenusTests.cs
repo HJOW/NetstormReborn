@@ -67,4 +67,119 @@ public sealed class TellMapMenusTests
         Assert.Equal(1u, new HtmlWindowMetadata(metadata).Process(1, buffer));
         Assert.Equal(2, begins); Assert.Equal(2u, node.MenuColumns); Assert.Equal(16, appended); Assert.Equal("fortSpec", key);
     }
+
+    /// <summary>스크롤 시험용 창 상태와 이동 행 관측이다.</summary>
+    private sealed class PagingDevice
+    {
+        public int Dirty, Count, WindowFirst, Begins, Rows, Reused;
+        public bool Keep;
+        public Func<string, string>? Translate;
+        public List<string> Scrolled { get; } = [];
+        public List<string> Trace { get; } = [];
+        public TellMapMenuHooks Hooks() => new()
+        {
+            BeginVertical = _ => { Trace.Add("begin"); Begins++; },
+            Invalidate = () => Dirty = 1, SelectFileSpec = _ => { }, Refresh = _ => Dirty = 0, Count = () => Count,
+            AppendRow = index => { Trace.Add("row:" + index); if (index >= Count) return false; Rows++; return true; },
+            WindowFirst = () => WindowFirst, SetWindowFirst = first => WindowFirst = first,
+            TakeKeepCache = () => { bool value = Keep; Keep = false; return value; },
+            ReuseCache = () => Reused++,
+            AppendScroll = (label, delta) => Scrolled.Add(label + "|" + delta),
+            Translate = Translate,
+        };
+    }
+
+    /// <summary>50행 초과 목록은 한 창씩 이전·다음 이동 행과 함께 만든다.</summary>
+    [Fact]
+    public void PagingLabelsClampAndHalves()
+    {
+        var device = new PagingDevice { Count = 120 };
+        uint columns = 0;
+        Assert.True(TellMapMenus.Append("*sololist*", ref columns, device.Hooks()));
+        // 첫 창 50행 + 다음 이동행, 두 번째 열에서 분할이다
+        Assert.Equal(2u, columns);
+        Assert.Equal(50, device.Rows);
+        Assert.Equal(["~oNext 50 >  (51-100 of 120)|50"], device.Scrolled);
+        // 다음 창으로 넘기면 이전·다음 이동행이 모두 붙는다
+        device.WindowFirst = 50; device.Keep = true;
+        columns = 0; device.Rows = 0; device.Scrolled.Clear(); device.Trace.Clear();
+        Assert.True(TellMapMenus.Append("*sololist*", ref columns, device.Hooks()));
+        Assert.Equal(["~o< Previous 50  (1-50 of 120)|-50", "~oNext 50 >  (101-120 of 120)|50"], device.Scrolled);
+        Assert.Equal(50, device.Rows);
+        // 마지막 창은 꽉 채우고 다음 이동행이 없다
+        device.WindowFirst = 200; device.Keep = true;
+        columns = 0; device.Rows = 0; device.Scrolled.Clear(); device.Trace.Clear();
+        Assert.True(TellMapMenus.Append("*sololist*", ref columns, device.Hooks()));
+        Assert.Equal(["~o< Previous 50  (21-70 of 120)|-50"], device.Scrolled);
+        Assert.Equal(50, device.Rows);
+        // 50행 이하는 스크롤 없이 원본 흐름이다
+        device.Count = 50; device.WindowFirst = 0; device.Keep = false;
+        columns = 0; device.Rows = 0; device.Scrolled.Clear(); device.Trace.Clear();
+        Assert.True(TellMapMenus.Append("*sololist*", ref columns, device.Hooks()));
+        Assert.Empty(device.Scrolled);
+        Assert.Equal(50, device.Rows);
+    }
+
+    /// <summary>이동 행 단어는 번역 장치가 없으면 영어 그대로, 있으면 바꾼다.</summary>
+    [Fact]
+    public void ScrollWordsTranslateWithFallback()
+    {
+        var device = new PagingDevice { Count = 120, Translate = key => key == "Previous" ? "이전" : key };
+        uint columns = 0;
+        Assert.True(TellMapMenus.Append("*fortlist*", ref columns, device.Hooks()));
+        Assert.Equal(["~oNext 50 >  (51-100 of 120)|50"], device.Scrolled);
+        device.WindowFirst = 50; device.Keep = true; device.Scrolled.Clear();
+        columns = 0;
+        Assert.True(TellMapMenus.Append("*fortlist*", ref columns, device.Hooks()));
+        Assert.Equal(["~o< 이전 50  (1-50 of 120)|-50", "~oNext 50 >  (101-120 of 120)|50"], device.Scrolled);
+    }
+
+    /// <summary>재표시이면 무효화 없이 캐시를 쓰고 일회성 표시는 소비한다.</summary>
+    [Fact]
+    public void KeepCacheSkipsInvalidateAndIsConsumed()
+    {
+        var device = new PagingDevice { Count = 60, Keep = true };
+        uint columns = 0;
+        Assert.True(TellMapMenus.Append("*fortlist*", ref columns, device.Hooks()));
+        Assert.Equal(0, device.Dirty);
+        Assert.Equal(1, device.Reused);
+        Assert.False(device.Keep);
+        Assert.Equal(50, device.Rows);
+    }
+
+    /// <summary>묶음 연결이 스크롤 창 상태와 이동 행 명령을 같은 목록 상태에 둔다.</summary>
+    [Fact]
+    public void BindScrollWiringSharesWindowState()
+    {
+        // 5차 무제한 Edit 목록처럼 한도를 올린다
+        var state = new SoloMapListState { Limit = int.MaxValue };
+        var files = Enumerable.Range(0, 60).Select(i => "m" + i).ToArray();
+        var list = new RawSoloMapList(state, new SoloMapListHooks
+        {
+            MayEditMissions = () => 0, Enumerate = () => files, Kind = _ => 0,
+            Construct = () => { }, Load = _ => { }, Present = () => true,
+            Subscriber = () => "u", StateByte = () => 0, UserName = () => "u", Reserved = () => 0u,
+        });
+        var rows = new List<(SoloMapRow Row, uint Command)>();
+        var bound = TellMapMenus.Bind(list, state, _ => { }, () => "", () => "", _ => { }, (row, command) => rows.Add((row, command)));
+        Assert.Equal(0, bound.WindowFirst!());
+        bound.SetWindowFirst!(7);
+        Assert.Equal(7, state.WindowFirst);
+        state.KeepCache = true;
+        Assert.True(bound.TakeKeepCache!());
+        Assert.False(state.KeepCache);
+        state.Dirty = 1;
+        bound.ReuseCache!();
+        Assert.Equal(0u, state.Dirty);
+        uint columns = 0;
+        state.WindowFirst = 0;
+        Assert.True(TellMapMenus.Append("*fortlist*", ref columns, bound));
+        Assert.Equal(60, state.Count);
+        Assert.Equal(51, rows.Count);
+        Assert.Equal(50, rows.Count(row => row.Command == 0x020000cau));
+        Assert.Equal(0x02000134u, rows[^1].Command);
+        Assert.Equal("50", rows[^1].Row.Name);
+        Assert.False(rows[^1].Row.Checked);
+        Assert.True(rows[^1].Row.Enabled);
+    }
 }

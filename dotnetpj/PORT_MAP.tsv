@@ -58,6 +58,7 @@ cpppj/src/client/EmbeddedTell.h	Netstorm.Client/Gump/EmbeddedTell.cs	ecb9802a88b
 cpppj/src/client/FortCurrentNameDevices.cpp	Netstorm.Client/Host/FortCurrentNameDevices.cs	2c7b34378d8f3ceb790276acd5be5a9b4c9ff928	port
 cpppj/src/client/FortCurrentNameDevices.h	Netstorm.Client/Host/FortCurrentNameDevices.cs	2c7b34378d8f3ceb790276acd5be5a9b4c9ff928	port
 cpppj/src/client/FortSelection.cpp	Netstorm.Client/Mission/FortSelection.cs	fb3911774a594162b2a9af981a2f6825cd1a2775	L1
+cpppj/src/client/FortSelection.h	Netstorm.Client/Mission/FortSelection.cs	fdb9a2b9b03f78b84af763aea51fe9a333f6dc20	port
 cpppj/src/client/FortTypeConversionStorage.cpp	Netstorm.Client/Host/FortTypeConversionStorage.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/client/FortTypeConversionStorage.h	Netstorm.Client/Host/FortTypeConversionStorage.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/client/GifImage.cpp	Netstorm.Assets/GifImage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1
@@ -240,7 +241,7 @@ cpppj/src/client/StyleTextMarkup.cpp	Netstorm.Client/Gump/StyleTextMarkup.cs	517
 cpppj/src/client/StyleTextMarkup.h	Netstorm.Client/Gump/StyleTextMarkup.cs	5171b8c7beb7b271594731680a23fa69bfab0c8e	port
 cpppj/src/client/TellFileMenus.cpp	Netstorm.Client/Gump/TellFileMenus.cs	a951ca7ed12683aaf5d5ced5df822ecc19d99780	L1
 cpppj/src/client/TellFileMenus.h	Netstorm.Client/Gump/TellFileMenus.cs	a951ca7ed12683aaf5d5ced5df822ecc19d99780	L1
-cpppj/src/client/TellMapMenus.cpp	Netstorm.Client/Gump/TellMapMenus.cs	4869c6baada60168f87626dc97d3ec3145028df3	L1
+cpppj/src/client/TellMapMenus.cpp	Netstorm.Client/Gump/TellMapMenus.cs	fdb9a2b9b03f78b84af763aea51fe9a333f6dc20	L1
 cpppj/src/client/TextEntryBuffer.cpp	Netstorm.Client/Gump/TextEntryBuffer.cs	84db5219fc4e3a0e0745fc27e0fe097a1deb6e38	L1
 cpppj/src/client/TextEntryBuffer.h	Netstorm.Client/Gump/TextEntryBuffer.cs	84db5219fc4e3a0e0745fc27e0fe097a1deb6e38	L1
 cpppj/src/client/TextEntryGump.cpp	Netstorm.Client/Gump/TextEntryGump.cs	84db5219fc4e3a0e0745fc27e0fe097a1deb6e38	L1
@@ -479,7 +480,8 @@ cpppj/src/o/RawPriestState.cpp	Netstorm.Core/Original/RawPriestState.cs	55520f78
 cpppj/src/o/RawRenderCollection.h	Netstorm.Core/Original/RenderCollectionEntry.cs	8ca081a26b4b6bce8dbf63f72a37733dc95e25d4	port
 cpppj/src/o/RawSnart.cpp	Netstorm.Core/Original/RawSnart.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
 cpppj/src/o/RawSnart.h	Netstorm.Core/Original/RawSnart.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
-cpppj/src/o/RawSoloMapList.cpp	Netstorm.Core/Original/RawSoloMapList.cs	af9cd8fef46c3a786fb8a30bc6334c860ae33850	L1
+cpppj/src/o/RawSoloMapList.cpp	Netstorm.Core/Original/RawSoloMapList.cs	fdb9a2b9b03f78b84af763aea51fe9a333f6dc20	L1
+cpppj/src/o/RawSoloMapList.h	Netstorm.Core/Original/RawSoloMapList.cs	fdb9a2b9b03f78b84af763aea51fe9a333f6dc20	L1
 cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSquidDestroy.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidDestroyDispatch.cpp	Netstorm.Core/Original/RawSquidDestroyDispatch.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidFinder.cpp	Netstorm.Core/Original/RawFinder.cs	da27e191b1459279170608224c4f60fdd84c3343	L1

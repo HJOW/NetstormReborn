@@ -2,13 +2,22 @@ using System.Text;
 
 namespace Netstorm.Core.Original;
 
-/// <summary>Client 수명의 맵 이름·플래그 50칸과 현재 캐시다.</summary>
+/// <summary>Client 수명의 맵 이름·플래그 캐시와 현재 개수다. 원문은 고정 50칸이지만 5차의 무제한 목록을 위해 늘어난다.</summary>
 public sealed class SoloMapListState
 {
-    public string?[] Names { get; } = new string?[50];
-    public uint[] Flags { get; } = new uint[50];
+    public List<string?> Names { get; } = Enumerable.Repeat<string?>(null, 50).ToList();
+    public List<uint> Flags { get; } = Enumerable.Repeat(0u, 50).ToList();
     public int Count { get; set; }
     public uint Dirty { get; set; }
+    /// <summary>5차: 열거해 담을 최대 개수다. 원문 50이며 Edit 목록의 무제한 요구는 메뉴 소유자가 int32 최대로 올린다.</summary>
+    /// <remarks>2026-11-11 0.363에서 추가했다.</remarks>
+    public int Limit { get; set; } = 50;
+    /// <summary>스크롤 표시 창의 첫 목록 번호다. 새로 연 목록은 첫 창에서 시작한다.</summary>
+    /// <remarks>2026-11-11 0.363에서 5차 스크롤 표시를 위해 추가했다.</remarks>
+    public int WindowFirst { get; set; }
+    /// <summary>스크롤 이동 뒤 재표시 표시다. 참이면 목록을 다시 열거하지 않고, 읽을 때 소비한다.</summary>
+    /// <remarks>2026-11-11 0.363에서 5차 스크롤 표시를 위해 추가했다.</remarks>
+    public bool KeepCache { get; set; }
 }
 
 /// <summary>맵 파일·임시 Template과 현재 사용자 및 번역 장치다.</summary>
@@ -37,7 +46,7 @@ public sealed class RawSoloMapList
     private readonly SoloMapListHooks _hooks;
     public RawSoloMapList(SoloMapListState state, SoloMapListHooks hooks) { _state = state; _hooks = hooks; }
     private static T Need<T>(T? effect) where T : Delegate => effect ?? throw new InvalidOperationException("단독 맵 목록의 실제 하위 미연결");
-    private int Index(int value) => value >= 0 && value < 50 ? value : throw new ArgumentOutOfRangeException(nameof(value));
+    private int Index(int value) => value >= 0 && value < _state.Names.Count ? value : throw new ArgumentOutOfRangeException(nameof(value));
     private string Name(int value) => _state.Names[Index(value)] ?? throw new InvalidOperationException("단독 맵 목록의 현재 이름 포인터 누락");
     private static string CString(string value) { int nul = value.IndexOf('\0'); return nul < 0 ? value : value[..nul]; }
     private static bool Same(string left, string right)
@@ -47,19 +56,25 @@ public sealed class RawSoloMapList
         return true;
     }
 
-    /// <summary>현재 dirty·설정과 실제 파일 열거를 사용해 원본 순서로 캐시한다.</summary>
+    /// <summary>현재 dirty·설정과 실제 파일 열거를 사용해 원본 순서로 캐시한다. 한도가 50을 넘으면 필요한 칸을 늘린다.</summary>
     public int Refresh(int mode)
     {
         if (_state.Dirty != 0)
         {
-            for (int i = 0; i < 50; i++) if (_state.Names[i] != null) { _state.Names[i] = null; _state.Flags[i] = 0; }
+            // 원본 50개 포인터 순서로 소유 문자열과 같은 flags를 정리한다. 5차 무제한 목록은 늘어난 칸도 같은 규칙으로 정리한다.
+            for (int i = 0; i < _state.Names.Count; i++) if (_state.Names[i] != null) { _state.Names[i] = null; _state.Flags[i] = 0; }
+            // 늘어난 칸은 모두 비웠으므로 원래 크기로 되돌린다
+            if (_state.Names.Count > 50) { _state.Names.RemoveRange(50, _state.Names.Count - 50); _state.Flags.RemoveRange(50, _state.Flags.Count - 50); }
             _state.Count = 0; _state.Dirty = 0;
         }
         int mayEdit = Need(_hooks.MayEditMissions)(); if (_state.Names[0] != null) return _state.Count;
+        // 원본 열거 순서대로 검사하며 수락한 이름만 limit(원문 50, 5차 무제한)개까지 담는다
         foreach (string file in Need(_hooks.Enumerate)())
         {
-            if (_state.Count >= 50) break; byte kind = Need(_hooks.Kind)(file); int selected = _state.Count;
+            if (_state.Count >= _state.Limit) break; byte kind = Need(_hooks.Kind)(file); int selected = _state.Count;
             if (kind != mode && !(mayEdit != 0 && mode == 2 && kind == 1)) continue;
+            // 5차: limit이 50을 넘을 때만 새 칸을 만든다
+            while (_state.Names.Count <= selected) { _state.Names.Add(null); _state.Flags.Add(0); }
             int slot = Index(selected); _state.Names[slot] = CString(file); Need(_hooks.Construct)(); Need(_hooks.Load)(Name(_state.Count));
             if (!Need(_hooks.Present)()) _state.Flags[slot] |= 1;
             else
