@@ -3,6 +3,7 @@
 #include "client/ProductPresentation.h"
 #include "client/FrameRateOption.h"
 #include "client/SkirmishSetup.h"
+#include <algorithm>
 #include <map>
 
 using namespace netstorm::client;
@@ -71,18 +72,20 @@ TEST_CASE(Skirmish_SaveLoadRoundTrip) {
 
 // 시작 대본: AI 수만큼 소유자 2..N+1이 있고, 동맹/금지/AI 이름이 설정을 따른다.
 TEST_CASE(Skirmish_LaunchScript) {
-    // 모든 AI 수에 후보 맵이 있다.
-    for (int count = 1; count <= kSkirmishMaxAi; ++count) CHECK(!SkirmishMapsFor(count).empty());
+    // 시작 섬 후보는 최대 참가자(사람 1 + AI 7 = 8명)보다 많아야 한다.
+    CHECK(SkirmishStartIslandPool().size() >= static_cast<std::size_t>(kSkirmishMaxAi + 1));
     SkirmishSettings settings;
     settings.aiCount = 3;
     settings.ai[0].ally = true;                    // 소유자 2는 같은 편이다.
     settings.ai[1].ally = false;                   // 소유자 3, 4는 적이다.
     settings.bans = {"outpost", "sunCannon"};
     const auto launch = BuildSkirmishLaunch(settings, 7);
-    CHECK(!launch.mapName.empty());
-    bool inPool = false;
-    for (const auto name : SkirmishMapsFor(3)) inPool = inPool || name == launch.mapName; // 고른 맵은 AI 3명용 후보에 있다.
-    CHECK(inPool);
+    CHECK(launch.islands.size() == 4); // 사람 1 + AI 3 = 시작 섬 4개이며 서로 다른 후보다.
+    for (std::size_t first = 0; first < launch.islands.size(); ++first)
+        for (std::size_t second = first + 1; second < launch.islands.size(); ++second)
+            CHECK(!(launch.islands[first].fort == launch.islands[second].fort && launch.islands[first].territory == launch.islands[second].territory));
+    CHECK(launch.mapSize == 2); // 4명은 링 간격 5칸(크기 2)이다.
+    CHECK(launch.central[2] == 0 && (launch.central[0] & 63) < 68); // 중앙섬 기록은 원점 배치(위치 0)이고 패턴 번호가 영역 패턴 표 안이다.
     const auto& script = launch.script;
     CHECK(Has(script, "ai2Name=") && Has(script, "ai3Name=") && Has(script, "ai4Name=") && !Has(script, "ai5Name="));
     CHECK(Has(script, "myAllyList=\"2\"")); // 같은 편은 AI 2뿐이다.
@@ -93,8 +96,46 @@ TEST_CASE(Skirmish_LaunchScript) {
     CHECK(!Has(BuildSkirmishLaunch(plain, 0).script, "techAllowed")); // 금지가 없으면 줄 자체가 없다.
     // 난수에 따라 후보가 달라질 수 있다.
     bool different = false;
-    for (std::uint32_t value = 1; value < 10; ++value) different = different || BuildSkirmishLaunch(settings, value).mapName != launch.mapName;
+    for (std::uint32_t value = 1; value < 10; ++value) {
+        const auto other = BuildSkirmishLaunch(settings, value);
+        different = different || other.islands[0].fort != launch.islands[0].fort || other.islands[0].territory != launch.islands[0].territory || other.central != launch.central;
+    }
     CHECK(different);
+    // 참가자 수에 따라 맵 크기가 커진다(2명=1, 3~4명=2, 5명 이상=3).
+    SkirmishSettings size;
+    size.aiCount = 1; CHECK(BuildSkirmishLaunch(size, 1).mapSize == 1 && BuildSkirmishLaunch(size, 1).islands.size() == 2);
+    size.aiCount = 7; CHECK(BuildSkirmishLaunch(size, 1).mapSize == 3 && BuildSkirmishLaunch(size, 1).islands.size() == 8);
+}
+
+// 빈 월드 fort: 길이 표 35개 섹션을 유지하고 Chaff/Territory/Terr만 비운다. 입력이 틀리면 빈 결과다.
+TEST_CASE(Skirmish_EmptyWorldFort) {
+    std::vector<std::uint8_t> base{'F', 0};
+    // 길이(자기 2바이트 포함)가 서로 다른 섹션 35개를 만든다(Chaff=4, Territory=6, Terr=15..34).
+    for (std::size_t index = 0; index < 35; ++index) {
+        std::vector<std::uint8_t> body(index == 6 ? 120 : (index % 5) + 3, static_cast<std::uint8_t>(index + 1));
+        const auto length = body.size() + 2;
+        base.push_back(static_cast<std::uint8_t>(length & 0xff)); base.push_back(static_cast<std::uint8_t>(length >> 8));
+        base.insert(base.end(), body.begin(), body.end());
+    }
+    const auto world = MakeSkirmishEmptyWorldFort(base);
+    CHECK(!world.empty() && world[0] == 'F');
+    // 결과를 다시 섹션으로 읽는다.
+    std::vector<std::vector<std::uint8_t>> sections;
+    std::size_t position = 2;
+    while (sections.size() < 35 && position + 2 <= world.size()) {
+        const std::size_t length = world[position] | (static_cast<std::size_t>(world[position + 1]) << 8);
+        sections.emplace_back(world.begin() + static_cast<std::ptrdiff_t>(position + 2), world.begin() + static_cast<std::ptrdiff_t>(position + length));
+        position += length;
+    }
+    CHECK(sections.size() == 35 && position == world.size());
+    CHECK(sections[0].size() == 3 && sections[0][0] == 1); // 나머지 섹션(예: Subscriber)은 그대로다.
+    CHECK(sections[4].size() == 1 + 256 * 3 && sections[4][0] == 2 && sections[4][1] == 99 && sections[4][2] == 0 && sections[4][3] == 0); // Chaff는 빈 청크 256개다.
+    CHECK(sections[6].size() == 120 && std::all_of(sections[6].begin(), sections[6].end(), [](auto byte) { return byte == 0; })); // 영역 표는 모두 0이다.
+    for (std::size_t index = 15; index < 35; ++index) CHECK(sections[index].size() == 1 && sections[index][0] == 2); // Terr 섹션은 버전만 남는다.
+    CHECK(MakeSkirmishEmptyWorldFort({}).empty());
+    CHECK(MakeSkirmishEmptyWorldFort(std::span<const std::uint8_t>(base).first(base.size() - 1)).empty()); // 마지막 섹션이 잘렸다.
+    base[0] = 'X';
+    CHECK(MakeSkirmishEmptyWorldFort(base).empty()); // 서명이 틀렸다.
 }
 
 // 화면 본문: 시작/취소와 현재 값, 금지 표시와 쪽 이동, 최대 도달 안내, 언어별 제목.

@@ -14,6 +14,7 @@ struct CampaignMissionStartEffects {
     std::function<void()> refreshSp; // 실제0043dad0의 현재 SP Gump 재구성이다.
     std::function<void()> refreshCommandGump; // 실제0042e440의 현재 명령 Gump 갱신이다.
     std::function<void()> randomGeysers; // 실제00486440의 세계 랜덤 간헐천 생성이며 로컬 GenerateLocalGeysers와 다르다.
+    std::function<void()> prepareWorld; // 12차 스커미시: 미션 Start가 사제/AI를 찾기 전에 월드를 먼저 준비한다(MP 규칙으로 섬 생성). 비어 있으면 일반 미션이라 아무것도 하지 않는다.
     std::function<void()> resetCamera; // 같은 실제 Session의 현재 카메라 재설정 소비자다.
     std::function<void(std::string_view)> unknownAbilityAssertion,unknownAbilityLog; // 실제 원본의 미등록 능력 진단 뒤 계속하는 외부 경계다.
 };

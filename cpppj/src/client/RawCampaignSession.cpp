@@ -6,6 +6,7 @@
 #include "o/RawSquidRegion.h" // 같은 TYPE 진단과 raw 지역 WORD의 getter/setter를 공유한다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/SkirmishSetup.h" // 12차: 스커미시 월드 계획(시작 섬 fort/중앙섬 기록)이다.
 #include "client/NativeLoginPacketReceivers.h" //실제 Login/Editor의 같은 고정 F를 빌린다.
 #include "client/NativeGameplayPacketReceivers.h" //이동/Squid/문자열의 같은 실제 고정 F를 사용한다.
 #include "client/NativeCarrierPacketReceivers.h" //Carrier 계열의 고정 F와 실제 현재 본문을 공유한다.
@@ -728,6 +729,7 @@ struct RawCampaignSession::Impl {
     FortRandomPlacementState localRandomPlacement;FortRandomPlacementState& randomPlacement{world.Storage()->UsesNativeTransmissionDevices() ? services.constructionGlobals->RandomPlacementState():localRandomPlacement}; //Native단일배치/지형/Farm은같은현재TYPE/ownerOverride를공유한다.
     FarmClusterState farm; // 실제 정상 군집 모드다.
     std::unique_ptr<RawNormalTerrainWorldBinding> normal; // 실제 성장/도장/Normalize/군집 몸체다.
+    std::unique_ptr<RawFortRandomPlacement> finishPlacement; // 12차: finish의 거주 구역 배치가 쓰는 실제 단일 배치기이며 finish보다 오래 산다.
     std::unique_ptr<RawFortFinishOwner> finish; // 같은9 Player의 최초 지역을 읽는다.
     ContainedCreateState contentState; // 저장 내용물은 실제 Form6으로 생성한다.
     ContentFormState contentFormState; // 같은 현재 전투/checking과 원문 진단을 부착 부모에 제공한다.
@@ -1849,7 +1851,16 @@ struct RawCampaignSession::Impl {
             if (!assertion) throw std::logic_error("지형 실제 진단 장치 미연결 "+std::string(file)+":"+std::to_string(line));assertion(expression);
         };
         normal->BindGenerationInputs(std::move(terrainGeneration));
-        finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.Residences(),finishState,FortFinishOwnerHooks{SessionMissing<FortRandomRectangle,std::int32_t>(),SessionMissing<double>(),SessionMissing<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),SessionMissing<void>()});
+        { // 12차 스커미시: MP 전투 규칙(비Chaff)의 소유자 후처리가 거주 구역을 실제 배치로 만들 수 있게 연결한다. 일반 미션은 chaffMode라 후처리가 일찍 반환해 이 훅을 쓰지 않는다.
+            auto singleHooks=MakeNormalTerrainFarmWorldHooks(world,chunks,*islands,*pipeline,hp);
+            singleHooks.mayPlace=[this](const CanonPlacementQuery& query) { return MayPlaceGameplay(query); }; // 현재 Player/동맹/섬·Graph를 읽는 실제 전체 MayPlace다.
+            finishPlacement=std::make_unique<RawFortRandomPlacement>(core.pool,core.hash,core.spots,core.types,core.frames,random,randomPlacement,std::move(singleHooks));
+            FortFinishOwnerHooks finishHooks;
+            finishHooks.regionBounds=[this](auto region) { const auto b=islands->Bounds(region);return FortRandomRectangle{b.left,b.top,b.right,b.bottom}; };
+            finishHooks.wallSeconds=[this] { if (!services.sound.wallSeconds) throw std::logic_error("소유자 후처리의 실제 벽시각 미연결");return services.sound.wallSeconds(); };
+            finishHooks.invalidType=SessionMissing<void>();finishHooks=MakeFortSinglePlacementHook(core.pool,*finishPlacement,std::move(finishHooks));
+            finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.Residences(),finishState,std::move(finishHooks));finish->BindPlayerRecords(players);
+        }
         if (services.installMode==CampaignInstallMode::MetaMap) { if (services.missionFortImage) throw std::logic_error("메타의 이미 읽은 Fort에 선행 이미지 중복 전달"); } // State19가 읽은 같은 manager/stream을 보존하고 빈 Fort로 Install/Clear하지 않는다.
         else if (services.missionFortFileSelect && services.localLogin) { if (services.missionFortImage) throw std::logic_error("지연 미션 파일 선택에 선행 이미지가 함께 전달됨"); } // 실제10.78은 State9 지역Template 읽기와 서버 수신의 전역 설치까지 파일을 열거나 manager를 공개하지 않는다.
         else if (services.deferExistingEditorFile) deferredEditorFort.emplace(std::move(fort)); //manager를공개하거나현재Slot을Clear하지않고입력/파일요청수명만보유한다.
@@ -3208,14 +3219,30 @@ struct RawCampaignSession::Impl {
         hooks.contents=[&](Sid parent,auto stream) { auto reader=MakeFortContentsReader(hooks.access);const FortContentsLoadGlobals globals{fortTypeConversion->Current(),hooks.checking};static_cast<void>(LoadFortContents(parent.value,stream,9,0,globals,reader)); };
         hooks.assertion=[](auto line) { throw std::logic_error("원본 Objects Template.cpp 진단 "+std::to_string(line)); };objects.LoadStream(static_cast<std::int32_t>(slot),hooks,firstTerritory,territoryEnd);
     }
+    // 12차 스커미시: 지역 Template의 slot 영역 표(20x6바이트)를 읽고, 고른 영역만 전투(4) 플래그가 켜진 첫 영역이 되게 한다.
+    // RawBattleIsland이 "4 플래그가 켜진 첫 영역, 없으면 0번"을 쓰므로 다른 영역의 4 플래그는 끄고 고른 영역만 켠다. territoryChoice가 범위 밖이면 표를 그대로 둔다.
+    void ReadSkirmishTerritory(CampaignTemplateStorage& source,std::uint32_t slot,std::int32_t territoryChoice,std::span<std::uint8_t,120> output) {
+        if (slot>=9 || Read(source.Headers(),static_cast<std::size_t>(slot)*20)==0) throw std::out_of_range("스커미시 시작 섬 Template 슬롯 미설치"); // 원문 tm 진단과 같은 조건이다.
+        auto& stream=source.SelectTerritory(slot);const auto position=stream.position; // RawFortWorldLoad::ReadTerritory와 같은 현재 위치의 120BYTE를 읽는다.
+        if (position>stream.bytes.size() || stream.bytes.size()-position<output.size()) throw std::out_of_range("스커미시 시작 섬 Territory 현재물리120BYTE누락");
+        for (std::size_t index=0;index<output.size();++index) output[index]=stream.bytes[position+index]; // 사용하지 않는 꼬리는 그대로 둔다.
+        stream.position=position+120U;
+        if (territoryChoice<0 || territoryChoice>=20) return;
+        for (std::size_t index=0;index<20;++index) output[index*6+1]&=static_cast<std::uint8_t>(~4U); // 모든 영역의 전투 표지를 끈다.
+        output[static_cast<std::size_t>(territoryChoice)*6+1]|=4U; // 고른 영역만 전투섬으로 표시한다.
+    }
     // 원문0046e2c0의 지형/객체를 현재 Session의 동일 Runtime·생성자·Player/Graph에 연결한다.
-    void BuildBattleIsland(std::uint32_t owner) {
+    // 12차 스커미시: sourceStorage가 있으면 현재 Template 대신 그 지역 Template의 owner 슬롯에서 영역/객체를 읽고, territoryChoice 영역을 전투섬으로 고른다(MP에서 참가자가 자기 fort의 전투 영역을 쓰는 것과 같다).
+    void BuildBattleIsland(std::uint32_t owner,CampaignTemplateStorage* sourceStorage=nullptr,std::int32_t territoryChoice=-1) {
         BattleIslandHooks hooks;hooks.assertion=[this](auto) { if (!services.ai.assertion) throw std::logic_error("전투섬 owner 진단 미연결");services.ai.assertion("playerId != INVALID_PLAYER_ID"); };
-        hooks.territory=[this](auto slot,auto output) { if (!runtime) throw std::logic_error("전투섬의 현재 Territory 부모 미설치");runtime->ReadTerritory(slot,output); };
+        hooks.territory=[this,sourceStorage,territoryChoice](auto slot,auto output) {
+            if (!sourceStorage) { if (!runtime) throw std::logic_error("전투섬의 현재 Territory 부모 미설치");runtime->ReadTerritory(slot,output);return; }
+            ReadSkirmishTerritory(*sourceStorage,slot,territoryChoice,output);
+        };
         hooks.placement=[this](auto player,auto record) { if (!construction) throw std::logic_error("전투섬의 현재 Player 배치 부모 미설치");return construction->PlayerBounds().Placement(static_cast<std::int32_t>(player),record); };
         hooks.region=[this](auto player,auto island) { if (player>=9) throw std::out_of_range("전투섬의 실제 Player9 범위");Put(players,static_cast<std::size_t>(player)*180+0x78,island); };
         hooks.generate=[this](const auto& builder,auto island) { if (!normal) throw std::logic_error("전투섬의 실제 지형 부모 미설치");normal->GenerateOriginal(builder.owner,builder.bounds,island); };
-        hooks.boss=[this] { return assetState.Boss(); };hooks.objects=[this](auto slot,auto start,auto end) { if (!runtime) throw std::logic_error("전투섬의 실제 Objects 부모 미설치");ReadFortObjectStreams(runtime->Objects(),slot,start,end); };
+        hooks.boss=[this] { return assetState.Boss(); };hooks.objects=[this,sourceStorage](auto slot,auto start,auto end) { if (!runtime) throw std::logic_error("전투섬의 실제 Objects 부모 미설치");ReadFortObjectStreams(runtime->Objects(),slot,start,end,sourceStorage); };
         hooks.graph=[this](bool reset) { core.graph.Rebuild(reset); };hooks.builderAssertion=[this](auto) { if (!services.ai.assertion) throw std::logic_error("전투섬의 builder 진단 미연결");services.ai.assertion("전투섬 IslandBuilder 진단"); };hooks.decoderDiagnostics=&metadata.geometry.decoderDiagnostics;
         RawBattleIsland(core.pool,chunks,*islands,core.frames,piece,std::move(hooks)).Build(owner);
     }
@@ -5648,6 +5675,70 @@ void RawCampaignSession::GenerateWorldGeysers() {
     hooks.decorate=[&placement](o::GameRandom& random,auto rectangle,auto region,auto quantity,auto type,auto force) { static_cast<void>(placement.PlaceRandom(random,rectangle,region,quantity,type,force)); };
     hooks.populate=[&s](std::int32_t quantity,o::GameRandom& random,auto rectangle,auto options) { s.PrepareConstruction();s.construction->PopulateGeysers(quantity,random,rectangle,options); };
     o::RawWorldGeyser(s.core.pool.Edition(),{s.core.ownerMode.battle,s.battleOptions,s.gameplayGlobals->GameAux()->WorldDecorationTypes(),true},std::move(hooks)).Generate(); // 10차 NB04: 실제 세션만 Even 구역 순서를 섞는다.
+}
+// 12차 스커미시: 미션 Start 직전에 MP 시작 규칙으로 월드를 만든다. 순서와 규칙은 MP 로그인과 같다.
+//  1) 무작위 중앙섬을 먼저 만든다($Random 메타데이터의 일반 중앙섬: 섬 목록이 비어 있어야 하고 원점 배치다).
+//  2) 소유자 1..N+1의 시작 섬을 차례로 만든다: 참가자의 fort 영역을 지역 Template 슬롯(owner)에 읽고, 전투섬 생성기(BuildBattleIsland)가
+//     방향표 링(PlayerBounds().Placement)에 놓고 지형을 키운 뒤 그 영역의 객체를 소유자=참가자로 만든다(MP는 비미션 모드라 객체 소유자가 항상 참가자다).
+//  3) 간헐천은 이 함수가 아니라 이어지는 randGeysers(MP와 같은 세계 간헐천 생성기)가 만든다.
+// 계획이 없으면(일반 미션) 아무것도 하지 않는다. 임시로 바꾼 미션 모드 두 곳은 예외가 나도 되돌린다.
+void RawCampaignSession::BuildSkirmishWorld() {
+    auto& s=*impl_;
+    const SkirmishWorldPlan* plan=s.services.ai.skirmishWorld ? s.services.ai.skirmishWorld() : nullptr;
+    if (!plan) return;
+    if (!s.loaded) throw std::logic_error("실제 Session 설치 전 스커미시 월드 생성 요청");
+    if (plan->islands.empty() || plan->islands.size()>8) throw std::out_of_range("스커미시 월드 계획의 참가자 수 범위");
+    s.PrepareConstruction();
+    s.battleOptions[6]=static_cast<std::uint8_t>(std::clamp(plan->mapSize,0,3)); // MP 맵 크기 옵션(링 간격 3/4/5/6칸)이다.
+    struct ModeGuard { // 객체 소유자/배치/Chaff 규칙을 MP(비미션)로 바꿔 두는 동안만 유효하며 소멸 때 원래 값으로 되돌린다.
+        std::array<bool*,4> targets;std::array<bool,4> saved;
+        explicit ModeGuard(std::array<bool*,4> list):targets(list) { for (std::size_t index=0;index<targets.size();++index) { saved[index]=*targets[index];*targets[index]=false; } } // 네 모드를 저장하고 끈다.
+        ~ModeGuard() { for (std::size_t index=0;index<targets.size();++index) *targets[index]=saved[index]; }
+        ModeGuard(const ModeGuard&)=delete;ModeGuard& operator=(const ModeGuard&)=delete;
+    } guard({&s.objectState.mission,&s.world.Storage()->links.mission,&s.objectState.chaffMode,&s.finishState.chaffMode});
+    // 객체 소유자=참가자(objectState.mission), 링 배치(links.mission), 원본 Chaff를 참가자마다 다시 읽지 않기(objectState.chaffMode),
+    // 영역 일치 판정이 소유자까지 비교하기(finishState.chaffMode: 켜져 있으면 같은 영역 번호의 다른 참가자 섬까지 일치로 본다)를 모두 MP 전투 규칙으로 맞춘다.
+    { // MP 로그인(InitializeDensity)과 같은 규칙으로 군도 밀도를 정한다: 밀도 옵션(0..3)의 최소/최대 표에서 반값 범위를 두 번 뽑아 더한다. 참가자가 많으면 SID가 모자라지 않게 낮은 밀도를 쓴다.
+        constexpr std::array<std::int32_t,4> minimum{10,15,20,25},maximum{30,35,40,45}; // 0041c9b0/0041c9e0의 밀도 표다.
+        const std::size_t density=plan->islands.size()>4 ? 0U : 1U;
+        s.battleOptions[7]=static_cast<std::uint8_t>(density);
+        auto& aux=*s.gameplayGlobals->GameAux();aux.ArchipelagoMinimum()=minimum[density];aux.ArchipelagoMaximum()=maximum[density];
+        const auto sample=[&] { const auto low=minimum[density]/2,high=maximum[density]/2;return s.random.Next(static_cast<std::uint32_t>(high-low))+static_cast<std::uint32_t>(low); };
+        const auto first=sample();const auto second=sample();aux.ArchipelagoPercent()=first+second;
+        // 섬 기록은 100개뿐이라(IslandRuntime) 중앙섬+군도가 약 90개를 넘으면 5~8번째 참가자의 섬을 만들 수 없다. 참가자가 5명 이상이면 군도 밀도를 5~8%로 낮춘다(실측: 8명 맵에서 5%=66개, 10%·15%=91개).
+        if (plan->islands.size()>4) aux.ArchipelagoPercent()=5U+s.random.Next(4U);
+        if (s.services.construction.configInt) if (const auto forced=s.services.construction.configInt("skirmishDensity",-1);forced>=0) aux.ArchipelagoPercent()=static_cast<std::uint32_t>(forced); // 검사용: 설정 skirmishDensity(0 이상)가 있으면 군도 밀도 비율을 그 값으로 고정한다.
+    }
+    try { s.BuildCentralIsland(plan->central); } // 1) 중앙섬은 시작 섬보다 먼저 만든다(원문 진단: 섬 목록이 비어 있어야 한다).
+    catch (const std::exception& error) { // 어느 기록에서 실패했는지 로그에 남긴다.
+        std::string record;for (const auto byte:plan->central) { constexpr std::string_view digits="0123456789abcdef";record+=digits[byte>>4];record+=digits[byte&15U]; }
+        throw std::runtime_error(std::string(error.what())+" [스커미시 중앙섬 기록="+record+"]");
+    }
+    std::clog<<"Skirmish: central island built (SID free "<<s.core.pool.FreeCount()<<"/"<<s.core.pool.Capacity()<<", islands "<<s.islands->Count()<<", density "<<s.gameplayGlobals->GameAux()->ArchipelagoPercent()<<"%)\n"; // 중앙섬 생성 뒤 SID 여유와 군도 밀도를 남긴다.
+    auto temporary=s.templateStorage->CreateSibling();
+    const auto clearAll=[&temporary] { for (std::uint32_t slot=1;slot<=8;++slot) temporary->Clear(slot); }; // 지역 Template 슬롯을 반납한다.
+    try {
+        // 2) 참가자마다 자기 시작 섬 fort를 읽고 전투섬을 만든다.
+        for (std::uint32_t owner=1;owner<=plan->islands.size();++owner) {
+            const auto& island=plan->islands[owner-1];
+            auto hooks=s.services.missionFortLoad;
+            hooks.read=[bytes=&island.bytes](auto)->std::vector<std::uint8_t> { return *bytes; };
+            hooks.sameName=[](auto first,auto second) { return first==second; };
+            hooks.wrongName=[] {};
+            hooks.readOnly=[](auto) { return true; }; // 원본 fort는 읽기만 하고 다시 저장하지 않는다.
+            hooks.typeCount=[&s] { return static_cast<std::int32_t>(s.core.types.size()); };
+            hooks.currentSlot=[] { return 9U; };hooks.refreshTitle={}; // 지역 Template는 현재 슬롯과 제목을 바꾸지 않는다.
+            if (!hooks.tooManyTypes) hooks.tooManyTypes=[] { throw std::logic_error("스커미시 시작 섬 fort의 numTypes<256 진단"); };
+            if (!hooks.rejectFile) hooks.rejectFile=[](auto path) { throw std::runtime_error("스커미시 시작 섬 fort 서명 거부: "+std::string(path)); };
+            std::string name="\\D\\"+island.fort+".FORT"; // 지역 Template 이름(원문 SurroundedCentral과 같은 \D\이름.FORT 형식)이다.
+            temporary->LoadFile(owner,{},name,hooks);
+            try { s.BuildBattleIsland(owner,temporary.get(),island.territory); }
+            catch (const std::exception& error) { throw std::runtime_error(std::string(error.what())+" [스커미시 시작 섬 owner="+std::to_string(owner)+" fort="+island.fort+" territory="+std::to_string(island.territory)+"]"); } // 어느 섬에서 실패했는지 로그에 남긴다.
+            std::clog<<"Skirmish: owner "<<owner<<" <- "<<island.fort<<" Terr"<<island.territory<<" (SID free "<<s.core.pool.FreeCount()<<"/"<<s.core.pool.Capacity()<<")\n"; // 시작 섬 배정과 SID 풀 여유를 실행 로그에 남긴다.
+            temporary->Clear(owner);
+        }
+    } catch (...) { clearAll();throw; }
+    clearAll();
 }
 //00486bc0의 현재 자원 전역과 실제 장치를 연결하며 로그인 기한/모드의 원문 관문을 먼저 실행한다.
 void RawCampaignSession::RunBattleResources() {

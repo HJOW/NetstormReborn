@@ -63,6 +63,7 @@ namespace netstorm::o { class RawConnectionRegistry; } //실제 Client와 로컬
 namespace netstorm::o { class BombEffectTimerProcess; } // 기본 생성 결과의 실제 클래스이며 호출자는 사용 전에 본문 헤더를 포함한다.
 
 namespace netstorm::client {
+struct SkirmishWorldPlan; // 12차: 스커미시 시작 월드 계획(시작 섬 fort/중앙섬 기록)이다. 정의는 SkirmishSetup.h에 있고 여기서는 포인터로만 쓴다.
 class CompositeMissionTransport; // 실제 Session 전체 owner를 빌리는 현재 ID 복합 전송이다.
 struct RitualChoiceInputHooks; //실제 Carrier.cpp의 같은선택제단과전송을일반입력에빌린다.
 struct TechnologyListMenuHooks; //HTML 원소별 기술 목록의 GUI는 실제 현재 controlled 메뉴가 공급한다.
@@ -146,6 +147,7 @@ struct CampaignAiServices {
     o::RawAiBrainMemory::Fill allocationBytes; // 실제 host 할당 직후의 입력 바이트다. 누락을 임의 0채움 성공으로 바꾸지 않는다.
     o::RawAiBrainMemory::Fill bridgeScratchBytes; //검색caller의초기8BYTE를별도로공급한다.본문힙할당입력이나임의성공좌표와합치지않는다.
     std::function<std::string()> defaultName; // 현재 defaultAiName 설정의 원본 좁은문자열을 반환한다.
+    std::function<const SkirmishWorldPlan*()> skirmishWorld; // 12차: 스커미시 실행 중이면 이번 시작의 월드 계획(없으면 nullptr)이다. 미션 시작 때 MP 전투섬 규칙으로 섬을 만드는 데 쓴다.
     std::function<std::uint32_t()> skirmishPlayers; // 12차: 스커미시 실행 중이면 사람+AI 참가자 수, 아니면 0이다(세계 간헐천 예산에만 쓴다).
     std::function<std::uint32_t(std::uint32_t,bool)> difficulty; // 11차: owner AI의 난이도 설정값(1쉬움/2보통/3어려움, 0=보통)이다. 두 번째 인자는 이 AI가 로컬 플레이어의 적인지 여부다. 없으면 모든 AI가 보통이다.
     std::function<void(std::uint32_t,std::uint32_t)> changeColor; // 실제0043ca70의 표/섬 프레임 변경을 마친 뒤 보내는 선택형 화면 통지다.
@@ -550,6 +552,8 @@ public:
     void GenerateLocalGeysers();
     //00486440 전체 부모를 같은 실제 지도/Player/Pool/건설과 장기 전역으로 실행한다.
     void GenerateWorldGeysers();
+    // 12차 스커미시: 서비스가 월드 계획을 주면 MP 시작 규칙(중앙섬 먼저, 참가자별 전투섬을 방향표 링에, 객체 소유자는 참가자)으로 섬을 만든다. 계획이 없으면 아무것도 하지 않는다.
+    void BuildSkirmishWorld();
     void SetAllBridgeQuality(std::uint32_t quality); //실제 Editor 또는 missionPost에서 전체 다리의 Cracked/Normal/Hard 원문 명령을 실행한다.
     void SetBridgeQuality(std::uint32_t sid,std::uint32_t quality); //일반 입력의 Editor/missionPost 뒤 실제421f20의 Editor/TYPE 관문을 유지해 개별 다리를 바꾼다.
     void CycleBridgeQuality(std::uint32_t sid); //편집 Ctrl 좌클릭이 선택한422640을 같은 풀/현재TYPE/프레임/난수/표시 장치에 전달한다.

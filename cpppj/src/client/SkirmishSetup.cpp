@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <cctype>
 #include <charconv>
+#include <numeric>
+#include <random>
+#include "o/CanonDecoder.h"
 
 namespace netstorm::client { // 스커미시 로직의 구현이다.
 namespace { // 이 파일에서만 쓰는 표와 작은 도우미다.
@@ -17,17 +20,12 @@ constexpr std::array<SkirmishBannable, 27> kBannable{{
     {"sunAviary", "Whirlibase"}, {"windAviary", "Devil Maker"}, {"rainAviary", "Man o'War Pool"},
     {"sunWalker", "Fire Ant"}, {"windWalker", "Sail Skater"}, {"rainWalker", "Crystal Crab"},
     {"bulf", "Bulf"}, {"outpost", "Outpost"}}};
-// 후보 맵 표의 한 행(AI 수 → 맵 이름들)이다.
-struct MapRow {
-    int ai;                              // 이 행이 쓰는 AI 수다.
-    std::vector<std::string_view> names; // 소유자 1..ai+1이 모두 있는 기존 fort의 미션 이름이다.
-};
-// 자동 생성 표를 한 번만 만든다(SkirmishMapList.inc).
-const std::vector<MapRow>& MapRows() {
-    static const std::vector<MapRow> rows{
-#include "client/SkirmishMapList.inc"
+// 시작 섬 후보 표를 한 번만 만든다(SkirmishStartIslands.inc, 자동 생성).
+const std::vector<SkirmishStartIsland>& IslandPool() {
+    static const std::vector<SkirmishStartIsland> pool{
+#include "client/SkirmishStartIslands.inc"
     };
-    return rows;
+    return pool;
 }
 // 화면 문구의 언어 구분이다.
 enum class Lang { English, Korean, Japanese };
@@ -96,11 +94,8 @@ std::string Head(std::string_view title, std::string_view intro) { return "<back
 }
 // 후보 표를 span으로 돌려준다.
 std::span<const SkirmishBannable> SkirmishBannableTypes() { return kBannable; }
-// AI 수에 맞는 행의 맵 이름들이다.
-std::span<const std::string_view> SkirmishMapsFor(int aiCount) {
-    for (const auto& row : MapRows()) if (row.ai == aiCount) return row.names; // 일치하는 AI 수의 행을 찾는다.
-    return {};
-}
+// 시작 섬 후보 표를 span으로 돌려준다.
+std::span<const SkirmishStartIsland> SkirmishStartIslandPool() { return IslandPool(); }
 // 설정을 읽는다.
 SkirmishSettings LoadSkirmishSettings(const SkirmishConfigGet& get) {
     SkirmishSettings settings;
@@ -237,9 +232,23 @@ std::string BuildSkirmishScreen(const SkirmishTarget& target, const SkirmishSett
 // 시작 자료(맵과 대본)를 만든다.
 SkirmishLaunch BuildSkirmishLaunch(const SkirmishSettings& settings, std::uint32_t randomValue) {
     SkirmishLaunch launch;
-    const auto maps = SkirmishMapsFor(settings.aiCount);
-    if (maps.empty()) return launch;
-    launch.mapName = std::string(maps[randomValue % maps.size()]);
+    const auto& pool = IslandPool();
+    const auto players = static_cast<std::size_t>(std::clamp(settings.aiCount, 1, kSkirmishMaxAi) + 1);
+    if (pool.size() < players) return launch;
+    std::mt19937 random(randomValue);
+    // 후보 표에서 참가자 수만큼 서로 다른 시작 섬을 뽑는다(소유자 1..N+1 순서, MP에서 참가자마다 자기 fort 영역을 쓰는 것과 같다).
+    std::vector<std::size_t> order(pool.size());
+    std::iota(order.begin(), order.end(), std::size_t{0});
+    std::shuffle(order.begin(), order.end(), random);
+    for (std::size_t slot = 0; slot < players; ++slot) launch.islands.push_back(pool[order[slot]]);
+    // 참가자가 많을수록 링 간격이 넓은 맵 크기를 쓴다(2명 간격4, 3~4명 간격5, 5명 이상 간격6).
+    launch.mapSize = players <= 2 ? 1 : players <= 4 ? 2 : 3;
+    // 중앙섬은 3x3 패턴 가운데서 무작위로 고르고 회전/씨앗도 무작위다(MP의 $Random 중앙섬 기록과 같은 형식).
+    std::vector<std::uint8_t> bigPatterns;
+    const auto patterns = o::TerritoryPatterns();
+    for (std::size_t index = 0; index < patterns.size(); ++index) if (patterns[index].width == 3 && patterns[index].height == 3) bigPatterns.push_back(static_cast<std::uint8_t>(index));
+    const auto pattern = bigPatterns.empty() ? std::uint8_t{0} : bigPatterns[random() % bigPatterns.size()];
+    launch.central = {static_cast<std::uint8_t>(pattern | ((random() & 3U) << 6)), 0x09, 0x00, static_cast<std::uint8_t>(random()), 0x00, 0x00};
     std::string script = "[Header]\nmissionType=\"Tutorial\"\n\nmissionNumber=1\nmoreGeysers=1\nrandGeysers=1\n\nmyStartMoney=5000\nmyTech=\"all\"\n";
     if (!settings.bans.empty()) {
         script += "techAllowed=\"deny";
@@ -275,6 +284,36 @@ SkirmishLaunch BuildSkirmishLaunch(const SkirmishSettings& settings, std::uint32
         "[Failed][GoodTeamDead]\n<h2>Defeat</h2>\n<p>\nYour team has fallen.\n$Button=Leave,MissionAbort,0\n\n[END]\n";
     launch.script = std::move(script);
     return launch;
+}
+// 스커미시용 빈 월드 fort를 만든다: 섹션 35개 중 Chaff(4)/Territory(6)/Terr00..19(15..34)만 비우고 나머지는 기준 fort 그대로 둔다.
+// 12차에서 월드 배치를 기존 맵 선택에서 MP 시작 규칙으로 바꾸면서 추가했다(섬은 시작 때 참가자별로 만든다).
+std::vector<std::uint8_t> MakeSkirmishEmptyWorldFort(std::span<const std::uint8_t> baseFort) {
+    constexpr std::size_t kSections = 35, kChaff = 4, kTerritory = 6, kFirstTerr = 15, kTerritoryBytes = 120, kChunkRecords = 256; // 섹션 수와 각 섹션 위치/크기(원본 저장 순서)다.
+    constexpr std::uint8_t kChunkMark = 99;                                                                                         // 청크 레코드 표지(0x63)다.
+    if (baseFort.size() < 2 || baseFort[0] != 'F') return {};
+    std::vector<std::vector<std::uint8_t>> sections;
+    std::size_t position = 2;
+    // 각 섹션의 [길이(자기 2바이트 포함)][본문]을 읽는다.
+    while (sections.size() < kSections) {
+        if (position + 2 > baseFort.size()) return {};
+        const std::size_t length = static_cast<std::size_t>(baseFort[position]) | (static_cast<std::size_t>(baseFort[position + 1]) << 8);
+        if (length < 2 || position + length > baseFort.size()) return {};
+        sections.emplace_back(baseFort.begin() + static_cast<std::ptrdiff_t>(position + 2), baseFort.begin() + static_cast<std::ptrdiff_t>(position + length));
+        position += length;
+    }
+    sections[kChaff].assign(1, 2);                                                  // 버전 2 뒤에 빈 청크 레코드 256개(표지, 개수0)를 둔다.
+    for (std::size_t chunk = 0; chunk < kChunkRecords; ++chunk) sections[kChaff].insert(sections[kChaff].end(), {kChunkMark, 0, 0});
+    sections[kTerritory].assign(kTerritoryBytes, 0);                                // 영역 표를 모두 비운다(섬 없음).
+    for (std::size_t index = kFirstTerr; index < kSections; ++index) sections[index].assign(1, 2); // Terr 섹션은 버전만 남긴다.
+    std::vector<std::uint8_t> result{baseFort[0], baseFort[1]};
+    // 각 섹션을 [길이][본문]으로 다시 쓴다.
+    for (const auto& body : sections) {
+        const auto length = body.size() + 2;
+        result.push_back(static_cast<std::uint8_t>(length & 0xff));
+        result.push_back(static_cast<std::uint8_t>(length >> 8));
+        result.insert(result.end(), body.begin(), body.end());
+    }
+    return result;
 }
 // 이름 비교는 대소문자를 무시한다.
 bool IsSkirmishMissionName(std::string_view name) { return Lower(name) == Lower(kSkirmishMissionName); }

@@ -48,7 +48,8 @@ o::MissionStartHooks RawCampaignMissionStartBindings::Hooks() {
     return hooks;
 }
 // 같은 게이트의 원본 시작 표식만 사용하고 별도 성공 사본을 만들지 않는다.
-void RawCampaignMissionStartBindings::Start() const { start_.Start(); }
+// 12차 스커미시: 일반 미션은 prepareWorld가 비어 있어 기존과 같고, 스커미시는 Start가 사제를 찾기 전에 MP 규칙 섬 생성을 먼저 실행한다.
+void RawCampaignMissionStartBindings::Start() const { if (effects_.prepareWorld) effects_.prepareWorld();start_.Start(); }
 // 호출자가 공급한 미초기화 영역에 기존 600BYTE 설정 초기화 순서를 한 번 적용한다.
 std::uint32_t RawCampaignMissionStartBindings::CreateAi(std::uint32_t owner) const {
     if (owner<1 || owner>8) throw std::out_of_range("미션 AI 소유자 범위 오류");

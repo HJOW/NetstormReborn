@@ -833,19 +833,29 @@ bool SameSkirmishPath(std::string_view first,std::string_view second) {
     return normalize(first)==normalize(second);
 }
 }
-// 12차 스커미시: 설정으로 미션 대본과 fort를 만들어 일반 미션처럼 시작한다. 후보 맵이 없거나 fort를 읽지 못하면 거짓이고 화면은 그대로다.
+// 12차 스커미시: 설정으로 미션 대본과 월드 계획을 만들어 일반 미션처럼 시작한다. 미션 fort는 섬이 없는 빈 월드이고, 섬은 미션 시작 때 MP 시작 규칙으로 만든다.
+// 시작 섬 fort를 읽지 못하면 거짓이고 화면은 그대로다.
 bool UberGump::StartSkirmish(const SkirmishSettings& settings) {
     std::random_device device;
     const auto launch=BuildSkirmishLaunch(settings,device());
-    if (launch.mapName.empty()) { std::clog<<"Skirmish: no map for "<<settings.aiCount<<" AI players.\n";return false; }
+    if (launch.islands.empty()) { std::clog<<"Skirmish: not enough start islands for "<<settings.aiCount<<" AI players.\n";return false; }
     auto& config=client_.Configuration();
-    const auto sourceFortPath=config.PathSpec("fortSpec",launch.mapName);
-    const auto fort=config.Reader()(sourceFortPath);
-    if (!fort) { std::clog<<"Skirmish: cannot read fort "<<sourceFortPath<<".\n";return false; }
+    auto plan=std::make_shared<SkirmishWorldPlan>(); // 참가자별 시작 섬의 원본 fort를 미리 읽어 세션이 파일 시스템 없이 지역 Template로 쓰게 한다.
+    plan->central=launch.central;plan->mapSize=launch.mapSize;
+    // 각 참가자의 시작 섬 fort를 읽는다.
+    for (const auto& island:launch.islands) {
+        const auto sourceFortPath=config.PathSpec("fortSpec",std::string(island.fort));
+        const auto fort=config.Reader()(sourceFortPath);
+        if (!fort) { std::clog<<"Skirmish: cannot read fort "<<sourceFortPath<<".\n";return false; }
+        plan->islands.push_back({std::string(island.fort),island.territory,*fort});
+    }
+    auto emptyWorld=MakeSkirmishEmptyWorldFort(plan->islands.front().bytes); // 첫 참가자의 fort에서 기술/덱 같은 섹션만 가져오고 섬/객체는 비운 월드다.
+    if (emptyWorld.empty()) { std::clog<<"Skirmish: cannot build the empty world from "<<plan->islands.front().fort<<".\n";return false; }
     const auto scriptPath=config.PathSpec("missionSpec",std::string(kSkirmishMissionName));
     const auto fortPath=config.PathSpec("fortSpec",std::string(kSkirmishMissionName));
     std::vector<std::uint8_t> script(launch.script.begin(),launch.script.end());
-    skirmishSource_=[script=std::move(script),fort=*fort,scriptPath,fortPath](std::string_view path)->std::optional<std::vector<std::uint8_t>> { // 생성한 대본과 고른 fort만 서비스한다.
+    skirmishWorld_=std::move(plan);
+    skirmishSource_=[script=std::move(script),fort=std::move(emptyWorld),scriptPath,fortPath](std::string_view path)->std::optional<std::vector<std::uint8_t>> { // 생성한 대본과 빈 월드 fort만 서비스한다.
         if (SameSkirmishPath(path,scriptPath)) return script;
         if (SameSkirmishPath(path,fortPath)) return fort;
         return std::nullopt;
@@ -903,6 +913,7 @@ void UberGump::BeginMission(std::string name,std::uint32_t demo,std::uint32_t mo
 void UberGump::CreateMission(std::string name,std::uint32_t demo,std::uint32_t mode,o::ConfigInterface::FileReader source) {
     if (mission_ || missionRuntime_) throw std::logic_error("Guide 새 미션 공장 전에 기존 현재가 남아 있음"); //기존 World는 새 Init 뒤 State7의 실제 cleanup 위치까지 살아 있을 수 있다.
     mission_ = CreateGuideMissionScript(client_.Configuration(),name,client_.SurfaceStorage()->links.mission,std::move(source));
+    if (!IsSkirmishMissionName(name)) skirmishWorld_.reset(); // 12차: 스커미시가 아닌 미션은 이전 스커미시의 월드 계획을 남기지 않는다.
     client_.Configuration().SetInt("skirmishRun",IsSkirmishMissionName(name) ? 1 : 0); // 12차: 이 미션이 스커미시면 AI 난이도는 AI별 설정을 쓴다.
     if (!mission_->Loaded()) throw std::runtime_error("Missing mission: " + name);
     const auto type = o::AsciiLower(mission_->MissionType());
@@ -1026,6 +1037,7 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
     auto services=MakeCampaignClientServices(client_,*rawButtons_,{
         [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); },
         [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { RemoveNativePacketMessage(kind,player,parameter); },[this](auto packet) { ReceiveChatMessage(packet); }}); // 현재 클라이언트의 설정·음향·입력·UI다.
+    services.ai.skirmishWorld=[this]()->const SkirmishWorldPlan* { return skirmishWorld_.get(); }; // 12차: 세션이 미션 시작 때 읽는 스커미시 월드 계획이다(일반 미션은 null).
     services.adoptInitializedPlayers=nativePlayers; //앞선 실제 cleanup의 같은9기록을 대여하며 생성자에서 두 번째로 재할당하지 않는다. 일반 World/로그인 어댑터의 나머지 기존 경계는 유지한다.
     if (nativePlayers) services.localLogin->startingProgress=[this] { rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });rebuild_=true; }; // 실제 인자20/즉시8 예약 뒤 만들며 중첩 Compose/Present/프레임 대기를 추가하지 않는다.
     if (nativePlayers) services.localLogin->creatingIslands=[this] { rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Creating Islands.")),[this] { return FontBytes(client_.Translate("Cancel")); });rebuild_=true; }; // 원문cf570의 같은 안내 serial 재사용/본문 갱신을 사용한다.

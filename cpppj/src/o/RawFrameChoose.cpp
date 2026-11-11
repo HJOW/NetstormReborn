@@ -25,7 +25,9 @@ std::int32_t ChooseTerrainFrame(const RiftTypeFrames& frames,FrameCode code,std:
     if (theme==-1) return candidates[random_.Next(static_cast<std::uint32_t>(candidates.size()))];
     const auto quarter=static_cast<std::int32_t>(candidates.size()/4);
     const auto low=quarter*theme+1,high=quarter*(theme+1);
-    if (high<=low) throw std::out_of_range("지역 프레임 quartile 난수 범위 오류");
+    // 10차 NB23(드문 섬 생성 종료) 교정: 후보가 8개 미만인 타일 코드는 분위(quartile) 범위가 비어 원문은 0으로 나누는 난수 범위를 쓴다.
+    // 무작위 섬(중앙섬/군도)에서만 나오는 드문 코드이므로, 범위가 비면 theme 없이 전체 후보에서 고르는 기존 theme=-1 규칙으로 대신한다.
+    if (high<=low) return candidates[random_.Next(static_cast<std::uint32_t>(candidates.size()))];
     const auto index=low+static_cast<std::int32_t>(random_.Next(static_cast<std::uint32_t>(high-low)));
     if (index<0 || static_cast<std::size_t>(index)>=candidates.size()) throw std::out_of_range("지역 프레임 후보 범위 오류");
     return candidates[static_cast<std::size_t>(index)];

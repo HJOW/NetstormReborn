@@ -3,6 +3,7 @@
 #include "client/NativeMetaParticipantName.h"
 #include "client/PriestSelectionShortcut.h"
 #include "o/RawCarrierPickup.h"
+#include "o/RawFrameChoose.h"
 #include "o/RawTerrainGrowth.h"
 #include "o/RawWorldGeyser.h"
 #include <set>
@@ -145,4 +146,27 @@ TEST_CASE(KnownBug_NB23_TerrainGrowthRandomShapesNeverThrow) {
         catch (const std::exception& error) { if (failures++ == 0) std::fprintf(stderr, "NB23 지형 성장 예외: round=%d bounds=%d,%d,%d,%d count=%d what=%s\n", round, left, top, right, bottom, count, error.what()); }
     }
     CHECK(failures == 0);
+}
+
+// NB23(교정): 드문 섬 생성 종료의 실제 원인. 후보가 8개 미만인 타일 코드에 theme(0..3)이 있으면 분위 범위가 비어
+// 원문은 0으로 나누는 난수 범위를 썼다. 스커미시의 MP 규칙 월드 생성(무작위 중앙섬/군도)에서 약 5%로 재현됐다.
+// 교정 뒤에는 theme 없이 전체 후보에서 고르며, 후보가 충분하면 기존 분위 규칙이 그대로다.
+TEST_CASE(KnownBug_NB23_SparseTileCodeFallsBackToAllCandidates) {
+    using namespace netstorm::o;
+    GameRandom random;
+    std::vector<FrameCode> codes;
+    for (int index = 0; index < 5; ++index) codes.push_back({'B', 'A', static_cast<std::uint8_t>(index), 0}); // 'B'/'A' 코드 5개: quarter=1이라 분위 범위가 빈다.
+    for (int index = 0; index < 16; ++index) codes.push_back({'C', 'A', static_cast<std::uint8_t>(index), 0}); // 'C'/'A' 코드 16개: quarter=4라 분위 범위가 있다.
+    const RiftTypeFrames frames(codes);
+    // 후보가 부족한 코드는 모든 theme에서 예외 없이 그 코드의 후보 안에서 고른다.
+    for (int theme = 0; theme < 4; ++theme)
+        for (int round = 0; round < 40; ++round) {
+            const auto chosen = ChooseTerrainFrame(frames, {'B', 'A', 0, 0}, theme, random);
+            CHECK(chosen >= 0 && chosen < 5);
+        }
+    // 후보가 충분하면 theme의 분위(5..8, 9..12, ...)를 지킨다: theme 1은 인덱스 (5+4*1+1)..(5+4*2) 사이다.
+    for (int round = 0; round < 40; ++round) {
+        const auto chosen = ChooseTerrainFrame(frames, {'C', 'A', 0, 0}, 1, random);
+        CHECK(chosen >= 5 + 5 && chosen < 5 + 8);
+    }
 }

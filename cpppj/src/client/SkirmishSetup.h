@@ -61,15 +61,36 @@ std::string ApplySkirmishAction(SkirmishSettings& settings, const std::vector<st
 // 화면 한 장의 Tell 본문을 만든다. language는 원문 언어 번호(0/1 영어, 5 일본어, 7 한국어)이고 translate는 유닛 이름 번역이다.
 std::string BuildSkirmishScreen(const SkirmishTarget& target, const SkirmishSettings& settings, std::uint32_t language,
     const std::function<std::string(std::string_view)>& translate);
-// 시작에 쓰는 생성 미션이다.
-struct SkirmishLaunch {
-    std::string mapName; // 고른 기존 fort의 미션 이름(예: "Battle1")이다.
-    std::string script;  // 생성한 미션 대본(english)이다.
+// 시작 섬 한 칸이다: 원본 fort 파일 하나의 영역(Terr) 하나를 한 참가자의 전투섬으로 쓴다(MP에서 참가자가 자기 fort의 전투 영역을 가져오는 것과 같다).
+struct SkirmishStartIsland {
+    std::string_view fort; // d 디렉터리의 원본 fort 이름(확장자 없음, 예: "school5")이다.
+    int territory{};       // 그 fort 안의 영역 번호(0..19)다. 이 영역의 객체(사제)가 이 참가자 소유로 만들어진다.
 };
-// 설정과 난수로 시작 자료를 만든다. 맵은 소유자 수가 AI 수+1인 후보 중에서 고르고, 후보가 없으면 빈 mapName이다.
+// 시작에 쓰는 생성 미션이다. 월드는 fort 파일이 아니라 MP 시작 규칙(참가자별 전투섬 + 무작위 중앙섬 + 무작위 간헐천)으로 만든다.
+struct SkirmishLaunch {
+    std::string script;                       // 생성한 미션 대본(english)이다.
+    std::vector<SkirmishStartIsland> islands; // 소유자 1..(AI 수+1) 순서의 시작 섬이다(MP 방향표대로 링에 놓인다).
+    std::array<std::uint8_t, 6> central{};    // 무작위 중앙섬 영역 기록(패턴|회전, 플래그, 위치 0, 지형 씨앗 세 바이트)이다.
+    int mapSize{};                            // 맵 크기 옵션(0..3, 링 간격 3/4/5/6칸)이다. 참가자 수가 많을수록 크다.
+};
+// 설정과 난수로 시작 자료를 만든다. 시작 섬은 후보 표에서 서로 다른 것을 뽑고 중앙섬은 무작위 패턴/회전/씨앗이다. 후보가 모자라면 islands가 비어 있다.
 SkirmishLaunch BuildSkirmishLaunch(const SkirmishSettings& settings, std::uint32_t randomValue);
-// AI 수별 후보 맵 이름 목록이다(생성 표).
-std::span<const std::string_view> SkirmishMapsFor(int aiCount);
+// 월드 생성 단계가 쓰는 시작 계획이다: 시작 섬마다 원본 fort 바이트를 함께 들고 있어 세션이 파일 시스템 없이 지역 Template로 읽을 수 있다.
+struct SkirmishWorldPlan {
+    struct Island {
+        std::string fort;                 // 원본 fort 이름이다(제목/서명 확인용).
+        int territory{};                  // 그 fort의 전투 영역 번호다.
+        std::vector<std::uint8_t> bytes;  // 그 fort 파일 전체 내용이다.
+    };
+    std::vector<Island> islands;          // 소유자 1..N+1 순서의 시작 섬이다.
+    std::array<std::uint8_t, 6> central{}; // 중앙섬 영역 기록이다.
+    int mapSize{};                        // 맵 크기 옵션(0..3)이다.
+};
+// 시작 섬 후보 표 전체다(자동 생성 표).
+std::span<const SkirmishStartIsland> SkirmishStartIslandPool();
+// 스커미시 월드를 가진 가상 미션 fort를 만든다: 기준 fort에서 영역 표/Chaff/Terr 객체를 모두 비워(섬 없는 빈 월드) 기술/덱/돈 같은 나머지 섹션만 남긴다.
+// 비어 있거나 형식이 틀린 입력이면 빈 벡터를 돌려준다.
+std::vector<std::uint8_t> MakeSkirmishEmptyWorldFort(std::span<const std::uint8_t> baseFort);
 // 이 이름이 생성 스커미시 미션인지 판정한다(대소문자 무시).
 bool IsSkirmishMissionName(std::string_view name);
 }

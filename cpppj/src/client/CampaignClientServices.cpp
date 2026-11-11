@@ -91,6 +91,7 @@ CampaignMissionStartEffects MakeCampaignMissionStartEffects(Client& client,GameW
     effects.refreshSp=[&client] { client.GetRenderer().InvalidateAll();if (client.Menu()) client.Menu()->Refresh(); };
     effects.refreshCommandGump=std::move(refreshCommandGump);
     effects.randomGeysers=[&world] { world.Session().GenerateWorldGeysers(); }; //randGeysers는 전체 부모이며 기본 local 생성 하나로 대신하지 않는다.
+    effects.prepareWorld=[&world] { world.Session().BuildSkirmishWorld(); }; // 12차 스커미시: 계획이 있을 때만 MP 규칙으로 섬을 만든다(일반 미션은 계획이 없어 아무 일도 하지 않는다).
     effects.resetCamera=[&world] { world.ResetCampaignCamera(); };
     effects.unknownAbilityAssertion=[](std::string_view name) { std::clog<<"미션 AI의 원본 능력 이름 진단: "<<name<<'\n'; };
     effects.unknownAbilityLog=[](std::string_view name) { std::clog<<"미등록 미션 AI 능력: "<<name<<'\n'; };

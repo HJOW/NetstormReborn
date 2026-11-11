@@ -25,6 +25,7 @@
 #include <memory>
 
 namespace netstorm::client {
+struct SkirmishWorldPlan; // 12차: 스커미시 시작 월드 계획이다(정의는 SkirmishSetup.h).
 class Client;
 struct RawSurfaceGumpBindings; // 실제 현재 UI 등록표와 저장소 pin을 Storage에 약하게 빌린다.
 class GameWorld;
@@ -300,6 +301,7 @@ private:
     SkirmishSettings CurrentSkirmishSettings(); // 12차: 설정 객체에서 스커미시 설정을 읽는다.
     void StoreSkirmishSettings(const SkirmishSettings& settings); // 12차: 스커미시 설정을 설정 객체에 쓴다.
     std::string SkirmishOrProductBody(std::string_view target,std::string_view body); // 12차: 스커미시 화면 본문 또는 제품 전용 Tell 본문이다.
+    std::shared_ptr<SkirmishWorldPlan> skirmishWorld_; // 12차: 이번 스커미시의 월드 계획이다. 세션 서비스가 미션 시작 때 읽고 일반 미션에서는 null이다.
     o::ConfigInterface::FileReader skirmishSource_; // 12차: 생성한 스커미시 대본/fort를 읽는 가상 파일 reader다(시작할 때 채운다).
     std::string lastTellTarget_; // 5차: 마지막으로 실제 창을 만든 Tell 섹션 이름이다. 맵 목록 스크롤이 같은 대화창을 다시 열 때 쓴다.
     ScreenRect htmlMapView_{};std::string htmlCurrentFortName_; // 각 조회에서 현재 뷰와 반환 문자열의 수명을 보존한다.
