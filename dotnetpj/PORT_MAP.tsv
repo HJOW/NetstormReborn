@@ -547,6 +547,8 @@ cpppj/src/o/TypeLoadOrder.cpp	Netstorm.Core/Original/RiftTypeLoadOrder.cs	c2d292
 cpppj/src/o/TypeParser.cpp	Netstorm.Core/Original/RiftTypeDefinition.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/o/UnpopVtables.inc	Netstorm.Core/Original/OriginalUnpopDisplay.Data.cs	fbc27346564e5245d36c00e0b151777204a22efe	L1
 cpppj/src/platform/Bitmap.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
+cpppj/src/platform/UserDataRoot.cpp	Netstorm.Client.Host/UserDataRoot.cs	9b8f4a9010405c10c91cbe843ca9afa5c371d252	port
+cpppj/src/platform/UserDataRoot.h	Netstorm.Client.Host/UserDataRoot.cs	9b8f4a9010405c10c91cbe843ca9afa5c371d252	port
 cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionTransport.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/o/RawCampaignWorldLoad.h	Netstorm.Core/Original/CampaignWorldGlobals.cs	b8ce42c7db0f762d0b836c50d557cc4556e04a52	port
