@@ -16029,7 +16029,7 @@
       "bytes": 1512708,
       "lines": 865,
       "fixtureCommit": "b68dd03fb",
-      "webCommit": "worktree",
+      "webCommit": "4e2259774",
       "cpppjBasis": {
         "cpppj/src/o/RawDataManagerSelection.cpp": "b68dd03fb"
       }
@@ -16058,7 +16058,7 @@
       "bytes": 4094740,
       "lines": 287,
       "fixtureCommit": "58de1f48e",
-      "webCommit": "worktree",
+      "webCommit": "11ad9bf58",
       "cpppjBasis": {
         "cpppj/src/o/RawDataManagerResize.cpp": "c2a3fa5e2"
       }
@@ -16087,9 +16087,38 @@
       "bytes": 4365952,
       "lines": 221,
       "fixtureCommit": "c2a3fa5e2",
-      "webCommit": "worktree",
+      "webCommit": "11ad9bf58",
       "cpppjBasis": {
         "cpppj/src/o/RawDataManagerResize.cpp": "c2a3fa5e2"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E284",
+      "id": "datamanager-read",
+      "path": "cpppj/tests/fixtures/datamanager-read-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: DataManager 파일 이미지 섹션 본문(ReadDataManagerImage)의 전체 1400BYTE(반복 표기 압축)·변이 3종 144입력과 매 경계 직전 전체 메모리",
+      "consumers": [
+        "webpj/tests/data-manager-image.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-data-manager-image.js"
+      ],
+      "doc": "docs/webpj-data-manager-image-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDataManagerImage.cpp"
+      ],
+      "scope": "144입력 전부 사용(서명·파일 부모는 손 시험)",
+      "sha256": "0e8eb4249bb68459ac041d1e92885cbdd8d1fb230fe56185e1e9f30f3e41ada7",
+      "bytes": 6627508,
+      "lines": 145,
+      "fixtureCommit": "b01e3ca77",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDataManagerImage.cpp": "c4b75d7aa"
       }
     }
   ]
