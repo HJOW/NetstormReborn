@@ -16567,9 +16567,67 @@
       "bytes": 65643,
       "lines": 34,
       "fixtureCommit": "9a8a0f855",
-      "webCommit": "worktree",
+      "webCommit": "219375476",
       "cpppjBasis": {
         "cpppj/src/o/RawLocalMissionState.cpp": "23b16b54f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E322",
+      "id": "construction-command-write",
+      "path": "cpppj/tests/fixtures/construction-command-write-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 로컬 건설 요청 0x3e 의 메시지 생성자·작성(40a7c0/4433b0)이 만든 25바이트 전송 버퍼(타입·x·y·인자·방향·품질의 값 조합별, 두 정밀도에서 같은 결과만, originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-construction-command.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-command.js"
+      ],
+      "doc": "docs/webpj-construction-command-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionCommand.cpp"
+      ],
+      "scope": "64행 전부 재생(25바이트 버퍼와 호출자 뒤 0xa5 보존)",
+      "sha256": "2bc1bc86bf6f7d1e61c0eb06ccccbd8e3581094aef6aaf4b032df302afd307c1",
+      "bytes": 5739,
+      "lines": 65,
+      "fixtureCommit": "ad64c18e6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionCommand.cpp": "5f4b9d304"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E322",
+      "id": "construction-command-receive",
+      "path": "cpppj/tests/fixtures/construction-command-receive-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 서버 수신 444af0 의 차단/로컬 sender/비용 선검사(부족·NaN 잔액·NaN 비용)/Request 반환값과 하위 호출 인자·순서, Money·Request 호출 도중 패킷·비용 변경(originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-construction-command.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-construction-command.js"
+      ],
+      "doc": "docs/webpj-construction-command-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConstructionCommand.cpp"
+      ],
+      "scope": "144행 전부 재생(하위 호출 이벤트 열의 T: 표식만 제외: C++/JS 의 직접 TYPE 조회에는 외부 호출이 없음)",
+      "sha256": "9706070a4aa90831e4b50e775bdc576a1bc38561e25af0e3f222aeb33175568d",
+      "bytes": 12989,
+      "lines": 145,
+      "fixtureCommit": "ad64c18e6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConstructionCommand.cpp": "5f4b9d304"
       }
     },
     {
