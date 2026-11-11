@@ -16206,9 +16206,38 @@
       "bytes": 532594,
       "lines": 131,
       "fixtureCommit": "ab9361f11",
-      "webCommit": "worktree",
+      "webCommit": "a05e25d3d",
       "cpppjBasis": {
         "cpppj/src/o/RawCampaignWorldLoad.cpp": "b8ce42c7d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E290",
+      "id": "terrain-context",
+      "path": "cpppj/tests/fixtures/terraincontext-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 초기 지형 context constructor 고유 입력(owner·전투·noRegion·청크 네 값·region·타입 두 개)별 makePredictable·lastSid·excludedFlags·청크·칸 bounds·타입 대응표 256·alias 256·배열 균일성·X 열 우선 16x16 창과 Edge/Normalize 도장 입력 5x5 변환 결과·assertion 수 (originals 112 + originalCD 112)",
+      "consumers": [
+        "webpj/tests/terrain-context.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-terrain-context.js"
+      ],
+      "doc": "docs/webpj-terrain-context-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTerrainContext.cpp"
+      ],
+      "scope": "originals 112행만 사용(originalCD 112행은 CD 10.72 몫이라 웹 목표 밖)",
+      "sha256": "4f2a00ade0e29273a76824b96ea3184a78d51022a0758b79deceaf322fa7696d",
+      "bytes": 481881,
+      "lines": 225,
+      "fixtureCommit": "552656c0c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTerrainContext.cpp": "1fe5fae75"
       }
     }
   ]
