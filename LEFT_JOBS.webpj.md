@@ -6,17 +6,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-11 정리, 마지막 구현 WB04-E298)
+### 0.1 현재 값 (2026-11-11 정리, 마지막 구현 WB04-E299)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
-| 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A 완료, 현재 단계 **4-B** 29/33, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 531(59.3%)·partial 73(8.1%)·todo 292(32.6%)**. 기준선 소스 줄 수로는 129,653줄 중 port 62,862(48.5%)·partial 20,135(15.5%)·todo 46,656(36.0%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E298** (이 커밋, `20261111-220 WB`) 4-B RawSurfaceStorage 이식 — Client 수명 장기 물리 저장소와 acquire/acquirePrepared 대여(`core/raw-surface-storage.js`, [문서](docs/webpj-surface-storage-20261111.md)). 그 앞은 WB04-E297 (`1d86a3c5e / 20261111-219 WB`) RawProcessHostStorage 이식 — 장기 ProcessState/Host/Kernel 저장소와 단일 현재 World 대여·Clear 증빙(`core/raw-process-host-storage.js`, RawSurfaceWorld 의 선행 항목으로 3.1절에 추가, [문서](docs/webpj-process-host-storage-20261111.md)). 그 앞은 WB04-E296 (`ce816c237 / 20261111-218 WB`) RawRegionPaint 이식 — 지역 도장 Paint·flood·경계·Select(`core/raw-region-paint.js`, 원본 386행 전체: 소유자 호출·프레임·후보·영향 지역 비트·난수 대조, [문서](docs/webpj-region-paint-20261111.md)). 그 앞은 WB04-E295 (`19effb4ff / 20261111-217 WB`) RawTerrainStamp 이식 — 초기 terrain frame 선택·stamp(`core/raw-terrain-stamp.js`, 원본 780행 전체: 프레임·두 난수·99 캐시·외부 효과·raw 슬롯 대조, [문서](docs/webpj-terrain-stamp-20261111.md)). 그 앞은 WB04-E294 (`d86508f68 / 20261111-216 WB`) RawFrameChoose 완료 — 후보 선택 단위 계약 시험과 기준선 뒤 cpppj 10차 NB23(`bda77381e`)의 3.6절 ② 반영(후보 8개 미만의 빈 원소 범위는 전체 후보 선택, [문서](docs/webpj-frame-choose-20261111.md)). 그 앞은 WB04-E293 (`1f7aba2d7 / 20261111-215 WB`) RawTerrainBitmap 이식(지형 미리보기 8비트 bitmap, 원본 28행 + 전체 부모 12행으로 E290~E292 결합 검증, [문서](docs/webpj-terrain-bitmap-20261111.md)), WB04-E292 (`53a7c28fa / 20261111-206 WB`) RawTerrainGrowth 이식(일반 초기 지형 성장 `runNormal`과 군도 공유 helper, 원본 세 파일 originals 1,115행, [문서](docs/webpj-terrain-growth-20261111.md)), WB04-E291 (`9f4465471 / 20261111-205 WB`) ChunkMap 완료([문서](docs/webpj-chunk-map-20261111.md); RawTerrainGrowth 의 mode 읽기 때문에 앞당김), WB04-E290 (`5ee4517f2 / 20261111-204 WB`) RawTerrainContext 이식([문서](docs/webpj-terrain-context-20261111.md)), WB04-E289 (`df6b823bf / 20261111-203 WB`) TerrainBuilder(타입 모델) 완료 확인, WB04-E288 (`c7f0754ba / 20261111-202 WB`) Islandbuilder 완료 확인, WB04-E287 (`a05e25d3d / 20261111-201 WB`) RawCampaignWorldLoad. 단위 색인은 2절·3.1절 |
-| 다음 작업 | **4-B RawSurfaceWorld**(client 기준선 804줄 = `.cpp` 522 + `.h` 282): 이어서 GameWorld·GameWorldInput 판정→client RawFortWorldLoadBinding→4-B 적재 통합 시험. 기준선 뒤 변경은 착수 때 저장소 루트에서 `git diff 1f00a25a..HEAD` 로 확인한다. 0.6절의 단계와 무관한 AGENTS 요구는 모두 반영됐다(11.01 카피라이트 줄은 WB03-AE) |
-| 마지막 전체 검사 | WB04-E298의 Node v26.13.0·v22.23.3, **2591/2591 통과·실패/건너뜀0**(신규 raw-surface-storage 11; WB04-E297 2580 신규 raw-process-host-storage 11; WB04-E296 2569 신규 region-paint 13; WB04-E295 2556 신규 terrain-stamp 11; WB04-E294 2545 신규 frame-choose 5; WB04-E293 2540 신규 terrain-bitmap 7; WB04-E292 2533 신규 terrain-growth 23; WB04-E291 2510 신규 chunk-map 4; WB04-E290 2506 은 첫 전체 실행의 유일한 실패 PORT_MAP 메모의 3.6 판정 표기 누락을 고친 뒤 통과; WB04-E287 2497; WB04-E288·E289 는 코드 변경이 없어 지도/manifest 검사만 재실행), v26·v22 약3분(v24 는 미설치) |
+| 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A 완료, 현재 단계 **4-B** 30/33, 0.2절) · M3~M5 미착수 |
+| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 532(59.4%)·partial 73(8.1%)·todo 291(32.5%)**. 기준선 소스 줄 수로는 129,653줄 중 port 63,666(49.1%)·partial 20,135(15.5%)·todo 45,852(35.4%). 영역별 남은 양은 0.3절 |
+| 마지막 구현 커밋 | **WB04-E299** (이 커밋, `20261111-221 WB`) 4-B RawSurfaceWorld 이식 — 표면 월드 조립(저장소 대여·적재·Pop/Unpop/Repop/Destroy·runtime/삭제 소비자/설치 모드·다리 붕괴 스캔·Process Clear 증빙·dispose, 공유 로딩 깊이 3.6절 ② 반영; `core/raw-surface-world.js`, [문서](docs/webpj-surface-world-20261111.md)). 그 앞은 WB04-E298 (`996318193 / 20261111-220 WB`) 4-B RawSurfaceStorage 이식 — Client 수명 장기 물리 저장소와 acquire/acquirePrepared 대여(`core/raw-surface-storage.js`, [문서](docs/webpj-surface-storage-20261111.md)). 그 앞은 WB04-E297 (`1d86a3c5e / 20261111-219 WB`) RawProcessHostStorage 이식 — 장기 ProcessState/Host/Kernel 저장소와 단일 현재 World 대여·Clear 증빙(`core/raw-process-host-storage.js`, RawSurfaceWorld 의 선행 항목으로 3.1절에 추가, [문서](docs/webpj-process-host-storage-20261111.md)). 그 앞은 WB04-E296 (`ce816c237 / 20261111-218 WB`) RawRegionPaint 이식 — 지역 도장 Paint·flood·경계·Select(`core/raw-region-paint.js`, 원본 386행 전체: 소유자 호출·프레임·후보·영향 지역 비트·난수 대조, [문서](docs/webpj-region-paint-20261111.md)). 그 앞은 WB04-E295 (`19effb4ff / 20261111-217 WB`) RawTerrainStamp 이식 — 초기 terrain frame 선택·stamp(`core/raw-terrain-stamp.js`, 원본 780행 전체: 프레임·두 난수·99 캐시·외부 효과·raw 슬롯 대조, [문서](docs/webpj-terrain-stamp-20261111.md)). 그 앞은 WB04-E294 (`d86508f68 / 20261111-216 WB`) RawFrameChoose 완료 — 후보 선택 단위 계약 시험과 기준선 뒤 cpppj 10차 NB23(`bda77381e`)의 3.6절 ② 반영(후보 8개 미만의 빈 원소 범위는 전체 후보 선택, [문서](docs/webpj-frame-choose-20261111.md)). 그 앞은 WB04-E293 (`1f7aba2d7 / 20261111-215 WB`) RawTerrainBitmap 이식(지형 미리보기 8비트 bitmap, 원본 28행 + 전체 부모 12행으로 E290~E292 결합 검증, [문서](docs/webpj-terrain-bitmap-20261111.md)), WB04-E292 (`53a7c28fa / 20261111-206 WB`) RawTerrainGrowth 이식(일반 초기 지형 성장 `runNormal`과 군도 공유 helper, 원본 세 파일 originals 1,115행, [문서](docs/webpj-terrain-growth-20261111.md)), WB04-E291 (`9f4465471 / 20261111-205 WB`) ChunkMap 완료([문서](docs/webpj-chunk-map-20261111.md); RawTerrainGrowth 의 mode 읽기 때문에 앞당김), WB04-E290 (`5ee4517f2 / 20261111-204 WB`) RawTerrainContext 이식([문서](docs/webpj-terrain-context-20261111.md)), WB04-E289 (`df6b823bf / 20261111-203 WB`) TerrainBuilder(타입 모델) 완료 확인, WB04-E288 (`c7f0754ba / 20261111-202 WB`) Islandbuilder 완료 확인, WB04-E287 (`a05e25d3d / 20261111-201 WB`) RawCampaignWorldLoad. 단위 색인은 2절·3.1절 |
+| 다음 작업 | **4-B GameWorld·GameWorldInput 판정**(옛 `--dump-world` 어댑터 1,155+42줄, 옛 지상 격자 포함): 이어서 client RawFortWorldLoadBinding(40줄)→4-B 적재 통합 시험. 이 월드의 객체 송신기 연결은 4-C, 기준선 뒤 장기 소유자 구조는 4-D(3.6절 ③ 표). 기준선 뒤 변경은 착수 때 저장소 루트에서 `git diff 1f00a25a..HEAD` 로 확인한다. 0.6절의 단계와 무관한 AGENTS 요구는 모두 반영됐다(11.01 카피라이트 줄은 WB03-AE) |
+| 마지막 전체 검사 | WB04-E299의 Node v26.13.0·v22.23.3, **2628/2628 통과·실패/건너뜀0**(신규 raw-surface-world 37; 첫 전체 실행의 유일한 실패는 이식 추적 목록의 소비 검사 등록 누락(새 검사가 읽는 `bridgedecay-x86.tsv`)이라 manifest 의 bridgedecay 소비자·모듈에 추가한 뒤 해당 검사 파일 3개를 두 버전에서 다시 돌려 통과; WB04-E298 2591 신규 raw-surface-storage 11; WB04-E297 2580 신규 raw-process-host-storage 11; WB04-E296 2569 신규 region-paint 13; WB04-E295 2556 신규 terrain-stamp 11; WB04-E294 2545 신규 frame-choose 5; WB04-E293 2540 신규 terrain-bitmap 7; WB04-E292 2533 신규 terrain-growth 23; WB04-E291 2510 신규 chunk-map 4; WB04-E290 2506 은 첫 전체 실행의 유일한 실패 PORT_MAP 메모의 3.6 판정 표기 누락을 고친 뒤 통과; WB04-E287 2497; WB04-E288·E289 는 코드 변경이 없어 지도/manifest 검사만 재실행), v26·v22 약3분(v24 는 미설치) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -28,7 +28,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 1·2 선행 | WB02-G·H | 이식 대응표·기준선 재반영, 무브라우저 실행·cpppj 오라클 기반 | 완료 (2026-11-07) | — |
 | 3 M2 선행 부품 | 3-A~3-E | 3-A WB04-A~D5c·E1~E242(SID 풀·해시·Kernel·Form/Process 층과 종류별 월드 부품), 3-B~3-D `o/` 18단위(E243~E258), 3-E 기준선 뒤 cpppj 변경 판정 79단위(E259~E264) | 완료 (2026-11-10 E264 마감) | 242+18단위 · 판정 79 |
 | 4 M2 | 4-A | 자료·파일·설정·타입 표 | 완료 9/9 (E265~E273) | `o/` 15단위 · 3,135줄 (+24) + client M |
-| 〃 | 4-B | Fort·지형·섬 적재 | **진행 중** 29/33 | `o/` 26단위 · 3,916줄 (+47) + client B |
+| 〃 | 4-B | Fort·지형·섬 적재 | **진행 중** 30/33 | `o/` 26단위 · 3,916줄 (+47) + client B |
 | 〃 | 4-C | 패킷·로그인·내부 미션 전송 | 미착수 | `o/` 20단위 · 2,578줄 (+548) + `zacket/` 1 + client A 일부 |
 | 〃 | 4-D | Session 조립·Tutorial1 Load/Start(L2) | 미착수 | client A 나머지(RawCampaignSession 5,715줄 등) |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 미착수 | `o/` 4단위 · 216줄 + client C·J 일부 |
@@ -46,23 +46,23 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 순서3(M2 선행 부품)은 2026-11-10 WB04-E264에서, 4-A는 WB04-E273에서 마감됐다. 두 단계의 체크 목록과 단위 링크는 보관본에 있고 요약은 2.3절이다. 6-P·7-P1~P3은 M2에 직접 필요하지 않아 순서3에서 이월한 부품이다(1절 단계 분할 결정). 현재 단계는 **4-B**이며, 4-B를 마치면 다음 단계(4-C)를 3.2절 칸에서 3.1절 체크 목록으로 펼친다.
 
-### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-11 WB04-E279 기준)
+### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-11 WB04-E299 기준)
 
 줄 수는 기준선 `1f00a25a`의 단위 파일(`.cpp/.h/.inc`) 줄 합계다(주석 포함). partial 줄 수는 일부만 옮긴 파일의 전체 줄이므로 남은 양의 상한이다. 단위·줄 수는 대략적인 척도일 뿐이며, 순서4~5의 연결·통합(실제 세션에서 부품을 같은 월드로 묶고 cpppj 오라클과 비교)은 이 수치에 드러나지 않는 큰 작업이다.
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 896단위 / 129,653줄 | 531 (59.3%) / 62,862줄 (48.5%) | 73 (8.1%) / 20,135줄 (15.5%) | 292 (32.6%) / 46,656줄 (36.0%) |
+| 전체 | 896단위 / 129,653줄 | 532 (59.4%) / 63,666줄 (49.1%) | 73 (8.1%) / 20,135줄 (15.5%) | 291 (32.5%) / 45,852줄 (35.4%) |
 | `o/` 월드·규칙 | 517단위 / 67,592줄 | 464 (89.7%) / 58,352줄 (86.3%) | 11 (2.1%) / 2,802줄 (4.1%) | 42 (8.1%) / 6,438줄 (9.5%) |
-| `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 67 (17.7%) / 4,510줄 (7.3%) | 62 (16.4%) / 17,333줄 (28.1%) | 249 (65.9%) / 39,779줄 (64.6%) |
+| `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 68 (18.0%) / 5,314줄 (8.6%) | 62 (16.4%) / 17,333줄 (28.1%) | 248 (65.6%) / 38,975줄 (63.2%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 439줄 | 0 | 0 | 1 / 439줄 |
 
-남은 365단위(todo 292·partial 73)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
+남은 364단위(todo 291·partial 73)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
 
 | 영역 | 주 단계 | todo 단위 / 줄 | partial 단위 / 줄 | 큰 단위(줄) |
 | --- | --- | --- | --- | --- |
 | A 세션·로그인·패킷·전송·클라이언트 전역 | 4-C·4-D | 66 / 13,035 | 2 / 1,907 | RawCampaignSession 5,715 · ClientMain* 1,797 · CampaignTemplateStorage 695 · LocalMissionTransport 439 |
-| B 월드·Fort 적재·지형/섬·객체 공통 수명 | 4-B(일부 4-D) | 2 / 2,132 | 1 / 727 | GameWorld 1,153 · RawSurfaceWorld 804 · SquidPostPop* 675 |
+| B 월드·Fort 적재·지형/섬·객체 공통 수명 | 4-B(일부 4-D) | 1 / 1,328 | 1 / 727 | GameWorld 1,153 · SquidPostPop* 675 |
 | C 시각 효과·입자 | 5-A | 5 / 678 | 0 | RawCampaignParticles 513 · ParticlePaletteMemory 65 · ConstructionVisualRenderer 57 · ThunderProcess 32 |
 | D 전투·유닛 이동·경로 | 6-P·7-P·7 | 29 / 4,098 | 5 / 1,246 | RawGunProcess 421 · RawGunTarget* 399 · RawMissile* 392 · RawPathProcess 360 |
 | E 경제·생산·건설·자원 | 6(7-P3 일부) | 14 / 2,573 | 1 / 142 | RawProductionControls 393 · RawDaisRegular 372 · RawCampaignFactoryDisplay 329 · RawCampaignConstructionBindings 291 |
@@ -206,7 +206,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - **목록 밖 단위:** 다른 단계 몫을 끼워 넣지 않는다. 항목이 선행 미완료로 막히면 사유를 그 항목에 적고 같은 단계의 다음 항목으로 간다. 단계 전체가 막히면 사유를 0.1절 다음 작업에 적고, 선행이 갖춰진 이월 부품(6-P·7-P) 항목을 진행할 수 있다. 목록에 없던 단위가 꼭 필요하면 해당 단계 목록 끝에 항목을 추가하고 이유를 적는다.
 - **끝난 단계:** 단계 머리글이 `(m/m)`이 되면 그 체크 목록을 보관본으로 옮기고 2.3절 표에 한 줄을 더한다(0.5절 5번).
 
-#### 4-B Fort·지형·섬 적재 (29/33)
+#### 4-B Fort·지형·섬 적재 (30/33)
 
 완료 기준(3.2절): Tutorial1 Fort 적재 결과(객체·지형·섬)가 cpppj 와 같다(`--inspect-fort`·session-dump 범위). 선행: 4-A(완료). 줄 수는 기준선 소스이고, 기준선 뒤 변경은 착수할 때 `git diff 1f00a25a..HEAD -- <파일>` 로 확인해 3.6절 ①/②/③ 으로 판정한다. `(partial)` 은 이미 일부 이식된 단위이며 남은 부분만 옮긴다. 앞 항목이 뒷 항목의 입력이므로 위에서부터 진행한다.
 
@@ -240,7 +240,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] **RawFrameChoose** 45줄 → [E294](docs/webpj-frame-choose-20261111.md) 단위 계약 시험과 기준선 뒤 NB23 반영(3.6절 ②; RawTerrainStamp 가 `ChooseTerrainFrame` 을 쓰므로 앞당김)
 - [x] **RawProcessHostStorage** (client 기준선 143줄) → [E297](docs/webpj-process-host-storage-20261111.md) 장기 ProcessState/Host/Kernel 저장소·단일 현재 World 대여·Clear 증빙 이식(RawSurfaceWorld 선행으로 추가)
 - [x] **RawSurfaceStorage** (client 기준선 98줄) → [E298](docs/webpj-surface-storage-20261111.md) Pool/해시/공간/그래프/집계 표/섬·청크/권한·보조 owner 의 장기 수명과 acquire/acquirePrepared 이식(RawSurfaceWorld 선행으로 추가; 기준선 뒤 +413줄은 3.6절 ③ 4-D)
-- [ ] **RawSurfaceWorld** (client 기준선 804줄 = `.cpp` 522 + `.h` 282; 기준선 뒤 +780줄은 3.6절 판정) — 표면 월드 적재 연결
+- [x] **RawSurfaceWorld** (client 기준선 804줄 = `.cpp` 522 + `.h` 282) → [E299](docs/webpj-surface-world-20261111.md) 표면 월드 조립(저장소 대여·적재·Pop 계열·runtime/삭제/설치 모드·붕괴 스캔·Process 증빙·dispose; 객체 송신기는 4-C `bindSquidTransmission`; 기준선 뒤 +780줄은 3.6절 ③ 4-D, `RawIslandPostPop` sharedLoadingDepth 는 ② 반영)
 - [ ] **GameWorld·GameWorldInput** 1,155+42줄 — 옛 `--dump-world` 어댑터 이식 여부 판정(E246 `o/Squid` 옛 struct 필드와 함께 닫음; E289 에서 `TerrainBuilder.h` 의 옛 지상 격자 `GroundCell`·`GroundGrid`·`CellPoint`·`Path` 도 이 판정에 포함)
 - [ ] **4-B 적재 통합 시험** — Tutorial1 Fort 의 객체·지형·섬 적재 결과를 cpppj `--inspect-fort`/session-dump 와 대조
 
@@ -364,9 +364,9 @@ cpppj는 AGENTS 1~13차 구현을 모두 마쳤다([공통 인계 0.4절](LEFT_J
 
 | 반영 단계 | ③ 항목 |
 | --- | --- |
-| 4-B | `RawFortObjectLoad`의 `FortSerializationGlobals` 대여 생성자(E259), `RawIslandPostPop` `sharedLoadingDepth`(E261), `RawIslandRuntime` NoWorld 자유 함수 3개(`RawIslandExists`/`Owner`/`Bounds`, 섬 저장소를 만들 때, E261) |
-| 4-C | `RawFormPacket` 삭제 패킷 writer 헤더 선기록·진단 복귀(`b8cadde1`), `GameClock` 시간 동기화 보정(`3e9dc2c7`, 보정 0이면 같음), `RawBombEffect` `ObserveBombEffectPacket`(E263), 아비어리 `ReadProcess`·`WritePacket`(E264), 공유 Regular 수신·`WriteFormPacket` 단독 도달 재확인(E259), `UberGump` 로그인 안내("Creating Islands."·`ShowLoginProgress`, `9cb0547f`~`11fbb988`) 단독 도달 확인 |
-| 4-D | World 수명·장기 owner 묶음: `RawSurfaceStorage` 기준선 뒤 +413줄 자산 장기 소유자 연결(`14fd017c`)·SidPool 소진 복구 BindAllocation 연결(진단/회수/덤프/Tell, E298), `RawProcessHostStorage` 장기 기본 장치 보관(`BindLifecycleDefaults`/`BindFormFactoryDefaults`/`BindFormTransmissionDefaults`)·fire/rotate 애니메이션 TYPE 참조·`ClearCall` owner pin(E297, `417f22d2`), `SquidDestroyLifecycle` Native PATCH 분기(E213)와 같은 시기 `RawSquidDestroy`·`SquidPostPop`·`SquidReward`, 공통 Form/Process 층 Native 분기(`SquidFormDispatch`·`SquidProcess`·`SquidFactory`·`SquidFrame`·`DependFormHost`·`GumpFormHost`·`ContentFormLifetime`, E259), Player·사제·신전 Native 조회기(E260), 섬·다리·자원 Native 전역(E261), 건설·운반·Dude 공유 getter(E262), 전투 역할 getter·폭탄/펜스 생성자(E263), 플레어·아이스 타워·아비어리 `FlyerDiedIn`(E264), `RawBombTargets` 현재 TYPE 사거리 직접 읽기(레코드 `range` 칸은 E265 완료). 또 `TellSection` 대체 tell 적재(`config.LoadFile`, 현재 미션 Tell 연결 때), `SidPool` 패치판 할당 진단 복귀·소진 시 다리 회수(`BindAllocation`), `ClientMain` 메인 루프 단계(연결 감시·전투 자원 프레임·재접속 저장, `44e53bdc`)의 단독 도달·순서 재확인 |
+| 4-B | `RawFortObjectLoad`의 `FortSerializationGlobals` 대여 생성자(E259), `RawIslandRuntime` NoWorld 자유 함수 3개(`RawIslandExists`/`Owner`/`Bounds`, 섬 저장소를 만들 때, E261) |
+| 4-C | `RawSurfaceWorld` 일반 Pop 송신기 연결(`bindSquidTransmission` ← `RawSquidTransmission.pop`, E299), `RawFormPacket` 삭제 패킷 writer 헤더 선기록·진단 복귀(`b8cadde1`), `GameClock` 시간 동기화 보정(`3e9dc2c7`, 보정 0이면 같음), `RawBombEffect` `ObserveBombEffectPacket`(E263), 아비어리 `ReadProcess`·`WritePacket`(E264), 공유 Regular 수신·`WriteFormPacket` 단독 도달 재확인(E259), `UberGump` 로그인 안내("Creating Islands."·`ShowLoginProgress`, `9cb0547f`~`11fbb988`) 단독 도달 확인 |
+| 4-D | World 수명·장기 owner 묶음: `RawSurfaceWorld` 기준선 뒤 +780줄(월드가 Display/PostPop/Pop/Unpop/Factory/Frame/Owner/Neighbors/Connect/Surface/BaseDestroy/VirtualDestroy/Common/Lifecycle/Events/Dependencies 를 Storage 장기 소유자에서 빌림·Runtime pin·자산별 Bindings 15종·직렬화 전역 선택·`SynchronizePeer`/`TransmitDeletion`/`AttachBaseAsset`/`BindMetaRefresh`, `14fd017c`; E299 변형 확인이 관찰하지 못한 건물 공간·Form 층·감시 Form 생성/Unpop·진단/현재 TYPE 빌림 연결은 Tutorial1 Session 검사에서 확인), `RawSurfaceStorage` 기준선 뒤 +413줄 자산 장기 소유자 연결(`14fd017c`)·SidPool 소진 복구 BindAllocation 연결(진단/회수/덤프/Tell, E298), `RawProcessHostStorage` 장기 기본 장치 보관(`BindLifecycleDefaults`/`BindFormFactoryDefaults`/`BindFormTransmissionDefaults`)·fire/rotate 애니메이션 TYPE 참조·`ClearCall` owner pin(E297, `417f22d2`), `SquidDestroyLifecycle` Native PATCH 분기(E213)와 같은 시기 `RawSquidDestroy`·`SquidPostPop`·`SquidReward`, 공통 Form/Process 층 Native 분기(`SquidFormDispatch`·`SquidProcess`·`SquidFactory`·`SquidFrame`·`DependFormHost`·`GumpFormHost`·`ContentFormLifetime`, E259), Player·사제·신전 Native 조회기(E260), 섬·다리·자원 Native 전역(E261), 건설·운반·Dude 공유 getter(E262), 전투 역할 getter·폭탄/펜스 생성자(E263), 플레어·아이스 타워·아비어리 `FlyerDiedIn`(E264), `RawBombTargets` 현재 TYPE 사거리 직접 읽기(레코드 `range` 칸은 E265 완료). 또 `TellSection` 대체 tell 적재(`config.LoadFile`, 현재 미션 Tell 연결 때), `SidPool` 패치판 할당 진단 복귀·소진 시 다리 회수(`BindAllocation`), `ClientMain` 메인 루프 단계(연결 감시·전투 자원 프레임·재접속 저장, `44e53bdc`)의 단독 도달·순서 재확인 |
 | 5-B | `SquidDisplay` `BindView`/`CurrentView`: 웹 `setView` 값 복사를 getter로 교체(E259) |
 | 6 | 건설 실제 wire `ActualConfirm`·`ActualPlace`(4-C 패킷 writer와 한 묶음, E262), `UberGump` `PollBattleResources`·F7/Ctrl+F6 건설 기록 재생 입력, `RawPlayerParticipation` 동맹 협상 키 단독 도달 재확인(E260) |
 | 6-P·7-P2 | `RawPathRuntime`의 `friend RawPathData` 웹 대응(6-P, E264), `RawGunHit.applyOverride` Rain 오버라이드(7-P2, E263) |

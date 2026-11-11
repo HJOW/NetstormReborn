@@ -6084,13 +6084,15 @@
         "webpj/tests/bridge-events.test.mjs",
         "webpj/tests/bridge-decay.test.mjs",
         "webpj/tests/raw-bridge-decay.test.mjs",
-        "webpj/tests/surface-lifecycle.test.mjs"
+        "webpj/tests/surface-lifecycle.test.mjs",
+        "webpj/tests/raw-surface-world.test.mjs"
       ],
       "modules": [
         "webpj/www/core/raw-bridge-events.js",
         "webpj/www/core/bridge-decay.js",
         "webpj/www/core/raw-bridge-decay.js",
-        "webpj/www/core/raw-surface-lifecycle.js"
+        "webpj/www/core/raw-surface-lifecycle.js",
+        "webpj/www/core/raw-surface-world.js"
       ],
       "doc": "docs/webpj-bridge-decay-20261108.md",
       "cpppjSources": [
