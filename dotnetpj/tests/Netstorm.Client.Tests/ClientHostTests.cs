@@ -54,11 +54,11 @@ public sealed class ClientHostTests
         Assert.Equal(640, options.Width);
     }
 
-    /// <summary>모르는 인자·빠진 값·범위 밖 숫자는 거부한다.</summary>
+    /// <summary>모르는 인자·빠진 값·범위 밖 숫자는 거부한다. 미션 이름은 적재 때 검증하므로 파서에서 받지 않는다.</summary>
     [Fact]
     public void RejectsBadArguments()
     {
-        Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--mission", "x"]));
+        Assert.Equal("x", HostOptions.Parse(["--mission", "x"]).Mission);
         Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--width"]));
         Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--width", "0"]));
         Assert.Throws<ArgumentException>(() => HostOptions.Parse(["--fps", "-1"]));
