@@ -282,6 +282,8 @@ cpppj/src/o/FortSerializationGlobals.h	Netstorm.Core/Original/FortSerializationG
 cpppj/src/o/Graph.cpp	Netstorm.Core/Bridges/SurfaceGraph.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/GumpFormHost.cpp	Netstorm.Core/Original/RawGumpFormHost.cs	9eb899e43b02660479342f0f4d709760e38ebda3	L1
 cpppj/src/o/OriginalText.h	Netstorm.Assets/OriginalText.cs	760e5ec3cf0013ac2817daefbd8a099461033832	port
+cpppj/src/o/OriginalText.h	Netstorm.Core/Original/ExtendedText.cs	8655b061d8fa13331fb3bb2564e2267481cae3d6	port
+cpppj/src/o/OriginalText.cpp	Netstorm.Core/Original/ExtendedText.cs	8655b061d8fa13331fb3bb2564e2267481cae3d6	port
 cpppj/src/o/Player.cpp	Netstorm.Core/Rules/MissionStart.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Player.cpp	Netstorm.Core/Simulation/BattleSession.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawAcidFence.cpp	Netstorm.Core/Original/RawAcidFence.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
