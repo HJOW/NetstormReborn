@@ -16302,7 +16302,7 @@
       "bytes": 38756,
       "lines": 1357,
       "fixtureCommit": "3128a7fa9",
-      "webCommit": "worktree",
+      "webCommit": "7cde7f3d6",
       "cpppjBasis": {
         "cpppj/src/o/RawBattleBroadcast.cpp": "77a0c3a47"
       }
@@ -16331,7 +16331,7 @@
       "bytes": 2783,
       "lines": 31,
       "fixtureCommit": "9c07d58cf",
-      "webCommit": "worktree",
+      "webCommit": "7cde7f3d6",
       "cpppjBasis": {
         "cpppj/src/o/RawBattleBroadcast.cpp": "77a0c3a47"
       }
@@ -16360,9 +16360,38 @@
       "bytes": 42449,
       "lines": 337,
       "fixtureCommit": "a726b49fb",
-      "webCommit": "worktree",
+      "webCommit": "7cde7f3d6",
       "cpppjBasis": {
         "cpppj/src/o/RawBattleBroadcast.cpp": "77a0c3a47"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E312",
+      "id": "form-packet",
+      "path": "cpppj/tests/fixtures/form-packet-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: Form 가상+54(감시 004ae560 13바이트·내용물 18바이트)와 공통 삭제 가상+58(004ac340 8바이트) 작성기와 래퍼의 합성 raw 슬롯·초기 64바이트 버퍼·현재 선언 헤더·삭제 표식 입력별 전체 출력·반환 크기·남은 표식·래퍼 방송 요청 수(originals 10.78 + originalCD 10.72)",
+      "consumers": [
+        "webpj/tests/raw-form-packet.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-form-packet.js"
+      ],
+      "doc": "docs/webpj-form-packet-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFormPacket.cpp"
+      ],
+      "scope": "originals 행 576개(종류 D/W/C/V/X/Z 각 96행)만 재생: 64바이트 전체 출력·반환 크기·표식 결과·입력 슬롯 불변·래퍼 방송 수를 대조. originalCD 행(CD 10.72)은 웹 범위 밖이라 읽지 않는다",
+      "sha256": "6ae20907d88e70ebaad17d0859c5e33980ef104d228f048357ad8bc3584c5190",
+      "bytes": 479994,
+      "lines": 1153,
+      "fixtureCommit": "30975d754",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFormPacket.cpp": "b8cadde14"
       }
     },
     {
