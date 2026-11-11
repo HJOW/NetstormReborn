@@ -365,25 +365,27 @@
       "required": false,
       "producer": "cpppj 원본 Terrainbuilder(004bfe50) 도장 x86 관측",
       "consumers": [
-        "webpj/tests/terrain-fringe.test.mjs"
+        "webpj/tests/terrain-fringe.test.mjs",
+        "webpj/tests/terrain-stamp.test.mjs"
       ],
       "modules": [
-        "webpj/www/assets/terrain-fringe.js"
+        "webpj/www/assets/terrain-fringe.js",
+        "webpj/www/core/raw-terrain-stamp.js"
       ],
       "unit": "WB03-Y",
-      "doc": "docs/webpj-terrain-extras-20261102.md",
+      "doc": "docs/webpj-terrain-stamp-20261111.md",
       "cpppjSources": [
         "cpppj/src/o/RawTerrainStamp.cpp"
       ],
-      "scope": "첫 도장 Stamp 패치 180줄 중 마스크로 표현 가능한 144줄 재생",
+      "scope": "typed 모델은 첫 도장 Stamp 패치 180줄 중 마스크로 표현 가능한 144줄 재생, raw 몸체(WB04-E295)는 originals 780행(Frame 600·Stamp 180) 전체 재생(originalCD 780행은 웹 목표 밖)",
       "text": true,
       "sha256": "cf6848c4c51c0af2aecf5ed020637c3798011425ca2cb929a3870ebadb7495c6",
       "bytes": 1061565,
       "lines": 1561,
-      "fixtureCommit": "b76adf95",
-      "webCommit": "310c5ba6",
+      "fixtureCommit": "b76adf95c",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawTerrainStamp.cpp": "b76adf95"
+        "cpppj/src/o/RawTerrainStamp.cpp": "b76adf95c"
       }
     },
     {
