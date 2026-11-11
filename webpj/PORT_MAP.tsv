@@ -645,7 +645,7 @@ cpppj/src/o/RawDataManagerInitialize.cpp	port	www/core/raw-data-manager-initiali
 cpppj/src/o/RawDataManagerLifetime.cpp	port	www/core/raw-data-manager-lifetime.js	1f00a25a	port	[o-default] WB04-E274: 0044d040 MemStream 소멸·004bd330→0044da60 DataManager 소멸(head unlink·재조회). 기준선 뒤 변경 없음(3.6절 ①). fixture datamanager-lifetime 392행 전부. tests/data-manager-streams.test.mjs
 cpppj/src/o/RawDataManagerList.cpp	port	www/core/raw-data-manager-list.js	1f00a25a	port	[o-default] WB04-E274: 0044ce10 추가·0044d0f0 제거(선행 링크 진단 뒤 재조회). 기준선 뒤 변경 없음(3.6절 ①). datamanager-streams 404행의 P·R 140행 + 손 시험. tests/data-manager-streams.test.mjs
 cpppj/src/o/RawDataManagerResize.cpp	port			todo	[o-default]
-cpppj/src/o/RawDataManagerSelection.cpp	port			todo	[o-default]
+cpppj/src/o/RawDataManagerSelection.cpp	port	www/core/raw-data-manager-selection.js	1f00a25a	port	[o-default] WB04-E282: 0044ce60 섹션 검색(head→next 순회·비교 뒤 current 재조회)·0044ceb0 선택(MissingCurrent/EmptyRead 진단 뒤 재조회·현재 노드 pos 0)·ASCII 이름 비교(비ASCII 거부). 기준선 뒤 변경 없음(3.6절 ①). datamanager-selection 원본 864입력. tests/data-manager-selection.test.mjs
 cpppj/src/o/RawDeckDraw.cpp	port	www/core/raw-deck-draw.js	1f00a25a	port	[o-default] WB04-E105: 352바이트 Deck 초기화 44f200·추가 44f290·열기/닫기 44f250/44f280·벽시각 난수 추첨 44f510·wallSeed 4bcab0. fixture gem-reward 1250행 중 직접 Draw 포함 전부(10.78 전용 파일). Player 소유 Deck 수명(RawProductionDeck)은 RawPlayerWorld 이식 뒤
 cpppj/src/o/RawDeckRestore.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/o/RawDependCreate.cpp	port	www/core/depend-form-host.js	1f00a25a	port	[o-default] WB04-D5a 감시 쌍 생성(004b1510). Process VT 부착은 기준선도 DependFormHost 에서 미연결(명시 오류)이며 실제 Process 부착 접두는 squid-process.js(WB04-D5c)

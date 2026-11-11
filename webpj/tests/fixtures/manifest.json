@@ -562,7 +562,7 @@
       "bytes": 374142,
       "lines": 1219,
       "fixtureCommit": "ada85427f",
-      "webCommit": "worktree",
+      "webCommit": "be96d8992",
       "cpppjBasis": {
         "cpppj/src/o/RawFortObjectLoad.cpp": "674e32020",
         "cpppj/src/o/RawFortObjectStream.cpp": "c18205179",
@@ -16003,6 +16003,35 @@
       "webCommit": "774b0414a",
       "cpppjBasis": {
         "cpppj/src/o/RawFortMoneyLoad.cpp": "2b0484195"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E282",
+      "id": "datamanager-selection",
+      "path": "cpppj/tests/fixtures/datamanager-selection-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: DataManager 섹션 검색(F)·선택(S)의 전체 256BYTE·이름 3종·쓰기 허용·변이 4종 864입력(비교/진단 순서와 그때의 전체 메모리 포함)",
+      "consumers": [
+        "webpj/tests/data-manager-selection.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-data-manager-selection.js"
+      ],
+      "doc": "docs/webpj-data-manager-selection-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDataManagerSelection.cpp"
+      ],
+      "scope": "864입력 전부 사용(머리글 행 제외)",
+      "sha256": "6216c81a623bfb9c40feeab3916264d006f3c7661d85aa15de05beeae63755b9",
+      "bytes": 1512708,
+      "lines": 865,
+      "fixtureCommit": "b68dd03fb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDataManagerSelection.cpp": "b68dd03fb"
       }
     }
   ]
