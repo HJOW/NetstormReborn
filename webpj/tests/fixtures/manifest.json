@@ -16447,9 +16447,38 @@
       "bytes": 652848,
       "lines": 188,
       "fixtureCommit": "18a384d5c",
-      "webCommit": "worktree",
+      "webCommit": "f252b7b16",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionServerPackets.cpp": "eeae45c69"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E316",
+      "id": "mission-settings-packet",
+      "path": "cpppj/tests/fixtures/mission-settings-packet-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 로그인 마지막 7DWORD 현재 설정 패킷(0x32)의 송신(0044dbc0 작성·실제 load 순서 1,2,0,4,5,3,6)·수신(0044dc20 직접 저장 0..6)·observer(0040b380)에서 현재 설정 프로필(영/전부 0xffffffff/경계값/필드별 구분값/한 필드만 1·0x80000000·0xffffffff) × seed × 대상 × 호출 도중 변경별 packet 32바이트·현재 설정 7DWORD·읽기/쓰기/송신 효과 순서(originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-mission-settings-packet.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mission-settings-packet.js"
+      ],
+      "doc": "docs/webpj-mission-settings-packet-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissionSettingsPacket.cpp"
+      ],
+      "scope": "164행 전부 재생(송신 117·수신 45·observer 2): packet 전체·현재 설정·효과 순서 대조. 수신 행에서는 callback 이 바꾼 packet 의 다음 DWORD 가 현재 바이트에서 읽히는지 포함",
+      "sha256": "dbd42f654348c6d4d5de37d99e421f0b2b971794061cc7a4631c7f4939616ae4",
+      "bytes": 35353,
+      "lines": 165,
+      "fixtureCommit": "05d7cb57d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissionSettingsPacket.cpp": "ae0e58b3a"
       }
     },
     {
