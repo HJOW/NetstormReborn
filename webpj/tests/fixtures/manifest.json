@@ -16239,6 +16239,93 @@
       "cpppjBasis": {
         "cpppj/src/o/RawTerrainContext.cpp": "1fe5fae75"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E292",
+      "id": "terrain-growth",
+      "path": "cpppj/tests/fixtures/terraingrowth-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 일반 초기 지형 성장 입력(profile 6·시드 3·선택 지역 3)별 전체 65,536BYTE code/region RLE·게임 난수·진단 수 (originals 54 + originalCD 54)",
+      "consumers": [
+        "webpj/tests/terrain-growth.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-terrain-growth.js"
+      ],
+      "doc": "docs/webpj-terrain-growth-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTerrainGrowth.cpp"
+      ],
+      "scope": "originals 54행만 사용(originalCD 54행은 CD 10.72 몫이라 웹 목표 밖)",
+      "sha256": "050e21070a6c3f6c40e2c35b83c2c224b163a2922abd1dc6520d8edfa0b31824",
+      "bytes": 70164,
+      "lines": 109,
+      "fixtureCommit": "5b10ce823",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTerrainGrowth.cpp": "1fe5fae75"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E292",
+      "id": "terrain-seed",
+      "path": "cpppj/tests/fixtures/terrain-seed-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 첫 raw+5 시드(First)와 흩뿌리기(Scatter) 입력 7 DWORD별 반환 값·진단 목록과 전체 code/region RLE (originals 189 + originalCD 189)",
+      "consumers": [
+        "webpj/tests/terrain-growth.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-terrain-growth.js"
+      ],
+      "doc": "docs/webpj-terrain-growth-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTerrainGrowth.cpp"
+      ],
+      "scope": "originals 189행만 사용(First 111·Scatter 78; originalCD 189행은 웹 목표 밖)",
+      "sha256": "3f2b350669ea34ae7966ce7d0c6fb48dfb187b80388ad56457252e4dc818b397",
+      "bytes": 408815,
+      "lines": 379,
+      "fixtureCommit": "3eec0830f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTerrainGrowth.cpp": "1fe5fae75"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E292",
+      "id": "terrain-arch-helpers",
+      "path": "cpppj/tests/fixtures/terrain-arch-helpers-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 군도 공유 GrowRectangle/RemoveSparseCell/RemoveSparse/ClearPlacement 입력별 반환 값·caller 시드와 전체 code/region RLE (originals 867 + originalCD 867)",
+      "consumers": [
+        "webpj/tests/terrain-growth.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-terrain-growth.js"
+      ],
+      "doc": "docs/webpj-terrain-growth-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTerrainGrowth.cpp"
+      ],
+      "scope": "originals 867행만 사용(Grow 72·Cell 771·Sparse 12·Clear 12; originalCD 867행은 웹 목표 밖)",
+      "sha256": "c2a26a3a2f70b8630f967ac4508105b21d62ff1d2a9f1964c9a09ebbed7d6882",
+      "bytes": 34536050,
+      "lines": 1735,
+      "fixtureCommit": "1fe5fae75",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTerrainGrowth.cpp": "1fe5fae75"
+      }
     }
   ]
 }
