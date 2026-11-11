@@ -16116,9 +16116,41 @@
       "bytes": 6627508,
       "lines": 145,
       "fixtureCommit": "b01e3ca77",
-      "webCommit": "worktree",
+      "webCommit": "ce5ae273c",
       "cpppjBasis": {
         "cpppj/src/o/RawDataManagerImage.cpp": "c4b75d7aa"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E285",
+      "id": "farmcluster",
+      "path": "cpppj/tests/fixtures/farmcluster-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: edgeFarm 군집 배치 입력(12 DWORD)별 단일 배치 시도 횟수·진입/반환 DWORD trace Adler·원시 효과 Adler·변경 raw·전역/local 난수·진단 수 (originals 104 + originalCD 104)",
+      "consumers": [
+        "webpj/tests/farm-cluster.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-farm-cluster.js",
+        "webpj/www/core/raw-fort-random-placement.js"
+      ],
+      "doc": "docs/webpj-farm-cluster-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFarmCluster.cpp",
+        "cpppj/src/o/RawFortRandomPlacement.cpp"
+      ],
+      "scope": "originals 104행만 사용(originalCD 104행은 CD 10.72 몫이라 웹 목표 밖)",
+      "sha256": "c5e53132543b400050630a81ca9df677d1595eed595ef757fb1398b7ac19db24",
+      "bytes": 749926,
+      "lines": 209,
+      "fixtureCommit": "5b10ce823",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFarmCluster.cpp": "f7f58f5a1",
+        "cpppj/src/o/RawFortRandomPlacement.cpp": "f7f58f5a1"
       }
     }
   ]
