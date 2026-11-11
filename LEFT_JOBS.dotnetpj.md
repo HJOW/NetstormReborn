@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.346 · 정리 2026-11-11(HJOW-Athlon) · 다음 단위 0.347 · cpppj 기준 제품 1300(AGENTS 1~13차 구현 마감, 2026-11-11 추가된 14차 QuickJS는 cpppj 미착수) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`) · 전체 목표 미완료 — 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
+**기준 단위 0.347 · 정리 2026-11-11(HJOW-Athlon) · 다음 단위 0.348 · cpppj 기준 제품 1300(AGENTS 1~13차 구현 마감, 2026-11-11 추가된 14차 QuickJS는 cpppj 미착수) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`) · 전체 목표 미완료 — 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리 직전의 이 문서 전체(단위 기록 0.280~0.341, 0.9의 단위별 완료 체크 목록, 옛 4~8차 번호의 R8 표)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341)에 바이트 그대로 보관했고, 그 이전 보관본 4개와 0.279 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -39,9 +39,9 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 커밋 | 0.346 `20261111-181 DN`(RawAddRandom M6-n 반환형 재대조) |
-| 검사 | 마지막 전체 완주는 0.345: Assets 366·Client 1,021·Core 1,886(합계 3,273, 실패 0, 백그라운드 완주). 0.330~0.341의 12단위는 집중 검사만 했다(0.330~0.333은 지시대로 검사 없는 사전 구현, 빌드 경고·오류 0과 `CppPortMapTests`만 확인). 0.342는 `ProductPresentationTests` 6건, 0.344는 `StyleTextMarkupTests` 45건, 0.345는 `RawFrameChooseTests` 7건(구 코드 변이 5건 검출)만 별도 확인했다. 0.346은 `AddRandomParentTests` 3건 통과(실패 0)로 확인했다. 전체 회귀 본체는 0.343 코드 기준이며 0.344·0.345 변경분은 집중 검사로 덮는다. 단위별 집중 검사 내역은 [보관본 0.1](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341) |
-| PORT_MAP | `PORT_MAP.tsv` 673줄(자료 668행: L1 333·port 335). 마지막 추가는 0.340 `RawPlayerIdentity.h/.cpp` → `RawPlayerIdentity.cs`. 0.344에서 `StyleTextMarkup.cpp/.h` 2행의 `base`를 `5171b8c7b`로 올렸다(NB02 재대조 완료). 0.345에서 `RawFrameChoose.cpp/.h` 2행의 `base`를 `df7902e70`으로 올렸다(NB23 재대조 완료, L1 유지). 0.346에서 `RawAddRandom.cpp/.h` 2행의 `base`를 `655740c81`로 올렸다(M6-n 반환형 재대조 완료, L1 유지) |
+| 마지막 구현 커밋 | 0.347 `20261111-182 DN`(AiDifficulty 신규 이식과 RawAiCreate 11차·NB10 재대조) |
+| 검사 | 마지막 전체 완주는 0.345: Assets 366·Client 1,021·Core 1,886(합계 3,273, 실패 0, 백그라운드 완주). 0.330~0.341의 12단위는 집중 검사만 했다(0.330~0.333은 지시대로 검사 없는 사전 구현, 빌드 경고·오류 0과 `CppPortMapTests`만 확인). 0.342는 `ProductPresentationTests` 6건, 0.344는 `StyleTextMarkupTests` 45건, 0.345는 `RawFrameChooseTests` 7건(구 코드 변이 5건 검출)만 별도 확인했다. 0.346은 `AddRandomParentTests` 3건 통과(실패 0)로 확인했다. 0.347은 `AiDifficultyTests`·`RawAiCreateTests` 합계 21건 통과(실패 0)와 NB10 제거 변이 검출로 확인했다. 전체 회귀 본체는 0.343 코드 기준이며 0.344·0.345 변경분은 집중 검사로 덮는다. 단위별 집중 검사 내역은 [보관본 0.1](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341) |
+| PORT_MAP | `PORT_MAP.tsv` 675줄(자료 670행: L1 333·port 337). 마지막 추가는 0.347 `AiDifficulty.h/.cpp` → `AiDifficulty.cs`. 0.346에서 `RawAddRandom.cpp/.h` 2행의 `base`를 `655740c81`로 올렸다(M6-n 반환형 재대조 완료, L1 유지). 0.347에서 `RawAiCreate.cpp/.h` 2행의 `base`를 `d904993ac`으로 올렸다(11차·NB10 재대조 완료, L1 유지) |
 | fixture | 연결 234개. `cpp_sync.py`는 미반영분 때문에 0종료가 아니다. `reflected-commit`·PORT_MAP floor는 `f95a8db2` 그대로다(영향 재검토를 마친 행만 올린다) |
 | cpppj 기준 | 현재 cpppj는 확정 제품 1300 / 11.01(LEFT_JOBS.md 0.5). dotnetpj의 마지막 영향 검토는 0.281(제품 1247, `4d4b3a928`)이다. 그 뒤 cpppj 47커밋, `cpppj/src` 184파일 변경(신규 39), 그중 PORT_MAP에 있는 파일 47개([1.2](#resync-scope)) |
 | 디컴파일 | 마지막 정밀 디컴파일은 HJOW-Athlon 2026-11-03(R 전용 11-07, 같은 호스트)이다. dotnetpj 이식 근거는 cpppj 소스·fixture·문서라 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 호스트를 확인한다 |
@@ -475,7 +475,17 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 
 문서가 없는 작은 단위만 아래에 최신순으로 짧게 적는다. 한 기록에는 범위, 구현(새 파일·수정 파일·옮긴 cpppj 파일과 기준 커밋), C#에서 달라진 모양, 검증(집중·전체·변이·L2/L4a 비교), PORT_MAP·fixture 변화, 함께 옮긴 10차 NB 수정, 보호·실행·외부 접속 관점, 남은 것을 적는다([3.1](#verify-levels)). 0.11~0.341은 보관 파일에 있다: [0.11~0.65](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073), [0.66~0.126](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126), [0.127~0.153](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154), [0.154~0.279](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279), [0.280~0.341](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341).
 
-(다음 단위 0.347부터 이 절에 적는다)
+(다음 단위 0.348부터 이 절에 적는다)
+
+#### 0.347 — AiDifficulty 신규 이식과 RawAiCreate 11차·NB10 재대조 (2026-11-11, HJOW-Athlon)
+
+- 범위: 재검토 문서 1절 25번(`RawAiCreate.cpp/.h`, R4 AI 관문) + 신규 39파일 중 `AiDifficulty.cpp/.h`(R8 11차). cpppj HEAD의 NB10 정리·11차 배율(157·159)을 C#에 반영했다.
+- 구현: 새 파일 `dotnetpj/src/Netstorm.Core/Original/AiDifficulty.cs`(열거 `AiDifficultyLevel` Easy=1/Normal=2/Hard=3·설정 키·배율 상수·`FromValue`/`ToValue`·`ApplyAiDifficulty`·`SanitizeAiForcedEnemy`, 오프셋 +0x220/224/228·+0x234·+0x240). `RawAiCreate.cs`에 `AiCreateHooks.Difficulty` 추가와 생성 시 정리 복사본→난이도 복사본 순서 적용(입력 불변). 새 검사 `dotnetpj/tests/Netstorm.Core.Tests/AiDifficultyTests.cs`(값 매핑·쉬움/어려움/보통·하한·0/NaN·크기 거부·정리 4건·생성 통합 3건). `dotnetpj/PORT_MAP.tsv`에 `AiDifficulty` 2행 추가(port), `RawAiCreate` 2행 `base`를 `d904993ac`으로 올렸다(L1 유지).
+- C# 모양 차이: cpppj 열거 `AiDifficulty`는 C# 정적 클래스와 이름이 겹쳐 열거를 `AiDifficultyLevel`로 두었다. cpppj 자유 함수·상수는 정적 클래스 멤버로 옮겼다.
+- 검증(게임 실행 없음, 이번 목표 지시): 별도 출력 경로 빌드 뒤 `vstest`로 `AiDifficultyTests`·`RawAiCreateTests` 합계 21건 통과(실패 0, 기존 L1 `CreateMatchesNative32` 포함 — 보통 경로 불변 확인). NB10 제거 변이에서 `CreateSanitizesInvalidForcedEnemy` 1건 실패로 검출력을 확인한 뒤 원복하고 다시 21건 통과했다.
+- fixture 변화 없음. 함께 옮긴 10차 수정: NB10. 11차 보통 경로가 원본과 같음은 L1 32행으로 확인했고, 쉬움/어려움 배율 검증(R8 11차)은 세션 AI 설정 소유자(0.306)에 배율 필드를 두는 후속 단위에서 한다.
+- 보호·실행·외부 접속: `originals/`·`originalCD/`·AGENTS.md·README 개요·cpppj·LEFT_JOBS.md 미수정. 게임 창·오라클 실행 없음. 외부 접속 목록 변경 없음. 다른 세션의 QuickJS 파일은 건드리지 않았다.
+- 남은 것: 재검토 문서 1절의 나머지 43파일 재대조(후속 단위에서 파일 묶음 단위로), 0.4 순서 1-4(보류).
 
 #### 0.346 — RawAddRandom M6-n 반환형 재대조 (2026-11-11, HJOW-Athlon)
 

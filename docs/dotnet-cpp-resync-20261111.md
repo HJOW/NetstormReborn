@@ -35,7 +35,7 @@
 | 22 | `src/client/TextEntryBuffer.cpp/.h` | `Gump/TextEntryBuffer.cs`(a4b04553, L1) | ① (+6차) | K1(122, 한글 조합 경로의 일부). R3 `RawTextEntryControls` 잔여에서 재대조 |
 | 23 | `src/client/TextEntryGump.cpp` | `Gump/TextEntryGump.cs`(39ec3a5a, L1) | ① (+6차) | K1(122). R3 잔여에서 재대조 |
 | 24 | `src/o/RawAddRandom.cpp/.h` | `Core/Original/RawAddRandom.cs`(108f76cc, L1) | ① (+M6-n) | 마지막 배치 SID 반환(M6-n Fort 채우기 0046e630용, 133). R4 AI 나머지·R6 배치 경로에서 재대조 |
-| 25 | `src/o/RawAiCreate.cpp/.h` | `Core/Original/RawAiCreate.cs`(53a0e4f9, L1) | ①② NB10 (+11차) | NB10 강제 AI 범위는 `RawCampaignConstructionBindings` 쪽(159, 이번 47 밖). 여기 변경은 11차 난이도 AI 설정 확인(157). R4 AI 나머지에서 재대조 |
+| 25 | `src/o/RawAiCreate.cpp/.h` | `Core/Original/RawAiCreate.cs`(53a0e4f9, L1) | ①② NB10 (+11차) | NB10 강제 AI 범위는 `RawCampaignConstructionBindings` 쪽(159, 이번 47 밖). 여기 변경은 11차 난이도 AI 설정 확인(157). R4 AI 나머지에서 재대조 → **0.347 완료**(`AiDifficulty` 신규 이식·`Difficulty` 훅·정리→배율 순서, 21건 통과) |
 | 26 | `src/o/RawConnectionActivity.cpp` | `Netstorm.Net/RawConnectionActivity.cs`(ee4e45c6, port) | ① (3차 사전 구현) | Native F가 있으면 같은 metadata 대여(105). 최후순위 3차에서 재대조 |
 | 27 | `src/o/RawFrameChoose.cpp` | `Core/Original/RawFrameChoose.cs`(5c2d0a1e, L1) | ①② NB23 | NB23 후보 8개 미만 타일의 quartile 빈 범위 교정(theme 없이 전체 후보, 169). 옮길 때 함께 옮긴다 |
 | 28 | `src/o/RawGameAuxState.h` | `Core/Original/RawGameAuxState.cs`(da27e191, port) | ① (+12차) | JoinTestBattle 1bh 생성자 헤더(108). R4 세션 조립에서 재대조 |
@@ -56,7 +56,7 @@ NB 수정이 든 PORT_MAP 교집합 파일 정리(②, 단위 기록에 번호�
 | `client/NativeCarrierPacketReceivers.cpp/.h`, `NativeConstructionPacketReceivers.cpp/.h`, `NativeFortPreparation.cpp/.h`, `NativeFortSnapshot.cpp/.h`, `NativeGameplayPacketReceivers.cpp/.h`, `NativeJoinTestBattle.cpp/.h`, `NativeLoginPacketReceivers.cpp/.h` | 3차 M6 LAN·Native → 최후순위 10단계 | 현재 `Netstorm.Net` 사전 구현과 같은 범위. 검사 없는 사전 구현을 늘리지 않고 10단계에서 옮긴다 |
 | `client/RawSurfaceVortex.cpp` | R6 규칙(소용돌이 표시·규칙) | 해당 몸체 클래스를 옮길 때 L1 `arc-spire` 계열처럼 fixture와 함께 연결한다 |
 | `client/SkirmishSetup.cpp/.h`, `client/SkirmishStartIslands.inc` | 12차 스커미시 → R8 12차 | 이미 옮긴 섬 생성(0.156)·간헐천 생성과 MP 시작 순서로 묶는 경로다 |
-| `o/AiDifficulty.cpp/.h` | 11차 난이도 → R4 AI 나머지(+R8 11차) | AI 설정 +0x220/224/228 배율 필드. 0.306의 AI 설정 소유자에 HEAD대로 두고 보통이 원본과 같은지 먼저 검증한다 |
+| `o/AiDifficulty.cpp/.h` | 11차 난이도 → R4 AI 나머지(+R8 11차) | AI 설정 +0x220/224/228 배율 필드. 0.306의 AI 설정 소유자에 HEAD대로 두고 보통이 원본과 같은지 먼저 검증한다 → **0.347 완료**(보통 불변은 L1 32행으로 확인, 배율 필드 후속) |
 | `o/RawPacketDelay.cpp/.h` | 3차 지연 FIFO → 최후순위 10단계 | `LocalTcp/UdpTransport` 변경(위 31)과 함께 다룬다 |
 | `platform/ErrorLog.cpp/.h` | 7차 오류 로그 → R8 7차 | `main.cpp`의 설치·기록 경로와 함께 옮긴다. 로그 위치·이름 규칙(`...\Netstorm\logs\yyyyMMddHHmmss.log`)은 결정 D1에 따라 처음부터 사용자 루트로 둔다 |
 
@@ -78,4 +78,4 @@ NB 수정이 든 PORT_MAP 교집합 파일 정리(②, 단위 기록에 번호�
 
 - 이번 단위는 정적 분류만 했으므로 PORT_MAP `base`와 `floor-commit`(`f95a8db2`)을 올리지 않았다. `cpp_sync.py`는 계속 0종료가 아니다(예상된 상태).
 - 재대조를 마친 행만 `base`를 올린다(0.4 1-2의 규칙). `ProductPresentation.cpp`는 0.342에서 카피라이트 줄만 반영했으므로 `base`를 올리지 않았다(난이도·스커미시·일본어 구간이 남아 있다).
-- 0.344에서 `StyleTextMarkup.cpp/.h` 2행의 `base`를 `5171b8c7b`로 올렸다(NB02 재대조 완료, `StyleTextMarkupTests` 45건 통과). 0.345에서 `RawFrameChoose.cpp/.h` 2행의 `base`를 `df7902e70`으로 올렸다(NB23 재대조 완료, `RawFrameChooseTests` 7건 통과·L1 유지). 0.346에서 `RawAddRandom.cpp/.h` 2행의 `base`를 `655740c81`로 올렸다(M6-n 반환형 재대조 완료, `AddRandomParentTests` 3건 통과·L1 유지).
+- 0.344에서 `StyleTextMarkup.cpp/.h` 2행의 `base`를 `5171b8c7b`로 올렸다(NB02 재대조 완료, `StyleTextMarkupTests` 45건 통과). 0.345에서 `RawFrameChoose.cpp/.h` 2행의 `base`를 `df7902e70`으로 올렸다(NB23 재대조 완료, `RawFrameChooseTests` 7건 통과·L1 유지). 0.346에서 `RawAddRandom.cpp/.h` 2행의 `base`를 `655740c81`로 올렸다(M6-n 반환형 재대조 완료, `AddRandomParentTests` 3건 통과·L1 유지). 0.347에서 `RawAiCreate.cpp/.h` 2행의 `base`를 `d904993ac`으로 올리고 `AiDifficulty.cpp/.h` 2행을 새로 등록했다(11차·NB10 재대조 완료, 21건 통과·L1/port).

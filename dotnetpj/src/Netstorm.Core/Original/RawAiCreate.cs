@@ -19,6 +19,8 @@ public sealed class AiCreateHooks
     public Func<uint, ReadOnlyMemory<byte>, int, uint>? Construct { get; init; }
     /// <summary>실제 AI의 기술과 분류를 초기 갱신한다.</summary>
     public Action<uint, ReadOnlyMemory<byte>>? InitialUpdate { get; init; }
+    /// <summary>11차 난이도. 소유자의 인공지능 난이도(설정 파일 값 1쉬움/2보통/3어려움)를 돌려준다. 선택 사항이며 없거나 보통이면 설정을 그대로 쓴다. 적이 아닌 인공지능(동맹/데모)은 호출자가 보통(2 또는 0)으로 돌려준다.</summary>
+    public Func<uint, uint>? Difficulty { get; init; }
 }
 
 /// <summary>10.78 AI 생성의 색→기존 brain→NoTemple→생성→부착→초기 갱신 순서다.
@@ -65,10 +67,26 @@ public sealed class RawAiCreate
         }
         var construct = Need(_hooks.Construct);
         var update = Need(_hooks.InitialUpdate);
-        uint brain = construct(owner, settings, BrainSize);
+        // 10차 NB10: 강제 적 번호가 범위 밖이거나 자기 자신이면 자동 선택(0)으로 정리한 복사본을 쓴다.
+        byte[] active = settings;
+        byte[] cleaned = AiDifficulty.SanitizeAiForcedEnemy(active, owner);
+        if (cleaned.Length != 0)
+        {
+            active = cleaned;
+        }
+        // 11차: 보통이 아니면 설정 복사본에 난이도 배율을 적용해 생성자와 초기 갱신에 같은 값을 넘긴다(입력 설정은 바꾸지 않는다).
+        if (_hooks.Difficulty is not null)
+        {
+            AiDifficultyLevel level = AiDifficulty.FromValue(_hooks.Difficulty(owner));
+            if (level != AiDifficultyLevel.Normal)
+            {
+                active = AiDifficulty.ApplyAiDifficulty(active, level);
+            }
+        }
+        uint brain = construct(owner, active, BrainSize);
         if (brain == 0) throw new InvalidOperationException("실제 AI 생성자가 빈 brain을 반환했다");
         _players.AttachBrain(owner, brain);
-        update(brain, settings);
+        update(brain, active);
         return brain;
     }
 }

@@ -287,8 +287,10 @@ cpppj/src/o/Player.cpp	Netstorm.Core/Simulation/BattleSession.cs	f95a8db28ceae6c
 cpppj/src/o/RawAcidFence.cpp	Netstorm.Core/Original/RawAcidFence.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
 cpppj/src/o/RawAddRandom.cpp	Netstorm.Core/Original/RawAddRandom.cs	655740c81f593724c897a4160da57c4432744fed	L1
 cpppj/src/o/RawAddRandom.h	Netstorm.Core/Original/RawAddRandom.cs	655740c81f593724c897a4160da57c4432744fed	L1
-cpppj/src/o/RawAiCreate.cpp	Netstorm.Core/Original/RawAiCreate.cs	53a0e4f98c1003048aad7d0559e56e3e370a2b62	L1
-cpppj/src/o/RawAiCreate.h	Netstorm.Core/Original/RawAiCreate.cs	53a0e4f98c1003048aad7d0559e56e3e370a2b62	L1
+cpppj/src/o/RawAiCreate.cpp	Netstorm.Core/Original/RawAiCreate.cs	d904993acff6e5cbecb44b5cc421f29568414016	L1
+cpppj/src/o/RawAiCreate.h	Netstorm.Core/Original/RawAiCreate.cs	d904993acff6e5cbecb44b5cc421f29568414016	L1
+cpppj/src/o/AiDifficulty.cpp	Netstorm.Core/Original/AiDifficulty.cs	d904993acff6e5cbecb44b5cc421f29568414016	port
+cpppj/src/o/AiDifficulty.h	Netstorm.Core/Original/AiDifficulty.cs	d904993acff6e5cbecb44b5cc421f29568414016	port
 cpppj/src/o/RawArcSpire.cpp	Netstorm.Core/Original/RawArcSpire.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
 cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawAssetPostPop.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
 cpppj/src/o/RawBattleIsland.cpp	Netstorm.Core/Original/RawBattleIsland.cs	dc6d19331da4212a048b85c6ad0d609cfe9f1c93	port
