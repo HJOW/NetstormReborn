@@ -50,7 +50,7 @@ NB 수정이 든 PORT_MAP 교집합 파일 정리(②, 단위 기록에 번호�
 | 신규 cpppj 파일 | AGENTS 차수·단계 | 비고 |
 | --- | --- | --- |
 | `client/ClientHelpWord.cpp/.h` | M7.1 도움말 캐시 → R3 잔여 | `ClientMain`·`RawMenuControls`의 helpWord 연결과 함께 옮긴다 |
-| `client/DisplayTextInput.cpp/.h` | 6차 한국어 화면·입력 → R3 잔여(표시 부호화 경계) + R8 6차 | 결정 D1에 따라 경계는 함께 옮기고 검증은 영어 → R8 |
+| `client/DisplayTextInput.cpp/.h` | 6차 한국어 화면·입력 → R3 잔여(표시 부호화 경계) + R8 6차 | 결정 D1에 따라 경계는 함께 옮기고 검증은 영어 → R8 → **0.351 완료**(+`text` 연산자) |
 | `client/EditorScenarioController.cpp/.h`, `EditorScenarioFiles.cpp/.h`, `EditorScenarioModel.cpp/.h`, `client/ScenarioDocument.cpp/.h`, `client/UberScenario.inc` | 9차 시나리오 편집 → R7 Edit | R7에서 묶음으로 옮긴다 |
 | `client/FrameRateOption.cpp/.h` | 후순위 60/120프레임(F1) + 0.4 8단계 | 옵션 `Frame Rate` 하위 메뉴·즉시 반영. 요구사항 전용 모듈이라 R8 전이 아니라 8단계에서 이식한다 |
 | `client/NativeCarrierPacketReceivers.cpp/.h`, `NativeConstructionPacketReceivers.cpp/.h`, `NativeFortPreparation.cpp/.h`, `NativeFortSnapshot.cpp/.h`, `NativeGameplayPacketReceivers.cpp/.h`, `NativeJoinTestBattle.cpp/.h`, `NativeLoginPacketReceivers.cpp/.h` | 3차 M6 LAN·Native → 최후순위 10단계 | 현재 `Netstorm.Net` 사전 구현과 같은 범위. 검사 없는 사전 구현을 늘리지 않고 10단계에서 옮긴다 |
@@ -78,4 +78,4 @@ NB 수정이 든 PORT_MAP 교집합 파일 정리(②, 단위 기록에 번호�
 
 - 이번 단위는 정적 분류만 했으므로 PORT_MAP `base`와 `floor-commit`(`f95a8db2`)을 올리지 않았다. `cpp_sync.py`는 계속 0종료가 아니다(예상된 상태).
 - 재대조를 마친 행만 `base`를 올린다(0.4 1-2의 규칙). `ProductPresentation.cpp`는 0.342에서 카피라이트 줄만 반영했으므로 `base`를 올리지 않았다(난이도·스커미시·일본어 구간이 남아 있다).
-- 0.344에서 `StyleTextMarkup.cpp/.h` 2행의 `base`를 `5171b8c7b`로 올렸다(NB02 재대조 완료, `StyleTextMarkupTests` 45건 통과). 0.345에서 `RawFrameChoose.cpp/.h` 2행의 `base`를 `df7902e70`으로 올렸다(NB23 재대조 완료, `RawFrameChooseTests` 7건 통과·L1 유지). 0.346에서 `RawAddRandom.cpp/.h` 2행의 `base`를 `655740c81`로 올렸다(M6-n 반환형 재대조 완료, `AddRandomParentTests` 3건 통과·L1 유지). 0.347에서 `RawAiCreate.cpp/.h` 2행의 `base`를 `d904993ac`으로 올리고 `AiDifficulty.cpp/.h` 2행을 새로 등록했다(11차·NB10 재대조 완료, 21건 통과·L1/port). 0.349에서 `InputEvent`·`Mission`·`QuickHelpWindow` 6행의 `base`를 `af7e11ff1`로 올렸다(K1 경계 재대조 완료, 14건 통과). 0.350에서 `OriginalText.h/.cpp`(확장 부분)→`ExtendedText.cs` 2행을 새로 등록했다(12건 통과·port).
+- 0.344에서 `StyleTextMarkup.cpp/.h` 2행의 `base`를 `5171b8c7b`로 올렸다(NB02 재대조 완료, `StyleTextMarkupTests` 45건 통과). 0.345에서 `RawFrameChoose.cpp/.h` 2행의 `base`를 `df7902e70`으로 올렸다(NB23 재대조 완료, `RawFrameChooseTests` 7건 통과·L1 유지). 0.346에서 `RawAddRandom.cpp/.h` 2행의 `base`를 `655740c81`로 올렸다(M6-n 반환형 재대조 완료, `AddRandomParentTests` 3건 통과·L1 유지). 0.347에서 `RawAiCreate.cpp/.h` 2행의 `base`를 `d904993ac`으로 올리고 `AiDifficulty.cpp/.h` 2행을 새로 등록했다(11차·NB10 재대조 완료, 21건 통과·L1/port). 0.349에서 `InputEvent`·`Mission`·`QuickHelpWindow` 6행의 `base`를 `af7e11ff1`로 올렸다(K1 경계 재대조 완료, 14건 통과). 0.350에서 `OriginalText.h/.cpp`(확장 부분)→`ExtendedText.cs` 2행을 새로 등록했다(12건 통과·port). 0.351에서 `DisplayTextInput.cpp/.h`→`Input/DisplayTextInput.cs` 2행을 새로 등록했다(7건 통과·port).

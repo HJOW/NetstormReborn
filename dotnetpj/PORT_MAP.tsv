@@ -40,6 +40,8 @@ cpppj/src/client/Cursor.h	Netstorm.Core/Rules/GameCursor.cs	f95a8db28ceae6c036fa
 cpppj/src/client/DialogExitCommand.cpp	Netstorm.Client/Scripting/DialogExitCommand.cs	9ad3ff97f51ac3900fbc1b957a3367e339982af6	L1
 cpppj/src/client/DialogExitCommand.h	Netstorm.Client/Scripting/DialogExitCommand.cs	9ad3ff97f51ac3900fbc1b957a3367e339982af6	L1
 cpppj/src/client/DialogScript.cpp	Netstorm.Assets/CampaignMenu.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/client/DisplayTextInput.cpp	Netstorm.Client/Input/DisplayTextInput.cs	f3786cda09ab0fef4cb1361b4cdd784154bd6af8	port
+cpppj/src/client/DisplayTextInput.h	Netstorm.Client/Input/DisplayTextInput.cs	f3786cda09ab0fef4cb1361b4cdd784154bd6af8	port
 cpppj/src/client/DrawSort.cpp	Netstorm.Client/Display/DrawSort.cs	a36b80101b868a3ad9afa11953a6dbc21b9b1040	port
 cpppj/src/client/DrawSort.h	Netstorm.Client/Display/DrawSort.cs	a36b80101b868a3ad9afa11953a6dbc21b9b1040	port
 cpppj/src/client/EditorFiles.cpp	Netstorm.Client/Host/EditorFiles.cs	473432cd5f2edca35ecb3cf78e79c151b105b0c2	port

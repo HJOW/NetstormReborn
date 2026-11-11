@@ -192,6 +192,9 @@ public sealed class UiScriptRunner
             case "esc":
                 _input.Push(0x1b, 0, 0);
                 return;
+            case "text":
+                Text(step);
+                return;
             case "key":
             case "keyup":
                 Key(step);
@@ -205,6 +208,16 @@ public sealed class UiScriptRunner
             default:
                 throw new NotSupportedException($"UI 동작 미이식: {step.Operation} (해당 계층을 옮긴 뒤 지원한다)");
         }
+    }
+
+    /// <summary>text 단계: IME와 같은 검증·배치 규칙의 확정 본문을 원자적으로 큐에 넣는다. TextEntry 상태를 직접 바꾸지 않는다.</summary>
+    /// <param name="step">입력할 본문을 인자로 가진 단계다.</param>
+    /// <exception cref="ArgumentException">본문에 제어문자·표현 불가 문자가 있거나 공간이 부족하다.</exception>
+    /// <remarks>2026-11-11 0.351에서 cpppj HEAD의 <c>text</c> 연산을 반영했다.</remarks>
+    private void Text(UiStep step)
+    {
+        InputEvent[] events = DisplayTextInput.MakeCommittedTextEvents(step.Argument);
+        if (!_input.TryPushBatch(events)) throw new ArgumentException("text 입력은 공간 부족 시 한 번에 최대 39문자");
     }
 
     /// <summary>key·keyup 단계: 한 글자는 WM_CHAR처럼 아래 코드로, 이름은 실제 가상 키 번호를 위로 밀어 넣는다. shift+ 접두는 Shift 비트만 더한다.</summary>
