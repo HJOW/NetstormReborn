@@ -292,7 +292,8 @@ public sealed class ClientHostGame : Game
         byte[] encoded = Netstorm.Core.Original.ExtendedText.EncodeDisplayText(table?.Translate("You") ?? "You");
         var translated = new byte[encoded.Length + 1];
         Array.Copy(encoded, 0, translated, 0, encoded.Length);
-        session.WriteBattleName(translated);
+        session.FillHandleName(translated);
+        session.WriteBattleName();
         _missionSession = session;
         return session;
     }

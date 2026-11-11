@@ -603,7 +603,8 @@ public sealed class MissionPlayersLoadTests
         var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
         session.StartPlayers(players, "Youpson");
         session.MissionPlayer.BattleOwner = 1u;
-        session.WriteBattleName(new byte[] { (byte)'Y', (byte)'o', (byte)'u', 0 });
+        session.FillHandleName(new byte[] { (byte)'Y', (byte)'o', (byte)'u', 0 });
+        session.WriteBattleName();
         // 7자 "Youpson"에 "You\0"을 덮어쓰면 "You\0son\0"이 된다(NUL 뒤 stale 꼬리 보존).
         Assert.Equal("You", System.Text.Encoding.Latin1.GetString(session.PlayerRecords, 180 + 12, 3));
         Assert.Equal(0, session.PlayerRecords[180 + 15]);
@@ -614,11 +615,12 @@ public sealed class MissionPlayersLoadTests
         Array.Copy(pre, 0, session2.PlayerRecords, 180 + 12, pre.Length);
         session2.PlayerRecords[180 + 20] = 0;
         session2.MissionPlayer.BattleOwner = 1u;
-        session2.WriteBattleName(new byte[] { (byte)'Y', (byte)'o', (byte)'u', 0 });
+        session2.FillHandleName(new byte[] { (byte)'Y', (byte)'o', (byte)'u', 0 });
+        session2.WriteBattleName();
         Assert.Equal("You", System.Text.Encoding.Latin1.GetString(session2.PlayerRecords, 180 + 12, 3));
         Assert.Equal(0, session2.PlayerRecords[180 + 15]);
         Assert.Equal("pson", System.Text.Encoding.Latin1.GetString(session2.PlayerRecords, 180 + 16, 4));
-        // NUL이 없으면 거부한다.
-        Assert.Throws<ArgumentOutOfRangeException>(() => session.WriteBattleName(new byte[] { (byte)'Y', (byte)'o' }));
+        // NUL이 없으면 채우기에서 거부한다.
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.FillHandleName(new byte[] { (byte)'Y', (byte)'o' }));
     }
 }
