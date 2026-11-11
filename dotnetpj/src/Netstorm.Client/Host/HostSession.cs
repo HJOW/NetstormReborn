@@ -554,6 +554,46 @@ public sealed class HostSession
         return frames;
     }
 
+    /// <summary>월드 적재의 로딩 깊이 공유 값이다. Territory·Money·Meta가 함께 읽고 쓴다.</summary>
+    /// <remarks>2026-11-12 0.437에서 월드 적재 드라이런용으로 추가했다. 실제 값 경로는 시작 흐름 단위에서 잇는다.</remarks>
+    private uint _worldLoadingDepth;
+
+    /// <summary>세션 저장소를 공유하는 월드 적재 부모를 만든다. 호출자가 효과 묶음을 모두 준다.</summary>
+    /// <param name="islandHooks">섬 런타임의 거주 구역·진단 효과다.</param>
+    /// <param name="territoryHooks">Territory 적재의 child·진단 효과다.</param>
+    /// <param name="types">장부 몸체가 읽는 실제 타입 표다.</param>
+    /// <param name="playerHooks">Player 부모의 생성·공간 효과다.</param>
+    /// <param name="loadHooks">적재 본체의 번역·설정·생성·카메라 효과다.</param>
+    /// <returns>세션 풀·기록·핸들을 공유하는 적재 부모다.</returns>
+    /// <remarks>2026-11-12 0.437에서 월드 적재 드라이런용으로 추가했다. 덤프·시작 흐름 연결 없이 호출 순서만 기록한다.
+    /// 로컬 소유자는 세션 TemplateOwner를 읽으며, puzzlePiece·지역없음 읽기는 실제 값 경로 단위에서 잇는다.</remarks>
+    public RawCampaignWorldLoad BuildWorldLoad(
+        IslandRuntimeHooks islandHooks,
+        FortWorldLoadHooks territoryHooks,
+        IReadOnlyList<OriginalTypeRecord> types,
+        PlayerWorldHooks playerHooks,
+        CampaignWorldLoadHooks loadHooks)
+    {
+        ArgumentNullException.ThrowIfNull(islandHooks);
+        ArgumentNullException.ThrowIfNull(territoryHooks);
+        ArgumentNullException.ThrowIfNull(types);
+        ArgumentNullException.ThrowIfNull(playerHooks);
+        ArgumentNullException.ThrowIfNull(loadHooks);
+        var islands = new RawIslandRuntime(
+            Pool, IslandHash, IslandRecords, IslandModes, IslandResidences,
+            () => IslandChanged, value => IslandChanged = value,
+            () => IslandRevision, value => IslandRevision = value, islandHooks);
+        var inner = new RawPostPop(Pool, types, new RawPostPopState { Suppressed = true });
+        var player = new RawPlayerWorld(Pool, inner, PlayerRecords, MissionPlayer, playerHooks);
+        var territory = new RawFortWorldLoad(
+            Pool, World, islands, WorldFrames,
+            () => 0u, () => MissionPlayer.TemplateOwner, () => 0,
+            () => _worldLoadingDepth, value => _worldLoadingDepth = value, territoryHooks);
+        return new RawCampaignWorldLoad(
+            World, islands, WorldFrames, () => 0u, () => 0, territory, player,
+            WorldGlobals, WorldTemplates, HandleBuffer, loadHooks);
+    }
+
     /// <summary>공유 핸들 버퍼에 번역 이름을 채운다. 원본 월드 적재의 핸들 버퍼 쓰기와 같다.</summary>
     /// <param name="translated">NUL 포함 번역 바이트다. 첫 NUL까지만 쓴다.</param>
     /// <remarks>2026-11-12 0.430에서 미션 값 채우기로 추가했다. 설정 전달과 이름 확정이 같은 버퍼를 읽는다.</remarks>
