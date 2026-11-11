@@ -70,7 +70,7 @@ cpppj/src/client/ClientStateWorldCleanup.cpp	port			todo	[client-default]
 cpppj/src/client/ClientStateWorldGlobals.cpp	port			todo	[client-default]
 cpppj/src/client/ClientStaticStrings.cpp	port			todo	[client-default]
 cpppj/src/client/ClientSubscriberGlobals.h	port			todo	[client-default]
-cpppj/src/client/ClientTemplateSectionNames.cpp	port			todo	[client-default] WB04-E272: 4-B 이월 — Template 적재 소비자와 함께(Client 수명 lazy 512 바이트 소유자, o 이름표는 E19 완료)
+cpppj/src/client/ClientTemplateSectionNames.cpp	port	www/core/client-template-section-names.js	1f00a25a	port	[client-default] WB04-E281: Client 수명 005c8aa4 이름표 512BYTE lazy 소유자(최초 names() 에서만 getTemplateSectionNames 실행·같은 배열 재사용·미정 끝 235BYTE 불변·할당 실패 시 토큰 0 보존). 기준선 뒤 변경 없음. 소비자 CampaignTemplateStorage·SoloMapCatalog 는 4-D. tests/template-load.test.mjs
 cpppj/src/client/ClientTitleBitmaps.cpp	port			todo	[client-default]
 cpppj/src/client/ClientUserSelectionCleanup.cpp	port			todo	[client-default]
 cpppj/src/client/ClientUserSelectionGlobals.cpp	port			todo	[client-default]
@@ -919,7 +919,7 @@ cpppj/src/o/RawSunAviaryProcess.cpp	port			todo	[o-default]
 cpppj/src/o/RawSunFlyerFrame.cpp	port			todo	[o-default]
 cpppj/src/o/RawSurfaceLifecycle.cpp	port	www/core/raw-surface-lifecycle.js	712e7224	port	[o-default] WB04-E248: 섬·다리·noIsland 삭제 훅 분배기(실제 가상 표 기록값으로 다리 pre/post·섬 pre·noIsland post 분배, 나머지는 공통 훅). cpppj SurfaceLifecycleTests 8건을 실제 Factory/Pop/Display/Frame/BridgeConnect/IslandPostPop/BridgeEvents/Destroy/Dispatch/DestroyLifecycle/ProcessHost/Kernel/Graph 조립으로 재현(교체·고립·hard·Keep·walker·Graph 활성·Native). 기준선 뒤 712e7224 의 BindCurrentConnectorType 을 ② 재반영(getter). CD 판본·Renderer 합성·InspectSurfaceLifecycle 은 범위 밖
 cpppj/src/o/RawTemplateLifetime.cpp	port	www/core/raw-template-lifetime.js	1f00a25a	port	[o-default] WB04-E123: Template9 헤더 초기화 004bd2e0·단일 반납 004bf690·전역 정리 004bfb00. fixture template-lifetime-v2 240행 전부(10.78 전용). DataManager 소멸/할당 반납은 훅 경계. 캠페인 템플릿 저장소(State 섹션 확장 포함)는 별도 client 단위
-cpppj/src/o/RawTemplateLoad.cpp	port			todo	[o-default]
+cpppj/src/o/RawTemplateLoad.cpp	port	www/core/raw-template-load.js	1f00a25a	port	[o-default] WB04-E281: 004bcc60 manager276 생성자(가상표 0x514690·+4/+8/+0x10c=0·+0x110=0xffffffff·이름 NUL 종료·005c89c0 4BYTE 0)·가상 004bcca0 파일명 살아 있는 뷰·004bf550 LoadTemplateFile(기존 파일 헤더 보존·새 파일 할당/생성/읽기 전용/읽기/현재 제목·실패 시 destroy→release→포인터 0). 기준선 뒤 변경 없음(3.6절 ①). cpppj 손 시험 5건 통과 확인 후 이식. tests/template-load.test.mjs
 cpppj/src/o/RawTemplateSectionNames.cpp	port	www/core/raw-template-section-names.js	1f00a25a	port	[o-default] WB04-E19: 004bccb0 Template 구역 이름표 lazy 생성(277 BYTE). fixture template-section-names 12행 전부
 cpppj/src/o/RawTempleDraw.cpp	port	www/core/raw-temple-draw.js	1f00a25a	port	[o-default] WB04-E203: 세 신전 VT(윈드 0x519860·레인 0x5196f0·썬더 0x519918) 판정·기본 프레임 4acfe0(현재 TYPE baseFrame, -1 유지)·윈드/썬더 추가 그림 4dcf10/4dd0f0(썬더 늘·윈드 baseFrame 앞만 현재 프레임, WORD 상태면 C 구간 개수 안에서 C 첫 번호+현재 32비트 감김). fixture templedraw 264행 전부(레인 행은 raw-rain-vortex-draw.js). 남음: 실제 Squid 가상 분배·SpriteDraw 본체·Session 표시 연결
 cpppj/src/o/RawTempleRitual.cpp	port			todo	[o-default]
