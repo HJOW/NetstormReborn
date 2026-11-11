@@ -15967,9 +15967,38 @@
       "bytes": 856750,
       "lines": 220,
       "fixtureCommit": "05d7cb57d",
-      "webCommit": "worktree",
+      "webCommit": "86f78e0d6",
       "cpppjBasis": {
         "cpppj/src/o/RawFortImage.cpp": "10c78952c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E278",
+      "id": "fort-money-load",
+      "path": "cpppj/tests/fixtures/fortmoney-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Fort Money 섹션 wrapper·직접 SP 지정·본문의 모드/owner/난이도/flags 마스크/seed 입력별 깊이·pos·SP 검사 횟수·분산 배열 288 DWORD·게임 난수·효과 순서·진단 횟수 408행",
+      "consumers": [
+        "webpj/tests/fort-money-load.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-money-load.js"
+      ],
+      "doc": "docs/webpj-fort-money-load-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortMoneyLoad.cpp"
+      ],
+      "scope": "408행 중 originals 244행만 사용(originalCD 164행은 CD 10.72 몫이라 웹 목표 밖)",
+      "text": true,
+      "sha256": "a87c4ae0d66d93196238cbe8c6f2568140e203808e703bda7fb9ad79847efc35",
+      "bytes": 383935,
+      "lines": 409,
+      "fixtureCommit": "5bdb5bedf",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortMoneyLoad.cpp": "2b0484195"
       }
     }
   ]
