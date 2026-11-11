@@ -29,6 +29,9 @@ public sealed class HtmlWindowFactoryHooks
     public Action<uint>? Kill { get; set; }
     /// <summary>현재 화면/루트 전역 DWORD.</summary>
     public Func<uint, uint>? Read { get; set; }
+    /// <summary>실제 클론 언어에서만 확장 문자를 내용으로 인정한다. 원문 검사는 빈 장치로 ASCII 관문을 유지한다.</summary>
+    /// <remarks>2026-11-11 0.353에서 cpppj HEAD(K1 확장 본문)를 반영했다.</remarks>
+    public Func<string, bool>? LocalizedContent { get; set; }
 }
 /// <summary>cpppj/src/client/HtmlWindowFactory.h/.cpp의004cf270 전체 생성기.</summary>
 public sealed class HtmlWindowFactory
@@ -60,7 +63,7 @@ public sealed class HtmlWindowFactory
     public uint Show(string source, uint suppress, uint width, uint height)
     {
         uint root = suppress != 0 ? 0 : Require(_hooks.Create)(width, height); _state.CreatedSerial = root != 0 ? Node(root).Serial : 0; string substituted = Require(_hooks.Substitute)(CString(source), Capacity); if (CString(substituted).Length >= Capacity) throw new ArgumentException("HTML 치환 지역8192BYTE 범위 초과"); var parser = new HtmlTextParserState(); byte[] first = new byte[Capacity]; Copy(first, Require(_hooks.Parse)(parser, root, CString(substituted), Capacity)); if (root == 0) return 0;
-        if (!HasContent(CString(first))) { _state.CreatedSerial = 0; Require(_hooks.Body)(root, "xxx"); Require(_hooks.Attach)(root, 0, 0, Require(_hooks.Read)(0x563e38), 0); Require(_hooks.Kill)(root); return 0; }
+        if (!HasContent(CString(first)) && !(_hooks.LocalizedContent?.Invoke(CString(first)) ?? false)) { _state.CreatedSerial = 0; Require(_hooks.Body)(root, "xxx"); Require(_hooks.Attach)(root, 0, 0, Require(_hooks.Read)(0x563e38), 0); Require(_hooks.Kill)(root); return 0; }
         _state.LastCloseTime = Require(_hooks.WallSeconds)(); if (Require(_hooks.Metadata)(root, first) == 0) { byte[] fallback = new byte[Capacity]; Copy(fallback, Require(_hooks.Fallback)()); Require(_hooks.Metadata)(root, fallback); }
         string secondSource = CString(first).Replace("\n", "<br>", StringComparison.Ordinal); string second = CString(Require(_hooks.Parse)(parser, root, secondSource, Capacity)); if (second.Length + 1 >= Capacity) throw new ArgumentException("HTML 마지막 LF/NUL 지역 범위 초과"); second += '\n'; Require(_hooks.Body)(root, second);
         int screenHeight = unchecked((int)Require(_hooks.Read)(0x5c78f4)); uint parent = Require(_hooks.Read)(0x563e38); float y = (float)(((double)screenHeight - Node(root).BaseHeight) * .5); int screenWidth = unchecked((int)Require(_hooks.Read)(0x5c78f0)); float x = (float)(((double)screenWidth - Node(root).BaseWidth) * .5); Require(_hooks.Attach)(root, x, y, parent, 0); Require(_hooks.Modal)(root, true); return Node(root).Serial;

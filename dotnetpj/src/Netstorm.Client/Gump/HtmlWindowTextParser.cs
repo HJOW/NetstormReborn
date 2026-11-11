@@ -17,6 +17,9 @@ public sealed class HtmlWindowTextParser
     private uint _nextBase = 0x63000000;
     /// <summary>현재 같은 저장소/파서 장치를 빌린다.</summary>
     public HtmlWindowTextParser(Func<uint, HtmlWindowGumpNode?> node, HtmlTextParserGlobals globals, HtmlTextParserHooks basic) { ArgumentNullException.ThrowIfNull(node); ArgumentNullException.ThrowIfNull(globals); ArgumentNullException.ThrowIfNull(basic); _node = node; _globals = globals; _basic = basic; }
+    /// <summary>같은 파서가 공유하는 전역이다. 입력 에이전트·언어 전환 장치가 표시 부호화 경계를 켠다.</summary>
+    /// <remarks>2026-11-11 0.353에서 cpppj HEAD의 공장 `localizedContent` 배선을 위해 공개했다.</remarks>
+    public HtmlTextParserGlobals Globals => _globals;
     /// <summary>현재 실제 부모가 없으면 반납되었거나 잘못된 토큰이다.</summary>
     private HtmlWindowGumpNode Node(uint token) => _node(token) ?? throw new InvalidOperationException("HTML 현재 링크 소유 부모 없음");
     /// <summary>같은 상태의 hidden/shown을 유지하고 매 호출 링크cursor만0으로 되돌린다.각 링크 효과 직후 실제 부모에 게시한다.</summary>

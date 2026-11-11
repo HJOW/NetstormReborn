@@ -27,6 +27,9 @@ public sealed class HtmlTextParserGlobals
     public uint SuppressParagraph { get; set; }
     /// <summary>짧은 덮어쓰기 뒤 나머지 BYTE도 유지하는 실제80BYTE 배경 이름.</summary>
     public byte[] Background { get; } = new byte[80];
+    /// <summary>실제 클론의 모든 UI 언어에서 유효한 표시 4바이트를 원자 문자로 보존한다. 원문 집계 초기화·독립 검사는 기본 거짓이다.</summary>
+    /// <remarks>2026-11-11 0.353에서 cpppj HEAD(K1 확장 본문)를 반영했다.</remarks>
+    public bool ExtendedText { get; set; }
 }
 /// <summary>선택된 실제 명령/조건/그림/링크/배경과 파생 가상 슬롯의 외부 효과.</summary>
 public sealed class HtmlTextParserHooks
@@ -99,6 +102,16 @@ public sealed class HtmlTextParser
     }
     /// <summary>같은80BYTE 저장소의 현재 첫 NUL 앞 이름을 읽는다.</summary>
     public static string HtmlBackgroundName(HtmlTextParserGlobals globals) { int end = Array.IndexOf(globals.Background, (byte)0); if (end < 0) throw new ArgumentException("HTML 배경80BYTE NUL 없음"); return System.Text.Encoding.Latin1.GetString(globals.Background, 0, end); }
+    /// <summary>입력 위치의 정확한 확장 토큰을 판정한다. 제어 바이트 네 개를 통째로 보존한다.</summary>
+    /// <param name="source">원시 입력이다.</param><param name="offset">검사할 위치다.</param>
+    /// <returns>정확한 토큰이면 참이다.</returns>
+    /// <remarks>2026-11-11 0.353에서 cpppj HEAD를 반영했다.</remarks>
+    private static bool HasExtendedAt(string source, int offset)
+    {
+        if (offset < 0 || offset + ExtendedText.ExtendedTextLength > source.Length) return false;
+        byte[] window = System.Text.Encoding.Latin1.GetBytes(source.Substring(offset, ExtendedText.ExtendedTextLength));
+        return ExtendedText.DecodeExtendedSequence(window, 0) is not null;
+    }
     /// <summary>첫 BYTE만 ASCII 소문자로 분기하며 후속 문자는 원문 literal 비교를 유지한다.</summary>
     private void Tag(string source, int offset, bool closing, int capacity)
     {
@@ -154,7 +167,14 @@ public sealed class HtmlTextParser
                 if (_state.Shown != 0)
                 {
                     if (unchecked((int)_state.TextAllowed) < 1 || (long)_state.Output.Length > (long)capacity - OutputReserve) break;
-                    if (item > 0x1f) { Append(source.Substring(_state.InputOffset, 1), capacity); if (_state.AfterHeading != 0) _state.AfterHeading = Byte(source, _state.InputOffset) == ' ' ? 1U : 0; }
+                    if (_globals.ExtendedText && HasExtendedAt(source, _state.InputOffset))
+                    {
+                        // 제어 바이트 네 개를 통째로 보존하고 하위 숫자를 일반 공백·태그로 재해석하지 않는다
+                        Append(source.Substring(_state.InputOffset, ExtendedText.ExtendedTextLength), capacity);
+                        _state.InputOffset += ExtendedText.ExtendedTextLength - 1;
+                        _state.AfterHeading = 0;
+                    }
+                    else if (item > 0x1f) { Append(source.Substring(_state.InputOffset, 1), capacity); if (_state.AfterHeading != 0) _state.AfterHeading = Byte(source, _state.InputOffset) == ' ' ? 1U : 0; }
                     if (Byte(source, _state.InputOffset) == '\n' && _state.Output.Length != 0 && _state.Output[^1] is not ' ' and not '\n') Append(" ", capacity);
                 }
             }

@@ -63,6 +63,8 @@ public sealed class HostHtmlFactory : IDisposable
         var hooks = new HtmlWindowFactoryHooks
         {
             Create = windows.Create, Node = MetadataHooks.Node,
+            // 입력 부품과 같은 유효 토큰 판별을 공유하며 독립 원문 파서의 기본 거짓 관문은 유지한다. 2026-11-11 0.353에서 cpppj HEAD를 반영했다.
+            LocalizedContent = text => parser.Globals.ExtendedText && DisplayTextInput.HasExtendedDisplayText(Encoding.Latin1.GetBytes(text)),
             Substitute = (raw, _) => Raw(startup.Configuration.SubstituteLocal(Text(raw))),
             Fallback = () => Raw(startup.Configuration.PathSpec("OkButton")), WallSeconds = wallSeconds,
             Attach = (token, x, y, parent, mode) => tree.TreeHooks.Attach!(token, x, y, parent, mode),

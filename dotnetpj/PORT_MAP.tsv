@@ -107,10 +107,10 @@ cpppj/src/client/HtmlConditionEffect.cpp	Netstorm.Client/Gump/HtmlConditionEffec
 cpppj/src/client/HtmlConditionEffect.h	Netstorm.Client/Gump/HtmlConditionEffect.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
 cpppj/src/client/HtmlLinkText.cpp	Netstorm.Client/Gump/HtmlLinkText.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	L1
 cpppj/src/client/HtmlLinkText.h	Netstorm.Client/Gump/HtmlLinkText.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	L1
-cpppj/src/client/HtmlTextParser.cpp	Netstorm.Client/Gump/HtmlTextParser.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
-cpppj/src/client/HtmlTextParser.h	Netstorm.Client/Gump/HtmlTextParser.cs	fb0f73782fb89fbbdf26c22ed3f91698abae1012	L1
-cpppj/src/client/HtmlWindowFactory.cpp	Netstorm.Client/Gump/HtmlWindowFactory.cs	9ad3ff97f51ac3900fbc1b957a3367e339982af6	L1
-cpppj/src/client/HtmlWindowFactory.h	Netstorm.Client/Gump/HtmlWindowFactory.cs	9ad3ff97f51ac3900fbc1b957a3367e339982af6	L1
+cpppj/src/client/HtmlTextParser.cpp	Netstorm.Client/Gump/HtmlTextParser.cs	e99c641aab012d0d424c922f52165329e4f29fff	L1
+cpppj/src/client/HtmlTextParser.h	Netstorm.Client/Gump/HtmlTextParser.cs	e99c641aab012d0d424c922f52165329e4f29fff	L1
+cpppj/src/client/HtmlWindowFactory.cpp	Netstorm.Client/Gump/HtmlWindowFactory.cs	e99c641aab012d0d424c922f52165329e4f29fff	L1
+cpppj/src/client/HtmlWindowFactory.h	Netstorm.Client/Gump/HtmlWindowFactory.cs	e99c641aab012d0d424c922f52165329e4f29fff	L1
 cpppj/src/client/HtmlWindowFit.cpp	Netstorm.Client/Gump/HtmlWindowFit.cs	f9a8cfa54009d437fa2ba1630de5284b582bd5ac	L1
 cpppj/src/client/HtmlWindowFit.h	Netstorm.Client/Gump/HtmlWindowFit.cs	f9a8cfa54009d437fa2ba1630de5284b582bd5ac	L1
 cpppj/src/client/HtmlWindowGump.cpp	Netstorm.Client/Gump/HtmlWindowGump.cs	9ad3ff97f51ac3900fbc1b957a3367e339982af6	L1
