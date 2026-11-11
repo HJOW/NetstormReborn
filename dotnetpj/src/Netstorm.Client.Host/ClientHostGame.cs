@@ -231,6 +231,7 @@ public sealed class ClientHostGame : Game
     /// <param name="handle">미션 1번의 핸들.</param>
     /// <remarks>2026-11-12 0.398에서 미션 시작 흐름으로 추가했다. 대본·타입 표는 목록용으로 한 번 더 연다.
     /// 요새 적재 장치가 가진 것과 같은 입력이며 세션이 표를 소유하면 합친다. 0.401에서 동맹 마스크 기록을 연결했다.
+    /// 0.406에서 로컬 1번의 가입·준비·Ready packet 송신을 연결했다(구독자 1은 mySubscriber 기본값이며 전송 갈고리는 기록만 한다).
     /// 월드 본체 조립·브리핑 화면은 다음 단위다.</remarks>
     private HostSession StartMission(string mission, string handle)
     {
@@ -248,6 +249,13 @@ public sealed class ClientHostGame : Game
         session.PrepareAiSettings(players, key => script.Get(key));
         session.StartPlayers(players, handle);
         session.StartPlayerMasks(players);
+        // 로컬 1번을 로그인 순서와 같이 올린다. 구독자 1은 Zone 기본 mySubscriber이며 Zone 설치 연결은 다음 단위다.
+        // 전송 갈고리는 실제 전송이 없어 기록만 하며 덤프 행을 바꾸지 않는다.
+        var sentPlayers = new List<(uint Owner, uint Target)>();
+        session.JoinPlayer(1u, 1u, 1u, new PlayerJoinHooks { SendPlayer = (owner, target) => sentPlayers.Add((owner, target)) });
+        session.MarkReady(1u);
+        var readyPackets = new List<byte[]>();
+        session.SendReady(0u, new PlayerReadyHooks { IsBoss = true, Broadcast = readyPackets.Add, Assertion = _ => { } });
         _missionSession = session;
         return session;
     }
