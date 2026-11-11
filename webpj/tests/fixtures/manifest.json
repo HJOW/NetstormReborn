@@ -16147,10 +16147,39 @@
       "bytes": 749926,
       "lines": 209,
       "fixtureCommit": "5b10ce823",
-      "webCommit": "worktree",
+      "webCommit": "67312db4b",
       "cpppjBasis": {
         "cpppj/src/o/RawFarmCluster.cpp": "f7f58f5a1",
         "cpppj/src/o/RawFortRandomPlacement.cpp": "f7f58f5a1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E286",
+      "id": "fort-world-load",
+      "path": "cpppj/tests/fixtures/fortworldload-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Fort 월드 적재 부모/Territory 입력 11 DWORD별 pos/end·depth·owner·noRegion·Territory 120BYTE·전체 청크·3204BYTE 섬 목록·단계 순서·진단 수 (originals 267 + originalCD 267)",
+      "consumers": [
+        "webpj/tests/fort-world-load.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-world-load.js"
+      ],
+      "doc": "docs/webpj-fort-world-load-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortWorldLoad.cpp"
+      ],
+      "scope": "originals 267행만 사용(originalCD 267행은 CD 10.72 몫이라 웹 목표 밖)",
+      "sha256": "18d9946e08d189c92388e11e5163802b54299d2cc7b9c08f68579c11e4a9d59f",
+      "bytes": 307558,
+      "lines": 535,
+      "fixtureCommit": "860030e73",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortWorldLoad.cpp": "2a8f937e1"
       }
     }
   ]

@@ -6,17 +6,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-11 정리, 마지막 구현 WB04-E285)
+### 0.1 현재 값 (2026-11-11 정리, 마지막 구현 WB04-E286)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
-| 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A 완료, 현재 단계 **4-B** 16/30, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 518(57.8%)·partial 80(8.9%)·todo 298(33.3%)**. 기준선 소스 줄 수로는 129,653줄 중 port 60,746(46.9%)·partial 21,345(16.5%)·todo 47,562(36.7%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E285** (이 커밋, `20261111-NNN WB`) 4-B RawFortRandomPlacement와 RawFarmCluster 이식(군집을 앞당겨 단일 배치를 farmcluster 원본 104행으로 검증), 공유 archipelago 재생 포함([문서](docs/webpj-farm-cluster-20261111.md)). 그 앞은 WB04-E284 (`ce5ae273c / 20261111-198 WB`) RawDataManagerImage, WB04-E283 (`11ad9bf58 / 20261111-197 WB`) RawDataManagerResize. 단위 색인은 2절·3.1절 |
-| 다음 작업 | **4-B RawFortWorldLoad**(120줄 + client RawFortWorldLoadBinding 40줄): 이어서 RawCampaignWorldLoad→RawFortWorldLoad→…→지형·섬 부품→RawSurfaceWorld. 기준선 뒤 변경은 착수 때 저장소 루트에서 `git diff 1f00a25a..HEAD` 로 확인한다. 0.6절의 단계와 무관한 AGENTS 요구는 모두 반영됐다(11.01 카피라이트 줄은 WB03-AE) |
-| 마지막 전체 검사 | WB04-E285의 Node v26.13.0·v22.23.3, **2489/2489 통과·실패/건너뜀0**(신규 farm-cluster 7; WB04-E284 2482), v26·v22 약3분(v24 는 미설치) |
+| 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A 완료, 현재 단계 **4-B** 17/31, 0.2절) · M3~M5 미착수 |
+| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 519(57.9%)·partial 80(8.9%)·todo 297(33.1%)**. 기준선 소스 줄 수로는 129,653줄 중 port 60,866(46.9%)·partial 21,345(16.5%)·todo 47,442(36.6%). 영역별 남은 양은 0.3절 |
+| 마지막 구현 커밋 | **WB04-E286** (이 커밋, `20261111-NNN WB`) 4-B RawFortWorldLoad 이식(client RawFortWorldLoadBinding 은 RawSurfaceWorld 뒤로 분리 이월), fortworldload 원본 patch 267행 대조([문서](docs/webpj-fort-world-load-20261111.md)). 그 앞은 WB04-E285 (`67312db4b / 20261111-199 WB`) RawFortRandomPlacement·RawFarmCluster, WB04-E284 (`ce5ae273c / 20261111-198 WB`) RawDataManagerImage. 단위 색인은 2절·3.1절 |
+| 다음 작업 | **4-B RawCampaignWorldLoad**(144줄): 이어서 Islandbuilder→RawFortWorldLoad→…→지형·섬 부품→RawSurfaceWorld. 기준선 뒤 변경은 착수 때 저장소 루트에서 `git diff 1f00a25a..HEAD` 로 확인한다. 0.6절의 단계와 무관한 AGENTS 요구는 모두 반영됐다(11.01 카피라이트 줄은 WB03-AE) |
+| 마지막 전체 검사 | WB04-E286의 Node v26.13.0·v22.23.3, **2494/2494 통과·실패/건너뜀0**(신규 fort-world-load 5; WB04-E285 2489), v26·v22 약3분(v24 는 미설치) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -28,7 +28,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 1·2 선행 | WB02-G·H | 이식 대응표·기준선 재반영, 무브라우저 실행·cpppj 오라클 기반 | 완료 (2026-11-07) | — |
 | 3 M2 선행 부품 | 3-A~3-E | 3-A WB04-A~D5c·E1~E242(SID 풀·해시·Kernel·Form/Process 층과 종류별 월드 부품), 3-B~3-D `o/` 18단위(E243~E258), 3-E 기준선 뒤 cpppj 변경 판정 79단위(E259~E264) | 완료 (2026-11-10 E264 마감) | 242+18단위 · 판정 79 |
 | 4 M2 | 4-A | 자료·파일·설정·타입 표 | 완료 9/9 (E265~E273) | `o/` 15단위 · 3,135줄 (+24) + client M |
-| 〃 | 4-B | Fort·지형·섬 적재 | **진행 중** 16/30 | `o/` 26단위 · 3,916줄 (+47) + client B |
+| 〃 | 4-B | Fort·지형·섬 적재 | **진행 중** 17/31 | `o/` 26단위 · 3,916줄 (+47) + client B |
 | 〃 | 4-C | 패킷·로그인·내부 미션 전송 | 미착수 | `o/` 20단위 · 2,578줄 (+548) + `zacket/` 1 + client A 일부 |
 | 〃 | 4-D | Session 조립·Tutorial1 Load/Start(L2) | 미착수 | client A 나머지(RawCampaignSession 5,715줄 등) |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 미착수 | `o/` 4단위 · 216줄 + client C·J 일부 |
@@ -52,17 +52,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 896단위 / 129,653줄 | 518 (57.8%) / 60,746줄 (46.9%) | 80 (8.9%) / 21,345줄 (16.5%) | 298 (33.3%) / 47,562줄 (36.7%) |
-| `o/` 월드·규칙 | 517단위 / 67,592줄 | 453 (87.6%) / 56,477줄 (83.6%) | 18 (3.5%) / 4,012줄 (5.9%) | 46 (8.9%) / 7,103줄 (10.5%) |
+| 전체 | 896단위 / 129,653줄 | 519 (57.9%) / 60,866줄 (46.9%) | 80 (8.9%) / 21,345줄 (16.5%) | 297 (33.1%) / 47,442줄 (36.6%) |
+| `o/` 월드·규칙 | 517단위 / 67,592줄 | 454 (87.8%) / 56,597줄 (83.7%) | 18 (3.5%) / 4,012줄 (5.9%) | 45 (8.7%) / 6,983줄 (10.3%) |
 | `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 65 (17.2%) / 4,269줄 (6.9%) | 62 (16.4%) / 17,333줄 (28.1%) | 251 (66.4%) / 40,020줄 (64.9%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 439줄 | 0 | 0 | 1 / 439줄 |
 
-남은 378단위(todo 298·partial 80)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
+남은 377단위(todo 297·partial 80)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
 
 | 영역 | 주 단계 | todo 단위 / 줄 | partial 단위 / 줄 | 큰 단위(줄) |
 | --- | --- | --- | --- | --- |
 | A 세션·로그인·패킷·전송·클라이언트 전역 | 4-C·4-D | 66 / 13,035 | 2 / 1,907 | RawCampaignSession 5,715 · ClientMain* 1,797 · CampaignTemplateStorage 695 · LocalMissionTransport 439 |
-| B 월드·Fort 적재·지형/섬·객체 공통 수명 | 4-B(일부 4-D) | 8 / 3,038 | 8 / 1,937 | GameWorld 1,153 · RawSurfaceWorld 804 · SquidPostPop* 675 |
+| B 월드·Fort 적재·지형/섬·객체 공통 수명 | 4-B(일부 4-D) | 7 / 2,918 | 8 / 1,937 | GameWorld 1,153 · RawSurfaceWorld 804 · SquidPostPop* 675 |
 | C 시각 효과·입자 | 5-A | 5 / 678 | 0 | RawCampaignParticles 513 · ParticlePaletteMemory 65 · ConstructionVisualRenderer 57 · ThunderProcess 32 |
 | D 전투·유닛 이동·경로 | 6-P·7-P·7 | 29 / 4,098 | 5 / 1,246 | RawGunProcess 421 · RawGunTarget* 399 · RawMissile* 392 · RawPathProcess 360 |
 | E 경제·생산·건설·자원 | 6(7-P3 일부) | 14 / 2,573 | 1 / 142 | RawProductionControls 393 · RawDaisRegular 372 · RawCampaignFactoryDisplay 329 · RawCampaignConstructionBindings 291 |
@@ -83,8 +83,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 이식 원본은 언제나 기준선 판(`git show 1f00a25a:경로`)이고, 기준선 뒤 cpppj 변경은 3.6절 절차로만 반영한다. 같은 작업 트리에서 CP 세션이 cpppj를 계속 커밋하므로(LAN 3차·`Actual*` 실제 연결 경로·`shared*` 공유 전역 추가 등) cpppj 상태는 커밋과 소스로 판단한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 54·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 518·partial 80·todo 298·제외(-) 88**, session/oracle 0. 웹 소스는 `www/` JS 약 7만 8천 줄(`www/data` 제외, `www/core` 모듈 465개), 검사 파일 431개, 도구(`webpj/tools`) 오라클 관련 4개다(2026-11-11 재계산) |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` 545항목(original-x86 514·independent 7·screenshot 13·source 8·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E282~E285에서 datamanager-selection/resize/create/read·farmcluster 5개 추가). original-x86 514개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 54·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 519·partial 80·todo 297·제외(-) 88**, session/oracle 0. 웹 소스는 `www/` JS 약 7만 8천 줄(`www/data` 제외, `www/core` 모듈 466개), 검사 파일 432개, 도구(`webpj/tools`) 오라클 관련 4개다(2026-11-11 재계산) |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` 546항목(original-x86 515·independent 7·screenshot 13·source 8·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E282~E286에서 datamanager-selection/resize/create/read·farmcluster·fort-world-load 6개 추가). original-x86 515개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
 | 마지막 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트). 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -206,7 +206,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - **목록 밖 단위:** 다른 단계 몫을 끼워 넣지 않는다. 항목이 선행 미완료로 막히면 사유를 그 항목에 적고 같은 단계의 다음 항목으로 간다. 단계 전체가 막히면 사유를 0.1절 다음 작업에 적고, 선행이 갖춰진 이월 부품(6-P·7-P) 항목을 진행할 수 있다. 목록에 없던 단위가 꼭 필요하면 해당 단계 목록 끝에 항목을 추가하고 이유를 적는다.
 - **끝난 단계:** 단계 머리글이 `(m/m)`이 되면 그 체크 목록을 보관본으로 옮기고 2.3절 표에 한 줄을 더한다(0.5절 5번).
 
-#### 4-B Fort·지형·섬 적재 (16/30)
+#### 4-B Fort·지형·섬 적재 (17/31)
 
 완료 기준(3.2절): Tutorial1 Fort 적재 결과(객체·지형·섬)가 cpppj 와 같다(`--inspect-fort`·session-dump 범위). 선행: 4-A(완료). 줄 수는 기준선 소스이고, 기준선 뒤 변경은 착수할 때 `git diff 1f00a25a..HEAD -- <파일>` 로 확인해 3.6절 ①/②/③ 으로 판정한다. `(partial)` 은 이미 일부 이식된 단위이며 남은 부분만 옮긴다. 앞 항목이 뒷 항목의 입력이므로 위에서부터 진행한다.
 
@@ -225,7 +225,8 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] **RawDataManagerSelection** 97줄 → [E282](docs/webpj-data-manager-selection-20261111.md) DataManager 섹션 검색·선택 이식(Image·Resize 의 선행이라 목록 순서를 바꿔 먼저 옮김)
 - [x] **FortSerializationGlobals** 11줄 → [E279](docs/webpj-fort-serialization-globals-20261111.md) Fort 저장 전역 묶음 이식과 RawFortObjectLoad 공유 상태 대여 생성자
 - [x] **RawFortRandomPlacement** 212줄 → [E285](docs/webpj-farm-cluster-20261111.md) Fort 단일 랜덤 배치 이식(farmcluster 104행 재생으로 검증하려고 RawFarmCluster 와 함께)
-- [ ] **RawFortWorldLoad** 120줄 + client `RawFortWorldLoadBinding` 40줄
+- [x] **RawFortWorldLoad** 120줄 → [E286](docs/webpj-fort-world-load-20261111.md) Fort 월드 적재 부모(Territory 120BYTE·Builder·후처리 순서) 이식
+- [ ] client **RawFortWorldLoadBinding** 40줄 — `RawSurfaceWorld`·`RawNormalTerrainWorldBinding` 뒤로 이월(E286 에서 RawFortWorldLoad 와 분리; 정상 지형·저장 객체·SP·Meta·Graph 월드 연결과 cpppj `FortWorldLoadBindingTests` 소비)
 - [ ] **RawCampaignWorldLoad** 144줄
 - [ ] **Islandbuilder** (partial 117줄)
 - [ ] **TerrainBuilder** (partial 246줄)
@@ -287,7 +288,7 @@ M2(Tutorial1 Load/Start/표시)에 직접 필요하지 않아 순서6/7 몫으�
 | 단계 | 할 일 | 선행 | 완료 기준 |
 | --- | --- | --- | --- |
 | **4-A** 자료·파일·설정·타입 표 | **완료**(E265~E273, 2.3절). E272 이월: client `DataManagerFileRead`·`ClientTemplateSectionNames` → 4-B, `ClientFortGlobals` → 4-D, `ClientColorMapFile`·`GameAssets` Find/FrameIndex → 5-A | 3-E | (달성) 미션 자료를 cpppj와 같은 순서로 조회, `SquidFactory_TypeLoader_ConnectsHpDepthAndConstructorMetadata` 대응 검사 통과 |
-| **4-B** Fort·지형·섬 적재 | **진행 중:** 3.1절 체크 목록(`o/` 26단위와 client B 영역 일부, 30항목). WB03-U~AB 판독/지형과 E220~E228 섬/Fort 부품을 같은 월드에 연결한다. `o/Squid` 옛 struct 저장 필드·Advance/Face(소비자는 옛 GameWorld/UberGump)는 GameWorld 이식 여부 판정과 함께 닫는다(E246). 3.6절 ③ 4-B 행과 E272 이월분(`DataManagerFileRead`·`ClientTemplateSectionNames`)을 해당 항목에서 함께 반영 | 4-A | Tutorial1 Fort 적재 결과(객체·지형·섬)가 cpppj 와 같음(`--inspect-fort`·session-dump 범위) |
+| **4-B** Fort·지형·섬 적재 | **진행 중:** 3.1절 체크 목록(`o/` 26단위와 client B 영역 일부, 31항목). WB03-U~AB 판독/지형과 E220~E228 섬/Fort 부품을 같은 월드에 연결한다. `o/Squid` 옛 struct 저장 필드·Advance/Face(소비자는 옛 GameWorld/UberGump)는 GameWorld 이식 여부 판정과 함께 닫는다(E246). 3.6절 ③ 4-B 행과 E272 이월분(`DataManagerFileRead`·`ClientTemplateSectionNames`)을 해당 항목에서 함께 반영 | 4-A | Tutorial1 Fort 적재 결과(객체·지형·섬)가 cpppj 와 같음(`--inspect-fort`·session-dump 범위) |
 | **4-C** 패킷·로그인·내부 미션 전송 | `o/` 20단위: PacketRegistrationTable·RawPacketDispatch·RawConnectionActivity·RawConnectionCleanup·RawConnectionRegistration·RawConnectionRegistry·RawTransportPolling·RawMissionClientPackets·RawMissionServerPackets·RawMissionLogin·RawMissionLoginPackets·RawMissionLoginTimer·RawMissionSettingsPacket·RawLocalMissionState·RawBattleBroadcast·RawFormPacket*(패킷 writer, 3.6절 ③)·RawSquidTransmission·Player·RawConstructionCommand·RawGeyserMined*(RegisterGeyserMined), `zacket/LocalMissionTransport`, client A 영역의 전송/로그인 서비스. 분배기 등록이 미뤄진 부품(E108 간헐천 채집·E217 RegisterFactoryResearchCommand·processform Dispatch 행)을 함께 연결. 1절 단독 경로 경계 | 4-A | 단독 미션의 로그인→Ready→Start 패킷 순서와 내용이 cpppj 와 같음 |
 | **4-D** Session 조립·Tutorial1 Load/Start | RawCampaignSession·ClientMain*·client 전역, `RawSurfaceWorld`/`RawWorldCore`, Player/동맹/기술/SP/Deck/AI 초기화, Start/Guide·State 전환을 cpppj 부모 호출 순서로 조립. 앞 단위가 미룬 연결: 보상의 삭제 장부(`reward_lifecycle_*`, D5b)·World 장기 호스트 대여와 Client 접합 장면(`ProcessHostStorage`·Kernel procSumm, D5c)·3.6절 ③ 표의 4-D 행(World 수명 Native 묶음·TellSection·SidPool·ClientMain 등)·client UI 4단위 판정. 웹 Session 덤프와 오라클 시나리오 형식(3.5절 1번). E272 이월: client `ClientFortGlobals`(현재/예약 Fort 이름 256 바이트 두 개·파일 키·목록·모드) | 4-B·4-C | **L2:** Tutorial1 Load/Start 관측(보고서·session-dump·첫 프레임 논리 화면)이 cpppj 와 같음. 임시 Player/AI/색 번호로 시작 성공을 만들지 않음 |
 | **5-A** 렌더러·Draw·시각 시스템 연결 | `Renderer`·`DrawSort`·타입별 Draw·팔레트 전환, 입자/표시 client 단위(RawCampaignParticles·ConstructionVisualRenderer·ParticlePaletteMemory(adapt)·ThunderProcess·SpellFrameVisibility), `o/` 4단위(RawPlainAssetDraw·RawPlainUnitCapture·RawPlainWorkshopCapture·RawColorMapCache(adapt), 캡처 픽셀 대조는 E199 `render/raw-shape-to-buffer.js` 위 E202 방식), cpppj `RainDrawTests` Renderer 합성 2건, KenCloud 메뉴 연결(4절 구름 차이 0). 전용 시험 없이 웹 조립 검사만 한 E197·E198·E201 시스템을 cpppj Session 시험(`DamageableBurningSessionTests` 등)으로 재대조. E272 이월: client `ClientColorMapFile`(색표 캐시 파일 읽기/쓰기, 웹은 계산 생성 예정)은 RawColorMapCache 와 함께, `GameAssets` 의 Find(별칭→typename)·FrameIndex·SHP 블록 수 검사 대조 | 4-D | Tutorial1 첫 프레임 논리 화면 일부(지형·객체)가 cpppj `snapshot` 과 같음 |
