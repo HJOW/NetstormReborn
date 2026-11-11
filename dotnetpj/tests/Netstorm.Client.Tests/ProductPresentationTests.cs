@@ -72,4 +72,41 @@ public sealed class ProductPresentationTests
         Assert.Contains("AI", ProductPresentation.PatchCreditsBody);
         Assert.Contains("{version}", ProductPresentation.PatchCreditsBody);
     }
+
+    /// <summary>새 항목 대상이면 현재 언어의 고정 번역 본문을 그대로 돌려준다.</summary>
+    [Fact]
+    public void TellBodyReturnsFixedTranslationForPatchTarget()
+    {
+        // 언어 번호는 원문과 같은 값이다(7 한국어, 5 일본어)
+        Assert.Equal(7u, ProductPresentation.KoreanLanguage);
+        Assert.Equal(5u, ProductPresentation.JapaneseLanguage);
+        Assert.Equal(ProductPresentation.PatchCreditsKoreanBody, ProductPresentation.TellBody("Patch1101.Credits", "anything", 7));
+        Assert.Equal(ProductPresentation.PatchCreditsKoreanBody, ProductPresentation.TellBody("PATCH1101.CREDITS", "anything", 7));
+        Assert.Equal(ProductPresentation.PatchCreditsJapaneseBody, ProductPresentation.TellBody("Patch1101.Credits", "anything", 5));
+        Assert.Contains("Copyright 2026 HJOW", ProductPresentation.PatchCreditsKoreanBody);
+        Assert.Contains("Copyright 2026 HJOW", ProductPresentation.PatchCreditsJapaneseBody);
+    }
+
+    /// <summary>Campaign 목록에는 Back 버튼 앞에 언어별 Skirmish 항목을 넣는다.</summary>
+    [Fact]
+    public void TellBodyInsertsSkirmishBeforeBackButton()
+    {
+        const string menu = "[UCampaign]\n$Menu=Campaign,Tell,First\n$Button=Back,Tell,Blank\n";
+        string english = ProductPresentation.TellBody("ucampaign", menu);
+        Assert.Contains("$Menu=Skirmish,Tell,Patch1101.Skirmish\n$Button=Back", english);
+        string korean = ProductPresentation.TellBody("UCampaign", menu, 7);
+        Assert.Contains("$Menu=스커미시,Tell,Patch1101.Skirmish\n$Button=Back", korean);
+        string japanese = ProductPresentation.TellBody("ucampaign", menu, 5);
+        Assert.Contains("$Menu=スカーミッシュ,Tell,Patch1101.Skirmish\n$Button=Back", japanese);
+        // 중복 확장도 피한다
+        Assert.Equal(english, ProductPresentation.TellBody("ucampaign", english));
+    }
+
+    /// <summary>언어별 새 항목 이름으로 Credits 목록을 확장한다.</summary>
+    [Fact]
+    public void TellBodyAppendsLocalizedPatchLabel()
+    {
+        Assert.Contains("$Menu=NetStorm 11.01 패치 크레딧,Tell,Patch1101.Credits", ProductPresentation.TellBody("credits", "[Credits]\n", 7));
+        Assert.Contains("$Menu=NetStorm 11.01 パッチ クレジット,Tell,Patch1101.Credits", ProductPresentation.TellBody("credits", "[Credits]\n", 5));
+    }
 }
