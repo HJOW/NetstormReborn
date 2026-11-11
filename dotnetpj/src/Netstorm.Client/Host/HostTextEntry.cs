@@ -1,3 +1,4 @@
+using System.Text;
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 
@@ -72,6 +73,18 @@ public sealed class HostTextEntry : IDisposable
     public uint AllocateEntry()
     {
         uint token = _tree.AllocateNode(new TextEntryGumpNode()); _windows.TrackChild(token); return token;
+    }
+
+    /// <summary>실제 편집 입력의 전체 버퍼 본문을 Latin1 문자열로 읽는다.</summary>
+    /// <param name="entryToken">문자 입력 Gump 토큰이다.</param>
+    /// <returns>Latin1 해독 본문이다.</returns>
+    /// <exception cref="InvalidOperationException">편집 노드·문자 저장소가 없으면 cpp와 같은 Scenario 확정 진단이다.</exception>
+    /// <remarks>2026-11-11 0.365에서 cpppj HEAD의 S1 Scenario 확정(버퍼 Text 직접 읽기)을 반영했다.</remarks>
+    public string ReadEntryText(uint entryToken)
+    {
+        var node = _tree.Node(entryToken) as TextEntryGumpNode ?? throw new InvalidOperationException("Scenario 확정의 실제 편집 노드 없음");
+        var buffer = _storage.Find(node.Buffer) ?? throw new InvalidOperationException("Scenario 확정의 실제 문자 저장소 없음");
+        return Encoding.Latin1.GetString(buffer.Text());
     }
 
     /// <summary>공통 수집·정렬 중 현재 출력 장치를 잠시 빌려 같은 순서로 그린다.</summary>
