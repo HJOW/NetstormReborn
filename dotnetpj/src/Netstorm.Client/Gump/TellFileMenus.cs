@@ -33,6 +33,24 @@ public sealed class TellFileMenus : IDisposable
     private static string Narrow(string text) => Encoding.Latin1.GetString(OriginalText.EncodeWindows1252(text));
     /// <summary>원본 지역 버퍼의 종료 NUL 공간을 검사한다.</summary>
     private static void Limit(string text, int capacity) { if (OriginalText.EncodeWindows1252(text).Length >= capacity) throw new PhysicalLimitException("Tell 파일 목록 지역 버퍼 초과"); }
+    /// <summary>표시 바이트(NUL 포함 capacity)를 넘지 않도록 마지막 문자부터 줄인다. 원문은 80바이트 지역 버퍼를 넘는 긴 캠페인 제목을 그대로 복사해 종료했다(10차 NB24).</summary>
+    /// <param name="value">줄일 제목이다.</param><param name="capacity">NUL 포함 표시 한도다.</param>
+    /// <returns>한도 안의 제목이다.</returns>
+    /// <remarks>2026-11-11 0.348에서 cpppj HEAD의 NB24 교정(`FitDisplayLimit`)을 반영했다. 서로게이트 쌍이 갈라지지 않게 마지막 문자 단위로 줄인다.</remarks>
+    private static string FitDisplayLimit(string value, int capacity)
+    {
+        // 한 번에 한 문자씩 줄여 표시 바이트가 중간에 잘리지 않게 한다
+        while (value.Length != 0 && OriginalText.EncodeWindows1252(value).Length >= capacity)
+        {
+            int last = value.Length - 1;
+            if (last > 0 && char.IsLowSurrogate(value[last]) && char.IsHighSurrogate(value[last - 1]))
+            {
+                last--;
+            }
+            value = value[..last];
+        }
+        return value;
+    }
     /// <summary>경로의 마지막 구분자 뒤에서 첫 점 앞까지 원본 이름을 얻는다.</summary>
     private static string FileName(string path)
     { int slash = path.LastIndexOfAny(['/', '\\', ':']); string name = path[(slash + 1)..]; int dot = name.IndexOf('.'); return dot < 0 ? name : name[..dot]; }
@@ -40,9 +58,9 @@ public sealed class TellFileMenus : IDisposable
     private static string Lower(string text) => string.Concat(text.Select(c => c is >= 'A' and <= 'Z' ? (char)(c + 32) : c));
     /// <summary>등록 객체의 마지막 점을 제외한 이름을 반환한다.</summary>
     private static string ObjectName(Config config) => config.Prefix.Length > 0 ? config.Prefix[..^1] : throw new InvalidOperationException("Tell 파일 목록 접두부 없음");
-    /// <summary>현재 local.1로 제목을 치환하고 선택한 경우 빈 제목을 파일명으로 대체한다.</summary>
+    /// <summary>현재 local.1로 제목을 치환하고 선택한 경우 빈 제목을 파일명으로 대체한다. 긴 제목은 종료하지 않고 80바이트 안으로 줄여 표시한다(10차 NB24).</summary>
     private string Title(string name, bool fallback)
-    { string title = _config.SubstituteLocal("{{local.1}.title}", name); Limit(title, 80); if (fallback && title.Length == 0) { title = name; Limit(title, 80); } return title; }
+    { string title = FitDisplayLimit(_config.SubstituteLocal("{{local.1}.title}", name), 80); if (fallback && title.Length == 0) { title = FitDisplayLimit(name, 80); } return title; }
 
     /// <summary>열거 순서대로 신규 Config를 등록한 뒤 고유 prefix를 원본 비교·교환 순서로 정렬한다.</summary>
     private List<Config> Collect(string pattern, int capacity)

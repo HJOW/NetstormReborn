@@ -17,20 +17,20 @@
 | 4 | `src/client/EditorMapCatalogFiles.cpp/.h` | `Host/EditorCatalogLedger.cs`(3ddeb19, port), `Host/EditorCatalogWorkspace.cs`(fc56410a, port), `Host/EditorWorkspacePaths.cs`(75c5dac, port) | ① (+R8 9차) | S1 `Deleted()` 추가(완료 이관 후 삭제 표식 구별, 132). 9차 편집 이식 때 재대조 |
 | 5 | `src/client/HtmlTextParser.cpp/.h` | `Gump/HtmlTextParser.cs`(fb0f7378, L1) | ① (+6차) | K1 확장 표시 4BYTE 원자 문자 보존(122). L1 fixture는 기본 false 관문 유지. R3 잔여에서 재대조 |
 | 6 | `src/client/HtmlWindowFactory.cpp/.h` | `Gump/HtmlWindowFactory.cs`(9ad3ff97, L1) | ① (+6차) | K1 `localizedContent` 훅(확장 문자 내용 인정, 122). R3 잔여에서 재대조 |
-| 7 | `src/client/HtmlWindowMetadata.cpp/.h` | `Gump/HtmlWindowMetadata.cs`(9ad3ff97, L1) | ①② NB08 | NB08 `%` 인라인 목록 잘림 교정(`repairInlineList` 꺼짐 시 원문 동작 보존, 145). 옮길 때 함께 옮기고 "10차 NB08 포함"으로 기록한다 |
+| 7 | `src/client/HtmlWindowMetadata.cpp/.h` | `Gump/HtmlWindowMetadata.cs`(9ad3ff97, L1) | ①② NB08 | NB08 `%` 인라인 목록 잘림 교정(`repairInlineList` 꺼짐 시 원문 동작 보존, 145). 옮길 때 함께 옮기고 "10차 NB08 포함"으로 기록한다 → **0.348 완료**(훅·분기·제품 배선, 10건 통과) |
 | 8 | `src/client/InputEvent.cpp/.h` | `Host/HostInputMapper.cs`(91d494c3, port), `Input/InputEvent.cs`(ac9ea916, port) | ① (+6차) | K1 `TryPushBatch`·`FreeSlots`(확정 본문 원자 입력, 122). R1 입력 큐·R6 전체 입력에서 재대조 |
 | 9 | `src/client/Mission.cpp/.h` | `Mission/GuideMissionScriptLifetime.cs`(f3735ed3, port), `Mission/MissionScript.cs`(8db90513, port) | ① (+6차) | K1 표시 언어 스크립트 분리(실행 대본 교체 없음, 122). R3·R6 미션 스크립트에서 재대조 |
 | 10 | `src/client/ProductPresentation.cpp/.h` | `ProductPresentation.cs`(108f76cc, port) | ① (+11/12/13차, 0.342 반영) | 11.01 카피라이트(155, 0.342에서 dotnetpj 반영 완료), 난이도 구간(157), 스커미시 Campaign 항목(158), L 일본어(149), K4/K5(136). `.cpp`의 한국어·일본어 고정 번역 본문과 Skirmish·SetDifficulty 구간은 R3 메뉴·R8 11/12/13차에서 옮긴다 |
 | 11 | `src/client/QuickHelpWindow.cpp/.h` | `Gump/QuickHelpWindow.cs`(c6b19af, L1) | ① (+6차) | K1 `InvalidateCache`(언어 전환 뒤 재조회, 122). R3 잔여에서 재대조 |
 | 12 | `src/client/RawCampaignSession.cpp/.h` | `Mission/RawCampaignSession.cs`(cpp 800ff40c/h 4ee21387, port) | ①② NB04·NB18·NB29 (+11/12차) | 대형(687행). NB18 운반체 사제 줍기 거부(156), NB04 Even 구역 선발 교정·NB29 간헐천 예산(162), 스커미시 월드 MP 시작 규칙·NB23 종료 교정(169), 스커미시 설정 화면(158), 난이도 AI 설정(157), M6-n Fort 채우기(133), Native 고정 수신기(97/98/101/103/105/108). F3 세션의 관문·소유 상태 이식 때 HEAD 기준으로 재대조하고 NB 번호를 기록한다 |
 | 13 | `src/client/RawMenuControls.cpp` | `Gump/HtmlBodyTextParser.cs`(ecb9802a, port; RenderEmbeddedTell 부분 게시기 행) | ① (+9차·6차·M7) | S1 Scenario 입력 Enter 처리·`ShowScenarioInputDialog`(132), K1 DisplayTextInput 취급(122), M7.1 helpWord NULL 진단(120/128), `InvalidateHelpLanguage`(122). RawMenuControls 전체 소유자 이식은 R3 잔여 범위이므로 HEAD 기준으로 옮긴다 |
-| 14 | `src/client/RawMenuHtml.inc` | `Gump/GumpModal.cs`(9ad3ff97, port), `Gump/HtmlWindowTextParser.cs`(9ad3ff97, port) | ①② NB08 (+6차) | NB08 제품에서 `repairInlineList=true`(145), K4 한국어 잔재 교정(136), K1(122). R3 잔여에서 재대조 |
+| 14 | `src/client/RawMenuHtml.inc` | `Gump/GumpModal.cs`(9ad3ff97, port), `Gump/HtmlWindowTextParser.cs`(9ad3ff97, port) | ①② NB08 (+6차) | NB08 제품에서 `repairInlineList=true`(145), K4 한국어 잔재 교정(136), K1(122). R3 잔여에서 재대조 → **0.348 부분**(NB08 배선만, K4·`localizedContent` 잔여, `base` 유지) |
 | 15 | `src/client/RawMenuSaveFort.inc` | `Host/HostFortNameConfirmation.cs`(75c5dac, port), `Host/HostSaveFortDialog.cs`(e814a8b8, port) | ① (+9차) | S1 Scenario 패널 연결(132). R3·R7 Edit에서 재대조 |
 | 16 | `src/client/RawSurfaceStorage.cpp` | `Core/Original/RawSurfaceStorage.cs`(435cfa1d, port) | ①② (+월드 보호) | 월드 판정 자산 처리 보호(119), Dude 주문 초과 최초 처리 본문(112), 무기 도표(88). R4 월드 본체 조립 때 재대조 |
 | 17 | `src/client/RawSurfaceWorld.cpp/.h` | `Core/Original/RawSurfaceWorld.cs` 등 4행(b8cadde1, port) | ① | 무기 도표(88), 월드 보호(119), Dude 본문(112). R4에서 재대조 |
 | 18 | `src/client/SaveFortNameDialog.cpp` | `Gump/SaveFortName.cs`(4e56903c, port), `Gump/SaveFortNameDialog.cs`(6f7070e7, port) | ① (+9차) | S1 `ShowScenarioInput`(132). R3 잔여에서 재대조 |
 | 19 | `src/client/StyleTextMarkup.cpp/.h` | `Gump/StyleTextMarkup.cs`(f7e1748e, port) | ①② NB02 | NB02 Emboss 오프셋 범위(-4..4) 고정 `StyleTextOffsetAllowed`(147). 옮길 때 함께 옮긴다 |
-| 20 | `src/client/TellFileMenus.cpp/.h` | `Gump/TellFileMenus.cs`(f9291649, L1) | ①② NB08·NB24 (+6차) | NB08 드라이브 루트 경로 해석(145), K1(122). NB24 긴 캠페인 이름 80BYTE 종료는 `TellMapMenus.cpp`(146, 아래 21) 쪽이다. R3 목록 소유자에서 재대조 |
+| 20 | `src/client/TellFileMenus.cpp/.h` | `Gump/TellFileMenus.cs`(f9291649, L1) | ①② NB24 (+6차·S1) | `Title` 80BYTE 절단(NB24)과 `InvalidateLanguageFiles` 선언·구현. NB08의 드라이브 루트 해석은 `o/BaseFile`·`o/FileSpecQuery`(47 밖) 쪽이다. R3 목록 소유자에서 재대조 → **0.348 부분**(`Title` 절단 완료, `InvalidateLanguageFiles` 잔여, `base` 유지) |
 | 21 | `src/client/TellMapMenus.cpp` | `Gump/TellMapMenus.cs`(4869c6ba, L1) | ①② NB24 (+6차) | NB24 긴 제목 80BYTE 종료·폴백(145), K4(136). R3에서 재대조 |
 | 22 | `src/client/TextEntryBuffer.cpp/.h` | `Gump/TextEntryBuffer.cs`(a4b04553, L1) | ① (+6차) | K1(122, 한글 조합 경로의 일부). R3 `RawTextEntryControls` 잔여에서 재대조 |
 | 23 | `src/client/TextEntryGump.cpp` | `Gump/TextEntryGump.cs`(39ec3a5a, L1) | ① (+6차) | K1(122). R3 잔여에서 재대조 |
@@ -43,7 +43,7 @@
 | 30 | `src/o/SquidPostPop.cpp` | `Core/Original/RawPostPop.cs`(f95a8db2, L1) | ① | 최초 Dude·세 효과 예약의 장기 전용 본문 선택(119), Dude 본문(112). R4에서 재대조 |
 | 31 | `src/client/LocalTcpTransport.cpp` / `LocalUdpTransport.cpp` | `Netstorm.Net/LocalTcpTransport.cs`·`LocalUdpTransport.cs`(a76499e3, port) | ① (3차 사전 구현) | 지연 FIFO(`RawPacketDelay`, 95). 최후순위 3차에서 재대조 |
 
-NB 수정이 든 PORT_MAP 교집합 파일 정리(②, 단위 기록에 번호를 적을 것): `HtmlWindowMetadata`(NB08), `RawMenuHtml.inc`(NB08), `TellFileMenus`(NB08), `TellMapMenus`(NB24), `StyleTextMarkup`(NB02), `RawCampaignSession`(NB04·NB18·NB29, NB23 종료 교정 포함), `RawFrameChoose`(NB23), `RawAiCreate`(NB10은 바인딩 쪽·NB 확인용). NB09(길드 태그)·NB20(사제 선택·커서 조각)·NB10(강제 AI)은 이번 47 밖의 파일(`NativeMetaParticipantName`·`PriestSelectionShortcut`·`RawCampaignConstructionBindings` 등)에 있어 해당 파일을 옮길 때 함께 옮긴다.
+NB 수정이 든 PORT_MAP 교집합 파일 정리(②, 단위 기록에 번호를 적을 것): `HtmlWindowMetadata`(NB08), `RawMenuHtml.inc`(NB08), `TellMapMenus`(NB24), `StyleTextMarkup`(NB02), `RawCampaignSession`(NB04·NB18·NB29, NB23 종료 교정 포함), `RawFrameChoose`(NB23), `RawAiCreate`(NB10은 바인딩 쪽·NB 확인용). `TellFileMenus`는 NB24(`Title` 절단)만 해당한다. NB09(길드 태그)·NB20(사제 선택·커서 조각)·NB10(강제 AI)은 이번 47 밖의 파일(`NativeMetaParticipantName`·`PriestSelectionShortcut`·`RawCampaignConstructionBindings` 등)에 있어 해당 파일을 옮길 때 함께 옮긴다. NB08의 드라이브 루트 해석은 `o/BaseFile`·`o/FileSpecQuery`(47 밖) 쪽이다.
 
 ## 2. 신규 39파일의 차수 배정 (1.3 표 기준)
 

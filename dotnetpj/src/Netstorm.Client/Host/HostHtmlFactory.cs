@@ -58,6 +58,7 @@ public sealed class HostHtmlFactory : IDisposable
         MetadataHooks.NamedList = (pattern, command, argument) => AppendFiles(pattern, command, argument, true);
         MetadataHooks.FileList = (pattern, command, argument) => AppendFiles(pattern, command, argument, false);
         MetadataHooks.InlineList = _fileMenus.Inline;
+        MetadataHooks.RepairInlineList = true; // 알려진 버그 NB08 교정을 제품에서 켠다. 2026-11-11 0.348에서 cpppj HEAD의 RawMenuHtml.inc를 반영했다.
         var metadata = new HtmlWindowMetadata(MetadataHooks);
         var hooks = new HtmlWindowFactoryHooks
         {

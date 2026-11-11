@@ -80,4 +80,22 @@ public sealed class TellFileMenusNativeTests
             Assert.Null(config.Registry.FindByName("cur")); Assert.Equal(row[5], string.Join(';', trace) + "|" + Hex(html));
         }
     }
+
+    /// <summary>80바이트를 넘는 긴 캠페인 제목은 종료하지 않고 80바이트 안으로 줄여 표시한다(10차 NB24).</summary>
+    /// <remarks>2026-11-11 0.348에서 NB24 재대조와 함께 추가했다.</remarks>
+    [Fact]
+    public void LongCampaignTitleIsTruncatedWithoutTermination()
+    {
+        ConfigInterface? config = null;
+        config = new ConfigInterface(_ => Encoding.Latin1.GetBytes("title=\"" + new string('T', 100) + "\"\n"));
+        config.Configuration.Assign("ready=1\nmissionSpec={local.1}\n");
+        using var menus = new TellFileMenus(config, _ => ["LongName.english"]);
+        var labels = new List<string>();
+        var strings = new ScriptStringRing();
+        menus.Append("input", 0x02000095, "arg", true, strings, item => labels.Add(item.Label));
+        // 예외 없이 79바이트 제목 하나만 나온다
+        string label = Assert.Single(labels);
+        Assert.Equal(new string('T', 79), label);
+        Assert.Equal(79, Encoding.Latin1.GetByteCount(label));
+    }
 }

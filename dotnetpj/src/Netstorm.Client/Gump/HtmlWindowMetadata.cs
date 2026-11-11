@@ -38,6 +38,9 @@ public sealed class HtmlWindowMetadataHooks
     public Action<string, uint, string>? FileList { get; set; }
     /// <summary>% 목록의 현재 키/원시 명령/인자로 얻는 문자열.</summary>
     public Func<string, string, string, string>? InlineList { get; set; }
+    /// <summary>true이면 알려진 버그 NB08을 고쳐 %목록을 본문 전체에 삽입한다. 기본 false는 원문 동작(replacement 길이만 복사)을 보존한다.</summary>
+    /// <remarks>2026-11-11 0.348에서 cpppj HEAD의 NB08 교정(`repairInlineList`)을 반영했다.</remarks>
+    public bool RepairInlineList { get; set; }
     /// <summary>현재 벽 시각.</summary>
     public Func<double>? WallSeconds { get; set; }
     /// <summary>공통 실제 idle 등록.</summary>
@@ -96,7 +99,15 @@ public sealed class HtmlWindowMetadata
             int start = match.Index, currentLength = Length(buffer); if (start > currentLength) throw new ArgumentOutOfRangeException(nameof(buffer), "HTML 메타 현재 일치 시작 범위 초과"); int finish = start + (buffer.Span[start] == '$' ? 1 : 0);
             // 캡처 끝 대신 현재 다음 LF/$/NUL까지 지운다.
             while (finish < currentLength && buffer.Span[finish] != '\n' && buffer.Span[finish] != '$') finish++; if (finish < currentLength && buffer.Span[finish] == '\n') finish++; buffer.Span.Slice(finish, currentLength - finish + 1).CopyTo(buffer.Span[start..]);
-            if (insert) { string merged = Encoding.Latin1.GetString(buffer.Span[..Length(buffer)]).Insert(start, replacement); if (replacement.Length > buffer.Length) throw new ArgumentException("HTML 메타 원문 치환 복사 범위 초과"); Encoding.Latin1.GetBytes(merged.AsSpan(0, replacement.Length), buffer.Span); }
+            if (insert && _hooks.RepairInlineList)
+            {
+                // 알려진 버그 NB08: 합친 문자열 전체와 끝 NUL을 쓰고 8192바이트 버퍼를 넘는 꼬리만 자른다(물리 범위 안에서만 쓴다).
+                // 2026-11-11 0.348에서 cpppj HEAD의 NB08 교정을 반영했다.
+                string repaired = Encoding.Latin1.GetString(buffer.Span[..Length(buffer)]).Insert(start, replacement);
+                if (repaired.Length + 1 > buffer.Length) repaired = repaired[..(buffer.Length - 1)];
+                Encoding.Latin1.GetBytes(repaired, buffer.Span); buffer.Span[repaired.Length] = 0;
+            }
+            else if (insert) { string merged = Encoding.Latin1.GetString(buffer.Span[..Length(buffer)]).Insert(start, replacement); if (replacement.Length > buffer.Length) throw new ArgumentException("HTML 메타 원문 치환 복사 범위 초과"); Encoding.Latin1.GetBytes(merged.AsSpan(0, replacement.Length), buffer.Span); }
         }
         return buttons != 0 || Node(token).MenuColumns != 0 ? 1U : 0U;
     }
