@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.353 · 정리 2026-11-11(HJOW-Athlon) · 다음 단위 0.354 · cpppj 기준 제품 1301(14차 QuickJS-ng v0.18.0 엔진 탑재) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`) · 전체 목표 미완료 — 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
+**기준 단위 0.354 · 정리 2026-11-11(HJOW-Athlon) · 다음 단위 0.355 · cpppj 기준 제품 1301(14차 QuickJS-ng v0.18.0 엔진 탑재) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`) · 전체 목표 미완료 — 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리 직전의 이 문서 전체(단위 기록 0.280~0.341, 0.9의 단위별 완료 체크 목록, 옛 4~8차 번호의 R8 표)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341)에 바이트 그대로 보관했고, 그 이전 보관본 4개와 0.279 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -39,9 +39,9 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 커밋 | 0.353 `20261111-188 DN`(HtmlTextParser·HtmlWindowFactory 확장 본문 재대조) |
-| 검사 | 마지막 전체 완주는 0.345: Assets 366·Client 1,021·Core 1,886(합계 3,273, 실패 0, 백그라운드 완주). 0.330~0.341의 12단위는 집중 검사만 했다(0.330~0.333은 지시대로 검사 없는 사전 구현, 빌드 경고·오류 0과 `CppPortMapTests`만 확인). 0.342는 `ProductPresentationTests` 6건, 0.344는 `StyleTextMarkupTests` 45건, 0.345는 `RawFrameChooseTests` 7건(구 코드 변이 5건 검출)만 별도 확인했다. 0.346은 `AddRandomParentTests` 3건 통과(실패 0)로 확인했다. 0.347은 `AiDifficultyTests`·`RawAiCreateTests` 합계 21건 통과(실패 0)와 NB10 제거 변이 검출로 확인했다. 0.348은 `HtmlWindowMetadataRepairTests`·`TellFileMenusNativeTests`·`HtmlWindowFactoryNativeTests` 합계 10건 통과(실패 0)와 NB08 무력화 변이 2건 검출로 확인했다. 0.349는 `InputQueueTests`·`MissionScriptDisplayTests`·`QuickHelpWindowTests`(자산 1건 제외) 합계 14건 통과(실패 0)와 표시 분리 무력화 변이 1건 검출로 확인했다. 0.350은 `ExtendedTextTests` 12건 통과(실패 0)와 구간 제거 변이 1건 검출로 확인했다. 0.351은 `DisplayTextInputTests`·`InputQueueTests` 합계 7건 통과(실패 0)와 검증 무력화 변이 1건 검출로 확인했다. 0.352는 `KoreanTextEntryTests`·`TextEntryStorageTests` 합계 13건 통과(실패 0)와 확장 무력화 변이 2건 검출로 확인했다. 0.353은 `HtmlExtendedContentTests`·파서·공장 기존 검사 합계 10건 통과(실패 0, 자산 1건 제외)와 확장 무력화 변이 1건 검출로 확인했다. 전체 회귀 본체는 0.343 코드 기준이며 0.344·0.345 변경분은 집중 검사로 덮는다. 단위별 집중 검사 내역은 [보관본 0.1](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341) |
-| PORT_MAP | `PORT_MAP.tsv` 679줄(자료 674행: L1 333·port 341). 마지막 추가는 0.351 `DisplayTextInput.cpp/.h` → `Input/DisplayTextInput.cs`. 0.350 `OriginalText.h/.cpp`(확장 부분) → `ExtendedText.cs`. 0.344~0.349의 행별 `base` 갱신은 §8 단위 기록과 재검토 문서 4절에 있다. 0.352에서 `TextEntryBuffer.cpp/.h`·`TextEntryGump.cpp/.h` 4행의 `base`를 `84db5219f`로 올렸다(확장 경계 재대조 완료, L1 유지). 0.353에서 `HtmlTextParser.cpp/.h`·`HtmlWindowFactory.cpp/.h` 4행의 `base`를 `e99c641aa`로 올렸다(확장 본문 재대조 완료, L1 유지) |
+| 마지막 구현 커밋 | 0.354 `20261111-189 DN`(SaveFortNameDialog 시나리오 입력 재대조) |
+| 검사 | 마지막 전체 완주는 0.345: Assets 366·Client 1,021·Core 1,886(합계 3,273, 실패 0, 백그라운드 완주). 0.330~0.341의 12단위는 집중 검사만 했다(0.330~0.333은 지시대로 검사 없는 사전 구현, 빌드 경고·오류 0과 `CppPortMapTests`만 확인). 0.342는 `ProductPresentationTests` 6건, 0.344는 `StyleTextMarkupTests` 45건, 0.345는 `RawFrameChooseTests` 7건(구 코드 변이 5건 검출)만 별도 확인했다. 0.346은 `AddRandomParentTests` 3건 통과(실패 0)로 확인했다. 0.347은 `AiDifficultyTests`·`RawAiCreateTests` 합계 21건 통과(실패 0)와 NB10 제거 변이 검출로 확인했다. 0.348은 `HtmlWindowMetadataRepairTests`·`TellFileMenusNativeTests`·`HtmlWindowFactoryNativeTests` 합계 10건 통과(실패 0)와 NB08 무력화 변이 2건 검출로 확인했다. 0.349는 `InputQueueTests`·`MissionScriptDisplayTests`·`QuickHelpWindowTests`(자산 1건 제외) 합계 14건 통과(실패 0)와 표시 분리 무력화 변이 1건 검출로 확인했다. 0.350은 `ExtendedTextTests` 12건 통과(실패 0)와 구간 제거 변이 1건 검출로 확인했다. 0.351은 `DisplayTextInputTests`·`InputQueueTests` 합계 7건 통과(실패 0)와 검증 무력화 변이 1건 검출로 확인했다. 0.352는 `KoreanTextEntryTests`·`TextEntryStorageTests` 합계 13건 통과(실패 0)와 확장 무력화 변이 2건 검출로 확인했다. 0.353은 `HtmlExtendedContentTests`·파서·공장 기존 검사 합계 10건 통과(실패 0, 자산 1건 제외)와 확장 무력화 변이 1건 검출로 확인했다. 0.354는 `SaveFortNameDialogTests` 4건 통과(실패 0)와 상한 변이 2건 검출로 확인했다. 전체 회귀 본체는 0.343 코드 기준이며 0.344·0.345 변경분은 집중 검사로 덮는다. 단위별 집중 검사 내역은 [보관본 0.1](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341) |
+| PORT_MAP | `PORT_MAP.tsv` 679줄(자료 674행: L1 333·port 341). 마지막 추가는 0.351 `DisplayTextInput.cpp/.h` → `Input/DisplayTextInput.cs`. 0.350 `OriginalText.h/.cpp`(확장 부분) → `ExtendedText.cs`. 0.344~0.349의 행별 `base` 갱신은 §8 단위 기록과 재검토 문서 4절에 있다. 0.352에서 `TextEntryBuffer.cpp/.h`·`TextEntryGump.cpp/.h` 4행의 `base`를 `84db5219f`로 올렸다(확장 경계 재대조 완료, L1 유지). 0.353에서 `HtmlTextParser.cpp/.h`·`HtmlWindowFactory.cpp/.h` 4행의 `base`를 `e99c641aa`로 올렸다(확장 본문 재대조 완료, L1 유지). 0.354에서 `SaveFortNameDialog.cpp`→`SaveFortNameDialog.cs` 1행의 `base`를 `9d35b9a34`로 올렸다(시나리오 입력 재대조 완료, port 유지) |
 | fixture | 연결 234개. `cpp_sync.py`는 미반영분 때문에 0종료가 아니다. `reflected-commit`·PORT_MAP floor는 `f95a8db2` 그대로다(영향 재검토를 마친 행만 올린다) |
 | cpppj 기준 | 현재 cpppj는 제품 1301 / 11.01(14차 QuickJS-ng v0.18.0 엔진 탑재, LEFT_JOBS.md 0.5). dotnetpj의 마지막 영향 검토는 0.281(제품 1247, `4d4b3a928`)이다. 그 뒤 `cpppj/src` 변경 중 PORT_MAP에 있는 파일 47개([1.2](#resync-scope)). 14차 엔진 본체(`ScriptEngine`·`third_party/quickjs-ng`)는 다음 재검토 패스에 포함한다 |
 | 디컴파일 | 마지막 정밀 디컴파일은 HJOW-Athlon 2026-11-03(R 전용 11-07, 같은 호스트)이다. dotnetpj 이식 근거는 cpppj 소스·fixture·문서라 디컴파일이 필요 없다. 산출물을 직접 읽어야 할 때만 AGENTS.md대로 호스트를 확인한다 |
@@ -475,7 +475,18 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 
 문서가 없는 작은 단위만 아래에 최신순으로 짧게 적는다. 한 기록에는 범위, 구현(새 파일·수정 파일·옮긴 cpppj 파일과 기준 커밋), C#에서 달라진 모양, 검증(집중·전체·변이·L2/L4a 비교), PORT_MAP·fixture 변화, 함께 옮긴 10차 NB 수정, 보호·실행·외부 접속 관점, 남은 것을 적는다([3.1](#verify-levels)). 0.11~0.341은 보관 파일에 있다: [0.11~0.65](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073), [0.66~0.126](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126), [0.127~0.153](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154), [0.154~0.279](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279), [0.280~0.341](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341).
 
-(다음 단위 0.354부터 이 절에 적는다)
+(다음 단위 0.355부터 이 절에 적는다)
+
+#### 0.354 — SaveFortNameDialog 시나리오 입력 재대조 (2026-11-11, HJOW-Athlon)
+
+- 범위: 재검토 문서 1절 18번(`SaveFortNameDialog.cpp`, R3·R7). cpppj HEAD의 S1 시나리오 입력(`ShowScenarioInput`)을 C#에 반영했다.
+- 구현: `SaveFortNameDialogHooks.InputTitle` 추가와 `ShowScenarioInput`(상한 2..16384·화면 맞춤·다중 줄 형식·번역 제목·모달) 추가. `SaveFortNameDialogTests`에 theory 2건(범위 거부·기하·형식·번역) 추가. `PORT_MAP.tsv`의 `SaveFortNameDialog.cs`행 `base`를 `9d35b9a34`로 올렸다(port 유지, `SaveFortName.cs`행은 그대로).
+- C# 모양 차이: cpppj의 자유 함수·`std::clamp`를 메서드·`Math.Clamp`로 옮겼다.
+- 검증(게임 실행 없음, 이번 목표 지시): 별도 출력 경로 빌드 뒤 `vstest`로 `SaveFortNameDialogTests` 4건 통과(실패 0). 상한 변이(`< 2` → `< 1`)에서 2건 실패로 검출력을 확인한 뒤 원복하고 다시 4건 통과했다.
+- fixture 변화 없음(port 행). 함께 옮긴 10차 수정 없음(9차).
+- 부분 재대조로 남긴 것: `SaveFortNameDialogContext`의 시나리오 4필드와 `RawMenuControls.ShowScenarioInputDialog`(R3 소유자 없음, R7 Edit 묶음) — 같은 파일의 S1 대화창 분리·`ConfigOverwriteAndQueueLifetime` 잔여와 함께 2.5에서 처리한다.
+- 보호·실행·외부 접속: `originals/`·`originalCD/`·AGENTS.md·README 개요·cpppj·LEFT_JOBS.md 미수정. 게임 창·오라클 실행 없음. 외부 접속 목록 변경 없음. 타 세션 작업물은 건드리지 않고 내 파일만 커밋한다.
+- 남은 것: 재검토 문서 1절의 나머지 35파일 재대조(후속 단위에서 파일 묶음 단위로, 6개 부분 재대조 포함), 0.4 순서 1-4(보류).
 
 #### 0.353 — HtmlTextParser·HtmlWindowFactory 확장 본문 재대조 (2026-11-11, HJOW-Athlon)
 

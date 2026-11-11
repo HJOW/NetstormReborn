@@ -193,7 +193,7 @@ cpppj/src/client/RawTextEntryControls.cpp	Netstorm.Client/Host/HostTextEntry.cs	
 cpppj/src/client/Renderer.cpp	Netstorm.Client/Display/RendererDraw.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/Renderer.h	Netstorm.Client/Display/RendererDraw.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/SaveFortNameDialog.cpp	Netstorm.Client/Gump/SaveFortName.cs	4e56903cb5ca329624d5ca4f6eae16698e863b7d	port
-cpppj/src/client/SaveFortNameDialog.cpp	Netstorm.Client/Gump/SaveFortNameDialog.cs	6f7070e796a15e3a806206c92407cd329dd291e1	port
+cpppj/src/client/SaveFortNameDialog.cpp	Netstorm.Client/Gump/SaveFortNameDialog.cs	9d35b9a3441e5cd1d2ad5e86c61d006daaeb2979	port
 cpppj/src/client/Screen.cpp	Netstorm.Client.Host/ClientHostGame.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/Screen.cpp	Netstorm.Client.Host/MonoGameScreenOutput.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/Screen.cpp	Netstorm.Client/Display/GamePalette.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port

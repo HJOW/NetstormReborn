@@ -38,6 +38,9 @@ public sealed class SaveFortNameDialogHooks
     public Action<uint, string>? Excluded { get; init; }
     /// <summary>같은 창의 Title 장치 또는 필드다.</summary>
     public Action<uint, string>? Title { get; init; }
+    /// <summary>실제 입력 제목(다중 줄 편집 형식의 너비 맞춤) 장치다.</summary>
+    /// <remarks>2026-11-11 0.354에서 cpppj HEAD의 S1 시나리오 입력(`inputTitle`)을 반영했다.</remarks>
+    public Action<uint, float, string>? InputTitle { get; init; }
     /// <summary>같은 창의 Stone 장치 또는 필드다.</summary>
     public Action<uint, string>? Stone { get; init; }
     /// <summary>제목과 버튼 크기를 맞추고 자식을 분리한다.</summary>
@@ -119,6 +122,31 @@ public sealed class SaveFortNameDialog
     public uint Show(uint fortMode, uint canCancel, string current, string? initial = null) => Create(fortMode, canCancel, initial ?? current, false);
     /// <summary>대상을 보유하는 숫자 입력 모달을 연다.</summary>
     public uint ShowMoney(uint target) => Create(target, 1, "0", true);
+    /// <summary>기존 ShowInput/Show/ShowMoney의 원문 기하·제한을 바꾸지 않는 Scenario 전용 생성이다.</summary>
+    /// <param name="title">입력창 제목이다.</param>
+    /// <param name="maximum">바이트 상한(2..16384)이다.</param>
+    /// <param name="multiline">여러 줄 여부다.</param>
+    /// <returns>모달 토큰이다.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">상한이 범위를 벗어났다.</exception>
+    /// <remarks>2026-11-11 0.354에서 cpppj HEAD의 S1 시나리오 입력(`ShowScenarioInput`)을 반영했다.</remarks>
+    public uint ShowScenarioInput(string title, int maximum, bool multiline)
+    {
+        ArgumentNullException.ThrowIfNull(title);
+        if (maximum < 2 || maximum > 16384) throw new ArgumentOutOfRangeException(nameof(maximum), "Scenario 입력 바이트 상한 범위");
+        float width = Math.Clamp(_state.ScreenWidth - 40, 240, 620), height = multiline ? Math.Clamp(_state.ScreenHeight - 100, 160, 360) : 120;
+        uint token = Need(_hooks.Allocate)(0x128); Need(_hooks.Decoration)(token, width, height);
+        var root = Node(token); root.Vtable = 0x00517d00u; root.Command = 68; root.FortMode = 1; root.CanCancel = 1;
+        root.Entry = Need(_hooks.Allocate)(0x110); Need(_hooks.TextEntry)(root.Entry, (int)width - 36, multiline ? (int)height - 98 : 18, "");
+        var entry = Need(_hooks.Entry)(root.Entry) ?? throw new InvalidOperationException("시나리오 실제 편집 형식 없음");
+        entry.MaxLength = maximum; entry.Multiline = multiline ? 1u : 0u; entry.ShowVertical = multiline ? 1u : 0u; entry.ShowHorizontal = 1;
+        Need(_hooks.Attach)(root.Entry, 18, 42, token, 0);
+        uint border = Need(_hooks.Allocate)(0xb8); Need(_hooks.Background)(border, Base(root.Entry).BaseWidth + 8, Base(root.Entry).BaseHeight + 4);
+        Need(_hooks.Attach)(border, 14, 40, token, 0);
+        root.Title = Need(_hooks.Allocate)(0xa4); Need(_hooks.InputTitle)(root.Title, width - 28, Need(_hooks.Translate)(title));
+        Need(_hooks.Attach)(root.Title, 14, 10, token, 0); Buttons(token, height - 34);
+        Need(_hooks.Attach)(token, (_state.ScreenWidth - width) * .5f, (_state.ScreenHeight - height) * .5f, _state.Entries[0], 0);
+        Need(_hooks.Depth)(token, unchecked((int)root.Depth - 76)); Need(_hooks.Modal)(token); return token;
+    }
     /// <summary>확인·취소 버튼 serial과 Enter를 판정하고 성공한 창을 지연 삭제한다.</summary>
     public uint Handle(uint token, uint input, uint first, uint second)
     {
