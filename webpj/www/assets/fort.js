@@ -230,10 +230,11 @@ export function fortSection(fort, name) {
 
 // `TypeNames` 섹션으로 파일의 타입 번호 → 현재 타입 번호 변환표를 만든다(원본 004bd800). 현재 타입마다 이름 해시가 같은 첫 파일 번호에 자기 번호를 적는다.
 // 같은 해시의 현재 타입이 여럿이면 번호가 큰 것이 남는다(이름 없는 타입의 해시 0 이 그렇다). 섹션이 비어 있으면 변환 없이 파일의 번호를 그대로 쓴다. (2026-11-01 WB03-U)
+// 이전 파일의 해시/변환이 빈 새 섹션으로 넘어가지 않도록 시작할 때 같은 배열을 제자리에서 비운다(cpppj ReadTypeConversion 의 clear()/fill(0); 새로 만든 fort 에서는 이미 빈 배열이라 결과가 같다). (2026-11-11 WB04-E280: 새 배열 대신 제자리 비움)
 function readTypeConversion(fort, types) {
-    fort.typeHashes = [];
+    fort.typeHashes.length = 0;
     fort.hasTypeConversion = false;
-    fort.typeConversion = new Uint8Array(255);
+    fort.typeConversion.fill(0);
     const section = fortSection(fort, 'TypeNames');
     if (section.length === 0) return;
     const stream = new Stream(section, 'TypeNames');
@@ -306,11 +307,24 @@ export function parseFort(bytes, types) {
             fort.deck.push({ storedType, type: convertType(fort, storedType), chance: stream.u8(), power: (stream.u8() << 24) >> 24, remaining: stream.u8() });
         }
     }
+    readObjectRecords(fort, types);
+    return fort;
+}
+
+// 객체 로더가 요구하는 원시 `Chaff`·`TerrNN` 섹션만 다시 해석한다(cpppj ReadObjectRecords). 다른 저장 섹션의 원시 바이트와 해석 필드는 건드리지 않는다. chaff 를 먼저 바꾸고 영역 섹션 20개를 차례로 같은 인덱스에 다시 쓰므로,
+// 중간 섹션이 손상돼 오류가 나면 앞선 chaff·영역은 이미 바뀐 채이고 뒤 영역은 이전 값 그대로 남는다(원본/cpppj 와 같은 부분 갱신; 원자적 갱신이 필요하면 호출자가 사본에 적용한다). (2026-11-11 WB04-E280)
+function readObjectRecords(fort, types) {
     fort.chaff = readChunkSection(fortSection(fort, 'Chaff'), 'Chaff', fort, types);
     // 영역 섹션 20개.
     for (let i = 0; i < TERRITORY_COUNT; i += 1) {
         const name = SECTION_NAMES[SECTION_NAMES.length - TERRITORY_COUNT + i];
-        fort.territories.push(readChunkSection(fortSection(fort, name), name, fort, types));
+        fort.territories[i] = readChunkSection(fortSection(fort, name), name, fort, types);
     }
-    return fort;
+}
+
+// 현재 원시 `TypeNames`/`Chaff`/`TerrNN` 섹션에서 타입 변환표와 객체 해석 자료만 다시 만든다(cpppj Template::RefreshObjectRecords). 파일 읽기와 manager cursor 는 바꾸지 않으며 technology·deck·subscriber·money·territory 는 다시 읽지 않는다.
+// 실제 Editor 와 준비 입력(원시 섹션을 고친 뒤 재파싱)이 쓴다. 사용: fort.sections[i] = 새 바이트; refreshFortObjectRecords(fort, types). 형식 오류는 오류를 던진다. (2026-11-11 WB04-E280)
+export function refreshFortObjectRecords(fort, types) {
+    readTypeConversion(fort, types);
+    readObjectRecords(fort, types);
 }
