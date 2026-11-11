@@ -727,4 +727,45 @@ public sealed class HostStartupSceneTests
         Assert.Equal(new[] { new MainMenuAction("Tell", "UCampaign") }, actions);
     }
 
+    /// <summary>모달 Tell이 열리면 메인 메뉴 돌 버튼은 그리지 않고 대화창 안의 돌 버튼은 계속 그린다.</summary>
+    [Fact]
+    public void ModalTellHidesMainMenuStonesButKeepsDialogButton()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        HostMenuInput? router = null;
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        { Now = () => 1, Poll = _ => new(InputCode.Release, 0, 0), Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 },
+            action => router!.Post(action));
+        var queue = new InputQueue(); var strings = new ScriptStringRing();
+        var windows = new HostHtmlWindows(menu, queue, () => 1, _ => throw new InvalidOperationException());
+        windows.BindParser(startup, raw => ScriptCommand.QueueScriptCommand(raw, queue, strings,
+            new() { Lookup = DialogScriptCommands.Lookup, Unknown = _ => throw new InvalidOperationException() }));
+        var text = new HostHtmlText(menu, windows, screen, _ => default, (_, _) => { }, _ => { }, _ => { });
+        text.Bind(windows); var menus = new HostHtmlMenus(menu, windows, text, startup, screen, (_, _) => { });
+        menus.BindInput(queue, _ => { }, (_, _) => { });
+        using var factory = new HostHtmlFactory(menu, windows, menus, startup, screen, queue, strings, () => 1, _ => 0, _ => throw new InvalidOperationException());
+        router = new HostMenuInput(menu, windows, factory, queue, strings, () => { }, action => throw new InvalidOperationException(action.ToString()));
+        var drawing = new HostGumpDrawing(menu, text, menus, screen);
+        // cpppj는 Tell이 열리면 Dialog 단계로 바뀌어 메인 메뉴 버튼을 그리지 않고 Tell 창만 그린다(UberGump.cpp 2029행·2065행).
+        // L4a menu-credits(0.382) 비교에서 드러난 차이다. 팝업 메뉴(Help·Options)는 모달이 아니라 계속 그린다.
+        router.Post(new("Tell", "Credits")); router.Tick();
+        uint root = menu.Tree.LifeState.CurrentDialog; Assert.NotEqual(0U, root);
+        drawing.Draw();
+        // 대화창 왼쪽(Edit 버튼 영역, 대화창 베벨 바깥)은 타이틀만 남는다. 같은 시작 화면만 그린 화면과 비교한다.
+        var plain = new Screen(1024, 768);
+        Assert.True(plain.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(plain);
+        // 대화창 베벨(x≈384) 바깥·버튼 행 안의 각 픽셀을 순회한다.
+        for (int y = 340; y < 348; y++)
+            for (int x = 356; x < 380; x++)
+                Assert.Equal(plain.Pixels[y * plain.Pitch + x], screen.Pixels[y * screen.Pitch + x]);
+        // 대화창 안의 돌 버튼(Cancel)은 그대로 그린다. 같은 좌표의 타이틀 픽셀과 달라야 한다.
+        var node = Assert.IsType<HtmlWindowGumpNode>(menu.Tree.Node(root));
+        ScreenRect button = menu.Tree.Collection.Bounds(node.Controls[0].Child);
+        int cx = (button.Left + button.Right) / 2, cy = (button.Top + button.Bottom) / 2;
+        Assert.NotEqual(plain.Pixels[cy * plain.Pitch + cx], screen.Pixels[cy * screen.Pitch + cx]);
+        windows.CloseAll();
+    }
+
 }

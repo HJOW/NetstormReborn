@@ -73,6 +73,13 @@ public sealed class HostMainMenu : IUiControlLocator
             byte[] label = Encoding.Latin1.GetBytes(Labels[index] + "\0");
             _buttons[index] = _tree.AddStone(75, 20, label, left + (index % 4) * 79, top + (index / 4) * 23);
         }
+        // 모달이 열리면 숨길 부품(버튼과 각 배경 자식)을 미리 모아 둔다. 배경은 별도 수집 항목이다.
+        // 각 버튼의 실제 배경 자식을 순회해 같은 집합에 넣는다.
+        foreach (uint button in _buttons)
+        {
+            _modalHidden.Add(button);
+            if (_tree.Node(button) is StoneButtonGumpNode stone && stone.Background != 0) _modalHidden.Add(stone.Background);
+        }
     }
 
     /// <summary>실제 버튼 serial의 클릭만 상위 메뉴 명령으로 분배하고 나머지 부모 사건은 기존 장치로 넘긴다.</summary>
@@ -109,6 +116,18 @@ public sealed class HostMainMenu : IUiControlLocator
         }
         return null;
     }
+
+    /// <summary>모달 대화창이 열리면 함께 그리지 않는 실제 메뉴 부품 토큰이다. 돌 버튼 여덟 개와 각 배경 자식이다.</summary>
+    private readonly HashSet<uint> _modalHidden = [];
+
+    /// <summary>모달 대화창이 열리면 도와 달리 메인 메뉴 돌 버튼과 그 배경은 그리지 않는다.</summary>
+    /// <param name="token">확인할 실제 Gump 토큰.</param>
+    /// <returns>여덟 버튼이나 그 배경 자식 중 하나이면 참이다.</returns>
+    /// <remarks>2026-11-12 0.382에서 L4a menu-credits 비교로 추가했다. cpppj는 Tell이 열리면 Dialog 단계로 바뀌어
+    /// 메인 메뉴 버튼을 그리지 않고 Tell 창만 그린다(<c>UberGump.cpp</c> 2029행의 MainMenu 단계 조건과 2065행의 Dialog 단계 분기).
+    /// 배경 자식은 별도 수집 항목이라 함께 건너뛰어야 한다. 팝업 메뉴(Help·Options)는 모달이 아니라 버튼을 계속 그린다.
+    /// <see cref="HostGumpDrawing"/>이 이 판별로 건너뛴다.</remarks>
+    public bool HideWithModal(uint token) => _modalHidden.Contains(token);
 
     /// <summary>현재 화면에 배경과 글리프를 같은 실제 팔레트·8비트 표면으로 그린다.</summary>
     /// <param name="screen">시작 타이틀을 그린 논리 화면.</param>
