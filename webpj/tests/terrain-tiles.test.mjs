@@ -289,8 +289,10 @@ test('chooseTerrainFrame: 난수 소비와 후보 선택', () => {
     random = script(0);
     assert.equal(chooseTerrainFrame(makeTable(['CC']), 'B', 'F', 0, random), -1);
     assert.deepEqual(random.calls, []);
-    // 후보 수가 8 미만이면 범위 오류, 난수가 한계를 넘으면 후보 범위 오류이다.
-    assert.throws(() => chooseTerrainFrame(makeTable(['BF', 'BF']), 'B', 'F', 1, script(0)), /quartile/);
+    // 후보 수가 8 미만이라 원소 범위가 비면(10차 NB23 교정) 오류 대신 전체 후보에서 한 번 고른다(next(후보 수)). 난수가 한계를 넘으면 후보 범위 오류이다.
+    random = script(1);
+    assert.equal(chooseTerrainFrame(makeTable(['BF', 'BF']), 'B', 'F', 1, random), 1);
+    assert.deepEqual(random.calls, [2]);
     assert.throws(() => chooseTerrainFrame(built, 'B', 'F', 3, script(99)), /후보 범위/);
     // 원소 3 의 범위 [19, 24) 에서 난수가 5 를 돌려주면 인덱스가 후보 수(24)와 같아져 범위를 벗어난다.
     assert.throws(() => chooseTerrainFrame(built, 'B', 'F', 3, script(5)), /후보 범위/);
@@ -747,12 +749,16 @@ test('buildTerrainFrames: 난수 소비 순서는 y 바깥·x 안쪽, 첫 도장
     assert.equal(painted.calls, 36);
 });
 
-// 후보가 4분할되지 않는 방향 글자('J': JJ00 하나뿐)를 가진 칸은 첫 도장에서 원본처럼 범위 오류가 난다(원본 465개에는 그런 칸이 없다). 세로 한 줄 통로 칸(북·남만 지면, 'J')을 만들어 확인한다. (2026-11-02 WB03-X)
-test('buildTerrainFrames: 후보가 4분할되지 않는 칸은 범위 오류', () => {
+// 후보가 4분할되지 않는 방향 글자('J': JJ00 하나뿐)를 가진 칸은 기준선에서는 첫 도장에서 범위 오류가 났으나(원본 465개에는 그런 칸이 없다) 10차 NB23 교정 뒤에는 전체 후보에서 고른다. 세로 한 줄 통로 칸(북·남만 지면, 'J')을 만들어 확인한다. (2026-11-02 WB03-X, 2026-11-11 WB04-E294: NB23 반영)
+test('buildTerrainFrames: 후보가 4분할되지 않는 칸은 전체 후보에서 고른다(NB23)', () => {
     const corridor = drawn(2, [[60, 59], [60, 60], [60, 61], [59, 59], [61, 61]]);
     assert.equal(neighborLetters(corridor, 60, 60).side, 'J');
     assert.equal(neighborLetters(corridor, 60, 60).variant, 'J');
-    assert.throws(() => buildTerrainFrames(corridor, frames), /quartile/);
+    // (J, J) 후보는 8개 미만이라 원소 범위가 비지만, 10차 NB23 교정 뒤에는 오류 없이 그 후보 안에서 고른다.
+    const { candidates } = terrainFrameCandidates(frames, 'J', 'J');
+    assert.ok(candidates.length > 0 && candidates.length < 8, `후보 ${candidates.length}개`);
+    const built = buildTerrainFrames(corridor, frames);
+    assert.ok(candidates.includes(built[60 * WORLD_CELLS + 60]));
 });
 
 // 후보가 하나도 없는 칸은 프레임 0 으로 대신한다(원본 도장의 `frame == -1 ? 0`). 프레임 0 의 코드가 안쪽(A, A) 이면 지역 도장은 그 칸을 안쪽 3 × 3 그림으로 칠한다(원본이 칠할 때 지금 프레임의 코드를 읽기 때문이다).

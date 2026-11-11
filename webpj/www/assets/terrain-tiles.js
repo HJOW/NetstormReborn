@@ -229,12 +229,18 @@ export function themeRange(candidateCount, theme) {
 }
 
 // 방향·변형 글자와 원소로 클러스터 하나를 고른다(원본 ChooseTerrainFrame). theme 가 -1 이면 후보 전체에서, 0~3 이면 themeRange 의 범위에서 random.next 를 한 번 소비해 고른다.
-// 후보가 없으면 -1 이다(난수를 쓰지 않는다). random 은 next(limit)(0 이상 limit 미만의 정수)를 가진 객체이다. (2026-11-02 WB03-X)
+// 후보가 없으면 -1 이다(난수를 쓰지 않는다). random 은 next(limit)(0 이상 limit 미만의 정수)를 가진 객체이다.
+// 10차 NB23 교정(cpppj `bda77381e`): 후보가 8개 미만이라 원소 범위가 비는 코드는 원문이 0 으로 나누는 난수 범위를 쓰던 곳이므로 오류 대신 theme -1 과 같이 전체 후보에서 고른다
+// (후보가 충분하면 기존 원소 규칙 그대로; 실제 Fort 의 칸은 이 경로에 닿지 않고 무작위 섬(중앙섬/군도)에서만 나온다). (2026-11-02 WB03-X, 2026-11-11 WB04-E294: NB23 반영)
 export function chooseTerrainFrame(frames, side, variant, theme, random) {
     const { candidates } = terrainFrameCandidates(frames, side, variant);
     if (candidates.length === 0) return -1;
     if (theme === -1) return candidates[random.next(candidates.length)];
-    const { low, high } = themeRange(candidates.length, theme);
+    const quarter = Math.trunc(candidates.length / 4);
+    const low = quarter * theme + 1;
+    const high = quarter * (theme + 1);
+    // NB23: 원소 범위가 비면 전체 후보에서 고른다(themeRange 모델은 빈 범위 오류를 그대로 둔다).
+    if (high <= low) return candidates[random.next(candidates.length)];
     const index = low + random.next(high - low);
     if (index < 0 || index >= candidates.length) throw new RangeError('지역 프레임 후보 범위 오류');
     return candidates[index];
