@@ -16417,7 +16417,7 @@
       "cpppjSources": [
         "cpppj/src/o/RawMissionClientPackets.cpp"
       ],
-      "scope": "157행 중 151행을 재생(전체 Player·동맹·전역·저장·SP·효과 대조). Ready 의 boss 서버 경로 6행은 실제 RawMissionLogin.SendReady 본체가 필요해 RawMissionLogin 단위가 마저 재생한다",
+      "scope": "157행 전부 재생(전체 Player·동맹·전역·저장·SP·효과 대조). Ready 의 boss 서버 경로 6행은 E319 에서 실제 RawMissionLogin.SendReady 본체를 공용 장면(tests/mission-client-scene.mjs)에 연결해 재생한다",
       "sha256": "ebdf5f1d7df41cec6e5187447c969f1b3b4cfae8b475e217fcb2842687ae6361",
       "bytes": 690149,
       "lines": 158,
@@ -16509,9 +16509,38 @@
       "bytes": 1169088,
       "lines": 1985,
       "fixtureCommit": "400aaefb8",
-      "webCommit": "worktree",
+      "webCommit": "367b49320",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionLoginTimer.cpp": "25e32b7a9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E319",
+      "id": "mission-login",
+      "path": "cpppj/tests/fixtures/mission-login-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 로그인 수신 부모(004a7800)의 서버/알려진 Player/현재 owner/구독자/flags/다른 Player/호출 도중 변경/CRT clock 별 전체 Player 1620바이트·현재 전역 9개·모든 송신 packet(Begin·옵션·SP·시간·Fort·Ready)과 외부 효과 순서(originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-mission-login.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mission-login.js"
+      ],
+      "doc": "docs/webpj-mission-login-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissionLogin.cpp"
+      ],
+      "scope": "48행 전부 재생(전체 Player·전역·packet·효과 순서 대조). 재접속 63h·일반 자원 초기화·디버그 burst·응답 double 비트·세부 경계는 원본 관측 없이 손 계산 시험",
+      "sha256": "d57f9122eb04350eb4eceb141b64ea9d3e4d63ac4b06066e7206902126e24790",
+      "bytes": 200840,
+      "lines": 49,
+      "fixtureCommit": "400aaefb8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissionLogin.cpp": "cea41eb09"
       }
     },
     {

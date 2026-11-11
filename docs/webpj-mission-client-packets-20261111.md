@@ -23,7 +23,7 @@
 
 ## 3. 검사 (`tests/raw-mission-client-packets.test.mjs` 8건)
 
-- **원본 독립 관측 `mission-client-packets-x86.tsv` 157행**: 8종 수신 × 서버/boss/미션 모드 × 알려진 Player × 변형 × 호출 도중 변경(wall 로 phase 바뀜·채널로 서버 모드 바뀜·SP 갱신으로 packet 바뀜·송신으로 타이머 바뀜)에서 전체 Player 1620바이트·방향별 동맹 81DWORD·현재 전역 20개(double 비트 포함)·옵션/zone/cache/TYPE 쓰기·SP 9칸·외부 효과 순서를 대조한다. **Ready boss 경로 6행은 실제 `RawMissionLogin.SendReady` 몸체가 필요해 건너뛰었고(151행 재생) RawMissionLogin 단위가 같은 harness 로 마저 재생한다.**
+- **원본 독립 관측 `mission-client-packets-x86.tsv` 157행**: 8종 수신 × 서버/boss/미션 모드 × 알려진 Player × 변형 × 호출 도중 변경(wall 로 phase 바뀜·채널로 서버 모드 바뀜·SP 갱신으로 packet 바뀜·송신으로 타이머 바뀜)에서 전체 Player 1620바이트·방향별 동맹 81DWORD·현재 전역 20개(double 비트 포함)·옵션/zone/cache/TYPE 쓰기·SP 9칸·외부 효과 순서를 대조한다. **Ready boss 경로 6행은 실제 `RawMissionLogin.SendReady` 몸체가 필요해 E314 에서는 건너뛰었고(151행 재생), E319 에서 실제 로그인을 공용 시험 장면(`tests/mission-client-scene.mjs`)에 연결해 157행 전부를 재생한다.**
 - 손 시험(cpppj `MissionClientPacketsTests.cpp` 이식 + fixture 밖 경계): 이름 정제, 송신 observer 네 종과 진단, 옵션 복사·순서·미연결 소비자(앞선 쓰기 보존), 필수 효과 누락·8종 등록·잘린 입력, 구성 검사, 비용 float 반올림, LoginBegin/Fort 범위·공유 seed·로컬 설치·짧은 이미지, flags 0x40 보존·CoreData 복원 조건, Reply 기본 경로, SP signed count·소유자 0, Ready boss 경로(시작 응답 바이트·타이머 관문)와 시간 응답, 분배기 sender 전달.
 - 변형 확인 127개 중 **9개만 남았고 모두 동등**하다: 이름 정제의 마지막 NUL 쓰기(이미 당겨진 NUL)·SP observer 의 16비트 감김(낮은 WORD 만 씀)·Player 범위의 길이 검사(NUL 누락 검사가 먼저 거부)·주소 NUL 여분(첫 NUL 에서 복사 종료)·동맹 mask 중복 쓰기(setAlliance 가 덮음)·SP 값 부호(음수는 앞에서 걸러짐)·SP 소유자 선택(로컬이면 같은 번호)·시간 응답의 signed 변환 둘(낮은 32비트는 모듈러 산술로 같음).
 
