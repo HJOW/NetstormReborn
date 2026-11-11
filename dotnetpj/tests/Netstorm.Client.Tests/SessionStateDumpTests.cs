@@ -148,6 +148,25 @@ public sealed class SessionStateDumpTests
         Assert.DoesNotContain("slot\t5\t", PoolText(), StringComparison.Ordinal);
     }
 
+    /// <summary>world 1 덤프의 난수 행이 세션이 실제 소비하는 게임·지형 CRT 상태를 쓴다. 미소비 호스트 CRT 상수가 아니다.</summary>
+    [Fact]
+    public void HostDumpWritesWorld1SessionStreams()
+    {
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        var dump = new HostSessionDump(session.Kernel, session.Game, session.Crt, () => 5, () => 0);
+        dump.BindSession(session);
+        session.Game.SetState(12u);
+        session.TerrainCrt.Value = 34u;
+        string path = Path.Combine(Path.GetTempPath(), "netstorm-session-" + Guid.NewGuid().ToString("N") + ".tsv");
+        try
+        {
+            dump.Write(path);
+            string text = new System.Text.ASCIIEncoding().GetString(File.ReadAllBytes(path));
+            Assert.Contains("\nrandom\t12\t34\n", text, StringComparison.Ordinal);
+        }
+        finally { File.Delete(path); }
+    }
+
     /// <summary>분산 SP 복호가 원본 비트 순서와 같다.</summary>
     [Fact]
     public void DecodesScrambledSpLikeNative()
