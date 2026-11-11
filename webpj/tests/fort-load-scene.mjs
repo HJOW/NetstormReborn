@@ -2,7 +2,7 @@
 // 그리고 원본 관측기에 공급했던 명시적 장치/저장소(harness: 풀 · finder · 타입 188 · 프레임 188 · 난수 · 공유 상태 · 효과 훅 · 이벤트 기록)이다.
 // 값형 경로(fort-object-load.test.mjs)와 stream 경로(fort-object-stream.test.mjs)가 같은 입력과 같은 효과 기록을 쓰도록 분리했다. 기대값은 만들지 않는다. (2026-11-10 WB04-E276: 시험 도우미 분리)
 import assert from 'node:assert/strict';
-import { createFortObjectLoadState } from '../www/core/fort-object-load.js';
+import { createFortObjectLoadState, createFortObjectLoadStateFromGlobals } from '../www/core/fort-object-load.js';
 import { LocalRandom } from '../www/assets/terrain-mask.js';
 
 // 원본 관측의 입력 열 이름이다. 출력 계산에는 사용하지 않는다.
@@ -40,13 +40,18 @@ export function record(v) {
 }
 
 // 원본 관측기에 공급했던 명시적 장치/저장소만 준비한다. 완성 게임 월드의 대체 장치가 아니다.
-export function harness(v) {
+// options.globals(FortSerializationGlobals)를 주면 다섯 저장 전역을 빌린 로더 상태로, options.depthOwner({value})를 주면 깊이만 빌린 상태로 만든다(기본은 독립 상태). (2026-11-11 WB04-E279: 공유 전역 대여 생성자 검사용 옵션 추가)
+export function harness(v, options = {}) {
     const slots = new Map();
     const types = Array.from({ length: 188 }, () => ({ flags1: 0, flags2: 0, containerListFlags: 0, contentListFlags: 0, maxHitPoints: 0 }));
     const frames = Array.from({ length: 188 }, () => ({ codes: [] }));
     const random = new LocalRandom(v[F.seed]);
     const versionOwner = { value: v[F.version] };
-    const state = createFortObjectLoadState(versionOwner);
+    let state;
+    if (options.globals) {
+        options.globals.version = v[F.version];
+        state = createFortObjectLoadStateFromGlobals(options.globals);
+    } else state = createFortObjectLoadState(versionOwner, options.depthOwner ?? null);
     Object.assign(state, { islandType: 97, largeIslandType: 98, loadingDepth: 3, chunksX: 2, chunksY: 2,
         special: !!v[F.special], mission: !!v[F.mission], fort: !!v[F.fort], fortDestroyBlocked: !!v[F.blocked], chaffMode: !!v[F.chaffMode] });
     // 원본 fixture가 지정한 두 타입만 같은 flags/HP/프레임 프로필을 갖는다.

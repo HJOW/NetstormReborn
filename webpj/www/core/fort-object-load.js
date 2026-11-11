@@ -1,6 +1,9 @@
 // 10.78의 저장 오브젝트/내용물 적용과 Terr→Chaff 순회를 같은 현재 월드 경계에서 수행한다.
 // 근거: cpppj/o/RawFortObjectLoad.cpp의 값형 Fort 경로(004bdc60/004bd130/004be160/004be610).
 // 실제 생성·가상 동작·공간 finder는 필수 주입한다. 슬롯/게임 월드의 대체 구현은 만들지 않는다. (2026-11-02 WB03-AB)
+// 실제 Client 의 저장 전역 묶음(판본·깊이·scope·두 저장 마스크)을 빌리는 생성자는 createFortObjectLoadStateFromGlobals 이다(cpppj 기준선 뒤 0d276d0d, 2026-11-11 WB04-E279).
+
+import { FortSerializationGlobals } from './fort-serialization-globals.js';
 
 // 패치판 슬롯의 타입·WORD·HP·프레임 위치이다. 인접 필드를 덮지 않고 해당 폭만 쓴다.
 const TYPE = 10, WORD = 12, HP = 26, FRAME = 36;
@@ -38,9 +41,12 @@ function required(value, name) {
 
 // versionOwner={value:DWORD}를 공유하는 로더 전역이다. 다른 로더의 저장 판본과 사본을 만들지 않는다.
 // readFullDeck/readFortKeepGenus는 실제 공유 전역을 조회할 때 지정한다. null이면 독립 입력의 fallback 필드를 쓴다.
-export function createFortObjectLoadState(versionOwner) {
+// depthOwner={value:DWORD}를 주면 005c89b8 의 중첩 로딩 깊이도 그 상자를 빌린다(cpppj 두 번째 대여 생성자: 판본/깊이만 명시 대여하고 scope/두 저장 마스크는 종전 로컬 값).
+// 주지 않으면 깊이도 이 상태의 로컬 값이다. battleSavedMask 는 0054263c 전투 저장 마스크의 로컬 칸이다(초기 0x40480002, FortKeepGenus 00542640 과 별개). (2026-11-11 WB04-E279: 깊이 대여·전투 저장 마스크 칸 추가)
+export function createFortObjectLoadState(versionOwner, depthOwner = null) {
     if (!versionOwner || typeof versionOwner.value !== 'number') throw new TypeError('공유 Fort 판본 저장소가 필요합니다.');
-    return {
+    if (depthOwner !== null && (!depthOwner || typeof depthOwner.value !== 'number')) throw new TypeError('공유 Fort 로딩 깊이 저장소는 { value } 여야 합니다.');
+    const state = {
         // 원본005c89c0의 현재 판본을 호출할 때마다 같은 소유자에서 읽고 쓴다.
         get version() { return versionOwner.value >>> 0; },
         set version(value) { versionOwner.value = value >>> 0; },
@@ -56,7 +62,40 @@ export function createFortObjectLoadState(versionOwner) {
         chunksX: 16, chunksY: 16,
         // 실제 공유 전역을 빌리는 선택형 읽기 함수이다. 마지막 Pop/Contents 뒤에도 다시 읽는다.
         readFullDeck: null, readFortKeepGenus: null,
+        // 0054263c 의 전투 저장 마스크이다. 저장 시 현재 flags2 와 비교하며 fortKeepMask 와 다른 전역이다.
+        battleSavedMask: 0x40480002,
     };
+    // 깊이 대여: 읽기/쓰기마다 상자의 현재 DWORD 를 쓴다(사본을 만들지 않는다).
+    if (depthOwner !== null) {
+        Object.defineProperty(state, 'loadingDepth', {
+            get() { return depthOwner.value >>> 0; },
+            set(value) { depthOwner.value = value >>> 0; },
+            enumerable: true, configurable: true,
+        });
+    }
+    return state;
+}
+
+// 실제 Client 의 저장 전역 묶음(FortSerializationGlobals)이 가진 다섯 DWORD(판본·깊이·scope·소유자 저장 마스크·전투 저장 마스크)를 모두 빌리는 로더 상태이다(cpppj 세 번째 대여 생성자).
+// 값/초기화/수명을 복제하지 않는다: 읽기와 쓰기가 매번 묶음의 같은 칸을 지나므로 Storage/NoWorld 저장과 객체 로더가 같은 현재 값을 본다. 묶음은 이 상태보다 오래 살아야 한다.
+// 나머지 칸(다리/섬 타입·ownerClearedMask·fortKeepMask·special/mission/fort 관문·청크 크기)은 독립 입력과 같은 로컬 값이다.
+// 사용: const globals = new FortSerializationGlobals(); const state = createFortObjectLoadStateFromGlobals(globals); state.scope = 1 → globals.scope === 1. (2026-11-11 WB04-E279)
+export function createFortObjectLoadStateFromGlobals(globals) {
+    if (!(globals instanceof FortSerializationGlobals)) throw new TypeError('Fort 저장 전역 묶음(FortSerializationGlobals)이 필요합니다.');
+    // 판본은 묶음의 한 칸을 { value } 상자처럼 보이는 접근자로 넘겨 기존 판본 대여 경로를 그대로 쓴다.
+    const state = createFortObjectLoadState({
+        get value() { return globals.version; },
+        set value(value) { globals.version = value; },
+    });
+    // 나머지 네 칸을 묶음에 연결한다.
+    for (const name of ['loadingDepth', 'scope', 'ownerSavedMask', 'battleSavedMask']) {
+        Object.defineProperty(state, name, {
+            get() { return globals[name]; },
+            set(value) { globals[name] = value; },
+            enumerable: true, configurable: true,
+        });
+    }
+    return state;
 }
 
 // parseFort 결과를 실제 pool/finder/효과에 적용하는 로더이다. 화면 미리보기에는 자동 연결하지 않는다.
