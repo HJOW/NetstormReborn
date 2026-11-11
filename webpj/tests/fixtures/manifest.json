@@ -16033,6 +16033,64 @@
       "cpppjBasis": {
         "cpppj/src/o/RawDataManagerSelection.cpp": "b68dd03fb"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E283",
+      "id": "datamanager-resize",
+      "path": "cpppj/tests/fixtures/datamanager-resize-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: DataManager 최소 확장(G)·이름 교체(R)·생성자의 전체 796BYTE·이름 종류·변이 4종 286입력(외부 효과 Q/A/S/F/N 순서와 그때의 전체 메모리 포함)",
+      "consumers": [
+        "webpj/tests/data-manager-resize.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-data-manager-resize.js"
+      ],
+      "doc": "docs/webpj-data-manager-resize-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDataManagerResize.cpp"
+      ],
+      "scope": "286입력 전부 사용",
+      "sha256": "3989c2ea19eba6d08b1eabf51e9c80d46339dcf02cfdddac012d258d2cd1644b",
+      "bytes": 4094740,
+      "lines": 287,
+      "fixtureCommit": "58de1f48e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDataManagerResize.cpp": "c2a3fa5e2"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E283",
+      "id": "datamanager-create",
+      "path": "cpppj/tests/fixtures/datamanager-create-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: DataManager 섹션 생성(N)·복제(C)·MemStream 대입(M)의 전체 17380BYTE(반복 표기 압축) 220입력과 매 경계 직전 전체 메모리",
+      "consumers": [
+        "webpj/tests/data-manager-resize.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-data-manager-resize.js"
+      ],
+      "doc": "docs/webpj-data-manager-resize-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDataManagerResize.cpp"
+      ],
+      "scope": "220입력 전부 사용",
+      "sha256": "121e1f53067d60afbe1ff0b92007935060b5fddf10bd307f2d23a75e05222ba2",
+      "bytes": 4365952,
+      "lines": 221,
+      "fixtureCommit": "c2a3fa5e2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDataManagerResize.cpp": "c2a3fa5e2"
+      }
     }
   ]
 }
