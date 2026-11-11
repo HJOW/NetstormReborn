@@ -613,6 +613,19 @@ public sealed class HostSession
     /// <remarks>2026-11-12 0.437에서 월드 적재 드라이런용으로 추가했다. 실제 값 경로는 시작 흐름 단위에서 잇는다.</remarks>
     private uint _worldLoadingDepth;
 
+    /// <summary>세션 저장소를 공유하는 섬 런타임 부모를 만든다. 호출자가 효과 묶음을 준다.</summary>
+    /// <param name="islandHooks">섬 런타임의 거주 구역·진단 효과다.</param>
+    /// <returns>세션 풀·기록·모드·목록·해시를 공유하는 섬 런타임이다.</returns>
+    /// <remarks>2026-11-12 0.452에서 섬 부모 조립용으로 추가했다. 지형 바인딩과 적재 본체가 같은 부모를 공유하는 방식은 다음 단위에서 잇는다.</remarks>
+    public RawIslandRuntime BuildIslands(IslandRuntimeHooks islandHooks)
+    {
+        ArgumentNullException.ThrowIfNull(islandHooks);
+        return new RawIslandRuntime(
+            Pool, IslandHash, IslandRecords, IslandModes, IslandResidences,
+            () => IslandChanged, value => IslandChanged = value,
+            () => IslandRevision, value => IslandRevision = value, islandHooks);
+    }
+
     /// <summary>월드 적재 setConfig 전달을 실제 설정 경계에 연결한다. NUL 포함 핸들은 C 문자열처럼 앞에서 자른다.</summary>
     /// <param name="configuration">쓸 설정 인터페이스다.</param>
     /// <returns>이름·NUL 포함 바이트를 받는 전달 효과다.</returns>
