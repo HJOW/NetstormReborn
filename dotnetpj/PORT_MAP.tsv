@@ -49,9 +49,9 @@ cpppj/src/client/EditorFiles.cpp	Netstorm.Client/Host/EditorWorkspacePaths.cs	47
 cpppj/src/client/EditorFiles.h	Netstorm.Client/Host/EditorFiles.cs	473432cd5f2edca35ecb3cf78e79c151b105b0c2	port
 cpppj/src/client/EditorFortFileDevices.cpp	Netstorm.Client/Host/EditorFortFileDevices.cs	473432cd5f2edca35ecb3cf78e79c151b105b0c2	port
 cpppj/src/client/EditorFortFileDevices.h	Netstorm.Client/Host/EditorFortFileDevices.cs	473432cd5f2edca35ecb3cf78e79c151b105b0c2	port
-cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorCatalogLedger.cs	3ddeb19a599961941e7c9e629ffc041bdf104de1	port
+cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorCatalogLedger.cs	9960123999de9a35e92ef31f1531d7ef7175b442	port
 cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorCatalogWorkspace.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	port
-cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorWorkspacePaths.cs	75c5dacabd0611a0540f198e75547903da40ca9a	port
+cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorWorkspacePaths.cs	9960123999de9a35e92ef31f1531d7ef7175b442	port
 cpppj/src/client/EditorMapCatalogFiles.h	Netstorm.Client/Host/EditorCatalogWorkspace.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	port
 cpppj/src/client/EmbeddedTell.cpp	Netstorm.Client/Gump/EmbeddedTell.cs	ecb9802a88b7de3f5740f3a1cda95c21ea982c24	L1
 cpppj/src/client/EmbeddedTell.h	Netstorm.Client/Gump/EmbeddedTell.cs	ecb9802a88b7de3f5740f3a1cda95c21ea982c24	L1
@@ -182,8 +182,8 @@ cpppj/src/client/RawChatChannels.h	Netstorm.Client/Chat/RawChatChannels.cs	65bc3
 cpppj/src/client/RawImage.cpp	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/RawImage.h	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Gump/HtmlBodyTextParser.cs	ecb9802a88b7de3f5740f3a1cda95c21ea982c24	port
-cpppj/src/client/RawMenuHtml.inc	Netstorm.Client/Gump/GumpModal.cs	9ad3ff97f51ac3900fbc1b957a3367e339982af6	port
-cpppj/src/client/RawMenuHtml.inc	Netstorm.Client/Gump/HtmlWindowTextParser.cs	9ad3ff97f51ac3900fbc1b957a3367e339982af6	port
+cpppj/src/client/RawMenuHtml.inc	Netstorm.Client/Gump/GumpModal.cs	9960123999de9a35e92ef31f1531d7ef7175b442	port
+cpppj/src/client/RawMenuHtml.inc	Netstorm.Client/Gump/HtmlWindowTextParser.cs	9960123999de9a35e92ef31f1531d7ef7175b442	port
 cpppj/src/client/RawMenuSaveFort.inc	Netstorm.Client/Host/HostFortNameConfirmation.cs	75c5dacabd0611a0540f198e75547903da40ca9a	port
 cpppj/src/client/RawMenuSaveFort.inc	Netstorm.Client/Host/HostSaveFortDialog.cs	e814a8b84850a85e536a45128a290fa652dd37c1	port
 cpppj/src/client/RawPriestMenu.h	Netstorm.Client/Gump/QuickHelpHtml.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	port
