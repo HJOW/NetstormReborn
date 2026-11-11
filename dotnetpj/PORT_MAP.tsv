@@ -4,7 +4,7 @@
 # base 이후 cpp 파일이 바뀌면 --ports 가 경고한다. 재대조를 마친 뒤 --ports-reflect 로 base 를 올린다. 기대값을 C# 결과로 바꾸지 않는다.
 # floor-commit: f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3
 cpppj/src/app/main.cpp	Netstorm.Client.Host/Program.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
-cpppj/src/app/main.cpp	Netstorm.Client/Automation/UiScript.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
+cpppj/src/app/main.cpp	Netstorm.Client/Automation/UiScript.cs	03c31cde6c413a9f70ed907474acfca881aa3f22	port
 cpppj/src/app/main.cpp	Netstorm.Client/Host/HostFrameDriver.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/app/main.cpp	Netstorm.Client/Host/HostOptions.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/AddRandomInput.cpp	Netstorm.Client/Menu/AddRandomInput.cs	108f76cc814769142a03e6923cb59966d76216b4	L1
@@ -656,7 +656,7 @@ cpppj/src/client/RawTerrainWorldBinding.h	Netstorm.Core/Original/RawTerrainWorld
 cpppj/src/client/RawTerrainWorldBinding.cpp	Netstorm.Core/Original/RawTerrainWorldBinding.cs	552656c0c8bb46b48637b26a1acb59213edc1de1	port
 cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionZone.cs	50a5a1845edc01699ee215001405e8404d43f92a	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionZone.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
-cpppj/src/o/RawConnectionActivity.cpp	Netstorm.Net/RawConnectionActivity.cs	ee4e45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawConnectionActivity.cpp	Netstorm.Net/RawConnectionActivity.cs	70ba25f1af88f6166fb3ea68f185ff602eb4f718	port
 cpppj/src/o/RawConnectionActivity.h	Netstorm.Net/RawConnectionActivity.cs	bd9ea8d37045e404e1f1892fb5fde9cea2653fdc	port
 cpppj/src/o/RawBattleBroadcast.cpp	Netstorm.Net/RawBattleBroadcast.cs	77a0c3a47d5e54547da7fb0bb242161c3cd8020b	port
 cpppj/src/o/RawBattleBroadcast.h	Netstorm.Net/RawBattleBroadcast.cs	77a0c3a47d5e54547da7fb0bb242161c3cd8020b	port
