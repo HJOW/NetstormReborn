@@ -78,4 +78,4 @@ NB 수정이 든 PORT_MAP 교집합 파일 정리(②, 단위 기록에 번호�
 
 - 이번 단위는 정적 분류만 했으므로 PORT_MAP `base`와 `floor-commit`(`f95a8db2`)을 올리지 않았다. `cpp_sync.py`는 계속 0종료가 아니다(예상된 상태).
 - 재대조를 마친 행만 `base`를 올린다(0.4 1-2의 규칙). `ProductPresentation.cpp`는 0.342에서 카피라이트 줄만 반영했으므로 `base`를 올리지 않았다(난이도·스커미시·일본어 구간이 남아 있다).
-- 0.344에서 `StyleTextMarkup.cpp/.h` 2행의 `base`를 `5171b8c7b`로 올렸다(NB02 재대조 완료, `StyleTextMarkupTests` 45건 통과).
+- 0.344에서 `StyleTextMarkup.cpp/.h` 2행의 `base`를 `5171b8c7b`로 올렸다(NB02 재대조 완료, `StyleTextMarkupTests` 45건 통과). 0.345에서 `RawFrameChoose.cpp/.h` 2행의 `base`를 `df7902e70`으로 올렸다(NB23 재대조 완료, `RawFrameChooseTests` 7건 통과·L1 유지).

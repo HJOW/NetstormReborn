@@ -12,6 +12,7 @@ public static class RawFrameChoose
 {
     /// <summary>
     /// 원본 0049aa90의 번호 wildcard(-1) 요청을 선택한다. theme=-1은 전체 후보, 0..3은 원소 quartile이다.
+    /// 분위 범위가 비면(후보 8개 미만) 전체 후보에서 고른다(10차 NB23 교정, 2026-11-11 0.345 반영).
     /// </summary>
     /// <param name="frames">프레임 코드 표다.</param>
     /// <param name="code">요청 방향·변형 코드다.</param>
@@ -67,9 +68,12 @@ public static class RawFrameChoose
         int quarter = candidates.Count / 4;
         int low = quarter * theme + 1;
         int high = quarter * (theme + 1);
+        // 후보가 8개 미만인 타일 코드는 분위(quartile) 범위가 비어 원문은 0으로 나누는 난수 범위를 쓴다(10차 NB23).
+        // 무작위 섬(중앙섬/군도)에서만 나오는 드문 코드이므로, 범위가 비면 theme 없이 전체 후보에서 고르는 기존 theme=-1 규칙으로 대신한다.
+        // 2026-11-11 0.345에서 cpppj HEAD의 NB23 교정을 반영했다.
         if (high <= low)
         {
-            throw new ArgumentOutOfRangeException(nameof(theme), "지역 프레임 quartile 난수 범위 오류");
+            return candidates[random.Next(candidates.Count)];
         }
         int index = low + random.Next(high - low);
         if (index < 0 || index >= candidates.Count)

@@ -407,8 +407,8 @@ cpppj/src/o/RawFortTypeNamesLoad.h	Netstorm.Core/Original/RawFortTypeNamesLoad.c
 cpppj/src/o/RawFortWorldLoad.cpp	Netstorm.Core/Original/RawFortWorldLoad.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
 cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	860030e73e9e11599c89334b2e6ab4b0c6e1702d	port
 cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/RawFortWorldLoad.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
-cpppj/src/o/RawFrameChoose.cpp	Netstorm.Core/Original/RawFrameChoose.cs	5c2d0a1e5374db102f577ffb7b1626175cdd66ca	L1
-cpppj/src/o/RawFrameChoose.h	Netstorm.Core/Original/RawFrameChoose.cs	5c2d0a1e5374db102f577ffb7b1626175cdd66ca	L1
+cpppj/src/o/RawFrameChoose.cpp	Netstorm.Core/Original/RawFrameChoose.cs	df7902e70c389c825a65b8ba70a48de6891905ad	L1
+cpppj/src/o/RawFrameChoose.h	Netstorm.Core/Original/RawFrameChoose.cs	df7902e70c389c825a65b8ba70a48de6891905ad	L1
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.cs	da27e191b1459279170608224c4f60fdd84c3343	port
 cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	73506bcbedac557bfd132e68524f772123f245d2	L1
 cpppj/src/o/RawIslandAdd.cpp	Netstorm.Core/Original/RawIslandAdd.cs	afe4ce5b45b8c786adba014946185cfec5799ae7	L1
