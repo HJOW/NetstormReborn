@@ -692,3 +692,162 @@ public sealed class PlayerInitializationTests
         Assert.True(rejected && _base == Bases[2] && _globals.FortCount == 0u && _globals.LastLoginPlayer == 0u && _calls[2] == 1u && _calls[3] == 0u && _blocks[Bases[2]].AsSpan().SequenceEqual(before));
     }
 }
+
+// 9기록 본문의 공장·플래그·마스크 배치를 검증하는 테스트 클래스다. 2026-11-12 R4 실제 호스트·월드 조립(0.411)에서 추가됐다.
+public sealed class PlayerInitializationRecordLayoutTests
+{
+    /// <summary>기록 효과를 모으는 초기화 훅을 만든다. 2026-11-12 R4 실제 호스트·월드 조립(0.411)에서 추가됐다.</summary>
+    /// <param name="memory">주소→물리뷰 장치다.</param>
+    /// <param name="freedFactories">받을 공장 토큰 해제 기록이다.</param>
+    /// <param name="freedBases">받을 Player base 반납 기록이다.</param>
+    /// <param name="alliances">받을 동맹 기록이다.</param>
+    /// <param name="factoryBase">공장 토큰 시작값이다.</param>
+    /// <param name="madeFactories">받을 공장 토큰 생성 기록이다.</param>
+    private static PlayerInitializationHooks RecordingHooks(
+        Func<uint, uint, Memory<byte>> memory,
+        List<uint> freedFactories,
+        List<uint> freedBases,
+        List<(uint Owner, uint Mask)> alliances,
+        uint factoryBase,
+        List<uint> madeFactories)
+    {
+        uint next = 0u;
+        return new PlayerInitializationHooks
+        {
+            Memory = memory,
+            FreeFactory = freedFactories.Add,
+            FreePlayers = freedBases.Add,
+            MallocPlayers = _ => 0u,
+            NewFactory = _ =>
+            {
+                uint token = unchecked(factoryBase + next * 0x1000u);
+                next++;
+                madeFactories.Add(token);
+                return token;
+            },
+            Alliance = (owner, mask) => alliances.Add((owner, mask)),
+        };
+    }
+
+    /// <summary>리틀 엔디언 DWORD를 읽는다. 2026-11-12 R4 실제 호스트·월드 조립(0.411)에서 추가됐다.</summary>
+    private static uint DwordAt(byte[] backing, int offset) =>
+        System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(backing.AsSpan(offset, 4));
+
+    /// <summary>새 9기록이 공장·30·0·구독자 0·자기 마스크·0x58/0x64 0·0x78=127로 차는지 확인한다.</summary>
+    [Fact]
+    public void InitializesNineRecordsLikeOriginal()
+    {
+        var backing = new byte[4096];
+        uint playerBase = 0u;
+        var globals = new PlayerInitializationGlobals
+        {
+            FortCount = 7u,
+            LastLoginPlayer = 3u,
+            PlayerBase = () => playerBase,
+            WritePlayerBase = value => playerBase = value,
+        };
+        var freedFactories = new List<uint>();
+        var freedBases = new List<uint>();
+        var alliances = new List<(uint Owner, uint Mask)>();
+        var madeFactories = new List<uint>();
+        PlayerInitializationHooks hooks = RecordingHooks(
+            (address, width) => new Memory<byte>(backing, (int)address, (int)width),
+            freedFactories, freedBases, alliances, 0x30015000u, madeFactories);
+        RawPlayerInitialization.InitializePlayerRecords(globals, hooks);
+        // 카운터가 0으로 돌아간다.
+        Assert.Equal(0u, globals.FortCount);
+        Assert.Equal(0u, globals.LastLoginPlayer);
+        // 이전 base가 0이면 해제 효과가 없다.
+        Assert.Empty(freedFactories);
+        Assert.Empty(freedBases);
+        // 9기록이 원본 순서대로 찬다.
+        Assert.Equal(9, madeFactories.Count);
+        for (uint owner = 0u; owner < 9u; owner++)
+        {
+            int record = (int)(owner * 180u);
+            Assert.Equal(madeFactories[(int)owner], DwordAt(backing, record));
+            Assert.Equal(30u, DwordAt(backing, record + 4));
+            Assert.Equal(0u, DwordAt(backing, record + 8));
+            Assert.Equal(0u, DwordAt(backing, record + 0x2c));
+            Assert.Equal(0u, DwordAt(backing, record + 0x58));
+            Assert.Equal(0u, DwordAt(backing, record + 0x64));
+            Assert.Equal(127u, DwordAt(backing, record + 0x78));
+            Assert.Equal(1u << (int)owner, DwordAt(backing, record + 0x54));
+        }
+
+        // 동맹 효과도 번호 순서대로 남는다.
+        Assert.Equal(9, alliances.Count);
+        for (uint owner = 0u; owner < 9u; owner++)
+            Assert.Equal((owner, 1u << (int)owner), alliances[(int)owner]);
+    }
+
+    /// <summary>이전 base가 있으면 공장·Player를 해제하고 새로 채우는지 확인한다.</summary>
+    [Fact]
+    public void FreesPreviousRecordsBeforeAllocating()
+    {
+        var backing = new byte[4096];
+        // 이전 토큰을 base 512의 9기록 +0에 둔다.
+        for (uint owner = 0u; owner < 9u; owner++)
+            System.Buffers.Binary.BinaryPrimitives.WriteUInt32LittleEndian(
+                backing.AsSpan(512 + (int)(owner * 180u), 4), unchecked(0x11111111u + owner));
+        uint playerBase = 512u;
+        var globals = new PlayerInitializationGlobals
+        {
+            FortCount = 5u,
+            LastLoginPlayer = 6u,
+            PlayerBase = () => playerBase,
+            WritePlayerBase = value => playerBase = value,
+        };
+        var freedFactories = new List<uint>();
+        var freedBases = new List<uint>();
+        var alliances = new List<(uint Owner, uint Mask)>();
+        var madeFactories = new List<uint>();
+        PlayerInitializationHooks hooks = RecordingHooks(
+            (address, width) => new Memory<byte>(backing, (int)address, (int)width),
+            freedFactories, freedBases, alliances, 0x30015000u, madeFactories);
+        hooks.MallocPlayers = _ => 2048u;
+        RawPlayerInitialization.InitializePlayerRecords(globals, hooks);
+        // 이전 9토큰을 번호 순서대로 해제하고 이전 base를 반납한다.
+        Assert.Equal(9, freedFactories.Count);
+        for (uint owner = 0u; owner < 9u; owner++)
+            Assert.Equal(unchecked(0x11111111u + owner), freedFactories[(int)owner]);
+        Assert.Equal([512u], freedBases);
+        // 카운터가 0으로 돌아가고 새 base에 새 기록이 찬다.
+        Assert.Equal(0u, globals.FortCount);
+        Assert.Equal(0u, globals.LastLoginPlayer);
+        Assert.Equal(2048u, playerBase);
+        for (uint owner = 0u; owner < 9u; owner++)
+        {
+            int record = 2048 + (int)(owner * 180u);
+            Assert.Equal(madeFactories[(int)owner], DwordAt(backing, record));
+            Assert.Equal(30u, DwordAt(backing, record + 4));
+            Assert.Equal(0u, DwordAt(backing, record + 8));
+            Assert.Equal(0u, DwordAt(backing, record + 0x2c));
+            Assert.Equal(127u, DwordAt(backing, record + 0x78));
+            Assert.Equal(1u << (int)owner, DwordAt(backing, record + 0x54));
+        }
+    }
+
+    /// <summary>빠진 장치·짧은 물리뷰를 명시 오류로 거부하는지 확인한다.</summary>
+    [Fact]
+    public void InitializationGuardsDevices()
+    {
+        var globals = new PlayerInitializationGlobals
+        {
+            PlayerBase = () => 0u,
+            WritePlayerBase = _ => { },
+        };
+        // malloc 미연결은 InvalidOperationException이다.
+        Assert.Throws<InvalidOperationException>(() => RawPlayerInitialization.InitializePlayerRecords(
+            globals, new PlayerInitializationHooks { Memory = (_, _) => Memory<byte>.Empty }));
+        // 4바이트보다 짧은 뷰는 ArgumentOutOfRangeException이다.
+        var shortHooks = new PlayerInitializationHooks
+        {
+            Memory = (_, _) => new Memory<byte>(new byte[2]),
+            MallocPlayers = _ => 0u,
+            NewFactory = _ => 1u,
+            Alliance = (_, _) => { },
+        };
+        Assert.Throws<ArgumentOutOfRangeException>(() => RawPlayerInitialization.InitializePlayerRecords(globals, shortHooks));
+    }
+}
