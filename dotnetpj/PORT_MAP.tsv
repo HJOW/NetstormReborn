@@ -119,7 +119,7 @@ cpppj/src/client/HtmlWindowMetadata.cpp	Netstorm.Client/Gump/HtmlWindowMetadata.
 cpppj/src/client/HtmlWindowMetadata.h	Netstorm.Client/Gump/HtmlWindowMetadata.cs	e82018f5cec8e84e4bc23971dce8c6ef8cc0c7d7	L1
 cpppj/src/client/ImageGump.cpp	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
 cpppj/src/client/ImageGump.h	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
-cpppj/src/client/InputEvent.cpp	Netstorm.Client/Host/HostInputMapper.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
+cpppj/src/client/InputEvent.cpp	Netstorm.Client/Host/HostInputMapper.cs	8f8ddf6c22931cb635cd2e6dec97a1d93ba5e478	port
 cpppj/src/client/InputEvent.cpp	Netstorm.Client/Input/InputEvent.cs	af7e11ff1dfb2feb4a84a55ac911dbd690c3c942	port
 cpppj/src/client/InputEvent.h	Netstorm.Client/Input/InputEvent.cs	af7e11ff1dfb2feb4a84a55ac911dbd690c3c942	port
 cpppj/src/client/Markup.cpp	Netstorm.Client/Gump/Markup.cs	b9be2a82a0f9f3848689ddcf9e1b05d0331be1a8	port
@@ -140,9 +140,9 @@ cpppj/src/client/MetaImageGump.cpp	Netstorm.Client/Gump/MetaImageGump.cs	8eece42
 cpppj/src/client/MetaImageGump.h	Netstorm.Client/Gump/MetaImageGump.cs	8eece422b34f1cb427900b1410f5c670a02c07c8	L1
 cpppj/src/client/MetaImageList.cpp	Netstorm.Client/Gump/MetaImageList.cs	27075f9bdaca0aa2738e5fadba335d92e7c4e99c	L1
 cpppj/src/client/MetaImageList.h	Netstorm.Client/Gump/MetaImageList.cs	27075f9bdaca0aa2738e5fadba335d92e7c4e99c	L1
-cpppj/src/client/Mission.cpp	Netstorm.Client/Mission/GuideMissionScriptLifetime.cs	f3735ed3fe9cd72dd1321ad7094dd0fdc1627708	port
+cpppj/src/client/Mission.cpp	Netstorm.Client/Mission/GuideMissionScriptLifetime.cs	8f8ddf6c22931cb635cd2e6dec97a1d93ba5e478	port
 cpppj/src/client/Mission.cpp	Netstorm.Client/Mission/MissionScript.cs	af7e11ff1dfb2feb4a84a55ac911dbd690c3c942	port
-cpppj/src/client/Mission.h	Netstorm.Client/Mission/GuideMissionScriptLifetime.cs	f3735ed3fe9cd72dd1321ad7094dd0fdc1627708	port
+cpppj/src/client/Mission.h	Netstorm.Client/Mission/GuideMissionScriptLifetime.cs	8f8ddf6c22931cb635cd2e6dec97a1d93ba5e478	port
 cpppj/src/client/Mission.h	Netstorm.Client/Mission/MissionScript.cs	af7e11ff1dfb2feb4a84a55ac911dbd690c3c942	port
 cpppj/src/client/MissionFortRequest.cpp	Netstorm.Client/Mission/MissionFortRequest.cs	604e34521d969fe0a0dc55fceebba34f37979fd7	port
 cpppj/src/client/MissionFortSource.h	Netstorm.Client/Mission/MissionFortSource.cs	8db90513e0a5cb2bca376cd61a6c5aa5670c8f10	port
@@ -192,7 +192,7 @@ cpppj/src/client/RawShapeToBuffer.h	Netstorm.Client/Display/RawShapeToBuffer.cs	
 cpppj/src/client/RawTextEntryControls.cpp	Netstorm.Client/Host/HostTextEntry.cs	fc70fa108dfc7685dbfcc102d8bcf54102116d5b	port
 cpppj/src/client/Renderer.cpp	Netstorm.Client/Display/RendererDraw.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/Renderer.h	Netstorm.Client/Display/RendererDraw.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
-cpppj/src/client/SaveFortNameDialog.cpp	Netstorm.Client/Gump/SaveFortName.cs	4e56903cb5ca329624d5ca4f6eae16698e863b7d	port
+cpppj/src/client/SaveFortNameDialog.cpp	Netstorm.Client/Gump/SaveFortName.cs	8f8ddf6c22931cb635cd2e6dec97a1d93ba5e478	port
 cpppj/src/client/SaveFortNameDialog.cpp	Netstorm.Client/Gump/SaveFortNameDialog.cs	9d35b9a3441e5cd1d2ad5e86c61d006daaeb2979	port
 cpppj/src/client/Screen.cpp	Netstorm.Client.Host/ClientHostGame.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/Screen.cpp	Netstorm.Client.Host/MonoGameScreenOutput.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
@@ -529,7 +529,7 @@ cpppj/src/o/SquidFrame.cpp	Netstorm.Core/Original/RawFrame.cs	f95a8db28ceae6c036
 cpppj/src/o/SquidHash.cpp	Netstorm.Core/Original/RawSquidHash.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidOwner.cpp	Netstorm.Core/Original/RawOwner.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/OriginalPopDisplay.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	L1
-cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/RawPop.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
+cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/RawPop.cs	8f8ddf6c22931cb635cd2e6dec97a1d93ba5e478	L1
 cpppj/src/o/SquidPostPop.cpp	Netstorm.Core/Original/RawPostPop.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidReward.cpp	Netstorm.Core/Original/RawHitPoints.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidReward.cpp	Netstorm.Core/Original/RawSquidReward.cs	3d038e510444a9c7448b6d4c88cc84f78446d395	L1
