@@ -11,7 +11,7 @@ public sealed class StyleTextMarkupTests
     [Fact]
     public void ActualSingleLineParserKeepsHooksAndFragmentTags()
     {
-        var s = new StyleMarkupScene(); Assert.NotNull(s.Scene.StyleHooks.TextMeasure); Assert.NotNull(s.Scene.StyleHooks.ExternalDraw); s.Scene.Style.Parse(ref s.Head, "A~[T 42]B~[I Unit.1]C~[E -9.2]"u8, s.Scene.Context); uint[] chain = StyleTextTestSupport.Chain(s.Scene.Fragments, s.Head); Assert.Equal(5, chain.Length); Assert.Equal(new uint[] { 0, 42, 42, 42, 42 }, chain.Select(t => s.Scene.Fragments.Fragments[t].Metadata)); Assert.Equal(1U, s.Pictures.Pictures[chain[2]].Frame); Assert.Equal(new[] { "A", "B", "C", "" }, chain.Where(t => t != chain[2]).Select(t => StyleTextTestSupport.Text(s.Scene.Fragments.Fragments[t]))); var last = s.Scene.Fragments.Fragments[chain[4]]; Assert.Equal((2U, 9U, unchecked((uint)-9), 2U), (last.Context[0], last.Context[5], last.Context[6], last.Context[7]));
+        var s = new StyleMarkupScene(); Assert.NotNull(s.Scene.StyleHooks.TextMeasure); Assert.NotNull(s.Scene.StyleHooks.ExternalDraw); s.Scene.Style.Parse(ref s.Head, "A~[T 42]B~[I Unit.1]C~[E -9.2]"u8, s.Scene.Context); uint[] chain = StyleTextTestSupport.Chain(s.Scene.Fragments, s.Head); Assert.Equal(5, chain.Length); Assert.Equal(new uint[] { 0, 42, 42, 42, 42 }, chain.Select(t => s.Scene.Fragments.Fragments[t].Metadata)); Assert.Equal(1U, s.Pictures.Pictures[chain[2]].Frame); Assert.Equal(new[] { "A", "B", "C", "" }, chain.Where(t => t != chain[2]).Select(t => StyleTextTestSupport.Text(s.Scene.Fragments.Fragments[t]))); var last = s.Scene.Fragments.Fragments[chain[4]]; Assert.Equal((0U, 0U, 1U, 1U), (last.Context[0], last.Context[5], last.Context[6], last.Context[7]));
     }
     /// <summary>앵커 없는 부분 검색과 임의 한BYTE 구분자,greedy 캡처/되돌림을 고정 문자열로 검사한다.</summary>
     [Theory]
@@ -65,12 +65,29 @@ public sealed class StyleTextMarkupTests
     {
         var s = new StyleMarkupScene(edition); int calls = 0; s.Hooks.Type = _ => new() { GumpFrame = ++calls == 1 ? 2 : 4, FrameCount = 20 }; s.Apply("I 2.*"); Assert.Equal(expected, s.Pictures.Pictures[s.Head].Frame); Assert.Equal(expectedCalls, calls);
     }
-    /// <summary>전경/배경/그림자 허용과 한 축만 허용 범위인 E,현재 검정색/기본 옵션 유지 규칙.</summary>
+    /// <summary>전경/배경/그림자 허용과 두 축이 모두 허용 범위일 때만 적용되는 E,현재 검정색/기본 옵션 유지 규칙.</summary>
+    /// <remarks>2026-11-11 0.344에서 10차 NB02 교정을 반영해 한 축만 범위 안인 E는 무시한다.</remarks>
     [Fact]
     public void OptionsPaletteOffsetAndConfigReadOrder()
     {
-        var s = new StyleMarkupScene(); var palette = new PaletteColorTable(); palette.Basic[0] = 17; StyleTextMarkup.BindStyleTextMarkupPalette(s.Hooks, palette); s.Apply("C . -7"); s.Apply("B . 4294967297"); s.Apply("E -9.2"); Assert.Equal(unchecked((uint)-7), s.Scene.Context[2]); Assert.Equal(17U, s.Scene.Context[5]); Assert.Equal((2U, unchecked((uint)-9), 2U), (s.Scene.Context[0], s.Scene.Context[6], s.Scene.Context[7])); palette.Basic[0] = 23; s.Apply("E 3\n4"); Assert.Equal((23U, 3U, 4U), (s.Scene.Context[5], s.Scene.Context[6], s.Scene.Context[7])); s.Apply("E 99.99"); Assert.Equal(23U, s.Scene.Context[5]);
+        var s = new StyleMarkupScene(); var palette = new PaletteColorTable(); palette.Basic[0] = 17; StyleTextMarkup.BindStyleTextMarkupPalette(s.Hooks, palette); s.Apply("C . -7"); s.Apply("B . 4294967297"); s.Apply("E -9.2"); Assert.Equal(unchecked((uint)-7), s.Scene.Context[2]); Assert.Equal(1U, s.Scene.Context[5]); Assert.Equal((0U, 1U, 1U), (s.Scene.Context[0], s.Scene.Context[6], s.Scene.Context[7])); palette.Basic[0] = 23; s.Apply("E 3\n4"); Assert.Equal((23U, 3U, 4U), (s.Scene.Context[5], s.Scene.Context[6], s.Scene.Context[7])); s.Apply("E 99.99"); Assert.Equal(23U, s.Scene.Context[5]);
         var keys = new List<string>(); StyleTextMarkup.LoadStyleTextMarkupOptions(s.State, key => { keys.Add(key); return key == "allowzonesounds" ? "-2" : key == "zonefgcolor" ? "0" : null; }); Assert.Equal(new[] { "allowzonesounds", "zonebgcolor", "zonefgcolor", "zoneoffset" }, keys); Assert.Equal((-2, 1, 0, 1), (s.State.AllowSounds, s.State.AllowBackgroundColor, s.State.AllowForegroundColor, s.State.AllowOffset)); s.Apply("C . 88"); Assert.Equal(unchecked((uint)-7), s.Scene.Context[2]); var args = new List<(string, int, int, int, int, int)>(); StyleTextMarkup.BindStyleTextMarkupSound(s.Hooks, (n, l, v, p, r, m) => args.Add((n, l, v, p, r, m))); s.Apply("S . thunder"); Assert.Equal(("thunder", 0, 0, 0, 0, 0), Assert.Single(args));
+    }
+    /// <summary>엠보스 오프셋은 두 좌표가 모두 -4..4 안일 때만 허용한다(cpppj KnownBug_NB02와 같은 경계).</summary>
+    /// <remarks>2026-11-11 0.344에서 10차 NB02 교정과 함께 추가했다. 원문 악용(한 좌표만 정상이고 다른 좌표가 매우 큼)을 거부한다.</remarks>
+    [Theory]
+    [InlineData(0, 0, true)]
+    [InlineData(-4, 4, true)]
+    [InlineData(4, -4, true)]
+    [InlineData(5, 0, false)]
+    [InlineData(0, -5, false)]
+    [InlineData(0, 1000, false)]
+    [InlineData(1000, 0, false)]
+    [InlineData(-1000, 1000, false)]
+    public void EmbossOffsetRequiresBothCoordinatesInRange(int x, int y, bool allowed)
+    {
+        // 두 좌표가 모두 범위 안일 때만 허용한다.
+        Assert.Equal(allowed, StyleTextMarkup.StyleTextOffsetAllowed(x, y));
     }
     /// <summary>다중 줄은 접두를 소비한 뒤 남은#만 맞춤으로 읽으며 &는 특수 문자가 아니다.</summary>
     [Theory]

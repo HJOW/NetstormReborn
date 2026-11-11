@@ -234,8 +234,8 @@ cpppj/src/client/StyleText.cpp	Netstorm.Client/Gump/StyleText.cs	6c0a1865fb3520c
 cpppj/src/client/StyleText.h	Netstorm.Client/Gump/StyleText.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	port
 cpppj/src/client/StyleTextBuffer.cpp	Netstorm.Client/Gump/StyleTextBuffer.cs	b9be2a82a0f9f3848689ddcf9e1b05d0331be1a8	port
 cpppj/src/client/StyleTextBuffer.h	Netstorm.Client/Gump/StyleTextBuffer.cs	b9be2a82a0f9f3848689ddcf9e1b05d0331be1a8	port
-cpppj/src/client/StyleTextMarkup.cpp	Netstorm.Client/Gump/StyleTextMarkup.cs	f7e1748e8c9a093be0f118ec864df7e5581b9f0c	port
-cpppj/src/client/StyleTextMarkup.h	Netstorm.Client/Gump/StyleTextMarkup.cs	f7e1748e8c9a093be0f118ec864df7e5581b9f0c	port
+cpppj/src/client/StyleTextMarkup.cpp	Netstorm.Client/Gump/StyleTextMarkup.cs	5171b8c7beb7b271594731680a23fa69bfab0c8e	port
+cpppj/src/client/StyleTextMarkup.h	Netstorm.Client/Gump/StyleTextMarkup.cs	5171b8c7beb7b271594731680a23fa69bfab0c8e	port
 cpppj/src/client/TellFileMenus.cpp	Netstorm.Client/Gump/TellFileMenus.cs	f9291649b97b56dbdb50eb20521690ac459ccf67	L1
 cpppj/src/client/TellFileMenus.h	Netstorm.Client/Gump/TellFileMenus.cs	f9291649b97b56dbdb50eb20521690ac459ccf67	L1
 cpppj/src/client/TellMapMenus.cpp	Netstorm.Client/Gump/TellMapMenus.cs	4869c6baada60168f87626dc97d3ec3145028df3	L1

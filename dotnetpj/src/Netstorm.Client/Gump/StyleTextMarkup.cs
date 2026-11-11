@@ -63,6 +63,10 @@ public sealed class StyleTextMarkup
     private const string CommandOrder = "ISTCBE";
     /// <summary>CD 다중 줄은 W의 두 캡처를 요구한다.</summary>
     private const string CdScrollingOrder = "IWT";
+    /// <summary>원본 E 좌표의 허용 하한이다. 두 좌표가 모두 범위 안에 있을 때만 적용한다.</summary>
+    private const int OffsetMinimum = -4;
+    /// <summary>원본 E 좌표의 허용 상한이다. 두 좌표가 모두 범위 안에 있을 때만 적용한다.</summary>
+    private const int OffsetMaximum = 4;
     /// <summary>같은 실제 공통 조각 표.</summary>
     private readonly StyleTextState _fragments;
     /// <summary>같은 실제 그림 처리기.</summary>
@@ -73,6 +77,12 @@ public sealed class StyleTextMarkup
     private readonly StyleTextMarkupHooks _hooks;
     /// <summary>명령/그림 재조회 분기를 고르는 판본.</summary>
     private readonly OriginalEdition _edition;
+    /// <summary>채팅 글자의 엠보스 오프셋이 허용 범위(-4..4) 안인지 판정한다.</summary>
+    /// <remarks>2026-11-11 0.344에서 cpppj HEAD(`StyleTextOffsetAllowed`, 10차 NB02 교정)를 반영했다. 원문은 두 좌표 중 하나만 범위 안이어도 둘 다 적용해 다른 좌표를 임의로 크게 줘서 글자를 뒤로 밀 수 있었다. 두 좌표가 모두 범위 안일 때만 참이다.</remarks>
+    /// <param name="x">엠보스 X 오프셋이다.</param>
+    /// <param name="y">엠보스 Y 오프셋이다.</param>
+    /// <returns>두 좌표가 모두 허용 범위 안이면 참이다.</returns>
+    public static bool StyleTextOffsetAllowed(int x, int y) => x is >= OffsetMinimum and <= OffsetMaximum && y is >= OffsetMinimum and <= OffsetMaximum;
     /// <summary>실제 도달 시에만 필수 경계를 요구한다.</summary>
     private static T Require<T>(T? value) where T : Delegate => value ?? throw new ArgumentException("스타일 대괄호 현재 자산/효과 경계 필요");
     /// <summary>첫NUL 앞 원본 BYTE를 UTF-8 재해석 없이 일대일 문자열로 복사한다.</summary>
@@ -144,7 +154,7 @@ public sealed class StyleTextMarkup
         int count = Type(type).FrameCount; if (Math.Min(frame, count) < 0) frame = 0; else if (patch) { if (frame >= Type(type).FrameCount) frame = Type(type).FrameCount; } else if (frame >= count) frame = count;
         uint picture = _pictures.NewPicture(unchecked((uint)type), unchecked((uint)frame), metadata); _pictures.SetMapped(picture, mapped ? 1U : 0U); if (fit) _pictures.Fit(picture, _state.FitWidth, _state.FitHeight); StyleText.AppendStyleTextFragment(_fragments, ref head, picture);
     }
-    /// <summary>일치한 옵션은 비활성이어도 소비한다.E는 두 축 중 하나만 허용 범위여도 두 값을 같이 쓴다.</summary>
+    /// <summary>일치한 옵션은 비활성이어도 소비한다.E는 두 축이 모두 허용 범위일 때만 두 값을 같이 쓴다.</summary>
     private void Option(char code, string first, string second, uint[] context, ref uint metadata, bool unconditionalSound = false)
     {
         switch (code)
@@ -153,7 +163,7 @@ public sealed class StyleTextMarkup
             case 'T': metadata = unchecked((uint)Number(first)); break;
             case 'C': if (_state.AllowForegroundColor != 0) context[2] = unchecked((uint)Number(first)); break;
             case 'B': if (_state.AllowBackgroundColor != 0) context[5] = unchecked((uint)Number(first)); break;
-            case 'E': if (_state.AllowOffset != 0) { int x = Number(first), y = Number(second); if (x is >= -4 and <= 4 || y is >= -4 and <= 4) { context[0] |= 2; context[5] = Require(_hooks.Black)(); context[6] = unchecked((uint)x); context[7] = unchecked((uint)y); } } break;
+            case 'E': if (_state.AllowOffset != 0) { int x = Number(first), y = Number(second); if (StyleTextOffsetAllowed(x, y)) { context[0] |= 2; context[5] = Require(_hooks.Black)(); context[6] = unchecked((uint)x); context[7] = unchecked((uint)y); } } break;
         }
     }
     /// <summary>첫NUL까지만 읽고 I→S→T→C→B→E 중 첫 일치를 처리한다.CD 한 줄은 I/T만 검사한다.</summary>
