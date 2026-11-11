@@ -3,6 +3,7 @@ using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
 using Netstorm.Client.Scripting;
+using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Host;
 
@@ -23,46 +24,133 @@ public sealed class HostPopupMenu
     private MainMenuAction[] _actions = [];
     /// <summary>팝업 행의 실제 명령 인자로 쓰는 공유 문자열 고리다.</summary>
     private readonly ScriptStringRing _strings;
+    /// <summary>음향 장치 준비 판정이다. 거짓이면 소리 행을 사용 안 함으로 그린다.</summary>
+    private readonly Func<bool> _soundReady;
 
     /// <summary>같은 공통 Gump 트리와 메뉴 수명·화면을 사용한다.</summary>
-    public HostPopupMenu(HostMainMenu root, HostHtmlWindows windows, HostHtmlMenus menus, Screen screen, HostStartupScene startup, Action changed, Action applyAudio, ScriptStringRing strings)
-    { _root = root; _windows = windows; _menus = menus; _screen = screen; _startup = startup; _changed = changed; _applyAudio = applyAudio; _strings = strings ?? throw new ArgumentNullException(nameof(strings)); }
+    public HostPopupMenu(HostMainMenu root, HostHtmlWindows windows, HostHtmlMenus menus, Screen screen, HostStartupScene startup, Action changed, Action applyAudio, ScriptStringRing strings, Func<bool>? soundReady = null)
+    { _root = root; _windows = windows; _menus = menus; _screen = screen; _startup = startup; _changed = changed; _applyAudio = applyAudio; _strings = strings ?? throw new ArgumentNullException(nameof(strings)); _soundReady = soundReady ?? (() => true); }
 
-    /// <summary>Help·설정 및 해상도/음량 팝업을 같은 Gump에 부착한다.</summary>
+    /// <summary>Help·설정 팝업을 같은 Gump에 부착한다. 하위 메뉴는 원문처럼 미리 만들어 부모 행에 붙인다.</summary>
     public bool Open(string name)
     {
-        var rows = new List<(string Label, MainMenuAction Action, bool Checked, bool Enabled)>();
-        void Add(string label, string command, string argument, bool check = false, bool enabled = true) => rows.Add((label, new(command, argument), check, enabled));
-        int Get(string key) => _startup.Configuration.GetInt(key);
         switch (name.ToLowerInvariant())
         {
             case "help": OpenHelp(); return true;
-            case "options":
-                if ((_screen.Flags & ScreenMode.FullScreen) != 0) { Add("Adjust Direct Draw", "Tell", "AdjustDirectDraw"); Add("Window Mode", "ScreenModeAbsChange", "10"); }
-                else Add("Direct Draw / Full Screen", "Tell", "DirectDrawManager");
-                Add("Resolution >", "Menu", "resolution");
-                Add("Sound On", "Toggle", "sound", Get("sound") != 0); Add("Play Music", "Toggle", "music", Get("music") != 0);
-                Add("Wind Noise", "Toggle", "playWind", Get("playWind") != 0); Add("Speaker Swap L/R", "Toggle", "swapLeftRightSpeakers", Get("swapLeftRightSpeakers") != 0);
-                Add("Sound Effect Volume >", "Menu", "soundvolume"); Add("Music Volume >", "Menu", "musicvolume");
-                Add("Edge Scroll in Fullscreen", "Toggle", "edgeScroll", Get("edgeScroll") != 0);
-                Add("Auto-Demo", "Toggle", "autoDemo", Get("autoDemo") != 0); Add("Tell Tips at Startup", "Toggle", "tellTips", Get("tellTips") != 0);
-                Add("Pass Server Diagnostic", "", "", false, false); break;
-            case "resolution":
-                foreach (var (width, height) in new[] { (640, 480), (800, 600), (1024, 768), (1280, 720), (1280, 800), (1366, 768) })
-                    Add($"{width} by {height}", "Tell", $"SETSIZE({width},{height})", _screen.Width == width && _screen.Height == height);
-                break;
-            case "soundvolume": case "musicvolume":
-                string key = name.Equals("soundvolume", StringComparison.OrdinalIgnoreCase) ? "soundVolume" : "musicVolume";
-                for (int i = 1; i <= 5; i++) Add($"Volume {i}", "Volume", $"{key}={i}", Get(key) == i);
-                break;
+            case "options": OpenOptions(); return true;
             default: return false;
         }
+    }
+
+    /// <summary>Options 팝업의 실제 전체 행을 앵커 버튼에 붙인다.
+    /// 근거: cpppj/src/client/RawGameMenus.cpp 107~160행의 <c>Options()</c>를 메인 메뉴 맥락(미션·전투·편집 없음)으로 옮긴 것이다.</summary>
+    /// <remarks>2026-11-12 0.384에서 L4a menu-options 비교로 옛 12행 자리표시를 실제 구성으로 바꿨다.
+    /// Language·Frame Rate·Difficulty 하위 메뉴와 Anti-Aliasing·FSR 1.0 토글, 구분선 3개, 앵커 부착을 더했다.
+    /// 하위 메뉴는 원문의 펼침 자식 대신 기존 방식의 중앙 팝업으로 연다(펼침 표시·입력은 R3 잔여).
+    /// 후처리 토글 행은 항상 보이며 장치 판정은 R8 8차에서 잇는다. 마지막 진단 행은 원문처럼 항상 사용이다.</remarks>
+    /// <summary>Options 팝업의 실제 전체 행을 앵커 버튼에 붙인다.
+    /// 근거: cpppj/src/client/RawGameMenus.cpp 107~160행의 <c>Options()</c>를 메인 메뉴 맥락(미션·전투·편집 없음)으로 옮긴 것이다.</summary>
+    /// <remarks>2026-11-12 0.384에서 L4a menu-options 비교로 옛 12행 자리표시를 실제 구성으로 바꿨다.
+    /// Language·Frame Rate·Difficulty 하위 메뉴와 Anti-Aliasing·FSR 1.0 토글, 구분선 3개를 더했다.
+    /// 하위 메뉴 6종은 원문처럼 미리 만들어 부모 행에 자식으로 붙인다(AddSubmenu). 자식 행의 실제 명령은 큐에 그대로 넣는다.
+    /// 자식 펼침 선택 흐름도 원문과 같은 공통 메뉴 엔진을 쓰므로 펼침 장면의 픽셀도 같은 코드에서 나온다.
+    /// 음량 선택은 기존 동작(설정 쓰기·음향 반영·팝업 닫기)을 유지하려고 <c>HostMenuInput</c>의 원시 분기에서
+    /// <c>Execute</c>로 돌린다. 언어·프레임·난이도·해상도 선택 적용은 R8 해당 차수에서 잇는다.
+    /// 후처리 토글 행은 항상 보이며 장치 판정은 R8 8차에서 잇는다. 마지막 진단 행은 원문처럼 항상 사용이다.</remarks>
+    private void OpenOptions()
+    {
+        var actions = new List<MainMenuAction>();
+        int items = 0;
+        int Get(string key) => _startup.Configuration.GetInt(key);
+        // 없는 설정은 원문처럼 0으로 읽는다(GetInt는 누락에 예외라 ReadInt로 보존한다).
+        int GetOr(string key, int fallback) { int value = fallback; _startup.Configuration.ReadInt(key, ref value); return value; }
+        // 부모 열의 선택 행이다. 선택 번호와 같은 순서로 행동 표를 채운다.
+        void ParentChecked(bool check, byte[] label, MainMenuAction action, bool enabled = true)
+        { _menus.Controls.AddChecked(check, label, SelectCommand, (uint)items + 1, true, enabled); actions.Add(action); items++; }
+        void ParentAscii(string label, string command, string argument, bool check = false, bool enabled = true)
+            => ParentChecked(check, Encoding.ASCII.GetBytes(label), new(command, argument), enabled);
+        void ParentGap() { _menus.Controls.AddSeparator(); actions.Add(new("", "")); items++; }
+        void ParentSubmenu(byte[] label, uint child, bool enabled = true)
+        { _menus.Controls.AddSubmenu(label, child, enabled); actions.Add(new("", "")); items++; }
+        // 자식 열의 실제 명령행이다. 선택하면 실제 명령이 큐에 들어가며 번호표는 쓰지 않는다.
+        void ChildChecked(bool check, byte[] label, uint command, uint parameter, bool enabled = true)
+            => _menus.Controls.AddChecked(check, label, command, parameter, true, enabled);
+        // 자식 열을 새로 열어 행들을 채운 뒤 꺼낸다. 부모 열로 복귀한다.
+        uint TakeChild(Action build)
+        { _menus.Widgets.BeginVertical(); build(); return _menus.Menu.TakeCurrent(); }
+        byte[] Utf8(string label) => Encoding.ASCII.GetBytes(label);
+
         _windows.RequestCloseAll();
-        _actions = rows.Select(row => row.Action).ToArray();
         _menus.Widgets.BeginVertical();
-        for (int i = 0; i < rows.Count; i++) _menus.Controls.AddChecked(rows[i].Checked, Encoding.ASCII.GetBytes(rows[i].Label), SelectCommand, (uint)i + 1, true, rows[i].Enabled);
-        _menus.Menu.AttachCurrent(_screen.Width / 2 + 2, _screen.Height / 2 - 27, _root.Tree.Create.Entries[0]);
-        _changed(); return true;
+        if ((_screen.Flags & ScreenMode.FullScreen) != 0) { ParentAscii("Adjust Direct Draw", "Tell", "AdjustDirectDraw"); ParentAscii("Window Mode", "ScreenModeAbsChange", "10"); }
+        else ParentAscii("Direct Draw / Full Screen", "Tell", "DirectDrawManager");
+        // 원문의 해상도 3행+호환 화면비 행이다. FSR 해상도는 장치가 있을 때만 들어가며 이 환경에서는 비었다.
+        uint resolutions = TakeChild(() =>
+        {
+            foreach (var (width, height) in new[] { (640, 480), (800, 600), (1024, 768), (1280, 720), (1280, 800), (1366, 768) })
+                ChildChecked(_screen.Width == width && _screen.Height == height,
+                    Utf8($"{width} by {height}"), 0x542948U, _strings.Store($"SETSIZE({width},{height})"));
+        });
+        ParentSubmenu(Utf8("Resolution"), resolutions);
+        // 6차 한국어 항목이다. 각 언어 자신의 표기를 쓰고 표시 부호화로 바꾼다.
+        // 현재 언어 번호 장치가 없어 영어를 기본 선택으로 두며(R8 6차·13차에서 잇는다).
+        uint languages = TakeChild(() =>
+        {
+            ChildChecked(true, ExtendedText.EncodeDisplayText("English"), 0x542988U, 0);
+            ChildChecked(false, ExtendedText.EncodeDisplayText("한국어"), 0x542988U, 7);
+            ChildChecked(false, ExtendedText.EncodeDisplayText("日本語"), 0x542988U, 5);
+        });
+        ParentSubmenu(Utf8("Language"), languages);
+        // 후순위 F1 항목이다. 설정이 없거나 범위 밖이면 원본 기본 75에 체크한다.
+        uint frameRates = TakeChild(() =>
+        {
+            int configured = 0; _startup.Configuration.ReadInt("maxFPS", ref configured);
+            int current = configured >= 1 && configured <= 1000 ? configured : 75;
+            foreach (int rate in new[] { 60, 75, 120 })
+                ChildChecked(rate == current, Utf8($"{rate} FPS" + (rate == 75 ? " (Original)" : "")),
+                    0x542948U, _strings.Store($"Patch1101.SetFrameRate({rate})"));
+        });
+        ParentSubmenu(Utf8("Frame Rate"), frameRates);
+        // 11차 난이도 항목이다. 설정이 없거나 범위 밖이면 보통에 체크한다.
+        uint difficulty = TakeChild(() =>
+        {
+            int configured = 0; _startup.Configuration.ReadInt("difficulty", ref configured);
+            AiDifficultyLevel level = AiDifficulty.FromValue(unchecked((uint)configured));
+            ChildChecked(level == AiDifficultyLevel.Easy, Utf8("Easy"), 0x542948U, _strings.Store("Patch1101.SetDifficulty(1)"));
+            ChildChecked(level == AiDifficultyLevel.Normal, Utf8("Normal"), 0x542948U, _strings.Store("Patch1101.SetDifficulty(2)"));
+            ChildChecked(level == AiDifficultyLevel.Hard, Utf8("Hard"), 0x542948U, _strings.Store("Patch1101.SetDifficulty(3)"));
+        });
+        ParentSubmenu(Utf8("Difficulty"), difficulty);
+        ParentGap();
+        // 소리 4행과 음량 하위 2행은 음향 장치 준비 판정을 사용한다(RawGameMenus.cpp 144·150행의 0x5c7b14).
+        // 음소거(--mute-audio) 실행이면 거짓이다.
+        bool ready = _soundReady();
+        ParentAscii("Sound On", "Toggle", "sound", Get("sound") != 0, ready); ParentAscii("Play Music", "Toggle", "music", Get("music") != 0, ready);
+        ParentAscii("Wind Noise", "Toggle", "playWind", Get("playWind") != 0, ready); ParentAscii("Speaker Swap L/R", "Toggle", "swapLeftRightSpeakers", Get("swapLeftRightSpeakers") != 0, ready);
+        uint soundVolume = TakeChild(() =>
+        {
+            for (int i = 1; i <= 5; i++) ChildChecked(Get("soundVolume") == i, Utf8($"Volume {i}"), 0x542a8cU, (uint)i);
+        });
+        ParentSubmenu(Utf8("Sound Effect Volume"), soundVolume, ready);
+        uint musicVolume = TakeChild(() =>
+        {
+            for (int i = 1; i <= 5; i++) ChildChecked(Get("musicVolume") == i, Utf8($"Volume {i}"), 0x542a90U, (uint)i);
+        });
+        ParentSubmenu(Utf8("Music Volume"), musicVolume, ready);
+        ParentGap();
+        ParentAscii("Edge Scroll in Fullscreen", "Toggle", "edgeScroll", Get("edgeScroll") != 0);
+        ParentAscii("Auto-Demo", "Toggle", "autoDemo", Get("autoDemo") != 0); ParentAscii("Tell Tips at Startup", "Toggle", "tellTips", Get("tellTips") != 0);
+        ParentAscii("Anti-Aliasing", "Toggle", "antiAliasing", GetOr("antiAliasing", 0) != 0); ParentAscii("FSR 1.0 Upscaling", "Toggle", "fsr1", GetOr("fsr1", 0) != 0);
+        ParentGap();
+        ParentAscii("Pass Server Diagnostic ", "Tell", "ChangeFirewall");
+        _actions = actions.ToArray();
+        uint current = _menus.Menu.TakeCurrent();
+        ScreenRect anchor = _root.ControlBounds("Options") ?? throw new InvalidOperationException("메인 Options의 현재 버튼 없음");
+        // 원문 앵커 공식(baseWidth*0.5+x, y-40)을 같은 실수 연산으로 둔다(RawMenuControls.cpp 1047~1048행).
+        float x = anchor.Left + (anchor.Right - anchor.Left) * 0.5f;
+        _menus.Widgets.Attach(current, x, anchor.Top - 40, _root.Tree.Create.Entries[0], 0);
+        _menus.Menu.AddMenuFlags(current, 0x04000000U);
+        _changed();
     }
 
     /// <summary>Help 팝업의 실제 3행(일반·기술·Version)을 앵커 버튼에 붙인다.

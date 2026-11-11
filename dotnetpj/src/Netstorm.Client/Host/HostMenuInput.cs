@@ -91,6 +91,15 @@ public sealed class HostMenuInput
         // 근거: cpppj/src/client/UberGump.cpp 1223~1224행과 TechnicalHelp.cpp 32행(0.383에서 행을 실제 구성으로 바꿈).
         if (code == 0x02000017) { if (!released) throw new InvalidOperationException("도움말 주제 창 미연결(R3 잔여)"); return false; }
         if (code == 0x02000049) { if (!released) throw new InvalidOperationException("기술 도움말 실행 미연결(외부 실행 경계)"); return false; }
+        // Options 음량 하위 행의 실제 명령이다. 기존 Volume 행동(설정 쓰기·음향 반영·팝업 닫기)과 같다.
+        // 근거: cpppj/src/client/RawGameMenus.cpp 149행(0x542a8c·0x542a90). 0.384에서 하위 메뉴를 펼침 자식으로 바꾸면서 연결했다.
+        // 큐 마스크(0x0100ffff) 뒤 코드가 0x02002a8c·0x02002a90이다.
+        if (code == 0x02002a8c || code == 0x02002a90)
+        {
+            if (!released) (_popup ?? throw new InvalidOperationException("팝업 메뉴 미연결"))
+                .Execute(new("Volume", $"{(code == 0x02002a8c ? "soundVolume" : "musicVolume")}={input.Y}"));
+            return false;
+        }
         if (code == 0x02000095) { if (!released) ShowTell(_strings.Resolve(unchecked((uint)input.Y))); return false; }
         if (code == 0x0200006d)
         {

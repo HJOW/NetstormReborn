@@ -37,6 +37,11 @@ public sealed class HostOptions
     /// <summary>건너뛴 관측 보고서 경로. 없으면 null이다. --ui-report 로 정한다.</summary>
     public string? UiReportPath { get; private set; }
 
+    /// <summary>음향 장치를 만들지 않는지. --mute-audio 이면 참이다.</summary>
+    /// <remarks>2026-11-12 0.384에서 cpppj `--mute-audio`와의 L4a 비교를 맞추려고 추가했다.
+    /// 음소거이면 음향 장치 준비 판정(옵션 메뉴의 소리 행 사용 여부)이 거짓이다. 실제 무음향화는 R6에서 잇는다.</remarks>
+    public bool MuteAudio { get; private set; }
+
     /// <summary>--set 으로 받은 현재 설정. 같은 이름은 마지막 값이다.</summary>
     public IReadOnlyDictionary<string, string> Settings => _settings;
 
@@ -109,6 +114,9 @@ public sealed class HostOptions
                 case "--ui-report":
                     options.UiReportPath = TakeValue(args, ref i, "--ui-report");
                     break;
+                case "--mute-audio":
+                    options.MuteAudio = true;
+                    break;
                 case "--set":
                     options.ApplySettings(TakeValue(args, ref i, "--set"));
                     break;
@@ -124,7 +132,7 @@ public sealed class HostOptions
 
     /// <summary>사용법을 돌려준다. 오류 종료 때 그대로 출력한다.</summary>
     public static string Usage() =>
-        "사용법: NetstormClientHost [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N] [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--set \"k=v;k=v...\"]";
+        "사용법: NetstormClientHost [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N] [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--mute-audio] [--set \"k=v;k=v...\"]";
 
     /// <summary>고정 시각 프레임 밀리초(1~60000)를 읽는다.</summary>
     private static uint TakeFixedFrameMs(string[] args, ref int index)

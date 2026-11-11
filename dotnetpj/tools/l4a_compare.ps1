@@ -131,7 +131,7 @@ try {
     New-StepsFile -Template $stepsFull -OutDir $dnOut -Target $dnSteps
     $env:NETSTORM_USER_DATA = New-EmptyUserRoot (Join-Path $work 'user-dn')
     $env:NETSTORM_DATA = $dataDir
-    $dnArgs = @('--window', '--frames', $Frames, '--set', $Set, '--ui-script', $dnSteps, '--ui-report', (Join-Path $dnOut 'report.tsv'))
+    $dnArgs = @('--window', '--frames', $Frames, '--mute-audio', '--set', $Set, '--ui-script', $dnSteps, '--ui-report', (Join-Path $dnOut 'report.tsv'))
     if ($FixedFrameMs -gt 0) { $dnArgs += @('--fixed-frame-ms', $FixedFrameMs) }
     & $dnExe @dnArgs | Out-Null
     if ($LASTEXITCODE -ne 0) { Fail "dotnetpj 호스트 종료 코드 $LASTEXITCODE" }
