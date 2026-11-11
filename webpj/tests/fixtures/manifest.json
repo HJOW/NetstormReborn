@@ -16244,7 +16244,7 @@
       "bytes": 2094762,
       "lines": 581,
       "fixtureCommit": "b76bb541e",
-      "webCommit": "worktree",
+      "webCommit": "924c25cd9",
       "cpppjBasis": {
         "cpppj/src/o/RawConnectionCleanup.cpp": "b76bb541e"
       }
@@ -16273,9 +16273,96 @@
       "bytes": 929967,
       "lines": 289,
       "fixtureCommit": "0c50d6684",
-      "webCommit": "worktree",
+      "webCommit": "924c25cd9",
       "cpppjBasis": {
         "cpppj/src/o/RawConnectionRegistration.cpp": "0c50d6684"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E311",
+      "id": "battle-bcast",
+      "path": "cpppj/tests/fixtures/battle-bcast-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: Player9 송신 분배 004e2e30(전체)·004e2e80(제외)의 접속 비트 mask × 연결 표 mask × 로컬 owner × 제외 번호 × 첫 송신 중 상태 변경(로컬 변경·연결 제거·접속 비트 제거)별 후보 송신 순서(originals 10.78 + originalCD 10.72)",
+      "consumers": [
+        "webpj/tests/raw-battle-broadcast.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-battle-broadcast.js"
+      ],
+      "doc": "docs/webpj-battle-broadcast-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBattleBroadcast.cpp"
+      ],
+      "scope": "originals 행 678개(전체 171·제외 507)만 재생: 송신 장치가 받은 packet 객체 동일성과 관측된 owner 순서를 대조. originalCD 행(CD 10.72, Player 폭 0xac)은 웹 범위 밖이라 읽지 않는다",
+      "sha256": "d7da6351dca0e671136a4a81926662815762b2c3466e0d6413d1587b1415d732",
+      "bytes": 38756,
+      "lines": 1357,
+      "fixtureCommit": "3128a7fa9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBattleBroadcast.cpp": "77a0c3a47"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E311",
+      "id": "flyer-command",
+      "path": "cpppj/tests/fixtures/flyer-command-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 훨리기그 명령 packet 0x86 작성(40a890/45c94d/45cc4e)의 SID·명령·seed 입력별 20BYTE 전체와 두 정밀도 열(originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-battle-broadcast.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-battle-broadcast.js"
+      ],
+      "doc": "docs/webpj-battle-broadcast-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBattleBroadcast.cpp"
+      ],
+      "scope": "30행 전부: 24BYTE 버퍼를 seed 로 채운 뒤 작성한 20BYTE 와 두 정밀도 열 비교, 20BYTE 밖 canary 보존(미정 +8/+16 포함)",
+      "sha256": "3eba7e893da3360048848fb3d402d94a66fa4067cddeeb34638131d1b15377b2",
+      "bytes": 2783,
+      "lines": 31,
+      "fixtureCommit": "9c07d58cf",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBattleBroadcast.cpp": "77a0c3a47"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E311",
+      "id": "drop-island-packet",
+      "path": "cpppj/tests/fixtures/drop-island-packet-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 섬 정리 packet 0x35 작성(46e6e7/40a740)의 16.16 좌표 DWORD·flags·owner·seed 입력별 20BYTE 전체와 두 정밀도 열(originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-battle-broadcast.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-battle-broadcast.js"
+      ],
+      "doc": "docs/webpj-battle-broadcast-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBattleBroadcast.cpp"
+      ],
+      "scope": "336행 전부: 좌표는 원문이 관측한 DWORD(wireX/wireY)를 그대로 공급해 20BYTE 전체와 두 정밀도 열을 비교하고 20BYTE 밖 canary 보존을 확인",
+      "sha256": "f53e6551d16c48da70b0bf4878ef951cb293bf9888fcc009fc985d3032094972",
+      "bytes": 42449,
+      "lines": 337,
+      "fixtureCommit": "a726b49fb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBattleBroadcast.cpp": "77a0c3a47"
       }
     },
     {
