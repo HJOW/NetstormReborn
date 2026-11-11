@@ -16389,9 +16389,38 @@
       "bytes": 479994,
       "lines": 1153,
       "fixtureCommit": "30975d754",
-      "webCommit": "worktree",
+      "webCommit": "edadc9703",
       "cpppjBasis": {
         "cpppj/src/o/RawFormPacket.cpp": "b8cadde14"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E314",
+      "id": "mission-client-packets",
+      "path": "cpppj/tests/fixtures/mission-client-packets-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 로그인 서버가 보낸 8종 패킷(0x29 LoginBegin·0x67 Options·0x2b Player·0x2a Fort·0x28 Reply·0x81 SP·0x84 시간·0x6e Ready) 수신의 입력 packet·모드(서버/boss/미션/알려진 Player/변형/호출 도중 변경)별 전체 Player 1620바이트·방향별 동맹 81DWORD·현재 전역 20개·옵션/zone/cache/TYPE 쓰기·SP 9칸·외부 효과 순서(originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-mission-client-packets.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mission-client-packets.js"
+      ],
+      "doc": "docs/webpj-mission-client-packets-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissionClientPackets.cpp"
+      ],
+      "scope": "157행 중 151행을 재생(전체 Player·동맹·전역·저장·SP·효과 대조). Ready 의 boss 서버 경로 6행은 실제 RawMissionLogin.SendReady 본체가 필요해 RawMissionLogin 단위가 마저 재생한다",
+      "sha256": "ebdf5f1d7df41cec6e5187447c969f1b3b4cfae8b475e217fcb2842687ae6361",
+      "bytes": 690149,
+      "lines": 158,
+      "fixtureCommit": "18a384d5c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissionClientPackets.cpp": "eeae45c69"
       }
     },
     {
