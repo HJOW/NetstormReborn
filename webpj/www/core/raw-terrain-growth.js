@@ -347,7 +347,8 @@ export class RawTerrainGrowth {
                 const top = y * CHUNK_SIDE;
                 const cx = left + 4 + (chunk.record[3] & 7);
                 const cy = top + 4 + ((9999 - chunk.record[3]) & 7);
-                const mask = connectionMask(chunk.side);
+                // 청크 항목의 방향은 타입 모델이 글자 문자열, 실제 Builder(RawIslandBuilder)가 BYTE 코드 번호로 쓴다: 둘 다 같은 글자로 읽는다. (2026-11-11 WB04-E303: 정상 지형 월드 연결 시험이 찾음)
+                const mask = connectionMask(typeof chunk.side === 'number' ? String.fromCharCode(chunk.side) : chunk.side);
                 const region = island & 0xff;
                 let added = this.#fill(cx - 1, cy - 1, cx + 3, cy + 3, region);
                 added += this.#fill(mask & 8 ? left : cx, mask & 1 ? top : cy, mask & 2 ? left + 16 : cx + 2, mask & 4 ? top + 16 : cy + 2, region);

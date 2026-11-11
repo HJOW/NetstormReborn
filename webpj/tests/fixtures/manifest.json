@@ -16191,6 +16191,38 @@
       "edition": "10.78",
       "required": false,
       "text": true,
+      "unit": "WB04-E303",
+      "id": "fort-world-load-builder-consumer",
+      "path": "cpppj/tests/fixtures/fortworldload-builder-consumer-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 기존 Fort Builder PlaceAll 의 소비자 입력/출력 한 행(Territory 120BYTE·물리 퍼즐 코드·초기/배치 후 청크 3072BYTE·섬 3204BYTE·Place/Add/Bounds 호출 수·진단 수; originals + originalCD)",
+      "consumers": [
+        "webpj/tests/fort-world-load-binding.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-world-load-binding.js",
+        "webpj/www/core/raw-normal-terrain-world-binding.js"
+      ],
+      "doc": "docs/webpj-fort-world-load-binding-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawFortWorldLoadBinding.cpp",
+        "cpppj/src/client/RawNormalTerrainWorldBinding.cpp"
+      ],
+      "scope": "originals 행만 사용(originalCD 행은 CD 10.72 판이라 웹 목표 밖): 생성 전 입력(Territory·퍼즐 코드·초기 청크/섬)과 정상 지형 상위 직전의 배치 후 청크/섬을 월드 연결 장면의 같은 단계에서 대조",
+      "sha256": "0c45ea192ba5eea755e3c5705a22c67e61dddbae3bf8a10af057bd326fa7d252",
+      "bytes": 53704,
+      "lines": 3,
+      "fixtureCommit": "860030e73",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawFortWorldLoadBinding.cpp": "2d50804c8",
+        "cpppj/src/client/RawNormalTerrainWorldBinding.cpp": "f7f58f5a1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
       "unit": "WB04-E287",
       "id": "campaign-worldload",
       "path": "cpppj/tests/fixtures/campaign-worldload-x86.tsv",
@@ -16413,7 +16445,7 @@
       "bytes": 95975,
       "lines": 485,
       "fixtureCommit": "8abd00ac3",
-      "webCommit": "worktree",
+      "webCommit": "ce816c237",
       "cpppjBasis": {
         "cpppj/src/o/RawRegionPaint.cpp": "bae8b702b"
       }
