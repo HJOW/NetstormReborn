@@ -266,9 +266,10 @@ public sealed class ClientHostGame : Game
                 Serve = port => zonePorts.Add(port),
                 Assertion = zoneAssertions.Add,
             }, 6799u);
-        var crtBox = new UIntBox { Value = 1 };
+        // CRT 상태 상자는 세션이 소유한다. 시드 사슬과 지형 소비자가 같은 상자를 공유한다(0.446).
+        session.TerrainCrt.Value = 1u;
         var modeBox = new UIntBox { Value = 0 };
-        var seed = new RawGameRandomSeed(session.Game, crtBox, modeBox, () => _clock.UnixSeconds);
+        var seed = new RawGameRandomSeed(session.Game, session.TerrainCrt, modeBox, () => _clock.UnixSeconds);
         session.BindSpReseed(() => seed.Reseed());
         session.StartPlayerSp(players);
         session.PrepareAiSettings(players, key => script.Get(key));
