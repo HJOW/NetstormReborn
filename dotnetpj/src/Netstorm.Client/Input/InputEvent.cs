@@ -89,6 +89,23 @@ public sealed class InputQueue
         if (_write == _read) _write = (_write + Capacity - 1) % Capacity;
     }
 
+    /// <summary>단일 확정 본문을 원자적으로 넣는다. 공간이 부족하면 기존 큐와 새 본문을 모두 보존하고 거짓이다.</summary>
+    /// <param name="events">한 번에 넣을 사건들이다.</param>
+    /// <returns>모두 넣으면 참이다.</returns>
+    /// <remarks>2026-11-11 0.349에서 cpppj HEAD(K1 한국어 확정 본문)를 반영했다.</remarks>
+    public bool TryPushBatch(ReadOnlySpan<InputEvent> events)
+    {
+        // 단일 확정 본문의 일부만 들어가거나 네 바이트 토큰이 잘리는 상태를 만들지 않는다.
+        if (events.Length > FreeSlots()) return false;
+        foreach (InputEvent item in events) Push(item.Code, item.X, item.Y);
+        return true;
+    }
+
+    /// <summary>원문 39사건 중 현재 비어 있는 칸 수다. 일반 Push의 버림 정책은 바꾸지 않는다.</summary>
+    /// <returns>쓸 수 있는 칸 수다.</returns>
+    /// <remarks>2026-11-11 0.349에서 cpppj HEAD를 반영했다. 읽기/쓰기 위치가 감기는 경우에도 한 칸을 항상 비워 둔다.</remarks>
+    public int FreeSlots() => (_read + Capacity - _write - 1) % Capacity;
+
     /// <summary>명령 사건을 넣는다(원본 FUN_00452fe0). 코드는 0x0100ffff만 남기고 명령 표시를 붙인다.</summary>
     /// <param name="code">명령 코드.</param>
     /// <param name="x">X 좌표.</param>

@@ -118,8 +118,8 @@ cpppj/src/client/HtmlWindowMetadata.h	Netstorm.Client/Gump/HtmlWindowMetadata.cs
 cpppj/src/client/ImageGump.cpp	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
 cpppj/src/client/ImageGump.h	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
 cpppj/src/client/InputEvent.cpp	Netstorm.Client/Host/HostInputMapper.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
-cpppj/src/client/InputEvent.cpp	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
-cpppj/src/client/InputEvent.h	Netstorm.Client/Input/InputEvent.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
+cpppj/src/client/InputEvent.cpp	Netstorm.Client/Input/InputEvent.cs	af7e11ff1dfb2feb4a84a55ac911dbd690c3c942	port
+cpppj/src/client/InputEvent.h	Netstorm.Client/Input/InputEvent.cs	af7e11ff1dfb2feb4a84a55ac911dbd690c3c942	port
 cpppj/src/client/Markup.cpp	Netstorm.Client/Gump/Markup.cs	b9be2a82a0f9f3848689ddcf9e1b05d0331be1a8	port
 cpppj/src/client/Markup.h	Netstorm.Client/Gump/Markup.cs	b9be2a82a0f9f3848689ddcf9e1b05d0331be1a8	port
 cpppj/src/client/MenuGump.cpp	Netstorm.Client/Gump/MenuGump.cs	6c0a1865fb3520c43b23e9d57a1625bb8baee98e	L1
@@ -139,9 +139,9 @@ cpppj/src/client/MetaImageGump.h	Netstorm.Client/Gump/MetaImageGump.cs	8eece422b
 cpppj/src/client/MetaImageList.cpp	Netstorm.Client/Gump/MetaImageList.cs	27075f9bdaca0aa2738e5fadba335d92e7c4e99c	L1
 cpppj/src/client/MetaImageList.h	Netstorm.Client/Gump/MetaImageList.cs	27075f9bdaca0aa2738e5fadba335d92e7c4e99c	L1
 cpppj/src/client/Mission.cpp	Netstorm.Client/Mission/GuideMissionScriptLifetime.cs	f3735ed3fe9cd72dd1321ad7094dd0fdc1627708	port
-cpppj/src/client/Mission.cpp	Netstorm.Client/Mission/MissionScript.cs	8db90513e0a5cb2bca376cd61a6c5aa5670c8f10	port
+cpppj/src/client/Mission.cpp	Netstorm.Client/Mission/MissionScript.cs	af7e11ff1dfb2feb4a84a55ac911dbd690c3c942	port
 cpppj/src/client/Mission.h	Netstorm.Client/Mission/GuideMissionScriptLifetime.cs	f3735ed3fe9cd72dd1321ad7094dd0fdc1627708	port
-cpppj/src/client/Mission.h	Netstorm.Client/Mission/MissionScript.cs	8db90513e0a5cb2bca376cd61a6c5aa5670c8f10	port
+cpppj/src/client/Mission.h	Netstorm.Client/Mission/MissionScript.cs	af7e11ff1dfb2feb4a84a55ac911dbd690c3c942	port
 cpppj/src/client/MissionFortRequest.cpp	Netstorm.Client/Mission/MissionFortRequest.cs	604e34521d969fe0a0dc55fceebba34f37979fd7	port
 cpppj/src/client/MissionFortSource.h	Netstorm.Client/Mission/MissionFortSource.cs	8db90513e0a5cb2bca376cd61a6c5aa5670c8f10	port
 cpppj/src/client/MissionGuideInput.cpp	Netstorm.Client/Mission/MissionGuideInput.cs	def7d68a5afaa14543d90fe634b23224b8bc11d5	port
@@ -172,8 +172,8 @@ cpppj/src/client/QuickHelpHtml.cpp	Netstorm.Client/Gump/QuickHelpHtml.cs	c58ddc1
 cpppj/src/client/QuickHelpHtml.h	Netstorm.Client/Gump/QuickHelpHtml.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	L1
 cpppj/src/client/QuickHelpRequest.cpp	Netstorm.Client/Gump/QuickHelpRequest.cs	2aef224eb823c7fe91c431edd11f35b5e0ae0697	L1
 cpppj/src/client/QuickHelpRequest.h	Netstorm.Client/Gump/QuickHelpRequest.cs	2aef224eb823c7fe91c431edd11f35b5e0ae0697	L1
-cpppj/src/client/QuickHelpWindow.cpp	Netstorm.Client/Gump/QuickHelpWindow.cs	c6b19afd39c66da4129bb6f06eb0fd305b1e0777	L1
-cpppj/src/client/QuickHelpWindow.h	Netstorm.Client/Gump/QuickHelpWindow.cs	c6b19afd39c66da4129bb6f06eb0fd305b1e0777	L1
+cpppj/src/client/QuickHelpWindow.cpp	Netstorm.Client/Gump/QuickHelpWindow.cs	af7e11ff1dfb2feb4a84a55ac911dbd690c3c942	L1
+cpppj/src/client/QuickHelpWindow.h	Netstorm.Client/Gump/QuickHelpWindow.cs	af7e11ff1dfb2feb4a84a55ac911dbd690c3c942	L1
 cpppj/src/client/RawBackgroundGifControls.cpp	Netstorm.Client/Gump/BackgroundGifStorage.cs	a168082548e090f2f191e4b83106e7351fbc00ba	port
 cpppj/src/client/RawChatChannels.cpp	Netstorm.Client/Chat/RawChatChannels.cs	65bc3e0c7019fd3a9265703f30daac9b8fbab373	L1
 cpppj/src/client/RawChatChannels.h	Netstorm.Client/Chat/RawChatChannels.cs	65bc3e0c7019fd3a9265703f30daac9b8fbab373	L1

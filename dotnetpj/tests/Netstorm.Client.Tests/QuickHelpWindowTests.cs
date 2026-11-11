@@ -58,4 +58,15 @@ public sealed class QuickHelpWindowTests
     {
         var s = new QuickHelpWindowFixtureScene(); s.Hooks.Config = _ => new string('x', 256); s.Hooks.Load = _ => throw new InvalidOperationException("파일명 거부 뒤 적재 금지"); Assert.Throws<ArgumentException>(() => Construct(s, "[0,0,1,1065353216]")); Assert.NotEqual(0U, s.Node.BackButton); Assert.Equal(0U, s.State.Id); Assert.Equal(0x2000095U, s.Popup.Command); Assert.Equal("mission", s.Popup.Argument()); var longBody = new QuickHelpWindowFixtureScene(); longBody.Hooks.Render = (_, _, _, _, _) => { longBody.BodyNode.Body[0] = 0; }; longBody.Hooks.Substitute = _ => new string('x', HtmlBodyGumpNode.Capacity); bool displayed = false; longBody.Hooks.BodyText = (_, _) => displayed = true; Assert.Throws<ArgumentException>(() => longBody.Help.Show(QuickHelpWindowFixtureScene.Window, 0, "introHelp")); Assert.False(displayed); Assert.Equal(0U, longBody.State.InfoMode);
     }
+
+    /// <summary>언어 전환 무효화는 성공 본문 캐시만 반납한다.</summary>
+    /// <remarks>2026-11-11 0.349에서 K1 캐시 무효화 재대조와 함께 추가했다.</remarks>
+    [Fact]
+    public void InvalidateCacheReleasesOnlyHelpData()
+    {
+        var s = new QuickHelpWindowFixtureScene();
+        s.State.HelpData = "cached\n";
+        s.Help.InvalidateCache();
+        Assert.Null(s.State.HelpData);
+    }
 }

@@ -70,9 +70,20 @@ public sealed class MissionScript : IDisposable
         }
     }
 
-    /// <summary>원본처럼 `mission.??`로 조회한다. 스크립트를 찾지 못했으면 찾지 못한다.</summary>
+    /// <summary>원본처럼 `mission.??`로 조회한다. 스크립트를 찾지 못했으면 찾지 못한다. 표시 제목만 현재 언어를 읽는다.</summary>
     /// <param name="key">찾을 키.</param>
-    public string? Get(string key) => _script.Get(MissionPrefix + key);
+    /// <remarks>2026-11-11 0.349에서 cpppj HEAD(K1 표시 분리)를 반영했다. 인공지능·SP 등 실행 키는 기존 객체를 유지한다.</remarks>
+    public string? Get(string key)
+    {
+        // 표시 제목만 현재 언어를 읽고 실행 키는 기존 객체를 유지한다
+        if (key == "title")
+        {
+            using Config? display = LocalizedDisplayScript();
+            string? title = display?.Get("title");
+            if (title != null) return title;
+        }
+        return _script.Get(MissionPrefix + key);
+    }
 
     /// <summary>미션 이름(스크립트 파일 이름).</summary>
     public string Name => _name;
@@ -150,9 +161,44 @@ public sealed class MissionScript : IDisposable
     /// <summary>`mission.missionType`: 원본은 빈 문자열로 등록한 미션 종류를 찾아 객체를 만든다.</summary>
     public string MissionType() => Get("missionType") ?? "";
 
-    /// <summary>미션 파일의 원본 브리핑 본문을 설정 치환 없이 찾는다.</summary>
+    /// <summary>미션 파일의 원본 브리핑 본문을 설정 치환 없이 찾는다. 명시 CustomMaps reader도 그대로 사용하고 부재는 기존 본문으로 돌아간다.</summary>
     /// <param name="name">섹션 이름.</param>
-    public string? Section(string name) => _script.Section(name);
+    /// <remarks>2026-11-11 0.349에서 cpppj HEAD(K1 표시 분리)를 반영했다.</remarks>
+    public string? Section(string name)
+    {
+        using Config? display = LocalizedDisplayScript();
+        string? body = display?.Section(name);
+        if (body != null) return body;
+        return _script.Section(name);
+    }
+
+    /// <summary>표시 언어가 바뀌어도 현재 월드의 실행 대본을 교체하지 않는다. 언어 파일 경로가 바뀐 경우만 동일 source로 익명 임시 Config를 읽는다. 실행 인공지능·SP·상태와 원문 키는 수정하지 않는다.</summary>
+    /// <returns>표시용 임시 스크립트. 같은 파일이면 null이다.</returns>
+    /// <remarks>2026-11-11 0.349에서 cpppj HEAD(`LocalizedDisplayScript`)를 반영했다. 익명 객체라 현재 mission의 등록 이름·우선권을 덮지 않는다.</remarks>
+    private Config? LocalizedDisplayScript()
+    {
+        string path = _configuration.PathSpec("missionSpec", _name);
+        // 같은 파일은 기존 캐시·원문 조회만 사용한다
+        if (path.Length == 0 || path == _scriptPath) return null;
+        var display = new Config(_configuration.Registry);
+        if (_explicitSource)
+        {
+            byte[]? bytes = _source?.Invoke(path);
+            if (bytes != null) display.LoadBytes(bytes);
+        }
+        else
+        {
+            // 명시 작업 source의 부재를 공식 번들로 우회하지 않는다
+            byte[]? bytes = _configuration.Reader?.Invoke(path);
+            if (bytes != null) display.LoadBytes(bytes);
+        }
+        if (!display.IsValid())
+        {
+            display.Dispose();
+            return null;
+        }
+        return display;
+    }
 
     /// <summary>현재 미션 Config에 00440640(접두부)으로 실행한다. Start의 tellAtList 작성과 같은 객체를 쓴다.</summary>
     /// <param name="prefix">섹션 이름 접두부.</param>

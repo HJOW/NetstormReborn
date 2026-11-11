@@ -158,6 +158,9 @@ public sealed class QuickHelpWindow
         if (Node(token).LearnType != 0) { uint cancel = Allocate(0x170); string cancelLabel = Require(_hooks.Translate)("Cancel"); Require(_hooks.ConstructButton)(cancel, 0, 0, CText(cancelLabel), _state.ButtonUnused, 0); Node(token).CancelButton = cancel; Require(_hooks.FitButton)(Node(token).CancelButton); Require(_hooks.Attach)(Node(token).CancelButton, 0, 0, token, 0); }
         Node(token).Command = unchecked((uint)_state.Kind); if (_state.HelpData is null) { string name = CText(Require(_hooks.Config)("Quick Help Spec")); if (name.Length >= 256) throw new ArgumentException("Quick Help 원본 파일명 버퍼 초과"); string? data = Require(_hooks.Load)(name); if (data is not null) _state.HelpData = data + '\n'; else Require(_hooks.LoadError)(name); } _state.Id = Node(token).Serial; Width(token, 450); Height(token, 350); Node(token).Flags |= 0x800; Node(token).Picture = 0; return token;
     }
+    /// <summary>언어 전환 뒤 성공 본문을 반납하고 다음 생성에서 같은 파일/해독 경계를 다시 사용한다.</summary>
+    /// <remarks>2026-11-11 0.349에서 cpppj HEAD(K1 언어 전환)를 반영했다. 캐시 외 원문 전역/이력/스크립트/현재 실행 대본은 변경하지 않는다.</remarks>
+    public void InvalidateCache() => _state.HelpData = null;
     /// <summary>그림/본문 표시/이전 정보 pane을 지연 반납하고 실제 새 정보 pane을 만든다.</summary>
     public void Reset(uint token) { if (Node(token).Picture != 0) { Require(_hooks.Kill)(Node(token).Picture); Node(token).Picture = 0; } Require(_hooks.ClearBody)(Node(token).Body); if (Node(token).Information != 0) Require(_hooks.Kill)(Node(token).Information); uint pane = Allocate(0xd8); Require(_hooks.ConstructInformation)(pane, 0, 0, 5, _state.Color); Node(token).Information = pane; Require(_hooks.Attach)(Node(token).Information, 0, 0, token, 0); }
     /// <summary>그림→버튼→본문 질감/안쪽 배경→HTML 부모→현재 정보 pane 순서로 재배치한다.</summary>

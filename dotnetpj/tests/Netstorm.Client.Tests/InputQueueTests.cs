@@ -63,4 +63,23 @@ public sealed class InputQueueTests
         queue.PushCommand(0xffffffffu, 7, 8);
         Assert.Equal(new InputEvent(0x0100ffffu | InputCode.Command, 7, 8), queue.Pop(false));
     }
+
+    /// <summary>확정 본문은 빈 칸 안에서 원자적으로 넣고, 부족하면 기존 큐와 새 본문을 모두 보존한다.</summary>
+    /// <remarks>2026-11-11 0.349에서 K1 확정 본문 재대조와 함께 추가했다.</remarks>
+    [Fact]
+    public void TryPushBatchKeepsAtomicity()
+    {
+        var queue = new InputQueue();
+        Assert.Equal(InputQueue.Capacity - 1, queue.FreeSlots());
+        InputEvent[] batch = [new(InputCode.LeftButton, 1, 2), new(InputCode.RightButton, 3, 4)];
+        Assert.True(queue.TryPushBatch(batch));
+        Assert.Equal(InputQueue.Capacity - 3, queue.FreeSlots());
+        Assert.Equal(batch[0], queue.Pop(false));
+        Assert.Equal(batch[1], queue.Pop(false));
+        // 공간이 부족하면 아무것도 넣지 않는다
+        for (uint i = 0; i < InputQueue.Capacity - 1; i++) queue.Push(i, 0, 0);
+        Assert.Equal(0, queue.FreeSlots());
+        Assert.False(queue.TryPushBatch(batch));
+        Assert.Equal(0u, queue.Pop(false).Code);
+    }
 }
