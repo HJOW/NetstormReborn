@@ -15962,24 +15962,28 @@
       "path": "cpppj/tests/fixtures/fort-image-packets-x86.tsv",
       "producer": "cpppj 독립 PE 관측: Fort 이미지 저장(I 116)·sendFort 예약/선언/전송(S 93)·관찰자(F 10) 전체 BYTE와 외부 읽기 순서",
       "consumers": [
-        "webpj/tests/fort-image.test.mjs"
+        "webpj/tests/fort-image.test.mjs",
+        "webpj/tests/raw-mission-login-packets.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-fort-image.js"
+        "webpj/www/core/raw-fort-image.js",
+        "webpj/www/core/raw-mission-login-packets.js"
       ],
       "doc": "docs/webpj-fort-image-20261110.md",
       "cpppjSources": [
-        "cpppj/src/o/RawFortImage.cpp"
+        "cpppj/src/o/RawFortImage.cpp",
+        "cpppj/src/o/RawMissionLoginPackets.cpp"
       ],
-      "scope": "219행 중 이미지 행 I 116개만 사용(S·F는 4-C RawMissionLoginPackets)",
+      "scope": "219행: 이미지 행 I 116개는 fort-image.test.mjs(E277), sendFort 행 S 93개와 길이 observer 행 F 10개는 raw-mission-login-packets.test.mjs(E317)가 재생 — 예약(image+20) 전체 BYTE·observer 전후·최종 wire·외부 읽기 순서 대조",
       "text": true,
       "sha256": "49abe4d0f80a4a5c4293ae8d59580ae6e4f34feff69ea140594290bf2bf88d8a",
       "bytes": 856750,
       "lines": 220,
       "fixtureCommit": "05d7cb57d",
-      "webCommit": "86f78e0d6",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawFortImage.cpp": "10c78952c"
+        "cpppj/src/o/RawFortImage.cpp": "10c78952c",
+        "cpppj/src/o/RawMissionLoginPackets.cpp": "ede61f05d"
       }
     },
     {
@@ -16476,7 +16480,7 @@
       "bytes": 35353,
       "lines": 165,
       "fixtureCommit": "05d7cb57d",
-      "webCommit": "worktree",
+      "webCommit": "d9bc213ea",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionSettingsPacket.cpp": "ae0e58b3a"
       }
