@@ -216,7 +216,7 @@ public sealed class TerrainStampTests
             string rawText = raw.Length == 0 ? "-" : raw.ToString();
             string mapping = $"{scene.Mapping['x']},{scene.Mapping['X']},{scene.Mapping['=']}";
             Assert.Equal(uint.Parse(row[3], CultureInfo.InvariantCulture), result);
-            Assert.Equal(uint.Parse(row[4], CultureInfo.InvariantCulture), scene.Random.State);
+            Assert.Equal(uint.Parse(row[4], CultureInfo.InvariantCulture), scene.Random.State());
             Assert.Equal(uint.Parse(row[5], CultureInfo.InvariantCulture), scene.CrtState);
             Assert.Equal(row[6], cache);
             Assert.Equal(row[7], effects);
@@ -261,7 +261,7 @@ public sealed class TerrainStampTests
         public TerrainStampState State { get; private set; } = new();
 
         // 실제 코드/fringe 후보가 소비하는 난수기 프로퍼티다. 2026-11-07 R4 지형·섬 생성 1차 이식에서 추가됐다.
-        public NetstormRandom Random { get; } = new();
+        public GameRandom Random { get; } = new();
 
         // 캐시 생성의 독립 CRT holdrand 상태 프로퍼티다. 2026-11-07 R4 지형·섬 생성 1차 이식에서 추가됐다.
         public uint CrtState { get; set; }

@@ -1,7 +1,5 @@
 // 초기 지형과 지역 재도장이 사용하는 원본 후보 선택(0049aa90)을 하나의 몸체로 공유한다(cpppj o/RawFrameChoose.h/.cpp).
 // 2026-11-07 R4 지형·섬 생성 및 인구/배치 1차에서 이식했다.
-using Netstorm.Core.Simulation;
-
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -23,7 +21,7 @@ public static class RawFrameChoose
         RiftTypeFrames frames,
         RiftFrameCode code,
         int theme,
-        NetstormRandom random)
+        GameRandom random)
     {
         ArgumentNullException.ThrowIfNull(frames);
         ArgumentNullException.ThrowIfNull(random);
@@ -63,7 +61,7 @@ public static class RawFrameChoose
         }
         if (theme == -1)
         {
-            return candidates[random.Next(candidates.Count)];
+            return candidates[unchecked((int)random.Next((uint)candidates.Count))];
         }
         int quarter = candidates.Count / 4;
         int low = quarter * theme + 1;
@@ -73,9 +71,9 @@ public static class RawFrameChoose
         // 2026-11-11 0.345에서 cpppj HEAD의 NB23 교정을 반영했다.
         if (high <= low)
         {
-            return candidates[random.Next(candidates.Count)];
+            return candidates[unchecked((int)random.Next((uint)candidates.Count))];
         }
-        int index = low + random.Next(high - low);
+        int index = low + unchecked((int)random.Next((uint)(high - low)));
         if (index < 0 || index >= candidates.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(theme), "지역 프레임 후보 범위 오류");

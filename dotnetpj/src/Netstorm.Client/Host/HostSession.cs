@@ -64,14 +64,12 @@ public sealed class HostSession
     /// <summary>세션이 소유한 동맹 81 DWORD다. Start 순서에서 같은 버퍼를 쓴다.</summary>
     public uint[] Alliances { get; } = new uint[AllianceDwords];
 
-    /// <summary>SP 저장소가 쓰는 전역 난수다. Start 순서에서 실제 난수에 연결한다.</summary>
-    private readonly NetstormRandom _spRandom = new();
-
     /// <summary>SP 초기화의 재시드 공급이다. 없으면 시작 SP 지정이 거부된다.</summary>
     /// <remarks>2026-11-12 0.395에서 StartPlayerSp 연결로 추가했다. 실제 공급(RawGameRandomSeed 사슬)은 미션 시작 흐름에서 잇는다.</remarks>
     private Func<uint>? _spReseed;
 
-    /// <summary>세션이 소유한 분산 SP 저장소다. 초기화 전에는 덤프에 대시를 쓴다.</summary>
+    /// <summary>세션이 소유한 분산 SP 저장소다. 초기화 전에는 덤프에 대시를 쓴다. 원본처럼 게임 공유 난수를 쓴다.</summary>
+    /// <remarks>2026-11-12 0.457에서 단일 공유 스트림으로 바꿨다(근거 cpppj RawCampaignSession.cpp 498행, 995행).</remarks>
     public RawSpStore Sp { get; }
 
     /// <summary>세션이 소유한 Graph 표다. 월드 적재의 ResetTable로 초기화한다.</summary>
@@ -112,7 +110,7 @@ public sealed class HostSession
         Game = game;
         Crt = crt;
         Pool = new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity);
-        Sp = new RawSpStore(_spRandom, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
+        Sp = new RawSpStore(Game, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
     }
 
     /// <summary>SP 초기화의 재시드 공급을 연결한다. 미션 시작 흐름에서 실제 사슬로 잇는다.</summary>
@@ -561,10 +559,6 @@ public sealed class HostSession
     /// <summary>세션이 소유한 지형 생성 입력 묶음이다. 바인딩 때 군집과 상자를 공유한다.</summary>
     /// <remarks>2026-11-12 0.444에서 지형 상태 저장소로 추가했다. 입력 값 연결과 바인딩은 생성 단위에서 잇는다.</remarks>
     public TerrainGenerationInputs GenerationInputs { get; } = new();
-
-    /// <summary>세션이 소유한 지형 생성 전용 게임 난수다. SP·호스트 스트림과 분리한다.</summary>
-    /// <remarks>2026-11-12 0.447에서 난수 상태 저장소로 추가했다. 시드값은 live 단위에서 reseed 사슬과 함께 확정한다.</remarks>
-    public Netstorm.Core.Simulation.NetstormRandom TerrainRandom { get; } = new();
 
     /// <summary>세션이 소유한 지형 생성 전용 CRT 상태 상자다. 시드 사슬과 지형 소비자가 공유한다.</summary>
     /// <remarks>2026-11-12 0.447에서 난수 상태 저장소로 추가했다. StartMission의 지역 상자를 여기로 승격한다.</remarks>

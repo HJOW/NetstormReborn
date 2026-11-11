@@ -36,7 +36,7 @@ public sealed class RawFrameChooseTests
         RiftTypeFrames frames = Frames(5);
         var code = new RiftFrameCode((byte)'A', (byte)'P', 0, 0);
         // 후보 5개면 quarter=1이라 모든 theme의 분위 범위가 빈다
-        int picked = RawFrameChoose.ChooseTerrainFrame(frames, code, theme, new NetstormRandom(1));
+        int picked = RawFrameChoose.ChooseTerrainFrame(frames, code, theme, new GameRandom(1));
         Assert.InRange(picked, 0, 4);
     }
 
@@ -47,7 +47,7 @@ public sealed class RawFrameChooseTests
         RiftTypeFrames frames = Frames(1);
         var code = new RiftFrameCode((byte)'A', (byte)'P', 0, 0);
         // quarter=0이라 low=1·high=0으로 범위가 빈다
-        Assert.Equal(0, RawFrameChoose.ChooseTerrainFrame(frames, code, 0, new NetstormRandom(1)));
+        Assert.Equal(0, RawFrameChoose.ChooseTerrainFrame(frames, code, 0, new GameRandom(1)));
     }
 
     /// <summary>정상 분위 범위는 기존처럼 해당 구간에서만 고른다.</summary>
@@ -57,7 +57,7 @@ public sealed class RawFrameChooseTests
         RiftTypeFrames frames = Frames(12);
         var code = new RiftFrameCode((byte)'A', (byte)'P', 0, 0);
         // 후보 12개·theme=1이면 low=4·high=6이다
-        int picked = RawFrameChoose.ChooseTerrainFrame(frames, code, 1, new NetstormRandom(1));
+        int picked = RawFrameChoose.ChooseTerrainFrame(frames, code, 1, new GameRandom(1));
         Assert.True(picked is 4 or 5, $"기대 구간 4..5, 실제 {picked}");
     }
 
@@ -67,7 +67,7 @@ public sealed class RawFrameChooseTests
     {
         RiftTypeFrames frames = Frames(5);
         var code = new RiftFrameCode((byte)'A', (byte)'P', 0, 0);
-        int picked = RawFrameChoose.ChooseTerrainFrame(frames, code, -1, new NetstormRandom(1));
+        int picked = RawFrameChoose.ChooseTerrainFrame(frames, code, -1, new GameRandom(1));
         Assert.InRange(picked, 0, 4);
     }
 }

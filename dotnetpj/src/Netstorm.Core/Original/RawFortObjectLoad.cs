@@ -232,8 +232,8 @@ public sealed class RawFortObjectLoad
     /// <summary>타입별 프레임 자료다.</summary>
     private readonly IReadOnlyList<RiftTypeFrames> _frames;
 
-    /// <summary>원본 FUN_004558c0 난수다. 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit으로 나눈 나머지를 둔다.</summary>
-    private readonly NetstormRandom _random;
+    /// <summary>원본 FUN_004558c0 난수다. 상태 0이면 0x0bad0bad로 바꾼 뒤 상태*0x10003+3의 상위 16비트를 limit으로 나눈 나머지를 둔다. 2026-11-12 0.457에서 단일 공유 스트림으로 바꿨다(근거 cpppj RawCampaignSession.cpp 498행).</summary>
+    private readonly GameRandom _random;
 
     /// <summary>객체·내용물 로더가 각 분기에서 공유하는 원본 작업 영역이다. 미션 기본 소유자는 Load의 Template 칸으로 전달한다.</summary>
     private readonly FortObjectLoadState _state;
@@ -252,7 +252,7 @@ public sealed class RawFortObjectLoad
     /// <param name="state">공유 작업 영역이다. 호출자가 소유한다.</param>
     /// <param name="hooks">하위 몸체와 실제 저장소·표시다.</param>
     /// <exception cref="ArgumentException">Fort 로더의 기본·자료·실제 효과 연결 오류다.</exception>
-    public RawFortObjectLoad(RawSidPool pool, RawSquidHash hash, IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames, NetstormRandom random, FortObjectLoadState state, FortObjectLoadHooks hooks)
+    public RawFortObjectLoad(RawSidPool pool, RawSquidHash hash, IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames, GameRandom random, FortObjectLoadState state, FortObjectLoadHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(hash);
@@ -461,7 +461,7 @@ public sealed class RawFortObjectLoad
                 }
             }
         }
-        return count == 0 ? -1 : candidates[_random.Next(count)];
+        return count == 0 ? -1 : candidates[unchecked((int)_random.Next((uint)count))];
     }
 
     /// <summary>

@@ -68,7 +68,7 @@ public sealed class X86RawPriestPanicTests
                 .Select(_ => new DudeNoticeTypeData()).ToArray();
             speeds[158].Speed = BitConverter.UInt32BitsToSingle(c[3]);
             speeds[159].Speed = 2.5f;
-            var random = new NetstormRandom(c[7]);
+            var random = new GameRandom(c[7]);
             uint lands = 0;
             uint regions = 0;
             uint randoms = 0;
@@ -152,7 +152,7 @@ public sealed class X86RawPriestPanicTests
                     SpPut(pool.RawSlot(50), 14, BitConverter.SingleToUInt32Bits(71.25f));
                     SpPut(pool.RawSlot(50), 18, BitConverter.SingleToUInt32Bits(72.5f));
                 }
-                return (double)random.Next(65536) / 65536.0 * Math.Abs((double)high - low) + low;
+                return (double)random.Next(65536u) / 65536.0 * Math.Abs((double)high - low) + low;
             };
             hooks.Point = (sid, x, y) =>
             {
@@ -168,7 +168,7 @@ public sealed class X86RawPriestPanicTests
             Assert.Equal(row[1], effects);
             Assert.Equal(row[2], SpHex(pool.Slot(50)) + SpHex(pool.Slot(60)));
             Assert.Equal(row[3], speedBits);
-            Assert.Equal(X86Fixture.UInt(row[4]), random.State);
+            Assert.Equal(X86Fixture.UInt(row[4]), random.State());
             count++;
             return true;
         });

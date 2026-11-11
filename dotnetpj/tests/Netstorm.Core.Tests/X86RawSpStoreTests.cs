@@ -49,7 +49,7 @@ public sealed class X86RawSpStoreTests
             Assert.Equal(4, row.Length);
             uint seed = X86Fixture.UInt(row[0]);
             uint fill = X86Fixture.UInt(row[1]);
-            var rng = new NetstormRandom(0);
+            var rng = new GameRandom(0);
             var store = new RawSpStore(rng, () => seed, fill);
             int tracking = -999;
             store.BindTrackingOffset(value => tracking = value);
@@ -81,7 +81,7 @@ public sealed class X86RawSpStoreTests
                 string[] values = halves[0].Split(',');
                 Assert.Equal(X86Fixture.UInt(values[0]), store.Offset);
                 Assert.Equal(X86Fixture.Int(values[1]), tracking);
-                Assert.Equal(X86Fixture.UInt(values[2]), rng.State);
+                Assert.Equal(X86Fixture.UInt(values[2]), rng.State());
                 Assert.Equal(2304, halves[1].Length);
                 Assert.Equal(halves[1], Dump(store.Pools));
                 Assert.True(store.Initialized);
@@ -104,7 +104,7 @@ public sealed class X86RawSpStoreTests
     [Fact]
     public void SpStoreContracts()
     {
-        var rng = new NetstormRandom(123);
+        var rng = new GameRandom(123);
         var missing = new RawSpStore(rng, null);
         Assert.False(missing.Initialized);
         Assert.Throws<InvalidOperationException>(() => missing.Get(0));
@@ -128,7 +128,7 @@ public sealed class X86RawSpStoreTests
     [Fact]
     public void SpStoreRoundtripAndRotateKeepsValues()
     {
-        var rng = new NetstormRandom(123);
+        var rng = new GameRandom(123);
         var store = new RawSpStore(rng, () => 0x12345678u, 0);
         for (uint owner = 0; owner < RawSpStore.Owners; owner++)
         {
@@ -180,7 +180,7 @@ public sealed class X86RawSpStoreTests
             uint allocations = 0;
             int tracking = 0;
             bool stopped = false;
-            var rng = new NetstormRandom(0);
+            var rng = new GameRandom(0);
             // 원본 operator_new 에 주던 같은 36바이트 명시 입력을 행마다 만든다
             var store = new RawSpStore(rng, () => seed, (Span<byte> bytes) =>
             {
@@ -213,7 +213,7 @@ public sealed class X86RawSpStoreTests
             Assert.Equal(X86Fixture.UInt(row[6]) != 0, store.Initialized);
             Assert.Equal(X86Fixture.UInt(row[7]), store.Offset);
             Assert.Equal(X86Fixture.UInt(row[8]), unchecked((uint)tracking));
-            Assert.Equal(X86Fixture.UInt(row[9]), rng.State);
+            Assert.Equal(X86Fixture.UInt(row[9]), rng.State());
             Assert.Equal(X86Fixture.UInt(row[10]) != 0, store.FirstPool);
             Assert.Equal(2304, row[11].Length);
             Assert.Equal(row[11], Dump(store.Pools));

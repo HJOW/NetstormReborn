@@ -369,7 +369,7 @@ public sealed class ClientHostGame : Game
                 {
                     worldOrder.Add($"generate:{region}");
                     // 실제 지형 생성 라이브 연결. 공간 Pop·군집 배치는 다음 단위다.
-                    terrainBinding.GenerateOriginal(state.Owner, state.Bounds, region, session.TerrainRandom, session.TerrainCrt, session.BuildTerrainStampHooks(types.Types), (_, _, _) => { });
+                    terrainBinding.GenerateOriginal(state.Owner, state.Bounds, region, session.Game, session.TerrainCrt, session.BuildTerrainStampHooks(types.Types), (_, _, _) => { });
                 },
                 CurrentTemplate = slot =>
                 {

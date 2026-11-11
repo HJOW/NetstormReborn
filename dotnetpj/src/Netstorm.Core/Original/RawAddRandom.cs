@@ -1,5 +1,3 @@
-using Netstorm.Core.Simulation;
-
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -19,7 +17,7 @@ public sealed class AddRandomHooks
     public Func<uint, int, int>? Island { get; set; }
 
     /// <summary>0040ded0의 지역 난수·사각형·지역·수량·타입·강제다.</summary>
-    public Func<NetstormRandom, FortRandomRectangle, int, uint, uint, uint, uint>? Place { get; set; }
+    public Func<GameRandom, FortRandomRectangle, int, uint, uint, uint, uint>? Place { get; set; }
 }
 
 /// <summary>
@@ -43,7 +41,7 @@ public static class RawAddRandom
     public static uint AddRandomObjects(uint type, uint quantity, AddRandomHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(hooks);
-        NetstormRandom random = new(RawFortFinishOwner.TimeSeed(Need(hooks.WallSeconds)()));
+        GameRandom random = new(RawFortFinishOwner.TimeSeed(Need(hooks.WallSeconds)()));
         ChunkRect chunk = ChunkMap.DefaultChunkRect();
         FortRandomRectangle rectangle = new(chunk.Left * 16f, chunk.Top * 16f, chunk.Right * 16f, chunk.Bottom * 16f);
         uint owner = Need(hooks.Local)();

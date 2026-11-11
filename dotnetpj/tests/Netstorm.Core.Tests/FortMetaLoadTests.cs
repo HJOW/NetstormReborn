@@ -507,7 +507,7 @@ public sealed class FortMetaLoadTests
             {
                 NotifySurface = _ => throw new InvalidOperationException("선택 Technology 대비 의미복원 경계 호출"),
             }));
-            NetstormRandom random = new(12345);
+            GameRandom random = new(12345);
             FortObjectLoadState objectState = new();
             RawFortObjectLoad objects = new(pool, hash, types, frames, random, objectState, ContentsOnly(contained));
             FortTemplate fort = new();
@@ -570,7 +570,7 @@ public sealed class FortMetaLoadTests
             Assert.Equal(111u, ReadU16(pool.Slot(children[1]), 18));
             Assert.Equal(9u, ReadU16(pool.Slot(children[0]), 12));
             Assert.Equal(65534u, ReadU16(pool.Slot(children[1]), 12));
-            Assert.Equal(12345u, random.State);
+            Assert.Equal(12345u, random.State());
             Assert.Equal(children[0], (int)ReadU16(pool.Slot(parent), 6));
             Assert.Equal(children[1], (int)ReadU16(pool.Slot(children[0]), 4));
             RawSidPool foreign = new(24000, false, null, edition);

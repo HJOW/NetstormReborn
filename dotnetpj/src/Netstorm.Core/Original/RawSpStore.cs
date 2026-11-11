@@ -1,5 +1,4 @@
 using System.Runtime.InteropServices;
-using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Original;
 
@@ -34,8 +33,8 @@ public sealed class RawSpStore
     /// <summary>offset 이 이 값보다 크면 빼서 되돌린다. 같은 값일 때는 빼지 않는다.</summary>
     private const uint OffsetWrap = 9600;
 
-    /// <summary>원본 전역 난수. 초기화·잡음 비트가 같은 상태를 공유한다.</summary>
-    private readonly NetstormRandom _rng;
+    /// <summary>원본 전역 난수. 초기화·잡음 비트가 같은 상태를 공유한다. 2026-11-12 0.457에서 단일 공유 스트림으로 바꿨다(결정 D1·2.1 결정 2, 근거 cpppj RawCampaignSession.cpp 498행).</summary>
+    private readonly GameRandom _rng;
 
     /// <summary>초기화 때 난수 상태를 주입하는 콜백. 원본 시각 기반 재시드를 대신한다.</summary>
     private readonly Func<uint>? _reseed;
@@ -70,7 +69,7 @@ public sealed class RawSpStore
     /// <param name="rng">원본 전역 난수.</param>
     /// <param name="reseed">초기화 때 난수 상태를 만드는 콜백. null 이면 Get/Set/Rotate 가 초기화에서 예외다.</param>
     /// <param name="fill">초기화가 모든 배열 칸에 채우는 값.</param>
-    public RawSpStore(NetstormRandom rng, Func<uint>? reseed, uint fill = 0)
+    public RawSpStore(GameRandom rng, Func<uint>? reseed, uint fill = 0)
     {
         ArgumentNullException.ThrowIfNull(rng);
         _rng = rng;
@@ -90,7 +89,7 @@ public sealed class RawSpStore
     /// <param name="rng">원본 전역 난수.</param>
     /// <param name="reseed">초기화 때 난수 상태를 만드는 콜백. null 이면 Get/Set/Rotate 가 초기화에서 예외다.</param>
     /// <param name="allocation">32개 행마다 36바이트 입력을 채우는 공급자. null 이면 거부한다.</param>
-    public RawSpStore(NetstormRandom rng, Func<uint>? reseed, Action<Span<byte>> allocation)
+    public RawSpStore(GameRandom rng, Func<uint>? reseed, Action<Span<byte>> allocation)
     {
         ArgumentNullException.ThrowIfNull(rng);
         ArgumentNullException.ThrowIfNull(allocation);
@@ -154,7 +153,7 @@ public sealed class RawSpStore
             throw new InvalidOperationException("SP 저장소 재시드 콜백 누락");
         }
         _rng.SetState(_reseed());
-        _offset = (uint)_rng.Next((int)OffsetLimit);
+        _offset = _rng.Next(OffsetLimit);
         // 원본은 첫 항등 순열을 만든 뒤 같은 추적 offset 전역에도 현재 offset 을 쓴다
         for (int index = 0; index < Bits; index++)
         {
@@ -164,7 +163,7 @@ public sealed class RawSpStore
         // 실제 32번 교환을 수행해 SP 몸체가 읽는 순열을 원본과 같게 만든다
         for (int index = 0; index < Bits; index++)
         {
-            int other = _rng.Next((int)BitLimit);
+            int other = unchecked((int)_rng.Next(BitLimit));
             (_permutation[index], _permutation[other]) = (_permutation[other], _permutation[index]);
         }
         // 원본은 교환 결과를 저장에 쓰기 전에 다시 항등 순열로 덮어쓴다
@@ -250,7 +249,7 @@ public sealed class RawSpStore
             // 잡음은 실제 비트를 제외한 위치에만 들어간다
             for (int n = 0; n < NoisePerBit; n++)
             {
-                _pools[index] |= 1u << _rng.Next((int)BitLimit) & ~mask;
+                _pools[index] |= 1u << unchecked((int)_rng.Next(BitLimit)) & ~mask;
             }
         }
     }

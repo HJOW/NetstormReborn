@@ -1,5 +1,4 @@
 // 일반 지형 소비자의 분기·범위·타입 연결 계약을 공유한다.
-using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Original;
 
@@ -403,7 +402,7 @@ public sealed class RawNormalTerrainWorldBinding
     /// <param name="world">도장의 생성·owner·Pop·지역 효과다. ChunkRegion·Assertion은 현재 지도·진단으로 덮는다.</param>
     /// <param name="place">같은 군집 몸체의 배치 효과다.</param>
     /// <returns>도장이 만든 마지막 SID다.</returns>
-    public int Generate(NormalTerrainRequest request, NetstormRandom random, UIntBox crt, TerrainStampHooks world, Action<FortRandomRectangle, int, uint> place)
+    public int Generate(NormalTerrainRequest request, GameRandom random, UIntBox crt, TerrainStampHooks world, Action<FortRandomRectangle, int, uint> place)
     {
         ArgumentNullException.ThrowIfNull(random);
         ArgumentNullException.ThrowIfNull(crt);
@@ -427,14 +426,14 @@ public sealed class RawNormalTerrainWorldBinding
     /// <summary>
     /// context를 도장·보정하고 같은 실제 월드에 실행한다.
     /// 근거: cpppj/src/client/RawNormalTerrainWorldBinding.cpp StampContext. (2026-11-10 R4 F2c 정상 생성 본체에서 추가했다)
-    /// C# 도장은 GameRandom 대신 NetstormRandom과 CRT 읽기·쓰기 대리자를 받으므로 호출자가 넘긴다.
+    /// C# 도장은 공유 GameRandom과 CRT 읽기·쓰기 대리자를 받으므로 호출자가 넘긴다.
     /// </summary>
     /// <param name="context">도장할 성장 context다.</param>
     /// <param name="random">도장이 소비하는 게임 난수다.</param>
     /// <param name="crt">도장이 소비하는 공유 CRT holdrand 상자다.</param>
     /// <param name="world">도장의 생성·owner·Pop·지역 효과다. ChunkRegion·Assertion은 현재 지도·진단으로 덮는다.</param>
     /// <returns>도장이 만든 마지막 SID다.</returns>
-    public int StampContext(RawTerrainContext context, NetstormRandom random, UIntBox crt, TerrainStampHooks world)
+    public int StampContext(RawTerrainContext context, GameRandom random, UIntBox crt, TerrainStampHooks world)
     {
         ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(random);
@@ -504,7 +503,7 @@ public sealed class RawNormalTerrainWorldBinding
     /// <param name="world">도장의 생성·owner·Pop·지역 효과다. ChunkRegion·Assertion은 현재 지도·진단으로 덮는다.</param>
     /// <param name="place">같은 군집 몸체의 배치 효과다.</param>
     /// <returns>도장이 만든 마지막 SID다.</returns>
-    public int GenerateOriginal(uint owner, ChunkRect bounds, int selectedRegion, NetstormRandom random, UIntBox crt, TerrainStampHooks world, Action<FortRandomRectangle, int, uint> place)
+    public int GenerateOriginal(uint owner, ChunkRect bounds, int selectedRegion, GameRandom random, UIntBox crt, TerrainStampHooks world, Action<FortRandomRectangle, int, uint> place)
     {
         ArgumentNullException.ThrowIfNull(random);
         ArgumentNullException.ThrowIfNull(crt);

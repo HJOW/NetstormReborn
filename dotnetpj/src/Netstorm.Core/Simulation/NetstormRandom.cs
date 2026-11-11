@@ -6,6 +6,7 @@ namespace Netstorm.Core.Simulation;
 /// 다리 조각 추첨(Combatgump.cpp 0043f…·Cursor.cpp 004468b0)과 지식 보석 추첨(Gem.cpp)이 이 난수를 쓴다.
 /// 지형 생성의 <c>004bca20</c> 도 같은 식이다 (FortTerrainPreview).
 /// </summary>
+/// <remarks>2026-11-12 0.457에서 포팅 모듈(RawSpStore·지형·농지·배치 등)은 공유 <see cref="Netstorm.Core.Original.GameRandom"/>으로 단일화했다(근거 cpppj RawCampaignSession.cpp 498행). 이 클래스는 동결된 레거시 경로(BattleSession 등) 전용으로 둔다(결정 D2 삭제 때까지).</remarks>
 public sealed class NetstormRandom
 {
     /// <summary>상태가 0일 때 대신 쓰는 시드 (원본 상수 0x0BAD0BAD)</summary>

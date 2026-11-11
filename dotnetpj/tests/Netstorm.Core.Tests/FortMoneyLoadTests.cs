@@ -1,7 +1,6 @@
 using System.Buffers.Binary;
 using System.Globalization;
 using Netstorm.Core.Original;
-using Netstorm.Core.Simulation;
 using Netstorm.Tests;
 
 namespace Netstorm.Core.Tests;
@@ -35,7 +34,7 @@ public sealed class FortMoneyLoadTests
         public FortMoneyState State { get; } = new();
 
         /// <summary>분산 SP가 실제로 소비하는 게임 난수다.</summary>
-        public NetstormRandom Random { get; }
+        public GameRandom Random { get; }
 
         /// <summary>현재 입력의 lazy·초기화 분산 SP 저장소다.</summary>
         public RawSpStore Store { get; }
@@ -98,7 +97,7 @@ public sealed class FortMoneyLoadTests
                 Records[index * stride + 0x50] = (mask & (1u << index)) != 0 ? (byte)0x20 : (byte)0;
             }
             Reward.CdLocalSp = 123.5f;
-            Random = new NetstormRandom();
+            Random = new GameRandom();
             uint seed = uint.Parse(values[14], CultureInfo.InvariantCulture);
             uint fill = uint.Parse(values[15], CultureInfo.InvariantCulture);
             Store = new RawSpStore(Random, () => seed, fill);
@@ -180,7 +179,7 @@ public sealed class FortMoneyLoadTests
                 && scene.State.SpCheckCount == uint.Parse(row[4], CultureInfo.InvariantCulture)
                 && scene.Store.Initialized == (row[5] != "0")
                 && scene.Store.Offset == uint.Parse(row[6], CultureInfo.InvariantCulture)
-                && scene.Random.State == uint.Parse(row[7], CultureInfo.InvariantCulture)
+                && scene.Random.State() == uint.Parse(row[7], CultureInfo.InvariantCulture)
                 && values == row[8] && pools == row[9] && events == row[10]
                 && scene.Assertions == int.Parse(row[11], CultureInfo.InvariantCulture);
             Assert.True(same);
@@ -208,7 +207,7 @@ public sealed class FortMoneyLoadTests
         SquidRewardState reward = new() { FixedSpA = true };
         RawPostPopState players = new() { LocalOwner = 1 };
         FortMoneyState state = new() { TemplatePresent = false };
-        NetstormRandom random = new(12345);
+        GameRandom random = new(12345);
         RawSpStore store = new(random, () => 12345u);
         byte[] records = new byte[9 * 0xb4];
         uint depth = 3;
@@ -272,7 +271,7 @@ public sealed class FortMoneyLoadTests
         SquidRewardState reward = new() { HalfHealthMode = true };
         RawPostPopState players = new() { LocalOwner = 1 };
         FortMoneyState state = new();
-        NetstormRandom random = new(42);
+        GameRandom random = new(42);
         RawSpStore store = new(random, () => 42u, 0xffffffffu);
         byte[] records = new byte[9 * 0xb4];
         uint depth = 3;
@@ -310,7 +309,7 @@ public sealed class FortMoneyLoadTests
         RawWorldCore core = world.Core();
         var reward = new SquidRewardState();
         var state = new FortMoneyState { ClientActive = true };
-        var random = new NetstormRandom();
+        var random = new GameRandom();
         var store = new RawSpStore(random, () => 42u);
         byte[] records = new byte[9 * 0xb4];
         world.SetLoadingDepth(3u);
@@ -333,7 +332,7 @@ public sealed class FortMoneyLoadTests
         money.SetPlayerSp(2, 3000);
         Assert.Equal(BitConverter.SingleToUInt32Bits(194162f), store.Get(2));
         Assert.Equal(2, refreshes);
-        Assert.NotEqual(0u, random.State);
+        Assert.NotEqual(0u, random.State());
         Assert.Equal(3u, world.LoadingDepth());
     }
 }

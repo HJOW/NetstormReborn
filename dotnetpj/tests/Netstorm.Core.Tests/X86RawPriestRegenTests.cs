@@ -31,7 +31,7 @@ public sealed class X86RawPriestRegenTests
         public RawSidPool Pool { get; } = new(24000, false);
 
         /// <summary>원본 전역 난수.</summary>
-        public NetstormRandom Random { get; } = new(0);
+        public GameRandom Random { get; } = new(0);
 
         /// <summary>패치판 SP 저장소.</summary>
         public RawSpStore Store { get; }
@@ -285,7 +285,7 @@ public sealed class X86RawPriestRegenTests
             Assert.Equal(X86Fixture.UInt(row[26]), BitConverter.SingleToUInt32Bits(result));
             Assert.Equal(row[27], scene.Events.Length == 0 ? "-" : scene.Events);
             Assert.Equal(row[28], scene.Tracking());
-            Assert.Equal(X86Fixture.UInt(row[29]), scene.Random.State);
+            Assert.Equal(X86Fixture.UInt(row[29]), scene.Random.State());
             Assert.Equal(row[30], SpHex(scene.Pool.Slot(SourceSid)));
             count++;
             return true;

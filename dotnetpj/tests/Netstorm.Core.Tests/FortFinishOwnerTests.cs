@@ -261,7 +261,7 @@ public sealed class FortFinishOwnerTests
                     {
                         random.SetState(0x98765432u);
                     }
-                    LastSeed = random.State;
+                    LastSeed = random.State();
                     bool success = Attempts >= Values[(int)FinishField.SuccessAt]
                         && (Attempts - Values[(int)FinishField.SuccessAt]) % Values[(int)FinishField.Period] == 0;
                     if (success && finishMode && !Added)
@@ -355,7 +355,7 @@ public sealed class FortFinishOwnerTests
             }
             else if (row[1] == "B")
             {
-                NetstormRandom random = new(scene.Values[(int)FinishField.Seed]);
+                GameRandom random = new(scene.Values[(int)FinishField.Seed]);
                 result = finish.PlaceRandom(
                     random,
                     FinishRectangle(scene.Values[(int)FinishField.Rect]),
@@ -363,7 +363,7 @@ public sealed class FortFinishOwnerTests
                     scene.Values[(int)FinishField.Quantity],
                     scene.Values[(int)FinishField.Type],
                     scene.Values[(int)FinishField.Force]);
-                scene.LastSeed = random.State;
+                scene.LastSeed = random.State();
             }
             else
             {
@@ -463,10 +463,10 @@ public sealed class FortFinishOwnerTests
             return 7u;
         };
         RawFortFinishOwner finish = new(scene.Pool, scene.Types, scene.Residences, scene.State, hooks);
-        NetstormRandom random = new(0);
+        GameRandom random = new(0);
         Assert.Equal(7u, finish.PlaceRandom(random, rect, 3, 2, 89, 0));
         Assert.Equal(2u, attempts);
-        Assert.Equal(0u, random.State);
+        Assert.Equal(0u, random.State());
         scene.State.PlayerRegions[1] = 3;
         scene.State.ChaffMode = false;
         scene.State.Special = false;

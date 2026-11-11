@@ -1,6 +1,5 @@
 // 원본 지형 미리보기의 8비트 bitmap과 최초 문자 분류 캐시를 복원한다(cpppj o/RawTerrainBitmap.h/.cpp).
 // 2026-11-07 R4 지형·섬 생성 및 인구/배치 1차에서 이식했다.
-using Netstorm.Core.Simulation;
 
 namespace Netstorm.Core.Original;
 
@@ -113,7 +112,7 @@ public sealed class RawTerrainBitmap
     /// <param name="height">출력 높이다.</param>
     /// <param name="random">로컬 난수다.</param>
     /// <returns>그려진 8비트 지형 비트맵이다.</returns>
-    public TerrainBitmapImage Render(ReadOnlySpan<byte> codes, int width, int height, NetstormRandom random)
+    public TerrainBitmapImage Render(ReadOnlySpan<byte> codes, int width, int height, GameRandom random)
     {
         ArgumentNullException.ThrowIfNull(random);
         if (codes.Length != 65536 || width < 0 || height < 0 || width > 256 || height > 256)
@@ -152,7 +151,7 @@ public sealed class RawTerrainBitmap
                 byte before = codes[x * 256 + y - 1];
                 if (before == (byte)'x')
                 {
-                    int length = random.Next(3) + 3;
+                    int length = unchecked((int)random.Next(3u)) + 3;
                     // 첫 샘플은 texture의 1행이며 아래 끝은 출력 높이로 제한한다.
                     for (int step = 0; step < length && y + step < height; step++)
                     {

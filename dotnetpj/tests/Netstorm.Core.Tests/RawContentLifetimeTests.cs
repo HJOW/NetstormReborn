@@ -72,7 +72,7 @@ public sealed class RawContentLifetimeTests
         var factory = new RawSquidFactory(pool, types);
         var unpop = new RawUnpop(pool, hash, new byte[65536]);
         var destroy = new RawSquidDestroy(pool, unpop, types);
-        var random = new NetstormRandom(7);
+        var random = new GameRandom(7);
         var store = new RawSpStore(random, () => 42u);
         store.Initialize();
         store.Set(1, BitConverter.SingleToUInt32Bits(1000f));

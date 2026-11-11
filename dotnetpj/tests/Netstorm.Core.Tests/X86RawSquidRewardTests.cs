@@ -233,14 +233,14 @@ public sealed class X86RawSquidRewardTests
             Assert.Equal(RawSpStore.Owners, sp.Length);
             uint seed = X86Fixture.UInt(row[(int)Column.Seed]);
             uint fill = X86Fixture.UInt(row[(int)Column.Fill]);
-            var rng = new NetstormRandom(0);
+            var rng = new GameRandom(0);
             var store = new RawSpStore(rng, () => seed, fill);
             for (uint owner = 0; owner < RawSpStore.Owners; owner++)
             {
                 store.Set(owner, sp[owner]);
             }
             // 원본과 같은 출발 난수 상태·배열 체크섬을 확인한다
-            Assert.Equal(X86Fixture.UInt(row[(int)Column.StateBefore]), rng.State);
+            Assert.Equal(X86Fixture.UInt(row[(int)Column.StateBefore]), rng.State());
             Assert.Equal(X86Fixture.UInt(row[(int)Column.AdlerBefore]), X86Fixture.Adler32(PoolBytes(store.Pools)));
             // 가상 개수 스크립트가 있으면 호출마다 다음 값을 준다
             var script = new List<int>();
@@ -277,7 +277,7 @@ public sealed class X86RawSquidRewardTests
             {
                 Assert.Equal(expectedSp[owner], store.Get(owner));
             }
-            Assert.Equal(X86Fixture.UInt(row[(int)Column.StateAfter]), rng.State);
+            Assert.Equal(X86Fixture.UInt(row[(int)Column.StateAfter]), rng.State());
             Assert.Equal(X86Fixture.UInt(row[(int)Column.AdlerAfter]), X86Fixture.Adler32(PoolBytes(store.Pools)));
             Assert.Equal(X86Fixture.UInt(row[(int)Column.OffsetAfter]), store.Offset);
             Assert.Equal(X86Fixture.UInt(row[(int)Column.RefreshCalls]), refreshCalls);
@@ -303,7 +303,7 @@ public sealed class X86RawSquidRewardTests
         types[82].Cost = 100f;
         var bookkeeping = new RawPostPopState();
         var state = new SquidRewardState();
-        var rng = new NetstormRandom(0);
+        var rng = new GameRandom(0);
         var store = new RawSpStore(rng, () => 1u);
         Assert.Throws<ArgumentException>(() => new RawSquidReward(pool, types, bookkeeping, state, null));
         var reward = new RawSquidReward(pool, types, bookkeeping, state, store);
@@ -334,7 +334,7 @@ public sealed class X86RawSquidRewardTests
         Span<byte> raw = pool.AllocatedBytes(5);
         var bookkeeping = new RawPostPopState();
         var state = new SquidRewardState();
-        var store = new RawSpStore(new NetstormRandom(0), () => 1u);
+        var store = new RawSpStore(new GameRandom(0), () => 1u);
         var reward = new RawSquidReward(pool, types, bookkeeping, state, store);
         raw[10] = 164;
         Assert.False(reward.Plan(5, 1, false).Applied);
@@ -375,7 +375,7 @@ public sealed class X86RawSquidRewardTests
         bookkeeping.AiAttached[1] = true;
         var state = new SquidRewardState { HalfHealthMode = true, WalletClamp = true };
         state.AiWallet[1] = -100;
-        var store = new RawSpStore(new NetstormRandom(0), () => 1u);
+        var store = new RawSpStore(new GameRandom(0), () => 1u);
         var reward = new RawSquidReward(pool, types, bookkeeping, state, store);
         Assert.Equal(0, reward.Plan(5, 1, true).Refund);
         state.HalfHealthMode = false;
@@ -412,7 +412,7 @@ public sealed class X86RawSquidRewardTests
         raw[11] = 0;
         var bookkeeping = new RawPostPopState();
         var state = new SquidRewardState { FixedSpA = true };
-        var store = new RawSpStore(new NetstormRandom(0), () => 1u);
+        var store = new RawSpStore(new GameRandom(0), () => 1u);
         uint refresh = 0;
         var reward = new RawSquidReward(pool, types, bookkeeping, state, store,
             new SquidRewardHooks { RefreshSp = () => refresh++ });
@@ -456,7 +456,7 @@ public sealed class X86RawSquidRewardTests
                 FixedSpB = (fixedFlags & 2) != 0,
             };
             // 원본 재생과 같은 출발 난수·재시드로 저장소를 세운다
-            var rng = new NetstormRandom(1);
+            var rng = new GameRandom(1);
             var store = new RawSpStore(rng, () => 77u);
             store.Set(owner, X86Fixture.UInt(row[3]));
             float delta = BitConverter.UInt32BitsToSingle(X86Fixture.UInt(row[4]));

@@ -695,7 +695,7 @@ public sealed class RawNormalTerrainBindingTests
     {
         (RawNormalTerrainWorldBinding binding, _, RawSidPool pool) = GenerateScene();
         var request = new NormalTerrainRequest(1u, new ChunkRect(1, 1, 5, 5), 127, NormalTerrainBranch.Normal);
-        var random = new NetstormRandom(1u);
+        var random = new GameRandom(1u);
         var crt = new UIntBox();
         var world = new StampWorldSpy(pool).Hooks;
         var spy = new PlaceSpy();
@@ -723,7 +723,7 @@ public sealed class RawNormalTerrainBindingTests
         diagnostics.Context = _ => { };
         var binding = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
         var context = new RawTerrainContext(pool.Edition, 1u, 127, new ChunkRect(1, 1, 5, 5), globals, _ => { });
-        Assert.Throws<ArgumentException>(() => binding.StampContext(context, new NetstormRandom(1u), new UIntBox(), new StampWorldSpy(pool).Hooks));
+        Assert.Throws<ArgumentException>(() => binding.StampContext(context, new GameRandom(1u), new UIntBox(), new StampWorldSpy(pool).Hooks));
     }
 
     /// <summary>일반 생성은 성장·도장·후처리를 순서대로 돌리고 같은 입력에 같은 SID를 돌려준다. 2026-11-10 R4 F2c 정상 생성 본체에서 추가됐다.</summary>
@@ -735,9 +735,9 @@ public sealed class RawNormalTerrainBindingTests
         var request = new NormalTerrainRequest(1u, new ChunkRect(1, 1, 5, 5), 127, NormalTerrainBranch.Normal);
         var firstSpy = new PlaceSpy();
         var firstWorld = new StampWorldSpy(firstPool);
-        int firstSid = first.Generate(request, new NetstormRandom(1u), new UIntBox { Value = 1u }, firstWorld.Hooks, firstSpy.Place);
+        int firstSid = first.Generate(request, new GameRandom(1u), new UIntBox { Value = 1u }, firstWorld.Hooks, firstSpy.Place);
         var secondSpy = new PlaceSpy();
-        int secondSid = second.Generate(request, new NetstormRandom(1u), new UIntBox { Value = 1u }, new StampWorldSpy(secondPool).Hooks, secondSpy.Place);
+        int secondSid = second.Generate(request, new GameRandom(1u), new UIntBox { Value = 1u }, new StampWorldSpy(secondPool).Hooks, secondSpy.Place);
         // 같은 입력의 두 장면이 같은 결과를 낸다.
         Assert.Equal(secondSid, firstSid);
         Assert.Equal(secondSpy.Calls.Count, firstSpy.Calls.Count);
@@ -767,7 +767,7 @@ public sealed class RawNormalTerrainBindingTests
             binding.BindGenerationInputs(farm, inputs);
             var spy = new PlaceSpy();
             // Battle이 꺼져 후보가 아니므로 일반 성장을 돈다.
-            int sid = binding.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new NetstormRandom(1u), new UIntBox { Value = 1u }, new StampWorldSpy(pool).Hooks, spy.Place);
+            int sid = binding.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new GameRandom(1u), new UIntBox { Value = 1u }, new StampWorldSpy(pool).Hooks, spy.Place);
             return (sid, spy.Calls.Count);
         }
 
@@ -775,7 +775,7 @@ public sealed class RawNormalTerrainBindingTests
             List<OriginalTypeRecord> types, RawSidPool pool, UIntBox piece, List<RiftTypeFrames> frames, NormalTerrainDiagnostics diagnostics) = BindingScene();
         var bare = Bind(chunks, islands, globals, placement, stamp, types, pool, piece, frames, diagnostics);
         // 보관한 입력이 없으면 거부한다.
-        Assert.Throws<InvalidOperationException>(() => bare.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new NetstormRandom(1u), new UIntBox(), new StampWorldSpy(pool).Hooks, new PlaceSpy().Place));
+        Assert.Throws<InvalidOperationException>(() => bare.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new GameRandom(1u), new UIntBox(), new StampWorldSpy(pool).Hooks, new PlaceSpy().Place));
         (int firstSid, int firstPlaces) = RunOnce();
         (int secondSid, int secondPlaces) = RunOnce();
         Assert.NotEqual(0, firstPlaces);
@@ -803,7 +803,7 @@ public sealed class RawNormalTerrainBindingTests
         inputs.Subscriber = _ => 0u;
         binding.BindGenerationInputs(farm, inputs);
         var spy = new PlaceSpy();
-        binding.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new NetstormRandom(1u), new UIntBox { Value = 1u }, new StampWorldSpy(pool).Hooks, spy.Place);
+        binding.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new GameRandom(1u), new UIntBox { Value = 1u }, new StampWorldSpy(pool).Hooks, spy.Place);
         // spacing 4는 span 2를 쓰고 군도 표시를 남긴다.
         Assert.Equal(2, binding.GenerationInputs().Span.Value);
         Assert.Equal(1u, binding.GenerationInputs().Archipelago.Value);

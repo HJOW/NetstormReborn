@@ -18,7 +18,7 @@ public sealed class FortWorldLoadBindingTests
     {
         var hash = new RawSquidHash();
         var frames = Enumerable.Range(0, types.Count).Select(_ => new RiftTypeFrames([])).ToList();
-        var objects = new RawFortObjectLoad(pool, hash, types, frames, new NetstormRandom(), new FortObjectLoadState(), new FortObjectLoadHooks
+        var objects = new RawFortObjectLoad(pool, hash, types, frames, new GameRandom(), new FortObjectLoadState(), new FortObjectLoadHooks
         {
             Create = (_, _) => 0,
             NotifySurface = _ => { },

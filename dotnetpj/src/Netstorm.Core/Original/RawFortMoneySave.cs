@@ -1,5 +1,3 @@
-using Netstorm.Core.Simulation;
-
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -61,10 +59,10 @@ public static class RawFortMoneySave
     /// <param name="stream">쓸 stream 토큰이다.</param>
     /// <param name="random">공유 게임 난수다. 호출자가 소유한다.</param>
     /// <param name="write">일반 stream writer다.</param>
-    public static void SaveFortMoney(uint stream, NetstormRandom random, FortMoneySaveWrite write)
+    public static void SaveFortMoney(uint stream, GameRandom random, FortMoneySaveWrite write)
     {
         ArgumentNullException.ThrowIfNull(random);
-        float value = random.Next((int)MoneyRandomLimit) + MoneyBase;
+        float value = random.Next(MoneyRandomLimit) + MoneyBase;
         uint bits = BitConverter.SingleToUInt32Bits(value);
         Span<byte> bytes = stackalloc byte[4];
         // 원본 little endian 네 바이트만 전달한다
@@ -82,7 +80,7 @@ public static class RawFortMoneySave
     /// <param name="slot">고정 this의 Template 칸 번호다.</param>
     /// <param name="random">공유 게임 난수다.</param>
     /// <param name="hooks">실제 저장소·writer 경계다.</param>
-    public static void SnapshotFortMoney(int slot, NetstormRandom random, FortMoneySaveHooks hooks)
+    public static void SnapshotFortMoney(int slot, GameRandom random, FortMoneySaveHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(random);
         ArgumentNullException.ThrowIfNull(hooks);

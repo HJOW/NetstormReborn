@@ -125,7 +125,7 @@ public sealed class HostTerrainBindingTests
         var spy = new StampCreateSpy(session.Pool);
         var places = new List<(FortRandomRectangle Area, int Region, uint Count)>();
         // 임무이므로 후보가 아니어서 일반 성장을 돈다.
-        int sid = binding.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new NetstormRandom(1u), new UIntBox { Value = 1u }, spy.Hooks, (area, region, count) => places.Add((area, region, count)));
+        int sid = binding.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new GameRandom(1u), new UIntBox { Value = 1u }, spy.Hooks, (area, region, count) => places.Add((area, region, count)));
         return (sid, spy.Creates);
     }
 
@@ -154,7 +154,7 @@ public sealed class HostTerrainBindingTests
         session.TerrainDiagnostics.Region = diagnostics.Region;
         var binding = session.BuildTerrainBinding(types, session.TerrainDiagnostics, RecordingIslandHooks());
         var places = new List<(FortRandomRectangle Area, int Region, uint Count)>();
-        int sid = binding.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new NetstormRandom(1u), new UIntBox { Value = 1u }, session.BuildTerrainStampHooks(types), (area, region, count) => places.Add((area, region, count)));
+        int sid = binding.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new GameRandom(1u), new UIntBox { Value = 1u }, session.BuildTerrainStampHooks(types), (area, region, count) => places.Add((area, region, count)));
         // 진단을 울리지 않아야 한다.
         Assert.Empty(fired);
         int slots = 0;

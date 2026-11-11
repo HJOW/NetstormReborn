@@ -245,7 +245,7 @@ public sealed class FortObjectLoadTests
         public List<RiftTypeFrames> Frames = [];
 
         /// <summary>원본 게임 난수다.</summary>
-        public NetstormRandom Random;
+        public GameRandom Random;
 
         /// <summary>검사 입력과 수행 결과가 같이 쓰고 있는 실제 기본 참조 로딩 상태다.</summary>
         public FortObjectLoadState State = new();
@@ -287,7 +287,7 @@ public sealed class FortObjectLoadTests
             Pool = new RawSidPool(Capacity, true, null, edition);
             Types = Enumerable.Range(0, edition == OriginalEdition.Patch1078 ? 188 : 171).Select(_ => new OriginalTypeRecord()).ToList();
             ModuleTypes = edition == OriginalEdition.Patch1078 ? Types : [.. Types, .. Enumerable.Range(0, 17).Select(_ => new OriginalTypeRecord())];
-            Random = new NetstormRandom(values[(int)Field.Seed]);
+            Random = new GameRandom(values[(int)Field.Seed]);
             V = values;
             Patch = edition == OriginalEdition.Patch1078;
             // native 경계와 같은 고정 객체·Content 번호를 확보한다
@@ -562,8 +562,8 @@ public sealed class FortObjectLoadTests
                 loader.Load(TemplateInput(scene.V), (int)scene.V[(int)Field.Slot], 0, 20);
             }
             string state = scene.State.Version.ToString(CultureInfo.InvariantCulture) + ',' + scene.State.LoadingDepth.ToString(CultureInfo.InvariantCulture) + ',' + scene.State.Scope.ToString(CultureInfo.InvariantCulture) + ',' + (scene.State.FortDestroyBlocked ? "1" : "0");
-            bool same = scene.EventsText() == row[4] && scene.Raws() == row[5] && scene.Random.State.ToString(CultureInfo.InvariantCulture) == row[6] && state == row[7];
-            Assert.True(same, "Fort object " + row[1] + " 행 " + count + " 입력 " + row[2] + "\n기대 events " + row[4] + "\n실제 events " + scene.EventsText() + "\n기대 raws " + row[5] + "\n실제 raws " + scene.Raws() + "\n기대 rng " + row[6] + " 실제 " + scene.Random.State + "\n기대 state " + row[7] + " 실제 " + state);
+            bool same = scene.EventsText() == row[4] && scene.Raws() == row[5] && scene.Random.State().ToString(CultureInfo.InvariantCulture) == row[6] && state == row[7];
+            Assert.True(same, "Fort object " + row[1] + " 행 " + count + " 입력 " + row[2] + "\n기대 events " + row[4] + "\n실제 events " + scene.EventsText() + "\n기대 raws " + row[5] + "\n실제 raws " + scene.Raws() + "\n기대 rng " + row[6] + " 실제 " + scene.Random.State() + "\n기대 state " + row[7] + " 실제 " + state);
             count++;
         }
         Assert.Equal(Cases, count);
@@ -890,7 +890,7 @@ public sealed class FortObjectLoadTests
                 loader.LoadStream((int)scene.V[(int)Field.Slot], hooks);
             }
             string state = scene.State.Version.ToString(CultureInfo.InvariantCulture) + ',' + scene.State.LoadingDepth.ToString(CultureInfo.InvariantCulture) + ',' + scene.State.Scope.ToString(CultureInfo.InvariantCulture) + ',' + (scene.State.FortDestroyBlocked ? "1" : "0");
-            bool same = scene.EventsText() == row[4] && scene.Raws() == row[5] && scene.Random.State.ToString(CultureInfo.InvariantCulture) == row[6] && state == row[7];
+            bool same = scene.EventsText() == row[4] && scene.Raws() == row[5] && scene.Random.State().ToString(CultureInfo.InvariantCulture) == row[6] && state == row[7];
             Assert.True(same, "Fort ObjectStream " + row[1] + " 행 " + count);
             count++;
         }

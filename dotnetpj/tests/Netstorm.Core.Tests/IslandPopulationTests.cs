@@ -330,7 +330,7 @@ public sealed class IslandPopulationTests
                     ++Calls;
                     uint bx = BitConverter.SingleToUInt32Bits(request.X);
                     uint by = BitConverter.SingleToUInt32Bits(request.Y);
-                    Events.Add($"P:{request.Type}:{bx}:{by}:{unchecked((uint)request.Region)}:{request.Mode}:{request.Force}:{local.State}");
+                    Events.Add($"P:{request.Type}:{bx}:{by}:{unchecked((uint)request.Region)}:{request.Mode}:{request.Force}:{local.State()}");
                     return Calls >= at ? 15001u : 0u;
                 },
             };

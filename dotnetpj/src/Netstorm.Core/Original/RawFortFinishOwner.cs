@@ -1,5 +1,3 @@
-using Netstorm.Core.Simulation;
-
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -116,8 +114,8 @@ public sealed class FortFinishOwnerHooks
     /// <summary>00460d70/CD004011b0의 현재 호출별 double 시각이다.</summary>
     public Func<double>? WallSeconds { get; set; }
 
-    /// <summary>실제 placement 전체다. local 난수도 전달한다.</summary>
-    public Func<NetstormRandom, FortRandomPlaceRequest, uint>? Place { get; set; }
+    /// <summary>실제 placement 전체다. local 난수도 전달한다. 2026-11-12 0.457에서 단일 공유 스트림으로 바꿨다(근거 cpppj RawCampaignSession.cpp 498행).</summary>
+    public Func<GameRandom, FortRandomPlaceRequest, uint>? Place { get; set; }
 
     /// <summary>AddRandom의 타입0·-1 진단이며 반환값0을 유지한다.</summary>
     public Action? InvalidType { get; set; }
@@ -203,9 +201,9 @@ public sealed class RawFortFinishOwner
     /// <param name="random">소비할 local 난수다.</param>
     /// <param name="limit">상한이다.</param>
     /// <returns>0 이상 limit 미만의 값이다.</returns>
-    private static uint Next(NetstormRandom random, int limit)
+    private static uint Next(GameRandom random, int limit)
     {
-        return limit < 1 ? 0u : unchecked((uint)random.Next(limit));
+        return limit < 1 ? 0u : random.Next(unchecked((uint)limit));
     }
 
     /// <summary>
@@ -277,7 +275,7 @@ public sealed class RawFortFinishOwner
                 return;
             }
             FortRandomRectangle rectangle = Need(_hooks.RegionBounds)(region);
-            NetstormRandom random = new(TimeSeed(Need(_hooks.WallSeconds)()));
+            GameRandom random = new(TimeSeed(Need(_hooks.WallSeconds)()));
             PlaceRandom(random, rectangle, region, 1, _state.ResidenceType, 0);
         }
     }
@@ -295,7 +293,7 @@ public sealed class RawFortFinishOwner
     /// <param name="force">강제다.</param>
     /// <returns>마지막 배치 결과다.</returns>
     public uint PlaceRandom(
-        NetstormRandom random,
+        GameRandom random,
         FortRandomRectangle rectangle,
         int region,
         uint quantity,

@@ -99,7 +99,7 @@ public sealed class AddRandomParentTests
             };
             hooks.Place = (random, area, region, amount, selected, force) =>
             {
-                AddTrace("B:" + random.State + ":" + BitConverter.SingleToUInt32Bits(area.Left) + ":" + BitConverter.SingleToUInt32Bits(area.Top) + ":" + BitConverter.SingleToUInt32Bits(area.Right) + ":" + BitConverter.SingleToUInt32Bits(area.Bottom) + ":" + unchecked((uint)region) + ":" + amount + ":" + selected + ":" + force);
+                AddTrace("B:" + random.State() + ":" + BitConverter.SingleToUInt32Bits(area.Left) + ":" + BitConverter.SingleToUInt32Bits(area.Top) + ":" + BitConverter.SingleToUInt32Bits(area.Right) + ":" + BitConverter.SingleToUInt32Bits(area.Bottom) + ":" + unchecked((uint)region) + ":" + amount + ":" + selected + ":" + force);
                 return 7u;
             };
             RawAddRandom.AddRandomObjects(type, quantity, hooks);

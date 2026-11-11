@@ -1,5 +1,3 @@
-using Netstorm.Core.Simulation;
-
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -58,7 +56,7 @@ public enum FarmClusterAssertion
 public sealed class FarmClusterHooks
 {
     /// <summary>같은 local 난수를 쓰는 실제 배치 전체를 연결한다.</summary>
-    public Func<NetstormRandom, FortRandomPlaceRequest, uint>? Place { get; set; }
+    public Func<GameRandom, FortRandomPlaceRequest, uint>? Place { get; set; }
 
     /// <summary>CD 진단의 record 0·월드 0으로 계속되는 흐름을 보존한다.</summary>
     public Action<FarmClusterAssertion>? Assertion { get; set; }
@@ -151,9 +149,9 @@ public sealed class RawFarmCluster
     /// <param name="random">소비할 local 난수다.</param>
     /// <param name="limit">상한이다.</param>
     /// <returns>0 이상 한도 미만의 값이다.</returns>
-    private static uint Next(NetstormRandom random, int limit)
+    private static uint Next(GameRandom random, int limit)
     {
-        return limit < 1 ? 0u : unchecked((uint)random.Next(limit));
+        return limit < 1 ? 0u : random.Next(unchecked((uint)limit));
     }
 
     /// <summary>실제 지역 record 조회는 현재 owner가 아니라 덩어리의 원래 지형 record를 읽는다.</summary>
@@ -192,7 +190,7 @@ public sealed class RawFarmCluster
     /// <param name="quantity">성공 목표 수량이다.</param>
     public void Place(FortRandomRectangle area, int region, uint quantity)
     {
-        NetstormRandom random = new(RegionSeed(region));
+        GameRandom random = new(RegionSeed(region));
         uint remaining = unchecked(quantity * QuantityFactor);
         uint force = 0;
         int radius = 1;

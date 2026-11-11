@@ -87,7 +87,7 @@ public sealed class FortMoneySaveTests
     private sealed class MoneyDevices
     {
         /// <summary>공유 난수다. 부분 중단·진단·공유 난수·실행 결과를 모두 기록한다.</summary>
-        public NetstormRandom Random = new(0);
+        public GameRandom Random = new(0);
 
         /// <summary>고정 this 슬롯이다.</summary>
         public int Slot;
@@ -203,13 +203,13 @@ public sealed class FortMoneySaveTests
                 {
                     Assert.Equal("Money", name);
                     uint stream = MoneyStreams[(int)Selected];
-                    Boundary("create", "create:" + captured + ":Money:" + stream + ':' + Random.State);
+                    Boundary("create", "create:" + captured + ":Money:" + stream + ':' + Random.State());
                     return stream;
                 },
                 Write = (stream, source) =>
                 {
                     Assert.Equal(4, source.Length);
-                    Boundary("write", "write:" + stream + ':' + MoneyRead(source) + ':' + Random.State);
+                    Boundary("write", "write:" + stream + ':' + MoneyRead(source) + ':' + Random.State());
                     int index = stream == MoneyStreams[0] ? 0 : 1;
                     Assert.Equal(MoneyStreams[index], stream);
                     MemStreamHooks memory = new()
@@ -223,7 +223,7 @@ public sealed class FortMoneySaveTests
                         Assertion = kind =>
                         {
                             Assert.Equal(MemStreamAssertion.WriteCapacity, kind);
-                            Boundary("assert", "assert:capacity:" + Random.State);
+                            Boundary("assert", "assert:capacity:" + Random.State());
                         },
                     };
                     RawMemStream.Write(Fields[index], source, 4, memory);
@@ -278,7 +278,7 @@ public sealed class FortMoneySaveTests
                 completed = false;
             }
             Assert.Equal(completed, row[11] == "1");
-            Assert.Equal(uint.Parse(row[12], CultureInfo.InvariantCulture), devices.Random.State);
+            Assert.Equal(uint.Parse(row[12], CultureInfo.InvariantCulture), devices.Random.State());
             Assert.Equal(uint.Parse(row[13], CultureInfo.InvariantCulture), devices.Manager);
             Assert.Equal(row[14], MoneyHex(devices.Fields[0]));
             Assert.Equal(row[15], MoneyHex(devices.Fields[1]));
@@ -303,13 +303,13 @@ public sealed class FortMoneySaveTests
     [Fact]
     public void LazyEffectsAndUnclampedSlot()
     {
-        NetstormRandom random = new(1);
+        GameRandom random = new(1);
         Assert.True(MoneyRejects(() => RawFortMoneySave.SaveFortMoney(77, random, null!)));
-        Assert.Equal(0x10006u, random.State);
+        Assert.Equal(0x10006u, random.State());
         random.SetState(1);
         FortMoneySaveHooks hooks = new();
         Assert.True(MoneyRejects(() => RawFortMoneySave.SnapshotFortMoney(-2, random, hooks)));
-        Assert.Equal(1u, random.State);
+        Assert.Equal(1u, random.State());
         int managers = 0;
         hooks.Manager = slot =>
         {
@@ -318,7 +318,7 @@ public sealed class FortMoneySaveTests
             return 0u;
         };
         Assert.True(MoneyRejects(() => RawFortMoneySave.SnapshotFortMoney(-2, random, hooks)));
-        Assert.Equal(1u, random.State);
+        Assert.Equal(1u, random.State());
         Assert.Equal(1, managers);
         int creates = 0;
         hooks.Create = (manager, name) =>
@@ -330,7 +330,7 @@ public sealed class FortMoneySaveTests
             return 77u;
         };
         Assert.True(MoneyRejects(() => RawFortMoneySave.SnapshotFortMoney(-2, random, hooks)));
-        Assert.Equal(0x10006u, random.State);
+        Assert.Equal(0x10006u, random.State());
         Assert.Equal(1, creates);
         int writes = 0;
         hooks.Write = (stream, bytes) =>
@@ -341,7 +341,7 @@ public sealed class FortMoneySaveTests
             writes++;
         };
         RawFortMoneySave.SnapshotFortMoney(-2, random, hooks);
-        Assert.Equal(0x10006u, random.State);
+        Assert.Equal(0x10006u, random.State());
         Assert.Equal(3, managers);
         Assert.Equal(2, creates);
         Assert.Equal(1, writes);
@@ -351,7 +351,7 @@ public sealed class FortMoneySaveTests
     [Fact]
     public void SharedRandomWithoutSpStoreWrites()
     {
-        NetstormRandom random = new(1);
+        GameRandom random = new(1);
         int reseeds = 0;
         RawSpStore store = new(random, () => { reseeds++; return 0u; }, 0x87654321u);
         uint[] pools = store.Pools.ToArray();
@@ -362,7 +362,7 @@ public sealed class FortMoneySaveTests
             Assert.Equal(saved.Length, bytes.Length);
             bytes.CopyTo(saved);
         });
-        Assert.Equal(0x10006u, random.State);
+        Assert.Equal(0x10006u, random.State());
         Assert.Equal(0x43a70000u, MoneyRead(saved));
         Assert.Equal(0, reseeds);
         Assert.False(store.Initialized);

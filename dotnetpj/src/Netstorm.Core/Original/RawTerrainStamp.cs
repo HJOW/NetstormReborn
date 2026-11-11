@@ -1,7 +1,5 @@
 // 초기 TerrainBuilder의 두 이웃 mask·독립 CRT cache·실제 지면/fringe 생성을 같은 raw 풀에 연결한다(cpppj o/RawTerrainStamp.h/.cpp).
 // 2026-11-07 R4 지형·섬 생성 및 인구/배치 1차에서 이식했다.
-using Netstorm.Core.Simulation;
-
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -136,8 +134,8 @@ public sealed class RawTerrainStamp
     /// <summary>현재 code/지역/mapping/bounds/context다.</summary>
     private readonly TerrainStampMap _map;
 
-    /// <summary>비AA와 fringe 검색이 소비하는 실제 GameRandom이다.</summary>
-    private readonly NetstormRandom _random;
+    /// <summary>비AA와 fringe 검색이 소비하는 실제 GameRandom이다. 2026-11-12 0.457에서 단일 공유 스트림으로 바꿨다(근거 cpppj RawCampaignSession.cpp 498행).</summary>
+    private readonly GameRandom _random;
 
     /// <summary>초기 99 cache가 소비하는 공유 CRT holdrand 읽기 대리자다.</summary>
     private readonly Func<uint> _getCrtState;
@@ -168,7 +166,7 @@ public sealed class RawTerrainStamp
         IReadOnlyList<OriginalTypeRecord> types,
         IReadOnlyList<RiftTypeFrames> frames,
         TerrainStampMap map,
-        NetstormRandom random,
+        GameRandom random,
         Func<uint> getCrtState,
         Action<uint> setCrtState,
         TerrainStampState state,

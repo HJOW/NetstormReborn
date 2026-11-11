@@ -30,7 +30,7 @@ public sealed class X86RawFortSpWriteTests
         private readonly byte[][] _buffers = [new byte[256], new byte[256], new byte[256]];
 
         /// <summary>검사 쪽에서 읽는 Native 실제 4558c0 대응 공유 난수.</summary>
-        private readonly NetstormRandom _random = new(0);
+        private readonly GameRandom _random = new(0);
 
         /// <summary>원시 float 입력 비트.</summary>
         private uint _bits;
@@ -63,7 +63,7 @@ public sealed class X86RawFortSpWriteTests
         public string Trace => _trace;
 
         /// <summary>공유 난수(진단용).</summary>
-        public NetstormRandom Random => _random;
+        public GameRandom Random => _random;
 
         /// <summary>
         /// 기록의 원시 입력만 해석하고 Native 출력을 역산하지 않는다. 입력 칸은 8개다.
@@ -160,7 +160,7 @@ public sealed class X86RawFortSpWriteTests
             hooks.NextRandom = limit =>
             {
                 Assert.Equal(32u, limit);
-                uint value = (uint)_random.Next((int)limit);
+                uint value = _random.Next(limit);
                 _randoms++;
                 if (value == (_randoms - 1) / 16)
                 {
@@ -170,7 +170,7 @@ public sealed class X86RawFortSpWriteTests
                 {
                     _trace += ';';
                 }
-                _trace += $"R:{_randoms}:{value}:{_random.State}";
+                _trace += $"R:{_randoms}:{value}:{_random.State()}";
                 Mutate("r" + _randoms);
                 return value;
             };
@@ -269,7 +269,7 @@ public sealed class X86RawFortSpWriteTests
                 status = "stop";
             }
             Assert.Equal(row[2], status);
-            Assert.Equal(X86Fixture.UInt(row[4]), device.Random.State);
+            Assert.Equal(X86Fixture.UInt(row[4]), device.Random.State());
             Assert.Equal(X86Fixture.UInt(row[5]), device.RandomCalls);
             Assert.Equal(X86Fixture.UInt(row[6]), device.AssertionCalls);
             Assert.Equal(X86Fixture.UInt(row[7]), device.EqualDraws);

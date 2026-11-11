@@ -1,5 +1,3 @@
-using Netstorm.Core.Simulation;
-
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -150,7 +148,7 @@ public sealed class RawFortRandomPlacement
         byte[] spots,
         IReadOnlyList<OriginalTypeRecord> types,
         IReadOnlyList<RiftTypeFrames> frames,
-        NetstormRandom globalRandom,
+        GameRandom globalRandom,
         FortRandomPlacementState state,
         FortRandomPlacementHooks hooks)
     {
@@ -197,7 +195,7 @@ public sealed class RawFortRandomPlacement
     private readonly IReadOnlyList<RiftTypeFrames> _frames;
 
     /// <summary>원본 FUN_004558c0 난수다. 상태 0이면 0x0BAD0BAD로 바꾼 뒤 상태×0x10003+3의 상위 16비트를 한도로 나눈 나머지를 쓴다.</summary>
-    private readonly NetstormRandom _random;
+    private readonly GameRandom _random;
 
     /// <summary>매 실제 분기에서 읽는 원본 타입·편집 소유자 전역이다.</summary>
     private readonly FortRandomPlacementState _state;
@@ -390,7 +388,7 @@ public sealed class RawFortRandomPlacement
                 }
             }
         }
-        return count != 0 ? candidates[_random.Next(count)] : -1;
+        return count != 0 ? candidates[unchecked((int)_random.Next((uint)count))] : -1;
     }
 
     /// <summary>
@@ -401,7 +399,7 @@ public sealed class RawFortRandomPlacement
     /// <param name="localRandom">군집이 전달하는 local 난수다. 단일 몸체는 소비하지 않는다.</param>
     /// <param name="request">배치 요청이다.</param>
     /// <returns>새 SID·교체 지면 SID·모서리 거부 1·실패 0이다.</returns>
-    public uint Place(NetstormRandom localRandom, FortRandomPlaceRequest request)
+    public uint Place(GameRandom localRandom, FortRandomPlaceRequest request)
     {
         int sx = Ftol((double)request.X + 0.5);
         int sy = Ftol((double)request.Y + 0.5);

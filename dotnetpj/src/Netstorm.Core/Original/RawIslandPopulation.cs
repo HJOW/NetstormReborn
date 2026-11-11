@@ -1,7 +1,6 @@
 // 섬 배치 후의 거주 구역·초기 객체 생성과 레코드 후처리를 같은 실제 월드에 연결한다.
 using System;
 using System.Buffers.Binary;
-using Netstorm.Core.Simulation;
 
 // 10.78 Islandbuilder/Addrandom의 실제 부모를 담는 네임스페이스다. 2026-11-07 R4 지형·섬 생성 1차 이식에서 추가됐다.
 namespace Netstorm.Core.Original;
@@ -176,7 +175,7 @@ public sealed class RawIslandPopulation
     {
         FortRandomRectangle rectangle = Center(area);
         byte[] record = RawFortTerritorySave.FortTerritoryIslandRecord(_world, region);
-        NetstormRandom random = new((uint)record[3] * 103u);
+        GameRandom random = new((uint)record[3] * 103u);
         if (_globals.Fort)
         {
             random.SetState(RawFortFinishOwner.TimeSeed(Need(_hooks.WallSeconds)()));
@@ -277,7 +276,7 @@ public sealed class RawIslandPopulation
     private void ResidenceIn(FortRandomRectangle area, int region, uint quantity)
     {
         byte[] record = RawFortTerritorySave.FortTerritoryIslandRecord(_world, region);
-        NetstormRandom random = new((uint)record[3] * 103u);
+        GameRandom random = new((uint)record[3] * 103u);
         _ = _placement.PlaceRandom(random, area, region, quantity, _globals.Residence, 0u);
     }
 

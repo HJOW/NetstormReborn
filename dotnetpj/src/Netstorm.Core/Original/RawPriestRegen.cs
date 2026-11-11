@@ -1,5 +1,3 @@
-using Netstorm.Core.Simulation;
-
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -105,8 +103,8 @@ public sealed class RawPriestRegen
     /// <summary>공간 경계.</summary>
     private readonly PriestHitPointHooks _space;
 
-    /// <summary>원본 전역 난수.</summary>
-    private readonly NetstormRandom _random;
+    /// <summary>원본 전역 난수. 2026-11-12 0.457에서 단일 공유 스트림으로 바꿨다.</summary>
+    private readonly GameRandom _random;
 
     /// <summary>처리 중 조회·갱신하는 상태.</summary>
     private readonly PriestRegenState _state;
@@ -126,7 +124,7 @@ public sealed class RawPriestRegen
     /// <param name="state">처리 중 상태.</param>
     /// <param name="hooks">외부 동작. 7갈래가 모두 있어야 한다.</param>
     public RawPriestRegen(RawSidPool pool, RawSquidReward hp, RawPriestState priest,
-        PriestHitPointMode mode, PriestHitPointHooks space, NetstormRandom random,
+        PriestHitPointMode mode, PriestHitPointHooks space, GameRandom random,
         PriestRegenState state, PriestRegenHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(pool);
@@ -178,7 +176,7 @@ public sealed class RawPriestRegen
             throw new InvalidOperationException("사제 회복 타입·가상 표 오류");
         }
         PriestRegenPatchState tracking = _state.Patch;
-        tracking.Sample = (uint)_random.Next(9);
+        tracking.Sample = _random.Next(9u);
         tracking.Sequence = Add(tracking.Sequence, 3);
         if (tracking.Sequence > SequenceLimit)
         {

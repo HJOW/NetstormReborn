@@ -160,7 +160,7 @@ public sealed class FarmClusterTests
         public List<RiftTypeFrames> Frames;
 
         /// <summary>단일 프레임 선택이 소비하는 같은 전체 난수다.</summary>
-        public NetstormRandom Random = new(0);
+        public GameRandom Random = new(0);
 
         /// <summary>실제 가장자리 농지 121·섬 97·owner 전역이다.</summary>
         public readonly FortRandomPlacementState PlacementState = new();
@@ -410,11 +410,11 @@ public sealed class FarmClusterTests
                 Event("A", assertion == FarmClusterAssertion.MissingIsland ? 294u : 300u);
             };
             hooks = RawFarmCluster.MakeFarmClusterPlacementHook(Pool, Placement!, hooks);
-            Func<NetstormRandom, FortRandomPlaceRequest, uint> actual = hooks.Place!;
+            Func<GameRandom, FortRandomPlaceRequest, uint> actual = hooks.Place!;
             hooks.Place = (local, request) =>
             {
                 Attempts++;
-                LastLocal = local.State;
+                LastLocal = local.State();
                 uint[] values = [LastLocal, request.Type, BitConverter.SingleToUInt32Bits(request.X),
                     BitConverter.SingleToUInt32Bits(request.Y), unchecked((uint)request.Region), request.Mode, request.Force];
                 // 단일 진입의 원본 DWORD 일곱 개를 순서대로 기록한다
@@ -600,7 +600,7 @@ public sealed class FarmClusterTests
             uint actualTrace = Adler([.. scene.Trace]);
             uint actualEffects = Adler(effectBytes);
             string actualRaw = scene.ChangedRaw();
-            uint actualGlobal = scene.Random.State;
+            uint actualGlobal = scene.Random.State();
             uint actualLocal = scene.LastLocal;
             uint actualAssert = scene.Assertions;
             bool same = actualAttempts == Number(row[2]) && actualTrace == Number(row[3])
