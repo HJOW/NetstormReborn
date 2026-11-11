@@ -558,6 +558,22 @@ public sealed class HostSession
     /// <remarks>2026-11-12 0.437에서 월드 적재 드라이런용으로 추가했다. 실제 값 경로는 시작 흐름 단위에서 잇는다.</remarks>
     private uint _worldLoadingDepth;
 
+    /// <summary>월드 적재 setConfig 전달을 실제 설정 경계에 연결한다. NUL 포함 핸들은 C 문자열처럼 앞에서 자른다.</summary>
+    /// <param name="configuration">쓸 설정 인터페이스다.</param>
+    /// <returns>이름·NUL 포함 바이트를 받는 전달 효과다.</returns>
+    /// <remarks>2026-11-12 0.439에서 SetConfig 라이브 연결로 추가했다. fort. 접두 키는 fort 객체에만 쓰고
+    /// 루트 변경 표시를 켜지 않아 options 저장을 촉발하지 않는다(0.438). 전체 바이트는 공유 HandleBuffer에 남는다.</remarks>
+    public static Action<string, byte[]> BuildSetConfigHook(ConfigInterface configuration)
+    {
+        ArgumentNullException.ThrowIfNull(configuration);
+        return (name, handle) =>
+        {
+            ArgumentException.ThrowIfNullOrEmpty(name);
+            ArgumentNullException.ThrowIfNull(handle);
+            configuration.Set(name, System.Text.Encoding.Latin1.GetString(handle));
+        };
+    }
+
     /// <summary>세션 저장소를 공유하는 월드 적재 부모를 만든다. 호출자가 효과 묶음을 모두 준다.</summary>
     /// <param name="islandHooks">섬 런타임의 거주 구역·진단 효과다.</param>
     /// <param name="territoryHooks">Territory 적재의 child·진단 효과다.</param>
