@@ -183,8 +183,8 @@ cpppj/src/client/RawChatChannels.h	Netstorm.Client/Chat/RawChatChannels.cs	65bc3
 cpppj/src/client/RawImage.cpp	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/RawImage.h	Netstorm.Client/Display/RawImage.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Gump/HtmlBodyTextParser.cs	ecb9802a88b7de3f5740f3a1cda95c21ea982c24	port
-cpppj/src/client/RawMenuHtml.inc	Netstorm.Client/Gump/GumpModal.cs	9960123999de9a35e92ef31f1531d7ef7175b442	port
-cpppj/src/client/RawMenuHtml.inc	Netstorm.Client/Gump/HtmlWindowTextParser.cs	9960123999de9a35e92ef31f1531d7ef7175b442	port
+cpppj/src/client/RawMenuHtml.inc	Netstorm.Client/Gump/GumpModal.cs	350641c48ec28ffc566d124732a857744e81c1b9	port
+cpppj/src/client/RawMenuHtml.inc	Netstorm.Client/Gump/HtmlWindowTextParser.cs	350641c48ec28ffc566d124732a857744e81c1b9	port
 cpppj/src/client/RawMenuSaveFort.inc	Netstorm.Client/Host/HostFortNameConfirmation.cs	75c5dacabd0611a0540f198e75547903da40ca9a	port
 cpppj/src/client/RawMenuSaveFort.inc	Netstorm.Client/Host/HostSaveFortDialog.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawPriestMenu.h	Netstorm.Client/Gump/QuickHelpHtml.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	port

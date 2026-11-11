@@ -84,11 +84,15 @@ public sealed class HostHtmlFactory : IDisposable
         (key, value) => _startup.Configuration.Set(Text(key), Text(value)));
 
     /// <summary>같은 실제 맵 목록·선택 이름·문자열 고리로 Tell의 맵 행을 연결한다.</summary>
-    public void BindMapCatalog(SoloMapCatalog catalog, HostHtmlMenus menus, ScriptStringRing strings, Func<string> current, Func<string> fallback)
+    /// <param name="translate">이동 행 고정 단어의 현재 언어 번역이다. 없으면 영어 그대로다.</param>
+    /// <remarks>2026-11-11 0.367에서 cpppj HEAD의 RawMenuHtml.inc K4 맵 단어 번역 배선을 반영했다.</remarks>
+    public void BindMapCatalog(SoloMapCatalog catalog, HostHtmlMenus menus, ScriptStringRing strings, Func<string> current, Func<string> fallback,
+        Func<string, string>? translate = null)
     {
         var hooks = TellMapMenus.Bind(catalog.List, catalog.State, catalog.SelectFileSpec, current, fallback,
             flags => menus.Widgets.BeginVertical(flags), (row, command) =>
-                menus.Controls.AddChecked(row.Checked, Encoding.Latin1.GetBytes(row.Label), command, strings.Store(row.Name), true, row.Enabled));
+                menus.Controls.AddChecked(row.Checked, Encoding.Latin1.GetBytes(row.Label), command, strings.Store(row.Name), true, row.Enabled),
+            translate);
         HtmlWindowMetadata.BindHtmlWindowMetadataMaps(MetadataHooks, hooks);
     }
 

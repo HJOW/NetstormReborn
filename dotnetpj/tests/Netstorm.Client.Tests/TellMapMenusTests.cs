@@ -182,4 +182,20 @@ public sealed class TellMapMenusTests
         Assert.False(rows[^1].Row.Checked);
         Assert.True(rows[^1].Row.Enabled);
     }
+
+    /// <summary>묶음 연결이 이동 행 번역 장치를 그대로 전달한다.</summary>
+    /// <remarks>2026-11-11 0.367에서 RawMenuHtml.inc K4 맵 단어 번역 배선과 함께 추가했다.</remarks>
+    [Fact]
+    public void BindForwardsTranslateDevice()
+    {
+        var state = new SoloMapListState();
+        var list = new RawSoloMapList(state, new SoloMapListHooks { MayEditMissions = () => 0 });
+        var bound = TellMapMenus.Bind(list, state, _ => { }, () => "", () => "", _ => { }, (_, _) => { },
+            key => key == "Next" ? "다음" : key);
+        Assert.NotNull(bound.Translate);
+        Assert.Equal("다음", bound.Translate!("Next"));
+        Assert.Equal("of", bound.Translate("of"));
+        var plain = TellMapMenus.Bind(list, state, _ => { }, () => "", () => "", _ => { }, (_, _) => { });
+        Assert.Null(plain.Translate);
+    }
 }
