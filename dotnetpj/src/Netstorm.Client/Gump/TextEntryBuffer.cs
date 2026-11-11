@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using Netstorm.Client.Input;
 
 namespace Netstorm.Client.Gump; // 표시 조각 버퍼와 구별한 원본 문자 편집/선택/LF 줄 표 영역이다.
 
@@ -139,9 +140,27 @@ public sealed class TextEntryBuffer
     /// <summary>빈 선택은 실제 전체 선택으로 바꾼 뒤 복사→null 삽입→dirty1을 수행한다.</summary>
     public void Cut() { if (State.SelectionBegin == State.SelectionEnd) { State.SelectionBegin = 0; State.SelectionEnd = State.Length; } Copy(); Insert(); State.Dirty = 1; }
     /// <summary>원본256바이트 클립보드에서 제외 문자를 지운 뒤 비어 있지 않으면 삽입한다.빈 입력도dirty1이다.</summary>
-    public void Paste(ReadOnlySpan<byte> excluded = default)
+    /// <param name="excluded">제외할 선두 바이트들이다.</param>
+    /// <param name="maxLength">확장 토큰이 있을 때만 쓰는 물리 바이트 상한이다. 0이면 원문 동작이다.</param>
+    /// <remarks>2026-11-11 0.352에서 cpppj HEAD의 확장 붙여넣기(`Paste` 길이 인자)를 반영했다.</remarks>
+    public void Paste(ReadOnlySpan<byte> excluded = default, int maxLength = 0)
     {
         byte[] text = new byte[256]; Require(_hooks.ClipboardRead)(text); int length = CStringLength(text);
+        ReadOnlySpan<byte> incoming = text.AsSpan(0, length);
+        // 기존 한글 본문에 긴 ASCII를 붙이는 경우도 최종 바이트 상한을 우회하지 않는다
+        if (DisplayTextInput.HasExtendedDisplayText(incoming) || DisplayTextInput.HasExtendedDisplayText(Text()))
+        {
+            ReadOnlySpan<byte> current = Text();
+            int begin = DisplayTextInput.DisplayTextFloor(current, State.SelectionBegin);
+            int end = State.SelectionBegin == State.SelectionEnd ? begin : DisplayTextInput.DisplayTextCeil(current, State.SelectionEnd);
+            int kept = unchecked(State.Length - (end - begin));
+            int available = maxLength > 0 ? Math.Max(0, maxLength - 1 - kept) : 255;
+            int excludedLength = excluded.IsEmpty ? 0 : CStringLength(excluded);
+            byte[] filtered = DisplayTextInput.FilterDisplayText(incoming, excluded.IsEmpty ? default : excluded[..excludedLength], available);
+            if (filtered.Length != 0) { Select(begin, end); byte[] terminated = [.. filtered, (byte)0]; Insert(terminated); }
+            State.Dirty = 1;
+            return;
+        }
         if (!excluded.IsEmpty) { int excludedLength = CStringLength(excluded), index = 0;
             // 문자를 지운 경우 같은 현재 칸을 다시 검사한다.원본 고정 length의 memmove 폭도 유지한다.
             while (index < text.Length && text[index] != 0) { if (!excluded[..excludedLength].Contains(text[index])) index++; else text.AsSpan(index + 1, length - index).CopyTo(text.AsSpan(index, length - index)); } text[^1] = 0;

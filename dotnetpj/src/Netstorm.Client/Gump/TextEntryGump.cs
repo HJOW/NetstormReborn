@@ -1,4 +1,5 @@
 using Netstorm.Client.Display;
+using Netstorm.Client.Input;
 
 namespace Netstorm.Client.Gump; // 같은 기본 Gump/문자 버퍼를 쓰는 원본 Editgump와 Console 영역이다.
 
@@ -249,7 +250,11 @@ public sealed class TextEntryGump
         var n = Node(token); if (line < 0) line = 0; else if (Buffer(token).LineCount() <= line) line = unchecked(Buffer(token).LineCount() - 1); if (column < 0) column = 0; else if (Buffer(token).LineLength(n.ScrollLine) <= column) column = unchecked(Buffer(token).LineLength(n.ScrollLine) - 1);
         n.ScrollLine = line; n.ScrollColumn = column; var metric = Measure(token, "M\0"u8); int rows = GumpCollection.Ftol((double)n.BaseHeight / metric.Height), columns = GumpCollection.Ftol((double)n.BaseWidth / metric.Width); Require(_hooks.SliderRange); Require(_hooks.SliderPage); Require(_hooks.SliderPosition);
         Buffer(token).LineLength(n.ScrollLine); int count = Buffer(token).LineLength(n.ScrollLine); _hooks.SliderRange!(n.HorizontalSlider, 0, unchecked(count - 1)); _hooks.SliderPage!(n.HorizontalSlider, columns); _hooks.SliderPosition!(n.HorizontalSlider, column); n.ScrollColumn = Slider(n.HorizontalSlider).Position;
-        int lines = Buffer(token).LineCount(); _hooks.SliderRange(n.VerticalSlider, 0, unchecked(lines - 1)); _hooks.SliderPage(n.VerticalSlider, rows); _hooks.SliderPosition(n.VerticalSlider, line); n.ScrollLine = Slider(n.VerticalSlider).Position; Redraw(token);
+        int lines = Buffer(token).LineCount(); _hooks.SliderRange(n.VerticalSlider, 0, unchecked(lines - 1)); _hooks.SliderPage(n.VerticalSlider, rows); _hooks.SliderPosition(n.VerticalSlider, line); n.ScrollLine = Slider(n.VerticalSlider).Position;
+        // 두 실제 Slider가 확정한 줄에서만 바이트 열을 문자 경계로 보정한다. 2026-11-11 0.352에서 cpppj HEAD를 반영했다.
+        ReadOnlySpan<byte> currentLine = DisplayTextInput.DisplayTextLine(Buffer(token).Text(), n.ScrollLine);
+        if (DisplayTextInput.HasExtendedDisplayText(currentLine)) { n.ScrollColumn = DisplayTextInput.DisplayTextFloor(currentLine, Math.Max(0, n.ScrollColumn)); Require(_hooks.SliderPosition)(n.HorizontalSlider, n.ScrollColumn); }
+        Redraw(token);
     }
     /// <summary>현재signed DWORD에 감김delta를 더한다.</summary>
     public void RelativeScroll(uint token, int line, int column) => SetScroll(token, unchecked(Node(token).ScrollLine + line), unchecked(Node(token).ScrollColumn + column));
@@ -278,21 +283,52 @@ public sealed class TextEntryGump
         var n = Node(token); uint value = code, result = 0, key = code & CodeMask;
         if ((code & Command) == 0 && key != 0x10000 && key != 0x20000 && n.ReadOnly == 0 && (code & Release) == 0)
         {
+            // 기존 순수 바이트 검사는 원문 계산·통지 경로를 그대로 사용한다. 2026-11-11 0.352에서 cpppj HEAD의 확장 문자 경계를 반영했다.
+            bool extended = DisplayTextInput.HasExtendedDisplayText(Buffer(token).Text());
+            if (extended)
+            {
+                var selected = Buffer(token);
+                ReadOnlySpan<byte> selectedText = selected.Text();
+                int normalizedBegin = DisplayTextInput.DisplayTextFloor(selectedText, selected.State.SelectionBegin);
+                int normalizedEnd = selected.State.SelectionBegin == selected.State.SelectionEnd ? normalizedBegin : DisplayTextInput.DisplayTextCeil(selectedText, selected.State.SelectionEnd);
+                selected.Select(normalizedBegin, normalizedEnd);
+                // 외부 선택 뒤 낡은 Shift 기준도 토큰 내부를 가리키지 않는다
+                n.ShiftAnchor = DisplayTextInput.DisplayTextFloor(selectedText, Math.Max(0, n.ShiftAnchor));
+                n.ShiftEnd = DisplayTextInput.DisplayTextFloor(selectedText, Math.Max(0, n.ShiftEnd));
+            }
+            // 현재 버퍼를 매번 다시 읽으므로 Insert 재할당 뒤의 오래된 뷰를 보유하지 않는다
+            int Previous(int at) => extended ? DisplayTextInput.PreviousDisplayText(Buffer(token).Text(), Math.Max(0, at)) : unchecked(at - 1);
+            int Next(int at) => extended ? DisplayTextInput.NextDisplayText(Buffer(token).Text(), Math.Max(0, at)) : unchecked(at + 1);
             result = 1; bool notify = true;
             switch (key)
             {
-                case 0x250000: { int begin = Buffer(token).State.SelectionBegin, end = Buffer(token).State.SelectionEnd; if ((code & Shift) == 0) Buffer(token).Select(unchecked(begin - 1), unchecked(begin - 1)); else { if (begin == end) { n.ShiftAnchor = begin; n.ShiftEnd = end; } n.ShiftEnd = unchecked(n.ShiftEnd - 1); Buffer(token).Select(n.ShiftAnchor, n.ShiftEnd); } break; }
-                case 0x270000: { int begin = Buffer(token).State.SelectionBegin, end = Buffer(token).State.SelectionEnd; if ((code & Shift) == 0) Buffer(token).Select(unchecked(end + 1), unchecked(end + 1)); else { if (begin == end) { n.ShiftAnchor = begin; n.ShiftEnd = end; } n.ShiftEnd = unchecked(n.ShiftEnd + 1); Buffer(token).Select(n.ShiftAnchor, n.ShiftEnd); } break; }
-                case 0x230000: { int begin = Buffer(token).State.SelectionBegin, end = Buffer(token).State.SelectionEnd; if ((code & Shift) == 0) { int at = unchecked(Buffer(token).State.Length + 1); Buffer(token).Select(at, at); RelativeScroll(token, 0, n.ShiftEnd); } else { if (begin == end) { n.ShiftAnchor = begin; n.ShiftEnd = end; } n.ShiftEnd = unchecked(Buffer(token).State.Length + 1); Buffer(token).Select(n.ShiftAnchor, n.ShiftEnd); RelativeScroll(token, 0, n.ShiftEnd); } break; }
+                case 0x250000: { int begin = Buffer(token).State.SelectionBegin, end = Buffer(token).State.SelectionEnd; if ((code & Shift) == 0) Buffer(token).Select(Previous(begin), Previous(begin)); else { if (begin == end) { n.ShiftAnchor = begin; n.ShiftEnd = end; } n.ShiftEnd = Previous(n.ShiftEnd); Buffer(token).Select(n.ShiftAnchor, n.ShiftEnd); } break; }
+                case 0x270000: { int begin = Buffer(token).State.SelectionBegin, end = Buffer(token).State.SelectionEnd; if ((code & Shift) == 0) Buffer(token).Select(Next(end), Next(end)); else { if (begin == end) { n.ShiftAnchor = begin; n.ShiftEnd = end; } n.ShiftEnd = Next(n.ShiftEnd); Buffer(token).Select(n.ShiftAnchor, n.ShiftEnd); } break; }
+                case 0x230000: { int begin = Buffer(token).State.SelectionBegin, end = Buffer(token).State.SelectionEnd; if ((code & Shift) == 0) { int at = extended ? Buffer(token).State.Length : unchecked(Buffer(token).State.Length + 1); Buffer(token).Select(at, at); RelativeScroll(token, 0, n.ShiftEnd); } else { if (begin == end) { n.ShiftAnchor = begin; n.ShiftEnd = end; } n.ShiftEnd = extended ? Buffer(token).State.Length : unchecked(Buffer(token).State.Length + 1); Buffer(token).Select(n.ShiftAnchor, n.ShiftEnd); RelativeScroll(token, 0, n.ShiftEnd); } break; }
                 case 0x240000: { int begin = Buffer(token).State.SelectionBegin, end = Buffer(token).State.SelectionEnd; if ((code & Shift) == 0) Buffer(token).Select(0, 0); else { if (begin == end) { n.ShiftAnchor = begin; n.ShiftEnd = end; } n.ShiftEnd = 0; Buffer(token).Select(n.ShiftAnchor, n.ShiftEnd); } RelativeScroll(token, 0, unchecked(-n.ScrollColumn)); break; }
-                case 8: if ((code & Control) != 0) Buffer(token).Reset(); else { int begin = Buffer(token).State.SelectionBegin, end = Buffer(token).State.SelectionEnd; if (begin == end) begin = unchecked(begin - 1); Buffer(token).Select(begin, end); Buffer(token).Insert(); } break;
+                case 8: if ((code & Control) != 0) Buffer(token).Reset(); else { int begin = Buffer(token).State.SelectionBegin, end = Buffer(token).State.SelectionEnd; if (begin == end) begin = Previous(begin); Buffer(token).Select(begin, end); Buffer(token).Insert(); } break;
                 case 13: if (n.Multiline != 0) { value = 10; Buffer(token).Insert("\n\0"u8); } Bubble(token, _state.EnterEvent, n.Serial, 0); break;
                 case 9: case 27: case 0x260000: case 0x280000: result = 0; notify = false; break;
-                case 0x2d0000: if ((code & Control) != 0) Buffer(token).Copy(); else if ((code & Shift) != 0) Buffer(token).Paste(Excluded(token)); break;
-                case 0x2e0000: if ((code & Shift) != 0) Buffer(token).Cut(); else { int begin = Buffer(token).State.SelectionBegin, end = Buffer(token).State.SelectionEnd; if (begin == end) end = unchecked(end + 1); Buffer(token).Select(begin, end); Buffer(token).Insert(); } break;
+                case 0x2d0000: if ((code & Control) != 0) Buffer(token).Copy(); else if ((code & Shift) != 0) Buffer(token).Paste(Excluded(token), n.MaxLength); break;
+                case 0x2e0000: if ((code & Shift) != 0) Buffer(token).Cut(); else { int begin = Buffer(token).State.SelectionBegin, end = Buffer(token).State.SelectionEnd; if (begin == end) end = Next(end); Buffer(token).Select(begin, end); Buffer(token).Insert(); } break;
                 default:
+                    if (DisplayTextInput.IsCommittedTextInput(code))
+                    {
+                        byte[] bytes = DisplayTextInput.CommittedTextBytes(code);
+                        var target = Buffer(token); var targetState = target.State;
+                        ReadOnlySpan<byte> excluded = Excluded(token);
+                        // 숫자 전용창의 기존 제외목록은 확장 토큰 전체에도 적용한다
+                        if (excluded.IndexOf((byte)0x1f) >= 0) { result = 0; notify = false; break; }
+                        // 길이 제한은 기존 물리 바이트 상한이고 새 문자만 완전한 토큰으로 판정한다
+                        long size = (long)targetState.Length - (targetState.SelectionEnd - targetState.SelectionBegin) + bytes.Length;
+                        if (n.MaxLength < 1 || size < n.MaxLength) target.Insert(Terminated(bytes)); else { result = 0; notify = false; }
+                        break;
+                    }
                     if (key < 0x20 || key >= 0x100) { result = 0; notify = false; break; }
-                    if (n.MaxLength < 1 || unchecked(Buffer(token).State.Length + 1) < n.MaxLength) { var excluded = Excluded(token); if (!excluded.IsEmpty && excluded.Contains(unchecked((byte)value))) { result = 0; notify = false; break; } Span<byte> character = [(byte)value, 0]; Buffer(token).Insert(character); } break;
+                    var current = Buffer(token).State;
+                    // 원문 순수 바이트의 선택 미차감 규칙은 유지한다
+                    long length = extended ? (long)current.Length - (current.SelectionEnd - current.SelectionBegin) + 1 : unchecked(current.Length + 1);
+                    if (n.MaxLength < 1 || length < n.MaxLength) { var excludedText = Excluded(token); if (!excludedText.IsEmpty && excludedText.Contains(unchecked((byte)value))) { result = 0; notify = false; break; } Span<byte> character = [(byte)value, 0]; Buffer(token).Insert(character); } break;
             }
             if (notify && n.ChangeNotice != 0) Bubble(token, _state.ChangeEvent, 0, 0); Redraw(token); if (n.ForwardInput != 0) Bubble(token, value, first, second);
         }
@@ -312,8 +348,10 @@ public sealed class TextEntryGump
                 {
                     ReadOnlyMemory<byte>? word = null;
                     if (n.ResetWord != 0) { n.WordStart = unchecked((uint)begin); var data = Buffer(token).Data();
-                        // 원본 ASCII 공백/콜론 바로 뒤까지 단어 시작을 역방향으로 찾는다.
-                        while (n.WordStart > 0) { uint at = n.WordStart - 1; if (at >= data.Length) throw new ArgumentOutOfRangeException(nameof(begin)); byte b = data.Span[(int)at]; if (b == 32 || b is >= 9 and <= 13 || b == 58) break; n.WordStart--; }
+                        // 토큰 숫자 바이트를 공백으로 오해하지 않는다. 2026-11-11 0.352에서 cpppj HEAD의 문자 경계 탐색을 반영했다.
+                        ReadOnlySpan<byte> consoleText = Buffer(token).Text(); bool extendedConsole = DisplayTextInput.HasExtendedDisplayText(consoleText);
+                        // 공백/콜론 바로 뒤까지 문자 경계로 단어 시작을 역방향으로 찾는다.
+                        while (n.WordStart > 0) { uint at = extendedConsole ? unchecked((uint)DisplayTextInput.PreviousDisplayText(consoleText, unchecked((int)n.WordStart))) : n.WordStart - 1; if (at >= data.Length) throw new ArgumentOutOfRangeException(nameof(begin)); byte b = data.Span[(int)at]; if (n.WordStart - at == 1 && (b == 32 || b is >= 9 and <= 13 || b == 58)) break; n.WordStart = at; }
                         n.WordLength = unchecked((uint)begin - n.WordStart); if (n.WordStart >= data.Length) throw new ArgumentOutOfRangeException(nameof(begin)); var raw = data[(int)n.WordStart..]; int count = CString(raw.Span).Length - 1; word = raw[..count];
                     }
                     byte[]? found = Require(_hooks.Complete)(n.Autocomplete, word, unchecked((int)n.WordLength), (code & Shift) != 0); if (found is not null) { Buffer(token).Select(unchecked((int)n.WordStart), unchecked((int)(n.WordStart + n.WordLength))); byte[] bytes = Terminated(found); Buffer(token).Insert(bytes); n.WordLength = (uint)bytes.Length - 1; n.ResetWord = 0; }
@@ -334,7 +372,20 @@ public sealed class TextEntryGump
         for (int index = n.ScrollLine; index < Buffer(token).LineCount(); index = unchecked(index + 1))
         {
             if (limit <= unchecked(index - n.ScrollLine)) return; uint length = Buffer(token).CopyLine(index, line, selection); if (length == uint.MaxValue) { _hooks.Assertion?.Invoke(0x2ae); throw new InvalidOperationException("문자 입력창 줄 복사 범위 거부"); }
-            if (n.ScrollColumn > 0 && n.ScrollColumn < 1024) { int visible = CString(line).Length - 1, removed = n.ScrollColumn; if (removed <= visible) line.AsSpan(removed, visible - removed + 1).CopyTo(line); }
+            // 순수 바이트는 원문을 유지하고 한글 줄만 선택/스크롤 경계를 보정한다. 2026-11-11 0.352에서 cpppj HEAD를 반영했다.
+            ReadOnlySpan<byte> original = line.AsSpan(0, unchecked((int)length)); bool extendedDraw = DisplayTextInput.HasExtendedDisplayText(original);
+            // 복사된 현재 줄의 토큰만 검사한다
+            int removedColumn = extendedDraw ? DisplayTextInput.DisplayTextFloor(original, Math.Max(0, n.ScrollColumn)) : Math.Max(0, n.ScrollColumn);
+            if (extendedDraw && selection[0] >= 0 && selection[1] >= 0) { int correctedBegin = DisplayTextInput.DisplayTextFloor(original, selection[0]); int correctedEnd = selection[0] == selection[1] ? correctedBegin : DisplayTextInput.DisplayTextCeil(original, selection[1]); selection[0] = correctedBegin; selection[1] = correctedEnd; }
+            if (n.ScrollColumn > 0 && n.ScrollColumn < 1024) { int visible = CString(line).Length - 1, removed = removedColumn;
+                // 원본 String::erase는 요청 수가 길이를 넘으면 아무것도 바꾸지 않는다
+                if (removed <= visible) line.AsSpan(removed, visible - removed + 1).CopyTo(line);
+                if (extendedDraw && removed <= visible)
+                {
+                    length -= unchecked((uint)removed);
+                    if (selection[0] >= 0) { int offset = removed; if (selection[1] < offset || (selection[1] == offset && selection[0] != selection[1])) { selection[0] = -1; selection[1] = -1; } else { selection[0] = Math.Max(0, selection[0] - offset); selection[1] = Math.Max(0, selection[1] - offset); } }
+                }
+            }
             if (length != 0) { if (length > line.Length) throw new ArgumentOutOfRangeException(nameof(length)); if (line[length - 1] == 10) line[length - 1] = 32; } else { line[0] = 32; line[1] = 0; }
             var dimensions = Measure(token, line);
             if (selection[0] == -1 || selection[1] <= selection[0])
