@@ -490,6 +490,70 @@ public sealed class HostSession
     /// <summary>세션이 공유하는 현재 mySubHandle NUL 저장소다. 이름 채우기가 쓰고 이름 확정이 읽는다.</summary>
     public byte[] HandleBuffer { get; } = new byte[64];
 
+    /// <summary>월드 적재가 읽는 같은 TYPE 프레임 표 개수다. PATCH 188이며 CD 171은 후속 단위에서 잇는다.</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 실제 타입 적재 단위에서 표를 채운다.</remarks>
+    public const int WorldFrameCount = 188;
+
+    /// <summary>월드 적재가 직접 쓰는 현재 Template header 바이트 수다(9×20, RawCampaignWorldLoad와 같은 값).</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다.</remarks>
+    public const int WorldTemplateBytes = 180;
+
+    /// <summary>세션이 소유한 빌더 attach용 원본 ChunkMap이다. 월드 적재의 섬 배치·지형 생성이 공유한다.</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 부모·갈고리 연결은 다음 단위다.</remarks>
+    public ChunkMap World { get; } = new();
+
+    /// <summary>세션이 소유한 섬 런타임 3204바이트 저장소다. 섬 목록의 count DWORD·100개 기록을 둔다.</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 런타임 부모 연결은 다음 단위다.</remarks>
+    public byte[] IslandRecords { get; } = new byte[RawIslandStorage.Bytes];
+
+    /// <summary>세션이 소유한 섬 런타임 모드 상태다. FortFinishOwner의 첫 지역·거주 구역 타입을 공유한다.</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 런타임 부모 연결은 다음 단위다.</remarks>
+    public FortFinishOwnerState IslandModes { get; } = new();
+
+    /// <summary>세션이 소유한 섬 런타임 거주 목록이다. AssetPostPop의 실제 등록 목록을 둔다.</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 런타임 부모 연결은 다음 단위다.</remarks>
+    public RawPostPopList IslandResidences { get; } = new();
+
+    /// <summary>세션이 소유한 표면 조회용 현재 hash0 단어 지도다. 섬 런타임·빌더가 함께 읽는다.</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 런타임 부모 연결은 다음 단위다.</remarks>
+    public RawSquidHash IslandHash { get; } = new();
+
+    /// <summary>세션이 소유한 지도 다시 그리기 공유 값이다. 섬 owner 변경이 증가시킨다.</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 런타임 갈고리 읽기로 쓴다.</remarks>
+    public uint IslandChanged { get; set; }
+
+    /// <summary>세션이 소유한 지도 리비전 공유 값이다. 패치판 owner 변경이 1로 둔다.</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 런타임 갈고리 읽기로 쓴다.</remarks>
+    public uint IslandRevision { get; set; }
+
+    /// <summary>세션이 소유한 같은 TYPE 프레임 표다. 실제 타입 적재 단위에서 채우기 전까지 빈 표다.</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 적재 본체 연결은 다음 단위다.</remarks>
+    public RiftTypeFrames[] WorldFrames { get; } = EmptyWorldFrames();
+
+    /// <summary>세션이 소유한 현재 Template header 180바이트다. 월드 적재가 +8 DWORD를 직접 쓴다.</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 적재 본체 연결은 다음 단위다.</remarks>
+    public byte[] WorldTemplates { get; } = new byte[WorldTemplateBytes];
+
+    /// <summary>세션이 소유한 월드 적재 전역이다. 구독자·편집·임무후 상태를 둔다.</summary>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 적재 본체 연결은 다음 단위다.</remarks>
+    public CampaignWorldGlobals WorldGlobals { get; } = new();
+
+    /// <summary>빈 프레임 표 188개를 만든다. 검사 하네스의 LoadScene과 같은 공유 빈 표다.</summary>
+    /// <returns>프레임 표다.</returns>
+    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다.</remarks>
+    private static RiftTypeFrames[] EmptyWorldFrames()
+    {
+        var frames = new RiftTypeFrames[WorldFrameCount];
+        var empty = new RiftTypeFrames([]);
+        // 모든 칸을 빈 표로 채우는 반복문이다.
+        for (int index = 0; index < frames.Length; ++index)
+        {
+            frames[index] = empty;
+        }
+
+        return frames;
+    }
+
     /// <summary>공유 핸들 버퍼에 번역 이름을 채운다. 원본 월드 적재의 핸들 버퍼 쓰기와 같다.</summary>
     /// <param name="translated">NUL 포함 번역 바이트다. 첫 NUL까지만 쓴다.</param>
     /// <remarks>2026-11-12 0.430에서 미션 값 채우기로 추가했다. 설정 전달과 이름 확정이 같은 버퍼를 읽는다.</remarks>
