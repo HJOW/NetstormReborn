@@ -1,10 +1,10 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.341 · 정리 2026-11-11(HJOW-Athlon, 문서만) · 다음 단위 0.342 · cpppj 기준 제품 1300(AGENTS 1~13차 구현 마감) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`) · 전체 목표 미완료 — 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
+**기준 단위 0.341 · 정리 2026-11-11(HJOW-Athlon, 문서만) · 다음 단위 0.342 · cpppj 기준 제품 1300(AGENTS 1~13차 구현 마감, 2026-11-11 추가된 14차 QuickJS는 cpppj 미착수) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`) · 전체 목표 미완료 — 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리 직전의 이 문서 전체(단위 기록 0.280~0.341, 0.9의 단위별 완료 체크 목록, 옛 4~8차 번호의 R8 표)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341)에 바이트 그대로 보관했고, 그 이전 보관본 4개와 0.279 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
-**읽는 순서:** 0.4(남은 작업) → 0.5(확정된 결정) → 1절(cpppj 마감분 반영과 4~13차 대응표) → 필요할 때 나머지 절.
+**읽는 순서:** 0.4(남은 작업) → 0.5(확정된 결정) → 1절(cpppj 마감분 반영과 4~14차 대응표) → 필요할 때 나머지 절.
 
 <a id="dotnet-overview"></a>
 
@@ -33,7 +33,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 | R5 | 월드 표시·카메라·HUD | D2 진입 화면 픽셀 일치 | ⬜ 미착수 |
 | R6 | 플레이 입력·규칙·소리·AI | M2·M3 | ⬜ 미착수 |
 | R7 | 미션 전체·Edit·설정·배포 | M4 | ⬜ 미착수(Edit 목록·`options.cfg` 저장 일부는 R3에서 선행) |
-| R8 | AGENTS **4~13차**, 60/120프레임, Linux, LAN·Outpost | — | ⬜ 미착수. 즉시 요구인 11.01 표기·Credits 3항목·외부 접속 문서화는 완료, **`Copyright 2026 HJOW` 줄은 미반영**(0.4 1-3). LAN은 `Netstorm.Net` 사전 구현 일부(검사 없음) |
+| R8 | AGENTS **4~14차**, 60/120프레임, Linux, LAN·Outpost | — | ⬜ 미착수. 즉시 요구인 11.01 표기·Credits 3항목·외부 접속 문서화는 완료, **`Copyright 2026 HJOW` 줄은 미반영**(0.4 1-3). LAN은 `Netstorm.Net` 사전 구현 일부(검사 없음) |
 
 ### 0.3 숫자로 보는 현재
 
@@ -63,7 +63,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 | 4 | R5 → 이정표 D2, **`Netstorm.exe` 전환** | 월드 표시·카메라·HUD. 34경로 진입 직후와 N프레임 뒤 캡처 차이 0. 이 시점에 메뉴·미션 기본 실행을 새 경로로 바꾸고 `Netstorm.exe` 이름과 배포 대상을 새 호스트로 넘긴다. 기존 경로는 `NetstormLegacy`로 내려 비교·개발용으로만 두고 배포에서 뺀다(결정 D2) | 2·3 뒤 |
 | 5 | R6 → M2·M3 | 입력·선택·커서, 게임 메뉴·우클릭 메뉴, 규칙(사제·운반·건설·생산·전투·의식·미션)·AI·소리. 고정 입력열 L3 상태 해시와 대표 장면 캡처 일치. 1-1·1-2가 새 경로에서 같은 수준 이상으로 진행되면 기존 경로(`NetstormLegacy`)와 그 검사를 삭제한다(결정 D2·결정 5) | 4 뒤 |
 | 6 | R7 → M4 | 34경로 전체·데모 반복·진행 저장·Retry/Next/Abort, Edit 전체, `options.cfg`(9-1 C·D·F 판정), 배포 스크립트 갱신과 압축 해제 실행 확인 | 5 뒤 |
-| 7 | R8 — AGENTS 4~13차 | [1.3](#dotnet-r8-requirements) 표의 차수별 할 일. 결정 D1에 따라 요구사항 코드 상당 부분이 2~6 단계에서 함께 들어오므로 R8은 요구사항 전용 모듈(MCP·FSR 출력기·오류 로그·스커미시 화면·시나리오 편집기·외부 글꼴 출력) 이식과 요구사항 검증이 중심이다 | 6 뒤 |
+| 7 | R8 — AGENTS 4~14차 | [1.3](#dotnet-r8-requirements) 표의 차수별 할 일. 결정 D1에 따라 요구사항 코드 상당 부분이 2~6 단계에서 함께 들어오므로 R8은 요구사항 전용 모듈(MCP·FSR 출력기·오류 로그·스커미시 화면·시나리오 편집기·외부 글꼴 출력·14차 QuickJS 엔진 탑재) 이식과 요구사항 검증이 중심이다. 14차는 cpppj가 아직 구현하지 않았으므로 cpppj 구현 뒤 같은 계약으로 옮긴다 | 6 뒤 |
 | 8 | 60/120프레임 | cpppj F1·F2(옵션 `Frame Rate` 60/75 원본/120·양보 대기). 비행체 표시 보간은 cpppj D2를 따른다 | 7 뒤 |
 | 9 | Linux(DesktopGL) | 설정·진행 저장·커스텀 맵·로그는 `$HOME/.netstorm/` 아래 `Saves/`·`CustomMaps/`·`logs/`(결정 D5). Windows 전용 동작은 호스트 OS 분기에만 둔다 | 8 뒤 |
 | 10 | TCP/IP 로컬 멀티플레이·Outpost | cpppj 3차(M1~M7)를 로컬 네트워크만으로 옮긴다. MP 실행 검사는 cpppj처럼 사용자 확인으로 둔다 | 최후순위 |
@@ -109,10 +109,10 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 ### 1.1 cpppj 현황과 dotnetpj에 주는 의미
 
-cpppj는 제품 1300에서 AGENTS 1~13차 구현을 모두 마쳤다([LEFT_JOBS.md 0.4](LEFT_JOBS.md#stages)). cpppj에 남은 AI 작업은 CD 10.72 복원 C3~C5, M8 최종 관문 재실행, 비행체 표시 보간(F3, 선택)뿐이다.
+cpppj는 제품 1300에서 AGENTS 1~13차 구현을 모두 마쳤다([LEFT_JOBS.md 0.4](LEFT_JOBS.md#stages)). cpppj에 남은 AI 작업은 CD 10.72 복원 C3~C5, M8 최종 관문 재실행, 비행체 표시 보간(F3, 선택)이다. 2026-11-11 사용자 커밋 `85551c6c2`가 **14차(QuickJS 엔진 탑재)**를 새로 더했고 dotnetpj 범위를 4~14차로 넓혔다. 14차는 cpppj도 아직 착수하지 않았다.
 
 - **이식 기준이 안정됐다.** 그동안 cpppj가 같은 파일을 계속 고쳐 dotnetpj는 "파일을 건드릴 때 늦게 재대조"했다(0.281). 이제 한 번 재검토(0.4 1-2)한 뒤 HEAD 기준 파일 묶음 단위 이식이 가능하다.
-- **요구사항(4~13차)의 해석과 계약이 cpppj 구현으로 확정됐다.** dotnetpj는 같은 계약을 옮긴다([1.3](#dotnet-r8-requirements)). 옛 문서가 미정으로 둔 해석(MCP 범위·와이드 방식·사용자 홈 범위·Test Battle `.english` 처리)은 cpppj 문서를 따른다.
+- **요구사항(4~13차)의 해석과 계약이 cpppj 구현으로 확정됐다(14차는 cpppj 구현 뒤 확정).** dotnetpj는 같은 계약을 옮긴다([1.3](#dotnet-r8-requirements)). 옛 문서가 미정으로 둔 해석(MCP 범위·와이드 방식·사용자 홈 범위·Test Battle `.english` 처리)은 cpppj 문서를 따른다.
 - **오라클 장치가 갖춰졌다.** `snapshot`(L4a)·`session-dump`(L2)·`--fixed-frame-ms`(L3)·MCP. dotnetpj 쪽 같은 장치는 0.283·0.284에서 만들었다(world 0 덤프까지, 세션 조립에 따라 행을 늘린다).
 - **dotnetpj 비대상:** CD 10.72 복원은 cpppj 전용이다(AGENTS가 cpppj에만 둠). 단 cpppj가 C3에서 `Patch1078` 게이트(241파일 306곳)를 판본 분기로 바꾸면, dotnetpj가 이미 옮긴 판본 분기(PATCH/CD) 파일의 재대조가 필요하다. 그 커밋 이후의 영향 검토에서 확인한다. cpppj M8의 ZIP·검증 도구(`tools/verify_cpp_package.py`)는 dotnetpj 배포 검증(R7)의 참고 자료다.
 - **cpppj 사용자 결정 중 dotnetpj에 닿는 것:** cpppj D2(비행체 보간) → dotnetpj 60/120프레임 범위, cpppj D3(일본어 본문 번역·다른 언어) → dotnetpj 13차 범위, cpppj D4·D5(알려진 버그 재현 조건·공식) → 수정되면 HEAD로 따라간다, cpppj D6(스커미시 후속) → dotnetpj 12차 범위.
@@ -130,9 +130,9 @@ cpppj는 제품 1300에서 AGENTS 1~13차 구현을 모두 마쳤다([LEFT_JOBS.
 
 <a id="dotnet-r8-requirements"></a>
 
-### 1.3 R8 — AGENTS 4~13차 차수별 대응
+### 1.3 R8 — AGENTS 4~14차 차수별 대응
 
-AGENTS(`8661e1060`·`60226ea93`)는 cpppj의 **4~13차**를 dotnetpj 후순위 요구로 둔다. 옛 문서의 4~8차 번호는 7차(오류 로그) 신설로 한 칸씩 밀렸다(옛 7차 AA·FSR → 8차, 옛 8차 시나리오 편집 → 9차, 옛 9차 알려진 버그 → 10차). 각 차수의 해석·세부 계약은 cpppj 구현을 기준으로 옮긴다(결정 2). 기존 경로에 이미 있는 요구사항 기능(한국어 선택·와이드·전체화면)은 버리지 않고 새 경로에서 cpppj 방식으로 다시 만든다.
+AGENTS(`8661e1060`·`60226ea93`·`85551c6c2`)는 cpppj의 **4~14차**를 dotnetpj 후순위 요구로 둔다(webpj와 달리 제외 차수가 없다). 옛 문서의 4~8차 번호는 7차(오류 로그) 신설로 한 칸씩 밀렸다(옛 7차 AA·FSR → 8차, 옛 8차 시나리오 편집 → 9차, 옛 9차 알려진 버그 → 10차). 각 차수의 해석·세부 계약은 cpppj 구현을 기준으로 옮긴다(결정 2). 기존 경로에 이미 있는 요구사항 기능(한국어 선택·와이드·전체화면)은 버리지 않고 새 경로에서 cpppj 방식으로 다시 만든다.
 
 | 차수 | AGENTS 요구 | cpppj 구현·근거 | cpppj 주요 소스 | dotnetpj에서 할 일 | dotnetpj 현황 |
 | --- | --- | --- | --- | --- | --- |
@@ -146,6 +146,7 @@ AGENTS(`8661e1060`·`60226ea93`)는 cpppj의 **4~13차**를 dotnetpj 후순위 �
 | **11차** | Options 난이도(쉬움·보통·어려움, 기본 보통). 쉬움은 적 AI 다리 건설·유닛 생성 주기 ×4와 채취 유닛 절반(최소 1), 어려움은 주기 ×½ | 1292 [난이도](docs/exe/cpp-difficulty-d-20261111.md)(AI 설정 +0x220/224/228 배율, AI 단위 값) | `o/AiDifficulty` | 세션 AI 설정 소유자(0.306)에 배율 필드를 HEAD대로 두고, 보통이 원본과 같은지 먼저 검증한다 | 없음 |
 | **12차** | 스커미시(Campaign 메뉴 항목, 자체 UI: 적 AI 수·AI별 난이도/동맹·금지 유닛 최대 5개(Outpost 포함)·시작/취소, 섬 배치·간헐천은 MP처럼 랜덤) | 1293·1300 [스커미시](docs/exe/cpp-skirmish-sk-20261111.md)(미션 시작 전 `prepareWorld`가 군도 밀도→중앙섬→참가자별 전투섬 순서로 생성) | `client/SkirmishSetup`·`SkirmishMapList.inc`·`SkirmishStartIslands.inc` | 이미 옮긴 섬 생성(중앙·전투·군도 분리, 0.156)과 간헐천 생성을 MP 시작 순서로 묶는 경로를 옮긴다. 계약은 LEFT_JOBS.md 4.1 '스커미시 월드' | 없음 |
 | **13차** | 기타 언어(일본어 — 추후 추가 예정) | 일본어 UI 1288 [일본어](docs/exe/cpp-japanese-l1-l3-20261111.md)(번역표 509키·외부 Noto Sans JP·`.japanese`가 없으면 영어 본문) | 번역표·표시 부호화·외부 `fonts\NotoSansJP-*` | 6차 다음. 본문 번역 범위는 cpppj D3을 따른다 | 없음 |
+| **14차** | QuickJS 지원([quickjs-ng](https://github.com/quickjs-ng/quickjs)). 일단 엔진 탑재만 하고 어느 정도까지 연동할지는 추후 결정(AGENTS `85551c6c2`, 2026-11-11 추가) | **cpppj 미착수**([LEFT_JOBS.md](LEFT_JOBS.md) 0.4에 아직 없음) | — | cpppj가 탑재 방식·노출 API·연동 범위를 정한 뒤 같은 계약으로 옮긴다(결정 D1). AI 기본안: quickjs-ng 네이티브 라이브러리를 대상 플랫폼별(Windows x64 먼저, Linux는 9단계)로 빌드해 P/Invoke로 적재하고, 글꼴처럼 exe 밖 파일로 배포 ZIP에 라이선스(MIT)와 함께 넣는다. AGENTS가 QuickJS를 지정했으므로 Jint 같은 관리형 JS 엔진으로 대체하지 않는다. 엔진이 외부 접속을 하지 않음을 [dotnet 외부 접속 문서](docs/dotnet-external-endpoints-20261103.md)에 적는다 | 없음 |
 | 후순위 | 60/120프레임 | F1·F2 1297·1298 [계획·결과](docs/exe/cpp-post-plan-fps-cd1072-20261111.md)(옵션 `Frame Rate` 60/75 원본/120, 양보 대기로 CPU 점유 감소·프레임 시간 동일) | `client/FrameRateOption` | 0.4 8단계 | 기존 경로에 근사 `FramePacing`만 |
 | 후순위 | Linux(DesktopGL) | — | — | 0.4 9단계, 경로는 결정 D5 | 없음 |
 | 최후순위 | TCP/IP 로컬 멀티플레이·Outpost(3차) | M1~M7 [LEFT_JOBS.md 1절](LEFT_JOBS.md#done) | `client/Native*`, `src/zacket`, `o/RawPacket*`·`RawConnection*` 등 | 로컬 네트워크만(`LocalNetworkPolicy` 루프백·리슨) | 사전 구현(검사 없음): `Netstorm.Net` 0.152·0.287·0.307·0.321·0.324·0.330~0.333, 세션 에디터 전송 0.293 |
@@ -311,7 +312,7 @@ dotnetpj 작업에서는 cpppj·LEFT_JOBS.md를 수정하지 않는다. 아래 �
 
 ### 3.2 계속 유효한 결정·제약
 
-- **목표 순서:** ① 원본 10.78과 동일한 동작 → ② 요구사항(AGENTS 4~13차, 화면비·60/120프레임·다국어·재실행 오류 방지) → ③ Linux. 이미 들어간 요구사항 기능(한국어 선택·와이드·전체화면)은 버리지 않고 새 경로에서 cpppj 방식(논리 해상도·호환 전체화면)으로 다시 만든다. cpppj HEAD에 섞인 요구사항 코드도 함께 옮기고 기본 설정에서 먼저 검증한다(결정 D1).
+- **목표 순서:** ① 원본 10.78과 동일한 동작 → ② 요구사항(AGENTS 4~14차, 화면비·60/120프레임·다국어·재실행 오류 방지) → ③ Linux. 이미 들어간 요구사항 기능(한국어 선택·와이드·전체화면)은 버리지 않고 새 경로에서 cpppj 방식(논리 해상도·호환 전체화면)으로 다시 만든다. cpppj HEAD에 섞인 요구사항 코드도 함께 옮기고 기본 설정에서 먼저 검증한다(결정 D1).
 - **AGENTS.md 요구의 반영 상태** — [9.1](#agents-reflection) 표.
 - **글꼴·명칭·주석:** 영어 화면은 원본 `.chfnt`, 한국어는 D2Coding, 일본어·기타 언어는 Noto Sans·Noto Sans JP다([5절](#dotnet-user-decisions) 2·7번). 글꼴은 exe(어셈블리 리소스 포함)에 내장하지 않고 배포판 `Netstorm.exe` 옆 `fonts/`에서 별도 파일로 읽으며 라이선스 파일도 함께 배포한다. 현재 기존 경로는 D2Coding 1.3.2를 출력 폴더 `fonts/`로 복사한다(`CopyToOutputDirectory`). AGENTS.md의 한국어 명칭 규칙을 따른다. 기존 주석은 대상을 고칠 때 정비한다(5절 8번).
 - **cpppj 공통 제약을 준용한다.** CHEAT 항목은 Edit 편집에서만 나타난다. 공격형 공중 3종(훨리기그·맨오워·더스트 데빌)은 코드를 옮기되 실제 생산·생성·우클릭 재현과 추가 실행 관측은 하지 않는다. 연녹색 직사각형 분석은 보류한다(원본에서도 관찰됨). 대응 `.english`가 없을 때 Test Battle이 끝나는 원본 동작과 새 맵 `.english` 자동 생성은 9차(cpppj S2) 계약을 따른다. 실제 실행 검사에서 사제 포획/희생·특정 적 공격·시나리오 승리를 재현해야 하는 검사는 건너뛴다([TODO.md](TODO.md)). MP 실행 검사는 하지 않는다.
@@ -446,7 +447,7 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 | **cpppj 현행 상태·계약·사용자 결정** | [LEFT_JOBS.md](LEFT_JOBS.md)(0.4 단계별 현황·1절 완료 묶음·4.1 계약·5절 실행 제외) | — |
 | cpppj 실제 Session 덤프·고정 시각 실행(L2·L3 오라클) | [cpp-session-state-dump-20261109.md](docs/exe/cpp-session-state-dump-20261109.md) | `client/SessionStateDump`, `client/ClientTimeSource`, `app/main.cpp` |
 | cpppj의 다른 프로젝트 요청 처리·재반영 대상 | [cpp-webpj-requests-20261109.md](docs/exe/cpp-webpj-requests-20261109.md) | `client/UberGump.cpp`, `client/RawMenuControls` |
-| **AGENTS 4~13차의 cpppj 구현** | [1.3](#dotnet-r8-requirements) 표의 근거 열 | 1.3 표의 소스 열 |
+| **AGENTS 4~14차의 cpppj 구현**(14차는 cpppj 미착수) | [1.3](#dotnet-r8-requirements) 표의 근거 열 | 1.3 표의 소스 열 |
 | cpppj 11.01 표기·Credits·카피라이트 / 외부 접속 목록 | [cpp-product-1101-20261101.md](docs/exe/cpp-product-1101-20261101.md), [cpp-external-services-20261101.md](docs/exe/cpp-external-services-20261101.md) | `client/ProductPresentation.cpp` |
 | cpppj CD 10.72(dotnetpj 비대상, 게이트 영향만) | [cpp-cd1072-startup-and-gates-20261111.md](docs/exe/cpp-cd1072-startup-and-gates-20261111.md) | `Patch1078` 게이트 |
 | 8비트 화면 출력·전체화면 호환 | [cpp-modern-fullscreen-20261027.md](docs/exe/cpp-modern-fullscreen-20261027.md), [cpp-screen-resolution-menu-20261027.md](docs/exe/cpp-screen-resolution-menu-20261027.md) | `client/Screen.cpp`, `client/ScreenPresentation.cpp`, `client/ClientMain.cpp` |
@@ -499,6 +500,7 @@ AGENTS.md는 수정하지 않는다. dotnetpj에 닿는 사용자 변경은 모�
 | `22a0877c3` webpj 예외(8·9차 등) | webpj 전용이라 dotnetpj 변화 없음 |
 | `60226ea93` 11차 난이도·12차 스커미시·13차 기타 언어, dotnetpj 범위 **4~13차**, `Copyright 2026 HJOW` | 1.3 11~13차, 0.4 1-3 카피라이트 |
 | `610670750` cpppj 플랫폼 명시 | cpppj 전용 |
+| `85551c6c2` 14차 QuickJS 추가, dotnetpj 범위 **4~14차**, webpj 예외 변경(4차 WebMCP·5차 localStorage·14차 불필요·12차 대상) | 1.3 14차(cpppj 구현 뒤 같은 계약), 0.2 R8·0.4 7단계 범위. webpj 예외 변경은 dotnetpj 변화 없음 |
 
 <a id="dotnet-archive-log"></a>
 
@@ -512,6 +514,8 @@ AGENTS.md는 수정하지 않는다. dotnetpj에 닿는 사용자 변경은 모�
 - 빌드·검사·게임 실행·디컴파일은 하지 않았다. `LEFT_JOBS.md`·cpppj·AGENTS.md는 수정하지 않았다.
 
 **2026-11-11 결정 반영(같은 날, HJOW-Athlon, 문서만):** 사용자가 D1~D5를 정했다(D1·D3~D5는 권고안, D2는 "새 경로가 이름을 이어받고 작업이 끝나면 기존 경로 제거"). 0.5를 확정 표로 바꾸고 0.4·1.3·2.1~2.3·3.2·4·5·9.1의 관련 문장을 고쳤다. 전환 시점(R5에서 메뉴·미션·이름·배포를 한 번에)과 기존 경로 삭제 시점(결정 5의 R6 기준)은 이 결정에 대한 AI 해석이다. 이정표 D1·D2와 결정 D1~D5가 헷갈리지 않게 이정표에는 "이정표"를 붙였다.
+
+**2026-11-11 AGENTS 14차 반영(같은 날, HJOW-Athlon, 문서만, 사용자 요청):** 사용자 커밋 `85551c6c2`(14차 QuickJS 추가, dotnetpj 범위 4~13차 → 4~14차)를 머리말·0.2 R8·0.4 7단계·1.1·1.3(14차 행)·3.2 목표 순서·7.2 참고 문서·9.1에 반영했다. 당시 기록인 0.5 아래 해소 항목과 9.1·9.2의 지난 행은 그대로 두었다. 빌드·검사·게임 실행은 하지 않았다.
 
 **이전 이관(요약, 상세는 각 보관본 머리):** [2026-11-10 — 0.279까지](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279)(HJOW-Athlon, AGENTS 8차 시나리오 편집·5차 확장·9차 알려진 버그·글꼴 외부 배포·평가 기준 반영), [2026-11-04 — 0.154까지](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154)(HJOW-Athlon), [2026-11-02 — 0.126까지](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126)(HJOW-Athlon), [2026-10-31 — 0.73까지](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073)(HJOW-X3D), 2026-10-28 재수립 이관(VM-W11-Codex: 2026-10-22 이전 계획, 날짜별 완료·인계 절, 옛 0~11·14절).
 
