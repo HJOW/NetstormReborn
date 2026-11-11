@@ -1,0 +1,5 @@
+# L4a 메인 메뉴 캡처(0.380). 줄 형식: 프레임<TAB>동작<TAB>인자. {OUT} 은 l4a_compare.ps1 이 면별 폴더로 바꾼다.
+# 고정 시계(--fixed-frame-ms 25)에서 프레임 10·40·120 의 메인 메뉴를 저장한다.
+10	snapshot	{OUT}\menu-f010.bmp
+40	snapshot	{OUT}\menu-f040.bmp
+120	snapshot	{OUT}\menu-f120.bmp

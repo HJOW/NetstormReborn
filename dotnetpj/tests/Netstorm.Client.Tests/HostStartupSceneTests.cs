@@ -719,7 +719,9 @@ public sealed class HostStartupSceneTests
         }, actions.Add);
         driver.BindControlLocator(menu);
         driver.BindInputHandler(input => { menu.Route(input); return false; });
-        Assert.Equal(new ScreenPoint(393, 320), menu.ControlPoint("Campaign"));
+        // cpppj 는 메인 메뉴 버튼 컨트롤 영역을 {x, y, x+75, y+kButtonHeight+1}(높이 20)로 만든다(UberGump.cpp 2019행·RawButtonControls.cpp 294행).
+        // 라벨 클릭 좌표는 그 영역의 중심이므로 (356+37, 311+10)=(393,321)이다. 높이 19를 가정한 옛 기대값 (393,320)은 0.380 L4a 첫 비교에서 바로잡았다.
+        Assert.Equal(new ScreenPoint(393, 321), menu.ControlPoint("Campaign"));
         Assert.Null(menu.ControlPoint("campaign")); Assert.Null(menu.ControlPoint("Missing"));
         driver.BeginFrame(); Assert.False(driver.ProcessInput()); driver.EndFrame(); driver.Finish();
         Assert.Equal(new[] { new MainMenuAction("Tell", "UCampaign") }, actions);

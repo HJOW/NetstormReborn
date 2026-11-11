@@ -65,10 +65,13 @@ public sealed class HostMainMenu : IUiControlLocator
         Decoration = new HostGumpDecoration(_tree, assets, cornerAssets, typeNumber, () => hooks.Redraw(_tree.Create.Entries[0], false));
         int left = screen.Width / 2 - 156, top = screen.Height / 2 - 73;
         // 원본 4열 2행의 순서와 폭·행 간격으로 실제 돌 버튼을 만든다.
+        // 버튼 높이는 20이다. cpppj 는 컨트롤 영역을 {x, y, x+75, y+kButtonHeight(19)+1}로 만들고(UberGump.cpp 2019행)
+        // 돌 버튼을 그 영역의 크기(75×20)로 구성한다(RawButtonControls.cpp 294행). 높이 19로 만들면 아래 테두리가 한 줄 위에 그려져
+        // 첫 L4a 비교(0.380)에서 버튼마다 3행씩 달랐다. 그 뒤 20으로 바로잡았다.
         for (int index = 0; index < Labels.Length; index++)
         {
             byte[] label = Encoding.Latin1.GetBytes(Labels[index] + "\0");
-            _buttons[index] = _tree.AddStone(75, 19, label, left + (index % 4) * 79, top + (index / 4) * 23);
+            _buttons[index] = _tree.AddStone(75, 20, label, left + (index % 4) * 79, top + (index / 4) * 23);
         }
     }
 
