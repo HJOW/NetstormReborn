@@ -656,7 +656,7 @@ cpppj/src/client/RawTerrainWorldBinding.h	Netstorm.Core/Original/RawTerrainWorld
 cpppj/src/client/RawTerrainWorldBinding.cpp	Netstorm.Core/Original/RawTerrainWorldBinding.cs	552656c0c8bb46b48637b26a1acb59213edc1de1	port
 cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionZone.cs	50a5a1845edc01699ee215001405e8404d43f92a	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionZone.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
-cpppj/src/o/RawConnectionActivity.cpp	Netstorm.Net/RawConnectionActivity.cs	70ba25f1af88f6166fb3ea68f185ff602eb4f718	port
+cpppj/src/o/RawConnectionActivity.cpp	Netstorm.Net/RawConnectionActivity.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
 cpppj/src/o/RawConnectionActivity.h	Netstorm.Net/RawConnectionActivity.cs	bd9ea8d37045e404e1f1892fb5fde9cea2653fdc	port
 cpppj/src/o/RawBattleBroadcast.cpp	Netstorm.Net/RawBattleBroadcast.cs	77a0c3a47d5e54547da7fb0bb242161c3cd8020b	port
 cpppj/src/o/RawBattleBroadcast.h	Netstorm.Net/RawBattleBroadcast.cs	77a0c3a47d5e54547da7fb0bb242161c3cd8020b	port

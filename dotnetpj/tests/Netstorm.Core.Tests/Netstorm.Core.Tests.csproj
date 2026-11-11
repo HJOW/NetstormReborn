@@ -17,6 +17,8 @@
     <ProjectReference Include="..\..\src\Netstorm.Core\Netstorm.Core.csproj" />
     <!-- Chat 채널 실제 모듈을 초기화 동맹 재생에 쓴다. 제품 순환은 없으며 검사 전용 참조다. -->
     <ProjectReference Include="..\..\src\Netstorm.Client\Netstorm.Client.csproj" />
+    <!-- 연결 활성 Native 대여 검사가 등록 표·수신 한 쌍을 쓴다. 제품 순환은 없으며 검사 전용 참조다. -->
+    <ProjectReference Include="..\..\src\Netstorm.Net\Netstorm.Net.csproj" />
   </ItemGroup>
   <ItemGroup>
     <!-- 원본 exe 없이 다리 표를 검증하는 정적 추출 자료를 테스트 출력에 복사한다. -->

@@ -125,3 +125,51 @@ public sealed class RawConnectionActivity
         return callback;
     }
 }
+
+/// <summary>연결 활성 0x64 Timer 수신의 Native 대여 판정이다.
+/// 근거: cpppj `src/o/RawConnectionActivity.cpp`의 `RegisterConnectionActivity` 앞부분(실제 Native F가 있으면 같은 값만 대여한다).
+/// 분배기 호출(`RegisterCanonical`·`Observe`·`Version`·`Register`)은 `RawPacketDispatch` 이식과 함께 3차 로컬 구현 때 잇는다.
+/// 2026-11-11 0.366에서 cpppj HEAD(`eeae45c69`)의 대여 분기를 반영했다.</summary>
+public static class ConnectionActivityRegistration
+{
+    /// <summary>연결 활성 Timer 패킷 타입이다.</summary>
+    public const uint ActivityType = 0x64u;
+
+    /// <summary>Timer 수신 몸체 004b6180의 원본 주소 식별자다.</summary>
+    public const uint NativeTimerEntry = 0x004b6180u;
+
+    /// <summary>대여가 요구하는 등록 버전이다.</summary>
+    public const byte ExpectedVersion = 1;
+
+    /// <summary>대여가 요구하는 불일치 모드다.</summary>
+    public const byte ExpectedMismatch = 0;
+
+    /// <summary>대여가 요구하는 선언 길이다. 기존 PE 길이 표의 현재값이다.</summary>
+    public const ushort ExpectedLength = 5;
+
+    /// <summary>같은 metadata의 Native 수신을 대여할지 판정한다. 대여할 수 없으면 일반 등록 경로(3차)로 돌려보낸다.</summary>
+    /// <param name="table">읽을 패킷 등록 표다.</param>
+    /// <param name="borrowed">대여한 표준 수신 한 쌍이다. 대여할 수 없으면 null이다.</param>
+    /// <returns>같은 값을 대여하면 참이다.</returns>
+    /// <exception cref="InvalidOperationException">Native 수신인데 버전·불일치·길이·관찰기 metadata가 다르면 멈춘다.</exception>
+    public static bool TryBorrowTimerReceiver(PacketRegistrationTable table, out CanonicalPacketReceiver? borrowed)
+    {
+        ArgumentNullException.ThrowIfNull(table);
+        PacketRegistration row = table.Registration(ActivityType);
+        CanonicalPacketReceiver? receiver = row.CanonicalReceive;
+        if (receiver is null || receiver.NativeEntry != NativeTimerEntry)
+        {
+            borrowed = null;
+            return false;
+        }
+
+        if (row.Version != ExpectedVersion || row.Mismatch != ExpectedMismatch || row.Length != ExpectedLength
+            || row.Observer is null || row.PacketObserver is not null)
+        {
+            throw new InvalidOperationException("Native 연결 수신의 같은 metadata 불일치");
+        }
+
+        borrowed = receiver;
+        return true;
+    }
+}
