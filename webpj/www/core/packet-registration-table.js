@@ -19,8 +19,9 @@ export class PacketRegistration {
     // 이 항목을 등록한 대여(전역 기본 등록이면 null)와 대여 등록 여부이다.
     registrationLease = null;
     leased = false;
-    // 처리기·관찰기 두 종류·길이(0xffff 가변)·버전 BYTE·불일치 정책 BYTE 이다.
+    // 처리기(일반 receive 와, NULL 연결을 허용하는 내부 직접 호출 directReceive)·관찰기 두 종류·길이(0xffff 가변)·버전 BYTE·불일치 정책 BYTE 이다.
     receive = null;
+    directReceive = null;
     observer = null;
     packetObserver = null;
     length = VARIABLE_PACKET_LENGTH;
@@ -148,6 +149,7 @@ export class PacketRegistrationTable {
         for (let type = 0; type <= LAST_TYPE; type += 1) {
             const entry = this.#entries[type];
             entry.receive = null;
+            entry.directReceive = null;
             entry.observer = null;
             entry.packetObserver = null;
             entry.version = 0;
