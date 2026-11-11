@@ -683,3 +683,9 @@ cpppj/src/client/ChatNameCompletion.cpp	Netstorm.Client/Chat/ChatNameCompletion.
 cpppj/src/client/ChatNameCompletion.h	Netstorm.Client/Chat/ChatNameCompletion.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port
 cpppj/src/o/RawPlayerIdentity.cpp	Netstorm.Core/Original/RawPlayerIdentity.cs	9f7c0604d47eba3a6240fd2a50dec49cf1302d70	port
 cpppj/src/o/RawPlayerIdentity.h	Netstorm.Core/Original/RawPlayerIdentity.cs	9f7c0604d47eba3a6240fd2a50dec49cf1302d70	port
+cpppj/src/o/RawKencloud.cpp	Netstorm.Core/Original/RawKencloud.cs	3fc1de7db1eda0d8b62e6df38831e07f0a6c8a15	L1
+cpppj/src/o/RawKencloud.h	Netstorm.Core/Original/RawKencloud.cs	3fc1de7db1eda0d8b62e6df38831e07f0a6c8a15	L1
+cpppj/src/o/RawKencloudRender.cpp	Netstorm.Core/Original/RawKencloudRender.cs	3fc1de7db1eda0d8b62e6df38831e07f0a6c8a15	L1
+cpppj/src/o/RawKencloudRender.h	Netstorm.Core/Original/RawKencloudRender.cs	3fc1de7db1eda0d8b62e6df38831e07f0a6c8a15	L1
+cpppj/src/client/ClientKencloudGlobals.cpp	Netstorm.Client/Display/ClientKencloudGlobals.cs	3fc1de7db1eda0d8b62e6df38831e07f0a6c8a15	port
+cpppj/src/client/ClientKencloudGlobals.h	Netstorm.Client/Display/ClientKencloudGlobals.cs	3fc1de7db1eda0d8b62e6df38831e07f0a6c8a15	port

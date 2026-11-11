@@ -179,6 +179,9 @@
     <None Include="../../../cpppj/tests/fixtures/fort-subscriber-load-x86.tsv" Link="X86/fort-subscriber-load-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/fort-territory-recover-x86.tsv" Link="X86/fort-territory-recover-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/fort-palette-transition-x86.tsv" Link="X86/fort-palette-transition-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 구름(Kencloud) 파일 부모·행 이동·생성 v2 원문 246관측과 갱신·dirty·표시 고정 Native 944관측 (0.381, 2026-11-11). -->
+    <None Include="../../../cpppj/tests/fixtures/kencloud-v2-x86.tsv" Link="X86/kencloud-v2-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/kencloud-render-x86.tsv" Link="X86/kencloud-render-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/fortobjectload-x86.tsv" Link="X86/fortobjectload-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/fort-money-save-x86.tsv" Link="X86/fort-money-save-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/fort-mission-save-x86.tsv" Link="X86/fort-mission-save-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

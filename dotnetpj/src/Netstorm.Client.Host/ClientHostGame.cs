@@ -71,8 +71,8 @@ public sealed class ClientHostGame : Game
     /// <summary>상태 덤프가 읽는 현재 Kernel이다. F3 세션이 생기면 같은 인스턴스를 세션에 넘긴다.</summary>
     private readonly Kernel _kernel = new();
 
-    /// <summary>상태 덤프가 읽는 게임 난수다. F3 세션이 생기면 같은 인스턴스를 세션에 넘긴다.</summary>
-    private readonly GameRandom _gameRandom = new();
+    /// <summary>상태 덤프가 읽는 게임 난수다. 시작 화면이 있으면 구름 생성이 소비한 같은 인스턴스를 쓴다(0.381). F3 세션이 생기면 같은 인스턴스를 세션에 넘긴다.</summary>
+    private readonly GameRandom _gameRandom;
 
     /// <summary>상태 덤프가 읽는 CRT 난수다. F3 세션이 생기면 같은 인스턴스를 세션에 넘긴다.</summary>
     private readonly CrtRandom _crtRandom = new();
@@ -118,6 +118,7 @@ public sealed class ClientHostGame : Game
         _driver = driver;
         _options = options;
         _startup = startup;
+        _gameRandom = startup?.Random ?? new GameRandom();
         _clock = clock ?? new HostTimeSource();
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
