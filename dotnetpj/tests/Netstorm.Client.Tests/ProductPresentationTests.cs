@@ -68,6 +68,7 @@ public sealed class ProductPresentationTests
     {
         Assert.Contains("NetStorm 11.01 Patch Credits", ProductPresentation.PatchCreditsBody);
         Assert.Contains("HJOW", ProductPresentation.PatchCreditsBody);
+        Assert.Contains("Copyright 2026 HJOW", ProductPresentation.PatchCreditsBody);
         Assert.Contains("AI", ProductPresentation.PatchCreditsBody);
         Assert.Contains("{version}", ProductPresentation.PatchCreditsBody);
     }

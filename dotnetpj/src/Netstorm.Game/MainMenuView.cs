@@ -418,11 +418,10 @@ internal sealed class MainMenuView : IDisposable
         else if (_page == "missions") BuildCampaignButtons(width, height);
     }
 
-    /// <summary>
-    /// 새 제품 요구의 세 항목 Credits 목록을 만든다. 순서는 10.72·원본·11.01이다.
+    /// <summary>새 제품 요구의 세 항목 Credits 목록을 만든다. 순서는 10.72·원본·11.01이다.
     /// 다른 Credits 창과 같은 상세 창을 쓰며 제목·본문만 바꾼다.
-    /// (2026-11-03 11.01 요구에서 추가했다. 원본 판본 표기와 옛 Credits는 복원 기준이라 바꾸지 않는다)
-    /// </summary>
+    /// (2026-11-03 11.01 요구에서 추가했다. 원본 판본 표기와 옛 Credits는 복원 기준이라 바꾸지 않는다.
+    /// 2026-11-11 0.342에서 cpppj 제품 1291의 Copyright 2026 HJOW 줄을 11.01 상세에 반영했다)</summary>
     /// <param name="width">논리 화면 폭</param>
     /// <param name="height">논리 화면 높이</param>
     private void BuildCredits(int width, int height)
@@ -458,6 +457,7 @@ internal sealed class MainMenuView : IDisposable
             _creditsTitle = "NetStorm 11.01 Patch Credits";
             _creditsBody = [Text("버전: v11.01", "Version: v11.01"),
                 Text("개발 및 Netstorm 11.01 패치: HJOW.", "Development and Netstorm 11.01 patch: HJOW."),
+                "Copyright 2026 HJOW",
                 Text("OpenAI Codex와 ChatGPT의 AI 도움으로 개발.", "Developed with AI assistance using OpenAI Codex and ChatGPT."),
                 Text("분석·프로그래밍·문서화·검증에 AI를 활용.", "AI was used to assist analysis, programming, documentation, and verification.")];
         }

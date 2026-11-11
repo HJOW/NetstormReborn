@@ -10,7 +10,8 @@ namespace Netstorm.Client;
 public static class ProductPresentation
 {
     /// <summary>추가 Credits의 고정 본문이며 기존 HTML 창 공장을 그대로 사용한다.</summary>
-    public const string PatchCreditsBody = "[Credits]\n<background=\"nsstart\">\n<h2>{H2}NetStorm 11.01 Patch Credits</h2>\n<p>{Text}\nVersion: {version}<br>\nDevelopment and Netstorm 11.01 patch: HJOW.<br>\n<p>\nDeveloped with AI assistance using OpenAI Codex and ChatGPT.<br>\nAI was used to assist analysis, programming, documentation, and verification.<br>\n<p>\nThe original game creators are acknowledged in the original Credits entries.\n$Button=Back,Tell,Credits\n$Button=Cancel,Tell,Blank\n";
+    /// <remarks>2026-11-03 11.01 요구에서 추가했고, 2026-11-11 0.342에서 cpppj 제품 1291의 Copyright 2026 HJOW 줄을 반영했다.</remarks>
+    public const string PatchCreditsBody = "[Credits]\n<background=\"nsstart\">\n<h2>{H2}NetStorm 11.01 Patch Credits</h2>\n<p>{Text}\nVersion: {version}<br>\nDevelopment and Netstorm 11.01 patch: HJOW.<br>\nCopyright 2026 HJOW<br>\n<p>\nDeveloped with AI assistance using OpenAI Codex and ChatGPT.<br>\nAI was used to assist analysis, programming, documentation, and verification.<br>\n<p>\nThe original game creators are acknowledged in the original Credits entries.\n$Button=Back,Tell,Credits\n$Button=Cancel,Tell,Blank\n";
 
     /// <summary>새 Credits 항목의 표시 이름이다.</summary>
     public const string PatchCreditsLabel = "Netstorm 11.01 Patch Credits";
