@@ -84,10 +84,11 @@ public sealed class HostPopupMenu
         _menus.Widgets.BeginVertical();
         if ((_screen.Flags & ScreenMode.FullScreen) != 0) { ParentAscii("Adjust Direct Draw", "Tell", "AdjustDirectDraw"); ParentAscii("Window Mode", "ScreenModeAbsChange", "10"); }
         else ParentAscii("Direct Draw / Full Screen", "Tell", "DirectDrawManager");
-        // 원문의 해상도 3행+호환 화면비 행이다. FSR 해상도는 장치가 있을 때만 들어가며 이 환경에서는 비었다.
+        // 원문의 해상도 3행+호환 화면비 5행이다. 근거: cpppj ScreenResolutions.h의 kOriginal(3)+kCompatibility(5).
+        // FSR 2행은 장치가 있을 때만 들어가며(같은 파일의 kFsrScreenResolutionChoices), 후처리 토글 행과 같이 항상 보인다(R8 8차에서 장치 판정을 잇는다).
         uint resolutions = TakeChild(() =>
         {
-            foreach (var (width, height) in new[] { (640, 480), (800, 600), (1024, 768), (1280, 720), (1280, 800), (1366, 768) })
+            foreach (var (width, height) in new[] { (640, 480), (800, 600), (1024, 768), (1280, 720), (1280, 800), (1366, 768), (1600, 900), (1920, 1080), (2560, 1440), (3840, 2160) })
                 ChildChecked(_screen.Width == width && _screen.Height == height,
                     Utf8($"{width} by {height}"), 0x542948U, _strings.Store($"SETSIZE({width},{height})"));
         });

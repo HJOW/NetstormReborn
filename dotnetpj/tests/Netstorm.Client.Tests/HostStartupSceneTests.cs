@@ -579,7 +579,7 @@ public sealed class HostStartupSceneTests
         column = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>(), node => node.ItemCount == 20);
         position = menu.Tree.Collection.Position(menu.Tree.Create.Entries[column.Id]); x = position.X + 8; y = position.Y + (int)column.Offsets[1] + 3;
         router.NotifyPointer(new(0, x, y)); queue.Push(InputCode.LeftButton, x, y); Assert.False(driver.ProcessInput()); router.FinishFrame();
-        var child = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>(), node => node.ItemCount == 6);
+        var child = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>(), node => node.ItemCount == 10);
         // 펼친 자식은 보이게 된다.
         Assert.NotEqual(0U, ((GumpCreateNode)child).Flags & 1U);
         // 해상도 자식 행은 실제 명령(0x542948 + SETSIZE 인자)을 직접 carry 한다.

@@ -1,0 +1,7 @@
+# L4a About Tell 캡처(0.387). 줄 형식: 프레임<TAB>동작<TAB>인자. {OUT} 은 l4a_compare.ps1 이 면별 폴더로 바꾼다.
+# Help 팝업의 Version 행(화면 좌표)을 눌러 About 창을 열고 프레임 45·80·120 을 저장한다.
+5	click	Help
+25	click	screen:666,353
+45	snapshot	{OUT}\about-f045.bmp
+80	snapshot	{OUT}\about-f080.bmp
+120	snapshot	{OUT}\about-f120.bmp

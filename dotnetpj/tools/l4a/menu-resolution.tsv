@@ -1,0 +1,7 @@
+# L4a Resolution 자식 펼침 캡처(0.387). 줄 형식: 프레임<TAB>동작<TAB>인자. {OUT} 은 l4a_compare.ps1 이 면별 폴더로 바꾼다.
+# Options 팝업의 Resolution 행(화면 좌표)을 눌러 자식을 펼치고 프레임 45·80·120 을 저장한다.
+5	click	Options
+25	click	screen:600,319
+45	snapshot	{OUT}\resolution-f045.bmp
+80	snapshot	{OUT}\resolution-f080.bmp
+120	snapshot	{OUT}\resolution-f120.bmp
