@@ -241,6 +241,15 @@ public sealed class HostSession
     /// <summary>준비 표시 비트다. RawMissionLogin과 같은 0x40이다.</summary>
     private const uint PlayerReadyFlag = 0x40u;
 
+    /// <summary>Player 기록의 요새 순서 DWORD 오프셋이다. RawMissionLogin과 같은 0x5c다.</summary>
+    private const int PlayerFortOrderOffset = 0x5c;
+
+    /// <summary>Player 기록의 예측 수 DWORD 오프셋이다. RawMissionLogin과 같은 0x60이다. 풀 예측 커서를 둔다.</summary>
+    private const int PlayerPredictableOffset = 0x60;
+
+    /// <summary>Player 기록의 요새 수신 표시 DWORD 오프셋이다. RawMissionLogin과 같은 0x64다.</summary>
+    private const int PlayerFortReceivedOffset = 0x64;
+
     /// <summary>참가자 이름·동맹을 미션 목록 값으로 채운다. 원본 로그인의 기록 쓰기와 같다.</summary>
     /// <param name="players">미션 플레이어 목록.</param>
     /// <param name="localHandle">로컬 1번의 핸들. 대본 이름("Player")이 아니라 실제 핸들을 쓴다.</param>
@@ -418,6 +427,45 @@ public sealed class HostSession
         else
             (hooks.Send ?? throw new InvalidOperationException("준비 packet의 실제 전송 미연결"))(target, packet);
     }
+
+    /// <summary>첫 로그인의 요새 순서를 기록한다. 원본 로그인의 첫 로그인 분기와 같다.</summary>
+    /// <param name="owner">새 요새를 받은 Player 번호다. 0~8이다.</param>
+    /// <remarks>2026-11-12 0.420에서 미션 값 채우기로 추가했다. 0x5c에 현재 순서 수·0x60에 풀 예측 커서를 쓰고
+    /// 순서 수를 올린 뒤 마지막 소유자를 둔다. 요새 이미지·전송 흐름 연결은 다음 단위다.</remarks>
+    public void WriteFortOrder(uint owner)
+    {
+        if (owner > (uint)MissionPlayers.PlayerCount)
+            throw new ArgumentOutOfRangeException(nameof(owner), "요새 순서의 실제 Player 번호 범위 오류");
+        int record = (int)owner * PlayerRecordStride;
+        // 순서 수 DWORD를 little endian으로 쓴다.
+        for (int index = 0; index < 4; ++index)
+            PlayerRecords[record + PlayerFortOrderOffset + index] = unchecked((byte)(FortCount >> (8 * index)));
+        // 예측 수 DWORD는 풀 예측 커서를 little endian으로 쓴다.
+        uint predictable = Pool.PredictableCursor;
+        for (int index = 0; index < 4; ++index)
+            PlayerRecords[record + PlayerPredictableOffset + index] = unchecked((byte)(predictable >> (8 * index)));
+        FortCount++;
+        LastLoginPlayer = owner;
+    }
+
+    /// <summary>요새 수신 표시를 켠다. 원본 로그인의 수신 표식 쓰기와 같다.</summary>
+    /// <param name="owner">요새를 받은 Player 번호다. 0~8이다.</param>
+    /// <remarks>2026-11-12 0.420에서 미션 값 채우기로 추가했다. 실제 이미지·시각 packet 흐름은 다음 단위다.</remarks>
+    public void WriteFortReceived(uint owner)
+    {
+        if (owner > (uint)MissionPlayers.PlayerCount)
+            throw new ArgumentOutOfRangeException(nameof(owner), "요새 수신의 실제 Player 번호 범위 오류");
+        int record = (int)owner * PlayerRecordStride;
+        // 수신 표시 DWORD를 little endian으로 쓴다.
+        for (int index = 0; index < 4; ++index)
+            PlayerRecords[record + PlayerFortReceivedOffset + index] = unchecked((byte)(1u >> (8 * index)));
+    }
+
+    /// <summary>세션이 센 로그인 요새 순서 수다. 원본 로그인의 fortCount와 같으며 첫 로그인에 0을 둔다.</summary>
+    public uint FortCount { get; private set; }
+
+    /// <summary>세션이 마지막에 새 요새를 받은 Player 번호다. 원본 로그인의 lastLoginPlayer와 같다.</summary>
+    public uint LastLoginPlayer { get; private set; }
 
     /// <summary>덤프용 Player 관측을 만든다. Start 순서 전까지 0이다.</summary>
     public SessionDumpPlayers DumpPlayers() =>

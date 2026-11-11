@@ -275,10 +275,14 @@ public sealed class ClientHostGame : Game
         session.PrepareAiSettings(players, key => script.Get(key));
         session.StartPlayers(players, handle);
         session.StartPlayerMasks(players);
+        // 첫 로그인의 요새 순서를 둔다. 0x5c 순서 수·0x60 풀 예측 커서 쓰기이며 요새 이미지 흐름은 다음 단위다.
+        session.WriteFortOrder(1u);
         // 로컬 1번을 로그인 순서와 같이 올린다. 구독자 1은 Zone 기본 mySubscriber이며 Zone 설치 연결은 다음 단위다.
         // 전송 갈고리는 실제 전송이 없어 기록만 하며 덤프 행을 바꾸지 않는다.
         var sentPlayers = new List<(uint Owner, uint Target)>();
         session.JoinPlayer(1u, 1u, 1u, new PlayerJoinHooks { SendPlayer = (owner, target) => sentPlayers.Add((owner, target)) });
+        // 요새 수신 표시를 켠다. 실제 이미지·시각 packet 흐름은 다음 단위다.
+        session.WriteFortReceived(1u);
         session.MarkReady(1u);
         var readyPackets = new List<byte[]>();
         session.SendReady(0u, new PlayerReadyHooks { IsBoss = true, Broadcast = readyPackets.Add, Assertion = _ => { } });

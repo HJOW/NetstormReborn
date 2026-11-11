@@ -552,4 +552,44 @@ public sealed class MissionPlayersLoadTests
         Assert.Single(broadcasts);
         Assert.Equal(new byte[] { 1, 0x6e, 8, 0, 2, 0, 0, 0 }, broadcasts[0]);
     }
+
+    /// <summary>첫 로그인의 요새 순서(0x5c 순서 수·0x60 풀 예측 커서)가 원본과 같이 쓰이는지 확인한다.</summary>
+    [Fact]
+    public void WritesFortOrderLikeLoginFirstLogin()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        Assert.Equal(0u, session.FortCount);
+        Assert.Equal(0u, session.LastLoginPlayer);
+        session.WriteFortOrder(1u);
+        static uint DwordAt(byte[] records, int owner, int offset) =>
+            System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(records.AsSpan(owner * 180 + offset, 4));
+        // 첫 순서 수는 0이며 예측 수는 풀 커서 초기값 1이다.
+        Assert.Equal(0u, DwordAt(session.PlayerRecords, 1, 0x5c));
+        Assert.Equal(session.Pool.PredictableCursor, DwordAt(session.PlayerRecords, 1, 0x60));
+        Assert.Equal(1u, DwordAt(session.PlayerRecords, 1, 0x60));
+        Assert.Equal(1u, session.FortCount);
+        Assert.Equal(1u, session.LastLoginPlayer);
+        // 2번 기록은 손대지 않는다.
+        Assert.Equal(0u, DwordAt(session.PlayerRecords, 2, 0x5c));
+        Assert.Equal(0u, DwordAt(session.PlayerRecords, 2, 0x60));
+    }
+
+    /// <summary>요새 수신 표시(0x64)가 원본과 같이 켜지는지 확인한다.</summary>
+    [Fact]
+    public void WritesFortReceivedLikeLoginMarker()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        session.WriteFortReceived(1u);
+        static uint DwordAt(byte[] records, int owner, int offset) =>
+            System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(records.AsSpan(owner * 180 + offset, 4));
+        Assert.Equal(1u, DwordAt(session.PlayerRecords, 1, 0x64));
+        // 2번 기록은 손대지 않는다.
+        Assert.Equal(0u, DwordAt(session.PlayerRecords, 2, 0x64));
+    }
 }
