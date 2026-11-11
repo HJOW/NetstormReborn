@@ -2,6 +2,7 @@
 #pragma once
 #include "client/CdPresence.h"
 #include <cstdint>
+#include <filesystem>
 #include <functional>
 #include <optional>
 #include <span>
@@ -23,5 +24,7 @@ struct CdDirectoryHooks { // 원본이 도달한 열거/종료/cancel 경계만 
 };
 bool FindCdDirectory(std::span<char> destination,const CdDirectoryHooks& hooks); // 최초 발견 디렉터리를 strncpy/NUL로 쓰며 실패는 기존 목적지를 보존한다.
 std::string FindWindowsCdDirectory(); // 실제 CD-ROM만 읽고 UTF-8 CDDir을 반환한다. 부재는 빈 문자열이다.
+// CD 10.72 자료 폴더에 표시 파일이 있으면 그 절대 경로를 쓰고, 없으면 전달한 기존 탐색을 호출한다.
+std::string FindCd1072DataDirectory(const std::filesystem::path& gameDirectory,const std::function<std::string()>& fallback);
 CdPresenceHooks MakeWindowsCdPresenceHooks(o::RawFileName* names=nullptr); // 원문 루트 열거/속성과 경로 한 칸을 연결한다. 기본값은 독립 값형 조합이며 재귀 CDDir 탐색은 바꾸지 않는다.
 }

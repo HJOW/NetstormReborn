@@ -53,6 +53,15 @@ std::string FindWindowsCdDirectory() { // 원본의 CD 자동 탐색은 유지�
     std::vector<char> output(4U*32768U); // 원본255BYTE 대신 Windows10/11의 긴 Unicode 경로가 UTF-8 중간에서 잘리지 않도록 충분히 확보한다.
     return FindCdDirectory(output,h) ? std::string(output.data()) : std::string();
 }
+// CD 복사본의 표시 파일을 먼저 확인하여 광학 장치 없이도 보조 아카이브의 루트를 고른다.
+std::string FindCd1072DataDirectory(const std::filesystem::path& gameDirectory,const std::function<std::string()>& fallback) {
+    if (!gameDirectory.empty()) {
+        std::error_code error;
+        const auto root=std::filesystem::absolute(gameDirectory,error).lexically_normal();
+        if (!error && std::filesystem::is_regular_file(root/std::string(kCdPresenceMarker),error) && !error) return CdUtf8(root);
+    }
+    return fallback ? fallback() : std::string{};
+}
 // 루트는 ASCII 드라이브 글자이므로 원문 A 열거를 그대로 쓰고 파일 경로만 현대 Windows의 W API로 전달한다.
 CdPresenceHooks MakeWindowsCdPresenceHooks(o::RawFileName* names) {
     CdPresenceHooks hooks;hooks.path=[names](auto root,auto marker) { return names ? o::JoinBaseFileRoot(root,marker,*names):o::JoinBaseFileRoot(root,marker); }; //00440c7f/440ce7는 장치 getter 없이 직접 한 칸만 작성한다.

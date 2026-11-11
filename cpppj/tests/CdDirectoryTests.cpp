@@ -1,8 +1,11 @@
 // 보호 PE의 세 CD 탐색 몸체가 쓴 목적지 전체256BYTE/항목 순서/열린 핸들을 비교한다.
 #include "TestSupport.h"
 #include "client/CdDirectory.h"
+#include "platform/Utf8Path.h"
 #include <algorithm>
 #include <array>
+#include <chrono>
+#include <filesystem>
 #include <fstream>
 #include <map>
 #include <sstream>
@@ -43,4 +46,22 @@ TEST_CASE(CdDirectory_Native15DestinationTraceAndHandleLifetime) {
 TEST_CASE(CdDirectory_UnicodePathAndInvalidDestination) {
     CdProbe probe;probe.roots={{"D:\\",5}};const std::string directory="한글 영상😀";probe.tree["D:"]={{directory,true}};probe.tree["D:\\"+directory]={{"CD.NETSTORM.TITANIC.ACTIVISION",false}};std::vector<char> output(4U*32768U);CHECK(FindCdDirectory(output,probe.Hooks()));CHECK(std::string(output.data())=="D:\\"+directory);CHECK(probe.handles.empty());
     bool rejected{};try { static_cast<void>(FindCdDirectory({},{})); }catch (const std::invalid_argument&) { rejected=true; }CHECK(rejected);
+}
+
+// CD 복사본의 표시 파일과 대체 탐색 순서를 실제 유니코드 경로에서 검사한다.
+TEST_CASE(CdDirectory_Local1072MarkerPrecedesOpticalFallback) {
+    const auto root=std::filesystem::temp_directory_path()/L"NetstormCdDirectoryTests"/
+        std::to_wstring(std::chrono::steady_clock::now().time_since_epoch().count())/L"CD 자료😀";
+    std::filesystem::create_directories(root);
+    unsigned calls{};
+    const auto fallback=[&] { ++calls;return std::string("optical"); };
+    CHECK(FindCd1072DataDirectory(root,fallback)=="optical" && calls==1);
+    std::filesystem::create_directory(root/std::string(kCdPresenceMarker));
+    CHECK(FindCd1072DataDirectory(root,fallback)=="optical" && calls==2);
+    std::filesystem::remove(root/std::string(kCdPresenceMarker));
+    { std::ofstream marker(root/"CD.NETSTORM.TITANIC.ACTIVISION",std::ios::binary);CHECK(marker.good()); }
+    CHECK(FindCd1072DataDirectory(root,fallback)==netstorm::platform::PathToUtf8(std::filesystem::absolute(root).lexically_normal()) && calls==2);
+    CHECK(FindCd1072DataDirectory({},fallback)=="optical" && calls==3);
+    CHECK(FindCd1072DataDirectory({},{}).empty());
+    std::filesystem::remove_all(root);
 }

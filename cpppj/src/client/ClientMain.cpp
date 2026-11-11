@@ -825,7 +825,7 @@ void Client::LoadNativeConfiguration(std::string_view commandLine,bool detectLan
         startupFiles.emplace(InitializeNativeStartupFiles(FindWindowsCdDirectory));const auto& locations=*startupFiles;startup.dataPrefix=locations.dataPrefix;startup.installDir=platform::PathToUtf8(locations.installDirectory);startup.cdDir=locations.cdDirectory; // 설정/자산/저장/편집은선택한같은기본root를사용한다.
     } else {
         const auto installUtf8=std::filesystem::absolute(options_.gameDirectory).lexically_normal().u8string();startup.installDir.assign(installUtf8.begin(),installUtf8.end()); //10.72기존경로를보존하며이번10.78탐색근거로확대하지않는다.
-        startup.cdDir=FindWindowsCdDirectory();InitializeNativeSecondaryFiles(startup.cdDir);
+        startup.cdDir=FindCd1072DataDirectory(options_.gameDirectory,FindWindowsCdDirectory);InitializeNativeSecondaryFiles(startup.cdDir); // CD 자료 폴더의 표시 파일을 우선하고 없을 때만 기존 광학 장치 탐색을 사용한다.
     }
     if (detectLanguage) detectedLanguage_=DetectOriginalLanguage(GetUserDefaultLangID()); // 최초 시작만 경로 탐색 뒤 원문 OS 언어를 감지하며 등록 메시지는 현재 감지값을 유지한다.
     configuration_.Startup(startup);
