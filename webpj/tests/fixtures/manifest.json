@@ -16418,9 +16418,38 @@
       "bytes": 690149,
       "lines": 158,
       "fixtureCommit": "18a384d5c",
-      "webCommit": "worktree",
+      "webCommit": "3ba70ca98",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionClientPackets.cpp": "eeae45c69"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E315",
+      "id": "mission-server-packets",
+      "path": "cpppj/tests/fixtures/mission-server-packets-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 로그인 서버의 Player 송신(0048f9f0)·중앙섬 metadata 송신(004a6b40)·metadata 수신(004b3bc0)의 서버/metamap/생성 표시/Zone bit/군도 × 이름·flags·대상 입력별 전체 Player 1620바이트·현재 전역 5개·외부 효과 순서(주소/로그/진단/송신 wire)(originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-mission-server-packets.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mission-server-packets.js"
+      ],
+      "doc": "docs/webpj-mission-server-packets-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissionServerPackets.cpp"
+      ],
+      "scope": "187행 전부 재생: 전체 Player·전역·외부 효과 순서와 송신된 wire 바이트(0x72 는 서버 observer, 0x2b 는 클라이언트 패킷 observer 후 캡처). 내부 이름 정제 진입(N,)은 외부 효과 비교에서만 제외",
+      "sha256": "89016a9dfc75ecc019d97fb1fbf17481ee28a067d0b142c25d3df22ffa5952e3",
+      "bytes": 652848,
+      "lines": 188,
+      "fixtureCommit": "18a384d5c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissionServerPackets.cpp": "eeae45c69"
       }
     },
     {
