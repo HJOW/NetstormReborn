@@ -570,6 +570,85 @@ public sealed class HostSession
     /// <remarks>2026-11-12 0.447에서 난수 상태 저장소로 추가했다. StartMission의 지역 상자를 여기로 승격한다.</remarks>
     public UIntBox TerrainCrt { get; } = new();
 
+    /// <summary>세션이 소유한 게임 보조 장기 전역이다. 생성·밀도·간헐천 여백의 현재 DWORD를 둔다.</summary>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1830행 terrainAux.</remarks>
+    public RawGameAuxState GameAux { get; } = new();
+
+    /// <summary>세션이 소유한 소유자 모드다. 미션 전투이므로 battle을 켠다.</summary>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 336행 CampaignLinks(battle=true).</remarks>
+    public SquidOwnerMode OwnerMode { get; } = new() { Battle = true };
+
+    /// <summary>세션이 소유한 다리·섬 연결 전역이다. 미션이므로 mission을 켜고 캠페인 연결 타입을 둔다.</summary>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 336행 CampaignLinks.</remarks>
+    public BridgeConnectState BridgeState { get; } = new()
+    {
+        BridgeType = 82,
+        IslandType = 94,
+        StalagType = 95,
+        ConnectorType = 155,
+        NoIslandType = 157,
+        Battle = true,
+        Mission = true,
+    };
+
+    /// <summary>세션이 소유한 87바이트 전투 옵션이다. 미션 기본값으로 초기화한다.</summary>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawMissionBattleOptions(ResetMissionBattleOptions).</remarks>
+    public byte[] BattleOptions { get; } = CreateBattleOptions();
+
+    /// <summary>세션이 소유한 AI 진단 checking DWORD 뷰의 장기 값이다. 생성 Growth가 같은 값을 읽는다.</summary>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj ClientGameplayGlobals AiDebug().Checking().</remarks>
+    public RawCheckingFlag AiChecking { get; } = new();
+
+    /// <summary>미션 기본 87바이트 전투 옵션을 만든다.</summary>
+    /// <returns>초기화된 87바이트 배열이다.</returns>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다.</remarks>
+    private static byte[] CreateBattleOptions()
+    {
+        var options = new byte[87];
+        RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, options);
+        return options;
+    }
+
+    /// <summary>세션 장기 전역에서 지형 생성 입력을 묶는다. 원문 terrainGeneration 15종의 세션 소유 결선이다.</summary>
+    /// <returns>세션 상자·기록을 공유하는 입력 묶음이다. 같은 인스턴스(GenerationInputs)를 돌려준다.</returns>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1831~1853행.
+    /// 건설 PlayerBounds(R6)·세션 로그 0x1d(R6)·성장 assertion은 미연결(null)로 두어 GenerateOriginal이 명시 거부한다.</remarks>
+    public TerrainGenerationInputs BuildTerrainGenerationInputs()
+    {
+        TerrainGenerationInputs inputs = GenerationInputs;
+        inputs.Enabled = new RawCheckingFlag(() => GameAux.TerrainEnabled);
+        inputs.Battle = new RawCheckingFlag(() => OwnerMode.Battle);
+        inputs.Mission = new RawCheckingFlag(() => BridgeState.Mission);
+        inputs.Layout = () => BattleOptions[5];
+        inputs.Spacing = () => RawWorldGeyserSpacing.Spacing(BattleOptions[6]);
+        inputs.Span.Value = GameAux.WorldGeyserMargin;
+        inputs.Minimum.Value = GameAux.ArchipelagoMinimum;
+        inputs.Maximum.Value = GameAux.ArchipelagoMaximum;
+        inputs.Percent.Value = GameAux.ArchipelagoPercent;
+        inputs.Archipelago.Value = GameAux.Archipelago;
+        inputs.Subscriber = ReadPlayerSubscriber;
+        inputs.Growth.Checking.Bind(() => AiChecking.Read());
+        return inputs;
+    }
+
+    /// <summary>현재 Player 기록에서 해당 소유자의 구독자 DWORD를 읽는다. 원문처럼 매 반복 다시 선택한다.</summary>
+    /// <param name="player">조회할 Player 번호다. 1~8이다.</param>
+    /// <returns>해당 기록의 +0x2c 구독자 DWORD다.</returns>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1836~1840행.</remarks>
+    private uint ReadPlayerSubscriber(int player)
+    {
+        if (player < 1 || player > 8 || PlayerRecords.Length < 9 * PlayerRecordStride)
+        {
+            throw new ArgumentOutOfRangeException(nameof(player), "지형 root의 현재 Player 9 물리 범위 오류");
+        }
+
+        int offset = player * PlayerRecordStride + PlayerSubscriberOffset;
+        return (uint)(PlayerRecords[offset]
+            | ((uint)PlayerRecords[offset + 1] << 8)
+            | ((uint)PlayerRecords[offset + 2] << 16)
+            | ((uint)PlayerRecords[offset + 3] << 24));
+    }
+
     /// <summary>빈 프레임 표 188개를 만든다. 검사 하네스의 LoadScene과 같은 공유 빈 표다.</summary>
     /// <returns>프레임 표다.</returns>
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다.</remarks>

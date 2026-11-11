@@ -57,6 +57,22 @@ public sealed class RawGameAuxState
     /// <summary>005c8bb0의 실제 FarmCluster 모드이며 로그인의 bb4와 다르다.</summary>
     public uint Archipelago { get; set; }
 
+    /// <summary>00540a2c의 현재 생성·Zone 보정 DWORD다. 설정 뒤 최초 1이며 세션 교체로 새 값을 쓰지 않는다.</summary>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj o/RawGameAuxState.h TerrainEnabled.</remarks>
+    public uint TerrainEnabled { get; set; } = 1u;
+
+    /// <summary>0054264c의 현재 밀도 하한이다. 난수 범위를 계산하는 시점의 같은 signed DWORD다.</summary>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj o/RawGameAuxState.h ArchipelagoMinimum.</remarks>
+    public int ArchipelagoMinimum { get; set; } = 15;
+
+    /// <summary>00542650의 현재 밀도 상한이다. 최초 35와 이후 원문 writer의 현재값을 구별한다.</summary>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj o/RawGameAuxState.h ArchipelagoMaximum.</remarks>
+    public int ArchipelagoMaximum { get; set; } = 35;
+
+    /// <summary>005c8bb4의 강제 밀도이며 bb0 결과와 별개다. 로그인과 생성 root가 같은 현재 DWORD를 읽는다.</summary>
+    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj o/RawGameAuxState.h ArchipelagoPercent.</remarks>
+    public uint ArchipelagoPercent { get; set; }
+
     /// <summary>005c848c의 공통 소멸이 따로 기록하는 최근 소실 X다.</summary>
     public float LostX { get; set; }
 
