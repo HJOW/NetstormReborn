@@ -383,7 +383,7 @@
       "bytes": 1061565,
       "lines": 1561,
       "fixtureCommit": "b76adf95c",
-      "webCommit": "worktree",
+      "webCommit": "19effb4ff",
       "cpppjBasis": {
         "cpppj/src/o/RawTerrainStamp.cpp": "b76adf95c"
       }
@@ -16385,6 +16385,35 @@
       "webCommit": "1f7aba2d7",
       "cpppjBasis": {
         "cpppj/src/o/RawTerrainBitmap.cpp": "588390281"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E296",
+      "id": "regionpaint",
+      "path": "cpppj/tests/fixtures/regionpaint-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 지역 도장 scene 6 x 변형 3 x 소유자/원소/시작 좌표별 소유자 가상 호출/edgeFarm finder 호출 순서·슬롯 소유자와 프레임 DWORD·경계 후보·영향 지역 float 비트·drawer·월드 DWORD·게임 난수 (originals 386 + originalCD 98)",
+      "consumers": [
+        "webpj/tests/region-paint.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-region-paint.js"
+      ],
+      "doc": "docs/webpj-region-paint-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawRegionPaint.cpp"
+      ],
+      "scope": "originals 386행만 사용(originalCD 98행은 CD 10.72 몫이라 웹 목표 밖)",
+      "sha256": "f17d9eafaf09cc9b4e3971c2b62be3987728e1e061f2d0a08f2427654742197a",
+      "bytes": 95975,
+      "lines": 485,
+      "fixtureCommit": "8abd00ac3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawRegionPaint.cpp": "bae8b702b"
       }
     }
   ]
