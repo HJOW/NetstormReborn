@@ -16538,9 +16538,38 @@
       "bytes": 200840,
       "lines": 49,
       "fixtureCommit": "400aaefb8",
-      "webCommit": "worktree",
+      "webCommit": "e661c2975",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionLogin.cpp": "cea41eb09"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E320",
+      "id": "local-mission-state",
+      "path": "cpppj/tests/fixtures/local-mission-state-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 단독 미션 상태 Request(004b2bc0)·Poll(004b88c0)·Run(004b6dd0)의 선택 상태 7~10/13/14 × 모드·연결·Fort·메타 변형 × 호출 도중 변경별 다섯 상태 블록 720바이트·현재 전역 15개·두 벽시각 예약 double 비트·Template Core 192바이트·외부 효과 순서(originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-local-mission-state.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-local-mission-state.js"
+      ],
+      "doc": "docs/webpj-local-mission-state-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawLocalMissionState.cpp"
+      ],
+      "scope": "33행 전부 재생(블록·전역·타이머·Core·효과 순서 대조). 큰 부모 상태·State15·일반 전투 State7·연결 안내·호스트 State7·메타 Poll·Core 경계는 원본 관측 없이 손 계산 시험",
+      "sha256": "b591cc51ffd837ce29d04e8090c066d33f5baf4abc1b3c863371346f161d2995",
+      "bytes": 65643,
+      "lines": 34,
+      "fixtureCommit": "9a8a0f855",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawLocalMissionState.cpp": "23b16b54f"
       }
     },
     {
