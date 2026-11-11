@@ -19,3 +19,9 @@ target_sources(netstorm PRIVATE
 )
 
 target_link_libraries(netstorm PUBLIC advapi32) # RegOpenKeyA/RegQueryValueA와 성공한 키 반납의 실제 Windows 장치를 연결한다.
+
+# 14차: QuickJS-ng 엔진(third_party/quickjs-ng)의 런타임·컨텍스트 생성/해제, 자원 한도와 시작 자체 검사다.
+# 엔진 헤더 경로는 ScriptEngine.cpp 한 파일에만 알린다. netstorm 대상 전체의 포함 경로를 바꾸면 모든 소스가 다시 컴파일된다.
+target_sources(netstorm PRIVATE ScriptEngine.cpp ScriptEngine.h)
+set_source_files_properties(ScriptEngine.cpp TARGET_DIRECTORY netstorm PROPERTIES INCLUDE_DIRECTORIES "${PROJECT_SOURCE_DIR}/third_party/quickjs-ng")
+target_link_libraries(netstorm PUBLIC NetstormQuickJs) # 정적 엔진 라이브러리이며 PRIVATE 포함 경로/정의만 가져 netstorm 컴파일 명령줄을 바꾸지 않는다.

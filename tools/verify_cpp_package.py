@@ -7,7 +7,7 @@
 
 검사 내용:
   1. 항목 대부분을 원천(빌드 산출물/저장소/originals/originalCD)과 바이트 단위로 대조한다.
-  2. 필수 항목(Netstorm.exe, R.exe, 글꼴+라이선스, 한국어 번역표/본문, 실행 배치 파일)이 있는지 확인한다.
+  2. 필수 항목(Netstorm.exe, R.exe, 글꼴+라이선스, 한국어 번역표/본문, 실행 배치 파일, QuickJS-ng 라이선스/출처)이 있는지 확인한다.
   3. 금지 항목(사용자 상태 파일, 내려받은 지도 잔재)이 없는지 확인한다.
   4. 글꼴 파일이 Netstorm.exe 안에 내장되어 있지 않은지(글꼴 시그니처 0) 확인한다.
   5. BUILD_INFO.txt에 적힌 Netstorm.exe/R.exe SHA-256이 ZIP 안의 실제 바이트와 같은지 확인한다.
@@ -33,6 +33,8 @@ REQUIRED = [
     'Netstorm.exe', 'R.exe', 'NetstormSmacker.dll', 'Netstorm.bat', 'Netstorm-SavedMode.bat', 'README.txt', 'BUILD_INFO.txt',
     'fonts/D2Coding-License.txt', 'lang/korean/xlat.korean',
     'game/netstorm.tarc', 'game/Netstorm.exe', 'game/d/setup.cfg',
+    # 14차: Netstorm.exe에 정적으로 넣은 QuickJS-ng 엔진의 MIT 라이선스와 출처(2026-11-11 추가).
+    'third-party/quickjs-ng/LICENSE', 'third-party/quickjs-ng/provenance.json',
 ]
 # 있으면 안 되는 항목의 패턴이다. 사용자 상태 파일과 내려받은 지도 묶음 잔재다.
 FORBIDDEN = [re.compile(p, re.I) for p in (r'(^|/)options\.cfg$', r'fullscreenStateFile\.dat$', r'\.php$', r'(^|/)(Thumbs\.db|desktop\.ini)$')]

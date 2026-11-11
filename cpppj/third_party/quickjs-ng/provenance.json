@@ -1,0 +1,127 @@
+{
+  "repository": "https://github.com/quickjs-ng/quickjs",
+  "release": "v0.18.0",
+  "tagType": "commit",
+  "commit": "d7215b0ad3fc2c562e8317fd9bca058fd4863804",
+  "commitDate": "2026-11-01T10:52:03+01:00",
+  "license": "MIT",
+  "upstreamFilesUnmodified": true,
+  "obtainedFrom": "git show of the release tag from a local clone of the official repository (no network download during build)",
+  "files": {
+    "quickjs.c": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/quickjs.c",
+      "sha256": "51b1d3919ffe812d0e01793f85d347bcea48c924c11262c5c5f00df1e4759d74",
+      "bytes": 2151165
+    },
+    "dtoa.c": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/dtoa.c",
+      "sha256": "a8d2cf2d04db406e0c16acdd95ab0e709d309902865722f41dac07a1ba5676af",
+      "bytes": 44854
+    },
+    "libregexp.c": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/libregexp.c",
+      "sha256": "af13e996abb1767fe0cdfda123c45b811d53688d403a2ac47142e97bf79f1fae",
+      "bytes": 115889
+    },
+    "libunicode.c": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/libunicode.c",
+      "sha256": "c4724e77ec5f122373d2635b6d481cfb5d96024a38453a54a0830007c4b5f3c9",
+      "bytes": 61406
+    },
+    "quickjs.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/quickjs.h",
+      "sha256": "6d3879c856551653a1c64fabe52d6d07dc84e97bac3df45848df626702fc30de",
+      "bytes": 69016
+    },
+    "cutils.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/cutils.h",
+      "sha256": "dffec8bea17f08108da5a91c1178804754698bbbb6202dc100268e78e8c5b770",
+      "bytes": 54740
+    },
+    "dtoa.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/dtoa.h",
+      "sha256": "1c4a4540c0038632c8a4c225472fbc21bd476fb35c4da4a857a11965b58231b9",
+      "bytes": 3357
+    },
+    "libregexp.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/libregexp.h",
+      "sha256": "53ff95a038f7001b752c455d195d998e2955f0ae4ed62a002c13eca798db3ceb",
+      "bytes": 3612
+    },
+    "libregexp-opcode.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/libregexp-opcode.h",
+      "sha256": "2a98d646089f3a72f25480116297c5fdb5b28fd9f815447273951f4ade4a115e",
+      "bytes": 2887
+    },
+    "libunicode.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/libunicode.h",
+      "sha256": "ad13f66aaea3fab1616e84b9c048f2a315e1bdbab628b966617a7a3e55bcba2b",
+      "bytes": 5278
+    },
+    "libunicode-table.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/libunicode-table.h",
+      "sha256": "5840a921ac11664b505ee37b1219f518fff2a04972fe848b4bdf1e85c5a0bd83",
+      "bytes": 251190
+    },
+    "list.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/list.h",
+      "sha256": "cb6e24e8ee54bccdd66234fe54cd702d1160b9841db2b9b9adeb5003afe301d5",
+      "bytes": 3177
+    },
+    "quickjs-atom.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/quickjs-atom.h",
+      "sha256": "8045b870825a43ecdb50692aac7ad21b43139b288df466ca5f7b780bde4ac13f",
+      "bytes": 8212
+    },
+    "quickjs-opcode.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/quickjs-opcode.h",
+      "sha256": "0054b0c45fd091afa308c3fb93b5862e0b071235918d3d73e413d23fce388bbc",
+      "bytes": 15831
+    },
+    "quickjs-c-atomics.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/quickjs-c-atomics.h",
+      "sha256": "29883c742a5c512278fce54d19b1b9af949006e1d7dfc9ffa2e0946b184d8c5c",
+      "bytes": 2305
+    },
+    "builtin-array-fromasync.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/builtin-array-fromasync.h",
+      "sha256": "d313ac1e47eaa08f39b2cb0929a512d88e492906c400f650e141d00b79faa905",
+      "bytes": 5652
+    },
+    "builtin-iterator-zip-keyed.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/builtin-iterator-zip-keyed.h",
+      "sha256": "5b015a8063088987f0fb19357c9da5ec44a7197493fdbb23740fde8f470049a4",
+      "bytes": 15074
+    },
+    "builtin-iterator-zip.h": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/builtin-iterator-zip.h",
+      "sha256": "54834b615ddc59541515a7aa6d2c66fbfbf3213608f52e463d2469d63d395465",
+      "bytes": 15442
+    },
+    "builtin-array-fromasync.js": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/builtin-array-fromasync.js",
+      "sha256": "7226d957cf5c320ea89ca8c79ba2c6bcf477ca1f8743b25e569138477bb433bc",
+      "bytes": 1751
+    },
+    "builtin-iterator-zip-keyed.js": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/builtin-iterator-zip-keyed.js",
+      "sha256": "7ddadb93b7c4e9a55f983e94c2be1d2a3e5dee9569f5a831e0e37c794f5c7328",
+      "bytes": 7666
+    },
+    "builtin-iterator-zip.js": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/builtin-iterator-zip.js",
+      "sha256": "83e50f14e1eab5d616d4fd72f3dedd07398ff4f888ee74509214c0fea6fd9dab",
+      "bytes": 7951
+    },
+    "LICENSE": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/LICENSE",
+      "sha256": "96f73f9d2a16c21a36b418f06073be26e7d6d5e7c1bc99756b21a4f2c74ef171",
+      "bytes": 1212
+    },
+    "README.md": {
+      "url": "https://raw.githubusercontent.com/quickjs-ng/quickjs/d7215b0ad3fc2c562e8317fd9bca058fd4863804/README.md",
+      "sha256": "fe2760de5a67464245431d4916c9ad190a29ecc041e0f6c28bcce5d0d6fbfc3b",
+      "bytes": 837
+    }
+  }
+}

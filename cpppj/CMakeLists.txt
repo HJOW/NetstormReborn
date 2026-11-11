@@ -35,6 +35,8 @@ include(cmake/CompilerOptions.cmake)
 
 # 원본32비트 Smackw32.dll 대신 Windows10/11의64비트 호스트에서 사용할 별도 C 디코더 DLL을 만든다.
 add_subdirectory(third_party/libsmacker)
+# 14차: QuickJS-ng JavaScript 엔진(v0.18.0, MIT)을 정적 라이브러리로 만든다. 소스는 저장소에 고정해 두고 빌드 중 내려받지 않는다.
+add_subdirectory(third_party/quickjs-ng)
 add_subdirectory(src)
 
 if(NETSTORM_BUILD_TESTS)

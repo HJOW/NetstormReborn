@@ -95,3 +95,7 @@ NativeMainMenuState의 기본 정책 `referenceValidationNotice=false`와 실제
 ## 2026-11-06 단위984 — 공유 전송 실제 단독 경로 접합
 
 공유 등록표/per-ID 복합 전송이 실제 단독 미션의 Client/World에 연결돼 EXE에 `WS2_32.dll`이 링크된다. `InternalMission` 역할은 TCP backend를 만들지 않는다. 실제 tutorial1 진입/대기/종료만 확인했고 LAN/소켓/통신 검사는 하지 않았다. TCP 역할의 주소 제한·DNS/공식 서버/폐기 유효성 비활성 정책은982와 같다. Multiplayer UI와 일반 전투 접합은 미완료다. [984 범위와 검증](cpp-shared-transport-lifetime-20261106.md)을 따른다.
+
+## 2026-11-11 단위1301 — 14차 QuickJS-ng 엔진 탑재
+
+`Netstorm.exe`에 QuickJS-ng v0.18.0 엔진을 정적으로 넣었다([기록](cpp-quickjs-engine-20261111.md)). quickjs-libc(`std`/`os` 모듈)는 넣지 않았고, 스크립트 컨텍스트에는 `fetch`·`XMLHttpRequest`·`WebSocket`·`require`가 없으며 모듈 적재기가 없어 `import()`가 거부된다(검사 14건으로 확인). 엔진 소스는 저장소에 고정해 두어 빌드 중 내려받기도 없다. 가져오기 표는 DLL 28개 집합이 그대로이고 새 함수 39개는 CRT 수학/힙·시각/시간대·동기화뿐이다. WinINet/WinHTTP/URLMon·새 WinSock·`LoadLibrary` 가져오기는 0이며 새 외부 도메인/IP 접속 기능은 없다. 현재 게임 안 사용은 시작 시 자체 검사(고정 식 6개)뿐이다. 연동을 넓힐 때(결정 D7) 새 노출 API가 외부 접속을 만들지 않는지 이 문서에서 다시 감사한다.

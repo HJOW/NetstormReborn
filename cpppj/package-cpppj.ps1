@@ -445,6 +445,7 @@ function New-ReadmeText {
         '  Netstorm.bat        창 모드 실행',
         '  Netstorm-SavedMode.bat  저장된 화면 모드로 실행',
         '  third-party\fsr1\   AMD FidelityFX FSR 1.0 헤더/라이선스(MIT)와 출처 설명',
+        '  third-party\quickjs-ng\  Netstorm.exe에 정적으로 들어간 QuickJS-ng JavaScript 엔진의 라이선스(MIT)와 출처',
         '  fonts\              한국어 글꼴(D2Coding)과 라이선스',
         '  lang\               한국어 번역표와 본문44개(lang\korean). 옵션 > 언어(Language)에서 한국어를 고릅니다.',
         '  game\               게임 데이터 (원본 Netstorm 10.78)',
@@ -476,7 +477,8 @@ function New-ReadmeText {
         '5. Delete %USERPROFILE%\Saved Games\Netstorm\Saves\options.cfg and fullscreenStateFile.dat to reset settings.',
         '6. Korean: fonts\ (D2Coding) and lang\korean\xlat.korean and all 43 Korean bodies are bundled; pick Options > Language > Korean.',
         '7. Optional Anti-Aliasing and AMD FidelityFX Super Resolution 1.0 (MIT, see third-party\fsr1\) are in Options (off by default); 2560x1440/3840x2160 appear when a Direct3D 11 device exists.',
-        '8. The rebuilt LAN server R.exe is bundled. Multiplayer remains under development and has not been verified.')
+        '8. The rebuilt LAN server R.exe is bundled. Multiplayer remains under development and has not been verified.',
+        '9. The QuickJS-ng JavaScript engine (MIT, see third-party\quickjs-ng\) is built into Netstorm.exe. It currently only runs a startup self-check (Netstorm.exe --quickjs-selftest) and exposes no game, file or network access to scripts.')
     return (($lines -join "`r`n") + "`r`n")
 }
 
@@ -860,6 +862,14 @@ try {
         if (-not (Test-Path -LiteralPath $fsrFile -PathType Leaf)) { throw "FSR 1.0 자료를 찾을 수 없습니다: ${fsrFile}" }
         Add-FileItem -Items $items -Entry ($PackageRootName + '/third-party/fsr1/' + $fsrName) -Source $fsrFile
     }
+    # 14차 QuickJS: 실행 파일에 QuickJS-ng 엔진이 정적으로 들어 있으므로 MIT 라이선스와 출처 자료를 third-party\quickjs-ng 에 함께 둔다.
+    # 엔진 소스 전체는 넣지 않는다(MIT는 저작권·허가 고지 동봉만 요구). 출처 커밋과 파일별 SHA-256은 provenance.json에 있다. (2026-11-11 신규)
+    $quickJsSource = Join-Path $PSScriptRoot 'third_party/quickjs-ng'
+    foreach ($quickJsName in @('LICENSE', 'README.ko.md', 'provenance.json')) {
+        $quickJsFile = Join-Path $quickJsSource $quickJsName
+        if (-not (Test-Path -LiteralPath $quickJsFile -PathType Leaf)) { throw "QuickJS-ng 자료를 찾을 수 없습니다: ${quickJsFile}" }
+        Add-FileItem -Items $items -Entry ($PackageRootName + '/third-party/quickjs-ng/' + $quickJsName) -Source $quickJsFile
+    }
     # 6차 한국어: D2Coding 글꼴(저장소 fonts 의 가장 새 .ttc 하나)과 라이선스, 한국어 번역표를 실행 파일 옆 fonts\, lang\ 에 넣는다.
     # 클론은 실행 파일 폴더에서 이 두 폴더를 찾아 한글 글리프와 번역을 읽는다. (2026-11-06 신규)
     $fontsDir = Join-Path $RepoRoot 'fonts'
@@ -935,6 +945,9 @@ try {
         $infoLines.Add(('Runtime      : {0}  {1}  ({2})' -f $dll.Name, $dll.Version, $dll.Origin))
     }
     if ($NoRuntime) { $infoLines.Add('Runtime      : not bundled (-NoRuntime)') }
+    # 14차: 실행 파일에 정적으로 넣은 QuickJS-ng 엔진의 고정 릴리스와 커밋을 provenance.json에서 읽어 적는다(문서와 어긋나지 않게). (2026-11-11 신규)
+    $quickJsProvenance = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'third_party/quickjs-ng/provenance.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+    $infoLines.Add(('Script engine: QuickJS-ng {0} (commit {1}), static in {2}, MIT (third-party\quickjs-ng\)' -f $quickJsProvenance.release, $quickJsProvenance.commit, $ExeName))
     Add-TextItem -Items $items -Entry ($PackageRootName + '/BUILD_INFO.txt') -Text ((($infoLines -join "`r`n")) + "`r`n") -UseBom $true
 
     $totalBytes = [long]0

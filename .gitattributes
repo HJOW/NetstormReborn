@@ -2488,3 +2488,5 @@ cpppj/palette-frame-checking-20261104.json text eol=lf
 
 # CD SID 원문 관측의 최초 바이트와 SHA-256을 줄바꿈 변환 없이 보존한다.
 cpppj/tests/fixtures/sid-cd-allocation-recovery-x86.tsv -text
+# 14차 QuickJS-ng 상류 소스/라이선스의 바이트를 provenance.json SHA-256과 같게 보존한다(core.autocrlf 체크아웃 포함).
+cpppj/third_party/quickjs-ng/** -text

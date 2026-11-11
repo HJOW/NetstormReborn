@@ -3891,3 +3891,8 @@ netstorm_apply_compiler_options(netstorm_skirmish_setup_tests)
 # 11차 일본어: 가나/한자 부호화와 일본어 번역표 계약 검사(창 없는 일반 검사, 1287).
 target_sources(netstorm_tests PRIVATE JapaneseTextTests.cpp)
 target_sources(netstorm_korean_text_tests PRIVATE JapaneseTextTests.cpp)
+# 14차 QuickJS 엔진 탑재: 엔진 생성·평가·UTF-8·예외·시간/메모리/스택 한도·외부 장치 부재·시작 자체 검사(창 없는 일반 검사, 1301).
+target_sources(netstorm_tests PRIVATE ScriptEngineTests.cpp)
+add_executable(netstorm_script_engine_tests FocusedTestMain.cpp ScriptEngineTests.cpp)
+target_link_libraries(netstorm_script_engine_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_script_engine_tests)

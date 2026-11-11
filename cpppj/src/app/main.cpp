@@ -46,6 +46,7 @@
 #include "platform/PortableStartup.h"
 #include "platform/UserDataRoot.h"
 #include "platform/ErrorLog.h" // 7차: 최상위 오류/비정상 종료 상세 로그를 사용자 홈 logs에 남긴다.
+#include "platform/ScriptEngine.h" // 14차: 탑재한 QuickJS-ng 엔진의 버전 표시·시작 자체 검사·--quickjs-selftest에 쓴다.
 
 namespace {
 // 복원의 기준이 되는 원본 판본.
@@ -56,6 +57,7 @@ void PrintBuildInfo() {
     std::puts("  --run: --test-bridge-patterns 3,0,25 (test-only repeating sequence; off restores normal supply)");
     std::printf("NetStorm %s\n",netstorm::client::kProductVersion.data());
     std::printf("  reconstructed from: NetStorm %s (decompiled)\n", kTargetOriginalVersion);
+    std::printf("  script engine: %s (self-check: --quickjs-selftest)\n", netstorm::platform::ScriptEngine::EngineVersion().c_str()); // 14차: 탑재한 JavaScript 엔진과 자체 검사 명령을 알린다.
     std::printf("  default maxFPS: %d (frame interval %.6f s, 1ms clock: %u ms)\n",
         netstorm::client::kDefaultMaxFps, netstorm::client::FrameIntervalSeconds(netstorm::client::kDefaultMaxFps),
         netstorm::client::QuantizedFrameMilliseconds(netstorm::client::kDefaultMaxFps));
@@ -588,9 +590,24 @@ std::vector<UiStep> ReadUiSteps(const std::filesystem::path& path) {
     }
     return steps;
 }
+// 클라이언트 시작 전에 QuickJS-ng 엔진을 한 번 만들어 고정 식을 평가하고 해제한다(엔진 탑재 확인). 결과는 7차 활동 기록에 남긴다.
+// 통과하면 메모리 활동 기록(Note)만 남겨 로그 파일을 만들지 않고, 실패하면 경고로 남겨 로그 파일에 항목별 상세를 쓴다. 실패해도 게임은 계속 시작한다.
+// stdout을 쓰지 않으므로 --mcp(stdio JSON-RPC)에서도 안전하다.
+// (2026-11-11 AGENTS 14차 QuickJS 엔진 탑재로 신규)
+void RecordStartupScriptSelfCheck() {
+    const auto report = netstorm::platform::RunScriptEngineSelfCheck();
+    if (report.passed) {
+        char line[160];
+        std::snprintf(line, sizeof line, "%s 자체 검사 통과 (%zu항목, %.2f ms)", report.engineVersion.c_str(), report.items.size(), report.elapsedMilliseconds);
+        netstorm::platform::ErrorLog::Note(line);
+        return;
+    }
+    netstorm::platform::ErrorLog::Record(netstorm::platform::LogLevel::kWarning, "QuickJS", netstorm::platform::FormatScriptSelfCheckReport(report));
+}
 // 원본 방식의 창과 Renderer를 띄운다. 기본은 메뉴, --view는 독립 검사 장면이다.
 int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::RawFileName> startupFileNames={},std::optional<std::filesystem::path> portableRoot={}) { // 무인자 탐색의 경로/고리를 Client까지 소유 복사로 인계한다.
     netstorm::client::ClientOptions options;
+    RecordStartupScriptSelfCheck(); // 14차: 엔진 탑재 확인(생성·자체 검사·해제)을 게임 시작마다 한 번 수행한다.
     options.edition = TakeEdition(arguments);
     if (arguments.empty() && !portableRoot) throw std::invalid_argument("Missing game directory");
     options.gameDirectory = portableRoot ? *portableRoot:std::filesystem::path(arguments[0]);
@@ -934,6 +951,11 @@ int main(int argc, char** argv) {
         if (argc == 2 && std::string(argv[1]) == "--help") { PrintBuildInfo(); return 0; }
         const std::string command = argv[1];
         if (argc==2 && command=="--version") { std::printf("NetStorm %s\n",netstorm::client::kProductVersion.data());return 0; } // 창/자산/원격 접속 없이 제품 표시 버전만 출력한다.
+        if (argc == 2 && command == "--quickjs-selftest") { // 14차: 창/자산 없이 QuickJS 엔진을 만들어 고정 식을 평가·해제하고 결과를 출력한다. 통과 0, 실패 1이다.
+            const auto report = netstorm::platform::RunScriptEngineSelfCheck();
+            std::fputs(netstorm::platform::FormatScriptSelfCheckReport(report).c_str(), stdout);
+            return report.passed ? 0 : 1;
+        }
         if (command == "--dump-font" && argc == 4) { DumpFont(argv[2], argv[3]); return 0; }
         if (command.starts_with("--config-")) return RunConfigCommand(command, std::vector<std::string>(argv + 2, argv + argc));
         if (command == "--run") return RunClient(std::vector<std::string>(argv + 2, argv + argc));

@@ -93,7 +93,7 @@
 | 폴더 | [`dotnetpj/`](../dotnetpj/) | [`cpppj/`](../cpppj/) |
 | 만드는 방법 | 원본을 분석해 만든 기존 클론(동결)을 cpppj 구조를 직역한 새 `Netstorm.Client` 경로로 교체하는 중이다(2026-10-28 계획) | **기존 게임을 디컴파일한 소스를 토대로 C++ 소스를 다시 만든다** |
 | 빌드 도구 | .NET 10 SDK (`dotnetpj/Netstorm.sln`) | CMake 3.21 이상 + C++20 컴파일러(MSVC), **Windows 전용** |
-| 플랫폼 | MonoGame (Windows·Linux) | **Win32 API 를 원본처럼 직접 호출**. Windows 구성요소 밖의 외부 라이브러리는 없으며, FSR 1.0 헤더와 SMK 디코더 소스는 `cpppj/third_party/`에 동봉한다 |
+| 플랫폼 | MonoGame (Windows·Linux) | **Win32 API 를 원본처럼 직접 호출**. Windows 구성요소 밖의 외부 라이브러리는 없으며, FSR 1.0 헤더와 SMK 디코더 소스, 14차 QuickJS-ng 엔진 소스는 `cpppj/third_party/`에 동봉한다 |
 | 실행 파일 | `Netstorm.exe`(Windows)·`Netstorm`(Linux) | `Netstorm.exe` (CMake 대상 `NetstormCpp`) |
 | 상태(2026-11-06) | 기존 경로에서 캠페인 1-1·1-2 근사 플레이. 새 경로는 메뉴 일부와 Fort 적재 부품까지 | 34경로(Early 6·Training 9·캠페인 16·데모 3) 플레이 가능. 4·5·7차 구현, 6차 1차 구현, 3차 LAN 사전 구현 중 |
 
@@ -129,6 +129,7 @@ cpppj/
   third_party/
     fsr1/                 AMD FidelityFX FSR 1 공식 헤더 (MIT, 수정 없음, 7차)
     libsmacker/           인트로 SMK 디코더 libsmacker (LGPL 2.1). NetstormSmacker.dll 을 만든다
+    quickjs-ng/           QuickJS-ng JavaScript 엔진 v0.18.0 (MIT, 수정 없음, 14차). 정적 라이브러리 NetstormQuickJs
   tests/                  단위 테스트 (ctest). tests/fixtures 에 원본 x86 대조 자료
 ```
 
@@ -308,7 +309,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File cpppj\package-cpppj.ps1 D:\d
 
 * **저장 위치.** 첫 매개변수다. 생략하면 실행 중에 입력받고, 빈 값을 입력하면 취소한다(종료 코드 0). 폴더만 주면 `NetstormReborn-cpppj-YYYYMMDD.zip` 으로 만들고, 확장자를 생략하면 `.zip` 을 붙인다.
 * **빌드.** 기본 실행은 `NetstormCpp` 대상을 Release 증분 빌드해 모든 CMake 입력을 확인하며 `cpppj/build/bin/Release/Netstorm.exe`를 만든다. `-NoBuild` 로 끄고, `-ExePath` 로 미리 만든 실행 파일을 지정하며, `-DryRun` 은 압축 없이 계획만 보여 준다.
-* **구성.** 최상위에 `Netstorm.exe`, 실행 파일이 가져오는 `msvcp140.dll` 등 런타임 DLL과 인트로 디코더 DLL, `Netstorm.bat`(창 모드로 강제)·`Netstorm-SavedMode.bat`(저장된 화면 모드), `README.txt`(한국어·영어 안내), `BUILD_INFO.txt`, `LICENSE.txt`가 들어간다. `fonts\`에는 최신 D2Coding `.ttc`와 라이선스, `lang\`에는 한국어 번역표 `xlat.korean`(6차), `third-party\fsr1\`에는 AMD FidelityFX FSR 1 헤더·MIT 라이선스·출처 설명(7차), `third-party\libsmacker\`에는 SMK 디코더의 라이선스와 대응 소스가 들어간다. `game\`에는 `netstorm.tarc`·`Netstorm.exe`·`d\`·`sound\`·`music\`과, 영상 원천이 있으면 원본 CD 인트로 SMK를 담은 `MOVIE\`가 들어간다. 데이터는 `originals/`에서 읽기만 한다(`-GameSource`로 바꿀 수 있고, 영상 원천은 `-MovieSource`로 지정한다).
+* **구성.** 최상위에 `Netstorm.exe`, 실행 파일이 가져오는 `msvcp140.dll` 등 런타임 DLL과 인트로 디코더 DLL, `Netstorm.bat`(창 모드로 강제)·`Netstorm-SavedMode.bat`(저장된 화면 모드), `README.txt`(한국어·영어 안내), `BUILD_INFO.txt`, `LICENSE.txt`가 들어간다. `fonts\`에는 최신 D2Coding `.ttc`와 라이선스, `lang\`에는 한국어 번역표 `xlat.korean`(6차), `third-party\fsr1\`에는 AMD FidelityFX FSR 1 헤더·MIT 라이선스·출처 설명(7차), `third-party\libsmacker\`에는 SMK 디코더의 라이선스와 대응 소스, `third-party\quickjs-ng\`에는 실행 파일에 정적으로 들어간 QuickJS-ng 엔진의 MIT 라이선스·출처(`provenance.json`)·설명(14차)이 들어간다. `game\`에는 `netstorm.tarc`·`Netstorm.exe`·`d\`·`sound\`·`music\`과, 영상 원천이 있으면 원본 CD 인트로 SMK를 담은 `MOVIE\`가 들어간다. 데이터는 `originals/`에서 읽기만 한다(`-GameSource`로 바꿀 수 있고, 영상 원천은 `-MovieSource`로 지정한다).
 * **원본 `Netstorm.exe` 를 넣는 이유.** 클라이언트가 아이콘·커서·로딩 그림 리소스를 이 파일에서 읽는다(`ClientMain.cpp`, `LOAD_LIBRARY_AS_DATAFILE`). 실행하지 않으며 없으면 기본 아이콘과 화살표 커서로 대체된다. `assets/game-data` 에는 이 파일이 없어 데이터 원천은 `originals/` 이다.
 * **제외.** 사용자별 상태 파일인 `d\options.cfg`와 `fullscreenStateFile.dat`(남아 있으면 창 모드로 강제된다), 내려받은 지도 묶음의 잔재인 `d\request*.php`는 넣지 않는다. 클론이 읽지 않는 `help\`·`movie\`·`w\`와 원본 DLL·도구도 넣지 않는다.
 * **설정·저장 위치(쓰기 권한).** 5차(2026-11-05)부터 설정·진행·캡처·진단·편집 작업본은 설치 폴더가 아니라 `%USERPROFILE%\Saved Games\Netstorm\`에 저장된다. 따라서 압축을 푼 폴더가 읽기 전용이거나 관리자 권한이 있어야 쓸 수 있는 위치여도 실행된다. 설정을 초기화하려면 `%USERPROFILE%\Saved Games\Netstorm\Saves\`의 `options.cfg`와 `fullscreenStateFile.dat`를 지운다. (2026-10-23~11-04 제품은 `game\d\options.cfg`를 썼으므로 압축을 푸는 폴더가 쓰기 가능해야 했다.)
