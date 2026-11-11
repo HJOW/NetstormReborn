@@ -2,6 +2,54 @@
 
 완료 이력·대체된 계획·지난 단위의 다음 작업 예고를 보존한다. 이 문서의 “현재/다음/미구현/확인 필요”는 당시 기록이며 새 작업의 기준이 아니다. 현행 상태와 작업 순서는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
+## 2026-11-11 이관 2 — WB04-E304까지(4-B 마감)
+
+<a id="archive-webpj-20261111-4b-through-wb04-e304"></a>
+
+4-B 가 35/35 로 마감되어 3.1절 체크 목록(E274~E304)을 옮겼다. 요약은 현행 문서 2.3절이다. 이 목록의 “다음/미구현”은 당시 기록이다.
+
+#### 4-B Fort·지형·섬 적재 (35/35)
+
+완료 기준(3.2절): Tutorial1 Fort 적재 결과(객체·지형·섬)가 cpppj 와 같다(`--inspect-fort`·session-dump 범위). 선행: 4-A(완료). 줄 수는 기준선 소스이고, 기준선 뒤 변경은 착수할 때 `git diff 1f00a25a..HEAD -- <파일>` 로 확인해 3.6절 ①/②/③ 으로 판정한다. `(partial)` 은 이미 일부 이식된 단위이며 남은 부분만 옮긴다. 앞 항목이 뒷 항목의 입력이므로 위에서부터 진행한다.
+
+- [x] **RawMemStream** 94줄 — Fort 파일 바이트 스트림(읽기 소유 범위·부분 읽기) → [E274](docs/webpj-data-manager-streams-20261110.md) DataManager 스트림 묶음 MemStream·소멸·연결 목록 이식
+- [x] **RawFortContentsLoad** 79줄 — 원본 004bd130 원시 stream 내용물 읽기(분류를 edit-existing-fort 에서 port 로 변경, E275) → [E275](docs/webpj-fort-contents-load-20261110.md) Fort 내용물 원시 읽기 RawFortContentsLoad 이식과 분류 변경
+- [x] **RawFortObjectStream** 121줄 [RawMemStream·RawFortContentsLoad 뒤] → [E276](docs/webpj-fort-object-stream-20261110.md) Fort Objects stream 적재 RawFortObjectStream 이식
+- [x] **RawFortImage** 87줄 → [E277](docs/webpj-fort-image-20261110.md) Fort 이미지 직렬화 RawFortImage 이식
+- [x] **RawFortMoneyLoad** 163줄 → [E278](docs/webpj-fort-money-load-20261111.md) Fort Money 읽기와 Player SP 지정·조회 정책 RawFortMoneyLoad 이식
+- [x] **RawFortObjectLoad** (partial 283줄) — E218 `fort-object-load.js` 이후 남은 부분 → [E276](docs/webpj-fort-object-stream-20261110.md) Fort Objects stream 적재 RawFortObjectStream 이식 · [E279](docs/webpj-fort-serialization-globals-20261111.md) 공유 상태 대여 생성자(깊이 상자·전체 대여)와 전투 저장 마스크 칸
+- [x] **Template** (partial 389줄) — `assets/fort.js` 위에 cpppj `Template` 부모(구역 이름표·슬롯 수명)를 올린다 → [E280](docs/webpj-fort-template-refresh-20261111.md) Template RefreshObjectRecords(refreshFortObjectRecords) 이식 — 실제로 비어 있던 것은 이 함수 하나였고 구역 이름표(E19)·슬롯 수명(E123)은 이미 별도 단위로 끝남
+- [x] **RawTemplateLoad** 81줄 + client `ClientTemplateSectionNames`(Client 수명 lazy 512 바이트 소유자, E272 이월) → [E281](docs/webpj-template-load-20261111.md) Template manager 생성자·Load와 Client 이름표 소유자 이식
+- [x] **RawDataManagerImage** 142줄 + client `DataManagerFileRead`(전체 읽기 최소 4바이트 할당·`BindDataManagerFileRead`, E272 이월) → [E284](docs/webpj-data-manager-image-20261111.md) DataManager 파일 이미지 읽기·서명·파일 부모와 client 전체 읽기 웹 어댑터 이식
+- [x] **RawDataManagerLifetime** 60줄 → [E274](docs/webpj-data-manager-streams-20261110.md) DataManager 스트림 묶음 MemStream·소멸·연결 목록 이식
+- [x] **RawDataManagerList** 67줄 → [E274](docs/webpj-data-manager-streams-20261110.md) DataManager 스트림 묶음 MemStream·소멸·연결 목록 이식
+- [x] **RawDataManagerResize** 100줄 → [E283](docs/webpj-data-manager-resize-20261111.md) DataManager 임시 stream·이름 교체·최소 확장·섹션 생성/복제 이식
+- [x] **RawDataManagerSelection** 97줄 → [E282](docs/webpj-data-manager-selection-20261111.md) DataManager 섹션 검색·선택 이식(Image·Resize 의 선행이라 목록 순서를 바꿔 먼저 옮김)
+- [x] **FortSerializationGlobals** 11줄 → [E279](docs/webpj-fort-serialization-globals-20261111.md) Fort 저장 전역 묶음 이식과 RawFortObjectLoad 공유 상태 대여 생성자
+- [x] **RawFortRandomPlacement** 212줄 → [E285](docs/webpj-farm-cluster-20261111.md) Fort 단일 랜덤 배치 이식(farmcluster 104행 재생으로 검증하려고 RawFarmCluster 와 함께)
+- [x] **RawFortWorldLoad** 120줄 → [E286](docs/webpj-fort-world-load-20261111.md) Fort 월드 적재 부모(Territory 120BYTE·Builder·후처리 순서) 이식
+- [x] client **RawTerrainWorldBinding** (기준선 35줄) → [E301](docs/webpj-terrain-world-binding-20261111.md) 초기 도장 월드 연결 훅 이식(RawNormalTerrainWorldBinding 의 선행으로 추가)
+- [x] client **RawNormalTerrainWorldBinding** (기준선 318줄 = `.cpp` 195 + `.h` 123; 기준선 뒤 `f7f58f5a`는 3.6절 ①) → [E302](docs/webpj-normal-terrain-world-binding-20261111.md) 일반 지형 성장·도장·섬별 edgeFarm·군도 후보 상위 조립(RawFortWorldLoadBinding 의 선행으로 추가)
+- [x] client **RawFortWorldLoadBinding** 40줄 → [E303](docs/webpj-fort-world-load-binding-20261111.md) Fort 적재 부모의 월드 연결 훅 이식(원본 PlaceAll 소비자 골든 대조; 실제 child 통합은 아래 마지막 항목)
+- [x] **RawCampaignWorldLoad** 144줄 → [E287](docs/webpj-campaign-world-load-20261111.md) 캠페인 월드 적재 부모와 CampaignWorldGlobals 이식
+- [x] **Islandbuilder** (partial 117줄) → [E288](docs/webpj-islandbuilder-typed-20261111.md) 타입 모델 공개 항목 전부가 territory.js 에 이미 있음을 대조해 완료 확인(raw 판은 E222)
+- [x] **TerrainBuilder** (partial 246줄) → [E289](docs/webpj-terrain-builder-typed-20261111.md) 타입 모델 본섬 마스크 완료 확인(GroundGrid 계열은 GameWorld 판정으로 이월)
+- [x] **RawTerrainContext** 171줄 → [E290](docs/webpj-terrain-context-20261111.md) 초기 지형 context·MarkEdges·NormalizeAfterStamp·군도 상자 이식(3.6절 ③ 군도 접근자 반영)
+- [x] **RawTerrainGrowth** 306줄 → [E292](docs/webpj-terrain-growth-20261111.md) 일반 성장과 군도 공유 helper 이식(원본 세 파일 originals 1,115행 전체 배열 대조)
+- [x] **RawTerrainBitmap** 95줄 → [E293](docs/webpj-terrain-bitmap-20261111.md) 지형 미리보기 bitmap 이식(원본 28행 + 전체 부모 12행)
+- [x] **RawTerrainStamp** 241줄 → [E295](docs/webpj-terrain-stamp-20261111.md) 초기 terrain frame 선택·stamp 이식(원본 780행 전체 대조)
+- [x] **RawFarmCluster** 134줄 → [E285](docs/webpj-farm-cluster-20261111.md) edgeFarm 군집 이식(목록 순서를 앞당김; ChunkMap 은 최소 계약으로 사용)
+- [x] **RawRegionPaint** 231줄 → [E296](docs/webpj-region-paint-20261111.md) 지역 도장 이식(원본 386행 전체 대조)
+- [x] **ChunkMap** 159줄 → [E291](docs/webpj-chunk-map-20261111.md) 원본 물리 순서·mode·reset 완료(RawTerrainGrowth 의 mode 읽기 때문에 앞당김)
+- [x] **RawFrameChoose** 45줄 → [E294](docs/webpj-frame-choose-20261111.md) 단위 계약 시험과 기준선 뒤 NB23 반영(3.6절 ②; RawTerrainStamp 가 `ChooseTerrainFrame` 을 쓰므로 앞당김)
+- [x] **RawProcessHostStorage** (client 기준선 143줄) → [E297](docs/webpj-process-host-storage-20261111.md) 장기 ProcessState/Host/Kernel 저장소·단일 현재 World 대여·Clear 증빙 이식(RawSurfaceWorld 선행으로 추가)
+- [x] **RawSurfaceStorage** (client 기준선 98줄) → [E298](docs/webpj-surface-storage-20261111.md) Pool/해시/공간/그래프/집계 표/섬·청크/권한·보조 owner 의 장기 수명과 acquire/acquirePrepared 이식(RawSurfaceWorld 선행으로 추가; 기준선 뒤 +413줄은 3.6절 ③ 4-D)
+- [x] **RawSurfaceWorld** (client 기준선 804줄 = `.cpp` 522 + `.h` 282) → [E299](docs/webpj-surface-world-20261111.md) 표면 월드 조립(저장소 대여·적재·Pop 계열·runtime/삭제/설치 모드·붕괴 스캔·Process 증빙·dispose; 객체 송신기는 4-C `bindSquidTransmission`; 기준선 뒤 +780줄은 3.6절 ③ 4-D, `RawIslandPostPop` sharedLoadingDepth 는 ② 반영)
+- [x] **GameWorld·GameWorldInput** 1,155+42줄 → [E300](docs/webpj-judge-game-world-20261111.md) 이식 판정(코드 없음): 옛 값형 어댑터(약 415줄)는 제외, 실제 캠페인 호스트는 4-D(Session 소유·프레임)·5-B(카메라/미니맵)·5-A(팔레트/스프라이트)·6(선택·입력)으로 배분. E246 `o/Squid` 옛 struct 필드·E289 옛 지상 격자(`GroundCell`/`GroundGrid`/`CellPoint`/`Path`)는 제외로 닫음(`o/Squid.cpp` partial→port)
+- [x] **4-B 적재 통합 시험** → [E304](docs/webpj-fort-load-integration-20261111.md) 실제 Tutorial 1 의 지형 마스크(SHA-256·1505칸·954/551)·섬/청크 256칸을 독립 기대값·타입 모델과 대조(저장 객체 실제 적재와 session-dump 대조는 4-D 로 이월)
+
+---
+
 ## 2026-11-11 이관 — WB04-E277까지(4-A 마감 뒤, AGENTS 4~14차 반영 정리 전)
 
 <a id="archive-webpj-20261111-through-wb04-e277"></a>

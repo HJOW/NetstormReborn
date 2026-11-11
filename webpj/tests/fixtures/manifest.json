@@ -266,10 +266,12 @@
       "producer": "webpj/tools/make-terrain-expected.py 독립 계산(원본 465개 맵)",
       "consumers": [
         "webpj/tests/terrain.test.mjs",
-        "webpj/tests/terrain-scene.test.mjs"
+        "webpj/tests/terrain-scene.test.mjs",
+        "webpj/tests/fort-load-integration.test.mjs"
       ],
       "modules": [
-        "webpj/www/assets/terrain-mask.js"
+        "webpj/www/assets/terrain-mask.js",
+        "webpj/www/core/raw-normal-terrain-world-binding.js"
       ],
       "unit": "WB03-W",
       "doc": "docs/webpj-terrain-mask-20261101.md",
@@ -277,7 +279,7 @@
         "cpppj/src/o/TerrainBuilder.cpp",
         "cpppj/src/o/RawTerrainContext.cpp"
       ],
-      "scope": "본섬 칸 마스크(통로·성장·틈 보정). 실제 일반 지형 경로(RawTerrainGrowth)의 객체 생성은 미연결",
+      "scope": "본섬 칸 마스크(통로·성장·틈 보정). 실제 일반 지형 경로(RawTerrainGrowth)의 객체 생성은 월드 연결(E302)과 fort-load-integration.test.mjs(E304)가 Tutorial 1 한 줄(마스크 SHA-256·칸 수·영역별 칸 수)을 실제 월드 적재 결과(raw 지형 객체)와 대조",
       "text": true,
       "sha256": "b1570b2c076ad20845cc369a8292cc91a39214f58ce63a53472b668f1bbb00da",
       "bytes": 54949,
