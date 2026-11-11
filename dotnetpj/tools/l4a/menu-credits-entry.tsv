@@ -1,0 +1,7 @@
+# L4a Credits 하위 항목 캡처(0.388). 줄 형식: 프레임<TAB>동작<TAB>인자. {OUT} 은 l4a_compare.ps1 이 면별 폴더로 바꾼다.
+# Credits 목록의 첫 행(10.72 Patch Credits, 화면 좌표)을 눌러 하위 창을 열고 프레임 45·80·120 을 저장한다.
+5	click	Credits
+25	click	screen:505,384
+45	snapshot	{OUT}\credits-entry-f045.bmp
+80	snapshot	{OUT}\credits-entry-f080.bmp
+120	snapshot	{OUT}\credits-entry-f120.bmp

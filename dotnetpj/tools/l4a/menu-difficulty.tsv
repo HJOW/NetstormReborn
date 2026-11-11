@@ -1,0 +1,7 @@
+# L4a Difficulty 자식 펼침 캡처(0.388). 줄 형식: 프레임<TAB>동작<TAB>인자. {OUT} 은 l4a_compare.ps1 이 면별 폴더로 바꾼다.
+# Options 팝업의 Difficulty 행(화면 좌표)을 눌러 자식을 펼치고 프레임 45·80·120 을 저장한다.
+5	click	Options
+25	click	screen:595,370
+45	snapshot	{OUT}\difficulty-f045.bmp
+80	snapshot	{OUT}\difficulty-f080.bmp
+120	snapshot	{OUT}\difficulty-f120.bmp
