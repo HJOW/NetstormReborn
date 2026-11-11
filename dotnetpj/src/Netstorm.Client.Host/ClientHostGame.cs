@@ -6,6 +6,7 @@ using Netstorm.Client.Automation;
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
+using Netstorm.Client.Mission;
 using Netstorm.Client.Scripting;
 using Netstorm.Core.Original;
 using Netstorm.Core.Rules;
@@ -61,6 +62,9 @@ public sealed class ClientHostGame : Game
     private HostEditorSelection? _editor;
     /// <summary>실제 공통 UI의 Fort 이름 입력 창이다.</summary>
     private HostSaveFortDialog? _saveFortDialog;
+
+    /// <summary>--mission 진입으로 조립한 현재 미션 세션이다. 없으면 메뉴만 돈다.</summary>
+    private HostSession? _missionSession;
 
     /// <summary>HTML과 상위 메뉴가 공유할 원본 80칸 스크립트 문자열 고리.</summary>
     private readonly ScriptStringRing _scriptStrings = new();
@@ -210,12 +214,40 @@ public sealed class ClientHostGame : Game
             // 미션 월드가 없을 때의 world 0 덤프(머리·난수·Kernel)부터 맞춘다. 게임 시각은 세션 시계 미연결 상태라 0이다.
             // 근거: cpppj SessionStateDump.cpp의 DumpSessionState(world 0 부분). (2026-11-10 L2·L3 장치에서 추가했다)
             var sessionDump = new HostSessionDump(_kernel, _gameRandom, _crtRandom, () => _driver.Frame, () => 0ul);
+            // --mission 진입이면 세션 데이터를 조립해 world 1 덤프에 연결한다. 월드 본체 조립은 다음 단위다.
+            // (2026-11-12 0.398에서 미션 시작 흐름으로 추가했다)
+            if (!string.IsNullOrEmpty(_options.Mission) && _startup is not null)
+                sessionDump.BindSession(StartMission(_options.Mission, _options.Handle ?? "Player"));
             _driver.BindSessionDump(sessionDump.Write);
             _gumpDrawing.Draw();
             _menuDirty = false;
         }
         _previousKeys = Keyboard.GetState();
         _previousMouse = Mouse.GetState();
+    }
+
+    /// <summary>--mission 진입의 세션 데이터 조립이다. 요새 적재·목록·SP·AI·참가자를 묶고 소유한다.</summary>
+    /// <param name="mission">들어갈 미션 이름.</param>
+    /// <param name="handle">미션 1번의 핸들.</param>
+    /// <remarks>2026-11-12 0.398에서 미션 시작 흐름으로 추가했다. 대본·타입 표는 목록용으로 한 번 더 연다.
+    /// 요새 적재 장치가 가진 것과 같은 입력이며 세션이 표를 소유하면 합친다. 월드 본체 조립·브리핑 화면은 다음 단위다.</remarks>
+    private HostSession StartMission(string mission, string handle)
+    {
+        if (_startup is null) throw new InvalidOperationException("미션 진입에 시작 화면 없음");
+        using var script = new MissionScript(_startup.Configuration, mission);
+        RiftTypeTable types = MissionFortLoad.LoadTypeTable(_startup.Files);
+        MissionFortLoadResult fort = MissionFortLoad.Load(_startup, mission);
+        MissionPlayers players = MissionPlayers.Load(key => script.Get(key), fort.Fort, types, 6500);
+        var session = new HostSession(_kernel, _gameRandom, _crtRandom);
+        var crtBox = new UIntBox { Value = 1 };
+        var modeBox = new UIntBox { Value = 0 };
+        var seed = new RawGameRandomSeed(session.Game, crtBox, modeBox, () => _clock.UnixSeconds);
+        session.BindSpReseed(() => seed.Reseed());
+        session.StartPlayerSp(players);
+        session.PrepareAiSettings(players, key => script.Get(key));
+        session.StartPlayers(players, handle);
+        _missionSession = session;
+        return session;
     }
 
     /// <summary>

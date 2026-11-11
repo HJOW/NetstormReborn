@@ -37,6 +37,14 @@ public sealed class HostOptions
     /// <summary>건너뛴 관측 보고서 경로. 없으면 null이다. --ui-report 로 정한다.</summary>
     public string? UiReportPath { get; private set; }
 
+    /// <summary>바로 들어갈 미션 이름. 없으면 null이다. --mission 으로 정한다.</summary>
+    /// <remarks>2026-11-12 0.398에서 L2 미션 진입용으로 추가했다. 브리핑 화면을 거치지 않고 세션을 조립한다.</remarks>
+    public string? Mission { get; private set; }
+
+    /// <summary>미션 1번의 핸들. 없으면 null이다. --handle 로 정한다.</summary>
+    /// <remarks>2026-11-12 0.398에서 L2 미션 진입용으로 추가했다. 대본 이름이 아니라 실제 핸들이 1번 기록에 들어간다.</remarks>
+    public string? Handle { get; private set; }
+
     /// <summary>음향 장치를 만들지 않는지. --mute-audio 이면 참이다.</summary>
     /// <remarks>2026-11-12 0.384에서 cpppj `--mute-audio`와의 L4a 비교를 맞추려고 추가했다.
     /// 음소거이면 음향 장치 준비 판정(옵션 메뉴의 소리 행 사용 여부)이 거짓이다. 실제 무음향화는 R6에서 잇는다.</remarks>
@@ -114,6 +122,12 @@ public sealed class HostOptions
                 case "--ui-report":
                     options.UiReportPath = TakeValue(args, ref i, "--ui-report");
                     break;
+                case "--mission":
+                    options.Mission = TakeValue(args, ref i, "--mission");
+                    break;
+                case "--handle":
+                    options.Handle = TakeValue(args, ref i, "--handle");
+                    break;
                 case "--mute-audio":
                     options.MuteAudio = true;
                     break;
@@ -132,7 +146,7 @@ public sealed class HostOptions
 
     /// <summary>사용법을 돌려준다. 오류 종료 때 그대로 출력한다.</summary>
     public static string Usage() =>
-        "사용법: NetstormClientHost [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N] [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--mute-audio] [--set \"k=v;k=v...\"]";
+        "사용법: NetstormClientHost [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N] [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--mute-audio] [--mission name] [--handle name] [--set \"k=v;k=v...\"]";
 
     /// <summary>고정 시각 프레임 밀리초(1~60000)를 읽는다.</summary>
     private static uint TakeFixedFrameMs(string[] args, ref int index)
