@@ -297,9 +297,8 @@ public sealed class ClientHostGame : Game
         // 월드 적재를 세션 공유 저장소로 실행한다. 번역·설정은 실제로 연결하고 나머지는 기록 갈고리로 둔다.
         // 화신·공간·지형·객체·장부·카메라 실제 효과는 월드 조립 단위에서 잇는다.
         int avatarSid = session.Pool.Allocate(Netstorm.Core.Simulation.SidAllocation.Client);
-        var worldTypes = new OriginalTypeRecord[OriginalConstructors.TypeCount];
-        // 쓰지 않는 번호도 슬롯 검사의 범위 안에 들어야 한다.
-        for (int index = 0; index < worldTypes.Length; ++index) worldTypes[index] = new OriginalTypeRecord();
+        IReadOnlyList<RiftTypeDefinition> worldDefinitions = MissionFortLoad.LoadTypeDefinitions(_startup.Files);
+        session.FillWorldFrames(worldDefinitions);
         var worldOrder = new List<string>();
         RawCampaignWorldLoad worldLoad = session.BuildWorldLoad(
             new IslandRuntimeHooks
@@ -329,7 +328,7 @@ public sealed class ClientHostGame : Game
                 PopulateIsland = (_, _) => { },
                 RebuildGraph = _ => { },
             },
-            worldTypes,
+            types.Types,
             new PlayerWorldHooks
             {
                 Find = (_, _, _) =>

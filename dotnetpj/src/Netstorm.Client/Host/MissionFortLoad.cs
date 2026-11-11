@@ -50,6 +50,27 @@ public static class MissionFortLoad
             ? System.Text.Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3)
             : OriginalText.DecodeWindows1252(bytes);
 
+    /// <summary>게임 파일 장치에서 10.78 타입 정의를 로딩 순서대로 읽어 둔다. 프레임 표 채우기에 쓴다.</summary>
+    /// <param name="files">게임 데이터 파일 장치.</param>
+    /// <returns>로딩 순서와 같은 정의 목록이다.</returns>
+    /// <remarks>2026-11-12 0.442에서 실제 타입 채우기로 추가했다. 표 적재와 같은 파일을 다시 읽는다.</remarks>
+    public static IReadOnlyList<RiftTypeDefinition> LoadTypeDefinitions(GameFileSystem files)
+    {
+        ArgumentNullException.ThrowIfNull(files);
+        IReadOnlyList<string> order = RiftTypeLoadOrder.Get(OriginalEdition.Patch1078);
+        var definitions = new RiftTypeDefinition[order.Count];
+        // 로딩 순서의 이름마다 d/이름.type을 읽는다.
+        for (int index = 0; index < order.Count; ++index)
+        {
+            byte[]? bytes = files.TryReadAllBytes("d/" + order[index] + ".type");
+            if (bytes is null) throw new InvalidDataException("타입 원문이 없다: d/" + order[index] + ".type");
+            definitions[index] = RiftTypeDefinition.Parse(DecodeType(bytes))
+                ?? throw new InvalidDataException("타입 정의 해석 실패: d/" + order[index] + ".type");
+        }
+
+        return definitions;
+    }
+
     /// <summary>시작 화면의 같은 설정·파일 장치로 미션 스크립트를 열고 요새를 읽어 푼다.</summary>
     /// <param name="startup">같은 파일 시스템과 Config를 보유한 시작 화면.</param>
     /// <param name="mission">고를 미션 이름.</param>

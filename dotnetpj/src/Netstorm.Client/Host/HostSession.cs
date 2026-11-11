@@ -554,6 +554,29 @@ public sealed class HostSession
         return frames;
     }
 
+    /// <summary>타입 정의의 클러스터 코드를 세션 프레임 표에 채운다. 자산 번호 = 70 + 적재 순서다.</summary>
+    /// <param name="definitions">로딩 순서와 같은 타입 정의 목록이다.</param>
+    /// <remarks>2026-11-12 0.442에서 실제 타입 채우기로 추가했다. 자산 밖 번호(0~69·186~187)는 빈 표로 둔다.
+    /// 실제 지형·객체 효과가 프레임을 읽기 전까지 덤프에 영향을 주지 않는다.</remarks>
+    public void FillWorldFrames(IReadOnlyList<RiftTypeDefinition> definitions)
+    {
+        ArgumentNullException.ThrowIfNull(definitions);
+        if (RiftTypeTable.FirstAssetTypeNumber + definitions.Count > WorldFrames.Length)
+            throw new ArgumentOutOfRangeException(nameof(definitions), "타입 정의가 프레임 표 폭을 넘는다");
+        // 적재 순서마다 클러스터 코드를 해당 자산 번호 칸에 두는 반복문이다.
+        for (int index = 0; index < definitions.Count; ++index)
+        {
+            var codes = new RiftFrameCode[definitions[index].Clusters.Count];
+            // 클러스터 선언 순서대로 코드를 옮기는 반복문이다.
+            for (int code = 0; code < codes.Length; ++code)
+            {
+                codes[code] = definitions[index].Clusters[code].Code;
+            }
+
+            WorldFrames[RiftTypeTable.FirstAssetTypeNumber + index] = new RiftTypeFrames(codes);
+        }
+    }
+
     /// <summary>월드 적재의 로딩 깊이 공유 값이다. Territory·Money·Meta가 함께 읽고 쓴다.</summary>
     /// <remarks>2026-11-12 0.437에서 월드 적재 드라이런용으로 추가했다. 실제 값 경로는 시작 흐름 단위에서 잇는다.</remarks>
     private uint _worldLoadingDepth;
