@@ -331,7 +331,7 @@ cpppj/src/client/RawObjectMenuVariants.cpp	port			todo	[client-default]
 cpppj/src/client/RawPlayerMenu.cpp	port			todo	[client-default]
 cpppj/src/client/RawPriestMenu.cpp	port			todo	[client-default]
 cpppj/src/client/RawPriestWorldBindings.cpp	port			todo	[client-default]
-cpppj/src/client/RawProcessHostStorage.cpp	port			todo	[client-default]
+cpppj/src/client/RawProcessHostStorage.cpp	port	www/core/raw-process-host-storage.js	417f22d2	port	[client-default] WB04-E297: 장기 ProcessState/Host/Kernel 저장소(권한·GameAux 소유자 직접 빌림·외부 Kernel/프레임 시각 pin·독립 Kernel 39999·단일 현재 World 대여 Use(release/drainOwnedForShutdown/clearForState→ClearPass/returnForState→Returned: 진행 중 호출·Regular 이외 잔류 거부)·SID 소진 복구 reclaimForAllocation·레거시 회수 대여·dispose). 3.6③: 기준선 뒤 cpppj 417f22d2(장기 기본 장치 보관 BindLifecycleDefaults/BindFormFactoryDefaults/BindFormTransmissionDefaults·fire/rotate 애니메이션 TYPE 참조·ClearCall owner pin)는 Session 조립 4-D 에서 반영. tests/raw-process-host-storage.test.mjs(원본 관측 없는 단위 계약)
 cpppj/src/client/RawProductionControls.cpp	port			todo	[client-default]
 cpppj/src/client/RawProductionMaintenance.cpp	port			todo	[client-default]
 cpppj/src/client/RawRendererClouds.cpp	port			todo	[client-default]
