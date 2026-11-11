@@ -16214,10 +16214,68 @@
       "bytes": 53704,
       "lines": 3,
       "fixtureCommit": "860030e73",
-      "webCommit": "worktree",
+      "webCommit": "04c8cc9c2",
       "cpppjBasis": {
         "cpppj/src/client/RawFortWorldLoadBinding.cpp": "2d50804c8",
         "cpppj/src/client/RawNormalTerrainWorldBinding.cpp": "f7f58f5a1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E307",
+      "id": "connection-cleanup",
+      "path": "cpppj/tests/fixtures/connection-cleanup-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 연결 지연 닫힘(004df440)·pending 개별/전체 종료(004df520·004df4a0/004e2a00)·양수 연결 개별/전체/owner 종료(004e2940·004e29c0·004e2a10) 여섯 몸체의 전체 연결표·버퍼표·pending 표·동기화/개수/server·노드 flags/깊이·효과열(소멸/free/진단)·중단 prefix, 두 FPU 환경, 호출 도중 변경 행(originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-connection-cleanup.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-connection-cleanup.js"
+      ],
+      "doc": "docs/webpj-connection-cleanup-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConnectionCleanup.cpp"
+      ],
+      "scope": "580행을 전부 재생: 22 연결·22 버퍼·32 pending 표와 노드 필드를 입력에 되써 기대 출력 892바이트와 비교하고 효과열·중단(268행)을 대조. 연결 숫자 토큰은 호출자 저장소에서 해석(실제 소켓/Registry 는 RawConnectionRegistry 단위)",
+      "sha256": "46d1c839cf052e4caccd50a4d9d2dedf3d6871aaa281033eb25b8515222232c5",
+      "bytes": 2094762,
+      "lines": 581,
+      "fixtureCommit": "b76bb541e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConnectionCleanup.cpp": "b76bb541e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E307",
+      "id": "connection-registration",
+      "path": "cpppj/tests/fixtures/connection-registration-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 연결 등록(004e2870)·pending 제거(004df4f0)·pending 재배치(004e27b0)의 전체 연결표·pending 표·개수·노드 flags/sender·효과열(buffered/진단)·중단 prefix, 두 FPU 환경, 호출 도중 변경 행(originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-connection-registration.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-connection-registration.js"
+      ],
+      "doc": "docs/webpj-connection-registration-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawConnectionRegistration.cpp"
+      ],
+      "scope": "288행을 전부 재생: 표·개수·sender 를 입력 800바이트에 되써 기대 출력과 비교하고 효과열·중단(60행)을 대조. 연결 토큰 해석과 Registry 수명은 RawConnectionRegistry 단위",
+      "sha256": "d6d37ed9d7f1018789e235293376d647b10c48784e1386f4ecbb43c653a4927d",
+      "bytes": 929967,
+      "lines": 289,
+      "fixtureCommit": "0c50d6684",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawConnectionRegistration.cpp": "0c50d6684"
       }
     },
     {
