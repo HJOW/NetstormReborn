@@ -110,6 +110,20 @@ public sealed class AddRandomParentTests
         Assert.Equal(720, count);
     }
 
+    /// <summary>마지막 배치 결과 SID를 원문 반환 레지스터처럼 그대로 돌려준다(M6-n 반환형).</summary>
+    /// <remarks>2026-11-11 0.346에서 cpppj HEAD의 반환형 추가와 함께 더했다.</remarks>
+    [Fact]
+    public void AddRandomObjectsReturnsLastPlacementSid()
+    {
+        AddRandomHooks hooks = new();
+        hooks.WallSeconds = () => 1.0;
+        hooks.Local = () => 2u;
+        hooks.Island = (_, _) => 0;
+        // 배치 몸체가 돌려준 SID를 그대로 전달한다
+        hooks.Place = (_, _, _, _, _, _) => 1234u;
+        Assert.Equal(1234u, RawAddRandom.AddRandomObjects(89, 1, hooks));
+    }
+
     /// <summary>선택되지 않은 하위와 이미 실행된 벽시각 효과를 잘못 처리하지 않는다.</summary>
     [Fact]
     public void OnlyReachedDevicesAreRequired()

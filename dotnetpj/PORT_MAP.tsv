@@ -285,8 +285,8 @@ cpppj/src/o/OriginalText.h	Netstorm.Assets/OriginalText.cs	760e5ec3cf0013ac2817d
 cpppj/src/o/Player.cpp	Netstorm.Core/Rules/MissionStart.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/Player.cpp	Netstorm.Core/Simulation/BattleSession.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawAcidFence.cpp	Netstorm.Core/Original/RawAcidFence.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
-cpppj/src/o/RawAddRandom.cpp	Netstorm.Core/Original/RawAddRandom.cs	108f76cc814769142a03e6923cb59966d76216b4	L1
-cpppj/src/o/RawAddRandom.h	Netstorm.Core/Original/RawAddRandom.cs	108f76cc814769142a03e6923cb59966d76216b4	L1
+cpppj/src/o/RawAddRandom.cpp	Netstorm.Core/Original/RawAddRandom.cs	655740c81f593724c897a4160da57c4432744fed	L1
+cpppj/src/o/RawAddRandom.h	Netstorm.Core/Original/RawAddRandom.cs	655740c81f593724c897a4160da57c4432744fed	L1
 cpppj/src/o/RawAiCreate.cpp	Netstorm.Core/Original/RawAiCreate.cs	53a0e4f98c1003048aad7d0559e56e3e370a2b62	L1
 cpppj/src/o/RawAiCreate.h	Netstorm.Core/Original/RawAiCreate.cs	53a0e4f98c1003048aad7d0559e56e3e370a2b62	L1
 cpppj/src/o/RawArcSpire.cpp	Netstorm.Core/Original/RawArcSpire.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
