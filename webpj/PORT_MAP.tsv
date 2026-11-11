@@ -904,7 +904,7 @@ cpppj/src/o/RawSquidPostPopParent.cpp	port	www/core/squid-postpop-parent.js	1f00
 cpppj/src/o/RawSquidRegion.cpp	port	www/core/raw-squid-region.js	9cb0547f	port	[o-default] WB04-E2: 004acd20 setter + 3.6②→반영: 기준선 뒤 9cb0547f 가 추가한 004acda0 getter(GetSquidRegion)를 getSquidRegion 으로 이식
 cpppj/src/o/RawSquidSelection.cpp	port	www/core/raw-squid-selection.js	1f00a25a	port	[o-default] WB04-E58: 선택 비트 41c0b0/44b2b0·사정거리 종류 474240·내용물 표시 입구 426080. fixture squid-selection 5600행 전부. 실제 표시 갱신(+88)·Regular 등록은 소비자 단위
 cpppj/src/o/RawSquidTake.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(004af610)
-cpppj/src/o/RawSquidTransmission.cpp	port			todo	[o-default]
+cpppj/src/o/RawSquidTransmission.cpp	port	www/core/raw-squid-transmission.js	be567d46	port	[o-default] WB04-E313: 공통 Squid 전송(004ac260 transmit: client SID 진단→선택자 -2 는 +58 공통 삭제/나머지 +54→크기 2048 이상 진단→방송 -1/연결 관문 뒤 대상 송신, mutable 전체 2048BYTE 경로 / 004ad170 35BYTE 갱신 쓰기 / 00432fe0 압축 인코더 16필드·마스크·누적 로그 / 00433100 같은 owner 모드)와 공통 전역 기본값. 현재 +54 분배: ProcessForm 장치·빈 표 0·공통 갱신·두 Form writer. 기준선 뒤 1cd2b05a5·b8cadde14·be567d46b 판정: 3.6절 ② 반영(대상 지정 송신·삭제 선택자·ProcessForm 인자·mutable 경로·같은 owner 모드). 3.6절 ③ 재기준선: 압축 수신 복호기 RawSquidCompressedReceive·월드 동기화 RawPeerWorldSync(대응표 밖 신규 파일); 월드 연결은 Session 조립(4-D)의 bindSquidTransmission 한 줄. CD 10.72 미이식. 전용 원본 관측 없음(cpppj 도 간접 통과) → 손 계산 바이트·독립 복호기 왕복·정확한 마스크 대조. tests/raw-squid-transmission.test.mjs
 cpppj/src/o/RawSquidUnpopParent.cpp	port	www/core/squid-unpop.js	1f00a25a	port	[o-default] WB04-D1
 cpppj/src/o/RawSquidWord.h	port	www/core/raw-squid-word.js	1f00a25a	port	[o-default] WB04-E2: 004ac220 표면 WORD setter(현재 다리 TYPE 통지)
 cpppj/src/o/RawStartupStateCheck.cpp	exclude-mp			-	[mp-saved-battle]
