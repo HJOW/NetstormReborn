@@ -66,6 +66,12 @@ public sealed class HostSession
     /// <summary>세션이 소유한 인공지능 600바이트 설정이다. 키는 소유자 번호다. 난이도 배율은 생성 때 적용하므로 원본 그대로 둔다.</summary>
     public Dictionary<int, byte[]> AiSettings { get; } = [];
 
+    /// <summary>세션이 만든 인공지능 brain 토큰이다. 키는 소유자 번호다. 실제 생성 전에는 비어 있다.</summary>
+    /// <remarks>2026-11-12 0.399에서 AI 생성 본체 연결로 추가했다. 실제 brain 생성자·초기 갱신은 호출자가
+    /// 주입한 효과로 받으며(월드 본체 연결 전까지 기록용 스텁), 같은 Player 기록에 부착한다.
+    /// 라이브 호스트 시작 흐름 연결은 월드 효과와 함께 다음 단위다.</remarks>
+    public Dictionary<uint, uint> AiBrains { get; } = [];
+
     /// <summary>같은 Kernel·난수를 빌리고 저장소를 새로 만든다.</summary>
     /// <param name="kernel">현재 Kernel.</param>
     /// <param name="game">게임 난수.</param>
@@ -158,6 +164,28 @@ public sealed class HostSession
         if (position == start) return 0;
         if (double.TryParse(value[start..position], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out double number)) return number;
         return 0;
+    }
+
+    /// <summary>인공지능 소유자의 brain을 실제 생성기에 만들어 같은 Player 기록에 부착한다. 원본 미션 Start의 AI 생성 순서와 같다.</summary>
+    /// <param name="players">미션 플레이어 목록. 활성 인공지능 소유자만 만든다.</param>
+    /// <param name="hooks">실제 색·월드·생성자·초기 갱신 효과. 월드 본체 연결 전까지 호출자가 스텁으로 준다.</param>
+    /// <remarks>2026-11-12 0.399에서 미션 값 채우기로 추가했다. 설정이 없는 인공지능 소유자는 명시 거부한다.
+    /// 같은 세션 버퍼를 공유하는 참여 모듈에 부착하므로 Player 덤프 행에 brain·flags가 반영된다.
+    /// 라이브 시작 흐름 연결은 월드 효과와 함께 다음 단위다.</remarks>
+    public void CreateAiBrains(MissionPlayers players, AiCreateHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(players);
+        ArgumentNullException.ThrowIfNull(hooks);
+        var participation = new Netstorm.Core.Simulation.PlayerParticipation(PlayerRecords, Alliances, HiddenPlayers, new Netstorm.Core.Simulation.PlayerParticipationState(), new Netstorm.Core.Simulation.PlayerParticipationHooks());
+        var create = new RawAiCreate(OriginalEdition.Patch1078, participation, hooks);
+        // 인공지능(활성·전산) 소유자만 번호 순서대로 만든다.
+        for (int owner = 1; owner <= MissionPlayers.PlayerCount; owner++)
+        {
+            if (!players.Players[owner].Active || !players.Players[owner].Computer) continue;
+            if (!AiSettings.TryGetValue(owner, out byte[]? settings))
+                throw new InvalidOperationException("인공지능 설정 없이 생성할 수 없다: " + owner);
+            AiBrains[(uint)owner] = create.Create((uint)owner, settings);
+        }
     }
 
     /// <summary>Player 기록의 이름 오프셋이다. RawPlayerParticipation과 같은 0xc다.</summary>

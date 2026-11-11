@@ -2,6 +2,7 @@ using Netstorm.Assets;
 using Netstorm.Client.Automation;
 using Netstorm.Client.Host;
 using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
 
 namespace Netstorm.Client.Tests;
 
@@ -179,6 +180,124 @@ public sealed class MissionPlayersLoadTests
             Assert.Equal(1u, DwordAt(raw, 0x230));
             Assert.Equal(1u, DwordAt(raw, 0x234));
             Assert.Equal(0xF7DFu, DwordAt(raw, 0x248));
+        }
+        finally { script.Dispose(); }
+    }
+
+    /// <summary>thewarbegins 인공지능 소유자의 brain을 실제 생성 순서로 만들어 같은 Player 기록에 부착하는지 확인한다.</summary>
+    [Fact]
+    public void CreatesAiBrainsForTheWarBeginsAiOwner()
+    {
+        var (startup, script) = OpenScript();
+        try
+        {
+            RiftTypeTable types = MissionFortLoad.LoadTypeTable(startup.Files);
+            MissionFortLoadResult loaded = MissionFortLoad.Load(startup, "thewarbegins");
+            MissionPlayers players = MissionPlayers.Load(key => script.Get(key), loaded.Fort, types, 6500);
+            var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+            session.PrepareAiSettings(players, key => script.Get(key));
+            session.StartPlayers(players, "Youpson");
+            byte[] before = (byte[])session.AiSettings[2].Clone();
+            var colors = new List<(uint Owner, uint Color)>();
+            var constructed = new List<(uint Owner, int Size, byte[] Settings)>();
+            var updated = new List<uint>();
+            uint next = 0x10000;
+            var hooks = new AiCreateHooks
+            {
+                ChangeColor = (owner, color) => colors.Add((owner, color)),
+                FirstRegion = _ => 0u,
+                IslandTemple = _ => 0u,
+                DestroyTemple = (_, _) => { },
+                Construct = (owner, settings, size) => { constructed.Add((owner, size, settings.ToArray())); return ++next; },
+                InitialUpdate = (brain, _) => updated.Add(brain),
+            };
+            session.CreateAiBrains(players, hooks);
+            // 인공지능 소유자(2번)만 만든다.
+            Assert.Equal(new[] { 2u }, session.AiBrains.Keys.OrderBy(key => key).ToArray());
+            uint brain = session.AiBrains[2];
+            Assert.NotEqual(0u, brain);
+            // 같은 Player 기록에 부착한다.
+            var participation = new Netstorm.Core.Simulation.PlayerParticipation(session.PlayerRecords, session.Alliances, session.HiddenPlayers, new Netstorm.Core.Simulation.PlayerParticipationState(), new Netstorm.Core.Simulation.PlayerParticipationHooks());
+            Assert.Equal(brain, participation.Brain(2));
+            Assert.NotEqual(0u, participation.Flags(2) & PlayerParticipation.BrainFlag);
+            Assert.Equal(0u, participation.Brain(1));
+            // 생성자에는 600바이트·원본 할당 크기로 넘긴다.
+            Assert.Single(constructed);
+            Assert.Equal(2u, constructed[0].Owner);
+            Assert.Equal(0xb08, constructed[0].Size);
+            Assert.Equal(RawMissionAiSettings.Size, constructed[0].Settings.Length);
+            Assert.Equal(new[] { brain }, updated.ToArray());
+            // 보통 난이도에서는 입력 설정을 그대로 넘긴다.
+            Assert.Equal(before, constructed[0].Settings);
+            Assert.Equal(before, session.AiSettings[2]);
+            // 색이 있으면 변경 효과를 부른다.
+            uint color = System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(before.AsSpan(0x250, 4));
+            Assert.Equal(color != 0u ? 1 : 0, colors.Count);
+            // 두 번째 호출은 기존 brain을 재사용하고 생성자를 다시 부르지 않는다.
+            session.CreateAiBrains(players, hooks);
+            Assert.Equal(brain, session.AiBrains[2]);
+            Assert.Single(constructed);
+        }
+        finally { script.Dispose(); }
+    }
+
+    /// <summary>NoTemple 설정에서는 생성자 없이 첫 지역·신전 조회와 신전 제거만 하는지 확인한다.</summary>
+    [Fact]
+    public void CreatesAiBrainsNoTemplePathWithoutConstruct()
+    {
+        var (startup, script) = OpenScript();
+        try
+        {
+            RiftTypeTable types = MissionFortLoad.LoadTypeTable(startup.Files);
+            MissionFortLoadResult loaded = MissionFortLoad.Load(startup, "thewarbegins");
+            MissionPlayers players = MissionPlayers.Load(key => script.Get(key), loaded.Fort, types, 6500);
+            var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+            session.PrepareAiSettings(players, key => script.Get(key));
+            session.StartPlayers(players, "Youpson");
+            System.Buffers.Binary.BinaryPrimitives.WriteUInt32LittleEndian(session.AiSettings[2].AsSpan(0x244, 4), 1u);
+            var destroyed = new List<(uint Temple, uint Flags)>();
+            int constructs = 0;
+            var hooks = new AiCreateHooks
+            {
+                ChangeColor = (_, _) => { },
+                FirstRegion = owner => { Assert.Equal(2u, owner); return 5u; },
+                IslandTemple = region => { Assert.Equal(5u, region); return 77u; },
+                DestroyTemple = (temple, flags) => destroyed.Add((temple, flags)),
+                Construct = (_, _, _) => { constructs++; return 1u; },
+                InitialUpdate = (_, _) => { },
+            };
+            session.CreateAiBrains(players, hooks);
+            Assert.Equal(0u, session.AiBrains[2]);
+            Assert.Equal(0, constructs);
+            Assert.Equal([(77u, 0x400000u)], destroyed);
+        }
+        finally { script.Dispose(); }
+    }
+
+    /// <summary>생성자 효과가 없으면 brain을 부착하지 않고 실패하는지 확인한다.</summary>
+    [Fact]
+    public void CreatesAiBrainsMissingConstructNeverAttaches()
+    {
+        var (startup, script) = OpenScript();
+        try
+        {
+            RiftTypeTable types = MissionFortLoad.LoadTypeTable(startup.Files);
+            MissionFortLoadResult loaded = MissionFortLoad.Load(startup, "thewarbegins");
+            MissionPlayers players = MissionPlayers.Load(key => script.Get(key), loaded.Fort, types, 6500);
+            var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+            session.PrepareAiSettings(players, key => script.Get(key));
+            session.StartPlayers(players, "Youpson");
+            var hooks = new AiCreateHooks
+            {
+                ChangeColor = (_, _) => { },
+                Construct = null,
+                InitialUpdate = (_, _) => { },
+            };
+            Assert.Throws<InvalidOperationException>(() => session.CreateAiBrains(players, hooks));
+            var participation = new Netstorm.Core.Simulation.PlayerParticipation(session.PlayerRecords, session.Alliances, session.HiddenPlayers, new Netstorm.Core.Simulation.PlayerParticipationState(), new Netstorm.Core.Simulation.PlayerParticipationHooks());
+            Assert.Equal(0u, participation.Brain(2));
+            Assert.Equal(0u, participation.Flags(2) & PlayerParticipation.BrainFlag);
+            Assert.Empty(session.AiBrains);
         }
         finally { script.Dispose(); }
     }
