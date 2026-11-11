@@ -538,6 +538,30 @@ public sealed class HostSession
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 적재 본체 연결은 다음 단위다.</remarks>
     public CampaignWorldGlobals WorldGlobals { get; } = new();
 
+    /// <summary>세션이 소유한 지형 문자 mapping 전역이다. 초기 지면·경계 타입과 지역 없음 값을 둔다.</summary>
+    /// <remarks>2026-11-12 0.444에서 지형 상태 저장소로 추가했다. 바인딩·생성 연결은 다음 단위다.</remarks>
+    public TerrainContextGlobals TerrainGlobals { get; } = new();
+
+    /// <summary>세션이 소유한 임의 배치 타입 전역이다. 섬·농지 타입과 지역 owner 규칙을 둔다.</summary>
+    /// <remarks>2026-11-12 0.444에서 지형 상태 저장소로 추가했다. 바인딩·생성 연결은 다음 단위다.</remarks>
+    public FortRandomPlacementState PlacementState { get; } = new();
+
+    /// <summary>세션이 소유한 수명 긴 초기 캐시 상태다. 기본 섬·경계·장식 타입과 지역 없음 값을 둔다.</summary>
+    /// <remarks>2026-11-12 0.444에서 지형 상태 저장소로 추가했다. 바인딩·생성 연결은 다음 단위다.</remarks>
+    public TerrainStampState StampState { get; } = new();
+
+    /// <summary>세션이 소유한 지형 진단 묶음이다. 연결 전까지 비어 있어 생성 진입을 거부한다.</summary>
+    /// <remarks>2026-11-12 0.444에서 지형 상태 저장소로 추가했다. 진단 연결은 생성 단위에서 잇는다.</remarks>
+    public NormalTerrainDiagnostics TerrainDiagnostics { get; } = new();
+
+    /// <summary>세션이 소유한 현재 조각 타입 공유 상자다. 바인딩·생성이 매 요청 읽는다.</summary>
+    /// <remarks>2026-11-12 0.444에서 지형 상태 저장소로 추가했다. 실제 값 경로는 생성 단위에서 잇는다.</remarks>
+    public UIntBox PuzzlePieceBox { get; } = new();
+
+    /// <summary>세션이 소유한 지형 생성 입력 묶음이다. 바인딩 때 군집과 상자를 공유한다.</summary>
+    /// <remarks>2026-11-12 0.444에서 지형 상태 저장소로 추가했다. 입력 값 연결과 바인딩은 생성 단위에서 잇는다.</remarks>
+    public TerrainGenerationInputs GenerationInputs { get; } = new();
+
     /// <summary>빈 프레임 표 188개를 만든다. 검사 하네스의 LoadScene과 같은 공유 빈 표다.</summary>
     /// <returns>프레임 표다.</returns>
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다.</remarks>
