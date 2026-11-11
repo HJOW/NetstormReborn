@@ -16264,7 +16264,7 @@
       "bytes": 70164,
       "lines": 109,
       "fixtureCommit": "5b10ce823",
-      "webCommit": "worktree",
+      "webCommit": "53a7c28fa",
       "cpppjBasis": {
         "cpppj/src/o/RawTerrainGrowth.cpp": "1fe5fae75"
       }
@@ -16293,7 +16293,7 @@
       "bytes": 408815,
       "lines": 379,
       "fixtureCommit": "3eec0830f",
-      "webCommit": "worktree",
+      "webCommit": "53a7c28fa",
       "cpppjBasis": {
         "cpppj/src/o/RawTerrainGrowth.cpp": "1fe5fae75"
       }
@@ -16322,9 +16322,67 @@
       "bytes": 34536050,
       "lines": 1735,
       "fixtureCommit": "1fe5fae75",
-      "webCommit": "worktree",
+      "webCommit": "53a7c28fa",
       "cpppjBasis": {
         "cpppj/src/o/RawTerrainGrowth.cpp": "1fe5fae75"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E293",
+      "id": "island-bitmap",
+      "path": "cpppj/tests/fixtures/island-bitmap-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 섬 bitmap 입력(폭·높이·시드·녹색·초기화·profile 문자 지도)별 전체 픽셀·로컬 난수 최종 상태·분류 캐시·texture 조회 순서 28행(10.78 단일 판본, 두 x87 관측 포함)",
+      "consumers": [
+        "webpj/tests/terrain-bitmap.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-terrain-bitmap.js"
+      ],
+      "doc": "docs/webpj-terrain-bitmap-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTerrainBitmap.cpp"
+      ],
+      "scope": "28행 전부 사용(10.78 단일 판본)",
+      "sha256": "fc10eb07e99800cab63682b7f3d287130a2a38a3cdcb71ddcff546f1f6383d23",
+      "bytes": 16754,
+      "lines": 29,
+      "fixtureCommit": "588390281",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTerrainBitmap.cpp": "588390281"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E293",
+      "id": "island-bitmap-parent",
+      "path": "cpppj/tests/fixtures/island-bitmap-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 섬 bitmap 전체 부모(청크 지도 → context → 일반 성장 → 경계 → bitmap) 입력(owner·bounds·청크 profile)별 전체 픽셀 12행(10.78 단일 판본, 두 x87 관측 포함)",
+      "consumers": [
+        "webpj/tests/terrain-bitmap.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-terrain-bitmap.js"
+      ],
+      "doc": "docs/webpj-terrain-bitmap-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTerrainBitmap.cpp"
+      ],
+      "scope": "12행 전부 사용(10.78 단일 판본; 합성 함수는 시험 안에만 있음)",
+      "sha256": "5e09783b6f7d6eab409852bb8506b9c9839df57d7081b5d1bd66f53a1947ade1",
+      "bytes": 283786,
+      "lines": 13,
+      "fixtureCommit": "588390281",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTerrainBitmap.cpp": "588390281"
       }
     }
   ]
