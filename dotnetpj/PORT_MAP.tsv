@@ -689,3 +689,5 @@ cpppj/src/o/RawKencloudRender.cpp	Netstorm.Core/Original/RawKencloudRender.cs	3f
 cpppj/src/o/RawKencloudRender.h	Netstorm.Core/Original/RawKencloudRender.cs	3fc1de7db1eda0d8b62e6df38831e07f0a6c8a15	L1
 cpppj/src/client/ClientKencloudGlobals.cpp	Netstorm.Client/Display/ClientKencloudGlobals.cs	3fc1de7db1eda0d8b62e6df38831e07f0a6c8a15	port
 cpppj/src/client/ClientKencloudGlobals.h	Netstorm.Client/Display/ClientKencloudGlobals.cs	3fc1de7db1eda0d8b62e6df38831e07f0a6c8a15	port
+cpppj/src/o/Player.cpp	Netstorm.Core/Original/RawMissionPlayers.cs	f907239725cde166b4c151425f8888dd03dd55b5	port
+cpppj/src/o/Player.h	Netstorm.Core/Original/RawMissionPlayers.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
