@@ -14,6 +14,22 @@ public sealed class PlayerJoinHooks
     public Action<uint, uint>? SendPlayer { get; set; }
 }
 
+// 준비 마스크 packet의 실제 외부 효과 경계다. 2026-11-12 R4 실제 호스트·월드 조립(0.405)에서 추가됐다.
+public sealed class PlayerReadyHooks
+{
+    /// <summary>방장 여부다. 거짓이면 원본처럼 boss 진단을 낸다. 2026-11-12 R4 실제 호스트·월드 조립(0.405)에서 추가됐다.</summary>
+    public bool IsBoss { get; set; }
+
+    /// <summary>방장 아님 진단을 받는다. 원본의 assertion(boss)과 같다. 2026-11-12 R4 실제 호스트·월드 조립(0.405)에서 추가됐다.</summary>
+    public Action<string>? Assertion { get; set; }
+
+    /// <summary>대상 0일 때 전체에 packet을 뿌린다. 2026-11-12 R4 실제 호스트·월드 조립(0.405)에서 추가됐다.</summary>
+    public Action<byte[]>? Broadcast { get; set; }
+
+    /// <summary>대상이 있을 때 그 대상에 packet을 보낸다. 2026-11-12 R4 실제 호스트·월드 조립(0.405)에서 추가됐다.</summary>
+    public Action<uint, byte[]>? Send { get; set; }
+}
+
 // 미션 세션의 호스트 소유자다. Kernel·난수는 빌리고 저장소는 소유한다.
 public sealed class HostSession
 {
@@ -374,6 +390,33 @@ public sealed class HostSession
         }
 
         return mask;
+    }
+
+    /// <summary>준비 마스크 0x6e packet을 만든다. 원본 로그인의 SendReady 순서와 같다.</summary>
+    /// <param name="target">받을 대상이다. 0이면 전체에 뿌린다.</param>
+    /// <param name="hooks">도달한 실제 외부 효과다. 방장 관문·전송 효과를 받는다.</param>
+    /// <remarks>2026-11-12 0.405에서 미션 값 채우기로 추가했다. packet은 8바이트(01 6e 08 00+마스크 LE)이며,
+    /// 방장이 아니면 boss 진단을 낸다. 라이브 시작 흐름 연결은 다음 단위다.</remarks>
+    public void SendReady(uint target, PlayerReadyHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        // 방장이 아니면 원본처럼 boss 진단을 낸다.
+        if (!hooks.IsBoss)
+            (hooks.Assertion ?? throw new InvalidOperationException("준비 packet의 실제 진단 미연결"))("boss");
+        // packet 8바이트를 만든다.
+        var packet = new byte[8];
+        packet[0] = 1;
+        packet[1] = 0x6e;
+        packet[2] = 8;
+        packet[3] = 0;
+        uint mask = ReadyMask();
+        // 마스크 DWORD를 little endian으로 쓴다.
+        for (int index = 0; index < 4; ++index)
+            packet[4 + index] = unchecked((byte)(mask >> (8 * index)));
+        if (target == 0)
+            (hooks.Broadcast ?? throw new InvalidOperationException("준비 packet의 실제 뿌리기 미연결"))(packet);
+        else
+            (hooks.Send ?? throw new InvalidOperationException("준비 packet의 실제 전송 미연결"))(target, packet);
     }
 
     /// <summary>덤프용 Player 관측을 만든다. Start 순서 전까지 0이다.</summary>

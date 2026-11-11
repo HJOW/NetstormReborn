@@ -486,4 +486,70 @@ public sealed class MissionPlayersLoadTests
         // 이름 앞 7바이트는 같다. 바이트 15의 NUL(기준선 "You\0pson")은 로그인 쓰기 순서 잔여로 남긴다.
         Assert.Equal("Youpson", System.Text.Encoding.Latin1.GetString(session.PlayerRecords, 180 + 12, 7));
     }
+
+    /// <summary>준비 마스크를 전체에 뿌리는 0x6e packet이 원본 바이트와 같은지 확인한다.</summary>
+    [Fact]
+    public void SendsReadyBroadcastLikeLoginSendReady()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        session.StartPlayers(players, "Youpson");
+        session.StartPlayerMasks(players);
+        var sent = new List<(uint Owner, uint Target)>();
+        session.JoinPlayer(1u, 1u, 1u, new PlayerJoinHooks { SendPlayer = (owner, target) => sent.Add((owner, target)) });
+        session.MarkReady(1u);
+        var broadcasts = new List<byte[]>();
+        var assertions = new List<string>();
+        session.SendReady(0u, new PlayerReadyHooks { IsBoss = true, Broadcast = broadcasts.Add, Assertion = assertions.Add });
+        Assert.Empty(assertions);
+        Assert.Single(broadcasts);
+        // 원본 Packet(0x6e,8)은 01 6e 08 00+마스크 LE다. 1번만 준비됐으므로 마스크는 0x2다.
+        Assert.Equal(new byte[] { 1, 0x6e, 8, 0, 2, 0, 0, 0 }, broadcasts[0]);
+    }
+
+    /// <summary>대상이 있을 때 그 대상에만 0x6e packet을 보내는지 확인한다.</summary>
+    [Fact]
+    public void SendsReadyToTargetLikeLoginSendReady()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        session.StartPlayers(players, "Youpson");
+        session.StartPlayerMasks(players);
+        var sent = new List<(uint Owner, uint Target)>();
+        session.JoinPlayer(1u, 1u, 1u, new PlayerJoinHooks { SendPlayer = (owner, target) => sent.Add((owner, target)) });
+        session.MarkReady(1u);
+        var targets = new List<(uint Target, byte[] Packet)>();
+        var broadcasts = new List<byte[]>();
+        session.SendReady(1u, new PlayerReadyHooks { IsBoss = true, Send = (target, packet) => targets.Add((target, packet)), Broadcast = broadcasts.Add });
+        Assert.Empty(broadcasts);
+        Assert.Single(targets);
+        Assert.Equal(1u, targets[0].Target);
+        Assert.Equal(new byte[] { 1, 0x6e, 8, 0, 2, 0, 0, 0 }, targets[0].Packet);
+    }
+
+    /// <summary>방장이 아니면 boss 진단을 내고도 packet을 보내는지 확인한다.</summary>
+    [Fact]
+    public void AssertsBossLikeLoginSendReady()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        session.StartPlayers(players, "Youpson");
+        session.StartPlayerMasks(players);
+        var sent = new List<(uint Owner, uint Target)>();
+        session.JoinPlayer(1u, 1u, 1u, new PlayerJoinHooks { SendPlayer = (owner, target) => sent.Add((owner, target)) });
+        session.MarkReady(1u);
+        var broadcasts = new List<byte[]>();
+        var assertions = new List<string>();
+        session.SendReady(0u, new PlayerReadyHooks { IsBoss = false, Broadcast = broadcasts.Add, Assertion = assertions.Add });
+        // 원본은 boss 진단을 낸 뒤에도 마스크 packet 송신을 계속한다.
+        Assert.Equal(new[] { "boss" }, assertions);
+        Assert.Single(broadcasts);
+        Assert.Equal(new byte[] { 1, 0x6e, 8, 0, 2, 0, 0, 0 }, broadcasts[0]);
+    }
 }
