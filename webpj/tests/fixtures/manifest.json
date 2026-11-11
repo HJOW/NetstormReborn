@@ -15980,7 +15980,7 @@
       "bytes": 856750,
       "lines": 220,
       "fixtureCommit": "05d7cb57d",
-      "webCommit": "worktree",
+      "webCommit": "9cc13a031",
       "cpppjBasis": {
         "cpppj/src/o/RawFortImage.cpp": "10c78952c",
         "cpppj/src/o/RawMissionLoginPackets.cpp": "ede61f05d"
@@ -16483,6 +16483,35 @@
       "webCommit": "d9bc213ea",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionSettingsPacket.cpp": "ae0e58b3a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E318",
+      "id": "mission-login-timer",
+      "path": "cpppj/tests/fixtures/mission-login-timer-x86.tsv",
+      "producer": "cpppj 원본 PE 관측: 로그인 집계(00490970·00490a00·00490ab0·00490b20·00490bc0)·만료(004180a0)·Begin(004b61f0)·Abort(004b6780)·Run(004b67c0 시작/진행)의 Player 패턴 × 현재 모드 × 연결 × 호출 도중 변경 트리거별 결과·전체 상태 직렬화(double 비트 포함)·현재 모드 읽기와 외부 효과 순서(originals 10.78)",
+      "consumers": [
+        "webpj/tests/raw-mission-login-timer.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mission-login-timer.js"
+      ],
+      "doc": "docs/webpj-mission-login-timer-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissionLoginTimer.cpp"
+      ],
+      "scope": "1984행 전부 재생(집계 C·만료 E·Begin B·Abort A·Run R/S): 결과·전체 상태·모드 읽기와 외부 효과 순서 대조. 진행 문구(progressText)는 원본 관측 없이 손 계산 시험",
+      "sha256": "780a993bbac4f8b51ae7a0e425eb6b44dd5a4161dbcddb96124bfc32b9aacb35",
+      "bytes": 1169088,
+      "lines": 1985,
+      "fixtureCommit": "400aaefb8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissionLoginTimer.cpp": "25e32b7a9"
       }
     },
     {
