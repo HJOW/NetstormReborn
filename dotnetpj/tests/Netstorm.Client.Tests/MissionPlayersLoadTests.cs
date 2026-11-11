@@ -25,6 +25,14 @@ public sealed class MissionPlayersLoadTests
         finally { script.Dispose(); }
     }
 
+    /// <summary>thewarbegins 대본 조회 함수를 연다. 호출자가 닫는다.</summary>
+    private static (HostStartupScene Startup, Netstorm.Client.Mission.MissionScript Script) OpenScript()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data);
+        return (startup, new Netstorm.Client.Mission.MissionScript(startup.Configuration, "thewarbegins"));
+    }
+
     /// <summary>thewarbegins 1·2번과 나머지 번호가 원본 규칙과 같은 목록을 내놓는지 확인한다.</summary>
     [Fact]
     public void LoadsTheWarBeginsPlayers()
@@ -108,5 +116,44 @@ public sealed class MissionPlayersLoadTests
             "originals", 90, 0, 0, 0, 0, 39999, null, session.DumpPool(),
             session.DumpPlayers(), session.DumpSp(), session.DumpGraph(), session.DumpTotals(), session.DumpTotalMade());
         Assert.Contains($"\nsp\t1\t{session.Sp.Offset}\t0\t1161527296\t0\t0\t0\t0\t0\t0\t0\n", text, StringComparison.Ordinal);
+    }
+
+    /// <summary>thewarbegins 인공지능 설정이 대본 값으로 채워지는지 확인한다.</summary>
+    [Fact]
+    public void PreparesAiSettingsLikeScript()
+    {
+        var (startup, script) = OpenScript();
+        try
+        {
+            RiftTypeTable types = MissionFortLoad.LoadTypeTable(startup.Files);
+            MissionFortLoadResult loaded = MissionFortLoad.Load(startup, "thewarbegins");
+            MissionPlayers players = MissionPlayers.Load(key => script.Get(key), loaded.Fort, types, 6500);
+            var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+            session.PrepareAiSettings(players, key => script.Get(key));
+            // 인공지능 소유자(2번)만 만든다.
+            Assert.True(session.AiSettings.ContainsKey(2));
+            Assert.False(session.AiSettings.ContainsKey(1));
+            byte[] raw = session.AiSettings[2];
+            Assert.Equal(RawMissionAiSettings.Size, raw.Length);
+            static string CString(byte[] bytes, int offset)
+            {
+                int end = Array.IndexOf(bytes, (byte)0, offset);
+                return System.Text.Encoding.Latin1.GetString(bytes, offset, (end < 0 ? bytes.Length : end) - offset);
+            }
+            static float FloatAt(byte[] bytes, int offset) =>
+                BitConverter.UInt32BitsToSingle(System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(offset, 4)));
+            static uint DwordAt(byte[] bytes, int offset) =>
+                System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(offset, 4));
+            Assert.Equal("The Jailer", CString(raw, 0));
+            Assert.Equal("sunWalker;windBattery;sunArcher", CString(raw, 0x1e));
+            Assert.Equal(6f, FloatAt(raw, 0x220));
+            Assert.Equal(3f, FloatAt(raw, 0x224));
+            Assert.Equal(6f, FloatAt(raw, 0x228));
+            Assert.Equal(0u, DwordAt(raw, 0x22c));
+            Assert.Equal(1u, DwordAt(raw, 0x230));
+            Assert.Equal(1u, DwordAt(raw, 0x234));
+            Assert.Equal(0xF7DFu, DwordAt(raw, 0x248));
+        }
+        finally { script.Dispose(); }
     }
 }
