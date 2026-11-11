@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.342 · 정리 2026-11-11(HJOW-Athlon, 문서만) · 다음 단위 0.343 · cpppj 기준 제품 1300(AGENTS 1~13차 구현 마감, 2026-11-11 추가된 14차 QuickJS는 cpppj 미착수) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`) · 전체 목표 미완료 — 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
+**기준 단위 0.343 · 정리 2026-11-11(HJOW-Athlon, 문서만) · 다음 단위 0.344 · cpppj 기준 제품 1300(AGENTS 1~13차 구현 마감, 2026-11-11 추가된 14차 QuickJS는 cpppj 미착수) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`) · 전체 목표 미완료 — 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리 직전의 이 문서 전체(단위 기록 0.280~0.341, 0.9의 단위별 완료 체크 목록, 옛 4~8차 번호의 R8 표)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341)에 바이트 그대로 보관했고, 그 이전 보관본 4개와 0.279 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -39,8 +39,8 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 커밋 | 0.342 `20261111-176 DN`(11.01 카피라이트 Copyright 2026 HJOW 반영) |
-| 검사 | 마지막 전체 완주는 0.329: Assets 366·Client 965·Core 1,876(합계 3,207, 실패 0). 0.330~0.341의 12단위는 집중 검사만 했다(0.330~0.333은 지시대로 검사 없는 사전 구현, 빌드 경고·오류 0과 `CppPortMapTests`만 확인). 0.342는 `ProductPresentationTests` 6건만 확인했다. 단위별 집중 검사 내역은 [보관본 0.1](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341) |
+| 마지막 구현 커밋 | 0.343 `20261111-178 DN`(cpppj 영향 재검토 정적 분류 문서) |
+| 검사 | 마지막 전체 완주는 0.329: Assets 366·Client 965·Core 1,876(합계 3,207, 실패 0). 0.330~0.341의 12단위는 집중 검사만 했다(0.330~0.333은 지시대로 검사 없는 사전 구현, 빌드 경고·오류 0과 `CppPortMapTests`만 확인). 0.342는 `ProductPresentationTests` 6건만 확인했다. 0.343은 정적 분류만 했고 전체 회귀(0.4 1-1)는 백그라운드 실행 중이다. 단위별 집중 검사 내역은 [보관본 0.1](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341) |
 | PORT_MAP | `PORT_MAP.tsv` 673줄(자료 668행: L1 333·port 335). 마지막 추가는 0.340 `RawPlayerIdentity.h/.cpp` → `RawPlayerIdentity.cs` |
 | fixture | 연결 234개. `cpp_sync.py`는 미반영분 때문에 0종료가 아니다. `reflected-commit`·PORT_MAP floor는 `f95a8db2` 그대로다(영향 재검토를 마친 행만 올린다) |
 | cpppj 기준 | 현재 cpppj는 확정 제품 1300 / 11.01(LEFT_JOBS.md 0.5). dotnetpj의 마지막 영향 검토는 0.281(제품 1247, `4d4b3a928`)이다. 그 뒤 cpppj 47커밋, `cpppj/src` 184파일 변경(신규 39), 그중 PORT_MAP에 있는 파일 47개([1.2](#resync-scope)) |
@@ -55,7 +55,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 | 순서 | 작업 | 할 일과 완료 기준 | 시작 조건 |
 | --- | --- | --- | --- |
 | **1-1** | **전체 회귀 완주** | `dotnet test dotnetpj/Netstorm.sln -c Release`를 끝까지 돌려 0.3의 기준선을 새로 적는다(0.330~0.341 누적, 20단위·하루 규칙) | 바로 |
-| **1-2** | **cpppj 영향 재검토(제품 1247→1300)** | [1.2](#resync-scope)의 47파일을 ① 이미 옮긴 C#의 재대조 대상 ② 10차 NB 수정이 든 파일 ③ 주석·형식만 바뀐 파일로 나누고, 신규 39파일은 [1.3](#dotnet-r8-requirements) 차수표에 배정한다. 옛 "cpppj 미완 범위" 목록([3.2](#dotnet-constraints))이 cpppj HEAD에 구현됐는지도 항목별로 확인한다. 재대조를 마친 행만 `base`를 올린다. 결과는 단위 문서(`docs/dotnet-cpp-resync-20261111.md` 등)에 둔다 | 1-1 뒤(병행 가능) |
+| **1-2** | **cpppj 영향 재검토(제품 1247→HEAD)** | 🔶 정적 분류 0.343 완료([재검토 문서](docs/dotnet-cpp-resync-20261111.md): 변경 188파일 중 PORT_MAP 교집합 47파일을 ① 재대조 39건·② NB 포함 8건으로 나누고(③ 해당 없음), 신규 39파일을 차수표에 배정, 옛 미완 범위 6항목 재확인). 실제 재대조·`base` 올리기는 각 파일을 건드리는 후속 단위에서 한다 | 1-1 뒤(병행 가능) |
 | **1-3** | **11.01 카피라이트** | ✅ 0.342 완료. 새 경로 `Netstorm.Client/ProductPresentation.cs`의 `PatchCreditsBody`와 기존 경로 `MainMenuView`의 11.01 Credits 상세에 `Copyright 2026 HJOW`를 넣었다. 기준은 cpppj `client/ProductPresentation.cpp`(제품 1291)다. 이번 목표 중 게임 실행 검사는 지시에 따라 건너뛰고 빌드 경고·오류 0과 `ProductPresentationTests` 6건 통과로 확인했다 | 바로 |
 | **1-4** | **오라클 갱신** | cpppj HEAD의 Release `Netstorm.exe`를 오라클로 정하고 커밋·SHA를 기록한다(R0-1의 `0cc1d33d` 빌드는 낡았다). CP 세션이 M8 재실행용으로 만든 Release 빌드가 HEAD와 같으면 그대로 쓴다. 빌드는 PowerShell 4병렬 명령([LEFT_JOBS.md 6절](LEFT_JOBS.md#rules-ops)) | 2-4·3단계 비교 전 |
 | **2** | **R4 마무리 → M1** | ① 실제 호스트·월드 조립 ② AI 나머지(11차 배율 필드 포함) ③ 미뤄 둔 전수 재생 ④ 34경로 Load/Start 상태를 cpppj `session-dump`와 대조(L2). 세부는 [2.4](#r4-detail) | 1-2 뒤 |
@@ -475,7 +475,18 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 
 문서가 없는 작은 단위만 아래에 최신순으로 짧게 적는다. 한 기록에는 범위, 구현(새 파일·수정 파일·옮긴 cpppj 파일과 기준 커밋), C#에서 달라진 모양, 검증(집중·전체·변이·L2/L4a 비교), PORT_MAP·fixture 변화, 함께 옮긴 10차 NB 수정, 보호·실행·외부 접속 관점, 남은 것을 적는다([3.1](#verify-levels)). 0.11~0.341은 보관 파일에 있다: [0.11~0.65](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073), [0.66~0.126](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126), [0.127~0.153](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154), [0.154~0.279](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279), [0.280~0.341](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341).
 
-(다음 단위 0.343부터 이 절에 적는다)
+(다음 단위 0.344부터 이 절에 적는다)
+
+#### 0.343 — cpppj 영향 재검토 정적 분류 (2026-11-11, HJOW-Athlon)
+
+- 범위: 0.4 순서 1-2의 정적 분류. `4d4b3a928..HEAD`의 `git diff`와 PORT_MAP 교집합을 나누고 신규 파일 39개를 차수표에 배정했다. 결과는 [재검토 문서](docs/dotnet-cpp-resync-20261111.md)에 있다.
+- 구현: 새 문서 `docs/dotnet-cpp-resync-20261111.md`(교집합 47파일 표 ① 39·② NB 포함 8·③ 없음, 신규 39파일 배정표, 옛 미완 6항목 재확인표). 코드는 건드리지 않았다.
+- C# 모양 차이: 없음(정적 분류만).
+- 검증(게임 실행 없음, 이번 목표 지시): 빌드·검사를 돌리지 않았다. `cpp_sync.py`는 시간 초과라 쓰지 않고 같은 교집합 방법을 썼다. 전체 회귀(0.4 1-1)는 백그라운드에서 실행 중이다.
+- PORT_MAP·fixture 변화 없음(`base`·floor 미갱신 — 재대조를 마친 행만 올린다).
+- 함께 옮긴 10차 NB 수정 없음(② 8파일의 NB08·NB02·NB24·NB04·NB18·NB29·NB23은 해당 파일을 옮길 때 함께 옮긴다).
+- 보호·실행·외부 접속: `originals/`·`originalCD/`·AGENTS.md·README 개요·cpppj·LEFT_JOBS.md 미수정. 게임 창·오라클 실행 없음. 외부 접속 목록 변경 없음.
+- 남은 것: 0.4 순서 1-1(전체 회귀 결과 기록), 1-2의 실제 재대조(후속 단위), 1-4(오라클 갱신, 게임 실행이 필요해 이번 목표에서는 보류).
 
 #### 0.342 — 11.01 카피라이트 Copyright 2026 HJOW 반영 (2026-11-11, HJOW-Athlon)
 
