@@ -371,9 +371,12 @@ export class IslandList {
 }
 
 // 월드를 청크(16 × 16칸) 격자로 나눈 지도이다(원본 ChunkMap.cpp): 청크마다 어느 섬(영역)에 속하는지를 담는다.
-// 항목은 (x, y) → entries[y × 16 + x] 이다(원본은 x × 16 + y 순서이지만 밖으로 드러나지 않는다).
-// 사용: const map = new ChunkMap(); map.at(11, 6).island. (2026-11-01 WB03-V)
+// 항목은 (x, y) → entries[x × 16 + y] 이다(원본 물리 순서이며 고정 256칸이 현재 가로·세로와 별개이므로 부분 reset 이 보존하는 바깥 칸도 같은 위치에 남는다).
+// 사용: const map = new ChunkMap(); map.at(11, 6).island; map.mode(원본 첫 DWORD, 기본 1)·map.reset()(00432360). (2026-11-01 WB03-V, 2026-11-11 WB04-E291: 원본 물리 순서와 mode/reset 추가)
 export class ChunkMap {
+    // 원문 첫 DWORD 이다. 정리/준비 단계와 현재 소비자가 reset 과 별도로 직접 쓰므로 boolean 으로 줄이지 않고 uint32 로 보관한다(생성자 004323c0 이 1 로 지정).
+    #mode = 1;
+
     // 가로·세로 청크 수(미션 맵은 16 × 16)이다. 1~16 범위를 벗어나면 오류이다.
     constructor(xLength = WORLD_CHUNKS_PER_SIDE, yLength = WORLD_CHUNKS_PER_SIDE) {
         if (!(xLength >= 1 && yLength >= 1 && xLength <= WORLD_CHUNKS_PER_SIDE && yLength <= WORLD_CHUNKS_PER_SIDE)) throw new RangeError('Chunk map size');
@@ -385,6 +388,36 @@ export class ChunkMap {
         this.entries = Array.from({ length: WORLD_CHUNKS_PER_SIDE * WORLD_CHUNKS_PER_SIDE }, emptyEntry);
     }
 
+    // 원문 첫 DWORD 를 읽는다(uint32). (2026-11-11 WB04-E291)
+    get mode() {
+        return this.#mode;
+    }
+
+    // 원문 첫 DWORD 를 쓴다. 수가 아니면 거부하고 값은 uint32 로 감긴다. (2026-11-11 WB04-E291)
+    set mode(value) {
+        if (typeof value !== 'number' || !Number.isFinite(value)) throw new TypeError('Chunk map mode must be a number');
+        this.#mode = value >>> 0;
+    }
+
+    // 원본 00432360: reset 중에는 mode 를 1 로 두었다가 현재 값으로 복원하고, 현재 가로·세로 안의 항목만 y 바깥·x 안쪽 순서로 "섬 없음"(섬 0x7f·방향 0·record 0·순번 0)으로 되돌린다.
+    // 현재 지도 밖의 고정 256칸 물리 항목은 그대로 둔다. (2026-11-11 WB04-E291)
+    reset() {
+        const mode = this.#mode;
+        this.#mode = 1;
+        // 원문은 y 바깥/x 안쪽 순서로 현재 활성 크기만 훑는다(저장 순서는 x × 16 + y).
+        for (let y = 0; y < this.yLength; y += 1) {
+            // 한 줄의 청크를 같은 항목 객체에서 비워 소비자가 쥔 참조를 보존한다.
+            for (let x = 0; x < this.xLength; x += 1) {
+                const entry = this.at(x, y);
+                entry.island = NO_ISLAND;
+                entry.side = '';
+                entry.record.fill(0);
+                entry.ordinal = 0;
+            }
+        }
+        this.#mode = mode;
+    }
+
     // 좌표가 현재 지도 안인가.
     contains(x, y) {
         return x >= 0 && y >= 0 && x < this.xLength && y < this.yLength;
@@ -392,7 +425,7 @@ export class ChunkMap {
 
     // 그 청크의 항목이다. 범위를 벗어난 좌표는 원본처럼 가장자리로 당긴다(원본은 그 전에 assert 한다; 당겨졌는지는 contains 로 먼저 확인한다).
     at(x, y) {
-        return this.entries[clamp(y, 0, this.yLength - 1) * WORLD_CHUNKS_PER_SIDE + clamp(x, 0, this.xLength - 1)];
+        return this.entries[clamp(x, 0, this.xLength - 1) * WORLD_CHUNKS_PER_SIDE + clamp(y, 0, this.yLength - 1)];
     }
 
     // 그 청크에 섬이 있는가(원본 00432300).

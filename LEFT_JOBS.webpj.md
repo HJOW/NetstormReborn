@@ -6,17 +6,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-11 정리, 마지막 구현 WB04-E290)
+### 0.1 현재 값 (2026-11-11 정리, 마지막 구현 WB04-E291)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
-| 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A 완료, 현재 단계 **4-B** 21/31, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 523(58.4%)·partial 77(8.6%)·todo 296(33.0%)**. 기준선 소스 줄 수로는 129,653줄 중 port 61,544(47.5%)·partial 20,811(16.1%)·todo 47,298(36.5%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E290** (이 커밋, `20261111-204 WB`) 4-B RawTerrainContext 이식 — 초기 지형 context·MarkEdges·NormalizeAfterStamp·군도 상자(`core/raw-terrain-context.js`, 원본 112행, [문서](docs/webpj-terrain-context-20261111.md)). 그 앞은 WB04-E289 (`df6b823bf / 20261111-203 WB`) TerrainBuilder(타입 모델) 완료 확인, WB04-E288 (`c7f0754ba / 20261111-202 WB`) Islandbuilder 완료 확인, WB04-E287 (`a05e25d3d / 20261111-201 WB`) RawCampaignWorldLoad. 단위 색인은 2절·3.1절 |
-| 다음 작업 | **4-B RawTerrainGrowth**(306줄, RawTerrainContext 뒤): 이어서 RawTerrainBitmap→RawTerrainStamp→RawRegionPaint→ChunkMap→RawFrameChoose→RawSurfaceWorld. 기준선 뒤 변경은 착수 때 저장소 루트에서 `git diff 1f00a25a..HEAD` 로 확인한다. 0.6절의 단계와 무관한 AGENTS 요구는 모두 반영됐다(11.01 카피라이트 줄은 WB03-AE) |
-| 마지막 전체 검사 | WB04-E290의 Node v26.13.0·v22.23.3, **2506/2506 통과·실패/건너뜀0**(신규 terrain-context 9; WB04-E287 2497. 첫 전체 실행의 유일한 실패는 PORT_MAP 메모의 3.6 판정 표기 누락이었고 고친 뒤 port-map·manifest 검사를 v26·v22에서 다시 통과; WB04-E288·E289 는 코드 변경이 없어 지도/manifest 검사만 재실행), v26·v22 약3분(v24 는 미설치) |
+| 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A 완료, 현재 단계 **4-B** 22/31, 0.2절) · M3~M5 미착수 |
+| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 524(58.5%)·partial 76(8.5%)·todo 296(33.0%)**. 기준선 소스 줄 수로는 129,653줄 중 port 61,703(47.6%)·partial 20,652(15.9%)·todo 47,298(36.5%). 영역별 남은 양은 0.3절 |
+| 마지막 구현 커밋 | **WB04-E291** (이 커밋, `20261111-205 WB`) 4-B ChunkMap 완료 — 원본 물리 순서 `entries[x*16+y]`·mode(첫 DWORD)·reset 00432360([문서](docs/webpj-chunk-map-20261111.md); RawTerrainGrowth 의 mode 읽기 때문에 앞당김). 그 앞은 WB04-E290 (`5ee4517f2 / 20261111-204 WB`) RawTerrainContext 이식([문서](docs/webpj-terrain-context-20261111.md)), WB04-E289 (`df6b823bf / 20261111-203 WB`) TerrainBuilder(타입 모델) 완료 확인, WB04-E288 (`c7f0754ba / 20261111-202 WB`) Islandbuilder 완료 확인, WB04-E287 (`a05e25d3d / 20261111-201 WB`) RawCampaignWorldLoad. 단위 색인은 2절·3.1절 |
+| 다음 작업 | **4-B RawTerrainGrowth**(306줄): 이어서 RawTerrainBitmap→RawTerrainStamp→RawRegionPaint→RawFrameChoose→RawSurfaceWorld. 기준선 뒤 변경은 착수 때 저장소 루트에서 `git diff 1f00a25a..HEAD` 로 확인한다. 0.6절의 단계와 무관한 AGENTS 요구는 모두 반영됐다(11.01 카피라이트 줄은 WB03-AE) |
+| 마지막 전체 검사 | WB04-E291의 Node v26.13.0·v22.23.3, **2510/2510 통과·실패/건너뜀0**(신규 chunk-map 4; WB04-E290 2506 은 첫 전체 실행의 유일한 실패 PORT_MAP 메모의 3.6 판정 표기 누락을 고친 뒤 통과; WB04-E287 2497; WB04-E288·E289 는 코드 변경이 없어 지도/manifest 검사만 재실행), v26·v22 약3분(v24 는 미설치) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -28,7 +28,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 1·2 선행 | WB02-G·H | 이식 대응표·기준선 재반영, 무브라우저 실행·cpppj 오라클 기반 | 완료 (2026-11-07) | — |
 | 3 M2 선행 부품 | 3-A~3-E | 3-A WB04-A~D5c·E1~E242(SID 풀·해시·Kernel·Form/Process 층과 종류별 월드 부품), 3-B~3-D `o/` 18단위(E243~E258), 3-E 기준선 뒤 cpppj 변경 판정 79단위(E259~E264) | 완료 (2026-11-10 E264 마감) | 242+18단위 · 판정 79 |
 | 4 M2 | 4-A | 자료·파일·설정·타입 표 | 완료 9/9 (E265~E273) | `o/` 15단위 · 3,135줄 (+24) + client M |
-| 〃 | 4-B | Fort·지형·섬 적재 | **진행 중** 21/31 | `o/` 26단위 · 3,916줄 (+47) + client B |
+| 〃 | 4-B | Fort·지형·섬 적재 | **진행 중** 22/31 | `o/` 26단위 · 3,916줄 (+47) + client B |
 | 〃 | 4-C | 패킷·로그인·내부 미션 전송 | 미착수 | `o/` 20단위 · 2,578줄 (+548) + `zacket/` 1 + client A 일부 |
 | 〃 | 4-D | Session 조립·Tutorial1 Load/Start(L2) | 미착수 | client A 나머지(RawCampaignSession 5,715줄 등) |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 미착수 | `o/` 4단위 · 216줄 + client C·J 일부 |
@@ -52,17 +52,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 896단위 / 129,653줄 | 523 (58.4%) / 61,544줄 (47.5%) | 77 (8.6%) / 20,811줄 (16.1%) | 296 (33.0%) / 47,298줄 (36.5%) |
-| `o/` 월드·규칙 | 517단위 / 67,592줄 | 458 (88.6%) / 57,275줄 (84.7%) | 15 (2.9%) / 3,478줄 (5.1%) | 44 (8.5%) / 6,839줄 (10.1%) |
+| 전체 | 896단위 / 129,653줄 | 524 (58.5%) / 61,703줄 (47.6%) | 76 (8.5%) / 20,652줄 (15.9%) | 296 (33.0%) / 47,298줄 (36.5%) |
+| `o/` 월드·규칙 | 517단위 / 67,592줄 | 459 (88.8%) / 57,434줄 (85.0%) | 14 (2.7%) / 3,319줄 (4.9%) | 44 (8.5%) / 6,839줄 (10.1%) |
 | `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 65 (17.2%) / 4,269줄 (6.9%) | 62 (16.4%) / 17,333줄 (28.1%) | 251 (66.4%) / 40,020줄 (64.9%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 439줄 | 0 | 0 | 1 / 439줄 |
 
-남은 373단위(todo 296·partial 77)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
+남은 372단위(todo 296·partial 76)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
 
 | 영역 | 주 단계 | todo 단위 / 줄 | partial 단위 / 줄 | 큰 단위(줄) |
 | --- | --- | --- | --- | --- |
 | A 세션·로그인·패킷·전송·클라이언트 전역 | 4-C·4-D | 66 / 13,035 | 2 / 1,907 | RawCampaignSession 5,715 · ClientMain* 1,797 · CampaignTemplateStorage 695 · LocalMissionTransport 439 |
-| B 월드·Fort 적재·지형/섬·객체 공통 수명 | 4-B(일부 4-D) | 6 / 2,774 | 5 / 1,403 | GameWorld 1,153 · RawSurfaceWorld 804 · SquidPostPop* 675 |
+| B 월드·Fort 적재·지형/섬·객체 공통 수명 | 4-B(일부 4-D) | 6 / 2,774 | 4 / 1,244 | GameWorld 1,153 · RawSurfaceWorld 804 · SquidPostPop* 675 |
 | C 시각 효과·입자 | 5-A | 5 / 678 | 0 | RawCampaignParticles 513 · ParticlePaletteMemory 65 · ConstructionVisualRenderer 57 · ThunderProcess 32 |
 | D 전투·유닛 이동·경로 | 6-P·7-P·7 | 29 / 4,098 | 5 / 1,246 | RawGunProcess 421 · RawGunTarget* 399 · RawMissile* 392 · RawPathProcess 360 |
 | E 경제·생산·건설·자원 | 6(7-P3 일부) | 14 / 2,573 | 1 / 142 | RawProductionControls 393 · RawDaisRegular 372 · RawCampaignFactoryDisplay 329 · RawCampaignConstructionBindings 291 |
@@ -83,7 +83,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 이식 원본은 언제나 기준선 판(`git show 1f00a25a:경로`)이고, 기준선 뒤 cpppj 변경은 3.6절 절차로만 반영한다. 같은 작업 트리에서 CP 세션이 cpppj를 계속 커밋하므로(LAN 3차·`Actual*` 실제 연결 경로·`shared*` 공유 전역 추가 등) cpppj 상태는 커밋과 소스로 판단한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 54·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 523·partial 77·todo 296·제외(-) 88**, session/oracle 0. 웹 소스는 `www/` JS 약 7만 8천 줄(`www/data` 제외, `www/core` 모듈 468개), 검사 파일 434개, 도구(`webpj/tools`) 오라클 관련 4개다(2026-11-11 재계산) |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 54·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 524·partial 76·todo 296·제외(-) 88**, session/oracle 0. 웹 소스는 `www/` JS 약 7만 8천 줄(`www/data` 제외, `www/core` 모듈 468개), 검사 파일 435개, 도구(`webpj/tools`) 오라클 관련 4개다(2026-11-11 재계산) |
 | 이식 추적 | `webpj/tests/fixtures/manifest.json` 548항목(original-x86 517·independent 7·screenshot 13·source 8·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E282~E287에서 datamanager-selection/resize/create/read·farmcluster·fort-world-load·campaign-worldload 7개, WB04-E290에서 terrain-context 1개 추가). original-x86 517개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
 | 마지막 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트). 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 
@@ -206,7 +206,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - **목록 밖 단위:** 다른 단계 몫을 끼워 넣지 않는다. 항목이 선행 미완료로 막히면 사유를 그 항목에 적고 같은 단계의 다음 항목으로 간다. 단계 전체가 막히면 사유를 0.1절 다음 작업에 적고, 선행이 갖춰진 이월 부품(6-P·7-P) 항목을 진행할 수 있다. 목록에 없던 단위가 꼭 필요하면 해당 단계 목록 끝에 항목을 추가하고 이유를 적는다.
 - **끝난 단계:** 단계 머리글이 `(m/m)`이 되면 그 체크 목록을 보관본으로 옮기고 2.3절 표에 한 줄을 더한다(0.5절 5번).
 
-#### 4-B Fort·지형·섬 적재 (21/31)
+#### 4-B Fort·지형·섬 적재 (22/31)
 
 완료 기준(3.2절): Tutorial1 Fort 적재 결과(객체·지형·섬)가 cpppj 와 같다(`--inspect-fort`·session-dump 범위). 선행: 4-A(완료). 줄 수는 기준선 소스이고, 기준선 뒤 변경은 착수할 때 `git diff 1f00a25a..HEAD -- <파일>` 로 확인해 3.6절 ①/②/③ 으로 판정한다. `(partial)` 은 이미 일부 이식된 단위이며 남은 부분만 옮긴다. 앞 항목이 뒷 항목의 입력이므로 위에서부터 진행한다.
 
@@ -236,7 +236,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [ ] **RawTerrainStamp** (partial 241줄)
 - [x] **RawFarmCluster** 134줄 → [E285](docs/webpj-farm-cluster-20261111.md) edgeFarm 군집 이식(목록 순서를 앞당김; ChunkMap 은 최소 계약으로 사용)
 - [ ] **RawRegionPaint** (partial 231줄)
-- [ ] **ChunkMap** (partial 159줄)
+- [x] **ChunkMap** 159줄 → [E291](docs/webpj-chunk-map-20261111.md) 원본 물리 순서·mode·reset 완료(RawTerrainGrowth 의 mode 읽기 때문에 앞당김)
 - [ ] **RawFrameChoose** (partial 45줄) — WB03-X `chooseTerrainFrame` 시험 보강
 - [ ] **RawSurfaceWorld** 806줄 — 표면 월드 적재 연결
 - [ ] **GameWorld·GameWorldInput** 1,155+42줄 — 옛 `--dump-world` 어댑터 이식 여부 판정(E246 `o/Squid` 옛 struct 필드와 함께 닫음; E289 에서 `TerrainBuilder.h` 의 옛 지상 격자 `GroundCell`·`GroundGrid`·`CellPoint`·`Path` 도 이 판정에 포함)
