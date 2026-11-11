@@ -98,4 +98,36 @@ public sealed class TellFileMenusNativeTests
         Assert.Equal(new string('T', 79), label);
         Assert.Equal(79, Encoding.Latin1.GetByteCount(label));
     }
+
+    /// <summary>언어 전환 뒤 소유한 목록 Config의 언어 내용만 다시 읽는다.</summary>
+    /// <remarks>2026-11-11 0.357에서 `InvalidateLanguageFiles` 재대조와 함께 추가했다.</remarks>
+    [Fact]
+    public void LanguageSwitchReloadsOnlyOwnedListContents()
+    {
+        static byte[] KoreanFile(string title) => [.. Encoding.UTF8.GetPreamble(), .. Encoding.UTF8.GetBytes("title=\"" + title + "\"\n")];
+        // 항목 라벨은 원본 바이트 표현(표시 바이트)이다
+        static string DisplayLabel(string title) => Encoding.Latin1.GetString(ExtendedText.EncodeDisplayText(title));
+        ConfigInterface? config = null;
+        config = new ConfigInterface(path =>
+            path == "X.english" ? Encoding.Latin1.GetBytes("title=\"English Title\"\n") :
+            path == "X.korean" ? KoreanFile("한글 제목") : null);
+        config.Configuration.Assign("missionSpec={local.1}\ncurrentLanguage=english\n");
+        using var menus = new TellFileMenus(config, _ => ["X.english"]);
+        var strings = new ScriptStringRing();
+        var labels = new List<string>();
+        menus.Append("input", 0x02000095, "arg", true, strings, item => labels.Add(item.Label));
+        Assert.Equal(["English Title"], labels);
+        // 같은 언어 전환 알림에서 한국어 내용만 재적재한다
+        config.Configuration.Assign("missionSpec={local.1}\ncurrentLanguage=korean\n");
+        menus.InvalidateLanguageFiles();
+        labels.Clear();
+        menus.Append("input", 0x02000095, "arg", true, strings, item => labels.Add(item.Label));
+        Assert.Equal([DisplayLabel("한글 제목")], labels);
+        // 모르는 언어는 소유 목록을 그대로 둔다
+        config.Configuration.Assign("missionSpec={local.1}\ncurrentLanguage=klingon\n");
+        menus.InvalidateLanguageFiles();
+        labels.Clear();
+        menus.Append("input", 0x02000095, "arg", true, strings, item => labels.Add(item.Label));
+        Assert.Equal([DisplayLabel("한글 제목")], labels);
+    }
 }

@@ -29,10 +29,11 @@ public sealed class TellFileMenus : IDisposable
     private static string CString(string value) { int end = value.IndexOf('\0'); return end < 0 ? value : value[..end]; }
     /// <summary>원본 바이트 표현을 실제 Config 문자열로 해독한다.</summary>
     private static string Decode(string raw) => OriginalText.DecodeWindows1252(Encoding.Latin1.GetBytes(raw));
-    /// <summary>설정 문자열을 원본 바이트 표현으로 변환한다.</summary>
-    private static string Narrow(string text) => Encoding.Latin1.GetString(OriginalText.EncodeWindows1252(text));
-    /// <summary>원본 지역 버퍼의 종료 NUL 공간을 검사한다.</summary>
-    private static void Limit(string text, int capacity) { if (OriginalText.EncodeWindows1252(text).Length >= capacity) throw new PhysicalLimitException("Tell 파일 목록 지역 버퍼 초과"); }
+    /// <summary>설정 문자열을 원본 바이트 표현으로 변환한다. 한글 등 확장 대상은 4바이트 시퀀스다.</summary>
+    /// <remarks>2026-11-11 0.357에서 cpppj HEAD의 표시 경계(`Narrow`)와 같게 고쳤다. ASCII·1252 범위는 기존과 같은 바이트다.</remarks>
+    private static string Narrow(string text) => Encoding.Latin1.GetString(ExtendedText.EncodeDisplayText(text));
+    /// <summary>원본 지역 버퍼의 종료 NUL 공간을 검사한다. 표시 바이트 길이로 잰다.</summary>
+    private static void Limit(string text, int capacity) { if (Narrow(text).Length >= capacity) throw new PhysicalLimitException("Tell 파일 목록 지역 버퍼 초과"); }
     /// <summary>표시 바이트(NUL 포함 capacity)를 넘지 않도록 마지막 문자부터 줄인다. 원문은 80바이트 지역 버퍼를 넘는 긴 캠페인 제목을 그대로 복사해 종료했다(10차 NB24).</summary>
     /// <param name="value">줄일 제목이다.</param><param name="capacity">NUL 포함 표시 한도다.</param>
     /// <returns>한도 안의 제목이다.</returns>
@@ -40,7 +41,7 @@ public sealed class TellFileMenus : IDisposable
     private static string FitDisplayLimit(string value, int capacity)
     {
         // 한 번에 한 문자씩 줄여 표시 바이트가 중간에 잘리지 않게 한다
-        while (value.Length != 0 && OriginalText.EncodeWindows1252(value).Length >= capacity)
+        while (value.Length != 0 && Narrow(value).Length >= capacity)
         {
             int last = value.Length - 1;
             if (last > 0 && char.IsLowSurrogate(value[last]) && char.IsHighSurrogate(value[last - 1]))
@@ -61,6 +62,30 @@ public sealed class TellFileMenus : IDisposable
     /// <summary>현재 local.1로 제목을 치환하고 선택한 경우 빈 제목을 파일명으로 대체한다. 긴 제목은 종료하지 않고 80바이트 안으로 줄여 표시한다(10차 NB24).</summary>
     private string Title(string name, bool fallback)
     { string title = FitDisplayLimit(_config.SubstituteLocal("{{local.1}.title}", name), 80); if (fallback && title.Length == 0) { title = FitDisplayLimit(name, 80); } return title; }
+
+    /// <summary>같은 언어 전환 알림에서 소유한 목록 Config의 언어 내용만 재적재하고 등록 주소·index·열린 안내 링크는 유지한다.</summary>
+    /// <remarks>2026-11-11 0.357에서 cpppj HEAD를 반영했다. mission·사용자 다른 객체에는 접근하지 않는다.</remarks>
+    public void InvalidateLanguageFiles()
+    {
+        string language = _config.Configuration.Get("currentLanguage") ?? "";
+        // 실제 Client가 확정한 현재 설정이며 빈 독립 입력은 다음 수집에서 재생성한다
+        if (language.Length == 0) { foreach (Config item in _owned) item.Dispose(); _owned.Clear(); return; }
+        // 언어 확장자만 교체하며 일반 설정·프로필 파일명은 바꾸지 않는다
+        string[] languages = ["english", "french", "german", "spanish", "japanese", "portuguese", "korean"];
+        if (Array.IndexOf(languages, language) < 0) return;
+        // 소유한 목록 Config만 교체한다
+        foreach (Config item in _owned)
+        {
+            string? path = item.GetRaw("path"); if (path is null) continue; int dot = path.LastIndexOf('.'); if (dot < 0) continue;
+            string previous = Lower(path[(dot + 1)..]); if (Array.IndexOf(languages, previous) < 0) continue;
+            string selected = path[..(dot + 1)] + language; if (selected == path) continue;
+            // 접두부 주소와 원래 index·파일 이름은 보존한다
+            string name = item.GetRaw("fileName") ?? ObjectName(item), index = item.GetRaw("index") ?? "0";
+            item.Clear(); item.Append("path=" + selected); item.Append("fileName=" + name); item.Append("index=" + index);
+            // 실제 Config 파일·본문 해독만 사용하며 인공지능·SP 실행을 다시 시작하지 않는다
+            byte[]? bytes = _config.Reader?.Invoke(selected); if (bytes is not null) item.LoadBytes(bytes);
+        }
+    }
 
     /// <summary>열거 순서대로 신규 Config를 등록한 뒤 고유 prefix를 원본 비교·교환 순서로 정렬한다.</summary>
     private List<Config> Collect(string pattern, int capacity)
