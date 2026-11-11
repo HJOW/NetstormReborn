@@ -547,15 +547,20 @@ public sealed class HostStartupSceneTests
         using var factory = new HostHtmlFactory(menu, windows, menus, startup, screen, queue, strings, () => 1, _ => 0, _ => throw new InvalidOperationException());
         router = new HostMenuInput(menu, windows, factory, queue, strings, () => { }, action => throw new InvalidOperationException(action.ToString()));
         int audioUpdates = 0;
-        router.BindPopup(new HostPopupMenu(menu, windows, menus, screen, startup, () => { }, () => audioUpdates++));
+        router.BindPopup(new HostPopupMenu(menu, windows, menus, screen, startup, () => { }, () => audioUpdates++, strings));
         var screenChanges = new List<(uint Mode, bool Remember)>(); int accepts = 0;
         router.BindScreenMode(() => screen.Flags, (mode, remember) => { screenChanges.Add((mode, remember)); Assert.True(screen.SetMode(mode)); }, () => accepts++);
         var driver = new HostFrameDriver(screen, queue); driver.BindInputHandler(router.Dispatch);
         var help = menu.ControlPoint("Help")!.Value;
         menu.Route(new(InputCode.LeftButton, help.X, help.Y)); menu.Route(new(InputCode.LeftButton | InputCode.Release, help.X, help.Y)); router.Tick();
         var column = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>());
-        Assert.Equal(1u, column.ItemCount); Assert.Equal(HostPopupMenu.SelectCommand, column.Items[0].Command);
-        var position = menu.Tree.Collection.Position(menu.Tree.Create.Entries[column.Id]); int x = position.X + 8, y = position.Y + (int)column.Offsets[0] + 3;
+        // 실제 Help 팝업 3행이다. cpppj UberGump.cpp 1223~1225행(0.383에서 1행 자리표시를 바꿈).
+        Assert.Equal(3u, column.ItemCount);
+        Assert.Equal(0x02000017U, column.Items[0].Command);
+        Assert.Equal(0x02000049U, column.Items[1].Command);
+        Assert.Equal(0x02000095U, column.Items[2].Command);
+        Assert.Equal("About", strings.Resolve(column.Items[2].Parameter));
+        var position = menu.Tree.Collection.Position(menu.Tree.Create.Entries[column.Id]); int x = position.X + 8, y = position.Y + (int)column.Offsets[2] + 3;
         router.NotifyPointer(new(0, x, y)); queue.Push(InputCode.LeftButton, x, y); Assert.False(driver.ProcessInput()); router.Tick();
         Assert.Equal("About", System.Text.Encoding.Latin1.GetString(startup.TellState.Current).Split('\0')[0]);
         windows.CloseAll();

@@ -117,6 +117,21 @@ public sealed class HostMainMenu : IUiControlLocator
         return null;
     }
 
+    /// <summary>현재 메뉴에서 일치하는 첫 버튼의 실제 Gump 경계를 찾는다. 팝업 앵커 계산용이다.</summary>
+    /// <param name="label">찾을 버튼 라벨.</param>
+    /// <remarks>2026-11-12 0.383에서 cpppj `UberGump.cpp` 1212~1215행의 앵커 버튼 조회를 반영하려고 추가했다.
+    /// 원문은 앵커 노드의 `baseWidth*0.5+x`·`y`에 팝업을 붙인다(`RawMenuControls.cpp` 1047~1048행).</remarks>
+    public ScreenRect? ControlBounds(string label)
+    {
+        // 원본 제어 영역 순서로 첫 일치 항목을 선택한다.
+        for (int index = 0; index < Labels.Length; index++)
+        {
+            if (!string.Equals(Labels[index], label, StringComparison.Ordinal)) continue;
+            return _tree.Collection.Bounds(_buttons[index]);
+        }
+        return null;
+    }
+
     /// <summary>모달 대화창이 열리면 함께 그리지 않는 실제 메뉴 부품 토큰이다. 돌 버튼 여덟 개와 각 배경 자식이다.</summary>
     private readonly HashSet<uint> _modalHidden = [];
 

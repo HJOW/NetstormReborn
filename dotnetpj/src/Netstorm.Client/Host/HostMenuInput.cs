@@ -87,6 +87,10 @@ public sealed class HostMenuInput
         if (code == 0x020000e4) { if (!released) { (_acceptScreen ?? throw new InvalidOperationException("화면 모드 확인 미연결"))(); ShowTell("AdjustDirectDraw"); } return false; }
         if (code == 0x020000be) { _windows.RequestCloseAll(); _changed(); return false; }
         if (code == 0x02000089) return false;
+        // Help 팝업의 실제 행 명령이다. 0x17 도움말 주제 창은 R3 잔여, 0x49 기술 도움말 외부 실행은 외부 경계라 명시 예외다.
+        // 근거: cpppj/src/client/UberGump.cpp 1223~1224행과 TechnicalHelp.cpp 32행(0.383에서 행을 실제 구성으로 바꿈).
+        if (code == 0x02000017) { if (!released) throw new InvalidOperationException("도움말 주제 창 미연결(R3 잔여)"); return false; }
+        if (code == 0x02000049) { if (!released) throw new InvalidOperationException("기술 도움말 실행 미연결(외부 실행 경계)"); return false; }
         if (code == 0x02000095) { if (!released) ShowTell(_strings.Resolve(unchecked((uint)input.Y))); return false; }
         if (code == 0x0200006d)
         {

@@ -137,6 +137,11 @@ public sealed class MenuGump
     public uint TakeCurrent() { uint token = Current(); DropCurrent(); return token; }
     /// <summary>정수를 float32로 전달해 가상 부착한 뒤 콜백 이후 현재 칸을 제거한다.</summary>
     public void AttachCurrent(int x, int y, uint parent) { uint token = Current(); Node(token); Require(_hooks.Attach)(token, x, y, parent, 0); DropCurrent(); }
+    /// <summary>메뉴 노드의 플래그에 비트를 OR한다. 메인 팝업의 원문 플래그(Help 0x04004000·Options 0x04000000) 재현용이다.</summary>
+    /// <param name="token">실제 메뉴 토큰.</param><param name="flags">추가할 비트.</param>
+    /// <remarks>2026-11-12 0.383에서 cpppj `RawMenuControls.cpp` 1049·1052행의 `menuFlags |=`를 반영하려고 추가했다.
+    /// 0x4000000(빈 선택 닫힘)은 이미 `MenuGumpInput`이 소비하고, 0x4000은 표시 소비자가 없어 표식으로만 둔다.</remarks>
+    public void AddMenuFlags(uint token, uint flags) { Node(token).MenuFlags |= flags; }
     /// <summary>현재 실제 등록표 루트와 객체 SID를 가상+3c에 넘긴 뒤 현재 칸을 제거한다.</summary>
     public void AttachObjectCurrent(uint objectId, int x, int y) { uint token = Current(); Node(token); Require(_hooks.AttachObject)(token, objectId, x, y, _create.Entries[0], 0); DropCurrent(); }
     /// <summary>현재 메뉴만 실제 idle/재그리기로 분배하며 다른 프레임을 보존한다.</summary>

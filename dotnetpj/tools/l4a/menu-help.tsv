@@ -1,0 +1,6 @@
+# L4a Help 팝업 캡처(0.383). 줄 형식: 프레임<TAB>동작<TAB>인자. {OUT} 은 l4a_compare.ps1 이 면별 폴더로 바꾼다.
+# 메인 메뉴에서 Help 버튼을 눌러 팝업 메뉴를 열고 프레임 30·60·120 을 저장한다. 팝업은 모달이 아니라 메인 버튼도 함께 그린다.
+5	click	Help
+30	snapshot	{OUT}\help-f030.bmp
+60	snapshot	{OUT}\help-f060.bmp
+120	snapshot	{OUT}\help-f120.bmp
