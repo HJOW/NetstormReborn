@@ -16177,9 +16177,38 @@
       "bytes": 307558,
       "lines": 535,
       "fixtureCommit": "860030e73",
-      "webCommit": "worktree",
+      "webCommit": "1eae89774",
       "cpppjBasis": {
         "cpppj/src/o/RawFortWorldLoad.cpp": "2a8f937e1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E287",
+      "id": "campaign-worldload",
+      "path": "cpppj/tests/fixtures/campaign-worldload-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 미션 저장 월드 부모 입력 10 DWORD별 mySubscriber·Template 9 header·handle·Player 9기록·두 owner·editor·pos/end/depth·전체 청크·3204BYTE 섬 목록·하위 요청 순서·진단 수 (originals 65 + originalCD 65)",
+      "consumers": [
+        "webpj/tests/campaign-world-load.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-campaign-world-load.js"
+      ],
+      "doc": "docs/webpj-campaign-world-load-20261111.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawCampaignWorldLoad.cpp"
+      ],
+      "scope": "originals 65행만 사용(originalCD 65행은 CD 10.72 몫이라 웹 목표 밖)",
+      "sha256": "ec9694d823a973eca65c0ad137545a08bad39b4ba032471973f8ab720cf7b441",
+      "bytes": 532594,
+      "lines": 131,
+      "fixtureCommit": "ab9361f11",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawCampaignWorldLoad.cpp": "b8ce42c7d"
       }
     }
   ]
