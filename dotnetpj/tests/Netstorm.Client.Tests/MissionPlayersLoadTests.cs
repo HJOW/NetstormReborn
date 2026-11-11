@@ -1,4 +1,5 @@
 using Netstorm.Assets;
+using Netstorm.Client.Automation;
 using Netstorm.Client.Host;
 using Netstorm.Core.Original;
 
@@ -80,5 +81,32 @@ public sealed class MissionPlayersLoadTests
         Assert.True(players.Allied(1, 1));
         Assert.False(players.Allied(0, 1));
         Assert.False(players.Allied(1, 9));
+    }
+
+    /// <summary>thewarbegins 시작 SP 지정이 기준선 sp 행의 참가자 값과 같은지 확인한다.</summary>
+    [Fact]
+    public void StartsPlayerSpLikeBaseline()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        Assert.False(session.Sp.Initialized);
+        // 실제 사슬 모양의 재시드(세션 게임 난수+CRT 상자+모드 상자+고정 유닉스 초)로 연결한다.
+        var crtBox = new UIntBox { Value = 1 };
+        var modeBox = new UIntBox { Value = 0 };
+        var seed = new RawGameRandomSeed(session.Game, crtBox, modeBox, () => 946684800);
+        session.BindSpReseed(() => seed.Reseed());
+        session.StartPlayerSp(players);
+        Assert.True(session.Sp.Initialized);
+        // 참가자 값은 난수와 무관하게 정확히 읽힌다(기준선 f090: 1번 1161527296, 나머지는 미지정 0과 같다).
+        Assert.Equal(1161527296u, session.Sp.Get(1));
+        Assert.Equal(0u, session.Sp.Get(2));
+        // offset은 초기화 사슬(재시드 입력·Rotate 횟수)이 Start 순서와 함께 맞아야 기준선(103)과 같아진다.
+        // 지금은 행 문법과 참가자 값만 고정하고 offset 값은 기록만 한다(0.395 잔여).
+        string text = SessionStateDump.FormatWorld1(
+            "originals", 90, 0, 0, 0, 0, 39999, null, session.DumpPool(),
+            session.DumpPlayers(), session.DumpSp(), session.DumpGraph(), session.DumpTotals(), session.DumpTotalMade());
+        Assert.Contains($"\nsp\t1\t{session.Sp.Offset}\t0\t1161527296\t0\t0\t0\t0\t0\t0\t0\n", text, StringComparison.Ordinal);
     }
 }

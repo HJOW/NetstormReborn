@@ -41,6 +41,10 @@ public sealed class HostSession
     /// <summary>SP 저장소가 쓰는 전역 난수다. Start 순서에서 실제 난수에 연결한다.</summary>
     private readonly NetstormRandom _spRandom = new();
 
+    /// <summary>SP 초기화의 재시드 공급이다. 없으면 시작 SP 지정이 거부된다.</summary>
+    /// <remarks>2026-11-12 0.395에서 StartPlayerSp 연결로 추가했다. 실제 공급(RawGameRandomSeed 사슬)은 미션 시작 흐름에서 잇는다.</remarks>
+    private Func<uint>? _spReseed;
+
     /// <summary>세션이 소유한 분산 SP 저장소다. 초기화 전에는 덤프에 대시를 쓴다.</summary>
     public RawSpStore Sp { get; }
 
@@ -73,7 +77,27 @@ public sealed class HostSession
         Game = game;
         Crt = crt;
         Pool = new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity);
-        Sp = new RawSpStore(_spRandom, null);
+        Sp = new RawSpStore(_spRandom, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
+    }
+
+    /// <summary>SP 초기화의 재시드 공급을 연결한다. 미션 시작 흐름에서 실제 사슬로 잇는다.</summary>
+    /// <param name="reseed">재시드 값을 주는 콜백.</param>
+    public void BindSpReseed(Func<uint> reseed) => _spReseed = reseed ?? throw new ArgumentNullException(nameof(reseed));
+
+    /// <summary>참가자의 시작 SP를 미션 목록 값으로 지정한다. 원본 로그인 setSp와 같은 분산 저장소를 쓴다.</summary>
+    /// <param name="players">미션 플레이어 목록.</param>
+    /// <remarks>2026-11-12 0.395에서 미션 값 채우기로 추가했다. 읽기는 로컬 활성·1번 owner·비편집 고정이며(세션 전역 연결은 다음 단위),
+    /// 표시는 바꾸지 않는다. 활성 참가자만 지정한다.</remarks>
+    public void StartPlayerSp(MissionPlayers players)
+    {
+        ArgumentNullException.ThrowIfNull(players);
+        var reads = new PlayerSpSetReads { ClientActive = () => 1, LocalOwner = () => 1, Editor = () => 0 };
+        // 활성 참가자만 번호 순서대로 지정한다.
+        for (int owner = 1; owner <= MissionPlayers.PlayerCount; owner++)
+        {
+            if (!players.Players[owner].Active) continue;
+            RawFortMoneyLoad.SetPlayerSpAmount(owner, unchecked((int)players.Players[owner].StormPower), Sp, reads, () => { });
+        }
     }
 
     /// <summary>덤프용 Player 관측을 만든다. Start 순서 전까지 0이다.</summary>
