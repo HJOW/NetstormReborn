@@ -562,6 +562,14 @@ public sealed class HostSession
     /// <remarks>2026-11-12 0.444에서 지형 상태 저장소로 추가했다. 입력 값 연결과 바인딩은 생성 단위에서 잇는다.</remarks>
     public TerrainGenerationInputs GenerationInputs { get; } = new();
 
+    /// <summary>세션이 소유한 지형 생성 전용 게임 난수다. SP·호스트 스트림과 분리한다.</summary>
+    /// <remarks>2026-11-12 0.447에서 난수 상태 저장소로 추가했다. 시드값은 live 단위에서 reseed 사슬과 함께 확정한다.</remarks>
+    public Netstorm.Core.Simulation.NetstormRandom TerrainRandom { get; } = new();
+
+    /// <summary>세션이 소유한 지형 생성 전용 CRT 상태 상자다. 시드 사슬과 지형 소비자가 공유한다.</summary>
+    /// <remarks>2026-11-12 0.447에서 난수 상태 저장소로 추가했다. StartMission의 지역 상자를 여기로 승격한다.</remarks>
+    public UIntBox TerrainCrt { get; } = new();
+
     /// <summary>빈 프레임 표 188개를 만든다. 검사 하네스의 LoadScene과 같은 공유 빈 표다.</summary>
     /// <returns>프레임 표다.</returns>
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다.</remarks>
