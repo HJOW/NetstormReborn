@@ -50,9 +50,9 @@ cpppj/src/client/EditorFiles.h	Netstorm.Client/Host/EditorFiles.cs	473432cd5f2ed
 cpppj/src/client/EditorFortFileDevices.cpp	Netstorm.Client/Host/EditorFortFileDevices.cs	473432cd5f2edca35ecb3cf78e79c151b105b0c2	port
 cpppj/src/client/EditorFortFileDevices.h	Netstorm.Client/Host/EditorFortFileDevices.cs	473432cd5f2edca35ecb3cf78e79c151b105b0c2	port
 cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorCatalogLedger.cs	3ddeb19a599961941e7c9e629ffc041bdf104de1	port
-cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorCatalogWorkspace.cs	fc56410a7ddd88b027b5365e08328dcc85332cce	port
+cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorCatalogWorkspace.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	port
 cpppj/src/client/EditorMapCatalogFiles.cpp	Netstorm.Client/Host/EditorWorkspacePaths.cs	75c5dacabd0611a0540f198e75547903da40ca9a	port
-cpppj/src/client/EditorMapCatalogFiles.h	Netstorm.Client/Host/EditorCatalogWorkspace.cs	fc56410a7ddd88b027b5365e08328dcc85332cce	port
+cpppj/src/client/EditorMapCatalogFiles.h	Netstorm.Client/Host/EditorCatalogWorkspace.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	port
 cpppj/src/client/EmbeddedTell.cpp	Netstorm.Client/Gump/EmbeddedTell.cs	ecb9802a88b7de3f5740f3a1cda95c21ea982c24	L1
 cpppj/src/client/EmbeddedTell.h	Netstorm.Client/Gump/EmbeddedTell.cs	ecb9802a88b7de3f5740f3a1cda95c21ea982c24	L1
 cpppj/src/client/FortCurrentNameDevices.cpp	Netstorm.Client/Host/FortCurrentNameDevices.cs	2c7b34378d8f3ceb790276acd5be5a9b4c9ff928	port
@@ -415,7 +415,7 @@ cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	86003
 cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/RawFortWorldLoad.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
 cpppj/src/o/RawFrameChoose.cpp	Netstorm.Core/Original/RawFrameChoose.cs	df7902e70c389c825a65b8ba70a48de6891905ad	L1
 cpppj/src/o/RawFrameChoose.h	Netstorm.Core/Original/RawFrameChoose.cs	df7902e70c389c825a65b8ba70a48de6891905ad	L1
-cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.cs	da27e191b1459279170608224c4f60fdd84c3343	port
+cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	port
 cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	73506bcbedac557bfd132e68524f772123f245d2	L1
 cpppj/src/o/RawIslandAdd.cpp	Netstorm.Core/Original/RawIslandAdd.cs	afe4ce5b45b8c786adba014946185cfec5799ae7	L1
 cpppj/src/o/RawIslandAdd.h	Netstorm.Core/Original/RawIslandAdd.cs	afe4ce5b45b8c786adba014946185cfec5799ae7	L1
@@ -528,13 +528,13 @@ cpppj/src/o/SquidForms.cpp	Netstorm.Core/Original/RawSquidForms.cs	eb739b8095351
 cpppj/src/o/SquidFrame.cpp	Netstorm.Core/Original/RawFrame.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidHash.cpp	Netstorm.Core/Original/RawSquidHash.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidOwner.cpp	Netstorm.Core/Original/RawOwner.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/OriginalPopDisplay.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
+cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/OriginalPopDisplay.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	L1
 cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/RawPop.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/SquidPostPop.cpp	Netstorm.Core/Original/RawPostPop.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidReward.cpp	Netstorm.Core/Original/RawHitPoints.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidReward.cpp	Netstorm.Core/Original/RawSquidReward.cs	3d038e510444a9c7448b6d4c88cc84f78446d395	L1
 cpppj/src/o/SquidSpatial.cpp	Netstorm.Core/Rules/SpotMap.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/SquidUnpop.cpp	Netstorm.Core/Original/OriginalUnpopDisplay.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
+cpppj/src/o/SquidUnpop.cpp	Netstorm.Core/Original/OriginalUnpopDisplay.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	L1
 cpppj/src/o/SquidUnpop.cpp	Netstorm.Core/Original/RawUnpop.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/Template.cpp	Netstorm.Core/Original/FortTemplate.Parse.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/o/Template.cpp	Netstorm.Core/Original/FortTemplate.cs	d48ea75609a1fe57db3acee4e28167de1723651b	port

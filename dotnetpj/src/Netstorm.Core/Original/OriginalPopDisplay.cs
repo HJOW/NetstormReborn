@@ -22,6 +22,14 @@ public static partial class OriginalPopDisplay
     /// <summary>마나 대체 주소 3개 중 셋째.</summary>
     private const uint ManaVtable2 = 0x005070C0;
 
+    /// <summary>메타 Sprite 가상 표. PE의 +20·+7c/80/84가 공통 쌍이라 공통 후처리를 허용한다.</summary>
+    /// <remarks>2026-11-11 0.355에서 cpppj HEAD(1267 후처리 허용)를 반영했다.</remarks>
+    private const uint MetaSpriteVtable = 0x0050C9F0;
+
+    /// <summary>일반 Sprite 가상 표. 메타와 같은 공통 쌍이라 공통 후처리를 허용한다.</summary>
+    /// <remarks>2026-11-11 0.355에서 cpppj HEAD(1267 후처리 허용)를 반영했다.</remarks>
+    private const uint GeneralSpriteVtable = 0x0050CC08;
+
     /// <summary>표의 항목 수(10.78 은 26개).</summary>
     public static int Count => Table.Length;
 
@@ -64,8 +72,8 @@ public static partial class OriginalPopDisplay
     /// <remarks>2026-11-04 F2c-11에서 추가했다.</remarks>
     public static bool Supports(OriginalEdition edition, uint vtable, uint flags)
     {
-        // 패치판 마나 3개는 원본처럼 판본별 공통 표시 지원으로 가린다
-        if (edition == OriginalEdition.Patch1078 && (vtable == ManaVtable0 || vtable == ManaVtable1 || vtable == ManaVtable2))
+        // 패치판 마나 3개와 메타·일반 Sprite 두 가상 표는 원본처럼 판본별 공통 표시 지원으로 가린다
+        if (edition == OriginalEdition.Patch1078 && (vtable == ManaVtable0 || vtable == ManaVtable1 || vtable == ManaVtable2 || vtable == MetaSpriteVtable || vtable == GeneralSpriteVtable))
         {
             return OriginalUnpopDisplay.Supports(edition, vtable, flags);
         }

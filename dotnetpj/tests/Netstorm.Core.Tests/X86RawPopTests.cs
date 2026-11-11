@@ -230,4 +230,19 @@ public sealed class X86RawPopTests
         Assert.False(OriginalPopDisplay.Supports(0, 0));
         Assert.False(OriginalPopDisplay.Supports(0x12345678, OriginalUnpopDisplay.VortexFlag));
     }
+
+    /// <summary>메타·일반 Sprite 두 가상 표는 판본별 공통 표시 지원을 따른다(1267 후처리 허용).</summary>
+    /// <remarks>2026-11-11 0.355에서 SquidPop 재대조와 함께 추가했다.</remarks>
+    [Fact]
+    public void MetaAndGeneralSpriteVtablesFollowEditionDisplay()
+    {
+        // 메타·일반 Sprite는 항상 지원하므로 판본별 공통 표시 지원과 같은 true다
+        foreach (uint vtable in new uint[] { 0x0050C9F0, 0x0050CC08 })
+        {
+            Assert.True(OriginalUnpopDisplay.Supports(OriginalEdition.Patch1078, vtable, 0));
+            Assert.True(OriginalPopDisplay.Supports(OriginalEdition.Patch1078, vtable, 0));
+            Assert.True(OriginalUnpopDisplay.Supports(OriginalEdition.Patch1078, vtable, OriginalUnpopDisplay.VortexFlag));
+            Assert.True(OriginalPopDisplay.Supports(OriginalEdition.Patch1078, vtable, OriginalUnpopDisplay.VortexFlag));
+        }
+    }
 }

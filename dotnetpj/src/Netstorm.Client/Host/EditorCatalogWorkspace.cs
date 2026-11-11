@@ -153,6 +153,19 @@ public sealed class EditorCatalogWorkspace : IDisposable
         return _files.TryRead(key) ?? _source.TryReadArchiveOnly(key);
     }
 
+    /// <summary>
+    /// 없는 원본과 사용자가 지운 완료 항목을 구별한다. 저장소·아카이브를 다시 가져오거나 장부를 바꾸지 않는다.
+    /// 시나리오 자동 기본 생성도 완료 이관 뒤 삭제 표식을 우회하지 않게 한다.
+    /// </summary>
+    /// <param name="configured">설정 경로.</param>
+    /// <returns>완료 이관 뒤 삭제됐으면 참이다.</returns>
+    /// <remarks>2026-11-11 0.355에서 cpppj HEAD의 `Deleted`를 반영했다.</remarks>
+    public bool Deleted(string configured)
+    {
+        string key = Key(configured);
+        return _ledger.State(key) == 2 && !File.Exists(_files.ResolvePath(key));
+    }
+
     /// <summary>장부 잠금을 반납한다. 이미 기록한 장부와 작업본은 그대로 보존한다.</summary>
     public void Dispose() => _ledger.Dispose();
 }

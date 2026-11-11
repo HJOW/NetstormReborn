@@ -50,6 +50,11 @@ public static partial class OriginalUnpopDisplay
     /// <remarks>2026-11-04 F2c-11에서 추가했다.</remarks>
     public static bool Supports(OriginalEdition edition, uint vtable, uint flags)
     {
+        // 메타·일반 Sprite 두 가상 표는 실제 메타 위치에 분배하므로 항상 지원한다. 2026-11-11 0.355에서 cpppj HEAD를 반영했다.
+        if (edition == OriginalEdition.Patch1078 && (vtable == 0x0050C9F0 || vtable == 0x0050CC08))
+        {
+            return true;
+        }
         // 패치판의 무조건 지원 분기다
         if (edition == OriginalEdition.Patch1078 && (vtable == 0x0050C3B0 || vtable == 0x00509810))
         {

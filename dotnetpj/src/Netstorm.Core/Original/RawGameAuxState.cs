@@ -175,6 +175,10 @@ public sealed class RawGameAuxState
     /// <summary>005ca8f0의 같은 현재 0·1이며 생성·HP·축소가 상태 정리를 공유한다.</summary>
     public bool PriestQuarterHp { get; set; }
 
+    /// <summary>0052ed78/79/7c의 현재 1bh 생성자 바이트·바이트·워드이며 수신 등록 메타데이터와 별개다. 직접 Join도 같은 현재 생성자 헤더를 읽고 등록표로 대체하지 않는다.</summary>
+    /// <remarks>2026-11-11 0.355에서 cpppj HEAD의 JoinTestBattle 생성자 헤더(`battleStartPeerHeader_`)를 반영했다. 월드·세션 교체로 초기화하지 않는다.</remarks>
+    public FormPacketHeader BattleStartPeerHeader { get; set; } = new(0x1b, 1, 38);
+
     /// <summary>기존 지역 목록을 비어 있는 입력으로 되돌리며 실제 정리 전체가 아니다.</summary>
     public void ResetForGeneralWorld()
     {

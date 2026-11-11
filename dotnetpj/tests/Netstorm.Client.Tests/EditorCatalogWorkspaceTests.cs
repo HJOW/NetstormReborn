@@ -284,4 +284,27 @@ public sealed class EditorCatalogWorkspaceTests
         Assert.Equal("Current", catalog.State.Names[0]);
         Assert.Equal(before, File.ReadAllBytes(sourceFile));
     }
+
+    /// <summary>완료 이관 뒤 사용자가 지운 항목만 삭제 표식으로 구별한다.</summary>
+    /// <remarks>2026-11-11 0.355에서 `Deleted` 재대조와 함께 추가했다.</remarks>
+    [Fact]
+    public void DeletedDistinguishesUserRemovedCompletedEntry()
+    {
+        using var temp = new EditorTempRoot();
+        temp.Seed("d/Gone.fort", Image(2));
+        using (var workspace = Open(temp))
+        {
+            // 이관 전과 작업본이 살아 있을 때는 삭제 표식이 아니다
+            Assert.False(workspace.Deleted("d/Gone.fort"));
+            Assert.NotNull(workspace.Read("d/Gone.fort"));
+            Assert.False(workspace.Deleted("d/Gone.fort"));
+            // 완료 이관 뒤 지우면 삭제 표식이다
+            workspace.Files.Delete("d/Gone.fort");
+            Assert.True(workspace.Deleted("d/Gone.fort"));
+        }
+        // Pending(미완료)은 지워도 삭제 표식이 아니다
+        using (var ledger = new EditorCatalogLedger(new EditorWorkspacePaths(temp.Source, temp.Work))) ledger.SetState("d/Gone.fort", 1);
+        using var again = Open(temp);
+        Assert.False(again.Deleted("d/Gone.fort"));
+    }
 }
