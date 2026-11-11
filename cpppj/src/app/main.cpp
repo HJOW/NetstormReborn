@@ -608,8 +608,9 @@ void RecordStartupScriptSelfCheck() {
 int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::RawFileName> startupFileNames={},std::optional<std::filesystem::path> portableRoot={}) { // 무인자 탐색의 경로/고리를 Client까지 소유 복사로 인계한다.
     netstorm::client::ClientOptions options;
     RecordStartupScriptSelfCheck(); // 14차: 엔진 탑재 확인(생성·자체 검사·해제)을 게임 시작마다 한 번 수행한다.
-    options.edition = TakeEdition(arguments);
-    if (arguments.empty() && !portableRoot) throw std::invalid_argument("Missing game directory");
+    // 일반 실행은 옵션 값을 소비하며 판본을 정해 --cd가 다른 옵션 값일 때 혼동하지 않는다.
+    options.edition = netstorm::o::OriginalEdition::Patch1078;
+    if (!portableRoot && (arguments.empty() || arguments.front()=="--cd")) throw std::invalid_argument("Missing game directory"); // 판본 옵션만 주면 경로가 없는 기존 오류를 유지한다.
     options.gameDirectory = portableRoot ? *portableRoot:std::filesystem::path(arguments[0]);
     options.startupFileNames=std::move(startupFileNames);
     options.userData=netstorm::platform::UserDataRoot::Resolve(); // 5차: 설정/진행/체크포인트를 설치 폴더가 아닌 사용자 홈(Saved Games 아래 Netstorm)에 둔다. 읽기 전용/관리자 권한 설치에서도 동작하기 위한 호환 처리다.
@@ -625,7 +626,8 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
             if (i + 1 >= arguments.size()) throw std::invalid_argument("Missing value for " + argument);
             return arguments[++i];
         };
-        if (argument == "--window") options.forceWindow = true;
+        if (argument == "--cd") options.edition = netstorm::o::OriginalEdition::Cd1072; // 10.72 자료의 명시적 판본 선택이다.
+        else if (argument == "--window") options.forceWindow = true;
         else if (argument == "--frames") options.frameLimit = std::stoull(value());
         else if (argument == "--screenshot") options.screenshot = value();
         else if (argument == "--set") options.settings = value();
