@@ -15,8 +15,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A 완료, 현재 단계 **4-B** 6/30, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 506(56.5%)·partial 82(9.2%)·todo 308(34.4%)**. 기준선 소스 줄 수로는 129,653줄 중 port 59,016(45.5%)·partial 22,017(17.0%)·todo 48,620(37.5%). 영역별 남은 양은 0.3절 |
 | 마지막 구현 커밋 | **WB04-E277** (`86f78e0d / 20261110-133 WB`) 4-B Fort 이미지 직렬화 RawFortImage 이식, fort-image-packets 이미지 116행 대조([문서](docs/webpj-fort-image-20261110.md)). 그 앞은 WB04-E276 (`85e13f2e / 20261110-132 WB`). 단위 색인은 2절·3.1절 |
-| 다음 작업 | **4-B RawFortMoneyLoad**(3.1절 4-B 체크 목록, 163줄): 이어서 RawFortObjectLoad(partial)→Template·RawTemplateLoad→RawDataManagerImage/Resize/Selection→FortSerializationGlobals→RawFortRandomPlacement→RawFortWorldLoad→…→지형·섬 부품→RawSurfaceWorld. 기준선 뒤 변경은 착수 때 저장소 루트에서 `git diff 1f00a25a..HEAD` 로 확인한다. 단계와 무관하게 바로 할 수 있는 작은 단위로 **0.6절 11.01 카피라이트 줄**이 남아 있다 |
-| 마지막 전체 검사 | WB04-E277의 Node v26.13.0·v22.23.3, **2434/2434 통과·실패/건너뜀0**(신규 fort-image 3; WB04-E276 2431), 약147초(Node v22.23.3 도 2434/2434, 약157초; v24 는 미설치) |
+| 다음 작업 | **4-B RawFortMoneyLoad**(3.1절 4-B 체크 목록, 163줄): 이어서 RawFortObjectLoad(partial)→Template·RawTemplateLoad→RawDataManagerImage/Resize/Selection→FortSerializationGlobals→RawFortRandomPlacement→RawFortWorldLoad→…→지형·섬 부품→RawSurfaceWorld. 기준선 뒤 변경은 착수 때 저장소 루트에서 `git diff 1f00a25a..HEAD` 로 확인한다. 0.6절의 단계와 무관한 AGENTS 요구는 모두 반영됐다(11.01 카피라이트 줄은 WB03-AE) |
+| 마지막 전체 검사 | WB03-AE(카피라이트 줄)의 Node v26.13.0·v22.23.3, **2434/2434 통과·실패/건너뜀0**(검사 개수 변동 없음; 직전 WB04-E277 도 2434), v26 약173초·v22 약193초(v24 는 미설치) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -103,7 +103,7 @@ AGENTS.md가 세 클론 모두에 바로 요구하는 항목이다. 단계 진�
 | 요구 | webpj 상태 | 할 일 |
 | --- | --- | --- |
 | 버전 11.01 표기·Credits 세 번째 항목 `Netstorm 11.01 Patch Credits`·창 제목 `NetStorm 11.01 Patch Credits`·HJOW 개발과 AI 사용 내용 | 완료(WB03-AC, [제품11.01](docs/webpj-product-1101-20261105.md)). 한국어 행 이름 `NetStorm 11.01 패치 크레딧` 확정 | — (AI 문구는 4절 "Credits AI 문구" 결정 유지) |
-| **11.01 카피라이트 `Copyright 2026 HJOW`** (사용자 커밋 `60226ea9`, 2026-11-11) | **미반영.** `www/assets/product.js`의 영어·한국어 Patch Credits 본문에 이 줄이 없다 | cpppj `client/ProductPresentation.cpp`(제품 1291)처럼 개발 줄 다음에 `Copyright 2026 HJOW<br>`를 영어·한국어 본문에 넣고 `tests/product.test.mjs`의 본문 문구 검사에 더한다. 원본 비교 모드(`GameData.build({product:false})`)의 10.78 두 행 Credits는 그대로 둔다 |
+| **11.01 카피라이트 `Copyright 2026 HJOW`** (사용자 커밋 `60226ea9`, 2026-11-11) | **완료**(WB03-AE, [제품11.01 6절](docs/webpj-product-1101-20261105.md)) — 영어·한국어 Patch Credits 본문의 개발 줄 다음에 `Copyright 2026 HJOW` 줄, `tests/product.test.mjs` 위치·문구 단언 | — (일본어 본문은 13차에서 다른 언어를 추가할 때 같은 줄을 넣는다. 원본 비교 모드의 10.78 두 행 Credits는 그대로) |
 | 메인 메뉴 전 "클릭하여 시작" 화면 | 완료(WB01) | — |
 | 외부 도메인/IP 접속 문서화·클라이언트 유효성 검사 비활성화 | 완료(WB02-E, [외부 접속](docs/webpj-external-access-20261105.md)): 런타임 요청은 같은 출처 `./data/`뿐이고 유효성 검사·서버 진단은 연결하지 않음 | 새 외부 요청(13차 CDN 글꼴 등)을 만드는 단위는 문서와 `tests/external-access.test.mjs` 감사를 함께 고친다 |
 | 글꼴: 한국어는 `fonts/` D2Coding, woff2가 없는 글꼴은 Google Fonts CDN | 한국어는 `D2Coding.woff2`·`D2CodingBold.woff2`를 복사해 사용. `fonts/`의 Noto Sans·Noto Sans JP는 TTF뿐이라 쓰게 되면 CDN 대상 | 13차 착수 때(3.7절·4절 "다른 언어 글꼴") |
@@ -330,7 +330,7 @@ cpppj는 AGENTS 1~13차 구현을 모두 마쳤다([공통 인계 0.4절](LEFT_J
 | 1차 비멀티 UI(929)·Edit(943)·미션 수명(956)·내부 수명/FILE(980)·2차 호환(981) | 웹 이식의 기준 범위(기준선 판). 완료한 웹 키/reader/UI는 다시 세지 않는다. Edit 관련은 제외 |
 | 3차 LAN·Outpost(~1279): 공유 파일에 `Actual*`/`shared*`/Native 연결이 쌓임 | LAN은 웹 제외. 공유 파일 변경의 단독 경로 영향은 3.6절로 확인. **Outpost는 12차 스커미시와 함께 이식**(1절, 3.7절) |
 | 4~13차(4차 MCP·와이드 935~937, 5차 홈 저장 932~934, 6차 한국어 K1~K5 1270~1281, 7차 로그 1269, 8차 AA/FSR 939, 9차 시나리오 S1~S4 1277~1284, 10차 버그 34/34 판정·수정 10건 1285~1300, 11차 난이도 1292, 12차 스커미시 1293·1300, 13차 일본어 UI 1288) | 차수별 웹 처리는 3.7절. 6차 미션 문구는 3.5절 2번 |
-| 11.01 카피라이트(1291) | **0.6절 즉시 요구(웹 미반영)** |
+| 11.01 카피라이트(1291) | **웹 반영 완료**(WB03-AE, 0.6절) |
 | Frame Rate 60/75/120(1297·1298)·CD 10.72 문서(1299) | Frame Rate는 순서 9의 60/120 때 참고. 웹 목표는 10.78이라 10.72는 범위 밖 |
 | 사용자 확인 경계(전체 동일성·자연 완주 등)·공중 3종 정적 작업만 | 웹도 같은 경계. 아직 없는 효과를 일반 성공으로 채우지 않고, 공중 3종 전용 생산·행동 검사를 추가하지 않음 |
 
@@ -352,7 +352,7 @@ cpppj는 AGENTS 1~13차 구현을 모두 마쳤다([공통 인계 0.4절](LEFT_J
 | --- | --- | --- |
 | 6차 한국어 K1(122)·13차 일본어 L1~L3(149): 표시 부호화·번역표·언어 선택 | client BitmapFont·ConfigFileRead·HtmlTextParser·HtmlWindowFactory·InputEvent·KoreanResources·LanguageOptions·QuickHelpFileRead·QuickHelpWindow·TellFileMenus, `o/` BaseFile·OriginalText | 순서 10. 단 원문 부호화(`EncodeOriginalText`)나 typed 결과가 바뀌었으면 ②이므로 같은 파일을 다시 다루는 단위에서 먼저 확인 |
 | 10차 버그 수정: NB08(145)·NB02/NB09(147)·NB20(154)·NB18(156)·NB10(159)·NB04/NB29(162)·NB23(169) | client HtmlWindowMetadata·StyleTextMarkup·PriestSelectionShortcut, `o/` FileSpecQuery·RawCarrierPickup·RawAiCreate·RawWorldGeyser·RawWorldGeyserBounds·RawFrameChoose (+위 TellFileMenus·BaseFile) | 순서 10. NB08(User Made Campaigns)은 ① 후보. RawFrameChoose는 4-B 항목에서 NB23 교정을 함께 판정 |
-| 카피라이트(155)·11차 난이도(157)·12차 스커미시(158·169)·Frame Rate(164)·시나리오 S1(132) | client ProductPresentation·RawGameMenus (+RawAiCreate·RawWorldGeyser*) | 카피라이트 0.6절, 난이도·스커미시 순서 10, Frame Rate 순서 9, 시나리오 ① |
+| 카피라이트(155)·11차 난이도(157)·12차 스커미시(158·169)·Frame Rate(164)·시나리오 S1(132) | client ProductPresentation·RawGameMenus (+RawAiCreate·RawWorldGeyser*) | 카피라이트 완료(WB03-AE), 난이도·스커미시 순서 10, Frame Rate 순서 9, 시나리오 ① |
 | Native/Actual 연결(2026-11-09~11) | `o/` RawAcidZap·RawAddRandom·RawManaBoltArrival·RawMeltdown·RawPlayerRegular·RawRunePostPop·SquidPop·SquidPostPop, client MenuGumpWidgets | 4-D(아래 ③ 표 묶음과 함께). SquidPop·SquidPostPop은 4-B 적재가 소비하면 그 단위에서 |
 | webpj 요청 처리(20261110-01) | client ScrollingTextGumpWidgets | 3.3절 오라클 차이 수정과 함께 재수집 때 ② 확인 |
 | 큰 client 두 개 | client ClientMain(`44e53bdc` 뒤 57커밋)·UberGump(`11fbb988` 뒤 54커밋) | 아래 ③ 표의 해당 행대로 4-C/4-D·6 |
@@ -418,7 +418,7 @@ AGENTS.md(사용자 커밋 `85551c6c`, 2026-11-11): "cpppj의 4~14차 목표 내
 | 입력/오디오/환경 | 실제 스피커 청취·모든 브라우저/GUI Linux·고DPI/모니터 이동은 미확인. 일부 Edge/Chromium 기록을 전체 플랫폼 지원으로 쓰지 않음 |
 | 다른 언어 글꼴 | AGENTS 글꼴 규칙: `fonts/`의 Noto Sans·Noto Sans JP는 TTF뿐이라 webpj는 Google Fonts CDN을 쓴다. 웹의 현재 범위(영어·한국어)는 D2Coding woff2만 쓰므로 아직 소비자가 없다. 13차(3.7절)에서 다른 언어를 추가하는 단위가 CDN 글꼴 요청을 [외부 접속 문서](docs/webpj-external-access-20261105.md)의 허용 목록과 `tests/external-access.test.mjs` 소스 감사에 함께 반영한다(현재 감사는 `./data/` 같은 출처 요청만 허용). cpppj 일본어 UI는 외부 `NotoSansJP-*`를 쓰며 가변 글꼴 기본 인스턴스가 Thin이라 굵기 확인이 남아 있다([공통 인계](LEFT_JOBS.md) 0.3절) |
 | README webpj 상태 | README.md·README.en.md의 webpj 상태는 2026-11-06 일괄 갱신(WB04-D5a, 검사 429개) 기준에 머물러 있고 "바깥 링크 미구현" 같은 지난 서술이 남아 있다. README는 공통 문서이므로 다음 공통 문서 일괄 갱신 때 WB02-G 이후 상태로 고친다(README.md "개요" 단락은 수정 금지) |
-| Credits AI 문구 | 2026-11-05 사용자 결정: 현행 문구(`OpenAI Codex, ChatGPT and Anthropic Claude Code`, 한국어 동일 취지)를 **유지하고 나중에 수정**한다. cpppj/dotnetpj 문구(Codex·ChatGPT만)와 다르며, 수정 지시가 오면 `www/assets/product.js`의 영어/한국어 섹션과 `tests/product.test.mjs`의 문구 검사를 함께 고친다. 한국어 행 이름 `NetStorm 11.01 패치 크레딧`은 확정. 카피라이트 줄 추가는 이 결정과 별개인 0.6절 즉시 요구다 |
+| Credits AI 문구 | 2026-11-05 사용자 결정: 현행 문구(`OpenAI Codex, ChatGPT and Anthropic Claude Code`, 한국어 동일 취지)를 **유지하고 나중에 수정**한다. cpppj/dotnetpj 문구(Codex·ChatGPT만)와 다르며, 수정 지시가 오면 `www/assets/product.js`의 영어/한국어 섹션과 `tests/product.test.mjs`의 문구 검사를 함께 고친다. 한국어 행 이름 `NetStorm 11.01 패치 크레딧`은 확정. 카피라이트 줄 추가는 이 결정과 별개이며 WB03-AE에서 반영했다 |
 
 ## 5. 검증과 완료 판정
 

@@ -141,7 +141,9 @@ test('영어 Patch Credits 창: 제목·본문·Back/Cancel 수명', () => {
     assert.ok(window, 'Patch1101.Credits 창');
     const text = bodyText(window);
     assert.ok(text.startsWith('NetStorm 11.01 Patch Credits'), text);
-    for (const fragment of ['Version v11.01', 'HJOW', 'AI assistance', 'OpenAI Codex', 'ChatGPT', 'Anthropic Claude Code', 'analysis, programming,', 'original Credits entries']) {
+    // 11.01 카피라이트 줄(AGENTS.md 사용자 커밋 60226ea9): 개발 줄 다음에 `Copyright 2026 HJOW` 가 한 줄로 있어야 한다. (2026-11-11 WB)
+    assert.ok(/HJOW, NetStorm 11\.01 patch development\.\s+Copyright 2026 HJOW\s/.test(text.replace(/\n/g, ' ')), `카피라이트 줄 위치: ${text}`);
+    for (const fragment of ['Version v11.01', 'HJOW', 'Copyright 2026 HJOW', 'AI assistance', 'OpenAI Codex', 'ChatGPT', 'Anthropic Claude Code', 'analysis, programming,', 'original Credits entries']) {
         assert.ok(text.replace(/\n/g, ' ').includes(fragment), `본문에 '${fragment}' 가 없음`);
     }
     // 현재 Tell 이름 기록: 창을 연 이름 그대로이다.
@@ -171,7 +173,7 @@ test('한국어 Patch Credits: 번역 행·창과 영어 대체', () => {
     const window = open('Patch1101.Credits', { data, resources: koreanResources });
     const text = bodyText(window);
     assert.ok(text.startsWith('NetStorm 11.01 패치 크레딧'), text);
-    for (const fragment of ['버전 v11.01', 'HJOW', 'AI', 'Anthropic Claude Code']) assert.ok(text.replace(/\n/g, ' ').includes(fragment), `본문에 '${fragment}' 가 없음`);
+    for (const fragment of ['버전 v11.01', 'HJOW', 'Copyright 2026 HJOW', 'AI', 'Anthropic Claude Code']) assert.ok(text.replace(/\n/g, ' ').includes(fragment), `본문에 '${fragment}' 가 없음`);
     assert.deepEqual(window.buttons.map((button) => [button.text, button.command]), [
         ['뒤로', { name: 'Tell', argument: 'Credits', instant: false }], ['취소', { name: 'Tell', argument: 'Blank', instant: false }],
     ]);

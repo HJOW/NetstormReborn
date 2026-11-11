@@ -47,6 +47,7 @@ export const PRODUCT_CREDITS_TITLES = Object.freeze({
 
 // 언어별 제품 Credits 섹션 원문이다. 원본 Credits 창들과 같은 배경·제목·{CText} 소제목 형식이며, Back 은 Credits 목록으로, Cancel 은 메인 메뉴로 돌아간다.
 // 본문은 HJOW 의 개발·패치와 AI 도움(분석·프로그래밍·문서화·검증)을 알리고, 원작 제작진은 기존 두 Credits 항목에 있음을 밝힌다. `{version}` 은 제품 표기로 치환된다. (2026-11-05 WB03-AC)
+// 개발 줄 다음에 11.01 카피라이트 줄 `Copyright 2026 HJOW` 를 영어·한국어 본문에 둔다. 사용자 커밋 60226ea9(AGENTS.md)의 요구이며 cpppj client/ProductPresentation.cpp(제품 1291)와 같은 위치다. (2026-11-11 WB)
 const PRODUCT_CREDITS_SECTIONS = Object.freeze({
     english: [
         '[Credits]',
@@ -57,6 +58,7 @@ const PRODUCT_CREDITS_SECTIONS = Object.freeze({
         '<p>',
         '{CText}Development{Text}<br>',
         'HJOW, NetStorm 11.01 patch development.<br>',
+        'Copyright 2026 HJOW<br>',
         '<br>',
         '{CText}AI Assistance{Text}<br>',
         'Developed with AI assistance using OpenAI Codex, ChatGPT and Anthropic Claude Code.<br>',
@@ -76,6 +78,7 @@ const PRODUCT_CREDITS_SECTIONS = Object.freeze({
         '<p>',
         '{CText}개발{Text}<br>',
         'HJOW, NetStorm 11.01 패치 개발.<br>',
+        'Copyright 2026 HJOW<br>',
         '<br>',
         '{CText}AI 사용{Text}<br>',
         'OpenAI Codex, ChatGPT, Anthropic Claude Code 등 AI의 도움을 받아 개발했습니다.<br>',
