@@ -10,6 +10,7 @@ using Netstorm.Client.Mission;
 using Netstorm.Client.Scripting;
 using Netstorm.Core.Original;
 using Netstorm.Core.Rules;
+using Netstorm.Net;
 
 namespace Netstorm.Client.Host;
 
@@ -232,6 +233,7 @@ public sealed class ClientHostGame : Game
     /// <remarks>2026-11-12 0.398에서 미션 시작 흐름으로 추가했다. 대본·타입 표는 목록용으로 한 번 더 연다.
     /// 요새 적재 장치가 가진 것과 같은 입력이며 세션이 표를 소유하면 합친다. 0.401에서 동맹 마스크 기록을 연결했다.
     /// 0.406에서 로컬 1번의 가입·준비·Ready packet 송신을 연결했다(구독자 1은 mySubscriber 기본값이며 전송 갈고리는 기록만 한다).
+    /// 0.407에서 단독 바인딩 Zone 설치를 연결했다(조합 검사와 같은 입력·순서이며 실제 서브 바인딩은 로컬 네트워크 단위에서 잇는다).
     /// 월드 본체 조립·브리핑 화면은 다음 단위다.</remarks>
     private HostSession StartMission(string mission, string handle)
     {
@@ -241,6 +243,30 @@ public sealed class ClientHostGame : Game
         MissionFortLoadResult fort = MissionFortLoad.Load(_startup, mission);
         MissionPlayers players = MissionPlayers.Load(key => script.Get(key), fort.Fort, types, 6500);
         var session = new HostSession(_kernel, _gameRandom, _crtRandom);
+        // 단독 바인딩 Zone을 먼저 설치한다. 조합 검사와 같은 입력(구독자 1·핸들 이름)이며 구독자·flags 0x08·이름을 둔다.
+        // 이름·서브 갈고리는 실제 전송이 없어 기록만 하며 포트는 검사와 같은 값으로 둔다(실제 바인딩은 로컬 네트워크 단위에서 잇는다).
+        var zone = new byte[LocalMissionZone.ZoneHead + LocalMissionZone.ZoneClient];
+        zone[14] = 1;
+        int zoneSlot = LocalMissionZone.ZoneHead;
+        zone[zoneSlot] = 0;
+        // 구독자 DWORD를 little endian으로 쓴다(mySubscriber 기본값 1).
+        for (int index = 0; index < 4; ++index)
+            zone[zoneSlot + 1 + index] = unchecked((byte)(1u >> (8 * index)));
+        byte[] zoneHandle = System.Text.Encoding.Latin1.GetBytes(handle);
+        Array.Copy(zoneHandle, 0, zone, zoneSlot + 9, zoneHandle.Length);
+        var zoneNames = new List<(uint Subscriber, string Name)>();
+        var zonePorts = new List<uint>();
+        var zoneAssertions = new List<string>();
+        var zonePlayer = new PlayerWorldState();
+        LocalMissionZone.Install(zone, session.PlayerRecords, zonePlayer, new LocalMissionZoneGlobals(),
+            new LocalMissionZoneHooks
+            {
+                LoginTimeout = () => 30,
+                Seconds = () => 0.0,
+                StoreName = (subscriber, name) => zoneNames.Add((subscriber, name)),
+                Serve = port => zonePorts.Add(port),
+                Assertion = zoneAssertions.Add,
+            }, 6799u);
         var crtBox = new UIntBox { Value = 1 };
         var modeBox = new UIntBox { Value = 0 };
         var seed = new RawGameRandomSeed(session.Game, crtBox, modeBox, () => _clock.UnixSeconds);

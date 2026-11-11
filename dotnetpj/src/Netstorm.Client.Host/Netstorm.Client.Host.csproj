@@ -10,5 +10,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Netstorm.Client\Netstorm.Client.csproj" />
+    <!-- 시작 흐름의 단독 Zone 설치(LocalMissionZone)에 실제 전송 모듈을 쓴다. R5·10단계 로컬 네트워크까지 기록 갈고리로만 둔다. 2026-11-12 R4 실제 호스트·월드 조립(0.407)에서 추가됐다. -->
+    <ProjectReference Include="..\Netstorm.Net\Netstorm.Net.csproj" />
   </ItemGroup>
 </Project>
