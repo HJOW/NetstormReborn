@@ -1,0 +1,6 @@
+# L4a Campaign 목록 캡처(0.385). 줄 형식: 프레임<TAB>동작<TAB>인자. {OUT} 은 l4a_compare.ps1 이 면별 폴더로 바꾼다.
+# 메인 메뉴에서 Campaign 버튼을 눌러 Tell 목록을 열고 프레임 30·60·120 을 저장한다. Tell 모달이므로 메인 버튼은 그리지 않는다.
+5	click	Campaign
+30	snapshot	{OUT}\campaign-f030.bmp
+60	snapshot	{OUT}\campaign-f060.bmp
+120	snapshot	{OUT}\campaign-f120.bmp
