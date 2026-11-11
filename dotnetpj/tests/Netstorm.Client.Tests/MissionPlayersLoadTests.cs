@@ -592,4 +592,33 @@ public sealed class MissionPlayersLoadTests
         // 2번 기록은 손대지 않는다.
         Assert.Equal(0u, DwordAt(session.PlayerRecords, 2, 0x64));
     }
+
+    /// <summary>전투 소유자 기록에 번역 이름이 NUL까지만 덮어씌워지는지 확인한다.</summary>
+    [Fact]
+    public void WritesBattleNameLikeWorldLoadCopyName()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        session.StartPlayers(players, "Youpson");
+        session.MissionPlayer.BattleOwner = 1u;
+        session.WriteBattleName(new byte[] { (byte)'Y', (byte)'o', (byte)'u', 0 });
+        // 7자 "Youpson"에 "You\0"을 덮어쓰면 "You\0son\0"이 된다(NUL 뒤 stale 꼬리 보존).
+        Assert.Equal("You", System.Text.Encoding.Latin1.GetString(session.PlayerRecords, 180 + 12, 3));
+        Assert.Equal(0, session.PlayerRecords[180 + 15]);
+        Assert.Equal("son", System.Text.Encoding.Latin1.GetString(session.PlayerRecords, 180 + 16, 3));
+        // 8자 선행 이름이면 기준선과 같은 "You\0pson" 모양이 된다(선행 꼬리 보존 증명).
+        var session2 = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        byte[] pre = System.Text.Encoding.Latin1.GetBytes("WXYZpson");
+        Array.Copy(pre, 0, session2.PlayerRecords, 180 + 12, pre.Length);
+        session2.PlayerRecords[180 + 20] = 0;
+        session2.MissionPlayer.BattleOwner = 1u;
+        session2.WriteBattleName(new byte[] { (byte)'Y', (byte)'o', (byte)'u', 0 });
+        Assert.Equal("You", System.Text.Encoding.Latin1.GetString(session2.PlayerRecords, 180 + 12, 3));
+        Assert.Equal(0, session2.PlayerRecords[180 + 15]);
+        Assert.Equal("pson", System.Text.Encoding.Latin1.GetString(session2.PlayerRecords, 180 + 16, 4));
+        // NUL이 없으면 거부한다.
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.WriteBattleName(new byte[] { (byte)'Y', (byte)'o' }));
+    }
 }

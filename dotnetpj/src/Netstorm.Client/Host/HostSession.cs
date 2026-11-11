@@ -461,11 +461,33 @@ public sealed class HostSession
             PlayerRecords[record + PlayerFortReceivedOffset + index] = unchecked((byte)(1u >> (8 * index)));
     }
 
+    /// <summary>전투 소유자 기록에 번역된 현재 이름을 덮어쓴다. 원본 월드 적재의 이름 확정 쓰기와 같다.</summary>
+    /// <param name="translated">NUL 포함 번역 바이트다. 첫 NUL까지만 쓴다.</param>
+    /// <remarks>2026-11-12 0.428에서 미션 값 채우기로 추가했다. NUL 뒤 stale 꼬리는 보존하므로 영어 "You"는 "You\0pson"이 된다.</remarks>
+    public void WriteBattleName(byte[] translated)
+    {
+        ArgumentNullException.ThrowIfNull(translated);
+        int nul = Array.IndexOf(translated, (byte)0);
+        if (nul < 0)
+            throw new ArgumentOutOfRangeException(nameof(translated), "전투 이름의 NUL 종료 바이트 누락");
+        uint owner = MissionPlayer.BattleOwner;
+        if (owner > (uint)MissionPlayers.PlayerCount)
+            throw new ArgumentOutOfRangeException(nameof(translated), "전투 이름의 실제 Player 번호 범위 오류");
+        int record = (int)owner * PlayerRecordStride;
+        if (nul + 1 > PlayerNameWidth)
+            throw new ArgumentOutOfRangeException(nameof(translated), "전투 이름이 기록 폭을 넘는다");
+        // 첫 NUL까지만 복사하고 stale 꼬리는 둔다.
+        Array.Copy(translated, 0, PlayerRecords, record + PlayerNameOffset, nul + 1);
+    }
+
     /// <summary>세션이 센 로그인 요새 순서 수다. 원본 로그인의 fortCount와 같으며 첫 로그인에 0을 둔다.</summary>
     public uint FortCount { get; private set; }
 
     /// <summary>세션이 마지막에 새 요새를 받은 Player 번호다. 원본 로그인의 lastLoginPlayer와 같다.</summary>
     public uint LastLoginPlayer { get; private set; }
+
+    /// <summary>세션이 공유하는 현재 Player 상태다. Zone 설치가 소유자를 정하고 이름 확정이 전투 소유자를 읽는다.</summary>
+    public PlayerWorldState MissionPlayer { get; } = new();
 
     /// <summary>덤프용 Player 관측을 만든다. Start 순서 전까지 0이다.</summary>
     public SessionDumpPlayers DumpPlayers() =>

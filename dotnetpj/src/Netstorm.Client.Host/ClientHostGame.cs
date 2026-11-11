@@ -257,8 +257,7 @@ public sealed class ClientHostGame : Game
         var zoneNames = new List<(uint Subscriber, string Name)>();
         var zonePorts = new List<uint>();
         var zoneAssertions = new List<string>();
-        var zonePlayer = new PlayerWorldState();
-        LocalMissionZone.Install(zone, session.PlayerRecords, zonePlayer, new LocalMissionZoneGlobals(),
+        LocalMissionZone.Install(zone, session.PlayerRecords, session.MissionPlayer, new LocalMissionZoneGlobals(),
             new LocalMissionZoneHooks
             {
                 LoginTimeout = () => 30,
@@ -286,6 +285,14 @@ public sealed class ClientHostGame : Game
         session.MarkReady(1u);
         var readyPackets = new List<byte[]>();
         session.SendReady(0u, new PlayerReadyHooks { IsBoss = true, Broadcast = readyPackets.Add, Assertion = _ => { } });
+        // 전투 소유자 기록에 번역된 현재 이름을 덮어쓴다. 편집 선택과 같은 언어표·대체 규칙을 쓴다.
+        string language = _startup.Configuration.Configuration.Get("currentLanguage") ?? "english";
+        byte[]? languageBytes = _startup.Files.TryReadAllBytes("d/xlat." + language);
+        var table = languageBytes is null ? null : Netstorm.Assets.XlatTable.FromFileBytes(languageBytes);
+        byte[] encoded = Netstorm.Core.Original.ExtendedText.EncodeDisplayText(table?.Translate("You") ?? "You");
+        var translated = new byte[encoded.Length + 1];
+        Array.Copy(encoded, 0, translated, 0, encoded.Length);
+        session.WriteBattleName(translated);
         _missionSession = session;
         return session;
     }
