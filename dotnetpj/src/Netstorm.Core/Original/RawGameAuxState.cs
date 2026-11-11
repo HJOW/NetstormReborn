@@ -73,6 +73,10 @@ public sealed class RawGameAuxState
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj o/RawGameAuxState.h ArchipelagoPercent.</remarks>
     public uint ArchipelagoPercent { get; set; }
 
+    /// <summary>00541204의 현재 조각 타입이다. 패턴·Player 범위·지형을 공유한다. 비Native 독립 세션도 같은 107을 쓴다.</summary>
+    /// <remarks>2026-11-12 0.455에서 Generate 라이브 연결용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 621~622행 localPiece(107).</remarks>
+    public uint PuzzlePieceType { get; set; } = 107u;
+
     /// <summary>005c848c의 공통 소멸이 따로 기록하는 최근 소실 X다.</summary>
     public float LostX { get; set; }
 

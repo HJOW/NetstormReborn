@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.454 · 정리 2026-11-12(HJOW-Athlon) · 다음 단위 0.455 · cpppj 기준 제품 1303(14차 QuickJS-ng 엔진 탑재는 1301) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`, 이후 1302·1303은 CD 10.72 전용이라 영향 없음) · 전체 목표 미완료 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
+**기준 단위 0.455 · 정리 2026-11-12(HJOW-Athlon) · 다음 단위 0.456 · cpppj 기준 제품 1303(14차 QuickJS-ng 엔진 탑재는 1301) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`, 이후 1302·1303은 CD 10.72 전용이라 영향 없음) · 전체 목표 미완료 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-12) 직전의 이 문서 전체(단위 기록 0.342~0.452 111건, 0.2~0.4의 단위별 검사·진행 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452)에 바이트 그대로 보관했고, 그 이전 보관본 5개와 0.341 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -31,7 +31,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 | R1 | 8비트 화면 호스트·입력 큐·오라클 도구(`--ui-script`·`snapshot`·`session-dump`·`--fixed-frame-ms`) | — | ✅ 완료 |
 | R2 | 그리기 원시·팔레트·글꼴 | — | ✅ 본체 완료(실자산·세션 연결은 R4·R5) |
 | R3 | Gump UI와 메인 메뉴 계열 | D1 메뉴 픽셀 일치 | 🔶 위젯·호스트 대부분 이식. **메뉴 L4a 12장면 차이 0**(0.381~0.388, 장면은 0.1). 남은 메뉴 장면 3건은 사유와 함께 뒤로 미뤘다(Language 자식 CJK는 R8, Multiplayer 섬 화면은 R5·3차, Edit 이동행은 R7). R3 잔여 위젯·소유자는 [2.5](#r3-r2-detail) |
-| R4 | 월드 세션 조립 | M1 시작 상태 L2 | 🔶 월드 아래층(Template·Fort·지형·섬·Player·저장소·프로세스·월드 본체)과 F3 세션의 관문·소유 상태 대부분 완료. **실제 호스트 조립 진행 중(0.391~0.454, [R4 진행판](#r4-board)):** 미션 Fort 적재 → 세션 홀더 → Player·SP·AI·동맹 → Zone·가입·Ready → 이름·요새 순번 → 월드 적재 시작 흐름 → 타입·프레임 → 지형·난수 저장소 → 섬 부모 → 입력 결선 → 바인딩 조립·드라이런까지 연결. **Generate 라이브·Objects·장부 연결과 월드 본체 조립은 미착수** |
+| R4 | 월드 세션 조립 | M1 시작 상태 L2 | 🔶 월드 아래층(Template·Fort·지형·섬·Player·저장소·프로세스·월드 본체)과 F3 세션의 관문·소유 상태 대부분 완료. **실제 호스트 조립 진행 중(0.391~0.455, [R4 진행판](#r4-board)):** 미션 Fort 적재 → 세션 홀더 → Player·SP·AI·동맹 → Zone·가입·Ready → 이름·요새 순번 → 월드 적재 시작 흐름 → 타입·프레임 → 지형·난수 저장소 → 섬 부모 → 입력 결선 → 바인딩 조립·드라이런 → Generate 라이브 연결까지. **Objects·장부·공간 Pop·농지 배치·공장 생성자 연결과 월드 본체 조립은 미착수** |
 | R5 | 월드 표시·카메라·HUD | D2 진입 화면 픽셀 일치 | ⬜ 미착수 |
 | R6 | 플레이 입력·규칙·소리·AI | M2·M3 | ⬜ 미착수 |
 | R7 | 미션 전체·Edit·설정·배포 | M4 | ⬜ 미착수(Edit 목록·`options.cfg` 저장 일부는 R3에서 선행) |
@@ -41,8 +41,8 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 커밋 | 0.454(지형 바인딩 조립과 드라이런, 다음 커밋). 직전 0.453은 입력 값 연결+전체 회귀 재완주 |
-| 검사 | **마지막 전체 회귀 완주는 0.453:** Assets 366·Client 1,130·Core 1,945(합계 3,441, 실패 0, 새 기준선). 전체 완주 이력은 0.345(3,273) → 0.369(3,375) → 0.381(3,389) → 0.432(3,422) → 0.453(3,441)이다. 0.433~0.452의 집중 검사 내역과 변이 검출 기록은 [보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452)에 있다 |
+| 마지막 구현 커밋 | 0.455(Generate 라이브 연결과 첫 덤프 대조, 다음 커밋). 직전 0.454는 바인딩 조립·드라이런 |
+| 검사 | **마지막 전체 회귀 완주는 0.453:** Assets 366·Client 1,130·Core 1,945(합계 3,441, 실패 0, 새 기준선). 전체 완주 이력은 0.345(3,273) → 0.369(3,375) → 0.381(3,389) → 0.432(3,422) → 0.453(3,441)이다. 0.454는 Client HostTerrain* 10건, 0.455는 Client 전체 1,134건+Core 지형 52건 집중 통과(실패 0). 단위별 집중 검사 내역과 변이 검출 기록은 8절과 [보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452)에 있다 |
 | PORT_MAP | `PORT_MAP.tsv` 688행(L1 338·port 350, 2026-11-12 재집계). 마지막 추가는 0.394 `Player.cpp/.h` → `RawMissionPlayers.cs`(port 2행), 그 앞은 0.381 `RawKencloud*`·`ClientKencloudGlobals` 6행이다. 행별 `base` 갱신 이력(0.344~0.371)과 0.359·0.360 신규 등록 행은 보관본에 있다 |
 | fixture | 연결 236개(0.381에서 `kencloud-v2-x86.tsv` 246행·`kencloud-render-x86.tsv` 944행을 Core에 더했다). `cpp_sync.py`는 미반영분 때문에 0종료가 아니다. `reflected-commit`·PORT_MAP floor는 `f95a8db2` 그대로다(영향 재검토를 마친 행만 올린다) |
 | cpppj 기준 | 현재 cpppj는 제품 1303 / 11.01([LEFT_JOBS.md](LEFT_JOBS.md) 0.1). dotnetpj의 마지막 영향 검토는 0.281(제품 1247, `4d4b3a928`)이고 재검토 범위는 0.379에서 종결했다. 그 뒤 `cpppj/src` 변경은 1302·1303(CD 10.72 전용)뿐이다([1.2](#resync-scope)). 14차 엔진 본체(`ScriptEngine`·`third_party/quickjs-ng`)는 R8에서 옮긴다 |
@@ -76,9 +76,9 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 <a id="r4-board"></a>
 
-#### R4 진행판 — 실제 호스트·월드 조립 (순서 2, 0.390~0.454)
+#### R4 진행판 — 실제 호스트·월드 조립 (순서 2, 0.390~0.455)
 
-M1(34경로의 Load/Start 뒤 상태를 cpppj `session-dump`와 대조)까지의 현재 위치다. **cpppj 기준선 4/34, 새 경로 전체 일치 0/34.** 새 경로의 world-1 덤프는 282행이고 월드 본체(지형·객체·그래프) 행이 없어 어느 경로도 전체 일치할 수 없다. 이 구간 64단위 중 코드를 바꾼 단위는 약 절반(32개)이고, 나머지는 기록자 추적·범위 확정·기준선 확보였다.
+M1(34경로의 Load/Start 뒤 상태를 cpppj `session-dump`와 대조)까지의 현재 위치다. **cpppj 기준선 4/34, 새 경로 전체 일치 0/34.** 새 경로의 world-1 덤프는 1,955행(슬롯 1,679, 0.455)이고 월드 본체(객체·그래프 재구성·장부 집계) 행이 없어 어느 경로도 전체 일치할 수 없다. 이 구간 65단위 중 코드를 바꾼 단위는 약 절반(33개)이고, 나머지는 기록자 추적·범위 확정·기준선 확보였다.
 
 | 묶음 | 연결한 것 (실행 호스트 world-1 덤프·집중 검사로 확인) | 단위 |
 | --- | --- | --- |
@@ -92,6 +92,7 @@ M1(34경로의 Load/Start 뒤 상태를 cpppj `session-dump`와 대조)까지의
 | 지형 저장소 | 지형 상태 묶음, 지형 전용 난수(`TerrainRandom`)·CRT 상자 묶음, 지역 상자의 세션 승격 | 0.444·0.447·0.448 |
 | 입력 결선 | 게임 보조(`TerrainEnabled`·밀도 3종)·`ownerMode.battle`·`bridgeState.mission`·전투 옵션 5·6번(`Layout`·`Spacing`)·구독자·`AiDebug` 결선과 `WorldGeyserSpacing` 표 이식 | 0.453 |
 | 바인딩 조립 | 세션 바인딩 조립(`BuildTerrainBinding`: 세션 저장소 묶음+입력 바인딩, 시작 흐름 드라이런)과 기록 효과 Generate 드라이런(일반 분기·도장·결정성) | 0.454 |
+| Generate 라이브 | Territory 실바이트·`noRegion=127`·조각 107 실제값 결선, Load.Generate 갈고리→`GenerateOriginal` 라이브 연결(실제 도장+기록 Pop). 슬롯 1,679행 출현·SID 집합 일치·비슬롯 행 무변화 확인 | 0.455 |
 | 섬 | 섬 런타임 부모 조립(`BuildIslands`: 풀·기록·모드·목록·해시 공유) | 0.452 |
 
 **조사로 확정한 것(코드 변경 없음, 잔여 지도):** Player 9기록·이름 바이트15·SP 오프셋·`+8`/`+0x78`/`0x5c~0x64`·장부 합계·AI 부착 recipe의 기록자 추적(0.408~0.431), 월드 적재(0.435)·지형/객체 효과(0.441)·Generate 진입점(0.443)·난수 출처(0.446)·생성 입력 15종(0.450)의 범위 확정, fragilefortune 2번 SP 불일치는 cpp 쪽 AI 경제 활동이라 시작값 오류가 아니라는 결론(0.451, R6 잔여). 상세는 [보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452)의 단위 기록이다.
@@ -103,8 +104,8 @@ M1(34경로의 Load/Start 뒤 상태를 cpppj `session-dump`와 대조)까지의
 **남은 조각과 순서(0.441·0.450에서 정한 분할):**
 
 1. **전체 회귀 재완주(0.4 1-1)** — 0.453에서 0.453 포함으로 완주한다.
-2. **바인딩 조립 설계 → 입력 값 연결 + Generate 드라이런.** 바인딩 조립·드라이런(0.454)은 끝났다. 남은 것은 Load.Generate 갈고리 연결과 도장 실제 효과다. `PlayerBounds`(R6)·세션 로그·`AiDebug` assertion은 이때 함께 잇는다.
-3. **Generate 라이브 연결 + 덤프 대조** — 슬롯·객체 행이 처음 나타난다. 위험: ① 풀 할당 수열이 cpp 로그인·적재 수열과 맞아야 슬롯·객체 행이 수렴한다 ② 난수 소비 순서(`NetstormRandom`·CRT)가 cpp와 같아야 한다(시드는 reseed 사슬 연계로 이때 확정한다).
+2. **바인딩 조립 설계 → 입력 값 연결 + Generate 드라이런.** ✅ 0.454에서 끝났다(조립·바인딩·드라이런, 덤프 282행 중립).
+3. **Generate 라이브 연결 + 덤프 대조** ✅ 0.455에서 1차 연결·대조: 슬롯 1,679행 출현, SID 집합·개수·SetRegion 일치, 비슬롯 행 무변화. 남은 차이: ① Pop 공간 등록(void·좌표·레벨·체인) ② 공장 생성자·vtable ③ 프레임 난수 parity(reseed 사슬) ④ 농지 121 배치·소유자 후속 지정(152셀 메커니즘 조사) ⑤ `noRegion=127`·조각 107 반영 후 dryrun 기대값 `generate:127` 갱신(의도적 결선 변경). 위험 ①(풀 수열)은 해소 — `predictable` 플래그를 그대로 풀에 전달해 예측 영역에 할당한다.
 4. **Objects 라이브 연결**(`RawFortObjectLoad` + 갈고리 약 20종, 공장 할당 parity) + 덤프 대조.
 5. **장부·그래프**(`RebuildGraph` 실몸체, totals·totalmade 연결).
 6. **기타 잔여:** brain 실생성자(현재 스텁 토큰 `0xA1000000+owner`), 요새 이미지 전송, 메뉴에서의 미션 시작(핸들 출처, 이름 꼬리 16~19 바이트 잔여), 전투섬 배정과 `+0x78` 첫 지역(1번 영점), Player 월드 풀·공간 Pop·예약 갈고리, 세션 `Bind*` 대리자의 실제 몸체 연결.
@@ -292,11 +293,11 @@ dotnetpj 작업에서는 cpppj·LEFT_JOBS.md를 수정하지 않는다. 아래 �
 - 채팅 형식·추적·본문 조합·패킷·수신·이름 자동완성(0.334~0.339), Player 식별자(0.340), 아카이브 열거 검사(0.325).
 - 재개 준비: 전체 회귀 재기준선(0.280), cpppj 영향 확인(0.281), cpppj 재반영 2건(Demo `Demoville`·Help 스크롤 화살표 색, 0.282), 고정 시각 실행·`session-dump` world 0(0.283·0.284), 전체 회귀(0.329).
 - 사전 구현(검사 없음, 3차 범위): LAN TCP/UDP 루프백(0.287), 세션 에디터 전송(0.293), 로컬 미션 Zone(0.307), 연결 활성(0.321), 전투 방송(0.324), 패킷 등록 표(0.330), 연결 등록·정리·종료(0.331~0.333).
-- **실제 호스트 조립 착수(0.390~0.454):** 미션 Fort 적재, 세션 홀더·world-1 덤프, 미션 플레이어·SP·AI·동맹, 마스크·Zone·가입·Ready, 요새 순번·이름 확정, 월드 적재 시작 흐름, 타입·프레임 채우기, 지형·난수 저장소, 섬 부모 조립, 지형 바인딩 입력 값 연결, 바인딩 조립·드라이런(묶음별 단위는 [0.4 R4 진행판](#r4-board)). 같은 구간에 오라클 갱신·L4a 메뉴 12장면(0.380~0.389)과 cpppj 영향 재검토(0.343~0.379)가 있다. 전체 회귀 재완주(0.453: 3,441건, 실패 0).
+- **실제 호스트 조립 착수(0.390~0.455):** 미션 Fort 적재, 세션 홀더·world-1 덤프, 미션 플레이어·SP·AI·동맹, 마스크·Zone·가입·Ready, 요새 순번·이름 확정, 월드 적재 시작 흐름, 타입·프레임 채우기, 지형·난수 저장소, 섬 부모 조립, 지형 바인딩 입력 값 연결, 바인딩 조립·드라이런, Generate 라이브 연결(묶음별 단위는 [0.4 R4 진행판](#r4-board)). 같은 구간에 오라클 갱신·L4a 메뉴 12장면(0.380~0.389)과 cpppj 영향 재검토(0.343~0.379)가 있다. 전체 회귀 재완주(0.453: 3,441건, 실패 0).
 
 **남은 항목:**
 
-- [ ] **실제 호스트·월드 조립:** *(0.390~0.454에 Player·SP·AI 설정·동맹·Zone·가입/Ready·이름·요새 순번과 월드 적재 11단계 순서·타입/프레임·지형/난수 저장소·섬 부모·지형 바인딩 입력 값 연결을 호스트에 연결했다. 나머지는 [0.4 R4 진행판](#r4-board)의 2~6번.)* 미션 객체, Fort reader, Guide 교체·수명, 미션 제어 입력, 공통 Start, AI 설정·생성, Guide 단계·Lifecycle은 이식과 L1 대조를 마쳤지만 검사에서는 명시 효과로만 연결돼 있다. 실제 호스트에 분배기를 설치하고 같은 Player·제한 표·메뉴·월드 효과에 연결한다(0.66·0.68·0.69·0.75~0.79). Tutorial Init의 실제 템플릿/옵션 소유자·요새 선택·상태 실행·실제 타입 조회·호스트 단계 연결(0.105~0.110), Start의 실제 Config·Player·SP·AI·Gump 효과(0.70), `PlayerParticipation`의 실제 세션 바인딩과 동맹 수신 `ReceiveAlliance`(0.74), 동맹 표의 `ClientPlayerRecords` 공유(0.341), 세션 TYPE 표의 메뉴·월드 연결(`HostEditorSelection`의 188 상수 교체, 0.327)이 남았다. 세션 대리자(`Bind*`) 묶음은 이 조립에서 실제 몸체에 연결한다.
+- [ ] **실제 호스트·월드 조립:** *(0.390~0.455에 Player·SP·AI 설정·동맹·Zone·가입/Ready·이름·요새 순번과 월드 적재 11단계 순서·타입/프레임·지형/난수 저장소·섬 부모·지형 바인딩 입력 값 연결을 호스트에 연결했다. 나머지는 [0.4 R4 진행판](#r4-board)의 2~6번.)* 미션 객체, Fort reader, Guide 교체·수명, 미션 제어 입력, 공통 Start, AI 설정·생성, Guide 단계·Lifecycle은 이식과 L1 대조를 마쳤지만 검사에서는 명시 효과로만 연결돼 있다. 실제 호스트에 분배기를 설치하고 같은 Player·제한 표·메뉴·월드 효과에 연결한다(0.66·0.68·0.69·0.75~0.79). Tutorial Init의 실제 템플릿/옵션 소유자·요새 선택·상태 실행·실제 타입 조회·호스트 단계 연결(0.105~0.110), Start의 실제 Config·Player·SP·AI·Gump 효과(0.70), `PlayerParticipation`의 실제 세션 바인딩과 동맹 수신 `ReceiveAlliance`(0.74), 동맹 표의 `ClientPlayerRecords` 공유(0.341), 세션 TYPE 표의 메뉴·월드 연결(`HostEditorSelection`의 188 상수 교체, 0.327)이 남았다. 세션 대리자(`Bind*`) 묶음은 이 조립에서 실제 몸체에 연결한다.
 - [ ] **AI 나머지:** `CrankAiMoney`·`SetAiParameter`(players·aiMemory 필요), `ResetAiForState`·`ReturnAiForState`(participation 필요), 실제 AI 몸체(`RawAiCreate.Create`의 600바이트 검사, 준비 00416eb0, 258 완료 판정 등). 11차 난이도 배율 필드(`o/AiDifficulty`)는 0.347에서 이식해 `RawAiCreate`에 재대조했다(`AiDifficultyTests`·`RawAiCreateTests` 21건). 2번 brain 생성·부착은 0.399에서 연결하고 부착 recipe는 0.412에서 확정했으며 실생성자 토큰은 스텁이다([R4 진행판](#r4-board) 6번).
 - [ ] **미뤄 둔 전수 재생:** `player-world-x86.tsv` 1680행(월드 스택 하네스 필요), 0.154에서 옮기지 않은 cpp 검사(`FortWorldLoadBindingTests`·`NormalTerrainWorldBindingTests`의 전체 월드 장면 등), 0.134~0.139에서 F3로 미룬 검사(`CampaignMissionFortPathTests`·`CampaignLoginObjectStreamTests`·`CampaignMissionReloadSourceTests`·`TemplateDiagnosticClientTests` 일부·`SoloMapCatalogTests`의 Tell 메타 1종·`CampaignNewFortTests`·`CampaignNewFortConfigTests`). 가상 분배 진입(`PostPopVirtual`)의 나머지 파생 분기.
 - [ ] **M1 판정:** 34경로의 Load/Start 뒤 상태를 cpppj `session-dump`와 대조한다(L2). cpp 기준선은 4경로(thewarbegins 0.390·masterofwhirligigs 0.433·savetheisland 0.445·fragilefortune 0.449)를 확보했고 새 경로가 일치한 경로는 아직 0개다. 나머지 30경로의 기준선은 월드 행이 나온 뒤 만든다([R4 진행판](#r4-board)).
@@ -529,7 +530,17 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 
 문서가 없는 작은 단위만 아래에 최신순으로 짧게 적는다. 한 기록에는 범위, 구현(새 파일·수정 파일·옮긴 cpppj 파일과 기준 커밋), C#에서 달라진 모양, 검증(집중·전체·변이·L2/L4a 비교), PORT_MAP·fixture 변화, 함께 옮긴 10차 NB 수정, 보호·실행·외부 접속 관점, 남은 것을 적는다([3.1](#verify-levels)). 0.11~0.452는 보관 파일에 있다: [0.11~0.65](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073) · [0.66~0.126](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126) · [0.127~0.153](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154) · [0.154~0.279](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279) · [0.280~0.341](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341) · [0.342~0.452](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452). 묶음별 요약은 [7.1](#dotnet-done-index)과 [0.4 R4 진행판](#r4-board)에 있다.
 
-(다음 단위 0.455부터 이 절에 적는다)
+(다음 단위 0.456부터 이 절에 적는다)
+
+#### 0.455 — Generate 라이브 연결과 첫 덤프 대조 (2026-11-12, HJOW-Athlon)
+
+- 범위: 0.4 순서 2(R4 실제 호스트·월드 조립)의 예순두 번째 단위. Load.Generate 갈고리→`GenerateOriginal` 라이브 연결과 world-1 덤프 첫 대조를 한다. 공간 Pop·군집 배치·공장 생성자는 다음 단위다.
+- 구현: `RawGameAuxState.PuzzlePieceType=107` 추가(근거 cpppj `RawCampaignSession.cpp` 621~622행 `localPiece`). `HostSession`에 세션 소유 `TerrainBookkeeping`+`BuildTerrainStampHooks`(실제 Create·SetOwner·SetRegion·ChunkRegion, Pop은 공간 등록 미연결로 기록만, 근거 `RawTerrainWorldBinding.cpp` 8~22행) 추가. `BuildWorldLoad`의 조각·지역없음 stub(`() => 0u`·`() => 0`)을 세션 실제값(`GameAux.PuzzlePieceType`·`TerrainGlobals.NoRegion`, 근거 cpppj 621·628행)으로 교체. `ClientHostGame.StartMission`에 Territory 실바이트·진단 결선·Generate 라이브 어댑터 연결(농지 place는 기록만, 섬 0개라 호출 없음). dryrun 기대값 `generate:0`→`generate:127` 갱신(의도적 실제값 결선 변경, 근사 수정 아님). 신규 검사 `HostTerrainBindingTests.GenerateLiveWritesTerrainSlotsDeterministically`(실슬롯 바이트·진단 무발화·결정성).
+- C# 모양 차이: 원문의 공장 Create·소유자 분배·지역 지정을 세션 소유 풀·장부·타입 표로 직접 잇는다. Pop 공간 등록은 잇지 않는다.
+- 검증: 깨끗한 전체 리빌드(경고 0·오류 0) 뒤 Client 전체 1,134건+Core 지형 52건 통과(실패 0, NETSTORM_DATA 지정). 생성 타입 바이트 제거 변이에서 신규 검사 1건 실패로 검출력을 확인한 뒤 원복하고 다시 통과했다. 게임 실행 있음(예외 PC): `--mission thewarbegins --handle Youpson` 260프레임 실행(종료 코드 0)으로 덤프가 282→1,955행이 됐다(슬롯 1,679행 출현). cpp 기준선(f090, 4,174행)과 대조: ① SID 집합 완전 일치(내 것만 0개, 기준선만 262개=서버 186+저수준 76=Objects 잔여) ② 지형 개수 일치(1,673 양쪽) ③ SetRegion WORD 일치 ④ 비슬롯 행(플레이어·동맹·SP·그래프 239/255) 무변화. 남은 차이: Pop(void·좌표·레벨·체인), 공장 생성자·vtable, 프레임 난수 parity, 농지 121 152셀·소유자 후속 지정 메커니즘(0.456 조사), 그래프 16행(RebuildGraph 잔여). `originals/` 변경 없음, 추적 `assets/game-data/d/options.cfg`는 `--set` 저장분만 바뀌어 되돌렸다.
+- PORT_MAP, fixture 변화 없음(대응행 추가 없음). 함께 옮긴 10차 NB 수정 없음. 외부 접속 목록 변경 없음.
+- 보호: originals, originalCD, AGENTS.md, README 개요, cpppj, LEFT_JOBS.md 미수정. 사제 포획/희생·특정 적 공격·시나리오 승리 재현 검사는 건너뛰었다.
+- 남은 것: Pop 공간 등록·농지 배치·공장 생성자 라이브 연결, Objects·장부·그래프 라이브 연결, brain 실생성자·요새 이미지·메뉴 미션 시작, 34경로 L2 대조(M1, 4/34).
 
 #### 0.454 — 지형 바인딩 조립과 드라이런 (2026-11-12, HJOW-Athlon)
 

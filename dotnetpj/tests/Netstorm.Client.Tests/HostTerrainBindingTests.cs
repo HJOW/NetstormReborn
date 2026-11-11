@@ -37,6 +37,20 @@ public sealed class HostTerrainBindingTests
         Assertion = _ => { },
     };
 
+    /// <summary>발화 내역을 남기는 진단 묶음을 만든다. 생성 진입의 필수 Context를 만족한다.</summary>
+    private static (NormalTerrainDiagnostics Diagnostics, List<string> Fired) JournalDiagnostics()
+    {
+        var fired = new List<string>();
+        return (new NormalTerrainDiagnostics
+        {
+            Context = reason => fired.Add($"context:{reason}"),
+            Stamp = reason => fired.Add($"stamp:{reason}"),
+            Region = reason => fired.Add($"region:{reason}"),
+            Farm = reason => fired.Add($"farm:{reason}"),
+            Postpass = reason => fired.Add($"postpass:{reason}"),
+        }, fired);
+    }
+
     /// <summary>세션 저장소로 바인딩을 조립하고 입력을 묶어 같은 상자를 공유하는지 확인한다.</summary>
     [Fact]
     public void BuildsBindingAndBindsSessionInputs()
@@ -124,5 +138,53 @@ public sealed class HostTerrainBindingTests
         Assert.NotEqual(0, firstCreates);
         Assert.Equal(firstSid, secondSid);
         Assert.Equal(firstCreates, secondCreates);
+    }
+
+    /// <summary>같은 입력의 라이브 생성을 두 번 돌려 슬롯 수·마지막 번호를 모은다.</summary>
+    private static (int Sid, int Slots) RunLiveOnce()
+    {
+        var (session, types) = LoadRealBindingScene();
+        session.World.At(2, 2).Island = 0;
+        session.World.At(2, 2).Side = (sbyte)'A';
+        session.World.At(2, 2).Record = [3, 1, 0, 7, 0, 0];
+        // 시작 흐름과 같은 진단 결선을 둔다. 발화는 다음에서 확인한다.
+        var (diagnostics, fired) = JournalDiagnostics();
+        session.TerrainDiagnostics.Context = diagnostics.Context;
+        session.TerrainDiagnostics.Stamp = diagnostics.Stamp;
+        session.TerrainDiagnostics.Region = diagnostics.Region;
+        var binding = session.BuildTerrainBinding(types, session.TerrainDiagnostics, RecordingIslandHooks());
+        var places = new List<(FortRandomRectangle Area, int Region, uint Count)>();
+        int sid = binding.GenerateOriginal(1u, new ChunkRect(1, 1, 5, 5), 127, new NetstormRandom(1u), new UIntBox { Value = 1u }, session.BuildTerrainStampHooks(types), (area, region, count) => places.Add((area, region, count)));
+        // 진단을 울리지 않아야 한다.
+        Assert.Empty(fired);
+        int slots = 0;
+        bool ground = false;
+        // 일반 번호부터 빈 칸을 건너뛰고 실제 슬롯을 읽는 반복문이다.
+        for (int each = RawSidPool.FirstOrdinary; each < session.Pool.Capacity; ++each)
+        {
+            ReadOnlySpan<byte> raw = session.Pool.Slot(each);
+            if ((raw[RawSidPool.StateOffset] & RawSidPool.FreeBit) != 0) continue;
+            // 지면(97)·장식(102) 타입에 0번 소유자·0번 지역을 둔다.
+            Assert.True(raw[RawSidPool.TypeOffset] is 97 or 102);
+            Assert.Equal(0, raw[0x22]);
+            Assert.Equal(0, raw[8] | (raw[9] << 8));
+            if (raw[RawSidPool.TypeOffset] == 97) ground = true;
+            ++slots;
+        }
+
+        Assert.True(ground);
+        return (sid, slots);
+    }
+
+    /// <summary>라이브 도장 효과가 실제 슬롯 바이트를 쓰고 같은 입력에 같은 결과를 내는지 확인한다.</summary>
+    [Fact]
+    public void GenerateLiveWritesTerrainSlotsDeterministically()
+    {
+        (int firstSid, int firstSlots) = RunLiveOnce();
+        (int secondSid, int secondSlots) = RunLiveOnce();
+        Assert.NotEqual(0, firstSid);
+        Assert.NotEqual(0, firstSlots);
+        Assert.Equal(firstSid, secondSid);
+        Assert.Equal(firstSlots, secondSlots);
     }
 }

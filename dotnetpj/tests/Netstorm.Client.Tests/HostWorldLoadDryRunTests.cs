@@ -100,7 +100,7 @@ public sealed class HostWorldLoadDryRunTests
             $"owner:{sid}:1",
             $"pop:{sid}",
             "territory:2",
-            "generate:0",
+            "generate:127",
             "template:2",
             "objects:2",
             "graph:False",

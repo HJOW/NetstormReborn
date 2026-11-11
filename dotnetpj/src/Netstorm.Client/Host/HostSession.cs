@@ -653,6 +653,10 @@ public sealed class HostSession
     /// <remarks>2026-11-12 0.454에서 지형 바인딩 드라이런 조립용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1829행 normal 바인딩의 farm.</remarks>
     public FarmClusterState TerrainFarm { get; } = new();
 
+    /// <summary>세션이 소유한 지형 생성 장부다. SetOwner의 소유자별 작업장 목록을 둔다. 장부 집계 연결은 다음 단위다.</summary>
+    /// <remarks>2026-11-12 0.455에서 Generate 라이브 연결용으로 추가했다. Pop 장부·그래프·집계(totals·totalmade) 연결은 다음 단위다.</remarks>
+    public RawPostPopState TerrainBookkeeping { get; } = new();
+
     /// <summary>세션 저장소를 묶은 지형 바인딩이다. 만들기 전까지 null이다.</summary>
     /// <remarks>2026-11-12 0.454에서 지형 바인딩 드라이런 조립용으로 추가했다. Generate 호출 연결은 다음 단위다.</remarks>
     public RawNormalTerrainWorldBinding? TerrainBinding { get; private set; }
@@ -675,9 +679,39 @@ public sealed class HostSession
         var binding = new RawNormalTerrainWorldBinding(
             World, BuildIslands(islandHooks), TerrainGlobals, PlacementState, StampState,
             types, Pool, PuzzlePieceBox, WorldFrames, diagnostics);
+        PuzzlePieceBox.Value = GameAux.PuzzlePieceType;
         binding.BindGenerationInputs(TerrainFarm, BuildTerrainGenerationInputs());
         TerrainBinding = binding;
         return binding;
+    }
+
+    /// <summary>세션 풀·소유자·지역으로 도장 실제 효과를 묶는다. Pop의 공간 등록은 다음 단위다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. SetOwner·SetRegion이 읽는다.</param>
+    /// <returns>세션 저장소를 공유하는 도장 효과다.</returns>
+    /// <remarks>2026-11-12 0.455에서 Generate 라이브 연결용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1829행 normal 바인딩의 world 효과.
+    /// Pop은 공간 등록(spots·해시·장부·표시)이 없어 기록만 하며, 슬롯은 void 비트·좌표 없이 남는다(덤프 차이로 기록한다).
+    /// 군집 배치(place) 효과는 Load 갈고리에서 잇는다.</remarks>
+    public TerrainStampHooks BuildTerrainStampHooks(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        var owner = new SquidOwner(Pool, types, TerrainBookkeeping, OwnerMode);
+        return new TerrainStampHooks
+        {
+            Create = (type, predictable) =>
+            {
+                // 원문 공장처럼 두 번째 인자를 풀 할당 flags로 쓴다. 지형은 1(예측 영역 23002~)이다.
+                int sid = Pool.Allocate(predictable != 0 ? SidAllocation.Predictable : SidAllocation.Client);
+                Span<byte> raw = Pool.AllocatedBytes(sid);
+                raw.Clear();
+                raw[RawSidPool.TypeOffset] = unchecked((byte)type);
+                return sid;
+            },
+            SetOwner = owner.Set,
+            Pop = (_, _, _, _) => { },
+            SetRegion = (sid, region) => RawSquidRegion.SetSquidRegion(Pool, types, sid, unchecked((uint)region), unchecked((uint)TerrainGlobals.NoRegion), TerrainDiagnostics.Region),
+            ChunkRegion = (x, y) => unchecked((sbyte)World.At(x, y).Island),
+            Assertion = TerrainDiagnostics.Stamp,
+        };
     }
 
     /// <summary>빈 프레임 표 188개를 만든다. 검사 하네스의 LoadScene과 같은 공유 빈 표다.</summary>
@@ -760,7 +794,7 @@ public sealed class HostSession
     /// <param name="loadHooks">적재 본체의 번역·설정·생성·카메라 효과다.</param>
     /// <returns>세션 풀·기록·핸들을 공유하는 적재 부모다.</returns>
     /// <remarks>2026-11-12 0.437에서 월드 적재 드라이런용으로 추가했다. 덤프·시작 흐름 연결 없이 호출 순서만 기록한다.
-    /// 로컬 소유자는 세션 TemplateOwner를 읽으며, puzzlePiece·지역없음 읽기는 실제 값 경로 단위에서 잇는다.</remarks>
+    /// 로컬 소유자는 세션 TemplateOwner를 읽으며, puzzlePiece·지역없음은 세션 장기 전역에서 잇는다(0.455).</remarks>
     public RawCampaignWorldLoad BuildWorldLoad(
         IslandRuntimeHooks islandHooks,
         FortWorldLoadHooks territoryHooks,
@@ -781,10 +815,10 @@ public sealed class HostSession
         var player = new RawPlayerWorld(Pool, inner, PlayerRecords, MissionPlayer, playerHooks);
         var territory = new RawFortWorldLoad(
             Pool, World, islands, WorldFrames,
-            () => 0u, () => MissionPlayer.TemplateOwner, () => 0,
+            () => GameAux.PuzzlePieceType, () => MissionPlayer.TemplateOwner, () => TerrainGlobals.NoRegion,
             () => _worldLoadingDepth, value => _worldLoadingDepth = value, territoryHooks);
         return new RawCampaignWorldLoad(
-            World, islands, WorldFrames, () => 0u, () => 0, territory, player,
+            World, islands, WorldFrames, () => GameAux.PuzzlePieceType, () => TerrainGlobals.NoRegion, territory, player,
             WorldGlobals, WorldTemplates, HandleBuffer, loadHooks);
     }
 

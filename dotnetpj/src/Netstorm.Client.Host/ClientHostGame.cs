@@ -295,14 +295,15 @@ public sealed class ClientHostGame : Game
         Array.Copy(encoded, 0, translated, 0, encoded.Length);
         session.FillHandleName(translated);
         session.WriteBattleName();
-        // 월드 적재를 세션 공유 저장소로 실행한다. 번역·설정은 실제로 연결하고 나머지는 기록 갈고리로 둔다.
-        // 화신·공간·지형·객체·장부·카메라 실제 효과는 월드 조립 단위에서 잇는다.
+        // 월드 적재를 세션 공유 저장소로 실행한다. 번역·설정·지형 생성은 실제로 연결하고 나머지는 기록 갈고리로 둔다.
+        // 화신 할당은 연결했고 공간·객체·장부·카메라 실제 효과는 월드 조립 단위에서 잇는다.
         int avatarSid = session.Pool.Allocate(Netstorm.Core.Simulation.SidAllocation.Client);
         IReadOnlyList<RiftTypeDefinition> worldDefinitions = MissionFortLoad.LoadTypeDefinitions(_startup.Files);
         session.FillWorldFrames(worldDefinitions);
-        // 지형 바인딩 드라이런 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 덤프에 영향을 주지 않는다.
-        // Load.Generate 갈고리·도장 실제 효과 연결은 다음 단위다.
-        session.BuildTerrainBinding(types.Types, new NormalTerrainDiagnostics(), new IslandRuntimeHooks
+        // 지형 바인딩 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 진단 저널 연결은 7차 로그 배선 단위에서 잇는다.
+        session.TerrainDiagnostics.Context = _ => { };
+        session.TerrainDiagnostics.Stamp = _ => { };
+        var terrainBinding = session.BuildTerrainBinding(types.Types, session.TerrainDiagnostics, new IslandRuntimeHooks
         {
             SetResidenceOwner = (_, _) => throw new InvalidOperationException("시작 흐름은 Residence owner를 요청하지 않는다"),
             Assertion = _ => throw new InvalidOperationException("시작 흐름의 Runtime 진단은 원본 분류와 불일치한다"),
@@ -320,8 +321,10 @@ public sealed class ClientHostGame : Game
                 Territory = slot =>
                 {
                     worldOrder.Add($"territory:{slot}");
+                    // 실제 요새 Territory 120바이트를 읽는다. 섹션이 없으면 누락으로 거부한다.
+                    byte[] raw = fort.Fort.Territory;
                     var stream = new FortTerritoryStream();
-                    stream.Set(new byte[120], 0u, 120u);
+                    stream.Set(raw, 0u, (uint)raw.Length);
                     return stream;
                 },
                 CurrentTemplate = _ => fort.Fort,
@@ -362,7 +365,12 @@ public sealed class ClientHostGame : Game
                 SetConfig = HostSession.BuildSetConfigHook(_startup.Configuration),
                 RefreshWindowTitle = () => worldOrder.Add("title"),
                 BuilderAssertion = assertion => worldOrder.Add($"builderDiag:{assertion}"),
-                Generate = (_, region) => worldOrder.Add($"generate:{region}"),
+                Generate = (state, region) =>
+                {
+                    worldOrder.Add($"generate:{region}");
+                    // 실제 지형 생성 라이브 연결. 공간 Pop·군집 배치는 다음 단위다.
+                    terrainBinding.GenerateOriginal(state.Owner, state.Bounds, region, session.TerrainRandom, session.TerrainCrt, session.BuildTerrainStampHooks(types.Types), (_, _, _) => { });
+                },
                 CurrentTemplate = slot =>
                 {
                     worldOrder.Add($"template:{slot}");
