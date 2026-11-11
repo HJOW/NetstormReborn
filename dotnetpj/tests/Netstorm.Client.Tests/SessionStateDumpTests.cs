@@ -104,7 +104,8 @@ public sealed class SessionStateDumpTests
         Assert.Equal(HostSession.MissionPoolCapacity, session.Pool.Capacity);
         string PoolText() => SessionStateDump.FormatWorld1(
             "originals", 90, 4622156887561024307, session.Game.State(), session.Crt.State(),
-            session.Kernel.Size(), session.Kernel.Capacity(), null, session.DumpPool());
+            session.Kernel.Size(), session.Kernel.Capacity(), null, session.DumpPool(),
+            session.DumpPlayers(), session.DumpSp(), session.DumpGraph(), session.DumpTotals(), session.DumpTotalMade());
         string zeros100 = new('0', 100);
         string zeros60 = new('0', 60);
         string zeros76 = new('0', 76);
@@ -124,6 +125,17 @@ public sealed class SessionStateDumpTests
         for (uint sid = 2; sid < 5; sid++)
             expected.Append("slot\t").Append(sid).Append('\t')
                 .Append(new string('0', 22)).Append("01").Append(zeros76).Append('\n');
+        // 빈 세션의 Player 9기록·숨김·동맹은 0이다.
+        for (int index = 0; index < 9; index++)
+            expected.Append("player\t").Append(index).Append('\t').Append(new string('0', 360)).Append('\n');
+        expected.Append("hidden_players\t").Append(new string('0', 18)).Append('\n');
+        expected.Append("alliances").Append(string.Concat(Enumerable.Repeat("\t0", 81))).Append('\n');
+        // 미초기화 SP는 대시 9칸이다.
+        expected.Append("sp\t0\t0").Append(string.Concat(Enumerable.Repeat("\t-", 9))).Append('\n');
+        // 적재 전 Graph 표 255칸과 장부는 0이다.
+        for (int index = 0; index < 255; index++)
+            expected.Append("graph\t").Append(index).Append("\t0\t0\t0\n");
+        expected.Append("totals\t0\t0\t0\n");
         expected.Append("end\n");
         Assert.Equal(expected.ToString(), PoolText());
         // 클라이언트 영역 첫 번호를 쓰면 슬롯 행이 생기고, 반납하면 다시 빠진다.
@@ -134,6 +146,72 @@ public sealed class SessionStateDumpTests
         Assert.Contains(slot5, taken, StringComparison.Ordinal);
         session.Pool.Release(sid5);
         Assert.DoesNotContain("slot\t5\t", PoolText(), StringComparison.Ordinal);
+    }
+
+    /// <summary>분산 SP 복호가 원본 비트 순서와 같다.</summary>
+    [Fact]
+    public void DecodesScrambledSpLikeNative()
+    {
+        var pools = new uint[32 * 9];
+        var permutation = new short[32];
+        // 항등 순열을 순서대로 둔다.
+        for (int index = 0; index < 32; index++) permutation[index] = (short)index;
+        // 소유자 3의 0·5·31번째 비트를 해당 배열 칸에 둔다.
+        pools[0 * 9 + 3] |= 1u << 0;
+        pools[5 * 9 + 3] |= 1u << 5;
+        pools[31 * 9 + 3] |= 1u << 31;
+        Assert.Equal(1u | (1u << 5) | (1u << 31), SessionStateDump.DecodeScrambledSp(pools, permutation, 0, 3));
+        // 다른 소유자는 읽지 않는다.
+        Assert.Equal(0u, SessionStateDump.DecodeScrambledSp(pools, permutation, 0, 4));
+        // 어긋난 입력은 거부한다.
+        Assert.Throws<ArgumentException>(() => SessionStateDump.DecodeScrambledSp(new uint[10], permutation, 0, 0));
+        Assert.Throws<ArgumentException>(() => SessionStateDump.DecodeScrambledSp(pools, new short[10], 0, 0));
+        Assert.Throws<ArgumentException>(() => SessionStateDump.DecodeScrambledSp(pools, permutation, 0, 9));
+        var badPermutation = (short[])permutation.Clone();
+        badPermutation[7] = 40;
+        Assert.Throws<ArgumentOutOfRangeException>(() => SessionStateDump.DecodeScrambledSp(pools, badPermutation, 0, 0));
+    }
+
+    /// <summary>0이 아닌 저장소 값이 덤프 행으로 나온다.</summary>
+    [Fact]
+    public void FormatsNonzeroSessionStores()
+    {
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        session.PlayerRecords[0] = 0xAB;
+        session.HiddenPlayers[2] = 7;
+        session.Alliances[0] = 7;
+        session.Alliances[80] = 1;
+        session.TotalMade.LocalCounts[5] = 3;
+        session.TotalMade.LocalSecondaryCounts[5] = 4;
+        session.TotalMade.GlobalCounts[70] = 9;
+        session.TotalCost = -12;
+        string text = SessionStateDump.FormatWorld1(
+            "originals", 1, 0, 0, 0, 0, 39999, null, session.DumpPool(),
+            session.DumpPlayers(), session.DumpSp(), session.DumpGraph(), session.DumpTotals(), session.DumpTotalMade());
+        Assert.Contains("\nplayer\t0\tab", text, StringComparison.Ordinal);
+        Assert.Contains("\nhidden_players\t000007000000000000\n", text, StringComparison.Ordinal);
+        Assert.Contains("\nalliances\t7", text, StringComparison.Ordinal);
+        Assert.Contains("\ntotalmade\t5\t3\t4\t0\n", text, StringComparison.Ordinal);
+        Assert.Contains("\ntotalmade\t70\t0\t0\t9\n", text, StringComparison.Ordinal);
+        Assert.Contains("\ntotals\t-12\t0\t0\n", text, StringComparison.Ordinal);
+    }
+
+    /// <summary>초기화한 SP 저장소는 소유자별 복호 값을 행에 쓴다.</summary>
+    [Fact]
+    public void FormatsInitializedSpRow()
+    {
+        var pools = new uint[32 * 9];
+        var permutation = new short[32];
+        // 항등 순열을 순서대로 둔다.
+        for (int index = 0; index < 32; index++) permutation[index] = (short)index;
+        // 소유자 1의 2번째 비트를 해당 배열 칸에 둔다(비트 위치 (7+2)&31).
+        pools[2 * 9 + 1] |= 1u << 9;
+        var sp = new SessionDumpSp(true, 7, pools, permutation);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        string text = SessionStateDump.FormatWorld1(
+            "originals", 1, 0, 0, 0, 0, 39999, null, session.DumpPool(),
+            session.DumpPlayers(), sp, session.DumpGraph(), session.DumpTotals(), session.DumpTotalMade());
+        Assert.Contains("\nsp\t1\t7\t0\t4\t0\t0\t0\t0\t0\t0\t0\n", text, StringComparison.Ordinal);
     }
 
     /// <summary>세션을 연결하면 world 1 파일을 쓰고 끊으면 world 0으로 돌아간다.</summary>

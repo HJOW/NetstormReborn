@@ -91,7 +91,8 @@ public sealed class HostSessionDump
         }
         string world1 = SessionStateDump.FormatWorld1(
             _edition, _frame(), _gameTimeBits(), _session.Game.State(), _session.Crt.State(),
-            _session.Kernel.Size(), _session.Kernel.Capacity(), processes, _session.DumpPool());
+            _session.Kernel.Size(), _session.Kernel.Capacity(), processes, _session.DumpPool(),
+            _session.DumpPlayers(), _session.DumpSp(), _session.DumpGraph(), _session.DumpTotals(), _session.DumpTotalMade());
         // cpppj 덤프와 같은 ASCII·LF 바이트로 쓴다.
         File.WriteAllText(path, world1, new System.Text.ASCIIEncoding());
     }

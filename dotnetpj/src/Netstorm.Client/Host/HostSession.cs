@@ -1,14 +1,21 @@
 using Netstorm.Client.Automation;
 using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
 
 namespace Netstorm.Client.Host;
 
-// 미션 세션의 호스트 소유자다. Kernel·난수는 빌리고 풀은 소유한다.
+// 미션 세션의 호스트 소유자다. Kernel·난수는 빌리고 저장소는 소유한다.
 public sealed class HostSession
 {
     /// <summary>미션 풀 슬롯 수다. L2 thewarbegins 기준선 덤프의 pool 행과 같은 값이다.</summary>
     /// <remarks>2026-11-12 0.392에서 world 1 덤프의 첫 관문으로 고정했다. 미션별 가변은 월드 조립에서 잇는다.</remarks>
     public const int MissionPoolCapacity = 32768;
+
+    /// <summary>Player 기록 바이트 수다(9기록×180바이트, cpppj kPlayerBytes).</summary>
+    public const int PlayerRecordBytes = 9 * 180;
+
+    /// <summary>동맹 표 DWORD 수다(9×9).</summary>
+    public const int AllianceDwords = 9 * 9;
 
     /// <summary>덤프와 세션이 함께 읽는 현재 Kernel이다. 호출자가 소유한다.</summary>
     public Kernel Kernel { get; }
@@ -22,7 +29,37 @@ public sealed class HostSession
     /// <summary>세션이 소유한 오브젝트 풀이다. 싱글 플레이는 로컬이 서버다.</summary>
     public RawSidPool Pool { get; }
 
-    /// <summary>같은 Kernel·난수를 빌리고 풀을 새로 만든다.</summary>
+    /// <summary>세션이 소유한 Player 9기록 원문이다. Start 순서에서 RawPlayerParticipation과 같은 버퍼를 쓴다.</summary>
+    public byte[] PlayerRecords { get; } = new byte[PlayerRecordBytes];
+
+    /// <summary>세션이 소유한 Chat 숨김 9바이트다. Start 순서에서 같은 버퍼를 쓴다.</summary>
+    public byte[] HiddenPlayers { get; } = new byte[9];
+
+    /// <summary>세션이 소유한 동맹 81 DWORD다. Start 순서에서 같은 버퍼를 쓴다.</summary>
+    public uint[] Alliances { get; } = new uint[AllianceDwords];
+
+    /// <summary>SP 저장소가 쓰는 전역 난수다. Start 순서에서 실제 난수에 연결한다.</summary>
+    private readonly NetstormRandom _spRandom = new();
+
+    /// <summary>세션이 소유한 분산 SP 저장소다. 초기화 전에는 덤프에 대시를 쓴다.</summary>
+    public RawSpStore Sp { get; }
+
+    /// <summary>세션이 소유한 Graph 표다. 월드 적재의 ResetTable로 초기화한다.</summary>
+    public RawGraphStorage Graph { get; } = new();
+
+    /// <summary>세션이 소유한 TotalMade 세 표다.</summary>
+    public RawTotalMadeStorage TotalMade { get; } = new();
+
+    /// <summary>장부의 총 비용이다. 월드 장부(포스트팝) 연결 전까지 0이다.</summary>
+    public int TotalCost { get; set; }
+
+    /// <summary>장부의 postPop 깊이다. 월드 장부 연결 전까지 0이다.</summary>
+    public uint PostPopDepth { get; set; }
+
+    /// <summary>장부의 생산 재계산 알림이다. 월드 장부 연결 전까지 0이다.</summary>
+    public uint ProductionDirty { get; set; }
+
+    /// <summary>같은 Kernel·난수를 빌리고 저장소를 새로 만든다.</summary>
     /// <param name="kernel">현재 Kernel.</param>
     /// <param name="game">게임 난수.</param>
     /// <param name="crt">CRT 난수.</param>
@@ -36,7 +73,33 @@ public sealed class HostSession
         Game = game;
         Crt = crt;
         Pool = new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity);
+        Sp = new RawSpStore(_spRandom, null);
     }
+
+    /// <summary>덤프용 Player 관측을 만든다. Start 순서 전까지 0이다.</summary>
+    public SessionDumpPlayers DumpPlayers() =>
+        new((byte[])PlayerRecords.Clone(), (byte[])HiddenPlayers.Clone(), (uint[])Alliances.Clone());
+
+    /// <summary>덤프용 SP 관측을 만든다. 초기화 전에는 대시 9칸으로 나간다.</summary>
+    public SessionDumpSp DumpSp() =>
+        new(Sp.Initialized, Sp.Offset, Sp.Pools.ToArray(), Sp.Permutation.ToArray());
+
+    /// <summary>덤프용 Graph 표 관측을 만든다. 월드 적재 ResetTable 전까지 0이다.</summary>
+    public IReadOnlyList<SessionDumpGraphRow> DumpGraph()
+    {
+        var rows = new SessionDumpGraphRow[Graph.Records.Length];
+        // 표 전체를 순서대로 복사한다.
+        for (int index = 0; index < rows.Length; index++)
+            rows[index] = new(Graph.Records[index].Surfaces, Graph.Records[index].InUse, Graph.Records[index].Reserved);
+        return rows;
+    }
+
+    /// <summary>덤프용 장부 관측을 만든다. 월드 장부 연결 전까지 0이다.</summary>
+    public SessionDumpTotals DumpTotals() => new(TotalCost, PostPopDepth, ProductionDirty);
+
+    /// <summary>덤프용 TotalMade 관측을 만든다. 집계 전까지 빈 표다.</summary>
+    public SessionDumpTotalMade DumpTotalMade() =>
+        new((uint[])TotalMade.LocalCounts.Clone(), (uint[])TotalMade.LocalSecondaryCounts.Clone(), (uint[])TotalMade.GlobalCounts.Clone());
 
     /// <summary>덤프용 풀 관측을 만든다. 예약 0~4번과 사용 중 슬롯만 담고 빈 칸은 제외한다.</summary>
     /// <returns>풀 행·슬롯 행에 쓰는 관측.</returns>
