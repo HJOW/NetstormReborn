@@ -294,6 +294,78 @@ public sealed class ClientHostGame : Game
         Array.Copy(encoded, 0, translated, 0, encoded.Length);
         session.FillHandleName(translated);
         session.WriteBattleName();
+        // 월드 적재를 세션 공유 저장소로 실행한다. 번역·설정은 실제로 연결하고 나머지는 기록 갈고리로 둔다.
+        // 화신·공간·지형·객체·장부·카메라 실제 효과는 월드 조립 단위에서 잇는다.
+        int avatarSid = session.Pool.Allocate(Netstorm.Core.Simulation.SidAllocation.Client);
+        var worldTypes = new OriginalTypeRecord[OriginalConstructors.TypeCount];
+        // 쓰지 않는 번호도 슬롯 검사의 범위 안에 들어야 한다.
+        for (int index = 0; index < worldTypes.Length; ++index) worldTypes[index] = new OriginalTypeRecord();
+        var worldOrder = new List<string>();
+        RawCampaignWorldLoad worldLoad = session.BuildWorldLoad(
+            new IslandRuntimeHooks
+            {
+                SetResidenceOwner = (_, _) => throw new InvalidOperationException("시작 흐름은 Residence owner를 요청하지 않는다"),
+                Assertion = _ => throw new InvalidOperationException("시작 흐름의 Runtime 진단은 원본 분류와 불일치한다"),
+            },
+            new FortWorldLoadHooks
+            {
+                TemplatePresent = _ => true,
+                Territory = slot =>
+                {
+                    worldOrder.Add($"territory:{slot}");
+                    var stream = new FortTerritoryStream();
+                    stream.Set(new byte[120], 0u, 120u);
+                    return stream;
+                },
+                CurrentTemplate = _ => fort.Fort,
+                Assertion = _ => throw new InvalidOperationException("시작 흐름의 Territory 진단은 원본 분류와 불일치한다"),
+                LoadingDepthChanged = _ => throw new InvalidOperationException("시작 흐름은 깊이 효과를 요청하지 않는다"),
+                BuilderAssertion = _ => throw new InvalidOperationException("시작 흐름의 빌더 진단은 원본 분류와 불일치한다"),
+                Generate = (_, _) => { },
+                Objects = (_, _) => { },
+                Money = (_, _) => { },
+                Badges = (_, _) => { },
+                Technology = (_, _) => { },
+                PopulateIsland = (_, _) => { },
+                RebuildGraph = _ => { },
+            },
+            worldTypes,
+            new PlayerWorldHooks
+            {
+                Find = (_, _, _) =>
+                {
+                    worldOrder.Add("find");
+                    return 0;
+                },
+                Create = (type, flags) =>
+                {
+                    worldOrder.Add($"create:{type}:{flags}");
+                    return avatarSid;
+                },
+                SetOwner = (slot, owner) => worldOrder.Add($"owner:{slot}:{owner}"),
+                Pop = (slot, _, _, _) => worldOrder.Add($"pop:{slot}"),
+            },
+            new CampaignWorldLoadHooks
+            {
+                TranslateYou = () =>
+                {
+                    worldOrder.Add("translate");
+                    return translated;
+                },
+                SetConfig = HostSession.BuildSetConfigHook(_startup.Configuration),
+                RefreshWindowTitle = () => worldOrder.Add("title"),
+                BuilderAssertion = assertion => worldOrder.Add($"builderDiag:{assertion}"),
+                Generate = (_, region) => worldOrder.Add($"generate:{region}"),
+                CurrentTemplate = slot =>
+                {
+                    worldOrder.Add($"template:{slot}");
+                    return fort.Fort;
+                },
+                Objects = (_, slot) => worldOrder.Add($"objects:{slot}"),
+                RebuildGraph = graph => worldOrder.Add($"graph:{graph}"),
+                ResetCamera = () => worldOrder.Add("camera"),
+            });
+        worldLoad.Load();
         _missionSession = session;
         return session;
     }
