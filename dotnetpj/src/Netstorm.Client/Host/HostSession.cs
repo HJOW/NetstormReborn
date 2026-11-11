@@ -4,6 +4,16 @@ using Netstorm.Core.Simulation;
 
 namespace Netstorm.Client.Host;
 
+// 참가자 가입의 실제 외부 효과 경계다. 2026-11-12 R4 실제 호스트·월드 조립(0.403)에서 추가됐다.
+public sealed class PlayerJoinHooks
+{
+    /// <summary>로컬이 아닌 소유자의 접속 주소를 읽는다. 2026-11-12 R4 실제 호스트·월드 조립(0.403)에서 추가됐다.</summary>
+    public Func<uint, string>? PeerAddress { get; set; }
+
+    /// <summary>가입·재전송 대상에게 Player 기록을 보낸다. 2026-11-12 R4 실제 호스트·월드 조립(0.403)에서 추가됐다.</summary>
+    public Action<uint, uint>? SendPlayer { get; set; }
+}
+
 // 미션 세션의 호스트 소유자다. Kernel·난수는 빌리고 저장소는 소유한다.
 public sealed class HostSession
 {
@@ -200,6 +210,18 @@ public sealed class HostSession
     /// <summary>Player 기록의 동맹 마스크 오프셋이다. RawPlayerParticipation과 같은 0x54다.</summary>
     private const int PlayerAlliesOffset = 0x54;
 
+    /// <summary>Player 기록의 구독자 DWORD 오프셋이다. RawPlayerParticipation과 같은 0x2c다.</summary>
+    private const int PlayerSubscriberOffset = 0x2c;
+
+    /// <summary>Player 기록의 참여 flags DWORD 오프셋이다. RawPlayerParticipation과 같은 0x50이다.</summary>
+    private const int PlayerFlagsOffset = 0x50;
+
+    /// <summary>Player 기록의 접속 주소 오프셋이다. RawPlayerParticipation과 같은 0x30이다.</summary>
+    private const int PlayerConnectionOffset = 0x30;
+
+    /// <summary>로그인 때 지우는 해제 비트다. RawPlayerParticipation과 같은 0x100이다.</summary>
+    private const uint PlayerReleasedFlag = 0x100u;
+
     /// <summary>참가자 이름·동맹을 미션 목록 값으로 채운다. 원본 로그인의 기록 쓰기와 같다.</summary>
     /// <param name="players">미션 플레이어 목록.</param>
     /// <param name="localHandle">로컬 1번의 핸들. 대본 이름("Player")이 아니라 실제 핸들을 쓴다.</param>
@@ -258,6 +280,61 @@ public sealed class HostSession
             PlayerRecords[offset + 1] = (byte)(mask >> 8);
             PlayerRecords[offset + 2] = (byte)(mask >> 16);
             PlayerRecords[offset + 3] = (byte)(mask >> 24);
+        }
+    }
+
+    /// <summary>참가자 가입의 구독자·flags를 미션 로그인 순서와 같이 쓴다. 원본 로그인의 가입 쓰기와 같다.</summary>
+    /// <param name="owner">가입하는 Player 번호다. 0~8이다.</param>
+    /// <param name="subscriber">쓸 구독자 번호다.</param>
+    /// <param name="localOwner">로컬 소유자 번호다. 같으면 접속 주소를 건너뛴다.</param>
+    /// <param name="hooks">도달한 실제 외부 효과다. null이면 도달 효과가 없을 때만 통한다.</param>
+    /// <remarks>2026-11-12 0.403에서 미션 값 채우기로 추가했다. 구독자를 먼저 쓰고 접속 주소(로컬 제외)를 둔 뒤 flags를 갱신하며,
+    /// 접속·참여 표시가 있는 대상에만 전송 효과를 부른다. Ready 0x40·라이브 연결은 다음 단위다.</remarks>
+    public void JoinPlayer(uint owner, uint subscriber, uint localOwner, PlayerJoinHooks? hooks)
+    {
+        if (owner > (uint)MissionPlayers.PlayerCount)
+            throw new ArgumentOutOfRangeException(nameof(owner), "참가자 가입의 실제 Player 번호 범위 오류");
+        int record = (int)owner * PlayerRecordStride;
+        // 구독자 DWORD를 먼저 쓴다.
+        PlayerRecords[record + PlayerSubscriberOffset] = (byte)subscriber;
+        PlayerRecords[record + PlayerSubscriberOffset + 1] = (byte)(subscriber >> 8);
+        PlayerRecords[record + PlayerSubscriberOffset + 2] = (byte)(subscriber >> 16);
+        PlayerRecords[record + PlayerSubscriberOffset + 3] = (byte)(subscriber >> 24);
+        if (owner != localOwner)
+        {
+            // 로컬이 아니면 접속 주소를 기록에 둔다.
+            string address = hooks?.PeerAddress is null
+                ? throw new InvalidOperationException("참가자 가입의 실제 접속 주소 미연결")
+                : hooks.PeerAddress(owner);
+            byte[] bytes = System.Text.Encoding.Latin1.GetBytes(address);
+            if (bytes.Length + 1 > PlayerRecordStride - PlayerConnectionOffset)
+                throw new ArgumentOutOfRangeException(nameof(hooks), "참가자 가입의 실제 접속 주소 범위 오류");
+            Array.Copy(bytes, 0, PlayerRecords, record + PlayerConnectionOffset, bytes.Length);
+            PlayerRecords[record + PlayerConnectionOffset + bytes.Length] = 0;
+        }
+
+        // 해제 비트를 지우고 연결·사람 비트를 켠다.
+        uint flags = (uint)(PlayerRecords[record + PlayerFlagsOffset]
+            | ((uint)PlayerRecords[record + PlayerFlagsOffset + 1] << 8)
+            | ((uint)PlayerRecords[record + PlayerFlagsOffset + 2] << 16)
+            | ((uint)PlayerRecords[record + PlayerFlagsOffset + 3] << 24));
+        flags = (flags & ~PlayerReleasedFlag) | 3u;
+        PlayerRecords[record + PlayerFlagsOffset] = (byte)flags;
+        PlayerRecords[record + PlayerFlagsOffset + 1] = (byte)(flags >> 8);
+        PlayerRecords[record + PlayerFlagsOffset + 2] = (byte)(flags >> 16);
+        PlayerRecords[record + PlayerFlagsOffset + 3] = (byte)(flags >> 24);
+        // 접속 표시가 있는 대상에게 가입 기록을 보낸다.
+        for (uint target = 1; target <= (uint)MissionPlayers.PlayerCount; target++)
+        {
+            if ((PlayerRecords[(int)target * PlayerRecordStride + PlayerFlagsOffset] & 1) == 0) continue;
+            (hooks?.SendPlayer ?? throw new InvalidOperationException("참가자 가입의 실제 전송 미연결"))(owner, target);
+        }
+
+        // 사람 표시가 있는 기록을 새 대상에게 다시 보낸다.
+        for (uint player = 1; player <= (uint)MissionPlayers.PlayerCount; player++)
+        {
+            if ((PlayerRecords[(int)player * PlayerRecordStride + PlayerFlagsOffset] & 2) == 0) continue;
+            (hooks?.SendPlayer ?? throw new InvalidOperationException("참가자 가입의 실제 전송 미연결"))(player, owner);
         }
     }
 

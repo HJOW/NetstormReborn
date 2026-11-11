@@ -330,4 +330,68 @@ public sealed class MissionPlayersLoadTests
             Assert.Equal(hex, row!.Split('\t')[2].Substring(0x54 * 2, 8));
         }
     }
+
+    /// <summary>로컬 1번 가입이 구독자·flags를 로그인 순서와 같이 쓰는지 확인한다.</summary>
+    [Fact]
+    public void JoinsPlayerLikeLoginPrimitive()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        session.StartPlayers(players, "Youpson");
+        session.StartPlayerMasks(players);
+        var sent = new List<(uint Owner, uint Target)>();
+        var hooks = new PlayerJoinHooks { SendPlayer = (owner, target) => sent.Add((owner, target)) };
+        session.JoinPlayer(1u, 1u, 1u, hooks);
+        static uint DwordAt(byte[] records, int owner, int offset) =>
+            System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(records.AsSpan(owner * 180 + offset, 4));
+        Assert.Equal(1u, DwordAt(session.PlayerRecords, 1, 0x2c));
+        Assert.Equal(3u, DwordAt(session.PlayerRecords, 1, 0x50));
+        // 가입한 자신을 포함한 접속·참여 대상에게 전송한다(원본 두 순회와 같은 순서).
+        Assert.Equal([(1u, 1u), (1u, 1u)], sent);
+        // 덤프 행의 같은 바이트도 확인한다.
+        string text = SessionStateDump.FormatWorld1(
+            "originals", 90, 0, 0, 0, 0, 39999, null, session.DumpPool(),
+            session.DumpPlayers(), session.DumpSp(), session.DumpGraph(), session.DumpTotals(), session.DumpTotalMade());
+        string? row = null;
+        foreach (string line in text.Split('\n'))
+            if (line.StartsWith("player\t1\t", StringComparison.Ordinal)) row = line;
+        Assert.NotNull(row);
+        Assert.Equal("01000000", row!.Split('\t')[2].Substring(0x2c * 2, 8));
+        Assert.Equal("03000000", row.Split('\t')[2].Substring(0x50 * 2, 8));
+    }
+
+    /// <summary>로컬이 아닌 가입이 접속 주소를 기록에 두는지 확인한다.</summary>
+    [Fact]
+    public void JoinPlayerWritesPeerAddressForRemoteOwner()
+    {
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        var sent = new List<(uint Owner, uint Target)>();
+        var hooks = new PlayerJoinHooks
+        {
+            PeerAddress = _ => "127.0.0.1",
+            SendPlayer = (owner, target) => sent.Add((owner, target)),
+        };
+        session.JoinPlayer(2u, 77u, 1u, hooks);
+        static uint DwordAt(byte[] records, int owner, int offset) =>
+            System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(records.AsSpan(owner * 180 + offset, 4));
+        Assert.Equal(77u, DwordAt(session.PlayerRecords, 2, 0x2c));
+        Assert.Equal(3u, DwordAt(session.PlayerRecords, 2, 0x50));
+        Assert.Equal([(2u, 2u), (2u, 2u)], sent);
+        Assert.Equal("127.0.0.1", System.Text.Encoding.Latin1.GetString(session.PlayerRecords, 2 * 180 + 0x30, 9));
+        Assert.Equal(0, session.PlayerRecords[2 * 180 + 0x30 + 9]);
+    }
+
+    /// <summary>접속 주소 미연결이면 구독자만 쓰고 flags 전에 실패하는지 확인한다.</summary>
+    [Fact]
+    public void JoinPlayerMissingPeerAddressThrowsPartialWrite()
+    {
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        Assert.Throws<InvalidOperationException>(() => session.JoinPlayer(2u, 77u, 1u, null));
+        static uint DwordAt(byte[] records, int owner, int offset) =>
+            System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(records.AsSpan(owner * 180 + offset, 4));
+        Assert.Equal(77u, DwordAt(session.PlayerRecords, 2, 0x2c));
+        Assert.Equal(0u, DwordAt(session.PlayerRecords, 2, 0x50));
+    }
 }
