@@ -230,7 +230,8 @@ public sealed class ClientHostGame : Game
     /// <param name="mission">들어갈 미션 이름.</param>
     /// <param name="handle">미션 1번의 핸들.</param>
     /// <remarks>2026-11-12 0.398에서 미션 시작 흐름으로 추가했다. 대본·타입 표는 목록용으로 한 번 더 연다.
-    /// 요새 적재 장치가 가진 것과 같은 입력이며 세션이 표를 소유하면 합친다. 월드 본체 조립·브리핑 화면은 다음 단위다.</remarks>
+    /// 요새 적재 장치가 가진 것과 같은 입력이며 세션이 표를 소유하면 합친다. 0.401에서 동맹 마스크 기록을 연결했다.
+    /// 월드 본체 조립·브리핑 화면은 다음 단위다.</remarks>
     private HostSession StartMission(string mission, string handle)
     {
         if (_startup is null) throw new InvalidOperationException("미션 진입에 시작 화면 없음");
@@ -246,6 +247,7 @@ public sealed class ClientHostGame : Game
         session.StartPlayerSp(players);
         session.PrepareAiSettings(players, key => script.Get(key));
         session.StartPlayers(players, handle);
+        session.StartPlayerMasks(players);
         _missionSession = session;
         return session;
     }
