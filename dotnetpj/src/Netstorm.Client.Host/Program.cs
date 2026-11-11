@@ -8,7 +8,7 @@ namespace Netstorm.Client.Host;
 /// <summary>
 /// MonoGame 출력 호스트의 별도 진입. 기존 <c>Netstorm.Game</c> 실행은 건드리지 않고 이 진입으로만 돈다.
 /// 인자: [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N]
-/// [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--set "k=v;..."].
+/// [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--set "k=v;..."] [--log-crash-test 종류].
 /// 종료 코드 0(정상)·1(실행 오류)·2(인자 오류).
 /// 근거: cpppj/src/app/main.cpp 의 --run 진입. (R1-2a, 2026-10-28)
 /// </summary>
@@ -28,6 +28,29 @@ internal static class Program
     [STAThread]
     private static int Main(string[] args)
     {
+        // 7차: 사용자 로그 폴더 구성·갈고리·스트림 복제와 시작 기록이다. 폴더를 못 정해도 시작은 계속한다.
+        HostErrorLog.Setup();
+        // 7차 검사용: 지정한 방식으로 의도적으로 비정상 종료해 로그 파일을 확인한다.
+        if (args.Length == 2 && args[0] == "--log-crash-test")
+        {
+            try
+            {
+                ErrorLog.CrashForTest(args[1]);
+                return Ok;
+            }
+            catch (Exception exception)
+            {
+                Console.Error.WriteLine(HostErrorLog.RecordTopLevelFailure(exception));
+                return RuntimeError;
+            }
+#pragma warning disable CS1058 // 원문 catch(...)처럼 비예외 종료도 같은 로그에 남긴다.
+            catch
+            {
+                Console.Error.WriteLine(HostErrorLog.RecordUnknownFailure());
+                return RuntimeError;
+            }
+#pragma warning restore CS1058
+        }
         HostOptions options;
         try
         {
@@ -65,9 +88,19 @@ internal static class Program
         }
         catch (Exception exception)
         {
-            Console.Error.WriteLine(exception.Message);
+            // 7차: 종료 직전 판정이 자동 로그에 남았으면 그 경로를 안내 문구에 더한다
+            string message = HostErrorLog.RecordTopLevelFailure(exception);
+            Console.Error.WriteLine(message);
             return RuntimeError;
         }
+#pragma warning disable CS1058 // 원문 catch(...)처럼 비예외 종료도 같은 로그에 남긴다.
+        catch
+        {
+            string message = HostErrorLog.RecordUnknownFailure();
+            Console.Error.WriteLine(message);
+            return RuntimeError;
+        }
+#pragma warning restore CS1058
         finally
         {
             // 보고서는 실패해도 남긴다. 경로가 없으면 쓰지 않는다

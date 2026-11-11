@@ -8,6 +8,7 @@ namespace Netstorm.Client.Tests;
 /// (cpppj <c>platform/ErrorLog</c>의 계약을 직접 작성했다).
 /// </summary>
 /// <remarks>2026-11-11 0.360에서 7차 로그 이식과 함께 추가했다. 실제 사용자 홈을 건드리지 않고 임시 폴더만 쓴다. 프로세스를 끝내는 종류는 검사하지 않는다.</remarks>
+[Collection("ErrorLogSerial")]
 public sealed class ErrorLogTests
 {
     /// <summary>검사 전 상태를 비우고 검사 뒤 임시 폴더를 지운다.</summary>
@@ -204,7 +205,8 @@ public sealed class ErrorLogTests
             ErrorLog.CaptureStandardStreams();
             Console.WriteLine("hello-tee");
             Assert.Contains("hello-tee", inner.ToString());
-            Assert.Equal(before + 1, ErrorLog.BufferedLineCount());
+            // 같은 창에 떠 있는 다른 검사의 출력이 함께 복제될 수 있어 증가분만 본다
+            Assert.True(ErrorLog.BufferedLineCount() > before);
         }
         finally
         {

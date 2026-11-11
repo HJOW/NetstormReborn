@@ -7,6 +7,7 @@ namespace Netstorm.Client.Tests;
 /// (cpppj <c>platform/UserDataRoot</c>의 계약을 직접 작성했다).
 /// </summary>
 /// <remarks>2026-11-11 0.359에서 5차 경로 이식과 함께 추가했다. 실제 사용자 홈을 건드리지 않고 재정의·임시 폴더만 쓴다.</remarks>
+[Collection("ErrorLogSerial")]
 public sealed class UserDataRootTests
 {
     /// <summary>환경 변수를 잠시 바꾸고 반드시 되돌린다.</summary>
