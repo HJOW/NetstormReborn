@@ -3,6 +3,7 @@ using Netstorm.Client.Automation;
 using Netstorm.Client.Host;
 using Netstorm.Core.Original;
 using Netstorm.Core.Simulation;
+using Netstorm.Net;
 
 namespace Netstorm.Client.Tests;
 
@@ -393,5 +394,96 @@ public sealed class MissionPlayersLoadTests
             System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(records.AsSpan(owner * 180 + offset, 4));
         Assert.Equal(77u, DwordAt(session.PlayerRecords, 2, 0x2c));
         Assert.Equal(0u, DwordAt(session.PlayerRecords, 2, 0x50));
+    }
+
+    /// <summary>전투 소유자의 준비 비트가 켜지고 마스크에 모이는지 확인한다.</summary>
+    [Fact]
+    public void MarksReadyLikeLoginReadyWrite()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        session.StartPlayers(players, "Youpson");
+        session.StartPlayerMasks(players);
+        var sent = new List<(uint Owner, uint Target)>();
+        session.JoinPlayer(1u, 1u, 1u, new PlayerJoinHooks { SendPlayer = (owner, target) => sent.Add((owner, target)) });
+        session.MarkReady(1u);
+        static uint DwordAt(byte[] records, int owner, int offset) =>
+            System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(records.AsSpan(owner * 180 + offset, 4));
+        // Zone 0x08 없이 가입 0x03+Ready 0x40이다. 전체 0x4b는 조합 검사에서 잇는다.
+        Assert.Equal(0x43u, DwordAt(session.PlayerRecords, 1, 0x50));
+        Assert.Equal(0x2u, session.ReadyMask());
+        // 덤프 행의 같은 바이트도 확인한다.
+        string text = SessionStateDump.FormatWorld1(
+            "originals", 90, 0, 0, 0, 0, 39999, null, session.DumpPool(),
+            session.DumpPlayers(), session.DumpSp(), session.DumpGraph(), session.DumpTotals(), session.DumpTotalMade());
+        string? row = null;
+        foreach (string line in text.Split('\n'))
+            if (line.StartsWith("player\t1\t", StringComparison.Ordinal)) row = line;
+        Assert.NotNull(row);
+        Assert.Equal("43000000", row!.Split('\t')[2].Substring(0x50 * 2, 8));
+    }
+
+    /// <summary>단일 바인딩 Zone 작성 입력 장면을 만든다. 2026-11-12 R4 실제 호스트·월드 조립(0.404)에서 추가됐다.</summary>
+    /// <param name="handle">클라이언트 이름이다.</param>
+    /// <param name="subscriber">클라이언트 구독자 번호다.</param>
+    /// <returns>헤더 15바이트+슬롯 71바이트 Zone이다.</returns>
+    private static byte[] SingleBindingZone(string handle, uint subscriber)
+    {
+        var zone = new byte[LocalMissionZone.ZoneHead + LocalMissionZone.ZoneClient];
+        zone[14] = 1;
+        int offset = LocalMissionZone.ZoneHead;
+        zone[offset] = 0;
+        // 구독자 DWORD를 little endian으로 쓴다.
+        for (int index = 0; index < 4; ++index)
+        {
+            zone[offset + 1 + index] = unchecked((byte)(subscriber >> (8 * index)));
+        }
+
+        byte[] name = System.Text.Encoding.Latin1.GetBytes(handle);
+        Array.Copy(name, 0, zone, offset + 9, name.Length);
+        return zone;
+    }
+
+    /// <summary>Zone·가입·Ready를 이으면 기준선 1번(구독자 1·flags 0x4b)이 되는지 확인한다.</summary>
+    [Fact]
+    public void ComposesZoneJoinReadyLikeBaselineOwner1()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        // Zone 설치가 구독자·flags 0x08·이름을 먼저 둔다.
+        var stored = new List<(uint Subscriber, string Name)>();
+        var served = new List<uint>();
+        var assertions = new List<string>();
+        var player = new PlayerWorldState();
+        LocalMissionZone.Install(SingleBindingZone("Youpson", 1u), session.PlayerRecords, player,
+            new LocalMissionZoneGlobals(),
+            new LocalMissionZoneHooks
+            {
+                LoginTimeout = () => 30,
+                Seconds = () => 0.0,
+                StoreName = (subscriber, name) => stored.Add((subscriber, name)),
+                Serve = port => served.Add(port),
+                Assertion = assertions.Add,
+            }, 6799u);
+        Assert.Equal(1u, player.BattleOwner);
+        Assert.Empty(assertions);
+        session.StartPlayers(players, "Youpson");
+        session.StartPlayerMasks(players);
+        var sent = new List<(uint Owner, uint Target)>();
+        session.JoinPlayer(1u, 1u, 1u, new PlayerJoinHooks { SendPlayer = (owner, target) => sent.Add((owner, target)) });
+        session.MarkReady(1u);
+        static uint DwordAt(byte[] records, int owner, int offset) =>
+            System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(records.AsSpan(owner * 180 + offset, 4));
+        // 0x08(Zone)|0x03(가입)|0x40(Ready) 순서 그대로 기준선과 같다.
+        Assert.Equal(1u, DwordAt(session.PlayerRecords, 1, 0x2c));
+        Assert.Equal(0x4bu, DwordAt(session.PlayerRecords, 1, 0x50));
+        Assert.Equal(0x2u, DwordAt(session.PlayerRecords, 1, 0x54));
+        Assert.Equal(0x2u, session.ReadyMask());
+        // 이름 앞 7바이트는 같다. 바이트 15의 NUL(기준선 "You\0pson")은 로그인 쓰기 순서 잔여로 남긴다.
+        Assert.Equal("Youpson", System.Text.Encoding.Latin1.GetString(session.PlayerRecords, 180 + 12, 7));
     }
 }

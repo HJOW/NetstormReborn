@@ -222,6 +222,9 @@ public sealed class HostSession
     /// <summary>로그인 때 지우는 해제 비트다. RawPlayerParticipation과 같은 0x100이다.</summary>
     private const uint PlayerReleasedFlag = 0x100u;
 
+    /// <summary>준비 표시 비트다. RawMissionLogin과 같은 0x40이다.</summary>
+    private const uint PlayerReadyFlag = 0x40u;
+
     /// <summary>참가자 이름·동맹을 미션 목록 값으로 채운다. 원본 로그인의 기록 쓰기와 같다.</summary>
     /// <param name="players">미션 플레이어 목록.</param>
     /// <param name="localHandle">로컬 1번의 핸들. 대본 이름("Player")이 아니라 실제 핸들을 쓴다.</param>
@@ -336,6 +339,41 @@ public sealed class HostSession
             if ((PlayerRecords[(int)player * PlayerRecordStride + PlayerFlagsOffset] & 2) == 0) continue;
             (hooks?.SendPlayer ?? throw new InvalidOperationException("참가자 가입의 실제 전송 미연결"))(player, owner);
         }
+    }
+
+    /// <summary>전투 소유자의 준비 비트를 켠다. 원본 로그인의 Ready 쓰기와 같다.</summary>
+    /// <param name="owner">준비된 Player 번호다. 0~8이다.</param>
+    /// <remarks>2026-11-12 0.404에서 미션 값 채우기로 추가했다. 0x6e 마스크 packet 송신·방장 관문은 실제 전송과 함께 다음 단위다.</remarks>
+    public void MarkReady(uint owner)
+    {
+        if (owner > (uint)MissionPlayers.PlayerCount)
+            throw new ArgumentOutOfRangeException(nameof(owner), "준비 표시의 실제 Player 번호 범위 오류");
+        int record = (int)owner * PlayerRecordStride;
+        // 준비 비트만 켜고 다른 비트는 보존한다.
+        uint flags = (uint)(PlayerRecords[record + PlayerFlagsOffset]
+            | ((uint)PlayerRecords[record + PlayerFlagsOffset + 1] << 8)
+            | ((uint)PlayerRecords[record + PlayerFlagsOffset + 2] << 16)
+            | ((uint)PlayerRecords[record + PlayerFlagsOffset + 3] << 24));
+        flags |= PlayerReadyFlag;
+        PlayerRecords[record + PlayerFlagsOffset] = (byte)flags;
+        PlayerRecords[record + PlayerFlagsOffset + 1] = (byte)(flags >> 8);
+        PlayerRecords[record + PlayerFlagsOffset + 2] = (byte)(flags >> 16);
+        PlayerRecords[record + PlayerFlagsOffset + 3] = (byte)(flags >> 24);
+    }
+
+    /// <summary>준비 비트가 켜진 소유자들의 마스크를 계산한다. 원본 Ready 마스크와 같다.</summary>
+    /// <returns>1~8번 중 flags 바이트에 0x40이 있는 소유자 비트 집합이다.</returns>
+    /// <remarks>2026-11-12 0.404에서 미션 값 채우기로 추가했다. 실제 0x6e packet 송신은 다음 단위다.</remarks>
+    public uint ReadyMask()
+    {
+        uint mask = 0u;
+        // 1~8번의 flags 바이트만 읽는다.
+        for (uint owner = 1; owner <= (uint)MissionPlayers.PlayerCount; owner++)
+        {
+            if ((PlayerRecords[(int)owner * PlayerRecordStride + PlayerFlagsOffset] & 0x40) != 0) mask |= 1u << (int)owner;
+        }
+
+        return mask;
     }
 
     /// <summary>덤프용 Player 관측을 만든다. Start 순서 전까지 0이다.</summary>
