@@ -197,6 +197,9 @@ public sealed class HostSession
     /// <summary>Player 기록 한 개의 바이트 수다. RawPlayerParticipation과 같은 0xb4다.</summary>
     private const int PlayerRecordStride = 180;
 
+    /// <summary>Player 기록의 동맹 마스크 오프셋이다. RawPlayerParticipation과 같은 0x54다.</summary>
+    private const int PlayerAlliesOffset = 0x54;
+
     /// <summary>참가자 이름·동맹을 미션 목록 값으로 채운다. 원본 로그인의 기록 쓰기와 같다.</summary>
     /// <param name="players">미션 플레이어 목록.</param>
     /// <param name="localHandle">로컬 1번의 핸들. 대본 이름("Player")이 아니라 실제 핸들을 쓴다.</param>
@@ -230,6 +233,31 @@ public sealed class HostSession
             int offset = owner * PlayerRecordStride;
             Array.Clear(PlayerRecords, offset + PlayerNameOffset, PlayerNameWidth);
             Array.Copy(bytes, 0, PlayerRecords, offset + PlayerNameOffset, bytes.Length);
+        }
+    }
+
+    /// <summary>참가자 기록의 동맹 마스크 DWORD를 미션 목록 값으로 채운다. 원본 로그인의 마스크 쓰기와 같다.</summary>
+    /// <param name="players">미션 플레이어 목록. 자기 비트와 대칭 판정 비트를 합친다.</param>
+    /// <remarks>2026-11-12 0.400에서 미션 값 채우기로 추가했다. 0번 중립은 목록 판정 밖이라 자기 비트만 둔다.
+    /// Chat 표시는 바꾸지 않는다. 구독자·flags·brain은 로그인·생성 흐름 단위에서 잇는다.</remarks>
+    public void StartPlayerMasks(MissionPlayers players)
+    {
+        ArgumentNullException.ThrowIfNull(players);
+        // 0번 중립을 포함한 9기록을 번호 순서대로 쓴다.
+        for (int owner = 0; owner <= MissionPlayers.PlayerCount; owner++)
+        {
+            uint mask = 1u << owner;
+            // 목록의 대칭 판정 비트를 합친다. 0번은 판정 밖이라 자기 비트만 둔다.
+            for (int target = 1; target <= MissionPlayers.PlayerCount; target++)
+            {
+                if (players.Allied(owner, target)) mask |= 1u << target;
+            }
+
+            int offset = owner * PlayerRecordStride + PlayerAlliesOffset;
+            PlayerRecords[offset] = (byte)mask;
+            PlayerRecords[offset + 1] = (byte)(mask >> 8);
+            PlayerRecords[offset + 2] = (byte)(mask >> 16);
+            PlayerRecords[offset + 3] = (byte)(mask >> 24);
         }
     }
 

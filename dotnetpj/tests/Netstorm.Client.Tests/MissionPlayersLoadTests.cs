@@ -301,4 +301,33 @@ public sealed class MissionPlayersLoadTests
         }
         finally { script.Dispose(); }
     }
+
+    /// <summary>thewarbegins 참가자 기록의 동맹 마스크 DWORD가 기준선과 같은지 확인한다.</summary>
+    [Fact]
+    public void StartsPlayerMasksLikeBaseline()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        Assert.NotNull(types);
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        session.StartPlayers(players, "Youpson");
+        session.StartPlayerMasks(players);
+        static uint MaskAt(byte[] records, int owner) =>
+            System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(records.AsSpan(owner * 180 + 0x54, 4));
+        // 기준선 f090의 9기록 마스크(자기 비트+대칭 판정)다.
+        for (int owner = 0; owner <= MissionPlayers.PlayerCount; owner++)
+            Assert.Equal(1u << owner, MaskAt(session.PlayerRecords, owner));
+        // 덤프 행의 같은 바이트도 확인한다.
+        string text = SessionStateDump.FormatWorld1(
+            "originals", 90, 0, 0, 0, 0, 39999, null, session.DumpPool(),
+            session.DumpPlayers(), session.DumpSp(), session.DumpGraph(), session.DumpTotals(), session.DumpTotalMade());
+        foreach ((int owner, string hex) in new[] { (1, "02000000"), (2, "04000000") })
+        {
+            string? row = null;
+            foreach (string line in text.Split('\n'))
+                if (line.StartsWith($"player\t{owner}\t", StringComparison.Ordinal)) row = line;
+            Assert.NotNull(row);
+            Assert.Equal(hex, row!.Split('\t')[2].Substring(0x54 * 2, 8));
+        }
+    }
 }
