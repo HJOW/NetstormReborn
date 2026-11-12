@@ -9985,7 +9985,7 @@
       "bytes": 553540,
       "lines": 2313,
       "fixtureCommit": "5c2d0a1e5",
-      "webCommit": "worktree",
+      "webCommit": "466e55c65",
       "cpppjBasis": {
         "cpppj/src/o/RawGeyserMined.cpp": "0d82e448d"
       }
@@ -16628,6 +16628,35 @@
       "webCommit": "fd11383cd",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionCommand.cpp": "5f4b9d304"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E324",
+      "id": "local-mission-transport",
+      "path": "cpppj/tests/fixtures/local-mission-transport-x86.tsv",
+      "producer": "cpppj 독립 기계어 관측: 단독 미션 Zone 512 예약(004b51e0)·로그인 0x27 예약(004b63d0)의 전체/선언 바이트, 집합 프레임 분배의 반환·flags·sender·두 시각·깊이와 now/record/terminate/receive 효과 순서, Zone 설치(004b4be0)의 Player9 전체·현재 전역 9값·Chat/시각 효과 순서(10.78 66행)",
+      "consumers": [
+        "webpj/tests/local-mission-transport.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/local-mission-transport.js"
+      ],
+      "doc": "docs/webpj-local-mission-transport-20261112.md",
+      "cpppjSources": [
+        "cpppj/src/zacket/LocalMissionTransport.cpp"
+      ],
+      "scope": "66행 전부 재생(Zone 2·Login 24·Batch 30·BatchClosed 2·Install 6·InstallMutate 2). zlocal 두 끝의 open/connect/poll accept/재배치/송신/폴링/정리는 원본 관측 없이 cpppj 손 시험과 웹 계약 시험",
+      "sha256": "34288e9109dd6d15df5231191b61f1f193c97d4a01d72a8aa59d812e3852368c",
+      "bytes": 51116,
+      "lines": 67,
+      "fixtureCommit": "fb1b29007",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/zacket/LocalMissionTransport.cpp": "50a5a1845"
       }
     },
     {
