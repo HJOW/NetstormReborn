@@ -9,8 +9,9 @@ import test from 'node:test';
 import { LocalMissionTransport } from '../www/core/local-mission-transport.js';
 import { RawConnectionRegistry } from '../www/core/raw-connection-registry.js';
 import {
-    CAMPAIGN_TRANSPORT_SERVICE_FIELDS, bindInternalCampaignTransport, campaignPeerAddressText,
+    CAMPAIGN_TRANSPORT_SERVICE_FIELDS, bindCompositeCampaignTransport, bindInternalCampaignTransport, campaignPeerAddressText,
 } from '../www/core/campaign-transport-services.js';
+import { CompositeMissionTransport, CompositeTransportRole } from '../www/core/composite-mission-transport.js';
 import {
     CAMPAIGN_LOGIN_SERVICE_FIELDS, CAMPAIGN_LOGIN_SERVICE_FUNCTIONS, createCampaignLoginServices, requireLoginService,
 } from '../www/core/campaign-login-services.js';
@@ -249,4 +250,133 @@ test('로그인 서비스: 선택 위치에서 비어 있는 칸은 이름과 �
     assert.throws(() => requireLoginService(services, 'nothing', 'x'), TypeError);
     // 형식이 틀리게 직접 덮은 객체도 함수가 아니면 거부한다.
     assert.throws(() => requireLoginService({ log: 3 }, 'log', 'x'), /log 누락/);
+});
+
+// ---------------------------------------------------------------- bindCompositeCampaignTransport (WB04-E327)
+
+// 복합 조정자 장면이다: 서버 권한 상자와 로그인 처리기를 갖춘 InternalMission 조정자를 만든다. (2026-11-12 WB04-E327)
+function makeCompositeScene() {
+    const device = effects();
+    const registry = new RawConnectionRegistry();
+    const transport = CompositeMissionTransport.create(CompositeTransportRole.InternalMission, new Uint8Array(1620), { value: true }, device.hooks, registry, {});
+    transport.dispatch.register(0x27, () => {});
+    return { device, registry, transport };
+}
+
+// 바인더는 Session 전체 owner 로 등록 대여를 만들고, 모든 칸을 조정자에 위임하며, 내부 전용 칸(LAN listen)은 조정자의 웹 제외 오류를 낸다.
+test('복합 전송 바인더: 등록 대여·칸 구성·위임', () => {
+    assert.throws(() => bindCompositeCampaignTransport(null, {}), /복합 전송 실제 owner 누락/);
+    const { transport, registry } = makeCompositeScene();
+    // 대여는 owner 가 있어야 한다.
+    assert.throws(() => bindCompositeCampaignTransport(transport, null), TypeError);
+    const owner = { name: 'Session' };
+    const services = bindCompositeCampaignTransport(transport, owner);
+    assert.deepEqual(Object.keys(services).filter((name) => !CAMPAIGN_TRANSPORT_SERVICE_FIELDS.includes(name)), []);
+    assert.equal(services.composite, transport);
+    assert.equal(services.lifetime, transport);
+    assert.equal(services.registry, registry);
+    assert.equal(services.dispatch, transport.dispatch);
+    // 같은 조정자의 등록 대여는 한 번에 하나이다.
+    assert.throws(() => bindCompositeCampaignTransport(transport, {}), /중복 대여/);
+    // serve/connect/poll/조회/배치가 조정자 호출이다.
+    services.serve(6799);
+    services.connect(new Uint8Array(20), 6799);
+    assert.throws(() => services.connect(new Uint8Array(19), 6799), RangeError);
+    services.poll();
+    assert.deepEqual([services.exists(9), services.isOpen(9), services.status(9), services.exists(-1)], [true, true, 1, true]);
+    assert.equal(services.connection(-1), transport.connection(-1));
+    services.assign(-1, 1);
+    assert.equal(services.connection(1), transport.connection(1));
+    assert.equal(services.peerAddress(5), '*:0');
+    assert.deepEqual([...services.address(9)], [...registry.address(9)]);
+    assert.throws(() => services.listen(6799), /웹 범위 밖: LAN TCP listener/);
+    const calls = [];
+    const send = transport.send;
+    transport.send = (id, packet) => { calls.push([id, packet]); return true; };
+    const packet = Uint8Array.of(1, 0x24, 5, 0, 0);
+    services.peer(1)(packet);
+    assert.equal(services.send(1, packet), true);
+    transport.send = send;
+    assert.deepEqual(calls.map(([id]) => id), [1, 1]);
+    assert.equal(services.flush(), undefined);
+    assert.equal(services.callbacksActive(), false);
+});
+
+// 문자 주소 연결은 조정자의 내부 끝만 연다.
+test('복합 전송 바인더: connectPeerText 는 조정자의 내부 끝만 연다', () => {
+    const { transport } = makeCompositeScene();
+    const services = bindCompositeCampaignTransport(transport, {});
+    services.serve(6799);
+    services.connectPeerText('저장된 주소', 6799);
+    assert.equal(transport.exists(9), true);
+});
+
+// detachSession 은 자기 대여만 반납하고, 종료 패킷 2/기술 0x69 의 기존 일반 수신기는 이번 대여로 다시 등록돼 detach 때 전역 등록으로 복원된다.
+test('복합 전송 바인더: 대여 반납과 종료 패킷 2·기술 0x69 재등록', () => {
+    const { transport } = makeCompositeScene();
+    const ended = () => {};
+    const technology = () => {};
+    transport.dispatch.register(2, ended);
+    transport.dispatch.registerDirect(0x69, technology);
+    assert.equal(transport.dispatch.registration(2).leased, false);
+    const services = bindCompositeCampaignTransport(transport, {});
+    // 이번 대여로 다시 등록됐다.
+    assert.equal(transport.dispatch.registration(2).leased, true);
+    assert.equal(transport.dispatch.registration(0x69).leased, true);
+    assert.equal(typeof transport.dispatch.registration(2).receive, 'function');
+    assert.equal(typeof transport.dispatch.registration(0x69).directReceive, 'function');
+    services.detachSession();
+    // 반납 뒤에는 새 대여를 만들 수 있다.
+    const again = bindCompositeCampaignTransport(transport, {});
+    assert.ok(again.detachSession);
+    // 기존 수신기가 없으면 아무 것도 새로 등록하지 않는다.
+    const fresh = makeCompositeScene().transport;
+    bindCompositeCampaignTransport(fresh, {});
+    assert.equal(fresh.dispatch.registration(2).receive, null);
+    assert.equal(fresh.dispatch.registration(0x69).directReceive, null);
+    // 재등록하지 않았으므로 대여 표식도 붙지 않는다.
+    assert.equal(fresh.dispatch.registration(2).leased, false);
+    assert.equal(fresh.dispatch.registration(0x69).leased, false);
+});
+
+// 수신 callback 이 실행되는 동안 callbacksActive 가 켜진다.
+test('복합 전송 바인더: callbacksActive 는 수신 callback 중 참이다', () => {
+    const { transport } = makeCompositeScene();
+    const services = bindCompositeCampaignTransport(transport, {});
+    services.serve(6799);
+    services.connect(new Uint8Array(20), 6799);
+    services.poll();
+    services.assign(-1, 1);
+    let during = null;
+    transport.dispatch.register(0x24, () => { during = services.callbacksActive(); });
+    services.send(9, Uint8Array.of(1, 0x24, 5, 0, 0));
+    services.flush();
+    assert.equal(services.poll(), 1);
+    assert.equal(during, true);
+    assert.equal(services.callbacksActive(), false);
+});
+
+// 조회 칸은 없는 ID 와 다른 owner 의 노드를 구별한다: 없는 ID 는 false/0, 같은 등록소의 다른 전송 노드는 조정자의 오류를 그대로 낸다. 주소 표시는 현재 노드의 실제 주소를 쓴다.
+test('복합 전송 바인더: 조회 칸의 없는 ID·다른 owner 구분과 실제 주소 표시', () => {
+    const { transport } = makeCompositeScene();
+    const services = bindCompositeCampaignTransport(transport, {});
+    // 없는 ID.
+    assert.deepEqual([services.exists(7), services.isOpen(7), services.status(7), services.connection(7)], [false, false, 0, null]);
+    // 현재 노드의 20BYTE 주소를 읽어 점 표기로 보여 준다.
+    services.serve(6799);
+    services.connect(new Uint8Array(20), 6799);
+    transport.connection(9).address.set([2, 0, 0x1a, 0x8f, 127, 0, 0, 1]);
+    assert.equal(services.peerAddress(9), '127.0.0.1:6799');
+    assert.deepEqual([...services.address(9).subarray(0, 8)], [2, 0, 0x1a, 0x8f, 127, 0, 0, 1]);
+    // 같은 등록소의 다른 전송이 가진 노드는 이 조정자의 소유가 아니다(연결 전의 새 조정자에서 다른 전송이 client9 를 연다).
+    const foreign = makeCompositeScene();
+    const foreignServices = bindCompositeCampaignTransport(foreign.transport, {});
+    const other = new LocalMissionTransport(new Uint8Array(1620), true, effects().hooks, foreign.registry);
+    other.registerLogin(() => {});
+    other.open(6900);
+    assert.throws(() => foreignServices.exists(9), /다른 owner의 복합 연결 주소 조회/);
+    assert.throws(() => foreignServices.isOpen(9), /다른 owner의 복합 연결 open 조회/);
+    assert.throws(() => foreignServices.status(9), /다른 owner의 복합 연결 status 조회/);
+    assert.throws(() => foreignServices.address(9), /다른 owner의 복합 연결 주소 조회/);
+    assert.throws(() => foreignServices.peerAddress(9), /다른 owner의 복합 연결 주소 조회/);
 });

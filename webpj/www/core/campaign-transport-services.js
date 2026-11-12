@@ -5,8 +5,8 @@
 //   connectPeerText(원문 State8 의 +54..7b 문자열 영역/포트)·assign·send·sendMutable·flush·poll·peer(owner → 패킷 송신 함수)·connection·exists·isOpen·status·address·peerAddress·close.
 // 사용: const services = bindInternalCampaignTransport(localMissionTransport); services.serve(port); services.connect(address20, port); services.poll();
 // 웹 범위(LEFT_JOBS 1절): 단독 미션이 쓰는 **내부 미션 바인더**(`bindInternalCampaignTransport`)와 공용 주소 표시(`campaignPeerAddressText`)만 옮긴다. 실제 LAN TCP 바인더(`BindTcpCampaignTransport`)와 Editor 바인더(`BindEditorCampaignTransport`)는
-//   LAN/Edit 제외라 만들지 않고, 복합 전송 바인더(`BindCompositeCampaignTransport`)는 CompositeMissionTransport 단위 뒤에 옮긴다(4-C 다음 항목).
-// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-12 WB04-E326: 4-C CampaignTransportServices 이식)
+//   LAN/Edit 제외라 만들지 않는다. 복합 전송 바인더(`bindCompositeCampaignTransport`)는 복합 전송 조정자(`composite-mission-transport.js`, E327)가 생긴 뒤 같은 단위 흐름에서 더했다.
+// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-12 WB04-E326: 4-C CampaignTransportServices 이식, WB04-E327: 복합 전송 바인더 추가)
 
 // 서비스 묶음이 가질 수 있는 칸 이름 전체이다(기준선 칸 + 기준선 뒤 composite·connectPeerText). 이름 밖 칸은 오타로 보아 거부하는 데 쓴다. (2026-11-12 WB04-E326)
 export const CAMPAIGN_TRANSPORT_SERVICE_FIELDS = Object.freeze([
@@ -63,5 +63,40 @@ export function bindInternalCampaignTransport(transport) {
     services.isOpen = (id) => transport.connectionOpen(id);
     // 실제 내부 Connect/Accept 결과와 상대 수명을 읽고 bit2 는 사용하지 않는다.
     services.status = (id) => transport.connectionStatus(id);
+    return services;
+}
+
+// 실제 Session/World 전체 owner 를 pin 하는 등록 대여까지 포함한 복합 전송 바인더이다. 하나의 조정자(CompositeMissionTransport)를 모든 writer/State/Chat/배치 부모에 공급하고 Session 수신 대여도 반납한다.
+// 순서: 등록 대여(bindSession) → 공통 칸 → composite 칸 → 종료 패킷 2 와 기술 0x69 의 기존 등록을 이번 대여로 다시 등록(실행 pin/정리 관문에 포함되고 detach 때 이전 전역 등록이 복원됨) → 대여 반납/콜백 활성 관문/주소/serve/listen/connect/배치/flush/peer/조회 칸.
+// 기준선 뒤 cpppj 변경 판정(LEFT_JOBS 3.6절): ② composite 칸·connectPeerText·종료 패킷 2/기술 0x69 재등록(`a76499e3`)을 옮긴다. 고정 Native 수신기(`canonicalReceive`)는 웹에 없어(3.6절 ③ 4-D) 그 분기는 두지 않고,
+//   일반 수신기(`receive`/`directReceive`)가 있을 때의 재등록만 한다. 웹 범위는 InternalMission 역할이라 `listen` 은 조정자의 명시 웹 제외 오류를 그대로 낸다. (2026-11-12 WB04-E327)
+export function bindCompositeCampaignTransport(transport, sessionOwner) {
+    if (!transport) throw new TypeError('복합 전송 실제 owner 누락');
+    const lease = transport.bindSession(sessionOwner);
+    const services = basicServices(transport);
+    services.composite = transport;
+    // 종료 패킷 2 의 기존 일반 수신기를 이번 대여로 다시 등록해 대여 표식을 붙인다(없으면 등록하지 않는다).
+    const ended = transport.dispatch.registration(2);
+    if (ended.receive) transport.dispatch.register(2, ended.receive);
+    // 기술 0x69 는 독립 즉시 등록의 기존 호환 입구만 있으면 같은 즉시 입구로 다시 등록한다.
+    const technology = transport.dispatch.registration(0x69);
+    if (technology.directReceive) transport.dispatch.registerDirect(0x69, technology.directReceive);
+    // 자기 세대만 즉시 반납하며 실행 중 callback 은 같은 owner pin 으로 정상 복귀한다.
+    services.detachSession = () => { lease.detach(); };
+    services.callbacksActive = () => transport.connectionCallbackActive();
+    // 다른 하위 전송의 노드 주소도 현재 ID 검증을 거친다.
+    services.address = (id) => transport.address(id);
+    services.peerAddress = (id) => campaignPeerAddressText(services.address(id));
+    services.serve = (port) => { transport.serve(port); };
+    services.listen = (port) => { transport.listenLan(port); };
+    services.connect = (address, port) => { transport.connect(address, port); };
+    services.connectPeerText = (address, port) => { transport.connectPeerText(address, port); };
+    services.assign = (pending, owner) => { transport.assign(pending, owner); };
+    services.flush = () => { transport.flush(); };
+    services.peer = (owner) => transport.peer(owner);
+    services.connection = (id) => transport.connection(id);
+    services.exists = (id) => transport.exists(id);
+    services.isOpen = (id) => transport.isOpen(id);
+    services.status = (id) => transport.status(id);
     return services;
 }

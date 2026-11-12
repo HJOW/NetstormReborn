@@ -24,4 +24,4 @@ cpppj 에는 이 두 묶음을 직접 겨냥한 시험이 없다(`CampaignSessio
 
 - 한 문자열 치환 변형 35개(전송 22·로그인 13)를 돌려 첫 실행에서 4개가 남았다: family 두 BYTE 비교(하위 BYTE 만 읽는 변형)·`flush` 위임 제거·`isOpen` 을 존재로 대체·`peer` 위임 제거. 시험을 보강(family 0x0106, 닫힘 표시가 있는 존재하는 끝, 열기 전 flush 오류, `send` 가로채기로 `peer` 위임 확인)한 뒤 **0개**가 남았다.
 - **앱 수명:** 아직 Session 이 이 서비스를 만들지 않는다(PORT_MAP session 0). 다음 항목인 `CompositeMissionTransport` 뒤에 `BindCompositeCampaignTransport` 를 더하고, `RawCampaignSessionLogin`·4-D 조립이 로그인 서비스를 채운다.
-- 3.1절 4-C 는 23/30 이다. 다음: client `CompositeMissionTransport`.
+- 3.1절 4-C 는 23/30 이다. 다음: client `CompositeMissionTransport`. (후속: E327 에서 `bindCompositeCampaignTransport` 를 더해 PORT_MAP 이 partial→port 가 됐다, [문서](webpj-composite-mission-transport-20261112.md).)
