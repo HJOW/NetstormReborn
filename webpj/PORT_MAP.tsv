@@ -192,8 +192,8 @@ cpppj/src/client/MetaImageGump.cpp	port			todo	[client-default]
 cpppj/src/client/MetaImageList.cpp	port			todo	[client-default]
 cpppj/src/client/MinimapGeometry.cpp	port			todo	[client-default]
 cpppj/src/client/Mission.cpp	port			todo	[client-default] WB04-E273: 4-D 이월 — MissionScript(AppendArguments @파일·SectionNames·Set·CreateGuideMissionScript)는 웹 Config 확장과 Session 조립과 함께. 조회 순서(missionSpec 스크립트→loadFort→fortSpec .fort)는 tests/data-lookup-order.test.mjs 가 GameData 로 고정
-cpppj/src/client/MissionFortRequest.cpp	port			todo	[client-default]
-cpppj/src/client/MissionFortSource.h	port			todo	[client-default]
+cpppj/src/client/MissionFortRequest.cpp	port	www/core/mission-fort-request.js	a76499e3	port	[client-default] WB04-E337: 미션 Fort 요청 004b51e0(큰 Fort 선택 → Zone 512 작성(선언 길이 4) → 선택 뒤 현재 로컬 주소 9BYTE 를 +0x54/+0x58 DWORD 와 +0x5c 낮은 BYTE 로 복사 → +0=7·+0x7c 포트 → 복제 핸들 +0x80 → 복제 뒤 현재 순번 +1 감김)와 Zone 캡처(15+첫 슬롯 수×71 길이 확정·단독 소유 복제·핸들 1)·지연 로드 취소(LoadMissionFort→LoadMissionWorld). fixture mission-fort-request 10.78 144행 전부 첫 실행 일치. 기준선 뒤 a76499e3(헤더 +11줄 GeneralBattleStartRequest): 일반 LAN State7 요청이라 3.6③ LAN 제외. WriteCurrentGuideFortRequest/GuideFortRequestHooks 는 호출자가 UberEditor.inc 하나뿐인 Edit 전용이라 옮기지 않음(guide-fort-request fixture 미사용)
+cpppj/src/client/MissionFortSource.h	port	www/core/mission-fort-source.js	1f00a25a	port	[client-default] WB04-E337: 헤더만 — 미션이 선택한 같은 파일 읽기의 원문 이미지+실제 Template 파일 이름 값(MissionFortSourceImage)과 선택/읽기 분리 값(MissionFortFileSelection) 생성기. 함수 형식 FileReader/FileSelector 는 일반 함수. 소비자는 Mission(MissionScript::FortFileSelector/FortFileReader)과 Session 로그인 재로드
 cpppj/src/client/MissionGuideInput.cpp	port			todo	[client-default]
 cpppj/src/client/MissionLifecycle.cpp	port			todo	[client-default]
 cpppj/src/client/MissionLoadingMessage.cpp	port			todo	[client-default]

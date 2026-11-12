@@ -16982,10 +16982,41 @@
       "bytes": 112790,
       "lines": 49,
       "fixtureCommit": "a1bfa97d2",
-      "webCommit": "worktree",
+      "webCommit": "81dccfce4",
       "cpppjBasis": {
         "cpppj/src/o/SpStore.cpp": "a1bfa97d2",
         "cpppj/src/client/ClientSpGlobals.cpp": "c91d9b849"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E337",
+      "id": "mission-fort-request",
+      "path": "cpppj/tests/fixtures/mission-fort-request-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 미션 Fort 요청 작성 004b51e0 의 네 이름 슬롯 × 요청 전체 144BYTE(양옆 이웃 8BYTE 포함 160BYTE) × Fort 선택 뒤/복제 뒤 현재 주소·포트·순번 변형 3종 — 요청 후 160BYTE·순번·Zone 512BYTE·복제 86BYTE·효과 호출 순서 144행",
+      "consumers": [
+        "webpj/tests/mission-fort-request.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/mission-fort-request.js"
+      ],
+      "doc": "docs/webpj-mission-fort-request-20261112.md",
+      "cpppjSources": [
+        "cpppj/src/client/MissionFortRequest.cpp",
+        "cpppj/src/client/MissionFortRequest.h"
+      ],
+      "scope": "10.78 144행 전부",
+      "sha256": "1ce96cb3b740b26b68033e67b87493a88d0578357b080755419ba2a3d4041f19",
+      "bytes": 280170,
+      "lines": 145,
+      "fixtureCommit": "8c653e23c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MissionFortRequest.cpp": "e003de1a6",
+        "cpppj/src/client/MissionFortRequest.h": "a76499e35"
       }
     }
   ]
