@@ -17923,7 +17923,7 @@
       "bytes": 3273217,
       "lines": 6721,
       "fixtureCommit": "552656c0c",
-      "webCommit": "worktree",
+      "webCommit": "5b973c2bd",
       "cpppjBasis": {
         "cpppj/src/o/RawTempleRitual.cpp": "21bb25505"
       },
@@ -17941,6 +17941,99 @@
         "cpppj/src/o/RawTempleRitual.cpp"
       ],
       "scope": "10.78(originals) 3,360행 전부 사용, originalCD 3,360행은 범위 밖"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E367",
+      "sha256": "1af508f4d7c13401e6e9c3a5daacde2f941a83ad94332624d2b61b11173394f8",
+      "bytes": 274069,
+      "lines": 669,
+      "fixtureCommit": "5bdb5bedf",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDaisRegular.cpp": "21bb25505",
+        "cpppj/src/o/RawRitualRegular.cpp": "21bb25505"
+      },
+      "id": "daisregular-core",
+      "path": "cpppj/tests/fixtures/daisregular-core-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다이스 첫 하위 범위(사제 604 중지·붕괴·희생 시작·희생 진행·305 단계·다리 자격)의 반환 float 비트·효과 순서·네 슬롯 raw",
+      "consumers": [
+        "webpj/tests/dais-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dais-regular.js",
+        "webpj/www/core/raw-ritual-regular.js"
+      ],
+      "doc": "docs/webpj-dais-regular-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDaisRegular.cpp",
+        "cpppj/src/o/RawRitualRegular.cpp"
+      ],
+      "scope": "10.78(originals) 334행 전부 사용, originalCD 334행은 범위 밖"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E367",
+      "sha256": "20f5ddd2486a3b592db3a4f77a8f18200a9ec4f46cec5f43355d86cf1f215cea",
+      "bytes": 2485473,
+      "lines": 2965,
+      "fixtureCommit": "db9b626c0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDaisRegular.cpp": "21bb25505",
+        "cpppj/src/o/RawRitualRegular.cpp": "21bb25505"
+      },
+      "id": "daisprogress",
+      "path": "cpppj/tests/fixtures/daisprogress-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다이스 진행·룬 304·희생 진행·제단 정기 handle 의 반환 비트·효과 순서·난수 상태·다섯 슬롯 raw·지연 소리 시각·Player 결과",
+      "consumers": [
+        "webpj/tests/dais-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dais-regular.js",
+        "webpj/www/core/raw-ritual-regular.js"
+      ],
+      "doc": "docs/webpj-dais-regular-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDaisRegular.cpp",
+        "cpppj/src/o/RawRitualRegular.cpp"
+      ],
+      "scope": "10.78(originals) 1,482행 중 다이스만 쓰는 progress/rune/advance 426행 사용(handle 1,056행은 RawAltarSacrifice 이식 때 사용), originalCD 1,482행은 범위 밖"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E367",
+      "sha256": "f2ccd4f6499e54356a1f6dd6e68d9ceab02f30aa388b7f86ed79e584216f0b17",
+      "bytes": 315776,
+      "lines": 641,
+      "fixtureCommit": "860030e73",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDaisRegular.cpp": "21bb25505"
+      },
+      "id": "daisbridge",
+      "path": "cpppj/tests/fixtures/daisbridge-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 다이스 다리 명령이 실제 PathStart/BFS/Host/직렬화/PathCleanup 으로 만든 새/기존 경로의 사건·꼭짓점·명령 필드·방향·시각 비트",
+      "consumers": [
+        "webpj/tests/dais-bridge.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-dais-regular.js"
+      ],
+      "doc": "docs/webpj-dais-regular-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDaisRegular.cpp"
+      ],
+      "scope": "10.78(originals) 320행 전부 사용, originalCD 320행은 범위 밖"
     }
   ]
 }
