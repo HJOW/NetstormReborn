@@ -17075,10 +17075,41 @@
       "bytes": 607951,
       "lines": 1541,
       "fixtureCommit": "e5a68d592",
-      "webCommit": "worktree",
+      "webCommit": "c0dc408e0",
       "cpppjBasis": {
         "cpppj/src/client/MissionLoadingMessage.cpp": "aba685cf9",
         "cpppj/src/client/MissionLoadingMessage.h": "aba685cf9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E340",
+      "id": "mission-guide",
+      "path": "cpppj/tests/fixtures/mission-guide-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Guide Run 00463bb0·Advance 00482c80 의 두 미션 객체 flags/sequence × pending/창 관문 × 호출 도중 외부 변경 7가지(action 1~6·8) × 현재 포인터 조회 횟수 1550행 — 최종 현재 식별자·두 객체 전체 208BYTE·외부 호출 순서",
+      "consumers": [
+        "webpj/tests/raw-mission-guide.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mission-guide.js"
+      ],
+      "doc": "docs/webpj-mission-guide-20261112.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawMissionGuide.cpp",
+        "cpppj/src/o/RawMissionGuide.h"
+      ],
+      "scope": "10.78 1550행 전부",
+      "sha256": "d69b394b3ac8a87f220bd1f382f1ad7aa54bd9bb6664319becc3bde89ab6e698",
+      "bytes": 1407801,
+      "lines": 1551,
+      "fixtureCommit": "400aaefb8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawMissionGuide.cpp": "400aaefb8",
+        "cpppj/src/o/RawMissionGuide.h": "400aaefb8"
       }
     }
   ]
