@@ -17987,24 +17987,31 @@
       "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisRegular.cpp": "21bb25505",
-        "cpppj/src/o/RawRitualRegular.cpp": "21bb25505"
+        "cpppj/src/o/RawRitualRegular.cpp": "21bb25505",
+        "cpppj/src/o/RawAltarSacrifice.cpp": "21bb25505",
+        "cpppj/src/o/RawDaisDeletion.cpp": "21bb25505"
       },
       "id": "daisprogress",
       "path": "cpppj/tests/fixtures/daisprogress-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 다이스 진행·룬 304·희생 진행·제단 정기 handle 의 반환 비트·효과 순서·난수 상태·다섯 슬롯 raw·지연 소리 시각·Player 결과",
       "consumers": [
-        "webpj/tests/dais-regular.test.mjs"
+        "webpj/tests/dais-regular.test.mjs",
+        "webpj/tests/altar-sacrifice.test.mjs"
       ],
       "modules": [
         "webpj/www/core/raw-dais-regular.js",
-        "webpj/www/core/raw-ritual-regular.js"
+        "webpj/www/core/raw-ritual-regular.js",
+        "webpj/www/core/raw-altar-sacrifice.js",
+        "webpj/www/core/raw-dais-deletion.js"
       ],
       "doc": "docs/webpj-dais-regular-20261113.md",
       "cpppjSources": [
         "cpppj/src/o/RawDaisRegular.cpp",
-        "cpppj/src/o/RawRitualRegular.cpp"
+        "cpppj/src/o/RawRitualRegular.cpp",
+        "cpppj/src/o/RawAltarSacrifice.cpp",
+        "cpppj/src/o/RawDaisDeletion.cpp"
       ],
-      "scope": "10.78(originals) 1,482행 중 다이스만 쓰는 progress/rune/advance 426행 사용(handle 1,056행은 RawAltarSacrifice 이식 때 사용), originalCD 1,482행은 범위 밖"
+      "scope": "10.78(originals) 1,482행 전부 사용(다이스만 쓰는 progress/rune/advance 426행은 E367, 제단 정기 handle 1,056행은 E368), originalCD 1,482행은 범위 밖"
     },
     {
       "kind": "original-x86",
@@ -18016,7 +18023,7 @@
       "bytes": 315776,
       "lines": 641,
       "fixtureCommit": "860030e73",
-      "webCommit": "worktree",
+      "webCommit": "e1f31d7f1",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisRegular.cpp": "21bb25505"
       },
@@ -18034,6 +18041,41 @@
         "cpppj/src/o/RawDaisRegular.cpp"
       ],
       "scope": "10.78(originals) 320행 전부 사용, originalCD 320행은 범위 밖"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E368",
+      "sha256": "10ff5e1a36607b575a7de140023ee353263ea79da90991b2d58f03cd2ddccac1",
+      "bytes": 2022850,
+      "lines": 2867,
+      "fixtureCommit": "5bdb5bedf",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawAltarSacrifice.cpp": "21bb25505",
+        "cpppj/src/o/RawRitualRegular.cpp": "21bb25505",
+        "cpppj/src/o/RawDaisDeletion.cpp": "21bb25505"
+      },
+      "id": "altarsacrifice",
+      "path": "cpppj/tests/fixtures/altarsacrifice-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 제단 20~24 사건·가상 개수·이탈 프레임·해방·다이스 전처리(제단 24 순회)의 반환 float 비트·효과 순서·난수 상태·Player 결과·다섯 슬롯 raw",
+      "consumers": [
+        "webpj/tests/altar-sacrifice.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-altar-sacrifice.js",
+        "webpj/www/core/raw-ritual-regular.js",
+        "webpj/www/core/raw-dais-deletion.js"
+      ],
+      "doc": "docs/webpj-altar-sacrifice-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawAltarSacrifice.cpp",
+        "cpppj/src/o/RawRitualRegular.cpp",
+        "cpppj/src/o/RawDaisDeletion.cpp"
+      ],
+      "scope": "10.78(originals) 1,435행 전부 사용, originalCD 1,431행은 범위 밖"
     }
   ]
 }
