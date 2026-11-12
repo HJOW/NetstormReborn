@@ -17807,7 +17807,7 @@
       "bytes": 3358,
       "lines": 49,
       "fixtureCommit": "d3a3eb4b1",
-      "webCommit": "worktree",
+      "webCommit": "55fe9864d",
       "cpppjBasis": {
         "cpppj/src/o/RawGunTarget.cpp": "56a282700"
       },
@@ -17825,6 +17825,35 @@
         "cpppj/src/o/RawGunTarget.cpp"
       ],
       "scope": "10.78 48행 전부(웹 준비 자료의 실제 TYPE/SHP 로 대조)"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E363",
+      "sha256": "2890d6b54b9e06809d2303845a858e64ef5f85a49ecd015eb42e86e5e75a7638",
+      "bytes": 438204,
+      "lines": 2275,
+      "fixtureCommit": "a349e63c9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGunImpact.cpp": "f2f9e8374"
+      },
+      "id": "gunimpact",
+      "path": "cpppj/tests/fixtures/gunimpact-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 충돌 효과 생산 Visual·anim Handle·좌표 제한·anim 생성자·Kernel 개수·지면 Ground — 반환 비트·호출 순서·anim 슬롯 50바이트·Regular 의미 상태·공유 난수·좌표",
+      "consumers": [
+        "webpj/tests/gun-impact.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-gun-impact.js"
+      ],
+      "doc": "docs/webpj-gun-impact-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGunImpact.cpp"
+      ],
+      "scope": "10.78(originals) 1,137행 전부 사용, originalCD 1,137행은 범위 밖"
     }
   ]
 }
