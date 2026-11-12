@@ -6,7 +6,8 @@
 //    세로(0/4)면 (출발 x, 끝 y), 가로면 (끝 x, 출발 y) 를 돌려준다.
 //  - hotspot(firing): 현재 물리 SHP 포구 픽셀(기본 프레임과 합산하지 않음). directionFrame(from, to, type): 표시 타입의 균등 방향 반올림 뒤 방향당 물리 프레임 수를 곱한다. dimensions(target)/targetBounds(target, position): 실제 footX/footY 와 확장 높이가 있는 표적 상자이다.
 // types[n] = { footX, footY }, geometry[n] = { defaultFrame, frameCount, directions, shotOffsets[[x,y]], heightExtension, range(float) }, scale 은 현재 BoardCoord 픽셀 배율(기본 16, 11), gunMode 는 { pool, get(sid) } 이다. 이 모듈은 DOM 을 쓰지 않는다.
-// (2026-11-08 WB04-E85: 투사체 포구/치수 기하 이식으로 추가)
+// 실제 TYPE 정의와 SHP 헤더에서 geometry 표를 만드는 연결은 raw-projectile-geometry-types.js(buildProjectileGeometryTypes)이다.
+// (2026-11-08 WB04-E85: 투사체 포구/치수 기하 이식으로 추가, 2026-11-13 WB04-E362: 실제 SHP 헤더 연결 모듈 안내 추가)
 
 // 실제 10.78 방향 helper 의 근사 원주/직각/역원주 double 비트이다. (2026-11-08 WB04-E85)
 const bits = new DataView(new ArrayBuffer(8));

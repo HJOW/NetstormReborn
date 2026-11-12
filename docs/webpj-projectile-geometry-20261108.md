@@ -19,7 +19,7 @@
 
 ## 3. 경계와 남은 것
 
-- `muzzle` 의 71 외 분기·`hotspot`·`directionFrame`·아이스/썬더(`gunMode`) 사정선은 이 단위의 fixture 로 직접 대조되지 않는다(원본 관측은 썬 디스크 발사기 포구·치수·상자와 썬 캐논 사정선이다). Missile/Cannon 소비자 단위의 fixture 가 이어서 확인한다(PORT_MAP 상태 partial). 실제 SHP 헤더 `+20/+22` 포구 읽기 자체는 SHP 자산 단위에서 연결한다.
+- `muzzle` 의 71 외 분기·`hotspot`·`directionFrame`·아이스/썬더(`gunMode`) 사정선은 이 단위의 fixture 로 직접 대조되지 않는다(원본 관측은 썬 디스크 발사기 포구·치수·상자와 썬 캐논 사정선이다). Missile/Cannon 소비자 단위의 fixture 가 이어서 확인한다(PORT_MAP 상태 partial). 실제 SHP 헤더 `+20/+22` 포구 읽기 자체는 SHP 자산 단위에서 연결한다. **→ 소비자 fixture 대조는 E126 에서 끝났고 실제 SHP 헤더 연결은 WB04-E362 에서 끝내 `port` 가 되었다**([docs/webpj-projectile-geometry-types-20261113.md](webpj-projectile-geometry-types-20261113.md)).
 
 ## 4. 다음 시작점
 
