@@ -16654,7 +16654,7 @@
       "bytes": 51116,
       "lines": 67,
       "fixtureCommit": "fb1b29007",
-      "webCommit": "worktree",
+      "webCommit": "3cbadabab",
       "cpppjBasis": {
         "cpppj/src/zacket/LocalMissionTransport.cpp": "50a5a1845"
       }
@@ -16889,6 +16889,38 @@
       "webCommit": "ce816c237",
       "cpppjBasis": {
         "cpppj/src/o/RawRegionPaint.cpp": "bae8b702b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E325",
+      "id": "subscriber-lifetime-edges",
+      "path": "cpppj/tests/fixtures/subscriber-lifetime-edges-v2-x86.tsv",
+      "producer": "cpppj 독립 기계어 관측(v2, 확정 함수 범위 디코드): 두 Subscriber DWORD(00540c74/0054265c)를 쓰는 실제 store 직전·직후 4DWORD checkpoint 120행(World·Tutorial Init 004c335c·그 밖의 선택 store). 부모 전체 반환이 아닌 store 에 이르는 최소 명령 구간",
+      "consumers": [
+        "webpj/tests/client-connection-globals.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/client-subscriber-globals.js",
+        "webpj/www/core/tutorial-init.js"
+      ],
+      "doc": "docs/webpj-client-connection-globals-20261112.md",
+      "cpppjSources": [
+        "cpppj/src/client/ClientSubscriberGlobals.h",
+        "cpppj/src/client/TutorialInit.cpp"
+      ],
+      "scope": "120행 중 Tutorial Init 현재 login 복사 지점(004c335c) 10행을 실제 initializeTutorialMission 에 연결해 재생(전 120행의 10칼럼 형태도 확인). 나머지 110행(World 등록 00482c0c 등 다른 store 지점)의 값 재생은 이 단위의 시험이 읽지 않으며 해당 소비자 단위가 필요할 때 대조한다",
+      "sha256": "2460f27f14a04d1f02d0419a7b16ba79f0c628359ac5685c9dc88904c7314f4b",
+      "bytes": 15764,
+      "lines": 121,
+      "fixtureCommit": "88834c491",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ClientSubscriberGlobals.h": "bed549ff5",
+        "cpppj/src/client/TutorialInit.cpp": "8ba4af11b"
       }
     }
   ]
