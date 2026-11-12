@@ -57,8 +57,8 @@ cpppj/src/client/ClientNsInfoGlobals.cpp	port			todo	[client-default]
 cpppj/src/client/ClientOptionsDisk.cpp	adapt	www/platform/settings.js;www/platform/progress.js	1f00a25a	partial	[adapt-options] options.cfg 키를 브라우저 저장소에 보관(웹 대체) / WB04-E272: 판정 유지 — 디스크 options.cfg 읽기/쓰기는 웹 제외, 키 보관만 settings.js
 cpppj/src/client/ClientOptionsFile.cpp	adapt	www/platform/settings.js	1f00a25a	port	[adapt-options] WB04-E272: options.cfg 디스크 저장·CP1252 XOR/UTF-8 BOM 인코딩 웹 제외(옵션은 브라우저 저장소). 원문 인코딩은 config-interface·original-text 시험
 cpppj/src/client/ClientOptionsSaveIO.h	adapt	www/platform/settings.js	1f00a25a	port	[adapt-options] WB04-E272: options.cfg 저장 입출력 경계 웹 제외(settings.js 가 브라우저 저장소에 보관)
-cpppj/src/client/ClientPlayerRecords.cpp	port			todo	[client-default]
-cpppj/src/client/ClientPlayerRuntime.cpp	port			todo	[client-default]
+cpppj/src/client/ClientPlayerRecords.cpp	port	www/core/client-player-records.js	7ba0130b	port	[client-default] WB04-E332: Client 수명 Player 기록 소유자 — 실제 할당 블록(Player 1620BYTE·공장 120BYTE×9, 0x30000000 부터 0x1000 간격 32비트 주소 토큰)과 원문 부모(initializePlayerRecords)용 메모리 장치(할당 크기·해제 종류·생존 블록·요청 폭 검사)·단일 세션 대여(acquire/Use: initialize·adoptCurrent·bindFactory·reuseOrBindFactory·release)·005951f8/005951fc 상자·동맹 81칸·Deck 저장소·Core 소유자 연결(bindCoreData)을 옮김. 기준선 뒤 ReuseOrBindFactory(7ba0130b, Native 공유 목록의 같은 Client/행 재사용)를 3.6절 ② 로 반영. cpppj 시험 6건 이식 + 웹 계약 시험. 웹: 시험용 firstToken 인자 추가. 남음: 없음
+cpppj/src/client/ClientPlayerRuntime.cpp	port	www/core/client-player-runtime.js	b6bc3e05	port	[client-default] WB04-E332: 공통 시작 initializeClientPlayerRecords(known0 관문·records.initialize 의 동맹 자식을 RawPlayerParticipation.setAlliance 로 실행·known0 이 아닌 World 조회 세 개는 미선택 World 장치 오류) 이식. cpppj 시험 4건 이식(공통 시작·Core0 선행·저장소 채택·할당 실패 뒤 채택 거부, 실제 Client 대신 최소 덕타입 장치). 기준선 뒤 변경 없음(3.6절 ①). 남음: 없음
 cpppj/src/client/ClientProductionSync.cpp	port			todo	[client-default]
 cpppj/src/client/ClientRandomGlobals.h	port	www/core/random.js	1f00a25a	port	[client-default] WB04-C1
 cpppj/src/client/ClientRendererFrame.cpp	port			todo	[client-default]
@@ -80,7 +80,7 @@ cpppj/src/client/ConfigurationCommandInput.cpp	port	www/core/configuration-comma
 cpppj/src/client/ConstructionHistoryKey.cpp	port	www/core/construction-history-key.js	1f00a25a	port	[client-default] WB04-E22: Tab 최근 건설 위치 순환과 최초 5칸 초기화(0043994c·0040e800). fixture construction-history-key 10.78 511행 전부
 cpppj/src/client/ConstructionVisualRenderer.cpp	port			todo	[client-default]
 cpppj/src/client/CreateAtInput.cpp	port	www/core/create-at-input.js	1f00a25a	port	[client-default] WB04-E33: 004d84f8..851b CreateAt 일반 입력과 이름표. fixture create-at-input 408행 전부·create-at-names 15행(이름→번호)
-cpppj/src/client/CurrentAllocationBytes.h	port			todo	[client-default]
+cpppj/src/client/CurrentAllocationBytes.h	port	www/core/current-allocation-bytes.js	c1b8fbf4	port	[client-default] WB04-E332(웹 적응): 원문은 같은 크기 malloc 의 미초기화 내용을 복사해 new 가 초기화하지 않는 바이트의 현재 할당 입력으로 쓴다. 웹은 비결정적 힙 내용을 읽을 수 없고 새 Uint8Array 가 0 이므로 입력을 덮어쓰지 않고(결정적) 검사는 ClientPlayerRecords 의 allocationBytes 인자로 명시 입력을 주입한다. 남음: 없음
 cpppj/src/client/CurrentTypeHitPoints.cpp	port			todo	[client-default]
 cpppj/src/client/Cursor.cpp	adapt	www/ui/cursor.js	1f00a25a	partial	[adapt-screen] RT_CURSOR 해독→CSS 커서(웹 대체). 커서2~14·17·18은 미션 입력과 함께
 cpppj/src/client/CursorObjectPickup.cpp	port	www/core/client-input-commands.js	1f00a25a	port	[client-default] WB04-E23: 00447340 편집 객체 취득(Unpop→현재 TYPE/WORD→생성→Take). fixture cursor-object-pickup 10.78 96행 전부
