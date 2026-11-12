@@ -515,25 +515,29 @@
       "required": false,
       "producer": "cpppj 원본 Renderer 카메라 64바이트 x86 관측",
       "consumers": [
-        "webpj/tests/world-render.test.mjs"
+        "webpj/tests/world-render.test.mjs",
+        "webpj/tests/client-ai-camera-globals.test.mjs"
       ],
       "modules": [
-        "webpj/www/render/camera-view.js"
+        "webpj/www/render/camera-view.js",
+        "webpj/www/core/client-camera-globals.js"
       ],
       "unit": "WB03-Z",
       "doc": "docs/webpj-world-render-20261102.md",
       "cpppjSources": [
-        "cpppj/src/client/RawCameraView.cpp"
+        "cpppj/src/client/RawCameraView.cpp",
+        "cpppj/src/client/ClientCameraGlobals.cpp"
       ],
-      "scope": "카메라 상태·좌표 변환. 실제 카메라 시작/제한/스크롤 정책은 미연결",
+      "scope": "카메라 상태·좌표 변환(WB03-Z) 및 Client 카메라 전역의 Native Renderer 초기화 init 행(WB04-E333). 실제 카메라 시작/제한/스크롤 정책은 미연결",
       "text": true,
       "sha256": "fb22a21df5be3ca9201d1c8d635f0e4b49b6f974efbacfe46e012a86536887d0",
       "bytes": 8139,
       "lines": 17,
-      "fixtureCommit": "e210c755",
-      "webCommit": "67aae862",
+      "fixtureCommit": "e210c7559",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/client/RawCameraView.cpp": "e210c755"
+        "cpppj/src/client/RawCameraView.cpp": "e210c7559",
+        "cpppj/src/client/ClientCameraGlobals.cpp": "66583eb4f"
       }
     },
     {
