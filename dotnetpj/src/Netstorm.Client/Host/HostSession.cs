@@ -733,6 +733,10 @@ public sealed class HostSession
     /// <remarks>2026-11-12 0.466에서 HostTerrainPopTests의 spot 대조용으로 추가했다. Unpop 쪽과 같은 배열을 공유한다.</remarks>
     public byte[]? TerrainPopSpots => _terrainSpots;
 
+    /// <summary>요새 내용물 Form 부착 진단을 검사·대조용으로 빌려준다. 부착 경로 실행 여부를 확인한다.</summary>
+    /// <remarks>2026-11-12 0.467에서 추가했다. 원문 진단 복귀 뒤에도 계속 진행하므로 기록만 남긴다.</remarks>
+    public IReadOnlyList<string> FortAttachDiagnostics => _fortAttachDiagnostics;
+
     /// <summary>세션 저장소를 묶은 지형 바인딩이다. 만들기 전까지 null이다.</summary>
     /// <remarks>2026-11-12 0.454에서 지형 바인딩 드라이런 조립용으로 추가했다. Generate 호출 연결은 다음 단위다.</remarks>
     public RawNormalTerrainWorldBinding? TerrainBinding { get; private set; }
@@ -813,6 +817,123 @@ public sealed class HostSession
             ChunkRegion = (x, y) => unchecked((sbyte)World.At(x, y).Island),
             Assertion = TerrainDiagnostics.Stamp,
         };
+    }
+
+    /// <summary>요새 내용물 Form 부착의 세션 소유 몸체다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.467에서 추가했다. 서버 전송은 MP 전송(R6)에서 잇기 전까지 기록만 한다(단독 미션 시작 흐름과 같은 관문).</remarks>
+    private RawSquidForms? _fortForms;
+
+    /// <summary>요새 내용물 Form 부착 진단의 세션 소유 기록이다. 부착 경로 실행을 검사에서 확인한다.</summary>
+    /// <remarks>2026-11-12 0.467에서 추가했다. 원문 진단 복귀 뒤에도 계속 진행하므로 기록만 남긴다.</remarks>
+    private readonly List<string> _fortAttachDiagnostics = [];
+
+    /// <summary>요새 객체 적재의 세션 소유 공장이다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.467에서 요새 객체 live 적재용으로 추가했다. 지형 공장과 같은 풀을 쓰며 서버 할당(0)도 처리한다.</remarks>
+    private RawSquidFactory? _fortFactory;
+
+    /// <summary>요새 객체 HP 판정의 세션 소유 보상 몸체다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.467에서 추가했다. 세션 공유 SP 저장소와 지형 장부를 빌린다.</remarks>
+    private RawSquidReward? _fortHp;
+
+    /// <summary>요새 내용물 생성의 세션 소유 몸체다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.467에서 추가했다. 부착은 bound Form 분배로 live 연결하며 서버 전송은 MP 전송(R6)에서 잇는다.</remarks>
+    private RawContainedCreate? _fortContained;
+
+    /// <summary>요새 객체 Pop의 건물 옆면·표면 통지 몸체다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.467에서 추가했다. 지형 Pop과 같은 해시·spots를 공유한다(cpppj core.building 대응).</remarks>
+    private RawBuildingSpace? _fortBuilding;
+
+    /// <summary>요새 객체 Pop의 세션 소유 몸체다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.467에서 추가했다. 지형 Pop과 같은 해시·spots에 등록한다(cpppj core.pop 공유 대응). 표시·파생은 잇지 않는다.</remarks>
+    private RawPop? _fortPop;
+
+    /// <summary>요새 객체 적재의 세션 소유 작업 영역이다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.467에서 추가했다. 미션 적재값(Mission=true·ChaffMode=true, Fort=false·Special=false·Version=0)을 둔다(cpppj RawCampaignSession.cpp 1093행 대응).</remarks>
+    private FortObjectLoadState? _fortState;
+
+    /// <summary>요새 객체 적재의 세션 소유 로더다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.467에서 추가했다. Load(fort, 칸) 한 호출이 전체 20개 Terr+Chaff를 적재한다.</remarks>
+    private RawFortObjectLoad? _fortLoader;
+
+    /// <summary>요새 객체 적재의 공장·공간·HP·내용물 장치를 세션에 연결한다. 지형 Pop 장치 뒤에 연결해야 한다(같은 해시·spots·표시를 공유한다).</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 패치판 188개여야 한다.</param>
+    /// <param name="frames">같은 실제 프레임 표다. 타입 개수와 같아야 한다.</param>
+    /// <remarks>2026-11-12 0.467에서 요새 객체 live 적재용으로 추가했다. 근거: cpppj RawCampaignWorldRuntime.cpp 43~53행(객체 갈고리+MakeFortObjectLoadHooks+RawFortObjectLoad)의 세션 결선이다.
+    /// SetState·FinishOwner는 기록만 하며(R6 공장 후처리·거주 배치에서 잇는다), Destroy·VirtualCount·내용물 부착은 미션 적재(Fort=false)에서 도달하지 않으므로 명시 경계로 둔다.</remarks>
+    public void BuildFortObjectDevices(IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        ArgumentNullException.ThrowIfNull(frames);
+        if (types.Count != OriginalConstructors.TypeCount || frames.Count != types.Count)
+        {
+            throw new ArgumentException("요새 객체 타입·프레임 목록 크기 오류", nameof(types));
+        }
+        if (_terrainHash is null || _terrainSpots is null || _terrainDisplay is null || _terrainPop is null)
+        {
+            throw new InvalidOperationException("요새 객체 장치는 지형 Pop 장치 뒤에 연결해야 한다");
+        }
+        _fortFactory = new RawSquidFactory(Pool, types);
+        _fortHp = new RawSquidReward(Pool, types, TerrainBookkeeping, new SquidRewardState(), Sp);
+        _fortForms = new RawSquidForms(Pool, null, (_, _) => { });
+        _fortForms.BindAttach(new FormAttachHooks
+        {
+            Assertion = (expression, file, line) => _fortAttachDiagnostics.Add($"{expression} {file}:{line}"),
+        });
+        var containedHooks = new ContainedCreateHooks
+        {
+            NotifySurface = sid => _fortBuilding!.NotifySurface(sid),
+            Attach = (form, parent, flags) => _fortForms.Attach(form, parent, flags),
+        };
+        RawContainedCreate.ConnectFactory(Pool, _fortFactory, containedHooks);
+        _fortContained = new RawContainedCreate(Pool, new ContainedCreateState(), containedHooks);
+        _fortBuilding = new RawBuildingSpace(Pool, _terrainHash, types,
+            new BuildingSpaceState { IslandType = TerrainGlobals.IslandType, BridgeType = 82 });
+        _fortPop = new RawPop(Pool, _terrainHash, _terrainSpots);
+        _fortPop.SetBuildingSide(_fortBuilding);
+        _fortState = new FortObjectLoadState { Mission = true, ChaffMode = true };
+        var owner = new SquidOwner(Pool, types, TerrainBookkeeping, OwnerMode);
+        RawIslandRuntime islands = BuildIslands(new IslandRuntimeHooks
+        {
+            SetResidenceOwner = (_, _) => { },
+            Assertion = _ => { },
+        });
+        var hooks = new FortObjectLoadHooks
+        {
+            NotifySurface = sid => _fortBuilding.NotifySurface(sid),
+            SetState = (_, _) => { },
+            SetOwner = owner.Set,
+            HasHitPoints = _fortHp.HasHitPoints,
+            MaxHitPoints = _fortHp.MaxHitPoints,
+            VirtualCount = _ => throw new InvalidOperationException("Fort 가상 개수 미연결(R6)"),
+            Pop = (sid, x, y, flags) =>
+            {
+                // 요새 객체 Pop의 공간 등록은 R6 postPop·표시·그래프 장치와 함께 잇는다.
+                // 실측 결과 thewarbegins 요새 객체에 Pop 지원표 밖 가상 표(71·75·78·89·122 등)가 있어
+                // 지금 공간 등록을 수행하면 파생 등록 효과 미지원으로 멈춘다. 생성·소유자·HP·프레임은 live로 둔다.
+            },
+            Destroy = (_, _) => throw new InvalidOperationException("Fort 파괴 미연결(R6)"),
+            CreateContent = _fortContained.Create,
+            ChunkRegion = (x, y) => unchecked((sbyte)World.At(x, y).Island),
+            TerritoryAllowed = (region, territoryOwner, territory) => islands.Matches(region, unchecked((int)territoryOwner), territory),
+            LoadingDepthChanged = depth => _worldLoadingDepth = depth,
+            FinishOwner = _ => { },
+        };
+        RawFortObjectLoad.MakeFortObjectLoadHooks(Pool, _fortFactory, _fortHp, _fortContained, hooks);
+        _fortLoader = new RawFortObjectLoad(Pool, _terrainHash, types, frames, Game, _fortState, hooks);
+    }
+
+    /// <summary>적재한 FortTemplate의 객체를 실제 로더로 풀에 만든다. 장치 연결 전에 호출하면 거부한다.</summary>
+    /// <param name="fort">객체를 읽을 FortTemplate다.</param>
+    /// <param name="slot">미션 Template 칸 번호다. 1~8이면 기본 소유자로 쓴다.</param>
+    /// <remarks>2026-11-12 0.467에서 요새 객체 live 적재용으로 추가했다. Generate 뒤 Objects 순서에서 부른다.</remarks>
+    public void LoadFortObjects(FortTemplate fort, uint slot)
+    {
+        ArgumentNullException.ThrowIfNull(fort);
+        if (_fortLoader is null)
+        {
+            throw new InvalidOperationException("요새 객체 장치가 연결되지 않았다");
+        }
+        _fortLoader.Load(fort, unchecked((int)slot));
     }
 
     /// <summary>빈 프레임 표 188개를 만든다. 검사 하네스의 LoadScene과 같은 공유 빈 표다.</summary>

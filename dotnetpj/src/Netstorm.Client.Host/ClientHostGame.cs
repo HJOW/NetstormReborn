@@ -319,6 +319,8 @@ public sealed class ClientHostGame : Game
         var shpDb = new Netstorm.Assets.ShapeDatabase(shpRaw);
         List<SquidDisplayShape> popShapes = TerrainDisplayShapes.Build(worldDefinitions, shpDb);
         session.BuildTerrainPopDevices(types.Types, popShapes);
+        // 요새 객체 적재 장치. 지형 Pop과 같은 해시·spots·표시를 공유한다(cpppj RawCampaignWorldRuntime, 0.467).
+        session.BuildFortObjectDevices(types.Types, session.WorldFrames);
         // 지형 바인딩 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 진단 저널 연결은 7차 로그 배선 단위에서 잇는다.
         session.TerrainDiagnostics.Context = _ => { };
         session.TerrainDiagnostics.Stamp = _ => { };
@@ -351,7 +353,12 @@ public sealed class ClientHostGame : Game
                 LoadingDepthChanged = _ => throw new InvalidOperationException("시작 흐름은 깊이 효과를 요청하지 않는다"),
                 BuilderAssertion = _ => throw new InvalidOperationException("시작 흐름의 빌더 진단은 원본 분류와 불일치한다"),
                 Generate = (_, _) => { },
-                Objects = (_, _) => { },
+                Objects = (fortTemplate, slot) =>
+                {
+                    worldOrder.Add($"fortObjects:{slot}");
+                    // 실제 요새 객체 적재 live 연결. Terrain·Money·Meta와 같은 풀·깊이로 둔다(0.467).
+                    session.LoadFortObjects(fortTemplate, slot);
+                },
                 Money = (_, _) => { },
                 Badges = (_, _) => { },
                 Technology = (_, _) => { },
@@ -395,7 +402,12 @@ public sealed class ClientHostGame : Game
                     worldOrder.Add($"template:{slot}");
                     return fort.Fort;
                 },
-                Objects = (_, slot) => worldOrder.Add($"objects:{slot}"),
+                Objects = (fortTemplate, slot) =>
+                {
+                    worldOrder.Add($"objects:{slot}");
+                    // 실제 요새 객체 적재 live 연결. 캠페인 부모가 부르는 같은 FortTemplate·칸 경로다(0.467).
+                    session.LoadFortObjects(fortTemplate, slot);
+                },
                 RebuildGraph = graph => worldOrder.Add($"graph:{graph}"),
                 ResetCamera = () => worldOrder.Add("camera"),
             });
