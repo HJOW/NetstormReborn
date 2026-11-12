@@ -17633,7 +17633,7 @@
       "bytes": 3332629,
       "lines": 1303,
       "fixtureCommit": "180149647",
-      "webCommit": "worktree",
+      "webCommit": "0e37159f3",
       "cpppjBasis": {
         "cpppj/src/o/RawFlyerTarget.cpp": "180149647"
       },
@@ -17651,6 +17651,64 @@
         "cpppj/src/o/RawFlyerTarget.cpp"
       ],
       "scope": "10.78 1,302행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E357",
+      "sha256": "aa3a4fd3f4e69b528f63dd070bdcd20e009ac77404a6f28d66c7d9bd8820c5f4",
+      "bytes": 519397,
+      "lines": 411,
+      "fixtureCommit": "bebf11ce4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSunFlyerFrame.cpp": "253e6a998"
+      },
+      "id": "sun-flyer-frame",
+      "path": "cpppj/tests/fixtures/sun-flyer-frame-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 훨리기그 전용 비행 초기화 I·장식 프레임 A·통지 N·홈 통지 P·폭탄 정리 C·종료 E·전용 Frame F·복귀 지연 R·표적 가능 Z 410행 — 필드 136바이트·객체 9개 450바이트·전역 20바이트·반환·효과 순서",
+      "consumers": [
+        "webpj/tests/raw-sun-flyer-frame.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-sun-flyer-frame.js"
+      ],
+      "doc": "docs/webpj-sun-flyer-frame-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSunFlyerFrame.cpp"
+      ],
+      "scope": "10.78 410행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E357",
+      "sha256": "fdd6b87b20e60b765830b3d2114a3c4a1a002914f58ade557019e87ff42ca307",
+      "bytes": 37220,
+      "lines": 31,
+      "fixtureCommit": "253e6a998",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSunFlyerFrame.cpp": "253e6a998"
+      },
+      "id": "sun-flyer-clear",
+      "path": "cpppj/tests/fixtures/sun-flyer-clear-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 훨리기그 전체 DWORD 폭탄 번호 정리·홈 통지 30행 — 첫 Frame 전 미정 값도 장치 효과 없이 0 으로 쓰는 경계",
+      "consumers": [
+        "webpj/tests/raw-sun-flyer-frame.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-sun-flyer-frame.js"
+      ],
+      "doc": "docs/webpj-sun-flyer-frame-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSunFlyerFrame.cpp"
+      ],
+      "scope": "10.78 30행 전부"
     }
   ]
 }
