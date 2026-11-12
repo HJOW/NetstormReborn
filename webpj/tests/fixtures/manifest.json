@@ -17013,10 +17013,41 @@
       "bytes": 280170,
       "lines": 145,
       "fixtureCommit": "8c653e23c",
-      "webCommit": "worktree",
+      "webCommit": "63d4a1f8f",
       "cpppjBasis": {
         "cpppj/src/client/MissionFortRequest.cpp": "e003de1a6",
         "cpppj/src/client/MissionFortRequest.h": "a76499e35"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E338",
+      "id": "mission-technology",
+      "path": "cpppj/tests/fixtures/mission-technology-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 미션 techAllowed 목록 적용 00482eb0 의 목록 문자열·호출 도중 바뀌는 현재 목록·초기 표 시드 × deny/allow/all/이름 항목과 빈 항목 종료, 미등록 이름 -1 쓰기 55행 — 257DWORD 표(앞 한 칸+물리 256칸)와 효과 호출 순서",
+      "consumers": [
+        "webpj/tests/mission-technology.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/mission-technology.js"
+      ],
+      "doc": "docs/webpj-mission-technology-20261112.md",
+      "cpppjSources": [
+        "cpppj/src/client/MissionTechnology.cpp",
+        "cpppj/src/client/MissionTechnology.h"
+      ],
+      "scope": "10.78 55행 전부",
+      "sha256": "19c5c321acdac977b365eb61d928ba7616387f51f92c3ac4b8add7b18298ee00",
+      "bytes": 118215,
+      "lines": 56,
+      "fixtureCommit": "bf68f0d45",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MissionTechnology.cpp": "8ba4af11b",
+        "cpppj/src/client/MissionTechnology.h": "8ba4af11b"
       }
     }
   ]

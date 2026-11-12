@@ -197,7 +197,7 @@ cpppj/src/client/MissionFortSource.h	port	www/core/mission-fort-source.js	1f00a2
 cpppj/src/client/MissionGuideInput.cpp	port			todo	[client-default]
 cpppj/src/client/MissionLifecycle.cpp	port			todo	[client-default]
 cpppj/src/client/MissionLoadingMessage.cpp	port			todo	[client-default]
-cpppj/src/client/MissionTechnology.cpp	port			todo	[client-default]
+cpppj/src/client/MissionTechnology.cpp	port	www/core/mission-technology.js	1f00a25a	port	[client-default] WB04-E338: 미션 techAllowed 목록 적용 00482eb0 — allowed=1 에서 시작해 인덱스 0 부터 매 항목 현재 목록을 다시 조회하고 첫 NUL 앞이 빈 항목에서 종료, ASCII 소문자 deny/allow 는 모드만 바꾸고 all 은 allowAll(첫 255칸)·그 밖은 allow(원문 이름의 findType, 미등록 -1 도 그대로 전달해 실제 저장소 거부 유지). C++ 오버로드 세 개를 applyMissionTechnology(hooks)·...ToTotalMade·...ToRestrictions 로 나눔(스크립트 대역 get('techAllowed')·Windows-1252 부호화·NUL 앞 512BYTE 미만). fixture mission-technology 10.78 55행 전부 첫 실행 일치. 기준선 뒤 변경 없음. cpppj 시험 ProtectedElevenAndInvalidStorage 는 실제 MissionScript(client Mission 단위)가 필요해 그 단위에서 이식
 cpppj/src/client/MoveDialog.cpp	port	www/core/move-dialog.js	1f00a25a	port	[client-default] WB04-E33: 004c8df0 MoveDialog. fixture move-dialog 73행 전부. 실제 Gump 트리 연결은 해당 단위에서
 cpppj/src/client/MovieLifecycle.cpp	adapt			todo	[adapt-sound]
 cpppj/src/client/MoviePcmOutput.cpp	adapt			todo	[adapt-sound]
