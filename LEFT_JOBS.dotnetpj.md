@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.459 · 정리 2026-11-12(HJOW-Athlon) · 다음 단위 0.460 · cpppj 기준 제품 1303(14차 QuickJS-ng 엔진 탑재는 1301) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`, 이후 1302·1303은 CD 10.72 전용이라 영향 없음) · 전체 목표 미완료 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
+**기준 단위 0.460 · 정리 2026-11-12(HJOW-Athlon) · 다음 단위 0.461 · cpppj 기준 제품 1303(14차 QuickJS-ng 엔진 탑재는 1301) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`, 이후 1302·1303은 CD 10.72 전용이라 영향 없음) · 전체 목표 미완료 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-12) 직전의 이 문서 전체(단위 기록 0.342~0.452 111건, 0.2~0.4의 단위별 검사·진행 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452)에 바이트 그대로 보관했고, 그 이전 보관본 5개와 0.341 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -31,7 +31,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 | R1 | 8비트 화면 호스트·입력 큐·오라클 도구(`--ui-script`·`snapshot`·`session-dump`·`--fixed-frame-ms`) | — | ✅ 완료 |
 | R2 | 그리기 원시·팔레트·글꼴 | — | ✅ 본체 완료(실자산·세션 연결은 R4·R5) |
 | R3 | Gump UI와 메인 메뉴 계열 | D1 메뉴 픽셀 일치 | 🔶 위젯·호스트 대부분 이식. **메뉴 L4a 12장면 차이 0**(0.381~0.388, 장면은 0.1). 남은 메뉴 장면 3건은 사유와 함께 뒤로 미뤘다(Language 자식 CJK는 R8, Multiplayer 섬 화면은 R5·3차, Edit 이동행은 R7). R3 잔여 위젯·소유자는 [2.5](#r3-r2-detail) |
-| R4 | 월드 세션 조립 | M1 시작 상태 L2 | 🔶 월드 아래층(Template·Fort·지형·섬·Player·저장소·프로세스·월드 본체)과 F3 세션의 관문·소유 상태 대부분 완료. **실제 호스트 조립 진행 중(0.391~0.459, [R4 진행판](#r4-board)):** 미션 Fort 적재 → 세션 홀더 → Player·SP·AI·동맹 → Zone·가입·Ready → 이름·요새 순번 → 월드 적재 시작 흐름 → 타입·프레임 → 지형·난수 저장소 → 섬 부모 → 입력 결선 → 바인딩 조립·드라이런 → Generate 라이브·덤프 CRT 행·난수 단일 스트림·프리-Generate 소비 확정·프레임 선택 대조까지. **Pop·농지 배치·공장체·소유자 후속 지정·월드 본체 조립은 미착수** |
+| R4 | 월드 세션 조립 | M1 시작 상태 L2 | 🔶 월드 아래층(Template·Fort·지형·섬·Player·저장소·프로세스·월드 본체)과 F3 세션의 관문·소유 상태 대부분 완료. **실제 호스트 조립 진행 중(0.391~0.460, [R4 진행판](#r4-board)):** 미션 Fort 적재 → 세션 홀더 → Player·SP·AI·동맹 → Zone·가입·Ready → 이름·요새 순번 → 월드 적재 시작 흐름 → 타입·프레임 → 지형·난수 저장소 → 섬 부모 → 입력 결선 → 바인딩 조립·드라이런 → Generate 라이브·덤프 CRT 행·난수 단일 스트림·프리-Generate 소비 확정·프레임 선택 대조·후보 테이블 per-type 대조까지. **Pop·농지 배치·공장체·소유자 후속 지정·월드 본체 조립은 미착수** |
 | R5 | 월드 표시·카메라·HUD | D2 진입 화면 픽셀 일치 | ⬜ 미착수 |
 | R6 | 플레이 입력·규칙·소리·AI | M2·M3 | ⬜ 미착수 |
 | R7 | 미션 전체·Edit·설정·배포 | M4 | ⬜ 미착수(Edit 목록·`options.cfg` 저장 일부는 R3에서 선행) |
@@ -41,8 +41,8 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 커밋 | 0.459(프레임 선택 대조와 메뉴 소비 확정, 다음 커밋). 직전 0.458은 프리-Generate 소비 목록 확정 |
-| 검사 | **마지막 전체 회귀 완주는 0.453:** Assets 366·Client 1,130·Core 1,945(합계 3,441, 실패 0, 새 기준선). 전체 완주 이력은 0.345(3,273) → 0.369(3,375) → 0.381(3,389) → 0.432(3,422) → 0.453(3,441)이다. 0.454는 Client HostTerrain* 10건, 0.455는 Client 전체 1,134건+Core 지형 52건, 0.456은 Client Host·Dump 69건+SessionStateDump 11건, 0.457은 Client 전체 1,133건+Core 포팅 111건, 0.459는 Client Host·Dump 24건 집중 통과(실패 0, 0.458은 조사 단위라 별도 집중 없음). 단위별 집중 검사 내역과 변이 검출 기록은 8절과 [보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452)에 있다 |
+| 마지막 구현 커밋 | 0.460(후보 테이블 per-type 대조와 메뉴 소비량 확정, 다음 커밋). 직전 0.459는 프레임 선택 대조와 메뉴 소비 확정 |
+| 검사 | **마지막 전체 회귀 완주는 0.453:** Assets 366·Client 1,130·Core 1,945(합계 3,441, 실패 0, 새 기준선). 전체 완주 이력은 0.345(3,273) → 0.369(3,375) → 0.381(3,389) → 0.432(3,422) → 0.453(3,441)이다. 0.454는 Client HostTerrain* 10건, 0.455는 Client 전체 1,134건+Core 지형 52건, 0.456은 Client Host·Dump 69건+SessionStateDump 11건, 0.457은 Client 전체 1,133건+Core 포팅 111건, 0.459는 Client Host·Dump 24건, 0.460은 Core RiftType·FrameChoose·AmbientWind·RawTerrain 33건 집중 통과(실패 0, 0.458은 조사 단위라 별도 집중 없음). 단위별 집중 검사 내역과 변이 검출 기록은 8절과 [보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452)에 있다 |
 | PORT_MAP | `PORT_MAP.tsv` 688행(L1 338·port 350, 2026-11-12 재집계). 마지막 추가는 0.394 `Player.cpp/.h` → `RawMissionPlayers.cs`(port 2행), 그 앞은 0.381 `RawKencloud*`·`ClientKencloudGlobals` 6행이다. 행별 `base` 갱신 이력(0.344~0.371)과 0.359·0.360 신규 등록 행은 보관본에 있다 |
 | fixture | 연결 236개(0.381에서 `kencloud-v2-x86.tsv` 246행·`kencloud-render-x86.tsv` 944행을 Core에 더했다). `cpp_sync.py`는 미반영분 때문에 0종료가 아니다. `reflected-commit`·PORT_MAP floor는 `f95a8db2` 그대로다(영향 재검토를 마친 행만 올린다) |
 | cpppj 기준 | 현재 cpppj는 제품 1303 / 11.01([LEFT_JOBS.md](LEFT_JOBS.md) 0.1). dotnetpj의 마지막 영향 검토는 0.281(제품 1247, `4d4b3a928`)이고 재검토 범위는 0.379에서 종결했다. 그 뒤 `cpppj/src` 변경은 1302·1303(CD 10.72 전용)뿐이다([1.2](#resync-scope)). 14차 엔진 본체(`ScriptEngine`·`third_party/quickjs-ng`)는 R8에서 옮긴다 |
@@ -76,9 +76,9 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 <a id="r4-board"></a>
 
-#### R4 진행판 — 실제 호스트·월드 조립 (순서 2, 0.390~0.459)
+#### R4 진행판 — 실제 호스트·월드 조립 (순서 2, 0.390~0.460)
 
-M1(34경로의 Load/Start 뒤 상태를 cpppj `session-dump`와 대조)까지의 현재 위치다. **cpppj 기준선 4/34, 새 경로 전체 일치 0/34.** 새 경로의 world-1 덤프는 1,955행(슬롯 1,679, 0.455)이고 월드 본체(객체·그래프 재구성·장부 집계) 행이 없어 어느 경로도 전체 일치할 수 없다. 이 구간 68단위 중 코드를 바꾼 단위는 약 절반(35개)이고, 나머지는 기록자 추적·범위 확정·기준선 확보였다.
+M1(34경로의 Load/Start 뒤 상태를 cpppj `session-dump`와 대조)까지의 현재 위치다. **cpppj 기준선 4/34, 새 경로 전체 일치 0/34.** 새 경로의 world-1 덤프는 1,955행(슬롯 1,679, 0.455)이고 월드 본체(객체·그래프 재구성·장부 집계) 행이 없어 어느 경로도 전체 일치할 수 없다. 이 구간 69단위 중 코드를 바꾼 단위는 약 절반(35개)이고, 나머지는 기록자 추적·범위 확정·기준선 확보였다.
 
 | 묶음 | 연결한 것 (실행 호스트 world-1 덤프·집중 검사로 확인) | 단위 |
 | --- | --- | --- |
@@ -110,7 +110,7 @@ M1(34경로의 Load/Start 뒤 상태를 cpppj `session-dump`와 대조)까지의
 2. **바인딩 조립 설계 → 입력 값 연결 + Generate 드라이런.** ✅ 0.454에서 끝났다(조립·바인딩·드라이런, 덤프 282행 중립).
 3. **Generate 라이브 연결 + 덤프 대조** ✅ 0.455에서 1차 연결·대조(슬롯 1,679행·SID 집합·비슬롯 행 무변화), 0.456에서 메커니즘 확정: ① 생성 순서·셀 집합 동일 증명(정렬 152 flips only·Pop 좌표 집합 동일) — 농지 121은 postprocess 배치 산물(동일 셀에 dn은 97, 배치 파이프라인 R6 필요) ② 소유자는 region+1을 적재 시점에 가짐(121은 0, writer는 Objects/AI-setup 잔여) ③ CRT parity 확정(체인 동일 출력 296677442) ④ Game/SP-offset/frame divergence는 단일 공유 스트림 분리가 원인(0.457에서 단일화), SP offset +6=게임플레이 2회전·tracking 미연결은 R6 잔여. 남은 차이: Pop 공간 등록(void·좌표·레벨·체인, vtable Supports·SHP dims·postPop이 발목) · 공장 생성자·vtable · `generate:127` 갱신(의도적 결선 변경, 0.455). 위험 ①(풀 수열)은 해소 — `predictable` 플래그를 그대로 풀에 전달해 예측 영역에 할당한다.
 4. **난수 단일 스트림 연결** ✅ 0.457에서 포팅 모듈 13종+호스트·테스트 20건을 공유 `GameRandom`으로 단일화(`TerrainRandom`·`_spRandom` 삭제, `HostTerrainRandomTests` 은퇴). 라이브 덤프 구조 동일(1,955행·슬롯 1,679·SID 집합 동일·비슬롯 행 무변화) 확인. 프레임은 미수렴(78/1679) — 0.458에서 dn 측 소비를 감사로 확정(reseed→SP 353회→Generate 무변화→지형 610회, 합계 advance^353+610)하고 cpp 측 정적 인벤토리를 마쳤다(AI 생성·로그인·플레이어 생성·PlaceAll 무소비, 메뉴 ambient 제외). 레거시(`BattleSession` 등)는 결정 D2 삭제 때까지 `NetstormRandom`을 둔다.
-5. **프레임 선택 대조(0.459)** ✅ 프레임 값 분포 대조로 후보 테이블 차이를 확정: dn 최댓값 0xd0·cpp 최댓값 0x13c(동일 셀 집합·동일 순서·동일 스트림 가정 하에 설명 불가) — 동일 인덱스가 양쪽에서 다른 값을 가리키므로 `RiftTypeFrames` 내용·순서가 다르거나 `ChooseTerrainFrame` 후보 필터가 다르다. 메뉴 ambient 소비량(프레임당 Next 횟수×메뉴 프레임 수)은 후속 R3/R6 메뉴 경유 또는 M1 비교점 재정의 때 함께 확정한다. 이후 Objects 라이브 연결(`RawFortObjectLoad` + 갈고리 약 20종, 공장 할당 parity) + 덤프 대조.
+5. **프레임 선택 대조(0.459~0.460)** ✅ 0.459에서 프레임 값 분포 대조로 후보 테이블 차이를 확정: dn 최댓값 0xd0·cpp 최댓값 0x13c(동일 셀 집합·동일 순서·동일 스트림 가정 하에 설명 불가). 0.460에서 per-type 정적 대조로 필터·구조 가설을 좁혔다: `ChooseTerrainFrame` 몸체 동일(cpp `o/RawFrameChoose.cpp` 8~33행 vs dn `RawFrameChoose.cs` 20~82행, NB23 포함), `RiftTypeFrames` 구조 동일(Codes·Find*·Run·LetterKinds), `FrameTable()` 양쪽 클러스터 순서 그대로(cpp `TypeParser.cpp` 225~231행 vs dn `TypeFrameTable`+`FillWorldFrames` 70+순서, 188칸·116자산), dn 호스트 ambient 0회(`Client.Host`에 `UpdateAmbient` 없음) vs cpp 매 프레임 Wind 1~2회(`Next(100)`+10% `Next(65536)`)·Sound 기한 통과 때만 1~2회(`Next(3000)`[+`Next(20000)`]), cpp 덤프는 메뉴 경유(click-if 5/30/60→dump 90, 약 90 메뉴 프레임) vs dn 직접 진입(`--mission`, 0 메뉴 프레임). reseed 대비 ambient 순서(적재 전후)는 0.461 paired 라이브 대조에서 확정한다. 이후 Objects 라이브 연결(`RawFortObjectLoad` + 갈고리 약 20종, 공장 할당 parity) + 덤프 대조.
 6. **장부·그래프·Pop·농지·공장체·소유자**(`RebuildGraph` 실몸체, totals·totalmade, Pop 공간 등록, 농지 배치 파이프라인, 공장 생성자·vtable, 소유자 후속 지정) + 덤프 대조. 선행: 프레임 수렴(5).
 7. **기타 잔여:** brain 실생성자(현재 스텁 토큰 `0xA1000000+owner`), 요새 이미지 전송, 메뉴에서의 미션 시작(핸들 출처, 이름 꼬리 16~19 바이트 잔여), 전투섬 배정과 `+0x78` 첫 지역(1번 영점), Player 월드 풀·공간 Pop·예약 갈고리, 세션 `Bind*` 대리자의 실제 몸체 연결.
 8. **34경로 L2 대조(M1)** — 나머지 30경로의 cpp 기준선을 만들고 새 경로 덤프와 행 단위로 대조한다. 비교 실행에는 `--fixed-unix-seconds`를 양쪽에 동일하게 준다(0.456; 고정 시각만으로는 프레임이 맞춰지지 않고 시드는 같아진다).
@@ -534,7 +534,17 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 
 문서가 없는 작은 단위만 아래에 최신순으로 짧게 적는다. 한 기록에는 범위, 구현(새 파일·수정 파일·옮긴 cpppj 파일과 기준 커밋), C#에서 달라진 모양, 검증(집중·전체·변이·L2/L4a 비교), PORT_MAP·fixture 변화, 함께 옮긴 10차 NB 수정, 보호·실행·외부 접속 관점, 남은 것을 적는다([3.1](#verify-levels)). 0.11~0.452는 보관 파일에 있다: [0.11~0.65](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073) · [0.66~0.126](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126) · [0.127~0.153](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154) · [0.154~0.279](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279) · [0.280~0.341](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341) · [0.342~0.452](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452). 묶음별 요약은 [7.1](#dotnet-done-index)과 [0.4 R4 진행판](#r4-board)에 있다.
 
-(다음 단위 0.460부터 이 절에 적는다)
+(다음 단위 0.461부터 이 절에 적는다)
+
+#### 0.460 — 후보 테이블 per-type 대조와 메뉴 소비량 확정 (2026-11-12, HJOW-Athlon)
+
+- 범위: 0.4 순서 2(R4 실제 호스트·월드 조립)의 예순일곱 번째 단위. 0.459 잔여(per-type 대조·메뉴 소비량)를 확정한다. 제품 코드 변경 없음(조사·검증 단위, 임시 계측 없음·`git status` 제품 트리-clean 확인).
+- per-type 정적 대조(실행 없음): ① `ChooseTerrainFrame` 몸체 동일 — cpp `o/RawFrameChoose.cpp` 8~33행 vs dn `RawFrameChoose.cs` 20~82행(수집→정규화→'A'→전체 폴백, theme -1·quartile, NB23 `high<=low` 전체 선택). ② `RiftTypeFrames` 구조 동일 — Codes·FindNumber·FindMasked·FindFlags·Run(A~P)·LetterKinds(cpp `o/RiftType.h` 24~46행 vs dn `RiftTypeFrames.cs` 22~156행). ③ `FrameTable()` 양쪽 클러스터 순서 그대로 — cpp `o/TypeParser.cpp` 225~231행 vs dn `TypeFrameTable`+`HostSession.FillWorldFrames`(70+순서, `WorldFrameCount`=188·`FirstAssetTypeNumber`=70·자산 116개→70..185, 0..69·186..187 빈칸, cpp `SessionAssets` 70+block·188칸과 같은 틀). 따라서 분포 차이(dn 최대 0xd0·100종 vs cpp 최대 0x13c·162종)는 필터·구조 차이가 아니라 스트림 위치 차이 쪽으로 좁혀진다.
+- 메뉴 소비량 확정(정적 계수): cpp `ClientMain.cpp` 601~602행은 메뉴 여부와 무관하게 매 프레임 `UpdateAmbientSound`+`UpdateAmbientWind`를 공유 `GameRandom`으로 소비한다. Wind=`Next(100)` 1회+10% 확률 `Next(65536)` 1회(평균 약 1.1회, `o/RawAmbientWind`·dn `RawAmbientWind.cs` 48~73행 동일). Sound=기한 통과 때만 `Next(3000)` 1회[+kind 1·2 때 `Next(20000)` 1회], 기한은 벽시각+10초 후 120초 간격(`o/RawAmbientSound.cpp` 11~23행)이라 단기 메뉴(약 90 프레임)에서는 0~1회다. dn 호스트(`Client.Host`)에는 `UpdateAmbient` 호출이 없다(grep 무일치). cpp 덤프는 메뉴 경유(ui-script click-if 5/30/60→dump 90, 약 90 메뉴 프레임) vs dn 직접 진입(`--mission`, 0 메뉴 프레임)이라 적재 전 스트림이 갈린다. 단 dn 감사에서 적재 전 801회는 reseed로 무효이므로, reseed 대비 ambient 순서(적재 전후)는 0.461 paired 라이브 대조에서 확정한다.
+- 검증: Core RiftType·TypeFrame·FrameChoose·AmbientWind·RawTerrain 33건 집중 통과(실패 0, NETSTORM_DATA 지정). 제품 코드 무변경이라 전체 회귀는 0.453 기준선을 유지한다. 게임 실행 없음(정적 대조 단위). `originals/` 미접촉, 추적 `options.cfg` 변경 없음.
+- PORT_MAP, fixture 변화 없음(대응행 추가 없음). 함께 옮긴 10차 NB 수정 없음. 외부 접속 목록 변경 없음.
+- 보호: originals, originalCD, AGENTS.md, README 개요, cpppj, LEFT_JOBS.md 미수정. 사제 포획/희생·특정 적 공격·시나리오 승리 재현 검사는 건너뛰었다.
+- 남은 것: reseed 대비 ambient 순서 확정과 프레임 반영·검증(0.461 paired 라이브), Pop·농지 배치·공장체·소유자 라이브 연결, Objects·장부·그래프, brain 실생성자·요새 이미지·메뉴 미션 시작, 34경로 L2 대조(M1, 4/34).
 
 #### 0.459 — 프레임 선택 대조와 메뉴 소비 확정 (2026-11-12, HJOW-Athlon)
 
