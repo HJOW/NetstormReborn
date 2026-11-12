@@ -9459,7 +9459,7 @@
       "bytes": 37981,
       "lines": 361,
       "fixtureCommit": "ada85427f",
-      "webCommit": "worktree",
+      "webCommit": "da07591ac",
       "cpppjBasis": {
         "cpppj/src/o/RawPathRuntime.cpp": "8a555c997",
         "cpppj/src/o/RawPathProcess.cpp": "5f4b9d304"
@@ -9492,7 +9492,7 @@
       "bytes": 8550,
       "lines": 91,
       "fixtureCommit": "8bf762066",
-      "webCommit": "worktree",
+      "webCommit": "da07591ac",
       "cpppjBasis": {
         "cpppj/src/o/RawPathRuntime.cpp": "8a555c997",
         "cpppj/src/o/RawPathProcess.cpp": "5f4b9d304"
@@ -17267,7 +17267,7 @@
       "bytes": 97467,
       "lines": 1171,
       "fixtureCommit": "aa506ebb8",
-      "webCommit": "worktree",
+      "webCommit": "da07591ac",
       "cpppjBasis": {
         "cpppj/src/o/RawPathProcess.cpp": "5f4b9d304"
       }
@@ -17298,7 +17298,7 @@
       "bytes": 7962,
       "lines": 65,
       "fixtureCommit": "73ef4e6d6",
-      "webCommit": "worktree",
+      "webCommit": "da07591ac",
       "cpppjBasis": {
         "cpppj/src/o/RawPathProcess.cpp": "5f4b9d304",
         "cpppj/src/o/RawPathSearch.cpp": "7f903eba0"
@@ -17328,9 +17328,38 @@
       "bytes": 6967,
       "lines": 49,
       "fixtureCommit": "028bd402c",
-      "webCommit": "worktree",
+      "webCommit": "da07591ac",
       "cpppjBasis": {
         "cpppj/src/o/RawPathProcess.cpp": "5f4b9d304"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E350",
+      "id": "pathdata",
+      "path": "cpppj/tests/fixtures/pathdata-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 서버 Path WriteData(004895b0) 12개 경로 프로필 × 부모 genus × 헤더 변형의 패킷 길이와 2048바이트 공유 버퍼 전체(반환 길이 밖 stale 바이트 포함) — 두 판본 768행",
+      "consumers": [
+        "webpj/tests/raw-path-data.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-data.js"
+      ],
+      "doc": "docs/webpj-path-data-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathData.cpp"
+      ],
+      "scope": "10.78(originals) 384행 사용(typed write·Native writeCurrent 둘 다; CD 10.72 384행은 범위 밖)",
+      "sha256": "dbd3e1413d6ae263da77fd1da763dc1e133939e34b88bdbd660d2da6c307b23f",
+      "bytes": 3182067,
+      "lines": 769,
+      "fixtureCommit": "028bd402c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathData.cpp": "2b5ee903c"
       }
     }
   ]
