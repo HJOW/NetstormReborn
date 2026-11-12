@@ -69,7 +69,8 @@ public sealed class HostSession
     private Func<uint>? _spReseed;
 
     /// <summary>세션이 소유한 분산 SP 저장소다. 초기화 전에는 덤프에 대시를 쓴다. 원본처럼 게임 공유 난수를 쓴다.</summary>
-    /// <remarks>2026-11-12 0.457에서 단일 공유 스트림으로 바꿨다(근거 cpppj RawCampaignSession.cpp 498행, 995행).</remarks>
+    /// <remarks>2026-11-12 0.457에서 단일 공유 스트림으로 바꿨다(근거 cpppj RawCampaignSession.cpp 498행, 995행).
+    /// 2026-11-12 0.464에서 호스트 시작 1회 초기화를 잇려고 공유 저장소 빌림을 추가했다(원본 004391ed, cpppj ClientMain 349행).</remarks>
     public RawSpStore Sp { get; }
 
     /// <summary>세션이 소유한 Graph 표다. 월드 적재의 ResetTable로 초기화한다.</summary>
@@ -96,12 +97,15 @@ public sealed class HostSession
     /// 라이브 호스트 시작 흐름 연결은 월드 효과와 함께 다음 단위다.</remarks>
     public Dictionary<uint, uint> AiBrains { get; } = [];
 
-    /// <summary>같은 Kernel·난수를 빌리고 저장소를 새로 만든다.</summary>
+    /// <summary>같은 Kernel·난수를 빌리고 저장소를 새로 만든다. 공유 SP·CRT 상자를 넘기면 미션 시작 때 재초기화하지 않고 그대로 쓴다.</summary>
     /// <param name="kernel">현재 Kernel.</param>
     /// <param name="game">게임 난수.</param>
     /// <param name="crt">CRT 난수.</param>
     /// <param name="poolCapacity">풀 슬롯 수. 0 이하면 미션 기본값이다.</param>
-    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0)
+    /// <param name="sharedSp">호스트가 시작 때 초기화한 공유 SP 저장소. null이면 세션 전용으로 만들고 첫 Set 때 초기화한다.</param>
+    /// <param name="sharedCrtBox">호스트가 시작 때 reseed한 공유 CRT 상자. null이면 세션 전용 상자를 쓴다.</param>
+    /// <remarks>2026-11-12 0.464에서 cpppj 공유 SP 경로와 같은 시작 1회 초기화를 잇려고 공유 빌림을 추가했다. 미션별 reseed는 원본에 없다.</remarks>
+    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null)
     {
         ArgumentNullException.ThrowIfNull(kernel);
         ArgumentNullException.ThrowIfNull(game);
@@ -110,7 +114,8 @@ public sealed class HostSession
         Game = game;
         Crt = crt;
         Pool = new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity);
-        Sp = new RawSpStore(Game, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
+        Sp = sharedSp ?? new RawSpStore(Game, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
+        TerrainCrt = sharedCrtBox ?? new();
     }
 
     /// <summary>SP 초기화의 재시드 공급을 연결한다. 미션 시작 흐름에서 실제 사슬로 잇는다.</summary>
@@ -562,7 +567,9 @@ public sealed class HostSession
 
     /// <summary>세션이 소유한 지형 생성 전용 CRT 상태 상자다. 시드 사슬과 지형 소비자가 공유한다.</summary>
     /// <remarks>2026-11-12 0.447에서 난수 상태 저장소로 추가했다. StartMission의 지역 상자를 여기로 승격한다.</remarks>
-    public UIntBox TerrainCrt { get; } = new();
+    /// <summary>세션이 공유하는 CRT 상태 상자다. 지형 소비자와 덤프가 같은 상자를 읽고 쓴다.</summary>
+    /// <remarks>2026-11-12 0.464에서 호스트 공유 상자를 잇려고 생성자에서 정하도록 바꿨다. 미션별 상자 교체는 원본에 없다.</remarks>
+    public UIntBox TerrainCrt { get; }
 
     /// <summary>세션이 소유한 게임 보조 장기 전역이다. 생성·밀도·간헐천 여백의 현재 DWORD를 둔다.</summary>
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1830행 terrainAux.</remarks>

@@ -120,6 +120,38 @@ public sealed class MissionPlayersLoadTests
         Assert.Contains($"\nsp\t1\t{session.Sp.Offset}\t0\t1161527296\t0\t0\t0\t0\t0\t0\t0\n", text, StringComparison.Ordinal);
     }
 
+    /// <summary>호스트 시작 때 1회 초기화한 공유 SP 저장소는 미션 시작 SP 지정에서 재시드 없이 Set 잡음만 소비한다.</summary>
+    /// <remarks>2026-11-12 0.464에서 cpppj 공유 SP 경로와 같은 시작 1회 초기화를 잇고 미션별 reseed를 없앴다(0.463 근본 원인 수정). 근거: ClientMain 349행.</remarks>
+    [Fact]
+    public void SharedSpStoreDoesNotReseedOnStartPlayerSp()
+    {
+        var (loaded, players, types) = LoadTheWarBegins();
+        Assert.NotNull(loaded);
+        var game = new GameRandom();
+        var crtBox = new UIntBox { Value = 1u };
+        var modeBox = new UIntBox { Value = 0 };
+        var seed = new RawGameRandomSeed(game, crtBox, modeBox, () => 946684800);
+        var shared = new RawSpStore(game, () => seed.Reseed());
+        shared.Initialize();
+        Assert.True(shared.Initialized);
+        uint before = game.State();
+        var session = new HostSession(new Kernel(), game, new CrtRandom(), sharedSp: shared, sharedCrtBox: crtBox);
+        Assert.True(session.Sp.Initialized);
+        Assert.Same(shared, session.Sp);
+        session.StartPlayerSp(players);
+        // 활성 소유자마다 Set 잡음(32비트×5회)만 소비하고 재시드·재초기화하지 않는다.
+        int active = 0;
+        for (int owner = 1; owner <= MissionPlayers.PlayerCount; owner++)
+        {
+            if (players.Players[owner].Active) active++;
+        }
+        var probe = new GameRandom(before);
+        for (int i = 0; i < active * 160; i++) probe.Next(2);
+        Assert.Equal(probe.State(), game.State());
+        // SP 값은 기존 경로와 같게 기록된다(1번 1161527296).
+        Assert.Equal(1161527296u, session.Sp.Get(1));
+    }
+
     /// <summary>thewarbegins 참가자·동맹 채우기가 기준선과 같은 행을 내놓는지 확인한다.</summary>
     [Fact]
     public void StartsPlayersLikeBaseline()
