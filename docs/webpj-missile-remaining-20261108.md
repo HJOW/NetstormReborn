@@ -19,7 +19,7 @@
 
 ## 3. 경계와 남은 것
 
-- 실제 Host 연결(`MakeMissileFactoryHooks`/`CreateMissile`/`MakeGunMissileHooks`)과 호스트 자기 삭제 시험(`MissileChecking_ActualHost…`)은 `SquidProcessHost`·`RawGunProcess` 이식 뒤에 한다. 그래서 `PORT_MAP` 의 `RawMissile` 행은 계속 `partial` 이다.
+- 실제 Host 연결(`MakeMissileFactoryHooks`/`CreateMissile`/`MakeGunMissileHooks`)과 호스트 자기 삭제 시험(`MissileChecking_ActualHost…`)은 이 문서 작성 때는 `SquidProcessHost`·`RawGunProcess` 이식 뒤로 미뤘고 `PORT_MAP` 의 `RawMissile` 행이 `partial` 이었다. **WB04-E361 에서 모두 끝내 `port` 가 되었다**([docs/webpj-missile-host-20261113.md](webpj-missile-host-20261113.md)).
 
 ## 4. 다음 시작점
 

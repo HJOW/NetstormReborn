@@ -1,13 +1,19 @@
 // 투사체의 현재 checking 관문과 항상 참인 Baseprocess 범위 진단(0041be80)의 두 위치, 진단 뒤 현재 필드 재조회를 합성 입력으로 검사한다(raw-missile.js).
 //  - 비충돌 직선 이동과 사거리 종료만 준비하며 실제 공격/게임 틱은 실행하지 않는다. 진단 장치가 선택되기 전의 이동과 빗나감 요청 소비를 일괄 사전검사로 되돌리지 않는다.
-//  - 실제 Host 의 자기 삭제 관찰(alive)은 `frame(fields, alive)` 의 alive 함수로 합성한다.
-// 실제 게임·브라우저 실행이 아니다. (2026-11-08 WB04-E125: RawMissile 이식과 함께 추가)
+//  - 실제 Host 의 자기 삭제 관찰(alive)은 `frame(fields, alive)` 의 alive 함수로 합성한 시험과, 실제 Host/Kernel/ProcessForm 으로 진단 안에서 `host.kill` 하는 시험(MissileChecking_ActualHostDeletion… 두 건, WB04-E361)을 모두 둔다.
+// 실제 게임·브라우저 실행이 아니다. (2026-11-08 WB04-E125: RawMissile 이식과 함께 추가, 2026-11-13 WB04-E361: 실제 Host 자기 삭제 시험 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { put, get, bitsToFloat, floatToBits } from './raw-support.mjs';
 import { SidPool } from '../www/core/sid-pool.js';
+import { Kernel } from '../www/core/kernel.js';
+import { SquidHash } from '../www/core/squid-hash.js';
+import { SquidUnpop } from '../www/core/squid-unpop.js';
+import { RawSquidDestroy } from '../www/core/squid-destroy.js';
+import { SquidProcessHost, SquidProcessState } from '../www/core/squid-process.js';
+import { typeConstructorAddress } from '../www/core/squid-constructors.js';
 import { MissileFields } from '../www/core/raw-missile-fields.js';
-import { MissileState, RawMissile } from '../www/core/raw-missile.js';
+import { MissileProcess, MissileState, RawMissile } from '../www/core/raw-missile.js';
 
 // 풀 용량(진단이 읽는 현재 상한)이다. (2026-11-08 WB04-E125)
 const CAPACITY = 24000;
@@ -212,4 +218,50 @@ test('MissileChecking: 호스트가 진단 중 자기 삭제하면(alive 거짓)
     new RawMissile(late.pool, late.types, late.supplement, late.state, late.hooks).frame(late.fields, () => aliveLate);
     assert.deepEqual(late.events, ['U12', 'P1097859072', 'B', 'C', 'A105']);
     assert.equal(late.previous(), -10000.0);
+});
+
+// 실제 ProcessForm/Kernel 삭제를 두 진단 위치(첫 진단·후반 진단)에서 각각 실행한다(cpppj CheckHostDiagnosticDeletion). 진단 장치가 `host.kill` 로 자기 프로세스를 지우면
+// Kernel 이 `destroy` 로 알려 남은 필드를 읽지 않고, 이전 좌표 저장이나 종료 반복 없이 끝난다. (2026-11-13 WB04-E361)
+function checkHostDiagnosticDeletion(late) {
+    const scene = makeScene();
+    // 공통 Form 생성이 읽는 원문 내장 생성자 주소를 Form 네 종류에 명시한다(cpppj MakeFormTypeInputs).
+    for (const form of [1, 2, 3, 6]) scene.types[form].constructorAddress = typeConstructorAddress(form);
+    const destroy = new RawSquidDestroy(scene.pool, new SquidUnpop(scene.pool, new SquidHash(), new Uint8Array(65536)), scene.types);
+    const kernel = new Kernel(32);
+    const host = new SquidProcessHost(scene.pool, scene.types, kernel, destroy, new SquidProcessState(), { asset: { selected: () => 0, emit: () => {} } });
+    let process = null;
+    scene.hooks.assertion = (expression, file, line) => {
+        scene.diagnostic(expression, file, line);
+        host.kill(process, 0x10);
+        process = null;
+    };
+    const ordinaryPop = scene.hooks.pop;
+    scene.hooks.pop = (sid, x, y, flags) => {
+        ordinaryPop(sid, x, y, flags);
+        scene.checking = 0x80000000;
+        put(process.fields.bytes, 4, 0x10005);
+    };
+    const logic = new RawMissile(scene.pool, scene.types, scene.supplement, scene.state, scene.hooks);
+    process = host.attach(new MissileProcess(logic, scene.fields), 28, 12, 0x10);
+    assert.ok(process instanceof MissileProcess);
+    const running = process;
+    const form = running.form;
+    if (!late) {
+        scene.checking = 0x80000000;
+        put(running.fields.bytes, 4, 0x10005);
+    }
+    running.runFrame();
+    assert.deepEqual([process, kernel.size, host.fromForm(form)], [null, 0, null]);
+    assert.ok((scene.pool.slot(form)[11] & 1) !== 0);
+    assert.equal(scene.pool.slot(12)[11] & 3, 0);
+    assert.deepEqual(scene.events, late ? ['U12', 'P1097859072', 'B', 'C', 'A105'] : ['A105']);
+    assert.equal(scene.previous(), -10000.0);
+}
+
+test('MissileChecking: 실제 Host 가 첫 진단에서 자기 프로세스를 삭제하면 삭제된 필드를 다시 읽지 않는다(MissileChecking_ActualHostDeletionInFirstDiagnosticStopsFields)', () => {
+    checkHostDiagnosticDeletion(false);
+});
+
+test('MissileChecking: 실제 Host 가 후반 진단에서 자기 프로세스를 삭제해도 이전 좌표/종료를 반복하지 않는다(MissileChecking_ActualHostDeletionInLateDiagnosticStopsFields)', () => {
+    checkHostDiagnosticDeletion(true);
 });

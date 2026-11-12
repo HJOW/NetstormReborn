@@ -7,7 +7,10 @@
 //  - frame(fields, alive): 진단 모드면 0041be80 의 두 SID 진단을 실행하고, 비행 시각 비율로 현재 위치를 구해 Unpop/Pop 으로 옮기고 표적 사각형(코너면 코너 사각형)과 이전→현재 선분의 겹침으로 충돌을 판정한다.
 //    클라우드 플로터 표적은 공유 난수로 회피할 수 있으며, 충돌 효과(코너 배리어/아이스 전용/일반)·반사 생성·썬더×스톤 타워 알림 큐를 수행하고 이전 좌표를 저장한 뒤, 충돌이거나 사거리가 끝났으면
 //    발사 자산의 현재 group 에 따라 총 직접 피해/사거리 갱신 또는 반사 피해를 전달하고 종료 효과 뒤 표시 자산을 삭제한다. 진단이 현재 프로세스를 삭제하면(alive()가 거짓) 남은 필드를 읽지 않는다.
-//  - MissileProcess(SquidProcess): 생성된 필드와 처리기를 묶은 Kernel 프로세스이다. runFrame 은 frame, onAttached 는 Form/Parent 기록이다.
+//  - MissileProcess(SquidProcess): 생성된 필드와 처리기를 묶은 Kernel 프로세스이다. runFrame 은 frame, onAttached 는 Form/Parent 기록이다. destroy 는 Kernel 이 지울 때(C++ ~Missile) 진행 중인 프레임에 자기 삭제를 알린다(WB04-E361).
+//  - makeMissileFactoryHooks(pool, factory, hooks): 실제 SquidFactory 의 create(type, flags)만 같은 풀의 Missile 훅에 연결하고 나머지 월드 효과 훅은 보존한다(풀이 다르면 거부).
+//    createMissile(host, logic, request): 실제 생성자(자산 생성·소유자·Pop·비행 효과) 뒤 원본 flags 0x10 으로 같은 Host/Kernel 에 MissileProcess 를 부착하고 부착되면 돌려준다(풀이 다르면 거부).
+//    makeGunMissileHooks(host, logic, hooks): GunAnimation 의 엄격한 createProjectile 경계를 실제 Missile 공장으로 연결하며 부착에 실패하면(생성 자산 삭제 중) 거부한다. (WB04-E361)
 // state(MissileState)·types[n]={group,hotspotX,hotspotY,flags2,…}·missileTypes[n]={range,frameCount,firingSound,impactSound,damagePerSecond,specialFlyerDamage,flyerDamagePerSecond} 는 호출 시점에 읽는다.
 // CD 10.72 의 0x68 필드 이미지와 BYTE 프레임은 제외한다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E125: RawMissile 이식으로 추가)
 import { SquidProcess } from './squid-process.js';
@@ -459,6 +462,38 @@ export class MissileProcess extends SquidProcess {
     // 호스트 삭제 때 호출해 진행 중인 진단 caller 의 비주소 관찰에 알린다. (2026-11-08 WB04-E125)
     dispose() { this.#alive = false; }
 
+    // Kernel 이 이 프로세스를 지울 때 부르는 소멸 처리(C++ ~Missile)이다: 진단 안에서 Host 가 자기를 삭제했음을 진행 중인 프레임에 알려 남은 필드를 읽지 않게 한다. (2026-11-13 WB04-E361)
+    destroy() { this.dispose(); }
+
     // 독립 대조/수명 관찰을 위한 현재 실제 필드이다. (2026-11-08 WB04-E125)
     get fields() { return this.#fields; }
+}
+
+// 실제 SquidFactory 생성 몸체를 같은 풀의 Missile 훅에 연결한다. 월드 Pop/owner/effect 는 호출자의 훅을 그대로 두고(복사본에 create 만 교체) 풀이 다르면 거부한다.
+// 사용: new RawMissile(pool, types, missileTypes, state, makeMissileFactoryHooks(pool, factory, 나머지 훅)). (2026-11-13 WB04-E361: Host 공장 이식으로 추가)
+export function makeMissileFactoryHooks(pool, factory, hooks) {
+    if (pool !== factory.pool) throw new TypeError('Missile/Factory SID 풀 불일치');
+    return { ...hooks, create: (type, flags) => factory.create(type, flags) };
+}
+
+// 실제 생성자(자산 생성·소유자·Pop·비행 효과) 뒤 원본 flags 0x10 으로 같은 Host/Kernel 에 Missile 프로세스를 붙인다. 부착이 안 되면 null 이다(풀이 다르면 생성 전에 거부).
+// 사용: createMissile(host, logic, request). (2026-11-13 WB04-E361: Host 공장 이식으로 추가)
+export function createMissile(host, logic, request) {
+    if (host.pool !== logic.pool) throw new TypeError('Missile/Host SID 풀 불일치');
+    const fields = new MissileFields();
+    const asset = logic.construct(fields, request);
+    const attached = host.attach(new MissileProcess(logic, fields), logic.processType, asset, 0x10);
+    return attached instanceof MissileProcess ? attached : null;
+}
+
+// 실제 GunAnimation launch 가 같은 Host/Kernel 의 Missile 공장을 부르도록 createProjectile 경계를 연결한다. 부착에 실패하면 거부한다(호출자의 원래 묶음은 바꾸지 않는다).
+// 사용: new RawGunAnimation(…, makeGunMissileHooks(host, logic, 나머지 훅)). (2026-11-13 WB04-E361: Host 공장 이식으로 추가)
+export function makeGunMissileHooks(host, logic, hooks) {
+    if (host.pool !== logic.pool) throw new TypeError('GunAnimation/Missile SID 풀 불일치');
+    return {
+        ...hooks,
+        createProjectile: (request) => {
+            if (!createMissile(host, logic, request)) throw new Error('Missile 생성 자산 삭제 중 부착 실패');
+        },
+    };
 }

@@ -24,7 +24,7 @@
 
 ## 3. 경계와 남은 것
 
-- 자산 생성·Pop·소리·비행 효과·피해·삭제·사정선·포구·hotspot·치수·방향 프레임·반사 생성은 훅 경계이다. 실제 팩토리/Host 부착(`MakeMissileFactoryHooks`/`CreateMissile`/`MakeGunMissileHooks`)은 `RawGunProcess`·Host 연결 단위로 둔다.
+- 자산 생성·Pop·소리·비행 효과·피해·삭제·사정선·포구·hotspot·치수·방향 프레임·반사 생성은 훅 경계이다. 실제 팩토리/Host 부착(`MakeMissileFactoryHooks`/`CreateMissile`/`MakeGunMissileHooks`)은 이 문서 작성 때는 `RawGunProcess`·Host 연결 단위로 두었고, **WB04-E361 에서 끝냈다**([docs/webpj-missile-host-20261113.md](webpj-missile-host-20261113.md)).
 - 아직 이식하지 않은 Missile 관측: 썬더 캐논(`thunder-missile-x86.tsv`)·초기 아이스(`ice-missile-initial-x86.tsv`)·플로터 회피(`missile-floater-x86.tsv`) — 같은 모듈의 해당 분기이며 다음 단위에서 시험으로 연결한다. 호스트 자기 삭제 실제 Kernel 시험(`MissileChecking_ActualHost…`)은 Host 단위에서 확인한다.
 
 ## 4. 다음 시작점
