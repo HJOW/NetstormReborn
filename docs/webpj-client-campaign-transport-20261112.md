@@ -28,4 +28,4 @@ cpppj 에는 이 파일을 직접 겨냥한 시험이 없다(Session/Meta 시험
 
 - 한 문자열 치환 변형 58개(생성기·기본 등록 51, `observeBombEffectPacket` 7)를 돌려 첫 실행에서 9개가 남았다(0x7d/0x3f/0x5f/표 길이 `requireLength`, version 확인, terminate 의 닫힘 표시, `players` 훅, 센티넬 폭, 길이 상위 BYTE). 시험을 보강(실제 종료 조건, Player 활성 비트를 켠 송신, 센티넬 폭과 길이 0x8000 이상)한 뒤 **5개가 남았고 모두 동등**하다: ① 0x7d/0x3f/0x5f 와 열여덟 행의 `requireLength` 제거 4개 — 웹 분배기의 기본 길이 표(PE 길이)가 이미 같은 값(0xffff/행 길이)이라 호출이 멱등이다(시험이 모든 행의 기본 길이와 표 길이가 같음을 확인) ② `observeBombEffectPacket` 의 길이에 count 를 WORD 대신 DWORD 로 읽는 변형 — `(count+5)×2` 를 16비트로 감싸므로 상위 WORD 가 길이에 영향을 주지 않는다.
 - **앱 수명:** 아직 Client 가 이 생성기를 부르지 않는다(PORT_MAP session 0). 4-D 의 Session 조립(`UberGump` 의 `BindConnectionTransport(MakeClientCampaignTransport(...))`)이 `makeClientCampaignTransport` → `bindCompositeCampaignTransport` 를 부른다.
-- 3.1절 4-C 는 24/30 이다(이 항목은 2단계가 남아 체크하지 않음). 다음: ClientCampaignTransport 2단계 → RawCampaignSessionLogin.
+- 3.1절 4-C 는 27/30 이다(이 항목은 2단계가 남아 체크하지 않음). 다음: ClientCampaignTransport 2단계 → RawCampaignSessionLogin.

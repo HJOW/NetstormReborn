@@ -26,4 +26,4 @@
 
 - 한 문자열 치환 변형 38개(구독자 12·활동 16·연결표 10)를 돌려 **3개가 남았고 모두 동등**하다: ① 연결표 생성자의 `!synchronization ||` 제거(`clockSynchronization()` 이 비어도 곧바로 `synchronization.connection` 접근이 `TypeError` 라 같은 오류 종류) ② 바인딩 직전의 `this.synchronization = { value: 0 }` 추가(바로 뒤 `bindSynchronization` 이 덮음) ③ `super()` 뒤 임의 필드 추가(관찰 가능한 계약 없음). 나머지 35개는 첫 실행에서 시험이 잡았다.
 - **앱 수명:** 아직 Client 가 이 객체들을 만들지 않는다(PORT_MAP session 0). 4-D 의 Client/`ClientLocalStateGlobals` 조립이 `new ClientConnectionGlobals(local)`·`ClientSubscriberGlobals`·`ClientConnectionActivityGlobals` 를 한 번씩 만든다.
-- 3.1절 4-C 는 22/30 이다. 다음: client `CampaignLoginServices`·`CampaignTransportServices`.
+- 3.1절 4-C 는 24/30 이다(분모는 항목이 묶은 단위 수: 이 항목은 세 단위). 다음: client `CampaignLoginServices`·`CampaignTransportServices`.

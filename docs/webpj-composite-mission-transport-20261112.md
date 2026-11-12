@@ -29,4 +29,4 @@ cpppj 에는 이 조정자를 직접 겨냥한 시험이 없어(Session 시험�
 
 - 한 문자열 치환 변형 70개(조정자 48·바인더 22)를 돌려 조정자는 첫 실행에서 13개가 남았다(주소/Player9 크기의 정확한 경계, 짧은 패킷 순서, send/sendMutable 구분, pending 순회·계수, `again` 반복, 상태/콜백 관문, `ownsConnection`). 시험을 보강한 뒤 **1개가 남았고 동등**하다: `closeRoom` 의 pending 순회 끝 칸(-31)을 빼는 변형(내부 전송은 첫 빈 pending 하나만 쓰므로 -31 은 단독 미션에서 닿지 않음). `closeRoom` 끝의 `internal.closeAll()` 제거는 처음에는 동등으로 보았으나 `closeAll` 이 내부 전송의 열림 표시(`#open`)를 내린다는 것을 확인해 재열기 시험으로 잡았다. 바인더 22개는 보강 뒤 모두 잡혔다(첫 실행 7개 생존: 대여 표식 유무·다른 owner 거부·없는 ID 조회·실제 주소 표시).
 - **앱 수명:** 아직 Session 이 이 조정자를 만들지 않는다(PORT_MAP session 0). `ClientCampaignTransport`(다음 항목)가 `MakeClientCampaignTransport` 로 `create` + `bindCompositeCampaignTransport` 를 부른다.
-- 3.1절 4-C 는 24/30 이다. 다음: client `ClientCampaignTransport`.
+- 3.1절 4-C 는 27/30 이다. 다음: client `ClientCampaignTransport`.

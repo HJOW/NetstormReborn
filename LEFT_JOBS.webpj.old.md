@@ -2,6 +2,44 @@
 
 완료 이력·대체된 계획·지난 단위의 다음 작업 예고를 보존한다. 이 문서의 “현재/다음/미구현/확인 필요”는 당시 기록이며 새 작업의 기준이 아니다. 현행 상태와 작업 순서는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
+## 2026-11-12 이관 3 — WB04-E328까지(4-C 마감)
+
+<a id="archive-webpj-20261112-4c-through-wb04-e328"></a>
+
+4-C 의 체크 목록(E305~E328)을 옮겼다. 단위로 센 27/30 이 완료이고 남은 세 단위(ClientCampaignTransport 2단계·RawCampaignSessionLogin·통합 시험)는 Session 조립이 선행이라 4-D 로 이월했다. 요약은 현행 문서 2.3절이다. 이 목록의 “다음/미구현”은 당시 기록이다.
+
+#### 4-C 패킷·로그인·내부 미션 전송 (27/30 완료 · 3항목 4-D 이월)
+
+완료 기준(3.2절): 단독 미션의 로그인→Ready→Start 패킷 순서와 내용이 cpppj 와 같다. 선행: 4-A(완료)·4-B 의 `RawSurfaceWorld`. LAN·외부 접속은 웹 범위 밖(1절): 단독 경로(내부 서버/클라이언트 두 끝이 같은 월드에서 도는 `LocalMissionTransport`)만 옮기고, 공유 파일의 LAN 분기는 3.6절로 판정한다. 줄 수는 기준선 소스(`.cpp/.h/.inc`)이고 `(+N)` 은 기준선 뒤 cpppj 변경 줄 수이다 — 기준선 판을 옮기고 바뀐 부분을 3.6절 ①/②/③ 으로 판정한다. 앞 항목이 뒷 항목의 입력이므로 위에서부터 진행한다. 4-B 에서 넘어온 연결: 월드의 `bindSquidTransmission` 에 `RawSquidTransmission.pop` 을 잇는다(E299).
+
+- [x] **PacketRegistrationTable** 113줄(+24) → [E305](docs/webpj-packet-registration-table-20261111.md) 등록 표 256칸·Session 대여 이식(기준선 뒤 Registration/ResetCallbacks 반영, PersistCanonicalBaseline 은 3.6절 ③ 4-D)
+- [x] **RawPacketDispatch** 135줄(+68) [PacketRegistrationTable 뒤] → [E306](docs/webpj-packet-dispatch-20261111.md) 등록·검증·버전 정책·즉시 분배 이식(기준선 뒤 직접 수신기 반영, 고정 Native 수신기·지연 FIFO 는 3.6절 ③/웹 제외)
+- [x] **RawConnectionCleanup** 81줄 → [E307](docs/webpj-connection-cleanup-20261111.md) 연결표와 수신 깊이의 정리 순서 이식(원본 관측 580행 전체 재생, 기준선 뒤 변경 없음 3.6절 ①). 순서를 Registration 앞으로 당겼다(Registry 의 선행)
+- [x] **RawConnectionRegistration** 45줄 [RawConnectionCleanup 뒤] → [E307](docs/webpj-connection-registration-20261111.md) 연결 등록/재배치와 pending 제거의 store 순서 이식(원본 관측 288행 전체 재생, 기준선 뒤 변경 없음 3.6절 ①)
+- [x] **RawConnectionRegistry** 110줄(+145) [RawConnectionCleanup·RawConnectionRegistration 뒤] → [E308](docs/webpj-connection-registry-20261111.md) 연결 숫자 토큰/표 묶음/수명 장치 이식(기준선 뒤 ② 반영, 장치 소유자 고정 ①, 접속 통지 StoreConnectPacket 등은 3.6절 ③ 4-D)
+- [x] **RawConnectionActivity** 76줄(+1) [RawPacketDispatch·RawConnectionRegistry 뒤] → [E309](docs/webpj-connection-activity-20261111.md) 수신 활동 기록(004b6180)과 0x64 등록 이식(기준선 뒤 Native 고정 수신기 대여 분기는 3.6절 ③ 4-D)
+- [x] **RawTransportPolling** 18줄 → [E310](docs/webpj-transport-polling-20261111.md) 여러 전송 owner 를 현재 ID 순회로 묶는 결과/조회 도구 이식(헤더만, 기준선 뒤 변경 없음 3.6절 ①)
+- [x] **RawBattleBroadcast** 90줄(+28) [RawConnectionRegistry 뒤] → [E311](docs/webpj-battle-broadcast-20261111.md) 현재 Player/연결 표를 읽는 두 송신 분배와 0x86·0x35 패킷 작성기 이식(원본 관측 678행·30행·336행 재생, 기준선 뒤 ② 반영)
+- [x] **RawFormPacket** (partial 118줄, +12) → [E312](docs/webpj-form-packet-20261111.md) Form 가상+54·공통 삭제 가상+58 의 실제 패킷 writer 이식(원본 관측 576행 재생, 3.6절 ③ `b8cadde1` 은 ② 로 반영해 partial→port)
+- [x] **RawSquidTransmission** 106줄(+33) [RawFormPacket 뒤] → [E313](docs/webpj-squid-transmission-20261111.md) 공통 Squid 전송 2048BYTE 버퍼·헤더·압축과 가상 writer 이식(전용 원본 관측 없음, 기준선 뒤 ② 반영). `RawSurfaceWorld.bindSquidTransmission((sid, flags) => wire.pop(sid, flags))` 연결은 Session 조립(4-D)
+- [x] **RawMissionClientPackets** 294줄(+59) [RawPacketDispatch 뒤] → [E314](docs/webpj-mission-client-packets-20261111.md) 로그인 서버가 보낸 실제 8종 패킷의 Player/State/SP/Template 수신 처리 이식(원본 관측 157행 전부 재생 — Ready boss 6행은 E319 에서 실제 로그인을 공용 장면에 연결해 재생, 기준선 뒤 ② 반영). 순서를 Server 앞으로 당겼다(서버 시험이 정제·observer 를 씀)
+- [x] **RawMissionServerPackets** 119줄(+27) [RawPacketDispatch·RawMissionClientPackets 뒤] → [E315](docs/webpj-mission-server-packets-20261111.md) 로그인 서버의 Player/중앙섬 metadata 작성과 송신 순서 이식(원본 관측 187행 전부 재생, 기준선 뒤 ② 반영)
+- [x] **RawMissionSettingsPacket** 91줄(+19) → [E316](docs/webpj-mission-settings-packet-20261111.md) 로그인 마지막 7DWORD 현재 설정 송신·수신 이식(원본 관측 164행 전부 재생, 기준선 뒤 ② 반영)
+- [x] **RawMissionLoginPackets** 104줄(+4) [RawFormPacket 뒤] → [E317](docs/webpj-mission-login-packets-20261111.md) 현재 Template SaveImage 와 sendFort 의 0x2a 예약/필드/길이 확정 이식(원본 관측 S 93행·F 10행 재생, 기준선 뒤 ② 반영)
+- [x] **RawMissionLoginTimer** 210줄(+71) → [E318](docs/webpj-mission-login-timer-20261111.md) 로그인 타이머의 Player9 집계·미션 종료 선택·Begin/Abort 순서와 일반 진행 문구 이식(원본 관측 1984행 전부 재생, 기준선 뒤 ② 반영). 순서를 Login 앞으로 당겼다(Login 이 집계를 씀)
+- [x] **RawMissionLogin** 265줄(+47) [RawMissionServerPackets·RawMissionClientPackets·RawMissionSettingsPacket·RawMissionLoginPackets·RawMissionLoginTimer 뒤] → [E319](docs/webpj-mission-login-20261111.md) PATCH 로그인 수신 부모(0x27)·재접속 63h·응답/Begin/SP/Ready 패킷·가입 통지·일반 자원 초기화 이식(원본 관측 48행 전부 재생, E314 의 Ready boss 6행 포함 클라이언트 157행 전부 재생, 기준선 뒤 ② 반영)
+- [x] **RawLocalMissionState** 211줄(+18) [RawMissionLogin 뒤] → [E320](docs/webpj-local-mission-state-20261111.md) 단독 미션 상태 7~10/13/14·15·큰 부모의 블록 복사·확정·수신 시점 이식(원본 관측 33행 전부 재생, 기준선 뒤 ② 반영)
+- [x] **Player** 122줄 → [E321](docs/webpj-mission-players-20261111.md) 미션 플레이어 목록 `MissionPlayers`(머리 값·C strtod·기술 허용표·시작 지식·색·동맹 대칭화·저장 기술/덱) 이식(원본 관측 없음, 손 계산과 실제 타입 표 대조, 기준선 뒤 변경 없음 3.6절 ①)
+- [x] **RawConstructionCommand** 97줄(+6) [RawPacketDispatch 뒤] → [E322](docs/webpj-construction-command-20261111.md) 로컬 건설 요청 0x3e 25바이트 작성과 서버 수신 444af0·분배기 등록 이식(원본 관측 write 64행·receive 144행 전부 재생, 기준선 뒤 ② 반영)
+- [x] **RawGeyserMined** (partial 142줄) [RawPacketDispatch 뒤] → [E323](docs/webpj-geyser-mined-registration-20261112.md) 0x5b 분배기 등록 `registerGeyserMined` 와 실제 분배기·factory·공통 삭제·Pop 연결 시험·소리 뒤 현재 boss/nugget 시험 이식(처리기 본체는 E108, partial→port, 기준선 뒤 변경 없음 3.6절 ①; cpppj 원 연결 시험의 Pop 전송 장치 누락은 웹 시험에서 보정)
+- [x] `zacket/` **LocalMissionTransport** 439줄 = `.cpp` 305 + `.h` 134 [위 `o/` 항목들 뒤] → [E324](docs/webpj-local-mission-transport-20261112.md) 단독 미션 Zone/로그인 작성·Zone 설치·zlocal 두 끝 이식(원본 관측 66행 전부 재생, cpppj 손 시험 6건 — 옛 설계 기대값 4건 보정, 기준선 뒤 ② 반영·RawPacketFrame ①·접속 통지 수신기 ③ 4-D). BattleLeave 결합 시험은 RawBattleLeave 단위, CampaignSession 결합은 4-D
+- [x] client **ClientConnectionGlobals** 28줄(+17)·**ClientConnectionActivityGlobals** 29줄(+3)·**ClientSubscriberGlobals** 22줄(+6) — 연결/활동/subscriber 장기 전역 → [E325](docs/webpj-client-connection-globals-20261112.md) Client 수명 전역 소유자 세 개 이식(Subscriber 두 DWORD+이름 64BYTE·활동 표 둘+Zone/하트비트/자동 재시작·`RawConnectionRegistry` 확장 연결표, 원본 관측 Tutorial Init 10행 재생, 기준선 뒤 ②/① 반영, `PacketSources().Resolve`·`PacketDelays()` 는 3.6절 ③ 4-D)
+- [x] client **CampaignLoginServices** 28줄(+20)·**CampaignTransportServices** 114줄(+21) — 캠페인 로그인/전송 서비스 묶음 → [E326](docs/webpj-campaign-services-20261112.md) 로그인 서비스 34칸 계약과 전송 서비스의 주소 표시·내부 미션 바인더 이식(cpppj 직접 시험 없어 웹 계약 시험 10건, 기준선 뒤 ② 반영, `BindCompositeCampaignTransport` 는 CompositeMissionTransport 뒤 3.6절 ③ 로 PORT_MAP partial)
+- [x] client **CompositeMissionTransport** 226줄(+97) [LocalMissionTransport 뒤] — 내부 연결 우선 수락·signed 대기 상한(LAN 분기는 3.6절 판정) → [E327](docs/webpj-composite-mission-transport-20261112.md) InternalMission 복합 조정자와 `bindCompositeCampaignTransport` 이식(웹 계약 시험 24건, 기준선 뒤 ② 반영, LAN/Edit/Meta 분기는 웹 제외 오류)
+- [x] client **ClientCampaignTransport** 60줄(+324) [CompositeMissionTransport 뒤] — Client 의 캠페인 전송 연결(기준선 뒤 변경이 커서 단독 경로 판정 비중이 큼). **1단계 완료 → [E328](docs/webpj-client-campaign-transport-20261112.md)** 생성기·기본 등록 순수 부분 이식(PORT_MAP partial); 2단계는 남은 고정 수신기 묶음과 채팅·연결 종료·기술 목록·경로/Squid 관찰기 → **2단계는 4-D 로 이월**: 남은 장기 기본 수신기 묶음(`InstallNative{Login,Gameplay,Carrier,Construction}PacketReceivers` 고정 수신기·채팅 41h·연결 종료 2번·기술 목록 0x69·경로 자료 0x30/압축 Squid 0x7a 관찰기)은 대응표 밖 신규 파일과 Client 전체(4-D), RawPathData(6-P)에 기대므로 4-D 의 Client 조립과 함께 옮긴다(3.6절 ③ 4-D 행).
+- [x] client **RawCampaignSessionLogin** 234줄(+182) [RawMissionLogin·RawMissionLoginTimer 뒤] — 캠페인 Session 의 로그인 단계(4-D 의 Session 조립과 경계를 정해 옮김) → **4-D 로 이월**: `RawCampaignSession::Impl::Login` 은 Session 상태 약 60칸(`s.players`·`s.playerState`·`s.core`·`s.templateStorage`·`s.localStateGlobals` 등)을 직접 빌려 쓰는 중첩 구조체라 Session 상태가 정해지는 4-D 와 분리할 수 없다. 입력 모듈 12개(RawMissionLogin·ClientPackets·ServerPackets·LoginPackets·Timer·LocalMissionState·BattleOptions 등)와 전송 서비스(E326~E328)는 모두 준비돼 있다.
+- [x] **4-C 통합 시험** — 단독 미션의 로그인→Ready→Start 패킷 순서와 내용을 cpppj 와 대조(저장된 패킷 기록 fixture·`LocalMissionTransport` 관측 범위) → **4-D 로 이월**: cpppj 의 대응 시험 `CampaignSession_LocalLoginActualHandshakeAndWorldLoad`(Zone→접속→0x27→응답→월드 설치→상태 8·9·10·13·14, 패킷 종류가 0x27 로 시작해 0x28·0x29 를 포함하고 0x6e 로 끝남, 옵션 22값·반경² 900·TYPE122 비용 3000)는 `RawCampaignSession` 이 있어야 재생된다. 4-D 에서 Session 조립 뒤 같은 시나리오로 옮긴다.
+
 ## 2026-11-11 이관 2 — WB04-E304까지(4-B 마감)
 
 <a id="archive-webpj-20261111-4b-through-wb04-e304"></a>
