@@ -17836,7 +17836,7 @@
       "bytes": 438204,
       "lines": 2275,
       "fixtureCommit": "a349e63c9",
-      "webCommit": "worktree",
+      "webCommit": "116dbde0e",
       "cpppjBasis": {
         "cpppj/src/o/RawGunImpact.cpp": "f2f9e8374"
       },
@@ -17854,6 +17854,64 @@
         "cpppj/src/o/RawGunImpact.cpp"
       ],
       "scope": "10.78(originals) 1,137행 전부 사용, originalCD 1,137행은 범위 밖"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E364",
+      "sha256": "932fae68bcf6862b05ab3ae2316f80e60f1f3230d109e6f57cd870ab6edd1f1a",
+      "bytes": 9537,
+      "lines": 193,
+      "fixtureCommit": "5f564e852",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDiscRegular.cpp": "f2f9e8374"
+      },
+      "id": "disc-regular",
+      "path": "cpppj/tests/fixtures/disc-regular-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 디스크 가상 Handle(00469540)의 현재 프레임·프레임 수·방향 수·payload 입력에 대한 다음 프레임·반환 payload 비트·Frame.Set 표시 갱신",
+      "consumers": [
+        "webpj/tests/disc-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-disc-regular.js"
+      ],
+      "doc": "docs/webpj-disc-regular-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDiscRegular.cpp"
+      ],
+      "scope": "10.78(originals) 96행 전부 사용, originalCD 96행은 범위 밖"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E364",
+      "sha256": "34d2fb87ef83e3675c1467bb993922a36453394b6fc5c5989a14cb7133792b9e",
+      "bytes": 2874,
+      "lines": 71,
+      "fixtureCommit": "f2f9e8374",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDiscRegular.cpp": "f2f9e8374"
+      },
+      "id": "disc-regular-boundary-1219",
+      "path": "cpppj/tests/fixtures/disc-regular-boundary-1219-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 썬 디스크 Handle 정수 산술 경계(INT_MIN/INT_MAX 감김·음수 방향 수·0 분모·INT_MIN÷−1) 70행 — 정상 47·하드웨어 나눗셈 오류 23",
+      "consumers": [
+        "webpj/tests/disc-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-disc-regular.js"
+      ],
+      "doc": "docs/webpj-disc-regular-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDiscRegular.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 70행 전부"
     }
   ]
 }
