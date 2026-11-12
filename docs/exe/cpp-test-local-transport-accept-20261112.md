@@ -39,4 +39,15 @@ webpj WB04-E323(RawGeyserMined)·E324(LocalMissionTransport) 이식 중 발견�
 
 ## 4. 남은 것 — NB18 과 충돌하는 시험 (결정 필요)
 
-`CampaignDevastation_ActualEnemyCaptureAndDropFromCast`(2026-10-20 작성)는 설정 실패가 풀리자 3961행 `link.transport.Poll()==1`(포획 요청 0x4f 없음)·3962행 `captured.value` 에서 실패한다. 임시 확인 줄(빌드·실행 뒤 제거)로 도착 시점에 시전자(TYPE 133)가 기도 내용물(SID 15057, contained Form TYPE 6)을 들고 있음을 확인했다. **10차 NB18 수정(1290, `RawCarrierPickup::RefusesHeldPriest` — mask 1 내용물을 든 운반체의 사제 줍기 요청/수신 거부)**이 이 포획을 정상적으로 막는 것이며, 시험은 NB18 이전 동작(기도를 든 채 적 사제 포획)을 기대한다. 시험 장면을 바꿀지(NB18 거부를 단언하고 포획/내려놓기는 내용물 없는 운반체로 검증) NB18 범위를 너겟으로 좁힐지는 제품 판단이라 이번 단위에서는 고치지 않고 LEFT_JOBS 결정 D8 로 남겼다.
+`CampaignDevastation_ActualEnemyCaptureAndDropFromCast`(2026-10-20 작성)는 설정 실패가 풀리자 3961행 `link.transport.Poll()==1`(포획 요청 0x4f 없음)·3962행 `captured.value` 에서 실패한다. 임시 확인 줄(빌드·실행 뒤 제거)로 도착 시점에 시전자(TYPE 133)가 기도 내용물(SID 15057, contained Form TYPE 6)을 들고 있음을 확인했다. **10차 NB18 수정(1290, `RawCarrierPickup::RefusesHeldPriest` — mask 1 내용물을 든 운반체의 사제 줍기 요청/수신 거부)**이 이 포획을 정상적으로 막는 것이며, 시험은 NB18 이전 동작(기도를 든 채 적 사제 포획)을 기대한다. 시험 장면을 바꿀지(NB18 거부를 단언하고 포획/내려놓기는 내용물 없는 운반체로 검증) NB18 범위를 너겟으로 좁힐지는 제품 판단이라 이번 단위에서는 고치지 않고 LEFT_JOBS 결정 D8 로 남겼다. → **1305 에서 해소**(5절).
+
+## 5. 1305 — 결정 D8 반영: NB18 유지, 시험 교정 (2026-11-12)
+
+사용자가 권고안("시험을 고치는 게 맞다")을 택했다. 제품 코드(NB18 `RawCarrierPickup::RefusesHeldPriest`)는 그대로 두고 `CampaignDevastation_ActualEnemyCaptureAndDropFromCast` 만 고쳤다.
+
+- 시전·폭발·피해·시전 기도 내용물 유지까지의 앞부분은 그대로다.
+- **거부 단언:** 기도 내용물을 든 시전자가 행동 불가가 된 적 사제 좌표에 도착한 뒤 `Flush`·`Poll` 하면 소비 프레임 0·서버 기록 1개(앞선 시전 0x50 뿐)이고, 시전자 안에 포로(TYPE 158 contained)가 없으며 적 사제는 free/dead 가 아니고 Player 2 의 사제 참여 값이 바뀌지 않는다.
+- **포획/내려놓기 검증:** 내용물이 없는 새 운반체(같은 TYPE 133, 소유자 1)를 `(x-1, y-1)` 에 놓고(내용물 mask 1 없음 확인) 같은 경로 도착 도우미로 적 사제에 보내, 기존 단언(포획 요청 1프레임·포로 Parent·인자 보존·참여 값, 0x50 내려놓기·복원 사제 TYPE/소유자·포로 정리·잔액 불변·기도 내용물은 시전자에 그대로, 서버 기록 0x50·0x4f·0x50)을 이 운반체 기준으로 검사한다. 이동은 두 운반체가 같은 람다(`StartCarrierMovement` → 도착 시각 프레임 반복 → 좌표·경로 종료 확인)를 쓴다.
+- 거부 단언은 NB18 이 없으면 시전자가 포획해 `Poll()==1` 이 되므로(1304 이전 시험의 기대) NB18 회귀를 잡는다. 이 판단은 1304 의 임시 확인(도착 때 든 내용물이 mask 1 기도 내용물)에 근거한다.
+
+**검증:** `netstorm_world_generation_tests` 증분 빌드 64초(종료 0). `--filter CampaignDevastation_ActualEnemyCaptureAndDropFromCast` **통과(실패 CHECK 0)**, `SessionPickupWire` 10건 **모두 통과**, 전체 실행은 1304 와 같은 기존 실패 2건·OK 57건·같은 위치 비정상 종료(이번 변경과 무관).

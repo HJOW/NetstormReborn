@@ -3924,7 +3924,8 @@ TEST_CASE(CampaignObjectCommand_ActualCarrierParentAndPriestOwner) {
     CHECK(Get(session.Core().pool.Slot(enemy),26)==hp && session.Sp(1)==before && external.packets.size()==packets);
 }
 
-// 원본 Early5의 적 사제를 실제 검색/피해/포획/내려놓기로 처리한다. 시전자/내용물/잔액만 명시 검사 입력이다.
+// 원본 Early5의 적 사제를 실제 검색/피해로 행동 불가로 만든 뒤, 기도를 든 시전자의 포획은 10차 NB18로 거부되고 내용물 없는 운반체가 포획/내려놓기를 하는지 검사한다.
+// 시전자/내용물/잔액만 명시 검사 입력이다(단위1304에서 결정 D8에 따라 NB18 거부를 단언하도록 교정).
 TEST_CASE(CampaignDevastation_ActualEnemyCaptureAndDropFromCast) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();netstorm::zacket::LocalMissionTransport* wire{};
     services.carrierRequest=[&](std::int32_t target,std::span<const std::uint8_t> packet) { CHECK(wire && target==9);if (wire) wire->Send(target,packet); };
@@ -3951,20 +3952,29 @@ TEST_CASE(CampaignDevastation_ActualEnemyCaptureAndDropFromCast) {
     }
     CHECK(frames>1 && frames<4096 && (core.pool.Slot(bomb)[11]&3U)==3U && !core.processes.FromForm(form));CHECK(Get(core.pool.Slot(enemy),26,2)==1 && initialHealth==100);CHECK(core.pool.Slot(enemy)[34]==2 && !(core.pool.Slot(enemy)[11]&3U));
     CHECK(Get(core.pool.Slot(temple),26,2)==templeHealth);CHECK(Get(core.pool.Slot(caster),26,2)==50 && !core.processes.FindEvent(caster,0x493));CHECK(SquidForms(core.pool).Parent(prayer)==caster && !(core.pool.Slot(prayer)[11]&3U));CHECK(session.Sp(1)==money-core.types[168].cost);
-    // 피해로 행동 불가가 된 실제 적 사제에게 경로로 도착하여 원래 포획 요청을 발생시킨다.
-    const auto argument=Get(core.pool.Slot(enemy),12,2);auto* movement=session.StartCarrierMovement({caster,{x,y},1,0,0,0,0});CHECK(movement);if (!movement) return;const auto movementForm=movement->Form();const auto arrivalTime=movement->Runtime().Time(movement->Runtime().Count()-1)+0.01;
-    // 경로는 한 호출에 한 꼭짓점만 소비하므로 마지막 시각에서도 실제 프레임을 반복한다.
-    for (std::size_t step=0;step<1024;++step) {
-        auto* current=dynamic_cast<RawPathProcess*>(core.processes.FromForm(movementForm));if (!current) break;core.processState.now=arrivalTime;current->RunFrame();
-    }
-    CHECK(std::bit_cast<float>(Get(core.pool.Slot(caster),14))==x && std::bit_cast<float>(Get(core.pool.Slot(caster),18))==y && !core.processes.FromForm(movementForm));
+    // 기도 내용물을 든 시전자가 행동 불가가 된 적 사제에게 도착해도 10차 NB18(1290)이 내용물을 든 운반체의 사제 줍기를 거부하므로 포획 요청이 나가지 않는다.
+    const auto argument=Get(core.pool.Slot(enemy),12,2);const auto participant=session.FindPriestParticipation(2);
+    // 운반체 하나를 적 사제 좌표까지 실제 경로 프레임으로 이동시키고 도착을 확인한다.
+    const auto arrive=[&](Sid carrier) {
+        auto* movement=session.StartCarrierMovement({carrier,{x,y},1,0,0,0,0});CHECK(movement);if (!movement) return false;const auto movementForm=movement->Form();const auto arrivalTime=movement->Runtime().Time(movement->Runtime().Count()-1)+0.01;
+        // 경로는 한 호출에 한 꼭짓점만 소비하므로 마지막 시각에서도 실제 프레임을 반복한다.
+        for (std::size_t step=0;step<1024;++step) {
+            auto* current=dynamic_cast<RawPathProcess*>(core.processes.FromForm(movementForm));if (!current) break;core.processState.now=arrivalTime;current->RunFrame();
+        }
+        CHECK(std::bit_cast<float>(Get(core.pool.Slot(carrier),14))==x && std::bit_cast<float>(Get(core.pool.Slot(carrier),18))==y && !core.processes.FromForm(movementForm));return true;
+    };
+    if (!arrive(caster)) return;
+    link.transport.Flush();CHECK(link.transport.Poll()==0 && link.recorded.size()==1);
+    CHECK(!session.Priests().Carrier().FindContained(caster,0x20,158,0).value && !(core.pool.Slot(enemy)[11]&3U) && session.FindPriestParticipation(2)==participant);
+    // 포획/내려놓기 흐름은 내용물이 없는 다른 운반체로 같은 적 사제에게 도착해 검증한다(결정 D8: NB18 유지·시험 교정).
+    const auto porter=session.World().Create(133,2);core.owner.Set(porter,1);session.World().Pop(porter,x-1,y-1,0);CHECK(!session.Priests().Carrier().FindContained(porter,1,0,0).value);if (!arrive(porter)) return;
     link.transport.Flush();CHECK(link.transport.Poll()==1);
-    const auto captured=session.Priests().Carrier().FindContained(caster,0x20,158,0);CHECK(captured.value);if (!captured.value) return;
-    CHECK((core.pool.Slot(enemy)[11]&1U)!=0 && SquidForms(core.pool).Parent(captured)==caster && Get(core.pool.Slot(captured),12,2)==argument);CHECK(session.FindPriestParticipation(2)==caster.value);
+    const auto captured=session.Priests().Carrier().FindContained(porter,0x20,158,0);CHECK(captured.value);if (!captured.value) return;
+    CHECK((core.pool.Slot(enemy)[11]&1U)!=0 && SquidForms(core.pool).Parent(captured)==porter && Get(core.pool.Slot(captured),12,2)==argument);CHECK(session.FindPriestParticipation(2)==porter.value);
     // 명시적으로 선택한 일반 포로 내용물을 실제0x50과 건설 확정 경로로 내려놓는다.
-    const auto beforeDrop=session.Sp(1);session.RequestCarrierDrop(caster,captured);CHECK(!(core.pool.Slot(captured)[11]&3U));link.transport.Flush();CHECK(link.transport.Poll()==1);
-    const Sid restored{static_cast<std::uint16_t>(session.FindPriestParticipation(2))};CHECK(restored.value && restored!=caster);if (restored.value && restored!=caster) CHECK(core.pool.Slot(restored)[10]==158 && (Get(core.pool.Slot(restored),12,2)&0x7fU)==2 && !(core.pool.Slot(restored)[11]&3U));
-    CHECK((core.pool.Slot(captured)[11]&3U)==3U && !session.Priests().Carrier().FindContained(caster,0x20,158,0).value);CHECK(session.Sp(1)==beforeDrop && SquidForms(core.pool).Parent(prayer)==caster && !(core.pool.Slot(prayer)[11]&3U));
+    const auto beforeDrop=session.Sp(1);session.RequestCarrierDrop(porter,captured);CHECK(!(core.pool.Slot(captured)[11]&3U));link.transport.Flush();CHECK(link.transport.Poll()==1);
+    const Sid restored{static_cast<std::uint16_t>(session.FindPriestParticipation(2))};CHECK(restored.value && restored!=porter);if (restored.value && restored!=porter) CHECK(core.pool.Slot(restored)[10]==158 && (Get(core.pool.Slot(restored),12,2)&0x7fU)==2 && !(core.pool.Slot(restored)[11]&3U));
+    CHECK((core.pool.Slot(captured)[11]&3U)==3U && !session.Priests().Carrier().FindContained(porter,0x20,158,0).value);CHECK(session.Sp(1)==beforeDrop && SquidForms(core.pool).Parent(prayer)==caster && !(core.pool.Slot(prayer)[11]&3U));
     CHECK(link.recorded.size()==3 && link.recorded[0][1]==0x50 && link.recorded[1][1]==0x4f && link.recorded[2][1]==0x50);CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());wire=nullptr;
 }
 
