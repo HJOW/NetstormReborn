@@ -17604,7 +17604,7 @@
       "bytes": 879878,
       "lines": 745,
       "fixtureCommit": "f9cf145f0",
-      "webCommit": "worktree",
+      "webCommit": "18c7efa40",
       "cpppjBasis": {
         "cpppj/src/o/RawFlyerFrame.cpp": "8b467ca03"
       },
@@ -17622,6 +17622,35 @@
         "cpppj/src/o/RawFlyerFrame.cpp"
       ],
       "scope": "10.78 744행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E356",
+      "sha256": "6a8865b9ab3046b748e1776256e822a50dcfc0938acdad3a17764da9e25fc2d2",
+      "bytes": 3332629,
+      "lines": 1303,
+      "fixtureCommit": "180149647",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFlyerTarget.cpp": "180149647"
+      },
+      "id": "flyer-target",
+      "path": "cpppj/tests/fixtures/flyer-target-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 비행체 표적 가까운 비행체 수 C·자리 수 P·자리 번호 I·포위 위치 S·표적 검색 F 1,302행 — 필드 112바이트·객체 22개 1,100바이트·전역 28바이트·결과·호출 순서",
+      "consumers": [
+        "webpj/tests/raw-flyer-target.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-flyer-target.js"
+      ],
+      "doc": "docs/webpj-flyer-target-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFlyerTarget.cpp"
+      ],
+      "scope": "10.78 1,302행 전부"
     }
   ]
 }
