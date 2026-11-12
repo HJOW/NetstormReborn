@@ -1,17 +1,22 @@
 // Gun 표적 raw-gun-target.js(RawGunTarget)를 원본 10.78 관측과 cpppj 계약으로 대조한다.
 //  - 원본 관측: guntarget-x86.tsv 10.78(originals) 1727행 — 입력 18열(검색/MayTarget/MayShoot/MayFire/CannonRay/Footprint 종류·원본 타입·방향 모드·테마·사거리 비트·후보 좌표 비트·extra·flags1/2·수량·소유자·동맹 허용·친구 발사·프레임·장면 종류·진단 출력·후보 SID)
 //    → 결과 SID 또는 판정, 사정선/발자국 네 float 비트, 진단 출력 요청(D:대상여부:네 float 비트). 같은 입력을 값형 동맹 배열과 현재 Player 조회기(allyMaskRead/playerFlagsRead) 두 방식으로 재생한다. CD 10.72 행은 웹 범위 밖이다.
-//  - 계약: rawGunTarget_bindings_and_missing_effect(진단 출력 경계 누락 거부·플레이어 bit20 이면 ray 진단 출력 생략). 보호 원본 SHP 자산의 48 사정선(GunTarget_ActualCannonAssetRay48)은 SHP 자산 시험 장치가 선행이라 이번 범위 밖이다.
-// 실제 게임·브라우저 실행이 아니다. (2026-11-08 WB04-E82: Gun 표적 이식과 함께 추가)
+//  - 계약: rawGunTarget_bindings_and_missing_effect(진단 출력 경계 누락 거부·플레이어 bit20 이면 ray 진단 출력 생략·makeGunTargetHooks 의 훅 보존과 풀 불일치 거부).
+//  - GunProcess 연결(WB04-E360): rawGunTarget_actual_gun_frame_fire(실제 RawGunProcess 프레임이 같은 풀의 표적 검색/발사 판정을 거쳐 단계 2, 방향이 맞지 않으면 해제·재전송)와 makeGunTargetHooks 의 인자 풀이(signed 방향 모드/프레임·float 비트 문맥) 계약.
+//  - 보호 원본 SHP 자산(WB04-E360): GunTarget_ActualCannonAssetRay48 — 웹 준비 자료(netstorm.tarc·d/_shapes.shp)의 실제 sunCannon(TYPE 128: 사거리 20·테마 3·핫스폿 0,6)과 실제 SHP 포구 헤더로 cannon-asset-ray-x86.tsv 48행의 사정선 네 float 비트를 전부 대조한다.
+// 실제 게임·브라우저 실행이 아니다. (2026-11-08 WB04-E82: Gun 표적 이식과 함께 추가, 2026-11-13 WB04-E360: GunProcess 연결과 실제 자산 사정선 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import { REPO_ROOT } from './helpers.mjs';
-import { readRows, put, floatToBits, bitsToFloat } from './raw-support.mjs';
+import { readRows, put, get, floatToBits, bitsToFloat } from './raw-support.mjs';
 import { SidPool } from '../www/core/sid-pool.js';
 import { SquidHash, SQUID_HASH_SCALES } from '../www/core/squid-hash.js';
 import { SquidFactory } from '../www/core/squid-factory.js';
-import { RawGunTarget } from '../www/core/raw-gun-target.js';
+import { RawGunTarget, makeGunTargetHooks } from '../www/core/raw-gun-target.js';
+import { GunProcessFields, RawGunProcess } from '../www/core/raw-gun-process.js';
+import { buildTypeRecords } from '../www/assets/type-flags.js';
+import { realCaptureAssets } from './capture-assets-support.mjs';
 
 // 원본 관측 10.78 행이다. 없으면 해당 검사를 건너뛴다. (2026-11-08 WB04-E82)
 const rows = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'guntarget-x86.tsv'))?.filter((row) => row[0] === 'originals') ?? null;
@@ -229,4 +234,125 @@ test('GunTarget: 진단 출력 경계 누락을 거부하고 플레이어 bit20 
     assert.ok(throws(() => new RawGunTarget({ edition: 'cd1072' }, scene.hash, scene.types, scene.targetTypes, scene.shapes, scene.state)));
     assert.ok(throws(() => new RawGunTarget(scene.pool, scene.hash, scene.types.slice(1), scene.targetTypes, scene.shapes, scene.state)));
     assert.ok(throws(() => logic.mayShoot({ ...query, owner: 9 }, 15050)));
+});
+
+test('GunTarget 연결: makeGunTargetHooks 는 검색/발사 훅만 교체하고 나머지 훅과 원래 묶음은 보존하며 풀이 다르면 거부한다', () => {
+    const scene = new GunTargetScene();
+    scene.prepare([4, 128, 0, 0, floatToBits(10.5), floatToBits(55.75), floatToBits(52.5), 0, 0x10, 0, 2, 2, 0, 0, 1, 0, 1, 15050]);
+    const logic = scene.logic();
+    let preserved = false;
+    const original = { refreshRange: () => { preserved = true; }, findTarget: () => 1, shoot: () => true };
+    const hooks = makeGunTargetHooks(scene.pool, logic, original);
+    assert.equal(typeof hooks.findTarget, 'function');
+    assert.equal(typeof hooks.shoot, 'function');
+    hooks.refreshRange(15050);
+    assert.ok(preserved);
+    // 원래 묶음은 바뀌지 않고 새 묶음의 두 훅만 달라진다.
+    assert.notEqual(hooks, original);
+    assert.notEqual(hooks.findTarget, original.findTarget);
+    assert.notEqual(hooks.shoot, original.shoot);
+    assert.equal(original.findTarget(), 1);
+    assert.deepEqual(Object.keys(hooks).sort(), ['findTarget', 'refreshRange', 'shoot']);
+    // 훅을 주지 않아도 검색/발사 두 훅이 생기고, 풀이 다르면 TypeError 이다.
+    assert.deepEqual(Object.keys(makeGunTargetHooks(scene.pool, logic, {})).sort(), ['findTarget', 'shoot']);
+    assert.throws(() => makeGunTargetHooks(new SidPool(24000), logic, {}), (error) => error instanceof TypeError && /풀 불일치/.test(error.message));
+});
+
+test('GunTarget 연결: findTarget 훅은 방향 모드를 signed 로, shoot 훅은 8DWORD 문맥을 float 비트·signed 방향/프레임으로 풀어 넘긴다', () => {
+    const pool = new SidPool(24000);
+    const calls = [];
+    const target = {
+        pool,
+        findTarget: (...args) => { calls.push(['find', ...args]); return 77; },
+        mayFire: (query, sid) => { calls.push(['fire', query, sid]); return sid === 5; },
+    };
+    const hooks = makeGunTargetHooks(pool, target, {});
+    assert.equal(hooks.findTarget(1.5, -2.25, 128, 0xfffffffe, 3), 77);
+    assert.equal(hooks.findTarget(0, 0, 129, 2, 4), 77);
+    assert.deepEqual(calls.slice(0, 2), [['find', 1.5, -2.25, 128, -2, 3], ['find', 0, 0, 129, 2, 4]]);
+    const words = [floatToBits(1.5), floatToBits(-2.25), floatToBits(50.25), floatToBits(52.5), 128, 0xfffffffd, 6, 0xffffffff];
+    assert.equal(hooks.shoot(words, 5), true);
+    assert.equal(hooks.shoot(words, 6), false);
+    assert.deepEqual(calls[2], ['fire', { x: 1.5, y: -2.25, centerX: 50.25, centerY: 52.5, type: 128, direction: -3, owner: 6, frame: -1 }, 5]);
+    assert.equal(calls[3][2], 6);
+});
+
+test('GunTarget 연결: 실제 RawGunProcess 프레임이 같은 풀의 표적 검색/발사 판정을 거쳐 발사하고 방향이 맞지 않으면 해제·재전송한다(rawGunTarget_actual_gun_frame_fire)', () => {
+    const scene = new GunTargetScene();
+    scene.prepare([3, 128, 0, 0, floatToBits(10.5), floatToBits(55.75), floatToBits(52.5), 0, 0x10, 0, 2, 2, 0, 0, 3, 0, 0, 15050]);
+    const parent = 15000;
+    const raw = scene.pool.allocated(parent);
+    raw.fill(0);
+    raw[10] = 128;
+    raw[34] = 1;
+    put(raw, 14, floatToBits(SOURCE_X));
+    put(raw, 18, floatToBits(SOURCE_Y));
+    put(raw, 36, 3);
+    const target = scene.logic();
+    const state = { now: 10 };
+    const events = [];
+    // 실제 parentBlocked raw bit20 과 현재 8DWORD shot 문맥을 같은 풀에서 직접 공급한다.
+    const boundaries = {
+        parentBlocked: (sid) => (scene.pool.slot(sid)[40] & 0x20) !== 0,
+        shotContext: (sid) => {
+            const image = scene.pool.slot(sid);
+            const center = target.center(sid);
+            return [get(image, 14), get(image, 18), floatToBits(center[0]), floatToBits(center[1]), image[10], 0, image[34], get(image, 36)];
+        },
+        // 타입 발사 간격 로더/감시 제거/전송은 이 검사에서 아직 명시 효과 경계다.
+        firingInterval: () => 2.25,
+        removeDependency: (form, sid) => { events.push(`D:${form}:${sid}`); },
+        repopForm: () => { events.push('P'); },
+    };
+    const globals = {
+        now: () => state.now, boss: () => true, server: () => true, fortMode: () => false, fixedMode: () => false, disabled: () => false,
+        friendlyFire: () => false, checking: () => 0, windArcherType: () => 140, thunderCannonType: () => 131, rainCannonType: () => 129, alliance: () => 0,
+    };
+    const gun = new RawGunProcess(scene.pool, scene.types, globals, makeGunTargetHooks(scene.pool, target, boundaries));
+    const fields = new GunProcessFields();
+    gun.initialize(fields, parent);
+    put(fields.bytes, 44, 5);
+    put(fields.bytes, 48, parent);
+    put(fields.bytes, 24, 15050, 2);
+    put(fields.bytes, 28, 7);
+    gun.frame(fields);
+    assert.deepEqual([fields.stage, fields.target, fields.time, events], [2, 15050, 12.25, []]);
+    // 방향에 맞지 않는 현재 프레임에서는 실제 MayFire 가 거부해 해제/상태 1/전송을 실행한다.
+    put(raw, 36, 1);
+    put(fields.bytes, 28, 7);
+    const dv = new DataView(new ArrayBuffer(8));
+    dv.setFloat64(0, state.now, true);
+    put(fields.bytes, 16, dv.getUint32(0, true));
+    put(fields.bytes, 20, dv.getUint32(4, true));
+    gun.frame(fields);
+    assert.deepEqual([fields.stage, fields.target, fields.time, events], [1, 0, 12.25, ['D:5:15050', 'P']]);
+});
+
+// 웹 준비 자료의 실제 sunCannon 정의(TYPE 128)와 실제 SHP 포구 헤더 자료이다(원본 로더가 읽은 값과 같다). (2026-11-13 WB04-E360)
+const assetRayRows = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'cannon-asset-ray-x86.tsv'));
+
+test('GunTarget: 보호 원본 SHP 자산의 sunCannon 사정선 48행의 네 float 비트가 같다(GunTarget_ActualCannonAssetRay48)', { skip: !assetRayRows && 'cannon-asset-ray fixture 없음' }, () => {
+    const assets = realCaptureAssets();
+    // 웹 레코드 중 핫스폿을 덮어쓰지 않은 원본 로더 값이다(sunCannon 은 0,6).
+    const types = buildTypeRecords(assets.table.definitions);
+    assert.deepEqual([types[128].hotspotX, types[128].hotspotY, types[128].group, types[128].theme], [0, 6, 1, 3]);
+    const definition = assets.table.definitions[128 - 70];
+    assert.equal(definition.name, 'suncannon');
+    const range = definition.properties.find((property) => property.name.toLowerCase() === 'range').value;
+    const targets = types.map(() => freshTarget());
+    targets[128].range = Math.fround(range);
+    targets[128].theme = types[128].theme;
+    const logic = new RawGunTarget(new SidPool(24000), new SquidHash(), types, targets, assets.shapes, freshState());
+    let count = 0;
+    // 입력/기대 바이트는 새 계산으로 만들지 않고 동결한 실제 원본 전체를 읽는다.
+    for (const row of assetRayRows) {
+        assert.equal(row.length, 2);
+        const input = row[0].split(',').map(Number);
+        const x = bitsToFloat(input[0]);
+        const y = bitsToFloat(input[1]);
+        const query = { x, y, centerX: Math.fround(x - 1.5), centerY: Math.fround(y - 1.5), type: 128, direction: 0, owner: 1, frame: 0 };
+        assert.equal(rectBits(logic.cannonRay(query, input[2])), row[1], `사정선 행 ${count}`);
+        count += 1;
+    }
+    assert.equal(count, 48);
 });

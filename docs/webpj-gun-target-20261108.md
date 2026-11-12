@@ -19,8 +19,15 @@
 
 ## 3. 경계와 남은 것
 
-- `MakeGunTargetHooks`(GunProcess 의 `findTarget`/`shoot` 연결)는 `RawGunProcess` 가 아직 없어 옮기지 않았다. 보호 원본 SHP 자산으로 `sunCannon` 사정선 48행을 대조하는 `GunTarget_ActualCannonAssetRay48`(`cannon-asset-ray-x86.tsv`)은 SHP 포구 헤더를 읽는 자산 시험 장치가 선행이라 이번 범위 밖이다(PORT_MAP 상태 partial).
+- `MakeGunTargetHooks`(GunProcess 의 `findTarget`/`shoot` 연결)와 보호 원본 SHP 자산으로 `sunCannon` 사정선 48행을 대조하는 `GunTarget_ActualCannonAssetRay48`(`cannon-asset-ray-x86.tsv`)은 이 문서 작성 때는 `RawGunProcess` 와 SHP 자산 시험 장치가 없어 옮기지 못했고, **WB04-E360 에서 모두 끝냈다(5절)**.
 
 ## 4. 다음 시작점
 
 `RawFenceCreate`(표식 M 106·포스필드 S 306, 이번 모듈이 선행), `RawFenceMarkerClear`, `RawGunGroundTarget`, 차단기(`GunBlocker`), `RawGunProcess`(+`MakeGunTargetHooks`), `RawCarrierArrival`, `RawAssetPostPop`, 사제 배치 계열(선행 `RawCanonPixelShape`·`RawCanonPlacement`), 후보/지형 권한(`RawCanonPlacementPermission`), `RawSquidTransmission`, `RawDudeSpawn`·`RawDudeNotice`→`RawDudeDrop`, `RawShapeToBuffer`(+ 캡처 계열), `RawIslandRuntime` 계열, 그 밖의 작은 몸체이다.
+
+## 5. WB04-E360 (2026-11-13): GunProcess 연결과 실제 자산 사정선 — 7-P2 둘째 항목, RawGunTarget 마감
+
+- **`makeGunTargetHooks(pool, target, hooks)`** (`core/raw-gun-target.js`): 같은 풀의 `RawGunProcess`(E359) 훅 묶음 중 `findTarget`(0046b6f0; 방향 모드 DWORD 를 signed 로)과 `shoot`(0046b070 MayFire; 8DWORD 문맥 = x·y·중심 x·중심 y 의 float 비트, 타입, signed 방향, 소유자, signed 프레임)만 이 모듈로 교체한 **새 묶음**을 돌려준다. 나머지 훅(종속·재전송·애니메이션·사거리·난수·검색 모드 등)은 그대로 복사해 보존하고 원래 묶음은 바꾸지 않으며, 풀이 다르면 `TypeError`('풀 불일치')로 거부한다. 그 밖의 `RawGunTarget` 본문은 바뀌지 않았다.
+- **검사 4건 추가(`tests/gun-target.test.mjs` 총 7건):** ① 훅 보존·교체·풀 불일치(cpppj `rawGunTarget_bindings_and_missing_effect` 의 연결 부분), ② 인자 풀이(signed 모드/방향/프레임, float 비트 문맥, 타입·소유자 그대로, 대상 SID 전달), ③ 실제 `RawGunProcess` 프레임이 같은 풀의 표적 검색/발사 판정으로 발사(단계 2, 표적 유지, 시각 12.25)하고 방향이 맞지 않는 프레임에서는 해제·재전송(단계 1, 표적 0, 사건 D:5:15050·P)하는 `rawGunTarget_actual_gun_frame_fire`, ④ 웹 준비 자료(`netstorm.tarc`·`d/_shapes.shp`)의 실제 sunCannon(TYPE 128: 사거리 20·테마 3·그룹 1)과 실제 SHP 포구 헤더로 `cannon-asset-ray-x86.tsv` 48행의 사정선 네 float 비트를 모두 대조하는 `GunTarget_ActualCannonAssetRay48` — **첫 실행에서 48행 전부 일치**했다. 핫스폿 (0, 6)은 `buildTypeRecords` 가 `hotFootRatioY 0.625` 에서 계산한 값이며(시험 공용 장치 `realCaptureAssets` 는 기준점을 0 으로 덮으므로 이 검사는 원본 로더 값을 직접 쓴다), 포구는 `squidRendererShapes` 의 헤더 값이다.
+- **변형 확인:** 새 함수에 의미 변형 16회(풀 검사 제거·반전, 훅 펼치기 제거, 모드 signed 제거와 인자 순서, 문맥 단어 위치 맞바꿈 둘, 방향/프레임 signed 제거, 타입/소유자 맞바꿈, 방향/프레임 맞바꿈, 대상 SID, float 비트 바이트 순서·정수 절삭, 기본 인자)를 적용했고 15개가 잡혔다. 남은 하나(`hooks = undefined` 기본 인자)는 동등이다.
+- **기준선 뒤 변경:** `20261107-48 CP`(friendlyFire 비영 뷰)는 3-E 판정 E263 ① 그대로(웹은 참/거짓 판정)이며 PORT_MAP base `a84509c9` 를 유지한다. 앱 수명 연결(`RawAssetPostPop.createGunProcess` 에 `createGunProcess` 연결과 훅 구현 조립)은 후속 단계 조립 몫이다. 다음 7-P2 항목은 **RawMissile**(partial)이다.

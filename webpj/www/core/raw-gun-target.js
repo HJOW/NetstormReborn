@@ -9,7 +9,10 @@
 // query = { x, y, centerX, centerY, type, direction, owner, frame }, 사각형 = { left, top, right, bottom }(float 값), types[n] = { footX, footY, flags1, flags2, group, hotspotX, hotspotY, maxHitPoints },
 // targetTypes[n] = { range, theme, directionFrames[4], heightExtension }, shapes[n] = { loaded, frameCount, frames[{ muzzleX, muzzleY }] }, state = { friendlyFire, checking, showRanges, sunCannonType(128), sunFenceType(136),
 // windArcherType(140), thunderArcherType(148), windHalfAngle(30), scaleX(16), scaleY(11), allyMasks[9], playerFlags[9], allyMaskRead?(소유자), playerFlagsRead?(소유자), angles }, hooks = { drawRange(rect, 표적 여부) } 이다.
-// friendlyFire/checking 은 소비 위치마다 읽는 현재 값(참/거짓 판정)이다. GunProcess 와의 연결(MakeGunTargetHooks)은 RawGunProcess 이식 때 한다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E82: Gun 표적 이식으로 추가)
+// friendlyFire/checking 은 소비 위치마다 읽는 현재 값(참/거짓 판정)이다.
+//  - makeGunTargetHooks(pool, target, hooks): 같은 풀의 RawGunProcess 훅 묶음 중 표적 검색(findTarget: 0046b6f0, 방향 모드는 signed)과 발사 판정(shoot: 0046b070 MayFire, 8DWORD 문맥 = x·y·중심 x·중심 y 의 float 비트, 타입, signed 방향, 소유자, signed 프레임)만 이 모듈로 교체한
+//    새 묶음을 돌려주고 나머지 훅(종속·재전송·애니메이션·사거리·난수·검색 모드 등)은 그대로 보존한다. 풀이 다르면 거부한다(원본 호출 묶음을 바꾸지 않음).
+// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E82: Gun 표적 이식으로 추가, 2026-11-13 WB04-E360: GunProcess 연결 makeGunTargetHooks 추가)
 import { RawSquidFinder } from './raw-squid-finder.js';
 import { normalizeBoardAngle } from './raw-board-angle.js';
 
@@ -403,4 +406,26 @@ export class RawGunTarget {
         }
         return this.mayTarget(query, target);
     }
+}
+
+// 8DWORD 발사 문맥의 한 칸을 float 로 본다(비트 그대로). (2026-11-13 WB04-E360)
+function wordFloat(word) {
+    view.setUint32(0, word >>> 0, true);
+    return view.getFloat32(0, true);
+}
+
+// 실제 표적 검색(0046b6f0)과 발사 판정(0046b070)만 같은 풀의 GunProcess 훅에 연결한다. 나머지 효과 경계는 새 묶음에 그대로 복사해 보존하고 원래 묶음은 바꾸지 않는다. 풀이 다르면 거부한다.
+// 사용: new RawGunProcess(pool, types, globals, makeGunTargetHooks(pool, target, 나머지 훅)). (2026-11-13 WB04-E360: RawGunProcess 이식 뒤 GunProcess 연결로 추가)
+export function makeGunTargetHooks(pool, target, hooks) {
+    if (pool !== target.pool) throw new TypeError('GunTarget/GunProcess 풀 불일치');
+    return {
+        ...hooks,
+        // 방향 모드는 DWORD 를 signed 로 본다.
+        findTarget: (x, y, type, mode, owner) => target.findTarget(x, y, type, mode | 0, owner),
+        // 문맥 8DWORD 를 질의로 풀어 MayFire 에 넘긴다(x·y·중심 x·중심 y 는 float 비트, 방향·프레임은 signed).
+        shoot: (words, sid) => target.mayFire({
+            x: wordFloat(words[0]), y: wordFloat(words[1]), centerX: wordFloat(words[2]), centerY: wordFloat(words[3]),
+            type: words[4], direction: words[5] | 0, owner: words[6], frame: words[7] | 0,
+        }, sid),
+    };
 }

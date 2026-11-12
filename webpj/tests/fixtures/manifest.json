@@ -17749,7 +17749,7 @@
       "bytes": 1093605,
       "lines": 2997,
       "fixtureCommit": "ada85427f",
-      "webCommit": "worktree",
+      "webCommit": "55661e851",
       "cpppjBasis": {
         "cpppj/src/o/RawGunProcess.cpp": "cc562ccfc"
       },
@@ -17778,7 +17778,7 @@
       "bytes": 367045,
       "lines": 905,
       "fixtureCommit": "34e3c3f9b",
-      "webCommit": "worktree",
+      "webCommit": "55661e851",
       "cpppjBasis": {
         "cpppj/src/o/RawGunProcess.cpp": "cc562ccfc"
       },
@@ -17796,6 +17796,35 @@
         "cpppj/src/o/RawGunProcess.cpp"
       ],
       "scope": "10.78 904행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E360",
+      "sha256": "7e74bd7c76044f719a02fb20a98b1cab3512a8fd87b82f31cbac24629edd67a9",
+      "bytes": 3358,
+      "lines": 49,
+      "fixtureCommit": "d3a3eb4b1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGunTarget.cpp": "56a282700"
+      },
+      "id": "cannon-asset-ray",
+      "path": "cpppj/tests/fixtures/cannon-asset-ray-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 원본 SHP 포구 헤더·실제 sunCannon(TYPE 128: 사거리 20·테마 3·핫스폿 0,6)의 방향별 사정선 사각형 float 비트 48행",
+      "consumers": [
+        "webpj/tests/gun-target.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-gun-target.js"
+      ],
+      "doc": "docs/webpj-gun-target-20261108.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGunTarget.cpp"
+      ],
+      "scope": "10.78 48행 전부(웹 준비 자료의 실제 TYPE/SHP 로 대조)"
     }
   ]
 }
