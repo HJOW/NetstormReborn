@@ -6,7 +6,8 @@
 //    emptyGeyser 를 생성(create(type, 0))해 보관한 좌표로 배치(pop(sid, x, y, 0))한다. 좌표 정수화는 ftol 하위 DWORD 이며 NaN/무한/범위 밖은 0, 256 밖 칸은 표면 없음이다.
 //  - handlePacket(packet): 패킷 +4 WORD 를 SID 로 읽어 handle 한다(짧은 패킷은 거부, 사용하지 않는 첫 두 handler 인자는 해석하지 않음).
 // state = { boss, checking(값/getter), nuggetType, emptyGeyserType, isleType, bridgeType } 의 live 속성, hooks = { sound(x, y, name, flags), destroy(sid, flags), create(type, flags)→sid, pop(sid, x, y, flags) }(모두 필수).
-// 패킷 분배기 등록(RegisterGeyserMined)은 분배기 이식 전이라 옮기지 않았다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E108: 간헐천 채집 통지 이식으로 추가)
+//  - registerGeyserMined(dispatch, handler): 원본 초기화처럼 0x5b 에 빈 observer·버전 1/정책 0·실제 handler 를 등록한다(길이 6 은 등록 표 기본값).
+// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E108: 간헐천 채집 통지 이식으로 추가, 2026-11-12 WB04-E323: 분배기 등록 RegisterGeyserMined 추가)
 
 // 소리 난수 구간 크기·최소, 고갈 삭제 flags, 슬롯 위치, ftol 경계, 판본의 TYPE 수이다. (2026-11-08 WB04-E108)
 const SOUND_CHOICES = 6000;
@@ -120,4 +121,19 @@ export class RawGeyserMined {
         if (packet.length < 6) throw new RangeError('간헐천 채집 packet SID 범위');
         this.handle(packet[4] | (packet[5] << 8));
     }
+}
+
+// 간헐천 채집 통지의 패킷 타입(0x5b)과 원본 초기화가 등록하는 버전 BYTE·불일치 정책 BYTE 이다. 정책 0 은 버전이 달라도 계속 분배한다. (2026-11-12 WB04-E323: 분배기 등록 이식)
+export const GEYSER_MINED_MESSAGE = 0x5b;
+const GEYSER_MINED_VERSION = 1;
+const GEYSER_MINED_MISMATCH = 0;
+
+// 원본 초기화처럼 0x5b 의 observer 를 비우고(원본 observer 는 효과가 없는 빈 함수라 표를 비운다; 단일 분배는 observer 를 부르지 않는다) 버전 1/정책 0 과 실제 handler 를 등록한다.
+// 길이는 등록 표 기본값(6)을 그대로 쓴다. 원본 handler 는 sender/연결을 읽지 않고 packet+4 SID 의 현재 raw 슬롯만 읽는다. handler 는 분배기보다 오래 살아야 한다.
+// 사용: registerGeyserMined(dispatch, new RawGeyserMined(pool, hash, types, random, state, hooks)). (2026-11-12 WB04-E323: cpppj RegisterGeyserMined 이식)
+export function registerGeyserMined(dispatch, handler) {
+    if (!(handler instanceof RawGeyserMined)) throw new TypeError('간헐천 채집 등록에는 RawGeyserMined 처리기가 필요합니다');
+    dispatch.observe(GEYSER_MINED_MESSAGE, null);
+    dispatch.version(GEYSER_MINED_MESSAGE, GEYSER_MINED_VERSION, GEYSER_MINED_MISMATCH);
+    dispatch.register(GEYSER_MINED_MESSAGE, (sender, connection, packet) => { handler.handlePacket(packet); });
 }

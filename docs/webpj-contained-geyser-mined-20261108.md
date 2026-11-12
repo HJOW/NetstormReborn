@@ -25,6 +25,7 @@
 ## 3. 경계와 남은 것
 
 - `RawContainedLookup` 의 건설 완료 연결 시험(`ContainedLookup_ConstructionStopsActualSoundAndKeepsOtherProcess`)은 건설 프로세스/소리 프로세스/Kernel 이 이식 전이라 하지 않았다. `RawGeyserMined` 의 패킷 분배기 등록(`RegisterGeyserMined`)과 실제 factory/삭제/Pop/공간 연결 시험(`real_packet_factory_destroy_and_space`)은 `RawPacketDispatch` 이식 뒤에 한다(PORT_MAP 은 partial). 소리·가상 삭제·생성·Pop 은 훅 경계이다.
+  - 2026-11-12 WB04-E323 에서 완료: `registerGeyserMined` 와 실제 연결 시험·소리 뒤 현재 boss/nugget 시험을 옮기고 PORT_MAP 을 port 로 올렸다([E323 문서](webpj-geyser-mined-registration-20261112.md)).
 
 ## 4. 다음 시작점
 
