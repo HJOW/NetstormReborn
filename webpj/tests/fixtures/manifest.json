@@ -107,7 +107,8 @@
       "producer": "cpppj 원본 스크립트 명령 해석 x86 관측",
       "consumers": [
         "webpj/tests/startup.test.mjs",
-        "webpj/tests/data-manager-names.test.mjs"
+        "webpj/tests/data-manager-names.test.mjs",
+        "webpj/tests/script-command-queue.test.mjs"
       ],
       "modules": [
         "webpj/www/ui/script-command.js",
@@ -124,11 +125,11 @@
       "sha256": "34ddbcb593f7f38ffd206aae777438697c7c194f5b1215a2a488f0ff7f878d4d",
       "bytes": 29665,
       "lines": 263,
-      "fixtureCommit": "7f1c4740",
-      "webCommit": "a638b780",
+      "fixtureCommit": "7f1c47407",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/client/ScriptCommand.cpp": "2054e074",
-        "cpppj/src/o/RawTextToken.cpp": "7f1c4740"
+        "cpppj/src/client/ScriptCommand.cpp": "2054e0744",
+        "cpppj/src/o/RawTextToken.cpp": "7f1c47407"
       }
     },
     {
@@ -17142,6 +17143,96 @@
       "cpppjBasis": {
         "cpppj/src/client/MissionLifecycle.cpp": "655794e91",
         "cpppj/src/client/MissionGuideInput.cpp": "2054e0744"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E343",
+      "id": "mission-first",
+      "path": "cpppj/tests/fixtures/mission-first-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Guide First 004c2a70·Tell 단계 004c2a90·First 사건 분배 00463e40·활성 미션 F8 key-down 내부 분기 278행(함수 정상 반환 264 + F8 내부 분기 14) — 반환·전체 208BYTE·호출 순서",
+      "consumers": [
+        "webpj/tests/mission-guide-input.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/mission-guide-input.js"
+      ],
+      "doc": "docs/webpj-mission-guide-input-20261112.md",
+      "cpppjSources": [
+        "cpppj/src/client/MissionGuideInput.cpp"
+      ],
+      "scope": "10.78 278행 전부",
+      "sha256": "31fd6fbe01a483a0557f48d2ca7dddf244614e2a0e44ee9c76e32e900800e794",
+      "bytes": 132477,
+      "lines": 279,
+      "fixtureCommit": "62213f9f4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MissionGuideInput.cpp": "2054e0744"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E343",
+      "id": "mission-common",
+      "path": "cpppj/tests/fixtures/mission-common-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 미션 Init demo 문자열 분기(004c3290)와 Reload 캡처(00463cf0)의 내부 분기 108행 — 빈 문자열·signed/감김·bool 정규화와 소유 이름 복사",
+      "consumers": [
+        "webpj/tests/mission-guide-input.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/mission-guide-input.js"
+      ],
+      "doc": "docs/webpj-mission-guide-input-20261112.md",
+      "cpppjSources": [
+        "cpppj/src/client/MissionGuideInput.cpp"
+      ],
+      "scope": "10.78 108행 전부",
+      "sha256": "555047cf993ed58d3c2e147f8db2dbe4ed0084c77db27c3f9b2d5d5d6ef2b6e0",
+      "bytes": 5651,
+      "lines": 109,
+      "fixtureCommit": "29d4682f8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MissionGuideInput.cpp": "2054e0744"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E343",
+      "id": "mission-abort",
+      "path": "cpppj/tests/fixtures/mission-abort-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Guide Abort/미처리 사건 분배 960행(A)과 실제 제어 이름 조회·문자열 토큰·큐 42행(S) — 반환·두 큐 함수 결과·Tell 섹션",
+      "consumers": [
+        "webpj/tests/mission-guide-input.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/mission-guide-input.js",
+        "webpj/www/ui/script-command.js"
+      ],
+      "doc": "docs/webpj-mission-guide-input-20261112.md",
+      "cpppjSources": [
+        "cpppj/src/client/MissionGuideInput.cpp",
+        "cpppj/src/client/ScriptCommand.cpp"
+      ],
+      "scope": "10.78 1002행 전부",
+      "sha256": "dd608d5f5c7bad4bcb70422c30719d2ed34e55b98473d77554dc6866e6a39889",
+      "bytes": 170367,
+      "lines": 1003,
+      "fixtureCommit": "3485834e8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MissionGuideInput.cpp": "2054e0744",
+        "cpppj/src/client/ScriptCommand.cpp": "2054e0744"
       }
     }
   ]
