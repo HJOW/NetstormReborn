@@ -485,7 +485,7 @@ public sealed class HostSession
     /// <summary>전투섬 배정 갈고리의 실제 기록 몸체다. 참가자 기록의 첫 지역(+0x78)에 배정된 섬 번호를 쓴다.</summary>
     /// <param name="owner">섬을 배정받은 Player 번호다. 0~8이다.</param>
     /// <param name="island">배정된 섬 번호다.</param>
-    /// <remarks>2026-11-12 0.474에서 R4 전투섬 배정 region 갈고리 live 연결용으로 추가했다. 근거: cpppj `RawCampaignSession.cpp` 3243행 `hooks.region`(범위 밖 9 이상은 `out_of_range`). AI 참가자의 지역은 AI 설정 사슬에서 덮어쓰므로(R6) 시작 흐름에서는 전투 소유자(로컬 인간)만 호출한다.</remarks>
+    /// <remarks>2026-11-12 0.474에서 MP 전투섬 배정 region 갈고리 live 연결용으로 추가했다. 근거: cpppj `RawCampaignSession.cpp` 3243행 `hooks.region`(범위 밖 9 이상은 `out_of_range`). 단일 미션 시작 흐름에서는 호출하지 않는다 — 단일 미션은 missionWorld=true라 loadWorld 경로를 타서 makeBattleIsland가 돌지 않으며, 첫 지역은 소용돌이→섬 소유자→첫 지역 사슬이 기록한다(R6, 0.477 정정).</remarks>
     public void WriteBattleIslandRegion(uint owner, uint island)
     {
         if (owner > (uint)MissionPlayers.PlayerCount)
@@ -498,14 +498,14 @@ public sealed class HostSession
 
     /// <summary>전투섬 배정 갈고리의 실제 Region 대리자를 만든다. 세션 Player 기록에 직접 쓴다.</summary>
     /// <returns>참가자·섬 번호를 받는 Region 갈고리다. 같은 세션 인스턴스를 공유한다.</returns>
-    /// <remarks>2026-11-12 0.474에서 추가했다. `BattleIslandHooks.Region` 자리에 그대로 꽂을 수 있으며 미연결 `RawBattleIsland` 호출자는 이 대리자를 그대로 쓴다.</remarks>
+    /// <remarks>2026-11-12 0.474에서 추가했다. MP 전투의 `BattleIslandHooks.Region` 자리에 그대로 꽂을 수 있으며 미연결 `RawBattleIsland` 호출자는 이 대리자를 그대로 쓴다.</remarks>
     public Action<uint, uint> BuildBattleIslandRegionHook() => WriteBattleIslandRegion;
 
     /// <summary>전투 Territory 120바이트에서 전투 소유자의 시작 섬 번호를 푼다. 배치 순서대로 셈한다.</summary>
     /// <param name="territory">20개 Territory(120바이트)다. 미션 요새의 전투 소유자 슬롯 값이다.</param>
     /// <param name="island">배정된 섬 번호다. 고른 영역이 배치 불가면 0이다.</param>
     /// <returns>고른 영역이 배치 가능하면 true, 아니면 false다.</returns>
-    /// <remarks>2026-11-12 0.474에서 시작 흐름 연결용으로 추가했다. 고른 영역은 `RawBattleIsland.SelectBattleTerritory`와 같은 규칙(0x04 첫 영역·없으면 0번)이며 섬 번호는 `RawIslandBuilder.PlaceAll`과 같은 배치 순서(앞선 배치 가능 레코드 수, flags bit0 켜짐·bit1 꺼짐)다. 배치 불가면 127 초기값을 그대로 두려고 false를 돌려준다.</remarks>
+    /// <remarks>2026-11-12 0.474에서 MP 전투섬 배정용으로 추가했다. 고른 영역은 `RawBattleIsland.SelectBattleTerritory`와 같은 규칙(0x04 첫 영역·없으면 0번)이며 섬 번호는 `RawIslandBuilder.PlaceAll`과 같은 배치 순서(앞선 배치 가능 레코드 수, flags bit0 켜짐·bit1 꺼짐)다. 배치 불가면 127 초기값을 그대로 두려고 false를 돌려준다. 단일 미션 시작 흐름에서는 호출하지 않는다(0.477 정정).</remarks>
     public static bool TryResolveBattleIslandRegion(byte[] territory, out uint island)
     {
         island = 0u;
@@ -1160,14 +1160,17 @@ public sealed class HostSession
     /// <summary>세션 저장소를 공유하는 섬 런타임 부모를 만든다. 호출자가 효과 묶음을 준다.</summary>
     /// <param name="islandHooks">섬 런타임의 거주 구역·진단 효과다.</param>
     /// <returns>세션 풀·기록·모드·목록·해시를 공유하는 섬 런타임이다.</returns>
-    /// <remarks>2026-11-12 0.452에서 섬 부모 조립용으로 추가했다. 지형 바인딩과 적재 본체가 같은 부모를 공유하는 방식은 다음 단위에서 잇는다.</remarks>
+    /// <remarks>2026-11-12 0.452에서 섬 부모 조립용으로 추가했다. 지형 바인딩과 적재 본체가 같은 부모를 공유하는 방식은 다음 단위에서 잇는다.
+    /// 2026-11-12 0.477에서 세션 Player 기록을 묶었다(근거 cpppj RawCampaignOwnership.cpp 61행 islands.BindPlayerRecords: 소용돌이→섬 소유자→첫 지역 사슬이 같은 Player 기록을 읽고 쓴다). 단일 미션 +0x78 기록의 전제이며 호출 자체는 소용돌이 체인(R6)에서 잇는다.</remarks>
     public RawIslandRuntime BuildIslands(IslandRuntimeHooks islandHooks)
     {
         ArgumentNullException.ThrowIfNull(islandHooks);
-        return new RawIslandRuntime(
+        var islands = new RawIslandRuntime(
             Pool, IslandHash, IslandRecords, IslandModes, IslandResidences,
             () => IslandChanged, value => IslandChanged = value,
             () => IslandRevision, value => IslandRevision = value, islandHooks);
+        islands.BindPlayerRecords(PlayerRecords);
+        return islands;
     }
 
     /// <summary>월드 적재 setConfig 전달을 실제 설정 경계에 연결한다. NUL 포함 핸들은 C 문자열처럼 앞에서 자른다.</summary>
