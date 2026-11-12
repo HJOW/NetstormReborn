@@ -419,6 +419,12 @@ public sealed class ClientHostGame : Game
                 ResetCamera = () => worldOrder.Add("camera"),
             });
         worldLoad.Load();
+        // 전투 소유자의 시작 섬 번호를 Player 기록(+0x78)에 쓴다. 전투섬 배정 region 갈고리의 실제 기록 몸체다.
+        // AI 참가자의 지역은 AI 설정 사슬에서 덮어쓰므로(R6) 여기서는 전투 소유자(로컬 인간)만 기록한다.
+        byte[] battleTerritory = new byte[120];
+        Array.Copy(fort.Fort.Territory, 0, battleTerritory, 0, Math.Min(120, fort.Fort.Territory.Length));
+        if (HostSession.TryResolveBattleIslandRegion(battleTerritory, out uint battleIsland))
+            session.WriteBattleIslandRegion(session.MissionPlayer.BattleOwner, battleIsland);
         _missionSession = session;
         return session;
     }

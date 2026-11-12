@@ -479,6 +479,61 @@ public sealed class HostSession
             PlayerRecords[record + PlayerFortReceivedOffset + index] = unchecked((byte)(1u >> (8 * index)));
     }
 
+    /// <summary>전투섬 배정 갈고리의 실제 기록 몸체다. 참가자 기록의 첫 지역(+0x78)에 배정된 섬 번호를 쓴다.</summary>
+    /// <param name="owner">섬을 배정받은 Player 번호다. 0~8이다.</param>
+    /// <param name="island">배정된 섬 번호다.</param>
+    /// <remarks>2026-11-12 0.474에서 R4 전투섬 배정 region 갈고리 live 연결용으로 추가했다. 근거: cpppj `RawCampaignSession.cpp` 3243행 `hooks.region`(범위 밖 9 이상은 `out_of_range`). AI 참가자의 지역은 AI 설정 사슬에서 덮어쓰므로(R6) 시작 흐름에서는 전투 소유자(로컬 인간)만 호출한다.</remarks>
+    public void WriteBattleIslandRegion(uint owner, uint island)
+    {
+        if (owner > (uint)MissionPlayers.PlayerCount)
+            throw new ArgumentOutOfRangeException(nameof(owner), owner, "전투섬 배정의 실제 Player 번호 범위 오류");
+        int offset = (int)owner * PlayerRecordStride + PlayerFirstRegionOffset;
+        // 섬 번호 DWORD를 little endian으로 쓴다.
+        for (int index = 0; index < 4; ++index)
+            PlayerRecords[offset + index] = unchecked((byte)(island >> (8 * index)));
+    }
+
+    /// <summary>전투섬 배정 갈고리의 실제 Region 대리자를 만든다. 세션 Player 기록에 직접 쓴다.</summary>
+    /// <returns>참가자·섬 번호를 받는 Region 갈고리다. 같은 세션 인스턴스를 공유한다.</returns>
+    /// <remarks>2026-11-12 0.474에서 추가했다. `BattleIslandHooks.Region` 자리에 그대로 꽂을 수 있으며 미연결 `RawBattleIsland` 호출자는 이 대리자를 그대로 쓴다.</remarks>
+    public Action<uint, uint> BuildBattleIslandRegionHook() => WriteBattleIslandRegion;
+
+    /// <summary>전투 Territory 120바이트에서 전투 소유자의 시작 섬 번호를 푼다. 배치 순서대로 셈한다.</summary>
+    /// <param name="territory">20개 Territory(120바이트)다. 미션 요새의 전투 소유자 슬롯 값이다.</param>
+    /// <param name="island">배정된 섬 번호다. 고른 영역이 배치 불가면 0이다.</param>
+    /// <returns>고른 영역이 배치 가능하면 true, 아니면 false다.</returns>
+    /// <remarks>2026-11-12 0.474에서 시작 흐름 연결용으로 추가했다. 고른 영역은 `RawBattleIsland.SelectBattleTerritory`와 같은 규칙(0x04 첫 영역·없으면 0번)이며 섬 번호는 `RawIslandBuilder.PlaceAll`과 같은 배치 순서(앞선 배치 가능 레코드 수, flags bit0 켜짐·bit1 꺼짐)다. 배치 불가면 127 초기값을 그대로 두려고 false를 돌려준다.</remarks>
+    public static bool TryResolveBattleIslandRegion(byte[] territory, out uint island)
+    {
+        island = 0u;
+        if (territory is null || territory.Length < 20 * 6)
+        {
+            return false;
+        }
+
+        int selected = RawBattleIsland.SelectBattleTerritory(territory);
+        // 고른 영역의 배치 가능 여부를 PlaceAll과 같은 조건으로 확인하는 검사다.
+        byte flags = territory[selected * 6 + 1];
+        if ((flags & 1) == 0 || (flags & 2) != 0)
+        {
+            return false;
+        }
+
+        uint placed = 0u;
+        // 고른 영역보다 앞선 배치 가능 레코드 수를 세어 섬 번호로 삼는 반복문이다.
+        for (int index = 0; index < selected; ++index)
+        {
+            byte before = territory[index * 6 + 1];
+            if ((before & 1) != 0 && (before & 2) == 0)
+            {
+                placed++;
+            }
+        }
+
+        island = placed;
+        return true;
+    }
+
     /// <summary>전투 소유자 기록에 공유 버퍼의 현재 이름을 덮어쓴다. 원본 월드 적재의 이름 확정 쓰기와 같다.</summary>
     /// <remarks>2026-11-12 0.428에서 미션 값 채우기로 추가했고 0.430에서 공유 버퍼 읽기로 바꿨다. NUL 뒤 stale 꼬리는 보존하므로 영어 "You"는 "You\0pson"이 된다.</remarks>
     public void WriteBattleName()

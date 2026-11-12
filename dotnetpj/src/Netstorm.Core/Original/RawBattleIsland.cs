@@ -99,16 +99,7 @@ public sealed class RawBattleIsland
 
         byte[] records = new byte[120];
         Need(_hooks.Territory)(state.Owner, records);
-        int selected = 0;
-        // 레코드의 flags BYTE+1에서 0x04 비트가 켜진 첫 영역을 찾고 없으면 원문처럼 0번을 유지하는 반복문이다. 2026-11-07 R4 지형·섬 생성 1차 이식에서 추가됐다.
-        for (int index = 0; index < 20; ++index)
-        {
-            if ((records[(index * 6) + 1] & 4) != 0)
-            {
-                selected = index;
-                break;
-            }
-        }
+        int selected = SelectBattleTerritory(records);
 
         byte[] record = records.AsSpan(selected * 6, 6).ToArray();
         state.Bounds = Need(_hooks.Placement)(state.Owner, record);
@@ -134,5 +125,30 @@ public sealed class RawBattleIsland
         }
 
         return hook;
+    }
+
+    /// <summary>전투섬으로 배치할 Territory 영역 번호를 고른다. flag 0x04가 켜진 첫 영역이며 없으면 0번이다.</summary>
+    /// <param name="records">20개 Territory(120바이트)다.</param>
+    /// <returns>고른 영역 번호(0~19)다.</returns>
+    /// <remarks>2026-11-12 0.474에서 호스트 시작 흐름의 섬 번호 해결에 재사용하려고 <see cref="Build(uint)"/>에서 분리했다. 원문 0046e2c0의 선택 순서와 같으며 동작은 그대로 둔다.</remarks>
+    public static int SelectBattleTerritory(ReadOnlySpan<byte> records)
+    {
+        if (records.Length < 20 * 6)
+        {
+            throw new ArgumentOutOfRangeException(nameof(records), "전투섬 Territory 20레코드 범위 오류");
+        }
+
+        int selected = 0;
+        // 레코드의 flags BYTE+1에서 0x04 비트가 켜진 첫 영역을 찾고 없으면 원문처럼 0번을 유지하는 반복문이다. 2026-11-07 R4 지형·섬 생성 1차 이식에서 추가됐다.
+        for (int index = 0; index < 20; ++index)
+        {
+            if ((records[(index * 6) + 1] & 4) != 0)
+            {
+                selected = index;
+                break;
+            }
+        }
+
+        return selected;
     }
 }
