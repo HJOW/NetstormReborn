@@ -1,4 +1,5 @@
 using Netstorm.Assets;
+using Netstorm.Client.Automation;
 using Netstorm.Client.Host;
 using Netstorm.Core.Original;
 using Netstorm.Core.Simulation;
@@ -93,9 +94,26 @@ public sealed class HostWorldGraphTests
         Assert.Throws<InvalidOperationException>(() => bare.RebuildWorldGraph(true));
     }
 
-    /// <summary>실제 장면의 재구성이 표를 채우고 결정적인지 확인한다.</summary>
+    /// <summary>장치 연결 직후 세션 표가 설치 초기(ResetTable) 상태인지 확인한다.</summary>
     [Fact]
-    public void RebuildFillsTableDeterministically()
+    public void GraphDevicesStartFromResetTable()
+    {
+        var (session, _) = LoadRealGraphScene();
+        var rows = session.DumpGraph();
+        Assert.Equal(255, rows.Count);
+        // 0번 예약과 무효 자리 sentinel이 설치 초기값이다(원본 세션 저장소와 같은 상태).
+        Assert.Equal(new SessionDumpGraphRow(0, 1, 1), rows[0]);
+        Assert.Equal(new SessionDumpGraphRow(0x7DFD, 0x7DFD, 0), rows[254]);
+        // 나머지 행은 모두 0이다.
+        for (int index = 1; index < 254; ++index)
+        {
+            Assert.Equal(new SessionDumpGraphRow(0, 0, 0), rows[index]);
+        }
+    }
+
+    /// <summary>실제 장면의 재구성이 번호 없는 표를 그대로 두고 결정적인지 확인한다.</summary>
+    [Fact]
+    public void RebuildKeepsResetTableWithoutPopNumbering()
     {
         var (first, _) = LoadRealGraphScene();
         var (second, _) = LoadRealGraphScene();
@@ -110,16 +128,20 @@ public sealed class HostWorldGraphTests
         {
             Assert.Equal(secondRows[index], firstRows[index]);
         }
-        // 재구성 전 0이던 표가 채워진다.
-        Assert.Contains(firstRows, row => row.Surfaces != 0 || row.InUse != 0);
-        // 표면 슬롯의 그래프 바이트(오프셋 30)가 쓰인다.
-        bool written = false;
+        // Pop 그래프 연결(R6) 전까지 무효 번호가 없어 재구성은 설치 초기 상태를 그대로 둔다.
+        // 0번 예약과 sentinel은 설치 때 들어간 값이다(빈 표의 임시 번호 0 충돌 회피).
+        Assert.Equal(new SessionDumpGraphRow(0, 1, 1), firstRows[0]);
+        Assert.Equal(new SessionDumpGraphRow(0x7DFD, 0x7DFD, 0), firstRows[254]);
+        for (int index = 1; index < 254; ++index)
+        {
+            Assert.Equal(new SessionDumpGraphRow(0, 0, 0), firstRows[index]);
+        }
+        // 표면 슬롯의 그래프 바이트(오프셋 30)를 쓰지 않는다.
         // 사용 중인 슬롯을 순서대로 훑는 반복문이다.
         for (int sid = RawSidPool.FirstOrdinary; sid < first.Pool.Capacity; ++sid)
         {
             if ((first.Pool.Slot(sid)[RawSidPool.StateOffset] & RawSidPool.FreeBit) != 0) continue;
-            if (first.Pool.Slot(sid)[30] != 0) { written = true; break; }
+            Assert.Equal(0, first.Pool.Slot(sid)[30]);
         }
-        Assert.True(written);
     }
 }

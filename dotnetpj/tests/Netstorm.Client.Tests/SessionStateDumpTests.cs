@@ -132,9 +132,11 @@ public sealed class SessionStateDumpTests
         expected.Append("alliances").Append(string.Concat(Enumerable.Repeat("\t0", 81))).Append('\n');
         // 미초기화 SP는 대시 9칸이다.
         expected.Append("sp\t0\t0").Append(string.Concat(Enumerable.Repeat("\t-", 9))).Append('\n');
-        // 적재 전 Graph 표 255칸과 장부는 0이다.
+        // 설치 초기화(ResetTable) Graph 표 255칸이다. 0번 예약·254번 sentinel 외에는 0이다.
+        // (2026-11-12 0.476에서 세션 설치 초기화를 잇었다. 근거 cpppj 세션 저장소의 Acquire ResetTable.)
         for (int index = 0; index < 255; index++)
-            expected.Append("graph\t").Append(index).Append("\t0\t0\t0\n");
+            expected.Append("graph\t").Append(index).Append(
+                index == 0 ? "\t0\t1\t1\n" : index == 254 ? "\t32253\t32253\t0\n" : "\t0\t0\t0\n");
         expected.Append("totals\t0\t0\t0\n");
         expected.Append("end\n");
         Assert.Equal(expected.ToString(), PoolText());

@@ -75,7 +75,8 @@ public sealed class HostSession
     /// 2026-11-12 0.464에서 호스트 시작 1회 초기화를 잇려고 공유 저장소 빌림을 추가했다(원본 004391ed, cpppj ClientMain 349행).</remarks>
     public RawSpStore Sp { get; }
 
-    /// <summary>세션이 소유한 Graph 표다. 월드 적재의 ResetTable로 초기화한다.</summary>
+    /// <summary>세션이 소유한 Graph 표다. 세션 설치(생성자)의 ResetTable로 초기 상태를 둔다.</summary>
+    /// <remarks>2026-11-12 0.476에서 생성자 초기화를 잇었다(근거 cpppj RawSurfaceStorage.Acquire의 Graph ResetTable). 적재 경로의 Rebuild는 무효 번호 수집만 하며 번호 부여는 Pop 그래프 연결(R6)에서 잇는다.</remarks>
     public RawGraphStorage Graph { get; } = new();
 
     /// <summary>세션이 소유한 TotalMade 세 표다.</summary>
@@ -106,7 +107,8 @@ public sealed class HostSession
     /// <param name="poolCapacity">풀 슬롯 수. 0 이하면 미션 기본값이다.</param>
     /// <param name="sharedSp">호스트가 시작 때 초기화한 공유 SP 저장소. null이면 세션 전용으로 만들고 첫 Set 때 초기화한다.</param>
     /// <param name="sharedCrtBox">호스트가 시작 때 reseed한 공유 CRT 상자. null이면 세션 전용 상자를 쓴다.</param>
-    /// <remarks>2026-11-12 0.464에서 cpppj 공유 SP 경로와 같은 시작 1회 초기화를 잇려고 공유 빌림을 추가했다. 미션별 reseed는 원본에 없다.</remarks>
+    /// <remarks>2026-11-12 0.464에서 cpppj 공유 SP 경로와 같은 시작 1회 초기화를 잇려고 공유 빌림을 추가했다. 미션별 reseed는 원본에 없다.
+    /// 2026-11-12 0.476에서 세션 설치 의미로 Graph 저장소를 ResetTable 초기 상태에 둔다(근거 cpppj RawSurfaceStorage.Acquire의 Graph ResetTable, o/RawGraphStorage.cpp). 0번 예약이 없으면 Rebuild의 임시 번호 0이 기존 graph-0과 충돌해 큰 맵에서 번호가 소진된다.</remarks>
     public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null)
     {
         ArgumentNullException.ThrowIfNull(kernel);
@@ -118,6 +120,7 @@ public sealed class HostSession
         Pool = new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity);
         Sp = sharedSp ?? new RawSpStore(Game, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
         TerrainCrt = sharedCrtBox ?? new();
+        RawGraphStorage.ResetTable(Graph);
     }
 
     /// <summary>SP 초기화의 재시드 공급을 연결한다. 미션 시작 흐름에서 실제 사슬로 잇는다.</summary>
@@ -1061,7 +1064,8 @@ public sealed class HostSession
 
     /// <summary>월드 적재 그래프 재구성 장치를 세션에 연결한다. 연결 전에는 재구성 요청이 거부된다.</summary>
     /// <param name="types">같은 실제 TYPE 표다. 패치판 188개·CD판 171개여야 한다.</param>
-    /// <remarks>2026-11-12 0.470에서 그래프 live 재구성용으로 추가했다. 지형 Pop 장치의 해시·점유 지도(core.hash·core.spots 구실)와 채운 WorldFrames를 그대로 쓰며, ResetTable은 cpppj 적재 경로에서도 호출되지 않아 연결하지 않는다.</remarks>
+    /// <remarks>2026-11-12 0.470에서 그래프 live 재구성용으로 추가했다. 지형 Pop 장치의 해시·점유 지도(core.hash·core.spots 구실)와 채운 WorldFrames를 그대로 쓰며, ResetTable은 cpppj 적재 경로에서도 호출되지 않아 연결하지 않는다.
+    /// 2026-11-12 0.476에서 엔진 표를 세션 설치와 같은 ResetTable 초기 상태에 둔다(근거 cpppj 저장소 Graph가 Acquire 때 ResetTable한 표를 엔진이 빌리는 구조, RawSurfaceWorld.cpp 161행). 초기화 없이 Rebuild하면 빈 표의 임시 번호 0이 기존 graph-0과 충돌해 큰 맵에서 번호가 소진된다.</remarks>
     public void BuildWorldGraphDevices(IReadOnlyList<OriginalTypeRecord> types)
     {
         ArgumentNullException.ThrowIfNull(types);
@@ -1086,6 +1090,7 @@ public sealed class HostSession
             frames.Add(codes);
         }
         _worldGraph = new RawGraph(Pool, _terrainHash, _terrainSpots, types, null, null, frames);
+        _worldGraph.ResetTable();
     }
 
     /// <summary>월드 그래프를 다시 구성하고 세션 표 저장소로 결과를 옮긴다. 장치 연결 전에 호출하면 거부한다.</summary>
@@ -1240,7 +1245,7 @@ public sealed class HostSession
     public SessionDumpSp DumpSp() =>
         new(Sp.Initialized, Sp.Offset, Sp.Pools.ToArray(), Sp.Permutation.ToArray());
 
-    /// <summary>덤프용 Graph 표 관측을 만든다. 월드 적재 ResetTable 전까지 0이다.</summary>
+    /// <summary>덤프용 Graph 표 관측을 만든다. 세션 설치의 ResetTable 초기 상태를 둔다.</summary>
     public IReadOnlyList<SessionDumpGraphRow> DumpGraph()
     {
         var rows = new SessionDumpGraphRow[Graph.Records.Length];
