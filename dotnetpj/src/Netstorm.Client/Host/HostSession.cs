@@ -1,4 +1,5 @@
 using Netstorm.Client.Automation;
+using Netstorm.Core.Display;
 using Netstorm.Core.Original;
 using Netstorm.Core.Simulation;
 
@@ -658,6 +659,80 @@ public sealed class HostSession
     /// <remarks>2026-11-12 0.455에서 Generate 라이브 연결용으로 추가했다. Pop 장부·그래프·집계(totals·totalmade) 연결은 다음 단위다.</remarks>
     public RawPostPopState TerrainBookkeeping { get; } = new();
 
+    /// <summary>지형 Pop 공간 등록의 세션 소유 공장이다. BuildTerrainPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.466에서 지형 Pop 공간 등록 라이브 연결용으로 추가했다. 근거: cpppj MakeTerrainStampWorldHooks의 core.factory와 같은 공장 생성(vtable 포함)이다.</remarks>
+    private RawSquidFactory? _terrainFactory;
+
+    /// <summary>지형 Pop 공간 등록에 쓰는 세션 소유 공간 해시다. BuildTerrainPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.466에서 추가했다. 섬 런타임의 IslandHash(경로 SurfaceAt 전용)와는 다른 오브젝트 체인 해시이며 cpppj core.hash와 같은 구실을 한다.</remarks>
+    private RawSquidHash? _terrainHash;
+
+    /// <summary>지형 Pop 공간 등록에 쓰는 세션 소유 칸별 점유 바이트 65,536개다. BuildTerrainPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.466에서 추가했다. cpppj core.spots와 같은 배열이며 Unpop 쪽과 공유한다.</remarks>
+    private byte[]? _terrainSpots;
+
+    /// <summary>지형 Pop의 SHP 크기 조회용 세션 소유 표시다. BuildTerrainPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.466에서 추가했다. CellWidth/CellHeight를 해시 단계 계산에만 쓰며 실제 출력은 하지 않는다(R5 표시 연결과 별개).</remarks>
+    private SquidDisplay? _terrainDisplay;
+
+    /// <summary>지형 Pop 공간 등록의 세션 소유 몸체다. BuildTerrainPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.466에서 추가했다. 표시·파생 효과는 연결하지 않으며 좌표·화면 좌표·spot·체인·레벨·void 해제를 수행한다.</remarks>
+    private RawPop? _terrainPop;
+
+    /// <summary>지형 Pop이 읽는 세션 TYPE 표다. BuildTerrainPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.466에서 추가했다. BuildTerrainStampHooks에 준 표와 같은 인스턴스를 둔다.</remarks>
+    private IReadOnlyList<OriginalTypeRecord>? _terrainPopTypes;
+
+    /// <summary>세션 Pop 표시의 빈 싱크다. SHP 크기 조회 경로에서는 호출되지 않는다.</summary>
+    /// <remarks>2026-11-12 0.466에서 추가했다. 실제 표시는 R5에서 잇는다.</remarks>
+    private sealed class NullTerrainDisplaySink : SquidDisplaySink
+    {
+        /// <summary>억제 여부를 묻는다. 항상 거짓이다.</summary>
+        /// <returns>거짓이다.</returns>
+        public override bool Suppressed() => false;
+
+        /// <summary>표시 갱신 요청을 버린다. SHP 크기 조회 경로에서는 호출되지 않는다.</summary>
+        /// <param name="rect">변경 영역이다.</param>
+        /// <param name="flags">전달 플래그다.</param>
+        public override void Invalidate(DisplayRect rect, uint flags)
+        {
+        }
+    }
+
+    /// <summary>지형 도장 Pop의 공장·공간·표시 장치를 세션에 연결한다. 연결 전에는 도장 효과가 중립(기록만)으로 동작한다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 패치판 188개·CD판 171개여야 한다.</param>
+    /// <param name="shapes">같은 순서의 표시 셰이프 목록이다. 타입 개수와 같아야 한다.</param>
+    /// <remarks>2026-11-12 0.466에서 지형 Pop 공간 등록 라이브 연결용으로 추가했다. 근거: cpppj MakeTerrainStampWorldHooks(core.factory·core.hash·core.shapes→FrameSize)의 세션 결선이다.</remarks>
+    public void BuildTerrainPopDevices(IReadOnlyList<OriginalTypeRecord> types, List<SquidDisplayShape> shapes)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        ArgumentNullException.ThrowIfNull(shapes);
+        if (types.Count != OriginalConstructors.TypeCount || shapes.Count != types.Count)
+        {
+            throw new ArgumentException("지형 Pop 타입·셰이프 목록 크기 오류", nameof(types));
+        }
+        _terrainFactory = new RawSquidFactory(Pool, types);
+        _terrainHash = new RawSquidHash();
+        _terrainSpots = new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells];
+        _terrainDisplay = new SquidDisplay(
+            Pool.Edition,
+            types,
+            shapes,
+            new NullTerrainDisplaySink(),
+            new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 65536, Viewport = new DisplayRect(0, 0, 640, 480) });
+        _terrainDisplay.ValidateFrameBinding(Pool.Edition, types);
+        _terrainPop = new RawPop(Pool, _terrainHash, _terrainSpots);
+        _terrainPopTypes = types;
+    }
+
+    /// <summary>지형 Pop 공간 해시를 검사·대조용으로 빌려준다. 장치를 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.466에서 HostTerrainPopTests의 체인·단계 대조용으로 추가했다. 실제 게임 흐름에서는 Pop 내부에서만 쓴다.</remarks>
+    public RawSquidHash? TerrainPopHash => _terrainHash;
+
+    /// <summary>지형 Pop 점유 지도를 검사·대조용으로 빌려준다. 장치를 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.466에서 HostTerrainPopTests의 spot 대조용으로 추가했다. Unpop 쪽과 같은 배열을 공유한다.</remarks>
+    public byte[]? TerrainPopSpots => _terrainSpots;
+
     /// <summary>세션 저장소를 묶은 지형 바인딩이다. 만들기 전까지 null이다.</summary>
     /// <remarks>2026-11-12 0.454에서 지형 바인딩 드라이런 조립용으로 추가했다. Generate 호출 연결은 다음 단위다.</remarks>
     public RawNormalTerrainWorldBinding? TerrainBinding { get; private set; }
@@ -686,11 +761,11 @@ public sealed class HostSession
         return binding;
     }
 
-    /// <summary>세션 풀·소유자·지역으로 도장 실제 효과를 묶는다. Pop의 공간 등록은 다음 단위다.</summary>
+    /// <summary>세션 풀·소유자·지역으로 도장 실제 효과를 묶는다. Pop 공간 등록 장치를 연결했으면 실제 Pop을 수행하고, 아니면 기록만 한다.</summary>
     /// <param name="types">같은 실제 TYPE 표다. SetOwner·SetRegion이 읽는다.</param>
     /// <returns>세션 저장소를 공유하는 도장 효과다.</returns>
     /// <remarks>2026-11-12 0.455에서 Generate 라이브 연결용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1829행 normal 바인딩의 world 효과.
-    /// Pop은 공간 등록(spots·해시·장부·표시)이 없어 기록만 하며, 슬롯은 void 비트·좌표 없이 남는다(덤프 차이로 기록한다).
+    /// 0.466에서 BuildTerrainPopDevices 연결 때 실제 Pop(factory 생성·공간 등록)을 수행하도록 바꿨다. 미연결 때는 neutral(기록만)이라 기존 드라이런 검사가 그대로 통과한다.
     /// 군집 배치(place) 효과는 Load 갈고리에서 잇는다.</remarks>
     public TerrainStampHooks BuildTerrainStampHooks(IReadOnlyList<OriginalTypeRecord> types)
     {
@@ -700,15 +775,40 @@ public sealed class HostSession
         {
             Create = (type, predictable) =>
             {
+                // Pop 장치가 연결됐으면 원문 공장처럼 생성자·가상 표까지 갖춘 슬롯을 만든다. 지형은 예측 영역(1) 할당이다.
+                if (_terrainFactory is not null)
+                {
+                    return _terrainFactory.Create(type, predictable != 0 ? SidAllocation.Predictable : SidAllocation.Client);
+                }
                 // 원문 공장처럼 두 번째 인자를 풀 할당 flags로 쓴다. 지형은 1(예측 영역 23002~)이다.
                 int sid = Pool.Allocate(predictable != 0 ? SidAllocation.Predictable : SidAllocation.Client);
                 Span<byte> raw = Pool.AllocatedBytes(sid);
                 raw.Clear();
+                raw[RawSidPool.StateOffset] = RawSidPool.VoidBit;
                 raw[RawSidPool.TypeOffset] = unchecked((byte)type);
                 return sid;
             },
             SetOwner = owner.Set,
-            Pop = (_, _, _, _) => { },
+            Pop = (sid, x, y, flags) =>
+            {
+                // Pop 장치가 없으면 기록만 한다(드라이런 중립).
+                if (_terrainPop is null || _terrainDisplay is null || _terrainPopTypes is null)
+                {
+                    return;
+                }
+                ReadOnlySpan<byte> raw = Pool.Slot(sid);
+                byte number = raw[RawSidPool.TypeOffset];
+                if (number >= _terrainPopTypes.Count)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(sid), "Pop 타입 번호 범위 오류");
+                }
+                // 원본 SHP 크기로 해시 단계를 정한다. 패치판은 +36 DWORD, CD판은 +34 BYTE 프레임을 읽는다.
+                int frame = Pool.Edition == OriginalEdition.Patch1078
+                    ? unchecked((int)(raw[36] | ((uint)raw[37] << 8) | ((uint)raw[38] << 16) | ((uint)raw[39] << 24)))
+                    : raw[34];
+                float[] size = _terrainDisplay.FrameSize(Pool.Edition, raw, frame);
+                _terrainPop.Pop(sid, _terrainPopTypes[number], size[0], size[1], x, y, flags);
+            },
             SetRegion = (sid, region) => RawSquidRegion.SetSquidRegion(Pool, types, sid, unchecked((uint)region), unchecked((uint)TerrainGlobals.NoRegion), TerrainDiagnostics.Region),
             ChunkRegion = (x, y) => unchecked((sbyte)World.At(x, y).Island),
             Assertion = TerrainDiagnostics.Stamp,

@@ -314,6 +314,11 @@ public sealed class ClientHostGame : Game
         int avatarSid = session.Pool.Allocate(Netstorm.Core.Simulation.SidAllocation.Client);
         IReadOnlyList<RiftTypeDefinition> worldDefinitions = MissionFortLoad.LoadTypeDefinitions(_startup.Files);
         session.FillWorldFrames(worldDefinitions);
+        // 지형 Pop 공간 등록 장치. SHP 실측 크기로 해시 단계를 정한다(cpppj SquidRenderer::Shapes, 0.466).
+        byte[] shpRaw = _startup.Files.ReadAllBytes("d/_shapes.shp");
+        var shpDb = new Netstorm.Assets.ShapeDatabase(shpRaw);
+        List<SquidDisplayShape> popShapes = TerrainDisplayShapes.Build(worldDefinitions, shpDb);
+        session.BuildTerrainPopDevices(types.Types, popShapes);
         // 지형 바인딩 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 진단 저널 연결은 7차 로그 배선 단위에서 잇는다.
         session.TerrainDiagnostics.Context = _ => { };
         session.TerrainDiagnostics.Stamp = _ => { };
