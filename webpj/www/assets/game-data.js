@@ -137,8 +137,24 @@ export class GameData {
     // `{@미션.키}` 조회가 임시 설정 객체(config)에 미션 스크립트를 읽어 넣는다(원본 ConfigInterface 의 미션 적재: missionSpec 경로 파일을 객체 버퍼에 덧붙임).
     // 파일이 없으면 아무것도 넣지 않는다. 언어 파일이므로 현재 언어의 파일이 없으면 영어로 대체한다. (2026-10-30 WB03-J)
     _loadMission(config, mission) {
-        const bytes = this._readLanguageFile(this.pathSpec('missionSpec', mission), this.language);
+        this.loadFile(config, this.pathSpec('missionSpec', mission));
+    }
+
+    // 원본 ConfigInterface::LoadFile: 경로의 설정 파일을 읽어 config 버퍼 끝에 덧붙인다(파일이 없으면 아무것도 더하지 않음). 언어 파일은 현재 언어 파일이 없으면 영어로 대체한다(웹 적응, _readLanguageFile).
+    // 미션 스크립트(MissionScript)가 쓰는 설정 인터페이스의 일부이다. 사용: data.loadFile(config, data.pathSpec('missionSpec', 'Tutorial1')). (2026-11-12 WB04-E342)
+    loadFile(config, path) {
+        const bytes = this._readLanguageFile(path, this.language);
         if (bytes) config.loadBytes(bytes, decodeOriginalText);
+    }
+
+    // 원본 ConfigInterface::AppendConfigArguments: 명령줄 형식의 글을 config 에 덧붙이되 `@파일` 낱말은 같은 파일 읽기(언어 대체 포함)로 읽어 넣는다. (2026-11-12 WB04-E342)
+    appendConfigArguments(config, text) {
+        config.appendArguments(text, (path) => this._readLanguageFile(path, this.language));
+    }
+
+    // 원본 ConfigInterface::Reader: 경로(게임 파일 표기)의 바이트를 돌려주는 파일 읽기 함수이다. 없으면 null 이다. 언어 대체 없이 파일 그대로 읽으므로 Fort 같은 비언어 파일 읽기에 쓴다. (2026-11-12 WB04-E342)
+    reader() {
+        return (path) => this.files.read(path);
     }
 
     // 언어 파일을 읽는다. 없고 언어가 영어가 아니면 경로의 `.언어` 또는 `config.언어` 를 영어로 바꿔 한 번 더 시도한다. (웹 적응)

@@ -1,6 +1,6 @@
 // 미션 기술 허용 목록 적용(mission-technology.js)을 원본 10.78 관측과 cpppj 시험, 웹 계약으로 확인한다.
 //  - 원본 관측: mission-technology-x86.tsv 55행(목록 문자열·호출 도중 바뀌는 현재 목록·초기 표 시드 × deny/allow/all/이름 항목, 빈 항목 종료, 미등록 이름 -1 쓰기)의 257DWORD 표 전체와 호출 순서를 대조한다.
-//  - cpppj 시험 이식: MissionTechnologyTests 의 Native55. 나머지 `MissionTechnology_ProtectedElevenAndInvalidStorage` 는 실제 MissionScript(Mission 단위, 4-D B 구획)가 필요해 그 단위에서 옮긴다.
+//  - cpppj 시험 이식: MissionTechnologyTests 의 Native55 와 ProtectedElevenAndInvalidStorage(보호 미션 11개를 실제 MissionScript(E342)·보호 타입 표·RawTotalMade 에 적용).
 //  - 웹 계약: 키워드 대소문자·공백 비정리·빈 항목 종료와 그 뒤 비조회, 매 항목 재조회, 도달한 효과만 요구, 미등록 이름 -1 전달, 스크립트 래퍼(실제 RawTotalMade·전역 금지 표)의 목록 조회·512BYTE 범위·Windows-1252 부호화·NUL 절단·미등록 이름 거부 시 무변경.
 // 실제 게임·브라우저 실행이 아니다. (2026-11-12 WB04-E338)
 import test from 'node:test';
@@ -16,6 +16,8 @@ import { configListItem } from '../www/core/raw-mission-ai-settings.js';
 import { RawTotalMade } from '../www/core/raw-total-made.js';
 import { SquidPostPopState } from '../www/core/squid-postpop-state.js';
 import { applyMissionTechnology, applyMissionTechnologyToRestrictions, applyMissionTechnologyToTotalMade } from '../www/core/mission-technology.js';
+import { ARCHIVE_PATH, GameData, SETUP_PATH } from '../www/assets/game-data.js';
+import { MissionScript } from '../www/core/mission-script.js';
 
 // 원본 관측 행이다. 파일이 없으면 재생 검사를 건너뛴다. (2026-11-12 WB04-E338)
 const ROWS = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'mission-technology-x86.tsv'));
@@ -259,4 +261,34 @@ test('스크립트 래퍼는 Windows-1252 바이트를 한 글자씩 보존해 �
     // é 는 0xe9 한 바이트, 유로 기호는 0x80 한 바이트로 부호화되어 그 코드 그대로의 글자가 된다.
     assert.deepEqual(names, ['café', 'caf']);
     assert.equal(restrictions[3], 0);
+});
+
+test('cpppj MissionTechnology_ProtectedElevenAndInvalidStorage: 보호 미션 11개의 techAllowed 를 실제 MissionScript·보호 타입 표·RawTotalMade 에 적용한다', () => {
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    const types = typeTable();
+    const names = ['Tutorial1', 'Tutorial2', 'Tutorial3', 'Tutorial4', 'Tutorial5', 'Tutorial6', 'TheWarBegins', 'MasterOfWhirligigs', 'DemoStormRages', 'GuardMyBack', 'DissolvedAlliance'];
+    // 매 미션은 소멸 뒤의 실제 allowAll(1)과 같은 초기 허용 표로 시작한다.
+    for (let index = 0; index < names.length; index += 1) {
+        const script = new MissionScript(data, names[index]);
+        assert.equal(script.loaded, true, names[index]);
+        const counts = new SquidPostPopState();
+        const table = new Uint32Array(256);
+        table[255] = 0x7391;
+        const total = new RawTotalMade(realPlayerAssets().types, counts, table);
+        applyMissionTechnologyToTotalMade(script, types, total);
+        assert.equal(table[255], 0x7391);
+        assert.equal(total.allowed(types.find('windVortex')), true, names[index]);
+        assert.equal(total.allowed(types.find('rainCannon')), index >= 6, names[index]);
+        assert.equal(total.allowed(types.find('dais')), index === 4 || index >= 6, names[index]);
+        if (index === 0) assert.equal(total.allowed(types.find('sunArcher')), false);
+        if (index === 1) assert.equal(total.allowed(types.find('sunArcher')), true);
+        if (index === 0) {
+            const before = table.slice();
+            script.set('techAllowed', 'missingType');
+            assert.ok(throws(() => applyMissionTechnologyToTotalMade(script, types, total), RangeError));
+            assert.deepEqual(table, before);
+        }
+        script.dispose();
+    }
+    assert.equal(data.registry.objects.filter((object) => object.prefix === 'mission.').length, 0);
 });

@@ -12,7 +12,7 @@
 ## 2. 웹 범위
 
 - 기준선 뒤 cpppj 변경이 없다(`.cpp`·`.h` 모두). PORT_MAP: `MissionTechnology.cpp` port(base `1f00a25a`). 앱 수명 연결(Init Header 가 호출)은 B 구획 `Mission`·4-D 조립 때 한다(PORT_MAP session 0).
-- cpppj 시험 `MissionTechnology_ProtectedElevenAndInvalidStorage`(보호 미션 11개의 `techAllowed` 를 실제 `MissionScript` 와 보호 타입 표에 적용해 `windVortex`/`rainCannon`/`dais`/`sunArcher` 허용 여부를 확인)는 실제 MissionScript 가 필요해 `Mission` 단위에서 옮긴다.
+- cpppj 시험 `MissionTechnology_ProtectedElevenAndInvalidStorage`(보호 미션 11개의 `techAllowed` 를 실제 `MissionScript` 와 보호 타입 표에 적용해 `windVortex`/`rainCannon`/`dais`/`sunArcher` 허용 여부를 확인)는 실제 MissionScript 가 필요해 `Mission` 단위에서 옮기기로 했고, **E342 에서 이식을 마쳤다**(첫 실행 일치).
 
 ## 3. 검사 (`tests/mission-technology.test.mjs` 10건)
 
@@ -23,4 +23,4 @@
 ## 4. 변형 확인과 남은 경계
 
 - 한 문자열 치환 변형 24개를 돌려 첫 실행에서 4개가 남았다: `techAllowed` 키 변형은 변형 도구가 헤더 주석의 첫 일치에 적용해 무효였고(코드 한 줄로 다시 지정해 잡힘), 나머지 둘은 `deny` 뒤 개별 금지 시험이 없어 `allow(type, 1)` 변형이 살아남았다(시험 보강 후 잡힘). **남은 것은 동등 1개**: `need()` 의 `typeof effect !== 'function'` 방어 — 제거해도 `undefined(...)` 호출이 같은 종류(`TypeError`)로 실패한다.
-- 남은 경계: 실제 `MissionScript`(Mission 단위)와의 연결 시험과 보호 미션 11개 시험.
+- 남은 경계: 앱 수명 연결(Init Header 호출). 보호 미션 11개 시험은 E342 에서 실제 MissionScript 로 이식했다.

@@ -9,6 +9,7 @@
 // 이 모듈은 DOM 을 쓰지 않아 Node 에서도 불러와 검사할 수 있다.
 // (2026-10-28 WB02-D: 메뉴 대화상자 본문과 용어표를 읽기 위해 추가)
 import { xorDecode } from './taff.js';
+import { decodeOriginalText } from './text-encoding.js';
 
 // 설정 텍스트의 특수 글자이다(원본 전역 0x532538). 이스케이프 '`', 치환 괄호 '{' '}', 기본값 구분 '|', 섹션 '[' ']', 객체 접두어 구분 '.'. (2026-10-28 WB02-D)
 const ESCAPE = '`';
@@ -288,6 +289,64 @@ export class Config {
         const hasSignature = plain.length >= CONFIG_SIGNATURE.length && CONFIG_SIGNATURE.split('').every((character, index) => plain[index] === character.charCodeAt(0));
         const skip = hasSignature ? CONFIG_SIGNATURE.length : 0;
         this.append(`${hasSignature ? CONFIG_SIGNATURE : ''}${decode(plain.subarray(skip))}`);
+    }
+
+    // 버퍼가 한 번이라도 만들어졌는지이다(원본 `*this != 0`, 미션 스크립트를 실제로 읽었는지 판단에 쓴다). clear() 로 버퍼를 버리면 다시 false 이다. 사용: config.isValid(). (2026-11-12 WB04-E342)
+    isValid() {
+        return this.text !== null;
+    }
+
+    // 원본 00440330: `[이름]` 섹션 줄을 덧붙인다. 이름이 '[' 로 시작하면 원본은 assert("sectionName[0] != startSection")이며 웹은 오류로 거부한다. 사용: config.appendSection('Header'). (2026-11-12 WB04-E342)
+    appendSection(name) {
+        const text = untilNul(name);
+        if (text.length > 0 && text[0] === OPEN_SECTION) throw new Error('sectionName[0] != startSection');
+        this.append(`${OPEN_SECTION}${text}${CLOSE_SECTION}`);
+    }
+
+    // 원본 00440410: 명령줄 형식의 글을 덧붙인다. `@` 로 시작하는 낱말(공백·탭·`;` 에서 끝남, `@` 포함)은 그 이름의 파일을 먼저 읽어 넣고(loadFile 이 있으면 그것만, 없으면 readFile 이 준 바이트를 loadBytes 로),
+    // 나머지 글은 `;` 를 CRLF 로 바꿔 모아 마지막에 한 번 덧붙인다. 첫 NUL 에서 끝나는 C 문자열로 읽고 빈 글이면 아무것도 하지 않는다. 낱말이 글 끝에서 끝나면 거기서 멈춘다(원본은 문자열 끝 너머를 읽음).
+    // readFile(경로) → Uint8Array|null, loadFile(경로)는 호출자가 직접 읽어 이 객체에 넣는 대체 경로이다. 사용: config.appendArguments('@d\\extra.english;a=1', readFile). (2026-11-12 WB04-E342)
+    appendArguments(text, readFile = null, loadFile = null) {
+        const source = untilNul(text);
+        if (source.length === 0) return;
+        let inlineText = '';
+        let position = 0;
+        // 글자마다 `@파일` 낱말과 `;` 구분을 처리한다.
+        while (position < source.length) {
+            if (source[position] === '@') {
+                const begin = position;
+                // 낱말은 공백·탭·`;` 또는 끝에서 끝난다. 낱말 자체는 버퍼에 복사하지 않는다.
+                while (position < source.length && !isBlank(source[position]) && source[position] !== ';') position += 1;
+                const word = source.slice(begin, position);
+                if (typeof loadFile === 'function') loadFile(word);
+                else if (typeof readFile === 'function') {
+                    const bytes = readFile(word);
+                    if (bytes) this.loadBytes(bytes, decodeOriginalText);
+                }
+                if (position === source.length) break;
+            }
+            if (source[position] === ';') inlineText += '\r\n';
+            else inlineText += source[position];
+            position += 1;
+        }
+        if (inlineText.length > 0) this.append(inlineText);
+    }
+
+    // 원본 00440640: 이름이 접두어로 시작하는 섹션(`[접두어…`)의 이름을 `이름;` 꼴로 등장 순서대로 이어 붙인다. 버퍼가 없으면 빈 문자열이다. 사용: config.sectionNames('A') → 'A.;A1;'. (2026-11-12 WB04-E342)
+    sectionNames(prefix) {
+        if (this.text === null) return '';
+        const header = `${OPEN_SECTION}${untilNul(prefix)}`;
+        let result = '';
+        let position = 0;
+        // 찾은 줄의 다음 위치에서 이어서 찾는다.
+        for (;;) {
+            const matched = { value: '' };
+            const next = findSection(this.text, position, header, matched);
+            if (next < 0) break;
+            result += `${matched.value};`;
+            position = next;
+        }
+        return result;
     }
 
     // 원본 00440240: 이 객체의 버퍼에서 키가 있는 줄(키 위치부터 다음 줄 첫 글자 앞까지)을 찾을 때마다 지운다. 같은 키가 여러 줄이면 모두 지운다.
