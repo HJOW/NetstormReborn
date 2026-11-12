@@ -1,6 +1,6 @@
 // Client 와 Session 이 함께 쓰는 Template9(캠페인/미션 템플릿 9칸)의 실제 manager 이미지·State cursor 수명 소유자를 옮긴 모듈이다(cpppj `client/CampaignTemplateStorage.cpp/.h`, 10.78).
 //  이 파일은 **1부(WB04-E345)**: 9개 20BYTE 헤더, manager 이미지 표, 빈 manager 할당/생성/초기화, 설치·빌림·반납, 섹션 노드 목록(60BYTE 노드·MemStream 16BYTE·다음 포인터)의 생성/검색/이름 교체/최소 확장/쓰기,
-//  State·Territory·Money·Badges·Technology 의 typed cursor 공개와 선택, 구독자 이름 읽기, State 확장 복사. 파일 Load/읽기(ReadFile·LoadFile·InstallFile)와 로그인 이미지 복제·저장은 2부·3부(E346·E347)에서 같은 클래스에 더한다.
+//  State·Territory·Money·Badges·Technology 의 typed cursor 공개와 선택, 구독자 이름 읽기, State 확장 복사, **2부(WB04-E346)**: 파일 읽기(ReadFile·BindFileStreams)와 원문 Load 부모(LoadFile)·InstallFile. 로그인 이미지 복제·저장은 3부(E347)에서 같은 클래스에 더한다.
 //  - 모델: manager 는 276BYTE(`+0` 가상표·`+4` head·`+8` current·`+12` 파일명 256BYTE·`+0x10c` 서명 판정·`+0x110` FE 판정)이고, 섹션은 60BYTE 노드(`+0` 버퍼 토큰·`+4` pos·`+8` end·`+12` 할당·`+16` 이름 40BYTE·`+0x38` next)이다.
 //    노드 토큰·manager 핸들은 호스트 포인터가 아닌 불투명 번호다(버퍼 토큰 = 0x10000000 + 노드 핸들, 임시 할당 토큰 = 0x20000000 + 핸들). 표준 35개 이름은 `fort.sections` 의 위치를 쓰고 그 밖의 이름(Temp 등)은 노드가 소유한 별도 버퍼를 쓴다.
 //  - 버퍼는 `ByteVector`(std::vector<uint8_t> 의 size/capacity 의미: resize 는 늘릴 때 새 칸을 0 으로 채우고 용량 안에서는 같은 저장소를 쓰며, 이동/교환은 원본을 비움)로 소유하고, 표준 위치의 변화는 `fort.sections[i]` 에 현재 논리 크기의 뷰로 반영한다.
@@ -15,7 +15,8 @@ import { createDataManagerStream, ensureDataManagerStreamSize, renameDataManager
 import { destroyDataManager } from './raw-data-manager-lifetime.js';
 import { initializeDataManager } from './raw-data-manager-initialize.js';
 import { compactMemStream, writeMemStream } from './raw-mem-stream.js';
-import { constructTemplateDataManager } from './raw-template-load.js';
+import { readDataManagerFile, readTemplateFileSignature } from './raw-data-manager-image.js';
+import { constructTemplateDataManager, loadTemplateFile, templateDataManagerFileName } from './raw-template-load.js';
 import { clearTemplateHeaders, initializeTemplateHeader, releaseTemplateHeader } from './raw-template-lifetime.js';
 
 // 고정 크기와 위치 상수이다. (2026-11-12 WB04-E345)
@@ -25,6 +26,7 @@ const MANAGER_BYTES = 276; // manager 이미지 크기.
 const NODE_BYTES = 60; // 섹션 노드 크기.
 const SECTION_COUNT = SECTION_NAMES.length; // 표준 섹션 수(35).
 const BUFFER_TOKEN_BASE = 0x10000000; // 노드 버퍼 토큰 기준.
+const FILE_TOKEN = 0x30000; // 파일 읽기 부모가 보유한 읽은 파일 할당의 불투명 토큰.
 const TEMPORARY_TOKEN_BASE = 0x20000000; // 임시 할당 토큰 기준.
 const NAME_OFFSET = 16; // 노드 안 이름 위치.
 const NAME_BYTES = 40; // 노드 안 이름 영역 크기.
@@ -41,6 +43,11 @@ function read(bytes, at) {
 // 지정 DWORD 의 네 BYTE 에만 쓴다(인접 필드 보존). (2026-11-12 WB04-E345)
 function put(bytes, at, value) {
     for (let index = 0; index < 4; index += 1) bytes[at + index] = (value >>> (index * 8)) & 255;
+}
+
+// manager 의 현재 파일 이름(+12, 첫 NUL 앞)을 한 글자 한 바이트 문자열로 읽는다. (2026-11-13 WB04-E346)
+function nameOfManager(manager) {
+    return String.fromCharCode(...templateDataManagerFileName(manager));
 }
 
 // 선택된 파일 장치 같은 효과를 호출한 자리에서만 요구한다. (2026-11-12 WB04-E345)
@@ -632,6 +639,129 @@ class Image {
         }
     }
 
+    // 실제 head/next 의 같은 버퍼만 표준 위치로 옮기고 current/pos/생성 수명은 재설정하지 않는다. 원문이 이미 붙인 노드만 같은 순서로 공개하며 미완료 임시 노드를 붙이지 않는다. (2026-11-13 WB04-E346)
+    bindFileStreams() {
+        this.streamOrder = [];
+        let current = read(this.manager, 4);
+        // head 부터 next 를 따라 붙은 노드를 차례로 공개한다.
+        while (current) {
+            if (this.streamOrder.length >= this.streams.size) throw new Error('Template 파일 읽기 뒤 실제 목록 순환');
+            const node = this.streams.get(current).bytes;
+            this.streamOrder.push(current);
+            this.bindRenamedBuffer(current);
+            const buffer = this.buffer(current);
+            const end = read(node, 8);
+            if (end > buffer.size) throw new RangeError('Template 파일 읽기 뒤 실제 end 범위');
+            buffer.resize(end);
+            this.publishCursor(current);
+            current = read(node, NEXT_OFFSET);
+        }
+    }
+
+    // 빈 이미지가 처음 파일을 읽기 전에 요새 섹션 35칸과 표준 위치 벡터, typed cursor 를 빈 상태로 되돌린다. (2026-11-13 WB04-E346)
+    resetForFileRead() {
+        this.fort.sections.length = 0;
+        this.#vectors = [];
+        // 표준 35칸을 빈 섹션으로 채운다.
+        for (let index = 0; index < SECTION_COUNT; index += 1) this.fort.sections.push(new Uint8Array(0));
+        this.seeded.fill(true);
+        Object.assign(this.state, { bytes: new Uint8Array(0), position: 0, end: 0, present: false });
+        Object.assign(this.territory, { bytes: new Uint8Array(0), position: 0, end: 0 });
+    }
+
+    // 같은 raw reader 의 bool 을 유지한다. 새 임시 버퍼는 기존 같은 이름을 제거하기 전까지 별개로 소유한다. fileEffects = TemplateFileLoadHooks
+    //  { read(이름) → Uint8Array, readWhole?(이름) → { storage, length } | null, typeCount(), tooManyTypes(), rejectFile(이름) } 이며 선택된 호출만 연결을 요구한다. (2026-11-13 WB04-E346)
+    readFile(fileEffects) {
+        this.requireNoAccess();
+        if (this.streams.size === 0 && !read(this.manager, 4)) this.resetForFileRead();
+        else this.syncStreams();
+        let source = new Uint8Array(0);
+        let wholeSource = null;
+        let allocating = 0;
+        let created = 0; // 파일 할당은 지역 소유지만 이름표는 같은 Client 에서 빌린다.
+        const fileBuffer = (pointer) => {
+            if (pointer === FILE_TOKEN) return wholeSource ? wholeSource.storage : source;
+            if (pointer <= BUFFER_TOKEN_BASE || !this.streams.has(pointer - BUFFER_TOKEN_BASE)) throw new RangeError('Template 파일 이미지의 실제 버퍼 토큰 범위');
+            return this.buffer(pointer - BUFFER_TOKEN_BASE).bytes;
+        }; // 입력과 새 임시 할당 및 기존 노드 모두 현재 실제 버퍼를 빌린다.
+        const imageHooks = {
+            names: () => this.sectionNames.names(),
+            assertion: () => { throw new Error('Template 실제 파일 이미지의 원본 진단'); },
+            streams: {
+                selection: { stream: (handle) => this.streams.get(handle).bytes },
+                list: this.listEffects(),
+                allocateStream: (size) => {
+                    if (size !== NODE_BYTES || created >= SECTION_COUNT) throw new Error('Template 파일 이미지의 새 노드 계약 위반');
+                    created += 1;
+                    allocating = this.allocateStream();
+                    return allocating;
+                }, // 기존 canonical 버퍼는 원문 제거 전까지 덮어쓰지 않는다.
+                memory: {
+                    buffer: fileBuffer,
+                    allocate: (size) => {
+                        const buffer = this.buffer(allocating);
+                        if (buffer.size !== 0) throw new Error('Template 파일 이미지의 새 버퍼 중복 할당');
+                        buffer.resize(size);
+                        return Image.bufferToken(allocating);
+                    },
+                    assertion: () => { throw new Error('Template 파일 이미지의 실제 MemStream 진단'); },
+                },
+            },
+        };
+        const currentFileName = () => nameOfManager(this.manager);
+        const file = {
+            image: imageHooks,
+            fileName: currentFileName,
+            readFile: (fileName, mode, length, flags) => {
+                if (mode !== 1 || flags || length.length !== 4) throw new Error('Template 파일 읽기의 실제 요청 인수 불일치');
+                if (typeof fileEffects.readWhole === 'function') { // 실제 Native 만 할당 존재와 논리 길이를 분리한다. 기존 snapshot/Editor namespace 의 값형 read 는 아래에 유지한다.
+                    wholeSource = fileEffects.readWhole(fileName);
+                    if (!wholeSource) return 0;
+                    if (wholeSource.length < 0 || wholeSource.storage.length < 4 || wholeSource.length > wholeSource.storage.length) throw new RangeError('Template Native 파일의 실제 할당/논리 길이 불일치');
+                    put(length, 0, wholeSource.length);
+                    return FILE_TOKEN;
+                }
+                source = need(fileEffects.read, 'Template 실제 파일 Load 장치 미연결')(fileName);
+                put(length, 0, source.length);
+                return source.length === 0 ? 0 : FILE_TOKEN;
+            }, // manager/header 가 공개되고 readonly/+16 을 쓴 뒤에만 실제 파일 장치를 호출한다.
+            signature: (cursor) => readTemplateFileSignature(this.manager, cursor, {
+                buffer: fileBuffer,
+                typeCount: () => need(fileEffects.typeCount, 'Template 실제 파일 Load 장치 미연결')(),
+                fileName: currentFileName,
+                tooManyTypes: () => { need(fileEffects.tooManyTypes, 'Template 실제 파일 Load 장치 미연결')(); },
+                rejectFile: (fileName) => { need(fileEffects.rejectFile, 'Template 실제 파일 Load 장치 미연결')(fileName); },
+            }),
+            releaseFile: (pointer) => {
+                if (pointer !== FILE_TOKEN) throw new Error('Template 파일 읽기 부모의 실제 할당 반납 불일치');
+                wholeSource = null;
+                source = new Uint8Array(0);
+            }, // 기존 원문 reader 가 성공/거부/예외에서 한 번만 반납한다.
+        };
+        try {
+            const success = readDataManagerFile(this.manager, file);
+            this.bindFileStreams();
+            if (success && created !== SECTION_COUNT) throw new Error('Template 실제 파일의 전체 이름 표 불일치');
+            return success;
+        } catch (error) {
+            this.bindFileStreams();
+            throw error;
+        } // host 예외 전에 원문이 이미 붙인 노드/부분 pos 를 숨기거나 rollback 하지 않는다.
+    }
+
+    // 기존 Campaign/목록 교체 API 는 이전과 같이 빈 manager 에 읽고 정상 false 를 예외로 바꾼다. (2026-11-13 WB04-E346)
+    readImage(input, typeCount) {
+        if (this.streams.size !== 0 || read(this.manager, 4) || input.length > 0xffffffff) throw new TypeError('Template 실제 파일 이미지/빈 manager 계약 위반');
+        const copy = Uint8Array.from(input);
+        const effects = {
+            read: () => Uint8Array.from(copy),
+            typeCount: () => typeCount,
+            tooManyTypes: () => { throw new Error('Template 파일의 numTypes<256 진단'); },
+            rejectFile: () => { throw new Error('Template 잘못된 서명의 원본 파일 제거 요청: 보호 원문은 삭제하지 않습니다'); },
+        };
+        if (!this.readFile(effects)) throw new Error('Template 실제 파일 열기/서명 거부');
+    }
+
     // 현재 각 섹션의 버퍼를 먼저 반납하고 같은 노드의 실제 할당을 뒤에 해제한다. (2026-11-12 WB04-E345)
     destroy() {
         this.syncStreams();
@@ -760,6 +890,47 @@ export class CampaignTemplateStorage {
         this.#nextHandle += 1;
         this.#images.set(handle, new Image(this.#sectionNames, fort, name, versionBorrow(this.#serializationGlobals)));
         put(this.#header(slot), 0, handle);
+    }
+
+    // 파싱된 보조 자료와 같은 실제 파일 원문을 새 manager 에 읽으며 임의 빈 섹션 목록을 먼저 만들지 않는다. typeCount 의 기본 188 은 10.78 독립 호출용이다. (2026-11-13 WB04-E346)
+    installFile(slot, fort, bytes, name, typeCount = 188) {
+        this.clear(slot);
+        if (!this.#nextHandle) throw new RangeError('Template 파일 manager 핸들 소진');
+        const image = new Image(this.#sectionNames, fort, name, versionBorrow(this.#serializationGlobals), true);
+        image.readImage(bytes, typeCount);
+        const handle = this.#nextHandle;
+        this.#nextHandle += 1;
+        this.#images.set(handle, image);
+        put(this.#header(slot), 0, handle);
+    }
+
+    // 실제 원문 부모(004bf550)가 설치/읽기/정상 false 정리를 지휘하며 기존 같은 manager 는 건드리지 않는다. fort 는 이미 해석된 보조 metadata 이고
+    // file = TemplateFileLoadHooks { read | readWhole, sameName, wrongName, readOnly, typeCount, tooManyTypes, rejectFile, currentSlot, refreshTitle } 이다. (2026-11-13 WB04-E346)
+    loadFile(slot, fort, name, file) {
+        const hooks = {
+            fileName: (manager) => nameOfManager(this.#images.get(manager).manager), // 항상 전달받은 현재 handle 의 실제 +12 를 빌린다.
+            sameName: (first, second) => need(file.sameName, 'Template 실제 파일 Load 장치 미연결')(first, second),
+            wrongName: () => { need(file.wrongName, 'Template 실제 파일 Load 장치 미연결')(); },
+            allocate: (bytes) => {
+                if (bytes !== MANAGER_BYTES || !this.#nextHandle) throw new RangeError('Template Load의 실제276BYTE/호스트handle 소진');
+                const handle = this.#nextHandle;
+                this.#nextHandle += 1;
+                return handle;
+            },
+            construct: (manager, fileName) => {
+                const image = new Image(this.#sectionNames, fort, String(fileName), versionBorrow(this.#serializationGlobals), true);
+                image.fort.sections.length = 0;
+                if (this.#images.has(manager)) throw new Error('Template Load manager의 같은 할당 중복');
+                this.#images.set(manager, image);
+                return manager;
+            }, // 생성자의 공유 version 0 과 실제 Image 소유를 끝낸 뒤 원문 부모가 header.ptr 를 공개한다.
+            readOnly: (fileName) => need(file.readOnly, 'Template 실제 파일 Load 장치 미연결')(fileName),
+            readFile: (manager) => this.#images.get(manager).readFile(file), // readonly callback 뒤 header 에서 재조회한 manager 를 그대로 읽는다.
+            isCurrent: () => slot === need(file.currentSlot, 'Template 실제 파일 Load 장치 미연결')(),
+            refreshTitle: () => { need(file.refreshTitle, 'Template 실제 파일 Load 장치 미연결')(); },
+            lifetime: this.#effects(),
+        };
+        loadTemplateFile(this.#header(slot), name, hooks);
     }
 
     // 빌린 헤더를 반납해도 원래 소유자의 실제 버퍼/커서는 유지된다. (2026-11-12 WB04-E345)

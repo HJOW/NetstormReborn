@@ -34,3 +34,12 @@
   6. 소멸 효과의 `retiredState.release()`: Image 가 곧 버려져 관찰할 수 없다.
 - 이 단위 시험이 드러낸 구현 오류 하나: 처음에는 cursor 를 공개할 때마다 새 객체로 바꿔 `storage.state(1)` 등을 미리 잡은 소비자가 낡은 참조를 갖게 되었다. 같은 객체에 값을 대입하도록 고쳤다(1.의 typed cursor 항목).
 - 남은 경계: 2부(파일 읽기와 Load/Install), 3부(로그인 이미지 복제/저장/덤프), Session/Client 조립에서의 실제 소비자(Player State getter·월드 로더).
+
+## 5. 2부 — 파일 읽기와 Load 부모 (WB04-E346)
+
+- **ReadFile(`Image.readFile`)·BindFileStreams:** 빈 이미지가 처음 읽을 때는 요새 섹션 35칸과 표준 위치 벡터, typed cursor 를 빈 상태로 되돌리고(이미 노드가 있으면 동기화만), 하위 `readDataManagerFile`(원본 관측 fixture 로 대조된 하위 부품)에 이름표·노드 할당(60BYTE, 최대 35개)·버퍼 할당(새 버퍼 중복 할당 금지)·읽은 파일 할당(`0x30000` 토큰)·서명 판독(`typeCount`/`tooManyTypes`/`rejectFile`)·반납을 연결한다. 읽은 뒤(성공이든 호스트 예외든) `bindFileStreams` 가 원문이 이미 붙인 노드만 같은 순서로 표준 위치로 옮겨 공개하고 논리 end 로 줄인다(미완료 임시 노드를 붙이지 않고 부분 pos 를 숨기거나 롤백하지 않음). 성공했는데 새 노드가 35개가 아니면 이름 표 불일치로 거부한다. Native 경로의 `readWhole`(최소 4BYTE 할당과 논리 길이 분리)과 값형 `read`(빈 값은 0 취급)를 모두 지원한다.
+- **LoadFile(`loadFile`, 004bf550 연결):** 원문 `loadTemplateFile` 에 실제 소유자를 연결한다 — 기존 파일이 있으면 같은 이름/다른 이름 모두 할당·읽기·해제 없이 비교(다르면 진단)만, 빈 헤더면 `+4`=0 → new276 핸들 → 생성자(판본 전역 0) → 헤더 공개 → 읽기 전용 사전 설정(`+8` 이 0 일 때만 판정해 1/0) → `+16`=0 → 실제 읽기. 읽기 성공이면 헤더 `+0` 을 **다시 읽어** 비영이고 현재 슬롯일 때만 제목을 갱신, 정상 false 면 현재 manager 만 소멸·반납하고 부가 필드와 callback 이 쓴 값은 보존한다. 파일 장치 예외는 정상 false 가 아니며 공개한 manager 를 롤백하지 않는다. readonly callback 이 헤더를 다른 owner 로 돌리면 그 manager 에 병합 읽기를 수행하고 빈 새 섹션은 기존 섹션(노드·생성 수명·할당)을 유지한다. 장치는 도달한 분기에서만 요구한다.
+- **InstallFile(`installFile`):** 파싱된 보조 자료와 같은 파일 원문을 새 manager 에 읽는다. 서명 거부(`rejectFile` 은 예외)·TYPE 개수 256 이상 진단·빈/잘린 이미지는 설치하지 않으며 헤더를 바꾸지 않는다. 기본 TYPE 개수 188 은 10.78 독립 호출용이다.
+- **시험:** `tests/campaign-template-load-file.test.mjs` 11건 — cpppj `CampaignTemplateLoadFile_*` 9건 이식(첫 시험의 SaveFile 단언만 3부로 미룸)과 installFile·Native readWhole 웹 계약. **첫 실행에서 cpppj 9건이 모두 일치했다.** 하위 읽기 부품(`datamanager-read`·`datamanager-live-read`·`datamanager-live-body` 등)은 각자 이미 대조되어 이 소유자는 연결 계약을 시험한다.
+- **변형 확인:** 한 문자열 치환 변형 26개 중 첫 실행에 7개가 남았고, 시험 보강(빈 섹션의 논리 길이 0, 부분 읽기 뒤 동기화가 읽지 않은 표준 섹션을 되살리지 않음, 4BYTE 미만 할당 거부) 뒤 **6개만 남았으며 모두 동등/도달 불가**하다: ① `bindFileStreams` 의 `end > buffer.size` 보호(정상 읽기에서 도달 불가) ② 빈 이미지 최초 읽기 초기화(`resetForFileRead`)를 건너뜀(표준 위치는 읽기 뒤 바인딩이 같은 상태로 채움) ③ 노드 개수 상한 `>=`→`>` 경계(36번째 노드는 이름 표가 만들 수 없음) ④ 값형 읽기 길이 +1(물리 버퍼가 범위를 제한해 결과 동일) ⑤ 성공 시 35개 이름 표 불일치 검사(도달 불가) ⑥ `readImage` 의 입력 복사(읽기 쪽이 변경하지 않음).
+- **남은 경계:** 3부(`CloneSectionFrom`·`ReadLoginImage`·`SaveImage`·`Dump`·`SaveFile`), 실제 Client/Session 에서의 Load 호출자, Fort 저장과의 관계.
