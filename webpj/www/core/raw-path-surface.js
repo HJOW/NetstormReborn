@@ -1,7 +1,7 @@
 // 위치(float 좌표)에서 표면 해시 0단계의 머리 SID 를 읽는 원본 BFS 보조 `RawPathSurfaceAt` 를 옮긴 모듈이다(cpppj `o/RawPathSearch.cpp` 의 RawPathSurfaceAt/Cell/Inside, 10.78 전용).
 // 좌표는 float32 로 반올림한 값에 단정도 0.9999 를 배정도로 더한 뒤 0 쪽으로 절삭해 칸을 만든다(x87 중간 덧셈 보존). 칸이 256×256 밖이면 SID 0 이다.
-// 이 모듈은 DOM 을 쓰지 않는다. 길 찾기(RawPathSearch) 본체는 아직 옮기지 않았고, 삭제 Graph(`raw-graph.js`)가 이 함수만 먼저 쓴다.
-// (2026-11-08 WB04-E40: RawGraph 삭제 경로의 위치→표면 조회로 추가)
+// 이 모듈은 DOM 을 쓰지 않는다. 삭제 Graph(`raw-graph.js`)가 이 함수를 먼저 쓰고, 길 찾기 본체(`raw-path-search.js`)가 같은 칸 계산(`pathCell`)과 표면 조회를 재사용한다.
+// (2026-11-08 WB04-E40: RawGraph 삭제 경로의 위치→표면 조회로 추가. 2026-11-12 WB04-E334: RawPathSearch 가 재사용하도록 주석 갱신)
 
 // 지도 한 변의 칸 수와 표면 근사 올림 보정값(float 0.9999)이다. (2026-11-08 WB04-E40)
 const BOARD_SIDE = 256;

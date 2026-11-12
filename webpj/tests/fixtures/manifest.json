@@ -534,7 +534,7 @@
       "bytes": 8139,
       "lines": 17,
       "fixtureCommit": "e210c7559",
-      "webCommit": "worktree",
+      "webCommit": "4f2c77ce2",
       "cpppjBasis": {
         "cpppj/src/client/RawCameraView.cpp": "e210c7559",
         "cpppj/src/client/ClientCameraGlobals.cpp": "66583eb4f"
@@ -16925,6 +16925,35 @@
       "cpppjBasis": {
         "cpppj/src/client/ClientSubscriberGlobals.h": "bed549ff5",
         "cpppj/src/client/TutorialInit.cpp": "8ba4af11b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E334",
+      "id": "pathsearch",
+      "path": "cpppj/tests/fixtures/pathsearch-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 BFS 길 찾기(00488af0/00488370)의 결과·꼭짓점 좌표/방향/시각·거리표 FNV·큐 FNV·방향3 선행 비트(10.78 322행, profile 0~9 × flags·avoid·policy·owner·legacy·guard)",
+      "consumers": [
+        "webpj/tests/path-search.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-search.js"
+      ],
+      "doc": "docs/webpj-path-search-20261112.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathSearch.cpp"
+      ],
+      "scope": "10.78(originals) 322행 전부(originalCD 322행은 10.72 범위 밖)",
+      "sha256": "26c697920661be2020f8e43aafb07fecd6099bd67962c94f1d16a367314b9f42",
+      "bytes": 94722,
+      "lines": 645,
+      "fixtureCommit": "ada85427f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathSearch.cpp": "7f903eba0"
       }
     }
   ]
