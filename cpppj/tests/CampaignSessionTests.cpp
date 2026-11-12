@@ -2413,7 +2413,8 @@ struct SessionPickupWire {
     // Session/현재Player기록은이연결보다오래살아야한다.
     explicit SessionPickupWire(RawCampaignSession& session):transport(session.PlayerRecords(),session.Core().processState.Server(),CommandDevice(recorded)) {
         transport.RegisterLogin([](std::uint32_t,PacketConnection&,std::span<const std::uint8_t>) { throw std::logic_error("포획검사에서로그인요청선택금지"); });
-        transport.Open(6799);transport.AssignConnection(-1,1);session.PlayerRecords()[0xb4+0x50]|=1;session.RegisterCarrierCommands(transport.Dispatch());
+        // 서버 끝은 Poll의 accept에서 pending -1로 생기므로 재배치 전에 한 번 Poll한다. 이 Poll은 두 끝의 접속 통지만 소비한다(783b12763 뒤 열기 직후 재배치하던 장면을 단위1304에서 교정).
+        transport.Open(6799);transport.Poll();transport.AssignConnection(-1,1);session.PlayerRecords()[0xb4+0x50]|=1;session.RegisterCarrierCommands(transport.Dispatch());
         const auto& registration=transport.Dispatch().Registration(0x4f);CHECK(registration.length==9 && registration.version==1 && registration.mismatch==0 && !registration.observer);
     }
 };

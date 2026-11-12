@@ -3896,3 +3896,8 @@ target_sources(netstorm_tests PRIVATE ScriptEngineTests.cpp)
 add_executable(netstorm_script_engine_tests FocusedTestMain.cpp ScriptEngineTests.cpp)
 target_link_libraries(netstorm_script_engine_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_script_engine_tests)
+# 실제 zlocal 양끝(LocalMissionTransport)을 쓰는 연결 등록/활동/전투 이탈 시험만 통합 검사 없이 선택 실행한다. 서버 끝은 Poll의 accept에서 생긴다(단위1304).
+add_executable(netstorm_local_transport_tests FocusedTestMain.cpp LocalMissionTransportTests.cpp ConnectionRegistrationTests.cpp ConnectionActivityTransportTests.cpp BattleLeaveTests.cpp)
+target_link_libraries(netstorm_local_transport_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_local_transport_tests)
+target_compile_definitions(netstorm_local_transport_tests PRIVATE ${_netstorm_menu_session_definitions})

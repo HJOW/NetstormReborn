@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**확정 제품 1303 / 11.01 · 정리 2026-11-12(HJOW-Athlon) · 다음 단위 번호 1304 · 마지막 디컴파일 HJOW-Athlon(변경 없음, 재디컴파일 없음) · 전체 목표 미완료 — 남은 일은 [0.1](#now), 사용자 결정은 [0.2](#decisions), 사용자 확인은 [0.3](#user-checks)**
+**확정 제품 1304 / 11.01(1304는 시험만 교정, 실행 파일은 1303과 같음) · 정리 2026-11-12(HJOW-Athlon) · 다음 단위 번호 1305 · 마지막 디컴파일 HJOW-Athlon(변경 없음, 재디컴파일 없음) · 전체 목표 미완료 — 남은 일은 [0.1](#now), 사용자 결정은 [0.2](#decisions), 사용자 확인은 [0.3](#user-checks)**
 
 이 문서는 cpppj와 공통 사항의 **현재 상태·남은 작업·유효한 규칙**만 둔다. 끝난 작업 묶음은 [1절](#done)에 한두 줄로 요약하고 상세는 근거 문서에 있다. 이번 정리 직전의 이 문서 전체(제품 1298 시점, 완료 묶음의 상세 표·B 판정 상세·D/SK 하위 단계표)는 [LEFT_JOBS.old.md](LEFT_JOBS.old.md#archive-20261111-through-1298)에 바이트 그대로 보관했고, 1254~1288 경과는 [제품1288 시점 보관본](LEFT_JOBS.old.md#archive-20261111-through-1288)에 있다. dotnetpj·webpj의 현황과 계획은 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md)·[LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 원격 저장소에 push하지 않는다.
 
@@ -15,6 +15,8 @@
 AGENTS 1~14차 구현은 모두 끝났다([0.4](#stages)). 14차(사용자 커밋 `85551c6c2`)는 **1301에서 QuickJS-ng 엔진 탑재**(D7 ① 범위)로 끝냈고 연동 범위는 결정 D7을 기다린다. 남은 AI 작업은 아래 셋이다.
 
 **1302~1303:** CD 10.72 자료 폴더의 표시 파일을 먼저 확인해 해당 폴더를 CDDir 및 보조 자산 루트로 선택하며([1302](docs/exe/cpp-cd1072-local-data-20261111.md)), 일반 실행 `--cd`는 자료 경로 뒤 옵션 위치와 무관하게 처리하고 다른 옵션 값과 구별한다([1303](docs/exe/cpp-cd1072-run-option-20261112.md)). 1302에서 중단한 정식 Release 링크와 CD 경로 집중 검사 3건도 1303에서 통과했다. 나머지 판본 게이트, 임의 CDDir 설정, 메뉴·튜토리얼 실행 검증은 아직 남았다. M8 관문은 후속 코드 변경 후 다시 수행한다.
+
+**1304(시험만):** webpj 이식(WB04-E323·E324) 중 발견한 cpppj 시험 결함을 사용자 요청으로 교정했다([근거](docs/exe/cpp-test-local-transport-accept-20261112.md)). ① `bd36f6e64` 뒤 Pop 송신 장치를 묶지 않던 `rawGeyserMined_real_packet_factory_destroy_and_space` ② `783b12763`(zlocal 서버 끝 생성을 Open → Poll accept 로 이동) 뒤 옛 기대값으로 남은 LocalMissionTransport·ConnectionRegistration·ConnectionActivityTransport·BattleLeave 시험 5건과 CampaignSession `SessionPickupWire` 9건. 새 집중 대상 `netstorm_local_transport_tests`(17/17 통과)를 더했다. 가려져 있던 `CampaignDevastation_ActualEnemyCaptureAndDropFromCast` 는 NB18(1290) 거부와 충돌해 결정 **D8** 로 남겼다.
 
 | 순서 | 작업 | 현재 상태 | 시작 조건 / 다음 행동 |
 | --- | --- | --- | --- |
@@ -40,6 +42,7 @@ AI가 근거 자료만으로는 정할 수 없는 항목이다. **권고**대로
 | D5 | NB04·NB29의 공식(제품 쪽 설계 기준) | Even 구역 순서는 시간 시드로 섞고, 간헐천 예산은 6명 이후 인당 6개로 이어 붙였다(원문 공식은 6명에서 최대인 비단조 오류) | **유지** | 다른 목표 공식이 있으면 `WorldGeyserBudget`(`o/RawWorldGeyserBounds.cpp`)·`RawWorldGeyser` 조정 |
 | D6 | 스커미시 후속(선택) | 시작 섬 **모양**은 원본 fort에서 고른 후보 22개 중 무작위이고(위치·중앙섬·군도·간헐천은 MP 규칙), 사람은 항상 남쪽(소유자 1)이다([근거](docs/exe/cpp-skirmish-sk-20261111.md) §3) | **유지** | 후보를 넓히거나 사람 시작 위치를 무작위로 바꾼다 |
 | **D7** | **QuickJS(14차)를 어디까지 연동할지** | AGENTS가 "어느 정도까지 연동할지는 추후 고민"으로 남겼다. 후보: ① 탑재만(엔진 생성·자체 검사) ② 개발용 진단(MCP·CLI에서 JS 평가) ③ 게임 상태 읽기·명령을 노출하는 스크립트/모드 ④ 미션 대본·Tell 명령 확장. **①은 1301에서 완료**([근거](docs/exe/cpp-quickjs-engine-20261111.md)) | **지금은 ①만.** ② 이상으로 넓힐 때 노출 API, 파일·네트워크 차단, 스크립트 위치(사용자 홈 아래)를 함께 정한다 | 정한 범위로 바인딩·검사를 만들고 dotnetpj에도 같은 계약을 넘긴다 |
+| **D8** | **NB18과 충돌하는 시험 `CampaignDevastation_ActualEnemyCaptureAndDropFromCast`의 처리** | 1304에서 설정 실패가 풀리자 드러났다. 시전자(운반체)가 기도 내용물을 든 채 적 사제에 도착하면 NB18(1290, 내용물을 든 운반체의 사제 줍기 거부)이 포획 요청 0x4f를 막는데 시험(2026-10-20 작성)은 포획을 기대한다([근거](docs/exe/cpp-test-local-transport-accept-20261112.md) §4) | **NB18 유지, 시험을 고친다:** 이 장면은 거부(요청 없음)를 단언하고 포획/내려놓기 흐름은 내용물 없는 운반체로 검증 | 권고대로면 시험만 교정한다. "NB18을 너겟으로 좁힘"이면 `RawCarrierPickup::RefusesHeldPriest` 조건을 TYPE 154로 제한하고 NB18 판정 문서를 고친다 |
 
 <a id="user-checks"></a>
 
@@ -85,7 +88,7 @@ AI가 근거 자료만으로는 정할 수 없는 항목이다. **권고**대로
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품 | **1303 / 11.01.** 최근: Frame Rate 옵션 1297·프레임 대기 방식 1298·CD 10.72 C1·C2 문서 1299·스커미시 MP 규칙 월드와 NB23 교정 1300·14차 QuickJS-ng 엔진 탑재 1301·CD 자료 폴더 경로 선택 1302·**일반 실행 CD 옵션 처리 1303**. 직전 정리 시점은 1298(커밋 `1f5b4ead1`까지) |
+| 확정 제품 | **1303 / 11.01.** 최근: Frame Rate 옵션 1297·프레임 대기 방식 1298·CD 10.72 C1·C2 문서 1299·스커미시 MP 규칙 월드와 NB23 교정 1300·14차 QuickJS-ng 엔진 탑재 1301·CD 자료 폴더 경로 선택 1302·**일반 실행 CD 옵션 처리 1303**·**시험 결함 교정 1304(실행 파일 불변)**. 직전 정리 시점은 1298(커밋 `1f5b4ead1`까지) |
 | 실행·플레이 | 무인자 GUI·메뉴·미션 플레이가 가능하다. 최근 확인: 스커미시 시작(AI 1·3·7명, 약 90초 동안 AI가 다리 건설), 일반 미션 `thewarbegins` 진입·대기, 메인 `Multiplayer` 로비 화면 표시(접속은 미검증), 한국어·일본어 UI, 1301 메인 메뉴 시작과 `--quickjs-selftest` PASS 6/6 |
 | 원본 동일성 | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이다 |
 | 최근 배포 ZIP | M8 재실행(제품 1297 기준): 1433항목 전수 일치, 누락/금지/exe 글꼴 0. **1298 이후 코드가 바뀌어 새 ZIP·관문이 필요하다**(1301부터 ZIP에 `third-party\quickjs-ng\` 포함, [3절](#final-gate)) |
@@ -111,6 +114,7 @@ AI가 근거 자료만으로는 정할 수 없는 항목이다. **권고**대로
 | SK 스커미시(12차) | 1293, **1300** | Campaign의 Skirmish 항목·자체 설정 화면 4장(AI 수·AI별 난이도/동맹·금지 유닛 최대 5(Outpost 포함)·시작/취소, 영·한·일). **1300: 월드를 MP 시작 규칙으로 생성**(중앙섬 먼저·참가자별 전투섬을 방향표 링에·소유자=참가자·MP 군도 밀도·MP 간헐천 생성기) | [근거](docs/exe/cpp-skirmish-sk-20261111.md) |
 | F 프레임(후순위) | 1296~1298 | 계획 문서·옵션 `Frame Rate`(60/75/120)·양보 대기(CPU 점유 감소) | [계획·결과](docs/exe/cpp-post-plan-fps-cd1072-20261111.md) |
 | C 10.72 복원(후순위) | 1299, 1302~1303 | C1 구동 관찰·해결 방안, C2 판본 게이트 목록, C3 로컬 CD 자료 경로 선택과 일반 실행 판본 옵션 개선. CD 메뉴·튜토리얼과 전체 복원은 미완료 | [C1/C2](docs/exe/cpp-cd1072-startup-and-gates-20261111.md)·[1302](docs/exe/cpp-cd1072-local-data-20261111.md)·[1303](docs/exe/cpp-cd1072-run-option-20261112.md) |
+| T 시험 교정 | 1304 | zlocal Poll accept 설계(`783b12763`)·Pop 송신 장치(`bd36f6e64`)에 맞춰 시험 15건 교정(제품 코드 불변), 집중 대상 `netstorm_local_transport_tests` 추가. 남은 충돌 1건은 D8 | [근거](docs/exe/cpp-test-local-transport-accept-20261112.md) |
 | Q QuickJS 엔진 탑재(14차) | 1301 | `cpppj/third_party/quickjs-ng/`(v0.18.0 상류 23파일 바이트 그대로·`provenance.json`·MIT)·정적 라이브러리 `NetstormQuickJs`, `platform/ScriptEngine`(생성/해제·평가·메모리/스택/시간 한도·외부 장치 없음), 시작 자체 검사(7차 활동 기록)·`--quickjs-selftest`, 배포 ZIP·검증 도구에 라이선스/출처 필수화, 가져오기 DLL 불변. 검사 14/14(x64 Release·Debug), ARM64 교차 빌드 | [근거](docs/exe/cpp-quickjs-engine-20261111.md)·[엔진 설명](cpppj/third_party/quickjs-ng/README.ko.md) |
 
 [986 준비본](docs/exe/handoffs/cpp-pause-20261106/README.md)의 한국어·시나리오 후보는 K1(1270)·S1(1277)에서 필요한 부분을 병합했고 S2~S4로 기능 검증을 마쳤다. 원격 Fort 준비분은 987에서 구현했다. 남은 후보 파일은 보관 자료로만 쓰며 현행 소스에 그대로 덮어쓰지 않는다.
@@ -194,7 +198,9 @@ AI가 근거 자료만으로는 정할 수 없는 항목이다. **권고**대로
 
 | 검사 대상 | 기존 실패(기준선 동일 확인 단위) |
 | --- | --- |
-| `netstorm_pop_context_tests` | 25건(1267) |
+| `netstorm_pop_context_tests` | 24건(1304: 1267의 25건 중 `rawGeyserMined_real_packet_factory_destroy_and_space` 교정) |
+| `netstorm_world_generation_tests` | 전체 실행은 `CampaignSession_GeneratorBodyShadowAndPicking`·`CampaignSession_AiCarrierActionsUseActualWorldContentsAndLifetime` 실패 뒤 `CampaignSharedKernel_*` 구간(1894~1954행)에서 비정상 종료(1304 교정 전후 동일). `CampaignDevastation_ActualEnemyCaptureAndDropFromCast` 는 NB18 충돌(D8, 1304) |
+| `netstorm_local_transport_tests` | 0건(1304 신설, 17건) |
 | `netstorm_guide_fort_request_tests` | 4건(1278) |
 | `netstorm_file_directory_tests` | 3건(1285) |
 | `netstorm_menu_session_tests`·`netstorm_main_popup_tests`·`netstorm_file_tests` | 기준선과 동일(1277). menu_session 6건 실패는 1268에서 직접 비교 없이 helpWord와 무관한 메시지로 판단했다 |

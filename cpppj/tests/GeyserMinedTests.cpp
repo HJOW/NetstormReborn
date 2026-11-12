@@ -83,7 +83,10 @@ TEST_CASE(rawGeyserMined_real_packet_factory_destroy_and_space) {
         SidPool pool(edition,32768,true);SquidHash hash;std::vector<std::uint8_t> spots(65536);std::vector<RiftTypeRecord> types(edition==OriginalEdition::Patch1078 ? 188 : 171);
         types[122].footX=types[122].footY=types[84].footX=types[84].footY=1;types[154].cost=200;
         SquidFactory factory(pool,types);SquidPop pop(pool,hash,spots);SquidUnpop unpop(pool,hash,spots);RawSquidDestroy destroy(pool,unpop,types);
+        // 같은 Pop의 실제 송신 요청을 기록한다. 서버 영역 객체의 첫 활성화는 송신 writer를 필수로 요구한다(bd36f6e64 뒤 이 장치가 없어 검사가 실패하던 것을 단위1304에서 교정).
+        std::vector<std::pair<Sid,std::uint32_t>> transmissions;pop.BindTransmission([&](Sid sid,std::uint32_t flags) { transmissions.emplace_back(sid,flags); });
         const auto geyser=factory.Create(122,2);Put(pool.AllocatedBytes(geyser),12,200,2);CHECK(pop.Pop(geyser,types[122],1,1,40.75F,41.25F,0)==RawPopResult::Registered);
+        CHECK(transmissions.empty()); // client 영역 간헐천의 Pop은 송신을 요청하지 않는다.
         GameRandom random;GeyserMinedState state;std::uint32_t sounds=0,created=0,recorded=0;Sid born;GeyserMinedHooks hooks;PacketConnection connection;connection.sender=17;
         hooks.sound=[&](float,float,std::string_view,std::uint32_t flags) { CHECK(flags==0 && connection.depth==1 && recorded==1);++sounds; };
         hooks.destroy=[&](Sid sid,std::uint32_t flags) {
@@ -111,6 +114,8 @@ TEST_CASE(rawGeyserMined_real_packet_factory_destroy_and_space) {
         CHECK(dispatch.Validate(packet) && dispatch.Dispatch(connection,packet));CHECK(connection.depth==0 && connection.received==723 && recorded==1);
         CHECK(sounds==1 && created==1 && born.value>=pool.Layout().serverFirst);CHECK(pool.Slot(geyser)[11]&1);CHECK(hash.Bucket(1,40.75F,41.25F)==born.value);
         CHECK(Get(pool.Slot(born),14)==std::bit_cast<std::uint32_t>(40.75F) && Get(pool.Slot(born),18)==std::bit_cast<std::uint32_t>(41.25F));
+        // 10.78은 서버 영역 emptyGeyser Pop의 첫 활성화만 송신 flags 9로 한 번 요청하고, 10.72 Pop 경로는 송신하지 않는다(단위1304).
+        CHECK(edition==OriginalEdition::Patch1078 ? transmissions.size()==1 && transmissions[0].first==born && transmissions[0].second==9U : transmissions.empty());
         CHECK(Throws([&] { handler.HandlePacket({}); }));CHECK(Throws([&] { RawGeyserMined missing(pool,hash,types,random,state,{}); }));
     }
 }

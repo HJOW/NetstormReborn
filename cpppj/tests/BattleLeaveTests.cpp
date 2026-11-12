@@ -52,7 +52,8 @@ TEST_CASE(BattleLeave_ActualLocalQueueAndRegistration) {
     hooks.terminate=[](auto&) { CHECK(false); };hooks.close=[](auto&) {};hooks.release=[](auto&) {};
     netstorm::zacket::LocalMissionTransport transport(players,server,std::move(hooks));transport.RegisterLogin([](auto,auto&,auto) { CHECK(false); });RegisterBattleLeavePacket(transport.Dispatch(),players);
     const auto& registration=transport.Dispatch().Registration(0x52);CHECK(registration.version==1 && registration.mismatch==0 && registration.observer && !registration.packetObserver && registration.receive);
-    transport.Open(6799);transport.AssignConnection(-1,1);const auto packet=MakeBattleLeavePacket();CHECK(transport.Send(9,packet));CHECK(Get(players,180+80)==0);
+    // 서버 끝은 Poll의 accept에서 pending -1로 생기므로 재배치 전에 한 번 Poll한다(783b12763 뒤 열기 직후 재배치하던 장면을 단위1304에서 교정).
+    transport.Open(6799);transport.Poll();transport.AssignConnection(-1,1);const auto packet=MakeBattleLeavePacket();CHECK(transport.Send(9,packet));CHECK(Get(players,180+80)==0);
     transport.Flush();CHECK(Get(players,180+80)==0);CHECK(transport.Poll()>0);CHECK(Get(players,180+80)==4 && records==1 && senders==std::vector<std::uint32_t>{1});
 }
 
