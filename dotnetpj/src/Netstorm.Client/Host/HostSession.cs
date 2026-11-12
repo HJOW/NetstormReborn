@@ -255,6 +255,10 @@ public sealed class HostSession
     /// <summary>Player 기록의 요새 수신 표시 DWORD 오프셋이다. RawMissionLogin과 같은 0x64다.</summary>
     private const int PlayerFortReceivedOffset = 0x64;
 
+    /// <summary>Player 기록의 첫 지역 DWORD 오프셋이다. RawPlayerInitialization·RawFortFinishOwner와 같은 0x78이다.</summary>
+    /// <remarks>2026-11-12 0.473에서 로그인 초기화 잔여(비참가자 127) 재현용으로 추가했다. 근거: cpppj o/RawPlayerInitialization.cpp 46행·o/RawFortFinishOwner.h 9행(기본 127). 참가자 지역은 전투섬 배정 갈고리·AI 설정 사슬에서 덮어쓰므로(R6·R4 후속) 여기서는 9기록 모두 127로 둔다.</remarks>
+    private const int PlayerFirstRegionOffset = 0x78;
+
     /// <summary>참가자 이름·동맹을 미션 목록 값으로 채운다. 원본 로그인의 기록 쓰기와 같다.</summary>
     /// <param name="players">미션 플레이어 목록.</param>
     /// <param name="localHandle">로컬 1번의 핸들. 대본 이름("Player")이 아니라 실제 핸들을 쓴다.</param>
@@ -288,6 +292,15 @@ public sealed class HostSession
             int offset = owner * PlayerRecordStride;
             Array.Clear(PlayerRecords, offset + PlayerNameOffset, PlayerNameWidth);
             Array.Copy(bytes, 0, PlayerRecords, offset + PlayerNameOffset, bytes.Length);
+        }
+        // 첫 지역(+0x78)은 원문 초기화와 같이 9기록 모두 127로 둔다. 참가자는 전투섬 배정 갈고리에서 덮어쓴다.
+        for (int owner = 0; owner <= MissionPlayers.PlayerCount; owner++)
+        {
+            int offset = owner * PlayerRecordStride + PlayerFirstRegionOffset;
+            PlayerRecords[offset] = 127;
+            PlayerRecords[offset + 1] = 0;
+            PlayerRecords[offset + 2] = 0;
+            PlayerRecords[offset + 3] = 0;
         }
     }
 

@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.472 · 정리 2026-11-12(HJOW-Athlon) · 다음 단위 0.473 · cpppj 기준 제품 1303(14차 QuickJS-ng 엔진 탑재는 1301) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`, 이후 1302·1303은 CD 10.72 전용이라 영향 없음) · 전체 목표 미완료 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
+**기준 단위 0.473 · 정리 2026-11-12(HJOW-Athlon) · 다음 단위 0.474 · cpppj 기준 제품 1303(14차 QuickJS-ng 엔진 탑재는 1301) · dotnetpj의 마지막 cpppj 영향 검토는 제품 1247(`4d4b3a928`, 이후 1302·1303은 CD 10.72 전용이라 영향 없음) · 전체 목표 미완료 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 남은 일은 [0.4](#now), 사용자 결정(D1~D5, 2026-11-11 확정)은 [0.5](#decisions)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-12) 직전의 이 문서 전체(단위 기록 0.342~0.452 111건, 0.2~0.4의 단위별 검사·진행 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452)에 바이트 그대로 보관했고, 그 이전 보관본 5개와 0.341 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -31,7 +31,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 | R1 | 8비트 화면 호스트·입력 큐·오라클 도구(`--ui-script`·`snapshot`·`session-dump`·`--fixed-frame-ms`) | — | ✅ 완료 |
 | R2 | 그리기 원시·팔레트·글꼴 | — | ✅ 본체 완료(실자산·세션 연결은 R4·R5) |
 | R3 | Gump UI와 메인 메뉴 계열 | D1 메뉴 픽셀 일치 | 🔶 위젯·호스트 대부분 이식. **메뉴 L4a 12장면 차이 0**(0.381~0.388, 장면은 0.1). 남은 메뉴 장면 3건은 사유와 함께 뒤로 미뤘다(Language 자식 CJK는 R8, Multiplayer 섬 화면은 R5·3차, Edit 이동행은 R7). R3 잔여 위젯·소유자는 [2.5](#r3-r2-detail) |
-| R4 | 월드 세션 조립 | M1 시작 상태 L2 | 🔶 월드 아래층(Template·Fort·지형·섬·Player·저장소·프로세스·월드 본체)과 F3 세션의 관문·소유 상태 대부분 완료. **실제 호스트 조립 진행 중(0.391~0.472, [R4 진행판](#r4-board)):** 미션 Fort 적재 → 세션 홀더 → Player·SP·AI·동맹 → Zone·가입·Ready → 이름·요새 순번 → 월드 적재 시작 흐름 → 타입·프레임 → 지형·난수 저장소 → 섬 부모 → 입력 결선 → 바인딩 조립·드라이런 → Generate 라이브·덤프 CRT 행·난수 단일 스트림·프리-Generate 소비 확정·프레임 선택 대조·후보 테이블 per-type 대조·SP 353 구성과 동기 순서 확정·SID 단위 per-cell 대조·reseed 시점 근본 원인 확정·호스트 시작 1회 reseed 적용·Pop 공간 등록 live 연결·요새 객체 live 적재·4경로 dn 덤프 구조 대조·소유자 귀속 확정·그래프 재구성 live 연결·장부 귀속 확정·전투섬 배정 귀속 확정까지. **Pop 후속(postPop·표시)·농지 배치·월드 본체(그래프 나머지·장부 집계) 조립은 미착수** |
+| R4 | 월드 세션 조립 | M1 시작 상태 L2 | 🔶 월드 아래층(Template·Fort·지형·섬·Player·저장소·프로세스·월드 본체)과 F3 세션의 관문·소유 상태 대부분 완료. **실제 호스트 조립 진행 중(0.391~0.473, [R4 진행판](#r4-board)):** 미션 Fort 적재 → 세션 홀더 → Player·SP·AI·동맹 → Zone·가입·Ready → 이름·요새 순번 → 월드 적재 시작 흐름 → 타입·프레임 → 지형·난수 저장소 → 섬 부모 → 입력 결선 → 바인딩 조립·드라이런 → Generate 라이브·덤프 CRT 행·난수 단일 스트림·프리-Generate 소비 확정·프레임 선택 대조·후보 테이블 per-type 대조·SP 353 구성과 동기 순서 확정·SID 단위 per-cell 대조·reseed 시점 근본 원인 확정·호스트 시작 1회 reseed 적용·Pop 공간 등록 live 연결·요새 객체 live 적재·4경로 dn 덤프 구조 대조·소유자 귀속 확정·그래프 재구성 live 연결·장부 귀속 확정·전투섬 배정 귀속 확정·Player 첫 지역 127 초기화까지. **Pop 후속(postPop·표시)·농지 배치·월드 본체(그래프 나머지·장부 집계) 조립은 미착수** |
 | R5 | 월드 표시·카메라·HUD | D2 진입 화면 픽셀 일치 | ⬜ 미착수 |
 | R6 | 플레이 입력·규칙·소리·AI | M2·M3 | ⬜ 미착수 |
 | R7 | 미션 전체·Edit·설정·배포 | M4 | ⬜ 미착수(Edit 목록·`options.cfg` 저장 일부는 R3에서 선행) |
@@ -41,8 +41,8 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 커밋 | 0.472(전투섬 배정·+0x78 첫 지역 귀속 확정·조사 단위, 제품 코드 변경 없음). 직전 0.471은 장부 totals·totalmade 귀속 확정·조사 단위, 제품 코드 변경 없음 |
-| 검사 | **마지막 전체 회귀 완주는 0.453:** Assets 366·Client 1,130·Core 1,945(합계 3,441, 실패 0, 새 기준선). 전체 완주 이력은 0.345(3,273) → 0.369(3,375) → 0.381(3,389) → 0.432(3,422) → 0.453(3,441)이다. 0.454는 Client HostTerrain* 10건, 0.455는 Client 전체 1,134건+Core 지형 52건, 0.456은 Client Host·Dump 69건+SessionStateDump 11건, 0.457은 Client 전체 1,133건+Core 포팅 111건, 0.459는 Client Host·Dump 24건, 0.460은 Core RiftType·FrameChoose·AmbientWind·RawTerrain 33건, 0.461은 Core SpStore·FortMoney·SetPlayerSp 12건, 0.464는 Client 전체 1,134건(신규 공유 SP 1건 포함)+paired 라이브 재실행(예측 일치) 통과(실패 0, 0.458·0.462·0.463·0.465는 조사 단위라 별도 집중 없음 — 0.462·0.464·0.465·0.466·0.467·0.468은 paired 라이브/디스크 대조). 0.465는 revert 확인용으로 깨끗한 전체 리빌드(경고 0·오류 0) 뒤 Client 전체 1,134건 통과(실패 0). 0.466은 빌드(경고 0·오류 0) 뒤 Client 전체 1,139건(신규 Pop 5건 포함, 실패 0)+paired 라이브 재실행(예측 일치) 통과. 0.467은 빌드(경고 0·오류 0) 뒤 Client 전체 1,144건(신규 FortObject 5건 포함, 실패 0)+paired 라이브 재실행(구조+결정성 일치) 통과. 0.468은 게임 코드 무변경(검사 2건 추가·측정 단위)으로 Client 전체 1,146건(신규 순서·null 프로브 2건 포함, 실패 0)+4경로 paired 구조 대조 통과. 0.469는 제품 코드 무변경 조사 단위로 새 집중 검사 없이 paired 디스크 대조로 소유자 귀속 확정(0.468 게이트 1,146건 유지). 0.470은 빌드(경고 0·오류 0) 뒤 Client 전체 1,149건(신규 그래프 3건 포함, 실패 0)+paired 라이브 재실행(난수·구조 중립, graph 120/255) 통과. 0.471은 제품 코드 무변경 조사 단위로 새 집중 검사 없이 paired 디스크 대조+소스 추적으로 장부 귀속 확정(0.470 게이트 1,149건 유지). 0.472는 제품 코드 무변경 조사 단위로 새 집중 검사 없이 paired 디스크 대조+소스 추적으로 전투섬 배정·+0x78 귀속 확정(0.471 게이트 1,149건 유지). 단위별 집중 검사 내역과 변이 검출 기록은 8절과 [보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452)에 있다 |
+| 마지막 구현 커밋 | 0.473(Player 첫 지역 +0x78 9기록 127 초기화·Start 순서 연결, 제품 코드 변경 있음). 직전 0.472는 전투섬 배정·+0x78 첫 지역 귀속 확정·조사 단위, 제품 코드 변경 없음 |
+| 검사 | **마지막 전체 회귀 완주는 0.453:** Assets 366·Client 1,130·Core 1,945(합계 3,441, 실패 0, 새 기준선). 전체 완주 이력은 0.345(3,273) → 0.369(3,375) → 0.381(3,389) → 0.432(3,422) → 0.453(3,441)이다. 0.454는 Client HostTerrain* 10건, 0.455는 Client 전체 1,134건+Core 지형 52건, 0.456은 Client Host·Dump 69건+SessionStateDump 11건, 0.457은 Client 전체 1,133건+Core 포팅 111건, 0.459는 Client Host·Dump 24건, 0.460은 Core RiftType·FrameChoose·AmbientWind·RawTerrain 33건, 0.461은 Core SpStore·FortMoney·SetPlayerSp 12건, 0.464는 Client 전체 1,134건(신규 공유 SP 1건 포함)+paired 라이브 재실행(예측 일치) 통과(실패 0, 0.458·0.462·0.463·0.465는 조사 단위라 별도 집중 없음 — 0.462·0.464·0.465·0.466·0.467·0.468은 paired 라이브/디스크 대조). 0.465는 revert 확인용으로 깨끗한 전체 리빌드(경고 0·오류 0) 뒤 Client 전체 1,134건 통과(실패 0). 0.466은 빌드(경고 0·오류 0) 뒤 Client 전체 1,139건(신규 Pop 5건 포함, 실패 0)+paired 라이브 재실행(예측 일치) 통과. 0.467은 빌드(경고 0·오류 0) 뒤 Client 전체 1,144건(신규 FortObject 5건 포함, 실패 0)+paired 라이브 재실행(구조+결정성 일치) 통과. 0.468은 게임 코드 무변경(검사 2건 추가·측정 단위)으로 Client 전체 1,146건(신규 순서·null 프로브 2건 포함, 실패 0)+4경로 paired 구조 대조 통과. 0.469는 제품 코드 무변경 조사 단위로 새 집중 검사 없이 paired 디스크 대조로 소유자 귀속 확정(0.468 게이트 1,146건 유지). 0.470은 빌드(경고 0·오류 0) 뒤 Client 전체 1,149건(신규 그래프 3건 포함, 실패 0)+paired 라이브 재실행(난수·구조 중립, graph 120/255) 통과. 0.471은 제품 코드 무변경 조사 단위로 새 집중 검사 없이 paired 디스크 대조+소스 추적으로 장부 귀속 확정(0.470 게이트 1,149건 유지). 0.472는 제품 코드 무변경 조사 단위로 새 집중 검사 없이 paired 디스크 대조+소스 추적으로 전투섬 배정·+0x78 귀속 확정(0.471 게이트 1,149건 유지). 0.473은 빌드(경고 0·오류 0) 뒤 Client 전체 1,151건(신규 첫 지역 2건 포함, 실패 0)+paired 라이브 재실행(9기록 +0x78 전부 127 확인, Game·CRT·슬롯 구조 중립) 통과. 단위별 집중 검사 내역과 변이 검출 기록은 8절과 [보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452)에 있다 |
 | PORT_MAP | `PORT_MAP.tsv` 688행(L1 338·port 350, 2026-11-12 재집계). 마지막 추가는 0.394 `Player.cpp/.h` → `RawMissionPlayers.cs`(port 2행), 그 앞은 0.381 `RawKencloud*`·`ClientKencloudGlobals` 6행이다. 행별 `base` 갱신 이력(0.344~0.371)과 0.359·0.360 신규 등록 행은 보관본에 있다 |
 | fixture | 연결 236개(0.381에서 `kencloud-v2-x86.tsv` 246행·`kencloud-render-x86.tsv` 944행을 Core에 더했다). `cpp_sync.py`는 미반영분 때문에 0종료가 아니다. `reflected-commit`·PORT_MAP floor는 `f95a8db2` 그대로다(영향 재검토를 마친 행만 올린다) |
 | cpppj 기준 | 현재 cpppj는 제품 1303 / 11.01([LEFT_JOBS.md](LEFT_JOBS.md) 0.1). dotnetpj의 마지막 영향 검토는 0.281(제품 1247, `4d4b3a928`)이고 재검토 범위는 0.379에서 종결했다. 그 뒤 `cpppj/src` 변경은 1302·1303(CD 10.72 전용)뿐이다([1.2](#resync-scope)). 14차 엔진 본체(`ScriptEngine`·`third_party/quickjs-ng`)는 R8에서 옮긴다 |
@@ -76,9 +76,9 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 <a id="r4-board"></a>
 
-#### R4 진행판 — 실제 호스트·월드 조립 (순서 2, 0.390~0.470)
+#### R4 진행판 — 실제 호스트·월드 조립 (순서 2, 0.390~0.473)
 
-M1(34경로의 Load/Start 뒤 상태를 cpppj `session-dump`와 대조)까지의 현재 위치다. **cpppj 기준선 4/34, 새 경로 전체 일치 0/34.** 새 경로의 world-1 덤프는 thewarbegins 기준 2,129행(슬롯 1,853, 0.467)이며, 0.468에서 baselined 4경로 중 나머지 3경로의 첫 실제 dn 미션 덤프(f090/f240)를 생성했다(masterofwhirligigs 1,743·savetheisland 2,618·fragilefortune 2,719슬롯, thunderingpower 구조 참조 2,410슬롯 별도). 월드 본체(객체·그래프 재구성·장부 집계) 행이 없어 어느 경로도 전체 일치할 수 없다. 이 구간 80단위 중 코드를 바꾼 단위는 약 절반(40개)이고, 나머지는 기록자 추적·범위 확정·기준선 확보였다.
+M1(34경로의 Load/Start 뒤 상태를 cpppj `session-dump`와 대조)까지의 현재 위치다. **cpppj 기준선 4/34, 새 경로 전체 일치 0/34.** 새 경로의 world-1 덤프는 thewarbegins 기준 2,129행(슬롯 1,853, 0.467)이며, 0.468에서 baselined 4경로 중 나머지 3경로의 첫 실제 dn 미션 덤프(f090/f240)를 생성했다(masterofwhirligigs 1,743·savetheisland 2,618·fragilefortune 2,719슬롯, thunderingpower 구조 참조 2,410슬롯 별도). 월드 본체(객체·그래프 재구성·장부 집계) 행이 없어 어느 경로도 전체 일치할 수 없다. 이 구간 81단위 중 코드를 바꾼 단위는 약 절반(41개)이고, 나머지는 기록자 추적·범위 확정·기준선 확보였다.
 
 | 묶음 | 연결한 것 (실행 호스트 world-1 덤프·집중 검사로 확인) | 단위 |
 | --- | --- | --- |
@@ -101,6 +101,7 @@ M1(34경로의 Load/Start 뒤 상태를 cpppj `session-dump`와 대조)까지의
 | 4경로 dn 미션 덤프·구조 대조 | baselined 4경로 중 나머지 3경로의 첫 실제 dn 미션 덤프(f090/f240) 생성과 SID 단위 대조(masterofwhirligigs 1743·savetheisland 2618·fragilefortune 2719슬롯, 모두 dn_only 0·공통=dn 전체, f240 dn_only [6] 게임플레이 잔여). thunderingpower 구조 참조(2410슬롯, cpp 시드 미일치로 구조만) 별도. 적재 순서 패리티 확정(순서 엄격 대조·내용물 null 전수·부착 경로 검사) | 0.468 |
 | 그래프 재구성 live | 세션 그래프 엔진 결선(`BuildWorldGraphDevices`: 해시·점유·프레임 공유 `RawGraph` 생성, `RebuildWorldGraph` 표·스택 복사, territory·campaign 두 갈고리 live, `HostWorldGraphTests` 3건). paired 재실행으로 중립성 확정(Game·CRT·타입 1628·프레임 123/1853·full 78 동일, 변경분은 오프셋 30만, graph 120/255) | 0.470 |
 | 소유자 귀속 확정 | 적재 중 postPop 스탬프 vs 게임플레이 진화 분리 확정(코드 변경 없음, 0.469 8절 기록) | 0.469 |
+| 첫 지역 127 초기화 | `StartPlayers`에서 9기록 +0x78을 원문 초기화와 같이 127로 둠(`HostPlayerFirstRegionTests` 2건, 비참가자 7기록 cpp 127과 일치·참가자는 전투섬 배정 갈고리에서 덮어쓸 예정). paired 재실행으로 9기록 전부 127·Game·CRT·슬롯 구조 중립 확인 | 0.473 |
 | 섬 | 섬 런타임 부모 조립(`BuildIslands`: 풀·기록·모드·목록·해시 공유) | 0.452 |
 
 **조사로 확정한 것(코드 변경 없음, 잔여 지도):** Player 9기록·이름 바이트15·SP 오프셋·`+8`/`+0x78`/`0x5c~0x64`·장부 합계·AI 부착 recipe의 기록자 추적(0.408~0.431), 월드 적재(0.435)·지형/객체 효과(0.441)·Generate 진입점(0.443)·난수 출처(0.446)·생성 입력 15종(0.450)의 범위 확정, fragilefortune 2번 SP 불일치는 cpp 쪽 AI 경제 활동이라 시작값 오류가 아니라는 결론(0.451, R6 잔여). 상세는 [보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452)의 단위 기록이다.
@@ -538,6 +539,15 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 ## 8. 단위 기록 (0.453부터)
 
 문서가 없는 작은 단위만 아래에 최신순으로 짧게 적는다. 한 기록에는 범위, 구현(새 파일·수정 파일·옮긴 cpppj 파일과 기준 커밋), C#에서 달라진 모양, 검증(집중·전체·변이·L2/L4a 비교), PORT_MAP·fixture 변화, 함께 옮긴 10차 NB 수정, 보호·실행·외부 접속 관점, 남은 것을 적는다([3.1](#verify-levels)). 0.11~0.452는 보관 파일에 있다: [0.11~0.65](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261031-through-073) · [0.66~0.126](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261102-through-0126) · [0.127~0.153](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261104-through-0154) · [0.154~0.279](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261110-through-0279) · [0.280~0.341](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261111-through-0341) · [0.342~0.452](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261112-through-0452). 묶음별 요약은 [7.1](#dotnet-done-index)과 [0.4 R4 진행판](#r4-board)에 있다.
+
+#### 0.473 — Player 첫 지역(+0x78) 9기록 127 초기화: 로그인 초기화 Start 순서 연결 (2026-11-12, HJOW-Athlon)
+
+- 범위: 0.4 순서 2(R4 실제 호스트·월드 조립)의 여든한 번째 단위. 0.472에서 로그인·초기화 잔여로 남긴 비참가자 127을 Start 순서에 연결한다. 제품 코드 변경 있음.
+- 구현: `HostSession`에 `PlayerFirstRegionOffset(0x78)` 상수 추가(근거 cpppj `o/RawPlayerInitialization.cpp` 46행·`o/RawFortFinishOwner.h` 9행 기본 127, 0.472 귀속 확정) + `StartPlayers`末尾에 9기록(0~8) +0x78 DWORD를 127(LE 7F 00 00 00)로 쓰는 반복문 추가(참가자는 전투섬 배정 갈고리에서 덮어쓸 예정). 신규 `HostPlayerFirstRegionTests` 2건(9기록 전부 127·이름/동맹 보존). C# 모양 차이 없음(세션 소유 바이트 배열에 원문과 같은 LE DWORD 쓰기).
+- 검증: 빌드(경고 0·오류 0) 뒤 신규 2건 통과(실패 0) + Client 전체 1,151건 통과(신규 2건 포함, 실패 0, NETSTORM_DATA 지정, 110초). paired 라이브 재실행(예외 PC, `steps-dn-f065-0473.tsv`, `--mission thewarbegins --handle Youpson --window --frames 90 --fixed-frame-ms 25 --fixed-unix-seconds 1760000000 --mute-audio`, 종료 코드 0): 덤프 `thewarbegins-dn-f065-0473.tsv`(2,129행 유지)에 player 9기록 +0x78 전부 127(7F) 확인, random·CRT·슬롯 구조는 0.470 덤프와 중립(길이 215,228 동일). 비참가자 7기록은 cpp 127과 일치, 참가자 2기록은 전투섬 배정 갈고리 후속에서 해소. `originals/` 미접촉, 추적 `assets/game-data/d/options.cfg`는 되돌렸다. paired 산출물은 `extracted/dotnet-l2-fixed/`에 두었다(Git 제외).
+- PORT_MAP, fixture 변화 없음(대응행 추가 없음). 함께 옮긴 10차 NB 수정 없음. 외부 접속 목록 변경 없음.
+- 보호: originals, originalCD, AGENTS.md, README 개요, cpppj, LEFT_JOBS.md 미수정(제품 변경은 dotnetpj 새 경로·검사만, 작업 트리의 cpppj/tests·docs/exe 미커밋 변경은 이번 단위와 무관해 손대지 않고 커밋 범위에서 제외). 사제 포획/희생·특정 적 공격·시나리오 승리 재현 검사는 건너뛴다.
+- 남은 것: 전투섬 배정 region 갈고리 결선(R4, 배정 섬 확정 위치에서 참가자 +0x78 기록), 소용돌이→섬 소유자→첫 지역 사슬과 AI 설정 지역 기록(R6, brain 실생성자·AI 설정과 함께), Player 월드 풀·공간 Pop·예약 갈고리, 세션 `Bind*` 실제 몸체, 요새 이미지 전송, 메뉴 미션 시작, 농지 배치 파이프라인, 34경로 L2 대조(M1, 4/34).
 
 #### 0.472 — 전투섬 배정·첫 지역(+0x78) 귀속 확정: 섬 배정 갈고리·AI 설정 미연결 (2026-11-12, HJOW-Athlon)
 
