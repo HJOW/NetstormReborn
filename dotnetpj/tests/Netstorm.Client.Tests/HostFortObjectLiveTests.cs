@@ -221,4 +221,221 @@ public sealed class HostFortObjectLiveTests
         Assert.True(total > 0);
         Assert.Equal(new SortedDictionary<uint, int> { [123u] = 1, [124u] = 1, [158u] = 2 }, found);
     }
+
+    /// <summary>실제 요새의 적재 순서를 덤프 생성 순서와 대조한다. 영역별 순서가 어긋나면 적재 순서 결함이다.</summary>
+    [Fact]
+    public void ProbeFortLoadVsDumpOrder()
+    {
+        var (session, _) = LoadRealObjectScene();
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data);
+        MissionFortLoadResult fort = MissionFortLoad.Load(startup, "thewarbegins");
+        RiftTypeTable table = MissionFortLoad.LoadTypeTable(startup.Files);
+        BuildLiveTerrainFirst(session, fort.Fort, table.Types);
+        session.LoadFortObjects(fort.Fort, 1u);
+        var islands = session.BuildIslands(new IslandRuntimeHooks
+        {
+            SetResidenceOwner = (_, _) => { },
+            Assertion = _ => { },
+        });
+        var expectedServer = new List<uint>();
+        var expectedClient = new List<uint>();
+        var expectedPredictable = new List<uint>();
+        // Load와 같은 순서·건너뜀·다리 매핑으로 훑는 반복문이다.
+        var orderState = new FortObjectLoadState();
+        for (int territory = 0; territory < 20; ++territory)
+        {
+            CollectFortSection(fort.Fort.Territories[territory], 1u, territory, orderState, session, islands,
+                table.Types, expectedServer, expectedClient, expectedPredictable);
+        }
+        CollectFortSection(fort.Fort.Chaff, 1u, -1, orderState, session, islands,
+            table.Types, expectedServer, expectedClient, expectedPredictable);
+        var actualServer = new List<uint>();
+        var actualClient = new List<uint>();
+        var actualPredictable = new List<uint>();
+        // 풀 전체를 번호 순서대로 읽는 반복문이다.
+        for (int sid = RawSidPool.FirstOrdinary; sid < session.Pool.Capacity; ++sid)
+        {
+            ReadOnlySpan<byte> raw = session.Pool.Slot(sid);
+            if ((raw[RawSidPool.StateOffset] & RawSidPool.FreeBit) != 0) continue;
+            if (raw[RawSidPool.TypeOffset] != 6) continue;
+            if (sid >= RawSidPool.PredictableFirst) actualPredictable.Add(raw[RawSidPool.TypeOffset]);
+            else if (sid >= RawSidPool.ServerFirst) actualServer.Add(raw[RawSidPool.TypeOffset]);
+            else actualClient.Add(raw[RawSidPool.TypeOffset]);
+        }
+        // 서버 영역의 내용물 자식은 6번뿐이므로 서버 슬롯 전체 순서와 대조한다.
+        var actualServerAll = new List<uint>();
+        for (int sid = RawSidPool.ServerFirst; sid < RawSidPool.PredictableFirst; ++sid)
+        {
+            ReadOnlySpan<byte> raw = session.Pool.Slot(sid);
+            if ((raw[RawSidPool.StateOffset] & RawSidPool.FreeBit) != 0) continue;
+            actualServerAll.Add(raw[RawSidPool.TypeOffset]);
+        }
+        Assert.Equal(expectedServer, actualServerAll);
+        Assert.Equal(expectedClient, actualClient);
+        Assert.Equal(expectedPredictable, actualPredictable);
+    }
+
+    /// <summary>적재와 같은 순서·건너뜀·다리 매핑·내용물 끼워넣기로 타입을 모은다.</summary>
+    private static void CollectFortSection(
+        Netstorm.Core.Original.FortChunkSection section, uint owner, int territory, FortObjectLoadState state,
+        HostSession session, RawIslandRuntime islands,
+        IReadOnlyList<OriginalTypeRecord> types, List<uint> server, List<uint> client, List<uint> predictable)
+    {
+        if (!section.Present) return;
+        int index = 0;
+        // y 바깥·x 안쪽 순서와 지역 조회 건너뜀은 로더와 같다.
+        for (int y = 0; y < state.ChunksY; ++y)
+        {
+            for (int x = 0; x < state.ChunksX; ++x)
+            {
+                sbyte region = unchecked((sbyte)session.World.At(x, y).Island);
+                if (territory >= 0 && !islands.Matches(region, unchecked((int)owner), territory))
+                {
+                    continue;
+                }
+                if (index >= section.Chunks.Count)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(section), "프로브 청크 자료 부족");
+                }
+                Netstorm.Core.Original.FortChunk chunk = section.Chunks[index++];
+                foreach (Netstorm.Core.Original.FortObject @object in chunk.Objects)
+                {
+                    uint type = @object.StoredType >= 0xf6 ? state.BridgeType : unchecked((uint)@object.Type);
+                    if (type == 0 || type == state.IslandType)
+                    {
+                        continue;
+                    }
+                    server.Add(type);
+                    // 내용물은 ContainerFlag 타입에만 있으며 Required와 같은 누락 검사를 둔다.
+                    if ((types[(int)type].Flags1 & 0x20000u) != 0)
+                    {
+                        if (@object.Contents is null)
+                        {
+                            throw new InvalidOperationException("프로브 필수 필드 누락: contents");
+                        }
+                        CollectFortContents(@object.Contents, 9u, type, types, server, client, predictable);
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>내용물 목록을 로더와 같은 순서·깃발로 훑어 생성될 타입을 모은다.</summary>
+    private static void CollectFortContents(
+        Netstorm.Core.Original.FortContentList contents, uint flags, uint parentType, IReadOnlyList<OriginalTypeRecord> types,
+        List<uint> server, List<uint> client, List<uint> predictable)
+    {
+        foreach (Netstorm.Core.Original.FortContent item in contents.Items)
+        {
+            if (item.Type == 0)
+            {
+                return;
+            }
+            uint listFlags = types[item.Type].ContentListFlags;
+            if (listFlags == 0)
+            {
+                listFlags = types[(int)parentType].ContainerListFlags;
+            }
+            if (listFlags == 0)
+            {
+                listFlags = item.ListFlags;
+            }
+            uint childFlags = flags;
+            if ((listFlags & 0x10u) != 0)
+            {
+                childFlags = (flags & ~8u) | 16u;
+            }
+            uint factoryFlags = (childFlags & 0x20u) != 0 ? 1u : (childFlags & 0x10u) != 0 ? 2u : 0u;
+            if (factoryFlags == 1u) predictable.Add(6u);
+            else if (factoryFlags == 2u) client.Add(6u);
+            else server.Add(6u);
+            if ((types[item.Type].Flags1 & 0x20000u) != 0)
+            {
+                if (item.Contents is null)
+                {
+                    throw new InvalidOperationException("프로브 필수 필드 누락: nested contents");
+                }
+                CollectFortContents(new Netstorm.Core.Original.FortContentList
+                {
+                    Items = item.Contents,
+                    Complete = item.ContentsComplete,
+                }, childFlags, unchecked((uint)item.Type), types, server, client, predictable);
+            }
+        }
+    }
+
+    /// <summary>실제 요새의 내용물 null 위치를 특정한다. 로더와 같은 ContainerFlag 조건으로만 검사한다.</summary>
+    [Fact]
+    public void ProbeFortContentsNulls()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data);
+        MissionFortLoadResult fort = MissionFortLoad.Load(startup, "thewarbegins");
+        RiftTypeTable table = MissionFortLoad.LoadTypeTable(startup.Files);
+        var nullObjects = new List<string>();
+        var nullItems = new List<string>();
+        int total = 0;
+        int containers = 0;
+        // 전 Terr+Chaff를 건너뜀 없이 훑는 반복문이다.
+        for (int territory = -1; territory < 20; ++territory)
+        {
+            Netstorm.Core.Original.FortChunkSection section =
+                territory < 0 ? fort.Fort.Chaff : fort.Fort.Territories[territory];
+            if (!section.Present) continue;
+            for (int chunk = 0; chunk < section.Chunks.Count; ++chunk)
+            {
+                int obj = 0;
+                foreach (Netstorm.Core.Original.FortObject @object in section.Chunks[chunk].Objects)
+                {
+                    uint type = @object.StoredType >= 0xf6 ? 82u : unchecked((uint)@object.Type);
+                    if (type == 0 || type == 94u || type >= (uint)table.Types.Count)
+                    {
+                        ++obj;
+                        continue;
+                    }
+                    ++total;
+                    if ((table.Types[(int)type].Flags1 & 0x20000u) == 0)
+                    {
+                        ++obj;
+                        continue;
+                    }
+                    ++containers;
+                    if (@object.Contents is null)
+                    {
+                        nullObjects.Add($"{territory}/{chunk}:{obj}");
+                    }
+                    else if (@object.Contents.Items is null)
+                    {
+                        nullItems.Add($"{territory}/{chunk}:{obj}(top)");
+                    }
+                    else
+                    {
+                        CollectNulls(@object.Contents.Items, $"{territory}/{chunk}:{obj}", nullItems);
+                    }
+                    ++obj;
+                }
+            }
+        }
+        Assert.True(total > 0);
+        Assert.True(containers > 0);
+        Assert.Empty(nullObjects);
+        Assert.Empty(nullItems);
+    }
+
+    /// <summary>중첩 내용물의 null 목록을 재귀로 모은다.</summary>
+    private static void CollectNulls(
+        System.Collections.Generic.IReadOnlyList<Netstorm.Core.Original.FortContent> items, string path, List<string> nullItems)
+    {
+        int index = 0;
+        // 항목 순서대로 훑는 반복문이다.
+        foreach (Netstorm.Core.Original.FortContent item in items)
+        {
+            if (item.Contents is null)
+            {
+                nullItems.Add($"{path}/{index}:null-list");
+            }
+            ++index;
+        }
+    }
 }
