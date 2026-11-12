@@ -486,21 +486,27 @@ test('SunAviary: 홈 통지는 일반 연결에서 확보된 슬롯만 쓰고 Na
 });
 
 test('SunAviary 프레임: 첫 부모 포인터는 살아 있는 보기라 효과가 바꾼 좌표·소유자를 이후 읽기가 그대로 본다', () => {
-    // 상태 6: 플라이어를 만드는 동안 부모 좌표가 (1.37, 2.5)·소유자가 3 으로 바뀌면 Pop 은 현재 값 + float 0.45 / −3 이다.
+    // 상태 6: 플라이어를 만드는 동안 부모 좌표가 (1.37, 0.1)·소유자가 3 으로 바뀌면 Pop 은 현재 값 + float 0.45 / −3 을 float 로 줄인 값이다
+    // (두 값 모두 float 로 줄이는 단계가 값을 바꾸는 입력이라 Pop 훅이 받은 수를 그대로 비교한다).
     const launch = new AviaryScene('F', '1,0,0,6,5,0,1,0'.split(','));
     const hooks = launch.hooks();
     const create = hooks.create;
+    const pop = hooks.pop;
+    const popped = [];
     hooks.create = (type, flags) => {
         const sid = create(type, flags);
         put(launch.pool.allocated(50), 14, floatToBits(1.37));
-        put(launch.pool.allocated(50), 18, floatToBits(2.5));
+        put(launch.pool.allocated(50), 18, floatToBits(0.1));
         launch.pool.allocated(50)[34] = 3;
         return sid;
     };
+    hooks.pop = (sid, x, y, flags) => { popped.push([x, y]); pop(sid, x, y, flags); };
     new RawSunAviaryProcess(launch.pool, launch.globals(), hooks).frame(launch.fields);
-    const x = floatToBits(Math.fround(Math.fround(1.37) + Math.fround(0.45)));
+    const expectedX = Math.fround(Math.fround(1.37) + Math.fround(0.45));
+    const expectedY = Math.fround(Math.fround(0.1) - 3);
     assert.ok(launch.trace.includes('Owner,60,3'));
-    assert.ok(launch.trace.includes(`Pop,60,${x},${floatToBits(-0.5)},0`));
+    assert.deepEqual(popped, [[expectedX, expectedY]]);
+    assert.ok(launch.trace.includes(`Pop,60,${floatToBits(expectedX)},${floatToBits(expectedY)},0`));
     // 상태 1: 홈 프레임을 쓰는 동안 좌표가 바뀌면 소리는 현재 좌표에서 난다.
     const start = new AviaryScene('F', '1,0,0,1,5,0,1,0'.split(','));
     const startHooks = start.hooks();

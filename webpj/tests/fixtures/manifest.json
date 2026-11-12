@@ -17459,7 +17459,7 @@
       "bytes": 754227,
       "lines": 1735,
       "fixtureCommit": "7cb79cc61",
-      "webCommit": "worktree",
+      "webCommit": "b9d0cf0f8",
       "cpppjBasis": {
         "cpppj/src/o/RawSunAviaryProcess.cpp": "0b1b7c73a"
       },
@@ -17488,7 +17488,7 @@
       "bytes": 60742,
       "lines": 129,
       "fixtureCommit": "7197d565d",
-      "webCommit": "worktree",
+      "webCommit": "b9d0cf0f8",
       "cpppjBasis": {
         "cpppj/src/o/RawSunAviaryProcess.cpp": "0b1b7c73a"
       },
@@ -17535,6 +17535,64 @@
         "cpppj/src/o/RawFlyerProcess.cpp"
       ],
       "scope": "10.78 391행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E354",
+      "sha256": "0fbbc25c029fa02cd8b7f9c919bb499d7d92b2cc55eb85c3725d2a1b2286ea26",
+      "bytes": 665206,
+      "lines": 1603,
+      "fixtureCommit": "53113b663",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawRainAviaryProcess.cpp": "0b1b7c73a"
+      },
+      "id": "rain-aviary",
+      "path": "cpppj/tests/fixtures/rain-aviary-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 맨 오 워 풀 생성자 C·후처리 P·프레임 F·상태 writer W 1,602행 — 필드 48바이트·객체 250바이트·전역 28바이트·패킷 64바이트·호출 순서",
+      "consumers": [
+        "webpj/tests/raw-rain-aviary-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-rain-aviary-process.js"
+      ],
+      "doc": "docs/webpj-rain-aviary-process-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawRainAviaryProcess.cpp"
+      ],
+      "scope": "10.78 1,602행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E354",
+      "sha256": "e313b1cbd5c5105e6e28594f319f7a31d050f0784240dac44b270f01a47f5d94",
+      "bytes": 10178,
+      "lines": 37,
+      "fixtureCommit": "954d19422",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawRainAviaryProcess.cpp": "0b1b7c73a"
+      },
+      "id": "rain-home-notice",
+      "path": "cpppj/tests/fixtures/rain-home-notice-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 맨 오 워 풀 홈 가상 34 통지 36행 — 서버 관문·시각 저장·게임 난수 상태·정수 초·Form 갱신 요청 이미지",
+      "consumers": [
+        "webpj/tests/raw-rain-aviary-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-rain-aviary-process.js"
+      ],
+      "doc": "docs/webpj-rain-aviary-process-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawRainAviaryProcess.cpp"
+      ],
+      "scope": "10.78 36행 전부"
     }
   ]
 }
