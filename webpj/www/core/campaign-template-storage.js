@@ -1,17 +1,18 @@
 // Client 와 Session 이 함께 쓰는 Template9(캠페인/미션 템플릿 9칸)의 실제 manager 이미지·State cursor 수명 소유자를 옮긴 모듈이다(cpppj `client/CampaignTemplateStorage.cpp/.h`, 10.78).
 //  이 파일은 **1부(WB04-E345)**: 9개 20BYTE 헤더, manager 이미지 표, 빈 manager 할당/생성/초기화, 설치·빌림·반납, 섹션 노드 목록(60BYTE 노드·MemStream 16BYTE·다음 포인터)의 생성/검색/이름 교체/최소 확장/쓰기,
-//  State·Territory·Money·Badges·Technology 의 typed cursor 공개와 선택, 구독자 이름 읽기, State 확장 복사, **2부(WB04-E346)**: 파일 읽기(ReadFile·BindFileStreams)와 원문 Load 부모(LoadFile)·InstallFile. 로그인 이미지 복제·저장은 3부(E347)에서 같은 클래스에 더한다.
+//  State·Territory·Money·Badges·Technology 의 typed cursor 공개와 선택, 구독자 이름 읽기, State 확장 복사, **2부(WB04-E346)**: 파일 읽기(ReadFile·BindFileStreams)와 원문 Load 부모(LoadFile)·InstallFile, **3부(WB04-E347)**: 송신용 지역 Template 의 로그인 이미지(ReadLoginImage·CloneSectionFrom·SaveImage).
 //  - 모델: manager 는 276BYTE(`+0` 가상표·`+4` head·`+8` current·`+12` 파일명 256BYTE·`+0x10c` 서명 판정·`+0x110` FE 판정)이고, 섹션은 60BYTE 노드(`+0` 버퍼 토큰·`+4` pos·`+8` end·`+12` 할당·`+16` 이름 40BYTE·`+0x38` next)이다.
 //    노드 토큰·manager 핸들은 호스트 포인터가 아닌 불투명 번호다(버퍼 토큰 = 0x10000000 + 노드 핸들, 임시 할당 토큰 = 0x20000000 + 핸들). 표준 35개 이름은 `fort.sections` 의 위치를 쓰고 그 밖의 이름(Temp 등)은 노드가 소유한 별도 버퍼를 쓴다.
 //  - 버퍼는 `ByteVector`(std::vector<uint8_t> 의 size/capacity 의미: resize 는 늘릴 때 새 칸을 0 으로 채우고 용량 안에서는 같은 저장소를 쓰며, 이동/교환은 원본을 비움)로 소유하고, 표준 위치의 변화는 `fort.sections[i]` 에 현재 논리 크기의 뷰로 반영한다.
 //  - 표기: 반환 `TemplateWriteStream` = `{ manager, section, generation }`(같은 이름 재생성 뒤 이전 참조로 쓰는 것을 거부하는 생성 수명). cursor 는 State/Badges/Technology `{ bytes, position, end, present }`, Territory `{ bytes, position, end }`, Money `{ position, end }`.
-//  - 제외: `BindCurrentName`(Editor 전용 `RawFortCurrentName`)은 옮기지 않는다. 기준선 뒤 변경(+41/−8줄 .cpp, +18줄 .h: 원격 수신 `ReadImage` 와 파일 읽기의 이미지 장치 공용화)은 3.6절 ①(결과 동일)/MP 이며 웹은 기준선 판을 옮긴다.
+//  - 제외: `BindCurrentName`(Editor 전용 `RawFortCurrentName`), `SaveFile`(Fort 저장 `RawDataManagerFileSave`, PORT_MAP exclude-edit), `Dump`(level29 덤프 `RawDataManagerDump`, exclude-host)는 옮기지 않는다. 기준선 뒤 변경(+41/−8줄 .cpp, +18줄 .h: 원격 수신 `ReadImage` 와 파일 읽기의 이미지 장치 공용화)은 3.6절 ①(결과 동일)/MP 이며 웹은 기준선 판을 옮긴다.
 //  이 모듈은 DOM 을 쓰지 않는다. (2026-11-12 WB04-E345: 4-D B 구획 CampaignTemplateStorage 1부 이식)
 import { SECTION_NAMES } from '../assets/fort.js';
 import { FortSerializationGlobals } from './fort-serialization-globals.js';
 import { ClientTemplateSectionNames } from './client-template-section-names.js';
 import { compareDataManagerSectionNames, findDataManagerSection, selectDataManagerSection } from './raw-data-manager-selection.js';
-import { createDataManagerStream, ensureDataManagerStreamSize, renameDataManagerStream } from './raw-data-manager-resize.js';
+import { cloneDataManagerStream, createDataManagerStream, ensureDataManagerStreamSize, renameDataManagerStream } from './raw-data-manager-resize.js';
+import { RawFortImage } from './raw-fort-image.js';
 import { destroyDataManager } from './raw-data-manager-lifetime.js';
 import { initializeDataManager } from './raw-data-manager-initialize.js';
 import { compactMemStream, writeMemStream } from './raw-mem-stream.js';
@@ -762,6 +763,70 @@ class Image {
         if (!this.readFile(effects)) throw new Error('Template 실제 파일 열기/서명 거부');
     }
 
+    // 서로 다른 지역 manager 의 노드/버퍼를 같은 raw 복제 부모에 연결한다. 대상 노드 번호는 원문 노드 범위 뒤에서 시작해야 한다(핸들 충돌 금지). (2026-11-13 WB04-E347)
+    cloneSectionFrom(source, sectionName) {
+        this.requireNoAccess();
+        source.requireNoAccess();
+        this.syncStreams();
+        source.syncStreams();
+        let created = 0;
+        const hooks = {
+            selection: { stream: (handle) => (this.streams.has(handle) ? this.streams.get(handle).bytes : source.streams.get(handle).bytes) }, // 두 manager 의 같은 60BYTE 를 핸들 충돌 없이 빌린다.
+            list: this.listEffects(),
+            allocateStream: (size) => {
+                if (size !== NODE_BYTES || created || source.streams.has(this.nextStreamHandle)) throw new Error('로그인이미지복제의실제노드할당계약');
+                created = this.allocateStream(canonicalSection(sectionName));
+                return created;
+            }, // 원문 검색/대상 제거 뒤 실제 새 노드를 할당한다.
+            memory: {
+                buffer: (pointer) => {
+                    if (pointer <= BUFFER_TOKEN_BASE) throw new RangeError('로그인이미지복제의실제버퍼범위');
+                    const handle = pointer - BUFFER_TOKEN_BASE;
+                    return this.streams.has(handle) ? this.buffer(handle).bytes : source.buffer(handle).bytes;
+                }, // 원본 대입은 source 의 현재 data/end 를 읽으며 대상 할당과 편의 사본을 섞지 않는다.
+                allocate: (size) => {
+                    if (!created) throw new Error('로그인이미지복제의노드이전버퍼할당');
+                    this.buffer(created).resize(size);
+                    return Image.bufferToken(created);
+                },
+                release: (pointer) => { this.releaseBuffer(pointer); }, // 생성 16384BYTE 와 대입 전 대상 버퍼만 원문 위치에서 반납한다.
+                assertion: () => { throw new Error('로그인이미지복제의MemStream진단'); },
+            },
+            missingSource: () => { throw new Error('로그인이미지복제의원문섹션누락진단'); },
+        };
+        const current = cloneDataManagerStream(this.manager, source.manager, sectionName, hooks);
+        if (current !== created) throw new Error('로그인이미지복제의현재노드불일치');
+        const node = this.streams.get(created).bytes;
+        const bytes = this.buffer(created);
+        const end = read(node, 8);
+        if (end > bytes.size) throw new RangeError('로그인이미지복제의실제끝범위');
+        bytes.resize(end);
+        this.streamOrder.push(created);
+        this.publishCursor(created);
+    }
+
+    // 파일 쓰기 없이 같은 manager 의 서명/current 검색 효과로 35개 이름의 raw 이미지를 작성한다. hooks = { typeCount(), assertion(번호) }. (2026-11-13 WB04-E347)
+    saveImage(hooks) {
+        this.syncStreams();
+        const imageHooks = {
+            ...hooks,
+            signatureFlag: () => {
+                put(this.manager, 0x10c, 0x46);
+                if (read(this.manager, 0x110) === 0xffffffff) put(this.manager, 0x110, 0);
+                return read(this.manager, 0x110) ? 0xfe : 0;
+            },
+            section: (index) => {
+                const handle = findDataManagerSection(this.manager, SECTION_NAMES[index], { stream: (node) => this.streams.get(node).bytes });
+                if (!handle) throw new Error('로그인이미지저장의실제섹션누락진단');
+                const end = read(this.streams.get(handle).bytes, 8);
+                const bytes = this.buffer(handle).bytes;
+                if (end > bytes.length) throw new RangeError('로그인이미지저장의실제끝범위');
+                return bytes.subarray(0, end);
+            }, // 이름 검색은 실제 current 를 갱신하며 source/target 의 pos 를 임의 진행하지 않는다.
+        };
+        return new RawFortImage('patch1078', this.fort, imageHooks).save();
+    }
+
     // 현재 각 섹션의 버퍼를 먼저 반납하고 같은 노드의 실제 할당을 뒤에 해제한다. (2026-11-12 WB04-E345)
     destroy() {
         this.syncStreams();
@@ -931,6 +996,41 @@ export class CampaignTemplateStorage {
             lifetime: this.#effects(),
         };
         loadTemplateFile(this.#header(slot), name, hooks);
+    }
+
+    // 송신용 지역 Template 와 strip 용 NONAME 은 같은 Client 전역을 빌리며 완료/예외 모두 target 부터 source 순서로 반납한다. 원본 004b63d0/004bf3e0: 지역 Template 를 읽고(readonly 사전 설정 1, 전역 현재 슬롯과 항상 다른 9,
+    // 제목 갱신 없음) NONAME 에 고정 네 이름(Subscriber·Territory·TypeNames·CoreData)을 순서대로, 마지막에 현재 `TerrNN`(NN 은 두 자리, signed) 하나를 복제한 뒤 35개 이름의 raw 이미지를 작성한다. 나머지 섹션은 모두 빈 payload 이다.
+    // 원문 level29 덤프(`Stripped Image:`)는 호스트 진단(PORT_MAP exclude-host)이라 옮기지 않았다 — 덤프는 임시 NONAME 의 current 만 검색하고 그 manager 는 곧 반납되므로 이미지 결과에 영향이 없다.
+    // file = TemplateFileLoadHooks(read|readWhole, typeCount, tooManyTypes, rejectFile, sameName?) 이며 readOnly/currentSlot/refreshTitle 은 지역 Template 가 조회하지 않는다. 반환은 `FortImageData`. (2026-11-13 WB04-E347)
+    readLoginImage(name, file, territory) {
+        const temporary = new CampaignTemplateStorage(this.#serializationGlobals, this.#sectionNames);
+        const load = { ...file, currentSlot: () => 9, refreshTitle: undefined };
+        put(temporary.#header(0), 8, 1); // 지역 Template 주소는 전역 현재 슬롯과 항상 다르며 readonly 사전 설정은 파일 권한 조회를 생략한다.
+        try {
+            temporary.loadFile(0, {}, name, load);
+            if (!read(temporary.#header(0), 0)) throw new Error('로그인송신의지역Template읽기실패진단');
+            temporary.install(1, {}, 'NONAME');
+            const source = temporary.#current(0);
+            const target = temporary.#current(1);
+            target.nextStreamHandle = source.nextStreamHandle; // 서로 다른 실제 노드를 같은 raw 복제 장치에서 식별하도록 토큰 범위를 이어 쓴다.
+            temporary.initializeEmptyManager(read(temporary.#header(1), 0), () => { throw new Error('로그인이미지의NONAME초기화진단'); });
+            // 원문 004bf3e0 의 네 고정 이름을 순서대로 복제하고 현재 Terr 만 마지막에 복제한다.
+            for (const section of ['Subscriber', 'Territory', 'TypeNames', 'CoreData']) target.cloneSectionFrom(source, section);
+            const section = `Terr${String(territory | 0).padStart(2, '0')}`;
+            if (section.length >= 256) throw new RangeError('로그인이미지의현재Terr이름범위');
+            target.cloneSectionFrom(source, section);
+            const result = target.saveImage({
+                typeCount: () => need(file.typeCount, 'Template 실제 파일 Load 장치 미연결')() >>> 0,
+                assertion: () => { throw new Error('로그인이미지의직렬화진단'); },
+            });
+            temporary.clear(1);
+            temporary.clear(0);
+            return result;
+        } catch (error) {
+            temporary.clear(1);
+            temporary.clear(0);
+            throw error;
+        } // 부분 읽기/복제 예외에서도 지역 노드/할당을 유지한 채 전역 owner 로 넘기지 않는다.
     }
 
     // 빌린 헤더를 반납해도 원래 소유자의 실제 버퍼/커서는 유지된다. (2026-11-12 WB04-E345)
