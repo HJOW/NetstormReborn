@@ -16951,9 +16951,41 @@
       "bytes": 94722,
       "lines": 645,
       "fixtureCommit": "ada85427f",
-      "webCommit": "worktree",
+      "webCommit": "7f8ff8032",
       "cpppjBasis": {
         "cpppj/src/o/RawPathSearch.cpp": "7f903eba0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E336",
+      "id": "sp-initialization",
+      "path": "cpppj/tests/fixtures/sp-initialization-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 분산 SP 저장소 초기화 0040eba0 의 시드 0/42/4294967295 × 이전 완전 초기화 0/1 × 중단 지점(0/1/16/32번째 할당) × x87 정밀도 두 모드 48행 — 할당 호출 수·초기화 완료·비트 offset·추적 offset·난수 상태·첫 배열·1152BYTE 분산 배열",
+      "consumers": [
+        "webpj/tests/client-sp-globals.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/sp-store.js",
+        "webpj/www/core/client-sp-globals.js"
+      ],
+      "doc": "docs/webpj-client-sp-globals-20261112.md",
+      "cpppjSources": [
+        "cpppj/src/o/SpStore.cpp",
+        "cpppj/src/client/ClientSpGlobals.cpp"
+      ],
+      "scope": "10.78 48행 전부(x87 정밀도 모드 두 가지는 웹에서 구별되지 않으며 두 모드 행이 같은 값이다)",
+      "sha256": "2476ee2150c5fb73799a488e85b63f68770e395032b94d7401830f58dc80e9d6",
+      "bytes": 112790,
+      "lines": 49,
+      "fixtureCommit": "a1bfa97d2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d2",
+        "cpppj/src/client/ClientSpGlobals.cpp": "c91d9b849"
       }
     }
   ]

@@ -63,7 +63,7 @@ cpppj/src/client/ClientProductionSync.cpp	port			todo	[client-default]
 cpppj/src/client/ClientRandomGlobals.h	port	www/core/random.js	1f00a25a	port	[client-default] WB04-C1
 cpppj/src/client/ClientRendererFrame.cpp	port			todo	[client-default]
 cpppj/src/client/ClientRendererFrameGlobals.h	port			todo	[client-default]
-cpppj/src/client/ClientSpGlobals.cpp	port			todo	[client-default]
+cpppj/src/client/ClientSpGlobals.cpp	port	www/core/client-sp-globals.js;www/core/client-time-source.js	c91d9b84	port	[client-default] WB04-E336: Client 수명 SP 전역 소유자 — 같은 ClientRandomGlobals 의 게임/CRT 난수·GameRandomSeed(004559d0 재시드)·ScrambledSpStore(분산 32×9 SP)·사제 추적 offset 0054d4e0(최초 0 Int32Box, 저장소에 즉시 연결)을 한 번 조립하고 생성자/접근자는 초기화하지 않는다(실제 초기화는 원문 호출자의 store().initialize()). 기준선 뒤 +3줄(c91d9b84: ClientCurrentUnixSeconds 가 ClientTimeSource 로 위임)과 그 새 파일 ClientTimeSource(고정 시각 모드 --fixed-frame-ms, 3.6절 ③)를 함께 이식(웹은 Client 가 만드는 인스턴스, 호스트 시계 주입 가능). 원본 관측 fixture sp-initialization 48행(할당 수·offset·추적 offset·난수 상태·첫 배열·1152BYTE 배열, 중단 포함) 전부와 cpppj 시험 ClientSpGlobals 명시 시작·ClientTimeSource 2건 이식. 실제 Client 생성 시험(ActualClientCreationAndGetterDoNotInitialize)은 Client 조립(4-D E)에서
 cpppj/src/client/ClientStateRuntimeRetirement.cpp	port			todo	[client-default]
 cpppj/src/client/ClientStateStorageCleanup.cpp	port			todo	[client-default]
 cpppj/src/client/ClientStateWorldCleanup.cpp	port			todo	[client-default]
