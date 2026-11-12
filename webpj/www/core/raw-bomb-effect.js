@@ -43,6 +43,22 @@ function costLow(value) {
     return (Math.trunc(value) | 0) >>> 0;
 }
 
+// 실제 원문 40aca0 의 Client 기본 등록 관찰기: 수신 방향(sending=0)은 payload 를 읽지 않고 복귀한다. 송신은 대상 수 DWORD 가 -1 이면 원문 진단(invalidCount)을 부르고(없으면 오류),
+// 진단이 복귀한 뒤 현재 대상 수의 하위 WORD 를 다시 읽어 선언 길이를 `(수 + 5) × 2` 의 16비트 값으로 쓴다. 범위 검사 없이 현재 버퍼의 헤더 4BYTE 가 있어야 한다.
+// `finalizeBombEffectPacket` 과 달리 수가 100 을 넘어도 거부하지 않는다(기준선 뒤 `01ec27ae` 의 장기 기본 observer). (2026-11-12 WB04-E328)
+export function observeBombEffectPacket(packet, sending, invalidCount) {
+    if (!sending) return;
+    if (bytesAt(packet, 6, 4) === 0xffffffff) {
+        if (typeof invalidCount !== 'function') throw new Error('Bomb 효과 count 원문 진단 장치 미연결');
+        invalidCount();
+    }
+    // 진단 복귀 뒤 현재 count 의 하위 WORD 를 다시 읽는다.
+    const length = ((bytesAt(packet, 6, 2) + 5) * 2) & 0xffff;
+    if (packet.length < 4) throw new RangeError('Bomb 효과 패킷 길이 부족');
+    packet[2] = length & 0xff;
+    packet[3] = (length >> 8) & 0xff;
+}
+
 // 40aca0: 쓰기 관문을 먼저 지키고 실제 버퍼 범위 안에서 길이 WORD 만 변경한다. (2026-11-08 WB04-E54)
 export function finalizeBombEffectPacket(packet, writing) {
     if (!writing) return;

@@ -1,0 +1,31 @@
+# webpj Client 캠페인 전송 생성기와 기본 패킷 등록 — WB04-E328 (2026-11-12, 4-C, 1단계)
+
+3.1절 4-C 의 client **ClientCampaignTransport**(기준선 60줄 = `.cpp` 51 + `.h` 9, 기준선 뒤 +324줄)를 두 단계로 나눠, 1단계로 `core/client-campaign-transport.js` 에 **생성기 `makeClientCampaignTransport` 와 Client 기본 패킷 등록의 순수 부분**을 옮겼다. 현재 cpppj 판은 346줄이며 기준선의 60줄은 생성기뿐이었다. 늘어난 +324줄은 대부분 장기 `Client` 가 조정자의 분배기에 설치하는 "기본 등록" 묶음이다: Meta/루트 서버 응답(0x0f/0x1d/0x26/0x66/0x71/0x7c/0x1a/0x1b)은 웹 제외, 고정 Native 수신기(`InstallNative…PacketReceivers`)는 대응표 밖 신규 파일과 `Client` 전체(4-D)에 기대므로 2단계로 남기고, 이 단위는 선행 모듈이 갖춰진 순수 부분만 이식한다. 같은 단위에서 3.6절 ③ 4-C 항목으로 남아 있던 `RawBombEffect` 의 `ObserveBombEffectPacket` 도 옮겼다(`core/raw-bomb-effect.js` 의 `observeBombEffectPacket`).
+
+## 1. 규칙
+
+- **생성기 `makeClientCampaignTransport(client, role, world)`:** 검증 — `world` 가 있고 `client.edition === 'patch1078'`, `client.playerRecords().initialized()` 가 참이며 `world.session().playerRecords()` 가 Client 의 같은 Player 배열인지 확인하고 아니면 `현재 Client/World/Player 물리의 복합 전송 수명 계약 오류`. 훅 — `players`(State 정리/재초기화 뒤에도 현재 Player 배열을 읽음)·`now`(`clock.wallSeconds(client.clientMilliseconds()) >>> 0`, 프레임 시각 사본을 읽지 않음)·`sent`(전송 본체의 복사 뒤 방향 1 기록)·`record`(방향 0 기록이 먼저, 이어서 `WeakRef` 로 약하게 참조한 현재 World 의 `session().recordConnectionPacket`)·`terminate`(닫힘 0x40 표시 + 진단 "로컬 미션 연결 종료")·`close`/`release`(진단 "로컬 연결 큐/소켓 종료"/"로컬 연결 반납"; `client.log` 가 없으면 `console.debug`). 복합 조정자(E327)를 만들고 **호출자의 `bindSession` 보다 먼저** 기본 등록을 채워 대여 반납 때 원문 기본 등록이 복구되게 한다. 연결은 열지 않는다.
+- **Client 계약:** 실제 `Client` 는 4-D 에서 옮기므로 최소 형태를 모듈 머리글에 적었다: `edition`·`playerRecords()`·`gameplayGlobals()`(`server()`·`gameAux().missionSettings()`)·`gameClockOwner()`·`clientMilliseconds()`·`connectionGlobals()`·`packetRecordOwner()`·`surfaceStorage()`(`assertDisplay`·`gameAux().packet0cHeader()/packet0cInitialLength()`)·`log?`.
+- **기본 등록 표(`CLIENT_PACKET_DEFAULTS`, 열여덟 행):** 0x0c·0x42·0x4d·0x55·0x56·0x57·0x5a(원문 C3 수신기 7종)와 0x10·0x11·0x12·0x16·0x17·0x1c·0x1e·0x1f·0x68·0x85·0x87(관찰 전용 11종)의 종류·고정 길이(0xffff 는 가변)·빈 C3 수신기·mutable 관찰기 구분을 원문 그대로 둔다. 이 열여덟 종만 version 1/policy 0·PE 길이에 맞추고 다른 등록에는 손대지 않는다. mutable 관찰기가 없는 행은 **비NULL 빈 observer**(40b380)를 두고(NULL 로 바꾸지 않음), C3 수신기는 4437f0 의 실제 ret 에 해당하는 빈 함수다(ACK/성공값 합성 없음). 웹에는 canonical(고정 Native) 등록이 없어 **일반 직접 수신기(`registerDirect`)로 등록**한다.
+- **가변 길이 관찰기 `observeClientPacketDefault(type, packet, sending, assertion)`:** 송신(`sending≠0`)에서만 동작하고 수신 방향은 필드를 읽기 전에 복귀한다. 종류별 길이 필드와 상수 — 0x0b/0x0c: `+8 WORD + 12`(센티넬은 `+8 DWORD = -1`, 줄 0x36c/0x38c), 0x55: `+4 WORD + 8`(0x8dc), 0x56: `+8 WORD + 12`(0x8f8), 0x57: `+8 WORD + 12`(0x916), 0x16: `signed BYTE(+5) × 4 + 14`(0x458), 0x1c: `BYTE(+45) + 46`(0x4ca), 0x85: `WORD(+5) + 7`(0xa2c), 0x7b: `signed BYTE(+9) + 10`(0xba8). 센티넬이면 `assertion(식, '\Ns\O\_p_packets.cpp', 줄)` 을 부르고 **복귀한 뒤 현재 필드를 다시 읽어** 선언 WORD 만 16비트로 감아 쓴다(나머지 바이트 보존). 물리 버퍼가 모자라거나 헤더 4BYTE 가 없으면 거부하고 미등록 종류는 `TypeError`.
+- **그 밖의 설치:** 0x0b 는 관찰기·version·가변 길이와 버전 조회 수신기(4b3af0: 현재 GameAux 의 BYTE 두 개/WORD 하나로 50BYTE 예약 전체 0xff 의 응답, 프로토콜 BYTE 상위 비트 제거·선언 길이 최소 4·WORD 10/78, 현재 sender/Player 관문 뒤 등록소 `sendMutable`), 0x32 는 비NULL 빈 관찰기·version 1/policy 0·길이 32·장기 7DWORD 직접 쓰기(44dc20), 0x7b 는 관찰기·version·가변(수신기는 Meta 주소 수신이라 제외), 0x3f/0x5f/0x7d 는 송신 길이 관찰기(각각 `finalizeConstructionPacket`·`observeBombEffectPacket`·`finalizeBombTimerPacket`), 0x2a/0x2b/0x67/0x81 은 미션 송신 관찰기 4종(`observeMissionClientPacket`)이다.
+
+## 2. 기준선 뒤 변경 판정 (+324줄, 판정 커밋 `8defb347`, 25커밋)
+
+- **② 반영:** 훅 `players`·`sent`·`record` 방향 0 기록(`af1fbf6c1`, `43eaad12a`), `now` 의 Client 시각 공급원(`ClientMilliseconds`), 기본 등록 열여덟 행 표와 mutable 관찰기(`1916bd66f`·`ede61f05d`·`5318a9b28` 외), 0x0b 수신기, 0x32 수신기, 미션 송신 관찰기 4종, 0x3f/0x5f/0x7d 길이 관찰기.
+- **① 결과 영향 없음(GC 가 대신):** `TransportGlobals` 의 `shared_ptr` 세 소유권, `PacketSources().Publish(transport)`(Source 경로 공개).
+- **웹 제외:** 훅 `delay`(`PacketDelays`, 실소켓 지연 FIFO), `MissionNetwork`/`meta` 인자와 `RebindWorld` 재진입, `BindMetaSource`, Meta 계열 수신기(0x0f 루트 응답·0x1d 도전 로그인·0x26 지오메트리·0x66 서버 탐색·0x71 전투 설명·0x7c 게임 로그인·0x7b CS 주소 수신기·0x1a/0x1b 전투 시작·`NotifyClientMetaMaster`), `ReceiveClientBattleStartPeer`.
+- **③ 후속(2단계/4-D):** `InstallNative{Login,Gameplay,Carrier,Construction}PacketReceivers`(고정 Native 수신기 14·26·15·12F, 대응표 밖 신규 파일 `NativeLoginPacketReceivers` 등), 채팅 41h(`InstallClientChatPacketReceiver`), 연결 종료 2번(`004b6660`, `ReceiveConnectionEnded`), 기술 목록 0x69(`RegisterTechnologyTypesPacket`), 0x30 경로 자료 관찰기(`ObservePathData` — RawPathData 6-P 미이식), 0x7a 압축 Squid 관찰기(`ObserveCompressedSquid` — 신규 파일). 이들은 PORT_MAP 메모의 "남음"과 LEFT_JOBS 3.6절 ③ 4-D 행에 적었다.
+
+## 3. 검사 (`tests/client-campaign-transport.test.mjs` 19건)
+
+cpppj 에는 이 파일을 직접 겨냥한 시험이 없다(Session/Meta 시험이 `MakeClientCampaignTransport` 로 간접 사용, 4-D). 기준선 소스와 ② 반영분을 단위 계약으로 옮겨 확인했다: 가변 길이 관찰기 5건(수신 무동작, 종류별 길이 필드·상수·signed 해석, 센티넬 진단과 복귀 뒤 재조회, 버퍼 부족·미등록 종류, 0x5f 기본 관찰기), 기본 등록 표 6건(열여덟 행 구성·설치된 version/policy/길이/관찰기/수신기, 관찰기의 Client 진단 연결, 0x32 수신기, 0x0b 응답 작성, 미션 송신 관찰기), 생성기 8건(수명 계약 검증, 조정자 구성과 대여 전 기본 등록·반납 복원, now 훅, sent/record 기록과 World 약참조, 종료/닫기/반납 진단, players 훅, terminate 훅, 주문 효과 센티넬 폭).
+
+- **첫 실행의 실패 2건은 모두 시험 쪽 기대값 오류였다:** 0x5f 센티넬 시험에서 진단이 count DWORD 의 낮은 바이트만 1 로 바꿔 상위 바이트가 남아 길이가 달랐고(진단 장치가 DWORD 전체를 바꾸도록 시험을 고침), 수신 기록의 sender 는 재배치 뒤 서버 끝의 owner(1)이지 0 이 아니었다. 모듈은 수정하지 않았다.
+- 종료 훅은 길이 불일치가 아니라 **버전 불일치 정책(높은 버전이면 4=종료)** 에서 불리므로, 변형 확인 보강 때 시험을 그 조건(버전 1/정책 4 등록 + 버전 2 프레임)으로 다시 썼다(처음에 쓴 "선언 길이 불일치" 시험은 분배기가 자연 생략해 종료 훅이 불리지 않았다).
+
+## 4. 변형 확인과 남은 경계
+
+- 한 문자열 치환 변형 58개(생성기·기본 등록 51, `observeBombEffectPacket` 7)를 돌려 첫 실행에서 9개가 남았다(0x7d/0x3f/0x5f/표 길이 `requireLength`, version 확인, terminate 의 닫힘 표시, `players` 훅, 센티넬 폭, 길이 상위 BYTE). 시험을 보강(실제 종료 조건, Player 활성 비트를 켠 송신, 센티넬 폭과 길이 0x8000 이상)한 뒤 **5개가 남았고 모두 동등**하다: ① 0x7d/0x3f/0x5f 와 열여덟 행의 `requireLength` 제거 4개 — 웹 분배기의 기본 길이 표(PE 길이)가 이미 같은 값(0xffff/행 길이)이라 호출이 멱등이다(시험이 모든 행의 기본 길이와 표 길이가 같음을 확인) ② `observeBombEffectPacket` 의 길이에 count 를 WORD 대신 DWORD 로 읽는 변형 — `(count+5)×2` 를 16비트로 감싸므로 상위 WORD 가 길이에 영향을 주지 않는다.
+- **앱 수명:** 아직 Client 가 이 생성기를 부르지 않는다(PORT_MAP session 0). 4-D 의 Session 조립(`UberGump` 의 `BindConnectionTransport(MakeClientCampaignTransport(...))`)이 `makeClientCampaignTransport` → `bindCompositeCampaignTransport` 를 부른다.
+- 3.1절 4-C 는 24/30 이다(이 항목은 2단계가 남아 체크하지 않음). 다음: ClientCampaignTransport 2단계 → RawCampaignSessionLogin.
