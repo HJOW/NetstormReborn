@@ -17444,10 +17444,97 @@
       "bytes": 1216659,
       "lines": 1422,
       "fixtureCommit": "ba8c3d837",
-      "webCommit": "worktree",
+      "webCommit": "6e9774822",
       "cpppjBasis": {
         "cpppj/src/o/RawFlyerProcess.cpp": "2b5ee903c"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E353",
+      "sha256": "e64841e232f3ea3b79eba3fba4d21656277a9b4dd05766f1ff1e77414cb6d0db",
+      "bytes": 754227,
+      "lines": 1735,
+      "fixtureCommit": "7cb79cc61",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSunAviaryProcess.cpp": "0b1b7c73a"
+      },
+      "id": "sun-aviary",
+      "path": "cpppj/tests/fixtures/sun-aviary-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 훨리베이스 생성자 C·후처리 P·프레임 F·상태 writer W 1,734행 — 필드 48바이트·객체 250바이트·전역 20바이트·패킷 64바이트·호출 순서",
+      "consumers": [
+        "webpj/tests/raw-sun-aviary-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-sun-aviary-process.js"
+      ],
+      "doc": "docs/webpj-sun-aviary-process-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSunAviaryProcess.cpp"
+      ],
+      "scope": "10.78 1,734행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E353",
+      "sha256": "a29498cf3a5305910f1c41f516facaa0b6febb8c91739bfab6711fd1a43bd21d",
+      "bytes": 60742,
+      "lines": 129,
+      "fixtureCommit": "7197d565d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSunAviaryProcess.cpp": "0b1b7c73a"
+      },
+      "id": "sun-aviary-notice",
+      "path": "cpppj/tests/fixtures/sun-aviary-notice-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 훨리베이스 홈 가상 34 통지 128행 — 서버 관문·효과 뒤 현재 값 재조회·세 변이의 호출 순서·홈 슬롯 raw·필드·전역",
+      "consumers": [
+        "webpj/tests/raw-sun-aviary-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-sun-aviary-process.js"
+      ],
+      "doc": "docs/webpj-sun-aviary-process-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSunAviaryProcess.cpp"
+      ],
+      "scope": "10.78 128행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E353",
+      "sha256": "c7693afd860973b51efad4321894bbfddec6eb058dea041dac0e56307ca22bda",
+      "bytes": 369646,
+      "lines": 392,
+      "fixtureCommit": "bf6d40075",
+      "webCommit": "6e9774822",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFlyerProcess.cpp": "2b5ee903c"
+      },
+      "id": "sun-flyer-postpop",
+      "path": "cpppj/tests/fixtures/sun-flyer-postpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 훨리기그 전용 최초 후처리 391행 — 전체 136바이트 필드·객체 250바이트·전역 16바이트·부착 직전 이미지·효과 순서",
+      "consumers": [
+        "webpj/tests/raw-flyer-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-flyer-process.js"
+      ],
+      "doc": "docs/webpj-sun-aviary-process-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFlyerProcess.cpp"
+      ],
+      "scope": "10.78 391행 전부"
     }
   ]
 }

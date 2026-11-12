@@ -272,6 +272,173 @@ test('Flyer: 원본 10.78 후처리 329행 — 맨 오 워 확장과 그림자�
 test('Flyer: 원본 10.78 홈 연결 30행 — 첫 nondead Form 조회와 WORD 홈/dirty 쓰기가 같다', { skip: !rows && '원본 fixture 없음' }, () => { compareFlyer('B', 30); });
 test('Flyer: 원본 10.78 상태 writer 1,024행 — 모든 dirty/부모/force 의 전체 64바이트 출력이 같다', { skip: !rows && '원본 fixture 없음' }, () => { compareFlyer('W', 1024); });
 
+// 훨리기그 전용 생성/홈/소리/그림자 후처리의 원본 입력을 설치하고 외부 경계의 인수/변경만 기록하는 장면이다(cpppj SunScene). (2026-11-13 WB04-E353)
+class SunScene {
+    constructor(input) {
+        this.pool = new SidPool(24000, { server: false });
+        this.types = Array.from({ length: 188 }, () => ({ cost: 0, flags1: 0, flags2: 0, footX: 0, footY: 0 }));
+        this.details = Array.from({ length: 188 }, () => ({ speed: 0, frames: 0, impactSound: 0, activeSound: 0 }));
+        this.fields = new FlyerProcessFields();
+        this.now = 100.25;
+        this.processType = 31;
+        this.popCount = 0;
+        this.events = [];
+        this.attach = '-';
+        // 관측 대상까지 실제 client 슬롯을 확보한다.
+        for (;;) {
+            const sid = this.pool.allocate(2);
+            if (sid === 71) break;
+            if (!sid || sid > 71) throw new Error('훨리기그 검사 SID 준비 오류');
+        }
+        // 독립 원문과 같은 초기 50바이트를 설치한다.
+        for (const sid of IDS) {
+            const raw = this.pool.allocated(sid);
+            raw.fill(0xa5);
+            put(raw, 0, 0x50a1e8);
+            put(raw, 4, 0, 2);
+            put(raw, 6, 0, 2);
+            put(raw, 8, 0, 2);
+            raw[10] = 73;
+            raw[11] = 0;
+            put(raw, 12, 60, 2);
+            put(raw, 14, floatToBits(50.25));
+            put(raw, 18, floatToBits(50.5));
+            put(raw, 36, 2);
+            raw[40] = 0;
+        }
+        put(this.pool.allocated(60), 0, 0x509930);
+        this.pool.allocated(60)[10] = 72;
+        this.server = Number(input[0]) !== 0;
+        this.allocated = Number(input[2]) !== 0;
+        this.soundAllocated = Number(input[3]) !== 0;
+        this.mutation = Number(input[7]);
+        put(this.pool.allocated(50), 36, Number(input[4]));
+        put(this.pool.allocated(50), 8, Number(input[6]) ? 60 : 0, 2);
+        // 부모 TYPE 변경 뒤의 snapshot 차이를 서로 다른 현재 값으로 구별한다.
+        for (const type of [73, 143]) {
+            this.types[type].flags1 = Number(input[5]) ? 0x400000 : 0;
+            this.details[type] = { speed: floatToBits(type === 73 ? 0.75 : 1.25), frames: type === 73 ? 12 : 18, impactSound: type === 73 ? 901 : 911, activeSound: type === 73 ? 902 : 912 };
+        }
+        // 생성 이전 미정 바이트의 실제 입력이다.
+        this.fields.bytes.fill(0xa5);
+        this.fields.sunTail.fill(0xa5);
+        this.logic = new RawFlyerProcess(this.pool, this.types, { server: () => this.server, now: () => this.now, processType: () => this.processType }, {
+            assertion: (line) => { this.event(`Assert,${line}`); },
+            attach: (live, parent, type, flags) => {
+                assert.equal(live, this.fields);
+                this.attach = this.image();
+                this.event(`Attach,${type},${parent},${flags}`);
+                if (this.mutation === 2) {
+                    put(this.fields.bytes, 84, 77);
+                    this.pool.allocated(50)[10] = 143;
+                    put(this.pool.allocated(50), 12, 13, 2);
+                    this.now = 200;
+                }
+            },
+        });
+    }
+
+    // 명시 관측 순서를 중복 제거 없이 쌓는다. (2026-11-13 WB04-E353)
+    event(value) { this.events.push(value); }
+
+    // 추가 꼬리를 기본 112바이트 뒤에 붙여 전체 136바이트를 원문과 같은 순서로 읽는다. (2026-11-13 WB04-E353)
+    image() { return hex(this.fields.bytes) + hex(this.fields.sunTail); }
+
+    // 선언한 외부 확보/부착/공간/소리 입력을 원본과 같은 순서로 적용한다. (2026-11-13 WB04-E353)
+    hooks() {
+        return {
+            allocateSunProcess: () => {
+                this.event('Allocate,136');
+                if (this.mutation === 7) {
+                    this.pool.allocated(50)[10] = 143;
+                    put(this.pool.allocated(50), 12, 13, 2);
+                }
+                if (this.mutation === 8) {
+                    this.server = false;
+                    this.processType = 30;
+                }
+                return this.allocated;
+            },
+            createSunProcess: (parent, home, speed, parameter) => {
+                this.logic.construct(this.fields, parent, home, speed, parameter);
+                RawFlyerProcess.specializeSun(this.fields);
+            },
+            allocateSound: () => { this.event('Allocate,40'); return this.soundAllocated; },
+            createSound: (parent, sound, alternate, flags) => { this.event(`Sound,${parent},${sound},${alternate},${flags}`); },
+            repop: (sid, flags) => { this.event(`Repop,${sid},${flags}`); },
+            create: (type, flags) => {
+                this.event(`Create,${type},${flags}`);
+                if (this.mutation === 3) {
+                    put(this.pool.allocated(50), 36, 7);
+                    put(this.pool.allocated(50), 14, floatToBits(90.25));
+                }
+                return 61;
+            },
+            pop: (sid, x, y, flags) => {
+                this.event(`Pop,${sid},${floatToBits(x)},${floatToBits(y)},${flags}`);
+                this.popCount += 1;
+                if (this.mutation === 4 && this.popCount === 1) {
+                    put(this.pool.allocated(50), 36, 9);
+                    put(this.pool.allocated(50), 18, floatToBits(70.25));
+                }
+            },
+            unpop: (sid, flags) => {
+                this.event(`Unpop,${sid},${flags}`);
+                if (this.mutation === 6) {
+                    put(this.pool.allocated(50), 14, floatToBits(100.25));
+                    put(this.pool.allocated(50), 18, floatToBits(110.25));
+                }
+            },
+            initializeUnit: (sid) => {
+                const view = new DataView(new ArrayBuffer(8));
+                view.setFloat64(0, this.now, true);
+                this.event(`SetTime,${sid},${view.getUint32(0, true)},${view.getUint32(4, true)}`);
+                if (this.mutation === 5) {
+                    put(this.pool.allocated(50), 8, 60, 2);
+                    put(this.pool.allocated(50), 36, 11);
+                    put(this.pool.allocated(50), 14, floatToBits(80.25));
+                }
+            },
+            shadowOffset: () => [Math.fround(-0.6), 3.5],
+            damageable: (sid, flags) => { this.event(`Base,${flags}`); },
+        };
+    }
+
+    // 전체 관측 객체 250바이트를 현재 풀에서 그대로 읽는다. (2026-11-13 WB04-E353)
+    objects() { return IDS.map((sid) => hex(this.pool.slot(sid))).join(''); }
+
+    // 바뀔 수 있는 원본 전역 16바이트를 동일 순서로 읽는다. (2026-11-13 WB04-E353)
+    globals() {
+        const raw = new Uint8Array(16);
+        const view = new DataView(new ArrayBuffer(8));
+        view.setFloat64(0, this.now, true);
+        put(raw, 0, this.server ? 1 : 0);
+        put(raw, 4, view.getUint32(0, true));
+        put(raw, 8, view.getUint32(4, true));
+        put(raw, 12, this.processType);
+        return hex(raw);
+    }
+}
+
+const sunRows = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'sun-flyer-postpop-x86.tsv'));
+
+test('Flyer 훨리기그: 원본 10.78 후처리 391행 — 훨리기그 전용 생성/홈/소리/그림자가 필드 136바이트·객체·전역·부착 직전·호출 순서까지 같다', { skip: !sunRows && '원본 fixture 없음' }, () => {
+    let count = 0;
+    // 기존 기대 원문을 변경하거나 제품 결과로 다시 만들지 않는다.
+    for (const row of sunRows) {
+        assert.equal(row.length, 6);
+        const input = row[0].split(',');
+        const scene = new SunScene(input);
+        new RawFlyerPostPop(scene.pool, scene.types, scene.details, () => scene.server, scene.hooks()).postPop(50, Number(input[1]));
+        const observed = [scene.image(), scene.objects(), scene.globals(), scene.attach, scene.events.length === 0 ? '-' : scene.events.join(';')];
+        const names = ['필드', '객체', '전역', '부착 직전', '호출 순서'];
+        // 실패한 입력과 필드를 각각 기록해 원문 관측으로 되돌아갈 수 있게 한다.
+        for (let index = 0; index < observed.length; index += 1) assert.equal(observed[index], row[index + 1], `${row[0]} ${names[index]}`);
+        count += 1;
+    }
+    assert.equal(count, 391);
+});
+
 test('Flyer: 선택 누락은 앞선 쓰기를 남기고 거부하며 짧은 패킷은 쓰기 전에 거부한다', () => {
     const scene = new FlyerScene('P', '1,1,1,2,12,1,1,0'.split(','));
     const hooks = scene.postHooks();
