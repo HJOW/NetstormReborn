@@ -17357,9 +17357,67 @@
       "bytes": 3182067,
       "lines": 769,
       "fixtureCommit": "028bd402c",
-      "webCommit": "worktree",
+      "webCommit": "b4112a676",
       "cpppjBasis": {
         "cpppj/src/o/RawPathData.cpp": "2b5ee903c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E351",
+      "id": "pathstart",
+      "path": "cpppj/tests/fixtures/pathstart-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 이동 시작(00489080) 512행 — 부모 134/158 × 장면 profile × 권한 × 기존 경로 × 시작점 교체 × 대기 사건의 성공 여부·공유 효과(C/K/P/B)·명령 필드·꼭짓점·프레임·남은 사건",
+      "consumers": [
+        "webpj/tests/raw-path-start.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-start.js"
+      ],
+      "doc": "docs/webpj-path-start-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathStart.cpp"
+      ],
+      "scope": "10.78(originals) 256행 사용(CD 10.72 256행은 범위 밖)",
+      "sha256": "465f2d5e682d4e15756fd6d7f1fcb8427e55df5afc251d1dbbff1a6bb3126c3c",
+      "bytes": 72466,
+      "lines": 513,
+      "fixtureCommit": "8abd00ac3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathStart.cpp": "5318fdd6a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E351",
+      "id": "pathprocesstype",
+      "path": "cpppj/tests/fixtures/pathprocesstype-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 이동 프로세스 종류 선택(00488fe0) 모든 타입 번호와 벌룬 genus 교차 718행(두 판본)",
+      "consumers": [
+        "webpj/tests/raw-path-start.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-movement-process-types.js"
+      ],
+      "doc": "docs/webpj-path-start-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawPriestWorldBindings.cpp"
+      ],
+      "scope": "10.78(originals) 376행 사용(CD 10.72 342행과 assert 열은 범위 밖)",
+      "sha256": "4a5da6130b1c840c4a6387efc64671f535c46251ccc529510f5386d0e9bcbb6f",
+      "bytes": 16650,
+      "lines": 719,
+      "fixtureCommit": "8abd00ac3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawPriestWorldBindings.cpp": "4b6efc0ef"
       }
     }
   ]
