@@ -17386,7 +17386,7 @@
       "bytes": 72466,
       "lines": 513,
       "fixtureCommit": "8abd00ac3",
-      "webCommit": "worktree",
+      "webCommit": "3e718106e",
       "cpppjBasis": {
         "cpppj/src/o/RawPathStart.cpp": "5318fdd6a"
       }
@@ -17415,9 +17415,38 @@
       "bytes": 16650,
       "lines": 719,
       "fixtureCommit": "8abd00ac3",
-      "webCommit": "worktree",
+      "webCommit": "3e718106e",
       "cpppjBasis": {
         "cpppj/src/client/RawPriestWorldBindings.cpp": "4b6efc0ef"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E352",
+      "id": "flyer-postpop",
+      "path": "cpppj/tests/fixtures/flyer-postpop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 공통 비행 프로세스 생성자 C·맨 오 워 후처리 P·홈 연결 B·상태 writer W 1,421행 — 필드 112바이트·객체 250바이트·전역 16바이트·패킷 64바이트·부착 직전 이미지·호출 순서",
+      "consumers": [
+        "webpj/tests/raw-flyer-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-flyer-process.js"
+      ],
+      "doc": "docs/webpj-flyer-process-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFlyerProcess.cpp"
+      ],
+      "scope": "10.78 1,421행 전부",
+      "sha256": "111beec5675ad2fcd8edc4fd2fb7b5dbe2c129d8b3c796f58b68ec3a7c8d456f",
+      "bytes": 1216659,
+      "lines": 1422,
+      "fixtureCommit": "ba8c3d837",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFlyerProcess.cpp": "2b5ee903c"
       }
     }
   ]
