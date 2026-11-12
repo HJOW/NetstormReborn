@@ -3,7 +3,7 @@
 //    반환·flags·sender·두 시각·깊이와 now/record/terminate/receive 효과 순서), Install 6·InstallMutate 2(Zone 설치 뒤 Player9 전체·현재 전역 9값·Chat/시각 효과 순서).
 //  - cpppj 손 시험(LocalMissionTransportTests 4건·ConnectionRegistrationTests 1건·ConnectionActivityTransportTests 2건): Zone 설치 → open → 로그인 0x27 → 실제 CheckLogin 재배치 → 응답 0x24 왕복,
 //    선택 경계·예외 깊이, 서버 열기와 클라이언트 접속 분리, 공유 등록소의 pending/owner/9번 칸, Client 객체 존재와 flags 분리, 실패한 접속의 부분 효과.
-//    cpppj 원 시험 중 셋(서버 열기 분리·공유 등록소·Client 존재 두 건)은 `open` 이 서버 끝을 바로 만들던 옛 설계의 기대값이라 cpppj 에서도 실패한다(783b12763 2026-11-06 의 poll accept 설계 이후).
+//    cpppj 원 시험 중 셋(서버 열기 분리·공유 등록소·Client 존재 두 건)은 `open` 이 서버 끝을 바로 만들던 옛 설계의 기대값이라 cpppj 에서도 실패했다(783b12763 2026-11-06 의 poll accept 설계 이후, cpppj 1304 에서 같은 값으로 교정).
 //    웹은 기준선 동작(서버 끝은 poll 의 accept 에서 생성)으로 기대값을 바꿔 옮기고 바뀐 값마다 주석에 cpppj 원 기대값을 적는다(단위 문서 3절).
 //  - 웹 계약: 0x87 bootstrap 등록(비NULL 빈 관찰기)·종료된 CD 검증 0x7f/0x80 미송수신·`sent` 기록·`players` 현재 Player9 조회·가상 송신 장치의 직접 노드 송신·반대 끝 상실 통지 1회·closeAll·dispose·인계.
 // 실제 게임·브라우저 실행이 아니다. (2026-11-12 WB04-E324: 4-C zacket/LocalMissionTransport 이식과 함께 추가)

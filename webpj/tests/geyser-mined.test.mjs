@@ -180,7 +180,7 @@ test('GeyserMined: 실제 분배기 등록·단일 분배부터 같은 풀의 fa
     const pop = new SquidPop(pool, hash, spots);
     const unpop = new SquidUnpop(pool, hash, spots);
     const destroy = new RawSquidDestroy(pool, unpop, types);
-    // 서버 객체 Pop 의 실제 전송 요청을 기록한다. cpppj 원 시험은 이 장치를 묶지 않아 2026-11-04 `bd36f6e64`(Pop 전송 미연결 검사 추가) 뒤로 실패한다(단위 문서 3절).
+    // 서버 객체 Pop 의 실제 전송 요청을 기록한다. cpppj 원 시험은 이 장치를 묶지 않아 2026-11-04 `bd36f6e64`(Pop 전송 미연결 검사 추가) 뒤로 실패했고 cpppj 1304 에서 같은 방식으로 교정됐다(단위 문서 3절).
     const transmissions = [];
     pop.bindTransmission((sid, flags) => { transmissions.push([sid, flags]); });
     const geyser = factory.create(122, 2);
