@@ -309,9 +309,7 @@ public sealed class ClientHostGame : Game
         Array.Copy(encoded, 0, translated, 0, encoded.Length);
         session.FillHandleName(translated);
         session.WriteBattleName();
-        // 월드 적재를 세션 공유 저장소로 실행한다. 번역·설정·지형 생성은 실제로 연결하고 나머지는 기록 갈고리로 둔다.
-        // 화신 할당은 연결했고 공간·객체·장부·카메라 실제 효과는 월드 조립 단위에서 잇는다.
-        int avatarSid = session.Pool.Allocate(Netstorm.Core.Simulation.SidAllocation.Client);
+        // 월드 적재를 세션 공유 저장소로 실행한다. 번역·설정·지형 생성·화신 생성은 실제로 연결하고 객체·장부·카메라 실제 효과는 월드 조립 단위에서 잇는다.
         IReadOnlyList<RiftTypeDefinition> worldDefinitions = MissionFortLoad.LoadTypeDefinitions(_startup.Files);
         session.FillWorldFrames(worldDefinitions);
         // 지형 Pop 공간 등록 장치. SHP 실측 크기로 해시 단계를 정한다(cpppj SquidRenderer::Shapes, 0.466).
@@ -368,21 +366,8 @@ public sealed class ClientHostGame : Game
                 RebuildGraph = mode => session.RebuildWorldGraph(mode),
             },
             types.Types,
-            new PlayerWorldHooks
-            {
-                Find = (_, _, _) =>
-                {
-                    worldOrder.Add("find");
-                    return 0;
-                },
-                Create = (type, flags) =>
-                {
-                    worldOrder.Add($"create:{type}:{flags}");
-                    return avatarSid;
-                },
-                SetOwner = (slot, owner) => worldOrder.Add($"owner:{slot}:{owner}"),
-                Pop = (slot, _, _, _) => worldOrder.Add($"pop:{slot}"),
-            },
+            // 화신 생성·소유자·찾기의 실제 장치 연결. 공간 Pop 기록과 예약 갈고리는 R6에서 잇는다(0.475).
+            session.BuildPlayerWorldHooks(),
             new CampaignWorldLoadHooks
             {
                 TranslateYou = () =>

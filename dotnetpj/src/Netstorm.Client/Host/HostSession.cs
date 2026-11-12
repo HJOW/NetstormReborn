@@ -924,11 +924,16 @@ public sealed class HostSession
     /// <remarks>2026-11-12 0.467에서 추가했다. Load(fort, 칸) 한 호출이 전체 20개 Terr+Chaff를 적재한다.</remarks>
     private RawFortObjectLoad? _fortLoader;
 
+    /// <summary>Player 월드(화신) 소유자 지정의 세션 소유 몸체다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.475에서 Player 월드 갈고리 live 연결용으로 추가했다. 요새 객체와 같은 몸체를 공유한다(근거 cpppj RawCampaignSession.cpp 1239행 core.owner). </remarks>
+    private SquidOwner? _playerOwner;
+
     /// <summary>요새 객체 적재의 공장·공간·HP·내용물 장치를 세션에 연결한다. 지형 Pop 장치 뒤에 연결해야 한다(같은 해시·spots·표시를 공유한다).</summary>
     /// <param name="types">같은 실제 TYPE 표다. 패치판 188개여야 한다.</param>
     /// <param name="frames">같은 실제 프레임 표다. 타입 개수와 같아야 한다.</param>
     /// <remarks>2026-11-12 0.467에서 요새 객체 live 적재용으로 추가했다. 근거: cpppj RawCampaignWorldRuntime.cpp 43~53행(객체 갈고리+MakeFortObjectLoadHooks+RawFortObjectLoad)의 세션 결선이다.
-    /// SetState·FinishOwner는 기록만 하며(R6 공장 후처리·거주 배치에서 잇는다), Destroy·VirtualCount·내용물 부착은 미션 적재(Fort=false)에서 도달하지 않으므로 명시 경계로 둔다.</remarks>
+    /// SetState·FinishOwner는 기록만 하며(R6 공장 후처리·거주 배치에서 잇는다), Destroy·VirtualCount·내용물 부착은 미션 적재(Fort=false)에서 도달하지 않으므로 명시 경계로 둔다.
+    /// 2026-11-12 0.475에서 소유자 지정 몸체를 Player 월드 갈고리와 공유하려고 `_playerOwner` 필드에 보관한다.</remarks>
     public void BuildFortObjectDevices(IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames)
     {
         ArgumentNullException.ThrowIfNull(types);
@@ -960,7 +965,7 @@ public sealed class HostSession
         _fortPop = new RawPop(Pool, _terrainHash, _terrainSpots);
         _fortPop.SetBuildingSide(_fortBuilding);
         _fortState = new FortObjectLoadState { Mission = true, ChaffMode = true };
-        var owner = new SquidOwner(Pool, types, TerrainBookkeeping, OwnerMode);
+        _playerOwner = new SquidOwner(Pool, types, TerrainBookkeeping, OwnerMode);
         RawIslandRuntime islands = BuildIslands(new IslandRuntimeHooks
         {
             SetResidenceOwner = (_, _) => { },
@@ -970,7 +975,7 @@ public sealed class HostSession
         {
             NotifySurface = sid => _fortBuilding.NotifySurface(sid),
             SetState = (_, _) => { },
-            SetOwner = owner.Set,
+            SetOwner = _playerOwner.Set,
             HasHitPoints = _fortHp.HasHitPoints,
             MaxHitPoints = _fortHp.MaxHitPoints,
             VirtualCount = _ => throw new InvalidOperationException("Fort 가상 개수 미연결(R6)"),
@@ -1003,6 +1008,51 @@ public sealed class HostSession
             throw new InvalidOperationException("요새 객체 장치가 연결되지 않았다");
         }
         _fortLoader.Load(fort, unchecked((int)slot));
+    }
+
+    /// <summary>캠페인 월드 적재의 Player 월드(화신) 갈고리를 실제 장치에 연결한다. 요새 객체 장치 뒤에 연결해야 한다.</summary>
+    /// <returns>같은 풀·공장·소유자·공간·표시를 공유하는 Player 월드 갈고리다.</returns>
+    /// <remarks>2026-11-12 0.475에서 Player 월드 갈고리 live 연결용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1235~1242행(playerHooks 결선: find→world.Find·create→world.Create·setOwner→core.owner.Set·pop→world.Pop). 화신 생성의 Pop 호출은 기록만 하며 공간 등록은 postPop·표시 장치와 함께 R6에서 잇고, ReserveRegular·AddRegular도 정기 프로세스 몫이라 R6에서 잇는다(패치판 생성자는 요구하지 않는다).</remarks>
+    public PlayerWorldHooks BuildPlayerWorldHooks()
+    {
+        if (_fortFactory is null || _playerOwner is null
+            || _terrainHash is null || _terrainPopTypes is null)
+        {
+            throw new InvalidOperationException("Player 월드 장치는 요새 객체 장치 뒤에 연결해야 한다");
+        }
+        RawSquidFactory factory = _fortFactory;
+        SquidOwner owner = _playerOwner;
+        RawSquidHash hash = _terrainHash;
+        IReadOnlyList<OriginalTypeRecord> types = _terrainPopTypes;
+        return new PlayerWorldHooks
+        {
+            Find = (x, y, type) =>
+            {
+                // 같은 타입의 첫 슬롯을 돌려주고 없으면 원문처럼 0을 돌려준다.
+                var finder = new RawSquidFinder(Pool, hash, types);
+                int left = unchecked((int)x);
+                int top = unchecked((int)y);
+                // 찾은 후보마다 슬롯 타입을 확인하는 반복문이다.
+                for (int sid = finder.Begin(new SquidSearchArea(left, top, left, top)); sid != 0; sid = finder.Next())
+                {
+                    if (Pool.Slot(sid)[RawSidPool.TypeOffset] == type)
+                    {
+                        return sid;
+                    }
+                }
+                return 0;
+            },
+            Create = (type, flags) => factory.Create(type,
+                (flags & 1) != 0 ? Netstorm.Core.Simulation.SidAllocation.Predictable
+                : (flags & 2) != 0 ? Netstorm.Core.Simulation.SidAllocation.Client
+                : Netstorm.Core.Simulation.SidAllocation.Server),
+            SetOwner = (sid, player) => owner.Set(sid, player),
+            Pop = (_, _, _, _) =>
+            {
+                // 화신 Pop의 공간 등록은 R6 postPop·표시·그래프 장치와 함께 잇는다.
+                // 실측 결과 152번(화신) 가상표는 표시·파생 등록 미지원이라 지금 공간 등록을 수행하면 멈춘다(0.467 요새 객체 Pop과 같은 경계).
+            },
+        };
     }
 
     /// <summary>월드 그래프 재구성의 세션 소유 엔진이다. BuildWorldGraphDevices로 연결하기 전에는 null이다.</summary>
