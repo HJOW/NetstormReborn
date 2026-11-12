@@ -17044,10 +17044,41 @@
       "bytes": 118215,
       "lines": 56,
       "fixtureCommit": "bf68f0d45",
-      "webCommit": "worktree",
+      "webCommit": "ec041b464",
       "cpppjBasis": {
         "cpppj/src/client/MissionTechnology.cpp": "8ba4af11b",
         "cpppj/src/client/MissionTechnology.h": "8ba4af11b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E339",
+      "id": "mission-loading-message",
+      "path": "cpppj/tests/fixtures/mission-loading-message-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 미션 시작 진행 안내 cf570 의 확장 printf/임시 버퍼 경계 뒤 본문·Cancel 번역 × 기존/새 부모 6가지 프로필 × 깊이 × 호출 도중 현재 필드 변경 5가지 1540행 — 조립 본문·하위 효과 순서·최종 transient/created serial·부모 깊이/serial",
+      "consumers": [
+        "webpj/tests/mission-loading-message.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/mission-loading-message.js"
+      ],
+      "doc": "docs/webpj-mission-loading-message-20261112.md",
+      "cpppjSources": [
+        "cpppj/src/client/MissionLoadingMessage.cpp",
+        "cpppj/src/client/MissionLoadingMessage.h"
+      ],
+      "scope": "10.78 1540행 전부",
+      "sha256": "9770007e448fa9710c3e7fe3eee8c26503cd21bddcfee3231b91db0ebc47a0c5",
+      "bytes": 607951,
+      "lines": 1541,
+      "fixtureCommit": "e5a68d592",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MissionLoadingMessage.cpp": "aba685cf9",
+        "cpppj/src/client/MissionLoadingMessage.h": "aba685cf9"
       }
     }
   ]
