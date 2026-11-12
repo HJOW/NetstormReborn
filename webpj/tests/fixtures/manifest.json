@@ -17662,7 +17662,7 @@
       "bytes": 519397,
       "lines": 411,
       "fixtureCommit": "bebf11ce4",
-      "webCommit": "worktree",
+      "webCommit": "4e3e81806",
       "cpppjBasis": {
         "cpppj/src/o/RawSunFlyerFrame.cpp": "253e6a998"
       },
@@ -17691,7 +17691,7 @@
       "bytes": 37220,
       "lines": 31,
       "fixtureCommit": "253e6a998",
-      "webCommit": "worktree",
+      "webCommit": "4e3e81806",
       "cpppjBasis": {
         "cpppj/src/o/RawSunFlyerFrame.cpp": "253e6a998"
       },
@@ -17709,6 +17709,35 @@
         "cpppj/src/o/RawSunFlyerFrame.cpp"
       ],
       "scope": "10.78 30행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E358",
+      "sha256": "f405cf9f4d89da2daab5f3746838393fb2d90d4208e4e3d749dcda8accfb1aaa",
+      "bytes": 89432,
+      "lines": 335,
+      "fixtureCommit": "edc257f9a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawWindFlyer.cpp": "edc257f9a"
+      },
+      "id": "wind-flyer",
+      "path": "cpppj/tests/fixtures/wind-flyer-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 더스트 데빌 생성자 뒤 전용 표 C·초기화 I·애니메이션 A·주기 처리 R·범위 공격 D 334행 — 필드 104바이트·반환 비트·소리 장부·효과 순서",
+      "consumers": [
+        "webpj/tests/raw-wind-flyer.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-wind-flyer.js"
+      ],
+      "doc": "docs/webpj-wind-flyer-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawWindFlyer.cpp"
+      ],
+      "scope": "10.78 334행 전부"
     }
   ]
 }
