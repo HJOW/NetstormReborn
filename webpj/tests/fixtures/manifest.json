@@ -17865,7 +17865,7 @@
       "bytes": 9537,
       "lines": 193,
       "fixtureCommit": "5f564e852",
-      "webCommit": "worktree",
+      "webCommit": "5620db21b",
       "cpppjBasis": {
         "cpppj/src/o/RawDiscRegular.cpp": "f2f9e8374"
       },
@@ -17894,7 +17894,7 @@
       "bytes": 2874,
       "lines": 71,
       "fixtureCommit": "f2f9e8374",
-      "webCommit": "worktree",
+      "webCommit": "5620db21b",
       "cpppjBasis": {
         "cpppj/src/o/RawDiscRegular.cpp": "f2f9e8374"
       },
@@ -17912,6 +17912,35 @@
         "cpppj/src/o/RawDiscRegular.cpp"
       ],
       "scope": "10.78 전용 단일 판본 70행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E365",
+      "sha256": "6ad3c0abef4a2af956e949ae54e7005d89811c0287bd9d5328e94efa3a98be65",
+      "bytes": 3273217,
+      "lines": 6721,
+      "fixtureCommit": "552656c0c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawTempleRitual.cpp": "21bb25505"
+      },
+      "id": "templeritual",
+      "path": "cpppj/tests/fixtures/templeritual-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 신전 의식의 가상 count·단계·목표점 좌표 비트·룬/강한 사제/추상 룬 조회·의식 전체의 효과 순서와 네 슬롯 raw·최종 권한(모드 0/1, 사제/룬 프로필, 권한, 예약 결과, 지면 값, 효과 뒤 변이)",
+      "consumers": [
+        "webpj/tests/temple-ritual.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-temple-ritual.js"
+      ],
+      "doc": "docs/webpj-temple-ritual-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawTempleRitual.cpp"
+      ],
+      "scope": "10.78(originals) 3,360행 전부 사용, originalCD 3,360행은 범위 밖"
     }
   ]
 }
