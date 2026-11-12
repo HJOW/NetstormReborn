@@ -1,3 +1,4 @@
+using Netstorm.Assets;
 using Netstorm.Client.Automation;
 using Netstorm.Core.Display;
 using Netstorm.Core.Original;
@@ -934,6 +935,60 @@ public sealed class HostSession
             throw new InvalidOperationException("요새 객체 장치가 연결되지 않았다");
         }
         _fortLoader.Load(fort, unchecked((int)slot));
+    }
+
+    /// <summary>월드 그래프 재구성의 세션 소유 엔진이다. BuildWorldGraphDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-12 0.470에서 그래프 live 재구성용으로 추가했다. 근거: cpppj RawCampaignWorldRuntime.cpp 65·83행(core.graph 공유 엔진)의 세션 결선이다.</remarks>
+    private RawGraph? _worldGraph;
+
+    /// <summary>월드 적재 그래프 재구성 장치를 세션에 연결한다. 연결 전에는 재구성 요청이 거부된다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 패치판 188개·CD판 171개여야 한다.</param>
+    /// <remarks>2026-11-12 0.470에서 그래프 live 재구성용으로 추가했다. 지형 Pop 장치의 해시·점유 지도(core.hash·core.spots 구실)와 채운 WorldFrames를 그대로 쓰며, ResetTable은 cpppj 적재 경로에서도 호출되지 않아 연결하지 않는다.</remarks>
+    public void BuildWorldGraphDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (types.Count != OriginalConstructors.TypeCount)
+        {
+            throw new ArgumentException("월드 그래프 타입 목록 크기 오류", nameof(types));
+        }
+        if (_terrainHash is null || _terrainSpots is null)
+        {
+            throw new InvalidOperationException("월드 그래프 장치는 지형 Pop 장치 뒤에 연결해야 한다");
+        }
+        // 월드 프레임(RiftFrameCode 바이트 4개)을 그래프 엔진(FrameCode 문자·정수·플래그)으로 옮기는 반복문이다. 플래그 비트는 양쪽이 같다(fringe 0x01·hard 0x40).
+        var frames = new List<IReadOnlyList<FrameCode>>(WorldFrames.Length);
+        for (int index = 0; index < WorldFrames.Length; ++index)
+        {
+            var codes = new List<FrameCode>(WorldFrames[index].Codes.Count);
+            for (int code = 0; code < WorldFrames[index].Codes.Count; ++code)
+            {
+                RiftFrameCode source = WorldFrames[index].Codes[code];
+                codes.Add(new FrameCode((char)source.Side, (char)source.Variant, source.Number, (FrameCodeFlags)source.Flags));
+            }
+            frames.Add(codes);
+        }
+        _worldGraph = new RawGraph(Pool, _terrainHash, _terrainSpots, types, null, null, frames);
+    }
+
+    /// <summary>월드 그래프를 다시 구성하고 세션 표 저장소로 결과를 옮긴다. 장치 연결 전에 호출하면 거부한다.</summary>
+    /// <param name="mode">참이면 전체 초기화 재구성, 거짓이면 무효 번호 수집이다.</param>
+    /// <remarks>2026-11-12 0.470에서 그래프 live 재구성용으로 추가했다. 적재 흐름의 territory·campaign 갈고리가 mode 거짓으로 부른다. 난수를 소비하지 않으며 슬롯 그래프 바이트·표·스택만 바꾼다.</remarks>
+    public void RebuildWorldGraph(bool mode)
+    {
+        if (_worldGraph is null)
+        {
+            throw new InvalidOperationException("월드 그래프 장치가 연결되지 않았다");
+        }
+        _worldGraph.Rebuild(mode);
+        // 엔진이 복사해 가진 표·스택을 세션 저장소로 옮기는 반복문이다. 덤프 관측(DumpGraph)이 읽는 표다.
+        for (int index = 0; index < Graph.Records.Length; ++index)
+        {
+            Graph.Records[index] = _worldGraph.Records[index];
+        }
+        for (int index = 0; index < Graph.Stack.Length; ++index)
+        {
+            Graph.Stack[index] = _worldGraph.FloodStack[index];
+        }
     }
 
     /// <summary>빈 프레임 표 188개를 만든다. 검사 하네스의 LoadScene과 같은 공유 빈 표다.</summary>

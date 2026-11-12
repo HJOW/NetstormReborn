@@ -321,6 +321,8 @@ public sealed class ClientHostGame : Game
         session.BuildTerrainPopDevices(types.Types, popShapes);
         // 요새 객체 적재 장치. 지형 Pop과 같은 해시·spots·표시를 공유한다(cpppj RawCampaignWorldRuntime, 0.467).
         session.BuildFortObjectDevices(types.Types, session.WorldFrames);
+        // 월드 그래프 재구성 장치. 같은 해시·spots·프레임 표를 공유한다(cpppj RawCampaignWorldRuntime 65·83행, 0.470).
+        session.BuildWorldGraphDevices(types.Types);
         // 지형 바인딩 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 진단 저널 연결은 7차 로그 배선 단위에서 잇는다.
         session.TerrainDiagnostics.Context = _ => { };
         session.TerrainDiagnostics.Stamp = _ => { };
@@ -363,7 +365,7 @@ public sealed class ClientHostGame : Game
                 Badges = (_, _) => { },
                 Technology = (_, _) => { },
                 PopulateIsland = (_, _) => { },
-                RebuildGraph = _ => { },
+                RebuildGraph = mode => session.RebuildWorldGraph(mode),
             },
             types.Types,
             new PlayerWorldHooks
@@ -408,7 +410,12 @@ public sealed class ClientHostGame : Game
                     // 실제 요새 객체 적재 live 연결. 캠페인 부모가 부르는 같은 FortTemplate·칸 경로다(0.467).
                     session.LoadFortObjects(fortTemplate, slot);
                 },
-                RebuildGraph = graph => worldOrder.Add($"graph:{graph}"),
+                RebuildGraph = graph =>
+                {
+                    worldOrder.Add($"graph:{graph}");
+                    // 실제 그래프 재구성 live 연결. territory 갈고리와 같은 세션 엔진을 공유한다(0.470).
+                    session.RebuildWorldGraph(graph);
+                },
                 ResetCamera = () => worldOrder.Add("camera"),
             });
         worldLoad.Load();
