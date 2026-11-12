@@ -126,7 +126,7 @@
       "bytes": 29665,
       "lines": 263,
       "fixtureCommit": "7f1c47407",
-      "webCommit": "worktree",
+      "webCommit": "77fdef2bf",
       "cpppjBasis": {
         "cpppj/src/client/ScriptCommand.cpp": "2054e0744",
         "cpppj/src/o/RawTextToken.cpp": "7f1c47407"
@@ -9441,24 +9441,28 @@
       "path": "cpppj/tests/fixtures/pathruntime-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 경로 ctor FNV32·Prepare 꼭짓점 시각 QWORD·연쇄 Step·arrival/frame(RawPathProcess)(두 판본 360행)",
       "consumers": [
-        "webpj/tests/path-runtime.test.mjs"
+        "webpj/tests/path-runtime.test.mjs",
+        "webpj/tests/raw-path-process.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-path-runtime.js"
+        "webpj/www/core/raw-path-runtime.js",
+        "webpj/www/core/raw-path-process.js"
       ],
       "doc": "docs/webpj-path-runtime-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawPathRuntime.cpp"
+        "cpppj/src/o/RawPathRuntime.cpp",
+        "cpppj/src/o/RawPathProcess.cpp"
       ],
-      "scope": "10.78(originals) ctor 4+prepare 24+step 80=108행 사용(arrival 12·frame 60 은 RawPathProcess 단위, CD 10.72 행은 범위 밖)",
+      "scope": "10.78(originals) ctor 4+prepare 24+step 80=108행은 path-runtime.test.mjs, frame 60+arrival 12=72행은 raw-path-process.test.mjs(RawPathProcess, E349)에서 사용(CD 10.72 행은 범위 밖)",
       "text": true,
       "sha256": "28d5c373696f4b855299bb01efd924e54b2da847872e0fad1ad5197b9a68ac50",
       "bytes": 37981,
       "lines": 361,
-      "fixtureCommit": "ada85427",
-      "webCommit": "6a095ac5",
+      "fixtureCommit": "ada85427f",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPathRuntime.cpp": "8a555c99"
+        "cpppj/src/o/RawPathRuntime.cpp": "8a555c997",
+        "cpppj/src/o/RawPathProcess.cpp": "5f4b9d304"
       }
     },
     {
@@ -9470,24 +9474,28 @@
       "path": "cpppj/tests/fixtures/flypath-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 실제 fly39 경로 ctor FNV32·기존 개수별 비행 Init 전체 이미지 FNV32·frame(RawPathProcess)(90행)",
       "consumers": [
-        "webpj/tests/path-runtime.test.mjs"
+        "webpj/tests/path-runtime.test.mjs",
+        "webpj/tests/raw-path-process.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-path-runtime.js"
+        "webpj/www/core/raw-path-runtime.js",
+        "webpj/www/core/raw-path-process.js"
       ],
       "doc": "docs/webpj-path-runtime-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawPathRuntime.cpp"
+        "cpppj/src/o/RawPathRuntime.cpp",
+        "cpppj/src/o/RawPathProcess.cpp"
       ],
-      "scope": "10.78 전용 단일 판본 ctor 3+init 24=27행 사용(frame 63 은 RawPathProcess 단위)",
+      "scope": "10.78 전용 단일 판본 ctor 3+init 24=27행은 path-runtime.test.mjs, frame 63행은 raw-path-process.test.mjs(RawPathProcess, E349)에서 사용",
       "text": true,
       "sha256": "94f29b69b4b2be2868ce3099de063d404d54aabe1ef2646633457b8b89abcc65",
       "bytes": 8550,
       "lines": 91,
-      "fixtureCommit": "8bf76206",
-      "webCommit": "6a095ac5",
+      "fixtureCommit": "8bf762066",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPathRuntime.cpp": "8a555c99"
+        "cpppj/src/o/RawPathRuntime.cpp": "8a555c997",
+        "cpppj/src/o/RawPathProcess.cpp": "5f4b9d304"
       }
     },
     {
@@ -17169,7 +17177,7 @@
       "bytes": 132477,
       "lines": 279,
       "fixtureCommit": "62213f9f4",
-      "webCommit": "worktree",
+      "webCommit": "77fdef2bf",
       "cpppjBasis": {
         "cpppj/src/client/MissionGuideInput.cpp": "2054e0744"
       }
@@ -17198,7 +17206,7 @@
       "bytes": 5651,
       "lines": 109,
       "fixtureCommit": "29d4682f8",
-      "webCommit": "worktree",
+      "webCommit": "77fdef2bf",
       "cpppjBasis": {
         "cpppj/src/client/MissionGuideInput.cpp": "2054e0744"
       }
@@ -17229,10 +17237,100 @@
       "bytes": 170367,
       "lines": 1003,
       "fixtureCommit": "3485834e8",
-      "webCommit": "worktree",
+      "webCommit": "77fdef2bf",
       "cpppjBasis": {
         "cpppj/src/client/MissionGuideInput.cpp": "2054e0744",
         "cpppj/src/client/ScriptCommand.cpp": "2054e0744"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E349",
+      "id": "walk-shape",
+      "path": "cpppj/tests/fixtures/walk-shape-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 보호 사제(158)/골렘(133) SHP 의 모든 논리 프레임 1,170개에서 RunFrame(원본 48bb40) 뒤 부모 필드와 가상 요청 순서(각 행은 별도 초기 상태)",
+      "consumers": [
+        "webpj/tests/raw-path-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-process.js"
+      ],
+      "doc": "docs/webpj-path-process-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathProcess.cpp"
+      ],
+      "scope": "10.78 1,170행 전부",
+      "sha256": "f6fc42cde52cab5e346cafa7d5f8029c9449d38376238b20f4b44c8334e8cd7d",
+      "bytes": 97467,
+      "lines": 1171,
+      "fixtureCommit": "aa506ebb8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathProcess.cpp": "5f4b9d304"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E349",
+      "id": "pathinit",
+      "path": "cpppj/tests/fixtures/pathinit-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 Init(00488af0 위) 의 표면 0/존재·void/live·Graph·flags·기존 경로 64행 — 가상 Pop 인자·현재 단계·꼭짓점 수·부모 상태/좌표·꼭짓점 문자열·거리표/큐 FNV32·방향 3 선행 비트",
+      "consumers": [
+        "webpj/tests/raw-path-process-search.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-process.js",
+        "webpj/www/core/raw-path-search.js"
+      ],
+      "doc": "docs/webpj-path-process-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathProcess.cpp",
+        "cpppj/src/o/RawPathSearch.cpp"
+      ],
+      "scope": "10.78(originals) 32행 사용(CD 10.72 32행은 범위 밖)",
+      "sha256": "3425807811a9e34d34dd2dc69896ced9c133cf4bb4887b23786477153a6ca2ee",
+      "bytes": 7962,
+      "lines": 65,
+      "fixtureCommit": "73ef4e6d6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathProcess.cpp": "5f4b9d304",
+        "cpppj/src/o/RawPathSearch.cpp": "7f903eba0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E349",
+      "id": "pathprepare",
+      "path": "cpppj/tests/fixtures/pathprepare-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 Process 가상 +0x30(Prepare)의 nonzero override / 타입 속도 선택별 꼭짓점 시각 QWORD(두 판본 48행; 원본 x87 53비트 결과)",
+      "consumers": [
+        "webpj/tests/raw-path-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-path-process.js"
+      ],
+      "doc": "docs/webpj-path-process-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPathProcess.cpp"
+      ],
+      "scope": "10.78(originals) 24행 사용(CD 10.72 24행은 범위 밖)",
+      "sha256": "c854b31ce7ed0bc9ddf059ffa0b09a96d3ac37860aa5f05155df57e0fd772dc8",
+      "bytes": 6967,
+      "lines": 49,
+      "fixtureCommit": "028bd402c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPathProcess.cpp": "5f4b9d304"
       }
     }
   ]

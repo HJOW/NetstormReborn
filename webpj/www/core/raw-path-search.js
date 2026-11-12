@@ -7,7 +7,7 @@
 //  - surfaceAt/graphAt/connects: 0.9999 보정 칸의 표면 SID, 같은 Graph 번호 비교용 조회(번호 254 는 Graph 없음), 같은 SID 는 바로 연결 / 다른 SID 는 현재 타입·물리 프레임으로 접합(`bridgeConnects`).
 //  - RawPathSearchState: Path 가 직접 읽고 바꾸는 전역(Graph 허용·kenGo 활성·역추적 flag 2 회피·정책 선택값·방향 선행 허용 비트·방향 우선순위·예외 Graph 타입). 정책 선택값이 5 이면 방향 3 의 선행 비트를 5 로 바꾼다.
 //  - RawPathSearchWork/RawPathSearchStorage: 원본 거리표·큐와, Client 수명 소유자(진단이 새로 계산하지 않고 읽는 59514c, 실제 거리표 쓰기에 도달한 뒤에만 `initialized`).
-// 웹 범위: 10.72(CD) 판본 분기는 옮기지 않았다. `makePathSearchHooks` 는 RawPathProcess 훅 묶음이 필요하므로 경로 프로세스 이식 단위에서 옮긴다.
+// 웹 범위: 10.72(CD) 판본 분기는 옮기지 않았다. `makePathSearchHooks(pool, search, hooks)` 는 같은 풀의 검색기를 RawPathProcess 훅 묶음의 search 훅에 연결한다(2026-11-13 WB04-E349 에서 추가).
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-12 WB04-E334: 6-P RawPathSearch 이식으로 추가)
 import { PATH_LAYOUT } from './raw-path-runtime.js';
 import { pathCell, rawPathSurfaceAt } from './raw-path-surface.js';
@@ -294,4 +294,17 @@ export class RawPathSearch {
 
     // 실제 PathProcess/월드 연결의 풀 일치를 검사할 수 있게 같은 풀을 돌려준다. (2026-11-12 WB04-E334)
     get pool() { return this.#pool; }
+}
+
+// 같은 SID 풀의 BFS 를 Path 검색 훅(search)에 연결하고 기존 이동·도착·삭제 효과는 호출자의 훅 묶음을 그대로 유지한 새 묶음을 돌려준다(원본 인자 hooks 는 바꾸지 않는다).
+// 명령의 현재 시작·목적·flags 를 원본 검색기에 그대로 전달하며, 성공 여부로 대체 경로를 만들지 않는다. 풀이 다르면 거부한다.
+// 사용: new RawPathProcess(pool, hash, types, frames, shapes, spots, state, makePathSearchHooks(pool, search, hooks), kinds). (2026-11-13 WB04-E349: RawPathProcess 이식으로 추가)
+export function makePathSearchHooks(pool, search, hooks) {
+    if (pool !== search.pool) throw new TypeError('Path 검색/프로세스 SID 풀 불일치');
+    return {
+        ...hooks,
+        search: (output, parent, start, destination, flags) => {
+            search.search(output, parent, start, destination, flags);
+        },
+    };
 }
