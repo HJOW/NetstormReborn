@@ -17546,7 +17546,7 @@
       "bytes": 665206,
       "lines": 1603,
       "fixtureCommit": "53113b663",
-      "webCommit": "worktree",
+      "webCommit": "8fe6eceb7",
       "cpppjBasis": {
         "cpppj/src/o/RawRainAviaryProcess.cpp": "0b1b7c73a"
       },
@@ -17575,7 +17575,7 @@
       "bytes": 10178,
       "lines": 37,
       "fixtureCommit": "954d19422",
-      "webCommit": "worktree",
+      "webCommit": "8fe6eceb7",
       "cpppjBasis": {
         "cpppj/src/o/RawRainAviaryProcess.cpp": "0b1b7c73a"
       },
@@ -17593,6 +17593,35 @@
         "cpppj/src/o/RawRainAviaryProcess.cpp"
       ],
       "scope": "10.78 36행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E355",
+      "sha256": "627270d186495d6929cac8a1d4e74c29e92c69294558e020b7d774854b0dfc85",
+      "bytes": 879878,
+      "lines": 745,
+      "fixtureCommit": "f9cf145f0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFlyerFrame.cpp": "8b467ca03"
+      },
+      "id": "flyer-frame",
+      "path": "cpppj/tests/fixtures/flyer-frame-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 공통 비행 프레임 초기화 I·애니메이션 A·표적 해제 C·통지 N·홈 통지 D·제어 F 744행 — 필드 112바이트·객체 350바이트·전역 20바이트·소리 장부 20바이트·훨리베이스 48바이트·결과·호출 순서",
+      "consumers": [
+        "webpj/tests/raw-flyer-frame.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-flyer-frame.js"
+      ],
+      "doc": "docs/webpj-flyer-frame-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFlyerFrame.cpp"
+      ],
+      "scope": "10.78 744행 전부"
     }
   ]
 }
