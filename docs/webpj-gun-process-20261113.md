@@ -1,0 +1,35 @@
+# webpj 총 프로세스 RawGunProcess (WB04-E359, 2026-11-13, 7-P2 총·투사체 부품 첫 항목)
+
+3.1절 7-P2 첫 항목 "RawGunProcess 423줄(+33)"(기준선 `.cpp` 277 + `.h` 144 = 421줄, 기준선 뒤 +33줄)을 `core/raw-gun-process.js` 로 옮겼다. 총(Gun, TYPE 34)의 실제 0x38바이트 필드·상태 기계·표적 감시 종속·상태 패킷과 수신(기본 생성자·읽기)을 담고, 실제 Kernel 수명(`GunProcess`)과 flags 0 부착 공장(`attachGunProcess`·`createGunProcess`)을 함께 둔다. 이 모듈이 `o/Player.h` 에서 쓰는 것은 플레이어 수 상수(8) 하나뿐이라 4-C 의 Player 를 기다리지 않고 모듈 안 상수로 처리했다. `MakeGunTargetHooks` 는 `RawGunTarget.cpp` 소속이라 다음 항목(RawGunTarget)에서 잇는다.
+
+## 1. 규칙
+
+- **구성:** `new RawGunProcess(pool, types, globals, hooks)` — 풀은 PATCH, TYPE 표는 188칸(생성 때 **group 만 복사**한다: C++ 가 `vector` 로 복사하므로 만든 뒤 표를 바꿔도 영향이 없고, `group` 이 없는 칸은 0). 전역 열두 개(`now`·`boss`·`server`·`fortMode`·`fixedMode`·`disabled`·`friendlyFire`·`checking`·`windArcherType`·`thunderCannonType`·`rainCannonType`·`alliance(소유자, 대상)`)는 모두 **소비 위치마다 현재 값을 읽는 함수**이다(boss/server 는 같은 `RawAuthorityState` 를 빌려도 된다; 친군 사격과 checking 은 비영 DWORD 판정; 동맹은 방향별 DWORD 한 칸으로 0 이 비동맹). 훅 열여덟 개는 선택된 것만 요구하고 선택된 누락은 앞선 쓰기를 남기지 않고 원문 문구로 거부한다(미복원 효과를 빈 함수로 성공시키지 않는다).
+- **필드:** `GunProcessFields.bytes` 0x38 — +8 dirty·+0x10 다음 시각(raw double)·+0x18 WORD 표적·+0x1c 단계·+0x20 group(signed)·+0x28 inner VT·+0x2c inner Form·+0x30 inner 부모. 쓰기는 해당 폭만이고 padding 은 입력 그대로다. 시각/단계/표적 변경은 각각 dirty 비트 2/8/4 만 켠다.
+- **`initialize`/`construct` (0046a1a0):** 부모 TYPE 의 group 이 0/1 이 아니면 원문 assert. 그 뒤 두 VT(0x50b668/0x50b648)·dirty 0xff·Form/부모 0·표적 0·시각 now·단계 0·group 을 쓴다. `construct` 는 `attach` 훅(실제 flags 0 부착)이 없으면 필드를 바꾸기 전에 거부한다. `initializeReceived`(0046a030)는 수신 observer 가 읽을 표적/시각/단계와 두 VT 만 쓰고 group·padding 은 보존한다.
+- **`frame` (0046b830):** ① 부모 group/abstract(1)/astral(8) 불일치는 원문 assert, 정지(0x20)·고정 모드·비활성은 무동작. ② boss 이면 표적이 풀 밖이거나 죽음/free 이거나(동맹이고 친군 사격이 꺼짐)이면 `clearTarget(false)` — 동맹 소유자는 0~8 만 허용하고 방향별 한 칸만 읽는다. ③ 부모를 다시 읽은 뒤 시각이 NaN 이거나 아직이면(`!(time <= now)`) 반환, 부모 extra bit0 도 반환. ④ 단계: 0 idle(검사 시 애니메이션/표적 없음 assert) → 검색 1, 1 검색(서버이고 Fort 모드가 아니거나 친군 사격이면 `targetingMode`→`findTarget`; 찾으면 `setTarget`, 못 찾으면 다음 시각 = `(난수(0, 0.2f) + 0.4f) + now`; 검사 시 지면 소유자 진단), 2 회전 대기(group 0 이 아니거나 바람 아처이고 썬더/아이스 캐논이 아니면 회전 애니메이션 시작→3, 아니면 4; group 은 **효과 뒤 현재 부모 TYPE** 에서 다시 읽는다), 3/6/9 애니메이션 중 대기, 4 표적이 있으면 5 아니면 1, 5 표적이 있으면 발사 애니메이션 시작→6, 7 발사, 8 종료 애니메이션→9, 10 → 1, 그 밖은 원문 assert.
+- **`clearTarget`/`setTarget` (0046a290/0046a960):** 해제는 boss 가 아니면 무동작, 서버가 아니면 원문 assert, 전송 필요성은 변경 전 값(`restart ? 표적 또는 단계≠1 : 표적≠0`)으로 정하며 표적 0·전송 없음은 어떤 외부 경계도 요구하지 않는다. 지정은 서버 작업(공격 모드와 무관)이고 현재 AnimationForm 을 세 번 조회한 뒤 사거리 갱신과 재전송을 한다.
+- **`notify` (0046a340):** 애니메이션 종료 4(또는 단계 6 의 7)는 단계로 기록하고 검사 시 AnimationForm 이 없으면 진단 0x154/0x160, 알 수 없는 값은 진단 0x16a 뒤 복귀. 표적 삭제 통지(서버)는 검사 시 `info2 == getTargetSid()`(0x16e) 진단 뒤 같은 표적이면 `clearTarget(true)` 와, 부모 상태 bit1(dead)이 서 있지 않을 때만 한 번 더 재전송을 한다. 진단이 복귀하면 현재 필드/부모를 다시 읽고 계속한다.
+- **`fire` (0046bd20):** 부모 검사 뒤 네 경계가 모두 있어야 한다. 검사 시 `checkForms` 전/후, 부모 차단이거나 고정 모드면 반환, 유효 표적(풀 안·죽음/free 아님)이고 `shoot` 이 참이면 단계 2, 아니면 `clearTarget(true)`, 어느 경우나 다음 시각 = 현재 시각 + 발사 간격.
+- **수신:** `receiveUpdate(fields, dirty, beforeRead)`(0046a4b0)는 읽기 전이고 dirty bit8 이며 옛 단계가 3/6 일 때만 현재 AnimationForm 을 두 번 조회해 중지한다. `readData(fields, packet, parent)`(00468f80)는 9바이트 머리가 모자라면 거부, 읽기 전 observer → bit1 부모 DWORD(상자 `parent.value`)·bit2 시각 8·bit4 표적 2·bit8 단계 4·bit16 group 4 를 선택된 것만 복사(모자라면 이미 쓴 것을 되돌리지 않고 거부) → 읽기 후 observer. 원문은 dirty 를 필드로 복사하거나 소비하지 않는다.
+- **writer:** `writeData`(00468ed0)는 길이(9 + 부모 4 + dirty 별 8/2/4/4)를 먼저 검사해 모자란 버퍼를 변경 전에 거부하고, 헤더·부모(bit1 켬)·선택 필드·길이·dirty 를 쓰고 dirty 를 0 으로 둔다. `writeProcess`(0046a090)는 `includeParent || force` 일 때만 현재 inner 부모를 쓰며 기본 protocol 1·message 0x3a.
+- **Kernel 수명:** `GunProcess` 는 `runFrame`→`frame`, `onAttached`→Form/부모를 필드에 쓴 뒤 단계 3→2·6→5 만 되돌리는 `attached`, `notify`, `writePacket`(OnAttached 이전 Form/부모를 먼저 동기화)을 가진다. `attachGunProcess`/`createGunProcess` 는 Host 와 로직의 풀이 같아야 하며(검사가 부모 검사보다 먼저) flags 0·기본 TYPE 34 로 부착한다.
+
+## 2. 웹 범위와 기준선 뒤 변경
+
+- 10.72(CD)는 범위 밖이다(PATCH 188칸만 받는다). 기준선 뒤 변경 세 건을 반영했다(PORT_MAP base `cc562ccf`): `20261107-40 CP`(실제 총 프로세스 전체 수신: `initializeReceived`·`readData`·`receiveUpdate` 의 읽기 전/후 구분), `20261107-48 CP`(친군 사격과 checking 을 서로 다른 현재 DWORD 의 비영 뷰로), `20261109-60 CP`(바람 아처/썬더/아이스 캐논 역할 번호를 소비 위치마다 읽는 현재 getter 로).
+- 훅 구현은 후속 단계 조립 몫이다: `removeDependency`·`addDependency`·`repopForm`·`animationForm`·`killAnimation`·`refreshRange`·`targetingMode`(이미 있는 `RawGunMode`)·`findTarget`·`randomBetween`·`startAnimation`·`validateIslandOwners`(`diagnoseRawGunIslandOwners`)·`checkForms`(`checkRawObjectForms`)·`parentBlocked`·`shotContext`·`shoot`·`firingInterval`·`attach`·`assertion`. 이 모듈은 DOM 을 쓰지 않는다.
+
+## 3. 검사 (`tests/raw-gun-process.test.mjs` 29건)
+
+- **원본 독립 관측:** `gunprocess-x86.tsv` 의 10.78(originals) 1,498행 — 생성 2·프레임 261·표적 해제 32·표적 지정 8·부착 직후 11·통지 352·발사 144·writeData 256·writeProcess 256·수신 관찰 176 이 호출 순서·필드 0x38바이트(미정 padding 포함)·패킷 64바이트·길이까지, `gun-notify-checking-x86.tsv` 904행(검사 진단의 복귀/중단과 진단이 바꾼 표적/부모 상태의 재조회)이 호출 순서·필드·outcome·checking·부모 상태까지 **첫 실행에서 전부** 일치했다.
+- **cpppj 시험 이식(11건):** `GunProcess_PatchNativeBodies`·`_SharedAuthorityReplaysBothNativeBodies`·`_CurrentDirectionalAlliances`·`_CurrentAllianceShortCircuit`·`_MissingEffectAndPacketBounds`·`_ClearNaturalZeroBoundary`(21행)·`_ActualHostTransmitAndLifetime`·`_SharedAuthorityChangesWithoutShadowSynchronization`·`GunNotify_NativeCheckingAndDiagnosticReturn904`·`_PreviousBothEditions`(352행)·`_SelectedDiagnosticAndCurrentOwner`.
+- **웹 계약(18건):** 필드 접근자(시각 8바이트 전체·부호·하위 WORD), 생성/수신 기본 생성자의 필드 이미지 전체(padding 보존)와 group 0/1 외 거부, 부모 SID/TYPE 범위(0·용량·65535·TYPE 188/255)와 free/dead 부모 허용, 프레임 관문(group/abstract/astral 각각·정지·고정·비활성), 동맹 소유자 0~8(9 거부), 풀 용량과 같은 표적의 즉시 해제, 해제 효과가 바꾼 부모 extra 의 재조회, 선택된 경계 누락의 문구와 필드·효과 불변(해제 셋·지정 여섯·검색 셋·발사 넷·수신 둘·검사 idle), 통지의 부모 상태 0~3, 풀 밖/죽음/free 표적 발사와 발사 간격 인자, 수신 관찰의 아홉 조합, 수신 읽기의 비트별 폭과 모자란 패킷, writer 의 모든 dirty×부모×force 128조합(정확한 길이·내용·딱 맞는 버퍼·1바이트 모자람 거부), writeProcess 기본값/부모 선택, 공장(풀 불일치가 부모 검사보다 먼저·기본 TYPE 34·flags 0·GunProcess 아닌 결과 null), 래퍼(onAttached 의 3→2·6→5, notify 전달), TYPE 표의 group 누락=0 과 단계 2 의 현재 부모 TYPE 재조회.
+- 시험이 먼저 실패한 곳은 시험 쪽 한 건뿐이었다(수신 기본 생성자가 부모 필드를 0 으로 지운 뒤 부모를 되돌리지 않은 시험). 모듈은 관측 대조에서 바뀌지 않았다.
+
+## 4. 변형 확인과 남은 경계
+
+- 한 문자열 치환 변형 343회(연산자·정수 상수 286 + 단항 `!` 제거·인자 순서·`put`/`set` 혼용 등 의미 변형 57)를 적용했다. 연산자·상수 변형은 1차에서 67개, 의미 변형은 6개가 남았고 대부분은 **시험의 공백**이라 보강해 잡았다. 원본 관측 1,498행의 입력이 좁아(모든 훅이 갖춰진 장면·부모 TYPE 몇 개·큰 패킷 버퍼·단일 조합) 훅이 하나씩 빠진 경우, 수신 읽기의 비트별 폭, 딱 맞는 패킷 길이, 풀 용량과 같은 SID, 소유자 8/9 경계, 필드 이미지 전체와 padding, 훅 인자 순서가 가려져 있었다.
+- 남은 동등 변형 6개: 공용 DataView 크기 8→9(여덟 바이트만 쓴다)·생성자의 `dirty |= 0x10` 을 `0x11` 로(이미 0xff)·정지 비트 0x20 을 0x21 로(bit0 은 앞의 abstract assert 가 이미 거부)·`readData` 의 읽기 전 인자 1→2(참/거짓 판정)·`require` 의 `offset > length` 를 `>=` 로(폭 ≥ 1 이라 뒤 조건이 같은 결과)·헤더 길이 기록 `cursor` 를 `length` 로(두 값이 항상 같다).
+- 변형하지 않은 방어선: 오류 메시지 문구 자체(시험은 문구의 핵심 낱말만 확인).
+- 앱 수명 연결(훅 구현과 `RawAssetPostPop.createGunProcess` 에 `createGunProcess` 연결)은 후속 단계 조립 몫이다. 다음 7-P2 항목은 **RawGunTarget**(partial: MakeGunTargetHooks·보호 SHP 자산 사정선 48행)이다.

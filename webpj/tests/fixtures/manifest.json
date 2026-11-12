@@ -17720,7 +17720,7 @@
       "bytes": 89432,
       "lines": 335,
       "fixtureCommit": "edc257f9a",
-      "webCommit": "worktree",
+      "webCommit": "f86d8a7f7",
       "cpppjBasis": {
         "cpppj/src/o/RawWindFlyer.cpp": "edc257f9a"
       },
@@ -17738,6 +17738,64 @@
         "cpppj/src/o/RawWindFlyer.cpp"
       ],
       "scope": "10.78 334행 전부"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E359",
+      "sha256": "d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7",
+      "bytes": 1093605,
+      "lines": 2997,
+      "fixtureCommit": "ada85427f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGunProcess.cpp": "cc562ccfc"
+      },
+      "id": "gunprocess",
+      "path": "cpppj/tests/fixtures/gunprocess-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 총 프로세스 진입점 열 가지(생성·프레임·표적 해제·표적 지정·부착 직후·통지·발사·writeData·writeProcess·수신 관찰) — 호출 순서·필드 0x38바이트·패킷 64바이트·길이",
+      "consumers": [
+        "webpj/tests/raw-gun-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-gun-process.js"
+      ],
+      "doc": "docs/webpj-gun-process-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGunProcess.cpp"
+      ],
+      "scope": "10.78(originals) 1,498행 전부 사용, originalCD 1,498행은 범위 밖"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E359",
+      "sha256": "e7a26f78b6f2994cb373051b7fa0e3ebf73a5d636619bd1f6afaeb010c9c0463",
+      "bytes": 367045,
+      "lines": 905,
+      "fixtureCommit": "34e3c3f9b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawGunProcess.cpp": "cc562ccfc"
+      },
+      "id": "gun-notify-checking",
+      "path": "cpppj/tests/fixtures/gun-notify-checking-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 총 프로세스 통지의 checking 진단 복귀·중단과 진단이 바꾼 표적/부모 상태의 재조회 904행",
+      "consumers": [
+        "webpj/tests/raw-gun-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-gun-process.js"
+      ],
+      "doc": "docs/webpj-gun-process-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawGunProcess.cpp"
+      ],
+      "scope": "10.78 904행 전부"
     }
   ]
 }
