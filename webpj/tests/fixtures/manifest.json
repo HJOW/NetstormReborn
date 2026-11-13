@@ -19702,7 +19702,7 @@
       "bytes": 5688829,
       "lines": 772,
       "fixtureCommit": "fb6c073a4",
-      "webCommit": "worktree",
+      "webCommit": "aef98c6ab",
       "cpppjBasis": {
         "cpppj/src/client/GumpEvents.cpp": "fb6c073a4",
         "cpppj/src/client/GumpEvents.h": "225f2322c"
@@ -19733,7 +19733,7 @@
       "bytes": 4986594,
       "lines": 697,
       "fixtureCommit": "860808b90",
-      "webCommit": "worktree",
+      "webCommit": "aef98c6ab",
       "cpppjBasis": {
         "cpppj/src/client/GumpInput.cpp": "860808b90",
         "cpppj/src/client/GumpInput.h": "225f2322c"
@@ -19764,10 +19764,74 @@
       "bytes": 6424156,
       "lines": 811,
       "fixtureCommit": "082a830cf",
-      "webCommit": "worktree",
+      "webCommit": "aef98c6ab",
       "cpppjBasis": {
         "cpppj/src/client/GumpFrame.cpp": "082a830cf",
         "cpppj/src/client/GumpFrame.h": "225f2322c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E414",
+      "consumers": [
+        "webpj/tests/gump-redraw-text-help.test.mjs"
+      ],
+      "doc": "docs/webpj-gump-redraw-text-help-20261114.md",
+      "id": "gump-redraw",
+      "path": "cpppj/tests/fixtures/gump-redraw-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 기본 Gump Whole/Map 갱신·원문 화면 좌표 clamp",
+      "modules": [
+        "webpj/www/render/gump-redraw.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/GumpRedraw.cpp",
+        "cpppj/src/client/GumpRedraw.h"
+      ],
+      "scope": "1474행 Whole728/Map728/Clamp18의 요청 전체·모든 위치캐시·투영 순서",
+      "text": true,
+      "sha256": "466b3deef743ab396beddfe0dafc5549fb0f6a8a556a89f1a85cd5b18515c6d7",
+      "bytes": 932123,
+      "lines": 1475,
+      "fixtureCommit": "350ebc500",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpRedraw.cpp": "350ebc500",
+        "cpppj/src/client/GumpRedraw.h": "350ebc500"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E414",
+      "consumers": [
+        "webpj/tests/gump-redraw-text-help.test.mjs"
+      ],
+      "doc": "docs/webpj-gump-redraw-text-help-20261114.md",
+      "id": "gumptext",
+      "path": "cpppj/tests/fixtures/gumptext-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 원문 글자 측정/FontStore 선택·출력 alias",
+      "modules": [
+        "webpj/www/assets/font-set.js",
+        "webpj/www/core/gump-text-measure.js",
+        "webpj/www/render/gump-text.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/GumpText.cpp",
+        "cpppj/src/client/GumpText.h"
+      ],
+      "scope": "원문 Font입력을 실제메모리캐시/BitmapFont/FontSet에 공급한 originals305행 폭/높이·signed 길이·alias. CD/추가판 제외",
+      "text": true,
+      "sha256": "64f7dd3aa8a0b2e850f86b53c2753df4bb9249e31945ac9c6f2e76d189b6e047",
+      "bytes": 113797,
+      "lines": 934,
+      "fixtureCommit": "18b387775",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpText.cpp": "5a2cd0474",
+        "cpppj/src/client/GumpText.h": "225f2322c"
       }
     }
   ]
