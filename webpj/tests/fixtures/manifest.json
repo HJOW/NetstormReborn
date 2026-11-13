@@ -19861,7 +19861,7 @@
       "bytes": 161026,
       "lines": 178,
       "fixtureCommit": "8ca250039",
-      "webCommit": "worktree",
+      "webCommit": "7a5c9b3cc",
       "cpppjBasis": {
         "cpppj/src/client/GumpBackground.cpp": "37a0662b4",
         "cpppj/src/client/GumpBackground.h": "225f2322c"
@@ -19893,10 +19893,41 @@
       "bytes": 1389044,
       "lines": 628,
       "fixtureCommit": "37a0662b4",
-      "webCommit": "worktree",
+      "webCommit": "7a5c9b3cc",
       "cpppjBasis": {
         "cpppj/src/client/GumpBackgroundDraw.cpp": "8db4af6f5",
         "cpppj/src/client/GumpBackgroundDraw.h": "8db4af6f5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E416",
+      "consumers": [
+        "webpj/tests/button-gump.test.mjs"
+      ],
+      "doc": "docs/webpj-button-gump-20261114.md",
+      "id": "buttongump",
+      "path": "cpppj/tests/fixtures/buttongump-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 실제 ButtonGump 생성/상태/입력/통지/idle와 매 콜백 전체 저장소",
+      "modules": [
+        "webpj/www/ui/button-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ButtonGump.cpp",
+        "cpppj/src/client/ButtonGump.h"
+      ],
+      "scope": "originals252행의 연속 action 반환·전체368BYTE 노드/미작성 꼬리·일곱 전역/다섯 표·모든 콜백 당시 전체 상태와 명시 raw응답. CD/추가판 제외",
+      "text": true,
+      "sha256": "5f6d5944090c763e0189e6ec47f2f00d5db8ee3f07be1099333ce66a93a0ff9c",
+      "bytes": 13851152,
+      "lines": 743,
+      "fixtureCommit": "f1aaf85d9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ButtonGump.cpp": "70446743a",
+        "cpppj/src/client/ButtonGump.h": "225f2322c"
       }
     }
   ]
