@@ -31,3 +31,16 @@
 - 자동 연산자·상수 변형 121개를 적용했다. 1차 생존 21건 중 5건(버려짐 플래그 값, 요청 상자 초기값 둘, `sceneImage` 선택 표시의 원점 두 위치)은 시험 공백이어서 독립 입력을 보강해 모두 잡았다(재확인 5/5). `dirty-regions.js` 의 이번 변경 두 곳(`clear` 배열 유지, `cameraEntries` 살아 있는 표)은 수동 변형 2/2 를 잡았다.
 - 남은 16건은 동등 변형이다: ① 비트 0 은 "버려짐" 표식이라 그려지는 항목의 flags 에 남지 않으므로 불투명 값 4→5 와 `flags & 4`→`& 5` 는 구분되지 않는다(2건), ② `invalidate` 의 기본 flags 0→1 은 `add` 가 비트 0 을 지우므로 같다, ③ 커서 초기 위치는 그림이 `null` 이면 어디서도 읽히지 않는다(2건), ④ 그림이 없는 경우의 빈 범위 `{0,0,0,0}` 한 좌표만 1 로 바꿔도 `right` 또는 `bottom` 이 0 이라 여전히 비어 있다(4건), ⑤ `glyph-text.js` 는 flags 의 비트 2·4 만 읽으므로 그림자/외곽선 값 2→3·4→5 와 꺼진 값 0→1 은 같고(4건), Renderer 가 항상 `clip` 을 넘기므로 표면 `bounds` 의 왼쪽·위 0→1 은 읽히지 않는다(2건), ⑥ 월드가 없을 때 `covered` 는 쓰이지 않으므로 0→1 이 같다.
 - 다음 5-A 항목: `ClientRendererFrame`(+`ClientRendererFrameGlobals.h`), `ScreenPresentation`, `Screen`, `RawCursorPreviews`(커서 전역 K 영역 선행), cpppj Session 시험 재대조.
+
+## 5. 시험 보강 (WB04-E392, 2026-11-13)
+
+E391 이 옮기지 않은 cpppj `RendererPresentationTests.cpp` 네 건 중 세 건을 `tests/renderer.test.mjs` 에 이식했다(시험 23건 → 27건). 모듈 코드 변경은 없다.
+
+- **`RendererPresentation_NativeDirtyRequestsAndFirstFlags`:** 원본 x86 관측 `renderer-present-dirty-x86.tsv` **288행**(보호 PE 의 카메라/배경 다시 그리기 요청·개수 0/1/2 표·첫/둘째 flags·세 화면비와 최종 9 DWORD·실제 호출 순서)을 한 행씩 재생해 그리기 건수, 출력 중 요청 상자·표 크기, 출력 호출 목록, 출력 뒤 요청 상자·빈 표를 대조한다. **첫 실행에서 288행 전부 일치**했다(manifest id `renderer-present-dirty`). 개수 0 인 표도 첫 flags 를 지우지 않는 입력(표를 한 항목으로 바꾼 뒤 `clearDirty`)을 포함한다.
+- **`RendererPresentation_ScrollKeepsInteriorAndPresentsFull`:** 카메라 이동 요청이 켜져 있으면 노출 띠(18..20)만 월드 수집·제출하고 안쪽 픽셀은 보존하며, 출력은 전체 화면 한 건이다.
+- **`RendererPresentation_ClipsActualTableBeforePresent`:** 그리기에서 화면 경계로 제한된 빈 영역 항목(`21,11,30,20` → `20,10,20,10`)도 출력 표에서 임의로 빠지지 않는다.
+- **웹 계약 보강 1건:** `world.submit` 이 없으면 비불투명 영역은 월드 항목과 추가 수집을 깊이 순으로 그리고 불투명(4) 영역은 추가 수집기만 부르며, `submit` 이 있으면 추가 수집기를 부르지 않는다(E391 변형 점검에서 드러난 시험 공백).
+
+**변형 확인:** `draw`/`present` 구간(269~360행)의 연산자·상수 변형 60회 중 1차 생존 4건이었다. 2건(`world` 없는 경로의 `covered` 기본값, 비트 0 은 항상 꺼져 있어 `flags & 4`→`& 5` 가 같음)은 동등 변형이고, 2건(`submit` 없는 world 의 불투명 판정, `submit` 이 있을 때 추가 수집 생략)은 위 보강 시험으로 잡혀 재확인 후 **58/60 잡음·2건 동등**이다.
+
+**남은 경계:** 네 번째 `RendererPresentation_ActualCameraCommitSharesDirtyAndRequest` 는 `RawCameraCommit`·`ClientCameraGlobals` 연결이 필요해 `RawCameraCommit` 단위(6단계 카메라 입력) 뒤로 미룬다. 다음 5-A 항목은 `ClientRendererFrame`·`ScreenPresentation`·`Screen` 이다.

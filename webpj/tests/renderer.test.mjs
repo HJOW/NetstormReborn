@@ -766,3 +766,135 @@ test('Renderer 초기 상태와 버려진 항목: 요청 상자는 0 에서 시�
     assert.deepEqual(sent, [{ left: 0, top: 0, right: 5, bottom: 5 }]);
     assert.equal(renderer.presentCount, 2);
 });
+
+// ---- cpppj RendererPresentationTests 이식 (2026-11-13 WB04-E392: Renderer 시험 보강) ----
+
+// 원본 출력 요청 관측 288행이다(보호 PE 의 카메라/배경 요청·빈 표·첫 flags 입력과 최종 9 DWORD·실제 호출). 파일이 없으면 해당 검사를 건너뛴다. (2026-11-13 WB04-E392)
+const presentRows = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'renderer-present-dirty-x86.tsv'));
+
+// 호출 문자열(`;` 구분)에서 화면 출력(U:…) 호출만 남긴다(cpppj Updates). (2026-11-13 WB04-E392)
+function updatesOf(text) {
+    return text.split(';').filter((event) => event.startsWith('U:')).join(';');
+}
+
+// 화면 사각형의 출력 호출 문자열이다(cpppj Update). (2026-11-13 WB04-E392)
+const updateText = (rect) => `U:${rect.left}:${rect.top}:${rect.right}:${rect.bottom}`;
+
+test('RendererPresentation_NativeDirtyRequestsAndFirstFlags: 원본 PE 의 요청·첫 flags·빈 표·세 화면비 288 입력과 그리기·출력 소비가 일치한다', { skip: presentRows === null }, () => {
+    let rows = 0;
+    // 기대값은 이식 구현으로 만들지 않고 보호 PE 의 고정 출력만 읽는다.
+    for (const row of presentRows) {
+        assert.equal(row.length, 18, row.join(' '));
+        const words = row.slice(0, 17).map(Number);
+        const events = row[17];
+        const [width, height] = words;
+        const renderer = new Renderer(width, height);
+        const pixels = new Uint8Array(width * height);
+        renderer.draw(pixels, width);
+        renderer.present(() => {});
+        // 개수 0 도 첫 flags 물리 바이트를 지우지 않는 원문 입력이다: 표를 한 항목으로 바꾸고 비운 뒤 개수만큼 다시 넣는다.
+        const entries = renderer.cameraDirtyEntries();
+        entries.length = 0;
+        entries.push({ rect: { left: 2, top: 3, right: 7, bottom: 8 }, flags: words[6] });
+        renderer.clearDirty();
+        if (words[5]) entries.push({ rect: { left: 2, top: 3, right: 7, bottom: 8 }, flags: words[6] });
+        if (words[5] === 2) entries.push({ rect: { left: 20, top: 30, right: 40, bottom: 50 }, flags: words[7] });
+        renderer.cameraRedraw.value = words[2];
+        renderer.backgroundRedraw.value = words[3];
+        const drawn = renderer.draw(pixels, width);
+        const expectedDraws = (words[5] > 0 && !(words[6] & 1) ? 1 : 0) + (words[5] > 1 && !(words[7] & 1) ? 1 : 0);
+        // 출력 전체화가 월드의 재수집/재합성을 늘리지 않아야 한다.
+        assert.equal(drawn.length, expectedDraws, row.join(' '));
+        assert.equal(renderer.cameraRedraw.value, words[2], row.join(' '));
+        assert.equal(renderer.backgroundRedraw.value, words[3], row.join(' '));
+        const actual = [];
+        // 원문은 두 요청을 지운 뒤 같은 표를 내보낸다.
+        renderer.present((rect) => {
+            assert.equal(renderer.cameraRedraw.value, 0, row.join(' '));
+            assert.equal(renderer.backgroundRedraw.value, 0, row.join(' '));
+            assert.equal(renderer.cameraDirtyEntries().length, (words[2] || words[3]) ? 1 : words[5], row.join(' '));
+            actual.push(updateText(rect));
+        });
+        assert.equal(actual.join(';'), updatesOf(events), row.join(' '));
+        assert.equal(renderer.cameraRedraw.value, words[8], row.join(' '));
+        assert.equal(renderer.backgroundRedraw.value, words[9], row.join(' '));
+        assert.equal(renderer.cameraDirtyEntries().length, 0, row.join(' '));
+        assert.equal(renderer.draw(pixels, width).length, 0, row.join(' '));
+        renderer.present(() => {});
+        rows += 1;
+    }
+    assert.equal(rows, 288);
+});
+
+test('RendererPresentation_ScrollKeepsInteriorAndPresentsFull: 이동 뒤 노출 띠만 월드로 다시 합성하고 안쪽 픽셀은 보존하며 전체 화면을 한 번 출력한다', () => {
+    const renderer = new Renderer(20, 10);
+    const pixels = new Uint8Array(200).fill(7);
+    const collected = [];
+    renderer.draw(pixels, 20);
+    renderer.present(() => {});
+    pixels.fill(7);
+    const world = {
+        collect: (rect) => { collected.push({ ...rect }); return 0; },
+        background: () => {},
+        // 실제 노출 띠 바깥의 스크롤 결과는 그대로 둔다.
+        submit: (surface, pitch, height, rect) => {
+            for (let y = rect.top; y < rect.bottom; y += 1) surface.fill(9, y * pitch + rect.left, y * pitch + rect.right);
+        },
+    };
+    renderer.invalidate({ left: 18, top: 0, right: 20, bottom: 10 });
+    renderer.cameraRedraw.value = 1;
+    renderer.draw(pixels, 20, 0, world);
+    assert.deepEqual(collected, [{ left: 18, top: 0, right: 20, bottom: 10 }]);
+    assert.equal(pixels[10], 7);
+    assert.equal(pixels[19], 9);
+    const updated = [];
+    renderer.present((rect) => updated.push(updateText(rect)));
+    assert.deepEqual(updated, ['U:0:0:20:10']);
+    assert.equal(renderer.draw(pixels, 20, 0, world).length, 0);
+    renderer.present(() => {});
+});
+
+test('RendererPresentation_ClipsActualTableBeforePresent: 그리기에서 화면 경계로 제한된 항목은 빈 영역이어도 출력 표에 남는다', () => {
+    const renderer = new Renderer(20, 10);
+    const pixels = new Uint8Array(200);
+    renderer.draw(pixels, 20);
+    renderer.present(() => {});
+    const entries = renderer.cameraDirtyEntries();
+    entries.length = 0;
+    entries.push({ rect: { left: -2, top: -3, right: 7, bottom: 8 }, flags: 0 }, { rect: { left: 21, top: 11, right: 30, bottom: 20 }, flags: 0 });
+    const drawn = renderer.draw(pixels, 20);
+    assert.equal(drawn.length, 1);
+    assert.equal(updateText(drawn[0]), 'U:0:0:7:8');
+    const updates = [];
+    renderer.present((rect) => updates.push(updateText(rect)));
+    assert.equal(updates.length, 2);
+    assert.equal(updates[1], 'U:20:10:20:10');
+});
+
+test('Renderer.draw 의 world(submit 없음/있음): submit 이 없으면 비불투명 영역은 월드와 추가 수집을 깊이 순으로 그리고 불투명(4) 영역은 수집만 하며, submit 이 있으면 추가 수집기를 부르지 않는다', () => {
+    const log = [];
+    const renderer = new Renderer(20, 10);
+    let collections = 0;
+    renderer.setScene([procedureSprite(log, 1, 5)]);
+    renderer.setExtraCollection(() => { collections += 1; return [procedureSprite(log, 2, 3)]; });
+    const pixels = new Uint8Array(200);
+    const bare = { collect: () => 0, background: () => {} };
+    // submit 이 없는 world: 비불투명 영역은 정렬된 월드 항목(깊이 5)과 추가 수집(깊이 3)을 이 순서로 그린다.
+    renderer.draw(pixels, 20, 0, bare);
+    renderer.present(() => {});
+    assert.equal(collections, 1);
+    assert.deepEqual(log, [1, 2]);
+    // 불투명(4) 영역: 추가 수집기는 부르지만 월드 표시는 그리지 않는다.
+    log.length = 0;
+    renderer.invalidate({ left: 0, top: 0, right: 3, bottom: 3 }, 4);
+    renderer.draw(pixels, 20, 0, bare);
+    renderer.present(() => {});
+    assert.equal(collections, 2);
+    assert.deepEqual(log, []);
+    // submit 이 있는 world: 같은 5,000칸 출력기가 모든 종류를 그리므로 추가 수집기는 부르지 않는다.
+    renderer.invalidate({ left: 0, top: 0, right: 3, bottom: 3 }, 0);
+    renderer.draw(pixels, 20, 0, { ...bare, submit: () => log.push('submit') });
+    renderer.present(() => {});
+    assert.equal(collections, 2);
+    assert.deepEqual(log, ['submit']);
+});

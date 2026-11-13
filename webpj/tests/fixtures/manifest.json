@@ -18979,7 +18979,39 @@
       "bytes": 56526,
       "lines": 395,
       "fixtureCommit": "30b24a9bc",
-      "webCommit": "worktree",
+      "webCommit": "8671967dc",
+      "cpppjBasis": {
+        "cpppj/src/client/Renderer.cpp": "5a2cd0474",
+        "cpppj/src/client/Renderer.h": "731c9dee9"
+      }
+    },
+    {
+      "id": "renderer-present-dirty",
+      "path": "cpppj/tests/fixtures/renderer-present-dirty-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 x86 관측: Renderer 출력(00499fe0)의 카메라/배경 다시 그리기 요청·빈 표·첫 flags 보존과 세 화면비(288행: 입력 8개와 최종 9 DWORD·실제 호출 순서)",
+      "consumers": [
+        "webpj/tests/renderer.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/renderer.js",
+        "webpj/www/render/dirty-regions.js"
+      ],
+      "unit": "WB04-E392",
+      "doc": "docs/webpj-renderer-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/Renderer.cpp",
+        "cpppj/src/client/Renderer.h"
+      ],
+      "scope": "288행 전부",
+      "text": true,
+      "sha256": "37d53dba949947109d4e6c09cbe22272449498c114de2a68060352ad50ddabca",
+      "bytes": 21125,
+      "lines": 289,
+      "fixtureCommit": "fcec59c0e",
+      "webCommit": "8671967dc",
       "cpppjBasis": {
         "cpppj/src/client/Renderer.cpp": "5a2cd0474",
         "cpppj/src/client/Renderer.h": "731c9dee9"
