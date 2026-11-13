@@ -18112,6 +18112,96 @@
         "cpppj/src/o/RawDaisLifecycle.cpp": "4ee213870",
         "cpppj/src/o/RawDaisDeletion.cpp": "21bb25505"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E373",
+      "consumers": [
+        "webpj/tests/color-maps.test.mjs"
+      ],
+      "doc": "docs/webpj-color-maps-20261113.md",
+      "sha256": "55c7e9e1d33f125b86f17fe3bf40a9efbf2cf8834669d5950eed216a9fbe2b6d",
+      "bytes": 10846,
+      "lines": 4,
+      "fixtureCommit": "72640bbb3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SpriteColorMaps.cpp": "1754e5461",
+        "cpppj/src/client/PaletteShade.cpp": "8ca250039"
+      },
+      "id": "sprite-colors",
+      "path": "cpppj/tests/fixtures/sprite-colors-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 전체 ColorSort/43c010 의 추상(밝음)·건설·그림자 색 변환표 256바이트 세 개(실제 GIFCLOUD 파일 팔레트·혼합 RGB·중복 회색 세 입력의 논리 팔레트 256색)",
+      "modules": [
+        "webpj/www/core/sprite-color-maps.js",
+        "webpj/www/assets/palette.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/SpriteColorMaps.cpp",
+        "cpppj/src/client/PaletteShade.cpp"
+      ],
+      "scope": "10.78 전용 3행 전부 사용(밝음·건설 표는 assets/palette.js 의 buildShadeMaps 를 같은 입력에서 대조)"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E373",
+      "consumers": [
+        "webpj/tests/color-maps.test.mjs"
+      ],
+      "doc": "docs/webpj-color-maps-20261113.md",
+      "sha256": "a575093209cfdb355d0b174ad654bc551157dd2c348fe65fe5ee706dd1bf3f6a",
+      "bytes": 10846,
+      "lines": 4,
+      "fixtureCommit": "c7e9e8b37",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/PreviewColorMaps.cpp": "c7e9e8b37"
+      },
+      "id": "preview-colors",
+      "path": "cpppj/tests/fixtures/preview-colors-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 전체 ColorSort/43c010 의 커서 파괴·불법·글자 그림자 표 256바이트 세 개(현재 기본 빨강 포함, 세 입력)",
+      "modules": [
+        "webpj/www/core/preview-color-maps.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/PreviewColorMaps.cpp"
+      ],
+      "scope": "10.78 전용 3행 전부 사용"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E373",
+      "consumers": [
+        "webpj/tests/color-maps.test.mjs"
+      ],
+      "doc": "docs/webpj-color-maps-20261113.md",
+      "sha256": "2d249420eebd10b843ab063ef660d8f6d2e30dd0abbd3bf59d9fa98d21d197e7",
+      "bytes": 9300,
+      "lines": 4,
+      "fixtureCommit": "3447c500d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ProductionColorMaps.cpp": "3447c500d"
+      },
+      "id": "production-colors",
+      "path": "cpppj/tests/fixtures/production-colors-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 전체 ColorSort/43c010 의 생산 아이콘 비활성·선행 표 256바이트 두 개(세 입력)",
+      "modules": [
+        "webpj/www/core/production-color-maps.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ProductionColorMaps.cpp"
+      ],
+      "scope": "10.78 전용 3행 전부 사용"
     }
   ]
 }
