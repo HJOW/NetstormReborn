@@ -18518,7 +18518,7 @@
       "bytes": 411840,
       "lines": 61,
       "fixtureCommit": "c258c7f37",
-      "webCommit": "worktree",
+      "webCommit": "b3181ebc3",
       "cpppjBasis": {
         "cpppj/src/client/VFXLine.cpp": "225f2322c",
         "cpppj/src/o/RawFieryTailFrame.cpp": "b77f1c9f1"
@@ -18538,6 +18538,97 @@
         "cpppj/src/o/RawFieryTailFrame.cpp"
       ],
       "scope": "10.78 전용 027f 30행 사용, 037f 30행(확장 정밀도)은 보존만"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E380",
+      "doc": "docs/webpj-draw-water-20261113.md",
+      "sha256": "f5ba237f32bbf4da282b0b58be4cb4d51d107147dbe5fe3824eb74228f73997c",
+      "bytes": 43425,
+      "lines": 77,
+      "fixtureCommit": "48ff7bbea",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/DrawWater.cpp": "c254e7716"
+      },
+      "id": "draw-water",
+      "path": "cpppj/tests/fixtures/draw-water-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: DrawWater 후단의 실제 finder·투영·사각형·VFX 선 전체 96×80 표면, 최종 clip/flag/색과 장치 호출 추적(여섯 합성 일반 객체, Renderer/snapshot·칸 크기·buried/상태, 현재 색·칸 크기·flag·객체 필드 변이)",
+      "consumers": [
+        "webpj/tests/draw-water.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/draw-water.js",
+        "webpj/www/core/raw-squid-finder.js",
+        "webpj/www/render/vfx-line.js",
+        "webpj/www/render/camera-view.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/DrawWater.cpp"
+      ],
+      "scope": "10.78 전용 76행 전부 사용"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E380",
+      "doc": "docs/webpj-draw-water-20261113.md",
+      "sha256": "c68dcbf1de8c9e845f0ca11f23e49bd73f2aa16b3123e73d8790d4298d8e2723",
+      "bytes": 23723,
+      "lines": 385,
+      "fixtureCommit": "48ff7bbea",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/DrawWater.cpp": "c254e7716"
+      },
+      "id": "draw-water-input",
+      "path": "cpppj/tests/fixtures/draw-water-input-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: DrawWater 명령 사건의 일반 분배(Guide/Gump/release/정지/Console/모드 조합)에서 현재 DWORD flag 토글과 worldRedraw 쓰기",
+      "consumers": [
+        "webpj/tests/draw-water.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/draw-water.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/DrawWater.cpp"
+      ],
+      "scope": "10.78 전용 384행 전부 사용"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E380",
+      "doc": "docs/webpj-draw-water-20261113.md",
+      "sha256": "819628db4e9da5ce4de01830eba90180ae27d54dba61b6f3aa92b665d31592bc",
+      "bytes": 666,
+      "lines": 10,
+      "fixtureCommit": "48ff7bbea",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/DrawWater.cpp": "c254e7716"
+      },
+      "id": "draw-water-names",
+      "path": "cpppj/tests/fixtures/draw-water-names-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: DrawWater 등록 이름(대소문자 변형)과 숫자/문자열 인자를 스크립트 명령 큐로 보낸 사건 코드/인자/고리 위치",
+      "consumers": [
+        "webpj/tests/draw-water.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/draw-water.js",
+        "webpj/www/ui/script-command.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/DrawWater.cpp"
+      ],
+      "scope": "10.78 전용 9행 전부 사용(GameMenuCommands 전체 이름표 대신 drawWaterScriptCode)"
     }
   ]
 }
