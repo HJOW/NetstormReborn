@@ -18914,10 +18914,42 @@
       "bytes": 416611,
       "lines": 1390,
       "fixtureCommit": "3819c52f2",
-      "webCommit": "worktree",
+      "webCommit": "71ae1600f",
       "cpppjBasis": {
         "cpppj/src/client/SpriteDraw.cpp": "63f429322",
         "cpppj/src/client/SpriteDraw.h": "7e66af8b4"
+      }
+    },
+    {
+      "id": "object-collection",
+      "path": "cpppj/tests/fixtures/objectcollection-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 x86 관측: 실제 일반 자산/그림자 수집(00433660) — 가시 사각형 float 네 개·한도·초기 해시 선택, 네 단계 해시 칸, 완성 raw 슬롯 50바이트, 타입 플래그/최대 HP/논리 프레임 수와 물리 프레임 상자에서 반환 수·작업 칸 64개 전체 바이트·작업 배열 앞뒤 0xa5 보호 항목. 프레임/타입/해시/CRT 모두 실제 몸체. 웹은 originals(10.78) 477행만 읽고 originalCD·original1037 행은 읽지 않는다",
+      "consumers": [
+        "webpj/tests/object-collection.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/object-collection.js",
+        "webpj/www/core/squid-hash.js"
+      ],
+      "unit": "WB04-E389",
+      "doc": "docs/webpj-object-collection-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/ObjectCollection.cpp",
+        "cpppj/src/client/ObjectCollection.h"
+      ],
+      "scope": "일반 자산/그림자 수집 477행",
+      "text": true,
+      "sha256": "cd8b42c1d8a8f106af77e476fb7e6c514b3ac0e57e83e4c9c900aa81cec3bca3",
+      "bytes": 4009488,
+      "lines": 1432,
+      "fixtureCommit": "250707112",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ObjectCollection.cpp": "250707112",
+        "cpppj/src/client/ObjectCollection.h": "225f2322c"
       }
     }
   ]
