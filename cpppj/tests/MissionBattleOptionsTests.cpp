@@ -34,6 +34,26 @@ TEST_CASE(MissionBattleOptions_ResetRejectsBeforeWrite) {
     CHECK(Throws([&] { ResetMissionBattleOptions(OriginalEdition::Patch1078,std::span(bytes).first(86)); }));CHECK(bytes==original);
     CHECK(Throws([&] { ResetMissionBattleOptions(OriginalEdition::Patch1078,std::span<std::uint8_t>{}); }));CHECK(bytes==original);
 }
+
+// CD00453540의 일곱 기본 선택과00453570이0으로 만든8번째 BYTE를 양쪽 canary까지 전수 확인한다.
+TEST_CASE(MissionBattleOptions_CdResetEightBytesAndNeighborCanaries) {
+    constexpr std::array<std::uint8_t,16> expected{0xa5,0xa5,0xa5,0xa5,1,2,0,1,1,0,1,0,0xa5,0xa5,0xa5,0xa5}; // 보호CD PE표의 고정 기대값이며 제품 상수에서 계산하지 않는다.
+    for (const auto initial:{std::uint8_t{0},std::uint8_t{0x5a},std::uint8_t{0xff}}) { // 기존 입력 값과 관계없이 모든8BYTE를 덮고 이웃4BYTE씩은 보존해야 한다.
+        std::array<std::uint8_t,16> bytes;bytes.fill(0xa5); // 양쪽 이웃을 포함한 실제 입력 물리다.
+        const auto options=std::span<std::uint8_t>(bytes).subspan(4,8); // 제품에 전달하는 유일한 CD 옵션 범위다.
+        std::fill(options.begin(),options.end(),initial);
+        ResetMissionBattleOptions(OriginalEdition::Cd1072,options);
+        CHECK(bytes==expected);
+    }
+}
+// CD는 정확한8BYTE만 허용하며 길이가 다르면 이웃과 옵션의 일부도 쓰지 않는다.
+TEST_CASE(MissionBattleOptions_CdResetInvalidSizesRejectBeforeWrite) {
+    std::array<std::uint8_t,95> bytes;bytes.fill(0x5a);const auto before=bytes; // 최대87BYTE 요청과 양쪽4BYTE 이웃을 포함한 거부 전 입력이다.
+    for (const auto size:{0U,1U,2U,3U,4U,5U,6U,7U,9U,16U,86U,87U}) { // 짧음·빈 값·긴 값·다른 판본 폭을 모두 거부해야 한다.
+        CHECK(Throws([&] { ResetMissionBattleOptions(OriginalEdition::Cd1072,std::span<std::uint8_t>(bytes).subspan(4,size)); }));
+        CHECK(bytes==before);
+    }
+}
 namespace {
 // 원본 관찰과 같은 입력 저장소를 만들되 결과 계산은 제품에 맡긴다.
 struct BattleOptionFixture {

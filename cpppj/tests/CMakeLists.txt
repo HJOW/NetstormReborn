@@ -1399,6 +1399,10 @@ set_source_files_properties(MissionServerPacketsTests.cpp PROPERTIES COMPILE_DEF
 # 실제 옵션과 현재 생산 Deck/Factory 재계산의 독립 원본 기대값이다.
 set_source_files_properties(MissionBattleOptionsTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MISSION_BATTLE_OPTIONS_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-battle-options-x86.tsv\";NETSTORM_MISSION_OPTION_RESET_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-option-reset-x86.tsv\"")
+# CD/패치 미션 옵션 초기화만 이름 필터로 실행할 수 있는 집중 대상을 만든다. 다른 전투·MP 검사를 자동 실행하지 않는다.
+add_executable(netstorm_mission_option_reset_tests FocusedTestMain.cpp MissionBattleOptionsTests.cpp)
+target_link_libraries(netstorm_mission_option_reset_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_mission_option_reset_tests)
 set_source_files_properties(ProductionDeckTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRODUCTION_DECK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-deck-x86.tsv\";NETSTORM_PRODUCTION_REFRESH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-refresh-x86.tsv\"")
 set_source_files_properties(FortImagePacketsTests.cpp PROPERTIES COMPILE_DEFINITIONS

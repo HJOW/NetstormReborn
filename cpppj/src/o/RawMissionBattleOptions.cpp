@@ -8,6 +8,7 @@
 namespace netstorm::o {
 namespace {
 constexpr std::array<std::uint8_t,22> kInitialOptions{0,2,2,0,3,0,2,1,1,0,0,1,0,1,1,2,2,1,2,2,0,0}; // PE0052f5e0부터24BYTE 간격의 실제 기본 선택 BYTE22개다.
+constexpr std::array<std::uint8_t,7> kCdInitialOptions{1,2,0,1,1,0,1}; // CD005200f8부터24BYTE 간격의 실제 기본 선택7개이며8번째는 초기0을 유지한다.
 constexpr std::array<std::int32_t,4> kTypeCosts{1000,2000,3000,5000}; //0041c8b0의실제스택표다.
 constexpr std::array<std::uint32_t,6> kValues{0,25,50,75,100,150}; //0041ca70의실제스택표다.
 constexpr std::array<std::int32_t,4> kMinimumDensity{10,15,20,25},kMaximumDensity{30,35,40,45}; //0041c9b0/0041c9e0의 서로 다른 현재 선택표다.
@@ -18,8 +19,13 @@ float StoreX87Float(float value) {
 std::uint8_t OptionByte(std::span<const std::uint8_t> options,std::size_t index) { if (index>=options.size()) throw std::out_of_range("현재 전투 옵션 BYTE 물리 범위");return options[index]; } //선택한 현재BYTE만 읽고 전체87BYTE를 선복사하지 않는다.
 float RangeChoice(std::span<const float> choices,std::size_t index) { if (index>=choices.size()) throw std::out_of_range("현재 공급 반경 선택표 물리 범위");return choices[index]; } //원문 순서에서 실제 필요한float만 조회한다.
 }
-// 원본은 전체87바이트를 지우지 않는다. 미작성 예약40바이트와 양쪽 이웃은 건드리지 않는다.
+// PATCH는 예약40바이트를 보존하고 CD는8바이트 전체를 초기화한다. 양쪽 모두 전달한 실제 옵션 밖에는 쓰지 않는다.
 void ResetMissionBattleOptions(OriginalEdition edition,std::span<std::uint8_t> options) {
+    if (edition==OriginalEdition::Cd1072) { // CD00453520→00453540은 먼저8BYTE를 지운 뒤 기본 선택7개만 복사한다.
+        if (options.size()!=8) throw std::invalid_argument("미션 옵션 초기화의 CD8BYTE 계약 오류");
+        std::fill(options.begin(),options.end(),std::uint8_t{0});
+        std::copy(kCdInitialOptions.begin(),kCdInitialOptions.end(),options.begin());return;
+    }
     if (edition!=OriginalEdition::Patch1078 || options.size()!=87) throw std::invalid_argument("미션 옵션 초기화의 PATCH87BYTE 계약 오류");
     std::fill_n(options.begin(),23,std::uint8_t{0});std::fill(options.begin()+63,options.end(),std::uint8_t{0});
     // 실제 색상0..7을 BYTE71..78에 설치한다.
