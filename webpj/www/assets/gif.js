@@ -192,3 +192,31 @@ export function decodeGif(bytes) {
         return Object.freeze({ width, height, indices, opacity });
     }
 }
+
+// 전역 팔레트 바로 뒤에 있다고 가정한 첫 descriptor 의 바이트 위치이다(원문 407171 의 고정 계산, 확장 블록을 건너뛰지 않는다). (2026-11-13 WB04-E396)
+function firstDescriptorOffset(bytes) {
+    return 13 + ((bytes[10] & 0x80) ? (3 << ((bytes[10] & 7) + 1)) : 0);
+}
+
+// 원문 GIF 파일 부모(407171)가 비트맵 할당 전에 쓰는 치수이다: 첫 descriptor 의 +5/+7 WORD 를 읽고 서명이나 descriptor 표식(0x2c)은 확인하지 않는다.
+// 반환 { width, height }. 헤더(13바이트)나 descriptor 9바이트가 물리 범위를 넘으면 RangeError 이다(cpppj GifFileDimensions 의 out_of_range).
+// 사용: const { width, height } = gifFileDimensions(bytes) — 구름 캐시 파일 부모가 치수 선행 쓰기에 쓴다. (2026-11-13 WB04-E396: ClientKencloudGlobals 파일 부모용으로 추가)
+export function gifFileDimensions(bytes) {
+    if (bytes.length < 13) throw new RangeError('GIF 치수 헤더의 실제 물리 범위');
+    const descriptor = firstDescriptorOffset(bytes);
+    if (descriptor > bytes.length || bytes.length - descriptor < 9) throw new RangeError('GIF 치수 descriptor의 실제 물리 범위');
+    return { width: bytes[descriptor + 5] | (bytes[descriptor + 6] << 8), height: bytes[descriptor + 7] | (bytes[descriptor + 8] << 8) };
+}
+
+// 원문 배경 로더(cpppj DecodeBackgroundGif)의 해독이다: 첫 descriptor 가 전역 팔레트 바로 뒤에 0x2c 로 있어야 하고, 그 치수를 논리 화면 치수로 옮기고
+// 이미지 위치(left/top)를 0 으로 둔 사본을 decodeGif 로 푼다(원본 파일 바이트는 바꾸지 않는다). 반환은 decodeGif 와 같은 { width, height, indices, opacity } 이다.
+// 헤더가 짧거나 첫 descriptor 가 없으면 Error(cpppj runtime_error)이다. 사용: decodeBackgroundGif(bytes). (2026-11-13 WB04-E396: ClientKencloudGlobals 파일 부모용으로 추가)
+export function decodeBackgroundGif(bytes) {
+    if (bytes.length < 13) throw new Error('Truncated BackgroundGif header');
+    const descriptor = firstDescriptorOffset(bytes);
+    if (descriptor > bytes.length || bytes.length - descriptor < 10 || bytes[descriptor] !== 0x2c) throw new Error('BackgroundGif first descriptor required');
+    const normalized = bytes.slice();
+    normalized.set(bytes.subarray(descriptor + 5, descriptor + 9), 6);
+    normalized.fill(0, descriptor + 1, descriptor + 5);
+    return decodeGif(normalized);
+}
