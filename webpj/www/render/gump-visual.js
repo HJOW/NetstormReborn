@@ -51,7 +51,9 @@ function div(a, b) {
 // 반복 주기는 SHP 메타 폭/높이에서 1을 뺀 값이며, 시작/끝 배수와 여분 타일까지 원본 정수 계산 그대로 구한다.
 // 반환: { rect, clip, flags, shade(0 원색·1 밝음·2 어두움), validTile, origins[{x,y}] } (2026-10-23 WB03-M1)
 function planTexturePass(rect, clip, tileWidth, tileHeight, flags) {
-    const result = { rect, clip: { left: 0, top: 0, right: 0, bottom: 0 }, flags, shade: 0, validTile: false, origins: [] };
+    // 원문 인자는 signed WORD 크기와 값형 사각형이다. (2026-11-14 WB04-E415)
+    tileWidth = tileWidth << 16 >> 16; tileHeight = tileHeight << 16 >> 16;
+    const result = { rect: { ...rect }, clip: { left: 0, top: 0, right: 0, bottom: 0 }, flags: flags >>> 0, shade: 0, validTile: false, origins: [] };
     const dx = tileWidth - 1;
     const dy = tileHeight - 1;
     if (dx < 1 || dy < 1) return result;
@@ -63,6 +65,10 @@ function planTexturePass(rect, clip, tileWidth, tileHeight, flags) {
     const startY = Math.imul(div(rect.top, dy), dy);
     const endX = Math.imul(add(add(div(sub(rect.right, rect.left), dx), 2), div(rect.left, dx)), dx);
     const endY = Math.imul(add(add(div(sub(rect.bottom, rect.top), dy), 2), div(rect.top, dy)), dy);
+    if (startX > endX || startY > endY) return result;
+    // 원문 DWORD 루프의 감김/무한 목록을 동일한 C++ 안전 한계에서 거부한다. (2026-11-14 WB04-E415)
+    const nx = Math.trunc((endX - startX) / dx) + 1; const ny = Math.trunc((endY - startY) / dy) + 1;
+    if (nx * ny > 1000000 || endX + dx > 0x7fffffff || endY + dy > 0x7fffffff) throw new RangeError('GUI 질감 반복 안전 범위 초과');
     // 위에서 아래로 끝 배수를 포함해 여분 타일까지 기준점을 만든다. 실제 출력 범위는 clip 이 제한한다.
     for (let y = startY; y <= endY; y += dy) {
         // 같은 화면 기준 x 배수를 각 행에서 다시 쓴다(버튼의 상대 원점에서 시작하지 않는다).
@@ -71,11 +77,19 @@ function planTexturePass(rect, clip, tileWidth, tileHeight, flags) {
     return result;
 }
 
+// raw 추가 출력은 매 pass의 현재 헤더/clip으로 동일한 단일 질감 계획기를 쓴다. (2026-11-14 WB04-E415)
+export function planGumpTexture(rect, clip, tileWidth, tileHeight, flags) {
+    if (rect.left > rect.right || rect.top > rect.bottom || clip.left > clip.right || clip.top > clip.bottom) throw new RangeError('배경 질감 경계 순서 오류');
+    return planTexturePass(rect, clip, tileWidth, tileHeight, flags);
+}
+
 // 질감 배경 전체의 출력 계획(바탕 → 왼쪽 → 오른쪽 → 위 → 아래 순서)을 만든다(원본 00465880 의 질감 경로).
 // rect 는 배경 자식의 화면 사각형, clip 은 현재 출력 클립, tileWidth/Height 는 질감 프레임의 Squid 메타 폭/높이다.
 // 정상은 왼쪽·위에 밝은 표, 오른쪽·아래에 어두운 표를 쓰고, PRESSED 면 방향을 바꾼다.
 // 사용: drawGumpBackground(surface, texture, planGumpBackground(...), shadeMaps) (2026-10-23 WB03-M1)
 export function planGumpBackground(rect, clip, tileWidth, tileHeight, flags) {
+    // 기본 안전 API는 두 사각형의 순서를 선행 확인한다. (2026-11-14 WB04-E415)
+    if (rect.left > rect.right || rect.top > rect.bottom || clip.left > clip.right || clip.top > clip.bottom) throw new RangeError('배경 질감 경계 순서 오류');
     if ((flags & 0x0c000000) !== 0 || (flags & GumpBackgroundFlags.TEXTURE) === 0) throw new Error('지원하지 않는 GUI 배경 경로입니다.');
     const pressed = (flags & GumpBackgroundFlags.PRESSED) !== 0;
     const nearShade = pressed ? GumpBackgroundFlags.DARK : GumpBackgroundFlags.BRIGHT;

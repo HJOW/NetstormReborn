@@ -19795,7 +19795,7 @@
       "bytes": 932123,
       "lines": 1475,
       "fixtureCommit": "350ebc500",
-      "webCommit": "worktree",
+      "webCommit": "8ed2a13f9",
       "cpppjBasis": {
         "cpppj/src/client/GumpRedraw.cpp": "350ebc500",
         "cpppj/src/client/GumpRedraw.h": "350ebc500"
@@ -19828,10 +19828,75 @@
       "bytes": 113797,
       "lines": 934,
       "fixtureCommit": "18b387775",
-      "webCommit": "worktree",
+      "webCommit": "8ed2a13f9",
       "cpppjBasis": {
         "cpppj/src/client/GumpText.cpp": "5a2cd0474",
         "cpppj/src/client/GumpText.h": "225f2322c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E415",
+      "consumers": [
+        "webpj/tests/gump-background.test.mjs"
+      ],
+      "doc": "docs/webpj-gump-background-20261114.md",
+      "id": "gumpbackground",
+      "path": "cpppj/tests/fixtures/gumpbackground-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 원문 배경 계획/명암·가상/직접 출력 사건과 소프트웨어 fill",
+      "modules": [
+        "webpj/www/render/gump-visual.js",
+        "webpj/www/render/gump-background.js",
+        "webpj/www/assets/palette.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/GumpBackground.cpp",
+        "cpppj/src/client/GumpBackground.h"
+      ],
+      "scope": "originals59행: 명암3표 전체768바이트와56전체 계획·clip/명암/여분 타일/복구 사건. CD/추가판 제외",
+      "text": true,
+      "sha256": "dd13aeb17a45453cb918427dab68d4c3d94927700d85f7dd2f1f953347e8c4e1",
+      "bytes": 161026,
+      "lines": 178,
+      "fixtureCommit": "8ca250039",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpBackground.cpp": "37a0662b4",
+        "cpppj/src/client/GumpBackground.h": "225f2322c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E415",
+      "consumers": [
+        "webpj/tests/gump-background.test.mjs"
+      ],
+      "doc": "docs/webpj-gump-background-20261114.md",
+      "id": "gumpbackgrounddraw",
+      "path": "cpppj/tests/fixtures/gumpbackgrounddraw-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 원문 배경 계획/명암·가상/직접 출력 사건과 소프트웨어 fill",
+      "modules": [
+        "webpj/www/render/gump-background-draw.js",
+        "webpj/www/ui/gump-background-create.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/GumpBackgroundDraw.cpp",
+        "cpppj/src/client/GumpBackgroundDraw.h"
+      ],
+      "scope": "originals209행: 가상/직접·모든 자산/클립/명암/shape/fill/선 사건과768 실제 fill픽셀/최종전역·guard. fixture의 선/VFX 그림은 호출 경계이며 별도 SHP 픽셀 시험으로 보완. CD/추가판 제외",
+      "text": true,
+      "sha256": "e3c0d2ac5ada475db41932960f168c6b4a318f2105fa01657b4a896b3434f5a9",
+      "bytes": 1389044,
+      "lines": 628,
+      "fixtureCommit": "37a0662b4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpBackgroundDraw.cpp": "8db4af6f5",
+        "cpppj/src/client/GumpBackgroundDraw.h": "8db4af6f5"
       }
     }
   ]
