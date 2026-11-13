@@ -131,7 +131,7 @@ cpppj/src/client/Gump.cpp	port			todo	[client-default]
 cpppj/src/client/GumpBackground.cpp	port	www/render/gump-visual.js	1f00a25a	partial	[client-default] 돌 질감 반복·2픽셀 명암 테두리
 cpppj/src/client/GumpBackgroundCreate.cpp	port			todo	[client-default]
 cpppj/src/client/GumpBackgroundDraw.cpp	port			todo	[client-default]
-cpppj/src/client/GumpCollection.cpp	port			todo	[client-default]
+cpppj/src/client/GumpCollection.cpp	port	www/render/gump-collection.js	1f00a25a	port	[client-default] WB04-E395: UI(Gump) 트리 위치/경계/표시 수집 — GumpCollection(node/project 훅, position(부모 체인 float32 누적·CRT 절삭 하위 DWORD·월드 부착 투영점 DWORD 덧셈·일반 노드만 cached 갱신)·bounds·screenToLocal(004650a0)·flags·collectNode(엄격 교차·통과 0x20·자식 visible 만·남은 개수·출력 용량 거부·1000개 순환/한도)·collect(root.child/override·최상위별 limit·dead 최상위 제외))와 bindGumpCollection. 원본 x86 관측 gumpcollection originals 389행 첫 실행 일치(manifest gumpcollection) + cpppj GumpCollectionTests 이식 + E389 가 미룬 ObjectCollection_CommonSubmissionIntegration 이식. CD 경로(월드 부착 부모 정수 위치 float 저장)는 10.78 전용이라 제외
 cpppj/src/client/GumpCreate.cpp	port			todo	[client-default]
 cpppj/src/client/GumpDecoration.cpp	port	www/ui/tell-window.js	1f00a25a	partial	[client-default] 금장식 모서리
 cpppj/src/client/GumpDraw.cpp	port			todo	[client-default]

@@ -27,3 +27,7 @@
 - 자동 연산자·상수 변형 108개를 적용했다. 1차 생존 13건 중 4건(`ABSTRACT`/`WALKER` 낮은 비트, 상단 칸 제한, 아래 확장 폭)은 독립 입력을 보강해 모두 잡았다(재확인 4/4).
 - 남은 9건은 동등 변형: ① `readField` 의 기본 폭 4→5(뒤의 `| 0`/`>>>`로 잘림), ② `#cell` 의 `Number.isFinite`/`±2^63` 범위 판정과 `BigInt.asIntN` 폭(2^56 이상 float 의 하위 32비트는 0).
 - 다음 5-A 항목: `RawCursorPreviews`(185, 커서 전역 K 영역 선행), 입자 본체(`RawCampaignParticles`·`ParticlePaletteMemory`), 렌더러 프레임 본체의 `Renderer`·`ClientRendererFrame`·`ScreenPresentation`·`Screen`.
+
+## 보강 (WB04-E395)
+
+- 이 단위가 미룬 `ObjectCollection_CommonSubmissionIntegration`(UI·지면 묶음·일반 객체 본체/그림자 세 수집기의 공통 병합·정렬·분배)은 `GumpCollection`·`TileGroupCollection` 이 갖춰진 E395 에서 `tests/object-collection.test.mjs` 에 이식해 닫았다([문서](webpj-gump-collection-20261113.md)).

@@ -19102,10 +19102,41 @@
       "bytes": 5546801,
       "lines": 1060,
       "fixtureCommit": "f2a9f8880",
-      "webCommit": "worktree",
+      "webCommit": "5aef84acb",
       "cpppjBasis": {
         "cpppj/src/client/TileGroupCollection.cpp": "f2a9f8880",
         "cpppj/src/client/TileGroupCollection.h": "225f2322c"
+      }
+    },
+    {
+      "id": "gumpcollection",
+      "path": "cpppj/tests/fixtures/gumpcollection-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 x86 관측: UI(Gump) 트리의 화면 위치/경계/트리 수집의 실제 몸체(판본별 389행: 루트·override·대상·한도·화면 사각형, 128바이트 노드 원본, 월드 투영 응답 → 반환 좌표/경계/개수·출력 32칸·전 노드 캐시·투영 호출 순서·보호 항목). 월드 투영만 명시 응답 경계",
+      "consumers": [
+        "webpj/tests/gump-collection.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/gump-collection.js"
+      ],
+      "unit": "WB04-E395",
+      "doc": "docs/webpj-gump-collection-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/GumpCollection.cpp",
+        "cpppj/src/client/GumpCollection.h"
+      ],
+      "scope": "originals 389행(CD·1037 778행은 웹 10.78 전용이라 제외)",
+      "text": true,
+      "sha256": "9e27ea77b8bbf7812b7a923cc84e30877d3c3043633c1d09b5f8b6a7d6e8ba26",
+      "bytes": 2943993,
+      "lines": 1168,
+      "fixtureCommit": "8f4a4d25f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpCollection.cpp": "70446743a",
+        "cpppj/src/client/GumpCollection.h": "225f2322c"
       }
     }
   ]

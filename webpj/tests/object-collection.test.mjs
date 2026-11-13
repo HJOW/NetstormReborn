@@ -15,6 +15,8 @@ import { SquidHash } from '../www/core/squid-hash.js';
 import { ShapeDatabase } from '../www/assets/shapes.js';
 import { collectDrawEntries, dispatchDrawEntries, sortRenderEntries } from '../www/render/draw-submission.js';
 import { ObjectCollection, bindObjectCollection } from '../www/render/object-collection.js';
+import { GumpCollection, bindGumpCollection } from '../www/render/gump-collection.js';
+import { TileGroupCollection, bindTileGroupCollection } from '../www/render/tile-group-collection.js';
 import { SpriteDraw, SpriteDrawState, SpritePixelTarget, bindSpriteDraw } from '../www/render/sprite-draw.js';
 
 // 원본 관측 행이다. 없으면 해당 검사를 건너뛴다. (2026-11-13 WB04-E389)
@@ -342,4 +344,48 @@ test('일반 자산 수집기 계약: 타입 비트 마스크·프레임 배수�
     assert.equal(farRight(3), 0);
     // 프레임 DWORD 의 상위 바이트까지 읽는다(프레임 0x01000000 은 물리 범위 밖 거부).
     assert.throws(() => count((w) => { put(w.pool.physical(5), 36, 0x01000000, 4); }), /physical frame/);
+});
+
+test('ObjectCollection_CommonSubmissionIntegration: UI·지면 묶음·일반 객체(본체/그림자) 세 수집기가 한 공통 목록에서 병합·정렬되고 kind 별로 분배된다 (E389 에서 미룬 시험, WB04-E395)', () => {
+    const w = scene();
+    w.types[1].flags1 = 0x40000;
+    w.types[1].flags2 = 0x10000;
+    // 일반 객체 SID 6 은 해시 3단계에, 지면 SID 5 는 0단계 칸 (20,25)에 둔다.
+    w.place(6, 20, 25, 10);
+    w.hash.setCell(3, 1, 1, 6);
+    w.place(5, 20, 25, 5);
+    w.hash.setCell(0, 20, 25, 5);
+    const objects = new ObjectCollection(w.hash, w.pool, w.types, w.shapes);
+    const tiles = new TileGroupCollection(w.hash, w.pool);
+    // UI 트리: 루트 1 아래 노드 2 (10,10) 10×10, 깊이 15.
+    const nodes = new Map([
+        [1, { flags: 0, next: 0, parent: 0, child: 2, object: 0, depth: 0, width: 0, height: 0, x: 0, y: 0, cached: { x: 0, y: 0 } }],
+        [2, { flags: 1, next: 0, parent: 1, child: 0, object: 0, depth: 15, width: 10, height: 10, x: 10, y: 10, cached: { x: 0, y: 0 } }],
+    ]);
+    const gumps = new GumpCollection({ root: 1, overrideHead: 0 }, { node: (token) => nodes.get(token) ?? null });
+    const collection = {};
+    const dispatch = {};
+    bindGumpCollection(collection, gumps);
+    bindTileGroupCollection(collection, dispatch, tiles);
+    bindObjectCollection(collection, objects);
+    const request = { screen: { left: 0, top: 0, right: 100, bottom: 100 }, visible: { left: 10, top: 20, right: 30, bottom: 40 }, unclipped: { left: 0, top: 0, right: 0, bottom: 0 }, dirtyFlags: 0, groupRowLimit: 100 };
+    const work = new Uint8Array(12 * ENTRY);
+    const result = collectDrawEntries(request, work, collection);
+    assert.equal(result.count, 4);
+    const entries = work.subarray(0, result.count * ENTRY);
+    sortRenderEntries(entries);
+    const drawn = [];
+    // 그림자 y 가 본체보다 작아 같은 깊이에서 먼저 분배된다. 지면 내부는 kind 1 을 유지한다.
+    dispatch.sprite = (entry) => drawn.push(`${objects.object(new DataView(entry.buffer, entry.byteOffset, ENTRY).getUint32(8, true))}:${entry[14]}:${entry[15]}`);
+    dispatch.ui = (token) => drawn.push(`ui:${token}`);
+    dispatchDrawEntries(entries, {}, dispatch);
+    assert.deepEqual(drawn, ['ui:2', '6:0:4', '6:0:0', '5:1:0']);
+    drawn.length = 0;
+    dispatchDrawEntries(entries, { hideGroups: true, debugAfterEach: false }, dispatch);
+    assert.deepEqual(drawn, ['ui:2', '6:0:4', '6:0:0']);
+    // UI 전용 dirty(4)는 UI 만 수집하고 해시 선택을 바꾸지 않는다.
+    request.dirtyFlags = 4;
+    w.hash.select(1);
+    assert.equal(collectDrawEntries(request, work, collection).count, 1);
+    assert.equal(w.hash.selected, 1);
 });
