@@ -505,7 +505,7 @@
       "bytes": 3643244,
       "lines": 1156,
       "fixtureCommit": "687dd2cf9",
-      "webCommit": "worktree",
+      "webCommit": "970bb53db",
       "cpppjBasis": {
         "cpppj/src/client/DrawSort.cpp": "225f2322c"
       }
@@ -18658,11 +18658,107 @@
       "bytes": 4811036,
       "lines": 967,
       "fixtureCommit": "6014cc9e0",
-      "webCommit": "worktree",
+      "webCommit": "970bb53db",
       "cpppjBasis": {
         "cpppj/src/client/DrawSubmission.cpp": "f2a9f8880",
         "cpppj/src/client/DrawSubmission.h": "225f2322c"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E383",
+      "doc": "docs/webpj-renderer-prelude-20261113.md",
+      "sha256": "545f83754fe09c83ae887ab29a66cb6a4db8f96b7c3a61fec5373328b7affa9c",
+      "bytes": 171130,
+      "lines": 721,
+      "fixtureCommit": "d2300feaf",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawRendererPrelude.cpp": "be33646d3",
+        "cpppj/src/client/RawRendererPrelude.h": "be33646d3"
+      },
+      "id": "renderer-prelude",
+      "path": "cpppj/tests/fixtures/renderer-prelude-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: Renderer 프레임 앞단(004994b0..00499758)의 화면 flags/세계 요청/override/구름 행 스캔 — 입력 19열(화면 flags·이전 flags·세계 요청·override 반환·폭/높이/초기 높이/카메라 Y/지도 clip·scan index·초기화 표식·dirty 행 순번·하위 효과 변형), 출력 35 DWORD(인접 scan 19·현재 전역 11·배경/일반 dirty/구름 dirty 개수·구름 요청 2)와 호출 순서 720행",
+      "consumers": [
+        "webpj/tests/raw-renderer-prelude.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-renderer-prelude.js",
+        "webpj/www/core/raw-kencloud-render.js",
+        "webpj/www/render/indexed-surface.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawRendererPrelude.cpp",
+        "cpppj/src/client/RawRendererPrelude.h"
+      ],
+      "scope": "프레임 앞단 전체 720행(전체 인접 상태·현재 전역·부분 쓰기·장치 순서)"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E383",
+      "doc": "docs/webpj-renderer-prelude-20261113.md",
+      "sha256": "c0faee47e3196896684baa19d9aa54665222c373a224716ca1648cb64e4054ad",
+      "bytes": 121453,
+      "lines": 696,
+      "fixtureCommit": "b05073df6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawRendererClouds.cpp": "b05073df6",
+        "cpppj/src/client/RawRendererClouds.h": "b05073df6"
+      },
+      "id": "renderer-clouds",
+      "path": "cpppj/tests/fixtures/renderer-clouds-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: 구름 4칸 저장(4977f0)·시차 갱신(497860)·배경 선택(499bfd..499cfe) — 입력 17열(함수·개수·진단·mode·묶음 숨김·dirty·덮임·날씨색·검정·카메라 X/Y·분모·clip·변형), 출력 31 DWORD(개수·4칸·전역 9·clip 4·IDIV 오류 표식)와 호출 순서 695행(정상 671·실제 IDIV 오류 24)",
+      "consumers": [
+        "webpj/tests/raw-renderer-clouds.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-renderer-clouds.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawRendererClouds.cpp",
+        "cpppj/src/client/RawRendererClouds.h"
+      ],
+      "scope": "구름 4칸/배경 선택 695행(부분 효과·인자·호출 순서)"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E383",
+      "doc": "docs/webpj-renderer-prelude-20261113.md",
+      "sha256": "b1b21b3df5b25482a5dc2e395f9111016667a5709cf218367d32662f4dd8a684",
+      "bytes": 23248,
+      "lines": 179,
+      "fixtureCommit": "d3c970770",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCameraPresent.cpp": "d3c970770",
+        "cpppj/src/client/RawCameraPresent.h": "d3c970770"
+      },
+      "id": "camera-present",
+      "path": "cpppj/tests/fixtures/camera-present-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: 카메라 Present 말미(49a081..49a1c9)의 진단 관문·두 목표 제한 — 입력 17열(진단·폭·높이·세계 칸·한계 X/Y·목표 X/Y·flip 뒤 변형 값), 출력 8열(진단·폭·높이·칸·한계·목표)과 flip/commit 호출 시점 목표 178행",
+      "consumers": [
+        "webpj/tests/raw-camera-present.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-camera-present.js",
+        "webpj/www/core/client-camera-globals.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawCameraPresent.cpp",
+        "cpppj/src/client/RawCameraPresent.h"
+      ],
+      "scope": "카메라 Present 한계·목표 전체 178행"
     }
   ]
 }
