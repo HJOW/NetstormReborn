@@ -19609,7 +19609,7 @@
       "bytes": 3275188,
       "lines": 520,
       "fixtureCommit": "fb653a43c",
-      "webCommit": "worktree",
+      "webCommit": "43af5542d",
       "cpppjBasis": {
         "cpppj/src/client/GumpLifetime.cpp": "aa403f6d0",
         "cpppj/src/client/GumpLifetime.h": "aa403f6d0"
@@ -19640,7 +19640,7 @@
       "bytes": 1704801,
       "lines": 243,
       "fixtureCommit": "a5afdafbe",
-      "webCommit": "worktree",
+      "webCommit": "43af5542d",
       "cpppjBasis": {
         "cpppj/src/client/GumpLifetime.cpp": "aa403f6d0",
         "cpppj/src/client/GumpLifetime.h": "aa403f6d0"
@@ -19671,10 +19671,103 @@
       "bytes": 125931,
       "lines": 369,
       "fixtureCommit": "aa403f6d0",
-      "webCommit": "worktree",
+      "webCommit": "43af5542d",
       "cpppjBasis": {
         "cpppj/src/client/GumpLifetime.cpp": "aa403f6d0",
         "cpppj/src/client/GumpLifetime.h": "aa403f6d0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E413",
+      "consumers": [
+        "webpj/tests/gump-events-input-frame.test.mjs"
+      ],
+      "doc": "docs/webpj-gump-events-input-frame-20261114.md",
+      "id": "gumpevents",
+      "path": "cpppj/tests/fixtures/gumpevents-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: GumpEvents 실제 전체 몸체/가상 경계",
+      "modules": [
+        "webpj/www/ui/gump-events.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/GumpEvents.cpp",
+        "cpppj/src/client/GumpEvents.h"
+      ],
+      "scope": "originals257행 전체160BYTE 노드/7전역/반환과 필터·처리기·투영 콜백 당시 상태. CD/추가판 제외",
+      "text": true,
+      "sha256": "2ff81d8c0ad65334183b607274ef246e68ccff8d7b8af17e23a88c7a7cf10e48",
+      "bytes": 5688829,
+      "lines": 772,
+      "fixtureCommit": "fb6c073a4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpEvents.cpp": "fb6c073a4",
+        "cpppj/src/client/GumpEvents.h": "225f2322c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E413",
+      "consumers": [
+        "webpj/tests/gump-events-input-frame.test.mjs"
+      ],
+      "doc": "docs/webpj-gump-events-input-frame-20261114.md",
+      "id": "gumpinput",
+      "path": "cpppj/tests/fixtures/gumpinput-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: GumpInput 실제 전체 몸체/가상 경계",
+      "modules": [
+        "webpj/www/ui/gump-input.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/GumpInput.cpp",
+        "cpppj/src/client/GumpInput.h"
+      ],
+      "scope": "originals232행 전체노드/11전역/overlay100·dialog16·반환/콜백. 실제 Events/Collection/수명 연동. CD/추가판 제외",
+      "text": true,
+      "sha256": "286932cbbb2709f3407759f2d1e75c663b7a0dd2f9018f15189be914ee0302c2",
+      "bytes": 4986594,
+      "lines": 697,
+      "fixtureCommit": "860808b90",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpInput.cpp": "860808b90",
+        "cpppj/src/client/GumpInput.h": "225f2322c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E413",
+      "consumers": [
+        "webpj/tests/gump-events-input-frame.test.mjs"
+      ],
+      "doc": "docs/webpj-gump-events-input-frame-20261114.md",
+      "id": "gumpframe",
+      "path": "cpppj/tests/fixtures/gumpframe-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: GumpFrame 실제 전체 몸체/가상 경계",
+      "modules": [
+        "webpj/www/ui/gump-frame.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/GumpFrame.cpp",
+        "cpppj/src/client/GumpFrame.h"
+      ],
+      "scope": "originals270행 전체노드/count/등록1000/idle500·통지/재그리기 콜백 당시 상태. CD/추가판 제외",
+      "text": true,
+      "sha256": "d3d9b8a83c5404d4e14f17967ae1ea5b3b6ffe3936b18b0c62ecd1b37af17f00",
+      "bytes": 6424156,
+      "lines": 811,
+      "fixtureCommit": "082a830cf",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpFrame.cpp": "082a830cf",
+        "cpppj/src/client/GumpFrame.h": "225f2322c"
       }
     }
   ]
