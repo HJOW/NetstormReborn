@@ -78,11 +78,17 @@ export class DirtyRegions {
     clear() {
         if (this.#entries.length > 0) this.#clearedFirstFlags = this.#entries[0].flags;
         this.#full = false;
-        this.#entries = [];
+        // 497960 같은 호출자가 빌린 표(cameraEntries)의 배열 소유자를 유지하도록 새 배열로 바꾸지 않고 비운다. (2026-11-13 WB04-E391: C++ vector clear 의미)
+        this.#entries.length = 0;
     }
 
     // 원본 순서의 항목 표이다(읽기 전용 목적). (2026-11-08 WB04-E59)
     get entries() {
+        return this.#entries;
+    }
+
+    // 497960(카메라 이동)·Renderer.draw 가 현재 표를 직접 이동/확장하도록 빌려 주는 살아 있는 배열이다. add/clear 뒤에도 같은 배열이다. (2026-11-13 WB04-E391: Renderer 이식을 위해 추가)
+    cameraEntries() {
         return this.#entries;
     }
 

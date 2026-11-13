@@ -18951,6 +18951,39 @@
         "cpppj/src/client/ObjectCollection.cpp": "250707112",
         "cpppj/src/client/ObjectCollection.h": "225f2322c"
       }
+    },
+    {
+      "id": "renderer",
+      "path": "cpppj/tests/fixtures/renderer-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 x86 관측: Renderer 표시 비교(00497900)의 반환값(Order 261행: 두 표시 항목의 float 좌표 둘과 signed 깊이)과 변경 표 등록(00497580)의 전체 결과(Dirty 133행: 화면 크기·등록 시퀀스 → 전체 갱신 여부와 무시된 항목의 위치·플래그를 포함한 표). 두 판본이 같은 값이며 웹은 10.78 으로 읽는다",
+      "consumers": [
+        "webpj/tests/renderer.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/renderer.js",
+        "webpj/www/render/draw-sort.js",
+        "webpj/www/render/dirty-regions.js"
+      ],
+      "unit": "WB04-E391",
+      "doc": "docs/webpj-renderer-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/Renderer.cpp",
+        "cpppj/src/client/Renderer.h"
+      ],
+      "scope": "표시 비교 261행·변경 표 133행",
+      "text": true,
+      "sha256": "3ba3dbb353f8d978533d9a843b73a8e9b6f78dd06dd6cfdbbf20ba589a3f6eff",
+      "bytes": 56526,
+      "lines": 395,
+      "fixtureCommit": "30b24a9bc",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/Renderer.cpp": "5a2cd0474",
+        "cpppj/src/client/Renderer.h": "731c9dee9"
+      }
     }
   ]
 }
