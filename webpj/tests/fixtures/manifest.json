@@ -19260,7 +19260,7 @@
       "bytes": 385349,
       "lines": 566,
       "fixtureCommit": "9501a2f9f",
-      "webCommit": "worktree",
+      "webCommit": "92774826d",
       "cpppjBasis": {
         "cpppj/src/client/RawCursorLifecycle.cpp": "0b720831a",
         "cpppj/src/client/RawCursorLifecycle.h": "0b720831a"
@@ -19291,7 +19291,7 @@
       "bytes": 95946,
       "lines": 157,
       "fixtureCommit": "0b720831a",
-      "webCommit": "worktree",
+      "webCommit": "92774826d",
       "cpppjBasis": {
         "cpppj/src/client/RawCursorLifecycle.cpp": "0b720831a",
         "cpppj/src/client/RawCursorLifecycle.h": "0b720831a"
@@ -19322,10 +19322,41 @@
       "bytes": 16009,
       "lines": 855,
       "fixtureCommit": "a9d351063",
-      "webCommit": "worktree",
+      "webCommit": "92774826d",
       "cpppjBasis": {
         "cpppj/src/client/RawCursorLifecycle.cpp": "0b720831a",
         "cpppj/src/client/RawCursorLifecycle.h": "0b720831a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E401",
+      "id": "cursor-placement",
+      "path": "cpppj/tests/fixtures/cursor-placement-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 위치 판정445440·연관 지역445340·표시 준비4458e0",
+      "consumers": [
+        "webpj/tests/cursor-placement.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cursor-placement.js"
+      ],
+      "doc": "docs/webpj-cursor-placement-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCursorPlacement.cpp",
+        "cpppj/src/client/RawCursorPlacement.h"
+      ],
+      "scope": "10.78 573행의 Query/Prepare/SourceAllowed 반환·17DWORD 상태·설명·전체 사건",
+      "text": true,
+      "sha256": "92948f3001f745d088ec58fb8212f3a42e6c02514e1c69fef7e77bc3a12e742f",
+      "bytes": 139995,
+      "lines": 574,
+      "fixtureCommit": "a61a8a44a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCursorPlacement.cpp": "167866d9c",
+        "cpppj/src/client/RawCursorPlacement.h": "e210c7559"
       }
     }
   ]

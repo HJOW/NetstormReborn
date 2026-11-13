@@ -293,7 +293,7 @@ cpppj/src/client/RawCursorActions.cpp	port			todo	[client-default]
 cpppj/src/client/RawCursorDrop.cpp	port	www/core/raw-cursor-drop.js	1f00a25a	port	[client-default] WB04-E398: CursorDropState·RawCursorDrop 전체 분기/효과 순서·전체 미리보기 DWORD 호스트 소비 관문·float32/CRT 비용/화면 정수 감김·makeCursorDropHooks(같은 풀 로컬 배치/SP/SoundPlayer). 원본 cursordrop originals 686행·cursor-preview-width originals 140행(준비 중단20) 첫 실행 일치, 시험8건. WB04-E399: 실제 ReturnPiece_ConnectsGuiDrop 사슬 완료. 남음: 앱/입력/음향 연결은 Session/Client 몫; CD/10.37 제외
 cpppj/src/client/RawCursorLifecycle.cpp	port	www/core/raw-cursor-lifecycle.js	1f00a25a	port	[client-default] WB04-E400: CursorLifecycleState(30DWORD/문맥/측정/비용·현재 checking)·취득/취소/정리·cursorPreviewSid·사정거리·메뉴/내려놓기 바인딩·실제 자산/FontSet 측정 바인딩(현재188TYPE 명시 대여). 원본 lifecycle565·cancel-checking156·type-range854행 첫 실행 일치, 시험8건·커서 집중21건 통과, defaultArgument 뒤 Form WORD 현재 조회의 독립 실패를 살아 있는 raw 대여로 교정. 남음: ClientGameplayGlobals 실제 Acquire/AcquirePrepared 대여/반납 시험은 4-D A, 실제 커서/선택/입력/Session 연결; 10.78 전용
 cpppj/src/client/RawCursorMana.cpp	port			todo	[client-default]
-cpppj/src/client/RawCursorPlacement.cpp	port			todo	[client-default]
+cpppj/src/client/RawCursorPlacement.cpp	port	www/core/raw-cursor-placement.js	1f00a25a	port	[client-default] WB04-E401: CursorPlacementState·Query(현재 설명/Canonical 그림 범위·여백·월드/Gump 허용·지역·Process 전이)·SourceAllowed·Prepare(세 dirty·현재 카메라)·수명/내려놓기 바인딩·실제 Canon/SHP/Renderer/배치 경계 바인딩(현재188TYPE 명시 대여). 원본 cursor-placement 573행 반환/17DWORD/전체 효과·설명 첫 실행 일치, 시험4건. 남음: 실제 장기 커서 소유자·미리보기/선택/Session 연결; 10.78 전용
 cpppj/src/client/RawCursorPosition.cpp	port			todo	[client-default]
 cpppj/src/client/RawCursorPreviews.cpp	port			todo	[client-default]
 cpppj/src/client/RawCursorRange.cpp	port			todo	[client-default]
