@@ -255,7 +255,7 @@ cpppj/src/client/RawCampaignCarrierDrop.inc	port			todo	[client-default]
 cpppj/src/client/RawCampaignCarrierInput.inc	port			todo	[client-default]
 cpppj/src/client/RawCampaignConstructionBindings.cpp	port			todo	[client-default]
 cpppj/src/client/RawCampaignCursor.cpp	port			todo	[client-default]
-cpppj/src/client/RawCampaignCursorDisplay.cpp	port			todo	[client-default]
+cpppj/src/client/RawCampaignCursorDisplay.cpp	port	www/render/raw-campaign-cursor-display.js	1f00a25a	port	[client-default] WB04-E407: 현재 커서 kind4 수집/Renderer procedure·전체 viewport·팔레트/공통OwnerColor/SP/시간·현재 FontSet 경고/비용 글자·현재 잠금/목록 가드. 실제 자산/Factory/SP/Renderer/GumpPixel 장치와 최소 RawWorldCore 4참조 계약으로6건 첫 통과(주변38/38), 본체 전체픽셀·작은 dirty 뒤 snapshot·현재 색/글꼴/의존 대조. 기준선 뒤 변경 없음. 남음: 실제 GameWorld/RawCampaignSession 부모 시험 2건·ClientRendererFrame 앱 수명 조립
 cpppj/src/client/RawCampaignDevastation.inc	port			todo	[client-default]
 cpppj/src/client/RawCampaignEditorIsland.inc	exclude-edit			-	[edit-editor]
 cpppj/src/client/RawCampaignFactoryDisplay.cpp	port			todo	[client-default]
