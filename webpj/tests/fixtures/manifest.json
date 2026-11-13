@@ -9867,21 +9867,24 @@
         "webpj/tests/foreign-ritual-reward.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-foreign-ritual-reward.js"
+        "webpj/www/core/raw-foreign-ritual-reward.js",
+        "webpj/www/core/raw-fort-money-load.js",
+        "webpj/www/core/sp-store.js",
+        "webpj/www/core/client-core-data-globals.js"
       ],
-      "doc": "docs/webpj-object-conversion-20261108.md",
+      "doc": "docs/webpj-foreign-ritual-reward-sp-20261113.md",
       "cpppjSources": [
         "cpppj/src/o/RawForeignRitualReward.cpp"
       ],
-      "scope": "10.78 전용: 기술 모드(mode 0) 144행 사용, SP 모드(mode 1) 180행은 분산 SP 정책 이식 뒤 사용",
+      "scope": "10.78 전용: 기술 모드(mode 0) 144행(E106)과 SP 모드(mode 1) 기본 53비트 180행(E371, 실제 분산 SP 저장소·정책) 사용, 확장 정밀도(0x37f) 180행은 감사 수만 확인",
       "text": true,
       "sha256": "d24f26652aae2a1c4cee5bf92a6ca212b0006b176670e522431f6fa9d65f4983",
       "bytes": 279988,
       "lines": 505,
-      "fixtureCommit": "1a3ccedb",
-      "webCommit": "bb8ebe44",
+      "fixtureCommit": "1a3ccedb7",
+      "webCommit": "4ee1417b2",
       "cpppjBasis": {
-        "cpppj/src/o/RawForeignRitualReward.cpp": "1a3ccedb"
+        "cpppj/src/o/RawForeignRitualReward.cpp": "1a3ccedb7"
       }
     },
     {
@@ -10437,7 +10440,7 @@
       "bytes": 360863,
       "lines": 1497,
       "fixtureCommit": "4e532fd1d",
-      "webCommit": "worktree",
+      "webCommit": "ad805c8c9",
       "cpppjBasis": {
         "cpppj/src/o/RawVortexAscend.cpp": "11fbb9881"
       }
