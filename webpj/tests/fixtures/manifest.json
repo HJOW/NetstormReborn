@@ -18851,10 +18851,41 @@
       "bytes": 3986319,
       "lines": 1561,
       "fixtureCommit": "ed06e9f17",
-      "webCommit": "worktree",
+      "webCommit": "865b55aa8",
       "cpppjBasis": {
         "cpppj/src/client/PreviewCollection.cpp": "76e3c4531",
         "cpppj/src/client/PreviewCollection.h": "c7e9e8b37"
+      }
+    },
+    {
+      "id": "preview-draw",
+      "path": "cpppj/tests/fixtures/previewdraw-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 x86 관측: 실제 미리보기 Draw(00446270) 전체 — 수집/Draw 상태 40값·방향 글자 바이트 열·격자 144바이트·raw SID 5 의 타입/화면 WORD/프레임/좌표·tail 에서 원본이 낸 출력 명령열(색 문맥 M·그림 S·사각형 R·문구 T). 픽셀/글꼴/번역만 경계. 웹은 originals(10.78) 477행만 읽고 originalCD·original1037 행은 읽지 않는다",
+      "consumers": [
+        "webpj/tests/preview-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/preview-draw.js"
+      ],
+      "unit": "WB04-E387",
+      "doc": "docs/webpj-preview-draw-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/PreviewDraw.cpp",
+        "cpppj/src/client/PreviewDraw.h"
+      ],
+      "scope": "미리보기 Draw 명령열 477행(독립 상태 경로; 실제 커서 전역 공유 재생은 커서 전역 단위에서)",
+      "text": true,
+      "sha256": "af2d5785a97c63ad38ecd8dd95c8040dfab46c813424fe906a17209f9e7ccb12",
+      "bytes": 969171,
+      "lines": 1432,
+      "fixtureCommit": "646ca213e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/PreviewDraw.cpp": "0dbfd0c8f",
+        "cpppj/src/client/PreviewDraw.h": "0dbfd0c8f"
       }
     }
   ]
