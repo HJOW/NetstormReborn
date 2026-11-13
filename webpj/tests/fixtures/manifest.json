@@ -18243,7 +18243,7 @@
       "bytes": 52855,
       "lines": 7,
       "fixtureCommit": "d207940cd",
-      "webCommit": "worktree",
+      "webCommit": "6d5c12c6a",
       "cpppjBasis": {
         "cpppj/src/client/ClientColorSortInput.cpp": "b601503d0",
         "cpppj/src/client/ClientColorMapFile.cpp": "b601503d0"
@@ -18293,10 +18293,98 @@
       "bytes": 1826214,
       "lines": 131,
       "fixtureCommit": "d207940cd",
-      "webCommit": "worktree",
+      "webCommit": "6d5c12c6a",
       "cpppjBasis": {
         "cpppj/src/o/RawColorMapCache.cpp": "d207940cd"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E376",
+      "doc": "docs/webpj-palette-flash-20261113.md",
+      "sha256": "e68627ed2932c481316f8ac9a9dae24da1b509caf3394e3984a29154be04ab52",
+      "bytes": 211742,
+      "lines": 25,
+      "fixtureCommit": "093e7512c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/PaletteColors.cpp": "e2821070e"
+      },
+      "id": "palettecolors",
+      "path": "cpppj/tests/fixtures/palettecolors-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: 파일 팔레트 로더의 논리 팔레트(R/G/B/플래그)·저장 팔레트·기본 9색·날씨 4색·전체 58색 (R,G,B,색 번호) 표(세 판본 × 파일 형식 × 재사용 8행씩)",
+      "consumers": [
+        "webpj/tests/palette-colors.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/palette-colors.js",
+        "webpj/www/assets/palette.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/PaletteColors.cpp"
+      ],
+      "scope": "10.78(originals) 8행 사용(웹 파일 형식 해석과 화면 팔레트 고정 포함), originalCD/original1037 16행은 범위 밖"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E376",
+      "doc": "docs/webpj-palette-flash-20261113.md",
+      "sha256": "3e3c769c896a52448ec675cdf82724382faf2336767afb76221ae3fdca0902b6",
+      "bytes": 740991,
+      "lines": 769,
+      "fixtureCommit": "9c87075c8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/PaletteFlash.cpp": "51fbfaf83"
+      },
+      "id": "paletteflash",
+      "path": "cpppj/tests/fixtures/paletteflash-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: 번개 팔레트 프로세스의 생성/초기화/프레임/중단 결과(변경 색·원래 색·간격/마지막 시각 double 비트·남은 단계·초기화 여부·apply/restore/kill 장치 순서)",
+      "consumers": [
+        "webpj/tests/palette-flash.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/palette-flash.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/PaletteFlash.cpp"
+      ],
+      "scope": "10.78(originals) 256행 전부 사용(entry 80·init 168·cancel 8), originalCD/original1037 512행은 범위 밖"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E376",
+      "doc": "docs/webpj-palette-flash-20261113.md",
+      "sha256": "dc4830c05cecb981f712925831c25779d3e815f10a52feba2e46a911e3ec8d8e",
+      "bytes": 43923,
+      "lines": 167,
+      "fixtureCommit": "29bee739f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ScreenPaletteApply.h": "29bee739f"
+      },
+      "id": "screen-palette-clear",
+      "path": "cpppj/tests/fixtures/screen-palette-clear-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: 팔레트 읽기 뒤 004a4923..004a49a2 의 clear 관문(두 x87 제어 × clear/flags/depth/작은 clip/하위 변경)의 중단 원인·현재 13필드·64바이트 물리·호출 trace",
+      "consumers": [
+        "webpj/tests/screen-palette-apply.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/screen-palette-apply.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ScreenPaletteApply.h"
+      ],
+      "scope": "10.78 전용 166행 전부 사용"
     }
   ]
 }
