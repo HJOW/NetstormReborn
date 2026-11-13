@@ -48,25 +48,28 @@ struct MissionStartHooks {
     std::function<void()> refreshCommandGump; // 0042e440:00548740 Gump에00542914/0/0을 전달한다.
     std::function<void()> randomGeysers; // 00486440의 현재 세계 전체 랜덤 간헐천 생성이다.
     std::function<void()> resetCamera; // 004340d0의 실제 카메라 초기화다.
+    std::function<void(float)> setCdSp; // CD00414650의 단일float SP 지정·현재 치트 관문·후속 갱신이며 owner별 PATCH setSp와 구별한다.
 };
 // 기존 frameGate의 start/demo/tellAt/started를 직접 참조한다. 별도 성공/시작 상태를 만들지 않는다.
 class RawMissionStart {
 public:
     // 현재 미션 상태와 필수 설정 조회를 빌린다. 실제 효과는 선택된 경계에서 확인한다.
     RawMissionStart(OriginalEdition edition,MissionFrameGateState& gate,MissionStartState& state,MissionStartGlobals& globals,MissionStartHooks hooks);
-    // 세 현재 getter를 모두 연결한다. 값형 fallback을 갱신하거나 getter 반환을 저장하지 않는다.
+    // PATCH는 세 현재 getter, CD는 localOwner를 요구한다. 값형 fallback을 갱신하거나 getter 반환을 저장하지 않는다.
     void BindCurrentInputs(MissionStartReads reads);
     // 004c2b20 전체 순서이며 실제 효과가 실패하면 이후 상태/started 쓰기를 실행하지 않는다.
     void Start() const;
     // 004c3100: 현재 tellAtIndex 항목의 첫 글자 뒤를 atol로 읽는다. '@' 여부를 추가로 검사하지 않는다.
     void RefreshTellAt() const;
 private:
+    void StartCd() const; // CD0040f840의 단일SP/기술 owner 조회/마지막 시작 표식 순서를 따로 실행한다.
     // 원본이 현재 전역을 읽는 위치에서만 getter 또는 기존 값형 fixture를 선택한다.
     std::uint32_t LocalOwner() const;
     // SP 쓰기를 선택하는 현재 PlayerKnown만 읽는다. 로컬 owner를 앞당겨 읽지 않는다.
     std::uint32_t PlayerKnown() const;
     // myStartMoney 조회 뒤의 현재 편집 모드를 읽는다.
     std::uint32_t Editor() const;
+    OriginalEdition edition_; // 현재 미션 시작 몸체의 실제 판본이며 PATCH와 CD의 SP/조회 순서를 구별한다.
     MissionFrameGateState& gate_; // 프레임 진행과 같은 장기 상태다.
     MissionStartState& state_; // base Mission/추가 Tutorial 필드다.
     MissionStartGlobals& globals_; // 매 원본 위치에서 다시 읽는 전역이다.

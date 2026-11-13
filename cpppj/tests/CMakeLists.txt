@@ -1337,6 +1337,10 @@ set_source_files_properties(LocalGeyserTests.cpp PROPERTIES COMPILE_DEFINITIONS
 # 실제 미션 시작/AI 설정의 독립 원본 결과다.
 set_source_files_properties(MissionStartTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_MISSION_START_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/mission-start-x86.tsv\"")
+# 미션 Start/AI 설정의 순수 효과와 원문 fixture만 검사하고 실제 AI/전투/통신을 실행하지 않는다.
+add_executable(netstorm_cd_mission_start_tests FocusedTestMain.cpp MissionStartTests.cpp)
+target_link_libraries(netstorm_cd_mission_start_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_cd_mission_start_tests)
 
 # 두 실제 PE의 기본 HTML 본문 변환을 독립 입력으로 재생한다.
 set_source_files_properties(HtmlTextParserTests.cpp PROPERTIES COMPILE_DEFINITIONS

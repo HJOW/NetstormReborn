@@ -41,12 +41,13 @@ bool Equal(std::string_view left,std::string_view right) {
 }
 
 // 실제 설정 조회가 없으면 준비를 시작하지 않는다.
-RawMissionAiSettings::RawMissionAiSettings(OriginalEdition edition,MissionAiSettingsState& state,MissionAiSettingsHooks hooks):state_(state),hooks_(std::move(hooks)) {
-    if (edition!=OriginalEdition::Patch1078 || !hooks_.get) throw std::invalid_argument("MissionAI는PATCH실제설정조회가필요합니다");
+RawMissionAiSettings::RawMissionAiSettings(OriginalEdition edition,MissionAiSettingsState& state,MissionAiSettingsHooks hooks):edition_(edition),state_(state),hooks_(std::move(hooks)) {
+    if (!hooks_.get) throw std::invalid_argument("MissionAI 실제 설정 조회가 필요합니다");
 }
 
 // CRT ftol 앞의 FILD startingSp +4000.0을 정확한 정수 합으로 유지하고 반환 하위 DWORD를 보존한다.
 void RawMissionAiSettings::Initialize(std::span<std::uint8_t> raw) const {
+    if (edition_==OriginalEdition::Cd1072) { InitializeCd(raw);return; } // CD는 직접 자금DWORD를 쓰며 PATCH의+4000 보정을 하지 않는다.
     Check(raw);raw[0]=0;Copy(raw,0x1e,kDefaultTech);Put(raw,0x220,std::bit_cast<std::uint32_t>(6.0F));Put(raw,0x224,std::bit_cast<std::uint32_t>(static_cast<float>(state_.stuffRefreshRate)));Put(raw,0x228,std::bit_cast<std::uint32_t>(3.0F));
     Put(raw,0x22c,static_cast<std::uint32_t>(static_cast<std::int64_t>(state_.startingSp)+4000));Put(raw,0x230,3);Put(raw,0x234,3);Put(raw,0x238,4);Put(raw,0x23c,0);Put(raw,0x240,0);Put(raw,0x244,0);Put(raw,0x24c,0);Put(raw,0x250,0);Put(raw,0x254,0);Put(raw,0x248,0xffff);
 }
@@ -58,7 +59,7 @@ void RawMissionAiSettings::SetAbility(std::span<std::uint8_t> raw,std::string_vi
     // 실제 NULL 종료 이름 표에서 일치하거나 마지막 NULL 위치까지 찾는다.
     while (index<kAbilities.size() && !Equal(name,kAbilities[index])) ++index;
     if (index==kAbilities.size()) {
-        if (state_.checkingAsserts) { if (!hooks_.unknownAbilityAssertion) throw std::logic_error("AI능력이름assert경계누락");hooks_.unknownAbilityAssertion(name); }
+        if (edition_==OriginalEdition::Patch1078 && state_.checkingAsserts) { if (!hooks_.unknownAbilityAssertion) throw std::logic_error("AI능력이름assert경계누락");hooks_.unknownAbilityAssertion(name); }
         if (!hooks_.unknownAbilityLog) throw std::logic_error("AI능력이름log경계누락");hooks_.unknownAbilityLog(name);
     }
     const auto bit=1U<<(index&31U);Put(raw,0x248,enabled ? Read(raw,0x248)|bit : Read(raw,0x248)&~bit);
@@ -67,7 +68,7 @@ void RawMissionAiSettings::SetAbility(std::span<std::uint8_t> raw,std::string_vi
 // 공통과 owner 적용은 매 번 현재 설정을 조회한다. 목록 열 개를 하나로 합치지 않는다.
 void RawMissionAiSettings::Apply(std::span<std::uint8_t> raw,std::int32_t owner) const {
     Check(raw);const auto prefix=std::string("ai")+(owner>0 ? std::to_string(owner) : "");
-    const auto get=[&](std::string_view suffix) { return hooks_.get(prefix+std::string(suffix)); }; // 원본 형식 문자열이 만든 현재 키다.
+    const auto get=[&](std::string_view suffix) { auto value=hooks_.get(prefix+std::string(suffix));if (edition_==OriginalEdition::Cd1072) value.resize(std::min(value.size(),value.find('\0')));return value; }; // 원본 형식 문자열이 만든 현재 키다.
     auto value=get("Name");if (!value.empty()) Copy(raw,0,value);value=get("Tech");if (!value.empty()) Copy(raw,0x1e,value);
     constexpr std::array<std::pair<std::string_view,std::size_t>,3> rates{{{"BridgeDrawRate",0x220},{"StuffRefreshRate",0x224},{"TimeBetweenMoves",0x228}}}; // 세 atof→float 필드의 실제 순서다.
     // 비어 있지 않은 값에만 원본 atof 경계를 호출한다.
@@ -81,9 +82,17 @@ void RawMissionAiSettings::Apply(std::span<std::uint8_t> raw,std::int32_t owner)
     // 공통/owner 목록은 원본대로 가산하며8을 넘는 양수도 shift의 하위5비트로 처리한다.
     for (int index=0;index<10;++index) { const auto ally=ConfigParseLong(ConfigListItem(get("AllyList"),index));if (ally>0) Put(raw,0x23c,Read(raw,0x23c)|(1U<<(static_cast<std::uint32_t>(ally)&31U))); }
     // 느낌표는 선두 한 글자만 제거하며 빈 이름은 아무 것도 하지 않는다.
-    for (int index=0;index<10;++index) { value=ConfigListItem(get("Ability"),index);const bool enabled=value.empty() || value.front()!='!';SetAbility(raw,enabled ? std::string_view(value) : std::string_view(value).substr(1),enabled); }
+    for (int index=0;index<10;++index) { value=ConfigListItem(get("Ability"),index);if (edition_==OriginalEdition::Cd1072 && value.size()>=256) throw std::length_error("CD AI 능력 이름의 원문256BYTE 지역 버퍼 범위");const bool enabled=value.empty() || value.front()!='!';SetAbility(raw,enabled ? std::string_view(value) : std::string_view(value).substr(1),enabled); }
 }
 
 // 같은 storage에 누적하여 공통의 동맹/능력이 owner 값에 보존되게 한다.
 void RawMissionAiSettings::Prepare(std::span<std::uint8_t> raw,std::int32_t owner) const { Initialize(raw);Apply(raw,-1);Apply(raw,owner); }
+// CD004d6e60의 실제 쓰기만 수행하며600BYTE의 미작성 입력과 이름/기술 문자열 뒤의 stale BYTE를 보존한다.
+void RawMissionAiSettings::InitializeCd(std::span<std::uint8_t> raw) const {
+    Check(raw);raw[0]=0;Copy(raw,0x1e,kDefaultTech);
+    const auto refresh=static_cast<float>(state_.stuffRefreshRate); // CD0052e8dc의 signed DWORD를 FILD→FSTP32로 변환한다.
+    Put(raw,0x220,std::bit_cast<std::uint32_t>(6.0F));Put(raw,0x228,std::bit_cast<std::uint32_t>(3.0F));Put(raw,0x230,3);Put(raw,0x224,std::bit_cast<std::uint32_t>(refresh));
+    Put(raw,0x22c,std::bit_cast<std::uint32_t>(state_.cdStartingSp)); // CD005120d0은 이미 시작 자금 DWORD이며 PATCH의+4000 보정을 더하지 않는다.
+    Put(raw,0x23c,0);Put(raw,0x240,0);Put(raw,0x244,0);Put(raw,0x24c,0);Put(raw,0x250,0);Put(raw,0x254,0);Put(raw,0x238,4);Put(raw,0x234,3);Put(raw,0x248,0xffff);
+}
 }
