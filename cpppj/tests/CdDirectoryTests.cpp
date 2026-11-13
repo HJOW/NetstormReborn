@@ -65,3 +65,27 @@ TEST_CASE(CdDirectory_Local1072MarkerPrecedesOpticalFallback) {
     CHECK(FindCd1072DataDirectory({},{}).empty());
     std::filesystem::remove_all(root);
 }
+
+// 설정된 CD 자료가 로컬 표시 파일보다 우선하며 상대·유니코드 경로와 잘못된 설정의 대체를 확인한다.
+TEST_CASE(CdDirectory_Configured1072MarkerAndRelativeRootPrecedeFallback) {
+    const auto root=std::filesystem::temp_directory_path()/L"NetstormCdDirectoryTests"/
+        std::to_wstring(std::chrono::steady_clock::now().time_since_epoch().count());
+    const auto game=root/L"설치",media=game/L"CD 자료😀"; // 실행 cwd와 무관하게 설정의 상대 기준이 되는 두 자료 폴더다.
+    std::filesystem::create_directories(media);
+    { std::ofstream marker(media/"CD.NETSTORM.TITANIC.ACTIVISION");CHECK(marker.good()); }
+    { std::ofstream marker(game/"CD.NETSTORM.TITANIC.ACTIVISION");CHECK(marker.good()); }
+    unsigned calls{}; // 실제 광학 대체 탐색이 선택됐을 때만 증가한다.
+    const auto fallback=[&] { ++calls;return std::string("optical"); };
+    const auto expected=netstorm::platform::PathToUtf8(std::filesystem::absolute(media).lexically_normal());
+    CHECK(FindCd1072DataDirectory(game,fallback,netstorm::platform::PathToUtf8(media))==expected);
+    CHECK(FindCd1072DataDirectory(game,fallback,netstorm::platform::PathToUtf8(media.filename()))==expected);
+    CHECK(calls==0);
+    const auto local=netstorm::platform::PathToUtf8(std::filesystem::absolute(game).lexically_normal());
+    CHECK(FindCd1072DataDirectory(game,fallback,"missing")==local && calls==0);
+    std::filesystem::remove(game/"CD.NETSTORM.TITANIC.ACTIVISION");
+    CHECK(FindCd1072DataDirectory(game,fallback,"missing")=="optical" && calls==1);
+    std::filesystem::remove(media/"CD.NETSTORM.TITANIC.ACTIVISION");
+    std::filesystem::create_directory(media/"CD.NETSTORM.TITANIC.ACTIVISION");
+    CHECK(FindCd1072DataDirectory(game,fallback,netstorm::platform::PathToUtf8(media))=="optical" && calls==2);
+    std::filesystem::remove_all(root);
+}

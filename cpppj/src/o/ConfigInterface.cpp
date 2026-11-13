@@ -128,7 +128,8 @@ void ConfigInterface::Startup(const StartupOptions& options) {
     }
     Load(arguments);
     Set("InstallDir", options.installDir);
-    Set("CDDir", options.cdDir.empty() ? options.installDir : options.cdDir);
+    const auto cdDirectory=options.resolveCdDirectory ? options.resolveCdDirectory(configuration_.Get("CDDir").value_or(std::string{})):options.cdDir; // 설정의 치환된 CDDir을 덮어쓰기 전에 선택 장치에 전달한다.
+    Set("CDDir", cdDirectory.empty() ? options.installDir : cdDirectory);
 }
 // 값이 없으면 빈 문자열을 읽어 0이 된다.
 std::int32_t ConfigInterface::GetInt(std::string_view key) {

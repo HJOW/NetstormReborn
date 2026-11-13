@@ -53,12 +53,24 @@ std::string FindWindowsCdDirectory() { // 원본의 CD 자동 탐색은 유지�
     std::vector<char> output(4U*32768U); // 원본255BYTE 대신 Windows10/11의 긴 Unicode 경로가 UTF-8 중간에서 잘리지 않도록 충분히 확보한다.
     return FindCdDirectory(output,h) ? std::string(output.data()) : std::string();
 }
-// CD 복사본의 표시 파일을 먼저 확인하여 광학 장치 없이도 보조 아카이브의 루트를 고른다.
-std::string FindCd1072DataDirectory(const std::filesystem::path& gameDirectory,const std::function<std::string()>& fallback) {
-    if (!gameDirectory.empty()) {
+// 설정된 CD 복사본이 유효하면 우선하고, 잘못된 설정은 로컬 자료와 기존 탐색으로 대체한다. CD 삽입을 기다리거나 원본 자료를 수정하지 않는다.
+std::string FindCd1072DataDirectory(const std::filesystem::path& gameDirectory,const std::function<std::string()>& fallback,std::string_view configuredDirectory) {
+    const auto markedDirectory=[](const std::filesystem::path& directory) -> std::string { // 일반 표시 파일을 가진 경로만 절대 UTF-8 경로로 돌려준다.
+        if (directory.empty()) return {};
         std::error_code error;
-        const auto root=std::filesystem::absolute(gameDirectory,error).lexically_normal();
+        const auto root=std::filesystem::absolute(directory,error).lexically_normal();
         if (!error && std::filesystem::is_regular_file(root/std::string(kCdPresenceMarker),error) && !error) return CdUtf8(root);
+        return {};
+    };
+    if (!configuredDirectory.empty()) {
+        auto configured=CdWide(configuredDirectory.substr(0,configuredDirectory.find('\0'))); // 현재 설정의 첫 NUL 뒤는 경로가 아니다.
+        if (configured.is_relative() && !gameDirectory.empty()) configured=gameDirectory/configured; // 프로세스 cwd가 다른 MCP·분석 실행에서도 같은 상대 CDDir을 사용한다.
+        const auto selected=markedDirectory(configured);
+        if (!selected.empty()) return selected;
+    }
+    if (!gameDirectory.empty()) {
+        const auto selected=markedDirectory(gameDirectory);
+        if (!selected.empty()) return selected;
     }
     return fallback ? fallback() : std::string{};
 }

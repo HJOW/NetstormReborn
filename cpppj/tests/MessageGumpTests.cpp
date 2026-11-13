@@ -85,6 +85,34 @@ TEST_CASE(MessageGump_MissingSelectedBranchesStayExplicit) {
     CHECK(missing && scene.trace=="Text");
 }
 
+// CD 004c8b40의 Pause는 CD 가상표/무강조 문구를 쓰고 기한·음향·Idle을 새로 만들지 않는다.
+TEST_CASE(MessageGump_CdPauseUsesCdTextVtableAndPermanentDeadline) {
+    for (const auto challenge:{0U,1U}) { // 같은 CD 공통 생성자는 일반/Challenge 이름 조회를 현재 모드에 따라 선택한다.
+        MessageScene scene;scene.create.collection.edition=netstorm::o::OriginalEdition::Cd1072;scene.challenge=challenge;
+        auto hooks=scene.Hooks();
+        hooks.translate=[&scene](std::string_view value) { CHECK(value=="~wGame Paused!");scene.Event("TranslateCd");return std::string("translated CD pause"); }; // 원문 번역 키와 실제 번역 반환을 따로 검증한다.
+        hooks.warningSound=[&scene] { scene.Event("UnexpectedSound"); };
+        hooks.wallSeconds=[&scene] { scene.Event("UnexpectedClock");return 100.0; };
+        hooks.idle=[&scene](auto,bool) { scene.Event("UnexpectedIdle"); };
+        MessageGump message(scene.create,std::move(hooks));
+        CHECK(message.Construct(kNode,11,0,9)==kNode);
+        CHECK(scene.node.vtable==0x506658U && scene.node.kind==11 && scene.node.player==0 && scene.node.parameter==9);
+        CHECK(scene.node.deadline==0.0 && scene.node.reserved==kCanary && scene.node.trailing==kCanary);
+        CHECK(scene.trace==std::string("Text;")+(challenge ? "ChallengeName,0" : "PlayerName,0")+";TranslateCd;Style,"+MessageScene::TextHex("translated CD pause")+";Fit,0,0");
+    }
+}
+
+// CD에 없는 PATCH 종류는 TextGump 생성/노드 쓰기/번역을 시작하기 전에 명시적으로 거부한다.
+TEST_CASE(MessageGump_CdUnsupportedKindsPreserveUnconstructedNode) {
+    for (const auto kind:{0,12,16,17,18}) { // CD switch1~11 밖인 입력과 현재 PATCH 확장 종류를 함께 확인한다.
+        MessageScene scene;scene.create.collection.edition=netstorm::o::OriginalEdition::Cd1072;
+        const auto before=scene.Snapshot(); // 실패 이전의 전체0xc0 물리 상태다.
+        MessageGump message(scene.create,scene.Hooks());bool rejected{}; // 판본 선택만으로 조기 TextGump 생성을 실행하지 않는다.
+        try { static_cast<void>(message.Construct(kNode,kind,0,0,"unsupported")); }catch (const std::logic_error&) { rejected=true; }
+        CHECK(rejected && scene.trace.empty() && scene.Snapshot()==before);
+    }
+}
+
 // T/t 게임 시간의 최초 원문 관측과 실제 메시지 생성자를 함께 검사한다(754).
 #include "GameTimeMessageTests.inc"
 

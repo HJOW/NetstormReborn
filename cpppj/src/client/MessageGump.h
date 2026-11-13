@@ -1,4 +1,4 @@
-// 원본10.78의004d0600 중 접속/이탈·전투·Pause/시간/Warning을 기존 TextGump에 연결한다.
+// 원본10.78의004d0600과 CD004c8b40의 메시지를 같은 판본의 기존 TextGump에 연결한다.
 #pragma once
 #include "client/TextGump.h"
 #include <functional>
@@ -35,10 +35,12 @@ std::string FormatWarningMessage(std::string_view pattern,std::optional<std::str
 // 등록/루트20칸/Draw/삭제는 기존 MessageBoard·TextGump·GumpLifetime이 담당한다.
 class MessageGump {
 public:
-    MessageGump(const GumpCreateState& create,MessageGumpHooks hooks); // 실제10.78 공통 생성 상태와 경계를 확인한다.
+    MessageGump(const GumpCreateState& create,MessageGumpHooks hooks); // 실제 공통 생성 상태의 판본과 필수 TextGump 경계를 보관한다.
     std::uint32_t Construct(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter,std::optional<std::string_view> source=std::nullopt) const; //지원하는 접속/전투/시간/Warning 종류를 생성하며 kind17의nullopt는원문NULL이다.
 private:
+    std::uint32_t ConstructCd(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter) const; // CD 004c8b40의 종류1~11 문구·이름·기한을 같은 TextGump에 생성한다.
     MessageGumpNode& Node(std::uint32_t token) const; // 경계 호출 뒤 같은 현재 노드를 다시 조회한다.
+    o::OriginalEdition edition_; // 실제 공유 Gump 저장소의 판본이며 CD를 PATCH 메시지로 해석하지 않는다.
     MessageGumpHooks hooks_; // 현재 실제 저장소와 공통 처리기를 빌리는 안정된 경계다.
 };
 }

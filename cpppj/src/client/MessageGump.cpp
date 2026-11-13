@@ -8,6 +8,7 @@
 namespace netstorm::client {
 namespace {
 constexpr std::uint32_t kMessageVtable=0x00517b60U; // 보호10.78의 메시지 파생 가상 표다.
+constexpr std::uint32_t kCdMessageVtable=0x00506658U; // CD 004c8b40이 TextGump 생성 뒤 기록하는 메시지 파생 가상 표다.
 constexpr std::int32_t kWarning=17; //원문Script Warning의실제메시지종류다.
 constexpr std::int32_t kGameTime=16; //원문게임시간메시지의실제종류다.
 constexpr std::int32_t kPause=11; // 원문 분배기와 생성자가 사용하는 실제 Pause 종류다.
@@ -68,8 +69,8 @@ std::string FormatWarningMessage(std::string_view pattern,std::optional<std::str
 }
 
 // 선택되지 않은 Challenge 이름 조회는 도달할 때만 요구한다.
-MessageGump::MessageGump(const GumpCreateState& create,MessageGumpHooks hooks):hooks_(std::move(hooks)) {
-    if (create.collection.edition!=o::OriginalEdition::Patch1078 || !hooks_.node || !hooks_.constructText || !hooks_.challenge || !hooks_.playerName || !hooks_.translate || !hooks_.style || !hooks_.fit)
+MessageGump::MessageGump(const GumpCreateState& create,MessageGumpHooks hooks):edition_(create.collection.edition),hooks_(std::move(hooks)) {
+    if (!hooks_.node || !hooks_.constructText || !hooks_.challenge || !hooks_.playerName || !hooks_.translate || !hooks_.style || !hooks_.fit)
         throw std::invalid_argument("Pause 메시지 실제 TextGump/이름/번역/측정 연결 누락");
 }
 // 별도 기본 노드를 만들지 않고 같은 실제 파생을 반환한다.
@@ -80,6 +81,7 @@ MessageGumpNode& MessageGump::Node(std::uint32_t token) const {
 }
 // Pause는 시계/음향/idle을 호출하지 않고 기한0의 영구 메시지를 측정한다.
 std::uint32_t MessageGump::Construct(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter,std::optional<std::string_view> source) const {
+    if (edition_==o::OriginalEdition::Cd1072) return ConstructCd(token,kind,player,parameter); // CD에 없는 시간/Warning/자원 지급 종류는 별도 CD 몸체가 생성 전에 거부한다.
     if (kind!=kPause && kind!=kGameTime && kind!=kWarning && kind!=kAllied && kind!=kStarted && kind!=kServerInactive && kind!=kPlayerInactive && kind!=kMoneyReceived && kind!=kResourceInjection && kind!=kPresent && kind!=kDisconnected && kind!=kDrawRequested && kind!=kAllianceBroken && kind!=kCompleted) throw std::logic_error("다른 원본 메시지 종류의 생성 분기 미복원");
     hooks_.constructText(token);
     Node(token).vtable=kMessageVtable;
@@ -159,5 +161,60 @@ std::uint32_t MessageGump::Construct(std::uint32_t token,std::int32_t kind,std::
     } else { const auto text=hooks_.translate(kPauseText);hooks_.style(token,text); } //Pause는기존영구기한0/무음향/무Idle을유지한다.
     hooks_.fit(token,0,0);
     return token;
+}
+// CD 004c8b40의 공통 생성 부분을 분리하며 접속/동맹 등의 원문 분기는 게임이나 통신을 실행하지 않고 같은 UI 장치만 호출한다.
+std::uint32_t MessageGump::ConstructCd(std::uint32_t token,std::int32_t kind,std::int32_t player,std::int32_t parameter) const {
+    if (kind<1 || kind>11) throw std::logic_error("CD 10.72에 없는 메시지 종류");
+    hooks_.constructText(token);
+    Node(token).vtable=kCdMessageVtable;Node(token).deadline=0.0;
+    Node(token).kind=kind;Node(token).player=player;Node(token).parameter=parameter;
+    std::span<const char> firstName; // 원문은 이름 주소를 먼저 얻고 번역/두 번째 이름 조회 뒤의 현재 바이트를 서식에 사용한다.
+    const bool challenge=hooks_.challenge()!=0; // CD00540a24의 현재 모드는 최초 이름 선택에서 한 번 읽는다.
+    const bool needsName=kind>=2 && kind<=8; // CD의 문자열 서식이 첫 이름을 소비하는 종류다.
+    if (challenge) {
+        if (needsName) {
+            if (!hooks_.challengePlayerText) throw std::logic_error("CD 메시지의 실제 Challenge 이름 주소 미연결");
+            firstName=hooks_.challengePlayerText(player);
+        } else {
+            if (!hooks_.challengePlayerName) throw std::logic_error("CD 메시지의 실제 Challenge 이름 조회 미연결");
+            hooks_.challengePlayerName(player);
+        }
+    } else if (needsName) {
+        if (!hooks_.playerText) throw std::logic_error("CD 메시지의 실제 Player 이름 주소 미연결");
+        firstName=hooks_.playerText(player);
+    } else hooks_.playerName(player);
+    const auto selected=Node(token).kind; // 이름 조회가 돌아온 뒤 원문이 다시 읽는 현재+a4 분기다.
+    if (selected==1 || selected==2 || selected==4 || selected==5 || selected==7 || selected==8) {
+        if (!hooks_.warningSound) throw std::logic_error("CD 메시지의 실제 경고 음향 미연결");
+        hooks_.warningSound();
+    }
+    switch (selected) {
+    case 1: hooks_.style(token,hooks_.translate("~wServer not responding"));break;
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6: {
+        const auto format=hooks_.translate(selected==2 ? "~w%s not responding" : selected==3 ? "~w%s is present" : selected==4 ? "~w%s sent you Storm Power" : selected==5 ? "~w%s has disconnected" : "~w%s wishes to declare a Draw"); // 번역 효과가 이름 내용을 바꿀 수 있으므로 이름 BYTE 복사보다 먼저 완료한다.
+        const auto name=CurrentMessageName(firstName); // 실제 번역 복귀 뒤 첫 NUL까지 읽는다.
+        hooks_.style(token,FormatWarningMessage(format,name));break;
+    }
+    case 7:
+    case 8: {
+        if (!hooks_.playerText) throw std::logic_error("CD 동맹 메시지의 실제 두 번째 Player 이름 주소 미연결");
+        const auto second=hooks_.playerText(parameter); // CD는 첫 이름의 Challenge 선택과 관계없이 두 번째 이름은 일반 Player에서 조회한다.
+        const auto format=hooks_.translate(selected==7 ? "~w%s and %s are now Allies" : "~w%s and %s have broken their Alliance.");
+        hooks_.style(token,AlliedMessage(format,firstName,second));break;
+    }
+    case 9: hooks_.style(token,hooks_.translate("~wGame started!"));break;
+    case 10: hooks_.style(token,hooks_.translate("~wGame completed!"));break;
+    case 11: hooks_.style(token,hooks_.translate("~wGame Paused!"));break;
+    default: break; // 이름 조회 장치가 바꾼 미정 종류는 원문의 switch처럼 문구를 생성하지 않고 공통 Fit만 수행한다.
+    }
+    if (selected>=3 && selected<=10) {
+        if (!hooks_.wallSeconds || !hooks_.idle) throw std::logic_error("CD 메시지의 실제 기한/Idle 미연결");
+        Node(token).deadline=hooks_.wallSeconds()+10.0;hooks_.idle(token,true);
+    }
+    hooks_.fit(token,0,0);return token;
 }
 }

@@ -45,6 +45,7 @@ public:
         std::string identity;         // 환경 변수 IDENTITY 또는 USER. 비어 있으면 그 파일은 건너뛴다.
         std::string installDir;       // InstallDir에 쓸 값(원본은 데이터 폴더의 상위 폴더).
         std::string cdDir;            // CDDir에 쓸 값(원본은 CD를 찾지 못하면 InstallDir과 같다).
+        std::function<std::string(std::string_view)> resolveCdDirectory; // 클론 CD 호환: 설정을 모두 읽은 뒤 현재 CDDir을 검증하여 보조 자료 경로를 확정한다. 미지정 시 원문 시작 규칙을 유지한다.
     };
 
     // 원본 CRT 순서대로 language→configuration→global→fort를 같은 Registry에 등록한다(004fc8c0~004fc920).

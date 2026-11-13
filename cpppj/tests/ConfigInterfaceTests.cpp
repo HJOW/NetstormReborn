@@ -85,6 +85,32 @@ TEST_CASE(ConfigInterface_Startup_BuildsSectionsInOriginalOrder) {
     CHECK(config.Registry().Objects().size() == 4);
 }
 
+// CD 호환 경로 선택은 저장/명령줄 설정을 모두 읽고 InstallDir을 확정한 뒤 현재 치환값을 받는다.
+TEST_CASE(ConfigInterface_Startup_ResolvesConfiguredCdAfterLoadingSettings) {
+    auto files=MakeFiles(); // 첫 줄 서명 뒤 개행을 두어 CDDir이 정상 설정 키로 적재되도록 한다.
+    files["d\\options.cfg"]=Encoded("\r\nCDDir=\"{InstallDir}\\saved-media\"\r\n");
+    ConfigInterface config(Reader(files));
+    ConfigInterface::StartupOptions options; // 원문 시작과 같은 구조체에 CD 호환 선택 장치만 추가한다.
+    options.installDir="C:\\NS";
+    unsigned calls{}; // 시작 한 번마다 설정 해석 뒤 경로 확정이 한 번 일어나야 한다.
+    std::vector<std::string> observed; // 각 실행에서 경로 선택 장치가 받은 실제 치환값이다.
+    options.resolveCdDirectory=[&](std::string_view configured) {
+        ++calls;observed.emplace_back(configured);
+        CHECK(config.Configuration().Get("InstallDir")=="C:\\NS");
+        return std::string("D:\\validated-media");
+    };
+    config.Startup(options);
+    CHECK(calls==1 && observed==std::vector<std::string>{"C:\\NS\\saved-media"});
+    CHECK(config.Configuration().Get("CDDir")=="D:\\validated-media");
+    options.commandLine="CDDir=\"E:\\argument-media\"";
+    config.Startup(options);
+    CHECK(calls==2 && observed.back()=="E:\\argument-media");
+    CHECK(config.Configuration().Get("CDDir")=="D:\\validated-media");
+    options.resolveCdDirectory=[](std::string_view) { return std::string{}; }; // 유효한 CD 자료가 없으면 기존 InstallDir 대체를 사용한다.
+    config.Startup(options);
+    CHECK(config.Configuration().Get("CDDir")=="C:\\NS");
+}
+
 // 정수·문자열 읽기와 "0에서 달라졌는가" 판정.
 TEST_CASE(ConfigInterface_TypedAccessors_KeepOriginalQuirks) {
     const auto files = MakeFiles();
