@@ -211,7 +211,7 @@ cpppj/src/client/NewFortManagerDevices.cpp	exclude-edit		a328ac1f	-	[edit-new-fo
 cpppj/src/client/NextUnitSelection.cpp	port	www/core/selection-shortcuts.js	1f00a25a	port	[client-default] WB04-E22: N 다음 이동 유닛 선택(004da880). fixture next-unit-selection 10.78 410행 전부. 실제 Select/ToggleMultiple 연결 대조는 해당 단위에서
 cpppj/src/client/ObjectCollection.cpp	port	www/render/object-collection.js	1f00a25a	port	[client-default] WB04-E389: 일반 자산/그림자 수집기 00433660 — ObjectCollection.collect(해시 1~3단계 y 바깥 x 안쪽·좌표+0.5 CRT 절삭 하위 DWORD÷단계 크기·상단 칸 제한·한 칸 확장+독립 clamp·체인 순환 거부·본체/그림자 프레임의 닫힌 구간 교차(x 는 x87 정밀도, y 는 float 저장)·walker y+0.5/그림자 y−0.1·깊이 signed BYTE·abstract/그림자 tail 4·기록 후 strict limit·정상 반환 때 해시 선택 2)·object(토큰→SID)·bindObjectCollection. fixture objectcollection originals 477행 첫 실행 전부 일치 + SpriteDraw_ObjectCollectionPixels(수집→CRT 정렬→분배→픽셀). CommonSubmissionIntegration 은 GumpCollection·TileGroupCollection 단위에서
 cpppj/src/client/ObjectDumpDisk.cpp	exclude-host			-	[host-dev-files]
-cpppj/src/client/ObjectHitVtables.inc	port			todo	[client-default]
+cpppj/src/client/ObjectHitVtables.inc	port	www/render/object-hit-vtables.js	1f00a25a	port	[client-default] WB04-E409: 보호10.78의 실제83VT/+78/+a4/+b0 읽기 전용 분배 키. RawCampaignFactoryDisplay의 실제 건물/선택 출력에서 사용. 기준선 뒤 변경 없음. 공중3종 생성/전용 검사 없음.
 cpppj/src/client/ObjectMenuSlots.inc	port			todo	[client-default]
 cpppj/src/client/ObjectOwnerCommands.cpp	port			todo	[client-default]
 cpppj/src/client/OwnerColorMaps.cpp	port	www/assets/owner-colors.js	1f00a25a	port	[client-default] WB03-Y 항등9색표·색 띠/다리 특례
@@ -258,7 +258,7 @@ cpppj/src/client/RawCampaignCursor.cpp	port			todo	[client-default]
 cpppj/src/client/RawCampaignCursorDisplay.cpp	port	www/render/raw-campaign-cursor-display.js	1f00a25a	port	[client-default] WB04-E407: 현재 커서 kind4 수집/Renderer procedure·전체 viewport·팔레트/공통OwnerColor/SP/시간·현재 FontSet 경고/비용 글자·현재 잠금/목록 가드. 실제 자산/Factory/SP/Renderer/GumpPixel 장치와 최소 RawWorldCore 4참조 계약으로6건 첫 통과(주변38/38), 본체 전체픽셀·작은 dirty 뒤 snapshot·현재 색/글꼴/의존 대조. 기준선 뒤 변경 없음. 남음: 실제 GameWorld/RawCampaignSession 부모 시험 2건·ClientRendererFrame 앱 수명 조립
 cpppj/src/client/RawCampaignDevastation.inc	port			todo	[client-default]
 cpppj/src/client/RawCampaignEditorIsland.inc	exclude-edit			-	[edit-editor]
-cpppj/src/client/RawCampaignFactoryDisplay.cpp	port			todo	[client-default]
+cpppj/src/client/RawCampaignFactoryDisplay.cpp	port	www/render/raw-campaign-factory-display.js	a0342fae	port	[client-default] WB04-E409: 실제83VT 현재 getter/추가Draw·kind0 수집/그림자·SpriteDraw/HP/Kernel 상태57·현재 소유자/파일색/고정9표·RawObjectHit 연결. 실제 자산/Factory/Host/Kernel/소유자 표 부품 조립7건(1440점 실제 SHP 선택 포함). 기준선 뒤 a0342fae 메타 추가Draw/200선택 장치 변경은3.6② 반영. 실제 Session/MetaWorld/ClientRendererFrame 부모 연결은 별도.
 cpppj/src/client/RawCampaignGunQueries.cpp	port			todo	[client-default]
 cpppj/src/client/RawCampaignHitBindings.cpp	port			todo	[client-default]
 cpppj/src/client/RawCampaignLifetimeBindings.cpp	port			todo	[client-default]
