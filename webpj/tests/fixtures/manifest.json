@@ -18771,7 +18771,7 @@
       "bytes": 643581,
       "lines": 253,
       "fixtureCommit": "7f903eba0",
-      "webCommit": "worktree",
+      "webCommit": "bfea62c88",
       "cpppjBasis": {
         "cpppj/src/client/RendererDiagnostics.cpp": "7f903eba0",
         "cpppj/src/client/RendererDiagnostics.h": "7f903eba0"
@@ -18805,7 +18805,7 @@
       "bytes": 26566,
       "lines": 577,
       "fixtureCommit": "7f903eba0",
-      "webCommit": "worktree",
+      "webCommit": "bfea62c88",
       "cpppjBasis": {
         "cpppj/src/client/RendererDiagnostics.cpp": "7f903eba0",
         "cpppj/src/client/RendererDiagnostics.h": "7f903eba0"
@@ -18825,6 +18825,37 @@
         "cpppj/src/client/RendererDiagnostics.h"
       ],
       "scope": "진단 키 분배 576행"
+    },
+    {
+      "id": "preview-collection",
+      "path": "cpppj/tests/fixtures/previewcollection-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 x86 관측: 실제 미리보기 기계어(00446060)의 수집/활성/CRT와 준비된 SP 읽기 — 상태 21값·한도·클립 전 영역·조각 목록·희소 spot·완성 raw 슬롯(50바이트 전체)에서 반환 수·작업 칸 64개 전체 바이트·강조 시각·카운트다운·SP getter 진입 횟수·작업 배열 앞뒤 0xa5 보호 항목. 웹은 originals(10.78) 520행만 읽고 originalCD·original1037 행은 읽지 않는다",
+      "consumers": [
+        "webpj/tests/preview-collection.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/preview-collection.js"
+      ],
+      "unit": "WB04-E386",
+      "doc": "docs/webpj-preview-collection-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/PreviewCollection.cpp",
+        "cpppj/src/client/PreviewCollection.h"
+      ],
+      "scope": "미리보기 수집 520행(독립 상태 경로; 실제 커서 전역 공유 재생은 커서 전역 단위에서)",
+      "text": true,
+      "sha256": "9901a90d6354dc93b302c83ad6aa84cb8fb6a8d4ec032dc285133b95fe4d2a82",
+      "bytes": 3986319,
+      "lines": 1561,
+      "fixtureCommit": "ed06e9f17",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/PreviewCollection.cpp": "76e3c4531",
+        "cpppj/src/client/PreviewCollection.h": "c7e9e8b37"
+      }
     }
   ]
 }
