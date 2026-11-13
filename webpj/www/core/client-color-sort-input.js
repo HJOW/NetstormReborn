@@ -5,13 +5,17 @@
 //  - rebuild(currentRed): 43c010 의 현재 빨강과 같은 최초 입력으로 기본 53비트 9표를 갱신한다. 순서: [0] RGB 1.6배 L1 최근접(첫 표, 228..245·254·255 항등) · [1] 파괴 · [2] 불법 · [3] 항등 · [4] 밝음 ·
 //    [5] 글자 그림자 · [6] 건설 · [7] 그림자 · [8] HLS 명도 최근접((명도+0.2)/3, 254·255 항등). 64비트 별도 출력은 섞지 않는다. maps: 완료 뒤 같은 표 배열을 빌린다.
 // colorSortLogicalInput(fixed, independentCurrent): 실제 Client 는 고정 초기 RGB(256)를 필수로 주고, 소유자 없는 독립 표시 검사만 명시한 현재 입력으로 되돌아간다(길이가 256 이 아니면 거부).
-// 캐시 파일(!color.dat) 읽기/쓰기와 소유자 8행 ownerHighlight/ownerSolid 출력은 웹에서 RawColorMapCache(adapt) 단위가 맡는다. 이 모듈은 DOM 을 쓰지 않는다.
-// (2026-11-13 WB04-E374: 5-A ClientColorSortInput 이식으로 추가, 기준선 뒤 cpppj 변경 없음)
+//  - initializeCache(files, path, currentRed, initializeOwners): 최초 43c4e0 — 소유자 표 두 개·TYPE 등록(initializeOwners)과 소유자 8행 ownerHighlight/ownerSolid 출력을 만들고 현재 파일(files)에서 아홉 표를 읽는다(hit).
+//    파일이 없으면(ColorCacheUnableToOpen) rebuild(currentRed)로 계산해 아홉 표를 파일 순서로 써서 남긴다(miss). 짧은 파일은 첫 목적 표의 접두만 바꾸고 나머지 표는 재생성하거나 파일을 고치지 않는다.
+//    파일 순서는 주소 순서와 달리 maps[2]·[7]·[6]·[4]·[3]·[5]·[1]·[0]·[8] 이다. ownerHighlight/ownerSolid 는 캐시 파일에 포함하지 않는 소유자 8행 출력(명도 > 0.8 이면 소유자 색)이다.
+//    files 는 core/color-map-files.js 의 웹 적응 저장소(read(path)·createWriter(path))이다(cpppj BaseFileSystem 대응, adapt-file).
+// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-13 WB04-E374: 5-A ClientColorSortInput 이식으로 추가, 2026-11-13 WB04-E375: initializeCache·소유자 8행 출력 추가, 기준선 뒤 cpppj 변경 없음)
 import { RawColorSortPrimary, COLOR_SORT_PRIMARY_BYTES } from './raw-color-sort-primary.js';
 import { OwnerColorTableState } from './owner-color-table-state.js';
 import { buildSpriteColorMaps } from './sprite-color-maps.js';
 import { buildPreviewColorMaps } from './preview-color-maps.js';
 import { currentAllocationBytes } from './current-allocation-bytes.js';
+import { ColorCacheUnableToOpen, initializeColorMapCache } from './raw-color-map-cache.js';
 
 // 팔레트 크기, 표 개수, 원본 503608/5066f8/5066e0/506558 의 double 상수(정규화·1.6배·명도 보정·1/3)와 초기 최소 거리이다. (2026-11-13 WB04-E374)
 const COLORS = 256;
@@ -25,6 +29,11 @@ const LIGHT_INITIAL = 1e6;
 // 43c010 꼬리가 덮는 예약 구간(228..245)과 마지막 두 번호이다. (2026-11-13 WB04-E374)
 const IDENTITY_FIRST = 228;
 const IDENTITY_LAST = 245;
+// 원문 005319c8 의 현재 초기 소유자 색 8 DWORD, 캐시 파일의 표 순서(주소 순서 인덱스), 소유자 8행 출력 크기, 한 표의 바이트 수이다. (2026-11-13 WB04-E375)
+const OWNER_COLORS = Object.freeze([84, 249, 184, 140, 150, 112, 156, 222]);
+const FILE_ORDER = Object.freeze([2, 7, 6, 4, 3, 5, 1, 0, 8]);
+const OWNER_TABLE_BYTES = 2048;
+const TABLE_BYTES = 256;
 
 // 실제 Client 의 고정 초기 입력(있으면)과 소유자 없는 독립 검사의 현재 입력 중 쓸 256색 배열을 고른다. (2026-11-13 WB04-E374)
 export function colorSortLogicalInput(fixed, independentCurrent) {
@@ -40,6 +49,8 @@ export class ClientColorSortInput {
     #primary = null;
     #ownerTables = new OwnerColorTableState();
     #maps = Array.from({ length: MAP_COUNT }, () => new Uint8Array(COLORS));
+    #ownerHighlight = new Uint8Array(OWNER_TABLE_BYTES);
+    #ownerSolid = new Uint8Array(OWNER_TABLE_BYTES);
     #captured = false;
     #built = false;
 
@@ -96,6 +107,60 @@ export class ClientColorSortInput {
     get maps() {
         if (!this.#built) throw new Error('ColorSort 실제 9표 미생성');
         return this.#maps;
+    }
+
+    // 같은 43c4e0 의 8행 명도 치환 출력(명도 > 0.8 이면 소유자 색)이다. 초기화 전에는 거부한다.
+    get ownerHighlight() {
+        void this.maps;
+        return this.#ownerHighlight;
+    }
+
+    // 같은 43c4e0 의 8행 고정색 출력이며 캐시 hit 에서도 먼저 작성한다. 초기화 전에는 거부한다.
+    get ownerSolid() {
+        void this.maps;
+        return this.#ownerSolid;
+    }
+
+    // 최초 43c4e0: 소유자 두 표/등록(initializeOwners)과 소유자 8행 출력 뒤 현재 파일 9read(hit) 또는 계산 9write(miss)를 같은 저장소에 연결한다. path 는 문자열이고 files 는 색표 캐시 저장소이다.
+    initializeCache(files, path, currentRed, initializeOwners) {
+        void this.primary;
+        if (this.#built || typeof initializeOwners !== 'function') throw new Error('색표 캐시 최초 초기화 계약');
+        const name = Uint8Array.from([...new TextEncoder().encode(path), 0]);
+        const readerObject = new Uint8Array(24);
+        const writerObject = new Uint8Array(24);
+        let source = null;
+        let position = 0;
+        let sink = null;
+        const globals = {
+            primary: () => this.primary.bytes,
+            ownerColors: OWNER_COLORS,
+            ownerHighlight: this.#ownerHighlight,
+            ownerSolid: this.#ownerSolid,
+            maps: FILE_ORDER.map((index) => this.#maps[index]),
+        };
+        const hooks = {
+            path: () => name,
+            owners: initializeOwners,
+            buildMaps: () => { this.rebuild(currentRed); },
+            // 파일이 없으면 열 수 없음으로 재생성에 들어가고 있으면 현재 전체 내용을 읽기용으로 연다.
+            openRead: () => {
+                source = files.read(path);
+                if (source === null) throw new ColorCacheUnableToOpen();
+                position = 0;
+            },
+            openWrite: () => { sink = files.createWriter(path); },
+            // 짧은 읽기는 목적 표의 접두만 바꾸고 반환 길이를 재시도 조건으로 쓰지 않는다.
+            read: (file, table) => {
+                const count = Math.min(TABLE_BYTES, source.length - position);
+                table.set(source.subarray(position, position + count));
+                position += count;
+                return count;
+            },
+            write: (file, table) => { sink.write(table); return TABLE_BYTES; },
+            close: (file) => { if (file === writerObject) sink?.close(); },
+        };
+        initializeColorMapCache(globals, hooks, readerObject, writerObject);
+        this.#built = true;
     }
 
     // 43c010: 현재 빨강과 같은 초기 입력으로 기본 53비트 9표를 갱신해 돌려준다.

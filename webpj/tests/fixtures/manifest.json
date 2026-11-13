@@ -18213,7 +18213,7 @@
       "bytes": 1065962,
       "lines": 2067,
       "fixtureCommit": "0dbfd0c8f",
-      "webCommit": "worktree",
+      "webCommit": "0dc712adc",
       "cpppjBasis": {
         "cpppj/src/client/OwnerColorTableState.cpp": "0dbfd0c8f"
       },
@@ -18245,24 +18245,58 @@
       "fixtureCommit": "d207940cd",
       "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/client/ClientColorSortInput.cpp": "b601503d0"
+        "cpppj/src/client/ClientColorSortInput.cpp": "b601503d0",
+        "cpppj/src/client/ClientColorMapFile.cpp": "b601503d0"
       },
       "id": "colorsort-fixed-input",
       "path": "cpppj/tests/fixtures/colorsort-fixed-input-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 최초 ColorSort 논리 RGB 고정 입력에서 화면 팔레트를 두 번 바꾼 뒤에도 같은 입력으로 만든 아홉 표(기본 53비트 3행 + 확장 64비트 3행; 64비트는 명도 표 8만 다름)",
       "consumers": [
-        "webpj/tests/client-color-sort-input.test.mjs"
+        "webpj/tests/client-color-sort-input.test.mjs",
+        "webpj/tests/client-color-map-file.test.mjs"
       ],
       "modules": [
         "webpj/www/core/client-color-sort-input.js",
         "webpj/www/core/sprite-color-maps.js",
-        "webpj/www/core/preview-color-maps.js"
+        "webpj/www/core/preview-color-maps.js",
+        "webpj/www/core/color-map-files.js",
+        "webpj/www/core/raw-color-map-cache.js"
       ],
       "doc": "docs/webpj-owner-color-table-state-20261113.md",
       "cpppjSources": [
-        "cpppj/src/client/ClientColorSortInput.cpp"
+        "cpppj/src/client/ClientColorSortInput.cpp",
+        "cpppj/src/client/ClientColorMapFile.cpp"
       ],
-      "scope": "10.78 전용 6행 전부 사용(64비트 3행은 명도 표 8 이 기본 정밀도와 다름을 확인)"
+      "scope": "10.78 전용 6행 전부 사용(64비트 3행은 명도 표 8 이 기본 정밀도와 다름을 확인, 기본 53비트 첫 행은 E375 에서 캐시 파일 miss/hit 입력/기대로도 사용)"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E375",
+      "id": "colorsort-cache-parent",
+      "path": "cpppj/tests/fixtures/colorsort-cache-parent-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 0043c4e0 색표 캐시 부모/catch/cleanup 130행(진입점 prefix·parent·catch·cleanupR/W × 프로필·초기값·읽기 길이·쓰기 제한·하위 변경)의 완료·정리·dispatch 횟수·소유자 DWORD·소유자 표 4096바이트·아홉 표 2304바이트·두 파일 객체 48바이트·쓴 바이트·장치 호출 순서",
+      "consumers": [
+        "webpj/tests/color-map-cache.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-color-map-cache.js"
+      ],
+      "doc": "docs/webpj-color-map-cache-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawColorMapCache.cpp"
+      ],
+      "scope": "10.78 전용 130행 전부 사용(두 정밀도 자료를 같은 명시 장치로 대조)",
+      "sha256": "6c798d40024bd57c7b0c07712238938b193c6aea5efc885d9c89ae99415bc3e6",
+      "bytes": 1826214,
+      "lines": 131,
+      "fixtureCommit": "d207940cd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawColorMapCache.cpp": "d207940cd"
+      }
     }
   ]
 }
