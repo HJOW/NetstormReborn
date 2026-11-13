@@ -19164,7 +19164,7 @@
       "bytes": 724559,
       "lines": 2060,
       "fixtureCommit": "1506b1786",
-      "webCommit": "worktree",
+      "webCommit": "cac7c4ca5",
       "cpppjBasis": {
         "cpppj/src/client/RawCursorDrop.cpp": "46e65408f",
         "cpppj/src/client/RawCursorDrop.h": "46e65408f"
@@ -19195,10 +19195,44 @@
       "bytes": 69875,
       "lines": 281,
       "fixtureCommit": "46e65408f",
-      "webCommit": "worktree",
+      "webCommit": "cac7c4ca5",
       "cpppjBasis": {
         "cpppj/src/client/RawCursorDrop.cpp": "46e65408f",
         "cpppj/src/client/RawCursorDrop.h": "46e65408f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E399",
+      "id": "returnpiece",
+      "path": "cpppj/tests/fixtures/returnpiece-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 생산 칸 반환004468b0·contained 생성·Factory 생성",
+      "consumers": [
+        "webpj/tests/cursor-return-piece.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cursor-return-piece.js",
+        "webpj/www/core/contained-create.js"
+      ],
+      "doc": "docs/webpj-cursor-return-piece-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCursorReturnPiece.cpp",
+        "cpppj/src/client/RawCursorReturnPiece.h",
+        "cpppj/src/o/RawContainedCreate.cpp"
+      ],
+      "scope": "originals 633행(Return528·Create101·Factory4)의 사건/인수·전체 raw·최종 전역8개·난수(CD/10.37 제외)",
+      "text": true,
+      "sha256": "675c8e23013dd8d09b5b9943b58aa3f278d9da6d18f7c29eebd13ff6688defcd",
+      "bytes": 555920,
+      "lines": 1900,
+      "fixtureCommit": "0109387c4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCursorReturnPiece.cpp": "fc56410a7",
+        "cpppj/src/client/RawCursorReturnPiece.h": "fc56410a7",
+        "cpppj/src/o/RawContainedCreate.cpp": "cddd939d5"
       }
     }
   ]

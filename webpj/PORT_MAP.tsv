@@ -290,14 +290,14 @@ cpppj/src/client/RawChatRelay.cpp	port			todo	[client-default]
 cpppj/src/client/RawChatSubmit.cpp	port			todo	[client-default]
 cpppj/src/client/RawChatWindowContext.h	port			todo	[client-default]
 cpppj/src/client/RawCursorActions.cpp	port			todo	[client-default]
-cpppj/src/client/RawCursorDrop.cpp	port	www/core/raw-cursor-drop.js	1f00a25a	port	[client-default] WB04-E398: CursorDropState·RawCursorDrop 전체 분기/효과 순서·전체 미리보기 DWORD 호스트 소비 관문·float32/CRT 비용/화면 정수 감김·makeCursorDropHooks(같은 풀 로컬 배치/SP/SoundPlayer). 원본 cursordrop originals 686행·cursor-preview-width originals 140행(준비 중단20) 첫 실행 일치, 시험8건. 남음: 실제 ReturnPiece_ConnectsGuiDrop 시험은 RawCursorReturnPiece 단위, 앱/입력/음향 연결은 Session/Client 몫; CD/10.37 제외
+cpppj/src/client/RawCursorDrop.cpp	port	www/core/raw-cursor-drop.js	1f00a25a	port	[client-default] WB04-E398: CursorDropState·RawCursorDrop 전체 분기/효과 순서·전체 미리보기 DWORD 호스트 소비 관문·float32/CRT 비용/화면 정수 감김·makeCursorDropHooks(같은 풀 로컬 배치/SP/SoundPlayer). 원본 cursordrop originals 686행·cursor-preview-width originals 140행(준비 중단20) 첫 실행 일치, 시험8건. WB04-E399: 실제 ReturnPiece_ConnectsGuiDrop 사슬 완료. 남음: 앱/입력/음향 연결은 Session/Client 몫; CD/10.37 제외
 cpppj/src/client/RawCursorLifecycle.cpp	port			todo	[client-default]
 cpppj/src/client/RawCursorMana.cpp	port			todo	[client-default]
 cpppj/src/client/RawCursorPlacement.cpp	port			todo	[client-default]
 cpppj/src/client/RawCursorPosition.cpp	port			todo	[client-default]
 cpppj/src/client/RawCursorPreviews.cpp	port			todo	[client-default]
 cpppj/src/client/RawCursorRange.cpp	port			todo	[client-default]
-cpppj/src/client/RawCursorReturnPiece.cpp	port			todo	[client-default]
+cpppj/src/client/RawCursorReturnPiece.cpp	port	www/core/raw-cursor-return-piece.js	1f00a25a	port	[client-default] WB04-E399: 생산 칸 반환(다리 난수/가중 패턴·품질 DWORD 감소·0x100·생성 후 유지 옵션·할당 후 요새/시간 getter·10/5/1초/요새 float 비트), makeCursorReturnPieceHooks(같은 풀 실제 Host Regular)·makeReturnPieceHooks(로컬/GUI). 원본 returnpiece originals 633행(전체 raw·효과·전역·난수) 첫 실행 일치, 시험5건. 실제 Factory/ProcessForm/Kernel 네 payload 및 1초 진행·E398 이월 GUI 반환 사슬 완료. 남음: 앱/커서/설정/Session 연결; CD/10.37 제외
 cpppj/src/client/RawDotCommandDispatch.cpp	port			todo	[client-default]
 cpppj/src/client/RawDotCommandRegister.cpp	port			todo	[client-default]
 cpppj/src/client/RawEdgeScroll.cpp	port			todo	[client-default]
@@ -621,7 +621,7 @@ cpppj/src/o/RawConstructionProcess.cpp	port	www/core/raw-construction-process.js
 cpppj/src/o/RawConstructionRequest.cpp	port	www/core/raw-construction-request.js	5f4b9d30	port	[o-default] WB04-E140: 서버 건설 요청(00444760: 편집 소유자 보정·배치 가능 판정·abstract 충돌 검사·밀어내기·받침 선행 확정·본 확정·실패 정리)과 어댑터. fixture constructionrequest originals 816행 전부(originalCD·original1037 제외). 남음: 전체 배치 가능 판정 파이프라인 통합 시험 / 3-E 판정(WB04-E262, 기준 f77c378c): ③ 4-D — sharedEditor·sharedLocalPlayer·sharedDisplaceGenus·sharedIslandType·sharedNoIslandType·patternTypesRead 를 소비 위치마다 읽음. typed 는 기존 값이라 결과 동일; island TYPE 범위 밖은 이제 명시 오류(①)
 cpppj/src/o/RawConstructionSelection.cpp	port	www/core/raw-construction-selection.js	1f00a25a	port	[o-default] WB04-E135: 확정의 그래프 기준점(findBuilder)과 통지의 소유 사제 조회(findPriest) 어댑터. 이름 계약·풀 불일치 거부는 대역으로 확인. 남음: Confirm 과의 통합 시험(RawConstructionConfirm 이식 뒤)
 cpppj/src/o/RawConstructionVisual.cpp	port	www/core/raw-construction-visual.js	1f00a25a	port	[o-default] WB04-E128: 건설 표시 생성·색 표 캐시·좌표 동기화·초기 입자 선택. fixture constructionvisual originals 592행 전부(originalCD/original1037 은 범위 밖). 남음: 실제 RawConstructionProcess::Start 연결 시험(RawConstructionProcess 이식 뒤)
-cpppj/src/o/RawContainedCreate.cpp	port	www/core/contained-create.js	1f00a25a	port	[o-default] WB04-D5a(004afa70)
+cpppj/src/o/RawContainedCreate.cpp	port	www/core/contained-create.js	1f00a25a	port	[o-default] WB04-D5a(004afa70). WB04-E399: ReturnPieceTests 원본 Create101·Return528행의 전체50바이트/효과를 실제 이 몸체로 재대조, Factory/Regular·GUI 반환 사슬 통합 완료
 cpppj/src/o/RawContainedFinder.cpp	port	www/core/raw-contained-finder.js	1f00a25a	port	[o-default] WB04-E56: 내용물 검색기 004b2270 Begin·004b1b20 Next·004acc60 CountContained와 ContainedFinderState(공유 boss/checking 대여). fixture carrierpredestroy 경유 대조. 실제 Client 권한/checking 연결은 WB05
 cpppj/src/o/RawContainedLookup.cpp	port	www/core/raw-contained-lookup.js	1f00a25a	port	[o-default] WB04-E108: 종속 객체 타입/순번 조회·권한별 가상 삭제 004b1a90(삭제 뒤 next 재독·DWORD 순번 감김·손상 체인 거부)·건설 완료 removeContained 연결. fixture contained originals 805행 전부(originalCD/original1037 행은 다른 판본). 건설 프로세스/소리 프로세스/Kernel 통합 시험은 해당 단위에서
 cpppj/src/o/RawContentAttach.cpp	port	www/core/content-form-host.js	1f00a25a	port	[o-default] WB04-D5a

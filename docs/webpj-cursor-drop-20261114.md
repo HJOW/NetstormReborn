@@ -23,4 +23,4 @@
 
 ## 남은 경계와 다음 시작점
 
-`CursorDropTests.ReturnPiece_ConnectsGuiDrop`의 실제 생산 칸 반환은 **다음 `RawCursorReturnPiece` 단위**에서 옮긴다. 이번 훅 계약 검사를 실제 GUI/건설/SP/음향 세션 통합으로 세지 않는다. 이어 `RawCursorLifecycle`·`RawCursorPlacement`와 커서 전역·미리보기 표시를 같은 상태에 연결한다. `RawCampaignCursorDisplay`와 `ClientRendererFrame`·Tutorial1 Load/Start는 여전히 미완료다. CD·10.37 분기는 웹 범위 밖이다.
+`CursorDropTests.ReturnPiece_ConnectsGuiDrop`의 실제 생산 칸 반환은 **`RawCursorReturnPiece` 단위**로 넘겼으며 [E399](webpj-cursor-return-piece-20261114.md)에서 실제 생성 사슬 대조를 완료했다. 이번 훅 계약 검사를 실제 GUI/건설/SP/음향 세션 통합으로 세지 않는다. 이어 `RawCursorLifecycle`·`RawCursorPlacement`와 커서 전역·미리보기 표시를 같은 상태에 연결한다. `RawCampaignCursorDisplay`와 `ClientRendererFrame`·Tutorial1 Load/Start는 여전히 미완료다. CD·10.37 분기는 웹 범위 밖이다.
