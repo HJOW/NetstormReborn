@@ -19138,6 +19138,68 @@
         "cpppj/src/client/GumpCollection.cpp": "70446743a",
         "cpppj/src/client/GumpCollection.h": "225f2322c"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E398",
+      "id": "cursordrop",
+      "path": "cpppj/tests/fixtures/cursordrop-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 커서 내려놓기 004473e0 및 전체 DWORD 미리보기 소비",
+      "consumers": [
+        "webpj/tests/cursor-drop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cursor-drop.js"
+      ],
+      "doc": "docs/webpj-cursor-drop-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCursorDrop.cpp",
+        "cpppj/src/client/RawCursorDrop.h"
+      ],
+      "scope": "originals 686행의 전체 효과 순서·DWORD 인수·최종 전역/raw 14개(CD/10.37 제외)",
+      "text": true,
+      "sha256": "9a89077c528939f3450d4137a553d727a6d42869fe83b3ea226ffae962006d73",
+      "bytes": 724559,
+      "lines": 2060,
+      "fixtureCommit": "1506b1786",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCursorDrop.cpp": "46e65408f",
+        "cpppj/src/client/RawCursorDrop.h": "46e65408f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E398",
+      "id": "cursor-preview-width",
+      "path": "cpppj/tests/fixtures/cursor-preview-width-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 커서 내려놓기 004473e0 및 전체 DWORD 미리보기 소비",
+      "consumers": [
+        "webpj/tests/cursor-drop.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cursor-drop.js"
+      ],
+      "doc": "docs/webpj-cursor-drop-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCursorDrop.cpp",
+        "cpppj/src/client/RawCursorDrop.h"
+      ],
+      "scope": "originals 140행(준비 중단20)의 전체 미리보기 DWORD·준비 효과·완료/사건·최종14필드(CD 제외)",
+      "text": true,
+      "sha256": "5a63b41fce76031c6525e722832e482f62096d7de141e7f189461e18f90844ad",
+      "bytes": 69875,
+      "lines": 281,
+      "fixtureCommit": "46e65408f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCursorDrop.cpp": "46e65408f",
+        "cpppj/src/client/RawCursorDrop.h": "46e65408f"
+      }
     }
   ]
 }

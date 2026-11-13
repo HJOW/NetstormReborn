@@ -6,17 +6,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-14, 마지막 단위 WB04-E397)
+### 0.1 현재 값 (2026-11-14, 마지막 단위 WB04-E398)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 644(71.9%)·partial 60(6.7%)·todo 192(21.4%)**. 기준선 소스 줄 수로는 129,653줄 중 port 80,117(61.8%)·partial 17,166(13.2%)·todo 32,370(25.0%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E397** (이 커밋) **5-A RainDraw Renderer 합성 검사** — cpppj `RainDrawTests`의 실제 SHP 본체·물결 전체 픽셀, 이동·프레임 교체·삭제 뒤 배경 복원, 후속 프레임만 보이는 경계 2건을 이식했다. 첫 집중 실행 **31/31 통과**, 제품 코드 변경 없음. 기준선 `1f00a25a` 뒤 해당 시험·Renderer 변경 없음. [단위 문서](docs/webpj-rain-renderer-20261114.md). 직전 [E396](docs/webpj-client-kencloud-globals-20261113.md)은 구름 전역 소유자·배경 GIF 해독 이식이다 |
-| 다음 작업 | **4-D**의 미완료 항목은 커서·메뉴·오디오 등 선행 대기(3.1절 사유)다. **5-A**는 RainDraw Renderer 합성 2건(E397)까지 끝났고, 남은 `ClientRendererFrame`·`RawCursorPreviews`와 E197·E198·E201 Session 재대조는 같은 선행을 기다린다. `ClientRendererFrame`이 요구하는 커서 표시·Factory 표시·메뉴·게임 전역의 선행 부품을 해당 단계 목록에 펼쳐 진행한다. 현재 실제 미션 플레이와 L2/L4a 판정은 미완료다 |
-| 마지막 전체 검사 | **WB04-E397: Node v26.13.0·v22.23.3 모두 3842/3842 통과·실패/건너뜀0**(v26 약5.4분·v22 약6.1분, 종료 코드0). 신규 합성 2건과 기존 rain-draw·renderer 집중 검사 **31/31 통과**. Node v24는 이 PC에 설치돼 있지 않다 |
+| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 645(72.0%)·partial 60(6.7%)·todo 191(21.3%)**. 기준선 소스 줄 수로는 129,653줄 중 port 80,316(61.9%)·partial 17,166(13.2%)·todo 32,171(24.8%). 영역별 남은 양은 0.3절 |
+| 마지막 구현 커밋 | **WB04-E398** (이 커밋) **6단계 선행 RawCursorDrop** — 커서 내려놓기 전체 분기·상태 공유·미리보기 DWORD 소비 관문·로컬 배치/SP/소리 훅을 이식했다. 원본 관측 **686+140행 첫 실행 일치**, 시험 **8/8 통과**. 기준선 `1f00a25a` 뒤 해당 소스 변경 없음. [단위 문서](docs/webpj-cursor-drop-20261114.md). 직전 [E397](docs/webpj-rain-renderer-20261114.md)은 레인 신전 Renderer 합성 2건 검증이다 |
+| 다음 작업 | **6단계 커서 선행 목록**(3.1절): `RawCursorDrop` E398 완료 → **RawCursorReturnPiece**(GUI 생산 칸 실제 반환 통합 시험 포함) → `RawCursorLifecycle` → `RawCursorPlacement`. 4-D와 5-A는 커서·메뉴·오디오 등 선행 대기이며, 커서 부품 뒤 전역/미리보기 표시를 같은 상태에 연결한다. `ClientRendererFrame`·실제 미션 플레이와 L2/L4a 판정은 미완료다 |
+| 마지막 전체 검사 | **WB04-E398: Node v26.13.0·v22.23.3 모두 3850/3850 통과·실패/건너뜀0**(v26 약5.2분·v22 약5.8분, 종료 코드0). E398 집중 검사 **8/8 통과**. Node v24는 이 PC에 설치돼 있지 않다 |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -35,7 +35,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 〃 | 5-B | 카메라·HUD·미니맵·커서 | 미착수 | `o/` 1단위 · 89줄 + client J 나머지 |
 | 〃 | 5-C | 미션 진입 명령과 **M2 판정**(L4a) | 미착수 | — |
 | 6 M3 | 6-P | 경로 부품(순서3에서 이월) | 완료 3/3 (E349~E351) | `o/` 4단위 · 937줄 (+163) |
-| 〃 | 6 | 입력·경제·건설 연결 | 미착수 | client K·E·L |
+| 〃 | 6 | 입력·경제·건설 연결 | 선행 커서 부품 진행 1/4(E398) | client K·E·L |
 | 7 M4 | 7-P1 | 비행 유닛 부품(이월) | 완료 7/7 | `o/` 7단위 · 1,401줄 (+92) |
 | 〃 | 7-P2 | 총·투사체 부품(이월) | 완료 6/6 | `o/` 6단위 · 1,600줄 (+100) |
 | 〃 | 7-P3 | 신전·제단·의식 부품(이월) | 완료 7/7 | `o/` 7단위 · 1,360줄 (+73) |
@@ -46,18 +46,18 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 순서3(M2 선행 부품)은 2026-11-10 WB04-E264에서, 4-A는 WB04-E273에서 마감됐다. 두 단계의 체크 목록과 단위 링크는 보관본에 있고 요약은 2.3절이다. 6-P·7-P1~P3은 M2에 직접 필요하지 않아 순서3에서 이월한 부품이다(1절 단계 분할 결정). 현재 단계는 **4-D**이며 3.1절에 체크 목록을 펼쳤다(E330).
 
-### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-14 WB04-E397 기준)
+### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-14 WB04-E398 기준)
 
 줄 수는 기준선 `1f00a25a`의 단위 파일(`.cpp/.h/.inc`) 줄 합계다(주석 포함). partial 줄 수는 일부만 옮긴 파일의 전체 줄이므로 남은 양의 상한이다. 단위·줄 수는 대략적인 척도일 뿐이며, 순서4~5의 연결·통합(실제 세션에서 부품을 같은 월드로 묶고 cpppj 오라클과 비교)은 이 수치에 드러나지 않는 큰 작업이다.
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 896단위 / 129,653줄 | 644 (71.9%) / 80,117줄 (61.8%) | 60 (6.7%) / 17,166줄 (13.2%) | 192 (21.4%) / 32,370줄 (25.0%) |
+| 전체 | 896단위 / 129,653줄 | 645 (72.0%) / 80,316줄 (61.9%) | 60 (6.7%) / 17,166줄 (13.2%) | 191 (21.3%) / 32,171줄 (24.8%) |
 | `o/` 월드·규칙 | 517단위 / 67,592줄 | 514 (99.4%) / 66,564줄 (98.5%) | 2 (0.4%) / 988줄 (1.5%) | 1 (0.2%) / 40줄 (0.1%) |
-| `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 129 (34.1%) / 13,114줄 (21.3%) | 58 (15.3%) / 16,178줄 (26.3%) | 191 (50.5%) / 32,330줄 (52.5%) |
+| `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 130 (34.4%) / 13,313줄 (21.6%) | 58 (15.3%) / 16,178줄 (26.3%) | 190 (50.3%) / 32,131줄 (52.1%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 439줄 | 1 (100%) / 439줄 (100%) | 0 | 0 |
 
-남은 339단위(todo 269·partial 70)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
+남은 251단위(todo 191·partial 60)를 단위 이름 규칙으로 대략 나눈 영역이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
 
 | 영역 | 주 단계 | todo 단위 / 줄 | partial 단위 / 줄 | 큰 단위(줄) |
 | --- | --- | --- | --- | --- |
@@ -71,7 +71,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | H 소리·음악·동영상 | 8 | 10 / 1,666 | 4 / 2,041 | Sound* 824 · ClientAudio* 467 · SoundMusic* 455 · SoundDevice 372 |
 | I 채팅·메시지 | 8 | 17 / 1,885 | 1 / 74 | ChatWindow 272 · ClientChatRuntime 191 · WarningMessages 181 · RawChatSubmit 142 |
 | J 렌더러·카메라·HUD·미니맵 | 5-A·5-B | 22 / 2,813 | 3 / 664 | SpriteDraw* 468 · PreviewDraw 363 |
-| K 게임 입력·커서·선택·객체 메뉴 | 6 | 36 / 4,806 | 2 / 149 | RawCursorMana 289 · RawCampaignCursor 283 · RawCursorRange 283 · CampaignObjectMenuClient 240 |
+| K 게임 입력·커서·선택·객체 메뉴 | 6 | 35 / 4,607 | 2 / 149 | RawCursorMana 289 · RawCampaignCursor 283 · RawCursorRange 283 · CampaignObjectMenuClient 240 |
 | L 메뉴·대화상자·Gump·글자 UI | 5·6 | 37 / 6,684 | 37 / 10,315 | UberGump* 2,207 · RawMenuControls 1,341 · RawButtonControls 797 · StyleText* 519 |
 | M 자료·파일·설정·언어(웹 적응 포함) | 4-A 완료, 이월분 4-B·4-D·5-A | 3 / 173 | 3 / 578 | ConfigInterface* 343 · ClientOptionsDisk* 165 · DataManagerFileRead 78 |
 | N 진단·추적 | 각 단계 | 3 / 284 | 0 | GifScreenshot 114 · ClientDiagnostics 99 · RawTraceLog 71 |
@@ -83,8 +83,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 이식 원본은 언제나 기준선 판(`git show 1f00a25a:경로`)이고, 기준선 뒤 cpppj 변경은 3.6절 절차로만 반영한다. 같은 작업 트리에서 CP 세션이 cpppj를 계속 커밋하므로(LAN 3차·`Actual*` 실제 연결 경로·`shared*` 공유 전역 추가 등) cpppj 상태는 커밋과 소스로 판단한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 54·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 644·partial 60·todo 192·제외(-) 88**(2026-11-14 WB04-E397 기준), session/oracle 0. 웹 소스는 `www/` JS 약 8만 8천 줄(`www/data` 제외, `www/core` 모듈 568개), 검사 파일 542개, 도구(`webpj/tools`) 오라클 관련 4개다(2026-11-12 재계산) |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` 643항목(original-x86 612·independent 7·screenshot 13·source 8·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E282~E287에서 datamanager-selection/resize/create/read·farmcluster·fort-world-load·campaign-worldload 7개, WB04-E290에서 terrain-context 1개, WB04-E292에서 terrain-growth·terrain-seed·terrain-arch-helpers 3개, WB04-E293에서 island-bitmap·island-bitmap-parent 2개, WB04-E296에서 regionpaint 1개, WB04-E325에서 subscriber-lifetime-edges 1개, WB04-E334에서 pathsearch 1개, WB04-E336에서 sp-initialization 1개, WB04-E337에서 mission-fort-request 1개, WB04-E338에서 mission-technology 1개, WB04-E339에서 mission-loading-message 1개, WB04-E340에서 mission-guide 1개, WB04-E341에서 mission-lifecycle 1개, WB04-E343에서 mission-first·mission-common·mission-abort 3개, WB04-E349에서 walk-shape·pathinit·pathprepare 3개, WB04-E350에서 pathdata 1개, WB04-E351에서 pathstart·pathprocesstype 2개, WB04-E352에서 flyer-postpop 1개, WB04-E353에서 sun-aviary·sun-aviary-notice·sun-flyer-postpop 3개, WB04-E354에서 rain-aviary·rain-home-notice 2개, WB04-E355에서 flyer-frame 1개, WB04-E356에서 flyer-target 1개, WB04-E357에서 sun-flyer-frame·sun-flyer-clear 2개, WB04-E358에서 wind-flyer 1개, WB04-E359에서 gunprocess·gun-notify-checking 2개, WB04-E360에서 cannon-asset-ray 1개, WB04-E363에서 gunimpact 1개, WB04-E364에서 disc-regular·disc-regular-boundary-1219 2개, WB04-E365에서 templeritual 1개, WB04-E367에서 daisregular-core·daisprogress·daisbridge 3개, WB04-E368에서 altarsacrifice 1개, WB04-E369에서 daislifecycle 1개, WB04-E373에서 sprite-colors·preview-colors·production-colors 3개, WB04-E374에서 banner-option·colorsort-fixed-input 2개, WB04-E375에서 colorsort-cache-parent 1개, WB04-E376에서 palettecolors·paletteflash·screen-palette-clear 3개, WB04-E377에서 vfx-ellipse·sprite-hit-point-bar 2개, WB04-E378에서 scaled-pixels·translated-pixels 2개, WB04-E379에서 fierytail-pixels 1개, WB04-E380에서 draw-water·draw-water-input·draw-water-names 3개, WB04-E382에서 draw-submission 1개, WB04-E383에서 renderer-prelude·renderer-clouds·camera-present 3개, WB04-E384에서 renderer-diagnostics·renderer-diagnostic-keys 2개, WB04-E386에서 preview-collection 1개, WB04-E387에서 preview-draw 1개, WB04-E388에서 sprite-draw 1개, WB04-E389에서 object-collection 1개, WB04-E391에서 renderer 1개, WB04-E392에서 renderer-present-dirty 1개, WB04-E393에서 palettecolor·screen-scroll 2개, WB04-E394에서 tilegroup 1개, WB04-E395에서 gumpcollection 1개 추가). original-x86 550개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 54·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 645·partial 60·todo 191·제외(-) 88**(2026-11-14 WB04-E398 기준), session/oracle 0. 웹 소스는 `www/` JS 약 8만 8천 줄(`www/data` 제외, `www/core` 모듈 568개), 검사 파일 542개, 도구(`webpj/tools`) 오라클 관련 4개다(2026-11-12 재계산) |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` 645항목(original-x86 614·independent 7·screenshot 13·source 8·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E282~E287에서 datamanager-selection/resize/create/read·farmcluster·fort-world-load·campaign-worldload 7개, WB04-E290에서 terrain-context 1개, WB04-E292에서 terrain-growth·terrain-seed·terrain-arch-helpers 3개, WB04-E293에서 island-bitmap·island-bitmap-parent 2개, WB04-E296에서 regionpaint 1개, WB04-E325에서 subscriber-lifetime-edges 1개, WB04-E334에서 pathsearch 1개, WB04-E336에서 sp-initialization 1개, WB04-E337에서 mission-fort-request 1개, WB04-E338에서 mission-technology 1개, WB04-E339에서 mission-loading-message 1개, WB04-E340에서 mission-guide 1개, WB04-E341에서 mission-lifecycle 1개, WB04-E343에서 mission-first·mission-common·mission-abort 3개, WB04-E349에서 walk-shape·pathinit·pathprepare 3개, WB04-E350에서 pathdata 1개, WB04-E351에서 pathstart·pathprocesstype 2개, WB04-E352에서 flyer-postpop 1개, WB04-E353에서 sun-aviary·sun-aviary-notice·sun-flyer-postpop 3개, WB04-E354에서 rain-aviary·rain-home-notice 2개, WB04-E355에서 flyer-frame 1개, WB04-E356에서 flyer-target 1개, WB04-E357에서 sun-flyer-frame·sun-flyer-clear 2개, WB04-E358에서 wind-flyer 1개, WB04-E359에서 gunprocess·gun-notify-checking 2개, WB04-E360에서 cannon-asset-ray 1개, WB04-E363에서 gunimpact 1개, WB04-E364에서 disc-regular·disc-regular-boundary-1219 2개, WB04-E365에서 templeritual 1개, WB04-E367에서 daisregular-core·daisprogress·daisbridge 3개, WB04-E368에서 altarsacrifice 1개, WB04-E369에서 daislifecycle 1개, WB04-E373에서 sprite-colors·preview-colors·production-colors 3개, WB04-E374에서 banner-option·colorsort-fixed-input 2개, WB04-E375에서 colorsort-cache-parent 1개, WB04-E376에서 palettecolors·paletteflash·screen-palette-clear 3개, WB04-E377에서 vfx-ellipse·sprite-hit-point-bar 2개, WB04-E378에서 scaled-pixels·translated-pixels 2개, WB04-E379에서 fierytail-pixels 1개, WB04-E380에서 draw-water·draw-water-input·draw-water-names 3개, WB04-E382에서 draw-submission 1개, WB04-E383에서 renderer-prelude·renderer-clouds·camera-present 3개, WB04-E384에서 renderer-diagnostics·renderer-diagnostic-keys 2개, WB04-E386에서 preview-collection 1개, WB04-E387에서 preview-draw 1개, WB04-E388에서 sprite-draw 1개, WB04-E389에서 object-collection 1개, WB04-E391에서 renderer 1개, WB04-E392에서 renderer-present-dirty 1개, WB04-E393에서 palettecolor·screen-scroll 2개, WB04-E394에서 tilegroup 1개, WB04-E395에서 gumpcollection 1개 추가). original-x86 550개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
 | 마지막 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트). 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -230,7 +230,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [ ] client **ClientNsInfoGlobals** 47줄(+44) [보류(E336 판정): 서버 목록·루트 서버 이름 버퍼·메타 명령 칸은 온라인/멀티플레이 몫(NSInfo 메타 루트·서버 선택)이고 Tutorial1 Load/Start 가 읽지 않는다 — 소비자(`HudNsInfo`·`NsInfoClient`, MP 제외 대상)를 판정할 때 값 보관만 할지 PORT_MAP 을 exclude-mp 로 바꿀지 함께 정한다]
 - [ ] client **ClientStateWorldGlobals** 108줄(+8)·**ClientStateWorldCleanup** 101줄(+2)·**ClientStateStorageCleanup** 71줄(+1)·**ClientStateRuntimeRetirement** 99줄 — State/World 전역과 정리·Runtime 반납 순서 [막힘(E336 판정): `ClientStateWorldContext` 가 `Client`·`CampaignTemplateStorage`(B 구획)·`RawMenuControls`(L 영역)·`ClientAudio`(H 영역)·`RawSurfaceStorage` 의 실제 저장소에 Native 주소별 접근을 연결하는 바인딩이라 그 소유자들이 선행 — B 구획과 Session 조립(C·D) 뒤]
 - [x] client **ClientCameraGlobals** 93줄 → [E333](docs/webpj-client-ai-camera-globals-20261112.md) 카메라 전역(snapshot·논리 Renderer·목표·분모·이력·저장 위치)과 Native 초기화/한계/중심/복사/분모 이식(원본 관측 init 행 재생)
-- [ ] client **ClientUserSelectionGlobals** 77줄·**ClientUserSelectionCleanup** 43줄·**ClientCursorGlobals** 25줄·**ClientCursorStateCleanup** 27줄 [막힘(E334 판정): `RawCursorLifecycle`·`RawCursorPlacement`·`RawCursorDrop`·사용자 선택 상태 구조체가 선행 — 해당 client 커서 단위(6단계 K 영역)가 todo 라 소유자 슬롯이 가리킬 대상이 없다. 그 단위를 옮길 때 함께]
+- [ ] client **ClientUserSelectionGlobals** 77줄·**ClientUserSelectionCleanup** 43줄·**ClientCursorGlobals** 25줄·**ClientCursorStateCleanup** 27줄 [막힘(E334 판정): `RawCursorLifecycle`·`RawCursorPlacement`·사용자 선택 상태 구조체가 선행(`RawCursorDrop`은 E398 완료) — 해당 client 커서 단위(6단계 K 영역)가 todo 라 소유자 슬롯이 가리킬 대상이 없다. 그 단위를 옮길 때 함께]
 - [x] client **ClientAiDebugGlobals** 34줄 → [E333](docs/webpj-client-ai-camera-globals-20261112.md) AI 진단 전역 소유자(checking·마지막 오류 상세·7로그 DWORD) 이식
 - [ ] client **ClientChatManagerGlobals** 123줄·**ClientChatWindowGlobals** 24줄(+4)·**ClientHtmlWindowGlobals** 8줄·**ClientRendererFrameGlobals** 26줄·**ClientDotCommandGlobals** 56줄 [막힘(E334 판정): `ChatWindow`·`StyleText`·`HtmlWindowGump`·`TellSection`·`RawRendererClouds`·`RawDotCommand*` 같은 UI 모듈이 웹에 없어 소유자 필드가 가리킬 대상이 없다 — 해당 UI 모듈 단위(5-A·6)와 함께]
 
@@ -295,6 +295,15 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] cpppj **`RainDrawTests` Renderer 합성 2건** → [E397](docs/webpj-rain-renderer-20261114.md)(실제 본체·물결 전체 픽셀, 이동·교체·삭제 배경 복원과 후속 프레임만 보이는 경계, 첫 집중 실행 31/31 통과)
 - [ ] E197·E198·E201 시스템(전용 시험 없이 웹 조립 검사만 한 것)의 cpppj Session 시험 재대조 [실제 Session 조립 선행]
 - [x] **GameAssets** Find(별칭→typename)·FrameIndex·SHP 블록 수 검사 대조 (E272 이월) → [E385](docs/webpj-game-assets-20261113.md)(실제 10.78 자료 대조, 별칭 3개·typename 중복·모든 클러스터 프레임 번호, partial → port)
+
+#### 6단계 선행: 커서 기반 부품 (1/4)
+
+4-D A의 커서/선택 전역과 5-A `ClientRendererFrame`의 `RawCampaignCursorDisplay`가 이 상태와 본체를 요구하므로 앞당긴다. 6단계 전체 착수/완료와 구별한다. 다른 6단계 목록은 실제 착수 때 펼친다.
+
+- [x] client **RawCursorDrop** 199줄 — 내려놓기·전체 DWORD 소비 관문·공유 상태·배치/SP/소리 훅 → [E398](docs/webpj-cursor-drop-20261114.md)(원본 관측 686+140행 첫 실행 일치, 시험8건)
+- [ ] client **RawCursorReturnPiece** — 생산 칸 반환·타이머와 `ReturnPiece_ConnectsGuiDrop` 실제 연결 시험 [RawCursorDrop 뒤]
+- [ ] client **RawCursorLifecycle** — 취득·취소·미리보기 정리와 자산/글자 측정 바인딩 [RawCursorDrop 뒤]
+- [ ] client **RawCursorPlacement** — 현재 커서 판정·위치 갱신·공유 미리보기 source [RawCursorLifecycle 뒤]
 
 #### 순서3에서 이월한 선행 부품 (순서3 마감 조건 아님)
 

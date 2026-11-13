@@ -290,7 +290,7 @@ cpppj/src/client/RawChatRelay.cpp	port			todo	[client-default]
 cpppj/src/client/RawChatSubmit.cpp	port			todo	[client-default]
 cpppj/src/client/RawChatWindowContext.h	port			todo	[client-default]
 cpppj/src/client/RawCursorActions.cpp	port			todo	[client-default]
-cpppj/src/client/RawCursorDrop.cpp	port			todo	[client-default]
+cpppj/src/client/RawCursorDrop.cpp	port	www/core/raw-cursor-drop.js	1f00a25a	port	[client-default] WB04-E398: CursorDropState·RawCursorDrop 전체 분기/효과 순서·전체 미리보기 DWORD 호스트 소비 관문·float32/CRT 비용/화면 정수 감김·makeCursorDropHooks(같은 풀 로컬 배치/SP/SoundPlayer). 원본 cursordrop originals 686행·cursor-preview-width originals 140행(준비 중단20) 첫 실행 일치, 시험8건. 남음: 실제 ReturnPiece_ConnectsGuiDrop 시험은 RawCursorReturnPiece 단위, 앱/입력/음향 연결은 Session/Client 몫; CD/10.37 제외
 cpppj/src/client/RawCursorLifecycle.cpp	port			todo	[client-default]
 cpppj/src/client/RawCursorMana.cpp	port			todo	[client-default]
 cpppj/src/client/RawCursorPlacement.cpp	port			todo	[client-default]
