@@ -18397,7 +18397,7 @@
       "bytes": 1666638,
       "lines": 271,
       "fixtureCommit": "b8842f94b",
-      "webCommit": "worktree",
+      "webCommit": "8f6ad8bfd",
       "cpppjBasis": {
         "cpppj/src/client/VFXEllipse.cpp": "b8842f94b"
       },
@@ -18427,7 +18427,7 @@
       "bytes": 37139,
       "lines": 505,
       "fixtureCommit": "63f429322",
-      "webCommit": "worktree",
+      "webCommit": "8f6ad8bfd",
       "cpppjBasis": {
         "cpppj/src/client/SpriteHitPointBar.cpp": "63f429322"
       },
@@ -18444,6 +18444,68 @@
         "cpppj/src/client/SpriteHitPointBar.cpp"
       ],
       "scope": "10.78(originals) 252행 사용, originalCD 252행은 범위 밖"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E378",
+      "doc": "docs/webpj-vfx-transform-20261113.md",
+      "sha256": "b2658380c3196cb093460f645422d4ac470c9f45008a10cee1877a02fe3c607a",
+      "bytes": 415360,
+      "lines": 241,
+      "fixtureCommit": "3682be7de",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/VFXTransform.cpp": "1754e5461"
+      },
+      "id": "scaled-pixels",
+      "path": "cpppj/tests/fixtures/scaled-pixels-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: 실제 SHP RLE 12종을 VFX 일반 변환 커널(004028cb)로 32×24 표면에 그린 전체 8비트 화면(pane 원점/clip·RLE 투명/255·단위 배율·분수 배율 0.5·0.99998·1.5·2.0, 위치 (12,10)/(−1,1))",
+      "consumers": [
+        "webpj/tests/vfx-transform.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/vfx-transform.js",
+        "webpj/www/render/indexed-surface.js",
+        "webpj/www/assets/shapes.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/VFXTransform.cpp"
+      ],
+      "scope": "10.78 전용 240행 전부 사용"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E378",
+      "doc": "docs/webpj-vfx-transform-20261113.md",
+      "sha256": "b5f6c7ca482be3d6ccd44f862aa7f4000fcd70a293d2086aab7e55d66564b49b",
+      "bytes": 2685591,
+      "lines": 297,
+      "fixtureCommit": "1754e5461",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/VFXTransform.cpp": "1754e5461"
+      },
+      "id": "translated-pixels",
+      "path": "cpppj/tests/fixtures/translated-pixels-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: VFX 대상 색 변환 커널(0040351d)이 255 마스크 소스 아래의 현재 대상 색을 색 변환표로 바꾼 전체 8비트 화면(합성 288 + 실제 간헐천 8, 32×24/256×192 표면, 배율 0.5·1.0·1.5)",
+      "consumers": [
+        "webpj/tests/vfx-transform.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/vfx-transform.js",
+        "webpj/www/render/indexed-surface.js",
+        "webpj/www/assets/shapes.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/VFXTransform.cpp"
+      ],
+      "scope": "10.78 전용 296행 전부 사용(cpppj 의 Sprite 네 모드 재생 296×4 는 SpriteDraw 미이식이라 범위 밖)"
     }
   ]
 }

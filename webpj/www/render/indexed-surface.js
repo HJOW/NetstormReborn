@@ -16,6 +16,31 @@ export function clipRect(rect, bounds) {
     };
 }
 
+// 색 번호 그림을 (left, top) 에 그린다(원본 Renderer DrawIndexedImage). pixels 는 pitch × height 의 색 번호 버퍼이며 클래스 없이 직접 쓸 수 있다(VFX 변환 커널의 단위 배율 경로가 쓴다).
+// 투명 픽셀은 기존 색을 유지한다. clip 은 출력 제한 사각형(right/bottom 은 포함하지 않으며 표면 경계와 교차), colorMap 이 있으면 그림의 색 번호를 colorMap[번호] 로 바꿔 쓰고,
+// shadow=true이면 불투명 픽셀에서 원본 그림 색 대신 현재 배경 색을 colorMap으로 변환한다. image 는 { width, height, indices, opacity } 이다.
+// (2026-11-13 WB04-E378: IndexedSurface.drawImage 의 본문을 독립 함수로 분리, 동작 변경 없음)
+export function drawIndexedImage(pixels, pitch, height, image, left, top, clip = { left: 0, top: 0, right: pitch, bottom: height }, colorMap = null, shadow = false) {
+    if (shadow && !colorMap) throw new TypeError('그림자에는 배경 색 변환표가 필요합니다.');
+    const area = clipRect(clip, { left: 0, top: 0, right: pitch, bottom: height });
+    const startY = Math.max(top, area.top);
+    const endY = Math.min(top + image.height, area.bottom);
+    const startX = Math.max(left, area.left);
+    const endX = Math.min(left + image.width, area.right);
+    const { indices, opacity } = image;
+    // 클립 안에 들어오는 행만 처리한다.
+    for (let y = startY; y < endY; y += 1) {
+        const input = (y - top) * image.width - left;
+        const output = y * pitch;
+        // 불투명 픽셀만 써서 투명 영역의 기존 화면 값을 남긴다.
+        for (let x = startX; x < endX; x += 1) {
+            if (opacity[input + x]) {
+                pixels[output + x] = colorMap ? colorMap[shadow ? pixels[output + x] : indices[input + x]] : indices[input + x];
+            }
+        }
+    }
+}
+
 // 8비트 색 번호 화면 버퍼이다. pixels[y * width + x] 가 한 픽셀의 색 번호다.
 // 사용: new IndexedSurface(1024, 768) 로 만들고 tile·drawImage·drawLines 로 합성한 뒤 표시기에 넘긴다. (2026-10-23 WB03-M1)
 export class IndexedSurface {
@@ -47,25 +72,7 @@ export class IndexedSurface {
     // image 는 { width, height, indices, opacity } 이다.
     // shadow=true이면 불투명 픽셀에서 원본 그림 색 대신 현재 배경 색을 colorMap으로 변환한다(Renderer::DrawIndexedImage). (2026-11-02 WB03-Z)
     drawImage(image, left, top, clip = this.bounds, colorMap = null, shadow = false) {
-        if (shadow && !colorMap) throw new TypeError('그림자에는 배경 색 변환표가 필요합니다.');
-        const area = clipRect(clip, this.bounds);
-        const startY = Math.max(top, area.top);
-        const endY = Math.min(top + image.height, area.bottom);
-        const startX = Math.max(left, area.left);
-        const endX = Math.min(left + image.width, area.right);
-        const pixels = this.pixels;
-        const { indices, opacity } = image;
-        // 클립 안에 들어오는 행만 처리한다.
-        for (let y = startY; y < endY; y += 1) {
-            const input = (y - top) * image.width - left;
-            const output = y * this.width;
-            // 불투명 픽셀만 써서 투명 영역의 기존 화면 값을 남긴다.
-            for (let x = startX; x < endX; x += 1) {
-                if (opacity[input + x]) {
-                    pixels[output + x] = colorMap ? colorMap[shadow ? pixels[output + x] : indices[input + x]] : indices[input + x];
-                }
-            }
-        }
+        drawIndexedImage(this.pixels, this.width, this.height, image, left, top, clip, colorMap, shadow);
     }
 
     // 그림을 rect 의 왼쪽 위부터 원본 크기 그대로 반복해 채운다(cpppj UberGump 의 Tile). 마지막 타일은 rect 에서 자른다.
