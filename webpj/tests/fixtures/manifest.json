@@ -18882,10 +18882,42 @@
       "bytes": 969171,
       "lines": 1432,
       "fixtureCommit": "646ca213e",
-      "webCommit": "worktree",
+      "webCommit": "6a412abed",
       "cpppjBasis": {
         "cpppj/src/client/PreviewDraw.cpp": "0dbfd0c8f",
         "cpppj/src/client/PreviewDraw.h": "0dbfd0c8f"
+      }
+    },
+    {
+      "id": "sprite-draw",
+      "path": "cpppj/tests/fixtures/spritedraw-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 x86 관측: 실제 일반 sprite Draw(00498220) 전체 — 입력 50값(tail·extra·프레임·월드 좌표·카메라·타입 기준점/발자국/플래그/HP/비용·타이머/자원/건설/상태 프로세스·필터·소유자 표)에서 VFX/가상 처리기/게임 조회만 경계로 원본이 낸 호출열(M·S·L·R·F·V)과 선택된 SID·그림자 alias 쓰기. 웹은 originals(10.78) 463행만 읽고 originalCD·original1037 행은 읽지 않는다",
+      "consumers": [
+        "webpj/tests/sprite-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/sprite-draw.js",
+        "webpj/www/core/sprite-hit-point-bar.js"
+      ],
+      "unit": "WB04-E388",
+      "doc": "docs/webpj-sprite-draw-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/SpriteDraw.cpp",
+        "cpppj/src/client/SpriteDraw.h"
+      ],
+      "scope": "일반 객체 Draw 호출열 463행",
+      "text": true,
+      "sha256": "9c5703b5c4d58ab4b7fa23a04784165dbd88a7de131b758d6bd30f9dc793d7ac",
+      "bytes": 416611,
+      "lines": 1390,
+      "fixtureCommit": "3819c52f2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SpriteDraw.cpp": "63f429322",
+        "cpppj/src/client/SpriteDraw.h": "7e66af8b4"
       }
     }
   ]
