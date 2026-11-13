@@ -6030,7 +6030,8 @@
       "path": "cpppj/tests/fixtures/bridgeconnect-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 다리/섬 연결·연결 객체 생성·소유자 전파·한 칸 조회·색 프레임·섬 받침 소유자 지정·postPop (232 장면)",
       "consumers": [
-        "webpj/tests/bridge-connect.test.mjs"
+        "webpj/tests/bridge-connect.test.mjs",
+        "webpj/tests/cursor-previews.test.mjs"
       ],
       "modules": [
         "webpj/www/core/raw-bridge-connect.js",
@@ -6045,10 +6046,10 @@
       "sha256": "90319a6bfd80f2325843638e63b59c6096b36afc1ea5514b01ca54b14f845d15",
       "bytes": 982108,
       "lines": 11861,
-      "fixtureCommit": "6a0907de",
-      "webCommit": "5bbe0cdb",
+      "fixtureCommit": "6a0907dee",
+      "webCommit": "5bbe0cdbd",
       "cpppjBasis": {
-        "cpppj/src/o/RawBridgeConnect.cpp": "0c06fa66"
+        "cpppj/src/o/RawBridgeConnect.cpp": "0c06fa666"
       }
     },
     {
@@ -19357,6 +19358,37 @@
       "cpppjBasis": {
         "cpppj/src/client/RawCursorPlacement.cpp": "167866d9c",
         "cpppj/src/client/RawCursorPlacement.h": "e210c7559"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E403",
+      "id": "cursor-previews",
+      "path": "cpppj/tests/fixtures/cursor-previews-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 커서 미리보기 생성445b30·위치 판정/준비 사슬",
+      "consumers": [
+        "webpj/tests/cursor-previews.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cursor-previews.js"
+      ],
+      "doc": "docs/webpj-cursor-previews-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCursorPreviews.cpp",
+        "cpppj/src/client/RawCursorPreviews.h"
+      ],
+      "scope": "10.78 522행(실제 위치 사슬32)의 생성/재사용 사건·52DWORD 상태·전체50바이트 raw",
+      "text": true,
+      "sha256": "d149954cf5475f127797d1ccd208f0d6ca6bfe2efca13cf9df1bd2aa29fd3a32",
+      "bytes": 631699,
+      "lines": 523,
+      "fixtureCommit": "db8969da1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCursorPreviews.cpp": "46e65408f",
+        "cpppj/src/client/RawCursorPreviews.h": "76e3c4531"
       }
     }
   ]
