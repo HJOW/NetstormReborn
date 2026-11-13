@@ -19041,7 +19041,7 @@
       "bytes": 1639360,
       "lines": 788,
       "fixtureCommit": "ff854f348",
-      "webCommit": "worktree",
+      "webCommit": "e42c73122",
       "cpppjBasis": {
         "cpppj/src/client/Screen.cpp": "b601503d0"
       }
@@ -19071,10 +19071,41 @@
       "bytes": 114746,
       "lines": 358,
       "fixtureCommit": "f7f551358",
-      "webCommit": "worktree",
+      "webCommit": "e42c73122",
       "cpppjBasis": {
         "cpppj/src/client/ScreenPresentation.cpp": "f7f551358",
         "cpppj/src/client/Screen.cpp": "b601503d0"
+      }
+    },
+    {
+      "id": "tilegroup",
+      "path": "cpppj/tests/fixtures/tilegroup-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 x86 관측: 지면/다리 행 묶음 수집 00433410 의 실제 행별 묶음·헤더·배경 결과(판본별 353행: 가시 사각형 float 비트·행 한도·화면 높이·초기 해시 선택·희소 해시 칸·완성 raw 슬롯 → 연속 항목 3072바이트·헤더 1024바이트·해시 선택). 모든 호출은 실제 몸체",
+      "consumers": [
+        "webpj/tests/tile-group-collection.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/tile-group-collection.js"
+      ],
+      "unit": "WB04-E394",
+      "doc": "docs/webpj-tile-group-collection-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/TileGroupCollection.cpp",
+        "cpppj/src/client/TileGroupCollection.h"
+      ],
+      "scope": "originals 353행(CD·1037 706행은 웹 10.78 전용이라 제외)",
+      "text": true,
+      "sha256": "20ec1b81aabfb7b68ea4755de086275555ed50937f56158dbe34b73a4fb6d15a",
+      "bytes": 5546801,
+      "lines": 1060,
+      "fixtureCommit": "f2a9f8880",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/TileGroupCollection.cpp": "f2a9f8880",
+        "cpppj/src/client/TileGroupCollection.h": "225f2322c"
       }
     }
   ]
