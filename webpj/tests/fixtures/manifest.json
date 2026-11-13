@@ -19422,10 +19422,42 @@
       "bytes": 1503316,
       "lines": 1429,
       "fixtureCommit": "ea4c65b7c",
-      "webCommit": "worktree",
+      "webCommit": "8e72b91e2",
       "cpppjBasis": {
         "cpppj/src/client/GumpDraw.cpp": "d600aad52",
         "cpppj/src/client/GumpDraw.h": "7838109ab"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E406",
+      "id": "gumpglyph",
+      "path": "cpppj/tests/fixtures/gumpglyph-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 글꼴 선택·글리프 반복·색/패스·기본/명시Gump 상대 출력",
+      "consumers": [
+        "webpj/tests/gump-glyph.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/glyph-text.js",
+        "webpj/www/render/gump-text-draw.js"
+      ],
+      "doc": "docs/webpj-gump-text-draw-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/GumpTextDraw.cpp",
+        "cpppj/src/client/GumpTextDraw.h"
+      ],
+      "scope": "원본10.78 Case256행과 Font 캐시 입력의 실제 FontSet 선택·C/G/E 사건, CD/추가판 미사용",
+      "text": true,
+      "sha256": "bbbb62c6191880049525599b7e576b61688b7985ec07dd21a31f70aebd9873f2",
+      "bytes": 391166,
+      "lines": 787,
+      "fixtureCommit": "8afea6136",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpTextDraw.cpp": "5a2cd0474",
+        "cpppj/src/client/GumpTextDraw.h": "5a2cd0474"
       }
     }
   ]

@@ -35,23 +35,33 @@ export function createTextContext(fields = {}) {
 // UnicodeGlyphFont 는 UTF-16 코드 단위 Uint16Array), context 는 createTextContext 결과, clip 은 출력 제한 사각형이다. (2026-10-31 WB03-N: 유니코드 글꼴 지원)
 // 그림자·외곽선·본문 패스마다 x 를 처음 위치로 되돌리며, 글리프 블록이 없는 코드는 그리지도 전진하지도 않는다. (2026-10-23 WB03-M1)
 export function drawGlyphText(surface, font, bytes, x, y, context, clip = surface.bounds) {
-    // 원본 글꼴 전용 256색 표다. 글자 픽셀은 100 번만 쓰므로 그 칸만 패스마다 바꾼다.
     const colorMap = new Uint8Array(256);
-    // 한 패스(오프셋·색)를 그린다.
+    // 기존 UI는 명시 길이를 사용하며 공유 원문 반복기가 색/글리프 순서를 수행한다. (2026-11-14 WB04-E406)
+    drawBitmapGlyphText(bytes, font, { x, y }, context, {
+        color: (color) => { colorMap[FONT_INK_INDEX] = color; },
+        // 원래 글리프의 상대 이미지 위치와 현재 clip을 기존 표면에 전달한다.
+        glyph: (selected, code, at) => { const glyph = selected.glyph(code); if (glyph.image) surface.drawImage(glyph.image, (at.x + glyph.image.left) | 0, (at.y + glyph.image.top) | 0, clip, colorMap); },
+    }, bytes.length);
+}
+
+// 원본 Screen 글리프 반복이다. -1은 범위 안 NUL 앞까지, 명시 길이는 중간0도 출력한다. UTF-16 입력은 기존 웹 유니코드 적응이다. (2026-11-14 WB04-E406)
+export function drawBitmapGlyphText(bytes, font, position, context, hooks, length = -1) {
+    let count;
+    if (length === -1) { count = bytes.indexOf(0); if (count < 0) throw new TypeError('Gump 글자 출력 범위에 NUL 종료 필요'); }
+    else { if (!Number.isInteger(length) || length < 0 || length > bytes.length) throw new RangeError('Gump 글자 출력 길이 범위 오류'); count = length; }
+    if (typeof hooks?.color !== 'function' || typeof hooks?.glyph !== 'function') throw new TypeError('Gump 색/글리프 출력 경계 필요');
+    // 빈 문자열/빈 글꼴도 매 패스 색을 설치하고 그림자·외곽선·본문 순서를 유지한다.
     const pass = (offsetX, offsetY, color) => {
-        colorMap[FONT_INK_INDEX] = color & 255;
-        let atX = (x + offsetX) | 0;
-        const atY = (y + offsetY) | 0;
-        // 문자열의 각 바이트를 차례로 그린다.
-        for (const code of bytes) {
-            const glyph = font.glyph(code);
-            if (!glyph.present) continue;
-            if (glyph.image) surface.drawImage(glyph.image, (atX + glyph.image.left) | 0, (atY + glyph.image.top) | 0, clip, colorMap);
-            atX = (atX + glyph.drawAdvance) | 0;
+        hooks.color(color & 255); const at = { x: (position.x + offsetX) | 0, y: (position.y + offsetY) | 0 };
+        // 포인터 없는 글리프는 폭을 전진하지 않으며 특별 빈 글리프는 출력 경계와 폭을 유지한다.
+        for (let index = 0; index < count; index += 1) {
+            const code = bytes instanceof Uint16Array ? bytes[index] : bytes[index] & 255;
+            if (!font) continue; const glyph = font.glyph(code); if (!glyph.present) continue;
+            hooks.glyph(font, code, { x: at.x, y: at.y }); at.x = (at.x + glyph.drawAdvance) | 0;
         }
     };
     if (context.flags & 2) pass(context.shadowX, context.shadowY, context.shadowColor);
-    // 외곽선 플래그가 있으면 고정 네 방향을 순서대로 그린다. 그림자와는 독립이다.
+    // 고정 외곽선 표는 위→오른쪽→아래→왼쪽이다.
     if (context.flags & 4) for (const [dx, dy] of OUTLINE_OFFSETS) pass(dx, dy, context.shadowColor);
     pass(0, 0, context.color);
 }

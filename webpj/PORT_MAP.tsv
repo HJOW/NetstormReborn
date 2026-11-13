@@ -144,7 +144,7 @@ cpppj/src/client/GumpLifetime.cpp	port			todo	[client-default]
 cpppj/src/client/GumpPointerBoundary.cpp	adapt			todo	[adapt-screen]
 cpppj/src/client/GumpRedraw.cpp	port			todo	[client-default]
 cpppj/src/client/GumpText.cpp	port	www/assets/font-set.js	1f00a25a	partial	[client-default] 글꼴 슬롯/글자 측정
-cpppj/src/client/GumpTextDraw.cpp	port	www/render/glyph-text.js	1f00a25a	partial	[client-default] 그림자/외곽선/본문 패스
+cpppj/src/client/GumpTextDraw.cpp	port	www/render/glyph-text.js;www/render/gump-text-draw.js	1f00a25a	port	[client-default] WB04-E406: 슬롯 검사→스타일 로그/fallback·실제 FontSet 선택·NUL/명시 길이·기본/명시Gump 문맥·현재 Position과 실제 GlyphPixelHooks/색256표 연결. 기존 UI도 같은 BitmapGlyph 반복기 사용. 원본 gumpglyph10.78 256행 실제캐시/FontSet C/G/E 첫 대조 일치, 새6건·주변한국어/픽셀34건 통과. OriginalText 기존 정책의4BYTE 확장은 UTF16/D2Coding으로 대체. 기준선 뒤 변경 없음. 남음: RawCampaignCursorDisplay/ClientRendererFrame 앱 수명 조립
 cpppj/src/client/GumpTree.cpp	port			todo	[client-default]
 cpppj/src/client/GumpVisual.cpp	port	www/render/gump-visual.js	1f00a25a	partial	[client-default] WB03 돌 버튼 외곽선/글자 배치
 cpppj/src/client/HelpLinkPolicy.cpp	port	www/ui/help-link.js	1f00a25a	partial	[client-default] 바깥 링크 새 탭/창 열기는 미구현(3.1절)
