@@ -90,16 +90,18 @@ export function buildScreenPalette(filePalette) {
 // 논리 팔레트에서 목표 RGB 에 가장 가까운 색 번호를 찾는다(원본 색 검색 몸체).
 // 거리는 각 채널 차이 제곱의 합이고, 번호 0부터 차례로 보며 더 작을 때만 바꾸므로 동률이면 앞 번호가 남는다.
 // 사용: 버튼 외곽선처럼 원본이 RGB 로 지정한 UI 색의 번호를 구할 때 쓴다. (2026-10-23 WB03-M1)
+// 원본 x87 은 채널 차이와 곱·합을 32비트로 감아 부호 있는 거리를 만들고 새 정수 거리를 반올림하기 전에 이전 float32 최솟값과 비교한다. 범위 밖(정수) RGB 도 같은 결과를 내도록 Math.imul 과 `| 0` 으로 감는다(바이트 범위 RGB 의 결과는 이전과 같다).
+// (2026-11-13 WB04-E393: 원본 x86 관측 palettecolor 786행 중 범위 밖 RGB 420행과 맞추려고 32비트 감김으로 정밀화)
 export function findPaletteColor(logical, red, green, blue) {
     let best = INITIAL_COLOR_DISTANCE;
     let chosen = 0;
     // 256색을 번호 순으로 검사한다. 예약 바이트는 거리 계산에 쓰지 않는다.
     for (let i = 0; i < logical.length; i += 1) {
         const color = logical[i];
-        const dr = (color & 255) - red;
-        const dg = ((color >>> 8) & 255) - green;
-        const db = ((color >>> 16) & 255) - blue;
-        const distance = dr * dr + dg * dg + db * db;
+        const dr = ((color & 255) - red) | 0;
+        const dg = (((color >>> 8) & 255) - green) | 0;
+        const db = (((color >>> 16) & 255) - blue) | 0;
+        const distance = (Math.imul(dr, dr) + Math.imul(dg, dg) + Math.imul(db, db)) | 0;
         if (distance < best) {
             best = Math.fround(distance);
             chosen = i;

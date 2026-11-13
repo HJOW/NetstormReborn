@@ -19016,6 +19016,66 @@
         "cpppj/src/client/Renderer.cpp": "5a2cd0474",
         "cpppj/src/client/Renderer.h": "731c9dee9"
       }
+    },
+    {
+      "id": "palettecolor",
+      "path": "cpppj/tests/fixtures/palettecolor-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 x86 관측: 색 검색 전체 몸체의 두 x87 관찰(세 판본 × 262입력 = 786행: 논리 팔레트 256 DWORD와 RGB 입력(범위 밖 정수 포함)별 선택 번호). 파일 로더·창·게임 실행이 아님",
+      "consumers": [
+        "webpj/tests/screen.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/assets/palette.js"
+      ],
+      "unit": "WB04-E393",
+      "doc": "docs/webpj-screen-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/Screen.cpp"
+      ],
+      "scope": "786행 전부(10.78 originals·CD·1037 세 판본 모두 같은 몸체)",
+      "text": true,
+      "sha256": "c888cf78e03718019d7061fc926ba1dbe63c0a9f052ee6b528f50fbfd67577dc",
+      "bytes": 1639360,
+      "lines": 788,
+      "fixtureCommit": "ff854f348",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/Screen.cpp": "b601503d0"
+      }
+    },
+    {
+      "id": "screen-scroll",
+      "path": "cpppj/tests/fixtures/screen-scroll-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 x86 관측: 보호 004a1ad0 의 DIB 행 이동(13×9 화면·줄 간격 16·영역 9×7 의 357가지 이동량별 전체 144바이트 결과, padding 포함)",
+      "consumers": [
+        "webpj/tests/screen.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/screen.js"
+      ],
+      "unit": "WB04-E393",
+      "doc": "docs/webpj-screen-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScreenPresentation.cpp",
+        "cpppj/src/client/Screen.cpp"
+      ],
+      "scope": "357행 전부",
+      "text": true,
+      "sha256": "07302c86eebc0e4a5cccb7c1d2a6b7bcff86a3983ff66391b107fa79cfb25375",
+      "bytes": 114746,
+      "lines": 358,
+      "fixtureCommit": "f7f551358",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ScreenPresentation.cpp": "f7f551358",
+        "cpppj/src/client/Screen.cpp": "b601503d0"
+      }
     }
   ]
 }
