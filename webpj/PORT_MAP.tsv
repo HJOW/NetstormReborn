@@ -390,7 +390,7 @@ cpppj/src/client/SpriteHitPointBar.cpp	port	www/core/sprite-hit-point-bar.js	1f0
 cpppj/src/client/SquidRenderer.cpp	port	www/render/squid-renderer.js	1f00a25a	port	[client-default] WB04-E199: Squid 표시 sink 어댑터(suppressed=전체 갱신 대기·invalidate 무절단 전달)·Shapes(로딩 순서 188칸 frameCount/loaded/물리 프레임 헤더 12값·포구 WORD). cpppj 직접 시험 없음(ShapeToBuffer·BurningFrame 시험의 자산 장치) → shape-to-buffer 시험의 실제 자산 대조와 계약 검사. 남음: 실제 Renderer(fullRedrawPending/invalidate) 연결은 WB03-M2/WB05
 cpppj/src/client/StartupFiles.cpp	adapt	www/assets/game-data.js	1f00a25a	port	[adapt-file] WB04-E272: 여섯 setup.cfg 후보 탐색·CD 탐색·chdir/cwd 웹 제외. 기본 TAFF 등록은 GameData.build(E271 StartupArchiveFiles 와 같음)
 cpppj/src/client/State.cpp	port			todo	[client-default]
-cpppj/src/client/StoneButtonGump.cpp	port	www/ui/stone-button.js	1f00a25a	partial	[client-default] 돌 버튼 크기 맞춤·그리기
+cpppj/src/client/StoneButtonGump.cpp	port	www/ui/stone-button.js;www/ui/stone-button-gump.js	1f00a25a	port	[client-default] WB04-E417 부분 문맥/라벨63·같은 실제 생성/측정/자식 배경·부착/수집/픽셀/자식 우선 해제; CPP 부모 시험/E414 이월 완료·현재 콜백/UTF16/guard; 기준선 뒤 변경 없음; 기존 앱의 간소화 StoneButton 교체·RawMenuControls 연결 대기
 cpppj/src/client/StyleText.cpp	port	www/ui/style-text.js;www/ui/html-text.js	1f00a25a	partial	[client-default] WB03 스타일 문자열 조각
 cpppj/src/client/StyleTextBuffer.cpp	port	www/ui/scroll-text.js	1f00a25a	partial	[client-default] 줄 저장소·표시 줄
 cpppj/src/client/StyleTextMarkup.cpp	port	www/ui/style-text.js;www/assets/picture-resolver.js	1f00a25a	partial	[client-default] ~[...] 명령·그림 조각
