@@ -19459,6 +19459,37 @@
         "cpppj/src/client/GumpTextDraw.cpp": "5a2cd0474",
         "cpppj/src/client/GumpTextDraw.h": "5a2cd0474"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E408",
+      "id": "object-hit",
+      "path": "cpppj/tests/fixtures/object-hit-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 픽셀 선택+b0=498000·+78/plain/+a4 호출과200원색 버퍼",
+      "consumers": [
+        "webpj/tests/object-hit.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-hit.js"
+      ],
+      "doc": "docs/webpj-object-hit-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawObjectHit.cpp",
+        "cpppj/src/client/RawObjectHit.h"
+      ],
+      "scope": "원본10.78 합성TYPE80의608행 반환·getter/plain/추가 사건·40000BYTE Adler·raw 불변. 실제 공중3종 생성/검사 제외",
+      "text": true,
+      "sha256": "959730b40a2d8b6dde016bc87e7f1e7a3d324726547def1de8fe9b0c69c917f6",
+      "bytes": 58713,
+      "lines": 609,
+      "fixtureCommit": "912ca8ac9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawObjectHit.cpp": "912ca8ac9",
+        "cpppj/src/client/RawObjectHit.h": "912ca8ac9"
+      }
     }
   ]
 }
