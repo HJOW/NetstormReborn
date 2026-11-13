@@ -212,3 +212,123 @@ TEST_CASE(PlayerInitialization_CoreDetachCacheBeforeReleaseAndNewAliasAfterAlloc
     core.Select(scene.player,metamap,1,1);CHECK(core.Current().data()==scene.blocks[2].data()+180+0x6c && scene.player.playerKnown==1);
     CHECK(std::all_of(core.Current().begin(),core.Current().end(),[](auto byte) { return byte==0; }) && std::equal(previous.begin(),previous.end(),core.Cached().begin()));
 }
+
+namespace {
+// CD 원문의 세 격리 Player 물리와 현재 장치 효과만 제공한다. 동맹 계산/Chat/통신은 실행하지 않는다.
+struct CdInitializationScene {
+    std::array<std::array<std::uint8_t,1556>,3> blocks; // 각1548BYTE 앞뒤에4BYTE canary가 있는 실제 입력 물리다.
+    std::uint32_t base{},fortCount{0x12345678U},lastPlayer{0x89abcdefU}; // CD의 현재 Player 주소와 두 초기 카운터 입력이다.
+    std::uint32_t newCalls{},allianceCalls{}; // 실제 장치 진입 횟수이며 성공 상태를 대신하지 않는다.
+    bool nullMalloc{},shortMemory{},changeFree{},changeNew{}; // NULL/짧은 물리와 장치 복귀 뒤 현재 주소 변경의 명시 입력이다.
+    std::uint32_t stopNew{},nullNew{}; // 지정된 실제 new 진입에서 외부 예외 또는NULL 반환을 공급한다.
+    std::vector<std::string> trace; // 현재 base 조회/쓰기와 선택된 장치의 실제 순서다.
+    CdInitializationScene() {
+        for (std::size_t block=0;block<blocks.size();++block) { // 부모 결과와 무관한 기존 BYTE와 factory 주소만 입력한다.
+            blocks[block].fill(0xa5);
+            for (std::uint32_t owner=0;owner<9;++owner) InitPut(std::span(blocks[block]).subspan(4,1548),owner*172,owner%3==0 ? 0U : 0x12408000U+static_cast<std::uint32_t>(block)*0x2000U+owner*0x100U); // NULL factory도 원문 free 장치로 전달해야 한다.
+        }
+    }
+    // 입력 세 블록의 현재 요청 범위만 빌리고 원문 NULL/범위 밖 접근은 명시적으로 거부한다.
+    std::span<std::uint8_t> Memory(std::uint32_t address,std::uint32_t bytes) {
+        for (std::size_t block=0;block<blocks.size();++block) if (address>=kBases[block] && std::uint64_t(address)+bytes<=std::uint64_t(kBases[block])+1548U) { // canary는 제품에 빌리지 않는다.
+            auto selected=std::span<std::uint8_t>(blocks[block]).subspan(4+address-kBases[block],bytes); // 선택한 실제 BYTE 범위다.
+            return shortMemory ? selected.first(std::min<std::size_t>(3,selected.size())) : selected;
+        }
+        throw std::out_of_range("CD Player 초기화의 실제 입력 물리 범위");
+    }
+    // base 장치는 같은 현재 슬롯의 읽기/쓰기만 수행한다.
+    PlayerInitializationGlobals Globals() {
+        return {fortCount,lastPlayer,[this] { trace.push_back("R:"+std::to_string(base));return base; },[this](auto value) { trace.push_back("W:"+std::to_string(value));base=value; }};
+    }
+    // CRT 장치는 입력 주소/NULL/예외만 제공하고 Player 필드/동맹/초기화 결과를 계산하지 않는다.
+    PlayerInitializationHooks Hooks() {
+        PlayerInitializationHooks hooks; // 기존 PATCH와 같은 실제 경계 인터페이스를 CD 주소 소유자에 연결한다.
+        hooks.memory=[this](auto address,auto bytes) { return Memory(address,bytes); };
+        hooks.freeFactory=[this](auto token) { trace.push_back("F:"+std::to_string(token));if (changeFree) { changeFree=false;base=kBases[1]; } };
+        hooks.freePlayers=[this](auto token) { trace.push_back("P:"+std::to_string(token)); };
+        hooks.mallocPlayers=[this](auto bytes) { CHECK(bytes==1548);trace.push_back("M:"+std::to_string(bytes));return nullMalloc ? 0U:kBases[2]; };
+        hooks.newFactory=[this](auto bytes) { CHECK(bytes==120);trace.push_back("N:"+std::to_string(bytes));if (++newCalls==stopNew) throw InitStop{};if (changeNew) { changeNew=false;base=kBases[1]; }return newCalls==nullNew ? 0U:kNewFactoryBase+(newCalls-1)*0x100U; };
+        hooks.alliance=[this](auto owner,auto mask) { ++allianceCalls;trace.push_back("A:"+std::to_string(owner)+':'+std::to_string(mask)); }; // 종속 몸체는 실행하지 않고 원문이 요청한 실제 인자/순서만 관측한다.
+        return hooks;
+    }
+    // 각 원본 필드를 고정 CD offset에 기록한 독립 기대 BYTE다. 제품 상수/결과는 읽지 않는다.
+    static void ExpectedRow(std::span<std::uint8_t> bytes,std::uint32_t owner,std::uint32_t factory) {
+        const auto offset=owner*172U; // CD004062b0/0040628d의 실제 행 위치다.
+        InitPut(bytes,offset,factory);InitPut(bytes,offset+4,30);InitPut(bytes,offset+0x70,127);InitPut(bytes,offset+8,0);InitPut(bytes,offset+0x2c,0);InitPut(bytes,offset+0x54,1U<<owner);
+    }
+    // 옵션 밖 양쪽4BYTE는 정상/실패 어느 경로에서도 바뀌면 안 된다.
+    void CheckCanaries() const {
+        for (const auto& block:blocks) { // 세 물리의 모든 이웃 BYTE를 검사한다.
+            CHECK(std::all_of(block.begin(),block.begin()+4,[](auto byte) { return byte==0xa5; }));
+            CHECK(std::all_of(block.end()-4,block.end(),[](auto byte) { return byte==0xa5; }));
+        }
+    }
+};
+}
+
+// CD 첫 초기화의1548BYTE 전체와 actual malloc/new/동맹 인자·현재 base 재조회 순서를 검증한다.
+TEST_CASE(PlayerInitialization_CdInitializesNineRecordsAndExactBoundaryOrder) {
+    CdInitializationScene scene;const auto oldBlocks=scene.blocks; // 초기 NULL Player라 이전 공장/배열을 반납하지 않아야 한다.
+    InitializeCdPlayerRecords(scene.Globals(),scene.Hooks());
+    std::array<std::uint8_t,1548> expected{}; // CD REP STOSD의 기대 전체0에 원문이 명시한 필드만 더한다.
+    std::vector<std::string> trace{"R:0","M:1548","W:"+std::to_string(kBases[2])}; // 공통 초기화 전 실제 세 경계다.
+    for (std::uint32_t owner=0;owner<9;++owner) { // 원문9행의 고정 기대값과 외부 장치 순서를 기록한다.
+        CdInitializationScene::ExpectedRow(expected,owner,kNewFactoryBase+owner*0x100U);
+        trace.push_back("R:"+std::to_string(kBases[2]));trace.push_back("N:120");trace.push_back("R:"+std::to_string(kBases[2]));trace.push_back("A:"+std::to_string(owner)+':'+std::to_string(1U<<owner));
+    }
+    CHECK(std::equal(expected.begin(),expected.end(),scene.blocks[2].begin()+4));
+    CHECK(scene.blocks[0]==oldBlocks[0] && scene.blocks[1]==oldBlocks[1]);
+    CHECK(scene.trace==trace && scene.base==kBases[2] && scene.fortCount==0 && scene.lastPlayer==0 && scene.newCalls==9 && scene.allianceCalls==9);
+    CHECK(kCdInitializedPlayerStride==172 && kCdInitializedPlayerBytes==1548);scene.CheckCanaries();
+}
+
+// CD free는 첫 캡처 base를 쓴 뒤 매 복귀마다 다시 읽고 NULL factory도 생략하지 않는다.
+TEST_CASE(PlayerInitialization_CdFreeUsesCapturedFirstBaseAndCurrentLaterBase) {
+    CdInitializationScene scene;scene.base=kBases[0];scene.changeFree=true; // 최초 factory 반납 장치가 현재 배열을 다른 실제 물리로 바꾼다.
+    InitializeCdPlayerRecords(scene.Globals(),scene.Hooks());
+    std::vector<std::string> prefix{"R:"+std::to_string(kBases[0])}; // 두 카운터 쓰기보다 앞선 첫 주소 조회다.
+    for (std::uint32_t owner=0;owner<9;++owner) { // 첫NULL factory는 이전base, 나머지는 변경된base의 같은 행에서 읽는다.
+        const auto token=owner%3==0 ? 0U:0x1240a000U+owner*0x100U; // CD 입력 블록1의 고정 포인터이며 owner0은 양쪽 모두NULL이다.
+        prefix.push_back("F:"+std::to_string(token));prefix.push_back("R:"+std::to_string(kBases[1]));
+    }
+    prefix.push_back("P:"+std::to_string(kBases[1]));prefix.push_back("W:0");prefix.push_back("M:1548");prefix.push_back("W:"+std::to_string(kBases[2]));
+    CHECK(scene.trace.size()>prefix.size() && std::equal(prefix.begin(),prefix.end(),scene.trace.begin()));scene.CheckCanaries();
+}
+
+// CD 행 생성자는 new의NULL 반환에도 나머지 용량/지역/동맹 초기화를 계속한다.
+TEST_CASE(PlayerInitialization_CdNullFactoryStoresNullAndCompletesOtherFields) {
+    for (const auto nullCall:{1U,9U}) { // 첫 행과 마지막 행에서 동일한 원문NULL 처리 계약을 확인한다.
+        CdInitializationScene scene;scene.nullNew=nullCall;InitializeCdPlayerRecords(scene.Globals(),scene.Hooks());
+        std::array<std::uint8_t,1548> expected{}; // 입력NULL 위치 외에는 고정 CD 초기화 기대값이다.
+        for (std::uint32_t owner=0;owner<9;++owner) CdInitializationScene::ExpectedRow(expected,owner,owner+1==nullCall ? 0U:kNewFactoryBase+owner*0x100U); // 제품 결과를 기대값으로 읽지 않는다.
+        CHECK(std::equal(expected.begin(),expected.end(),scene.blocks[2].begin()+4) && scene.newCalls==9 && scene.allianceCalls==9);scene.CheckCanaries();
+    }
+}
+
+// CD new 직전의 행 주소와 그 뒤 동맹 쓰기가 읽는 현재 base를 같은 주소로 합치지 않는다.
+TEST_CASE(PlayerInitialization_CdNewKeepsCapturedRowAndUsesCurrentAllianceBase) {
+    CdInitializationScene scene;scene.changeNew=true;const auto before=scene.blocks; // 첫 new 장치에서 현재 Player 주소만 바꾼다.
+    InitializeCdPlayerRecords(scene.Globals(),scene.Hooks());
+    std::array<std::uint8_t,1548> allocated{}; // malloc으로 받은 블록2는 전체0으로 초기화되고 첫 행의 생성 필드만 기록된다.
+    CdInitializationScene::ExpectedRow(allocated,0,kNewFactoryBase);InitPut(allocated,0x54,0); // 자기 동맹 mask는 변경된base에 써야 하므로 캡처한 행+54는0이다.
+    auto current=before[1];InitPut(std::span(current).subspan(4,1548),0x54,1); // 변경된base의0행에는 현재 동맹 DWORD만 기록된다.
+    for (std::uint32_t owner=1;owner<9;++owner) CdInitializationScene::ExpectedRow(std::span(current).subspan(4,1548),owner,kNewFactoryBase+owner*0x100U); // 이후 각행의 캡처 주소는 변경된 실제base다.
+    CHECK(std::equal(allocated.begin(),allocated.end(),scene.blocks[2].begin()+4));CHECK(scene.blocks[1]==current && scene.blocks[0]==before[0]);
+    CHECK(scene.base==kBases[1] && scene.newCalls==9 && scene.allianceCalls==9);scene.CheckCanaries();
+}
+
+// NULL malloc·짧은 첫 store·new의 외부 예외는 앞선 실제 counter/base/행 효과를 되돌리지 않는다.
+TEST_CASE(PlayerInitialization_CdFailuresPreserveEarlierEffects) {
+    CdInitializationScene nullScene;nullScene.nullMalloc=true;const auto nullBefore=nullScene.blocks;bool nullRejected{}; // 원문의NULL zero-store를 명시 호스트 물리 실패로 구별한다.
+    try { InitializeCdPlayerRecords(nullScene.Globals(),nullScene.Hooks()); }catch (const std::out_of_range&) { nullRejected=true; }
+    CHECK(nullRejected && nullScene.base==0 && nullScene.fortCount==0 && nullScene.lastPlayer==0 && nullScene.blocks==nullBefore && nullScene.newCalls==0);
+    CdInitializationScene shortScene;shortScene.shortMemory=true;const auto shortBefore=shortScene.blocks;bool shortRejected{}; // DWORD 전체를 확인하기 전 부분BYTE를 쓰면 안 된다.
+    try { InitializeCdPlayerRecords(shortScene.Globals(),shortScene.Hooks()); }catch (const std::out_of_range&) { shortRejected=true; }
+    CHECK(shortRejected && shortScene.base==kBases[2] && shortScene.fortCount==0 && shortScene.lastPlayer==0 && shortScene.blocks==shortBefore && shortScene.newCalls==0);
+    CdInitializationScene stopped;stopped.stopNew=5;bool externalStopped{}; // 다섯 번째 new 진입 전에 앞선4개 행과 동맹 요청은 완료된다.
+    try { InitializeCdPlayerRecords(stopped.Globals(),stopped.Hooks()); }catch (const InitStop&) { externalStopped=true; }
+    std::array<std::uint8_t,1548> expected{}; // REP 초기화와 앞선4행의 실제 부분효과만 기대한다.
+    for (std::uint32_t owner=0;owner<4;++owner) CdInitializationScene::ExpectedRow(expected,owner,kNewFactoryBase+owner*0x100U); // 실패한5번째 행에는 생성 필드를 쓰지 않는다.
+    CHECK(externalStopped && stopped.base==kBases[2] && stopped.newCalls==5 && stopped.allianceCalls==4 && std::equal(expected.begin(),expected.end(),stopped.blocks[2].begin()+4));
+    nullScene.CheckCanaries();shortScene.CheckCanaries();stopped.CheckCanaries();
+}

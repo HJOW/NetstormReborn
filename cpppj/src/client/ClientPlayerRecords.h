@@ -13,6 +13,7 @@ class ClientPlayerRecords {
 public:
     using AllocationBytes=std::function<void(std::span<std::uint8_t>)>; // new가 초기화하지 않는 실제120BYTE의 외부 할당 입력이다.
     explicit ClientPlayerRecords(AllocationBytes allocationBytes={}); // 할당은 실제 원문 초기화 호출 때 시작한다.
+    ClientPlayerRecords(o::OriginalEdition edition,AllocationBytes allocationBytes={}); // 실제 판본의 Player 폭으로 같은 장기 할당/목록 소유자를 만든다. 생성만으로 할당하지 않는다.
     ClientPlayerRecords(const ClientPlayerRecords&)=delete; // 살아 있는 Player/factory alias를 복제하지 않는다.
     ClientPlayerRecords& operator=(const ClientPlayerRecords&)=delete; // 실제 할당 소유권의 값 대입을 막는다.
     ClientPlayerRecords(ClientPlayerRecords&&)=delete; // 대여자가 참조하는 owner 주소를 고정한다.
@@ -38,7 +39,8 @@ public:
     void BindCoreData(std::shared_ptr<ClientCoreDataGlobals> core); // 같은 Player base 변경을 실제 Core의 빌린 Player 슬롯에 연결한다. 현재 선택을 임의로 바꾸지 않는다.
     std::shared_ptr<ClientCoreDataGlobals> BoundCoreData() const; // 같은 실제 장기 소유자 정체성을 순수 조회한다.
     bool Initialized() const; // 전체 실제 초기화가 정상 복귀했는지 관측한다. 부분 실패는 초기화 완료로 대여하지 않는다.
-    std::span<std::uint8_t> Records(); // 현재 base가 가리키는 실제1620BYTE다. 재할당을 넘어 보관하려면 Use가 필요하다.
+    std::uint32_t Stride() const; // 현재 판본의 실제 Player 한 행 크기(PATCH180/CD172)를 반환한다.
+    std::span<std::uint8_t> Records(); // 현재 base가 가리키는 실제9행(PATCH1620/CD1548BYTE)이다. 재할당을 넘어 보관하려면 Use가 필요하다.
     std::span<const std::uint8_t> Records() const; // 같은 실제 Player 물리의 읽기뷰다.
     std::uint32_t Base() const; // 원시0059534c의 현재 opaque32 주소다.
     std::uint32_t& FortCount(); // 초기화와 실제 MissionLogin이 함께 쓰는005951f8이다.
@@ -58,6 +60,8 @@ private:
     std::span<std::uint32_t> Factory(std::uint32_t owner); // 현재 Player의 포인터/용량으로 같은 실제 factory 배열을 해석한다.
     void InitializeBody(std::function<void(std::uint32_t,std::uint32_t)> alliance); // 공통/대여 경로가 같은 실제 Native 부모와 메모리 장치를 공유한다.
     void WriteBase(std::uint32_t base); // 원문 현재 주소를 쓰고 같은 실제 할당의 host span 슬롯도 즉시 갱신한다.
+    std::uint32_t PlayerBytes() const; // 현재 판본의 아홉 행 전체 할당 크기를 같은 stride에서 계산한다.
+    o::OriginalEdition edition_; // 이 소유자가 처음부터 끝까지 보관하는 실제 데이터 판본이다.
     std::map<std::uint32_t,Block> blocks_; // 실제 생존 할당만 유지하며 해제된 주소로의 조회는 실패한다.
     std::uint32_t next_{0x30000000},base_{},fortCount_{},lastLoginPlayer_{}; // 겹치지 않는 발급 주소와 원문의 실제 세 DWORD다.
     std::array<std::uint32_t,81> alliances_{}; // 최초 BSS0이며 원문 자식이 각 행을 직접 갱신한다.

@@ -26,4 +26,9 @@ struct PlayerInitializationHooks {
 //236BYTE 부모 전체다. Core 선택/known0/PlayerLinks/Kernel 정리는 호출자의 앞선 원문 단계이며 여기서 암묵 실행하지 않는다.
 // 메모리/getter/setter는 같은 실제 owner의 순수 물리 장치다. NULL·짧은물리/누락장치는 도달한 위치에서만 예외로 거부한다.
 void InitializePlayerRecords(const PlayerInitializationGlobals& globals,const PlayerInitializationHooks& hooks);
+inline constexpr std::uint32_t kCdInitializedPlayerStride=172; // CD00406200의 각 Player 기록 간격0xac이며 기록 수9는 기존 상수를 공유한다.
+inline constexpr std::uint32_t kCdInitializedPlayerBytes=1548; // CD0048ef10에 전달하는9×172=0x60c바이트이며 factory120은 기존 상수를 공유한다.
+// CD00406200/004062b0/004062e0의 해제·할당·행 초기화와 현재 동맹 장치 호출을 그대로 실행한다.
+// globals는 CD0050f6d8/0050f6dc/0050f834를 빌리고 hooks는 같은 실제 CD 메모리/할당/00406130 동맹 장치를 공급한다.
+void InitializeCdPlayerRecords(const PlayerInitializationGlobals& globals,const PlayerInitializationHooks& hooks);
 }

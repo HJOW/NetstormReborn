@@ -583,6 +583,7 @@ target_sources(netstorm PRIVATE o/RawOrdinaryBattleStart.cpp o/RawOrdinaryBattle
 target_sources(netstorm PRIVATE o/RawSavedStateWrite.cpp o/RawSavedStateWrite.h client/SavedStateFileWrite.cpp client/SavedStateFileWrite.h) # 일반 재접속 저장의 개별 원문 쓰기를 실제 사용자 FILE에 연결한다.
 target_sources(netstorm PRIVATE client/SavedStateFileRead.cpp client/SavedStateFileRead.h) # startup 저장상태 reader가 같은 실제 Client Player/Core와 사용자 FILE을 읽는다.
 target_sources(netstorm PRIVATE o/RawBattleCompletion.cpp o/RawBattleCompletion.h) #449200/48fd0/490d0의 현재 전투 종료 관문을 실제 Player와 연결한다.
+target_sources(netstorm PRIVATE o/RawCdBattleCompletion.cpp o/RawCdBattleCompletion.h) #CD00484140의 실제172BYTE 기록 진단과 inactive 반환을 같은 Client에 연결한다.
 target_sources(netstorm PRIVATE o/RawBattleReconnect.cpp o/RawBattleReconnect.h) #4b8cb0의 실제 서버 선택과 현재15/다음7·3 요청을 복원한다.
 target_sources(netstorm PRIVATE o/RawConnectionHealth.cpp o/RawConnectionHealth.h) #4b9010의 프레임 활동 송신/지연/자동 서버 장애 관문이다.
 target_sources(netstorm PRIVATE o/RawConnectionEnded.cpp o/RawConnectionEnded.h) #4b6660의 실제2번 종료 통지/Player flags·선택 활동표 정리다.

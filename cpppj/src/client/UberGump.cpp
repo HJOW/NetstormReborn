@@ -189,6 +189,7 @@
 #include "o/RawBattleReconnect.h" // 저장 질문/서버 실패의 실제 같은 후보 선택 부모를 사용한다.
 #include "o/RawConnectionHealth.h" // 실제 프레임의 연결 활동/지연/자동 서버 이전을 같은 상태에 연결한다.
 #include "o/RawBattleResourceFrame.h"
+#include "o/RawCdBattleCompletion.h" // CD172BYTE Player 진단과 원문 inactive 관문이다.
 #include "o/RawBattleCompletion.h" //기존현재팀/flag판정과44ac30후반프레임을같은Player/State에연결한다. // Kernel 뒤 같은 장기 자원 전역의 프레임을 실행한다.
 #include "client/ClientConnectionActivityGlobals.h" // 수신과 프레임 감시가 같은22칸/기한/자동 이전 DWORD를 빌린다.
 #include "client/SavedStateFileRead.h" // 같은 startup reader를 실제 사용자 FILE/Player/Core에 연결한다.
@@ -1889,12 +1890,15 @@ void UberGump::PollBattleCompletion() {
     auto& game=*client_.GameplayGlobals();auto& local=*client_.LocalStateGlobals();auto& surface=*client_.SurfaceStorage();
     o::BattleCompletionHooks gate;gate.serverConnection=[this] { return client_.ConnectionGlobals()->Cleanup().transceivers[9]!=0; }; //4e2b10은open/LoggedIn이아닌현재객체존재다.
     gate.priestDead=[this](auto owner) { return client_.GameplayGlobals()->RequireSession().MissionPriestDead(owner); };gate.currentPlayers=[this] { return client_.PlayerRecords()->Records(); };
-    o::RawBattleCompletion completion({client_.PlayerRecords()->Records(),*missionOptions_,client_.PlayerRecords()->Alliances(),surface.ownerMode.battle,game.world.missionPost,game.Boss(),local.ScriptBreak(),local.LoginEnd()},std::move(gate));
+    o::BattleCompletionGlobals globals{client_.PlayerRecords()->Records(),*missionOptions_,client_.PlayerRecords()->Alliances(),surface.ownerMode.battle,game.world.missionPost,game.Boss(),local.ScriptBreak(),local.LoginEnd()}; // 판본에 맞는 실행기만 같은 현재 기록을 빌린다.
     o::BattleCompletionFrameHooks hooks;hooks.wallSeconds=[this] { return client_.WallSeconds(); };hooks.currentDialog=[this] { return rawButtons_->CurrentDialog(); };
     hooks.assertion=[storage=client_.SurfaceStorage()](auto expression,auto file,auto line) { storage->AssertDisplay(expression,file,line); };
     hooks.deleteSavedState=[this] { static_cast<void>(DeleteSavedStateFile(client_.GameDirectory(),client_.StaticStrings()->FileNames(),client_.UserSavedStateFile())); }; //같은실제사용자저장파일writer를재사용하며반환값을성공값으로합성하지않는다.
     hooks.rejectDraw=[this] { client_.GameplayGlobals()->RequireSession().RejectDraw(); };hooks.queueMainMenu=[this] { client_.Input().PushCommand(GameMenuCommandValue(0x00542a08U).value(),1,1); };
-    auto& aux=*game.GameAux();completion.Frame({client_.PlayerRecords()->Records(),game.Server(),local.State().phase[0],game.player.battleOwner,local.CaptureEnd(),aux.ScheduledDrawDeadline(),aux.BattleFinishFrames(),client_.WorldAudio().ResultState(),client_.Time().game},hooks);
+    auto& aux=*game.GameAux();
+    o::BattleCompletionFrameGlobals frame{client_.PlayerRecords()->Records(),game.Server(),local.State().phase[0],game.player.battleOwner,local.CaptureEnd(),aux.ScheduledDrawDeadline(),aux.BattleFinishFrames(),client_.WorldAudio().ResultState(),client_.Time().game}; // 장기 프레임/결과 필드의 현재 참조다.
+    if (client_.Edition()==o::OriginalEdition::Cd1072) o::RunCdBattleCompletionPrefix(globals,frame,gate,hooks);
+    else o::RawBattleCompletion(globals,std::move(gate)).Frame(frame,hooks);
 }
 void UberGump::PollBattleResources() {
     if (world_) { if (!world_->PreparingFort()) world_->Session().RunBattleResources();return; }auto& game=*client_.GameplayGlobals();auto& local=*client_.LocalStateGlobals();

@@ -8,7 +8,9 @@
 
 namespace netstorm::client {
 ClientPlayerRecords::ClientPlayerRecords(AllocationBytes allocationBytes)
-    :allocationBytes_(allocationBytes ? std::move(allocationBytes) : CurrentAllocationBytes) {} // 제품 기본은 현재 CRT 입력이다.
+    :ClientPlayerRecords(o::OriginalEdition::Patch1078,std::move(allocationBytes)) {} // 기존 독립 호출자는 같은 PATCH 판본을 유지한다.
+ClientPlayerRecords::ClientPlayerRecords(o::OriginalEdition edition,AllocationBytes allocationBytes)
+    :edition_(edition),allocationBytes_(allocationBytes ? std::move(allocationBytes) : CurrentAllocationBytes) {} // 제품 기본은 현재 CRT 입력이며 판본별 초기화가 실제 할당을 시작한다.
 ClientPlayerRecords::Use::Use(ClientPlayerRecords& records):records_(records) {
     if (records_.inUse_) throw std::logic_error("Player 고정뷰를 사용하는 이전 세션이 아직 살아 있음");records_.inUse_=true;
 } // 두 번째 세션은 기존 소비자의 물리를 변경하기 전에 실패한다.
@@ -31,7 +33,7 @@ void ClientPlayerRecords::Initialize(std::function<void(std::uint32_t,std::uint3
 void ClientPlayerRecords::InitializeBody(std::function<void(std::uint32_t,std::uint32_t)> alliance) {
     if (const auto core=core_.lock();core && core->Current().data() && base_) {
         const auto selected=reinterpret_cast<std::uintptr_t>(core->Current().data()),start=reinterpret_cast<std::uintptr_t>(Records().data());
-        if (selected>=start && selected-start<o::kInitializedPlayerBytes) throw std::logic_error("이전 Player 해제 전 실제 Core0 선택 필요"); // 현재 캐시의 사본을 만들거나 포인터를 조용히 지우지 않는다.
+        if (selected>=start && selected-start<PlayerBytes()) throw std::logic_error("이전 Player 해제 전 실제 Core0 선택 필요"); // 현재 캐시의 사본을 만들거나 포인터를 조용히 지우지 않는다.
     }
     initialized_=false;
     o::PlayerInitializationHooks hooks; // 복원된 부모가 직접 사용하는 실제 메모리 장치다.
@@ -39,7 +41,9 @@ void ClientPlayerRecords::InitializeBody(std::function<void(std::uint32_t,std::u
     hooks.freeFactory=[this](auto token) { Free(token,false); };hooks.freePlayers=[this](auto token) { Free(token,true); };
     hooks.mallocPlayers=[this](auto bytes) { return Allocate(bytes,true); };hooks.newFactory=[this](auto bytes) { return Allocate(bytes,false); };
     hooks.alliance=std::move(alliance);
-    o::InitializePlayerRecords({fortCount_,lastLoginPlayer_,[this] { return base_; },[this](auto base) { WriteBase(base); }},hooks);
+    const o::PlayerInitializationGlobals globals{fortCount_,lastLoginPlayer_,[this] { return base_; },[this](auto base) { WriteBase(base); }}; // 판본이 달라도 실제 base 슬롯과 카운터·할당 장치는 하나다.
+    if (edition_==o::OriginalEdition::Cd1072) o::InitializeCdPlayerRecords(globals,hooks);
+    else o::InitializePlayerRecords(globals,hooks);
     initialized_=true;
 }
 // 실제 주소의 host 표현만 갱신한다. 새로운 Core 선택/복사/known 쓰기는 하지 않는다.
@@ -50,6 +54,8 @@ void ClientPlayerRecords::BindCoreData(std::shared_ptr<ClientCoreDataGlobals> co
 }
 std::shared_ptr<ClientCoreDataGlobals> ClientPlayerRecords::BoundCoreData() const { return core_.lock(); } // 현재 연결된 같은 소유자를 조회한다.
 bool ClientPlayerRecords::Initialized() const { return initialized_; } // Native 정상 복귀 상태만 읽는다.
+std::uint32_t ClientPlayerRecords::Stride() const { return edition_==o::OriginalEdition::Cd1072 ? o::kCdInitializedPlayerStride:o::kInitializedPlayerStride; } // 원문 주소 산술도 같은 현재 판본을 사용한다.
+std::uint32_t ClientPlayerRecords::PlayerBytes() const { return Stride()*o::kInitializedPlayerCount; } // 다른 판본의 뒷부분을 같은 기록으로 공개하지 않는다.
 // 현재 owner 번호만 캡처한다. Player 주소/포인터/용량/개수는 호출마다 실제 기록에서 읽는다.
 void ClientPlayerRecords::Use::BindFactory(o::SquidPostPopList& list,std::uint32_t owner) {
     if (!initialized_ || owner>=o::kInitializedPlayerCount) throw std::logic_error("초기화되지 않은 Player factory 연결");
@@ -64,7 +70,7 @@ void ClientPlayerRecords::Use::ReuseOrBindFactory(o::SquidPostPopList& list,std:
 }
 // 실제 부모의 두 할당 크기만 받으며 factory의 미초기화 입력은 임의0으로 치환하지 않는다.
 std::uint32_t ClientPlayerRecords::Allocate(std::uint32_t bytes,bool player) {
-    if (bytes!=(player ? o::kInitializedPlayerBytes : o::kInitializedFactoryBytes)) throw std::logic_error("Player 실제 할당 크기 오류");
+    if (bytes!=(player ? PlayerBytes() : o::kInitializedFactoryBytes)) throw std::logic_error("Player 실제 할당 크기 오류");
     if (next_>std::numeric_limits<std::uint32_t>::max()-0x1000U) throw std::overflow_error("Player 물리 주소 소진");
     Block block{std::vector<std::uint32_t>(bytes/4),player}; // DWORD의 실제 수명을 시작하고 정확한 크기를 확보한다.
     if (!player) allocationBytes_({reinterpret_cast<std::uint8_t*>(block.words.data()),bytes});
@@ -82,7 +88,7 @@ std::span<std::uint8_t> ClientPlayerRecords::Memory(std::uint32_t address,std::u
     if (offset>available || bytes>available-offset) throw std::out_of_range("Player 물리 요청폭 범위 오류");
     return {reinterpret_cast<std::uint8_t*>(words.data())+static_cast<std::size_t>(offset),bytes};
 }
-std::span<std::uint8_t> ClientPlayerRecords::Records() { return base_ ? Memory(base_,o::kInitializedPlayerBytes) : std::span<std::uint8_t>{}; } // 현재 실제 base다.
+std::span<std::uint8_t> ClientPlayerRecords::Records() { return base_ ? Memory(base_,PlayerBytes()) : std::span<std::uint8_t>{}; } // 현재 판본의 실제 base와 전체 할당만 빌린다.
 std::span<const std::uint8_t> ClientPlayerRecords::Records() const { return const_cast<ClientPlayerRecords*>(this)->Records(); } // 같은 물리의 읽기뷰다.
 std::uint32_t ClientPlayerRecords::Base() const { return base_; } // 원문의 현재 슬롯을 읽는다.
 std::uint32_t& ClientPlayerRecords::FortCount() { return fortCount_; } // 같은 로그인 카운터다.
@@ -90,12 +96,12 @@ std::uint32_t& ClientPlayerRecords::LastLoginPlayer() { return lastLoginPlayer_;
 std::array<std::uint32_t,81>& ClientPlayerRecords::Alliances() { return alliances_; } // 사본 없는 방향별 표다.
 // 현재 Player base를 매번 조회하여 재할당 이전 행을 캡처하지 않는다.
 std::uint32_t ClientPlayerRecords::Read(std::uint32_t owner,std::uint32_t offset) {
-    if (owner>=o::kInitializedPlayerCount || offset>o::kInitializedPlayerStride-4) throw std::out_of_range("현재 Player DWORD 범위 오류");
-    const auto bytes=Memory(base_+owner*o::kInitializedPlayerStride+offset,4);std::uint32_t value{}; // 현재 little endian DWORD다.
+    if (owner>=o::kInitializedPlayerCount || offset>Stride()-4) throw std::out_of_range("현재 Player DWORD 범위 오류");
+    const auto bytes=Memory(base_+owner*Stride()+offset,4);std::uint32_t value{}; // 현재 판본 행의 little endian DWORD다.
     for (std::uint32_t byte=0;byte<4;++byte) value|=std::uint32_t(bytes[byte])<<(byte*8);return value; // 정확한4BYTE만 읽는다.
 }
 void ClientPlayerRecords::Write(std::uint32_t owner,std::uint32_t offset,std::uint32_t value) {
-    static_cast<void>(Read(owner,offset));const auto bytes=Memory(base_+owner*o::kInitializedPlayerStride+offset,4);
+    static_cast<void>(Read(owner,offset));const auto bytes=Memory(base_+owner*Stride()+offset,4);
     for (std::uint32_t byte=0;byte<4;++byte) bytes[byte]=static_cast<std::uint8_t>(value>>(byte*8)); // 같은 현재 DWORD를 쓴다.
 }
 // 배열 접근에 도달한 경우에만 실제 포인터/용량의 물리와 DWORD 정렬을 확인한다.

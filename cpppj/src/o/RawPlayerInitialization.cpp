@@ -50,4 +50,30 @@ void InitializePlayerRecords(const PlayerInitializationGlobals& globals,const Pl
         Need(hooks.alliance)(owner,currentMask);
     }
 }
+// CD는 첫 base를 캡처하고 각 free 복귀 뒤 현재 base를 다시 읽는다. PATCH 부모의 다른 재조회 위치를 섞지 않는다.
+void InitializeCdPlayerRecords(const PlayerInitializationGlobals& globals,const PlayerInitializationHooks& hooks) {
+    auto current=Need(globals.playerBase)(); // CD00406201의 최초 EAX이며 두 카운터 쓰기보다 먼저 읽는다.
+    globals.fortCount=0;globals.lastLoginPlayer=0;
+    if (current!=0) {
+        for (std::uint32_t owner=0;owner<kInitializedPlayerCount;++owner) { // 현재 EAX의 행을 반납하고 마지막 행까지 매 free 뒤 전역을 재조회한다.
+            const auto token=Read(hooks,current+owner*kCdInitializedPlayerStride); // CD004062e0이 전달된 행+0에서 읽는 실제 factory 주소다.
+            Need(hooks.freeFactory)(token); // CD004f1a50은 NULL 주소도 호출한다.
+            current=Need(globals.playerBase)(); // CD00406228의 실제 위치이며 마지막 조회는 freePlayers 인자로 이어진다.
+        }
+        Need(hooks.freePlayers)(current); // CD0048ef20은 마지막 freeFactory 뒤 읽은 현재 Player 배열을 반납한다.
+        Need(globals.writePlayerBase)(0);
+    }
+    const auto allocated=Need(hooks.mallocPlayers)(kCdInitializedPlayerBytes); // CD0048ef10(0x60c)의 실제 반환 주소이며 NULL도 원문 위치까지 보존한다.
+    Need(globals.writePlayerBase)(allocated);
+    for (std::uint32_t word=0;word<kCdInitializedPlayerBytes/4;++word) Write(hooks,allocated+word*4,0); // CD의 REP STOSD387개는 캡처한 malloc 주소에 순서대로 쓴다.
+    for (std::uint32_t owner=0;owner<kInitializedPlayerCount;++owner) { // CD00406269의 실제 현재 base로 각 행 주소를 한 번 캡처한다.
+        const auto offset=owner*kCdInitializedPlayerStride; // ESI의 현재0xac 간격 행 위치다.
+        const auto record=Need(globals.playerBase)()+offset; // CD004062b0의 ESI는 new가 현재 전역 base를 바꾸더라도 같은 행을 유지한다.
+        const auto factory=Need(hooks.newFactory)(kInitializedFactoryBytes); // CD004f1650(0x78)의 실제 opaque32 반환이며 할당 내용은 쓰지 않는다.
+        Write(hooks,record,factory);Write(hooks,record+4,30);Write(hooks,record+0x70,127);Write(hooks,record+8,0);Write(hooks,record+0x2c,0);
+        const auto mask=1U<<owner; // CD0040627c의 자기 동맹 마스크이며 Player+54 쓰기 뒤에도 같은 EDX를 동맹 인자로 넘긴다.
+        Write(hooks,Need(globals.playerBase)()+offset+0x54,mask);
+        Need(hooks.alliance)(owner,mask); // CD00406130의 실제 장치이며 +54를 다시 읽거나 동맹 성공값을 합성하지 않는다.
+    }
+}
 }

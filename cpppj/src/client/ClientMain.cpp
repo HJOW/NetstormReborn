@@ -240,7 +240,7 @@ Client::Client(ClientOptions options)
       connectionGlobals_(std::make_shared<ClientConnectionGlobals>(localStateGlobals_)),
       fortGlobals_(std::make_shared<ClientFortGlobals>()),
       coreDataGlobals_(std::make_shared<ClientCoreDataGlobals>()),
-      playerRecords_(std::make_shared<ClientPlayerRecords>()),
+      playerRecords_(std::make_shared<ClientPlayerRecords>(options_.edition)),
       gameplayGlobals_(std::make_shared<ClientGameplayGlobals>(subscriberGlobals_)),
       constructionGlobals_(std::make_shared<ClientConstructionGlobals>()),
       htmlWindowGlobals_(std::make_shared<ClientHtmlWindowGlobals>()),
@@ -380,7 +380,7 @@ int Client::Run() {
     // [원본] 설치 검사(GameInstalledTest)·zacket·프로토콜 검사는 아직 연결하지 않았다.
     *clock_ = o::GameClock(ClientMilliseconds()); // "init full time"(FUN_00461090)의 시작 시각.
     if (options_.edition==o::OriginalEdition::Patch1078) clock_->BindSynchronizationTicks(localStateGlobals_->GameTicks(),localStateGlobals_); // 같은 실제0055b4ac와 owner를 보유하여 외부 공유 시계가 Client보다 오래 남아도 주소 대여를 유지한다.
-    if (options_.edition==o::OriginalEdition::Patch1078) InitializeClientPlayerRecords(*this); //0043952c의 실제 초기화이며 그 다음00439537 ColorSort 입력보다 앞선다.
+    InitializeClientPlayerRecords(*this); // PATCH0043952c/CD00406200의 실제 판본별 Player 초기화이며 첫 메뉴 전에 같은 장기 기록을 구성한다.
     //00439537의초기ColorSort입력위치다.이캡처만으로미연결43b430검색/색띠전체를성공시킨것은아니다.
     colorSortInput_->CaptureWithPrimary(screen_->LogicalPalette());
     screen_->BindColorSortInput([owner=colorSortInput_] { return owner->Logical(); });

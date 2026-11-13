@@ -97,3 +97,23 @@ TEST_CASE(ClientPlayerRecords_NativeReuseRejectsForeignOwnerSlotAndIndependentDa
     ClientPlayerRecords first([](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{}); }),other([](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{}); });auto a=first.Acquire(),b=other.Acquire();OwnerInitialize(first,*a);OwnerInitialize(other,*b);SquidPostPopList list;a->ReuseOrBindFactory(list,2);list.Append(77);
     CHECK(PlayerOwnerThrows([&] { a->ReuseOrBindFactory(list,3); }));CHECK(PlayerOwnerThrows([&] { b->ReuseOrBindFactory(list,2); }));CHECK(list.Count()==1 && list.Items()[0]==77);SquidPostPopList independent{{55},1};CHECK(PlayerOwnerThrows([&] { a->ReuseOrBindFactory(independent,2); }) && independent.entries==std::vector<std::uint32_t>{55} && independent.count==1);
 }
+
+// CD의 실제1548BYTE와172BYTE 행을 같은 장기 목록이 재할당 뒤에도 현재 주소로 조회한다.
+TEST_CASE(ClientPlayerRecords_CdStorageFactoryAndReallocationUseActualStride) {
+    ClientPlayerRecords records(netstorm::o::OriginalEdition::Cd1072,[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0x59}); });
+    CHECK(records.Stride()==172 && records.Base()==0 && records.Records().empty());
+    auto use=records.Acquire();
+    const auto alliance=[&](auto owner,auto mask) { // 원문 초기화가 넘긴 실제 자기 mask와 같은 기록을 확인한다.
+        CHECK(mask==(1U<<owner) && records.Records().size()==1548);
+        CHECK(OwnerRead(records.Records(),owner*172+0x70)==127);
+    };
+    use->Initialize(alliance);
+    CHECK(records.Initialized() && records.Records().size()==1548);
+    SquidPostPopList list;use->BindFactory(list,8); // 마지막 CD 행의 실제+0/+4/+8을 빌려 PATCH 폭 접근을 검출한다.
+    CHECK(list.Capacity()==30 && list.Count()==0 && list.Storage()[0]==0x59595959U);
+    list.Append(51);CHECK(list.Items()[0]==51 && OwnerRead(records.Records(),8*172+8)==1);
+    const auto previous=records.Base();use.reset();
+    records.Initialize(alliance);
+    CHECK(records.Base()!=previous && records.Records().size()==1548 && list.Count()==0 && list.Capacity()==30);
+    list.Append(52);CHECK(list.Items()[0]==52 && OwnerRead(records.Records(),8*172+8)==1);
+}

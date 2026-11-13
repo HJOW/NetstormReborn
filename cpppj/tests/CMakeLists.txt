@@ -1403,6 +1403,11 @@ set_source_files_properties(MissionBattleOptionsTests.cpp PROPERTIES COMPILE_DEF
 add_executable(netstorm_mission_option_reset_tests FocusedTestMain.cpp MissionBattleOptionsTests.cpp)
 target_link_libraries(netstorm_mission_option_reset_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_mission_option_reset_tests)
+# CD Player의 순수 초기화·장기 소유자·메뉴 SID 진단을 비MP 이름 필터로 검증한다.
+add_executable(netstorm_cd_player_startup_tests FocusedTestMain.cpp PlayerInitializationTests.cpp ClientPlayerRecordsTests.cpp CdBattleCompletionTests.cpp)
+target_link_libraries(netstorm_cd_player_startup_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_cd_player_startup_tests)
+target_sources(netstorm_tests PRIVATE CdBattleCompletionTests.cpp)
 set_source_files_properties(ProductionDeckTests.cpp PROPERTIES COMPILE_DEFINITIONS
     "NETSTORM_PRODUCTION_DECK_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-deck-x86.tsv\";NETSTORM_PRODUCTION_REFRESH_FIXTURE=\"${CMAKE_CURRENT_SOURCE_DIR}/fixtures/production-refresh-x86.tsv\"")
 set_source_files_properties(FortImagePacketsTests.cpp PROPERTIES COMPILE_DEFINITIONS
