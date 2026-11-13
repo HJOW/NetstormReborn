@@ -19490,6 +19490,37 @@
         "cpppj/src/client/RawObjectHit.cpp": "912ca8ac9",
         "cpppj/src/client/RawObjectHit.h": "912ca8ac9"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E410",
+      "id": "gumpcreate",
+      "path": "cpppj/tests/fixtures/gumpcreate-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Gump 기본 생성4642c0·루트4663d0/명시 new 입력 경계",
+      "consumers": [
+        "webpj/tests/gump-create.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/gump-create.js"
+      ],
+      "doc": "docs/webpj-gump-create-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/GumpCreate.cpp",
+        "cpppj/src/client/GumpCreate.h"
+      ],
+      "scope": "originals315행의 전체160BYTE/1000DWORD 등록표·현재 전역·반환·할당 순서. CD/추가판 제외",
+      "text": true,
+      "sha256": "e8dfe04522654ba878d78a15bbb8fd0585979da00b508f0c70e93871cded0986",
+      "bytes": 2698793,
+      "lines": 946,
+      "fixtureCommit": "ec0e3e597",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpCreate.cpp": "ec0e3e597",
+        "cpppj/src/client/GumpCreate.h": "225f2322c"
+      }
     }
   ]
 }
