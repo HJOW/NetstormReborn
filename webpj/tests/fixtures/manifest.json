@@ -18675,7 +18675,7 @@
       "bytes": 171130,
       "lines": 721,
       "fixtureCommit": "d2300feaf",
-      "webCommit": "worktree",
+      "webCommit": "f73fbaf1e",
       "cpppjBasis": {
         "cpppj/src/client/RawRendererPrelude.cpp": "be33646d3",
         "cpppj/src/client/RawRendererPrelude.h": "be33646d3"
@@ -18708,7 +18708,7 @@
       "bytes": 121453,
       "lines": 696,
       "fixtureCommit": "b05073df6",
-      "webCommit": "worktree",
+      "webCommit": "f73fbaf1e",
       "cpppjBasis": {
         "cpppj/src/client/RawRendererClouds.cpp": "b05073df6",
         "cpppj/src/client/RawRendererClouds.h": "b05073df6"
@@ -18739,7 +18739,7 @@
       "bytes": 23248,
       "lines": 179,
       "fixtureCommit": "d3c970770",
-      "webCommit": "worktree",
+      "webCommit": "f73fbaf1e",
       "cpppjBasis": {
         "cpppj/src/client/RawCameraPresent.cpp": "d3c970770",
         "cpppj/src/client/RawCameraPresent.h": "d3c970770"
@@ -18759,6 +18759,72 @@
         "cpppj/src/client/RawCameraPresent.h"
       ],
       "scope": "카메라 Present 한계·목표 전체 178행"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E384",
+      "doc": "docs/webpj-renderer-diagnostics-20261113.md",
+      "sha256": "c6a42b0827f4db4bf256a8973d4bd78790661251dc4b3ce54f2c59f598dabe83",
+      "bytes": 643581,
+      "lines": 253,
+      "fixtureCommit": "7f903eba0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RendererDiagnostics.cpp": "7f903eba0",
+        "cpppj/src/client/RendererDiagnostics.h": "7f903eba0"
+      },
+      "id": "renderer-diagnostics",
+      "path": "cpppj/tests/fixtures/renderer-diagnostics-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: Renderer 후단 진단 Hash/Fire(모드 0·1)/Spot/Board 252행 — 입력 6열(종류·flag·fireMode·spot 채움 BYTE·거리표 채움 값·칸 크기 종류)로 만든 96×80 전체 표면(행 padding 100)·최종 clip·배경 쓰기·장치 호출 순서(Begin/Clip/Rect/Line/Lock/Unlock/Present/Assert). 여섯 합성 객체를 실제 네 단계 해시에 걸고 순회는 제품이 한다",
+      "consumers": [
+        "webpj/tests/raw-renderer-diagnostics.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-renderer-diagnostics.js",
+        "webpj/www/core/draw-water.js",
+        "webpj/www/core/raw-squid-finder.js",
+        "webpj/www/render/vfx-line.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RendererDiagnostics.cpp",
+        "cpppj/src/client/RendererDiagnostics.h"
+      ],
+      "scope": "후단 진단 네 가지 전체 표면 252행"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E384",
+      "doc": "docs/webpj-renderer-diagnostics-20261113.md",
+      "sha256": "fedba938ac7463ee59c647aae3026b217a5ee4d6050572aa1cb1d78b01223531",
+      "bytes": 26566,
+      "lines": 577,
+      "fixtureCommit": "7f903eba0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RendererDiagnostics.cpp": "7f903eba0",
+        "cpppj/src/client/RendererDiagnostics.h": "7f903eba0"
+      },
+      "id": "renderer-diagnostic-keys",
+      "path": "cpppj/tests/fixtures/renderer-diagnostic-keys-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: 진단 키 7/16/19(수식·outside 마스크 포함)와 정지/Console 상태의 DWORD 토글·redraw·Shift-P 좌표 로그 576행",
+      "consumers": [
+        "webpj/tests/raw-renderer-diagnostics.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-renderer-diagnostics.js",
+        "webpj/www/core/input-queue.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RendererDiagnostics.cpp",
+        "cpppj/src/client/RendererDiagnostics.h"
+      ],
+      "scope": "진단 키 분배 576행"
     }
   ]
 }
