@@ -18309,7 +18309,7 @@
       "bytes": 211742,
       "lines": 25,
       "fixtureCommit": "093e7512c",
-      "webCommit": "worktree",
+      "webCommit": "7d6c05ba6",
       "cpppjBasis": {
         "cpppj/src/client/PaletteColors.cpp": "e2821070e"
       },
@@ -18339,7 +18339,7 @@
       "bytes": 740991,
       "lines": 769,
       "fixtureCommit": "9c87075c8",
-      "webCommit": "worktree",
+      "webCommit": "7d6c05ba6",
       "cpppjBasis": {
         "cpppj/src/client/PaletteFlash.cpp": "51fbfaf83"
       },
@@ -18368,7 +18368,7 @@
       "bytes": 43923,
       "lines": 167,
       "fixtureCommit": "29bee739f",
-      "webCommit": "worktree",
+      "webCommit": "7d6c05ba6",
       "cpppjBasis": {
         "cpppj/src/client/ScreenPaletteApply.h": "29bee739f"
       },
@@ -18385,6 +18385,65 @@
         "cpppj/src/client/ScreenPaletteApply.h"
       ],
       "scope": "10.78 전용 166행 전부 사용"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E377",
+      "doc": "docs/webpj-vfx-ellipse-20261113.md",
+      "sha256": "ce77c06050a05b6e3fbe7412e9b219e64c7be7628c5f952c03f8cc8c264aa207",
+      "bytes": 1666638,
+      "lines": 271,
+      "fixtureCommit": "b8842f94b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/VFXEllipse.cpp": "b8842f94b"
+      },
+      "id": "vfx-ellipse",
+      "path": "cpppj/tests/fixtures/vfx-ellipse-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: VFX 타원 윤곽의 64×48 전체 8비트 화면(배경 199, 클립/중심/반경(음수 포함)/색 입력, EvilRay 음수 반경·두 정수 구간·퇴화 선·오프스크린·한 픽셀 pane)",
+      "consumers": [
+        "webpj/tests/vfx-ellipse.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/vfx-ellipse.js",
+        "webpj/www/render/vfx-line.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/VFXEllipse.cpp"
+      ],
+      "scope": "10.78 전용 270행 전부 사용"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E377",
+      "doc": "docs/webpj-vfx-ellipse-20261113.md",
+      "sha256": "81d16cc071f6ae3e759a60b1e46b4467289815db0275e1bbb0807fa5be899b87",
+      "bytes": 37139,
+      "lines": 505,
+      "fixtureCommit": "63f429322",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SpriteHitPointBar.cpp": "63f429322"
+      },
+      "id": "sprite-hit-point-bar",
+      "path": "cpppj/tests/fixtures/sprite-hit-point-bar-x86.tsv",
+      "producer": "cpppj 독립 x86 관측: 선택 체력 막대 내부 부모 구간의 색·현재/최대 HP·읽기 추적(H/M)·끝 HP·최대 HP getter 호출 수(두 판본, 입력은 최대 HP 자식·HP/색 변경 명시)",
+      "consumers": [
+        "webpj/tests/sprite-hit-point-bar.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/sprite-hit-point-bar.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/SpriteHitPointBar.cpp"
+      ],
+      "scope": "10.78(originals) 252행 사용, originalCD 252행은 범위 밖"
     }
   ]
 }
