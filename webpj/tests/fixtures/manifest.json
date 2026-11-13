@@ -487,10 +487,12 @@
       "required": false,
       "producer": "cpppj 원본 표시 비교(00497900)·CRT qsort x86 관측",
       "consumers": [
-        "webpj/tests/world-render.test.mjs"
+        "webpj/tests/world-render.test.mjs",
+        "webpj/tests/construction-visual-renderer.test.mjs"
       ],
       "modules": [
-        "webpj/www/render/draw-sort.js"
+        "webpj/www/render/draw-sort.js",
+        "webpj/www/render/construction-visual-renderer.js"
       ],
       "unit": "WB03-Z",
       "doc": "docs/webpj-world-render-20261102.md",
@@ -502,10 +504,10 @@
       "sha256": "4cf42c2dbc1f1e2ca93df8157c392fe9dc816e7634f839768282cb6039c7abd8",
       "bytes": 3643244,
       "lines": 1156,
-      "fixtureCommit": "687dd2cf",
-      "webCommit": "67aae862",
+      "fixtureCommit": "687dd2cf9",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/client/DrawSort.cpp": "225f2322"
+        "cpppj/src/client/DrawSort.cpp": "225f2322c"
       }
     },
     {
@@ -18550,7 +18552,7 @@
       "bytes": 43425,
       "lines": 77,
       "fixtureCommit": "48ff7bbea",
-      "webCommit": "worktree",
+      "webCommit": "31792ff4c",
       "cpppjBasis": {
         "cpppj/src/client/DrawWater.cpp": "c254e7716"
       },
@@ -18582,7 +18584,7 @@
       "bytes": 23723,
       "lines": 385,
       "fixtureCommit": "48ff7bbea",
-      "webCommit": "worktree",
+      "webCommit": "31792ff4c",
       "cpppjBasis": {
         "cpppj/src/client/DrawWater.cpp": "c254e7716"
       },
@@ -18611,7 +18613,7 @@
       "bytes": 666,
       "lines": 10,
       "fixtureCommit": "48ff7bbea",
-      "webCommit": "worktree",
+      "webCommit": "31792ff4c",
       "cpppjBasis": {
         "cpppj/src/client/DrawWater.cpp": "c254e7716"
       },
@@ -18629,6 +18631,38 @@
         "cpppj/src/client/DrawWater.cpp"
       ],
       "scope": "10.78 전용 9행 전부 사용(GameMenuCommands 전체 이름표 대신 drawWaterScriptCode)"
+    },
+    {
+      "id": "draw-submission",
+      "path": "cpppj/tests/fixtures/drawsubmission-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 독립 x86 관측: 상위 Renderer(004994b0)의 실제 병합/CRT 정렬/분배/정상 반환 — 네 수집기의 완성 입력 바이트와 묶음 저장소, 입력 옵션 여섯(case·dirty·정렬·묶음 숨김·debug), 수집기 호출 기록·병합 후/정렬 후 바이트·분배 기록·작업 배열 보호 바이트. 수집기·화면 출력은 명시 응답 경계. 웹은 originals(10.78) 322행만 읽고 originalCD·original1037 행은 읽지 않는다",
+      "consumers": [
+        "webpj/tests/draw-submission.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/draw-submission.js",
+        "webpj/www/render/draw-sort.js"
+      ],
+      "unit": "WB04-E382",
+      "doc": "docs/webpj-draw-submission-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/DrawSubmission.cpp",
+        "cpppj/src/client/DrawSubmission.h"
+      ],
+      "scope": "표시 목록 병합·kind 0~4 분배·작업 배열 보호 바이트 전체(10.78 322행)",
+      "text": true,
+      "sha256": "cbb90df57240451f23a4e596ba36d61fbf8e072ee946e7ae520b2ad73968146f",
+      "bytes": 4811036,
+      "lines": 967,
+      "fixtureCommit": "6014cc9e0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/DrawSubmission.cpp": "f2a9f8880",
+        "cpppj/src/client/DrawSubmission.h": "225f2322c"
+      }
     }
   ]
 }
