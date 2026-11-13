@@ -18838,24 +18838,27 @@
         "webpj/tests/preview-collection.test.mjs"
       ],
       "modules": [
-        "webpj/www/render/preview-collection.js"
+        "webpj/www/render/preview-collection.js",
+        "webpj/www/render/cursor-preview-source.js"
       ],
       "unit": "WB04-E386",
-      "doc": "docs/webpj-preview-collection-20261113.md",
+      "doc": "docs/webpj-cursor-preview-binding-20261114.md",
       "cpppjSources": [
         "cpppj/src/client/PreviewCollection.cpp",
-        "cpppj/src/client/PreviewCollection.h"
+        "cpppj/src/client/PreviewCollection.h",
+        "cpppj/src/client/CursorPreviewSource.h"
       ],
-      "scope": "미리보기 수집 520행(독립 상태 경로; 실제 커서 전역 공유 재생은 커서 전역 단위에서)",
+      "scope": "미리보기 수집 520행(독립 상태 경로; 실제 커서 전역 공유 재생은 커서 전역 단위에서); E404 같은 원문 입력의 실제 공유 커서 참조 경로와 현재값/수명 계약도 대조",
       "text": true,
       "sha256": "9901a90d6354dc93b302c83ad6aa84cb8fb6a8d4ec032dc285133b95fe4d2a82",
       "bytes": 3986319,
       "lines": 1561,
       "fixtureCommit": "ed06e9f17",
-      "webCommit": "865b55aa8",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/client/PreviewCollection.cpp": "76e3c4531",
-        "cpppj/src/client/PreviewCollection.h": "c7e9e8b37"
+        "cpppj/src/client/PreviewCollection.h": "c7e9e8b37",
+        "cpppj/src/client/CursorPreviewSource.h": "c13543855"
       }
     },
     {
@@ -18869,24 +18872,27 @@
         "webpj/tests/preview-draw.test.mjs"
       ],
       "modules": [
-        "webpj/www/render/preview-draw.js"
+        "webpj/www/render/preview-draw.js",
+        "webpj/www/render/cursor-preview-source.js"
       ],
       "unit": "WB04-E387",
-      "doc": "docs/webpj-preview-draw-20261113.md",
+      "doc": "docs/webpj-cursor-preview-binding-20261114.md",
       "cpppjSources": [
         "cpppj/src/client/PreviewDraw.cpp",
-        "cpppj/src/client/PreviewDraw.h"
+        "cpppj/src/client/PreviewDraw.h",
+        "cpppj/src/client/CursorPreviewSource.h"
       ],
-      "scope": "미리보기 Draw 명령열 477행(독립 상태 경로; 실제 커서 전역 공유 재생은 커서 전역 단위에서)",
+      "scope": "미리보기 Draw 명령열 477행(독립 상태 경로; 실제 커서 전역 공유 재생은 커서 전역 단위에서); E404 같은 원문 입력의 실제 공유 커서 참조 경로와 현재값/수명 계약도 대조",
       "text": true,
       "sha256": "af2d5785a97c63ad38ecd8dd95c8040dfab46c813424fe906a17209f9e7ccb12",
       "bytes": 969171,
       "lines": 1432,
       "fixtureCommit": "646ca213e",
-      "webCommit": "6a412abed",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/client/PreviewDraw.cpp": "0dbfd0c8f",
-        "cpppj/src/client/PreviewDraw.h": "0dbfd0c8f"
+        "cpppj/src/client/PreviewDraw.h": "0dbfd0c8f",
+        "cpppj/src/client/CursorPreviewSource.h": "c13543855"
       }
     },
     {
@@ -19385,7 +19391,7 @@
       "bytes": 631699,
       "lines": 523,
       "fixtureCommit": "db8969da1",
-      "webCommit": "worktree",
+      "webCommit": "1e28ca2bf",
       "cpppjBasis": {
         "cpppj/src/client/RawCursorPreviews.cpp": "46e65408f",
         "cpppj/src/client/RawCursorPreviews.h": "76e3c4531"

@@ -2,9 +2,10 @@
 //  - 관측 한 행 = 실제 미리보기 기계어의 완성 입력 한 건이다: 상태 21값(잠금·조각 개수·표면/섬 비트·zOrder·부모 Gump·부모 깊이 반환·배치 가능·배치 좌표·받침 타입 A/B·SP offset 둘·시각·강조·카운트다운·SP 조회·로컬 소유자·첫 풀·첫 순열·SP 반환),
 //    한도, 클립 전 영역 네 float, 조각 목록, 희소 spot, 완성 raw 슬롯(50바이트 전체). 기대는 반환 수·작업 칸 64개 전체 바이트·강조 시각·카운트다운·SP getter 진입 횟수·작업 배열 앞뒤 0xa5 보호 항목이며 기대 쌍/깊이는 계산하지 않는다.
 //    풀과 spot 은 수집 전후 바이트가 같아야 하고 두 레이어의 토큰은 `object()` 가 같은 풀 SID 로 되돌린다. original1037·originalCD 행(각 520)은 웹 범위 밖(10.78 전용)이라 읽지 않는다.
-//  - cpppj 시험 이식: `PreviewCollection_PairLimitAndPartialWrites`(soft 쌍 제한·실패 후보의 14바이트 부분 기록·실제 span 넘침 방지). 실제 커서 전역에 묶는 `PreviewCollection_PatchNativeSharedCursor`·`bindCursor`는 커서 전역(K 영역) 단위가 옮겨진 뒤 건다.
+//  - cpppj 시험 이식: `PreviewCollection_PairLimitAndPartialWrites`(soft 쌍 제한·실패 후보의 14바이트 부분 기록·실제 span 넘침 방지). 실제 커서 전역520행·SP 재진입/계약 시험도 함께 대조한다(WB04-E404).
 //  - 웹 계약: 토큰 범위/풀 검증, `object()` 거부 조건, 훅 우선(`now`·SP offset·첫 풀/순열)과 state 독립 값, SP 저장소 훅 연결(초기화 전 거부), 공통 수집기 묶음 연결, spot 좌표의 float 상수와 64비트 절삭(비유한은 0).
 // 실제 게임·브라우저 실행이 아니다. (2026-11-13 WB04-E386)
+import { CursorPreviewBindingScene } from './cursor-preview-binding-support.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
@@ -23,7 +24,7 @@ const hex = (bytes) => Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLen
 const bitsFloat = (bits) => { const view = new DataView(new ArrayBuffer(4)); view.setUint32(0, bits >>> 0, true); return view.getFloat32(0, true); };
 
 // 한 관측 행을 재생하고 불일치 설명 목록을 돌려준다. (2026-11-13 WB04-E386)
-function replay(pool, row) {
+function replay(pool, row, shared = false) {
     const fields = row[2].split(',');
     const v = fields.slice(0, 21).map((field) => Number(field) >>> 0);
     const state = new PreviewCollectionState({
@@ -50,6 +51,7 @@ function replay(pool, row) {
     const owners = [];
     const hooks = { gumpDepth: (token) => { assert.equal(token, v[4]); return v[5]; }, readSp: (owner) => { owners.push(owner); return v[20]; } };
     const collector = new PreviewCollection(pool, types, spots, state, hooks, PREVIEW_POOL);
+    if (shared) { const actual = new CursorPreviewBindingScene(); actual.collection(state); collector.bindCursor(actual.source(pool)); state.lockDepth = 1; state.type = 0xffffffff; state.pieceCount = 0; state.pieces = []; }
     const guarded = new Uint8Array((CAPACITY + 2) * ENTRY).fill(0xa5);
     const work = guarded.subarray(ENTRY, ENTRY + CAPACITY * ENTRY);
     const limit = Number(fields[21]) | 0;
@@ -325,4 +327,26 @@ test('커서 미리보기 수집기 계약: 쌍 제출 직전·직후 현재 값
     const target = run(() => {});
     bindPreviewCollection(bound, new PreviewCollection(target.pool, target.types, target.spots, target.state, {}, 0));
     assert.equal(bound.preview({}, new Uint8Array(ENTRY * 2), 1), 2);
+});
+
+// 같은 원문 입력을 실제30DWORD와 별도 표시 판정에 공급한다. 독립 중복값은 반대로 둔다. (2026-11-14 WB04-E404)
+test('PreviewCollection_PatchNativeSharedCursor: 실제 커서 전역의520행이 독립 상태와 같은 원본 바이트/피드백을 낸다', { skip: rows === null }, () => {
+    const originals = rows.filter((row) => row[0] === 'originals'); assert.equal(originals.length, 520); const pool = new SidPool(24000, { server: false });
+    // 기대 출력은 기존 원본 관측에서만 읽는다.
+    for (const row of originals) assert.deepEqual(replay(pool, row, true), [], row[1]);
+});
+
+// 실제 SP 재진입 뒤 현재 목록/count와 저장한 위치/깊이를 구별한다. (2026-11-14 WB04-E404)
+test('PreviewCollection_SharedCursorCurrentReadsAndContracts: SP가 바꾼 현재SID·개수와 다른 풀/판본 계약을 지킨다', () => {
+    const w = scene(); w.place(6, 1, -10, -30); w.state.pieces.push(6); w.state.pieceCount = 2; w.state.querySp = 1; w.state.countdown = 1;
+    const actual = new CursorPreviewBindingScene(); actual.collection(w.state);
+    const hooks = { readSp: (owner) => { assert.equal(owner, actual.drop.localPlayer); actual.lifecycle.previews[0] = 6; actual.lifecycle.previewCount = 1; w.place(5, 1, 70, 80); w.types[1].zOrder = 100; return floatToBits(0); } };
+    const collector = new PreviewCollection(w.pool, w.types, w.spots, w.state, hooks); collector.bindCursor(actual.source(w.pool)); w.state.lockDepth = 1;
+    const work = new Uint8Array(ENTRY * 8); assert.equal(collector.collect({}, work, 8), 2); const view = new DataView(work.buffer);
+    assert.deepEqual([view.getUint32(8, true), view.getUint32(ENTRY + 8, true)], [250, 300]);
+    assert.deepEqual([view.getFloat32(ENTRY, true), view.getFloat32(ENTRY + 4, true), view.getInt16(12, true), view.getInt16(ENTRY + 12, true)], [20, 25, 7, 6]);
+    assert.equal(actual.drop.legal, 0); assert.equal(actual.placement.placementAllowed, 1);
+    assert.throws(() => collector.bindCursor(actual.source(new SidPool(24000))), /pool\/edition/);
+    const cd = { edition: 'cd1072', capacity: 24000 }; const cdCollector = new PreviewCollection(cd, w.types, w.spots, w.state);
+    assert.throws(() => cdCollector.bindCursor(actual.source(cd)), /pool\/edition/);
 });

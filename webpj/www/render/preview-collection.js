@@ -9,8 +9,9 @@
 //    첫 SP 풀이 없거나 첫 순열 WORD 가 −1 이면 강조 시각을 현재 시각으로 쓴다. 각 값은 hooks 가 있으면 매번 현재 값을, 없으면 state 의 독립 값을 읽는다.
 //  - object(token): 대리 토큰을 같은 풀의 SID 로 되돌린다(tokenBase 미만·0·stride 배수 아님·용량 밖은 거부). makePreviewSpHooks(store, hooks): 초기화를 끝낸 분산 SP 저장소의 읽기를 `readSp` 로 연결한다.
 //    bindPreviewCollection(hooks, collector): 공통 수집기 묶음의 `preview` 를 이 수집기로 연결한다.
-// 항목은 16바이트(x·y·token·depth·kind·tail) `Uint8Array`이며 state 는 원본 전역의 현재 값(`PreviewCollectionState`)이다. 커서 전역(`CursorPreviewSource`)에 직접 묶는 `bindCursor` 는 커서 전역 단위(K 영역)가 옮겨진 뒤 잇는다.
+// 항목은16바이트 Uint8Array다. bindCursor(source)는 같은 실제 커서 전역을 빌려 출력/SP 재진입 뒤 현재 목록/개수를 읽는다. 표시 피드백은 기존 state에 유지한다. (2026-11-14 WB04-E404)
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-13 WB04-E386: 5-A 타입별 Draw·미리보기 첫 단위로 추가, 기준선 뒤 cpppj 변경 없음)
+import { captureCursorPreviewSource, cursorPreviewCollectionInput } from './cursor-preview-source.js';
 import { RENDER_ENTRY_BYTES } from '../core/raw-render-collection.js';
 
 // 원본 배치 칸의 +0.9999 단정도 상수(0x3f7ff972)와 SP 강조 기준, TYPE flags2 의 표면/섬 우선 비트이다. (2026-11-13 WB04-E386)
@@ -87,6 +88,8 @@ export class PreviewCollection {
     #state;
     #hooks;
     #tokenBase;
+    // 현재 실제 커서 참조 묶음이며 독립 피드백 state와 분리한다. (2026-11-14 WB04-E404)
+    #cursor = null;
 
     // spot 표 크기(65536)와 토큰 범위를 생성 때 검증한다. (2026-11-13 WB04-E386)
     constructor(pool, types, spots, state, hooks = {}, tokenBase = 0) {
@@ -99,6 +102,9 @@ export class PreviewCollection {
         this.#hooks = hooks;
         this.#tokenBase = tokenBase >>> 0;
     }
+
+    // 같은 PATCH 풀의 실제 전역만 빌린다. 연결 뒤 외부 묶음의 참조 교체는 따르지 않는다. (2026-11-14 WB04-E404)
+    bindCursor(source) { this.#cursor = captureCursorPreviewSource(this.#pool, source, 'Preview collection'); }
 
     // 패치판의 offset/카운터/SP float/첫 포인터·순열 검사 순서로 표시 시각(highlight)을 갱신한다. (2026-11-13 WB04-E386)
     #patchFeedback(owner) {
@@ -123,7 +129,7 @@ export class PreviewCollection {
 
     // 원본은 view 인수를 읽지 않는다. 배치 판정 실패의 부분 쓰기와 성공 쌍의 원래 깊이를 구분한다. 반환은 쓴 항목 수이다. (2026-11-13 WB04-E386)
     collect(view, output, limit) {
-        const state = this.#state;
+        const state = this.#cursor ? cursorPreviewCollectionInput(this.#cursor) : this.#state;
         const pool = this.#pool;
         const capacity = Math.floor(output.length / RENDER_ENTRY_BYTES);
         const data = new DataView(output.buffer, output.byteOffset, output.byteLength);

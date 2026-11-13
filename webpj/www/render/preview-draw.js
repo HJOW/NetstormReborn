@@ -9,9 +9,11 @@
 //  - makePreviewAssetShapes(assets, priceType, price): 원본 타입 번호를 `GameAssets` 의 SHP 블록으로 연결하고 비용 그림 타입만 별도 바인딩으로 돌려준다.
 //  - PreviewPixelTarget: 현재 8비트 출력 표면에서 실제 SHP 투명/색 표/격자·윤곽을 즉시 합성한다. 표면·clip 을 먼저 검증하고(오른쪽/아래 제외) 색 문맥은 이후 현재 색 그림에만 쓰며 원색 그림은 항상 원색이다.
 //    체크 무늬는 절대 좌표 위상 `(x ^ y) & 1`(오른쪽/아래 모서리 제외), 윤곽은 모서리 선 네 개(폭/높이 0 도 전달, 잘린 면에 새 선을 만들지 않음)이다. text 는 기존 번역/글꼴 계층에 연결한다.
-// 실제 커서 전역(`CursorPreviewSource`)에 묶는 `bindCursor`, 비용 그림 토큰을 `CursorLifecycleState` 에서 읽는 `makeCursorPreviewAssetShapes` 와 `PreviewDraw_PatchNativeSharedCursor` 등은 커서 전역(K 영역) 단위가 옮겨진 뒤 잇는다.
+// bindCursor(source)는 실제 표시 판정·배치 격자·목록/측정값을 빌리고 makeCursorPreviewAssetShapes는 현재 비용 그림 토큰을 매번 읽는다. (2026-11-14 WB04-E404)
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-13 WB04-E387: 5-A 타입별 Draw·미리보기로 추가, 기준선 뒤 cpppj 변경 없음)
 import { clipRect, drawIndexedImage } from './indexed-surface.js';
+import { GameAssets } from '../assets/game-assets.js';
+import { captureCursorPreviewSource, cursorPreviewCollectionInput, cursorPreviewDrawInput } from './cursor-preview-source.js';
 import { FIRST_ASSET_TYPE_NUMBER } from '../assets/type-table.js';
 
 // 표 선택(원본 전역 VFX 문맥)과 한 그림에만 적용하는 모드이다. (2026-11-13 WB04-E387)
@@ -109,6 +111,8 @@ export class PreviewDraw {
     #state;
     #hooks;
     #tokenBase;
+    // 현재 실제 커서 참조 묶음이다. (2026-11-14 WB04-E404)
+    #cursor = null;
 
     // 실제 저장소가 같은 범위의 raw 토큰과 타입 표를 쓰도록 검증한다. (2026-11-13 WB04-E387)
     constructor(pool, types, collection, state, hooks = {}, tokenBase = 0) {
@@ -121,6 +125,9 @@ export class PreviewDraw {
         this.#tokenBase = tokenBase >>> 0;
     }
 
+    // 같은 PATCH 풀의 실제 커서/격자를 참조한다. 독립 상태는 연결 뒤 커서 값을 덮지 않는다. (2026-11-14 WB04-E404)
+    bindCursor(source) { this.#cursor = captureCursorPreviewSource(this.#pool, source, 'Preview Draw'); }
+
     // 본체와 보조의 공통 화면 WORD/footprint 를 먼저 저장하고 출력 분기를 나눈다. entry 는 16바이트 Uint8Array 이다. (2026-11-13 WB04-E387)
     draw(entry) {
         const token = new DataView(entry.buffer, entry.byteOffset, entry.byteLength).getUint32(ENTRY_TOKEN, true);
@@ -132,8 +139,8 @@ export class PreviewDraw {
         const type = raw[10];
         if (type >= this.#types.length) throw new RangeError('Preview Draw type');
         const record = this.#types[type];
-        const c = this.#collection;
-        const s = this.#state;
+        const c = this.#cursor ? cursorPreviewCollectionInput(this.#cursor) : this.#collection;
+        const s = this.#cursor ? cursorPreviewDrawInput(this.#cursor, this.#state) : this.#state;
         const hooks = this.#hooks;
         // 출력 경계가 바꾼 값은 다음 원본 접근에서 참조를 통해 다시 읽는다.
         const x = sub((readField(raw, 22, 2) << 16) >> 16, s.cameraX);
@@ -236,6 +243,18 @@ export function makePreviewAssetShapes(assets, priceType, price) {
         const types = assets.types();
         if (type < FIRST_ASSET_TYPE_NUMBER || type - FIRST_ASSET_TYPE_NUMBER >= types.length) throw new RangeError('Preview Draw asset type');
         return { database: assets.shapes, block: types[type - FIRST_ASSET_TYPE_NUMBER].block };
+    };
+}
+
+// Take가 얻은 현재 비용 이미지 토큰으로 SHP 블록을 고른다. GameAssets 생성자의10.78 크기 계약을 사용한다. (2026-11-14 WB04-E404)
+export function makeCursorPreviewAssetShapes(assets, priceType, lifecycle) {
+    if (!(assets instanceof GameAssets)) throw new TypeError('Preview cursor asset edition');
+    const ordinary = makePreviewAssetShapes(assets, priceType, null);
+    return (type) => {
+        if ((type >>> 0) !== (priceType >>> 0)) return ordinary(type);
+        const token = lifecycle.costImage >>> 0;
+        if (!token || token > assets.shapes.blocks.length) throw new RangeError('Preview cursor cost image');
+        return { database: assets.shapes, block: token - 1 };
     };
 }
 

@@ -3,8 +3,10 @@
 //    M(색 문맥 선택), S(그림: 타입·프레임·위치·모드(0 원색·3 불법 표·그 밖은 직전 색 문맥)), R(사각형: 체크 무늬 여부·좌표·색), T(문구 번호·위치). 픽셀/글꼴/번역만 경계이다. raw 슬롯은 Draw 전후 같아야 한다.
 //    original1037·originalCD 행(각 477)은 웹 범위 밖(10.78 전용)이라 읽지 않는다.
 //  - 이식한 cpppj 시험: PreviewDraw_PatchNative·CommonCollectionDispatch(실제 수집→CRT 정렬→kind 4 분배→VFX 픽셀)·PixelsColorsTransparencyClip·PixelsCheckerAndOutline·Contracts·CurrentStateAfterGrid.
-//    실제 커서 전역에 묶는 `PatchNativeSharedCursor`·`SharedCursorCurrentReadsAndContracts`·`CurrentCursorProtectedAssetBinding` 은 커서 전역(K 영역) 단위가 옮겨진 뒤 건다. `makePreviewAssetShapes` 는 실제 자산으로 따로 확인한다.
+//    실제 커서 전역의477행·현재값/계약·비용 자산 시험도 함께 대조한다(WB04-E404). `makePreviewAssetShapes` 는 실제 자산으로 따로 확인한다.
 // 실제 게임·브라우저 실행이 아니다. (2026-11-13 WB04-E387)
+import { CursorPreviewBindingScene } from './cursor-preview-binding-support.mjs';
+import { bindCursorLifecycleAssets } from '../www/core/raw-cursor-lifecycle.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
@@ -16,7 +18,7 @@ import { ShapeDatabase } from '../www/assets/shapes.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { collectDrawEntries, dispatchDrawEntries, sortRenderEntries } from '../www/render/draw-submission.js';
 import { PreviewCollection, PreviewCollectionState, bindPreviewCollection } from '../www/render/preview-collection.js';
-import { PreviewColors, PreviewDraw, PreviewDrawState, PreviewPixelTarget, PreviewShapeMode, bindPreviewDraw, makePreviewAssetShapes } from '../www/render/preview-draw.js';
+import { PreviewColors, PreviewDraw, PreviewDrawState, PreviewPixelTarget, PreviewShapeMode, bindPreviewDraw, makePreviewAssetShapes, makeCursorPreviewAssetShapes } from '../www/render/preview-draw.js';
 
 // 원본 관측 행이다. 없으면 해당 검사를 건너뛴다. (2026-11-13 WB04-E387)
 const rows = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'previewdraw-x86.tsv'));
@@ -35,7 +37,7 @@ function entry(token, tail, kind = 4) {
 const throwsOf = (action) => { try { action(); } catch { return true; } return false; };
 
 // 한 관측 행을 재생해 호출 순서와 raw 보존 여부를 돌려준다. (2026-11-13 WB04-E387)
-function replay(pool, row) {
+function replay(pool, row, shared = false) {
     const v = row[2].split(',').map(Number);
     const c = new PreviewCollectionState({ parentGump: v[0], legal: v[1], localPlayer: v[8] });
     const s = new PreviewDrawState({
@@ -74,7 +76,9 @@ function replay(pool, row) {
         rectangle: (rect, color, checker) => { events.push(`R,${checker ? 1 : 0},${u(rect.left)},${u(rect.top)},${u(rect.right)},${u(rect.bottom)},${u(color)}`); },
         text: (request) => { events.push(`T,${u(request.index)},${u(request.position.x)},${u(request.position.y)}`); },
     };
-    new PreviewDraw(pool, types, c, s, hooks, TOKEN_BASE).draw(entry(0x16000200, v[34]));
+    const draw = new PreviewDraw(pool, types, c, s, hooks, TOKEN_BASE);
+    if (shared) { const actual = new CursorPreviewBindingScene(); actual.drawing(c, s); draw.bindCursor(actual.source(pool)); c.parentGump = 0xffffffff; c.legal = actual.placement.placementAllowed ? 0 : 1; c.localPlayer = 0xffffffff; }
+    draw.draw(entry(0x16000200, v[34]));
     return { observed: events.length ? events.join(';') : '-', same: Buffer.compare(before, raw) === 0 };
 }
 
@@ -117,7 +121,8 @@ function pixelShape() {
     return new ShapeDatabase(bytes);
 }
 
-test('커서 미리보기 그리기: 실제 수집→CRT 정렬→kind 4 분배→VFX 픽셀이 한 흐름으로 이어지고 본체/보조 레이어가 차례로 그려진다(PreviewDraw_CommonCollectionDispatch)', () => {
+// 독립/공유 커서 양쪽이 같은 실제 수집·정렬·분배·픽셀 사슬을 지난다. (2026-11-14 WB04-E404)
+function commonCollectionDispatch(shared) {
     const w = scene();
     w.c.parentGump = 1;
     const spots = new Uint8Array(65536);
@@ -126,6 +131,7 @@ test('커서 미리보기 그리기: 실제 수집→CRT 정렬→kind 4 분배�
     const target = new PreviewPixelTarget(pixels, 8, 8, { left: 0, top: 0, right: 8, bottom: 8 }, () => ({ database: shapes, block: 0 }), null, null);
     const collector = new PreviewCollection(w.pool, w.types, spots, w.c, { gumpDepth: () => 16 }, TOKEN_BASE);
     const draw = new PreviewDraw(w.pool, w.types, w.c, w.s, target.hooks(), TOKEN_BASE);
+    if (shared) { const actual = new CursorPreviewBindingScene(); actual.drawing(w.c, w.s); collector.bindCursor(actual.source(w.pool)); draw.bindCursor(actual.source(w.pool)); w.c.pieceCount = 0; w.c.parentGump = 0; w.c.legal = 0; }
     const collection = {};
     bindPreviewCollection(collection, collector);
     const dispatch = {};
@@ -140,7 +146,9 @@ test('커서 미리보기 그리기: 실제 수집→CRT 정렬→kind 4 분배�
     dispatchDrawEntries(entries, {}, dispatch);
     // 투명 칸은 배경 9 그대로, 이어서 색 0 과 255 가 위치(4,4)부터 놓인다.
     assert.deepEqual([pixels[4 * 8 + 4], pixels[4 * 8 + 5], pixels[4 * 8 + 6]], [9, 0, 255]);
-});
+}
+
+test('PreviewDraw_CommonCollectionDispatch: 독립/공유 커서가 같은 수집→CRT→분배→VFX 픽셀을 낸다', () => { commonCollectionDispatch(false); commonCollectionDispatch(true); });
 
 test('커서 미리보기 그리기: 실제 압축 해제의 투명/원색/현재 색/명시 불법 표와 클립을 지킨다(PreviewDraw_PixelsColorsTransparencyClip)', () => {
     const shapes = pixelShape();
@@ -532,4 +540,37 @@ test('커서 미리보기 그리기 계약: 방향 글자 경계 — 0x60 은 �
     const frames = [];
     new PreviewDraw(w.pool, w.types, w.c, w.s, { setColors: () => {}, shape: (r) => { frames.push(r.frame); }, rectangle: () => {}, text: () => {} }, TOKEN_BASE).draw(entry(0x16000200, 2));
     assert.deepEqual(frames, [0x60, 0x60]);
+});
+
+// 같은477개 원문 입력을 실제 커서 참조에 공급한다. (2026-11-14 WB04-E404)
+test('PreviewDraw_PatchNativeSharedCursor: 별도 표시 판정·실제 격자·현재 치수/문구의477행이 원본과 같다', { skip: rows === null }, () => {
+    const originals = rows.filter((row) => row[0] === 'originals'); assert.equal(originals.length, 477); const pool = new SidPool(24000, { server: false });
+    // 원본 호출 명령과 raw 보존을 그대로 대조한다.
+    for (const row of originals) { const { observed, same } = replay(pool, row, true); assert.equal(observed, row[5], row[1]); assert.ok(same, row[1]); }
+});
+
+// 출력 경계 뒤 실제 부모/격자/허용/선택/소유자를 현재 참조에서 다시 읽는다. (2026-11-14 WB04-E404)
+test('PreviewDraw_SharedCursorCurrentReadsAndContracts: 격자·부모 변경과 본체 색 선택의 현재값·풀 계약을 지킨다', () => {
+    const w = scene(); w.c.legal = 0; w.s.noOutlineType = 90; w.s.gridOption = 1; w.s.flags = 0x40; w.s.grid.fill(1);
+    const actual = new CursorPreviewBindingScene(); actual.drawing(w.c, w.s); let rectangles = 0; let texts = 0; let shapes = 0;
+    const hooks = { rectangle: (rect, color, checker) => { assert.ok(checker); rectangles += 1; actual.lifecycle.currentGump = 1; actual.pipeline.preview.blocked.fill(0); }, text: () => { texts += 1; }, shape: () => { shapes += 1; } };
+    const draw = new PreviewDraw(w.pool, w.types, w.c, w.s, hooks, TOKEN_BASE); draw.bindCursor(actual.source(w.pool)); draw.draw(entry(0x16000200, 2));
+    assert.deepEqual([rectangles, texts, shapes], [1, 0, 0]); actual.lifecycle.currentGump = 0; actual.placement.placementAllowed = 1; actual.drop.legal = 0; w.s.ownerMaps[70] = true;
+    hooks.rectangle = (rect, color, checker) => { assert.equal(checker, false); actual.placement.placementAllowed = 0; actual.drop.type = actual.surfaces.bridgeType; actual.drop.localPlayer = 3; };
+    hooks.setColors = (r) => { assert.deepEqual([r.colors, r.owner], [PreviewColors.destroy, 3]); actual.drop.localPlayer = 4; };
+    hooks.shape = (r) => { shapes += 1; assert.equal(r.mode, PreviewShapeMode.currentColors); assert.equal(actual.drop.localPlayer, 4); };
+    const changing = new PreviewDraw(w.pool, w.types, w.c, w.s, hooks, TOKEN_BASE); changing.bindCursor(actual.source(w.pool)); changing.draw(entry(0x16000200, 0)); assert.equal(shapes, 1);
+    assert.throws(() => changing.bindCursor(actual.source(new SidPool(24000))), /pool\/edition/);
+    const cd = { edition: 'cd1072', capacity: 24000 }; const cdDraw = new PreviewDraw(cd, w.types, w.c, w.s);
+    assert.throws(() => cdDraw.bindCursor(actual.source(cd)), /pool\/edition/);
+});
+
+// 실제 Take 자산 경계의 비용 토큰을 변경한 뒤에도 낡은 블록을 재사용하지 않는다. (2026-11-14 WB04-E404)
+test('PreviewDraw_CurrentCursorProtectedAssetBinding: 실제 비용SHP 토큰과 일반 타입·0/범위 밖 토큰을 구별한다', () => {
+    const { table, database, types } = realCaptureAssets(); const assets = new GameAssets(table, database); const hooks = {}; bindCursorLifecycleAssets(hooks, assets, types);
+    const actual = new CursorPreviewBindingScene(); const life = actual.lifecycle; life.costImage = hooks.costImage(92, 3).token;
+    const binding = makeCursorPreviewAssetShapes(assets, 0xfffffffe, life); assert.equal(binding(0xfffffffe).database, database); assert.equal(binding(0xfffffffe).block, assets.types()[92 - 70].block); assert.equal(binding(123).block, assets.types()[123 - 70].block);
+    life.costImage = hooks.costImage(123, 3).token; assert.equal(binding(0xfffffffe).block, assets.types()[123 - 70].block);
+    life.costImage = 0; assert.throws(() => binding(0xfffffffe), /cost image/); life.costImage = database.blocks.length + 1; assert.throws(() => binding(0xfffffffe), /cost image/);
+    assert.throws(() => makeCursorPreviewAssetShapes({}, 0xfffffffe, life), /asset edition/);
 });
