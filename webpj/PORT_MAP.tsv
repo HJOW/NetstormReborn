@@ -383,7 +383,7 @@ cpppj/src/client/SoundMusicSelection.cpp	port			todo	[client-default]
 cpppj/src/client/SoundProcess.cpp	port			todo	[client-default]
 cpppj/src/client/SoundSceneMusic.cpp	port	www/audio/audio-system.js	1f00a25a	partial	[client-default] 메뉴 장면 음악
 cpppj/src/client/SpecialPointerTrace.cpp	port			todo	[client-default]
-cpppj/src/client/SpellFrameVisibility.h	port			todo	[client-default]
+cpppj/src/client/SpellFrameVisibility.h	port	www/core/spell-frame-visibility.js	1f00a25a	port	[client-default] WB04-E381: 스펠 도움말 그림 임시 제외 suppressSpellHelpFrame(폭탄 종류 && 도움말 프레임 ≥ 0 && 지금 프레임 == 도움말 프레임, 64비트 정수 비교). 판본 인자는 10.78 전용이라 옮기지 않음. 호출자(GameWorld·RawCampaignFactoryDisplay·RawCampaignSession 파편 캡처)는 각 단위에서 연결
 cpppj/src/client/SpriteColorMaps.cpp	port	www/core/sprite-color-maps.js	1f00a25a	port	[client-default] WB04-E373: 원본 0043c010 의 추상(밝음)·건설·그림자 색 변환표(556238/556438/557738) buildSpriteColorMaps — 밝음·건설은 PaletteShade 의 buildShadeMaps(assets/palette.js), 그림자는 소스 RGB×float 0.6 목표와 후보의 blue→green→red 제곱 거리(엄격 비교·최소 거리만 float32), 228..245·254·255 항등 덮어쓰기. fixture sprite-colors 10.78 3행(실제 파일·혼합 RGB·중복 회색) 256바이트 세 표 모두 첫 실행 일치, 계약 시험 포함. 기준선 뒤 변경 없음
 cpppj/src/client/SpriteDraw.cpp	port	www/render/world-sprites.js	1f00a25a	partial	[client-default] 타입 발 기준점 출력만
 cpppj/src/client/SpriteHitPointBar.cpp	port	www/core/sprite-hit-point-bar.js	1f00a25a	port	[client-default] WB04-E377: 선택 체력 막대 HP/색 조회 부모 readSpriteHitPointBar(원문 49898c) — 정상 색 → H,M 읽고 current ≤ max/2 면 colors[1] → H,M 다시 읽고 ≤ max/4 면 colors[2] → 마지막 H,M, signed32 0 방향 절삭, 호출 사이 캐시 없음. fixture sprite-hit-point-bar 10.78 252행(결과·읽기 추적·끝 HP·getter 호출 수) 첫 실행 일치, 계약 시험 3건. CD clamp 경로·실제 SpriteDraw 선택 분기 시험은 범위 밖/SpriteDraw 이식 때. 기준선 뒤 변경 없음
@@ -408,7 +408,7 @@ cpppj/src/client/TextEntryGump.cpp	port			todo	[client-default]
 cpppj/src/client/TextEntryStorage.cpp	port			todo	[client-default]
 cpppj/src/client/TextGump.cpp	port	www/ui/scroll-text.js	1f00a25a	partial	[client-default] 다중 줄 표시
 cpppj/src/client/ThemeTechnologyCommand.cpp	port	www/core/get-technology-input.js	1f00a25a	partial	[client-default] WB04-E35: DispatchGetTechnologyInput 분배만(뗌/전체 DWORD/부모 누락). ApplyThemeTechnology의 RawCampaignSession 연결은 캠페인 세션 단위에서(기술 지급 몸체는 raw-theme-technology.js)
-cpppj/src/client/ThunderProcess.cpp	port			todo	[client-default]
+cpppj/src/client/ThunderProcess.cpp	port	www/core/thunder-process.js	1f00a25a	port	[client-default] WB04-E381: 번개 프로세스(TYPE 55, flags 0x10 부모 종속) — E376 PaletteFlash 를 SquidProcess 하나로 감쌈. 생성 인자(전체화면=지속 0.5초/창 1/60초·밝기 0=+64)·onAttached 가 init(부착 전 팔레트 읽기 0·부착 직후 2회)·runFrame 종료 시 host.kill(this,0)·destroy(C++ ~ThunderProcess)가 cancel+destroyed(pid). 실제 188 TYPE·다리 부모·SquidFactory/Destroy/Host/Kernel/삭제 수명 한 풀에서 cpppj ThunderProcessTests 4건(자연 종료·중단 복구 1회·부모 삭제·signed 밝기 -17) 대응. 남음: procSumm.txt 요약(개발 파일 출력)과 PaletteFrameChecking_ActualClientClock…(실제 Client 시계·일시정지·checking 소유자)는 4-D Client 본체 때
 cpppj/src/client/TileGroupCollection.cpp	port			todo	[client-default]
 cpppj/src/client/TitleBitmapLifetime.cpp	port			todo	[client-default]
 cpppj/src/client/TraceChat.cpp	port			todo	[client-default]
