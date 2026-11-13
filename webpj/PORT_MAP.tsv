@@ -116,7 +116,7 @@ cpppj/src/client/FortCurrentNameDevices.cpp	exclude-edit		a328ac1f	-	[edit-fort-
 cpppj/src/client/FortSelection.cpp	exclude-edit			-	[edit-map-list]
 cpppj/src/client/FortTypeConversionStorage.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/client/FsrConstants.cpp	exclude-host			-	[host-gpu]
-cpppj/src/client/GameAssets.cpp	port	www/assets/type-table.js;www/assets/type-flags.js;www/assets/shapes.js	1f00a25a	partial	[client-default] WB04-E272: TYPE_LOAD_ORDER·buildTypeRecords·frame+layer*frameCount 가 같은 일을 함. Find(별칭→typename)·FrameIndex·SHP 블록 수 검사는 cpppj 도구 쪽이라 5-A 소비 단계에서 대조
+cpppj/src/client/GameAssets.cpp	port	www/assets/type-table.js;www/assets/type-flags.js;www/assets/shapes.js;www/assets/game-assets.js	1f00a25a	port	[client-default] WB04-E272: TYPE_LOAD_ORDER·buildTypeRecords·frame+layer*frameCount 가 같은 일을 함. Find(별칭→typename)·FrameIndex·SHP 블록 수 검사는 cpppj 도구 쪽이라 5-A 소비 단계에서 대조 / WB04-E385: 남은 Find(파일 이름 먼저·typename 다음·ASCII 대소문자 무시·앞선 로딩 순서 우선)·FrameIndex(layer×클러스터 수+순번·중복 클러스터 첫 일치·블록/프레임 범위 RangeError)·SHP 블록 수(116) 검사를 game-assets.js 로 이식. 실제 자료에서 별칭 3개(dude→Man·edgeFarm→efarm·anim→Flare)와 typename 'flare' 중복을 대조. 팔레트 읽기는 assets/palette.js, Native 로더 훅(readType/readShapes)은 웹 불필요
 cpppj/src/client/GameMenuActions.cpp	port			todo	[client-default]
 cpppj/src/client/GameMenuCommands.cpp	port			todo	[client-default]
 cpppj/src/client/GameTimeDisplay.cpp	port	www/core/game-time-display.js	1f00a25a	port	[client-default] WB04-E34: T/t 토글(004d9862)과 CRT 시계 초 계산(004a68b0). fixture game-time-key 168행 전부. 시간 메시지 90행은 MessageGump 단위에서
