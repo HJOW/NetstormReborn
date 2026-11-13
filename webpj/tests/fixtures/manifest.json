@@ -18854,7 +18854,7 @@
       "bytes": 3986319,
       "lines": 1561,
       "fixtureCommit": "ed06e9f17",
-      "webCommit": "worktree",
+      "webCommit": "1e4ac05f1",
       "cpppjBasis": {
         "cpppj/src/client/PreviewCollection.cpp": "76e3c4531",
         "cpppj/src/client/PreviewCollection.h": "c7e9e8b37",
@@ -18888,7 +18888,7 @@
       "bytes": 969171,
       "lines": 1432,
       "fixtureCommit": "646ca213e",
-      "webCommit": "worktree",
+      "webCommit": "1e4ac05f1",
       "cpppjBasis": {
         "cpppj/src/client/PreviewDraw.cpp": "0dbfd0c8f",
         "cpppj/src/client/PreviewDraw.h": "0dbfd0c8f",
@@ -19395,6 +19395,37 @@
       "cpppjBasis": {
         "cpppj/src/client/RawCursorPreviews.cpp": "46e65408f",
         "cpppj/src/client/RawCursorPreviews.h": "76e3c4531"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E405",
+      "id": "gumpdraw",
+      "path": "cpppj/tests/fixtures/gumpdraw-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: UI 가상 Draw466310·현재 clip 설정/복구·중첩/투영",
+      "consumers": [
+        "webpj/tests/gump-draw.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/gump-draw.js"
+      ],
+      "doc": "docs/webpj-gump-draw-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/GumpDraw.cpp",
+        "cpppj/src/client/GumpDraw.h"
+      ],
+      "scope": "10.78 originals476행의 가상 호출·half-open/inclusive clip·전체 노드 캐시·투영 호출 순서",
+      "text": true,
+      "sha256": "685d5a87e347eacba4ee171d961214a5ab219c73665eea2c590dc3db0e73f05e",
+      "bytes": 1503316,
+      "lines": 1429,
+      "fixtureCommit": "ea4c65b7c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpDraw.cpp": "d600aad52",
+        "cpppj/src/client/GumpDraw.h": "7838109ab"
       }
     }
   ]
