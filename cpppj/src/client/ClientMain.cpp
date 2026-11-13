@@ -841,7 +841,8 @@ void Client::InterpretOptions() {
     rendererFrame_->ReadOptions(); //같은 원문 showSoftAsserts의 현재값을 실제 Renderer 진단 관문에 적용한다.
     InterpretLanguageOptions(); //실제 current/published와 같은 Config를 원문 선택 순서로 갱신한다.
     InterpretCursorOptions(); //원문에서 언어 다음에 읽는 rotmode를 실제 C/우클릭과 공유한다.
-    std::int32_t width = 0, height = 0;
+    // CD 10.72 설정에는 SCREENW/SCREENH가 없으므로 기존 표시 크기(최초 640×480)를 유지한 채 명시된 축만 읽는다.
+    std::int32_t width = presentWidth_>0 ? presentWidth_:screenWidth_, height = presentHeight_>0 ? presentHeight_:screenHeight_;
     configuration_.ReadInt("SCREENW", width);
     configuration_.ReadInt("SCREENH", height);
     // 7차: SCREENW/SCREENH는 표시(목표) 크기다. FSR 해상도(2560x1440, 3840x2160)는 논리 1920x1080으로 그려 FSR이 늘리며, 후처리 장치가 없으면 1920x1080으로 낮춘다.

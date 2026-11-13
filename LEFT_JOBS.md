@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**확정 제품 1305 / 11.01(1304~1305는 시험만 교정, 실행 파일은 1303과 같음) · 정리 2026-11-12(HJOW-Athlon) · 다음 단위 번호 1306 · 마지막 디컴파일 HJOW-Athlon(변경 없음, 재디컴파일 없음) · 전체 목표 미완료 — 남은 일은 [0.1](#now), 사용자 결정은 [0.2](#decisions), 사용자 확인은 [0.3](#user-checks)**
+**확정 제품 1306 / 11.01 · 정리 2026-11-14(HJOW-Athlon) · 다음 단위 번호 1307 · 마지막 디컴파일 HJOW-Athlon(변경 없음, 재디컴파일 없음) · 전체 목표 미완료 — 남은 일은 [0.1](#now), 사용자 결정은 [0.2](#decisions), 사용자 확인은 [0.3](#user-checks)**
 
 이 문서는 cpppj와 공통 사항의 **현재 상태·남은 작업·유효한 규칙**만 둔다. 끝난 작업 묶음은 [1절](#done)에 한두 줄로 요약하고 상세는 근거 문서에 있다. 이번 정리 직전의 이 문서 전체(제품 1298 시점, 완료 묶음의 상세 표·B 판정 상세·D/SK 하위 단계표)는 [LEFT_JOBS.old.md](LEFT_JOBS.old.md#archive-20261111-through-1298)에 바이트 그대로 보관했고, 1254~1288 경과는 [제품1288 시점 보관본](LEFT_JOBS.old.md#archive-20261111-through-1288)에 있다. dotnetpj·webpj의 현황과 계획은 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md)·[LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 원격 저장소에 push하지 않는다.
 
@@ -20,7 +20,7 @@ AGENTS 1~14차 구현은 모두 끝났다([0.4](#stages)). 14차(사용자 커�
 
 | 순서 | 작업 | 현재 상태 | 시작 조건 / 다음 행동 |
 | --- | --- | --- | --- |
-| **1** | **CD 10.72 복원 C3~C5** (실제 복원·CD 확인 설정 대체·CD 자료 실행 검증) | C1·C2는 [문서화](docs/exe/cpp-cd1072-startup-and-gates-20261111.md), C3 자료 경로 선택은 1302, 일반 실행 판본 옵션은 1303에서 개선했다. 일반 클라이언트에는 여전히 **241개 파일 306곳**의 `Patch1078` 게이트가 있으며 CD 메뉴·미션은 검증되지 않았다. C2의 마지막 `--cd` 거부 기록은 작업 전 현재 소스와 일치하지 않는다([1303](docs/exe/cpp-cd1072-run-option-20261112.md)). AGENTS는 10.72 복원을 차후 작업으로 둔다 | **진행 중.** 결정 **D1**이 없으면 ①자산/타입/폰트 경로 → ②시작/메뉴 → ③튜토리얼 진입의 최소 범위로 계속하고 CD 확인은 설정(`CDDir`)으로 대체한다 |
+| **1** | **CD 10.72 복원 C3~C5** (실제 복원·CD 확인 설정 대체·CD 자료 실행 검증) | C1·C2는 [문서화](docs/exe/cpp-cd1072-startup-and-gates-20261111.md), C3 자료 경로 선택은 1302, 일반 실행 판본 옵션은 1303에서 개선했다. **1306:** CD 설정의 SCREENW/H 부재가 0×0 DIB를 만들던 오류를 교정했다. 실제 CD 사본 실행은 화면·글꼴·자산 초기화 뒤 MessageGump의 10.78 전용 판본 검사에서 종료한다(메뉴 표시 미완료). 일반 클라이언트에는 여전히 **241개 파일 306곳**의 `Patch1078` 게이트가 있으며 CD 메뉴·미션은 검증되지 않았다. C2의 마지막 `--cd` 거부 기록은 작업 전 현재 소스와 일치하지 않는다([1303](docs/exe/cpp-cd1072-run-option-20261112.md)). AGENTS는 10.72 복원을 차후 작업으로 둔다 | **진행 중.** 결정 **D1**이 없으면 ①자산/타입/폰트 경로 → ②시작/메뉴 → ③튜토리얼 진입의 최소 범위로 계속하고 CD 확인은 설정(`CDDir`)으로 대체한다 |
 | **2** | **M8 최종 관문 재실행** ([3절](#final-gate)) | 마지막 통과는 제품 1297 기준이다. 이후 코드가 바뀌었다(1298 프레임 대기 방식·1299 CD 문서·1300 스커미시 MP 규칙 월드와 NB23 교정·**1301 QuickJS 엔진 정적 링크와 배포 `third-party\quickjs-ng\` 추가**) | **코드 변경이 모두 끝난 뒤 1회.** 14차 탑재(1301)는 끝났으므로 CD 10.72 C3~C5를 하지 않으면 바로 해도 된다. 작은 단위마다 반복하지 않는다 |
 | 3 | 비행체 표시 보간(F3, 선택) | 미착수. 지상 이동은 게임 시계 기반이라 상한만 올려도 갱신이 더 잦아지지만, 비행체는 원문이 0.02초(50Hz) 간격으로 갱신을 예약해 50FPS를 넘으면 부드러워지지 않는다 | 결정 **D2**가 "한다"일 때만 |
 | — | 새 제보 처리 | 재현 조건·영상·로그가 오면 해당 NB 행([1.1](#bugs))을 다시 연다 | 제보 시 |
@@ -87,7 +87,7 @@ AI가 근거 자료만으로는 정할 수 없는 항목이다. **권고**대로
 
 | 항목 | 현행 값 |
 | --- | --- |
-| 확정 제품 | **1303 / 11.01.** 최근: Frame Rate 옵션 1297·프레임 대기 방식 1298·CD 10.72 C1·C2 문서 1299·스커미시 MP 규칙 월드와 NB23 교정 1300·14차 QuickJS-ng 엔진 탑재 1301·CD 자료 폴더 경로 선택 1302·**일반 실행 CD 옵션 처리 1303**·**시험 결함 교정 1304·NB18 충돌 시험 교정 1305(실행 파일 불변)**. 직전 정리 시점은 1298(커밋 `1f5b4ead1`까지) |
+| 확정 제품 | **1306 / 11.01.** 최근: Frame Rate 옵션 1297·프레임 대기 방식 1298·CD 10.72 C1·C2 문서 1299·스커미시 MP 규칙 월드와 NB23 교정 1300·14차 QuickJS-ng 엔진 탑재 1301·CD 자료 폴더 경로 선택 1302·**일반 실행 CD 옵션 처리 1303**·**시험 결함 교정 1304·NB18 충돌 시험 교정 1305(실행 파일 불변)**·**CD 기본 해상도 유지 1306**. 직전 정리 시점은 1298(커밋 `1f5b4ead1`까지) |
 | 실행·플레이 | 무인자 GUI·메뉴·미션 플레이가 가능하다. 최근 확인: 스커미시 시작(AI 1·3·7명, 약 90초 동안 AI가 다리 건설), 일반 미션 `thewarbegins` 진입·대기, 메인 `Multiplayer` 로비 화면 표시(접속은 미검증), 한국어·일본어 UI, 1301 메인 메뉴 시작과 `--quickjs-selftest` PASS 6/6 |
 | 원본 동일성 | 부품별 디컴파일/기계어·fixture 대조와 제한된 플레이 확인을 누적했다. 모든 시나리오 자연 완주·전체 화면/음향 동일성은 미확정이다 |
 | 최근 배포 ZIP | M8 재실행(제품 1297 기준): 1433항목 전수 일치, 누락/금지/exe 글꼴 0. **1298 이후 코드가 바뀌어 새 ZIP·관문이 필요하다**(1301부터 ZIP에 `third-party\quickjs-ng\` 포함, [3절](#final-gate)) |
@@ -103,6 +103,7 @@ AI가 근거 자료만으로는 정할 수 없는 항목이다. **권고**대로
 | --- | --- | --- | --- |
 | M6 LAN·Native 등록(3차) | ~1173, 1258~1267, 1272, 1278, 1279 | M6-a~n 구현·정적 종결. 비MP 도달 가능 경로는 모두 장기 소유자에 연결, 도달 불가 행은 명시 오류 유지 | [M6 감사](docs/exe/cpp-lan-remaining-audit-20261108.md)·[1262 감사](docs/exe/cpp-native-registry-owner-audit-20261110.md)·[1279 종결](docs/exe/cpp-m6n-reachability-closure-20261111.md)·[1278 Fort 섬](docs/exe/cpp-fort-island-populate-20261111.md)·[1272](docs/exe/cpp-m6n-fort-callers-noworld-audit-20261111.md)·[1267](docs/exe/cpp-asset-postpop-noworld-20261111.md)·[1266](docs/exe/cpp-native-fort-snapshot-20261110.md)·[1265](docs/exe/cpp-login-debug-burst-20261110.md)·[1264](docs/exe/cpp-initial-postpop-owner-20261110.md)·[1263](docs/exe/cpp-native-join-test-battle-20261110.md) |
 | M7 후속 5건 | 1268~1273 | helpWord 캐시·메타 맵 커서(정적 판정)·희생 안내/이동 marker·오류/예외 로그 | [1268](docs/exe/cpp-help-word-cache-20261111.md)·[1275](docs/exe/cpp-help-regression-korean-screens-20261111.md)·[1273](docs/exe/cpp-meta-cursor-reachability-20261111.md)·[1271](docs/exe/cpp-early-sacrifice-marker-20261111.md)·[1269](docs/exe/cpp-error-log-20261111.md) |
+| CD 10.72 시작 | 1302·1303·1306 | 로컬 CD 자료 선택·일반 실행 판본 옵션·해상도 키 부재 시 기본 640×480 유지. 메뉴는 MessageGump 판본 검사에서 미완료 | [1306](docs/exe/cpp-cd1072-default-resolution-20261114.md)·[1302](docs/exe/cpp-cd1072-local-data-20261111.md)·[1303](docs/exe/cpp-cd1072-run-option-20261112.md) |
 | M8 배포 | 1274, 1280, 1295~1297 | 글꼴 exe 내장 금지·외부 `fonts\`·ZIP 전수 대조·외부 접속 재감사 | [선행 점검](docs/exe/cpp-m8-font-zip-precheck-20261111.md)·[1차](docs/exe/cpp-m8-final-gate-20261111.md)·[재실행](docs/exe/cpp-m8-final-gate-1294-20261111.md) |
 | K 한국어(6차) | 1270, 1276, 1281 | K1~K5 | [K1](docs/exe/cpp-korean-k1-merge-20261111.md)·[화면·입력](docs/exe/cpp-korean-screens-input-verification-20261111.md)·[K4/K5](docs/exe/cpp-korean-k4-k5-closure-20261111.md) |
 | S 시나리오 편집(9차) | 1277, 1282~1284 | S1~S4 | [S1](docs/exe/cpp-scenario-s1-merge-20261111.md)·[S2](docs/exe/cpp-scenario-s2-test-battle-20261111.md)·[S3](docs/exe/cpp-scenario-s3-ui-20261111.md)·[S4](docs/exe/cpp-scenario-s4-readonly-home-20261111.md) |
