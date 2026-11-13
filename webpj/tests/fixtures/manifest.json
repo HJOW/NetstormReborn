@@ -19835,7 +19835,7 @@
       "bytes": 113797,
       "lines": 934,
       "fixtureCommit": "18b387775",
-      "webCommit": "worktree",
+      "webCommit": "aea983863",
       "cpppjBasis": {
         "cpppj/src/client/GumpText.cpp": "5a2cd0474",
         "cpppj/src/client/GumpText.h": "225f2322c",
@@ -19939,6 +19939,37 @@
       "cpppjBasis": {
         "cpppj/src/client/ButtonGump.cpp": "70446743a",
         "cpppj/src/client/ButtonGump.h": "225f2322c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E419",
+      "consumers": [
+        "webpj/tests/gump-decoration.test.mjs"
+      ],
+      "doc": "docs/webpj-gump-decoration-20261114.md",
+      "id": "gump-derived-redraw",
+      "path": "cpppj/tests/fixtures/gump-derived-redraw-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 장식 배경/메뉴 Compact·Row 원문 Redraw",
+      "modules": [
+        "webpj/www/ui/gump-decoration.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/GumpDecoration.cpp",
+        "cpppj/src/client/GumpDecoration.h"
+      ],
+      "scope": "Decoration384행의 전체 요청·root/대상 캐시·투영 순서만 직접 대조. Compact/Row768행은 MenuGumpInput 단위로 이월",
+      "text": true,
+      "sha256": "7f98ceb180c7503b97c20afdda410fb9a9993db55b5a5c97c29a894dbd765009",
+      "bytes": 708483,
+      "lines": 1153,
+      "fixtureCommit": "d7ab4678d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpDecoration.cpp": "573bfd54c",
+        "cpppj/src/client/GumpDecoration.h": "225f2322c"
       }
     }
   ]
