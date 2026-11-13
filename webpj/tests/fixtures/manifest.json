@@ -10421,7 +10421,8 @@
       "path": "cpppj/tests/fixtures/vortexascend-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 신전 Ascend Candidate/Tick/Count 의 반환·게임 난수·외부 효과 순서·슬롯 60..99 상태·신전 소유자(두 판본 1496행)",
       "consumers": [
-        "webpj/tests/vortex-ascend.test.mjs"
+        "webpj/tests/vortex-ascend.test.mjs",
+        "webpj/tests/vortex-island-binding.test.mjs"
       ],
       "modules": [
         "webpj/www/core/raw-vortex-ascend.js"
@@ -10430,15 +10431,15 @@
       "cpppjSources": [
         "cpppj/src/o/RawVortexAscend.cpp"
       ],
-      "scope": "10.78(originals) 748행 사용, originalCD 748행은 범위 밖",
+      "scope": "10.78(originals) 748행 사용(Candidate/Tick/Count 배열 경로 748행은 E120, Count 20행은 E370 에서 실제 섬 런타임 기록으로 재사용), originalCD 748행은 범위 밖",
       "text": true,
       "sha256": "6f77aec0c642c3cc10c405ef03150c65e9aa0698ff3abe5b1f5ec85670c54a75",
       "bytes": 360863,
       "lines": 1497,
-      "fixtureCommit": "4e532fd1",
-      "webCommit": "130ffad4",
+      "fixtureCommit": "4e532fd1d",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawVortexAscend.cpp": "11fbb988"
+        "cpppj/src/o/RawVortexAscend.cpp": "11fbb9881"
       }
     },
     {
@@ -17952,7 +17953,7 @@
       "bytes": 274069,
       "lines": 669,
       "fixtureCommit": "5bdb5bedf",
-      "webCommit": "worktree",
+      "webCommit": "0b4c278df",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisRegular.cpp": "21bb25505",
         "cpppj/src/o/RawRitualRegular.cpp": "21bb25505"
@@ -17984,7 +17985,7 @@
       "bytes": 2485473,
       "lines": 2965,
       "fixtureCommit": "db9b626c0",
-      "webCommit": "worktree",
+      "webCommit": "0b4c278df",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisRegular.cpp": "21bb25505",
         "cpppj/src/o/RawRitualRegular.cpp": "21bb25505",
@@ -18103,7 +18104,7 @@
       "bytes": 1329913,
       "lines": 1929,
       "fixtureCommit": "db9b626c0",
-      "webCommit": "worktree",
+      "webCommit": "0b4c278df",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisLifecycle.cpp": "4ee213870",
         "cpppj/src/o/RawDaisDeletion.cpp": "21bb25505"

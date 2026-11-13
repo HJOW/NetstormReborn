@@ -5,8 +5,10 @@
 //    후보 버퍼를 확보한 뒤(실패는 첫 후보에서 거부) 최대 20개 후보를 모으며 20개가 되면 난수 소비 없이 중단한다. 후보가 있으면 게임 난수(limit=후보 수) 한 번으로 하나를 flags 0x100000 으로 삭제한다.
 //    반환은 후보가 있었거나 반경이 64 가 아니면 true(최종 64 의 빈 반경이면 false)이다. 버퍼 해제는 예외에도 실행한다.
 //  - countForeignOwnedIslands(owner): 존재하며 소유자가 0 도 owner 도 아닌 섬의 수이다.
-// 섬 배열 항목은 { exists, owner }(원본 IslandList 의 존재 DWORD/+0xc 소유자)이고, 훅 { islandNumber(x,y)→int32, reserveCandidateBuffer()→bool, releaseCandidateBuffer(), destroy(sid, flags) } 는 모두 필수이다.
-// 실제 월드의 RawIslandRuntime 을 직접 읽는 생성자(liveIslands)는 해당 단위 이식 뒤로 둔다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E120: RawVortexAscend 이식으로 추가)
+// 섬 목록은 두 가지로 줄 수 있다: ① 배열 항목 { exists, owner }(원본 IslandList 의 존재 DWORD/+0xc 소유자; 기존 독립 입력 경로) ② 실제 월드의 RawIslandRuntime(cpppj 두 번째 생성자 대응) — 이 경우 복사 없이
+// 실제 3204바이트 기록의 현재 count(signed)·존재·owner 를 반복마다 다시 읽고(삭제/owner 변경이 곧바로 보임) 다른 풀의 목록은 거부한다. 훅 { islandNumber(x,y)→int32, reserveCandidateBuffer()→bool, releaseCandidateBuffer(), destroy(sid, flags) } 는 모두 필수이다.
+// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E120: RawVortexAscend 이식으로 추가, 2026-11-13 WB04-E370: 실제 섬 런타임 직접 읽기 생성자 추가)
+import { RawIslandRuntime } from './raw-island-runtime.js';
 import { RawSquidFinder } from './raw-squid-finder.js';
 
 // 원본 Ascend 에서 제외하는 표면/내용물/유닛 genus 묶음, 후보 버퍼의 DWORD 후보 수, 반경 finder 의 좌표 편향(float 0.99999)이다. (2026-11-08 WB04-E120)
@@ -43,26 +45,31 @@ function radiusCoordinate(value) {
 // 신전 Ascend 판정 논리이다. 사용: new RawVortexAscend(pool, hash, spots, types, islands, random, state, hooks). (2026-11-08 WB04-E120)
 export class RawVortexAscend {
     // 후보/부모를 조회하는 단일 raw 풀, 일반 반경 finder 와 표면 0단계가 함께 읽는 실제 해시, 발자국 spot 비트 지도(65536),
-    // genus/flags1 이 저장된 공유 타입 표, 섬 존재/소유자 목록, 삭제 후보 선택이 한 번 소비하는 게임 난수, 현재 noIsland 타입 전역, 외부 효과 훅이다.
+    // genus/flags1 이 저장된 공유 타입 표, 섬 존재/소유자 목록(독립 배열), 실제 월드의 섬 런타임(없으면 null), 삭제 후보 선택이 한 번 소비하는 게임 난수, 현재 noIsland 타입 전역, 외부 효과 훅이다.
     #pool;
     #hash;
     #spots;
     #types;
     #islands;
+    #liveIslands = null;
     #random;
     #state;
     #hooks;
 
-    // 필요한 효과와 표/지도의 판본 크기를 처음 구성할 때 확인한다. state = { noIslandType, sharedNoIslandType?: { value } }. (2026-11-08 WB04-E120)
+    // 필요한 효과와 표/지도의 판본 크기를 처음 구성할 때 확인한다. islands 는 { exists, owner } 배열이거나 같은 풀의 RawIslandRuntime 이다. state = { noIslandType, sharedNoIslandType?: { value } }.
+    // (2026-11-08 WB04-E120, 2026-11-13 WB04-E370: RawIslandRuntime 을 직접 읽는 생성자 경로 추가)
     constructor(pool, hash, spots, types, islands, random, state, hooks) {
         if (pool?.edition !== 'patch1078' || !spots || spots.length !== SPOT_COUNT || !types || types.length !== TYPE_COUNT || !hooks
             || typeof hooks.islandNumber !== 'function' || typeof hooks.reserveCandidateBuffer !== 'function'
             || typeof hooks.releaseCandidateBuffer !== 'function' || typeof hooks.destroy !== 'function') throw new Error('Ascend 공유 지도/타입 표/하위 효과 누락');
+        // 실제 섬 런타임은 복사 없이 같은 풀의 것만 받는다(배열 경로는 그대로 둔다).
+        if (islands instanceof RawIslandRuntime && islands.pool !== pool) throw new TypeError('Ascend 섬 목록과 raw 풀 불일치');
         this.#pool = pool;
         this.#hash = hash;
         this.#spots = spots;
         this.#types = types;
         this.#islands = islands;
+        this.#liveIslands = islands instanceof RawIslandRuntime ? islands : null;
         this.#random = random;
         this.#state = state;
         this.#hooks = hooks;
@@ -143,8 +150,18 @@ export class RawVortexAscend {
         return candidates.length !== 0 || radius !== 64;
     }
 
-    // 0046f480: 원본은 목록 길이를 현재 반복마다 다시 읽으며 존재/nonzero owner/다른 owner 의 항목만 센다. 사용: countForeignOwnedIslands(owner). (2026-11-08 WB04-E120)
+    // 0046f480: 원본은 목록 길이를 현재 반복마다 다시 읽으며 존재/nonzero owner/다른 owner 의 항목만 센다. 사용: countForeignOwnedIslands(owner).
+    // 실제 섬 런타임이면 반복마다 signed count 와 현재 기록을 다시 읽고 owner 를 두 번 조회한다(원본 호출 횟수 보존). (2026-11-08 WB04-E120, 2026-11-13 WB04-E370: 실제 목록 경로 추가)
     countForeignOwnedIslands(owner) {
+        const live = this.#liveIslands;
+        if (live) {
+            let currentCount = 0;
+            // 원본 두 판본처럼 반복마다 signed count 와 현재 32바이트 기록을 조회한다.
+            for (let index = 0; index < (live.count | 0); index += 1) {
+                if (live.exists(index) && live.owner(index) !== (owner >>> 0) && live.owner(index) !== 0) currentCount += 1;
+            }
+            return currentCount;
+        }
         let count = 0;
         // 공유 IslandList 항목의 존재/소유자를 읽는다. 빈 번호는 개수에 더하지 않는다.
         for (const island of this.#islands) if (island.exists && island.owner && island.owner !== (owner >>> 0)) count += 1;
