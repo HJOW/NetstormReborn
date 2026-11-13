@@ -151,6 +151,23 @@ export class DaisRegularState {
         this.#playerRecords = records;
     }
 
+    // 지금 묶인 실제 Player 기록 9칸을 그대로 돌려준다(묶지 않았으면 null). 다이스 수명(raw-dais-lifecycle)의 Player 쌍 읽기와 고유 삭제의 기록 대여가 매번 다시 읽는다. (2026-11-13 WB04-E369: 7-P3 RawDaisLifecycle 이식에서 추가)
+    get playerRecords() { return this.#playerRecords; }
+
+    // 획득 플래그 BYTE 의 쓰기 대상을 지금 시점에 고정해 쓰기 함수로 돌려준다(C++ GrantFlagSlot 참조 반환 대응). 가상 Count 가 기록을 다시 묶어도 이 함수는 고정한 칸에 쓴다.
+    // (2026-11-13 WB04-E369: PATCH 다이스 최초 Pop 이 Count 앞에서 Player 주소를 저장하는 순서를 보존하려고 추가)
+    grantFlagWriter(owner) {
+        checkPlayer(owner, '다이스 grant 쓰기 Player 범위');
+        const records = this.#playerRecords;
+        // 실제 기록이면 그 배열과 위치를, 아니면 독립 BYTE 배열과 번호를 고정한다.
+        if (records) {
+            const at = owner * PLAYER_RECORD_SIZE + PLAYER_GRANT_AT;
+            return (value) => { records[at] = value & 0xff; };
+        }
+        const flags = this.grantFlags;
+        return (value) => { flags[owner] = value & 0xff; };
+    }
+
     // 현재 획득 플래그 BYTE 이다(효과 뒤 다시 읽는다).
     grantFlag(owner) {
         checkPlayer(owner, '다이스 grant Player 범위');
