@@ -19516,10 +19516,72 @@
       "bytes": 2698793,
       "lines": 946,
       "fixtureCommit": "ec0e3e597",
-      "webCommit": "worktree",
+      "webCommit": "bf2a78354",
       "cpppjBasis": {
         "cpppj/src/client/GumpCreate.cpp": "ec0e3e597",
         "cpppj/src/client/GumpCreate.h": "225f2322c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E411",
+      "consumers": [
+        "webpj/tests/gump-tree.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/gump-tree.js"
+      ],
+      "doc": "docs/webpj-gump-tree-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/GumpTree.cpp",
+        "cpppj/src/client/GumpTree.h"
+      ],
+      "id": "gumptree",
+      "path": "cpppj/tests/fixtures/gumptree-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Gump 부착/정렬/Push/깊이/이동과 가상 경계",
+      "scope": "originals574행 전체160BYTE 노드·8전역·정렬 반환·콜백 당시 전체 상태와 명시 raw 응답. CD/추가판 제외",
+      "text": true,
+      "sha256": "a7c87acffdb45ab27d8a8ecb50e3669da403d121a22dd557fc498855d7c2b0e6",
+      "bytes": 9191191,
+      "lines": 1723,
+      "fixtureCommit": "51ffb45c8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpTree.cpp": "e1f694d6d",
+        "cpppj/src/client/GumpTree.h": "e1f694d6d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E411",
+      "consumers": [
+        "webpj/tests/gump-tree.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/gump-tree.js"
+      ],
+      "doc": "docs/webpj-gump-tree-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/GumpTree.cpp",
+        "cpppj/src/client/GumpTree.h"
+      ],
+      "id": "gump-attach-diagnostic",
+      "path": "cpppj/tests/fixtures/gump-attach-diagnostic-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Gump 부착 첫쓰기 전 signed GT/상한 진단 접두",
+      "scope": "432행 signed GT/상한·현재DWORD checking·전체노드·writer후 상세 ASCII/몸체 도달",
+      "text": true,
+      "sha256": "e9f23164182e09cd7c0b952113cb24a02c3a73036509f87e92a997b183aa9898",
+      "bytes": 161990,
+      "lines": 433,
+      "fixtureCommit": "e1f694d6d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpTree.cpp": "e1f694d6d",
+        "cpppj/src/client/GumpTree.h": "e1f694d6d"
       }
     }
   ]
