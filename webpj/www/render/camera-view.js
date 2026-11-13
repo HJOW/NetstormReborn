@@ -15,6 +15,12 @@ export function cameraFtolLow(value) {
     return Math.trunc(value) | 0;
 }
 
+// 카메라 원점(정수 픽셀)을 값으로 받아 월드 float 좌표를 화면 정수 좌표로 바꾼다(RawCameraView.cpp ProjectCameraCoordinates, 497220과 위치 음향 SoundToScreen 이 같은 몸체).
+// float32 월드 좌표 ×16/11 +0.5의 ftol 하위 DWORD 에서 원점을 DWORD 감김으로 뺀다. 반환은 [x, y]. 입자 시스템처럼 카메라 상태 객체 없이 원점만 가진 호출자가 쓴다. (2026-11-13 WB04-E390: 입자 본체 이식을 위해 project 의 몸체를 분리)
+export function projectCameraCoordinates(cameraX, cameraY, x, y) {
+    return [(cameraFtolLow(Math.fround(x) * 16 + 0.5) - cameraX) | 0, (cameraFtolLow(Math.fround(y) * 11 + 0.5) - cameraY) | 0];
+}
+
 // 정확한 16DWORD 상태이다. bytes는 원본 fixture·스냅숏용이며 복사 생성은 독립 저장소를 만든다.
 export class CameraView {
     // 선택한 64바이트를 복사한다. 생략하면 BSS 0이다.
@@ -89,10 +95,8 @@ export class CameraView {
     // 497220: float32 월드 좌표 ×16/11 +0.5의 ftol 뒤 현재 signed 픽셀 원점을 DWORD 감김으로 뺀다.
     // Math.round와 음수 좌표의 결과가 다르다. 그리기와 위치 음향이 같은 snapshot을 사용할 수 있다.
     project(x, y) {
-        return {
-            x: (cameraFtolLow(Math.fround(x) * 16 + 0.5) - this.data.getInt32(28, true)) | 0,
-            y: (cameraFtolLow(Math.fround(y) * 11 + 0.5) - this.data.getInt32(32, true)) | 0,
-        };
+        const [px, py] = projectCameraCoordinates(this.data.getInt32(28, true), this.data.getInt32(32, true), x, y);
+        return { x: px, y: py };
     }
 
     // 4971e0: 커서의 signed32 화면 위치에16/11을 더한 뒤 역배율·현재 월드 원점을 적용한다.
