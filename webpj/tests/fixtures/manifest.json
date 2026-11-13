@@ -19228,11 +19228,104 @@
       "bytes": 555920,
       "lines": 1900,
       "fixtureCommit": "0109387c4",
-      "webCommit": "worktree",
+      "webCommit": "b6b959b06",
       "cpppjBasis": {
         "cpppj/src/client/RawCursorReturnPiece.cpp": "fc56410a7",
         "cpppj/src/client/RawCursorReturnPiece.h": "fc56410a7",
         "cpppj/src/o/RawContainedCreate.cpp": "cddd939d5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E400",
+      "id": "cursor-lifecycle",
+      "path": "cpppj/tests/fixtures/cursor-lifecycle-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 커서 취득00447000·취소00446e70·미리보기 정리00445aa0·TYPE/사정거리",
+      "consumers": [
+        "webpj/tests/cursor-lifecycle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cursor-lifecycle.js"
+      ],
+      "doc": "docs/webpj-cursor-lifecycle-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCursorLifecycle.cpp",
+        "cpppj/src/client/RawCursorLifecycle.h"
+      ],
+      "scope": "10.78 565행의 취득/취소/정리·사건·78DWORD·비용 문자열·raw150바이트",
+      "text": true,
+      "sha256": "153f07eb922205fa0a2adf2a4d365bbbffe82d4822d4814c79fdd539d5a4c53a",
+      "bytes": 385349,
+      "lines": 566,
+      "fixtureCommit": "9501a2f9f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCursorLifecycle.cpp": "0b720831a",
+        "cpppj/src/client/RawCursorLifecycle.h": "0b720831a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E400",
+      "id": "cursor-cancel-checking",
+      "path": "cpppj/tests/fixtures/cursor-cancel-checking-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 커서 취득00447000·취소00446e70·미리보기 정리00445aa0·TYPE/사정거리",
+      "consumers": [
+        "webpj/tests/cursor-lifecycle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cursor-lifecycle.js"
+      ],
+      "doc": "docs/webpj-cursor-lifecycle-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCursorLifecycle.cpp",
+        "cpppj/src/client/RawCursorLifecycle.h"
+      ],
+      "scope": "10.78 156행의 반환음/진단 뒤 현재 checking/TYPE·음수0 비용·진단 중단·부분 상태",
+      "text": true,
+      "sha256": "4c02fa86dc6cf5f00849ffafd9f77f6a2e0d81c4c348164b1a62cde8e537faa9",
+      "bytes": 95946,
+      "lines": 157,
+      "fixtureCommit": "0b720831a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCursorLifecycle.cpp": "0b720831a",
+        "cpppj/src/client/RawCursorLifecycle.h": "0b720831a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E400",
+      "id": "cursor-type-range",
+      "path": "cpppj/tests/fixtures/cursor-type-range-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 커서 취득00447000·취소00446e70·미리보기 정리00445aa0·TYPE/사정거리",
+      "consumers": [
+        "webpj/tests/cursor-lifecycle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cursor-lifecycle.js"
+      ],
+      "doc": "docs/webpj-cursor-lifecycle-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCursorLifecycle.cpp",
+        "cpppj/src/client/RawCursorLifecycle.h"
+      ],
+      "scope": "10.78 854행의 현재 그룹/flags2 사정거리 판정·TYPE 번호",
+      "text": true,
+      "sha256": "cf2a3db28cd78c5089e7102a33b86b5ab3908e2f7137bf09de592d33df69b824",
+      "bytes": 16009,
+      "lines": 855,
+      "fixtureCommit": "a9d351063",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCursorLifecycle.cpp": "0b720831a",
+        "cpppj/src/client/RawCursorLifecycle.h": "0b720831a"
       }
     }
   ]
