@@ -19547,7 +19547,7 @@
       "bytes": 9191191,
       "lines": 1723,
       "fixtureCommit": "51ffb45c8",
-      "webCommit": "worktree",
+      "webCommit": "dc76efebe",
       "cpppjBasis": {
         "cpppj/src/client/GumpTree.cpp": "e1f694d6d",
         "cpppj/src/client/GumpTree.h": "e1f694d6d"
@@ -19578,10 +19578,103 @@
       "bytes": 161990,
       "lines": 433,
       "fixtureCommit": "e1f694d6d",
-      "webCommit": "worktree",
+      "webCommit": "dc76efebe",
       "cpppjBasis": {
         "cpppj/src/client/GumpTree.cpp": "e1f694d6d",
         "cpppj/src/client/GumpTree.h": "e1f694d6d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E412",
+      "consumers": [
+        "webpj/tests/gump-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/gump-lifetime.js"
+      ],
+      "doc": "docs/webpj-gump-lifetime-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/GumpLifetime.cpp",
+        "cpppj/src/client/GumpLifetime.h"
+      ],
+      "id": "gumplifetime",
+      "path": "cpppj/tests/fixtures/gumplifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Gump 삭제 수명·idle/overlay/dialog·기본 소멸/해제",
+      "scope": "originals173행 전체160BYTE 노드·5표/7전역·반환·가상/해제 콜백 당시 상태. CD/추가판 제외",
+      "text": true,
+      "sha256": "52d85b1de6e7b040ff2dc3352609293c4b7a4e86acf4d3207ba6757847c4d11c",
+      "bytes": 3275188,
+      "lines": 520,
+      "fixtureCommit": "fb653a43c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpLifetime.cpp": "aa403f6d0",
+        "cpppj/src/client/GumpLifetime.h": "aa403f6d0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E412",
+      "consumers": [
+        "webpj/tests/gump-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/gump-lifetime.js"
+      ],
+      "doc": "docs/webpj-gump-lifetime-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/GumpLifetime.cpp",
+        "cpppj/src/client/GumpLifetime.h"
+      ],
+      "id": "uireset",
+      "path": "cpppj/tests/fixtures/uireset-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 현재 전체999등록 칸 KillExceptType·루트 ReplaceRoot",
+      "scope": "originals121행 제외BYTE/9전역·전체노드/5표·하위 실제 수명/해제 콜백 상태. CD 제외",
+      "text": true,
+      "sha256": "b1a48cbcd05a8bcc2a5fd38ce3dc2b63d79826a7fb8fd7f9a0d4b74e4dcc5348",
+      "bytes": 1704801,
+      "lines": 243,
+      "fixtureCommit": "a5afdafbe",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpLifetime.cpp": "aa403f6d0",
+        "cpppj/src/client/GumpLifetime.h": "aa403f6d0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E412",
+      "consumers": [
+        "webpj/tests/gump-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/gump-lifetime.js"
+      ],
+      "doc": "docs/webpj-gump-lifetime-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/GumpLifetime.cpp",
+        "cpppj/src/client/GumpLifetime.h"
+      ],
+      "id": "gump-checking-parents",
+      "path": "cpppj/tests/fixtures/gump-checking-parents-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: overlay 진단/복귀·기본 소멸 진단/텍스트 free 부모",
+      "scope": "368행 overlay320/base48의 진단조건/파일/줄·현재 checking/포인터/표·signed 인접DWORD 관측",
+      "text": true,
+      "sha256": "de8b2790b5827a60a1ec6d97565030896d30f5d7c3b6daf82bfea40dc99390ac",
+      "bytes": 125931,
+      "lines": 369,
+      "fixtureCommit": "aa403f6d0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpLifetime.cpp": "aa403f6d0",
+        "cpppj/src/client/GumpLifetime.h": "aa403f6d0"
       }
     }
   ]

@@ -140,7 +140,7 @@ cpppj/src/client/GumpFormBinding.cpp	port			todo	[client-default]
 cpppj/src/client/GumpFrame.cpp	port			todo	[client-default]
 cpppj/src/client/GumpHelp.cpp	port			todo	[client-default]
 cpppj/src/client/GumpInput.cpp	port			todo	[client-default]
-cpppj/src/client/GumpLifetime.cpp	port			todo	[client-default]
+cpppj/src/client/GumpLifetime.cpp	port	www/ui/gump-lifetime.js	1f00a25a	port	[client-default] WB04-E412: 같은 생성/트리의 idle/overlay·Kill/Cleanup/Destroy·기본/스칼라 소멸·dialog·KillExceptType/ReplaceRoot·현재 checking 대여와 선택 진단/부분실패. 원본 수명173행/reset121행/진단부모368행 전체노드/다섯 표/전역/콜백시점 첫 대조 일치. 실제 해제/등록 재사용/루트 이동/동종 교체 지연·guard 포함7건, 주변38건 첫 통과. 기준선 뒤 변경 없음. 이벤트/입력/파생 메뉴/RawMenuControls와 앱은 후속.
 cpppj/src/client/GumpPointerBoundary.cpp	adapt			todo	[adapt-screen]
 cpppj/src/client/GumpRedraw.cpp	port			todo	[client-default]
 cpppj/src/client/GumpText.cpp	port	www/assets/font-set.js	1f00a25a	partial	[client-default] 글꼴 슬롯/글자 측정
