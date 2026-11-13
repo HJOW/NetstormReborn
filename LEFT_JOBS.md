@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품 1310 / 11.01 · 정리 2026-11-14(HJOW-Athlon) · 다음 단위 1311(M8) · 마지막 디컴파일 HJOW-Athlon · M8 완료 후 사용자 요청으로 목표 일시 중지 예정**
+**제품 1310 / 11.01 · 정리 2026-11-14(HJOW-Athlon) · 마지막 단위 1311(M8 완료) · 다음 번호 1312(사용자 재개 대기) · 마지막 디컴파일 HJOW-Athlon · 사용자 요청으로 목표 일시 중지**
 
 현재 상태·남은 작업·유효한 규칙만 유지한다. 단위별 경과와 만료된 지시는 [1310 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310), 개별 구현·검증은 아래 근거 문서를 따른다. [dotnetpj](LEFT_JOBS.dotnetpj.md)·[webpj](LEFT_JOBS.webpj.md)는 각 인계 문서가 기준이며 이 작업에서 수정하지 않는다.
 
@@ -12,7 +12,7 @@
 
 | 구분 | 상태와 다음 행동 |
 | --- | --- |
-| **필수: M8 최종 배포 관문** | **미완료.** 확정1310으로 Release·ZIP 전수 대조·배포본 실행·외부 접속 재감사를 수행한다([3절](#final-gate)). 마지막 ZIP 통과는1297이며 이후 코드가 바뀌었다. 완료 뒤 문서 갱신·로컬 커밋 후 목표를 **paused**로 전환한다(2026-11-14 사용자 지시). |
+| **M8 최종 배포 관문** | **1311 완료.** 확정1310의 Release·ZIP1,436항목·배포본5경로·QuickJS6건·외부 접속 감사를 통과했다([3절](#final-gate)). 사용자 지시(2026-11-14)에 따라 문서·로컬 커밋 뒤 목표를 **paused**로 전환하며 재개 지시를 기다린다. |
 | **CD10.72 복원 C3~C5** | **사용자 보류(2026-11-14). 재개 지시 전 진행하지 않는다.** 메뉴·CDDir 저장 후 재실행은1309에서 확인했다. 1310의 Start/AI 설정은 순수 몸체만 검증했고 실제 Session/Guide/SP/AI 생성자에는 미연결이다. 첫 튜토리얼 차단은 `RawMenuHtml.inc:3`의 PATCH 전용 HTML 검사다. [보류 인계·재개 지점](docs/exe/cpp-cd1072-deferred-20261114.md). |
 | 선택/추가 제보 | 비행체 표시 보간·번역·QuickJS 추가 연동은 D2·D3·D7 결정 뒤 진행한다. 새 재현 자료가 오면 해당 NB 행을 다시 연다. |
 
@@ -76,7 +76,7 @@
 | --- | --- |
 | 제품 | **1310 / 11.01**, 코드 커밋 `09f9f34d5`. 마지막 집중 검사는 Start/AI 설정10건 통과. 단위별 결과는 근거 문서에 있다. |
 | 실행·플레이 | 10.78 메뉴·미션·스커미시 플레이 가능. CD는 메뉴만 확인했고 튜토리얼/플레이 미완료다. 전체 원본 동일성은 미확정이다. |
-| ZIP·전체 검사 | M8 재실행 전. 전체34경로 진입의 마지막 기록은 제품644, 최신 전체 솔루션 통과 기록은 없다. 과거 실패를 최신 결과로 표시하지 않는다. |
+| ZIP·전체 검사 | **1311 M8 통과**, ZIP1,436항목·배포본5경로·QuickJS6/6. 제품 코드는1310 그대로다. 전체34경로 진입의 마지막 기록은 제품644, 최신 전체 솔루션 통과 기록은 없다. |
 | 디컴파일 | Client 양판본2026-11-03·R전용2026-11-07, 모두 **HJOW-Athlon(192.168.0.94)**. 이후 원문 변경·재디컴파일 없음. [기록](docs/exe/cpp-decompilation-20261103.md). |
 | 보호 | AGENTS.md·originals·originalCD·기존 fixture·README 개요를 보존한다. 최근 CD 사본 실행 전후 originalCD 전체 해시는 불변이었다. |
 
@@ -95,6 +95,7 @@
 | 난이도·스커미시·프레임 | [난이도](docs/exe/cpp-difficulty-d-20261111.md)·[MP 규칙 스커미시](docs/exe/cpp-skirmish-sk-20261111.md)·[60/120FPS](docs/exe/cpp-post-plan-fps-cd1072-20261111.md). |
 | QuickJS | 탑재·자원 한도·자체 검사·배포 라이선스. [1301](docs/exe/cpp-quickjs-engine-20261111.md). |
 | 시험 교정1304~1305 | Pop/로컬 전송 accept·NB18 충돌 시험 교정. 실행 파일 불변. [근거](docs/exe/cpp-test-local-transport-accept-20261112.md). |
+| M8 1311 | Release·ZIP 전수·배포본 실행·PE/소스 감사 완료. [최종 보고](docs/exe/cpp-m8-final-gate-1310-20261114.md)·[요약JSON](cpppj/m8-final-gate-20261114.json). 사용자 요청으로 목표 일시 중지. |
 | CD1306~1310 | 기본 해상도·메시지·CDDir·Player/메뉴·순수 Start/AI 설정. **후속 보류.** [메뉴/Player](docs/exe/cpp-cd1072-player-initialization-20261114.md)·[Start/AI](docs/exe/cpp-cd1072-mission-start-ai-settings-20261114.md)·[보류 인계](docs/exe/cpp-cd1072-deferred-20261114.md). |
 
 <a id="bugs"></a>
@@ -111,17 +112,20 @@
 
 <a id="final-gate"></a>
 
-## 3. M8 최종 관문 — 현재 필수 작업
+## 3. M8 최종 관문 — 1311 완료
 
-확정1310에서 한 번 수행하며, 코드가 다시 바뀌면 ZIP을 새로 만든다.
+확정1310의 [최종 보고](docs/exe/cpp-m8-final-gate-1310-20261114.md)·[기계 판독 결과](cpppj/m8-final-gate-20261114.json)가 기준이다. 제품 코드는 바뀌지 않았다.
 
-1. 6절 명령으로 Release `NetstormCpp`·`NetstormRoot`를 빌드하고 `powershell -File cpppj/package-cpppj.ps1 -NoBuild <zip>` 실행.
-2. `python tools/verify_cpp_package.py <zip> --extract <빈 폴더> --json <보고서>`로 전 항목 SHA-256·BUILD_INFO·누락/금지/exe 글꼴 시그니처를 대조한다. `third-party/quickjs-ng/LICENSE`·`provenance.json`도 필수다.
-3. **푼 배포본**으로 영어·한국어·일본어 메뉴와 단순 비MP 미션/스커미시 진입 확인: 종료0·오류 로그 없음·설치 폴더 불변. 5절 제외 규칙을 적용한다.
-4. Netstorm.exe/R.exe의 WinINet·WinHTTP·URLMon import와 폐기 외부 검증·새 활성 접속/checking 호출자를 재감사한다. R의 기존 `master.`/`PIRATE` 진단 문자열은 접속 코드와 구별한다. [외부 정책](docs/exe/cpp-external-services-20261101.md).
-5. 변경 위험에 따라 전체34경로/솔루션 검사 재집계 필요 여부를 판단하고 수행 범위·기존 실패를 명시한다. 문서·커밋까지 끝낸 뒤 **사용자 요청으로 목표 일시 중지**한다.
+| 항목 | 결과 |
+| --- | --- |
+| 빌드·ZIP | Release NetstormCpp·NetstormRoot 종료0. ZIP1,436항목(원천1,429·생성4·런타임3) 대조, 누락/금지/실행 파일 내 글꼴0. QuickJS 라이선스·출처 포함. |
+| 배포본 실행 | 영어·한국어·일본어 메뉴/11.01 Credits, 일반 미션 thewarbegins·AI3 스커미시 진입/대기 **5경로 종료0·오류 로그0**. QuickJS 자체 검사6/6. |
+| 불변·외부 감사 | 실행 뒤 배포1,436파일·보호1,821파일 불변. 두 PE의 WinINet/WinHTTP/URLMon0, 폐기 검증 비활성·LAN 정책 유지, 새 네트워크/미연결 checking 소비자0. |
+| 범위 | 전체34경로/전체 솔루션 검사는 재집계하지 않았다. 기존 실패·5절의 사용자 확인/실행 제외를 유지한다. CD 추가 실행 없음. |
 
-지난 관문은 [1294~1297 결과](docs/exe/cpp-m8-final-gate-1294-20261111.md)에 있다.
+ZIP: `extracted/cpp-m8-1310/NetstormReborn-11.01-cpppj.zip`(209,724,870바이트), SHA-256 `0a94b7f11a39bef8b1c702ddaa6a6ae70cc816224db16dea98ebbdf94485c66e`.
+
+**현재 필수 AI 작업은 마쳤다. 사용자 지시대로 로컬 커밋 뒤 목표를 일시 중지하며, CD·선택 작업·추가 검사는 재개 지시 전 진행하지 않는다.** 향후 제품 코드가 바뀌면 새 ZIP과 관문이 필요하다. 과거 결과는 [1294~1297](docs/exe/cpp-m8-final-gate-1294-20261111.md)에 있다.
 
 <a id="contracts"></a>
 

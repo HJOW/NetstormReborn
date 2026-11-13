@@ -1,0 +1,275 @@
+{
+  "unit": 1311,
+  "product": 1310,
+  "version": "11.01",
+  "date": "2026-11-14",
+  "host": "HJOW-Athlon",
+  "sourceCommit": "09f9f34d5",
+  "packageSourceCommit": "54f95ba19",
+  "gameCodeChanged": false,
+  "lastDecompile": {
+    "client": "2026-11-03",
+    "root": "2026-11-07",
+    "host": "HJOW-Athlon",
+    "rerun": false
+  },
+  "releaseBuild": {
+    "targets": [
+      "NetstormCpp",
+      "NetstormRoot"
+    ],
+    "exitCode": 0
+  },
+  "package": {
+    "path": "extracted/cpp-m8-1310/NetstormReborn-11.01-cpppj.zip",
+    "bytes": 209724870,
+    "sha256": "0a94b7f11a39bef8b1c702ddaa6a6ae70cc816224db16dea98ebbdf94485c66e",
+    "verification": {
+      "zip": "extracted\\cpp-m8-1310\\NetstormReborn-11.01-cpppj.zip",
+      "entries": 1436,
+      "verified": 1429,
+      "generated": 4,
+      "runtime": 3,
+      "directories": 0,
+      "mismatches": [],
+      "unmapped": [],
+      "missingRequired": [],
+      "forbidden": [],
+      "fontSignaturesInExe": [],
+      "buildInfo": {
+        "Netstorm.exe": {
+          "sha256": "cbcf0d0f154fea64301d7e1b7ac4bdb71e39defdbb54f421abdaf1a5e88a8e17",
+          "recordedInBuildInfo": true
+        },
+        "R.exe": {
+          "sha256": "95342fa920d304d10cff4d6e20377662b8ee0fcd458151e2e28647bb9b898f30",
+          "recordedInBuildInfo": true
+        }
+      },
+      "extract": {
+        "files": 1436,
+        "expectedFiles": 1436,
+        "bytes": 252771576,
+        "expectedBytes": 252771576
+      },
+      "passed": true
+    },
+    "filesUnchangedAfterRuns": 1436,
+    "quickJsLicenseAndProvenanceIncluded": true
+  },
+  "runs": [
+    {
+      "artifact": "extracted/cpp-m8-1310/run-english",
+      "kind": "영어 메뉴·Credits",
+      "passed": true,
+      "exitCode": 0,
+      "gameFilesUnchanged": true,
+      "errorLogs": [],
+      "screenReviewed": true
+    },
+    {
+      "artifact": "extracted/cpp-m8-1310/run-korean-final",
+      "kind": "한국어 메뉴·Credits",
+      "passed": true,
+      "exitCode": 0,
+      "gameFilesUnchanged": true,
+      "errorLogs": [],
+      "screenReviewed": true
+    },
+    {
+      "artifact": "extracted/cpp-m8-1310/run-japanese-final",
+      "kind": "일본어 메뉴·Credits",
+      "passed": true,
+      "exitCode": 0,
+      "gameFilesUnchanged": true,
+      "errorLogs": [],
+      "screenReviewed": true
+    },
+    {
+      "artifact": "extracted/cpp-m8-1310/run-mission",
+      "kind": "thewarbegins 진입·90프레임 대기",
+      "passed": true,
+      "exitCode": 0,
+      "gameFilesUnchanged": true,
+      "errorLogs": [],
+      "screenReviewed": true
+    },
+    {
+      "artifact": "extracted/cpp-m8-1310/run-skirmish",
+      "kind": "AI3 스커미시 설정·진입·90프레임 대기",
+      "passed": true,
+      "exitCode": 0,
+      "gameFilesUnchanged": true,
+      "errorLogs": [],
+      "screenReviewed": true
+    }
+  ],
+  "quickJsSelftest": {
+    "passed": true,
+    "checks": 6,
+    "exitCode": 0
+  },
+  "peAudit": {
+    "Netstorm.exe": {
+      "sha256": "cbcf0d0f154fea64301d7e1b7ac4bdb71e39defdbb54f421abdaf1a5e88a8e17",
+      "imports": [
+        "ADVAPI32.dll",
+        "D3DCOMPILER_47.dll",
+        "GDI32.dll",
+        "IMM32.dll",
+        "KERNEL32.dll",
+        "MMDevAPI.DLL",
+        "MSVCP140.dll",
+        "SHELL32.dll",
+        "USER32.dll",
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll",
+        "VERSION.dll",
+        "WINMM.dll",
+        "WS2_32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "api-ms-win-crt-utility-l1-1-0.dll",
+        "d3d11.dll",
+        "dwmapi.dll",
+        "ole32.dll"
+      ],
+      "blockedImports": [],
+      "literalCounts": {
+        "master.": {
+          "ascii": 0,
+          "utf-16-le": 0
+        },
+        "security.dat": {
+          "ascii": 0,
+          "utf-16-le": 0
+        },
+        "Not Validated": {
+          "ascii": 0,
+          "utf-16-le": 0
+        },
+        "PIRATE": {
+          "ascii": 0,
+          "utf-16-le": 0
+        },
+        "bugs@": {
+          "ascii": 0,
+          "utf-16-le": 0
+        },
+        "setup.exe": {
+          "ascii": 0,
+          "utf-16-le": 0
+        },
+        "nsLaunch": {
+          "ascii": 0,
+          "utf-16-le": 0
+        }
+      }
+    },
+    "R.exe": {
+      "sha256": "95342fa920d304d10cff4d6e20377662b8ee0fcd458151e2e28647bb9b898f30",
+      "imports": [
+        "ADVAPI32.dll",
+        "IPHLPAPI.DLL",
+        "KERNEL32.dll",
+        "MSVCP140.dll",
+        "SHELL32.dll",
+        "USER32.dll",
+        "VCRUNTIME140.dll",
+        "VCRUNTIME140_1.dll",
+        "WINMM.dll",
+        "WS2_32.dll",
+        "api-ms-win-crt-convert-l1-1-0.dll",
+        "api-ms-win-crt-environment-l1-1-0.dll",
+        "api-ms-win-crt-filesystem-l1-1-0.dll",
+        "api-ms-win-crt-heap-l1-1-0.dll",
+        "api-ms-win-crt-locale-l1-1-0.dll",
+        "api-ms-win-crt-math-l1-1-0.dll",
+        "api-ms-win-crt-runtime-l1-1-0.dll",
+        "api-ms-win-crt-stdio-l1-1-0.dll",
+        "api-ms-win-crt-string-l1-1-0.dll",
+        "api-ms-win-crt-time-l1-1-0.dll",
+        "ole32.dll"
+      ],
+      "blockedImports": [],
+      "literalCounts": {
+        "master.": {
+          "ascii": 1,
+          "utf-16-le": 0
+        },
+        "security.dat": {
+          "ascii": 0,
+          "utf-16-le": 0
+        },
+        "Not Validated": {
+          "ascii": 0,
+          "utf-16-le": 0
+        },
+        "PIRATE": {
+          "ascii": 1,
+          "utf-16-le": 0
+        },
+        "bugs@": {
+          "ascii": 0,
+          "utf-16-le": 0
+        },
+        "setup.exe": {
+          "ascii": 0,
+          "utf-16-le": 0
+        },
+        "nsLaunch": {
+          "ascii": 0,
+          "utf-16-le": 0
+        }
+      }
+    }
+  },
+  "sourceAudit": {
+    "base": "2e17bdff4",
+    "head": "09f9f34d5",
+    "changedProductFiles": 36,
+    "addedLines": 1026,
+    "newNetworkConsumers": 0,
+    "newUnboundCheckingConsumers": 0,
+    "note": "추가된 checking 행은 기존 AI 알 수 없는 능력 진단의 Patch1078 조건이며 새 소비자가 아니다. LAN·검증·주소 정책 파일 변경 없음."
+  },
+  "protectedFiles": {
+    "files": 1821,
+    "unchanged": true,
+    "paths": [
+      "AGENTS.md",
+      "README.md",
+      "originals/**",
+      "originalCD/**"
+    ]
+  },
+  "probeCorrection": {
+    "productChange": false,
+    "discarded": [
+      "run-korean",
+      "run-japanese",
+      "run-korean-label"
+    ],
+    "reason": "옛 고정 좌표·번역 항목 라벨 오류. 메인 컨트롤 라벨과 실제 raw_menu 경계/세 항목/11.01 세 번째 행으로 다시 확인했다."
+  },
+  "notRun": [
+    "전체34경로 재집계",
+    "전체 솔루션 검사",
+    "MP·LAN 실행",
+    "사제 포획/희생·특정 적 공격·시나리오 승리",
+    "사용자 직접 확인 검사",
+    "보류한 CD10.72 추가 실행"
+  ],
+  "knownFailuresUnchanged": "LEFT_JOBS.md#baselines의 과거 기준선을 유지한다. 최신 전수 통과로 간주하지 않는다.",
+  "goalNextState": "paused",
+  "resumeRequiresUserRequest": true,
+  "passed": true
+}
