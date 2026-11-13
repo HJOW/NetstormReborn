@@ -18127,7 +18127,7 @@
       "bytes": 10846,
       "lines": 4,
       "fixtureCommit": "72640bbb3",
-      "webCommit": "worktree",
+      "webCommit": "ad2b73e33",
       "cpppjBasis": {
         "cpppj/src/client/SpriteColorMaps.cpp": "1754e5461",
         "cpppj/src/client/PaletteShade.cpp": "8ca250039"
@@ -18159,7 +18159,7 @@
       "bytes": 10846,
       "lines": 4,
       "fixtureCommit": "c7e9e8b37",
-      "webCommit": "worktree",
+      "webCommit": "ad2b73e33",
       "cpppjBasis": {
         "cpppj/src/client/PreviewColorMaps.cpp": "c7e9e8b37"
       },
@@ -18188,7 +18188,7 @@
       "bytes": 9300,
       "lines": 4,
       "fixtureCommit": "3447c500d",
-      "webCommit": "worktree",
+      "webCommit": "ad2b73e33",
       "cpppjBasis": {
         "cpppj/src/client/ProductionColorMaps.cpp": "3447c500d"
       },
@@ -18202,6 +18202,67 @@
         "cpppj/src/client/ProductionColorMaps.cpp"
       ],
       "scope": "10.78 전용 3행 전부 사용"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E374",
+      "sha256": "152b5c01100c57dae91241577d483ca140e1fe83cb1a1b0c2708a2697458839b",
+      "bytes": 1065962,
+      "lines": 2067,
+      "fixtureCommit": "0dbfd0c8f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/OwnerColorTableState.cpp": "0dbfd0c8f"
+      },
+      "id": "banner-option",
+      "path": "cpppj/tests/fixtures/banner-option-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 배너 옵션 설정 쓰기(43bc40)와 최초 소유자 색표 등록(43be30)의 끝 ready/enabled/redraw DWORD·188칸 현재 포인터 표·생성(standard/special 오프셋 double 비트·소스 목록)/반납(free) 효과 순서(write 2,050·init 16)",
+      "consumers": [
+        "webpj/tests/banner-option.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/owner-color-table-state.js",
+        "webpj/www/assets/owner-colors.js"
+      ],
+      "doc": "docs/webpj-owner-color-table-state-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/OwnerColorTableState.cpp"
+      ],
+      "scope": "10.78 전용 2,066행 전부 사용"
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "text": true,
+      "unit": "WB04-E374",
+      "sha256": "70684bfd514b29e981d67faa4d2abc6cababcc5ed275b22f495f58e41d65813f",
+      "bytes": 52855,
+      "lines": 7,
+      "fixtureCommit": "d207940cd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ClientColorSortInput.cpp": "b601503d0"
+      },
+      "id": "colorsort-fixed-input",
+      "path": "cpppj/tests/fixtures/colorsort-fixed-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 최초 ColorSort 논리 RGB 고정 입력에서 화면 팔레트를 두 번 바꾼 뒤에도 같은 입력으로 만든 아홉 표(기본 53비트 3행 + 확장 64비트 3행; 64비트는 명도 표 8만 다름)",
+      "consumers": [
+        "webpj/tests/client-color-sort-input.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/client-color-sort-input.js",
+        "webpj/www/core/sprite-color-maps.js",
+        "webpj/www/core/preview-color-maps.js"
+      ],
+      "doc": "docs/webpj-owner-color-table-state-20261113.md",
+      "cpppjSources": [
+        "cpppj/src/client/ClientColorSortInput.cpp"
+      ],
+      "scope": "10.78 전용 6행 전부 사용(64비트 3행은 명도 표 8 이 기본 정밀도와 다름을 확인)"
     }
   ]
 }

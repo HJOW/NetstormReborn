@@ -120,8 +120,17 @@ export function paletteLightness(logical) {
 // logical 은 논리 팔레트 DWORD 256개, type 은 94·97·111·141·137 이다. 사용: buildSpecialOwnerColorMaps(palette.logical, ISLE_TYPE). (2026-11-02 WB03-Y)
 export function buildSpecialOwnerColorMaps(logical, type, candidates = OWNER_COLOR_CANDIDATES) {
     if (candidates.length < (OWNER_COLOR_COUNT + 1) * 8) throw new RangeError('소유자 색 후보는 72개여야 한다');
+    specialOwnerColorSources(type);
+    return buildSpecialOwnerColorMapsFromLightness(paletteLightness(logical), type, candidates);
+}
+
+// 저장된 명도(색 번호 256개의 double)에서 바로 명도 전용 표를 만든다: 원본 실제 Client 의 입력은 ColorSort primary(RawColorSortPrimary)가 저장한 +8 double 이며 RGB 에서 다시 계산하지 않는다
+// (cpppj `BuildSpecialOwnerColorMaps(const RawColorSortPrimary&, …)` 대응). light 는 길이 256 의 숫자 배열/Float64Array 이고 나머지는 위 함수와 같다.
+// 사용: buildSpecialOwnerColorMapsFromLightness(Float64Array.from({ length: 256 }, (_, i) => primary.lightness(i)), 97). (2026-11-13 WB04-E374: 5-A OwnerColorTableState/ClientColorSortInput 이식에서 추가)
+export function buildSpecialOwnerColorMapsFromLightness(light, type, candidates = OWNER_COLOR_CANDIDATES) {
+    if (candidates.length < (OWNER_COLOR_COUNT + 1) * 8) throw new RangeError('소유자 색 후보는 72개여야 한다');
+    if (!light || light.length !== OWNER_COLOR_ROW) throw new RangeError('저장 명도는 256색이어야 한다');
     const sources = specialOwnerColorSources(type);
-    const light = paletteLightness(logical);
     const maps = identityMaps();
     // 소유자 색 번호 1~8 마다 소스 색을 바꾼다.
     for (let owner = 1; owner <= OWNER_COLOR_COUNT; owner += 1) {
