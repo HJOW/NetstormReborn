@@ -20853,7 +20853,7 @@
       "bytes": 31309,
       "lines": 260,
       "fixtureCommit": "ddbfc6a09",
-      "webCommit": "worktree",
+      "webCommit": "7879cb102",
       "cpppjBasis": {
         "cpppj/src/client/RawCameraPan.cpp": "ddbfc6a09",
         "cpppj/src/client/RawCameraPan.h": "ddbfc6a09"
@@ -20885,10 +20885,46 @@
       "bytes": 22250,
       "lines": 136,
       "fixtureCommit": "72df1d731",
-      "webCommit": "worktree",
+      "webCommit": "7879cb102",
       "cpppjBasis": {
         "cpppj/src/client/RawEdgeScroll.cpp": "72df1d731",
         "cpppj/src/client/RawEdgeScroll.h": "72df1d731"
+      }
+    },
+    {
+      "id": "embedded-tell",
+      "path": "cpppj/tests/fixtures/embedded-tell-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E466",
+      "producer": "cpppj EmbeddedTellTests: 보호 원본 10.78 내장 설명 조회/HtmlBody 부모의 제한 x86 관측, 두 x87 정밀도(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/html-body-gump.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/html-body-gump.js",
+        "webpj/www/ui/embedded-tell.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HtmlBodyGump.cpp",
+        "cpppj/src/client/HtmlBodyGump.h",
+        "cpppj/src/client/EmbeddedTell.cpp",
+        "cpppj/src/client/EmbeddedTell.h"
+      ],
+      "doc": "docs/webpj-html-body-gump-20261115.md",
+      "scope": "82행의 조회 순서 mask/키/본문 입력과 반환 serial·부모 flags/가상 표/serial·자식 유무·본문/링크 8192BYTE 지문·호출 순서",
+      "text": true,
+      "sha256": "a3b066240637a18fa7a435e6d9c50bbab06e5d3cfcb76687b76759b0bbdabdba",
+      "bytes": 18184,
+      "lines": 83,
+      "fixtureCommit": "2e2b24f2c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HtmlBodyGump.cpp": "2e2b24f2c",
+        "cpppj/src/client/HtmlBodyGump.h": "2e2b24f2c",
+        "cpppj/src/client/EmbeddedTell.cpp": "5a2cd0474",
+        "cpppj/src/client/EmbeddedTell.h": "2e2b24f2c"
       }
     }
   ]

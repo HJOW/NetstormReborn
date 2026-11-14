@@ -106,7 +106,7 @@ cpppj/src/client/EditorLocalTransport.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/client/EditorMapCatalogFiles.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/client/EditorSaveGoMain.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/client/EditorTestBattle.cpp	exclude-edit			-	[edit-editor]
-cpppj/src/client/EmbeddedTell.cpp	port	www/ui/embedded-tell.js	1f00a25a	port	[client-default] WB04-E437 EmbeddedTell showEmbeddedTell(mission→fallback→missing 0·빈 섹션도 HtmlBody·construct 0 은 Error·설치 뒤 serial)·showEmbeddedTellInConfig(매번 새 임시 Config('tell')로 현재 missionSpec tell 읽기·키 해독·임시 Config 는 생성 전 반납) 이식. 전용 PE fixture 없음(소스 계약·실제 공개 tell 자료); 기준선 뒤 변경 없음; 남음: HtmlBody 실제 생성 연결
+cpppj/src/client/EmbeddedTell.cpp	port	www/ui/embedded-tell.js	1f00a25a	port	[client-default] WB04-E437 EmbeddedTell showEmbeddedTell(mission→fallback→missing 0·빈 섹션도 HtmlBody·construct 0 은 Error·설치 뒤 serial)·showEmbeddedTellInConfig(매번 새 임시 Config('tell')로 현재 missionSpec tell 읽기·키 해독·임시 Config 는 생성 전 반납) 이식. 전용 PE fixture 없음(소스 계약·실제 공개 tell 자료); 기준선 뒤 변경 없음; 남음: HtmlBody 실제 생성 연결 / WB04-E466: 원본 embedded-tell 82행 전체일치(cpppj EmbeddedTellTests, 이전 "직접 시험 없음" 기록은 오류, HtmlBodyGump 와 함께 재생)
 cpppj/src/client/ExistingEditorAfterCheckpoint.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/client/ExternalHelpClient.cpp	adapt			todo	[adapt-external] 3.1절 바깥 링크 새 탭/창 열기 미구현 항목(netstorm.js external 훅)으로 구현 예정
 cpppj/src/client/FloatingSpGump.cpp	port	www/ui/floating-sp-gump.js	1f00a25a	port	[client-default] WB04-E434 FloatingSpGump construct(한 줄 생성→가상 표/시각 0/가속도 float32/속도 0→Clear→서식 ~3~E~y<비용>~[IfortGump.3]→측정→idle→현재 시각/깊이)·show(new 0xb8·가속도 -2·객체 참조 시 (0,0)·루트 Attach mode 0)·idle(double 시각 차이·y float32·범위 이탈 x87 parity NaN 제외→idle 해제+Kill·속도 float32)·deleteScalar 이식. 전용 PE fixture 없음(소스 계약·손 계산); 기준선 뒤 변경 없음; 앱 비용 표시는 간소화판 그대로; 남음: RawMenuControls 허브 조립
@@ -149,7 +149,7 @@ cpppj/src/client/GumpTree.cpp	port	www/ui/gump-tree.js	1f00a25a	port	[client-def
 cpppj/src/client/GumpVisual.cpp	port	www/render/gump-visual.js	1f00a25a	partial	[client-default] WB03 돌 버튼 외곽선/글자 배치
 cpppj/src/client/HelpLinkPolicy.cpp	port	www/ui/help-link.js	1f00a25a	partial	[client-default] 바깥 링크 새 탭/창 열기는 미구현(3.1절)
 cpppj/src/client/HelpListDisk.cpp	exclude-host			-	[host-dev-files]
-cpppj/src/client/HtmlBodyGump.cpp	port	www/ui/tell-window.js	1f00a25a	partial	[client-default] 본문 자식
+cpppj/src/client/HtmlBodyGump.cpp	port	www/ui/html-body-gump.js;www/ui/tell-window.js	1f00a25a	port	[client-default] WB04-E466: 내장 설명용 HTML 부모(construct 46c9c0·clear·parse·setText 이전 자식 Kill 뒤 새 생성·setHtml 두 첫 NUL→본문 NUL 앞 setText·fit/attach 여백 0 재맞춤), 원본 embedded-tell 82행 전체일치(본문/링크 8192BYTE 지문 포함). 기준선 뒤 변경 없음. 기존 앱 tell-window.js 는 허브 결선 전까지 유지.
 cpppj/src/client/HtmlConditionEffect.cpp	port	www/ui/html-text.js	1f00a25a	partial	[client-default] ? 분기
 cpppj/src/client/HtmlInputDialog.cpp	port	www/ui/html-input-dialog.js	1f00a25a	port	[client-default] WB04-E435 HtmlInputDialog confirmHtmlInput(CopyText 256·마지막 칸 NUL·첫 LF 절단·종료 NUL부터 isspace(int8) 역방향·모드≠1 atol(반환 무시)·후속 섹션 80바이트 NUL 앞·format/Tell·1 반환) 이식. 전용 PE fixture 없음(소스 계약); 기준선 뒤 변경 없음; 남음: 실제 모달/입력 조립
 cpppj/src/client/HtmlLinkText.cpp	port	www/ui/html-text.js	1f00a25a	partial	[client-default] 링크 문자열

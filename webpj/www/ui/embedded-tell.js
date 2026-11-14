@@ -1,6 +1,6 @@
 // 원본 004c8f60의 내장 설명(Tell) 조회와 HtmlBody 생성/serial 반환을 옮긴다(cpppj client/EmbeddedTell.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 일반 004cf730 팝업과 별개의 내장 HtmlBody 경로다. 내장 설명은 빈 섹션도 실제 HtmlBody 를 생성하며 일반 팝업의 이름 기록/param/BLANK/등록 객체 조회를 하지 않는다.
-// 현재 Mission → 매번 새로 읽는 tell 설정(fallback) → HtmlBody 생성 순서이며, 두 조회가 모두 실패하면 경고 뒤 0 을 돌려준다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다).
+// 현재 Mission → 매번 새로 읽는 tell 설정(fallback) → HtmlBody 생성 순서이며, 두 조회가 모두 실패하면 경고 뒤 0 을 돌려준다. 원본 관측 fixture(embedded-tell 82행)는 E466 의 html-body-gump.test.mjs 가 HtmlBodyGump 와 함께 직접 대조한다.
 // 사용: showEmbeddedTell('Tips', { mission, fallback, missing, construct, setHtml, serial }) → serial|0, showEmbeddedTellInConfig('Tips', gameData, mission, hooks) 는 실제 tell 파일을 임시 Config 로 읽는 fallback 을 붙인다.
 // (2026-11-14 WB04-E437: RawMenuControls 선행 내장 Tell 이식)
 import { Config } from '../assets/config.js';

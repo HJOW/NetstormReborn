@@ -1,5 +1,5 @@
 // 내장 Tell 조회와 HtmlBody 생성/serial 반환(EmbeddedTell)을 기준선 소스 계약과 실제 공개 tell 자료로 검증한다. (2026-11-14 WB04-E437)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(EmbeddedTell.cpp)에서 옮겼다. 실제 경로는 공개 자료의 GameData/Config 위에서 확인한다.
+// 이 파일의 순서/경계는 기준선 소스에서 옮겼고 원본 직접 관측(embedded-tell 82행) 대조는 html-body-gump.test.mjs(E466)가 한다. 순서/경계는 기준선 소스(EmbeddedTell.cpp)에서 옮겼다. 실제 경로는 공개 자료의 GameData/Config 위에서 확인한다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readDataMap } from './helpers.mjs';
