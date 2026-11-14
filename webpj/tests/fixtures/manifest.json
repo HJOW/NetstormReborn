@@ -22249,7 +22249,7 @@
       "bytes": 58671,
       "lines": 127,
       "fixtureCommit": "5dc75236b",
-      "webCommit": "worktree",
+      "webCommit": "b881c37a7",
       "cpppjBasis": {
         "cpppj/src/client/ProductionHintGump.cpp": "5dc75236b",
         "cpppj/src/client/ProductionHintGump.h": "5dc75236b"
@@ -22280,10 +22280,41 @@
       "bytes": 239016,
       "lines": 427,
       "fixtureCommit": "365dbe814",
-      "webCommit": "worktree",
+      "webCommit": "b881c37a7",
       "cpppjBasis": {
         "cpppj/src/client/FloatingSpGump.cpp": "365dbe814",
         "cpppj/src/client/FloatingSpGump.h": "365dbe814"
+      }
+    },
+    {
+      "id": "pointer-special-trace",
+      "path": "cpppj/tests/fixtures/pointer-special-trace-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E487",
+      "producer": "cpppj PointerMenuParentTests(ReplaysNativeSpecialTrace36): 보호 원본 10.78 Ctrl+special 지점 진단(4da263..2e6)의 독립 x86 관측 36행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/pointer-special-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/special-pointer-trace.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/SpecialPointerTrace.cpp",
+        "cpppj/src/client/SpecialPointerTrace.h"
+      ],
+      "doc": "docs/webpj-pointer-special-native-fixtures-20261115.md",
+      "scope": "Ctrl+special 지점 진단 36입력(조건 단락·빈 후보·중복 후보)의 역투영/첫 후보/직접 가상 70/다음 후보 호출 순서",
+      "text": true,
+      "sha256": "fc6c8939b2bf80736893fbb7415909743b16d7667d77933ead69d5b5a8079808",
+      "bytes": 1157,
+      "lines": 37,
+      "fixtureCommit": "9271152fe",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SpecialPointerTrace.cpp": "9271152fe",
+        "cpppj/src/client/SpecialPointerTrace.h": "9271152fe"
       }
     }
   ]
