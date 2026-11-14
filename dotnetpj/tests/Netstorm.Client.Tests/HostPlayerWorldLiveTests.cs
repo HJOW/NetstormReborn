@@ -25,6 +25,40 @@ public sealed class HostPlayerWorldLiveTests
         return (session, table.Types);
     }
 
+    /// <summary>제품 HP 부모가 장치 생성 뒤 바뀐 같은 사제TYPE·약화·TYPE HP를 실제 owner에서 읽는다.</summary>
+    [Fact]
+    public void RewardHpUsesCurrentHostGameAuxAndTypeTable()
+    {
+        var (session, types) = LoadPlayerScene();
+        types[74].Flags1 = 0x10; types[74].MaxHitPoints = 120;
+        session.GameAux.PriestTypeBox.Value = 74; session.GameAux.PriestQuarterHp = true;
+        Assert.Equal(30, session.Reward.TypeHitPoints(74));
+        session.GameAux.PriestTypeBox.Value = 75; Assert.Equal(120, session.Reward.TypeHitPoints(74));
+        types[74].MaxHitPoints = -37; session.GameAux.PriestTypeBox.Value = 74;
+        Assert.Equal(-9, session.Reward.TypeHitPoints(74));
+        session.GameAux.PriestQuarterHp = false; Assert.Equal(-37, session.Reward.TypeHitPoints(74));
+        session.AiChecking.Set(0x80000000u); types[74].Flags1 = 0; session.GameAux.DaisTypeBox.Value = 74;
+        Assert.Equal(-37, session.Reward.TypeHitPoints(74));
+        session.GameAux.DaisTypeBox.Value = 75; Assert.Throws<InvalidOperationException>(() => session.Reward.TypeHitPoints(74));
+    }
+
+    /// <summary>실제 공장 초기화와 보상 조회가 같은 현재 사제TYPE·약화 owner를 사용한다.</summary>
+    [Fact]
+    public void FactoryAndRewardShareCurrentPriestHpOwner()
+    {
+        var (session, types) = LoadPlayerScene(); PlayerWorldHooks hooks = session.BuildPlayerWorldHooks();
+        types[158].Flags1 |= 0x10; types[158].MaxHitPoints = 120;
+        session.GameAux.PriestTypeBox.Value = 158; session.GameAux.PriestQuarterHp = true;
+        int first = hooks.Create!(158, 2);
+        Assert.Equal(30, BitConverter.ToInt32(session.Pool.Slot(first)[26..30]));
+        Assert.Equal(30, session.Reward.MaxHitPoints(first));
+        session.GameAux.PriestTypeBox.Value = 157;
+        int next = hooks.Create(158, 2);
+        Assert.Equal(120, BitConverter.ToInt32(session.Pool.Slot(next)[26..30]));
+        Assert.Equal(120, session.Reward.MaxHitPoints(next));
+        Assert.Equal(30, BitConverter.ToInt32(session.Pool.Slot(first)[26..30]));
+    }
+
     /// <summary>장치 연결 전에 화신 갈고리 조립을 거부하는지 확인한다.</summary>
     [Fact]
     public void PlayerWorldHooksRequireDevices()

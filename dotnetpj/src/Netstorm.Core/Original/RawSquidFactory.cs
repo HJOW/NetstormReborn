@@ -56,7 +56,7 @@ public sealed class SquidFactoryDiagnostics
 /// 슬롯 필드 위치(10.78): 가상 표 +0, 섬 번호 +8, 타입 +10, 상태 +11, HP +26(4바이트), 소유자 +34, zOrder +35, 추가 비트 +40.
 /// 생산 칸 contained Form 과 GumpForm 의 생성은 Form 모듈(W03)에서 옮긴다.
 /// 근거: docs/exe/cpp-creation-reconstruction.md, docs/exe/cpp-derived-reconstruction.md, cpppj/src/o/SquidFactory.cpp (W02 첫 조각, 2026-10-16; Retype·생성자 표 명시 오류는 R0-4 재대조, 2026-10-28).
-/// 최종 가상 표 판별(SupportsConstructedVtable)은 0.224에서 연결했고 약화 전역 공유(BindWeakenedMana)는 0.223에서 연결했다. 타입 HP 읽기(TypeHitPoints)는 R6에서 연결한다.
+/// 최종 가상 표 판별(SupportsConstructedVtable)은 0.224, 약화 전역 공유는 0.223, 현재 TYPE HP와 공통 초기화는 0.528에서 연결했다.
 /// 생성·타입 변경·최초 Pop 플래그의 판본별 표·위치는 F2c-11에서 이었다. Take·공통 postCreate의 나머지 CD 분기는 별도 범위다.
 /// </summary>
 public sealed partial class RawSquidFactory
@@ -130,10 +130,10 @@ public sealed partial class RawSquidFactory
     /// <summary>호출 중 같은 World 저장소를 바꾸지 않는 공유 깊이 상자다. 없으면 지역 깊이를 쓴다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
     private UIntBox? _formPostPopDepth;
 
-    /// <summary>타입 HP가 읽는 같은 장기 사제 타입 DWORD다. 미연결이면 158을 쓴다. R6 TypeHitPoints에서 소비하며 그 전까지는 보관만 한다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    /// <summary>공통 초기화·선택 HP가 읽는 같은 장기 사제 타입 DWORD다. 미연결이면 158을 쓴다.</summary>
     private UIntBox? _sharedPriestType;
 
-    /// <summary>타입 HP가 읽는 같은 장기 받침 타입 DWORD다. 미연결이면 165를 쓴다. R6 TypeHitPoints에서 소비하며 그 전까지는 보관만 한다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
+    /// <summary>공통 초기화·선택 HP가 읽는 같은 장기 받침 타입 DWORD다. 미연결이면 165를 쓴다.</summary>
     private UIntBox? _sharedDaisType;
 
     /// <summary>Create가 읽는 같은 장기 fakeThreeByThreeSurface 타입 DWORD다. 미연결이면 162를 쓴다. 2026-11-07 F2d 공장 HP·표면 바인딩 이식에서 추가됐다.</summary>
@@ -589,30 +589,40 @@ public sealed partial class RawSquidFactory
     /// <param name="sid">대상 슬롯 번호.</param>
     public void PostCreate(int sid)
     {
-        Span<byte> bytes = LiveBytes(sid);
-        OriginalTypeRecord type = Type(bytes[RawSidPool.TypeOffset], requireSupported: false);
-        bytes[ZOrderOffset] = (byte)type.ZOrder;
-        if (!_pool.IsServer)
+        bool patch = _pool.Edition == OriginalEdition.Patch1078;
+        Span<byte> bytes = _pool.RawSlot(sid);
+        if (bytes[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType)
+            Assert("!isForm()", patch ? 0x7d4u : 0x7a6u);
+        if ((bytes[RawSidPool.StateOffset] & ContainedBit) != 0)
+            Assert("!isContained()", patch ? 0x7d5u : 0x7a7u);
+        IReadOnlyList<OriginalTypeRecord> selectedBase = CurrentTypes();
+        OriginalTypeRecord initial = TypeRecord(bytes[RawSidPool.TypeOffset]);
+        bool cdServer = !patch && _pool.IsServer;
+        bytes[patch ? 35 : 33] = unchecked((byte)initial.ZOrder);
+        if (patch ? _pool.IsServer : cdServer)
         {
-            return;
+            bytes[patch ? 34 : 32] = 0;
+            OriginalTypeRecord current = TypeRecord(bytes[RawSidPool.TypeOffset]);
+            bool needsHp = (current.Flags2 & OriginalTypeRecord.Dais) != 0
+                ? (bytes[patch ? 40 : 35] & 1) != 0 : (current.Flags1 & OriginalTypeRecord.HasHitPoints) != 0;
+            if (needsHp)
+                Put(bytes, HpOffset, unchecked((uint)ReadSelectedHitPoints(initial, selectedBase)), patch ? 4 : 2);
         }
-        bytes[OwnerOffset] = 0;
-        bool needsHp = (type.Flags2 & OriginalTypeRecord.Dais) != 0
-            ? (bytes[ExtraOffset] & 1) != 0
-            : (type.Flags1 & OriginalTypeRecord.HasHitPoints) != 0;
-        if (needsHp)
-        {
-            int hp = CurrentWeakenedMana() && bytes[RawSidPool.TypeOffset] == ManaType ? type.MaxHitPoints / 4 : type.MaxHitPoints;
-            Put(bytes, HpOffset, unchecked((uint)hp), 4);
-        }
+        if ((bytes[RawSidPool.StateOffset] & ContainedBit) != 0)
+            Assert("!isContained()", patch ? 0x7dfu : 0x7b1u);
     }
 
     /// <summary>공통 postTake(원본 004ad4a0). zOrder 하위 바이트만 복사하고 소유자·HP 는 보존한다.</summary>
     /// <param name="sid">대상 슬롯 번호.</param>
     public void PostTake(int sid)
     {
-        Span<byte> bytes = LiveBytes(sid);
-        bytes[ZOrderOffset] = (byte)Type(bytes[RawSidPool.TypeOffset], requireSupported: false).ZOrder;
+        bool patch = _pool.Edition == OriginalEdition.Patch1078;
+        Span<byte> bytes = _pool.RawSlot(sid);
+        if (bytes[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType)
+            Assert("!isForm()", patch ? 0x7f6u : 0x7c8u);
+        bytes[patch ? 35 : 33] = unchecked((byte)TypeRecord(bytes[RawSidPool.TypeOffset]).ZOrder);
+        if ((bytes[RawSidPool.StateOffset] & ContainedBit) != 0)
+            Assert("!isContained()", patch ? 0x7fau : 0x7ccu);
     }
 
     /// <summary>

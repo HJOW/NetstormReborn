@@ -14,24 +14,23 @@ public sealed partial class RawSquidFactory
             if (ReferenceEquals(selectedBase[index], type)) { selected = index; break; }
         // C# 레코드 교체도 같은 물리 TYPE 칸의 현재 필드를 읽도록 저장한 번호를 역참조한다.
         OriginalTypeRecord Selected() => selected >= 0 ? selectedBase[selected] : type;
-        // 전체 표 API에서는 현재 base가 같은 표일 때만 원문 포인터 차이를 계산할 수 있다.
+        // 선택 당시의 물리 칸과 현재 표 뷰의 상대 번호를 실제 getNum 위치에서 계산한다.
         uint Number()
         {
-            if (selected < 0 || !ReferenceEquals(selectedBase, CurrentTypes()))
+            if (selected < 0)
                 throw new InvalidOperationException("TYPE HP의 서로 다른 물리 표 주소 연결");
-            return unchecked((uint)selected);
+            return RawRiftHitPoints.CurrentRiftTypeNumber(selected, selectedBase, CurrentTypes());
         }
-        if (_pool.Edition == OriginalEdition.Patch1078 && (_diagnostics?.Checking?.Read() ?? 0) != 0 && (Selected().Flags1 & OriginalTypeRecord.HasHitPoints) == 0)
+        return RawRiftHitPoints.ReadSelected(_pool.Edition, Selected, new()
         {
-            uint number = Number();
-            if (number != CurrentDaisType())
-            {
-                Action<string, string, uint> assertion = _diagnostics?.Assertion ?? throw new InvalidOperationException("TYPE HP 실제 진단 미연결");
-                assertion("(typeFlags & TYPE_FLAG_HAS_HIT_POINTS) != 0 || getNum() == daisType", @"\Ns\O\Rifttype.cpp", 0x1e3);
-            }
-        }
-        bool quarter = false;
-        if (CurrentWeakenedMana()) quarter = Number() == CurrentPriestType();
-        return quarter ? Selected().MaxHitPoints / 4 : Selected().MaxHitPoints;
+            Checking = _diagnostics?.Checking ?? new RawCheckingFlag(),
+            Quarter = new RawCheckingFlag(CurrentWeakenedMana),
+            Priest = CurrentPriestType, Dais = CurrentDaisType,
+        }, new()
+        {
+            Number = Number,
+            Assertion = (expression, file, line) => (_diagnostics?.Assertion
+                ?? throw new InvalidOperationException("TYPE HP 실제 진단 미연결"))(expression, file, line),
+        });
     }
 }

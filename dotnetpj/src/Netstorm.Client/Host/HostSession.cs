@@ -796,6 +796,7 @@ public sealed partial class HostSession
             throw new ArgumentException("지형 Pop 타입·셰이프 목록 크기 오류", nameof(types));
         }
         _terrainFactory = new RawSquidFactory(Pool, types);
+        BindFactoryHitPoints(_terrainFactory, types);
         _terrainHash = new RawSquidHash();
         _terrainSpots = new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells];
         _terrainDisplay = new SquidDisplay(
@@ -925,6 +926,24 @@ public sealed partial class HostSession
     /// <remarks>2026-11-12 0.467에서 추가했다. 세션 공유 SP 저장소와 지형 장부를 빌린다.</remarks>
     private RawSquidReward? _fortHp;
 
+    /// <summary>실제 요새·사제 회복이 같은 현재 HP 전역을 빌리는 보상 상태다.</summary>
+    public SquidRewardState RewardState { get; } = new();
+
+    /// <summary>요새 장치 구성 뒤 같은 실제 HP/보상 처리기를 빌린다.</summary>
+    public RawSquidReward Reward => _fortHp ?? throw new InvalidOperationException("세션 실제 HP/보상 미연결");
+
+    /// <summary>지형·요새 공장이 같은 현재 사제TYPE·다이스·약화와 복귀 진단을 읽게 한다.</summary>
+    private void BindFactoryHitPoints(RawSquidFactory factory, IReadOnlyList<OriginalTypeRecord> types)
+    {
+        factory.BindWeakenedMana(GameAux.PriestQuarterHpBox);
+        factory.BindHitPointTypes(GameAux.PriestTypeBox, GameAux.DaisTypeBox);
+        factory.BindDiagnostics(new()
+        {
+            Types = types, Checking = new RawCheckingFlag(() => AiChecking.Read()),
+            Assertion = (expression, file, line) => throw new InvalidOperationException($"공장 HP 원본 진단: {expression} {file}:{line}"),
+        });
+    }
+
     /// <summary>요새 내용물 생성의 세션 소유 몸체다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
     /// <remarks>2026-11-12 0.467에서 추가했다. 부착은 bound Form 분배로 live 연결하며 서버 전송은 MP 전송(R6)에서 잇는다.</remarks>
     private RawContainedCreate? _fortContained;
@@ -968,7 +987,15 @@ public sealed partial class HostSession
             throw new InvalidOperationException("요새 객체 장치는 지형 Pop 장치 뒤에 연결해야 한다");
         }
         _fortFactory = new RawSquidFactory(Pool, types);
-        _fortHp = new RawSquidReward(Pool, types, TerrainBookkeeping, new SquidRewardState(), Sp);
+        BindFactoryHitPoints(_fortFactory, types);
+        RewardState.SharedPriestType = GameAux.PriestTypeBox;
+        RewardState.SharedDaisType = GameAux.DaisTypeBox;
+        RewardState.SharedPriestQuarterHp = GameAux.PriestQuarterHpBox;
+        RewardState.Checking.Bind(() => AiChecking.Read());
+        _fortHp = new RawSquidReward(Pool, types, TerrainBookkeeping, RewardState, Sp);
+        _fortHp.BindCurrentTypes(types);
+        _fortHp.BindHitPointDiagnostics((expression, file, line) =>
+            throw new InvalidOperationException($"보상 HP 원본 진단: {expression} {file}:{line}"));
         _fortForms = new RawSquidForms(Pool, null, (_, _) => { });
         _fortForms.BindAttach(new FormAttachHooks
         {

@@ -1,3 +1,4 @@
+// 공통 HP·비용·보상을 같은 실제 슬롯과 전역에 적용한다.
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -59,7 +60,16 @@ public sealed class SquidRewardState
     public bool PriestQuarterHp { get; set; }
 
     /// <summary>패치 0049fce0 의 디버그 assert 전역(원본 DAT_005e4794). 켜지면 위반 입력을 거부한다.</summary>
-    public bool DebugAsserts { get; set; }
+    public bool DebugAsserts { get => Checking.IsEnabled; set => Checking.Set(value); }
+
+    /// <summary>원문 HP 진단의 현재 DWORD를 빌리며 독립 DebugAsserts 입력도 유지한다.</summary>
+    public RawCheckingFlag Checking { get; } = new();
+    /// <summary>최대HP 조회에 빌리는 같은 현재 사제 약화 주소다.</summary>
+    public BoolBox? SharedPriestQuarterHp { get; set; }
+    /// <summary>현재 약화 비교의 사제 TYPE 주소다.</summary>
+    public UIntBox? SharedPriestType { get; set; }
+    /// <summary>현재 HP 플래그 예외 TYPE 주소다.</summary>
+    public UIntBox? SharedDaisType { get; set; }
 
     /// <summary>소유자별 AI 지갑(1~8). 0 번은 쓰지 않는다.</summary>
     public int[] AiWallet { get; } = new int[RawPostPopState.OwnerCount];
@@ -138,6 +148,15 @@ public sealed class RawSquidReward
     /// <summary>타입 번호로 비용·HP·플래그를 조회하는 타입 표.</summary>
     private readonly OriginalTypeRecord[] _types;
 
+    /// <summary>명시 연결한 같은 물리 TYPE 뷰다. 비용표의 생성 시 입력과 구별한다.</summary>
+    private ArraySegment<OriginalTypeRecord>? _currentTypes;
+
+    /// <summary>현재 HP 진단이 선택하는 실제 장치다.</summary>
+    private Action<string, string, uint>? _hitPointAssertion;
+
+    /// <summary>현재 HP/플래그 기록 또는 독립 구성의 생성 시 표다.</summary>
+    private ArraySegment<OriginalTypeRecord> CurrentTypes => _currentTypes ?? new ArraySegment<OriginalTypeRecord>(_types);
+
     /// <summary>AI 부착·로컬 소유자 장부.</summary>
     private readonly RawPostPopState _bookkeeping;
 
@@ -197,6 +216,24 @@ public sealed class RawSquidReward
     /// <summary>가상 +0x80 을 물은 횟수.</summary>
     public uint VirtualCountCalls => _virtualCalls;
 
+    /// <summary>같은 PATCH 물리 배열 또는 겹치는 뷰를 빌린다. null은 생성 시 표로 돌아간다.</summary>
+    public void BindCurrentTypes(IReadOnlyList<OriginalTypeRecord>? types)
+    {
+        if (types is null) { _currentTypes = null; return; }
+        if (_pool.Edition != OriginalEdition.Patch1078 || types.Count != OriginalConstructors.TypeCount)
+            throw new ArgumentException("보상 현재 TYPE 대여의 판본/길이 오류");
+        ArraySegment<OriginalTypeRecord> selected = types switch
+        {
+            OriginalTypeRecord[] array => new(array),
+            ArraySegment<OriginalTypeRecord> segment => segment,
+            _ => throw new ArgumentException("보상 현재 TYPE는 실제 물리 배열/뷰가 필요하다"),
+        };
+        _currentTypes = selected;
+    }
+
+    /// <summary>선택된 HP 진단만 실제 장치로 전달한다. null은 그 경계를 명시 미연결로 둔다.</summary>
+    public void BindHitPointDiagnostics(Action<string, string, uint>? assertion) => _hitPointAssertion = assertion;
+
     /// <summary>원본과 같이 번호·타입 범위를 확인한 뒤 슬롯을 읽는다.</summary>
     /// <param name="sid">대상 슬롯 번호.</param>
     private ReadOnlySpan<byte> Raw(int sid)
@@ -206,7 +243,7 @@ public sealed class RawSquidReward
             throw new ArgumentOutOfRangeException(nameof(sid), sid, "보상 SID 범위 오류");
         }
         ReadOnlySpan<byte> raw = _pool.Slot(sid);
-        if (raw[TypeOffset] >= _types.Length)
+        if (raw[TypeOffset] >= CurrentTypes.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(sid), raw[TypeOffset], "보상 타입 번호 범위 오류");
         }
@@ -294,17 +331,25 @@ public sealed class RawSquidReward
     /// <param name="type">타입 번호.</param>
     public int TypeHitPoints(uint type)
     {
-        if (type >= _types.Length)
+        ArraySegment<OriginalTypeRecord> selected = CurrentTypes;
+        if (type >= selected.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(type), type, "보상 HP 타입 번호 범위 오류");
         }
-        OriginalTypeRecord record = _types[(int)type];
-        // 원본은 UI 경고만 내지만 디버그 assert 가 켜지면 즉시 멈춘다
-        if (_state.DebugAsserts && (record.Flags1 & HasHitPointBit) == 0 && type != _state.Types.Dais)
+        BoolBox? quarter = _state.SharedPriestQuarterHp;
+        UIntBox? priest = _state.SharedPriestType, dais = _state.SharedDaisType;
+        return RawRiftHitPoints.ReadSelected(_pool.Edition, () => selected[(int)type], new()
         {
-            throw new InvalidOperationException("보상 HP 없는 타입의 assert 경로");
-        }
-        return _state.PriestQuarterHp && type == _state.Types.Priest ? record.MaxHitPoints / 4 : record.MaxHitPoints;
+            Checking = _state.Checking,
+            Quarter = new RawCheckingFlag(() => quarter?.Value ?? _state.PriestQuarterHp),
+            Priest = () => priest?.Value ?? _state.Types.Priest,
+            Dais = () => dais?.Value ?? _state.Types.Dais,
+        }, new()
+        {
+            Number = () => RawRiftHitPoints.CurrentRiftTypeNumber((int)type, selected, CurrentTypes),
+            Assertion = (expression, file, line) => (_hitPointAssertion
+                ?? throw new InvalidOperationException("보상 HP TYPE 실제 진단 장치 미연결"))(expression, file, line),
+        });
     }
 
     /// <summary>객체가 HP 를 갖는지 확인한다. 받침(dais)은 abstract 비트가 정한다.</summary>
@@ -312,7 +357,7 @@ public sealed class RawSquidReward
     public bool HasHitPoints(int sid)
     {
         ReadOnlySpan<byte> raw = Raw(sid);
-        OriginalTypeRecord type = _types[raw[TypeOffset]];
+        OriginalTypeRecord type = CurrentTypes[raw[TypeOffset]];
         return (type.Flags2 & DaisKind) != 0 ? (raw[ExtraOffset] & 1) != 0 : (type.Flags1 & HasHitPointBit) != 0;
     }
 
@@ -321,7 +366,7 @@ public sealed class RawSquidReward
     public int MaxHitPoints(int sid)
     {
         ReadOnlySpan<byte> raw = Raw(sid);
-        OriginalTypeRecord type = _types[raw[TypeOffset]];
+        OriginalTypeRecord type = CurrentTypes[raw[TypeOffset]];
         if ((type.Flags2 & DaisKind) == 0)
         {
             return TypeHitPoints(raw[TypeOffset]);
