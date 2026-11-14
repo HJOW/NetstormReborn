@@ -320,7 +320,7 @@ cpppj/src/o/RawColorSortPrimary.cpp	Netstorm.Core/Original/RawColorSortPrimary.c
 cpppj/src/o/RawColorSortPrimary.h	Netstorm.Core/Original/RawColorSortPrimary.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
 cpppj/src/o/RawColorSortStartup.cpp	Netstorm.Core/Original/RawColorSortStartup.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	L1
 cpppj/src/o/RawColorSortStartup.h	Netstorm.Core/Original/RawColorSortStartup.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	L1
-cpppj/src/o/RawConstructionVisual.h	Netstorm.Core/Original/ConstructionVisualImage.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
+cpppj/src/o/RawConstructionVisual.h	Netstorm.Core/Original/ConstructionVisualImage.cs	5389347d381dbdfbbbfc67f540ed3d5bf702f412	port
 cpppj/src/o/RawContainedCreate.cpp	Netstorm.Core/Original/RawContainedCreate.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/RawContainedFinder.cpp	Netstorm.Core/Original/RawContainedFinder.cs	88743a5a69d05ae9a038f4abe1dd45ceaebfea6f	L1
 cpppj/src/o/RawContainedFinder.h	Netstorm.Core/Original/RawContainedFinder.cs	88743a5a69d05ae9a038f4abe1dd45ceaebfea6f	L1
@@ -477,7 +477,7 @@ cpppj/src/o/RawPriestPreDestroy.cpp	Netstorm.Core/Original/RawPriestPreDestroy.c
 cpppj/src/o/RawPriestRegen.cpp	Netstorm.Core/Original/RawPriestRegen.cs	f7e81025d1b1d019a5a4d6bffb0a4cbae9d7a473	L1
 cpppj/src/o/RawPriestSpawn.h	Netstorm.Core/Original/RawPlacementTerrainTypes.cs	dfdbcd655c0564cc045fcb40fb79096cb051ac67	L1
 cpppj/src/o/RawPriestState.cpp	Netstorm.Core/Original/RawPriestState.cs	92f395980ead5365394d469f8a7cab3c4eff3e9c	L1
-cpppj/src/o/RawRenderCollection.h	Netstorm.Core/Original/RenderCollectionEntry.cs	8ca081a26b4b6bce8dbf63f72a37733dc95e25d4	port
+cpppj/src/o/RawRenderCollection.h	Netstorm.Core/Original/RenderCollectionEntry.cs	8f4a4d25fdb933c52f2404f5739dd1d0c4b41d8b	port
 cpppj/src/o/RawSnart.cpp	Netstorm.Core/Original/RawSnart.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
 cpppj/src/o/RawSnart.h	Netstorm.Core/Original/RawSnart.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
 cpppj/src/o/RawSoloMapList.cpp	Netstorm.Core/Original/RawSoloMapList.cs	fdb9a2b9b03f78b84af763aea51fe9a333f6dc20	L1
@@ -819,3 +819,13 @@ cpppj/src/o/RawDamageablePostDestroy.h	Netstorm.Core/Original/RawDamageablePostD
 cpppj/src/o/RawDamageableBurning.h	Netstorm.Core/Original/RawDamageableBurning.cs	a9157275900dc6537b7aa423481272be7328b8ba	L1
 cpppj/src/o/RawDamageableHit.h	Netstorm.Core/Original/RawDamageableHit.cs	8b467ca03249dbc963ceaf8efdd35fa6e26986b7	L1
 cpppj/src/o/RawSquidHitPoints.h	Netstorm.Core/Original/RawSquidHitPoints.cs	552656c0c8bb46b48637b26a1acb59213edc1de1	L1
+cpppj/src/o/RawConstructionLifetime.h	Netstorm.Core/Original/RawRenderRegistry.cs	3e6286eb8bab56d6cbf26b35d567ab410ac1afde	L1
+cpppj/src/o/RawConstructionLifetime.h	Netstorm.Core/Original/RawConstructionLifetime.cs	3e6286eb8bab56d6cbf26b35d567ab410ac1afde	L1
+cpppj/src/o/RawConstructionLifetime.cpp	Netstorm.Core/Original/RawRenderRegistry.cs	3e6286eb8bab56d6cbf26b35d567ab410ac1afde	L1
+cpppj/src/o/RawConstructionLifetime.cpp	Netstorm.Core/Original/RawConstructionLifetime.cs	3e6286eb8bab56d6cbf26b35d567ab410ac1afde	L1
+cpppj/src/o/RawRenderCollection.h	Netstorm.Core/Original/RawRenderCollection.cs	8f4a4d25fdb933c52f2404f5739dd1d0c4b41d8b	L1
+cpppj/src/o/RawRenderCollection.cpp	Netstorm.Core/Original/RawRenderCollection.cs	3e6286eb8bab56d6cbf26b35d567ab410ac1afde	L1
+cpppj/src/o/RenderProcessSystem.h	Netstorm.Core/Original/RenderProcessSystem.cs	c258c7f3723d1c32fbbfdf39fca4a6f5f0fc3db9	port
+cpppj/src/o/RenderProcessSystem.cpp	Netstorm.Core/Original/RenderProcessSystem.cs	c258c7f3723d1c32fbbfdf39fca4a6f5f0fc3db9	port
+cpppj/src/o/RawConstructionVisual.h	Netstorm.Core/Original/ConstructionVisualFields.cs	5389347d381dbdfbbbfc67f540ed3d5bf702f412	port
+cpppj/src/o/RawConstructionVisual.h	Netstorm.Core/Original/RawRenderRegistry.cs	5389347d381dbdfbbbfc67f540ed3d5bf702f412	port
