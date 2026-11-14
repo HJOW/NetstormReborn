@@ -20261,11 +20261,47 @@
       "sha256": "db68ae7e1d65efcbc01f50906d9a211d9412c1665d6ac2d7f33319b1c45994e5",
       "bytes": 41451,
       "lines": 1018,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "169a3712a",
+      "webCommit": "169a3712a",
       "cpppjBasis": {
         "cpppj/src/client/WarningMessages.cpp": "8d45566de",
         "cpppj/src/client/WarningMessages.h": "8d45566de"
+      }
+    },
+    {
+      "id": "chat-recipient-identity-runtime",
+      "path": "cpppj/tests/fixtures/chat-recipient-identity-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E455",
+      "producer": "cpppj ChatRecipients_ActualIdentityNative48: 보호 원본10.78 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/client-chat-runtime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/client-chat-runtime.js",
+        "webpj/www/ui/chat-recipients.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ClientChatRuntime.cpp",
+        "cpppj/src/client/ClientChatRuntime.h",
+        "cpppj/src/client/ChatRecipients.cpp",
+        "cpppj/src/client/ChatRecipients.h"
+      ],
+      "doc": "docs/webpj-client-chat-runtime-20261114.md",
+      "scope": "일반/전투/편집48입력의 실제Identity+대상검사 반환·전체60BYTE·외부호출순서. 실제UI/transport 픽셀은 아님",
+      "text": true,
+      "sha256": "3f2e56c9396b50e66dc932d1b23e620f9c1bc53de07f5366ca2aa6aab3aeab76",
+      "bytes": 13008,
+      "lines": 49,
+      "fixtureCommit": "162594848",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ClientChatRuntime.cpp": "c0f7843ae",
+        "cpppj/src/client/ClientChatRuntime.h": "c0f7843ae",
+        "cpppj/src/client/ChatRecipients.cpp": "325d19a08",
+        "cpppj/src/client/ChatRecipients.h": "325d19a08"
       }
     }
   ]
