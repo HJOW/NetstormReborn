@@ -849,3 +849,7 @@ cpppj/src/client/BurningFrameCapture.h	Netstorm.Client/Display/BurningFrameCaptu
 cpppj/src/client/BurningFrameCapture.cpp	Netstorm.Client/Display/BurningFrameCapture.cs	ab9361f11f2bc7618251f17d047f6d601c5c08fc	port
 cpppj/src/client/Renderer.h	Netstorm.Client/Display/DirtyRegions.cs	731c9dee99fdaf98338fc54f33c9d62a886251f6	L1
 cpppj/src/client/Renderer.cpp	Netstorm.Client/Display/DirtyRegions.cs	5a2cd047486b18fb1d3978f8bbd4b1dee6924413	L1
+cpppj/src/o/ParticleGradient.h	Netstorm.Core/Original/ParticleGradient.cs	e6d976346d9f7cebb5af45aa19bb91a2b83d3294	L1
+cpppj/src/o/ParticleGradient.cpp	Netstorm.Core/Original/ParticleGradient.cs	e6d976346d9f7cebb5af45aa19bb91a2b83d3294	L1
+cpppj/src/client/ParticlePaletteMemory.h	Netstorm.Client.Host/ParticlePaletteMemory.cs	c258c7f3723d1c32fbbfdf39fca4a6f5f0fc3db9	port
+cpppj/src/client/ParticlePaletteMemory.cpp	Netstorm.Client.Host/ParticlePaletteMemory.cs	c258c7f3723d1c32fbbfdf39fca4a6f5f0fc3db9	port

@@ -28,6 +28,6 @@ Client의 BurningFrameCapture는 기존 실제 RawShapeToBuffer/plain RLE를 같
 
 ## 남은 제품 조립
 
-제품 HostSession의 공통표시/연소owner와 실제SHPCapture·현재프레임/뷰/팔레트/소리장치·일반burning/사제회복/피해·전체삭제/배치를 연결한다(다음0.537). 현재실제시스템의합성수명/원본대조를 제품미션의표시/플레이 완료로 합산하지 않는다. 전체Renderer/HUD/카메라·메뉴미션시작·brain/다른파생은 계속잔여다.
+제품 HostSession의 공통표시/연소owner와 실제SHPCapture·현재프레임/뷰/팔레트/소리장치·일반burning/사제회복/피해·전체삭제/배치를 연결한다(0.537에서색띠/실제팔레트선행을분리완료, 제품결선은0.538). 현재실제시스템의합성수명/원본대조를 제품미션의표시/플레이 완료로 합산하지 않는다. 전체Renderer/HUD/카메라·메뉴미션시작·brain/다른파생은 계속잔여다.
 
 PORT_MAP846행(L1 414+port432), fixture291개(4개추가). 전체floor/reflected 유지·새외부접속/NB수정없음. 게임창·사제포획/희생·특정적공격·승리·MP 재현없음. 보호원본/CD·AGENTS.md·README개요·cpppj·LEFT_JOBS.md·다른프로젝트 변경없음. 목표active·M1전체0/34·후속단계잔여다.

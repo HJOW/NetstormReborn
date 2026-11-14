@@ -21,6 +21,10 @@
     <ProjectReference Include="..\..\src\Netstorm.Net\Netstorm.Net.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <!-- 실제 색 띠/두 생성자 팔레트의 원본 관측을 링크로 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/particle-gradient-x86.tsv" Link="X86/particle-gradient-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/fierytail-lifetime-x86.tsv" Link="X86/fierytail-lifetime-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/lightning-lifetime-x86.tsv" Link="X86/lightning-lifetime-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 원본 exe 없이 다리 표를 검증하는 정적 추출 자료를 테스트 출력에 복사한다. -->
     <None Update="Fixtures/bridge-tables.json" CopyToOutputDirectory="PreserveNewest" />
     <!-- cpppj 콘솔 월드 덤프의 미션 시작 상태. x86 실행 기대값과 출처를 구분한다 (tools/export_cpp_world.py). -->
