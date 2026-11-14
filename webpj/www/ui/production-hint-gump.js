@@ -1,7 +1,7 @@
 // 생산 실패 안내의 원본 TextGump 파생과 두 번역 wrapper 를 복원한다(10.78 의 4728d0/4729d0/472a00/472a50/472be0/472d20 처리기).
 // (cpppj client/ProductionHintGump.cpp/.h, 기준선 1f00a25a, 10.78 전용 — CD 10.72 주소/몸체는 추정하지 않는다)
 // 기존 TextGump/StyleText/수집/수명/시계에만 위임하는 실제 경계다. x86 의 부호 있는 DWORD 감김과 float32 저장 경계를 보존한다. 콜백 뒤에도 현재 저장소를 재조회한다.
-// 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 원본 10.78 독립 관측 126행은 tests/hud-gump-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E486 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // (2026-11-14 WB04-E434: RawMenuControls 선행 ProductionHintGump 이식)
 import { TextGumpNode } from './text-gump.js';
 

@@ -1,5 +1,5 @@
 // 전용 PE fixture가 없는 비용 표시 Gump(FloatingSpGump: 생성 순서·서식 문자열·가속도 -2·객체 참조 Attach·프레임 이동/범위 이탈·소멸 위임)를 기준선 소스 계약과 손으로 계산한 값으로 검증한다. (2026-11-14 WB04-E434)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 호출 순서/조건은 기준선 소스(FloatingSpGump.cpp)에서 옮겼다. 한 줄 TextGump/StyleText/수명/시계는 호출 기록 대역이다.
+// 이 파일의 수치는 기준선 소스 계약과 손 계산이다. 원본 직접 관측 426행은 tests/hud-gump-native-fixtures.test.mjs(2026-11-15 WB04-E486)가 대조한다. 호출 순서/조건은 기준선 소스(FloatingSpGump.cpp)에서 옮겼다. 한 줄 TextGump/StyleText/수명/시계는 호출 기록 대역이다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { FloatingSpGump, FloatingSpGumpNode } from '../www/ui/floating-sp-gump.js';

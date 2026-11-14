@@ -22218,10 +22218,72 @@
       "bytes": 572205,
       "lines": 181,
       "fixtureCommit": "e5a68d592",
-      "webCommit": "worktree",
+      "webCommit": "aa78f2c7e",
       "cpppjBasis": {
         "cpppj/src/client/ChatWindow.cpp": "09fd17306",
         "cpppj/src/client/ChatWindow.h": "09fd17306"
+      }
+    },
+    {
+      "id": "production-hint",
+      "path": "cpppj/tests/fixtures/production-hint-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E486",
+      "producer": "cpppj ProductionHintGumpTests: 보호 원본 10.78 생산 실패 안내 Gump 의 독립 x86 관측 126행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/hud-gump-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/production-hint-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ProductionHintGump.cpp",
+        "cpppj/src/client/ProductionHintGump.h"
+      ],
+      "doc": "docs/webpj-hud-gump-native-fixtures-20261115.md",
+      "scope": "생산 실패 안내 Gump 126입력(구성 C/Idle I/Draw D/Delete X/Show W)의 노드 필드(전체 snapshot)·마지막 일련번호·호출 순서",
+      "text": true,
+      "sha256": "de2e73e104769163f2af876dd8bb41d16c1b0e15d0a33518e624b430d216d629",
+      "bytes": 58671,
+      "lines": 127,
+      "fixtureCommit": "5dc75236b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ProductionHintGump.cpp": "5dc75236b",
+        "cpppj/src/client/ProductionHintGump.h": "5dc75236b"
+      }
+    },
+    {
+      "id": "floating-sp",
+      "path": "cpppj/tests/fixtures/floating-sp-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E486",
+      "producer": "cpppj FloatingSpGumpTests: 보호 원본 10.78 비용 표시 Gump 의 독립 x86 관측 426행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/hud-gump-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/floating-sp-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/FloatingSpGump.cpp",
+        "cpppj/src/client/FloatingSpGump.h"
+      ],
+      "doc": "docs/webpj-hud-gump-native-fixtures-20261115.md",
+      "scope": "비용 표시 Gump 426입력(construct/show/delete/idle)의 노드 필드(float32/double 비트)와 호출 순서(Redraw 안의 필드 변경 포함), 두 x87 정밀도 열이 모두 같음",
+      "text": true,
+      "sha256": "89c61652ca97026e9b3d9a9c8e294292d6d6d2e7e87c3fbc7d67b864463a4aeb",
+      "bytes": 239016,
+      "lines": 427,
+      "fixtureCommit": "365dbe814",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/FloatingSpGump.cpp": "365dbe814",
+        "cpppj/src/client/FloatingSpGump.h": "365dbe814"
       }
     }
   ]

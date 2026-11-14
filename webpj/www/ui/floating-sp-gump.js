@@ -1,7 +1,7 @@
 // 원본 비용 표시 Gump 의 생성·부착·프레임 이동을 복원한다. 원본 클래스 이름은 미확정이다.
 // (cpppj client/FloatingSpGump.cpp/.h, 기준선 1f00a25a, 10.78 전용 — CD 10.72 의 가상 표/몸체는 추정하지 않는다)
 // 별도 타이머/문자 출력/등록표를 만들지 않고 기존 원본 모듈(한 줄 TextGump·StyleText·등록표·수명·시계)을 조립한다. 모든 토큰은 같은 기본 노드를 가리키며 콜백이 필드를 바꿀 수 있으므로 이후 사용은 현재 저장소를 다시 조회한다.
-// 원본 x87 의 double 시간 차이 저장과 float32 위치/속도 저장 순서를 유지한다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 원본 x87 의 double 시간 차이 저장과 float32 위치/속도 저장 순서를 유지한다. 원본 10.78 독립 관측 426행은 tests/hud-gump-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E486 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // (2026-11-14 WB04-E434: RawMenuControls 선행 FloatingSpGump 이식)
 import { TextGumpNode } from './text-gump.js';
 
