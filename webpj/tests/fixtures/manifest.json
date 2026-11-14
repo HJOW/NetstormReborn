@@ -21047,10 +21047,43 @@
       "bytes": 15891,
       "lines": 197,
       "fixtureCommit": "0e6574fcd",
-      "webCommit": "worktree",
+      "webCommit": "c3c4061a7",
       "cpppjBasis": {
         "cpppj/src/o/RawManaBoltRegular.cpp": "dfde4ad3e",
         "cpppj/src/o/RawManaBoltRegular.h": "dfde4ad3e"
+      }
+    },
+    {
+      "id": "hud-dock-geometry",
+      "path": "cpppj/tests/fixtures/hud-dock-geometry-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E470",
+      "producer": "cpppj HudDockTests: 보호 원본 10.78 HUD divider 생성(4c6c50)·슬레이브 등록(4c4790)·재배치(4c47f0/48f0)·HUD 표시 모드/채팅/지도 갱신(4c6530)의 독립 x86 관측 2,150행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/hud-dock.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/hud-dock.js",
+        "webpj/www/ui/gump-tree.js",
+        "webpj/www/ui/gump-background-create.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HudDock.cpp",
+        "cpppj/src/client/HudDock.h"
+      ],
+      "doc": "docs/webpj-hud-dock-20261115.md",
+      "scope": "진입 4종(construct/register/reflow/hud)의 노드 8개 0x11c raw 전체·22DWORD 전역·callback 효과·호출 순서·반환 EAX·스택 크기, 중단 효과 6행",
+      "text": true,
+      "sha256": "a8bd529f1df42321d035882dcdc59efb1016b43b2ad08ea108a0fe879250830e",
+      "bytes": 20572597,
+      "lines": 2151,
+      "fixtureCommit": "d2dd9fcb0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HudDock.cpp": "53a1ebf94",
+        "cpppj/src/client/HudDock.h": "53a1ebf94"
       }
     }
   ]
