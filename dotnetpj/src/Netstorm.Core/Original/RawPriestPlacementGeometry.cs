@@ -16,7 +16,7 @@ public sealed class PriestPlacementGeometryHooks
     internal PriestPlacementGeometryHooks Copy() => new() { BeginRegions = BeginRegions, EndShape = EndShape, FinishRegions = FinishRegions, BeginShape = BeginShape };
 }
 
-/// <summary>사제의 후반 모양 순회와 후보별 지형 경계다. 후보 충돌 본체는 별도 이식한다.</summary>
+/// <summary>실제 사제 기하/후보 충돌이 공유하는 모양 순회와 후보별 지형 경계다.</summary>
 public sealed class PriestPlacementCollisionHooks
 {
     /// <summary>실제 모양마다 finder의 사각형 검사 함수를 호출하는 지역 정책이다.</summary>

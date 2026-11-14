@@ -296,4 +296,9 @@
     <None Include="../../../cpppj/tests/fixtures/canonpreview-x86.tsv" Link="X86/canonpreview-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/priestpreview-x86.tsv" Link="X86/priestpreview-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 일반/사제 후보 충돌·전체 무시 비트의 실제 원본 관찰을 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/canoncollision-x86.tsv" Link="X86/canoncollision-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/priestcollision-x86.tsv" Link="X86/priestcollision-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

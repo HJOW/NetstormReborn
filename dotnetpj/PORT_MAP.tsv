@@ -787,4 +787,7 @@ cpppj/src/o/RawCanonPlacementPreview.h	Netstorm.Core/Original/RawCanonPlacementP
 cpppj/src/o/RawCanonPlacementPreview.cpp	Netstorm.Core/Original/RawCanonPlacementPreview.cs	6af09bc8d04543a1ac767a93d5c32f80b699736a	L1
 cpppj/src/o/RawPriestPlacementPreview.h	Netstorm.Core/Original/RawPriestPlacementPreview.cs	6af09bc8d04543a1ac767a93d5c32f80b699736a	L1
 cpppj/src/o/RawPriestPlacementPreview.cpp	Netstorm.Core/Original/RawPriestPlacementPreview.cs	6af09bc8d04543a1ac767a93d5c32f80b699736a	L1
-cpppj/src/o/RawPriestPlacementCollision.h	Netstorm.Core/Original/RawPriestPlacementGeometry.cs	6af09bc8d04543a1ac767a93d5c32f80b699736a	port
+cpppj/src/o/RawPriestPlacementCollision.h	Netstorm.Core/Original/RawPriestPlacementCollision.cs	a127fb5ccbca1504e6633940b7f057ab3f496557	L1
+cpppj/src/o/RawCanonPlacementCollision.h	Netstorm.Core/Original/RawCanonPlacementCollision.cs	a127fb5ccbca1504e6633940b7f057ab3f496557	L1
+cpppj/src/o/RawCanonPlacementCollision.cpp	Netstorm.Core/Original/RawCanonPlacementCollision.cs	a127fb5ccbca1504e6633940b7f057ab3f496557	L1
+cpppj/src/o/RawPriestPlacementCollision.cpp	Netstorm.Core/Original/RawPriestPlacementCollision.cs	a127fb5ccbca1504e6633940b7f057ab3f496557	L1
