@@ -20015,6 +20015,37 @@
         "cpppj/src/client/GumpDecoration.cpp": "573bfd54c",
         "cpppj/src/client/GumpDecoration.h": "225f2322c"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E449",
+      "consumers": [
+        "webpj/tests/raw-chat-relay.test.mjs"
+      ],
+      "doc": "docs/webpj-chat-relay-20261114.md",
+      "id": "chat-relay",
+      "path": "cpppj/tests/fixtures/chat-relay-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 단독 자기 채팅 중계",
+      "modules": [
+        "webpj/www/ui/raw-chat-relay.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawChatRelay.cpp",
+        "cpppj/src/client/RawChatRelay.h"
+      ],
+      "scope": "132행 전체256BYTE 패킷·현재 마스크·주소/수신 효과 순서; 원격 LAN 제외",
+      "text": true,
+      "sha256": "b7e122e07d9fdcb50b9a2f30200d5741e94cad70a0cf64c1150030cc00fda48a",
+      "bytes": 135519,
+      "lines": 133,
+      "fixtureCommit": "b35e345b9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawChatRelay.cpp": "eeae45c69",
+        "cpppj/src/client/RawChatRelay.h": "16431ec18"
+      }
     }
   ]
 }
