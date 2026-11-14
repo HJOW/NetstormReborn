@@ -20952,7 +20952,7 @@
       "bytes": 26193,
       "lines": 259,
       "fixtureCommit": "229a2c102",
-      "webCommit": "worktree",
+      "webCommit": "8a2858802",
       "cpppjBasis": {
         "cpppj/src/client/DialogCommandLifetime.cpp": "229a2c102",
         "cpppj/src/client/DialogCommandLifetime.h": "229a2c102"
@@ -20983,7 +20983,7 @@
       "bytes": 37603,
       "lines": 205,
       "fixtureCommit": "5391fc2e4",
-      "webCommit": "worktree",
+      "webCommit": "8a2858802",
       "cpppjBasis": {
         "cpppj/src/client/DialogExitCommand.cpp": "5391fc2e4",
         "cpppj/src/client/DialogExitCommand.h": "5391fc2e4"
@@ -21014,10 +21014,43 @@
       "bytes": 9294,
       "lines": 123,
       "fixtureCommit": "890219ac6",
-      "webCommit": "worktree",
+      "webCommit": "8a2858802",
       "cpppjBasis": {
         "cpppj/src/client/RawIssueCommands.cpp": "890219ac6",
         "cpppj/src/client/RawIssueCommands.h": "890219ac6"
+      }
+    },
+    {
+      "id": "mana-bolt-regular",
+      "path": "cpppj/tests/fixtures/mana-bolt-regular-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E468",
+      "producer": "cpppj ManaBoltRegularTests: 보호 원본 10.78 45a8e0 마나 볼트 주기의 제한 x86 관측, 두 정밀도(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/raw-mana-bolt-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-mana-bolt-regular.js",
+        "webpj/www/core/raw-mana-bolt-arrival.js",
+        "webpj/www/render/camera-view.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/o/RawManaBoltRegular.cpp",
+        "cpppj/src/o/RawManaBoltRegular.h"
+      ],
+      "doc": "docs/webpj-raw-mana-bolt-regular-20261115.md",
+      "scope": "196행의 입력 8개(event/count/프레임/WORD/대상 유무/extra/소유자/원점 profile)와 반환 비트·프레임·위치 float·호출 순서·현재 카메라 비트",
+      "text": true,
+      "sha256": "f61c2e4c72c6729749e43a1517a77894d866cf5e5061a9c967ba43df9b41913e",
+      "bytes": 15891,
+      "lines": 197,
+      "fixtureCommit": "0e6574fcd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawManaBoltRegular.cpp": "dfde4ad3e",
+        "cpppj/src/o/RawManaBoltRegular.h": "dfde4ad3e"
       }
     }
   ]
