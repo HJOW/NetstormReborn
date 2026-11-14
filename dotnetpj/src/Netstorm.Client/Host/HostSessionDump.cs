@@ -71,15 +71,20 @@ public sealed class HostSessionDump
     {
         if (string.IsNullOrEmpty(path))
             throw new ArgumentException("session-dump 출력 경로가 비어 있습니다", nameof(path));
-        // 현재 Kernel 슬롯을 pid 순서로 읽는다. SquidProcess·RegularProcess의 Form·사건 정보는
-        // 월드 저장소 연결(R4) 전까지 없으므로 0으로 둔다(cpppj의 비Squid 행과 같은 모양).
+        // 현재 커널 객체를 직접 읽어 실제 Form·부모·Regular 비트를 원문 덤프로 보낸다.
         var processes = new List<SessionDumpProcess>();
-        // 등록된 pid만 순서대로 읽는다.
+        // 등록된 PID만 원문 증가 순서로 관측하며 실행이나 난수 소비는 하지 않는다.
         for (uint pid = 1; pid <= _kernel.Capacity(); pid++)
         {
-            if (_kernel.Get(pid) is null)
-                continue;
-            processes.Add(new SessionDumpProcess(pid, 0, 0));
+            BaseProcess? process = _kernel.Get(pid);
+            if (process is null) continue;
+            SquidProcess? squid = process as SquidProcess;
+            RegularProcess? regular = process as RegularProcess;
+            processes.Add(new SessionDumpProcess(pid,
+                unchecked((uint)(squid?.Form() ?? 0)), unchecked((uint)(squid?.Parent() ?? 0)),
+                regular is not null, regular?.Event() ?? 0u, regular?.Count() ?? 0u,
+                regular is null ? 0u : BitConverter.SingleToUInt32Bits(regular.Payload()),
+                regular is null ? 0ul : BitConverter.DoubleToUInt64Bits(regular.Time())));
         }
         if (_session is null)
         {

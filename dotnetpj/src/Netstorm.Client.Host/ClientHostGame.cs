@@ -156,6 +156,7 @@ public sealed class ClientHostGame : Game
     {
         if (disposing)
         {
+            _missionSession?.ReleasePlayerProcesses();
             _htmlWindows?.CloseAll();
             _editor?.Dispose();
             _textEntry?.Dispose();

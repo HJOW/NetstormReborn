@@ -57,6 +57,18 @@ public sealed class RawPostPopList
 /// </summary>
 public sealed class RawPostPopState
 {
+    /// <summary>독립 대조용 세 통계표를 소유한다. 실제 세션에서는 공유 저장소 생성자를 사용한다.</summary>
+    public RawPostPopState() : this(new RawTotalMadeStorage()) { }
+
+    /// <summary>세션의 같은 세 통계표를 빌려 PostPop·Owner·덤프가 같은 DWORD를 읽고 쓰게 한다.</summary>
+    /// <param name="storage">상태보다 오래 유지할 실제 TotalMade 저장소다.</param>
+    public RawPostPopState(RawTotalMadeStorage storage)
+    {
+        ArgumentNullException.ThrowIfNull(storage);
+        LocalCounts = storage.LocalCounts;
+        LocalSecondaryCounts = storage.LocalSecondaryCounts;
+        GlobalCounts = storage.GlobalCounts;
+    }
     /// <summary>소유자 수(0~8). 0 은 중립이며 배열은 9칸이다.</summary>
     public const int OwnerCount = 9;
 
@@ -91,13 +103,13 @@ public sealed class RawPostPopState
     public uint Depth { get; set; }
 
     /// <summary>로컬 소유자의 타입별 현재 수(앞 256칸만 쓴다).</summary>
-    public uint[] LocalCounts { get; } = new uint[TableSize];
+    public uint[] LocalCounts { get; }
 
     /// <summary>로컬 소유자의 타입별 두 번째 현재 수(같은 조건으로 함께 늘어난다).</summary>
-    public uint[] LocalSecondaryCounts { get; } = new uint[TableSize];
+    public uint[] LocalSecondaryCounts { get; }
 
     /// <summary>모든 소유자의 타입별 현재 수.</summary>
-    public uint[] GlobalCounts { get; } = new uint[TableSize];
+    public uint[] GlobalCounts { get; }
 
     /// <summary>공급원 목록(공급 비트 타입의 최초 등록).</summary>
     public RawPostPopList Providers { get; } = new();

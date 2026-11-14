@@ -86,34 +86,77 @@ public sealed class HostPlayerWorldLiveTests
         Assert.Equal(1, raw[34]);
     }
 
-    /// <summary>화신 Pop 호출이 기록만 하고 멈추지 않는지 확인한다. 공간 등록은 R6 경계다.</summary>
+    /// <summary>실제 Pop이 공간·Player 기술부모·공유 장부와 커널 예약을 함께 변경하는지 확인한다.</summary>
     [Fact]
-    public void PopIsRecordOnlyBoundary()
+    public void PopRegistersAvatarAndInitialRegular()
     {
         var (session, _) = LoadPlayerScene();
+        session.MissionPlayer.PlayerKnown = 1u;
+        session.MissionPlayer.BattleOwner = 1u;
+        session.ProcessTime.Value = 17.25;
         PlayerWorldHooks hooks = session.BuildPlayerWorldHooks();
-        Assert.NotNull(hooks.Create);
-        Assert.NotNull(hooks.Pop);
-        int sid = hooks.Create(152u, 2u);
-        byte state = session.Pool.Slot(sid)[RawSidPool.StateOffset];
-        hooks.Pop(sid, 11f, 1f, 0u);
-        Assert.Equal(state, session.Pool.Slot(sid)[RawSidPool.StateOffset]);
+        Assert.Same(hooks, session.BuildPlayerWorldHooks());
+        int sid = session.PlayerWorld.Create(1);
+        Assert.Equal(sid, hooks.Find!(11f, 1f, 152u));
+        Assert.Equal((uint)sid, session.PlayerWorld.Technology(1));
+        Assert.Equal((uint)sid, session.PlayerWorld.CurrentTechnology());
+        Assert.Same(session.PlayerRecords, session.PlayerWorld.Records());
+        Assert.Same(session.MissionPlayer, session.PlayerWorld.State());
+        Assert.Equal(0, session.Pool.Slot(sid)[RawSidPool.StateOffset] & RawSidPool.VoidBit);
+        RegularProcess regular = Assert.IsType<RegularProcess>(session.PlayerProcesses.FindEvent(sid, 1u));
+        Assert.Equal(sid, regular.Parent());
+        Assert.Equal(5f, regular.Payload());
+        Assert.Equal(17.25, regular.Time());
+        Assert.Equal(0u, regular.Count());
+        Assert.Equal(1, session.Kernel.Size());
+        Assert.Equal(0u, session.PostPopDepth);
+        Assert.Throws<InvalidOperationException>(() => session.PlayerWorld.Create(1));
+        string output = Path.GetTempFileName();
+        try
+        {
+            var dump = new HostSessionDump(session.Kernel, session.Game, session.Crt, () => 90ul, () => 0ul);
+            dump.BindSession(session);
+            dump.Write(output);
+            string[] lines = File.ReadAllLines(output);
+            Assert.Contains($"process\t1\t{regular.Form()}\t{sid}", lines);
+            Assert.Contains($"regular\t1\t1\t0\t{BitConverter.SingleToUInt32Bits(5f)}\t{BitConverter.DoubleToUInt64Bits(17.25)}", lines);
+        }
+        finally { File.Delete(output); }
+        session.ReleasePlayerProcesses();
+        Assert.Equal(0, session.Kernel.Size());
     }
 
-    /// <summary>실제 적재 호출 순서(찾기→생성→소유자→직접 프레임 0→Pop)로 화신을 만드는지 확인한다.</summary>
+    /// <summary>로컬이 아닌 화신은 기술부모를 등록하되 로컬 전용 정기 프로세스를 만들지 않는지 확인한다.</summary>
     [Fact]
-    public void FullAvatarFlowThroughRawPlayerWorld()
+    public void OtherOwnerRegistersTechnologyWithoutLocalRegular()
     {
-        var (session, types) = LoadPlayerScene();
-        PlayerWorldHooks hooks = session.BuildPlayerWorldHooks();
-        var state = new PlayerWorldState { PlayerKnown = 1u, BattleOwner = 1u, PlayerType = 152u };
-        var inner = new RawPostPop(session.Pool, types, new RawPostPopState { Suppressed = true });
-        var player = new RawPlayerWorld(session.Pool, inner, session.PlayerRecords, state, hooks);
-        int sid = player.Create(1);
-        Assert.True(sid > 0);
-        ReadOnlySpan<byte> raw = session.Pool.Slot(sid);
-        Assert.Equal(152, raw[RawSidPool.TypeOffset]);
-        Assert.Equal(1, raw[34]);
-        Assert.Equal(0u, raw[36] | ((uint)raw[37] << 8) | ((uint)raw[38] << 16) | ((uint)raw[39] << 24));
+        var (session, _) = LoadPlayerScene();
+        session.MissionPlayer.PlayerKnown = 1u;
+        session.MissionPlayer.BattleOwner = 1u;
+        session.BuildPlayerWorldHooks();
+        int sid = session.PlayerWorld.Create(2);
+        Assert.Equal((uint)sid, session.PlayerWorld.Technology(2));
+        Assert.Equal(0u, session.PlayerWorld.CurrentTechnology());
+        Assert.Equal(2, session.Pool.Slot(sid)[34]);
+        Assert.Equal(0, session.Kernel.Size());
+        Assert.Equal(0u, session.PostPopDepth);
+    }
+
+    /// <summary>장부의 세 통계표와 scalar를 덤프·소유자·PostPop이 복사 없이 공유하는지 확인한다.</summary>
+    [Fact]
+    public void BookkeepingAndDumpUseSameStorage()
+    {
+        var (session, _) = LoadPlayerScene();
+        Assert.Same(session.TotalMade.LocalCounts, session.TerrainBookkeeping.LocalCounts);
+        Assert.Same(session.TotalMade.LocalSecondaryCounts, session.TerrainBookkeeping.LocalSecondaryCounts);
+        Assert.Same(session.TotalMade.GlobalCounts, session.TerrainBookkeeping.GlobalCounts);
+        session.TerrainBookkeeping.TotalCost = -23;
+        session.TerrainBookkeeping.Depth = 7;
+        session.TerrainBookkeeping.ProductionDirty = 11;
+        Assert.Equal(-23, session.DumpTotals().TotalCost);
+        Assert.Equal(7u, session.PostPopDepth);
+        Assert.Equal(11u, session.ProductionDirty);
+        session.TotalCost = 17;
+        Assert.Equal(17, session.TerrainBookkeeping.TotalCost);
     }
 }

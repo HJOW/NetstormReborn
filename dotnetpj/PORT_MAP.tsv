@@ -701,3 +701,6 @@ cpppj/src/o/RawTypeRequiredEnergy.cpp	Netstorm.Core/Original/RawTypeRequiredEner
 cpppj/src/o/RawTypeRequiredEnergy.h	Netstorm.Core/Original/RawTypeRequiredEnergy.cs	4a7b305e63ef80897526addff45d0f785a0711db	L1
 cpppj/src/client/AiTypeRequiredEnergy.cpp	Netstorm.Client/Mission/AiTypeRequiredEnergy.cs	4a7b305e63ef80897526addff45d0f785a0711db	port
 cpppj/src/client/AiTypeRequiredEnergy.h	Netstorm.Client/Mission/AiTypeRequiredEnergy.cs	4a7b305e63ef80897526addff45d0f785a0711db	port
+cpppj/src/o/SquidPostPop.h	Netstorm.Core/Original/RawPostPop.cs	b43574aea7f7f56a6d761b0fd50846017c84cd5a	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PlayerWorld.cs	b43574aea7f7f56a6d761b0fd50846017c84cd5a	port
+cpppj/src/client/SessionStateDump.cpp	Netstorm.Client/Host/HostSessionDump.cs	b43574aea7f7f56a6d761b0fd50846017c84cd5a	port

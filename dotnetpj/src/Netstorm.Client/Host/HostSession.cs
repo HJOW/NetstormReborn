@@ -33,7 +33,7 @@ public sealed class PlayerReadyHooks
 }
 
 // 미션 세션의 호스트 소유자다. Kernel·난수는 빌리고 저장소는 소유한다.
-public sealed class HostSession
+public sealed partial class HostSession
 {
     /// <summary>미션 풀 슬롯 수다. L2 thewarbegins 기준선 덤프의 pool 행과 같은 값이다.</summary>
     /// <remarks>2026-11-12 0.392에서 world 1 덤프의 첫 관문으로 고정했다. 미션별 가변은 월드 조립에서 잇는다.</remarks>
@@ -82,14 +82,14 @@ public sealed class HostSession
     /// <summary>세션이 소유한 TotalMade 세 표다.</summary>
     public RawTotalMadeStorage TotalMade { get; } = new();
 
-    /// <summary>장부의 총 비용이다. 월드 장부(포스트팝) 연결 전까지 0이다.</summary>
-    public int TotalCost { get; set; }
+    /// <summary>공통 PostPop과 덤프가 공유하는 총 비용이다.</summary>
+    public int TotalCost { get => TerrainBookkeeping.TotalCost; set => TerrainBookkeeping.TotalCost = value; }
 
-    /// <summary>장부의 postPop 깊이다. 월드 장부 연결 전까지 0이다.</summary>
-    public uint PostPopDepth { get; set; }
+    /// <summary>공통 PostPop과 덤프가 공유하는 중첩 깊이다.</summary>
+    public uint PostPopDepth { get => TerrainBookkeeping.Depth; set => TerrainBookkeeping.Depth = value; }
 
-    /// <summary>장부의 생산 재계산 알림이다. 월드 장부 연결 전까지 0이다.</summary>
-    public uint ProductionDirty { get; set; }
+    /// <summary>공통 PostPop과 덤프가 공유하는 생산 재계산 알림이다.</summary>
+    public uint ProductionDirty { get => TerrainBookkeeping.ProductionDirty; set => TerrainBookkeeping.ProductionDirty = value; }
 
     /// <summary>세션이 소유한 인공지능 600바이트 설정이다. 키는 소유자 번호다. 난이도 배율은 생성 때 적용하므로 원본 그대로 둔다.</summary>
     public Dictionary<int, byte[]> AiSettings { get; } = [];
@@ -120,6 +120,7 @@ public sealed class HostSession
         Pool = new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity);
         Sp = sharedSp ?? new RawSpStore(Game, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
         TerrainCrt = sharedCrtBox ?? new();
+        TerrainBookkeeping = new RawPostPopState(TotalMade);
         RawGraphStorage.ResetTable(Graph);
     }
 
@@ -727,9 +728,9 @@ public sealed class HostSession
     /// <remarks>2026-11-12 0.454에서 지형 바인딩 드라이런 조립용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1829행 normal 바인딩의 farm.</remarks>
     public FarmClusterState TerrainFarm { get; } = new();
 
-    /// <summary>세션이 소유한 지형 생성 장부다. SetOwner의 소유자별 작업장 목록을 둔다. 장부 집계 연결은 다음 단위다.</summary>
+    /// <summary>세션이 소유한 공통 장부다. SetOwner·Player PostPop·덤프가 같은 통계표를 공유한다.</summary>
     /// <remarks>2026-11-12 0.455에서 Generate 라이브 연결용으로 추가했다. Pop 장부·그래프·집계(totals·totalmade) 연결은 다음 단위다.</remarks>
-    public RawPostPopState TerrainBookkeeping { get; } = new();
+    public RawPostPopState TerrainBookkeeping { get; }
 
     /// <summary>지형 Pop 공간 등록의 세션 소유 공장이다. BuildTerrainPopDevices로 연결하기 전에는 null이다.</summary>
     /// <remarks>2026-11-12 0.466에서 지형 Pop 공간 등록 라이브 연결용으로 추가했다. 근거: cpppj MakeTerrainStampWorldHooks의 core.factory와 같은 공장 생성(vtable 포함)이다.</remarks>
@@ -1013,50 +1014,9 @@ public sealed class HostSession
         _fortLoader.Load(fort, unchecked((int)slot));
     }
 
-    /// <summary>캠페인 월드 적재의 Player 월드(화신) 갈고리를 실제 장치에 연결한다. 요새 객체 장치 뒤에 연결해야 한다.</summary>
-    /// <returns>같은 풀·공장·소유자·공간·표시를 공유하는 Player 월드 갈고리다.</returns>
-    /// <remarks>2026-11-12 0.475에서 Player 월드 갈고리 live 연결용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1235~1242행(playerHooks 결선: find→world.Find·create→world.Create·setOwner→core.owner.Set·pop→world.Pop). 화신 생성의 Pop 호출은 기록만 하며 공간 등록은 postPop·표시 장치와 함께 R6에서 잇고, ReserveRegular·AddRegular도 정기 프로세스 몫이라 R6에서 잇는다(패치판 생성자는 요구하지 않는다).</remarks>
-    public PlayerWorldHooks BuildPlayerWorldHooks()
-    {
-        if (_fortFactory is null || _playerOwner is null
-            || _terrainHash is null || _terrainPopTypes is null)
-        {
-            throw new InvalidOperationException("Player 월드 장치는 요새 객체 장치 뒤에 연결해야 한다");
-        }
-        RawSquidFactory factory = _fortFactory;
-        SquidOwner owner = _playerOwner;
-        RawSquidHash hash = _terrainHash;
-        IReadOnlyList<OriginalTypeRecord> types = _terrainPopTypes;
-        return new PlayerWorldHooks
-        {
-            Find = (x, y, type) =>
-            {
-                // 같은 타입의 첫 슬롯을 돌려주고 없으면 원문처럼 0을 돌려준다.
-                var finder = new RawSquidFinder(Pool, hash, types);
-                int left = unchecked((int)x);
-                int top = unchecked((int)y);
-                // 찾은 후보마다 슬롯 타입을 확인하는 반복문이다.
-                for (int sid = finder.Begin(new SquidSearchArea(left, top, left, top)); sid != 0; sid = finder.Next())
-                {
-                    if (Pool.Slot(sid)[RawSidPool.TypeOffset] == type)
-                    {
-                        return sid;
-                    }
-                }
-                return 0;
-            },
-            Create = (type, flags) => factory.Create(type,
-                (flags & 1) != 0 ? Netstorm.Core.Simulation.SidAllocation.Predictable
-                : (flags & 2) != 0 ? Netstorm.Core.Simulation.SidAllocation.Client
-                : Netstorm.Core.Simulation.SidAllocation.Server),
-            SetOwner = (sid, player) => owner.Set(sid, player),
-            Pop = (_, _, _, _) =>
-            {
-                // 화신 Pop의 공간 등록은 R6 postPop·표시·그래프 장치와 함께 잇는다.
-                // 실측 결과 152번(화신) 가상표는 표시·파생 등록 미지원이라 지금 공간 등록을 수행하면 멈춘다(0.467 요새 객체 Pop과 같은 경계).
-            },
-        };
-    }
+    /// <summary>같은 실제 Player·Pop·정기 프로세스를 조립하고 월드 적재에 넘길 갈고리를 반환한다.</summary>
+    /// <returns>세션 수명 동안 같은 Player 몸체와 함께 쓰는 갈고리다.</returns>
+    public PlayerWorldHooks BuildPlayerWorldHooks() => BindLivePlayerWorld();
 
     /// <summary>월드 그래프 재구성의 세션 소유 엔진이다. BuildWorldGraphDevices로 연결하기 전에는 null이다.</summary>
     /// <remarks>2026-11-12 0.470에서 그래프 live 재구성용으로 추가했다. 근거: cpppj RawCampaignWorldRuntime.cpp 65·83행(core.graph 공유 엔진)의 세션 결선이다.</remarks>
@@ -1215,7 +1175,9 @@ public sealed class HostSession
             () => IslandChanged, value => IslandChanged = value,
             () => IslandRevision, value => IslandRevision = value, islandHooks);
         var inner = new RawPostPop(Pool, types, new RawPostPopState { Suppressed = true });
-        var player = new RawPlayerWorld(Pool, inner, PlayerRecords, MissionPlayer, playerHooks);
+        var player = ReferenceEquals(playerHooks, _livePlayerHooks)
+            ? PlayerWorld
+            : new RawPlayerWorld(Pool, inner, PlayerRecords, MissionPlayer, playerHooks);
         var territory = new RawFortWorldLoad(
             Pool, World, islands, WorldFrames,
             () => GameAux.PuzzlePieceType, () => MissionPlayer.TemplateOwner, () => TerrainGlobals.NoRegion,
@@ -1258,7 +1220,7 @@ public sealed class HostSession
         return rows;
     }
 
-    /// <summary>덤프용 장부 관측을 만든다. 월드 장부 연결 전까지 0이다.</summary>
+    /// <summary>공통 장부의 현재 비용·깊이·생산 알림을 덤프로 관측한다.</summary>
     public SessionDumpTotals DumpTotals() => new(TotalCost, PostPopDepth, ProductionDirty);
 
     /// <summary>덤프용 TotalMade 관측을 만든다. 집계 전까지 빈 표다.</summary>
