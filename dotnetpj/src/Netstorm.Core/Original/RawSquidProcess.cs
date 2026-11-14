@@ -19,7 +19,14 @@ public class SquidProcess : BaseProcess
     internal SquidProcessHost? HostLink { get; set; }
 
     /// <summary>독립 월드 최종 fallback은 자기 대여가 만든 프로세스만 반납한다. Host 본체 단위에서 붙인다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
-    internal ProcessHostRuntimeBindings? RuntimeLink { get; set; }
+    internal ProcessHostRuntimeBindings? RuntimeLink
+    {
+        get => _runtimeBinding is not null && _runtimeBinding.TryGetTarget(out ProcessHostRuntimeBindings? runtime) ? runtime : null;
+        set => _runtimeBinding = value is null ? null : new(value);
+    }
+
+    /// <summary>C++ weak_ptr와 같이 잔류 프로세스가 이전 World 대여의 수명을 늘리지 않게 한다.</summary>
+    private WeakReference<ProcessHostRuntimeBindings>? _runtimeBinding;
 
     /// <summary>부착·재수신 때 식별자를 한 번에 둔다. 원문 friend 쓰기와 같다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
     /// <param name="form">쓸 Form SID다.</param>
@@ -186,11 +193,15 @@ public sealed class RuntimeCallGuard : IDisposable
     /// <summary>호출 중 실제 처리기 묶음을 유지한다. null이면 아무것도 세지 않는다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
     private ProcessHostRuntimeBindings? _runtime;
 
+    /// <summary>현재 실제 외곽 소유자를 호출 끝까지 유지하는 강한 참조다.</summary>
+    private object? _owner;
+
     /// <summary>같은 현재 대여만 증가시킨다. 2026-11-07 F2d 프로세스 호출 수명 이식에서 추가됐다.</summary>
     /// <param name="runtime">유지할 런타임 묶음이다. null이면 빈 guard다.</param>
     public RuntimeCallGuard(ProcessHostRuntimeBindings? runtime)
     {
         _runtime = runtime;
+        _owner = runtime?.Pin?.Invoke();
         if (_runtime is not null)
         {
             ++_runtime.ActiveCalls;
@@ -205,5 +216,8 @@ public sealed class RuntimeCallGuard : IDisposable
             --_runtime.ActiveCalls;
             _runtime = null;
         }
+        // C++ shared_ptr 반납과 같이 실제 호출이 끝난 뒤 참조만 놓는다. 소유자의 Dispose를 대신 호출하지 않는다.
+        GC.KeepAlive(_owner);
+        _owner = null;
     }
 }

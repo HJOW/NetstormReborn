@@ -47,6 +47,9 @@ public sealed class ProcessHostRuntimeBindings
     /// <summary>선택된 Host 효과의 대여 수이며 진행 중 반납을 거부한다. 2026-11-07 F2d 호스트 묶음 이식에서 추가됐다.</summary>
     public ulong ActiveCalls { get; set; }
 
+    /// <summary>실제 외곽 World/EditorRuntime 소유자를 현재 호출 동안 강한 참조로 보유한다. 대체 토큰을 만들지 않는다.</summary>
+    public Func<object?>? Pin { get; set; }
+
     /// <summary>실제 현재 월드의 공통 Pop 깊이를 생성 위치에서 읽는다. 2026-11-07 F2d 호스트 묶음 이식에서 추가됐다.</summary>
     public Func<uint>? PostPopDepth { get; set; }
 
@@ -65,6 +68,7 @@ public sealed class ProcessHostRuntimeBindings
         Asset = Asset,
         Transmit = Transmit,
         ActiveCalls = ActiveCalls,
+        Pin = Pin,
         PostPopDepth = PostPopDepth,
         Assertion = Assertion,
         Factory = Factory,

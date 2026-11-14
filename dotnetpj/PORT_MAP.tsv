@@ -866,3 +866,5 @@ cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSidPool.cs	417f22d2967
 cpppj/src/o/SquidDestroyLifecycle.h	Netstorm.Core/Original/RawSquidDestroyLifecycle.cs	7ba0130b6b862e393a28f9e9ea7deaf29aaed3ff	port
 cpppj/src/o/SquidDestroyLifecycle.h	Netstorm.Core/Original/CampaignWorldGlobals.cs	7ba0130b6b862e393a28f9e9ea7deaf29aaed3ff	port
 cpppj/src/o/SquidFormDispatch.h	Netstorm.Core/Original/RawSquidFormDispatch.cs	541624a91439623c5faeaf8fcc4b6283e93bbb0a	port
+cpppj/src/o/SquidProcess.h	Netstorm.Core/Original/RawSquidProcessHost.Devices.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port
+cpppj/src/o/SquidProcess.cpp	Netstorm.Core/Original/RawSquidProcessHost.Devices.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port

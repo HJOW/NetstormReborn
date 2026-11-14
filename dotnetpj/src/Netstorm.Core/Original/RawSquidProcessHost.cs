@@ -6,7 +6,7 @@ namespace Netstorm.Core.Original;
 // 프로세스 호스트 모듈을 담는 네임스페이스다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.
 
 // 객체 Form과 커널 프로세스의 부착·통지·수명·삭제·정기 실행을 연결하는 호스트 본체다. 검색·전송 본체와 패킷 직렬화는 후속 단위에서 잇는다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐고 0.204에서 삭제 본체를, 0.205에서 정기 실행을, 0.214에서 부착 본체를 이었다.
-public sealed class SquidProcessHost
+public sealed partial class SquidProcessHost
 {
     /// <summary>CD판의 절차 상한 비트다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.</summary>
     public const uint CdProcessEnd = 62u;
@@ -128,17 +128,13 @@ public sealed class SquidProcessHost
     /// <returns>현재 공통 삭제 몸체다.</returns>
     public RawSquidDestroy Destroy()
     {
-        if (_currentRuntime is not null)
-        {
-            return Runtime().Destroy!;
-        }
-
-        if (_destroy is null)
-        {
-            throw new InvalidOperationException("프로세스 호스트의 공통 삭제 몸체 미연결");
-        }
-
-        return _destroy;
+        if (_currentRuntime is null) return _destroy ?? throw new InvalidOperationException("프로세스 공통 삭제 몸체 미연결");
+        ProcessHostRuntimeBindings? current = _currentRuntime();
+        RawSquidDestroy destroy = current is not null
+            ? current.Destroy ?? throw new InvalidOperationException("현재 Host 삭제 몸체 미연결")
+            : (_defaultDestroy ?? throw new InvalidOperationException("World 없는 Host의 실제 공통 삭제 미연결"))();
+        if (!ReferenceEquals(destroy.Pool, _pool)) throw new InvalidOperationException("Host 현재/기본 삭제의 실제 Pool 불일치");
+        return destroy;
     }
 
     /// <summary>직접 입력의 사본과 장기 실제 TYPE를 구분한다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.</summary>
@@ -160,15 +156,30 @@ public sealed class SquidProcessHost
 
     /// <summary>현재 사건 함수만 짧게 빌린다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.</summary>
     /// <returns>현재 Regular 처리기다.</returns>
-    public RegularHandler? Regular() => _currentRuntime is not null ? Runtime().Regular : _handler;
+    public RegularHandler? Regular()
+    {
+        if (_currentRuntime is null) return _handler;
+        ProcessHostRuntimeBindings? current = _currentRuntime();
+        return current is not null ? current.Regular : _defaultRegular ?? throw new InvalidOperationException("World 없는 Host의 실제 Regular 미연결");
+    }
 
     /// <summary>현재 자산 효과를 복사해 호출 중 수명을 지킨다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.</summary>
     /// <returns>현재 자산 효과다.</returns>
-    public SquidDestroyHooks? Asset() => _currentRuntime is not null ? Runtime().Asset : _asset;
+    public SquidDestroyHooks? Asset()
+    {
+        if (_currentRuntime is null) return _asset;
+        ProcessHostRuntimeBindings? current = _currentRuntime();
+        return current is not null ? current.Asset : (_defaultAssets ?? throw new InvalidOperationException("World 없는 Host의 실제 종속 삭제 분배 미연결"))();
+    }
 
     /// <summary>원문 재조회 위치를 유지한다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.</summary>
     /// <returns>현재 전송 경계다.</returns>
-    public ProcessFormTransmission? Transmission() => _currentRuntime is not null ? Runtime().Transmit : _transmit;
+    public ProcessFormTransmission? Transmission()
+    {
+        ProcessFormTransmission? current = _currentRuntime?.Invoke()?.Transmit;
+        return current is not null && (current.WriteData is not null || current.WriteFullData is not null || current.Packet is not null || current.Transmit is not null)
+            ? current : _transmit;
+    }
 
     /// <summary>같은 수명의 직접 Host에만 공장을 연결한다. 장기 Host는 현재 대여의 factory를 소비 위치에서 조회한다. 2026-11-07 F2d 프로세스 호스트 이식에서 추가됐다.</summary>
     /// <param name="factory">연결할 공장이다. 같은 풀을 써야 한다.</param>
@@ -228,12 +239,13 @@ public sealed class SquidProcessHost
     public int WriteFormPacket(int form, uint argument, Span<byte> packet, RawSquidTransmissionState transmission)
     {
         ArgumentNullException.ThrowIfNull(transmission);
-        using (var call = new RuntimeCallGuard(_currentRuntime?.Invoke()))
+        ProcessHostRuntimeBindings? runtime = _currentRuntime?.Invoke();
+        using (var call = new RuntimeCallGuard(runtime))
         {
             int parent = RawContainedLink.CommonContainedParent(_pool, form);
             if (parent >= RawSidPool.FirstOrdinary && parent < RawSidPool.ServerFirst)
             {
-                Action<string, string, uint>? assertion = _currentRuntime is not null ? Runtime().Assertion : _state.Assertion;
+                Action<string, string, uint>? assertion = runtime?.Assertion ?? _state.Assertion;
                 if (assertion is null)
                 {
                     throw new InvalidOperationException("ProcessForm writer의 부모 SID 진단 미연결");
@@ -273,7 +285,7 @@ public sealed class SquidProcessHost
                 return 28;
             }
 
-            ProcessFormTransmission? device = Transmission();
+            ProcessFormTransmission? device = Transmission()?.Clone();
             if (device is null || device.WriteFullData is null)
             {
                 throw new InvalidOperationException("ProcessForm의 실제 전체 파생 writer 미연결");
@@ -327,6 +339,7 @@ public sealed class SquidProcessHost
     /// <param name="runtime">정리할 현재 대여다.</param>
     public void DrainRuntimeBindings(ProcessHostRuntimeBindings? runtime)
     {
+        using var call = new RuntimeCallGuard(runtime);
         _kernel.DrainOwnedForShutdown(candidate =>
             candidate is SquidProcess process && ReferenceEquals(process.HostLink, this) && ReferenceEquals(process.RuntimeLink, runtime));
     }
@@ -448,29 +461,11 @@ public sealed class SquidProcessHost
     /// <param name="form">해제할 Form 번호다.</param>
     public void UnpopForm(int form)
     {
-        ProcessHostRuntimeBindings? runtime = _currentRuntime is not null ? Runtime() : null;
-        using (var call = new RuntimeCallGuard(runtime))
-        {
-            if (runtime is not null)
-            {
-                if (runtime.Factory is null)
-                {
-                    throw new InvalidOperationException("Process Unpop의 현재 공장 미연결");
-                }
-
-                runtime.Factory.UnpopForm(form);
-                return;
-            }
-
-            if (_directFormFactory is not null)
-            {
-                _directFormFactory.UnpopForm(form);
-                return;
-            }
-
-            // 독립 Host도 같은 공통 해제 순서를 사용한다
-            new RawSquidForms(_pool).Unpop(form);
-        }
+        using var call = new RuntimeCallGuard(_currentRuntime?.Invoke());
+        RawSquidFactory? factory = FormFactory();
+        if (factory is not null) { factory.UnpopForm(form); return; }
+        // 독립 Host는 기존 공통 Form 해제를 사용한다. Form 복귀 진단 장치의 추가 이식은 별도다.
+        new RawSquidForms(_pool).Unpop(form);
     }
 
     /// <summary>원본 004ae140의 권한·번호 관문을 지나 공통 삭제로 프로세스를 지운다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>
@@ -488,11 +483,19 @@ public sealed class SquidProcessHost
                 return;
             }
 
-            if (form == 0 || form >= _pool.Capacity || (_pool.Slot(form)[StateOffset] & DeadBit) != 0)
+            if (_defaultDestroy is not null)
             {
-                throw new InvalidOperationException("프로세스 form 상태 오류");
+                // Native 기본 장치가 연결된 경우에만 원문 단언의 정상 복귀를 이어간다.
+                if (form == 0 || (uint)form >= _pool.Capacity) DiagnoseKill("s.isValid()", 0x98);
+                if ((uint)form >= _pool.Capacity) throw new ArgumentOutOfRangeException(nameof(process), "Native Kill 진단 뒤 실제 SID 물리 범위");
+                if ((_pool.Slot(form)[StateOffset] & DeadBit) != 0) DiagnoseKill("!s.isDead()", 0x99);
+                // 최초 Form 사본의 현재 VT를 실제 공유 분배기가 선택한다.
+                (Asset()?.Emit ?? throw new InvalidOperationException("Native Kill의 현재 가상 삭제 분배 미연결"))
+                    (new(SquidDestroyEffect.DestroyDependent, form, 0, flags));
+                return;
             }
-
+            if (form == 0 || form >= _pool.Capacity || (_pool.Slot(form)[StateOffset] & DeadBit) != 0)
+                throw new InvalidOperationException("프로세스 form 상태 오류");
             Destroy().Destroy(form, flags, Hooks());
         }
     }
@@ -581,6 +584,16 @@ public sealed class SquidProcessHost
             hooks.Selected = () => 0;
         }
 
+        if (_defaultAssets is not null)
+        {
+            // Native 장기 기본 장치가 있을 때만 현재 전체 선택 DWORD를 전달한다.
+            hooks.SelectedRaw = () =>
+            {
+                using var call = new RuntimeCallGuard(_currentRuntime?.Invoke());
+                Func<uint> selected = Asset()?.SelectedRaw ?? throw new InvalidOperationException("현재 Native Host의 전체 DWORD 선택 조회 미연결");
+                return selected();
+            };
+        }
         hooks.UnpopForm = UnpopForm;
         hooks.Emit = e =>
         {
@@ -738,26 +751,7 @@ public sealed class SquidProcessHost
     /// <returns>쓸 Form SID다.</returns>
     internal int CreateOrTakeForm(uint flags, int form)
     {
-        RawSquidFactory factory;
-        if (_currentRuntime is not null)
-        {
-            ProcessHostRuntimeBindings runtime = Runtime();
-            if (runtime.Factory is null)
-            {
-                throw new InvalidOperationException("현재 월드의 ProcessForm 공장 미연결");
-            }
-
-            factory = runtime.Factory;
-        }
-        else if (_directFormFactory is not null)
-        {
-            factory = _directFormFactory;
-        }
-        else
-        {
-            factory = new RawSquidFactory(_pool, _types);
-        }
-
+        RawSquidFactory factory = FormFactory() ?? new RawSquidFactory(_pool, _types);
         if (!ReferenceEquals(factory.Pool, _pool))
         {
             throw new ArgumentException("ProcessForm 공장의 실제 Pool 불일치");
@@ -847,7 +841,7 @@ public sealed class SquidProcessHost
                 ProcessFormType = () => _state.ProcessFormType(),
                 Assertion = (expression, file, line) =>
                 {
-                    Action<string, string, uint>? device = _currentRuntime is not null ? Runtime().Assertion : _state.Assertion;
+                    Action<string, string, uint>? device = AssertionDevice();
                     if (device is null)
                     {
                         throw new InvalidOperationException("BaseProcess 부착의 선택된 원문 진단 장치 미연결");
@@ -951,10 +945,12 @@ public sealed class SquidProcessHost
         process.MarkShared(shared);
         if (shared && _pool.Edition == OriginalEdition.Patch1078)
         {
-            ProcessHostRuntimeBindings? runtime = _currentRuntime is not null ? Runtime() : null;
+            ProcessHostRuntimeBindings? runtime = _currentRuntime?.Invoke();
             using (var call = new RuntimeCallGuard(runtime))
             {
-                Func<uint>? depth = runtime?.PostPopDepth;
+                if (_currentRuntime is not null && runtime is null && _defaultPostPopDepth is null)
+                    throw new InvalidOperationException("World 없는 SharedRegular의 실제 공통 깊이 미연결");
+                Func<uint>? depth = runtime is not null ? runtime.PostPopDepth : _defaultPostPopDepth;
                 if (runtime is not null && depth is null)
                 {
                     throw new InvalidOperationException("SharedRegular 현재 Pop 깊이 미연결");
@@ -1056,25 +1052,8 @@ public sealed class SquidProcessHost
             SquidProcess? selected = null;
             Action<int, int, uint> attach = (attachForm, attachParent, attachFlags) =>
             {
-                if (_currentRuntime is not null)
-                {
-                    ProcessHostRuntimeBindings bindings = Runtime();
-                    if (bindings.Factory is null)
-                    {
-                        throw new InvalidOperationException("현재 World의 공통 Form 부착 공장 미연결");
-                    }
-
-                    bindings.Factory.AttachForm(attachForm, attachParent, attachFlags);
-                }
-                else if (_directFormFactory is not null)
-                {
-                    _directFormFactory.AttachForm(attachForm, attachParent, attachFlags);
-                }
-                else
-                {
-                    // 독립 입력도 같은 현재 표·진단 부모를 쓴다
-                    new RawSquidFactory(_pool, _types).AttachForm(attachForm, attachParent, attachFlags);
-                }
+                RawSquidFactory factory = FormFactory() ?? new RawSquidFactory(_pool, _types);
+                factory.AttachForm(attachForm, attachParent, attachFlags);
             };
             var hooks = new ProcessAttachHooks
             {
@@ -1107,7 +1086,7 @@ public sealed class SquidProcessHost
                 },
                 Assertion = (expression, file, line) =>
                 {
-                    Action<string, string, uint>? device = _currentRuntime is not null ? Runtime().Assertion : _state.Assertion;
+                    Action<string, string, uint>? device = AssertionDevice();
                     if (device is null)
                     {
                         throw new InvalidOperationException("Process 부착의 선택된 원문 진단 장치 미연결");
@@ -1161,7 +1140,7 @@ public sealed class SquidProcessHost
             bool patch = _pool.Edition == OriginalEdition.Patch1078;
             Action<string, uint, uint> diagnose = (expression, patchLine, cdLine) =>
             {
-                Action<string, string, uint>? device = _currentRuntime is not null ? Runtime().Assertion : _state.Assertion;
+                Action<string, string, uint>? device = AssertionDevice();
                 if (device is null)
                 {
                     throw new InvalidOperationException("Form 갱신의 선택된 원문 진단 장치 미연결");
