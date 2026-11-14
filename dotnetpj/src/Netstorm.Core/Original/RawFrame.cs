@@ -1,3 +1,4 @@
+// 공통 프레임 지정과 현재 TYPE의 표시·공간 효과 순서를 보존한다.
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -22,7 +23,7 @@ public sealed class SquidFrameHooks
 /// <summary>
 /// 객체 프레임 변경을 물리 프레임·통지·갱신 요청에 반영하는 처리기(원본 SquidFrame 004acee0, 10.78).
 /// 표시 갱신·Unpop·Pop은 가상 호출 순서대로 외부 효과에 연결하고, 레벨·프레임은 원본 바이트 위치에 쓴다.
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 프레임·레벨 바이트 위치와 쓰기 폭이 달라서 옮기지 않았다).
+/// PATCH의 DWORD와 CD의 BYTE 프레임을 판본별 위치·폭으로 처리한다.
 /// 근거: cpppj/src/o/SquidFrame.cpp (W02 Frame 조각, 2026-10-20).
 /// </summary>
 public sealed class SquidFrame
@@ -57,6 +58,9 @@ public sealed class SquidFrame
     /// <summary>타입 번호 → 타입 레코드. 표시 레벨 판정의 genus 를 읽는다.</summary>
     private readonly IReadOnlyList<OriginalTypeRecord> _types;
 
+    /// <summary>실제 장기 실행기가 빌린 현재 TYPE 표이며 null이면 생성 시 사본으로 돌아간다.</summary>
+    private IReadOnlyList<OriginalTypeRecord>? _currentTypes;
+
     /// <summary>외부 효과 연결 묶음.</summary>
     private readonly SquidFrameHooks _hooks;
 
@@ -64,29 +68,32 @@ public sealed class SquidFrame
     /// 풀·타입·효과를 받아 프레임 지정을 만든다. 참조 대상은 이 객체보다 오래 살아야 한다.
     /// </summary>
     /// <param name="pool">슬롯 풀.</param>
-    /// <param name="types">타입 번호 순서의 타입 레코드. 10.78 은 188개여야 한다.</param>
+    /// <param name="types">타입 번호 순서의 타입 레코드. 생성 시 깊은 사본을 소유하며 현재 표는 BindCurrentTypes로 명시 대여한다.</param>
     /// <param name="hooks">외부 효과 연결 묶음. 네 항목이 모두 있어야 한다.</param>
     public SquidFrame(RawSidPool pool, IReadOnlyList<OriginalTypeRecord> types, SquidFrameHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(hooks);
-        // CD 10.72(171개)는 프레임·레벨 바이트 위치와 쓰기 폭이 다르므로 받지 않는다
-        if (types.Count != OriginalConstructors.TypeCount)
-        {
-            throw new ArgumentException($"타입 레코드가 {types.Count}개입니다 (10.78 은 {OriginalConstructors.TypeCount}개)", nameof(types));
-        }
         if (hooks.FrameSize is null || hooks.Update is null || hooks.Unpop is null || hooks.Pop is null)
         {
             throw new ArgumentException("프레임 지정 효과 누락", nameof(hooks));
         }
         _pool = pool;
-        _types = types;
-        _hooks = hooks;
+        _types = types.Select(type => type.Clone()).ToArray();
+        _hooks = new SquidFrameHooks { FrameSize = hooks.FrameSize, Update = hooks.Update, Unpop = hooks.Unpop, Pop = hooks.Pop };
     }
 
     /// <summary>이 모듈이 쓰는 슬롯 풀. 같은 풀인지 확인하는 데 쓴다.</summary>
     public RawSidPool Pool => _pool;
+
+    /// <summary>같은 물리 길이의 현재 TYPE를 빌리고 null·빈 표로 생성 시 소유 사본을 복원한다.</summary>
+    public void BindCurrentTypes(IReadOnlyList<OriginalTypeRecord>? types)
+    {
+        if (types is not null && types.Count != 0 && types.Count != _types.Count)
+            throw new ArgumentException("Frame의 현재 TYPE 물리 길이 불일치", nameof(types));
+        _currentTypes = types is { Count: > 0 } ? types : null;
+    }
 
     /// <summary>
     /// 객체의 프레임 번호를 바꾼다. 표시 레벨이 맞으면 갱신만 두 번 하고,
@@ -103,7 +110,7 @@ public sealed class SquidFrame
             throw new ArgumentException("프레임 지정 flags(판본 assert)", nameof(flags));
         }
         // 레벨 바이트는 부호 있는 바이트로 읽고, 레벨 계산은 쓰기 전에 먼저 한다
-        int stored = unchecked((sbyte)_pool.Slot(sid)[LevelOffset]);
+        int stored = unchecked((sbyte)_pool.Slot(sid)[_pool.Edition == OriginalEdition.Patch1078 ? LevelOffset : 0x1f]);
         int current = Frame(sid);
         int level = StoreLevel(sid);
         if (level == stored)
@@ -133,13 +140,14 @@ public sealed class SquidFrame
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     public int StoreLevel(int sid)
     {
+        IReadOnlyList<OriginalTypeRecord> types = _currentTypes ?? _types;
         uint number = _pool.Slot(sid)[TypeOffset];
         // 잘못된 타입은 인덱서에 넘기기 전에 번호를 진단하고 슬롯 쓰기·외부 효과를 막는다
-        if (number >= (uint)_types.Count)
+        if (number >= (uint)types.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(sid), number, "프레임 지정 타입 번호 범위 오류");
         }
-        uint genus = _types[(int)number].Flags2;
+        uint genus = types[(int)number].Flags2;
         int level = 0;
         // 섬·다리는 프레임을 세지 않는다. 그 밖은 현재 프레임의 크기로 판정한다
         if ((genus & IslandBridgeMask) == 0)
@@ -147,20 +155,21 @@ public sealed class SquidFrame
             float[] size = _hooks.FrameSize!(sid, Frame(sid));
             level = RawSquidHash.ObjectLevel(genus, size[0], size[1]);
         }
-        _pool.AllocatedBytes(sid)[LevelOffset] = (byte)level;
+        _pool.AllocatedBytes(sid)[_pool.Edition == OriginalEdition.Patch1078 ? LevelOffset : 0x1f] = (byte)level;
         return level;
     }
 
-    /// <summary>판본의 프레임 번호 필드를 읽는다. 10.78 은 +0x24 DWORD 다.</summary>
+    /// <summary>판본의 프레임 번호를 읽는다. PATCH는 +0x24 signed DWORD, CD는 +0x22 BYTE다.</summary>
     /// <param name="sid">오브젝트 슬롯 번호.</param>
-    private int Frame(int sid) => unchecked((int)Read(_pool.Slot(sid), FrameOffset));
+    private int Frame(int sid) => _pool.Edition == OriginalEdition.Patch1078 ? unchecked((int)Read(_pool.Slot(sid), FrameOffset)) : _pool.Slot(sid)[0x22];
 
-    /// <summary>프레임 DWORD 를 쓴다. 낮은 바이트부터 4바이트를 쓴다.</summary>
+    /// <summary>PATCH는 프레임 DWORD 네 바이트, CD는 하위 BYTE만 쓰고 이웃 필드는 보존한다.</summary>
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     /// <param name="frame">쓸 프레임 번호.</param>
     private void WriteFrame(int sid, int frame)
     {
         Span<byte> raw = _pool.AllocatedBytes(sid);
+        if (_pool.Edition != OriginalEdition.Patch1078) { raw[0x22] = unchecked((byte)frame); return; }
         uint bits = unchecked((uint)frame);
         // 낮은 바이트부터 폭만큼 쓴다
         for (int i = 0; i < 4; i++)

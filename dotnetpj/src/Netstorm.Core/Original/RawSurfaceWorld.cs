@@ -433,6 +433,8 @@ public sealed class RawSurfaceWorld
                     pop.Pop(sid, frameTypes[number], 0, 0, x, y, flags);
                 },
             });
+            // 실제 장기 실행기의 현재 TYPE를 명시 대여한다. cpp RawSurfaceStorage::Frame의 PATCH 연결과 같다.
+            _frame.BindCurrentTypes(frameTypes);
         }
 
         _bookkeeping.LocalOwner = 1;

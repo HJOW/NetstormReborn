@@ -84,7 +84,7 @@ public sealed class RawFrameTests
     };
 
     /// <summary>
-    /// 생성자는 같은 풀·10.78 타입 표·연결된 효과를 요구한다.
+    /// 생성자는 TYPE 사본·연결된 효과를 유지하며 현재 번호의 물리 범위는 조회 때 검사한다.
     /// </summary>
     [Fact]
     public void ConstructorRejectsMismatchedPoolTypesAndHooks()
@@ -93,8 +93,10 @@ public sealed class RawFrameTests
         var types = Types();
         var hooks = Hooks([], [1f, 1f], new int[1]);
         _ = new SquidFrame(pool, types, hooks);
-        // 짧은 타입 표(CD 171개)는 받지 않는다
-        Assert.ThrowsAny<Exception>(() => new SquidFrame(pool, types.Take(100).ToList(), hooks));
+        // 원문 구성은 짧은 표도 복사하고 실제 현재 타입이 표 밖일 때만 진단한다.
+        var shortFrames = new SquidFrame(pool, types.Take(80).ToList(), hooks);
+        Fill(pool, 0, 0);
+        Assert.Throws<ArgumentOutOfRangeException>(() => shortFrames.StoreLevel(Target));
         // 빠진 효과로는 만들지 않는다
         var broken = Hooks([], [1f, 1f], new int[1]);
         broken.Pop = null;

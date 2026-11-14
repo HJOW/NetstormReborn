@@ -527,7 +527,7 @@ cpppj/src/o/SquidFinder.cpp	Netstorm.Core/Bridges/SurfaceFinder.cs	f95a8db28ceae
 cpppj/src/o/SquidFinder.h	Netstorm.Core/Bridges/SurfaceFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidFormDispatch.cpp	Netstorm.Core/Original/RawSquidFormDispatch.cs	9eb899e43b02660479342f0f4d709760e38ebda3	L1
 cpppj/src/o/SquidForms.cpp	Netstorm.Core/Original/RawSquidForms.cs	eb739b8095351e2931be9af9aeec2fd95b1f9b05	L1
-cpppj/src/o/SquidFrame.cpp	Netstorm.Core/Original/RawFrame.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/SquidFrame.cpp	Netstorm.Core/Original/RawFrame.cs	73e3b8ba3d23f966439a41f0217d11231c208139	L1
 cpppj/src/o/SquidHash.cpp	Netstorm.Core/Original/RawSquidHash.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidOwner.cpp	Netstorm.Core/Original/RawOwner.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/OriginalPopDisplay.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	L1
@@ -717,3 +717,6 @@ cpppj/src/o/RawPriestForcefield.h	Netstorm.Core/Original/RawPriestForcefield.cs	
 cpppj/src/o/RawPriestForcefield.cpp	Netstorm.Core/Original/RawPriestForcefield.cs	7b854b6513ee1b933681d4651b2707a9631a7147	port
 cpppj/src/o/RawPriestShield.h	Netstorm.Core/Original/RawPriestShield.cs	7b854b6513ee1b933681d4651b2707a9631a7147	port
 cpppj/src/o/RawPriestShield.cpp	Netstorm.Core/Original/RawPriestShield.cs	7b854b6513ee1b933681d4651b2707a9631a7147	port
+cpppj/src/o/SquidFrame.h	Netstorm.Core/Original/RawFrame.cs	73e3b8ba3d23f966439a41f0217d11231c208139	port
+cpppj/src/o/RawFrameAdvance.h	Netstorm.Core/Original/RawFrameAdvance.cs	73e3b8ba3d23f966439a41f0217d11231c208139	port
+cpppj/src/o/RawFrameAdvance.cpp	Netstorm.Core/Original/RawFrameAdvance.cs	73e3b8ba3d23f966439a41f0217d11231c208139	port

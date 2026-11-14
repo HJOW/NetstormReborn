@@ -100,6 +100,8 @@
     <!-- 원본 월드 코어 W02 Owner 조각: 소유자 지정 3,000행 중 10.78 몫. -->
     <None Include="../../../cpppj/tests/fixtures/owner-x86.tsv" Link="X86/owner-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/setframe-x86.tsv" Link="X86/setframe-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 공통 진행의 세 PE23040입력은 실제 지정기·공간 효과와 함께 대조한다. -->
+    <None Include="../../../cpppj/tests/fixtures/frameadvance-x86.tsv" Link="X86/frameadvance-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/buildingspace-x86.tsv" Link="X86/buildingspace-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/rawfinder-x86.tsv" Link="X86/rawfinder-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/neighbor-x86.tsv" Link="X86/neighbor-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

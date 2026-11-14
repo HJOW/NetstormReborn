@@ -6,10 +6,10 @@ namespace Netstorm.Core.Tests;
 
 /// <summary>
 /// 원본 월드 코어의 프레임 지정(<see cref="SquidFrame"/>)을 원본 x86 기대값에 대조한다.
-/// 기대값은 setframe-x86.tsv(프레임 변경, 판본별 1,920회) 중 10.78 몫이다.
+/// 기대값은 setframe-x86.tsv의 세 판본별1,920회이며 순서·전체 raw를 대조한다.
 /// 각 호출 뒤 효과 순서와 대상 슬롯 50바이트를 비교한다.
 /// 열 구성은 cpppj/tests/SetFrameTests.cpp 와 같다.
-/// CD 10.72·10.37 행은 기준 판본이 아니므로 읽지 않는다 (W02 Frame 조각, 2026-10-20).
+/// CD 10.72·별도10.37도 원본 관측만 독립 재생하며 제품 대상 확대를 뜻하지 않는다.
 /// </summary>
 public sealed class X86RawFrameTests
 {
@@ -79,15 +79,15 @@ public sealed class X86RawFrameTests
         public Kind CurrentKind = new(0, 0, 0);
 
         /// <summary>번호 5~74번을 클라이언트 영역에 확보한다.</summary>
-        public Scene()
+        public Scene(OriginalEdition edition = OriginalEdition.Patch1078)
         {
-            Pool = new RawSidPool(24000, false);
+            Pool = new RawSidPool(24000, false, edition: edition);
             // 원본 관찰의 번호 범위를 그대로 확보한다
             for (int id = 5; id <= 74; id++)
             {
                 Assert.Equal(id, Pool.Allocate(SidAllocation.Client));
             }
-            Types = new OriginalTypeRecord[OriginalConstructors.TypeCount];
+            Types = new OriginalTypeRecord[Pool.Edition == OriginalEdition.Patch1078 ? 188 : 171];
             // 모든 타입 번호에 빈 타입 레코드를 채운다
             for (int i = 0; i < Types.Length; i++)
             {
@@ -111,8 +111,8 @@ public sealed class X86RawFrameTests
             raw[RawSidPool.TypeOffset] = ObjectType;
             Put(raw, 14, BitConverter.SingleToUInt32Bits(FixedX));
             Put(raw, 18, BitConverter.SingleToUInt32Bits(FixedY));
-            Put(raw, 0x24, frame);
-            raw[0x21] = (byte)level;
+            Put(raw, Pool.Edition == OriginalEdition.Patch1078 ? 0x24 : 0x22, frame, Pool.Edition == OriginalEdition.Patch1078 ? 4 : 1);
+            raw[Pool.Edition == OriginalEdition.Patch1078 ? 0x21 : 0x1f] = (byte)level;
         }
 
         /// <summary>객체의 현재 프레임 번호를 10진 문자열로 읽는다.</summary>
@@ -121,9 +121,9 @@ public sealed class X86RawFrameTests
             ReadOnlySpan<byte> raw = Pool.Slot(Target);
             uint value = 0;
             // 낮은 바이트부터 조합한다
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < (Pool.Edition == OriginalEdition.Patch1078 ? 4 : 1); i++)
             {
-                value |= (uint)raw[0x24 + i] << (8 * i);
+                value |= (uint)raw[(Pool.Edition == OriginalEdition.Patch1078 ? 0x24 : 0x22) + i] << (8 * i);
             }
             return value.ToString();
         }
@@ -135,11 +135,11 @@ public sealed class X86RawFrameTests
             {
                 int limit = CurrentKind.Count * ((CurrentKind.Flags1 & DoubleFrames) != 0 ? 2 : 1);
                 // 표를 벗어난 프레임은 원본 00419850 assert 로 거부한다
-                if (frame < 0 || frame >= limit)
+                if (Pool.Edition == OriginalEdition.Patch1078 && (frame < 0 || frame >= limit))
                 {
                     throw new ArgumentOutOfRangeException(nameof(frame), frame, "프레임이 표 밖입니다(00419850 assert)");
                 }
-                return frame < Sizes.Count ? Sizes[frame] : [0f, 0f];
+                return frame >= 0 && frame < Sizes.Count ? Sizes[frame] : [0f, 0f];
             },
             Update = (sid, flags) => Events.Add($"{((flags & FrameUpdateAlternate) != 0 ? "E:" : "D:")}{sid}:{FrameNow()}"),
             Unpop = (sid, flags) => Events.Add($"U:{sid}:{flags}:{FrameNow()}"),
@@ -151,11 +151,14 @@ public sealed class X86RawFrameTests
     }
 
     /// <summary>
-    /// 프레임 변경 fixture 의 10.78 몫 1,920회를 재생한다.
+    /// 프레임 변경 fixture 의 선택 판본1,920회를 재생한다.
     /// 호출마다 효과 순서와 대상 슬롯 50바이트를 대조한다.
     /// </summary>
-    [Fact]
-    public void FrameLevelsAndEffectsMatchOriginalX86()
+    [Theory]
+    [InlineData("originals")]
+    [InlineData("originalCD")]
+    [InlineData("original1037")]
+    public void FrameLevelsAndEffectsMatchOriginalX86(string edition)
     {
         string[][] all = X86Fixture.ReadFile("setframe-x86.tsv");
         var sizes = new List<float[]>();
@@ -186,11 +189,11 @@ public sealed class X86RawFrameTests
         Assert.Equal(4, kinds.Count);
         int sets = 0;
         int thunks = 0;
-        var scene = new Scene();
+        var scene = new Scene(edition == PatchEdition ? OriginalEdition.Patch1078 : OriginalEdition.Cd1072);
         scene.Sizes.AddRange(sizes);
         X86Fixture.CheckRows(rows.ToArray(), row =>
         {
-            if (row[1] != PatchEdition)
+            if (row[1] != edition)
             {
                 return true;
             }
@@ -207,7 +210,7 @@ public sealed class X86RawFrameTests
             scene.Prepare(kinds[X86Fixture.Int(row[2])], X86Fixture.UInt(row[3]), X86Fixture.UInt(row[4]));
             var frames = new SquidFrame(scene.Pool, scene.Types, scene.Hooks());
             frames.Set(Target, unchecked((int)X86Fixture.UInt(row[5])), X86Fixture.UInt(row[6]));
-            string actual = scene.EventText() + '|' + Convert.ToHexStringLower(scene.Pool.Slot(Target));
+            string actual = scene.EventText() + '|' + Convert.ToHexStringLower(scene.Pool.Slot(Target)[..(scene.Pool.Edition == OriginalEdition.Patch1078 ? 50 : 36)]);
             Assert.Equal(row[7] + '|' + row[8], actual);
             sets++;
             return true;

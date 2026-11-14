@@ -33,4 +33,16 @@ public static class RawPathAnimation
     /// <param name="frame">프레임 인덱스.</param>
     /// <returns>'A' 가 0 인 방향 번호.</returns>
     public static int Direction(IReadOnlyList<FrameCode> frames, int frame) => Side(frames, frame) - 'A';
+
+    /// <summary>실제 RiftTypeFrames의 현재 코드를 signed BYTE로 읽고 범위 밖은 효과 전에 진단한다.</summary>
+    public static int Side(RiftTypeFrames frames, int frame)
+    {
+        ArgumentNullException.ThrowIfNull(frames);
+        if (frame < 0 || frame >= frames.Codes.Count)
+            throw new ArgumentOutOfRangeException(nameof(frame), frame, "경로 방향 프레임 범위 오류");
+        return unchecked((sbyte)frames.Codes[frame].Side);
+    }
+
+    /// <summary>실제 현재 코드표의 방향을 A=0으로 반환한다. 프레임 진행·낙하가 공유한다.</summary>
+    public static int Direction(RiftTypeFrames frames, int frame) => Side(frames, frame) - 'A';
 }
