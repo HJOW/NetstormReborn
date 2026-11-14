@@ -22311,10 +22311,41 @@
       "bytes": 1157,
       "lines": 37,
       "fixtureCommit": "9271152fe",
-      "webCommit": "worktree",
+      "webCommit": "d5cde4b58",
       "cpppjBasis": {
         "cpppj/src/client/SpecialPointerTrace.cpp": "9271152fe",
         "cpppj/src/client/SpecialPointerTrace.h": "9271152fe"
+      }
+    },
+    {
+      "id": "hud-nsinfo-attach",
+      "path": "cpppj/tests/fixtures/hud-nsinfo-attach-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E488",
+      "producer": "cpppj HudNsInfoTests: 보호 원본 10.78 NSInfo 일반 부착(0047e9d0)의 독립 x86 관측 310행(155입력 × 두 정밀도, 기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/hud-nsinfo-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/hud-ns-info.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HudNsInfo.cpp",
+        "cpppj/src/client/HudNsInfo.h"
+      ],
+      "doc": "docs/webpj-hud-nsinfo-native-fixtures-20261115.md",
+      "scope": "NSInfo 일반 부착 310행의 8개 노드 0x11c바이트 전체(읽지 않는 확장 영역 포함)·24개 전역·기본 부착/Push/배경 부착/메타맵 배치 호출 순서·부분 중단 8행",
+      "text": true,
+      "sha256": "98b1ca16e573ad185f295c8fc6503f6f18f40102076c8ef155455aec5b174fbd",
+      "bytes": 2923921,
+      "lines": 311,
+      "fixtureCommit": "e5a68d592",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HudNsInfo.cpp": "97dcd28fb",
+        "cpppj/src/client/HudNsInfo.h": "97dcd28fb"
       }
     }
   ]

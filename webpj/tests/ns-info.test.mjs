@@ -1,5 +1,5 @@
 // NSInfo 묶음(ClientNsInfoGlobals 전역·HudNsInfo 일반 부착·HudNsInfoCreate 전체 생성)을 기준선 소스 계약과 손 계산 값으로 검증한다.
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 생성 순서 전체는 기준선 HudNsInfoCreate.cpp 의 호출 순서를 시험 쪽에서 따로 손으로 펼쳐 비교하고, 기본 생성은 실제 GumpCreate 를 쓴다.
+// 이 파일의 수치는 기준선 소스 계약과 손 계산이다. 일반 부착의 원본 직접 관측 310행은 tests/hud-nsinfo-native-fixtures.test.mjs(2026-11-15 WB04-E488)가 대조하고, 전체 자식 생성(HudNsInfoCreate)의 관측 `hud-nsinfo-create` 170행은 후속 단위다. 생성 순서 전체는 기준선 HudNsInfoCreate.cpp 의 호출 순서를 시험 쪽에서 따로 손으로 펼쳐 비교하고, 기본 생성은 실제 GumpCreate 를 쓴다.
 // 실제 게임·브라우저 실행이 아니다. (2026-11-14 WB04-E444)
 import test from 'node:test';
 import assert from 'node:assert/strict';

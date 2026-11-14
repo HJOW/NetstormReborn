@@ -1,6 +1,6 @@
 // 원본 NSInfo(준비 창, 0xd8 바이트 파생)의 일반 미션 부착을 실제 배경 자식과 같은 Gump 트리에 연결한다(원문 0047e9d0, cpppj client/HudNsInfo.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 기본 부착 → 현재 배경 Push → 배경 폭/높이·배율 쓰기 → 배경 부착 → 현재 메타맵/플레이어 인식 관문 순서이며, 전체 자식 생성(HudNsInfoCreate)과 메타맵 전체 배치(0047ea71 이후)는 별도 단위/훅이다.
-// 메타맵·플레이어 인식 전역은 복사본 없이 소비 시점에 직접 읽는다(현재 값 객체 또는 조회 함수 모두 허용). 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 메타맵·플레이어 인식 전역은 복사본 없이 소비 시점에 직접 읽는다(현재 값 객체 또는 조회 함수 모두 허용). 원본 10.78 독립 관측 310행은 tests/hud-nsinfo-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E488 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: const info = new HudNsInfo({ metamap: () => meta, playerKnown: () => known }, hooks); info.attach(token, x, y, parent, mode);
 // (2026-11-14 WB04-E444: RawMenuControls 선행 NSInfo 부착 이식)
 import { GumpCreateNode } from './gump-create.js';
