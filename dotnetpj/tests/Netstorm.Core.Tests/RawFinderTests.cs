@@ -106,14 +106,14 @@ public sealed class RawFinderTests
     }
 
     /// <summary>
-    /// 발자국이 깨지면(가로 0·세로 0) 조회 전에 거부한다.
+    /// 음수 발자국은 원본 호스트 보호 계약에 따라 조회 전에 거부한다.
     /// </summary>
     [Fact]
     public void FootprintValidationRejectsBadFeet()
     {
         var (pool, hash, types, heights) = Scene();
         Lifecycle(pool, hash, types, heights, false, false);
-        types[74].FootX = 0;
+        types[74].FootX = -1;
         var finder = new RawSquidFinder(pool, hash, types);
         // 첫 후보의 발자국 검사에서 멈춘다
         Assert.ThrowsAny<Exception>(() => finder.Begin(new SquidSearchArea(20, 21, 20, 21)));

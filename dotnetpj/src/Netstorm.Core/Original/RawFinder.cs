@@ -57,7 +57,7 @@ public struct SquidSearchState
 /// 반환된 후보의 다음 체인은 먼저 확보하고, 필터·호출 중 변경은 다음 후보의 변경된 값으로 읽는다.
 /// 매립은 제외하고 free·dead·void 는 호출자 필터의 몫으로 남긴다.
 /// CD 판본은 매립 바이트 위치(35)와 물리 범위 밖 좌표 assert가 다르며 F2c-11에서 이었다.
-/// 발자국 검증은 기존 직접 검사(<c>RawFinderTests.FootprintValidationRejectsBadFeet</c>)가 0을 거부하므로 원문 조건 그대로 두지 않았다.
+/// Dude70의0×0 발자국도 원본 OR 교차식으로 조회하며 음수/확장 오버플로만 거부한다.
 /// 근거: cpppj/src/o/RawSquidFinder.cpp (W02 탐색 조각, 2026-10-20; CD 분기 F2c-11, 2026-11-04).
 /// </summary>
 public sealed class RawSquidFinder
@@ -293,7 +293,7 @@ public sealed class RawSquidFinder
         }
         OriginalTypeRecord type = _types[(int)number];
         long height = (long)type.FootY + (_state.ExtendedHeight ? _heightExtensions[(int)number] : 0);
-        if (type.FootX < 1 || height < 1 || height > int.MaxValue)
+        if (type.FootX < 0 || height < 0 || height > int.MaxValue)
         {
             throw new ArgumentOutOfRangeException(nameof(sid), "원시 찾기 발자국 범위 오류");
         }

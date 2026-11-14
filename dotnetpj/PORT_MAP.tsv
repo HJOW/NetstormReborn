@@ -484,7 +484,7 @@ cpppj/src/o/RawSoloMapList.cpp	Netstorm.Core/Original/RawSoloMapList.cs	fdb9a2b9
 cpppj/src/o/RawSoloMapList.h	Netstorm.Core/Original/RawSoloMapList.cs	fdb9a2b9b03f78b84af763aea51fe9a333f6dc20	L1
 cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSquidDestroy.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidDestroyDispatch.cpp	Netstorm.Core/Original/RawSquidDestroyDispatch.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
-cpppj/src/o/RawSquidFinder.cpp	Netstorm.Core/Original/RawFinder.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
+cpppj/src/o/RawSquidFinder.cpp	Netstorm.Core/Original/RawFinder.cs	7b854b6513ee1b933681d4651b2707a9631a7147	L1
 cpppj/src/o/RawSquidHitPoints.cpp	Netstorm.Core/Original/RawSquidHitPoints.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawSquidNeighbors.cpp	Netstorm.Core/Original/RawNeighbor.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidPoolReset.cpp	Netstorm.Core/Original/RawSquidPoolReset.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
@@ -713,3 +713,7 @@ cpppj/src/o/RawPriestPostPop.h	Netstorm.Core/Original/RawPriestPreDestroy.cs	9be
 cpppj/src/o/RawPriestPostPopTail.h	Netstorm.Core/Original/RawPriestPostPopTail.cs	d95b07dfb8da8b6b1f2b0bc794b9740773e0c493	port
 cpppj/src/o/RawPriestPostPopTail.cpp	Netstorm.Core/Original/RawPriestPostPopTail.cs	d95b07dfb8da8b6b1f2b0bc794b9740773e0c493	port
 cpppj/src/o/RawCarrierPostPop.h	Netstorm.Core/Original/RawCarrierPostPop.cs	0a67c2bf41336c6751ef6668a790ea583735d876	port
+cpppj/src/o/RawPriestForcefield.h	Netstorm.Core/Original/RawPriestForcefield.cs	7b854b6513ee1b933681d4651b2707a9631a7147	port
+cpppj/src/o/RawPriestForcefield.cpp	Netstorm.Core/Original/RawPriestForcefield.cs	7b854b6513ee1b933681d4651b2707a9631a7147	port
+cpppj/src/o/RawPriestShield.h	Netstorm.Core/Original/RawPriestShield.cs	7b854b6513ee1b933681d4651b2707a9631a7147	port
+cpppj/src/o/RawPriestShield.cpp	Netstorm.Core/Original/RawPriestShield.cs	7b854b6513ee1b933681d4651b2707a9631a7147	port

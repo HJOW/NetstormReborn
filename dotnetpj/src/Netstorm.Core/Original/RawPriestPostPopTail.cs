@@ -91,4 +91,19 @@ public sealed class RawPriestPostPopTail
     public void Validate(int sid) => _prefix.Validate(sid);
     /// <summary>일반 Pop 가상 분배가 같은 실제 풀인지 검증하는 참조다.</summary>
     public RawSidPool Pool() => _pool;
+
+    /// <summary>같은 실제 보호막 생성/조회에 연결하고 현재 조회 결과만 flags0으로 삭제한다.</summary>
+    public static PriestPostPopTailHooks MakePriestPostPopTailShieldHooks(RawSidPool pool, RawPriestShield shield,
+        RawPriestForcefield lookup, Action<int, uint> destroy, Action<int> fall)
+    {
+        ArgumentNullException.ThrowIfNull(pool); ArgumentNullException.ThrowIfNull(shield);
+        ArgumentNullException.ThrowIfNull(lookup); ArgumentNullException.ThrowIfNull(destroy); ArgumentNullException.ThrowIfNull(fall);
+        if (!ReferenceEquals(pool, shield.Pool()) || !ReferenceEquals(pool, lookup.Pool()))
+            throw new ArgumentException("사제 후반 보호막 실제 풀 불일치");
+        return new PriestPostPopTailHooks
+        {
+            Fall = fall, EnsureShield = shield.Ensure,
+            ClearShield = sid => { int found = lookup.Find(sid); if (found > 0 && found < pool.Capacity) destroy(found, 0); },
+        };
+    }
 }

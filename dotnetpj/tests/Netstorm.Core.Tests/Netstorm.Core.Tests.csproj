@@ -261,4 +261,9 @@
     <!-- 사제 전체 후처리의 원본 관측에서 PATCH2048입력을 대조한다. -->
     <None Include="../../../cpppj/tests/fixtures/priestpostpoptail-x86.tsv" Link="X86/priestpostpoptail-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 실제 보호막 조회/생성의 원본 관측을 사본 없이 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/priestforcefield-x86.tsv" Link="X86/priestforcefield-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/priestshield-x86.tsv" Link="X86/priestshield-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
