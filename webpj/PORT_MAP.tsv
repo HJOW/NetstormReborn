@@ -155,7 +155,7 @@ cpppj/src/client/HtmlInputDialog.cpp	port	www/ui/html-input-dialog.js	1f00a25a	p
 cpppj/src/client/HtmlLinkText.cpp	port	www/ui/html-text.js	1f00a25a	partial	[client-default] 링크 문자열
 cpppj/src/client/HtmlTextParser.cpp	port	www/ui/html-text.js	1f00a25a	partial	[client-default] HTML 유사 본문 변환
 cpppj/src/client/HtmlWindowFactory.cpp	port	www/ui/html-text.js;www/ui/tell-window.js	1f00a25a	partial	[client-default] 두 번 변환 준비(004cf270)
-cpppj/src/client/HtmlWindowFit.cpp	port	www/ui/tell-window.js	1f00a25a	partial	[client-default] 크기 맞춤·중앙 배치
+cpppj/src/client/HtmlWindowFit.cpp	port	www/ui/html-window-fit.js	1f00a25a	port	[client-default] WB04-E457: 실제 같은 HTML/본문/버튼/메뉴의 전체Fit·FST32·측정/메뉴pop/스크롤전환·중앙좌표/깊이. 원본160행의26객체/전체효과 일치, 실제 HTML/Gump트리 조립 포함. 앱/Tell 교체·실제글꼴/가상장치 결선은 RawMenuControls 허브.
 cpppj/src/client/HtmlWindowGump.cpp	port	www/ui/html-window-gump.js	1f00a25a	port	[client-default] WB04-E456: 실제 기본/장식 파생주소의8192BYTE/20행·생성/본문/버튼/입력/Idle/소멸, 원본250+88행 전체일치. 기존TellWindow 앱 경로 교체와 실제 stone/scroll/HTML Fit·메타/공장은 RawMenuControls 허브에서 조립.
 cpppj/src/client/HtmlWindowMetadata.cpp	port	www/ui/html-text.js	1f00a25a	partial	[client-default] $Button=/$Menu= 등 메타
 cpppj/src/client/HtmlZsend.cpp	exclude-mp			-	[mp-zsend]
