@@ -1,6 +1,6 @@
 // 원문 004d53a0의 초기 명령 등록과 flash/desc/cheatorama 콜백을 실제 Client 장치에서 분리해 옮긴다(cpppj client/RawIssueCommands.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 같은 명령표와 공유 치트 DWORD 를 쓰는 초기 명령 계층이며, 명령에서 설정 파일이나 게임 모드를 임의로 바꾸지 않는다. 치트 비밀번호를 Config 에 저장하지 않는다.
-// 직접 호출과 실제 Chat 분배기가 같은 본체를 쓴다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다).
+// 직접 호출과 실제 Chat 분배기가 같은 본체를 쓴다. 원본 관측 fixture(issue-commands 122행)는 E467 의 dialog-native.test.mjs 가 직접 대조한다.
 // 사용: registerIssueCommands((name, callback, visible) => table.add(name, callback, visible)); const result = invokeIssueCommand(0x4d5340, '/data', cheatBox, hooks) (알려진 콜백이면 0, 아니면 null).
 // (2026-11-14 WB04-E437: RawMenuControls 선행 초기 점 명령 이식)
 import { configParseLong } from '../assets/config.js';

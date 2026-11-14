@@ -1,7 +1,7 @@
 // 원본 HTML 부모의 OnExit 를 메타 해석 시 고정하고 실제 반납 시 같은 입력 큐에 한 번 예약한다.
 // (cpppj client/DialogExitCommand.cpp/.h, 기준선 1f00a25a, 10.78 전용)
 // 메타는 명령 전체 토큰을 다시 자르지 않고 이미 얻은 regex 캡처 원문을 조회한다. 같은 페이지에서 여러 번 해석하면 마지막 결과가 남고 따옴표/공백/쉼표를 제거하지 않는다.
-// 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 원본 관측 fixture(dialog-exit-command 204행)는 E467 의 dialog-native.test.mjs 가 직접 대조한다. 기준선 뒤 변경도 없다.
 // (2026-11-14 WB04-E435: RawMenuControls 선행 HTML 대화상자 종료 명령 이식)
 import { configParseLong } from '../assets/config.js';
 

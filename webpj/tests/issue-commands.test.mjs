@@ -1,5 +1,5 @@
 // 초기 점 명령(flash/desc/cheatorama) 등록과 콜백(RawIssueCommands)을 기준선 소스 계약으로 검증한다. (2026-11-14 WB04-E437)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(RawIssueCommands.cpp)에서 옮겼다. 치트 값 0x845fed 는 십진 8675309 이다.
+// 이 파일의 값은 기준선 소스에서 옮긴 것이며 원본 직접 관측(issue-commands 122행) 대조는 dialog-native.test.mjs(E467)가 한다. 순서/경계는 기준선 소스(RawIssueCommands.cpp)에서 옮겼다. 치트 값 0x845fed 는 십진 8675309 이다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { registerIssueCommands, invokeIssueCommand, ISSUE_FLASH_COMMAND, ISSUE_DESCRIPTION_COMMAND, ISSUE_CHEAT_COMMAND, ISSUE_CHEAT_VALUE } from '../www/ui/issue-commands.js';

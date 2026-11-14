@@ -20919,12 +20919,105 @@
       "bytes": 18184,
       "lines": 83,
       "fixtureCommit": "2e2b24f2c",
-      "webCommit": "worktree",
+      "webCommit": "2e1d8b303",
       "cpppjBasis": {
         "cpppj/src/client/HtmlBodyGump.cpp": "2e2b24f2c",
         "cpppj/src/client/HtmlBodyGump.h": "2e2b24f2c",
         "cpppj/src/client/EmbeddedTell.cpp": "5a2cd0474",
         "cpppj/src/client/EmbeddedTell.h": "2e2b24f2c"
+      }
+    },
+    {
+      "id": "dialog-command-lifetime",
+      "path": "cpppj/tests/fixtures/dialog-command-lifetime-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E467",
+      "consumers": [
+        "webpj/tests/dialog-native.test.mjs"
+      ],
+      "doc": "docs/webpj-dialog-native-fixtures-20261115.md",
+      "text": true,
+      "modules": [
+        "webpj/www/ui/dialog-command-lifetime.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/DialogCommandLifetime.cpp",
+        "cpppj/src/client/DialogCommandLifetime.h"
+      ],
+      "producer": "cpppj DialogCommandLifetimeTests: 보호 원본 10.78 c79b0 선택 명령 발화의 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "258행(발화 252행)의 입력 종류/사건/선택 명령·인자와 큐 세 정수·부모 Kill 호출 순서",
+      "sha256": "ee27d2eca659dae70d66fd3f30636485c0eae485356d937a9d8bc24f35a13482",
+      "bytes": 26193,
+      "lines": 259,
+      "fixtureCommit": "229a2c102",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/DialogCommandLifetime.cpp": "229a2c102",
+        "cpppj/src/client/DialogCommandLifetime.h": "229a2c102"
+      }
+    },
+    {
+      "id": "dialog-exit-command",
+      "path": "cpppj/tests/fixtures/dialog-exit-command-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E467",
+      "consumers": [
+        "webpj/tests/dialog-native.test.mjs"
+      ],
+      "doc": "docs/webpj-dialog-native-fixtures-20261115.md",
+      "text": true,
+      "modules": [
+        "webpj/www/ui/dialog-exit-command.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/DialogExitCommand.cpp",
+        "cpppj/src/client/DialogExitCommand.h"
+      ],
+      "producer": "cpppj DialogExitCommandTests: 보호 원본 10.78 c83b0 OnExit 해석/저장/소멸 예약의 제한 x86 관측, 두 정밀도(기존 fixture, 재실행 없음)",
+      "scope": "204행의 regex 캡처(명령/인자 hex)·Config 코드 0 여부와 해석된 코드/인자·문자열 고리 진행·소멸 예약 횟수·외부 효과 순서",
+      "sha256": "b09428751d30aff304cfd0c7be8467563147bdf8729b75b0a9840c8d330961ed",
+      "bytes": 37603,
+      "lines": 205,
+      "fixtureCommit": "5391fc2e4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/DialogExitCommand.cpp": "5391fc2e4",
+        "cpppj/src/client/DialogExitCommand.h": "5391fc2e4"
+      }
+    },
+    {
+      "id": "issue-commands",
+      "path": "cpppj/tests/fixtures/issue-commands-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E467",
+      "consumers": [
+        "webpj/tests/dialog-native.test.mjs"
+      ],
+      "doc": "docs/webpj-dialog-native-fixtures-20261115.md",
+      "text": true,
+      "modules": [
+        "webpj/www/ui/issue-commands.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawIssueCommands.cpp",
+        "cpppj/src/client/RawIssueCommands.h"
+      ],
+      "producer": "cpppj IssueCommandsTests: 보호 원본 10.78 초기 점 명령 등록과 flash/cheatorama 의 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "122행의 초기 등록 네 호출과 flash/cheatorama 의 NULL/부호/32비트 감김/인용/78BYTE 토큰/중복 등록·기존 치트 전후·외부 호출 순서",
+      "sha256": "3ad685952d0d04f6e49e8d571fa251dae10dd97d71775ea07c80a0595860e897",
+      "bytes": 9294,
+      "lines": 123,
+      "fixtureCommit": "890219ac6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawIssueCommands.cpp": "890219ac6",
+        "cpppj/src/client/RawIssueCommands.h": "890219ac6"
       }
     }
   ]
