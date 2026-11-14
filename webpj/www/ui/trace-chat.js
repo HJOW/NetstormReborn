@@ -1,6 +1,6 @@
 // 공통 로그(trace)의 선택 관문에서 현재 Chat UI로 문자열을 넘기는 장치다(원문 434f40→42f190, cpppj client/TraceChat.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 원문 설정을 추가하거나 강제로 켜지 않고 같은 Client 의 현재 관문만 소비한다. 현재 색/현재 Chat 포인터는 실행 위치에서 다시 읽으며 UI 소유자는 이 콜백보다 오래 살아야 한다.
-// 서식은 인자 없는 일반 문자와 `%%`만 지원한다. 추가 인자가 필요한 `%` 서식은 원문이 정의하지 않은 스택을 읽으므로 명시 거부한다(Error). 전용 PE fixture 는 없다.
+// 서식은 인자 없는 일반 문자와 `%%`만 지원한다. 추가 인자가 필요한 `%` 서식은 원문이 정의하지 않은 스택을 읽으므로 명시 거부한다(Error). 원본 10.78 독립 관측 37행은 tests/chat-native-fixtures3.test.mjs 가 대조한다(2026-11-15 WB04-E476 연결, 첫 실행 전체일치).
 // 사용: forwardTraceToChat(enabled, '준비 100%%', { color: () => 0x7f7f7f, currentChat: () => chatToken, append: (chat, text, context) => chatWindow.append(chat, text, context) }).
 // (2026-11-14 WB04-E437: RawMenuControls 선행 trace→Chat 전달 이식)
 

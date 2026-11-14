@@ -20298,7 +20298,7 @@
       "bytes": 13008,
       "lines": 49,
       "fixtureCommit": "162594848",
-      "webCommit": "worktree",
+      "webCommit": "2daf2b0ed",
       "cpppjBasis": {
         "cpppj/src/client/ClientChatRuntime.cpp": "c0f7843ae",
         "cpppj/src/client/ClientChatRuntime.h": "c0f7843ae",
@@ -21404,7 +21404,7 @@
       "bytes": 46113,
       "lines": 351,
       "fixtureCommit": "325d19a08",
-      "webCommit": "worktree",
+      "webCommit": "2daf2b0ed",
       "cpppjBasis": {
         "cpppj/src/client/ChatRecipients.cpp": "325d19a08",
         "cpppj/src/client/ChatRecipients.h": "325d19a08"
@@ -21466,7 +21466,7 @@
       "bytes": 16319,
       "lines": 217,
       "fixtureCommit": "6df0f316b",
-      "webCommit": "worktree",
+      "webCommit": "2daf2b0ed",
       "cpppjBasis": {
         "cpppj/src/client/HudChatGeometry.cpp": "6df0f316b",
         "cpppj/src/client/HudChatGeometry.h": "6df0f316b"
@@ -21497,7 +21497,70 @@
       "bytes": 178174,
       "lines": 163,
       "fixtureCommit": "6df0f316b",
+      "webCommit": "2daf2b0ed",
+      "cpppjBasis": {
+        "cpppj/src/client/HudChatGeometry.cpp": "6df0f316b",
+        "cpppj/src/client/HudChatGeometry.h": "6df0f316b"
+      }
+    },
+    {
+      "id": "trace-chat",
+      "path": "cpppj/tests/fixtures/trace-chat-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E476",
+      "producer": "cpppj TraceChatTests: 보호 원본 10.78 trace→Chat 전달(434f40→42f190)과 로그 추가(42eca0)의 독립 x86 관측 37행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-native-fixtures3.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/trace-chat.js",
+        "webpj/www/ui/chat-window.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/TraceChat.cpp",
+        "cpppj/src/client/TraceChat.h"
+      ],
+      "doc": "docs/webpj-chat-native-fixtures3-20261115.md",
+      "scope": "trace→Chat 전달의 색/현재 Chat 관문과 ChatWindow 로그 추가 부모의 부모/두 자식 8DWORD 문맥·alias·현재 자식 변경·부분 중단·호출 순서",
+      "text": true,
+      "sha256": "2e6df936cef3b895de5033fe6130db00065b5d4f933509b95a26e229d3c9a974",
+      "bytes": 19199,
+      "lines": 38,
+      "fixtureCommit": "c3625c33e",
       "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/TraceChat.cpp": "c3625c33e",
+        "cpppj/src/client/TraceChat.h": "c3625c33e"
+      }
+    },
+    {
+      "id": "hud-chat-geometry",
+      "path": "cpppj/tests/fixtures/hud-chat-geometry-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E476",
+      "producer": "cpppj HudChatGeometryTests: 보호 원본 10.78 ChatWindow 기하(42e6e0 등)의 독립 x86 관측 3,960행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-native-fixtures3.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/hud-chat-geometry.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HudChatGeometry.cpp",
+        "cpppj/src/client/HudChatGeometry.h"
+      ],
+      "doc": "docs/webpj-chat-native-fixtures3-20261115.md",
+      "scope": "ChatWindow 기하(attach/helper/input)의 다섯 노드 크기·표시 비트와 공개 가상/텍스트 요청 순서, 독립 1,980입력의 두 x87 정밀도",
+      "text": true,
+      "sha256": "9c3cb7eba22c800405b726861d102c4fa0deb4b911b5dbe4a77238984f22504a",
+      "bytes": 2362800,
+      "lines": 3961,
+      "fixtureCommit": "e5a68d592",
+      "webCommit": "2daf2b0ed",
       "cpppjBasis": {
         "cpppj/src/client/HudChatGeometry.cpp": "6df0f316b",
         "cpppj/src/client/HudChatGeometry.h": "6df0f316b"
