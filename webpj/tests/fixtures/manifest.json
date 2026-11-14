@@ -22499,10 +22499,41 @@
       "bytes": 1515477,
       "lines": 309,
       "fixtureCommit": "11bbf42cf",
-      "webCommit": "worktree",
+      "webCommit": "92756846b",
       "cpppjBasis": {
         "cpppj/src/client/MenuGump.cpp": "11bbf42cf",
         "cpppj/src/client/MenuGump.h": "225f2322c"
+      }
+    },
+    {
+      "id": "hud-nsinfo-create",
+      "path": "cpppj/tests/fixtures/hud-nsinfo-create-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E493",
+      "producer": "cpppj HudNsInfoCreateTests(Native170ParentsChildrenAndPartialEffects): 보호 원본 10.78 NSInfo 부모 생성(0047ca50/0047c4b0/00479d40/0047afa0/004256d0)의 독립 x86 관측 170행(85입력 × 두 정밀도, 기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/hud-nsinfo-create-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/hud-ns-info-create.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HudNsInfoCreate.cpp",
+        "cpppj/src/client/HudNsInfoCreate.h"
+      ],
+      "doc": "docs/webpj-hud-nsinfo-create-native-fixtures-20261115.md",
+      "scope": "NSInfo 부모 생성 5종(hidden·ns·player·battle·button) 170행의 전체 할당 블록(가드 바이트 포함)·번역/서버 문자열 512바이트·13개 전역·호출 순서와 부분 중단 50행",
+      "text": true,
+      "sha256": "f55acf0d793978c0856cb73df51a54edb0dd7cafbfb82333ec5d444b66da7762",
+      "bytes": 5734550,
+      "lines": 171,
+      "fixtureCommit": "e5a68d592",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HudNsInfoCreate.cpp": "e5a68d592",
+        "cpppj/src/client/HudNsInfoCreate.h": "e5a68d592"
       }
     }
   ]

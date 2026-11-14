@@ -1,6 +1,6 @@
 // 원본 NSInfo(준비 창)와 항상 생성되는 PlayerInfo/BattleInfo/특수 버튼의 실제 부모 생성자를 옮긴다(원문 0047ca50/0047c4b0/00479d40/0047afa0/004256d0/00479fb0/0047b480, cpppj client/HudNsInfoCreate.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 생성은 항상 전체 자식을 만들며(일반/메타 모드 관문은 PlayerInfo/BattleInfo 의 가상 부착에만 있다) 부모 생성자의 현재 포인터 재조회·형제 생성 순서·초기 파싱/크기 갱신을 그대로 보존한다.
-// 하위 생성자/번역/문자열/TYPE 은 실제 기존 처리기를 부르는 호스트 훅이고, 선택하지 않은 효과는 요구하지 않는다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 하위 생성자/번역/문자열/TYPE 은 실제 기존 처리기를 부르는 호스트 훅이고, 선택하지 않은 효과는 요구하지 않는다. 원본 10.78 독립 관측 170행은 tests/hud-nsinfo-create-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E493 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: const create = new HudNsInfoCreate({ value: 0 }, hooks); const token = create.createHidden(); create.attachPlayer(token, x, y, parent, mode).
 // (2026-11-14 WB04-E444: RawMenuControls 선행 NSInfo 생성 이식)
 import { GumpCreateNode } from './gump-create.js';
