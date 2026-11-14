@@ -8,6 +8,8 @@ namespace Netstorm.Core.Original;
 public delegate void AiBrainMemoryFill(Span<byte> bytes);
 
 /// <summary>실제 소유 블록의 불투명32비트 토큰과 요청 크기다. 원본 주소와 같음을 뜻하지 않는다.</summary>
+/// <param name="Token">살아 있는 실제 배열을 식별하는 비제로 토큰이다.</param>
+/// <param name="Size">해당 배열을 확보할 때 요청한 바이트 수다.</param>
 public readonly record struct AiBrainAllocation(uint Token, int Size);
 
 /// <summary>AI의32비트 포인터 필드를 실제 .NET 소유 배열에 연결한다.

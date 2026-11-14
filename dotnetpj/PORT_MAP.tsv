@@ -695,3 +695,5 @@ cpppj/src/o/RawAiBrain.cpp	Netstorm.Core/Original/RawAiBrain.cs	04c87c034dd35923
 cpppj/src/o/RawAiBrain.h	Netstorm.Core/Original/RawAiBrain.cs	04c87c034dd35923a20a363fd9a24ff708329648	L1
 cpppj/src/o/RawPlayerTechnology.cpp	Netstorm.Core/Original/RawPlayerTechnology.cs	f3a5c821f1fbff3cc1d0885730cba40a2709fbd4	L1
 cpppj/src/o/RawPlayerTechnology.h	Netstorm.Core/Original/RawPlayerTechnology.cs	f3a5c821f1fbff3cc1d0885730cba40a2709fbd4	L1
+cpppj/src/o/RawAiBrainInitialUpdate.cpp	Netstorm.Core/Original/RawAiBrainInitialUpdate.cs	efa953c41c6e53b21cfbea5ebd8948124d94edf1	L1
+cpppj/src/o/RawAiBrainInitialUpdate.h	Netstorm.Core/Original/RawAiBrainInitialUpdate.cs	efa953c41c6e53b21cfbea5ebd8948124d94edf1	L1
