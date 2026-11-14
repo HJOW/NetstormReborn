@@ -31,6 +31,12 @@ public sealed class DamageablePreDestroyState
 {
     /// <summary>종속 kind WORD 와 비교하는 타입 번호(원본 005412d0). 기본값은 158 이다.</summary>
     public uint PriestType { get; set; } = 158;
+
+    /// <summary>실제 Client의같은현재005412d0을 빌리며 독립입력의PriestType은보존한다.</summary>
+    public UIntBox? SharedPriestType { get; set; }
+
+    /// <summary>내용물의각kind비교에서같은현재사제TYPE의전체DWORD를읽는다.</summary>
+    public uint ReadPriestType() => SharedPriestType?.Value ?? PriestType;
 }
 
 /// <summary>
@@ -154,11 +160,24 @@ public sealed class RawDamageablePreDestroy
         _spots = spots;
         _finderState = finderState;
         _state = state;
-        _hooks = hooks;
+        _hooks = new() { Collapse = hooks.Collapse, Explosion = hooks.Explosion, Sound = hooks.Sound, ReleaseContained = hooks.ReleaseContained, ValidateBase = hooks.ValidateBase, Base = hooks.Base };
     }
 
     /// <summary>이 몸체가 쓰는 슬롯 풀. 연결 어댑터가 참조 대상을 확인한다.</summary>
     public RawSidPool Pool => _pool;
+
+    /// <summary>실제PATCH장기owner의진입을선택하며 게임상태·내용물·난수는조회하지않는다.</summary>
+    public void EnableNativeBody()
+    {
+        if (_pool.Edition != OriginalEdition.Patch1078) throw new ArgumentException("Native Damageable 전처리 판본 오류");
+        _nativeBody = true;
+    }
+
+    /// <summary>독립typed/CD선행검사와 실제PATCH진입을 구별하는 구성선택이다.</summary>
+    private bool _nativeBody;
+
+    /// <summary>판본별원문extra 바이트위치다. PATCH40/CD35를 같은조건에서읽는다.</summary>
+    private int CurrentExtraOffset => _pool.Edition == OriginalEdition.Patch1078 ? ExtraOffset : 35;
 
     /// <summary>
     /// 자산 상태·타입과 연결된 공통 경계를 효과 전에 검사한다.
@@ -167,15 +186,16 @@ public sealed class RawDamageablePreDestroy
     /// <param name="flags">삭제에 적용되는 플래그 비트.</param>
     public void Validate(int sid, uint flags)
     {
+        if (_nativeBody) return;
         // 빈 슬롯·할당되지 않은 번호는 여기에서 거부된다.
         Span<byte> raw = _pool.AllocatedBytes(sid);
         if ((raw[StateOffset] & 9) != 0 || raw[TypeOffset] < OriginalConstructors.FirstAssetType
-            || raw[TypeOffset] >= OriginalConstructors.TypeCount)
+            || raw[TypeOffset] >= (_pool.Edition == OriginalEdition.Patch1078 ? 188 : 171))
         {
             throw new InvalidOperationException("Damageable 사전 파괴 raw 자산 상태/타입 오류");
         }
         // abstract·매림이면 좌표를 읽지 않는다.
-        if ((raw[ExtraOffset] & AbstractBuriedMask) == 0)
+        if ((raw[CurrentExtraOffset] & AbstractBuriedMask) == 0)
         {
             _ = Spot(sid);
         }
@@ -189,9 +209,18 @@ public sealed class RawDamageablePreDestroy
     /// <param name="flags">삭제에 적용되는 플래그 비트.</param>
     public void PreDestroy(int sid, uint flags)
     {
-        Validate(sid, flags);
+        if (!_nativeBody) Validate(sid, flags);
+        RunPreDestroy(sid, flags, _hooks.ReleaseContained, _nativeBody);
+    }
+
+    /// <summary>원문실제진입으로 현재extra/효과/후행Spot/선택해방/공통부모만실행하고 typed검사를앞당기지않는다.</summary>
+    public void PreDestroyNative(int sid, uint flags, Action<int>? releaseContained) => RunPreDestroy(sid, flags, releaseContained, true);
+
+    /// <summary>두진입의같은효과순서와 현재TYPE/권한·선택해방을 보존한다.</summary>
+    private void RunPreDestroy(int sid, uint flags, Action<int>? releaseContained, bool native)
+    {
         // extra 의 진입 조건은 효과 중 extra 가 바뀌어도 다시 평가하지 않는다.
-        if ((_pool.Slot(sid)[ExtraOffset] & AbstractBuriedMask) == 0)
+        if ((_pool.Slot(sid)[CurrentExtraOffset] & AbstractBuriedMask) == 0)
         {
             if ((flags & CollapseBit) != 0)
             {
@@ -203,21 +232,22 @@ public sealed class RawDamageablePreDestroy
                 _hooks.Explosion!(sid);
                 SoundAt(sid, DamageableSound.Explosion);
             }
-            if ((Spot(sid) & InsideOrBlockedMask) != 0)
+            if (((native ? SpotNative(sid) : Spot(sid)) & InsideOrBlockedMask) != 0)
             {
                 var finder = new RawContainedFinder(_pool, _finderState);
                 // dead 부모도 허용한다. 소리 콜백 뒤 현재 kind/타입 전역을 다시 읽는다.
                 for (int current = finder.Begin(sid, true); current != 0; current = finder.Next())
                 {
-                    if (Read(_pool.Slot(current), KindOffset, 2) == _state.PriestType)
+                    if (Read(_pool.Slot(current), KindOffset, 2) == _state.ReadPriestType())
                     {
                         _hooks.Sound!(new DamageableSoundEvent(DamageableSound.PriestFree, 0, 0));
                     }
                 }
             }
-            if (_finderState.Boss && (flags & NoReleaseBit) == 0)
+            if (_finderState.ReadBoss() && (flags & NoReleaseBit) == 0)
             {
-                _hooks.ReleaseContained!(sid);
+                if (releaseContained is null) throw new InvalidOperationException("Damageable Native 삭제의 선택된 실제 해방 장치 미연결");
+                releaseContained(sid);
             }
         }
         _hooks.Base!(sid, flags);
@@ -234,6 +264,31 @@ public sealed class RawDamageablePreDestroy
         int x = Cell(BitConverter.UInt32BitsToSingle(Read(raw, XOffset, 4)));
         int y = Cell(BitConverter.UInt32BitsToSingle(Read(raw, YOffset, 4)));
         return _spots[y * Side + x];
+    }
+
+    /// <summary>원문_ftol의signed64절삭후lowDWORD를보존하며 개별좌표0..255검사를추가하지않는다.</summary>
+    private static uint NativeCell(float coordinate)
+    {
+        double value = (double)coordinate + (double)SpotBias;
+        if (!double.IsFinite(value) || value < -9223372036854775808.0 || value >= 9223372036854775808.0) throw new ArgumentOutOfRangeException(nameof(coordinate), "Damageable Native spot의실제CRT절삭표현범위");
+        return unchecked((uint)(long)value);
+    }
+
+    /// <summary>효과뒤현재Y→X를절삭하고감긴Y*256+X가선택한실제지도BYTE만범위검사한다.</summary>
+    private byte SpotNative(int sid)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid); uint y = NativeCell(BitConverter.UInt32BitsToSingle(Read(raw, YOffset, 4))), x = NativeCell(BitConverter.UInt32BitsToSingle(Read(raw, XOffset, 4)));
+        uint index = unchecked(y * (uint)Side + x);
+        if (index >= _spots.Length) throw new ArgumentOutOfRangeException(nameof(sid), "Damageable Native spot의현재flatBYTE물리부족");
+        return _spots[(int)index];
+    }
+
+    /// <summary>같은풀의Carrier두경계만실제피해준비에연결하고 종속후처리함수사본은보존한다.</summary>
+    public static CarrierPreDestroyHooks MakeDamageablePreDestroyHooks(RawSidPool pool, RawDamageablePreDestroy damageable, CarrierPreDestroyHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(pool); ArgumentNullException.ThrowIfNull(damageable); ArgumentNullException.ThrowIfNull(hooks);
+        if (!ReferenceEquals(pool, damageable.Pool)) throw new ArgumentException("Carrier/Damageable preDestroy의 SID 풀이 다릅니다");
+        return new() { ValidateDamageable = damageable.Validate, DamageablePre = damageable.PreDestroy, DependentFound = hooks.DependentFound };
     }
 
     /// <summary>

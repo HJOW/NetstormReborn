@@ -10,7 +10,7 @@ namespace Netstorm.Core.Tests;
 /// 붕괴/폭발 효과와 소리 접두·사제 해방 소리·해방 몸체·공통 preDestroy 호출을 실행하고,
 /// "D" 절은 Damageable 를 직접, "C" 절은 Carrier 경유로 부른다.
 /// 호출마다 외부 호출 순서·슬롯 50바이트 ×5·현재 권한/타입/사제 kind 전역을 비교한다.
-/// 기준 판본은 10.78 이며 originalCD·original1037 행은 읽지 않는다 (W03 삭제·수명 다섯째 조각, 2026-10-21).
+/// 기존10.78대조를유지하고0.524에서세판본typed와PATCH Native대조를추가했다.
 /// </summary>
 public sealed class X86RawDamageablePreDestroyTests
 {
@@ -31,9 +31,6 @@ public sealed class X86RawDamageablePreDestroyTests
 
     /// <summary>슬롯의 기본 타입 번호(원본 사제 타입).</summary>
     private const byte DefaultType = 158;
-
-    /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
-    private const int ExtraOffset = 40;
 
     /// <summary>값을 리틀 엔디언으로 슬롯에 쓴다.</summary>
     /// <param name="bytes">대상 슬롯 바이트.</param>
@@ -80,9 +77,9 @@ public sealed class X86RawDamageablePreDestroyTests
         public int Validations { get; private set; }
 
         /// <summary>장면을 만든다. 클라이언트 번호 5~63 을 먼저 확보한다.</summary>
-        public Scene()
+        public Scene(OriginalEdition edition = OriginalEdition.Patch1078)
         {
-            Pool = new RawSidPool(24000, false);
+            Pool = new RawSidPool(24000, false, edition: edition);
             // 부모 실제 Create와 같은 클라이언트 할당만 준비한다
             for (int id = 5; id <= LastSlot; id++)
             {
@@ -90,6 +87,9 @@ public sealed class X86RawDamageablePreDestroyTests
             }
             FinderState.CheckingDead = new(true);
         }
+
+        /// <summary>원문판본의현재extra 위치이며 PATCH40/CD35다.</summary>
+        private int CurrentExtraOffset => Pool.Edition == OriginalEdition.Patch1078 ? 40 : 35;
 
         /// <summary>슬롯 바이트를 직접 쓴다(장면 준비용).</summary>
         /// <param name="sid">대상 슬롯 번호.</param>
@@ -118,7 +118,7 @@ public sealed class X86RawDamageablePreDestroyTests
                 if (marker == "C")
                 {
                     Coordinates(21.00001f, 22.00001f);
-                    Slot(Source)[ExtraOffset] = 9;
+                    Slot(Source)[CurrentExtraOffset] = 9;
                 }
                 if (marker == "A0")
                 {
@@ -229,12 +229,12 @@ public sealed class X86RawDamageablePreDestroyTests
                 raw.Fill(0xab);
                 raw[RawSidPool.TypeOffset] = DefaultType;
                 raw[RawSidPool.StateOffset] = 0;
-                raw[ExtraOffset] = 0;
+                raw[CurrentExtraOffset] = 0;
                 Put(raw, RawSidPool.NextOffset, 0);
             }
             Span<byte> source = Slot(Source);
             source[RawSidPool.StateOffset] = (byte)X86Fixture.UInt(row[2]);
-            source[ExtraOffset] = (byte)X86Fixture.UInt(row[3]);
+            source[CurrentExtraOffset] = (byte)X86Fixture.UInt(row[3]);
             Put(source, 14, X86Fixture.UInt(row[8]));
             Put(source, 18, X86Fixture.UInt(row[9]));
             Put(source, 6, X86Fixture.UInt(row[11]), 2);
@@ -258,10 +258,10 @@ public sealed class X86RawDamageablePreDestroyTests
 
         /// <summary>입력 5개 raw를 실행기의 순서로 직렬화한다.</summary>
         /// <returns>슬롯 바이트 hex 문자열.</returns>
-        public string Slots()
+        public string Slots(int bytes = 50)
         {
             // 후보의 미지정 바이트까지 모두 비교한다
-            return string.Join('|', SlotIds.Select(id => Convert.ToHexStringLower(Pool.Slot(id).ToArray())));
+            return string.Join('|', SlotIds.Select(id => Convert.ToHexStringLower(Pool.Slot(id)[..bytes].ToArray())));
         }
 
         /// <summary>현재 권한/타입/사제 kind 전역의 전체 관찰이다.</summary>
@@ -281,14 +281,13 @@ public sealed class X86RawDamageablePreDestroyTests
     public void PreDestroyMatchOriginalX86()
     {
         string[][] rows = X86Fixture.Read("damageablepredestroy");
-        int count = 0;
+        int count = 0; var scene = new Scene();
         X86Fixture.CheckRows(rows, row =>
         {
             if (row[0] != PatchEdition)
             {
                 return true;
             }
-            var scene = new Scene();
             scene.Prepare(row);
             var damageable = new RawDamageablePreDestroy(scene.Pool, scene.Spots, scene.FinderState, scene.State, scene.Hooks());
             uint flags = X86Fixture.UInt(row[7]);
@@ -316,4 +315,25 @@ public sealed class X86RawDamageablePreDestroyTests
         });
         Assert.Equal(RowsPerEdition, count);
     }
+    /// <summary>같은원본4896입력의판본별typed와PATCH1632입력의Native를원문전체상태에대조한다.</summary>
+    [Theory]
+    [InlineData("originals", OriginalEdition.Patch1078, false)]
+    [InlineData("originalCD", OriginalEdition.Cd1072, false)]
+    [InlineData("original1037", OriginalEdition.Cd1072, false)]
+    [InlineData("originals", OriginalEdition.Patch1078, true)]
+    public void CurrentTypedAndNativeBodiesMatchOriginal(string name, OriginalEdition edition, bool native)
+    {
+        string[][] rows = X86Fixture.Read("damageablepredestroy", name); Assert.Equal(RowsPerEdition, rows.Length); var scene = new Scene(edition);
+        X86Fixture.CheckRows(rows, row =>
+        {
+            scene.Prepare(row); var body = new RawDamageablePreDestroy(scene.Pool, scene.Spots, scene.FinderState, scene.State, scene.Hooks()); if (native) body.EnableNativeBody(); uint flags = X86Fixture.UInt(row[7]);
+            if (row[1] == "D") body.PreDestroy(Source, flags);
+            else new RawCarrierPreDestroy(scene.Pool, scene.FinderState, RawDamageablePreDestroy.MakeDamageablePreDestroyHooks(scene.Pool, body, new() { DependentFound = () => scene.Events.Add("T") })).PreDestroy(Source, flags);
+            Assert.Equal(row[14], scene.Globals()); Assert.Equal(row[15], scene.EventText()); int bytes = edition == OriginalEdition.Patch1078 ? 50 : 36; Assert.Equal(row[16], scene.Slots(bytes)); Assert.Equal(native ? 0 : row[1] == "D" ? 1 : 2, scene.Validations);
+            // CD원본36BYTE밖의.NET14BYTE입력도별도로보존한다.
+            if (bytes < 50) foreach (int sid in SlotIds) Assert.All(scene.Pool.Slot(sid)[bytes..].ToArray(), value => Assert.Equal((byte)0xab, value));
+            return true;
+        });
+    }
+
 }
