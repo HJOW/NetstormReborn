@@ -154,7 +154,7 @@ cpppj/src/client/HtmlConditionEffect.cpp	port	www/ui/html-text.js	1f00a25a	parti
 cpppj/src/client/HtmlInputDialog.cpp	port	www/ui/html-input-dialog.js	1f00a25a	port	[client-default] WB04-E435 HtmlInputDialog confirmHtmlInput(CopyText 256·마지막 칸 NUL·첫 LF 절단·종료 NUL부터 isspace(int8) 역방향·모드≠1 atol(반환 무시)·후속 섹션 80바이트 NUL 앞·format/Tell·1 반환) 이식. 전용 PE fixture 없음(소스 계약); 기준선 뒤 변경 없음; 남음: 실제 모달/입력 조립
 cpppj/src/client/HtmlLinkText.cpp	port	www/ui/html-text.js	1f00a25a	partial	[client-default] 링크 문자열
 cpppj/src/client/HtmlTextParser.cpp	port	www/ui/html-text.js	1f00a25a	partial	[client-default] HTML 유사 본문 변환
-cpppj/src/client/HtmlWindowFactory.cpp	port	www/ui/html-text.js;www/ui/tell-window.js	1f00a25a	partial	[client-default] 두 번 변환 준비(004cf270)
+cpppj/src/client/HtmlWindowFactory.cpp	port	www/ui/html-window-factory.js	1d5b1f43	port	[client-default] WB04-E459: 전체생성·같은파서2회/현재메타버퍼·기본버튼/빈본문·모달뒤현재serial, 원본106행 전체일치. 기준선뒤 localizedContent 공통관문②, 사설4BYTE표시codec① 웹제외; 실제locale/파서전체·부모/앱 결선은 후속허브.
 cpppj/src/client/HtmlWindowFit.cpp	port	www/ui/html-window-fit.js	1f00a25a	port	[client-default] WB04-E457: 실제 같은 HTML/본문/버튼/메뉴의 전체Fit·FST32·측정/메뉴pop/스크롤전환·중앙좌표/깊이. 원본160행의26객체/전체효과 일치, 실제 HTML/Gump트리 조립 포함. 앱/Tell 교체·실제글꼴/가상장치 결선은 RawMenuControls 허브.
 cpppj/src/client/HtmlWindowGump.cpp	port	www/ui/html-window-gump.js	1f00a25a	port	[client-default] WB04-E456: 실제 기본/장식 파생주소의8192BYTE/20행·생성/본문/버튼/입력/Idle/소멸, 원본250+88행 전체일치. 기존TellWindow 앱 경로 교체와 실제 stone/scroll/HTML Fit·메타/공장은 RawMenuControls 허브에서 조립.
 cpppj/src/client/HtmlWindowMetadata.cpp	port	www/ui/html-window-metadata.js	4edec13c	port	[client-default] WB04-E458: 9종 우선순위·현재원시버퍼/캡처·명령고리·실제HTML버튼/메뉴/기한/입력효과, 원본128행 전체일치. 기준선뒤 NB08 공통inline목록 repair옵션② 반영(기본false 원문 유지); 제품켜기·실제목록/앱 결선은 RawMenuControls 허브.

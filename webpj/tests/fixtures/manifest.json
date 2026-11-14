@@ -20422,10 +20422,41 @@
       "bytes": 55910,
       "lines": 129,
       "fixtureCommit": "50b114b9b",
-      "webCommit": "worktree",
+      "webCommit": "44ec39a3f",
       "cpppjBasis": {
         "cpppj/src/client/HtmlWindowMetadata.cpp": "4edec13c5",
         "cpppj/src/client/HtmlWindowMetadata.h": "4edec13c5"
+      }
+    },
+    {
+      "id": "html-window-factory",
+      "path": "cpppj/tests/fixtures/html-window-factory-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E459",
+      "producer": "cpppj HtmlWindowFactoryTests: 보호 원본10.78 전체 생성 상위 관측, 생성/파서/메타 명시 하위(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/html-window-factory.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/html-window-factory.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HtmlWindowFactory.cpp",
+        "cpppj/src/client/HtmlWindowFactory.h"
+      ],
+      "doc": "docs/webpj-html-window-factory-20261114.md",
+      "scope": "106행의 현재전역/serial·8192BYTE링크·두출력·반환/중단·효과순서. localizedContent는 별도 독립검사",
+      "text": true,
+      "sha256": "24e0e986a8dd113422473f726447936401cf68e2e495807109bf2427475cbd8e",
+      "bytes": 73191,
+      "lines": 107,
+      "fixtureCommit": "fd9438a28",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HtmlWindowFactory.cpp": "1d5b1f437",
+        "cpppj/src/client/HtmlWindowFactory.h": "1d5b1f437"
       }
     }
   ]
