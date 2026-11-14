@@ -742,3 +742,15 @@ cpppj/src/o/RawForcefieldLifecycle.cpp	Netstorm.Core/Original/RawForcefieldLifec
 cpppj/src/o/RawPriestState.h	Netstorm.Core/Original/RawPriestState.cs	92f395980ead5365394d469f8a7cab3c4eff3e9c	port
 cpppj/src/o/RawPriestFall.h	Netstorm.Core/Original/RawPriestFall.cs	92f395980ead5365394d469f8a7cab3c4eff3e9c	port
 cpppj/src/o/RawPriestFall.cpp	Netstorm.Core/Original/RawPriestFall.cs	92f395980ead5365394d469f8a7cab3c4eff3e9c	port
+cpppj/src/client/Sound.h	Netstorm.Client/Audio/SoundTypes.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/Sound.cpp	Netstorm.Client/Audio/SoundTypes.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/Sound.h	Netstorm.Client/Audio/SoundList.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/Sound.cpp	Netstorm.Client/Audio/SoundList.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/Sound.h	Netstorm.Client/Audio/SoundGeometry.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/Sound.cpp	Netstorm.Client/Audio/SoundGeometry.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/Sound.h	Netstorm.Client/Audio/SoundPlayer.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/Sound.cpp	Netstorm.Client/Audio/SoundPlayer.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/RawCameraView.h	Netstorm.Client/Audio/SoundGeometry.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/RawCameraView.cpp	Netstorm.Client/Audio/SoundGeometry.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/SoundProcess.h	Netstorm.Client/Audio/SoundProcess.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/SoundProcess.cpp	Netstorm.Client/Audio/SoundProcess.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
