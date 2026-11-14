@@ -282,4 +282,11 @@
     <None Include="../../../cpppj/tests/fixtures/priestforcefield-x86.tsv" Link="X86/priestforcefield-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/priestshield-x86.tsv" Link="X86/priestshield-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 일반/사제 배치 접두와 전체 픽셀 getter의 실제 원본 관찰을 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/canonplacement-x86.tsv" Link="X86/canonplacement-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/priestplacement-x86.tsv" Link="X86/priestplacement-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/canonshape-x86.tsv" Link="X86/canonshape-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/priestshape-x86.tsv" Link="X86/priestshape-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

@@ -7,10 +7,10 @@ namespace Netstorm.Core.Original;
 /// <remarks>2026-11-04 F2c-11에서 추가했다. 전체 파이프라인(<c>RawCanonPlacementPipeline</c>)은 R6 범위라 여기서는 조회 형식만 둔다.</remarks>
 public readonly record struct CanonPlacementQuery(uint Type, uint Argument, float X, float Y, uint Flags, uint Owner, uint Mode)
 {
-    /// <summary>타입 번호와 배치 번호·첫 사용 인자를 합친 값이다.</summary>
+    /// <summary>배치할 타입 번호다. 별도 Argument와 구별한다.</summary>
     public uint Type { get; init; } = Type;
 
-    /// <summary>예약 인자다.</summary>
+    /// <summary>타입과 구별하는 패턴 번호 또는 첫 모양 인자다.</summary>
     public uint Argument { get; init; } = Argument;
 
     /// <summary>실제 배치가 전달하는 월드 X 좌표다.</summary>

@@ -307,7 +307,7 @@ cpppj/src/o/RawBridgeConnect.h	Netstorm.Core/Original/RawBridgeConnect.cs	db8969
 cpppj/src/o/RawBridgeEvents.cpp	Netstorm.Core/Original/RawBridgeEvent.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawBridgeLifecycle.cpp	Netstorm.Core/Original/RawBridgeLifecycle.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawBuildingSpace.cpp	Netstorm.Core/Original/RawBuildingSpace.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/RawCanonPlacement.h	Netstorm.Core/Original/RawFortRandomPlacement.cs	da27e191b1459279170608224c4f60fdd84c3343	port
+cpppj/src/o/RawCanonPlacement.h	Netstorm.Core/Original/RawCanonPlacement.cs	a5101d897cce87a26b68aefbb6d57f2427e10d91	L1
 cpppj/src/o/RawCanonPlacementGeometry.h	Netstorm.Core/Original/RawPlacementTerrainTypes.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
 cpppj/src/o/RawCanonPlacementTerrain.cpp	Netstorm.Core/Original/RawCanonPlacementTerrain.cs	6e7fdd37215c74fa8e599729e8e0757ba514272c	L1
 cpppj/src/o/RawCanonPlacementTerrain.h	Netstorm.Core/Original/RawCanonPlacementTerrain.cs	225f2322cf7936604306b6534fd4edf18f246c12	L1
@@ -773,3 +773,11 @@ cpppj/src/o/RawPriestSpawn.h	Netstorm.Core/Original/RawPriestSpawn.cs	dfdbcd655c
 cpppj/src/o/RawPriestSpawn.cpp	Netstorm.Core/Original/RawPriestSpawn.cs	dfdbcd655c0564cc045fcb40fb79096cb051ac67	L1
 cpppj/src/o/RawCarrierCheck.h	Netstorm.Core/Original/RawCarrierCheck.cs	dfdbcd655c0564cc045fcb40fb79096cb051ac67	L1
 cpppj/src/o/RawCarrierCheck.cpp	Netstorm.Core/Original/RawCarrierCheck.cs	dfdbcd655c0564cc045fcb40fb79096cb051ac67	L1
+cpppj/src/o/RawCanonPlacement.cpp	Netstorm.Core/Original/RawCanonPlacement.cs	a5101d897cce87a26b68aefbb6d57f2427e10d91	L1
+cpppj/src/o/RawPriestPlacement.h	Netstorm.Core/Original/RawPriestPlacement.cs	a5101d897cce87a26b68aefbb6d57f2427e10d91	L1
+cpppj/src/o/RawPriestPlacement.cpp	Netstorm.Core/Original/RawPriestPlacement.cs	a5101d897cce87a26b68aefbb6d57f2427e10d91	L1
+cpppj/src/o/RawCanonPixelShape.h	Netstorm.Core/Original/RawCanonPixelShape.cs	a5101d897cce87a26b68aefbb6d57f2427e10d91	L1
+cpppj/src/o/RawCanonPixelShape.cpp	Netstorm.Core/Original/RawCanonPixelShape.cs	a5101d897cce87a26b68aefbb6d57f2427e10d91	L1
+cpppj/src/o/RawPriestPlacementShape.h	Netstorm.Core/Original/RawPriestPlacementShape.cs	a5101d897cce87a26b68aefbb6d57f2427e10d91	L1
+cpppj/src/o/RawPriestPlacementShape.cpp	Netstorm.Core/Original/RawPriestPlacementShape.cs	a5101d897cce87a26b68aefbb6d57f2427e10d91	L1
+cpppj/src/o/RawPriestPlacementGeometry.h	Netstorm.Core/Original/RawPriestPlacementShape.cs	a5101d897cce87a26b68aefbb6d57f2427e10d91	port
