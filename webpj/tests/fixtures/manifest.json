@@ -2706,10 +2706,10 @@
       "sha256": "77d1e5af049d3f4e6faf591de6fc4814d4a6225d46581a7961844ca8979d8278",
       "bytes": 2402254,
       "lines": 609,
-      "fixtureCommit": "ddf0a837",
-      "webCommit": "eda361ee",
+      "fixtureCommit": "ddf0a837b",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPlayerParticipation.cpp": "3cea1b14"
+        "cpppj/src/o/RawPlayerParticipation.cpp": "3f766a97f"
       }
     },
     {
@@ -2735,10 +2735,10 @@
       "sha256": "8765e66aa2fac76b2c8ad9870fdd5459bd56097a442baddc1d21a62c1fd8a6f6",
       "bytes": 2311266,
       "lines": 289,
-      "fixtureCommit": "4963da20",
-      "webCommit": "eda361ee",
+      "fixtureCommit": "4963da207",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPlayerParticipation.cpp": "3cea1b14"
+        "cpppj/src/o/RawPlayerParticipation.cpp": "3f766a97f"
       }
     },
     {
@@ -2795,10 +2795,10 @@
       "sha256": "71a08f435250150de5a4ec528f638ca63b90e5dd31bbb09497c955d7ef5b703f",
       "bytes": 4254429,
       "lines": 203,
-      "fixtureCommit": "7e53489e",
-      "webCommit": "6e2efbc9",
+      "fixtureCommit": "7e53489e9",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPlayerInitialization.cpp": "7e53489e"
+        "cpppj/src/o/RawPlayerInitialization.cpp": "b9b67b613"
       }
     },
     {
@@ -20165,7 +20165,7 @@
       "bytes": 162619,
       "lines": 325,
       "fixtureCommit": "5adcf532b",
-      "webCommit": "worktree",
+      "webCommit": "5d535d7c6",
       "cpppjBasis": {
         "cpppj/src/client/MessageGump.cpp": "86b37fff4",
         "cpppj/src/client/MessageGump.h": "86b37fff4"
@@ -20198,7 +20198,7 @@
       "bytes": 54746,
       "lines": 90,
       "fixtureCommit": "8d51d63d6",
-      "webCommit": "worktree",
+      "webCommit": "5d535d7c6",
       "cpppjBasis": {
         "cpppj/src/client/MessageGump.cpp": "86b37fff4",
         "cpppj/src/client/MessageGump.h": "86b37fff4",
@@ -20231,7 +20231,7 @@
       "bytes": 24986,
       "lines": 50,
       "fixtureCommit": "6e94dd2fa",
-      "webCommit": "worktree",
+      "webCommit": "5d535d7c6",
       "cpppjBasis": {
         "cpppj/src/client/MessageGump.cpp": "86b37fff4",
         "cpppj/src/client/MessageGump.h": "86b37fff4"

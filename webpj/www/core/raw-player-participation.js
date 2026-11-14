@@ -25,6 +25,27 @@ export class PlayerParticipationState {
     localTransport = false;
 }
 
+// Client 수명의 동맹 요청 제한 상태다. 입력 처리기/협상 수신 연결은 기존 3.6③ 6단계에 남긴다. (2026-11-14 WB04-E453)
+export class AllianceRequestState {
+    // 5caf44의 counter9·5caf68의 sample/start9쌍·5cafb0 initialized를 같은 112BYTE BSS로 소유한다.
+    #memory = new ArrayBuffer(112);
+    // 같은 물리의 DWORD/행 뷰이며 미션/창 교체 때 재할당하지 않는다.
+    #counters = new Uint32Array(this.#memory, 0, 9);
+    #clocks = Array.from({ length: 9 }, (_, index) => new Uint32Array(this.#memory, 36 + index * 8, 2));
+    // 마지막 initialized DWORD를 읽고 쓰는 리틀엔디언 뷰다.
+    #view = new DataView(this.#memory);
+    // PE 540bc8/bcc의 signed 초기값이다. BSS 시간 표와 별개인 현재 설정이다.
+    windowSeconds = 60; limit = 3;
+    // 원문 요청 counter9를 값 사본 없이 빌린다.
+    get counters() { return this.#counters; }
+    // 각 행의 sampled/start가 같은 72BYTE에 이어지는 실제 뷰다.
+    get clocks() { return this.#clocks; }
+    // 첫 요청의 아홉 clock store 뒤 쓰는 최초 BSS 0 DWORD다.
+    get initialized() { return this.#view.getUint32(108, true); }
+    // 입력 값은 DWORD로 감겨 같은 실제 BSS에 기록된다.
+    set initialized(value) { this.#view.setUint32(108, value, true); }
+}
+
 // Player 한 기록 폭·개수와 통신/동맹/brain/구독자 필드 위치(10.78)이다. (2026-11-08 WB04-E5)
 const STRIDE = 0xb4, COUNT = 9, FLAGS = 0x50, ALLIES = 0x54, BRAIN = 0xb0, SUBSCRIBER = 0x2c;
 
