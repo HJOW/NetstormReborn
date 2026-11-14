@@ -33,6 +33,8 @@ public sealed class GumpFormBindingTests
         /// <summary>기존 공통 Form과 실제 UI를 같은 소유 ID/삭제 콜백으로 연결한다.</summary>
         public Scene()
         {
+            // 실제 공장의 Gump 생성은 현재TYPE3 생성자를 사용한다.
+            Types[3].ConstructorAddress = OriginalConstructors.Address(3);
             Unpop = new(Pool, Hash, new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]); Destroy = new(Pool, Unpop, Types); Factory = new(Pool, Types, false, Unpop); var fallback = new SquidDestroyHooks { Selected = () => 0, Emit = e => { if (e.Effect == SquidDestroyEffect.PreDestroy) Destroy.CompletePreDestroy(); else if (e.Effect == SquidDestroyEffect.PostDestroy) Destroy.CompletePostDestroy(); } }; var notice = GumpFormBinding.MakeGumpFormNotice(Ui.Scene.Create, (t, o) => { Notices.Add((t, o)); GumpFormBinding.ReleaseGumpObject(Ui.Scene.Lifetime, t, o); }); Forms = new(Pool, Factory, Types, Destroy, notice, fallback); GumpFormBinding.BindMenuGumpForms(Ui.Scene.Create, Ui.State, Ui.Hooks, Forms); Ui.Scene.LifetimeHooks.DeleteForm = (form, flags) => OtherForms.Add((form, flags)); GumpFormBinding.BindGumpFormLifetime(Ui.Scene.LifetimeHooks, Forms);
         }
         /// <summary>공간 해시의 실제 자산 입력을 만든다.생성/공격/승리 재현을 실행하지 않는다.</summary>

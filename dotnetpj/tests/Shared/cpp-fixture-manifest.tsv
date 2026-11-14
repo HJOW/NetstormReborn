@@ -300,3 +300,4 @@ fierytail-lifetime-x86.tsv	0bdf2958f9e393cb06c926544ca4364b7cae2611e3899fab74186
 lightning-lifetime-x86.tsv	cb4229dc5837044fb5ed3b6d952254ef86aec582798acfc9457056aed57655da	110	cpppj	Core
 form-unpop-current-x86.tsv	acfa309114c45b9c415b1fd7ef1a5d3aa1e0f1b61fe9e63be0ad107cf9334060	1728	cpppj	Core
 squid-take-parent-current-x86.tsv	9f40fe7ddf0b219f3eafbca0f5dc7a740efa89ed07ac1585ba625bddc2098302	720	cpppj	Core
+squid-creation-parent-x86.tsv	8bbc69366eae3d6ae4ba1a333eeb988c2ea1bdc558379c427adb3677bed1e26a	588	cpppj	Core

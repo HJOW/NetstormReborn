@@ -4,9 +4,9 @@ using Netstorm.Core.Simulation;
 namespace Netstorm.Core.Tests;
 
 /// <summary>
-/// 원본 월드 코어의 오브젝트 팩토리(<see cref="RawSquidFactory"/>)의 보호 경로와 필드 보존 규칙을 확인한다.
-/// 원본 기대값 재생(X86RawFactoryTests)이 정상 호출의 결과를 대조하고, 이 검사들은 cpppj/tests/CreationTests.cpp 의 보호 검사 6종을
-/// 10.78 로 옮겨 "거부한 호출은 풀을 한 바이트도 바꾸지 않는다"를 확인한다 (W02 첫 조각, 2026-10-16).
+/// 원본 월드 코어 공장의 현재 선택 실패와 실제 할당/필드 보존 규칙을 확인한다.
+/// 원본 기대값 재생은 정상 호출의 결과를 대조하고 합성 경계는 현행 Create/Take의 부분 효과를 구별한다.
+/// 미연결 생성자 앞의 할당도 원문대로 남기며 성공 상수나 롤백으로 대신하지 않는다.
 /// </summary>
 public sealed class RawSquidFactoryTests
 {
@@ -32,22 +32,20 @@ public sealed class RawSquidFactoryTests
     /// <param name="pool">대상 풀.</param>
     private static byte[] Snapshot(RawSidPool pool) => pool.Bytes.ToArray();
 
-    /// <summary>미복원 생성자·자산/Form 밖 번호·패치판 금지 타입·클라이언트 권한 오류는 슬롯을 할당하기 전에 거부한다.</summary>
-    /// <remarks>2026-11-07 F2d 공장 폼 생성에서 내장 Form(1·2·3·6)을 허용하므로 자산·Form 밖 번호는 4로 확인한다.</remarks>
+    /// <summary>선택된 생성자/TYPE 실패는 이미 할당한 슬롯을 남기고 진단/권한 실패는 도달한 위치에서 멈춘다.</summary>
     [Fact]
-    public void CreateGuardsRejectBeforeAllocating()
+    public void CreateSelectedFailuresKeepEarlierAllocation()
     {
-        var pool = new RawSidPool(32768, server: false);
-        var factory = new RawSquidFactory(pool, Types());
-        byte[] before = Snapshot(pool);
-        // 자산·Form 밖(4), 표 밖(188), 지원 안 하는 153, 패치판 금지 162, 서버 권한 없는 기본 할당(74, flags 0)
+        var pool = new RawSidPool(32768, server: false); var factory = new RawSquidFactory(pool, Types()); uint free = pool.FreeCount;
         Assert.ThrowsAny<Exception>(() => factory.Create(4, SidAllocation.Client));
         Assert.ThrowsAny<Exception>(() => factory.Create(188, SidAllocation.Client));
         Assert.ThrowsAny<Exception>(() => factory.Create(153, SidAllocation.Client));
+        Assert.Equal(free - 3, pool.FreeCount); Assert.Equal(1u, pool.PredictableCursor);
+        // 할당 전에 멈추는 fake 진단/권한 실패는 앞선 세 실패의 실제 풀을 보존한다.
+        byte[] before = Snapshot(pool);
         Assert.ThrowsAny<Exception>(() => factory.Create(162, SidAllocation.Client));
         Assert.ThrowsAny<Exception>(() => factory.Create(74, SidAllocation.Server));
         Assert.Equal(before, Snapshot(pool));
-        Assert.Equal((32763u, 1u), (pool.FreeCount, pool.PredictableCursor));
     }
 
     /// <summary>
@@ -108,28 +106,28 @@ public sealed class RawSquidFactoryTests
     }
 
     /// <summary>
-    /// 표에 없는 생성자 주소·null/assert 생성자(153·159·169)는 Create·Construct·Take 어느 경로로도 슬롯을 바꾸지 못한다.
+    /// 미지원/null/assert 생성자의 Create 실패는 할당을 남기고 Construct/Take의 기존 대상 payload는 보존한다.
     /// </summary>
     [Fact]
-    public void UnsupportedConstructorsAreRejectedOnEveryPath()
+    public void UnsupportedConstructorsKeepFailedAllocationAndOriginalTarget()
     {
         var pool = new RawSidPool(32768);
         OriginalTypeRecord[] types = Types();
         types[82].ConstructorAddress = 0x12345678;
         var factory = new RawSquidFactory(pool, types);
         int sid = factory.Create(74);
-        byte[] before = Snapshot(pool);
+        byte[] before = pool.Slot(sid).ToArray();
         uint free = pool.FreeCount;
         uint cursor = pool.PredictableCursor;
-        // 잘못된 생성자로 갈 모든 진입 경로에서 변경 전 거부를 확인한다
+        // Create는 실제 할당 뒤 실패하고 Construct/Take는 같은 기존 대상의 선택 실패 효과를 검사한다
         foreach (uint type in new uint[] { 82, 153, 159, 169 })
         {
             Assert.ThrowsAny<Exception>(() => factory.Create(type));
             Assert.ThrowsAny<Exception>(() => factory.Construct(type, sid));
             Assert.ThrowsAny<Exception>(() => factory.Take(type, sid));
         }
-        Assert.Equal(before, Snapshot(pool));
-        Assert.Equal((free, cursor), (pool.FreeCount, pool.PredictableCursor));
+        Assert.Equal(before, pool.Slot(sid).ToArray());
+        Assert.Equal((free - 4, cursor), (pool.FreeCount, pool.PredictableCursor));
     }
 
     /// <summary>

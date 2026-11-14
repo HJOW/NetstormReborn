@@ -490,6 +490,8 @@ public sealed class FortMetaLoadTests
             types[110].ContentListFlags = 0x10;
             types[111].Flags1 = 0x2000;
             types[111].ContentListFlags = 0x20;
+            // 실제 공통 Create가 현재 TYPE6 생성자와 같은 판본의 Form VT를 읽는다.
+            moduleTypes[6].ConstructorAddress = OriginalConstructors.Address(edition, 6);
             RawSquidFactory factory = new(pool, moduleTypes);
             int parent = factory.Create(89, (SidAllocation)2);
             List<int> children = [];

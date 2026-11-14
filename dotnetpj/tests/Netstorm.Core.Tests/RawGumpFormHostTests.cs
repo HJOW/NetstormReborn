@@ -113,6 +113,8 @@ public sealed class RawGumpFormHostTests
             {
                 Types[index] = new OriginalTypeRecord();
             }
+            // 실제 Gump 편의생성도 현재 TYPE3의 원문 생성자를 선택한다.
+            Types[3].ConstructorAddress = OriginalConstructors.Address(3);
             Unpop = new RawUnpop(Pool, Hash, Spots);
             Destroy = new RawSquidDestroy(Pool, Unpop, Types);
             Factory = new RawSquidFactory(Pool, Types, false, Unpop);

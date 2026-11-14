@@ -73,6 +73,8 @@ public sealed class RawContainedCreateTests
             {
                 Types[index] = new OriginalTypeRecord();
             }
+            // 같은 합성 TYPE 표를 실제 공장으로 빌릴 때도 원문 내용물 생성자를 제공한다.
+            Types[6].ConstructorAddress = OriginalConstructors.Address(6);
             Forms = new RawSquidForms(Pool);
             var state = new ContainedCreateState();
             var hooks = new ContainedCreateHooks

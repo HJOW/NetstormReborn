@@ -344,60 +344,6 @@ public sealed partial class RawSquidFactory
     }
 
     /// <summary>
-    /// 오브젝트를 만든다. 슬롯 할당 → 생성자 쓰기 → 타입 바이트 → postCreate 순서이며 새 슬롯 번호를 돌려준다.
-    /// 내장 Form(1·2·3·6)은 가상 표와 타입만 쓰고 자산 후처리를 건너뛴다.
-    /// 지원하지 않는 타입(미복원 생성자, 현재 fake 표면 타입, 자산·Form 밖)은 슬롯을 할당하기 전에 예외로 거부한다.
-    /// 근거: cpppj/src/o/SquidFactory.cpp Create·RawSquidCreation.cpp CreateRawSquid (F2d 공장 폼 생성, 2026-11-07; fake 연결 F2d 0.221, 2026-11-07).
-    /// </summary>
-    /// <param name="type">타입 번호(내장 Form 1·2·3·6 또는 70 이상).</param>
-    /// <param name="flags">할당 영역 비트(1 예측, 2 클라이언트).</param>
-    public int Create(uint type, SidAllocation flags = SidAllocation.Server)
-    {
-        OriginalTypeRecord record = TypeForCreate(type);
-        if (type == CurrentFakeSurfaceType())
-        {
-            throw new InvalidOperationException("패치판 fakeThreeByThreeSurface 는 생성할 수 없습니다");
-        }
-        int sid = _pool.Allocate(flags);
-        ConstructRaw(record.ConstructorAddress, sid, true);
-        uint table = ReadVtable(_pool.AllocatedBytes(sid));
-        _pool.AllocatedBytes(sid)[RawSidPool.TypeOffset] = (byte)type;
-        VirtualPostCreate(sid, table);
-        return sid;
-    }
-
-    /// <summary>
-    /// 생산 칸에 넣는 contained Form(타입 6)을 만든다(원본 SquidFactory::CreateContained, 004af530 계열).
-    /// 자산 생성자 표가 아니라 내장 Form 생성자를 쓰므로 슬롯에는 가상 표와 타입만 쓰고 postCreate 는 부르지 않는다.
-    /// 생성 영역은 contained 생성기가 넘기는 원본 플래그(1 예측, 2 클라이언트, 0 서버)를 그대로 따른다.
-    /// 추가: W03 내용물 생성 조각(2026-10-23). 근거: cpppj/src/o/SquidFactory.cpp CreateContained.
-    /// </summary>
-    /// <param name="flags">원본 생성 플래그(1 예측, 2 클라이언트, 0 서버).</param>
-    /// <returns>새 contained Form 번호.</returns>
-    public int CreateContained(uint flags)
-    {
-        // 예측 비트가 클라이언트 비트보다 우선하는 원본 할당 순서를 그대로 쓴다
-        SidAllocation allocation = (flags & 1) != 0 ? SidAllocation.Predictable
-            : (flags & 2) != 0 ? SidAllocation.Client : SidAllocation.Server;
-        return new RawSquidForms(_pool).Create(6, allocation);
-    }
-
-    /// <summary>
-    /// 메뉴 GumpForm(타입 3)을 만든다(원본 SquidFactory::CreateGumpForm, 004af530 계열).
-    /// contained 생성과 같이 자산 생성자 표가 아니라 내장 Form 생성자를 쓰므로 postCreate 는 부르지 않는다.
-    /// 추가: W03 삭제·수명 열다섯째 조각(2026-10-23). 근거: cpppj/src/o/SquidFactory.cpp CreateGumpForm.
-    /// </summary>
-    /// <param name="flags">원본 생성 플래그(1 예측, 2 클라이언트, 0 서버).</param>
-    /// <returns>새 GumpForm 번호.</returns>
-    public int CreateGumpForm(uint flags = 2)
-    {
-        // 예측 비트가 클라이언트 비트보다 우선하는 원본 할당 순서를 그대로 쓴다
-        SidAllocation allocation = (flags & 1) != 0 ? SidAllocation.Predictable
-            : (flags & 2) != 0 ? SidAllocation.Client : SidAllocation.Server;
-        return new RawSquidForms(_pool).Create(RawGumpFormHost.GumpFormType, allocation);
-    }
-
-    /// <summary>
     /// 이미 확보된 슬롯에 생성자 쓰기만 적용한다. 타입 바이트·상태·풀 목록·HP·소유자는 덮지 않는다(독립 검사와 재초기화용).
     /// 5 번 미만·빈·contained 슬롯은 거부한다.
     /// </summary>
@@ -664,62 +610,12 @@ public sealed partial class RawSquidFactory
         }
     }
 
-    /// <summary>내장 Form 타입 번호인지 판단한다.</summary>
-    /// <param name="number">확인할 타입 번호.</param>
-    private static bool IsFormTypeNumber(uint number)
-    {
-        // 고정된 네 종류만 Form 경로를 쓴다
-        foreach (uint formType in FormTypes)
-        {
-            if (number == formType)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /// <summary>원문 생성자 주소가 내장 Form 네 종류 중 하나인지 판단한다.</summary>
-    /// <param name="address">확인할 생성자 주소.</param>
-    private bool IsFormAddress(uint address)
-    {
-        // 판본별 주소 표와 직접 대조한다
-        foreach (uint formType in FormTypes)
-        {
-            if (address == OriginalConstructors.Address(_pool.Edition, (int)formType))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /// <summary>내장 Form 생성자가 쓰는 판본별 실제 가상 표를 공통 Forms와 같은 표에서 읽는다.</summary>
     /// <param name="formType">네 내장 Form 타입 중 하나다.</param>
     private uint FormVtable(uint formType) => new RawSquidForms(_pool).Vtable(formType);
 
-    /// <summary>가상 표 값이 내장 Form 네 종류 중 하나인지 판단한다.</summary>
-    /// <param name="table">확인할 가상 표 값.</param>
-    private bool IsFormVtable(uint table)
-    {
-        if (_pool.Edition != OriginalEdition.Patch1078)
-        {
-            return false;
-        }
-
-        // 네 종류의 패치 가상 표와 대조한다
-        foreach (uint formType in FormTypes)
-        {
-            if (table == RawSquidForms.VtableFor(formType))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
+    /// <summary>현재 TYPE와 무관하게 두 판본의 네 실제 Form VT인지 판정한다.</summary>
+    private bool IsFormVtable(uint table) => IsTakeFormVtable(table);
 
     /// <summary>같은 판본의 기본·검증된 생성자 표에 있는 현재 가상 표인지 확인한다. 타입과 가상 표의 쌍 일치는 강제하지 않는다. 2026-11-07 F2d 공장 현재 생성 이식에서 추가됐다.</summary>
     /// <param name="edition">원본 판본.</param>
@@ -770,31 +666,6 @@ public sealed partial class RawSquidFactory
         }
 
         return current[(int)number];
-    }
-
-    /// <summary>Create·Take가 쓰는 타입 조회다. 내장 Form(1·2·3·6) 또는 자산(70 이상)만 받고 지원 여부를 미리 검사한다.</summary>
-    /// <param name="type">타입 번호.</param>
-    private OriginalTypeRecord TypeForCreate(uint type)
-    {
-        IReadOnlyList<OriginalTypeRecord> current = CurrentTypes();
-        if (type >= (uint)current.Count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(type), type, "공장 현재 TYPE 번호 오류");
-        }
-
-        if (!IsFormTypeNumber(type) && type < (uint)OriginalConstructors.FirstAssetType)
-        {
-            throw new ArgumentOutOfRangeException(nameof(type), type, "base 오브젝트 타입 번호 오류");
-        }
-
-        OriginalTypeRecord record = current[(int)type];
-        if (record.ConstructorAddress != 0 && !IsFormAddress(record.ConstructorAddress)
-            && OriginalConstructors.Recipe(_pool.Edition, record.ConstructorAddress) is null)
-        {
-            throw new InvalidOperationException("null/assert 또는 미복원 생성자는 지원하지 않습니다");
-        }
-
-        return record;
     }
 
     /// <summary>현재 슬롯의 타입이 가리키는 생성자만 실행하고 반환 객체는 무시한다. 타입·상태 선행 검사를 하지 않는다. 2026-11-07 F2d 공장 현재 생성 이식에서 추가됐다.</summary>
@@ -892,6 +763,7 @@ public sealed partial class RawSquidFactory
             return;
         }
 
+        if (!SupportsConstructedVtable(_pool.Edition, table)) throw new InvalidOperationException("Create의 선택된 실제 VT+28 미연결");
         PostCreate(sid);
     }
 

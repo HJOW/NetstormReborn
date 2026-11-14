@@ -446,7 +446,8 @@ public sealed class RawFactoryAttachTests
         // CD판에서는 같은 주소가 미지원 생성자로 거부된다
         var cdPool = new RawSidPool(RawSurfaceStorage.PoolCapacity, true, null, OriginalEdition.Cd1072);
         var cdFactory = new RawSquidFactory(cdPool, Types188());
-        int cdSid = cdFactory.Create(74u);
+        // CD 관리풀의 서버영역 차이와 별개인 client 할당으로 보조 생성자만 검사한다.
+        int cdSid = cdFactory.Create(74u, SidAllocation.Client);
         Assert.Throws<InvalidOperationException>(() => cdFactory.ConstructRaw(0x44a420u, cdSid, false));
     }
 }

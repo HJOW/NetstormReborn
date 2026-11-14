@@ -598,6 +598,11 @@ public sealed class FortObjectLoadTests
             values[(int)Field.Mission] = 1;
             FortLoadScene scene = new(edition, values);
             RawSquidFactory factory = new(scene.Pool, scene.ModuleTypes);
+            // 현재 관리풀은 CD도 서버15000을 사용하므로 원문14000예측경계 진단을 명시 복귀시킨다.
+            // 실제 CD풀 복원 성공으로 세지 않고 기존 로더의 같은 SID 입력을 유지한다.
+            factory.BindDiagnostics(new() { Assertion = (expression, file, line) => { Assert.False(scene.Patch); Assert.Equal("sid < FIRST_PREDICTABLE_SID", expression); Assert.Equal(@"\ns\o\Squid.cpp", file); Assert.Equal(0x18bu, line); } });
+            scene.ModuleTypes[6].ConstructorAddress = OriginalConstructors.Address(edition, 6);
+
             SquidOwnerMode mode = new() { Battle = true };
             SquidOwner owner = new(scene.Pool, scene.Types, scene.Books, mode);
             byte[] spots = new byte[65536];

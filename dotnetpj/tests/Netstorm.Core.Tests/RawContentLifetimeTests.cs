@@ -65,6 +65,8 @@ public sealed class RawContentLifetimeTests
         {
             types[index] = new OriginalTypeRecord();
         }
+        // 공통 Create가 현재TYPE6의 원문 생성자를 읽도록 실제 입력을 공급한다.
+        types[6].ConstructorAddress = OriginalConstructors.Address(6);
         types[154].Cost = 50.75f;
         types[90].FootX = 3;
         types[90].FootY = 5;

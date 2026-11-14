@@ -5,7 +5,7 @@ namespace Netstorm.Core.Original;
 /// (cpppj <c>o/RawGameAuxState.h</c>의 <c>RawGameAuxState</c>).
 /// </summary>
 /// <remarks>2026-11-04 F2c-11에서 추가했다. 같은 주소를 고정하는 게임 데이터 owner 주소이며 세션 조립(F3) 때 연결한다.</remarks>
-public sealed class RawGameAuxState
+public sealed partial class RawGameAuxState
 {
     /// <summary>공통 패킷 버퍼·헤더·압축 누적 상태다. 월드 교체와 일반 준비에서도 유지한다.</summary>
     public RawSquidTransmissionState SquidTransmission { get; } = new();

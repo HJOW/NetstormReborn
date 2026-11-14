@@ -1058,7 +1058,8 @@ public sealed class RawSquidProcessHostTests
         Assert.Throws<InvalidOperationException>(() => host.Attach(process, 46u, parent, 0x50u, 0));
         Assert.True(process.Disposed);
         Assert.Equal(1, kernel.Size());
-        Assert.Equal(free, pool.FreeCount);
+        // 원문 Create는 선택된 미지원 생성자 앞의 실제 할당도 남긴다.
+        Assert.Equal(free - 1, pool.FreeCount);
     }
 
     /// <summary>공통 가상 표는 공장 부착으로 간다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>

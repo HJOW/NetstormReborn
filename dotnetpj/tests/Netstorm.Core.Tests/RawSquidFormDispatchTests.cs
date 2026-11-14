@@ -169,6 +169,8 @@ public sealed class RawSquidFormDispatchTests
                 Types[index] = new OriginalTypeRecord();
             }
             Unpop = new RawUnpop(Pool, Hash, Spots);
+            // 실제 공장 편의 Create도 현재 내장 TYPE의 생성자를 읽는다.
+            Types[3].ConstructorAddress = OriginalConstructors.Address(3); Types[6].ConstructorAddress = OriginalConstructors.Address(6);
             Destroy = new RawSquidDestroy(Pool, Unpop, Types);
             Factory = new RawSquidFactory(Pool, Types, false, Unpop);
             // 자산 경계는 선택 해제와 사전·사후 깊이 반납을 이 장면이 직접 처리한다

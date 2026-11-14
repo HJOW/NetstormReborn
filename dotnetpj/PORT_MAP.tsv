@@ -878,3 +878,9 @@ cpppj/src/o/SquidFactory.h	Netstorm.Core/Original/RawSquidFactory.Take.cs	be567d
 cpppj/src/o/SquidFactory.cpp	Netstorm.Core/Original/RawSquidFactory.Runtime.cs	be567d46b5eca30d2a1421af78d49125add1ff6a	port
 cpppj/src/o/SquidFactory.h	Netstorm.Core/Original/RawSquidFactory.Runtime.cs	be567d46b5eca30d2a1421af78d49125add1ff6a	port
 cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.FactoryRuntime.cs	c102cdbf36fca4e8661d0699ea2ce5f2f44b2934	port
+cpppj/src/o/RawSquidCreation.cpp	Netstorm.Core/Original/RawSquidCreation.cs	e6259e9755b33d28da9060d0d51aa986d20bb7b1	L1
+cpppj/src/o/RawSquidCreation.h	Netstorm.Core/Original/RawSquidCreation.cs	e6259e9755b33d28da9060d0d51aa986d20bb7b1	port
+cpppj/src/o/SquidFactory.cpp	Netstorm.Core/Original/RawSquidFactory.Create.cs	be567d46b5eca30d2a1421af78d49125add1ff6a	port
+cpppj/src/o/SquidFactory.h	Netstorm.Core/Original/RawSquidFactory.Create.cs	be567d46b5eca30d2a1421af78d49125add1ff6a	port
+cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.Creation.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceWorld.FactoryRuntime.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port

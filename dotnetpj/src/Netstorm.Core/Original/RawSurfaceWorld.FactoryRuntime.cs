@@ -10,6 +10,7 @@ public sealed partial class RawSurfaceWorld
     /// <summary>이미 만든 같은 풀/공장의 실제 장치만 연결하며 생성·분리·전송을 미리 실행하지 않는다.</summary>
     private void BindFactoryRuntime()
     {
+        _factory!.BindFakeSurfaceType(_storage.GameAux().FakeSurfaceTypeBox);
         _factoryRuntime = new()
         {
             Unpop = _unpop,
