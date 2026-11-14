@@ -20,9 +20,10 @@ public static class RawSquidHitPoints
     {
         ArgumentNullException.ThrowIfNull(pool);
         Span<byte> raw = pool.AllocatedBytes(sid);
-        // 낮은 바이트부터 네 바이트를 쓴다
+        // 현재 판본의 하위DWORD/WORD만 써 인접 stale BYTE를 보존한다
         uint bits = unchecked((uint)value);
-        for (int i = 0; i < 4; i++)
+        int width = pool.Edition == OriginalEdition.Patch1078 ? 4 : 2;
+        for (int i = 0; i < width; i++)
         {
             raw[HealthOffset + i] = (byte)(bits >> (i * 8));
         }

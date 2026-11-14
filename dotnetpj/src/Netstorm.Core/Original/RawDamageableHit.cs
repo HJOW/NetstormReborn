@@ -1,3 +1,4 @@
+// 현재 일반 피격의 권한/경고·판본 HP 폭과 실제 burning/가상 진입 주소를 연결한다.
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -12,7 +13,10 @@ public sealed class DamageableHitState
     public bool Server { get; set; } = true;
 
     /// <summary>패치 held 피격 진단 전역.</summary>
-    public bool Checking { get; set; }
+    public RawCheckingFlag Checking { get => _checking; set => _checking = new(value); }
+
+    /// <summary>원문 진단 뷰는 값 복사하고 실제 현재DWORD owner는 같은 주소로 빌린다.</summary>
+    private RawCheckingFlag _checking = new();
 
     /// <summary>원본 현재 localPlayerId 바이트다.</summary>
     public byte LocalOwner { get; set; } = 1;
@@ -76,12 +80,20 @@ public sealed class DamageableHitHooks
 
     /// <summary>패치판만 형식화 뒤 islandUnderAttack 원본 알림을 제출한다.</summary>
     public Action? WarningText { get; set; }
+
+    /// <summary>함수 객체는 값 복사하고 캡처한 실제 owner는 같은 수명을 빌린다.</summary>
+    internal DamageableHitHooks Copy() => new()
+    {
+        RejectDamage = RejectDamage, Destroy = Destroy, OwnerDamageNotice = OwnerDamageNotice, Refresh = Refresh,
+        Unrealize = Unrealize, IslandAt = IslandAt, RealTime = RealTime,
+        WarningEvent = WarningEvent, WarningSound = WarningSound, WarningText = WarningText,
+    };
 }
 
 /// <summary>
 /// 일반 자산의 BaseHit·DamageableHit 와 HP·사망·섬 경고 순서를 복원한다(원본 RawDamageableHit, 004add10 ↔ CD 004aeda0).
 /// 순서는 원본 그대로 "HP 보유 판정 → 섬 경고 → unrealize → BaseHit(방어·레벨 보정·HP 쓰기·소유자 통지) → burning"이다.
-/// 기준 판본은 10.78 뿐이다.
+/// PATCH/CD의 슬롯 폭과 선택 진단/경고를 구별한다.
 /// 근거: cpppj/src/o/RawDamageableHit.cpp (W03 삭제·수명 여덟째 조각, 2026-10-21).
 /// </summary>
 public sealed class RawDamageableHit
@@ -105,10 +117,10 @@ public sealed class RawDamageableHit
     private const int IslandOffset = 8;
 
     /// <summary>슬롯 안 소유자 바이트의 위치(10.78).</summary>
-    private const int OwnerOffset = 34;
+    private int OwnerOffset => _pool.Edition == OriginalEdition.Patch1078 ? 34 : 32;
 
     /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
-    private const int ExtraOffset = 40;
+    private int ExtraOffset => _pool.Edition == OriginalEdition.Patch1078 ? 40 : 35;
 
     /// <summary>타입 플래그2의 제단(dais) 비트.</summary>
     private const uint DaisKind = 0x400000;
@@ -154,14 +166,14 @@ public sealed class RawDamageableHit
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(hooks);
-        if (types.Count != OriginalConstructors.TypeCount)
+        if (types.Count != (pool.Edition == OriginalEdition.Patch1078 ? 188 : 171))
         {
             throw new ArgumentException($"타입 레코드가 {types.Count}개입니다 (10.78 은 {OriginalConstructors.TypeCount}개)", nameof(types));
         }
         _pool = pool;
         _types = types;
         _state = state;
-        _hooks = hooks;
+        _hooks = hooks.Copy();
     }
 
     /// <summary>이 몸체가 쓰는 슬롯 풀.</summary>
@@ -185,7 +197,8 @@ public sealed class RawDamageableHit
 
     /// <summary>현재 HP 를 패치판 signed DWORD 로 읽는다.</summary>
     /// <param name="victim">피해자 슬롯 번호.</param>
-    private int Health(int victim) => unchecked((int)Read(Slot(victim), HealthOffset));
+    private int Health(int victim) => _pool.Edition == OriginalEdition.Patch1078
+        ? unchecked((int)Read(Slot(victim), HealthOffset)) : unchecked((short)Read(Slot(victim), HealthOffset, 2));
 
     /// <summary>제단 genus 는 extra bit 0 이며 다른 타입은 실제 HP 보유 비트다.</summary>
     /// <param name="victim">피해자 슬롯 번호.</param>
@@ -241,13 +254,13 @@ public sealed class RawDamageableHit
         }
         if (_state.WarningTime <= _hooks.RealTime())
         {
-            if (_hooks.WarningSound is null || (_hooks.WarningEvent is null || _hooks.WarningText is null))
+            if (_hooks.WarningSound is null || (_pool.Edition == OriginalEdition.Patch1078 && (_hooks.WarningEvent is null || _hooks.WarningText is null)))
             {
                 throw new InvalidOperationException("일반 피해 실제 섬 피격 알림 경계 누락");
             }
-            _hooks.WarningEvent?.Invoke();
+            if (_pool.Edition == OriginalEdition.Patch1078) _hooks.WarningEvent!();
             _hooks.WarningSound();
-            _hooks.WarningText?.Invoke();
+            if (_pool.Edition == OriginalEdition.Patch1078) _hooks.WarningText!();
         }
         double now = _hooks.RealTime();
         _state.WarningTime = now + (double)_state.WarningDelay;
@@ -264,7 +277,7 @@ public sealed class RawDamageableHit
     public bool BaseHit(int victim, int damage, uint attackerOwner, int attacker)
     {
         ReadOnlySpan<byte> raw = Slot(victim);
-        if ((raw[StateOffset] & 2) != 0)
+        if ((raw[StateOffset] & 2) != 0 && _pool.Edition == OriginalEdition.Patch1078)
         {
             throw new InvalidOperationException("일반 피해 죽음 assert 경로");
         }
@@ -275,7 +288,7 @@ public sealed class RawDamageableHit
         byte extra = raw[ExtraOffset];
         if ((extra & 9) != 0)
         {
-            if (_state.Checking)
+            if (_pool.Edition == OriginalEdition.Patch1078 && _state.Checking)
             {
                 throw new InvalidOperationException("일반 피해 held assert 경로");
             }
@@ -294,10 +307,9 @@ public sealed class RawDamageableHit
             return true;
         }
         byte owner = Slot(victim)[OwnerOffset];
-        damage = RawPriestDamage.Adjust(damage, attackerOwner, owner, _state.Levels);
+        damage = RawPriestDamage.Adjust(damage, attackerOwner, owner, _state.Levels, _pool.Edition == OriginalEdition.Patch1078);
         int next = Subtract(Health(victim), damage);
-        bool server = _state.ServerRead is not null ? _state.ServerRead() : _state.Server;
-        if (next < 1 && server)
+        if (next < 1 && (_state.ServerRead is not null ? _state.ServerRead() : _state.Server))
         {
             if (_hooks.Destroy is null)
             {
@@ -359,6 +371,34 @@ public sealed class RawDamageableHit
         return alive;
     }
 
+    /// <summary>같은 풀의 실제 burning을 함수 사본에 연결하며 입력과 나머지 효과는 보존한다.</summary>
+    public static DamageableHitHooks MakeDamageableHitBurningHooks(RawSidPool pool, RawDamageableBurning burning, DamageableHitHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(pool); ArgumentNullException.ThrowIfNull(burning); ArgumentNullException.ThrowIfNull(hooks);
+        if (!ReferenceEquals(pool, burning.Pool)) throw new ArgumentException("일반 피해/burning 실제 풀 불일치");
+        DamageableHitHooks result = hooks.Copy(); result.Refresh = sid => burning.Refresh(sid); return result;
+    }
+
+    /// <summary>현재 raw VT의 실제 가상98 주소로만 일반/기본 피해를 분배하는 총기 콜백을 만든다.</summary>
+    /// <remarks>cpppj MakeDamageableGunHitHooks의 damage 슬롯 몸체다. 상위 GunHitHooks 객체 대신 C# Action으로 같은 슬롯을 제공한다.</remarks>
+    public Action<int, int, byte, int> MakeDamageableGunHitCallback(ReadOnlyMemory<DamageableHitEntry> entries, Action<int, int, byte, int>? fallback = null)
+    {
+        if (entries.IsEmpty) throw new ArgumentException("일반 피해 실제 가상 진입 표 오류", nameof(entries));
+        bool patch = _pool.Edition == OriginalEdition.Patch1078;
+        return (victim, amount, owner, attacker) =>
+        {
+            if (victim == 0 || victim >= _pool.Capacity) throw new ArgumentOutOfRangeException(nameof(victim), "일반 피해 분배 SID 오류");
+            uint table = Read(_pool.Slot(victim), 0), address = 0;
+            // 빌린 실제 진입 표에서 현재 VT와 같은 첫 항목만 선택한다.
+            foreach (DamageableHitEntry entry in entries.Span)
+                if (entry.Vtable == table) { address = entry.Address; break; }
+            if (address == (patch ? 0x44c8e0u : 0x462300u)) { Hit(victim, amount, owner, attacker); return; }
+            if (address == (patch ? 0x4add10u : 0x4aeda0u)) { BaseHit(victim, amount, owner, attacker); return; }
+            if (fallback is null) throw new InvalidOperationException("다른 파생 실제 피해 미복원");
+            fallback(victim, amount, owner, attacker);
+        };
+    }
+
     /// <summary>원본 signed overflow 를 하위 DWORD 로 보존한다.</summary>
     /// <param name="value">현재 HP.</param>
     /// <param name="damage">피해량.</param>
@@ -379,3 +419,8 @@ public sealed class RawDamageableHit
         return result;
     }
 }
+
+/// <summary>현재 가상 표 주소와 실제 가상98 진입 주소를 기록하며 TYPE 번호로 추측하지 않는다.</summary>
+/// <param name="Vtable">현재 raw DWORD의 가상 표 주소다.</param>
+/// <param name="Address">원문의 실제 피격 진입 주소다.</param>
+public readonly record struct DamageableHitEntry(uint Vtable, uint Address);

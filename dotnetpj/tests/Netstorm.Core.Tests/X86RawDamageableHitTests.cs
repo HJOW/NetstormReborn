@@ -10,15 +10,15 @@ namespace Netstorm.Core.Tests;
 /// 원본 월드 코어의 일반 피해(Damageable Hit·BaseHit)를 원본 x86 기대값에 대조한다.
 /// 장면은 cpppj/tests/DamageableHitTests.cpp 의 HitScene 과 같다: 실제 슬롯 풀·타입 표·레벨/권한/시계 전역 위에서
 /// 방어 판정·레벨 피해 보정·HP 쓰기·소유자 통지·섬 경고·burning 을 실행한다.
-/// 호출마다 생존 여부·외부 경계 순서·피해자 슬롯 50바이트·사망 기록 8바이트·경고 시각 8바이트를 비교한다.
-/// 기준 판본은 10.78 이며 originalCD 행은 읽지 않는다 (W03 삭제·수명 여덟째 조각, 2026-10-21).
+/// 호출마다 생존 여부·외부 경계 순서·판본 슬롯 50/36바이트·사망 기록 8바이트·경고 시각 8바이트를 비교한다.
+/// CD에서는 현재 TYPE 171개와 최대HP만 조회하는 기존 물리188칸 부모를 연결하고 나머지14바이트 불변도 확인한다.
 /// </summary>
 public sealed class X86RawDamageableHitTests
 {
     /// <summary>10.78 행의 판본 이름. 그 밖은 CD 10.72 다.</summary>
     private const string PatchEdition = "originals";
 
-    /// <summary>10.78 한 판본의 행 수.</summary>
+    /// <summary>한 판본의 고유 원본 관찰 행 수.</summary>
     private const int RowsPerEdition = 2923;
 
     /// <summary>피격 대상 슬롯 번호.</summary>
@@ -68,7 +68,7 @@ public sealed class X86RawDamageableHitTests
         /// <summary>4단계 공간 해시. CD 판의 지면 조회 보정에만 쓴다.</summary>
         public readonly RawSquidHash Hash = new();
 
-        /// <summary>타입 표(10.78 188개).</summary>
+        /// <summary>기존 최대HP 부모의 물리188칸이다. CD의 앞171칸도 같은 레코드를 빌린다.</summary>
         public readonly OriginalTypeRecord[] Types;
 
         /// <summary>현재 레벨·권한 전역.</summary>
@@ -87,9 +87,9 @@ public sealed class X86RawDamageableHitTests
         public string[] Row { get; private set; } = [];
 
         /// <summary>장면을 만든다. 클라이언트 번호 5~70 을 확보한다.</summary>
-        public Scene()
+        public Scene(string edition)
         {
-            Pool = new RawSidPool(24000, false);
+            Pool = new RawSidPool(24000, false, edition: edition == PatchEdition ? OriginalEdition.Patch1078 : OriginalEdition.Cd1072);
             // 각 독립 입력은 같은 원본 번호를 사용한다
             for (int id = 5; id <= 70; id++)
             {
@@ -107,7 +107,13 @@ public sealed class X86RawDamageableHitTests
         /// <summary>슬롯 바이트를 직접 쓴다(검사 입력용).</summary>
         /// <param name="sid">대상 슬롯 번호.</param>
         /// <returns>쓰기 가능한 슬롯 바이트.</returns>
-        private Span<byte> Slot(int sid) => Pool.RawSlot(sid);
+        private Span<byte> Slot(int sid) => Pool.RawSlot(sid)[..(Patch ? 50 : 36)];
+
+        /// <summary>현재 원본 판본의 필드 폭 선택이다.</summary>
+        private bool Patch => Pool.Edition == OriginalEdition.Patch1078;
+
+        /// <summary>CD에서 native 원본 밖 관리 패딩을 저장해 이웃 쓰기를 검출한다.</summary>
+        private byte[] Padding = [];
 
         /// <summary>현재 double 비트를 판단 없이 입력으로 읽는다.</summary>
         /// <param name="index">입력 칸 번호.</param>
@@ -139,7 +145,7 @@ public sealed class X86RawDamageableHitTests
             Levels.Levels[X86Fixture.Int(value[6])] = (int)X86Fixture.UInt(value[4]);
             Levels.Levels[X86Fixture.Int(value[7])] = (int)X86Fixture.UInt(value[5]);
             State.Server = X86Fixture.UInt(value[10]) != 0;
-            State.Checking = X86Fixture.UInt(value[20]) != 0;
+            State.Checking = new(X86Fixture.UInt(value[20]) != 0);
             State.LocalOwner = (byte)X86Fixture.UInt(value[21]);
             State.PrimaryIslands[X86Fixture.Int(value[7])] = (int)X86Fixture.UInt(value[24]);
             State.WarningTime = Double(26);
@@ -157,12 +163,14 @@ public sealed class X86RawDamageableHitTests
             Put(raw, 6, 0, 2);
             raw[RawSidPool.TypeOffset] = 71;
             raw[RawSidPool.StateOffset] = (byte)X86Fixture.UInt(value[11]);
-            raw[40] = (byte)X86Fixture.UInt(value[12]);
-            raw[34] = (byte)X86Fixture.UInt(value[7]);
+            raw[Patch ? 40 : 35] = (byte)X86Fixture.UInt(value[12]);
+            raw[Patch ? 34 : 32] = (byte)X86Fixture.UInt(value[7]);
             Put(raw, 14, BitConverter.SingleToUInt32Bits(20.75f));
             Put(raw, 18, BitConverter.SingleToUInt32Bits(21.9f));
-            Put(raw, 26, X86Fixture.UInt(value[2]), 4);
-            Put(raw, 36, 0, 4);
+            Put(raw, 26, X86Fixture.UInt(value[2]), Patch ? 4 : 2);
+            Put(raw, Patch ? 36 : 34, 0, Patch ? 4 : 1);
+            Pool.RawSlot(Source)[(Patch ? 50 : 36)..].Fill(0xa7);
+            Padding = Pool.RawSlot(Source)[(Patch ? 50 : 36)..].ToArray();
             Span<byte> attacker = Slot(Attacker);
             attacker.Clear();
             attacker[RawSidPool.TypeOffset] = 128;
@@ -210,6 +218,7 @@ public sealed class X86RawDamageableHitTests
                 Unrealize = sid => Events.Add($"U:{sid}"),
                 IslandAt = (x, y) =>
                 {
+                    if (!Patch) return RawPathSurface.SurfaceAt(Hash, new() { X = x, Y = y });
                     Events.Add($"I:{BitConverter.SingleToUInt32Bits(x)}:{BitConverter.SingleToUInt32Bits(y)}");
                     return Island;
                 },
@@ -236,8 +245,9 @@ public sealed class X86RawDamageableHitTests
         public string[] Run()
         {
             var hp = new RawHitPoints(Pool, Types, new RawHitPointState());
-            var burning = new RawDamageableBurning(Pool, Types, hp, BurningState, BurningHooks());
-            var hit = new RawDamageableHit(Pool, Types, State, Hooks(burning));
+            IReadOnlyList<OriginalTypeRecord> currentTypes = Patch ? Types : new ArraySegment<OriginalTypeRecord>(Types, 0, 171);
+            var burning = new RawDamageableBurning(Pool, currentTypes, hp, BurningState, BurningHooks());
+            var hit = new RawDamageableHit(Pool, currentTypes, State, Hooks(burning));
             bool result = X86Fixture.UInt(Row[1]) != 0
                 ? hit.Hit(Source, X86Fixture.Int(Row[3]), X86Fixture.UInt(Row[6]), Attacker)
                 : hit.BaseHit(Source, X86Fixture.Int(Row[3]), X86Fixture.UInt(Row[6]), Attacker);
@@ -249,11 +259,12 @@ public sealed class X86RawDamageableHitTests
             var warning = new byte[8];
             Put(warning, 0, (uint)deadline);
             Put(warning, 4, (uint)(deadline >> 32));
+            Assert.Equal(Padding, Pool.RawSlot(Source)[(Patch ? 50 : 36)..].ToArray());
             return
             [
                 result ? "1" : "0",
                 actions,
-                Convert.ToHexStringLower(Pool.Slot(Source).ToArray()),
+                Convert.ToHexStringLower(Slot(Source).ToArray()),
                 Convert.ToHexStringLower(death),
                 Convert.ToHexStringLower(warning),
             ];
@@ -261,21 +272,23 @@ public sealed class X86RawDamageableHitTests
     }
 
     /// <summary>
-    /// 일반 피해 fixture 의 10.78 몫을 재생한다.
+    /// 일반 피해 fixture 의 PATCH/CD 양판본을 각각 재생한다.
     /// 입력 1 이 0 이면 BaseHit, 1 이면 Hit 경로로 실행한다.
     /// </summary>
-    [Fact]
-    public void HitMatchOriginalX86()
+    [Theory]
+    [InlineData(PatchEdition)]
+    [InlineData("originalCD")]
+    public void HitMatchOriginalX86(string edition)
     {
         string[][] rows = X86Fixture.Read("damageablehit");
         int count = 0;
         X86Fixture.CheckRows(rows, row =>
         {
-            if (row[0] != PatchEdition)
+            if (row[0] != edition)
             {
                 return true;
             }
-            var scene = new Scene();
+            var scene = new Scene(edition);
             scene.Prepare(row);
             string[] actual = scene.Run();
             // 원본이 관찰한 순서만 비교한다

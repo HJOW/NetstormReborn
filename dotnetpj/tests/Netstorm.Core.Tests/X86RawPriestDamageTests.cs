@@ -146,7 +146,7 @@ public sealed class X86RawPriestDamageTests
             Array.Clear(DamageState.Levels);
             DamageState.Levels[X86Fixture.Int(value[6])] = X86Fixture.Int(value[4]);
             DamageState.Levels[X86Fixture.Int(value[7])] = X86Fixture.Int(value[5]);
-            BurningState.Checking = X86Fixture.UInt(value[16]) != 0;
+            BurningState.Checking = new(X86Fixture.UInt(value[16]) != 0);
             Span<byte> raw = Slot(Source);
             // raw padding 도 native 의 독립 입력 패턴과 동일하게 준비한다
             for (int i = 0; i < raw.Length; i++)

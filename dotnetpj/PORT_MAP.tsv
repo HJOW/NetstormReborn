@@ -325,8 +325,8 @@ cpppj/src/o/RawContainedCreate.cpp	Netstorm.Core/Original/RawContainedCreate.cs	
 cpppj/src/o/RawContainedFinder.cpp	Netstorm.Core/Original/RawContainedFinder.cs	88743a5a69d05ae9a038f4abe1dd45ceaebfea6f	L1
 cpppj/src/o/RawContainedFinder.h	Netstorm.Core/Original/RawContainedFinder.cs	88743a5a69d05ae9a038f4abe1dd45ceaebfea6f	L1
 cpppj/src/o/RawContainedLookup.cpp	Netstorm.Core/Original/RawContainedLookup.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/RawDamageableBurning.cpp	Netstorm.Core/Original/RawDamageableBurning.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/RawDamageableHit.cpp	Netstorm.Core/Original/RawDamageableHit.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawDamageableBurning.cpp	Netstorm.Core/Original/RawDamageableBurning.cs	a9157275900dc6537b7aa423481272be7328b8ba	L1
+cpppj/src/o/RawDamageableHit.cpp	Netstorm.Core/Original/RawDamageableHit.cs	c3cfc98fa788f6229dbf5dd0b57752c90dc9f4d9	L1
 cpppj/src/o/RawDamageablePostDestroy.cpp	Netstorm.Core/Original/RawDamageablePostDestroy.cs	079f170e3a44eb7329d0d48613cf4002e1b4619d	L1
 cpppj/src/o/RawDamageablePreDestroy.cpp	Netstorm.Core/Original/RawDamageablePreDestroy.cs	4c29c9e353bd0d585f8971b6b99cdb22971f1610	L1
 cpppj/src/o/RawDamageableRelease.cpp	Netstorm.Core/Original/RawDamageableRelease.cs	230528e31fc1c239b5d1251a729b99041bf45d9e	L1
@@ -485,7 +485,7 @@ cpppj/src/o/RawSoloMapList.h	Netstorm.Core/Original/RawSoloMapList.cs	fdb9a2b9b0
 cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSquidDestroy.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidDestroyDispatch.cpp	Netstorm.Core/Original/RawSquidDestroyDispatch.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidFinder.cpp	Netstorm.Core/Original/RawFinder.cs	7b854b6513ee1b933681d4651b2707a9631a7147	L1
-cpppj/src/o/RawSquidHitPoints.cpp	Netstorm.Core/Original/RawSquidHitPoints.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawSquidHitPoints.cpp	Netstorm.Core/Original/RawSquidHitPoints.cs	552656c0c8bb46b48637b26a1acb59213edc1de1	L1
 cpppj/src/o/RawSquidNeighbors.cpp	Netstorm.Core/Original/RawNeighbor.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidPoolReset.cpp	Netstorm.Core/Original/RawSquidPoolReset.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/RawSquidRegion.cpp	Netstorm.Core/Original/RawSquidRegion.cs	9cb0547f5488d69fecc11fc3eb0eb591507140ec	L1
@@ -816,3 +816,6 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client.Host/HostMissionAudio.cs
 cpppj/src/o/AiAllianceSide.h	Netstorm.Core/Original/AiAllianceSide.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/o/RawDamageableRelease.h	Netstorm.Core/Original/RawDamageableRelease.cs	230528e31fc1c239b5d1251a729b99041bf45d9e	L1
 cpppj/src/o/RawDamageablePostDestroy.h	Netstorm.Core/Original/RawDamageablePostDestroy.cs	079f170e3a44eb7329d0d48613cf4002e1b4619d	L1
+cpppj/src/o/RawDamageableBurning.h	Netstorm.Core/Original/RawDamageableBurning.cs	a9157275900dc6537b7aa423481272be7328b8ba	L1
+cpppj/src/o/RawDamageableHit.h	Netstorm.Core/Original/RawDamageableHit.cs	8b467ca03249dbc963ceaf8efdd35fa6e26986b7	L1
+cpppj/src/o/RawSquidHitPoints.h	Netstorm.Core/Original/RawSquidHitPoints.cs	552656c0c8bb46b48637b26a1acb59213edc1de1	L1

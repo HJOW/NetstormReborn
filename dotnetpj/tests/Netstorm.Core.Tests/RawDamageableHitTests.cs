@@ -132,7 +132,7 @@ public sealed class RawDamageableHitTests
         Assert.True(hit.BaseHit(50, 10, 2, 60));
         Assert.Empty(scene.Events);
         // held 진단이 켜져 있으면 abstract 표적도 거부한다
-        scene.State.Checking = true;
+        scene.State.Checking = new(true);
         scene.ClearEvents();
         Assert.Throws<InvalidOperationException>(() => hit.BaseHit(50, 10, 2, 60));
         Assert.Empty(scene.Events);

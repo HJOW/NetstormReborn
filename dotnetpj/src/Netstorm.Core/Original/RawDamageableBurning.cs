@@ -1,3 +1,4 @@
+// 현재 HP/TYPE·진단 복귀·위치 소리 뒤 생성 경계를 원문 순서로 연결한다.
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -16,6 +17,13 @@ public sealed class DamageableBurningHooks
 
     /// <summary>실제 위치의 bulfHurt.wav 를 재생한다. 다른 타입에는 요구하지 않는다.</summary>
     public Action<int, float, float>? BulfSound { get; set; }
+
+    /// <summary>중복 프로세스 원문 식/파일/행을 보고하며 정상 복귀하면 저장한 판정을 이어간다.</summary>
+    public Action<string, string, uint>? Assertion { get; set; }
+
+    /// <summary>함수 객체는 값 복사하고 실제 월드 수명은 캡처한 같은 owner를 빌린다.</summary>
+    internal DamageableBurningHooks Copy() => new()
+    { Find = Find, Create = Create, Destroy = Destroy, BulfSound = BulfSound, Assertion = Assertion };
 }
 
 /// <summary>
@@ -24,7 +32,10 @@ public sealed class DamageableBurningHooks
 public sealed class DamageableBurningState
 {
     /// <summary>패치판만 두 번째 burning 이 없는지 확인하는 원본 전역이다.</summary>
-    public bool Checking { get; set; }
+    public RawCheckingFlag Checking { get => _checking; set => _checking = new(value); }
+
+    /// <summary>원문 진단 뷰는 값 복사하고 실제 현재DWORD owner는 같은 주소로 빌린다.</summary>
+    private RawCheckingFlag _checking = new();
 
     /// <summary>원본 process 14 타입의 현재 값.</summary>
     public uint BurningType { get; set; } = 14;
@@ -36,7 +47,7 @@ public sealed class DamageableBurningState
 /// <summary>
 /// 피해가능객체의 현재 HP·최대 HP 절반 비교와 실제 burning 프로세스 생성·제거 분기를 복원한다(원본 RawDamageableBurning, 0044c060).
 /// free·피격 효과 0 은 자연 반환하고, 저 HP 면 생성·기존 유지, 회복 후에는 기존을 삭제한다.
-/// 기준 판본은 10.78 뿐이다.
+/// PATCH signedDWORD/CD signedWORD HP와 진단 선택을 구별한다.
 /// 근거: cpppj/src/o/RawDamageableBurning.cpp (W03 삭제·수명 여덟째 조각, 2026-10-21).
 /// </summary>
 public sealed class RawDamageableBurning
@@ -51,7 +62,7 @@ public sealed class RawDamageableBurning
     private readonly IReadOnlyList<OriginalTypeRecord> _types;
 
     /// <summary>최대 HP 조회 몸체.</summary>
-    private readonly RawHitPoints _hp;
+    private readonly Func<uint, int> _typeHitPoints;
 
     /// <summary>현재 검사·프로세스 타입 전역.</summary>
     private readonly DamageableBurningState _state;
@@ -69,21 +80,30 @@ public sealed class RawDamageableBurning
     /// <param name="hooks">외부 효과 콜백 묶음.</param>
     public RawDamageableBurning(RawSidPool pool, IReadOnlyList<OriginalTypeRecord> types, RawHitPoints hp,
         DamageableBurningState state, DamageableBurningHooks hooks)
+        : this(pool, types, hp?.Pool ?? throw new ArgumentNullException(nameof(hp)), hp.TypeHitPoints, state, hooks) { }
+
+    /// <summary>같은 실제 보상 HP의 현재 TYPE 조회를 빌린다. 부모와 TYPE/상태는 더 오래 살아야 한다.</summary>
+    public RawDamageableBurning(RawSidPool pool, IReadOnlyList<OriginalTypeRecord> types, RawSquidReward hp,
+        DamageableBurningState state, DamageableBurningHooks hooks)
+        : this(pool, types, hp?.Pool ?? throw new ArgumentNullException(nameof(hp)), hp.TypeHitPoints, state, hooks) { }
+
+    /// <summary>선택된 실제 HP 부모와 현재 자료를 구성 때 확인하고 함수 사본을 보관한다.</summary>
+    private RawDamageableBurning(RawSidPool pool, IReadOnlyList<OriginalTypeRecord> types, RawSidPool hpPool,
+        Func<uint, int> typeHitPoints, DamageableBurningState state, DamageableBurningHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(types);
-        ArgumentNullException.ThrowIfNull(hp);
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(hooks);
-        if (!ReferenceEquals(hp.Pool, pool) || types.Count != OriginalConstructors.TypeCount)
+        if (!ReferenceEquals(hpPool, pool) || types.Count != (pool.Edition == OriginalEdition.Patch1078 ? 188 : 171))
         {
             throw new ArgumentException("burning HP·타입·풀 연결 오류", nameof(types));
         }
         _pool = pool;
         _types = types;
-        _hp = hp;
+        _typeHitPoints = typeHitPoints;
         _state = state;
-        _hooks = hooks;
+        _hooks = hooks.Copy();
     }
 
     /// <summary>이 몸체가 쓰는 슬롯 풀.</summary>
@@ -117,20 +137,22 @@ public sealed class RawDamageableBurning
         {
             throw new InvalidOperationException("burning 조회 콜백이 연결되지 않았습니다");
         }
-        int current = unchecked((int)Read(raw, HealthOffset));
-        int maximum = _hp.TypeHitPoints(raw[RawSidPool.TypeOffset]);
+        bool patch = _pool.Edition == OriginalEdition.Patch1078;
+        int current = patch ? unchecked((int)Read(raw, HealthOffset)) : unchecked((short)Read(raw, HealthOffset, 2));
+        int maximum = _typeHitPoints(raw[RawSidPool.TypeOffset]);
         int doubled = unchecked((int)unchecked((uint)maximum * 2u));
         int half = doubled / 4;
         int found = _hooks.Find(victim, _state.BurningType, 0);
-        if (_state.Checking && _hooks.Find(victim, _state.BurningType, 1) != 0)
+        if (patch && _state.Checking && _hooks.Find(victim, _state.BurningType, 1) != 0)
         {
-            throw new InvalidOperationException("burning 중복 판정 assert 경로");
+            if (_hooks.Assertion is null) throw new InvalidOperationException("burning 두 번째 프로세스 원본 진단 장치 미연결");
+            _hooks.Assertion("findProcess (mySid, burningSystemProcessType, 1 ) == 0", @"\Ns\O\Damageable.cpp", 0x210);
         }
         if (current < half)
         {
             if (found == 0)
             {
-                if (_hooks.Create is null || (raw[RawSidPool.TypeOffset] == _state.BulfType && _hooks.BulfSound is null))
+                if (raw[RawSidPool.TypeOffset] == _state.BulfType && _hooks.BulfSound is null)
                 {
                     throw new InvalidOperationException("burning 생성·소리 경계가 연결되지 않았습니다");
                 }
@@ -140,6 +162,7 @@ public sealed class RawDamageableBurning
                         BitConverter.UInt32BitsToSingle(Read(raw, 14)),
                         BitConverter.UInt32BitsToSingle(Read(raw, 18)));
                 }
+                if (_hooks.Create is null) throw new InvalidOperationException("burning 실제 생성 몸체 미연결");
                 found = _hooks.Create(victim);
             }
         }
