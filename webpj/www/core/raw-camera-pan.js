@@ -1,6 +1,6 @@
 // 원본 4d6b54의 Alt/가운데 버튼 카메라 이동과 두 입력 큐 경로 선택을 분리해 옮긴다(cpppj client/RawCameraPan.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 현재 UI/창 입력을 소비하며 카메라 현재값은 직접 쓰지 않는다. 프레임 delta 나 임시 속도 대신 원문 signed 좌표/FTOL/8 과 Shift 축 선택을 쓴다.
-// 목표 쓰기(request)는 497e00 의 현재 view 기준 요청이며 즉시 Scroll 과 다르다(화면 갱신 말미가 현재 view 에 적용한다). 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다).
+// 목표 쓰기(request)는 497e00 의 현재 view 기준 요청이며 즉시 Scroll 과 다르다(화면 갱신 말미가 현재 view 에 적용한다). 원본 관측 fixture(camera-pan 259행)는 E465 의 raw-camera-native.test.mjs 가 직접 대조한다.
 // 사용: const moved = processCameraPan({ code: InputCode.middleButton, x: 300, y: 100 }, { poll, globals, closePopups, request }); true 이면 이동 전용 큐 경로이며 일반 입력을 다시 나누지 않는다.
 // (2026-11-14 WB04-E437: RawMenuControls 선행 카메라 pan 이식)
 import { InputCode } from './input-queue.js';

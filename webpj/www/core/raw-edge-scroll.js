@@ -1,6 +1,6 @@
 // 원본 004d65ac..004d67ad 의 가장자리 스크롤 입력과 497e00 의 현재 카메라 목표 쓰기를 옮긴다(cpppj client/RawEdgeScroll.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 실제 GUI/OS 조회는 현재 소유자가 같은 호출 위치에서 훅으로 공급한다. 가장자리 2픽셀 관문·시간 가속(원문 FSUB→FMUL→FADD 저장 정밀도를 합치지 않음)·팝업 닫기·Shift 축 선택·최종 방향 반환과
-// 현재 view 를 즉시 바꾸지 않고 목표에만 쓰는 카메라 이동 요청(requestCameraDelta)을 포함한다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 현재 view 를 즉시 바꾸지 않고 목표에만 쓰는 카메라 이동 요청(requestCameraDelta)을 포함한다. 원본 관측 fixture(edge-scroll 135행)는 E465 의 raw-camera-native.test.mjs 가 직접 대조한다. 기준선 뒤 변경도 없다.
 // 사용: const direction = processEdgeScroll(state, { enabled, dialog, menuSerial, borderX, borderY, width, height, x, y, speed, wall }, { poll, menu, blockingPopup, closePopups, request }).
 // (2026-11-14 WB04-E442: RawMenuControls 선행 가장자리 스크롤 이식)
 import { InputCode } from './input-queue.js';

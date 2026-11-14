@@ -1,5 +1,5 @@
 // 가장자리 스크롤(RawEdgeScroll)의 초기화/관문/가속/팝업/Shift 축 선택/목표 요청을 기준선 소스 계약과 손 계산 값으로 검증한다. (2026-11-14 WB04-E442)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(RawEdgeScroll.cpp)에서 옮겼다.
+// 이 파일의 값은 손 계산이며 원본 직접 관측(edge-scroll 135행) 대조는 raw-camera-native.test.mjs(E465)가 한다. 순서/경계는 기준선 소스(RawEdgeScroll.cpp)에서 옮겼다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { InputCode } from '../www/core/input-queue.js';

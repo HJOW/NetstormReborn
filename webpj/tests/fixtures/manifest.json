@@ -20754,7 +20754,7 @@
       "bytes": 288716,
       "lines": 2365,
       "fixtureCommit": "82cc43831",
-      "webCommit": "worktree",
+      "webCommit": "f6c7c3a04",
       "cpppjBasis": {
         "cpppj/src/client/CameraHome.cpp": "acf3df968",
         "cpppj/src/client/CameraHome.h": "acf3df968"
@@ -20788,10 +20788,107 @@
       "bytes": 1497,
       "lines": 35,
       "fixtureCommit": "acf3df968",
-      "webCommit": "worktree",
+      "webCommit": "f6c7c3a04",
       "cpppjBasis": {
         "cpppj/src/client/CameraHome.cpp": "acf3df968",
         "cpppj/src/client/CameraHome.h": "acf3df968"
+      }
+    },
+    {
+      "id": "camera-center",
+      "path": "cpppj/tests/fixtures/camera-center-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E465",
+      "consumers": [
+        "webpj/tests/raw-camera-native.test.mjs"
+      ],
+      "doc": "docs/webpj-camera-native-fixtures-20261115.md",
+      "text": true,
+      "modules": [
+        "webpj/www/core/client-camera-globals.js",
+        "webpj/www/render/camera-view.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ClientCameraGlobals.cpp",
+        "cpppj/src/client/ClientCameraGlobals.h"
+      ],
+      "producer": "cpppj CameraCenterTests: 보호 원본 10.78 497f20 목표-only 중심 요청의 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "140행의 폭/높이·중심 float 비트·변환 번호와 Renderer 160BYTE(현재 view 64BYTE + 목표 20BYTE)/snapshot 64BYTE 전후",
+      "sha256": "25506a2c807af9fbab8755320c08f26eb2b29660754628128fb765f895a9d669",
+      "bytes": 131022,
+      "lines": 141,
+      "fixtureCommit": "72dda3ce8",
+      "webCommit": "681cc3e44",
+      "cpppjBasis": {
+        "cpppj/src/client/ClientCameraGlobals.cpp": "66583eb4f",
+        "cpppj/src/client/ClientCameraGlobals.h": "aae2f0ab2"
+      }
+    },
+    {
+      "id": "camera-pan",
+      "path": "cpppj/tests/fixtures/camera-pan-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E465",
+      "consumers": [
+        "webpj/tests/raw-camera-native.test.mjs"
+      ],
+      "doc": "docs/webpj-camera-native-fixtures-20261115.md",
+      "text": true,
+      "modules": [
+        "webpj/www/core/raw-camera-pan.js",
+        "webpj/www/core/raw-edge-scroll.js",
+        "webpj/www/core/client-camera-globals.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawCameraPan.cpp",
+        "cpppj/src/client/RawCameraPan.h"
+      ],
+      "producer": "cpppj CameraPanTests: 보호 원본 10.78 4d6b54 카메라 이동의 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "259행의 입력 20열(사건 코드/포인터/폴링 뗌/전역 9개/현재 view/목표/변환 번호/콜백 변이)과 선택·현재 view·목표·변환 번호·호출 순서",
+      "sha256": "51fd14e039b2210f3a461eabf205ea5a7992c5396bbd98c73a013c130b929619",
+      "bytes": 31309,
+      "lines": 260,
+      "fixtureCommit": "ddbfc6a09",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCameraPan.cpp": "ddbfc6a09",
+        "cpppj/src/client/RawCameraPan.h": "ddbfc6a09"
+      }
+    },
+    {
+      "id": "edge-scroll",
+      "path": "cpppj/tests/fixtures/edge-scroll-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E465",
+      "consumers": [
+        "webpj/tests/raw-camera-native.test.mjs"
+      ],
+      "doc": "docs/webpj-camera-native-fixtures-20261115.md",
+      "text": true,
+      "modules": [
+        "webpj/www/core/raw-edge-scroll.js",
+        "webpj/www/core/client-camera-globals.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawEdgeScroll.cpp",
+        "cpppj/src/client/RawEdgeScroll.h"
+      ],
+      "producer": "cpppj EdgeScrollTests: 보호 원본 10.78 004d65ac 가장자리 스크롤과 497e00 목표 요청의 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "135행의 입력 21열(flags/since/관문/포인터/화면/폴링/메뉴/팝업/시각/속도/현재 view/목표/변환 번호)과 flags/since/방향/목표/변환 번호/호출 순서",
+      "sha256": "68863380289c1ea91ec7218f3509e138288b09c74325deb161624867a81ca78a",
+      "bytes": 22250,
+      "lines": 136,
+      "fixtureCommit": "72df1d731",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawEdgeScroll.cpp": "72df1d731",
+        "cpppj/src/client/RawEdgeScroll.h": "72df1d731"
       }
     }
   ]
