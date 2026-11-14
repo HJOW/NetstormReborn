@@ -1,6 +1,6 @@
 # webpj 문자 편집 버퍼·저장소 TextEntryBuffer/TextEntryStorage (WB04-E438, 2026-11-14)
 
-RawMenuControls 선행 **TextEntryStorage 66줄·TextEntryBuffer 235줄(.cpp/.h, todo→port, 합계 301줄)**을 새 모듈 [`www/ui/text-entry-buffer.js`](../webpj/www/ui/text-entry-buffer.js)·[`www/ui/text-entry-storage.js`](../webpj/www/ui/text-entry-storage.js)로 이식했다. 기준선 `1f00a25a` 전체 소스를 읽었다. **전용 PE fixture는 없다.** cpppj에도 직접 시험이 없고 아래 검사는 기준선 소스 계약·손 계산 값·실제 저장소 위의 동작으로 한 것이며 원본 직접 관측 수치가 아니다.
+RawMenuControls 선행 **TextEntryStorage 66줄·TextEntryBuffer 226줄(기준선 `1f00a25a`의 .cpp/.h 줄 수, todo→port, 합계 292줄)**을 새 모듈 [`www/ui/text-entry-buffer.js`](../webpj/www/ui/text-entry-buffer.js)·[`www/ui/text-entry-storage.js`](../webpj/www/ui/text-entry-storage.js)로 이식했다. 기준선 `1f00a25a` 전체 소스를 읽었다. **전용 PE fixture는 없다.** cpppj에도 직접 시험이 없고 아래 검사는 기준선 소스 계약·손 계산 값·실제 저장소 위의 동작으로 한 것이며 원본 직접 관측 수치가 아니다.
 
 ## 기준선 뒤 변경 (3.6절)
 
