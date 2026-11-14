@@ -396,7 +396,7 @@ cpppj/src/client/StyleTextBuffer.cpp	port	www/ui/style-text-buffer.js;www/ui/scr
 cpppj/src/client/StyleTextMarkup.cpp	port	www/ui/style-text-markup.js;www/ui/style-text.js;www/assets/picture-resolver.js	b810ebe0	port	[client-default] WB04-E421 ~[...] 대괄호 I→S→T→C→B→E 부분 검색·greedy 되돌리기·ASCII 공백/탭 캡처·80바이트·첫 NUL 절단·타입 helper 재조회 순서·그림 조각 체인/공통 태그 전달·E 그림자/검정·S 소리·다중 줄 그림 제한 모드와 실제188타입/SHP +1a 높이/zone 옵션/검정/소리 연결. 3.6② 판정: 기준선 뒤 cpppj b810ebe0(NB02 엠보스 오프셋 두 좌표 -4..4) 반영. 전용 PE fixture 없음(기준선 소스 계약·독립 picture-resolver 116타입 전수 대조); 10.72 CD(I→W→T·판본 인자) 제외; 앱 메뉴 style-text.js 는 간소화판 그대로; 남음: StyleTextBuffer/TextGump/ScrollingText·RawMenuControls 연결
 cpppj/src/client/TechnicalHelp.cpp	exclude-host			-	[host-tech-help]
 cpppj/src/client/TechnicalHelpClient.cpp	exclude-host			-	[host-tech-help]
-cpppj/src/client/TechnologyListMenu.cpp	port			todo	[client-default]
+cpppj/src/client/TechnologyListMenu.cpp	port	www/ui/technology-list-menu.js	1f00a25a	port	[client-default] WB04-E450 원문 기술 목록 367입력+전체 메뉴 100입력의 반환/40DWORD/효과 순서 일치. 현재 TYPE·개수·소유 재조회·저장 개수와 전체 수 구별·초과 후보 순환·대상 DWORD/WORD·업그레이드/랭크/보상 분기 이식. 기준선 뒤 변경 없음; HTML metadata·RawMenuControls 실제 조립은 후속, 랭크 분기는 정적 이식만
 cpppj/src/client/TellFileMenus.cpp	port	www/ui/tell-lists.js	1f00a25a	partial	[client-default] WB03 @/# 파일 목록 메뉴
 cpppj/src/client/TellMapMenus.cpp	exclude-edit			-	[edit-map-list]
 cpppj/src/client/TellParameters.cpp	port	www/ui/tell-parameters.js	1f00a25a	port	[client-default] WB03(004c8ea0)

@@ -20041,10 +20041,72 @@
       "bytes": 135519,
       "lines": 133,
       "fixtureCommit": "b35e345b9",
-      "webCommit": "worktree",
+      "webCommit": "5e05099d9",
       "cpppjBasis": {
         "cpppj/src/client/RawChatRelay.cpp": "eeae45c69",
         "cpppj/src/client/RawChatRelay.h": "16431ec18"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E450",
+      "consumers": [
+        "webpj/tests/technology-list-menu.test.mjs"
+      ],
+      "doc": "docs/webpj-technology-list-menu-20261114.md",
+      "id": "technology-list-menu",
+      "path": "cpppj/tests/fixtures/technology-list-menu-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 기술 목록/전체 메뉴의 명시 TYPE 및 UI 경계",
+      "modules": [
+        "webpj/www/ui/technology-list-menu.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/TechnologyListMenu.cpp",
+        "cpppj/src/client/TechnologyListMenu.h"
+      ],
+      "scope": "367입력 전체 반환·40DWORD·메뉴 효과/문구/활성 상태; 실제 제단·희생·MP 실행 아님",
+      "text": true,
+      "sha256": "13ca2a50c6992533749a5ce557e9e369c127d1bf3ea423f441de149cada552eb",
+      "bytes": 198312,
+      "lines": 368,
+      "fixtureCommit": "524c126bb",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/TechnologyListMenu.cpp": "a3cc939ba",
+        "cpppj/src/client/TechnologyListMenu.h": "a3cc939ba"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E450",
+      "consumers": [
+        "webpj/tests/technology-list-menu.test.mjs"
+      ],
+      "doc": "docs/webpj-technology-list-menu-20261114.md",
+      "id": "technology-all-menu",
+      "path": "cpppj/tests/fixtures/technology-all-menu-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 기술 목록/전체 메뉴의 명시 TYPE 및 UI 경계",
+      "modules": [
+        "webpj/www/ui/technology-list-menu.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/TechnologyListMenu.cpp",
+        "cpppj/src/client/TechnologyListMenu.h"
+      ],
+      "scope": "100입력 전체 반환·40DWORD·메뉴 효과/문구/활성 상태; 실제 제단·희생·MP 실행 아님",
+      "text": true,
+      "sha256": "d150598800efd9a9c733a13823394fbc705875b067f77d7008016dc545ddcf1a",
+      "bytes": 110827,
+      "lines": 101,
+      "fixtureCommit": "a3cc939ba",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/TechnologyListMenu.cpp": "a3cc939ba",
+        "cpppj/src/client/TechnologyListMenu.h": "a3cc939ba"
       }
     }
   ]
