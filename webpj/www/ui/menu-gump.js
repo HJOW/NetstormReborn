@@ -1,7 +1,7 @@
 // 원본 MenuGump 의 항목/노드 저장소, 크기·장식 프레임, 확장 idle, controlled 메뉴 스택을 같은 Gump 저장소에 연결한다.
 // (cpppj client/MenuGump.cpp/.h, 기준선 1f00a25a, 10.78 전용 — CD 10.72 의 index 쓰기 순서·x87 unordered 분기는 옮기지 않는다)
 // 크기 변경은 x87 중간값(double)을 float32 로 좁히기 전까지 유지하고, 콜백(Push/Attach/Redraw) 뒤에는 현재 필드/표/루트를 다시 읽는다.
-// 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 원본 10.78 독립 관측 154행은 tests/menu-gump-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E492 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // (2026-11-14 WB04-E428: RawMenuControls 선행 MenuGump 이식)
 import { GumpBackgroundNode } from './gump-background-create.js';
 

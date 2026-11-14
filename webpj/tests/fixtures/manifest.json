@@ -22468,10 +22468,41 @@
       "bytes": 1348751,
       "lines": 3879,
       "fixtureCommit": "bb9132423",
-      "webCommit": "worktree",
+      "webCommit": "68419f481",
       "cpppjBasis": {
         "cpppj/src/client/GumpPointerBoundary.cpp": "bb9132423",
         "cpppj/src/client/GumpPointerBoundary.h": "bb9132423"
+      }
+    },
+    {
+      "id": "menugump",
+      "path": "cpppj/tests/fixtures/menugump-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E492",
+      "producer": "cpppj MenuGumpTests(OriginalMachineObservations): 보호 원본 10.78/CD 10.72 메뉴 Gump 의 독립 x86 관측 308행 중 originals(10.78) 154행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/menu-gump-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/menu-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/MenuGump.cpp",
+        "cpppj/src/client/MenuGump.h"
+      ],
+      "doc": "docs/webpj-menu-gump-native-fixtures-20261115.md",
+      "scope": "메뉴 Gump 크기/프레임/확장 idle/controlled 스택 154행(originals)의 입력 노드 55DWORD×3·표·콜백 응답과 콜백 당시 상태·최종 노드/표·반환·뒤쪽 idle 보호. originalCD(10.72) 154행은 웹 범위 밖이라 제외",
+      "text": true,
+      "sha256": "e1ec3c5aa10786003c1e1a5837a5653d5ce6821564a762d1e13ccdf738978ac6",
+      "bytes": 1515477,
+      "lines": 309,
+      "fixtureCommit": "11bbf42cf",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MenuGump.cpp": "11bbf42cf",
+        "cpppj/src/client/MenuGump.h": "225f2322c"
       }
     }
   ]

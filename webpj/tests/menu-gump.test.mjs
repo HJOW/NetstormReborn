@@ -1,5 +1,5 @@
 // 전용 PE fixture가 없는 MenuGump(메뉴 크기/장식 프레임/확장 idle/controlled 스택)를 기준선 소스 계약과 손으로 계산한 값으로 검증한다. (2026-11-14 WB04-E428)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 호출 순서/경계는 기준선 소스(MenuGump.cpp)에서 옮겼다. 기본 생성/수명 장치는 실제이고 가상 경계는 호출 기록 대역이다.
+// 이 파일의 수치는 기준선 소스 계약과 손 계산이다. 원본 직접 관측 154행은 tests/menu-gump-native-fixtures.test.mjs(2026-11-15 WB04-E492)가 대조한다. 호출 순서/경계는 기준선 소스(MenuGump.cpp)에서 옮겼다. 기본 생성/수명 장치는 실제이고 가상 경계는 호출 기록 대역이다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { MenuGump, MenuGumpNode, MenuGumpState, MenuGumpItem, bindMenuGumpFrame, MENU_ITEM_CAPACITY, CONTROLLED_MENU_CAPACITY } from '../www/ui/menu-gump.js';
