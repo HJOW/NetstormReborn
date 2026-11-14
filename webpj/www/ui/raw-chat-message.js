@@ -1,6 +1,6 @@
 // 원본 일반 채팅 본문의 채널/대상 아이콘·이름/스타일 조합과 say/wrapper 호출 순서를 옮긴다(원문 0042d640/0042dc30/0042f1e0, cpppj client/RawChatMessage.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 패킷 작성(RawChatPacket)과 분리된 부모다. manager 는 2712바이트 객체이고 본문 출력은 그 안의 +0x298(2048바이트)에 쓰인다. 원문 포인터는 호스트에서 같은 소유자의 불투명 토큰으로 표현하며 모든 물리 접근은 `hooks.memory(token)` 의 같은 Uint8Array 를 다시 빌려 실제 바이트에서 한다.
-// 문자열은 "바이트 문자열"(문자 하나 = 바이트 하나)이다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 문자열은 "바이트 문자열"(문자 하나 = 바이트 하나)이다. 원본 10.78 독립 관측 524행은 tests/chat-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E474 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: sayChatMessage(inputBytes, nameWork256, { current, subscriber }, { memory, currentName, nameForSubscriber, deliver, inputVisible, formatName?, stripSlots? }).
 // (2026-11-14 WB04-E446: RawMenuControls 선행 Chat 본문 조합 이식)
 import { stripChatFormatSlots } from './raw-chat-format.js';

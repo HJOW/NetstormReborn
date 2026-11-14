@@ -1,6 +1,6 @@
 // 원본 0042d280 의 일반 채팅 패킷 작성·채널 선택과 0040a8d0 의 송신 길이 확정을 옮긴다(cpppj client/RawChatPacket.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 본문 조합 부모(RawChatMessage)와 실제 전송/수신 장치 사이의 경계다. 패킷 종류 0x41/버전 3, 현재 전역의 재조회, 전투/비전투의 서로 다른 복사 폭, 패킷 바이트/WORD/BYTE 절단을 보존한다.
-// 실제 전송 채널·지역 수신은 호스트 훅이다(전송을 빈 성공으로 대체하지 않는다). 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 실제 전송 채널·지역 수신은 호스트 훅이다(전송을 빈 성공으로 대체하지 않는다). 원본 10.78 독립 관측 256행은 tests/chat-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E474 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: sendChatPacket(manager, recipients, bodyBytes, { memory, currentName, read, addRecipient, send, log, zeroAddress, localReceive }); observeChatPacket(packet, sending, assertion).
 // (2026-11-14 WB04-E446: RawMenuControls 선행 Chat 패킷 이식)
 

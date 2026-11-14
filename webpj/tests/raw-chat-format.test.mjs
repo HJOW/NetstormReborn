@@ -1,5 +1,5 @@
 // Chat 서식 명령(RawChatFormat)의 고정 스타일 검색·캡처 쓰기·슬롯 제거·manager/Config 쓰기를 기준선 소스 계약과 손 계산 바이트로 검증한다. (2026-11-14 WB04-E442)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(RawChatFormat.cpp)에서 옮겼다.
+// 이 파일은 손 계산 바이트·경계 시험이며 원본 10.78 직접 관측은 chat-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E474). 순서/경계는 기준선 소스(RawChatFormat.cpp)에서 옮겼다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { applyChatFormat, stripChatFormatSlots, CHAT_FORMAT_CAPTURE_BYTES } from '../www/ui/raw-chat-format.js';

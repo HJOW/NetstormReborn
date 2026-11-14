@@ -1,6 +1,6 @@
 // 원본 0042ed30/0042f0e0 의 일반 채팅 수신·필터·로그 문맥과 선택 UI 효과를 옮긴다(cpppj client/RawChatReceive.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 순수 조회(`hooks.read`) 외의 효과(알림 깨움·소리·본문 추가·표시·로그·뉴스)는 원문에 도달한 위치에서만 실행하며 숨겨지는 메시지도 열 개 옵션을 원문 순서대로 모두 읽는다. 문자열 변환과 현재값 재조회, 실제 8 DWORD 글자 문맥을 원문 순서로 유지한다.
-// 패킷은 Uint8Array 이고 본문은 바이트 문자열로 전달한다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 패킷은 Uint8Array 이고 본문은 바이트 문자열로 전달한다. 원본 10.78 독립 관측 238행은 tests/chat-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E474 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: dispatchChatPacket(packet, { read, ignored, config, owner, wake, sound, append, show, log, setNewsTime, news }); receiveChatPacket(chat, packet, hooks).
 // (2026-11-14 WB04-E446: RawMenuControls 선행 Chat 수신 이식)
 

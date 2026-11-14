@@ -1,6 +1,6 @@
 // 원본 0042da00 의 대상/본문 해석과 0042d1b0 의 실제 수신자 배열 추가를 옮긴다(cpppj client/RawChatSubmit.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 같은 manager 물리와 현재 Identity/Chat 행을 빌리는 채팅 제출 부품이다. 입력의 고정 패턴(`^[CR LF TAB SPACE]*([^:]*)($|:[공백]*(.*))`)을 두 인접 2048바이트 캡처(본문·대상 접두)로 나누고, 접두의 각 이름을 Player/Chat 식별자 또는 여덟 채널 키로 해석해 수신자 배열과
-// 채널 마스크를 갱신한 뒤 본문을 분배(0043f6f0)하거나 빈 본문이면 입력줄을 숨긴다. 전체 Regexp/네트워크 전송을 대신하지 않는다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 채널 마스크를 갱신한 뒤 본문을 분배(0043f6f0)하거나 빈 본문이면 입력줄을 숨긴다. 전체 Regexp/네트워크 전송을 대신하지 않는다. 원본 10.78 독립 관측 383행은 tests/chat-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E474 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: submitChatInput(manager, inputBytes, identity60, work4097, { memory, allocate, release, assertion, resolve, translate, records, inputVisible, dispatch }); addChatRecipient(manager, subscriber, hooks).
 // (2026-11-14 WB04-E446: RawMenuControls 선행 Chat 제출 이식)
 import { RawPlayerIdentity } from '../core/raw-player-identity.js';

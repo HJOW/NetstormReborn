@@ -21216,10 +21216,165 @@
       "bytes": 127475,
       "lines": 133,
       "fixtureCommit": "668d8aee8",
-      "webCommit": "worktree",
+      "webCommit": "1353b55b9",
       "cpppjBasis": {
         "cpppj/src/client/InventoryItemGump.cpp": "167866d9c",
         "cpppj/src/client/InventoryItemGump.h": "668d8aee8"
+      }
+    },
+    {
+      "id": "chat-format",
+      "path": "cpppj/tests/fixtures/chat-format-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E474",
+      "producer": "cpppj ChatFormatTests: 보호 원본 10.78 채팅 서식 명령(42ddf0/42def0)의 독립 x86 관측 372행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/raw-chat-format.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawChatFormat.cpp",
+        "cpppj/src/client/RawChatFormat.h"
+      ],
+      "doc": "docs/webpj-chat-native-fixtures-20261115.md",
+      "scope": "서식 명령(front/back)의 정규식 캡처·슬롯 제거·두 manager 쓰기·설정 키와 선택 중단 6종의 manager 2개·캡처·호출 순서",
+      "text": true,
+      "sha256": "74e94cb19651a1db9f392ea24d0231b7ec1a75ba081874492c1713fdf12689ab",
+      "bytes": 4201756,
+      "lines": 373,
+      "fixtureCommit": "5ed5c1acd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawChatFormat.cpp": "5ed5c1acd",
+        "cpppj/src/client/RawChatFormat.h": "5ed5c1acd"
+      }
+    },
+    {
+      "id": "chat-message",
+      "path": "cpppj/tests/fixtures/chat-message-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E474",
+      "producer": "cpppj ChatMessageTests: 보호 원본 10.78 본문 조합(42d640/42dc30/42f1e0)의 독립 x86 관측 524행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/raw-chat-message.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawChatMessage.cpp",
+        "cpppj/src/client/RawChatMessage.h"
+      ],
+      "doc": "docs/webpj-chat-native-fixtures-20261115.md",
+      "scope": "본문 조합 세 호출 부모(format/wrap/say)의 manager 2개·입력·지역 이름 바이트와 이름/구독자 현재 읽기·선택 중단·호출 순서",
+      "text": true,
+      "sha256": "d88b87961594aef50555f59ff65558ef9871f0d8eb55d13bd8529e9eb0a487c8",
+      "bytes": 6327809,
+      "lines": 525,
+      "fixtureCommit": "bcf1dd300",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawChatMessage.cpp": "bcf1dd300",
+        "cpppj/src/client/RawChatMessage.h": "bcf1dd300"
+      }
+    },
+    {
+      "id": "chat-packet",
+      "path": "cpppj/tests/fixtures/chat-packet-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E474",
+      "producer": "cpppj ChatPacketTests: 보호 원본 10.78 패킷 작성(42d280)·송신 길이(40a8d0)의 독립 x86 관측 256행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/raw-chat-packet.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawChatPacket.cpp",
+        "cpppj/src/client/RawChatPacket.h"
+      ],
+      "doc": "docs/webpj-chat-native-fixtures-20261115.md",
+      "scope": "송신 부모(단독 9/fallback)와 길이 observer 의 manager·수신자 배열·패킷 바이트·전역 변경·선택 중단·호출 순서",
+      "text": true,
+      "sha256": "d5e0a3687937bdab1df599ef021135c744b151c04722793bd93bc3c6d3ebc5ef",
+      "bytes": 2100848,
+      "lines": 257,
+      "fixtureCommit": "3667594cd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawChatPacket.cpp": "3667594cd",
+        "cpppj/src/client/RawChatPacket.h": "3667594cd"
+      }
+    },
+    {
+      "id": "chat-receive",
+      "path": "cpppj/tests/fixtures/chat-receive-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E474",
+      "producer": "cpppj ChatReceiveTests: 보호 원본 10.78 채팅 수신(42ed30/42f0e0)의 독립 x86 관측 238행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/raw-chat-receive.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawChatReceive.cpp",
+        "cpppj/src/client/RawChatReceive.h"
+      ],
+      "doc": "docs/webpj-chat-native-fixtures-20261115.md",
+      "scope": "수신 부모/현재 Chat wrapper 의 버전/ASCII·무시·채널/관계 옵션·현재값 변경·선택 중단과 전체 패킷 바이트·호출 순서",
+      "text": true,
+      "sha256": "f2b196e8a7e637e29e9178502aa0041fccd1da7fd65d491ba46bd65572e2ba92",
+      "bytes": 196451,
+      "lines": 239,
+      "fixtureCommit": "fc5bec1cc",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawChatReceive.cpp": "fc5bec1cc",
+        "cpppj/src/client/RawChatReceive.h": "fc5bec1cc"
+      }
+    },
+    {
+      "id": "chat-submit",
+      "path": "cpppj/tests/fixtures/chat-submit-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E474",
+      "producer": "cpppj ChatSubmitTests: 보호 원본 10.78 채팅 제출(42da00)·수신자 추가(42d1b0)의 독립 x86 관측 383행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/raw-chat-submit.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawChatSubmit.cpp",
+        "cpppj/src/client/RawChatSubmit.h"
+      ],
+      "doc": "docs/webpj-chat-native-fixtures-20261115.md",
+      "scope": "제출/수신자 추가의 manager·이전/새 수신자 배열·식별자 지역·본문 작업 공간·호출 순서·선택 중단(할당 실패/해제/진단 포함)",
+      "text": true,
+      "sha256": "6081ea747ff3f51ff725877a896d870df618a757ed80c9d87ddecc8e91a1496f",
+      "bytes": 8609289,
+      "lines": 384,
+      "fixtureCommit": "7120a0151",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawChatSubmit.cpp": "7120a0151",
+        "cpppj/src/client/RawChatSubmit.h": "7120a0151"
       }
     }
   ]

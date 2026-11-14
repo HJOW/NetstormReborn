@@ -1,5 +1,5 @@
 // Chat 본문 조합 raw-chat-message(formatChatMessage·formatChatInput·sayChatMessage·writeChatNameFormat)를 기준선 소스 계약과 손 계산 바이트로 검증한다.
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(RawChatMessage.cpp)에서 옮겼다. 실제 게임·브라우저 실행이 아니다. (2026-11-14 WB04-E446)
+// 이 파일은 손 계산 바이트·경계 시험이며 원본 10.78 직접 관측은 chat-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E474). 순서/경계는 기준선 소스(RawChatMessage.cpp)에서 옮겼다. 실제 게임·브라우저 실행이 아니다. (2026-11-14 WB04-E446)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { CHAT_MESSAGE_NAME_BYTES, CHAT_MESSAGE_OFFSET, formatChatInput, formatChatMessage, sayChatMessage, writeChatNameFormat } from '../www/ui/raw-chat-message.js';

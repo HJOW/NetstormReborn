@@ -1,6 +1,6 @@
 // 원본 format/back/front 명령(0042ddf0/0042def0, 슬롯 제거 0042d160)의 고정 스타일 검색·공통 캡처·manager/Config 쓰기를 옮긴다(cpppj client/RawChatFormat.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 범용 정규식 대신 원문 00504a00 의 한 고정 패턴 `(~[^~ CR TAB LF space]+)+` 만 같은 캡처/부분 쓰기로 실행한다(VT/FF·비ASCII 는 스타일 글자로 허용). 외부 callback 뒤 원문이 쓰는 시점에 같은 현재 슬롯을 다시 읽는다.
-// 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 원본 10.78 독립 관측 372행은 tests/chat-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E474 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: applyChatFormat(false, { current, subscriber }, '~1~2x', capture(Uint8Array 81+), { memory, assertion, copyFormat, writeConfig, illegalFormat }); stripChatFormatSlots(bytes).
 // (2026-11-14 WB04-E442: RawMenuControls 선행 Chat 서식 명령 이식)
 

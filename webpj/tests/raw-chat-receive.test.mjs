@@ -1,5 +1,5 @@
 // Chat 수신 raw-chat-receive(receiveChatPacket·dispatchChatPacket)의 무시/뉴스/필터/관계/소리/표시 순서를 기준선 소스 계약과 손 계산 값으로 검증한다.
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 실제 게임·브라우저 실행이 아니다. (2026-11-14 WB04-E446)
+// 이 파일은 손 계산 바이트·경계 시험이며 원본 10.78 직접 관측은 chat-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E474). 실제 게임·브라우저 실행이 아니다. (2026-11-14 WB04-E446)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { dispatchChatPacket, receiveChatPacket } from '../www/ui/raw-chat-receive.js';
