@@ -20296,12 +20296,74 @@
       "bytes": 13008,
       "lines": 49,
       "fixtureCommit": "162594848",
-      "webCommit": "worktree",
+      "webCommit": "dece01974",
       "cpppjBasis": {
         "cpppj/src/client/ClientChatRuntime.cpp": "c0f7843ae",
         "cpppj/src/client/ClientChatRuntime.h": "c0f7843ae",
         "cpppj/src/client/ChatRecipients.cpp": "325d19a08",
         "cpppj/src/client/ChatRecipients.h": "325d19a08"
+      }
+    },
+    {
+      "id": "html-window-gump",
+      "path": "cpppj/tests/fixtures/html-window-gump-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E456",
+      "producer": "cpppj HtmlWindowGumpTests: 보호 원본10.78 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/html-window-gump.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/html-window-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HtmlWindowGump.cpp",
+        "cpppj/src/client/HtmlWindowGump.h"
+      ],
+      "doc": "docs/webpj-html-window-gump-20261114.md",
+      "scope": "250입력의 실제24필드·20행·HTML8192BYTE·자식·장기상태·반환/중단·효과순서",
+      "text": true,
+      "sha256": "2acaf260f0f47cce99b5d0cabfc341aaa14b2921281e32ba9c63c92797061f36",
+      "bytes": 345659,
+      "lines": 251,
+      "fixtureCommit": "b402a15db",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HtmlWindowGump.cpp": "b402a15db",
+        "cpppj/src/client/HtmlWindowGump.h": "b402a15db"
+      }
+    },
+    {
+      "id": "html-window-idle",
+      "path": "cpppj/tests/fixtures/html-window-idle-v2-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E456",
+      "producer": "cpppj HtmlWindowGumpTests: 보호 원본10.78 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/html-window-gump.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/html-window-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HtmlWindowGump.cpp",
+        "cpppj/src/client/HtmlWindowGump.h"
+      ],
+      "doc": "docs/webpj-html-window-gump-20261114.md",
+      "scope": "88입력의 실제24필드·20행·HTML8192BYTE·자식·장기상태·반환/중단·효과순서",
+      "text": true,
+      "sha256": "b0309464c7c8643467a819d5c28aa413a1e2d15b57ceed1e8b48af95d855f333",
+      "bytes": 111185,
+      "lines": 89,
+      "fixtureCommit": "b402a15db",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HtmlWindowGump.cpp": "b402a15db",
+        "cpppj/src/client/HtmlWindowGump.h": "b402a15db"
       }
     }
   ]
