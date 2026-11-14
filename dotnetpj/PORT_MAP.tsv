@@ -754,3 +754,9 @@ cpppj/src/client/RawCameraView.h	Netstorm.Client/Audio/SoundGeometry.cs	0c24d018
 cpppj/src/client/RawCameraView.cpp	Netstorm.Client/Audio/SoundGeometry.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
 cpppj/src/client/SoundProcess.h	Netstorm.Client/Audio/SoundProcess.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
 cpppj/src/client/SoundProcess.cpp	Netstorm.Client/Audio/SoundProcess.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
+cpppj/src/client/SoundDevice.h	Netstorm.Client/Audio/SoundWave.cs	51b0068827c4bd3114f82da39579f6aa6aa69e7c	port
+cpppj/src/client/SoundDevice.cpp	Netstorm.Client/Audio/SoundWave.cs	51b0068827c4bd3114f82da39579f6aa6aa69e7c	port
+cpppj/src/client/SoundDevice.h	Netstorm.Client.Host/WindowsSoundFiles.cs	51b0068827c4bd3114f82da39579f6aa6aa69e7c	port
+cpppj/src/client/SoundDevice.cpp	Netstorm.Client.Host/WindowsSoundFiles.cs	51b0068827c4bd3114f82da39579f6aa6aa69e7c	port
+cpppj/src/client/SoundDevice.h	Netstorm.Client.Host/WindowsSoundDevice.cs	51b0068827c4bd3114f82da39579f6aa6aa69e7c	port
+cpppj/src/client/SoundDevice.cpp	Netstorm.Client.Host/WindowsSoundDevice.cs	51b0068827c4bd3114f82da39579f6aa6aa69e7c	port

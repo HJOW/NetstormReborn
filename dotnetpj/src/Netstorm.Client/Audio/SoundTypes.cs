@@ -101,8 +101,8 @@ public sealed class SoundState
 /// <param name="Attenuation">이름에서 읽은 signed 감쇠다.</param>
 public readonly record struct SoundLoad(uint Buffer, int Attenuation);
 
-/// <summary>원본 HRESULT와 함께 실제 복제 버퍼를 돌려주는 장치 경계다.</summary>
-public delegate int SoundDuplicate(uint original, out uint copy);
+/// <summary>원본 HRESULT와 함께 실제 복제 버퍼를 돌려주며 실패 때 기존 출력값을 보존하는 장치 경계다.</summary>
+public delegate int SoundDuplicate(uint original, ref uint copy);
 
 /// <summary>원본 DirectSound 호출 위치에 대응하는 실제 장치 함수 객체다.</summary>
 public sealed class SoundDeviceHooks

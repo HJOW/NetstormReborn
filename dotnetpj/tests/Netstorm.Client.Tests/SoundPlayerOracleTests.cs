@@ -54,7 +54,7 @@ public sealed partial class SoundPlayerOracleTests
             SetVolume = (buffer, value) => { _events.Add($"V:{Ordinal(buffer)}:{value}"); return GainResult; },
             SetPan = (buffer, value) => { _events.Add($"N:{Ordinal(buffer)}:{value}"); return BalanceResult; },
             Stop = buffer => { Status[Index(buffer)] &= ~5u; _events.Add($"X:{Ordinal(buffer)}"); },
-            Duplicate = (uint original, out uint copy) => { _events.Add($"D:{Ordinal(original)}"); copy = CopyResult >= 0 ? Create() : 0; return CopyResult; },
+            Duplicate = (uint original, ref uint copy) => { _events.Add($"D:{Ordinal(original)}"); if (CopyResult >= 0) copy = Create(); return CopyResult; },
             Load = name => { var result = new SoundLoad(LoadKind == 'b' ? Create() : LoadKind == 's' ? SoundConstants.SilentBuffer : 0, LoadAttenuation); _events.Add($"F:{name}"); return result; },
             Log = (channel, text) => _events.Add($"G:{channel}:{text.TrimEnd('\n', ' ')}"),
         };

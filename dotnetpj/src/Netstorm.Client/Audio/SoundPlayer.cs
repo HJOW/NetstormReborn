@@ -156,7 +156,8 @@ public sealed class SoundPlayer
             }
             if (Get(sound, SoundField.Buffer) == 0)
             {
-                if (_hooks.Duplicate!(Get(Get(sound, SoundField.Root), SoundField.Buffer), out uint restored) < 0) { Failed(0x310); Set(sound, SoundField.Buffer, 0); return sound; }
+                uint restored = 0;
+                if (_hooks.Duplicate!(Get(Get(sound, SoundField.Root), SoundField.Buffer), ref restored) < 0) { Failed(0x310); Set(sound, SoundField.Buffer, 0); return sound; }
                 Set(sound, SoundField.Buffer, restored); Log(LogSound, $"Restored sound {_list.Name(sound)}\n");
             }
         }
@@ -174,14 +175,16 @@ public sealed class SoundPlayer
                 buffer = Get(walk, SoundField.Buffer);
                 if (buffer == 0)
                 {
-                    if (_hooks.Duplicate!(Get(sound, SoundField.Buffer), out uint refill) < 0) { Failed(0x33c); Set(walk, SoundField.Buffer, 0); return walk; }
+                    uint refill = 0;
+                    if (_hooks.Duplicate!(Get(sound, SoundField.Buffer), ref refill) < 0) { Failed(0x33c); Set(walk, SoundField.Buffer, 0); return walk; }
                     Set(walk, SoundField.Buffer, refill); buffer = refill;
                 }
                 entry = walk;
             }
             else
             {
-                if (_hooks.Duplicate!(Get(sound, SoundField.Buffer), out uint copy) < 0) { Failed(0x348); return sound; }
+                uint copy = 0;
+                if (_hooks.Duplicate!(Get(sound, SoundField.Buffer), ref copy) < 0) { Failed(0x348); return sound; }
                 if (last == 0) throw new InvalidOperationException("소리 항목의 원본 연결이 비어 있습니다");
                 entry = _list.AppendDuplicate(sound, last, copy); buffer = copy;
             }
