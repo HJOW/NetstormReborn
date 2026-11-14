@@ -81,7 +81,7 @@ cpppj/src/client/ConstructionHistoryKey.cpp	port	www/core/construction-history-k
 cpppj/src/client/ConstructionVisualRenderer.cpp	port	www/render/construction-visual-renderer.js	1f00a25a	port	[client-default] WB04-E382: 건설 표시 수집·정렬·분배 어댑터 — drawVisibleConstruction(같은 영역을 visible/unclipped 로·dirty 0·정렬 끔=수집 순서)·drawVisibleScene(ConstructionVisualSystem 또는 RenderProcessSystem, construction 수집기/Draw 만 시스템으로 교체한 사본 훅). E194 가 미룬 cpppj 시험 5건(가시 영역 제출·작은 동률/비유한 좌표·9항목 CRT 동률 drawsort 행·혼합 병합·분배 중 삭제) 대응. 장면 장치는 tests/construction-visual-support.mjs 로 분리해 E194 시험과 공유
 cpppj/src/client/CreateAtInput.cpp	port	www/core/create-at-input.js	1f00a25a	port	[client-default] WB04-E33: 004d84f8..851b CreateAt 일반 입력과 이름표. fixture create-at-input 408행 전부·create-at-names 15행(이름→번호)
 cpppj/src/client/CurrentAllocationBytes.h	port	www/core/current-allocation-bytes.js	c1b8fbf4	port	[client-default] WB04-E332(웹 적응): 원문은 같은 크기 malloc 의 미초기화 내용을 복사해 new 가 초기화하지 않는 바이트의 현재 할당 입력으로 쓴다. 웹은 비결정적 힙 내용을 읽을 수 없고 새 Uint8Array 가 0 이므로 입력을 덮어쓰지 않고(결정적) 검사는 ClientPlayerRecords 의 allocationBytes 인자로 명시 입력을 주입한다. 남음: 없음
-cpppj/src/client/CurrentTypeHitPoints.cpp	port			todo	[client-default]
+cpppj/src/client/CurrentTypeHitPoints.cpp	port	www/core/current-type-hit-points.js	1f00a25a	port	[client-default] WB04-E435 CurrentTypeHitPoints makeCurrentTypeHitPoints(번호 범위·현재 표 호출마다 조회·선택 레코드의 현재 표 getNum·실제 readRiftHitPoints·진단 복귀 뒤에도 처음 선택 TYPE 보존) 이식. 전용 PE fixture 없음(소스 계약·실제 readRiftHitPoints); 기준선 뒤 변경 없음; 남음: UI/월드 설치 연결
 cpppj/src/client/Cursor.cpp	adapt	www/ui/cursor.js	1f00a25a	partial	[adapt-screen] RT_CURSOR 해독→CSS 커서(웹 대체). 커서2~14·17·18은 미션 입력과 함께
 cpppj/src/client/CursorObjectPickup.cpp	port	www/core/client-input-commands.js	1f00a25a	port	[client-default] WB04-E23: 00447340 편집 객체 취득(Unpop→현재 TYPE/WORD→생성→Take). fixture cursor-object-pickup 10.78 96행 전부
 cpppj/src/client/CursorPreviewSource.h	port	www/render/cursor-preview-source.js	1f00a25a	port	[client-default] WB04-E404: 같은 PATCH 풀/현재 Drop·Lifecycle·Placement·표면TYPE·실제144BYTE Canon 격자의 참조 묶음. 수집/표시 입력 getter로 SP/그리기 재진입 뒤 현재값 재조회. 원본 SharedCursor 수집520행·표시477행과 실제 카메라/목록/배치 판정 시험, 기준선 뒤 변경 없음
@@ -89,8 +89,8 @@ cpppj/src/client/DataManagerFileRead.cpp	adapt	www/core/client-data-manager-file
 cpppj/src/client/DestroyAtInput.cpp	port	www/core/script-command-inputs.js	1f00a25a	port	[client-default] WB04-E21: 004d8528 DestroyAt 일반 입력 분배. fixture destroy-at-input 10.78 48행 전부. 스크립트 큐/실제 부모 대조는 해당 단위에서
 cpppj/src/client/DetonateInput.cpp	port	www/core/detonate-input.js	1f00a25a	partial	[client-default] WB04-E33: DetonateBomb 분배 계약만. 768행 fixture는 RawObjectConversion(Spell→Object→Form 반환) 단위에서 대조
 cpppj/src/client/DialogBodyLayout.cpp	port			todo	[client-default]
-cpppj/src/client/DialogCommandLifetime.cpp	port			todo	[client-default]
-cpppj/src/client/DialogExitCommand.cpp	port			todo	[client-default]
+cpppj/src/client/DialogCommandLifetime.cpp	port	www/ui/dialog-command-lifetime.js	1f00a25a	port	[client-default] WB04-E435 DialogCommandLifetime fireDialogCommand(선택 당시 값 먼저 예약(코드 0 포함) 뒤 부모 Kill·큐/Kill 경계 누락 거부)·InputQueue 변형 이식. 전용 PE fixture 없음(소스 계약·실제 InputQueue); 기준선 뒤 변경 없음; 남음: HTML 부모 조립
+cpppj/src/client/DialogExitCommand.cpp	port	www/ui/dialog-exit-command.js	1f00a25a	port	[client-default] WB04-E435 DialogExitCommand resolve(캡처 80/256 NUL 한도·lookup→코드 0 진단→첫 글자 숫자 atol/문자열 고리→두 필드 마지막 교체)·dispose(보유값 먼저 비우고 (코드,인자,인자) 한 번 예약·코드 0 무예약)·makeDialogExitResolveHooks/InputQueue 변형 이식. 전용 PE fixture 없음(소스 계약·실제 ScriptStringRing/InputQueue); 기준선 뒤 변경 없음; 남음: HTML 부모 조립
 cpppj/src/client/DialogScript.cpp	port			todo	[client-default]
 cpppj/src/client/DrawSort.cpp	port	www/render/draw-sort.js	1f00a25a	port	[client-default] WB03-Z CRT 판본별 16바이트 정렬
 cpppj/src/client/DrawSubmission.cpp	port	www/render/draw-submission.js	1f00a25a	port	[client-default] WB04-E382: 원본 Renderer 004994b0 의 표시 목록 병합·분배 — collectDrawEntries(용량 5000 제한·UI→건설→묶음→일반→미리보기 순·dirty 비트 2 는 UI 만·남은 칸/한도 전달·음수/초과/비정수 반환 거부·묶음은 첫 항목 x,y,depth+헤더 토큰 kind 1·tail 미기록)·dispatchDrawEntries(kind 0~4·숨김/debug 현재 값·묶음 개수 상자 재조회·알 수 없는 kind 는 그리기만 생략·필수 훅 검사)·sortRenderEntries(16바이트 항목 전체를 draw-sort 로 정렬). fixture drawsubmission originals 322행(병합·정렬·분배 기록·0xa5 보호 바이트) 첫 실행 전부 일치. 10.78 전용(CD/1037 행은 읽지 않음)
@@ -151,7 +151,7 @@ cpppj/src/client/HelpLinkPolicy.cpp	port	www/ui/help-link.js	1f00a25a	partial	[c
 cpppj/src/client/HelpListDisk.cpp	exclude-host			-	[host-dev-files]
 cpppj/src/client/HtmlBodyGump.cpp	port	www/ui/tell-window.js	1f00a25a	partial	[client-default] 본문 자식
 cpppj/src/client/HtmlConditionEffect.cpp	port	www/ui/html-text.js	1f00a25a	partial	[client-default] ? 분기
-cpppj/src/client/HtmlInputDialog.cpp	port			todo	[client-default]
+cpppj/src/client/HtmlInputDialog.cpp	port	www/ui/html-input-dialog.js	1f00a25a	port	[client-default] WB04-E435 HtmlInputDialog confirmHtmlInput(CopyText 256·마지막 칸 NUL·첫 LF 절단·종료 NUL부터 isspace(int8) 역방향·모드≠1 atol(반환 무시)·후속 섹션 80바이트 NUL 앞·format/Tell·1 반환) 이식. 전용 PE fixture 없음(소스 계약); 기준선 뒤 변경 없음; 남음: 실제 모달/입력 조립
 cpppj/src/client/HtmlLinkText.cpp	port	www/ui/html-text.js	1f00a25a	partial	[client-default] 링크 문자열
 cpppj/src/client/HtmlTextParser.cpp	port	www/ui/html-text.js	1f00a25a	partial	[client-default] HTML 유사 본문 변환
 cpppj/src/client/HtmlWindowFactory.cpp	port	www/ui/html-text.js;www/ui/tell-window.js	1f00a25a	partial	[client-default] 두 번 변환 준비(004cf270)
@@ -382,7 +382,7 @@ cpppj/src/client/SoundMusicRuntime.cpp	adapt			todo	[adapt-sound]
 cpppj/src/client/SoundMusicSelection.cpp	port			todo	[client-default]
 cpppj/src/client/SoundProcess.cpp	port			todo	[client-default]
 cpppj/src/client/SoundSceneMusic.cpp	port	www/audio/audio-system.js	1f00a25a	partial	[client-default] 메뉴 장면 음악
-cpppj/src/client/SpecialPointerTrace.cpp	port			todo	[client-default]
+cpppj/src/client/SpecialPointerTrace.cpp	port	www/ui/special-pointer-trace.js	1f00a25a	port	[client-default] WB04-E435 SpecialPointerTrace traceSpecialPointer(Ctrl+special일 때만 사건 좌표 역투영→단일 지점 탐색→후보마다 가상 70→다음 조회·중복 보존·도달 시 경계 요구) 이식. 전용 PE fixture 없음(소스 계약); 기준선 뒤 변경 없음; 남음: Select/월드 연결
 cpppj/src/client/SpellFrameVisibility.h	port	www/core/spell-frame-visibility.js	1f00a25a	port	[client-default] WB04-E381: 스펠 도움말 그림 임시 제외 suppressSpellHelpFrame(폭탄 종류 && 도움말 프레임 ≥ 0 && 지금 프레임 == 도움말 프레임, 64비트 정수 비교). 판본 인자는 10.78 전용이라 옮기지 않음. 호출자(GameWorld·RawCampaignFactoryDisplay·RawCampaignSession 파편 캡처)는 각 단위에서 연결
 cpppj/src/client/SpriteColorMaps.cpp	port	www/core/sprite-color-maps.js	1f00a25a	port	[client-default] WB04-E373: 원본 0043c010 의 추상(밝음)·건설·그림자 색 변환표(556238/556438/557738) buildSpriteColorMaps — 밝음·건설은 PaletteShade 의 buildShadeMaps(assets/palette.js), 그림자는 소스 RGB×float 0.6 목표와 후보의 blue→green→red 제곱 거리(엄격 비교·최소 거리만 float32), 228..245·254·255 항등 덮어쓰기. fixture sprite-colors 10.78 3행(실제 파일·혼합 RGB·중복 회색) 256바이트 세 표 모두 첫 실행 일치, 계약 시험 포함. 기준선 뒤 변경 없음
 cpppj/src/client/SpriteDraw.cpp	port	www/render/world-sprites.js;www/render/sprite-draw.js	1f00a25a	port	[client-default] 타입 발 기준점 출력만 / WB04-E388: 일반 Squid 객체 Draw 00498220 — SpriteDraw.draw(그림자 레이어 tail 4: abstract 끝·alias 기록(공유 진단 정확히 0)·프레임 보정·그림자 모드 / 본체: 죽음·abstract·특수 모드 필터·일반(소유자 색 문맥)·extra 비트 2 가상 프레임/Draw / 표식·상태 표시 / 선택 두 겹 선 + HP·건설·자원·타이머 셋·지속·비용 막대)·SpritePixelTarget(원색/소유자 소스 치환/고정 대상 변환표 translated·배율·직교 선·half-open fill)·makeSpriteAssetViews·makeSpriteAssetShapes·makeSpriteSurfaceLookup·bindSpriteDraw. fixture spritedraw originals 463행 첫 실행 전부 일치. SpriteDraw_ObjectCollectionPixels 는 ObjectCollection 단위에서
