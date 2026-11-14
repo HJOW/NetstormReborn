@@ -20683,7 +20683,7 @@
       "bytes": 71319,
       "lines": 107,
       "fixtureCommit": "79bc9a067",
-      "webCommit": "worktree",
+      "webCommit": "c00c1c56e",
       "cpppjBasis": {
         "cpppj/src/client/RawCameraCommit.cpp": "79bc9a067",
         "cpppj/src/client/RawCameraCommit.h": "fcec59c0e"
@@ -20719,12 +20719,79 @@
       "bytes": 117240,
       "lines": 169,
       "fixtureCommit": "66583eb4f",
-      "webCommit": "worktree",
+      "webCommit": "c00c1c56e",
       "cpppjBasis": {
         "cpppj/src/client/RawCameraCommit.cpp": "79bc9a067",
         "cpppj/src/client/RawCameraCommit.h": "fcec59c0e",
         "cpppj/src/client/ClientCameraGlobals.cpp": "66583eb4f",
         "cpppj/src/client/ClientCameraGlobals.h": "aae2f0ab2"
+      }
+    },
+    {
+      "id": "camera-home",
+      "path": "cpppj/tests/fixtures/camera-home-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E464",
+      "consumers": [
+        "webpj/tests/camera-home.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/camera-home.js",
+        "webpj/www/core/client-camera-globals.js",
+        "webpj/www/core/sid-pool.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/CameraHome.cpp",
+        "cpppj/src/client/CameraHome.h"
+      ],
+      "doc": "docs/webpj-camera-home-20261115.md",
+      "text": true,
+      "producer": "cpppj CameraHomeTests: 보호 원본 10.78(+CD 10.72 행은 웹 범위 밖) 초기 시야 선택/좌표/Carrier 억제/ftol 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "원본 10.78 1,182행(originalCD 1,182행 제외)의 raw 슬롯 입력(번호/타입/상태/소유자/좌표 DWORD)·모드·로컬 번호·화면 크기·카운터와 적용 원점/억제 깊이/요청·변환 번호 열",
+      "sha256": "f083d4a18323b6da96fa14930329a812e18a9505be1b8790f8a4277d8dfa3e3e",
+      "bytes": 288716,
+      "lines": 2365,
+      "fixtureCommit": "82cc43831",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/CameraHome.cpp": "acf3df968",
+        "cpppj/src/client/CameraHome.h": "acf3df968"
+      }
+    },
+    {
+      "id": "viewspot",
+      "path": "cpppj/tests/fixtures/viewspot-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E464",
+      "consumers": [
+        "webpj/tests/camera-home.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/camera-home.js",
+        "webpj/www/core/client-camera-globals.js",
+        "webpj/www/ui/html-text.js",
+        "webpj/www/assets/config.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/CameraHome.cpp",
+        "cpppj/src/client/CameraHome.h"
+      ],
+      "doc": "docs/webpj-camera-home-20261115.md",
+      "text": true,
+      "producer": "cpppj ViewSpot_PatchNative: 보호 원본 10.78 433ad0 ViewSpot 인자 해석의 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "34행의 입력 바이트(hex)·x/y float 비트(토큰 분리와 atol→float)",
+      "sha256": "07baecc50f7ddfa93fe486325c82410fa0f13a5953235b64ade5f75c60f24fa2",
+      "bytes": 1497,
+      "lines": 35,
+      "fixtureCommit": "acf3df968",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/CameraHome.cpp": "acf3df968",
+        "cpppj/src/client/CameraHome.h": "acf3df968"
       }
     }
   ]
