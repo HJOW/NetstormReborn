@@ -22530,10 +22530,46 @@
       "bytes": 5734550,
       "lines": 171,
       "fixtureCommit": "e5a68d592",
-      "webCommit": "worktree",
+      "webCommit": "b8d25de84",
       "cpppjBasis": {
         "cpppj/src/client/HudNsInfoCreate.cpp": "e5a68d592",
         "cpppj/src/client/HudNsInfoCreate.h": "e5a68d592"
+      }
+    },
+    {
+      "id": "minimap-blit",
+      "path": "cpppj/tests/fixtures/minimap-blit-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E494",
+      "producer": "cpppj MinimapBlitTests(IndependentNativeFullSurfaceAndGuardReads): 보호 원본 10.78 미니맵 Draw→복사→VFX 선의 독립 x86 관측 120행(기존 fixture, 재실행 없음; guard BYTE 는 명시 입력이며 실제 게임 heap 관측값이 아님)",
+      "consumers": [
+        "webpj/tests/minimap-blit-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/gump-draw.js",
+        "webpj/www/ui/minimap-geometry.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/GumpDraw.cpp",
+        "cpppj/src/client/GumpDraw.h",
+        "cpppj/src/client/MinimapGeometry.cpp",
+        "cpppj/src/client/MinimapGeometry.h"
+      ],
+      "doc": "docs/webpj-minimap-blit-native-fixtures-20261115.md",
+      "scope": "미니맵 블릿 계획(원점/소스 평면 주소/크기/카메라 외곽)과 GumpPixelTarget rawBitmap/linesClipped 의 전체 192×160 표면 바이트·할당 밖 소스 BYTE 읽기 주소 집합(40행)·클립 전역 불변",
+      "text": true,
+      "sha256": "7b6eec53b0d69a138b41d7d438bc04495b5b4b1e7ee438d96194fed2930497b3",
+      "bytes": 2431647,
+      "lines": 122,
+      "fixtureCommit": "e5a68d592",
+      "webCommit": "26f93a695",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpDraw.cpp": "d600aad52",
+        "cpppj/src/client/GumpDraw.h": "7838109ab",
+        "cpppj/src/client/MinimapGeometry.cpp": "560df210e",
+        "cpppj/src/client/MinimapGeometry.h": "560df210e"
       }
     }
   ]
