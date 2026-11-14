@@ -26,4 +26,6 @@
 
 ClientHtmlWindowGlobals의 `text`는 현재 기존 `createParserGlobals()` 객체다. 새 원문 처리기를 옮길 때 실제80BYTE 배경 저장소와 표시 이름 별칭을 공유하도록 바꾸고 관련 owner 검사를 함께 갱신한다. 앱의 기존 Unicode 경로는 RawMenuControls 결선 전까지 유지한다. 기준선 뒤 `1d5b1f437`의 사설4BYTE extendedText는 E269 정책에 따라 ① 웹 제외로 판정할 대상이다.
 
+**재개(2026-11-14):** 사용자의 `/goal` 재개 지시로 [E460 HtmlTextParser](webpj-html-text-parser-20261114.md)를 이어서 마쳤다(예비 초안은 쓰지 않고 기준선과 현재 계약을 다시 대조해 새로 작성).
+
 이 컴퓨터(HJOW-Athlon)의 `%TEMP%/netstorm-e460-html-text-parser.js`에 **미검증 예비 초안**만 있다. 저장소에 반영하거나 검사·커밋하지 않았다. 재개 때 초안의 존재를 전제로 삼지 말고 기준선과 현재 계약을 다시 대조한 뒤 사용한다. 인수인계의 기준은 이 문서와 커밋된 소스다.

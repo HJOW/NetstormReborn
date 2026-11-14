@@ -2,14 +2,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ClientHtmlWindowGlobals } from '../www/core/client-html-window-globals.js';
+import { bindHtmlBackground, htmlBackgroundName } from '../www/ui/html-text-parser.js';
 import { createRawHtmlFactoryServices, createRawHtmlMetadataServices, createRawHtmlWindowContext } from '../www/ui/raw-html-window-context.js';
 
-test('HTML 장기owner: 실제PE초기값과 같은window/Tell256BYTE/기존파서전역을 공유한다', () => {
+test('HTML 장기owner: 실제PE초기값과 같은window/Tell256BYTE/80BYTE배경 파서전역을 공유한다', () => {
     const owner = new ClientHtmlWindowGlobals(); const { window, tell, text } = owner;
     assert.deepEqual([window.instances, window.createdSerial, window.transientSerial, window.lastCloseTime, window.kind, window.enterEvent, window.clickEvent, window.tagEvent, window.closedEvent], [0, 0, 0, 0, 27, 0x02000038, 0x0200002c, 0x02000025, 0x020000be]);
-    assert.equal(tell.current.length, 256); assert.ok(tell.current.every((byte) => byte === 0)); assert.deepEqual(text, { suppressParagraph: 0, background: '' });
-    window.instances = 7; tell.current[3] = 0xa5; text.background = 'clouds'; text.suppressParagraph = 1; assert.equal(owner.window, window); assert.equal(owner.tell, tell); assert.equal(owner.text, text); assert.equal(owner.tell.current[3], 0xa5);
-    const next = new ClientHtmlWindowGlobals(); assert.notEqual(next.window, window); assert.equal(next.window.instances, 0); assert.equal(next.tell.current[3], 0); assert.equal(next.text.background, '');
+    assert.equal(tell.current.length, 256); assert.ok(tell.current.every((byte) => byte === 0)); assert.deepEqual(text, { suppressParagraph: 0, background: new Uint8Array(80) }); assert.equal(htmlBackgroundName(text), '');
+    window.instances = 7; tell.current[3] = 0xa5; const hooks = {}; bindHtmlBackground(hooks, text); hooks.background({}, 'clouds'); assert.equal(htmlBackgroundName(owner.text), 'clouds'); text.suppressParagraph = 1; assert.equal(owner.window, window); assert.equal(owner.tell, tell); assert.equal(owner.text, text); assert.equal(owner.tell.current[3], 0xa5);
+    const next = new ClientHtmlWindowGlobals(); assert.notEqual(next.window, window); assert.equal(next.window.instances, 0); assert.equal(next.tell.current[3], 0); assert.equal(htmlBackgroundName(next.text), ''); assert.notEqual(next.text.background, text.background); assert.equal(next.text.suppressParagraph, 0);
 });
 test('HTML 문맥: 장기owner/목록/고리는 공유하고서비스/명령/HTML콜백표는값복사한다', () => {
     const owner = new ClientHtmlWindowGlobals(); const ring = {}; const callback = () => 1; const metadata = { strings: ring, commands: { lookup: callback } }; const factory = { globals: owner.text, html: { command: callback } };

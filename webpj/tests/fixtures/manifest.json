@@ -20453,10 +20453,106 @@
       "bytes": 73191,
       "lines": 107,
       "fixtureCommit": "fd9438a28",
-      "webCommit": "worktree",
+      "webCommit": "4a9cc0f0c",
       "cpppjBasis": {
         "cpppj/src/client/HtmlWindowFactory.cpp": "1d5b1f437",
         "cpppj/src/client/HtmlWindowFactory.h": "1d5b1f437"
+      }
+    },
+    {
+      "id": "htmltext",
+      "path": "cpppj/tests/fixtures/htmltext-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E460",
+      "consumers": [
+        "webpj/tests/html-text-parser.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/html-text-parser.js",
+        "webpj/www/ui/html-text.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HtmlTextParser.cpp",
+        "cpppj/src/client/HtmlTextParser.h"
+      ],
+      "doc": "docs/webpj-html-text-parser-20261114.md",
+      "text": true,
+      "producer": "cpppj HtmlTextParserTests: 보호 원본 10.78 기본 HTML→StyleText 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "원본10.78 408행(originalCD 408행 제외)의 입력/용량/shown/hiddenDepth/P억제와 출력·커서·조건 상태 일곱 필드, link 저장소 null",
+      "sha256": "ae9353f6629cf35a0a9b081ecf3c1b6235a94d5ce4d460cff81196bf96f7c36b",
+      "bytes": 601657,
+      "lines": 817,
+      "fixtureCommit": "e62916335",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HtmlTextParser.cpp": "1d5b1f437",
+        "cpppj/src/client/HtmlTextParser.h": "1d5b1f437"
+      }
+    },
+    {
+      "id": "html-background",
+      "path": "cpppj/tests/fixtures/html-background-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E460",
+      "consumers": [
+        "webpj/tests/html-text-parser.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/html-text-parser.js",
+        "webpj/www/ui/html-text.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HtmlTextParser.cpp",
+        "cpppj/src/client/HtmlTextParser.h"
+      ],
+      "doc": "docs/webpj-html-text-parser-20261114.md",
+      "text": true,
+      "producer": "cpppj HtmlTextParserTests: 보호 원본 10.78 HTML 배경 전역 80BYTE 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "648행의 80BYTE 시작/최종 저장소·출력·커서·상태 일곱 필드(짧은 덮어쓰기의 뒤쪽 보존)",
+      "sha256": "44491cd8ae6b1a808f5bcd988dae69f4390700c00081a39815f8ac6c892bad6f",
+      "bytes": 266695,
+      "lines": 649,
+      "fixtureCommit": "fd89d7f1d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HtmlTextParser.cpp": "1d5b1f437",
+        "cpppj/src/client/HtmlTextParser.h": "1d5b1f437"
+      }
+    },
+    {
+      "id": "htmlpicture",
+      "path": "cpppj/tests/fixtures/htmlpicture-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E460",
+      "consumers": [
+        "webpj/tests/html-text-parser.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/html-text-parser.js",
+        "webpj/www/ui/html-text.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HtmlTextParser.cpp",
+        "cpppj/src/client/HtmlTextParser.h"
+      ],
+      "doc": "docs/webpj-html-text-parser-20261114.md",
+      "text": true,
+      "producer": "cpppj HtmlTextParserTests: 보호 원본 10.78 HTML 그림 helper/전체 순회 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "원본10.78 138행(originalCD 138행 제외)의 그림 helper 출력·커서·상태 일곱 필드",
+      "sha256": "123b57dcc7794d9c5dc0c5dc4fe21c57c0f0901da4f2a428fc08353721ee2f5c",
+      "bytes": 29056,
+      "lines": 277,
+      "fixtureCommit": "b67f807be",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HtmlTextParser.cpp": "1d5b1f437",
+        "cpppj/src/client/HtmlTextParser.h": "1d5b1f437"
       }
     }
   ]

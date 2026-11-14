@@ -6,12 +6,14 @@
 // 복원 기준: cpppj HtmlTextParser.cpp·HtmlWindowMetadata.cpp·HtmlWindowFactory.cpp(10.78 경로). 조건 태그 `<?`·그림 `<!`·링크 `<a>` 의 효과와 목록 메뉴 `@`·`#`·`%`·`*TECHLIST*` 등은 호출자가 훅으로 공급한다.
 // (2026-10-28 WB03-D: Tell 대화상자 본문을 처리하기 위해 추가)
 import { configParseLong } from '../assets/config.js';
+import { HtmlTextParser, htmlPictureText } from './html-text-parser.js';
 
 // 변환 결과 최대 길이(바이트)이다. 원본 출력 버퍼 8192바이트에서 NUL 자리를 뺀 한도로 쓴다. (2026-10-28 WB03-D)
 const OUTPUT_CAPACITY = 8192;
 
-// 평문 순회가 태그·마지막 LF 를 위해 남기는 출력 여유(바이트)이다. 출력이 (용량 - 256) 보다 길어지면 평문 처리를 멈춘다. (2026-10-28 WB03-D)
-const OUTPUT_RESERVE = 256;
+// 미공급 효과를 건너뛰는 기존 앱 경로의 빈 효과와 빈 문자열 효과다. (2026-11-14 WB04-E460)
+const NO_EFFECT = () => {};
+const EMPTY_TEXT = () => '';
 
 // 대화상자에 만들 수 있는 최대 버튼 수이다(원본 +0x20c4 의 20행 표). (2026-10-28 WB03-D)
 export const MAX_DIALOG_BUTTONS = 20;
@@ -44,150 +46,29 @@ export function createParserGlobals() {
     return { suppressParagraph: 0, background: '' };
 }
 
-// HTML 유사 본문을 StyleText 제어문자열로 바꾼다(원본 HtmlTextParser::Parse, 10.78 경로). 개행 문자는 평문 구분에 쓰고, 태그는 아래처럼 바뀐다.
+// HTML 유사 본문을 StyleText 제어문자열로 바꾼다(원본 HtmlTextParser::Parse, 10.78 경로). 실제 변환은 `html-text-parser.js` 의 HtmlTextParser 가 하며(2026-11-14 WB04-E460 위임),
+// 이 함수는 앱 기존 경로의 계약만 유지한다: 공급되지 않은 효과(command·condition·picture·link)는 건너뛰고, `<background>` 이름은 문자열 globals.background 에 남긴다(80BYTE 미만).
 //  `<br>` → LF, `<p>` → `~*` LF [+ 빈 줄], `<h1>` → `~N~4~E`, `<h2>` → `~N~3~E`, `<h3>` → `~N~5~B~E`, `</h?>` → `~*~N~.` LF, `<b>` → `~N~B`, `<i>` → `~N~j`,
 //  `<c>` → `~N~i`, `<q>` → `~N~q`, `</b>`·`</i>`·`</c>`·`</q>` → `~N` 또는 `~.`, `<a href>` → 링크 훅 + `~l~E`, `</a>` → 링크 훅 + `~N~.`, `<background="이름">` → 전역 이름 저장.
-// state 와 globals 는 호출자가 소유하고 hooks 는 선택 태그의 효과를 공급한다: { command, condition, picture, link, background }. 공급되지 않은 효과가 필요한 태그는 무시한다(호출자가 onUnsupported 로 알 수 있음).
-// 마지막에 LF 하나를 붙여 돌려준다. 출력이 용량을 넘으면 RangeError 를 던진다.
+// state 와 globals 는 호출자가 소유하고 hooks 는 선택 태그의 효과를 공급한다: { command, condition, picture, link, background, insideTag, beforeClose, afterTag }.
+// 마지막에 LF 하나를 붙여 돌려준다. 출력이 용량을 넘으면 RangeError 를 던진다. 원본처럼 효과 미연결을 거부하는 경로는 `HtmlTextParser` 를 직접 쓴다.
 // 사용: parseHtml('<h2>제목</h2>', state, globals, hooks) → '~N~3~E제목~*~N~.\n\n'. (2026-10-28 WB03-D)
 export function parseHtml(source, state, globals, hooks = {}, capacity = OUTPUT_CAPACITY) {
-    const text = source.includes('\0') ? source.slice(0, source.indexOf('\0')) : source;
-    state.inputOffset = 0;
-    state.output = '';
-    state.afterHeading = 0;
-    state.textAllowed = state.shown;
-    state.inTag = 0;
-
-    // 입력의 offset 위치 글자를 돌려준다(끝을 넘으면 NUL 로 취급한다).
-    const byteAt = (offset) => (offset < text.length ? text[offset] : '\0');
-    // 출력 뒤에 문자열을 붙인다(원본은 출력 버퍼 물리 한도에서 오버런하므로 여기서는 오류로 거부한다).
-    const append = (piece) => {
-        if (state.output.length + piece.length >= capacity) throw new RangeError('HTML 변환 출력이 버퍼 한도를 넘었습니다.');
-        state.output += piece;
+    // 기존 앱 경로는 미공급 효과를 조용히 건너뛴다. 원본 경로(HtmlTextParser)는 같은 분기에서 거부한다.
+    const adapted = {
+        ...hooks,
+        command: hooks.command ?? NO_EFFECT,
+        condition: hooks.condition ?? NO_EFFECT,
+        picture: hooks.picture ?? EMPTY_TEXT,
+        link: hooks.link ?? EMPTY_TEXT,
+        // 배경 이름은 문자열 전역에 남기고 80BYTE 이상이면 거부한다(원본 565e70 80BYTE NUL 범위).
+        background: (parserState, name) => {
+            if (name.length >= 80) throw new RangeError('HTML 배경 이름이 80바이트를 넘었습니다.');
+            globals.background = name;
+            hooks.background?.(parserState, name);
+        },
     };
-
-    // 태그 하나를 처리한다. offset 은 '<'(또는 닫는 태그의 '/') 다음 글자 위치다.
-    const tag = (offset, closing) => {
-        const rawFirst = byteAt(offset);
-        const first = rawFirst >= 'A' && rawFirst <= 'Z' ? rawFirst.toLowerCase() : rawFirst;
-        const second = byteAt(offset + 1);
-        const remaining = text.slice(Math.min(offset, text.length));
-        let result = '';
-        switch (first) {
-            case '!':
-                if (hooks.picture) append(hooks.picture(state, remaining));
-                break;
-            case '$':
-                hooks.command?.(state, remaining.slice(1));
-                break;
-            case '?':
-                hooks.condition?.(state, remaining, closing);
-                break;
-            case 'a':
-                if (closing) {
-                    if (hooks.link) append(hooks.link(state, '', true));
-                    result = '~N~.';
-                } else if (byteAt(offset + 2) === 'h') {
-                    if (hooks.link) append(hooks.link(state, remaining, false));
-                    result = '~l~E';
-                }
-                break;
-            case 'b':
-                if (second === 'r') {
-                    result = '\n';
-                    state.afterHeading = 0;
-                } else if (second === 'a') {
-                    // 배경 이름은 '=' 뒤 첫 따옴표를 건너뛰고 다음 따옴표·'>'·끝 앞까지다.
-                    const end = remaining.indexOf('>');
-                    const equal = remaining.indexOf('=');
-                    if (equal >= 0 && (end < 0 || equal < end)) {
-                        let start = equal + 1;
-                        if (remaining[start] === '"') start += 1;
-                        let finish = start;
-                        // 이름의 끝을 찾는다.
-                        while (finish < remaining.length && remaining[finish] !== '>' && remaining[finish] !== '"') finish += 1;
-                        const name = remaining.slice(start, finish);
-                        if (name.length >= 80) throw new RangeError('HTML 배경 이름이 80바이트를 넘었습니다.');
-                        globals.background = name;
-                        hooks.background?.(state, name);
-                    }
-                } else {
-                    result = closing ? '~N' : '~N~B';
-                }
-                break;
-            case 'c':
-                result = closing ? '~.' : '~N~i';
-                break;
-            case 'h':
-                if (closing) {
-                    result = '~*~N~.\n';
-                    state.afterHeading = 1;
-                } else if (second === '3') result = '~N~5~B~E';
-                else if (second === '1') result = '~N~4~E';
-                else if (second === '2') result = '~N~3~E';
-                else result = '~N~1~E';
-                break;
-            case 'i':
-                result = closing ? '~.' : '~N~j';
-                break;
-            case 'p':
-                if (globals.suppressParagraph) {
-                    globals.suppressParagraph = 0;
-                } else {
-                    result = state.afterHeading ? '~*\n' : '~*\n \n';
-                    state.afterHeading = 0;
-                }
-                break;
-            case 'q':
-                result = closing ? '~.' : '~N~q';
-                break;
-            case '~':
-                append('~');
-                if (second !== '\0') append(second);
-                break;
-            default:
-                break;
-        }
-        append(result);
-    };
-
-    // 입력을 한 글자씩 읽으며 태그·평문을 처리한다. 태그 훅이 바꾼 현재 위치는 다음 반복에서 다시 읽는다.
-    while (byteAt(state.inputOffset) !== '\0') {
-        const char = byteAt(state.inputOffset);
-        if (char === '<') {
-            state.inTag = 1;
-            if (!state.hiddenDepth && byteAt(state.inputOffset + 1) === 'a') state.textAllowed += 1;
-            const closing = byteAt(state.inputOffset + 1) === '/';
-            if (state.shown || (state.hiddenDepth && closing && byteAt(state.inputOffset + 2) === '?')) {
-                if (closing) {
-                    state.inputOffset += 1;
-                    if (byteAt(state.inputOffset + 1) === 'a') state.textAllowed -= 1;
-                    hooks.beforeClose?.(state, text);
-                }
-                tag(state.inputOffset + 1, closing);
-            }
-        } else if (char === '>') {
-            state.inTag = 0;
-            if (state.shown) hooks.afterTag?.(state, text);
-        } else if (!state.inTag) {
-            if (state.shown) {
-                if ((state.textAllowed | 0) < 1 || state.output.length > capacity - OUTPUT_RESERVE) break;
-                const code = char.charCodeAt(0);
-                if (code > 0x1f) {
-                    append(char);
-                    if (state.afterHeading) state.afterHeading = char === ' ' ? 1 : 0;
-                }
-                // 소스의 줄바꿈은 앞 글자가 공백·LF 가 아니면 공백 하나가 된다.
-                const last = state.output[state.output.length - 1];
-                if (char === '\n' && state.output.length > 0 && last !== ' ' && last !== '\n') append(' ');
-            }
-        } else {
-            hooks.insideTag?.(state, text);
-        }
-        state.inputOffset += 1;
-    }
-    append('\n');
-    return state.output;
+    return new HtmlTextParser(state, globals, adapted).parse(source, capacity);
 }
 
 // 링크 목적지 표이다(원본 HtmlLinkTextState 의 문자열 저장소). `<a href="...">` 를 만날 때마다 목적지를 등록하고 그 번호를 StyleText 태그 `~[T번호]` 로 본문에 넣는다.
@@ -224,24 +105,8 @@ export class LinkTable {
     }
 }
 
-// 그림 태그 `<!"이름.프레임">` 의 원문에서 StyleText 그림 명령 `~[I이름.프레임]` 을 만든다(원본 HtmlPictureText). 첫 따옴표 뒤부터 다음 따옴표·`>`·끝 앞까지를 그대로 옮기고 따옴표가 없으면 빈 `~[I]` 이다.
-// 사용: htmlPictureText('!"fortgump.3">') → '~[Ifortgump.3]'. (2026-10-30 WB03-G)
-export function htmlPictureText(raw) {
-    const source = raw.includes('\0') ? raw.slice(0, raw.indexOf('\0')) : raw;
-    let position = 0;
-    // 태그 이름 뒤 공백·속성을 해석하지 않고 첫 따옴표(또는 `>`)까지 간다.
-    while (position < source.length && source[position] !== '>' && source[position] !== '"') position += 1;
-    let result = '~[I';
-    if (position < source.length && source[position] === '"') {
-        position += 1;
-        // 따옴표 안은 다음 따옴표·`>` 에서 끝나며 이스케이프를 풀지 않는다.
-        while (position < source.length && source[position] !== '>' && source[position] !== '"') {
-            result += source[position];
-            position += 1;
-        }
-    }
-    return `${result}]`;
-}
+// 그림 태그 `<!"이름.프레임">` 의 원문에서 StyleText 그림 명령 `~[I이름.프레임]` 을 만든다(원본 HtmlPictureText). 구현은 `html-text-parser.js` 로 옮겼고 여기서는 같은 함수를 다시 내보낸다. (2026-10-30 WB03-G, 2026-11-14 WB04-E460)
+export { htmlPictureText };
 
 // 원본 토큰 읽기(공통 helper)이다. offset 부터 space·tab 만 건너뛴 뒤 delimiters 의 글자를 만나기 전까지(따옴표 안은 제외) 읽는다. 따옴표 글자는 출력하지 않고, 입력 한도는 78글자이며, 끝의 공백·탭은 첫 글자만 남기고 지운다.
 // 반환: { text, next }(next 는 읽은 뒤 구분자까지 건너뛴 위치). 사용: 조건 태그의 왼쪽·오른쪽 식을 읽는다. (2026-10-30 WB03-G)
