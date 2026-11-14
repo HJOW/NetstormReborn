@@ -697,3 +697,7 @@ cpppj/src/o/RawPlayerTechnology.cpp	Netstorm.Core/Original/RawPlayerTechnology.c
 cpppj/src/o/RawPlayerTechnology.h	Netstorm.Core/Original/RawPlayerTechnology.cs	f3a5c821f1fbff3cc1d0885730cba40a2709fbd4	L1
 cpppj/src/o/RawAiBrainInitialUpdate.cpp	Netstorm.Core/Original/RawAiBrainInitialUpdate.cs	efa953c41c6e53b21cfbea5ebd8948124d94edf1	L1
 cpppj/src/o/RawAiBrainInitialUpdate.h	Netstorm.Core/Original/RawAiBrainInitialUpdate.cs	efa953c41c6e53b21cfbea5ebd8948124d94edf1	L1
+cpppj/src/o/RawTypeRequiredEnergy.cpp	Netstorm.Core/Original/RawTypeRequiredEnergy.cs	4a7b305e63ef80897526addff45d0f785a0711db	L1
+cpppj/src/o/RawTypeRequiredEnergy.h	Netstorm.Core/Original/RawTypeRequiredEnergy.cs	4a7b305e63ef80897526addff45d0f785a0711db	L1
+cpppj/src/client/AiTypeRequiredEnergy.cpp	Netstorm.Client/Mission/AiTypeRequiredEnergy.cs	4a7b305e63ef80897526addff45d0f785a0711db	port
+cpppj/src/client/AiTypeRequiredEnergy.h	Netstorm.Client/Mission/AiTypeRequiredEnergy.cs	4a7b305e63ef80897526addff45d0f785a0711db	port
