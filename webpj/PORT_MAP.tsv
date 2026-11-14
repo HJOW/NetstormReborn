@@ -109,7 +109,7 @@ cpppj/src/client/EditorTestBattle.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/client/EmbeddedTell.cpp	port			todo	[client-default]
 cpppj/src/client/ExistingEditorAfterCheckpoint.cpp	exclude-edit			-	[edit-editor]
 cpppj/src/client/ExternalHelpClient.cpp	adapt			todo	[adapt-external] 3.1절 바깥 링크 새 탭/창 열기 미구현 항목(netstorm.js external 훅)으로 구현 예정
-cpppj/src/client/FloatingSpGump.cpp	port			todo	[client-default]
+cpppj/src/client/FloatingSpGump.cpp	port	www/ui/floating-sp-gump.js	1f00a25a	port	[client-default] WB04-E434 FloatingSpGump construct(한 줄 생성→가상 표/시각 0/가속도 float32/속도 0→Clear→서식 ~3~E~y<비용>~[IfortGump.3]→측정→idle→현재 시각/깊이)·show(new 0xb8·가속도 -2·객체 참조 시 (0,0)·루트 Attach mode 0)·idle(double 시각 차이·y float32·범위 이탈 x87 parity NaN 제외→idle 해제+Kill·속도 float32)·deleteScalar 이식. 전용 PE fixture 없음(소스 계약·손 계산); 기준선 뒤 변경 없음; 앱 비용 표시는 간소화판 그대로; 남음: RawMenuControls 허브 조립
 cpppj/src/client/FontCacheFile.cpp	adapt	www/assets/bitmap-font.js	1f00a25a	port	[adapt-file] WB04-E272: BitmapFont.parse 의 서명·버전 1·글자 수 256 판정을 font-cache-file-x86.tsv reader 시나리오로 대조, 서명 마지막 바이트 무시를 원문과 같게 수정. writer·부분 설치·FILE 효과열 웹 제외
 cpppj/src/client/FontFaceEncoding.cpp	exclude-host			-	[host-win32]
 cpppj/src/client/FortCurrentNameDevices.cpp	exclude-edit		a328ac1f	-	[edit-fort-name] 3.6①(a328ac1f): 원격 Fort 경로 조회 SelectRemoteFortPath 추가(MP)
@@ -230,7 +230,7 @@ cpppj/src/client/PriestPlacementAssets.cpp	port			todo	[client-default]
 cpppj/src/client/PriestSelectionShortcut.cpp	port	www/core/selection-shortcuts.js	1f00a25a	port	[client-default] WB04-E22: P/R 사제 선택 키(004d9884..004d98e1). fixture priest-selection-shortcut 10.78 220행 전부. ClientUserSelectionGlobals 수명 대조는 해당 단위에서
 cpppj/src/client/ProductionColorMaps.cpp	port	www/core/production-color-maps.js	1f00a25a	port	[client-default] WB04-E373: 생산 아이콘 비활성(빨강 2.1배 제곱 거리)·선행(0) 두 표 buildProductionColorMaps. fixture production-colors 10.78 3행 일치. 기준선 뒤 변경 없음
 cpppj/src/client/ProductionControlContext.h	port			todo	[client-default]
-cpppj/src/client/ProductionHintGump.cpp	port			todo	[client-default]
+cpppj/src/client/ProductionHintGump.cpp	port	www/ui/production-hint-gump.js	1f00a25a	port	[client-default] WB04-E434 ProductionHintGump construct(복제 소유·signed 종류 BYTE·문맥 [0,6,흰색,0,0,검정,1,1]·파싱·측정 6,4·idle·벽시계+4초)·show(두 번역 wrapper·기준 영역 float32 비트·flags 0x4000/0x8100·깊이 0xffffff9c·Attach y+20·마지막 serial)·idle(만료 <= 현재)·draw((3,2) 여백)·deleteScalar(소유 문자열 반납 뒤 TextGump 소멸) 이식. 전용 PE fixture 없음(소스 계약·손 계산); 기준선 뒤 변경 없음; 앱 생산 안내는 간소화판 그대로; 남음: RawMenuControls 허브 조립
 cpppj/src/client/ProductionShortcuts.cpp	port	www/core/production-shortcuts.js	1f00a25a	port	[client-default] WB04-E36: 생산 조각 문자 키 예약. fixture production-shortcuts 8040행 중 도달 4280행 전부(나머지 3760행은 도달 여부만). D/d 최근 항목은 계약 검사만
 cpppj/src/client/ProductPresentation.cpp	port	www/assets/product.js	1f00a25a	port	[client-default] WB03-AC 11.01 표시·세 번째 Credits
 cpppj/src/client/ProductVersion.h	port	www/assets/product.js	1f00a25a	port	[client-default] WB03-AC
