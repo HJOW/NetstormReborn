@@ -207,7 +207,8 @@ public sealed class RawSquidContainedUnpop
             PutLink(parent, 6, unchecked((ushort)next));
         }
 
-        _pool.AllocatedBytes(sid)[RawSidPool.StateOffset] &= unchecked((byte)~ContainedBit);
+        // 복귀 진단 뒤 free/SID0도 원문 LinkRaw처럼 같은 물리 상태 BYTE만 쓴다.
+        _pool.RawSlot(sid)[RawSidPool.StateOffset] &= unchecked((byte)~ContainedBit);
         if (_pool.Slot(sid)[RawSidPool.TypeOffset] > LastForm || _pool.Slot(sid)[RawSidPool.TypeOffset] == _state.ContentFormType!.Value)
         {
             Need(_hooks.ParentNotice)(parent, sid, 2u);

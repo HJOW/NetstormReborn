@@ -464,8 +464,8 @@ public sealed partial class SquidProcessHost
         using var call = new RuntimeCallGuard(_currentRuntime?.Invoke());
         RawSquidFactory? factory = FormFactory();
         if (factory is not null) { factory.UnpopForm(form); return; }
-        // 독립 Host는 기존 공통 Form 해제를 사용한다. Form 복귀 진단 장치의 추가 이식은 별도다.
-        new RawSquidForms(_pool).Unpop(form);
+        // 독립 Host도 같은 원문 복귀 진단을 공통 Form 해제에 전달한다.
+        new RawSquidForms(_pool, unpop: new FormUnpopHooks { Assertion = _state.Assertion }).Unpop(form);
     }
 
     /// <summary>원본 004ae140의 권한·번호 관문을 지나 공통 삭제로 프로세스를 지운다. 2026-11-07 F2d 프로세스 호스트 삭제 본체 이식에서 추가됐다.</summary>

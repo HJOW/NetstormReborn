@@ -343,4 +343,8 @@
     <None Include="../../../cpppj/tests/fixtures/burning-archer-capture-x86.tsv" Link="X86/burning-archer-capture-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/render-frame-gate-x86.tsv" Link="X86/render-frame-gate-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 공통 Form 해제의 복귀 진단·현재 부모·void 쓰기를 실제 PE 관측에 대조한다. -->
+    <None Include="../../../cpppj/tests/fixtures/form-unpop-current-x86.tsv" Link="X86/form-unpop-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

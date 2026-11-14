@@ -235,10 +235,15 @@ public sealed class X86RawSquidFormsTests
         Put(pool, parent, 6, (uint)form);
         Put(pool, form, 16, (uint)parent);
         pool.AllocatedBytes(form)[RawSidPool.StateOffset] = 8;
-        string before = Convert.ToHexStringLower(pool.Slot(form));
-        // 알림 경계가 없으면 Take 는 슬롯을 바꾸기 전에 거부한다
+        byte[] before = pool.Slot(form).ToArray();
+        // 현행 원본은 알림 누락 전 void/contained와 부모 머리 쓰기를 이미 완료한다.
         Assert.Throws<InvalidOperationException>(() => plain.Take(6, form));
-        Assert.Equal(before, Convert.ToHexStringLower(pool.Slot(form)));
+        before[RawSidPool.StateOffset] = 4;
+        Assert.Equal(before, pool.Slot(form).ToArray());
+        Assert.Equal(0, pool.Slot(parent)[6] | (pool.Slot(parent)[7] << 8));
+        // 다음 독립 입력은 이미 부착된 단일 ContentForm으로 다시 공급한다.
+        pool.RawSlot(form)[RawSidPool.StateOffset] = 8;
+        Put(pool, parent, 6, (uint)form);
         uint notices = 0;
         var bound = new RawSquidForms(pool, (notifiedParent, notifiedForm) =>
         {

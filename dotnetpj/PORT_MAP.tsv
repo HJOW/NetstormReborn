@@ -868,3 +868,6 @@ cpppj/src/o/SquidDestroyLifecycle.h	Netstorm.Core/Original/CampaignWorldGlobals.
 cpppj/src/o/SquidFormDispatch.h	Netstorm.Core/Original/RawSquidFormDispatch.cs	541624a91439623c5faeaf8fcc4b6283e93bbb0a	port
 cpppj/src/o/SquidProcess.h	Netstorm.Core/Original/RawSquidProcessHost.Devices.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port
 cpppj/src/o/SquidProcess.cpp	Netstorm.Core/Original/RawSquidProcessHost.Devices.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port
+cpppj/src/o/SquidForms.h	Netstorm.Core/Original/RawSquidForms.cs	09ad72b071d7864e114f671b82ec5067cbb01c62	port
+cpppj/src/o/SquidForms.cpp	Netstorm.Core/Original/RawSquidForms.Unpop.cs	09ad72b071d7864e114f671b82ec5067cbb01c62	L1
+cpppj/src/o/SquidForms.h	Netstorm.Core/Original/RawSquidForms.Unpop.cs	09ad72b071d7864e114f671b82ec5067cbb01c62	port

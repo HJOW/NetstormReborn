@@ -8,11 +8,19 @@ public sealed class FormUnpopHooks
     /// <summary>void 설정·부모 free 관문 뒤 실제 공통 종속 분리만 실행한다. null이면 기본 종속 분리를 쓴다. 2026-11-07 F2d Host 분리 종단 이식에서 추가됐다.</summary>
     public Action<int>? Detach { get; set; }
 
+    /// <summary>복귀 진단 뒤 선택한 현재 VT+0의 실제 부모 getter다.</summary>
+    public Func<int, uint, int>? Parent { get; set; }
+
+    /// <summary>원문 식/파일/줄을 전달하고 정상 복귀하면 현재 물리에서 계속한다.</summary>
+    public Action<string, string, uint>? Assertion { get; set; }
+
     /// <summary>현재 훅 묶음의 얕은 사본을 만든다. 2026-11-07 F2d Host 분리 종단 이식에서 추가됐다.</summary>
     /// <returns>복사된 훅 묶음이다.</returns>
     public FormUnpopHooks Clone() => new()
     {
         Detach = Detach,
+        Parent = Parent,
+        Assertion = Assertion,
     };
 }
 
@@ -21,17 +29,20 @@ public sealed class FormUnpopHooks
 /// 공통 Pop/Unpop 을 같은 raw 슬롯 풀에 옮긴 몸체 (004af530·004af610·004ac560·004ae140, CD 004ab390·004ab440·004abfb0·004af270).
 /// 부모 제거를 요청하는 ContentForm 은 <c>notice</c> 경계로, 서버 Pop 전송은 <c>transmit</c> 경계로 알린다.
 /// 두 경계가 없으면 원본이 요구하는 시점에 예외를 내고 슬롯을 바꾸지 않는다.
-/// 이 몸체는 상태 변경 전에 모든 계약을 검사하므로 잘못된 입력에서도 풀이 부분 변경되지 않는다.
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 가상 표 값과 Pop/Unpop 의 분기 순서가 달라 옮기지 않았다).
+/// 공통 Unpop은 원문 진단 복귀와 부분 효과를 보존한다. 다른 직접 편의 경로의 선검사는 별도다.
+/// 공통 Unpop/가상 표는 PATCH·CD를 구별한다. 전체 CD 게임/편의 부착 복원은 별도다.
 /// 근거: cpppj/src/o/SquidForms.cpp (W03 삭제·수명 열한째 조각, 2026-10-22).
 /// </summary>
-public sealed class RawSquidForms
+public sealed partial class RawSquidForms
 {
     /// <summary>지원하는 내장 Form 타입 번호 네 개. 이 밖의 생성자는 자산 factory 의 책임이다.</summary>
     private static readonly uint[] Types = [1, 2, 3, 6];
 
     /// <summary>10.78 생성자가 슬롯 +0 에 기록하는 가상 표 값(타입 1·2·3·6 순서).</summary>
     private static readonly uint[] PatchVtables = [0x512110, 0x512098, 0x512188, 0x512208];
+
+    /// <summary>CD 네 Form 생성자의 실제 VT DWORD다. 타입 순서는 PATCH와 같다.</summary>
+    private static readonly uint[] CdVtables = [0x505a08, 0x505990, 0x505a80, 0x505b00];
 
     /// <summary>슬롯 안 다음 종속 번호(16비트)의 위치.</summary>
     private const int NextOffset = 4;
@@ -140,7 +151,7 @@ public sealed class RawSquidForms
     /// 타입의 생성자가 기록하는 10.78 가상 표 값을 돌려준다. 지원하지 않는 타입은 슬롯을 바꾸기 전에 예외다.
     /// </summary>
     /// <param name="type">내장 Form 타입 번호.</param>
-    private static uint Vtable(uint type)
+    private uint Vtable(uint type)
     {
         // 고정된 네 타입만 이 몸체가 만들 수 있다
         int index = Array.IndexOf(Types, type);
@@ -148,12 +159,20 @@ public sealed class RawSquidForms
         {
             throw new ArgumentOutOfRangeException(nameof(type), type, "미복원 내장 Form 생성자 타입");
         }
-        return PatchVtables[index];
+        return (_pool.Edition == OriginalEdition.Patch1078 ? PatchVtables : CdVtables)[index];
     }
 
     /// <summary>지원 내장 타입의 생성자가 쓰는 판본별 실제 가상 표 기록값이다. Host 부착의 테이블 분기에서 쓴다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
     /// <param name="type">내장 Form 타입 번호.</param>
-    internal static uint VtableFor(uint type) => Vtable(type);
+    internal static uint VtableFor(uint type)
+    {
+        int index = Array.IndexOf(Types, type);
+        if (index < 0) throw new ArgumentOutOfRangeException(nameof(type));
+        return PatchVtables[index];
+    }
+
+    /// <summary>원문 cdecl 생성자의 실제 DWORD 하나만 지정 물리에 쓴다. 타입/할당/상태는 바꾸지 않는다.</summary>
+    public void ConstructVtableAt(uint type, int sid) => Put(sid, 0, Vtable(type), 4);
 
     /// <summary>
     /// 원본의 정렬되지 않은 WORD/DWORD 를 낮은 바이트부터 읽는다.
@@ -199,17 +218,12 @@ public sealed class RawSquidForms
     private ReadOnlySpan<byte> Form(int sid)
     {
         ReadOnlySpan<byte> raw = _pool.Slot(sid);
-        uint type = raw[TypeOffset];
         if (sid < FirstOrdinary || (raw[StateOffset] & FreeBit) != 0)
-        {
             throw new InvalidOperationException("Form 슬롯 상태 오류");
-        }
-        uint constructorType = type >= ProcessFirst && type < PatchProcessEnd ? ProcessForm : type;
-        if (Read(sid, 0, 4) != Vtable(constructorType))
-        {
-            throw new InvalidOperationException("Form 가상 표 미복원");
-        }
-        return raw;
+        uint table = Read(sid, 0, 4);
+        // 변경 가능한 TYPE 별칭과 독립적으로 실제 네 생성자의 VT만 확인한다.
+        foreach (uint type in Types) if (table == Vtable(type)) return raw;
+        throw new InvalidOperationException("Form 가상 표 미복원");
     }
 
     /// <summary>
@@ -500,85 +514,4 @@ public sealed class RawSquidForms
         Put(sid, offset, (uint)previous, 2);
     }
 
-    /// <summary>
-    /// 공통 Form Unpop. void 를 켜고, 부모가 free 면 링크를 보존한 채 돌아가며, dead 면 체인을 건드리지 않고 끝낸다.
-    /// 살아 있는 부모에서 빠진 ContentForm 만 부모 제거 알림을 보낸다.
-    /// </summary>
-    /// <param name="form">해제할 Form 번호.</param>
-    public void Unpop(int form)
-    {
-        ReadOnlySpan<byte> raw = Form(form);
-        if ((raw[StateOffset] & VoidBit) != 0)
-        {
-            throw new InvalidOperationException("void Form Unpop 금지");
-        }
-        int parent = Parent(form);
-        if (parent == 0 || parent >= _pool.Capacity)
-        {
-            throw new InvalidOperationException("Form 부모 번호 오류");
-        }
-        byte parentState = _pool.Slot(parent)[StateOffset];
-        bool notify = raw[TypeOffset] == ContentForm && (parentState & (FreeBit | DeadBit)) == 0;
-        if (notify && _notice is null)
-        {
-            throw new InvalidOperationException("ContentForm 부모 제거 알림 미연결");
-        }
-        _pool.RawSlot(form)[StateOffset] |= VoidBit;
-        if ((parentState & FreeBit) != 0)
-        {
-            return;
-        }
-        // 바인딩된 분리는 기본 종속 분리 대신 실제 공통 분리만 실행한다 (원문 detach 분기).
-        // 근거: cpppj/src/o/SquidForms.cpp Unpop (F2d Host 분리 종단, 2026-11-07).
-        Action<int>? detach = _boundUnpop?.Detach;
-        if (detach is not null)
-        {
-            detach(form);
-            return;
-        }
-        if ((_pool.RawSlot(form)[StateOffset] & ContainedBit) == 0)
-        {
-            throw new InvalidOperationException("Form contained 누락");
-        }
-        if ((parentState & DeadBit) != 0)
-        {
-            return;
-        }
-        int next = (int)(ushort)Read(form, NextOffset, 2);
-        int previous = Previous(form);
-        // 손상 번호는 배열 밖 쓰기 전에 거부한다
-        foreach (int neighbor in new[] { next, previous })
-        {
-            if (neighbor != 0 && (neighbor < FirstOrdinary || neighbor >= _pool.Capacity || neighbor == form
-                || (_pool.Slot(neighbor)[StateOffset] & FreeBit) != 0))
-            {
-                throw new InvalidOperationException("Form 이웃 링크 오류");
-            }
-        }
-        if (previous != 0 && previous == next)
-        {
-            throw new InvalidOperationException("Form 종속 체인 순환");
-        }
-        if (previous != 0)
-        {
-            Put(previous, NextOffset, (uint)next, 2);
-        }
-        if (next != 0)
-        {
-            SetPrevious(next, previous);
-        }
-        if (Read(parent, HeadOffset, 2) == (uint)form)
-        {
-            if (previous != 0)
-            {
-                throw new InvalidOperationException("Form 머리 이전 항목 오류");
-            }
-            Put(parent, HeadOffset, (uint)next, 2);
-        }
-        _pool.RawSlot(form)[StateOffset] &= unchecked((byte)~ContainedBit);
-        if (notify)
-        {
-            _notice!(parent, form);
-        }
-    }
 }

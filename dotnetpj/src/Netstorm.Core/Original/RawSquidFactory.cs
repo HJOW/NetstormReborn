@@ -321,14 +321,9 @@ public sealed partial class RawSquidFactory
     /// <param name="sid">해제할 Form 번호다.</param>
     public void UnpopForm(int sid)
     {
-        var forms = new RawSquidForms(_pool);
-        if (_formDetach is not null)
-        {
-            Action<int> detach = _formDetach;
-            forms.BindUnpop(new FormUnpopHooks { Detach = detach });
-        }
-
-        forms.Unpop(sid);
+        // 실제 공장의 현재 진단과 같은 종속 분리 장치를 한 호출의 함수 사본으로 빌린다.
+        var hooks = new FormUnpopHooks { Detach = _formDetach, Assertion = _diagnostics?.Assertion };
+        new RawSquidForms(_pool, unpop: hooks).Unpop(sid);
     }
 
     /// <summary>실제 현재 진단·깊이를 같은 호출 수명으로 빌려 직접 Pop 한다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
