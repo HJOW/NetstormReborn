@@ -1,5 +1,5 @@
 // 문자 편집 버퍼(TextEntryBuffer)의 구성/선택/삽입/줄 offset/복사/clipboard 를 기준선 소스 계약과 손 계산 값으로 검증한다. (2026-11-14 WB04-E438)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(TextEntryBuffer.cpp)에서 옮겼다. 메모리는 실제 TextEntryStorage 위에서 확인하고 실패 분기는 훅을 바꿔 만든다.
+// 이 파일의 수치는 기준선 소스 계약과 손 계산이다. 원본 직접 관측 570행은 tests/text-entry-native-fixtures.test.mjs(2026-11-15 WB04-E481)가 대조한다. 순서/경계는 기준선 소스(TextEntryBuffer.cpp)에서 옮겼다. 메모리는 실제 TextEntryStorage 위에서 확인하고 실패 분기는 훅을 바꿔 만든다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { TextEntryBuffer, TextEntryBufferState } from '../www/ui/text-entry-buffer.js';

@@ -22061,6 +22061,37 @@
         "cpppj/src/client/ClientDotCommandGlobals.cpp": "14ec2759c",
         "cpppj/src/client/ClientDotCommandGlobals.h": "14ec2759c"
       }
+    },
+    {
+      "id": "text-entry-buffer",
+      "path": "cpppj/tests/fixtures/text-entry-buffer-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E481",
+      "producer": "cpppj TextEntryBufferTests: 보호 원본 10.78 문자 편집 버퍼 13개 진입의 독립 x86 관측 570행(285입력 × 두 정밀도, 기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/text-entry-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/text-entry-buffer.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/TextEntryBuffer.cpp",
+        "cpppj/src/client/TextEntryBuffer.h"
+      ],
+      "doc": "docs/webpj-text-entry-native-fixtures-20261115.md",
+      "scope": "문자 편집 버퍼 13개 진입의 현재 10DWORD·할당 블록 전체(가드/반납 포함)·출력 2048바이트·선택 쌍·clipboard 출력·외부 호출 순서·반환·부분 중단(10행)",
+      "text": true,
+      "sha256": "aa792a6af93d503c2236c378936bd74f6ae2d300b28974e48c4f40d55a7f4109",
+      "bytes": 3995336,
+      "lines": 571,
+      "fixtureCommit": "e5a68d592",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/TextEntryBuffer.cpp": "1d5b1f437",
+        "cpppj/src/client/TextEntryBuffer.h": "1d5b1f437"
+      }
     }
   ]
 }

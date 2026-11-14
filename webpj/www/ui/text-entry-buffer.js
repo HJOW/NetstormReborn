@@ -1,7 +1,7 @@
 // 원본 0x28바이트 문자 편집 버퍼(TextEntryBuffer)를 StyleTextBuffer 와 구별해 옮긴다(원문 00451a80/00451680/004516c0/00451710/00451930/00451550/00451950~00451990/004518f0/004518c0/00451b10/00451800,
 // cpppj client/TextEntryBuffer.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 본문/줄 offset 배열은 같은 가상 주소 공간의 DWORD 주소(토큰)이며 주소+내부 offset 합산을 허용한다. 할당/해제/재할당/주소 조회/clipboard 는 호스트 훅이고(보통 TextEntryStorage),
-// 이 클래스는 원문의 부분 실패·현재 재조회·선택·LF 줄 offset 규칙만 가진다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다).
+// 이 클래스는 원문의 부분 실패·현재 재조회·선택·LF 줄 offset 규칙만 가진다. 원본 10.78 독립 관측 570행은 tests/text-entry-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E481 연결, 첫 실행 전체일치).
 // 기준선 뒤 변경(3.6절): cpppj 작업본의 6차 한국어 확장 표시 토큰 분기(Paste 의 maxLength·DisplayTextInput 경로)는 기준선에 없고 웹은 UTF-16 문자열을 쓰므로 이식하지 않는다(이식 범위 밖, 기준선 Paste 만).
 // 사용: const state = new TextEntryBufferState(); const buffer = new TextEntryBuffer(state, { allocate, release, resize, bytes, clipboardRead, clipboardWrite }); buffer.construct(); buffer.insert('hello'); buffer.text() === 'hello'.
 // (2026-11-14 WB04-E438: RawMenuControls 선행 문자 편집 버퍼 이식)
