@@ -482,7 +482,7 @@ cpppj/src/o/RawSnart.cpp	Netstorm.Core/Original/RawSnart.cs	d48ea75609a1fe57db3a
 cpppj/src/o/RawSnart.h	Netstorm.Core/Original/RawSnart.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
 cpppj/src/o/RawSoloMapList.cpp	Netstorm.Core/Original/RawSoloMapList.cs	fdb9a2b9b03f78b84af763aea51fe9a333f6dc20	L1
 cpppj/src/o/RawSoloMapList.h	Netstorm.Core/Original/RawSoloMapList.cs	fdb9a2b9b03f78b84af763aea51fe9a333f6dc20	L1
-cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSquidDestroy.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
+cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSquidDestroy.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	L1
 cpppj/src/o/RawSquidDestroyDispatch.cpp	Netstorm.Core/Original/RawSquidDestroyDispatch.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidFinder.cpp	Netstorm.Core/Original/RawFinder.cs	7b854b6513ee1b933681d4651b2707a9631a7147	L1
 cpppj/src/o/RawSquidHitPoints.cpp	Netstorm.Core/Original/RawSquidHitPoints.cs	552656c0c8bb46b48637b26a1acb59213edc1de1	L1
@@ -860,3 +860,6 @@ cpppj/src/client/RawCampaignParticles.h	Netstorm.Client.Host/HostMissionBurning.
 cpppj/src/client/RawCampaignParticles.cpp	Netstorm.Client.Host/HostMissionBurning.cs	247855746f40366e6c45c9c2b97dc378f0cb8bf8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client.Host/HostMissionBurning.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/SquidRenderer.cpp	Netstorm.Client.Host/TerrainDisplayShapes.cs	aa506ebb8d367ea74a97baf71c800546f8713606	port
+cpppj/src/o/RawSquidDestroy.h	Netstorm.Core/Original/RawSquidDestroy.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port
+cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSquidDestroy.Patch.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	L1
+cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSidPool.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	L1

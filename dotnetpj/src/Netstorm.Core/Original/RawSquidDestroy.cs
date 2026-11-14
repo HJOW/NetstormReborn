@@ -37,7 +37,7 @@ public readonly record struct SquidDestroyEvent(SquidDestroyEffect Effect, int S
 
 /// <summary>
 /// 삭제 본체가 바깥에 요구하는 콜백 묶음(원본 SquidDestroyHooks).
-/// Emit·Selected 는 반드시 있어야 하며, 자산 밖 Form 뿌리(타입 70 미만)는 UnpopForm 도 있어야 한다.
+/// Emit과선택함수(Selected/SelectedRaw중하나)는있어야하며, 자산밖Form뿌리는UnpopForm도필요하다.
 /// </summary>
 public sealed class SquidDestroyHooks
 {
@@ -49,6 +49,22 @@ public sealed class SquidDestroyHooks
 
     /// <summary>자산 밖 Form 뿌리(타입 70 미만)의 공간 해제(vtable +0x48). 자산 뿌리는 쓰지 않는다.</summary>
     public Action<int>? UnpopForm { get; set; }
+
+    /// <summary>현재전체선택DWORD다. 비어있으면기존Selected/SID함수를사용하며두진입모두상위비트를보존한다.</summary>
+    public Func<uint>? SelectedRaw { get; set; }
+}
+
+/// <summary>실제 PATCH 공통삭제가 선택 위치에서 읽는 진단·원문로그·최초비용표 장치다.</summary>
+public sealed class SquidDestroyDiagnostics
+{
+    /// <summary>원문 식/파일/줄을 보고하며 정상복귀하면 같은 삭제를 계속한다.</summary>
+    public Action<string, string, uint>? Assertion { get; set; }
+    /// <summary>현재TYPE 이름으로 만든level0x27의 삭제문장을 기록한다.</summary>
+    public Action<int, string>? Trace { get; set; }
+    /// <summary>World보다 오래 사는 최초 로딩 비용 입력이다. 비어 있으면 기존독립비용표를 쓴다.</summary>
+    public IReadOnlyList<OriginalTypeRecord>? LoadedCostTypes { get; set; }
+    /// <summary>함수는 값사본으로 보관하고 비용표의 같은 저장소를 빌린다.</summary>
+    internal SquidDestroyDiagnostics Copy() => new() { Assertion = Assertion, Trace = Trace, LoadedCostTypes = LoadedCostTypes };
 }
 
 /// <summary>
@@ -58,8 +74,30 @@ public sealed class SquidDestroyHooks
 /// 기준 판본은 10.78 뿐이다(CD 10.72 는 주소·분기 위치가 달라서 옮기지 않았다).
 /// 근거: cpppj/src/o/RawSquidDestroy.cpp (W03 삭제·수명 첫 조각, 2026-10-21).
 /// </summary>
-public sealed class RawSquidDestroy
+public sealed partial class RawSquidDestroy
 {
+    /// <summary>명시연결한 실제PATCH 경로이며 독립typed/CD진입과 구별한다.</summary>
+    private SquidDestroyDiagnostics? _patchDiagnostics;
+    /// <summary>공통수명주기가 실제현재TYPE/진단 경로를 선택하는지 확인한다.</summary>
+    public bool HasPatchDiagnostics => _patchDiagnostics is not null;
+    /// <summary>현재 공통월드의같은TYPE입력 뷰다. 호출자가 더 오래 소유해야 한다.</summary>
+    public IReadOnlyList<OriginalTypeRecord> Types => _types;
+    /// <summary>현재비용과다른 최초비용캐시 입력을 공통삭제부모가 빌린다.</summary>
+    internal IReadOnlyList<OriginalTypeRecord> LoadedCostTypes => _patchDiagnostics?.LoadedCostTypes ?? [];
+
+    /// <summary>실제PATCH에서만 원문진단 경로를 연결하며 현재게임/슬롯/난수를 조회하지 않는다.</summary>
+    public void BindPatchDiagnostics(SquidDestroyDiagnostics diagnostics)
+    {
+        ArgumentNullException.ThrowIfNull(diagnostics);
+        if (_pool.Edition != OriginalEdition.Patch1078) throw new ArgumentException("PATCH 공통 삭제 진단 판본 불일치");
+        _patchDiagnostics = diagnostics.Copy();
+    }
+    /// <summary>현재 선택한 진단함수의 수명을 복사해 콜백의 자기연결교체 중에도 호출을 마친다.</summary>
+    internal void AssertPatch(string expression, uint line, string file = @"\Ns\O\Squid.cpp")
+    {
+        Action<string, string, uint> assertion = _patchDiagnostics?.Assertion ?? throw new InvalidOperationException("PATCH 공통 삭제의 현재 진단 장치 미연결");
+        assertion(expression, file, line);
+    }
     /// <summary>슬롯 안 다음 번호(16비트)의 위치. 종속 체인의 머리·다음을 읽는다.</summary>
     private const int NextOffset = 4;
 
@@ -192,6 +230,7 @@ public sealed class RawSquidDestroy
     public void Destroy(int sid, uint flags, SquidDestroyHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(hooks);
+        if (HasPatchDiagnostics) { DestroyPatch(sid, flags, hooks); return; }
         if (sid < FirstOrdinary || sid == RawSidPool.PredictableFirst || sid >= _pool.Capacity)
         {
             throw new ArgumentOutOfRangeException(nameof(sid), sid, "삭제 번호가 풀 범위를 벗어났습니다");
@@ -206,7 +245,7 @@ public sealed class RawSquidDestroy
         {
             throw new InvalidOperationException("삭제 뿌리 상태 오류(빈·타입·Form·내용물)");
         }
-        if (hooks.Emit is null || hooks.Selected is null)
+        if (hooks.Emit is null || (hooks.Selected is null && hooks.SelectedRaw is null))
         {
             throw new ArgumentException("삭제 효과 콜백이 연결되지 않았습니다", nameof(hooks));
         }
@@ -256,7 +295,7 @@ public sealed class RawSquidDestroy
         {
             hooks.Emit(new SquidDestroyEvent(SquidDestroyEffect.Transmit, sid, 0, flags | ServerFlag));
         }
-        if (hooks.Selected() == sid)
+        if ((hooks.SelectedRaw is { } selectedRaw ? selectedRaw() : unchecked((uint)hooks.Selected!())) == (uint)sid)
         {
             hooks.Emit(new SquidDestroyEvent(SquidDestroyEffect.ClearSelection, sid, 0, 0));
         }

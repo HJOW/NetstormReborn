@@ -266,6 +266,24 @@ public sealed class RawSidPool
         _bytes[offset + StateOffset] = FreeBit | DeadBit;
     }
 
+    /// <summary>실제PATCH 삭제의void/free·현재tail 단언복귀 뒤 같은기록/FIFO/슬롯을 반납한다. 독립Release의선검사는 유지한다.</summary>
+    internal void ReleasePatch(int sid, Action<string, string, uint> assertion)
+    {
+        if ((_bytes[Offset(sid) + StateOffset] & VoidBit) == 0) assertion("p->isVoid()", @"\Ns\O\Squid.cpp", 0x15c);
+        if ((_bytes[Offset(sid) + StateOffset] & FreeBit) != 0) assertion("!p->isFree()", @"\Ns\O\Squid.cpp", 0x15d);
+        Record(sid, _bytes[Offset(sid) + TypeOffset]);
+        byte type = _bytes[Offset(sid) + TypeOffset]; int offset = Offset(sid);
+        Array.Clear(_bytes, offset, Stride); _bytes[offset + TypeOffset] = type;
+        if (!IsServer && sid >= ServerFirst) { _bytes[offset + StateOffset] |= FreeBit; return; }
+        if (sid >= FirstOrdinary && sid < PredictableFirst)
+        {
+            int list = sid < ServerFirst ? 0 : 1; ushort tail = _tails[list];
+            if (tail == sid) assertion("n != getSid()", @"c:\ns\o\squid.h", 0x123);
+            WriteNext(Offset(tail), (ushort)sid); _tails[list] = (ushort)sid; WriteNext(Offset(sid), 0); FreeCount++;
+        }
+        _bytes[Offset(sid) + StateOffset] |= FreeBit | DeadBit;
+    }
+
     /// <summary>
     /// 서버 영역의 빈 번호를 번호순으로 다시 잇는다(원본 004abe00). 빈 번호 카운터는 다시 세지 않고 빈 서버 번호 수를 더한다.
     /// </summary>

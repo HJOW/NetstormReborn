@@ -358,10 +358,17 @@ public sealed class X86RawDestroyTests
     /// <summary>한 행을 재생하고 효과·슬롯·요약을 대조한다. 다리 행은 다리 장면으로 만든다.</summary>
     /// <param name="row">fixture 행(10칸).</param>
     /// <param name="bridgeMode">다리 장면인지.</param>
-    private static void PlayRow(string[] row, bool bridgeMode)
+    /// <param name="native">동일원본입력을명시PATCH진단경로로실행할지다.</param>
+    private static void PlayRow(string[] row, bool bridgeMode, bool native)
     {
         Assert.Equal(10, row.Length);
         var scene = new Scene(row[3] == "1", X86Fixture.Int(row[4]), X86Fixture.Int(row[6]), bridgeMode);
+        if (native) scene.Destroy.BindPatchDiagnostics(new()
+        {
+            // 기존원본fixture는진단/trace를출력에포함하지않는다. 이장치만명시대체하고삭제본체는재생한다.
+            Assertion = static (_, _, _) => { },
+            Trace = (level, text) => { Assert.Equal(0x27, level); Assert.StartsWith("destroying ", text); },
+        });
         scene.Destroy.Destroy(scene.Root, X86Fixture.UInt(row[5]), scene.Hooks);
         Assert.Equal(row[7], scene.EventText());
         string[] slots = row[8].Split(';');
@@ -396,8 +403,10 @@ public sealed class X86RawDestroyTests
     /// 삭제 fixture 의 10.78 Destroy 몫 600회를 재생한다.
     /// 호출마다 효과 순서·슬롯 바이트·풀 카운터·머리·꼬리·체크섬·고른 번호·깊이를 대조한다.
     /// </summary>
-    [Fact]
-    public void DestroyMatchOriginalX86()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void DestroyMatchOriginalX86(bool native)
     {
         string[][] rows = X86Fixture.Read("destroy");
         int count = 0;
@@ -407,7 +416,7 @@ public sealed class X86RawDestroyTests
             {
                 return true;
             }
-            PlayRow(row, false);
+            PlayRow(row, false, native);
             count++;
             return true;
         });
@@ -418,8 +427,10 @@ public sealed class X86RawDestroyTests
     /// 삭제 fixture 의 10.78 Bridge 몫 64회를 다리 수명주기와 이어 재생한다.
     /// 연결 끊기·제거 알림·추락 소리·보행자 추락·공통 사전·사후의 순서와 슬롯·요약을 대조한다.
     /// </summary>
-    [Fact]
-    public void BridgeMatchOriginalX86()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void BridgeMatchOriginalX86(bool native)
     {
         string[][] rows = X86Fixture.Read("destroy");
         int count = 0;
@@ -429,7 +440,7 @@ public sealed class X86RawDestroyTests
             {
                 return true;
             }
-            PlayRow(row, true);
+            PlayRow(row, true, native);
             count++;
             return true;
         });
