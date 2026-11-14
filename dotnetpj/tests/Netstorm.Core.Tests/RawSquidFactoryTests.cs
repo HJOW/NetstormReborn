@@ -51,11 +51,11 @@ public sealed class RawSquidFactoryTests
     }
 
     /// <summary>
-    /// non-void·타입 불일치·다른 클래스·contained 슬롯·서버 영역 밖 번호의 Take 는 바이트를 바꾸기 전에 거부하고,
-    /// 정상 Take 는 풀 카운터를 건드리지 않고 지정하지 않은 필드를 보존한다.
+    /// 필요한 진단/상세/실제 공간 장치가 누락된 입력은 선택 위치에서 실패한다.
+    /// 정상 Take는 현재 실제 해제를 연결하고 풀 카운터·비생성자 payload를 보존한다.
     /// </summary>
     [Fact]
-    public void TakeGuardsRejectBeforeWritingAndKeepPoolAccounting()
+    public void TakeSelectedDeviceFailuresAndValidPathKeepPoolAccounting()
     {
         var pool = new RawSidPool(32768);
         var factory = new RawSquidFactory(pool, Types());
@@ -80,7 +80,7 @@ public sealed class RawSquidFactoryTests
         before = Snapshot(pool);
         Assert.Throws<InvalidOperationException>(() => factory.Take(74, sid));
         Assert.Equal(before, Snapshot(pool));
-        // contained 비트
+        // contained 입력도 필요한 실제 공간 해제가 없으면 그 선택 위치에서 거부된다
         bytes[0] = 0xD0;
         bytes[1] = 0x1D;
         bytes[2] = 0x50;
@@ -89,6 +89,8 @@ public sealed class RawSquidFactoryTests
         before = Snapshot(pool);
         Assert.Throws<InvalidOperationException>(() => factory.Take(74, sid));
         Assert.Equal(before, Snapshot(pool));
+        // 원문은 void 슬롯도 실제 VT+48을 호출하므로 정상 경로에는 같은 실제 Unpop을 연결한다.
+        var unpop = new RawUnpop(pool, new RawSquidHash(), new byte[65536]); factory.BindUnpop(() => unpop);
         // 정상 Take: 상태에서 dead 만 지우고 void 를 켜며, 지정하지 않은 필드(HP 바이트, 임의 필드)와 풀 카운터를 보존한다
         bytes[RawSidPool.StateOffset] = RawSidPool.DeadBit | RawSidPool.VoidBit;
         bytes[HpOffset] = 0xA1;
@@ -138,7 +140,7 @@ public sealed class RawSquidFactoryTests
     public void AnimTakeClearsFourHpBytesAndReturnsToPool()
     {
         var pool = new RawSidPool(32768);
-        var factory = new RawSquidFactory(pool, Types());
+        var factory = new RawSquidFactory(pool, Types(), unpop: new RawUnpop(pool, new RawSquidHash(), new byte[65536]));
         int sid = factory.Create(161);
         Span<byte> bytes = pool.AllocatedBytes(sid);
         bytes[HpOffset] = 1;
@@ -388,21 +390,24 @@ public sealed class RawSquidFactoryTests
     }
 
     /// <summary>
-    /// 공장 Take는 내장 Form의 void 슬롯을 공간 해제 연결 없이 받고 자산 후처리(PostTake)를 건너뛰며,
-    /// Form의 contained 비트를 자산과 달리 허용한다.
+    /// 공장 Take는 void Form의 실제 해제 진단을 거쳐 현재 free 부모에서 복귀하고,
+    /// 실제 Form VT의 빈 PostTake를 사용해 zOrder/HP와 contained를 보존한다.
     /// 근거: cpppj/src/o/SquidFactory.cpp Take (F2d 공장 폼 생성, 2026-11-07).
     /// </summary>
     [Fact]
-    public void TakeFormOnVoidSlotSkipsPostTakeAndAllowsContained()
+    public void TakeFormCallsVoidDiagnosticAndUsesEmptyActualPostTake()
     {
         OriginalTypeRecord[] types = Types();
         // 후처리가 복사할 zOrder를 눈에 띄는 값으로 둔다
         types[1].ZOrder = 0x5A;
         var pool = new RawSidPool(32768);
         var factory = new RawSquidFactory(pool, types);
-        // void Form 슬롯은 Unpop 연결 없이 받는다
+        int diagnostics = 0;
+        factory.BindDiagnostics(new() { Types = types, Assertion = (expression, file, line) => { Assert.Equal("!isVoid()", expression); Assert.Equal(0xa5bu, line); diagnostics++; } });
+        // 원문 free 부모 관문이 실제 분리를 생략하는 명시 입력이다.
         int sid = factory.Create(1);
         Span<byte> bytes = pool.AllocatedBytes(sid);
+        System.Buffers.Binary.BinaryPrimitives.WriteUInt16LittleEndian(bytes[16..], 9);
         bytes[35] = 0x77;
         bytes[HpOffset] = 0xA1;
         Assert.Equal(sid, factory.Take(1, sid));
@@ -412,7 +417,7 @@ public sealed class RawSquidFactoryTests
         // 후처리를 건너뛰므로 zOrder는 호출자가 둔 값 그대로고 HP도 보존된다
         Assert.Equal((byte)0x77, bytes[35]);
         Assert.Equal((byte)0xA1, bytes[HpOffset]);
-        // Form은 contained 비트가 있어도 받는다 (자산 Take는 거부한다)
+        // 현재 free 부모에서는 contained도 그대로 보존한다.
         bytes[RawSidPool.StateOffset] = (byte)(RawSidPool.VoidBit | 8);
         bytes[35] = 0x77;
         Assert.Equal(sid, factory.Take(1, sid));
@@ -422,6 +427,6 @@ public sealed class RawSquidFactoryTests
         Assert.Equal(16000, factory.Take(1, 16000));
         ReadOnlySpan<byte> empty = pool.Slot(16000);
         Assert.Equal(0x512110u, BitConverter.ToUInt32(empty.Slice(0, 4).ToArray(), 0));
-        Assert.Equal((byte)1, empty[RawSidPool.TypeOffset]);
+        Assert.Equal((byte)1, empty[RawSidPool.TypeOffset]); Assert.Equal(2, diagnostics);
     }
 }

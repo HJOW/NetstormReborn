@@ -871,3 +871,10 @@ cpppj/src/o/SquidProcess.cpp	Netstorm.Core/Original/RawSquidProcessHost.Devices.
 cpppj/src/o/SquidForms.h	Netstorm.Core/Original/RawSquidForms.cs	09ad72b071d7864e114f671b82ec5067cbb01c62	port
 cpppj/src/o/SquidForms.cpp	Netstorm.Core/Original/RawSquidForms.Unpop.cs	09ad72b071d7864e114f671b82ec5067cbb01c62	L1
 cpppj/src/o/SquidForms.h	Netstorm.Core/Original/RawSquidForms.Unpop.cs	09ad72b071d7864e114f671b82ec5067cbb01c62	port
+cpppj/src/o/RawSquidTake.cpp	Netstorm.Core/Original/RawSquidTake.cs	e1a617acd52d3308017308a1e5495ff8c8c9b194	L1
+cpppj/src/o/RawSquidTake.h	Netstorm.Core/Original/RawSquidTake.cs	e1a617acd52d3308017308a1e5495ff8c8c9b194	port
+cpppj/src/o/SquidFactory.cpp	Netstorm.Core/Original/RawSquidFactory.Take.cs	be567d46b5eca30d2a1421af78d49125add1ff6a	port
+cpppj/src/o/SquidFactory.h	Netstorm.Core/Original/RawSquidFactory.Take.cs	be567d46b5eca30d2a1421af78d49125add1ff6a	port
+cpppj/src/o/SquidFactory.cpp	Netstorm.Core/Original/RawSquidFactory.Runtime.cs	be567d46b5eca30d2a1421af78d49125add1ff6a	port
+cpppj/src/o/SquidFactory.h	Netstorm.Core/Original/RawSquidFactory.Runtime.cs	be567d46b5eca30d2a1421af78d49125add1ff6a	port
+cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.FactoryRuntime.cs	c102cdbf36fca4e8661d0699ea2ce5f2f44b2934	port

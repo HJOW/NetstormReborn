@@ -112,7 +112,7 @@ public sealed partial class RawSquidFactory
     /// <summary>mana 약화 옵션. 켜지면 mana 의 최대 HP 를 0 쪽으로 절삭한 정수 1/4 로 쓴다.</summary>
     private readonly bool _weakenedMana;
 
-    /// <summary>void 가 아닌 오브젝트를 Take 할 때 쓰는 공간 해제. 연결 전이면 null 이며 그 경우 Take 는 거부한다.</summary>
+    /// <summary>!free 오브젝트의 실제 가상 해제를 Take에서 선택할 때 쓰는 독립 공간 장치다. 현재 대여/getter가 없으면 이 장치를 빌린다.</summary>
     private readonly IRawUnpop? _unpop;
 
     /// <summary>선택된 Form 해제 때 실제 공통 종속 분리만 실행하는 경계다. 없으면 공통 순서를 쓴다. 2026-11-07 F2d 공장 부착 배선 이식에서 추가됐다.</summary>
@@ -146,7 +146,7 @@ public sealed partial class RawSquidFactory
     /// <param name="pool">슬롯 풀.</param>
     /// <param name="types">타입 번호 순서의 타입 레코드. 개수는 <see cref="OriginalConstructors.TypeCount"/> 와 같아야 한다.</param>
     /// <param name="weakenedMana">mana 약화 옵션.</param>
-    /// <param name="unpop">non-void Take 의 공간 해제. 없으면 null.</param>
+    /// <param name="unpop">Take가 선택한 실제 공간 해제의 독립 장치. 없으면 null.</param>
     public RawSquidFactory(RawSidPool pool, IReadOnlyList<OriginalTypeRecord> types, bool weakenedMana = false, IRawUnpop? unpop = null)
     {
         ArgumentNullException.ThrowIfNull(pool);
@@ -299,7 +299,9 @@ public sealed partial class RawSquidFactory
     /// <param name="transmit">서버 Pop 전송 경계다. null이면 바인딩된 경계를 쓴다.</param>
     public void AttachForm(int form, int parent, uint flags, Action<int, uint>? transmit = null)
     {
-        var forms = new RawSquidForms(_pool, null, transmit ?? _formTransmit);
+        using var call = BeginRuntimeCall();
+        Action<int, uint>? currentTransmit = call.Runtime is { } runtime ? runtime.FormTransmit : _formTransmit;
+        var forms = new RawSquidForms(_pool, null, transmit ?? currentTransmit);
         BindCurrentFormPop(forms);
         var hooks = new FormAttachHooks
         {
@@ -311,7 +313,8 @@ public sealed partial class RawSquidFactory
                     ? throw new ArgumentOutOfRangeException(nameof(number), number, "Form 부착의 현재 TYPE 범위 오류")
                     : current[number].Flags2;
             },
-            ContentType = _formContentType ?? (() => 6u),
+            ContentType = call.Runtime is { } current ? current.ContentType : _formContentType ?? (() => 6u),
+            Assertion = _diagnostics?.Assertion,
         };
         forms.BindAttach(hooks);
         forms.Attach(form, parent, flags);
@@ -321,8 +324,9 @@ public sealed partial class RawSquidFactory
     /// <param name="sid">해제할 Form 번호다.</param>
     public void UnpopForm(int sid)
     {
+        using var call = BeginRuntimeCall();
         // 실제 공장의 현재 진단과 같은 종속 분리 장치를 한 호출의 함수 사본으로 빌린다.
-        var hooks = new FormUnpopHooks { Detach = _formDetach, Assertion = _diagnostics?.Assertion };
+        var hooks = new FormUnpopHooks { Detach = call.Runtime is { } runtime ? runtime.FormDetach : _formDetach, Assertion = _diagnostics?.Assertion };
         new RawSquidForms(_pool, unpop: hooks).Unpop(sid);
     }
 
@@ -332,7 +336,9 @@ public sealed partial class RawSquidFactory
     /// <param name="transmit">서버 Pop 전송 경계다. null이면 바인딩된 경계를 쓴다.</param>
     public void PopForm(int form, uint flags, Action<int, uint>? transmit = null)
     {
-        var forms = new RawSquidForms(_pool, null, transmit ?? _formTransmit);
+        using var call = BeginRuntimeCall();
+        Action<int, uint>? currentTransmit = call.Runtime is { } runtime ? runtime.FormTransmit : _formTransmit;
+        var forms = new RawSquidForms(_pool, null, transmit ?? currentTransmit);
         BindCurrentFormPop(forms);
         forms.Pop(form, flags);
     }
@@ -477,9 +483,8 @@ public sealed partial class RawSquidFactory
             return cut < 0 ? name : name.Substring(0, cut);
         }
 
-        IReadOnlyList<OriginalTypeRecord> current = CurrentTypes();
-        string serverName = serverType < (uint)current.Count ? BaseName(current[(int)serverType]) : "";
-        string clientName = clientType < (uint)current.Count ? BaseName(current[(int)clientType]) : "";
+        string clientName = BaseName(TypeRecord(clientType));
+        string serverName = BaseName(TypeRecord(serverType));
         string detail = "Invalid take. Server type " + serverName + ", client type " + clientName;
         if (System.Text.Encoding.Latin1.GetByteCount(detail) >= 256)
         {
@@ -493,70 +498,6 @@ public sealed partial class RawSquidFactory
         }
 
         writer(detail);
-    }
-
-    /// <summary>
-    /// 서버가 정한 번호의 슬롯을 받는다(원본 Take). 풀 목록·빈 번호 카운터는 바꾸지 않는다.
-    /// 이미 쓰는 슬롯이면 같은 타입·같은 클래스(가상 표)여야 하고, void 가 아니면 공간 해제(Form은 <see cref="UnpopForm"/>, 자산은 <see cref="IRawUnpop"/>)를 먼저 한다.
-    /// 내장 Form(1·2·3·6)은 가상 표·타입만 쓰고 자산 후처리를 건너뛴다.
-    /// 그다음 free/dead 를 지우고 void 를 켠 뒤 생성자 필드와 타입 바이트를 쓴다. 그 밖의 필드는 보존한다.
-    /// 근거: cpppj/src/o/SquidFactory.cpp Take (F2d 공장 폼 생성, 2026-11-07).
-    /// </summary>
-    /// <param name="type">타입 번호(내장 Form 1·2·3·6 또는 70 이상).</param>
-    /// <param name="sid">서버 영역의 슬롯 번호.</param>
-    public int Take(uint type, int sid)
-    {
-        OriginalTypeRecord record = TypeForCreate(type);
-        if (sid < RawSidPool.ServerFirst)
-        {
-            throw new ArgumentOutOfRangeException(nameof(sid), sid, "Take 는 서버 영역 번호만 받습니다");
-        }
-        bool isForm = IsFormTypeNumber(type);
-        Span<byte> bytes = _pool.RawSlot(sid);
-        if (!isForm && (bytes[RawSidPool.StateOffset] & ContainedBit) != 0)
-        {
-            throw new InvalidOperationException("contained 오브젝트의 base Take 는 지원하지 않습니다");
-        }
-        if ((bytes[RawSidPool.StateOffset] & RawSidPool.FreeBit) == 0)
-        {
-            if (bytes[RawSidPool.TypeOffset] != type)
-            {
-                // 원문 Take 부모는 상세 복사 뒤 진단을 거쳐 정상 복귀하면 새 타입으로 덮어쓴다. 2026-11-07 F2d 공장 진단 소비 이식에서 연결했다.
-                uint previous = bytes[RawSidPool.TypeOffset];
-                WriteTakeDetail(type, previous);
-                Assert("0", _pool.Edition == OriginalEdition.Patch1078 ? 0x1bau : 0x1b1u);
-            }
-            uint beforeTable = ReadVtable(bytes);
-            if (beforeTable != ConstructorVtable(record))
-            {
-                throw new InvalidOperationException("Take 의 미복원 가상/공간 해제 효과가 필요합니다");
-            }
-            if ((bytes[RawSidPool.StateOffset] & RawSidPool.VoidBit) == 0)
-            {
-                if (isForm)
-                {
-                    UnpopForm(sid);
-                    bytes = _pool.RawSlot(sid);
-                }
-                else
-                {
-                    if (_unpop is null)
-                    {
-                        throw new InvalidOperationException("Take 의 non-void 공간 해제 연결이 없습니다");
-                    }
-                    _unpop.Unpop(sid, record);
-                }
-            }
-            // 이미 void 인 오브젝트의 기본 Unpop 은 쓰기 없이 돌아온다
-        }
-        bytes[RawSidPool.StateOffset] = (byte)((bytes[RawSidPool.StateOffset] & 0xFC) | RawSidPool.VoidBit);
-        ConstructRaw(record.ConstructorAddress, sid, true);
-        _pool.RawSlot(sid)[RawSidPool.TypeOffset] = (byte)type;
-        if (!isForm)
-        {
-            PostTake(sid);
-        }
-        return sid;
     }
 
     /// <summary>
@@ -755,17 +696,9 @@ public sealed partial class RawSquidFactory
         return false;
     }
 
-    /// <summary>내장 Form 타입의 실제 가상 표 기록값을 돌려준다. CD판은 명시 경계로 둔다.</summary>
-    /// <param name="formType">내장 Form 타입 번호.</param>
-    private uint FormVtable(uint formType)
-    {
-        if (_pool.Edition != OriginalEdition.Patch1078)
-        {
-            throw new InvalidOperationException("CD Form 가상 표 미연결");
-        }
-
-        return RawSquidForms.VtableFor(formType);
-    }
+    /// <summary>내장 Form 생성자가 쓰는 판본별 실제 가상 표를 공통 Forms와 같은 표에서 읽는다.</summary>
+    /// <param name="formType">네 내장 Form 타입 중 하나다.</param>
+    private uint FormVtable(uint formType) => new RawSquidForms(_pool).Vtable(formType);
 
     /// <summary>가상 표 값이 내장 Form 네 종류 중 하나인지 판단한다.</summary>
     /// <param name="table">확인할 가상 표 값.</param>

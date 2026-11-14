@@ -72,7 +72,8 @@ public sealed class X86RawFactoryTests
                     pool = new RawSidPool(X86Fixture.Int(row[2]), row[3] == "1");
                     types = Types();
                     weakenedMana = row[4] == "1";
-                    factory = new RawSquidFactory(pool, types, weakenedMana);
+                    // 원문 실제 VT+48은 void 입력에서도 호출되므로 같은 실제 공간 부모를 제공한다.
+                    factory = new RawSquidFactory(pool, types, weakenedMana, new RawUnpop(pool, new RawSquidHash(), new byte[65536]));
                     begins++;
                 }
                 return true;

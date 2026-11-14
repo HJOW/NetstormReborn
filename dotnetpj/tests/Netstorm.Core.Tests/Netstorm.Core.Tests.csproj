@@ -347,4 +347,8 @@
     <!-- 공통 Form 해제의 복귀 진단·현재 부모·void 쓰기를 실제 PE 관측에 대조한다. -->
     <None Include="../../../cpppj/tests/fixtures/form-unpop-current-x86.tsv" Link="X86/form-unpop-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Take 부모의 반환 객체·저장 VT·양판본 읽기/쓰기 순서를 실제 PE 관측에 대조한다. -->
+    <None Include="../../../cpppj/tests/fixtures/squid-take-parent-current-x86.tsv" Link="X86/squid-take-parent-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

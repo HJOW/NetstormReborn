@@ -215,7 +215,9 @@ public sealed partial class RawSurfaceWorld
         {
             _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph.Records, _storage.Graph.Stack, null, GraphRecovery.FullPool);
             _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots, _display);
-            _factory = new RawSquidFactory(_storage.Pool, _types, false, _unpop);            if (_frames.Count == _types.Count)
+            _factory = new RawSquidFactory(_storage.Pool, _types, false, _unpop);
+            BindFactoryRuntime();
+            if (_frames.Count == _types.Count)
             {
                 _surface = new RawIslandPostPop(_storage.Pool, new HashLevelView(_storage.Hash), _types, _frames, _storage.Links, _loadState, new IslandPostPopHooks
                 {

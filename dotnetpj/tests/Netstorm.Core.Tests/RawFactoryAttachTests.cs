@@ -301,7 +301,8 @@ public sealed class RawFactoryAttachTests
         var types = Types188();
         types[74].Name = "Alpha";
         types[80].Name = "Beta";
-        var factory = new RawSquidFactory(pool, types);
+        // void 입력도 진단 복귀 뒤 실제 가상 공간 해제를 호출하므로 같은 풀의 부모를 공급한다.
+        var factory = new RawSquidFactory(pool, types, unpop: new RawUnpop(pool, new RawSquidHash(), new byte[65536]));
         int sid = factory.Create(74u);
         pool.RawSlot(sid)[RawSidPool.StateOffset] = RawSidPool.VoidBit;
         var details = new List<string>();
