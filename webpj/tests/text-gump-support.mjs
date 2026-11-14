@@ -38,7 +38,7 @@ export function scene(options = {}) {
     // 노드 2(한 줄)·3(다중 줄)·4(slider)를 실제 기본 생성으로 등록하고 루트(1) 아래 둔다.
     const root = nodes.get(1); void root; for (const [token, width, height] of [[3, 40, 25], [4, 9, 25]]) { factory.construct(token, 0, width, height, 1); nodes.get(token).parent = 1; }
     const multi = nodes.get(3); multi.x = 5; multi.y = 7; multi.slider = 4; multi.buffer = 9;
-    return { create, nodes, factory, fragments, events, draws, style, styleHooks, lifetime, lifeHooks, released, collection, clip, textState, single, scrolling, bufferState, real, handler, calls, slider, sliderState, pictures, pictureState, scaleOnMeasure, multi, slide: nodes.get(4), text: nodes.get(2) };
+    return { create, nodes, factory, fragments, events, draws, style, styleHooks, lifetime, lifeState, lifeHooks, released, collection, clip, textState, single, scrolling, bufferState, real, handler, calls, slider, sliderState, pictures, pictureState, scaleOnMeasure, multi, slide: nodes.get(4), text: nodes.get(2) };
 }
 // 한 줄 노드(2)를 만든다.
 export function made(s, width = 33, height = 17, font = 3, color = 9) { s.single.construct(2, width, height, font, color); s.text.parent = 1; s.text.x = 10; s.text.y = 20; return s.text; }

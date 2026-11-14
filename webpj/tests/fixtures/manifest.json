@@ -2707,7 +2707,7 @@
       "bytes": 2402254,
       "lines": 609,
       "fixtureCommit": "ddf0a837b",
-      "webCommit": "worktree",
+      "webCommit": "035b05940",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerParticipation.cpp": "3f766a97f"
       }
@@ -2736,7 +2736,7 @@
       "bytes": 2311266,
       "lines": 289,
       "fixtureCommit": "4963da207",
-      "webCommit": "worktree",
+      "webCommit": "035b05940",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerParticipation.cpp": "3f766a97f"
       }
@@ -2796,7 +2796,7 @@
       "bytes": 4254429,
       "lines": 203,
       "fixtureCommit": "7e53489e9",
-      "webCommit": "worktree",
+      "webCommit": "035b05940",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerInitialization.cpp": "b9b67b613"
       }
@@ -20235,6 +20235,37 @@
       "cpppjBasis": {
         "cpppj/src/client/MessageGump.cpp": "86b37fff4",
         "cpppj/src/client/MessageGump.h": "86b37fff4"
+      }
+    },
+    {
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E454",
+      "consumers": [
+        "webpj/tests/warning-messages.test.mjs"
+      ],
+      "doc": "docs/webpj-warning-messages-20261114.md",
+      "id": "warning-report-numbers",
+      "path": "webpj/tests/fixtures/warning-report-numbers.tsv",
+      "producer": "webpj/tools/warning-report-number-probe.cpp: MSVC14.51.36231 x64 표준 스트림 defaultfloat/setprecision(17), 게임 실행 없음",
+      "modules": [
+        "webpj/www/ui/warning-messages.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/WarningMessages.cpp",
+        "cpppj/src/client/WarningMessages.h"
+      ],
+      "scope": "명시18+고정LCG1000개의 double 비트→C++ 17자리 문자열. 원본10.78 PE 관측 자료가 아님",
+      "text": true,
+      "sha256": "db68ae7e1d65efcbc01f50906d9a211d9412c1665d6ac2d7f33319b1c45994e5",
+      "bytes": 41451,
+      "lines": 1018,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/WarningMessages.cpp": "8d45566de",
+        "cpppj/src/client/WarningMessages.h": "8d45566de"
       }
     }
   ]
