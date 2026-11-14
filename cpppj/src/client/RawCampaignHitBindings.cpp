@@ -17,6 +17,17 @@ std::uint32_t HitTable(std::span<const std::uint8_t> raw) {
     for (std::size_t i=0;i<4;++i) value|=static_cast<std::uint32_t>(raw[i])<<(8*i);
     return value;
 }
+// 제단/다이스(Dais.cpp)의 가상+98 0x00448b70이다. 표적의 현재 프레임 방향 글자가 11(투명 프레임)이나 12(희생 중)이면 피해를 무시하고 1을 돌려주며,
+// 그 밖에는 일반 피격 0x0044c8e0(hit)으로 넘긴다. 원문 4ad710은 같은 TYPE/프레임에서 방향을 읽어 두 번 비교하지만 순수 조회라 한 번만 읽는다.
+// 반환형 경로(DamageResult)와 총기 피격 경로(DamageHooks)가 같은 본문을 쓰도록 한곳에 둔다.
+// (2026-11-14 테스트 자동 플레이로 2-4 GuardMyBack에서 썬 캐논(TYPE128)→제단(TYPE164) 총기 피격이 미복원 예외로 종료되는 것을 발견해 총기 경로에도 연결하며 분리함)
+template<class Frames,class Hit> std::uint32_t AltarHit(const o::SidPool& pool,const Frames& frames,o::Sid victim,Hit&& hit) {
+    const auto raw=pool.Slot(victim);
+    if (raw[10]>=frames.size()) throw std::out_of_range("현재448b70 피해의TYPE 프레임 물리 부족");
+    const auto direction=o::RawPathAnimation::Direction(frames[raw[10]],std::bit_cast<std::int32_t>(HitTable(raw.subspan(36)))); // 원문의 4ad710에서 현재 TYPE/프레임을 읽는다.
+    if (direction==11 || direction==12) return 1U;
+    return hit();
+}
 }
 // 복원된 몸체와 단일 Core의 참조를 소유하며 별도 HP/표적 사본을 만들지 않는다.
 struct RawCampaignHitBindings::Impl {
@@ -106,6 +117,7 @@ o::GunHitHooks RawCampaignHitBindings::DamageHooks(o::GunHitHooks hooks) const {
         for (const auto& entry:kCampaignDamageHitEntries) if (entry.vtable==table) { //현재실제+98만고르며타입이름으로분배하지않는다.
             if (entry.address==0x4dba40U) { static_cast<void>(o::RawVortexDamage(impl_->core.pool,victim,amount,owner,attacker,impl_->vortex));return; }
             if (entry.address==0x48ef20U) { static_cast<void>(o::RawBulwarkHit(impl_->core.pool,impl_->core.types,victim,amount,owner,attacker,[this](auto target,auto value,auto sourceOwner,auto source) { return static_cast<std::uint32_t>(impl_->generalDamage->Hit(target,value,sourceOwner,source)); }));return; }
+            if (entry.address==0x448b70U) { static_cast<void>(AltarHit(impl_->core.pool,impl_->core.frames,victim,[&] { return static_cast<std::uint32_t>(impl_->generalDamage->Hit(victim,amount,owner,attacker)); }));return; } // 제단/다이스: 투명·희생 프레임 무시, 그 밖은 일반 피격이다(2026-11-14 총기 경로 연결).
             break;
         }
         if (!fallback) throw std::logic_error("캠페인 다른 실제 피해 미연결");fallback(victim,amount,owner,attacker);
@@ -122,10 +134,7 @@ std::uint32_t RawCampaignHitBindings::DamageResult(o::Sid victim,std::int32_t am
     case 0x494380U:return impl_->priestDamage->Hit(victim,amount,owner,attacker);
     case 0x4dba40U:return o::RawVortexDamage(impl_->core.pool,victim,amount,owner,attacker,impl_->vortex);
     case 0x48ef20U:return o::RawBulwarkHit(impl_->core.pool,impl_->core.types,victim,amount,owner,attacker,[this](auto target,auto value,auto sourceOwner,auto source) { return static_cast<std::uint32_t>(impl_->generalDamage->Hit(target,value,sourceOwner,source)); });
-    case 0x448b70U: {
-        const auto direction=[this,victim] { const auto raw=impl_->core.pool.Slot(victim);if (raw[10]>=impl_->core.frames.size()) throw std::out_of_range("현재448b70 피해의TYPE 프레임 물리 부족");return o::RawPathAnimation::Direction(impl_->core.frames[raw[10]],std::bit_cast<std::int32_t>(HitTable(raw.subspan(36)))); }; // 원문의각4ad710에서현재TYPE/프레임을읽는다.
-        if (direction()==11 || direction()==12) return 1U;return impl_->generalDamage->Hit(victim,amount,owner,attacker);
-    }
+    case 0x448b70U:return AltarHit(impl_->core.pool,impl_->core.frames,victim,[&] { return static_cast<std::uint32_t>(impl_->generalDamage->Hit(victim,amount,owner,attacker)); }); // 본문은 총기 경로와 같은 AltarHit 한 곳이다.
     default:throw std::logic_error("현재target+98의실제반환형피해장치미연결");
     }
 }

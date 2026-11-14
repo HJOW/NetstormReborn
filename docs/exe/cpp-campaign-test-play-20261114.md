@@ -64,7 +64,7 @@ python -X utf8 tools/cpp_campaign_autoplay.py --skirmish --skirmish-ai-count 2 -
 
 ## 4. 변경 파일
 
-- 신규: `cpppj/src/client/CampaignTestPlay.{h,cpp}`(옵션 해석·전역 보관·난이도 감싸기·로컬 AI 설정), `cpppj/src/client/CampaignTestSpectator.{h,cpp}`(관전 카메라 판단기), `cpppj/src/o/AiAllianceSide.h`(생성 직전 아군/적 판정), `cpppj/tests/CampaignTestPlayTests.cpp`, `tools/cpp_campaign_autoplay.py`(캠페인/스커미시 실행 도구), `docs/testing/cpp-autoplay-test-guide.md`(AI 에이전트용 사용 안내).
+- 신규: `cpppj/src/client/CampaignTestPlay.{h,cpp}`(옵션 해석·전역 보관·난이도 감싸기·로컬 AI 설정), `cpppj/src/client/CampaignTestSpectator.{h,cpp}`(관전 카메라 판단기), `cpppj/src/o/AiAllianceSide.h`(생성 직전 아군/적 판정), `cpppj/tests/CampaignTestPlayTests.cpp`, `tools/cpp_campaign_autoplay.py`(캠페인/스커미시 실행 도구, 승패 확정 뒤 조기 종료·추가/조건부 버튼), `tools/cpp_campaign_batch.py`(캠페인 1~3 일괄 실행·결과표), `docs/testing/cpp-autoplay-test-guide.md`(AI 에이전트용 사용 안내). 1313에서 `cpppj/src/client/RawCampaignHitBindings.cpp`에 제단 총기 피격(`0x00448b70`) 분배를 추가했다(7.2절).
 - 수정: `cpppj/src/app/main.cpp`(옵션), `cpppj/src/client/RawCampaignMissionStartBindings.{h,cpp}`(시작 SP·적 SP·로컬 AI), `cpppj/src/client/UberGump.cpp`(적격 판정·난이도 감싸기·관전 카메라 연결), `cpppj/src/o/RawAiCreate.{h,cpp}`·`cpppj/src/client/RawCampaignSession.cpp`(11차 판정 보정), CMake 목록, 새 집중 검사 대상 `netstorm_campaign_test_play_tests`.
 
 ## 5. 검증
@@ -103,3 +103,35 @@ python -X utf8 tools/cpp_campaign_autoplay.py --skirmish --skirmish-ai-count 2 -
 - 관전 카메라의 **희생 의식(제단) 이동은 실제 실행에서 아직 관측하지 못했다**(이번 실행들은 모두 적 전멸로 끝나 의식이 없었다). 원문 의식 소리 위치를 받는 경로와 우선 규칙은 검사 `CampaignTestSpectator_RitualHasPriority`로만 확인했다. 의식이 나오는 실행에서 `camera_moves.ritual`과 화면을 확인하면 된다.
 - 관전 카메라의 전투 판정은 피해 관찰에 기반한 근사다. 피해 합이 작은 교전(20 미만)이나 한 번에 끝난 짧은 교전은 놓칠 수 있다.
 - 제품 코드가 바뀌었으므로(11차 판정 보정 포함) 배포 ZIP을 다시 만들 때는 M8 관문을 다시 거친다.
+
+## 7. 캠페인 전체 자동 플레이 실행 (1313, 2026-11-14 후속)
+
+사용자 요청: 캠페인 전 스테이지를 이 방식으로 테스트한다. 이어서 사용자가 **3-x 계열(캠페인 3)은 이 방식으로 안 되겠다며 제외**, **2-5 Surrounded도 제외**를 지시했다(해당 게임 창은 사용자가 직접 종료했다). 튜토리얼 성격의 Early Missions·Priest Training과 사용자 제작 캠페인은 처음부터 대상이 아니다. 실행은 HJOW-Athlon(실행 확인 예외 호스트)에서 일괄 도구 `tools/cpp_campaign_batch.py`로 했고, 출력은 `extracted/cpp-campaign-batch/pass1/`(Git 제외)다.
+
+**공통 인자:** 아군(로컬·동맹) AI 어려움, 적 AI 쉬움, 로컬 시작 SP 20000, 적 시작 SP 1000, 관전 카메라 켬, 72000프레임(고정 25ms 기준 게임 시간 30분), 덤프 4000프레임마다, 3개 동시 실행, 승패 확정 뒤 조기 종료. 도구가 `Play Mission`/`More`/`Fight On`/`Continue Fighting`/`Ignore`/`Go to Hell`만 눌렀다(승패 창 버튼 제외, EnemyTerritory만 `Ai2PriestCaptured` 창에서 `Continue`).
+
+### 7.1 결과 (범위 안: 캠페인 1·2)
+
+| 미션 | 결과 | 비고 |
+| --- | --- | --- |
+| 1-1 TheWarBegins | **승리** (프레임 40000) | `BadTeamDead` |
+| 1-2 MasterOfWhirligigs | **승리** (20000) | |
+| 1-3 SaveTheIsland | 미결 | 로컬 SP가 ~1000으로 묶인 채 적 SP 11550까지 증가, 교전 정체 |
+| 1-4 FragileFortune | 미결 | 로컬 객체 ~1100·SP 20000대 미지출, 적 객체 ~1920 불변 |
+| 1-5 ThunderingPower | **승리** (32000) | 게임 중 선택창 `[@20]…[@900]`을 `Fight On`/`Continue Fighting` 등으로 통과 |
+| 1-6 DissolvedAlliance | 미결 | 로컬 객체 1500대·SP 38800까지 누적, 두 적 객체 ~1100/~1000 불변 |
+| 2-1 TheNoose | **패배** (24000) | 로컬 AI가 처음 2400 SP만 쓰고 이후 SP 17600 고정(건설·다리 없음), 로컬 객체가 698→28로 급감 |
+| 2-2 RainVsRain | **승리** (20000) | |
+| 2-3 RunForIt | **승리** (24000) | |
+| 2-4 GuardMyBack | 1차 **비정상 종료** → 수정 → 2차 미결(종료 없이 완주) | 7.2절 |
+| 2-5 Surrounded | 사용자 지시로 제외 | 창은 사용자가 종료(`UI script ended before all steps ran`), 게임 오류는 관측하지 못함 |
+
+집계(2-5 제외 10개): 승리 5, 패배 1, 미결 4. 모든 승리 실행은 오류 로그 0·AI 원본 진단 0이다.
+
+### 7.2 발견과 조치
+
+1. **2-4 GuardMyBack 비정상 종료 — 수정 완료.** 게임 시간 약 853초에 `std::logic_error: 실제 세션 총 피해 미복원: 공격 TYPE128 → 표적 TYPE164`로 종료했다(7차 오류 로그 확인). 썬 캐논이 제단(TYPE164)을 쏘는 총기 피격 경로에서, 제단의 가상 `+0x98`(`0x00448b70`, `Dais.cpp`: 방향 글자 11=투명·12=희생 중이면 피해를 무시하고 1 반환, 그 밖에는 일반 피격 `0x0044c8e0`)이 분배되지 않고 미복원 예외로 떨어졌다. 같은 함수는 반환형 경로 `RawCampaignHitBindings::DamageResult`에는 이미 있었으나 총기 경로 `DamageHooks`에만 빠져 있었다. 본문을 파일 안 도우미 `AltarHit` 한 곳으로 모아 두 경로가 함께 쓰게 했다(`cpppj/src/client/RawCampaignHitBindings.cpp`). **검증:** 같은 인자로 다시 실행하면 이전 종료 지점을 넘어 게임 시간 30분까지 종료 코드 0·오류 로그 0으로 완주했다(`extracted/cpp-campaign-batch/pass2-guardmyback/`). 새 집중 검사는 만들지 못했다: 이 저장소의 `InstallScene` 검사 틀이 새 집중 대상에서 기본 미션 `Load()`부터 `RawNormalTerrainWorldBinding::GenerateOriginal`의 "지형 생성 상위의 현재 전역/장치 미연결"로 실패한다(2026-11-05 군도 생성 연결 이후의 기존 문제로 추정, 기준선 비교는 하지 않았다). 기존 `netstorm_campaign_test_play_tests` 16건·`netstorm_ai_difficulty_tests`·`netstorm_cd_mission_start_tests`는 변경 뒤에도 통과한다.
+2. **아군 AI 정체 — 미해결(조사 과제).** 미결 4건과 패배 1건의 공통 양상은 로컬 AI가 초반에 성장한 뒤 SP를 쓰지 않고 정체하는 것이다(2-1은 거의 처음부터). 이 기능은 원본의 데모 분기와 같은 AI 몸체를 쓰지만 설정은 `MakeAi` 규칙의 기본값이라 미션이 조정한 `ai1*` 값이 없다. 2-1은 섬이 적 다리로 둘러싸인 미션이라 AI의 초기 전략(`0x258`, 자기/적 시작 지역이 있어야 완료)이 끝나지 않았을 가능성이 있으나 **확인하지 않았다**. 다음 단계 제안: 세션 덤프/보고에 AI 본체 필드(초기화 `+258`·적 `+264`·지갑 `+2d8`·마지막 행동 시각)를 넣어 정체 원인을 직접 관측.
+3. **희생 의식 카메라 미관측.** 15개 실행 모두 `camera_moves.ritual=0`이었다(의식이 없었다). 전투 카메라는 모든 실행에서 작동했다(미션당 18~206회).
+4. **3-x 참고(범위 밖, 수정하지 않음).** 3-1 BreakingThrough는 게임 시간 약 245초에 `std::logic_error: 다른 파생 실제 피해 미복원`(`RawDamageableHit.cpp:63`, 총기 피격의 표적 가상 `+0x98`이 일반/Base가 아닌 다른 파생이고 대체 처리 없음)으로 종료했다. 3-2 ToTheRescue는 `@120` 선택창에서 멈춰(원인 버튼 미확인) 사용자가 종료했고, 3-3 Vicious도 사용자가 종료했으며, 3-4 EnemyTerritory는 72000프레임 미결, 3-5 FinalConfrontation은 제가 시작 직후 종료했다. 모두 판정 근거로 쓰지 않는다.
+5. **병렬 실행 비용.** 3개 동시 실행은 실행 속도를 크게 떨어뜨린다(단독 실행은 약 100프레임/초, 24000프레임 약 240초였지만 병렬에서 1-1은 40000프레임에 1464초, 약 27프레임/초). 시간 비교는 같은 병렬도에서만 한다.

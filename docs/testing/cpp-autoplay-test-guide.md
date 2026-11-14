@@ -37,6 +37,20 @@ python -X utf8 tools/cpp_campaign_autoplay.py --mission thewarbegins --ally-ai n
 - 실행 시간: 고정 25ms/프레임에서 HJOW-Athlon 기준 약 100프레임/초(24000프레임 ≈ 4분, 72000프레임 ≈ 12분). Bash/PowerShell 도구의 제한 시간을 넘기면 **백그라운드 실행**으로 돌리고 완료 알림을 기다린다.
 - 미션 키 목록: 캠페인 메뉴 파일(`offical*.english`의 `MissionBegin,<키>`)과 [미션 대응 문서](../gameplay/demo-campaign-map.md)를 참고한다. 예: `thewarbegins`(1-1), `dissolvedalliance`(1-6), `guardmyback`(2-4).
 
+### 2.0 캠페인 전체를 한 번에 (일괄 실행)
+
+`tools/cpp_campaign_batch.py`가 캠페인 1~3(메뉴 `offical3`~`offical5`)의 **16개 미션**을 메뉴 순서대로, 동시에 `--workers`(기본 3)개씩 돌리고 한 표로 모은다. 튜토리얼 성격의 `Early Missions`(Tutorial1~6)·`Priest Training`(bc*)은 기본 대상이 아니며(`--groups`로 명시할 때만 포함), 사용자 제작 캠페인은 대상이 아니다.
+
+```powershell
+python -X utf8 tools/cpp_campaign_batch.py --frames 72000 --start-sp 20000 --enemy-start-sp 1000 --snapshot-every 12000 --out extracted/cpp-campaign-batch/run1
+python -X utf8 tools/cpp_campaign_batch.py --missions TheWarBegins,GuardMyBack --workers 2   # 일부만
+```
+
+- 출력: `batch-summary.md`(미션별 결과·확정 프레임·카메라 이동·마지막 page·걸린 시간)·`batch-summary.json`·미션별 폴더(위 3절과 같은 파일). 미션이 끝나는 대로 갱신되므로 중간에 끊겨도 표가 남는다.
+- **조기 종료**: 승패가 확정되면 보고가 1개 더 쌓인 뒤 그 게임 프로세스를 종료한다(`stopped_early`). 확정되지 않으면 `--frames`까지 실행한다. `--no-early-stop`으로 끌 수 있다.
+- 병렬 실행은 안전하다(게임에 단일 인스턴스 제한이 없고 사용자 데이터는 미션별 폴더로 격리). 코어 수보다 작게 잡는다.
+- **안내창 버튼**: 도구는 승패 창 버튼(`Next Mission`·`Leave Missions`·`Continue`·`OK`)을 누르지 않고 `Play Mission`·`More`·`Fight On`·`Continue Fighting`·`Ignore`·`Go to Hell`만 누른다. 미션별 예외는 배치 도구의 `MISSION_WHEN_CLICKS`(조건부 클릭 `보고정규식;;버튼`)에 둔다. 새 미션에서 `page`가 안내창 이름에서 계속 멈추면 그 창의 버튼 이름을 `--buttons`(단일 실행 도구)로 추가한다. 버튼 이름은 `report.tsv`의 `raw_html_button` 행에서 볼 수 있다.
+
 ### 2.1 도구 인자
 
 | 인자 | 기본값 | 뜻 |
@@ -53,6 +67,8 @@ python -X utf8 tools/cpp_campaign_autoplay.py --mission thewarbegins --ally-ai n
 | `--skirmish-ai-diff` | 모두 보통 | 스커미시 화면 AI별 난이도(예: `2=hard,3=easy`). `--ally-ai`/`--enemy-ai`가 지정되면 그쪽이 우선 |
 | `--skirmish-bans` | 없음 | 금지 유닛 TYPE 이름 쉼표 목록(최대 5개) |
 | `--no-follow` | (관전 카메라 켬) | 관전 카메라(주요 전투 위치·희생 의식 중 제단으로 화면 이동)를 끈다 |
+| `--buttons` / `--when-click` | 없음 | 항상 누를 추가 버튼 이름 쉼표 목록 / 조건부 클릭 `보고정규식;;버튼`(반복 가능, 예: `page\tAi2PriestCaptured;;Continue`) |
+| `--no-early-stop` / `--keep-reports` | 끔 / 1 | 승패가 확정돼도 끝까지 실행 / 확정 뒤 더 지켜볼 보고 개수(그 뒤 게임 종료) |
 | `--out` | `extracted/cpp-campaign-autoplay/<대상>-<시각>` | 출력 폴더(`extracted/`는 git 제외) |
 
 ## 3. 결과 읽는 법
@@ -67,7 +83,7 @@ python -X utf8 tools/cpp_campaign_autoplay.py --mission thewarbegins --ally-ai n
 | `camera_moves` | 관전 카메라 이동 횟수(`battle`/`ritual`). `ritual`이 1 이상이면 그 실행에서 사제 희생 의식이 있었다는 뜻이다. |
 | `dumps[]` | 프레임별 `ai_owners`(AI가 붙은 소유자), `objects_by_owner`(소유자별 객체 수: 섬·다리·건물·유닛 포함), `sp`(소유자별 SP). 아군 AI가 일하면 로컬 소유자 객체 수가 늘고 SP가 오르내린다. |
 | `reports[]` | 프레임별 `page`(현재 안내/화면 이름), `paused`, `mission_progress`(`Done<미션>` 설정 값) |
-| `outcome` / `outcome_frame` | `victory`: `Done<미션>`≠0 또는 page가 `BadTeamDead`/`Succeeded`/`Success`. `defeat`: page가 `GoodTeamDead`/`Failed`. 그 외 `undecided`. 프레임은 처음 관측된 보고 시점(덤프 주기 단위)이다. |
+| `outcome` / `outcome_frame` | `victory`: `Done<미션>`≠0 또는 page가 `BadTeamDead`/`Succeeded`/`Success`. `defeat`: page가 `GoodTeamDead`/`Failed`/`Ai<N>PriestDead`·`Ai<N>TempleDead`. page가 `Ai2PriestSaved`/`VictoryNote`여도 승리다. 그 외 `undecided`. 프레임은 처음 관측된 보고 시점(덤프 주기 단위)이다. |
 
 - 승리/패배 창의 버튼(`Next Mission`·`Leave Missions`·`Leave`)은 누르지 않으므로 결과 이후에는 그 창에서 멈춘 상태가 기록된다.
 - 객체 TYPE 번호는 `Netstorm.exe --dump-types assets\game-data`로 이름(예: 82=bridge, 72=sunAviary)을 찾는다. `dump-*.tsv`의 `object` 행(SID·TYPE·상태·소유자·프레임·x·y·HP) 형식은 [session-dump 문서](../exe/cpp-session-state-dump-20261109.md) 2절을 따른다.

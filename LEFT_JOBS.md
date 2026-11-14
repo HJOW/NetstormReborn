@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품 1312 / 11.01 · 정리 2026-11-14(HJOW-Athlon) · 마지막 단위 1312(테스트 전용 캠페인/스커미시 자동 플레이, 사용자 지시) · 다음 번호 1313 · 마지막 디컴파일 HJOW-Athlon · 사용자 요청으로 목표 일시 중지**
+**제품 1313 / 11.01 · 정리 2026-11-14(HJOW-Athlon) · 마지막 단위 1313(캠페인 자동 플레이 일괄 실행·제단 총기 피격 연결, 사용자 지시) · 다음 번호 1314 · 마지막 디컴파일 HJOW-Athlon · 사용자 요청으로 목표 일시 중지**
 
 현재 상태·남은 작업·유효한 규칙만 유지한다. 단위별 경과와 만료된 지시는 [1310 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310), 개별 구현·검증은 아래 근거 문서를 따른다. [dotnetpj](LEFT_JOBS.dotnetpj.md)·[webpj](LEFT_JOBS.webpj.md)는 각 인계 문서가 기준이며 이 작업에서 수정하지 않는다.
 
@@ -13,7 +13,7 @@
 | 구분 | 상태와 다음 행동 |
 | --- | --- |
 | **M8 최종 배포 관문** | **1311 완료.** 확정1310의 Release·ZIP1,436항목·배포본5경로·QuickJS6건·외부 접속 감사를 통과했다([3절](#final-gate)). 사용자 지시(2026-11-14)에 따라 문서·로컬 커밋 뒤 목표를 **paused**로 전환하며 재개 지시를 기다린다. |
-| **테스트 자동 플레이 1312** | **완료(2026-11-14 사용자 요청).** 명령줄 전용 `--test-autoplay`·`--test-ally-ai`·`--test-enemy-ai`·`--test-start-sp`·`--test-enemy-start-sp`로 **캠페인·스커미시**에서 로컬 플레이어에도 원본 데모 분기와 같은 AI를 붙여 자동 플레이한다(무인자 일반 실행·options.cfg·메뉴에는 없음). 실제 1-1에서 아군 어려움·적 쉬움·SP 20000으로 **승리(`BadTeamDead`) 재현**, 스커미시 실행 확인. 사람이 지켜볼 수 있게 **관전 카메라**(`--test-follow-battle`, 프리셋 포함: 주요 전투 위치, 희생 의식 중에는 제단으로 이동)도 넣었다. 11차 동맹 AI 난이도 판정도 보정했다. **플레이 결과 재현이 필요한 AI는 먼저 [AI 에이전트용 사용 안내](docs/testing/cpp-autoplay-test-guide.md)를 읽고 [실행 도구](tools/cpp_campaign_autoplay.py)를 쓴다.** [구현 근거](docs/exe/cpp-campaign-test-play-20261114.md). |
+| **테스트 자동 플레이 1312** | **완료(2026-11-14 사용자 요청).** 명령줄 전용 `--test-autoplay`·`--test-ally-ai`·`--test-enemy-ai`·`--test-start-sp`·`--test-enemy-start-sp`로 **캠페인·스커미시**에서 로컬 플레이어에도 원본 데모 분기와 같은 AI를 붙여 자동 플레이한다(무인자 일반 실행·options.cfg·메뉴에는 없음). 실제 1-1에서 아군 어려움·적 쉬움·SP 20000으로 **승리(`BadTeamDead`) 재현**, 스커미시 실행 확인. 사람이 지켜볼 수 있게 **관전 카메라**(`--test-follow-battle`, 프리셋 포함: 주요 전투 위치, 희생 의식 중에는 제단으로 이동)도 넣었다. 11차 동맹 AI 난이도 판정도 보정했다. **플레이 결과 재현이 필요한 AI는 먼저 [AI 에이전트용 사용 안내](docs/testing/cpp-autoplay-test-guide.md)를 읽고 [실행 도구](tools/cpp_campaign_autoplay.py)를 쓴다.** [구현 근거](docs/exe/cpp-campaign-test-play-20261114.md). **1313 일괄 실행(사용자 지시로 3-x·2-5 제외, 캠페인 1·2의 10개):** 승리5(1-1·1-2·1-5·2-2·2-3)·패배1(2-1)·미결4(1-3·1-4·1-6·2-4). 2-4는 **제단 총기 피격 미복원으로 비정상 종료 → 수정, 재실행 완주**. 남은 과제: 아군 AI 정체 원인(AI 본체 필드 관측 필요)·희생 의식 카메라 미관측·3-1 `다른 파생 실제 피해 미복원`(3-x 제외로 미수정). [결과 7절](docs/exe/cpp-campaign-test-play-20261114.md#7-캠페인-전체-자동-플레이-실행-1313-2026-11-14-후속). |
 | **CD10.72 복원 C3~C5** | **사용자 보류(2026-11-14). 재개 지시 전 진행하지 않는다.** 메뉴·CDDir 저장 후 재실행은1309에서 확인했다. 1310의 Start/AI 설정은 순수 몸체만 검증했고 실제 Session/Guide/SP/AI 생성자에는 미연결이다. 첫 튜토리얼 차단은 `RawMenuHtml.inc:3`의 PATCH 전용 HTML 검사다. [보류 인계·재개 지점](docs/exe/cpp-cd1072-deferred-20261114.md). |
 | 선택/추가 제보 | 비행체 표시 보간·번역·QuickJS 추가 연동은 D2·D3·D7 결정 뒤 진행한다. 새 재현 자료가 오면 해당 NB 행을 다시 연다. |
 
@@ -75,9 +75,9 @@
 
 | 항목 | 현재 기준 |
 | --- | --- |
-| 제품 | **1312 / 11.01**, 코드는 1312 단위 커밋(이전 1310 `09f9f34d5`). 마지막 집중 검사는 `netstorm_campaign_test_play_tests`16건·`netstorm_ai_difficulty_tests`5건·`netstorm_cd_mission_start_tests`10건 통과, NetstormCpp·NetstormRoot Release 종료0. 단위별 결과는 근거 문서에 있다. |
+| 제품 | **1313 / 11.01**, 코드는 1312·1313 단위 커밋(이전 1310 `09f9f34d5`). 마지막 집중 검사는 `netstorm_campaign_test_play_tests`16건·`netstorm_ai_difficulty_tests`5건·`netstorm_cd_mission_start_tests`10건 통과, NetstormCpp·NetstormRoot Release 종료0. 단위별 결과는 근거 문서에 있다. |
 | 실행·플레이 | 10.78 메뉴·미션·스커미시 플레이 가능. CD는 메뉴만 확인했고 튜토리얼/플레이 미완료다. 전체 원본 동일성은 미확정이다. |
-| ZIP·전체 검사 | **1311 M8 통과**, ZIP1,436항목·배포본5경로·QuickJS6/6(제품1310 기준). **1312에서 제품 코드가 바뀌었으므로 배포 전 새 ZIP·M8 관문이 필요하다.** 전체34경로 진입의 마지막 기록은 제품644, 최신 전체 솔루션 통과 기록은 없다. |
+| ZIP·전체 검사 | **1311 M8 통과**, ZIP1,436항목·배포본5경로·QuickJS6/6(제품1310 기준). **1312·1313에서 제품 코드가 바뀌었으므로 배포 전 새 ZIP·M8 관문이 필요하다.** 전체34경로 진입의 마지막 기록은 제품644, 최신 전체 솔루션 통과 기록은 없다. |
 | 디컴파일 | Client 양판본2026-11-03·R전용2026-11-07, 모두 **HJOW-Athlon(192.168.0.94)**. 이후 원문 변경·재디컴파일 없음. [기록](docs/exe/cpp-decompilation-20261103.md). |
 | 보호 | AGENTS.md·originals·originalCD·기존 fixture·README 개요를 보존한다. 최근 CD 사본 실행 전후 originalCD 전체 해시는 불변이었다. |
 

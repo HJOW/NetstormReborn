@@ -19,9 +19,11 @@ import argparse
 import datetime
 import json
 import os
+import re
 import struct
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 # 저장소 최상위 경로이며 기본 실행 파일/게임 자료/출력 위치의 기준이다.
@@ -29,21 +31,27 @@ ROOT = Path(__file__).resolve().parents[1]
 # Player 기록 하나의 크기와 AI 본체 토큰 위치다(cpppj Player+0xb0).
 PLAYER_BYTES = 180
 BRAIN_OFFSET = 0xB0
-# 미션 진행 중 표시되는 안내 창을 닫는 버튼 이름이다. 승패 창의 버튼(Next Mission/Leave 등)은 누르지 않는다.
-SAFE_BUTTONS = ('Play Mission', 'Go!', 'MORE', 'More', 'OK', 'Ok')
+# 미션 진행 중 표시되는 안내/선택 창을 닫는 버튼 이름이다(캠페인 16개 미션의 [A.]·[A1.]·[@시각] 구간 조사 결과).
+# 승패 창의 버튼(Next Mission/Leave Missions/Continue/OK 등)과 항복 쪽 선택(Surrender 등)은 누르지 않는다. 'OK'는 FinalConfrontation 승리 창의 MissionAbort 버튼이라 뺐다.
+SAFE_BUTTONS = ('Play Mission', 'Go!', 'MORE', 'More', 'Fight On', 'Fight On!', 'Continue Fighting', 'Ignore', 'Go to Hell')
 # 스커미시 시작까지 메인 메뉴에서 차례로 누르는 버튼이다(Campaign → Skirmish → Start).
 SKIRMISH_MENU_BUTTONS = ('Campaign', 'Skirmish', 'Start')
 # 스커미시 메뉴 버튼을 누르는 마지막 프레임이다. 이후에는 메뉴로 돌아가도 새 스커미시를 시작하지 않는다.
 SKIRMISH_MENU_LAST_FRAME = 1500
 # 승리/패배 안내 섹션 이름(소문자)이다. 캠페인은 Done<미션> 설정 값도 승리로 본다.
-VICTORY_PAGES = {'badteamdead', 'succeeded', 'success'}
+VICTORY_PAGES = {'badteamdead', 'succeeded', 'success', 'ai2priestsaved', 'victorynote'}
 DEFEAT_PAGES = {'goodteamdead', 'failed'}
+# 소유자별 사제/신전 사망 패배 섹션 이름(예: Ai2PriestDead, Ai1TempleDead)이다.
+DEFEAT_PAGE_PATTERN = re.compile(r'^ai\d+(priest|temple)dead$')
 # 난이도 이름을 스커미시 설정 값(1/2/3)으로 바꾸는 표다.
 LEVELS = {'easy': 1, 'normal': 2, 'hard': 3, '1': 1, '2': 2, '3': 3}
 
 
-def build_steps(frames, dump_every, click_every, snapshot_every, skirmish, out_dir):
-    """UI 스크립트 단계(프레임, 동작, 인자) 목록을 만든다. 안내 버튼 클릭과 덤프/보고(선택: 화면 캡처)를 주기적으로 넣는다."""
+def build_steps(frames, dump_every, click_every, snapshot_every, skirmish, out_dir, extra_buttons=(), when_clicks=()):
+    """UI 스크립트 단계(프레임, 동작, 인자) 목록을 만든다. 안내 버튼 클릭과 덤프/보고(선택: 화면 캡처)를 주기적으로 넣는다.
+
+    extra_buttons: 기본 목록 외에 항상 누를 버튼 이름. when_clicks: (보고 정규식, 버튼) 쌍이며 현재 보고가 정규식과 맞을 때만 그 버튼을 누른다(승패 창과 같은 이름의 버튼을 안내 창에서만 누를 때 쓴다).
+    """
     steps = []
     # 스커미시는 처음 구간에서만 메인 메뉴 → Campaign → Skirmish → Start 를 차례로 누른다(없는 버튼은 click-if 가 무시한다).
     for frame in range(30, min(frames, SKIRMISH_MENU_LAST_FRAME), 10) if skirmish else ():
@@ -51,8 +59,11 @@ def build_steps(frames, dump_every, click_every, snapshot_every, skirmish, out_d
             steps.append((frame, 'click-if', button))
     # 매 click_every 프레임마다 표시된 안내 버튼만 누른다(없으면 click-if 는 아무 것도 하지 않는다).
     for frame in range(5, frames, click_every):
-        for button in SAFE_BUTTONS:
+        for button in (*SAFE_BUTTONS, *extra_buttons):
             steps.append((frame, 'click-if', button))
+        # 'when' 단계의 인자는 "정규식;;동작;;인자"이며 보고에 정규식이 있을 때만 입력을 넣는다.
+        for pattern, button in when_clicks:
+            steps.append((frame, 'when', f'{pattern};;click-if;;{button}'))
     # 매 dump_every 프레임마다 그리기 뒤 상태를 기록한다.
     for frame in range(dump_every, frames, dump_every):
         steps.append((frame, 'session-dump', str(out_dir / f'dump-{frame:06d}.tsv')))
@@ -116,7 +127,7 @@ def judge(reports):
         page = item.get('page', '').lower()
         if item.get('mission_progress', '0') not in ('0', '') or page in VICTORY_PAGES:
             return 'victory', item['frame']
-        if page in DEFEAT_PAGES:
+        if page in DEFEAT_PAGES or DEFEAT_PAGE_PATTERN.match(page):
             return 'defeat', item['frame']
     return 'undecided', None
 
@@ -157,6 +168,8 @@ def main():
     parser.add_argument('--dump-every', type=int, default=2000, help='session-dump/report 주기 (프레임)')
     parser.add_argument('--click-every', type=int, default=20, help='안내 버튼 클릭 주기 (프레임)')
     parser.add_argument('--snapshot-every', type=int, default=0, help='화면 캡처(BMP) 주기 (프레임, 0이면 끔)')
+    parser.add_argument('--buttons', default='', help='기본 안내 버튼 목록 외에 항상 누를 버튼 이름 쉼표 목록')
+    parser.add_argument('--when-click', action='append', default=[], help="조건부 클릭 '보고정규식;;버튼' (여러 번 지정 가능). 예: 'page\\tAi2PriestCaptured;;Continue'")
     parser.add_argument('--ally-ai', default='hard', help='아군(로컬·동맹) AI 난이도 easy/normal/hard, none 이면 아군 AI 없음')
     parser.add_argument('--enemy-ai', default='easy', help='적 AI 난이도 easy/normal/hard, option 이면 옵션(스커미시는 화면) 값 사용')
     parser.add_argument('--start-sp', type=int, default=None, help='로컬 시작 SP (기본: 미션 값, 스커미시 5000)')
@@ -164,6 +177,8 @@ def main():
     parser.add_argument('--no-follow', action='store_true', help='관전 카메라(주요 전투·희생 의식 제단으로 화면 이동)를 끈다. 기본은 켬')
     parser.add_argument('--language', default='english', help='게임 언어 (english 권장: 버튼 이름이 영어 기준이다)')
     parser.add_argument('--timeout', type=int, default=3600, help='실행 제한 시간 (초)')
+    parser.add_argument('--no-early-stop', action='store_true', help='승패가 확정돼도 --frames 끝까지 계속 실행한다 (기본: 확정 뒤 보고가 --keep-reports 개 더 쌓이면 종료)')
+    parser.add_argument('--keep-reports', type=int, default=1, help='승패 확정 뒤 더 지켜볼 보고 개수 (기본 1)')
     args = parser.parse_args()
 
     stamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
@@ -172,7 +187,13 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
     user_data = out_dir / 'user-data'
     user_data.mkdir(exist_ok=True)
-    steps = build_steps(args.frames, args.dump_every, args.click_every, args.snapshot_every, args.skirmish, out_dir)
+    extra_buttons = [item.strip() for item in args.buttons.split(',') if item.strip()]
+    when_clicks = []
+    # "정규식;;버튼" 형식의 조건부 클릭을 읽는다(예: 'page\tAi2PriestCaptured;;Continue').
+    for item in args.when_click:
+        pattern, button = item.split(';;', 1)
+        when_clicks.append((pattern, button))
+    steps = build_steps(args.frames, args.dump_every, args.click_every, args.snapshot_every, args.skirmish, out_dir, extra_buttons, when_clicks)
     steps_path = out_dir / 'steps.tsv'
     steps_path.write_text(''.join(f'{frame}\t{operation}\t{argument}\n' for frame, operation, argument in steps), encoding='utf-8')
 
@@ -199,16 +220,41 @@ def main():
     if not args.no_follow:
         command += ['--test-follow-battle']
 
-    env =dict(os.environ, NETSTORM_USER_DATA=str(user_data))
+    env = dict(os.environ, NETSTORM_USER_DATA=str(user_data))
     (out_dir / 'run.json').write_text(json.dumps({'argv': command, 'NETSTORM_USER_DATA': str(user_data)}, ensure_ascii=False, indent=2), encoding='utf-8')
+    stopped_early, timed_out = False, False
     with (out_dir / 'console.txt').open('w', encoding='utf-8') as console:
-        result = subprocess.run(command, cwd=ROOT, env=env, stdout=console, stderr=subprocess.STDOUT, timeout=args.timeout)
+        process = subprocess.Popen(command, cwd=ROOT, env=env, stdout=console, stderr=subprocess.STDOUT)
+        started, outcome_at = time.time(), None
+        # 게임이 끝나거나 제한 시간이 될 때까지 보고 파일을 지켜본다. 결과가 나온 뒤 보고 --keep-reports 개가 더 쌓이면 남은 프레임을 기다리지 않고 종료한다.
+        while process.poll() is None:
+            time.sleep(2)
+            if time.time() - started > args.timeout:
+                timed_out = True
+                process.kill()
+                break
+            if args.no_early_stop:
+                continue
+            try:
+                reports_now = parse_reports(out_dir / 'report.tsv')
+            except OSError:
+                continue  # 게임이 보고 파일을 다시 쓰는 중이면 다음 확인으로 넘긴다.
+            decided, _ = judge(reports_now)
+            if decided != 'undecided' and outcome_at is None:
+                outcome_at = len(reports_now)
+            if outcome_at is not None and len(reports_now) >= outcome_at + args.keep_reports:
+                stopped_early = True
+                process.kill()  # 이 도구가 띄운 프로세스만 종료한다. 사용자 데이터는 출력 폴더에 격리되어 있다.
+                break
+        process.wait()
+    result = process
 
     dumps = [parse_dump(path) for path in sorted(out_dir.glob('dump-*.tsv'))]
     reports = parse_reports(out_dir / 'report.tsv')
     outcome, outcome_frame = judge(reports)
     console_text = (out_dir / 'console.txt').read_text(encoding='utf-8', errors='replace')
-    summary = {'target': name, 'exit_code': result.returncode, 'outcome': outcome, 'outcome_frame': outcome_frame,
+    summary = {'target': name, 'exit_code': 0 if stopped_early else result.returncode, 'stopped_early': stopped_early, 'timed_out': timed_out,
+               'outcome': outcome, 'outcome_frame': outcome_frame,
                'local_ai_attached': '로컬 owner' in console_text and 'AI 생성 완료' in console_text,
                'ai_diagnostics': console_text.count('AI 원본 진단'),
                'camera_moves': {'battle': console_text.count('테스트 관전 카메라: 전투'), 'ritual': console_text.count('테스트 관전 카메라: 희생 의식 제단')},
@@ -216,14 +262,14 @@ def main():
     (out_dir / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding='utf-8')
     # 사람이 읽는 간단한 표를 출력한다.
     print(f'출력 폴더: {out_dir}')
-    print(f"종료 코드: {result.returncode} / 로컬 AI 부착: {summary['local_ai_attached']} / AI 원본 진단: {summary['ai_diagnostics']} / 오류 로그: {len(summary['logs'])}")
+    print(f"종료 코드: {summary['exit_code']}{' (결과 확정 뒤 조기 종료)' if stopped_early else ''}{' (제한 시간 초과)' if timed_out else ''} / 로컬 AI 부착: {summary['local_ai_attached']} / AI 원본 진단: {summary['ai_diagnostics']} / 오류 로그: {len(summary['logs'])}")
     for item in dumps:
         print(f"frame {item['frame']}: AI={item['ai_owners']} objects={dict(sorted(item['objects_by_owner'].items()))} sp={item['sp']}")
     for item in reports:
         print(f"report {item['frame']}: page={item.get('page')} popup={item.get('popup')} paused={item.get('paused')} done={item.get('mission_progress')}")
     print(f"관전 카메라 이동: 전투 {summary['camera_moves']['battle']}회 / 희생 의식 {summary['camera_moves']['ritual']}회")
     print(f'결과: {outcome} (프레임 {outcome_frame})')
-    return result.returncode
+    return summary['exit_code']
 
 
 if __name__ == '__main__':
