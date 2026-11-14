@@ -6,17 +6,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E472)
+### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E473)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 765(85.4%)·partial 32(3.6%)·todo 99(11.0%)**. 기준선 소스 줄 수로는 129,653줄 중 port 97,774(75.4%)·partial 10,233(7.9%)·todo 21,646(16.7%). 영역별 남은 양은 0.3절 |
-| 마지막 구현 커밋 | **WB04-E472** (이 커밋) **5-B client/InventoryGump** — 생산 격자·항목(`InventoryGridNode`/`InventoryItemNode`, 생성·점멸·`attachGrid`(두 번 순회·열 ceil·행 몫 보정·칸 크기 배정도)·통지·삭제 통지)을 `www/ui/inventory-gump.js` 로 이식했다. 원본 10.78 독립 관측 격자 170행·점멸 110행 첫 실행 전체일치, 공통 트리/수명 통합과 독립 시험 6건, 기준선 뒤 변경 없음. [단위 문서](docs/webpj-inventory-gump-20261115.md) · 직전 **WB04-E471** (`834002d9e` / 20261115-15 WB) HudDividerInput([단위 문서](docs/webpj-hud-divider-input-20261115.md)) |
-| 다음 작업 | **3.8절 원본 관측 연결 이월**(약 40개 fixture)을 단위별로 처리하면서 5-B 카메라/HUD 부품(`UberHud.inc`·`InventoryItemGump`·`RawMinimapControls`)과 번갈아 이어간다. 이월 목록은 이미 이식한 모듈을 원본 관측에 대조하는 일이라 첫 실행 불일치가 곧 이식 결함 발견이다(E465/E466의 일곱 건은 모두 일치). 5-A에 남은 실제 RawMenuControls 허브(1,345줄)·ClientRendererFrame·E197/E198/E201 Session 재비교는 허브가 묶는 세션/메타/채팅/영상/텍스트 입력 단위와 4-D 선행이 있어 구획별로 나눠 그 뒤에 진행한다. 기존 앱 경로 교체·GameWorld·ClientGameplayGlobals/미션 연결도 남는다 |
-| 마지막 전체 검사 | 2026-11-15 WB04-E472: Node v26.13.0·v22.23.3 전체 각각 **4,868건 통과, 실패 0**. 신규 시험 9건(원본 생산 격자 170행·점멸 110행 전체일치, 트리/수명 통합 1건, 독립 6건), port-map 984행 오류 0. Node v24는 이 PC에 설치되지 않아 실행하지 못했다 |
+| 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 765(85.4%)·partial 33(3.7%)·todo 98(10.9%)**. 기준선 소스 줄 수로는 129,653줄 중 port 97,774(75.4%)·partial 10,421(8.0%)·todo 21,458(16.6%). 영역별 남은 양은 0.3절 |
+| 마지막 구현 커밋 | **WB04-E473** (이 커밋) **5-B client/InventoryItemGump(partial)** — 생산 항목의 아이콘 자식 부착(43ce40: 배율/중심 float32 저장·패턴 칸별 다리 품질 프레임·모드 1/2·수량 글자)·Draw·입력·비용 판정을 `www/ui/inventory-item-gump.js` 로 이식했다. 원본 10.78 독립 관측 132행 첫 실행 전체일치, 독립 시험 5건, 기준선 뒤 변경 없음. 실제 자산 연결(`BindInventoryItemAssets`)은 PriestPlacementAssets 이식 때라 대응표 상태는 partial. [단위 문서](docs/webpj-inventory-item-gump-20261115.md) · 직전 **WB04-E472** (`71a5ad811` / 20261115-16 WB) InventoryGump([단위 문서](docs/webpj-inventory-gump-20261115.md)) |
+| 다음 작업 | **3.8절 원본 관측 연결 이월**(약 40개 fixture)을 단위별로 처리하면서 5-B 카메라/HUD 부품(`UberHud.inc`·`RawMinimapControls`)과 번갈아 이어간다. 이월 목록은 이미 이식한 모듈을 원본 관측에 대조하는 일이라 첫 실행 불일치가 곧 이식 결함 발견이다(E465/E466의 일곱 건은 모두 일치). 5-A에 남은 실제 RawMenuControls 허브(1,345줄)·ClientRendererFrame·E197/E198/E201 Session 재비교는 허브가 묶는 세션/메타/채팅/영상/텍스트 입력 단위와 4-D 선행이 있어 구획별로 나눠 그 뒤에 진행한다. 기존 앱 경로 교체·GameWorld·ClientGameplayGlobals/미션 연결도 남는다 |
+| 마지막 전체 검사 | 2026-11-15 WB04-E473: Node v26.13.0·v22.23.3 전체 각각 **4,874건 통과, 실패 0**. 신규 시험 6건(원본 생산 항목 132행 전체일치 + 독립 5건), port-map 984행 오류 0. Node v24는 이 PC에 설치되지 않아 실행하지 못했다 |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭(정지 포인터 아래 펼침 메뉴 첫 행 강조)→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -32,7 +32,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 〃 | 4-C | 패킷·로그인·내부 미션 전송 | 완료 27/30 (E305~E328, 3항목은 4-D 이월) | `o/` 20단위 · 2,578줄 (+548) + `zacket/` 1 + client A 일부 |
 | 〃 | 4-D | Session 조립·Tutorial1 Load/Start(L2) | **진행 중** 12/31 (체크 목록 펼침 E330; 분모는 항목 줄 수이며 세부 항목을 더하면 늘어난다) | client A 나머지(RawCampaignSession 5,715줄 등) |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 진행 중 44/46 (체크 목록 펼침 E372; 4-D 선행 대기와 병행) | `o/` 4단위 · 216줄 + client C·J 일부 |
-| 〃 | 5-B | 카메라·HUD·미니맵·커서 | 진행 중 8/13 (체크 목록 펼침 E464, E470~E472 에서 HudDock·HudDividerInput·InventoryGump 분리) | `o/` 1단위 · 89줄 + client J 나머지 |
+| 〃 | 5-B | 카메라·HUD·미니맵·커서 | 진행 중 9/13 (체크 목록 펼침 E464, E470~E473 에서 HudDock·HudDividerInput·InventoryGump·InventoryItemGump 분리) | `o/` 1단위 · 89줄 + client J 나머지 |
 | 〃 | 5-C | 미션 진입 명령과 **M2 판정**(L4a) | 미착수 | — |
 | 6 M3 | 6-P | 경로 부품(순서3에서 이월) | 완료 3/3 (E349~E351) | `o/` 4단위 · 937줄 (+163) |
 | 〃 | 6 | 입력·경제·건설 연결 | 선행 커서 부품 완료 4/4(E398~E401) | client K·E·L |
@@ -46,18 +46,18 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 순서3(M2 선행 부품)은 2026-11-10 WB04-E264에서, 4-A는 WB04-E273에서 마감됐다. 두 단계의 체크 목록과 단위 링크는 보관본에 있고 요약은 2.3절이다. 6-P·7-P1~P3은 M2에 직접 필요하지 않아 순서3에서 이월한 부품이다(1절 단계 분할 결정). 현재 단계는 **4-D**이며 3.1절에 체크 목록을 펼쳤다(E330).
 
-### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-15 WB04-E472 기준)
+### 0.3 남은 이식량 (`webpj/PORT_MAP.tsv`, 2026-11-15 WB04-E473 기준)
 
 줄 수는 기준선 `1f00a25a`의 단위 파일(`.cpp/.h/.inc`) 줄 합계다(주석 포함). partial 줄 수는 일부만 옮긴 파일의 전체 줄이므로 남은 양의 상한이다. 단위·줄 수는 대략적인 척도일 뿐이며, 순서4~5의 연결·통합(실제 세션에서 부품을 같은 월드로 묶고 cpppj 오라클과 비교)은 이 수치에 드러나지 않는 큰 작업이다.
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 896단위 / 129,653줄 | 765 (85.4%) / 97,774줄 (75.4%) | 32 (3.6%) / 10,233줄 (7.9%) | 99 (11.0%) / 21,646줄 (16.7%) |
+| 전체 | 896단위 / 129,653줄 | 765 (85.4%) / 97,774줄 (75.4%) | 33 (3.7%) / 10,421줄 (8.0%) | 98 (10.9%) / 21,458줄 (16.6%) |
 | `o/` 월드·규칙 | 517단위 / 67,592줄 | 515 (99.6%) / 66,604줄 (98.5%) | 2 (0.4%) / 988줄 (1.5%) | 0 / 0줄 |
-| `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 249 (65.9%) / 30,759줄 (49.9%) | 30 (7.9%) / 9,215줄 (15.0%) | 99 (26.2%) / 21,648줄 (35.1%) |
+| `client/` 세션·UI·표시 | 378단위 / 61,622줄 | 249 (65.9%) / 30,759줄 (49.9%) | 31 (8.2%) / 9,403줄 (15.3%) | 98 (25.9%) / 21,460줄 (34.8%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 439줄 | 1 (100%) / 439줄 (100%) | 0 | 0 |
 
-남은 전체는 131단위(todo 99·partial 32)다. 아래 영역 표는 2026-11-11 근사 분류에 단위별 변경을 덧붙인 참고치이며, 최신 전체 합계는 위 표가 기준이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
+남은 전체는 131단위(todo 98·partial 33)다. 아래 영역 표는 2026-11-11 근사 분류에 단위별 변경을 덧붙인 참고치이며, 최신 전체 합계는 위 표가 기준이다. 영역 경계는 근사이며 실제 이식 순서는 0.2절 단계와 cpppj 의존 관계로 정한다. `*`는 partial이다.
 
 | 영역 | 주 단계 | todo 단위 / 줄 | partial 단위 / 줄 | 큰 단위(줄) |
 | --- | --- | --- | --- | --- |
@@ -70,7 +70,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | G 미션 진행·튜토리얼·안내·대본 | 8 | 9 / 1,072 | 4 / 323 | DialogScript 296 · Mission 150 · RawCampaignTutorialOneBindings 136 · MissionGuideInput 120 |
 | H 소리·음악·동영상 | 8 | 10 / 1,666 | 4 / 2,041 | Sound* 824 · ClientAudio* 467 · SoundMusic* 455 · SoundDevice 372 |
 | I 채팅·메시지 | 8 | 0 / 0 | 1 / 74 | — (Runtime은 E455 이식, 나머지 partial은 허브 조립 때) |
-| J 렌더러·카메라·HUD·미니맵 | 5-A·5-B | 11 / 1,361 | 2 / 569 | SpriteDraw* 468 · PreviewDraw 363 |
+| J 렌더러·카메라·HUD·미니맵 | 5-A·5-B | 10 / 1,173 | 3 / 757 | SpriteDraw* 468 · PreviewDraw 363 |
 | K 게임 입력·커서·선택·객체 메뉴 | 6 | 25 / 3,635 | 2 / 149 | RawCursorMana 289 · RawCampaignCursor 283 · RawCursorRange 283 · CampaignObjectMenuClient 240 |
 | L 메뉴·대화상자·Gump·글자 UI | 5·6 | 8 / 2,547 | 12 / 4,068 | UberGump* 2,207 · RawMenuControls 1,341 · RawButtonControls 797 · StyleText* 519 |
 | M 자료·파일·설정·언어(웹 적응 포함) | 4-A 완료, 이월분 4-B·4-D·5-A | 3 / 173 | 3 / 578 | ConfigInterface* 343 · ClientOptionsDisk* 165 · DataManagerFileRead 78 |
@@ -83,8 +83,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`1f00a25a`(제품985·표시 11.01).** 이식 원본은 언제나 기준선 판(`git show 1f00a25a:경로`)이고, 기준선 뒤 cpppj 변경은 3.6절 절차로만 반영한다. 같은 작업 트리에서 CP 세션이 cpppj를 계속 커밋하므로(LAN 3차·`Actual*` 실제 연결 경로·`shared*` 공유 전역 추가 등) cpppj 상태는 커밋과 소스로 판단한다. **오라클 실행 파일**은 기준선을 따로 빌드한 `extracted/webpj-oracle/1f00a25a/Netstorm.exe`(SHA-256 `03fa4df8…cbc1e`, Git 제외·HJOW-Athlon 전용)다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 54·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 765·partial 32·todo 99·제외(-) 88**(2026-11-15 WB04-E472 기준), session/oracle 0. 웹 소스는 `www/` JS 117,693줄(`www/data` 제외, `www/core` 모듈 591개), 검사 파일 651개, 도구(`webpj/tools`) 오라클 관련 4개다(2026-11-15 E472 재계산) |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` 706항목(original-x86 673·independent 8·screenshot 13·source 9·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E282~E287에서 datamanager-selection/resize/create/read·farmcluster·fort-world-load·campaign-worldload 7개, WB04-E290에서 terrain-context 1개, WB04-E292에서 terrain-growth·terrain-seed·terrain-arch-helpers 3개, WB04-E293에서 island-bitmap·island-bitmap-parent 2개, WB04-E296에서 regionpaint 1개, WB04-E325에서 subscriber-lifetime-edges 1개, WB04-E334에서 pathsearch 1개, WB04-E336에서 sp-initialization 1개, WB04-E337에서 mission-fort-request 1개, WB04-E338에서 mission-technology 1개, WB04-E339에서 mission-loading-message 1개, WB04-E340에서 mission-guide 1개, WB04-E341에서 mission-lifecycle 1개, WB04-E343에서 mission-first·mission-common·mission-abort 3개, WB04-E349에서 walk-shape·pathinit·pathprepare 3개, WB04-E350에서 pathdata 1개, WB04-E351에서 pathstart·pathprocesstype 2개, WB04-E352에서 flyer-postpop 1개, WB04-E353에서 sun-aviary·sun-aviary-notice·sun-flyer-postpop 3개, WB04-E354에서 rain-aviary·rain-home-notice 2개, WB04-E355에서 flyer-frame 1개, WB04-E356에서 flyer-target 1개, WB04-E357에서 sun-flyer-frame·sun-flyer-clear 2개, WB04-E358에서 wind-flyer 1개, WB04-E359에서 gunprocess·gun-notify-checking 2개, WB04-E360에서 cannon-asset-ray 1개, WB04-E363에서 gunimpact 1개, WB04-E364에서 disc-regular·disc-regular-boundary-1219 2개, WB04-E365에서 templeritual 1개, WB04-E367에서 daisregular-core·daisprogress·daisbridge 3개, WB04-E368에서 altarsacrifice 1개, WB04-E369에서 daislifecycle 1개, WB04-E373에서 sprite-colors·preview-colors·production-colors 3개, WB04-E374에서 banner-option·colorsort-fixed-input 2개, WB04-E375에서 colorsort-cache-parent 1개, WB04-E376에서 palettecolors·paletteflash·screen-palette-clear 3개, WB04-E377에서 vfx-ellipse·sprite-hit-point-bar 2개, WB04-E378에서 scaled-pixels·translated-pixels 2개, WB04-E379에서 fierytail-pixels 1개, WB04-E380에서 draw-water·draw-water-input·draw-water-names 3개, WB04-E382에서 draw-submission 1개, WB04-E383에서 renderer-prelude·renderer-clouds·camera-present 3개, WB04-E384에서 renderer-diagnostics·renderer-diagnostic-keys 2개, WB04-E386에서 preview-collection 1개, WB04-E387에서 preview-draw 1개, WB04-E388에서 sprite-draw 1개, WB04-E389에서 object-collection 1개, WB04-E391에서 renderer 1개, WB04-E392에서 renderer-present-dirty 1개, WB04-E393에서 palettecolor·screen-scroll 2개, WB04-E394에서 tilegroup 1개, WB04-E395에서 gumpcollection 1개, WB04-E460에서 htmltext·html-background·htmlpicture 3개, WB04-E461에서 tell-section 1개, WB04-E462에서 background-gif-assets·background-gif-variants 2개, WB04-E463에서 camera-commit·camera-immediate 2개, WB04-E464에서 camera-home·viewspot 2개, WB04-E465에서 camera-center·camera-pan·edge-scroll 3개, WB04-E466에서 embedded-tell 1개, WB04-E467에서 dialog-command-lifetime·dialog-exit-command·issue-commands 3개, WB04-E468에서 mana-bolt-regular 1개, WB04-E470에서 hud-dock-geometry 1개, WB04-E471에서 hud-divider-input 1개, WB04-E472에서 inventory-grid·inventory-blink 2개 추가). original-x86 582개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 984단위**(기준선 `o/`555·`client/`428·`zacket/`1, 약 13만 7천 줄). 분류: **port 852·adapt 44·exclude-mp 6·exclude-edit 54·exclude-host 27·exclude-legacy 1, 미분류 0**. 상태: **port 765·partial 33·todo 98·제외(-) 88**(2026-11-15 WB04-E473 기준), session/oracle 0. 웹 소스는 `www/` JS 117,826줄(`www/data` 제외, `www/core` 모듈 591개), 검사 파일 652개, 도구(`webpj/tools`) 오라클 관련 4개다(2026-11-15 E473 재계산) |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` 707항목(original-x86 674·independent 8·screenshot 13·source 9·original-binary 1·**cpppj-oracle 2**; 최근 WB04-E282~E287에서 datamanager-selection/resize/create/read·farmcluster·fort-world-load·campaign-worldload 7개, WB04-E290에서 terrain-context 1개, WB04-E292에서 terrain-growth·terrain-seed·terrain-arch-helpers 3개, WB04-E293에서 island-bitmap·island-bitmap-parent 2개, WB04-E296에서 regionpaint 1개, WB04-E325에서 subscriber-lifetime-edges 1개, WB04-E334에서 pathsearch 1개, WB04-E336에서 sp-initialization 1개, WB04-E337에서 mission-fort-request 1개, WB04-E338에서 mission-technology 1개, WB04-E339에서 mission-loading-message 1개, WB04-E340에서 mission-guide 1개, WB04-E341에서 mission-lifecycle 1개, WB04-E343에서 mission-first·mission-common·mission-abort 3개, WB04-E349에서 walk-shape·pathinit·pathprepare 3개, WB04-E350에서 pathdata 1개, WB04-E351에서 pathstart·pathprocesstype 2개, WB04-E352에서 flyer-postpop 1개, WB04-E353에서 sun-aviary·sun-aviary-notice·sun-flyer-postpop 3개, WB04-E354에서 rain-aviary·rain-home-notice 2개, WB04-E355에서 flyer-frame 1개, WB04-E356에서 flyer-target 1개, WB04-E357에서 sun-flyer-frame·sun-flyer-clear 2개, WB04-E358에서 wind-flyer 1개, WB04-E359에서 gunprocess·gun-notify-checking 2개, WB04-E360에서 cannon-asset-ray 1개, WB04-E363에서 gunimpact 1개, WB04-E364에서 disc-regular·disc-regular-boundary-1219 2개, WB04-E365에서 templeritual 1개, WB04-E367에서 daisregular-core·daisprogress·daisbridge 3개, WB04-E368에서 altarsacrifice 1개, WB04-E369에서 daislifecycle 1개, WB04-E373에서 sprite-colors·preview-colors·production-colors 3개, WB04-E374에서 banner-option·colorsort-fixed-input 2개, WB04-E375에서 colorsort-cache-parent 1개, WB04-E376에서 palettecolors·paletteflash·screen-palette-clear 3개, WB04-E377에서 vfx-ellipse·sprite-hit-point-bar 2개, WB04-E378에서 scaled-pixels·translated-pixels 2개, WB04-E379에서 fierytail-pixels 1개, WB04-E380에서 draw-water·draw-water-input·draw-water-names 3개, WB04-E382에서 draw-submission 1개, WB04-E383에서 renderer-prelude·renderer-clouds·camera-present 3개, WB04-E384에서 renderer-diagnostics·renderer-diagnostic-keys 2개, WB04-E386에서 preview-collection 1개, WB04-E387에서 preview-draw 1개, WB04-E388에서 sprite-draw 1개, WB04-E389에서 object-collection 1개, WB04-E391에서 renderer 1개, WB04-E392에서 renderer-present-dirty 1개, WB04-E393에서 palettecolor·screen-scroll 2개, WB04-E394에서 tilegroup 1개, WB04-E395에서 gumpcollection 1개, WB04-E460에서 htmltext·html-background·htmlpicture 3개, WB04-E461에서 tell-section 1개, WB04-E462에서 background-gif-assets·background-gif-variants 2개, WB04-E463에서 camera-commit·camera-immediate 2개, WB04-E464에서 camera-home·viewspot 2개, WB04-E465에서 camera-center·camera-pan·edge-scroll 3개, WB04-E466에서 embedded-tell 1개, WB04-E467에서 dialog-command-lifetime·dialog-exit-command·issue-commands 3개, WB04-E468에서 mana-bolt-regular 1개, WB04-E470에서 hud-dock-geometry 1개, WB04-E471에서 hud-divider-input 1개, WB04-E472에서 inventory-grid·inventory-blink 2개, WB04-E473에서 inventory-item 1개 추가). original-x86 582개는 모두 `cpppj/tests/fixtures`를 직접 읽는다. cpppj-oracle은 `tests/fixtures/cpppj/m1/oracle.json`(PNG 8장·보고서 8개의 해시를 담은 메타)과 `m1-scenarios.json`이다. `fixture-manifest.mjs`는 대응표 base(판정 커밋) 뒤 변경만 보고하고, `port-map.mjs`는 기준선 뒤 cpppj 변경(3.6절)과 새 파일을 보고한다 |
 | 마지막 정밀 디컴파일 | 공통 인계 기준 **HJOW-Athlon / 2026-11-03**(R 전용은 2026-11-07, 같은 호스트). 웹은 cpppj 소스·fixture를 근거로 하므로 디컴파일 산출물을 직접 읽지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -311,7 +311,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [ ] E197·E198·E201 시스템(전용 시험 없이 웹 조립 검사만 한 것)의 cpppj Session 시험 재대조 [실제 Session 조립 선행]
 - [x] **GameAssets** Find(별칭→typename)·FrameIndex·SHP 블록 수 검사 대조 (E272 이월) → [E385](docs/webpj-game-assets-20261113.md)(실제 10.78 자료 대조, 별칭 3개·typename 중복·모든 클러스터 프레임 번호, partial → port)
 
-#### 5-B 카메라·HUD·미니맵 (8/13)
+#### 5-B 카메라·HUD·미니맵 (9/13)
 
 완료 기준(3.2절): 화면 요소별 cpppj 대조. 5-A 에서 먼저 끝낸 카메라 적용(E463)과 이 단계에서 시작한 초기 카메라(E464)부터 시작해 카메라 입력 → HUD/미니맵 순으로 진행한다. 줄 수는 기준선 `1f00a25a` 파일 줄 합(.cpp/.h/.inc)이다.
 
@@ -324,7 +324,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] client **HudDividerInput** 102줄 → [E471](docs/webpj-hud-divider-input-20261115.md)(원본 10.78 독립 관측 13,398행 첫 실행 전체일치, 독립 시험 5건·변형 확인 모두 잡음/동등만 남음, 기준선 뒤 변경 없음, todo → port)
 - [ ] client **UberHud.inc** 154줄 — HUD 조립(HudDock·HudDividerInput 의 실제 Uber 직계 연결)
 - [x] client **InventoryGump** 207줄 → [E472](docs/webpj-inventory-gump-20261115.md)(원본 10.78 독립 관측 격자 170행·점멸 110행 첫 실행 전체일치, 공통 트리/수명 통합·독립 시험 6건, 변형 확인 동등만 남음, 기준선 뒤 변경 없음, todo → port)
-- [ ] client **InventoryItemGump** 188줄(fixture `inventory-item-x86.tsv` 132행, 실제 자산 경로는 PriestPlacementAssets 선행) — 항목 아이콘 자식 부착·Draw·클릭·비용 판정
+- [x] client **InventoryItemGump** 188줄 (partial) → [E473](docs/webpj-inventory-item-gump-20261115.md)(원본 10.78 독립 관측 132행 첫 실행 전체일치, 독립 시험 5건·변형 확인 동등만 남음, 기준선 뒤 변경 없음; `BindInventoryItemAssets`·실제 자산 트리/클릭 시험은 PriestPlacementAssets 이식 때)
 - [ ] client **RawMinimapControls** 183줄 (+ MinimapGeometry E448 연결)
 - [ ] client **FloatingSpGump** 소비자 연결·**RawProductionControls**(393줄) 표시 연결 — 허브/세션 선행으로 6단계와 함께 판정
 - [ ] 커서 표시(`Cursor` partial 125줄·`RawCursor*`)는 6단계 선행 커서 부품(4/4 완료)과 이어 5-B 마감 때 남은 것을 판정한다

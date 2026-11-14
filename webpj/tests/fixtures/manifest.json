@@ -21148,7 +21148,7 @@
       "bytes": 141287,
       "lines": 171,
       "fixtureCommit": "c4551504c",
-      "webCommit": "worktree",
+      "webCommit": "71a5ad811",
       "cpppjBasis": {
         "cpppj/src/client/InventoryGump.cpp": "087ff2577",
         "cpppj/src/client/InventoryGump.h": "087ff2577"
@@ -21181,10 +21181,45 @@
       "bytes": 233726,
       "lines": 111,
       "fixtureCommit": "087ff2577",
-      "webCommit": "worktree",
+      "webCommit": "71a5ad811",
       "cpppjBasis": {
         "cpppj/src/client/InventoryGump.cpp": "087ff2577",
         "cpppj/src/client/InventoryGump.h": "087ff2577"
+      }
+    },
+    {
+      "id": "inventory-item",
+      "path": "cpppj/tests/fixtures/inventory-item-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E473",
+      "producer": "cpppj InventoryItemGumpTests: 보호 원본 10.78 생산 항목의 부착(43ce40)·Draw(43cdc0)·클릭(43d4c0)·비용(4af010) 독립 x86 관측 132행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/inventory-item-gump.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/inventory-item-gump.js",
+        "webpj/www/ui/inventory-gump.js",
+        "webpj/www/ui/image-gump.js",
+        "webpj/www/ui/text-gump.js",
+        "webpj/www/assets/terrain-tiles.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/InventoryItemGump.cpp",
+        "cpppj/src/client/InventoryItemGump.h"
+      ],
+      "doc": "docs/webpj-inventory-item-gump-20261115.md",
+      "scope": "진입 4종(Attach/Handle/Draw/Afford)의 항목 노드 0xc0 바이트·실제 생성한 그림 0xb4/글자 0xa4 바이트·마지막 선택·반환·호출 순서",
+      "text": true,
+      "sha256": "2e0dd1216399d96cdb76e68f8d8ef1aa017b398376e3ec23a7d195518aaac749",
+      "bytes": 127475,
+      "lines": 133,
+      "fixtureCommit": "668d8aee8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/InventoryItemGump.cpp": "167866d9c",
+        "cpppj/src/client/InventoryItemGump.h": "668d8aee8"
       }
     }
   ]
