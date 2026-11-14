@@ -1,6 +1,6 @@
 // 원본 Editgump(VT 00508e10)의 실제 문자 편집 노드와 Console 파생(VT 00506a6c)을 공통 Gump/문자 버퍼에 연결한다(cpppj client/TextEntryGump.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 실제 0x28 편집 버퍼(TextEntryBuffer)와 두 Slider 를 공유하며 원본의 현재 필드 재조회/사건 순서를 유지한다. 노드/버퍼/Slider/글꼴·픽셀 출력은 모두 호스트 훅이고 빈 성공 노드를 만들지 않는다.
-// 문자열 인자(span<const char>)는 NUL 로 끝나는 Uint8Array(또는 바이트 문자열)이며 훅이 받는 글 바이트도 같다. 기준선 뒤 K1 한국어 확장 토큰 변경은 이 파일에 없다(Buffer 쪽 기록 참고). 전용 PE fixture 는 없다.
+// 문자열 인자(span<const char>)는 NUL 로 끝나는 Uint8Array(또는 바이트 문자열)이며 훅이 받는 글 바이트도 같다. 기준선 뒤 K1 한국어 확장 토큰 변경은 이 파일에 없다(Buffer 쪽 기록 참고). 원본 10.78 독립 관측 2,292행은 tests/text-entry-gump-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E483 연결, 첫 실행 전체일치).
 // 사용: const gump = new TextEntryGump(state, hooks); gump.construct(token, 200, 60, 'hello', fontToken, backgroundToken, color); gump.handle(token, 0x41, 0, 0)(문자 'A' 입력); gump.draw(token).
 // (2026-11-14 WB04-E439: RawMenuControls 선행 문자 편집 Gump 이식)
 import { GumpBackgroundNode } from './gump-background-create.js';

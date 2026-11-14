@@ -1,5 +1,5 @@
 // 문자 편집 Gump(TextEntryGump)의 입력 처리(handle)·Console 자동완성/제출(handleConsole)·그리기(draw)를 기준선 소스 계약과 손 계산 값으로 검증한다. (2026-11-14 WB04-E439)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(TextEntryGump.cpp)에서 옮겼다. 글 폭은 바이트당 8·높이 16, 현재 위치는 (10,20)이다.
+// 이 파일의 수치는 기준선 소스 계약과 손 계산이다. 원본 직접 관측 2,292행은 tests/text-entry-gump-native-fixtures.test.mjs(2026-11-15 WB04-E483)가 대조한다. 순서/경계는 기준선 소스(TextEntryGump.cpp)에서 옮겼다. 글 폭은 바이트당 8·높이 16, 현재 위치는 (10,20)이다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { TextEntryGump } from '../www/ui/text-entry-gump.js';

@@ -2044,7 +2044,7 @@
       "bytes": 107011,
       "lines": 1161,
       "fixtureCommit": "804b87a59",
-      "webCommit": "worktree",
+      "webCommit": "7b3258415",
       "cpppjBasis": {
         "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a59",
         "cpppj/src/o/SquidReward.cpp": "2b0484195",
@@ -22124,10 +22124,42 @@
       "bytes": 19528,
       "lines": 179,
       "fixtureCommit": "8c10b36a2",
-      "webCommit": "worktree",
+      "webCommit": "7b3258415",
       "cpppjBasis": {
         "cpppj/src/client/RawUserHighlight.cpp": "8c10b36a2",
         "cpppj/src/client/RawUserHighlight.h": "8c10b36a2"
+      }
+    },
+    {
+      "id": "text-entry-gump",
+      "path": "cpppj/tests/fixtures/text-entry-gump-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E483",
+      "producer": "cpppj TextEntryGumpTests: 보호 원본 10.78 TextEntry/Console 편집 Gump 13개 진입의 독립 x86 관측 2,292행(1,146입력 × 두 정밀도, 기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/text-entry-gump-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/text-entry-gump.js",
+        "webpj/www/ui/text-entry-buffer.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/TextEntryGump.cpp",
+        "cpppj/src/client/TextEntryGump.h"
+      ],
+      "doc": "docs/webpj-text-entry-gump-native-fixtures-20261115.md",
+      "scope": "편집 Gump 13개 진입(construct/consoleConstruct/attach/scroll/handle/console/draw/idle/setText/append/excluded/horizontal/destroy)의 노드 48필드·Slider 11필드·편집 버퍼 10DWORD·할당 전체·clipboard·호출 순서·반환·스택 정리량",
+      "text": true,
+      "sha256": "658245fb178eae9f9b03365caabd65f8f189fe04867babbcda0c102fca003474",
+      "bytes": 7381138,
+      "lines": 2293,
+      "fixtureCommit": "e5a68d592",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/TextEntryGump.cpp": "1d5b1f437",
+        "cpppj/src/client/TextEntryGump.h": "e5a68d592"
       }
     }
   ]
