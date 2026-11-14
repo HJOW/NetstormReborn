@@ -419,7 +419,7 @@ public sealed class RawPostPopTests
         Assert.Equal(3u, state.Depth);
     }
 
-    /// <summary>가상 분배 진입은 Player를 실제 몸체로 후처리하고 그 밖은 공통 경로로 간다. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.</summary>
+    /// <summary>가상 분배 진입은 Player를 실제 몸체로 후처리하고 미연결 Player 가상 몸체는 명시 실패한다. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.</summary>
     [Fact]
     public void PostPopVirtualRoutesPlayerBody()
     {
@@ -434,12 +434,12 @@ public sealed class RawPostPopTests
         post.PostPopVirtual(sid, 0u);
         Assert.Equal((uint)sid, Get(records, 0xb4 + 0x9c));
         Assert.Equal(0u, state.Depth);
-        // 묶지 않은 가상표는 공통 경로로만 간다
+        // 현재 cpp의 미연결 Player 가상 몸체는 공통 성공으로 대신하지 않으며 깊이를 보존한다
         var plainState = new RawPostPopState { Suppressed = true, Depth = 1 };
         var plain = new RawPostPop(pool, types, plainState);
         int plainSid = PlayerSlot(new RawSquidFactory(pool, types), pool, 1);
-        plain.PostPopVirtual(plainSid, 0u);
-        Assert.Equal(0u, plainState.Depth);
+        Assert.Throws<InvalidOperationException>(() => plain.PostPopVirtual(plainSid, 0u));
+        Assert.Equal(1u, plainState.Depth);
         Assert.Equal(0u, plainState.GlobalCounts[TestType]);
     }
 

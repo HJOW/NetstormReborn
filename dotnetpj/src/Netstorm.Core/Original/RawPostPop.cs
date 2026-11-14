@@ -235,6 +235,9 @@ public sealed class RawPostPop : IRawPopPostPop
     /// <summary>명시 연결한 같은 풀의 실제 사제 접두·Carrier·후반 조합이다.</summary>
     private RawPriestPostPopTail? _priestPostPop;
 
+    /// <summary>현재 보호막 최초 예약 접두이며 공통 깊이는 이 부모가 이어서 한 번 처리한다.</summary>
+    private RawForcefieldPostPop? _forcefieldPostPop;
+
     /// <summary>공통 후처리 모듈을 만든다.</summary>
     /// <param name="pool">슬롯 풀.</param>
     /// <param name="types">타입 번호 순서의 타입 레코드. 10.78 은 188개여야 한다.</param>
@@ -299,11 +302,11 @@ public sealed class RawPostPop : IRawPopPostPop
 
     /// <summary>
     /// 이 모듈이 처리할 수 있는 파생 postPop 인지 돌려준다.
-    /// 명시 연결한 전체 사제 몸체만 처리하며 그 밖의 미복원 파생은 거부한다.
+    /// 명시 연결한 사제 전체 몸체·보호막 접두를 처리하며 그 밖의 미복원 파생은 거부한다.
     /// Player 몸체는 별도 등록(<see cref="SetPlayerPostPop"/>)으로 분배하며 여기서 세지 않는다.
     /// </summary>
     /// <param name="sid">오브젝트 슬롯 번호.</param>
-    public bool HandlesDerived(int sid) => HandlesPriest(sid);
+    public bool HandlesDerived(int sid) => HandlesPriest(sid) || HandlesForcefield(sid);
 
     /// <summary>
     /// 실제 Player 최초 기록·예약 몸체를 같은 풀에만 명시 등록한다. null이면 등록을 해제한다.
@@ -341,6 +344,21 @@ public sealed class RawPostPop : IRawPopPostPop
     public bool HandlesPriest(int sid) => _priestPostPop is not null
         && Read(_pool.Slot(sid), 0, 4) == 0x0050f210u;
 
+    /// <summary>같은 실제 풀의 보호막 접두만 등록하고 null은 현재 대여를 해제한다.</summary>
+    public void SetForcefieldPostPop(RawForcefieldPostPop? prefix)
+    {
+        if (prefix is not null && !ReferenceEquals(prefix.Pool, _pool)) throw new ArgumentException("보호막 Pop/접두 풀 불일치", nameof(prefix));
+        _forcefieldPostPop = prefix;
+    }
+
+    /// <summary>PATCH는 현재 가상 표만 선택하고 CD는 기존 TYPE 일치도 요구한다.</summary>
+    public bool HandlesForcefield(int sid)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        return _forcefieldPostPop is not null && (_pool.Edition == OriginalEdition.Patch1078 || raw[10] == ForcefieldLifecycle.Type)
+            && Read(raw, 0, 4) == (_pool.Edition == OriginalEdition.Patch1078 ? ForcefieldLifecycle.PatchVtable : ForcefieldLifecycle.CdVtable);
+    }
+
     /// <summary>Pop 과 같은 해시·점유 지도를 보는지 확인한다. Graph 가 없으면 검사할 것이 없어 그대로 둔다.</summary>
     /// <param name="hash">Pop 이 쓰는 공간 해시.</param>
     /// <param name="spots">Pop 이 쓰는 칸별 점유 바이트 65,536개.</param>
@@ -374,6 +392,7 @@ public sealed class RawPostPop : IRawPopPostPop
             throw new InvalidOperationException("파생 postPop 미복원");
         }
         if (HandlesPriest(sid)) _priestPostPop!.Validate(sid);
+        if (HandlesForcefield(sid)) _forcefieldPostPop!.Validate(sid);
         // Player는 현재 9기록·SID와 조건부 예약을 가진 실제 몸체가 검사한다
         if (HandlesPlayer(sid))
         {
@@ -401,6 +420,8 @@ public sealed class RawPostPop : IRawPopPostPop
     /// <param name="checkPending">보류 배치를 여기서 거부하면 참이다. PATCH 공통 몸체는 원본 부모 실행처럼 통계 뒤 끝에서 검사하므로 거짓으로 둔다.</param>
     private void ValidateBaseCore(int sid, uint flags, in PopProjection projection, bool checkPending)
     {
+        // PATCH 공통 부모의 억제 관문은 현재 raw/TYPE 사전 조회보다 먼저 반환한다.
+        if (_pool.Edition == OriginalEdition.Patch1078 && _state.Suppressed) return;
         ReadOnlySpan<byte> slot = _pool.Slot(sid);
         // 번호·빈·내용물·자산 타입 밖이면 공통 장부의 대상이 아니다
         if (sid < RawSidPool.FirstOrdinary || (slot[RawSidPool.StateOffset] & (FreeBit | ContainedBit)) != 0
@@ -500,7 +521,7 @@ public sealed class RawPostPop : IRawPopPostPop
     }
 
     /// <summary>
-    /// 가상 분배 진입이다. 명시 연결한 사제·Player는 실제 전체 몸체가 후처리하며 나머지는 공통 몸체로 간다.
+    /// 가상 분배 진입이다. 사제·Player의 전체 몸체와 보호막 접두를 선택하며 나머지는 실제 지원 표를 확인한다.
     /// PATCH는 사전 검사를 삽입하지 않는다.
     /// 근거: cpppj `o/SquidPostPop.cpp`의 `PostPopVirtual`·`DispatchPostPop` 중 Player 분기.
     /// 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.
@@ -528,6 +549,9 @@ public sealed class RawPostPop : IRawPopPostPop
             return;
         }
 
+        if (HandlesForcefield(sid)) _forcefieldPostPop!.Prefix(sid, flags);
+        else if (!OriginalPopDisplay.Supports(_pool.Edition, Read(_pool.Slot(sid), 0, 4), flags))
+            throw new InvalidOperationException("현재 가상 후처리 몸체 미복원");
         PostPopBase(sid, flags, default);
     }
 

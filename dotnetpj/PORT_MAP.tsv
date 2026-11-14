@@ -737,3 +737,5 @@ cpppj/src/o/RawRiftHitPoints.cpp	Netstorm.Core/Original/RawSquidFactory.HitPoint
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceWorld.PopCurrent.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
 cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.PopCurrent.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
 cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceWorld.PopCurrent.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/RawForcefieldLifecycle.h	Netstorm.Core/Original/RawForcefieldLifecycle.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/RawForcefieldLifecycle.cpp	Netstorm.Core/Original/RawForcefieldLifecycle.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
