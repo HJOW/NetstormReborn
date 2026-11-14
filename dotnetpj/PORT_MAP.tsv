@@ -693,3 +693,5 @@ cpppj/src/o/Player.cpp	Netstorm.Core/Original/RawMissionPlayers.cs	f907239725cde
 cpppj/src/o/Player.h	Netstorm.Core/Original/RawMissionPlayers.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
 cpppj/src/o/RawAiBrain.cpp	Netstorm.Core/Original/RawAiBrain.cs	04c87c034dd35923a20a363fd9a24ff708329648	L1
 cpppj/src/o/RawAiBrain.h	Netstorm.Core/Original/RawAiBrain.cs	04c87c034dd35923a20a363fd9a24ff708329648	L1
+cpppj/src/o/RawPlayerTechnology.cpp	Netstorm.Core/Original/RawPlayerTechnology.cs	f3a5c821f1fbff3cc1d0885730cba40a2709fbd4	L1
+cpppj/src/o/RawPlayerTechnology.h	Netstorm.Core/Original/RawPlayerTechnology.cs	f3a5c821f1fbff3cc1d0885730cba40a2709fbd4	L1
