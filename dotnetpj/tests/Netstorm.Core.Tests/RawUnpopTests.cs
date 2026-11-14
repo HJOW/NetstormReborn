@@ -3,10 +3,9 @@ using Netstorm.Core.Original;
 namespace Netstorm.Core.Tests;
 
 /// <summary>
-/// 원본 월드 코어의 공간 해제(<see cref="RawUnpop"/>)와 공간 해시(<see cref="RawSquidHash"/>)의 보호 경로와 연결 지점 계약을 확인한다.
-/// 원본 기대값 재생(X86RawUnpopTests)이 정상 호출의 결과를 대조하고, 이 검사들은 cpppj/tests/UnpopTests.cpp 의 보호 검사를 10.78 로 옮기며
-/// "거부한 호출은 풀·점유 지도·해시 머리를 한 바이트도 바꾸지 않는다", 상태별 동작, 연결 지점(표시·미니맵·건물 옆면)의 호출 순서를 더해 확인한다.
-/// 연결 지점 순서는 cpppj 구현의 계약이며 원본 기대값 행으로 증명된 것이 아니다(그 효과를 가진 모듈은 아직 없다) (W02 Unpop 조각, 2026-10-16).
+/// 현재 공간 해제의 선택 실패/부분 쓰기와 같은 공간 연결/상태 규칙을 검사한다.
+/// 기존 원본 기대값 재생과 현재 부모2702관측은 별도로 유지하며 이 합성 검사의 옛 선검사 가정은 현행화한다.
+/// 명시 미니맵/옆면/표시 장치가 관측한 소비 순서와 상태를 검증한다.
 /// </summary>
 public sealed class RawUnpopTests
 {
@@ -59,64 +58,28 @@ public sealed class RawUnpopTests
     /// <param name="hash">대상 해시.</param>
     private static ushort[] HeadSnapshot(RawSquidHash hash) => Enumerable.Range(0, RawSquidHash.Levels).SelectMany(level => hash.Entries(level).ToArray()).ToArray();
 
-    /// <summary>
-    /// 손상된 검색 경로·미복원 효과는 풀·점유 지도·해시 머리를 바꾸기 전에 거부한다:
-    /// 체인에 없음, 지원하지 않는 가상 표, contained, 건물 옆면 미연결, 자기 next, 유한하지 않은 좌표.
-    /// </summary>
+    /// <summary>현재 선택 실패는 void/해시의 선행 효과를 남기고 prefix 진단 실패만 그 앞에서 멈춘다.</summary>
     [Fact]
-    public void GuardsRejectBeforeChangingPoolOrSpace()
+    public void SelectedFailuresKeepEarlierVoidAndSpaceChanges()
     {
-        var pool = new RawSidPool(32768);
-        OriginalTypeRecord[] types = Types();
-        var factory = new RawSquidFactory(pool, types);
-        var hash = new RawSquidHash();
-        byte[] spots = new byte[256 * 256];
-        Array.Fill(spots, (byte)0xFF);
-        var unpop = new RawUnpop(pool, hash, spots);
-        int sid = factory.Create(TestType);
-        Span<byte> bytes = pool.AllocatedBytes(sid);
-        bytes[RawSidPool.StateOffset] = 0;
-        PutPosition(bytes, 20f, 20f);
-        byte[] before = pool.Bytes.ToArray();
-        byte[] originalSpots = spots.ToArray();
-        // 어느 체인에도 없다
-        Assert.Throws<InvalidOperationException>(() => unpop.Unpop(sid, types[TestType]));
-        Assert.Equal(before, pool.Bytes.ToArray());
-        hash.Bucket(1, 20, 20) = (ushort)sid;
-        ushort[] heads = HeadSnapshot(hash);
-        // 지원하지 않는 가상 표(표시 갱신의 파생 효과 미복원)
-        uint vtable = BitConverter.ToUInt32(pool.Slot(sid)[..4]);
-        Put(bytes, 0, 0x12345678);
-        byte[] invalidVtable = pool.Bytes.ToArray();
-        Assert.Throws<InvalidOperationException>(() => unpop.Unpop(sid, types[TestType]));
-        Assert.Equal(invalidVtable, pool.Bytes.ToArray());
-        Put(bytes, 0, vtable);
-        // contained 슬롯
-        bytes[RawSidPool.StateOffset] = 8;
-        byte[] contained = pool.Bytes.ToArray();
-        Assert.Throws<InvalidOperationException>(() => unpop.Unpop(sid, types[TestType]));
-        Assert.Equal(contained, pool.Bytes.ToArray());
-        bytes[RawSidPool.StateOffset] = 0;
-        // 건물군 타입(매몰 아님)은 옆면 몸체가 없으면 거부한다
-        var building = new OriginalTypeRecord { Flags2 = 0x4000, ConstructorAddress = types[TestType].ConstructorAddress };
-        Assert.Throws<InvalidOperationException>(() => unpop.Unpop(sid, building));
-        // 제거 뒤 자기 자신을 가리키게 되는 next
-        Put(bytes, RawSidPool.NextOffset, (uint)sid, 2);
-        byte[] selfNext = pool.Bytes.ToArray();
-        Assert.Throws<InvalidOperationException>(() => unpop.Unpop(sid, types[TestType]));
-        Assert.Equal(selfNext, pool.Bytes.ToArray());
-        // 유한하지 않은 좌표
-        Put(bytes, RawSidPool.NextOffset, 0, 2);
-        Put(bytes, XOffset, 0x7FC00000);
-        byte[] notFinite = pool.Bytes.ToArray();
-        Assert.ThrowsAny<ArgumentOutOfRangeException>(() => unpop.Unpop(sid, types[TestType]));
-        Assert.Equal(notFinite, pool.Bytes.ToArray());
-        Assert.Equal(originalSpots, spots);
-        Assert.Equal((ushort)sid, hash.Bucket(1, 20, 20));
-        Assert.Equal(heads, HeadSnapshot(hash));
-        // 서로 다른 풀을 쓰는 해제 모듈은 팩토리에 연결할 수 없다
+        var pool = new RawSidPool(32768); OriginalTypeRecord[] types = Types(); var factory = new RawSquidFactory(pool, types);
+        var hash = new RawSquidHash(); byte[] spots = new byte[65536]; Array.Fill(spots, (byte)0xff); var unpop = new RawUnpop(pool, hash, spots);
+        int sid = factory.Create(TestType); Span<byte> bytes = pool.RawSlot(sid); bytes[11] = 0; PutPosition(bytes, 20f, 20f); byte[] originalSpots = spots.ToArray();
+        // 미발견 진단의 장치가 없어도 앞선 void 기록은 보존한다.
+        byte[] before = pool.Bytes.ToArray(); before[sid * RawSidPool.Stride + 11] |= 4;
+        Assert.Throws<InvalidOperationException>(() => unpop.Unpop(sid, types[TestType])); Assert.Equal(before, pool.Bytes.ToArray());
+        // 늦은 미지원 가상 표시 실패는 실제 체인을 제거한 뒤 발생한다.
+        bytes[11] = 0; uint table = BitConverter.ToUInt32(bytes[..4]); Put(bytes, 0, 0x12345678); hash.Bucket(1, 20, 20) = (ushort)sid;
+        Assert.Throws<InvalidOperationException>(() => unpop.Unpop(sid, types[TestType])); Assert.Equal(4, bytes[11]); Assert.Equal(0, hash.Bucket(1, 20, 20)); Put(bytes, 0, table);
+        // contained prefix 진단은 void 쓰기 전에 실제 선택 실패한다.
+        bytes[11] = 8; before = pool.Bytes.ToArray(); Assert.Throws<InvalidOperationException>(() => unpop.Unpop(sid, types[TestType])); Assert.Equal(before, pool.Bytes.ToArray());
+        // 원문 직접 머리 저장은 자기 next를 추가 역참조하거나 진단하지 않는다.
+        bytes[11] = 0; Put(bytes, 4, (uint)sid, 2); hash.Bucket(1, 20, 20) = (ushort)sid;
+        unpop.Unpop(sid, types[TestType]); Assert.Equal(4, bytes[11]); Assert.Equal(sid, hash.Bucket(1, 20, 20));
+        // 유한 좌표 소비 실패 앞에도 void는 남고 해시/점유는 유지된다.
+        bytes[11] = 0; Put(bytes, 4, 0, 2); Put(bytes, XOffset, 0x7fc00000); before = pool.Bytes.ToArray(); before[sid * RawSidPool.Stride + 11] |= 4;
+        Assert.ThrowsAny<ArgumentOutOfRangeException>(() => unpop.Unpop(sid, types[TestType])); Assert.Equal(before, pool.Bytes.ToArray()); Assert.Equal(originalSpots, spots); Assert.Equal(sid, hash.Bucket(1, 20, 20));
         Assert.Throws<ArgumentException>(() => new RawSquidFactory(new RawSidPool(32768), types, false, unpop));
-        // 점유 지도 크기가 틀리면 만들 수 없다
         Assert.Throws<ArgumentException>(() => new RawUnpop(pool, hash, new byte[100]));
     }
 
@@ -224,7 +187,7 @@ public sealed class RawUnpopTests
     }
 
     /// <summary>
-    /// 건물군 오브젝트(3×3, 매몰 아님)를 풀 때의 연결 지점 순서: 표시 검증 → void 설정 → (섬·다리일 때만) 미니맵 → 칸마다 "점유 해제 후 옆면 해제" →
+    /// 건물군 오브젝트(3×3, 매몰 아님)를 풀 때의 연결 지점 순서: void 설정 → (섬·다리일 때만) 미니맵 → 칸마다 "점유 해제 후 옆면 해제" →
     /// 체인 제거 → 표시 갱신. 점유는 이 타입이 적은 비트(바깥 칸 0x12, 안쪽 0x1A)만 지우고 이웃 칸과 다른 비트는 보존한다.
     /// 건물 옆면은 발자국의 왼쪽·오른쪽 열 가운데 맨 위·맨 아래 행을 뺀 칸이 위쪽 행부터 왼쪽 칸 순서로 불리며,
     /// 불린 시점에 그 칸의 점유는 이미 지워져 있다(0xFF → 0xED).
@@ -249,10 +212,11 @@ public sealed class RawUnpopTests
         bytes[RawSidPool.StateOffset] = 0;
         PutPosition(bytes, 20f, 20f);
         hash.Bucket(1, 20, 20) = (ushort)sid;
+        // 실제 표면 WORD가 있는 두 중간 옆면만 원문 호출 대상이다.
+        hash.Cell(0, 18, 19) = 70; hash.Cell(0, 20, 19) = 70;
         unpop.Unpop(sid, type, 0);
         Assert.Equal(
             [
-                "validate void=False flags=0",
                 "minimap void=True head=" + sid + " center=FF",
                 "side 18,19 cell=ED",
                 "side 20,19 cell=ED",
@@ -265,7 +229,7 @@ public sealed class RawUnpopTests
         Assert.Equal((byte)0xFF, spots[17 * 256 + 17]);
         Assert.Equal((byte)0xFF, spots[21 * 256 + 21]);
         Assert.Equal(RawSidPool.VoidBit, bytes[RawSidPool.StateOffset]);
-        // 섬·다리 비트가 없는 건물은 미니맵 큐에 알리지 않는다(표시 검증·옆면·갱신은 그대로 불린다)
+        // 섬·다리 비트가 없는 건물은 미니맵 큐에 알리지 않는다(실제 표면의 옆면·늦은 갱신은 그대로 불린다)
         recorder.Events.Clear();
         var plain = new OriginalTypeRecord { Flags2 = 0x4000 | 0x10, FootX = 3, FootY = 3, ConstructorAddress = types[TestType].ConstructorAddress };
         int second = factory.Create(TestType);
@@ -275,7 +239,7 @@ public sealed class RawUnpopTests
         hash.Bucket(1, 20, 20) = (ushort)second;
         unpop.Unpop(second, plain, 0);
         Assert.DoesNotContain(recorder.Events, line => line.StartsWith("minimap", StringComparison.Ordinal));
-        Assert.Equal(["validate", "side", "side", "update"], recorder.Events.Select(line => line.Split(' ')[0]));
+        Assert.Equal(["side", "side", "update"], recorder.Events.Select(line => line.Split(' ')[0]));
         // 서로 다른 풀·해시를 쓰는 몸체와 큐는 연결할 수 없다
         var other = new Recorder { PoolValue = new RawSidPool(32768), HashValue = hash, Spots = spots };
         Assert.Throws<ArgumentException>(() => unpop.SetBuildingSide(other));
@@ -315,10 +279,10 @@ public sealed class RawUnpopTests
     }
 
     /// <summary>
-    /// 점유를 지우는 발자국이 지도 밖으로 나가는 타입(왼쪽·위쪽이 음수)은 상태를 바꾸기 전에 거부한다.
+    /// 지도 밖 발자국의 소비 실패는 선행 void만 남기고 이후 void 재호출은 자연 반환한다.
     /// </summary>
     [Fact]
-    public void FootprintOutsideMapIsRejectedBeforeChanges()
+    public void FootprintOutsideMapKeepsEarlierVoid()
     {
         var pool = new RawSidPool(32768);
         OriginalTypeRecord[] types = Types();
@@ -334,10 +298,9 @@ public sealed class RawUnpopTests
         hash.Bucket(1, 2, 2) = (ushort)sid;
         byte[] before = pool.Bytes.ToArray();
         Assert.Throws<ArgumentOutOfRangeException>(() => unpop.Unpop(sid, type));
-        Assert.Equal(before, pool.Bytes.ToArray());
-        Assert.Equal((ushort)sid, hash.Bucket(1, 2, 2));
-        type.FootX = 0;
-        Assert.Throws<InvalidOperationException>(() => unpop.Unpop(sid, type));
+        before[sid * RawSidPool.Stride + 11] |= 4;
+        Assert.Equal(before, pool.Bytes.ToArray()); Assert.Equal((ushort)sid, hash.Bucket(1, 2, 2));
+        type.FootX = 0; unpop.Unpop(sid, type);
         Assert.Equal(before, pool.Bytes.ToArray());
     }
 

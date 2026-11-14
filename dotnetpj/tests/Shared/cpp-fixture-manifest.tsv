@@ -301,3 +301,5 @@ lightning-lifetime-x86.tsv	cb4229dc5837044fb5ed3b6d952254ef86aec582798acfc945705
 form-unpop-current-x86.tsv	acfa309114c45b9c415b1fd7ef1a5d3aa1e0f1b61fe9e63be0ad107cf9334060	1728	cpppj	Core
 squid-take-parent-current-x86.tsv	9f40fe7ddf0b219f3eafbca0f5dc7a740efa89ed07ac1585ba625bddc2098302	720	cpppj	Core
 squid-creation-parent-x86.tsv	8bbc69366eae3d6ae4ba1a333eeb988c2ea1bdc558379c427adb3677bed1e26a	588	cpppj	Core
+cd-squid-unpop-current-hardware-x86.tsv	c5c6095dba4d3141038d8510d8a46f4f0e81e2fe4e50ff7a5841621b68196c7c	1402	cpppj	Core
+squid-unpop-parent-hardware-x86.tsv	a4df8f48be831c66ae530cd5fdc21d0e86515f119f9393e07736356694f32ed7	1300	cpppj	Core

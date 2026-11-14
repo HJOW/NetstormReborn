@@ -8,7 +8,7 @@ namespace Netstorm.Core.Original;
 /// </summary>
 public interface IRawUnpopDisplay
 {
-    /// <summary>해제 전에 이 호출을 처리할 수 있는지 검사한다. 처리할 수 없으면 예외를 던져야 하며, 그 시점까지 풀·공간은 바뀌지 않았다.</summary>
+    /// <summary>명시 결선 검사에 사용할 수 있는 표시 검사다. 공통 Unpop 본문은 선검사로 호출하지 않고 공간 쓰기 뒤 현재 Update를 선택한다.</summary>
     /// <param name="slot">대상 슬롯 바이트.</param>
     /// <param name="flags">Unpop 호출 플래그.</param>
     void Validate(ReadOnlySpan<byte> slot, uint flags);
@@ -52,17 +52,12 @@ public interface IRawMinimapQueue
 }
 
 /// <summary>
-/// 오브젝트를 공간 해시와 점유(spot) 지도에서 푸는 원본 공통 Unpop(<c>004afe50</c>, 10.78)의 일반 자산·매몰 경로.
-/// 순서는 원본 그대로 "void 설정 → (섬·다리면) 미니맵 알림 → 발자국 spot 해제 → 현재 좌표의 0~3 단계 체인 제거 → 표시 갱신"이며,
-/// 제거 대상 슬롯의 next·좌표·저장 단계·HP·섬 번호는 그대로 둔다. free/void 인 슬롯은 아무것도 바꾸지 않고, dead 는 막지 않는다.
-/// 원본은 체인에서 못 찾으면 assert 로 멈춘다. 이 구현은 그 밖의 손상(순환·자기 next·범위 밖 next·유한하지 않은 좌표·잘못된 발자국)과
-/// 미복원 효과(건물 옆면·표시 갱신의 파생 가상 표)를 <b>풀·공간을 바꾸기 전에</b> 예외로 거부한다. 원본 assert 앞의 부분 변경과 오류 창은 재현하지 않는다.
-/// 이 경로에서 spot 지도는 바이트 단위로 칸의 점유를 지우며, 지우는 값은 <see cref="SpotRules.EffectiveGenus"/> 의 하위 바이트다(다른 비트는 보존).
-/// <see cref="IRawUnpop"/> 이므로 <see cref="RawSquidFactory"/> 의 non-void Take 가 이 클래스를 쓴다.
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 체인 미발견을 조용히 넘기는 등 달라서 옮기지 않았다).
-/// 근거: docs/exe/cpp-unpop-reconstruction.md, cpppj/src/o/SquidUnpop.cpp (W02 Unpop 조각, 2026-10-16).
+/// PATCH004afe50/CD004ad0b0의 현재 공통 공간 해제를 같은 실제 Pool/Hash/점유/표시에 연결한다.
+/// 원문 진단이 정상 복귀하면 현재 TYPE/상태를 다시 읽고 void·점유·옆면·해시의 이미 실행한 쓰기를 보존한다.
+/// 제거 대상 자신의 next/좌표는 보존하며 표시와 실제 종속 분리는 선택된 위치에서만 요구한다.
+/// CD 전체 관리풀/월드 복원과 구별하고 여기서는 판본별 부모/필드 위치만 실행한다.
 /// </summary>
-public sealed class RawUnpop : IRawUnpop
+public sealed partial class RawUnpop : IRawUnpop
 {
     /// <summary>슬롯 안 가상 표(4바이트)의 위치.</summary>
     private const int VtableOffset = 0;
@@ -97,7 +92,7 @@ public sealed class RawUnpop : IRawUnpop
     /// <summary>공통 표시 경로. 없으면 표시 객체가 없는 경로다.</summary>
     private readonly IRawUnpopDisplay? _display;
 
-    /// <summary>건물 옆면 해제 몸체. 연결 전이면 null 이며 건물군(매몰 아님)의 Unpop 은 거부된다.</summary>
+    /// <summary>건물 옆면 해제 몸체. 실제 표면 중간 옆면을 선택할 때만 연결을 요구한다.</summary>
     private IRawBuildingSide? _building;
 
     /// <summary>미니맵 갱신 큐. 연결 전이면 null.</summary>
@@ -173,167 +168,11 @@ public sealed class RawUnpop : IRawUnpop
     /// <param name="type">그 오브젝트의 타입 레코드.</param>
     void IRawUnpop.Unpop(int sid, OriginalTypeRecord type) => Unpop(sid, type, 0);
 
-    /// <summary>
-    /// 오브젝트를 공간에서 푼다. 끝나면 슬롯은 void 상태이고 spot 의 발자국 비트와 체인 연결이 지워져 있다.
-    /// 자산 타입(70 이상) 밖이거나 contained 이거나 번호 0 이면 예외다. 이미 free 또는 void 면 아무것도 바꾸지 않고 돌아온다.
-    /// </summary>
-    /// <param name="sid">슬롯 번호.</param>
-    /// <param name="type">그 오브젝트의 타입 레코드(플래그·발자국).</param>
-    /// <param name="flags">호출 플래그. 0x2000 은 소용돌이 경로를 뜻한다.</param>
-    public void Unpop(int sid, OriginalTypeRecord type, uint flags = 0)
-    {
-        ArgumentNullException.ThrowIfNull(type);
-        Span<byte> bytes = _pool.RawSlot(sid);
-        if (sid == 0 || bytes[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || (bytes[RawSidPool.StateOffset] & ContainedBit) != 0)
-        {
-            throw new InvalidOperationException("Unpop 자산/SID 상태 오류");
-        }
-        if ((bytes[RawSidPool.StateOffset] & (RawSidPool.FreeBit | RawSidPool.VoidBit)) != 0)
-        {
-            return;
-        }
-        bool buried = (bytes[ExtraOffset] & BuriedBit) != 0;
-        if (!buried && (type.Flags2 & OriginalTypeRecord.BuildingMask) != 0 && _building is null)
-        {
-            throw new InvalidOperationException("Unpop 건물 부착 공간이 연결되지 않았습니다");
-        }
-        if (!OriginalUnpopDisplay.Supports(Read(bytes, VtableOffset, 4), flags))
-        {
-            throw new InvalidOperationException("Unpop의 파생 표시 갱신 효과는 아직 지원하지 않습니다");
-        }
-        float x = BitConverter.UInt32BitsToSingle(Read(bytes, XOffset, 4));
-        float y = BitConverter.UInt32BitsToSingle(Read(bytes, YOffset, 4));
-        // 버킷 조회에서 유한 좌표·지도 범위를 검증한다. 제거는 저장된 단계를 믿지 않는다
-        RawSquidHash.BucketIndex(0, x, y);
-        bool writesSpots = !buried && ((type.Flags2 & OriginalTypeRecord.SpotWriteMask) != 0 || (type.Flags1 & OriginalTypeRecord.Surface) != 0);
-        int right = (int)x;
-        int bottom = (int)y;
-        int left = right;
-        int top = bottom;
-        if (writesSpots)
-        {
-            if (type.FootX < 1 || type.FootY < 1 || type.FootX > RawSquidHash.WorldCells || type.FootY > RawSquidHash.WorldCells)
-            {
-                throw new InvalidOperationException("Unpop 발자국 크기 오류");
-            }
-            left = right - type.FootX + 1;
-            top = bottom - type.FootY + 1;
-            if (left < 0 || top < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(type), "Unpop 지도 밖 발자국");
-            }
-        }
-        (int foundLevel, int previous) = FindInChains(sid, x, y);
-        // 원본은 10.78 에서 체인에 없으면 assert 로 멈춘다
-        if (foundLevel < 0)
-        {
-            throw new InvalidOperationException("Unpop 해시에서 SID를 찾지 못했습니다");
-        }
-        _display?.Validate(bytes, flags);
-        bytes[RawSidPool.StateOffset] |= RawSidPool.VoidBit;
-        // 원본은 void 전환 뒤 spot/해시를 제거하기 전에 이전 칸을 미니맵에 알린다
-        if (!buried && (type.Flags2 & IslandOrBridge) != 0)
-        {
-            _minimap?.Enqueue(sid);
-        }
-        if (writesSpots)
-        {
-            ClearFootprint(type, x, y, left, top, right, bottom);
-        }
-        ushort next = (ushort)Read(bytes, RawSidPool.NextOffset, 2);
-        if (previous == 0)
-        {
-            _hash.Bucket(foundLevel, x, y) = next;
-        }
-        else
-        {
-            // 이전 슬롯의 next 만 바꾼다. 제거 대상 자신의 next 는 보존한다
-            Span<byte> before = _pool.RawSlot(previous);
-            before[RawSidPool.NextOffset] = (byte)next;
-            before[RawSidPool.NextOffset + 1] = (byte)(next >> 8);
-        }
-        // 원본은 void/spot/체인 제거 뒤 이전 위치를 갱신한다
-        _display?.Update(bytes, flags);
-    }
-
-    /// <summary>
-    /// 현재 좌표의 0~3 단계 체인을 차례로 훑어 오브젝트를 찾는다. 읽기만 하며 손상된 체인은 쓰기 전에 거부한다:
-    /// 유효 번호 밖의 next·순환·자기 next·제거 뒤 자기를 가리키게 될 next 가 그 대상이다.
-    /// 찾지 못하면 단계 -1 을 돌려준다.
-    /// </summary>
-    /// <param name="sid">찾을 슬롯 번호.</param>
-    /// <param name="x">오브젝트 x 좌표.</param>
-    /// <param name="y">오브젝트 y 좌표.</param>
-    /// <returns>찾은 단계(-1 은 없음)와 그 체인에서 바로 앞 슬롯 번호(머리면 0).</returns>
-    private (int Level, int Previous) FindInChains(int sid, float x, float y)
-    {
-        // 큰 표면 배열(단계 0)부터 작은 배열 순서로 찾는다
-        for (int level = 0; level < RawSquidHash.Levels; level++)
-        {
-            int current = _hash.Bucket(level, x, y);
-            int previous = 0;
-            int visited = 0;
-            // 체인의 슬롯을 한 칸씩 따라간다
-            while (current != 0)
-            {
-                if (++visited > _pool.Capacity)
-                {
-                    throw new InvalidOperationException("Unpop 순환 체인");
-                }
-                int next = (int)Read(_pool.Slot(current), RawSidPool.NextOffset, 2);
-                if (current == sid)
-                {
-                    if (next == current || (previous != 0 && next == previous))
-                    {
-                        throw new InvalidOperationException("Unpop 제거 뒤 자기 next");
-                    }
-                    if (next >= _pool.Capacity)
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(sid), next, "Unpop next SID 범위 오류");
-                    }
-                    return (level, previous);
-                }
-                if (next == current)
-                {
-                    throw new InvalidOperationException("Unpop 자기 next");
-                }
-                previous = current;
-                current = next;
-            }
-        }
-        return (-1, 0);
-    }
-
-    /// <summary>
-    /// 발자국의 칸마다 점유 바이트에서 이 타입이 적었던 값을 AND 로 지운다(위쪽 행부터, 행 안은 왼쪽부터). 다른 비트는 보존한다.
-    /// 건물군이면 발자국의 왼쪽·오른쪽 가장자리 열(맨 위·맨 아래 행 제외)에서 건물 옆면도 함께 푼다.
-    /// </summary>
-    /// <param name="type">타입 레코드.</param>
-    /// <param name="x">오브젝트 x 좌표.</param>
-    /// <param name="y">오브젝트 y 좌표.</param>
-    /// <param name="left">발자국 왼쪽 칸.</param>
-    /// <param name="top">발자국 위쪽 칸.</param>
-    /// <param name="right">발자국 오른쪽 칸.</param>
-    /// <param name="bottom">발자국 아래쪽 칸.</param>
-    private void ClearFootprint(OriginalTypeRecord type, float x, float y, int left, int top, int right, int bottom)
-    {
-        bool building = (type.Flags2 & OriginalTypeRecord.BuildingMask) != 0;
-        // 위쪽 행부터 한 줄씩 지운다
-        for (int cy = top; cy <= bottom; cy++)
-        {
-            // 행 안의 칸을 왼쪽부터 지운다. 발자국 루프의 정수 절삭과 EffectiveGenus 의 소수 편향 계산은 다르다
-            for (int cx = left; cx <= right; cx++)
-            {
-                byte genus = (byte)SpotRules.EffectiveGenus(type.Flags2, x, y, type.FootX, type.FootY, cx, cy);
-                _spots[cy * RawSquidHash.WorldCells + cx] &= (byte)~genus;
-                // Unpop 은 Pop 의 표면 플래그 검사 없이 옆면 SID 의 BYTE 비트를 푼다
-                if (building && (cx == left || cx == right) && cy != top && cy != bottom)
-                {
-                    _building!.UnpopSide(cx, cy);
-                }
-            }
-        }
-    }
+    /// <summary>현재 진단/TYPE와 실제 순차 공간 해제를 공통 부모에 전달하며 앞선 효과를 되돌리지 않는다.</summary>
+    /// <param name="sid">같은 실제 풀의 물리 SID다.</param>
+    /// <param name="type">독립 입력의 TYPE 참조다. 현재 표를 연결하면 그 표를 소비 위치에서 고른다.</param>
+    /// <param name="flags">현재 가상88/8c 선택에 쓰는 전체 flags다.</param>
+    public void Unpop(int sid, OriginalTypeRecord type, uint flags = 0) => UnpopCurrent(sid, type, flags);
 
     /// <summary>슬롯 안의 정렬되지 않은 리틀 엔디언 값을 필요한 폭만큼 읽는다(이웃 필드를 읽지 않는다).</summary>
     /// <param name="bytes">슬롯 바이트.</param>

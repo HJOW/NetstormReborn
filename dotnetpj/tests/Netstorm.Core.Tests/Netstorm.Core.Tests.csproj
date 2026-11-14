@@ -355,4 +355,9 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/squid-creation-parent-x86.tsv" Link="X86/squid-creation-parent-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 현재 Unpop 부모의 두 판본 원본 공간/지도/진단 관측을 읽기 전용으로 연결한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/squid-unpop-parent-hardware-x86.tsv" Link="X86/squid-unpop-parent-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/cd-squid-unpop-current-hardware-x86.tsv" Link="X86/cd-squid-unpop-current-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

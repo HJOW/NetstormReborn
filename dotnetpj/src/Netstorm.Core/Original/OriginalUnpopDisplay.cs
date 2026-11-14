@@ -2,7 +2,7 @@ namespace Netstorm.Core.Original;
 
 /// <summary>
 /// 공간 해제(Unpop)가 "표시 갱신"을 공통 경로(update88/update8c)로 처리할 수 있는 가상 표(클래스 식별 값)의 지원 표(10.78·CD 10.72).
-/// 이 표에 없는 클래스는 파생 표시 갱신 효과가 아직 복원되지 않았으므로 Unpop 이 상태를 바꾸기 전에 거부한다.
+/// 현재 Unpop은 실제 공간 쓰기 뒤 표시를 선택할 때 이 지원 여부를 확인하며 미복원 표시 실패 앞의 변경을 유지한다.
 /// 표 데이터(.Data.cs)는 dotnetpj/tools/gen_original_unpop_vtables.py 가 cpppj 목록에서 만들고,
 /// 원본 기계어 기대값 unpop-vtables.tsv 의 10.78 83행으로 검증한다.
 /// 지원 비트: 1 은 일반 경로, 2 는 소용돌이 플래그(0x2000)를 켠 호출의 경로다.
