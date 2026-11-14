@@ -1,7 +1,7 @@
 // HTML $Input 의 확인은 입력을 다음 Tell 섹션의 인자로 전달한다. 설정 변경과 구별한다.
 // (cpppj client/HtmlInputDialog.cpp/.h, 기준선 1f00a25a, 10.78 전용, 원문 004cfae0)
 // 문자 편집/공통 모달은 기존 실제 처리기가 담당한다. 공백 제거처럼 보이는 원문의 NUL 검사도 그대로 두고 숫자 입력을 재서식하지 않는다.
-// 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 원본 10.78 독립 관측 89행은 tests/command-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E478 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // (2026-11-14 WB04-E435: RawMenuControls 선행 HTML 입력 확인 이식)
 
 // 원문 고정 256바이트 입력 버퍼 크기다.

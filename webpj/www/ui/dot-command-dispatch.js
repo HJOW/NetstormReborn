@@ -1,7 +1,7 @@
 // 원본 0043f6f0 의 로컬 점 명령 분배를 고정 Regexp 문법과 같은 현재 표에 수행한다(cpppj client/RawDotCommandDispatch.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 실제 원문 고정 패턴(00506a30)의 바이트 문법만 구현하며 범용 정규식이나 네트워크 전송을 대체하지 않는다. Client 가 소유하는 원문 명령표(이름/함수/count 인접 물리)와 외부 명령 장치(invoke/error)의 경계다.
 // 인자는 127바이트까지 복사하고 이름은 80바이트까지 비교하며 물리 밖 원시 포인터 접근은 RangeError 다. 공유 separatorOffset 은 callback 뒤 재조회하므로 같은 상태의 중첩 분배 효과도 유지한다.
-// 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 원본 10.78 독립 관측 512행은 tests/command-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E478 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: dispatchDotCommand(table, state, inputBytes('.help me;.quit\0'), { invoke: (callback, argument) => code, error: (name, code) => {} }) → 1.
 // (2026-11-14 WB04-E443: RawMenuControls 선행 점 명령 분배 이식)
 

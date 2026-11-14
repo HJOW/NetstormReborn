@@ -200,7 +200,8 @@ export function applyHtmlCondition(state, raw, closing, substitute) {
     }
     if (predicate !== (!leadingNegation && !operatorNegation)) {
         state.shown = 0;
-        state.hiddenDepth += 1;
+        // 원문 DWORD 증가이므로 0xffffffff 에서 0 으로 감긴다(원본 관측 htmlcondition 행으로 확인, 2026-11-15 WB04-E478).
+        state.hiddenDepth = (state.hiddenDepth + 1) >>> 0;
     }
 }
 

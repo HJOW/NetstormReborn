@@ -21591,7 +21591,7 @@
       "bytes": 1243112,
       "lines": 121,
       "fixtureCommit": "a0a17c435",
-      "webCommit": "worktree",
+      "webCommit": "42d610db8",
       "cpppjBasis": {
         "cpppj/src/client/RawStormPowerRefresh.cpp": "a0a17c435",
         "cpppj/src/client/RawStormPowerRefresh.h": "a0a17c435"
@@ -21622,7 +21622,7 @@
       "bytes": 38591,
       "lines": 327,
       "fixtureCommit": "99bb3f8cd",
-      "webCommit": "worktree",
+      "webCommit": "42d610db8",
       "cpppjBasis": {
         "cpppj/src/client/MetaImageGump.cpp": "99bb3f8cd",
         "cpppj/src/client/MetaImageGump.h": "99bb3f8cd"
@@ -21653,7 +21653,7 @@
       "bytes": 924474,
       "lines": 515,
       "fixtureCommit": "f0ac043fe",
-      "webCommit": "worktree",
+      "webCommit": "42d610db8",
       "cpppjBasis": {
         "cpppj/src/client/MetaImageList.cpp": "f0ac043fe",
         "cpppj/src/client/MetaImageList.h": "f0ac043fe"
@@ -21684,7 +21684,7 @@
       "bytes": 1199884,
       "lines": 1571,
       "fixtureCommit": "479ff24c4",
-      "webCommit": "worktree",
+      "webCommit": "42d610db8",
       "cpppjBasis": {
         "cpppj/src/client/RawImage.cpp": "479ff24c4",
         "cpppj/src/client/RawImage.h": "479ff24c4"
@@ -21715,10 +21715,165 @@
       "bytes": 306396,
       "lines": 881,
       "fixtureCommit": "85f886f8e",
-      "webCommit": "worktree",
+      "webCommit": "42d610db8",
       "cpppjBasis": {
         "cpppj/src/client/TextClipboard.cpp": "1d5b1f437",
         "cpppj/src/client/TextClipboard.h": "1d5b1f437"
+      }
+    },
+    {
+      "id": "dot-command-dispatch",
+      "path": "cpppj/tests/fixtures/dot-command-dispatch-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E478",
+      "producer": "cpppj DotCommandDispatchTests: 보호 원본 10.78 점 명령 분배(43f6f0)와 실제 Regexp 의 독립 x86 관측 512행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/command-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/dot-command-dispatch.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawDotCommandDispatch.cpp",
+        "cpppj/src/client/RawDotCommandDispatch.h"
+      ],
+      "doc": "docs/webpj-command-native-fixtures-20261115.md",
+      "scope": "점 명령 분배의 명령표(이름/함수/count)·입력·기본 슬롯/구분자 위치·외부 호출 순서(독립 1,024관측)",
+      "text": true,
+      "sha256": "89a1702e95e0fe51b6d7f100a244a755efb3292c5a6033897889325542f91190",
+      "bytes": 2872083,
+      "lines": 513,
+      "fixtureCommit": "13ea2e602",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawDotCommandDispatch.cpp": "13ea2e602",
+        "cpppj/src/client/RawDotCommandDispatch.h": "13ea2e602"
+      }
+    },
+    {
+      "id": "dot-command-register",
+      "path": "cpppj/tests/fixtures/dot-command-register-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E478",
+      "producer": "cpppj DotCommandRegisterTests: 보호 원본 10.78 점 명령 등록의 독립 x86 관측 250행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/command-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/dot-command-register.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawDotCommandRegister.cpp",
+        "cpppj/src/client/RawDotCommandRegister.h"
+      ],
+      "doc": "docs/webpj-command-native-fixtures-20261115.md",
+      "scope": "점 명령 등록의 count 63 끝쓰기와 복사 뒤 count 변경·복사 중단의 인접 전체 표 2568바이트·반환·복사 인자",
+      "text": true,
+      "sha256": "e20c7a33500cbf6ae1c6ca94c4a462393cbbc34920c675690e07f67b60bac5ac",
+      "bytes": 1294562,
+      "lines": 251,
+      "fixtureCommit": "d207940cd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawDotCommandRegister.cpp": "d207940cd",
+        "cpppj/src/client/RawDotCommandRegister.h": "d207940cd"
+      }
+    },
+    {
+      "id": "dot-command-register-v2",
+      "path": "cpppj/tests/fixtures/dot-command-register-v2-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E478",
+      "producer": "cpppj DotCommandRegisterTests(V2): 보충 독립 x86 관측 12행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/command-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/dot-command-register.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawDotCommandRegister.cpp",
+        "cpppj/src/client/RawDotCommandRegister.h"
+      ],
+      "doc": "docs/webpj-command-native-fixtures-20261115.md",
+      "scope": "보충 v2: count 64 정상과 count 65 종단 실패 전 전체 표, 음수 count 의 CRT 인자 경계 4행",
+      "text": true,
+      "sha256": "6f1c66622b9fdd1ece4503e1652466b2131ccb760bdd1a68de336286541ea4eb",
+      "bytes": 62711,
+      "lines": 13,
+      "fixtureCommit": "d207940cd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawDotCommandRegister.cpp": "d207940cd",
+        "cpppj/src/client/RawDotCommandRegister.h": "d207940cd"
+      }
+    },
+    {
+      "id": "htmlcondition",
+      "path": "cpppj/tests/fixtures/htmlcondition-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E478",
+      "producer": "cpppj HtmlConditionEffectTests: 보호 원본 10.78/CD HTML 조건/토큰/CRT 의 독립 x86 관측 754행 중 10.78 행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/command-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/html-text.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HtmlConditionEffect.cpp",
+        "cpppj/src/client/HtmlConditionEffect.h"
+      ],
+      "doc": "docs/webpj-command-native-fixtures-20261115.md",
+      "scope": "HTML 조건 태그/전체 순회의 출력·입력 위치·표시/숨김 깊이(uint32 감김 포함)·상태 비트·분리된 Config 치환 호출 순서. originals(10.78) 489행만, originalCD 265행은 웹 범위 밖",
+      "text": true,
+      "sha256": "9e65562b49035d78051b14516404a6951b1be5a04d8fbc9d1753b662253615be",
+      "bytes": 114087,
+      "lines": 755,
+      "fixtureCommit": "61bb28bb8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HtmlConditionEffect.cpp": "61bb28bb8",
+        "cpppj/src/client/HtmlConditionEffect.h": "61bb28bb8"
+      }
+    },
+    {
+      "id": "html-input-dialog",
+      "path": "cpppj/tests/fixtures/html-input-dialog-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E478",
+      "producer": "cpppj HtmlInputDialogTests: 보호 원본 10.78 HTML 입력 확인의 독립 x86 관측 109행 중 확인 89행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/command-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/html-input-dialog.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HtmlInputDialog.cpp",
+        "cpppj/src/client/HtmlInputDialog.h"
+      ],
+      "doc": "docs/webpj-command-native-fixtures-20261115.md",
+      "scope": "HTML 입력 확인(004cfae0) 89행의 복사·NUL·LF·공백 검사·atol·서식/Tell 호출 순서와 반환. 생성/공장 20행은 SaveFortNameDialog 이식 때",
+      "text": true,
+      "sha256": "027d74f92ba363fa3e7e1852866d1802c679bc66102a7cfc96eb22237bd80b66",
+      "bytes": 30046,
+      "lines": 110,
+      "fixtureCommit": "967ca80d8",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HtmlInputDialog.cpp": "967ca80d8",
+        "cpppj/src/client/HtmlInputDialog.h": "967ca80d8"
       }
     }
   ]

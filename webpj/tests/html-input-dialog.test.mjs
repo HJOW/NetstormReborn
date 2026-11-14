@@ -1,5 +1,5 @@
 // 전용 PE fixture가 없는 HTML $Input 확인(ConfirmHtmlInput: 편집 문자열 복사·첫 LF 절단·NUL 공백 검사·선택 atol·서식/Tell)을 기준선 소스 계약으로 검증한다. (2026-11-14 WB04-E435)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 호출 순서/조건은 기준선 소스(HtmlInputDialog.cpp, 원문 004cfae0)에서 옮겼다. 편집 자식/서식/Tell은 호출 기록 대역이다.
+// 이 파일은 손 계산 바이트·경계 시험이며 원본 10.78 직접 관측은 command-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E478). 호출 순서/조건은 기준선 소스(HtmlInputDialog.cpp, 원문 004cfae0)에서 옮겼다. 편집 자식/서식/Tell은 호출 기록 대역이다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { confirmHtmlInput } from '../www/ui/html-input-dialog.js';
