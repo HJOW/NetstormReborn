@@ -21746,7 +21746,7 @@
       "bytes": 2872083,
       "lines": 513,
       "fixtureCommit": "13ea2e602",
-      "webCommit": "worktree",
+      "webCommit": "be7136f46",
       "cpppjBasis": {
         "cpppj/src/client/RawDotCommandDispatch.cpp": "13ea2e602",
         "cpppj/src/client/RawDotCommandDispatch.h": "13ea2e602"
@@ -21777,7 +21777,7 @@
       "bytes": 1294562,
       "lines": 251,
       "fixtureCommit": "d207940cd",
-      "webCommit": "worktree",
+      "webCommit": "be7136f46",
       "cpppjBasis": {
         "cpppj/src/client/RawDotCommandRegister.cpp": "d207940cd",
         "cpppj/src/client/RawDotCommandRegister.h": "d207940cd"
@@ -21808,7 +21808,7 @@
       "bytes": 62711,
       "lines": 13,
       "fixtureCommit": "d207940cd",
-      "webCommit": "worktree",
+      "webCommit": "be7136f46",
       "cpppjBasis": {
         "cpppj/src/client/RawDotCommandRegister.cpp": "d207940cd",
         "cpppj/src/client/RawDotCommandRegister.h": "d207940cd"
@@ -21839,7 +21839,7 @@
       "bytes": 114087,
       "lines": 755,
       "fixtureCommit": "61bb28bb8",
-      "webCommit": "worktree",
+      "webCommit": "be7136f46",
       "cpppjBasis": {
         "cpppj/src/client/HtmlConditionEffect.cpp": "61bb28bb8",
         "cpppj/src/client/HtmlConditionEffect.h": "61bb28bb8"
@@ -21870,10 +21870,165 @@
       "bytes": 30046,
       "lines": 110,
       "fixtureCommit": "967ca80d8",
-      "webCommit": "worktree",
+      "webCommit": "be7136f46",
       "cpppjBasis": {
         "cpppj/src/client/HtmlInputDialog.cpp": "967ca80d8",
         "cpppj/src/client/HtmlInputDialog.h": "967ca80d8"
+      }
+    },
+    {
+      "id": "ai-utility-names",
+      "path": "cpppj/tests/fixtures/ai-utility-names-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E479",
+      "producer": "cpppj AiUtilityCommandInputTests: 보호 원본 10.78 AI 일반 명령 이름표의 독립 x86 관측 30행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/input-command-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/client-input-commands.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/AiUtilityCommandInput.cpp",
+        "cpppj/src/client/AiUtilityCommandInput.h"
+      ],
+      "doc": "docs/webpj-input-command-native-fixtures-20261115.md",
+      "scope": "AI 일반 명령 이름표 30행(원래/대소문자·숫자/문자열 인자·미등록)의 명령 큐 사건·문자열 고리 위치·진단 횟수",
+      "text": true,
+      "sha256": "accd8c24e371d193e9157be644226a0abf0d0aaebb7b70526a4b90065bb5453e",
+      "bytes": 2622,
+      "lines": 31,
+      "fixtureCommit": "aeb552a88",
+      "webCommit": "feaf9c283",
+      "cpppjBasis": {
+        "cpppj/src/client/AiUtilityCommandInput.cpp": "aeb552a88",
+        "cpppj/src/client/AiUtilityCommandInput.h": "aeb552a88"
+      }
+    },
+    {
+      "id": "make-ai-names",
+      "path": "cpppj/tests/fixtures/make-ai-names-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E479",
+      "producer": "cpppj MakeAiCommandInputTests: 보호 원본 10.78 MakeAi 이름표의 독립 x86 관측 12행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/input-command-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/script-command-inputs.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/MakeAiCommandInput.cpp",
+        "cpppj/src/client/MakeAiCommandInput.h"
+      ],
+      "doc": "docs/webpj-input-command-native-fixtures-20261115.md",
+      "scope": "MakeAi 이름표 12행의 명령 큐 사건·문자열 고리 위치·진단 횟수",
+      "text": true,
+      "sha256": "841802d0e698a358e9afc873a9b1136cb255758b642a5908a6958b715f19a35c",
+      "bytes": 1026,
+      "lines": 13,
+      "fixtureCommit": "b466c1277",
+      "webCommit": "191f157ef",
+      "cpppjBasis": {
+        "cpppj/src/client/MakeAiCommandInput.cpp": "b466c1277",
+        "cpppj/src/client/MakeAiCommandInput.h": "b466c1277"
+      }
+    },
+    {
+      "id": "ai-debug-names",
+      "path": "cpppj/tests/fixtures/ai-debug-names-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E479",
+      "producer": "cpppj AiDebugMenuTests: 보호 원본 10.78 AI 진단 옛 별칭 이름표의 독립 x86 관측 21행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/input-command-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/ai-debug-command-input.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/AiDebugCommandInput.cpp",
+        "cpppj/src/client/AiDebugCommandInput.h"
+      ],
+      "doc": "docs/webpj-input-command-native-fixtures-20261115.md",
+      "scope": "AI 진단 옛 별칭 21행(전부 미등록)의 큐 사건·고리 위치·진단. ai-debug-toggle-names 63행과 함께 84행",
+      "text": true,
+      "sha256": "5491dc6c34faf75a6dcec1d358173aa40ff3275a531441064a1f6f1b95617e17",
+      "bytes": 2646,
+      "lines": 22,
+      "fixtureCommit": "8d6c325c0",
+      "webCommit": "6c0302d55",
+      "cpppjBasis": {
+        "cpppj/src/client/AiDebugCommandInput.cpp": "8d6c325c0",
+        "cpppj/src/client/AiDebugCommandInput.h": "8d6c325c0"
+      }
+    },
+    {
+      "id": "ai-debug-toggle-names",
+      "path": "cpppj/tests/fixtures/ai-debug-toggle-names-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E479",
+      "producer": "cpppj AiDebugMenuTests: 보호 원본 10.78 AI 진단 Toggle 이름표의 독립 x86 관측 63행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/input-command-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/ai-debug-command-input.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/AiDebugCommandInput.cpp",
+        "cpppj/src/client/AiDebugCommandInput.h"
+      ],
+      "doc": "docs/webpj-input-command-native-fixtures-20261115.md",
+      "scope": "AI 진단 실제 Toggle 이름 63행(등록 32·미등록 31)의 숫자/문자열/첫 NUL·큐·고리·진단",
+      "text": true,
+      "sha256": "3cd3f4c838d610e383448cbe956c6293d04f4d8e2fa80fc93f9d628c8eafa8bf",
+      "bytes": 6582,
+      "lines": 64,
+      "fixtureCommit": "8d6c325c0",
+      "webCommit": "6c0302d55",
+      "cpppjBasis": {
+        "cpppj/src/client/AiDebugCommandInput.cpp": "8d6c325c0",
+        "cpppj/src/client/AiDebugCommandInput.h": "8d6c325c0"
+      }
+    },
+    {
+      "id": "priority-loop",
+      "path": "cpppj/tests/fixtures/priority-loop-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E479",
+      "producer": "cpppj ConfigurationCommandInputTests(PriorityLoopTests.inc): 보호 원본 10.78 WinMain 우선순위 루프의 독립 x86 관측 96행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/input-command-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/configuration-command-input.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ConfigurationCommandInput.cpp",
+        "cpppj/src/client/ConfigurationCommandInput.h"
+      ],
+      "doc": "docs/webpj-input-command-native-fixtures-20261115.md",
+      "scope": "WinMain 국소 스레드 우선순위 루프 96행: raw 요청·OS 등급 정규화·설정 여부·선택 우선순위(범위 밖 요청의 반복 NORMAL 포함)",
+      "text": true,
+      "sha256": "261d3ba1acb8e8ff7cf9fc44146f0c443b172dc4c792e8ca3410b93780115bf2",
+      "bytes": 19557,
+      "lines": 97,
+      "fixtureCommit": "9e20b1c9f",
+      "webCommit": "6c0302d55",
+      "cpppjBasis": {
+        "cpppj/src/client/ConfigurationCommandInput.cpp": "9e20b1c9f",
+        "cpppj/src/client/ConfigurationCommandInput.h": "9e20b1c9f"
       }
     }
   ]
