@@ -24,8 +24,8 @@ cpppj/src/client/CampaignUserInputServices.cpp	port			todo	[client-default]
 cpppj/src/client/CaptureInput.cpp	exclude-host			-	[host-capture]
 cpppj/src/client/CdDirectory.cpp	exclude-host			-	[host-cd]
 cpppj/src/client/CdPresence.cpp	exclude-host			-	[host-cd]
-cpppj/src/client/ChatNameCompletion.cpp	port			todo	[client-default]
-cpppj/src/client/ChatRecipients.cpp	port			todo	[client-default]
+cpppj/src/client/ChatNameCompletion.cpp	port	www/ui/chat-name-completion.js	1f00a25a	port	[client-default] WB04-E436 ChatNameCompletion completeChatName(0x4090 상태 배치·새 질의 채널 번역 4개+Chat 100×48 Subscriber 행 이름 수집·길이 127 이상 진단 0x354·strncpy 접두·NULL 질의 ±1 순환·signed 인덱스 감김·strnicmp 접두 비교·두 번째 이탈에서만 undefined) 이식. 전용 PE fixture 없음(소스 계약·손 계산); 기준선 뒤 변경 없음; 남음: ChatWindow/Console 연결
+cpppj/src/client/ChatRecipients.cpp	port	www/ui/chat-recipients.js	1f00a25a	port	[client-default] WB04-E436 ChatRecipients checkChatRecipients(manager 0/text 없음 false·mode 0 초기화·고정 구분자 CR LF TAB SPACE 토큰·이름 40바이트 복사/NUL·선택 필드만 지움(앞 8·이름 첫 바이트·주소 48..51)·Identity 실패 때만 여덟 채널 키 번역 비교(ASCII 접기)·다음 토큰은 절단 전 끝) 이식. 전용 PE fixture 없음(소스 계약·실제 RawPlayerIdentity.initialize); 기준선 뒤 변경 없음; 남음: ChatWindow/Console 연결
 cpppj/src/client/ChatWindow.cpp	port			todo	[client-default] 단독 HUD Chat/Console(비멀티 UI 범위). 원격 송수신 분기는 경계 규칙
 cpppj/src/client/ClientAiDebugGlobals.h	port	www/core/client-ai-debug-globals.js	023a0a93	port	[client-default] WB04-E333: Client 수명 AI 진단 전역 소유자 — checking 005e4794(최초 BSS 0, signed 32비트 Int32Box)·마지막 오류 상세 005e4798(최초 null)·보호 PE 7로그 DWORD(0x52f3cc..e4, 초기 99·99·29·99·99·99·29, 정확한 주소 일치만 허용). 헤더만. cpppj 직접 시험은 메뉴/소비자 시험에 흩어져 있어(AiDebugMenuTests 등 4-D 이후) 웹 계약 시험 2건. 기준선 뒤 변경 없음(3.6절 ①). 남음: 없음
 cpppj/src/client/ClientAllocationFailure.cpp	exclude-host			-	[host-memory]
