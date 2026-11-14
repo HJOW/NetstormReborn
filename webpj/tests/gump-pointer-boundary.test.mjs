@@ -1,5 +1,5 @@
 // 전용 PE fixture가 없는 포인터 안팎 전환 앞단(GumpPointerBoundary: 첫 폴링·정적 초기화·안→밖 기록·밖→안 합성 release 예약)을 기준선 소스 계약으로 검증한다. (2026-11-14 WB04-E433)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 호출 순서/분기는 기준선 소스(GumpPointerBoundary.cpp, 10.78 004d6379..004d65a0)에서 옮겼다. 큐 연결은 실제 40칸 InputQueue를 쓴다.
+// 이 파일의 수치는 기준선 소스 계약이다. 원본 직접 관측 3,878행은 tests/gump-pointer-native-fixtures.test.mjs(2026-11-15 WB04-E491)가 대조한다. 호출 순서/분기는 기준선 소스(GumpPointerBoundary.cpp, 10.78 004d6379..004d65a0)에서 옮겼다. 큐 연결은 실제 40칸 InputQueue를 쓴다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { GumpPointerBoundaryState, prepareGumpPointerBoundary, prepareGumpPointerBoundaryWithQueue } from '../www/ui/gump-pointer-boundary.js';

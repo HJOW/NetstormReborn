@@ -22405,7 +22405,7 @@
       "bytes": 544313,
       "lines": 1297,
       "fixtureCommit": "5dc75236b",
-      "webCommit": "worktree",
+      "webCommit": "c2ec9100c",
       "cpppjBasis": {
         "cpppj/src/client/InventoryAboutMenu.cpp": "4398ba2c3",
         "cpppj/src/client/InventoryAboutMenu.h": "4398ba2c3"
@@ -22437,10 +22437,41 @@
       "bytes": 1030325,
       "lines": 2593,
       "fixtureCommit": "71379b0ac",
-      "webCommit": "worktree",
+      "webCommit": "c2ec9100c",
       "cpppjBasis": {
         "cpppj/src/client/InventoryAboutMenu.cpp": "4398ba2c3",
         "cpppj/src/client/InventoryAboutMenu.h": "4398ba2c3"
+      }
+    },
+    {
+      "id": "gump-pointer-boundary",
+      "path": "cpppj/tests/fixtures/gump-pointer-boundary-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E491",
+      "producer": "cpppj GumpPointerBoundaryTests(Native3878): 보호 원본 10.78 포인터 안팎 전환 앞단(004d6379..004d65a0)의 독립 x86 관측 3,878행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/gump-pointer-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/gump-pointer-boundary.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/GumpPointerBoundary.cpp",
+        "cpppj/src/client/GumpPointerBoundary.h"
+      ],
+      "doc": "docs/webpj-gump-pointer-native-fixtures-20261115.md",
+      "scope": "포인터 안팎 전환 앞단 3,878행의 폴링 사건·언어 3 Ctrl 합성 release·초기화 비트 1/2·안→밖 좌/우 기록·밖→안 합성 release 예약·callback 뒤 기록 재조회·wasInside 마지막 덮어쓰기와 실제 40칸 큐의 최종 사건 열(포화 prefill 포함)",
+      "text": true,
+      "sha256": "eb689894225910c60d163e4ca1198e7c932497913938a87c588998399b5026e5",
+      "bytes": 1348751,
+      "lines": 3879,
+      "fixtureCommit": "bb9132423",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GumpPointerBoundary.cpp": "bb9132423",
+        "cpppj/src/client/GumpPointerBoundary.h": "bb9132423"
       }
     }
   ]

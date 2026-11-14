@@ -2,7 +2,7 @@
 // 창 안→밖 전환 때 좌/우 버튼 상태를 기록하고, 밖→안 전환 때 기록상 눌려 있었지만 지금은 떼어진 버튼에 합성 release 를 입력 큐에 예약한다.
 // 사건은 { code, x, y } 이고 code 는 DWORD, 좌표는 signed 다. 폴링은 요청 code 마다 현재 OS 상태를 새로 읽는다. 큐 예약은 원본 52f90 의 raw code/x/y 를 그대로 쓴다(PushCommand 변환 없음).
 // 직후 Guide 4d65a7→카메라/Overlay/Broadcast/일반 사건 드레인은 호출자가 같은 현재 포인터로 이어 간다.
-// 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 원본 10.78 독립 관측 3,878행은 tests/gump-pointer-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E491 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // (2026-11-14 WB04-E433: RawMenuControls 선행 포인터 경계 이식)
 import { InputCode } from '../core/input-queue.js';
 
