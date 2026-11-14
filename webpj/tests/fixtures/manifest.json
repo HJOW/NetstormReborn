@@ -20391,10 +20391,41 @@
       "bytes": 1001350,
       "lines": 161,
       "fixtureCommit": "b5a076fa4",
-      "webCommit": "worktree",
+      "webCommit": "f3f1f8327",
       "cpppjBasis": {
         "cpppj/src/client/HtmlWindowFit.cpp": "b5a076fa4",
         "cpppj/src/client/HtmlWindowFit.h": "b5a076fa4"
+      }
+    },
+    {
+      "id": "html-window-metadata",
+      "path": "cpppj/tests/fixtures/html-window-metadata-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E458",
+      "producer": "cpppj HtmlWindowMetadataTests: 보호 원본10.78 상위 메타/버튼 관측, regex compile/search 명시 하위(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/html-window-metadata.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/html-window-metadata.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HtmlWindowMetadata.cpp",
+        "cpppj/src/client/HtmlWindowMetadata.h"
+      ],
+      "doc": "docs/webpj-html-window-metadata-20261114.md",
+      "scope": "원본부분복사모드128행의 실제부모9필드·20행·8192BYTE·고리·반환/중단·효과순서. NB08 true는 별도 독립검사",
+      "text": true,
+      "sha256": "22aebb9dca3c67272a8867d53370051346258fb47880c240e51904764c1e62c5",
+      "bytes": 55910,
+      "lines": 129,
+      "fixtureCommit": "50b114b9b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HtmlWindowMetadata.cpp": "4edec13c5",
+        "cpppj/src/client/HtmlWindowMetadata.h": "4edec13c5"
       }
     }
   ]

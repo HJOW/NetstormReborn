@@ -8,4 +8,4 @@
 
 원본 fixture `technology-list-menu-x86.tsv` 367입력의 전체 반환·stored·40DWORD·효과 순서와 `technology-all-menu-x86.tsv` 100입력의 전체 효과·문구·활성 상태가 첫 실행부터 일치했다. 각 해시는 fixture manifest의 동명 두 항목에 있다. 신규 검사 6건은 이 467입력과 NULL/빈 TYPE·저장 인덱스·현재 TYPE 수 변경·하위 장치 누락 뒤 부분 효과·대상 DWORD 유지·40칸 초과 순환도 확인한다.
 
-전체 회귀는 Node v26.13.0·v22.23.3 각각 **4,658건 통과, 실패 0**이다. 대응표 984행 오류 0, fixture manifest 형식/해시/등록 검사 3건도 통과했다. Node v24는 설치되지 않아 미실행이다. cpppj의 HTML metadata 통합 검사 2건은 해당 모듈이 아직 웹에 없어 후속으로 넘긴다. 실제 RawMenuControls/HTML/current Session 조립과 화면 출력은 별도 단위이며, 이 검사는 실제 게임/브라우저 실행이나 제단/희생/생산 관측이 아니다.
+전체 회귀는 Node v26.13.0·v22.23.3 각각 **4,658건 통과, 실패 0**이다. 대응표 984행 오류 0, fixture manifest 형식/해시/등록 검사 3건도 통과했다. Node v24는 설치되지 않아 미실행이다. cpppj의 HTML metadata 통합 검사 2건은 당시 해당 모듈이 없어 넘겼고 **[E458](webpj-html-window-metadata-20261114.md)에서 실제 metadata와 연결해 완료했다.** 실제 RawMenuControls/current Session 조립과 화면 출력은 별도 단위이며, 이 검사는 실제 게임/브라우저 실행이나 제단/희생/생산 관측이 아니다.

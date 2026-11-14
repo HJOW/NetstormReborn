@@ -157,7 +157,7 @@ cpppj/src/client/HtmlTextParser.cpp	port	www/ui/html-text.js	1f00a25a	partial	[c
 cpppj/src/client/HtmlWindowFactory.cpp	port	www/ui/html-text.js;www/ui/tell-window.js	1f00a25a	partial	[client-default] 두 번 변환 준비(004cf270)
 cpppj/src/client/HtmlWindowFit.cpp	port	www/ui/html-window-fit.js	1f00a25a	port	[client-default] WB04-E457: 실제 같은 HTML/본문/버튼/메뉴의 전체Fit·FST32·측정/메뉴pop/스크롤전환·중앙좌표/깊이. 원본160행의26객체/전체효과 일치, 실제 HTML/Gump트리 조립 포함. 앱/Tell 교체·실제글꼴/가상장치 결선은 RawMenuControls 허브.
 cpppj/src/client/HtmlWindowGump.cpp	port	www/ui/html-window-gump.js	1f00a25a	port	[client-default] WB04-E456: 실제 기본/장식 파생주소의8192BYTE/20행·생성/본문/버튼/입력/Idle/소멸, 원본250+88행 전체일치. 기존TellWindow 앱 경로 교체와 실제 stone/scroll/HTML Fit·메타/공장은 RawMenuControls 허브에서 조립.
-cpppj/src/client/HtmlWindowMetadata.cpp	port	www/ui/html-text.js	1f00a25a	partial	[client-default] $Button=/$Menu= 등 메타
+cpppj/src/client/HtmlWindowMetadata.cpp	port	www/ui/html-window-metadata.js	4edec13c	port	[client-default] WB04-E458: 9종 우선순위·현재원시버퍼/캡처·명령고리·실제HTML버튼/메뉴/기한/입력효과, 원본128행 전체일치. 기준선뒤 NB08 공통inline목록 repair옵션② 반영(기본false 원문 유지); 제품켜기·실제목록/앱 결선은 RawMenuControls 허브.
 cpppj/src/client/HtmlZsend.cpp	exclude-mp			-	[mp-zsend]
 cpppj/src/client/HudChatGeometry.cpp	port	www/ui/hud-chat-geometry.js	1f00a25a	port	[client-default] WB04-E445 HudChatGeometry(attach: 기본 부착→배경 Push·크기(입력줄 표시 때만 본문 높이에서 입력줄 높이 차감·x87 중간값 배율 곱 float32)→도우미 높이(입력줄 표시+원시 BYTE 두 관문 15.0)→배경 부착→본문 줄 조회·Push·크기·맨 아래 요청·부착→도우미→입력줄(폭만 복사·왼쪽 여백+17.0) 순서·각 단계 root 자식 재조회·setHelperVisible/setInputVisible(challenge 0 요청도 표시)/toggleInputVisible/inputVisible·dispatchChatInputKey(뗌·코드 마스크 뒤 13)·consumeChatInputToggle(전환 뒤 0)) 이식. 전용 PE fixture 없음(소스 계약·손 계산 좌표/크기); 기준선 뒤 변경 없음; 남음: ChatWindow 본체(Console/TextEntry 생성·입력)
 cpppj/src/client/HudDividerInput.cpp	port			todo	[client-default]
@@ -396,7 +396,7 @@ cpppj/src/client/StyleTextBuffer.cpp	port	www/ui/style-text-buffer.js;www/ui/scr
 cpppj/src/client/StyleTextMarkup.cpp	port	www/ui/style-text-markup.js;www/ui/style-text.js;www/assets/picture-resolver.js	b810ebe0	port	[client-default] WB04-E421 ~[...] 대괄호 I→S→T→C→B→E 부분 검색·greedy 되돌리기·ASCII 공백/탭 캡처·80바이트·첫 NUL 절단·타입 helper 재조회 순서·그림 조각 체인/공통 태그 전달·E 그림자/검정·S 소리·다중 줄 그림 제한 모드와 실제188타입/SHP +1a 높이/zone 옵션/검정/소리 연결. 3.6② 판정: 기준선 뒤 cpppj b810ebe0(NB02 엠보스 오프셋 두 좌표 -4..4) 반영. 전용 PE fixture 없음(기준선 소스 계약·독립 picture-resolver 116타입 전수 대조); 10.72 CD(I→W→T·판본 인자) 제외; 앱 메뉴 style-text.js 는 간소화판 그대로; 남음: StyleTextBuffer/TextGump/ScrollingText·RawMenuControls 연결
 cpppj/src/client/TechnicalHelp.cpp	exclude-host			-	[host-tech-help]
 cpppj/src/client/TechnicalHelpClient.cpp	exclude-host			-	[host-tech-help]
-cpppj/src/client/TechnologyListMenu.cpp	port	www/ui/technology-list-menu.js	1f00a25a	port	[client-default] WB04-E450 원문 기술 목록 367입력+전체 메뉴 100입력의 반환/40DWORD/효과 순서 일치. 현재 TYPE·개수·소유 재조회·저장 개수와 전체 수 구별·초과 후보 순환·대상 DWORD/WORD·업그레이드/랭크/보상 분기 이식. 기준선 뒤 변경 없음; HTML metadata·RawMenuControls 실제 조립은 후속, 랭크 분기는 정적 이식만
+cpppj/src/client/TechnologyListMenu.cpp	port	www/ui/technology-list-menu.js	1f00a25a	port	[client-default] WB04-E450 원문 기술 목록 367입력+전체 메뉴 100입력의 반환/40DWORD/효과 순서 일치. 현재 TYPE·개수·소유 재조회·저장 개수와 전체 수 구별·초과 후보 순환·대상 DWORD/WORD·업그레이드/랭크/보상 분기 이식. 기준선 뒤 변경 없음; 실제HTML metadata 통합2건 E458 완료, RawMenuControls 결선은 후속, 랭크 분기는 정적 이식만
 cpppj/src/client/TellFileMenus.cpp	port	www/ui/tell-lists.js	1f00a25a	partial	[client-default] WB03 @/# 파일 목록 메뉴
 cpppj/src/client/TellMapMenus.cpp	exclude-edit			-	[edit-map-list]
 cpppj/src/client/TellParameters.cpp	port	www/ui/tell-parameters.js	1f00a25a	port	[client-default] WB03(004c8ea0)

@@ -3,6 +3,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { TechnologyListMenu } from '../www/ui/technology-list-menu.js';
+import { HtmlWindowMetadata } from '../www/ui/html-window-metadata.js';
+import { HtmlWindowGumpNode } from '../www/ui/html-window-gump.js';
 
 // unsigned DWORD로 기록된 입력 행을 복원한다.
 const numbers = (text) => text.split(',').map(Number);
@@ -83,4 +85,21 @@ test('전체 DWORD 대상·currentTechnology 선행 조회·알려진 기술 비
     const rows = []; r.hooks.item = (label, command, type, enabled) => rows.push({ type, enabled });
     new TechnologyListMenu(r.hooks).appendTheme(0xf123000a, 5); assert.ok(rows.length > 40); assert.ok(rows.some((row) => !row.enabled)); assert.ok(rows.some((row) => row.enabled));
     assert.ok(rows.some((row, index) => rows.findIndex((other) => other.type === row.type) < index));
+});
+
+// E450에서 HTML 부모/메타 이식 뒤로 미뤘던 cpppj의 같은 실제 두 통합 경로다.
+test('TechnologyListMenu_HtmlMetadataThemeDispatch: 실제metadata가packed원소/대상을같은기술목록으로분배한다', () => {
+    const r = scene([2, 1, 2, 80, 1, 40, 0]); const node = new HtmlWindowGumpNode(); const metadata = new HtmlWindowMetadata({
+        node: () => node, clearButtons: () => {}, commands: { lookup: (name) => { assert.equal(name, 'DoNothing'); return 0x02000089; } }, beginMenu: (flags) => assert.equal(flags, 0x40000),
+        themeTech: (target, theme) => { assert.deepEqual([target, theme], [10, 1]); new TechnologyListMenu(r.hooks).appendTheme(target, theme); },
+    });
+    const buffer = new Uint8Array(8192); buffer.set(Buffer.from('$Menu=*THEMETECHLIST*,DoNothing,65546\nTAIL', 'latin1'));
+    assert.equal(metadata.process(1, buffer), 1); assert.equal(node.menuColumns, 1); assert.equal(Buffer.from(buffer.subarray(0, buffer.indexOf(0))).toString('latin1'), 'TAIL'); assert.match(r.trace.join(';'), /^L:10;T/); assert.match(r.trace.join(';'), /I:33554645:/);
+});
+test('TechnologyListMenu_HtmlMetadataAllDispatch: 실제metadata의전체DWORD는목록진입에서만WORD로접는다', () => {
+    const float = new Float32Array([10.25]); const coordinate = new Uint32Array(float.buffer)[0]; const r = scene([3, 0, 1, 80, 1, 40, 0, coordinate, coordinate, 11, 7, 7, 0], true); const node = new HtmlWindowGumpNode();
+    const metadata = new HtmlWindowMetadata({ node: () => node, clearButtons: () => {}, commands: { lookup: (name) => { assert.equal(name, 'DoNothing'); return 0x02000089; } }, beginMenu: (flags) => assert.equal(flags, 0x40000), tech: (target) => { assert.equal(target, 0x1234000a); new TechnologyListMenu(r.hooks).appendAll(target); } });
+    const buffer = new Uint8Array(8192); buffer.set(Buffer.from('$Menu=*TECHLIST*,DoNothing,305397770\nTAIL', 'latin1'));
+    assert.equal(metadata.process(1, buffer), 1); assert.equal(node.menuColumns, 1); assert.equal(Buffer.from(buffer.subarray(0, buffer.indexOf(0))).toString('latin1'), 'TAIL');
+    assert.match(r.trace.join(';'), /^L:10;C;B:10;T/); assert.match(r.trace.join(';'), /I:Upgrade Altar to Level 3:33554644:10:1/); assert.match(r.trace.join(';'), /I:Get 5,000 ~\[IfortGump\.3\]:33554645:154:1$/);
 });
