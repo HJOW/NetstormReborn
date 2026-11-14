@@ -1,5 +1,5 @@
 // 생산 내용물 정보 메뉴(inventory-about-menu: 설명·비용·부족 머리·회수·Help·부착·음향)를 기준선 소스 계약과 손 계산 값으로 검증한다.
-// 실제 SidPool 위에서 내용물 슬롯(+10 종류/+18 종류 WORD/+20 플래그 WORD)을 쓰고, 나머지 메뉴/번역/비용은 기록 훅이다. cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 실제 게임·브라우저 실행이 아니다. (2026-11-14 WB04-E448)
+// 실제 SidPool 위에서 내용물 슬롯(+10 종류/+18 종류 WORD/+20 플래그 WORD)을 쓰고, 나머지 메뉴/번역/비용은 기록 훅이다. 이 파일의 수치는 기준선 소스 계약과 손 계산이다. 원본 직접 관측 3,888행은 tests/inventory-about-native-fixtures.test.mjs(2026-11-15 WB04-E490)가 대조한다. 실제 게임·브라우저 실행이 아니다. (2026-11-14 WB04-E448)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SidPool } from '../www/core/sid-pool.js';

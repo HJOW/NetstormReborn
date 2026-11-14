@@ -22373,10 +22373,74 @@
       "bytes": 260470,
       "lines": 1056,
       "fixtureCommit": "560df210e",
-      "webCommit": "worktree",
+      "webCommit": "26f93a695",
       "cpppjBasis": {
         "cpppj/src/client/MinimapGeometry.cpp": "560df210e",
         "cpppj/src/client/MinimapGeometry.h": "560df210e"
+      }
+    },
+    {
+      "id": "inventory-about",
+      "path": "cpppj/tests/fixtures/inventory-about-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E490",
+      "producer": "cpppj InventoryAboutMenuTests(InventoryAboutMenu_Native1296): 보호 원본 10.78 생산 내용물 정보 메뉴(43d330)의 독립 x86 관측 1,296행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/inventory-about-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/inventory-about-menu.js",
+        "webpj/www/ui/inventory-item-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/InventoryAboutMenu.cpp",
+        "cpppj/src/client/InventoryAboutMenu.h"
+      ],
+      "doc": "docs/webpj-inventory-about-native-fixtures-20261115.md",
+      "scope": "생산 내용물 정보 메뉴 이전 1,296행(내용물 클래스 0 고정)의 설명/비용/부족 머리/회수/Help/부착/음향 호출 순서와 풀 슬롯·항목 노드 불변",
+      "text": true,
+      "sha256": "e4e426da56fe1958bce6ece767ef964b7ddd0ef017ad101dfa56a55b2130d9d7",
+      "bytes": 544313,
+      "lines": 1297,
+      "fixtureCommit": "5dc75236b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/InventoryAboutMenu.cpp": "4398ba2c3",
+        "cpppj/src/client/InventoryAboutMenu.h": "4398ba2c3"
+      }
+    },
+    {
+      "id": "inventory-about-class",
+      "path": "cpppj/tests/fixtures/inventory-about-class-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E490",
+      "producer": "cpppj InventoryAboutMenuTests(InventoryAboutMenu_NativeClasses2592): 보호 원본 10.78 생산 내용물 정보 메뉴(43d330)의 클래스 입력 확장 독립 x86 관측 2,592행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/inventory-about-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/inventory-about-menu.js",
+        "webpj/www/ui/inventory-item-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/InventoryAboutMenu.cpp",
+        "cpppj/src/client/InventoryAboutMenu.h"
+      ],
+      "doc": "docs/webpj-inventory-about-native-fixtures-20261115.md",
+      "scope": "생산 내용물 정보 메뉴 새 클래스 2,592행(내용물 클래스 6·회수 제외 122 포함)의 같은 호출 순서와 풀 슬롯·항목 노드 불변",
+      "text": true,
+      "sha256": "7e7752bd6aa2e9e260151cdb1251eb64bb0f97e156aaa8cc00ac035b9d7eef1c",
+      "bytes": 1030325,
+      "lines": 2593,
+      "fixtureCommit": "71379b0ac",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/InventoryAboutMenu.cpp": "4398ba2c3",
+        "cpppj/src/client/InventoryAboutMenu.h": "4398ba2c3"
       }
     }
   ]

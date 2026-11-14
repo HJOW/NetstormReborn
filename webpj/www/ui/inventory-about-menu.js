@@ -1,7 +1,7 @@
 // 원본 43d330 의 생산 내용물 정보 메뉴(Inventory 항목을 눌렀을 때 열리는 설명/비용/회수/Help 메뉴)를 같은 현재 SID 와 작성기에 연결한다(cpppj client/InventoryAboutMenu.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 설명(describe) → 비용 머리(번역 서식에 정수 비용) → SP 부족 머리 → (편집 중이 아니고 회수 가능 비트가 있고 회수 제외 클래스가 아니면) 회수 항목 → Help 항목 → 현재 루트 부착 → 음향 순서다. 문자열/메뉴/시계 사본 없이 현재 읽기와 작성 순서를 복원한다.
 // 회수 비용은 원본의 float 비용 저장 뒤 넓은 합/quarter 를 유지한다: 비용을 float32 로 저장한 뒤(43cb53/43cb57) 제단/다이스는 합 0, 그 밖은 저장값을 승격하고 너겟이 아니면 1/4 을 곱해 signed 64비트 절삭의 하위 DWORD 를 쓴다.
-// 이 처리기는 10.78 전용이며 실제 경계가 누락된 빈 성공을 허용하지 않는다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 이 처리기는 10.78 전용이며 실제 경계가 누락된 빈 성공을 허용하지 않는다. 원본 10.78 독립 관측 3,888행은 tests/inventory-about-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E490 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: const menu = new InventoryAboutMenu(pool, new InventoryAboutState(), hooks); menu.open({ content, object }, { x, y }) → 1.
 // (2026-11-14 WB04-E448: RawMenuControls 선행 Inventory 정보 메뉴 이식)
 import { cameraFtolLow } from '../render/camera-view.js';
