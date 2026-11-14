@@ -22156,10 +22156,41 @@
       "bytes": 7381138,
       "lines": 2293,
       "fixtureCommit": "e5a68d592",
-      "webCommit": "worktree",
+      "webCommit": "0ba613795",
       "cpppjBasis": {
         "cpppj/src/client/TextEntryGump.cpp": "1d5b1f437",
         "cpppj/src/client/TextEntryGump.h": "e5a68d592"
+      }
+    },
+    {
+      "id": "chat-completion",
+      "path": "cpppj/tests/fixtures/chat-completion-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E484",
+      "producer": "cpppj ChatNameCompletionTests: 보호 원본 10.78 이름 자동완성(0042e540)의 독립 x86 관측 189행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-completion-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/chat-name-completion.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ChatNameCompletion.cpp",
+        "cpppj/src/client/ChatNameCompletion.h"
+      ],
+      "doc": "docs/webpj-chat-completion-native-fixtures-20261115.md",
+      "scope": "이름 자동완성의 번역 중복/빈값/127·128바이트 넘침·100행 기록·현재 기록 변경·접두 잔류·정/역방향 순환의 결과·상태 0x4090바이트 전체·호출 순서(행 사이에 BSS 유지)",
+      "text": true,
+      "sha256": "1f3062fe838cfcd9d52b8c6366c5600742edf4cba370067317b31e090678e453",
+      "bytes": 1569054,
+      "lines": 190,
+      "fixtureCommit": "cf3babe1a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ChatNameCompletion.cpp": "cf3babe1a",
+        "cpppj/src/client/ChatNameCompletion.h": "cf3babe1a"
       }
     }
   ]
