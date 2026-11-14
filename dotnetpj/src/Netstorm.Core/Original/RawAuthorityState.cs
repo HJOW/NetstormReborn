@@ -11,4 +11,7 @@ public sealed class RawAuthorityState
 
     /// <summary>권한 관문에서 현재값을 읽는다. 두 PE의 초기 DWORD 1을 논리 true로 시작한다. 2026-11-07 F2d 서피스 월드 권한 이식에서 추가됐다.</summary>
     public bool Boss { get; set; } = true;
+
+    /// <summary>같은 권한 소유자의 현재 boss를 읽으며 대리자 동등성으로 실제 소유자를 확인할 때 쓴다.</summary>
+    public bool ReadBoss() => Boss;
 }

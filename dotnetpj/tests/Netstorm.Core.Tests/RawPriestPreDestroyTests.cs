@@ -261,4 +261,53 @@ public sealed class RawPriestPreDestroyTests
             ValidateCarrier = (_, _) => { },
         }));
     }
+    /// <summary>Native는 현재 signed 음수 개수에서 저장소를 읽지 않고 보호막·Carrier를 계속 실행한다.</summary>
+    [Fact]
+    public void NativeSignedCountSkipsStorageAndTypedValidation()
+    {
+        var pool = new RawSidPool(24000, false); int sid = pool.Allocate(SidAllocation.Client); pool.RawSlot(sid).Clear();
+        uint count = uint.MaxValue; var state = new PriestPostPopState();
+        state.Priests.BindCurrent(new() { Storage = () => throw new InvalidOperationException("음수 목록 저장소 미선택"),
+            Capacity = () => throw new InvalidOperationException("Native 용량 미선택"), ReadCount = () => count, WriteCount = value => count = value });
+        var trace = new List<string>(); var hooks = new PriestPreDestroyHooks
+        { FindForcefield = _ => { trace.Add("find"); return 1; }, DestroyForcefield = (found, flags) => trace.Add($"shield:{found}:{flags}"),
+            ValidateCarrier = (_, _) => throw new InvalidOperationException("Native typed 선검사 미선택"), CarrierPre = (parent, flags) => trace.Add($"carrier:{parent}:{flags}") };
+        var body = new RawPriestPreDestroy(pool, state, hooks); body.EnableNativeBody(); hooks.CarrierPre = null;
+        pool.RawSlot(sid)[10] = 0; pool.RawSlot(sid)[11] = 9; body.PreDestroy(sid, 42);
+        Assert.Equal(uint.MaxValue, count); Assert.Equal(["find", "shield:1:0", $"carrier:{sid}:42"], trace);
+    }
+
+    /// <summary>Native는 실물 범위에 도달할 때만 진단하여 앞선 안정 압축의 부분 쓰기를 보존한다.</summary>
+    [Fact]
+    public void NativePhysicalFailurePreservesEarlierCompaction()
+    {
+        var pool = new RawSidPool(24000, false); int sid = pool.Allocate(SidAllocation.Client); pool.RawSlot(sid).Clear();
+        var state = new PriestPostPopState(); state.Priests.Entries = [(uint)sid, 60]; state.Priests.Count = 3;
+        var hooks = new PriestPreDestroyHooks { FindForcefield = _ => throw new InvalidOperationException("범위 뒤 조회 미선택"),
+            DestroyForcefield = (_, _) => { }, ValidateCarrier = (_, _) => { }, CarrierPre = (_, _) => { } };
+        var body = new RawPriestPreDestroy(pool, state, hooks); body.EnableNativeBody();
+        Assert.Throws<ArgumentOutOfRangeException>(() => body.PreDestroy(sid, 0));
+        Assert.Equal([60u, 60u], state.Priests.Entries); Assert.Equal(3u, state.Priests.Count);
+    }
+
+    /// <summary>Native 분배는 예약1~4·현재TYPE불일치를 허용하되 실제 사제VT만 선택하고 extra9는 목록을 생략한다.</summary>
+    [Fact]
+    public void NativeDispatchUsesActualVtableAndRetainsOtherHooks()
+    {
+        var pool = new RawSidPool(24000, false); var state = new PriestPostPopState(); state.Priests.Count = uint.MaxValue;
+        int carriers = 0, fallback = 0; var body = new RawPriestPreDestroy(pool, state, new()
+        { FindForcefield = _ => throw new InvalidOperationException("extra9 목록 미선택"), DestroyForcefield = (_, _) => { },
+            ValidateCarrier = (_, _) => throw new InvalidOperationException("Native 선검사 미선택"), CarrierPre = (_, _) => carriers++ });
+        body.EnableNativeBody(); pool.RawSlot(1).Clear(); Put(pool.RawSlot(1), 0, PatchPriestVtable); pool.RawSlot(1)[11] = 9; pool.RawSlot(1)[40] = 9;
+        Assert.True(body.Handles(1)); Assert.False(body.Handles(0)); Assert.False(body.Handles(pool.Capacity));
+        var selected = new Func<int>(() => 1); var unpop = new Action<int>(_ => { });
+        SquidDestroyHooks wrapped = body.WrapHooks(pool, new() { Emit = _ => fallback++, Selected = selected, UnpopForm = unpop });
+        Assert.Same(selected, wrapped.Selected); Assert.Same(unpop, wrapped.UnpopForm);
+        wrapped.Emit!(new(SquidDestroyEffect.PreDestroy, 1, 0, 4)); Assert.Equal((1, 0), (carriers, fallback));
+        pool.RawSlot(1)[0] = 0; wrapped.Emit(new(SquidDestroyEffect.PreDestroy, 1, 0, 4)); Assert.Equal((1, 1), (carriers, fallback));
+        var cd = new RawPriestPreDestroy(new RawSidPool(24000, false, edition: OriginalEdition.Cd1072), new(),
+            new() { FindForcefield = _ => 0, DestroyForcefield = (_, _) => { }, ValidateCarrier = (_, _) => { }, CarrierPre = (_, _) => { } });
+        Assert.Throws<ArgumentException>(cd.EnableNativeBody);
+    }
+
 }

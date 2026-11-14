@@ -133,6 +133,14 @@ public sealed class RawSquidHash
     /// 단계의 모든 머리를 편집기의 직접 WORD 쓰기에 빌린다. 같은 실제 저장소이며 사본이 아니다. 2026-11-07 F2d 저장소 조립에서 추가됐다.
     /// </summary>
     /// <param name="level">단계 0~3.</param>
+    /// <summary>장기 월드 모듈이 같은 단계의 실제 배열을 대여한다. 사본이 아니며 소유자는 이 해시다.</summary>
+    public ushort[] BorrowEntries(int level)
+    {
+        Side(level);
+        return _heads[level];
+    }
+
+    /// <summary>편집기가 같은 실제 단계의 WORD 저장소를 직접 갱신한다.</summary>
     public Span<ushort> MutableEntries(int level)
     {
         Side(level);

@@ -9,7 +9,7 @@ namespace Netstorm.Core.Tests;
 /// 장면은 cpppj/tests/PriestPreDestroyTests.cpp 의 PriestScene 과 같다: 실제 풀의 사제 50 하나에
 /// 가상 표·타입·상태·추가 비트를 넣고, 사제 목록을 입력으로 두고, 보호막 조회 이후의 효과를 순서대로 기록한다.
 /// 호출마다 목록 count·목록 저장소 전체·효과 문자열·슬롯 전체 50바이트·Carrier 사전 검사 횟수를 비교한다.
-/// 기준 판본은 10.78(Patch) 이며, CD 10.72·10.37 몫은 옮기지 않았다 (W03 다리 밖 자산 삭제 재정의 조각, 2026-10-23).
+/// 기존 PATCH 재생에 typed 세 판본·PATCH Native 재생을 더해 판본별 실물 바이트와 선검사 차이를 대조한다.
 /// </summary>
 public sealed class X86RawPriestPreDestroyTests
 {
@@ -73,14 +73,18 @@ public sealed class X86RawPriestPreDestroyTests
         public readonly RawPriestPreDestroy Body;
 
         /// <summary>클라이언트 풀을 만들고 사제 50 까지 실제 할당한다.</summary>
-        public Scene()
+        /// <summary>현재 판본의 실제 extra 위치다.</summary>
+        private int ExtraPosition => Pool.Edition == OriginalEdition.Patch1078 ? ExtraOffset : 35;
+
+        public Scene(OriginalEdition edition = OriginalEdition.Patch1078, bool native = false)
         {
-            Pool = new RawSidPool(Capacity, false);
+            Pool = new RawSidPool(Capacity, false, edition: edition);
             // 각 행에서 같은 번호를 다시 쓰도록 50 까지만 확보한다
             while (Pool.Allocate(SidAllocation.Client) != Source)
             {
             }
             Body = new RawPriestPreDestroy(Pool, State, Hooks());
+            if (native) Body.EnableNativeBody();
         }
 
         /// <summary>호출 시점의 인자·목록 개수·현재 추가 비트를 기록한다.</summary>
@@ -94,7 +98,7 @@ public sealed class X86RawPriestPreDestroyTests
             {
                 Parts.Add(";");
             }
-            Parts.Add($"{marker}:{sid}{flags}:{State.Priests.Count}:{Pool.Slot(Source)[ExtraOffset]}");
+            Parts.Add($"{marker}:{sid}{flags}:{State.Priests.Count}:{Pool.Slot(Source)[ExtraPosition]}");
         }
 
         /// <summary>보호막·Carrier 몸체만 명시적 대체로 공급한다.</summary>
@@ -106,7 +110,7 @@ public sealed class X86RawPriestPreDestroyTests
                 // 조회가 추가 비트를 바꾸면 다음 분기가 그 값을 읽는다
                 if (After != "-")
                 {
-                    Pool.RawSlot(Source)[ExtraOffset] = (byte)uint.Parse(After, System.Globalization.CultureInfo.InvariantCulture);
+                    Pool.RawSlot(Source)[ExtraPosition] = (byte)uint.Parse(After, System.Globalization.CultureInfo.InvariantCulture);
                 }
                 return Found;
             },
@@ -123,10 +127,10 @@ public sealed class X86RawPriestPreDestroyTests
             Validations = 0;
             Span<byte> raw = Pool.RawSlot(Source);
             raw.Fill(0xab);
-            Put(raw, 0, PatchPriestVtable);
+            Put(raw, 0, Pool.Edition == OriginalEdition.Patch1078 ? PatchPriestVtable : 0x005003e0u);
             raw[10] = PriestType;
             raw[11] = (byte)X86Fixture.UInt(row[2]);
-            raw[ExtraOffset] = (byte)X86Fixture.UInt(row[1]);
+            raw[ExtraPosition] = (byte)X86Fixture.UInt(row[1]);
             State.Priests.Entries = row[5].Split(',').Select(X86Fixture.UInt).ToArray();
             State.Priests.Count = X86Fixture.UInt(row[4]);
             Found = X86Fixture.UInt(row[6]);
@@ -163,4 +167,25 @@ public sealed class X86RawPriestPreDestroyTests
         });
         Assert.Equal(PatchRows, count);
     }
+    /// <summary>같은 원본6552관찰을 typed 세 판본과 PATCH Native2184입력으로 독립 재생한다.</summary>
+    [Theory]
+    [InlineData("originals", OriginalEdition.Patch1078, false)]
+    [InlineData("originalCD", OriginalEdition.Cd1072, false)]
+    [InlineData("original1037", OriginalEdition.Cd1072, false)]
+    [InlineData("originals", OriginalEdition.Patch1078, true)]
+    public void CurrentTypedAndNativeMatchOriginal(string name, OriginalEdition edition, bool native)
+    {
+        string[][] rows = X86Fixture.Read("priestdestroy", name); Assert.Equal(PatchRows, rows.Length);
+        var scene = new Scene(edition, native);
+        X86Fixture.CheckRows(rows, row =>
+        {
+            scene.Prepare(row); scene.Body.PreDestroy(Source, X86Fixture.UInt(row[3]));
+            Assert.Equal(X86Fixture.UInt(row[8]), scene.State.Priests.Count);
+            Assert.Equal(row[9], scene.Entries()); Assert.Equal(row[10], scene.Trace());
+            byte[] raw = X86Fixture.Bytes(row[11]); Assert.Equal(raw, scene.Pool.Slot(Source)[..raw.Length].ToArray());
+            if (raw.Length < 50) Assert.All(scene.Pool.Slot(Source)[raw.Length..].ToArray(), value => Assert.Equal((byte)0xab, value));
+            Assert.Equal(native ? 0 : 1, scene.Validations); return true;
+        });
+    }
+
 }

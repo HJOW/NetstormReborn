@@ -55,7 +55,7 @@ public sealed class PriestPreDestroyHooks
 /// (일반) 사제 목록 압축·보호막 조회와 삭제 요청 → Carrier 전체 준비"다.
 /// 원본은 공통 삭제가 dead 를 켠 뒤 진입하므로 dead 를 이유로 생략하지 않는다. 깊이 감소는 연결한 Carrier 의 책임이며
 /// 이 몸체는 일반 사제 Pop·공간 해제를 하지 않는다.
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 가상 표 값과 추가 비트 위치가 달라 옮기지 않았다).
+/// typed 두 판본과 PATCH Native를 구별한다. Native는 실제 가상 분배 뒤 TYPE·상태·목록·Carrier 선검사를 추가하지 않는다.
 /// 근거: cpppj/src/o/RawPriestPreDestroy.cpp (W03 다리 밖 자산 삭제 재정의 조각, 2026-10-23).
 /// </summary>
 public sealed class RawPriestPreDestroy
@@ -90,6 +90,9 @@ public sealed class RawPriestPreDestroy
     /// <summary>보호막·Carrier 의 실제 소비자.</summary>
     private readonly PriestPreDestroyHooks _hooks;
 
+    /// <summary>실제 PATCH 가상 분배 뒤 불필요한 typed 선검사를 생략한다.</summary>
+    private bool _nativeBody;
+
     /// <summary>
     /// 사제 사전 파괴를 만든다. 네 경계가 모두 있어야 하며, 누락하면 첫 삭제 전에 거부한다(부분 복원에 따른 효과 누락 방지).
     /// </summary>
@@ -109,7 +112,7 @@ public sealed class RawPriestPreDestroy
         }
         _pool = pool;
         _state = state;
-        _hooks = hooks;
+        _hooks = new PriestPreDestroyHooks { FindForcefield = hooks.FindForcefield, DestroyForcefield = hooks.DestroyForcefield, ValidateCarrier = hooks.ValidateCarrier, CarrierPre = hooks.CarrierPre };
     }
 
     /// <summary>이 몸체가 쓰는 슬롯 풀. 연결 어댑터가 참조 대상을 확인할 때 쓴다.</summary>
@@ -121,38 +124,42 @@ public sealed class RawPriestPreDestroy
     /// <param name="sid">확인할 번호.</param>
     public bool Handles(int sid)
     {
-        // 5 미만(목록 밖)과 풀 범위 밖은 사제 슬롯이 아니다
-        if (sid < RawSidPool.FirstOrdinary || sid >= _pool.Capacity)
+        // typed는5부터, 실제 Native 가상 분배는1부터 실제 표를 확인한다.
+        if (sid < (_nativeBody ? 1 : RawSidPool.FirstOrdinary) || sid >= _pool.Capacity)
         {
             return false;
         }
         ReadOnlySpan<byte> raw = _pool.Slot(sid);
-        // 실제 사제 타입이면서 10.78 사제 가상 표일 때만 이 몸체가 처리한다
-        return raw[TypeOffset] == PriestType && UInt(raw, 0) == PatchPriestVtable;
+        // typed만 TYPE158을 요구하고 판본별 실제 사제 가상 표를 비교한다.
+        return (_nativeBody || raw[TypeOffset] == PriestType) && UInt(raw, 0) == (_pool.Edition == OriginalEdition.Patch1078 ? PatchPriestVtable : 0x005003e0u);
     }
 
-    /// <summary>
-    /// 원본 004919b0 전체다. dead·void 여도 실행하며 추가 비트 9 가 켜져 있으면 Carrier 만 부른다.
-    /// 일반 경로는 목록 개수를 먼저 검사하고 Carrier 사전 검사 뒤에 목록 압축·보호막 삭제를 한다.
-    /// </summary>
-    /// <param name="sid">삭제되는 사제 번호.</param>
-    /// <param name="flags">삭제 플래그. Carrier 사전 검사·전체 준비에 그대로 쓴다.</param>
+    /// <summary>장기 실제 가상 소유자가 최초 조립 때 PATCH Native 본문을 선택한다.</summary>
+    public void EnableNativeBody()
+    {
+        if (_pool.Edition != OriginalEdition.Patch1078) throw new ArgumentException("Native 사제 전처리 판본 오류");
+        _nativeBody = true;
+    }
+
+    /// <summary>현재 extra에 따라 목록·보호막·Carrier를 원문 순서로 실행한다. typed만 기존 선검사를 유지한다.</summary>
+    /// <param name="sid">삭제되는 사제 번호다.</param>
+    /// <param name="flags">Carrier로 그대로 전달할 삭제 플래그다.</param>
     public void PreDestroy(int sid, uint flags)
     {
         // 사제가 아니거나 상태에 abstract·free 비트가 있으면 쓰기 전에 거부한다
-        if (!Handles(sid) || (_pool.Slot(sid)[StateOffset] & InvalidState) != 0)
+        if (!_nativeBody && (!Handles(sid) || (_pool.Slot(sid)[StateOffset] & InvalidState) != 0))
         {
             throw new InvalidOperationException("사제 삭제 준비의 raw 상태 오류");
         }
         // 추가 비트가 0 이면 일반 사제 경로다
-        bool ordinary = (_pool.Slot(sid)[ExtraOffset] & SkipPrefix) == 0;
+        bool ordinary = (_pool.Slot(sid)[_pool.Edition == OriginalEdition.Patch1078 ? ExtraOffset : 35] & SkipPrefix) == 0;
         // 일반 경로는 목록을 쓰기 전에 활성 개수를 검사한다
-        if (ordinary)
+        if (!_nativeBody && ordinary)
         {
             _ = _state.GetPriests().Items();
         }
-        // Carrier 사전 검사는 목록·보호막보다 먼저이며 일반·추상 모두 부른다
-        _hooks.ValidateCarrier!(sid, flags);
+        // 독립 typed만 목록·보호막보다 먼저 Carrier 사전 검사를 부른다.
+        if (!_nativeBody) _hooks.ValidateCarrier!(sid, flags);
         // 일반 경로만 목록 압축과 보호막 삭제를 한다
         if (ordinary)
         {
@@ -177,24 +184,17 @@ public sealed class RawPriestPreDestroy
     private void Remove(int sid)
     {
         RawPostPopList list = _state.GetPriests();
-        // 손상된 개수는 목록을 쓰기 전에 거부한다
-        _ = list.Items().Length;
         uint removed = 0;
-        // 생존 항목은 최초 상대 순서를 유지한다
-        for (uint index = 0; index < list.Count; index++)
+        // Native는 현재 signed count만 읽으며 음수면 저장소를 조회하지 않고 그대로 둔다.
+        for (int index = 0; index < unchecked((int)list.Count); index++)
         {
-            uint current = list.Entries[(int)index];
-            // 같은 번호는 세고, 다르면 앞으로 당긴다
-            if (current == (uint)sid)
-            {
-                removed++;
-            }
-            else
-            {
-                list.Entries[(int)(index - removed)] = current;
-            }
+            uint[] entries = list.Entries;
+            if ((uint)index >= entries.Length) throw new ArgumentOutOfRangeException(nameof(sid), "SID 목록 제거의 현재 물리 범위");
+            uint current = entries[index];
+            if (current == (uint)sid) removed++;
+            else entries[index - removed] = current;
         }
-        list.Count -= removed;
+        list.Count = unchecked(list.Count - removed);
     }
 
     /// <summary>

@@ -473,7 +473,7 @@ cpppj/src/o/RawPriestPlacementGeometry.h	Netstorm.Core/Original/RawPriestPlaceme
 cpppj/src/o/RawPriestPlacementTerrain.cpp	Netstorm.Core/Original/RawPriestPlacementTerrain.cs	6649e44f753b764e6bd2061edd2eac5fa5dc050d	L1
 cpppj/src/o/RawPriestPlacementTerrain.h	Netstorm.Core/Original/RawPriestPlacementTerrain.cs	225f2322cf7936604306b6534fd4edf18f246c12	L1
 cpppj/src/o/RawPriestPrayer.cpp	Netstorm.Core/Original/RawPriestPrayer.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
-cpppj/src/o/RawPriestPreDestroy.cpp	Netstorm.Core/Original/RawPriestPreDestroy.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
+cpppj/src/o/RawPriestPreDestroy.cpp	Netstorm.Core/Original/RawPriestPreDestroy.cs	bcdd1138362cf22d3d0a02376736a667cfd5b259	L1
 cpppj/src/o/RawPriestRegen.cpp	Netstorm.Core/Original/RawPriestRegen.cs	37dbf68bfd44f3288348c9063681e7fce5d39ece	L1
 cpppj/src/o/RawPriestSpawn.h	Netstorm.Core/Original/RawPlacementTerrainTypes.cs	dfdbcd655c0564cc045fcb40fb79096cb051ac67	L1
 cpppj/src/o/RawPriestState.cpp	Netstorm.Core/Original/RawPriestState.cs	92f395980ead5365394d469f8a7cab3c4eff3e9c	L1
@@ -797,3 +797,6 @@ cpppj/src/client/RawPriestWorldBindings.h	Netstorm.Client/Mission/RawMovementPro
 cpppj/src/client/RawPriestWorldBindings.cpp	Netstorm.Client/Mission/RawMovementProcessTypes.cs	30523aaf2d90489101b737d142fdf046c042cdb3	port
 cpppj/src/o/RawCarrierPreDestroy.h	Netstorm.Core/Original/RawCarrierPreDestroy.cs	88743a5a69d05ae9a038f4abe1dd45ceaebfea6f	L1
 cpppj/src/o/RawDamageablePreDestroy.h	Netstorm.Core/Original/RawDamageablePreDestroy.cs	4c29c9e353bd0d585f8971b6b99cdb22971f1610	L1
+cpppj/src/o/RawPriestPreDestroy.h	Netstorm.Core/Original/RawPriestPreDestroy.cs	bcdd1138362cf22d3d0a02376736a667cfd5b259	L1
+cpppj/src/client/RawPriestWorldBindings.h	Netstorm.Client/Mission/RawPriestWorldBindings.cs	bcdd1138362cf22d3d0a02376736a667cfd5b259	port
+cpppj/src/client/RawPriestWorldBindings.cpp	Netstorm.Client/Mission/RawPriestWorldBindings.cs	bcdd1138362cf22d3d0a02376736a667cfd5b259	port
