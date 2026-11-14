@@ -804,3 +804,7 @@ cpppj/src/o/RawPriestRegen.h	Netstorm.Core/Original/RawPriestRegen.cs	f7e81025d1
 cpppj/src/o/RawPriestRegenHitPoints.h	Netstorm.Core/Original/RawPriestRegenHitPoints.cs	f7e81025d1b1d019a5a4d6bffb0a4cbae9d7a473	L1
 cpppj/src/o/RawPriestRegenHitPoints.cpp	Netstorm.Core/Original/RawPriestRegenHitPoints.cs	f7e81025d1b1d019a5a4d6bffb0a4cbae9d7a473	L1
 cpppj/src/o/SpStore.h	Netstorm.Core/Original/RawSpStore.cs	f7e81025d1b1d019a5a4d6bffb0a4cbae9d7a473	L1
+cpppj/src/client/ClientSpGlobals.h	Netstorm.Client/ClientSpGlobals.cs	4a9cc0f0c6198e567d2a2b68ac73d401d6274251	port
+cpppj/src/client/ClientSpGlobals.cpp	Netstorm.Client/ClientSpGlobals.cs	4a9cc0f0c6198e567d2a2b68ac73d401d6274251	port
+cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.cs	4a9cc0f0c6198e567d2a2b68ac73d401d6274251	port
+cpppj/src/client/ClientGameplayGlobals.cpp	Netstorm.Client/ClientGameplayGlobals.cs	4a9cc0f0c6198e567d2a2b68ac73d401d6274251	port

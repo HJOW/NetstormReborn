@@ -92,7 +92,10 @@ public sealed class ClientHostGame : Game
 
     /// <summary>클라이언트 시작 때 1회 초기화하는 공유 SP 저장소다. 미션 세션이 빌려 쓴다.</summary>
     /// <remarks>2026-11-12 0.464에서 추가했다. 미션별 reseed+재초기화는 원본에 없어 0.463에서 근본 원인으로 확정했다.</remarks>
-    private readonly RawSpStore _sharedSp;
+    private readonly ClientSpGlobals _spGlobals;
+
+    /// <summary>미션 교체에서도 같은 현재 TYPE·권한·표본·진단 주소를 유지한다.</summary>
+    private readonly ClientGameplayGlobals _gameplay = new();
 
     /// <summary>메뉴 효과음의 MonoGame 장치 경계.</summary>
     private HostButtonSound? _buttonSound;
@@ -139,9 +142,8 @@ public sealed class ClientHostGame : Game
         _clock = clock ?? new HostTimeSource();
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
         // 세션 시작 흐름의 미션별 reseed는 원본에 없어 0.463에서 근본 원인으로 확정했다.
-        var startupSeed = new RawGameRandomSeed(_gameRandom, _spCrtBox, _spModeBox, () => _clock.UnixSeconds);
-        _sharedSp = new RawSpStore(_gameRandom, () => startupSeed.Reseed());
-        _sharedSp.Initialize();
+        _spGlobals = new ClientSpGlobals(_gameRandom, _spCrtBox, _spModeBox, () => _clock.UnixSeconds);
+        _spGlobals.Store.Initialize();
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsFixedTimeStep = true;
@@ -260,7 +262,7 @@ public sealed class ClientHostGame : Game
         RiftTypeTable types = MissionFortLoad.LoadTypeTable(_startup.Files);
         MissionFortLoadResult fort = MissionFortLoad.Load(_startup, mission);
         MissionPlayers players = MissionPlayers.Load(key => script.Get(key), fort.Fort, types, 6500);
-        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _sharedSp, sharedCrtBox: _spCrtBox);
+        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay);
         // 단독 바인딩 Zone을 먼저 설치한다. 조합 검사와 같은 입력(구독자 1·핸들 이름)이며 구독자·flags 0x08·이름을 둔다.
         // 이름·서브 갈고리는 실제 전송이 없어 기록만 하며 포트는 검사와 같은 값으로 둔다(실제 바인딩은 로컬 네트워크 단위에서 잇는다).
         var zone = new byte[LocalMissionZone.ZoneHead + LocalMissionZone.ZoneClient];

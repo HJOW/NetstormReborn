@@ -109,7 +109,7 @@ public sealed partial class HostSession
     /// <param name="sharedCrtBox">호스트가 시작 때 reseed한 공유 CRT 상자. null이면 세션 전용 상자를 쓴다.</param>
     /// <remarks>2026-11-12 0.464에서 cpppj 공유 SP 경로와 같은 시작 1회 초기화를 잇려고 공유 빌림을 추가했다. 미션별 reseed는 원본에 없다.
     /// 2026-11-12 0.476에서 세션 설치 의미로 Graph 저장소를 ResetTable 초기 상태에 둔다(근거 cpppj RawSurfaceStorage.Acquire의 Graph ResetTable, o/RawGraphStorage.cpp). 0번 예약이 없으면 Rebuild의 임시 번호 0이 기존 graph-0과 충돌해 큰 맵에서 번호가 소진된다.</remarks>
-    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null)
+    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null)
     {
         ArgumentNullException.ThrowIfNull(kernel);
         ArgumentNullException.ThrowIfNull(game);
@@ -121,6 +121,11 @@ public sealed partial class HostSession
         Sp = sharedSp ?? new RawSpStore(Game, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
         TerrainCrt = sharedCrtBox ?? new();
         TerrainBookkeeping = new RawPostPopState(TotalMade);
+        Gameplay = sharedGameplay ?? new ClientGameplayGlobals();
+        PriestState = new(GameAux.PriestTypeBox, GameAux);
+        PriestState.Regen.SharedPriestType = GameAux.PriestTypeBox;
+        PriestState.Regen.Patch.SharedSample = Gameplay.PatchSample;
+        PriestState.Regen.Patch.SharedChangedSample = Gameplay.PatchDiagnostic;
         RawGraphStorage.ResetTable(Graph);
     }
 
@@ -647,7 +652,13 @@ public sealed partial class HostSession
 
     /// <summary>세션이 소유한 게임 보조 장기 전역이다. 생성·밀도·간헐천 여백의 현재 DWORD를 둔다.</summary>
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1830행 terrainAux.</remarks>
-    public RawGameAuxState GameAux { get; } = new();
+    public RawGameAuxState GameAux => Gameplay.GameAux;
+
+    /// <summary>호스트보다 짧은 세션이 빌리는 같은 장기 게임 전역이다.</summary>
+    public ClientGameplayGlobals Gameplay { get; }
+
+    /// <summary>사제 조회·후처리·회복이 공유하는 같은 미션 상태다.</summary>
+    public Netstorm.Client.Mission.RawPriestWorldState PriestState { get; }
 
     /// <summary>세션이 소유한 소유자 모드다. 미션 전투이므로 battle을 켠다.</summary>
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 336행 CampaignLinks(battle=true).</remarks>
