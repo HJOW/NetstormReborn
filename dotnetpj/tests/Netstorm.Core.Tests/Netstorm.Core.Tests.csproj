@@ -309,4 +309,8 @@
     <!-- 실제 Carrier/내용물 조회의 세판본 전체 관찰을 공유한다. -->
     <None Include="../../../cpppj/tests/fixtures/carrierpredestroy-x86.tsv" Link="X86/carrierpredestroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 현재 회복 HP getter의 양판본 원본 호출 순서를 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/priest-regen-hit-points-current-x86.tsv" Link="X86/priest-regen-hit-points-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

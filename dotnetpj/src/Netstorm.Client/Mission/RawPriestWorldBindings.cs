@@ -117,7 +117,9 @@ public sealed class RawPriestWorldEffects
             NoticeSound = Shield.NoticeSound, Translate = Shield.Translate, Tell = Shield.Tell },
         Regen = new() { Refresh = Regen.Refresh, Damageable = Regen.Damageable, Shape = Regen.Shape,
             Occupied = Regen.Occupied, NeutralAction = Regen.NeutralAction, PatchAudit = Regen.PatchAudit,
-            Measurement = Regen.Measurement },
+            Measurement = Regen.Measurement, SpReads = Regen.SpReads is { } reads ? new()
+            { ObservedSequence = reads.ObservedSequence, FirstPool = reads.FirstPool, FirstPermutation = reads.FirstPermutation,
+                TrackingSequence = reads.TrackingSequence } : null },
     };
 }
 
@@ -224,7 +226,7 @@ public sealed class RawPriestWorldBindings : IDisposable
             new() { Unpop = _effects.Unpop, Repop = _effects.Repop }, core.Random, state.Regen,
             new() { Refresh = _effects.Regen.Refresh, Damageable = DamageableRefresh, Shape = MovementProcessType,
                 Occupied = (sid, process) => _contained.Find(sid, process) != 0, NeutralAction = _effects.Regen.NeutralAction,
-                PatchAudit = _effects.Regen.PatchAudit, Measurement = _effects.Regen.Measurement });
+                PatchAudit = _effects.Regen.PatchAudit, Measurement = _effects.Regen.Measurement, SpReads = _effects.Regen.SpReads });
         Spawn = new(core.Pool, core.Types, core.Spots, state.Spawn, new()
         {
             MayPlace = query => Placement().MayPlace(query), Create = (type, flags) => core.Factory.Create(type, (SidAllocation)flags),

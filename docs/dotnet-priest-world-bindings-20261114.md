@@ -29,3 +29,5 @@ signed count를 unsigned로 바꾼 변이는 Native 집중3건 중1건, 현재TY
 실제 게임·MP를 실행하지 않았다. 사제 포획/희생·특정 적 공격·시나리오 승리의 실제 재현은 사용자 확인으로 남긴다. 보호 원본·AGENTS.md·README개요·CPP·WB를 변경하지 않고 외부 접속을 추가하지 않았다.
 
 이번 결과는 실제 모듈을 합성 월드에 조립한 것이다. 제품 HostSession의 전체 사제/가상 공간/소리/피해·해방 연결은 잔여다. 현행 Session 결선 검토에서 기존 RawPriestRegen의 spReads·공유 sample/changedSample/사제TYPE와 RawSpStore의 현재 tracking owner가 아직 과거 값형 경계인 것을 확인했다. 따라서 다음0.526은 이 회복/SP 묶음과 HP getter 순서를 현행화한 뒤 제품 HostSession을 연결한다. 이번 효과 복사는 현재 C#의 일곱 회복 훅까지이며, 아직 없는 선택 spReads를 연결했다고 세지 않는다. CD 전체 월드는 C# 사제 접두/후반·공장이 PATCH 전용이므로 아직 구성하지 못한다. Native 공유 모듈은 원문처럼 호출자가 실제 장기 본문 선택을 한 뒤 빌린다. 일반 지역 정책·AI 시작·그 밖의 객체 후처리·M1 전체일치0/34는 잔여다.
+
+후속0.526에서 위 회복의 선택 SpReads·공유 추적/표본/진단/사제TYPE와 HP getter 순서를 [현재 회복 단위](dotnet-priest-regen-current-20261114.md)에서 갱신했다. 제품 HostSession 결선은 여전히 잔여이며 사용자 요청으로0.526 커밋 뒤 일시 중지한다.

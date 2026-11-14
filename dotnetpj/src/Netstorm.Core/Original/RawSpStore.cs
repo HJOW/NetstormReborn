@@ -48,6 +48,9 @@ public sealed class RawSpStore
     /// <summary>추적 offset 의 외부 기록자. 원본이 기존 전역 주소를 빌리는 자리다.</summary>
     private Action<int>? _trackingWrite;
 
+    /// <summary>실제 사제와 SP가 공유하는 장기 signed DWORD 주소다.</summary>
+    private IntBox? _trackingOffset;
+
     /// <summary>초기화가 끝났는지. false 면 Get/Set/Rotate 가 먼저 초기화한다.</summary>
     private bool _initialized;
 
@@ -75,10 +78,6 @@ public sealed class RawSpStore
         _rng = rng;
         _reseed = reseed;
         _fill = fill;
-        for (int index = 0; index < Bits; index++)
-        {
-            _permutation[index] = (short)index;
-        }
     }
 
     /// <summary>
@@ -96,10 +95,6 @@ public sealed class RawSpStore
         _rng = rng;
         _reseed = reseed;
         _allocation = allocation;
-        for (int index = 0; index < Bits; index++)
-        {
-            _permutation[index] = (short)index;
-        }
     }
 
     /// <summary>초기화를 마쳤는지.</summary>
@@ -124,12 +119,27 @@ public sealed class RawSpStore
     public void BindTrackingOffset(Action<int> write)
     {
         ArgumentNullException.ThrowIfNull(write);
-        if (_initialized || (_trackingWrite is not null && !ReferenceEquals(_trackingWrite, write)))
+        if (_initialized || _trackingOffset is not null || (_trackingWrite is not null && !ReferenceEquals(_trackingWrite, write)))
         {
             throw new InvalidOperationException("SP 추적 offset 의 늦은 연결/다른 소유자 오류");
         }
         _trackingWrite = write;
     }
+
+    /// <summary>실제 장기 signed 추적 주소를 초기화 전에 빌린다. 같은 주소의 반복 연결만 허용한다.</summary>
+    public void BindTrackingOffset(IntBox tracking)
+    {
+        ArgumentNullException.ThrowIfNull(tracking);
+        if (_initialized || _trackingWrite is not null || (_trackingOffset is not null && !ReferenceEquals(_trackingOffset, tracking)))
+            throw new InvalidOperationException("SP 추적 offset의 늦은 연결/다른 소유자 오류");
+        _trackingOffset = tracking;
+    }
+    /// <summary>회복이 직접 읽고 쓰는 실제 추적 owner다. 미연결은 임의 값으로 대체하지 않는다.</summary>
+    public IntBox TrackingOffsetCurrent => _trackingOffset ?? throw new InvalidOperationException("SP 추적 offset의 실제 소유자 연결 누락");
+    /// <summary>현재 비트 위치를 초기화 부작용 없이 읽는다.</summary>
+    public uint OffsetCurrent => _offset;
+    /// <summary>첫 할당 전 null, 정상 복귀 후 같은 실제 분산배열을 빌린다.</summary>
+    public uint[]? FirstPoolCurrent => _firstPool ? _pools : null;
 
     /// <summary>소유자 번호가 0~8 인지 확인한다. 원본은 범위 밖에서 힙 밖을 읽거나 쓴다.</summary>
     /// <param name="owner">확인할 소유자 번호.</param>
@@ -144,7 +154,7 @@ public sealed class RawSpStore
     /// <summary>
     /// 원본 0040eba0: 재시드 → offset 추첨 → 추적 offset 기록 → 32번 순열 교환 → 항등 순열 복원 → 배열 채우기.
     /// 배열 채우기는 행마다 공급자 입력(또는 fill 값)으로 같은 현재 행을 발행하며, 공급자가 던지면 앞선 행을 되돌리지 않고 중단한다.
-    /// 추적 offset 쓰기와 첫 배열 준비 표시는 R4 세션 조립 때 장기 주소 공유로 바꾸며, 이 단위는 기록 콜백으로 L1을 대조한다.
+    /// 실제 추적 owner와 첫 분산배열 주소는 사본 없이 대여하며 독립 관찰의 기존 기록 콜백도 유지한다.
     /// </summary>
     public void Initialize()
     {
@@ -159,6 +169,7 @@ public sealed class RawSpStore
         {
             _permutation[index] = (short)index;
         }
+        if (_trackingOffset is not null) _trackingOffset.Value = unchecked((int)_offset);
         _trackingWrite?.Invoke(unchecked((int)_offset));
         // 실제 32번 교환을 수행해 SP 몸체가 읽는 순열을 원본과 같게 만든다
         for (int index = 0; index < Bits; index++)

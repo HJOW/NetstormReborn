@@ -9,7 +9,10 @@ public sealed class PriestRegenPatchState
     public uint Sample { get; set; }
 
     /// <summary>3씩 증가하고 9600을 한 번 빼는 추적 값.</summary>
-    public int Sequence { get; set; }
+    public int Sequence { get => SequenceBox.Value; set => SequenceBox.Value = value; }
+
+    /// <summary>SP와 회복이 실제 주소로 대여하는 독립 추적 DWORD다.</summary>
+    public IntBox SequenceBox { get; } = new();
 
     /// <summary>독립 fixture의 입력. 실제 세션은 저장소를 직접 읽는다.</summary>
     public int ObservedSequence { get; set; }
@@ -25,6 +28,17 @@ public sealed class PriestRegenPatchState
 
     /// <summary>독립 fixture의 signed WORD 입력. 실제 세션은 같은 순열 배열을 읽는다.</summary>
     public short Sentinel { get; set; }
+
+    /// <summary>실제 Client의 같은 현재 표본 주소이며 독립 Sample은 보존한다.</summary>
+    public UIntBox? SharedSample { get; set; }
+    /// <summary>실제 Client의 같은 현재 진단 주소이며 독립 ChangedSample은 보존한다.</summary>
+    public UIntBox? SharedChangedSample { get; set; }
+    /// <summary>각 원문 읽기 위치의 현재 표본이다.</summary>
+    public uint ReadSample() => SharedSample?.Value ?? Sample;
+    /// <summary>현재 표본 주소에만 쓴다.</summary>
+    public void WriteSample(uint value) { if (SharedSample is { } shared) shared.Value = value; else Sample = value; }
+    /// <summary>현재 진단 주소에만 쓴다.</summary>
+    public void WriteChangedSample(uint value) { if (SharedChangedSample is { } shared) shared.Value = value; else ChangedSample = value; }
 }
 
 /// <summary>
@@ -40,6 +54,26 @@ public sealed class PriestRegenState
 
     /// <summary>패치 상태.</summary>
     public PriestRegenPatchState Patch { get; } = new();
+
+    /// <summary>증분마다 실제 현재 사제TYPE를 빌리며 Actor의 TYPE와 구별한다.</summary>
+    public UIntBox? SharedPriestType { get; set; }
+    /// <summary>연결된 장기 번호 또는 독립 초기158을 읽는다.</summary>
+    public uint ReadPriestType() => SharedPriestType?.Value ?? 158;
+}
+
+/// <summary>실제 SP 전역을 원문 읽기 위치에서 조회하는 함수 사본이다.</summary>
+public sealed class PriestRegenSpReads
+{
+    /// <summary>중립 효과 뒤 현재 비트 위치 signed DWORD다.</summary>
+    public Func<int>? ObservedSequence { get; set; }
+    /// <summary>측정 뒤 현재 첫 분산배열의 실제 주소다.</summary>
+    public Func<uint[]?>? FirstPool { get; set; }
+    /// <summary>앞의 null 검사와 독립된 현재 순열의 signed WORD다.</summary>
+    public Func<short>? FirstPermutation { get; set; }
+    /// <summary>실제 공통 시작에서 연결한 추적 owner이며 생략 시 독립 patch.SequenceBox다.</summary>
+    public Func<IntBox>? TrackingSequence { get; set; }
+    /// <summary>함수 객체를 복사하고 캡처한 장기 저장소는 그대로 빌린다.</summary>
+    internal PriestRegenSpReads Copy() => new() { ObservedSequence = ObservedSequence, FirstPool = FirstPool, FirstPermutation = FirstPermutation, TrackingSequence = TrackingSequence };
 }
 
 /// <summary>
@@ -69,12 +103,18 @@ public sealed class PriestRegenHooks
 
     /// <summary>패치 전용 측정 결과. remaining이 0이 아닐 때만 읽는다.</summary>
     public Func<double>? Measurement { get; set; }
+
+    /// <summary>실제 세션의 현재 SP 조회기이며 독립 fixture는 비워 둔다.</summary>
+    public PriestRegenSpReads? SpReads { get; set; }
+    /// <summary>구성 시 중첩 조회기까지 값 복사한다.</summary>
+    internal PriestRegenHooks Copy() => new() { Refresh = Refresh, Damageable = Damageable, Shape = Shape,
+        Occupied = Occupied, NeutralAction = NeutralAction, PatchAudit = PatchAudit, Measurement = Measurement, SpReads = SpReads?.Copy() };
 }
 
 /// <summary>
 /// 사제 이벤트 0x25a의 실제 HP 회복과 중립 후처리·패치 추적 순서를 복원한다(원본 <c>RawPriestRegen</c>).
-/// 회복 이벤트 분기만 실행한다. 분배기(MakePriestRegenHandler)와 실제 저장소 읽기는 R4 세션 조립 때 연결한다.
-/// 기준 판본은 10.78 뿐이다.
+/// 회복 이벤트·가상 분배·선택 SP 조회기를 제공한다. 제품 Session의 실제 효과 연결은 호출자가 공급한다.
+/// typed 두 판본과 현재 SP·사제TYPE·추적 owner를 같은 실제 읽기 위치에서 사용한다.
 /// 근거: cpppj/src/o/RawPriestRegen.cpp (R0-4 신규 이식, 2026-10-28).
 /// </summary>
 public sealed class RawPriestRegen
@@ -139,7 +179,8 @@ public sealed class RawPriestRegen
             || space.Unpop is null || space.Repop is null
             || hooks.Refresh is null || hooks.Damageable is null || hooks.Shape is null
             || hooks.Occupied is null || hooks.NeutralAction is null
-            || hooks.PatchAudit is null || hooks.Measurement is null)
+            || (pool.Edition == OriginalEdition.Patch1078 && (hooks.PatchAudit is null || hooks.Measurement is null))
+            || (hooks.SpReads is { } reads && (reads.ObservedSequence is null || reads.FirstPool is null || reads.FirstPermutation is null)))
         {
             throw new ArgumentException("사제 회복 풀/외부 효과 연결 오류", nameof(hooks));
         }
@@ -147,10 +188,10 @@ public sealed class RawPriestRegen
         _hp = hp;
         _priest = priest;
         _mode = mode;
-        _space = space;
+        _space = new() { Unpop = space.Unpop, Repop = space.Repop };
         _random = random;
         _state = state;
-        _hooks = hooks;
+        _hooks = hooks.Copy();
     }
 
     /// <summary>분배기의 동일 풀 보호에 쓴다.</summary>
@@ -169,66 +210,81 @@ public sealed class RawPriestRegen
         {
             throw new ArgumentException("미복원 사제 이벤트", nameof(@event));
         }
-        int current = _priest.CurrentHitPoints(sid);
+        bool patch = _pool.Edition == OriginalEdition.Patch1078;
         ReadOnlySpan<byte> raw = _pool.Slot(sid);
-        if (raw[10] != 158 || Vtable(raw) != 0x0050F210u)
-        {
+        if (Vtable(raw) != (patch ? 0x0050F210u : 0x005003e0u))
             throw new InvalidOperationException("사제 회복 타입·가상 표 오류");
-        }
         PriestRegenPatchState tracking = _state.Patch;
-        tracking.Sample = _random.Next(9u);
-        tracking.Sequence = Add(tracking.Sequence, 3);
-        if (tracking.Sequence > SequenceLimit)
+        // 각 원문 참조 확보 위치에서 같은 현재 추적 주소를 선택한다.
+        IntBox Sequence() => _hooks.SpReads?.TrackingSequence is { } select
+            ? select() ?? throw new InvalidOperationException("사제 회복 실제 추적 owner 누락") : tracking.SequenceBox;
+        if (patch)
         {
-            tracking.Sequence = Add(tracking.Sequence, -SequenceLimit);
+            tracking.WriteSample(_random.Next(9u)); IntBox sequence = Sequence();
+            sequence.Value = Add(sequence.Value, 3);
+            if (sequence.Value > SequenceLimit) sequence.Value = Add(sequence.Value, -SequenceLimit);
         }
-        if (current < _hp.MaxHitPoints(sid))
+        int? value = RawPriestRegenHitPoints.Read(_pool.Edition, new()
+        { Current = () => _priest.CurrentHitPoints(sid), Maximum = () => _hp.MaxHitPoints(sid),
+            PriestType = _state.ReadPriestType, TypeMaximum = _hp.TypeHitPoints });
+        if (value is { } healed)
         {
-            int candidate = Add(_priest.CurrentHitPoints(sid), _hp.TypeHitPoints(158) / 6);
-            int value = candidate > _hp.MaxHitPoints(sid)
-                ? _hp.MaxHitPoints(sid)
-                : Add(_priest.CurrentHitPoints(sid), _hp.TypeHitPoints(158) / 6);
-            _priest.SetHitPoints(sid, value, _mode, _space);
-            _hooks.Refresh!(sid);
-            _hooks.Damageable!(sid);
+            _priest.SetHitPoints(sid, healed, _mode, _space); _hooks.Refresh!(sid); _hooks.Damageable!(sid);
         }
-        _hooks.PatchAudit!();
-        // HP setter·외부 효과가 바꾼 현재 소유자·HP·전역을 이 시점에 다시 읽는다
-        byte owner = _pool.Slot(sid)[34];
+        if (patch) _hooks.PatchAudit!();
+        byte owner = _pool.Slot(sid)[patch ? 34 : 32];
         if (_mode.GetAuthority() && !_state.NeutralBlocked && owner == 0 && !_state.ModeBlocked &&
             _priest.CurrentHitPoints(sid) >= _hp.MaxHitPoints(sid) / 2)
         {
             uint shape = _hooks.Shape!(_pool.Slot(sid)[10]);
-            if (!_hooks.Occupied!(sid, shape))
+            if (!_hooks.Occupied!(sid, shape)) _hooks.NeutralAction!(sid);
+        }
+        if (patch)
+        {
+            int observed = _hooks.SpReads is { } reads ? reads.ObservedSequence!() : tracking.ObservedSequence;
+            int sequence = Sequence().Value;
+            if (observed != sequence) tracking.WriteChangedSample(tracking.ReadSample());
+            if (tracking.Remaining != 0)
             {
-                _hooks.NeutralAction!(sid);
+                if (_hooks.Measurement!() > MeasurementLimit) tracking.WriteChangedSample(tracking.ReadSample());
+                tracking.Remaining--;
             }
-        }
-        int observed = tracking.ObservedSequence;
-        int sequence = tracking.Sequence;
-        // 중립·외부 효과 뒤 같은 현재 추적 전역을 다시 읽는다
-        if (observed != sequence)
-        {
-            tracking.ChangedSample = tracking.Sample;
-        }
-        if (tracking.Remaining != 0)
-        {
-            if (_hooks.Measurement!() > MeasurementLimit)
-            {
-                tracking.ChangedSample = tracking.Sample;
-            }
-            tracking.Remaining--;
-        }
-        // 원본은 두 독립 if다. 첫 배열이 없어도 뒤의 signed WORD를 반드시 현재 읽는다
-        if (tracking.Gate == 0)
-        {
-            tracking.ChangedSample = tracking.Sample;
-        }
-        if (tracking.Sentinel == -1)
-        {
-            tracking.ChangedSample = tracking.Sample;
+            // 두 독립 if이므로 첫 배열이 null이어도 뒤 순열 WORD는 반드시 현재 읽는다.
+            if (_hooks.SpReads is { } poolReads ? poolReads.FirstPool!() is null : tracking.Gate == 0)
+                tracking.WriteChangedSample(tracking.ReadSample());
+            if ((_hooks.SpReads is { } permutationReads ? permutationReads.FirstPermutation!() : tracking.Sentinel) == -1)
+                tracking.WriteChangedSample(tracking.ReadSample());
         }
         return payload;
+    }
+
+    /// <summary>독립 사제 추적 주소와 SP의 실제 대여 주소가 같아야 현재 조회기를 만든다.</summary>
+    public static PriestRegenSpReads BindPriestRegenSpStore(RawSpStore store, PriestRegenPatchState patch)
+    {
+        ArgumentNullException.ThrowIfNull(store); ArgumentNullException.ThrowIfNull(patch);
+        if (!ReferenceEquals(store.TrackingOffsetCurrent, patch.SequenceBox)) throw new ArgumentException("사제 회복과 SP 저장소의 추적 주소 불일치");
+        return new() { ObservedSequence = () => unchecked((int)store.OffsetCurrent), FirstPool = () => store.FirstPoolCurrent,
+            FirstPermutation = () => store.Permutation[0] };
+    }
+    /// <summary>공통 시작에서 연결한 같은 장기 추적 owner를 사본 없이 읽고 쓴다.</summary>
+    public static PriestRegenSpReads BindPriestRegenSpStore(RawSpStore store)
+    {
+        ArgumentNullException.ThrowIfNull(store); _ = store.TrackingOffsetCurrent;
+        return new() { ObservedSequence = () => unchecked((int)store.OffsetCurrent), FirstPool = () => store.FirstPoolCurrent,
+            FirstPermutation = () => store.Permutation[0], TrackingSequence = () => store.TrackingOffsetCurrent };
+    }
+    /// <summary>실제 가상표의 회복602만 처리하고 다른 사제 사건은 부모 없으면 진단한다.</summary>
+    public static RegularHandler MakePriestRegenHandler(RawSidPool pool, RawPriestRegen regen, RegularHandler? fallback = null)
+    {
+        ArgumentNullException.ThrowIfNull(pool); ArgumentNullException.ThrowIfNull(regen);
+        if (!ReferenceEquals(pool, regen.Pool)) throw new ArgumentException("사제 회복 분배 풀 불일치");
+        return (sid, ev, count, payload) =>
+        {
+            bool priest = Vtable(pool.Slot(sid)) == (pool.Edition == OriginalEdition.Patch1078 ? 0x0050f210u : 0x005003e0u);
+            if (priest && ev == PriestRegenEvent) return regen.Handle(sid, ev, count, payload);
+            if (fallback is not null) return fallback(sid, ev, count, payload);
+            if (priest) throw new ArgumentException("미복원 사제 이벤트 분배"); return payload;
+        };
     }
 
     /// <summary>정렬되지 않은 vtable DWORD를 읽는다.</summary>

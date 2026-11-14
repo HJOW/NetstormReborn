@@ -254,4 +254,22 @@ public sealed class PriestWorldBindingsTests
         Assert.False(scene.Core.PostPop.HandlesPriest(priest));
     }
 
+    /// <summary>월드의 중첩 SP 조회기 사본이 같은 장기 추적 주소를 회복·회전에 빌린다.</summary>
+    [Fact]
+    public void WorldRegenCopiesSpReadFunctionsAndBorrowsActualTracking()
+    {
+        var scene = new Scene(); var store = new RawSpStore(scene.Core.Random, () => 1);
+        var tracking = new IntBox(); store.BindTrackingOffset(tracking); store.Initialize();
+        scene.State.Regen.Patch.Sequence = -300; scene.State.Regen.Patch.ChangedSample = 19;
+        scene.Effects.Regen.SpReads = RawPriestRegen.BindPriestRegenSpStore(store); scene.Effects.Regen.PatchAudit = store.Rotate;
+        using var world = new RawPriestWorldBindings(scene.Core, scene.State, scene.Effects);
+        world.SetLoadingDepth(1); int sid = scene.Slot(158, 0x50f210);
+        BinaryPrimitives.WriteInt32LittleEndian(scene.Pool.AllocatedBytes(sid)[26..], 120);
+        int before = tracking.Value; scene.Effects.Regen.SpReads.TrackingSequence = null;
+        scene.Effects.Regen.SpReads.ObservedSequence = null; scene.Effects.Regen.PatchAudit = null;
+        Assert.Equal(8.25f, world.UniqueRegular(sid, 602, 0, 8.25f));
+        Assert.Equal(before + 3, tracking.Value); Assert.Equal((uint)tracking.Value, store.OffsetCurrent);
+        Assert.Equal(-300, scene.State.Regen.Patch.Sequence); Assert.Equal(19u, scene.State.Regen.Patch.ChangedSample);
+    }
+
 }
