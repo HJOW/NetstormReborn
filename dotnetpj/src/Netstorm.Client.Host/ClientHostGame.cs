@@ -106,6 +106,9 @@ public sealed class ClientHostGame : Game
     /// <summary>미션 프로세스보다 오래 사는 실제 소리 표·장치·재생기다.</summary>
     private HostMissionAudio? _missionAudio;
 
+    /// <summary>같은 미션 연소의 실제SHP/팔레트/소리 대여가 프로세스보다 오래 살아 있게 한다.</summary>
+    private HostMissionBurning? _missionBurning;
+
     /// <summary>배포 자산의 원본 커서와 SDL 핸들.</summary>
     private HostOriginalCursor? _cursor;
 
@@ -165,6 +168,7 @@ public sealed class ClientHostGame : Game
         if (disposing)
         {
             _missionSession?.ReleasePlayerProcesses();
+            _missionBurning?.Dispose();
             _missionAudio?.Dispose();
             _htmlWindows?.CloseAll();
             _editor?.Dispose();
@@ -272,6 +276,8 @@ public sealed class ClientHostGame : Game
         // 독립 일반 월드의 fresh 설치에서만 정적 목록의 기존 배열을 초기화한다.
         _sidLists.PrepareGeneralWorld();
         var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists);
+        // 적재 실패에서도 이 호출이 만든 외부 연소장치만 반납한다.
+        HostMissionBurning? pendingBurning = null;
         try
         {
             // 단독 바인딩 Zone을 먼저 설치한다. 조합 검사와 같은 입력(구독자 1·핸들 이름)이며 구독자·flags 0x08·이름을 둔다.
@@ -337,6 +343,8 @@ public sealed class ClientHostGame : Game
             session.BuildWorldGraphDevices(types.Types);
             // 같은 Player·공통 Pop·프로세스에 실제 사제/보호막 후처리를 등록한다.
             _missionAudio ??= new HostMissionAudio(_startup, Window.Handle, _options.MuteAudio, () => _clock.NowSeconds);
+            if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("현재 미션 연소 장치는 Windows 전용이다");
+            pendingBurning = new HostMissionBurning(session, _startup, _driver.Screen, types.Types, worldDefinitions, popShapes, shpRaw, _missionAudio);
             session.BuildPriestWorldDevices(_missionAudio.BindPriest(session));
             // 지형 바인딩 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 진단 저널 연결은 7차 로그 배선 단위에서 잇는다.
             session.TerrainDiagnostics.Context = _ => { };
@@ -424,12 +432,14 @@ public sealed class ClientHostGame : Game
             // 단일 미션의 첫 지역(+0x78)은 소용돌이→섬 소유자→첫 지역 사슬이 적재 중 기록한다(R6: 신전 Pop·postPop 표시와 함께).
             // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
             _missionSession = session;
+            _missionBurning = pendingBurning;
             return session;
         }
         catch
         {
             // 적재 중 예외에서도 같은 Host 프로세스를 장치보다 먼저 반납한다.
             session.ReleasePlayerProcesses();
+            pendingBurning?.Dispose();
             throw;
         }
     }
@@ -444,6 +454,7 @@ public sealed class ClientHostGame : Game
         _menuInput?.Tick();
         _driver.BeginFrame();
         _missionAudio?.SetFrame(unchecked((uint)_driver.Frame));
+        _missionBurning?.PrepareFrame(_clock.NowSeconds, unchecked((uint)_driver.Frame));
         PumpKeyboard();
         PumpMouse();
         if (_menuInput?.NotifyPointer(Poll(0xffff)) == 0) _cursor?.Set(GameCursor.Arrow);

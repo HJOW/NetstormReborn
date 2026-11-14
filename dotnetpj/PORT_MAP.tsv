@@ -853,3 +853,10 @@ cpppj/src/o/ParticleGradient.h	Netstorm.Core/Original/ParticleGradient.cs	e6d976
 cpppj/src/o/ParticleGradient.cpp	Netstorm.Core/Original/ParticleGradient.cs	e6d976346d9f7cebb5af45aa19bb91a2b83d3294	L1
 cpppj/src/client/ParticlePaletteMemory.h	Netstorm.Client.Host/ParticlePaletteMemory.cs	c258c7f3723d1c32fbbfdf39fca4a6f5f0fc3db9	port
 cpppj/src/client/ParticlePaletteMemory.cpp	Netstorm.Client.Host/ParticlePaletteMemory.cs	c258c7f3723d1c32fbbfdf39fca4a6f5f0fc3db9	port
+cpppj/src/o/RawPlainUnitCapture.h	Netstorm.Core/Original/RawPlainUnitCapture.cs	253e6a9981e5e50ecbb4881255ba302534834c1e	port
+cpppj/src/o/RawPlainUnitCapture.cpp	Netstorm.Core/Original/RawPlainUnitCapture.cs	253e6a9981e5e50ecbb4881255ba302534834c1e	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Burning.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/client/RawCampaignParticles.h	Netstorm.Client.Host/HostMissionBurning.cs	247855746f40366e6c45c9c2b97dc378f0cb8bf8	port
+cpppj/src/client/RawCampaignParticles.cpp	Netstorm.Client.Host/HostMissionBurning.cs	247855746f40366e6c45c9c2b97dc378f0cb8bf8	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client.Host/HostMissionBurning.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/client/SquidRenderer.cpp	Netstorm.Client.Host/TerrainDisplayShapes.cs	aa506ebb8d367ea74a97baf71c800546f8713606	port

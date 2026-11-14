@@ -48,11 +48,11 @@ public static class TerrainDisplayShapes
             for (int frame = 0; frame < block.Frames.Count; frame++)
             {
                 SquidFrameMetrics metrics = shapes.SquidMetrics(block.Index, frame);
-                ShapeFrame source = block.Frames[frame];
+                // VFX 압축영역의 경계와 다른 원본 Squid 표시폭/높이를 사용한다.
                 shape.Frames.Add(new SquidDisplayFrame
                 {
-                    Width = unchecked((short)source.Width),
-                    Height = unchecked((short)source.Height),
+                    Width = metrics.DisplayWidth,
+                    Height = metrics.DisplayHeight,
                     HotspotX = metrics.HotspotX,
                     HotspotY = metrics.HotspotY,
                     CellWidth = metrics.CellWidth,

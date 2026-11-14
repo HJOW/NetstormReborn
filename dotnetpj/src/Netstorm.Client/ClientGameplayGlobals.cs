@@ -19,4 +19,7 @@ public sealed class ClientGameplayGlobals
 
     /// <summary>005318ec의 최초 DWORD6이다. 회복 추적 쓰기와 후속 정책이 같은 현재값을 빌린다.</summary>
     public UIntBox PatchDiagnostic { get; } = new() { Value = 6 };
+
+    /// <summary>미션 교체 뒤에도 같은 원문 최근실패비트/TYPE를 보존하는 SID 진단 owner다.</summary>
+    public RawSidRobustDiagnostics SidRobustDiagnostics { get; } = new();
 }

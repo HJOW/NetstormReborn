@@ -66,7 +66,8 @@ public sealed partial class HostSession
         live.Regen.Refresh = sid => _terrainDisplay!.Update(Pool.Slot(sid));
         live.Regen.PatchAudit = Sp.Rotate;
         live.Regen.SpReads = RawPriestRegen.BindPriestRegenSpStore(Sp);
-        live.Regen.Damageable ??= _ => throw PriestMissing("피해 표시 갱신");
+        // 효과 사본은 현재 세션 owner를 지연 조회하므로 사제 구성 뒤에 연소를 붙여도 같은 몸체를 사용한다.
+        live.Regen.Damageable ??= sid => WorldDamageableBurning.Refresh(sid);
         live.Regen.NeutralAction ??= _ => throw PriestMissing("중립 사제 대피");
         live.Regen.Measurement ??= () => throw PriestMissing("회복 추적 측정");
 

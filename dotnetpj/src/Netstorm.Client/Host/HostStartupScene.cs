@@ -20,6 +20,8 @@ public sealed class HostStartupScene
     public TellSectionState TellState { get; } = new();
     /// <summary>설정의 fortPal 파일 팔레트.</summary>
     private readonly GamePalette _palette;
+    /// <summary>입자 첫색표가 실제 게임 자산과 같은 불변COL 색번호를 빌린다.</summary>
+    public GamePalette Palette => _palette;
     /// <summary>새 제품 Credits 상세를 같은 Config 수명에 보관하는 등록 객체다.</summary>
     private readonly Config _productCredits;
     /// <summary>구름(Kencloud) 전역·주소 공간 소유자다. 메인 메뉴 진입의 팔레트 전환이 구름을 만들고 이동시킨다(0.381).</summary>

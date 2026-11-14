@@ -9,7 +9,7 @@ using Netstorm.Core.Original;
 namespace Netstorm.Client.Tests;
 
 /// <summary>호스트 사제의 실제 등록·현재 owner/SP 회복·반납·미연결 경계를 검증한다.</summary>
-public sealed class HostPriestWorldLiveTests
+public sealed partial class HostPriestWorldLiveTests
 {
     /// <summary>실자산과 시작 때 초기화한 SP·장기 목록을 같은 세션에 연결한다.</summary>
     private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types) Scene()

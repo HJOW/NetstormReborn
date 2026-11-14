@@ -66,6 +66,12 @@ public sealed class HostMissionAudio : IDisposable
     /// <summary>같은 Client 프레임 카운터를 연결된 소리 상태에 반영한다.</summary>
     public void SetFrame(uint frame) { if (_processState is not null) _processState.Frame = frame; }
 
+    /// <summary>실제 연소가 소유한 비영 소리만 같은 원문 재생기로 정지한다.</summary>
+    public void StopEffect(uint sound) { if (sound != 0) _player.Stop(sound); }
+
+    /// <summary>저HP 벌프의 실제 파일명/현재좌표를 같은 이름표·위치 재생기로 보낸다.</summary>
+    public void BulfHurt(int sid, float x, float y) => _player.PlayOnceAt(x, y, _list.Lookup("bulfHurt.wav"), 0, 0);
+
     /// <summary>모든 미션 프로세스 반납 뒤 실제 장치·버퍼 소유권을 반납한다.</summary>
     public void Dispose() { if (OperatingSystem.IsWindows()) _device.Dispose(); }
 }
