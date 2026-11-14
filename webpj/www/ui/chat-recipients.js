@@ -2,7 +2,7 @@
 // (cpppj client/ChatRecipients.cpp/.h, 기준선 1f00a25a, 10.78 전용)
 // 같은 현재 Identity/번역을 빌리는 표시 전용 검사이며 패킷을 보내지 않는다. manager 0/NULL 은 false, 나머지는 모든 토큰이 Identity/채널에 있으면 true 다. 고정 Regexp 005049e8 만 직역하며 범용 정규식/송수신/재접속은 수행하지 않는다.
 // scratch 는 60바이트 레코드다. 같은 원문 부분 쓰기·40바이트 이름과 인접 주소 첫 BYTE 의 NUL 을 보존한다. 원문 바이트를 UTF-8/유니코드 공백으로 바꾸지 않는다.
-// 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 원본 10.78 독립 관측 350행과 실제 Identity 접합 48행은 tests/chat-native-fixtures2.test.mjs 가 대조한다(2026-11-15 WB04-E475 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // (2026-11-14 WB04-E436: RawMenuControls 선행 Chat 대상 이름 검사 이식)
 import { RawPlayerIdentity } from '../core/raw-player-identity.js';
 

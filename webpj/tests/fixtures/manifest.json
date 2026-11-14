@@ -20277,11 +20277,13 @@
       "unit": "WB04-E455",
       "producer": "cpppj ChatRecipients_ActualIdentityNative48: 보호 원본10.78 제한 x86 관측(기존 fixture, 재실행 없음)",
       "consumers": [
-        "webpj/tests/client-chat-runtime.test.mjs"
+        "webpj/tests/client-chat-runtime.test.mjs",
+        "webpj/tests/chat-native-fixtures2.test.mjs"
       ],
       "modules": [
         "webpj/www/core/client-chat-runtime.js",
-        "webpj/www/ui/chat-recipients.js"
+        "webpj/www/ui/chat-recipients.js",
+        "webpj/www/core/raw-player-identity.js"
       ],
       "cpppjSources": [
         "cpppj/src/client/ClientChatRuntime.cpp",
@@ -20296,7 +20298,7 @@
       "bytes": 13008,
       "lines": 49,
       "fixtureCommit": "162594848",
-      "webCommit": "dece01974",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/client/ClientChatRuntime.cpp": "c0f7843ae",
         "cpppj/src/client/ClientChatRuntime.h": "c0f7843ae",
@@ -21247,7 +21249,7 @@
       "bytes": 4201756,
       "lines": 373,
       "fixtureCommit": "5ed5c1acd",
-      "webCommit": "worktree",
+      "webCommit": "7aa285fea",
       "cpppjBasis": {
         "cpppj/src/client/RawChatFormat.cpp": "5ed5c1acd",
         "cpppj/src/client/RawChatFormat.h": "5ed5c1acd"
@@ -21278,7 +21280,7 @@
       "bytes": 6327809,
       "lines": 525,
       "fixtureCommit": "bcf1dd300",
-      "webCommit": "worktree",
+      "webCommit": "7aa285fea",
       "cpppjBasis": {
         "cpppj/src/client/RawChatMessage.cpp": "bcf1dd300",
         "cpppj/src/client/RawChatMessage.h": "bcf1dd300"
@@ -21309,7 +21311,7 @@
       "bytes": 2100848,
       "lines": 257,
       "fixtureCommit": "3667594cd",
-      "webCommit": "worktree",
+      "webCommit": "7aa285fea",
       "cpppjBasis": {
         "cpppj/src/client/RawChatPacket.cpp": "3667594cd",
         "cpppj/src/client/RawChatPacket.h": "3667594cd"
@@ -21340,7 +21342,7 @@
       "bytes": 196451,
       "lines": 239,
       "fixtureCommit": "fc5bec1cc",
-      "webCommit": "worktree",
+      "webCommit": "7aa285fea",
       "cpppjBasis": {
         "cpppj/src/client/RawChatReceive.cpp": "fc5bec1cc",
         "cpppj/src/client/RawChatReceive.h": "fc5bec1cc"
@@ -21371,10 +21373,134 @@
       "bytes": 8609289,
       "lines": 384,
       "fixtureCommit": "7120a0151",
-      "webCommit": "worktree",
+      "webCommit": "7aa285fea",
       "cpppjBasis": {
         "cpppj/src/client/RawChatSubmit.cpp": "7120a0151",
         "cpppj/src/client/RawChatSubmit.h": "7120a0151"
+      }
+    },
+    {
+      "id": "chat-recipients",
+      "path": "cpppj/tests/fixtures/chat-recipients-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E475",
+      "producer": "cpppj ChatRecipientsTests: 보호 원본 10.78 대상 이름 검사(42dc70→42d910)의 독립 x86 관측 350행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-native-fixtures2.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/chat-recipients.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ChatRecipients.cpp",
+        "cpppj/src/client/ChatRecipients.h"
+      ],
+      "doc": "docs/webpj-chat-native-fixtures2-20261115.md",
+      "scope": "대상 이름 검사(CheckChatRecipients)의 반환·지역 60바이트·조회/번역 호출 순서와 번역 변경·선택 중단",
+      "text": true,
+      "sha256": "fb8b2c83a9e79ccc6c6801f820981fe30b395cb5d332f9c58229c1c5b5bd9a23",
+      "bytes": 46113,
+      "lines": 351,
+      "fixtureCommit": "325d19a08",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ChatRecipients.cpp": "325d19a08",
+        "cpppj/src/client/ChatRecipients.h": "325d19a08"
+      }
+    },
+    {
+      "id": "chat-state-clear",
+      "path": "cpppj/tests/fixtures/chat-state-clear-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E475",
+      "producer": "cpppj ChatStateClearTests: 보호 원본 10.78 채팅 기록 정리(445140)의 독립 x86 관측 216행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-native-fixtures2.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-chat-channels.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawChatChannels.cpp",
+        "cpppj/src/client/RawChatChannels.h"
+      ],
+      "doc": "docs/webpj-chat-native-fixtures2-20261115.md",
+      "scope": "채팅 기록 전체 4800바이트 정리(resetOccupied) 108입력 × 두 정밀도(027f/037f)의 전체 바이트와 쓰기 수",
+      "text": true,
+      "sha256": "86e01b2defe684cba52c0178df35091a8ab06df8e436ca5d8fbf26aacd1f1910",
+      "bytes": 2085581,
+      "lines": 217,
+      "fixtureCommit": "65bc3e0c7",
+      "webCommit": "4c395df20",
+      "cpppjBasis": {
+        "cpppj/src/client/RawChatChannels.cpp": "65bc3e0c7",
+        "cpppj/src/client/RawChatChannels.h": "65bc3e0c7"
+      }
+    },
+    {
+      "id": "chat-input-toggle",
+      "path": "cpppj/tests/fixtures/chat-input-toggle-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E475",
+      "producer": "cpppj ChatInputTests: 보호 원본 10.78 입력줄 표시/전환/프레임말(439b96)의 독립 x86 관측 216행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-native-fixtures2.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/hud-chat-geometry.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HudChatGeometry.cpp",
+        "cpppj/src/client/HudChatGeometry.h"
+      ],
+      "doc": "docs/webpj-chat-native-fixtures2-20261115.md",
+      "scope": "입력줄 표시 조회·전환·프레임말 요청 소비의 플래그·현재 Chat·요청·반환·가상 Push/Attach 순서",
+      "text": true,
+      "sha256": "b9b05aaab72a35f82f2d856afbd6d8058ab4b2805bcb05c470e3e18f54ac832f",
+      "bytes": 16319,
+      "lines": 217,
+      "fixtureCommit": "6df0f316b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HudChatGeometry.cpp": "6df0f316b",
+        "cpppj/src/client/HudChatGeometry.h": "6df0f316b"
+      }
+    },
+    {
+      "id": "chat-input-key",
+      "path": "cpppj/tests/fixtures/chat-input-key-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E475",
+      "producer": "cpppj ChatInputTests: 보호 원본 10.78 Enter 부모 입력(Guide/Gump/모달/해제/정지)의 독립 x86 관측 162행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-native-fixtures2.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/hud-chat-geometry.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HudChatGeometry.cpp",
+        "cpppj/src/client/HudChatGeometry.h"
+      ],
+      "doc": "docs/webpj-chat-native-fixtures2-20261115.md",
+      "scope": "Guide/Gump/모달 관문 뒤 Enter 의 표시·열기 호출 순서(정지 상태 포함)",
+      "text": true,
+      "sha256": "5ddb6ec2eca492480e8332fe500a24cc01bc22d98661d470d2e7a84f86c37d6f",
+      "bytes": 178174,
+      "lines": 163,
+      "fixtureCommit": "6df0f316b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HudChatGeometry.cpp": "6df0f316b",
+        "cpppj/src/client/HudChatGeometry.h": "6df0f316b"
       }
     }
   ]

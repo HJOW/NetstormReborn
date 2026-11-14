@@ -1,6 +1,6 @@
 // 원본 ChatWindow(0x13c 바이트 파생)의 실제 자식 기하(배경·본문 글·도우미·입력줄)와 입력줄 표시 전환, 문자 Enter 분배, 프레임말 전환 요청 소비를 옮긴다(원문 0042e6e0/0042f250/0042f270/0042f210/0042f310/00439b96, cpppj client/HudChatGeometry.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // Console/TextEntry 생성·입력과 네트워크 Chat 은 별도 단위다. 이 모듈은 root 자체를 그리지 않고 현재 네 자식의 크기와 가상 호출 순서를 갱신한다. 자식 포인터는 각 가상 호출 뒤에도 root 에서 다시 읽는다.
-// 크기 곱셈은 원문 x87 처럼 float 저장 전 중간값(배정도)으로 배율을 곱한 뒤 float32 로 저장한다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 크기 곱셈은 원문 x87 처럼 float 저장 전 중간값(배정도)으로 배율을 곱한 뒤 float32 로 저장한다. 입력줄 전환 216행·Enter 162행의 원본 10.78 관측은 tests/chat-native-fixtures2.test.mjs 가 대조한다(2026-11-15 WB04-E475 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: const geometry = new HudChatGeometry({ chat, node, baseAttach, push, attach, bottomIndex, requestBottom, challenge, current }); geometry.attach(token, x, y, parent, mode).
 // (2026-11-14 WB04-E445: RawMenuControls 선행 Chat 기하 이식)
 import { GumpCreateNode } from './gump-create.js';
