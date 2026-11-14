@@ -97,8 +97,14 @@ public sealed class ClientHostGame : Game
     /// <summary>미션 교체에서도 같은 현재 TYPE·권한·표본·진단 주소를 유지한다.</summary>
     private readonly ClientGameplayGlobals _gameplay = new();
 
+    /// <summary>미션 교체에서 배열을 다시 만들지 않는 실제 정적 SID 목록이다.</summary>
+    private readonly RawStateSidLists _sidLists = new();
+
     /// <summary>메뉴 효과음의 MonoGame 장치 경계.</summary>
     private HostButtonSound? _buttonSound;
+
+    /// <summary>미션 프로세스보다 오래 사는 실제 소리 표·장치·재생기다.</summary>
+    private HostMissionAudio? _missionAudio;
 
     /// <summary>배포 자산의 원본 커서와 SDL 핸들.</summary>
     private HostOriginalCursor? _cursor;
@@ -159,6 +165,7 @@ public sealed class ClientHostGame : Game
         if (disposing)
         {
             _missionSession?.ReleasePlayerProcesses();
+            _missionAudio?.Dispose();
             _htmlWindows?.CloseAll();
             _editor?.Dispose();
             _textEntry?.Dispose();
@@ -262,155 +269,169 @@ public sealed class ClientHostGame : Game
         RiftTypeTable types = MissionFortLoad.LoadTypeTable(_startup.Files);
         MissionFortLoadResult fort = MissionFortLoad.Load(_startup, mission);
         MissionPlayers players = MissionPlayers.Load(key => script.Get(key), fort.Fort, types, 6500);
-        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay);
-        // 단독 바인딩 Zone을 먼저 설치한다. 조합 검사와 같은 입력(구독자 1·핸들 이름)이며 구독자·flags 0x08·이름을 둔다.
-        // 이름·서브 갈고리는 실제 전송이 없어 기록만 하며 포트는 검사와 같은 값으로 둔다(실제 바인딩은 로컬 네트워크 단위에서 잇는다).
-        var zone = new byte[LocalMissionZone.ZoneHead + LocalMissionZone.ZoneClient];
-        zone[14] = 1;
-        int zoneSlot = LocalMissionZone.ZoneHead;
-        zone[zoneSlot] = 0;
-        // 구독자 DWORD를 little endian으로 쓴다(mySubscriber 기본값 1).
-        for (int index = 0; index < 4; ++index)
-            zone[zoneSlot + 1 + index] = unchecked((byte)(1u >> (8 * index)));
-        byte[] zoneHandle = System.Text.Encoding.Latin1.GetBytes(handle);
-        Array.Copy(zoneHandle, 0, zone, zoneSlot + 9, zoneHandle.Length);
-        var zoneNames = new List<(uint Subscriber, string Name)>();
-        var zonePorts = new List<uint>();
-        var zoneAssertions = new List<string>();
-        LocalMissionZone.Install(zone, session.PlayerRecords, session.MissionPlayer, new LocalMissionZoneGlobals(),
-            new LocalMissionZoneHooks
-            {
-                LoginTimeout = () => 30,
-                Seconds = () => 0.0,
-                StoreName = (subscriber, name) => zoneNames.Add((subscriber, name)),
-                Serve = port => zonePorts.Add(port),
-                Assertion = zoneAssertions.Add,
-            }, 6799u);
-        // CRT 상태 상자는 호스트가 시작 때 reseed한 공유 상자를 세션이 그대로 쓴다. 미션마다 초기화하지 않는다(0.464).
-        // SP도 호스트 시작 때 1회 초기화한 공유 저장소를 그대로 쓴다. 미션 시작 때 reseed+재초기화하지 않는다(0.464, 0.463 근본 원인 수정).
-        session.StartPlayerSp(players);
-        session.PrepareAiSettings(players, key => script.Get(key));
-        session.StartPlayers(players, handle);
-        session.StartPlayerMasks(players);
-        // 첫 로그인의 요새 순서를 둔다. 0x5c 순서 수·0x60 풀 예측 커서 쓰기이며 요새 이미지 흐름은 다음 단위다.
-        session.WriteFortOrder(1u);
-        // 로컬 1번을 로그인 순서와 같이 올린다. 구독자 1은 Zone 기본 mySubscriber이며 Zone 설치 연결은 다음 단위다.
-        // 전송 갈고리는 실제 전송이 없어 기록만 하며 덤프 행을 바꾸지 않는다.
-        var sentPlayers = new List<(uint Owner, uint Target)>();
-        session.JoinPlayer(1u, 1u, 1u, new PlayerJoinHooks { SendPlayer = (owner, target) => sentPlayers.Add((owner, target)) });
-        // 요새 수신 표시를 켠다. 실제 이미지·시각 packet 흐름은 다음 단위다.
-        session.WriteFortReceived(1u);
-        session.MarkReady(1u);
-        var readyPackets = new List<byte[]>();
-        session.SendReady(0u, new PlayerReadyHooks { IsBoss = true, Broadcast = readyPackets.Add, Assertion = _ => { } });
-        // 전투 소유자 기록에 번역된 현재 이름을 덮어쓴다. 편집 선택과 같은 언어표·대체 규칙을 쓴다.
-        string language = _startup.Configuration.Configuration.Get("currentLanguage") ?? "english";
-        byte[]? languageBytes = _startup.Files.TryReadAllBytes("d/xlat." + language);
-        var table = languageBytes is null ? null : Netstorm.Assets.XlatTable.FromFileBytes(languageBytes);
-        byte[] encoded = Netstorm.Core.Original.ExtendedText.EncodeDisplayText(table?.Translate("You") ?? "You");
-        var translated = new byte[encoded.Length + 1];
-        Array.Copy(encoded, 0, translated, 0, encoded.Length);
-        session.FillHandleName(translated);
-        session.WriteBattleName();
-        // 월드 적재를 세션 공유 저장소로 실행한다. 번역·설정·지형 생성·화신 생성은 실제로 연결하고 객체·장부·카메라 실제 효과는 월드 조립 단위에서 잇는다.
-        IReadOnlyList<RiftTypeDefinition> worldDefinitions = MissionFortLoad.LoadTypeDefinitions(_startup.Files);
-        session.FillWorldFrames(worldDefinitions);
-        // 지형 Pop 공간 등록 장치. SHP 실측 크기로 해시 단계를 정한다(cpppj SquidRenderer::Shapes, 0.466).
-        byte[] shpRaw = _startup.Files.ReadAllBytes("d/_shapes.shp");
-        var shpDb = new Netstorm.Assets.ShapeDatabase(shpRaw);
-        List<SquidDisplayShape> popShapes = TerrainDisplayShapes.Build(worldDefinitions, shpDb);
-        session.BuildTerrainPopDevices(types.Types, popShapes);
-        // 요새 객체 적재 장치. 지형 Pop과 같은 해시·spots·표시를 공유한다(cpppj RawCampaignWorldRuntime, 0.467).
-        session.BuildFortObjectDevices(types.Types, session.WorldFrames);
-        // 월드 그래프 재구성 장치. 같은 해시·spots·프레임 표를 공유한다(cpppj RawCampaignWorldRuntime 65·83행, 0.470).
-        session.BuildWorldGraphDevices(types.Types);
-        // 지형 바인딩 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 진단 저널 연결은 7차 로그 배선 단위에서 잇는다.
-        session.TerrainDiagnostics.Context = _ => { };
-        session.TerrainDiagnostics.Stamp = _ => { };
-        var terrainBinding = session.BuildTerrainBinding(types.Types, session.TerrainDiagnostics, new IslandRuntimeHooks
+        // 독립 일반 월드의 fresh 설치에서만 정적 목록의 기존 배열을 초기화한다.
+        _sidLists.PrepareGeneralWorld();
+        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists);
+        try
         {
-            SetResidenceOwner = (_, _) => throw new InvalidOperationException("시작 흐름은 Residence owner를 요청하지 않는다"),
-            Assertion = _ => throw new InvalidOperationException("시작 흐름의 Runtime 진단은 원본 분류와 불일치한다"),
-        });
-        var worldOrder = new List<string>();
-        RawCampaignWorldLoad worldLoad = session.BuildWorldLoad(
-            new IslandRuntimeHooks
+            // 단독 바인딩 Zone을 먼저 설치한다. 조합 검사와 같은 입력(구독자 1·핸들 이름)이며 구독자·flags 0x08·이름을 둔다.
+            // 이름·서브 갈고리는 실제 전송이 없어 기록만 하며 포트는 검사와 같은 값으로 둔다(실제 바인딩은 로컬 네트워크 단위에서 잇는다).
+            var zone = new byte[LocalMissionZone.ZoneHead + LocalMissionZone.ZoneClient];
+            zone[14] = 1;
+            int zoneSlot = LocalMissionZone.ZoneHead;
+            zone[zoneSlot] = 0;
+            // 구독자 DWORD를 little endian으로 쓴다(mySubscriber 기본값 1).
+            for (int index = 0; index < 4; ++index)
+                zone[zoneSlot + 1 + index] = unchecked((byte)(1u >> (8 * index)));
+            byte[] zoneHandle = System.Text.Encoding.Latin1.GetBytes(handle);
+            Array.Copy(zoneHandle, 0, zone, zoneSlot + 9, zoneHandle.Length);
+            var zoneNames = new List<(uint Subscriber, string Name)>();
+            var zonePorts = new List<uint>();
+            var zoneAssertions = new List<string>();
+            LocalMissionZone.Install(zone, session.PlayerRecords, session.MissionPlayer, new LocalMissionZoneGlobals(),
+                new LocalMissionZoneHooks
+                {
+                    LoginTimeout = () => 30,
+                    Seconds = () => 0.0,
+                    StoreName = (subscriber, name) => zoneNames.Add((subscriber, name)),
+                    Serve = port => zonePorts.Add(port),
+                    Assertion = zoneAssertions.Add,
+                }, 6799u);
+            // CRT 상태 상자는 호스트가 시작 때 reseed한 공유 상자를 세션이 그대로 쓴다. 미션마다 초기화하지 않는다(0.464).
+            // SP도 호스트 시작 때 1회 초기화한 공유 저장소를 그대로 쓴다. 미션 시작 때 reseed+재초기화하지 않는다(0.464, 0.463 근본 원인 수정).
+            session.StartPlayerSp(players);
+            session.PrepareAiSettings(players, key => script.Get(key));
+            session.StartPlayers(players, handle);
+            session.StartPlayerMasks(players);
+            // 첫 로그인의 요새 순서를 둔다. 0x5c 순서 수·0x60 풀 예측 커서 쓰기이며 요새 이미지 흐름은 다음 단위다.
+            session.WriteFortOrder(1u);
+            // 로컬 1번을 로그인 순서와 같이 올린다. 구독자 1은 Zone 기본 mySubscriber이며 Zone 설치 연결은 다음 단위다.
+            // 전송 갈고리는 실제 전송이 없어 기록만 하며 덤프 행을 바꾸지 않는다.
+            var sentPlayers = new List<(uint Owner, uint Target)>();
+            session.JoinPlayer(1u, 1u, 1u, new PlayerJoinHooks { SendPlayer = (owner, target) => sentPlayers.Add((owner, target)) });
+            // 요새 수신 표시를 켠다. 실제 이미지·시각 packet 흐름은 다음 단위다.
+            session.WriteFortReceived(1u);
+            session.MarkReady(1u);
+            var readyPackets = new List<byte[]>();
+            session.SendReady(0u, new PlayerReadyHooks { IsBoss = true, Broadcast = readyPackets.Add, Assertion = _ => { } });
+            // 전투 소유자 기록에 번역된 현재 이름을 덮어쓴다. 편집 선택과 같은 언어표·대체 규칙을 쓴다.
+            string language = _startup.Configuration.Configuration.Get("currentLanguage") ?? "english";
+            byte[]? languageBytes = _startup.Files.TryReadAllBytes("d/xlat." + language);
+            var table = languageBytes is null ? null : Netstorm.Assets.XlatTable.FromFileBytes(languageBytes);
+            byte[] encoded = Netstorm.Core.Original.ExtendedText.EncodeDisplayText(table?.Translate("You") ?? "You");
+            var translated = new byte[encoded.Length + 1];
+            Array.Copy(encoded, 0, translated, 0, encoded.Length);
+            session.FillHandleName(translated);
+            session.WriteBattleName();
+            // 월드 적재를 세션 공유 저장소로 실행한다. 번역·설정·지형 생성·화신 생성은 실제로 연결하고 객체·장부·카메라 실제 효과는 월드 조립 단위에서 잇는다.
+            IReadOnlyList<RiftTypeDefinition> worldDefinitions = MissionFortLoad.LoadTypeDefinitions(_startup.Files);
+            session.FillWorldFrames(worldDefinitions);
+            // 지형 Pop 공간 등록 장치. SHP 실측 크기로 해시 단계를 정한다(cpppj SquidRenderer::Shapes, 0.466).
+            byte[] shpRaw = _startup.Files.ReadAllBytes("d/_shapes.shp");
+            var shpDb = new Netstorm.Assets.ShapeDatabase(shpRaw);
+            List<SquidDisplayShape> popShapes = TerrainDisplayShapes.Build(worldDefinitions, shpDb);
+            session.BuildTerrainPopDevices(types.Types, popShapes);
+            // 요새 객체 적재 장치. 지형 Pop과 같은 해시·spots·표시를 공유한다(cpppj RawCampaignWorldRuntime, 0.467).
+            session.BuildFortObjectDevices(types.Types, session.WorldFrames);
+            // 월드 그래프 재구성 장치. 같은 해시·spots·프레임 표를 공유한다(cpppj RawCampaignWorldRuntime 65·83행, 0.470).
+            session.BuildWorldGraphDevices(types.Types);
+            // 같은 Player·공통 Pop·프로세스에 실제 사제/보호막 후처리를 등록한다.
+            _missionAudio ??= new HostMissionAudio(_startup, Window.Handle, _options.MuteAudio, () => _clock.NowSeconds);
+            session.BuildPriestWorldDevices(_missionAudio.BindPriest(session));
+            // 지형 바인딩 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 진단 저널 연결은 7차 로그 배선 단위에서 잇는다.
+            session.TerrainDiagnostics.Context = _ => { };
+            session.TerrainDiagnostics.Stamp = _ => { };
+            var terrainBinding = session.BuildTerrainBinding(types.Types, session.TerrainDiagnostics, new IslandRuntimeHooks
             {
                 SetResidenceOwner = (_, _) => throw new InvalidOperationException("시작 흐름은 Residence owner를 요청하지 않는다"),
                 Assertion = _ => throw new InvalidOperationException("시작 흐름의 Runtime 진단은 원본 분류와 불일치한다"),
-            },
-            new FortWorldLoadHooks
-            {
-                TemplatePresent = _ => true,
-                Territory = slot =>
-                {
-                    worldOrder.Add($"territory:{slot}");
-                    // 실제 요새 Territory 120바이트를 읽는다. 섹션이 없으면 누락으로 거부한다.
-                    byte[] raw = fort.Fort.Territory;
-                    var stream = new FortTerritoryStream();
-                    stream.Set(raw, 0u, (uint)raw.Length);
-                    return stream;
-                },
-                CurrentTemplate = _ => fort.Fort,
-                Assertion = _ => throw new InvalidOperationException("시작 흐름의 Territory 진단은 원본 분류와 불일치한다"),
-                LoadingDepthChanged = _ => throw new InvalidOperationException("시작 흐름은 깊이 효과를 요청하지 않는다"),
-                BuilderAssertion = _ => throw new InvalidOperationException("시작 흐름의 빌더 진단은 원본 분류와 불일치한다"),
-                Generate = (_, _) => { },
-                Objects = (fortTemplate, slot) =>
-                {
-                    worldOrder.Add($"fortObjects:{slot}");
-                    // 실제 요새 객체 적재 live 연결. Terrain·Money·Meta와 같은 풀·깊이로 둔다(0.467).
-                    session.LoadFortObjects(fortTemplate, slot);
-                },
-                Money = (_, _) => { },
-                Badges = (_, _) => { },
-                Technology = (_, _) => { },
-                PopulateIsland = (_, _) => { },
-                RebuildGraph = mode => session.RebuildWorldGraph(mode),
-            },
-            types.Types,
-            // 화신 생성·소유자·찾기의 실제 장치 연결. 공간 Pop 기록과 예약 갈고리는 R6에서 잇는다(0.475).
-            session.BuildPlayerWorldHooks(),
-            new CampaignWorldLoadHooks
-            {
-                TranslateYou = () =>
-                {
-                    worldOrder.Add("translate");
-                    return translated;
-                },
-                SetConfig = HostSession.BuildSetConfigHook(_startup.Configuration),
-                RefreshWindowTitle = () => worldOrder.Add("title"),
-                BuilderAssertion = assertion => worldOrder.Add($"builderDiag:{assertion}"),
-                Generate = (state, region) =>
-                {
-                    worldOrder.Add($"generate:{region}");
-                    // 실제 지형 생성 라이브 연결. 공간 Pop·군집 배치는 다음 단위다.
-                    terrainBinding.GenerateOriginal(state.Owner, state.Bounds, region, session.Game, session.TerrainCrt, session.BuildTerrainStampHooks(types.Types), (_, _, _) => { });
-                },
-                CurrentTemplate = slot =>
-                {
-                    worldOrder.Add($"template:{slot}");
-                    return fort.Fort;
-                },
-                Objects = (fortTemplate, slot) =>
-                {
-                    worldOrder.Add($"objects:{slot}");
-                    // 실제 요새 객체 적재 live 연결. 캠페인 부모가 부르는 같은 FortTemplate·칸 경로다(0.467).
-                    session.LoadFortObjects(fortTemplate, slot);
-                },
-                RebuildGraph = graph =>
-                {
-                    worldOrder.Add($"graph:{graph}");
-                    // 실제 그래프 재구성 live 연결. territory 갈고리와 같은 세션 엔진을 공유한다(0.470).
-                    session.RebuildWorldGraph(graph);
-                },
-                ResetCamera = () => worldOrder.Add("camera"),
             });
-        worldLoad.Load();
-        // 단일 미션의 첫 지역(+0x78)은 소용돌이→섬 소유자→첫 지역 사슬이 적재 중 기록한다(R6: 신전 Pop·postPop 표시와 함께).
-        // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
-        _missionSession = session;
-        return session;
+            var worldOrder = new List<string>();
+            RawCampaignWorldLoad worldLoad = session.BuildWorldLoad(
+                new IslandRuntimeHooks
+                {
+                    SetResidenceOwner = (_, _) => throw new InvalidOperationException("시작 흐름은 Residence owner를 요청하지 않는다"),
+                    Assertion = _ => throw new InvalidOperationException("시작 흐름의 Runtime 진단은 원본 분류와 불일치한다"),
+                },
+                new FortWorldLoadHooks
+                {
+                    TemplatePresent = _ => true,
+                    Territory = slot =>
+                    {
+                        worldOrder.Add($"territory:{slot}");
+                        // 실제 요새 Territory 120바이트를 읽는다. 섹션이 없으면 누락으로 거부한다.
+                        byte[] raw = fort.Fort.Territory;
+                        var stream = new FortTerritoryStream();
+                        stream.Set(raw, 0u, (uint)raw.Length);
+                        return stream;
+                    },
+                    CurrentTemplate = _ => fort.Fort,
+                    Assertion = _ => throw new InvalidOperationException("시작 흐름의 Territory 진단은 원본 분류와 불일치한다"),
+                    LoadingDepthChanged = _ => throw new InvalidOperationException("시작 흐름은 깊이 효과를 요청하지 않는다"),
+                    BuilderAssertion = _ => throw new InvalidOperationException("시작 흐름의 빌더 진단은 원본 분류와 불일치한다"),
+                    Generate = (_, _) => { },
+                    Objects = (fortTemplate, slot) =>
+                    {
+                        worldOrder.Add($"fortObjects:{slot}");
+                        // 실제 요새 객체 적재 live 연결. Terrain·Money·Meta와 같은 풀·깊이로 둔다(0.467).
+                        session.LoadFortObjects(fortTemplate, slot);
+                    },
+                    Money = (_, _) => { },
+                    Badges = (_, _) => { },
+                    Technology = (_, _) => { },
+                    PopulateIsland = (_, _) => { },
+                    RebuildGraph = mode => session.RebuildWorldGraph(mode),
+                },
+                types.Types,
+                // 화신 생성·소유자·찾기의 실제 장치 연결. 공간 Pop 기록과 예약 갈고리는 R6에서 잇는다(0.475).
+                session.BuildPlayerWorldHooks(),
+                new CampaignWorldLoadHooks
+                {
+                    TranslateYou = () =>
+                    {
+                        worldOrder.Add("translate");
+                        return translated;
+                    },
+                    SetConfig = HostSession.BuildSetConfigHook(_startup.Configuration),
+                    RefreshWindowTitle = () => worldOrder.Add("title"),
+                    BuilderAssertion = assertion => worldOrder.Add($"builderDiag:{assertion}"),
+                    Generate = (state, region) =>
+                    {
+                        worldOrder.Add($"generate:{region}");
+                        // 실제 지형 생성 라이브 연결. 공간 Pop·군집 배치는 다음 단위다.
+                        terrainBinding.GenerateOriginal(state.Owner, state.Bounds, region, session.Game, session.TerrainCrt, session.BuildTerrainStampHooks(types.Types), (_, _, _) => { });
+                    },
+                    CurrentTemplate = slot =>
+                    {
+                        worldOrder.Add($"template:{slot}");
+                        return fort.Fort;
+                    },
+                    Objects = (fortTemplate, slot) =>
+                    {
+                        worldOrder.Add($"objects:{slot}");
+                        // 실제 요새 객체 적재 live 연결. 캠페인 부모가 부르는 같은 FortTemplate·칸 경로다(0.467).
+                        session.LoadFortObjects(fortTemplate, slot);
+                    },
+                    RebuildGraph = graph =>
+                    {
+                        worldOrder.Add($"graph:{graph}");
+                        // 실제 그래프 재구성 live 연결. territory 갈고리와 같은 세션 엔진을 공유한다(0.470).
+                        session.RebuildWorldGraph(graph);
+                    },
+                    ResetCamera = () => worldOrder.Add("camera"),
+                });
+            worldLoad.Load();
+            // 단일 미션의 첫 지역(+0x78)은 소용돌이→섬 소유자→첫 지역 사슬이 적재 중 기록한다(R6: 신전 Pop·postPop 표시와 함께).
+            // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
+            _missionSession = session;
+            return session;
+        }
+        catch
+        {
+            // 적재 중 예외에서도 같은 Host 프로세스를 장치보다 먼저 반납한다.
+            session.ReleasePlayerProcesses();
+            throw;
+        }
     }
 
     /// <summary>
@@ -422,6 +443,7 @@ public sealed class ClientHostGame : Game
         _editor?.Poll();
         _menuInput?.Tick();
         _driver.BeginFrame();
+        _missionAudio?.SetFrame(unchecked((uint)_driver.Frame));
         PumpKeyboard();
         PumpMouse();
         if (_menuInput?.NotifyPointer(Poll(0xffff)) == 0) _cursor?.Set(GameCursor.Arrow);

@@ -810,3 +810,6 @@ cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.c
 cpppj/src/client/ClientGameplayGlobals.cpp	Netstorm.Client/ClientGameplayGlobals.cs	4a9cc0f0c6198e567d2a2b68ac73d401d6274251	port
 cpppj/src/o/RawRiftHitPoints.h	Netstorm.Core/Original/RawRiftHitPoints.cs	5207aab92411ce7cc3efdb7a09569f3435fdac2e	L1
 cpppj/src/o/RawRiftHitPoints.cpp	Netstorm.Core/Original/RawRiftHitPoints.cs	5207aab92411ce7cc3efdb7a09569f3435fdac2e	L1
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PriestWorld.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Client/Host/HostSession.PriestWorld.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client.Host/HostMissionAudio.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port

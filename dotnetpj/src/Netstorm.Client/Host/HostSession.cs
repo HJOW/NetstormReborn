@@ -109,7 +109,7 @@ public sealed partial class HostSession
     /// <param name="sharedCrtBox">호스트가 시작 때 reseed한 공유 CRT 상자. null이면 세션 전용 상자를 쓴다.</param>
     /// <remarks>2026-11-12 0.464에서 cpppj 공유 SP 경로와 같은 시작 1회 초기화를 잇려고 공유 빌림을 추가했다. 미션별 reseed는 원본에 없다.
     /// 2026-11-12 0.476에서 세션 설치 의미로 Graph 저장소를 ResetTable 초기 상태에 둔다(근거 cpppj RawSurfaceStorage.Acquire의 Graph ResetTable, o/RawGraphStorage.cpp). 0번 예약이 없으면 Rebuild의 임시 번호 0이 기존 graph-0과 충돌해 큰 맵에서 번호가 소진된다.</remarks>
-    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null)
+    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null)
     {
         ArgumentNullException.ThrowIfNull(kernel);
         ArgumentNullException.ThrowIfNull(game);
@@ -117,12 +117,14 @@ public sealed partial class HostSession
         Kernel = kernel;
         Game = game;
         Crt = crt;
-        Pool = new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity);
+        Gameplay = sharedGameplay ?? new ClientGameplayGlobals();
+        Pool = new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity, true, () => Gameplay.Authority.Server);
         Sp = sharedSp ?? new RawSpStore(Game, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
         TerrainCrt = sharedCrtBox ?? new();
         TerrainBookkeeping = new RawPostPopState(TotalMade);
-        Gameplay = sharedGameplay ?? new ClientGameplayGlobals();
+        SidLists = sharedLists ?? new RawStateSidLists();
         PriestState = new(GameAux.PriestTypeBox, GameAux);
+        PriestState.Priests.SharedPriests = SidLists.Priests;
         PriestState.Regen.SharedPriestType = GameAux.PriestTypeBox;
         PriestState.Regen.Patch.SharedSample = Gameplay.PatchSample;
         PriestState.Regen.Patch.SharedChangedSample = Gameplay.PatchDiagnostic;
@@ -660,6 +662,9 @@ public sealed partial class HostSession
     /// <summary>사제 조회·후처리·회복이 공유하는 같은 미션 상태다.</summary>
     public Netstorm.Client.Mission.RawPriestWorldState PriestState { get; }
 
+    /// <summary>호스트가 한 번 만든 정적 SID 목록을 미션이 직접 빌린다.</summary>
+    public RawStateSidLists SidLists { get; }
+
     /// <summary>세션이 소유한 소유자 모드다. 미션 전투이므로 battle을 켠다.</summary>
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 336행 CampaignLinks(battle=true).</remarks>
     public SquidOwnerMode OwnerMode { get; } = new() { Battle = true };
@@ -1029,12 +1034,17 @@ public sealed partial class HostSession
         {
             NotifySurface = sid => _fortBuilding.NotifySurface(sid),
             SetState = (_, _) => { },
-            SetOwner = _playerOwner.Set,
+            SetOwner = SetWorldObjectOwner,
             HasHitPoints = _fortHp.HasHitPoints,
             MaxHitPoints = _fortHp.MaxHitPoints,
             VirtualCount = _ => throw new InvalidOperationException("Fort 가상 개수 미연결(R6)"),
             Pop = (sid, x, y, flags) =>
             {
+                if (_priests is not null && _livePostPop!.HandlesDerived(sid))
+                {
+                    PopWorldObject(sid, x, y, flags);
+                    return;
+                }
                 // 요새 객체 Pop의 공간 등록은 R6 postPop·표시·그래프 장치와 함께 잇는다.
                 // 실측 결과 thewarbegins 요새 객체에 Pop 지원표 밖 가상 표(71·75·78·89·122 등)가 있어
                 // 지금 공간 등록을 수행하면 파생 등록 효과 미지원으로 멈춘다. 생성·소유자·HP·프레임은 live로 둔다.
@@ -1043,7 +1053,7 @@ public sealed partial class HostSession
             CreateContent = _fortContained.Create,
             ChunkRegion = (x, y) => unchecked((sbyte)World.At(x, y).Island),
             TerritoryAllowed = (region, territoryOwner, territory) => islands.Matches(region, unchecked((int)territoryOwner), territory),
-            LoadingDepthChanged = depth => _worldLoadingDepth = depth,
+            LoadingDepthChanged = SetWorldLoadingDepth,
             FinishOwner = _ => { },
         };
         RawFortObjectLoad.MakeFortObjectLoadHooks(Pool, _fortFactory, _fortHp, _fortContained, hooks);

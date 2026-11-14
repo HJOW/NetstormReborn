@@ -64,7 +64,7 @@ public sealed class HostFortObjectLiveTests
     }
 
     /// <summary>실제 요새의 객체 적재 장치를 만든다. live 시작 흐름과 같은 순서(지형 PlaceAll·Generate 뒤 Objects)용이다.</summary>
-    private static void BuildLiveTerrainFirst(HostSession session, FortTemplate fort, IReadOnlyList<OriginalTypeRecord> types)
+    internal static void BuildLiveTerrainFirst(HostSession session, FortTemplate fort, IReadOnlyList<OriginalTypeRecord> types)
     {
         // live와 같은 120바이트 Territory 읽기와 같다. 스트림 위치·진단은 FortWorldLoad 쪽 검사에서 다룬다.
         Assert.True(fort.Territory.Length >= 120);

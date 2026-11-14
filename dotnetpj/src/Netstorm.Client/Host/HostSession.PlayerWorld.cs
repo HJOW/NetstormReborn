@@ -13,8 +13,14 @@ public sealed partial class HostSession
     /// <summary>화신 몸체가 재사용하는 동일 갈고리다.</summary>
     private PlayerWorldHooks? _livePlayerHooks;
 
-    /// <summary>생성된 Regular의 실제 커널 소유권만 추적한다.</summary>
-    private readonly List<RegularProcess> _playerRegulars = [];
+    /// <summary>Player·사제가 같은 가상 후처리를 등록하는 실제 공통 부모다.</summary>
+    private RawPostPop? _livePostPop;
+    /// <summary>Player·사제·보호막이 같은 해시/점유 지도에 등록하는 몸체다.</summary>
+    private RawPop? _livePop;
+    /// <summary>같은 공유 공간의 등록 해제 몸체다.</summary>
+    private RawUnpop? _liveUnpop;
+    /// <summary>현재 프레임의 표시·공간 효과를 같은 실제 장치로 전달한다.</summary>
+    private SquidFrame? _liveFrame;
 
     /// <summary>원문 할당 관문에서 확보해 다음 부착에 넘기는 실제 객체다.</summary>
     private RegularProcess? _reservedPlayerRegular;
@@ -43,12 +49,16 @@ public sealed partial class HostSession
         var hash = _terrainHash;
         var display = _terrainDisplay;
         var inner = new RawPostPop(Pool, types, TerrainBookkeeping);
-        var pop = new RawPop(Pool, hash, _terrainSpots, null, inner);
-        var unpop = new RawUnpop(Pool, hash, _terrainSpots);
+        var pop = new RawPop(Pool, hash, _terrainSpots, display, inner);
+        var unpop = new RawUnpop(Pool, hash, _terrainSpots, display);
+        _livePostPop = inner; _livePop = pop; _liveUnpop = unpop;
+        _liveFrame = new SquidFrame(Pool, types, SquidFrameBinding.MakeSquidFrameHooks(Pool, types, display, unpop, pop));
+        _liveFrame.BindCurrentTypes(types);
         var destroy = new RawSquidDestroy(Pool, unpop, types);
         PlayerProcesses = new SquidProcessHost(Pool, types, Kernel, destroy,
             new SquidProcessState { SharedNow = ProcessTime });
         PlayerProcesses.BindFormFactory(factory);
+        BindWorldPopParent();
         var hooks = new PlayerWorldHooks
         {
             Assertion = assertion => throw new InvalidOperationException($"Player 원본 진단: {assertion}"),
@@ -100,16 +110,15 @@ public sealed partial class HostSession
         _reservedPlayerRegular = null;
         if (process.Event() != ev || process.Payload() != payload)
             throw new InvalidOperationException("Player Regular의 원본 event·payload 계약 위반");
-        RegularProcess attached = PlayerProcesses.AttachRegular(process, sid, false)
+        _ = PlayerProcesses.AttachRegular(process, sid, false)
             ?? throw new InvalidOperationException("Player Regular 부착 실패");
-        _playerRegulars.Add(attached);
     }
 
-    /// <summary>빌린 커널에서 이 세션이 만든 화신 프로세스의 소유권만 반납한다.</summary>
+    /// <summary>빌린 커널에서 이 세션의 실제 Host가 부착한 프로세스만 비우고 사제 대여를 반납한다.</summary>
     public void ReleasePlayerProcesses()
     {
-        Kernel.DrainOwnedForShutdown(process => process is RegularProcess regular && _playerRegulars.Contains(regular));
-        _playerRegulars.Clear();
+        if (PlayerProcesses is not null) Kernel.DrainOwnedForShutdown(PlayerProcesses.Owns);
+        ReleasePriestWorld();
         _reservedPlayerRegular = null;
     }
 }

@@ -164,6 +164,12 @@ public sealed class RawGameAuxState
     /// <summary>같은 발사 번호 DWORD의 공유 owner다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
     public UIntBox FireAnimationProcessTypeBox => _fireAnimationProcessTypeBox;
 
+    /// <summary>0054112c의 현재 소리 프로세스 역할 번호다. 미션 교체에서47로 다시 쓰지 않는다.</summary>
+    public uint SoundProcessType { get => SoundProcessTypeBox.Value; set => SoundProcessTypeBox.Value = value; }
+
+    /// <summary>소리 프로세스와 부착이 같은 주소로 빌리는 현재 역할DWORD다.</summary>
+    public UIntBox SoundProcessTypeBox { get; } = new() { Value = 47u };
+
     /// <summary>같은 발사 번호 DWORD를 빌리는 상자다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
     private readonly UIntBox _fireAnimationProcessTypeBox = new() { Value = 35u };
 
