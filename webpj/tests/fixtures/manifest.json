@@ -21080,10 +21080,45 @@
       "bytes": 20572597,
       "lines": 2151,
       "fixtureCommit": "d2dd9fcb0",
-      "webCommit": "worktree",
+      "webCommit": "88187ee35",
       "cpppjBasis": {
         "cpppj/src/client/HudDock.cpp": "53a1ebf94",
         "cpppj/src/client/HudDock.h": "53a1ebf94"
+      }
+    },
+    {
+      "id": "hud-divider-input",
+      "path": "cpppj/tests/fixtures/hud-divider-input-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E471",
+      "producer": "cpppj HudDividerInputTests: 보호 원본 10.78 HUD divider 입력(4c49f0)과 프레임 방송(4c4b00)의 독립 x86 관측 13,398행, 두 정밀도(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/hud-divider-input.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/hud-divider-input.js",
+        "webpj/www/ui/hud-dock.js",
+        "webpj/www/ui/gump-tree.js",
+        "webpj/www/render/gump-collection.js",
+        "webpj/www/ui/gump-input.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/HudDividerInput.cpp",
+        "cpppj/src/client/HudDividerInput.h"
+      ],
+      "doc": "docs/webpj-hud-divider-input-20261115.md",
+      "scope": "진입 2종(handle 9,666·broadcast 3,732)의 입력 이벤트/좌표·축·플래그·제한·위치·부모 체인·capture·폴링·메뉴 수·기본 결과와 반환·최종 flags/기준점/focus·장치 호출 순서·최종 Push/Attach 인자",
+      "text": true,
+      "sha256": "d6551d404c129e9e389519ffc4cb11061f1c4769929a5f4dd0fc65f1100d6183",
+      "bytes": 3414472,
+      "lines": 13399,
+      "fixtureCommit": "d2dd9fcb0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/HudDividerInput.cpp": "d2dd9fcb0",
+        "cpppj/src/client/HudDividerInput.h": "d2dd9fcb0"
       }
     }
   ]
