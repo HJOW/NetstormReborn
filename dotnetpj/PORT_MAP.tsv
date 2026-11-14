@@ -416,7 +416,7 @@ cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	86003
 cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/RawFortWorldLoad.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
 cpppj/src/o/RawFrameChoose.cpp	Netstorm.Core/Original/RawFrameChoose.cs	df7902e70c389c825a65b8ba70a48de6891905ad	L1
 cpppj/src/o/RawFrameChoose.h	Netstorm.Core/Original/RawFrameChoose.cs	df7902e70c389c825a65b8ba70a48de6891905ad	L1
-cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	port
+cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.cs	30523aaf2d90489101b737d142fdf046c042cdb3	port
 cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	73506bcbedac557bfd132e68524f772123f245d2	L1
 cpppj/src/o/RawIslandAdd.cpp	Netstorm.Core/Original/RawIslandAdd.cs	afe4ce5b45b8c786adba014946185cfec5799ae7	L1
 cpppj/src/o/RawIslandAdd.h	Netstorm.Core/Original/RawIslandAdd.cs	afe4ce5b45b8c786adba014946185cfec5799ae7	L1
@@ -791,3 +791,7 @@ cpppj/src/o/RawPriestPlacementCollision.h	Netstorm.Core/Original/RawPriestPlacem
 cpppj/src/o/RawCanonPlacementCollision.h	Netstorm.Core/Original/RawCanonPlacementCollision.cs	a127fb5ccbca1504e6633940b7f057ab3f496557	L1
 cpppj/src/o/RawCanonPlacementCollision.cpp	Netstorm.Core/Original/RawCanonPlacementCollision.cs	a127fb5ccbca1504e6633940b7f057ab3f496557	L1
 cpppj/src/o/RawPriestPlacementCollision.cpp	Netstorm.Core/Original/RawPriestPlacementCollision.cs	a127fb5ccbca1504e6633940b7f057ab3f496557	L1
+cpppj/src/o/RawPriestRegular.h	Netstorm.Core/Original/RawPriestRegular.cs	30523aaf2d90489101b737d142fdf046c042cdb3	L1
+cpppj/src/o/RawPriestRegular.cpp	Netstorm.Core/Original/RawPriestRegular.cs	30523aaf2d90489101b737d142fdf046c042cdb3	L1
+cpppj/src/client/RawPriestWorldBindings.h	Netstorm.Client/Mission/RawMovementProcessTypes.cs	30523aaf2d90489101b737d142fdf046c042cdb3	port
+cpppj/src/client/RawPriestWorldBindings.cpp	Netstorm.Client/Mission/RawMovementProcessTypes.cs	30523aaf2d90489101b737d142fdf046c042cdb3	port

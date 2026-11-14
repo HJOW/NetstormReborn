@@ -207,6 +207,21 @@ public sealed class RawGameAuxState
     /// <summary>005412ec의 현재 받침 TYPE이며 HP 검사 예외가 읽는다.</summary>
     public UIntBox DaisTypeBox { get; } = new() { Value = 165u };
 
+    /// <summary>0054126c의현재133이며 신전 기본제품/이동 선택이 같은 장기 주소를 빌린다.</summary>
+    public UIntBox TempleProductTypeBox { get; } = new() { Value = 133u };
+
+    /// <summary>00541344의현재187이며 고갈된 타입의 이동/전달이 같은 장기 주소를 빌린다.</summary>
+    public UIntBox EmptyCarrierTypeBox { get; } = new() { Value = 187u };
+
+    /// <summary>005412c8의현재156이며 크리스탈 크랩 이동/내용물이 같은 장기 주소를 빌린다.</summary>
+    public UIntBox RainWalkerTypeBox { get; } = new() { Value = 156u };
+
+    /// <summary>00541274의현재135이며 벌프 이동/삭제 드롭이 같은 장기 주소를 빌린다.</summary>
+    public UIntBox BulfTypeBox { get; } = new() { Value = 135u };
+
+    /// <summary>005410d0의현재24이며 Dude 이동/정기/통지가 같은 장기 주소를 빌린다.</summary>
+    public UIntBox DudePathTypeBox { get; } = new() { Value = 24u };
+
     /// <summary>0052ed78/79/7c의 현재 1bh 생성자 바이트·바이트·워드이며 수신 등록 메타데이터와 별개다. 직접 Join도 같은 현재 생성자 헤더를 읽고 등록표로 대체하지 않는다.</summary>
     /// <remarks>2026-11-11 0.355에서 cpppj HEAD의 JoinTestBattle 생성자 헤더(`battleStartPeerHeader_`)를 반영했다. 월드·세션 교체로 초기화하지 않는다.</remarks>
     public FormPacketHeader BattleStartPeerHeader { get; set; } = new(0x1b, 1, 38);
