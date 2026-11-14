@@ -329,7 +329,7 @@ cpppj/src/o/RawDamageableBurning.cpp	Netstorm.Core/Original/RawDamageableBurning
 cpppj/src/o/RawDamageableHit.cpp	Netstorm.Core/Original/RawDamageableHit.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawDamageablePostDestroy.cpp	Netstorm.Core/Original/RawDamageablePostDestroy.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawDamageablePreDestroy.cpp	Netstorm.Core/Original/RawDamageablePreDestroy.cs	4c29c9e353bd0d585f8971b6b99cdb22971f1610	L1
-cpppj/src/o/RawDamageableRelease.cpp	Netstorm.Core/Original/RawDamageableRelease.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawDamageableRelease.cpp	Netstorm.Core/Original/RawDamageableRelease.cs	230528e31fc1c239b5d1251a729b99041bf45d9e	L1
 cpppj/src/o/RawDataManagerDump.cpp	Netstorm.Core/Original/RawDataManagerDump.cs	d48ea75609a1fe57db3acee4e28167de1723651b	port
 cpppj/src/o/RawDataManagerDump.h	Netstorm.Core/Original/RawDataManagerDump.cs	d48ea75609a1fe57db3acee4e28167de1723651b	port
 cpppj/src/o/RawDataManagerFileSave.cpp	Netstorm.Core/Original/RawDataManagerFileSave.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
@@ -814,3 +814,4 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PriestW
 cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Client/Host/HostSession.PriestWorld.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client.Host/HostMissionAudio.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/o/AiAllianceSide.h	Netstorm.Core/Original/AiAllianceSide.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/o/RawDamageableRelease.h	Netstorm.Core/Original/RawDamageableRelease.cs	230528e31fc1c239b5d1251a729b99041bf45d9e	L1

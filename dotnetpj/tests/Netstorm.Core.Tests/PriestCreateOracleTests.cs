@@ -72,8 +72,10 @@ public sealed class PriestCreateOracleTests
     }
 
     /// <summary>실제 종속 해방→나선→서버 생성자→사제/공통 소유자→현재 Carrier를 연결한다.</summary>
-    [Fact]
-    public void ReleaseSpawnsThroughActualFactoryAndPriestOwner()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void ReleaseSpawnsThroughActualFactoryAndPriestOwner(bool native)
     {
         var pool = new RawSidPool(24000, true); uint free = pool.FreeCount; var types = Types(OriginalEdition.Patch1078);
         types[158].ConstructorAddress = OriginalConstructors.Address(158); types[158].Flags1 = 0x69012; types[158].Flags2 = 0x210000; types[158].MaxHitPoints = 200; types[158].FootX = types[158].FootY = 1;
@@ -92,7 +94,9 @@ public sealed class PriestCreateOracleTests
         hooks = RawCarrierCheck.MakeCarrierCheckSpawnHooks(pool, check, hooks); Action<int> actualCheck = hooks.CheckCarrier!; hooks.CheckCarrier = sid => { carrierChecks++; actualCheck(sid); }; var spawn = new RawPriestSpawn(pool, types, spots, new PriestSpawnState(), hooks); hooks.Create = null;
         var releases = new DamageableReleaseHooks { Create = (_, _) => throw new InvalidOperationException("사제는 일반 해방 생성을 선택하지 않는다"), SetOwner = (_, _) => Assert.Fail("일반 해방 소유자 미선택"), Pop = (_, _, _, _) => Assert.Fail("일반 해방 Pop 미선택"), NotifySurface = _ => Assert.Fail("일반 해방 표면 알림 미선택") };
         DamageableReleaseHooks attached = RawPriestSpawn.MakePriestSpawnHooks(pool, spawn, releases); Assert.Null(releases.SpawnPriest); Assert.Same(releases.Create, attached.Create);
-        var release = new RawDamageableRelease(pool, types, spots, new ContainedFinderState(), new DamageableReleaseState { Battle = true }, attached); release.Release(parent);
+        var releaseState = new DamageableReleaseState { Battle = true };
+        var release = new RawDamageableRelease(pool, types, spots, new ContainedFinderState(), releaseState, attached);
+        if (native) release.ReleaseNative(parent, () => mode.Battle, () => releaseState.BridgeType); else release.Release(parent);
         Assert.Equal(15000, born); Assert.Equal(free - 3, pool.FreeCount); Assert.True(priestOwner.Handles(born)); Assert.Equal((ushort)0x8181, BinaryPrimitives.ReadUInt16LittleEndian(pool.Slot(born)[12..])); Assert.Equal(1, pool.Slot(born)[34]); Assert.Equal((ushort)0x8101, BinaryPrimitives.ReadUInt16LittleEndian(pool.Slot(contained)[12..])); Assert.Equal((1, 1, 1), (pops, carrierChecks, notices));
         var other = new RawSidPool(24000, false); Assert.Throws<ArgumentException>(() => RawPriestSpawn.MakePriestSpawnHooks(other, spawn, releases)); Assert.Throws<ArgumentException>(() => RawCarrierCheck.MakeCarrierCheckSpawnHooks(other, check, new PriestSpawnHooks())); Assert.Throws<ArgumentException>(() => RawCarrierCheck.MakeCarrierCheckPostPopHooks(other, check, new CarrierPostPopHooks()));
     }

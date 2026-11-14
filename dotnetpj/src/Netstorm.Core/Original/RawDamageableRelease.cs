@@ -1,3 +1,4 @@
+// 현재 종속 해방의 typed 사전 계약과 Native 현재 전역/물리 좌표 경계를 구별한다.
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -5,11 +6,17 @@ namespace Netstorm.Core.Original;
 /// </summary>
 public sealed class DamageableReleaseState
 {
-    /// <summary>전투 중인지(원본 00594fbc). 전투가 아니면 허용 genus 검사를 건너뛴다.</summary>
+    /// <summary>전투 중인지(원본 00594fbc). 전투에서는 허용 genus 검사를 건너뛴다.</summary>
     public bool Battle { get; set; }
 
     /// <summary>허용 genus 마스크(원본 00542640). 초기값은 0x40480002 다.</summary>
     public uint AllowedGenus { get; set; } = 0x40480002;
+
+    /// <summary>같은 Client의 현재00542640 마스크 주소를 빌린다.</summary>
+    public UIntBox? SharedAllowedGenus { get; set; }
+
+    /// <summary>가상 효과 뒤 후보의 판정 시점마다 현재 전체DWORD를 조회한다.</summary>
+    public uint ReadAllowedGenus() => SharedAllowedGenus?.Value ?? AllowedGenus;
 
     /// <summary>다리 타입 번호(원본 005411a0). WORD 를 쓴 뒤 표면 알림을 받을 대상이다.</summary>
     public uint BridgeType { get; set; } = 82;
@@ -34,6 +41,12 @@ public sealed class DamageableReleaseHooks
 
     /// <summary>실제 WORD 쓰기 뒤 다리 타입에만 부르는 표면 검사(원본 004ac220).</summary>
     public Action<int>? NotifySurface { get; set; }
+
+    /// <summary>함수 객체는 값 복사하고 캡처한 실제 월드의 같은 수명은 유지한다.</summary>
+    internal DamageableReleaseHooks Copy() => new()
+    {
+        SpawnPriest = SpawnPriest, Create = Create, SetOwner = SetOwner, Pop = Pop, NotifySurface = NotifySurface,
+    };
 }
 
 /// <summary>
@@ -41,8 +54,9 @@ public sealed class DamageableReleaseHooks
 /// 순서는 원본 그대로 "부모 상태 검사 → 중심 계산과 스냅 → 종속 순회 → 해방 가능 마스크 →
 /// 허용 genus → 사제 생성 또는 일반 자산 생성·WORD 복사·소유자 지정·Pop"다.
 /// 좌표 스냅은 0.99999, 공간 조회는 0.9999 편향을 쓰고 중간 float 반올림을 넣지 않는다.
-/// 기준 판본은 10.78 뿐이다.
+/// PATCH188/CD171 TYPE와 Native의 실제 물리 진입을 구별한다.
 /// 근거: cpppj/src/o/RawDamageableRelease.cpp (W03 삭제·수명 여섯째 조각, 2026-10-21).
+/// 현행 Native/전역 근거: docs/exe/cpp-damageable-lifetime-owner-20261109.md·cpp-damageable-current-roles-20261109.md.
 /// </summary>
 public sealed class RawDamageableRelease
 {
@@ -124,7 +138,7 @@ public sealed class RawDamageableRelease
         ArgumentNullException.ThrowIfNull(finderState);
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(hooks);
-        if (types.Count != OriginalConstructors.TypeCount || spots.Length != Cells)
+        if (types.Count != (pool.Edition == OriginalEdition.Patch1078 ? 188 : 171) || spots.Length != Cells)
         {
             throw new ArgumentException("Damageable 해방 자료 오류", nameof(types));
         }
@@ -138,7 +152,7 @@ public sealed class RawDamageableRelease
         _spots = spots;
         _finderState = finderState;
         _state = state;
-        _hooks = hooks;
+        _hooks = hooks.Copy();
     }
 
     /// <summary>이 몸체가 쓰는 슬롯 풀. 연결 어댑터가 같은 풀인지 확인한다.</summary>
@@ -171,10 +185,10 @@ public sealed class RawDamageableRelease
     /// <summary>발자국의 절반을 빼고 각 좌표를 float 에 저장해 중심을 만든다.</summary>
     /// <param name="parent">부모 슬롯 번호.</param>
     /// <returns>중심 x·y 좌표.</returns>
-    private float[] Center(int parent)
+    private float[] Center(int parent, bool native = false)
     {
         OriginalTypeRecord type = Type(_pool.Slot(parent)[TypeOffset]);
-        if (type.FootX < 1 || type.FootY < 1 || type.FootX > Side || type.FootY > Side)
+        if (!native && (type.FootX < 1 || type.FootY < 1 || type.FootX > Side || type.FootY > Side))
         {
             throw new ArgumentOutOfRangeException(nameof(parent), "Damageable 해방 발자국 범위 오류");
         }
@@ -190,7 +204,14 @@ public sealed class RawDamageableRelease
     /// <summary>고정 보정 좌표의 공간 바이트를 읽는다.</summary>
     /// <param name="point">스냅한 좌표.</param>
     /// <returns>해당 칸의 spot 바이트.</returns>
-    private byte Spot(float[] point) => _spots[Cell(point[1], SpotBias) * Side + Cell(point[0], SpotBias)];
+    private byte Spot(float[] point, bool native)
+    {
+        if (!native) return _spots[Cell(point[1], SpotBias) * Side + Cell(point[0], SpotBias)];
+        uint y = unchecked((uint)NativeCell(point[1], SpotBias)), x = unchecked((uint)NativeCell(point[0], SpotBias));
+        uint index = unchecked(y * Side + x);
+        if (index >= _spots.Length) throw new ArgumentOutOfRangeException(nameof(point), "Damageable Native 해방의 현재 flatBYTE 물리 부족");
+        return _spots[(int)index];
+    }
 
     /// <summary>
     /// 권한 해방 몸체를 실행한다. 상위에서 확인한 boss·extra·flags 는 다시 평가하지 않는다.
@@ -204,11 +225,26 @@ public sealed class RawDamageableRelease
         {
             throw new InvalidOperationException("Damageable 해방 부모 상태 오류");
         }
-        float[] point = Type(raw[TypeOffset]).FootX == 1 ? Position(parent) : Center(parent);
+        RunRelease(parent, false, () => _state.Battle, () => _state.BridgeType);
+    }
+
+    /// <summary>상위에서 정한 해방 진입을 그대로 실행하며 현재 battle/BridgeTYPE는 소비 시점에 조회한다.</summary>
+    /// <remarks>0044b626의 Native 경로다. 부모의 free/contained/타입 하한과 발자국 보드 범위를 다시 검사하지 않는다.</remarks>
+    public void ReleaseNative(int parent, Func<bool> battle, Func<uint> bridgeType)
+    {
+        ArgumentNullException.ThrowIfNull(battle); ArgumentNullException.ThrowIfNull(bridgeType);
+        RunRelease(parent, true, battle, bridgeType);
+    }
+
+    /// <summary>같은 현재 TYPE·좌표·후보·생성 효과를 typed/Native 물리 계약으로 실행한다.</summary>
+    private void RunRelease(int parent, bool native, Func<bool> battle, Func<uint> bridgeType)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(parent);
+        float[] point = Type(raw[TypeOffset]).FootX == 1 ? Position(parent) : Center(parent, native);
         // 스냅한 정수는 float 로 저장되며 이후 일반 자산의 위치로 고정된다.
         for (int i = 0; i < point.Length; i++)
         {
-            point[i] = Cell(point[i], SnapBias);
+            point[i] = native ? NativeCell(point[i], SnapBias) : Cell(point[i], SnapBias);
         }
         var finder = new RawContainedFinder(_pool, _finderState);
         // 반환 전 저장된 next 를 사용하므로 현재 후보의 연결 변경에도 원래 다음 후보로 간다.
@@ -219,7 +255,7 @@ public sealed class RawDamageableRelease
                 continue;
             }
             uint kind = Read(_pool.Slot(current), KindOffset, 2);
-            if (!_state.Battle && (Type(kind).Flags2 & _state.AllowedGenus) == 0)
+            if (!battle() && (Type(kind).Flags2 & _state.ReadAllowedGenus()) == 0)
             {
                 continue;
             }
@@ -228,7 +264,7 @@ public sealed class RawDamageableRelease
                 float[] position = Position(parent);
                 if ((Type(_pool.Slot(parent)[TypeOffset]).Flags2 & CenteredParent) != 0)
                 {
-                    position = Center(parent);
+                    position = Center(parent, native);
                     position[0] += 0.5f;
                     position[1] += 0.5f;
                 }
@@ -236,7 +272,7 @@ public sealed class RawDamageableRelease
             }
             else
             {
-                if ((Spot(point) & 0x10) != 0 || (Spot(point) & 6) == 0)
+                if ((Spot(point, native) & 0x10) != 0 || (Spot(point, native) & 6) == 0)
                 {
                     continue;
                 }
@@ -245,7 +281,7 @@ public sealed class RawDamageableRelease
                 Span<byte> target = _pool.AllocatedBytes(created);
                 target[WordOffset] = (byte)word;
                 target[WordOffset + 1] = (byte)(word >> 8);
-                if (target[TypeOffset] == _state.BridgeType)
+                if (target[TypeOffset] == bridgeType())
                 {
                     _hooks.NotifySurface!(created);
                 }
@@ -269,6 +305,15 @@ public sealed class RawDamageableRelease
         return (int)value;
     }
 
+    /// <summary>signed64 CRT 절삭의 하위DWORD를 signed로 해석하며 축별 보드 범위를 선검사하지 않는다.</summary>
+    private static int NativeCell(float coordinate, float bias)
+    {
+        double value = (double)coordinate + bias;
+        if (!double.IsFinite(value) || value < -9223372036854775808.0 || value >= 9223372036854775808.0)
+            throw new ArgumentOutOfRangeException(nameof(coordinate), "Damageable Native 해방의 실제 CRT 절삭 표현 범위");
+        return unchecked((int)(uint)(long)value);
+    }
+
     /// <summary>슬롯 안의 정렬되지 않은 값을 필요한 폭만큼 읽는다.</summary>
     /// <param name="bytes">슬롯 바이트.</param>
     /// <param name="offset">읽기 시작 위치.</param>
@@ -284,7 +329,7 @@ public sealed class RawDamageableRelease
         return value;
     }
     /// <summary>
-    /// 동일한 풀의 실제 종속 해방만 연결하고 다른 Damageable 효과는 유지한다.
+    /// 동일한 풀의 실제 종속 해방만 함수 사본에 연결하고 입력과 다른 Damageable 효과는 유지한다.
     /// </summary>
     /// <param name="pool">연결 대상 슬롯 풀.</param>
     /// <param name="release">실제 해방 몸체.</param>
@@ -300,7 +345,10 @@ public sealed class RawDamageableRelease
         {
             throw new ArgumentException("Damageable 해방의 슬롯 풀이 다릅니다", nameof(pool));
         }
-        hooks.ReleaseContained = sid => release.Release(sid);
-        return hooks;
+        return new DamageablePreDestroyHooks
+        {
+            Collapse = hooks.Collapse, Explosion = hooks.Explosion, Sound = hooks.Sound,
+            ReleaseContained = sid => release.Release(sid), ValidateBase = hooks.ValidateBase, Base = hooks.Base,
+        };
     }
 }
