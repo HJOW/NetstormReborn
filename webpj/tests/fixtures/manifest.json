@@ -22571,6 +22571,178 @@
         "cpppj/src/client/MinimapGeometry.cpp": "560df210e",
         "cpppj/src/client/MinimapGeometry.h": "560df210e"
       }
+    },
+    {
+      "id": "user-selection",
+      "path": "cpppj/tests/fixtures/user-selection-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E495",
+      "doc": "docs/webpj-user-selection-native-fixtures-20261115.md",
+      "text": true,
+      "producer": "cpppj UserSelectionTests(NativeThreeArgumentsAndCurrentEffects): 보호 원본 10.78 004d5c90 Select·4d5490 다중 정리·4d5440 기억·Carrier(4268c0)/Archer(41e660) 메뉴 입구의 독립 x86 관측 1,074행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/user-selection-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-user-selection.js",
+        "webpj/www/core/raw-user-highlight.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawUserSelection.cpp",
+        "cpppj/src/client/RawUserSelection.h",
+        "cpppj/src/client/RawUserHighlight.cpp",
+        "cpppj/src/client/RawUserHighlight.h"
+      ],
+      "scope": "세 인자 Select(정지/비활성/차단 관문·다중/단일 정리·덤프·마나/사정거리·제단 위임·선택 통지·기억 좌표·이동 강조·소리)와 ClearMultiple·Remember·Carrier/Archer 메뉴 입구의 반환·경계 사건 순서·현재 전역/물리 필드",
+      "sha256": "1bc0b81da3e8f62eff6b16887dad8adc27305b5a5fed1637029706639a0c93cd",
+      "bytes": 335817,
+      "lines": 1075,
+      "fixtureCommit": "e95ed13d7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawUserSelection.cpp": "99ff1a5f4",
+        "cpppj/src/client/RawUserSelection.h": "99ff1a5f4",
+        "cpppj/src/client/RawUserHighlight.cpp": "8c10b36a2",
+        "cpppj/src/client/RawUserHighlight.h": "8c10b36a2"
+      }
+    },
+    {
+      "id": "user-selection-clear",
+      "path": "cpppj/tests/fixtures/user-selection-clear-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E495",
+      "doc": "docs/webpj-user-selection-native-fixtures-20261115.md",
+      "text": true,
+      "producer": "cpppj UserSelectionTests(ClearNativeEnabledAndCurrentEffects): 보호 원본 10.78 004d5c60 Clear 의 독립 x86 관측 87행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/user-selection-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-user-selection.js",
+        "webpj/www/core/raw-user-highlight.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawUserSelection.cpp",
+        "cpppj/src/client/RawUserSelection.h"
+      ],
+      "scope": "Clear 의 enabled 관문·다중 정리·selected 0·강조 0 의 경계 순서와 현재 전역",
+      "sha256": "2b5fab6fa86b8205809031175742d13d7a24749f977e274a9d0ceff1391e7775",
+      "bytes": 14915,
+      "lines": 88,
+      "fixtureCommit": "3afc18833",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawUserSelection.cpp": "99ff1a5f4",
+        "cpppj/src/client/RawUserSelection.h": "99ff1a5f4"
+      }
+    },
+    {
+      "id": "escape-selection",
+      "path": "cpppj/tests/fixtures/escape-selection-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E495",
+      "doc": "docs/webpj-user-selection-native-fixtures-20261115.md",
+      "text": true,
+      "producer": "cpppj UserSelectionTests(EscapeNative154MatchesZeroSelection): 보호 원본 10.78 ESC 부분과 Select(0) 의 독립 x86 관측 154행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/user-selection-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-user-selection.js",
+        "webpj/www/core/raw-user-highlight.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawUserSelection.cpp",
+        "cpppj/src/client/RawUserSelection.h"
+      ],
+      "scope": "Select(0,0,0) 의 관문·다중/단일 선택 해제·강조·콜백 현재값",
+      "sha256": "4fc418163b78fa7f5e391910ec959b07f8891f2af6ec8c7cf789d340834922a5",
+      "bytes": 28148,
+      "lines": 155,
+      "fixtureCommit": "837187f2a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawUserSelection.cpp": "99ff1a5f4",
+        "cpppj/src/client/RawUserSelection.h": "99ff1a5f4"
+      }
+    },
+    {
+      "id": "user-pick",
+      "path": "cpppj/tests/fixtures/user-pick-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E495",
+      "doc": "docs/webpj-user-selection-native-fixtures-20261115.md",
+      "text": true,
+      "producer": "cpppj UserPickTests(Replays Native1092 Priorities Filters And Nearest Fallback): 보호 원본 10.78 004d5840 후보 순위·가상 hit 호출 순서·마지막 근접 교체의 독립 x86 관측 1,092행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/user-selection-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-user-pick.js",
+        "webpj/www/core/raw-squid-neighbors.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawUserPick.cpp",
+        "cpppj/src/client/RawUserPick.h",
+        "cpppj/src/o/RawSquidNeighbors.cpp",
+        "cpppj/src/o/RawSquidNeighbors.h"
+      ],
+      "scope": "소유자·이동·깊이·좌표 순위와 숨김/비선택/추상 필터·가상 hit 호출 순서·마지막 근접 이동 후보 교체의 반환과 전체 슬롯 불변성",
+      "sha256": "7dba986f39c8a964c8cca84b88cd8199fbf8f32000e275ef01a09f87df576e97",
+      "bytes": 291733,
+      "lines": 1093,
+      "fixtureCommit": "b5503bacc",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawUserPick.cpp": "b5503bacc",
+        "cpppj/src/client/RawUserPick.h": "b5503bacc",
+        "cpppj/src/o/RawSquidNeighbors.cpp": "99ff1a5f4",
+        "cpppj/src/o/RawSquidNeighbors.h": "5626fa85b"
+      }
+    },
+    {
+      "id": "multiple-selection",
+      "path": "cpppj/tests/fixtures/multiple-selection-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E495",
+      "doc": "docs/webpj-user-selection-native-fixtures-20261115.md",
+      "text": true,
+      "producer": "cpppj MultipleSelectionTests(IndependentNative): 보호 원본 10.78 004da6b0 토글·004d5500 다중 이동·기본 선택 비트·실제 목록 helper 의 독립 x86 관측 601행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/multiple-selection-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-user-selection.js",
+        "webpj/www/core/client-user-selection-globals.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawUserSelection.cpp",
+        "cpppj/src/client/RawUserSelection.h",
+        "cpppj/src/client/ClientUserSelectionGlobals.cpp",
+        "cpppj/src/client/ClientUserSelectionGlobals.h"
+      ],
+      "scope": "다중 선택 토글(기본 선택 비트·승격/제외)·다중 이동(현재 개수/배열 재조회·enabled 쓰기)·AppendMultiple/RemoveMultiple 고정 용량 30·전체 30칸 배열",
+      "sha256": "768e9363e653fc8a0f1f5d04ecff86c57035fc67953da3421733cb7a630306b1",
+      "bytes": 88561,
+      "lines": 602,
+      "fixtureCommit": "32fe196f3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawUserSelection.cpp": "99ff1a5f4",
+        "cpppj/src/client/RawUserSelection.h": "99ff1a5f4",
+        "cpppj/src/client/ClientUserSelectionGlobals.cpp": "32fe196f3",
+        "cpppj/src/client/ClientUserSelectionGlobals.h": "b006db453"
+      }
     }
   ]
 }
