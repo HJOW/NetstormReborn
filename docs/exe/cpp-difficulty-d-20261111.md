@@ -19,6 +19,7 @@
 - 계산: `o/AiDifficulty.{h,cpp}`(순수 함수, 설정 600BYTE의 복사본에만 배율 적용).
 - 연결: `RawAiCreate::Create`가 `AiCreateHooks::difficulty(owner)`를 조회해 **보통이 아니면 복사본으로 생성자(`00416860`)와 초기 갱신(`00414710`)에 같은 값을 넘긴다**. 입력 설정은 바꾸지 않는다.
 - 실제 Session: `createHooks.difficulty`가 **적 AI에만** 난이도를 준다. 데모(`demo!=0`), 로컬 플레이어 자신, `Player+54` 동맹 비트가 켜진 동맹 AI는 보통이다. 난이도 값 공급은 `CampaignAiServices::difficulty`(클라이언트가 `difficulty` 설정을 읽음)다.
+  - **2026-11-14 보정:** 미션 동맹 AI(`ai2AllyList="1"` 등)는 AI 생성자 안에서야 `Player+54`에 기록되므로, 생성 전에 판정하는 위 규칙으로는 **적으로 분류되어 옵션 난이도를 받았다**(GuardMyBack·EnemyTerritory·ToTheRescue). 이제 `AiCreateHooks::difficulty(owner,settings)`가 설정 동맹 목록(+23c)도 받아 `o::IsAiEnemyOfLocal`로 판정한다. 근거·검사: [테스트 자동 플레이 문서](cpp-campaign-test-play-20261114.md) 3절·6절.
 - **12차 연결점:** 난이도는 AI(owner) 단위 값으로 공급되므로 스커미시 화면의 AI별 난이도는 같은 `services.ai.difficulty(owner)`를 교체해 쓴다(옵션 난이도 대신 적용).
 - 한계: 난이도는 **AI 생성 시점**에 반영한다. 게임 중에 바꾸면 이미 만든 AI는 그대로이고 다음에 만드는 AI부터 적용된다. LAN 호스트 규칙·패킷 형식은 건드리지 않았고 MP 실행은 검증하지 않았다.
 

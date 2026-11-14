@@ -3914,3 +3914,10 @@ add_executable(netstorm_local_transport_tests FocusedTestMain.cpp LocalMissionTr
 target_link_libraries(netstorm_local_transport_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_local_transport_tests)
 target_compile_definitions(netstorm_local_transport_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 테스트 전용 캠페인 자동 플레이(--test-*: 아군 AI·아군/적 난이도·시작 SP)와 동맹 AI 난이도 판정을 실제 보호 미션 Start로 창 없이 확인한다(2026-11-14 추가).
+target_sources(netstorm_tests PRIVATE CampaignTestPlayTests.cpp)
+add_executable(netstorm_campaign_test_play_tests FocusedTestMain.cpp CampaignTestPlayTests.cpp AiDifficultyTests.cpp)
+target_link_libraries(netstorm_campaign_test_play_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_campaign_test_play_tests)
+target_compile_definitions(netstorm_campaign_test_play_tests PRIVATE ${_netstorm_menu_session_definitions})

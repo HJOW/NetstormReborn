@@ -30,7 +30,7 @@ std::uint32_t RawAiCreate::Create(std::uint32_t owner,std::span<const std::uint8
     std::vector<std::uint8_t> adjusted;
     if (auto cleaned=SanitizeAiForcedEnemy(settings,owner);!cleaned.empty()) { adjusted=std::move(cleaned);settings=adjusted; }
     // 11차: 보통이 아니면 설정 복사본에 난이도 배율을 적용해 생성자와 초기 갱신에 같은 값을 넘긴다(입력 설정은 바꾸지 않는다).
-    if (hooks_.difficulty) { const auto level=AiDifficultyFromValue(hooks_.difficulty(owner));if (level!=AiDifficulty::Normal) { adjusted=ApplyAiDifficulty(settings,level);settings=adjusted; } } // adjusted를 다시 쓰므로 위의 정리 결과를 이어받은 settings에서 새 복사본을 만든다.
+    if (hooks_.difficulty) { const auto level=AiDifficultyFromValue(hooks_.difficulty(owner,settings));if (level!=AiDifficulty::Normal) { adjusted=ApplyAiDifficulty(settings,level);settings=adjusted; } } // adjusted를 다시 쓰므로 위의 정리 결과를 이어받은 settings에서 새 복사본을 만든다.
     const auto brain=hooks_.construct(owner,settings,0xb08);if (brain==0) throw std::runtime_error("AI실제생성소유자가NULL을반환했습니다");players_.AttachBrain(owner,brain);hooks_.initialUpdate(brain,settings);return brain;
 }
 }

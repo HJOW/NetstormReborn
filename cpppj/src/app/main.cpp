@@ -29,6 +29,7 @@
 #include "client/UberGump.h"
 #include "client/SessionStateDump.h"
 #include "client/ClientTimeSource.h"
+#include "client/CampaignTestPlay.h" // 테스트 전용 캠페인 자동 플레이 명령줄 옵션이다(2026-11-14 추가).
 #include "client/GifImage.h"
 #include "o/BaseFile.h"
 #include "o/RawFileName.h"
@@ -619,6 +620,7 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
     std::filesystem::path uiScript, uiReport;
     netstorm::client::FixedClientTime fixedTime; // 검사 전용 고정 시각 설정이다. frameMilliseconds 0이면 기본 OS 시계를 쓴다(2026-11-09 추가).
     bool mcpMode = false; // 4차 새 옵션: stdio MCP 서버로 게임을 조작/관찰한다(원본에 없는 분석용 기능).
+    netstorm::client::CampaignTestPlayOptions testPlay; // 테스트 전용 캠페인 자동 플레이(--test-*)다. 무인자 일반 실행에서는 항상 비어 있다(2026-11-14 추가).
     // 나머지 인자: 원본 명령줄의 "window"에 해당하는 것과 검사용 옵션.
     for (std::size_t i = 1; i < arguments.size(); ++i) {
         const auto& argument = arguments[i];
@@ -644,7 +646,16 @@ int RunClient(std::vector<std::string> arguments,std::shared_ptr<netstorm::o::Ra
         else if (argument == "--ui-script") uiScript = value();
         else if (argument == "--ui-report") uiReport = value();
         else if (argument == "--test-bridge-patterns") options.testBridgePatterns=value(); // 테스트 전용 임시 조작이며 원본 분석 결과가 아니다.
+        // 테스트 전용 캠페인/스커미시 자동 플레이: 아군 AI(로컬 플레이어 AI)·아군/적 난이도·시작 SP를 명령줄로만 지정한다. --help에는 노출하지 않는다(2026-11-14 추가).
+        else if (netstorm::client::ParseCampaignTestPlayOption(argument, [&] { return value(); }, testPlay)) {}
         else throw std::invalid_argument("Unknown --run option: " + argument);
+    }
+    netstorm::client::FinalizeCampaignTestPlay(testPlay);
+    if (testPlay.Active()) { // 설정/진행 파일에는 저장하지 않으며 이 프로세스에서만 유효하다.
+        if (!view.empty()) throw std::invalid_argument("--test-* 옵션은 --view와 함께 쓸 수 없습니다");
+        netstorm::client::ConfigureCampaignTestPlay(testPlay);
+        const auto summary = "테스트 전용 캠페인 자동 플레이 활성: " + netstorm::client::DescribeCampaignTestPlay(testPlay);
+        netstorm::platform::ErrorLog::Note(summary); std::fprintf(stderr, "%s\n", summary.c_str()); // MCP stdout을 오염시키지 않도록 stderr에만 쓴다.
     }
     if (!view.empty() && !options.mission.empty()) throw std::invalid_argument("--view and --mission cannot be combined");
     // 자동 검사 스크립트가 소리를 내지 않도록 환경 변수로도 끈다(새 검사 기능). 비어 있거나 "0"이면 켜 둔다.

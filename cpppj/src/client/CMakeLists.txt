@@ -107,6 +107,10 @@ target_sources(netstorm PRIVATE
     RawCampaignProductionBindings.cpp RawCampaignProductionBindings.h
     # 실제 미션 Start의 같은 Script/Player/SP/기술/AI 설정을 연결한다.
     RawCampaignMissionStartBindings.cpp RawCampaignMissionStartBindings.h
+    # 테스트 전용 캠페인 자동 플레이(--test-* 명령줄 옵션: 아군 AI·아군/적 난이도·시작 SP)다(2026-11-14 추가).
+    CampaignTestPlay.cpp CampaignTestPlay.h
+    # 테스트 전용 관전 카메라 판단기(전투/희생 의식 위치로 화면 이동)다(2026-11-14 추가).
+    CampaignTestSpectator.cpp CampaignTestSpectator.h
     # Early1의 같은 실제 프레임/입력/장부와 안내 정지를 연결한다.
     RawCampaignTutorialOneBindings.cpp RawCampaignTutorialOneBindings.h
     CampaignClientServices.cpp CampaignClientServices.h

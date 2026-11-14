@@ -235,6 +235,7 @@
 #include "o/RawSpStoreNoticeBindings.h"
 #include "o/RawPlayerTechnology.h"
 #include "o/RawAiCreate.h"
+#include "o/AiAllianceSide.h" // 11차 난이도의 생성 직전 아군/적 판정이다(2026-11-14 추가).
 #include "o/RawPlayerColor.h"
 #include "o/RawAiCommandState.h" //772의직접writer도같은현재Player/생존brain을빌린다.
 #include "o/RawAiBrainInitialUpdate.h"
@@ -2816,10 +2817,12 @@ struct RawCampaignSession::Impl {
             if (sid>65535 || sid>=core.pool.Capacity()) throw std::out_of_range("실제 Session AI 신전 SID 범위 오류");world.Destroy(Sid{static_cast<std::uint16_t>(sid)},flags);
         };
         // 11차 난이도: 데모와 로컬 플레이어/동맹의 AI는 적이 아니므로 보통으로 두고, 나머지 AI에만 클라이언트가 공급한 난이도를 쓴다.
-        createHooks.difficulty=[this](std::uint32_t owner)->std::uint32_t {
+        // 동맹은 로컬 Player+54 마스크뿐 아니라 이 AI 설정의 동맹 목록(+23c)도 본다. 생성자가 양방향 동맹을 기록하기 전에 판정하기 때문이다.
+        // (2026-11-14 수정: ai2AllyList="1" 같은 미션 동맹 AI가 적으로 분류되어 옵션 난이도를 받던 문제를 바로잡음)
+        createHooks.difficulty=[this](std::uint32_t owner,std::span<const std::uint8_t> settings)->std::uint32_t {
             if (!services.ai.difficulty || owner>=9 || services.missionOutcome.demo()!=0) return 0;
-            const auto local=playerState.battleOwner;
-            const bool enemy=!(owner==local || (local<9 && (Read(players,local*0xb4+0x54)&(1U<<owner)))); // Player+54는 소유자별 동맹 비트 마스크다.
+            const auto local=playerState.battleOwner;if (local>=9) return services.ai.difficulty(owner,owner!=local); // 범위 밖 로컬은 동맹표를 읽지 않고 기존 판정만 쓴다.
+            const bool enemy=o::IsAiEnemyOfLocal(owner,local,Read(players,local*0xb4+0x54),settings); // Player+54는 소유자별 동맹 비트 마스크다.
             return services.ai.difficulty(owner,enemy); // 12차: 스커미시는 동맹 AI도 자기 난이도를 쓰므로 판정은 서비스에 맡긴다.
         };
         createHooks.construct=[this](std::uint32_t owner,std::span<const std::uint8_t> settings,std::size_t bytes) { return aiConstructor->Construct(owner,settings,bytes); };

@@ -100,6 +100,9 @@
 #include "client/CampaignObjectMenuClient.h"
 #include "client/RawObjectMenuOpen.h" //같은 실제 가상ac 반환값으로만 우클릭 열기음향을 판정한다.
 #include "client/RawCampaignMissionStartBindings.h"
+#include "client/CampaignTestPlay.h" // 테스트 전용 자동 플레이 설정이다(2026-11-14 추가).
+#include "client/CampaignTestSpectator.h" // 테스트 전용 관전 카메라 판단기다(2026-11-14 추가).
+#include <unordered_set>
 #include "client/RawCampaignTutorialOneBindings.h"
 #include "client/MissionGuideInput.h"
 #include "client/RawBattleLeave.h"
@@ -1039,6 +1042,25 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
         [this] { RefreshWindowTitle(); },[this](std::string_view key) { Tell(std::string(key)); },
         [this](std::int32_t kind,std::int32_t player,std::int32_t parameter) { RemoveNativePacketMessage(kind,player,parameter); },[this](auto packet) { ReceiveChatMessage(packet); }}); // 현재 클라이언트의 설정·음향·입력·UI다.
     services.ai.skirmishWorld=[this]()->const SkirmishWorldPlan* { return skirmishWorld_.get(); }; // 12차: 세션이 미션 시작 때 읽는 스커미시 월드 계획이다(일반 미션은 null).
+    // 테스트 전용 자동 플레이(명령줄 --test-*)는 캠페인/일반 미션과 스커미시에 적용한다. 편집 Test Battle(mode64)에는 적용하지 않는다.
+    // 스커미시에서는 지정한 아군/적 난이도가 스커미시 화면의 AI별 난이도보다 우선한다(지정하지 않은 쪽은 화면 값).
+    // (2026-11-14 추가, 같은 날 사용자 요청으로 스커미시까지 확장)
+    const auto& testPlay=ConfiguredCampaignTestPlay();const bool testPlayMission=testPlay.Active() && !missionRuntime_->mode64 && nativePlayers; // 10.78 판본만 대상이다.
+    if (testPlayMission) services.ai.difficulty=WrapCampaignTestPlayDifficulty(testPlay,std::move(services.ai.difficulty)); // 아군/적 AI 난이도만 바꾸며 나머지 서비스는 그대로다.
+    // 테스트 전용 관전 카메라: 미션마다 새 판단기를 두고, 희생 의식(사슬·몸부림) 위치 소리를 재생 요청 그대로 통과시키며 위치만 기록한다(2026-11-14 추가).
+    SetCurrentTestSpectator(nullptr,nullptr);std::shared_ptr<CampaignTestSpectator> testSpectator; // World 생성 뒤 그 World에 묶어 지정한다.
+    if (testPlayMission && testPlay.followBattle && services.soundNames && services.sound.playOnceAt) {
+        TestSpectatorSettings spectatorSettings; // 붕괴·소모로 HP가 줄어 전투와 무관한 지형/다리 TYPE은 표본에서 뺀다.
+        for (const auto* name:{"bridge","bridgeConnector","island","islandStalag","noIsland"}) if (const auto type=client_.Assets().TypeTable().Find(name);type>0) spectatorSettings.ignoredTypes.push_back(static_cast<std::uint32_t>(type));
+        auto spectator=std::make_shared<CampaignTestSpectator>(std::move(spectatorSettings));
+        std::unordered_set<SoundHandle> ritualSounds; // 제단 의식 중에만 제단 위치에서 재생되는 원문 소리다(RunAltarRegular 사건21).
+        for (const auto* name:{"chainRattle23.wav","chainRattle24.wav","chainRattle25.wav","chainRattle26.wav","chainRattle27.wav","priestStruggleFade01.wav","priestStruggleFade02.wav","priestStruggleFade03.wav"}) ritualSounds.insert(services.soundNames->Lookup(name));
+        services.sound.playOnceAt=[this,spectator,ritualSounds=std::move(ritualSounds),play=std::move(services.sound.playOnceAt)](float x,float y,SoundHandle sound,std::uint32_t flags,std::uint32_t extra) {
+            if (ritualSounds.contains(sound)) spectator->NoteRitual(x,y,client_.Time().game); // 관찰만 하며 재생 인자/순서는 바꾸지 않는다.
+            return play(x,y,sound,flags,extra);
+        };
+        testSpectator=std::move(spectator);
+    }
     services.adoptInitializedPlayers=nativePlayers; //앞선 실제 cleanup의 같은9기록을 대여하며 생성자에서 두 번째로 재할당하지 않는다. 일반 World/로그인 어댑터의 나머지 기존 경계는 유지한다.
     if (nativePlayers) services.localLogin->startingProgress=[this] { rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Starting Mission...")),[this] { return FontBytes(client_.Translate("Cancel")); });rebuild_=true; }; // 실제 인자20/즉시8 예약 뒤 만들며 중첩 Compose/Present/프레임 대기를 추가하지 않는다.
     if (nativePlayers) services.localLogin->creatingIslands=[this] { rawButtons_->Menus()->ShowMissionLoading(LoadingHtmlContext({85,0,client_.GetScreen().Width(),client_.GetScreen().Height()}),FontBytes(client_.Translate("Creating Islands.")),[this] { return FontBytes(client_.Translate("Cancel")); });rebuild_=true; }; // 원문cf570의 같은 안내 serial 재사용/본문 갱신을 사용한다.
@@ -1081,13 +1103,16 @@ void UberGump::LoadMissionWorldBody(std::optional<std::string> requestedFort) {
         [this]() { return client_.GetRenderer().FullRedrawPending(); },
         [this](o::SquidDisplayRect rect,std::uint32_t flags) { client_.GetRenderer().Invalidate({rect.left,rect.top,rect.right,rect.bottom},flags); }};
     world_=std::move(world); // 호스트 어댑터는 원문 프로세스 슬롯을 차지하지 않는다.
+    if (testSpectator) SetCurrentTestSpectator(std::move(testSpectator),world_.get()); // 테스트 전용 관전 카메라는 이 미션 World에서만 동작한다(2026-11-14 추가).
     if (nativePlayers) world_->Session().BindConnectionTransport(MakeClientCampaignTransport(client_,CompositeTransportRole::InternalMission,world_),world_); // 실제 World 전체를 콜백 동안 유지하며 생성/바인딩으로 접속을 앞당기지 않는다.
     worldMissionToken_=missionRuntime_->saveToken; // 준비한 World를 현재 미션 수명에만 귀속한다.
     if (missionRuntime_->mode64) { if (!editor_) throw std::logic_error("편집 Test Battle의 실제 작업 파일 owner 없음");world_->Session().BindFortFileSave(client_.ReadOnlyForts(),editor_->files); } //테스트 복귀의 선택된 Notify도 실제 작업본 경로에만 저장한다.
+    auto startEffects=MakeCampaignMissionStartEffects(client_,*world_,[this] {
+        if (commandGump_!=0) static_cast<void>(rawButtons_->BubbleGump(commandGump_,0x02000088U,0,0)); //0042e440은현재Chat의부모에실제숨김명령을보내며0이면생략한다.
+    });
+    if (testPlayMission) startEffects.testPlay=testPlay; // 테스트 전용: 로컬 AI·시작 SP 변경은 같은 적격 판정의 미션에만 전달한다(2026-11-14 추가).
     missionRuntime_->start=std::make_unique<RawCampaignMissionStartBindings>(world_->Session(),*mission_,missionRuntime_->gate,missionRuntime_->state,
-        world_->Session().MissionStartSettings(),world_->Session().MissionAiSettings(),MakeCampaignMissionStartEffects(client_,*world_,[this] {
-            if (commandGump_!=0) static_cast<void>(rawButtons_->BubbleGump(commandGump_,0x02000088U,0,0)); //0042e440은현재Chat의부모에실제숨김명령을보내며0이면생략한다.
-        }));
+        world_->Session().MissionStartSettings(),world_->Session().MissionAiSettings(),std::move(startEffects));
     if (nativePlayers) { world_->PrepareLocalConnectionForState();loading.continued=true;return; } // 같은 부모로 복귀한 뒤7 확정/즉시8을 실행하고 다음9는 자연 Tick에 남긴다.
     world_->BeginLocalConnection();loading.continued=true;FinishMissionWorldLoad(); //10.72의 기존 동기 어댑터와 새10.78 상태 경로를 구별한다.
 }
@@ -1882,8 +1907,34 @@ void UberGump::MissionFrame() {
 }
 // 호스트 어댑터가 자기 자신을 소유한 Kernel을 중첩 호출하지 않도록 준비를 분리한다.
 void UberGump::PrepareKernelFrame() { if (world_) world_->PrepareKernelFrame(); }
+namespace { // 테스트 전용 관전 카메라의 표본 수집이다(2026-11-14 추가).
+// 현재 월드의 소유 객체(중립·제외 TYPE 빼고)를 HP와 함께 모아 판단기에 넘기고, 새 목표가 나오면 미니맵 클릭과 같은 카메라 목표 경로로 옮긴다.
+// 게임 상태는 읽기만 한다. 10.78 슬롯의 HP는 +26 signed DWORD다.
+void FollowTestBattle(GameWorld& world,CampaignTestSpectator& spectator,double now) {
+    if (world.Connecting() || world.PreparingFort() || !spectator.Due(now)) return;
+    const auto core=world.Session().Core();const auto& ignored=spectator.Settings().ignoredTypes;
+    std::vector<TestSpectatorSample> samples; // 이번 표본이다.
+    // 현재 살아 있는 월드 객체를 순회한다.
+    for (const auto& snapshot:world.Session().World().Objects()) {
+        const auto& object=snapshot.object;
+        if (object.owner<1 || object.owner>8 || std::find(ignored.begin(),ignored.end(),object.type)!=ignored.end()) continue;
+        const auto raw=core.pool.Slot(snapshot.sid);if (raw.size()<30) continue;
+        std::int32_t hitPoints{};std::memcpy(&hitPoints,raw.data()+26,sizeof hitPoints); // 비정렬 DWORD를 그대로 읽는다.
+        samples.push_back({snapshot.sid.value,object.type,object.owner,object.x,object.y,hitPoints});
+    }
+    if (const auto focus=spectator.Observe(samples,now)) {
+        world.CenterCamera(focus->x,focus->y); // 목표만 저장하며 실제 적용은 화면 출력 뒤 ApplyCameraFrame이 한다.
+        std::clog<<"테스트 관전 카메라: "<<(focus->ritual ? "희생 의식 제단" : "전투")<<" ("<<focus->x<<", "<<focus->y<<") 피해합 "<<focus->weight<<" @ "<<now<<"s\n";
+    }
+}
+}
 // 현재 단일 Kernel의 이동/생성/삭제가 끝난 같은 프레임에서만 표시 사본을 갱신한다.
-void UberGump::FinishKernelFrame() { if (world_) world_->FinishKernelFrame(); }
+// 테스트 전용 관전 카메라가 켜져 있으면 같은 시점에 전투/의식 위치를 판단한다(2026-11-14 추가, 일반 실행에서는 판단기가 없어 아무 일도 하지 않는다).
+void UberGump::FinishKernelFrame() {
+    if (!world_) return;
+    world_->FinishKernelFrame();
+    if (auto* spectator=CurrentTestSpectator(world_.get())) FollowTestBattle(*world_,*spectator,client_.Time().game);
+}
 // 실제 World가 없는 메뉴도 원문 boss/옵션을 유지하고 현재 전역 조회 뒤 자연 반환한다.
 //44ac30은메뉴에서도네SID진단을먼저실행하며실제일반battle/서버객체/State14뒤에만Session사제를요구한다.
 void UberGump::PollBattleCompletion() {

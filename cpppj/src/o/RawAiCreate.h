@@ -14,8 +14,9 @@ struct AiCreateHooks {
     std::function<std::uint32_t(std::uint32_t,std::span<const std::uint8_t>,std::size_t)> construct; // 실제 new(0xb08)→00416860이며 반환0은 안전한 호출 계약에서 거부한다.
     std::function<void(std::uint32_t,std::span<const std::uint8_t>)> initialUpdate; // 00414710의 실제 기술/분류 초기화 전체다.
     // difficulty: 11차 난이도. owner의 AI 난이도(설정 파일 값 1쉬움/2보통/3어려움)를 돌려준다. 선택 사항이며 없거나 보통이면 설정을 그대로 쓴다.
-    // 적이 아닌 AI(동맹/데모)는 호출자가 보통(2 또는 0)으로 돌려준다.
-    std::function<std::uint32_t(std::uint32_t)> difficulty;
+    // 적이 아닌 AI(동맹/데모)는 호출자가 보통(2 또는 0)으로 돌려준다. 둘째 인자는 강제 적 정리 뒤의 600BYTE 설정이며,
+    // 생성자보다 먼저 판정하므로 호출자는 아직 동맹표에 기록되지 않은 설정 동맹 목록(+23c)을 여기서 읽는다(2026-11-14 설정 인자 추가).
+    std::function<std::uint32_t(std::uint32_t,std::span<const std::uint8_t>)> difficulty;
 };
 // 이 wrapper는 brain을 합성하지 않는다. 생성자와 initialUpdate가 없으면 flags20을 켜지 않는다.
 class RawAiCreate {

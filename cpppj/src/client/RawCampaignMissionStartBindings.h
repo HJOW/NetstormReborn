@@ -2,6 +2,8 @@
 #pragma once
 #include "client/RawCampaignSession.h"
 #include "client/Mission.h"
+#include "client/CampaignTestPlay.h" // 테스트 전용 자동 플레이 설정이다(2026-11-14 추가).
+#include <optional>
 #include "o/RawMissionStart.h"
 #include "o/RawMissionAiSettings.h"
 #include "o/RawPriestLookup.h"
@@ -17,6 +19,10 @@ struct CampaignMissionStartEffects {
     std::function<void()> prepareWorld; // 12차 스커미시: 미션 Start가 사제/AI를 찾기 전에 월드를 먼저 준비한다(MP 규칙으로 섬 생성). 비어 있으면 일반 미션이라 아무것도 하지 않는다.
     std::function<void()> resetCamera; // 같은 실제 Session의 현재 카메라 재설정 소비자다.
     std::function<void(std::string_view)> unknownAbilityAssertion,unknownAbilityLog; // 실제 원본의 미등록 능력 진단 뒤 계속하는 외부 경계다.
+    // 테스트 전용 자동 플레이 설정이다. 비어 있으면(일반 사용자 실행·편집 Test Battle) 원본 Start와 한 비트도 다르지 않다.
+    // 값이 있으면 로컬 시작 SP·적 AI 시작 SP를 바꾸고, allyAi가 있으면 Start 뒤 로컬 플레이어에도 원본 데모 분기와 같은 AI를 붙인다.
+    // 캠페인과 스커미시가 같은 Start를 쓰므로 두 경우 모두 적용된다(2026-11-14 추가, 같은 날 스커미시 확장).
+    std::optional<CampaignTestPlayOptions> testPlay;
 };
 // 같은 Session/Script/장기 상태는 이 연결보다 오래 살아야 한다. 생성만으로 Start/AI를 실행하지 않는다.
 class RawCampaignMissionStartBindings {
@@ -34,11 +40,18 @@ public:
     const o::MissionFrameGateState& Gate() const;
     // Start의004921f0과 실제 AI 생성자가 공유하는 live 사제 조회다. 포획 참여 fallback과 구분한다.
     std::uint32_t FindLivePriest(std::uint32_t owner) const;
+    // 테스트 전용: 현재 미션에 적용할 자동 플레이 설정이다. 설정이 없거나 데모(이미 로컬 AI가 붙음)·편집 모드면 nullptr이다(2026-11-14 추가).
+    const CampaignTestPlayOptions* TestPlay() const;
+    // 테스트 전용: 살아 있는 사제가 있고 아직 AI가 없는 로컬 플레이어에 원문 MakeAi 규칙의 기본 설정으로 AI를 붙인다.
+    // 반환은 새 AI 본체 토큰이며 조건이 맞지 않으면 0이다. Start가 allyAi 설정일 때 자동으로 부른다(2026-11-14 추가).
+    std::uint32_t CreateLocalTestAi() const;
 private:
     // 생성자에서 실제 Session과 Script의 함수만 조립하며 게임 결과를 외부 bool로 받지 않는다.
     o::MissionStartHooks Hooks();
     // 현재 MissionScript를 직접 조회하는 기본값/공통/owner 설정 처리기를 조립한다.
     o::MissionAiSettingsHooks AiHooks();
+    // 테스트 전용 처리가 읽는 현재 Player 기록(9×180BYTE)의 DWORD다(2026-11-14 추가).
+    std::uint32_t ReadPlayerDword(std::uint32_t owner,std::size_t offset) const;
     RawCampaignSession& session_; // SP/기술/AI/현재 Player9의 유일한 실제 수명 소유자다.
     MissionScript& script_; // 현재 mission Config와 Set/SectionNames가 공유하는 객체다.
     o::MissionFrameGateState& gate_; // 실제 프레임/Guide가 사용하는 같은 started/start/demo/tellAt 필드다.
