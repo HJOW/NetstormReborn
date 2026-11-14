@@ -164,7 +164,7 @@ cpppj/src/client/HudDividerInput.cpp	port			todo	[client-default]
 cpppj/src/client/HudDock.cpp	port			todo	[client-default]
 cpppj/src/client/HudNsInfo.cpp	port			todo	[client-default]
 cpppj/src/client/HudNsInfoCreate.cpp	port			todo	[client-default]
-cpppj/src/client/ImageGump.cpp	port			todo	[client-default]
+cpppj/src/client/ImageGump.cpp	port	www/ui/image-gump.js	1f00a25a	port	[client-default] WB04-E441 ImageGump(construct 공통 기본 생성+종류 3·setFrame 헤더 폭/높이 float32 기본 크기+배율 표시 크기·기준점=(헤더−TYPE) float32·draw 단위 배율 비트 검사/모드 4 그림자 색표(오프셋·단위 y-1)/모드 1·2 선택·비활성 색표/owner 색표(owner>0, 단위+모드 8 이면 생략)/ftol 기준점·16.16 배율·hit 요청 ftol 검사점·기준점·attach 위임)와 bindImageGumpAssets(TYPE 70부터→SHP 블록·실제 Squid 헤더·프레임 수=클러스터×(0x440000 이면 2))·ImageGumpPixelTarget(색표 공급자 복사·일반/배율 VFX·특수 프레임 생략·200×200 적중 버퍼 클램프/보정) 이식. 전용 PE fixture 없음(소스 계약·손 계산·실제 TypeTable/SHP/GumpPixelTarget); 기준선 뒤 변경 없음; 남음: 생산 아이콘 창 연결
 cpppj/src/client/IndexedBitmapFile.cpp	exclude-host			-	[host-capture]
 cpppj/src/client/InputEvent.cpp	port	www/core/input-queue.js	1f00a25a	port	[client-default] WB04-C3(40칸 입력 큐)
 cpppj/src/client/IntroMenu.cpp	port	www/core/intro-menu.js	1f00a25a	port	[client-default] WB04-E33: 00435de0 인트로 감지·PlayIntro State39 예약. fixture intro-menu 84행 전부. BaseFile 조회 정책/Client 소유자는 해당 단위에서
