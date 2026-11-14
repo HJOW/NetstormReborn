@@ -20134,10 +20134,107 @@
       "bytes": 185805,
       "lines": 82,
       "fixtureCommit": "968abf89a",
-      "webCommit": "worktree",
+      "webCommit": "d295fb630",
       "cpppjBasis": {
         "cpppj/src/client/RawTraceLog.cpp": "968abf89a",
         "cpppj/src/client/RawTraceLog.h": "968abf89a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E452",
+      "consumers": [
+        "webpj/tests/message-gump.test.mjs"
+      ],
+      "doc": "docs/webpj-message-gump-20261114.md",
+      "id": "message-gump",
+      "path": "cpppj/tests/fixtures/message-gump-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: MessageGump 실제 생성/원문 CRT/명시 이름·번역·시계·측정",
+      "modules": [
+        "webpj/www/ui/message-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/MessageGump.cpp",
+        "cpppj/src/client/MessageGump.h"
+      ],
+      "scope": "324입력 전체192BYTE·효과 순서; 시간은 실제 GameTimeDisplay와 stamp 대조, CD와 후속 일반 안내의 직접 관측은 제외",
+      "text": true,
+      "sha256": "e9de1458a1145934a10fccc90080c9238e8c141c326c8316b39e51fc574aab46",
+      "bytes": 162619,
+      "lines": 325,
+      "fixtureCommit": "5adcf532b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MessageGump.cpp": "86b37fff4",
+        "cpppj/src/client/MessageGump.h": "86b37fff4"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E452",
+      "consumers": [
+        "webpj/tests/message-gump.test.mjs"
+      ],
+      "doc": "docs/webpj-message-gump-20261114.md",
+      "id": "game-time-message",
+      "path": "cpppj/tests/fixtures/game-time-message-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: MessageGump 실제 생성/원문 CRT/명시 이름·번역·시계·측정",
+      "modules": [
+        "webpj/www/ui/message-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/MessageGump.cpp",
+        "cpppj/src/client/MessageGump.h",
+        "cpppj/src/client/GameTimeDisplay.cpp",
+        "cpppj/src/client/GameTimeDisplay.h"
+      ],
+      "scope": "90입력 전체192BYTE·효과 순서; 시간은 실제 GameTimeDisplay와 stamp 대조, CD와 후속 일반 안내의 직접 관측은 제외",
+      "text": true,
+      "sha256": "ebe97152c5a785b06837f1ab53b0938a690a51d4eb58f9d04b804058d6bbe318",
+      "bytes": 54746,
+      "lines": 90,
+      "fixtureCommit": "8d51d63d6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MessageGump.cpp": "86b37fff4",
+        "cpppj/src/client/MessageGump.h": "86b37fff4",
+        "cpppj/src/client/GameTimeDisplay.cpp": "8d51d63d6",
+        "cpppj/src/client/GameTimeDisplay.h": "8d51d63d6"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E452",
+      "consumers": [
+        "webpj/tests/message-gump.test.mjs"
+      ],
+      "doc": "docs/webpj-message-gump-20261114.md",
+      "id": "warning-message",
+      "path": "cpppj/tests/fixtures/warning-message-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: MessageGump 실제 생성/원문 CRT/명시 이름·번역·시계·측정",
+      "modules": [
+        "webpj/www/ui/message-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/MessageGump.cpp",
+        "cpppj/src/client/MessageGump.h"
+      ],
+      "scope": "50입력 전체192BYTE·효과 순서; 시간은 실제 GameTimeDisplay와 stamp 대조, CD와 후속 일반 안내의 직접 관측은 제외",
+      "text": true,
+      "sha256": "13999702dff9be206337159ee35603e3a910f31b9291544665cc9ddf9326c543",
+      "bytes": 24986,
+      "lines": 50,
+      "fixtureCommit": "6e94dd2fa",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MessageGump.cpp": "86b37fff4",
+        "cpppj/src/client/MessageGump.h": "86b37fff4"
       }
     }
   ]
