@@ -20616,7 +20616,7 @@
       "bytes": 6317,
       "lines": 35,
       "fixtureCommit": "b817a28a0",
-      "webCommit": "worktree",
+      "webCommit": "02d58a687",
       "cpppjBasis": {
         "cpppj/src/client/RawBackgroundGifControls.cpp": "750845400",
         "cpppj/src/client/RawBackgroundGifControls.h": "b817a28a0"
@@ -20650,10 +20650,81 @@
       "bytes": 793,
       "lines": 5,
       "fixtureCommit": "b817a28a0",
-      "webCommit": "worktree",
+      "webCommit": "02d58a687",
       "cpppjBasis": {
         "cpppj/src/client/RawBackgroundGifControls.cpp": "750845400",
         "cpppj/src/client/RawBackgroundGifControls.h": "b817a28a0"
+      }
+    },
+    {
+      "id": "camera-commit",
+      "path": "cpppj/tests/fixtures/camera-commit-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E463",
+      "consumers": [
+        "webpj/tests/raw-camera-commit.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-camera-commit.js",
+        "webpj/www/render/camera-view.js",
+        "webpj/www/core/client-camera-globals.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawCameraCommit.cpp",
+        "cpppj/src/client/RawCameraCommit.h"
+      ],
+      "doc": "docs/webpj-raw-camera-commit-20261115.md",
+      "text": true,
+      "producer": "cpppj CameraCommitTests: 보호 원본 10.78 497960 의 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "106행의 두 64BYTE(Renderer/snapshot)·목표/한계/전체 출력 요청·전체 dirty 5DWORD 표·viewport/화면/마우스/worldRedraw 전역·외부 호출 순서(L/U/R/S/P/D/B/M/A)",
+      "sha256": "1f9ef98a49949eea0a3d2ad13ab8e1d49406c9da3dbe5e9c8b30aeef3c051756",
+      "bytes": 71319,
+      "lines": 107,
+      "fixtureCommit": "79bc9a067",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCameraCommit.cpp": "79bc9a067",
+        "cpppj/src/client/RawCameraCommit.h": "fcec59c0e"
+      }
+    },
+    {
+      "id": "camera-immediate",
+      "path": "cpppj/tests/fixtures/camera-immediate-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E463",
+      "consumers": [
+        "webpj/tests/raw-camera-commit.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-camera-commit.js",
+        "webpj/www/render/camera-view.js",
+        "webpj/www/core/client-camera-globals.js",
+        "webpj/www/render/renderer.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawCameraCommit.cpp",
+        "cpppj/src/client/RawCameraCommit.h",
+        "cpppj/src/client/ClientCameraGlobals.cpp",
+        "cpppj/src/client/ClientCameraGlobals.h"
+      ],
+      "doc": "docs/webpj-raw-camera-commit-20261115.md",
+      "text": true,
+      "producer": "cpppj CameraImmediateTests: 보호 원본 10.78 433aa0 부모/목표 쓰기와 497960 을 결합한 제한 x86 관측(기존 fixture, 재실행 없음)",
+      "scope": "168행의 중심 float 비트/즉시 부모의 worldRedraw·revision 쓰기·목표 원점 입력 항목과 그 뒤 497960 의 전체 현재 상태·효과·순서",
+      "sha256": "ec4fcc64884fb117046efbc27c0e6f58e045e787664c9c7038a032e02e97c6ca",
+      "bytes": 117240,
+      "lines": 169,
+      "fixtureCommit": "66583eb4f",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCameraCommit.cpp": "79bc9a067",
+        "cpppj/src/client/RawCameraCommit.h": "fcec59c0e",
+        "cpppj/src/client/ClientCameraGlobals.cpp": "66583eb4f",
+        "cpppj/src/client/ClientCameraGlobals.h": "aae2f0ab2"
       }
     }
   ]
