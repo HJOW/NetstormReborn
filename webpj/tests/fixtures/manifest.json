@@ -22187,10 +22187,41 @@
       "bytes": 1569054,
       "lines": 190,
       "fixtureCommit": "cf3babe1a",
-      "webCommit": "worktree",
+      "webCommit": "0032e3bb6",
       "cpppjBasis": {
         "cpppj/src/client/ChatNameCompletion.cpp": "cf3babe1a",
         "cpppj/src/client/ChatNameCompletion.h": "cf3babe1a"
+      }
+    },
+    {
+      "id": "chat-window",
+      "path": "cpppj/tests/fixtures/chat-window-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E485",
+      "producer": "cpppj ChatWindowTests: 보호 원본 10.78 채팅 창(0x13c 바이트 root)의 생성/Create/정규화/사건 처리/도우미 메뉴/소멸에 대한 독립 x86 관측 180행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-window-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/chat-window.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ChatWindow.cpp",
+        "cpppj/src/client/ChatWindow.h"
+      ],
+      "doc": "docs/webpj-chat-window-native-fixtures-20261115.md",
+      "scope": "채팅 창 root 16필드·중첩 Console 48필드·로그 4필드·입력 접두·입력 본문·자동완성 목록 세 개·호출 순서·반환·스택 정리량(construct 12·handle 16·그 밖 4)",
+      "text": true,
+      "sha256": "e7faa97fbd0bf4c4d8b9d5a48bb6c64e3930ed3a0365948f850ecf65623ee5e5",
+      "bytes": 572205,
+      "lines": 181,
+      "fixtureCommit": "e5a68d592",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ChatWindow.cpp": "09fd17306",
+        "cpppj/src/client/ChatWindow.h": "09fd17306"
       }
     }
   ]

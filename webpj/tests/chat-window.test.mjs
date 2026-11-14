@@ -1,6 +1,6 @@
 // ChatWindow(생성·명령 등록·접두 편집·사건 처리·로그 추가·도우미 메뉴)를 기준선 소스 계약과 손 계산 값으로 검증한다.
 // 실제 TextEntryGump/TextEntryBuffer/TextEntryStorage(E439 지원 틀)와 실제 GumpCreate 위에서 동작하며 나머지 큰 하위(배경/스크롤/메뉴/Chatmanager)는 기록 훅이다.
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 실제 게임·브라우저 실행이 아니다. (2026-11-14 WB04-E447)
+// 이 파일의 수치는 기준선 소스 계약과 손 계산이다. 원본 직접 관측 180행은 tests/chat-window-native-fixtures.test.mjs(2026-11-15 WB04-E485)가 대조한다. 실제 게임·브라우저 실행이 아니다. (2026-11-14 WB04-E447)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { GumpCreate, GumpCreateNode, GumpCreateState } from '../www/ui/gump-create.js';

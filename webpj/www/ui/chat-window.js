@@ -1,6 +1,6 @@
 // 원본 ChatWindow(0x13c 바이트 root)의 네 실제 자식(helper·배경·입력줄 Console·로그 ScrollingText) 생성, 명령 등록(clear/quit), 입력줄 접두(수신자 목록) 편집, 사건 처리, 로그 추가, 도우미 메뉴를 공통 Gump/텍스트 계층에 연결한다(cpppj client/ChatWindow.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // root 자체는 그리지 않으며 재부착(0042e6e0)은 이미 이식한 HudChatGeometry 본체에 맡긴다. 실제 자식 저장소/문자 버퍼/편집 본체/번역/메뉴/Chatmanager 연결은 호스트 훅이고, 도달하지 않은 효과는 요구하지 않는다(미연결은 Error).
-// 사건/모드/색/종류/포인터 전역은 사용하는 지점마다 `hooks.global(주소)` 로 현재 값을 다시 읽는다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 사건/모드/색/종류/포인터 전역은 사용하는 지점마다 `hooks.global(주소)` 로 현재 값을 다시 읽는다. 원본 10.78 독립 관측 180행은 tests/chat-window-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E485 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: const window = new ChatWindow(new ChatWindowState(), hooks); const token = window.create(); window.handle(token, event, first, second, text); window.appendLog(token, '글', context8);
 // (2026-11-14 WB04-E447: RawMenuControls 선행 ChatWindow 이식)
 import { RawPlayerIdentity } from '../core/raw-player-identity.js';
