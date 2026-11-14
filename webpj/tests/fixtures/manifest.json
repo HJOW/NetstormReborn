@@ -20072,7 +20072,7 @@
       "bytes": 198312,
       "lines": 368,
       "fixtureCommit": "524c126bb",
-      "webCommit": "worktree",
+      "webCommit": "7d0b75f3e",
       "cpppjBasis": {
         "cpppj/src/client/TechnologyListMenu.cpp": "a3cc939ba",
         "cpppj/src/client/TechnologyListMenu.h": "a3cc939ba"
@@ -20103,10 +20103,41 @@
       "bytes": 110827,
       "lines": 101,
       "fixtureCommit": "a3cc939ba",
-      "webCommit": "worktree",
+      "webCommit": "7d0b75f3e",
       "cpppjBasis": {
         "cpppj/src/client/TechnologyListMenu.cpp": "a3cc939ba",
         "cpppj/src/client/TechnologyListMenu.h": "a3cc939ba"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E451",
+      "consumers": [
+        "webpj/tests/raw-trace-log.test.mjs"
+      ],
+      "doc": "docs/webpj-raw-trace-log-20261114.md",
+      "id": "trace-log",
+      "path": "cpppj/tests/fixtures/trace-log-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 원문 trace 로그의 출력 장치/공유 버퍼/현재 상태",
+      "modules": [
+        "webpj/www/core/raw-trace-log.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawTraceLog.cpp",
+        "cpppj/src/client/RawTraceLog.h"
+      ],
+      "scope": "81입력 전체1024BYTE(미작성 꼬리 포함)·출력 callback 인자/순서·최종 전역; 실제 게임·FILE 출력 아님",
+      "text": true,
+      "sha256": "7a564a4a835f1236e36471c152303ef752f90e7c6dd7fb824c5d57804a3ac3f6",
+      "bytes": 185805,
+      "lines": 82,
+      "fixtureCommit": "968abf89a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawTraceLog.cpp": "968abf89a",
+        "cpppj/src/client/RawTraceLog.h": "968abf89a"
       }
     }
   ]
