@@ -20485,7 +20485,7 @@
       "bytes": 601657,
       "lines": 817,
       "fixtureCommit": "e62916335",
-      "webCommit": "worktree",
+      "webCommit": "1578dacbd",
       "cpppjBasis": {
         "cpppj/src/client/HtmlTextParser.cpp": "1d5b1f437",
         "cpppj/src/client/HtmlTextParser.h": "1d5b1f437"
@@ -20517,7 +20517,7 @@
       "bytes": 266695,
       "lines": 649,
       "fixtureCommit": "fd89d7f1d",
-      "webCommit": "worktree",
+      "webCommit": "1578dacbd",
       "cpppjBasis": {
         "cpppj/src/client/HtmlTextParser.cpp": "1d5b1f437",
         "cpppj/src/client/HtmlTextParser.h": "1d5b1f437"
@@ -20549,10 +20549,43 @@
       "bytes": 29056,
       "lines": 277,
       "fixtureCommit": "b67f807be",
-      "webCommit": "worktree",
+      "webCommit": "1578dacbd",
       "cpppjBasis": {
         "cpppj/src/client/HtmlTextParser.cpp": "1d5b1f437",
         "cpppj/src/client/HtmlTextParser.h": "1d5b1f437"
+      }
+    },
+    {
+      "id": "tell-section",
+      "path": "cpppj/tests/fixtures/tell-section-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E461",
+      "producer": "cpppj TellSectionTests: 보호 원본10.78 4cf730 현재 256BYTE 이름 기록·세 단계 조회 선택 투영, 두 FPU 정밀도(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/tell-section.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/tell-section.js",
+        "webpj/www/ui/tell-parameters.js",
+        "webpj/www/ui/embedded-tell.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/TellSection.cpp",
+        "cpppj/src/client/TellSection.h"
+      ],
+      "doc": "docs/webpj-tell-section-20261114.md",
+      "scope": "858행의 대상/이전 이름·mask(이름/미션/fallback 존재·빈 본문·현재 이름 변경)·현재 256BYTE 지문·본문 또는 없음·호출 순서. 실제 Config 등록·재적재·param 수명은 별도 독립 검사",
+      "text": true,
+      "sha256": "2a75006a18d404d8a30464ff0b3406423439f2e64c1bc4aa3aa7ccb70e85b32e",
+      "bytes": 128620,
+      "lines": 859,
+      "fixtureCommit": "c5c0e7c96",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/TellSection.cpp": "5a2cd0474",
+        "cpppj/src/client/TellSection.h": "6dd8d803b"
       }
     }
   ]
