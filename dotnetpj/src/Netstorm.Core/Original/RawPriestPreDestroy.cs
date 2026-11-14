@@ -2,8 +2,7 @@ namespace Netstorm.Core.Original;
 
 /// <summary>
 /// 사제 postPop·preDestroy 가 함께 읽고 갱신하는 상태(원본 PriestPostPopState).
-/// 이번 조각은 사전 파괴가 실제로 읽는 사제 목록만 옮겼고, 소유자 상태 배열(원본 00595428)
-/// 은 사제 postPop 몸체를 옮길 때 같은 클래스에 더한다.
+/// 사제 조회·등록·사전 파괴가 같은 목록을 공유하고 소유자 상태는 현재 공유9DWORD를 직접 선택한다.
 /// </summary>
 public sealed class PriestPostPopState
 {
@@ -15,6 +14,20 @@ public sealed class PriestPostPopState
 
     /// <summary>Pop·삭제가 같은 현재 사제 목록에 직접 쓴다.</summary>
     public RawPostPopList GetPriests() => SharedPriests ?? Priests;
+
+    /// <summary>독립 검사에서 쓰는 소유자 상태9DWORD다. 공유 표가 연결되면 보존한다.</summary>
+    public uint[] OwnerState { get; } = new uint[9];
+
+    /// <summary>실제 세션의 현재 공유 소유자9DWORD다. 효과 콜백 뒤에도 다시 선택한다.</summary>
+    public uint[]? SharedOwnerState { get; set; }
+
+    /// <summary>원문 writer가 접근하는 현재9DWORD를 사본 없이 돌려준다.</summary>
+    public uint[] GetOwnerState()
+    {
+        uint[] current = SharedOwnerState ?? OwnerState;
+        if (current.Length != 9) throw new InvalidOperationException("사제 소유자 상태 실제9DWORD 계약 위반");
+        return current;
+    }
 }
 
 /// <summary>
