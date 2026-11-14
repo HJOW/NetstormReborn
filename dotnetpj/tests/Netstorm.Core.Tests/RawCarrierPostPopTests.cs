@@ -55,9 +55,9 @@ public sealed class RawCarrierPostPopTests
     }
 
     /// <summary>번호 50 을 클라이언트 영역에 확보하고 기본 사제 슬롯을 채운 풀을 만든다.</summary>
-    private static RawSidPool Pool()
+    private static RawSidPool Pool(OriginalEdition edition = OriginalEdition.Patch1078)
     {
-        var pool = new RawSidPool(24000, false);
+        var pool = new RawSidPool(24000, false, edition: edition);
         // 원본 fixture 의 번호 50 을 클라이언트 영역에 확보한다
         for (int id = 5; id <= Source; id++)
         {
@@ -103,10 +103,10 @@ public sealed class RawCarrierPostPopTests
     /// 빈 번호·범위 밖 번호·자산 밖 타입·내용물 상태·공통 검사 거부를 확인한다.
     /// </summary>
     [Fact]
-    public void RejectsInvalidInputsBeforeExternalEffects()
+    public void CdRejectsInvalidInputsBeforeExternalEffects()
     {
-        var pool = Pool();
-        var types = Types();
+        var pool = Pool(OriginalEdition.Cd1072);
+        var types = Types().Take(171).ToArray();
         var state = new CarrierPostPopState();
         var events = new List<string>();
         var validations = new int[1];
@@ -215,11 +215,11 @@ public sealed class RawCarrierPostPopTests
         Assert.Equal(1u, book.GlobalCounts[PriestType]);
         Assert.Equal(0u, book.Providers.Count);
         Assert.Equal(0u, book.Factories.Count);
-        // AI 가 붙은 소유자의 최초 등록 통지는 미복원이므로 거부하고 장부를 그대로 둔다
+        // PATCH는 지면 효과 뒤 공통 장부의 AI 통지 실패가 오며 앞선 지면 효과를 보존한다
         book.AiAttached[1] = true;
         book.Depth = 1;
         Assert.ThrowsAny<Exception>(() => carrier.PostPop(Source, 1));
-        Assert.Equal(1, claims);
+        Assert.Equal(2, claims);
         Assert.Equal(1u, book.Depth);
         Assert.Equal(133, book.TotalCost);
         Assert.Equal(1u, book.GlobalCounts[PriestType]);
@@ -227,7 +227,7 @@ public sealed class RawCarrierPostPopTests
         book.Suppressed = true;
         book.Depth = 8;
         carrier.DamageablePostPop(Source, 1);
-        Assert.Equal(2, claims);
+        Assert.Equal(3, claims);
         Assert.Equal(7u, book.Depth);
         Assert.Equal(133, book.TotalCost);
         // 다른 풀의 기본 몸체로는 묶음을 만들지 않는다

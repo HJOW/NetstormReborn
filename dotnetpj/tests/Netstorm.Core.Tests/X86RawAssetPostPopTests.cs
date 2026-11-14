@@ -191,7 +191,7 @@ public sealed class X86RawAssetPostPopTests
             ValidateBase = (sid, flags) => { Assert.Equal(Source, sid); Validations++; },
             Base = (sid, flags) =>
             {
-                Assert.Equal(1, Validations);
+                Assert.Equal(0, Validations);
                 Events.Add($"D:{flags}");
                 @base.PostPopBase(sid, flags);
             },

@@ -7,15 +7,12 @@ namespace Netstorm.Core.Tests;
 /// <summary>
 /// 원본 월드 코어의 운반체 후처리(<see cref="RawCarrierPostPop"/>)를 원본 x86 기대값에 대조한다.
 /// 기대값은 carrierpostpop-x86.tsv(운반체 직접 호출·Damageable 직접 호출, 판본별 2,448회)다.
-/// 각 호출 뒤 효과 순서와 대상 슬롯 50바이트를 비교한다.
+/// 각 호출 뒤 효과 순서와 판본별 슬롯50/36바이트를 비교한다.
 /// 열 구성은 cpppj/tests/CarrierPostPopTests.cpp 와 같다.
-/// CD 10.72·10.37 행은 기준 판본이 아니므로 읽지 않는다 (W02 Carrier 조각, 2026-10-20).
+/// PATCH·CD10.72·별도10.37 관측을 각 판본 필드로 대조한다.
 /// </summary>
 public sealed class X86RawCarrierPostPopTests
 {
-    /// <summary>10.78 행의 판본 이름. 그 밖은 CD·10.37 이다.</summary>
-    private const string PatchEdition = "originals";
-
     /// <summary>판본별 호출 수. 전체 7,344행 중 10.78 몫이다.</summary>
     private const int RowsPerEdition = 2448;
 
@@ -41,9 +38,9 @@ public sealed class X86RawCarrierPostPopTests
 
     /// <summary>타입 레코드 188개를 만들고 운반체 관련 세 번호에만 원본 플래그를 채운다.</summary>
     /// <param name="flags1">세 번호에 공통으로 넣을 플래그1.</param>
-    private static OriginalTypeRecord[] Types(uint flags1)
+    private static OriginalTypeRecord[] Types(uint flags1, int count = OriginalConstructors.TypeCount)
     {
-        var types = new OriginalTypeRecord[OriginalConstructors.TypeCount];
+        var types = new OriginalTypeRecord[count];
         // 쓰지 않는 번호도 슬롯 검사의 범위 안에 들어야 한다
         for (int i = 0; i < types.Length; i++)
         {
@@ -62,30 +59,32 @@ public sealed class X86RawCarrierPostPopTests
     /// 운반체·Damageable 직접 호출 fixture 의 10.78 몫 2,448회를 재생한다.
     /// 호출마다 효과 순서와 대상 슬롯 50바이트를 대조한다.
     /// </summary>
-    [Fact]
-    public void CarrierAndDamageableMatchOriginalX86()
+    [Theory]
+    [InlineData("originals", OriginalEdition.Patch1078)]
+    [InlineData("originalCD", OriginalEdition.Cd1072)]
+    [InlineData("original1037", OriginalEdition.Cd1072)]
+    public void CarrierAndDamageableMatchOriginalX86(string edition, OriginalEdition version)
     {
         string[][] rows = X86Fixture.Read("carrierpostpop");
         Assert.Equal(3 * RowsPerEdition, rows.Length);
         int count = 0;
         var failures = new List<string>();
-        // 판본 이름이 originals 인 행만 10.78 경로로 재생한다
+        bool patch = version == OriginalEdition.Patch1078;
+        int extraOffset = patch ? 40 : 35, ownerOffset = patch ? 34 : 32;
+        var pool = new RawSidPool(24000, false, edition: version);
+        // cpp 장면과 같이 입력 SID까지 한 번 확보하고 각 행에서 동일 물리 슬롯을 다시 채운다.
+        for (int id = 5; id <= Source; id++) Assert.Equal(id, pool.Allocate(SidAllocation.Client));
+        // 선택한 실제PE의 독립 관측만 현재 판본 경로로 재생한다
         foreach (string[] row in rows)
         {
-            if (row[1] != PatchEdition)
+            if (row[1] != edition)
             {
                 continue;
             }
             try
             {
                 Assert.Equal(19, row.Length);
-                var pool = new RawSidPool(24000, false);
-                // 원본 fixture 의 번호 50 을 클라이언트 영역에 확보한다
-                for (int id = 5; id <= Source; id++)
-                {
-                    Assert.Equal(id, pool.Allocate(SidAllocation.Client));
-                }
-                var types = Types(X86Fixture.UInt(row[8]));
+                var types = Types(X86Fixture.UInt(row[8]), patch ? 188 : 171);
                 var state = new CarrierPostPopState
                 {
                     Boss = row[3] != "0",
@@ -100,11 +99,11 @@ public sealed class X86RawCarrierPostPopTests
                 int validations = 0;
                 Span<byte> raw = pool.AllocatedBytes(Source);
                 raw.Clear();
-                Put(raw, 0, PriestVtable);
+                Put(raw, 0, patch ? PriestVtable : 0x005003e0u);
                 raw[RawSidPool.TypeOffset] = (byte)X86Fixture.UInt(row[5]);
                 raw[RawSidPool.StateOffset] = (byte)X86Fixture.UInt(row[9]);
-                raw[40] = (byte)X86Fixture.UInt(row[7]);
-                raw[34] = (byte)X86Fixture.UInt(row[10]);
+                raw[extraOffset] = (byte)X86Fixture.UInt(row[7]);
+                raw[ownerOffset] = (byte)X86Fixture.UInt(row[10]);
                 Put(raw, 12, 0xab84, 2);
                 Put(raw, 14, X86Fixture.UInt(row[11]));
                 Put(raw, 18, X86Fixture.UInt(row[12]));
@@ -112,29 +111,29 @@ public sealed class X86RawCarrierPostPopTests
                 {
                     CarrierCheck = sid =>
                     {
-                        // 직접 호출의 +0xCC 확인은 공통 검사가 끝난 뒤에 와야 한다
-                        Assert.Equal(1, validations);
+                        // PATCH에는 사전 검사가 없고 CD는 기존 검사 뒤에 이 효과가 온다
+                        Assert.Equal(patch ? 0 : 1, validations);
                         events.Add($"C:{sid}");
                         // 후속 변경이 있으면 현재 raw 의 타입·추가·소유자·좌표를 바꾼다
                         if (afterType >= 0)
                         {
                             Span<byte> target = pool.AllocatedBytes(sid);
                             target[RawSidPool.TypeOffset] = (byte)afterType;
-                            target[40] = (byte)afterExtra;
-                            target[34] = (byte)afterOwner;
+                            target[extraOffset] = (byte)afterExtra;
+                            target[ownerOffset] = (byte)afterOwner;
                             Put(target, 14, 0x41f20000);
                             Put(target, 18, 0x41fc0000);
                         }
                     },
                     ClaimGround = (x, y, owner) =>
                     {
-                        // 지면 갱신도 공통 검사가 끝난 뒤에 와야 한다
-                        Assert.Equal(1, validations);
+                        // 판본별 사전 검사 호출 횟수를 보존한다
+                        Assert.Equal(patch ? 0 : 1, validations);
                         events.Add($"G:{BitConverter.SingleToUInt32Bits(x)}:{BitConverter.SingleToUInt32Bits(y)}:{owner}");
                         // 후속 소유자가 있으면 대상 슬롯의 소유자를 바꾼다
                         if (groundOwner >= 0)
                         {
-                            pool.AllocatedBytes(Source)[34] = (byte)groundOwner;
+                            pool.AllocatedBytes(Source)[ownerOffset] = (byte)groundOwner;
                         }
                     },
                     ValidateBase = (sid, flags) =>
@@ -144,10 +143,10 @@ public sealed class X86RawCarrierPostPopTests
                     },
                     Base = (sid, flags) =>
                     {
-                        // 공통 몸체는 검사 뒤에 현재 raw 값으로 호출되어야 한다
-                        Assert.Equal(1, validations);
+                        // 공통 몸체는 판본별 검사 계약과 현재 raw 값으로 호출된다
+                        Assert.Equal(patch ? 0 : 1, validations);
                         ReadOnlySpan<byte> slot = pool.Slot(sid);
-                        events.Add($"B:{sid}:{flags}:{slot[RawSidPool.TypeOffset]}:{slot[40]}:{slot[34]}");
+                        events.Add($"B:{sid}:{flags}:{slot[RawSidPool.TypeOffset]}:{slot[extraOffset]}:{slot[ownerOffset]}");
                     },
                 };
                 var carrier = new RawCarrierPostPop(pool, types, state, hooks);
@@ -162,7 +161,7 @@ public sealed class X86RawCarrierPostPopTests
                 }
                 string actual = string.Join(';', events);
                 // 효과 순서와 raw 슬롯 전체를 원본과 비교한다
-                if (actual != row[17] || Convert.ToHexStringLower(pool.Slot(Source)) != row[18])
+                if (actual != row[17] || Convert.ToHexStringLower(pool.Slot(Source)[..(patch ? 50 : 36)]) != row[18])
                 {
                     failures.Add($"{count}: 기대 {row[17]} / 실제 {actual}");
                 }
