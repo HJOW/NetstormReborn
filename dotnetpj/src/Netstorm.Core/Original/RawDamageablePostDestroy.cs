@@ -1,5 +1,6 @@
 using Netstorm.Assets;
 
+// 삭제 후처리의 현재 역할·목록·실제 HP/프레임 대여를 원문 소비 위치에서 조회한다.
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -30,6 +31,35 @@ public sealed class DamageablePostDestroyState
 
     /// <summary>이 타입이면 일반 수량 대신 3개를 생성한다.</summary>
     public uint SpecialDropType { get; set; } = 135;
+
+    /// <summary>드롭/섬/피해 효과 뒤 같은 Client의 현재 권한을 조회한다.</summary>
+    public Func<bool>? SharedBoss { get; set; }
+    /// <summary>드롭/섬 효과 뒤의 현재 전투 모드를 빌린다.</summary>
+    public Func<bool>? SharedBattle { get; set; }
+    /// <summary>보상과 같은 현재 rainBlocker TYPE 주소다.</summary>
+    public UIntBox? SharedSilentSurfaceType { get; set; }
+    /// <summary>제외 비교 순서의 실제 TYPE 주소 다섯 개다.</summary>
+    public UIntBox?[] SharedExcludedDropTypes { get; } = new UIntBox?[5];
+    /// <summary>특별 수량3의 현재 벌프 TYPE 주소다.</summary>
+    public UIntBox? SharedSpecialDropType { get; set; }
+    /// <summary>생성 수량 계산 시 signed 개수로 읽는 실제 장기 목록이다.</summary>
+    public RawPostPopList? SharedDudePopulation { get; set; }
+    /// <summary>각 피해 예약이 읽는 실제 사건 번호DWORD다.</summary>
+    public UIntBox? SharedDamageEvent { get; set; }
+    /// <summary>현재 권한 owner 또는 독립 입력을 읽는다.</summary>
+    public bool ReadBoss() => SharedBoss?.Invoke() ?? Boss;
+    /// <summary>현재 전투 owner 또는 독립 입력을 읽는다.</summary>
+    public bool ReadBattle() => SharedBattle?.Invoke() ?? Battle;
+    /// <summary>현재 섬 정리 제외 역할을 읽는다.</summary>
+    public uint ReadSilentSurfaceType() => SharedSilentSurfaceType?.Value ?? SilentSurfaceType;
+    /// <summary>0~4 인덱스의 각 비교 시점에 현재 제외 역할을 읽는다.</summary>
+    public uint ReadExcludedDropType(int index) => SharedExcludedDropTypes[index]?.Value ?? ExcludedDropTypes[index];
+    /// <summary>제외 비교를 통과한 뒤 현재 특별 수량 역할을 읽는다.</summary>
+    public uint ReadSpecialDropType() => SharedSpecialDropType?.Value ?? SpecialDropType;
+    /// <summary>목록의 현재 DWORD를 원문 signed 개수로 해석한다.</summary>
+    public int ReadDudeCount() => SharedDudePopulation is { } list ? unchecked((int)list.Count) : DudeCount;
+    /// <summary>각 현재 피해 예약의 사건 번호를 읽는다.</summary>
+    public uint ReadDamageEvent() => SharedDamageEvent?.Value ?? DamageEvent;
 }
 
 /// <summary>
@@ -60,14 +90,22 @@ public sealed class DamageablePostDestroyHooks
 
     /// <summary>마지막 공통 postDestroy.</summary>
     public Action<int, uint>? Base { get; set; }
+
+    /// <summary>함수 객체는 값 복사하고 캡처한 실제 월드는 같은 수명으로 빌린다.</summary>
+    internal DamageablePostDestroyHooks Copy() => new()
+    {
+        DropDude = DropDude, DropIsland = DropIsland, Regular = Regular, HasBridgeFall = HasBridgeFall,
+        NotifySurface = NotifySurface, DisplayUpdate = DisplayUpdate, Destroy = Destroy, Base = Base,
+    };
 }
 
 /// <summary>
 /// 피해 가능 객체의 삭제 후 실제 드롭·섬 정리·주변 HP 예약·다리 약화와 공통 post 를 연결한다(원본 RawDamageablePostDestroy, 0044b9e0).
 /// 순서는 원본 그대로 "드롭 → 섬 정리 → HP 예약 → 다리 순회 → 공통 post"다.
 /// 각 효과 뒤 현재 raw 타입·상태·좌표와 전역을 다시 읽는다.
-/// 기준 판본은 10.78 뿐이다.
+/// PATCH/CD 슬롯 필드와 기존 검사 부모/현재 월드 부모를 구별한다.
 /// 근거: cpppj/src/o/RawDamageablePostDestroy.cpp (W03 삭제·수명 일곱째 조각, 2026-10-21).
+/// 현재 대여 근거: docs/exe/cpp-damageable-current-roles-20261109.md·cpp-damageable-lifetime-owner-20261109.md.
 /// </summary>
 public sealed class RawDamageablePostDestroy
 {
@@ -87,13 +125,16 @@ public sealed class RawDamageablePostDestroy
     private const int YOffset = 18;
 
     /// <summary>슬롯 안 소유자 바이트의 위치(10.78).</summary>
-    private const int OwnerOffset = 34;
+    private int OwnerOffset => _pool.Edition == OriginalEdition.Patch1078 ? 34 : 32;
 
     /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
-    private const int ExtraOffset = 40;
+    private int ExtraOffset => _pool.Edition == OriginalEdition.Patch1078 ? 40 : 35;
 
     /// <summary>슬롯 안 프레임 번호의 위치(10.78, 4바이트).</summary>
-    private const int FrameOffset = 36;
+    private int FrameOffset => _pool.Edition == OriginalEdition.Patch1078 ? 36 : 34;
+
+    /// <summary>현재 판본의 원문 프레임 쓰기/읽기 폭이다.</summary>
+    private int FrameWidth => _pool.Edition == OriginalEdition.Patch1078 ? 4 : 1;
 
     /// <summary>드롭 대상 genus 마스크(원본 0x174200).</summary>
     private const uint DropMask = 0x174200;
@@ -126,10 +167,16 @@ public sealed class RawDamageablePostDestroy
     private readonly IReadOnlyList<OriginalTypeRecord> _types;
 
     /// <summary>타입별 프레임 코드 표.</summary>
-    private readonly IReadOnlyList<IReadOnlyList<FrameCode>> _frames;
+    private readonly IReadOnlyList<IReadOnlyList<FrameCode>>? _frames;
+
+    /// <summary>실제 월드가 소유한 원문 프레임 표이며 생성 시 사본을 만들지 않는다.</summary>
+    private readonly IReadOnlyList<RiftTypeFrames>? _currentFrames;
 
     /// <summary>피해 가능 객체의 HP 조회 몸체.</summary>
-    private readonly RawHitPoints _hp;
+    private readonly Func<int, bool> _hasHitPoints;
+
+    /// <summary>같은 실제 HP 부모의 현재 최대값 조회다.</summary>
+    private readonly Func<int, int> _maxHitPoints;
 
     /// <summary>발자국 중심을 계산하는 이웃 몸체.</summary>
     private readonly RawSquidNeighbors _footprint;
@@ -154,22 +201,36 @@ public sealed class RawDamageablePostDestroy
     public RawDamageablePostDestroy(RawSidPool pool, RawSquidHash hash, IReadOnlyList<OriginalTypeRecord> types,
         IReadOnlyList<IReadOnlyList<FrameCode>> frames, RawHitPoints hp, RawSquidNeighbors footprint,
         DamageablePostDestroyState state, DamageablePostDestroyHooks hooks)
+        : this(pool, hash, types, frames, null, hp?.Pool ?? throw new ArgumentNullException(nameof(hp)),
+            hp.HasHitPoints, hp.MaxHitPoints, footprint, state, hooks) { }
+
+    /// <summary>실제 월드의 보상HP와 원문 프레임을 빌린다. 같은 Pool/Hash 및 현재 표가 더 오래 살아야 한다.</summary>
+    public RawDamageablePostDestroy(RawSidPool pool, RawSquidHash hash, IReadOnlyList<OriginalTypeRecord> types,
+        IReadOnlyList<RiftTypeFrames> frames, RawSquidReward hp, RawSquidNeighbors footprint,
+        DamageablePostDestroyState state, DamageablePostDestroyHooks hooks)
+        : this(pool, hash, types, null, frames, hp?.Pool ?? throw new ArgumentNullException(nameof(hp)),
+            hp.HasHitPoints, hp.MaxHitPoints, footprint, state, hooks) { }
+
+    /// <summary>선택된 실제 HP/프레임 부모와 같은 자료/효과를 한 번 검증해 보존한다.</summary>
+    private RawDamageablePostDestroy(RawSidPool pool, RawSquidHash hash, IReadOnlyList<OriginalTypeRecord> types,
+        IReadOnlyList<IReadOnlyList<FrameCode>>? frames, IReadOnlyList<RiftTypeFrames>? currentFrames,
+        RawSidPool hpPool, Func<int, bool> hasHitPoints, Func<int, int> maxHitPoints, RawSquidNeighbors footprint,
+        DamageablePostDestroyState state, DamageablePostDestroyHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(hash);
         ArgumentNullException.ThrowIfNull(types);
-        ArgumentNullException.ThrowIfNull(frames);
-        ArgumentNullException.ThrowIfNull(hp);
+        if (frames is null && currentFrames is null) throw new ArgumentNullException(nameof(frames));
         ArgumentNullException.ThrowIfNull(footprint);
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(hooks);
-        if (types.Count != OriginalConstructors.TypeCount || frames.Count != types.Count)
+        if (types.Count != (pool.Edition == OriginalEdition.Patch1078 ? 188 : 171) || (currentFrames?.Count ?? frames!.Count) != types.Count)
         {
             throw new ArgumentException("Damageable 사후 파괴 타입/프레임 표 크기 오류", nameof(types));
         }
-        if (!ReferenceEquals(hp.Pool, pool))
+        if (!ReferenceEquals(hpPool, pool))
         {
-            throw new ArgumentException("Damageable 사후 파괴와 HP 조회 몸체의 슬롯 풀이 다릅니다", nameof(hp));
+            throw new ArgumentException("Damageable 사후 파괴와 HP 조회 몸체의 슬롯 풀이 다릅니다", "hp");
         }
         if (!ReferenceEquals(footprint.Pool, pool) || !ReferenceEquals(footprint.Hash, hash))
         {
@@ -184,10 +245,11 @@ public sealed class RawDamageablePostDestroy
         _hash = hash;
         _types = types;
         _frames = frames;
-        _hp = hp;
+        _currentFrames = currentFrames;
+        _hasHitPoints = hasHitPoints; _maxHitPoints = maxHitPoints;
         _footprint = footprint;
         _state = state;
-        _hooks = hooks;
+        _hooks = hooks.Copy();
     }
 
     /// <summary>이 몸체가 쓰는 슬롯 풀. 연결 어댑터가 같은 풀인지 확인한다.</summary>
@@ -271,8 +333,14 @@ public sealed class RawDamageablePostDestroy
     private byte FrameFlags(int sid)
     {
         ReadOnlySpan<byte> raw = Slot(sid);
-        uint frame = Read(raw, FrameOffset);
-        IReadOnlyList<FrameCode> codes = _frames[raw[TypeOffset]];
+        uint frame = Read(raw, FrameOffset, FrameWidth);
+        if (_currentFrames is not null)
+        {
+            IReadOnlyList<RiftFrameCode> current = _currentFrames[raw[TypeOffset]].Codes;
+            if (frame >= current.Count) throw new ArgumentOutOfRangeException(nameof(sid), frame, "현재 삭제 후처리 프레임 물리 부족");
+            return current[(int)frame].Flags;
+        }
+        IReadOnlyList<FrameCode> codes = _frames![raw[TypeOffset]];
         if (frame >= codes.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(sid), frame, "Damageable 사후 파괴 다리 프레임 오류");
@@ -282,18 +350,20 @@ public sealed class RawDamageablePostDestroy
 
     /// <summary>약화 WORD 쓰기·현재 전역·공간 콜백 이후의 타입·프레임 재조회 순서를 유지한다.</summary>
     /// <param name="sid">대상 슬롯 번호.</param>
-    private void Weaken(int sid)
+    public void Weaken(int sid)
     {
         uint word = Read(Slot(sid), WordOffset, 2);
         uint next = (word & ~0x78u) | ((_state.BridgeCrackLife - 1u) * 8u & 0x78u);
         Write(_pool.AllocatedBytes(sid), WordOffset, next, 2);
         _hooks.NotifySurface!(sid);
         ReadOnlySpan<byte> raw = Slot(sid);
-        uint old = Read(raw, FrameOffset);
-        int frame = BridgeFrameSearch.CrackedFrame(_frames[raw[TypeOffset]], (int)old, true);
+        uint old = Read(raw, FrameOffset, FrameWidth);
+        int frame = _currentFrames is not null
+            ? RawBridgeFrames.CrackedFrame(_currentFrames[raw[TypeOffset]], unchecked((int)old), true)
+            : BridgeFrameSearch.CrackedFrame(_frames![raw[TypeOffset]], unchecked((int)old), true);
         if (frame != -1)
         {
-            Write(_pool.AllocatedBytes(sid), FrameOffset, (uint)frame, 4);
+            Write(_pool.AllocatedBytes(sid), FrameOffset, (uint)frame, FrameWidth);
             _hooks.DisplayUpdate!(sid);
         }
     }
@@ -324,18 +394,18 @@ public sealed class RawDamageablePostDestroy
         }
         uint type = raw[TypeOffset];
         // 제외 타입과 현재 특별 타입을 원본 우선순위로 검사한다.
-        foreach (uint excluded in _state.ExcludedDropTypes)
+        for (int index = 0, excluded = _pool.Edition == OriginalEdition.Patch1078 ? 5 : 4; index < excluded; index++)
         {
-            if (type == excluded)
+            if (type == _state.ReadExcludedDropType(index))
             {
                 return;
             }
         }
-        if (type == _state.SpecialDropType)
+        if (type == _state.ReadSpecialDropType())
         {
             count = 3;
         }
-        if (_state.DudeCount > 20)
+        if (_state.ReadDudeCount() > 20)
         {
             count /= 2;
         }
@@ -362,18 +432,18 @@ public sealed class RawDamageablePostDestroy
         {
             float[] position = Position(sid);
             if (GenusAt(position[0], position[1], Rubble) != 0 && (Genus(sid) & 0x10000000u) == 0
-                && ((flags & 0x200000u) != 0 || Slot(sid)[TypeOffset] != _state.SilentSurfaceType))
+                && ((flags & 0x200000u) != 0 || Slot(sid)[TypeOffset] != _state.ReadSilentSurfaceType()))
             {
                 float[] current = Position(sid);
                 _hooks.DropIsland!(current[0], current[1], flags, Slot(sid)[OwnerOffset]);
             }
         }
-        if (_state.Battle && _hp.HasHitPoints(sid) && Ordinary(sid))
+        if (_state.ReadBattle() && _hasHitPoints(sid) && Ordinary(sid))
         {
             uint attackerOwner = (flags >> 16) & 15u;
             if ((flags & 0x200000u) == 0 && (Type(sid).Group == 0 || Type(sid).Group == 1 || (Genus(sid) & Vortex) != 0))
             {
-                int damage = Add(_hp.MaxHitPoints(sid) / 2, 1);
+                int damage = Add(_maxHitPoints(sid) / 2, 1);
                 if ((Genus(sid) & Vortex) != 0)
                 {
                     damage = 400;
@@ -385,10 +455,10 @@ public sealed class RawDamageablePostDestroy
                     // 첫 후보부터 현재 일반 finder 의 skipSurface=1 순서로 HP 대상을 처리한다.
                     for (int current = finder.Begin(Area(sid, radius), 1); current != 0; current = finder.Next())
                     {
-                        if (_hp.HasHitPoints(current) && (Slot(current)[StateOffset] & 2) == 0
+                        if (_hasHitPoints(current) && (Slot(current)[StateOffset] & 2) == 0
                             && (Slot(current)[ExtraOffset] & 1) == 0)
                         {
-                            _hooks.Regular!(current, _state.DamageEvent, 0.0f,
+                            _hooks.Regular!(current, _state.ReadDamageEvent(), 0.0f,
                                 attackerOwner * 65536u + (uint)damage);
                         }
                     }
@@ -409,7 +479,7 @@ public sealed class RawDamageablePostDestroy
                                 Weaken(current);
                             }
                         }
-                        else if (_state.Boss)
+                        else if (_state.ReadBoss())
                         {
                             _hooks.Destroy!(current, 0);
                         }

@@ -12,7 +12,7 @@ namespace Netstorm.Core.Tests;
 /// 호출마다 외부 경계 순서·관찰 대상 7개 슬롯의 전체 바이트를 비교한다.
 /// 기준 판본은 10.78 이며 originalCD 행은 읽지 않는다 (W03 삭제·수명 일곱째 조각, 2026-10-21).
 /// </summary>
-public sealed class X86RawDamageablePostDestroyTests
+public sealed partial class X86RawDamageablePostDestroyTests
 {
     /// <summary>10.78 행의 판본 이름. 그 밖은 CD 10.72 다.</summary>
     private const string PatchEdition = "originals";
@@ -255,8 +255,10 @@ public sealed class X86RawDamageablePostDestroyTests
     /// 피해가능객체 삭제 후 처리 fixture 의 10.78 몫을 재생한다.
     /// "Post" 절은 공통 post 를, "Drops" 절은 드롭 수량 계산만 부른다.
     /// </summary>
-    [Fact]
-    public void PostDestroyMatchOriginalX86()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void PostDestroyMatchOriginalX86(bool current)
     {
         string[][] rows = X86Fixture.Read("damageablepostdestroy");
         int count = 0;
@@ -271,8 +273,18 @@ public sealed class X86RawDamageablePostDestroyTests
             scene.Prepare(input);
             var hp = new RawHitPoints(scene.Pool, scene.Types, scene.HitPointState);
             var footprint = new RawSquidNeighbors(scene.Pool, scene.Hash, scene.Spots, scene.Types, scene.Frames);
-            var post = new RawDamageablePostDestroy(scene.Pool, scene.Hash, scene.Types, scene.Frames, hp, footprint,
-                scene.State, scene.Hooks());
+            RawDamageablePostDestroy post;
+            if (current)
+            {
+                var store = new RawSpStore(new GameRandom(1), () => 1); store.Initialize();
+                var reward = new RawSquidReward(scene.Pool, scene.Types, new RawPostPopState(), new SquidRewardState(), store);
+                reward.BindCurrentTypes(scene.Types);
+                // 원본 입력의 같은 네 BYTE 코드를 실제 RiftTypeFrames 부모로 준비한다.
+                RiftTypeFrames[] frames = scene.Frames.Select(codes => new RiftTypeFrames(codes.Select(code =>
+                    new RiftFrameCode((byte)code.Side, (byte)code.Variant, (byte)code.Number, (byte)code.Flags)))).ToArray();
+                post = new RawDamageablePostDestroy(scene.Pool, scene.Hash, scene.Types, frames, reward, footprint, scene.State, scene.Hooks());
+            }
+            else post = new RawDamageablePostDestroy(scene.Pool, scene.Hash, scene.Types, scene.Frames, hp, footprint, scene.State, scene.Hooks());
             if (row[1] == "Post")
             {
                 post.PostDestroy(50, input[0]);
