@@ -289,4 +289,11 @@
     <None Include="../../../cpppj/tests/fixtures/canonshape-x86.tsv" Link="X86/canonshape-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/priestshape-x86.tsv" Link="X86/priestshape-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 실제 배치 칸 순회와 로컬 미리보기의 세판본 원본 관찰을 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/canongeometry-x86.tsv" Link="X86/canongeometry-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/priestgeometry-x86.tsv" Link="X86/priestgeometry-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/canonpreview-x86.tsv" Link="X86/canonpreview-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/priestpreview-x86.tsv" Link="X86/priestpreview-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
