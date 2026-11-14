@@ -6,7 +6,7 @@ namespace Netstorm.Core.Original;
 // 표시 수집 모듈을 담는 네임스페이스다. 2026-11-07 F2d 표시 수집 이식에서 추가됐다.
 
 // 타입·프레임 자료와 카메라에서 객체 출력 요청을 만드는 처리기이다. 클라이언트 장치에는 의존하지 않으며 sink에만 전달한다. 2026-11-07 F2d 표시 수집 이식에서 추가됐다.
-public sealed class SquidDisplay
+public sealed class SquidDisplay : IRawUnpopDisplay
 {
     /// <summary>표시 레이어와 extra의 선택·표식 비트다. 2026-11-07 F2d 표시 수집 이식에서 추가됐다.</summary>
     private const uint DoubleFrames = 0x440000u;
@@ -165,6 +165,9 @@ public sealed class SquidDisplay
         SquidDisplayFrame header = shape.Frames[frame];
         return [header.CellWidth, header.CellHeight];
     }
+
+    /// <summary>같은 표시기를 일반 Pop/Unpop에 연결하고 저장한 판본으로 검증한다.</summary>
+    void IRawUnpopDisplay.Validate(ReadOnlySpan<byte> slot, uint flags) => Validate(_edition, slot, flags);
 
     /// <summary>공간 쓰기 전에 미지원 vtable·물리 프레임 범위·판본 불일치를 확인한다.</summary>
     /// <param name="edition">확인할 판본이다.</param>

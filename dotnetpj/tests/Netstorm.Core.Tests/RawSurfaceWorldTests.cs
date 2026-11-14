@@ -1199,6 +1199,15 @@ public sealed class RawSurfaceWorldTests
         Assert.Equal(10f, objects[0].Object.X);
         Assert.Equal(10f, objects[0].Object.Y);
         Assert.True(world.TakeChanged());
+        // 독립 typed 월드도 방송 관문 전에 실제 압축 writer와 장기 공통 버퍼를 소비한다.
+        RawSquidTransmissionState wire = world.Storage().GameAux().SquidTransmission;
+        Assert.Equal(1u, wire.CompressedCount); Assert.Equal(0x7a, wire.Buffer[1]);
+        Assert.True(BitConverter.ToUInt16(wire.Buffer, 2) >= 4);
+        world.TransmitDeletion(sid, 0);
+        Assert.Equal(1u, wire.CompressedCount); Assert.Equal(0x2e, wire.Buffer[1]);
+        Assert.Equal((ushort)sid, BitConverter.ToUInt16(wire.Buffer, 4));
+        world.Storage().GameAux().ResetForGeneralWorld();
+        Assert.Same(wire, world.Storage().GameAux().SquidTransmission); Assert.Equal(1u, wire.CompressedCount);
     }
 
     /// <summary>범위 밖 좌표가 10으로 고정되는지 검증한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
@@ -1229,13 +1238,16 @@ public sealed class RawSurfaceWorldTests
         Assert.Single(world.Objects());
     }
 
-    /// <summary>빈 번호의 등록을 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
+    /// <summary>빈 번호가 현재 부모에서 원문처럼 무변경 반환하는지 검증한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
     [Fact]
-    public void PopRejectsFreeSlot()
+    public void PopFreeSlotReturnsWithoutMutation()
     {
-        // 슬롯 5번은 fresh 풀의 빈 머리라 SHP 조회 전에 멈춘다.
+        // 슬롯 5번은 fresh 풀의 빈 머리라 SHP·writer를 선택하지 않고 그대로 반환한다.
         var world = DisplayPopWorld();
-        Assert.Throws<InvalidOperationException>(() => world.Pop(5, 10f, 10f));
+        byte[] before = world.Storage().Pool.RawSlot(5).ToArray();
+        world.Pop(5, 10f, 10f);
+        Assert.Equal(before, world.Storage().Pool.RawSlot(5).ToArray());
+        Assert.Equal(0u, world.Storage().GameAux().SquidTransmission.CompressedCount);
     }
 
     /// <summary>연결 조회가 없으면 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 연결 조회 이식에서 추가됐다.</summary>

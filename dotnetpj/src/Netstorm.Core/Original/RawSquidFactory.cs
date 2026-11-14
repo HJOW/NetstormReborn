@@ -59,7 +59,7 @@ public sealed class SquidFactoryDiagnostics
 /// 최종 가상 표 판별(SupportsConstructedVtable)은 0.224에서 연결했고 약화 전역 공유(BindWeakenedMana)는 0.223에서 연결했다. 타입 HP 읽기(TypeHitPoints)는 R6에서 연결한다.
 /// 생성·타입 변경·최초 Pop 플래그의 판본별 표·위치는 F2c-11에서 이었다. Take·공통 postCreate의 나머지 CD 분기는 별도 범위다.
 /// </summary>
-public sealed class RawSquidFactory
+public sealed partial class RawSquidFactory
 {
     /// <summary>슬롯 안 가상 표(클래스 식별 값, 4바이트)의 위치.</summary>
     private const int VtableOffset = 0;

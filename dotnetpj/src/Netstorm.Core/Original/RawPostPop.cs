@@ -263,6 +263,9 @@ public sealed class RawPostPop : IRawPopPostPop
     /// <summary>이 모듈이 쓰는 슬롯 풀. Pop 이 같은 풀인지 확인하는 데 쓴다.</summary>
     public RawSidPool Pool => _pool;
 
+    /// <summary>실제 Pop/Activate가 공통·파생 몸체와 같은 깊이를 사본 없이 공유한다.</summary>
+    public ref uint ActivationDepth => ref _state.ActivationDepth;
+
     /// <summary>
     /// 다리 postPop(<c>00422150</c>)의 접두 부분. flag 1 은 추가 비트 2 를 켜고,
     /// flag 1 또는 (flag 4 이고 abstract 비트가 꺼져 있음)이면 연결 효과를 요청한다.

@@ -311,6 +311,17 @@ public sealed class X86RawGraphReplayTests
             Graph = new RawGraph(Pool, Hash, Spots, Types, Records(row[3]), stack, Frames, _recovery);
             Post = new RawPostPop(Pool, Types, State, Graph);
             Pop = new RawPop(Pool, Hash, Spots, null, Post);
+            // cpp RawGraphTests::BindGraphFixturePop처럼 실제 grid 오류 로그만 관측한다.
+            Pop.BindDiagnostics(new SquidPopDiagnostics
+            {
+                Types = Types,
+                Trace = (level, text) =>
+                {
+                    Assert.Equal(29, level);
+                    Assert.StartsWith("ERROR: gridSid ", text);
+                    Assert.EndsWith("\n", text);
+                },
+            });
             Unpop = new RawUnpop(Pool, Hash, Spots);
         }
 

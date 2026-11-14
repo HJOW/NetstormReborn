@@ -126,6 +126,14 @@ public sealed class RawUnpop : IRawUnpop
     /// <summary>이 모듈이 쓰는 슬롯 풀. 팩토리가 같은 풀인지 확인해 서로 다른 수명 상태의 혼용을 막는다.</summary>
     public RawSidPool Pool => _pool;
 
+    /// <summary>실제 프레임 연결이 같은 풀·표시·해시·지도 대여를 공유하는지 구성 때 확인한다.</summary>
+    public void ValidateFrameBinding(RawSidPool pool, SquidDisplay display, RawSquidHash hash, byte[] spots)
+    {
+        if (!ReferenceEquals(pool, _pool) || !ReferenceEquals(display, _display) || !ReferenceEquals(hash, _hash) || !ReferenceEquals(spots, _spots))
+            throw new ArgumentException("프레임 Unpop 풀·표시·공간 연결 불일치");
+    }
+
+
     /// <summary>
     /// 이 모듈이 쓰는 공간 해시. 삭제 본체가 Graph 와 같은 공간인지 확인할 때 쓴다.
     /// W03 자산 삭제 분배 조각(2026-10-23)에서 원본 SquidUnpop::ValidateGraph 의 대조를 위해 추가했다.

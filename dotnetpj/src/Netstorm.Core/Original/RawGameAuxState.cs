@@ -7,6 +7,9 @@ namespace Netstorm.Core.Original;
 /// <remarks>2026-11-04 F2c-11에서 추가했다. 같은 주소를 고정하는 게임 데이터 owner 주소이며 세션 조립(F3) 때 연결한다.</remarks>
 public sealed class RawGameAuxState
 {
+    /// <summary>공통 패킷 버퍼·헤더·압축 누적 상태다. 월드 교체와 일반 준비에서도 유지한다.</summary>
+    public RawSquidTransmissionState SquidTransmission { get; } = new();
+
     /// <summary>005950ac의 값이다. 시작이 많은 간헐천 부분을 읽는다.</summary>
     public uint OrdinaryGeysers { get; set; }
 
@@ -193,7 +196,16 @@ public sealed class RawGameAuxState
     public uint SubscriberMarker { get; set; }
 
     /// <summary>005ca8f0의 같은 현재 0·1이며 생성·HP·축소가 상태 정리를 공유한다.</summary>
-    public bool PriestQuarterHp { get; set; }
+    public bool PriestQuarterHp { get => PriestQuarterHpBox.Value; set => PriestQuarterHpBox.Value = value; }
+
+    /// <summary>공장이 같은 현재 약화 전역을 빌리는 장기 owner다.</summary>
+    public BoolBox PriestQuarterHpBox { get; } = new();
+
+    /// <summary>005412d0의 현재 사제 TYPE이며 일반 월드 준비에서도 유지한다.</summary>
+    public UIntBox PriestTypeBox { get; } = new() { Value = 158u };
+
+    /// <summary>005412ec의 현재 받침 TYPE이며 HP 검사 예외가 읽는다.</summary>
+    public UIntBox DaisTypeBox { get; } = new() { Value = 165u };
 
     /// <summary>0052ed78/79/7c의 현재 1bh 생성자 바이트·바이트·워드이며 수신 등록 메타데이터와 별개다. 직접 Join도 같은 현재 생성자 헤더를 읽고 등록표로 대체하지 않는다.</summary>
     /// <remarks>2026-11-11 0.355에서 cpppj HEAD의 JoinTestBattle 생성자 헤더(`battleStartPeerHeader_`)를 반영했다. 월드·세션 교체로 초기화하지 않는다.</remarks>

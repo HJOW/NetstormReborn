@@ -1,5 +1,6 @@
 using Netstorm.Core.Rules;
 
+// 일반 Pop의 PATCH 현재 부모와 CD의 독립 등록 경로를 같은 공간에 연결한다.
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -76,6 +77,12 @@ public interface IRawPopPostPop
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     /// <param name="flags">정규화한 Pop 호출 플래그(최초 Pop 비트와 Activate 비트 0x10 포함).</param>
     void Activate(int sid, uint flags);
+
+    /// <summary>실제 Activate 부모와 가상 후처리가 같은 DWORD 깊이를 공유한다.</summary>
+    ref uint ActivationDepth { get; }
+
+    /// <summary>실제 Activate가 깊이를 증가시킨 뒤 현재 가상 후처리를 호출한다.</summary>
+    void PostPopVirtual(int sid, uint flags);
 }
 
 /// <summary>
@@ -98,12 +105,12 @@ public enum RawPopResult
 /// 순서는 원본 그대로 "유효 검사 → 좌표·화면 좌표 쓰기 → (섬·다리면) 미니맵 알림 → 발자국 spot 등록(겹치면 Overlap 반환) →
 /// 단계·next 쓰기와 머리 연결 → (0단계 다리가 아니면) 섬 번호 127 → 표시 갱신 → 최초 Pop 비트·void 해제 → 파생 Activate"이며,
 /// 겹침 반환 때는 좌표·화면 좌표 쓰기와 그때까지의 spot·건물 옆면·미니맵 알림이 남는다.
-/// 원본은 손상된 머리·잘못된 발자국·미복원 효과(건물 옆면·표시 갱신의 파생 가상 표)를 <b>풀·공간을 바꾸기 전에</b> 예외로 거부한다.
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 무효 void 를 조용히 넘기는 등 달라서 옮기지 않았다).
-/// CD 판본의 표시 지원·추가 비트·단계 위치 분기는 F2c-11에서 이었다. 무효 void·겹침 분기는 별도 범위다.
+/// PATCH는 현재 부모의 도달 장치·부분 변경·진단 복귀 순서를 사용하고 CD는 기존 사전 검사를 유지한다.
+/// PATCH의 현재 TYPE/SHP 연결은 PopCurrent·BindDiagnostics로 공급한다.
+/// CD의 표시 지원·추가 비트·단계 위치와 무효 void/겹침 분기는 별도 몸체로 유지한다.
 /// 근거: cpppj/src/o/SquidPop.cpp (W02 Pop 조각, 2026-10-20).
 /// </summary>
-public sealed class RawPop
+public sealed partial class RawPop
 {
     /// <summary>슬롯 안 x 좌표(float, 4바이트)의 위치.</summary>
     private const int XOffset = 14;
@@ -132,7 +139,7 @@ public sealed class RawPop
     /// <summary>슬롯 안 추가 비트 바이트의 위치(CD 10.72). (F2c-11, 2026-11-04)</summary>
     private const int CdExtraOffset = 35;
 
-    /// <summary>상태 바이트의 전송 중(transmitting) 비트. 이 비트가 켜진 슬롯의 Pop 은 거부한다.</summary>
+    /// <summary>CD 사전 검사에서 거부하는 transmitting 비트다. PATCH는 실제 Activate의 도달 진단으로 처리한다.</summary>
     private const byte TransmittingBit = 16;
 
     /// <summary>상태 바이트의 들어 있는 내용물(contained) 비트. 생산 칸 안의 내용물은 base Pop 의 대상이 아니다.</summary>
@@ -259,10 +266,11 @@ public sealed class RawPop
     public RawPopResult Pop(int sid, OriginalTypeRecord type, float frameWidth, float frameHeight, float x, float y, uint flags = 0)
     {
         ArgumentNullException.ThrowIfNull(type);
+        if (_pool.Edition == OriginalEdition.Patch1078) return PopPatch(sid, x, y, flags, type, [frameWidth, frameHeight]);
         ReadOnlySpan<byte> old = _pool.Slot(sid);
         if (sid == 0 || (old[RawSidPool.StateOffset] & RawSidPool.VoidBit) == 0 || (old[RawSidPool.StateOffset] & ContainedBit) != 0)
         {
-            return RawPopResult.Unchanged;
+            throw new InvalidOperationException("CD Pop은 유효한 void 객체가 필요합니다");
         }
         if ((old[RawSidPool.StateOffset] & (RawSidPool.FreeBit | TransmittingBit)) != 0 || old[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType)
         {
@@ -278,10 +286,12 @@ public sealed class RawPop
             x = FallbackCoordinate;
             y = FallbackCoordinate;
         }
-        bool patch = _pool.Edition == OriginalEdition.Patch1078;
+        bool patch = false; // 아래는 CD 기존 사전 검사·배치 전용이며 PATCH는 위에서 현재 부모로 실행한다.
         int extraOffset = patch ? ExtraOffset : CdExtraOffset;
         int levelOffset = patch ? LevelOffset : CdLevelOffset;
-        bool buried = (old[extraOffset] & BuriedBit) != 0;
+        // CD는 원문처럼 외부 표시/미니맵 효과 전의 추가 BYTE를 보관한다.
+        byte extra = old[extraOffset];
+        bool buried = (extra & BuriedBit) != 0;
         if (!buried && (type.Flags2 & OriginalTypeRecord.BuildingMask) != 0 && _building is null)
         {
             throw new InvalidOperationException("Pop 건물 부착 공간이 연결되지 않았습니다");
@@ -320,9 +330,9 @@ public sealed class RawPop
         }
         _display?.Validate(old, flags);
         uint normalized = flags;
-        if ((old[extraOffset] & FirstPopBit) == 0)
+        if ((extra & FirstPopBit) == 0)
         {
-            normalized |= FirstPopBits(old[extraOffset]);
+            normalized |= FirstPopBits(extra);
         }
         if ((normalized & DeactivateBit) == 0)
         {
@@ -350,7 +360,7 @@ public sealed class RawPop
                     byte genus = (byte)SpotRules.EffectiveGenus(type.Flags2, x, y, type.FootX, type.FootY, cx, cy);
                     if (genus != 0)
                     {
-                        if ((_spots[cy * RawSquidHash.WorldCells + cx] & genus) != 0)
+                        if (patch && (_spots[cy * RawSquidHash.WorldCells + cx] & genus) != 0)
                         {
                             return RawPopResult.Overlap;
                         }
@@ -373,9 +383,9 @@ public sealed class RawPop
         }
         // 머리를 연결한 뒤, 최초 Pop·void 해제 전에 이전 위치의 표시를 갱신한다
         _display?.Update(bytes, flags);
-        if ((bytes[extraOffset] & FirstPopBit) == 0)
+        if ((extra & FirstPopBit) == 0)
         {
-            flags |= FirstPopBits(bytes[extraOffset]);
+            flags |= FirstPopBits(extra);
             bytes[extraOffset] |= FirstPopBit;
         }
         bytes[RawSidPool.StateOffset] &= unchecked((byte)~RawSidPool.VoidBit);

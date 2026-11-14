@@ -10,7 +10,7 @@ namespace Netstorm.Core.Original;
 // 서피스 월드 모듈을 담는 네임스페이스다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.
 
 // 판본·타입·지형 종류·물리 저장소의 같은 소유 정체성만 두고 실제 조립은 잇지 않는 월드 껍데기다. 적재·표시·삭제·프로세스 본체 조립은 후속 단위에서 잇는다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.
-public sealed class RawSurfaceWorld
+public sealed partial class RawSurfaceWorld
 {
     /// <summary>월드가 따르는 원본 판본이다. 슬롯 오프셋이 다른 모듈이 이 값으로 갈라진다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>
     private readonly OriginalEdition _edition;
@@ -205,10 +205,16 @@ public sealed class RawSurfaceWorld
             SetPrevious = (sid, previous) => RawContainedLink.CommonContainedSetPrevious(_storage.Pool, sid, previous),
             Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
         });
+        // 표시 수집은 판본과 무관하게 같은 수의 셰이프 표가 있을 때만 둔다. 자동 껍데기 저장소의 빈 표에서는 비워 둔다.
+        if (_types.Count == _storage.Shapes.Count && _storage.Shapes.Count > 0)
+        {
+            _display = new SquidDisplay(_edition, _types, _storage.Shapes, new WorldDisplaySink(this), new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 65536, Viewport = new DisplayRect(0, 0, 640, 480) });
+        }
+
         if (_types.Count == OriginalConstructors.TypeCount)
         {
             _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph.Records, _storage.Graph.Stack, null, GraphRecovery.FullPool);
-            _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots);
+            _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots, _display);
             _factory = new RawSquidFactory(_storage.Pool, _types, false, _unpop);            if (_frames.Count == _types.Count)
             {
                 _surface = new RawIslandPostPop(_storage.Pool, new HashLevelView(_storage.Hash), _types, _frames, _storage.Links, _loadState, new IslandPostPopHooks
@@ -231,7 +237,8 @@ public sealed class RawSurfaceWorld
             _buildingState.BridgeType = _storage.Links.BridgeType;
             _building = new RawBuildingSpace(_storage.Pool, _storage.Hash, _types, _buildingState);
             _postPop = new RawPostPop(_storage.Pool, _types, _bookkeeping, _graph);
-            _pop = new RawPop(_storage.Pool, _storage.Hash, _storage.Spots, null, _postPop);
+            _pop = new RawPop(_storage.Pool, _storage.Hash, _storage.Spots, _display, _postPop);
+            BindCurrentPop();
             _pop.SetBuildingSide(_building);
             _unpop.SetBuildingSide(_building);
             // 호스트 대여는 같은 장기 TYPE 표를 가진 전체 저장소에서만 한다. 자동 껍데기 저장소는 호스트를 묶지 않는다.
@@ -393,12 +400,6 @@ public sealed class RawSurfaceWorld
             _assetOwner = RawBridgeConnect.MakeOwnerDispatch(_storage.Pool, _storage.Links, owner.Set);
         }
 
-        // 표시 수집은 판본과 무관하게 같은 수의 셰이프 표가 있을 때만 둔다. 자동 껍데기 저장소의 빈 표에서는 비워 둔다.
-        if (_types.Count == _storage.Shapes.Count && _storage.Shapes.Count > 0)
-        {
-            _display = new SquidDisplay(_edition, _types, _storage.Shapes, new WorldDisplaySink(this), new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 65536, Viewport = new DisplayRect(0, 0, 640, 480) });
-        }
-
         // 프레임 지정은 표시·Unpop·Pop 가상 호출 순서대로 외부 효과에 연결한다. CD 판본과 표시 미연결 껍데기에서는 비워 둔다.
         if (_edition == OriginalEdition.Patch1078 && _display is not null && _unpop is not null && _pop is not null)
         {
@@ -407,32 +408,7 @@ public sealed class RawSurfaceWorld
             RawPop pop = _pop;
             RawSidPool pool = _storage.Pool;
             IReadOnlyList<OriginalTypeRecord> frameTypes = _types;
-            display.ValidateFrameBinding(_edition, frameTypes);
-            _frame = new SquidFrame(pool, frameTypes, new SquidFrameHooks
-            {
-                FrameSize = (sid, frame) => display.FrameSize(_edition, pool.Slot(sid), frame),
-                Update = (sid, flags) => display.Update(pool.Slot(sid), flags),
-                Unpop = (sid, flags) =>
-                {
-                    byte number = pool.Slot(sid)[10];
-                    if (number >= frameTypes.Count)
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(sid), "프레임 Unpop 타입 번호 범위 오류");
-                    }
-
-                    unpop.Unpop(sid, frameTypes[number], flags);
-                },
-                Pop = (sid, x, y, flags) =>
-                {
-                    byte number = pool.Slot(sid)[10];
-                    if (number >= frameTypes.Count)
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(sid), "프레임 Pop 타입 번호 범위 오류");
-                    }
-
-                    pop.Pop(sid, frameTypes[number], 0, 0, x, y, flags);
-                },
-            });
+            _frame = new SquidFrame(pool, frameTypes, SquidFrameBinding.MakeSquidFrameHooks(pool, frameTypes, display, unpop, pop));
             // 실제 장기 실행기의 현재 TYPE를 명시 대여한다. cpp RawSurfaceStorage::Frame의 PATCH 연결과 같다.
             _frame.BindCurrentTypes(frameTypes);
         }
@@ -1061,13 +1037,13 @@ public sealed class RawSurfaceWorld
         throw new InvalidOperationException("현재 판본의 실제 Squid 전송기가 설치되지 않았습니다.");
     }
 
-    /// <summary>공통 삭제의 패킷을 같은 현재 가상 기록기·버퍼·방송 부모로 전달한다. 멀티플레이 3차 사전 구현이며 전송기가 없어 명시 오류로 멈춘다. 2026-11-07 F2d 월드 본체 전송 사전 구현에서 추가됐다.</summary>
+    /// <summary>공통 삭제의 패킷을 같은 현재 가상 기록기·버퍼·방송 부모로 전달한다. 독립 typed 월드는 실제 writer 뒤 방송에서 반환한다. 2026-11-07 F2d 월드 본체 전송 사전 구현에서 추가됐다.</summary>
     /// <param name="sid">삭제 패킷을 보낼 객체 번호다.</param>
     /// <param name="flags">삭제 전달 플래그다.</param>
     public void TransmitDeletion(int sid, uint flags)
     {
-        // 원본 squidTransmission 미설치 logic_error를 직역한다. 실제 Transmit 연결은 3차 로컬 구현 때 잇는다.
-        throw new InvalidOperationException("현재 판본의 실제 삭제 전송기가 설치되지 않았습니다.");
+        RawSquidTransmission writer = _squidTransmission ?? throw new InvalidOperationException("현재 판본의 실제 삭제 전송기가 설치되지 않았습니다.");
+        writer.Transmit(sid, -1, -2, 0, flags);
     }
 
     /// <summary>원본 정밀도(유효 12자리)로 부동소수 값을 같은 CLI 관측 문자열로 만든다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>
@@ -1235,9 +1211,13 @@ public sealed class RawSurfaceWorld
             throw new InvalidOperationException("실제 월드 공간 등록이 연결되지 않았습니다.");
         }
 
-        ReadOnlySpan<byte> raw = _storage.Pool.Slot(sid);
-        float[] size = _display.FrameSize(_edition, raw, unchecked((int)ReadSlot(raw, 36, 4)));
-        _pop.Pop(sid, _types[raw[RawSidPool.TypeOffset]], size[0], size[1], x, y, flags);
+        if (_edition == OriginalEdition.Patch1078) _pop.PopCurrent(sid, x, y, flags);
+        else
+        {
+            ReadOnlySpan<byte> raw = _storage.Pool.Slot(sid);
+            float[] size = _display.FrameSize(_edition, raw, raw[34]);
+            _pop.Pop(sid, _types[raw[RawSidPool.TypeOffset]], size[0], size[1], x, y, flags);
+        }
         _changed = true;
     }
 

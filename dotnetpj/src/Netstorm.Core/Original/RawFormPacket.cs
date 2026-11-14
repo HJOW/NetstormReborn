@@ -227,11 +227,16 @@ public sealed class RawFormPacket
     /// <param name="sid">삭제할 번호.</param>
     /// <param name="flags">삭제 플래그. 상위 WORD 만 쓴다.</param>
     /// <param name="packet">쓸 버퍼. 반환 크기보다 길면 뒤는 보존된다.</param>
+    /// <param name="assertion">헤더를 쓴 뒤 client SID 진단을 정상 복귀시킬 현재 장치다. null이면 독립 기존 오류를 유지한다.</param>
     /// <returns>8.</returns>
-    public ushort WriteDeletion(int sid, uint flags, Span<byte> packet)
+    public ushort WriteDeletion(int sid, uint flags, Span<byte> packet, Action<string, string, uint>? assertion = null)
     {
-        ServerSid(sid);
         Header(packet, _headers.Deletion, 8);
+        if (sid >= FirstOrdinary && sid < RawSidPool.ServerFirst)
+        {
+            if (assertion is not null) assertion("!isClientSid()", @"\Ns\O\Squid.cpp", 0x2f6);
+            else ServerSid(sid);
+        }
         Put(packet, 4, (uint)sid, 2);
         ushort token = 0;
         if (_stamp.Sid == sid)

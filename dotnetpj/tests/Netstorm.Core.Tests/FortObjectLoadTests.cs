@@ -602,6 +602,12 @@ public sealed class FortObjectLoadTests
             SquidOwner owner = new(scene.Pool, scene.Types, scene.Books, mode);
             byte[] spots = new byte[65536];
             RawPop pop = new(scene.Pool, scene.Hash, spots);
+            int popTransmits = 0;
+            // cpp FortObjectLoadTests와 같이 필수 Pop 자식의 실제 도달 인자를 내용물 송신과 별도로 관측한다.
+            pop.BindTransmission((sid, flags) =>
+            {
+                Assert.True(scene.Patch); Assert.Equal(RawSidPool.ServerFirst, sid); Assert.Equal(9u, flags); popTransmits++;
+            });
             List<int> notices = [];
             int transmits = 0;
             RawContentFormHost content = new(scene.Pool, scene.ModuleTypes,
@@ -633,6 +639,7 @@ public sealed class FortObjectLoadTests
             Assert.Equal(803u, Read(scene.Pool.Slot(sid), 26, scene.Patch ? 4 : 2));
             Assert.Equal(2, notices.Count);
             Assert.Equal(0, transmits);
+            Assert.Equal(scene.Patch ? 1 : 0, popTransmits);
             Assert.Equal((ushort)sid, scene.Hash.Bucket(1, 16f + (values[(int)Field.Position] >> 4), 32f + (values[(int)Field.Position] & 15)));
             RawSquidForms forms = new(scene.Pool);
             Assert.Equal(sid, forms.Parent(notices[0]));

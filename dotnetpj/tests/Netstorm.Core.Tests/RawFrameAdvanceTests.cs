@@ -138,6 +138,7 @@ public sealed class RawFrameAdvanceTests
         var pool = new RawSidPool(32768, true, edition: edition); OriginalTypeRecord[] types = Types(edition);
         types[155].Flags1 = 0x28000002; types[155].Flags2 = 0x2000000; types[155].FootX = types[155].FootY = 1;
         var hash = new RawSquidHash(); var spots = new byte[65536]; var unpop = new RawUnpop(pool, hash, spots); var pop = new RawPop(pool, hash, spots);
+        TestSquidTransmission.Bind(pop, pool, types);
         var factory = new RawSquidFactory(pool, types, unpop: unpop); int sid = factory.Create(155); float[][] sizes = [[1, 1], [2, 1.5f], [5, 5], [6, 6]];
         Assert.Equal(RawPopResult.Registered, pop.Pop(sid, types[155], 1, 1, 20, 20)); var effects = new List<string>();
         var setter = new SquidFrame(pool, types, new SquidFrameHooks

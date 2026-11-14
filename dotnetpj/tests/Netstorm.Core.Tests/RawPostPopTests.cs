@@ -227,7 +227,7 @@ public sealed class RawPostPopTests
     [Fact]
     public void FirstRegistrationAndProviderDuplicatePreserveCounters()
     {
-        var pool = new RawSidPool(32768);
+        var pool = new RawSidPool(32768, false);
         OriginalTypeRecord[] types = Types();
         types[TestType].Flags1 = 0x10000000;
         types[TestType].Flags2 = 0x10000;
@@ -240,7 +240,7 @@ public sealed class RawPostPopTests
         byte[] spots = new byte[256 * 256];
         var pop = new RawPop(pool, hash, spots, null, post);
         var unpop = new RawUnpop(pool, hash, spots);
-        int sid = factory.Create(TestType);
+        int sid = factory.Create(TestType, SidAllocation.Client);
         pool.AllocatedBytes(sid)[34] = 1;
         Assert.Equal(RawPopResult.Registered, pop.Pop(sid, types[TestType], 1, 1, 20, 20));
         Assert.Equal(3, state.TotalCost);

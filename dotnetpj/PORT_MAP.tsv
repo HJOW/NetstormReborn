@@ -349,7 +349,7 @@ cpppj/src/o/RawDataManagerSelection.h	Netstorm.Core/Original/RawDataManagerSelec
 cpppj/src/o/RawFarmCluster.cpp	Netstorm.Core/Original/RawFarmCluster.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawFarmCluster.h	Netstorm.Core/Original/RawFarmCluster.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawFlyerPreDestroy.cpp	Netstorm.Core/Original/RawFlyerPreDestroy.cs	0e66d91ba40ac55542ec2e2747b68e406c27de43	L1
-cpppj/src/o/RawFormPacket.cpp	Netstorm.Core/Original/RawFormPacket.cs	5d34fc2dbabe34e06d8e86e6b4eb3a3aa33803f3	L1
+cpppj/src/o/RawFormPacket.cpp	Netstorm.Core/Original/RawFormPacket.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	L1
 cpppj/src/o/RawFortBadgesGlobals.cpp	Netstorm.Core/Original/RawFortBadgesGlobals.cs	67321fab5686b0ab9f3b2801dbc79a2785bc8439	L1
 cpppj/src/o/RawFortBadgesGlobals.h	Netstorm.Core/Original/RawFortBadgesGlobals.cs	67321fab5686b0ab9f3b2801dbc79a2785bc8439	L1
 cpppj/src/o/RawFortBadgesSave.cpp	Netstorm.Core/Original/RawFortBadgesSave.cs	67321fab5686b0ab9f3b2801dbc79a2785bc8439	L1
@@ -531,7 +531,7 @@ cpppj/src/o/SquidFrame.cpp	Netstorm.Core/Original/RawFrame.cs	73e3b8ba3d23f96643
 cpppj/src/o/SquidHash.cpp	Netstorm.Core/Original/RawSquidHash.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidOwner.cpp	Netstorm.Core/Original/RawOwner.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/OriginalPopDisplay.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	L1
-cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/RawPop.cs	8f8ddf6c22931cb635cd2e6dec97a1d93ba5e478	L1
+cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/RawPop.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	L1
 cpppj/src/o/SquidPostPop.cpp	Netstorm.Core/Original/RawPostPop.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidReward.cpp	Netstorm.Core/Original/RawHitPoints.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidReward.cpp	Netstorm.Core/Original/RawSquidReward.cs	3d038e510444a9c7448b6d4c88cc84f78446d395	L1
@@ -623,7 +623,7 @@ cpppj/src/client/RawFortWorldLoadBinding.h	Netstorm.Core/Original/RawFortWorldLo
 cpppj/src/client/RawFortWorldLoadBinding.cpp	Netstorm.Core/Original/RawFortWorldLoadBinding.cs	2d50804c8e2796f498c79cb79956848b54c5e5f0	port
 cpppj/src/o/RawFormPop.h	Netstorm.Core/Original/RawFormPop.cs	09ad72b071d7864e114f671b82ec5067cbb01c62	port
 cpppj/src/o/RawFormPop.cpp	Netstorm.Core/Original/RawFormPop.cs	09ad72b071d7864e114f671b82ec5067cbb01c62	port
-cpppj/src/o/RawSquidTransmission.h	Netstorm.Core/Original/RawSquidTransmissionState.cs	b8cadde14fbf9cd9e2d89a3102c5db2d5645c494	port
+cpppj/src/o/RawSquidTransmission.h	Netstorm.Core/Original/RawSquidTransmissionState.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
 cpppj/src/o/RawSquidContainedUnpop.h	Netstorm.Core/Original/RawSquidContainedUnpop.cs	f83db66ca229cc8fe9676d8ed52787277768869d	port
 cpppj/src/o/RawSquidContainedUnpop.cpp	Netstorm.Core/Original/RawSquidContainedUnpop.cs	f83db66ca229cc8fe9676d8ed52787277768869d	port
 cpppj/src/o/Bridge.h	Netstorm.Core/Original/RawBridgeConnects.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
@@ -724,3 +724,16 @@ cpppj/src/o/RawSquidActivate.h	Netstorm.Core/Original/RawSquidActivate.cs	b2c41b
 cpppj/src/o/RawSquidActivate.cpp	Netstorm.Core/Original/RawSquidActivate.cs	b2c41b42b2edb478eadbb42b9f35a991c2bc29b8	port
 cpppj/src/o/RawSquidPopParent.h	Netstorm.Core/Original/RawSquidPopParent.cs	b2c41b42b2edb478eadbb42b9f35a991c2bc29b8	port
 cpppj/src/o/RawSquidPopParent.cpp	Netstorm.Core/Original/RawSquidPopParent.cs	b2c41b42b2edb478eadbb42b9f35a991c2bc29b8	port
+cpppj/src/o/SquidPop.h	Netstorm.Core/Original/RawPop.Current.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/RawPop.Current.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/SquidFrameBinding.h	Netstorm.Core/Original/SquidFrameBinding.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/SquidFrameBinding.cpp	Netstorm.Core/Original/SquidFrameBinding.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/RawSquidTransmission.h	Netstorm.Core/Original/RawSquidTransmission.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/RawSquidTransmission.cpp	Netstorm.Core/Original/RawSquidTransmission.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/SquidFactory.h	Netstorm.Core/Original/RawSquidFactory.HitPoints.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/SquidFactory.cpp	Netstorm.Core/Original/RawSquidFactory.HitPoints.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/RawRiftHitPoints.h	Netstorm.Core/Original/RawSquidFactory.HitPoints.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/RawRiftHitPoints.cpp	Netstorm.Core/Original/RawSquidFactory.HitPoints.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceWorld.PopCurrent.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.PopCurrent.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceWorld.PopCurrent.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
