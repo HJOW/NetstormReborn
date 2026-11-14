@@ -1,5 +1,5 @@
 // 사용자 강조(RawUserHighlight)의 모드 변경/마우스 타입 초기화/모드별 효과를 기준선 소스 계약으로 검증한다. (2026-11-14 WB04-E442)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(RawUserHighlight.cpp)에서 옮겼다.
+// 이 파일의 수치는 기준선 소스 계약이다. 원본 직접 관측 178행은 tests/ui-state-native-fixtures.test.mjs(2026-11-15 WB04-E482)가 대조한다. 순서/경계는 기준선 소스(RawUserHighlight.cpp)에서 옮겼다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { RawUserHighlight } from '../www/core/raw-user-highlight.js';

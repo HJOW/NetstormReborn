@@ -2022,28 +2022,34 @@
       "required": false,
       "producer": "cpppj 원본 TYPE HP getter(0049fce0) x86 관측(HP 플래그 진단·사제 1/4·진단 복귀 뒤 표 기준 이동/전역 변경)",
       "consumers": [
-        "webpj/tests/squid-reward.test.mjs"
+        "webpj/tests/squid-reward.test.mjs",
+        "webpj/tests/ui-state-native-fixtures.test.mjs"
       ],
       "modules": [
         "webpj/www/core/squid-reward.js",
-        "webpj/www/core/squid-factory.js"
+        "webpj/www/core/squid-factory.js",
+        "webpj/www/core/current-type-hit-points.js"
       ],
       "unit": "WB04-D5b",
       "doc": "docs/webpj-content-lifetime-20261107.md",
       "cpppjSources": [
         "cpppj/src/o/RawRiftHitPoints.cpp",
-        "cpppj/src/o/SquidReward.cpp"
+        "cpppj/src/o/SquidReward.cpp",
+        "cpppj/src/client/CurrentTypeHitPoints.cpp",
+        "cpppj/src/client/CurrentTypeHitPoints.h"
       ],
-      "scope": "10.78 행 중 초기 번호 음수가 아닌 579행(cpppj RewardHitPointDiagnosticsTests 와 같은 선택). CD 행 제외",
+      "scope": "10.78 행 중 초기 번호 음수가 아닌 579행(cpppj RewardHitPointDiagnosticsTests 와 같은 선택). CD 행 제외. WB04-E482: CurrentTypeHitPoints 가 같은 fixture 의 10.78 579행(초기 번호 음수 제외)을 현재 전역·저장된 물리 TYPE·진단 복귀 뒤 표 이동까지 대조(docs/webpj-ui-state-native-fixtures-20261115.md)",
       "text": true,
       "sha256": "58197e3d412b3a01482039fe00930b831ce302ab63c6de319e6bdd7121d5d9e1",
       "bytes": 107011,
       "lines": 1161,
-      "fixtureCommit": "804b87a5",
-      "webCommit": "e3bd87d5",
+      "fixtureCommit": "804b87a59",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a5",
-        "cpppj/src/o/SquidReward.cpp": "2b048419"
+        "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a59",
+        "cpppj/src/o/SquidReward.cpp": "2b0484195",
+        "cpppj/src/client/CurrentTypeHitPoints.cpp": "5393a14fa",
+        "cpppj/src/client/CurrentTypeHitPoints.h": "5393a14fa"
       }
     },
     {
@@ -22087,10 +22093,41 @@
       "bytes": 3995336,
       "lines": 571,
       "fixtureCommit": "e5a68d592",
-      "webCommit": "worktree",
+      "webCommit": "73070fe86",
       "cpppjBasis": {
         "cpppj/src/client/TextEntryBuffer.cpp": "1d5b1f437",
         "cpppj/src/client/TextEntryBuffer.h": "1d5b1f437"
+      }
+    },
+    {
+      "id": "user-highlight",
+      "path": "cpppj/tests/fixtures/user-highlight-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E482",
+      "producer": "cpppj UserHighlightTests: 보호 원본 10.78 강조 모드(004d5bb0)·마우스 TYPE 초기화(004d5480)의 독립 x86 관측 178행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/ui-state-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-user-highlight.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawUserHighlight.cpp",
+        "cpppj/src/client/RawUserHighlight.h"
+      ],
+      "doc": "docs/webpj-ui-state-native-fixtures-20261115.md",
+      "scope": "강조 모드·마우스 TYPE 초기화의 전체 전역(모드/선택/마우스 TYPE/좌표)과 커서/역투영/이동 경계의 인자·순서·경계 도달 시 변경",
+      "text": true,
+      "sha256": "e1d0bc9dbf434de9c897a6fcac4af50f2be637318ab3a52d3795273cf734ed78",
+      "bytes": 19528,
+      "lines": 179,
+      "fixtureCommit": "8c10b36a2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawUserHighlight.cpp": "8c10b36a2",
+        "cpppj/src/client/RawUserHighlight.h": "8c10b36a2"
       }
     }
   ]

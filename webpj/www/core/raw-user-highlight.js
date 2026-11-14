@@ -1,6 +1,6 @@
 // 원본 Userinput.cpp 의 강조 모드 004d5bb0 와 마우스 타입 초기화 004d5480 을 옮긴다(cpppj client/RawUserHighlight.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 실제 선택(005caea0)과 강조(005cae90)는 다른 전역이다. 이 처리기는 모드 변경만 다루며 선택 해제(004d5c90/004d5490)와 별개이고 selectedSid 를 지우지 않는다. 모든 참조 대상은 이 처리기보다 오래 살아야 한다.
-// 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 원본 10.78 독립 관측 178행은 tests/ui-state-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E482 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: const highlight = new RawUserHighlight(state, { selectCursor, project, move }); highlight.highlight(5);
 // (2026-11-14 WB04-E442: RawMenuControls 선행 사용자 강조 이식)
 

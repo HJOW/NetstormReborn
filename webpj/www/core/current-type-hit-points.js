@@ -1,6 +1,6 @@
 // 월드 설치 전후의 UI 도 같은 현재 TYPE HP getter 를 사용할 수 있게 연결한다(cpppj client/CurrentTypeHitPoints.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 번호 선택과 같은 물리 TYPE 의 현재 getNum/진단 복귀를 공통 getter(0049fce0)에 연결한다. 현재 표는 생성 시 캐시하지 않고 실제 읽기 위치에서만 요구하며, 진단 뒤 현재 표 기준을 읽되 처음 선택한 TYPE this 는 보존한다.
-// 원문 TYPE base/전역의 수명은 호출자가 반환 함수보다 오래 유지한다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 원문 TYPE base/전역의 수명은 호출자가 반환 함수보다 오래 유지한다. 원본 10.78 관측 579행(rifttype-hit-points)은 tests/ui-state-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E482 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // (2026-11-14 WB04-E435: RawMenuControls 선행 현재 TYPE HP getter 이식)
 import { currentRiftTypeNumber, readRiftHitPoints } from './squid-factory.js';
 

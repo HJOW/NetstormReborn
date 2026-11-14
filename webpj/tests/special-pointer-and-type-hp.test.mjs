@@ -1,5 +1,5 @@
 // 전용 PE fixture가 없는 Ctrl+special 지점 진단(SpecialPointerTrace)과 현재 TYPE HP getter(CurrentTypeHitPoints)를 기준선 소스 계약으로 검증한다. (2026-11-14 WB04-E435)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 호출 순서/조건은 기준선 소스(SpecialPointerTrace.cpp, CurrentTypeHitPoints.cpp)에서 옮겼다. 투영/탐색/진단은 호출 기록 대역이고 TYPE HP 계산은 실제 readRiftHitPoints 다.
+// 이 파일의 수치는 기준선 소스 계약이다. CurrentTypeHitPoints 의 원본 직접 관측 579행은 tests/ui-state-native-fixtures.test.mjs(2026-11-15 WB04-E482)가, SpecialPointerTrace 의 관측(pointer-special-trace)은 LEFT_JOBS 3.8절 후속 단위가 대조한다. 호출 순서/조건은 기준선 소스(SpecialPointerTrace.cpp, CurrentTypeHitPoints.cpp)에서 옮겼다. 투영/탐색/진단은 호출 기록 대역이고 TYPE HP 계산은 실제 readRiftHitPoints 다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { traceSpecialPointer } from '../www/ui/special-pointer-trace.js';
