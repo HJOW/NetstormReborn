@@ -122,8 +122,8 @@ public sealed class RawPriestState
     /// <summary>객체 슬롯을 읽고 쓰는 풀.</summary>
     private readonly RawSidPool _pool;
 
-    /// <summary>최대 HP 조회 몸체.</summary>
-    private readonly RawHitPoints _hp;
+    /// <summary>현재 최대 HP를 조회하는 실제 장치의 빌린 메서드다.</summary>
+    private readonly Func<int, int> _maxHitPoints;
 
     /// <summary>타입 번호로 속성을 조회하는 타입 표.</summary>
     private readonly IReadOnlyList<OriginalTypeRecord> _types;
@@ -135,7 +135,7 @@ public sealed class RawPriestState
     /// 사제 상태 몸체를 만든다. HP 조회 몸체의 풀과 타입 표·지도 크기를 확인한다.
     /// </summary>
     /// <param name="pool">객체 슬롯 풀.</param>
-    /// <param name="hp">최대 HP 조회 몸체. 같은 풀을 써야 한다.</param>
+    /// <param name="hp">현재 최대 HP를 조회하는 실제 장치의 빌린 메서드다. 같은 풀을 써야 한다.</param>
     /// <param name="types">타입 번호 순서의 타입 레코드.</param>
     /// <param name="spots">칸별 점유 지도 65,536칸.</param>
     public RawPriestState(RawSidPool pool, RawHitPoints hp, IReadOnlyList<OriginalTypeRecord> types, byte[] spots)
@@ -149,9 +149,19 @@ public sealed class RawPriestState
             throw new ArgumentException("사제 상태 조회 풀·타입·지도 연결 오류", nameof(types));
         }
         _pool = pool;
-        _hp = hp;
+        _maxHitPoints = hp.MaxHitPoints;
         _types = types;
         _spots = spots;
+    }
+
+    /// <summary>사제 등록·상태가 같은 실제 보상 HP 장치를 공유하도록 연결한다.</summary>
+    public RawPriestState(RawSidPool pool, RawSquidReward hp, IReadOnlyList<OriginalTypeRecord> types, byte[] spots)
+    {
+        ArgumentNullException.ThrowIfNull(pool); ArgumentNullException.ThrowIfNull(hp);
+        ArgumentNullException.ThrowIfNull(types); ArgumentNullException.ThrowIfNull(spots);
+        if (!ReferenceEquals(hp.Pool, pool) || types.Count != OriginalConstructors.TypeCount || spots.Length != Side * Side)
+            throw new ArgumentException("사제 상태 조회 실제 보상HP·타입·지도 연결 오류", nameof(types));
+        _pool = pool; _maxHitPoints = hp.MaxHitPoints; _types = types; _spots = spots;
     }
 
     /// <summary>회복 처리기의 연결 검사용 원본 풀을 반환한다.</summary>
@@ -188,7 +198,7 @@ public sealed class RawPriestState
             return false;
         }
         // 저 HP 일 때에는 지면 좌표를 읽지 않는다.
-        if (CurrentHitPoints(sid) < _hp.MaxHitPoints(sid) / 2)
+        if (CurrentHitPoints(sid) < _maxHitPoints(sid) / 2)
         {
             return true;
         }
@@ -224,7 +234,7 @@ public sealed class RawPriestState
             throw new InvalidOperationException("사제 HP 변경 타입·가상 표 오류");
         }
         int oldHp = CurrentHitPoints(sid);
-        int half = _hp.MaxHitPoints(sid) / 2;
+        int half = _maxHitPoints(sid) / 2;
         bool wasLow = oldHp < half;
         bool transition = (value < half) != wasLow;
         byte owner = raw[34];
@@ -264,7 +274,7 @@ public sealed class RawPriestState
         }
         hooks.Unpop!(sid, 0);
         // 가상 효과 이후 HP·좌표를 다시 읽는다. 새 HP 가 저 HP 일 때만 현재 위치를 거의 올림한다.
-        if (CurrentHitPoints(sid) < _hp.MaxHitPoints(sid) / 2)
+        if (CurrentHitPoints(sid) < _maxHitPoints(sid) / 2)
         {
             Span<byte> target = _pool.AllocatedBytes(sid);
             foreach (int offset in new[] { XOffset, YOffset })

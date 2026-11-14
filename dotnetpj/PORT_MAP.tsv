@@ -710,3 +710,5 @@ cpppj/src/o/RawPlayerColor.h	Netstorm.Core/Original/RawPlayerColor.cs	fffd98dc46
 cpppj/src/o/RawPriestPostPop.h	Netstorm.Core/Original/RawPriestPostPop.cs	9bea55e239a6574c0856a5e8349c8689167ebdf3	port
 cpppj/src/o/RawPriestPostPop.cpp	Netstorm.Core/Original/RawPriestPostPop.cs	9bea55e239a6574c0856a5e8349c8689167ebdf3	port
 cpppj/src/o/RawPriestPostPop.h	Netstorm.Core/Original/RawPriestPreDestroy.cs	9bea55e239a6574c0856a5e8349c8689167ebdf3	port
+cpppj/src/o/RawPriestPostPopTail.h	Netstorm.Core/Original/RawPriestPostPopTail.cs	d95b07dfb8da8b6b1f2b0bc794b9740773e0c493	port
+cpppj/src/o/RawPriestPostPopTail.cpp	Netstorm.Core/Original/RawPriestPostPopTail.cs	d95b07dfb8da8b6b1f2b0bc794b9740773e0c493	port

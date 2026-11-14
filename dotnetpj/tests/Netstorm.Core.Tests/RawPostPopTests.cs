@@ -7,7 +7,7 @@ namespace Netstorm.Core.Tests;
 /// 원본 월드 코어의 공통 후처리(<see cref="RawPostPop"/>)의 보호 경로와 연결 지점 계약을 확인한다.
 /// 원본 기대값 재생(X86RawPostPopTests)이 정상 호출의 결과를 대조하고, 이 검사들은 cpppj/tests/PostPopTests.cpp 의 보호 검사를 10.78 로 옮기며
 /// "거부한 호출은 상태·풀을 한 바이트도 바꾸지 않는다", 최초 등록의 중복 집계 금지, Graph 연결 요구, 다리 접두의 쓰기 순서를 더해 확인한다.
-/// 파생 몸체는 아직 없으므로 HandlesDerived 는 항상 거짓이다 (W02 PostPop 조각, 2026-10-20).
+/// 파생 몸체를 연결하지 않은 이 검사에서는 HandlesDerived가 거짓이다 (W02 PostPop 조각, 2026-10-20).
 /// </summary>
 public sealed class RawPostPopTests
 {

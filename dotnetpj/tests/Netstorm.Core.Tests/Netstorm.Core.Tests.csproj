@@ -257,4 +257,8 @@
     <!-- 사제 목록·회복 예약 접두의 원본 관측을 PATCH 입력 대조에 공유한다. -->
     <None Include="../../../cpppj/tests/fixtures/priestpostpop-x86.tsv" Link="X86/priestpostpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 사제 전체 후처리의 원본 관측에서 PATCH2048입력을 대조한다. -->
+    <None Include="../../../cpppj/tests/fixtures/priestpostpoptail-x86.tsv" Link="X86/priestpostpoptail-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

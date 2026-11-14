@@ -153,8 +153,7 @@ public interface IRawPostPopGraph
 /// Pop 이후 타입별 등록 목록과 표면 연결 상태를 갱신하는 원본 공통 후처리(<c>004b0d30</c>, 10.78).
 /// 순서는 원본 그대로 "상태 검사 → 파생 지원 검사 → Graph 검사 → 비용·목록·통계 검사(Validate) →
 /// 영역 무효화·Graph 생성 → 비용 누적 → 공급원·작업장 목록 → 소유자 조건 통계 → 깊이 감소(PostPopBase)"다.
-/// 파생 몸체(사제·운반체·자산·공장·룬·다이스·다리 등)는 아직 연결하지 않으므로 <see cref="HandlesDerived"/> 는 항상 거짓이며,
-/// 그 효과가 필요한 가상 표의 등록은 풀·공간을 바꾸기 전에 거부한다.
+/// 명시 연결한 사제·Player의 전체 몸체에 분배하며 나머지 미복원 파생은 풀·공간 변경 전에 거부한다.
 /// Player 몸체만 <see cref="SetPlayerPostPop"/> 으로 따로 묶어 분배한다(F3 실제 호스트·월드 조립, 2026-11-10 0.304).
 /// 기준 판본은 10.78 뿐이다(CD 10.72 는 소유자·추가 비트 위치와 비용 누적 방식이 달라서 옮기지 않았다).
 /// 근거: cpppj/src/o/SquidPostPop.cpp (W02 PostPop 조각, 2026-10-20).
@@ -227,6 +226,9 @@ public sealed class RawPostPop : IRawPopPostPop
     /// <summary>같은 풀에 명시 등록한 실제 Player 최초 기록·예약 몸체다. 없으면 Player 가상표도 공통 경로로 간다. 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.</summary>
     private RawPlayerWorld? _playerPostPop;
 
+    /// <summary>명시 연결한 같은 풀의 실제 사제 접두·Carrier·후반 조합이다.</summary>
+    private RawPriestPostPopTail? _priestPostPop;
+
     /// <summary>공통 후처리 모듈을 만든다.</summary>
     /// <param name="pool">슬롯 풀.</param>
     /// <param name="types">타입 번호 순서의 타입 레코드. 10.78 은 188개여야 한다.</param>
@@ -288,11 +290,11 @@ public sealed class RawPostPop : IRawPopPostPop
 
     /// <summary>
     /// 이 모듈이 처리할 수 있는 파생 postPop 인지 돌려준다.
-    /// 파생 몸체(사제·운반체·자산·공장·룬·다이스·다리 등)를 아직 연결하지 않으므로 항상 거짓이다.
+    /// 명시 연결한 전체 사제 몸체만 처리하며 그 밖의 미복원 파생은 거부한다.
     /// Player 몸체는 별도 등록(<see cref="SetPlayerPostPop"/>)으로 분배하며 여기서 세지 않는다.
     /// </summary>
     /// <param name="sid">오브젝트 슬롯 번호.</param>
-    public bool HandlesDerived(int sid) => false;
+    public bool HandlesDerived(int sid) => HandlesPriest(sid);
 
     /// <summary>
     /// 실제 Player 최초 기록·예약 몸체를 같은 풀에만 명시 등록한다. null이면 등록을 해제한다.
@@ -317,6 +319,18 @@ public sealed class RawPostPop : IRawPopPostPop
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     /// <returns>묶은 Player 몸체가 처리하면 참이다.</returns>
     public bool HandlesPlayer(int sid) => _playerPostPop is not null && _playerPostPop.Handles(sid);
+
+    /// <summary>같은 풀의 전체 사제 후처리를 연결한다. 접두만으로 파생 지원을 허용하지 않는다.</summary>
+    public void SetPriestPostPop(RawPriestPostPopTail? priest)
+    {
+        if (priest is not null && !ReferenceEquals(priest.Pool(), _pool))
+            throw new ArgumentException("사제 Pop·후처리 풀 불일치", nameof(priest));
+        _priestPostPop = priest;
+    }
+
+    /// <summary>PATCH는 현재 TYPE를 추가 관문으로 쓰지 않고 실제 사제 가상표로 분배한다.</summary>
+    public bool HandlesPriest(int sid) => _priestPostPop is not null
+        && Read(_pool.Slot(sid), 0, 4) == 0x0050f210u;
 
     /// <summary>Pop 과 같은 해시·점유 지도를 보는지 확인한다. Graph 가 없으면 검사할 것이 없어 그대로 둔다.</summary>
     /// <param name="hash">Pop 이 쓰는 공간 해시.</param>
@@ -350,6 +364,7 @@ public sealed class RawPostPop : IRawPopPostPop
         {
             throw new InvalidOperationException("파생 postPop 미복원");
         }
+        if (HandlesPriest(sid)) _priestPostPop!.Validate(sid);
         // Player는 현재 9기록·SID와 조건부 예약을 가진 실제 몸체가 검사한다
         if (HandlesPlayer(sid))
         {
@@ -447,7 +462,7 @@ public sealed class RawPostPop : IRawPopPostPop
     }
 
     /// <summary>
-    /// 비전투 Activate 에서 postPop 을 호출하는 깊이 증가·감소를 보존한다. 파생 몸체가 없으므로 바로 공통 몸체로 간다.
+    /// 비전투 Activate의 깊이 증가·감소를 보존하고 명시 연결한 전체 파생 몸체에 분배한다.
     /// Player는 가상 분배 진입으로 실제 몸체가 후처리한다(원본 Activate→DispatchPostPop 상당).
     /// 2026-11-10 F3 실제 호스트·월드 조립(0.305)에서 추가됐다.
     /// </summary>
@@ -459,7 +474,7 @@ public sealed class RawPostPop : IRawPopPostPop
         uint before = _state.Depth;
         _state.Depth = unchecked(before + 1);
         PostPopVirtual(sid, flags);
-        // 파생 몸체가 없으므로 공통 몸체가 깊이를 정확히 1 줄였는지 여기서 보장된다
+        // 연결한 파생도 공통 몸체를 통해 깊이를 정확히 한 번 줄였는지 확인한다
         if (_state.Depth != before)
         {
             throw new InvalidOperationException("postPop Activate 공통 깊이 불일치");
@@ -476,8 +491,8 @@ public sealed class RawPostPop : IRawPopPostPop
     }
 
     /// <summary>
-    /// 가상 분배 진입이다. Player는 현재 9기록·SID와 조건부 예약을 가진 실제 몸체가 후처리하고,
-    /// 그 밖은 파생 분배 없이 공통 몸체로 간다. PATCH는 사전 검사를 삽입하지 않는다.
+    /// 가상 분배 진입이다. 명시 연결한 사제·Player는 실제 전체 몸체가 후처리하며 나머지는 공통 몸체로 간다.
+    /// PATCH는 사전 검사를 삽입하지 않는다.
     /// 근거: cpppj `o/SquidPostPop.cpp`의 `PostPopVirtual`·`DispatchPostPop` 중 Player 분기.
     /// 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.
     /// </summary>
@@ -488,6 +503,13 @@ public sealed class RawPostPop : IRawPopPostPop
         if (_pool.Edition != OriginalEdition.Patch1078)
         {
             Validate(sid, flags, default);
+        }
+
+        // 사제는 Carrier를 통해 공통 깊이를 한 번 끝내고 후반 처리를 이어 간다.
+        if (HandlesPriest(sid))
+        {
+            _priestPostPop!.PostPop(sid, flags);
+            return;
         }
 
         // Player는 자기 몸체에서 공통 장부를 한 번 호출하므로 여기서 끝낸다
