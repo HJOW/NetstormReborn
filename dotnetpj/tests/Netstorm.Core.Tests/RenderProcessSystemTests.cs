@@ -6,7 +6,7 @@ using Netstorm.Core.Simulation;
 namespace Netstorm.Core.Tests;
 
 /// <summary>생성 중 공개·출력 중 변경·현재 배율·실제 Form 반납을 검증한다.</summary>
-public sealed class RenderProcessSystemTests
+public sealed partial class RenderProcessSystemTests
 {
     /// <summary>실제 원문 풀/타입/Host/Kernel과 공통 등록기를 소유한다.</summary>
     private sealed class Scene

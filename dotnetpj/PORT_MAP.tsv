@@ -839,3 +839,13 @@ cpppj/src/o/RawBurningSourceCount.h	Netstorm.Core/Original/RawBurningSourceCount
 cpppj/src/o/RawBurningSourceCount.cpp	Netstorm.Core/Original/RawBurningSourceCount.cs	247855746f40366e6c45c9c2b97dc378f0cb8bf8	L1
 cpppj/src/o/RawBurningSources.h	Netstorm.Core/Original/RawBurningSources.cs	247855746f40366e6c45c9c2b97dc378f0cb8bf8	L1
 cpppj/src/o/RawBurningSources.cpp	Netstorm.Core/Original/RawBurningSources.cs	247855746f40366e6c45c9c2b97dc378f0cb8bf8	L1
+cpppj/src/o/RawBurningFrame.h	Netstorm.Core/Original/RawBurningFrame.cs	e5a198df450ae720da38f5110ebc611119ea2f38	L1
+cpppj/src/o/RawBurningFrame.cpp	Netstorm.Core/Original/RawBurningFrame.cs	e5a198df450ae720da38f5110ebc611119ea2f38	L1
+cpppj/src/o/RawBurningLifetimeDraw.h	Netstorm.Core/Original/RawBurningLifetimeDraw.cs	961f6be53a319c5c9cf78c7cc8eb2fdd007938a7	L1
+cpppj/src/o/RawBurningLifetimeDraw.cpp	Netstorm.Core/Original/RawBurningLifetimeDraw.cs	961f6be53a319c5c9cf78c7cc8eb2fdd007938a7	L1
+cpppj/src/o/BurningVisualSystem.h	Netstorm.Core/Original/BurningVisualSystem.cs	961f6be53a319c5c9cf78c7cc8eb2fdd007938a7	port
+cpppj/src/o/BurningVisualSystem.cpp	Netstorm.Core/Original/BurningVisualSystem.cs	961f6be53a319c5c9cf78c7cc8eb2fdd007938a7	port
+cpppj/src/client/BurningFrameCapture.h	Netstorm.Client/Display/BurningFrameCapture.cs	ab9361f11f2bc7618251f17d047f6d601c5c08fc	port
+cpppj/src/client/BurningFrameCapture.cpp	Netstorm.Client/Display/BurningFrameCapture.cs	ab9361f11f2bc7618251f17d047f6d601c5c08fc	port
+cpppj/src/client/Renderer.h	Netstorm.Client/Display/DirtyRegions.cs	731c9dee99fdaf98338fc54f33c9d62a886251f6	L1
+cpppj/src/client/Renderer.cpp	Netstorm.Client/Display/DirtyRegions.cs	5a2cd047486b18fb1d3978f8bbd4b1dee6924413	L1
