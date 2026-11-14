@@ -158,7 +158,7 @@ public sealed class AiDifficultyTests
         {
             Construct = (_, body, _) => { built = body.ToArray(); return 77u; },
             InitialUpdate = (_, body) => { updated = body.ToArray(); },
-            Difficulty = _ => 1u,
+            Difficulty = (_, _) => 1u,
         };
         var create = new RawAiCreate(OriginalEdition.Patch1078, Players(), hooks);
         Assert.Equal(77u, create.Create(1, settings));
@@ -192,7 +192,7 @@ public sealed class AiDifficultyTests
                 {
                     Construct = (_, body, _) => { built = body.ToArray(); return 78u; },
                     InitialUpdate = (_, _) => { },
-                    Difficulty = _ => value.Value,
+                    Difficulty = (_, _) => value.Value,
                 };
             var create = new RawAiCreate(OriginalEdition.Patch1078, Players(), hooks);
             Assert.Equal(78u, create.Create(1, settings));

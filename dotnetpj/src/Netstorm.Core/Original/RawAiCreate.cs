@@ -19,8 +19,8 @@ public sealed class AiCreateHooks
     public Func<uint, ReadOnlyMemory<byte>, int, uint>? Construct { get; init; }
     /// <summary>실제 AI의 기술과 분류를 초기 갱신한다.</summary>
     public Action<uint, ReadOnlyMemory<byte>>? InitialUpdate { get; init; }
-    /// <summary>11차 난이도. 소유자의 인공지능 난이도(설정 파일 값 1쉬움/2보통/3어려움)를 돌려준다. 선택 사항이며 없거나 보통이면 설정을 그대로 쓴다. 적이 아닌 인공지능(동맹/데모)은 호출자가 보통(2 또는 0)으로 돌려준다.</summary>
-    public Func<uint, uint>? Difficulty { get; init; }
+    /// <summary>11차 난이도다. 강제 적 정리 뒤의 현재 설정을 함께 읽어, 생성자가 아직 기록하지 않은 동맹 목록으로 아군/적을 판정한다. 없거나 보통이면 설정을 유지한다.</summary>
+    public Func<uint, ReadOnlyMemory<byte>, uint>? Difficulty { get; init; }
 }
 
 /// <summary>10.78 AI 생성의 색→기존 brain→NoTemple→생성→부착→초기 갱신 순서다.
@@ -77,7 +77,7 @@ public sealed class RawAiCreate
         // 11차: 보통이 아니면 설정 복사본에 난이도 배율을 적용해 생성자와 초기 갱신에 같은 값을 넘긴다(입력 설정은 바꾸지 않는다).
         if (_hooks.Difficulty is not null)
         {
-            AiDifficultyLevel level = AiDifficulty.FromValue(_hooks.Difficulty(owner));
+            AiDifficultyLevel level = AiDifficulty.FromValue(_hooks.Difficulty(owner, active));
             if (level != AiDifficultyLevel.Normal)
             {
                 active = AiDifficulty.ApplyAiDifficulty(active, level);
