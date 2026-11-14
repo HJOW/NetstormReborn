@@ -20582,10 +20582,78 @@
       "bytes": 128620,
       "lines": 859,
       "fixtureCommit": "c5c0e7c96",
-      "webCommit": "worktree",
+      "webCommit": "66fa648d7",
       "cpppjBasis": {
         "cpppj/src/client/TellSection.cpp": "5a2cd0474",
         "cpppj/src/client/TellSection.h": "6dd8d803b"
+      }
+    },
+    {
+      "id": "background-gif-assets",
+      "path": "cpppj/tests/fixtures/background-gif-assets-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E462",
+      "consumers": [
+        "webpj/tests/raw-background-gif-controls.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/raw-background-gif-controls.js",
+        "webpj/www/ui/raw-menu-tree.js",
+        "webpj/www/ui/background-gif-gump.js",
+        "webpj/www/assets/gif.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawBackgroundGifControls.cpp",
+        "cpppj/src/client/RawBackgroundGifControls.h"
+      ],
+      "doc": "docs/webpj-raw-background-gif-controls-20261114.md",
+      "text": true,
+      "producer": "cpppj BackgroundGifClientTests: 보호 원본 10.78 배경 GIF 34개를 원본 LZW 본체로 미리 관측한 색 번호 FNV-1a 64·SHA-256·치수(기존 fixture, 재실행 없음)",
+      "scope": "원본 d/*.gif 34행의 폭/높이·색 번호 지문·해시. 기본 소스 해시와 행/기본 블록 항목 수는 기록 열(비교하지 않음)",
+      "sha256": "6153a1ec5a7c6fa2f584f94753c67a2264b7f8d61dd8639f6bffbd14d0c7d083",
+      "bytes": 6317,
+      "lines": 35,
+      "fixtureCommit": "b817a28a0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawBackgroundGifControls.cpp": "750845400",
+        "cpppj/src/client/RawBackgroundGifControls.h": "b817a28a0"
+      }
+    },
+    {
+      "id": "background-gif-variants",
+      "path": "cpppj/tests/fixtures/background-gif-variants-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E462",
+      "consumers": [
+        "webpj/tests/raw-background-gif-controls.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/raw-background-gif-controls.js",
+        "webpj/www/ui/raw-menu-tree.js",
+        "webpj/www/ui/background-gif-gump.js",
+        "webpj/www/assets/gif.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawBackgroundGifControls.cpp",
+        "cpppj/src/client/RawBackgroundGifControls.h"
+      ],
+      "doc": "docs/webpj-raw-background-gif-controls-20261114.md",
+      "text": true,
+      "producer": "cpppj BackgroundGifClientTests: 보호 원본 10.78 titleMenu.gif 입력 헤더 변형 4개를 같은 원본 LZW 본체로 미리 관측한 색 번호 지문(기존 fixture, 재실행 없음)",
+      "scope": "4행(logicalOffsets·smallCanvas·localPalette·interlaced)의 폭/높이·색 번호 지문·해시. 논리 화면/오프셋 무시와 첫 descriptor·지역 표·인터레이스 네 패스 규칙",
+      "sha256": "e3084fcfc65dd9312f2bc57dede50fbf5c2a5c9bc057b71df128cd59642a05cc",
+      "bytes": 793,
+      "lines": 5,
+      "fixtureCommit": "b817a28a0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawBackgroundGifControls.cpp": "750845400",
+        "cpppj/src/client/RawBackgroundGifControls.h": "b817a28a0"
       }
     }
   ]

@@ -241,7 +241,7 @@ cpppj/src/client/QuickHelpList.cpp	exclude-host			-	[host-dev-files]
 cpppj/src/client/QuickHelpRequest.cpp	port	www/ui/help-window.js	1f00a25a	partial	[client-default] 주제 요청
 cpppj/src/client/QuickHelpWindow.cpp	port	www/ui/help-window.js	1f00a25a	partial	[client-default] 도움말 창 배치
 cpppj/src/client/RawAiDebugMenu.cpp	port	www/core/raw-ai-debug-menu.js	1f00a25a	port	[client-default] WB04-E182: AI 디버그 메뉴 413dd0(현재 Player 행의 +0xb0 재조회·AI Debug 뒤 보관 brain·진단 7행·파라미터 다섯 묶음). fixture aidebugmenu 60행 전부. 남음: 메뉴 작성기(서식/스택/Submenu)와 현재 Player/brain 물리 세션 연결
-cpppj/src/client/RawBackgroundGifControls.cpp	port			todo	[client-default]
+cpppj/src/client/RawBackgroundGifControls.cpp	port	www/ui/raw-background-gif-controls.js;www/ui/raw-menu-tree.js	1f00a25a	port	[client-default] WB04-E462: RawMenuTree 접합 구조체(필수 13·선택 3)와 GIF 창 조립(고정 파생 저장소·전체 생성·소유 이미지 별칭 0x72000000 대역·Draw 표면 대여/재진입 거부·원시 큐 전달·이미지 free→기본 소멸→객체 free·미부착 포함 Close). 원본 GIF 34개와 변형 4개의 색 번호가 독립 LZW 관측과 전체일치, cpppj 시험 5건 대응(파일 이름 고리 시험은 네이티브 전용). 기준선 뒤 변경 없음. 허브의 EnableBackgroundGifs 결선과 실제 구름/배경 화면 비교는 허브·ClientRendererFrame.
 cpppj/src/client/RawBattleLeave.cpp	port			todo	[client-default] 단독 State3 복귀(LeaveBattle)에서도 쓴다
 cpppj/src/client/RawBombBlastBindings.cpp	port			todo	[client-default]
 cpppj/src/client/RawButtonControls.cpp	port			todo	[client-default]
