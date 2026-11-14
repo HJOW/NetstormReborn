@@ -323,4 +323,13 @@
     <None Include="../../../cpppj/tests/fixtures/rendercollection-x86.tsv" Link="X86/rendercollection-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/render-removal-x86.tsv" Link="X86/render-removal-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 연소 생성/입자/연소점과 현재 대상·SID 상세진단의 실제 원본 관찰을 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/sid-robust-parent-x86.tsv" Link="X86/sid-robust-parent-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/burning-victim-parent-x86.tsv" Link="X86/burning-victim-parent-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/burningprocess-constructor-x86.tsv" Link="X86/burningprocess-constructor-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/burningparticle-x86.tsv" Link="X86/burningparticle-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/burningsources-x86.tsv" Link="X86/burningsources-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/burning-source-count-current-x86.tsv" Link="X86/burning-source-count-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
