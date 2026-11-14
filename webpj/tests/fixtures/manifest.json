@@ -21115,10 +21115,76 @@
       "bytes": 3414472,
       "lines": 13399,
       "fixtureCommit": "d2dd9fcb0",
-      "webCommit": "worktree",
+      "webCommit": "834002d9e",
       "cpppjBasis": {
         "cpppj/src/client/HudDividerInput.cpp": "d2dd9fcb0",
         "cpppj/src/client/HudDividerInput.h": "d2dd9fcb0"
+      }
+    },
+    {
+      "id": "inventory-grid",
+      "path": "cpppj/tests/fixtures/inventory-grid-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E472",
+      "consumers": [
+        "webpj/tests/inventory-gump.test.mjs"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/InventoryGump.cpp",
+        "cpppj/src/client/InventoryGump.h"
+      ],
+      "doc": "docs/webpj-inventory-gump-20261115.md",
+      "text": true,
+      "producer": "cpppj InventoryGumpTests: 보호 원본 10.78 생산 격자/항목의 생성(43d790/43e120)·부착(43e1e0)·통지(43d850)·삭제 통지(43d9c0) 독립 x86 관측 170행(기존 fixture, 재실행 없음)",
+      "modules": [
+        "webpj/www/ui/inventory-gump.js",
+        "webpj/www/ui/gump-create.js",
+        "webpj/www/core/raw-contained-finder.js"
+      ],
+      "scope": "진입 5종(Grid/Item/Attach/Handle/Gone)의 격자·항목 노드 전체 바이트·생성 항목·호출 순서·반환",
+      "sha256": "e58dd7725294925c2e9ff69c39521591ddedbabc8c21e2b8ee3034643c71aa0c",
+      "bytes": 141287,
+      "lines": 171,
+      "fixtureCommit": "c4551504c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/InventoryGump.cpp": "087ff2577",
+        "cpppj/src/client/InventoryGump.h": "087ff2577"
+      }
+    },
+    {
+      "id": "inventory-blink",
+      "path": "cpppj/tests/fixtures/inventory-blink-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E472",
+      "consumers": [
+        "webpj/tests/inventory-gump.test.mjs"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/InventoryGump.cpp",
+        "cpppj/src/client/InventoryGump.h"
+      ],
+      "doc": "docs/webpj-inventory-gump-20261115.md",
+      "text": true,
+      "producer": "cpppj InventoryBlinkTests: 보호 원본 10.78 항목 점멸 Idle(43d6e0)의 독립 x86 관측 110행(기존 fixture, 재실행 없음)",
+      "modules": [
+        "webpj/www/ui/inventory-gump.js",
+        "webpj/www/ui/gump-lifetime.js",
+        "webpj/www/render/gump-redraw.js"
+      ],
+      "scope": "점멸 단계·표시 비트·Idle 500칸 표·시각 조회 횟수·내용물 점멸 비트·다시 그리기 사각형",
+      "sha256": "76de11e7031b1cffecd6ce2055905305665333f69418d3934aa4d6e76b55fe3d",
+      "bytes": 233726,
+      "lines": 111,
+      "fixtureCommit": "087ff2577",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/InventoryGump.cpp": "087ff2577",
+        "cpppj/src/client/InventoryGump.h": "087ff2577"
       }
     }
   ]
