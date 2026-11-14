@@ -34,6 +34,6 @@ python -X utf8 -m unittest discover -s dotnetpj/tools -p test_l2_compare.py -v
 
 ## 검증과 후속
 
-Release솔루션 빌드 경고0·오류0. 전체 회귀의 Assets366·Client1171은 실패0이고 Core는 진행 중이다(`extracted/dotnet-regression-0499/`); 종결 결과는 다음 단위에서 갱신한다. 제품 코드·PORT_MAP·fixture변화·새 NB수정·외부 접속 변화는 없다.
+Release솔루션 빌드 경고0·오류0. 전체 회귀의 Assets366·Client1171은 실패0이고 Core1945개도 완주해 총3482개·실패0·건너뜀0·종료0으로 종결했다(`extracted/dotnet-regression-0499/`, 0.500에서 확인). 제품 코드·PORT_MAP·fixture변화·새 NB수정·외부 접속 변화는 없다.
 
 기준선 확보를 반복하는 단위는 끝났다. 다음은 실제 AI생성자·초기 갱신, 세션 `Bind*`, 요새 이미지·메뉴 미션 시작, Pop후속·농지·장부·표시/그래프 연결이다. 시작 흐름이 같아진 뒤 같은 시드의 기준선으로 M1을 다시 판정한다. 일반 미션31개와 데모3개를 서로 다른 시작 경로로 유지한다.

@@ -6,6 +6,7 @@
 # 열: file	sha256	rows	origin	consumer
 add-random-input-x86.tsv	bbe76e4e4e4e9f6d8ac99fa9da3b98762c05350888eafede69e409b7498b805a	289	cpppj	Client
 add-random-parent-x86.tsv	dffb9b89963349c900283e3503f574987f81c155815c0dff01ad3064371fca3d	721	cpppj	Core
+ai-brain-x86.tsv	53aecd3e635d5743ea07091d863d6db7fb328daa8181b7a5769b78a233087fab	161	cpppj	Core
 ambient-wind-hardware-x86.tsv	8d653588b6e676c85f7cd292677699df4a3702bb6ab268b5697caea19b04c999	1920	cpppj	Core
 asset-player-x86.tsv	9562745a755606ed0492e8a457d1c5f97822f073896882db282e04bbb992c3a4	576	cpppj	Core
 assetpostpop-x86.tsv	706afb7e0bd78de2527e97a1ec1bbe1f35a202aafbd2c81a0dc8d77d99198741	1636	cpppj	Core
