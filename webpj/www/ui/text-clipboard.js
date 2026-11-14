@@ -1,7 +1,7 @@
 // 원문 004dd810/004dd870 의 CF_TEXT 읽기/쓰기와 GlobalAlloc/Lock 순서를 명시한 장치에 연결한다(cpppj client/TextClipboard.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 공통 TextEntry 가 빌리는 clipboard 의 원문 부모다. CF_UNICODETEXT 변환이나 새 줄/문자열 정규화를 더하지 않고, 실제 OS 반환을 성공으로 바꾸지 않으며 원문의 검사/무시/Close 위치를 유지한다.
 // 웹 적응: cpppj 의 Win32TextClipboardDevices(User32/Kernel32 직접 호출)는 이식하지 않는다. 브라우저 clipboard 는 비동기이므로 호스트가 붙여넣기 이벤트에서 얻은 문자열 스냅숏과 쓰기 함수만 주면
-// createWebTextClipboardDevices 가 같은 아홉 장치 호출 순서(형식/Open/Get/Lock/Unlock/Empty/Alloc/Set/Close)로 에뮬레이트한다. 글자는 Windows-1252 바이트이며 전용 PE fixture 는 없다.
+// createWebTextClipboardDevices 가 같은 아홉 장치 호출 순서(형식/Open/Get/Lock/Unlock/Empty/Alloc/Set/Close)로 에뮬레이트한다. 글자는 Windows-1252 바이트이며 원본 10.78 독립 관측 880행은 tests/ui-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E477 연결, 첫 실행 전체일치).
 // 사용: const clipboard = new TextClipboard(createWebTextClipboardDevices({ snapshot: () => pasteText, store: (text) => navigator.clipboard.writeText(text) })); bindTextClipboard(context, clipboard).
 // (2026-11-14 WB04-E439: RawMenuControls 선행 clipboard 이식)
 import { decodeWindows1252, encodeWindows1252 } from '../assets/text-encoding.js';

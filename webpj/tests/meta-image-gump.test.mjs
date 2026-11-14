@@ -1,5 +1,5 @@
 // 동적 Image 를 빌리는 MetaImage 노드(MetaImageGump)의 생성/크기/부착 축소/출력 분기와 실제 픽셀 연결을 기준선 소스 계약과 손 계산 값으로 검증한다. (2026-11-14 WB04-E440)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(MetaImageGump.cpp)에서 옮겼다. 공통 factory 는 실제 GumpCreate 이다.
+// 이 파일은 손 계산 바이트·경계 시험이며 원본 10.78 직접 관측은 ui-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E477). 순서/경계는 기준선 소스(MetaImageGump.cpp)에서 옮겼다. 공통 factory 는 실제 GumpCreate 이다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { GumpCreate, GumpCreateState } from '../www/ui/gump-create.js';

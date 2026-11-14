@@ -1,6 +1,6 @@
 // 원본 Image(0046d790/0046d900/0046d8a0)의 bitmap 소비·VFX 1.10 변환·깊은 복사·소멸 수명을 옮긴다(cpppj client/RawImage.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 동적 이미지는 자산 TYPE 그림과 별도 수명으로 소유한다. 행 우선 8비트 bitmap(0 은 투명)을 받아 불투명 사각형만 단일 프레임 VFX 1.10 shape(40바이트 머리 + 행별 skip/repeat/literal 토큰)로 인코딩하고 bitmap 은 소비한다.
-// 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 인코딩은 웹 ShapeDatabase 로 되풀이 해독해 원래 픽셀과 대조한다. 기준선 뒤 변경도 없다.
+// 원본 10.78 독립 관측 1570행은 tests/ui-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E477 연결, 첫 실행 전체일치). 인코딩은 웹 ShapeDatabase 로 되풀이 해독해 원래 픽셀과 대조한다. 기준선 뒤 변경도 없다.
 // 사용: const image = new RawImage(); image.convert({ width, height, pixels }, true); image.shape() → Uint8Array, image.width()/height().
 // (2026-11-14 WB04-E440: RawMenuControls 선행 동적 Image 이식)
 

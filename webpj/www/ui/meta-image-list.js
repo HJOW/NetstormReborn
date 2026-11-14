@@ -1,6 +1,6 @@
 // 원본 21칸 Image 목록(VT 0050d0d4, 종류 22)의 등록·배치·적중·선택·삭제를 옮긴다(원문 0047ccb0~0047d1f0·0047f360, cpppj client/MetaImageList.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 목록은 MetaImage 자식을 소유하고 각 Image 는 창/호출자가 소유한다. 같은 기본 Gump 뒤의 원문 목록 필드(개수·이미지/ID 배열·선택·열 수·셀 크기)를 쓰며 사용하지 않는 배열 끝도 보존한다.
-// 부작용 순서와 float32 저장/CRT 절삭을 보존한다(생성 중 현재 count 가 바뀌어도 각 읽기 시점을 유지). 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 부작용 순서와 float32 저장/CRT 절삭을 보존한다(생성 중 현재 count 가 바뀌어도 각 읽기 시점을 유지). 원본 10.78 독립 관측 514행은 tests/ui-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E477 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: const list = new MetaImageList(factory, { node, image, createImage, attach, baseAttach, push, kill, destructBase, bounds, redraw, notify, green, fill }); list.construct(token, 4); list.add(token, rawImage, id).
 // (2026-11-14 WB04-E440: RawMenuControls 선행 MetaImage 목록 이식)
 import { GumpCreateNode } from './gump-create.js';

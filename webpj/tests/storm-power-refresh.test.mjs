@@ -1,5 +1,5 @@
 // 현재 serial의 SP 예산 Gump 재부착(RawStormPowerRefresh)을 기준선 소스 계약으로 검증한다. (2026-11-14 WB04-E437)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(RawStormPowerRefresh.cpp)에서 옮겼다. 등록은 실제 GumpCreate 로 하고 Push/Attach 는 기록 장치를 쓴다.
+// 이 파일은 손 계산 바이트·경계 시험이며 원본 10.78 직접 관측은 ui-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E477). 순서/경계는 기준선 소스(RawStormPowerRefresh.cpp)에서 옮겼다. 등록은 실제 GumpCreate 로 하고 Push/Attach 는 기록 장치를 쓴다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { GumpCreateNode, GumpCreateState, GumpCreate, GUMP_REGISTRY_CAPACITY } from '../www/ui/gump-create.js';

@@ -1,6 +1,6 @@
 // 현재 serial의 실제 예산(Storm Power) Gump를 원문 Push/Attach 순서로 다시 붙인다(원문 00464020/0043dad0, cpppj client/RawStormPowerRefresh.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 금액/SP/Idle/문자열을 다시 계산하지 않고 실제 예산 Gump의 재부착만 수행한다. 숫자 토큰은 같은 공통 등록표(GumpCreateState.entries)의 노드에만 해석하며
-// 노드 조회(hooks.node)는 같은 저장소의 순수 주소 조회여야 한다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 노드 조회(hooks.node)는 같은 저장소의 순수 주소 조회여야 한다. 원본 10.78 독립 관측 120행은 tests/ui-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E477 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: refreshStormPowerGump(state.entries, serial, { node: (token) => nodes.get(token), push: (token) => tree.push(token), attach: (token, x, y, a, b) => tree.attach(token, x, y, a, b) }).
 // (2026-11-14 WB04-E437: RawMenuControls 선행 SP 표시 재부착 이식)
 import { GUMP_REGISTRY_CAPACITY } from './gump-create.js';

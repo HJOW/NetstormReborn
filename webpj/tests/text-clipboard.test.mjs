@@ -1,5 +1,5 @@
 // CF_TEXT clipboard 부모(TextClipboard)의 읽기/쓰기 장치 호출 순서와 웹 에뮬레이터를 기준선 소스 계약으로 검증한다. (2026-11-14 WB04-E439)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(TextClipboard.cpp)에서 옮겼다. 실제 Win32 장치는 웹에 없다(브라우저 스냅숏 에뮬레이터로 대신한다).
+// 이 파일은 손 계산 바이트·경계 시험이며 원본 10.78 직접 관측은 ui-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E477). 순서/경계는 기준선 소스(TextClipboard.cpp)에서 옮겼다. 실제 Win32 장치는 웹에 없다(브라우저 스냅숏 에뮬레이터로 대신한다).
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { TextClipboard, bindTextClipboard, createWebTextClipboardDevices } from '../www/ui/text-clipboard.js';

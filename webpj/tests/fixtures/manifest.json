@@ -21529,7 +21529,7 @@
       "bytes": 19199,
       "lines": 38,
       "fixtureCommit": "c3625c33e",
-      "webCommit": "worktree",
+      "webCommit": "d1742a4db",
       "cpppjBasis": {
         "cpppj/src/client/TraceChat.cpp": "c3625c33e",
         "cpppj/src/client/TraceChat.h": "c3625c33e"
@@ -21564,6 +21564,161 @@
       "cpppjBasis": {
         "cpppj/src/client/HudChatGeometry.cpp": "6df0f316b",
         "cpppj/src/client/HudChatGeometry.h": "6df0f316b"
+      }
+    },
+    {
+      "id": "budget-refresh",
+      "path": "cpppj/tests/fixtures/budget-refresh-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E477",
+      "producer": "cpppj StormPowerRefreshTests: 보호 원본 10.78 예산 Gump 재부착(464020/43dad0)의 독립 x86 관측 120행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/ui-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/storm-power-refresh.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawStormPowerRefresh.cpp",
+        "cpppj/src/client/RawStormPowerRefresh.h"
+      ],
+      "doc": "docs/webpj-ui-native-fixtures-20261115.md",
+      "scope": "현재 serial 조회와 Push/Attach 순서·좌표·깊이 복원, 없는 대상/루트/첫째·마지막 슬롯/죽음/중복/두 정밀도와 중단 prefix(전체 노드·등록표·serial·호출 순서)",
+      "text": true,
+      "sha256": "5751f03a844bf48b56a8043d230e5d416d7fbf0560d66dbc7b9bdba192f24cae",
+      "bytes": 1243112,
+      "lines": 121,
+      "fixtureCommit": "a0a17c435",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawStormPowerRefresh.cpp": "a0a17c435",
+        "cpppj/src/client/RawStormPowerRefresh.h": "a0a17c435"
+      }
+    },
+    {
+      "id": "meta-image",
+      "path": "cpppj/tests/fixtures/meta-image-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E477",
+      "producer": "cpppj MetaImageGumpTests: 보호 원본 10.78 MetaImage(47f2a0/47cbd0/47cc00/47cae0)의 독립 x86 관측 326행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/ui-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/meta-image-gump.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/MetaImageGump.cpp",
+        "cpppj/src/client/MetaImageGump.h"
+      ],
+      "doc": "docs/webpj-ui-native-fixtures-20261115.md",
+      "scope": "MetaImage 노드 생성/크기/부착 축소/가상 출력의 배율·기하 비트와 호출 인자/순서, 공통 등록표 count/serial, 두 제어 모드",
+      "text": true,
+      "sha256": "8f0707a8c3aa720dbb1966e91493b9fc7dbfc483225460ddb60c164a960e4b1f",
+      "bytes": 38591,
+      "lines": 327,
+      "fixtureCommit": "99bb3f8cd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MetaImageGump.cpp": "99bb3f8cd",
+        "cpppj/src/client/MetaImageGump.h": "99bb3f8cd"
+      }
+    },
+    {
+      "id": "meta-image-list",
+      "path": "cpppj/tests/fixtures/meta-image-list-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E477",
+      "producer": "cpppj MetaImageListTests: 보호 원본 10.78 Image 목록(47ccb0 등)의 독립 x86 관측 514행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/ui-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/meta-image-list.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/MetaImageList.cpp",
+        "cpppj/src/client/MetaImageList.h"
+      ],
+      "doc": "docs/webpj-ui-native-fixtures-20261115.md",
+      "scope": "Image 목록의 생성/부착/히트/입력/그리기/ID/이미지/삭제/추가/소멸에서의 tail 0xbc·자식 기하·호출 순서·반환·노드 필드",
+      "text": true,
+      "sha256": "fb7a7b8465a6f4637d76c76e12e77215a901998a51eda233d59dde26071f3301",
+      "bytes": 924474,
+      "lines": 515,
+      "fixtureCommit": "f0ac043fe",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MetaImageList.cpp": "f0ac043fe",
+        "cpppj/src/client/MetaImageList.h": "f0ac043fe"
+      }
+    },
+    {
+      "id": "editor-image",
+      "path": "cpppj/tests/fixtures/editor-image-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E477",
+      "producer": "cpppj EditorImageTests: 보호 원본 10.78 편집기 Image 변환·인코딩의 독립 x86 관측 1,570행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/ui-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/raw-image.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawImage.cpp",
+        "cpppj/src/client/RawImage.h"
+      ],
+      "doc": "docs/webpj-ui-native-fixtures-20261115.md",
+      "scope": "Image 변환/crop/shape 인코딩/복사/소멸의 전체 shape 바이트·크기(x87 두 모드·삼색 전 조합·긴 run·실제 지형 Bitmap)",
+      "text": true,
+      "sha256": "5e7bf7cb98a53697f0d33b6204a69ad425a38fe2b528993bd20371831e4342eb",
+      "bytes": 1199884,
+      "lines": 1571,
+      "fixtureCommit": "479ff24c4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawImage.cpp": "479ff24c4",
+        "cpppj/src/client/RawImage.h": "479ff24c4"
+      }
+    },
+    {
+      "id": "text-clipboard",
+      "path": "cpppj/tests/fixtures/text-clipboard-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E477",
+      "producer": "cpppj TextClipboardTests: 보호 원본 10.78 clipboard(4dd810/4dd870)의 독립 x86 관측 880행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/ui-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/text-clipboard.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/TextClipboard.cpp",
+        "cpppj/src/client/TextClipboard.h"
+      ],
+      "doc": "docs/webpj-ui-native-fixtures-20261115.md",
+      "scope": "CF_TEXT 읽기(240)/쓰기(640)의 용량·NUL 패딩·장치 실패별 호출 순서·접근 실패 80행",
+      "text": true,
+      "sha256": "79537abf02125545001553dafdb855f024727fbe6daf642092232ff864b95f31",
+      "bytes": 306396,
+      "lines": 881,
+      "fixtureCommit": "85f886f8e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/TextClipboard.cpp": "1d5b1f437",
+        "cpppj/src/client/TextClipboard.h": "1d5b1f437"
       }
     }
   ]

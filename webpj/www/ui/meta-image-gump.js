@@ -1,6 +1,6 @@
 // 원본 동적 Image 를 빌리는 전용 MetaImage(VT 0050d290, 종류 21)의 생성·기하·가상 출력을 옮긴다(원문 0047f2a0/0047cbd0/0047cc00/0047cae0, cpppj client/MetaImageGump.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 자산 TYPE ImageGump 와 독립된 원본 MetaImage 파생이다. Image 수명은 목록/창이 소유하며 이 노드는 그 객체만 빌린다(노드 소멸이 Image 를 해제하지 않는다).
-// 기본 생성/등록은 같은 10.78 공통 factory(GumpCreate)를 쓰고 부착/위치/픽셀·색표 효과는 호스트 훅이다. 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 기본 생성/등록은 같은 10.78 공통 factory(GumpCreate)를 쓰고 부착/위치/픽셀·색표 효과는 호스트 훅이다. 원본 10.78 독립 관측 326행은 tests/ui-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E477 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: const meta = new MetaImageGump(factory, { node, attach, position, color, draw }); meta.construct(token, image); meta.resize(token); bindMetaImagePixels(hooks, target, colors, disabled) 로 실제 픽셀 출력을 연결한다.
 // (2026-11-14 WB04-E440: RawMenuControls 선행 MetaImage 이식)
 import { GumpCreateNode } from './gump-create.js';
