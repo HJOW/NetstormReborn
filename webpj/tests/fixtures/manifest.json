@@ -22342,10 +22342,41 @@
       "bytes": 2923921,
       "lines": 311,
       "fixtureCommit": "e5a68d592",
-      "webCommit": "worktree",
+      "webCommit": "02cfb135e",
       "cpppjBasis": {
         "cpppj/src/client/HudNsInfo.cpp": "97dcd28fb",
         "cpppj/src/client/HudNsInfo.h": "97dcd28fb"
+      }
+    },
+    {
+      "id": "minimap-geometry",
+      "path": "cpppj/tests/fixtures/minimap-geometry-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E489",
+      "producer": "cpppj MinimapGeometryTests: 보호 원본 10.78 미니맵 순수 기하(00480270/004803f0/00480440/004805e0/00480660)의 독립 x86/CRT 관측 1,054행 중 callback 변경이 없는 1,028행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/minimap-geometry-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/minimap-geometry.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/MinimapGeometry.cpp",
+        "cpppj/src/client/MinimapGeometry.h"
+      ],
+      "doc": "docs/webpj-minimap-geometry-native-fixtures-20261115.md",
+      "scope": "1,054행 중 mutation 이 `-` 인 1,028행(rebuild 254·move 36·idle 216·attach 272·draw 250)의 state 5필드·view 8필드 원시 비트와 중심 목표 float 비트·블릿 원점/크기·카메라 외곽·재구성 억제. callback 재조회/부분 중단 26행은 외부 호출 순서라 제외(cpppj 와 같음)",
+      "text": true,
+      "sha256": "632b1e411d801a7e5a72c455d340e74a071c54e2511fa7486fd0f687ee47a078",
+      "bytes": 260470,
+      "lines": 1056,
+      "fixtureCommit": "560df210e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/MinimapGeometry.cpp": "560df210e",
+        "cpppj/src/client/MinimapGeometry.h": "560df210e"
       }
     }
   ]

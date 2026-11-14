@@ -1,5 +1,5 @@
 // 미니맵 기하(minimap-geometry: rebuild·target·drag·clamp·draw plan)를 기준선 소스 계약과 손 계산 값으로 검증한다.
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 모든 기대값은 기준선 식(x87 절삭·float 중간 저장·signed 32비트 감김)을 손으로 계산했다. 실제 게임·브라우저 실행이 아니다. (2026-11-14 WB04-E448)
+// 이 파일의 수치는 기준선 식에서 손으로 계산한 값이다. 원본 직접 관측 1,028행은 tests/minimap-geometry-native-fixtures.test.mjs(2026-11-15 WB04-E489)가 대조한다. 모든 기대값은 기준선 식(x87 절삭·float 중간 저장·signed 32비트 감김)을 손으로 계산했다. 실제 게임·브라우저 실행이 아니다. (2026-11-14 WB04-E448)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { MinimapGeometryState, clampMinimapAttachment, dragMinimap, minimapGeometryView, minimapTarget, planMinimapDraw, rebuildMinimap } from '../www/ui/minimap-geometry.js';

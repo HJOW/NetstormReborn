@@ -1,6 +1,6 @@
 // 원본 Sky Overview(미니맵)의 crop·카메라 프레임 사각형·바깥 드래그 계산을 옮긴다(원문 00480270/004803f0/00480440/004805e0/00480660, cpppj client/MinimapGeometry.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // x87 의 정수 절삭(CRT _ftol: signed 64비트 절삭 뒤 하위 DWORD, 무효 값은 0)과 float 중간 저장 위치, signed 32비트 감김, std::min/max 의 NaN 처리 순서를 보존한다.
-// 화면 픽셀로 바꾸거나 가장자리를 clamp 하는 일은 호출자의 몫이다(실제 497f20 은 호출자가 실행). 전용 PE fixture 는 없다(cpppj 에도 직접 시험이 없다). 기준선 뒤 변경도 없다.
+// 화면 픽셀로 바꾸거나 가장자리를 clamp 하는 일은 호출자의 몫이다(실제 497f20 은 호출자가 실행). 원본 10.78 독립 관측 1,028행은 tests/minimap-geometry-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E489 연결, 첫 실행 전체일치). 기준선 뒤 변경도 없다.
 // 사용: const state = new MinimapGeometryState(); rebuildMinimap(state, { camera: [bits0, bits1], viewport: {left,top,right,bottom}, pixelsX: 16, pixelsY: 11 }); planMinimapDraw(state, view, { x, y }).
 // (2026-11-14 WB04-E448: RawMenuControls 선행 미니맵 기하 이식)
 import { cameraFtolLow } from '../render/camera-view.js';
