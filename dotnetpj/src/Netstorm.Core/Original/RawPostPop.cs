@@ -1,56 +1,6 @@
 namespace Netstorm.Core.Original;
 
 /// <summary>
-/// 공통 PostPop 이 등록한 대상 번호를 모아 두는 목록(원본 SquidPostPopList).
-/// 원본처럼 미리 확보한 배열과 현재 개수(count)를 따로 둔다. 개수 밖의 stale 값은 버퍼에 남기되 조회에서는 숨긴다.
-/// </summary>
-public sealed class RawPostPopList
-{
-    /// <summary>미리 확보한 번호 배열. 길이(capacity)가 그대로 유지되며 개수 밖의 stale 값도 검사 대조에 쓴다.</summary>
-    public uint[] Entries { get; set; } = [];
-
-    /// <summary>현재 항목 수. 배열 길이를 넘으면 손상된 목록이므로 조회 때 거부한다.</summary>
-    public uint Count { get; set; }
-
-    /// <summary>활성 항목만 읽기 전용으로 본다. 개수가 배열을 넘으면 예외다.</summary>
-    public ReadOnlySpan<uint> Items()
-    {
-        // 손상된 개수는 목록 쓰기 전에 거부한다
-        if (Count > (uint)Entries.Length)
-        {
-            throw new InvalidOperationException("postPop 목록 count 범위 오류");
-        }
-        return Entries.AsSpan(0, (int)Count);
-    }
-
-    /// <summary>번호가 활성 항목에 있는지 돌려준다.</summary>
-    /// <param name="sid">찾을 슬롯 번호.</param>
-    public bool Contains(int sid)
-    {
-        // 활성 범위만 앞에서부터 찾는다
-        foreach (uint entry in Items())
-        {
-            if (entry == (uint)sid)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /// <summary>자리가 남았을 때만 번호를 덧붙인다. 가득 찼으면 기존 항목을 보존하고 생략한다(원본 Append).</summary>
-    /// <param name="sid">덧붙일 슬롯 번호.</param>
-    public void Append(int sid)
-    {
-        // 개수가 배열 안에 있을 때만 쓰고 개수를 늘린다
-        if (Count < (uint)Entries.Length)
-        {
-            Entries[(int)Count++] = (uint)sid;
-        }
-    }
-}
-
-/// <summary>
 /// 공통 PostPop 이 등록·조회하는 상태 묶음(원본 SquidPostPopState).
 /// 전역 비용 집계·생산 재계산 알림·공통 깊이·타입별 세 통계표·공급원/작업장 목록을 담는다.
 /// 이 인스턴스는 <see cref="RawPostPop"/> 과 같은 수명으로 공유하며 호출자가 State 행처럼 직접 채운다.

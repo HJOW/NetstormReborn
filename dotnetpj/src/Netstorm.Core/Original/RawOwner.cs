@@ -15,159 +15,67 @@ public sealed class SquidOwnerMode
     public bool Challenge { get; set; }
 }
 
-/// <summary>
-/// 소유자 변경을 객체 슬롯과 소유자별 작업장 목록에 반영하는 처리기(원본 SquidOwner, 10.78).
-/// 편집·전투 모드에서 신전·공장 부류의 이전 소유자 목록에서 번호를 빼고,
-/// 빈·매립이 아닌 새 소유자의 목록에 자리가 차면 생략한다.
-/// 판본별 소유자·추가 바이트 위치(패치 0x22·0x28, CD 0x20·0x23)를 따른다.
-/// 근거: cpppj/src/o/SquidOwner.cpp (W02 Owner 조각, 2026-10-20; CD 위치 F2c-2에서 추가).
-/// </summary>
+/// <summary>공통 Owner의 현재 TYPE/선택 진단을 실제 장기 장치에 연결한다.</summary>
+public sealed class SquidOwnerDiagnostics
+{
+    /// <summary>대여할 현재 TYPE 표다. null/빈 표는 생성 시 사본을 사용한다.</summary>
+    public IReadOnlyList<OriginalTypeRecord>? Types { get; set; }
+    /// <summary>원문 범위 진단의 식/파일/행과 정상 복귀를 연결한다.</summary>
+    public Action<string, string, uint>? Assertion { get; set; }
+}
+
+/// <summary>같은 실제 모드/장부와 현재 TYPE로 공통 Owner를 실행한다. cpp SquidOwner.h/.cpp의 수명/조회 계약이다.</summary>
 public sealed class SquidOwner
 {
-    /// <summary>작업장 목록 부류 마스크(소용돌이·공장, 원본 0x4200).</summary>
-    private const uint FactoryMask = 0x4200;
-
-    /// <summary>도전 모드에서 유효한 소유자 번호의 상한(원본 CL_NUM_CHAL_PLAYERS = 0x28). 1~39가 유효하다.</summary>
-    private const uint ChallengePlayers = 0x28;
-
-    /// <summary>상태 바이트의 빈(void) 비트. 켜져 있으면 새 소유자의 목록에 넣지 않는다.</summary>
-    private const byte VoidBit = 4;
-
-    /// <summary>추가 비트의 매립(buried) 비트. 켜져 있으면 새 소유자의 목록에 넣지 않는다.</summary>
-    private const byte BuriedBit = 8;
-
-    /// <summary>슬롯 안 타입 번호(1바이트)의 위치.</summary>
-    private const int TypeOffset = 10;
-
-    /// <summary>슬롯 안 상태 바이트의 위치.</summary>
-    private const int StateOffset = 11;
-
-    /// <summary>슬롯 안 소유자 바이트의 위치. 판본에 따라 다르다(패치 0x22, CD 0x20).</summary>
-    private int OwnerOffset => _pool.Edition == OriginalEdition.Cd1072 ? 0x20 : 0x22;
-
-    /// <summary>슬롯 안 추가 비트 바이트의 위치. 판본에 따라 다르다(패치 0x28, CD 0x23).</summary>
-    private int ExtraOffset => _pool.Edition == OriginalEdition.Cd1072 ? 0x23 : 0x28;
-
-    /// <summary>슬롯을 읽고 쓸 풀.</summary>
+    /// <summary>원문 물리 슬롯을 빌린다.</summary>
     private readonly RawSidPool _pool;
-
-    /// <summary>타입 번호 → 타입 레코드. 작업장 부류를 읽는다.</summary>
-    private readonly IReadOnlyList<OriginalTypeRecord> _types;
-
-    /// <summary>객체 종류·소유자별 등록 목록을 관리하는 장부. 호출자가 소유하며 이 클래스가 직접 바꾼다.</summary>
+    /// <summary>생성 시 값 복사한 독립 TYPE 기본 표다.</summary>
+    private readonly OriginalTypeRecord[] _types;
+    /// <summary>같은 실제 Player별 작업장 목록이다.</summary>
     private readonly RawPostPopState _bookkeeping;
-
-    /// <summary>소유자 지정이 보는 기본 모드 영역.</summary>
+    /// <summary>효과 사이에도 다시 읽는 현재 편집/전투/도전 모드다.</summary>
     private readonly SquidOwnerMode _mode;
-
-    /// <summary>
-    /// 풀·타입·장부·모드를 받아 소유자 지정을 만든다. 참조 대상은 이 객체보다 오래 살아야 한다.
-    /// </summary>
-    /// <param name="pool">슬롯 풀. 판본에 따라 소유자·추가 바이트 위치가 갈린다.</param>
-    /// <param name="types">타입 번호 순서의 타입 레코드. 판본에 맞는 개수(패치 188개, CD 171개)여야 한다.</param>
-    /// <param name="bookkeeping">소유자별 작업장 목록을 가진 장부.</param>
-    /// <param name="mode">기본 모드 영역.</param>
+    /// <summary>현재 TYPE를 대여하고 함수 객체를 복사한 진단이다.</summary>
+    private SquidOwnerDiagnostics _diagnostics = new();
+    /// <summary>판본의 TYPE 길이를 확인하고 생성 시 독립 깊은 사본을 소유한다.</summary>
     public SquidOwner(RawSidPool pool, IReadOnlyList<OriginalTypeRecord> types, RawPostPopState bookkeeping, SquidOwnerMode mode)
     {
-        ArgumentNullException.ThrowIfNull(pool);
-        ArgumentNullException.ThrowIfNull(types);
-        ArgumentNullException.ThrowIfNull(bookkeeping);
-        ArgumentNullException.ThrowIfNull(mode);
-        // CD 10.72(171개)는 소유자·추가 바이트 위치가 다르므로 풀 판본에 맞는 개수를 받는다
-        int expected = pool.Edition == OriginalEdition.Cd1072 ? 171 : OriginalConstructors.TypeCount;
-        if (types.Count != expected)
-        {
-            throw new ArgumentException($"타입 레코드가 {types.Count}개입니다 (기대 {expected}개)", nameof(types));
-        }
-        _pool = pool;
-        _types = types;
-        _bookkeeping = bookkeeping;
-        _mode = mode;
+        ArgumentNullException.ThrowIfNull(pool); ArgumentNullException.ThrowIfNull(types); ArgumentNullException.ThrowIfNull(bookkeeping); ArgumentNullException.ThrowIfNull(mode);
+        int expected = pool.Edition == OriginalEdition.Patch1078 ? 188 : 171;
+        if (types.Count != expected) throw new ArgumentException("소유자 지정 타입 판본/크기 오류", nameof(types));
+        _pool = pool; _types = types.Select(type => type.Clone()).ToArray(); _bookkeeping = bookkeeping; _mode = mode;
     }
-
-    /// <summary>이 모듈이 쓰는 슬롯 풀. 같은 풀의 목록인지 확인하는 데 쓴다.</summary>
+    /// <summary>사전 검증 실패 때 기존 연결을 보존하고 현재 표/진단 함수를 대여/복사한다.</summary>
+    public void BindDiagnostics(SquidOwnerDiagnostics diagnostics)
+    {
+        ArgumentNullException.ThrowIfNull(diagnostics);
+        if (diagnostics.Types is { Count: > 0 } types && types.Count != _types.Length) throw new ArgumentException("공통 Owner 현재 TYPE 판본/길이 오류", nameof(diagnostics));
+        _diagnostics = new SquidOwnerDiagnostics { Types = diagnostics.Types, Assertion = diagnostics.Assertion };
+    }
+    /// <summary>실제로 선택된 genus 조회 위치에서만 현재 TYPE 범위를 검사한다.</summary>
+    private uint TypeGenus(byte type)
+    {
+        var current = _diagnostics.Types is { Count: > 0 } types ? types : _types;
+        if (type >= current.Count) throw new ArgumentOutOfRangeException(nameof(type), "공통 Owner 현재 TYPE 물리 범위");
+        return current[type].Flags2;
+    }
+    /// <summary>세션 장치가 동일 풀인지 확인할 실제 참조다.</summary>
     public RawSidPool Pool => _pool;
-
-    /// <summary>
-    /// 객체의 소유자 바이트를 바꾸고 작업장 목록을 갱신한다.
-    /// 목록에 드는 부류가 아니면 소유자 바이트만 바꾼다. 소유자 0은 목록에 들지 않는다.
-    /// </summary>
-    /// <param name="sid">오브젝트 슬롯 번호.</param>
-    /// <param name="player">새 소유자 번호. 일반 모드 0~8, 도전 모드 1~39다.</param>
+    /// <summary>현재 모드/TYPE·선택된 목록과 진단을 원문 공통 본문에 연결한다.</summary>
     public void Set(int sid, uint player)
     {
-        // 판본 assert: 일반 모드의 범위는 목록 개수(0~8)이며 도전 모드에서는 1~39다
-        bool valid = _mode.Challenge ? player > 0 && player < ChallengePlayers : player < (uint)_bookkeeping.OwnerFactories.Length;
-        if (!valid)
+        var hooks = new CommonOwnerHooks
         {
-            throw new ArgumentException("소유자 번호 범위 오류(판본 assert)", nameof(player));
-        }
-        // 목록이 드는 번호는 0~8이다. 도전 모드의 9~39는 목록에 넣지 않는다
-        if (player >= (uint)_bookkeeping.OwnerFactories.Length)
-        {
-            throw new ArgumentException("목록이 없는 소유자 번호는 지정하지 않는다", nameof(player));
-        }
-        Span<byte> raw = _pool.AllocatedBytes(sid);
-        uint type = raw[TypeOffset];
-        if (type >= (uint)_types.Count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(sid), type, "소유자 지정 타입 번호 범위 오류");
-        }
-        bool listed = (_mode.Fort || _mode.Battle) && (_types[(int)type].Flags2 & FactoryMask) != 0;
-        // 이전 소유자의 목록에서 번호를 뺀다. 소유자 0은 목록에 없다
-        if (listed)
-        {
-            byte previous = raw[OwnerOffset];
-            if (previous != 0)
-            {
-                if (previous >= _bookkeeping.OwnerFactories.Length)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(sid), previous, "이전 소유자 번호 범위 오류");
-                }
-                Remove(_bookkeeping.OwnerFactories[previous], sid);
-            }
-        }
-        raw[OwnerOffset] = (byte)player;
-        // 빈·매립이 아니면 새 소유자의 목록에 넣는다. 소유자 0은 넣지 않는다
-        if (listed && (raw[StateOffset] & VoidBit) == 0 && (raw[ExtraOffset] & BuriedBit) == 0 && player != 0)
-        {
-            Append(_bookkeeping.OwnerFactories[player], sid);
-        }
+            Fort = () => _mode.Fort, Battle = () => _mode.Battle, Challenge = () => _mode.Challenge,
+            Genus = TypeGenus, Assertion = _diagnostics.Assertion,
+            Remove = (owner, value) => { if (owner == 0) return; if (owner >= _bookkeeping.OwnerFactories.Length) throw new ArgumentOutOfRangeException(nameof(owner), "공통 Owner 제거의 현재 Player 물리 범위"); Remove(_bookkeeping.OwnerFactories[owner], value); },
+            Append = (owner, value) => { if (owner == 0) return; if (owner >= _bookkeeping.OwnerFactories.Length) throw new ArgumentOutOfRangeException(nameof(owner), "공통 Owner 추가의 현재 Player 물리 범위"); Append(_bookkeeping.OwnerFactories[owner], value); },
+        };
+        RawCommonOwner.SetCommonSquidOwner(_pool, sid, player, hooks);
     }
+    /// <summary>같은 목록의 원문 저장 뒤 개수 증가를 실행한다.</summary>
+    private static void Append(RawPostPopList list, int sid) => list.Append(sid);
 
-    /// <summary>원본 00490050: 목록에 자리가 남았을 때만 번호를 덧붙인다.</summary>
-    /// <param name="list">대상 목록.</param>
-    /// <param name="sid">덧붙일 번호.</param>
-    private static void Append(RawPostPopList list, int sid)
-    {
-        // 자리가 남았을 때만 쓰고 개수를 늘린다
-        if (list.Count < (uint)list.Entries.Length)
-        {
-            list.Entries[(int)list.Count++] = (uint)sid;
-        }
-    }
-
-    /// <summary>원본 004900a0: 같은 번호를 모두 빼고 나머지를 앞으로 당긴다. 개수 밖의 값은 건드리지 않는다.</summary>
-    /// <param name="list">대상 목록.</param>
-    /// <param name="sid">뺄 번호.</param>
-    private static void Remove(RawPostPopList list, int sid)
-    {
-        // 손상된 개수는 목록 쓰기 전에 거부한다
-        _ = list.Items();
-        uint removed = 0;
-        // 남는 항목을 앞에서부터 당긴다
-        for (uint i = 0; i < list.Count; i++)
-        {
-            uint value = list.Entries[i];
-            if (value == (uint)sid)
-            {
-                removed++;
-            }
-            else
-            {
-                list.Entries[i - removed] = value;
-            }
-        }
-        list.Count -= removed;
-    }
+    /// <summary>같은 목록의 현재 getter/중복 전체 제거/꼬리 보존을 실행한다.</summary>
+    private static void Remove(RawPostPopList list, int sid) => list.RemoveAll(unchecked((uint)sid));
 }

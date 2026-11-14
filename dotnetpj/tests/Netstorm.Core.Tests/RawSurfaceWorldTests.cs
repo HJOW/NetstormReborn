@@ -415,7 +415,7 @@ public sealed class RawSurfaceWorldTests
         Assert.True(world.TakeChanged());
     }
 
-    /// <summary>범위 밖 소유자 번호를 거부하는지 검증한다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>
+    /// <summary>범위 밖 소유자는 선택된 실제 진단 장치를 요구하며 미연결 시 쓰기 전에 멈춘다.</summary>
     [Fact]
     public void SetAssetOwnerRejectsBadOwner()
     {
@@ -425,7 +425,7 @@ public sealed class RawSurfaceWorldTests
         Span<byte> raw = world.Storage().Pool.AllocatedBytes(sid);
         raw[RawSidPool.StateOffset] = 0;
         raw[RawSidPool.TypeOffset] = (byte)OriginalConstructors.FirstAssetType;
-        Assert.Throws<ArgumentException>(() => world.SetAssetOwner(sid, 9u));
+        Assert.Throws<InvalidOperationException>(() => world.SetAssetOwner(sid, 9u));
     }
 
     /// <summary>CD 소유자 위치에 적히는지 검증한다. 2026-11-07 F2d 월드 본체 소유자 지정 이식에서 추가됐다.</summary>

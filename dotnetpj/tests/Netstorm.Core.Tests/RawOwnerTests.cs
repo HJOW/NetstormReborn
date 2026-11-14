@@ -61,11 +61,11 @@ public sealed class RawOwnerTests
     }
 
     /// <summary>
-    /// 판본 assert 가 보고하는 범위 밖 소유자는 목록이 없는 번호까지 쓰기 전에 거부한다.
+    /// 범위 밖 요청은 진단하며, 도전20의 선택된 목록 실패는 앞의 제거/소유자 쓰기를 보존한다.
     /// 일반 9·도전 0·20·40 을 확인한다.
     /// </summary>
     [Fact]
-    public void RejectsOutOfRangePlayersBeforeWriting()
+    public void ReportsInvalidRequestsAndKeepsEarlierEffectsOnUnlistedOwner()
     {
         var pool = Pool();
         var types = Types();
@@ -82,15 +82,19 @@ public sealed class RawOwnerTests
         // 목록이 없는 9번은 쓰기 전에 거부한다
         Assert.ThrowsAny<Exception>(() => owner.Set(Target, 9));
         mode.Challenge = true;
-        // 도전 모드에서 0·40 은 범위 밖, 20 은 목록이 없어서 거부한다
+        // 도전 모드에서0·40은 선택된 진단 장치가 없어 선행 중단한다
         Assert.ThrowsAny<Exception>(() => owner.Set(Target, 0));
-        Assert.ThrowsAny<Exception>(() => owner.Set(Target, 20));
         Assert.ThrowsAny<Exception>(() => owner.Set(Target, 40));
         // 거부된 호출은 소유자 바이트와 목록을 바꾸지 않는다
         Assert.Equal(3, pool.Slot(Target)[34]);
         Assert.Equal(1u, book.OwnerFactories[3].Count);
         Assert.Equal(slotBefore, Convert.ToHexStringLower(pool.Slot(Target)));
         Assert.Equal(listBefore, string.Join(',', book.OwnerFactories[3].Entries));
+        // 유효 도전20은 제거→BYTE 쓰기 뒤 선택한 Player 목록의 물리 범위에서 실패한다.
+        Assert.Throws<ArgumentOutOfRangeException>(() => owner.Set(Target, 20));
+        Assert.Equal(20, pool.Slot(Target)[34]);
+        Assert.Equal(0u, book.OwnerFactories[3].Count);
+
     }
 
     /// <summary>

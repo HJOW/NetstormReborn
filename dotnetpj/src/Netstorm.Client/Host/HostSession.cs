@@ -848,6 +848,12 @@ public sealed partial class HostSession
     {
         ArgumentNullException.ThrowIfNull(types);
         var owner = new SquidOwner(Pool, types, TerrainBookkeeping, OwnerMode);
+        // 도장도 같은 현재 TYPE를 읽으며 진단이 선택되면 실제 호스트 오류로 전달한다.
+        owner.BindDiagnostics(new SquidOwnerDiagnostics
+        {
+            Types = types,
+            Assertion = (expression, file, line) => throw new InvalidOperationException($"도장 Owner 원본 진단: {expression} {file}:{line}"),
+        });
         return new TerrainStampHooks
         {
             Create = (type, predictable) =>
@@ -970,6 +976,12 @@ public sealed partial class HostSession
         _fortPop.SetBuildingSide(_fortBuilding);
         _fortState = new FortObjectLoadState { Mission = true, ChaffMode = true };
         _playerOwner = new SquidOwner(Pool, types, TerrainBookkeeping, OwnerMode);
+        // 실제 World와 같은 TYPE를 빌리고 선택된 원문 진단을 현재 호스트 오류 기록으로 전달한다.
+        _playerOwner.BindDiagnostics(new SquidOwnerDiagnostics
+        {
+            Types = types,
+            Assertion = (expression, file, line) => throw new InvalidOperationException($"공통 Owner 원본 진단: {expression} {file}:{line}"),
+        });
         RawIslandRuntime islands = BuildIslands(new IslandRuntimeHooks
         {
             SetResidenceOwner = (_, _) => { },

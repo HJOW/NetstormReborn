@@ -86,6 +86,20 @@ public sealed class HostPlayerWorldLiveTests
         Assert.Equal(1, raw[34]);
     }
 
+    /// <summary>호스트 공통 Owner도 장치 구성 뒤 바뀐 같은 현재 TYPE 표를 소비한다.</summary>
+    [Fact]
+    public void HostOwnerBorrowsCurrentTypeTableAfterConstruction()
+    {
+        var (session, types) = LoadPlayerScene(); PlayerWorldHooks hooks = session.BuildPlayerWorldHooks();
+        int sid = hooks.Create!(152u, 2u); session.OwnerMode.Fort = true; session.OwnerMode.Battle = false;
+        types[152].Flags2 = 0x4000; Span<byte> raw = session.Pool.AllocatedBytes(sid); raw[11] = 0; raw[34] = 0;
+        session.TerrainBookkeeping.OwnerFactories[3].Entries = new uint[2]; hooks.SetOwner!(sid, 3);
+        Assert.Equal(1u, session.TerrainBookkeeping.OwnerFactories[3].Count); Assert.Equal((uint)sid, session.TerrainBookkeeping.OwnerFactories[3].Entries[0]);
+        types[152].Flags2 = 0; hooks.SetOwner(sid, 2); Assert.Equal(2, session.Pool.Slot(sid)[34]); Assert.Equal(1u, session.TerrainBookkeeping.OwnerFactories[3].Count);
+        TerrainStampHooks stamps = session.BuildTerrainStampHooks(types); types[152].Flags2 = 0x4000; session.TerrainBookkeeping.OwnerFactories[3].Count = 0;
+        stamps.SetOwner!(sid, 3); Assert.Equal(3, session.Pool.Slot(sid)[34]); Assert.Equal(1u, session.TerrainBookkeeping.OwnerFactories[3].Count);
+    }
+
     /// <summary>실제 Pop이 공간·Player 기술부모·공유 장부와 커널 예약을 함께 변경하는지 확인한다.</summary>
     [Fact]
     public void PopRegistersAvatarAndInitialRegular()

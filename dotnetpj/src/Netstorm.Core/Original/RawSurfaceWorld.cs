@@ -396,6 +396,8 @@ public sealed partial class RawSurfaceWorld
             || (_edition == OriginalEdition.Cd1072 && _types.Count == 171);        if (ownerReady)
         {
             SquidOwner owner = new(_storage.Pool, _types, _bookkeeping, _storage.OwnerMode);
+            // 저장소의 같은 현재 TYPE와 Client 진단을 실제 공통 Owner가 소비한다.
+            owner.BindDiagnostics(new SquidOwnerDiagnostics { Types = _types, Assertion = _storage.AssertDisplay });
             _owner = owner;
             _assetOwner = RawBridgeConnect.MakeOwnerDispatch(_storage.Pool, _storage.Links, owner.Set);
         }

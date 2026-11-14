@@ -529,7 +529,7 @@ cpppj/src/o/SquidFormDispatch.cpp	Netstorm.Core/Original/RawSquidFormDispatch.cs
 cpppj/src/o/SquidForms.cpp	Netstorm.Core/Original/RawSquidForms.cs	eb739b8095351e2931be9af9aeec2fd95b1f9b05	L1
 cpppj/src/o/SquidFrame.cpp	Netstorm.Core/Original/RawFrame.cs	73e3b8ba3d23f966439a41f0217d11231c208139	L1
 cpppj/src/o/SquidHash.cpp	Netstorm.Core/Original/RawSquidHash.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/SquidOwner.cpp	Netstorm.Core/Original/RawOwner.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/SquidOwner.cpp	Netstorm.Core/Original/RawOwner.cs	99449bd000838e2a1b2554d54dd8751a63af6aec	L1
 cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/OriginalPopDisplay.cs	7bf9248b30d9e56b1169b4ae157a71f0f117f4c4	L1
 cpppj/src/o/SquidPop.cpp	Netstorm.Core/Original/RawPop.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	L1
 cpppj/src/o/SquidPostPop.cpp	Netstorm.Core/Original/RawPostPop.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
@@ -760,3 +760,12 @@ cpppj/src/client/SoundDevice.h	Netstorm.Client.Host/WindowsSoundFiles.cs	51b0068
 cpppj/src/client/SoundDevice.cpp	Netstorm.Client.Host/WindowsSoundFiles.cs	51b0068827c4bd3114f82da39579f6aa6aa69e7c	port
 cpppj/src/client/SoundDevice.h	Netstorm.Client.Host/WindowsSoundDevice.cs	51b0068827c4bd3114f82da39579f6aa6aa69e7c	port
 cpppj/src/client/SoundDevice.cpp	Netstorm.Client.Host/WindowsSoundDevice.cs	51b0068827c4bd3114f82da39579f6aa6aa69e7c	port
+cpppj/src/o/RawCommonOwner.h	Netstorm.Core/Original/RawCommonOwner.cs	99449bd000838e2a1b2554d54dd8751a63af6aec	L1
+cpppj/src/o/RawCommonOwner.cpp	Netstorm.Core/Original/RawCommonOwner.cs	99449bd000838e2a1b2554d54dd8751a63af6aec	L1
+cpppj/src/o/RawPriestOwner.h	Netstorm.Core/Original/RawPriestOwner.cs	99449bd000838e2a1b2554d54dd8751a63af6aec	L1
+cpppj/src/o/RawPriestOwner.cpp	Netstorm.Core/Original/RawPriestOwner.cs	99449bd000838e2a1b2554d54dd8751a63af6aec	L1
+cpppj/src/o/SquidPostPop.h	Netstorm.Core/Original/RawPostPopList.cs	99449bd000838e2a1b2554d54dd8751a63af6aec	port
+cpppj/src/o/SquidPostPop.cpp	Netstorm.Core/Original/RawPostPopList.cs	99449bd000838e2a1b2554d54dd8751a63af6aec	port
+cpppj/src/o/SquidOwner.h	Netstorm.Core/Original/RawOwner.cs	99449bd000838e2a1b2554d54dd8751a63af6aec	L1
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Client/Host/HostSession.cs	99449bd000838e2a1b2554d54dd8751a63af6aec	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceWorld.cs	99449bd000838e2a1b2554d54dd8751a63af6aec	port
