@@ -19805,12 +19805,12 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E421",
+      "unit": "WB04-E422",
       "consumers": [
         "webpj/tests/gump-redraw-text-help.test.mjs",
         "webpj/tests/stone-button-support.mjs"
       ],
-      "doc": "docs/webpj-style-text-markup-20261114.md",
+      "doc": "docs/webpj-style-text-buffer-20261114.md",
       "id": "gumptext",
       "path": "cpppj/tests/fixtures/gumptext-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 원문 글자 측정/FontStore 선택·출력 alias",
@@ -19821,7 +19821,8 @@
         "webpj/www/ui/stone-button-gump.js",
         "webpj/www/ui/style-text-fragments.js",
         "webpj/www/ui/markup-picture.js",
-        "webpj/www/ui/style-text-markup.js"
+        "webpj/www/ui/style-text-markup.js",
+        "webpj/www/ui/style-text-buffer.js"
       ],
       "cpppjSources": [
         "cpppj/src/client/GumpText.cpp",
@@ -19833,9 +19834,11 @@
         "cpppj/src/client/Markup.cpp",
         "cpppj/src/client/Markup.h",
         "cpppj/src/client/StyleTextMarkup.cpp",
-        "cpppj/src/client/StyleTextMarkup.h"
+        "cpppj/src/client/StyleTextMarkup.h",
+        "cpppj/src/client/StyleTextBuffer.cpp",
+        "cpppj/src/client/StyleTextBuffer.h"
       ],
-      "scope": "원문 Font입력을 실제메모리캐시/BitmapFont/FontSet에 공급한 originals305행 폭/높이·signed 길이·alias. CD/추가판 제외; E417은 원문 폭표/캐시를 실제 StoneButton 부모 측정·크기/트리·출력/수명에 공급한다. 부모 생성의 별도 원본 fixture를 뜻하지 않는다; E418은 이미 등록된 stone-button-support가 읽는 Font 입력을 실제 StyleText/GumpText에 공급한다. StyleText 전용 원본 관측 fixture는 아니다; E420은 같은 Font 입력/실제 GumpText를 StyleText 문자열과 Markup 그림의 공통 기준선/수명 시험에 공급한다. Markup 전용 PE fixture가 아니다; E421은 같은 Font 입력/실제 GumpText를 StyleText 대괄호 명령이 만든 문자열·그림 조각의 폭/높이 시험에 공급한다. StyleTextMarkup 전용 PE fixture가 아니다",
+      "scope": "원문 Font입력을 실제메모리캐시/BitmapFont/FontSet에 공급한 originals305행 폭/높이·signed 길이·alias. CD/추가판 제외; E417은 원문 폭표/캐시를 실제 StoneButton 부모 측정·크기/트리·출력/수명에 공급한다. 부모 생성의 별도 원본 fixture를 뜻하지 않는다; E418은 이미 등록된 stone-button-support가 읽는 Font 입력을 실제 StyleText/GumpText에 공급한다. StyleText 전용 원본 관측 fixture는 아니다; E420은 같은 Font 입력/실제 GumpText를 StyleText 문자열과 Markup 그림의 공통 기준선/수명 시험에 공급한다. Markup 전용 PE fixture가 아니다; E421은 같은 Font 입력/실제 GumpText를 StyleText 대괄호 명령이 만든 문자열·그림 조각의 폭/높이 시험에 공급한다. StyleTextMarkup 전용 PE fixture가 아니다; E422는 같은 Font 입력/실제 GumpText를 StyleTextBuffer 표시 줄 폭의 실제 StyleText 측정 일치 시험에 공급한다. StyleTextBuffer 전용 PE fixture가 아니다",
       "text": true,
       "sha256": "64f7dd3aa8a0b2e850f86b53c2753df4bb9249e31945ac9c6f2e76d189b6e047",
       "bytes": 113797,
@@ -19852,7 +19855,9 @@
         "cpppj/src/client/Markup.cpp": "169ceadd5",
         "cpppj/src/client/Markup.h": "225f2322c",
         "cpppj/src/client/StyleTextMarkup.cpp": "b810ebe01",
-        "cpppj/src/client/StyleTextMarkup.h": "b810ebe01"
+        "cpppj/src/client/StyleTextMarkup.h": "b810ebe01",
+        "cpppj/src/client/StyleTextBuffer.cpp": "1b8ed42a7",
+        "cpppj/src/client/StyleTextBuffer.h": "225f2322c"
       }
     },
     {
