@@ -720,3 +720,7 @@ cpppj/src/o/RawPriestShield.cpp	Netstorm.Core/Original/RawPriestShield.cs	7b854b
 cpppj/src/o/SquidFrame.h	Netstorm.Core/Original/RawFrame.cs	73e3b8ba3d23f966439a41f0217d11231c208139	port
 cpppj/src/o/RawFrameAdvance.h	Netstorm.Core/Original/RawFrameAdvance.cs	73e3b8ba3d23f966439a41f0217d11231c208139	port
 cpppj/src/o/RawFrameAdvance.cpp	Netstorm.Core/Original/RawFrameAdvance.cs	73e3b8ba3d23f966439a41f0217d11231c208139	port
+cpppj/src/o/RawSquidActivate.h	Netstorm.Core/Original/RawSquidActivate.cs	b2c41b42b2edb478eadbb42b9f35a991c2bc29b8	port
+cpppj/src/o/RawSquidActivate.cpp	Netstorm.Core/Original/RawSquidActivate.cs	b2c41b42b2edb478eadbb42b9f35a991c2bc29b8	port
+cpppj/src/o/RawSquidPopParent.h	Netstorm.Core/Original/RawSquidPopParent.cs	b2c41b42b2edb478eadbb42b9f35a991c2bc29b8	port
+cpppj/src/o/RawSquidPopParent.cpp	Netstorm.Core/Original/RawSquidPopParent.cs	b2c41b42b2edb478eadbb42b9f35a991c2bc29b8	port

@@ -99,8 +99,14 @@ public sealed class RawPostPopState
     /// <summary>공급·작업장 재계산 알림 수. 공급원·작업장 등록마다 1씩 늘어난다.</summary>
     public uint ProductionDirty { get; set; }
 
+    /// <summary>Activate와 공통 후처리가 같은 DWORD로 공유하는 실제 깊이 저장소다.</summary>
+    private uint _depth;
+
     /// <summary>Activate/postPop 깊이. Activate 가 1 늘리고 공통 몸체가 1 줄인다.</summary>
-    public uint Depth { get; set; }
+    public uint Depth { get => _depth; set => _depth = value; }
+
+    /// <summary>원문 Activate 부모가 사본 없이 같은 깊이를 증감하도록 참조를 빌린다.</summary>
+    public ref uint ActivationDepth => ref _depth;
 
     /// <summary>로컬 소유자의 타입별 현재 수(앞 256칸만 쓴다).</summary>
     public uint[] LocalCounts { get; }

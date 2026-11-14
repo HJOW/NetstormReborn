@@ -252,3 +252,4 @@ unpop-vtables.tsv	d149c425723b9be5f8f1808f37f08e951b93a8f0dca069db4eaffa9fb07f51
 unpop-x86.tsv	76c693fe249b31249fbd011cc5cafadd32d6aa7f016952cc63b2acdda275585b	8422	cpppj	Core
 vortex-pre-x86.tsv	027a0d1edeb5d6c96d82980c3be92ce18cdc0bc8bc83c48002e22e7d952cca9c	103	cpppj	Core
 frameadvance-x86.tsv	74f24374bf31a47be3a48024052102ae5f8edfcedd3ccc940e1ecfdacaac75f1	23040	cpppj	Core
+pop-world-bounds-x86.tsv	f7266004f4a79668af5ad08bbe8fd62afe19dca5f793c1107d0f26e274ec7a50	260	cpppj	Core

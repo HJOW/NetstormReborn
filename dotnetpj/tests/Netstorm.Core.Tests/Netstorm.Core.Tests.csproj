@@ -74,6 +74,8 @@
     <None Include="../../../cpppj/tests/fixtures/unpop-vtables.tsv" Link="X86/unpop-vtables.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 원본 월드 코어 W02 Pop 조각: 공간 등록·해제·생성·반납 6,241행과 파생 지원 주소 152행의 원본 PE 독립 관찰 (10.78 행만 쓴다). -->
     <None Include="../../../cpppj/tests/fixtures/pop-x86.tsv" Link="X86/pop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 현재世界 크기의 원본Point/Pop 앞단260입력이다. -->
+    <None Include="../../../cpppj/tests/fixtures/pop-world-bounds-x86.tsv" Link="X86/pop-world-bounds-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/pop-vtables.tsv" Link="X86/pop-vtables.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 원본 월드 코어 W02 미니맵 큐 조각: 큐 등록·Refresh·view 비교·전체/부분 그리기 1,041행의 원본 PE 독립 관찰 (10.78 행만 쓴다). -->
     <None Include="../../../cpppj/tests/fixtures/metadisplaydirty-x86.tsv" Link="X86/metadisplaydirty-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
