@@ -19,8 +19,8 @@ public sealed class X86RawPriestStateTests
         mode.RecoveryAllowed[2] = false;
         Assert.True(mode.GetRecoveryAllowed(1));
         Assert.False(mode.GetRecoveryAllowed(2));
-        Assert.Throws<ArgumentOutOfRangeException>(() => mode.GetRecoveryAllowed(10));
-        var records = new byte[10 * 0xb4];
+        Assert.Throws<ArgumentOutOfRangeException>(() => mode.GetRecoveryAllowed(9));
+        var records = new byte[9 * 0xb4];
         void Put(int owner, uint temple)
         {
             int offset = owner * 0xb4 + 0x7c;
@@ -34,8 +34,8 @@ public sealed class X86RawPriestStateTests
         mode.PlayerRecords = records;
         Assert.True(mode.GetRecoveryAllowed(1));
         Assert.False(mode.GetRecoveryAllowed(2));
-        Assert.Throws<ArgumentOutOfRangeException>(() => mode.GetRecoveryAllowed(10));
-        mode.PlayerRecords = new byte[10 * 0xb4 - 1];
+        Assert.Throws<ArgumentOutOfRangeException>(() => mode.GetRecoveryAllowed(9));
+        mode.PlayerRecords = new byte[9 * 0xb4 - 1];
         Assert.Throws<ArgumentException>(() => mode.GetRecoveryAllowed(1));
     }
 

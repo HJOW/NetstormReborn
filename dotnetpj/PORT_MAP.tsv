@@ -476,7 +476,7 @@ cpppj/src/o/RawPriestPrayer.cpp	Netstorm.Core/Original/RawPriestPrayer.cs	55520f
 cpppj/src/o/RawPriestPreDestroy.cpp	Netstorm.Core/Original/RawPriestPreDestroy.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
 cpppj/src/o/RawPriestRegen.cpp	Netstorm.Core/Original/RawPriestRegen.cs	37dbf68bfd44f3288348c9063681e7fce5d39ece	L1
 cpppj/src/o/RawPriestSpawn.h	Netstorm.Core/Original/RawPlacementTerrainTypes.cs	8b467ca03249dbc963ceaf8efdd35fa6e26986b7	port
-cpppj/src/o/RawPriestState.cpp	Netstorm.Core/Original/RawPriestState.cs	55520f783fbcc11157fcc7fbfc5887407e788d67	L1
+cpppj/src/o/RawPriestState.cpp	Netstorm.Core/Original/RawPriestState.cs	92f395980ead5365394d469f8a7cab3c4eff3e9c	L1
 cpppj/src/o/RawRenderCollection.h	Netstorm.Core/Original/RenderCollectionEntry.cs	8ca081a26b4b6bce8dbf63f72a37733dc95e25d4	port
 cpppj/src/o/RawSnart.cpp	Netstorm.Core/Original/RawSnart.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
 cpppj/src/o/RawSnart.h	Netstorm.Core/Original/RawSnart.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
@@ -739,3 +739,6 @@ cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.PopC
 cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceWorld.PopCurrent.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
 cpppj/src/o/RawForcefieldLifecycle.h	Netstorm.Core/Original/RawForcefieldLifecycle.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
 cpppj/src/o/RawForcefieldLifecycle.cpp	Netstorm.Core/Original/RawForcefieldLifecycle.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
+cpppj/src/o/RawPriestState.h	Netstorm.Core/Original/RawPriestState.cs	92f395980ead5365394d469f8a7cab3c4eff3e9c	port
+cpppj/src/o/RawPriestFall.h	Netstorm.Core/Original/RawPriestFall.cs	92f395980ead5365394d469f8a7cab3c4eff3e9c	port
+cpppj/src/o/RawPriestFall.cpp	Netstorm.Core/Original/RawPriestFall.cs	92f395980ead5365394d469f8a7cab3c4eff3e9c	port

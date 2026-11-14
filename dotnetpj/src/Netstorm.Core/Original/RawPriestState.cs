@@ -12,8 +12,8 @@ public sealed class PriestHitPointMode
     /// <summary>실제 Client boss의 장기 권한. 연결되면 <see cref="GetAuthority"/>가 이 값을 읽는다.</summary>
     public Func<bool>? SharedAuthority { get; set; }
 
-    /// <summary>Player +0x7c 의 회복 허용 표. 모두 1 로 시작하고 0 이면 회복을 막는다. 장기 기록이 연결되면 읽지 않는다.</summary>
-    public bool[] RecoveryAllowed { get; set; } = new bool[10];
+    /// <summary>Player +0x7c 의 회복 허용 표. 최초에는 모두0이며, 0이면 회복을 막는다. 장기 기록이 연결되면 읽지 않는다.</summary>
+    public bool[] RecoveryAllowed { get; set; } = new bool[9];
 
     /// <summary>같은 Client의 실제 Player 9 기록. 사제 신전 DWORD의 0 아님을 허용 조건으로 읽으며, 허용 bool이나 SID 사본을 만들지 않는다.</summary>
     public byte[]? PlayerRecords { get; set; }
@@ -23,13 +23,13 @@ public sealed class PriestHitPointMode
 
     /// <summary>
     /// 원문 회복 분기에서 현재 신전 DWORD의 0 아님을 읽는다. 장기 기록이 없으면 기존 배열을 쓴다.
-    /// 10.78 배치(stride 0xb4/offset 0x7c)만 복원했으며 판본 검사는 생략한다.
+    /// PATCH는 stride0xb4/offset0x7c, CD는 stride0xac/offset0x74의 실제9기록을 읽는다.
     /// 근거: cpppj/src/o/RawPriestState.cpp RecoveryAllowed (R0-4 재대조, 2026-10-28).
     /// </summary>
-    /// <param name="owner">소유자 번호(0~9).</param>
-    public bool GetRecoveryAllowed(uint owner)
+    /// <param name="owner">소유자 번호(0~8).</param>
+    public bool GetRecoveryAllowed(uint owner, OriginalEdition edition = OriginalEdition.Patch1078)
     {
-        if (owner > 9)
+        if (owner > 8)
         {
             throw new ArgumentOutOfRangeException(nameof(owner), owner, "사제 HP 회복 Player 번호 오류");
         }
@@ -37,9 +37,9 @@ public sealed class PriestHitPointMode
         {
             return RecoveryAllowed[owner];
         }
-        const int stride = 0xb4;
-        const int field = 0x7c;
-        if (PlayerRecords.Length != 10 * stride)
+        int stride = edition == OriginalEdition.Patch1078 ? 0xb4 : 0xac;
+        int field = edition == OriginalEdition.Patch1078 ? 0x7c : 0x74;
+        if (PlayerRecords.Length != 9 * stride)
         {
             throw new ArgumentException("사제 HP 회복 Player9 기록 폭 오류", nameof(PlayerRecords));
         }
@@ -59,10 +59,10 @@ public sealed class PriestHitPointMode
 /// </summary>
 public sealed class PriestHitPointHooks
 {
-    /// <summary>가상 +0x48 공간 해제. 저 HP 에서 회복할 때만 불린다.</summary>
+    /// <summary>가상 +0x48 공간 해제. HP가 절반 경계를 넘나드는 실제 공간 전환에서 부른다.</summary>
     public Action<int, uint>? Unpop { get; set; }
 
-    /// <summary>가상 +0x4c 공간 등록. 저 HP 에서 회복할 때만 불린다.</summary>
+    /// <summary>가상 +0x4c 공간 등록. HP 전환 뒤 현재 좌표를 보정하고 부른다.</summary>
     public Action<int, uint>? Repop { get; set; }
 }
 
@@ -89,14 +89,17 @@ public sealed class RawPriestState
     /// <summary>슬롯 안 HP 필드의 위치.</summary>
     private const int HealthOffset = 26;
 
-    /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
-    private const int ExtraOffset = 40;
+    /// <summary>슬롯 안 추가 비트 바이트의 판본별 위치(PATCH40/CD35).</summary>
+    private int ExtraOffset => _pool.Edition == OriginalEdition.Patch1078 ? 40 : 35;
 
     /// <summary>사제 타입 번호(원본 158).</summary>
     private const byte PriestType = 158;
 
     /// <summary>사제 가상 표 값(10.78).</summary>
     private const uint PatchPriestVtable = 0x0050F210;
+
+    /// <summary>CD 사제 가상 표이며 PATCH 표로 대신하지 않는다.</summary>
+    private const uint CdPriestVtable = 0x005003e0;
 
     /// <summary>사제 부류 비트(원본 0x200000).</summary>
     private const uint PriestGenus = 0x200000;
@@ -128,6 +131,20 @@ public sealed class RawPriestState
     /// <summary>타입 번호로 속성을 조회하는 타입 표.</summary>
     private readonly IReadOnlyList<OriginalTypeRecord> _types;
 
+    /// <summary>실제 PATCH 월드가 빌리는 주소 고정 현재 TYPE 표다. null은 생성 시 사본을 선택한다.</summary>
+    private IReadOnlyList<OriginalTypeRecord>? _currentTypes;
+
+    /// <summary>지면 genus/타입 범위 판정 시점의 현재 표를 읽는다.</summary>
+    private IReadOnlyList<OriginalTypeRecord> CurrentTypes() => _currentTypes ?? _types;
+
+    /// <summary>PATCH188칸의 현재 표를 빌리며 빈 표/null은 생성 시 사본으로 복귀한다.</summary>
+    public void BindCurrentTypes(IReadOnlyList<OriginalTypeRecord>? types)
+    {
+        if (types is { Count: > 0 } && (_pool.Edition != OriginalEdition.Patch1078 || types.Count != 188))
+            throw new ArgumentException("사제 상태 현재 TYPE 대여의 판본/길이 오류", nameof(types));
+        _currentTypes = types is { Count: > 0 } ? types : null;
+    }
+
     /// <summary>칸별 점유·통행 비트를 읽는 spot 지도.</summary>
     private readonly byte[] _spots;
 
@@ -144,13 +161,13 @@ public sealed class RawPriestState
         ArgumentNullException.ThrowIfNull(hp);
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(spots);
-        if (!ReferenceEquals(hp.Pool, pool) || types.Count != OriginalConstructors.TypeCount || spots.Length != Side * Side)
+        if (!ReferenceEquals(hp.Pool, pool) || types.Count != (pool.Edition == OriginalEdition.Patch1078 ? 188 : 171) || spots.Length != Side * Side)
         {
             throw new ArgumentException("사제 상태 조회 풀·타입·지도 연결 오류", nameof(types));
         }
         _pool = pool;
         _maxHitPoints = hp.MaxHitPoints;
-        _types = types;
+        _types = types.Select(type => type.Clone()).ToArray();
         _spots = spots;
     }
 
@@ -159,9 +176,9 @@ public sealed class RawPriestState
     {
         ArgumentNullException.ThrowIfNull(pool); ArgumentNullException.ThrowIfNull(hp);
         ArgumentNullException.ThrowIfNull(types); ArgumentNullException.ThrowIfNull(spots);
-        if (!ReferenceEquals(hp.Pool, pool) || types.Count != OriginalConstructors.TypeCount || spots.Length != Side * Side)
+        if (!ReferenceEquals(hp.Pool, pool) || types.Count != (pool.Edition == OriginalEdition.Patch1078 ? 188 : 171) || spots.Length != Side * Side)
             throw new ArgumentException("사제 상태 조회 실제 보상HP·타입·지도 연결 오류", nameof(types));
-        _pool = pool; _maxHitPoints = hp.MaxHitPoints; _types = types; _spots = spots;
+        _pool = pool; _maxHitPoints = hp.MaxHitPoints; _types = types.Select(type => type.Clone()).ToArray(); _spots = spots;
     }
 
     /// <summary>회복 처리기의 연결 검사용 원본 풀을 반환한다.</summary>
@@ -177,23 +194,27 @@ public sealed class RawPriestState
         }
         ReadOnlySpan<byte> raw = _pool.Slot(sid);
         if ((raw[StateOffset] & InvalidState) != 0 || raw[TypeOffset] < OriginalConstructors.FirstAssetType
-            || raw[TypeOffset] >= _types.Count)
+            || raw[TypeOffset] >= CurrentTypes().Count)
         {
             throw new InvalidOperationException("사제 상태 조회 raw 자산 오류");
         }
         return raw;
     }
 
-    /// <summary>현재 HP 를 10.78 의 signed DWORD 로 읽는다.</summary>
+    /// <summary>현재 HP를 PATCH signed DWORD/CD signed WORD로 읽고 인접 stale BYTE는 보존한다.</summary>
     /// <param name="sid">대상 슬롯 번호.</param>
-    public int CurrentHitPoints(int sid) => unchecked((int)Read(Raw(sid), HealthOffset));
+    public int CurrentHitPoints(int sid)
+    {
+        ReadOnlySpan<byte> raw = Raw(sid);
+        return _pool.Edition == OriginalEdition.Patch1078 ? unchecked((int)Read(raw, HealthOffset)) : unchecked((short)Read(raw, HealthOffset, 2));
+    }
 
     /// <summary>사제 부류의 지면 이동 불가 판정(원본 00492090).</summary>
     /// <param name="sid">대상 슬롯 번호.</param>
     public bool GroundImmobile(int sid)
     {
         ReadOnlySpan<byte> raw = Raw(sid);
-        if ((_types[raw[TypeOffset]].Flags2 & PriestGenus) == 0)
+        if ((CurrentTypes()[raw[TypeOffset]].Flags2 & PriestGenus) == 0)
         {
             return false;
         }
@@ -229,21 +250,22 @@ public sealed class RawPriestState
         ArgumentNullException.ThrowIfNull(mode);
         ArgumentNullException.ThrowIfNull(hooks);
         ReadOnlySpan<byte> raw = Raw(sid);
-        if (raw[TypeOffset] != PriestType || Read(raw, 0) != PatchPriestVtable)
+        if (raw[TypeOffset] != PriestType || Read(raw, 0) != (_pool.Edition == OriginalEdition.Patch1078 ? PatchPriestVtable : CdPriestVtable))
         {
             throw new InvalidOperationException("사제 HP 변경 타입·가상 표 오류");
         }
         int oldHp = CurrentHitPoints(sid);
         int half = _maxHitPoints(sid) / 2;
         bool wasLow = oldHp < half;
-        bool transition = (value < half) != wasLow;
-        byte owner = raw[34];
+        int stored = _pool.Edition == OriginalEdition.Patch1078 ? value : unchecked((short)value);
+        bool transition = (stored < half) != wasLow;
+        byte owner = raw[_pool.Edition == OriginalEdition.Patch1078 ? 34 : 32];
         // 실제로 참조하는 소유자 칸과 필요한 가상 효과만 쓰기 전에 검사한다.
-        if (transition && mode.GetAuthority() && wasLow && owner > 9)
+        if (transition && mode.GetAuthority() && wasLow && owner > 8)
         {
             throw new ArgumentOutOfRangeException(nameof(sid), owner, "사제 HP 회복 소유자 오류");
         }
-        bool space = transition && mode.GetAuthority() && (!wasLow || mode.GetRecoveryAllowed(owner));
+        bool space = transition && mode.GetAuthority() && (!wasLow || mode.GetRecoveryAllowed(owner, _pool.Edition));
         if (space && (hooks.Unpop is null || hooks.Repop is null))
         {
             throw new ArgumentException("사제 HP 변경 공간 효과 누락", nameof(hooks));
@@ -252,7 +274,8 @@ public sealed class RawPriestState
         void Write(int hp)
         {
             Span<byte> target = _pool.AllocatedBytes(sid);
-            for (int i = 0; i < 4; i++)
+            // 실제 setter 폭만 쓰고 CD의 이웃 HP stale 두 바이트를 보존한다.
+            for (int i = 0; i < (_pool.Edition == OriginalEdition.Patch1078 ? 4 : 2); i++)
             {
                 target[HealthOffset + i] = (byte)((uint)hp >> (8 * i));
             }
@@ -267,7 +290,7 @@ public sealed class RawPriestState
             Write(half - (wasLow ? 1 : 0));
             return;
         }
-        if (wasLow && !mode.GetRecoveryAllowed(owner))
+        if (wasLow && !mode.GetRecoveryAllowed(owner, _pool.Edition))
         {
             Write(oldHp);
             return;
