@@ -312,7 +312,7 @@ cpppj/src/o/RawCanonPlacementGeometry.h	Netstorm.Core/Original/RawCanonPlacement
 cpppj/src/o/RawCanonPlacementTerrain.cpp	Netstorm.Core/Original/RawCanonPlacementTerrain.cs	6e7fdd37215c74fa8e599729e8e0757ba514272c	L1
 cpppj/src/o/RawCanonPlacementTerrain.h	Netstorm.Core/Original/RawCanonPlacementTerrain.cs	225f2322cf7936604306b6534fd4edf18f246c12	L1
 cpppj/src/o/RawCarrierPostPop.cpp	Netstorm.Core/Original/RawCarrierPostPop.cs	0a67c2bf41336c6751ef6668a790ea583735d876	L1
-cpppj/src/o/RawCarrierPreDestroy.cpp	Netstorm.Core/Original/RawCarrierPreDestroy.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawCarrierPreDestroy.cpp	Netstorm.Core/Original/RawCarrierPreDestroy.cs	88743a5a69d05ae9a038f4abe1dd45ceaebfea6f	L1
 cpppj/src/o/RawCentralIsland.cpp	Netstorm.Core/Original/RawCentralIsland.cs	9cb0547f5488d69fecc11fc3eb0eb591507140ec	port
 cpppj/src/o/RawCentralIsland.h	Netstorm.Core/Original/RawCentralIsland.cs	9cb0547f5488d69fecc11fc3eb0eb591507140ec	port
 cpppj/src/o/RawCheckingFlag.h	Netstorm.Core/Original/RawCheckingFlag.cs	8b467ca03249dbc963ceaf8efdd35fa6e26986b7	L1
@@ -322,8 +322,8 @@ cpppj/src/o/RawColorSortStartup.cpp	Netstorm.Core/Original/RawColorSortStartup.c
 cpppj/src/o/RawColorSortStartup.h	Netstorm.Core/Original/RawColorSortStartup.cs	ca0c01ebfceb9801ef1fcdb272deec4dc311a2db	L1
 cpppj/src/o/RawConstructionVisual.h	Netstorm.Core/Original/ConstructionVisualImage.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
 cpppj/src/o/RawContainedCreate.cpp	Netstorm.Core/Original/RawContainedCreate.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
-cpppj/src/o/RawContainedFinder.cpp	Netstorm.Core/Original/RawContainedFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/RawContainedFinder.h	Netstorm.Core/Original/RawContainedFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawContainedFinder.cpp	Netstorm.Core/Original/RawContainedFinder.cs	88743a5a69d05ae9a038f4abe1dd45ceaebfea6f	L1
+cpppj/src/o/RawContainedFinder.h	Netstorm.Core/Original/RawContainedFinder.cs	88743a5a69d05ae9a038f4abe1dd45ceaebfea6f	L1
 cpppj/src/o/RawContainedLookup.cpp	Netstorm.Core/Original/RawContainedLookup.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawDamageableBurning.cpp	Netstorm.Core/Original/RawDamageableBurning.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawDamageableHit.cpp	Netstorm.Core/Original/RawDamageableHit.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
@@ -795,3 +795,4 @@ cpppj/src/o/RawPriestRegular.h	Netstorm.Core/Original/RawPriestRegular.cs	30523a
 cpppj/src/o/RawPriestRegular.cpp	Netstorm.Core/Original/RawPriestRegular.cs	30523aaf2d90489101b737d142fdf046c042cdb3	L1
 cpppj/src/client/RawPriestWorldBindings.h	Netstorm.Client/Mission/RawMovementProcessTypes.cs	30523aaf2d90489101b737d142fdf046c042cdb3	port
 cpppj/src/client/RawPriestWorldBindings.cpp	Netstorm.Client/Mission/RawMovementProcessTypes.cs	30523aaf2d90489101b737d142fdf046c042cdb3	port
+cpppj/src/o/RawCarrierPreDestroy.h	Netstorm.Core/Original/RawCarrierPreDestroy.cs	88743a5a69d05ae9a038f4abe1dd45ceaebfea6f	L1

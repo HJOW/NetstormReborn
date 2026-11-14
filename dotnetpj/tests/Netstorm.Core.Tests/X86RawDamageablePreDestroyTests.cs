@@ -88,7 +88,7 @@ public sealed class X86RawDamageablePreDestroyTests
             {
                 Assert.Equal(id, Pool.Allocate(SidAllocation.Client));
             }
-            FinderState.CheckingDead = true;
+            FinderState.CheckingDead = new(true);
         }
 
         /// <summary>슬롯 바이트를 직접 쓴다(장면 준비용).</summary>

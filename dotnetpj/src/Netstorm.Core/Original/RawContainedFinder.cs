@@ -14,15 +14,27 @@ public sealed class ContainedFinderState
     /// <summary>후보 바이트와 비교하는 타입 번호(원본 00541088). 기본값은 6 이다.</summary>
     public uint ContainedType { get; set; } = 6;
 
-    /// <summary>패치판 dead 부모 조회 assert 를 활성화하는지(원본 005e4794).</summary>
-    public bool CheckingDead { get; set; }
+    /// <summary>원문 진단뷰의 독립값/장기 owner를 보관하며 외부뷰 객체의 주소 자체는 빌리지 않는다.</summary>
+    private RawCheckingFlag _checkingDead = new();
+
+    /// <summary>패치판 dead 부모 조회의 현재 전체DWORD다. 대입은 원문 값 사본으로 같은 장기 owner를 빌린다.</summary>
+    public RawCheckingFlag CheckingDead { get => _checkingDead; set => _checkingDead = new(value); }
+
+    /// <summary>효과 뒤 Carrier/내용물 조회가 같은 실제 Client boss를 읽는 장기 경계다.</summary>
+    public Func<bool>? SharedBoss { get; set; }
+
+    /// <summary>dead 부모 진단의 식/파일/행을 전달하며 정상 복귀하면 현재head로 조회를 계속한다.</summary>
+    public Action<string, string, uint>? Assertion { get; set; }
+
+    /// <summary>원문 관문에서 같은 현재 공유boss 또는 독립값을 읽는다.</summary>
+    public bool ReadBoss() => SharedBoss?.Invoke() ?? Boss;
 }
 
 /// <summary>
 /// 내용물(종속) 체인을 앞에서부터 훑는 커서(원본 RawContainedFinder, 004b2270 ↔ CD 004eb8d0).
 /// 부모 슬롯의 head WORD 에서 시작해 타입이 일치하는 후보만 돌려주되, 다음 링크는 반환 전에 저장한다.
 /// 원본처럼 후보의 free/dead/void/contained 상태는 거르지 않는다.
-/// 기준 판본은 10.78 뿐이다.
+/// PATCH의 현재checking/dead 진단과 CD의 진단 생략을 구별한다.
 /// 근거: cpppj/src/o/RawContainedFinder.cpp (W03 삭제·수명 다섯째 조각, 2026-10-21).
 /// </summary>
 public sealed class RawContainedFinder
@@ -78,13 +90,13 @@ public sealed class RawContainedFinder
         {
             throw new ArgumentOutOfRangeException(nameof(parent), parent, "내용물 검색기 부모 번호 오류");
         }
-        ReadOnlySpan<byte> raw = _pool.Slot(parent);
         // 권한 없는 dead 부모 조회는 패치판 assert 경로다.
-        if (_state.CheckingDead && (raw[StateOffset] & DeadBit) != 0 && !_state.Boss && !allowDead)
+        if (_pool.Edition == OriginalEdition.Patch1078 && _state.CheckingDead && (_pool.Slot(parent)[StateOffset] & DeadBit) != 0 && !_state.ReadBoss() && !allowDead)
         {
-            throw new InvalidOperationException("권한 없는 죽은 부모의 내용물 조회 경로");
+            Action<string, string, uint> assertion = _state.Assertion ?? throw new InvalidOperationException("권한 없는 죽은 부모의 내용물 조회 경로");
+            assertion("!p.isDead() || boss || yesIKnowThatIShouldntLookInsideMyselfDuringADestroy", @"\Ns\O\Squidfinder.cpp", 0x13c);
         }
-        _next = Link(raw, HeadOffset);
+        _next = Link(_pool.Slot(parent), HeadOffset);
         _visited.Clear();
         return Next();
     }
@@ -111,6 +123,19 @@ public sealed class RawContainedFinder
             }
         }
         return 0;
+    }
+
+    /// <summary>004acc60의같은 현재 커서로 종류DWORD와 maskWORD가 일치하는 모든 후보를 원문 순서로 센다.</summary>
+    public static int CountContained(RawSidPool pool, ContainedFinderState state, int parent, uint mask, uint kind)
+    {
+        var finder = new RawContainedFinder(pool, state); uint count = 0;
+        // 상태/free/dead 추가 필터 없이 각 후보의 종류 판정 뒤 전체WORD mask도 읽는다.
+        for (int sid = finder.Begin(parent); sid != 0; sid = finder.Next())
+        {
+            ReadOnlySpan<byte> raw = pool.Slot(sid); uint candidateKind = (uint)(raw[18] | raw[19] << 8); bool matches = kind == 0 || kind == candidateKind; uint candidateMask = (uint)(raw[20] | raw[21] << 8);
+            if ((mask == 0 || (mask & candidateMask) != 0) && matches) count = unchecked(count + 1);
+        }
+        return unchecked((int)count);
     }
 
     /// <summary>정렬되지 않은 16비트 값을 낮은 바이트부터 읽는다.</summary>

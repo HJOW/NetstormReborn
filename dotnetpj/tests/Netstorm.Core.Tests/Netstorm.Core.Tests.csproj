@@ -305,4 +305,8 @@
     <!-- 사제 정기 분배와 현재 이동 선택의 독립 원본 관찰을 공유한다. -->
     <None Include="../../../cpppj/tests/fixtures/priest-regular-dispatch-x86.tsv" Link="X86/priest-regular-dispatch-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- 실제 Carrier/내용물 조회의 세판본 전체 관찰을 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/carrierpredestroy-x86.tsv" Link="X86/carrierpredestroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

@@ -32,7 +32,7 @@ public sealed class RawDamageableReleaseTests
         public readonly OriginalTypeRecord[] Types = new OriginalTypeRecord[OriginalConstructors.TypeCount];
 
         /// <summary>내용물 검색기의 권한·타입 전역.</summary>
-        public readonly ContainedFinderState FinderState = new() { CheckingDead = true };
+        public readonly ContainedFinderState FinderState = new() { CheckingDead = new(true) };
 
         /// <summary>전투·허용 genus·다리 타입 전역.</summary>
         public readonly DamageableReleaseState State = new();

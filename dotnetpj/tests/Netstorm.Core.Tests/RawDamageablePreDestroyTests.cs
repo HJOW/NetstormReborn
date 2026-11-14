@@ -32,7 +32,7 @@ public sealed class RawDamageablePreDestroyTests
         public readonly byte[] Spots = new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells];
 
         /// <summary>내용물 검색기의 권한·타입 전역.</summary>
-        public readonly ContainedFinderState FinderState = new() { CheckingDead = true };
+        public readonly ContainedFinderState FinderState = new() { CheckingDead = new(true) };
 
         /// <summary>사제 해방 판정 전역.</summary>
         public readonly DamageablePreDestroyState State = new();

@@ -100,7 +100,7 @@ public sealed class X86RawDamageableReleaseTests
             {
                 Types[i] = new OriginalTypeRecord();
             }
-            FinderState.CheckingDead = true;
+            FinderState.CheckingDead = new(true);
         }
 
         /// <summary>슬롯 바이트를 직접 쓴다(장면 준비용).</summary>

@@ -20,7 +20,7 @@ public sealed class CarrierPreDestroyHooks
 /// 순서는 원본 그대로 "asset/타입 검사 → Damageable 사전 검사 → Damageable 사전 파괴 →
 /// 권한이 있으면 종속 조회(1,0,0) → 전역 후처리"다.
 /// Damageable 에 넘긴 플래그는 종속 조회 인자에 영향을 주지 않는다.
-/// 기준 판본은 10.78 뿐이다.
+/// 판본별 타입 상한과 PATCH Native의선행검사 생략·현재boss 조회를 구별한다.
 /// 근거: cpppj/src/o/RawCarrierPreDestroy.cpp (W03 삭제·수명 다섯째 조각, 2026-10-21).
 /// </summary>
 public sealed class RawCarrierPreDestroy
@@ -49,6 +49,9 @@ public sealed class RawCarrierPreDestroy
     /// <summary>외부 효과 콜백 묶음.</summary>
     private readonly CarrierPreDestroyHooks _hooks;
 
+    /// <summary>실제PATCH부모만 선행typed검사를 생략하며 독립/CD경로는 기존검사를 유지한다.</summary>
+    private bool _nativeBody;
+
     /// <summary>
     /// 캐리어 삭제 준비를 만든다. 세 하위 효과가 모두 있어야 직접 부를 수 있다.
     /// </summary>
@@ -66,11 +69,21 @@ public sealed class RawCarrierPreDestroy
         }
         _pool = pool;
         _state = state;
-        _hooks = hooks;
+        _hooks = new() { ValidateDamageable = hooks.ValidateDamageable, DamageablePre = hooks.DamageablePre, DependentFound = hooks.DependentFound };
     }
 
     /// <summary>이 몸체가 쓰는 슬롯 풀. 연결 어댑터가 같은 풀인지 확인한다.</summary>
     public RawSidPool Pool => _pool;
+
+    /// <summary>같은 현재 내용물TYPE/권한/checking 장기 상태를 복사 없이 제공한다.</summary>
+    public ContainedFinderState FinderState => _state;
+
+    /// <summary>실제PATCH의직접Damageable부모를 선택하며 게임 상태/난수/내용물은 읽거나 바꾸지 않는다.</summary>
+    public void EnableNativeBody()
+    {
+        if (_pool.Edition != OriginalEdition.Patch1078) throw new ArgumentException("Native Carrier 전처리 판본 오류");
+        _nativeBody = true;
+    }
 
     /// <summary>
     /// 사제 목록 변경 전에 하위 몸체와 raw 자산의 지원 상태를 검사한다.
@@ -79,10 +92,11 @@ public sealed class RawCarrierPreDestroy
     /// <param name="flags">삭제에 적용되는 플래그 비트.</param>
     public void Validate(int sid, uint flags)
     {
+        if (_nativeBody) return;
         // 빈 슬롯·할당되지 않은 번호는 여기에서 거부된다.
         Span<byte> raw = _pool.AllocatedBytes(sid);
         if ((raw[StateOffset] & FreeContainedMask) != 0 || raw[TypeOffset] < OriginalConstructors.FirstAssetType
-            || raw[TypeOffset] >= OriginalConstructors.TypeCount)
+            || raw[TypeOffset] >= (_pool.Edition == OriginalEdition.Patch1078 ? 188 : 171))
         {
             throw new InvalidOperationException("캐리어 사전 파괴 raw 자산 상태/타입 오류");
         }
@@ -98,7 +112,7 @@ public sealed class RawCarrierPreDestroy
     {
         Validate(sid, flags);
         _hooks.DamageablePre!(sid, flags);
-        if (_state.Boss && FindContained(sid, 1, 0, 0) != 0)
+        if (_state.ReadBoss() && FindContained(sid, 1, 0, 0) != 0)
         {
             _hooks.DependentFound!();
         }
@@ -132,6 +146,14 @@ public sealed class RawCarrierPreDestroy
             }
         }
         return 0;
+    }
+
+    /// <summary>같은 풀의사제Carrier경계만 실제 Validate/PreDestroy로 교체하고 보호막 함수 사본은 보존한다.</summary>
+    public static PriestPreDestroyHooks MakeCarrierPreDestroyHooks(RawSidPool pool, RawCarrierPreDestroy carrier, PriestPreDestroyHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(pool); ArgumentNullException.ThrowIfNull(carrier); ArgumentNullException.ThrowIfNull(hooks);
+        if (!ReferenceEquals(pool, carrier.Pool)) throw new ArgumentException("사제/Carrier preDestroy의 SID 풀이 다릅니다");
+        return new() { FindForcefield = hooks.FindForcefield, DestroyForcefield = hooks.DestroyForcefield, ValidateCarrier = carrier.Validate, CarrierPre = carrier.PreDestroy };
     }
 
     /// <summary>슬롯 안의 정렬되지 않은 값을 필요한 폭만큼 읽는다.</summary>
