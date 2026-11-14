@@ -238,7 +238,7 @@ public sealed class X86RawDestroyGraphTests
         /// <param name="initialSpots">점유 지도 초기 값(칸 x·칸 y·값).</param>
         /// <param name="records">그래프 표의 hex 문자열.</param>
         /// <param name="islandFrame">참이면 섬 H 프레임(9→1) 치환용 프레임 표를 쓴다.</param>
-        public Scene(string[] input, List<int[]> nodes, List<int[]> initialSpots, string records, bool islandFrame)
+        public Scene(string[] input, List<int[]> nodes, List<int[]> initialSpots, string records, bool islandFrame, bool native)
         {
             Assert.Equal(25, input.Length);
             Assert.Equal(7, nodes.Count);
@@ -257,6 +257,8 @@ public sealed class X86RawDestroyGraphTests
             }
             Unpop = new RawUnpop(Pool, Hash, Spots);
             Destroy = new RawSquidDestroy(Pool, Unpop, Types);
+            // 진단/trace는 외부 shim이며 원본 그래프·장부 기대값을 바꾸지 않는다.
+            if (native) Destroy.BindPatchDiagnostics(new() { Assertion = (_, _, _) => throw new InvalidOperationException("예상 밖 원문 단언"), Trace = (_, _) => { } });
             // 부모 실제 Create와 같은 클라이언트 할당만 준비한다
             for (int i = 0; i < SlotIds.Length; i++)
             {
@@ -376,6 +378,14 @@ public sealed class X86RawDestroyGraphTests
                 island[8] = new FrameCode('H', 'P', 9, FrameCodeFlags.None);
                 Frames[SpecialSurfaceType] = island;
                 Frames[SpecialSurfaceReplacementType] = [new FrameCode('A', 'P', 1, FrameCodeFlags.None)];
+            }
+            if (native)
+            {
+                // 원본 역할 입력은 같은 DWORD 상자로 빌리고 독립 BYTE 사본을 다르게 두어 실제 선택을 검증한다.
+                State.SharedSpecialSurfaceType = new() { Value = State.SpecialSurfaceType };
+                State.SharedReplacementSurfaceType = new() { Value = State.SpecialSurfaceReplacementType };
+                State.SharedLargeSurfaceType = new() { Value = State.LargeSurfaceType };
+                State.SpecialSurfaceType = 0; State.SpecialSurfaceReplacementType = 0; State.LargeSurfaceType = 0;
             }
             Graph = new RawGraph(Pool, Hash, Spots, Types, Records(records), stack, Frames);
             Lifecycle = new RawSquidDestroyLifecycle(Pool, Types, Bookkeeping, State, Destroy, new SquidDeletionHooks
@@ -577,7 +587,7 @@ public sealed class X86RawDestroyGraphTests
     /// <param name="rows">fixture 전체 행.</param>
     /// <param name="kind">실행할 절 이름.</param>
     /// <param name="count">기대 행 수.</param>
-    private static void Replay(string[][] rows, string kind, int count)
+    private static void Replay(string[][] rows, string kind, int count, bool native)
     {
         int played = 0;
         X86Fixture.CheckRows(rows, row =>
@@ -586,7 +596,7 @@ public sealed class X86RawDestroyGraphTests
             {
                 return true;
             }
-            var scene = new Scene(row[3].Split(','), Nodes(row[9]), Nodes(row[10]), row[11], false);
+            var scene = new Scene(row[3].Split(','), Nodes(row[9]), Nodes(row[10]), row[11], false, native);
             scene.Run(kind);
             scene.Check(row);
             played++;
@@ -598,35 +608,43 @@ public sealed class X86RawDestroyGraphTests
     /// <summary>
     /// 원본 pre 의 표면 분할·Free·특수 H 치환·선택/장부 순서를 비교한다.
     /// </summary>
-    [Fact]
-    public void PreMatchOriginalX86()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void PreMatchOriginalX86(bool native)
     {
-        Replay(X86Fixture.Read("destroygraph"), "Pre", RowsPerKind);
+        Replay(X86Fixture.Read("destroygraph"), "Pre", RowsPerKind, native);
     }
 
     /// <summary>
     /// 발자국 경계·네 해시 단계·중복 머리·inactive 표면과 순차 Add를 비교한다.
     /// </summary>
-    [Fact]
-    public void PostMatchOriginalX86()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void PostMatchOriginalX86(bool native)
     {
-        Replay(X86Fixture.Read("destroygraph"), "Post", RowsPerKind);
+        Replay(X86Fixture.Read("destroygraph"), "Post", RowsPerKind, native);
     }
 
     /// <summary>
     /// actual destroy→pre Graph/장부→Unpop→post Graph/비용→Release 전체를 비교한다.
     /// </summary>
-    [Fact]
-    public void DestroyMatchOriginalX86()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void DestroyMatchOriginalX86(bool native)
     {
-        Replay(X86Fixture.Read("destroygraph"), "Destroy", RowsPerKind);
+        Replay(X86Fixture.Read("destroygraph"), "Destroy", RowsPerKind, native);
     }
 
     /// <summary>
     /// 실제 9→1 프레임 치환에서 원본 pre/Destroy의 풀·장부·그래프 전체를 비교한다.
     /// </summary>
-    [Fact]
-    public void IslandH8AndSingleFrameReplacementMatchOriginalX86()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void IslandH8AndSingleFrameReplacementMatchOriginalX86(bool native)
     {
         string[][] rows = X86Fixture.Read("island-graph-frame");
         int played = 0;
@@ -636,7 +654,7 @@ public sealed class X86RawDestroyGraphTests
             {
                 return true;
             }
-            var scene = new Scene(row[3].Split(','), Nodes(row[9]), Nodes(row[10]), row[11], true);
+            var scene = new Scene(row[3].Split(','), Nodes(row[9]), Nodes(row[10]), row[11], true, native);
             scene.Run(row[0]);
             scene.Check(row);
             played++;

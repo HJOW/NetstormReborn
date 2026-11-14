@@ -358,6 +358,8 @@ public sealed class RawContentLifetime
         {
             // 선택 번호가 없으면 원본처럼 0(없음)을 돌려준다
             Selected = _fallback.Selected ?? (() => 0),
+            // 전체 DWORD 선택 getter의 함수 사본도 함께 전달한다.
+            SelectedRaw = _fallback.SelectedRaw,
             // 실제 제거 알림·부모 dead 링크 보존은 앞서 검증한 ContentFormHost 로 연결한다
             UnpopForm = form =>
             {

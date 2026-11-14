@@ -222,6 +222,8 @@ public sealed class RawPriestPreDestroy
         {
             // 선택·Unpop 경계는 기존 묶음 그대로 쓴다
             Selected = fallback.Selected,
+            // 실제 Native 선택의 상위 비트를 보존한다.
+            SelectedRaw = fallback.SelectedRaw,
             UnpopForm = fallback.UnpopForm,
             Emit = effect =>
             {

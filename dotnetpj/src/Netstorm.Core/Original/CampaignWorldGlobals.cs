@@ -17,6 +17,13 @@ public sealed class IntBox
     public int Value { get; set; }
 }
 
+// 외부 단정밀도 좌표 저장소를 빌리는 상자다. 원문 float 주소와 같은 32비트를 보존한다.
+public sealed class FloatBox
+{
+    /// <summary>같은 실제 단정밀도 값이다. NaN 페이로드와 부호 있는 0을 산술 없이 전달한다.</summary>
+    public float Value { get; set; }
+}
+
 // 외부 bool 전역을 빌리는 상자다. 원문 `const bool&amp;` 빌림을 옮긴다. 2026-11-07 F2d 공장 약화 공유 이식에서 추가됐다.
 public sealed class BoolBox
 {

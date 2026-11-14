@@ -300,6 +300,8 @@ public sealed class RawGumpFormHost
     {
         // 기존 월드의 선택 번호를 유지하며 연결이 없으면 선택 없음으로 답한다
         Selected = _fallback?.Selected ?? (() => 0),
+        // 실제 부모가 제공한 전체 DWORD 선택을 유지한다.
+        SelectedRaw = _fallback?.SelectedRaw,
         // 공통 삭제가 실제 Unpop 을 요청하면 GumpForm 만 여기서 처리한다
         UnpopForm = sid =>
         {

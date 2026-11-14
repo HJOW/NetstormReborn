@@ -1,3 +1,5 @@
+using System.Buffers.Binary;
+
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -13,7 +15,7 @@ public delegate bool SquidAssetDestroy(int sid, uint flags, SquidDestroyHooks ho
 /// 월드·UI·프로세스의 내장 Form 가상 삭제를 같은 SID 풀·공통 삭제 깊이로 분배하는 몸체
 /// (원본 SquidFormDispatch, 10.78).
 /// 타입 번호마다 등록된 삭제 훅을 골라 Form 종류별 효과를 섞인 종속 체인에서도 중첩 삭제할 수 있게 한다.
-/// 기준 판본은 10.78 뿐이다. 프로세스 Form(10~62) 등록은 실제 Kernel 프로세스 호스트가 아직 이식되지 않아 비워 둔다.
+/// PATCH Native는 현재 자산/네 Form VT를 분배하고, Process VT도 같은 Kernel 호스트에 등록한다.
 /// 근거: cpppj/src/o/SquidFormDispatch.cpp (W03 삭제·수명 열다섯째 조각, 2026-10-23).
 /// </summary>
 public sealed class RawSquidFormDispatch
@@ -62,7 +64,7 @@ public sealed class RawSquidFormDispatch
         {
             throw new ArgumentException("Form 분배 공통 삭제 SID 풀 불일치", nameof(destroy));
         }
-        if (assets.Emit is null || assets.Selected is null)
+        if (assets.Emit is null || (assets.Selected is null && assets.SelectedRaw is null))
         {
             throw new ArgumentException("Form 분배 자산 공통 경계 필요", nameof(assets));
         }
@@ -136,12 +138,20 @@ public sealed class RawSquidFormDispatch
     public void SetAssets(SquidDestroyHooks assets, SquidAssetDestroy? assetDestroy)
     {
         ArgumentNullException.ThrowIfNull(assets);
-        if (assets.Emit is null || assets.Selected is null)
+        if (assets.Emit is null || (assets.Selected is null && assets.SelectedRaw is null) || assetDestroy is null)
         {
             throw new ArgumentException("Form 분배 현재 자산 경계 필요", nameof(assets));
         }
         _assets = assets;
-        _assetDestroy = assetDestroy;
+        // Native +10은 최초 월드의 실제 부모를 유지하고 현재 Pre/Post 경계만 교체한다.
+        if (!_destroy.HasPatchDiagnostics) _assetDestroy = assetDestroy;
+    }
+
+    /// <summary>실제 Process VT의 삭제·Unpop을 같은 풀의 호스트에 등록한다.</summary>
+    public void Bind(SquidProcessHost processes)
+    {
+        ArgumentNullException.ThrowIfNull(processes);
+        Register(processes.Pool(), 2, processes.Hooks());
     }
 
     /// <summary>
@@ -152,6 +162,15 @@ public sealed class RawSquidFormDispatch
     /// <param name="flags">삭제 플래그.</param>
     public bool Destroy(int sid, uint flags = 0)
     {
+        if (_destroy.HasPatchDiagnostics)
+        {
+            uint table = CurrentVtable(sid);
+            if (RawSquidFactory.SupportsConstructedVtable(_pool.Edition, table))
+                return (_assetDestroy ?? throw new InvalidOperationException("PATCH 현재 자산 가상+10 실제 World 처리기 미연결"))(sid, flags, Hooks());
+            if (!IsFormVtable(table)) throw new InvalidOperationException("PATCH 현재 가상+10의 미지 VT는 호스트에서 실행할 수 없습니다");
+            _destroy.Destroy(sid, flags, Hooks());
+            return true;
+        }
         uint type = _pool.Slot(sid)[TypeOffset];
         if (type >= OriginalConstructors.FirstAssetType && _assetDestroy is not null)
         {
@@ -165,57 +184,98 @@ public sealed class RawSquidFormDispatch
     /// 공유 분배기의 훅을 만든다. 공통 효과는 파생 fallback 으로 다시 분배하지 않아 같은 타입의 순환 호출을 막는다.
     /// 전송·선택 해제는 자산 경계로 바로 보내고, 종속 삭제는 루트 재진입으로 처리해 자산 재정의를 보존한다.
     /// </summary>
-    public SquidDestroyHooks Hooks() => new()
+    public SquidDestroyHooks Hooks()
     {
-        // 선택 번호는 현재 자산 경계에서 읽는다
-        Selected = _assets.Selected ?? throw new InvalidOperationException("Form 분배 자산 선택 경계 미연결"),
-        // 파생 Unpop 도 현재 타입별 실제 호스트가 처리한다
-        UnpopForm = sid =>
+        var hooks = new SquidDestroyHooks
         {
-            SquidDestroyHooks route = Route(sid);
-            // 등록 시점에 검사했지만 자산 경계 교체 뒤에도 계약을 지킨다
-            if (route.UnpopForm is null)
+            // getter 설치 여부는 현재 부모를 따르고 실제 호출은 다음 현재 부모를 다시 읽는다.
+            Selected = _assets.Selected is not null ? () => (_assets.Selected ?? throw new InvalidOperationException("Form 분배 현재 선택 경계 미연결"))() : null,
+            SelectedRaw = _assets.SelectedRaw is not null ? () =>
             {
-                throw new InvalidOperationException("Form 분배 등록 Unpop 경계 누락");
-            }
-            route.UnpopForm(sid);
-        },
-        Emit = effect =>
-        {
-            if (effect.Effect == SquidDestroyEffect.Transmit || effect.Effect == SquidDestroyEffect.ClearSelection)
+                Func<uint>? selected = _assets.SelectedRaw;
+                if (selected is not null) return selected();
+                return unchecked((uint)(_assets.Selected ?? throw new InvalidOperationException("현재 Form 분배의 실제 선택 조회 미연결"))());
+            } : null,
+            // 파생 Unpop 도 현재 타입별 실제 호스트가 처리한다
+            UnpopForm = sid =>
             {
-                EmitAssets(effect);
-                return;
-            }
-            if (effect.Effect == SquidDestroyEffect.DestroyDependent)
-            {
-                Destroy(effect.Sid, effect.Flags);
-                return;
-            }
-            if (_pool.Slot(effect.Sid)[TypeOffset] < OriginalConstructors.FirstAssetType)
-            {
-                SquidDestroyHooks route = Route(effect.Sid);
-                if (route.Emit is null)
+                SquidDestroyHooks route = Route(sid);
+                // 등록 시점에 검사했지만 자산 경계 교체 뒤에도 계약을 지킨다
+                if (route.UnpopForm is null)
                 {
-                    throw new InvalidOperationException("Form 분배 등록 효과 경계 누락");
+                    throw new InvalidOperationException("Form 분배 등록 Unpop 경계 누락");
                 }
-                route.Emit(effect);
-                return;
-            }
-            EmitAssets(effect);
-        },
+                route.UnpopForm(sid);
+            },
+            Emit = effect =>
+            {
+                if (effect.Effect == SquidDestroyEffect.Transmit || effect.Effect == SquidDestroyEffect.ClearSelection)
+                {
+                    EmitAssets(effect);
+                    return;
+                }
+                if (effect.Effect == SquidDestroyEffect.DestroyDependent)
+                {
+                    Destroy(effect.Sid, effect.Flags);
+                    return;
+                }
+                bool form;
+                if (_destroy.HasPatchDiagnostics)
+                {
+                    uint table = CurrentVtable(effect.Sid);
+                    form = IsFormVtable(table);
+                    if (!form && !RawSquidFactory.SupportsConstructedVtable(_pool.Edition, table))
+                        throw new InvalidOperationException("PATCH 현재 삭제 가상 효과의 미지 VT");
+                }
+                else form = _pool.Slot(effect.Sid)[TypeOffset] < OriginalConstructors.FirstAssetType;
+                if (form)
+                {
+                    SquidDestroyHooks route = Route(effect.Sid);
+                    if (route.Emit is null)
+                    {
+                        throw new InvalidOperationException("Form 분배 등록 효과 경계 누락");
+                    }
+                    route.Emit(effect);
+                    return;
+                }
+                EmitAssets(effect);
+            },
+        };
+        return hooks;
+    }
+
+    /// <summary>현재 물리 슬롯의 VT DWORD만 읽고 TYPE 별칭을 가상 분류에 섞지 않는다.</summary>
+    private uint CurrentVtable(int sid) => BinaryPrimitives.ReadUInt32LittleEndian(_pool.Slot(sid));
+
+    /// <summary>네 내장 Form의 실제 VT인지 판본에 맞춰 판단한다.</summary>
+    private bool IsFormVtable(uint table)
+    {
+        // 네 실제 클래스만 순서대로 비교한다. 이 조회는 슬롯과 장부를 변경하지 않는다.
+        foreach (uint type in new uint[] { 1, 2, 3, 6 })
+            if (table == FormVtable(type)) return true;
+        return false;
+    }
+
+    /// <summary>실제 Form 생성자의 판본별 VT 주소다.</summary>
+    private uint FormVtable(uint type) => _pool.Edition == OriginalEdition.Patch1078 ? RawSquidForms.VtableFor(type) : type switch
+    {
+        1 => 0x505a08, 2 => 0x505990, 3 => 0x505a80, 6 => 0x505b00,
+        _ => throw new ArgumentOutOfRangeException(nameof(type)),
     };
 
-    /// <summary>콜백 뒤 다음 효과는 현재 raw 타입으로 다시 선택한다.</summary>
+    /// <summary>콜백 뒤 다음 효과는 현재 실제 Form VT로 다시 선택한다.</summary>
     /// <param name="sid">효과 대상 번호.</param>
     private SquidDestroyHooks Route(int sid)
     {
-        uint type = _pool.Slot(sid)[TypeOffset];
-        if (type >= _routes.Length || !_bound[type])
+        uint table = CurrentVtable(sid);
+        // TYPE 값과 독립적인 현재 네 클래스에서 선택된 처리기만 요구한다.
+        foreach (uint type in new uint[] { 1, 2, 3, 6 })
         {
-            throw new InvalidOperationException("Form 분배 미등록 타입");
+            if (table != FormVtable(type)) continue;
+            if (!_bound[type]) throw new InvalidOperationException("선택된 현재 Form 클래스 처리기 미등록");
+            return _routes[type]!;
         }
-        return _routes[type]!;
+        throw new InvalidOperationException("선택된 현재 Form 가상 처리기 미등록");
     }
 
     /// <summary>자산 공통 효과를 현재 경계로 보낸다. 경계 교체 뒤에도 매번 최신 콜백을 읽는다.</summary>

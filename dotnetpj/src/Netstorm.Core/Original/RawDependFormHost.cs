@@ -322,6 +322,8 @@ public sealed class RawDependFormHost
     public SquidDestroyHooks Hooks() => new()
     {
         Selected = _fallback.Selected ?? (() => 0),
+        // 전체 DWORD 선택 getter의 함수 사본도 함께 전달한다.
+        SelectedRaw = _fallback.SelectedRaw,
         UnpopForm = sid =>
         {
             if (IsDependForm(sid))

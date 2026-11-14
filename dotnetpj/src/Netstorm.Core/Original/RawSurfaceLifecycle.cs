@@ -143,6 +143,8 @@ public sealed class RawSurfaceLifecycle
         {
             Emit = Emit,
             Selected = shared.Selected,
+            // 실제 공통 선택 getter를 그대로 전달한다.
+            SelectedRaw = shared.SelectedRaw,
             UnpopForm = shared.UnpopForm,
         };
     }

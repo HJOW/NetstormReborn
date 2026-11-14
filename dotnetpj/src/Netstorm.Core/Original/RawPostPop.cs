@@ -46,6 +46,15 @@ public sealed class RawPostPopState
     /// <summary>전역 비용 집계. 같은 타입을 다시 등록해도 최초 Pop 비트가 있으면 늘지 않는다.</summary>
     public int TotalCost { get; set; }
 
+    /// <summary>현재 Client의 장기 비용 DWORD다. 독립 TotalCost 사본을 덮어쓰지 않는다.</summary>
+    public IntBox? SharedTotalCost { get; set; }
+    /// <summary>현재 Client의 metamap 억제 bool이다. 독립 Suppressed 사본과 구별한다.</summary>
+    public BoolBox? SharedSuppressed { get; set; }
+    /// <summary>현재 실제 비용을 읽고 쓰며 미연결이면 독립 비용으로 돌아간다.</summary>
+    public int CurrentTotalCost { get => SharedTotalCost?.Value ?? TotalCost; set { if (SharedTotalCost is { } box) box.Value = value; else TotalCost = value; } }
+    /// <summary>현재 실제 억제 관문 또는 독립 입력이다.</summary>
+    public bool CurrentSuppressed => SharedSuppressed?.Value ?? Suppressed;
+
     /// <summary>공급·작업장 재계산 알림 수. 공급원·작업장 등록마다 1씩 늘어난다.</summary>
     public uint ProductionDirty { get; set; }
 
@@ -518,7 +527,7 @@ public sealed class RawPostPop : IRawPopPostPop
         bool patch = _pool.Edition == OriginalEdition.Patch1078;
         ValidateBaseCore(sid, flags, in projection, checkPending: !patch);
         // 억제 경로도 깊이는 1 줄인다
-        if (_state.Suppressed)
+        if (_state.CurrentSuppressed)
         {
             _state.Depth = unchecked(_state.Depth - 1);
             return;
@@ -539,7 +548,7 @@ public sealed class RawPostPop : IRawPopPostPop
         // 최초 등록이고 abstract·매립이 아니면 비용·목록·통계를 갱신한다
         if ((flags & 1) != 0 && (slot[ExtraOffset] & AbstractBuriedMask) == 0)
         {
-            _state.TotalCost = TotalCost(number);
+            _state.CurrentTotalCost = TotalCost(number);
             // 공급원이면 목록에 없을 때만 덧붙이고 재계산 알림은 항상 1 늘린다
             if ((type.Flags1 & ProviderBit) != 0)
             {
@@ -608,7 +617,7 @@ public sealed class RawPostPop : IRawPopPostPop
         }
         // 0 쪽 절삭 뒤 편향을 빼고 32비트 low DWORD 로 읽는다
         int unit = unchecked((int)(uint)((long)encoded - bias));
-        double total = (double)unit + _state.TotalCost;
+        double total = (double)unit + _state.CurrentTotalCost;
         // 누적 범위를 벗어나면 원본 ftol 의 범위를 벗어난 것이므로 거부한다
         if (total < -4294967296.0 || total > 4294967295.0)
         {

@@ -178,7 +178,7 @@ public sealed class X86RawDestroyLifecycleTests
 
         /// <summary>행 입력(19칸)으로 장면을 준비한다.</summary>
         /// <param name="input">쉼표로 나눈 19개 입력값.</param>
-        public Scene(string[] input)
+        public Scene(string[] input, bool native)
         {
             Assert.Equal(19, input.Length);
             Pool = new RawSidPool(32768, true);
@@ -190,6 +190,8 @@ public sealed class X86RawDestroyLifecycleTests
             }
             Unpop = new RawUnpop(Pool, Hash, Spots);
             Destroy = new RawSquidDestroy(Pool, Unpop, Types);
+            // Native 진단 장치는 외부 shim이며 기록 없는 정상 입력만 같은 원본 기대값에 재생한다.
+            if (native) Destroy.BindPatchDiagnostics(new() { Assertion = (_, _, _) => throw new InvalidOperationException("예상 밖 원문 단언"), Trace = (_, _) => { } });
             // 부모 실제 Create와 같은 클라이언트 할당만 준비한다
             for (int i = 0; i < SlotIds.Length; i++)
             {
@@ -433,8 +435,10 @@ public sealed class X86RawDestroyLifecycleTests
     /// 삭제 수명주기 fixture 의 10.78 Pair 몫 384회를 재생한다.
     /// 호출마다 효과 순서·슬롯 바이트·풀/해시/점유 체크섬·장부·좌표를 대조한다.
     /// </summary>
-    [Fact]
-    public void PairMatchOriginalX86()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void PairMatchOriginalX86(bool native)
     {
         string[][] rows = X86Fixture.Read("destroylifecycle");
         int count = 0;
@@ -444,7 +448,7 @@ public sealed class X86RawDestroyLifecycleTests
             {
                 return true;
             }
-            var scene = new Scene(row[3].Split(','));
+            var scene = new Scene(row[3].Split(','), native);
             scene.Run(true);
             scene.Check(row);
             count++;
@@ -457,8 +461,10 @@ public sealed class X86RawDestroyLifecycleTests
     /// 삭제 수명주기 fixture 의 10.78 Destroy 몫 192회를 공통 삭제 본체 경유로 재생한다.
     /// 삭제 순서(죽음 표시→종속→전송·선택→공간 해제→사후)와 장부 결과를 대조한다.
     /// </summary>
-    [Fact]
-    public void DestroyMatchOriginalX86()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void DestroyMatchOriginalX86(bool native)
     {
         string[][] rows = X86Fixture.Read("destroylifecycle");
         int count = 0;
@@ -468,7 +474,7 @@ public sealed class X86RawDestroyLifecycleTests
             {
                 return true;
             }
-            var scene = new Scene(row[3].Split(','));
+            var scene = new Scene(row[3].Split(','), native);
             scene.Run(false);
             scene.Check(row);
             count++;
