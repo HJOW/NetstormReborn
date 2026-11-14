@@ -1,5 +1,6 @@
 // 점 명령 등록(RawDotCommandRegister)·전역 표(ClientDotCommandGlobals)·분배(RawDotCommandDispatch)를 기준선 소스 계약과 손 계산 바이트로 검증한다. (2026-11-14 WB04-E443)
-// cpppj에도 직접 시험이 없어 원본 직접 관측 수치가 아니다. 순서/경계는 기준선 소스(RawDotCommandRegister.cpp·ClientDotCommandGlobals.cpp·RawDotCommandDispatch.cpp)에서 옮겼다.
+// 이 파일의 수치는 기준선 소스 계약과 손 계산이며, 순서/경계는 기준선 소스(RawDotCommandRegister.cpp·ClientDotCommandGlobals.cpp·RawDotCommandDispatch.cpp)에서 옮겼다.
+// 원본 직접 관측은 별도 시험이 대조한다: 등록/분배 행은 tests/command-native-fixtures.test.mjs(2026-11-15 WB04-E478), ClientDotCommandGlobals 의 PE 정적 이미지(2568바이트, dot-command-static-image.hex)는 같은 파일(2026-11-15 WB04-E480)이다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DOT_COMMAND_EMPTY_TOKEN, DOT_COMMAND_NAMES_TOKEN, DOT_COMMAND_STATE_BYTES, copyDotCommandName, registerDotCommand } from '../www/ui/dot-command-register.js';

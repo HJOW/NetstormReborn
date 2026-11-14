@@ -22030,6 +22030,37 @@
         "cpppj/src/client/ConfigurationCommandInput.cpp": "9e20b1c9f",
         "cpppj/src/client/ConfigurationCommandInput.h": "9e20b1c9f"
       }
+    },
+    {
+      "id": "dot-command-static-image",
+      "path": "cpppj/tests/fixtures/dot-command-static-image.hex",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E480",
+      "producer": "cpppj ClientDotCommandGlobalsTests: 보호 원본 10.78 PE 정적 데이터(00531b30~00532537) 점 명령 인접 표 2568바이트의 hex 동결(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/command-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/dot-command-globals.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ClientDotCommandGlobals.cpp",
+        "cpppj/src/client/ClientDotCommandGlobals.h"
+      ],
+      "doc": "docs/webpj-static-image-adapt-judgement-20261115.md",
+      "scope": "점 명령 전역 표의 PE 정적 이미지 2568바이트 전체(say 슬롯·함수 0x0042f1e0·표시 이름표 주소·count 1)와 같은 물리 대여·공유 등록·복사 중단 부분 효과",
+      "text": true,
+      "sha256": "8e1d19359228680d0e4fb0b25721b57bf563cc43bd82156392d5001b51bee411",
+      "bytes": 5137,
+      "lines": 1,
+      "fixtureCommit": "d207940cd",
+      "webCommit": "6af09bc8d",
+      "cpppjBasis": {
+        "cpppj/src/client/ClientDotCommandGlobals.cpp": "14ec2759c",
+        "cpppj/src/client/ClientDotCommandGlobals.h": "14ec2759c"
+      }
     }
   ]
 }

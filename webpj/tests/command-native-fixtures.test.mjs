@@ -1,10 +1,12 @@
 // 점 명령/HTML 계열의 원본 10.78 독립 관측 대조: 분배(DotCommandDispatch, 512행)·등록(DotCommandRegister, 250행+보충 v2 12행)·HTML 조건(10.78 행)·HTML 입력 확인(89행)을 같은 표·입력·호출 순서·부분 효과에서 비교한다.
 // 입력 열만 읽고 관측 열은 비교에만 쓴다(cpppj `DotCommandDispatchTests`·`DotCommandRegisterTests` 와 같은 방식). 원본게임을 실행하지 않는다. (2026-11-15 WB04-E478)
+// 끝의 세 시험은 cpppj `ClientDotCommandGlobalsTests` 를 옮겨, 보호 원본 PE 정적 표 전체(dot-command-static-image.hex, 2568바이트)와 ClientDotCommandGlobals 를 대조한다. (2026-11-15 WB04-E480)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { DotCommandDispatchState, dispatchDotCommand } from '../www/ui/dot-command-dispatch.js';
-import { DOT_COMMAND_STATE_BYTES, copyDotCommandName, registerDotCommand } from '../www/ui/dot-command-register.js';
+import { DOT_COMMAND_EMPTY_TOKEN, DOT_COMMAND_NAMES_TOKEN, DOT_COMMAND_STATE_BYTES, copyDotCommandName, registerDotCommand } from '../www/ui/dot-command-register.js';
+import { ClientDotCommandGlobals } from '../www/ui/dot-command-globals.js';
 import { applyHtmlCondition, createParserGlobals, createParserState, parseHtml } from '../www/ui/html-text.js';
 import { Config, ConfigRegistry } from '../www/assets/config.js';
 import { confirmHtmlInput } from '../www/ui/html-input-dialog.js';
@@ -140,4 +142,47 @@ test('HtmlInputDialog 원본 10.78 확인 89행: 복사·강제 NUL·첫 LF·종
         if (problems.length) failures.push(`${index}/${row[1]}: ${problems.join(',')}`);
     }
     assert.deepEqual(failures.slice(0, 20), []);
+});
+
+// 보호 원본 PE 에서 동결한 점 명령 정적 표 전체(2568바이트 hex + 마지막 개행)를 읽는다. 개행 변환(CRLF)에는 의존하지 않는다. (2026-11-15 WB04-E480)
+function staticImage() {
+    const text = fs.readFileSync(new URL('../../cpppj/tests/fixtures/dot-command-static-image.hex', import.meta.url), 'utf8').replace(/\r\n/g, '\n');
+    assert.equal(text.length, DOT_COMMAND_STATE_BYTES * 2 + 1); assert.equal(text.at(-1), '\n');
+    return Uint8Array.from(Buffer.from(text.slice(0, -1), 'hex'));
+}
+// 점 명령 이름 인자(NUL 포함 바이트 열)이다.
+const nameBytes = (text) => Uint8Array.from([...Buffer.from(text, 'latin1'), 0]);
+// 표의 한 DWORD 를 little endian 으로 읽는다.
+const wordAt = (bytes, at) => (bytes[at] | (bytes[at + 1] << 8) | (bytes[at + 2] << 16) | (bytes[at + 3] << 24)) >>> 0;
+
+test('ClientDotCommandGlobals 원본 PE 정적 표: 인접 표 2568바이트 전체가 원본 정적 이미지와 같고 같은 물리를 빌려준다', () => {
+    const owner = new ClientDotCommandGlobals(); const expected = staticImage();
+    assert.equal(expected.length, DOT_COMMAND_STATE_BYTES);
+    // count 0 가정이나 say 한 필드만이 아니라 전체 바이트를 비교한다.
+    assert.deepEqual(Array.from(owner.bytes()), Array.from(expected));
+    assert.equal(owner.bytes(), owner.bytes()); assert.equal(wordAt(owner.bytes(), 0xa04), 1);
+});
+
+test('ClientDotCommandGlobals 공유 등록: 등록이 최초 say 와 앞선 슬롯을 보존하고 같은 표에 쌓이며 새 소유자는 초기 상태다', () => {
+    const owner = new ClientDotCommandGlobals(); const expected = staticImage(); const address = owner.bytes();
+    assert.equal(owner.register(nameBytes('format'), 0x12345678, 0), 1);
+    assert.equal(owner.register(nameBytes('back'), 0x87654321, 1), 1);
+    const state = owner.bytes();
+    assert.equal(state, address); assert.equal(wordAt(state, 0xa04), 3);
+    assert.deepEqual(Array.from(state.subarray(0, 32)), Array.from(expected.subarray(0, 32))); assert.equal(wordAt(state, 0x800), 0x0042f1e0);
+    assert.equal(wordAt(state, 0x804), 0x12345678); assert.equal(wordAt(state, 0x808), 0x87654321);
+    assert.equal(wordAt(state, 0x904), DOT_COMMAND_EMPTY_TOKEN); assert.equal(wordAt(state, 0x908), DOT_COMMAND_NAMES_TOKEN + 64); assert.equal(wordAt(state, 0x90c), 0);
+    // 다른 소유자의 초기 상태와 구별된다.
+    const fresh = new ClientDotCommandGlobals(); assert.equal(wordAt(fresh.bytes(), 0xa04), 1); assert.equal(wordAt(state, 0xa04), 3);
+});
+
+test('ClientDotCommandGlobals 복사 중단: 이름 복사 뒤 중단해도 같은 표의 부분 효과를 되돌리지 않는다', () => {
+    const owner = new ClientDotCommandGlobals();
+    // 실제 복사는 수행하고 그 뒤 명시 중단만 추가한다.
+    const hooks = { copy: (destination, source, count) => { copyDotCommandName(destination, source, count); throw new Error('명시 복사 뒤 중단'); } };
+    assert.throws(() => owner.register(nameBytes('front'), 0x12345678, 1, hooks), { message: '명시 복사 뒤 중단' });
+    const state = owner.bytes();
+    assert.equal(wordAt(state, 0xa04), 1); assert.equal(state[32], 'f'.charCodeAt(0)); assert.equal(state[36], 't'.charCodeAt(0));
+    // callback/표시/count 는 아직 도달 전이다.
+    assert.equal(wordAt(state, 0x804), 0); assert.equal(wordAt(state, 0x904), 0);
 });
