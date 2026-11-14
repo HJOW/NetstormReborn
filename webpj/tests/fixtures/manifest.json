@@ -15344,6 +15344,35 @@
       }
     },
     {
+      "kind": "source",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E447",
+      "id": "src-object-menu-slots",
+      "path": "cpppj/src/client/ObjectMenuSlots.inc",
+      "producer": "cpppj 복원 소스(실제 PE 생성자 VT 83개의 +a8 메뉴 작성·+ac 메뉴 열기 진입)",
+      "consumers": [
+        "webpj/tests/object-menu-slots.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/object-menu-slots.js"
+      ],
+      "doc": "docs/webpj-chat-window-manager-menu-slots-20261114.md",
+      "cpppjSources": [
+        "cpppj/src/client/ObjectMenuSlots.inc"
+      ],
+      "scope": "83개 항목의 VT·작성·열기 세 DWORD 전부를 순서까지 대조(원본 .inc 를 읽어 비교)",
+      "text": null,
+      "sha256": null,
+      "bytes": null,
+      "lines": null,
+      "fixtureCommit": "3d1fe1466",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ObjectMenuSlots.inc": "3d1fe1466"
+      }
+    },
+    {
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
