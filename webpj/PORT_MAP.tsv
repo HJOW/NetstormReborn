@@ -282,7 +282,7 @@ cpppj/src/client/RawCarrierDropPoint.cpp	port	www/core/raw-carrier-drop-point.js
 cpppj/src/client/RawCarrierInput.cpp	port	www/core/raw-carrier-input.js	1f00a25a	port	[client-default] WB04-E97: 운반물 입력 4277f0 평가·4284a0 강조·42a360 클릭 분배·426290 확인 음향(자기 사각형·후보·제단/간헐천/귀환 장소·Graph·희생·표시 카운터·프레임 중복 억제). fixture carrier-input 454행 전부(10.78 전용 파일). 포획/Graph/연결/표면/제단 조회·요청 송신·UI/음향 장치는 훅 경계
 cpppj/src/client/RawCarrierMenu.cpp	port	www/core/raw-carrier-menu.js	1f00a25a	port	[client-default] WB04-E96: 운반물 메뉴 부모 몸체 004288f0(contained 순회·이동 불가/비행 중·위치 활성·주문 비용 대비 SP·Carrying/Drop/Cast/About·기본 메뉴)·사제 기본 메뉴/위치 계산기 연결. fixture carrier-menu originals 314행 전부(originalCD 314행은 10.72). controlled 메뉴·기본 객체 메뉴·월드 연결(BindCarrierMenuControls/Base/World)은 해당 모듈 이식 뒤
 cpppj/src/client/RawChatChannels.cpp	port	www/core/raw-chat-channels.js	ce5d8878	port	[client-default] WB04-E6: 00444ee0 Add(자기/-1/첫 빈칸/기존 검색·이름 40·Unknown%08x)·0042b0e0 이름 정제·004437f0 갱신 두 번·Clear·00445140 ResetOccupied. fixture chat-channels 10.78 2448행 전부. Client 수명/AI 서비스 공유 대조는 client 단위에서 / 3-E 판정(WB04-E264, 기준 ba0a999b): ① — SanitizePlayerName(0042b0e0 이름 정제를 자유 함수로 분리; 소비자 NativeMetaParticipantCreate 는 메타 참가자 생성)과 Forget(00445110: 같은 ID 의 100기록 모두 0, 소비자는 메타 참가자 전체 제거)은 메타(웹 제외). NameChanged 는 같은 정제를 40BYTE 로 호출해 결과 동일(NUL 없는 40BYTE 는 이제 명시 오류이나 Add 가 +27 에 NUL 을 쓰므로 도달하지 않음)
-cpppj/src/client/RawChatFormat.cpp	port			todo	[client-default]
+cpppj/src/client/RawChatFormat.cpp	port	www/ui/raw-chat-format.js	1f00a25a	port	[client-default] WB04-E442 RawChatFormat(stripChatFormatSlots ~0~6 제자리 제거·제거 위치 재검사·꼬리 보존/범위 오류·applyChatFormat 고정 패턴 (~[^~ CR TAB LF space]+)+ 검색·manager 0 이면 assertion(157/184) 뒤 계속·최대 80바이트 캡처+NUL·manager 복사 back 0x14/60 front 0x50/500·강제 NUL 0x4f/0x243·ID+chatFormat/chatFormat2 Config 키) 이식. 전용 PE fixture 없음(소스 계약·손 계산 바이트); 기준선 뒤 변경 없음; 남음: Chat 명령 연결
 cpppj/src/client/RawChatMessage.cpp	port			todo	[client-default]
 cpppj/src/client/RawChatPacket.cpp	port			todo	[client-default]
 cpppj/src/client/RawChatReceive.cpp	port			todo	[client-default]
@@ -300,7 +300,7 @@ cpppj/src/client/RawCursorRange.cpp	port			todo	[client-default]
 cpppj/src/client/RawCursorReturnPiece.cpp	port	www/core/raw-cursor-return-piece.js	1f00a25a	port	[client-default] WB04-E399: 생산 칸 반환(다리 난수/가중 패턴·품질 DWORD 감소·0x100·생성 후 유지 옵션·할당 후 요새/시간 getter·10/5/1초/요새 float 비트), makeCursorReturnPieceHooks(같은 풀 실제 Host Regular)·makeReturnPieceHooks(로컬/GUI). 원본 returnpiece originals 633행(전체 raw·효과·전역·난수) 첫 실행 일치, 시험5건. 실제 Factory/ProcessForm/Kernel 네 payload 및 1초 진행·E398 이월 GUI 반환 사슬 완료. 남음: 앱/커서/설정/Session 연결; CD/10.37 제외
 cpppj/src/client/RawDotCommandDispatch.cpp	port			todo	[client-default]
 cpppj/src/client/RawDotCommandRegister.cpp	port			todo	[client-default]
-cpppj/src/client/RawEdgeScroll.cpp	port			todo	[client-default]
+cpppj/src/client/RawEdgeScroll.cpp	port	www/core/raw-edge-scroll.js	1f00a25a	port	[client-default] WB04-E442 RawEdgeScroll(processEdgeScroll 비트 4 초기화·꺼짐/테두리/대화상자/좌버튼 관문·x<2/y<2(메뉴 없을 때)/≥크기-1 방향·방향 없음/팝업이면 시각 0·최초 시각·30×경과+2 ftol 을 속도로 제한(float32)·팝업 닫기·Shift 눌림이면 큰 축만(같으면 X 삭제)·목표 요청)와 requestCameraDelta(현재 view+이동량을 목표에만·32비트 감김·metaRebuild+1) 이식. 전용 PE fixture 없음(소스 계약·손 계산); 기준선 뒤 변경 없음; 남음: 입력 처리 연결
 cpppj/src/client/RawFactoryMenu.cpp	port			todo	[client-default]
 cpppj/src/client/RawFortWorldLoadBinding.cpp	port	www/core/raw-fort-world-load-binding.js	1f00a25a	port	[client-default] WB04-E303: Fort 적재 부모의 월드 연결 훅 makeFortWorldLoadBinding(다른 풀/Money 선택 누락 거부, child 어댑터 + generate=정상 지형 generateOriginal·money=지연 선택 loadSelected·rebuildGraph=월드 Graph). 기준선 뒤 변경 없음(3.6절 ①). 원본 골든 fortworldload-builder-consumer-x86.tsv originals 행(청크 3072·섬 3204 입력/출력)을 같은 단계에서 대조. 실제 child 본문(객체/Money/Meta)은 관찰 어댑터로 대신하고 실제 child 통합은 4-B 적재 통합 시험. tests/fort-world-load-binding.test.mjs
 cpppj/src/client/RawGameMenuBar.cpp	port	www/ui/option-menus.js	1f00a25a	partial	[client-default] About 하위 항목
@@ -345,7 +345,7 @@ cpppj/src/client/RawTextEntryContext.h	port	www/ui/text-entry-gump.js	1f00a25a	p
 cpppj/src/client/RawTextEntryControls.cpp	port			todo	[client-default]
 cpppj/src/client/RawTraceLog.cpp	adapt			todo	[adapt-log]
 cpppj/src/client/RawUberRootControls.cpp	port			todo	[client-default]
-cpppj/src/client/RawUserHighlight.cpp	port			todo	[client-default]
+cpppj/src/client/RawUserHighlight.cpp	port	www/core/raw-user-highlight.js	1f00a25a	port	[client-default] WB04-E442 RawUserHighlight(resetMouse 마우스 TYPE 만 0·highlight 같은 모드 무효과/변경 시 모드 쓰기→초기화→효과(1~3 커서 3·4 커서 2·5 선택 SID 보관 뒤 역투영 두 DWORD 를 이동 강조에·그 밖 커서 1)) 이식. 전용 PE fixture 없음(소스 계약); 기준선 뒤 변경 없음; 남음: 사용자 입력 연결
 cpppj/src/client/RawUserPick.cpp	port			todo	[client-default]
 cpppj/src/client/RawUserSelection.cpp	port			todo	[client-default]
 cpppj/src/client/ReadOnlyFileMap.cpp	exclude-host			-	[host-win32]
