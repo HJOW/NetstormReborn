@@ -6,7 +6,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E514)
+### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E515)
 
 | 항목 | 현행 기준 |
 | --- | --- |
@@ -14,21 +14,21 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 1,004단위(제외 156 별도) 중 **port 776(77.3%)·partial 36(3.6%)·todo 192(19.1%)**. 남은 228단위에는 기존 129단위와 재기준선에서 추가된 99단위가 포함된다. 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
-| 마지막 작업 단위 | **WB04-E514** 재기준선에 추가된 기존 이식분 9단위 검토: 8 port·1 partial([단위 문서](docs/webpj-rebaseline-existing-modules-20261115.md)). 실제 Client·Session 조립은 후속 |
-| 다음 작업 | ① 4-R의 신규 이식 대상 중 남은 99단위를 E498~E502의 근거에 따라 각 단계에서 처리한다. 시간 동기화 본체는 데이터 구조만 이식된 partial이다(E514). ② 독립적으로 가능한 4-D A·B·C와 5-A·5-B 잔여를 선행 관계에 맞게 병행한다. ③ 4-D의 D(Session 본체)·E(Client 본체·통합·L2 판정) 순서다. 3.8절 원본 관측 연결은 허브/적응 판정이 필요한 4건만 남았다 |
-| 마지막 전체 검사 | 2026-11-15 WB04-E514: Node v22.23.3·v26.13.0 전체 각각 **4,974건 통과, 실패 0** (v24 전체는 E513에서 4,973건 통과) |
+| 마지막 작업 단위 | **WB04-E515** 시간 동기화의 일반 등록·초기화·연결·수신 이식([단위 문서](docs/webpj-clock-synchronization-receive-20261115.md)). Poll·고정 수신기 수명과 Session 연결은 후속 |
+| 다음 작업 | ① 4-R의 신규 이식 대상 중 남은 99단위를 E498~E502의 근거에 따라 각 단계에서 처리한다. 시간 동기화는 일반 등록·수신까지 이식된 partial이며 Poll·고정 수신기 수명이 남았다(E515). ② 독립적으로 가능한 4-D A·B·C와 5-A·5-B 잔여를 선행 관계에 맞게 병행한다. ③ 4-D의 D(Session 본체)·E(Client 본체·통합·L2 판정) 순서다. 3.8절 원본 관측 연결은 허브/적응 판정이 필요한 4건만 남았다 |
+| 마지막 전체 검사 | 2026-11-15 WB04-E515: Node v22.23.3·v26.13.0 전체 각각 **4,982건 통과, 실패 0** (v24 전체는 E513에서 4,973건 통과; 복사 검사 교정 후 해당 8건 두 버전 재통과) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
 
-순서별 완료 기준은 3.2절, 단계별 체크 목록은 3.1절이다. **진행** 칸의 `n/m`은 3.1절 체크 항목 수, **남은 단위**는 `PORT_MAP.tsv`에서 todo·partial인 cpppj 단위를 단계에 배정한 수와 현재 cpppj 소스 줄 수 합계다(partial은 파일 전체 줄이라 상한, `python -X utf8 tools/port_inventory.py --families wb`). 표의 남은 단위 수는 옛 기준선의 129단위 배정이며, 재기준선에서 추가된 미완료 대상 99단위는 각 판정 문서(E498~E502)의 후속 단계에서 별도 처리한다.
+순서별 완료 기준은 3.2절, 단계별 체크 목록은 3.1절이다. **진행** 칸의 `n/m`은 3.1절 체크 항목 수, **남은 단위**는 `PORT_MAP.tsv`에서 todo·partial인 cpppj 단위를 단계에 배정한 수와 현재 cpppj 소스 줄 수 합계다(partial은 파일 전체 줄이라 상한, `python -X utf8 tools/port_inventory.py --families wb`). 표에는 옛 기준선의 129단위 배정을 유지하고 새 시간 동기화 1단위를 별도로 적었다. 재기준선에서 추가된 미완료 대상 99단위는 각 판정 문서(E498~E502)의 후속 단계에서 처리한다.
 
 | 순서·마일스톤 | 단계 | 내용 | 진행 | 남은 단위 / 줄 |
 | --- | --- | --- | --- | --- |
 | 1~3 M1·M2 선행 | WB02-G·H, 3-A~3-E | 대응표·오라클 기반, 월드 부품 E1~E264 | 완료(2026-11-10) | — |
 | 4 M2 | 4-A·4-B·4-C | 자료·설정·타입 표 / Fort·지형·섬 적재 / 패킷·로그인·내부 전송 | 완료(E265~E328, 4-C 3항목은 4-D 이월) | — |
 | 〃 | **4-R 재기준선** | cpppj 제품 985 → 1313 전환과 오라클 재수집 | **완료**(E497~E513, 기존 ③ 실제 구현은 후속 단계) | 추가 이식 대상 중 남은 99단위는 아래 단계에 별도 반영 |
-| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 12/31** | 28단위 / 14,969줄 |
+| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 12/32** | 기존 28단위 / 14,969줄 + 시간 동기화 1단위 / 99줄 |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 진행 중 44/46 | 3단위 / 533줄 |
 | 〃 | 5-B | 카메라·HUD·미니맵·커서 | 진행 중 9/13 | 5단위 / 1,039줄 |
 | 〃 | 5-C | 게임 화면 허브(Uber·메뉴 컨트롤)·미션 진입 명령 → **M2 판정**(L4a) | 미착수 | 13단위 / 5,998줄 |
@@ -215,7 +215,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 
 체크 목록 전체는 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261112-4c-through-wb04-e328)으로 옮겼고 요약은 2.3절이다(E305~E328). **4-D 로 넘긴 것:** ① client `ClientCampaignTransport` 2단계 — 고정 Native 수신기 묶음·채팅 41h·연결 종료 2번·기술 목록 0x69·경로 자료 0x30/압축 Squid 0x7a 관찰기(3.6절 ③ 4-D 행) ② client `RawCampaignSessionLogin`(`RawCampaignSession::Impl::Login`) — Session 상태 약 60칸을 직접 빌리는 중첩 구조체라 Session 조립과 함께 ③ 4-C 통합 시험 — cpppj `CampaignSession_LocalLoginActualHandshakeAndWorldLoad` 대응(Session 조립 뒤).
 
-#### 4-D Session 조립·Tutorial1 Load/Start (12/31)
+#### 4-D Session 조립·Tutorial1 Load/Start (12/32)
 
 완료 기준(3.2절): **L2** — Tutorial1 Load/Start 관측(보고서·session-dump·첫 프레임 논리 화면)이 cpppj 와 같다. 임시 Player/AI/색 번호로 시작 성공을 만들지 않는다. 선행: 4-B·4-C(완료). 이 목록의 줄 수와 `(+N)`은 이전 기준선 `1f00a25a`와 그 뒤 추가분을 기록한 것이다. 현재 기준선 `225553df`의 소스를 착수 때 확인하고 그 이후 변경은 3.6절 ①/②/③으로 판정한다. **실제 `Client`/`GameWorld`/`RawCampaignSession` 은 이 구획 끝에서 조립**하며, 그 전 항목은 앞 단위(E325~E328)처럼 **client 계약(최소 덕타입)** 을 모듈 머리글에 적고 시험이 그 형태의 장치를 만든다. 앞 순서 항목이 뒤 항목의 입력이므로 위에서부터 진행하고, 선행 미이식으로 막히면 사유를 그 항목에 적고 다음으로 간다. 큰 단위(RawCampaignSession 5,715줄 등)는 공개 API 경계로 나누어 착수 때 이 구획에 세부 항목을 더한다.
 
@@ -230,6 +230,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [ ] client **CampaignClientServices** 333줄(+56)·**CampaignUserInputServices** 34줄(+4)·**CampaignCursorClientEffects** 72줄(+2) — Session 에 주입하는 Client 서비스 묶음 [막힘(E348 판정): `RawCampaignSession.h` 의 서비스 형식과 `Client`·`GameWorld`·`RawButtonControls` 를 요구하는 접합 코드 — D(RawCampaignSession) 뒤]
 
 **C. Session 바인딩** (Tutorial1 Load/Start 에 닿는 것만 먼저, 나머지는 6·7·8 단계에서 연결)
+- [ ] o **RawClockSynchronization** 99줄 — [E515](docs/webpj-clock-synchronization-receive-20261115.md)에서 일반 등록·서버 초기화·연결·수신 완료. Poll의 표본 만료·빠른 절반 보정·송신과 고정 Native 수신기 baseline 수명, Session 실제 단독 연결은 남음
 - [ ] client **RawCampaignWorldRuntime** 196줄(+2)·**RawCampaignLifetimeBindings** 111줄(+9)·**RawCampaignMissionStartBindings** 113줄(+5)·**RawCampaignTutorialOneBindings** 136줄
 - [ ] client **RawCampaignAssetBindings** 272줄·**RawCampaignOwnership** 126줄·**RawCampaignProductionBindings** 153줄·**RawCampaignConstructionBindings** 291줄 — 생성/소유/생산/건설 연결(Tutorial1 Fort 의 TYPE 생성·정기 처리에 필요한 부분)
 - [ ] client 나머지 `RawCampaign*Bindings`(Hit 193·Archer 177·Motion 137·Cursor 283·CursorDisplay 161·Ritual 161·Devastation 110·Particles 513·Path 259·Carrier*·Gun*·Prayer·Meltdown·Panic) — **Tutorial1 Load/Start 가 요구하는 항목만 앞당기고** 나머지는 해당 순서(5-A 입자·6 입력/경로·7 전투/의식)에서 옮긴다. 착수 때 필요한 항목을 이 구획에 개별 항목으로 더한다
@@ -247,7 +248,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [ ] **4-C 통합 시험** (4-C 이월) — cpppj `CampaignSession_LocalLoginActualHandshakeAndWorldLoad` 대응: Zone→접속→0x27→응답→월드 설치→상태 8·9·10·13·14, 패킷 종류가 0x27 로 시작해 0x28·0x29 를 포함하고 0x6e 로 끝남, 옵션 22값·반경² 900·TYPE122 비용 3000
 - [ ] **4-D L2 판정** — Tutorial1 Load/Start 의 `session-dump`(웹 덤프 형식·`tools/cpp-oracle.mjs` 의 `--ui-script`/`--fixed-frame-ms` 시나리오, 3.5절 1번, 현행 기준선 오라클은 이 기능을 포함하며 웹 덤프·시나리오 연결은 미구현)·첫 프레임 논리 화면. 7차 오류/예외 console 로깅 구조(3.7절)를 이 Session 조립 때 앞당길 수 있다
 
-**4-D 남은 단위(대응표 todo·partial, 28단위 / 14,969줄):** RawCampaignSession 7,118, RawCampaignSessionLogin 389, RawCampaignWorldRuntime 197, RawCampaignAssetBindings 282, RawCampaignOwnership 137, RawCampaignLifetimeBindings 115, RawCampaignMissionStartBindings 173, RawCampaignTutorialOneBindings 136, ClientMain* 2,133, GameWorld 1,157, ClientStateWorldGlobals 112, ClientStateWorldCleanup 102, ClientStateRuntimeRetirement 99, ClientStateStorageCleanup 71, ClientCampaignTransport* 378, CampaignClientServices 373, CampaignUserInputServices 36, CampaignCursorClientEffects* 74, ClientGameplayGlobals 258, ClientDiagnostics 157, ClientStaticStrings 78, RawMonitorTime* 74, State 53, CampaignGuideRelease 82, GuideMissionTransitions 77, SquidPostPop* 709, ConfigInterface* 356, ClientUserSelectionCleanup 43. 위 체크 줄의 줄 수는 기준선 값이고 여기 줄 수는 현재 cpppj 값이다.
+**4-D 기존 기준선 남은 단위(대응표 todo·partial, 28단위 / 14,969줄; 신규 RawClockSynchronization 99줄은 별도):** RawCampaignSession 7,118, RawCampaignSessionLogin 389, RawCampaignWorldRuntime 197, RawCampaignAssetBindings 282, RawCampaignOwnership 137, RawCampaignLifetimeBindings 115, RawCampaignMissionStartBindings 173, RawCampaignTutorialOneBindings 136, ClientMain* 2,133, GameWorld 1,157, ClientStateWorldGlobals 112, ClientStateWorldCleanup 102, ClientStateRuntimeRetirement 99, ClientStateStorageCleanup 71, ClientCampaignTransport* 378, CampaignClientServices 373, CampaignUserInputServices 36, CampaignCursorClientEffects* 74, ClientGameplayGlobals 258, ClientDiagnostics 157, ClientStaticStrings 78, RawMonitorTime* 74, State 53, CampaignGuideRelease 82, GuideMissionTransitions 77, SquidPostPop* 709, ConfigInterface* 356, ClientUserSelectionCleanup 43. 위 체크 줄의 줄 수는 기준선 값이고 여기 줄 수는 현재 cpppj 값이다.
 
 #### 5-A 렌더러·Draw·시각 시스템 연결 (44/46)
 
