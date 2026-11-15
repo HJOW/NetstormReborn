@@ -19,6 +19,9 @@ public sealed class SquidDisplayView
 
     /// <summary>월드 그림을 투영하고 자를 화면 사각형이다. 2026-11-07 F2d 표시 진단 이식에서 추가됐다.</summary>
     public DisplayRect Viewport { get; set; } = new(0, 0, 0, 0);
+
+    /// <summary>원문 값형 카메라/viewport를 독립 사본으로 전달하고 원래 뷰 변경을 공유하지 않는다.</summary>
+    public SquidDisplayView Clone() => new() { CameraX = CameraX, CameraY = CameraY, Zoom = Zoom, Viewport = Viewport };
 }
 
 // Squid 출력 요청을 실제 렌더러에 연결하는 인터페이스다. Renderer 또는 독립 변경 표의 수명을 호출자가 관리한다. 2026-11-07 F2d 표시 진단 이식에서 추가됐다.

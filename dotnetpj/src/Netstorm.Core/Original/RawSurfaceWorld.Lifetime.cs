@@ -12,10 +12,12 @@ public sealed partial class RawSurfaceWorld
     public void Dispose()
     {
         if (_disposed) return;
+        BindRuntimePin(null);
         DrainCurrentProcessBindingsForShutdown();
         _processUse?.Dispose(); _processUse = null;
         if (_factoryRuntime is { } runtime) { _factory!.ReleaseRuntime(runtime); _factoryRuntime = null; }
         _postPop?.ReleaseRuntimeBindings();
+        ReleaseStorageDisplay();
         _storageUse?.Dispose(); _disposed = true; GC.SuppressFinalize(this);
     }
 }

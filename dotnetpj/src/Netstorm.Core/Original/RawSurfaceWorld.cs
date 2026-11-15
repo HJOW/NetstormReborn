@@ -218,19 +218,29 @@ public sealed partial class RawSurfaceWorld : IDisposable
                 (_runtime?.ContentNotice ?? throw new InvalidOperationException("현재 World의 실제 내용물 부모 파생 통지 미연결"))(selected, content, code)).Notice(parent, form, reason),
             Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
         });
+        bool coreTypesReady = prepared || _types.Count == OriginalConstructors.TypeCount;
+        // 원문처럼 Graph를 표시 대여보다 먼저 구성해 실패한 Graph가 표시 실행기를 남기지 않게 한다.
+        if (coreTypesReady)
+        {
+            if (_storage.Types.Count == _types.Count) _graph = _storage.GraphExecutor();
+            else
+            {
+                // 독립 얇은 World만 지역 진단을 갖고 장기 Graph의 Storage 장치를 덮지 않는다.
+                _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph,
+                    _frames.Count == _types.Count ? new RiftFrameCodeTables(_frames) : null, GraphRecovery.FullPool);
+                if (_edition == OriginalEdition.Patch1078) _graph.BindCurrentTypes(_types);
+                _graph.BindDiagnostics(new() { Checking = new(() => _storage.Checking().Read()), Assertion = _storage.AssertDisplay });
+                _graph.BindClock(_storage.ReadGraphClock); _graph.BindTrace(_storage.TraceGraph);
+            }
+        }
         // 표시 수집은 판본과 무관하게 같은 수의 셰이프 표가 있을 때만 둔다. 자동 껍데기 저장소의 빈 표에서는 비워 둔다.
         if (_types.Count == _storage.Shapes.Count && _storage.Shapes.Count > 0)
         {
-            _display = new SquidDisplay(_edition, _types, _storage.Shapes, new WorldDisplaySink(this), new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 65536, Viewport = new DisplayRect(0, 0, 640, 480) });
+            _display = _storage.Types.Count == _types.Count ? BindStorageDisplay() : new SquidDisplay(_edition, _types, _storage.Shapes, new WorldDisplaySink(this), _displayView);
         }
 
-        if (prepared || _types.Count == OriginalConstructors.TypeCount)
+        if (coreTypesReady)
         {
-            _graph = _storage.Types.Count == _types.Count ? _storage.GraphExecutor() : new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph,
-                _frames.Count == _types.Count ? new RiftFrameCodeTables(_frames) : null, GraphRecovery.FullPool);
-            if (_edition == OriginalEdition.Patch1078) _graph.BindCurrentTypes(_types);
-            _graph.BindDiagnostics(new() { Checking = new(() => _storage.Checking().Read()), Assertion = _storage.AssertDisplay });
-            _graph.BindClock(_storage.ReadGraphClock); _graph.BindTrace(_storage.TraceGraph);
             _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots, _display);
             _factory = new RawSquidFactory(_storage.Pool, _types, false, _unpop);
             BindFactoryRuntime();
@@ -444,7 +454,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
         catch
         {
             // 생성자 실패의 RAII 꼬리다. 이미 수행한 게임 값은 되돌리지 않고 같은 대여만 반납한다.
-            _processUse?.Dispose(); _processUse = null; _storageUse.Dispose(); throw;
+            _processUse?.Dispose(); _processUse = null; ReleaseStorageDisplay(); _storageUse.Dispose(); throw;
         }
     }
 
@@ -1414,6 +1424,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
         }
 
         _display.SetView(view);
+        _displayView = view.Clone();
         _displayHooks = hooks.Clone();
     }
 
@@ -1427,6 +1438,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
         }
 
         _metaRefresh = refresh;
+        if (_displayRuntime is not null) _displayRuntime.MetaRefresh = raw => _metaRefresh!(raw);
     }
 
     /// <summary>깊이·Graph·프로세스·공간의 실제 상태를 읽기 전용으로 노출한다. 2026-11-07 F2d 월드 본체 Report 이식에서 추가됐다.</summary>

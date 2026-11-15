@@ -6,7 +6,7 @@ namespace Netstorm.Core.Original;
 // 표시 수집 모듈을 담는 네임스페이스다. 2026-11-07 F2d 표시 수집 이식에서 추가됐다.
 
 // 타입·프레임 자료와 카메라에서 객체 출력 요청을 만드는 처리기이다. 클라이언트 장치에는 의존하지 않으며 sink에만 전달한다. 2026-11-07 F2d 표시 수집 이식에서 추가됐다.
-public sealed class SquidDisplay : IRawUnpopDisplay
+public sealed partial class SquidDisplay : IRawUnpopDisplay
 {
     /// <summary>표시 레이어와 extra의 선택·표식 비트다. 2026-11-07 F2d 표시 수집 이식에서 추가됐다.</summary>
     private const uint DoubleFrames = 0x440000u;
@@ -84,7 +84,7 @@ public sealed class SquidDisplay : IRawUnpopDisplay
             throw new ArgumentException("표시 카메라·viewport 오류");
         }
 
-        _view = view;
+        _view = view.Clone();
     }
 
     /// <summary>프레임 연결부가 같은 판본·타입 목록을 쓰는지 구성 때 확인한다.</summary>
@@ -288,7 +288,7 @@ public sealed class SquidDisplay : IRawUnpopDisplay
 
             DisplayRect rect = Bounds(type, frame, BitConverter.UInt32BitsToSingle(Read(bytes, 14)), BitConverter.UInt32BitsToSingle(Read(bytes, 18)));
             rect = rect with { Top = Coordinate((long)rect.Top + GeyserVerticalInset), Bottom = Coordinate((long)rect.Bottom - GeyserVerticalInset) };
-            rect = Clip(rect, _view.Viewport);
+            rect = Clip(rect, CurrentView().Viewport);
             if (Nonempty(rect))
             {
                 _sink.Invalidate(rect, 0u);
@@ -342,7 +342,7 @@ public sealed class SquidDisplay : IRawUnpopDisplay
             DisplayRect boltRect = Bounds(Read(bytes, 10, 1), unchecked((int)Read(bytes, 36)), BitConverter.UInt32BitsToSingle(Read(bytes, 14)), BitConverter.UInt32BitsToSingle(Read(bytes, 18)));
             const int extra = 10;
             boltRect = boltRect with { Right = Coordinate((long)boltRect.Right + extra), Bottom = Coordinate((long)boltRect.Bottom + extra) };
-            boltRect = Clip(boltRect, _view.Viewport);
+            boltRect = Clip(boltRect, CurrentView().Viewport);
             if (Nonempty(boltRect))
             {
                 _sink.Invalidate(boltRect, 0u);
@@ -375,7 +375,7 @@ public sealed class SquidDisplay : IRawUnpopDisplay
                     Right = Coordinate((long)inset.Right - insets[2]),
                     Bottom = Coordinate((long)inset.Bottom - insets[3]),
                 };
-                inset = Clip(inset, _view.Viewport);
+                inset = Clip(inset, CurrentView().Viewport);
                 if (Nonempty(inset))
                 {
                     _sink.Invalidate(inset, 0u);
@@ -418,9 +418,9 @@ public sealed class SquidDisplay : IRawUnpopDisplay
         }
 
         SquidDisplayFrame header = shape.Frames[frame];
-        int left = Coordinate((long)Project(x, 16, _view.CameraX) - Scale(header.HotspotX, _view.Zoom));
-        int top = Coordinate((long)Project(y, 11, _view.CameraY) - Scale(header.HotspotY, _view.Zoom));
-        return new DisplayRect(left, top, Coordinate((long)left + Scale(header.Width, _view.Zoom) + 1), Coordinate((long)top + Scale(header.Height, _view.Zoom) + 1));
+        int left = Coordinate((long)Project(x, 16, CurrentView().CameraX) - Scale(header.HotspotX, CurrentView().Zoom));
+        int top = Coordinate((long)Project(y, 11, CurrentView().CameraY) - Scale(header.HotspotY, CurrentView().Zoom));
+        return new DisplayRect(left, top, Coordinate((long)left + Scale(header.Width, CurrentView().Zoom) + 1), Coordinate((long)top + Scale(header.Height, CurrentView().Zoom) + 1));
     }
 
     /// <summary>패치의 일반 경로에도 남아 있는 frameCheck 조건이다. debug·assert UI는 복원 범위 밖이다.</summary>
@@ -450,7 +450,7 @@ public sealed class SquidDisplay : IRawUnpopDisplay
         }
 
         bool patch = _edition == OriginalEdition.Patch1078;
-        DisplayRect main = Clip(Bounds(type, frame, x, y), _view.Viewport);
+        DisplayRect main = Clip(Bounds(type, frame, x, y), CurrentView().Viewport);
         if (marker != 0)
         {
             if ((long)main.Right - main.Left < 19)
@@ -470,7 +470,7 @@ public sealed class SquidDisplay : IRawUnpopDisplay
 
         if ((_types[(int)type].Flags1 & Shadow) != 0)
         {
-            DisplayRect shadow = Clip(Bounds(type, frame + _shapes[(int)type].FrameCount, x, y), _view.Viewport);
+            DisplayRect shadow = Clip(Bounds(type, frame + _shapes[(int)type].FrameCount, x, y), CurrentView().Viewport);
             if (Nonempty(shadow))
             {
                 _sink.Invalidate(shadow, marker);
