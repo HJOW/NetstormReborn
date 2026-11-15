@@ -1,5 +1,5 @@
 // RawCampaignSession::Impl의 캠페인 소유 자료를 실제 하위 생성자로 구성한다(225553df, WB04-E574).
-// 사용: owner 생성(공유 입력 결선) → initializePlayersAndSp(진단 결선 포함) → 나머지 모듈/Load 연결.
+// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → 나머지 모듈/Load 연결.
 // 이 단계는 Session이 아니며 현재 Runtime에 공개하지 않는다. 외곽 Session과 Load는 아직 미구현이다.
 // Editor/LAN/메타/Native 장치는 이 캠페인 분기에 섞지 않는다. 반납은 하위 모듈을 정리한 부모가 마지막에 dispose로 한다.
 import { GameAssets } from '../assets/game-assets.js';
@@ -23,6 +23,7 @@ import { RawPriestWorldState } from './raw-priest-world-bindings.js';
 import { RawSquidLevel, makeSquidLevelAssertion } from './raw-squid-level.js';
 import { RawSurfaceWorld } from './raw-surface-world.js';
 import { RawCampaignSessionState } from './raw-campaign-session-state.js';
+import { RawCampaignSessionTables } from './raw-campaign-session-tables.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
 import { ScrambledSpStore } from './sp-store.js';
 import { SquidReward, SquidRewardState } from './squid-reward.js';
@@ -81,7 +82,9 @@ export class RawCampaignSessionOwners {
     // 상위가 실제 가상80 분배를 연결하며, 미연결 시 선택된 호출에서 오류다.
     rewardCount = null; soundNames; level = null;
     // 같은 Impl의 공유 입력·현재 상태와 Player/SP 이후 진단 결선이다.
-    state;
+    state; tables;
+    // 후속 실제 Login의 현재 소유 슬롯이다. 이 단계는 Login을 생성하거나 Session을 공개하지 않는다.
+    login = null;
     // 독립 typed 분기만 지역으로 소유하는 현재 값이다. Native 전역을 임의로 빌리지 않는다.
     piece = 107; dudeProviderIndex = 0; windFlyerType = 138; rainFlyerType = 144; sunFlyerType = 73;
     // 기반 자료 반납 및 생성자 내 Player/SP 구간의 한 번 실행 여부다.
@@ -93,7 +96,8 @@ export class RawCampaignSessionOwners {
         try {
             this.coreDataGlobals = input.coreDataGlobals ?? new ClientCoreDataGlobals();
             this.playerRecords = input.playerRecords ?? new ClientPlayerRecords(); this.playerUse = this.playerRecords.acquire();
-            this.services = { ...input }; this.missionFortName = String(mission);
+            // 값형 서비스의 assets와 peer9 표는 복사하고, 함수와 실제 공유 owner의 참조는 유지한다.
+            this.services = { ...input, assets: { ...input.assets }, battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
             this.fortTypeConversion = input.fortTypeConversion ?? new FortTypeConversionStorage();
             this.chatGlobals = input.chatGlobals ?? new ClientChatWindowGlobals();
             this.localStateGlobals = input.localStateGlobals ?? new ClientLocalStateGlobals();
@@ -134,6 +138,7 @@ export class RawCampaignSessionOwners {
             // 멤버 선언의 참조는 장기 owner의 현재 칸에 직접 읽고 쓴다.
             for (const [name, key] of Object.entries(ROLE_ALIASES)) Object.defineProperty(this, name, { enumerable: true, get: () => aux[key], set: (value) => { aux[key] = value; } });
             this.state = new RawCampaignSessionState(this);
+            this.tables = new RawCampaignSessionTables(this);
         } catch (error) { this.dispose(); throw error; }
     }
 
@@ -162,6 +167,12 @@ export class RawCampaignSessionOwners {
 
     // Player/SP와 후속 진단 결선이 정상 복귀했는지다. Session/World Load 완료를 뜻하지 않는다.
     get playersReady() { return this.#playersReady; }
+
+    // Player/SP와 진단 뒤 원문1152..1186을 한 번 연결한다. 이후 Islands/Sound 등 전체 생성자는 부모의 잔여다.
+    connectPlayerTablesAndPackets() {
+        if (this.#disposed) throw new Error('반납한 Session Player 테이블 결선');
+        this.tables.bind();
+    }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
     get fullDeck() { return this.gameplayGlobals.fullDeck().value; }
