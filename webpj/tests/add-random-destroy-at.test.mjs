@@ -67,7 +67,7 @@ test('AddRandom 부모: 원본10.78 720행(시각 seed·기본 범위 16..240·�
                 return 7;
             },
         };
-        addRandomObjects(type, quantity, hooks);
+        assert.equal(addRandomObjects(type, quantity, hooks), 7);
         assert.equal(trace.join(';'), row[7], `행 ${count + 1}`);
         assert.equal(row[8], '4');
         count += 1;
@@ -83,6 +83,11 @@ test('AddRandom: 시각 seed·섬 검색 규칙', () => {
     assert.equal(timeSeed(Number.POSITIVE_INFINITY), 0);
     assert.equal(timeSeed(1), ((1013 >> 4) + 1013 * 33) >>> 0);
     assert.equal(timeSeed(-1), (((-1013) >> 4) + Math.imul(-1013, 33)) >>> 0);
+    // 섬 채우기는 마지막으로 만든 임시 객체 SID를 사용하며 실패 0도 그대로 받는다.
+    const hooks = { wallSeconds: () => 0, local: () => 1, island: () => 1, place: () => 0xffffffff };
+    assert.equal(addRandomObjects(89, 1, hooks), 0xffffffff);
+    hooks.place = () => 0;
+    assert.equal(addRandomObjects(89, 1, hooks), 0);
     const islands = islandsImage();
     // 일반은 원래 owner 와 현재 owner 가 모두 요청 owner 와 같은 첫 항목, Fort 는 현재 owner 가 0 이거나 요청 owner 인 첫 항목이다.
     assert.equal(findFortTerritoryIsland(islands, false, 1, 0), 1);

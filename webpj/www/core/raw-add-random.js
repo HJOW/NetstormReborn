@@ -1,6 +1,6 @@
 // 대본 AddRandom 의 고정 범위 부모(0040dfd0)와 그 시각 seed(004bcab0 → 00460d70), 그리고 섬 검색(0046f380/0046f3f0)을 옮긴 모듈이다(cpppj `o/RawAddRandom.cpp/.h`, `o/RawFortTerritorySave.cpp`의 섬 검색 함수, `o/RawFortFinishOwner.cpp`의 TimeSeed, 10.78 전용).
 // addRandomObjects(type, quantity, hooks): 벽시각으로 지역 난수 seed 를 만들고(글로벌 GameRandom 을 바꾸지 않음) 기본 범위 청크 1..15 를 16배한 칸 16..240 사각형을 만든 뒤, 시각 seed 효과 다음에 현재 로컬 소유자를 읽어 그 소유자의 지역 0 섬을 찾고
-//   place(난수, 사각형, 섬, 수량, 타입, 0)로 기존 배치 몸체에 넘긴다. 마지막 배치 반환은 쓰지 않는다. 선택된 실제 장치(wallSeconds → local → island → place)의 누락은 그 호출 위치에서 거부하며 앞선 효과는 되돌리지 않는다.
+//   place(난수, 사각형, 섬, 수량, 타입, 0)로 기존 배치 몸체에 넘기고 마지막 배치 SID DWORD를 반환한다. 선택된 실제 장치(wallSeconds → local → island → place)의 누락은 그 호출 위치에서 거부하며 앞선 효과는 되돌리지 않는다.
 // timeSeed(wallSeconds): double 초에 1013 을 곱해 64비트 절삭의 하위 32비트(음수는 SAR 반올림)를 `(v>>4) + v*33` 로 감은 seed 이다(RawFortFinishOwner 도 같은 함수를 쓴다).
 // findFortTerritoryIsland(islands, fort, owner, region): 3204바이트 섬 기록(개수 DWORD + 32바이트 항목)에서 존재하는 항목 중 일반은 원래 owner·현재 owner 가 모두 요청 owner 와 같고, Fort 는 현재 owner 가 0 이거나 요청 owner 인 첫 signed region BYTE 일치를 돌려준다(없으면 127).
 //   findAnyFortTerritoryIsland(islands, region)는 owner 조건 없이 존재하는 첫 일치를 돌려준다. Edit 의 저장 부분(SnapshotFortTerritory 등)은 웹 제외 범위이고 이 두 검색만 미션 런타임이 공유한다.
@@ -42,7 +42,7 @@ export function addRandomObjects(type, quantity, hooks) {
     };
     const owner = need(hooks.local)();
     const region = need(hooks.island)(owner, 0);
-    need(hooks.place)(random, rectangle, region, quantity, type, 0);
+    return need(hooks.place)(random, rectangle, region, quantity, type, 0) >>> 0;
 }
 
 // 비정렬 필드의 지정 폭을 리틀엔디언으로 읽고 물리 범위 밖은 거부한다. (2026-11-08 WB04-E30)

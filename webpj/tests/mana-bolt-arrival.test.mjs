@@ -109,3 +109,20 @@ test('마나 볼트 도착: 첫 제거의 외부 효과 뒤 공유 번호를 다
     // 첫 제거(46) 뒤 공유 번호가 바뀌어 둘째 제거는 바뀐 번호(99)를 쓴다.
     assert.ok(events.includes('R:50:46') && events.includes('R:50:99'), events.join(';'));
 });
+
+test('마나 볼트 도착: 예약 확보 뒤 현재 공유 지연을 다시 읽는다', () => {
+    const scene = makeScene({ extra: 1, state: 0, owner: 1 });
+    const state = new ManaBoltArrivalState();
+    let delay = 0.05;
+    let reads = 0;
+    state.currentDelay = () => { reads += 1; return delay; };
+    const events = [];
+    const hooks = { ...makeHooks(events, 1), reserveRegular: () => { delay = 0.75; return true; } };
+    const arrival = new RawManaBoltArrival(scene.pool, scene.hash, scene.types, state, hooks);
+    assert.equal(arrival.arrive(BOLT), 1000);
+    assert.equal(reads, 1);
+    assert.ok(events.includes(`A:1:${BOLT}:${floatToBits(0.75)}`));
+    hooks.reserveRegular = () => false;
+    assert.equal(arrival.arrive(BOLT), 1000);
+    assert.equal(reads, 1);
+});

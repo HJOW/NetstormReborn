@@ -18,18 +18,21 @@ const ARRIVED_WITH_TARGET = 1000;
 const ARRIVED_WITHOUT_TARGET = 1001;
 
 // 원본 마나 볼트가 도착 때 제거/예약하는 현재 전역이다: regularType(00541128, 46)·sharedRegularType(00541164, 61)·delay(00532750, 0.05f)와 실제 Session 이 같은 장기 전역을 빌려주는 함수
-// currentRegularType/currentSharedRegularType 이다. 사용: 월드마다 하나를 두고 RawManaBoltArrival 에 넘긴다. (2026-11-09 WB04-E143)
+// currentRegularType/currentSharedRegularType/currentDelay 이다. 사용: 월드마다 하나를 두고 RawManaBoltArrival 에 넘긴다. (2026-11-09 WB04-E143)
 export class ManaBoltArrivalState {
     regularType = 46;
     sharedRegularType = 61;
     delay = Math.fround(0.05);
     currentRegularType = null;
     currentSharedRegularType = null;
+    currentDelay = null; // 예약 직전에 실제 장기 전역 float를 조회하는 선택 장치다.
 
     // 첫 제거 직전의 현재 전체 번호이다. (2026-11-09 WB04-E143)
     regularTypeNow() { return this.currentRegularType ? this.currentRegularType() >>> 0 : this.regularType; }
     // 첫 제거의 외부 효과 뒤 공유 번호를 다시 읽는다. (2026-11-09 WB04-E143)
     sharedRegularTypeNow() { return this.currentSharedRegularType ? this.currentSharedRegularType() >>> 0 : this.sharedRegularType; }
+    // 확보 효과가 바꾼 현재 지연을 원문의 float 폭으로 읽는다.
+    delayNow() { return this.currentDelay ? Math.fround(this.currentDelay()) : this.delay; }
 }
 
 // 비정렬 float DWORD 를 리틀엔디언으로 읽는다. (2026-11-09 WB04-E143)
@@ -98,7 +101,7 @@ export class RawManaBoltArrival {
             // 도달한 각 제거 위치의 같은 현재 번호를 다시 읽는다.
             need(hooks.removeProcesses)(bolt, state.regularTypeNow());
             need(hooks.removeProcesses)(bolt, state.sharedRegularTypeNow());
-            if (need(hooks.reserveRegular)()) need(hooks.addRegular)(bolt, 1, state.delay);
+            if (need(hooks.reserveRegular)()) need(hooks.addRegular)(bolt, 1, state.delayNow());
             return ARRIVED_WITH_TARGET;
         }
         need(hooks.destroy)(bolt, 0);
