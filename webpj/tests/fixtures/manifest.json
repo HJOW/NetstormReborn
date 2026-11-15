@@ -1953,6 +1953,70 @@
       "cpppjBasis": {}
     },
     {
+      "id": "cpppj-oracle-m1-1313-meta",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/m1/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "consumers": [
+        "webpj/tests/cpp-oracle-candidate.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/main-menu.js",
+        "webpj/www/ui/popup-menu.js",
+        "webpj/www/ui/option-menus.js",
+        "webpj/www/ui/tell-window.js",
+        "webpj/www/ui/help-window.js",
+        "webpj/www/ui/menu-list.js",
+        "webpj/www/ui/stone-button.js"
+      ],
+      "unit": "WB04-E497",
+      "doc": "docs/webpj-oracle-candidate-20261115.md",
+      "cpppjSources": [],
+      "producer": "cpppj 225553df Release 오라클 후보의 8장면 수집과 기록된 화면 차이",
+      "scope": "영어 4:3 메인 메뉴 8장면의 후보 오라클. 기준선 전환은 후속 4-R 작업이다.",
+      "text": true,
+      "sha256": "895e1cb3e574385dd413506f81adcdab711b937bb7d31cfc130811686641b89e",
+      "bytes": 7594,
+      "lines": 259,
+      "fixtureCommit": null,
+      "webCommit": "97b687ea6",
+      "cpppjBasis": {}
+    },
+    {
+      "id": "cpppj-oracle-m1-1313-scenarios",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/m1-scenarios.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "consumers": [
+        "webpj/tests/cpp-oracle-candidate.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/main-menu.js",
+        "webpj/www/ui/popup-menu.js",
+        "webpj/www/ui/option-menus.js",
+        "webpj/www/ui/tell-window.js",
+        "webpj/www/ui/help-window.js",
+        "webpj/www/ui/menu-list.js",
+        "webpj/www/ui/stone-button.js"
+      ],
+      "unit": "WB04-E497",
+      "doc": "docs/webpj-oracle-candidate-20261115.md",
+      "cpppjSources": [],
+      "producer": "cpppj 225553df Release 오라클 후보의 8장면 수집과 기록된 화면 차이",
+      "scope": "영어 4:3 메인 메뉴 8장면의 후보 오라클. 기준선 전환은 후속 4-R 작업이다.",
+      "text": true,
+      "sha256": "4ecd16f5566c7d68e369dc3df7f5c718b6b385439fdb7a5ccc35e158b9c63ca8",
+      "bytes": 6926,
+      "lines": 308,
+      "fixtureCommit": null,
+      "webCommit": "97b687ea6",
+      "cpppjBasis": {}
+    },
+    {
       "id": "reward",
       "path": "cpppj/tests/fixtures/reward-x86.tsv",
       "kind": "original-x86",
@@ -22600,7 +22664,7 @@
       "bytes": 335817,
       "lines": 1075,
       "fixtureCommit": "e95ed13d7",
-      "webCommit": "worktree",
+      "webCommit": "fa8c2931f",
       "cpppjBasis": {
         "cpppj/src/client/RawUserSelection.cpp": "99ff1a5f4",
         "cpppj/src/client/RawUserSelection.h": "99ff1a5f4",
@@ -22634,7 +22698,7 @@
       "bytes": 14915,
       "lines": 88,
       "fixtureCommit": "3afc18833",
-      "webCommit": "worktree",
+      "webCommit": "fa8c2931f",
       "cpppjBasis": {
         "cpppj/src/client/RawUserSelection.cpp": "99ff1a5f4",
         "cpppj/src/client/RawUserSelection.h": "99ff1a5f4"
@@ -22666,7 +22730,7 @@
       "bytes": 28148,
       "lines": 155,
       "fixtureCommit": "837187f2a",
-      "webCommit": "worktree",
+      "webCommit": "fa8c2931f",
       "cpppjBasis": {
         "cpppj/src/client/RawUserSelection.cpp": "99ff1a5f4",
         "cpppj/src/client/RawUserSelection.h": "99ff1a5f4"
@@ -22700,7 +22764,7 @@
       "bytes": 291733,
       "lines": 1093,
       "fixtureCommit": "b5503bacc",
-      "webCommit": "worktree",
+      "webCommit": "fa8c2931f",
       "cpppjBasis": {
         "cpppj/src/client/RawUserPick.cpp": "b5503bacc",
         "cpppj/src/client/RawUserPick.h": "b5503bacc",
@@ -22736,7 +22800,7 @@
       "bytes": 88561,
       "lines": 602,
       "fixtureCommit": "32fe196f3",
-      "webCommit": "worktree",
+      "webCommit": "fa8c2931f",
       "cpppjBasis": {
         "cpppj/src/client/RawUserSelection.cpp": "99ff1a5f4",
         "cpppj/src/client/RawUserSelection.h": "99ff1a5f4",

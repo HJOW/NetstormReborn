@@ -1,0 +1,259 @@
+{
+  "format": "netstorm-webpj-cpppj-oracle",
+  "version": 1,
+  "description": "cpppj 기준선 실행 파일로 수집한 M1 메인 메뉴 오라클. 그림은 cpppj 논리 화면 캡처(BMP)를 무손실 팔레트 PNG 로 바꾼 것이다. tools/cpp-oracle.mjs 가 쓴다.",
+  "cpppjCommit": "225553df",
+  "exe": {
+    "file": "Netstorm.exe",
+    "sha256": "5b52d96d2e53f4674a40991b78ff64c3c7e2ad8275a0a99b22d18d532b77eb46",
+    "bytes": 15595008
+  },
+  "scenarios": "webpj/tests/fixtures/cpppj/candidate-225553df/m1-scenarios.json",
+  "collectionInputsSha256": "49adf975a09e34059ce5518a48b65c251a0a462b2866796a0ee33b79e83fd009",
+  "data": {
+    "gameFiles": 1351,
+    "gameTreeSha256": "5ce8f82b6e3c1bfb51d5baca26e41f8dee4389cfd45e534b533799c4ca419555",
+    "compared": 30,
+    "mismatched": [],
+    "missingInWeb": 1321
+  },
+  "collected": {
+    "host": "HJOW-Athlon",
+    "at": "2026-11-15T02:01:18.100Z",
+    "node": "v26.13.0"
+  },
+  "results": {
+    "welcome": {
+      "args": [
+        "--run",
+        "assets/game-data",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "31",
+        "--set",
+        "SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "<steps.tsv>",
+        "--ui-report",
+        "<report.tsv>"
+      ],
+      "snapshots": {
+        "welcome": {
+          "png": "welcome/welcome.png",
+          "pngSha256": "8ec9e687012a91237ac5c1bc3d3f8c5074821956574e0ae2bf02fbc0c404fd7d",
+          "bmpSha256": "cf9344697ff65d44fc8f9bc3f60ac7b261f21e59c9339eced0f8c1b1cc182ce9",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "report": {
+        "file": "welcome/report.txt",
+        "sha256": "9b92a6879f90f19fc04ccad6fc5f95d17f487dc5045f3e6ded0d951e393f0f7c"
+      }
+    },
+    "main-menu": {
+      "args": [
+        "--run",
+        "assets/game-data",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "31",
+        "--set",
+        "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0",
+        "--ui-script",
+        "<steps.tsv>",
+        "--ui-report",
+        "<report.tsv>"
+      ],
+      "snapshots": {
+        "main-menu": {
+          "png": "main-menu/main-menu.png",
+          "pngSha256": "a5788e2fa7e03efa3af875e8a95c8f0fc697fa2722d316a81e710497b6ce3d2d",
+          "bmpSha256": "e2e20ab6134a6a10a418d2950dcd512f0804e9bba973b430ba1711ad88888a29",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "report": {
+        "file": "main-menu/report.txt",
+        "sha256": "7c0133afc67efdfa2bec66f55ecd4450cead00ac1888c7814541a729210179bd"
+      }
+    },
+    "campaign": {
+      "args": [
+        "--run",
+        "assets/game-data",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "31",
+        "--set",
+        "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0",
+        "--ui-script",
+        "<steps.tsv>",
+        "--ui-report",
+        "<report.tsv>"
+      ],
+      "snapshots": {
+        "campaign": {
+          "png": "campaign/campaign.png",
+          "pngSha256": "1f1f5822e73417a8e9556a32eca2a69bce5c6505c40343fc5468fa3f6e0103e7",
+          "bmpSha256": "d75553e281f46ff9a0c9762ed8979bef45e00551de9c0c84642f0ea6865fc2fc",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "report": {
+        "file": "campaign/report.txt",
+        "sha256": "4fa87772fb7e7156165bd737f64398955191d2d6101d9d85861cde05cbda9fd4"
+      }
+    },
+    "demo": {
+      "args": [
+        "--run",
+        "assets/game-data",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "31",
+        "--set",
+        "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0",
+        "--ui-script",
+        "<steps.tsv>",
+        "--ui-report",
+        "<report.tsv>"
+      ],
+      "snapshots": {
+        "demo": {
+          "png": "demo/demo.png",
+          "pngSha256": "4704f3b4dd5fcba17ffef405002cfc07dc9ec468bcf20761efc156f3d2d0b0fb",
+          "bmpSha256": "d35ccccc5a1a5c2446f5d2235bfaaec9b93d2e7c1fa8b9c5cd6fa6acf136b5df",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "report": {
+        "file": "demo/report.txt",
+        "sha256": "2638496ab13a9464c559993ad4b47483bac9a54516738df4596f46d71656e333"
+      }
+    },
+    "credits": {
+      "args": [
+        "--run",
+        "assets/game-data",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "31",
+        "--set",
+        "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0",
+        "--ui-script",
+        "<steps.tsv>",
+        "--ui-report",
+        "<report.tsv>"
+      ],
+      "snapshots": {
+        "credits": {
+          "png": "credits/credits.png",
+          "pngSha256": "088b3fcab33fcc43467df736364536831a7ea4f98965b5f0f255c42190b0457e",
+          "bmpSha256": "a99f5314b9b13be432442cafef043e5f87fc2a39e38e914f4d147ce715242a9b",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "report": {
+        "file": "credits/report.txt",
+        "sha256": "da0f8b02b6e5794ce8cfd7b036daaa99216b9ced83e2b2d3cc5c008c104edec6"
+      }
+    },
+    "help-popup": {
+      "args": [
+        "--run",
+        "assets/game-data",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "31",
+        "--set",
+        "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0",
+        "--ui-script",
+        "<steps.tsv>",
+        "--ui-report",
+        "<report.tsv>"
+      ],
+      "snapshots": {
+        "help-popup": {
+          "png": "help-popup/help-popup.png",
+          "pngSha256": "6e27c8d37a950ec39fdd88aad23ce133e91ce1cd27235cc74db78344e2c77ee8",
+          "bmpSha256": "259be7f470db5a3b1a2ab2cf3d0fe16d7f65b4518b263149b654818ced0f8d33",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "report": {
+        "file": "help-popup/report.txt",
+        "sha256": "93d117da7b76503775b6fed52a870401839700511b5794f4cc6e1f2f1010bb93"
+      }
+    },
+    "options-popup": {
+      "args": [
+        "--run",
+        "assets/game-data",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "31",
+        "--set",
+        "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0",
+        "--ui-script",
+        "<steps.tsv>",
+        "--ui-report",
+        "<report.tsv>"
+      ],
+      "snapshots": {
+        "options-popup": {
+          "png": "options-popup/options-popup.png",
+          "pngSha256": "c2e09fb2f00bfeed3ae462eb32a8ad7714792541a900bd8033ae2ec7aa78ca45",
+          "bmpSha256": "d20aea646378688713c85cc5870207dc1c56caec84e0dfd80c7ba90220219123",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "report": {
+        "file": "options-popup/report.txt",
+        "sha256": "506140b589c46d0c8b64538002e01742ef48da6293ef7e26299babfcb254ea3e"
+      }
+    },
+    "general-help": {
+      "args": [
+        "--run",
+        "assets/game-data",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "41",
+        "--set",
+        "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0",
+        "--ui-script",
+        "<steps.tsv>",
+        "--ui-report",
+        "<report.tsv>"
+      ],
+      "snapshots": {
+        "general-help": {
+          "png": "general-help/general-help.png",
+          "pngSha256": "d5ae7e8119050d96ab4aa8b0f2b5c87b802e5d7d4955fb7525d5f568f60c6252",
+          "bmpSha256": "778c013184cefcef7c7bb75a6f3a9770cf69be697c5d67655f5ea18f1fcedb1c",
+          "width": 1024,
+          "height": 768
+        }
+      },
+      "report": {
+        "file": "general-help/report.txt",
+        "sha256": "3c70857c752946f52b892ce57416cca2dcf03ac51343f1e17842d8e959e64473"
+      }
+    }
+  }
+}
