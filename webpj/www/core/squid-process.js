@@ -167,6 +167,13 @@ export class RegularProcess extends SquidProcess {
         this.#time = time;
     }
 
+    // JS 예약 객체를 같은 메모리의 Regular 생성자처럼 초기화한다. 부착 전 확보한 객체에만 사용한다.
+    // 사용: new RegularProcess(0, 0)로 예약 → initializeDetached(event, payload) → host.attachRegular.
+    initializeDetached(event, payload) {
+        if (this.host !== null || this.form !== 0 || this.pid !== 0) throw new Error('부착한 Regular의 예약 재생성 금지');
+        this.#time = 0; this.#event = event >>> 0; this.#payload = Math.fround(payload); this.#count = 0;
+    }
+
     // Carrier 426db0 의 생성 이후 +10/+14 쓰기이다. 다른 필드는 재초기화하지 않고 실제 기한만 덮어쓴다.
     setNextTime(time) {
         this.#time = time;
