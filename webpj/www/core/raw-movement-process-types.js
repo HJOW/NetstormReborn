@@ -1,5 +1,5 @@
 // 부모 TYPE 에서 이동 경로 프로세스 종류(23/54/39/40/42/24/41/38)를 고르는 몸체를 옮긴 모듈이다(cpppj `client/RawPriestWorldBindings.cpp` 의 `RawMovementProcessTypes`·`SelectMovementProcessType`, 원본 00488fe0, 10.78 전용).
-// RawPathStart 의 `processType` 훅과 사제 월드 바인딩이 같은 mutable 선택 상태를 읽도록 분리했다. 그 파일의 나머지(사제 월드 바인딩 본체)는 아직 옮기지 않았다.
+// RawPathStart 의 `processType` 훅과 사제 월드 바인딩이 같은 mutable 선택 상태를 읽도록 분리했다. 나머지 본체는 raw-priest-world-bindings.js가 소유한다. (2026-11-16 WB04-E563)
 //  - RawMovementProcessTypes: 현재 자산 TYPE 전역(sunWalker 133·empty 187·windWalker 137·rainWalker 156·teleport 134·bulf 135·dude 70·priest 158·manaBolt 105)과 내장 프로세스 번호
 //    (worm 40·walker 38·balloon 42·teleportProcess 23·bulfProcess 41·priestProcess 54·flyProcess 39·dudeProcess 24)를 가진다. 실제 Session 은 장기 소유자의 현재 값을 빌린다:
 //    `new RawMovementProcessTypes({ priest: 소유자(priestType), roles: 소유자(templeProductType·emptyCarrierType·rainWalkerType·bulfType·dudePathType) })` 이면 해당 칸은 매번 소유자의 현재 값을 읽고 쓰며,

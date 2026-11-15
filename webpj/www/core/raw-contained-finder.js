@@ -58,6 +58,9 @@ export class ContainedFinderState {
     // 외부 효과 뒤 또는 dead 진단 관문에서 다시 읽는 현재 권한이다.
     get currentBoss() { return this.#sharedBoss ? Boolean(this.#sharedBoss.value) : Boolean(this.boss); }
 
+    // 사제 월드의 네 권한 소비자가 같은 주소를 빌리는지 확인하는 현재 owner다. 값 변경에는 쓰지 않는다. (2026-11-16 WB04-E563)
+    get bossOwner() { return this.#sharedBoss; }
+
     // 진단 소비 위치마다 다시 읽는 현재 checking DWORD 이다.
     get currentChecking() { return this.#checking ? this.#checking() >>> 0 : Number(this.checkingDead) >>> 0; }
 }
