@@ -245,19 +245,6 @@ public sealed partial class RawSurfaceWorld
             BindCurrentPop();
             _pop.SetBuildingSide(_building);
             _unpop.SetBuildingSide(_building);
-            // 호스트 대여는 같은 장기 TYPE 표를 가진 전체 저장소에서만 한다. 자동 껍데기 저장소는 호스트를 묶지 않는다.
-            if (_storage.Types.Count == _types.Count && _types.Count > 0)
-            {
-                RawSquidDestroy boundDestroy = _baseDestroy;
-                RawSquidFactory boundFactory = _factory!;
-                _processUse = _storage.Processes().Bind(new ProcessHostRuntimeBindings
-                {
-                    Destroy = boundDestroy,
-                    Factory = boundFactory,
-                    PostPopDepth = () => _bookkeeping.Depth,
-                    Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
-                });
-            }
             if (_frames.Count == _types.Count)
             {
                 RawSquidFactory factory = _factory!;
@@ -394,6 +381,16 @@ public sealed partial class RawSurfaceWorld
                 _dependencies.BindCreation(factory, _storage.GameAux().DependFormTypeBox, _storage.AssertDisplay);
                 _dependencies.BindUnpop(factory.UnpopForm);
                 _formDispatch.Bind(_dependencies);
+            }
+            // 실제 현재 가상 분배 구성이 끝난 뒤 같은 장기 Host에 짧게 대여한다. 소진 회수도 이 가상 부모를 사용한다.
+            if (_storage.Types.Count == _types.Count && _types.Count > 0)
+            {
+                _processUse = _storage.Processes().Bind(new ProcessHostRuntimeBindings
+                {
+                    Destroy = _baseDestroy, Factory = _factory, Asset = _formDispatch?.Hooks(),
+                    PostPopDepth = () => _bookkeeping.Depth,
+                    Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
+                });
             }
         }
 

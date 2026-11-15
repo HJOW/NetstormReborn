@@ -308,3 +308,4 @@ depend-create-parent-current-x86.tsv	3cc59aea363466d0a6734d567a5f4d8d0577e4e3f9f
 bridge-fall-parent-x86.tsv	22eda704911c2886da2efac28a5e28dbb1c2fbd1f0f06f5603d4e702f1addcbf	200	cpppj	Core
 bridgeeffects-x86.tsv	cb68d6265d0d71ede7ed96f85e0be3311ebc6f6fec6279442c7607c7ca1ff3f5	6170	cpppj	Core
 content-cursor-width-x86.tsv	1dbbcddbf61e0c6354e8c70419c9a4bee4e4d690d92df5525313c5b59193e084	56	cpppj	Core
+sid-allocation-recovery-x86.tsv	1527716c4194bc879f0bab5cb6352a378951f7beb049b730cf503485426fd5d8	47	cpppj	Core

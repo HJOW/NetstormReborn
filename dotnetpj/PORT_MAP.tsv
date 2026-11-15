@@ -515,7 +515,7 @@ cpppj/src/o/RiftType.h	Netstorm.Core/Original/RiftTypeDefinition.cs	c2d292277d84
 cpppj/src/o/RiftType.h	Netstorm.Core/Original/RiftTypeFrames.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/o/RiftType.h	Netstorm.Core/Original/RiftTypeTable.cs	c2d292277d843ecc690a11787b8892afad5143f2	L1
 cpppj/src/o/RiftTypeTable.cpp	Netstorm.Core/Original/RiftTypeTable.cs	c2d292277d843ecc690a11787b8892afad5143f2	L1
-cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	L1
+cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.cs	c0e0237d6e345ca15440a207da00c8205ea2b1a3	L1
 cpppj/src/o/SidPool.cpp	Netstorm.Core/Simulation/SidPool.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/SpStore.cpp	Netstorm.Core/Original/RawSpStore.cs	f7e81025d1b1d019a5a4d6bffb0a4cbae9d7a473	L1
 cpppj/src/o/Squid.cpp	Netstorm.Core/Rules/SpotRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
@@ -901,3 +901,5 @@ cpppj/src/o/RawBridgeFallParent.cpp	Netstorm.Core/Original/RawBridgeFallParent.c
 cpppj/src/o/RawBridgeFallParent.h	Netstorm.Core/Original/RawBridgeFallParent.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	port
 cpppj/src/o/RawBridgeLifecycle.h	Netstorm.Core/Original/RawBridgeLifecycle.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	port
 cpppj/src/o/ContentFormHost.h	Netstorm.Core/Original/RawContentFormHost.cs	d5a23c9990c041dff2feb50ba1fd26a5ac0da440	port
+cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.Allocation.cs	c0e0237d6e345ca15440a207da00c8205ea2b1a3	L1
+cpppj/src/o/SidPool.h	Netstorm.Core/Original/RawSidPool.Allocation.cs	c0e0237d6e345ca15440a207da00c8205ea2b1a3	port

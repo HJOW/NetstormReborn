@@ -377,4 +377,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/content-cursor-width-x86.tsv" Link="X86/content-cursor-width-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- PATCH 할당 진단·현재 종류·최대50개 소진 회수의 독립 원본 관측이다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/sid-allocation-recovery-x86.tsv" Link="X86/sid-allocation-recovery-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

@@ -1,5 +1,6 @@
 using Netstorm.Core.Simulation;
 
+// 같은 원본 풀의 물리 바이트·목록·현재 할당 owner를 보관한다.
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -13,7 +14,7 @@ namespace Netstorm.Core.Original;
 /// 0번 슬롯에는 클라이언트 목록 머리(+0)와 서버 목록 머리(+14)가 겹쳐 놓인다.
 /// 근거: docs/exe/cpp-sid-reconstruction.md, cpppj/src/o/SidPool.cpp (W02 첫 조각, 2026-10-16; ClearDeletionHistory·공유 서버 판정은 R0-4 재대조, 2026-10-28).
 /// </summary>
-public sealed class RawSidPool
+public sealed partial class RawSidPool
 {
     /// <summary>슬롯 하나의 바이트 수(10.78).</summary>
     public const int Stride = 50;
@@ -27,8 +28,8 @@ public sealed class RawSidPool
     /// <summary>예측 머리 번호. 그 자체는 할당하지 않는다.</summary>
     public const int PredictableFirst = 23001;
 
-    /// <summary>지원하는 최대 슬롯 수. 원본 Clientmain.cpp 가 실제로 확보하는 수와 같고, 빈 목록 연결은 16비트라 넘치는 번호는 원본처럼 잘린다.</summary>
-    public const int MaximumCapacity = 120000;
+    /// <summary>현재 cpppj raw 풀이 물리 번호와 16비트 목록을 함께 보존하는 최대 슬롯 수다.</summary>
+    public const int MaximumCapacity = 65535;
 
     /// <summary>슬롯 안 "다음 빈 번호"(16비트)의 위치.</summary>
     public const int NextOffset = 4;
@@ -100,8 +101,11 @@ public sealed class RawSidPool
     /// <summary>빈 번호 카운터. 원본 값 그대로 재구성은 다시 세지 않고 더하며, 예측 번호의 반납은 늘리지 않는다.</summary>
     public uint FreeCount { get; private set; }
 
-    /// <summary>다음 예측 번호 = 예측 머리 + 이 값.</summary>
-    public uint PredictableCursor { get; private set; }
+    /// <summary>Login/metadata와 같은005424b0 전체 DWORD owner다. Reset은 주소를 바꾸지 않고 값만 초기화한다.</summary>
+    public UIntBox PredictableCursorBox { get; } = new();
+
+    /// <summary>다음 예측 번호 = 예측 머리 + 현재 전체 DWORD다.</summary>
+    public uint PredictableCursor { get => PredictableCursorBox.Value; private set => PredictableCursorBox.Value = value; }
 
     /// <summary>풀 전체의 슬롯 바이트를 읽기 전용으로 돌려준다(검사용).</summary>
     public ReadOnlySpan<byte> Bytes => _bytes;
@@ -169,12 +173,10 @@ public sealed class RawSidPool
     }
 
     /// <summary>
-    /// 번호를 할당한다(원본 004af1d0). 할당된 슬롯은 전부 0 으로 지워지고 void 상태로 시작한다.
-    /// 예측 비트가 클라이언트 비트보다 우선한다. 일반 영역이 예약 꼬리만 남았거나 예측 영역이 끝나면 예외이며 풀은 바뀌지 않는다
-    /// (원본의 소진 처리 — 다리 최대 50개 삭제 등 — 는 옮기지 않았다).
+    /// 기존 관리 CD 하네스의50바이트/10.78 경계 할당이다. CD 실제36바이트·고유 소진 복구의 복원으로 세지 않는다.
     /// </summary>
     /// <param name="flags">할당 영역.</param>
-    public int Allocate(SidAllocation flags = SidAllocation.Server)
+    private int AllocateLegacyCd(SidAllocation flags)
     {
         int sid;
         if ((flags & SidAllocation.Predictable) != 0)

@@ -156,6 +156,16 @@ public sealed class RawSurfaceStorage
             First = edition == OriginalEdition.Patch1078 ? -1 : 0,
             Last = edition == OriginalEdition.Patch1078 ? -1 : 0,
         };
+        // 긴 Pool은 같은 현재 전역을 읽고 선택된 삭제만 현재 ProcessHost 대여에서 호출한다.
+        Pool.BindAllocation(new()
+        {
+            Disallow = () => DisallowSquidAllocation, Boss = () => _authority.Boss, BridgeType = () => Links.BridgeType,
+            Assertion = (expression, file, line) => AssertDisplay(expression, file, line),
+            Reclaim = sid => Processes().ReclaimForAllocation(sid),
+            Dump = () => (_allocationDump ?? throw new InvalidOperationException("CD SID 할당의 현재 Client 객체 덤프 미연결"))(),
+            Detail = text => RecordAssertionDetail(text),
+            Tell = text => (_allocationTell ?? throw new InvalidOperationException("CD SID 할당의 현재 Client Tell 미연결"))(text),
+        });
     }
 
     /// <summary>같은 실제 Pool·해시·spot·그래프·집계·섬·청크 물리에 타입·프레임·셰이프를 최초 한 번만 넣어 실제 저장소를 만든다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
