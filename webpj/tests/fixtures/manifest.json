@@ -769,7 +769,7 @@
         "cpppj/src/o/RawSquidContainedUnpop.h",
         "cpppj/src/o/RawPacketLengths.h"
       ],
-      "scope": "게임 보조 전역 50필드(WB04-D3 의 Form 종속 전역 0054107c·00541088·005427dc 포함)+장식 4칸의 초기값. 실행 중 writer(타입 적재·Start·정리)의 값 변화는 각 소비자 단위에서 대조. WB04-E232: 패킷 선언 길이 표 0052ec40 의 WORD 138개(타입 0~137)도 같은 PE 구역 표로 읽어 웹 표와 대조",
+      "scope": "게임 보조 전역58필드(소리 TYPE0054112c=47 포함)·장식4칸·패킷 길이WORD138개와 ClientGameplayGlobals22칸/배열의 PE 초기값. 실행 중 writer는 각 소비자 단위에서 검증",
       "text": false,
       "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
       "bytes": 1552384,
@@ -4853,7 +4853,7 @@
       "bytes": 448744,
       "lines": 1059,
       "fixtureCommit": "5bd2e807a",
-      "webCommit": "worktree",
+      "webCommit": "2f547c78f",
       "cpppjBasis": {
         "cpppj/src/o/RawEnergySupply.cpp": "504a92a85"
       }
@@ -4882,7 +4882,7 @@
       "bytes": 690669,
       "lines": 568,
       "fixtureCommit": "504a92a85",
-      "webCommit": "worktree",
+      "webCommit": "2f547c78f",
       "cpppjBasis": {
         "cpppj/src/o/RawEnergySupply.cpp": "504a92a85"
       }
@@ -4911,7 +4911,7 @@
       "bytes": 1356,
       "lines": 84,
       "fixtureCommit": "5bd2e807a",
-      "webCommit": "worktree",
+      "webCommit": "2f547c78f",
       "cpppjBasis": {
         "cpppj/src/o/RawEnergySupply.cpp": "504a92a85"
       }
@@ -24090,6 +24090,42 @@
       "webCommit": "bdb1f8b04",
       "cpppjBasis": {
         "cpppj/src/client/RawBattleLeave.cpp": "eeae45c69"
+      }
+    },
+    {
+      "id": "sound-process",
+      "path": "cpppj/tests/fixtures/soundprocess-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "tools/decomp_soundprocess_oracle.py의 실제 PE 함수 관측(창/게임 루프/소리 장치 실행 없음)",
+      "consumers": [
+        "webpj/tests/sound-process.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/sound-process.js",
+        "webpj/www/audio/sound-list.js"
+      ],
+      "unit": "WB04-E571",
+      "doc": "docs/webpj-sound-process-20261116.md",
+      "cpppjSources": [
+        "cpppj/src/client/SoundProcess.cpp",
+        "cpppj/src/client/SoundProcess.h",
+        "cpppj/src/client/Sound.cpp",
+        "cpppj/src/client/Sound.h"
+      ],
+      "scope": "총18381관측 중10.78 originals6127행(실행5808·통지144·생성168·이름 연산7묶음/124조회)을 사용. CD/10.37은 제외. 실제 Host/보호막 연결은 별도 관계 검사",
+      "text": true,
+      "sha256": "1687245d52763e0e26111e95c3984e9977a1504a882bd825e8f828f1b55b9203",
+      "bytes": 4177929,
+      "lines": 18386,
+      "fixtureCommit": "99d66b0a6",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SoundProcess.cpp": "d3767242f",
+        "cpppj/src/client/SoundProcess.h": "d3767242f",
+        "cpppj/src/client/Sound.cpp": "d445a5d04",
+        "cpppj/src/client/Sound.h": "d445a5d04"
       }
     }
   ]

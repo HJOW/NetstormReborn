@@ -67,6 +67,8 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['fieryTailProcessType', 0x0054109c, 'u32', 11, 'fieryTailSystemProcessType', '불꽃 꼬리 생성자의 부착 TYPE'],
     ['streakProcessType', 0x005410a0, 'u32', 12, 'streakSystemProcessType', 'Teleport 생성·표시 부착·도착 삭제 TYPE'],
     ['regularProcessType', 0x00541128, 'u32', 46, 'regularProcessType', '일반 예약(Regular) 생성과 종속 조회 TYPE'],
+    // 소리/내용물 타이머가 실제 부착 때 같은 현재 DWORD를 읽는다. 일반 대여/reset은47로 되돌리지 않는다. (2026-11-16 WB04-E571)
+    ['soundProcessType', 0x0054112c, 'u32', 47, 'soundProcessType', '소리/내용물 프로세스의 현재 부착 TYPE'],
     ['processFormType', 0x00541078, 'u32', 2, 'ProcessForm', '공통 Process 부모 Create/Take TYPE'],
     ['dependFormType', 0x00541074, 'u32', 1, 'DependForm', '감시 쌍 Create 와 검색 TYPE'],
     // 아래 세 칸은 공통 Form 층·contained 해제가 호출마다 읽는 종속 전역이다(squid-forms.js squidFormGlobals). (2026-11-06 WB04-D3 추가)
