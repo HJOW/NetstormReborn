@@ -10,7 +10,7 @@ namespace Netstorm.Core.Original;
 // 서피스 월드 모듈을 담는 네임스페이스다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.
 
 // 판본·타입·지형 종류·물리 저장소의 같은 소유 정체성만 두고 실제 조립은 잇지 않는 월드 껍데기다. 적재·표시·삭제·프로세스 본체 조립은 후속 단위에서 잇는다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.
-public sealed partial class RawSurfaceWorld
+public sealed partial class RawSurfaceWorld : IDisposable
 {
     /// <summary>월드가 따르는 원본 판본이다. 슬롯 오프셋이 다른 모듈이 이 값으로 갈라진다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>
     private readonly OriginalEdition _edition;
@@ -174,7 +174,8 @@ public sealed partial class RawSurfaceWorld
     /// <param name="terrainType">초기 지면에 쓰는 지형 종류 번호다.</param>
     /// <param name="storage">빌릴 물리 저장소다. null이면 같은 판본으로 새로 만든다.</param>
     /// <param name="frames">같은 장기 프레임 표다. null이면 빈 목록을 둔다.</param>
-    public RawSurfaceWorld(OriginalEdition edition, IReadOnlyList<OriginalTypeRecord> types, uint terrainType, RawSurfaceStorage? storage = null, IReadOnlyList<RiftTypeFrames>? frames = null)
+    /// <param name="prepared">명시 정리가 끝난 PATCH 저장소를 초기화 없이 빌릴 때 true다. 실제 저장소가 필요하다.</param>
+    public RawSurfaceWorld(OriginalEdition edition, IReadOnlyList<OriginalTypeRecord> types, uint terrainType, RawSurfaceStorage? storage = null, IReadOnlyList<RiftTypeFrames>? frames = null, bool prepared = false)
     {
         ArgumentNullException.ThrowIfNull(types);
         if (types.Count == 0)
@@ -182,12 +183,20 @@ public sealed partial class RawSurfaceWorld
             throw new ArgumentException("서피스 월드의 실제 TYPE 표가 비었습니다.", nameof(types));
         }
 
+        // 준비 대여는 실제 Storage와 자산 정체성을 대여/초기화 전에 확인한다.
+        if (prepared && (storage is null || edition != OriginalEdition.Patch1078 || storage.Pool.Edition != edition
+            || storage.Types.Count != types.Count || storage.Frames.Count != types.Count || storage.Shapes.Count != types.Count
+            || (frames is not null && frames.Count != types.Count)
+            || terrainType >= types.Count || storage.Links.BridgeType >= types.Count || storage.Links.NoIslandType >= types.Count))
+            throw new ArgumentException("준비된 표면 대여의 실제 PATCH 저장소/자산/타입 불일치", nameof(storage));
         _edition = edition;
-        _types = types;
-        _frames = frames ?? [];
+        _types = prepared ? storage!.Types : types;
+        _frames = prepared ? storage!.Frames : frames ?? [];
         _terrainType = terrainType;
         _storage = storage ?? new RawSurfaceStorage(edition);
-        _storageUse = _storage.Acquire();
+        _storageUse = prepared ? _storage.AcquirePrepared() : _storage.Acquire();
+        try
+        {
         _processState = _storage.Processes().State();
         _kernel = _storage.Processes().Kernel();
         _containedUnpop = new RawSquidContainedUnpop(_storage.Pool, new SquidContainedUnpopState
@@ -213,7 +222,7 @@ public sealed partial class RawSurfaceWorld
             _display = new SquidDisplay(_edition, _types, _storage.Shapes, new WorldDisplaySink(this), new SquidDisplayView { CameraX = 0, CameraY = 0, Zoom = 65536, Viewport = new DisplayRect(0, 0, 640, 480) });
         }
 
-        if (_types.Count == OriginalConstructors.TypeCount)
+        if (prepared || _types.Count == OriginalConstructors.TypeCount)
         {
             _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph,
                 _frames.Count == _types.Count ? new RiftFrameCodeTables(_frames) : null, GraphRecovery.FullPool);
@@ -429,6 +438,12 @@ public sealed partial class RawSurfaceWorld
         }
 
         _bookkeeping.LocalOwner = 1;
+        }
+        catch
+        {
+            // 생성자 실패의 RAII 꼬리다. 이미 수행한 게임 값은 되돌리지 않고 같은 대여만 반납한다.
+            _processUse?.Dispose(); _processUse = null; _storageUse.Dispose(); throw;
+        }
     }
 
     /// <summary>월드가 따르는 원본 판본이다. 2026-11-07 F2d 서피스 월드 껍데기 이식에서 추가됐다.</summary>

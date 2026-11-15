@@ -69,6 +69,12 @@ public sealed partial class RawPostPop
     {
         RequirePatch(); ArgumentNullException.ThrowIfNull(body); _defaultResourcePostPop = body;
     }
+    /// <summary>짧은 Session/World 대여만 반납하고 장기 기본 장치·TYPE·목록·공통 깊이는 유지한다.</summary>
+    public void ReleaseRuntimeBindings()
+    {
+        _runtimePin = null; _aiNotice = null; _selectionRecheck = null; _localOwner = null; _teleportPrefix = null;
+        _priestPostPop = null; _forcefieldPostPop = null; _carrierPostPop = null; _assetPostPop = null; _playerPostPop = null;
+    }
     /// <summary>선택한 실제 가상 몸체 전체를 현재 Runtime pin 안에서 실행한다. 미구현 몸체는 도달 위치에서 실패한다.</summary>
     private void DispatchPostPop(int sid, uint flags)
     {

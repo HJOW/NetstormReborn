@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.555 · 갱신 2026-11-15(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.556 = [R4-1](#r4-detail) · cpppj 기준 제품 1313 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
+**기준 단위 0.556 · 갱신 2026-11-15(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.557 = [R4-1](#r4-detail) · cpppj 기준 제품 1313 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-15) 직전의 이 문서 전체(단위 기록 0.453~0.545 93건, R4 진행판의 묶음별 경과, 0.3의 단위별 검사·fixture 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261115-through-0545)에 바이트 그대로 보관했고, 그 이전 보관본 6개와 0.452 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -35,7 +35,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 | R1 | 8비트 화면 호스트·입력 큐·오라클 도구(`--ui-script`·`snapshot`·`session-dump`·`--fixed-frame-ms`) | — | ✅ 완료 | — |
 | R2 | 그리기 원시·팔레트·글꼴 | — | ✅ 본체 완료(실자산·세션 연결은 R5) | — |
 | R3 | Gump UI와 메인 메뉴 계열 | D1 메뉴 픽셀 일치 | 🔶 **메뉴 L4a 12장면 차이 0.** 미룬 3장면(Language 자식 CJK는 R8, Multiplayer 섬 화면은 R5·R11, Edit 이동행은 R7)과 잔여 위젯·소유자([2.5](#r3-r2-detail))는 R5~R7에서 해당 화면과 함께 닫는다 | R5의 G 영역에 포함 |
-| **R4** | **월드 세션 조립** | **M1: 34경로 Load/Start 상태가 cpppj `session-dump`와 같다(L2)** | 🔶 **진행 중(0.390~0.555).** 세션·Player·지형·요새 객체 적재와 객체 수명 공통층(공장·Pop/Unpop·삭제·피해·연소·사제·보호막 부품)까지. **M1 0/34.** 남은 조각 R4-1~R4-8 | A·B·C·D **138단위 / 13,913줄** + K·L·M 중 적재 경로 |
+| **R4** | **월드 세션 조립** | **M1: 34경로 Load/Start 상태가 cpppj `session-dump`와 같다(L2)** | 🔶 **진행 중(0.390~0.556).** 세션·Player·지형·요새 객체 적재와 객체 수명 공통층(공장·Pop/Unpop·삭제·피해·연소·사제·보호막 부품)까지. **M1 0/34.** 남은 조각 R4-1~R4-8 | A·B·C·D **138단위 / 13,913줄** + K·L·M 중 적재 경로 |
 | R5 | 월드 표시·카메라·HUD, **`Netstorm.exe` 전환** | D2: 34경로 진입 직후·N프레임 뒤 캡처 차이 0(L4a) | ⬜ 미착수(연소·공통 표시 등록 부품만 R4에서 선행) | E·G **102단위 / 13,764줄** |
 | R6 | 플레이 입력·규칙·AI·소리 | M2: 고정 입력열 L3 상태 해시 일치 · M3: 1-1·1-2를 새 경로에서 진행 → 기존 경로 삭제 | ⬜ 미착수(사제·Carrier·보호막·소리 장치 일부 부품만 R4에서 선행) | F·H·I·J·K·L·N·O **382단위 / 45,090줄** |
 | R7 | 미션 전체·Edit·설정·배포 | M4: 34경로 진입·진행·저장 수명, Edit, 배포 압축 해제 실행 | ⬜ 미착수(Edit 목록·`options.cfg` 저장 일부는 R3에서 선행) | M·Y **45단위 / 5,657줄** |
@@ -50,11 +50,11 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 단위 | **0.555(2026-11-15, HJOW-Athlon):** [현재 PostPop 가상 분배](docs/dotnet-postpop-dispatch-20261115.md). Core284/284·Client55/55, 신규34검사(자산818행의 가상 분배 재생 포함). 다리/섬/표면/Teleport·Carrier/자산·Runtime pin과 실제 World 접두/프레임 연결. 미이식 파생·NativeStorage 장기 보유·호스트 전환은 잔여 |
-| 검사 기준선 | 0.546 재개 전체 회귀 완주: **Assets366/366·Client일반1,232/1,232·Core2,393/2,394**(17분39초, 대형 독립 저장 포함). Core 실패1은 `NETSTORM_DATA` 누락이며 환경을 바로잡은 **관련155/155**에서 동일 검사와 신규11검사 통과. 최초 전체 종료1과 후속 통과를 구분한다. 실장치 오디오Explicit1 미실행. 0.555 Core284/284·Client55/55(신규34·기존 자산818행의 가상 분배 대조)·호스트 Release 0경고·0오류. TRX `extracted/dotnet-regression-0546/`·`extracted/dotnet-form-parent-0546-final/`, [근거](docs/dotnet-form-parent-20261115.md) |
-| PORT_MAP | `PORT_MAP.tsv` **913행(L1 431·port 482)**, cpppj 415단위에 대응. 행은 파일 전체 완료를 뜻하지 않는다 |
+| 마지막 구현 단위 | **0.556(2026-11-15, HJOW-Athlon):** [Storage 물리·World 대여 수명](docs/dotnet-storage-lifetime-20261115.md). 관련327/327, 신규5검사. 일반 fresh의 물리 주소 유지·준비 World 진입·생성 실패 반납·동기 실행 뒤 일반 종료. 장기 공통 장부/실행기와 실제 호스트 전환은 잔여 |
+| 검사 기준선 | 0.546 재개 전체 회귀 완주: **Assets366/366·Client일반1,232/1,232·Core2,393/2,394**(17분39초, 대형 독립 저장 포함). Core 실패1은 `NETSTORM_DATA` 누락이며 환경을 바로잡은 **관련155/155**에서 동일 검사와 신규11검사 통과. 최초 전체 종료1과 후속 통과를 구분한다. 실장치 오디오Explicit1 미실행. 0.556 관련327/327(신규5); 0.555 Client55/55·호스트 Release 0경고·0오류. TRX `extracted/dotnet-regression-0546/`·`extracted/dotnet-form-parent-0546-final/`, [근거](docs/dotnet-form-parent-20261115.md) |
+| PORT_MAP | `PORT_MAP.tsv` **917행(L1 431·port 486)**, cpppj 415단위에 대응. 행은 파일 전체 완료를 뜻하지 않는다 |
 | fixture | 연결 **312개**(원본 x86 대조 자료, `cpp-fixture-manifest.tsv`) |
-| L2 기준선 | 0.555: cpp34는0.546 기준선 재사용(SHA 확인), dn일반31/31 신규 실행 종료0·수집 오류0·원본1,394파일 전후 동일. **일치0/34**, 데모dn3 미연결. dn31의 슬롯·그래프·난수 등 상태는0.554와 동일(14경로 파일 전체 동일,17경로는 frame행만 차이). 자료 `extracted/dotnet-l2-0555-fixed/`, [이번 결과](docs/dotnet-postpop-dispatch-20261115.md)·[일괄 도구](docs/dotnet-l2-batch-20261114.md) |
+| L2 기준선 | 0.556: cpp34는0.546 기준선 재사용(SHA 확인), dn일반31/31 신규 실행 종료0·수집 오류0·원본1,394파일 전후 동일. **일치0/34**, 데모dn3 미연결. dn31의 슬롯·그래프·난수 등 상태는0.555 수정본과 동일(16경로 파일 전체 동일,15경로는 frame행만 차이). 자료 `extracted/dotnet-l2-0556/`, [이번 결과](docs/dotnet-storage-lifetime-20261115.md)·[일괄 도구](docs/dotnet-l2-batch-20261114.md) |
 | cpppj 기준 | 제품 **1313 / 11.01**(M8 최종 관문 1311 완료, CD 10.72 복원은 사용자 보류, cpppj 목표 일시 중지). 영향 분류는 0.379(1247→1300 전수)·0.499(1304~1310)·0.530(1312·1313)까지 마쳤다([1.2](#resync-scope)). `reflected-commit`/floor는 올리지 않았다 |
 | 오라클 | `cpppj/build/bin/Release/Netstorm.exe`. cpppj `src`가 바뀌면 PowerShell로 다시 빌드한다. 데이터 사본 `extracted/dotnet-oracle-data/`·캡처 `extracted/dotnet-oracle-captures/`·기준선 `extracted/dotnet-r0-baseline/`은 이 PC에만 있다(Git 제외) |
 | 디컴파일 | dotnetpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`). 이식 근거는 cpppj 소스·fixture·문서다 |
@@ -63,7 +63,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 ### 0.4 남은 작업 — 순서대로
 
-**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). 현재 Form 부모 체인·기본 내용물 통지와 감시 Form의 실제 공장/현재 타입/가상 삭제를 옮겼다. **0.555에서 현재 다리/섬/표면/Teleport 접두·Carrier/자산 전체 몸체의 가상 분배·장기 자원 선택·전체 호출 pin을 연결했다. 실제 World 접두/프레임도 연결했다. 다음은 NativeStorage의 장기 공장·공간·World 수명과 실행기 보유다. 아직 미이식인 나머지 파생 모듈 설치, 실제 Runtime pin 대여와 현재 HostSession 별도 풀 전환, 피해/해방·삭제/배치 상위 결선이 남아 있다.** 사제 포획/희생·특정 적 공격·시나리오 승리 재현이 필요한 실행 검사와 MP 실행 검사는 계속 사용자 확인 대상이다.
+**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.556에서 Storage의 일반/준비 물리 대여·World 생성 실패 반납·동기 실행 뒤 명시 종료를 연결했다. Graph·집계·섬·청크·실패점의 물리 객체를 일반 fresh에서 교체하지 않는다. 다음은 공유 장부 본체/전역 주소와 공장·공간·Graph 등 실행기의 Storage 장기 보유, 실제 Runtime pin 대여다.** 미이식 파생 설치, 현재 HostSession의 별도 풀 전환과 피해/해방·삭제/배치 상위 결선이 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
 
 체크 대상은 AI 작업이다. 자연 완주·전체 동일성·Windows 11 실기는 AI 작업이 아니며 단계 전환을 막지 않는다([2.3](#stage-criteria)).
 
@@ -264,7 +264,7 @@ dotnetpj 작업에서는 cpppj·LEFT_JOBS.md를 수정하지 않는다. 아래 �
 
 | 조각 | 할 일 | 주 cpppj 근거 | 끝났다는 증거 |
 | --- | --- | --- | --- |
-| **R4-1** 객체 수명 공통층 마감 | 🔶 0.546~0.555에서 현재 Form·Content·Pool 할당/소진 회수·이웃·Graph·PostPop 공통/가상 분배(현재 이식된 파생)·마나 등록 완료. `NativeStorage` 장기 공장·공간·World 수명과 실행기 보유, 나머지 미이식 파생과 실제 Runtime pin 대여, 현재 HostSession 별도 풀 전환, 제품 피해/해방·삭제/배치 상위 결선은 잔여. 이 층이 닫혀야 R4-2 이후가 같은 저장소를 쓴다 | `client/RawSurfaceStorage`·`RawSurfaceWorld`(대응 있음, 재검토 16·17번 잔여), `client/RawSurface*` 11단위, `o/RawSquid*`·`RawContent*`·`RawDepend*` | 대표 미션 덤프의 slot 행이 변하지 않고 집중 검사 통과 |
+| **R4-1** 객체 수명 공통층 마감 | 🔶 0.546~0.556에서 현재 Form·Content·Pool·이웃·Graph·PostPop 공통/현재 파생 분배·마나 등록과 일반/준비 물리 대여·World 기본 반납 완료. `NativeStorage` 공유 장부 본체/현재 전역·장기 공장/공간/실행기 보유, 나머지 미이식 파생/실제 Runtime pin, 현재 HostSession 별도 풀 전환, 피해/해방·삭제/배치 상위 결선은 잔여. 이 층이 닫혀야 R4-2 이후가 같은 저장소를 쓴다 | `client/RawSurfaceStorage`·`RawSurfaceWorld`(대응 있음, 재검토 16·17번 잔여), `client/RawSurface*` 11단위, `o/RawSquid*`·`RawContent*`·`RawDepend*` | 대표 미션 덤프의 slot 행이 변하지 않고 집중 검사 통과 |
 | **R4-2** 적재 중 Pop 후처리 | 지면·받침 소유자 스탬프(`IslandPostPop.SetSupportOwner` 3×3·`Prefix`), 농지 배치 파이프라인(타입 121), 표시 등록, 그래프 per-Pop 번호 부여, 장부 totals·totalmade 집계(`PostPopBase`) | `o/SquidPostPop`(대응 있음, 재검토 30번 잔여)·`SquidPostPopPatch`, `o/RawRegionPaint`·`RawRegionOwnership`, `o/RawGraphLive`, `o/Islandbuilder`, `o/RawFarmCluster`(대응 있음) | 덤프의 owner·type·graph·totals 행이 cpp와 같다 |
 | **R4-3** 신전·소용돌이 사슬 | 신전 Pop → 소용돌이 → 섬 소유자 → Player 첫 지역(+0x78). 단일 미션의 기록자는 전투섬 배정 갈고리가 아니라 이 사슬이다(0.477) | `o/RawVortex*`·`RawTemple*`·`RawRune*`·`RawDais*` 중 적재 경로(L 영역, R6-5 목록에서 당겨 온다) | 경로별 +0x78이 cpp와 같다(surrounded의 무신전 127 포함) |
 | **R4-4** 정기 처리·프로세스 초기 등록 | 적재 직후 등록되는 Regular와 프로세스, `RawSurfaceStorage.UpdateAmbientWind` 연결 | `o/RawAssetRegular`·`RawDaisRegular`·`RawDudeRegular`·`RawPlayerRegular`·`RawDiscRegular`·`RawBuriedRegular`·`RawDecorationRegular`·`RawProcess*`, `client/RawSurface*Regular` | 덤프 kernel·regular·process 행이 cpp와 같다 |
@@ -284,6 +284,7 @@ dotnetpj 작업에서는 cpppj·LEFT_JOBS.md를 수정하지 않는다. 아래 �
 - [x] `o/RawGraph` 공유 물리/현재 TYPE와 `RawGraphLive` 전체 실행 — 0.553. 실제 World 배열·진단·로그·시계 연결 포함. 실행기 자체의 NativeStorage 장기 보유와 R4-2 적재 결선은 잔여.
 - [x] `o/RawSquidPostPopParent`·`SquidPostPopPatch`·`RawManaRegistration` 현재 공통 몸체 — 0.554. 외곽 가상 분배·NativeStorage 장기 보유는 잔여.
 - [x] `o/SquidPostPop` 현재 이식된 파생/접두의 가상 분배·장기 자원 선택·외곽 호출 pin — 0.555. 미이식 파생 설치와 실제 Runtime/NativeStorage 대여는 잔여.
+- [x] `client/RawSurfaceStorage` 일반/준비 물리 대여와 `RawSurfaceWorld` 준비 진입·생성 실패/일반 종료 반납 — 0.556. 장기 장부 본체/실행기·실제 Runtime pin은 잔여.
 
 **A 자료·파일·설정 — 30단위 / 2,572줄**
 
@@ -1075,6 +1076,7 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 | 0.553 (11-15) | Graph 공유 기록/stack·현재 실행·콜백 재진입과 실제 World 물리/로그/시계 | [단위 문서](docs/dotnet-graph-live-20261115.md) | 새 경로 R4-1(NativeStorage 장기 보유·R4-2 결선은 잔여) |
 | 0.554 (11-15) | 현재 PostPop 공통 부모·PATCH 몸체·마나 목록 등록과 TYPE/최초 비용/진단 | [단위 문서](docs/dotnet-postpop-current-20261115.md) | 새 경로 R4-1(가상 파생 분배·NativeStorage 장기 보유는 잔여) |
 | 0.555 (11-15) | 현재 PostPop 가상 분배·다리/섬/표면/Teleport 접두·Carrier/자산·외곽 pin·실제 World 접두 | [단위 문서](docs/dotnet-postpop-dispatch-20261115.md) | 새 경로 R4-1(미이식 파생·NativeStorage·현재 호스트 전환은 잔여) |
+| 0.556 (11-15) | Storage 일반 fresh의 물리 정체성·준비 World 진입·생성 실패/명시 일반 종료 반납 | [단위 문서](docs/dotnet-storage-lifetime-20261115.md) | 새 경로 R4-1(공유 장부 본체·장기 실행기·실제 Runtime pin은 잔여) |
 | 0.478~0.499 (11-12~14) | L2 기준선 확장 — 6번째~26번째 경로의 cpp 기준선·dn 덤프와 구조 대조, 담긴 섬 판정(0.484), 34경로 같은 시드 일괄 수집·도구(0.499) | [L2 일괄](docs/dotnet-l2-batch-20261114.md), 같은 보관본 | 새 경로 R4(M1 판정 자료) |
 | 0.453~0.477 (11-12) | 지형 바인딩 조립·Generate 라이브·난수 단일 스트림·시작 1회 reseed(0.453~0.465), Pop 공간 등록·요새 객체 적재·그래프 재구성(0.466~0.470), 장부·전투섬·첫 지역 귀속 확정과 Player 월드 갈고리(0.471~0.477) | 같은 보관본 | 새 경로 R4 |
 | 기간·단위 | 완료 범위 | 근거 문서 | 처리 |

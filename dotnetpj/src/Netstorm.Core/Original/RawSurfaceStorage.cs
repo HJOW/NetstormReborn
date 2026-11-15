@@ -20,7 +20,7 @@ public sealed class BridgeDecayScanState
 }
 
 // Session보다 오래 사는 실제 저장소의 진단·바람·대여 껍데기와 풀·물리 생성이다. 장기 ProcessHost·풀 할당 진단 배선·자산 소스는 후속 단위에서 잇는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.
-public sealed class RawSurfaceStorage
+public sealed partial class RawSurfaceStorage
 {
     /// <summary>기존 실제 월드의 SID 풀 크기이며 다음 대여에서 재확보하지 않는다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     public const int PoolCapacity = 32768;
@@ -50,7 +50,7 @@ public sealed class RawSurfaceStorage
     public uint[] PriestOwnerState { get; } = new uint[PriestOwnerCount];
 
     /// <summary>545370/545374 실패점을 Pool과 같은 장기 수명에 둔다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
-    public BoardTargetState BoardTargetState { get; private set; } = new();
+    public BoardTargetState BoardTargetState { get; } = new();
 
     /// <summary>0052f96c·970·005453a8·b8의 같은 현재 스캔 범위·커서·기한을 World 반납 뒤에도 유지한다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     public BridgeDecayScanState BridgeDecayScan { get; set; } = new();
@@ -83,19 +83,19 @@ public sealed class RawSurfaceStorage
     public RawPathSearchStorage PathSearch { get; } = new();
 
     /// <summary>기록 255행과 flood 4096DWORD만 장기 보유한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
-    public RawGraphStorage Graph { get; private set; } = new();
+    public RawGraphStorage Graph { get; } = new();
 
     /// <summary>실제 정적 SID 목록·count와 등록 포인터를 World·Session 전후에 보존한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
     public RawStateSidLists SidLists { get; } = new();
 
     /// <summary>현재 로컬·누적 로컬·전역 256DWORD만 장기 보유한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
-    public RawTotalMadeStorage TotalMade { get; private set; } = new();
+    public RawTotalMadeStorage TotalMade { get; } = new();
 
     /// <summary>같은 3204바이트 섬과 모드·크기·청크를 Session 전후에도 유지한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
-    public RawIslandStorage Islands { get; private set; } = new();
+    public RawIslandStorage Islands { get; } = new();
 
     /// <summary>같은 지도와 256×12바이트 청크를 Session 전후에도 유지한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
-    public ChunkMap Chunks { get; private set; } = new();
+    public ChunkMap Chunks { get; } = new();
 
     /// <summary>Pool의 현재 서버 포인터와 World 실행기보다 먼저 만드는 실제 권한 owner다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
     private readonly RawAuthorityState _authority;
@@ -348,76 +348,4 @@ public sealed class RawSurfaceStorage
     /// <returns>대여 횟수다.</returns>
     public ulong Generation() => _generation;
 
-    /// <summary>동시 설치를 거부한 뒤에만 이전 물리를 초기화한다. TYPE·삭제 기록과 배열 주소는 유지한다. 일반 설치만 기존 새 목록 의미를 유지하며 prepared·반납은 현재 SID·count·용량을 보존한다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
-    /// <returns>반납 경계다.</returns>
-    public Use Acquire()
-    {
-        if (_borrowed)
-        {
-            throw new InvalidOperationException("실제 월드 저장소 중복 대여");
-        }
-
-        var use = new Use(this);
-        GameAux().ResetForGeneralWorld();
-        BoardTargetState = new BoardTargetState();
-        _authority.Server = true;
-        _authority.Boss = true;
-        if (_generation > 0ul)
-        {
-            Pool.Reset(0);
-            Hash.Reset();
-            Array.Clear(Spots);
-        }
-
-        Array.Clear(PriestOwnerState);
-        Graph = new RawGraphStorage();
-        RawGraphStorage.ResetTable(Graph);
-        SidLists.PrepareGeneralWorld();
-        TotalMade = new RawTotalMadeStorage();
-        Islands = new RawIslandStorage();
-        RawIslandRuntime.ResetRawIslandRecords(Islands.Records);
-        Chunks = new ChunkMap();
-        _borrowed = true;
-        ++_generation;
-        return use;
-    }
-
-    /// <summary>앞선 명시 정리가 끝난 실제 배열을 초기화 없이 대여하며 동시 사용은 같은 관문에서 거부한다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
-    /// <returns>반납 경계다.</returns>
-    public Use AcquirePrepared()
-    {
-        if (_borrowed)
-        {
-            throw new InvalidOperationException("준비된 실제 월드 저장소 중복 대여");
-        }
-
-        var use = new Use(this);
-        _borrowed = true;
-        ++_generation;
-        return use;
-    }
-
-    /// <summary>대여 중에는 두 번째 월드가 같은 풀을 초기화하지 못하게 한다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
-    public sealed class Use : IDisposable
-    {
-        /// <summary>빌린 저장소다. 반납 뒤에는 null이다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
-        private RawSurfaceStorage? _storage;
-
-        /// <summary>이미 검증한 단일 소유자의 반납 경계다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
-        /// <param name="storage">빌린 저장소다.</param>
-        internal Use(RawSurfaceStorage storage)
-        {
-            _storage = storage;
-        }
-
-        /// <summary>월드의 모든 모듈을 반납한 뒤 대여만 해제한다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
-        public void Dispose()
-        {
-            if (_storage is not null)
-            {
-                _storage._borrowed = false;
-                _storage = null;
-            }
-        }
-    }
 }
