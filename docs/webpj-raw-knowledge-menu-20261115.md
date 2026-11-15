@@ -34,6 +34,6 @@
 
 ## 남은 경계
 
-- cpppj `KnowledgeWorldMenu_Native21NamesAndQueue`의 `knowledge-world-names-x86.tsv`(21행: 원문 이름→명령/토큰/큐)는 `GameMenuCommands`·`QueueScriptCommand`가 있어야 같은 경로로 대조할 수 있어
-  `GameMenuCommands` 단위에서 한다. `KnowledgeMenu_ActualScriptCommandQueue`도 같다.
+- cpppj `KnowledgeWorldMenu_Native21NamesAndQueue`의 `knowledge-world-names-x86.tsv`(21행: 원문 이름→명령/토큰/큐)는 `GameMenuCommands`가 있어야 같은 경로로 대조할 수 있어
+  E538(`GameMenuCommands`)에서 대조했다. `KnowledgeMenu_ActualScriptCommandQueue`에 해당하는 계약 시험은 이 단위의 테스트 5번째로 두었다.
 - 실제 Gump 메뉴 저장소·번역·기술 보유 조회와 `ThemeTechnologyCommand` 연결은 아직 없다(PORT_MAP `port`).

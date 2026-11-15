@@ -23330,7 +23330,7 @@
       "bytes": 55143,
       "lines": 26,
       "fixtureCommit": "05df64c08",
-      "webCommit": "worktree",
+      "webCommit": "e53b1c743",
       "cpppjBasis": {
         "cpppj/src/client/RawKnowledgeMenu.cpp": "35df08ace"
       }
@@ -23359,9 +23359,96 @@
       "bytes": 72676,
       "lines": 51,
       "fixtureCommit": "35df08ace",
-      "webCommit": "worktree",
+      "webCommit": "e53b1c743",
       "cpppjBasis": {
         "cpppj/src/client/RawKnowledgeMenu.cpp": "35df08ace"
+      }
+    },
+    {
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E538",
+      "consumers": [
+        "webpj/tests/game-menu-commands.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/game-menu-commands.js"
+      ],
+      "doc": "docs/webpj-game-menu-commands-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "kind": "original-x86",
+      "id": "html-solo-command-names-pe",
+      "path": "cpppj/tests/fixtures/html-solo-command-names-pe.tsv",
+      "producer": "cpppj 가 보호 원본 10.78 실행 파일의 HTML 이름표를 판독해 기록한 43개 항목(이름·이름표 주소·전역 주소·초기 명령 DWORD)",
+      "scope": "43개 전부: 전역 주소 조회와 이름 조회(4가지 대소문자)가 같은 명령이거나 미등록(이 표가 직접 소유하는 이름 29개·주소 23개, 나머지 14개는 UberGump 다른 해석기 몫)",
+      "text": true,
+      "sha256": "9e63cd5933ec3f5770bda260076794eff2c4315e04bf977b18cc50e6dd21fc5a",
+      "bytes": 1681,
+      "lines": 44,
+      "fixtureCommit": "c148400ba",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GameMenuCommands.cpp": "8defb347c"
+      }
+    },
+    {
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E538",
+      "consumers": [
+        "webpj/tests/game-menu-commands.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/game-menu-commands.js"
+      ],
+      "doc": "docs/webpj-game-menu-commands-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "kind": "original-x86",
+      "id": "knowledge-world-names",
+      "path": "cpppj/tests/fixtures/knowledge-world-names-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 대본 이름 ShowTecSideMenu/ShowTecMenu2 와 미등록 이름의 명령 큐·문자열 고리 21행(원문 코드·숫자/문자열 토큰·고리 위치)",
+      "scope": "21행 전부",
+      "text": true,
+      "sha256": "0b1a436cfc9a86b681264009b0cf9157212cbd3b876ac0db91bb58a961bb1494",
+      "bytes": 1836,
+      "lines": 22,
+      "fixtureCommit": "35df08ace",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GameMenuCommands.cpp": "8defb347c"
+      }
+    },
+    {
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E538",
+      "consumers": [
+        "webpj/tests/game-menu-commands.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/game-menu-commands.js"
+      ],
+      "doc": "docs/webpj-game-menu-commands-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/GameMenuCommands.cpp"
+      ],
+      "kind": "source",
+      "id": "src-game-menu-commands",
+      "path": "cpppj/src/client/GameMenuCommands.cpp",
+      "producer": "cpppj 복원 소스(명령 표 kCommands 64쌍과 이름 if-사슬 51개)와 client 헤더의 기호 상수",
+      "scope": "표 64쌍(첫 쌍 규칙)·특수 주소 4개·이름 51개의 값 교차 확인",
+      "text": null,
+      "sha256": null,
+      "bytes": null,
+      "lines": null,
+      "fixtureCommit": "8defb347c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GameMenuCommands.cpp": "8defb347c"
       }
     }
   ]

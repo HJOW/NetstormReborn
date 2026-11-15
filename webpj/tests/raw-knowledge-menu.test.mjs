@@ -7,6 +7,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import { REPO_ROOT } from './helpers.mjs';
+import { InputQueue } from '../www/core/input-queue.js';
+import { ScriptStringRing, queueScriptCommand } from '../www/ui/script-command.js';
 import { floatToBits, readRows } from './raw-support.mjs';
 import { CHEAT_ALL_TECHNOLOGY_COMMAND, SHOW_TEC_MENU2_COMMAND, SHOW_TEC_SIDE_MENU_COMMAND, SHOW_TECHNOLOGY_COMMAND, createKnowledgeMenuState, knowledgeScriptCode, showKnowledgeMenu, showKnowledgeSideMenu, showWorldKnowledgeMenu } from '../www/core/raw-knowledge-menu.js';
 
@@ -197,4 +199,14 @@ test('전체 지식 창 계약: 설명 줄 나눔 경계(길이 8 이하·위치
     const marks = seen.filter(([name]) => name === 'mark');
     assert.equal(marks.length, 1);
     assert.ok(marks[0][1].every((flag) => flag === 0x4000));
+});
+
+test('지식 창 이름→큐 계약: ShowTechnology 이름은 기존 파서와 40칸 큐로 가고 직접 화면 열기를 우회하지 않는다', () => {
+    const queue = new InputQueue();
+    const strings = new ScriptStringRing();
+    assert.equal(knowledgeScriptCode('sHoWtEcHnOlOgY'), SHOW_TECHNOLOGY_COMMAND);
+    assert.equal(knowledgeScriptCode('ShowKnowledge'), 0xffffffff);
+    queueScriptCommand('ShowTechnology,0', queue, strings, { lookup: knowledgeScriptCode, unknown: () => { throw new Error('등록된 이름이 미등록으로 진단됨'); } });
+    const event = queue.pop(false);
+    assert.ok(event.code === SHOW_TECHNOLOGY_COMMAND && event.x === 0 && event.y === 0 && queue.empty);
 });
