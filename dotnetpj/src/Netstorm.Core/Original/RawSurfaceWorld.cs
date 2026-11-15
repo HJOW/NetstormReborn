@@ -391,6 +391,8 @@ public sealed partial class RawSurfaceWorld
                     _runtime.FormTransmit(form, flags);
                 };
                 _dependencies = new RawDependFormHost(_storage.Pool, dependDestroy, dependNotice, dependFallback, dependTransmit);
+                _dependencies.BindCreation(factory, _storage.GameAux().DependFormTypeBox, _storage.AssertDisplay);
+                _dependencies.BindUnpop(factory.UnpopForm);
                 _formDispatch.Bind(_dependencies);
             }
         }

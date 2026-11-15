@@ -279,7 +279,7 @@ cpppj/src/o/ConfigInterface.h	Netstorm.Core/Original/ConfigInterface.cs	760e5ec3
 cpppj/src/o/ContentFormHost.cpp	Netstorm.Core/Original/RawContentFormHost.cs	9eb899e43b02660479342f0f4d709760e38ebda3	L1
 cpppj/src/o/ContentFormLifetime.cpp	Netstorm.Core/Original/RawContentLifetime.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/ContentFormLifetime.h	Netstorm.Core/Original/RawContentLifetime.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
-cpppj/src/o/DependFormHost.cpp	Netstorm.Core/Original/RawDependFormHost.cs	eb739b8095351e2931be9af9aeec2fd95b1f9b05	L1
+cpppj/src/o/DependFormHost.cpp	Netstorm.Core/Original/RawDependFormHost.cs	c0907232690d13a58eb28e2ffe46af83cc2454ec	L1
 cpppj/src/o/DerivedConstructors.inc	Netstorm.Core/Original/OriginalConstructors.Data.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/FortSerializationGlobals.h	Netstorm.Core/Original/FortSerializationGlobals.cs	d48ea75609a1fe57db3acee4e28167de1723651b	port
 cpppj/src/o/Graph.cpp	Netstorm.Core/Bridges/SurfaceGraph.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
@@ -894,3 +894,6 @@ cpppj/src/o/RawContentParentNotice.cpp	Netstorm.Core/Original/RawContentParentNo
 cpppj/src/o/RawContentParentNotice.h	Netstorm.Core/Original/RawContentParentNotice.cs	435a7032c649c653fc4bea0757e5db120724d633	port
 cpppj/src/o/RawFormLinked.cpp	Netstorm.Core/Original/RawFormLinked.cs	435a7032c649c653fc4bea0757e5db120724d633	L1
 cpppj/src/o/RawFormLinked.h	Netstorm.Core/Original/RawFormLinked.cs	435a7032c649c653fc4bea0757e5db120724d633	port
+cpppj/src/o/DependFormHost.h	Netstorm.Core/Original/RawDependFormHost.cs	c0907232690d13a58eb28e2ffe46af83cc2454ec	port
+cpppj/src/o/RawDependCreate.cpp	Netstorm.Core/Original/RawDependCreate.cs	c0907232690d13a58eb28e2ffe46af83cc2454ec	L1
+cpppj/src/o/RawDependCreate.h	Netstorm.Core/Original/RawDependCreate.cs	c0907232690d13a58eb28e2ffe46af83cc2454ec	port

@@ -115,6 +115,12 @@ public sealed partial class RawGameAuxState
     /// <summary>같은 ProcessForm 번호 DWORD를 빌리는 상자다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
     private readonly UIntBox _processFormTypeBox = new() { Value = 2u };
 
+    /// <summary>두 Create·검색에서 읽는 현재 감시 Form DWORD다. 일반 World 초기화에서도 현재 번호를 유지한다.</summary>
+    public uint DependFormType { get => DependFormTypeBox.Value; set => DependFormTypeBox.Value = value; }
+
+    /// <summary>00541074/CD0051c964의 같은 장기 현재 타입 주소다. 소비자에게 이 상자를 빌려 준다.</summary>
+    public UIntBox DependFormTypeBox { get; } = new() { Value = 1u };
+
     /// <summary>일반 절차 번호의 실제 초기 DWORD다. 일반 World 준비에서도 유지한다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
     public uint RegularProcessType
     {

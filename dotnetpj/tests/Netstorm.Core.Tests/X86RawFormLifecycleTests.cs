@@ -13,6 +13,14 @@ namespace Netstorm.Core.Tests;
 /// </summary>
 public sealed class X86RawFormLifecycleTests
 {
+    /// <summary>독립 관측의 빈 TYPE 입력에 실제 감시 Form 생성자를 지정한다. 현재 공장 생성의 입력이며 기대값은 바꾸지 않는다.</summary>
+    private static OriginalTypeRecord[] FormTypes()
+    {
+        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToArray();
+        types[1].ConstructorAddress = OriginalConstructors.Address(1);
+        return types;
+    }
+
     /// <summary>10.78 행의 판본 이름.</summary>
     private const string PatchEdition = "originals";
 
@@ -140,9 +148,8 @@ public sealed class X86RawFormLifecycleTests
         /// <summary>외부 사건 순서.</summary>
         public readonly List<string> Events = [];
 
-        /// <summary>원본 실행기와 같은 빈 타입 표(188개).</summary>
-        private readonly OriginalTypeRecord[] _types = Enumerable.Range(0, OriginalConstructors.TypeCount)
-            .Select(_ => new OriginalTypeRecord()).ToArray();
+        /// <summary>원본 실행기와 같은 188개 타입 입력이며 현재 공장이 읽는 감시 생성자 주소를 명시한다.</summary>
+        private readonly OriginalTypeRecord[] _types = FormTypes();
 
         /// <summary>이번 행의 제거 통지 덮어쓰기 값.</summary>
         private readonly uint _mutation;
@@ -294,7 +301,7 @@ public sealed class X86RawFormLifecycleTests
     public void DependencyPreDestroyOrderIsWatchedFirst()
     {
         var pool = new RawSidPool(32768);
-        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToArray();
+        var types = FormTypes();
         var unpop = new RawUnpop(pool, new RawSquidHash(), new byte[65536]);
         var destroy = new RawSquidDestroy(pool, unpop, types);
         var forms = new RawSquidForms(pool);
@@ -328,7 +335,7 @@ public sealed class X86RawFormLifecycleTests
     public void DependencyPairDirectionsAndReentrantNotice()
     {
         var pool = new RawSidPool(32768);
-        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToArray();
+        var types = FormTypes();
         var unpop = new RawUnpop(pool, new RawSquidHash(), new byte[65536]);
         var destroy = new RawSquidDestroy(pool, unpop, types);
         var forms = new RawSquidForms(pool);
@@ -376,7 +383,7 @@ public sealed class X86RawFormLifecycleTests
     public void DependencyCreateContractsAndMixedRegions()
     {
         var pool = new RawSidPool(32768, false);
-        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToArray();
+        var types = FormTypes();
         var unpop = new RawUnpop(pool, new RawSquidHash(), new byte[65536]);
         var destroy = new RawSquidDestroy(pool, unpop, types);
         var depend = new RawDependFormHost(pool, destroy);
@@ -394,7 +401,10 @@ public sealed class X86RawFormLifecycleTests
         // 같은 부모 안의 두 Form 도 원본처럼 생성할 수 있다
         Assert.NotEqual(0, depend.Create(clientA, clientA).WatchedForm);
         pool.RawSlot(clientB)[RawSidPool.StateOffset] |= RawSidPool.FreeBit;
-        Assert.Throws<InvalidOperationException>(() => depend.Create(clientA, clientB));
+        // 현재 원문 생성 부모는 free 부모를 미리 거부하지 않으며 실제 부착 위치의 링크 쓰기를 유지한다.
+        DependFormPair freeParentPair = depend.Create(clientA, clientB);
+        Assert.Equal(freeParentPair.WatcherForm, pool.Slot(clientB)[6] | (pool.Slot(clientB)[7] << 8));
+        Assert.NotEqual(0, pool.Slot(clientB)[RawSidPool.StateOffset] & RawSidPool.FreeBit);
     }
 
     /// <summary>
@@ -404,7 +414,7 @@ public sealed class X86RawFormLifecycleTests
     public void ContentAttachOrderAndDamageReattach()
     {
         var pool = new RawSidPool(32768);
-        var types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToArray();
+        var types = FormTypes();
         var reasons = new List<uint>();
         var content = new RawContentFormHost(pool, types, (parent, form, reason) => reasons.Add(reason));
         var forms = new RawSquidForms(pool);
