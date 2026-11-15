@@ -23765,7 +23765,7 @@
       "bytes": 5467568,
       "lines": 643,
       "fixtureCommit": "1a04f78b2",
-      "webCommit": "worktree",
+      "webCommit": "99cbff1d1",
       "cpppjBasis": {
         "cpppj/src/client/RawCursorMana.cpp": "e210c7559"
       }
@@ -23826,6 +23826,35 @@
       "webCommit": "db343d4b0",
       "cpppjBasis": {
         "cpppj/src/o/SquidDisplay.cpp": "2c6ab7cc1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E550",
+      "id": "cursor-range",
+      "path": "cpppj/tests/fixtures/cursor-range-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 커서 사정거리 표시 474520 생성자·474b80 프레임·474c30 직선·474ed0 원형·474790 통지·474870 소멸 593입력(58 DWORD 독립 입력의 효과 순서·512바이트 필드·전역·raw 슬롯 102개·단계별 필드, 기본/64비트 두 관측 일치)",
+      "consumers": [
+        "webpj/tests/raw-cursor-range.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cursor-range.js"
+      ],
+      "doc": "docs/webpj-raw-cursor-range-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCursorRange.cpp"
+      ],
+      "scope": "10.78 593행 전부",
+      "text": true,
+      "sha256": "d1aaf51ae3023b56c08e074cf9c671dfb6678ea54950f197cec65cd91777b616",
+      "bytes": 7731214,
+      "lines": 594,
+      "fixtureCommit": "b62491bfe",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCursorRange.cpp": "e210c7559"
       }
     }
   ]
