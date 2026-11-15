@@ -3,7 +3,7 @@
 //    선언 길이는 보정하지 않고 그대로 기록한다(원본 헤더 선언 길이는 반환 크기와 별개).
 //  - receive(owner, flags, packet): 원본은 송신 owner/flags 를 쓰지 않는다. 대상이 free/dead(상태 비트 1·2)이거나 첫 폴이 free 이거나 대상 TYPE 이 제단/성장 중 아이스 타워이거나 사제 genus(0x200000)이면 끝이다
 //    (둘째 폴/동맹/boss/editor 는 검사하지 않음). 아니면 소리(좌표/dissolve.wav/반복 0) → 분해 생성 → 현재 가상 삭제(원 소유자 << 16 | 0x400048) 순서이며 효과 뒤의 패킷/슬롯 변화는 처음 읽은 표적과 첫 폴로 유지한다.
-// 훅 { sound(x, y, 이름, 반복), dissolve(대상, 첫 폴, 둘째 폴, 방향), destroy(대상, 플래그) }는 모두 필요하다. 전역 { altar(164), growingIceTower(150) }는 수신 시점마다 읽는다. 이 모듈은 DOM 을 쓰지 않는다.
+// 훅 { sound(x, y, 이름, 반복), dissolve(대상, 첫 폴, 둘째 폴, 방향), destroy(대상, 플래그) }는 모두 필요하다. 전역 { altar, growingIceTower, sharedAltar?, sharedGrowingIce? }는 수신 시점마다 읽는다. 이 모듈은 DOM 을 쓰지 않는다.
 // (2026-11-08 WB04-E48: RawAcidZap 이식으로 추가)
 
 // 슬롯 필드 위치(상태·타입·좌표·소유자)와 타입 수, 패킷 길이이다. (2026-11-08 WB04-E48)
@@ -31,6 +31,12 @@ function read(raw, offset, width = 4) {
 function floatOf(raw, offset) {
     floatView.setUint32(0, read(raw, offset), true);
     return floatView.getFloat32(0, true);
+}
+
+// 선택된 공유 조회기가 있으면 그 현재 DWORD를, 없으면 독립 입력을 읽는다.
+function currentRole(state, sharedName, valueName) {
+    const shared = state[sharedName];
+    return shared ? shared.call(state) >>> 0 : state[valueName];
 }
 
 // 애시드 포획 실행기이다. 사용: new RawAcidZap(pool, types, { altar, growingIceTower }, { message, protocol, length }, { sound, dissolve, destroy }). 상태/헤더는 현재 객체를 그대로 읽는다.
@@ -81,7 +87,9 @@ export class RawAcidZap {
         const victim = read(packet, 4, 2);
         const first = read(packet, 6, 2);
         const raw = pool.slot(victim);
-        if ((raw[STATE_OFFSET] & 3) || (pool.slot(first)[STATE_OFFSET] & 1) || raw[TYPE_OFFSET] === this.#state.altar || raw[TYPE_OFFSET] === this.#state.growingIceTower) return;
+        if ((raw[STATE_OFFSET] & 3) || (pool.slot(first)[STATE_OFFSET] & 1) ||
+            raw[TYPE_OFFSET] === currentRole(this.#state, 'sharedAltar', 'altar') ||
+            raw[TYPE_OFFSET] === currentRole(this.#state, 'sharedGrowingIce', 'growingIceTower')) return;
         if (raw[TYPE_OFFSET] >= this.#types.length) throw new RangeError('애시드 대상 TYPE 범위 오류');
         if (this.#types[raw[TYPE_OFFSET]].flags2 & PRIEST_GENUS) return;
         const hooks = this.#hooks;

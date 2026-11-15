@@ -922,8 +922,15 @@ export class CampaignTemplateStorage {
     // 다른 Storage 도 동일 Client 이름표를 명시 공유할 수 있다. (2026-11-12 WB04-E345)
     sectionNamesOwner() { return this.#sectionNames; }
 
+    // 같은 직렬화 전역과 이름표를 빌리되 별도 헤더·이미지를 소유하는 저장소를 만든다.
+    createSibling() { return new CampaignTemplateStorage(this.#serializationGlobals, this.#sectionNames); }
+
     // 같은 Client 의 판본 전역 묶음이다(생성자/객체 로더/저장 부모가 직접 같이 쓰는 005c89c0 DWORD 를 복사하지 않는다). (2026-11-12 WB04-E345)
     get serializationGlobals() { return this.#serializationGlobals; }
+
+    // 현재 중첩 로딩 깊이는 같은 직렬화 전역에 직접 읽고 쓴다.
+    get loadingDepth() { return this.#serializationGlobals.loadingDepth; }
+    set loadingDepth(value) { this.#serializationGlobals.loadingDepth = value; }
 
     // 같은 DWORD 의 현재 값이다. 조회/Storage 생성자에서 공유값을 재초기화하지 않는다. (2026-11-12 WB04-E345)
     get serializationVersion() { return this.#serializationGlobals.version; }

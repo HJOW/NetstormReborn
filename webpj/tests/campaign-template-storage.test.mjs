@@ -158,6 +158,28 @@ test('설치한 manager 의 파일 이름·서명 판정·판본 전역: 생성�
     assert.throws(() => storage.install(3, emptyFort(), 'a\0b'), TypeError);
 });
 
+test('Template 형제 저장소: 같은 판본·로딩 깊이·이름표를 빌리고 이미지는 독립 소유한다', () => {
+    const globals = new FortSerializationGlobals();
+    const storage = new CampaignTemplateStorage(globals);
+    storage.install(3, emptyFort(), 'first.fort');
+    globals.version = 9;
+    globals.loadingDepth = 4;
+    const sibling = storage.createSibling();
+    assert.notEqual(sibling, storage);
+    assert.equal(sibling.serializationGlobals, globals);
+    assert.equal(sibling.sectionNamesOwner(), storage.sectionNamesOwner());
+    assert.equal(sibling.serializationVersion, 9);
+    assert.equal(sibling.loadingDepth, 4);
+    sibling.loadingDepth = 7;
+    assert.equal(storage.loadingDepth, 7);
+    assert.equal(sibling.ownedImages(), 0);
+    sibling.install(3, emptyFort(), 'second.fort');
+    assert.equal(storage.name(3), 'first.fort');
+    assert.equal(sibling.name(3), 'second.fort');
+    assert.equal(storage.ownedImages(), 1);
+    assert.equal(sibling.ownedImages(), 1);
+});
+
 test('빈 manager 할당→원문 ctor→35개 이름 초기화: 표준 이름 순서의 섹션 목록이 만들어진다', () => {
     const storage = new CampaignTemplateStorage();
     assert.throws(() => storage.allocateEmptyManager(275), TypeError);

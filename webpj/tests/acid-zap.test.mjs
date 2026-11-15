@@ -124,3 +124,36 @@ test('acid-zap: 구성 오류와 짧은 패킷은 효과 전에 거부한다', (
     // 선언 길이는 보정하지 않고 프로토콜 상위 비트는 지운다.
     assert.deepEqual(Array.from(zap.build(0x0102, 0x0304, 0x0506, -2)), [0x01, 7, 3, 0, 0x02, 0x01, 0x04, 0x03, 0x06, 0x05, 0xfe]);
 });
+
+test('acid-zap: 공유 제단·성장형 TYPE은 도달한 순서에서 현재 값을 읽는다', () => {
+    const pool = new SidPool(32768, { server: false });
+    const types = Array.from({ length: 188 }, () => ({ flags1: 0, flags2: 0, footX: 1, footY: 1 }));
+    const target = pool.physical(50);
+    const first = pool.physical(51);
+    target.fill(0); first.fill(0); target[10] = 70;
+    const reads = [];
+    const effects = [];
+    let altar = 70;
+    let growing = 150;
+    const state = {
+        altar: 70, growingIceTower: 70,
+        sharedAltar: () => { reads.push('altar'); return altar; },
+        sharedGrowingIce: () => { reads.push('growing'); return growing; },
+    };
+    const hooks = { sound: () => effects.push('sound'), dissolve: () => effects.push('dissolve'), destroy: () => effects.push('destroy') };
+    const zap = new RawAcidZap(pool, types, state, { message: 1, protocol: 2, length: 11 }, hooks);
+    const packet = zap.build(50, 51, 0, 0);
+    target[11] = 2;
+    zap.receive(0, 0, packet);
+    assert.deepEqual(reads, []);
+    target[11] = 0;
+    zap.receive(0, 0, packet);
+    assert.deepEqual(reads.splice(0), ['altar']);
+    altar = 164; growing = 70;
+    zap.receive(0, 0, packet);
+    assert.deepEqual(reads.splice(0), ['altar', 'growing']);
+    growing = 150;
+    zap.receive(0, 0, packet);
+    assert.deepEqual(reads, ['altar', 'growing']);
+    assert.deepEqual(effects, ['sound', 'dissolve', 'destroy']);
+});
