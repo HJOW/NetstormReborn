@@ -32,7 +32,9 @@ public sealed partial class RawGameAuxState
     public double ScheduledDrawDeadline { get; set; }
 
     /// <summary>0059508c의 실제 Pop·소멸 집계 부호 있는 비용 DWORD다.</summary>
-    public int TotalCost { get; set; }
+    public int TotalCost { get => TotalCostBox.Value; set => TotalCostBox.Value = value; }
+    /// <summary>장기 PostPop/삭제가 같은 signed 비용 DWORD를 직접 빌린다.</summary>
+    public IntBox TotalCostBox { get; } = new();
 
     /// <summary>00595088의 보상·로컬 간헐천이 직접 공유하는 부호 있는 물리 값이다.</summary>
     public int ResourcePool { get; set; }
@@ -81,10 +83,14 @@ public sealed partial class RawGameAuxState
     public uint PuzzlePieceType { get; set; } = 107u;
 
     /// <summary>005c848c의 공통 소멸이 따로 기록하는 최근 소실 X다.</summary>
-    public float LostX { get; set; }
+    public float LostX { get => LostXBox.Value; set => LostXBox.Value = value; }
+    /// <summary>실제 삭제와 GameAux가 같은 손실 X 비트를 공유한다.</summary>
+    public FloatBox LostXBox { get; } = new();
 
     /// <summary>005c8490의 최근 소실 Y이며 정리가 X보다 먼저 둔다.</summary>
-    public float LostY { get; set; }
+    public float LostY { get => LostYBox.Value; set => LostYBox.Value = value; }
+    /// <summary>실제 삭제와 GameAux가 같은 손실 Y 비트를 공유한다.</summary>
+    public FloatBox LostYBox { get; } = new();
 
     /// <summary>00540bdc의 초기 2000 부호 있는 정수이며 타입 비용과는 float로 변환해 둔다.</summary>
     public int DefaultSp { get; set; } = 2000;

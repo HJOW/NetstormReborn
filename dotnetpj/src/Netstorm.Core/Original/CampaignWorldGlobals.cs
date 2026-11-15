@@ -6,8 +6,12 @@ namespace Netstorm.Core.Original;
 // 외부 DWORD 저장소를 빌리는 상자다. 2026-11-07 F2d 캠페인 월드 적재 이식에서 추가됐다.
 public sealed class UIntBox
 {
+    /// <summary>같은 DWORD의 실제 물리 값이다. 값 속성과 ref 소비자가 함께 읽고 쓴다.</summary>
+    private uint _value;
     /// <summary>빌린 DWORD 값이다. 2026-11-07 F2d 캠페인 월드 적재 이식에서 추가됐다.</summary>
-    public uint Value { get; set; }
+    public uint Value { get => _value; set => _value = value; }
+    /// <summary>원문 참조형 부모가 사본 없이 같은 DWORD를 증감할 때만 빌리는 주소다.</summary>
+    internal ref uint Storage => ref _value;
 }
 
 // 외부 signed DWORD 저장소를 빌리는 상자다. 원문 `std::int32_t&amp;` 빌림을 옮긴다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.

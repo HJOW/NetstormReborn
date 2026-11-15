@@ -5,7 +5,7 @@ namespace Netstorm.Core.Original;
 /// 전역 비용 집계·생산 재계산 알림·공통 깊이·타입별 세 통계표·공급원/작업장 목록을 담는다.
 /// 이 인스턴스는 <see cref="RawPostPop"/> 과 같은 수명으로 공유하며 호출자가 State 행처럼 직접 채운다.
 /// </summary>
-public sealed class RawPostPopState
+public sealed partial class RawPostPopState
 {
     /// <summary>독립 대조용 세 통계표를 소유한다. 실제 세션에서는 공유 저장소 생성자를 사용한다.</summary>
     public RawPostPopState() : this(new RawTotalMadeStorage()) { }
@@ -65,13 +65,16 @@ public sealed class RawPostPopState
     public ref uint ProductionDirtyValue => ref _productionDirty;
 
     /// <summary>Activate와 공통 후처리가 같은 DWORD로 공유하는 실제 깊이 저장소다.</summary>
-    private uint _depth;
+    private readonly UIntBox _depth = new();
 
     /// <summary>Activate/postPop 깊이. Activate 가 1 늘리고 공통 몸체가 1 줄인다.</summary>
-    public uint Depth { get => _depth; set => _depth = value; }
+    public uint Depth { get => _depth.Value; set => _depth.Value = value; }
 
     /// <summary>원문 Activate 부모가 사본 없이 같은 깊이를 증감하도록 참조를 빌린다.</summary>
-    public ref uint ActivationDepth => ref _depth;
+    public ref uint ActivationDepth => ref _depth.Storage;
+
+    /// <summary>장기 공장/Form 부모가 같은 깊이 DWORD를 계속 빌리는 소유자다.</summary>
+    public UIntBox DepthBox => _depth;
 
     /// <summary>로컬 소유자의 타입별 현재 수(앞 256칸만 쓴다).</summary>
     public uint[] LocalCounts { get; }

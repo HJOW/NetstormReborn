@@ -10,7 +10,11 @@ namespace Netstorm.Core.Original;
 public sealed class IslandPostPopState
 {
     /// <summary>요새 읽기 중이면 서·북 칸으로 프레임 글자를 선택한다. 2026-11-07 R4 지형·섬 생성 2차 이식에서 추가됐다.</summary>
-    public uint LoadingDepth { get; set; }
+    public uint LoadingDepth { get => SharedLoadingDepth?.Value ?? _loadingDepth; set => _loadingDepth = value; }
+    /// <summary>독립 입력/일반 fresh의 기존 값형 로딩 깊이다.</summary>
+    private uint _loadingDepth;
+    /// <summary>실제 World는 같은 Storage/Template 깊이 DWORD를 매 조회에서 읽는다.</summary>
+    public UIntBox? SharedLoadingDepth { get; set; }
 
     /// <summary>받침 소유자 전파를 억제한다. 공유 저장 게임 값이 연결되면 읽지 않는다. 2026-11-07 R4 지형·섬 생성 2차 이식에서 추가됐다.</summary>
     public bool OwnerPropagationSuppressed { get; set; }

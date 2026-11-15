@@ -145,6 +145,8 @@ public sealed partial class RawSurfaceStorage
         _edition = edition;
         _authority = authority ?? new RawAuthorityState();
         _gameAux = gameAux ?? new RawGameAuxState();
+        PostPopState = new(TotalMade) { SharedTotalCost = _gameAux.TotalCostBox, SharedProviders = SidLists.Providers, SharedFactories = SidLists.Factories };
+        DeletionState = new() { SharedLostX = _gameAux.LostXBox, SharedLostY = _gameAux.LostYBox };
         Pool = new RawSidPool(PoolCapacity, true, () => _authority.Server, edition);
         Links.BridgeType = 82u;
         Links.IslandType = 94u;

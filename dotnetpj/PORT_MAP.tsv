@@ -920,3 +920,9 @@ cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Lifetime.cs	f1031d048c4cd82f0b588816fbbbe4b9356d48e9	port
 cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.Lifetime.cs	f1031d048c4cd82f0b588816fbbbe4b9356d48e9	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceWorld.Lifetime.cs	f1031d048c4cd82f0b588816fbbbe4b9356d48e9	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.State.cs	b57e654b8740e2abfb692750cd85a1128be12a03	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.State.cs	b57e654b8740e2abfb692750cd85a1128be12a03	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Executors.cs	b57e654b8740e2abfb692750cd85a1128be12a03	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Executors.cs	b57e654b8740e2abfb692750cd85a1128be12a03	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawPostPopState.Lifetime.cs	b57e654b8740e2abfb692750cd85a1128be12a03	port
+cpppj/src/o/SquidPostPop.h	Netstorm.Core/Original/RawPostPopState.Lifetime.cs	b57e654b8740e2abfb692750cd85a1128be12a03	port

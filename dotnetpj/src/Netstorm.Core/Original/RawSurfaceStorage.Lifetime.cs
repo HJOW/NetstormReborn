@@ -31,6 +31,7 @@ public sealed partial class RawSurfaceStorage
         Array.Clear(Graph.Stack);
         RawGraphStorage.ResetTable(Graph);
         SidLists.PrepareGeneralWorld();
+        ResetSharedStatesForGeneralWorld();
         Array.Clear(TotalMade.LocalCounts);
         Array.Clear(TotalMade.LocalSecondaryCounts);
         Array.Clear(TotalMade.GlobalCounts);

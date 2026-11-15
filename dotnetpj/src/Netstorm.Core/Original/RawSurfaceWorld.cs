@@ -31,7 +31,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
     private bool _changed = true;
 
     /// <summary>중첩 로딩의 표면/사제/자산 후처리가 같은 값을 읽는 로딩 상태다. 원본 Impl.loadState에 대응하며 초기 깊이는 1이다. 런타임 전달과 저장 게임 공유 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 SetLoadingDepth 이식에서 추가됐다.</summary>
-    private readonly IslandPostPopState _loadState = new() { LoadingDepth = 1u };
+    private readonly IslandPostPopState _loadState;
 
     /// <summary>붕괴 처리가 읽는 원본 실행 상태 전역이다. 원본 Impl.mode에 대응하며 초기값은 싱글 플레이(로컬이 서버) 전투 화면이다. 2026-11-07 F2d 월드 본체 ConfigureInstallModes 이식에서 추가됐다.</summary>
     private BridgeDecayMode _mode = BridgeDecayMode.SinglePlayer;
@@ -55,7 +55,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
     private readonly SquidProcessState _processState;
 
     /// <summary>객체 종류·소유자별 등록 목록과 개수를 관리하는 제어 장부다. 원본 Impl.bookkeeping에 대응한다. 공유 집계 연결은 세션 조립에서 잇는다. 2026-11-07 F2d 월드 본체 적재 구간 이식에서 추가됐다.</summary>
-    private readonly RawPostPopState _bookkeeping = new();
+    private readonly RawPostPopState _bookkeeping;
 
     /// <summary>서로 연결된 표면의 Graph 소속을 관리하는 처리기다. 원본 Impl.graph에 대응한다. 188개 TYPE가 아니면 비워 두며 CD 연결은 후속 단위에서 잇는다. 2026-11-07 F2d 월드 본체 그래프 적재 이식에서 추가됐다.</summary>
     private readonly RawGraph? _graph;
@@ -104,7 +104,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
     private Action<FrameTime>? _decayTime;
 
     /// <summary>원본 타입 전역과 현재 점검 전역이다. 원본 Impl.buildingState에 대응한다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
-    private readonly BuildingSpaceState _buildingState = new();
+    private readonly BuildingSpaceState _buildingState;
 
     /// <summary>일반 건물의 공간 등록·해제를 반영하는 처리기다. 원본 Impl.building에 대응하며 188개 TYPE가 아니면 비워 둔다. 2026-11-07 F2d 월드 본체 배치 연결 이식에서 추가됐다.</summary>
     private readonly RawBuildingSpace? _building;
@@ -157,7 +157,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
     private bool _deletionBound;
 
     /// <summary>후설치와 같은 현재 원본 삭제 전역이다. 원본 Impl.deletion에 대응한다. 별도 세션 사본을 만들지 않으며 공유 좌표 연결은 BindDeletion 단위에서 잇는다. 2026-11-07 F2d 월드 본체 삭제 상태 이식에서 추가됐다.</summary>
-    private readonly SquidDeletionState _deletion = new();
+    private readonly SquidDeletionState _deletion;
 
     /// <summary>모든 Form·경로·Regular가 쓰는 같은 실제 커널이다. 원본 Impl.kernel에 대응하며 호출자 저장소보다 오래 살 수 없다. 외부에서 빌린 커널의 수명은 호출자가 둔다. 2026-11-07 F2d 월드 본체 커널 차용 이식에서 추가됐다.</summary>
     private readonly Kernel _kernel;
@@ -190,11 +190,13 @@ public sealed partial class RawSurfaceWorld : IDisposable
             || terrainType >= types.Count || storage.Links.BridgeType >= types.Count || storage.Links.NoIslandType >= types.Count))
             throw new ArgumentException("준비된 표면 대여의 실제 PATCH 저장소/자산/타입 불일치", nameof(storage));
         _edition = edition;
-        _types = prepared ? storage!.Types : types;
-        _frames = prepared ? storage!.Frames : frames ?? [];
+        _types = storage is { Types.Count: > 0 } ? storage.Types : types;
+        _frames = storage is not null && storage.Frames.Count == _types.Count ? storage.Frames : frames ?? [];
         _terrainType = terrainType;
         _storage = storage ?? new RawSurfaceStorage(edition);
         _storageUse = prepared ? _storage.AcquirePrepared() : _storage.Acquire();
+        _bookkeeping = _storage.PostPopState; _deletion = _storage.DeletionState; _loadState = _storage.IslandPostPopState; _buildingState = _storage.BuildingSpaceState;
+        _loadState.SharedLoadingDepth = _storage.LoadingDepthBox;
         try
         {
         _processState = _storage.Processes().State();
@@ -224,7 +226,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
 
         if (prepared || _types.Count == OriginalConstructors.TypeCount)
         {
-            _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph,
+            _graph = _storage.Types.Count == _types.Count ? _storage.GraphExecutor() : new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph,
                 _frames.Count == _types.Count ? new RiftFrameCodeTables(_frames) : null, GraphRecovery.FullPool);
             if (_edition == OriginalEdition.Patch1078) _graph.BindCurrentTypes(_types);
             _graph.BindDiagnostics(new() { Checking = new(() => _storage.Checking().Read()), Assertion = _storage.AssertDisplay });
@@ -269,7 +271,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
                 RawBuildingSpace building = _building!;
                 RawSquidDestroy baseDestroy = _baseDestroy!;
                 RawGraph graph = _graph!;
-                _neighbors = new RawSquidNeighbors(_storage.Pool, _storage.Hash, _storage.Spots, _types, new RiftFrameCodeTables(_frames));
+                _neighbors = _storage.Types.Count == _types.Count ? _storage.NeighborsExecutor() : new RawSquidNeighbors(_storage.Pool, _storage.Hash, _storage.Spots, _types, new RiftFrameCodeTables(_frames));
                 if (_edition == OriginalEdition.Patch1078) _neighbors.BindCurrentTypes(_types);
                 _connect = new RawBridgeConnect(_storage.Pool, _neighbors, _storage.Links, new BridgeConnectHooks
                 {
@@ -417,7 +419,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
         bool ownerReady = (_edition == OriginalEdition.Patch1078 && _types.Count == OriginalConstructors.TypeCount)
             || (_edition == OriginalEdition.Cd1072 && _types.Count == 171);        if (ownerReady)
         {
-            SquidOwner owner = new(_storage.Pool, _types, _bookkeeping, _storage.OwnerMode);
+            SquidOwner owner = _storage.Types.Count == _types.Count ? _storage.OwnerExecutor() : new(_storage.Pool, _types, _bookkeeping, _storage.OwnerMode);
             // 저장소의 같은 현재 TYPE와 Client 진단을 실제 공통 Owner가 소비한다.
             owner.BindDiagnostics(new SquidOwnerDiagnostics { Types = _types, Assertion = _storage.AssertDisplay });
             _owner = owner;
@@ -622,6 +624,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
     /// <param name="depth">쓸 로딩 중첩 깊이다.</param>
     public void SetLoadingDepth(uint depth)
     {
+        _storage.LoadingDepth = depth;
         // 원본 impl_->loadState.loadingDepth 대입을 직역한다. runtimeBound 뒤에는 같은 값을 runtime에도 전달한다.
         _loadState.LoadingDepth = depth;
         if (_runtimeBound && _runtime?.LoadingDepth is not null)

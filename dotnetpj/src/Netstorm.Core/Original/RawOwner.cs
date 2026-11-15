@@ -12,7 +12,9 @@ public sealed class SquidOwnerMode
     public bool Battle { get; set; }
 
     /// <summary>도전 모드. 켜지면 유효 소유자 번호가 1~39로 바뀐다(원본 CL_NUM_CHAL_PLAYERS).</summary>
-    public bool Challenge { get; set; }
+    public bool Challenge { get => ChallengeStorage.Value; set => ChallengeStorage.Value = value; }
+    /// <summary>현재 metamap 억제를 값 사본 없이 빌리는 같은 bool 물리다.</summary>
+    internal BoolBox ChallengeStorage { get; } = new();
 }
 
 /// <summary>공통 Owner의 현재 TYPE/선택 진단을 실제 장기 장치에 연결한다.</summary>

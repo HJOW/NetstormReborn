@@ -11,4 +11,10 @@ public sealed class FortSerializationGlobals
     /// 직렬화 버전이다. manager 생성자는 0, 전체 Objects 저장은 2를 쓰며 각 소비자는 현재 값을 읽는다.
     /// </summary>
     public uint Version { get; set; }
+
+    /// <summary>실제 Template/Storage/World가 함께 읽고 쓰는005c89b8 로딩 깊이의 장기 owner다.</summary>
+    public UIntBox LoadingDepthBox { get; } = new();
+
+    /// <summary>현재 실제 로딩 깊이를 사본 동기화 없이 읽고 쓴다.</summary>
+    public uint LoadingDepth { get => LoadingDepthBox.Value; set => LoadingDepthBox.Value = value; }
 }
