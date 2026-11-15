@@ -145,8 +145,11 @@ export class RawPathSearch {
         const raw = this.#raw(sid);
         const type = raw[TYPE_AT];
         const frame = raw[FRAME_AT] | (raw[FRAME_AT + 1] << 8) | (raw[FRAME_AT + 2] << 16) | (raw[FRAME_AT + 3] << 24);
-        if (type >= this.#frames.length || frame < 0 || frame >= this.#frames[type].length) throw new RangeError('BFS 표면 프레임');
-        return this.#frames[type][frame];
+        if (type >= this.#frames.length) throw new RangeError('BFS 표면 프레임');
+        // 실제 World의 FrameCodeTable과 독립 관측의 코드 배열을 모두 같은 현재 저장소에서 읽는다. (2026-11-16 WB04-E568)
+        const codes = this.#frames[type].codes ?? this.#frames[type];
+        if (frame < 0 || frame >= codes.length) throw new RangeError('BFS 표면 프레임');
+        return codes[frame];
     }
 
     // 한 방향이 바뀔 때 같은 좌표의 이전/새 방향 꼭짓점 둘을 저장하는 원본 append 이다. 최대 길이(5000)나 출력 이미지 크기가 맞지 않으면 진단이다. (2026-11-12 WB04-E334)

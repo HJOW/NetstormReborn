@@ -62,6 +62,8 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['sunArcherType', 0x00541174, 'u32', 71, 'sunArcher', '썬 디스크 발사기의 현재 TYPE'],
     ['sunCannonType', 0x00541258, 'u32', 128, 'sunCannon', '썬 캐논의 현재 TYPE'],
     ['windArcherType', 0x00541288, 'u32', 140, 'windArcher', '크로스보우의 현재 TYPE'],
+    // Path 수신 trace가 공통 로그 임계값과 구별해 읽는 현재 signed 수준이다. (2026-11-16 WB04-E568)
+    ['pathTraceLevel', 0x00540c68, 'i32', 99, null, '경로 수신의 현재 로그 수준'],
     ['fieryTailProcessType', 0x0054109c, 'u32', 11, 'fieryTailSystemProcessType', '불꽃 꼬리 생성자의 부착 TYPE'],
     ['streakProcessType', 0x005410a0, 'u32', 12, 'streakSystemProcessType', 'Teleport 생성·표시 부착·도착 삭제 TYPE'],
     ['regularProcessType', 0x00541128, 'u32', 46, 'regularProcessType', '일반 예약(Regular) 생성과 종속 조회 TYPE'],

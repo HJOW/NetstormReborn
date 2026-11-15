@@ -5,13 +5,14 @@
 //     acquirePrepared(): 앞선 명시 정리가 끝난 물리를 초기화 없이 대여하고 같은 관문에서 중복을 거부한다. 반환 `Use.release()` 는 대여만 풀고(C++ ~Use) 물리는 그대로 둔다.
 //   - 장기 장치(Client 수명): 표시 진단·상세 owner, 할당 소진 진단, Graph 시계/추적, checking 뷰는 첫 World 전에 한 번 연결하며 World 마다 교체하지 않는다. 주변 바람은 Client 난수를 직접 소비한다.
 // C++ 의 `shared_ptr`/주소 동일성은 웹에서 객체 동일성이며, 대여가 "새 값 대입"인 곳은 같은 객체를 제자리에서 초기화해 참조를 유지한다. 웹에는 소멸자가 없으므로 `Use.release()` 와 `dispose()` 가 명시 반납이다.
-// 아직 옮기지 않은 것: 길 찾기 작업 배열(RawPathSearchStorage, 6-P RawPathSearch), SID 소진 복구 할당 연결(SidPool.BindAllocation — 웹 풀은 소진을 거부만 한다, 3.6절 ③ 4-D), 실제 자산에서 만드는 MakeRawSurfaceStorage(Client 자산 단위).
+// E568의 실제 Path 검색기가 장기 거리표/큐도 빌린다. 남음: SID 소진 복구 할당 연결(SidPool.BindAllocation — 웹 풀은 소진을 거부만 한다, 3.6절 ③ 4-D), 실제 자산의 MakeRawSurfaceStorage(Client 자산 단위).
 // CD(10.72)의 시작 값/분기는 옮기지 않았다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-11 WB04-E298: 4-B RawSurfaceStorage 이식)
 import { ChunkMap } from '../assets/territory.js';
 import { BoardTargetState } from './raw-board-target.js';
 import { BridgeConnectState } from './raw-bridge-connect.js';
 import { createAmbientWindState, stepAmbientWind } from './raw-ambient-wind.js';
 import { GameAuxState } from './game-aux-state.js';
+import { RawPathSearchStorage } from './raw-path-search.js';
 import { RawAuthorityState } from './raw-authority-state.js';
 import { RawGraphStorage, resetRawGraphTable } from './raw-graph.js';
 import { createRawIslandStorage, resetRawIslandRecords } from './raw-island-runtime.js';
@@ -93,6 +94,8 @@ export class RawSurfaceStorage {
         this.boardTargetState = new BoardTargetState();
         // 기록 255행과 flood 4096 DWORD 만 장기 보유한다. 실행기/TYPE snapshot/복구 정책은 World 지역이다.
         this.graph = new RawGraphStorage();
+        // 실제 BFS 거리표/큐와 초기화 표식은 World 재대여 때 초기화하지 않는다. (2026-11-16 WB04-E568)
+        this.pathSearchWork = new RawPathSearchStorage();
         // 실제 정적 SID 8목록/count 와 등록 20칸을 World/Session 전후에 보존한다.
         this.sidLists = new RawStateSidLists();
         // 현재 로컬/누적 로컬/전역 256 DWORD 만 장기 보유하며 ownerFactories/로딩 정책은 World 지역이다.

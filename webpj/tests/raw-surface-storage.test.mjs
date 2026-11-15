@@ -16,6 +16,17 @@ import { RawGraphStorage, resetRawGraphTable } from '../www/core/raw-graph.js';
 import { RawProcessHostStorage } from '../www/core/raw-process-host-storage.js';
 import { RawSurfaceStorage, SurfaceUse } from '../www/core/raw-surface-storage.js';
 import { SidPool } from '../www/core/sid-pool.js';
+import { RawPathSearchWork } from '../www/core/raw-path-search.js';
+
+// 경로 검색의 실제 거리/큐와 초기화 표식은 World 일반/준비 대여와 별개인 장기 물리다. (2026-11-16 WB04-E568)
+test('RawSurfaceStorage: Path 검색 작업 배열과 초기화 표식은 대여/반납에서 유지된다', () => {
+    const storage = make(); const owner = storage.pathSearchWork;
+    assert.equal(owner.work, null); assert.equal(owner.initialized, false);
+    owner.work = new RawPathSearchWork(); owner.initialized = true; owner.work.distance[77] = 31; owner.work.queue[7] = 109;
+    const work = owner.work; const first = storage.acquire(); first.release(); const second = storage.acquire(); second.release(); const prepared = storage.acquirePrepared(); prepared.release();
+    assert.equal(storage.pathSearchWork, owner); assert.equal(owner.work, work); assert.deepEqual([owner.initialized, work.distance[77], work.queue[7]], [true, 31, 109]);
+    assert.notEqual(make().pathSearchWork, owner);
+});
 
 // 188칸 입력 표(TYPE 이름·셰이프 프레임 수 포함)와 프레임 표이다. (2026-11-11 WB04-E298)
 function inputs() {
