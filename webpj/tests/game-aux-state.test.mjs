@@ -20,6 +20,14 @@ const ORIGINAL_EXE = path.join(REPO_ROOT, 'originals', 'Netstorm.exe');
 // 원본 10.78 실행 파일의 SHA-256 이다(현재 저장소 보호 원본). 다른 판본으로 대조하지 않도록 확인한다. (2026-11-05 WB04-C2)
 const ORIGINAL_EXE_SHA256 = 'a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236';
 
+// 실제 로컬 건설이 매번 읽는 생성자4BYTE는 PE 초기값과 같고 일반 월드 reset으로 바뀌지 않는다. (WB04-E569)
+test('GameAuxState: 건설 요청의 현재 헤더/WORD는 보호 PE와 같고 장기 물리를 유지한다', () => {
+    const aux = new GameAuxState(); const header = aux.constructionRequestHeader; assert.deepEqual([...header], [0x3e, 1]); assert.equal(aux.constructionRequestLength, 25);
+    if (fs.existsSync(ORIGINAL_EXE)) { const bytes = fs.readFileSync(ORIGINAL_EXE); assert.equal(sha256(bytes), ORIGINAL_EXE_SHA256); assert.deepEqual([...peReader(bytes)(0x0052ede6, 4).bytes], [0x3e, 1, 25, 0]); }
+    header[0] = 0x77; aux.constructionRequestLength = 65535; aux.resetForGeneralWorld(); assert.equal(aux.constructionRequestHeader, header); assert.deepEqual([...header], [0x77, 1]); assert.equal(aux.constructionRequestLength, 65535);
+    assert.throws(() => { aux.constructionRequestLength = -1; }, RangeError); assert.throws(() => { aux.constructionRequestLength = 65536; }, RangeError); assert.throws(() => { aux.constructionRequestLength = 1.5; }, RangeError); assert.equal(new GameAuxState().constructionRequestLength, 25);
+});
+
 // 두 현재 애니메이션 헤더와 공통 전송 owner는 일반 월드 초기화 뒤에도 같은 물리이다. (2026-11-16 WB04-E567)
 test('GameAuxState: 애니메이션 현재 헤더·공유 전송은 보호 PE 초기값이며 일반 reset과 별개로 유지된다', () => {
     // 원문의 현재 BYTE 헤더와 실제 공통 버퍼 객체다.

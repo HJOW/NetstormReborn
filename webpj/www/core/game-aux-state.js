@@ -135,6 +135,9 @@ export class GameAuxState {
     // 현재 메시지/프로토콜 두 BYTE이며 World 교체/일반 초기화로 다시 만들지 않는다. (2026-11-16 WB04-E567)
     #rotateAnimationHeader = Uint8Array.of(0x3c, 1);
     #fireAnimationHeader = Uint8Array.of(0x3b, 1);
+    // 원문0052ede6/7/8의 현재3e 생성자 헤더/길이WORD다. 같은 물리4BYTE를 장기 보관한다. (2026-11-16 WB04-E569)
+    #constructionRequest = Uint8Array.of(0x3e, 1, 25, 0);
+    #constructionRequestHeader = this.#constructionRequest.subarray(0, 2);
     // 실제 공통 전송 버퍼와 압축/헤더 상태를 한 번만 소유하고 각 소비자에게 같은 객체를 빌린다. (2026-11-16 WB04-E567)
     #squidTransmission = createSquidTransmissionState();
 
@@ -150,6 +153,11 @@ export class GameAuxState {
     // 원문 00540468/69·0054046e/6f의 현재 메시지/프로토콜 BYTE를 직접 빌려 준다. (2026-11-16 WB04-E567)
     get rotateAnimationHeader() { return this.#rotateAnimationHeader; }
     get fireAnimationHeader() { return this.#fireAnimationHeader; }
+
+    // 로컬 예측 배치와 실제 요청 생성자가 같은 현재 BYTE 두 개와 길이WORD를 읽는다. (2026-11-16 WB04-E569)
+    get constructionRequestHeader() { return this.#constructionRequestHeader; }
+    get constructionRequestLength() { return new DataView(this.#constructionRequest.buffer).getUint16(2, true); }
+    set constructionRequestLength(value) { if (!Number.isInteger(value) || value < 0 || value > 65535) throw new RangeError('건설 요청 길이WORD 범위'); new DataView(this.#constructionRequest.buffer).setUint16(2, value, true); }
 
     // 일반/강제 writer와 packet/송신이 같은 2048BYTE 물리를 공유한다. (2026-11-16 WB04-E567)
     get squidTransmission() { return this.#squidTransmission; }

@@ -6,17 +6,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E568)
+### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E569)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 1,004단위(제외 156 별도) 중 **port 836(83.3%)·partial 33(3.3%)·todo 135(13.4%)**. 남은 168단위는 기존 기준선 89단위와 재기준선에서 추가된 79단위다(대응표·재기준선 규칙 key로 E565 재집계). 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
-| 마지막 작업 단위 | **WB04-E568** 4-D C의 `RawCampaignMotionBindings`·`RawCampaignPathBindings` 조립 — 같은 실제 World/Host/clock/장부의 BFS·Halt/Arrival/cleanup·현재 경로와 30h 수신/전송. 보호 TYPE/SHP 월드의 owner1/2 실제330프레임 이동·도착/반납을 포함한15건과 장기 검색 작업 수명1건([단위 문서](docs/webpj-campaign-motion-path-20261116.md)). 저장 캠페인 전체 설치와 실제 Session/Native 장치는 D/E 이후 L3에서 재대조. [E567 Archer](docs/webpj-campaign-archer-bindings-20261116.md) 완료 |
-| 다음 작업 | ⓪ 4-D C의 나머지 큰 바인딩은 `RawCampaignSession` 구성/Load의 실제 도달을 확인해 필요한 것만 앞당긴다. 사제·피격·Archer·Motion/Path가 끝났으므로 D 구획 1번(구성·소유 상태·Load)을 다시 소스로 확인하고 `CampaignInstallSupport.h`의 전체 설치와 `tests/campaign-motion-support.mjs`를 실제 저장 미션으로 넓힌다. ① 재기준선 신규 미완료79단위는 E498~E502의 근거에 따라 각 단계에서 처리한다. 시간 동기화 고정 수신기/실제 Session 연결(E515~E517)과 A·B·C/5-A·5-B 잔여는 선행 관계대로 병행한다. ② D(Session)→E(Client·통합·L2) 순서이며 3.8절 원본 관측 연결은 허브/적응 판정4건이 남았다 |
-| 마지막 전체 검사 | 2026-11-16 WB04-E568: Node v22.23.3·v26.13.0 전체 각각 **5,372건 통과, 실패·건너뜀 0** (v24 전체는 E513에서 4,973건 통과) |
+| 이식 진행도 | 대상 1,004단위(제외 156 별도) 중 **port 837(83.4%)·partial 33(3.3%)·todo 134(13.3%)**. 남은 167단위는 기존 기준선 88단위와 재기준선에서 추가된 79단위다(대응표·재기준선 규칙 key로 E565 재집계). 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
+| 마지막 작업 단위 | **WB04-E569** 4-D C의 `RawCampaignCursor` — 같은 실제 World/Factory/Form 수명·건설 배치·현재 커서/카메라·표시기를 취득/취소/위치/입력/GUI/반환·Regular·3e 송신으로 조립. 보호 자료 연결11건과 GameAux 현재 헤더 PE1건([단위 문서](docs/webpj-campaign-cursor-20261116.md)). 원본 하위 fixture 포함 집중59건 통과. 실제 Session·저장 미션/에너지/전체 MayPlace·마나/사정거리·Builder 결선은 D/E·6단계 |
+| 다음 작업 | ⓪ 4-D A의 `ClientGameplayGlobals`부터 이식한다. E569 재판정에서 커서/선택·SID 진단·지형 두 캐시 선행이 모두 갖춰졌다. 실제 장기 소유자/대여·반납·현재 Session 공개/pin을 덕타입 계약으로 구성한 뒤 D Session1(구성·소유 상태·Load)을 공개 경계로 나누어 연결한다. ConnectDevastation/CarrierDrop/PriestPrayer는 Session의 포함 inc 구현이므로 같은 소유 상태와 함께 처리한다. ① 재기준선 신규 미완료79단위는 각 단계에서 처리한다. 시간 동기화 고정 수신기/실제 Session(E515~E517)과 A·B·C/5-A·5-B 잔여는 선행 관계를 지킨다. ② D(Session)→E(Client·통합·L2) 순서이며 3.8절 허브/적응 판정4건은 잔여 |
+| 마지막 전체 검사 | 2026-11-16 WB04-E569: Node v22.23.3·v26.13.0 전체 각각 **5,384건 통과, 실패·건너뜀 0** (v24 전체는 E513에서 4,973건 통과) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -28,11 +28,11 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 1~3 M1·M2 선행 | WB02-G·H, 3-A~3-E | 대응표·오라클 기반, 월드 부품 E1~E264 | 완료(2026-11-10) | — |
 | 4 M2 | 4-A·4-B·4-C | 자료·설정·타입 표 / Fort·지형·섬 적재 / 패킷·로그인·내부 전송 | 완료(E265~E328, 4-C 3항목은 4-D 이월) | — |
 | 〃 | **4-R 재기준선** | cpppj 제품 985 → 1313 전환과 오라클 재수집 | **완료**(E497~E513, 기존 ③ 실제 구현은 후속 단계) | 추가 이식 대상 중 남은 79단위는 아래 단계에 별도 반영 |
-| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 23/39** | 기존 18단위 / 13,643줄 + 시간 동기화 1단위 / 99줄 |
+| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 24/40** | 기존 18단위 / 13,643줄 + 시간 동기화 1단위 / 99줄 |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 진행 중 44/46 | 3단위 / 533줄 |
 | 〃 | 5-B | 카메라·HUD·미니맵·커서 | 진행 중 9/13 | 5단위 / 1,039줄 |
 | 〃 | 5-C | 게임 화면 허브(Uber·메뉴 컨트롤)·미션 진입 명령 → **M2 판정**(L4a) | 미착수(`NativeIntroState`·`TitleBitmapLifetime`·`NativeMainMenuState` 선행 완료) | 10단위 / 5,766줄 |
-| 6 M3 | 6 | 입력·게임 메뉴·사제/운반·경제·건설 연결 → L3 | 선행 부품 완료(6-P 3/3·커서 4/4), client 연결 미착수(`ObjectOwnerCommands`·`GameMenuActions`·`GameMenuCommands`·`RawKnowledgeMenu`·`RawGameMenuBar`·`RawPriestMenu`·`RawObjectMenu`·`RawObjectMenuVariants`·`RawObjectMenuOpen`·`RawPlayerMenu`·`RawFactoryMenu`·`RawObjectMenuInfo`·`RawCursorActions`·`RawCursorPosition`·`RawCursorMana`·`RawCursorRange` 선행 완료, `RawPriestWorldBindings` E563·`RawCampaignPathBindings` E568 완료) | 14단위 / 1,407줄 |
+| 6 M3 | 6 | 입력·게임 메뉴·사제/운반·경제·건설 연결 → L3 | 선행 부품 완료(6-P 3/3·커서 4/4), client 연결 미착수(`ObjectOwnerCommands`·`GameMenuActions`·`GameMenuCommands`·`RawKnowledgeMenu`·`RawGameMenuBar`·`RawPriestMenu`·`RawObjectMenu`·`RawObjectMenuVariants`·`RawObjectMenuOpen`·`RawPlayerMenu`·`RawFactoryMenu`·`RawObjectMenuInfo`·`RawCursorActions`·`RawCursorPosition`·`RawCursorMana`·`RawCursorRange` 선행 완료, `RawPriestWorldBindings` E563·`RawCampaignPathBindings` E568·`RawCampaignCursor` E569 완료) | 13단위 / 1,123줄 |
 | 7 M4 | 7 | 전투·의식·AI 연결 | 부품 완료(7-P1~P3 20/20), client 연결 진행 중(Hit E564·GunQueries E565·Archer E567·Motion E568 선행 완료) | 9단위 / 589줄 |
 | 8 M4 | 8 | 미션 수명·안내·대본·소리·채팅·도움말 잔여 | 미착수 | 31단위 / 6,277줄 |
 | 9 M5 | 9 | 표시 품질(60/120)·브라우저/OS 확인·정적 배포 | 미착수 | — |
@@ -46,9 +46,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 1,004단위 / 146,057줄 | 836 (83.3%) / 110,564줄 (75.7%) | 33 (3.3%) | 135 (13.4%) |
+| 전체 | 1,004단위 / 146,057줄 | 837 (83.4%) / 110,848줄 (75.9%) | 33 (3.3%) | 134 (13.3%) |
 | `o/` 월드·규칙 | 559단위 / 73,092줄 | 540 (96.6%) / 70,646줄 (96.7%) | 3 (0.5%) / 1,164줄 (1.6%) | 16 (2.9%) / 1,282줄 (1.8%) |
-| `client/` 세션·UI·표시 | 444단위 / 72,539줄 | 295 (66.4%) / 39,492줄 (54.4%) | 30 (6.8%) | 119 (26.8%) |
+| `client/` 세션·UI·표시 | 444단위 / 72,539줄 | 296 (66.7%) / 39,776줄 (54.8%) | 30 (6.8%) | 118 (26.6%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 426줄 | 1 (100%) / 426줄 (100%) | 0 | 0 |
 
 표의 port 줄 수는 현재 기준선 파일 전체의 규모이며 기존 행에 남은 ③ 후속 기능의 구현을 뜻하지 않는다. 분류(class)별로는 port 953(이식 대상)·adapt 51(웹 대체가 필요한 플랫폼 경계)·제외 156(exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1)이다.
@@ -60,7 +60,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 953·adapt 51·exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1, 미분류 0**. 상태: **port 836·partial 33·todo 135·제외(-) 156**, session/oracle 0. 새 partial 2개는 아래 중단 인계의 미완성 초안이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 953·adapt 51·exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1, 미분류 0**. 상태: **port 837·partial 33·todo 134·제외(-) 156**, session/oracle 0. 새 partial 2개는 아래 중단 인계의 미완성 초안이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
 | 이식 추적 | `webpj/tests/fixtures/manifest.json` **801항목**(original-x86 763·screenshot 13·source 10·independent 9·cpppj-oracle 5·original-binary 1, 2026-11-15 재집계). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
@@ -215,12 +215,12 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 
 체크 목록 전체는 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261112-4c-through-wb04-e328)으로 옮겼고 요약은 2.3절이다(E305~E328). **4-D 로 넘긴 것:** ① client `ClientCampaignTransport` 2단계 — 고정 Native 수신기 묶음·채팅 41h·연결 종료 2번·기술 목록 0x69·경로 자료 0x30/압축 Squid 0x7a 관찰기(3.6절 ③ 4-D 행) ② client `RawCampaignSessionLogin`(`RawCampaignSession::Impl::Login`) — Session 상태 약 60칸을 직접 빌리는 중첩 구조체라 Session 조립과 함께 ③ 4-C 통합 시험 — cpppj `CampaignSession_LocalLoginActualHandshakeAndWorldLoad` 대응(Session 조립 뒤).
 
-#### 4-D Session 조립·Tutorial1 Load/Start (23/39)
+#### 4-D Session 조립·Tutorial1 Load/Start (24/40)
 
 완료 기준(3.2절): **L2** — Tutorial1 Load/Start 관측(보고서·session-dump·첫 프레임 논리 화면)이 cpppj 와 같다. 임시 Player/AI/색 번호로 시작 성공을 만들지 않는다. 선행: 4-B·4-C(완료). 이 목록의 줄 수와 `(+N)`은 이전 기준선 `1f00a25a`와 그 뒤 추가분을 기록한 것이다. 현재 기준선 `225553df`의 소스를 착수 때 확인하고 그 이후 변경은 3.6절 ①/②/③으로 판정한다. **실제 `Client`/`GameWorld`/`RawCampaignSession` 은 이 구획 끝에서 조립**하며, 그 전 항목은 앞 단위(E325~E328)처럼 **client 계약(최소 덕타입)** 을 모듈 머리글에 적고 시험이 그 형태의 장치를 만든다. 앞 순서 항목이 뒤 항목의 입력이므로 위에서부터 진행하고, 선행 미이식으로 막히면 사유를 그 항목에 적고 다음으로 간다. 큰 단위(RawCampaignSession 5,715줄 등)는 공개 API 경계로 나누어 착수 때 이 구획에 세부 항목을 더한다.
 
 **A. Client 수명 전역 소유자** (앞 단위 E325 와 같은 방식 — 참조를 빌려 주는 소유자, 값 사본 없음)
-- [ ] client **ClientGameplayGlobals** 205줄(+57) [ClientPlayerRecords·ClientSubscriberGlobals(E325) 뒤] — 서버 권한 `Server()`·`GameAux`·전투 시계 원점/스탬프·카메라·AiDebug 연결·현재 Session 대여/pin [막힘(E334 판정): 하위 소유자(커서·선택)와 `RawSidRobust` 진단·`TerrainBitmapState`/`TerrainStampState` 가 선행. E400 이월: CursorLifecycle_CurrentClientCheckingSurvivesReset의 실제 Acquire/AcquirePrepared 대여/반납 시험도 이 소유자 연결 때 수행]
+- [ ] client **ClientGameplayGlobals** 현재258줄 [ClientPlayerRecords·ClientSubscriberGlobals(E325) 뒤] — 서버 권한 `Server()`·`GameAux`·전투 시계 원점/스탬프·카메라·AiDebug 연결·현재 Session 대여/pin [E569 재판정: E334의 하위 커서/선택·`RawSidRobust` 진단·`TerrainBitmapState`/`TerrainStampState` 선행은 모두 갖춰졌다. 최소 실제 Session/World 계약을 모듈 머리글에 명시하고 다음 단위로 이식한다. E400 이월: CursorLifecycle_CurrentClientCheckingSurvivesReset의 실제 Acquire/AcquirePrepared 대여/반납 시험도 함께 수행. 전체 Session 부모 검사는 D/E에서 재대조]
 - [ ] client **ClientStateWorldGlobals** 108줄(+8)·**ClientStateWorldCleanup** 101줄(+2)·**ClientStateStorageCleanup** 71줄(+1)·**ClientStateRuntimeRetirement** 99줄 — State/World 전역과 정리·Runtime 반납 순서 [막힘(E336 판정): `ClientStateWorldContext` 가 `Client`·`CampaignTemplateStorage`(B 구획)·`RawMenuControls`(L 영역)·`ClientAudio`(H 영역)·`RawSurfaceStorage` 의 실제 저장소에 Native 주소별 접근을 연결하는 바인딩이라 그 소유자들이 선행 — B 구획과 Session 조립(C·D) 뒤]
 - [ ] client **ClientUserSelectionGlobals** 77줄·**ClientUserSelectionCleanup** 43줄·**ClientCursorGlobals** 25줄·**ClientCursorStateCleanup** 27줄 [진행: **ClientCursorGlobals·ClientCursorStateCleanup**은 [E402](docs/webpj-client-cursor-globals-20261114.md) 완료(장기 주소/reset·실제 Cancel/Prepare/현재 카메라·Renderer 연결). **ClientUserSelectionGlobals**는 [E495](docs/webpj-user-selection-native-fixtures-20261115.md) 완료(RawUserSelection/RawUserPick 이식과 함께, fixture multiple-selection 601행). **ClientUserSelectionCleanup**(43줄)은 `RawCampaignSession.core()` Session 허브와 `RawSquidSelection` 표시 갱신 연결을 기다린다. 이 줄은 네 모듈이 끝날 때 체크한다]
 - [ ] client **ClientChatManagerGlobals** 123줄·**ClientChatWindowGlobals** 24줄(+4)·**ClientHtmlWindowGlobals** 8줄·**ClientRendererFrameGlobals** 26줄·**ClientDotCommandGlobals** 56줄 [진행: Chat manager는 E447, DotCommand는 E443, **ClientChatWindowGlobals**는 [E453](docs/webpj-client-chat-window-globals-20261114.md) 완료(같은 창/로그/완성/무시·문자열·뉴스 키와 동맹 요청 상태; 일반 동맹 입력은 단독 관문이 없어 상태를 유지, 입력/수신 연결은 기존③6 이월). **ClientHtmlWindowGlobals**는 [E456](docs/webpj-html-window-gump-20261114.md) 완료. **ClientRendererFrameGlobals**는 [E496](docs/webpj-renderer-cloud-queue-20261115.md)에서 구름 고정 칸과 실제 Renderer 앞단을 검증했으며 실제 owner는 5-A 프레임 조립 때 남음. 다섯 모듈이 끝나면 이 줄을 체크한다]
@@ -240,7 +240,8 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] client **RawCampaignArcherBindings** 223줄 — 같은 World/Host의 실제 발사·회전·Missile·Disc·수신/전송과 장기 TYPE/헤더 연결 → [E567](docs/webpj-campaign-archer-bindings-20261116.md) 보호 자료 검사17건과 GameAux 추가1건. 실제 Session/Native 장치는 D/E, 저장 미션의 전체 Kernel/첫 비행 시험은 그 설치 뒤 7단계
 - [x] client **RawCampaignMotionBindings** 137줄 — 같은 실제 도착·정리·Path 순환 조립 → [E568](docs/webpj-campaign-motion-path-20261116.md) 보호 사제 owner1/2 이동/반납과 같은 Pool/장부/clock 검증. 실제 Session 연결은 D/E
 - [x] client **RawCampaignPathBindings** 281줄 — 같은 실제 Start/BFS/Host·8생성자·현재경로·30h 수신/전송과 장기 거리표/큐 → [E568](docs/webpj-campaign-motion-path-20261116.md) 실제330프레임 도착과 free/live 수신·진단·같은 버퍼/장치 계약. 저장 미션 전체 초기화·L3는 D/E 이후
-- [ ] client 나머지 `RawCampaign*Bindings`(Cursor 283·CursorDisplay 161·Ritual 161·Devastation 110·Particles 513·Carrier*·Gun*·Prayer·Meltdown·Panic) — **Tutorial1 Load/Start 가 요구하는 항목만 앞당기고** 나머지는 해당 순서(5-A 입자·6 입력/경로·7 전투/의식)에서 옮긴다. 착수 때 필요한 항목을 이 구획에 개별 항목으로 더한다. Hit·Archer·Motion·Path는 위 E564·E567·E568에서 완료했다
+- [x] client **RawCampaignCursor** 284줄 — Load의 ConnectCursor가 무조건 요구하여 6단계에서 앞당김 → [E569](docs/webpj-campaign-cursor-20261116.md) 실제 하위 조립·현재 장치·카메라/목록·GUI·Local/비용/반환 타이머·현재3e헤더. 실제 Session/Client 결선은 D/E
+- [ ] client 나머지 `RawCampaign*Bindings`(CursorDisplay 161·Ritual 161·Devastation 110·Particles 513·Carrier*·Gun*·Prayer·Meltdown·Panic) — **Tutorial1 Load/Start 가 요구하는 항목만 앞당기고** 나머지는 해당 순서(5-A 입자·6 입력/경로·7 전투/의식)에서 옮긴다. 착수 때 필요한 항목을 이 구획에 개별 항목으로 더한다. Hit·Archer·Motion·Path·Cursor는 위 E564·E567·E568·E569에서 완료했다
 
 **D. Session 본체 (`RawCampaignSession` 5,715줄, +1,773)** — 공개 API 경계로 분할해 항목을 더한다(헤더 642줄·`.cpp` 5,073줄)
 - [ ] **RawCampaignSession 1: 구성·소유 상태·Load** — 생성자(Impl 상태 약 60칸)·`Load`·Player/동맹/기술/SP/Deck/AI 초기화·`RawSurfaceWorld`/`RawWorldCore` 접합(`bindSquidTransmission` ← `RawSquidTransmission.pop`, 4-B 이월: 저장 객체 `FortObjectLoad`/Money/Meta child 의 실제 적재·session-dump 대조)
@@ -286,12 +287,12 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [ ] **3.8절 허브 선행 fixture** — `chat-callbacks`(30행)·`chat-input-recipients`(721행)·`html-input-dialog` 생성/공장 20행을 허브 조립과 함께 연결
 - [ ] **M2 판정** — Tutorial1 진입 직후·N프레임 뒤 L4a(영어 4:3 → 16:9/16:10 → 한국어), 오라클 시나리오 추가
 
-#### 6 입력·게임 메뉴·사제/운반·경제·건설 연결 → M3 (0/8, 2026-11-15 펼침)
+#### 6 입력·게임 메뉴·사제/운반·경제·건설 연결 → M3 (1/8, 2026-11-15 펼침)
 
 완료 기준(3.2절): 같은 입력 단계표에서 cpppj와 같은 상태·화면(L3). **M3:** Tutorial1·2와 캠페인 1-1·1-2를 사용자가 브라우저에서 검증할 수 있다. `o/` 규칙 부품(경로 6-P·커서 선행 포함)은 이미 옮겼으므로 이 단계는 client 바인딩·입력·메뉴와 세션 결선이다. 3.6절 ③ 표의 6단계 행(`GameWorld::SelectPriest` NB20·건설 실제 wire·`UberGump` 건설 기록)을 함께 반영한다.
 
 - [ ] client **입력 본체** 2단위 163줄 — 40칸 사건 큐의 게임 입력 분배: UserInput 122, GameWorldInput 41
-- [ ] client **커서** 1단위 284줄 — 미션 커서 상태·범위·마나 표시·위치·동작(선행 부품 E398~E401 위): RawCampaignCursor 284 [진행: RawCursorRange 는 [E550](docs/webpj-raw-cursor-range-20261115.md)(원본 593행 일치), RawCursorMana 는 [E549](docs/webpj-raw-cursor-mana-20261115.md)(원본 642행+표시 432행×2 일치), RawCursorPosition 은 [E548](docs/webpj-raw-cursor-position-20261115.md)(원본 687행 일치), RawCursorActions 는 [E547](docs/webpj-raw-cursor-actions-20261115.md)(원본 289행 일치) 완료]
+- [x] client **커서** 284줄 — `RawCampaignCursor`는 [E569](docs/webpj-campaign-cursor-20261116.md)에서 Session Load 선행으로 조립 완료. 실제 수명/미리보기/위치/반환·Local/표시 연결과 보호 자료11검사. RawCursorRange E550·RawCursorMana E549·RawCursorPosition E548·RawCursorActions E547도 완료. 실제 Session/GameWorld/UserInput 부모·에너지/전체 MayPlace/Builder·마나/사정거리 결선과 저장 미션 시험은 D/E 이후 이 단계 L3에서 재대조한다
 - [ ] client **게임 메뉴** 1단위 273줄 — ESC 가로/하위 메뉴·명령·Player 메뉴: RawGameMenus* 273 [진행: RawPlayerMenu 는 [E544](docs/webpj-raw-player-menu-20261115.md)(원본 292입력 일치) 완료, GameMenuActions 는 [E535](docs/webpj-game-menu-actions-20261115.md)(원본 610+144+384행 일치), GameMenuCommands 는 [E538](docs/webpj-game-menu-commands-20261115.md)(원본 PE 이름표 43개·이름→큐 21행 일치), RawGameMenuBar 는 [E539](docs/webpj-raw-game-menu-bar-20261115.md)(원본 510행 일치) 완료, 나머지 1단위가 끝나면 이 줄을 체크한다]
 - [ ] client **객체 우클릭 메뉴** 1단위 229줄 — 건물·운반체·특수 대상 메뉴와 소유자 명령: CampaignObjectMenuClient 229 [진행: RawObjectMenuInfo 는 [E546](docs/webpj-raw-object-menu-info-20261115.md)(원본 1,434입력 일치), RawObjectMenu 는 [E541](docs/webpj-raw-object-menu-20261115.md)(원본 717입력), RawObjectMenuVariants 는 [E542](docs/webpj-raw-object-menu-variants-20261115.md)(원본 1,024행), RawObjectMenuOpen 은 [E543](docs/webpj-raw-object-menu-open-20261115.md)(원본 788입력), ObjectOwnerCommands 는 [E531](docs/webpj-object-owner-commands-20261115.md)(원본 256+256행) 완료, 나머지 하나가 끝나면 이 줄을 체크한다]
 - [ ] client **사제·운반·경로 바인딩** 4단위 131줄 [진행: RawPriestMenu 는 [E540](docs/webpj-raw-priest-menu-20261115.md)(원본 905행 일치), **RawPriestWorldBindings**는 [E563](docs/webpj-priest-world-bindings-20261116.md) 완료(4-D 선행), PriestPlacementAssets 는 [E562](docs/webpj-campaign-construction-bindings-20261116.md) 완료, **RawCampaignPathBindings**는 [E568](docs/webpj-campaign-motion-path-20261116.md) 완료(4-D 선행)] — 사제 월드 바인딩·경로·운반 입력/투하·기도·공황: RawCampaignCarrierInput 42, RawCampaignCarrierDrop 53, RawCampaignPrayer 24, RawCampaignPanic 12. E568 후속: D/E Session 설치 뒤 cpppj CampaignMotion의 thewarbegins·masterofwhirligigs 저장 사제/목적지 선택·전체 초기화와 같은 경로 루프를 재대조한다
