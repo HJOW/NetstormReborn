@@ -769,13 +769,13 @@
         "cpppj/src/o/RawSquidContainedUnpop.h",
         "cpppj/src/o/RawPacketLengths.h"
       ],
-      "scope": "게임 보조 전역71필드·장식4칸·미션 설정7DWORD·패킷 길이WORD138개와 ClientGameplayGlobals22칸/배열의 PE 초기값. 원문 미션 설정 주소는 비연속이며 실행 중 writer는 각 소비자 단위에서 검증",
+      "scope": "게임 보조 전역79필드·장식4칸·미션 설정7DWORD·패킷 길이WORD138개와 ClientGameplayGlobals22칸/배열의 PE 초기값. 원문 미션 설정 주소는 비연속이며 실행 중 writer는 각 소비자 단위에서 검증",
       "text": false,
       "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
       "bytes": 1552384,
       "lines": null,
       "fixtureCommit": "2f80430a0",
-      "webCommit": "7ce86a05a",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawGameAuxState.h": "8defb347c",
         "cpppj/src/o/RawSquidContainedUnpop.h": "be567d46b",
@@ -24157,7 +24157,7 @@
       "bytes": 4788248,
       "lines": 665,
       "fixtureCommit": "a9af29da7",
-      "webCommit": "worktree",
+      "webCommit": "d89dd819f",
       "cpppjBasis": {
         "cpppj/src/o/RawFortTypeNamesLoad.cpp": "a9af29da7",
         "cpppj/src/o/RawFortTypeNamesLoad.h": "a9af29da7",
