@@ -1,5 +1,5 @@
 // Client 수명의 전역 카메라 snapshot(0059a900)과 논리 Native Renderer 의 현재 view·목표·분모를 **서로 다른 주소**에서 보관하는 모듈이다
-// (cpppj `client/ClientCameraGlobals.cpp/.h`, 10.78 전용, 기준선 1f00a25a 뒤 변경 없음). 카메라 64BYTE 상태는 기존 `CameraView`(WB03-Z, 16DWORD)를 쓴다.
+// (cpppj `client/ClientCameraGlobals.cpp/.h`, 10.78 전용, 기준선 뒤 장기 건설 이력과 저장 위치도 반영). 카메라 64BYTE 상태는 기존 `CameraView`(WB03-Z, 16DWORD)를 쓴다.
 // 칸: snapshot(전역 BSS 0, NativeInit/명시 setter/프레임 복사만 바꿈)·rendererView(논리 Renderer 앞 64BYTE, 호스트 화면 장치 교체와 무관)·target(원문 +48/+4c 한계, +50/+54 다음 픽셀 원점, +58 다음 Q16 배율)·
 //   denominator(00540ce0/ce4, PE 초기 15/15, 인자 0 이면 기본 선택)·constructionHistory(최근 로컬 건설 위치 5칸+Tab 순번)·savedPositions(005caeb0 숫자 키 저장 10칸 80BYTE).
 //   같은 형식이라는 이유로 목표/논리 Renderer/snapshot 을 alias 하지 않으며 명시 복사 위치만 현재 값을 바꾼다.

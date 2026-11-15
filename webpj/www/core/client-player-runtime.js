@@ -1,4 +1,4 @@
-// 공통 시작의 실제 Player 할당과 방향별 동맹 초기화 장치를 연결하는 모듈이다(cpppj `client/ClientPlayerRuntime.cpp/.h`, 10.78 전용, 기준선 1f00a25a 뒤 변경 없음).
+// 공통 시작의 실제 Player 할당과 방향별 동맹 초기화 장치를 연결하는 모듈이다(cpppj `client/ClientPlayerRuntime.cpp/.h`, 10.78 전용, 기준선 뒤 CD 전용 분기는 제외).
 // `initializeClientPlayerRecords(client)` 는 원문 0043952c 의 실제 초기화이다: 현재 known 이 0 인 초기 경로만 요구하며(아니면 `공통 Player 시작의 실제 known0 관문` 거부), 없는 World/Chat 을 빈 성공으로 채우지 않는다.
 // 같은 소유자(`client.playerRecords()`)에서 known0→전체 9기록/9공장/81방향 동맹을 구성하며, 동맹은 기존 실제 자식(`RawPlayerParticipation.setAlliance`, 00490ea0)이 계산한다.
 //   참여 모듈에는 known 이 0 일 때 읽지 않는 World 조회 세 개(battle·metamap·localTransport)를 "미선택 World 장치" 오류로 연결해, 상수 모드로 통과하는 일이 없게 한다.
