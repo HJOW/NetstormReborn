@@ -23533,9 +23533,67 @@
       "bytes": 299286,
       "lines": 1435,
       "fixtureCommit": "989d1345d",
-      "webCommit": "worktree",
+      "webCommit": "f1b54fb8e",
       "cpppjBasis": {
         "cpppj/src/client/RawObjectMenu.cpp": "c551d159d"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E542",
+      "id": "object-menu-variants",
+      "path": "cpppj/tests/fixtures/object-menu-variants-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 파생 객체 메뉴 여덟 +a8 본체(0041c210·00422000·00462390·00462550·00485600·0048eca0·004dcca0·00420b30)의 입력 11개와 콜백 변경 조합 1,024입력에서 전체 외부 효과·인자·순서",
+      "consumers": [
+        "webpj/tests/raw-object-menu-variants.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-menu-variants.js"
+      ],
+      "doc": "docs/webpj-raw-object-menu-variants-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawObjectMenuVariants.cpp"
+      ],
+      "scope": "10.78 1,024행 전부",
+      "text": true,
+      "sha256": "1cb47ffb8dda67f6effff3ab91c5bce1cdf8ad026ad58affdb09e4970e9198d1",
+      "bytes": 108328,
+      "lines": 1025,
+      "fixtureCommit": "83ac91129",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawObjectMenuVariants.cpp": "83ac91129"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E543",
+      "id": "object-menu-open",
+      "path": "cpppj/tests/fixtures/object-menu-open-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 공통 객체 메뉴 Open 004adb30·Position 00425f90 788입력(모드·extra·TYPE flags·제단·변경 경계·사건 좌표·투영·내용물·사정거리·메뉴/화면 폭)에서 반환값·효과 순서와 전체 인자·콜백 뒤 현재 필드",
+      "consumers": [
+        "webpj/tests/raw-object-menu-open.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-menu-open.js"
+      ],
+      "doc": "docs/webpj-raw-object-menu-open-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawObjectMenuOpen.cpp"
+      ],
+      "scope": "10.78 788입력 전부",
+      "text": true,
+      "sha256": "5ab274b7e92b4676b84bdd061954a1dfd92efbf6ff428671c884573cdf920e6f",
+      "bytes": 118759,
+      "lines": 789,
+      "fixtureCommit": "ed492698c",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawObjectMenuOpen.cpp": "9271152fe"
       }
     }
   ]
