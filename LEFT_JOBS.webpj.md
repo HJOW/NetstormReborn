@@ -6,17 +6,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E524)
+### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E528)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 1,004단위(제외 156 별도) 중 **port 784(78.1%)·partial 36(3.6%)·todo 184(18.3%)**. 남은 220단위에는 기존 129단위와 재기준선에서 추가된 99단위가 포함된다. 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
-| 마지막 작업 단위 | **WB04-E524** `CampaignGuideRelease` 이식 — Guide 소멸의 실제 전역/AI/Config 순서와 `CampaignGuideRuntime`([단위 문서](docs/webpj-campaign-guide-release-20261115.md)). 직전 E523은 `GuideMissionTransitions`([단위 문서](docs/webpj-guide-mission-transitions-20261115.md), 원본 286행 일치), E522는 `RawCampaignProductionBindings`([단위 문서](docs/webpj-campaign-production-bindings-20261115.md), 원본 242행 일치), E521은 `RawCampaignLifetimeBindings`([단위 문서](docs/webpj-campaign-lifetime-bindings-20261115.md)), E520은 `RawCampaignMissionStartBindings`·`RawCampaignTutorialOneBindings`([단위 문서](docs/webpj-campaign-mission-bindings-20261115.md)), E519는 `RawCampaignWorldRuntime`([단위 문서](docs/webpj-campaign-world-runtime-20261115.md)), E518은 `RawCampaignOwnership`([단위 문서](docs/webpj-campaign-ownership-20261115.md)) |
+| 이식 진행도 | 대상 1,004단위(제외 156 별도) 중 **port 788(78.5%)·partial 35(3.5%)·todo 181(18.0%)**. 남은 216단위에는 기존 129단위와 재기준선에서 추가된 99단위가 포함된다. 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
+| 마지막 작업 단위 | **WB04-E528** `RawPriestRegular` 이식 — 사제 정기 494580 사건 선택, 원본 10.78 관측 384행 전부 첫 실행 일치([단위 문서](docs/webpj-priest-regular-20261115.md)). 직전 E527은 `RawDecorationRegular` 이식 — 장식·가장자리 팜 Regular 462420, 원본 10.78 관측 630행 전부 첫 실행 일치([단위 문서](docs/webpj-decoration-regular-20261115.md)). 직전 E526은 `RawMonitorTime` 본체 이식 — 시간 알림 Step·줄·달력·임시 Chat 서식, 원본 10.78 관측 1176+12행 전부 첫 실행 일치([단위 문서](docs/webpj-monitor-time-20261115.md)). 직전 E525는 `State`([단위 문서](docs/webpj-client-state-20261115.md)), E524는 `CampaignGuideRelease`([단위 문서](docs/webpj-campaign-guide-release-20261115.md)), E523은 `GuideMissionTransitions`([단위 문서](docs/webpj-guide-mission-transitions-20261115.md), 원본 286행 일치), E522는 `RawCampaignProductionBindings`([단위 문서](docs/webpj-campaign-production-bindings-20261115.md), 원본 242행 일치), E521은 `RawCampaignLifetimeBindings`([단위 문서](docs/webpj-campaign-lifetime-bindings-20261115.md)), E520은 `RawCampaignMissionStartBindings`·`RawCampaignTutorialOneBindings`([단위 문서](docs/webpj-campaign-mission-bindings-20261115.md)), E519는 `RawCampaignWorldRuntime`([단위 문서](docs/webpj-campaign-world-runtime-20261115.md)), E518은 `RawCampaignOwnership`([단위 문서](docs/webpj-campaign-ownership-20261115.md)) |
 | 다음 작업 | ⓪ 4-D C 구획: `RawCampaignAssetBindings`·`RawCampaignConstructionBindings`(실제 `ClientConstructionGlobals`는 별도 todo) ① 4-R의 신규 이식 대상 중 남은 99단위를 E498~E502의 근거에 따라 각 단계에서 처리한다. 시간 동기화는 Poll까지 이식된 partial이며 고정 수신기 수명과 실제 Session 연결이 남았다(E515~E517). ② 독립적으로 가능한 4-D A·B·C와 5-A·5-B 잔여를 선행 관계에 맞게 병행한다. ③ 4-D의 D(Session 본체)·E(Client 본체·통합·L2 판정) 순서다. 3.8절 원본 관측 연결은 허브/적응 판정이 필요한 4건만 남았다 |
-| 마지막 전체 검사 | 2026-11-15 WB04-E524: Node v22.23.3·v26.13.0 전체 각각 **5,031건 통과, 실패 0** (v24 전체는 E513에서 4,973건 통과) |
+| 마지막 전체 검사 | 2026-11-15 WB04-E528: Node v22.23.3·v26.13.0 전체 각각 **5,042건 통과, 실패 0** (v24 전체는 E513에서 4,973건 통과) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -28,7 +28,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 1~3 M1·M2 선행 | WB02-G·H, 3-A~3-E | 대응표·오라클 기반, 월드 부품 E1~E264 | 완료(2026-11-10) | — |
 | 4 M2 | 4-A·4-B·4-C | 자료·설정·타입 표 / Fort·지형·섬 적재 / 패킷·로그인·내부 전송 | 완료(E265~E328, 4-C 3항목은 4-D 이월) | — |
 | 〃 | **4-R 재기준선** | cpppj 제품 985 → 1313 전환과 오라클 재수집 | **완료**(E497~E513, 기존 ③ 실제 구현은 후속 단계) | 추가 이식 대상 중 남은 99단위는 아래 단계에 별도 반영 |
-| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 14/32** | 기존 21단위 / 14,052줄 + 시간 동기화 1단위 / 99줄 |
+| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 14/32** | 기존 19단위 / 13,925줄 + 시간 동기화 1단위 / 99줄 |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 진행 중 44/46 | 3단위 / 533줄 |
 | 〃 | 5-B | 카메라·HUD·미니맵·커서 | 진행 중 9/13 | 5단위 / 1,039줄 |
 | 〃 | 5-C | 게임 화면 허브(Uber·메뉴 컨트롤)·미션 진입 명령 → **M2 판정**(L4a) | 미착수 | 13단위 / 5,998줄 |
@@ -46,9 +46,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 1,004단위 / 146,057줄 | 784 (78.1%) / 104,178줄 (71.3%) | 36 (3.6%) | 184 (18.3%) |
-| `o/` 월드·규칙 | 559단위 / 73,092줄 | 520 (93.0%) / 69,541줄 (95.1%) | 3 (0.5%) / 1,164줄 (1.6%) | 36 (6.4%) / 2,387줄 (3.3%) |
-| `client/` 세션·UI·표시 | 444단위 / 72,539줄 | 263 (59.2%) / 34,211줄 (47.2%) | 33 (7.4%) | 148 (33.3%) |
+| 전체 | 1,004단위 / 146,057줄 | 788 (78.5%) / 104,360줄 (71.5%) | 35 (3.5%) | 181 (18.0%) |
+| `o/` 월드·규칙 | 559단위 / 73,092줄 | 522 (93.4%) / 69,596줄 (95.2%) | 3 (0.5%) / 1,164줄 (1.6%) | 34 (6.1%) / 2,332줄 (3.2%) |
+| `client/` 세션·UI·표시 | 444단위 / 72,539줄 | 265 (59.7%) / 34,338줄 (47.3%) | 32 (7.2%) | 147 (33.1%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 426줄 | 1 (100%) / 426줄 (100%) | 0 | 0 |
 
 표의 port 줄 수는 현재 기준선 파일 전체의 규모이며 기존 행에 남은 ③ 후속 기능의 구현을 뜻하지 않는다. 분류(class)별로는 port 953(이식 대상)·adapt 51(웹 대체가 필요한 플랫폼 경계)·제외 156(exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1)이다.
@@ -60,8 +60,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 953·adapt 51·exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1, 미분류 0**. 상태: **port 784·partial 36·todo 184·제외(-) 156**, session/oracle 0. 새 partial 2개는 아래 중단 인계의 미완성 초안이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` **761항목**(original-x86 724·screenshot 13·source 9·independent 9·cpppj-oracle 5·original-binary 1, 2026-11-15 재집계). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 953·adapt 51·exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1, 미분류 0**. 상태: **port 788·partial 35·todo 181·제외(-) 156**, session/oracle 0. 새 partial 2개는 아래 중단 인계의 미완성 초안이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` **765항목**(original-x86 728·screenshot 13·source 9·independent 9·cpppj-oracle 5·original-binary 1, 2026-11-15 재집계). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -248,7 +248,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [ ] **4-C 통합 시험** (4-C 이월) — cpppj `CampaignSession_LocalLoginActualHandshakeAndWorldLoad` 대응: Zone→접속→0x27→응답→월드 설치→상태 8·9·10·13·14, 패킷 종류가 0x27 로 시작해 0x28·0x29 를 포함하고 0x6e 로 끝남, 옵션 22값·반경² 900·TYPE122 비용 3000
 - [ ] **4-D L2 판정** — Tutorial1 Load/Start 의 `session-dump`(웹 덤프 형식·`tools/cpp-oracle.mjs` 의 `--ui-script`/`--fixed-frame-ms` 시나리오, 3.5절 1번, 현행 기준선 오라클은 이 기능을 포함하며 웹 덤프·시나리오 연결은 미구현)·첫 프레임 논리 화면. 7차 오류/예외 console 로깅 구조(3.7절)를 이 Session 조립 때 앞당길 수 있다
 
-**4-D 기존 기준선 남은 단위(대응표 todo·partial, 21단위 / 14,052줄; 신규 RawClockSynchronization 99줄은 별도):** RawCampaignSession 7,118, RawCampaignSessionLogin 389, RawCampaignAssetBindings 282, ClientMain* 2,133, GameWorld 1,157, ClientStateWorldGlobals 112, ClientStateWorldCleanup 102, ClientStateRuntimeRetirement 99, ClientStateStorageCleanup 71, ClientCampaignTransport* 378, CampaignClientServices 373, CampaignUserInputServices 36, CampaignCursorClientEffects* 74, ClientGameplayGlobals 258, ClientDiagnostics 157, ClientStaticStrings 78, RawMonitorTime* 74, State 53, SquidPostPop* 709, ConfigInterface* 356, ClientUserSelectionCleanup 43. 위 체크 줄의 줄 수는 기준선 값이고 여기 줄 수는 현재 cpppj 값이다.
+**4-D 기존 기준선 남은 단위(대응표 todo·partial, 19단위 / 13,925줄; 신규 RawClockSynchronization 99줄은 별도):** RawCampaignSession 7,118, RawCampaignSessionLogin 389, RawCampaignAssetBindings 282, ClientMain* 2,133, GameWorld 1,157, ClientStateWorldGlobals 112, ClientStateWorldCleanup 102, ClientStateRuntimeRetirement 99, ClientStateStorageCleanup 71, ClientCampaignTransport* 378, CampaignClientServices 373, CampaignUserInputServices 36, CampaignCursorClientEffects* 74, ClientGameplayGlobals 258, ClientDiagnostics 157, ClientStaticStrings 78, SquidPostPop* 709, ConfigInterface* 356, ClientUserSelectionCleanup 43. 위 체크 줄의 줄 수는 기준선 값이고 여기 줄 수는 현재 cpppj 값이다.
 
 #### 5-A 렌더러·Draw·시각 시스템 연결 (44/46)
 
@@ -408,7 +408,7 @@ cpppj는 AGENTS 1~13차 구현을 모두 마쳤다([공통 인계 0.4절](LEFT_J
 | --- | --- |
 | 4-D (4-C 마감 이월) | `RawSurfaceWorld` 일반 Pop 송신기 연결(`bindSquidTransmission` ← `RawSquidTransmission.pop`, E299; 송신기 자체는 E313 완료, 실제 연결은 4-D Session 조립), `RawSquidTransmission` 압축 수신 복호기 `RawSquidCompressedReceive`·월드 동기화 `RawPeerWorldSync`(E513 대응표 등록, 이식은 4-D 후속), `RawFormPacket` 삭제 패킷 writer 헤더 선기록·진단 복귀(`b8cadde1`, E312 에서 ② 반영 완료), `GameClock` 시간 동기화 보정(`3e9dc2c7`, 보정 0이면 같음), 아비어리 `ReadProcess`·`WritePacket`(E264), 공유 Regular 수신·`WriteFormPacket` 단독 도달 재확인(E259), `UberGump` 로그인 안내("Creating Islands."·`ShowLoginProgress`, `9cb0547f`~`11fbb988`) 단독 도달 확인 |
 | 4-D | `PacketRegistrationTable` `PersistCanonicalBaseline`·`canonicalReceive`(장기 고정 수신기 승격, `899c934dc`, E305)·`RawPacketDispatch` `CanonicalPacketReceiver`/`RegisterCanonical*`/`SnapshotReceiver`(`ec0b6e973`, E306), `RawConnectionActivity` 등록의 Native 고정 수신기(nativeEntry 0x004b6180) 대여 분기(`eeae45c69`, E309; 위 canonical 묶음과 같이 처리), `RawMissionLogin` 의 Native Login 고정 수신기를 분배기에 대여하는 분기(E319; canonical 묶음과 같이 처리), `RawConnectionRegistry` 접속 통지 `StoreConnectPacket`/`SendConnectPacket`/`RegisterConnectPacketReceiver`(LocalMissionTransport 생성자의 type 1 수신기 등록 포함, E324; `621efab7e`·`efc78ee56`, 실제 TCP 접속의 초기 패킷 복제·LAN 전용, 대응표 밖 신규 파일 `RawPacketCopy` 와 고정 Native 수신기에 기댐; 그 전까지 `buffers` 칸은 비어 있어야 함, E308), `ClientConnectionGlobals` `PacketSources().Resolve(connection)`(Squid 대상 송신·전투 배송의 실제 Source 선택, `a76499e35`)·`PacketDelays()`(실소켓 지연 FIFO·`lag` 선택·`ResetDefault`, `ec0b6e973`; `ClientMain`/`ClientCampaignTransport`/Meta 의 소비 위치와 함께 단독 도달 여부 판정, E325), `CampaignTransportServices` `BindCompositeCampaignTransport` 의 고정 Native 수신기 분기(종료 패킷 2/기술 0x69 의 `canonicalReceive` 에 대한 `RegisterCanonical` lease 표식, `a76499e35`; 일반 수신기 재등록은 E327 완료, canonical 묶음과 같이 처리), `ClientCampaignTransport` `InstallClientPacketDefaults` 의 고정 Native 수신기 묶음(`RegisterCanonicalDirect` 로 등록하는 C3 빈 수신기 004437f0 와 Login/Gameplay/Carrier/Construction 수신기 — 웹은 일반 직접 수신기로 등록, canonical 승격은 위 묶음과 같이 처리, E328), 4-B 이월: `RawIslandRuntime` NoWorld 자유 함수 3개(`RawIslandExists`/`Owner`/`Bounds`, 섬 저장소를 만들 때, E261). World 수명·장기 owner 묶음: `RawSurfaceWorld` 기준선 뒤 +780줄(월드가 Display/PostPop/Pop/Unpop/Factory/Frame/Owner/Neighbors/Connect/Surface/BaseDestroy/VirtualDestroy/Common/Lifecycle/Events/Dependencies 를 Storage 장기 소유자에서 빌림·Runtime pin·자산별 Bindings 15종·직렬화 전역 선택·`SynchronizePeer`/`TransmitDeletion`/`AttachBaseAsset`/`BindMetaRefresh`, `14fd017c`; E299 변형 확인이 관찰하지 못한 건물 공간·Form 층·감시 Form 생성/Unpop·진단/현재 TYPE 빌림 연결은 Tutorial1 Session 검사에서 확인), `RawSurfaceStorage` 기준선 뒤 +413줄 자산 장기 소유자 연결(`14fd017c`)·SidPool 소진 복구 BindAllocation 연결(진단/회수/덤프/Tell, E298), `RawProcessHostStorage` 장기 기본 장치 보관(`BindLifecycleDefaults`/`BindFormFactoryDefaults`/`BindFormTransmissionDefaults`)·fire/rotate 애니메이션 TYPE 참조·`ClearCall` owner pin(E297, `417f22d2`), `SquidDestroyLifecycle` Native PATCH 분기(E213)와 같은 시기 `RawSquidDestroy`·`SquidPostPop`·`SquidReward`, 공통 Form/Process 층 Native 분기(`SquidFormDispatch`·`SquidProcess`·`SquidFactory`·`SquidFrame`·`DependFormHost`·`GumpFormHost`·`ContentFormLifetime`, E259), Player·사제·신전 Native 조회기(E260), 섬·다리·자원 Native 전역(E261), 건설·운반·Dude 공유 getter(E262), 전투 역할 getter·폭탄/펜스 생성자(E263), 플레어·아이스 타워·아비어리 `FlyerDiedIn`(E264), `RawBombTargets` 현재 TYPE 사거리 직접 읽기(레코드 `range` 칸은 E265 완료). 또 `TellSection` 대체 tell 적재(`config.LoadFile`, 현재 미션 Tell 연결 때), `SidPool` 패치판 할당 진단 복귀·소진 시 다리 회수(`BindAllocation`), `ClientMain` 메인 루프 단계(연결 감시·전투 자원 프레임·재접속 저장, `44e53bdc`)의 단독 도달·순서 재확인 |
-| 4-D~ (E335 이월) | `RawClockSynchronization` 본체(서버 응답 004c1e70·Commander 연결 004c1eb0·수신 004c1f60·Poll 004c2070; 데이터 구조 `ClockSynchronizationData` 는 E335 완료)·`RawMonitorTime` 나머지(`StepMonitorTime`·`SubmitTemporaryChatFormat`, 채팅 관리자 단위와 함께; 상태 `MonitorTimeState` 는 E335 완료)·`RawPacketCopies.duplicate`/`adopt` 의 실제 소비자(State+80 가변 Zone 복제, Session 조립) |
+| 4-D~ (E335 이월) | `RawClockSynchronization` 본체(서버 응답 004c1e70·Commander 연결 004c1eb0·수신 004c1f60·Poll 004c2070; 데이터 구조 `ClockSynchronizationData` 는 E335 완료)·`RawMonitorTime`(상태 E335, 본체 `StepMonitorTime`·`SubmitTemporaryChatFormat` 은 [E526](docs/webpj-monitor-time-20261115.md) 완료; Client Config writer·실제 Chat manager 부모는 4-D 조립)·`RawPacketCopies.duplicate`/`adopt` 의 실제 소비자(State+80 가변 Zone 복제, Session 조립) |
 | 5-B | `SquidDisplay` `BindView`/`CurrentView`: 웹 `setView` 값 복사를 getter로 교체(E259) |
 | 6 | `GameWorld::SelectPriest` NB20(`0817fa87`: P/R 사제 선택이 커서에 붙은 건설 조각을 먼저 취소 — `hooks.pieceHeld`/`cancelPiece`, `PriestSelectionShortcut` 새 필드; 선택 입력 이식과 함께 webpj 10차 대상, E300), 건설 실제 wire `ActualConfirm`·`ActualPlace`(4-C 패킷 writer와 한 묶음, E262), `UberGump` `PollBattleResources`·F7/Ctrl+F6 건설 기록 재생 입력, `RawPlayerParticipation` 동맹 협상 키 단독 도달 재확인(E260) |
 | 6-P·7-P2 | `RawPathRuntime`의 `friend RawPathData` 웹 대응(6-P, E264), `RawGunHit.applyOverride` Rain 오버라이드(7-P2, E263) |

@@ -14285,6 +14285,122 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
+      "unit": "WB04-E528",
+      "id": "priest-regular-dispatch",
+      "path": "cpppj/tests/fixtures/priest-regular-dispatch-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 사제 정기 494580 의 사건 601~605 선택. 사건·count·payload 비트·외부 후단 반환 비트에서 반환 비트와 호출한 후단(가상 삭제 flags·고유 후단·직접 Carrier 부모)의 인자 384행",
+      "consumers": [
+        "webpj/tests/priest-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-regular.js"
+      ],
+      "doc": "docs/webpj-priest-regular-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawPriestRegular.cpp"
+      ],
+      "scope": "10.78 384입력 전부",
+      "text": true,
+      "sha256": "354a610312baf7ca3b6179ac98527d5625c48585629ad305eb0ae3e179a8eb7d",
+      "bytes": 23098,
+      "lines": 385,
+      "fixtureCommit": "c54f488c5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawPriestRegular.cpp": "c54f488c5"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E527",
+      "id": "decoration-regular",
+      "path": "cpppj/tests/fixtures/decoration-regular-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 462420 장식·가장자리 팜 Regular. 입력 7 DWORD(사건·count·payload 비트·서버 권한·최대 HP·현재 HP·최대 HP 효과의 가상 변경)에서 반환 비트·선택한 효과 순서(M·H/h·D/d·B)·최종 슬롯 50BYTE 630행",
+      "consumers": [
+        "webpj/tests/decoration-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-decoration-regular.js"
+      ],
+      "doc": "docs/webpj-decoration-regular-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawDecorationRegular.cpp"
+      ],
+      "scope": "10.78 630입력 전부",
+      "text": true,
+      "sha256": "552870876337dc3537316360b670987faeb84f836f6e2645b210d228694d3477",
+      "bytes": 107492,
+      "lines": 631,
+      "fixtureCommit": "e0d7775ee",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawDecorationRegular.cpp": "e0d7775ee"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E526",
+      "id": "monitor-time",
+      "path": "cpppj/tests/fixtures/monitor-time-hardware-x86.tsv",
+      "producer": "cpppj 독립 PE 관측(실제 CPU): 180초 시간 알림 guard/기한/monitor·alert 옵션/벽시각 증분/단계 수/변경 입력에서 최종 initialized·deadline 비트·옵션·벽시각 호출 수·요청 순서(W·T/L/A·P·Q·E) 1176행",
+      "consumers": [
+        "webpj/tests/monitor-time.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-monitor-time.js"
+      ],
+      "doc": "docs/webpj-monitor-time-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawMonitorTime.cpp"
+      ],
+      "scope": "1176행 전부(originals·originalCD 모두 같은 단계 로직으로 재생, CD 전용 atexit 열 제외)",
+      "text": true,
+      "sha256": "11306fdb76dfda8395222d6dc3cbee56f5bf7d66fc25d011270ee043cd66fbd3",
+      "bytes": 537148,
+      "lines": 1176,
+      "fixtureCommit": "8f60c53d0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawMonitorTime.cpp": "8f60c53d0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E526",
+      "id": "temporary-chat-format",
+      "path": "cpppj/tests/fixtures/temporary-chat-format-hardware-x86.tsv",
+      "producer": "cpppj 독립 PE 관측(실제 CPU): 판본별 임시 Chat front 서식(10.78 +0x14·60BYTE, CD +0x10·16BYTE)의 저장·절삭·패딩·제출 뒤 현재 manager 재조회와 두 manager 전체 256BYTE·요청 순서 12행",
+      "consumers": [
+        "webpj/tests/monitor-time.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-monitor-time.js"
+      ],
+      "doc": "docs/webpj-monitor-time-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawMonitorTime.cpp"
+      ],
+      "scope": "12행 전부",
+      "text": true,
+      "sha256": "3e709504420a0db882ca2b36823b4d68929e130c539e63b81d7ff313a8b0b359",
+      "bytes": 13354,
+      "lines": 12,
+      "fixtureCommit": "8f60c53d0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawMonitorTime.cpp": "8f60c53d0"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
       "unit": "WB04-E523",
       "id": "guide-transitions",
       "path": "cpppj/tests/fixtures/guide-transitions-x86.tsv",
@@ -14305,7 +14421,7 @@
       "bytes": 29069,
       "lines": 287,
       "fixtureCommit": "2054e0744",
-      "webCommit": "worktree",
+      "webCommit": "d5a23c999",
       "cpppjBasis": {
         "cpppj/src/client/GuideMissionTransitions.cpp": "9148dbab0"
       }
