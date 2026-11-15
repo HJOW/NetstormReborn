@@ -4,7 +4,7 @@
 //    반환·352 BYTE Deck 전체·Player 9기록 전체·요청한 하위 경계 순서(할당 바이트 N, 진단 A, 종속 부착 C)를 대조한다. 실제 Player/Factory/ContentHost/SP 통지/Carrier 조건 순회로 매 행 새 월드를 만든다.
 //  - 계약: 현재 templateOwner·서로 다른 두 owner 의 블록 수명, 물리 범위(누락 할당·모르는 토큰·66 초과 개수)의 쓰기 전 거부, Player 링크 정리 증빙(실제 부모 36번 조회·세 DWORD 밖 보존·실패 접두 보존·
 //    다른 모듈/소비/만료 증빙 거부·부모 복귀 전 소비 금지), 개별 반납(한 블록만·Player 쓰기 없음·NULL 무효과·모르는/중복 토큰 거부·소멸자의 별도 정리).
-//  - 웹 범위 밖: 재계산/Factory 상품 추가(`RawCampaignProductionBindings`, client 단위)와 장기 FullDeck 전역을 쓰는 cpppj 시험 3건(ProductionDeck_ReplaysFactoryRefreshNative242·CurrentRestrictionsAndFactoriesAreShared·SharedFullDeckReadsAfterModeDiagnostic)은
+//  - (2026-11-15 WB04-E522 정정: 아래 3건은 `RawCampaignProductionBindings` 이식과 함께 tests/raw-campaign-production-bindings.test.mjs 에서 원본 242행·계약으로 대조했다.) 웹 범위 밖이었던: 재계산/Factory 상품 추가(`RawCampaignProductionBindings`, client 단위)와 장기 FullDeck 전역을 쓰는 cpppj 시험 3건(ProductionDeck_ReplaysFactoryRefreshNative242·CurrentRestrictionsAndFactoriesAreShared·SharedFullDeckReadsAfterModeDiagnostic)은
 //    그 client 모듈을 옮길 때 대조한다.
 // 실제 게임·브라우저 실행이 아니다. (2026-11-10 WB04-E215: 생산 Deck 이식과 함께 추가)
 import test from 'node:test';

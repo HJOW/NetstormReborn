@@ -14285,6 +14285,35 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
+      "unit": "WB04-E522",
+      "id": "production-refresh",
+      "path": "cpppj/tests/fixtures/production-refresh-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 현재 Factory/Deck/TotalMade 재계산(0044f7c0)과 Factory mode 0 상품 추가(004752b0). 입력(모드·owner·미션·Fort/Battle·fullDeck·설정·금지 비트·레벨·변형)과 입력 Deck 704 hex 에서 반환·352 BYTE Deck 전체·요청 순서(설정 질의·모드 진단) 242행",
+      "consumers": [
+        "webpj/tests/raw-campaign-production-bindings.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-campaign-production-bindings.js"
+      ],
+      "doc": "docs/webpj-campaign-production-bindings-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCampaignProductionBindings.cpp"
+      ],
+      "scope": "10.78 242입력 전부",
+      "text": true,
+      "sha256": "46828b77fdbe491d6ed8f06fa815a86c7fde5d60ad5cd3d124c98c14957f0c7d",
+      "bytes": 353107,
+      "lines": 243,
+      "fixtureCommit": "05d7cb57d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCampaignProductionBindings.cpp": "1e8e43d9a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
       "unit": "WB04-E216",
       "id": "production-sync",
       "path": "cpppj/tests/fixtures/production-sync-x86.tsv",
@@ -22864,8 +22893,8 @@
       "sha256": "f80b975d556e94c3e45a547bc7da2b38b8ea749f0487eceb7acd263924ac9978",
       "bytes": 221641,
       "lines": 1,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "435a7032c",
+      "webCommit": "435a7032c",
       "cpppjBasis": {
         "cpppj/src/o/RawClockSynchronization.cpp": "899c934dc",
         "cpppj/src/o/RawClockSynchronization.h": "3f766a97f"
