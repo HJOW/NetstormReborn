@@ -6,7 +6,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E506)
+### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E507)
 
 | 항목 | 현행 기준 |
 | --- | --- |
@@ -14,9 +14,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 768(85.7%)·partial 35(3.9%)·todo 93(10.4%)**. `o/` 월드·규칙은 517단위 중 515가 끝났고, 남은 128단위는 `client/`의 세션·허브·바인딩·메뉴·소리와 `o/` partial 2단위다. 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
-| 마지막 작업 단위 | **WB04-E506** CD 전용 변경 7단위와 기이식 카메라 저장소 1단위 판정([단위 문서](docs/webpj-rebaseline-edition-20261115.md)). 기존 변경 37단위 중 12단위 판정·반영 완료 |
-| 다음 작업 | ① **4-R 재기준선**의 기존 이식분 변경 25단위 판정과 대응표 규칙·기준선 전환을 진행한다(3.5절 6번, 오라클 후보 E497·신규 176단위 분류 E498~E505 완료). ② 독립적으로 가능한 4-D A·B·C와 5-A·5-B 잔여를 선행 관계에 맞게 병행한다. ③ 4-R 뒤 4-D의 D(Session 본체)·E(Client 본체·통합·L2 판정) 순서다. 3.8절 원본 관측 연결은 허브/적응 판정이 필요한 4건만 남았다 |
-| 마지막 전체 검사 | 2026-11-15 WB04-E506: Node v22.23.3·v24.22.3·v26.13.0 전체 각각 **4,969건 통과, 실패 0** |
+| 마지막 작업 단위 | **WB04-E507** 언어·파일·도움말 변경 12단위 판정([단위 문서](docs/webpj-rebaseline-language-20261115.md)). 기존 변경 37단위 중 24단위 판정 완료, 후속 기능은 3.6절에 유지 |
+| 다음 작업 | ① **4-R 재기준선**의 기존 이식분 변경 13단위 판정과 대응표 규칙·기준선 전환을 진행한다(3.5절 6번, 오라클 후보 E497·신규 176단위 분류 E498~E505 완료). ② 독립적으로 가능한 4-D A·B·C와 5-A·5-B 잔여를 선행 관계에 맞게 병행한다. ③ 4-R 뒤 4-D의 D(Session 본체)·E(Client 본체·통합·L2 판정) 순서다. 3.8절 원본 관측 연결은 허브/적응 판정이 필요한 4건만 남았다 |
+| 마지막 전체 검사 | 2026-11-15 WB04-E507: Node v22.23.3·v24.22.3·v26.13.0 전체 각각 **4,969건 통과, 실패 0** |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -27,7 +27,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | --- | --- | --- | --- | --- |
 | 1~3 M1·M2 선행 | WB02-G·H, 3-A~3-E | 대응표·오라클 기반, 월드 부품 E1~E264 | 완료(2026-11-10) | — |
 | 4 M2 | 4-A·4-B·4-C | 자료·설정·타입 표 / Fort·지형·섬 적재 / 패킷·로그인·내부 전송 | 완료(E265~E328, 4-C 3항목은 4-D 이월) | — |
-| 〃 | **4-R 재기준선**(신설) | cpppj 기준선 `1f00a25a`(제품 985) → HEAD(제품 1313) 전환과 오라클 재수집 | **진행 중**(① 후보 오라클 E497, ② 신규 176단위 분류 E498~E505, ③ 기존 12단위 E503~E506; 규칙 반영·나머지 판정·④⑤ 남음) | 기존 이식분 변경 판정 25단위 |
+| 〃 | **4-R 재기준선**(신설) | cpppj 기준선 `1f00a25a`(제품 985) → HEAD(제품 1313) 전환과 오라클 재수집 | **진행 중**(① 후보 오라클 E497, ② 신규 176단위 분류 E498~E505, ③ 기존 24단위 E503~E507; 규칙 반영·나머지 판정·④⑤ 남음) | 기존 이식분 변경 판정 13단위 |
 | 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 12/31** | 28단위 / 14,969줄 |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 진행 중 44/46 | 3단위 / 533줄 |
 | 〃 | 5-B | 카메라·HUD·미니맵·커서 | 진행 중 9/13 | 5단위 / 1,039줄 |
@@ -390,7 +390,7 @@ cpppj는 AGENTS 1~13차 구현을 모두 마쳤다([공통 인계 0.4절](LEFT_J
 - **기준선 이후의 변경:** 매 단위 착수 때 `node webpj/tools/port-map.mjs`의 `cpppj 변경` 줄을 본다(행 base 뒤 커밋을 단위별로 보고하고 안내를 붙인다). `exclude-*` 행은 ①로 기록만 하고, `port`/`adapt` 행은 ②/③을 판정해 ②는 `재반영`을 명시한 WB 단위로 반영한다. 판정을 마치면 그 행 base를 판정한 커밋으로 올리고 근거를 메모(①이라도)와 단위 문서에 남긴다. `fixture-manifest.mjs`도 같은 base 뒤 변경만 보고한다. 기준선 뒤 새로 생긴 파일은 `새 파일`로 보고되며 재기준선 때 분류한다.
 - **판정 대기 (2026-11-11, HEAD `f801c562`의 `port-map.mjs` 보고):** `cpppj 변경` 155건 — **②/③ 판정 필요(웹에 이식분 있음) 35단위**(`o/` 16·client 19), 이식 때 판정(아직 웹에 없음) 109단위(`o/` 32·client 76·zacket 1), ① 자동(제외 분류) 11단위. 새 파일은 299파일(172단위, 대응표 밖)이다. 2026-11-10의 87단위는 3-E(E259~E264, `o/` 82·RawChatChannels)에서 판정을 마쳤다. 남은 35단위는 대부분 그 뒤 cpppj가 2026-11-10~11에 더한 Native 연결과 AGENTS 6~13차·알려진 버그 수정(제품 1270~1300)이다. 아래 잠정 배정은 커밋 제목 기준이며, 해당 단위를 다시 다루는 단계에서 `git diff --ignore-cr-at-eol <base> HEAD`로 ①/②/③을 확정한다. 목록은 `node webpj/tools/port-map.mjs`의 `②/③ 판정 필요` 줄이다.
 - **판정 대기 재집계 (2026-11-15, HEAD `c17aeede1`의 `port-map.mjs` 보고):** `cpppj 변경` **92단위** — ②/③ 판정 필요(웹에 이식분 있음) 37, 이식 때 판정(아직 웹에 없음) 43, ① 자동(제외 분류) 12. 2026-11-11의 155건에서 줄어든 것은 E329~E495에서 이식·판정하며 행 base를 올렸기 때문이다. 위 2026-11-11 항목의 성격별 표는 아직 유효하다(끝난 행은 표 안에 표시).
-- **재기준선 제안 (4-R, 2026-11-15, 결정은 3.5절 6번):** 기준선 뒤 `cpppj/src`의 `o/`·`client/`·`zacket/`은 **301커밋·768파일(+26,257/−3,270줄)** 바뀌었다. 남은 허브가 가장 많이 바뀌었고(RawCampaignSession 5,715→7,118줄, ClientMain 1,797→2,133줄, UberGump 2,207→2,683줄), 4-D L2 판정에 필요한 `session-dump`·`--fixed-frame-ms`와 6·7단계 비교에 쓸 수 있는 `--test-autoplay`는 기준선 오라클 실행 파일에 없다. 기준선 판 허브를 옮긴 뒤 수십 커밋을 다시 판정하는 것보다 HEAD 판을 바로 옮기는 편이 일이 적다. **절차:** ① 오라클을 HEAD로 다시 빌드해 `extracted/webpj-oracle/<커밋>/`에 두고 M1 8장면을 재수집·재대조(창이 뜨므로 AGENTS 실행 규칙) — **E497 완료**, 후보 기준으로 기록한 차이 밖 0 ② `tools/port-map.mjs`의 기준선과 대응표를 다시 만들어 대응표 밖 새 단위 176개를 분류(MP·Edit·host 제외 규칙, 12차 스커미시·Outpost 관련은 순서 10 몫으로 표시; [E498](docs/webpj-rebaseline-surface-20261115.md)~[E502](docs/webpj-rebaseline-meta-20261115.md) 판정 및 E505 Sprite 갱신 2개 정정, 도구 규칙·대응표 반영은 남음) ③ 이미 옮긴 단위 중 변경 37단위를 ①/②/③으로 판정하고 ②는 재반영 단위로 처리(E503~E506에서 12단위 완료, 25단위 남음) ④ `manifest.json`의 근거 커밋 갱신과 전체 검사(Node v22·v24·v26) ⑤ 이후 남은 단위는 HEAD 판을 옮긴다. 10차 버그 수정·6차/13차 표시 부호화처럼 웹 후순위(순서 10) 몫인 변경은 재기준선 때 ③으로 남겨 해당 순서에서 반영한다.
+- **재기준선 제안 (4-R, 2026-11-15, 결정은 3.5절 6번):** 기준선 뒤 `cpppj/src`의 `o/`·`client/`·`zacket/`은 **301커밋·768파일(+26,257/−3,270줄)** 바뀌었다. 남은 허브가 가장 많이 바뀌었고(RawCampaignSession 5,715→7,118줄, ClientMain 1,797→2,133줄, UberGump 2,207→2,683줄), 4-D L2 판정에 필요한 `session-dump`·`--fixed-frame-ms`와 6·7단계 비교에 쓸 수 있는 `--test-autoplay`는 기준선 오라클 실행 파일에 없다. 기준선 판 허브를 옮긴 뒤 수십 커밋을 다시 판정하는 것보다 HEAD 판을 바로 옮기는 편이 일이 적다. **절차:** ① 오라클을 HEAD로 다시 빌드해 `extracted/webpj-oracle/<커밋>/`에 두고 M1 8장면을 재수집·재대조(창이 뜨므로 AGENTS 실행 규칙) — **E497 완료**, 후보 기준으로 기록한 차이 밖 0 ② `tools/port-map.mjs`의 기준선과 대응표를 다시 만들어 대응표 밖 새 단위 176개를 분류(MP·Edit·host 제외 규칙, 12차 스커미시·Outpost 관련은 순서 10 몫으로 표시; [E498](docs/webpj-rebaseline-surface-20261115.md)~[E502](docs/webpj-rebaseline-meta-20261115.md) 판정 및 E505 Sprite 갱신 2개 정정, 도구 규칙·대응표 반영은 남음) ③ 이미 옮긴 단위 중 변경 37단위를 ①/②/③으로 판정하고 ②는 재반영 단위로 처리(E503~E507에서 24단위 판정 완료, 13단위 남음(③ 후속 기능은 아래 표에 유지)) ④ `manifest.json`의 근거 커밋 갱신과 전체 검사(Node v22·v24·v26) ⑤ 이후 남은 단위는 HEAD 판을 옮긴다. 10차 버그 수정·6차/13차 표시 부호화처럼 웹 후순위(순서 10) 몫인 변경은 재기준선 때 ③으로 남겨 해당 순서에서 반영한다.
 
 | 성격 (cpppj 커밋 번호 20261111-NN) | 단위 | 잠정 시점 |
 | --- | --- | --- |
@@ -401,7 +401,7 @@ cpppj는 AGENTS 1~13차 구현을 모두 마쳤다([공통 인계 0.4절](LEFT_J
 | webpj 요청 처리(20261110-01) | client ScrollingTextGumpWidgets | E427 에서 주석만 변경(sliderType/sliderFrame 설명)이라 ①로 판정 완료(대응표 base `c91d9b84`) |
 | 큰 client 두 개 | client ClientMain(`44e53bdc` 뒤 57커밋)·UberGump(`11fbb988` 뒤 54커밋) | 아래 ③ 표의 해당 행대로 4-C/4-D·6 |
 
-- **판정을 마치고 반영 시점만 남은 ③ (아래 표):** 해당 단계에서 반영하면 이 표에서 지우고 대응표 메모를 고친다. 모두 typed 결과는 변하지 않는 Native/실제 연결 몫이다. 행별 상세(기준 커밋·바뀐 함수·판정 이유)는 각 행 `PORT_MAP.tsv` 메모, 판정 문서([공통층 E259](docs/webpj-judge-common-20261110.md)·[Player·사제 E260](docs/webpj-judge-player-priest-20261110.md)·[섬·자원 E261](docs/webpj-judge-island-resource-20261110.md)·[건설·Dude E262](docs/webpj-judge-construction-dude-20261110.md)·[전투 E263](docs/webpj-judge-combat-20261110.md)·[기타 E264](docs/webpj-judge-misc-20261110.md)), [대응표 문서 5·9절](docs/webpj-port-map-20261106.md)과 [2026-11-11 보관](LEFT_JOBS.webpj.old.md#archive-webpj-20261111-through-wb04-e277) 3.6절 원래 표에 있다. 판정을 마친 ①·②는 PORT_MAP base·메모에 있다.
+- **판정을 마치고 반영 시점만 남은 ③ (아래 표):** 해당 단계에서 반영하면 이 표에서 지우고 대응표 메모를 고친다. Native/실제 연결과 아직 미구현인 후순위 기능을 포함한다. 행별 상세(기준 커밋·바뀐 함수·판정 이유)는 각 행 `PORT_MAP.tsv` 메모, 판정 문서([공통층 E259](docs/webpj-judge-common-20261110.md)·[Player·사제 E260](docs/webpj-judge-player-priest-20261110.md)·[섬·자원 E261](docs/webpj-judge-island-resource-20261110.md)·[건설·Dude E262](docs/webpj-judge-construction-dude-20261110.md)·[전투 E263](docs/webpj-judge-combat-20261110.md)·[기타 E264](docs/webpj-judge-misc-20261110.md)), [대응표 문서 5·9절](docs/webpj-port-map-20261106.md)과 [2026-11-11 보관](LEFT_JOBS.webpj.old.md#archive-webpj-20261111-through-wb04-e277) 3.6절 원래 표에 있다. 판정을 마친 ①·②는 PORT_MAP base·메모에 있다.
 
 | 반영 단계 | ③ 항목 |
 | --- | --- |
@@ -411,6 +411,7 @@ cpppj는 AGENTS 1~13차 구현을 모두 마쳤다([공통 인계 0.4절](LEFT_J
 | 5-B | `SquidDisplay` `BindView`/`CurrentView`: 웹 `setView` 값 복사를 getter로 교체(E259) |
 | 6 | `GameWorld::SelectPriest` NB20(`0817fa87`: P/R 사제 선택이 커서에 붙은 건설 조각을 먼저 취소 — `hooks.pieceHeld`/`cancelPiece`, `PriestSelectionShortcut` 새 필드; 선택 입력 이식과 함께 webpj 10차 대상, E300), 건설 실제 wire `ActualConfirm`·`ActualPlace`(4-C 패킷 writer와 한 묶음, E262), `UberGump` `PollBattleResources`·F7/Ctrl+F6 건설 기록 재생 입력, `RawPlayerParticipation` 동맹 협상 키 단독 도달 재확인(E260) |
 | 6-P·7-P2 | `RawPathRuntime`의 `friend RawPathData` 웹 대응(6-P, E264), `RawGunHit.applyOverride` Rain 오버라이드(7-P2, E263) |
+| 6·10 | E507 언어·파일 후속: `BitmapFont` 일본어 글꼴/폭, `ConfigFileRead`·`KoreanResources`·`BaseFile` 한국어 공식 미션 번들과 부분 번역 우선순위, `InputEvent` 조합 문자 일괄 입력, `LanguageOptions` 일본어 선택, `ProductPresentation` 일본어 Credits·난이도·스커미시, `QuickHelpWindow` 언어 전환 시 열린 창·캐시 수명, `TellFileMenus` 긴 제목 NB24·언어 전환 재적재. 상세는 [E507 판정](docs/webpj-rebaseline-language-20261115.md) |
 | 소비자 단위마다 | `GameAuxState` 새 장기 전역 칸(보호 PE 초기값과 함께, base `8defb347`), `SquidProcess` 발사/회전 애니메이션 프로세스 TYPE 두 칸(`RawCampaignArcherBindings` 이식 때, `02b00b12`) |
 
 ### 3.7 AGENTS 후순위 요구(4~14차)의 웹 처리
