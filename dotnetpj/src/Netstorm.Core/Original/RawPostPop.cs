@@ -56,7 +56,13 @@ public sealed class RawPostPopState
     public bool CurrentSuppressed => SharedSuppressed?.Value ?? Suppressed;
 
     /// <summary>공급·작업장 재계산 알림 수. 공급원·작업장 등록마다 1씩 늘어난다.</summary>
-    public uint ProductionDirty { get; set; }
+    public uint ProductionDirty { get => _productionDirty; set => _productionDirty = value; }
+
+    /// <summary>공급원 등록이 같은 현재 생산 DWORD를 사본 없이 증감한다.</summary>
+    private uint _productionDirty;
+
+    /// <summary>원문 등록 부모에 빌려주는 같은 생산 카운터 주소다.</summary>
+    public ref uint ProductionDirtyValue => ref _productionDirty;
 
     /// <summary>Activate와 공통 후처리가 같은 DWORD로 공유하는 실제 깊이 저장소다.</summary>
     private uint _depth;
@@ -77,10 +83,18 @@ public sealed class RawPostPopState
     public uint[] GlobalCounts { get; }
 
     /// <summary>공급원 목록(공급 비트 타입의 최초 등록).</summary>
-    public RawPostPopList Providers { get; } = new();
+    public RawPostPopList Providers => SharedProviders ?? _providers;
+    /// <summary>독립 입력의 기존 공급원 물리다.</summary>
+    private readonly RawPostPopList _providers = new();
+    /// <summary>실제 NativeStorage의 같은 장기 공급원/count 대여다.</summary>
+    public RawPostPopList? SharedProviders { get; set; }
 
     /// <summary>작업장 목록(작업장 비트 타입의 최초 등록).</summary>
-    public RawPostPopList Factories { get; } = new();
+    public RawPostPopList Factories => SharedFactories ?? _factories;
+    /// <summary>독립 입력의 기존 워크샾 물리다.</summary>
+    private readonly RawPostPopList _factories = new();
+    /// <summary>실제 NativeStorage의 같은 장기 워크샾/count 대여다.</summary>
+    public RawPostPopList? SharedFactories { get; set; }
 
     /// <summary>소유자별 작업장 목록. 중립 0번도 메모리를 보존하며 검사 대조에 쓴다.</summary>
     public RawPostPopList[] OwnerFactories { get; } = Enumerable.Range(0, OwnerCount).Select(_ => new RawPostPopList()).ToArray();
@@ -123,7 +137,7 @@ public interface IRawPostPopGraph
 /// 기준 판본은 10.78 뿐이다(CD 10.72 는 소유자·추가 비트 위치와 비용 누적 방식이 달라서 옮기지 않았다).
 /// 근거: cpppj/src/o/SquidPostPop.cpp (W02 PostPop 조각, 2026-10-20).
 /// </summary>
-public sealed class RawPostPop : IRawPopPostPop
+public sealed partial class RawPostPop : IRawPopPostPop
 {
     /// <summary>상태 바이트의 free 비트(빈 슬롯).</summary>
     private const byte FreeBit = 1;
@@ -217,9 +231,10 @@ public sealed class RawPostPop : IRawPopPostPop
             throw new ArgumentException("postPop/Graph SID 풀 불일치", nameof(graph));
         }
         _pool = pool;
-        _types = types;
+        _types = types.Select(type => type.Clone()).ToArray();
         _state = state;
         _graph = graph;
+        if (graph is RawGraph actualGraph) actualGraph.ValidateTypes(types);
     }
 
     /// <summary>이 모듈이 쓰는 슬롯 풀. Pop 이 같은 풀인지 확인하는 데 쓴다.</summary>
@@ -340,7 +355,7 @@ public sealed class RawPostPop : IRawPopPostPop
         ReadOnlySpan<byte> slot = _pool.Slot(sid);
         // 번호·빈·내용물·자산 타입 밖이면 공통 후처리의 대상이 아니다
         if (sid < RawSidPool.FirstOrdinary || (slot[RawSidPool.StateOffset] & (FreeBit | ContainedBit)) != 0
-            || slot[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || slot[RawSidPool.TypeOffset] >= _types.Count)
+            || slot[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || slot[RawSidPool.TypeOffset] >= CurrentTypes.Count)
         {
             throw new InvalidOperationException("postPop raw 자산 상태 오류");
         }
@@ -384,7 +399,7 @@ public sealed class RawPostPop : IRawPopPostPop
         ReadOnlySpan<byte> slot = _pool.Slot(sid);
         // 번호·빈·내용물·자산 타입 밖이면 공통 장부의 대상이 아니다
         if (sid < RawSidPool.FirstOrdinary || (slot[RawSidPool.StateOffset] & (FreeBit | ContainedBit)) != 0
-            || slot[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || slot[RawSidPool.TypeOffset] >= _types.Count)
+            || slot[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || slot[RawSidPool.TypeOffset] >= CurrentTypes.Count)
         {
             throw new InvalidOperationException("postPop raw 자산 상태 오류");
         }
@@ -393,7 +408,7 @@ public sealed class RawPostPop : IRawPopPostPop
         {
             return;
         }
-        OriginalTypeRecord type = _types[slot[RawSidPool.TypeOffset]];
+        OriginalTypeRecord type = CurrentTypes[slot[RawSidPool.TypeOffset]];
         if (_state.GraphsEnabled)
         {
             (bool region, bool add) = GraphKinds(type, flags);
@@ -475,7 +490,7 @@ public sealed class RawPostPop : IRawPopPostPop
     /// <param name="flags">호출 플래그.</param>
     public void PostPop(int sid, uint flags)
     {
-        Validate(sid, flags, default);
+        if (_pool.Edition != OriginalEdition.Patch1078) Validate(sid, flags, default);
         PostPopBase(sid, flags, default);
     }
 
@@ -525,7 +540,8 @@ public sealed class RawPostPop : IRawPopPostPop
     public void PostPopBase(int sid, uint flags, in PopProjection projection = default)
     {
         bool patch = _pool.Edition == OriginalEdition.Patch1078;
-        ValidateBaseCore(sid, flags, in projection, checkPending: !patch);
+        if (patch) { PostPopPatch(sid, flags); return; }
+        ValidateBaseCore(sid, flags, in projection, checkPending: true);
         // 억제 경로도 깊이는 1 줄인다
         if (_state.CurrentSuppressed)
         {
@@ -534,7 +550,7 @@ public sealed class RawPostPop : IRawPopPostPop
         }
         ReadOnlySpan<byte> slot = _pool.Slot(sid);
         int number = slot[RawSidPool.TypeOffset];
-        OriginalTypeRecord type = _types[number];
+        OriginalTypeRecord type = CurrentTypes[number];
         if (_state.GraphsEnabled && _graph is not null)
         {
             (bool region, bool add) = GraphKinds(type, flags);
@@ -602,7 +618,8 @@ public sealed class RawPostPop : IRawPopPostPop
     /// <param name="typeIndex">타입 번호.</param>
     private int TotalCost(int typeIndex)
     {
-        double cost = _types[typeIndex].Cost;
+        IReadOnlyList<OriginalTypeRecord> costs = _pool.Edition == OriginalEdition.Patch1078 ? (_loadedCosts ?? _types) : CurrentTypes;
+        double cost = costs[typeIndex].Cost;
         // 유한하지 않은 비용은 통계·깊이·슬롯에 쓰기 전에 거부한다
         if (!double.IsFinite(cost))
         {

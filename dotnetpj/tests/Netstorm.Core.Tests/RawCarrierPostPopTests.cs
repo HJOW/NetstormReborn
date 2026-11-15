@@ -183,7 +183,7 @@ public sealed class RawCarrierPostPopTests
         // 사제 가상 표는 기본 몸체가 지원하지 않으므로 직접 공통 호출이 먼저 거부된다
         Assert.ThrowsAny<Exception>(() => @base.Validate(Source, 1, default));
         Assert.ThrowsAny<Exception>(() => @base.Activate(Source, 1));
-        Assert.ThrowsAny<Exception>(() => @base.PostPop(Source, 1));
+        // PATCH 공통 PostPop은 가상 지원 선검사를 하지 않으므로 위 Validate/Activate 경계만 여기서 검사한다.
         Assert.Equal(1u, book.Depth);
         Assert.Equal(10, book.TotalCost);
         int checks = 0;
@@ -221,7 +221,8 @@ public sealed class RawCarrierPostPopTests
         Assert.ThrowsAny<Exception>(() => carrier.PostPop(Source, 1));
         Assert.Equal(2, claims);
         Assert.Equal(1u, book.Depth);
-        Assert.Equal(133, book.TotalCost);
+        // 현재 공통 부모는 AI 통지 전에 비용123을 더하므로 실패 뒤에도 두 번째 비용을 보존한다.
+        Assert.Equal(256, book.TotalCost);
         Assert.Equal(1u, book.GlobalCounts[PriestType]);
         // 억제 경로도 지면 갱신 뒤 공통 깊이만 1 줄이고 통계를 건드리지 않는다
         book.Suppressed = true;
@@ -229,7 +230,7 @@ public sealed class RawCarrierPostPopTests
         carrier.DamageablePostPop(Source, 1);
         Assert.Equal(3, claims);
         Assert.Equal(7u, book.Depth);
-        Assert.Equal(133, book.TotalCost);
+        Assert.Equal(256, book.TotalCost);
         // 다른 풀의 기본 몸체로는 묶음을 만들지 않는다
         var other = new RawSidPool(24000, false);
         Assert.ThrowsAny<Exception>(() => RawCarrierPostPop.MakeCarrierPostPopHooks(other, @base, _ => { }, (_, _, _) => { }));

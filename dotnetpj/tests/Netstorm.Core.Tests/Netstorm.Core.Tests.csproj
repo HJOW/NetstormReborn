@@ -393,4 +393,8 @@
     <None Include="../../../cpppj/tests/fixtures/graph-detach-live-x86.tsv" Link="X86/graph-detach-live-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/graph-region-free-x86.tsv" Link="X86/graph-region-free-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 두 원본의 실제 CPU 마나 등록1084행을 읽기 전용으로 공유한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/mana-registration-hardware-x86.tsv" Link="X86/mana-registration-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

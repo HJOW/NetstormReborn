@@ -91,43 +91,45 @@ public sealed class RawPostPopTests
         var factory = new RawSquidFactory(pool, types);
         var state = new RawPostPopState { Depth = 3 };
         var post = new RawPostPop(pool, types, state);
+        // 사전 검사가 읽을 현재 TYPE를 명시 대여한다.
+        post.BindCurrentTypes(types);
         int sid = VoidSlot(factory, pool);
         (int cost, uint dirty, uint depth, byte[] before) = Snapshot(state, pool);
         // 번호 0~4 는 대상이 아니다
-        Assert.Throws<InvalidOperationException>(() => post.PostPop(0, 1));
-        Assert.Throws<InvalidOperationException>(() => post.PostPop(4, 1));
+        Assert.Throws<InvalidOperationException>(() => post.Validate(0, 1, default));
+        Assert.Throws<InvalidOperationException>(() => post.Validate(4, 1, default));
         // 빈 슬롯은 거부한다(목록·카운터는 바뀌지만 슬롯 바이트 비교는 그 뒤부터 한다)
         int free = pool.Allocate(SidAllocation.Client);
         pool.Release(free);
-        Assert.Throws<InvalidOperationException>(() => post.PostPop(free, 1));
+        Assert.Throws<InvalidOperationException>(() => post.Validate(free, 1, default));
         before = pool.Bytes.ToArray();
         // 들어 있는 내용물은 거부한다
         pool.AllocatedBytes(sid)[RawSidPool.StateOffset] |= 8;
-        Assert.Throws<InvalidOperationException>(() => post.PostPop(sid, 1));
+        Assert.Throws<InvalidOperationException>(() => post.Validate(sid, 1, default));
         pool.AllocatedBytes(sid)[RawSidPool.StateOffset] &= 0xF7;
         // 자산 타입 밖은 거부한다
         pool.AllocatedBytes(sid)[RawSidPool.TypeOffset] = 69;
-        Assert.Throws<InvalidOperationException>(() => post.PostPop(sid, 1));
+        Assert.Throws<InvalidOperationException>(() => post.Validate(sid, 1, default));
         pool.AllocatedBytes(sid)[RawSidPool.TypeOffset] = (byte)TestType;
         // 지원하지 않는 가상 표는 파생 몸체가 없으므로 거부한다
         Put(pool.AllocatedBytes(sid), 0, 0x12345678);
-        Assert.Throws<InvalidOperationException>(() => post.PostPop(sid, 1));
+        Assert.Throws<InvalidOperationException>(() => post.Validate(sid, 1, default));
         Put(pool.AllocatedBytes(sid), 0, BaseVtable);
         // 소유자 9 이상은 범위 오류다
         pool.AllocatedBytes(sid)[34] = 9;
-        Assert.Throws<ArgumentOutOfRangeException>(() => post.PostPop(sid, 1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => post.Validate(sid, 1, default));
         pool.AllocatedBytes(sid)[34] = 0;
         // 손상된 공급원 목록 개수는 쓰기 전에 거부한다
         state.Providers.Entries = new uint[1];
         state.Providers.Count = 2;
         types[TestType].Flags1 = 0x10000000;
-        Assert.Throws<InvalidOperationException>(() => post.PostPop(sid, 1));
+        Assert.Throws<InvalidOperationException>(() => post.Validate(sid, 1, default));
         state.Providers.Count = 0;
         // 손상된 작업장 목록 개수도 쓰기 전에 거부한다
         state.Factories.Entries = new uint[1];
         state.Factories.Count = 2;
         types[TestType].Flags2 = 0x4200;
-        Assert.Throws<InvalidOperationException>(() => post.PostPop(sid, 1));
+        Assert.Throws<InvalidOperationException>(() => post.Validate(sid, 1, default));
         state.Factories.Count = 0;
         types[TestType].Flags2 = 0;
         Assert.Equal((cost, dirty, depth), (state.TotalCost, state.ProductionDirty, state.Depth));
@@ -151,10 +153,10 @@ public sealed class RawPostPopTests
         int sid = VoidSlot(factory, pool, owner: 1);
         (int cost, uint dirty, uint depth, byte[] before) = Snapshot(state, pool);
         state.AiAttached[1] = true;
-        Assert.Throws<InvalidOperationException>(() => post.PostPop(sid, 1));
+        Assert.Throws<InvalidOperationException>(() => post.Validate(sid, 1, default));
         state.AiAttached[1] = false;
         state.PendingPlacement = true;
-        Assert.Throws<InvalidOperationException>(() => post.PostPop(sid, 1));
+        Assert.Throws<InvalidOperationException>(() => post.Validate(sid, 1, default));
         state.PendingPlacement = false;
         // 최초 등록(flags 1)이 아니면 AI 부착·보류 배치 검사도 건드리지 않고 깊이만 줄인다
         state.AiAttached[1] = true;
@@ -177,6 +179,8 @@ public sealed class RawPostPopTests
         var factory = new RawSquidFactory(pool, types);
         var state = new RawPostPopState { Depth = 3 };
         var post = new RawPostPop(pool, types, state);
+        // 현재 TYPE 비용 쓰기와 구별되는 최초 비용표 입력을 직접 공급한다.
+        post.BindLoadedCosts(types);
         int sid = VoidSlot(factory, pool);
         (int cost, uint dirty, uint depth, byte[] before) = Snapshot(state, pool);
         types[TestType].Cost = float.NaN;
@@ -271,6 +275,7 @@ public sealed class RawPostPopTests
         var factory = new RawSquidFactory(pool, types);
         var state = new RawPostPopState { GraphsEnabled = true, Depth = 3 };
         var post = new RawPostPop(pool, types, state);
+        post.BindCurrentTypes(types);
         int sid = VoidSlot(factory, pool);
         (int cost, uint dirty, uint depth, byte[] before) = Snapshot(state, pool);
         // 영역 등록인데 Graph 가 없으면 거부한다
@@ -300,6 +305,8 @@ public sealed class RawPostPopTests
         var log = new List<string>();
         var post = new RawPostPop(pool, types, state, new RecordingGraph(pool, log));
         int sid = VoidSlot(factory, pool);
+        // 명시 사전 검사와 실제 실행을 구분해 두 경계를 확인한다.
+        post.Validate(sid, 1, default);
         post.PostPop(sid, 1);
         Assert.Contains("GraphValidate:True:False", log);
         Assert.Contains("GraphPostPop:True:False", log);

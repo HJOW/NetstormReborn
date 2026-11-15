@@ -907,3 +907,10 @@ cpppj/src/o/RawSquidNeighbors.h	Netstorm.Core/Original/RawNeighbor.cs	4c06fd9d64
 cpppj/src/o/Graph.cpp	Netstorm.Core/Original/RawGraph.Live.cs	0ba6de1e6215cc1d3e6b7612d4f5ca151524c461	port
 cpppj/src/o/RawGraph.h	Netstorm.Core/Original/RawGraph.Live.cs	0ba6de1e6215cc1d3e6b7612d4f5ca151524c461	port
 cpppj/src/o/RawGraphLive.cpp	Netstorm.Core/Original/RawGraph.Live.cs	0ba6de1e6215cc1d3e6b7612d4f5ca151524c461	L1
+cpppj/src/o/RawSquidPostPopParent.cpp	Netstorm.Core/Original/RawSquidPostPopParent.cs	8412bca13a7701cf688f08585ddc6ed42cccb928	L1
+cpppj/src/o/RawSquidPostPopParent.h	Netstorm.Core/Original/RawSquidPostPopParent.cs	8412bca13a7701cf688f08585ddc6ed42cccb928	port
+cpppj/src/o/SquidPostPopPatch.cpp	Netstorm.Core/Original/RawPostPop.Current.cs	8412bca13a7701cf688f08585ddc6ed42cccb928	L1
+cpppj/src/o/SquidPostPop.cpp	Netstorm.Core/Original/RawPostPop.Current.cs	8412bca13a7701cf688f08585ddc6ed42cccb928	port
+cpppj/src/o/SquidPostPop.h	Netstorm.Core/Original/RawPostPop.Current.cs	8412bca13a7701cf688f08585ddc6ed42cccb928	port
+cpppj/src/o/RawManaRegistration.cpp	Netstorm.Core/Original/RawManaRegistration.cs	8412bca13a7701cf688f08585ddc6ed42cccb928	L1
+cpppj/src/o/RawManaRegistration.h	Netstorm.Core/Original/RawManaRegistration.cs	8412bca13a7701cf688f08585ddc6ed42cccb928	port

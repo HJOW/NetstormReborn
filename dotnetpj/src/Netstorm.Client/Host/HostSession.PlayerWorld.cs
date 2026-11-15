@@ -49,6 +49,8 @@ public sealed partial class HostSession
         var hash = _terrainHash;
         var display = _terrainDisplay;
         var inner = new RawPostPop(Pool, types, TerrainBookkeeping);
+        // 실제 호스트의 같은 현재 TYPE를 빌리되 최초 비용 snapshot은 별도로 보존한다.
+        inner.BindCurrentTypes(types);
         var pop = new RawPop(Pool, hash, _terrainSpots, display, inner);
         var unpop = new RawUnpop(Pool, hash, _terrainSpots, display);
         _livePostPop = inner; _livePop = pop; _liveUnpop = unpop;

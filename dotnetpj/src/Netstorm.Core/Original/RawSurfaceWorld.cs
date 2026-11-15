@@ -218,7 +218,7 @@ public sealed partial class RawSurfaceWorld
             _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph,
                 _frames.Count == _types.Count ? new RiftFrameCodeTables(_frames) : null, GraphRecovery.FullPool);
             if (_edition == OriginalEdition.Patch1078) _graph.BindCurrentTypes(_types);
-            _graph.BindDiagnostics(new() { Checking = _storage.Checking(), Assertion = _storage.AssertDisplay });
+            _graph.BindDiagnostics(new() { Checking = new(() => _storage.Checking().Read()), Assertion = _storage.AssertDisplay });
             _graph.BindClock(_storage.ReadGraphClock); _graph.BindTrace(_storage.TraceGraph);
             _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots, _display);
             _factory = new RawSquidFactory(_storage.Pool, _types, false, _unpop);
@@ -245,6 +245,8 @@ public sealed partial class RawSurfaceWorld
             _buildingState.BridgeType = _storage.Links.BridgeType;
             _building = new RawBuildingSpace(_storage.Pool, _storage.Hash, _types, _buildingState);
             _postPop = new RawPostPop(_storage.Pool, _types, _bookkeeping, _graph);
+            if (_edition == OriginalEdition.Patch1078) _postPop.BindCurrentTypes(_types);
+            _postPop.BindManaDiagnostics(new() { Checking = new(() => _storage.Checking().Read()), Assertion = _storage.AssertDisplay });
             _pop = new RawPop(_storage.Pool, _storage.Hash, _storage.Spots, _display, _postPop);
             BindCurrentPop();
             _pop.SetBuildingSide(_building);
