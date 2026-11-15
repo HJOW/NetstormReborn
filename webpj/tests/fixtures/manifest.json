@@ -23678,9 +23678,38 @@
       "bytes": 853869,
       "lines": 1435,
       "fixtureCommit": "c09f7a0f0",
-      "webCommit": "worktree",
+      "webCommit": "6960fc81b",
       "cpppjBasis": {
         "cpppj/src/client/RawObjectMenuInfo.cpp": "9388cd633"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E547",
+      "id": "cursor-actions",
+      "path": "cpppj/tests/fixtures/cursor-actions-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 Cursor 446a10 잠금·446a40 해제·446a70 회전 289입력(깊이·인자·방향·Gump·TYPE 그룹·선택/특별 타입·재진입 변경)에서 외부 효과 호출 순서와 전체 전역 아홉 개",
+      "consumers": [
+        "webpj/tests/raw-cursor-actions.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cursor-actions.js"
+      ],
+      "doc": "docs/webpj-raw-cursor-actions-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCursorActions.cpp"
+      ],
+      "scope": "10.78 289행 전부",
+      "text": true,
+      "sha256": "cf7ed24a65ed0b93d9800251e42c373f9d9de5ac398425346d8e782edc3f846b",
+      "bytes": 27004,
+      "lines": 290,
+      "fixtureCommit": "f69dc67ba",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCursorActions.cpp": "76e3c4531"
       }
     }
   ]
