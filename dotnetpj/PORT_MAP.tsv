@@ -952,3 +952,5 @@ cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawAssetPostPop.ParentsCu
 cpppj/src/o/RawAssetPostPop.h	Netstorm.Core/Original/RawAssetPostPop.ParentsCurrent.cs	0f337918fcb6392c7278a9ff225789bb70397f9a	L1
 cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawAssetPostPop.GunCurrent.cs	21f77e6f8be72d57734335692040d8b2793a9ce4	L1
 cpppj/src/o/RawAssetPostPop.h	Netstorm.Core/Original/RawAssetPostPop.GunCurrent.cs	21f77e6f8be72d57734335692040d8b2793a9ce4	L1
+cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawAssetPostPop.VortexCurrent.cs	dbda2029d017aeb894eb24a795d258108f485d2f	L1
+cpppj/src/o/RawAssetPostPop.h	Netstorm.Core/Original/RawAssetPostPop.VortexCurrent.cs	dbda2029d017aeb894eb24a795d258108f485d2f	L1

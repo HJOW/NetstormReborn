@@ -356,11 +356,11 @@ public sealed partial class X86RawAssetPostPopTests
     }
 
     /// <summary>
-    /// 외부 효과가 없을 때 공간 쓰기 전에 거부하고 raw·목록·기록을 바꾸지 않는다.
-    /// 간헐천 분기의 필수 효과 누락을 확인한다.
+    /// 명시 Validate는 외부 효과가 없을 때 raw·목록·기록을 바꾸지 않고 거부한다.
+    /// 신전 필수 효과의 사전 확인과 실제 본문의 도달 순서를 구별한다.
     /// </summary>
     [Fact]
-    public void MissingEffectsBeforeMutation()
+    public void ValidateRejectsMissingVortexEffectsBeforeMutation()
     {
         string[][] rows = X86Fixture.Read("assetpostpop");
         string[] template = rows.First(row => row[0] == PatchEdition);
@@ -372,8 +372,8 @@ public sealed partial class X86RawAssetPostPopTests
         var assets = new RawAssetPostPop(scene.Pool, scene.Types, @base, damageable, scene.State, new AssetPostPopHooks());
         string[] before = scene.Output();
         scene.Book.Depth++;
-        // 필수 간헐천 효과가 없어서 쓰기 전에 실패한다
-        Assert.ThrowsAny<Exception>(() => assets.PostPop(Source, 1));
+        // 명시 사전 검사는 필수 신전 효과 누락을 쓰기 없이 거부한다.
+        Assert.ThrowsAny<Exception>(() => assets.Validate(Source, 1));
         Assert.Equal(before, scene.Output());
         scene.Book.Depth--;
         Assert.Equal(0u, scene.Book.Depth);

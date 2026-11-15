@@ -514,7 +514,7 @@ public sealed partial class RawAssetPostPop
     {
         uint kind = Kind(sid);
         // 이식한 현재 부모는 실제 도달 순서를 사용하고 CD/다른 독립 몸체의 기존 사전 계약은 유지한다.
-        if (_pool.Edition != OriginalEdition.Patch1078 || !(kind >= GeneratorKind && kind <= ResidenceKind || kind == GeyserKind)) Validate(sid, flags);
+        if (_pool.Edition != OriginalEdition.Patch1078 || !(kind >= GeneratorKind && kind <= ResidenceKind || kind == GeyserKind || kind >= VortexRainKind && kind <= VortexThunderKind)) Validate(sid, flags);
         if (kind == SunAviaryKind)
         {
             _hooks.SunAviaryPostPop!(sid, flags);
@@ -676,132 +676,11 @@ public sealed partial class RawAssetPostPop
         GeyserCurrent(sid, flags, false);
     }
 
-    /// <summary>신전 공통 몸체 후 각 원소 포장의 추가·예약을 처리한다.</summary>
-    /// <param name="sid">오브젝트 슬롯 번호.</param>
-    /// <param name="flags">호출 플래그.</param>
-    /// <param name="kind">신전 세부 부류.</param>
-    private void Vortex(int sid, uint flags, uint kind)
-    {
-        VortexBase(sid, flags);
-        if ((flags & 1) != 0)
-        {
-            // 윈드 신전은 공통 몸체가 이미 추가 위치를 썼으므로 원소 추가를 건너뛴다
-            if (kind != VortexWindKind)
-            {
-                Write(_pool.AllocatedBytes(sid), WordOffset, _hooks.TypeDword!(sid, 0x134));
-            }
-            Regular(sid, 1, kind == VortexThunderKind ? 0.1f : 0.08f);
-        }
-    }
-
-    /// <summary>
-    /// 신전 Damageable 뒤 Player·목록·영역·다른 신전 삭제·생산 칸 생성을 처리한다.
-    /// 공통 Damageable 을 먼저 호출하여 공통 깊이를 줄인다.
-    /// </summary>
-    /// <param name="sid">오브젝트 슬롯 번호.</param>
-    /// <param name="flags">호출 플래그.</param>
-    private void VortexBase(int sid, uint flags)
-    {
-        _damageable.DamageablePostPop(sid, flags);
-        if ((flags & 2) != 0)
-        {
-            // 새 신전 비트의 소유자는 1~8 이어야 한다
-            uint owner = _pool.Slot(sid)[OwnerOffset];
-            if (owner == 0 || owner > 8)
-            {
-                throw new InvalidOperationException("Vortex postPop 새 신전 소유자 assert");
-            }
-            SetPlayerTemple(owner, 2, (uint)sid);
-            SetPlayerTemple(owner, 3, (uint)sid);
-        }
-        if ((flags & 1) == 0)
-        {
-            return;
-        }
-        ++_state.TempleCount;
-        // 비추가의 최초 신전은 충격음을 내고 HP 를 지운다
-        if ((_pool.Slot(sid)[ExtraOffset] & 8) == 0)
-        {
-            _hooks.PlayImpactSound!(_hooks.TypeDword!(sid, 0x74));
-            Write(_pool.AllocatedBytes(sid), 12, 0, 2);
-            uint owner = _pool.Slot(sid)[OwnerOffset];
-            // 초기 신전이 없고 비추가이면 공유 기록의 초기 신전 두 필드를 채운다
-            if (owner != 0 && owner <= 8 && PlayerTemple(owner, 0) == 0 && (_pool.Slot(sid)[ExtraOffset] & 1) == 0)
-            {
-                SetPlayerTemple(owner, 0, (uint)sid);
-                SetPlayerTemple(owner, 1, (uint)sid);
-            }
-        }
-        // 비추가·비매립의 최초 신전은 목록·선택 취소·추가·영역 등록을 처리한다
-        if ((_pool.Slot(sid)[ExtraOffset] & 9) == 0)
-        {
-            Add(_state.CurrentTemples, sid, true);
-            Add(_state.CurrentResidences, sid, true);
-            // 선택된 폼이 소용돌이 부류이면 배치 커서를 취소한다
-            if (_state.Selected != 0 && _pool.Slot(sid)[OwnerOffset] == LocalOwner())
-            {
-                ReadOnlySpan<byte> form = _pool.Slot((int)_state.Selected);
-                uint type = Read(form, 18, 2);
-                if (type < _types.Count && (_types[(int)type].Flags2 & 0x200) != 0)
-                {
-                    _hooks.ClearPlacement!();
-                }
-            }
-            Write(_pool.AllocatedBytes(sid), WordOffset, _hooks.TypeDword!(sid, 0x130));
-            ReadOnlySpan<byte> raw = _pool.Slot(sid);
-            int island = _hooks.IslandNumber!(X(raw, XOffset), X(raw, YOffset));
-            // 섬이 목록에 없으면 원본처럼 멈춘다
-            if (!_hooks.IslandExists!(island))
-            {
-                throw new InvalidOperationException("Vortex postPop 섬 목록 assert");
-            }
-            _hooks.RegisterTemple!(island, sid);
-            _hooks.SetOwner!(sid, _pool.Slot(sid)[OwnerOffset]);
-            // 보스이면 원본 반복자처럼 다음 번호를 미리 확보하고 같은 영역의 다른 소용돌이를 삭제한다
-            if (_state.CurrentBoss)
-            {
-                uint current = 2;
-                // 최초 번호는 해제 슬롯을 건너뛰며 첫 할당 자산·폼을 그대로 반환한다
-                while (current < (uint)_pool.Capacity && (_pool.Slot((int)current)[RawSidPool.StateOffset] & 1) != 0)
-                {
-                    current++;
-                }
-                // 가상 삭제의 외부 효과가 다음 슬롯을 바꿔도 원본 반복자의 현재 번호를 유지한다
-                while (current < (uint)_pool.Capacity)
-                {
-                    int other = (int)current;
-                    uint next = current + 1;
-                    // 다음 번호부터 해제 슬롯을 건너뛰어 살아 있는 다음 번호를 찾는다(없으면 풀 끝)
-                    while (next < (uint)_pool.Capacity && (_pool.Slot((int)next)[RawSidPool.StateOffset] & 1) != 0)
-                    {
-                        next++;
-                    }
-                    ReadOnlySpan<byte> otherRaw = _pool.Slot(other);
-                    byte otherType = otherRaw[RawSidPool.TypeOffset];
-                    if ((otherRaw[ExtraOffset] & 8) == 0 && otherType < _types.Count
-                        && (_types[otherType].Flags2 & 0x200) != 0 && other != sid)
-                    {
-                        float x = X(otherRaw, XOffset);
-                        float y = X(otherRaw, YOffset);
-                        if (_hooks.RegionNumber!(x, y) == island)
-                        {
-                            _hooks.Destroy!(other, 0x100000);
-                        }
-                    }
-                    current = next;
-                }
-            }
-        }
-        // 비로딩의 비추가·비매립 신전은 생산 칸 확인·생산 갱신을 처리한다
-        if (_state.LoadingDepth == 0 && (_pool.Slot(sid)[ExtraOffset] & 9) == 0)
-        {
-            if (!_hooks.HasContent!(sid, _state.SlotType))
-            {
-                _hooks.CreateSlot!(sid, _state.SlotType);
-            }
-            _hooks.RefreshProduction!();
-        }
-    }
+    /// <summary>신전 현재 공통 부모와 원소별 프레임/예약을 실행한다.</summary>
+    /// <param name="sid">현재 물리 슬롯 번호.</param>
+    /// <param name="flags">원문 후처리 플래그.</param>
+    /// <param name="kind">선택된 원소별 몸체.</param>
+    private void Vortex(int sid, uint flags, uint kind) => VortexCurrent(sid, flags, kind);
 
     /// <summary>현재 Player 의 신전 네 DWORD 를 실제 기록 저장소에서 읽는다. 묶지 않은 모듈은 state 사본을 쓴다.</summary>
     /// <param name="owner">소유자 번호(0~8).</param>
@@ -860,24 +739,6 @@ public sealed partial class RawAssetPostPop
 
     /// <summary>현재 외부 소유자 DWORD 또는 state 의 로컬 소유자 바이트를 조회한다.</summary>
     private uint LocalOwner() => _localOwner is null ? _state.LocalOwner : _localOwner();
-
-    /// <summary>원본 전체 목록은 자리가 남은 경우만 덧붙인다(중복 검사는 호출자가 정한다).</summary>
-    /// <param name="list">대상 목록.</param>
-    /// <param name="sid">덧붙일 번호.</param>
-    /// <param name="unique">참이면 이미 있을 때 생략한다.</param>
-    private static void Add(RawPostPopList list, int sid, bool unique)
-    {
-        if (list.Count >= (uint)list.Entries.Length)
-        {
-            return;
-        }
-        // 중복이면 덧붙이지 않고 기존 항목을 보존한다
-        if (unique && list.Contains(sid))
-        {
-            return;
-        }
-        list.Entries[(int)list.Count++] = (uint)sid;
-    }
 
     /// <summary>현재 float 좌표의 비트 패턴을 읽는다.</summary>
     /// <param name="raw">슬롯 바이트.</param>

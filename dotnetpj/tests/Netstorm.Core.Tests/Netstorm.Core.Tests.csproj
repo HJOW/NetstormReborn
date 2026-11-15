@@ -405,4 +405,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/gun-postpop-checking-x86.tsv" Link="X86/gun-postpop-checking-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 현재 신전 진단/복귀와 Player 전체 기록의 원본936행을 공유한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/vortex-current-x86.tsv" Link="X86/vortex-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
