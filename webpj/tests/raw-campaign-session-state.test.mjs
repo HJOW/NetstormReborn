@@ -136,7 +136,8 @@ test('Session checking: 한 현재 signed DWORD·같은 Canon 진단과 값 대�
 test('Session 실제 진단: 호출 때 조회하는 장치와 생성 때 캡처한 장치를 구별한다', () => {
     const events = []; const ai = { assertion: (expression) => events.push(`A:${expression}`) }; const o = scene({ ai });
     try {
-        o.initializePlayersAndSp(); o.gameplayGlobals.aiDebug().checking().value = 1; ai.assertion = (expression) => events.push(`B:${expression}`);
+        o.initializePlayersAndSp(); o.gameplayGlobals.aiDebug().checking().value = 1; const supplied = o.services.ai.assertion; ai.assertion = () => { throw new Error('호출자 AI 묶음 재대입은 Session 값 사본에 미반영'); };
+        assert.equal(o.services.ai.assertion, supplied); o.services.ai.assertion = (expression) => events.push(`B:${expression}`);
         o.state.anchorState.graphAssertion('anchor', '', 1); o.metadata.geometry.decoderDiagnostics.assertion('canon', '', 2);
         o.core.types[75].flags1 &= ~0x10; o.hp.typeHitPoints(75);
         assert.deepEqual(events.slice(0, 2), ['B:anchor', 'B:canon']); assert.ok(events.slice(2).length > 0); assert.ok(events.slice(2).every((value) => value.startsWith('A:')));

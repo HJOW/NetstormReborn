@@ -24,6 +24,7 @@ import { MissileState } from './raw-missile.js';
 import { RawPathProcessState } from './raw-path-process.js';
 import { PlayerPlacementAnchorState } from './raw-player-placement-anchor.js';
 import { PriestDamageState } from './raw-priest-damage.js';
+import { GunImpactState } from './raw-gun-impact.js';
 import { RunePostPopState } from './raw-rune-post-pop.js';
 import { SoundProcessState } from './sound-process.js';
 import { TempleRitualState } from './raw-temple-ritual.js';
@@ -84,12 +85,15 @@ export class RawCampaignSessionState {
     archerState = new ArcherAnimationState(); missileState = new MissileState(); soundState = new SoundProcessState();
     buildArrivalState = new ConstructionArrivalState(); assetState = new AssetPostPopState(); regularState = new AssetRegularState();
     generalDamageState; burningState = new DamageableBurningState(); carrierDropState = carrierDropState();
+    // 원문666의 충돌/Flare 억제이며 같은 로그인 기한 double을 빌린다.
+    impactState;
     // 수신 등록을 하지 않는 실제 연결 활동 몸체다. 등록과 전송은 전체 Session 부모의 몫이다.
     connectionActivity;
 
     // 기반 owner의 동일 참조를 사용하며 Player/시계/SP를 초기화하지 않는다.
     constructor(owner) {
         this.#owner = owner; this.process = new RawPathProcessState(owner.core.processState); this.generalDamageState = new DamageableHitState(this.priestDamageState);
+        this.impactState = new GunImpactState({ sharedSuppressedTime: owner.localStateGlobals.loginEnd() });
         const movement = owner.priestState.movement; const state = this;
         this.start = { clock: owner.core.processState,
             get dudeType() { return movement.dude; }, get teleportType() { return movement.teleport; }, get manaBoltType() { return movement.manaBolt; }, get priestType() { return movement.priest; }, get geyserType() { return owner.geyserType; },
