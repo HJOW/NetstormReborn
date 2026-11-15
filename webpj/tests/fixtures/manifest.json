@@ -23852,9 +23852,67 @@
       "bytes": 7731214,
       "lines": 594,
       "fixtureCommit": "b62491bfe",
-      "webCommit": "worktree",
+      "webCommit": "856b692cd",
       "cpppjBasis": {
         "cpppj/src/client/RawCursorRange.cpp": "e210c7559"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E551",
+      "id": "bomb-hardener",
+      "path": "cpppj/tests/fixtures/bomb-hardener-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 하드너 대상 가상 41fe90 자격·41feb0 강화 21입력(자격 마스크·후보 상한·난수 상태·QA 제외·검색 실패 플레어·프레임·효과 순서)",
+      "consumers": [
+        "webpj/tests/raw-bomb-hardener.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-hardener.js"
+      ],
+      "doc": "docs/webpj-raw-bomb-hardener-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombHardener.cpp"
+      ],
+      "scope": "10.78 21행 전부(자격 5·적용 16)",
+      "text": true,
+      "sha256": "daa6e66fe349781ec147fd13dcf8b8fc102f9f4159f5656fa4769bb6a6b6daa1",
+      "bytes": 8476,
+      "lines": 22,
+      "fixtureCommit": "62eb228da",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombHardener.cpp": "62eb228da"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E552",
+      "id": "bomb-treason",
+      "path": "cpppj/tests/fixtures/bomb-treason-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 트리즌 대상 가상 41ff20 자격·41ff90 소유권/받침/이웃 전파 157입력(소유자·genus·종류·방향·QA·바닥 발견·재진입 변경·후보 순회의 자격 결과·소유자 결과·효과 순서)",
+      "consumers": [
+        "webpj/tests/raw-bomb-treason.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-treason.js"
+      ],
+      "doc": "docs/webpj-raw-bomb-treason-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombTreason.cpp"
+      ],
+      "scope": "10.78 157행 전부(자격 144·적용 13)",
+      "text": true,
+      "sha256": "9e8eedc492412f677bf05ae6415048d1b6822f7afe550ccb930f43f5fe8568da",
+      "bytes": 7625,
+      "lines": 158,
+      "fixtureCommit": "44a48b1e9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombTreason.cpp": "44a48b1e9"
       }
     }
   ]
