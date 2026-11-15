@@ -1,5 +1,5 @@
 // RawCampaignSession::Impl의 캠페인 소유 자료를 실제 하위 생성자로 구성한다(225553df, WB04-E574).
-// 사용: owner 생성 → 나머지 공유 상태 결선 → initializePlayersAndSp → 나머지 모듈/Load 연결.
+// 사용: owner 생성(공유 입력 결선) → initializePlayersAndSp(진단 결선 포함) → 나머지 모듈/Load 연결.
 // 이 단계는 Session이 아니며 현재 Runtime에 공개하지 않는다. 외곽 Session과 Load는 아직 미구현이다.
 // Editor/LAN/메타/Native 장치는 이 캠페인 분기에 섞지 않는다. 반납은 하위 모듈을 정리한 부모가 마지막에 dispose로 한다.
 import { GameAssets } from '../assets/game-assets.js';
@@ -22,6 +22,7 @@ import { PlayerParticipationState, RawPlayerParticipation } from './raw-player-p
 import { RawPriestWorldState } from './raw-priest-world-bindings.js';
 import { RawSquidLevel, makeSquidLevelAssertion } from './raw-squid-level.js';
 import { RawSurfaceWorld } from './raw-surface-world.js';
+import { RawCampaignSessionState } from './raw-campaign-session-state.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
 import { ScrambledSpStore } from './sp-store.js';
 import { SquidReward, SquidRewardState } from './squid-reward.js';
@@ -79,6 +80,8 @@ export class RawCampaignSessionOwners {
     players = new Uint8Array(0); alliances; battleOptions; hiddenPlayers; restrictions; participationState;
     // 상위가 실제 가상80 분배를 연결하며, 미연결 시 선택된 호출에서 오류다.
     rewardCount = null; soundNames; level = null;
+    // 같은 Impl의 공유 입력·현재 상태와 Player/SP 이후 진단 결선이다.
+    state;
     // 독립 typed 분기만 지역으로 소유하는 현재 값이다. Native 전역을 임의로 빌리지 않는다.
     piece = 107; dudeProviderIndex = 0; windFlyerType = 138; rainFlyerType = 144; sunFlyerType = 73;
     // 기반 자료 반납 및 생성자 내 Player/SP 구간의 한 번 실행 여부다.
@@ -130,10 +133,11 @@ export class RawCampaignSessionOwners {
             if (!(this.restrictions instanceof Uint32Array) || this.restrictions.length !== 256) throw new TypeError('Session의 실제 금지256DWORD 필요');
             // 멤버 선언의 참조는 장기 owner의 현재 칸에 직접 읽고 쓴다.
             for (const [name, key] of Object.entries(ROLE_ALIASES)) Object.defineProperty(this, name, { enumerable: true, get: () => aux[key], set: (value) => { aux[key] = value; } });
+            this.state = new RawCampaignSessionState(this);
         } catch (error) { this.dispose(); throw error; }
     }
 
-    // 원문1076..1095 구간이다. 앞선 공유 상태 결선 뒤 부모가 한 번 호출하며 실패 접두를 되돌리거나 재실행하지 않는다.
+    // 원문1076..1121의 Player/SP와 후속 진단 구간이다. 부모가 한 번 호출하며 실패 접두를 되돌리거나 재실행하지 않는다.
     initializePlayersAndSp() {
         if (this.#disposed || this.#playersStarted) throw new Error('Session Player/SP 초기화의 반납/반복 호출');
         this.#playersStarted = true; const services = this.services;
@@ -152,10 +156,11 @@ export class RawCampaignSessionOwners {
         this.level = new RawSquidLevel(this.core.pool, this.core.types, makeSquidLevelAssertion((expression) => {
             if (typeof services.ai?.assertion !== 'function') throw new Error('Squid level 실제 진단 장치 미연결'); services.ai.assertion(expression);
         }));
-        this.finishState.chaffMode = true; this.objectState.mission = true; this.objectState.chaffMode = true; this.playerState.playerKnown = 1; this.#playersReady = true;
+        this.finishState.chaffMode = true; this.objectState.mission = true; this.objectState.chaffMode = true; this.playerState.playerKnown = 1;
+        this.state.bindDiagnostics(); this.#playersReady = true;
     }
 
-    // Player/SP 구간만 정상 복귀했는지다. Session/World Load 완료를 뜻하지 않는다.
+    // Player/SP와 후속 진단 결선이 정상 복귀했는지다. Session/World Load 완료를 뜻하지 않는다.
     get playersReady() { return this.#playersReady; }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.

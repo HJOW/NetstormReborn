@@ -184,7 +184,7 @@ test('Session 채택 거부: 초기화하지 않은 Player를 완료 기록으�
 
 test('Session 레벨 진단: 현재 실제 모듈은 같은 원문 식을 실제 장치에 전달한다', () => {
     const events = []; const o = new RawCampaignSessionOwners(game, files, 'x', services({ ai: { assertion: (expression) => events.push(expression) } }));
-    try { o.initializePlayersAndSp(); const sid = o.core.pool.allocate(2); o.core.pool.slot(sid)[10] = 71; o.level.set(sid, 9); assert.equal(o.level.get(sid), 1); assert.deepEqual(events, ['0 <= n && n < 8']); } finally { o.dispose(); }
+    try { o.initializePlayersAndSp(); const sid = o.core.pool.allocate(2); o.core.pool.allocated(sid)[10] = 71; o.level.set(sid, 9); assert.equal(o.level.get(sid), 1); assert.deepEqual(events, ['0 <= n && n < 8']); } finally { o.dispose(); }
     const missing = new RawCampaignSessionOwners(game, files, 'x', services());
-    try { missing.initializePlayersAndSp(); const sid = missing.core.pool.allocate(2); missing.core.pool.slot(sid)[10] = 71; assert.throws(() => missing.level.set(sid, 9), /미연결/); } finally { missing.dispose(); }
+    try { missing.initializePlayersAndSp(); const sid = missing.core.pool.allocate(2); missing.core.pool.allocated(sid)[10] = 71; assert.throws(() => missing.level.set(sid, 9), /미연결/); } finally { missing.dispose(); }
 });
