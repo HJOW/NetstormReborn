@@ -78,7 +78,7 @@ public sealed partial class AssetPostPopState
 
 /// <summary>
 /// 외부 몸체를 생략하지 않고 호출 순서대로 연결하는 명시 경계(원본 AssetPostPopHooks).
-/// 필요한 경계가 없으면 공간 쓰기 전에 사전 검사에서 거부한다.
+/// 실제 본문은 도달한 장치만 요구하며 별도 Validate가 쓰기 없는 사전 확인을 맡는다.
 /// </summary>
 public sealed class AssetPostPopHooks
 {
@@ -513,27 +513,27 @@ public sealed partial class RawAssetPostPop
     public void PostPop(int sid, uint flags)
     {
         uint kind = Kind(sid);
-        // 이식한 현재 부모는 실제 도달 순서를 사용하고 CD/다른 독립 몸체의 기존 사전 계약은 유지한다.
-        if (_pool.Edition != OriginalEdition.Patch1078 || !(kind >= GeneratorKind && kind <= ResidenceKind || kind == GeyserKind || kind >= VortexRainKind && kind <= VortexThunderKind)) Validate(sid, flags);
+        // 실제 PATCH 가상 표가 선택한 몸체만 호출하며 CD/미복원 표의 독립 사전 계약은 유지한다.
+        if (_pool.Edition != OriginalEdition.Patch1078 || kind == 0) Validate(sid, flags);
         if (kind == SunAviaryKind)
         {
-            _hooks.SunAviaryPostPop!(sid, flags);
+            DedicatedPostPop(sid, flags, kind);
         }
         else if (kind == NuggetKind)
         {
-            _hooks.NuggetPostPop!(sid, flags);
+            DedicatedPostPop(sid, flags, kind);
         }
         else if (kind == RainAviaryKind)
         {
-            _hooks.RainAviaryPostPop!(sid, flags);
+            DedicatedPostPop(sid, flags, kind);
         }
         else if (kind == WindAviaryKind)
         {
-            _hooks.WindAviaryPostPop!(sid, flags);
+            DedicatedPostPop(sid, flags, kind);
         }
         else if (kind == SunFenceKind)
         {
-            _hooks.SunFencePostPop!(sid, flags);
+            DedicatedPostPop(sid, flags, kind);
         }
         else if (kind == ArcSpireKind)
         {
@@ -547,7 +547,7 @@ public sealed partial class RawAssetPostPop
         }
         else if (kind == GrowingIceKind)
         {
-            _hooks.GrowingIcePostPop!(sid, flags);
+            DedicatedPostPop(sid, flags, kind);
         }
         else if (kind == GeneratorKind)
         {
@@ -574,12 +574,7 @@ public sealed partial class RawAssetPostPop
         }
         else if (kind == BlockerKind)
         {
-            // 전투 중 비로딩 최초 바리케이드는 전용 몸체를 먼저 부른다
-            if (_state.CurrentServer && (flags & 1) != 0 && _state.LoadingDepth == 0)
-            {
-                _hooks.StartBlocker!(sid);
-            }
-            _damageable.DamageablePostPop(sid, flags);
+            BlockerCurrent(sid, flags);
         }
         else if (kind == GeyserKind)
         {

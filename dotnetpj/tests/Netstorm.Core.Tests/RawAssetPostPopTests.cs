@@ -335,12 +335,14 @@ public sealed class RawAssetPostPopTests
             string before = Convert.ToHexStringLower(pool.Slot(Source));
             if (logicError)
             {
-                Assert.Throws<InvalidOperationException>(() => assets.PostPop(Source, 1));
+                Assert.Throws<InvalidOperationException>(() => assets.Validate(Source, 1));
             }
             else
             {
-                Assert.Throws<ArgumentException>(() => assets.PostPop(Source, 1));
+                Assert.Throws<ArgumentException>(() => assets.Validate(Source, 1));
             }
+            // 실제 분배는 도달한 전체 몸체의 누락을 원문처럼 명시 실행 오류로 보고한다.
+            Assert.Throws<InvalidOperationException>(() => assets.PostPop(Source, 1));
             Assert.Equal(before, Convert.ToHexStringLower(pool.Slot(Source)));
         }
     }
@@ -398,9 +400,10 @@ public sealed class RawAssetPostPopTests
             var (@base, damageable, state) = Hub(pool, types, book, carrierState);
             Fill(pool, vtable);
             var assets = new RawAssetPostPop(pool, types, @base, damageable, state, new AssetPostPopHooks());
-            // 최초 호출인데 예약이 없으면 쓰기 전에 거부한다
+            // 명시 사전 확인은 인자 오류이며 실제 선택 확보는 그 위치의 실행 오류다.
             string before = Convert.ToHexStringLower(pool.Slot(Source));
-            Assert.Throws<ArgumentException>(() => assets.PostPop(Source, 1));
+            Assert.Throws<ArgumentException>(() => assets.Validate(Source, 1));
+            Assert.Throws<InvalidOperationException>(() => assets.PostPop(Source, 1));
             Assert.Equal(before, Convert.ToHexStringLower(pool.Slot(Source)));
             // 추가 비트가 켜지면 예약 없이 통과한다
             Fill(pool, vtable, extra: 8);

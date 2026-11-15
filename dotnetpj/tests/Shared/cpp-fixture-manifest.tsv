@@ -319,3 +319,7 @@ mana-registration-hardware-x86.tsv	4711f8b9998cd3e60f2cb5538dca4f84e95b8f24bf7e5
 asset-owner-current-local-x86.tsv	daa7b30762b24f9a3b71759ea6c63ea1efc126d5c46aee0c452af645b7cd3e0f	128	cpppj	Core
 gun-postpop-checking-x86.tsv	4ba2d249d9fa997b9c620d723b442e3af9c9013cee6dfe432ce53c75b4c42101	1344	cpppj	Core
 vortex-current-x86.tsv	8f7ae62fd72c778d5b03f460115534b2d3091c88a9deb1e074a1740ce6b27638	936	cpppj	Core
+nugget-postpop-x86.tsv	46998ea686990586fb51f7a50f6cade479ec339bfa8187e99b9e6cff4367fa7a	288	cpppj	Core
+ice-tower-x86.tsv	92e9e45544b20f4ee40e1443e6b3be340a59b095e1bdcda02e0687d708d3ee5b	1426	cpppj	Core
+arc-spire-x86.tsv	6eb5d0a42837bce4b373884d808adb93e95c93d9044929de687d62ff9436568a	665	cpppj	Core
+acid-fence-x86.tsv	c7380a4fd7c2b0daea334a0106934d6b5c03adf4eb1bc18e6ffc4352677b79c7	1125	cpppj	Core

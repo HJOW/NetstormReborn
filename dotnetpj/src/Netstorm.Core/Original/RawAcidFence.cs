@@ -19,6 +19,9 @@ public static class RawAcidFencePostPop
     /// <summary>최초 호출의 예약 지연(초). 원본 0048c7a0의 0.3F다.</summary>
     private const float FirstDelay = 0.3f;
 
+    /// <summary>선택된 실제 하위만 요구하며 미도달 장치의 누락을 앞당기지 않는다.</summary>
+    private static T Need<T>(T? callback) where T : Delegate => callback ?? throw new InvalidOperationException("애시드 바리케이드 실제 후처리 하위 미연결");
+
     /// <summary>
     /// 애시드 바리케이드 최초 후처리를 실행한다. 비추가·비매립의 최초 호출만 사건 0을 0.3초 뒤로 예약하고, 항상 같은 Damageable 후처리로 이어진다.
     /// 판본 검사는 호출자인 <see cref="RawAssetPostPop"/>이 10.78 타입 표(188개)로 이미 가리므로 여기서는 하지 않는다.
@@ -29,16 +32,15 @@ public static class RawAcidFencePostPop
     /// <param name="reserve">각각의 확보(new 0x28) 성공 여부. 최초 관문이 아니면 쓰지 않으므로 비어도 된다.</param>
     /// <param name="regular">확보한 사건의 실제 예약. 최초 관문이 아니면 쓰지 않으므로 비어도 된다.</param>
     /// <param name="damageable">같은 Damageable 후처리. 비어 있으면 안 된다.</param>
-    public static void PostPop(RawSidPool pool, int sid, uint flags, Func<bool>? reserve, Action<int, uint, float>? regular, Action<int, uint> damageable)
+    public static void PostPop(RawSidPool pool, int sid, uint flags, Func<bool>? reserve, Action<int, uint, float>? regular, Action<int, uint>? damageable)
     {
         ArgumentNullException.ThrowIfNull(pool);
-        ArgumentNullException.ThrowIfNull(damageable);
+        if (pool.Edition != OriginalEdition.Patch1078) throw new ArgumentException("애시드 바리케이드 후처리 판본 오류", nameof(pool));
         // 비추가·비매립의 최초 호출만 최초 예약을 건다. 그 밖에는 효과 뭉치를 건드리지 않는다
-        if ((pool.Slot(sid)[ExtraOffset] & SkipReserveMask) == 0 && (flags & 1) != 0 && reserve is not null && reserve())
+        if ((pool.Slot(sid)[ExtraOffset] & SkipReserveMask) == 0 && (flags & 1) != 0 && Need(reserve)())
         {
-            ArgumentNullException.ThrowIfNull(regular);
-            regular(sid, FirstEvent, FirstDelay);
+            Need(regular)(sid, FirstEvent, FirstDelay);
         }
-        damageable(sid, flags);
+        Need(damageable)(sid, flags);
     }
 }

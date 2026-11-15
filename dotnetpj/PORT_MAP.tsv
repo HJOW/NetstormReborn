@@ -954,3 +954,9 @@ cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawAssetPostPop.GunCurren
 cpppj/src/o/RawAssetPostPop.h	Netstorm.Core/Original/RawAssetPostPop.GunCurrent.cs	21f77e6f8be72d57734335692040d8b2793a9ce4	L1
 cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawAssetPostPop.VortexCurrent.cs	dbda2029d017aeb894eb24a795d258108f485d2f	L1
 cpppj/src/o/RawAssetPostPop.h	Netstorm.Core/Original/RawAssetPostPop.VortexCurrent.cs	dbda2029d017aeb894eb24a795d258108f485d2f	L1
+cpppj/src/o/RawNuggetPostPop.cpp	Netstorm.Core/Original/RawNuggetPostPop.cs	f2ad7f69f36de5a227afee7ea59e31471b34967f	L1
+cpppj/src/o/RawNuggetPostPop.h	Netstorm.Core/Original/RawNuggetPostPop.cs	f2ad7f69f36de5a227afee7ea59e31471b34967f	L1
+cpppj/src/o/RawIceTower.cpp	Netstorm.Core/Original/RawGrowingIcePostPop.cs	f2ad7f69f36de5a227afee7ea59e31471b34967f	L1
+cpppj/src/o/RawIceTower.h	Netstorm.Core/Original/RawGrowingIcePostPop.cs	f2ad7f69f36de5a227afee7ea59e31471b34967f	L1
+cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawAssetPostPop.TailCurrent.cs	f2ad7f69f36de5a227afee7ea59e31471b34967f	L1
+cpppj/src/o/RawAssetPostPop.h	Netstorm.Core/Original/RawAssetPostPop.TailCurrent.cs	f2ad7f69f36de5a227afee7ea59e31471b34967f	L1

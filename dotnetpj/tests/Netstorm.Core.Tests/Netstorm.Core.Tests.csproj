@@ -409,4 +409,11 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/vortex-current-x86.tsv" Link="X86/vortex-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 너겟/성장형 아이스와 두 펜스의 원문 자료를 공유하며 이번 단위는 후처리 행만 선택한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/nugget-postpop-x86.tsv" Link="X86/nugget-postpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/ice-tower-x86.tsv" Link="X86/ice-tower-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/arc-spire-x86.tsv" Link="X86/arc-spire-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/acid-fence-x86.tsv" Link="X86/acid-fence-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
