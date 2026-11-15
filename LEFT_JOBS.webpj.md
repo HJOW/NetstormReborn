@@ -6,17 +6,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E572)
+### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E573)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 1,004단위(제외 156 별도) 중 **port 839(83.6%)·partial 33(3.3%)·todo 132(13.1%)**. 남은 165단위는 기존 기준선 86단위와 재기준선에서 추가된 79단위다(대응표·재기준선 규칙 key로 E565 재집계). 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
-| 마지막 작업 단위 | **WB04-E572** Session 생성자 선행 GameAux 입력14종(건설/운반/총 scalar13칸·같은 미션 설정7DWORD)을 보완했다. 보호 PE71칸/미션7칸·기존 원본 패킷164관측과 실제 대여/현재 reader를 대조했다(신규4·집중43건 통과, [단위 문서](docs/webpj-session-gameplay-inputs-20261116.md)). 전체 생성자/Load는 미완료다 |
-| 다음 작업 | ⓪ 4-D D의 `RawCampaignSession` 1(구성·소유 상태·Load)을 공개 경계로 나누어 연결한다. 생성자가 참조하는 누락 GameAux14종은 E572에서 보완했다. 먼저 같은 Player/Core·자산·RawSurfaceWorld·SP와 하위 모듈을 실제 생성/반납 순서로 구성하고 저장 Fort 설치/Load를 잇는다. ConnectDevastation/CarrierDrop/PriestPrayer는 Session의 포함 inc로 같은 소유 상태와 처리한다. ① 신규 미완료79단위·시간 동기화/Native 장치는 각 단계와 D/E에서, A 정리·B Client 서비스는 실제 Session 허브 뒤에 연결한다. ② D→E(Client·통합·L2) 순서이며 3.8절 허브/적응 판정4건은 잔여 |
-| 마지막 전체 검사 | 2026-11-16 WB04-E572: Node v22.23.3·v26.13.0 전체 각각 **5,418건 통과, 실패·건너뜀 0** (v24 전체는 E513에서 4,973건 통과) |
+| 이식 진행도 | 대상 1,006단위(제외 154 별도) 중 **port 841(83.6%)·partial 33(3.3%)·todo 132(13.1%)**. 남은 165단위는 기존 기준선 86단위와 재기준선에서 추가된 79단위다(대응표·재기준선 규칙 key로 E565 재집계). 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
+| 마지막 작업 단위 | **WB04-E573** 캠페인 공용 TypeNames112줄·변환표 owner63줄을 제외에서 이식 대상으로 복원하고 port했다. 원본664본문/38cleanup을 두 경로로 대조하고 실제 Template/255BYTE 수명·guard·부분 실패를 검증했다(신규16건, [단위 문서](docs/webpj-fort-type-names-20261116.md)). 실제 Session 생성자/Load는 미완료다 |
+| 다음 작업 | ⓪ 4-D D의 `RawCampaignSession` 1(구성·소유 상태·Load)을 연결한다. 캠페인 저장 객체의 TypeNames/변환표가 Editor 전용으로 잘못 제외된 판정은 E573에서 복원했다. 생성자 본문뿐 아니라 Impl 멤버 선언의 같은 GameAux 별칭/기본 owner도 대조하고, 실제 Player/Core·자산·World·SP와 하위 모듈을 생성/반납 순서로 묶는다. 저장 Fort 설치/Load에는 같은 Template의 TypeNames→Objects/Contents를 잇는다. ① 신규 미완료79단위·시간 동기화/Native 장치는 각 단계와 D/E에서, A 정리·B Client 서비스는 실제 Session 허브 뒤에 연결한다. ② D→E(Client·통합·L2) 순서이며 3.8절 허브/적응 판정4건은 잔여 |
+| 마지막 전체 검사 | 2026-11-16 WB04-E573: Node v22.23.3·v26.13.0 전체 각각 **5,434건 통과, 실패·취소·건너뜀 0** (v24 전체는 E513에서 4,973건 통과) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -28,7 +28,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 1~3 M1·M2 선행 | WB02-G·H, 3-A~3-E | 대응표·오라클 기반, 월드 부품 E1~E264 | 완료(2026-11-10) | — |
 | 4 M2 | 4-A·4-B·4-C | 자료·설정·타입 표 / Fort·지형·섬 적재 / 패킷·로그인·내부 전송 | 완료(E265~E328, 4-C 3항목은 4-D 이월) | — |
 | 〃 | **4-R 재기준선** | cpppj 제품 985 → 1313 전환과 오라클 재수집 | **완료**(E497~E513, 기존 ③ 실제 구현은 후속 단계) | 추가 이식 대상 중 남은 79단위는 아래 단계에 별도 반영 |
-| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 27/42** | 기존 17단위 / 13,385줄 + 시간 동기화 1단위 / 99줄 |
+| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 28/43** | 기존 17단위 / 13,385줄 + 시간 동기화 1단위 / 99줄 |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 진행 중 44/46 | 3단위 / 533줄 |
 | 〃 | 5-B | 카메라·HUD·미니맵·커서 | 진행 중 9/13 | 5단위 / 1,039줄 |
 | 〃 | 5-C | 게임 화면 허브(Uber·메뉴 컨트롤)·미션 진입 명령 → **M2 판정**(L4a) | 미착수(`NativeIntroState`·`TitleBitmapLifetime`·`NativeMainMenuState` 선행 완료) | 10단위 / 5,766줄 |
@@ -46,12 +46,12 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 1,004단위 / 146,057줄 | 839 (83.6%) / 111,467줄 (76.3%) | 33 (3.3%) | 132 (13.1%) |
-| `o/` 월드·규칙 | 559단위 / 73,092줄 | 540 (96.6%) / 70,646줄 (96.7%) | 3 (0.5%) / 1,164줄 (1.6%) | 16 (2.9%) / 1,282줄 (1.8%) |
-| `client/` 세션·UI·표시 | 444단위 / 72,539줄 | 298 (67.1%) / 40,395줄 (55.7%) | 30 (6.8%) | 116 (26.1%) |
+| 전체 | 1,006단위 / 146,232줄 | 841 (83.6%) / 111,642줄 (76.3%) | 33 (3.3%) | 132 (13.1%) |
+| `o/` 월드·규칙 | 560단위 / 73,204줄 | 541 (96.6%) / 70,758줄 (96.7%) | 3 (0.5%) / 1,164줄 (1.6%) | 16 (2.9%) / 1,282줄 (1.8%) |
+| `client/` 세션·UI·표시 | 445단위 / 72,602줄 | 299 (67.2%) / 40,458줄 (55.7%) | 30 (6.7%) | 116 (26.1%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 426줄 | 1 (100%) / 426줄 (100%) | 0 | 0 |
 
-표의 port 줄 수는 현재 기준선 파일 전체의 규모이며 기존 행에 남은 ③ 후속 기능의 구현을 뜻하지 않는다. 분류(class)별로는 port 953(이식 대상)·adapt 51(웹 대체가 필요한 플랫폼 경계)·제외 156(exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1)이다.
+표의 port 줄 수는 현재 기준선 파일 전체의 규모이며 기존 행에 남은 ③ 후속 기능의 구현을 뜻하지 않는다. 분류(class)별로는 port 955(이식 대상)·adapt 51(웹 대체가 필요한 플랫폼 경계)·제외 154(exclude-mp 62·exclude-edit 59·exclude-host 32·exclude-legacy 1)이다.
 
 **영역별(현재 cpppj 소스 줄 수, `tools/port_inventory.py`):** 영역 기호와 전체 표는 [LEFT_JOBS.dotnetpj.md 2.7](LEFT_JOBS.dotnetpj.md#dotnet-inventory)과 같다. 기존 기준선에서 남았던 126단위는 Z 스커미시 Outpost 1단위 148줄과 D 세션·월드 조립·로그인·패킷·Client 전역 20단위 13,370줄, G UI 프레임워크·메뉴(Gump·HTML·Tell) 32단위 9,032줄, N 소리·음악·동영상 14단위 3,710줄, F 입력·커서·선택·게임 메뉴 14단위 1,581줄, I 건설·생산·경제·다리 9단위 1,162줄, E 표시·렌더러·카메라·HUD·시각 효과 7단위 1,170줄, H 사제·운반·수확·경로 6단위 1,130줄, M 미션 수명·안내·대본·튜토리얼 6단위 952줄, J 전투·비행·투사체·방어 8단위 877줄, B 월드 코어(SID·슬롯·Pop·해시) 2단위 777줄, A 자료·파일·설정 3단위 530줄, X 요구사항 전용(4~14차) 1단위 212줄, L 신전·제단·의식·승패 1단위 161줄, O 채팅·메시지 1단위 48줄, K AI 1단위 28줄이다. 이와 별도로 **재기준선에서 추가된 176단위**가 있으며 판정 결과는 port 100·adapt 7·exclude-edit 7·exclude-mp 57·exclude-host 5다(대부분 기존 파일에서 갈라져 나온 `Actual*`·`Client*Globals`·`RawSurface*` 조각). 이 중 `RawSurface*` 29단위는 [E498](docs/webpj-rebaseline-surface-20261115.md), 편집·플랫폼 등 33단위는 [E499](docs/webpj-rebaseline-boundaries-20261115.md), 게임 규칙·스커미시 33단위는 [E500](docs/webpj-rebaseline-gameplay-20261115.md), 전송·진단 경계 26단위는 [E501](docs/webpj-rebaseline-transport-20261115.md), 나머지 메타·전투 경계 55단위는 [E502](docs/webpj-rebaseline-meta-20261115.md)에서 판정했다. 176개 모두 대응표에 등록했다. port·adapt 107개 중 E514에서 기존 구현을 검토해 8개 port·1개 partial로 판정했고 나머지 98개는 todo다.
 
@@ -60,8 +60,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 953·adapt 51·exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1, 미분류 0**. 상태: **port 839·partial 33·todo 132·제외(-) 156**, session/oracle 0. 새 partial 2개는 아래 중단 인계의 미완성 초안이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` **802항목**(original-x86 764·screenshot 13·source 10·independent 9·cpppj-oracle 5·original-binary 1, 2026-11-15 재집계). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 955·adapt 51·exclude-mp 62·exclude-edit 59·exclude-host 32·exclude-legacy 1, 미분류 0**(E573 캠페인 공용2단위 복원). 상태: **port 841·partial 33·todo 132·제외(-) 154**, session/oracle 0. 새 partial 2개는 아래 중단 인계의 미완성 초안이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` **803항목**(original-x86 765·screenshot 13·source 10·independent 9·cpppj-oracle 5·original-binary 1, 2026-11-15 재집계). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -215,7 +215,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 
 체크 목록 전체는 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261112-4c-through-wb04-e328)으로 옮겼고 요약은 2.3절이다(E305~E328). **4-D 로 넘긴 것:** ① client `ClientCampaignTransport` 2단계 — 고정 Native 수신기 묶음·채팅 41h·연결 종료 2번·기술 목록 0x69·경로 자료 0x30/압축 Squid 0x7a 관찰기(3.6절 ③ 4-D 행) ② client `RawCampaignSessionLogin`(`RawCampaignSession::Impl::Login`) — Session 상태 약 60칸을 직접 빌리는 중첩 구조체라 Session 조립과 함께 ③ 4-C 통합 시험 — cpppj `CampaignSession_LocalLoginActualHandshakeAndWorldLoad` 대응(Session 조립 뒤).
 
-#### 4-D Session 조립·Tutorial1 Load/Start (27/42)
+#### 4-D Session 조립·Tutorial1 Load/Start (28/43)
 
 완료 기준(3.2절): **L2** — Tutorial1 Load/Start 관측(보고서·session-dump·첫 프레임 논리 화면)이 cpppj 와 같다. 임시 Player/AI/색 번호로 시작 성공을 만들지 않는다. 선행: 4-B·4-C(완료). 이 목록의 줄 수와 `(+N)`은 이전 기준선 `1f00a25a`와 그 뒤 추가분을 기록한 것이다. 현재 기준선 `225553df`의 소스를 착수 때 확인하고 그 이후 변경은 3.6절 ①/②/③으로 판정한다. **실제 `Client`/`GameWorld`/`RawCampaignSession` 은 이 구획 끝에서 조립**하며, 그 전 항목은 앞 단위(E325~E328)처럼 **client 계약(최소 덕타입)** 을 모듈 머리글에 적고 시험이 그 형태의 장치를 만든다. 앞 순서 항목이 뒤 항목의 입력이므로 위에서부터 진행하고, 선행 미이식으로 막히면 사유를 그 항목에 적고 다음으로 간다. 큰 단위(RawCampaignSession 5,715줄 등)는 공개 API 경계로 나누어 착수 때 이 구획에 세부 항목을 더한다.
 
@@ -245,6 +245,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] client **SoundProcess**361줄·**SoundList 공개API**(Sound 전체824줄의 일부) — Session 생성자1208의 무조건 생성과 실제 보호막 Sound47 부착에 필요해8단계에서 앞당김 → [E571](docs/webpj-sound-process-20261116.md) 원본6127행·실제 Host/이름 표/보호막 생성부터 삭제 정지, 현재TYPE/부모/checking·어댑터·오류 접두 검증. SoundPlayer/실제 브라우저 장치와 Session 설치는 D/E·8단계
 
 - [x] **Session 선행 GameAux 공용 입력** — 생성자가 same owner로 빌리는 건설/운반/총13칸·미션 설정7DWORD가 미이식이라 먼저 보완 → [E572](docs/webpj-session-gameplay-inputs-20261116.md) 실제 PE·32h 원본164관측·현재 무적/동맹 사격/강제 배치와 일반/준비 대여·부분 수신 대조. 전체 Session 생성자/설치는 D/E에서 재대조
+- [x] **캠페인 TypeNames/변환표 공용 부모** — 생성자/실제 campaignObjects3484→ReadFortObjectStreams3218→PrepareFortTypeNames3345가 사용하므로 Editor 제외 판정을 교정 → [E573](docs/webpj-fort-type-names-20261116.md) RawFortTypeNamesLoad112줄·FortTypeConversionStorage63줄, 원본664본문/38cleanup·실제 Template/255BYTE 수명/guard 대조. 실제 Session의 해당 연결은 D1에서
 
 **D. Session 본체 (`RawCampaignSession` 5,715줄, +1,773)** — 공개 API 경계로 분할해 항목을 더한다(헤더 642줄·`.cpp` 5,073줄)
 - [ ] **RawCampaignSession 1: 구성·소유 상태·Load** — 생성자(Impl 상태 약 60칸)·`Load`·Player/동맹/기술/SP/Deck/AI 초기화·`RawSurfaceWorld`/`RawWorldCore` 접합(`bindSquidTransmission` ← `RawSquidTransmission.pop`, 4-B 이월: 저장 객체 `FortObjectLoad`/Money/Meta child 의 실제 적재·session-dump 대조)

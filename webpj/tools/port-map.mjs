@@ -69,9 +69,11 @@ export const RULES = Object.freeze([
     },
     {
         id: 'edit-existing-fort', class: 'exclude-edit',
-        names: ['RawFortTypeNamesLoad', 'RawFortDeckLoad', 'RawDeckRestore', 'RawFortTerritoryRecover', 'FortTypeConversionStorage', 'RawFortSubscriberLoad', 'RawSubscriberIdGenerate', 'RawFortSubscriberChange'],
-        reason: '기존 Fort Editor 설치의 타입 변환·Deck·Subscriber·지형 회복(RawCampaignSession 의 "기존Editor" 경로). 미션 적재는 RawCampaignWorldLoad/RawFortWorldLoad 를 쓴다. 내용물 원시 읽기 RawFortContentsLoad 는 일반 Objects 적재(RawCampaignSession 3201)도 쓰므로 이 목록에서 뺐다(WB04-E275)',
+        names: ['RawFortDeckLoad', 'RawDeckRestore', 'RawFortTerritoryRecover', 'RawFortSubscriberLoad', 'RawSubscriberIdGenerate', 'RawFortSubscriberChange'],
+        reason: '기존 Fort Editor 설치의 Deck·Subscriber·지형 회복. RawFortContentsLoad는 일반 Objects에서도 공유한다(E275). TypeNames와 변환표 owner도 캠페인3484→3218→3345가 공유하므로 E573에서 이식 대상으로 복원했다',
     },
+    // 실제 캠페인 저장 객체도 같은 TypeNames/변환표를 거친다. Editor 전용이라는 앞 판정을 호출 사슬 근거로 교정한다. (WB04-E573)
+    { id: 'campaign-type-names', class: 'port', names: ['RawFortTypeNamesLoad', 'FortTypeConversionStorage'], reason: 'RawCampaignSession data.campaignObjects(3484)→ReadFortObjectStreams(3218)→PrepareFortTypeNames(3345)의 캠페인 공용 적재/255BYTE owner' },
     { id: 'edit-new-fort', class: 'exclude-edit', names: ['RawNewFort', 'RawCampaignNewFort', 'NewFortManagerDevices'], reason: '새 맵 Template manager·보호 작업본 파일. cpppj 987 뒤로 원격 Fort(MP)도 같은 생성을 쓴다' },
     { id: 'edit-fort-name', class: 'exclude-edit', names: ['RawFortCurrentName', 'FortCurrentNameDevices'], reason: 'Editor 플레이어 초기화·현재 Fort 이름과 원격 Fort 경로(987)' },
     { id: 'edit-map-list', class: 'exclude-edit', names: ['FortSelection', 'SoloMapCatalog', 'RawSoloMapList', 'TellMapMenus'], reason: '편집/단독(커스텀) 맵 선택·목록. WB03-I 에서 웹 제외(User Made Campaigns 포함)' },

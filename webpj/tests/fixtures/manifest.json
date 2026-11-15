@@ -775,7 +775,7 @@
       "bytes": 1552384,
       "lines": null,
       "fixtureCommit": "2f80430a0",
-      "webCommit": "worktree",
+      "webCommit": "7ce86a05a",
       "cpppjBasis": {
         "cpppj/src/o/RawGameAuxState.h": "8defb347c",
         "cpppj/src/o/RawSquidContainedUnpop.h": "be567d46b",
@@ -16953,7 +16953,7 @@
       "bytes": 35353,
       "lines": 165,
       "fixtureCommit": "05d7cb57d",
-      "webCommit": "worktree",
+      "webCommit": "7ce86a05a",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionSettingsPacket.cpp": "ae0e58b3a"
       }
@@ -24127,6 +24127,42 @@
         "cpppj/src/client/SoundProcess.h": "d3767242f",
         "cpppj/src/client/Sound.cpp": "d445a5d04",
         "cpppj/src/client/Sound.h": "d445a5d04"
+      }
+    },
+    {
+      "id": "fort-type-names-load",
+      "path": "cpppj/tests/fixtures/fort-type-names-load-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "producer": "tools/decomp_fort_type_names_load.py의 실제10.78 x86 함수 관측",
+      "consumers": [
+        "webpj/tests/fort-type-names-load.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-type-names-load.js",
+        "webpj/www/core/fort-type-conversion-storage.js"
+      ],
+      "unit": "WB04-E573",
+      "doc": "docs/webpj-fort-type-names-20261116.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortTypeNamesLoad.cpp",
+        "cpppj/src/o/RawFortTypeNamesLoad.h",
+        "cpppj/src/client/FortTypeConversionStorage.cpp",
+        "cpppj/src/client/FortTypeConversionStorage.h"
+      ],
+      "scope": "원본664본문(332입력×두x87제어)과 중단38건의 별도cleanup. getter/같은 동기access 각각에 재대조하며 새 관측 수를 늘리지 않음. 실제 Template/owner 수명은 별도 통합 검사",
+      "text": true,
+      "sha256": "4c824ec764b85b73ef1d2387c7e6043611b767e983f66abc3f1a98da2d0ef86c",
+      "bytes": 4788248,
+      "lines": 665,
+      "fixtureCommit": "a9af29da7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortTypeNamesLoad.cpp": "a9af29da7",
+        "cpppj/src/o/RawFortTypeNamesLoad.h": "a9af29da7",
+        "cpppj/src/client/FortTypeConversionStorage.cpp": "a9af29da7",
+        "cpppj/src/client/FortTypeConversionStorage.h": "a9af29da7"
       }
     }
   ]
