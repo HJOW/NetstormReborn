@@ -948,3 +948,5 @@ cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.Surface.cs	
 cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Assets.cs	cb2c941ca21fdc9102f6a2487491919bdf965e0e	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Assets.cs	cb2c941ca21fdc9102f6a2487491919bdf965e0e	port
 cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/SquidDisplayShape.cs	cb2c941ca21fdc9102f6a2487491919bdf965e0e	port
+cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawAssetPostPop.ParentsCurrent.cs	0f337918fcb6392c7278a9ff225789bb70397f9a	L1
+cpppj/src/o/RawAssetPostPop.h	Netstorm.Core/Original/RawAssetPostPop.ParentsCurrent.cs	0f337918fcb6392c7278a9ff225789bb70397f9a	L1

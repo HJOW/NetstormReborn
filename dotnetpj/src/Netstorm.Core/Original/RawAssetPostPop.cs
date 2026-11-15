@@ -22,7 +22,7 @@ public sealed class AssetPostPopPlayer
 /// Gun·거주 구역·간헐천·신전 재정의가 쓰는 전역과 목록(원본 AssetPostPopState).
 /// 이 인스턴스는 모듈보다 오래 살아야 하며 호출자가 직접 채운다.
 /// </summary>
-public sealed class AssetPostPopState
+public sealed partial class AssetPostPopState
 {
     /// <summary>내부 전투 여부.</summary>
     public bool InBattle { get; set; }
@@ -180,6 +180,12 @@ public sealed class AssetPostPopHooks
 
     /// <summary>실제 00484f90 의 조회·두 할당·게임 난수·Regular·Damageable 전체 몸체다(너겟).</summary>
     public Action<int, uint>? NuggetPostPop { get; set; }
+
+    /// <summary>현재 일반 finder의 후보 효과 뒤 다음 링크를 읽는 동기 순회다. 독립 AtPosition 사본과 구별한다.</summary>
+    public Action<float, float, Action<int>>? VisitAtPosition { get; set; }
+
+    /// <summary>원문 함수 묶음의 값 복사다. 캡처된 실제 owner를 복제하거나 실행하지 않는다.</summary>
+    internal AssetPostPopHooks Copy() => (AssetPostPopHooks)MemberwiseClone();
 }
 
 /// <summary>
@@ -188,7 +194,7 @@ public sealed class AssetPostPopHooks
 /// 기준 판본은 10.78 뿐이다(CD 10.72 는 가상 표·추가 바이트 폭·거주 구역 예약·소용돌이 좌표가 달라서 옮기지 않았다).
 /// 근거: cpppj/src/o/RawAssetPostPop.cpp (W02 Asset 조각, 2026-10-20).
 /// </summary>
-public sealed class RawAssetPostPop
+public sealed partial class RawAssetPostPop
 {
     /// <summary>제네레이터 몸체 부류. 타입 +0x98 순수 조회 뒤 Damageable 로 이어진다.</summary>
     private const uint GeneratorKind = 1;
@@ -350,7 +356,7 @@ public sealed class RawAssetPostPop
         _base = @base;
         _damageable = damageable;
         _state = state;
-        _hooks = hooks;
+        _hooks = hooks.Copy();
     }
 
     /// <summary>이 모듈이 쓰는 슬롯 풀. 기본·Damageable 몸체와 같은 풀인지 확인하는 데 쓴다.</summary>
@@ -452,7 +458,7 @@ public sealed class RawAssetPostPop
         if (kind == BlockerKind)
         {
             // 전투 중 비로딩 최초인데 바리케이드 몸체가 없으면 거부한다
-            if (_state.InBattle && (flags & 1) != 0 && _state.LoadingDepth == 0 && _hooks.StartBlocker is null)
+            if (_state.CurrentServer && (flags & 1) != 0 && _state.LoadingDepth == 0 && _hooks.StartBlocker is null)
             {
                 throw new ArgumentException("바리케이드 최초 프로세스 경계 누락", nameof(sid));
             }
@@ -469,7 +475,7 @@ public sealed class RawAssetPostPop
                 throw new ArgumentException("Gun postPop 효과 누락", nameof(sid));
             }
             // 원본 서버·로딩 assert 경로. 전투 중 비추가의 최초 호출이 서버·예측 번호가 아니면 원본처럼 멈춘다
-            if (_state.InBattle && (raw[ExtraOffset] & 1) == 0 && (flags & 1) != 0
+            if (_state.CurrentServer && (raw[ExtraOffset] & 1) == 0 && (flags & 1) != 0
                 && ((kind == GunSunKind && _state.LoadingDepth == 0) || (kind == GunArcherKind && !_state.FortMode))
                 && ((flags & 0x50) != 0 || (sid >= RawSidPool.FirstOrdinary && sid < ServerFirst)))
             {
@@ -490,7 +496,7 @@ public sealed class RawAssetPostPop
         {
             throw new ArgumentException("거주 구역 지면·소유자·연결 경계 누락", nameof(sid));
         }
-        if (kind == GeyserKind && (_hooks.GeyserRegistration is null || _hooks.AtPosition is null || _hooks.Unpop is null || _hooks.Repop is null))
+        if (kind == GeyserKind && (_hooks.GeyserRegistration is null || (_hooks.AtPosition is null && _hooks.VisitAtPosition is null) || _hooks.Unpop is null || _hooks.Repop is null))
         {
             throw new ArgumentException("간헐천 등록·공간 경계 누락", nameof(sid));
         }
@@ -511,8 +517,9 @@ public sealed class RawAssetPostPop
     /// <param name="flags">호출 플래그.</param>
     public void PostPop(int sid, uint flags)
     {
-        Validate(sid, flags);
         uint kind = Kind(sid);
+        // 두 현재 부모는 PATCH의 실제 도달 순서를 사용하고 CD/다른 독립 몸체의 기존 사전 계약은 유지한다.
+        if (_pool.Edition != OriginalEdition.Patch1078 || (kind != ResidenceKind && kind != GeyserKind)) Validate(sid, flags);
         if (kind == SunAviaryKind)
         {
             _hooks.SunAviaryPostPop!(sid, flags);
@@ -571,7 +578,7 @@ public sealed class RawAssetPostPop
         else if (kind == BlockerKind)
         {
             // 전투 중 비로딩 최초 바리케이드는 전용 몸체를 먼저 부른다
-            if (_state.InBattle && (flags & 1) != 0 && _state.LoadingDepth == 0)
+            if (_state.CurrentServer && (flags & 1) != 0 && _state.LoadingDepth == 0)
             {
                 _hooks.StartBlocker!(sid);
             }
@@ -641,9 +648,9 @@ public sealed class RawAssetPostPop
     /// <param name="delay">예약 지연(초).</param>
     private void Regular(int sid, uint @event, float delay)
     {
-        if (_hooks.ReserveRegular!())
+        if (AssetNeed(_hooks.ReserveRegular)())
         {
-            _hooks.AddRegular!(sid, @event, delay);
+            AssetNeed(_hooks.AddRegular)(sid, @event, delay);
         }
     }
 
@@ -665,7 +672,7 @@ public sealed class RawAssetPostPop
         if (branch && (kind != GunSunKind || (_pool.Slot(sid)[ExtraOffset] & 1) == 0))
         {
             // 전투 중 비추가이면 GunProcess 생성·부착의 전체 경계로 간다
-            if (_state.InBattle && (_pool.Slot(sid)[ExtraOffset] & 1) == 0)
+            if (_state.CurrentServer && (_pool.Slot(sid)[ExtraOffset] & 1) == 0)
             {
                 if (kind == GunArcherKind)
                 {
@@ -696,36 +703,7 @@ public sealed class RawAssetPostPop
     /// <param name="flags">호출 플래그.</param>
     private void Residence(int sid, uint flags)
     {
-        if ((flags & 1) != 0)
-        {
-            ReadOnlySpan<byte> raw = _pool.Slot(sid);
-            int surface = _hooks.Surface!(X(raw, XOffset), X(raw, YOffset));
-            // 현재 지면의 소유자가 있으면 그 소유자로 재지정한다
-            if (surface != 0)
-            {
-                uint owner = _pool.Slot(surface)[OwnerOffset];
-                if (owner != 0)
-                {
-                    _hooks.SetOwner!(sid, owner);
-                }
-            }
-            Add(_state.Residences, sid, false);
-            Regular(sid, 0, 0);
-            Regular(sid, 1, 0);
-            Regular(sid, 3, 0);
-            _pool.AllocatedBytes(sid)[12] &= 0xf0;
-            _hooks.NotifySurface!(sid);
-            int value = unchecked((int)Read(_pool.Slot(sid), WordOffset));
-            // 애니메이션이 켜지면 잔여 프레임을 2로 나눈 나머지와 현재 하위 니블로 묶는다
-            if (_state.ResidenceAnimation)
-            {
-                value = value / 2 * 2 + (_pool.Slot(sid)[12] & 15);
-                int group = value < 6 ? 0 : value < 12 ? 1 : value < 18 ? 2 : 3;
-                value -= group * 6;
-            }
-            Write(_pool.AllocatedBytes(sid), 42, unchecked((uint)value));
-        }
-        _base.PostPopBase(sid, flags);
+        ResidenceCurrent(sid, flags);
     }
 
     /// <summary>간헐천 최초 비용 워드·목록·주변 받침 중립 프레임·Damageable 을 처리한다.</summary>
@@ -733,28 +711,7 @@ public sealed class RawAssetPostPop
     /// <param name="flags">호출 플래그.</param>
     private void Geyser(int sid, uint flags)
     {
-        // 최초 비추가의 간헐천만 등록·비용·예약을 처리한다
-        if ((flags & 1) != 0 && (_pool.Slot(sid)[ExtraOffset] & 9) == 0)
-        {
-            Add(_state.Geysers, sid, false);
-            _hooks.GeyserRegistration!(sid, 1);
-            Write(_pool.AllocatedBytes(sid), 12, Truncate(Type(sid).Cost), 2);
-            Regular(sid, 0, 0.1f);
-            ReadOnlySpan<byte> raw = _pool.Slot(sid);
-            int[] neighbors = _hooks.AtPosition!(X(raw, XOffset), X(raw, YOffset));
-            // 현재 지점에 걸린 섬 받침·종유석만 중립 프레임으로 다시 등록한다
-            foreach (int neighbor in neighbors)
-            {
-                byte type = _pool.Slot(neighbor)[RawSidPool.TypeOffset];
-                if (type == _state.IslandType || type == _state.StalagType)
-                {
-                    _hooks.Unpop!(neighbor, 0);
-                    Write(_pool.AllocatedBytes(neighbor), WordOffset, 8);
-                    _hooks.Repop!(neighbor, 0x40);
-                }
-            }
-        }
-        _damageable.DamageablePostPop(sid, flags);
+        GeyserCurrent(sid, flags, false);
     }
 
     /// <summary>신전 공통 몸체 후 각 원소 포장의 추가·예약을 처리한다.</summary>
@@ -816,8 +773,8 @@ public sealed class RawAssetPostPop
         // 비추가·비매립의 최초 신전은 목록·선택 취소·추가·영역 등록을 처리한다
         if ((_pool.Slot(sid)[ExtraOffset] & 9) == 0)
         {
-            Add(_state.Temples, sid, true);
-            Add(_state.Residences, sid, true);
+            Add(_state.CurrentTemples, sid, true);
+            Add(_state.CurrentResidences, sid, true);
             // 선택된 폼이 소용돌이 부류이면 배치 커서를 취소한다
             if (_state.Selected != 0 && _pool.Slot(sid)[OwnerOffset] == LocalOwner())
             {
@@ -839,7 +796,7 @@ public sealed class RawAssetPostPop
             _hooks.RegisterTemple!(island, sid);
             _hooks.SetOwner!(sid, _pool.Slot(sid)[OwnerOffset]);
             // 보스이면 원본 반복자처럼 다음 번호를 미리 확보하고 같은 영역의 다른 소용돌이를 삭제한다
-            if (_state.Boss)
+            if (_state.CurrentBoss)
             {
                 uint current = 2;
                 // 최초 번호는 해제 슬롯을 건너뛰며 첫 할당 자산·폼을 그대로 반환한다

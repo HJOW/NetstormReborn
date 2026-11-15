@@ -239,6 +239,8 @@ public sealed class RawAssetPostPopTests
             // 필수 효과가 없으면 쓰기 전에 거부한다
             clear(hooks);
             Assert.True(missing(hooks));
+            // 원문 함수 묶음은 값 복사이므로 누락 입력은 새 모듈에 전달한다.
+            assets = new RawAssetPostPop(pool, types, @base, damageable, state, hooks);
             string specialBefore = Convert.ToHexStringLower(pool.Slot(Source));
             Assert.ThrowsAny<Exception>(() => assets.PostPop(Source, 1));
             Assert.Equal(specialBefore, Convert.ToHexStringLower(pool.Slot(Source)));
@@ -328,6 +330,8 @@ public sealed class RawAssetPostPopTests
             Assert.Single(calls);
             // 필수 효과가 없으면 쓰기 전에 거부한다
             clear(hooks);
+            // 이미 생성한 모듈의 함수 사본과 별개로 누락 입력의 새 모듈을 구성한다.
+            assets = new RawAssetPostPop(pool, types, @base, damageable, state, hooks);
             string before = Convert.ToHexStringLower(pool.Slot(Source));
             if (logicError)
             {
