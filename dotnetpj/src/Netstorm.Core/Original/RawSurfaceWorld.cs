@@ -318,7 +318,7 @@ public sealed partial class RawSurfaceWorld
                 };
                 var surfaceHooks = new SurfaceLifecycleHooks
                 {
-                    ScheduleFall = (sid, x, y) => { _ = SquidProcessHost.ScheduleBridgeFall(_storage.Processes().Host(), sid, x, y); },
+                    ScheduleFall = (sid, x, y) => { _ = RawBridgeFallParent.ScheduleChecked(_storage.Processes().Host(), _storage.Pool, _types, sid, x, y, _storage.Checking()); },
                     Destroy = (sid, flags) => { _ = Destroy(sid, flags); },
                     FallWalker = sid =>
                     {

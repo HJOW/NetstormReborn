@@ -305,7 +305,7 @@ cpppj/src/o/RawBridgeConnect.h	Netstorm.Core/Original/RawBridgeConnectTypes.cs	d
 cpppj/src/o/RawBridgeConnect.cpp	Netstorm.Core/Original/RawBridgeConnect.cs	0c06fa666c7b11c9c16de659439c3454b073a984	L1
 cpppj/src/o/RawBridgeConnect.h	Netstorm.Core/Original/RawBridgeConnect.cs	db8969da1348ceef52157cc341f52290fb504fa3	L1
 cpppj/src/o/RawBridgeEvents.cpp	Netstorm.Core/Original/RawBridgeEvent.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/RawBridgeLifecycle.cpp	Netstorm.Core/Original/RawBridgeLifecycle.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawBridgeLifecycle.cpp	Netstorm.Core/Original/RawBridgeLifecycle.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	L1
 cpppj/src/o/RawBuildingSpace.cpp	Netstorm.Core/Original/RawBuildingSpace.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawCanonPlacement.h	Netstorm.Core/Original/RawCanonPlacement.cs	a5101d897cce87a26b68aefbb6d57f2427e10d91	L1
 cpppj/src/o/RawCanonPlacementGeometry.h	Netstorm.Core/Original/RawCanonPlacementGeometry.cs	6af09bc8d04543a1ac767a93d5c32f80b699736a	L1
@@ -557,8 +557,8 @@ cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionTransport.cs
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/o/RawCampaignWorldLoad.h	Netstorm.Core/Original/CampaignWorldGlobals.cs	b8ce42c7db0f762d0b836c50d557cc4556e04a52	port
 cpppj/src/o/RawCampaignWorldLoad.cpp	Netstorm.Core/Original/RawCampaignWorldLoad.cs	b8ce42c7db0f762d0b836c50d557cc4556e04a52	port
-cpppj/src/o/RawSurfaceLifecycle.h	Netstorm.Core/Original/RawSurfaceLifecycle.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
-cpppj/src/o/RawSurfaceLifecycle.cpp	Netstorm.Core/Original/RawSurfaceLifecycle.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/o/RawSurfaceLifecycle.h	Netstorm.Core/Original/RawSurfaceLifecycle.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	port
+cpppj/src/o/RawSurfaceLifecycle.cpp	Netstorm.Core/Original/RawSurfaceLifecycle.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	port
 cpppj/src/o/RawSavedStateWrite.h	Netstorm.Core/Original/RawSavedState.cs	4558729bdc7e40a66b0e239c75977fd178a4280e	port
 cpppj/src/o/RawSavedStateWrite.cpp	Netstorm.Core/Original/RawSavedState.cs	4558729bdc7e40a66b0e239c75977fd178a4280e	port
 cpppj/src/o/RawSavedStateRead.h	Netstorm.Core/Original/RawSavedState.cs	4558729bdc7e40a66b0e239c75977fd178a4280e	L1
@@ -897,3 +897,6 @@ cpppj/src/o/RawFormLinked.h	Netstorm.Core/Original/RawFormLinked.cs	435a7032c649
 cpppj/src/o/DependFormHost.h	Netstorm.Core/Original/RawDependFormHost.cs	c0907232690d13a58eb28e2ffe46af83cc2454ec	port
 cpppj/src/o/RawDependCreate.cpp	Netstorm.Core/Original/RawDependCreate.cs	c0907232690d13a58eb28e2ffe46af83cc2454ec	L1
 cpppj/src/o/RawDependCreate.h	Netstorm.Core/Original/RawDependCreate.cs	c0907232690d13a58eb28e2ffe46af83cc2454ec	port
+cpppj/src/o/RawBridgeFallParent.cpp	Netstorm.Core/Original/RawBridgeFallParent.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	L1
+cpppj/src/o/RawBridgeFallParent.h	Netstorm.Core/Original/RawBridgeFallParent.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	port
+cpppj/src/o/RawBridgeLifecycle.h	Netstorm.Core/Original/RawBridgeLifecycle.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	port

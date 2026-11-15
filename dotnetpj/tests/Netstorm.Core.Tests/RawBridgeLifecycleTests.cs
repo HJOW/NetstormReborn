@@ -64,16 +64,16 @@ public sealed class RawBridgeLifecycleTests
     }
 
     /// <summary>
-    /// 지연 추락 페이로드가 원본 ftol 묶음과 같다. 기대 비트는 파이썬 struct 로 독립 계산했다.
+    /// 지연 추락 페이로드가 원문 signed 정수 포장의 수치 변환과 같다. 비트 재해석을 구분한다.
     /// </summary>
     [Fact]
     public void DelayedFallPayloadPacksTruncatedCoordinates()
     {
-        Assert.Equal(0x1514U, BitConverter.SingleToUInt32Bits(RawBridgeLifecycle.DelayedFallPayload(20.75f, 21.9f)));
-        Assert.Equal(0U, BitConverter.SingleToUInt32Bits(RawBridgeLifecycle.DelayedFallPayload(0f, 0f)));
-        Assert.Equal(0x12CFFU, BitConverter.SingleToUInt32Bits(RawBridgeLifecycle.DelayedFallPayload(-1.5f, 300.25f)));
-        Assert.Equal(0x500U, BitConverter.SingleToUInt32Bits(RawBridgeLifecycle.DelayedFallPayload(float.NaN, 5f)));
-        Assert.Equal(0x100U, BitConverter.SingleToUInt32Bits(RawBridgeLifecycle.DelayedFallPayload(1e20f, 1f)));
+        Assert.Equal(5396f, RawBridgeLifecycle.DelayedFallPayload(20.75f, 21.9f));
+        Assert.Equal(0f, RawBridgeLifecycle.DelayedFallPayload(0f, 0f));
+        Assert.Equal(77055f, RawBridgeLifecycle.DelayedFallPayload(-1.5f, 300.25f));
+        Assert.Equal(1280f, RawBridgeLifecycle.DelayedFallPayload(float.NaN, 5f));
+        Assert.Equal(256f, RawBridgeLifecycle.DelayedFallPayload(1e20f, 1f));
     }
 
     /// <summary>

@@ -305,3 +305,5 @@ cd-squid-unpop-current-hardware-x86.tsv	c5c6095dba4d3141038d8510d8a46f4f0e81e2fe
 squid-unpop-parent-hardware-x86.tsv	a4df8f48be831c66ae530cd5fdc21d0e86515f119f9393e07736356694f32ed7	1300	cpppj	Core
 form-linked-parent-x86.tsv	a25d7aa27570bd79adb49b627a45a8e9a330bd968526ffeb2fdca0b9adc0bc15	120	cpppj	Core
 depend-create-parent-current-x86.tsv	3cc59aea363466d0a6734d567a5f4d8d0577e4e3f9f2267e210e5a5ba6facd68	1620	cpppj	Core
+bridge-fall-parent-x86.tsv	22eda704911c2886da2efac28a5e28dbb1c2fbd1f0f06f5603d4e702f1addcbf	200	cpppj	Core
+bridgeeffects-x86.tsv	cb68d6265d0d71ede7ed96f85e0be3311ebc6f6fec6279442c7607c7ca1ff3f5	6170	cpppj	Core

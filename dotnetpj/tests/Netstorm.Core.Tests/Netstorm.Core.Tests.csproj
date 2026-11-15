@@ -368,4 +368,9 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/depend-create-parent-current-x86.tsv" Link="X86/depend-create-parent-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 다리 수명 효과 전체와 현재 낙하 진단 부모의 원본 관측을 공유한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/bridgeeffects-x86.tsv" Link="X86/bridgeeffects-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/bridge-fall-parent-x86.tsv" Link="X86/bridge-fall-parent-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

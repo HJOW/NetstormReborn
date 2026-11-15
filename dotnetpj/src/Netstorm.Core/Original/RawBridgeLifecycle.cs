@@ -65,8 +65,8 @@ public readonly record struct BridgeLifecycleSearch(int Left, int Top, int Right
 /// 다리 사전·사후 파괴(원본 RawBridgeLifecycle 00422290·004221b0·00422300, 10.78).
 /// 사전은 주변 3×3 칸에서 끊긴 연결을 찾아 재귀 삭제를 알리고, 사후는 제거 알림·추락 소리·보행자 추락을 순서대로 알린다.
 /// 매립·추상 다리는 탐색을 건너뛰고 공통 사전·사후만 알린다. 탐색은 일반 찾기(<see cref="RawSquidFinder"/>)를 그대로 쓴다.
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 추가 비트 위치·함수 주소가 달라서 옮기지 않았다).
-/// 근거: cpppj/src/o/RawBridgeLifecycle.cpp (W03 삭제·수명 둘째 조각, 2026-10-21).
+/// 판본별 추가 비트 위치와 Native의 현재 connector DWORD를 구별한다.
+/// 근거: cpppj/src/o/RawBridgeLifecycle.cpp.
 /// </summary>
 public sealed class RawBridgeLifecycle
 {
@@ -157,6 +157,17 @@ public sealed class RawBridgeLifecycle
     /// <param name="linkType">찾을 연결 타입 번호.</param>
     /// <param name="hooks">바깥 효과 콜백 묶음.</param>
     public void PreDestroy(int bridge, uint flags, uint linkType, BridgeLifecycleHooks hooks)
+        => RunPreDestroy(bridge, flags, () => linkType, hooks);
+
+    /// <summary>각 finder 후보에서 현재 전체 connector DWORD를 다시 읽는다. 삭제 효과가 바꾼 번호를 다음 후보에 반영한다.</summary>
+    public void PreDestroyNative(int bridge, uint flags, UIntBox linkType, BridgeLifecycleHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(linkType);
+        RunPreDestroy(bridge, flags, () => linkType.Value, hooks);
+    }
+
+    /// <summary>독립 값 사본과 Native 현재 주소의 읽기만 구분하고 같은 탐색·연결 삭제 순서를 실행한다.</summary>
+    private void RunPreDestroy(int bridge, uint flags, Func<uint> linkType, BridgeLifecycleHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(hooks);
         bool ordinary = Ordinary(bridge);
@@ -170,7 +181,7 @@ public sealed class RawBridgeLifecycle
             // 찾기 사각형은 중심 칸의 상하좌우 한 칸씩이다
             for (int current = hooks.Begin!(new BridgeLifecycleSearch(x - 1, y - 1, x + 1, y + 1)); current != 0; current = hooks.Next!())
             {
-                if (Object(current)[TypeOffset] == linkType && LinkNeedsDestroy(current))
+                if (Object(current)[TypeOffset] == linkType() && LinkNeedsDestroy(current))
                 {
                     hooks.Emit!(new BridgeLifecycleEvent(BridgeLifecycleEffect.DestroyLink, current, 0));
                 }
@@ -219,14 +230,14 @@ public sealed class RawBridgeLifecycle
 
     /// <summary>
     /// 지연 추락 사건(원본 0x2692)의 실수 페이로드(원본 00421530·00421f90).
-    /// x·y 를 각각 ftol 로 자른 값의 하위 바이트(x)·상위 3바이트(y)를 한 DWORD 로 묶어 float 비트로 돌려준다.
+    /// x·y를 ftol로 자른 뒤 포장한 signed DWORD의 수치를 float로 변환한다. 비트를 float로 재해석하지 않는다.
     /// </summary>
     /// <param name="x">추락 지점 x 좌표.</param>
     /// <param name="y">추락 지점 y 좌표.</param>
     public static float DelayedFallPayload(float x, float y)
     {
         uint packed = (FtolLow(x) & 0xff) | (FtolLow(y) << 8);
-        return BitConverter.Int32BitsToSingle(unchecked((int)packed));
+        return unchecked((int)packed);
     }
 
     /// <summary>번호의 슬롯을 읽기 전용으로 돌려준다. 0 번·범위 밖 번호는 거부한다.</summary>
@@ -242,7 +253,7 @@ public sealed class RawBridgeLifecycle
 
     /// <summary>매립·추상 비트가 모두 꺼진 일반 다리인지 본다.</summary>
     /// <param name="sid">볼 슬롯 번호.</param>
-    private bool Ordinary(int sid) => (Object(sid)[ExtraOffset] & AbstractOrBuriedMask) == 0;
+    private bool Ordinary(int sid) => (Object(sid)[_pool.Edition == OriginalEdition.Patch1078 ? ExtraOffset : 35] & AbstractOrBuriedMask) == 0;
 
     /// <summary>슬롯의 리틀 엔디언 값을 읽는다.</summary>
     /// <param name="raw">슬롯 바이트.</param>

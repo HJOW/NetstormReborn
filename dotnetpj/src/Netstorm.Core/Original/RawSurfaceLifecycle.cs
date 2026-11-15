@@ -59,6 +59,9 @@ public sealed class RawSurfaceLifecycle
     /// <summary>연결부 타입이다. 2026-11-07 F2d 서피스 월드 스택 이식에서 추가됐다.</summary>
     private readonly uint _connectorType;
 
+    /// <summary>Native에서만 명시 연결하는 같은 장기 connector DWORD다. 독립 typed 입력의 값 사본과 구별한다.</summary>
+    private UIntBox? _currentConnectorType;
+
     /// <summary>파생 타입 사이에 공유하는 기본 처리기 또는 상태다. 2026-11-07 F2d 서피스 월드 스택 이식에서 추가됐다.</summary>
     private readonly SquidDestroyHooks _common;
 
@@ -111,7 +114,8 @@ public sealed class RawSurfaceLifecycle
 
         _pool = pool;
         _connectorType = connectorType;
-        _common = common;
+        // C++ 값 인자의 함수 사본을 보관하고 대리자가 읽는 실제 owner 값만 계속 공유한다.
+        _common = new() { Emit = common.Emit, Selected = common.Selected, SelectedRaw = common.SelectedRaw, UnpopForm = common.UnpopForm };
         _hooks = hooks.Clone();
         _finder = new RawSquidFinder(pool, neighbors.Hash, neighbors.Types);
         _bridge = new RawBridgeLifecycle(pool, neighbors.Types);
@@ -149,6 +153,14 @@ public sealed class RawSurfaceLifecycle
         };
     }
 
+    /// <summary>PATCH Native의 현재 연결 타입 주소만 빌린다. 값이나 게임 상태를 초기화하지 않는다.</summary>
+    public void BindCurrentConnectorType(UIntBox type)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+        if (_pool.Edition != OriginalEdition.Patch1078) throw new ArgumentException("Native 표면 연결 TYPE 판본 오류", nameof(type));
+        _currentConnectorType = type;
+    }
+
     /// <summary>
     /// 실제 가상 표 기록값으로 bridge pre/post, island pre, noIsland post를 분배한다. 나머지는 공통 훅이다. 원본 private 분배를 직접 검사에서 호출할 수 있게 공개한다.
     /// </summary>
@@ -165,7 +177,8 @@ public sealed class RawSurfaceLifecycle
             {
                 if (pre)
                 {
-                    _bridge.PreDestroy(@event.Sid, @event.Flags, _connectorType, _bridgeHooks);
+                    if (_currentConnectorType is { } current) _bridge.PreDestroyNative(@event.Sid, @event.Flags, current, _bridgeHooks);
+                    else _bridge.PreDestroy(@event.Sid, @event.Flags, _connectorType, _bridgeHooks);
                 }
                 else
                 {

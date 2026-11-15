@@ -2,12 +2,59 @@
 using Netstorm.Assets;
 using Netstorm.Core.Original;
 using Netstorm.Core.Simulation;
+using System.Buffers.Binary;
 
 namespace Netstorm.Core.Tests;
 
 // RawSurfaceLifecycle의 PATCH 본체를 검증하는 테스트 클래스다. 2026-11-07 F2d 서피스 월드 스택 이식에서 추가됐다.
 public sealed class RawSurfaceLifecycleTests
 {
+    /// <summary>실제 공간 탐색·표면 가상 분배가 같은 현재 connector DWORD를 사용하고 BYTE 별칭을 허용하지 않는다.</summary>
+    [Fact]
+    public void NativeConnectorBindingUsesCurrentStorageDwordAndRealFinder()
+    {
+        var scene = new LifecycleScene();
+        RawSurfaceLifecycle body = scene.Build();
+        var links = new BridgeConnectState { ConnectorType = 0x1009b };
+        body.BindCurrentConnectorType(links.ConnectorTypeBox);
+        int root = scene.Take(BridgeVtable), link = scene.Take(OriginalConstructors.BaseVtable), other = scene.Take(OriginalConstructors.BaseVtable);
+        scene.Pool.RawSlot(root)[11] = 2; scene.Pool.RawSlot(link)[11] = 0; scene.Pool.RawSlot(other)[11] = 0;
+        scene.Pool.RawSlot(link)[10] = 155;
+        BinaryPrimitives.WriteSingleLittleEndian(scene.Pool.RawSlot(root)[14..], 20.5f);
+        BinaryPrimitives.WriteSingleLittleEndian(scene.Pool.RawSlot(root)[18..], 20.5f);
+        BinaryPrimitives.WriteSingleLittleEndian(scene.Pool.RawSlot(link)[14..], 20.5f);
+        BinaryPrimitives.WriteSingleLittleEndian(scene.Pool.RawSlot(link)[18..], 20.5f);
+        BinaryPrimitives.WriteUInt16LittleEndian(scene.Pool.RawSlot(link)[12..], (ushort)root);
+        BinaryPrimitives.WriteUInt16LittleEndian(scene.Pool.RawSlot(link)[8..], (ushort)other);
+        scene.Hash.Bucket(0, 20, 20) = (ushort)link;
+        body.Emit(new(SquidDestroyEffect.PreDestroy, root, 0, 0x1234));
+        Assert.Empty(scene.Order);
+        links.ConnectorType = 155;
+        body.Emit(new(SquidDestroyEffect.PreDestroy, root, 0, 0x1234));
+        Assert.Equal(new[] { $"destroy:{link}:0" }, scene.Order);
+        Assert.Equal(2, scene.CommonLog.Count);
+        Assert.All(scene.CommonLog, effect => Assert.Equal(0x1234u, effect.Flags));
+    }
+
+    /// <summary>공통 훅은 C++ 값 인자의 함수 사본을 유지하고 선택 getter가 참조하는 현재 값은 계속 읽는다.</summary>
+    [Fact]
+    public void CommonCallbacksAreSnapshotsWhileOwnerValuesStayCurrent()
+    {
+        var scene = new LifecycleScene(); uint selected = 0x12340005; int unpops = 0;
+        scene.Common.SelectedRaw = () => selected;
+        scene.Common.UnpopForm = _ => unpops++;
+        RawSurfaceLifecycle body = scene.Build();
+        scene.Common.Emit = _ => throw new InvalidOperationException("이후 교체된 외부 훅을 사용함");
+        scene.Common.SelectedRaw = () => 0;
+        scene.Common.UnpopForm = _ => throw new InvalidOperationException("이후 교체된 Form 훅을 사용함");
+        selected = 0x56780006;
+        SquidDestroyHooks hooks = body.Hooks();
+        Assert.Equal(selected, hooks.SelectedRaw!());
+        hooks.UnpopForm!(6); hooks.Emit!(new(SquidDestroyEffect.Transmit, 0, 0, 1));
+        Assert.Equal(1, unpops); Assert.Single(scene.CommonLog);
+    }
+
+
     /// <summary>10.78 다리 가상 표 값이다. 2026-11-07 F2d 서피스 월드 스택 이식에서 추가됐다.</summary>
     private const uint BridgeVtable = 0x005034c8u;
 

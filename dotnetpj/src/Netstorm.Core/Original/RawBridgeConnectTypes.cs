@@ -14,7 +14,10 @@ public static class BridgeConnectValues
 public sealed class BridgeConnectState
 {
     /// <summary>연결 객체 타입 번호다. 2026-11-07 R4 지형·섬 생성 2차 이식에서 추가됐다.</summary>
-    public uint ConnectorType { get; set; }
+    public uint ConnectorType { get => ConnectorTypeBox.Value; set => ConnectorTypeBox.Value = value; }
+
+    /// <summary>연결 생성과 Native 수명 분배기가 함께 빌리는 같은 현재 타입 DWORD다.</summary>
+    public UIntBox ConnectorTypeBox { get; } = new();
 
     /// <summary>섬 받침 타입 번호다. 2026-11-07 R4 지형·섬 생성 2차 이식에서 추가됐다.</summary>
     public uint IslandType { get; set; }
