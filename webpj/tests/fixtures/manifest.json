@@ -23562,7 +23562,7 @@
       "bytes": 108328,
       "lines": 1025,
       "fixtureCommit": "83ac91129",
-      "webCommit": "worktree",
+      "webCommit": "b57e654b8",
       "cpppjBasis": {
         "cpppj/src/client/RawObjectMenuVariants.cpp": "83ac91129"
       }
@@ -23591,9 +23591,38 @@
       "bytes": 118759,
       "lines": 789,
       "fixtureCommit": "ed492698c",
-      "webCommit": "worktree",
+      "webCommit": "b57e654b8",
       "cpppjBasis": {
         "cpppj/src/client/RawObjectMenuOpen.cpp": "9271152fe"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E544",
+      "id": "player-menu",
+      "path": "cpppj/tests/fixtures/player-menu-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 Player 메뉴 부모 004c9700 292입력(대상·모드·flags·사제·동맹·숨김·허용·SP·무시/귓속말·게임 수·주소·변경)에서 반환값·정적 asksend 208바이트·모든 조회/GUI 효과 순서",
+      "consumers": [
+        "webpj/tests/raw-player-menu.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-player-menu.js"
+      ],
+      "doc": "docs/webpj-raw-player-menu-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawPlayerMenu.cpp"
+      ],
+      "scope": "10.78 292입력 전부",
+      "text": true,
+      "sha256": "373a6cbeaf047c4ecb123016efd071e4fcd13ab8a2be41b7dfc0633e6cb0d942",
+      "bytes": 272097,
+      "lines": 293,
+      "fixtureCommit": "8b2d2640d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawPlayerMenu.cpp": "6f25a98e6"
       }
     }
   ]
