@@ -1040,7 +1040,8 @@ public sealed partial class HostSession
             VirtualCount = _ => throw new InvalidOperationException("Fort 가상 개수 미연결(R6)"),
             Pop = (sid, x, y, flags) =>
             {
-                if (_priests is not null && _livePostPop!.HandlesDerived(sid))
+                // 현재 개발 호스트가 실제 결선한 두 몸체만 선택한다. 일반 적재는 R4-2에서 같은 장기 공간에 연결한다.
+                if (_priests is not null && (_livePostPop!.HandlesPriest(sid) || _livePostPop.HandlesForcefield(sid)))
                 {
                     PopWorldObject(sid, x, y, flags);
                     return;

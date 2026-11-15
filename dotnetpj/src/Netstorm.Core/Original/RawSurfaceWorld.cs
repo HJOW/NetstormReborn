@@ -244,7 +244,10 @@ public sealed partial class RawSurfaceWorld
             _buildingState.IslandType = _terrainType;
             _buildingState.BridgeType = _storage.Links.BridgeType;
             _building = new RawBuildingSpace(_storage.Pool, _storage.Hash, _types, _buildingState);
-            _postPop = new RawPostPop(_storage.Pool, _types, _bookkeeping, _graph);
+            _postPop = new RawPostPop(_storage.Pool, _types, _bookkeeping, _graph, sid => BridgeConnections().Connect(sid));
+            // 순환하는 실제 접두는 모든 모듈 생성 뒤 선택될 때만 현재 몸체를 조회한다.
+            _postPop.SetIslandPrefix((sid, flags) => BridgeConnections().IslandPostPopPrefix(sid, flags));
+            _postPop.SetSurfacePrefix((sid, flags) => (_surface ?? throw new InvalidOperationException("실제 표면 접두 미연결")).Prefix(sid, flags));
             if (_edition == OriginalEdition.Patch1078) _postPop.BindCurrentTypes(_types);
             _postPop.BindManaDiagnostics(new() { Checking = new(() => _storage.Checking().Read()), Assertion = _storage.AssertDisplay });
             _pop = new RawPop(_storage.Pool, _storage.Hash, _storage.Spots, _display, _postPop);
@@ -272,7 +275,7 @@ public sealed partial class RawSurfaceWorld
                         _changed = true;
                     },
                     Pop = (sid, x, y, flags) => Pop(sid, x, y, flags),
-                    SetFrame = (_, _, _) => throw new InvalidOperationException("실제 프레임 지정이 연결되지 않았습니다."),
+                    SetFrame = (sid, frame, flags) => (_frame ?? throw new InvalidOperationException("실제 프레임 지정이 연결되지 않았습니다.")).Set(sid, frame, flags),
                     NotifySurface = sid => building.NotifySurface(sid),
                 });
                 RawSquidDestroyDispatch virtualDestroy = new(baseDestroy, _neighbors, () => _mode, graph);

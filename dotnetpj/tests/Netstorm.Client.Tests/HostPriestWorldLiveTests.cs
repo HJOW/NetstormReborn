@@ -73,6 +73,20 @@ public sealed partial class HostPriestWorldLiveTests
         session.ReleasePlayerProcesses(); Assert.Equal(0, session.Kernel.Size());
     }
 
+    /// <summary>일반 표면 VT를 포함한 실제 Fort도 현재 사제 전용 적재 어댑터에서 사제/보호막만 선택한다.</summary>
+    [Fact]
+    public void FortWithSurfaceVtablesLoadsThroughInstalledPriestBodies()
+    {
+        var (session, types) = Scene(); string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); MissionFortLoadResult fort = MissionFortLoad.Load(startup, "bc3acid_bar76");
+        session.BuildPriestWorldDevices(); HostFortObjectLiveTests.BuildLiveTerrainFirst(session, fort.Fort, types);
+        session.LoadFortObjects(fort.Fort, 1); Assert.True(session.SidLists.Priests.Count > 0); Assert.Equal(0u, session.PostPopDepth);
+        // 실제 적재된 각 사제의 회복 Form이 같은 Host에 붙어 있는지 확인한다.
+        foreach (uint entry in session.SidLists.Priests.Items())
+        { Assert.NotNull(session.PlayerProcesses.FindEvent(checked((int)entry), 602)); }
+        session.ReleasePlayerProcesses(); Assert.Equal(0, session.Kernel.Size());
+    }
+
     /// <summary>실제 사제 Pop이 공유 목록·장부·해시와 동일 ProcessHost에 회복 Regular를 등록한다.</summary>
     [Fact]
     public void ActualPopRegistersSharedListAndRegenerationForm()

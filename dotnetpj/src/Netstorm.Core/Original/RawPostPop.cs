@@ -130,11 +130,10 @@ public interface IRawPostPopGraph
 
 /// <summary>
 /// Pop 이후 타입별 등록 목록과 표면 연결 상태를 갱신하는 원본 공통 후처리(<c>004b0d30</c>, 10.78).
-/// 순서는 원본 그대로 "상태 검사 → 파생 지원 검사 → Graph 검사 → 비용·목록·통계 검사(Validate) →
-/// 영역 무효화·Graph 생성 → 비용 누적 → 공급원·작업장 목록 → 소유자 조건 통계 → 깊이 감소(PostPopBase)"다.
-/// 명시 연결한 사제·Player의 전체 몸체에 분배하며 나머지 미복원 파생은 풀·공간 변경 전에 거부한다.
-/// Player 몸체만 <see cref="SetPlayerPostPop"/> 으로 따로 묶어 분배한다(F3 실제 호스트·월드 조립, 2026-11-10 0.304).
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 소유자·추가 비트 위치와 비용 누적 방식이 달라서 옮기지 않았다).
+/// 명시 Validate/독립 Activate와 현재 PATCH 실행을 구분한다. 실제 실행은 선택 접두/전체 파생 몸체 뒤에
+/// 영역·Graph·비용·목록·AI·통계·선택·깊이 감소를 원문 순서로 실행하고 실패 전의 효과를 남긴다.
+/// 사제·Player·Carrier·자산 전체 몸체와 보호막·다리·섬·표면·텔레포트 접두를 현재 가상표로 선택한다.
+/// 아직 없는 파생 모듈은 명시 장기 장치 선택에서 실패한다. CD 전체 후처리는 기존 독립 harness 범위다.
 /// 근거: cpppj/src/o/SquidPostPop.cpp (W02 PostPop 조각, 2026-10-20).
 /// </summary>
 public sealed partial class RawPostPop : IRawPopPostPop
@@ -216,7 +215,8 @@ public sealed partial class RawPostPop : IRawPopPostPop
     /// <param name="types">타입 번호 순서의 타입 레코드. 10.78 은 188개여야 한다.</param>
     /// <param name="state">공유 상태. 이 모듈보다 오래 살아야 한다.</param>
     /// <param name="graph">표면 Graph. 같은 풀을 쓰는 몸체만 받는다. null 이면 영역·표면 등록을 거부한다.</param>
-    public RawPostPop(RawSidPool pool, IReadOnlyList<OriginalTypeRecord> types, RawPostPopState state, IRawPostPopGraph? graph = null)
+    /// <param name="bridgeConnector">같은 현재 풀/공간의 실제 다리 연결 접두다. 실행이 선택할 때만 요구한다.</param>
+    public RawPostPop(RawSidPool pool, IReadOnlyList<OriginalTypeRecord> types, RawPostPopState state, IRawPostPopGraph? graph = null, Action<int>? bridgeConnector = null)
     {
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(types);
@@ -234,6 +234,7 @@ public sealed partial class RawPostPop : IRawPopPostPop
         _types = types.Select(type => type.Clone()).ToArray();
         _state = state;
         _graph = graph;
+        _bridgeConnector = bridgeConnector;
         if (graph is RawGraph actualGraph) actualGraph.ValidateTypes(types);
     }
 
@@ -246,17 +247,25 @@ public sealed partial class RawPostPop : IRawPopPostPop
     /// <summary>
     /// 다리 postPop(<c>00422150</c>)의 접두 부분. flag 1 은 추가 비트 2 를 켜고,
     /// flag 1 또는 (flag 4 이고 abstract 비트가 꺼져 있음)이면 연결 효과를 요청한다.
-    /// 연결 효과는 명시적 외부 경계이며 필요할 때 없으면 추가 비트를 쓰기 전에 거부한다.
+    /// PATCH는 최초 비트 저장 뒤 실제 장치를 선택한다. CD는 기존 무효과 사전 계약을 유지한다.
     /// </summary>
     /// <param name="pool">슬롯 풀.</param>
     /// <param name="sid">다리 슬롯 번호.</param>
     /// <param name="flags">Activate 가 넘긴 호출 플래그.</param>
-    /// <param name="connector">연결 효과(원본 004213b0). 필요할 때 null 이면 거부한다.</param>
+    /// <param name="connector">연결 효과(원본 004213b0). 선택 위치에서 null이면 실패한다.</param>
     public static void BridgePrefix(RawSidPool pool, int sid, uint flags, Action<int>? connector)
     {
         ArgumentNullException.ThrowIfNull(pool);
+        if (pool.Edition == OriginalEdition.Patch1078)
+        {
+            // 실제 PATCH는 raw 수명 검사 없이 첫 저장 뒤 선택한 연결 장치를 요구한다.
+            if ((flags & 1) != 0) pool.RawSlot(sid)[40] |= 2;
+            else if ((flags & 4) == 0 || (pool.Slot(sid)[40] & 1) != 0) return;
+            Action<int> selected = connector ?? throw new InvalidOperationException("다리 postPop 선택 연결 효과 미연결");
+            selected(sid); return;
+        }
         ReadOnlySpan<byte> slot = pool.Slot(sid);
-        byte extra = slot[ExtraOffset];
+        byte extra = slot[35];
         bool connect = (flags & BridgeConnectFlag) != 0 || ((flags & BridgeAbstractFlag) != 0 && (extra & 1) == 0);
         // 연결이 필요할 때 효과가 없으면 쓰기 전에 거부한다
         if (connect && connector is null)
@@ -266,7 +275,7 @@ public sealed partial class RawPostPop : IRawPopPostPop
         // flag 1 은 연결 함수를 부르기 전에 추가 비트를 먼저 기록한다
         if ((flags & BridgeConnectFlag) != 0)
         {
-            pool.AllocatedBytes(sid)[ExtraOffset] |= BridgeTouchedBit;
+            pool.AllocatedBytes(sid)[35] |= BridgeTouchedBit;
         }
         if (connect)
         {
@@ -276,11 +285,12 @@ public sealed partial class RawPostPop : IRawPopPostPop
 
     /// <summary>
     /// 이 모듈이 처리할 수 있는 파생 postPop 인지 돌려준다.
-    /// 명시 연결한 사제 전체 몸체·보호막 접두를 처리하며 그 밖의 미복원 파생은 거부한다.
-    /// Player 몸체는 별도 등록(<see cref="SetPlayerPostPop"/>)으로 분배하며 여기서 세지 않는다.
+    /// 실제 등록된 전체 몸체와 원문 표면 접두를 조회하고 아직 없는 파생은 허용하지 않는다.
     /// </summary>
     /// <param name="sid">오브젝트 슬롯 번호.</param>
-    public bool HandlesDerived(int sid) => HandlesPriest(sid) || HandlesForcefield(sid);
+    public bool HandlesDerived(int sid) => HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid)
+        || HandlesPlayer(sid) || HandlesPriest(sid) || HandlesForcefield(sid)
+        || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid);
 
     /// <summary>
     /// 실제 Player 최초 기록·예약 몸체를 같은 풀에만 명시 등록한다. null이면 등록을 해제한다.
@@ -360,6 +370,13 @@ public sealed partial class RawPostPop : IRawPopPostPop
             throw new InvalidOperationException("postPop raw 자산 상태 오류");
         }
         uint vtable = Read(slot, 0, 4);
+        if (_pool.Edition == OriginalEdition.Patch1078)
+        {
+            if (HandlesBridge(sid) && _bridgeConnector is null && ((flags & 1) != 0 || ((flags & 4) != 0 && (slot[40] & 1) == 0)))
+                throw new InvalidOperationException("명시 다리 postPop 사전 검사의 연결 효과 미연결");
+            if ((flags & 1) != 0 && ((HandlesIsland(sid) && _islandPrefix is null) || (HandlesSurface(sid) && _surfacePrefix is null)))
+                throw new InvalidOperationException("명시 섬/표면 postPop 사전 검사의 접두 미연결");
+        }
         // 공통 지원 표에 없고 파생 몸체도 없으면 미복원 효과다. Player 몸체는 등록된 실제 몸체를 재사용한다
         if (!OriginalPopDisplay.Supports(vtable, flags) && !HandlesDerived(sid) && !HandlesPlayer(sid))
         {
@@ -367,6 +384,7 @@ public sealed partial class RawPostPop : IRawPopPostPop
         }
         if (HandlesPriest(sid)) _priestPostPop!.Validate(sid);
         if (HandlesForcefield(sid)) _forcefieldPostPop!.Validate(sid);
+        if (HandlesAsset(sid)) _assetPostPop!.Validate(sid, flags);
         // Player는 현재 9기록·SID와 조건부 예약을 가진 실제 몸체가 검사한다
         if (HandlesPlayer(sid))
         {
@@ -474,15 +492,17 @@ public sealed partial class RawPostPop : IRawPopPostPop
     /// <param name="flags">Pop 이 정규화한 호출 플래그.</param>
     public void Activate(int sid, uint flags)
     {
-        Validate(sid, flags, default);
-        uint before = _state.Depth;
-        _state.Depth = unchecked(before + 1);
-        PostPopVirtual(sid, flags);
-        // 연결한 파생도 공통 몸체를 통해 깊이를 정확히 한 번 줄였는지 확인한다
-        if (_state.Depth != before)
+        object? owner = _runtimePin?.Invoke();
+        try
         {
-            throw new InvalidOperationException("postPop Activate 공통 깊이 불일치");
+            Validate(sid, flags, default);
+            uint before = _state.Depth;
+            _state.Depth = unchecked(before + 1);
+            DispatchPostPop(sid, flags);
+            // 연결한 파생도 공통 몸체를 통해 깊이를 정확히 한 번 줄였는지 확인한다.
+            if (_state.Depth != before) throw new InvalidOperationException("postPop Activate 공통 깊이 불일치");
         }
+        finally { GC.KeepAlive(owner); }
     }
 
     /// <summary>공통 몸체. 명시적인 직접 호출은 깊이를 한 단계 감소시킨다.</summary>
@@ -495,7 +515,7 @@ public sealed partial class RawPostPop : IRawPopPostPop
     }
 
     /// <summary>
-    /// 가상 분배 진입이다. 사제·Player의 전체 몸체와 보호막 접두를 선택하며 나머지는 실제 지원 표를 확인한다.
+    /// 가상 분배 진입이다. 현재 전체 파생 몸체·접두·장기 자원 장치를 원문 가상표로 선택한다.
     /// PATCH는 사전 검사를 삽입하지 않는다.
     /// 근거: cpppj `o/SquidPostPop.cpp`의 `PostPopVirtual`·`DispatchPostPop` 중 Player 분기.
     /// 2026-11-10 F3 실제 호스트·월드 조립(0.304)에서 추가됐다.
@@ -509,30 +529,13 @@ public sealed partial class RawPostPop : IRawPopPostPop
             Validate(sid, flags, default);
         }
 
-        // 사제는 Carrier를 통해 공통 깊이를 한 번 끝내고 후반 처리를 이어 간다.
-        if (HandlesPriest(sid))
-        {
-            _priestPostPop!.PostPop(sid, flags);
-            return;
-        }
-
-        // Player는 자기 몸체에서 공통 장부를 한 번 호출하므로 여기서 끝낸다
-        if (HandlesPlayer(sid))
-        {
-            _playerPostPop!.PostPop(sid, flags);
-            return;
-        }
-
-        if (HandlesForcefield(sid)) _forcefieldPostPop!.Prefix(sid, flags);
-        else if (!OriginalPopDisplay.Supports(_pool.Edition, Read(_pool.Slot(sid), 0, 4), flags))
-            throw new InvalidOperationException("현재 가상 후처리 몸체 미복원");
-        PostPopBase(sid, flags, default);
+        DispatchPostPop(sid, flags);
     }
 
     /// <summary>
     /// 공통 후처리의 순서: Graph 생성 → 비용 → 공급·작업장 목록 → 소유자 조건 통계 → 깊이 감소다.
     /// 직접 base 호출도 공통 상태·효과의 검사와 깊이 감소를 그대로 수행한다.
-    /// PATCH는 원본 부모 실행처럼 보류 배치를 통계 뒤 끝에서 검사하므로 깊이를 줄이지 않고 멈춘다.
+    /// PATCH는 실제 선택 재검사를 통계 뒤에서 호출하며 실패하면 깊이를 줄이지 않는다.
     /// </summary>
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     /// <param name="flags">호출 플래그.</param>

@@ -353,9 +353,10 @@ public sealed class RawPostPopTests
         RawPostPop.BridgePrefix(pool, 50, 4, _ => called = true);
         Assert.True(called);
         Assert.Equal(0, pool.Slot(50)[40]);
-        // 연결이 필요한데 효과가 없으면 쓰기 전에 거부한다
+        // 실제 PATCH 접두는 최초 비트2를 저장한 뒤 선택 연결 누락에서 실패한다.
         byte[] before = pool.Bytes.ToArray();
-        Assert.Throws<ArgumentException>(() => RawPostPop.BridgePrefix(pool, 50, 1, null));
+        before[50 * RawSidPool.Stride + 40] |= 2;
+        Assert.Throws<InvalidOperationException>(() => RawPostPop.BridgePrefix(pool, 50, 1, null));
         Assert.Equal(before, pool.Bytes.ToArray());
     }
 

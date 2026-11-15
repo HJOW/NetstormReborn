@@ -258,8 +258,10 @@ public sealed class X86RawAssetPostPopTests
     /// 자산 전용 몸체 fixture 의 10.78 몫 818회를 재생한다.
     /// Activate(공통 깊이 증가·공통 몸체 감소) 순서와 같은 깊이 보존을 확인한다.
     /// </summary>
-    [Fact]
-    public void AssetBodiesMatchOriginalX86()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void AssetBodiesMatchOriginalX86(bool throughVirtualDispatch)
     {
         string[][] rows = X86Fixture.Read("assetpostpop");
         int count = 0;
@@ -277,7 +279,9 @@ public sealed class X86RawAssetPostPopTests
             var assets = new RawAssetPostPop(scene.Pool, scene.Types, @base, damageable, scene.State, scene.Hooks());
             // 파생 Activate 의 깊이 증가·공통 몸체 감소를 그대로 보존한다
             scene.Book.Depth++;
-            assets.PostPop(Source, X86Fixture.UInt(row[2]));
+            // 같은818행을 직접 몸체와 실제 등록 가상 분배 양쪽에서 그대로 대조한다.
+            if (throughVirtualDispatch) { @base.SetAssetPostPop(assets); @base.PostPopVirtual(Source, X86Fixture.UInt(row[2])); }
+            else assets.PostPop(Source, X86Fixture.UInt(row[2]));
             Assert.Equal(0u, scene.Book.Depth);
             string[] output = scene.Output();
             string[] expected = row[15..];

@@ -362,6 +362,15 @@ public sealed class RawAssetPostPop
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     public bool Handles(int sid) => Kind(sid) != 0;
 
+    /// <summary>연결 인스턴스와 무관하게 원본 전용 가상표가 있는지만 조회한다. 현재 장기 분배의 선택 관문이다.</summary>
+    public static bool HasDedicatedVtable(OriginalEdition edition, uint table)
+    {
+        if (edition == OriginalEdition.Patch1078) return KindTable.Any(item => item.Vtable == table);
+        // CD 전용 조회 표이며 CD 전체 실행기 지원과 구분한다.
+        return table is 0x5022f8 or 0x5011e8 or 0x5012b0 or 0x501120 or 0x501378 or 0x5014f8 or 0x501440
+            or 0x501b90 or 0x506168 or 0x506230 or 0x5062f8 or 0x500760 or 0x501d28 or 0x501de0 or 0x501e98;
+    }
+
     /// <summary>
     /// 공간 쓰기 전에 현재 분기가 요구하는 외부 효과와 공통 장부를 확인한다.
     /// 쓰기 전에 거부하므로 풀·목록·기록은 바뀌지 않는다.
