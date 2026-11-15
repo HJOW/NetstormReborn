@@ -2,8 +2,9 @@
 // 원본은 각 값이 .data/BSS 의 고정 DWORD/float/double 이고, 생성·Pop·보상·HP·지형 등 여러 소비자가 같은 주소를 직접 읽고 쓴다.
 // 웹도 소비자마다 사본을 만들지 않고 이 객체 하나를 빌린다. 세션/미션 생성·반납으로 다시 만들지 않으며, 원본 일반 월드 준비에 해당하는 일부 값만 resetForGeneralWorld 가 되돌린다.
 // 근거: cpppj `o/RawGameAuxState.h`(커밋 886f2d23). 초기값은 보호 원본 originals/Netstorm.exe 의 .data(초기화 영역)·BSS(0)와 같다(tests/game-aux-state.test.mjs 가 PE 를 읽어 대조).
-// 범위 밖: cpppj 의 RawSquidTransmissionState(공통 전송 버퍼/압축 전역)는 실제 객체 송신 소비자와 함께 판단한다. CD 10.72 주소는 다루지 않는다.
-// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-05 WB04-C2: 세션 장기 상태의 현재 TYPE/모드 전역 이식으로 추가)
+// E567의 애니메이션 송신 소비자가 공통 전송 버퍼/압축 전역도 같은 owner에서 빌린다. 다른 미이식 칸은 각 소비자와 함께 판단한다. CD 10.72 주소는 다루지 않는다.
+// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-05 WB04-C2, 2026-11-16 WB04-E567: 애니메이션 TYPE·헤더·공통 전송 owner 연결)
+import { createSquidTransmissionState } from './raw-squid-transmission.js';
 
 // 필드 폭 종류이다: u32(부호 없는 DWORD), i32(signed DWORD), f32(float), f64(double), bool(원본 0/1 바이트). (2026-11-05 WB04-C2)
 const KIND_CHECKS = Object.freeze({
@@ -57,6 +58,10 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['lostY', 0x005c8490, 'f32', 0, null, '최근 손실 Y'],
     ['defaultSp', 0x00540bdc, 'i32', 2000, null, '기본 SP(TYPE.cost 에는 float 로 변환)'],
     ['geyserType', 0x00541240, 'u32', 122, 'geyser', '현재 간헐천 TYPE'],
+    // 생성·프레임·수신 공장이 같은 장기 DWORD를 매번 읽는 세 애니메이션 부모 TYPE이다. (2026-11-16 WB04-E567)
+    ['sunArcherType', 0x00541174, 'u32', 71, 'sunArcher', '썬 디스크 발사기의 현재 TYPE'],
+    ['sunCannonType', 0x00541258, 'u32', 128, 'sunCannon', '썬 캐논의 현재 TYPE'],
+    ['windArcherType', 0x00541288, 'u32', 140, 'windArcher', '크로스보우의 현재 TYPE'],
     ['fieryTailProcessType', 0x0054109c, 'u32', 11, 'fieryTailSystemProcessType', '불꽃 꼬리 생성자의 부착 TYPE'],
     ['streakProcessType', 0x005410a0, 'u32', 12, 'streakSystemProcessType', 'Teleport 생성·표시 부착·도착 삭제 TYPE'],
     ['regularProcessType', 0x00541128, 'u32', 46, 'regularProcessType', '일반 예약(Regular) 생성과 종속 조회 TYPE'],
@@ -125,6 +130,11 @@ export class GameAuxState {
     #values = new Map(GAME_AUX_FIELDS.map((field) => [field.name, field.initial]));
     // 세계 장식 네 TYPE 의 실제 DWORD 저장소이다(빌려 주는 같은 배열).
     #decorations = Uint32Array.from(WORLD_DECORATION_FIELDS, (field) => field.initial);
+    // 현재 메시지/프로토콜 두 BYTE이며 World 교체/일반 초기화로 다시 만들지 않는다. (2026-11-16 WB04-E567)
+    #rotateAnimationHeader = Uint8Array.of(0x3c, 1);
+    #fireAnimationHeader = Uint8Array.of(0x3b, 1);
+    // 실제 공통 전송 버퍼와 압축/헤더 상태를 한 번만 소유하고 각 소비자에게 같은 객체를 빌린다. (2026-11-16 WB04-E567)
+    #squidTransmission = createSquidTransmissionState();
 
     // 필드 값을 읽는다(접근자 공통 구현).
     #read(name) { return this.#values.get(name); }
@@ -134,6 +144,13 @@ export class GameAuxState {
 
     // 세계 장식 네 TYPE 의 실제 저장소(Uint32Array 4칸)를 빌려 준다. 원소 쓰기는 원본 메모리처럼 32비트로 감긴다.
     get worldDecorationTypes() { return this.#decorations; }
+
+    // 원문 00540468/69·0054046e/6f의 현재 메시지/프로토콜 BYTE를 직접 빌려 준다. (2026-11-16 WB04-E567)
+    get rotateAnimationHeader() { return this.#rotateAnimationHeader; }
+    get fireAnimationHeader() { return this.#fireAnimationHeader; }
+
+    // 일반/강제 writer와 packet/송신이 같은 2048BYTE 물리를 공유한다. (2026-11-16 WB04-E567)
+    get squidTransmission() { return this.#squidTransmission; }
 
     // 자원 DWORD 를 unsigned 비트로 읽는다(로그인/폭탄의 unsigned 조회).
     get resourcePoolBits() { return this.#read('resourcePool') >>> 0; }

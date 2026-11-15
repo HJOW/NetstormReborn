@@ -20,6 +20,24 @@ const ORIGINAL_EXE = path.join(REPO_ROOT, 'originals', 'Netstorm.exe');
 // 원본 10.78 실행 파일의 SHA-256 이다(현재 저장소 보호 원본). 다른 판본으로 대조하지 않도록 확인한다. (2026-11-05 WB04-C2)
 const ORIGINAL_EXE_SHA256 = 'a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236';
 
+// 두 현재 애니메이션 헤더와 공통 전송 owner는 일반 월드 초기화 뒤에도 같은 물리이다. (2026-11-16 WB04-E567)
+test('GameAuxState: 애니메이션 현재 헤더·공유 전송은 보호 PE 초기값이며 일반 reset과 별개로 유지된다', () => {
+    // 원문의 현재 BYTE 헤더와 실제 공통 버퍼 객체다.
+    const aux = new GameAuxState(); const other = new GameAuxState();
+    const rotate = aux.rotateAnimationHeader; const fire = aux.fireAnimationHeader; const wire = aux.squidTransmission;
+    assert.deepEqual([...rotate], [0x3c, 1]); assert.deepEqual([...fire], [0x3b, 1]); assert.equal(wire.buffer.length, 2048);
+    if (fs.existsSync(ORIGINAL_EXE)) {
+        const bytes = fs.readFileSync(ORIGINAL_EXE); assert.equal(sha256(bytes), ORIGINAL_EXE_SHA256);
+        const read = peReader(bytes);
+        assert.deepEqual([read(0x00540468, 1).bytes[0], read(0x00540469, 1).bytes[0], read(0x0054046e, 1).bytes[0], read(0x0054046f, 1).bytes[0]], [0x3c, 1, 0x3b, 1]);
+    }
+    rotate[0] = 0x60; fire[1] = 3; wire.buffer[7] = 0xa5; wire.compress = -7; aux.sunArcherType = 72; aux.sunCannonType = 127; aux.windArcherType = 139;
+    aux.resetForGeneralWorld();
+    assert.equal(aux.rotateAnimationHeader, rotate); assert.equal(aux.fireAnimationHeader, fire); assert.equal(aux.squidTransmission, wire);
+    assert.deepEqual([rotate[0], fire[1], wire.buffer[7], wire.compress, aux.sunArcherType, aux.sunCannonType, aux.windArcherType], [0x60, 3, 0xa5, -7, 72, 127, 139]);
+    assert.notEqual(other.squidTransmission, wire); assert.notEqual(other.squidTransmission.buffer, wire.buffer); assert.deepEqual([...other.rotateAnimationHeader], [0x3c, 1]);
+});
+
 // PE 파일에서 가상 주소의 초기 DWORD 를 읽는 함수를 만든다. 섹션의 파일 자료 밖(초기화되지 않은 BSS)은 0 이다. 어느 섹션에도 없으면 오류이다. (2026-11-05 WB04-C2)
 function peReader(bytes) {
     const pe = bytes.readUInt32LE(0x3c);
@@ -86,8 +104,8 @@ test('GameAuxState: 초기값이 원본10.78 PE 의 .data/BSS 와 같다', (t) =
         if (value !== field.initial) mismatches.push(`장식@${field.address.toString(16)}: ${value} ≠ ${field.initial}`);
     }
     assert.deepEqual(mismatches, []);
-    // 필드 53개(double 4개는 8바이트 전체를 읽음, WB04-D3 의 Form 종속 전역 3칸과 WB04-E561 의 총/발사/회전 프로세스 TYPE 3칸 포함)와 장식 4칸이다.
-    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [53, 4]);
+    // 필드 56개(double 4개는 8바이트 전체를 읽음, E561의 프로세스 TYPE 3칸과 E567의 애니메이션 부모 TYPE 3칸 포함)와 장식 4칸이다.
+    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [56, 4]);
 });
 
 // TYPE 번호 칸: 웹 타입 표에서 같은 번호의 이름이 표의 대응 이름과 같다(자산 70~, 프로세스 10~, 내장 Form 1·2·3·6). 프로세스 상한 63 은 마지막 프로세스(62)+1 이다.
@@ -98,7 +116,7 @@ test('GameAuxState: TYPE 번호가 웹 타입 표의 이름과 맞는다', () =>
     const nameOf = (number) => (number >= FIRST_ASSET_TYPE_NUMBER ? TYPE_LOAD_ORDER[number - FIRST_ASSET_TYPE_NUMBER] : number >= 10 ? PROCESS_TYPE_NAMES[number - 10] : builtin[number]);
     const typed = [...GAME_AUX_FIELDS.filter((field) => field.typeName !== null).map((field) => [field.name, field.initial, field.typeName]),
         ...WORLD_DECORATION_FIELDS.map((field) => [`decoration@${field.address.toString(16)}`, field.initial, field.typeName])];
-    assert.equal(typed.length, 31);
+    assert.equal(typed.length, 34);
     for (const [name, number, typeName] of typed) assert.equal(nameOf(number), typeName, `${name}=${number}`);
     assert.equal(new GameAuxState().processTypeEnd, 10 + PROCESS_TYPE_NAMES.length);
 });

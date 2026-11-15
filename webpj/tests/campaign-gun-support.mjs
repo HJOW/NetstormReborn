@@ -50,8 +50,8 @@ export class CampaignGunScene extends CampaignHitScene {
     }
 
     // 첫 객체 전에 E561 자산 후처리와 같은 실제 Gun 조회를 연결한다. Archer 애니메이션은 아직 미연결이며 선택 시 거부한다. (2026-11-16 WB04-E565)
-    installGunAssets() {
-        this.effects.gun = makeGunTargetHooks(this.core.pool, this.gunTarget, this.queries);
+    installGunAssets(hooks = this.queries) {
+        this.effects.gun = makeGunTargetHooks(this.core.pool, this.gunTarget, hooks);
         this.bindings = this.make(); this.bindings.activatePostPop(); this.core.postPop.setBody('carrier', this.carrier);
         this.core.processes.setFormTransmit(this.bindings.transmission());
         this.core.processes.setRegularHandler(this.hits.handler(this.bindings.handler(this.priests.regularHandler())));
