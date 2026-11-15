@@ -14285,6 +14285,35 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
+      "unit": "WB04-E529",
+      "id": "sprite-refresh",
+      "path": "cpppj/tests/fixtures/sprite-refresh-x86.tsv",
+      "producer": "cpppj 독립 PE 관측(225행): 일반 Sprite 표시(모드 D 78행, NativeMetaSpriteRefresh 몫)와 정기 4794b0(147행: 현재 프레임·frameCount·payload 비트에서 IDIV 오류·BYTE35·최종 프레임·반환 payload·지정 순서)",
+      "consumers": [
+        "webpj/tests/sprite-regular.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-sprite-regular.js"
+      ],
+      "doc": "docs/webpj-sprite-regular-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawSpriteRegular.cpp"
+      ],
+      "scope": "정기 147행만(표시 모드 D 78행은 메타 Sprite 표시 단위가 소비한다)",
+      "text": true,
+      "sha256": "6eb4cdeae4bd5a5ff08e3ee195314f88faca2e55af06dea0d2c9faed78c7be21",
+      "bytes": 19659,
+      "lines": 226,
+      "fixtureCommit": "2c6ab7cc1",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawSpriteRegular.cpp": "2c6ab7cc1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
       "unit": "WB04-E528",
       "id": "priest-regular-dispatch",
       "path": "cpppj/tests/fixtures/priest-regular-dispatch-x86.tsv",
@@ -14305,7 +14334,7 @@
       "bytes": 23098,
       "lines": 385,
       "fixtureCommit": "c54f488c5",
-      "webCommit": "worktree",
+      "webCommit": "c0e0237d6",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestRegular.cpp": "c54f488c5"
       }
@@ -14334,7 +14363,7 @@
       "bytes": 107492,
       "lines": 631,
       "fixtureCommit": "e0d7775ee",
-      "webCommit": "worktree",
+      "webCommit": "c0e0237d6",
       "cpppjBasis": {
         "cpppj/src/o/RawDecorationRegular.cpp": "e0d7775ee"
       }
@@ -14363,7 +14392,7 @@
       "bytes": 537148,
       "lines": 1176,
       "fixtureCommit": "8f60c53d0",
-      "webCommit": "worktree",
+      "webCommit": "c0e0237d6",
       "cpppjBasis": {
         "cpppj/src/client/RawMonitorTime.cpp": "8f60c53d0"
       }
@@ -14392,7 +14421,7 @@
       "bytes": 13354,
       "lines": 12,
       "fixtureCommit": "8f60c53d0",
-      "webCommit": "worktree",
+      "webCommit": "c0e0237d6",
       "cpppjBasis": {
         "cpppj/src/client/RawMonitorTime.cpp": "8f60c53d0"
       }
