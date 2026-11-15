@@ -24,9 +24,9 @@
 복사 검사의 첫 초안은 `Buffer.slice()`로 기대값을 만들어 원본과 저장 영역을
 공유했다. 독립 `Buffer.from()`으로 고친 뒤 Node 22·26에서 검사를 다시 통과했다.
 
-이 단위는 **partial**이다. 표본 만료·빠른 절반 평균·시계 보정·송신을 하는
-`Poll`, 장기 고정 Native 수신기와 baseline 승격, 실제 Session/Client 결선 및
-단독 미션 도달 검증이 남았다. 후속 Poll 구현 시 동률 정렬에 주의한다. 이 PC의
+이 단위 종료 당시 **partial**이었고 `Poll`, 장기 고정 Native 수신기와 baseline
+승격, 실제 Session/Client 결선이 남았다. E517에서 `Poll`은 이식·대조했으며
+고정 수신기와 Session 연결은 계속 남았다. 후속 Poll 구현에 앞서 이 PC의
 Windows UCRT `qsort`를 같은 비교자로 호출하면 왕복 시간이 같은 2개 표본은
 입력과 반대 순서가 되는데 JavaScript의 안정 정렬은 입력 순서를 유지한다.
 제품 1313 오라클 실행 파일의 import 표에서도 `qsort`가

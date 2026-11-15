@@ -1,10 +1,11 @@
-// Commander 의 70개 시간 표본과 지연/송수신 카운터의 장기 보관 구조 `ClockSynchronizationData` 만 옮긴 모듈이다(cpppj `o/RawClockSynchronization.h`, 10.78 전용, 기준선 1f00a25a 뒤 추가된 새 파일, 3.6절 ③).
+// Commander 시간 표본의 장기 저장소와 시간 동기화 본체를 옮긴 모듈이다(cpppj `o/RawClockSynchronization.h/.cpp`, 10.78 전용).
 // 원문 BSS 표본과 진단값을 서버/Commander 의 서로 다른 초기화 범위로 장기 보유한다.
 //  - latencyMilliseconds(005c8bf0)·sent(005c8bf8)·received(005c8bfc): 단방향 지연·송신·수신 현재 DWORD. next(005c8c08): 현재 벽시각 기한(double), 0 은 예약 없음.
 //  - samples(005c8c10): 실제 70×32BYTE 이다. 헤더/미작성 4BYTE 도 각 표본 안에 보존한다.
-// 일반 등록·서버 초기화·Commander 연결·수신은 RawClockSynchronization 이 같은 데이터와 분배기를 빌려 처리한다.
-// 아직 옮기지 않은 것: Poll 004c2070 과 장기 고정 Native 수신기 baseline 승격은 4-D 후속이다.
-// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-12 WB04-E335: 4-D ClientLocalStateGlobals 의 하위 소유자로 데이터 구조만 추가)
+// 일반 등록·서버 초기화·Commander 연결·수신·Poll은 RawClockSynchronization 이 같은 데이터와 분배기를 빌려 처리한다.
+// 아직 옮기지 않은 것: 장기 고정 Native 수신기 baseline 승격과 실제 Session 연결은 4-D 후속이다.
+// 이 모듈은 DOM 을 쓰지 않는다. (2026-11-12 WB04-E335: 데이터 구조 추가, 2026-11-15 WB04-E515~E517: 일반 등록·수신·Poll 이식)
+import { sortClockSamples } from './ucrt-clock-sort.js';
 
 // 표본 개수와 표본 한 칸의 바이트 수이다. (2026-11-12 WB04-E335)
 export const CLOCK_SAMPLE_COUNT = 70;
@@ -47,7 +48,21 @@ function clockView(packet) {
     return new DataView(packet.buffer, packet.byteOffset, packet.byteLength);
 }
 
-// 같은 Client 전역·표본·패킷 분배기에 시간 응답을 연결한다. Poll 과 고정 수신기 승격은 제공하지 않는다. (2026-11-15 WB04-E515)
+// 표본의 세 시각만 지우고 헤더와 미사용 바이트는 보존한다. (2026-11-15 WB04-E517)
+function clearClockTimes(sample) {
+    const view = clockView(sample);
+    view.setFloat64(8, 0, true);
+    view.setFloat64(16, 0, true);
+    view.setFloat64(24, 0, true);
+}
+
+// x86 signed 64비트 절삭의 하위 DWORD를 돌려준다. 범위 밖과 비유한 값은 0이다. (2026-11-15 WB04-E517)
+function truncateClockDword(value) {
+    if (!Number.isFinite(value) || value >= 2 ** 63 || value < -(2 ** 63)) return 0;
+    return Number(BigInt.asUintN(32, BigInt(Math.trunc(value))));
+}
+
+// 같은 Client 전역·표본·패킷 분배기에 시간 응답과 주기 보정을 연결한다. (2026-11-15 WB04-E515, E517 수정)
 export class RawClockSynchronization {
     // Client 의 연결·응답 모드·시계 보정을 빌린다.
     #globals;
@@ -115,5 +130,64 @@ export class RawClockSynchronization {
                 return;
             }
         }
+    }
+
+    // 만료 표본·빠른 절반 평균·현재 기한의 송신을 원문 순서로 처리한다. (2026-11-15 WB04-E517)
+    poll() {
+        if (this.#globals.replyMode || !this.#globals.connection) return;
+        const now = needClockHook(this.#hooks.wallSeconds)();
+        const accepted = [];
+        // 각 표본의 세 double만 현재 순서로 읽고 만료된 시각만 지운다.
+        for (const sample of this.#data.samples) {
+            const view = clockView(sample);
+            const request = view.getFloat64(8, true);
+            const server = view.getFloat64(16, true);
+            const received = view.getFloat64(24, true);
+            if (!(now - request <= 2) && received === 0) {
+                clearClockTimes(sample);
+                continue;
+            }
+            if (request !== 0 && server !== 0 && received !== 0) {
+                const roundTrip = received - request;
+                const offset = received - server;
+                if (roundTrip >= 2 || Number.isNaN(roundTrip)) {
+                    clearClockTimes(sample);
+                    continue;
+                }
+                accepted.push({ offset, roundTrip });
+            }
+        }
+        if (accepted.length) {
+            sortClockSamples(accepted);
+            const used = Math.max(Math.floor(accepted.length / 2), 1);
+            let roundTrips = 0;
+            let offsets = 0;
+            // native CRT 순서에서 빠른 절반을 앞에서부터 누적한다.
+            for (let index = 0; index < used; index += 1) {
+                roundTrips += accepted[index].roundTrip;
+                offsets += accepted[index].offset;
+            }
+            const reciprocal = 1 / used;
+            const latency = (reciprocal * roundTrips) * 0.5;
+            this.#data.latencyMilliseconds = truncateClockDword(1000 * latency);
+            this.#globals.gameTicks = truncateClockDword((reciprocal * offsets - latency) * 1000);
+        }
+        if (!(((this.#data.sent | 0) <= 30 || this.#data.received !== 0) && this.#data.next !== 0 && this.#data.next <= now)) return;
+        // 오래된 시각을 지우며 첫 빈 표본만 선택해 같은 버퍼를 송신한다.
+        for (const sample of this.#data.samples) {
+            const view = clockView(sample);
+            if (now - view.getFloat64(8, true) > 30) clearClockTimes(sample);
+            if (view.getFloat64(8, true) !== 0) continue;
+            clearClockTimes(sample);
+            sample[1] = 5;
+            sample[2] = 32;
+            sample[3] = 0;
+            view.setFloat64(8, now, true);
+            needClockHook(this.#hooks.send)(this.#globals.connection, sample);
+            this.#data.sent = (this.#data.sent + 1) >>> 0;
+            break;
+        }
+        this.#data.next = 0;
+        if ((this.#data.sent | 0) < 60) this.#data.next = now + 1;
     }
 }

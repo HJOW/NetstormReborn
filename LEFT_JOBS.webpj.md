@@ -6,7 +6,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E516)
+### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E517)
 
 | 항목 | 현행 기준 |
 | --- | --- |
@@ -14,9 +14,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 1,004단위(제외 156 별도) 중 **port 776(77.3%)·partial 36(3.6%)·todo 192(19.1%)**. 남은 228단위에는 기존 129단위와 재기준선에서 추가된 99단위가 포함된다. 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
-| 마지막 작업 단위 | **WB04-E516** Windows CRT 시간 표본 동률 정렬 이식·합성 순열 대조([단위 문서](docs/webpj-clock-sort-20261115.md)). Poll 본체·고정 수신기 수명과 Session 연결은 후속 |
-| 다음 작업 | ① 4-R의 신규 이식 대상 중 남은 99단위를 E498~E502의 근거에 따라 각 단계에서 처리한다. 시간 동기화는 일반 등록·수신과 CRT 표본 정렬까지 이식된 partial이며 Poll 본체·고정 수신기 수명이 남았다(E515~E516). ② 독립적으로 가능한 4-D A·B·C와 5-A·5-B 잔여를 선행 관계에 맞게 병행한다. ③ 4-D의 D(Session 본체)·E(Client 본체·통합·L2 판정) 순서다. 3.8절 원본 관측 연결은 허브/적응 판정이 필요한 4건만 남았다 |
-| 마지막 전체 검사 | 2026-11-15 WB04-E516: Node v22.23.3·v26.13.0 전체 각각 **4,984건 통과, 실패 0** (v24 전체는 E513에서 4,973건 통과; 무한대 정렬 경계는 해당 2건 두 버전 재통과) |
+| 마지막 작업 단위 | **WB04-E517** 시간 동기화 Poll의 표본 만료·보정·송신 이식과 실제 cpppj 본체 대조([단위 문서](docs/webpj-clock-poll-20261115.md)). 고정 수신기 수명과 Session 연결은 후속 |
+| 다음 작업 | ① 4-R의 신규 이식 대상 중 남은 99단위를 E498~E502의 근거에 따라 각 단계에서 처리한다. 시간 동기화는 Poll까지 이식된 partial이며 고정 수신기 수명과 실제 Session 연결이 남았다(E515~E517). ② 독립적으로 가능한 4-D A·B·C와 5-A·5-B 잔여를 선행 관계에 맞게 병행한다. ③ 4-D의 D(Session 본체)·E(Client 본체·통합·L2 판정) 순서다. 3.8절 원본 관측 연결은 허브/적응 판정이 필요한 4건만 남았다 |
+| 마지막 전체 검사 | 2026-11-15 WB04-E517: Node v22.23.3·v26.13.0 전체 각각 **4,990건 통과, 실패 0** (v24 전체는 E513에서 4,973건 통과) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -61,7 +61,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
 | 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 953·adapt 51·exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1, 미분류 0**. 상태: **port 776·partial 36·todo 192·제외(-) 156**, session/oracle 0. 새 partial 2개는 아래 중단 인계의 미완성 초안이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` **758항목**(original-x86 722·screenshot 13·source 9·independent 9·cpppj-oracle 4·original-binary 1, 2026-11-15 재집계). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` **759항목**(original-x86 722·screenshot 13·source 9·independent 9·cpppj-oracle 5·original-binary 1, 2026-11-15 재집계). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -230,7 +230,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [ ] client **CampaignClientServices** 333줄(+56)·**CampaignUserInputServices** 34줄(+4)·**CampaignCursorClientEffects** 72줄(+2) — Session 에 주입하는 Client 서비스 묶음 [막힘(E348 판정): `RawCampaignSession.h` 의 서비스 형식과 `Client`·`GameWorld`·`RawButtonControls` 를 요구하는 접합 코드 — D(RawCampaignSession) 뒤]
 
 **C. Session 바인딩** (Tutorial1 Load/Start 에 닿는 것만 먼저, 나머지는 6·7·8 단계에서 연결)
-- [ ] o **RawClockSynchronization** 99줄 — [E515](docs/webpj-clock-synchronization-receive-20261115.md)에서 일반 등록·서버 초기화·연결·수신 완료. [E516](docs/webpj-clock-sort-20261115.md)에서 CRT 표본 정렬을 합성 350건과 추가 3,500건으로 대조했다. Poll의 표본 만료·빠른 절반 보정·송신과 고정 Native 수신기 baseline 수명, Session 실제 단독 연결은 남음
+- [ ] o **RawClockSynchronization** 99줄 — [E515](docs/webpj-clock-synchronization-receive-20261115.md)에서 일반 등록·서버 초기화·연결·수신 완료. [E516](docs/webpj-clock-sort-20261115.md)에서 CRT 표본 정렬을 합성 350건과 추가 3,500건으로 대조했다. [E517](docs/webpj-clock-poll-20261115.md)에서 Poll 본체와 실제 cpppj 장면 24건 대조를 완료했다. 고정 Native 수신기 baseline 수명, Session 실제 단독 연결은 남음
 - [ ] client **RawCampaignWorldRuntime** 196줄(+2)·**RawCampaignLifetimeBindings** 111줄(+9)·**RawCampaignMissionStartBindings** 113줄(+5)·**RawCampaignTutorialOneBindings** 136줄
 - [ ] client **RawCampaignAssetBindings** 272줄·**RawCampaignOwnership** 126줄·**RawCampaignProductionBindings** 153줄·**RawCampaignConstructionBindings** 291줄 — 생성/소유/생산/건설 연결(Tutorial1 Fort 의 TYPE 생성·정기 처리에 필요한 부분)
 - [ ] client 나머지 `RawCampaign*Bindings`(Hit 193·Archer 177·Motion 137·Cursor 283·CursorDisplay 161·Ritual 161·Devastation 110·Particles 513·Path 259·Carrier*·Gun*·Prayer·Meltdown·Panic) — **Tutorial1 Load/Start 가 요구하는 항목만 앞당기고** 나머지는 해당 순서(5-A 입자·6 입력/경로·7 전투/의식)에서 옮긴다. 착수 때 필요한 항목을 이 구획에 개별 항목으로 더한다

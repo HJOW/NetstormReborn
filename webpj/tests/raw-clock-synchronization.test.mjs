@@ -1,6 +1,7 @@
 // 시간 동기화의 등록·초기화·연결·수신을 cpppj 225553df의 순서와 기존 패킷 분배기에 대조한다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { ClockSynchronizationData, RawClockSynchronization } from '../www/core/raw-clock-synchronization.js';
 import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 
@@ -142,4 +143,102 @@ test('시간 동기화: 물리 부족과 응답 장치 누락의 순서를 보�
     const bytes = packet();
     assert.throws(() => clock.receive(new PacketConnection(), bytes), /실제 장치 미연결/);
     assert.equal(new DataView(bytes.buffer).getFloat64(16, true), 17);
+});
+
+// cpppj 실제 Poll이 출력한 전체 표본·카운터·보정값·송신을 재생한다.
+test('시간 동기화 Poll: cpppj 실제 본체의 합성 장면 24건', () => {
+    const fixture = JSON.parse(fs.readFileSync(new URL('./fixtures/cpppj-clock-poll.json', import.meta.url), 'utf8'));
+    assert.equal(fixture.format, 'netstorm-cpp-clock-poll-v1');
+    assert.equal(fixture.cases.length, 24);
+    // 각 장면에서 독립 전역을 만들고 입력의 70개 표본 바이트를 복원한다.
+    for (const entry of fixture.cases) {
+        let wallCalls = 0;
+        const sends = [];
+        const { data, globals, clock } = scene({
+            wallSeconds: () => { wallCalls += 1; return entry.now; },
+            send: (connection, bytes) => sends.push({ connection, bytes: Buffer.from(bytes).toString('hex') }),
+        });
+        globals.connection = entry.connection;
+        globals.replyMode = entry.replyMode;
+        globals.gameTicks = entry.gameTicks;
+        data.sent = entry.sent;
+        data.received = entry.received;
+        data.latencyMilliseconds = entry.latency;
+        data.next = entry.next;
+        const input = Buffer.from(entry.samples, 'hex');
+        assert.equal(input.length, 70 * 32);
+        // 원본 표본마다 헤더와 미사용 바이트를 포함해 복사한다.
+        for (let index = 0; index < data.samples.length; index += 1) {
+            data.samples[index].set(input.subarray(index * 32, (index + 1) * 32));
+        }
+        clock.poll();
+        assert.deepEqual({
+            gameTicks: globals.gameTicks,
+            sent: data.sent,
+            received: data.received,
+            latency: data.latencyMilliseconds,
+            next: data.next,
+            samples: Buffer.concat(data.samples.map((sample) => Buffer.from(sample))).toString('hex'),
+            wallCalls,
+            sends,
+        }, entry.expected, `장면 ${entry.id}`);
+    }
+});
+
+// 같은 왕복 시간의 두 표본은 CRT 정렬 결과의 첫 offset으로 보정한다.
+test('시간 동기화 Poll: 동률 표본의 빠른 절반과 DWORD 보정', () => {
+    const { data, globals, clock } = scene({ wallSeconds: () => 10 });
+    data.samples[0].set(packet(9, 9.25, 10));
+    data.samples[1].set(packet(9, 9.75, 10));
+    data.next = 0;
+    clock.poll();
+    assert.equal(data.latencyMilliseconds, 500);
+    assert.equal(globals.gameTicks, 0xffffff06);
+});
+
+// 송신 실패는 이미 쓴 표본을 남기고 송신 수와 기한의 후속 갱신은 하지 않는다.
+test('시간 동기화 Poll: 송신 실패와 앞선 표본 쓰기', () => {
+    const { data, clock } = scene({ wallSeconds: () => 10, send: () => { throw new Error('송신 중단'); } });
+    data.next = 1;
+    assert.throws(() => clock.poll(), /송신 중단/);
+    assert.deepEqual([...data.samples[0].subarray(1, 4)], [5, 32, 0]);
+    assert.equal(new DataView(data.samples[0].buffer).getFloat64(8, true), 10);
+    assert.equal(data.sent, 0);
+    assert.equal(data.next, 1);
+});
+
+// 순회 중 NaN 왕복 시간은 시각만 지우고 주변 바이트를 남긴다.
+test('시간 동기화 Poll: NaN 표본의 세 시각만 정리한다', () => {
+    const { data, clock } = scene({ wallSeconds: () => 10 });
+    data.samples[0].fill(0xa5);
+    const view = new DataView(data.samples[0].buffer);
+    view.setFloat64(8, Number.NaN, true);
+    view.setFloat64(16, 9, true);
+    view.setFloat64(24, 10, true);
+    clock.poll();
+    assert.equal(view.getFloat64(8, true), 0);
+    assert.equal(view.getFloat64(16, true), 0);
+    assert.equal(view.getFloat64(24, true), 0);
+    assert.deepEqual([...data.samples[0].subarray(0, 8)], new Array(8).fill(0xa5));
+});
+
+// signed 송신 수 관문과 DWORD 감김은 현재 상태를 기준으로 적용한다.
+test('시간 동기화 Poll: 음수로 읽히는 송신 수는 허용하고 감긴다', () => {
+    const targets = [];
+    const { data, clock } = scene({ wallSeconds: () => 10, send: (connection) => targets.push(connection) });
+    data.sent = 0xffffffff;
+    data.next = 1;
+    clock.poll();
+    assert.deepEqual(targets, [71]);
+    assert.equal(data.sent, 0);
+    assert.equal(data.next, 11);
+});
+
+// 비유한 보정식의 x86 절삭 결과는 하위 DWORD 0이다.
+test('시간 동기화 Poll: 비유한 보정 결과의 DWORD', () => {
+    const { data, globals, clock } = scene({ wallSeconds: () => 10 });
+    data.samples[0].set(packet(Infinity, 9, 10));
+    clock.poll();
+    assert.equal(data.latencyMilliseconds, 0);
+    assert.equal(globals.gameTicks, 0);
 });

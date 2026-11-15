@@ -21,7 +21,7 @@ DLL과 웹 정렬기의 순열이 일치했다. 추가 자료는 Git 제외 경�
 제품 1313 오라클 실행 파일의 import 표에는 `api-ms-win-crt-utility-l1-1-0.dll`
 `qsort`가 있다. 수집된 fixture는 추후 실행 환경이 Windows가 아니어도 검사한다.
 
-이 정렬기는 아직 시간 동기화의 `Poll`에 연결되지 않았다. 표본 만료·빠른 절반
-평균·시계 보정·송신과 고정 수신기 baseline·Session 연결은 계속 남아 있으며
-`RawClockSynchronization` 상태는 partial이다. Node 22·26 전체 회귀 검사를
+E517에서 이 정렬기를 `Poll`에 연결하고 표본 만료·평균·보정·송신을 이식했다.
+고정 수신기 baseline·Session 연결은 계속 남아 있어 `RawClockSynchronization`
+상태는 partial이다. Node 22·26 전체 회귀 검사를
 수행했다.

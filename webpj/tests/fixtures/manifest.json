@@ -9,7 +9,7 @@
     "screenshot": "원본 게임 화면 캡처(창 테두리 포함, screenShots/)",
     "source": "cpppj/dotnetpj 의 상수·자료를 교차 확인하는 소스(계속 바뀌므로 해시 미기록)",
     "original-binary": "보호 원본 실행 파일의 정적 자료(.data 초기값 등)를 파일 읽기로만 대조한다. 실행하지 않는다",
-    "cpppj-oracle": "cpppj 기준선 실행 파일(LEFT_JOBS.webpj.md 3.6절 기준선)을 같은 단계표로 실행해 수집한 논리 화면·관측 보고서와 그 시나리오(tools/cpp-oracle.mjs, 창 실행). npm test 는 저장된 결과만 읽는다"
+    "cpppj-oracle": "cpppj 기준선의 실행 파일 또는 동일 소스를 빌드한 관측 도구에서 수집한 화면·보고서·합성 상태. 검사는 저장된 자료만 읽는다"
   },
   "entries": [
     {
@@ -22833,10 +22833,42 @@
       "sha256": "513cc55e38885df25a43d86f497ab7920741465afc98c8522fefabbcf39d01b1",
       "bytes": 71772,
       "lines": 1,
+      "fixtureCommit": "a60db7f32",
+      "webCommit": "a60db7f32",
+      "cpppjBasis": {
+        "cpppj/src/o/RawClockSynchronization.cpp": "899c934dc"
+      }
+    },
+    {
+      "id": "cpppj-clock-poll",
+      "path": "webpj/tests/fixtures/cpppj-clock-poll.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "webpj/tools/clock-poll-observer: cpppj 225553df 실제 Poll의 합성 상태 24건",
+      "consumers": [
+        "webpj/tests/raw-clock-synchronization.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-clock-synchronization.js",
+        "webpj/www/core/ucrt-clock-sort.js"
+      ],
+      "unit": "WB04-E517",
+      "doc": "docs/webpj-clock-poll-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawClockSynchronization.cpp",
+        "cpppj/src/o/RawClockSynchronization.h"
+      ],
+      "scope": "제품 1313의 합성 Poll 상태·송신 관측이며 원본 10.78 기계어 관측이 아님",
+      "text": true,
+      "sha256": "f80b975d556e94c3e45a547bc7da2b38b8ea749f0487eceb7acd263924ac9978",
+      "bytes": 221641,
+      "lines": 1,
       "fixtureCommit": null,
       "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawClockSynchronization.cpp": "899c934dc"
+        "cpppj/src/o/RawClockSynchronization.cpp": "899c934dc",
+        "cpppj/src/o/RawClockSynchronization.h": "3f766a97f"
       }
     }
   ]
