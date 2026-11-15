@@ -276,7 +276,7 @@ cpppj/src/o/Config.cpp	Netstorm.Core/Original/Config.cs	b05073df6f9b8dae3afe492a
 cpppj/src/o/Config.h	Netstorm.Core/Original/Config.cs	b05073df6f9b8dae3afe492ab5dc969361f25c51	L1
 cpppj/src/o/ConfigInterface.cpp	Netstorm.Core/Original/ConfigInterface.cs	760e5ec3cf0013ac2817daefbd8a099461033832	port
 cpppj/src/o/ConfigInterface.h	Netstorm.Core/Original/ConfigInterface.cs	760e5ec3cf0013ac2817daefbd8a099461033832	port
-cpppj/src/o/ContentFormHost.cpp	Netstorm.Core/Original/RawContentFormHost.cs	9eb899e43b02660479342f0f4d709760e38ebda3	L1
+cpppj/src/o/ContentFormHost.cpp	Netstorm.Core/Original/RawContentFormHost.cs	d5a23c9990c041dff2feb50ba1fd26a5ac0da440	L1
 cpppj/src/o/ContentFormLifetime.cpp	Netstorm.Core/Original/RawContentLifetime.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/ContentFormLifetime.h	Netstorm.Core/Original/RawContentLifetime.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	L1
 cpppj/src/o/DependFormHost.cpp	Netstorm.Core/Original/RawDependFormHost.cs	c0907232690d13a58eb28e2ffe46af83cc2454ec	L1
@@ -900,3 +900,4 @@ cpppj/src/o/RawDependCreate.h	Netstorm.Core/Original/RawDependCreate.cs	c0907232
 cpppj/src/o/RawBridgeFallParent.cpp	Netstorm.Core/Original/RawBridgeFallParent.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	L1
 cpppj/src/o/RawBridgeFallParent.h	Netstorm.Core/Original/RawBridgeFallParent.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	port
 cpppj/src/o/RawBridgeLifecycle.h	Netstorm.Core/Original/RawBridgeLifecycle.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	port
+cpppj/src/o/ContentFormHost.h	Netstorm.Core/Original/RawContentFormHost.cs	d5a23c9990c041dff2feb50ba1fd26a5ac0da440	port

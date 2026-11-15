@@ -496,7 +496,8 @@ public sealed class FortMetaLoadTests
             int parent = factory.Create(89, (SidAllocation)2);
             List<int> children = [];
             int transmits = 0;
-            RawContentFormHost forms = new(pool, moduleTypes,
+            // 관리 공장의188칸 하네스와 Content의 판본별 입력 크기는 서로 구분한다.
+            RawContentFormHost forms = new(pool, moduleTypes.Take(edition == OriginalEdition.Patch1078 ? 188 : 171).ToArray(),
                 (owner, form, reason) =>
                 {
                     Assert.Equal(parent, owner);

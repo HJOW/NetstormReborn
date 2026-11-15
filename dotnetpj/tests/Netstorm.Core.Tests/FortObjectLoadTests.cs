@@ -615,7 +615,8 @@ public sealed class FortObjectLoadTests
             });
             List<int> notices = [];
             int transmits = 0;
-            RawContentFormHost content = new(scene.Pool, scene.ModuleTypes,
+            // CD의 관리 공장188칸 하네스와 Content의 실제 판본171개 입력을 구분한다.
+            RawContentFormHost content = new(scene.Pool, scene.ModuleTypes.Take(scene.Patch ? 188 : 171).ToArray(),
                 (parent, form, reason) =>
                 {
                     Assert.Equal(1u, reason);
