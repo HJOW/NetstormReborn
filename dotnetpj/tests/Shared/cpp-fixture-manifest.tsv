@@ -311,3 +311,7 @@ content-cursor-width-x86.tsv	1dbbcddbf61e0c6354e8c70419c9a4bee4e4d690d92df552531
 sid-allocation-recovery-x86.tsv	1527716c4194bc879f0bab5cb6352a378951f7beb049b730cf503485426fd5d8	47	cpppj	Core
 neighbor-boundary-x86.tsv	a0ba755d3333de2e9d688543b284c14a2e5ca79774c384bd4ed79e54969b6296	18	cpppj	Core
 surface-neighbor-current-x86.tsv	4c7f9b9acf48f18129a2fcc7d3131443828cf0428b489d3a868727cf32e9ea1a	32	cpppj	Core
+graph-detach-live-x86.tsv	2d4b7573fe7567a914ba73b46fdc905cfe81bed89f7285db8e7344034d2028c2	432	cpppj	Core
+graph-live-checking-x86.tsv	473ee74344c15d6117716428d6f76f07da2262970e19884f0d15c20c18d91852	144	cpppj	Core
+graph-live-free-callback-x86.tsv	ed7b0cc99f214a1ea2a5fd2482b70bc4206dc54ac5fb5983753a57736d19aac6	24	cpppj	Core
+graph-region-free-x86.tsv	7ccfb02fb8426bbaaec9520c2a37c54a943530047df454c6cacf35954fdf35d8	8	cpppj	Core

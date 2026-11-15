@@ -215,7 +215,11 @@ public sealed partial class RawSurfaceWorld
 
         if (_types.Count == OriginalConstructors.TypeCount)
         {
-            _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph.Records, _storage.Graph.Stack, null, GraphRecovery.FullPool);
+            _graph = new RawGraph(_storage.Pool, _storage.Hash, _storage.Spots, _types, _storage.Graph,
+                _frames.Count == _types.Count ? new RiftFrameCodeTables(_frames) : null, GraphRecovery.FullPool);
+            if (_edition == OriginalEdition.Patch1078) _graph.BindCurrentTypes(_types);
+            _graph.BindDiagnostics(new() { Checking = _storage.Checking(), Assertion = _storage.AssertDisplay });
+            _graph.BindClock(_storage.ReadGraphClock); _graph.BindTrace(_storage.TraceGraph);
             _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots, _display);
             _factory = new RawSquidFactory(_storage.Pool, _types, false, _unpop);
             BindFactoryRuntime();

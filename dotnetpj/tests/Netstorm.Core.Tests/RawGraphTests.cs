@@ -199,8 +199,10 @@ public sealed class RawGraphTests
     public void AddRejectsNonSurfaceType()
     {
         (RawSidPool pool, byte[] spots, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        graph.BindCurrentTypes(types);
         types[74].Flags1 = 0;
-        int sid = Surface(pool, 10, 10, 3);
+        // 현재 실행은 void이면 타입 조회 전에 반환하므로 활성 입력으로 타입 거부를 검사한다.
+        int sid = Surface(pool, 10, 10, 3, 0);
         byte[] before = pool.Bytes.ToArray();
         Assert.Throws<InvalidOperationException>(() => graph.Add(sid));
         Assert.Equal(before, pool.Bytes.ToArray());
@@ -561,7 +563,8 @@ public sealed class RawGraphTests
         // 할당되지 않은 번호는 거부한다
         Assert.Throws<InvalidOperationException>(() => graph.ValidatePostDestroy(99));
         Assert.Throws<InvalidOperationException>(() => graph.PostDestroy(99));
-        // 비표면 타입의 원천은 등록할 표면이 없어 그대로 돌아간다
+        // 명시 현재 TYPE 대여 뒤 비표면 원천은 등록할 표면이 없어 돌아간다.
+        graph.BindCurrentTypes(types);
         types[74].Flags1 = 0;
         graph.ValidatePostDestroy(sid);
         graph.PostDestroy(sid);
@@ -669,6 +672,7 @@ public sealed class RawGraphTests
     public void RegionTruncatesNonSurfaceFractionalCoordinates()
     {
         (RawSidPool pool, _, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        graph.BindCurrentTypes(types);
         types[74].Flags1 = 0;
         int sid = Surface(pool, 10.9f, 20.9f, 0);
         byte[] before = pool.Bytes.ToArray();
@@ -692,6 +696,7 @@ public sealed class RawGraphTests
     public void RegionRejectsOutOfRangeAndNonFiniteForNonSurface()
     {
         (RawSidPool pool, _, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        graph.BindCurrentTypes(types);
         types[74].Flags1 = 0;
         // 256 이상·음수·NaN·무한대는 절삭 전에 거부한다
         foreach (float x in new float[] { 256f, 300.5f, -1.5f, float.NaN, float.PositiveInfinity })
@@ -706,6 +711,7 @@ public sealed class RawGraphTests
     public void ValidatePostPopTruncatesNonSurfaceFractionalPrediction()
     {
         (RawSidPool pool, _, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        graph.BindCurrentTypes(types);
         types[74].Flags1 = 0;
         int sid = Surface(pool, 10, 20, 0);
         var prediction = new PopProjection(10.9f, 20.9f, 0, types[74]);
@@ -729,6 +735,7 @@ public sealed class RawGraphTests
     public void PostDestroyTruncatesNonSurfaceFractionalCoordinates()
     {
         (RawSidPool pool, _, OriginalTypeRecord[] types, RawGraph graph) = SurfaceScene();
+        graph.BindCurrentTypes(types);
         types[74].Flags1 = 0;
         int sid = Surface(pool, 10.9f, 20.25f, 0);
         // 옛 코드는 정수 검사를 거부했으나 이제 10,20 칸으로 절삭한다

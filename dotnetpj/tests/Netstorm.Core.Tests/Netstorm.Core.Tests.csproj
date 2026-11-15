@@ -386,4 +386,11 @@
     <None Include="../../../cpppj/tests/fixtures/surface-neighbor-current-x86.tsv" Link="X86/surface-neighbor-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/neighbor-boundary-x86.tsv" Link="X86/neighbor-boundary-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 현재 Graph 부모·콜백·삭제 정책의 전체 기록/stack/슬롯 원본 관측이다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/graph-live-checking-x86.tsv" Link="X86/graph-live-checking-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/graph-live-free-callback-x86.tsv" Link="X86/graph-live-free-callback-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/graph-detach-live-x86.tsv" Link="X86/graph-detach-live-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/graph-region-free-x86.tsv" Link="X86/graph-region-free-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

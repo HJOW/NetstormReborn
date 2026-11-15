@@ -417,7 +417,7 @@ cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/RawFortWorldLoad.cs	2a8f93
 cpppj/src/o/RawFrameChoose.cpp	Netstorm.Core/Original/RawFrameChoose.cs	df7902e70c389c825a65b8ba70a48de6891905ad	L1
 cpppj/src/o/RawFrameChoose.h	Netstorm.Core/Original/RawFrameChoose.cs	df7902e70c389c825a65b8ba70a48de6891905ad	L1
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.cs	30523aaf2d90489101b737d142fdf046c042cdb3	port
-cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	73506bcbedac557bfd132e68524f772123f245d2	L1
+cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	0ba6de1e6215cc1d3e6b7612d4f5ca151524c461	L1
 cpppj/src/o/RawIslandAdd.cpp	Netstorm.Core/Original/RawIslandAdd.cs	afe4ce5b45b8c786adba014946185cfec5799ae7	L1
 cpppj/src/o/RawIslandAdd.h	Netstorm.Core/Original/RawIslandAdd.cs	afe4ce5b45b8c786adba014946185cfec5799ae7	L1
 cpppj/src/o/RawIslandBuilder.cpp	Netstorm.Core/Original/RawIslandBuilder.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
@@ -904,3 +904,6 @@ cpppj/src/o/ContentFormHost.h	Netstorm.Core/Original/RawContentFormHost.cs	d5a23
 cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.Allocation.cs	c0e0237d6e345ca15440a207da00c8205ea2b1a3	L1
 cpppj/src/o/SidPool.h	Netstorm.Core/Original/RawSidPool.Allocation.cs	c0e0237d6e345ca15440a207da00c8205ea2b1a3	port
 cpppj/src/o/RawSquidNeighbors.h	Netstorm.Core/Original/RawNeighbor.cs	4c06fd9d64fa55b89e23b885562e0d035e41a0f8	port
+cpppj/src/o/Graph.cpp	Netstorm.Core/Original/RawGraph.Live.cs	0ba6de1e6215cc1d3e6b7612d4f5ca151524c461	port
+cpppj/src/o/RawGraph.h	Netstorm.Core/Original/RawGraph.Live.cs	0ba6de1e6215cc1d3e6b7612d4f5ca151524c461	port
+cpppj/src/o/RawGraphLive.cpp	Netstorm.Core/Original/RawGraph.Live.cs	0ba6de1e6215cc1d3e6b7612d4f5ca151524c461	L1

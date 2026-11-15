@@ -6,16 +6,16 @@ namespace Netstorm.Core.Original;
 
 /// <summary>
 /// 원본 월드 코어의 그래프 표·공간 연결(원본 RawGraph, 10.78).
-/// 255개 레코드(각 6바이트: 표면 수·사용 여부·예약 WORD)와 4096개 flood 스택 DWORD 를 소유하고,
+/// 255개 레코드(각 6바이트: 표면 수·사용 여부·예약 WORD)와 4096개 flood 스택 DWORD를 소유하거나 명시 장기 저장소에서 빌리고,
 /// 원본처럼 0번 예약 레코드·251..253 의 틈·254 sentinel 을 구분한다.
 /// 이 조각은 표 저장소·초기화(<see cref="ResetTable"/>)·반납(<see cref="Free"/>)·공간/타입 일치와 함께
 /// 원본 슬롯·해시·점유 지도에서 표면 스냅샷을 만들어 영역 무효화(<see cref="InvalidateRegion"/>)·
 /// 추가(<see cref="Add"/>)·flood(<see cref="Flood"/>)·등록 후처리(<see cref="PostPop"/>)·빈 번호 할당(<see cref="Allocate"/>)·
 /// 삭제 준비(<see cref="Detach"/>)·전체 재구성(<see cref="Rebuild"/>)·삭제 후처리(<see cref="PostDestroy"/>)·방향 코드 조회(<see cref="Frame(int)"/>)를 수행한다.
-/// 계산은 항상 사본에서 하고(<see cref="Calculate"/>) 성공한 계획만 commit 하므로, 거부된 호출은 표·스택·슬롯을 바꾸지 않는다.
+/// 사전 검사는 사본에서 계산하고 실제 실행은 현재 물리를 소비한다. 진단·로그의 중첩 변경과 실패 전 부분 효과를 보존한다.
 /// 근거: cpppj/src/o/RawGraph.cpp (W02 열여덟째 조각, 2026-10-21).
 /// </summary>
-public sealed class RawGraph : IRawPostPopGraph
+public sealed partial class RawGraph : IRawPostPopGraph
 {
     /// <summary>유효 그래프 번호 수(원본 Graph::kCount). 0~250 이 쓰이고 251~253 은 틈이다.</summary>
     public const int Count = SurfaceGraph.Count;
@@ -50,17 +50,17 @@ public sealed class RawGraph : IRawPostPopGraph
     /// <summary>추가 비트의 매립(buried) 비트.</summary>
     private const byte BuriedBit = 8;
 
-    /// <summary>슬롯 안 그래프 번호 바이트의 위치(10.78).</summary>
-    private const int GraphOffset = 30;
+    /// <summary>판본별 graph BYTE 위치(PATCH30·CD28)다.</summary>
+    private int GraphOffset => _pool.Edition == OriginalEdition.Patch1078 ? 30 : 28;
 
     /// <summary>슬롯 안 다음 번호(16비트)의 위치. 삭제 연결의 해시 체인을 읽는다.</summary>
     private const int NextOffset = 4;
 
-    /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
-    private const int ExtraOffset = 40;
+    /// <summary>판본별 extra BYTE 위치(PATCH40·CD35)다.</summary>
+    private int ExtraOffset => _pool.Edition == OriginalEdition.Patch1078 ? 40 : 35;
 
-    /// <summary>슬롯 안 프레임(SHP) 번호의 위치(10.78, 4바이트).</summary>
-    private const int FrameOffset = 36;
+    /// <summary>판본별 프레임 위치(PATCH36 DWORD·CD34 BYTE)다.</summary>
+    private int FrameOffset => _pool.Edition == OriginalEdition.Patch1078 ? 36 : 34;
 
     /// <summary>슬롯 안 x 좌표(float, 4바이트)의 위치.</summary>
     private const int XOffset = 14;
@@ -140,9 +140,9 @@ public sealed class RawGraph : IRawPostPopGraph
         _pool = pool;
         _hash = hash;
         _spots = spots;
-        _types = types;
+        _types = types.Select(type => type.Clone()).ToArray();
         _recovery = recovery;
-        _frames = frames ?? Enumerable.Range(0, OriginalConstructors.TypeCount)
+        _frames = frames?.Select(codes => (IReadOnlyList<FrameCode>)codes.ToArray()).ToArray() ?? Enumerable.Range(0, OriginalConstructors.TypeCount)
             .Select(_ => (IReadOnlyList<FrameCode>)Array.Empty<FrameCode>()).ToArray();
         if (records is null)
         {
@@ -214,6 +214,8 @@ public sealed class RawGraph : IRawPostPopGraph
 
         /// <summary>빈 그래프 번호 할당.</summary>
         Allocate,
+        // 현재 물리 입력을 검사한 뒤 실행/번호 계획 없이 반환한다.
+        Inspect,
     }
 
     /// <summary>
@@ -285,7 +287,7 @@ public sealed class RawGraph : IRawPostPopGraph
     public void ValidateTypes(IReadOnlyList<OriginalTypeRecord> types)
     {
         ArgumentNullException.ThrowIfNull(types);
-        if (types.Count != _types.Count)
+        if (types.Count != CurrentTypes.Count)
         {
             throw new ArgumentException("postPop/raw 그래프 타입 크기가 다릅니다", nameof(types));
         }
@@ -293,7 +295,7 @@ public sealed class RawGraph : IRawPostPopGraph
         for (int i = 0; i < types.Count; i++)
         {
             OriginalTypeRecord other = types[i];
-            OriginalTypeRecord own = _types[i];
+            OriginalTypeRecord own = CurrentTypes[i];
             if (other.Flags1 != own.Flags1 || other.Flags2 != own.Flags2 || other.FootX != own.FootX || other.FootY != own.FootY)
             {
                 throw new ArgumentException("postPop/raw 그래프 타입이 다릅니다", nameof(types));
@@ -325,28 +327,29 @@ public sealed class RawGraph : IRawPostPopGraph
     /// <param name="add">표면을 추가하는지.</param>
     public void PostPop(int sid, bool invalidate, bool add)
     {
-        if (invalidate || add)
-        {
-            Commit(Calculate(sid, invalidate ? (add ? Operation.RegionAdd : Operation.Region) : Operation.Add, 0, null));
-        }
+        ValidatePostPop(sid, invalidate, add);
+        if (invalidate) InvalidateRegion(sid);
+        if (add) Add(sid);
     }
 
     /// <summary>4단계 해시의 발자국 영역 후보 번호를 무효로 바꾼다(원본 00462d40).</summary>
     /// <param name="sid">대상 슬롯 번호.</param>
-    public void InvalidateRegion(int sid) => Commit(Calculate(sid, Operation.Region, 0, null));
+    public void InvalidateRegion(int sid)
+    {
+        _ = Calculate(sid, Operation.Region, 0, null);
+        Region(sid, null, _spots, new Plan { Records = [], Stack = [] }, true);
+    }
 
     /// <summary>표면을 가장 큰 연결 그래프에 추가한다(원본 004633c0).</summary>
     /// <param name="sid">대상 슬롯 번호.</param>
-    public void Add(int sid) => Commit(Calculate(sid, Operation.Add, 0, null));
+    public void Add(int sid) => ExecuteAdd(sid);
 
     /// <summary>목적 번호로 표면 연결을 flood 하고 바뀐 번호 수를 돌려준다(원본 00462f10).</summary>
     /// <param name="sid">시작 슬롯 번호.</param>
     /// <param name="graph">목적 그래프 번호(254 는 무효).</param>
     public uint Flood(int sid, byte graph)
     {
-        Plan plan = Calculate(sid, Operation.Flood, graph, null);
-        Commit(plan);
-        return plan.Changed;
+        return ExecuteFlood(sid, graph, true);
     }
 
     /// <summary>
@@ -359,12 +362,8 @@ public sealed class RawGraph : IRawPostPopGraph
     /// <param name="sourceType">삭제 위치 정보만 치환할 타입 번호(없으면 원천 타입 유지).</param>
     public void Detach(int sid, bool rebuild = false, byte removedSurfaces = 1, byte? sourceType = null)
     {
-        // 감소 수는 원본처럼 1 또는 9만 받는다
-        if (removedSurfaces != 1 && removedSurfaces != 9)
-        {
-            throw new ArgumentException("raw 그래프 감소 수 오류", nameof(removedSurfaces));
-        }
-        Commit(Calculate(sid, Operation.Detach, (byte)((rebuild ? 1 : 0) | (removedSurfaces == 9 ? 2 : 0)), null, sourceType));
+        // 실제 활성 관문 뒤 선택된 ValidateDetach에서 감소 수를 확인한다.
+        ExecuteDetach(sid, rebuild, removedSurfaces, sourceType);
     }
 
     /// <summary>
@@ -390,9 +389,7 @@ public sealed class RawGraph : IRawPostPopGraph
     /// </summary>
     public byte Allocate()
     {
-        Plan plan = Calculate(0, Operation.Allocate, 0, null);
-        Commit(plan);
-        return (byte)plan.Changed;
+        return ExecuteAllocate(true);
     }
 
     /// <summary>
@@ -402,7 +399,7 @@ public sealed class RawGraph : IRawPostPopGraph
     /// <param name="resetAll">참이면 전체 초기화 재구성, 거짓이면 무효 번호 수집.</param>
     public void Rebuild(bool resetAll)
     {
-        Commit(Calculate(0, Operation.Rebuild, (byte)(resetAll ? 1 : 0), null));
+        ExecuteRebuild(resetAll);
     }
 
     /// <summary>
@@ -422,9 +419,9 @@ public sealed class RawGraph : IRawPostPopGraph
     {
         ReadOnlySpan<byte> raw = _pool.Slot(sid);
         byte number = raw[RawSidPool.TypeOffset];
-        uint index = Read(raw, FrameOffset, 4);
+        uint index = Read(raw, FrameOffset, _pool.Edition == OriginalEdition.Patch1078 ? 4 : 1);
         // 타입 번호와 프레임 번호가 표를 벗어나면 쓰기 전에 거부한다
-        if (number < OriginalConstructors.FirstAssetType || number >= _types.Count || index >= (uint)_frames[number].Count)
+        if (number < OriginalConstructors.FirstAssetType || number >= CurrentTypes.Count || index >= (uint)_frames[number].Count)
         {
             throw new ArgumentOutOfRangeException(nameof(sid), index, "raw 그래프 프레임 조회 오류");
         }
@@ -436,7 +433,7 @@ public sealed class RawGraph : IRawPostPopGraph
     /// 발자국 영역 안의 표면을 탐색 순서대로 등록하고, 그래프 byte 변경분만 한 번에 반영한다.
     /// </summary>
     /// <param name="sid">대상 슬롯 번호.</param>
-    public void PostDestroy(int sid) => Commit(CalculatePostDestroy(sid));
+    public void PostDestroy(int sid) => ExecutePostDestroy(sid);
 
     /// <summary>
     /// 공통 postDestroy 가 공간·표·스택을 바꾸기 전에 같은 검사를 수행한다. 쓰기는 없다.
@@ -492,11 +489,11 @@ public sealed class RawGraph : IRawPostPopGraph
         bool region = operation is Operation.Region or Operation.RegionAdd;
         bool add = operation is Operation.Add or Operation.RegionAdd;
         // 자동 재구성 가능 경로는 삭제 준비도 전체 풀에서 읽는다(원본 GraphRecovery.FullPool)
-        bool fullPool = global || (_recovery == GraphRecovery.FullPool && (add || operation == Operation.Detach));
+        bool fullPool = global || (_recovery == GraphRecovery.FullPool && (add || operation is Operation.Detach or Operation.Inspect));
         ReadOnlySpan<byte> root = _pool.Slot(sid);
         if (!global && (sid < 5 || sid > MaximumId || (root[RawSidPool.StateOffset] & (FreeBit | ContainedBit)) != 0
-            || root[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || root[RawSidPool.TypeOffset] >= _types.Count
-            || (operation != Operation.Region && (_types[root[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0)))
+            || root[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || root[RawSidPool.TypeOffset] >= CurrentTypes.Count
+            || (operation != Operation.Region && (CurrentTypes[root[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0)))
         {
             throw new InvalidOperationException("raw 그래프 표면 SID 오류");
         }
@@ -526,8 +523,8 @@ public sealed class RawGraph : IRawPostPopGraph
             // 조회 머리의 free·contained·void, 타입 범위, 표면 여부, 좌표 일치를 확인한다
             if ((lookup[RawSidPool.StateOffset] & (FreeBit | ContainedBit | VoidBit)) != 0
                 || lookup[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType
-                || lookup[RawSidPool.TypeOffset] >= _types.Count
-                || (_types[lookup[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0
+                || lookup[RawSidPool.TypeOffset] >= CurrentTypes.Count
+                || (CurrentTypes[lookup[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0
                 || Coordinate(BitConverter.UInt32BitsToSingle(Read(lookup, XOffset))) != lookupX
                 || Coordinate(BitConverter.UInt32BitsToSingle(Read(lookup, YOffset))) != lookupY)
             {
@@ -553,7 +550,7 @@ public sealed class RawGraph : IRawPostPopGraph
         }
         if (pop is { } projected)
         {
-            OriginalTypeRecord type = _types[root[RawSidPool.TypeOffset]];
+            OriginalTypeRecord type = CurrentTypes[root[RawSidPool.TypeOffset]];
             if (operation == Operation.Flood || projected.Type is null || projected.Level < 0 || projected.Level > 3
                 || type.Flags1 != projected.Type.Flags1 || type.Flags2 != projected.Type.Flags2
                 || type.FootX != projected.Type.FootX || type.FootY != projected.Type.FootY)
@@ -571,7 +568,7 @@ public sealed class RawGraph : IRawPostPopGraph
         byte[] spots = (byte[])_spots.Clone();
         if (pop is { } prediction)
         {
-            OriginalTypeRecord type = _types[root[RawSidPool.TypeOffset]];
+            OriginalTypeRecord type = CurrentTypes[root[RawSidPool.TypeOffset]];
             // 실제 Pop이 보존한 비표면 소수 위치만 영역 칸으로 절삭한다. 표면은 정수 칸을 유지한다
             Func<float, int> cell = (type.Flags1 & OriginalTypeRecord.Surface) != 0 ? Coordinate : RegionCoordinate;
             int px = cell(prediction.X);
@@ -627,8 +624,8 @@ public sealed class RawGraph : IRawPostPopGraph
             // 로컬 표면 스냅샷에만 비표면 필터를 적용한다
             if ((candidate[RawSidPool.StateOffset] & (FreeBit | ContainedBit | VoidBit)) == 0
                 && candidate[RawSidPool.TypeOffset] >= OriginalConstructors.FirstAssetType
-                && candidate[RawSidPool.TypeOffset] < _types.Count
-                && (_types[candidate[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0)
+                && candidate[RawSidPool.TypeOffset] < CurrentTypes.Count
+                && (CurrentTypes[candidate[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0)
             {
                 map[i] = 0;
                 continue;
@@ -661,7 +658,7 @@ public sealed class RawGraph : IRawPostPopGraph
                 }
                 continue;
             }
-            if (bytes[RawSidPool.TypeOffset] >= _types.Count)
+            if (bytes[RawSidPool.TypeOffset] >= CurrentTypes.Count)
             {
                 if (required[id] || fullPool)
                 {
@@ -669,7 +666,7 @@ public sealed class RawGraph : IRawPostPopGraph
                 }
                 continue;
             }
-            OriginalTypeRecord type = _types[bytes[RawSidPool.TypeOffset]];
+            OriginalTypeRecord type = CurrentTypes[bytes[RawSidPool.TypeOffset]];
             bool surface = (type.Flags1 & OriginalTypeRecord.Surface) != 0;
             if (!surface && !required[id])
             {
@@ -685,7 +682,7 @@ public sealed class RawGraph : IRawPostPopGraph
             FrameCode code = default;
             if (surface)
             {
-                uint frame = Read(bytes, FrameOffset, 4);
+                uint frame = Read(bytes, FrameOffset, _pool.Edition == OriginalEdition.Patch1078 ? 4 : 1);
                 if (frame >= _frames[bytes[RawSidPool.TypeOffset]].Count)
                 {
                     throw new ArgumentOutOfRangeException(nameof(sid), frame, "raw 그래프 프레임 번호 오류");
@@ -699,6 +696,7 @@ public sealed class RawGraph : IRawPostPopGraph
         }
         var finder = new SurfaceFinder(objects, map, spots);
         var graph = new SurfaceGraph(finder, members, plan.Records, plan.Stack);
+        if (operation == Operation.Inspect) return plan;
         if (operation == Operation.Rebuild)
         {
             // 전체 풀 스냅샷 위에서 무효 수집 또는 표 초기화 재구성을 수행한다
@@ -721,11 +719,11 @@ public sealed class RawGraph : IRawPostPopGraph
             if (sourceType.HasValue)
             {
                 // 치환 타입 번호가 표를 벗어나면 쓰기 전에 거부한다
-                if (sourceType.Value >= _types.Count)
+                if (sourceType.Value >= CurrentTypes.Count)
                 {
                     throw new ArgumentOutOfRangeException(nameof(sourceType), sourceType.Value, "raw 그래프 삭제 치환 타입 오류");
                 }
-                OriginalTypeRecord replacement = _types[sourceType.Value];
+                OriginalTypeRecord replacement = CurrentTypes[sourceType.Value];
                 uint frameIndex = Read(root, FrameOffset, 4);
                 // 치환 타입은 표면이어야 하고 발자국이 지도 안에 있어야 한다
                 if ((replacement.Flags1 & OriginalTypeRecord.Surface) == 0)
@@ -853,14 +851,14 @@ public sealed class RawGraph : IRawPostPopGraph
                             throw new InvalidOperationException("그래프 삭제 후보 상태 오류");
                         }
                         // 타입 번호가 표를 벗어나면 쓰기 전에 거부한다
-                        if (bytes[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || bytes[RawSidPool.TypeOffset] >= _types.Count)
+                        if (bytes[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || bytes[RawSidPool.TypeOffset] >= CurrentTypes.Count)
                         {
                             throw new InvalidOperationException("그래프 삭제 후보 타입 오류");
                         }
                         // 죽음·매립·비표면 후보는 건너뛴다
                         if ((bytes[RawSidPool.StateOffset] & DeadBit) != 0
                             || (bytes[ExtraOffset] & BuriedBit) != 0
-                            || (_types[bytes[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0)
+                            || (CurrentTypes[bytes[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0)
                         {
                             continue;
                         }
@@ -918,10 +916,10 @@ public sealed class RawGraph : IRawPostPopGraph
     /// <param name="pop">Pop 예측값(그 단계·버킷은 새 객체를 먼저 넣은 것으로 본다).</param>
     /// <param name="spots">예측 반영이 끝난 점유 지도 사본.</param>
     /// <param name="plan">번호 변경을 쌓을 계획.</param>
-    private void Region(int sid, PopProjection? pop, byte[] spots, Plan plan)
+    private void Region(int sid, PopProjection? pop, byte[] spots, Plan plan, bool live = false)
     {
         ReadOnlySpan<byte> root = _pool.Slot(sid);
-        OriginalTypeRecord source = _types[root[RawSidPool.TypeOffset]];
+        OriginalTypeRecord source = CurrentTypes[root[RawSidPool.TypeOffset]];
         // 비표면 업그레이드 그림의 +0.001 위치도 원본 영역을 통지한다. 표면은 정수 칸을 유지한다
         Func<float, int> cell = (source.Flags1 & OriginalTypeRecord.Surface) != 0 ? Coordinate : RegionCoordinate;
         int x = cell(pop is { } prediction ? prediction.X : BitConverter.UInt32BitsToSingle(Read(root, XOffset)));
@@ -977,12 +975,12 @@ public sealed class RawGraph : IRawPostPopGraph
                         {
                             continue;
                         }
-                        if (bytes[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || bytes[RawSidPool.TypeOffset] >= _types.Count)
+                        if (bytes[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || bytes[RawSidPool.TypeOffset] >= CurrentTypes.Count)
                         {
                             throw new InvalidOperationException("그래프 영역 후보 타입 오류");
                         }
                         // 실제 일반 탐색의 비표면은 그래프를 바꾸지 않는다
-                        if ((_types[bytes[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0)
+                        if ((CurrentTypes[bytes[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) == 0)
                         {
                             continue;
                         }
@@ -996,7 +994,7 @@ public sealed class RawGraph : IRawPostPopGraph
                         {
                             throw new ArgumentOutOfRangeException(nameof(sid), "그래프 영역 후보의 유효 좌표가 필요합니다");
                         }
-                        OriginalTypeRecord type = _types[bytes[RawSidPool.TypeOffset]];
+                        OriginalTypeRecord type = CurrentTypes[bytes[RawSidPool.TypeOffset]];
                         if (type.FootX < 1 || type.FootY < 1 || type.FootX > RawSquidHash.WorldCells || type.FootY > RawSquidHash.WorldCells)
                         {
                             throw new ArgumentOutOfRangeException(nameof(sid), "그래프 영역 후보 발자국 오류");
@@ -1009,13 +1007,14 @@ public sealed class RawGraph : IRawPostPopGraph
                             continue;
                         }
                         int staged = StagedIndex(plan, candidate);
-                        byte graph = staged < 0 ? bytes[GraphOffset] : plan.Numbers[staged].Graph;
+                        byte graph = live || staged < 0 ? bytes[GraphOffset] : plan.Numbers[staged].Graph;
                         if (graph != Invalid)
                         {
                             if (graph >= Count)
                             {
                                 throw new ArgumentOutOfRangeException(nameof(sid), graph, "그래프 영역 후보 번호 오류");
                             }
+                            if (live) { RemoveSurface(graph); WriteNumber(candidate, Invalid); continue; }
                             ref GraphRecord record = ref plan.Records[graph];
                             // Remove 의 활성/양수 조건을 유지하며 0 이 되면 사용 여부도 지운다
                             if (record.InUse != 0 && record.Surfaces > 0)
@@ -1098,11 +1097,11 @@ public sealed class RawGraph : IRawPostPopGraph
         ReadOnlySpan<byte> root = _pool.Slot(sid);
         // 빈 슬롯·들어 있는 내용물·비자산 타입은 쓰기 전에 거부한다
         if (sid < RawSidPool.FirstOrdinary || (root[RawSidPool.StateOffset] & (FreeBit | ContainedBit)) != 0
-            || root[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || root[RawSidPool.TypeOffset] >= _types.Count)
+            || root[RawSidPool.TypeOffset] < OriginalConstructors.FirstAssetType || root[RawSidPool.TypeOffset] >= CurrentTypes.Count)
         {
             throw new InvalidOperationException("raw 그래프 postDestroy 자산 오류");
         }
-        OriginalTypeRecord type = _types[root[RawSidPool.TypeOffset]];
+        OriginalTypeRecord type = CurrentTypes[root[RawSidPool.TypeOffset]];
         // 예측 그림 삭제 뒤의 표면 재연결도 같은 원본 발자국 칸을 쓴다. 비표면은 소수 위치를 절삭한다
         Func<float, int> cell = (type.Flags1 & OriginalTypeRecord.Surface) != 0 ? Coordinate : RegionCoordinate;
         int x = cell(BitConverter.UInt32BitsToSingle(Read(root, XOffset)));
@@ -1116,24 +1115,24 @@ public sealed class RawGraph : IRawPostPopGraph
         int top = Math.Clamp(y - type.FootY + 1, 1, RawSquidHash.WorldCells - 1);
         var area = new SquidSearchArea(left, top, x > 0 && y > 0 ? x : left, x > 0 && y > 0 ? y : top);
         // 원본처럼 풀 사본 위에서 순차 Add 를 수행한다
-        var trial = new RawSidPool(_pool.Capacity, _pool.IsServer);
+        var trial = new RawSidPool(_pool.Capacity, _pool.IsServer, edition: _pool.Edition);
         // 사본 풀의 슬롯 바이트를 현재 풀과 같게 채운다
         for (int i = 0; i < _pool.Capacity; i++)
         {
             _pool.Slot(i).CopyTo(trial.RawSlot(i));
         }
-        var next = new RawGraph(trial, _hash, _spots, _types, _records, _stack, _frames, _recovery);
-        var finder = new RawSquidFinder(trial, _hash, _types);
+        var next = new RawGraph(trial, _hash, _spots, CurrentTypes, _records, _stack, _frames, _recovery);
+        var finder = new RawSquidFinder(trial, _hash, CurrentTypes);
         // Begin 은 첫 Next 까지 수행한다. 반환 직전 next 저장과 단계/y/x 순서를 그대로 사용한다
         for (int candidate = finder.Begin(area); candidate != 0; candidate = finder.Next())
         {
             ReadOnlySpan<byte> raw = trial.Slot(candidate);
             // 후보 타입 번호가 표를 벗어나면 쓰기 전에 거부한다
-            if (raw[RawSidPool.TypeOffset] >= _types.Count)
+            if (raw[RawSidPool.TypeOffset] >= CurrentTypes.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(sid), raw[RawSidPool.TypeOffset], "raw 그래프 postDestroy 후보 타입 오류");
             }
-            if ((_types[raw[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) != 0)
+            if ((CurrentTypes[raw[RawSidPool.TypeOffset]].Flags1 & OriginalTypeRecord.Surface) != 0)
             {
                 next.Add(candidate);
             }
