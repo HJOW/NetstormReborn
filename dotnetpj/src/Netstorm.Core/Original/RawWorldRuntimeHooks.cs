@@ -53,6 +53,9 @@ public sealed class RawWorldRuntimeHooks
     /// <summary>watcher의 실제 가상 통지다. 누락 시 기존 ProcessForm 통지를 사용한다. 2026-11-07 F2d 월드 런타임 훅 이식에서 추가됐다.</summary>
     public DependFormNotice? DependencyNotice { get; set; }
 
+    /// <summary>현재 내용물 부모의 실제 파생 통지다. 빈 가상 몸체는 이 장치를 요구하지 않는다.</summary>
+    public Action<int, int, uint>? ContentNotice { get; set; }
+
     /// <summary>실제 세션의 다리 파편·위치 소리 소비자이며 runtime 설치 전에 필수로 공급한다. 2026-11-07 F2d 월드 런타임 훅 이식에서 추가됐다.</summary>
     public Action<BridgeLifecycleEvent>? BridgeEffect { get; set; }
 
@@ -71,6 +74,7 @@ public sealed class RawWorldRuntimeHooks
         SquidConnected = SquidConnected,
         SquidSend = SquidSend,
         DependencyNotice = DependencyNotice,
+        ContentNotice = ContentNotice,
         BridgeEffect = BridgeEffect,
     };
 }

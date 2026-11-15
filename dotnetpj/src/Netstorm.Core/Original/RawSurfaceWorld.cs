@@ -203,6 +203,8 @@ public sealed partial class RawSurfaceWorld
             Parent = sid => RawContainedLink.CommonContainedParent(_storage.Pool, sid),
             Previous = sid => RawContainedLink.CommonContainedPrevious(_storage.Pool, sid),
             SetPrevious = (sid, previous) => RawContainedLink.CommonContainedSetPrevious(_storage.Pool, sid, previous),
+            ParentNotice = (parent, form, reason) => new RawContentParentNotice(_storage.Pool, (selected, content, code) =>
+                (_runtime?.ContentNotice ?? throw new InvalidOperationException("현재 World의 실제 내용물 부모 파생 통지 미연결"))(selected, content, code)).Notice(parent, form, reason),
             Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
         });
         // 표시 수집은 판본과 무관하게 같은 수의 셰이프 표가 있을 때만 둔다. 자동 껍데기 저장소의 빈 표에서는 비워 둔다.

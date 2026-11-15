@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.545 · 정리 2026-11-15(HJOW-Athlon, 문서만) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.546 = [R4-1](#r4-detail) · cpppj 기준 제품 1313 · 전체 목표 미완료 · 2026-11-15 사용자 요청으로 0.545 마감 후 목표 일시 중지 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
+**기준 단위 0.546 · 갱신 2026-11-15(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.547 = [R4-1](#r4-detail) · cpppj 기준 제품 1313 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-15) 직전의 이 문서 전체(단위 기록 0.453~0.545 93건, R4 진행판의 묶음별 경과, 0.3의 단위별 검사·fixture 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261115-through-0545)에 바이트 그대로 보관했고, 그 이전 보관본 6개와 0.452 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -19,9 +19,9 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 | 경로 | 실행·플레이 가능 여부 | 원본과의 동일성 |
 | --- | --- | --- |
 | **기존 경로** `Netstorm.Game`<br>(`Netstorm.exe`, 현재 배포 대상) | **실행·플레이 가능.** 메인 메뉴와 캠페인 1-1·1-2를 근사 규칙으로 플레이할 수 있다. 한국어 선택·와이드 시야 확장·테두리 없는 전체화면이 있다. 새 기능을 넣지 않는 동결 상태다(실행 오류 수정만). | **낮다.** 녹화·팬게임 기반 근사(RGBA 합성, 자체 UI 배치, 근사 세션 `BattleSession`)라 원본 동일성의 기준이 될 수 없다. 새 경로가 같은 범위를 대체하면 삭제한다. |
-| **새 경로** `Netstorm.Client` + `Netstorm.Client.Host`<br>(개발 호스트, 아직 배포 안 함) | **메뉴와 미션 진입 일부만 실행.** 타이틀, 메인 메뉴 8버튼, Help·Options(해상도·음량·난이도 펼침 포함)·Credits(11.01 포함), 캠페인 선택, Edit 맵 목록·새 맵 이름까지의 메뉴, 그리고 개발 진입 `--mission <키> --handle <이름>`(세션·Player·동맹·Zone·가입/Ready·지형·요새 객체 슬롯·그래프 초기화, Player 화신·사제 Pop). **월드 화면·입력·규칙이 없어 플레이할 수 없다.** | **부품은 높지만 전체는 미확정.** cpppj를 구조 그대로 직역했고 원본 x86 fixture 299개로 부품을 대조했다(PORT_MAP L1 422행). **화면(L4a): 1024×768 메뉴 12장면이 cpppj와 BMP 바이트 동일**(0.381~0.388). **상태(L2): cpp 기준선 34/34경로·dn 일반 31미션 덤프를 같은 시드로 확보해 대조했고 전체 일치는 0/34**다(데모 3경로는 dn 진입 미연결, [일괄 수집 결과](docs/dotnet-l2-batch-20261114.md)). 덤프에서 SID 집합·타입·난수 흐름은 맞고, 소유자 스탬프·그래프 번호·장부·정기 처리·AI·첫 지역(+0x78)이 다르다([2.4](#r4-detail) R4-2~R4-5의 대상). L3·L4b·L5는 미착수다. |
+| **새 경로** `Netstorm.Client` + `Netstorm.Client.Host`<br>(개발 호스트, 아직 배포 안 함) | **메뉴와 미션 진입 일부만 실행.** 타이틀, 메인 메뉴 8버튼, Help·Options(해상도·음량·난이도 펼침 포함)·Credits(11.01 포함), 캠페인 선택, Edit 맵 목록·새 맵 이름까지의 메뉴, 그리고 개발 진입 `--mission <키> --handle <이름>`(세션·Player·동맹·Zone·가입/Ready·지형·요새 객체 슬롯·그래프 초기화, Player 화신·사제 Pop). **월드 화면·입력·규칙이 없어 플레이할 수 없다.** | **부품은 높지만 전체는 미확정.** cpppj를 구조 그대로 직역했고 원본 x86 fixture 300개로 부품을 대조했다(PORT_MAP L1 423행). **화면(L4a): 1024×768 메뉴 12장면이 cpppj와 BMP 바이트 동일**(0.381~0.388). **상태(L2): cpp 기준선 34/34경로·dn 일반 31미션 덤프를 같은 시드로 확보해 대조했고 전체 일치는 0/34**다(데모 3경로는 dn 진입 미연결, [일괄 수집 결과](docs/dotnet-l2-batch-20261114.md)). 덤프에서 SID 집합·타입·난수 흐름은 맞고, 소유자 스탬프·그래프 번호·장부·정기 처리·AI·첫 지역(+0x78)이 다르다([2.4](#r4-detail) R4-2~R4-5의 대상). L3·L4b·L5는 미착수다. |
 
-**이식 범위(2026-11-15 집계, `tools/port_inventory.py`):** cpppj `src`는 소스 단위(같은 이름의 `.cpp/.h/.inc` 묶음) 1,237개·169,017줄이다. dotnetpj `PORT_MAP.tsv` 886행이 가리키는 것은 그중 **406단위(75,329줄, 45%)**이고, **대응이 없는 것이 831단위(93,688줄, 55%)**다. 대응이 있다는 것은 행이 있다는 뜻일 뿐 그 파일을 끝까지 옮겼다는 뜻이 아니다(예: `RawCampaignSession`·`ClientMain`·`Renderer`는 일부만). 대응 없는 831단위의 단계별 배분은 0.2, 영역별 표는 [2.7](#dotnet-inventory)이다.
+**이식 범위(0.545 시점, 2026-11-15 집계, `tools/port_inventory.py`):** cpppj `src`는 소스 단위(같은 이름의 `.cpp/.h/.inc` 묶음) 1,237개·169,017줄이다. dotnetpj `PORT_MAP.tsv` 886행이 가리키는 것은 그중 **406단위(75,329줄, 45%)**이고, **대응이 없는 것이 831단위(93,688줄, 55%)**다. 대응이 있다는 것은 행이 있다는 뜻일 뿐 그 파일을 끝까지 옮겼다는 뜻이 아니다(예: `RawCampaignSession`·`ClientMain`·`Renderer`는 일부만). 대응 없는 831단위의 단계별 배분은 0.2, 영역별 표는 [2.7](#dotnet-inventory)이다.
 
 <a id="dotnet-stage-board"></a>
 
@@ -35,7 +35,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 | R1 | 8비트 화면 호스트·입력 큐·오라클 도구(`--ui-script`·`snapshot`·`session-dump`·`--fixed-frame-ms`) | — | ✅ 완료 | — |
 | R2 | 그리기 원시·팔레트·글꼴 | — | ✅ 본체 완료(실자산·세션 연결은 R5) | — |
 | R3 | Gump UI와 메인 메뉴 계열 | D1 메뉴 픽셀 일치 | 🔶 **메뉴 L4a 12장면 차이 0.** 미룬 3장면(Language 자식 CJK는 R8, Multiplayer 섬 화면은 R5·R11, Edit 이동행은 R7)과 잔여 위젯·소유자([2.5](#r3-r2-detail))는 R5~R7에서 해당 화면과 함께 닫는다 | R5의 G 영역에 포함 |
-| **R4** | **월드 세션 조립** | **M1: 34경로 Load/Start 상태가 cpppj `session-dump`와 같다(L2)** | 🔶 **진행 중(0.390~0.545).** 세션·Player·지형·요새 객체 적재와 객체 수명 공통층(공장·Pop/Unpop·삭제·피해·연소·사제·보호막 부품)까지. **M1 0/34.** 남은 조각 R4-1~R4-8 | A·B·C·D **141단위 / 14,251줄** + K·L·M 중 적재 경로 |
+| **R4** | **월드 세션 조립** | **M1: 34경로 Load/Start 상태가 cpppj `session-dump`와 같다(L2)** | 🔶 **진행 중(0.390~0.546).** 세션·Player·지형·요새 객체 적재와 객체 수명 공통층(공장·Pop/Unpop·삭제·피해·연소·사제·보호막 부품)까지. **M1 0/34.** 남은 조각 R4-1~R4-8 | A·B·C·D **141단위 / 14,251줄** + K·L·M 중 적재 경로 |
 | R5 | 월드 표시·카메라·HUD, **`Netstorm.exe` 전환** | D2: 34경로 진입 직후·N프레임 뒤 캡처 차이 0(L4a) | ⬜ 미착수(연소·공통 표시 등록 부품만 R4에서 선행) | E·G **102단위 / 13,764줄** |
 | R6 | 플레이 입력·규칙·AI·소리 | M2: 고정 입력열 L3 상태 해시 일치 · M3: 1-1·1-2를 새 경로에서 진행 → 기존 경로 삭제 | ⬜ 미착수(사제·Carrier·보호막·소리 장치 일부 부품만 R4에서 선행) | F·H·I·J·K·L·N·O **383단위 / 45,141줄** |
 | R7 | 미션 전체·Edit·설정·배포 | M4: 34경로 진입·진행·저장 수명, Edit, 배포 압축 해제 실행 | ⬜ 미착수(Edit 목록·`options.cfg` 저장 일부는 R3에서 선행) | M·Y **45단위 / 5,657줄** |
@@ -50,11 +50,11 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 단위 | **0.545(2026-11-15, HJOW-Athlon):** [현재 Unpop·실제 공간](docs/dotnet-unpop-current-20261115.md). 커밋 `0b54c5d96 / 20261115-50 DN`. 문서·커밋 마감 뒤 사용자 요청으로 목표 일시 중지 |
-| 검사 기준선 | 0.545: 전체 비증분 Release 0경고 0오류, **Core 2,393/2,393**(대형 독립 저장 검사 1건은 0.542 전체 통과 뒤 미반복), **Client 일반 1,232/1,232**(실장치 Explicit 1건 미실행 — [0.6](#user-checks) 소리 출력 환경). **Assets 366**은 0.453 전체 회귀 값이다. 실제 `thewarbegins` 120프레임 진입 종료 코드 0. 솔루션 전체를 한 번에 끝까지 돌린 마지막 기록은 0.453(합계 3,441)이므로 재개 첫 단위에서 전체 회귀를 다시 돌려 기준선을 적는다([6.1](#dotnet-commands) 전체 검사 완주) |
-| PORT_MAP | `PORT_MAP.tsv` **886행(L1 422·port 464)**, cpppj 406단위에 대응. 행은 파일 전체 완료를 뜻하지 않는다 |
-| fixture | 연결 **299개**(원본 x86 대조 자료, `cpp-fixture-manifest.tsv`) |
-| L2 기준선 | cpp 34/34경로(같은 시드 f090), dn 일반 31/31 덤프, 데모 3 미연결, **일치 0/34**. 일괄 도구·결과는 [L2 일괄 문서](docs/dotnet-l2-batch-20261114.md), 자료는 `extracted/dotnet-l2-fixed/`(Git 제외, HJOW-Athlon) |
+| 마지막 구현 단위 | **0.546(2026-11-15, HJOW-Athlon):** [현재 Form 부모 체인·내용물 통지](docs/dotnet-form-parent-20261115.md). R4-1 진행 중, 장기 NativeStorage 수명·파생 몸체는 잔여 |
+| 검사 기준선 | 0.546 재개 전체 회귀 완주: **Assets366/366·Client일반1,232/1,232·Core2,393/2,394**(17분39초, 대형 독립 저장 포함). Core 실패1은 `NETSTORM_DATA` 누락이며 환경을 바로잡은 **관련155/155**에서 동일 검사와 신규11검사 통과. 최초 전체 종료1과 후속 통과를 구분한다. 실장치 오디오Explicit1 미실행. 호스트 Release 0경고·0오류. TRX `extracted/dotnet-regression-0546/`·`extracted/dotnet-form-parent-0546-final/`, [근거](docs/dotnet-form-parent-20261115.md) |
+| PORT_MAP | `PORT_MAP.tsv` **891행(L1 423·port 468)**, cpppj 409단위에 대응. 행은 파일 전체 완료를 뜻하지 않는다 |
+| fixture | 연결 **300개**(원본 x86 대조 자료, `cpp-fixture-manifest.tsv`) |
+| L2 기준선 | 0.546 재수집: cpp 34/34경로(같은 시드 f090), dn 일반 31/31 덤프, 데모 3 미연결, **일치 0/34**. 65회 종료0·수집 오류0·원본1,394파일 전후 동일. 대표 thewarbegins 2,140행은 0.545와 전부 동일. 자료 `extracted/dotnet-l2-0546/`, [이번 결과](docs/dotnet-form-parent-20261115.md)·[일괄 도구](docs/dotnet-l2-batch-20261114.md) |
 | cpppj 기준 | 제품 **1313 / 11.01**(M8 최종 관문 1311 완료, CD 10.72 복원은 사용자 보류, cpppj 목표 일시 중지). 영향 분류는 0.379(1247→1300 전수)·0.499(1304~1310)·0.530(1312·1313)까지 마쳤다([1.2](#resync-scope)). `reflected-commit`/floor는 올리지 않았다 |
 | 오라클 | `cpppj/build/bin/Release/Netstorm.exe`. cpppj `src`가 바뀌면 PowerShell로 다시 빌드한다. 데이터 사본 `extracted/dotnet-oracle-data/`·캡처 `extracted/dotnet-oracle-captures/`·기준선 `extracted/dotnet-r0-baseline/`은 이 PC에만 있다(Git 제외) |
 | 디컴파일 | dotnetpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`). 이식 근거는 cpppj 소스·fixture·문서다 |
@@ -63,7 +63,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 ### 0.4 남은 작업 — 순서대로
 
-**작업 상태:** 0.545 완료 뒤 사용자 요청으로 목표 일시 중지(2026-11-15). 이번 정리는 문서만 고쳤고 코드·검사·게임 실행은 하지 않았다. **재개하면 아래 순서 1의 R4-1부터 한다.** 사제 포획/희생·특정 적 공격·시나리오 승리 재현이 필요한 실행 검사와 MP 실행 검사는 계속 사용자 확인 대상이다.
+**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). 현재 Form 부모 체인·기본 내용물 통지 분배를 옮겼고, **다음은 R4-1의 장기 저장소와 현재 connector·파생 Form 몸체다.** 사제 포획/희생·특정 적 공격·시나리오 승리 재현이 필요한 실행 검사와 MP 실행 검사는 계속 사용자 확인 대상이다.
 
 체크 대상은 AI 작업이다. 자연 완주·전체 동일성·Windows 11 실기는 AI 작업이 아니며 단계 전환을 막지 않는다([2.3](#stage-criteria)).
 
@@ -264,7 +264,7 @@ dotnetpj 작업에서는 cpppj·LEFT_JOBS.md를 수정하지 않는다. 아래 �
 
 | 조각 | 할 일 | 주 cpppj 근거 | 끝났다는 증거 |
 | --- | --- | --- | --- |
-| **R4-1** 객체 수명 공통층 마감 | 0.545의 재개 지점. `NativeStorage` 장기 공장·공간·World 수명, 표면 connector와 파생 Form의 현재 몸체, 제품 피해/해방·삭제/배치 상위 결선. 이 층이 닫혀야 R4-2 이후가 같은 저장소를 쓴다 | `client/RawSurfaceStorage`·`RawSurfaceWorld`(대응 있음, 재검토 16·17번 잔여), `client/RawSurface*` 11단위, `o/RawSquid*`·`RawContent*`·`RawDepend*` | 대표 미션 덤프의 slot 행이 변하지 않고 집중 검사 통과 |
+| **R4-1** 객체 수명 공통층 마감 | 🔶 0.546에서 현재 Form 부모 체인·기본 내용물 통지 분배 완료. `NativeStorage` 장기 공장·공간·World 수명, 표면 connector와 파생 Form의 현재 몸체, 제품 피해/해방·삭제/배치 상위 결선은 잔여. 이 층이 닫혀야 R4-2 이후가 같은 저장소를 쓴다 | `client/RawSurfaceStorage`·`RawSurfaceWorld`(대응 있음, 재검토 16·17번 잔여), `client/RawSurface*` 11단위, `o/RawSquid*`·`RawContent*`·`RawDepend*` | 대표 미션 덤프의 slot 행이 변하지 않고 집중 검사 통과 |
 | **R4-2** 적재 중 Pop 후처리 | 지면·받침 소유자 스탬프(`IslandPostPop.SetSupportOwner` 3×3·`Prefix`), 농지 배치 파이프라인(타입 121), 표시 등록, 그래프 per-Pop 번호 부여, 장부 totals·totalmade 집계(`PostPopBase`) | `o/SquidPostPop`(대응 있음, 재검토 30번 잔여)·`SquidPostPopPatch`, `o/RawRegionPaint`·`RawRegionOwnership`, `o/RawGraphLive`, `o/Islandbuilder`, `o/RawFarmCluster`(대응 있음) | 덤프의 owner·type·graph·totals 행이 cpp와 같다 |
 | **R4-3** 신전·소용돌이 사슬 | 신전 Pop → 소용돌이 → 섬 소유자 → Player 첫 지역(+0x78). 단일 미션의 기록자는 전투섬 배정 갈고리가 아니라 이 사슬이다(0.477) | `o/RawVortex*`·`RawTemple*`·`RawRune*`·`RawDais*` 중 적재 경로(L 영역, R6-5 목록에서 당겨 온다) | 경로별 +0x78이 cpp와 같다(surrounded의 무신전 127 포함) |
 | **R4-4** 정기 처리·프로세스 초기 등록 | 적재 직후 등록되는 Regular와 프로세스, `RawSurfaceStorage.UpdateAmbientWind` 연결 | `o/RawAssetRegular`·`RawDaisRegular`·`RawDudeRegular`·`RawPlayerRegular`·`RawDiscRegular`·`RawBuriedRegular`·`RawDecorationRegular`·`RawProcess*`, `client/RawSurface*Regular` | 덤프 kernel·regular·process 행이 cpp와 같다 |
@@ -309,14 +309,14 @@ dotnetpj 작업에서는 cpppj·LEFT_JOBS.md를 수정하지 않는다. 아래 �
 - [ ] `o/RawSquid*` 9단위 584줄: RawSquidMutationReceive 106, RawSquidReceive 88, RawSquidName 73, RawSquidLevel 69, RawSquidCompressedReceive 67, RawSquidVerification 62, RawSquidPostPopParent 60, RawSquidDefense 46, RawSquidWord 13
 - [ ] `o/RawObject*` 4단위 380줄: RawObjectTraceMain 130, RawObjectTraceFields 99, RawObjectTrace 82, RawObjectCommand 69
 - [ ] `client/Object*` 2단위 178줄: ObjectDumpDisk 110, ObjectOwnerCommands 68
-- [ ] `o/Content*` 1단위 158줄: ContentNoticeVtables 158
+- [x] `o/Content*` 1단위 158줄: ContentNoticeVtables 158 — 0.546
 - [ ] `client/RawObject*` 1단위 129줄: RawObjectDump 129
 - [ ] `o/SquidName*` 1단위 86줄: SquidNameVtables 86
 - [ ] `o/RawBuried*` 1단위 79줄: RawBuriedPostPop 79
 - [ ] `client/Type*` 1단위 72줄: TypeFileRead 72
 - [ ] `o/RawDestroy*` 1단위 69줄: RawDestroyAt 69
 - [ ] `o/RawCreate*` 1단위 62줄: RawCreateAt 62
-- [ ] `o/RawContent*` 1단위 61줄: RawContentParentNotice 61
+- [x] `o/RawContent*` 1단위 61줄: RawContentParentNotice 61 — 0.546
 - [ ] `o/RawAllocation*` 1단위 52줄: RawAllocationFailure 52
 - [ ] `o/RawDepend*` 1단위 50줄: RawDependCreate 50
 - [ ] `o/Pop*` 1단위 49줄: PopVtables 49
@@ -371,7 +371,7 @@ dotnetpj 작업에서는 cpppj·LEFT_JOBS.md를 수정하지 않는다. 아래 �
 - [ ] `client/State*` 1단위 53줄: State 53
 - [ ] `client/CampaignLogin*` 1단위 47줄: CampaignLoginServices 47
 - [ ] `client/LocalServer*` 1단위 41줄: LocalServerProcess 41
-- [ ] `o/RawForm*` 1단위 40줄: RawFormLinked 40
+- [x] `o/RawForm*` 1단위 40줄: RawFormLinked 40 — 0.546(실제 건설 소비자는 R6)
 - [ ] `client/ClientRandom*` 1단위 36줄: ClientRandomGlobals 36
 - [ ] `o/RawDeveloper*` 1단위 35줄: RawDeveloperCommandPacket 35
 - [ ] `o/RawDecoration*` 1단위 33줄: RawDecorationRegular 33
@@ -1052,6 +1052,7 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 단위별 상세는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md)와 아래 문서에 있다. 마지막 열은 현행 계획에서의 처리다([2.2](#04-기존-dotnetpj-소스의-재수정-판정)). 새 경로의 진행도는 Client 검사와 2.3의 실제 완료 기준을 함께 본다. Assets·Core의 기존 경로 검사 수를 새 경로 진행도로 세지 않는다.
 
 | 0.500~0.545 (11-14~15) | 객체 수명 공통층 — AI 본체·기술·에너지 부품(0.500~0.503), Player 화신·공유 장부(0.504), 사제 조회·등록·Pop·낙하·회복·보호막·소리(0.505~0.518·0.522~0.529), 배치 접두·기하·후보 충돌(0.519~0.521), Carrier·피해 전처리(0.523·0.524), cpp 1312/1313 영향 분류(0.530), 종속 해방·삭제 후처리·피격(0.531~0.533), 공통 표시 등록·연소(0.534~0.538), 공통 삭제·풀 반납(0.539·0.540), ProcessHost·Form 해제(0.541·0.542), Take·Create·Unpop 현재 부모(0.543~0.545) | [보관 0.453~0.545](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261115-through-0545)의 8절·R4 진행판, 단위 문서 `docs/dotnet-*-2026111[45].md` | 새 경로 R4(상위 결선은 R4-1~R4-5) |
+| 0.546 (11-15) | 현재 Form 부모 체인·내용물 통지 가상표와 World 기본 해제 연결 | [단위 문서](docs/dotnet-form-parent-20261115.md) | 새 경로 R4-1(전체 수명 연결은 잔여) |
 | 0.478~0.499 (11-12~14) | L2 기준선 확장 — 6번째~26번째 경로의 cpp 기준선·dn 덤프와 구조 대조, 담긴 섬 판정(0.484), 34경로 같은 시드 일괄 수집·도구(0.499) | [L2 일괄](docs/dotnet-l2-batch-20261114.md), 같은 보관본 | 새 경로 R4(M1 판정 자료) |
 | 0.453~0.477 (11-12) | 지형 바인딩 조립·Generate 라이브·난수 단일 스트림·시작 1회 reseed(0.453~0.465), Pop 공간 등록·요새 객체 적재·그래프 재구성(0.466~0.470), 장부·전투섬·첫 지역 귀속 확정과 Player 월드 갈고리(0.471~0.477) | 같은 보관본 | 새 경로 R4 |
 | 기간·단위 | 완료 범위 | 근거 문서 | 처리 |

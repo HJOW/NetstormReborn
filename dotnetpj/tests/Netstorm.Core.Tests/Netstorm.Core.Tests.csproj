@@ -360,4 +360,8 @@
     <None Include="../../../cpppj/tests/fixtures/squid-unpop-parent-hardware-x86.tsv" Link="X86/squid-unpop-parent-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/cd-squid-unpop-current-hardware-x86.tsv" Link="X86/cd-squid-unpop-current-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 공통 Form의 부모 체인 전체를 원본 PE 관측과 읽기 전용으로 대조한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/form-linked-parent-x86.tsv" Link="X86/form-linked-parent-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

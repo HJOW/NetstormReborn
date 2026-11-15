@@ -889,3 +889,8 @@ cpppj/src/o/RawSquidUnpopParent.h	Netstorm.Core/Original/RawSquidUnpopParent.cs	
 cpppj/src/o/SquidUnpop.cpp	Netstorm.Core/Original/RawUnpop.Current.cs	2c6ab7cc1851d34a9e936af1d4333d2bf5155d38	port
 cpppj/src/o/SquidUnpop.h	Netstorm.Core/Original/RawUnpop.Current.cs	2c6ab7cc1851d34a9e936af1d4333d2bf5155d38	port
 cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.UnpopCurrent.cs	c102cdbf36fca4e8661d0699ea2ce5f2f44b2934	port
+cpppj/src/o/ContentNoticeVtables.inc	Netstorm.Core/Original/RawContentParentNotice.Tables.cs	435a7032c649c653fc4bea0757e5db120724d633	port
+cpppj/src/o/RawContentParentNotice.cpp	Netstorm.Core/Original/RawContentParentNotice.cs	435a7032c649c653fc4bea0757e5db120724d633	port
+cpppj/src/o/RawContentParentNotice.h	Netstorm.Core/Original/RawContentParentNotice.cs	435a7032c649c653fc4bea0757e5db120724d633	port
+cpppj/src/o/RawFormLinked.cpp	Netstorm.Core/Original/RawFormLinked.cs	435a7032c649c653fc4bea0757e5db120724d633	L1
+cpppj/src/o/RawFormLinked.h	Netstorm.Core/Original/RawFormLinked.cs	435a7032c649c653fc4bea0757e5db120724d633	port
