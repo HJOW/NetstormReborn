@@ -344,7 +344,7 @@ cpppj/src/client/RawCampaignMeltdown.inc	port			todo	[client-default]
 cpppj/src/client/RawCampaignMissionStartBindings.cpp	port			todo	[client-default]
 cpppj/src/client/RawCampaignMotionBindings.cpp	port			todo	[client-default]
 cpppj/src/client/RawCampaignNewFort.inc	exclude-edit			-	[edit-new-fort]
-cpppj/src/client/RawCampaignOwnership.cpp	port			todo	[client-default]
+cpppj/src/client/RawCampaignOwnership.cpp	port	www/core/raw-campaign-ownership.js	225553df	port	[client-default] WB04-E518: 신전 Owner→IslandList→지역 투표/도장 조립(지면 getter·RegionPaint·RegionOwnership·VortexOwner를 같은 Core에 구성, plain float 절삭·가상 표 분배·섬 Player 기록 연결)과 Native 두 번째 생성 경로(덕타입 owner, 실제 ClientConstructionGlobals는 별도 todo). cpppj VortexOwnerTests 캠페인 장면·ClientRegionOwnerTests wrapper 대응, tests/raw-campaign-ownership.test.mjs. 기준선 뒤 cpppj 변경 없음.
 cpppj/src/client/RawCampaignPanic.inc	port			todo	[client-default]
 cpppj/src/client/RawCampaignParticles.cpp	port	www/render/raw-campaign-particles.js	1f00a25a	port	[client-default] WB04-E390: 아홉 표시 시스템(불꽃·줄기·빔·연기·악마 광선·파편·분해·연소·건설)을 한 풀/Host/Kernel/공통 표시 목록에 묶는 입자 본체 — RawCampaignParticles(색 표 메모리 6개·dirty 대기표/전달·VFX 선/타원/픽셀·캡처 복사 출력·위치 음향·CameraView 빌림·GameAuxState 전역 getter)·add/addStreak/addEvilRay/addBeam/addScreenBolt/addShrapnel/addDissolve/addConstruction/addBurning/addCooling/addSmoke/createTailByConstructor·connect*/bind*·prepareFrame/prepareBridgeClock/setView·sprites/collectDrawing/drawEntry·dispose·particlePaletteInput. cpppj ParticleRenderingTests 호스트 2건 첫 실행 일치 + 웹 계약. Renderer 합성은 Renderer 단위(웹 sprites 객체 필드는 RenderSprite 와 동일)
 cpppj/src/client/RawCampaignPathBindings.cpp	port			todo	[client-default]
