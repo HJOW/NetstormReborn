@@ -23736,9 +23736,96 @@
       "bytes": 283398,
       "lines": 688,
       "fixtureCommit": "94492b1f0",
-      "webCommit": "worktree",
+      "webCommit": "a8f9a5a1b",
       "cpppjBasis": {
         "cpppj/src/client/RawCursorPosition.cpp": "0e6574fcd"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E549",
+      "id": "cursor-mana",
+      "path": "cpppj/tests/fixtures/cursor-mana-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 커서 마나 표시 004737f0 생성자·00473d00 프레임·00473c30 통지·00473b90 소멸 642입력(36 DWORD 독립 입력의 효과 순서·224바이트 필드·전역·raw 슬롯 31개·단계별 필드, 기본/64비트 두 관측 일치)",
+      "consumers": [
+        "webpj/tests/raw-cursor-mana.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-cursor-mana.js"
+      ],
+      "doc": "docs/webpj-raw-cursor-mana-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawCursorMana.cpp"
+      ],
+      "scope": "10.78 642행 전부",
+      "text": true,
+      "sha256": "13bc12de4bee7790d44ce4138249221a49f26740538e0e9ebca9fb22348adc38",
+      "bytes": 5467568,
+      "lines": 643,
+      "fixtureCommit": "1a04f78b2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawCursorMana.cpp": "e210c7559"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E549",
+      "id": "cursor-mana-display",
+      "path": "cpppj/tests/fixtures/cursor-mana-display-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 마나 103 표시 갱신 473770/8c 432입력(WORD 조건·10픽셀 확대·표시 억제·변경 표 전체)",
+      "consumers": [
+        "webpj/tests/raw-cursor-mana.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-display.js"
+      ],
+      "doc": "docs/webpj-raw-cursor-mana-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidDisplay.cpp"
+      ],
+      "scope": "10.78 432행 전부(마나 표시 변경 표)",
+      "text": true,
+      "sha256": "a4538ccefab60ad875c2c0d6e0b1a2283ab541a0c234b2b92853826b7314f844",
+      "bytes": 56960,
+      "lines": 433,
+      "fixtureCommit": "1a04f78b2",
+      "webCommit": "db343d4b0",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidDisplay.cpp": "2c6ab7cc1"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E549",
+      "id": "mana-bolt-display",
+      "path": "cpppj/tests/fixtures/mana-bolt-display-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 마나 볼트 105 표시 갱신 45ac90/8c 432입력(WORD 무관·10픽셀 확대·표시 억제·변경 표 전체)",
+      "consumers": [
+        "webpj/tests/raw-cursor-mana.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/squid-display.js"
+      ],
+      "doc": "docs/webpj-raw-cursor-mana-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/o/SquidDisplay.cpp"
+      ],
+      "scope": "10.78 432행 전부(볼트 표시 변경 표)",
+      "text": true,
+      "sha256": "4da6175c1a181d5c430e4fc485cb4afbc019e9ed48b671214d6400f96f2c6f3d",
+      "bytes": 58032,
+      "lines": 433,
+      "fixtureCommit": "8bf762066",
+      "webCommit": "db343d4b0",
+      "cpppjBasis": {
+        "cpppj/src/o/SquidDisplay.cpp": "2c6ab7cc1"
       }
     }
   ]
