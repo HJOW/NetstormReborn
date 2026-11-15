@@ -56,13 +56,16 @@ public sealed partial class RawPostPopState
     public bool CurrentSuppressed => SharedSuppressed?.Value ?? Suppressed;
 
     /// <summary>공급·작업장 재계산 알림 수. 공급원·작업장 등록마다 1씩 늘어난다.</summary>
-    public uint ProductionDirty { get => _productionDirty; set => _productionDirty = value; }
+    public uint ProductionDirty { get => _productionDirty.Value; set => _productionDirty.Value = value; }
 
     /// <summary>공급원 등록이 같은 현재 생산 DWORD를 사본 없이 증감한다.</summary>
-    private uint _productionDirty;
+    private readonly UIntBox _productionDirty = new();
 
     /// <summary>원문 등록 부모에 빌려주는 같은 생산 카운터 주소다.</summary>
-    public ref uint ProductionDirtyValue => ref _productionDirty;
+    public ref uint ProductionDirtyValue => ref _productionDirty.Storage;
+
+    /// <summary>자산 소유자 분배도 같은 실제 생산 DWORD를 빌리는 장기 owner다.</summary>
+    public UIntBox ProductionDirtyBox => _productionDirty;
 
     /// <summary>Activate와 공통 후처리가 같은 DWORD로 공유하는 실제 깊이 저장소다.</summary>
     private readonly UIntBox _depth = new();

@@ -250,7 +250,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
             BindFactoryRuntime();
             if (_frames.Count == _types.Count)
             {
-                _surface = new RawIslandPostPop(_storage.Pool, new HashLevelView(_storage.Hash), _types, _frames, _storage.Links, _loadState, new IslandPostPopHooks
+                _surface = sharedSpace ? _storage.SurfaceExecutor() : new RawIslandPostPop(_storage.Pool, new HashLevelView(_storage.Hash), _types, _frames, _storage.Links, _loadState, new IslandPostPopHooks
                 {
                     Objects = new BridgeConnectHooks { SetOwner = (sid, owner) => SetAssetOwner(sid, owner) },
                     Connect = _ => throw new InvalidOperationException("실제 표면 연결의 현재 생성기가 연결되지 않았습니다."),
@@ -267,13 +267,17 @@ public sealed partial class RawSurfaceWorld : IDisposable
             }
             _baseDestroy = new RawSquidDestroy(_storage.Pool, _unpop, _types);
             _building = sharedSpace ? _storage.BuildingExecutor() : new RawBuildingSpace(_storage.Pool, _storage.Hash, _types, _buildingState);
-            _postPop = new RawPostPop(_storage.Pool, _types, _bookkeeping, _graph, sid => BridgeConnections().Connect(sid));
-            // 순환하는 실제 접두는 모든 모듈 생성 뒤 선택될 때만 현재 몸체를 조회한다.
-            _postPop.SetIslandPrefix((sid, flags) => BridgeConnections().IslandPostPopPrefix(sid, flags));
-            _postPop.SetSurfacePrefix((sid, flags) => (_surface ?? throw new InvalidOperationException("실제 표면 접두 미연결")).Prefix(sid, flags));
-            if (_edition == OriginalEdition.Patch1078) _postPop.BindCurrentTypes(_types);
-            _postPop.BindManaDiagnostics(new() { Checking = new(() => _storage.Checking().Read()), Assertion = _storage.AssertDisplay });
-            _pop = new RawPop(_storage.Pool, _storage.Hash, _storage.Spots, _display, _postPop);
+            if (sharedSpace) _postPop = _storage.PostPopExecutor();
+            else
+            {
+                _postPop = new RawPostPop(_storage.Pool, _types, _bookkeeping, _graph, sid => BridgeConnections().Connect(sid));
+                // 얇은 독립 World만 자기 지역 접두/진단을 연결한다. 장기 실행기는 Storage의 실제 장치를 유지한다.
+                _postPop.SetIslandPrefix((sid, flags) => BridgeConnections().IslandPostPopPrefix(sid, flags));
+                _postPop.SetSurfacePrefix((sid, flags) => (_surface ?? throw new InvalidOperationException("실제 표면 접두 미연결")).Prefix(sid, flags));
+                if (_edition == OriginalEdition.Patch1078) _postPop.BindCurrentTypes(_types);
+                _postPop.BindManaDiagnostics(new() { Checking = new(() => _storage.Checking().Read()), Assertion = _storage.AssertDisplay });
+            }
+            _pop = sharedSpace ? _storage.PopExecutor() : new RawPop(_storage.Pool, _storage.Hash, _storage.Spots, _display, _postPop);
             BindCurrentPop();
             _pop.SetBuildingSide(_building);
             _unpop.SetBuildingSide(_building);
@@ -285,7 +289,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
                 RawGraph graph = _graph!;
                 _neighbors = _storage.Types.Count == _types.Count ? _storage.NeighborsExecutor() : new RawSquidNeighbors(_storage.Pool, _storage.Hash, _storage.Spots, _types, new RiftFrameCodeTables(_frames));
                 if (_edition == OriginalEdition.Patch1078) _neighbors.BindCurrentTypes(_types);
-                _connect = new RawBridgeConnect(_storage.Pool, _neighbors, _storage.Links, new BridgeConnectHooks
+                _connect = sharedSpace ? _storage.ConnectionsExecutor() : new RawBridgeConnect(_storage.Pool, _neighbors, _storage.Links, new BridgeConnectHooks
                 {
                     Create = (type, flags) =>
                     {
@@ -435,7 +439,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
             // 저장소의 같은 현재 TYPE와 Client 진단을 실제 공통 Owner가 소비한다.
             owner.BindDiagnostics(new SquidOwnerDiagnostics { Types = _types, Assertion = _storage.AssertDisplay });
             _owner = owner;
-            _assetOwner = RawBridgeConnect.MakeOwnerDispatch(_storage.Pool, _storage.Links, owner.Set);
+            _assetOwner = RawAssetOwner.MakeAssetOwnerDispatch(_storage.Pool, _storage.Links, _bookkeeping.ProductionDirtyBox, owner.Set);
         }
 
         // 프레임 지정은 표시·Unpop·Pop 가상 호출 순서대로 외부 효과에 연결한다. CD 판본과 표시 미연결 껍데기에서는 비워 둔다.
@@ -446,7 +450,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
             RawPop pop = _pop;
             RawSidPool pool = _storage.Pool;
             IReadOnlyList<OriginalTypeRecord> frameTypes = _types;
-            _frame = new SquidFrame(pool, frameTypes, SquidFrameBinding.MakeSquidFrameHooks(pool, frameTypes, display, unpop, pop));
+            _frame = _storage.Types.Count == _types.Count ? _storage.FrameExecutor() : new SquidFrame(pool, frameTypes, SquidFrameBinding.MakeSquidFrameHooks(pool, frameTypes, display, unpop, pop));
             // 실제 장기 실행기의 현재 TYPE를 명시 대여한다. cpp RawSurfaceStorage::Frame의 PATCH 연결과 같다.
             _frame.BindCurrentTypes(frameTypes);
         }

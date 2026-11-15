@@ -397,4 +397,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/mana-registration-hardware-x86.tsv" Link="X86/mana-registration-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 두 원본의 생산/중립 소유자 가상 몸체128행을 읽기 전용으로 연결한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/asset-owner-current-local-x86.tsv" Link="X86/asset-owner-current-local-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

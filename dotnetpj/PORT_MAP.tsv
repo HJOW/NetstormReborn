@@ -940,3 +940,8 @@ cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Transmission.cs	f55ae26e38d0a1676eb7c343470949b4e80d6924	port
 cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.Transmission.cs	f55ae26e38d0a1676eb7c343470949b4e80d6924	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceWorld.Transmission.cs	f55ae26e38d0a1676eb7c343470949b4e80d6924	port
+cpppj/src/o/RawAssetOwner.cpp	Netstorm.Core/Original/RawAssetOwner.cs	b1742e6dfd522500cb2433fed1bc3b76da49e41c	L1
+cpppj/src/o/RawAssetOwner.h	Netstorm.Core/Original/RawAssetOwner.cs	b1742e6dfd522500cb2433fed1bc3b76da49e41c	L1
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Space.cs	b1742e6dfd522500cb2433fed1bc3b76da49e41c	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Space.cs	b1742e6dfd522500cb2433fed1bc3b76da49e41c	port
+cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.Surface.cs	b1742e6dfd522500cb2433fed1bc3b76da49e41c	port

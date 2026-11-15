@@ -13,7 +13,7 @@ public sealed partial class RawSurfaceWorld
         if (_edition != OriginalEdition.Patch1078) return;
         BindCurrentUnpop();
         RawPop pop = _pop ?? throw new InvalidOperationException("현재 Pop 부모 미연결");
-        pop.BindDiagnostics(new SquidPopDiagnostics
+        if (_storage.Types.Count != _types.Count || _display is null) pop.BindDiagnostics(new SquidPopDiagnostics
         {
             Checking = _storage.Checking(), Types = _types, Metamap = () => _storage.OwnerMode.Challenge,
             Trace = _storage.TraceGraph, Assertion = _storage.AssertDisplay,
