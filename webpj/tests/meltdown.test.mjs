@@ -17,6 +17,24 @@ const rows = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'meltdo
 const hex = (bytes) => Buffer.from(bytes).toString('hex');
 const bits = floatToBits;
 
+test('Meltdown: 쓰기 진단이 복귀하면 변경된 현재 개수의 WORD로 길이를 계산한다', () => {
+    const packet = new Uint8Array(20);
+    put(packet, 2, 0x1234, 2);
+    put(packet, 16, 0xffffffff);
+    RawMeltdown.finalizePacket(packet, false, () => assert.fail('읽기에서는 진단하지 않는다'));
+    assert.equal(new DataView(packet.buffer).getUint16(2, true), 0x1234);
+    assert.throws(() => RawMeltdown.finalizePacket(packet, true), /진단b23/);
+    assert.equal(new DataView(packet.buffer).getUint16(2, true), 0x1234);
+    let calls = 0;
+    RawMeltdown.finalizePacket(packet, true, () => {
+        calls += 1;
+        put(packet, 16, 0x12340005);
+    });
+    assert.equal(calls, 1);
+    assert.equal(new DataView(packet.buffer).getUint16(2, true), 30);
+    assert.equal(new DataView(packet.buffer).getUint32(16, true), 0x12340005);
+});
+
 // 명시 입력과 큰 외부 효과만 공급하는 장면이다. (2026-11-08 WB04-E111)
 function makeScene() {
     const scene = {

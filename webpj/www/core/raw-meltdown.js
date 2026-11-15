@@ -7,7 +7,7 @@
 //    아니면 서버(boss)일 때 다리 끝 칸 변환(edge)이다.
 //  - receiveRequest(packet): 부모(패킷 WORD +4)가 dead 면 무시, 권한이 없으면 진단(0x6c3). 최초 중심에서 반경 4 로 검색한 뒤 **현재** 부모 중심/소유자로 220바이트 효과 패킷(검색 결과 전체를 WORD 로 복사)을 만들어 배포(broadcast)·로컬 수신(receive(현재 로컬 owner, 0, 패킷))·부모 삭제(0)한다.
 //  - receiveEffect(packet): 중심을 스냅해 0.5 를 빼고 세 위치에 시각 효과(variant 1, 0.04)와 소리(whirligigFire-1000.wav)를 먼저 낸 뒤, 패킷의 현재 대상 수(signed)와 대상 WORD 를 원문 위치에서 다시 읽어 dead/삭제 대상을 건너뛰고 apply 한다.
-//  - Meltdown.finalizePacket(packet, writing): 송신일 때만 count==-1 진단(오류) 뒤 선언 길이 WORD 를 `(count+10)×2` 로 확정한다.
+//  - Meltdown.finalizePacket(packet, writing, invalidCount): 송신일 때만 count==-1 을 진단하고, 복귀하면 현재 count의 WORD로 선언 길이를 확정한다.
 // state = { boss(), localOwner(), alliances(81 DWORD), request/effect: { message, protocol, length } }, hooks = { hasHitPoints, assertion, find, send, broadcast, receive, destroy, damage, ground, edge, visual, sound }(도달한 것만 필수).
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E111: 제네레이터 Meltdown 이식으로 추가)
 import { RawSquidFinder } from './raw-squid-finder.js';
@@ -253,11 +253,13 @@ export class RawMeltdown {
         }
     }
 
-    // 40b150: 원본은 쓰기 요청일 때만 현재 count 로 WORD 길이를 갱신하며 count=-1 을 진단한다. (2026-11-08 WB04-E111)
-    static finalizePacket(packet, writing) {
+    // 40b150: 쓰기 시 count=-1을 진단하고 진단이 복귀하면 현재 count WORD를 다시 읽어 길이를 갱신한다.
+    static finalizePacket(packet, writing, invalidCount) {
         if (!writing) return;
-        const count = get(packet, 16);
-        if (count === 0xffffffff) throw new Error('원본 Meltdown count 진단b23');
-        put(packet, 2, (count + 10) * 2, 2);
+        if (get(packet, 16) === 0xffffffff) {
+            if (invalidCount) invalidCount();
+            else throw new Error('원본 Meltdown count 진단b23');
+        }
+        put(packet, 2, (get(packet, 16, 2) + 10) * 2, 2);
     }
 }
