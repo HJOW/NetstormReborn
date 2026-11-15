@@ -775,7 +775,7 @@
       "bytes": 1552384,
       "lines": null,
       "fixtureCommit": "2f80430a0",
-      "webCommit": "worktree",
+      "webCommit": "6a49ea44d",
       "cpppjBasis": {
         "cpppj/src/o/RawGameAuxState.h": "8defb347c",
         "cpppj/src/o/RawSquidContainedUnpop.h": "be567d46b",
@@ -24163,6 +24163,37 @@
         "cpppj/src/o/RawFortTypeNamesLoad.h": "a9af29da7",
         "cpppj/src/client/FortTypeConversionStorage.cpp": "a9af29da7",
         "cpppj/src/client/FortTypeConversionStorage.h": "a9af29da7"
+      }
+    },
+    {
+      "id": "devastation-draw",
+      "path": "cpppj/tests/fixtures/devastation-draw-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj CampaignDevastation_AdditionalDrawNative32가 소비하는 원본10.78 41e3d0 독립 x86 관측32입력(draw53/draw64)",
+      "consumers": [
+        "webpj/tests/raw-bomb-blast-bindings.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-blast-bindings.js"
+      ],
+      "unit": "WB04-E583",
+      "doc": "docs/webpj-bomb-blast-bindings-20261116.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawBombBlastBindings.cpp",
+        "cpppj/src/client/RawBombBlastBindings.h"
+      ],
+      "scope": "원본41e3d0의 현재 TYPE/전체 signed 프레임·x/y 전달32행과53/64 결과. 새 원본 실행 없음. 큰 폭발 효과의 World/피격 연결은 별도 실제 소스 계약 검사다.",
+      "text": true,
+      "sha256": "db3d3d73bce0f29c91e6b97976cfafb66efb74a8e3de2af9a91ff6155b26d8f1",
+      "bytes": 3030,
+      "lines": 33,
+      "fixtureCommit": "380cb7dd2",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawBombBlastBindings.cpp": "44a48b1e9",
+        "cpppj/src/client/RawBombBlastBindings.h": "380cb7dd2"
       }
     }
   ]
