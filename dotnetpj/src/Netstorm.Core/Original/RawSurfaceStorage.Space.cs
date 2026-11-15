@@ -23,7 +23,11 @@ public sealed partial class RawSurfaceStorage
         if (_postPopExecutor is null)
         {
             var post = new RawPostPop(Pool, Types, PostPopState, GraphExecutor(), sid => ConnectionsExecutor().Connect(sid));
-            if (_edition == OriginalEdition.Patch1078) post.BindCurrentTypes(Types);
+            if (_edition == OriginalEdition.Patch1078)
+            {
+                post.BindCurrentTypes(Types);
+                if (Source() is { } source) post.BindLoadedCosts(source.LoadedTypes ?? throw new InvalidOperationException("실제 최초 자산 TYPE 표 누락"));
+            }
             post.BindManaDiagnostics(new() { Checking = new(() => Checking().Read()), Assertion = AssertDisplay });
             post.SetIslandPrefix((sid, flags) => ConnectionsExecutor().IslandPostPopPrefix(sid, flags)); post.SetSurfacePrefix((sid, flags) => SurfaceExecutor().Prefix(sid, flags));
             _postPopExecutor = post;

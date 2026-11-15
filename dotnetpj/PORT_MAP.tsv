@@ -521,7 +521,7 @@ cpppj/src/o/SpStore.cpp	Netstorm.Core/Original/RawSpStore.cs	f7e81025d1b1d019a5a
 cpppj/src/o/Squid.cpp	Netstorm.Core/Rules/SpotRules.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidDestroyLifecycle.cpp	Netstorm.Core/Original/RawSquidDestroyLifecycle.cs	7ba0130b6b862e393a28f9e9ea7deaf29aaed3ff	L1
 cpppj/src/o/SquidDisplay.cpp	Netstorm.Core/Display/DisplayBounds.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
-cpppj/src/o/SquidDisplay.h	Netstorm.Core/Original/SquidDisplayShape.cs	4fab249c1190a4f3024baf7bccf152adfcc1859d	port
+cpppj/src/o/SquidDisplay.h	Netstorm.Core/Original/SquidDisplayShape.cs	cb2c941ca21fdc9102f6a2487491919bdf965e0e	port
 cpppj/src/o/SquidFactory.cpp	Netstorm.Core/Original/RawSquidFactory.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/SquidFinder.cpp	Netstorm.Core/Bridges/SurfaceFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/SquidFinder.h	Netstorm.Core/Bridges/SurfaceFinder.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
@@ -945,3 +945,6 @@ cpppj/src/o/RawAssetOwner.h	Netstorm.Core/Original/RawAssetOwner.cs	b1742e6dfd52
 cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Space.cs	b1742e6dfd522500cb2433fed1bc3b76da49e41c	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Space.cs	b1742e6dfd522500cb2433fed1bc3b76da49e41c	port
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.Surface.cs	b1742e6dfd522500cb2433fed1bc3b76da49e41c	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Assets.cs	cb2c941ca21fdc9102f6a2487491919bdf965e0e	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Assets.cs	cb2c941ca21fdc9102f6a2487491919bdf965e0e	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/SquidDisplayShape.cs	cb2c941ca21fdc9102f6a2487491919bdf965e0e	port

@@ -172,12 +172,13 @@ public sealed partial class RawSurfaceStorage
 
     /// <summary>같은 실제 Pool·해시·spot·그래프·집계·섬·청크 물리에 타입·프레임·셰이프를 최초 한 번만 넣어 실제 저장소를 만든다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
     /// <param name="edition">같은 판본의 풀·바람·스캔이 읽는 판본이다.</param>
-    /// <param name="inputTypes">같은 수정 가능한 전역 TYPE이다.</param>
+    /// <param name="inputTypes">최초 입력 TYPE다. 저장소는 원문 vector처럼 현재 수정 가능한 독립 값 사본을 소유한다.</param>
     /// <param name="inputFrames">타입별 프레임 자료다.</param>
     /// <param name="inputShapes">프레임의 셰이프 자료다.</param>
     /// <param name="authority">빌릴 실제 권한 owner다. null이면 자체 owner를 만든다.</param>
     /// <param name="gameAux">빌릴 실제 게임 보조 owner다. null이면 자체 owner를 만든다.</param>
-    public RawSurfaceStorage(OriginalEdition edition, IReadOnlyList<OriginalTypeRecord> inputTypes, IReadOnlyList<RiftTypeFrames> inputFrames, IReadOnlyList<SquidDisplayShape> inputShapes, RawAuthorityState? authority = null, RawGameAuxState? gameAux = null)
+    /// <param name="assetSource">실제 최초 자산 owner다. 명시하지 않은 독립 저장소는 로딩 비용 owner를 합성하지 않는다.</param>
+    public RawSurfaceStorage(OriginalEdition edition, IReadOnlyList<OriginalTypeRecord> inputTypes, IReadOnlyList<RiftTypeFrames> inputFrames, IReadOnlyList<SquidDisplayShape> inputShapes, RawAuthorityState? authority = null, RawGameAuxState? gameAux = null, IRawSurfaceAssetSource? assetSource = null)
         : this(edition, authority, gameAux)
     {
         ArgumentNullException.ThrowIfNull(inputTypes);
@@ -188,9 +189,10 @@ public sealed partial class RawSurfaceStorage
             throw new ArgumentException("실제 월드 저장소의 자산 배열 크기 불일치");
         }
 
-        Types.AddRange(inputTypes);
-        Frames.AddRange(inputFrames);
-        Shapes.AddRange(inputShapes);
+        _assetSource = assetSource;
+        Types.AddRange(inputTypes.Select(type => type.Clone()));
+        Frames.AddRange(inputFrames.Select(frame => new RiftTypeFrames(frame.Codes)));
+        Shapes.AddRange(inputShapes.Select(shape => shape.Clone()));
         RawPathPoint invalid = BoardTargetState.Invalid;
         RawSquidPoolReset.Finish(Pool, ref invalid);
         BoardTargetState.Invalid = invalid;

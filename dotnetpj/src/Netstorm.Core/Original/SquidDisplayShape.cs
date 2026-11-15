@@ -42,6 +42,14 @@ public sealed class SquidDisplayFrame
 
     /// <summary>SHP 추가 헤더의 보행 간격 세로.</summary>
     public float WalkStepY { get; set; }
+
+    /// <summary>원문 값형 헤더를 독립 복사한다. float NaN/부호0도 계산 없이 그대로 보존한다.</summary>
+    public SquidDisplayFrame Clone() => new()
+    {
+        Width = Width, Height = Height, HotspotX = HotspotX, HotspotY = HotspotY,
+        CellWidth = CellWidth, CellHeight = CellHeight, CellHotspotX = CellHotspotX, CellHotspotY = CellHotspotY,
+        MuzzleX = MuzzleX, MuzzleY = MuzzleY, WalkStepX = WalkStepX, WalkStepY = WalkStepY,
+    };
 }
 
 /// <summary>
@@ -59,4 +67,13 @@ public sealed class SquidDisplayShape
 
     /// <summary>타입별 프레임 자료.</summary>
     public List<SquidDisplayFrame> Frames { get; } = [];
+
+    /// <summary>원문 셰이프 vector 복사처럼 loaded/count와 각 물리 프레임 헤더를 독립 소유한다.</summary>
+    public SquidDisplayShape Clone()
+    {
+        var shape = new SquidDisplayShape { FrameCount = FrameCount, Loaded = Loaded };
+        // 입력 자산의 물리 프레임 목록/헤더를 현재 월드 쓰기와 분리한다.
+        foreach (SquidDisplayFrame frame in Frames) shape.Frames.Add(frame.Clone());
+        return shape;
+    }
 }
