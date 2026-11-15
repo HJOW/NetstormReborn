@@ -23881,7 +23881,7 @@
       "bytes": 8476,
       "lines": 22,
       "fixtureCommit": "62eb228da",
-      "webCommit": "worktree",
+      "webCommit": "c232b541b",
       "cpppjBasis": {
         "cpppj/src/o/RawBombHardener.cpp": "62eb228da"
       }
@@ -23910,9 +23910,38 @@
       "bytes": 7625,
       "lines": 158,
       "fixtureCommit": "44a48b1e9",
-      "webCommit": "worktree",
+      "webCommit": "c232b541b",
       "cpppjBasis": {
         "cpppj/src/o/RawBombTreason.cpp": "44a48b1e9"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E553",
+      "id": "bomb-gravity-regular",
+      "path": "cpppj/tests/fixtures/bomb-gravity-regular-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 그라비테이션 버스트 정기 41f760 122입력(signed count·프레임 감김/역방향·종료·NaN payload·표시 갱신/삭제 순서)",
+      "consumers": [
+        "webpj/tests/raw-bomb-heal.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-bomb-heal.js"
+      ],
+      "doc": "docs/webpj-raw-bomb-heal-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawBombHeal.cpp"
+      ],
+      "scope": "10.78 122행 전부",
+      "text": true,
+      "sha256": "c02b1d7a2c98ef49711142d9a6a3ca8ac08d898e6d9511a8d482e51ccf2cbf76",
+      "bytes": 5215,
+      "lines": 123,
+      "fixtureCommit": "473e1247d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawBombHeal.cpp": "473e1247d"
       }
     }
   ]
