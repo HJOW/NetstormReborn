@@ -1,5 +1,5 @@
 // RawCampaignSession::Impl의 캠페인 소유 자료를 실제 하위 생성자로 구성한다(225553df, WB04-E574).
-// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → 나머지 모듈/Load 연결.
+// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → 나머지 모듈/Load.
 // 이 단계는 Session이 아니며 현재 Runtime에 공개하지 않는다. 외곽 Session과 Load는 아직 미구현이다.
 // Editor/LAN/메타/Native 장치는 이 캠페인 분기에 섞지 않는다. 반납은 하위 모듈을 정리한 부모가 마지막에 dispose로 한다.
 import { GameAssets } from '../assets/game-assets.js';
@@ -24,6 +24,7 @@ import { RawSquidLevel, makeSquidLevelAssertion } from './raw-squid-level.js';
 import { RawSurfaceWorld } from './raw-surface-world.js';
 import { RawCampaignSessionState } from './raw-campaign-session-state.js';
 import { RawCampaignSessionTables } from './raw-campaign-session-tables.js';
+import { RawCampaignSessionPriests } from './raw-campaign-session-priests.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
 import { ScrambledSpStore } from './sp-store.js';
 import { SquidReward, SquidRewardState } from './squid-reward.js';
@@ -82,7 +83,14 @@ export class RawCampaignSessionOwners {
     // 상위가 실제 가상80 분배를 연결하며, 미연결 시 선택된 호출에서 오류다.
     rewardCount = null; soundNames; level = null;
     // 같은 Impl의 공유 입력·현재 상태와 Player/SP 이후 진단 결선이다.
-    state; tables;
+    state; tables; priestModules = null;
+    // 현재 Client의 같은 redraw 상자 또는 독립 Session의 지역0 상자다.
+    worldRedraw;
+    // 실제 생성 순서에서 채우는 섬·소리·사제와 참여 조회 모듈이다.
+    islands = null; sounds = null; priests = null; priestParticipation = null;
+    // 후속 생성자가 설치하는 실제 순환 참조다. 현재 구간은 대체 객체를 만들지 않는다.
+    ownership = null; hits = null; construction = null; placeBattleNuggets = null;
+    carrierRegular = null; balloonBody = null; carrierFallStart = null; priestPanic = null;
     // 후속 실제 Login의 현재 소유 슬롯이다. 이 단계는 Login을 생성하거나 Session을 공개하지 않는다.
     login = null;
     // 독립 typed 분기만 지역으로 소유하는 현재 값이다. Native 전역을 임의로 빌리지 않는다.
@@ -96,8 +104,9 @@ export class RawCampaignSessionOwners {
         try {
             this.coreDataGlobals = input.coreDataGlobals ?? new ClientCoreDataGlobals();
             this.playerRecords = input.playerRecords ?? new ClientPlayerRecords(); this.playerUse = this.playerRecords.acquire();
-            // 값형 서비스의 assets와 peer9 표는 복사하고, 함수와 실제 공유 owner의 참조는 유지한다.
-            this.services = { ...input, assets: { ...input.assets }, battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
+            // 값형 서비스의 소비 묶음/peer9 표는 복사하고, 함수와 실제 공유 owner의 참조는 유지한다.
+            this.services = { ...input, assets: { ...input.assets }, sound: { ...input.sound }, priest: { ...input.priest, shield: { ...input.priest?.shield }, regen: { ...input.priest?.regen } }, battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
+            this.worldRedraw = input.kencloudGlobals ? input.kencloudGlobals.worldRedraw() : { value: 0 };
             this.fortTypeConversion = input.fortTypeConversion ?? new FortTypeConversionStorage();
             this.chatGlobals = input.chatGlobals ?? new ClientChatWindowGlobals();
             this.localStateGlobals = input.localStateGlobals ?? new ClientLocalStateGlobals();
@@ -174,6 +183,12 @@ export class RawCampaignSessionOwners {
         this.tables.bind();
     }
 
+    // 같은 실제 섬·소리·사제/참여 모듈을 생성한다. 나머지 순환 연결/전체 Session 공개는 후속 구간이다.
+    connectIslandsAndPriests() {
+        if (this.#disposed) throw new Error('반납한 Session 섬/사제 결선');
+        this.priestModules ??= new RawCampaignSessionPriests(this); this.priestModules.bind();
+    }
+
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
     get fullDeck() { return this.gameplayGlobals.fullDeck().value; }
     // 값 쓰기도 동일 장기 DWORD를 사용한다.
@@ -194,6 +209,12 @@ export class RawCampaignSessionOwners {
     // C++ 기반 멤버의 역순 반납이다. 전체 Session 부모는 먼저 자기 모듈/현재 Runtime 공개를 닫아야 한다.
     dispose() {
         if (this.#disposed) return; this.#disposed = true;
-        try { this.world?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } }
+        try {
+            if (this.priestModules) { this.world?.drainOwnedProcessesForShutdown(); this.priestModules.dispose(); }
+        } finally {
+            try { this.world?.dispose(); } finally {
+                try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } }
+            }
+        }
     }
 }

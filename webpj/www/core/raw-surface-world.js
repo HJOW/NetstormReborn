@@ -432,6 +432,13 @@ export class RawSurfaceWorld {
         else if (this.#legacyHost) this.#kernel.drainOwnedForShutdown((process) => this.#legacyHost.owns(process));
     }
 
+    // JS 상위 모듈의 명시 종료에서 이 World의 현재 프로세스만 먼저 반납한다. 하위 처리기/표면 대여는 아직 유지한다.
+    // 사용: Session 파생 모듈이 살아 있는 동안 호출한 뒤 등록을 해제하고 dispose로 World 대여를 반납한다.
+    drainOwnedProcessesForShutdown() {
+        if (this.#disposed) throw new Error('반납한 월드의 모듈 종료 요청');
+        this.#drainCurrentProcessesForShutdown();
+    }
+
     // 월드 모듈이 사라진 뒤 저장소 대여를 푼다: 현재 처리기 대여(공유 Host)·레거시 회수 대여 → 저장소 대여 순서이다(멱등). (2026-11-11 WB04-E299)
     dispose() {
         if (this.#disposed) return;

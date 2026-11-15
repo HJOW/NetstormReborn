@@ -8,7 +8,8 @@ const STATE_OFFSET = 11;
 const OWNER_OFFSET = 34;
 const DEAD = 2;
 
-// pool 은 10.78 SidPool, state 는 사제 목록(`state.priests` SquidPostPopList)을 가진 PriestPostPopState 이다. 등록·제거가 즉시 보이도록 목록을 복사하지 않고 참조한다. (2026-11-08 WB04-E66)
+// pool 은 10.78 SidPool, state 는 PriestPostPopState다. 현재 공유 목록을 빌리고 독립 입력만 state.priests를 쓴다.
+// 등록·제거가 즉시 보이도록 목록을 복사하지 않는다. (2026-11-08 WB04-E66, WB04-E577 공유 목록 결선 교정)
 export class RawPriestLookup {
     // 현재 소유자와 사망 상태를 매 조회마다 읽는 풀, 공유 사제 목록의 상태이다.
     #pool;
@@ -28,7 +29,7 @@ export class RawPriestLookup {
 
     // 소유자 인자는 전체 DWORD 로 비교한다(BYTE 로 자르지 않음). 없으면 0 이다. 손상된 양수 개수(용량 초과)와 범위 밖 SID 는 접근 시 거부한다. (2026-11-08 WB04-E66)
     find(player) {
-        const list = this.#state.priests;
+        const list = this.#state.currentPriests ? this.#state.currentPriests() : this.#state.priests;
         if ((list.readCount() | 0) <= 0) return 0;
         const wanted = player >>> 0;
         // 목록을 원래 순서로 읽고 첫 일치에서 멈춘다(뒤의 항목은 읽지 않는다).
