@@ -217,7 +217,8 @@ public sealed class SquidTakeParentCurrentTests
         {
             Parent = sid => RawContainedLink.CommonContainedParent(core.Pool, sid), Previous = sid => RawContainedLink.CommonContainedPrevious(core.Pool, sid),
             SetPrevious = (sid, previous) => RawContainedLink.CommonContainedSetPrevious(core.Pool, sid, previous),
-            ParentNotice = (owner, sid, reason) => { Assert.Equal(parent, owner); Assert.Equal(form, sid); Assert.Equal(2u, reason); Assert.Equal(4, core.Pool.Slot(form)[11]); notices++; types[7].ConstructorAddress = OriginalConstructors.Address(1); },
+            // Storage의 값 사본과 구별해 실제 공장이 읽는 현재 표를 변경한다.
+            ParentNotice = (owner, sid, reason) => { Assert.Equal(parent, owner); Assert.Equal(form, sid); Assert.Equal(2u, reason); Assert.Equal(4, core.Pool.Slot(form)[11]); notices++; storage.Types[7].ConstructorAddress = OriginalConstructors.Address(1); },
         });
         world.BindContainedUnpop(session); uint free = core.Pool.FreeCount; Assert.Equal(form, core.Factory.Take(7, form));
         Assert.Equal(1, notices); Assert.Equal(0x512110u, BinaryPrimitives.ReadUInt32LittleEndian(core.Pool.Slot(form))); Assert.Equal(7, core.Pool.Slot(form)[10]); Assert.Equal(0x77, core.Pool.Slot(form)[35]);

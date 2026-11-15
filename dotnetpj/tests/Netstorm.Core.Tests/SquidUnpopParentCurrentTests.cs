@@ -37,8 +37,8 @@ public sealed partial class SquidUnpopParentCurrentTests
         private readonly RawSquidHash _hash = new();
         /// <summary>전체65536BYTE 점유 지도다.</summary>
         private readonly byte[] _spots = new byte[65536];
-        /// <summary>현재 TYPE 표이며 CD의 실제171칸 뒤 관리용17칸은 조회하지 않는다.</summary>
-        private readonly OriginalTypeRecord[] _types = Enumerable.Range(0, 188).Select(_ => new OriginalTypeRecord()).ToArray();
+        /// <summary>원문 판본별 현재 TYPE 표이며 PATCH188칸/CD171칸을 실제 옆면과 공유한다.</summary>
+        private readonly OriginalTypeRecord[] _types;
         /// <summary>같은 Pool/Hash의 실제 옆면 몸체다.</summary>
         private readonly RawBuildingSpace _building;
         /// <summary>명시 외부 장치와 실제 TYPE/옆면 경계다.</summary>
@@ -77,6 +77,7 @@ public sealed partial class SquidUnpopParentCurrentTests
             _patch = patch; _width = patch ? 50 : 36; _extra = patch ? 40 : 35;
             uint[] input = row.Take(17).Select(X86Fixture.UInt).ToArray(); _checking = input[1]; _source = (int)input[2]; _flags = input[13]; _action = input[14];
             _pool = new RawSidPool(24000, edition: patch ? OriginalEdition.Patch1078 : OriginalEdition.Cd1072);
+            _types = Enumerable.Range(0, patch ? 188 : 171).Select(_ => new OriginalTypeRecord()).ToArray();
             _building = new(_pool, _hash, _types, new() { IslandType = 83, BridgeType = 82 }); Array.Fill(_spots, (byte)input[15]);
             // CD 비균일 입력 프로필도 원본과 같은 셀값으로 공급한다.
             if (!patch && (input[15] & 0x100) != 0)
