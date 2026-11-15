@@ -42,7 +42,8 @@ export function appendRendererCloudDirty(queue, rect, checking, hooks = {}) {
     const index = signed(queue.count.value);
     if (index >= RENDERER_CLOUD_RECT_COUNT) return;
     if (index < 0) throw new RangeError('Renderer 구름 4칸 앞의 미제공 물리 영역 쓰기');
-    queue.rectangles[index] = { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom };
+    // 기존 칸에 값을 써서 앞서 빌린 사각형 참조도 같은 물리 저장소를 계속 보게 한다.
+    Object.assign(queue.rectangles[index], { left: rect.left | 0, top: rect.top | 0, right: rect.right | 0, bottom: rect.bottom | 0 });
     queue.count.value = (queue.count.value + 1) >>> 0;
 }
 

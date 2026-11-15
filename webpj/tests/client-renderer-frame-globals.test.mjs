@@ -5,6 +5,7 @@ import { ClientRendererFrameGlobals } from '../www/core/client-renderer-frame-gl
 import { appendRendererCloudDirty } from '../www/render/raw-renderer-clouds.js';
 import { prepareRendererFrame } from '../www/render/raw-renderer-prelude.js';
 import { markKencloudDirty } from '../www/core/raw-kencloud-render.js';
+import { Renderer } from '../www/render/renderer.js';
 
 // 원문 참조 DWORD를 테스트 장치에서 빌릴 수 있도록 만든다.
 const box = (value) => ({ value });
@@ -54,4 +55,31 @@ test('Renderer 프레임 전역의 대여 참조와 DWORD 저장 폭은 유지�
     assert.equal(globals.hideGroups().value, 0xffffffff);
     queue.count.value = 0x100000001;
     assert.equal(globals.cloudDirtyCount().value, 1);
+});
+
+test('구름 칸의 대여 참조는 기록 뒤에도 유지되고 실제 Renderer의 변경 영역을 갱신한다', () => {
+    const owner = new ClientRendererFrameGlobals();
+    const slot = owner.cloudRectangles()[0];
+    const renderer = new Renderer(1024, 768);
+    const pixels = new Uint8Array(1024 * 768);
+    renderer.draw(pixels, 1024);
+    renderer.present(() => {});
+    renderer.invalidate({ left: 1, top: 2, right: 3, bottom: 4 });
+    const dirtyCount = box(renderer.cameraDirtyEntries().length);
+    const values = { mode: 138, force: 1, width: 1024, height: 768, initialHeight: 800, cameraY: 0, left: 84, top: 0, right: 1024, bottom: 768 };
+    const globals = Object.fromEntries(Object.entries(values).map(([key, value]) => [key, box(value)]));
+    const clouds = new Uint32Array(2054);
+    prepareRendererFrame({ scan: owner.scan(), backgroundRedraw: renderer.backgroundRedraw, dirtyCount, drawCounter: owner.cloudDirtyCount() }, globals, {
+        markCloudDirty: () => markKencloudDirty(clouds),
+        queueCloudDirty: (rect) => appendRendererCloudDirty(owner.cloudQueue(), rect, 0),
+        overrideActive: () => 0,
+        clearDirty: () => renderer.clearDirty(),
+        invalidate: (rect, flags) => { assert.equal(dirtyCount.value, 0); renderer.invalidate(rect, flags); },
+    });
+    assert.equal(owner.cloudRectangles()[0], slot);
+    assert.deepEqual(slot, { left: 0, top: 0, right: 1024, bottom: 768 });
+    assert.equal(owner.cloudDirtyCount().value, 0);
+    assert.equal(owner.cloudRectangles()[1].bottom, 768);
+    assert.equal(renderer.fullRedrawPending(), false);
+    assert.deepEqual(renderer.cameraDirtyEntries(), [{ rect: { left: 0, top: 0, right: 1024, bottom: 768 }, flags: 0 }]);
 });

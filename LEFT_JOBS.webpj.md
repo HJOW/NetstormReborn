@@ -6,7 +6,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E495)
+### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E496)
 
 | 항목 | 현행 기준 |
 | --- | --- |
@@ -14,9 +14,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 896단위(제외 88 별도) 중 **port 768(85.7%)·partial 35(3.9%)·todo 93(10.4%)**. `o/` 월드·규칙은 517단위 중 515가 끝났고, 남은 128단위는 `client/`의 세션·허브·바인딩·메뉴·소리와 `o/` partial 2단위다. 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
-| 마지막 구현 커밋 | **WB04-E495**(`fa8c2931f / 20261115-51 WB`) 5-B 사용자 선택·후보 선택·다중 선택 이식과 원본 관측 3,108행 연결([단위 문서](docs/webpj-user-selection-native-fixtures-20261115.md)) |
+| 마지막 구현 단위 | **WB04-E496** 구름 큐의 고정 칸 참조 보존과 실제 Renderer 변경 영역 연결 검사([단위 문서](docs/webpj-renderer-cloud-queue-20261115.md)). 프레임 소유자의 실제 조립은 미완료 |
 | 다음 작업 | ① 사용자가 승인한 **4-R 재기준선**을 진행한다(3.5절 6번). ② 독립적으로 가능한 4-D A·B·C와 5-A·5-B 잔여를 선행 관계에 맞게 병행한다. ③ 4-R 뒤 4-D의 D(Session 본체)·E(Client 본체·통합·L2 판정) 순서다. 3.8절 원본 관측 연결은 허브/적응 판정이 필요한 4건만 남았다 |
-| 마지막 전체 검사 | 2026-11-15 WB04-E495: Node v26.13.0·v22.23.3 전체 각각 **4,960건 통과, 실패 0** |
+| 마지막 전체 검사 | 2026-11-15 WB04-E496: Node v22.23.3·v24.22.3·v26.13.0 전체 각각 **4,965건 통과, 실패 0** |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -68,7 +68,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 **2026-11-15 사용자 중단 요청 인계:** 재기준선 승인 후 `225553df9`에서 별도 worktree `extracted/webpj-oracle/source-225553df`를 만들고 Game 빌드를 시작했으나 중단 요청에 맞춰 CMake 구성 중 중지했다. 오라클 실행 파일 생성·8장면 재수집·대응표 기준선 전환은 하지 않았다. cpppj 마지막 변경 커밋 `979d65b5d`와 제품 1313의 대응 관계는 재개 시 확인한다. 기준선 변경 전 삭제·대표 파일 확장자 변경·분할/병합을 대조하고 기존 행의 `base`와 미판정 변경을 보존하며 신규 단위의 MP·Edit·host·스커미시 분류를 검토한다. `--write`는 사라진 단위를 제거하므로 무작정 실행하지 않는다.
 
-`ClientRendererFrameGlobals`와 `RawMinimapControls`의 코드 및 각 집중 시험은 **미완성 초안**으로 보존했다. Node v26·v22에서 두 시험 파일 각 2건, 합계 4건이 모두 통과했으나 cpppj 전체 계약·원본 fixture·실제 Client/메뉴/월드 연결과 전체 회귀는 수행하지 않았다. 미니맵 시험은 최초 SID 풀 크기 오류를 수정한 뒤 통과했다. 렌더러 프레임 본체와 Session은 여전히 미연결이다. 두 행은 `PORT_MAP.tsv`에서 partial이며 체크 목록을 완료로 바꾸지 않았다. 재개 시 집중 검사와 실제 허브 선행 관계를 확인하고 필요한 구현·원본 대조 및 Node v22·v26 전체 검사를 마친다. 실제 게임은 실행하지 않았다.
+`ClientRendererFrameGlobals`와 `RawMinimapControls`의 코드는 **미완성 초안**으로 보존했다. WB04-E496에서 구름 큐의 고정 참조를 교정하고 실제 Renderer와 원본 관측에 대조했으나 프레임 본체의 실제 소유자 연결은 남았다. 미니맵은 최초 SID 풀 크기 오류를 수정한 집중 검사까지이며 cpppj 전체 계약·실제 메뉴/월드 허브 연결이 남았다. 렌더러 프레임 본체와 Session은 여전히 미연결이다. 두 행은 `PORT_MAP.tsv`에서 partial이며 체크 목록을 완료로 바꾸지 않았다.
 
 1. AGENTS.md·이 문서·공통/dotnetpj 인계를 읽고 `git status`·`git fetch`를 확인한다. **같은 작업 트리에서 다른 세션이 cpppj·dotnetpj·공통 문서를 동시에 커밋할 수 있다(2026-11-06 실제 관측).** 공통 인계와 cpppj 파일은 고치지 않고, cpppj 상태는 커밋 기록과 소스로 판단한다.
 2. `node webpj/tools/port-map.mjs`로 대응표 검사와 기준선(행 base) 뒤 cpppj 변경을 본다. 이번 단위가 옮길 항목은 **3.1절의 현재 단계 목록에서 위에서부터** 고른다(대괄호 선행 관계를 지킨다). **기준선 판**의 소스(`git show 1f00a25a:경로`)·그 파일을 대상으로 하는 cpppj 검사·fixture·단위 문서를 함께 읽는다. 기준선 뒤 그 파일이 바뀌었는지는 저장소 루트에서 `git diff --numstat 1f00a25a HEAD -- <파일>`로 확인하고, 바뀌었으면 3.6절로 판정해 판정 커밋을 base와 단위 문서에 적는다. 디컴파일이 꼭 필요하면 마지막 수행 PC와 현재 PC를 먼저 비교하고 AGENTS.md의 재디컴파일 규칙을 따른다.
@@ -221,7 +221,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [ ] client **ClientGameplayGlobals** 205줄(+57) [ClientPlayerRecords·ClientSubscriberGlobals(E325) 뒤] — 서버 권한 `Server()`·`GameAux`·전투 시계 원점/스탬프·카메라·AiDebug 연결·현재 Session 대여/pin [막힘(E334 판정): 하위 소유자(커서·선택)와 `RawSidRobust` 진단·`TerrainBitmapState`/`TerrainStampState` 가 선행. E400 이월: CursorLifecycle_CurrentClientCheckingSurvivesReset의 실제 Acquire/AcquirePrepared 대여/반납 시험도 이 소유자 연결 때 수행]
 - [ ] client **ClientStateWorldGlobals** 108줄(+8)·**ClientStateWorldCleanup** 101줄(+2)·**ClientStateStorageCleanup** 71줄(+1)·**ClientStateRuntimeRetirement** 99줄 — State/World 전역과 정리·Runtime 반납 순서 [막힘(E336 판정): `ClientStateWorldContext` 가 `Client`·`CampaignTemplateStorage`(B 구획)·`RawMenuControls`(L 영역)·`ClientAudio`(H 영역)·`RawSurfaceStorage` 의 실제 저장소에 Native 주소별 접근을 연결하는 바인딩이라 그 소유자들이 선행 — B 구획과 Session 조립(C·D) 뒤]
 - [ ] client **ClientUserSelectionGlobals** 77줄·**ClientUserSelectionCleanup** 43줄·**ClientCursorGlobals** 25줄·**ClientCursorStateCleanup** 27줄 [진행: **ClientCursorGlobals·ClientCursorStateCleanup**은 [E402](docs/webpj-client-cursor-globals-20261114.md) 완료(장기 주소/reset·실제 Cancel/Prepare/현재 카메라·Renderer 연결). **ClientUserSelectionGlobals**는 [E495](docs/webpj-user-selection-native-fixtures-20261115.md) 완료(RawUserSelection/RawUserPick 이식과 함께, fixture multiple-selection 601행). **ClientUserSelectionCleanup**(43줄)은 `RawCampaignSession.core()` Session 허브와 `RawSquidSelection` 표시 갱신 연결을 기다린다. 이 줄은 네 모듈이 끝날 때 체크한다]
-- [ ] client **ClientChatManagerGlobals** 123줄·**ClientChatWindowGlobals** 24줄(+4)·**ClientHtmlWindowGlobals** 8줄·**ClientRendererFrameGlobals** 26줄·**ClientDotCommandGlobals** 56줄 [진행: Chat manager는 E447, DotCommand는 E443, **ClientChatWindowGlobals**는 [E453](docs/webpj-client-chat-window-globals-20261114.md) 완료(같은 창/로그/완성/무시·문자열·뉴스 키와 동맹 요청 상태; 일반 동맹 입력은 단독 관문이 없어 상태를 유지, 입력/수신 연결은 기존③6 이월). **ClientHtmlWindowGlobals**는 [E456](docs/webpj-html-window-gump-20261114.md) 완료. **ClientRendererFrameGlobals** 실제 owner는 5-A 프레임 조립 때 남음. 다섯 모듈이 끝나면 이 줄을 체크한다]
+- [ ] client **ClientChatManagerGlobals** 123줄·**ClientChatWindowGlobals** 24줄(+4)·**ClientHtmlWindowGlobals** 8줄·**ClientRendererFrameGlobals** 26줄·**ClientDotCommandGlobals** 56줄 [진행: Chat manager는 E447, DotCommand는 E443, **ClientChatWindowGlobals**는 [E453](docs/webpj-client-chat-window-globals-20261114.md) 완료(같은 창/로그/완성/무시·문자열·뉴스 키와 동맹 요청 상태; 일반 동맹 입력은 단독 관문이 없어 상태를 유지, 입력/수신 연결은 기존③6 이월). **ClientHtmlWindowGlobals**는 [E456](docs/webpj-html-window-gump-20261114.md) 완료. **ClientRendererFrameGlobals**는 [E496](docs/webpj-renderer-cloud-queue-20261115.md)에서 구름 고정 칸과 실제 Renderer 앞단을 검증했으며 실제 owner는 5-A 프레임 조립 때 남음. 다섯 모듈이 끝나면 이 줄을 체크한다]
 
 **B. 미션 시작 경로** (Init → Fort 요청 → State7 → Zone/Guide)
 - [ ] client **Mission** 150줄(+12)·**MissionGuideInput** 120줄·**CampaignGuideRelease** 82줄 — 현재 미션 문맥·안내 입력(Tutorial1 게이트는 순서 8 연결) [진행: **Mission** 은 [E342](docs/webpj-mission-script-20261112.md) 완료 — MissionScript·Guide 미션 생성/해제와 기준선 뒤 +12줄(웹 Config 확장·GameData 어댑터 포함). **MissionGuideInput** 은 E341 에서 `MissionFirst` 만 옮겨 PORT_MAP partial. **MissionGuideInput** 은 [E343](docs/webpj-mission-guide-input-20261112.md) 완료 — 일곱 제어 명령·Abort/First/F8 분배·Reload 캡처·안내 표시와 선행 ScriptCommand 명령 큐/문자열 고리. **CampaignGuideRelease** 는 [막힘(E344 판정)]: `CampaignGuideRuntime` 이 `RawCampaignMissionStartBindings`·`RawCampaignTutorialOneBindings`(C 구획)를 보유하고 `ReleaseCampaignGuideMission` 이 실제 `Client`(GameplayGlobals·PlayerRecords·Configuration)와 Session 의 AI 반납(`Participation.RemoveAllBrains`)을 요구하며 cpppj 시험 3건이 모두 실제 Client+GameWorld+UserInput 조립을 쓴다 — C·E 구획 뒤에 옮긴다. 이 줄은 CampaignGuideRelease 가 끝날 때 체크한다]
