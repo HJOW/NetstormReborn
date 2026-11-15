@@ -23649,9 +23649,38 @@
       "bytes": 29663,
       "lines": 77,
       "fixtureCommit": "91842596a",
-      "webCommit": "worktree",
+      "webCommit": "88103f8d8",
       "cpppjBasis": {
         "cpppj/src/client/RawFactoryMenu.cpp": "05df64c08"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E546",
+      "id": "object-menu-info",
+      "path": "cpppj/tests/fixtures/object-menu-info-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 객체 메뉴 제목/정보 Describe 004ad780·Summary 004ada70·CaptureStatus 0042a2f0·LevelName 4a8980·ThemeName 4a8940의 20 DWORD 독립 입력과 콜백 변경 조합 1,434입력에서 반환 문자열·번역/서식/GUI 효과 전체 순서·콜백 뒤 현재 필드",
+      "consumers": [
+        "webpj/tests/raw-object-menu-info.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-menu-info.js"
+      ],
+      "doc": "docs/webpj-raw-object-menu-info-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawObjectMenuInfo.cpp"
+      ],
+      "scope": "10.78 1,434입력 전부",
+      "text": true,
+      "sha256": "9fd102d6cd45d7851c06ac62e8eb81e4676f277723a09d4915f3de9ac5d9e99f",
+      "bytes": 853869,
+      "lines": 1435,
+      "fixtureCommit": "c09f7a0f0",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawObjectMenuInfo.cpp": "9388cd633"
       }
     }
   ]
