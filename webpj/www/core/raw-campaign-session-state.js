@@ -87,6 +87,8 @@ export class RawCampaignSessionState {
     generalDamageState; burningState = new DamageableBurningState(); carrierDropState = carrierDropState();
     // 원문666의 충돌/Flare 억제이며 같은 로그인 기한 double을 빌린다.
     impactState;
+    // 원문660의 TYPE 전체 최대 검색 반경과 스톤 타워 번호다. 실제 채움은 Gun 몸체 생성 구간이다.
+    gunBlockerState = { cannonRange: 0, archerRange: 0, stoneTowerType: 78 };
     // 수신 등록을 하지 않는 실제 연결 활동 몸체다. 등록과 전송은 전체 Session 부모의 몫이다.
     connectionActivity;
 
