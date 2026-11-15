@@ -44,13 +44,21 @@ export const CLASSES = Object.freeze(['port', 'adapt', 'exclude-mp', 'exclude-ed
 // 상태 이름이다. todo→partial→port→session→oracle 순서로 올리며 제외 분류는 '-' 이다. (2026-11-06 WB02-G)
 export const STATUSES = Object.freeze(['todo', 'partial', 'port', 'session', 'oracle', '-']);
 
-// 이름 묶음으로 분류하는 규칙이다. 위에서부터 처음 맞는 규칙을 쓴다. names 는 단위 이름(확장자 없는 파일 이름) 목록, pattern 은 이름 정규식이다.
+// 후보 기준선의 신규 단위별 판정이다. 정확한 폴더와 이름을 함께 사용해 기존 규칙과 구별한다. (2026-11-15 WB04-E512)
+const REBASELINE_CLASSES = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'webpj/tools/rebaseline-225553df.json'), 'utf8')).classes;
+
+// 경로·이름 묶음으로 분류하는 규칙이다. 위에서부터 처음 맞는 규칙을 쓴다. keys 는 단위 경로, names 는 파일 이름, pattern 은 정규식이다.
 // 각 규칙의 reason 은 근거(cpppj 머리 주석·CMake 주석·호출 위치)를 줄여 쓴 것이며 상세는 docs/webpj-port-map-20261106.md 3절에 있다.
 // 단독 미션이 실제로 지나는 코드는 이름이 멀티플레이 같아도 port 다(LEFT_JOBS.webpj.md 1절 경계). (2026-11-06 WB02-G)
 export const RULES = Object.freeze([
+    { id: 'rebaseline-port', class: 'port', keys: REBASELINE_CLASSES.port, reason: '후보 기준선의 단독 공통 또는 스커미시 이식 경로(E498~E505)' },
+    { id: 'rebaseline-adapt', class: 'adapt', keys: REBASELINE_CLASSES.adapt, reason: '후보 기준선의 웹 플랫폼 대체 경계(E498~E505)' },
+    { id: 'rebaseline-edit', class: 'exclude-edit', keys: REBASELINE_CLASSES['exclude-edit'], reason: '후보 기준선의 편집기 전용 경로(E498~E505)' },
+    { id: 'rebaseline-mp', class: 'exclude-mp', keys: REBASELINE_CLASSES['exclude-mp'], reason: '후보 기준선의 LAN·멀티플레이 전용 경로(E498~E505)' },
+    { id: 'rebaseline-host', class: 'exclude-host', keys: REBASELINE_CLASSES['exclude-host'], reason: '후보 기준선의 호스트 전용 경로(E498~E505)' },
     { id: 'mp-lan-tcp', class: 'exclude-mp', names: ['LocalTcpTransport'], reason: '로컬 LAN TCP 프레임 전송(982). 단독은 zlocal 내부 양끝만 쓴다' },
     { id: 'mp-saved-battle', class: 'exclude-mp', names: ['RawSavedStateRead', 'SavedStateFiles', 'RawStartupStateCheck'], reason: '일반 전투 저장상태(!state.dat) 읽기·정리와 재접속 질문. 웹은 저장상태 파일이 없다' },
-    { id: 'mp-outpost', class: 'exclude-mp', names: ['RawOutpostLifecycle'], reason: 'Outpost(멀티플레이 전용) 배치/거리 목록. RawRegionOwnership 의 outpost 분기에서만 부른다' },
+    { id: 'skirmish-outpost', class: 'port', names: ['RawOutpostLifecycle'], reason: '12차 스커미시의 Outpost 배치·거리 목록과 지역 소유 갱신' },
     { id: 'mp-zsend', class: 'exclude-mp', names: ['HtmlZsend'], reason: 'HTML $Zsend 의 87h 패킷을 11번 연결로 송신. WB02-E 에서 미연결로 결정' },
     { id: 'edit-editor', class: 'exclude-edit', pattern: /Editor/, reason: '이름에 Editor 가 든 편집기 전용 장치(UberEditor·섬 추가 창·작업본 파일·Test Battle 등)' },
     { id: 'edit-island-add', class: 'exclude-edit', names: ['RawIslandAdd', 'RawIslandPlacement'], reason: '편집기의 섬 한 개 추가와 임시 청크 지도 배치 검사' },
@@ -125,6 +133,7 @@ export function classify(key) {
     const name = path.posix.basename(key);
     // 위에서부터 처음 맞는 규칙을 고른다.
     for (const rule of RULES) {
+        if (rule.keys?.includes(key)) return rule;
         if (rule.names?.includes(name)) return rule;
         if (rule.pattern?.test(rule.pattern.source.startsWith('^') ? key : name)) return rule;
     }

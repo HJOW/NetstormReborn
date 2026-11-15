@@ -49,7 +49,7 @@ test('이식 대응표: 단독 경로와 웹 제외 경계의 대표 분류', ()
         'o/RawMissionLogin': 'port', // 단독 미션 로그인
         'o/PacketRegistrationTable': 'port',
         'o/RawMetaZoneCleanup': 'port', // State 정리에서 단독도 호출
-        'o/RawOutpostLifecycle': 'exclude-mp',
+        'o/RawOutpostLifecycle': 'port', // 12차 스커미시에서도 사용
         'o/RawSavedStateRead': 'exclude-mp',
         'client/HtmlZsend': 'exclude-mp',
         'client/UberEditor': 'exclude-edit', // UberGump.cpp 가 포함하는 .inc 지만 Edit 전용
@@ -74,6 +74,27 @@ test('이식 대응표: 단독 경로와 웹 제외 경계의 대표 분류', ()
     assert.deepEqual(actual, expected);
     // 범위 밖·비소스 경로는 단위가 아니다.
     assert.deepEqual([unitKey('cpppj/src/platform/Utf8Path.cpp'), unitKey('cpppj/src/o/CMakeLists.txt'), unitKey('cpppj\\src\\o\\SidPool.h')], [null, null, 'o/SidPool']);
+});
+
+// 후보 기준선의 신규 단위를 정확한 경로와 판정 분류로 고정한다. (2026-11-15 WB04-E512)
+test('이식 대응표: 후보 신규 단위 경로별 분류', () => {
+    const rules = RULES.filter((rule) => rule.id.startsWith('rebaseline-'));
+    const entries = rules.flatMap((rule) => rule.keys.map((key) => [key, rule.class]));
+    const classified = new Map(entries);
+    assert.equal(classified.size, 176);
+    assert.equal(entries.length, classified.size);
+    assert.deepEqual(Object.fromEntries(rules.map((rule) => [rule.class, rule.keys.length])), {
+        port: 100, adapt: 7, 'exclude-edit': 7, 'exclude-mp': 57, 'exclude-host': 5,
+    });
+    // 후보의 각 경로가 의도한 규칙에 먼저 일치하는지 확인한다.
+    for (const [key, expected] of classified) assert.equal(classify(key)?.class, expected, key);
+    assert.deepEqual(['client/NativeFortSaveVirtual', 'client/ClientMetaSpriteRefresh', 'client/NativeMetaSpriteRefresh', 'client/SkirmishSetup', 'client/ClientTimeSource'].map((key) => classify(key)?.class), ['port', 'port', 'port', 'port', 'adapt']);
+    // 두 기준선을 읽을 수 있으면 목록이 추가 단위 전체와 정확히 같은지 확인한다.
+    const previous = listUnits('1f00a25a');
+    const candidate = listUnits('225553df');
+    if (previous && candidate) {
+        assert.deepEqual([...candidate.keys()].filter((key) => !previous.has(key)).sort(), [...classified.keys()].sort());
+    }
 });
 
 // 기존 웹 모듈 대응: 이식을 마친 WB04 모듈과 3.6절 판정 행의 기록을 고정한다.
