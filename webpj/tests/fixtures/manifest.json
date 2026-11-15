@@ -14285,6 +14285,35 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
+      "unit": "WB04-E534",
+      "id": "native-main-menu-state",
+      "path": "cpppj/tests/fixtures/native-main-menu-state-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 004b6dd0 State 3 메인 메뉴 선택 부모. 입력 11 DWORD와 외부 변경/중단 이름 41입력 × 두 제어 워드(639/895)에서 종료 종류·다섯 144BYTE 블록 전체·현재 DWORD 여섯·현재/pending/배경 이름 전체·활동 기한 double·외부 호출 순서 82관측",
+      "consumers": [
+        "webpj/tests/native-main-menu-state.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/native-main-menu-state.js"
+      ],
+      "doc": "docs/webpj-native-main-menu-state-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/NativeMainMenuState.cpp"
+      ],
+      "scope": "10.78 82관측 전부",
+      "text": true,
+      "sha256": "1620edbc7050afbef2ec63c59ca73d4306d8ece1fba8737dc4f267f037264dd8",
+      "bytes": 233173,
+      "lines": 83,
+      "fixtureCommit": "b37bd01a5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/NativeMainMenuState.cpp": "499344b76"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
       "unit": "WB04-E533",
       "id": "title-bitmap-lifetime",
       "path": "cpppj/tests/fixtures/title-bitmap-lifetime-x86.tsv",
@@ -14305,7 +14334,7 @@
       "bytes": 20062,
       "lines": 34,
       "fixtureCommit": "c4b8a17d7",
-      "webCommit": "worktree",
+      "webCommit": "dc3b6aad8",
       "cpppjBasis": {
         "cpppj/src/client/TitleBitmapLifetime.cpp": "c4b8a17d7"
       }
@@ -14334,7 +14363,7 @@
       "bytes": 26491,
       "lines": 18,
       "fixtureCommit": "1c652cbf5",
-      "webCommit": "worktree",
+      "webCommit": "dc3b6aad8",
       "cpppjBasis": {
         "cpppj/src/client/NativeIntroState.cpp": "c4b8a17d7"
       }

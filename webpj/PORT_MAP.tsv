@@ -259,7 +259,7 @@ cpppj/src/client/NativeIslandRig.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeJoinTestBattle.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeLocalServerLaunch.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeLoginPacketReceivers.cpp	port			todo	[rebaseline-port]
-cpppj/src/client/NativeMainMenuState.cpp	port			todo	[client-default]
+cpppj/src/client/NativeMainMenuState.cpp	port	www/core/native-main-menu-state.js	225553df	port	[client-default] WB04-E534: 원문 004b6dd0 State 3 선택 부모(current 3 계약·DWORD 33 지움·intro 0이면 State39 예약·immediate[35]=1 확정·공통 앞단 출처 정규화·승패/titleMenu 배경과 음악·출처 배경·이전 Battle14 통지·prefix/HUD1·이름 첫 BYTE·제목 갱신·바뀐 State 전달·Guide 소멸·Welcome/Blank/Tips 안내·firstMenu·editorPlayers·tail)와 ReadNativeFortEntrySource·NotifyNativeFortEntryLeave·PrepareNativeEditorEntry. 원본 10.78 관측 native-main-menu-state 82관측(41입력×두 제어 워드: 다섯 144BYTE·현재 DWORD·이름·활동 기한 double·외부 호출 순서) 전부 실제 RawLocalMissionState와 함께 첫 실행 대조(Edit 전용 tail은 시험 장치로 재현), tests/native-main-menu-state.test.mjs. 기준선 뒤 cpppj 변경 없음.
 cpppj/src/client/NativeMetaBattleCreate.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeMetaBattleDescription.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeMetaBattleOptions.cpp	exclude-mp			-	[rebaseline-mp]
