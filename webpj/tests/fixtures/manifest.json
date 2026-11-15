@@ -14305,7 +14305,7 @@
       "bytes": 233173,
       "lines": 83,
       "fixtureCommit": "b37bd01a5",
-      "webCommit": "worktree",
+      "webCommit": "8412bca13",
       "cpppjBasis": {
         "cpppj/src/client/NativeMainMenuState.cpp": "499344b76"
       }
@@ -23217,6 +23217,93 @@
       "cpppjBasis": {
         "cpppj/src/o/RawClockSynchronization.cpp": "899c934dc",
         "cpppj/src/o/RawClockSynchronization.h": "3f766a97f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E535",
+      "id": "game-menu-actions",
+      "path": "cpppj/tests/fixtures/game-menu-actions-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 UserInput 일반 메뉴 명령 몸체. 명령(QuitApp·RequestQuitApp·볼륨·Pause·ViewHome·HideBuildings·ReloadTheams 등)×Guide/Gump 앞단 소비×부분 중단·현재 변경 610행에서 종료 종류·최종 전역 16개·장치 바이트·큐 커서/물리 큐·본체 효과 순서",
+      "consumers": [
+        "webpj/tests/game-menu-actions.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/game-menu-actions.js"
+      ],
+      "doc": "docs/webpj-game-menu-actions-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/GameMenuActions.cpp"
+      ],
+      "scope": "10.78 610행 전부(부분 중단 26·QuitApp 즉시 반환 16·앞단 소비 270 포함)",
+      "text": true,
+      "sha256": "2afddb2ef27ec52bec7a1842dc1f3b8c2cb191d25525a94977bf0e069d29b300",
+      "bytes": 5756570,
+      "lines": 611,
+      "fixtureCommit": "5adcf532b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GameMenuActions.cpp": "840989433"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E535",
+      "id": "cheat-money",
+      "path": "cpppj/tests/fixtures/cheat-money-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 SP 메뉴 명령(AddSp 0x02000061) Editor/mission 관문·signed 금액·중단 지점 144행에서 관문 읽기 순서·가산 float 비트·부분 효과",
+      "consumers": [
+        "webpj/tests/game-menu-actions.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/game-menu-actions.js"
+      ],
+      "doc": "docs/webpj-game-menu-actions-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/GameMenuActions.cpp"
+      ],
+      "scope": "10.78 144행 전부",
+      "text": true,
+      "sha256": "213680a78703af02b0fa28a5386da91081473b0d72f85082853fb5ab5021311b",
+      "bytes": 4589,
+      "lines": 145,
+      "fixtureCommit": "375ba0264",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GameMenuActions.cpp": "840989433"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E535",
+      "id": "full-deck-input",
+      "path": "cpppj/tests/fixtures/full-deck-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 전체 Deck 명령(GetFullDeck 0x020000cd)의 Guide/Gump 앞단·Editor/mission 관문·release 384행에서 하위 getFullDeck 호출 여부(60회)",
+      "consumers": [
+        "webpj/tests/game-menu-actions.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/game-menu-actions.js"
+      ],
+      "doc": "docs/webpj-game-menu-actions-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/GameMenuActions.cpp"
+      ],
+      "scope": "10.78 384행 전부(하위 전체 Deck 갱신 부모 GetFullDeckCommand 는 exclude-edit 라 웹 제외, getFullDeck 훅 호출 여부만 대조)",
+      "text": true,
+      "sha256": "524da298935a7997f0a642265e94b7e34e1d9bcfa2050974d1bd3db0a894ea04",
+      "bytes": 3622508,
+      "lines": 385,
+      "fixtureCommit": "1ecdfa2a9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/GameMenuActions.cpp": "840989433"
       }
     }
   ]
