@@ -10,9 +10,15 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { REPO_ROOT } from './helpers.mjs';
-import { GAME_AUX_FIELDS, GameAuxState, WORLD_DECORATION_FIELDS } from '../www/core/game-aux-state.js';
+import { GAME_AUX_FIELDS, GameAuxState, WORLD_DECORATION_FIELDS, MISSION_SETTING_FIELDS } from '../www/core/game-aux-state.js';
 import { FIRST_ASSET_TYPE_NUMBER, TYPE_LOAD_ORDER } from '../www/assets/type-table.js';
 import { PROCESS_TYPE_NAMES } from '../www/assets/type-flags.js';
+import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
+import { GunProcessState } from '../www/core/raw-gun-process.js';
+import { PriestDamageState } from '../www/core/raw-priest-damage.js';
+import { ConstructionProcessState } from '../www/core/raw-construction-process.js';
+import { createPlacementState, currentForcePlacement } from '../www/core/raw-canon-placement.js';
+import { RawMissionSettingsPacket, receiveCurrentMissionSettingsPacket } from '../www/core/raw-mission-settings-packet.js';
 
 // 보호 원본 실행 파일(10.78) 경로이다. (2026-11-05 WB04-C2)
 const ORIGINAL_EXE = path.join(REPO_ROOT, 'originals', 'Netstorm.exe');
@@ -74,6 +80,54 @@ function sha256(bytes) {
     return crypto.createHash('sha256').update(bytes).digest('hex');
 }
 
+// 비연속 원문 주소7개를 각각 보호 PE에서 읽고 같은 현재 배열의 초기값과 비교한다. (WB04-E572)
+test('GameAuxState: Session 미션 설정7DWORD의 주소/초기값이 보호 PE와 같다', (t) => {
+    const aux = new GameAuxState(); assert.deepEqual([...aux.missionSettings()], [1, 0, 0, 0, 0, 1, 8]);
+    assert.equal(aux.missionSettings(), aux.missionSettings()); assert.equal(aux.missionSettings().byteLength, 28);
+    assert.deepEqual(MISSION_SETTING_FIELDS.map((field) => field.address), [0x5326cc, 0x55a488, 0x55a48c, 0x55a490, 0x55a494, 0x5326d0, 0x5326d4]);
+    if (!fs.existsSync(ORIGINAL_EXE)) { t.diagnostic('보호 PE가 없어 실제 파일 바이트 대조만 생략한다'); return; }
+    const bytes = fs.readFileSync(ORIGINAL_EXE); assert.equal(sha256(bytes), ORIGINAL_EXE_SHA256); const read = peReader(bytes);
+    // 연속된 구조체라고 가정하지 않고 각 실제 원문 DWORD를 읽는다.
+    for (const [index, field] of MISSION_SETTING_FIELDS.entries()) assert.equal(read(field.address).bytes.readUInt32LE(0), aux.missionSettings()[index]);
+});
+
+// 현재 피해/발사/배치 소비자는 패킷 수신 뒤 새 소유자나 다음 프레임 없이 같은 입력을 읽는다. 전체 Session 설치 검사는 아니다. (WB04-E572)
+test('GameAuxState: 같은 미션 설정의 패킷 왕복이 무적·동맹 사격·강제 배치에 즉시 보인다', () => {
+    const aux = new GameAuxState(), current = aux.missionSettings(), damage = new PriestDamageState(), gun = new GunProcessState(), placement = createPlacementState();
+    damage.sharedInvulnerable = () => aux.missionSettings()[2]; gun.friendlyFire = () => aux.missionSettings()[3]; placement.sharedForcePlacement = () => aux.missionSettings()[1];
+    const readers = gun.globals(); assert.equal(damage.isInvulnerable(), false); assert.equal(readers.friendlyFire(), false); assert.equal(currentForcePlacement(placement), 0);
+    let packet; const settings = new RawMissionSettingsPacket({ current: (field) => aux.missionSettings()[field], setCurrent: (field, value) => { aux.missionSettings()[field] = value; }, send: (target, bytes) => { assert.equal(target, 9); packet = bytes.slice(); } });
+    current.set([9, 0x80000000, 0xffffffff, 0x80000001, 17, 3, 16]); settings.send(9); current.fill(0); settings.receive(packet);
+    assert.equal(aux.missionSettings(), current); assert.deepEqual([...current], [9, 0x80000000, 0xffffffff, 0x80000001, 17, 3, 16]);
+    assert.equal(damage.isInvulnerable(), true); assert.equal(readers.friendlyFire(), true); assert.equal(currentForcePlacement(placement), 0x80000000);
+    current[1] = current[2] = current[3] = 0; assert.equal(damage.isInvulnerable(), false); assert.equal(readers.friendlyFire(), false); assert.equal(currentForcePlacement(placement), 0);
+});
+
+// 원문 수신은 각DWORD를 읽는 즉시 현재 owner에 쓴다. 뒤 물리 부족이 앞선 저장을 되돌리지 않는다. (WB04-E572)
+test('GameAuxState: 짧은 미션 패킷의 앞선 저장을 같은 owner에 남기고 다음 송신이 읽는다', () => {
+    const aux = new GameAuxState(), current = aux.missionSettings(), packet = Uint8Array.of(1, 0x32, 32, 0, 0xef, 0xcd, 0xab, 0x89, 0x44, 0x33, 0x22, 0x11, 0xaa);
+    current.fill(0xcccccccc); assert.throws(() => receiveCurrentMissionSettingsPacket(current, packet), /물리 범위/);
+    assert.deepEqual([...current], [0x89abcdef, 0x11223344, 0xcccccccc, 0xcccccccc, 0xcccccccc, 0xcccccccc, 0xcccccccc]);
+    let sent; new RawMissionSettingsPacket({ current: (field) => aux.missionSettings()[field], send: (target, bytes) => { sent = bytes; } }).send(9);
+    assert.deepEqual([...sent.subarray(4, 12)], [...packet.subarray(4, 12)]);
+});
+
+// Session의 일반/준비 대여와 반납도 같은 GameAux 물리를 유지하며 현재 생성/완료 상태 reader는 효과 뒤 값을 읽는다. (WB04-E572)
+test('GameAuxState: Session 선행 건설·운반·미션 입력을 일반/준비 대여·reset에서 보존한다', () => {
+    const aux = new GameAuxState(), other = new GameAuxState(), globals = new ClientGameplayGlobals(null, null, aux), settings = aux.missionSettings(), building = new ConstructionProcessState(), gun = new GunProcessState();
+    building.currentProcessType = () => aux.constructionProcessType; building.quickBuild = () => aux.quickBuild; building.quickVortex = () => aux.quickVortex;
+    gun.sharedRainCannonType = () => aux.rainCannonType; gun.sharedThunderCannonType = () => aux.thunderCannonType;
+    Object.assign(aux, { constructionProcessType: 31, constructionBlocked: 0x80000000, constructionDisplaceGenus: 0xffffffff, emptyCarrierType: 186, emptyGeyserType: 83, firstLocalGeyserQuantity: -1, lastLocalGeyserQuantity: -2147483648, islandDropBlocked: 3, islandStumpType: 95, quickBuild: 0x80000001, quickVortex: 0xffffffff, rainCannonType: 130, thunderCannonType: 132 });
+    settings.set([3, 4, 5, 6, 7, 8, 9]); const general = globals.acquire(); general.release(); const prepared = globals.acquirePrepared(); prepared.release(); aux.resetForGeneralWorld();
+    assert.equal(globals.gameAux(), aux); assert.equal(aux.missionSettings(), settings); assert.deepEqual([...settings], [3, 4, 5, 6, 7, 8, 9]);
+    assert.deepEqual([building.currentType(), building.read('quickBuild'), building.read('quickVortex'), gun.readRainCannonType(), gun.readThunderCannonType()], [31, 0x80000001, 0xffffffff, 130, 132]);
+    assert.deepEqual([aux.constructionBlocked, aux.constructionDisplaceGenus, aux.emptyCarrierType, aux.emptyGeyserType, aux.firstLocalGeyserQuantity, aux.lastLocalGeyserQuantity, aux.islandDropBlocked, aux.islandStumpType], [0x80000000, 0xffffffff, 186, 83, -1, -2147483648, 3, 95]);
+    aux.constructionProcessType = 32; aux.quickBuild = 0; aux.quickVortex = 1; aux.rainCannonType = 129; aux.thunderCannonType = 131;
+    assert.deepEqual([building.currentType(), building.read('quickBuild'), building.read('quickVortex'), gun.readRainCannonType(), gun.readThunderCannonType()], [32, 0, 1, 129, 131]);
+    assert.notEqual(other.missionSettings(), settings); assert.deepEqual([...other.missionSettings()], [1, 0, 0, 0, 0, 1, 8]); assert.equal(other.firstLocalGeyserQuantity, 3);
+    assert.throws(() => { aux.firstLocalGeyserQuantity = 0x80000000; }, RangeError); assert.throws(() => { aux.quickBuild = -1; }, RangeError); assert.equal(aux.quickBuild, 0);
+});
+
 // 필드 폭의 바이트 수이다. (2026-11-05 WB04-C2)
 const WIDTH = Object.freeze({ u32: 4, i32: 4, f32: 4, f64: 8, bool: 1 });
 
@@ -112,8 +166,8 @@ test('GameAuxState: 초기값이 원본10.78 PE 의 .data/BSS 와 같다', (t) =
         if (value !== field.initial) mismatches.push(`장식@${field.address.toString(16)}: ${value} ≠ ${field.initial}`);
     }
     assert.deepEqual(mismatches, []);
-    // 필드58개(double4개의8바이트 전체, E571의 소리 부착TYPE 포함)와 장식4칸이다.
-    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [58, 4]);
+    // 필드71개(double4개의8바이트 전체, E572 Session 선행13칸 포함)와 장식4칸이다.
+    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [71, 4]);
 });
 
 // TYPE 번호 칸: 웹 타입 표에서 같은 번호의 이름이 표의 대응 이름과 같다(자산 70~, 프로세스 10~, 내장 Form 1·2·3·6). 프로세스 상한 63 은 마지막 프로세스(62)+1 이다.
@@ -124,7 +178,7 @@ test('GameAuxState: TYPE 번호가 웹 타입 표의 이름과 맞는다', () =>
     const nameOf = (number) => (number >= FIRST_ASSET_TYPE_NUMBER ? TYPE_LOAD_ORDER[number - FIRST_ASSET_TYPE_NUMBER] : number >= 10 ? PROCESS_TYPE_NAMES[number - 10] : builtin[number]);
     const typed = [...GAME_AUX_FIELDS.filter((field) => field.typeName !== null).map((field) => [field.name, field.initial, field.typeName]),
         ...WORLD_DECORATION_FIELDS.map((field) => [`decoration@${field.address.toString(16)}`, field.initial, field.typeName])];
-    assert.equal(typed.length, 35);
+    assert.equal(typed.length, 40);
     for (const [name, number, typeName] of typed) assert.equal(nameOf(number), typeName, `${name}=${number}`);
     assert.equal(new GameAuxState().processTypeEnd, 10 + PROCESS_TYPE_NAMES.length);
 });

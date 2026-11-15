@@ -9,6 +9,7 @@ import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-disp
 import { MISSION_SETTINGS_FIELD, RawMissionSettingsPacket, receiveCurrentMissionSettingsPacket, registerMissionSettingsPacket } from '../www/core/raw-mission-settings-packet.js';
 import { REPO_ROOT } from './helpers.mjs';
 import { readRows } from './raw-support.mjs';
+import { GameAuxState } from '../www/core/game-aux-state.js';
 
 // 원본 관측 파일이다. 파일이 없으면 재생 검사를 건너뛴다. (2026-11-11 WB04-E316)
 const ROWS = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'mission-settings-packet-x86.tsv'));
@@ -78,7 +79,9 @@ test('미션 설정 패킷: 원본 관측 164행의 packet·설정·효과 순�
         const seed = Number(fields[2]);
         const target = Number(fields[3]);
         const mode = Number(fields[4]);
-        const current = settingsValues(profile, seed);
+        // Session/고정 수신기가 빌릴 실제 장기 owner의 같은7DWORD에 원본 입력을 쓴다. (WB04-E572)
+        const owner = new GameAuxState();
+        const current = owner.missionSettings(); current.set(settingsValues(profile, seed));
         const packet = new Uint8Array(32);
         // 수신/observer 의 원문 헤더도 native 의 무해석 입력을 그대로 보존한다.
         for (let index = 0; index < packet.length; index += 1) packet[index] = (index * 37 + 11) & 0xff;

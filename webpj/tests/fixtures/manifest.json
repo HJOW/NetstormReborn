@@ -769,7 +769,7 @@
         "cpppj/src/o/RawSquidContainedUnpop.h",
         "cpppj/src/o/RawPacketLengths.h"
       ],
-      "scope": "게임 보조 전역58필드(소리 TYPE0054112c=47 포함)·장식4칸·패킷 길이WORD138개와 ClientGameplayGlobals22칸/배열의 PE 초기값. 실행 중 writer는 각 소비자 단위에서 검증",
+      "scope": "게임 보조 전역71필드·장식4칸·미션 설정7DWORD·패킷 길이WORD138개와 ClientGameplayGlobals22칸/배열의 PE 초기값. 원문 미션 설정 주소는 비연속이며 실행 중 writer는 각 소비자 단위에서 검증",
       "text": false,
       "sha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
       "bytes": 1552384,
@@ -16941,7 +16941,8 @@
         "webpj/tests/raw-mission-settings-packet.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-mission-settings-packet.js"
+        "webpj/www/core/raw-mission-settings-packet.js",
+        "webpj/www/core/game-aux-state.js"
       ],
       "doc": "docs/webpj-mission-settings-packet-20261111.md",
       "cpppjSources": [
@@ -16952,7 +16953,7 @@
       "bytes": 35353,
       "lines": 165,
       "fixtureCommit": "05d7cb57d",
-      "webCommit": "d9bc213ea",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionSettingsPacket.cpp": "ae0e58b3a"
       }
@@ -24120,7 +24121,7 @@
       "bytes": 4177929,
       "lines": 18386,
       "fixtureCommit": "99d66b0a6",
-      "webCommit": "worktree",
+      "webCommit": "5b09937dd",
       "cpppjBasis": {
         "cpppj/src/client/SoundProcess.cpp": "d3767242f",
         "cpppj/src/client/SoundProcess.h": "d3767242f",

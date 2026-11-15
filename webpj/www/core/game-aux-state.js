@@ -69,6 +69,20 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['regularProcessType', 0x00541128, 'u32', 46, 'regularProcessType', '일반 예약(Regular) 생성과 종속 조회 TYPE'],
     // 소리/내용물 타이머가 실제 부착 때 같은 현재 DWORD를 읽는다. 일반 대여/reset은47로 되돌리지 않는다. (2026-11-16 WB04-E571)
     ['soundProcessType', 0x0054112c, 'u32', 47, 'soundProcessType', '소리/내용물 프로세스의 현재 부착 TYPE'],
+    // Session 생성자가 건설/미사일/운반의 실제 현재 값을 같은 Client owner에서 빌린다. (2026-11-16 WB04-E572)
+    ['constructionProcessType', 0x005410e8, 'u32', 30, 'constructionProcessType', '건설/볼텍스 프로세스의 현재 부착 TYPE'],
+    ['constructionBlocked', 0x00558e74, 'u32', 0, null, '현재 건설 수신 차단 DWORD'],
+    ['constructionDisplaceGenus', 0x005325b4, 'u32', 0x10444200, null, '건설/경로/배치가 공유하는 밀어내기 장르'],
+    ['emptyCarrierType', 0x00541344, 'u32', 187, null, '파일 적재 이름표 밖의 빈 운반체 추가 TYPE'],
+    ['emptyGeyserType', 0x005411a8, 'u32', 84, 'emptyGeyser', '고갈된 간헐천의 현재 TYPE'],
+    ['firstLocalGeyserQuantity', 0x00540bd4, 'i32', 3, null, 'Player1~4의 현재 지역 간헐천 요청 수'],
+    ['lastLocalGeyserQuantity', 0x00540bd8, 'i32', 4, null, 'Player5~8의 현재 지역 간헐천 요청 수'],
+    ['islandDropBlocked', 0x0054db84, 'u32', 0, null, '로딩 깊이와 별개인 섬 정리 억제 DWORD'],
+    ['islandStumpType', 0x005411d8, 'u32', 96, 'playerBanner', '섬 정리 때 비교하는 그루터기 역할의 현재 TYPE'],
+    ['quickBuild', 0x0055a49c, 'u32', 0, null, '일반 건설의 현재 즉시 완료 DWORD'],
+    ['quickVortex', 0x0055a498, 'u32', 0, null, '신전 건설의 현재 즉시 완료 DWORD'],
+    ['rainCannonType', 0x0054125c, 'u32', 129, 'rainCannon', '아이스 캐논의 현재 원문 역할 TYPE'],
+    ['thunderCannonType', 0x00541264, 'u32', 131, 'thunderCannon', '썬더 캐논의 현재 역할 TYPE'],
     ['processFormType', 0x00541078, 'u32', 2, 'ProcessForm', '공통 Process 부모 Create/Take TYPE'],
     ['dependFormType', 0x00541074, 'u32', 1, 'DependForm', '감시 쌍 Create 와 검색 TYPE'],
     // 아래 세 칸은 공통 Form 층·contained 해제가 호출마다 읽는 종속 전역이다(squid-forms.js squidFormGlobals). (2026-11-06 WB04-D3 추가)
@@ -109,6 +123,12 @@ export const WORLD_DECORATION_FIELDS = Object.freeze([
     [0x005411e8, 100, 'treeTwo'], [0x00541338, 184, 'RUIN'], [0x005411ec, 101, 'treeThree'], [0x0054133c, 185, 'Monument'],
 ].map(([address, initial, typeName]) => Object.freeze({ address, initial, typeName })));
 
+// Session/32h가 같은7DWORD를 순서대로 읽고 쓰는 공개 필드 표다. 원본 주소는 비연속이며 연속 메모리 image로 취급하지 않는다. (WB04-E572)
+export const MISSION_SETTING_FIELDS = Object.freeze([
+    [0x005326cc, 1, '제네레이터 타이머'], [0x0055a488, 0, '강제 이동/배치'], [0x0055a48c, 0, '무적'],
+    [0x0055a490, 0, '동맹 사격'], [0x0055a494, 0, '자원 탱크'], [0x005326d0, 1, '전투 패널 열'], [0x005326d4, 8, '전투 패널 행'],
+].map(([address, initial, description]) => Object.freeze({ address, initial, description })));
+
 // 원본 일반 월드 준비(기존 지역 Runtime 의 fresh 입력)에서 되돌리는 필드와 값이다. 원본 정리 전체가 아니다. (2026-11-05 WB04-C2)
 const GENERAL_WORLD_RESET = Object.freeze({
     ordinaryGeysers: 0, totalCost: 0, resourcePool: 0, refundPercent: 25, allowAnyCapture: 0, archipelago: 0, lostX: 0, lostY: 0, geyserType: 122, priestQuarterHp: false,
@@ -142,6 +162,8 @@ export class GameAuxState {
     #constructionRequestHeader = this.#constructionRequest.subarray(0, 2);
     // 실제 공통 전송 버퍼와 압축/헤더 상태를 한 번만 소유하고 각 소비자에게 같은 객체를 빌린다. (2026-11-16 WB04-E567)
     #squidTransmission = createSquidTransmissionState();
+    // 새 Client에서 한 번 만든 같은 미션 설정 물리다. 일반/준비 대여·반납과 reset은 재생성하거나0으로 지우지 않는다. (WB04-E572)
+    #missionSettings = Uint32Array.from(MISSION_SETTING_FIELDS, (field) => field.initial);
 
     // 필드 값을 읽는다(접근자 공통 구현).
     #read(name) { return this.#values.get(name); }
@@ -163,6 +185,9 @@ export class GameAuxState {
 
     // 일반/강제 writer와 packet/송신이 같은 2048BYTE 물리를 공유한다. (2026-11-16 WB04-E567)
     get squidTransmission() { return this.#squidTransmission; }
+
+    // 32h 수신/송신과 Session의 강제 배치/무적/동맹 사격이 공유하는7칸 현재DWORD 배열이다. (WB04-E572)
+    missionSettings() { return this.#missionSettings; }
 
     // 자원 DWORD 를 unsigned 비트로 읽는다(로그인/폭탄의 unsigned 조회).
     get resourcePoolBits() { return this.#read('resourcePool') >>> 0; }
