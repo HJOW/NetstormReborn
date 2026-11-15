@@ -318,3 +318,32 @@ test('미션 클라이언트 패킷: Ready boss 경로·시간 응답·분배기
     assert.equal(dispatch.dispatch(new PacketConnection({ sender: 4 }), Uint8Array.of(1, 0x67, 7, 0, 0, 0, 0)), true);
     assert.ok(scene.trace.includes('Outpost,4'));
 });
+
+// 67h 공통 부모 경계(WB04-E558, 대응표 RawStateBattleOptions 판정에서 변형 확인으로 드러난 미관측 경계): 비용은 signed int32 의 float 저장, 환불 비율은 unsigned 32비트이며,
+// 길이 진단·재연결 장치가 필요한 경로에서 누락하면 같은 명시 오류(소비자 미연결)이고 앞선 효과는 남는다.
+test('미션 클라이언트 패킷: 옵션 수신의 부호 변환과 선택 장치 누락', () => {
+    const stored = [];
+    const values = [];
+    const options = new Uint8Array(87).fill(0xa5);
+    const globals = { options, challenge: 0, battle: true, mission: false, saved: true, setValue: (value) => values.push(value) };
+    const hooks = { assertion: () => {}, challengeOptions: () => {}, range: () => {}, cost: () => -5, storeCost: (value) => stored.push(value), currentValue: () => 0xfffffff0, reconnect: () => {} };
+    const packet = (length) => { const bytes = new Uint8Array(7 + 100).fill(0x31); bytes[5] = length & 0xff; bytes[6] = length >> 8; return bytes; };
+    receiveStateBattleOptions(1, packet(4), globals, hooks);
+    // 음수 비용은 signed 로 float 저장하고, 환불 비율은 unsigned 32비트로 쓴다.
+    assert.deepEqual(stored, [-5]);
+    assert.deepEqual(values, [0xfffffff0]);
+    // 큰 정수 비용은 float 로 반올림해 저장한다(16777217 → 16777216).
+    stored.length = 0;
+    receiveStateBattleOptions(1, packet(4), globals, { ...hooks, cost: () => 16777217 });
+    assert.deepEqual(stored, [16777216]);
+    // 길이 진단 장치 누락은 87 초과일 때만 도달하며 앞선 복사 없이 명시 오류이다.
+    options.fill(0xa5);
+    assert.throws(() => receiveStateBattleOptions(1, packet(88), globals, { ...hooks, assertion: undefined }), /소비자 미연결/);
+    assert.ok(options.every((byte) => byte === 0xa5));
+    assert.doesNotThrow(() => receiveStateBattleOptions(1, packet(4), globals, { ...hooks, assertion: undefined }));
+    // 재연결 장치 누락은 전투·비미션·저장일 때만 도달하며 앞선 값 쓰기는 남는다.
+    values.length = 0;
+    assert.throws(() => receiveStateBattleOptions(1, packet(4), globals, { ...hooks, reconnect: undefined }), /소비자 미연결/);
+    assert.deepEqual(values, [0xfffffff0]);
+    assert.doesNotThrow(() => receiveStateBattleOptions(1, packet(4), { ...globals, saved: false }, { ...hooks, reconnect: undefined }));
+});
