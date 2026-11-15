@@ -22809,6 +22809,35 @@
         "cpppj/src/client/ClientUserSelectionGlobals.cpp": "32fe196f3",
         "cpppj/src/client/ClientUserSelectionGlobals.h": "b006db453"
       }
+    },
+    {
+      "id": "ucrt-clock-sort",
+      "path": "webpj/tests/fixtures/ucrt-clock-sort.json",
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "producer": "webpj/tools/capture-ucrt-clock-sort.py: Windows UCRT 10.0.19041.7802 qsort의 합성 double 입력 350건",
+      "consumers": [
+        "webpj/tests/ucrt-clock-sort.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/ucrt-clock-sort.js"
+      ],
+      "unit": "WB04-E516",
+      "doc": "docs/webpj-clock-sort-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawClockSynchronization.cpp"
+      ],
+      "scope": "cpppj 제품 1313의 Windows CRT 정렬 경계. 원본 10.78 관측이 아닌 합성 표본의 순열",
+      "text": true,
+      "sha256": "513cc55e38885df25a43d86f497ab7920741465afc98c8522fefabbcf39d01b1",
+      "bytes": 71772,
+      "lines": 1,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawClockSynchronization.cpp": "899c934dc"
+      }
     }
   ]
 }
