@@ -6,7 +6,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E577)
+### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E578)
 
 | 항목 | 현행 기준 |
 | --- | --- |
@@ -14,9 +14,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 1,006단위(제외 154 별도) 중 **port 841(83.6%)·partial 34(3.4%)·todo 131(13.0%)**. 남은 165단위는 기존 기준선 86단위와 재기준선에서 추가된 79단위다(대응표·재기준선 규칙 key로 E565 재집계). 추가 partial 3개는 중단 시점 초안2개와 E574 Session 기반 자료다. 전체 Session 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
-| 마지막 작업 단위 | **WB04-E577** 생성자1188..1235의 실제 섬·Sound47·사제/참여를 같은 owner에 결선하고 장기 사제 목록 조회 누락을 교정했다(신규12검사, [단위 문서](docs/webpj-session-priests-20261116.md)). 같은 SP 추적/Player·종료도 대조했으며 전체 생성자/외곽 공개/Load·Login은 미완료다 |
-| 다음 작업 | ⓪ 4-D D의 `RawCampaignSession` 1을 계속한다. E577 뒤1236의 실제 PlayerWorld→TemplateState/PlayerRegular→1257의 소유권과 전체 모듈을 원문 순서로 연결한다. 외곽 공개와 같은 Template TypeNames→Objects/Contents·Load는 그 뒤다. ① 신규 미완료79단위·시간 동기화/Native 장치는 각 단계와 D/E에서, A 정리·B Client 서비스는 실제 Session 허브 뒤에 연결한다. ② D→E(Client·통합·L2) 순서이며 3.8절 허브/적응 판정4건은 잔여 |
-| 마지막 전체 검사 | 2026-11-16 WB04-E577: Node v22.23.3·v26.13.0 전체 각각 **5,483건 통과, 실패·취소·건너뜀 0** (v24 전체는 E513에서 4,973건 통과) |
+| 마지막 작업 단위 | **WB04-E578** 생성자1236..1267의 실제 Player152·TemplateState·PlayerRegular·소유권을 결선했다(신규12검사, [단위 문서](docs/webpj-session-players-20261116.md)). 실제 첫 Regular·State 생성/확장/Notify·신전/지역 쓰기와 부분 실패를 대조했다. 전체 생성자/외곽 공개/Load·Login은 미완료다 |
+| 다음 작업 | ⓪ 4-D D의 `RawCampaignSession` 1을 계속한다. E578 뒤1268의 실제 CarrierPostPop→BalloonBody→1284 TYPE 파생표(themes/elements 등)와 전체 모듈을 원문 순서로 연결한다. 외곽 공개와 같은 Template TypeNames→Objects/Contents·Load는 그 뒤다. ① 신규 미완료79단위·시간 동기화/Native 장치는 각 단계와 D/E에서, A 정리·B Client 서비스는 실제 Session 허브 뒤에 연결한다. ② D→E(Client·통합·L2) 순서이며 3.8절 허브/적응 판정4건은 잔여 |
+| 마지막 전체 검사 | 2026-11-16 WB04-E578: Node v22.23.3·v26.13.0 전체 각각 **5,495건 통과, 실패·취소·건너뜀 0** (v24 전체는 E513에서 4,973건 통과) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -248,7 +248,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] **캠페인 TypeNames/변환표 공용 부모** — 생성자/실제 campaignObjects3484→ReadFortObjectStreams3218→PrepareFortTypeNames3345가 사용하므로 Editor 제외 판정을 교정 → [E573](docs/webpj-fort-type-names-20261116.md) RawFortTypeNamesLoad112줄·FortTypeConversionStorage63줄, 원본664본문/38cleanup·실제 Template/255BYTE 수명/guard 대조. 실제 Session의 해당 연결은 D1에서
 
 **D. Session 본체 (`RawCampaignSession` 7,118줄, 기준선 `225553df`)** — 공개 API 경계로 분할한다(헤더712줄·`.cpp`6,406줄)
-- [ ] **RawCampaignSession 1: 구성·소유 상태·Load** — 생성자(Impl 상태)·`Load`·Player/동맹/기술/SP/Deck/AI 초기화·`RawSurfaceWorld`/`RawWorldCore` 접합(`bindSquidTransmission` ← `RawSquidTransmission.pop`, 4-B 이월: 저장 객체 `FortObjectLoad`/Money/Meta child 의 실제 적재·session-dump 대조) — [E574 기반 자료](docs/webpj-session-owners-20261116.md)에서 실제 owner/World·Template 깊이·Player/Core·난수/SP 구간을 구성했다(partial). [E575 공유 입력/진단](docs/webpj-session-shared-state-20261116.md)·[E576 Player/패킷 테이블](docs/webpj-session-player-tables-20261116.md)·[E577 섬/사제/Sound](docs/webpj-session-priests-20261116.md)까지 결선했다.1236 이후 Player/Template/소유권·전체 모듈 생성·외곽 공개·Load·실제 Login은 잔여
+- [ ] **RawCampaignSession 1: 구성·소유 상태·Load** — 생성자(Impl 상태)·`Load`·Player/동맹/기술/SP/Deck/AI 초기화·`RawSurfaceWorld`/`RawWorldCore` 접합(`bindSquidTransmission` ← `RawSquidTransmission.pop`, 4-B 이월: 저장 객체 `FortObjectLoad`/Money/Meta child 의 실제 적재·session-dump 대조) — 실제 owner/World·공유 입력·Player/SP·진단·테이블·섬/사제/Sound·Player/Template/소유권까지 결선했다(partial, [기반 자료](docs/webpj-session-owners-20261116.md)·[현재 연결](docs/webpj-session-players-20261116.md)). 다음1268 Carrier/Balloon/TYPE 파생표·전체 모듈 생성·외곽 공개·Load·실제 Login은 잔여
 - [ ] **RawCampaignSession 2: 로컬 연결·로그인** — `LoadLocalConnection`/`PrepareLocalConnectionForState`/`ConnectLocalConnectionForState`/`PollLocalConnectionState`/`PumpLocalConnection`/송신 + **RawCampaignSessionLogin** 234줄(+182, 4-C 이월 `Impl::Login`)
 - [ ] **RawCampaignSession 3: 프레임·카메라·표시 입력** — `RunFrame`/`PrepareFrame`·카메라 홈/중심/명령(`CenterCameraOn`·`ViewHome`·`ViewYourPriest`·`RequestCameraCenter`/`CommitRequestedCamera`)·입자 뷰(5-A 연결)
 - [ ] **RawCampaignSession 4: 승패·종료·Editor 제외 정리** — `CheckMissionOutcome`·종료 수명(웹 제외인 Existing Editor 계열은 만들지 않는다)

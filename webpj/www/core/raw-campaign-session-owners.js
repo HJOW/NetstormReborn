@@ -1,5 +1,5 @@
 // RawCampaignSession::Impl의 캠페인 소유 자료를 실제 하위 생성자로 구성한다(225553df, WB04-E574).
-// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → 나머지 모듈/Load.
+// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → 나머지 모듈/Load.
 // 이 단계는 Session이 아니며 현재 Runtime에 공개하지 않는다. 외곽 Session과 Load는 아직 미구현이다.
 // Editor/LAN/메타/Native 장치는 이 캠페인 분기에 섞지 않는다. 반납은 하위 모듈을 정리한 부모가 마지막에 dispose로 한다.
 import { GameAssets } from '../assets/game-assets.js';
@@ -25,6 +25,9 @@ import { RawSurfaceWorld } from './raw-surface-world.js';
 import { RawCampaignSessionState } from './raw-campaign-session-state.js';
 import { RawCampaignSessionTables } from './raw-campaign-session-tables.js';
 import { RawCampaignSessionPriests } from './raw-campaign-session-priests.js';
+import { RawCampaignSessionPlayers } from './raw-campaign-session-players.js';
+import { RegionPaintState } from './raw-region-paint.js';
+import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
 import { ScrambledSpStore } from './sp-store.js';
 import { SquidReward, SquidRewardState } from './squid-reward.js';
@@ -83,11 +86,15 @@ export class RawCampaignSessionOwners {
     // 상위가 실제 가상80 분배를 연결하며, 미연결 시 선택된 호출에서 오류다.
     rewardCount = null; soundNames; level = null;
     // 같은 Impl의 공유 입력·현재 상태와 Player/SP 이후 진단 결선이다.
-    state; tables; priestModules = null;
+    state; tables; priestModules = null; playerModules = null;
     // 현재 Client의 같은 redraw 상자 또는 독립 Session의 지역0 상자다.
     worldRedraw;
+    // 같은 장기 redraw/개정 상자를 빌리는 지역 도장/투표와 생성 시0인 TYPE별 두 벡터다.
+    paint; votes; themes; elements;
     // 실제 생성 순서에서 채우는 섬·소리·사제와 참여 조회 모듈이다.
     islands = null; sounds = null; priests = null; priestParticipation = null;
+    // 같은 Player9/Template를 빌리는 Player152·현재 State·정기 처리기다.
+    player = null; templateState = null; playerRegular = null;
     // 후속 생성자가 설치하는 실제 순환 참조다. 현재 구간은 대체 객체를 만들지 않는다.
     ownership = null; hits = null; construction = null; placeBattleNuggets = null;
     carrierRegular = null; balloonBody = null; carrierFallStart = null; priestPanic = null;
@@ -105,8 +112,10 @@ export class RawCampaignSessionOwners {
             this.coreDataGlobals = input.coreDataGlobals ?? new ClientCoreDataGlobals();
             this.playerRecords = input.playerRecords ?? new ClientPlayerRecords(); this.playerUse = this.playerRecords.acquire();
             // 값형 서비스의 소비 묶음/peer9 표는 복사하고, 함수와 실제 공유 owner의 참조는 유지한다.
-            this.services = { ...input, assets: { ...input.assets }, sound: { ...input.sound }, priest: { ...input.priest, shield: { ...input.priest?.shield }, regen: { ...input.priest?.regen } }, battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
+            this.services = { ...input, assets: { ...input.assets }, sound: { ...input.sound }, priest: { ...input.priest, shield: { ...input.priest?.shield }, regen: { ...input.priest?.regen } }, player: { ...input.player }, ownership: { ...input.ownership }, battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
             this.worldRedraw = input.kencloudGlobals ? input.kencloudGlobals.worldRedraw() : { value: 0 };
+            this.paint = Object.assign(new RegionPaintState(), { sharedWorldRedraw: this.worldRedraw });
+            const revision = this.gameplayGlobals.mapRevision(); this.votes = new RegionOwnershipState({ sharedWorldRedraw: this.worldRedraw, sharedMapRevision: revision });
             this.fortTypeConversion = input.fortTypeConversion ?? new FortTypeConversionStorage();
             this.chatGlobals = input.chatGlobals ?? new ClientChatWindowGlobals();
             this.localStateGlobals = input.localStateGlobals ?? new ClientLocalStateGlobals();
@@ -122,6 +131,7 @@ export class RawCampaignSessionOwners {
                 loadingDepth: { get value() { return inputDepth.loadingDepth; }, set value(value) { inputDepth.loadingDepth = value; } },
             });
             this.core = this.world.core();
+            this.themes = new Uint32Array(this.core.types.length); this.elements = new Int32Array(this.core.types.length);
             this.chunks = this.world.storage.chunks; this.islandBytes = this.world.storage.islands; this.dudePopulation = this.world.storage.sidLists.dudes; this.stamp = this.gameplayGlobals.terrainStamp();
             this.playerState = this.gameplayGlobals.player; this.globals = this.gameplayGlobals.world;
             this.cursorDrop = this.gameplayGlobals.cursor; this.energyState = this.gameplayGlobals.energy; this.contentFinder = this.gameplayGlobals.finder;
@@ -189,6 +199,12 @@ export class RawCampaignSessionOwners {
         this.priestModules ??= new RawCampaignSessionPriests(this); this.priestModules.bind();
     }
 
+    // 같은 Player/Template/정기와 실제 섬/지역 소유권을 원문 순서로 연결한다. 전체 적재/공개는 후속 구간이다.
+    connectPlayersAndOwnership() {
+        if (this.#disposed) throw new Error('반납한 Session Player/소유권 결선');
+        this.playerModules ??= new RawCampaignSessionPlayers(this); this.playerModules.bind();
+    }
+
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
     get fullDeck() { return this.gameplayGlobals.fullDeck().value; }
     // 값 쓰기도 동일 장기 DWORD를 사용한다.
@@ -210,10 +226,10 @@ export class RawCampaignSessionOwners {
     dispose() {
         if (this.#disposed) return; this.#disposed = true;
         try {
-            if (this.priestModules) { this.world?.drainOwnedProcessesForShutdown(); this.priestModules.dispose(); }
+            if (this.priestModules || this.playerModules) { this.world?.drainOwnedProcessesForShutdown(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
         } finally {
             try { this.world?.dispose(); } finally {
-                try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } }
+                try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } }
             }
         }
     }
