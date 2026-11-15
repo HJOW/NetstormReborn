@@ -14285,6 +14285,64 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
+      "unit": "WB04-E531",
+      "id": "object-owner-command",
+      "path": "cpppj/tests/fixtures/object-owner-command-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 SetOwner 명령 4d817e..4d81cb. 편집/미션 후처리/선택/새 owner/가상 74 뒤 변경/revision 입력에서 효과 순서(가상 74·Player Core 선택)와 최종 상태 256행",
+      "consumers": [
+        "webpj/tests/object-owner-commands.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/object-owner-commands.js"
+      ],
+      "doc": "docs/webpj-object-owner-commands-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/ObjectOwnerCommands.cpp"
+      ],
+      "scope": "10.78 256입력 전부",
+      "text": true,
+      "sha256": "93f78ffb15c3624dd9229790a2dc7437ba43de6882a06980f86d987f7c7b24ab",
+      "bytes": 8898,
+      "lines": 257,
+      "fixtureCommit": "ffab63a0b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ObjectOwnerCommands.cpp": "ea21e0e8a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E531",
+      "id": "editor-primary-selection",
+      "path": "cpppj/tests/fixtures/editor-primary-selection-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 일반 좌클릭 후처리 4da2e8..357(보관 SID·뒤늦은 owner·다리 순환·follow). 입력에서 효과 순서와 최종 상태 256행",
+      "consumers": [
+        "webpj/tests/object-owner-commands.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/object-owner-commands.js"
+      ],
+      "doc": "docs/webpj-object-owner-commands-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/ObjectOwnerCommands.cpp"
+      ],
+      "scope": "10.78 256입력 전부",
+      "text": true,
+      "sha256": "cf76d3f6792218e9d7560feae438fb4a2de833d0776f61a855a4c5bd15387db2",
+      "bytes": 9264,
+      "lines": 257,
+      "fixtureCommit": "ea21e0e8a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ObjectOwnerCommands.cpp": "ea21e0e8a"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
       "unit": "WB04-E529",
       "id": "sprite-refresh",
       "path": "cpppj/tests/fixtures/sprite-refresh-x86.tsv",
@@ -14305,7 +14363,7 @@
       "bytes": 19659,
       "lines": 226,
       "fixtureCommit": "2c6ab7cc1",
-      "webCommit": "worktree",
+      "webCommit": "4c06fd9d6",
       "cpppjBasis": {
         "cpppj/src/o/RawSpriteRegular.cpp": "2c6ab7cc1"
       }
