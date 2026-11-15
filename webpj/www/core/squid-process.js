@@ -190,6 +190,9 @@ export class SquidProcessState {
     #sharedRegularType = 61;
     #processTypeEnd = 63;
     #processFormType = 2;
+    // 발사/회전 애니메이션 프로세스 TYPE 의 독립 입력이다(005410fc/00541100 의 초기 35/36). (2026-11-15 WB04-E561: cpppj 02b00b12 의 두 칸 재반영, 3.6절 ③)
+    #fireAnimationType = 35;
+    #rotateAnimationType = 36;
     // 빌린 권한 소유자(RawAuthorityState)·현재 게임 시각 getter·장기 TYPE 소유자(GameAuxState)이다. 없으면 null.
     #authority = null;
     #clock = null;
@@ -275,6 +278,21 @@ export class SquidProcessState {
     set processFormType(value) {
         if (this.#aux) this.#aux.processFormType = value;
         else this.#processFormType = value >>> 0;
+    }
+
+    // 발사 애니메이션 프로세스 TYPE 이다(일반 생성/조회와 전체 수신이 같은 현재 번호를 쓴다). 빌린 장기 소유자에 그 칸(fireAnimationProcessType)이 있으면 현재 값을 읽는다.
+    // (2026-11-15 WB04-E561: cpppj SquidProcessState.FireAnimationType)
+    get fireAnimationType() { return this.#aux && 'fireAnimationProcessType' in this.#aux ? this.#aux.fireAnimationProcessType >>> 0 : this.#fireAnimationType; }
+    set fireAnimationType(value) {
+        if (this.#aux && 'fireAnimationProcessType' in this.#aux) this.#aux.fireAnimationProcessType = value;
+        else this.#fireAnimationType = value >>> 0;
+    }
+
+    // 회전 애니메이션 프로세스 TYPE 이다(발사와 별개인 DWORD 를 복사 없이 읽는다). (2026-11-15 WB04-E561: cpppj SquidProcessState.RotateAnimationType)
+    get rotateAnimationType() { return this.#aux && 'rotateAnimationProcessType' in this.#aux ? this.#aux.rotateAnimationProcessType >>> 0 : this.#rotateAnimationType; }
+    set rotateAnimationType(value) {
+        if (this.#aux && 'rotateAnimationProcessType' in this.#aux) this.#aux.rotateAnimationProcessType = value;
+        else this.#rotateAnimationType = value >>> 0;
     }
 }
 

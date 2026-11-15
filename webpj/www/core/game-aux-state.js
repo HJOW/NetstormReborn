@@ -71,6 +71,11 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['evilRayProcessType', 0x00541098, 'u32', 10, 'evilRaySystemProcessType', '악마 광선 생성자 부착 TYPE'],
     ['particleSource', 0x00595128, 'u32', 0, null, '현재 파편 원천 DWORD(SID 로 줄이지 않음)'],
     ['flyerProcessType', 0x005410ec, 'u32', 31, 'baseFlyerProcessType', '비행 프로세스 생성/홈 조회 TYPE'],
+    // 총 프로세스와 발사/회전 애니메이션 프로세스의 현재 TYPE 세 칸이다(cpppj RawGameAuxState 의 GunProcessType·FireAnimationProcessType·RotateAnimationProcessType).
+    // (2026-11-15 WB04-E561 추가: RawCampaignAssetBindings 가 신규 Gun 생성과 Animation Form 조회에서 읽는다)
+    ['gunProcessType', 0x005410f8, 'u32', 34, 'gunProcessType', '총 프로세스 신규 생성/전체 수신 TYPE'],
+    ['fireAnimationProcessType', 0x005410fc, 'u32', 35, 'fireAnimProcessType', '발사 애니메이션 프로세스 TYPE(전체 발사 수신 부모가 조회)'],
+    ['rotateAnimationProcessType', 0x00541100, 'u32', 36, 'rotateAnimProcessType', '회전 애니메이션 프로세스 TYPE(발사와 별개인 장기 DWORD)'],
     ['altarType', 0x005412e8, 'u32', 164, 'altar', '현재 제단 TYPE'],
     ['daisType', 0x005412ec, 'u32', 165, 'dais', '현재 다이스 TYPE'],
     ['priestType', 0x005412d0, 'u32', 158, 'priest', '현재 사제 TYPE'],

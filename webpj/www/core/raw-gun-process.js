@@ -120,6 +120,74 @@ export class GunProcessFields {
     get parent() { return read(this.bytes, PARENT) & 0xffff; }
 }
 
+// 총이 소비 위치마다 읽는 전역의 독립 입력/공유 소유자 묶음이다(cpppj `GunProcessState`). 필드는 독립 입력 값이고, 공유 소유자(sharedAuthority·shared*Type getter·allianceRead)를 연결하면 그 현재 값을 읽는다.
+// 사용: const state = new GunProcessState(); state.now = 12.5; const logic = new RawGunProcess(pool, types, state.globals(), hooks). `globals()` 는 RawGunProcess 가 받는 현재 값 reader 묶음이며 값을 복사해 두지 않는다.
+// friendlyFire·checking 은 값(불리언/정수) 또는 현재 DWORD 를 돌려주는 함수이다(cpppj RawCheckingFlag 의 비영 관문). (2026-11-15 WB04-E561: RawCampaignAssetBindings 의 Gun 전역 연결에 필요해 추가)
+export class GunProcessState {
+    // 현재 판정에 쓰는 게임 시각(초, double)이다.
+    now = 0;
+    // 독립 입력의 권한·서버·Fort 모드·고정 모드·비활성 여부이다.
+    boss = true;
+    server = true;
+    fortMode = false;
+    fixedMode = false;
+    disabled = false;
+    // 아군 발사 허용과 checking 진단의 현재 값(또는 getter)이다.
+    friendlyFire = 0;
+    checking = 0;
+    // 총 프로세스 TYPE 과 크로스보우·썬더 캐논·아이스 캐논 TYPE 의 독립 입력이다.
+    processType = GUN_PROCESS_TYPE;
+    windArcherType = 140;
+    thunderCannonType = 131;
+    rainCannonType = 129;
+    // 방향별 동맹 표(owner → target, 0~8)의 독립 입력이다.
+    allies = Array.from({ length: PLAYER_COUNT + 1 }, () => new Array(PLAYER_COUNT + 1).fill(false));
+    // 같은 실제 방향별 81 DWORD 의 현재 한 칸을 읽는 함수이다(없으면 allies 를 쓴다).
+    allianceRead = null;
+    // 실제 Process/Pool 과 같은 두 bool(RawAuthorityState)을 빌린다(없으면 자기 값).
+    sharedAuthority = null;
+    // 실제 00541288·00541264·0054125c 의 현재 값을 돌려주는 getter 이다(없으면 자기 값).
+    sharedWindArcherType = null;
+    sharedThunderCannonType = null;
+    sharedRainCannonType = null;
+
+    // 총의 각 원문 권한 관문이 읽는 현재 boss 이다. (2026-11-15 WB04-E561)
+    readBoss() { return this.sharedAuthority ? Boolean(this.sharedAuthority.boss) : Boolean(this.boss); }
+
+    // 서버 assert/부착/통지 관문이 읽는 현재 server 이다. (2026-11-15 WB04-E561)
+    readServer() { return this.sharedAuthority ? Boolean(this.sharedAuthority.server) : Boolean(this.server); }
+
+    // 원본 방향을 유지해 현재 비영 동맹 칸을 판정한다. 반대 방향을 자동으로 읽지 않으며 범위 밖 번호는 RangeError 이다. (2026-11-15 WB04-E561)
+    isAlly(owner, target) {
+        if (!(owner >= 0 && owner <= PLAYER_COUNT) || !(target >= 0 && target <= PLAYER_COUNT)) throw new RangeError('Gun 현재 방향별 동맹 범위 오류');
+        return this.allianceRead ? (this.allianceRead(owner, target) >>> 0) !== 0 : Boolean(this.allies[owner][target]);
+    }
+
+    // 회전 단계의 소비 위치에서 읽는 세 TYPE 의 현재 번호이다. (2026-11-15 WB04-E561)
+    readWindArcherType() { return this.sharedWindArcherType ? this.sharedWindArcherType() >>> 0 : this.windArcherType; }
+    readThunderCannonType() { return this.sharedThunderCannonType ? this.sharedThunderCannonType() >>> 0 : this.thunderCannonType; }
+    readRainCannonType() { return this.sharedRainCannonType ? this.sharedRainCannonType() >>> 0 : this.rainCannonType; }
+
+    // RawGunProcess 생성자가 받는 현재 값 reader 묶음을 만든다. 각 함수는 호출 때마다 이 객체의 현재 필드/공유 소유자를 읽는다. (2026-11-15 WB04-E561)
+    globals() {
+        const flag = (value) => (typeof value === 'function' ? value() : value);
+        return {
+            now: () => this.now,
+            boss: () => this.readBoss(),
+            server: () => this.readServer(),
+            fortMode: () => Boolean(this.fortMode),
+            fixedMode: () => Boolean(this.fixedMode),
+            disabled: () => Boolean(this.disabled),
+            friendlyFire: () => Boolean(flag(this.friendlyFire)),
+            checking: () => Boolean(flag(this.checking)),
+            windArcherType: () => this.readWindArcherType(),
+            thunderCannonType: () => this.readThunderCannonType(),
+            rainCannonType: () => this.readRainCannonType(),
+            alliance: (owner, target) => (this.isAlly(owner, target) ? 1 : 0),
+        };
+    }
+}
+
 // 원본 GunProcess 몸체를 raw 필드와 같은 풀의 자산 상태로 실행한다. (2026-11-13 WB04-E359)
 export class RawGunProcess {
     #pool;
