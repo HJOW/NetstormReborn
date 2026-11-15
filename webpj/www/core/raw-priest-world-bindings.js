@@ -86,6 +86,8 @@ export class RawPriestWorldBindings {
 
     // core는 RawPriestWorldCore와 같은 이름의 참조 묶음이며 surfaces는 반드시 hash.view(0)이다. (2026-11-16 WB04-E563)
     constructor(core, state, effects) {
+        // C++ 값 인수의 함수 사본을 소유한다. 상태/장기 몸체 참조는 유지하고 외부 훅 묶음의 재대입만 분리한다. (2026-11-16 WB04-E564)
+        effects = { ...effects, shield: { ...effects?.shield }, regen: { ...effects?.regen } };
         const { pool, hash, types, frames, spots, surfaces, reward, random, factory, owner, ownerMode, postPop, frame } = core;
         if ([reward, factory, owner, postPop, frame].some((body) => body?.pool !== pool) || types.length !== frames.length
             || spots.length !== MAP_CELLS || surfaces.length !== MAP_CELLS || surfaces !== hash.view(0)

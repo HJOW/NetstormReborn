@@ -172,3 +172,12 @@ test('RawPriestWorldBindings: 다음 Session이 같은 장기 권한/상태를 �
     world.state.contained.bindBoss({ value: true }); assert.throws(() => next.bindAuthority(authority));
     assert.throws(() => next.setAuthority(true)); next.dispose();
 });
+
+// C++ 값 인수처럼 원래 함수 사본을 유지하되 호출 안에서 읽는 상태/슬롯은 계속 현재값이다. (2026-11-16 WB04-E564)
+test('RawPriestWorldBindings: 외부 훅 묶음 재대입이 등록된 함수 사본을 바꾸지 않는다', () => {
+    const world = new PriestWorld(); const sid = world.add();
+    world.effects.regen.damageable = unreachable;
+    world.types[PRIEST].damageEffect = 1; world.bindings.damageableRefresh(sid); assert.equal(world.healthRequests, 1);
+    world.effects.fallSound = unreachable;
+    world.bindings.fallWalker(sid); assert.equal(world.falls, 1);
+});
