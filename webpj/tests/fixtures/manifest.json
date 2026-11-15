@@ -23305,6 +23305,64 @@
       "cpppjBasis": {
         "cpppj/src/client/GameMenuActions.cpp": "840989433"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E537",
+      "id": "knowledge-menu",
+      "path": "cpppj/tests/fixtures/knowledge-menu-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 전체 지식 창(Storm 카드 00492b60). 차단/타입 수/보유/제외/언어/화면/아이콘/번역 입력 25관측에서 노드 아홉 필드(단정도 비트)·표식·80BYTE 인자·생성/글자/부착/조회 호출 순서",
+      "consumers": [
+        "webpj/tests/raw-knowledge-menu.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-knowledge-menu.js"
+      ],
+      "doc": "docs/webpj-raw-knowledge-menu-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawKnowledgeMenu.cpp"
+      ],
+      "scope": "10.78 25관측 전부",
+      "text": true,
+      "sha256": "2d277ffff7cd57dc967e562f6b3027d9604c0554e840ee255fb94d38fe71cb17",
+      "bytes": 55143,
+      "lines": 26,
+      "fixtureCommit": "05df64c08",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawKnowledgeMenu.cpp": "35df08ace"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E537",
+      "id": "knowledge-world-menu",
+      "path": "cpppj/tests/fixtures/knowledge-world-menu-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 World 카드(00493210)와 Storm/World 선택 메뉴(004938c0). 입력 25장면씩 50관측에서 노드 아홉 필드·표식·80BYTE 인자·호출 순서",
+      "consumers": [
+        "webpj/tests/raw-knowledge-menu.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-knowledge-menu.js"
+      ],
+      "doc": "docs/webpj-raw-knowledge-menu-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawKnowledgeMenu.cpp"
+      ],
+      "scope": "10.78 50관측 전부",
+      "text": true,
+      "sha256": "5f937f02e5eea14f08746ae798095a43dd6477d8490d1bca1c86a2d54a8c4a36",
+      "bytes": 72676,
+      "lines": 51,
+      "fixtureCommit": "35df08ace",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawKnowledgeMenu.cpp": "35df08ace"
+      }
     }
   ]
 }
