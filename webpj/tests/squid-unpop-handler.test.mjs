@@ -1,6 +1,6 @@
 // Unpop 처리기(SquidUnpop)·표시 갱신 vtable 지원표·미니맵/contained 연결을 검사한다(WB04-D2).
 //  - cpppj/tests/fixtures/unpop-vtables.tsv 의 10.78 83행: 실제 PE 가상 표의 update88/update8c 가 공통 경로인지(mask)와 웹 지원표가 같다.
-//    따로 복원한 마나(103)·볼트(105)·소용돌이 8c·간헐천 부분 8c 는 cpppj 검사와 같이 추가 허용한다.
+//    따로 복원한 마나·볼트·Sprite·소용돌이 8c·간헐천 부분 8c는 cpppj 검사와 같이 추가 허용한다.
 //  - 부분 변경 경계: cpppj tests/UnpopTests.cpp 의 Guards 검사를 옮겼다. 그 검사의 Factory Create(82) 두 번은 실제 생성자 주소 표를 넣은 SquidFactory.create(82)로 한다
 //    (2026-11-06 WB04-D4: D2 의 allocate(0)+base VT 대체를 실제 Factory 로 교체, 검사는 그 뒤 초기 바이트 대비 변화만 본다).
 //  - 미니맵/contained 연결: cpppj MetadisplayDirtyTests 의 Unpop 부분과 SquidContainedUnpopTests 의 Take→Unpop→종속 해제 경로 중 Unpop 부분을 같은 풀로 검사한다.
@@ -37,11 +37,11 @@ test('supportsUnpopDisplay: 원본10.78 vtable 83행과 같다', { skip: !vtable
         const vtable = Number(row[1]) >>> 0;
         const alternate = Number(row[3]) >>> 0;
         const mask = Number(row[5]);
-        const mana = vtable === 0x50c3b0 || vtable === 0x509810;
+        const special = vtable === 0x50c3b0 || vtable === 0x509810 || vtable === 0x50c9f0 || vtable === 0x50cc08;
         const vortex = [0x4dcda0, 0x4dcf80, 0x4dd150, 0x4dbcd0].includes(alternate);
         const geyser = vtable === 0x50da88 && alternate === 0x4854b0;
-        assert.equal(supportsUnpopDisplay(vtable, 0), (mask & 1) !== 0 || mana, row.join(' '));
-        assert.equal(supportsUnpopDisplay(vtable, 0x2000), (mask & 2) !== 0 || vortex || mana || geyser, row.join(' '));
+        assert.equal(supportsUnpopDisplay(vtable, 0), (mask & 1) !== 0 || special, row.join(' '));
+        assert.equal(supportsUnpopDisplay(vtable, 0x2000), (mask & 2) !== 0 || vortex || special || geyser, row.join(' '));
         listed.add(vtable);
     }
     assert.equal(vtableRows.length, 83);

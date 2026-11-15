@@ -132,14 +132,14 @@ export function runSquidUnpopParent(pool, hash, spots, sid, flags, checking, hoo
     need(hooks, 'update')(sid, flags);
 }
 
-// 따로 복원한 마나(103)·볼트(105) 표시의 가상 표이다. 공통 지원표의 비트 0 과 별개로 두 경로(88/8c)를 모두 지원한다. (2026-11-05 WB04-D2)
-const MANA_DISPLAY_VTABLES = new Set([0x0050c3b0, 0x00509810]);
+// 별도 표시 본문이 확인된 마나·볼트·메타 및 일반 Sprite는 두 경로(88/8c)를 지원한다.
+const SPECIAL_DISPLAY_VTABLES = new Set([0x0050c3b0, 0x00509810, 0x0050c9f0, 0x0050cc08]);
 
 // 원본 vtable 의 공통 update88(flags 에 0x2000 이 없을 때)/update8c(있을 때) 경로인지 확인한다. 호스트 포인터로 역참조하지 않는다.
 // 사용: supportsUnpopDisplay(rawVtable, flags). 근거 cpppj `SquidUnpop::SupportsDisplay`(10.78 분기). (2026-11-05 WB04-D2)
 export function supportsUnpopDisplay(vtable, flags) {
     const table = vtable >>> 0;
-    if (MANA_DISPLAY_VTABLES.has(table)) return true;
+    if (SPECIAL_DISPLAY_VTABLES.has(table)) return true;
     const row = squidAssetVtable(table);
     if (row === null) return false;
     return (row[1] & ((flags & 0x2000) !== 0 ? 2 : 1)) !== 0;

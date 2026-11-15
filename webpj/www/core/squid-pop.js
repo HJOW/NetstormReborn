@@ -2,7 +2,7 @@
 // 현재 TYPE 표·SHP 프레임 크기·월드 한 변·진단/로그·미니맵 dirty 큐·건물 옆면·표시 갱신·firstPop·현재 가상 Activate(raw-squid-activate.js)를 연결한다.
 //  - 독립 입력: pop(sid, type, 프레임 폭, 높이, x, y, flags) 는 인자 TYPE 레코드와 치수를 쓴다. 실제 World: popCurrent(sid, x, y, flags) 는 사전 TYPE/SHP 조회 없이
 //    bindDiagnostics 로 빌린 전체 현재 표와 표시 장치를 소비 위치마다 조회한다.
-//  - Supports: 공통 firstPop/postPop 을 확인한 가상 표만 허용한다(PopVtables.inc 26칸 + 마나·볼트 표시, 134 의 실제 7c/80/84 쌍). 호스트 포인터로 호출하지 않는다.
+//  - Supports: 공통 firstPop/postPop을 확인한 가상 표와 별도로 복원한 마나·볼트·Sprite 경로를 허용한다. 호스트 포인터로 호출하지 않는다.
 //  - 표시(display)와 공통 postPop(postPop)은 선택 연결이다: null 이면 표시 갱신을 억제하되 현재 VT 의 지원 여부는 확인하고(미복원 파생은 오류), 공통 깊이는 호출마다의 지역 장부를 쓴다.
 //    연결할 객체의 계약 — display: { frameSize(raw, frameNumber) → [폭, 높이], update(raw, flags) }, postPop: { pool, activationDepth: { value }, postPopVirtual(sid, flags), validateSpace?(hash, spots) }.
 // 근거: cpppj `o/SquidPop.cpp/.h`, `o/PopVtables.inc`(기준선 1f00a25a), 원본 관측 pop-x86.tsv(10.78 4블록 2456단계)·pop-vtables.tsv(10.78 83행)·pop-world-bounds-x86.tsv(260행)(tests/squid-pop.test.mjs).
@@ -21,8 +21,8 @@ export const PATCH_POP_VTABLES = Object.freeze([
     0x00509388, 0x005096a0, 0x00509758, 0x00509b98, 0x0050db78, 0x0050eb98,
 ]);
 
-// 마나(103)·볼트(105) 표시와 134 의 실제 7c/80/84 쌍은 공통 공간 Pop 을 쓰는 별도 확인 표이다. (2026-11-08 WB04-E1)
-const EXTRA_POP_VTABLES = new Set([0x50c3b0, 0x509810, 0x5070c0]);
+// 마나·볼트·134 및 메타/일반 Sprite의 실제 7c/80/84 쌍은 공통 공간 Pop을 쓴다.
+const EXTRA_POP_VTABLES = new Set([0x50c3b0, 0x509810, 0x5070c0, 0x50c9f0, 0x50cc08]);
 
 // 슬롯의 VT DWORD 를 읽는다. (2026-11-08 WB04-E1)
 function vtableOf(raw) {

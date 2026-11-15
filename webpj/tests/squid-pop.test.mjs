@@ -146,10 +146,10 @@ test('SquidPop.supports: 원본10.78 가상 표 지원 여부 83행', { skip: !v
         assert.equal(fields.length, 5);
         const vtable = Number(fields[1]);
         const supported = fields[4] === '1';
-        // 마나 103/볼트 105 는 별도 표시 관측, 134 는 실제 7c/80/84 표와 Session 검사로 검증했다. 기존 metadata 는 불변이다.
-        const mana = vtable === 0x50c3b0 || vtable === 0x509810 || vtable === 0x5070c0;
-        assert.equal(SquidPop.supports(vtable, 0), supported || mana, `vtable ${vtable.toString(16)}`);
-        assert.equal(SquidPop.supports(vtable, 0x2000), supported || mana, `vtable ${vtable.toString(16)} 0x2000`);
+        // 별도 복원된 마나·볼트·134·Sprite 가상 표를 기존 불변 metadata와 구별한다.
+        const extra = vtable === 0x50c3b0 || vtable === 0x509810 || vtable === 0x5070c0 || vtable === 0x50c9f0 || vtable === 0x50cc08;
+        assert.equal(SquidPop.supports(vtable, 0), supported || extra, `vtable ${vtable.toString(16)}`);
+        assert.equal(SquidPop.supports(vtable, 0x2000), supported || extra, `vtable ${vtable.toString(16)} 0x2000`);
         rows += 1;
     }
     assert.equal(rows, vtableRows.length);

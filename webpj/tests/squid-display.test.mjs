@@ -17,6 +17,7 @@ import { SquidFactory } from '../www/core/squid-factory.js';
 import { SquidDisplay, buildSquidFrameAssertionDetail } from '../www/core/squid-display.js';
 import { readRiftShapeFrame, RIFT_SHAPE_ASSERTION } from '../www/core/raw-rift-shape-access.js';
 import { DirtyRegions, DIRTY_CAPACITY } from '../www/render/dirty-regions.js';
+import { supportsUnpopDisplay } from '../www/core/squid-unpop.js';
 
 // 원본 관측 파일이다. 없으면 해당 검사를 건너뛴다. (2026-11-08 WB04-E59)
 const FIXTURES = path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures');
@@ -28,6 +29,37 @@ function throws(action) {
     try { action(); } catch { return true; }
     return false;
 }
+
+test('Sprite 표시: 지원과 전용 갱신은 현재 장치를 한 번 읽고 같은 슬롯을 사용한다', () => {
+    const types = displayTypes();
+    const shapes = types.map(() => ({ frameCount: 0, loaded: false, frames: [] }));
+    const view = { cameraX: 0, cameraY: 0, zoom: 65536, viewport: { left: 0, top: 0, right: 640, bottom: 480 } };
+    const seen = [];
+    let reads = 0;
+    const sink = { get metaRefresh() { reads += 1; return (raw) => { seen.push(raw); raw[35] = 20; }; } };
+    const display = new SquidDisplay(types, shapes, sink, view);
+    // 두 가상 표와 두 표시 경로에서 별도 프레임 검사 없이 같은 슬롯을 전달한다.
+    for (const table of [0x50c9f0, 0x50cc08]) {
+        // 일반 표시와 8c 표시를 각각 같은 계약으로 검사한다.
+        for (const flags of [0, 0x2000]) {
+            const raw = new Uint8Array(50);
+            put(raw, 0, table);
+            raw[10] = 255;
+            assert.equal(SquidPop.supports(table, flags), true);
+            assert.equal(supportsUnpopDisplay(table, flags), true);
+            display.validate(raw, flags);
+            assert.equal(seen.length, 0);
+            display.update(raw, flags);
+            assert.equal(seen.pop(), raw);
+            assert.equal(raw[35], 20);
+        }
+    }
+    assert.equal(reads, 4);
+    const missing = new SquidDisplay(types, shapes, {}, view);
+    const raw = new Uint8Array(50);
+    put(raw, 0, 0x50cc08);
+    assert.throws(() => missing.update(raw), /Sprite 표시 갱신 장치 미연결/);
+});
 
 // 바이트 배열을 소문자 hex 로 만든다. (2026-11-08 WB04-E59)
 const hex = (bytes) => Buffer.from(bytes).toString('hex');

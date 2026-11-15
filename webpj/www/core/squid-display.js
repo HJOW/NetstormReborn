@@ -2,7 +2,7 @@
 // raw 프레임·위치와 SHP 칸 크기 목록·카메라(원점·Q16 배율·viewport)로 객체 출력 사각형(본그림·그림자·선택 표식)을 만들어 출력 장치(sink)의 변경 표에 순서대로 보낸다.
 //  - update: 현재 가상 표의 특수 8c(간헐천 고정 외형·마나/볼트 부분 표시·신전 rune 부분 표시)를 먼저 분배하고, 나머지 확인된 가상 경로는 공통 표시 부모(RawSquidDisplayParent)로 보낸다.
 //  - frameSize: 해시 단계용 칸 크기(00419850)이며 표시 억제와 무관하게 읽는다. validate: 공간 쓰기 전에 미지원 가상 표·물리 프레임 범위 오류를 거부한다. bounds: 렌더러의 원본 경계 계산.
-//  - 출력 장치 sink = { suppressed() → bool, invalidate(rect, flags), checking() → DWORD(기본 0), frameError(번호, 프레임, abstract), assertion(식, 파일, 줄) }. 오류 상세·진단 장치가
+//  - 출력 장치 sink = { suppressed() → bool, invalidate(rect, flags), metaRefresh(raw), checking() → DWORD(기본 0), frameError(번호, 프레임, abstract), assertion(식, 파일, 줄) }. 오류 상세·진단 장치가
 //    없는데 도달하면 빈 성공 대신 오류를 낸다. 이 모듈은 DOM 을 쓰지 않는다.
 // 웹은 10.78 전용이라 CD 10.72 분기(1바이트 프레임·표 밖 메모리 접근)는 옮기지 않았다. (2026-11-08 WB04-E59: 객체 표시 이식으로 추가)
 
@@ -16,6 +16,7 @@ const SHADOW = 0x40000;
 const MARKER = 0x10;
 const MANA_VTABLE = 0x50c3b0;
 const BOLT_VTABLE = 0x509810;
+const META_SPRITE_VTABLES = new Set([0x50c9f0, 0x50cc08]); // 메타와 일반 Sprite의 전용 표시 갱신 가상 표다.
 const GEYSER_VTABLE = 0x50da88;
 const GEYSER_VERTICAL_INSET = 50;
 const ALTERNATE = 0x2000;
@@ -151,6 +152,7 @@ export class SquidDisplay {
     // 공간 쓰기 전에 미지원 가상 표·물리 프레임 범위 오류를 확인한다. 억제 중이면 경계 계산을 생략한다(마나/간헐천/신전 부분 경로는 원문과 같은 위치에서 경계를 계산한다). (2026-11-08 WB04-E59)
     validate(bytes, flags) {
         const table = read(bytes, 0);
+        if (META_SPRITE_VTABLES.has(table)) return; // 전용 갱신은 공통 프레임 검사를 실행하지 않는다.
         if (!supportsUnpopDisplay(table, flags)) throw new Error('파생 표시 갱신 미복원');
         if (table === GEYSER_VTABLE && (flags & ALTERNATE)) {
             const type = read(bytes, 10, 1);
@@ -199,9 +201,15 @@ export class SquidDisplay {
         };
     }
 
-    // 현재 가상 표의 특수 8c 를 먼저 분배하고 나머지 확인된 가상 경로만 공통 표시 부모에 전달한다. bytes 는 50바이트 슬롯 사본, flags 는 0 또는 0x2000(8c) 이다. (2026-11-08 WB04-E59)
+    // 현재 가상 표의 전용 갱신을 먼저 분배하고 나머지는 공통 표시 부모에 전달한다. bytes는 현재 슬롯, flags는 0 또는 0x2000(8c)이다.
     update(bytes, flags = 0) {
         const table = read(bytes, 0);
+        if (META_SPRITE_VTABLES.has(table)) {
+            const refresh = this.#sink.metaRefresh; // 현재 선택 장치를 한 번 보관해 조회 중 교체도 같은 호출에 섞이지 않는다.
+            if (typeof refresh !== 'function') throw new Error('Sprite 표시 갱신 장치 미연결');
+            refresh.call(this.#sink, bytes); // 8c도 같은 88로 이어지며 현재 실제 슬롯을 그대로 전달한다.
+            return;
+        }
         if (table === GEYSER_VTABLE && (flags & ALTERNATE)) {
             const type = read(bytes, 10, 1);
             if (type >= this.#types.length) throw new RangeError('간헐천 고정 외형 TYPE 범위 오류');
