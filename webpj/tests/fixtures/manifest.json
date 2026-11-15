@@ -23943,6 +23943,35 @@
       "cpppjBasis": {
         "cpppj/src/o/RawBombHeal.cpp": "473e1247d"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E556",
+      "id": "outpostlifecycle",
+      "path": "cpppj/tests/fixtures/outpostlifecycle-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 아웃포스트 PostPop 004557c0·PreDestroy 00455840 접두 768입력(추가/거리 후보 목록 전체·개수·지역 통지/base 순서·raw 쓰기; 파일은 세 판본 2,304행 중 originals 만 대조)",
+      "consumers": [
+        "webpj/tests/raw-outpost-lifecycle.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-outpost-lifecycle.js"
+      ],
+      "doc": "docs/webpj-raw-outpost-lifecycle-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawOutpostLifecycle.cpp"
+      ],
+      "scope": "10.78(originals) 768행 전부",
+      "text": true,
+      "sha256": "2c67fc95cb21da2c1d3bf3bfb2d355f9c2c7c8d3085b7250b06ce421570f9b51",
+      "bytes": 613076,
+      "lines": 2306,
+      "fixtureCommit": "9724ff36e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawOutpostLifecycle.cpp": "230528e31"
+      }
     }
   ]
 }
