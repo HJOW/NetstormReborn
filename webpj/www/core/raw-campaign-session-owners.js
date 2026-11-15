@@ -1,5 +1,5 @@
 // RawCampaignSession::Impl의 캠페인 소유 자료를 실제 하위 생성자로 구성한다(225553df, WB04-E574).
-// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → 나머지 모듈/Load.
+// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → connectGunAndCursorViews → 나머지 모듈/Load.
 // 이 단계는 Session이 아니며 현재 Runtime에 공개하지 않는다. 외곽 Session과 Load는 아직 미구현이다.
 // Editor/LAN/메타/Native 장치는 이 캠페인 분기에 섞지 않는다. 반납은 하위 모듈을 정리한 부모가 마지막에 dispose로 한다.
 import { GameAssets } from '../assets/game-assets.js';
@@ -27,6 +27,7 @@ import { RawCampaignSessionTables } from './raw-campaign-session-tables.js';
 import { RawCampaignSessionPriests } from './raw-campaign-session-priests.js';
 import { RawCampaignSessionPlayers } from './raw-campaign-session-players.js';
 import { RawCampaignSessionTypes, createCampaignTypeTables } from './raw-campaign-session-types.js';
+import { RawCampaignSessionGunViews, createCampaignCursorTables } from './raw-campaign-session-gun-views.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -87,7 +88,7 @@ export class RawCampaignSessionOwners {
     // 상위가 실제 가상80 분배를 연결하며, 미연결 시 선택된 호출에서 오류다.
     rewardCount = null; soundNames; level = null;
     // 같은 Impl의 공유 입력·현재 상태와 Player/SP 이후 진단 결선이다.
-    state; tables; priestModules = null; playerModules = null; typeModules = null;
+    state; tables; priestModules = null; playerModules = null; typeModules = null; gunViewModules = null;
     // 현재 Client의 같은 redraw 상자 또는 독립 Session의 지역0 상자다.
     worldRedraw;
     // 같은 장기 redraw/개정 상자를 빌리는 지역 도장/투표와 생성 시0인 TYPE별 두 벡터다.
@@ -103,6 +104,9 @@ export class RawCampaignSessionOwners {
     carrierRegular = null; balloonBody = null; carrierFallStart = null; priestPanic = null;
     // 같은 공통 Carrier 후처리와 클라우드 플로터의 미부착 Regular 한 번 예약이다.
     carrier = null; pendingCloudRegular = null;
+    // 같은 장기 좌표/반경과30칸 선택 목록, 실제 총 검색·공급·커서 표시 논리다.
+    cursorManaGlobals; cursorRangeGlobals; energySources;
+    gunMode = null; gunTarget = null; energySupply = null; cursorMana = null; cursorRange = null;
     // 후속 실제 Login의 현재 소유 슬롯이다. 이 단계는 Login을 생성하거나 Session을 공개하지 않는다.
     login = null;
     // 독립 typed 분기만 지역으로 소유하는 현재 값이다. Native 전역을 임의로 빌리지 않는다.
@@ -163,6 +167,7 @@ export class RawCampaignSessionOwners {
             // 멤버 선언의 참조는 장기 owner의 현재 칸에 직접 읽고 쓴다.
             for (const [name, key] of Object.entries(ROLE_ALIASES)) Object.defineProperty(this, name, { enumerable: true, get: () => aux[key], set: (value) => { aux[key] = value; } });
             this.state = new RawCampaignSessionState(this);
+            Object.assign(this, createCampaignCursorTables(this));
             this.tables = new RawCampaignSessionTables(this);
         } catch (error) { this.dispose(); throw error; }
     }
@@ -217,6 +222,12 @@ export class RawCampaignSessionOwners {
         this.typeModules ??= new RawCampaignSessionTypes(this); this.typeModules.bind();
     }
 
+    // TYPE 파생 표 뒤 총 검색·에너지·마나/사정거리 표시를 같은 World와 현재 전역에 연결한다.
+    connectGunAndCursorViews() {
+        if (this.#disposed) throw new Error('반납한 Session 총/커서 결선');
+        this.gunViewModules ??= new RawCampaignSessionGunViews(this); this.gunViewModules.bind();
+    }
+
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
     get fullDeck() { return this.gameplayGlobals.fullDeck().value; }
     // 값 쓰기도 동일 장기 DWORD를 사용한다.
@@ -238,10 +249,10 @@ export class RawCampaignSessionOwners {
     dispose() {
         if (this.#disposed) return; this.#disposed = true;
         try {
-            if (this.priestModules || this.playerModules || this.typeModules) { this.world?.drainOwnedProcessesForShutdown(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
+            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules) { this.world?.drainOwnedProcessesForShutdown(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
         } finally {
             try { this.world?.dispose(); } finally {
-                try { this.typeModules?.dispose(); } finally { try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } } }
+                try { this.gunViewModules?.dispose(); } finally { try { this.typeModules?.dispose(); } finally { try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } } } }
             }
         }
     }
