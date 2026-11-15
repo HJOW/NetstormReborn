@@ -282,3 +282,21 @@ export class FortObjectLoad {
         }
     }
 }
+
+// 이미 복원한 실제 생성/HP/내용물 모듈을 같은 풀에서만 사용하는 로더 훅 묶음이다(cpppj `o/RawFortObjectLoad.cpp` `MakeFortObjectLoadHooks`, 10.78 전용).
+// 사용: const hooks = makeFortObjectLoadHooks(pool, factory, hp, contained, { notifySurface, setState, setOwner, virtualCount, pop, destroy, chunkRegion, territoryAllowed, loadingDepthChanged, finishOwner }).
+// create/hasHitPoints/maxHitPoints/createContent 네 개를 채우고 나머지 훅은 입력을 그대로 보존한다. 풀이 하나라도 다르면 어떤 효과도 연결하지 않고 거부한다.
+// (2026-11-15 WB04-E519: 4-D RawCampaignWorldRuntime 이식 때 빠져 있던 이 팩토리를 추가)
+export function makeFortObjectLoadHooks(pool, factory, hp, contained, hooks = {}) {
+    if (pool !== factory?.pool || pool !== hp?.pool || pool !== contained?.pool) throw new TypeError('Fort 생성/HP/내용물 SID 풀 불일치');
+    return {
+        ...hooks,
+        // 실제 Factory 생성이다.
+        create: (type, flags) => factory.create(type, flags),
+        // 실제 HP 처리기의 현재 HP 유무와 최대 HP 이다.
+        hasHitPoints: (sid) => hp.hasHitPoints(sid),
+        maxHitPoints: (sid) => hp.maxHitPoints(sid),
+        // 실제 내용물 생성기이다.
+        createContent: (parent, type, quantity, listFlags, flags, quality) => contained.create(parent, type, quantity, listFlags, flags, quality),
+    };
+}
