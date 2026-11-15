@@ -23968,9 +23968,125 @@
       "bytes": 613076,
       "lines": 2306,
       "fixtureCommit": "9724ff36e",
-      "webCommit": "worktree",
+      "webCommit": "c8947de52",
       "cpppjBasis": {
         "cpppj/src/o/RawOutpostLifecycle.cpp": "230528e31"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E557",
+      "id": "battle-leave",
+      "path": "cpppj/tests/fixtures/battle-leave-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 전투 이탈 통지 헤더 0040aa60·수신 004a71a0·메인 복귀 예약 004b3540·State3 복귀 송신 16입력(header 3·receive 7·next 3·parent 3)",
+      "consumers": [
+        "webpj/tests/raw-battle-leave.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-battle-leave.js"
+      ],
+      "doc": "docs/webpj-raw-battle-leave-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawBattleLeave.cpp"
+      ],
+      "scope": "10.78 16행 전부",
+      "text": true,
+      "sha256": "69adc62de97eb9a14c09dc3f7cda009f0e488eb19dea7808e17a2fb174d87ec6",
+      "bytes": 27923,
+      "lines": 17,
+      "fixtureCommit": "87fdeee61",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawBattleLeave.cpp": "eeae45c69"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E557",
+      "id": "battle-abort-state",
+      "path": "cpppj/tests/fixtures/battle-abort-state-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 전투 공통 중단 상태 004b6350 8입력(단독/편집 직접 쓰기와 저장 경로·삭제 경계 중단의 부분 효과·다섯 144바이트 상태)",
+      "consumers": [
+        "webpj/tests/raw-battle-leave.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-battle-leave.js"
+      ],
+      "doc": "docs/webpj-raw-battle-leave-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawBattleLeave.cpp"
+      ],
+      "scope": "10.78 8행 전부",
+      "text": true,
+      "sha256": "e63b6a4a287d4e334c50ed31e529ea14f0331cabc867ee83c714aefd5cfedda1",
+      "bytes": 11996,
+      "lines": 9,
+      "fixtureCommit": "87fdeee61",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawBattleLeave.cpp": "eeae45c69"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E557",
+      "id": "battle-leave-reason",
+      "path": "cpppj/tests/fixtures/battle-leave-reason-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 양수 이유 부모 004d803e 22입력(이유별 예약·선행/공통 삭제 사이의 부분 효과·경계 trace)",
+      "consumers": [
+        "webpj/tests/raw-battle-leave.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-battle-leave.js"
+      ],
+      "doc": "docs/webpj-raw-battle-leave-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawBattleLeave.cpp"
+      ],
+      "scope": "10.78 22행 전부",
+      "text": true,
+      "sha256": "9b82e520c0fe4a7864f7d64e283381170503df262d008b60de46bd22a53ff969",
+      "bytes": 34684,
+      "lines": 23,
+      "fixtureCommit": "57ed305bc",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawBattleLeave.cpp": "eeae45c69"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E557",
+      "id": "retreat-confirmation",
+      "path": "cpppj/tests/fixtures/retreat-confirmation-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 떠나기 확인 관문 004d8035 18입력(signed 이유 경계·ConfirmRetreat Tell·중단/양수 본문 진행)",
+      "consumers": [
+        "webpj/tests/raw-battle-leave.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-battle-leave.js"
+      ],
+      "doc": "docs/webpj-raw-battle-leave-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawBattleLeave.cpp"
+      ],
+      "scope": "10.78 18행 전부",
+      "text": true,
+      "sha256": "c59bc1a10df1913f70ec4d2c463a9adc3c8524c2169cdc441f4d0c500baac08e",
+      "bytes": 421,
+      "lines": 19,
+      "fixtureCommit": "68f1001c9",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawBattleLeave.cpp": "eeae45c69"
       }
     }
   ]
