@@ -110,8 +110,8 @@ test('SquidPostPop(Native): 기본 장치는 셋 모두 필요하고 현재 Sess
     assert.deepEqual(log.map((entry) => entry[0]), ['ai', 'owner', 'recheck']);
 });
 
-test('SquidPostPop(Native): 기본 자원 후처리는 기본 장치가 있고 현재 파생이 없는 자원 가상 표에서만 선택되며 미설치면 실패한다', () => {
-    const tables = [FACTORY_TABLE, 0x509210, BURIED_TABLE, ASSET_TABLE, CARRIER_TABLE, DAMAGEABLE_TABLE, 0x508cc8, 0x5040c0, 0x504198, 0x50e888, 0x509470];
+test('SquidPostPop(Native): 기본 자원 분배와 Dude·보호막 파생 우선순위 및 미설치를 구분한다', () => {
+    const tables = [FACTORY_TABLE, 0x509210, BURIED_TABLE, ASSET_TABLE, CARRIER_TABLE, DAMAGEABLE_TABLE, 0x508cc8, 0x502c38, 0x502cf0, 0x502db0, 0x507770, 0x5040c0, 0x504198, 0x50e888, 0x509470];
     for (const table of tables) {
         const s = scene(table);
         const calls = [];
@@ -122,6 +122,10 @@ test('SquidPostPop(Native): 기본 자원 후처리는 기본 장치가 있고 �
         s.post.bindDefaultPatchDevices(devices([]));
         s.post.postPopVirtual(s.sid, 1);
         assert.deepEqual(calls, [[s.sid, 1]], `표 ${table.toString(16)}`);
+        // 선택된 표의 장기 몸체가 없으면 공통 후처리로 성공하지 않는다.
+        const absent = scene(table);
+        absent.post.bindDefaultPatchDevices(devices([]));
+        assert.ok(throws(() => absent.post.postPopVirtual(absent.sid, 1), /장기 모듈 미설치/), `미설치 ${table.toString(16)}`);
     }
     // 미설치면 공통 성공으로 바꾸지 않고 이 위치에서 실패한다.
     const missing = scene(FACTORY_TABLE);
@@ -135,6 +139,22 @@ test('SquidPostPop(Native): 기본 자원 후처리는 기본 장치가 있고 �
     derived.post.setBody('factory', { pool: derived.pool, handles: () => true, validate() {}, postPop: () => calls.push('body') });
     derived.post.postPopVirtual(derived.sid, 1);
     assert.deepEqual(calls, ['body']);
+    // 새 Dude 표도 현재 파생 몸체가 있으면 장기 기본 장치보다 우선한다.
+    const dude = scene(0x502c38);
+    const dudeCalls = [];
+    dude.post.bindDefaultPatchDevices(devices([]));
+    dude.post.bindDefaultResourcePostPop(() => dudeCalls.push('default'));
+    dude.post.setBody('dude', { pool: dude.pool, handles: () => true, validate() {}, postPop: () => dudeCalls.push('body') });
+    dude.post.postPopVirtual(dude.sid, 1);
+    assert.deepEqual(dudeCalls, ['body']);
+    // 보호막 표 역시 등록된 접두가 기본 분배보다 먼저 선택된다.
+    const shield = scene(0x507770);
+    const shieldCalls = [];
+    shield.post.bindDefaultPatchDevices(devices([]));
+    shield.post.bindDefaultResourcePostPop(() => shieldCalls.push('default'));
+    shield.post.setBody('forcefield', { pool: shield.pool, prefix: () => shieldCalls.push('prefix') });
+    shield.post.postPopVirtual(shield.sid, 0);
+    assert.deepEqual(shieldCalls, ['prefix']);
     // 자원 표가 아닌 공통 객체는 기본 자원 후처리를 거치지 않고 공통 몸체로 간다.
     const common = scene(COMMON_VTABLE);
     const commonCalls = [];

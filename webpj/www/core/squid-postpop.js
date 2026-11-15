@@ -14,9 +14,9 @@ import { registerManaProvider } from './raw-mana-registration.js';
 import { SquidPop } from './squid-pop.js';
 import { runSquidPostPopParent } from './squid-postpop-parent.js';
 
-// 기본 장치가 연결된 장기 Client 에서 현재 파생 몸체가 없을 때 장기 자원 후처리(defaultResourcePostPop)로 보내는 가상 표이다: 벌룬 그림자·Factory 둘·0x5040c0·0x504198·buried·0x50e888·0x509470
+// 기본 장치가 연결된 장기 Client에서 현재 파생 몸체가 없을 때 장기 자원 후처리로 보내는 가상 표이다: 벌룬 그림자·Dude·효과 예약·보호막·Factory·buried 등이다.
 // (그리고 자산 전용 표와 Carrier/Damageable 직접 표). 이 표의 몸체가 미설치면 공통 성공으로 바꾸지 않고 실패한다. (2026-11-10 WB04-E258: cpppj 기준선 뒤 DispatchPostPop 선택 분기 재반영)
-const DEFAULT_RESOURCE_TABLES = new Set([0x508cc8, 0x509148, 0x509210, 0x5040c0, 0x504198, 0x50a748, 0x50e888, 0x509470]);
+const DEFAULT_RESOURCE_TABLES = new Set([0x508cc8, 0x502c38, 0x502cf0, 0x502db0, 0x507770, 0x509148, 0x509210, 0x5040c0, 0x504198, 0x50a748, 0x50e888, 0x509470]);
 
 // 슬롯 필드 위치(타입·상태·소유자·extra·그래프 번호)와 상태/extra 비트, 첫 자산 타입 번호, 타입 수이다. (2026-11-08 WB04-E41)
 const TYPE_OFFSET = 10;
