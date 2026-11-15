@@ -53,6 +53,18 @@ const clamp = (value, low, high) => (value < low ? low : high < value ? high : v
 const minOf = (a, b) => (b < a ? b : a);
 const maxOf = (a, b) => (a < b ? b : a);
 
+// Client가 장기 소유하는 원문 Mana 상태다. 현재 반경의 float 저장과 여섯 DWORD를 구별한다. (2026-11-16 WB04-E570)
+export class EnergySupplyState {
+    // 0052f48c의 단정도 제곱 반경이며 최초22×22다.
+    #radius = Float32Array.of(484);
+    // 현재 편집/특수/미션/사용자 치트/무시/동맹 DWORD다. 실제 전역 getter는 기존 reads로 선택한다.
+    editor = 0; special = 0; mission = 0; userCheat = 0; ignore = 0; allied = 1;
+    // 원문의 현재 float를 읽는다.
+    get radiusSquared() { return this.#radius[0]; }
+    // 단정도 저장 지점에서 반올림한다.
+    set radiusSquared(value) { this.#radius[0] = value; }
+}
+
 // pool, types(188개 { footX, footY, flags2, theme }), providers(SquidPostPopList), selected(독립 목록 entries/count), alliances(81 DWORD, 공급 소유자*9+요청 소유자), mapLimit() 정수 getter,
 // state = { radiusSquared, editor, special, mission, userCheat, ignore, allied }, hooks = { providerEntry(표) → +a0, requirement(type) → 문자열, sortDiagnostic(kind) }, reads = { editor, special, mission } 현재 전역 getter 이다. (2026-11-08 WB04-E29)
 export class RawEnergySupply {

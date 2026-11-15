@@ -753,11 +753,14 @@
       "producer": "보호 원본 10.78 실행 파일(읽기 전용). PE 섹션 표로 원본 주소를 파일 위치로 바꿔 .data 초기값/BSS 0 을 읽음",
       "consumers": [
         "webpj/tests/game-aux-state.test.mjs",
-        "webpj/tests/packet-lengths.test.mjs"
+        "webpj/tests/packet-lengths.test.mjs",
+        "webpj/tests/client-gameplay-globals.test.mjs"
       ],
       "modules": [
         "webpj/www/core/game-aux-state.js",
-        "webpj/www/core/raw-packet-lengths.js"
+        "webpj/www/core/raw-packet-lengths.js",
+        "webpj/www/core/client-gameplay-globals.js",
+        "webpj/www/core/raw-energy-supply.js"
       ],
       "unit": "WB04-C2",
       "doc": "docs/webpj-game-aux-state-20261105.md",
@@ -1632,7 +1635,7 @@
       "bytes": 146005,
       "lines": 577,
       "fixtureCommit": "21da88755",
-      "webCommit": "worktree",
+      "webCommit": "c8310b941",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "be567d46b",
         "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a59"
@@ -4849,10 +4852,10 @@
       "sha256": "d020d2165be81e8db054c63804976ddd9a50876e3765243e7f7fcc38f2299802",
       "bytes": 448744,
       "lines": 1059,
-      "fixtureCommit": "5bd2e807",
-      "webCommit": "cffd501e",
+      "fixtureCommit": "5bd2e807a",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawEnergySupply.cpp": "504a92a8"
+        "cpppj/src/o/RawEnergySupply.cpp": "504a92a85"
       }
     },
     {
@@ -4878,10 +4881,10 @@
       "sha256": "58f67ad1e9207c2b7793101100855d504c6167de92ee0176adf3be816489ab4e",
       "bytes": 690669,
       "lines": 568,
-      "fixtureCommit": "504a92a8",
-      "webCommit": "cffd501e",
+      "fixtureCommit": "504a92a85",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawEnergySupply.cpp": "504a92a8"
+        "cpppj/src/o/RawEnergySupply.cpp": "504a92a85"
       }
     },
     {
@@ -4907,10 +4910,10 @@
       "sha256": "21022817bb7106b346b7be01a30078a61ce9ac4ed11ed0341b5db888886a9d63",
       "bytes": 1356,
       "lines": 84,
-      "fixtureCommit": "5bd2e807",
-      "webCommit": "cffd501e",
+      "fixtureCommit": "5bd2e807a",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawEnergySupply.cpp": "504a92a8"
+        "cpppj/src/o/RawEnergySupply.cpp": "504a92a85"
       }
     },
     {

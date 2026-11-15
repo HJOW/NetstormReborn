@@ -6,17 +6,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E569)
+### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E570)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 1,004단위(제외 156 별도) 중 **port 837(83.4%)·partial 33(3.3%)·todo 134(13.3%)**. 남은 167단위는 기존 기준선 88단위와 재기준선에서 추가된 79단위다(대응표·재기준선 규칙 key로 E565 재집계). 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
-| 마지막 작업 단위 | **WB04-E569** 4-D C의 `RawCampaignCursor` — 같은 실제 World/Factory/Form 수명·건설 배치·현재 커서/카메라·표시기를 취득/취소/위치/입력/GUI/반환·Regular·3e 송신으로 조립. 보호 자료 연결11건과 GameAux 현재 헤더 PE1건([단위 문서](docs/webpj-campaign-cursor-20261116.md)). 원본 하위 fixture 포함 집중59건 통과. 실제 Session·저장 미션/에너지/전체 MayPlace·마나/사정거리·Builder 결선은 D/E·6단계 |
-| 다음 작업 | ⓪ 4-D A의 `ClientGameplayGlobals`부터 이식한다. E569 재판정에서 커서/선택·SID 진단·지형 두 캐시 선행이 모두 갖춰졌다. 실제 장기 소유자/대여·반납·현재 Session 공개/pin을 덕타입 계약으로 구성한 뒤 D Session1(구성·소유 상태·Load)을 공개 경계로 나누어 연결한다. ConnectDevastation/CarrierDrop/PriestPrayer는 Session의 포함 inc 구현이므로 같은 소유 상태와 함께 처리한다. ① 재기준선 신규 미완료79단위는 각 단계에서 처리한다. 시간 동기화 고정 수신기/실제 Session(E515~E517)과 A·B·C/5-A·5-B 잔여는 선행 관계를 지킨다. ② D(Session)→E(Client·통합·L2) 순서이며 3.8절 허브/적응 판정4건은 잔여 |
-| 마지막 전체 검사 | 2026-11-16 WB04-E569: Node v22.23.3·v26.13.0 전체 각각 **5,384건 통과, 실패·건너뜀 0** (v24 전체는 E513에서 4,973건 통과) |
+| 이식 진행도 | 대상 1,004단위(제외 156 별도) 중 **port 838(83.5%)·partial 33(3.3%)·todo 133(13.2%)**. 남은 166단위는 기존 기준선 87단위와 재기준선에서 추가된 79단위다(대응표·재기준선 규칙 key로 E565 재집계). 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
+| 마지막 작업 단위 | **WB04-E570** 4-D A의 `ClientGameplayGlobals` — 같은 실제 장기 전역/하위 소유자, 일반·준비 대여/반납·현재 Session 공개, 전체 owner weak/pin과 배송 수명, EnergySupplyState 추가. 보호 PE22칸/배열과 실제 대여 checking·현재 owner 교체·GC 수명 종료를 포함한16건([단위 문서](docs/webpj-client-gameplay-globals-20261116.md)). 주변 원본 fixture 포함 집중45건 통과. 실제 전체 Session/Client·State 자식 정리 증빙과 외곽 owner 설치는 D/E |
+| 다음 작업 | ⓪ Session 생성자1208의 무조건 생성 때문에 8단계 `SoundProcess`(361줄)와 같은 Sound.cpp의 `SoundList` 공개 경계를 선행 이식한다. 별도 C 항목을 더하고 원본 소리 프로세스 fixture와 같은 실제 Host/보호막 수명을 대조한다(브라우저 재생 장치는 별도). 그 뒤 4-D D의 Session1 구성·소유 상태·Load를 공개 경계로 나누어 연결한다. ClientGameplayGlobals(E570)와 사제/피격/Archer/Motion/Path/Cursor는 갖춰졌다. ConnectDevastation/CarrierDrop/PriestPrayer는 Session의 포함 inc로 같은 소유 상태와 처리한다. ① 신규 미완료79단위·시간 동기화/Native 장치는 각 단계와 D/E에서, A 정리·B Client 서비스는 실제 Session 허브 뒤에 연결한다. ② D→E(Client·통합·L2) 순서이며 3.8절 허브/적응 판정4건은 잔여 |
+| 마지막 전체 검사 | 2026-11-16 WB04-E570: Node v22.23.3·v26.13.0 전체 각각 **5,400건 통과, 실패·건너뜀 0** (v24 전체는 E513에서 4,973건 통과) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -28,7 +28,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 1~3 M1·M2 선행 | WB02-G·H, 3-A~3-E | 대응표·오라클 기반, 월드 부품 E1~E264 | 완료(2026-11-10) | — |
 | 4 M2 | 4-A·4-B·4-C | 자료·설정·타입 표 / Fort·지형·섬 적재 / 패킷·로그인·내부 전송 | 완료(E265~E328, 4-C 3항목은 4-D 이월) | — |
 | 〃 | **4-R 재기준선** | cpppj 제품 985 → 1313 전환과 오라클 재수집 | **완료**(E497~E513, 기존 ③ 실제 구현은 후속 단계) | 추가 이식 대상 중 남은 79단위는 아래 단계에 별도 반영 |
-| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 24/40** | 기존 18단위 / 13,643줄 + 시간 동기화 1단위 / 99줄 |
+| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 25/40** | 기존 17단위 / 13,385줄 + 시간 동기화 1단위 / 99줄 |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 진행 중 44/46 | 3단위 / 533줄 |
 | 〃 | 5-B | 카메라·HUD·미니맵·커서 | 진행 중 9/13 | 5단위 / 1,039줄 |
 | 〃 | 5-C | 게임 화면 허브(Uber·메뉴 컨트롤)·미션 진입 명령 → **M2 판정**(L4a) | 미착수(`NativeIntroState`·`TitleBitmapLifetime`·`NativeMainMenuState` 선행 완료) | 10단위 / 5,766줄 |
@@ -46,9 +46,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 1,004단위 / 146,057줄 | 837 (83.4%) / 110,848줄 (75.9%) | 33 (3.3%) | 134 (13.3%) |
+| 전체 | 1,004단위 / 146,057줄 | 838 (83.5%) / 111,106줄 (76.1%) | 33 (3.3%) | 133 (13.2%) |
 | `o/` 월드·규칙 | 559단위 / 73,092줄 | 540 (96.6%) / 70,646줄 (96.7%) | 3 (0.5%) / 1,164줄 (1.6%) | 16 (2.9%) / 1,282줄 (1.8%) |
-| `client/` 세션·UI·표시 | 444단위 / 72,539줄 | 296 (66.7%) / 39,776줄 (54.8%) | 30 (6.8%) | 118 (26.6%) |
+| `client/` 세션·UI·표시 | 444단위 / 72,539줄 | 297 (66.9%) / 40,034줄 (55.2%) | 30 (6.8%) | 117 (26.4%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 426줄 | 1 (100%) / 426줄 (100%) | 0 | 0 |
 
 표의 port 줄 수는 현재 기준선 파일 전체의 규모이며 기존 행에 남은 ③ 후속 기능의 구현을 뜻하지 않는다. 분류(class)별로는 port 953(이식 대상)·adapt 51(웹 대체가 필요한 플랫폼 경계)·제외 156(exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1)이다.
@@ -60,7 +60,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 953·adapt 51·exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1, 미분류 0**. 상태: **port 837·partial 33·todo 134·제외(-) 156**, session/oracle 0. 새 partial 2개는 아래 중단 인계의 미완성 초안이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 953·adapt 51·exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1, 미분류 0**. 상태: **port 838·partial 33·todo 133·제외(-) 156**, session/oracle 0. 새 partial 2개는 아래 중단 인계의 미완성 초안이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
 | 이식 추적 | `webpj/tests/fixtures/manifest.json` **801항목**(original-x86 763·screenshot 13·source 10·independent 9·cpppj-oracle 5·original-binary 1, 2026-11-15 재집계). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
@@ -215,12 +215,12 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 
 체크 목록 전체는 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261112-4c-through-wb04-e328)으로 옮겼고 요약은 2.3절이다(E305~E328). **4-D 로 넘긴 것:** ① client `ClientCampaignTransport` 2단계 — 고정 Native 수신기 묶음·채팅 41h·연결 종료 2번·기술 목록 0x69·경로 자료 0x30/압축 Squid 0x7a 관찰기(3.6절 ③ 4-D 행) ② client `RawCampaignSessionLogin`(`RawCampaignSession::Impl::Login`) — Session 상태 약 60칸을 직접 빌리는 중첩 구조체라 Session 조립과 함께 ③ 4-C 통합 시험 — cpppj `CampaignSession_LocalLoginActualHandshakeAndWorldLoad` 대응(Session 조립 뒤).
 
-#### 4-D Session 조립·Tutorial1 Load/Start (24/40)
+#### 4-D Session 조립·Tutorial1 Load/Start (25/40)
 
 완료 기준(3.2절): **L2** — Tutorial1 Load/Start 관측(보고서·session-dump·첫 프레임 논리 화면)이 cpppj 와 같다. 임시 Player/AI/색 번호로 시작 성공을 만들지 않는다. 선행: 4-B·4-C(완료). 이 목록의 줄 수와 `(+N)`은 이전 기준선 `1f00a25a`와 그 뒤 추가분을 기록한 것이다. 현재 기준선 `225553df`의 소스를 착수 때 확인하고 그 이후 변경은 3.6절 ①/②/③으로 판정한다. **실제 `Client`/`GameWorld`/`RawCampaignSession` 은 이 구획 끝에서 조립**하며, 그 전 항목은 앞 단위(E325~E328)처럼 **client 계약(최소 덕타입)** 을 모듈 머리글에 적고 시험이 그 형태의 장치를 만든다. 앞 순서 항목이 뒤 항목의 입력이므로 위에서부터 진행하고, 선행 미이식으로 막히면 사유를 그 항목에 적고 다음으로 간다. 큰 단위(RawCampaignSession 5,715줄 등)는 공개 API 경계로 나누어 착수 때 이 구획에 세부 항목을 더한다.
 
 **A. Client 수명 전역 소유자** (앞 단위 E325 와 같은 방식 — 참조를 빌려 주는 소유자, 값 사본 없음)
-- [ ] client **ClientGameplayGlobals** 현재258줄 [ClientPlayerRecords·ClientSubscriberGlobals(E325) 뒤] — 서버 권한 `Server()`·`GameAux`·전투 시계 원점/스탬프·카메라·AiDebug 연결·현재 Session 대여/pin [E569 재판정: E334의 하위 커서/선택·`RawSidRobust` 진단·`TerrainBitmapState`/`TerrainStampState` 선행은 모두 갖춰졌다. 최소 실제 Session/World 계약을 모듈 머리글에 명시하고 다음 단위로 이식한다. E400 이월: CursorLifecycle_CurrentClientCheckingSurvivesReset의 실제 Acquire/AcquirePrepared 대여/반납 시험도 함께 수행. 전체 Session 부모 검사는 D/E에서 재대조]
+- [x] client **ClientGameplayGlobals** 258줄 — [E570](docs/webpj-client-gameplay-globals-20261116.md) 같은 장기 권한/GameAux·상태/캐시/배열/참조·일반/준비 대여·현재 Session 공개/pin 이식. 신규16·주변45검사, PE22칸/배열과 E400 이월 checking 실제 Acquire/AcquirePrepared 재대조 완료. 최소 Session 계약을 명시했으며 전체 Session/Client 부모·외곽 owner/자식 증빙 결선은 D/E에서 재대조
 - [ ] client **ClientStateWorldGlobals** 108줄(+8)·**ClientStateWorldCleanup** 101줄(+2)·**ClientStateStorageCleanup** 71줄(+1)·**ClientStateRuntimeRetirement** 99줄 — State/World 전역과 정리·Runtime 반납 순서 [막힘(E336 판정): `ClientStateWorldContext` 가 `Client`·`CampaignTemplateStorage`(B 구획)·`RawMenuControls`(L 영역)·`ClientAudio`(H 영역)·`RawSurfaceStorage` 의 실제 저장소에 Native 주소별 접근을 연결하는 바인딩이라 그 소유자들이 선행 — B 구획과 Session 조립(C·D) 뒤]
 - [ ] client **ClientUserSelectionGlobals** 77줄·**ClientUserSelectionCleanup** 43줄·**ClientCursorGlobals** 25줄·**ClientCursorStateCleanup** 27줄 [진행: **ClientCursorGlobals·ClientCursorStateCleanup**은 [E402](docs/webpj-client-cursor-globals-20261114.md) 완료(장기 주소/reset·실제 Cancel/Prepare/현재 카메라·Renderer 연결). **ClientUserSelectionGlobals**는 [E495](docs/webpj-user-selection-native-fixtures-20261115.md) 완료(RawUserSelection/RawUserPick 이식과 함께, fixture multiple-selection 601행). **ClientUserSelectionCleanup**(43줄)은 `RawCampaignSession.core()` Session 허브와 `RawSquidSelection` 표시 갱신 연결을 기다린다. 이 줄은 네 모듈이 끝날 때 체크한다]
 - [ ] client **ClientChatManagerGlobals** 123줄·**ClientChatWindowGlobals** 24줄(+4)·**ClientHtmlWindowGlobals** 8줄·**ClientRendererFrameGlobals** 26줄·**ClientDotCommandGlobals** 56줄 [진행: Chat manager는 E447, DotCommand는 E443, **ClientChatWindowGlobals**는 [E453](docs/webpj-client-chat-window-globals-20261114.md) 완료(같은 창/로그/완성/무시·문자열·뉴스 키와 동맹 요청 상태; 일반 동맹 입력은 단독 관문이 없어 상태를 유지, 입력/수신 연결은 기존③6 이월). **ClientHtmlWindowGlobals**는 [E456](docs/webpj-html-window-gump-20261114.md) 완료. **ClientRendererFrameGlobals**는 [E496](docs/webpj-renderer-cloud-queue-20261115.md)에서 구름 고정 칸과 실제 Renderer 앞단을 검증했으며 실제 owner는 5-A 프레임 조립 때 남음. 다섯 모듈이 끝나면 이 줄을 체크한다]
