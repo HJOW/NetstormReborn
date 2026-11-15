@@ -309,3 +309,5 @@ bridge-fall-parent-x86.tsv	22eda704911c2886da2efac28a5e28dbb1c2fbd1f0f06f5603d4e
 bridgeeffects-x86.tsv	cb68d6265d0d71ede7ed96f85e0be3311ebc6f6fec6279442c7607c7ca1ff3f5	6170	cpppj	Core
 content-cursor-width-x86.tsv	1dbbcddbf61e0c6354e8c70419c9a4bee4e4d690d92df5525313c5b59193e084	56	cpppj	Core
 sid-allocation-recovery-x86.tsv	1527716c4194bc879f0bab5cb6352a378951f7beb049b730cf503485426fd5d8	47	cpppj	Core
+neighbor-boundary-x86.tsv	a0ba755d3333de2e9d688543b284c14a2e5ca79774c384bd4ed79e54969b6296	18	cpppj	Core
+surface-neighbor-current-x86.tsv	4c7f9b9acf48f18129a2fcc7d3131443828cf0428b489d3a868727cf32e9ea1a	32	cpppj	Core

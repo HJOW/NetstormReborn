@@ -486,7 +486,7 @@ cpppj/src/o/RawSquidDestroy.cpp	Netstorm.Core/Original/RawSquidDestroy.cs	417f22
 cpppj/src/o/RawSquidDestroyDispatch.cpp	Netstorm.Core/Original/RawSquidDestroyDispatch.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
 cpppj/src/o/RawSquidFinder.cpp	Netstorm.Core/Original/RawFinder.cs	7b854b6513ee1b933681d4651b2707a9631a7147	L1
 cpppj/src/o/RawSquidHitPoints.cpp	Netstorm.Core/Original/RawSquidHitPoints.cs	552656c0c8bb46b48637b26a1acb59213edc1de1	L1
-cpppj/src/o/RawSquidNeighbors.cpp	Netstorm.Core/Original/RawNeighbor.cs	c7459e61da4d3b6a97c5266bb3ec676f38be1d5e	L1
+cpppj/src/o/RawSquidNeighbors.cpp	Netstorm.Core/Original/RawNeighbor.cs	4c06fd9d64fa55b89e23b885562e0d035e41a0f8	L1
 cpppj/src/o/RawSquidPoolReset.cpp	Netstorm.Core/Original/RawSquidPoolReset.cs	1ddc4ba021c0fadcf75c0a681cc18d937b798219	L1
 cpppj/src/o/RawSquidRegion.cpp	Netstorm.Core/Original/RawSquidRegion.cs	9cb0547f5488d69fecc11fc3eb0eb591507140ec	L1
 cpppj/src/o/RawSquidRegion.h	Netstorm.Core/Original/RawSquidRegion.cs	9cb0547f5488d69fecc11fc3eb0eb591507140ec	L1
@@ -903,3 +903,4 @@ cpppj/src/o/RawBridgeLifecycle.h	Netstorm.Core/Original/RawBridgeLifecycle.cs	cf
 cpppj/src/o/ContentFormHost.h	Netstorm.Core/Original/RawContentFormHost.cs	d5a23c9990c041dff2feb50ba1fd26a5ac0da440	port
 cpppj/src/o/SidPool.cpp	Netstorm.Core/Original/RawSidPool.Allocation.cs	c0e0237d6e345ca15440a207da00c8205ea2b1a3	L1
 cpppj/src/o/SidPool.h	Netstorm.Core/Original/RawSidPool.Allocation.cs	c0e0237d6e345ca15440a207da00c8205ea2b1a3	port
+cpppj/src/o/RawSquidNeighbors.h	Netstorm.Core/Original/RawNeighbor.cs	4c06fd9d64fa55b89e23b885562e0d035e41a0f8	port

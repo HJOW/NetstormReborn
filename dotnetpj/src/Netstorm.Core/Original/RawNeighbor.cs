@@ -1,10 +1,11 @@
 using Netstorm.Assets;
 using Netstorm.Core.Bridges;
 
+// 현재 원본 이웃의 원천 snapshot과 후보별 현재 지도·타입 조회를 구분한다.
 namespace Netstorm.Core.Original;
 
 /// <summary>
-/// 탐색 플래그 비트(원본 finder +0x48). 8(표면 지도 조회)은 이웃 탐색에서 지원하지 않는다.
+/// 탐색 플래그 비트(원본 finder +0x48). 일반 해시와 표면 지도 순회가 같은 후보 필터를 사용한다.
 /// </summary>
 public static class NeighborFlags
 {
@@ -17,8 +18,11 @@ public static class NeighborFlags
     /// <summary>abstract(extra 비트 1) 후보를 제외한다.</summary>
     public const uint SkipAbstract = 4;
 
-    /// <summary>이웃 탐색이 지원하는 조합(0~7). 8은 표면 지도 조회라 거부한다.</summary>
-    public const uint Supported = NoJoint | AnyType | SkipAbstract;
+    /// <summary>현재0단계 표면 지도의 원문 y/x 순회를 선택한다.</summary>
+    public const uint SurfaceMap = 8;
+
+    /// <summary>원문 네 비트의 지원 조합(0~15)이다.</summary>
+    public const uint Supported = NoJoint | AnyType | SkipAbstract | SurfaceMap;
 }
 
 /// <summary>
@@ -29,6 +33,13 @@ public static class NeighborFlags
 /// <param name="Right">사각형의 오른쪽 경계.</param>
 /// <param name="Bottom">사각형의 아래쪽 경계.</param>
 public readonly record struct SquidFootprint(float Left, float Top, float Right, float Bottom);
+
+/// <summary>삭제 부모가 값으로 보관한 위치·타입·프레임이다. 후보의 실제 raw 타입과 별개다.</summary>
+/// <param name="X">포착한 가로 단정도 좌표다.</param>
+/// <param name="Y">포착한 세로 단정도 좌표다.</param>
+/// <param name="Type">전체 DWORD 타입이다.</param>
+/// <param name="Frame">현재 프레임 인덱스다.</param>
+public readonly record struct SquidNeighborSource(float X, float Y, uint Type, uint Frame);
 
 /// <summary>
 /// 탐색기로 찾은 이웃을 원본 raw 값·발자국·표면에서 고르는 처리기(원본 RawSquidNeighbors, 10.78).
@@ -95,8 +106,11 @@ public sealed class RawSquidNeighbors
     /// <summary>칸별 점유·비행 비트를 읽는 지도.</summary>
     private readonly IReadOnlyList<byte> _spots;
 
-    /// <summary>타입 번호 → 타입 레코드.</summary>
+    /// <summary>C++ vector처럼 값으로 보관하는 독립 타입 표다.</summary>
     private readonly IReadOnlyList<OriginalTypeRecord> _types;
+
+    /// <summary>명시 결합한 실제 PATCH 장기 TYPE다. null이면 독립 사본을 쓴다.</summary>
+    private IReadOnlyList<OriginalTypeRecord>? _currentTypes;
 
     /// <summary>타입 번호 → SHP 프레임 목록.</summary>
     private readonly IReadOnlyList<IReadOnlyList<FrameCode>> _frames;
@@ -123,8 +137,8 @@ public sealed class RawSquidNeighbors
         _pool = pool;
         _hash = hash;
         _spots = spots;
-        _types = types;
-        _frames = frames;
+        _types = types.Select(type => type.Clone()).ToArray();
+        _frames = frames.Select(codes => (IReadOnlyList<FrameCode>)codes.ToArray()).ToArray();
     }
 
     /// <summary>이 탐색기가 쓰는 슬롯 풀.</summary>
@@ -138,6 +152,23 @@ public sealed class RawSquidNeighbors
     /// </summary>
     /// <param name="type">타입 번호.</param>
     public IReadOnlyList<FrameCode> Frames(int type) => _frames[type];
+
+    /// <summary>실제 PATCH의 현재188개 TYPE만 명시 대여하며 null/빈 표는 독립 사본으로 돌린다. 물리·코드를 초기화하지 않는다.</summary>
+    public void BindCurrentTypes(IReadOnlyList<OriginalTypeRecord>? types)
+    {
+        if (types is { Count: > 0 } && (_pool.Edition != OriginalEdition.Patch1078 || types.Count != 188))
+            throw new ArgumentException("이웃 현재TYPE 대여의 판본/길이 오류", nameof(types));
+        _currentTypes = types is { Count: > 0 } ? types : null;
+    }
+
+    /// <summary>프레임 판독 전에 실제 슬롯의 원문 인자만 값으로 포착한다.</summary>
+    public SquidNeighborSource Source(int sid)
+    {
+        if (sid <= 0 || sid >= _pool.Capacity) throw new ArgumentOutOfRangeException(nameof(sid), sid, "원본 이웃 번호 오류");
+        ReadOnlySpan<byte> raw = _pool.Slot(sid); bool patch = _pool.Edition == OriginalEdition.Patch1078;
+        return new(BitConverter.UInt32BitsToSingle(Read(raw, XOffset)), BitConverter.UInt32BitsToSingle(Read(raw, YOffset)),
+            raw[TypeOffset], Read(raw, patch ? FrameOffset : CdFrameOffset, patch ? 4 : 1));
+    }
 
     /// <summary>
     /// 생성 직후 +0x34 값이다. 결합 이웃이 없으면 0이다.
@@ -167,7 +198,7 @@ public sealed class RawSquidNeighbors
 
     /// <summary>
     /// from 에서 to 를 보는 방향(0 위·2 오른·4 아래·6 왼)이다.
-    /// 가로 차이가 세로 차이보다 크거나 같으면(비유한 포함) 가로 방향이다.
+    /// 세로 절댓값이 가로보다 작지 않으면(동률·NaN 포함) 세로 방향이다.
     /// </summary>
     /// <param name="fromX">출발 x.</param>
     /// <param name="fromY">출발 y.</param>
@@ -206,25 +237,25 @@ public sealed class RawSquidNeighbors
     /// <param name="readFrame">참이면 현재 프레임도 읽는다.</param>
     internal NeighborObject ReadObject(int sid, bool readFrame)
     {
-        if (sid == 0 || sid >= _pool.Capacity)
+        return ReadObject(Source(sid), readFrame, false);
+    }
+
+    /// <summary>값 원천의 보정 발자국·중심과 필요한 코드만 읽는다. lazyFrame은 실제 접합 분기까지 범위 밖 코드를 기본값으로 둔다.</summary>
+    internal NeighborObject ReadObject(SquidNeighborSource source, bool readFrame, bool lazyFrame)
+    {
+        uint number = source.Type;
+        if (number < (uint)OriginalConstructors.FirstAssetType || number >= (uint)Types.Count)
         {
-            throw new ArgumentOutOfRangeException(nameof(sid), sid, "원본 이웃 번호 오류");
+            throw new ArgumentOutOfRangeException("sid", number, "원본 이웃 자산 타입 범위 오류");
         }
-        ReadOnlySpan<byte> raw = _pool.Slot(sid);
-        uint number = raw[TypeOffset];
-        if (number < (uint)OriginalConstructors.FirstAssetType || number >= (uint)_types.Count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(sid), number, "원본 이웃 자산 타입 범위 오류");
-        }
-        OriginalTypeRecord type = _types[(int)number];
-        float x = BitConverter.UInt32BitsToSingle(Read(raw, XOffset));
-        float y = BitConverter.UInt32BitsToSingle(Read(raw, YOffset));
+        OriginalTypeRecord type = Types[(int)number];
+        float x = source.X, y = source.Y;
         if (!float.IsFinite(x) || !float.IsFinite(y)
             || type.FootX < 1 || type.FootY < 1 || type.FootX > RawSquidHash.WorldCells || type.FootY > RawSquidHash.WorldCells)
         {
-            throw new ArgumentOutOfRangeException(nameof(sid), "원본 이웃 좌표·발자국 범위 오류");
+            throw new ArgumentOutOfRangeException("sid", "원본 이웃 좌표·발자국 범위 오류");
         }
-        // 모서리 확장은 낮은 좌표가 모두 (0, 256) 밖일 때만 이전 값을 보존한다(원본 49ae80)
+        // 두 원래 좌표가 모두(0,256) 안일 때만 이전 점을 보존하고 그 밖에는 보정된 한 점을 사용한다.
         float left = Math.Clamp(x - (type.FootX - 1), FirstCell, LastCell);
         float top = Math.Clamp(y - (type.FootY - 1), FirstCell, LastCell);
         bool valid = x > 0 && x < RawSquidHash.WorldCells && y > 0 && y < RawSquidHash.WorldCells;
@@ -240,13 +271,13 @@ public sealed class RawSquidNeighbors
         };
         if (readFrame)
         {
-            uint frame = Read(raw, _pool.Edition == OriginalEdition.Patch1078 ? FrameOffset : CdFrameOffset, _pool.Edition == OriginalEdition.Patch1078 ? 4 : 1);
+            uint frame = source.Frame;
             IReadOnlyList<FrameCode> codes = _frames[(int)number];
             if (frame >= (uint)codes.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(sid), frame, "원본 이웃 프레임 범위 오류");
+                if (!lazyFrame) throw new ArgumentOutOfRangeException("sid", frame, "원본 이웃 프레임 범위 오류");
             }
-            body.Frame = codes[(int)frame];
+            else body.Frame = codes[(int)frame];
         }
         return body;
     }
@@ -281,7 +312,7 @@ public sealed class RawSquidNeighbors
         ReadOnlySpan<byte> raw = _pool.Slot(candidate);
         uint number = raw[TypeOffset];
         // 표면 타입이 아니고 아무 부류나 받지 않으면 거부한다
-        if ((_types[(int)number].Flags1 & SurfaceFlag) == 0 && (flags & NeighborFlags.AnyType) == 0)
+        if ((Types[(int)number].Flags1 & SurfaceFlag) == 0 && (flags & NeighborFlags.AnyType) == 0)
         {
             return false;
         }
@@ -296,7 +327,7 @@ public sealed class RawSquidNeighbors
             float y2 = Math.Min(src.Bottom, bottom);
             return x1 >= FirstCell && y1 >= FirstCell && x2 < RawSquidHash.WorldCells && y2 < RawSquidHash.WorldCells && x1 <= x2 && y1 <= y2;
         }
-        if (Intersects(body.Left - 1.0f, body.Top, body.Right + 1.0f, body.Bottom)
+        if ((flags & NeighborFlags.SurfaceMap) == 0 && Intersects(body.Left - 1.0f, body.Top, body.Right + 1.0f, body.Bottom)
             == Intersects(body.Left, body.Top - 1.0f, body.Right, body.Bottom + 1.0f))
         {
             return false;
@@ -306,7 +337,7 @@ public sealed class RawSquidNeighbors
             NeighborObject framed = ReadObject(candidate, true);
             // 후보 중심에서 source 중심을 보는 방향으로 결합을 검사한다
             int direction = Direction(framed.CenterX, framed.CenterY, source.CenterX, source.CenterY);
-            if (!BridgeSurfaceRules.Connects(framed.Frame, _types[(int)number].Flags2, source.Frame, _types[(int)source.Type].Flags2, direction))
+            if (!BridgeSurfaceRules.Connects(framed.Frame, Types[(int)number].Flags2, source.Frame, Types[(int)source.Type].Flags2, direction))
             {
                 return false;
             }
@@ -321,8 +352,8 @@ public sealed class RawSquidNeighbors
             return false;
         }
         // 후보 기준점의 spot 칸이 다음 칸이면 그 칸을 보고, 배열 밖만 거부한다
-        int index = BiasedCell(body.Bottom) * RawSquidHash.WorldCells + BiasedCell(body.Right);
-        if (index >= _spots.Count)
+        int index = BiasedCell(BitConverter.UInt32BitsToSingle(Read(raw, YOffset))) * RawSquidHash.WorldCells + BiasedCell(BitConverter.UInt32BitsToSingle(Read(raw, XOffset)));
+        if (index < 0 || index >= _spots.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(candidate), "원본 이웃 spot 범위 오류");
         }
@@ -354,7 +385,7 @@ public sealed class RawSquidNeighbors
     }
 
     /// <summary>이웃 탐색기가 쓰는 타입 표.</summary>
-    public IReadOnlyList<OriginalTypeRecord> Types => _types;
+    public IReadOnlyList<OriginalTypeRecord> Types => _currentTypes ?? _types;
 }
 
 /// <summary>
@@ -366,27 +397,56 @@ public sealed class RawSquidNeighborWalk
     /// <summary>탐색기. 안쪽이면 만들지 않는다.</summary>
     private readonly RawSquidFinder? _finder;
 
+    /// <summary>표면 지도용 원천 snapshot·커서·signed short 캐시를 보관하는 현재 Next다.</summary>
+    private readonly Func<int>? _surfaceNext;
+
     /// <summary>현재 처리 위치. 0이면 끝이다.</summary>
     private int _current;
 
     /// <summary>
-    /// 이웃 탐색기·기준 번호·플래그로 회귀를 만든다. 플래그는 0~7 조합이다.
+    /// 이웃 탐색기·기준 번호·플래그로 회귀를 만든다. 플래그는 0~15 조합이다.
     /// </summary>
     /// <param name="neighbors">이웃 탐색기. 이 객체보다 오래 살아야 한다.</param>
     /// <param name="source">기준 번호.</param>
     /// <param name="flags">호출 플래그.</param>
     public RawSquidNeighborWalk(RawSquidNeighbors neighbors, int source, uint flags)
+        : this(neighbors, (neighbors ?? throw new ArgumentNullException(nameof(neighbors))).Source(source), flags) { }
+
+    /// <summary>삭제 정보의 값 원천만 치환하며 실제 후보·지도·현재 타입은 Next마다 읽는다.</summary>
+    public RawSquidNeighborWalk(RawSquidNeighbors neighbors, SquidNeighborSource source, uint flags, bool lazyFrame = false)
     {
         ArgumentNullException.ThrowIfNull(neighbors);
-        // 8(표면 지도 조회)은 이웃 탐색에서 지원하지 않는다
         if ((flags & ~NeighborFlags.Supported) != 0)
         {
             throw new ArgumentException("원본 이웃 플래그 오류", nameof(flags));
         }
-        RawSquidNeighbors.NeighborObject body = neighbors.ReadObject(source, true);
+        RawSquidNeighbors.NeighborObject body = neighbors.ReadObject(source, true, lazyFrame);
         if (neighbors.Interior(body))
         {
             return;
+        }
+        if ((flags & NeighborFlags.SurfaceMap) != 0)
+        {
+            int left = (int)(body.Left - 1f), top = (int)(body.Top - 1f), right = (int)(body.Right + 1f), bottom = (int)(body.Bottom + 1f);
+            int x = left, y = top; var seen = new List<short>();
+            _surfaceNext = () =>
+            {
+                // 원문 선증가·모서리 생략 뒤 현재 지도/후보를 읽는다. 각 Walk의 커서와 캐시는 독립적이다.
+                while (true)
+                {
+                    x++;
+                    if (y == top || y == bottom) { if (x >= right) { y++; if (y > bottom) return 0; x = left; } }
+                    else if (x > right) { y++; x = left + (y == bottom ? 1 : 0); }
+                    if (x < 0 || y < 0 || x >= 256 || y >= 256) continue;
+                    int candidate = neighbors.Hash.Cell(0, x, y); if (candidate == 0) continue;
+                    SquidNeighborSource current = neighbors.Source(candidate);
+                    if (body.Left <= current.X && current.X <= body.Right && body.Top <= current.Y && current.Y <= body.Bottom) continue;
+                    if (!neighbors.Accept(candidate, body, flags)) continue;
+                    if (seen.Any(prior => (int)prior == candidate)) continue;
+                    seen.Add(unchecked((short)candidate)); return candidate;
+                }
+            };
+            _current = _surfaceNext(); return;
         }
         _finder = new RawSquidFinder(neighbors.Pool, neighbors.Hash, neighbors.Types);
         _current = _finder.Begin(
@@ -399,13 +459,13 @@ public sealed class RawSquidNeighborWalk
     public int Current => _current;
 
     /// <summary>
-    /// 다음 후보를 받는다. flag 8이 없으면 일반 Next(004b1810)로 다음 버킷·단계를 전진한다.
+    /// 다음 후보를 받는다. flag8이면 현재 단계0 지도, 나머지는 일반 Next로 다음 버킷·단계를 전진한다.
     /// </summary>
     public int Next()
     {
         if (_current != 0)
         {
-            _current = _finder!.Next();
+            _current = _surfaceNext is not null ? _surfaceNext() : _finder!.Next();
         }
         return _current;
     }

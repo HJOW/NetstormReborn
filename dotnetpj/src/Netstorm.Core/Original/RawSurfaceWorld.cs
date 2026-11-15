@@ -252,6 +252,7 @@ public sealed partial class RawSurfaceWorld
                 RawSquidDestroy baseDestroy = _baseDestroy!;
                 RawGraph graph = _graph!;
                 _neighbors = new RawSquidNeighbors(_storage.Pool, _storage.Hash, _storage.Spots, _types, new RiftFrameCodeTables(_frames));
+                if (_edition == OriginalEdition.Patch1078) _neighbors.BindCurrentTypes(_types);
                 _connect = new RawBridgeConnect(_storage.Pool, _neighbors, _storage.Links, new BridgeConnectHooks
                 {
                     Create = (type, flags) =>

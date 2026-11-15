@@ -381,4 +381,9 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/sid-allocation-recovery-x86.tsv" Link="X86/sid-allocation-recovery-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 현재 표면 지도 순회 중 지도·후보·원천 변경과 보정 발자국의 원본 관측이다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/surface-neighbor-current-x86.tsv" Link="X86/surface-neighbor-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/neighbor-boundary-x86.tsv" Link="X86/neighbor-boundary-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

@@ -121,7 +121,7 @@ public sealed class RawNeighborTests
         // 빈 지도로는 만들지 않는다
         Assert.ThrowsAny<Exception>(() => new RawSquidNeighbors(pool, hash, [], types, frames));
         // 지원 밖 플래그(표면 지도 조회)는 거부한다
-        Assert.ThrowsAny<Exception>(() => new RawSquidNeighborWalk(neighbors, Source, 8));
+        Assert.ThrowsAny<Exception>(() => new RawSquidNeighborWalk(neighbors, Source, 16));
     }
 
     /// <summary>
