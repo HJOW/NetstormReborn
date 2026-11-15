@@ -34,7 +34,7 @@ public sealed partial class AssetPostPopState
     public bool FortMode { get; set; }
 
     /// <summary>검사 Form 여부. 켜지면 Gun 생성 뒤 checkForms assert 를 검사한다.</summary>
-    public bool CheckingForms { get; set; }
+    public RawCheckingFlag CheckingForms { get; } = new();
 
     /// <summary>거주 구역 애니메이션 여부. 켜지면 잔여 프레임을 2로 나눈 나머지와 묶는다.</summary>
     public bool ResidenceAnimation { get; set; }
@@ -103,8 +103,11 @@ public sealed class AssetPostPopHooks
     /// <summary>썬 디스크 발사기의 현재 애니메이션을 제거한다.</summary>
     public Action<int>? RemoveAnimation { get; set; }
 
-    /// <summary>켜진 진단의 checkForms assert 를 검사한다.</summary>
-    public Action<int>? CheckForms { get; set; }
+    /// <summary>현재 Form 체인의 원문 판정값이다. 실패 진단 선택은 현재 부모가 맡는다.</summary>
+    public Func<int, bool>? CheckForms { get; set; }
+
+    /// <summary>원문 식·파일·행을 보고한다. 복귀하면 현재 전역과 물리 슬롯에서 처리를 계속한다.</summary>
+    public Action<string, string, uint>? Assertion { get; set; }
 
     /// <summary>현재 총 각도에서 실제 총 애니메이션 프레임을 조회한다.</summary>
     public Func<int, int>? GunFrame { get; set; }
@@ -469,17 +472,9 @@ public sealed partial class RawAssetPostPop
             // Gun 분기의 필수 효과를 검사한다
             if (_hooks.CreateGunProcess is null
                 || (kind == GunAngleKind && (_hooks.GunFrame is null || _hooks.SetGraph is null))
-                || (kind == GunArcherKind && _hooks.RemoveAnimation is null)
-                || (_state.CheckingForms && _hooks.CheckForms is null))
+                || (kind == GunArcherKind && _hooks.RemoveAnimation is null))
             {
                 throw new ArgumentException("Gun postPop 효과 누락", nameof(sid));
-            }
-            // 원본 서버·로딩 assert 경로. 전투 중 비추가의 최초 호출이 서버·예측 번호가 아니면 원본처럼 멈춘다
-            if (_state.CurrentServer && (raw[ExtraOffset] & 1) == 0 && (flags & 1) != 0
-                && ((kind == GunSunKind && _state.LoadingDepth == 0) || (kind == GunArcherKind && !_state.FortMode))
-                && ((flags & 0x50) != 0 || (sid >= RawSidPool.FirstOrdinary && sid < ServerFirst)))
-            {
-                throw new InvalidOperationException("Gun postPop 원본 서버·로딩 assert 경로");
             }
             return;
         }
@@ -518,8 +513,8 @@ public sealed partial class RawAssetPostPop
     public void PostPop(int sid, uint flags)
     {
         uint kind = Kind(sid);
-        // 두 현재 부모는 PATCH의 실제 도달 순서를 사용하고 CD/다른 독립 몸체의 기존 사전 계약은 유지한다.
-        if (_pool.Edition != OriginalEdition.Patch1078 || (kind != ResidenceKind && kind != GeyserKind)) Validate(sid, flags);
+        // 이식한 현재 부모는 실제 도달 순서를 사용하고 CD/다른 독립 몸체의 기존 사전 계약은 유지한다.
+        if (_pool.Edition != OriginalEdition.Patch1078 || !(kind >= GeneratorKind && kind <= ResidenceKind || kind == GeyserKind)) Validate(sid, flags);
         if (kind == SunAviaryKind)
         {
             _hooks.SunAviaryPostPop!(sid, flags);
@@ -556,6 +551,8 @@ public sealed partial class RawAssetPostPop
         }
         else if (kind == GeneratorKind)
         {
+            // 최초 현재 theme 조회는 반환값이 버려져도 원문처럼 Damageable보다 먼저 수행한다.
+            if ((flags & 1) != 0) _ = Type(sid).Theme;
             _damageable.DamageablePostPop(sid, flags);
         }
         else if (kind >= GunAngleKind && kind <= GunArcherKind)
@@ -660,42 +657,7 @@ public sealed partial class RawAssetPostPop
     /// <param name="kind">Gun 세부 부류.</param>
     private void Gun(int sid, uint flags, uint kind)
     {
-        // 각도 Gun 은 하위 3비트가 켜졌을 때 현재 각도로 그래프 바이트를 먼저 정한다
-        if (kind == GunAngleKind && (flags & 7) != 0)
-        {
-            int angle = unchecked((int)Read(_pool.Slot(sid), WordOffset));
-            int graph = _hooks.GunFrame!(angle);
-            _hooks.SetGraph!(sid, graph);
-        }
-        bool branch = kind == GunAngleKind ? (flags & 7) != 0 : (flags & 1) != 0;
-        // 썬 캐논은 현재 추가 비트가 꺼졌을 때만 분기한다
-        if (branch && (kind != GunSunKind || (_pool.Slot(sid)[ExtraOffset] & 1) == 0))
-        {
-            // 전투 중 비추가이면 GunProcess 생성·부착의 전체 경계로 간다
-            if (_state.CurrentServer && (_pool.Slot(sid)[ExtraOffset] & 1) == 0)
-            {
-                if (kind == GunArcherKind)
-                {
-                    _hooks.RemoveAnimation!(sid);
-                }
-                _hooks.CreateGunProcess!(sid);
-                if (_state.CheckingForms)
-                {
-                    _hooks.CheckForms!(sid);
-                }
-            }
-            // 로딩 중 최초 캐논의 타입 0x1000 은 현재 HP 워드를 추가 위치에 복사한다
-            if (kind == GunSunKind && _state.LoadingDepth != 0 && (Type(sid).Flags1 & 0x1000) != 0)
-            {
-                Write(_pool.AllocatedBytes(sid), WordOffset, Read(_pool.Slot(sid), 12, 2));
-            }
-        }
-        // 썬 캐논의 타입 0x1000 은 현재 추가 위치 값을 HP 워드로 쓴다
-        if (kind == GunSunKind && (Type(sid).Flags1 & 0x1000) != 0)
-        {
-            Write(_pool.AllocatedBytes(sid), 12, Read(_pool.Slot(sid), WordOffset), 2);
-        }
-        _damageable.DamageablePostPop(sid, flags);
+        GunCurrent(sid, flags, kind);
     }
 
     /// <summary>거주 구역 최초 소유자·목록·예약·연결·잔여 프레임을 처리한다. 마지막에는 공통 몸체를 직접 호출한다.</summary>

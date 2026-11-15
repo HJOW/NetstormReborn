@@ -11,7 +11,7 @@ namespace Netstorm.Core.Tests;
 /// 열 구성은 cpppj/tests/AssetPostPopTests.cpp 와 같다.
 /// CD 10.72 행은 기준 판본이 아니므로 읽지 않는다 (W02 Asset 조각, 2026-10-20).
 /// </summary>
-public sealed class X86RawAssetPostPopTests
+public sealed partial class X86RawAssetPostPopTests
 {
     /// <summary>10.78 행의 판본 이름. 그 밖은 CD 이다.</summary>
     private const string PatchEdition = "originals";
@@ -216,7 +216,7 @@ public sealed class X86RawAssetPostPopTests
                 }
             },
             RemoveAnimation = sid => Events.Add($"M:{sid}"),
-            CheckForms = sid => { },
+            CheckForms = sid => true,
             GunFrame = angle => { Events.Add($"F:{angle}"); return 2; },
             SetGraph = (sid, graph) => { Events.Add($"Q:{graph}"); Pool.AllocatedBytes(sid)[30] = (byte)graph; },
             Surface = (x, y) => 60,
