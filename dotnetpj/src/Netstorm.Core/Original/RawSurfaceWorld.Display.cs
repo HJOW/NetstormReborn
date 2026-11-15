@@ -37,6 +37,7 @@ public sealed partial class RawSurfaceWorld
         _runtimePin = pin;
         if (_displayRuntime is not null) _displayRuntime.Pin = pin;
         if (_factoryRuntime is not null) _factoryRuntime.Pin = pin;
+        if (_popRuntime is not null) _popRuntime.Pin = pin;
         _postPop?.BindRuntimePin(pin);
     }
 }

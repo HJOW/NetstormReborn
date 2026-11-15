@@ -936,3 +936,7 @@ cpppj/src/o/RawBuildingSpace.cpp	Netstorm.Core/Original/RawBuildingSpace.Current
 cpppj/src/o/RawBuildingSpace.h	Netstorm.Core/Original/RawBuildingSpace.Current.cs	fecfb68486e8fc7e9cfefe592d19db6896ab088f	port
 cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Creation.cs	fecfb68486e8fc7e9cfefe592d19db6896ab088f	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Creation.cs	fecfb68486e8fc7e9cfefe592d19db6896ab088f	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Transmission.cs	f55ae26e38d0a1676eb7c343470949b4e80d6924	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Transmission.cs	f55ae26e38d0a1676eb7c343470949b4e80d6924	port
+cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.Transmission.cs	f55ae26e38d0a1676eb7c343470949b4e80d6924	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceWorld.Transmission.cs	f55ae26e38d0a1676eb7c343470949b4e80d6924	port

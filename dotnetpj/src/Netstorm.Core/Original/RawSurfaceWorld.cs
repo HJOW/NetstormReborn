@@ -459,7 +459,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
             _processUse?.Dispose(); _processUse = null;
             if (_factoryRuntime is { } failedRuntime) { _factory!.ReleaseRuntime(failedRuntime); _factoryRuntime = null; }
             if (_containedUnpop is not null) _storage.ReleaseContainedUnpop(CurrentContainedUnpop());
-            ReleaseStorageDisplay(); _storageUse.Dispose(); throw;
+            ReleaseStorageTransmission(); ReleaseStorageDisplay(); _storageUse.Dispose(); throw;
         }
     }
 

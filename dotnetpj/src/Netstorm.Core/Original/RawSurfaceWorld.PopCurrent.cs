@@ -26,6 +26,7 @@ public sealed partial class RawSurfaceWorld
         });
         factory.BindWeakenedMana(_storage.GameAux().PriestQuarterHpBox);
         factory.BindHitPointTypes(_storage.GameAux().PriestTypeBox, _storage.GameAux().DaisTypeBox);
+        if (_storage.Types.Count == _types.Count) { BindStorageTransmission(); return; }
         var writer = new RawSquidTransmission(_storage.Pool, _storage.GameAux().SquidTransmission, new RawSquidTransmissionHooks
         {
             Type = number => new SquidPopTypeReference(() => _types[number]),

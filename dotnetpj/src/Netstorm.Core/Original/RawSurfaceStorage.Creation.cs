@@ -93,6 +93,7 @@ public sealed partial class RawSurfaceStorage
             factory.BindUnpop(() => UnpopExecutor()); factory.BindFormDetach(sid => CurrentContainedUnpopExecutor().Detach(sid));
             factory.BindFormPopDepth(PostPopState.DepthBox); factory.BindWeakenedMana(GameAux().PriestQuarterHpBox);
             factory.BindHitPointTypes(GameAux().PriestTypeBox, GameAux().DaisTypeBox); factory.BindFakeSurfaceType(GameAux().FakeSurfaceTypeBox);
+            if (UsesNativeTransmissionDevices()) factory.BindFormAttach(() => CurrentContainedUnpopExecutor().ContentFormType(), TransmitPop);
             _factoryExecutor = factory;
         }
         return _factoryExecutor;
