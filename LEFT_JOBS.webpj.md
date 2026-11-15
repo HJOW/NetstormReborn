@@ -6,17 +6,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E531)
+### 0.1 현재 값 (2026-11-15, 마지막 단위 WB04-E533)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 1,004단위(제외 156 별도) 중 **port 791(78.8%)·partial 35(3.5%)·todo 178(17.7%)**. 남은 213단위에는 기존 129단위와 재기준선에서 추가된 99단위가 포함된다. 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
-| 마지막 작업 단위 | **WB04-E531** `ObjectOwnerCommands` 이식 — SetOwner 명령·편집 객체 owner 따라가기·좌클릭 후처리, 원본 10.78 관측 256+256행 전부 첫 실행 일치([단위 문서](docs/webpj-object-owner-commands-20261115.md)). 직전 E530은 `RawAviaryProcessData` 이식 — 아비어리 공유 수신 선택 필드 decoder(전용 원본 관측 없음, 계약 시험, [단위 문서](docs/webpj-aviary-process-data-20261115.md)). 직전 E529는 `RawSpriteRegular` 이식 — 일반 Sprite 정기 4794b0, 원본 10.78 관측 정기 147행 전부 첫 실행 일치([단위 문서](docs/webpj-sprite-regular-20261115.md)). 직전 E528은 `RawPriestRegular` 이식 — 사제 정기 494580 사건 선택, 원본 10.78 관측 384행 전부 첫 실행 일치([단위 문서](docs/webpj-priest-regular-20261115.md)). 직전 E527은 `RawDecorationRegular` 이식 — 장식·가장자리 팜 Regular 462420, 원본 10.78 관측 630행 전부 첫 실행 일치([단위 문서](docs/webpj-decoration-regular-20261115.md)). 직전 E526은 `RawMonitorTime` 본체 이식 — 시간 알림 Step·줄·달력·임시 Chat 서식, 원본 10.78 관측 1176+12행 전부 첫 실행 일치([단위 문서](docs/webpj-monitor-time-20261115.md)). 직전 E525는 `State`([단위 문서](docs/webpj-client-state-20261115.md)), E524는 `CampaignGuideRelease`([단위 문서](docs/webpj-campaign-guide-release-20261115.md)), E523은 `GuideMissionTransitions`([단위 문서](docs/webpj-guide-mission-transitions-20261115.md), 원본 286행 일치), E522는 `RawCampaignProductionBindings`([단위 문서](docs/webpj-campaign-production-bindings-20261115.md), 원본 242행 일치), E521은 `RawCampaignLifetimeBindings`([단위 문서](docs/webpj-campaign-lifetime-bindings-20261115.md)), E520은 `RawCampaignMissionStartBindings`·`RawCampaignTutorialOneBindings`([단위 문서](docs/webpj-campaign-mission-bindings-20261115.md)), E519는 `RawCampaignWorldRuntime`([단위 문서](docs/webpj-campaign-world-runtime-20261115.md)), E518은 `RawCampaignOwnership`([단위 문서](docs/webpj-campaign-ownership-20261115.md)) |
+| 이식 진행도 | 대상 1,004단위(제외 156 별도) 중 **port 793(79.0%)·partial 35(3.5%)·todo 176(17.5%)**. 남은 211단위에는 기존 129단위와 재기준선에서 추가된 99단위가 포함된다. 새 partial 2개는 중단 시점 초안으로 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
+| 마지막 작업 단위 | **WB04-E533** `TitleBitmapLifetime` 이식 — 시작 title 그림 수명 4ab3e0/4ab370/4ab2d0, 원본 10.78 관측 33행 전부 첫 실행 일치([단위 문서](docs/webpj-title-bitmap-lifetime-20261115.md)). 직전 E532는 `NativeIntroState` 이식 — 인트로 State 39/40/41/42, 원본 10.78 관측 17행 전부 첫 실행 일치([단위 문서](docs/webpj-native-intro-state-20261115.md)). 직전 E531은 `ObjectOwnerCommands` 이식 — SetOwner 명령·편집 객체 owner 따라가기·좌클릭 후처리, 원본 10.78 관측 256+256행 전부 첫 실행 일치([단위 문서](docs/webpj-object-owner-commands-20261115.md)). 직전 E530은 `RawAviaryProcessData` 이식 — 아비어리 공유 수신 선택 필드 decoder(전용 원본 관측 없음, 계약 시험, [단위 문서](docs/webpj-aviary-process-data-20261115.md)). 직전 E529는 `RawSpriteRegular` 이식 — 일반 Sprite 정기 4794b0, 원본 10.78 관측 정기 147행 전부 첫 실행 일치([단위 문서](docs/webpj-sprite-regular-20261115.md)). 직전 E528은 `RawPriestRegular` 이식 — 사제 정기 494580 사건 선택, 원본 10.78 관측 384행 전부 첫 실행 일치([단위 문서](docs/webpj-priest-regular-20261115.md)). 직전 E527은 `RawDecorationRegular` 이식 — 장식·가장자리 팜 Regular 462420, 원본 10.78 관측 630행 전부 첫 실행 일치([단위 문서](docs/webpj-decoration-regular-20261115.md)). 직전 E526은 `RawMonitorTime` 본체 이식 — 시간 알림 Step·줄·달력·임시 Chat 서식, 원본 10.78 관측 1176+12행 전부 첫 실행 일치([단위 문서](docs/webpj-monitor-time-20261115.md)). 직전 E525는 `State`([단위 문서](docs/webpj-client-state-20261115.md)), E524는 `CampaignGuideRelease`([단위 문서](docs/webpj-campaign-guide-release-20261115.md)), E523은 `GuideMissionTransitions`([단위 문서](docs/webpj-guide-mission-transitions-20261115.md), 원본 286행 일치), E522는 `RawCampaignProductionBindings`([단위 문서](docs/webpj-campaign-production-bindings-20261115.md), 원본 242행 일치), E521은 `RawCampaignLifetimeBindings`([단위 문서](docs/webpj-campaign-lifetime-bindings-20261115.md)), E520은 `RawCampaignMissionStartBindings`·`RawCampaignTutorialOneBindings`([단위 문서](docs/webpj-campaign-mission-bindings-20261115.md)), E519는 `RawCampaignWorldRuntime`([단위 문서](docs/webpj-campaign-world-runtime-20261115.md)), E518은 `RawCampaignOwnership`([단위 문서](docs/webpj-campaign-ownership-20261115.md)) |
 | 다음 작업 | ⓪ 4-D C 구획: `RawCampaignAssetBindings`·`RawCampaignConstructionBindings`(실제 `ClientConstructionGlobals`는 별도 todo) ① 4-R의 신규 이식 대상 중 남은 99단위를 E498~E502의 근거에 따라 각 단계에서 처리한다. 시간 동기화는 Poll까지 이식된 partial이며 고정 수신기 수명과 실제 Session 연결이 남았다(E515~E517). ② 독립적으로 가능한 4-D A·B·C와 5-A·5-B 잔여를 선행 관계에 맞게 병행한다. ③ 4-D의 D(Session 본체)·E(Client 본체·통합·L2 판정) 순서다. 3.8절 원본 관측 연결은 허브/적응 판정이 필요한 4건만 남았다 |
-| 마지막 전체 검사 | 2026-11-15 WB04-E531: Node v22.23.3·v26.13.0 전체 각각 **5,050건 통과, 실패 0** (v24 전체는 E513에서 4,973건 통과) |
+| 마지막 전체 검사 | 2026-11-15 WB04-E533: Node v22.23.3·v26.13.0 전체 각각 **5,055건 통과, 실패 0** (v24 전체는 E513에서 4,973건 통과) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -31,7 +31,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 14/32** | 기존 19단위 / 13,925줄 + 시간 동기화 1단위 / 99줄 |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 진행 중 44/46 | 3단위 / 533줄 |
 | 〃 | 5-B | 카메라·HUD·미니맵·커서 | 진행 중 9/13 | 5단위 / 1,039줄 |
-| 〃 | 5-C | 게임 화면 허브(Uber·메뉴 컨트롤)·미션 진입 명령 → **M2 판정**(L4a) | 미착수 | 13단위 / 5,998줄 |
+| 〃 | 5-C | 게임 화면 허브(Uber·메뉴 컨트롤)·미션 진입 명령 → **M2 판정**(L4a) | 미착수(`NativeIntroState`·`TitleBitmapLifetime` 선행 완료) | 11단위 / 5,856줄 |
 | 6 M3 | 6 | 입력·게임 메뉴·사제/운반·경제·건설 연결 → L3 | 선행 부품 완료(6-P 3/3·커서 4/4), client 연결 미착수(`ObjectOwnerCommands`만 선행 완료) | 34단위 / 5,347줄 |
 | 7 M4 | 7 | 전투·의식·AI 연결 | 부품 완료(7-P1~P3 20/20), client 연결 미착수 | 13단위 / 1,231줄 |
 | 8 M4 | 8 | 미션 수명·안내·대본·소리·채팅·도움말 잔여 | 미착수 | 31단위 / 6,277줄 |
@@ -46,9 +46,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 1,004단위 / 146,057줄 | 791 (78.8%) / 104,477줄 (71.5%) | 35 (3.5%) | 178 (17.7%) |
+| 전체 | 1,004단위 / 146,057줄 | 793 (79.0%) / 104,619줄 (71.6%) | 35 (3.5%) | 176 (17.5%) |
 | `o/` 월드·규칙 | 559단위 / 73,092줄 | 524 (93.7%) / 69,645줄 (95.3%) | 3 (0.5%) / 1,164줄 (1.6%) | 32 (5.7%) / 2,283줄 (3.1%) |
-| `client/` 세션·UI·표시 | 444단위 / 72,539줄 | 266 (59.9%) / 34,406줄 (47.4%) | 32 (7.2%) | 146 (32.9%) |
+| `client/` 세션·UI·표시 | 444단위 / 72,539줄 | 268 (60.4%) / 34,548줄 (47.6%) | 32 (7.2%) | 144 (32.4%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 426줄 | 1 (100%) / 426줄 (100%) | 0 | 0 |
 
 표의 port 줄 수는 현재 기준선 파일 전체의 규모이며 기존 행에 남은 ③ 후속 기능의 구현을 뜻하지 않는다. 분류(class)별로는 port 953(이식 대상)·adapt 51(웹 대체가 필요한 플랫폼 경계)·제외 156(exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1)이다.
@@ -60,8 +60,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 953·adapt 51·exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1, 미분류 0**. 상태: **port 791·partial 35·todo 178·제외(-) 156**, session/oracle 0. 새 partial 2개는 아래 중단 인계의 미완성 초안이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` **768항목**(original-x86 731·screenshot 13·source 9·independent 9·cpppj-oracle 5·original-binary 1, 2026-11-15 재집계). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 953·adapt 51·exclude-mp 62·exclude-edit 61·exclude-host 32·exclude-legacy 1, 미분류 0**. 상태: **port 793·partial 35·todo 176·제외(-) 156**, session/oracle 0. 새 partial 2개는 아래 중단 인계의 미완성 초안이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` **770항목**(original-x86 733·screenshot 13·source 9·independent 9·cpppj-oracle 5·original-binary 1, 2026-11-15 재집계). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -274,7 +274,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 
 - [ ] client **Uber 허브** 3단위 3,031줄 — 게임 화면 최상위 Gump와 루트 컨트롤(HUD·덱·미니맵·채팅 창의 실제 소유자). 3.6절 ③의 `UberGump` 행을 함께 판정: UberGump* 2,683, UberRootGump 187, RawUberRootControls 161
 - [ ] client **메뉴·버튼 컨트롤 허브** 6단위 2,650줄 — 모달·등록 소유자·링크/명령 소비자, 게임 버튼 묶음, 문자 입력·채팅 메뉴: RawMenuControls 1,605, RawButtonControls 811, RawMenuHtml 65, RawMenuLoading 11, RawTextEntryControls 110, RawMenuChat 48
-- [ ] client **메인 메뉴·타이틀 상태** 4단위 317줄 — 이미 동작하는 웹 메뉴를 원본 상태 소유자에 맞춘다: NativeMainMenuState 90, NativeIntroState 64, TitleBitmapLifetime 78, ClientTitleBitmaps 85
+- [ ] client **메인 메뉴·타이틀 상태** 4단위 317줄 — 이미 동작하는 웹 메뉴를 원본 상태 소유자에 맞춘다: NativeMainMenuState 90, NativeIntroState 64, TitleBitmapLifetime 78, ClientTitleBitmaps 85 [진행: NativeIntroState 는 [E532](docs/webpj-native-intro-state-20261115.md)(원본 17행 일치), TitleBitmapLifetime 은 [E533](docs/webpj-title-bitmap-lifetime-20261115.md)(원본 33행 일치) 완료, 나머지 둘이 끝나면 이 줄을 체크한다]
 - [ ] **미션 진입 명령 연결** — `MissionBegin`·`StartDemo`·환영 창 명령을 실제 Session 생성에 연결(메뉴 → Fort 요청 → State 전환). `?map=` 개발 화면과 구분한다
 - [ ] **3.8절 허브 선행 fixture** — `chat-callbacks`(30행)·`chat-input-recipients`(721행)·`html-input-dialog` 생성/공장 20행을 허브 조립과 함께 연결
 - [ ] **M2 판정** — Tutorial1 진입 직후·N프레임 뒤 L4a(영어 4:3 → 16:9/16:10 → 한국어), 오라클 시나리오 추가

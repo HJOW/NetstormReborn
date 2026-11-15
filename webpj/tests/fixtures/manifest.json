@@ -14285,6 +14285,64 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
+      "unit": "WB04-E533",
+      "id": "title-bitmap-lifetime",
+      "path": "cpppj/tests/fixtures/title-bitmap-lifetime-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 시작 title 그림 수명 4ab3e0/4ab370/4ab2d0/4b3500. 모드(실행·재그리기·요청)×치수·건너뜀·실패 지점·현재 번호·기존 슬롯 33입력에서 종료 종류·현재·paint 깊이·게임 시각·8칸·장치 호출 전체 순서·next 144BYTE",
+      "consumers": [
+        "webpj/tests/title-bitmap-lifetime.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/title-bitmap-lifetime.js"
+      ],
+      "doc": "docs/webpj-title-bitmap-lifetime-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/TitleBitmapLifetime.cpp"
+      ],
+      "scope": "10.78 33입력 전부",
+      "text": true,
+      "sha256": "8cb6eea07d2556b30fb144bb39ce4314f98b573682cc1bf8dd43536bbad94629",
+      "bytes": 20062,
+      "lines": 34,
+      "fixtureCommit": "c4b8a17d7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/TitleBitmapLifetime.cpp": "c4b8a17d7"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E532",
+      "id": "native-intro-state",
+      "path": "cpppj/tests/fixtures/native-intro-state-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 State 39/40/41/42(004b6e62..004b6fa9) 정상/중단 17입력에서 종료 종류·다섯 144BYTE 상태 블록 전체·fort/server/boss 모드·pending 이름·효과 순서",
+      "consumers": [
+        "webpj/tests/native-intro-state.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/native-intro-state.js"
+      ],
+      "doc": "docs/webpj-native-intro-state-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/NativeIntroState.cpp"
+      ],
+      "scope": "10.78 17입력 전부",
+      "text": true,
+      "sha256": "8a98e71bcc943ee09966340ebf261a1fd97e381d60e9aed18fb9d19ee5f97698",
+      "bytes": 26491,
+      "lines": 18,
+      "fixtureCommit": "1c652cbf5",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/NativeIntroState.cpp": "c4b8a17d7"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
       "unit": "WB04-E531",
       "id": "object-owner-command",
       "path": "cpppj/tests/fixtures/object-owner-command-x86.tsv",
@@ -14305,7 +14363,7 @@
       "bytes": 8898,
       "lines": 257,
       "fixtureCommit": "ffab63a0b",
-      "webCommit": "worktree",
+      "webCommit": "0ba6de1e6",
       "cpppjBasis": {
         "cpppj/src/client/ObjectOwnerCommands.cpp": "ea21e0e8a"
       }
@@ -14334,7 +14392,7 @@
       "bytes": 9264,
       "lines": 257,
       "fixtureCommit": "ea21e0e8a",
-      "webCommit": "worktree",
+      "webCommit": "0ba6de1e6",
       "cpppjBasis": {
         "cpppj/src/client/ObjectOwnerCommands.cpp": "ea21e0e8a"
       }
