@@ -13,7 +13,10 @@ public sealed class BuildingSpaceState
     public uint BridgeType { get; set; }
 
     /// <summary>판본 assert 경계의 진단 출력을 검사할지.</summary>
-    public bool Debug { get; set; }
+    public bool Debug { get => Checking.Read() != 0; set => Checking.Set(value); }
+
+    /// <summary>원문 전체 DWORD 진단 뷰다. 독립 bool 입력과 현재 Client owner를 같은 상태에서 읽는다.</summary>
+    internal RawCheckingFlag Checking { get; set; } = new();
 }
 
 /// <summary>
@@ -21,10 +24,10 @@ public sealed class BuildingSpaceState
 /// 해시 0단계에서 칸의 표면 번호를 찾고, 건물 좌표의 지면이 섬이면 옆면 WORD 의 bit1을 지우고 bit2를 켠다.
 /// Unpop 은 옆면 WORD 의 bit1·bit2를 지운다. 다리 수명 nibble 이 7을 넘기면 진단 모드에서 멈춘다.
 /// Pop·Unpop 의 건물 옆면 연결 지점(<see cref="IRawPopBuildingSide"/>·<see cref="IRawBuildingSide"/>)을 구현한다.
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 표면 شرط·진단 방식이 달라서 옮기지 않았다).
+/// PATCH의 실제 다리 진단과 CD의 효과 없는 NotifySurface를 판본별로 실행한다.
 /// 근거: cpppj/src/o/RawBuildingSpace.cpp (W02 건물 공간 조각, 2026-10-20).
 /// </summary>
-public sealed class RawBuildingSpace : IRawPopBuildingSide, IRawBuildingSide
+public sealed partial class RawBuildingSpace : IRawPopBuildingSide, IRawBuildingSide
 {
     /// <summary>슬롯 안 타입 번호(1바이트)의 위치.</summary>
     private const int TypeOffset = 10;
@@ -61,7 +64,7 @@ public sealed class RawBuildingSpace : IRawPopBuildingSide, IRawBuildingSide
     /// </summary>
     /// <param name="pool">슬롯 풀.</param>
     /// <param name="hash">공간 해시. Pop·Unpop 과 같은 해시여야 한다.</param>
-    /// <param name="types">타입 번호 순서의 타입 레코드. 10.78 은 188개여야 한다.</param>
+    /// <param name="types">타입 번호 순서의 타입 레코드. PATCH188개/CD171개여야 한다.</param>
     /// <param name="state">섬·다리 타입 번호와 진단 여부.</param>
     public RawBuildingSpace(RawSidPool pool, RawSquidHash hash, IReadOnlyList<OriginalTypeRecord> types, BuildingSpaceState state)
     {
@@ -69,8 +72,8 @@ public sealed class RawBuildingSpace : IRawPopBuildingSide, IRawBuildingSide
         ArgumentNullException.ThrowIfNull(hash);
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(state);
-        // CD 10.72(171개)는 표면 판정·진단 방식이 다르므로 받지 않는다
-        if (types.Count != OriginalConstructors.TypeCount
+        // 판본에 맞는 실제 전체 TYPE만 받고 CD 슬롯을 PATCH 배치로 읽지 않는다.
+        if (types.Count != (pool.Edition == OriginalEdition.Patch1078 ? OriginalConstructors.TypeCount : 171)
             || state.IslandType >= (uint)types.Count || state.BridgeType >= (uint)types.Count)
         {
             throw new ArgumentException("건물 공간 타입 표·섬·다리 번호 오류", nameof(types));
@@ -111,7 +114,7 @@ public sealed class RawBuildingSpace : IRawPopBuildingSide, IRawBuildingSide
     public bool HasIsland(float x, float y)
     {
         int sid = Surface(Truncate(x), Truncate(y));
-        return sid != 0 && _pool.Slot(sid)[TypeOffset] == _state.IslandType;
+        return sid != 0 && _pool.Slot(sid)[TypeOffset] == (_currentIslandType?.Invoke() ?? _state.IslandType);
     }
 
     /// <summary>
@@ -169,13 +172,14 @@ public sealed class RawBuildingSpace : IRawPopBuildingSide, IRawBuildingSide
     /// <param name="sid">표면 번호.</param>
     public void NotifySurface(int sid)
     {
+        // CD는 버려지는 포인터 계산뿐이므로 raw 슬롯이나 진단을 읽지 않는다.
+        if (_pool.Edition == OriginalEdition.Cd1072) return;
         ReadOnlySpan<byte> raw = _pool.Slot(sid);
-        // 다리 수명이 7을 넘기면 진단 모드에서 원본처럼 멈춘다
-        if (raw[TypeOffset] == _state.BridgeType && (raw[ExtraOffset] & BuriedBit) == 0
-            && _state.Debug && ((raw[WordOffset] >> 3) & 15) > BridgeLifeMax)
-        {
-            throw new InvalidOperationException("다리 수명 진단: num >= 0 && num <= 7");
-        }
+        uint bridge = _currentBridgeType?.Invoke() ?? _state.BridgeType;
+        if (raw[TypeOffset] != bridge || (raw[ExtraOffset] & BuriedBit) != 0) return;
+        uint number = (uint)(raw[WordOffset] >> 3) & 15;
+        if (_state.Checking.Read() != 0 && number > BridgeLifeMax)
+            (_notifyAssertion ?? throw new InvalidOperationException("지면 통지의 선택된 원문 진단 장치 미연결"))("num >= 0 && num <= 7", "\\Ns\\O\\Bridge.cpp", 0xff);
     }
 
     /// <summary>

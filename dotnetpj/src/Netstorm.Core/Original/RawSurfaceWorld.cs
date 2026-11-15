@@ -203,9 +203,9 @@ public sealed partial class RawSurfaceWorld : IDisposable
         _kernel = _storage.Processes().Kernel();
         _containedUnpop = new RawSquidContainedUnpop(_storage.Pool, new SquidContainedUnpopState
         {
-            ContentFormType = new UIntBox { Value = 6u },
-            GumpFormType = new UIntBox { Value = 3u },
-            UiEvent = new UIntBox { Value = 0x02000039u },
+            ContentFormType = _storage.ContainedType,
+            GumpFormType = _storage.ContainedGumpType,
+            UiEvent = _storage.ContainedUiEvent,
             CheckingDead = _storage.Checking(),
             InMetamapMode = () => _storage.OwnerMode.Challenge,
             Boss = () => _storage.Authority().Boss,
@@ -218,7 +218,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
                 (_runtime?.ContentNotice ?? throw new InvalidOperationException("현재 World의 실제 내용물 부모 파생 통지 미연결"))(selected, content, code)).Notice(parent, form, reason),
             Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
         });
-        bool coreTypesReady = prepared || _types.Count == OriginalConstructors.TypeCount;
+        bool coreTypesReady = prepared || (_edition == OriginalEdition.Patch1078 && _types.Count == OriginalConstructors.TypeCount);
         // 원문처럼 Graph를 표시 대여보다 먼저 구성해 실패한 Graph가 표시 실행기를 남기지 않게 한다.
         if (coreTypesReady)
         {
@@ -241,8 +241,12 @@ public sealed partial class RawSurfaceWorld : IDisposable
 
         if (coreTypesReady)
         {
-            _unpop = new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots, _display);
-            _factory = new RawSquidFactory(_storage.Pool, _types, false, _unpop);
+            _buildingState.IslandType = _terrainType;
+            _buildingState.BridgeType = _storage.Links.BridgeType;
+            bool sharedSpace = _display is not null && _storage.Types.Count == _types.Count;
+            if (sharedSpace) _storage.BindContainedUnpop(_containedUnpop);
+            _unpop = sharedSpace ? _storage.UnpopExecutor() : new RawUnpop(_storage.Pool, _storage.Hash, _storage.Spots, _display);
+            _factory = _storage.Types.Count == _types.Count ? _storage.FactoryExecutor() : new RawSquidFactory(_storage.Pool, _types, false, _unpop);
             BindFactoryRuntime();
             if (_frames.Count == _types.Count)
             {
@@ -262,9 +266,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
                 });
             }
             _baseDestroy = new RawSquidDestroy(_storage.Pool, _unpop, _types);
-            _buildingState.IslandType = _terrainType;
-            _buildingState.BridgeType = _storage.Links.BridgeType;
-            _building = new RawBuildingSpace(_storage.Pool, _storage.Hash, _types, _buildingState);
+            _building = sharedSpace ? _storage.BuildingExecutor() : new RawBuildingSpace(_storage.Pool, _storage.Hash, _types, _buildingState);
             _postPop = new RawPostPop(_storage.Pool, _types, _bookkeeping, _graph, sid => BridgeConnections().Connect(sid));
             // 순환하는 실제 접두는 모든 모듈 생성 뒤 선택될 때만 현재 몸체를 조회한다.
             _postPop.SetIslandPrefix((sid, flags) => BridgeConnections().IslandPostPopPrefix(sid, flags));
@@ -454,7 +456,10 @@ public sealed partial class RawSurfaceWorld : IDisposable
         catch
         {
             // 생성자 실패의 RAII 꼬리다. 이미 수행한 게임 값은 되돌리지 않고 같은 대여만 반납한다.
-            _processUse?.Dispose(); _processUse = null; ReleaseStorageDisplay(); _storageUse.Dispose(); throw;
+            _processUse?.Dispose(); _processUse = null;
+            if (_factoryRuntime is { } failedRuntime) { _factory!.ReleaseRuntime(failedRuntime); _factoryRuntime = null; }
+            if (_containedUnpop is not null) _storage.ReleaseContainedUnpop(CurrentContainedUnpop());
+            ReleaseStorageDisplay(); _storageUse.Dispose(); throw;
         }
     }
 
@@ -957,6 +962,7 @@ public sealed partial class RawSurfaceWorld : IDisposable
         }
 
         _sessionContainedUnpop = binding is null ? null : new WeakReference<RawSquidContainedUnpop>(binding);
+        if (_storage.Types.Count == _types.Count && _display is not null) _storage.BindContainedUnpop(binding ?? _containedUnpop);
     }
 
     /// <summary>같은 저장소를 사용하는 자산·Regular·Form 전송·낙하·로딩 경계를 설치한다. 미연결 콜백은 생략하지 않는다.</summary>

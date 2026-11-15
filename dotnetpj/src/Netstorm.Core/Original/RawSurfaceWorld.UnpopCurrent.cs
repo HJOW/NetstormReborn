@@ -8,6 +8,8 @@ public sealed partial class RawSurfaceWorld
     private void BindCurrentUnpop()
     {
         RawUnpop unpop = _unpop ?? throw new InvalidOperationException("현재 Unpop 부모 미연결");
+        // 장기 실행기는 Storage 진단/현재 종단을 유지하며 짧은 World 콜백을 보관하지 않는다.
+        if (_storage.Types.Count == _types.Count && _display is not null) return;
         unpop.BindDiagnostics(new() { Types = _types, Checking = _storage.Checking(), Assertion = _storage.AssertDisplay });
         unpop.BindContainedUnpop(sid => CurrentContainedUnpop().Unpop(sid));
     }

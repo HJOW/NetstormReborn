@@ -19,7 +19,7 @@ public sealed partial class RawSurfaceWorld
             Trace = _storage.TraceGraph, Assertion = _storage.AssertDisplay,
         });
         RawSquidFactory factory = _factory ?? throw new InvalidOperationException("현재 전송 HP 공장 미연결");
-        factory.BindDiagnostics(new SquidFactoryDiagnostics
+        if (_storage.Types.Count != _types.Count) factory.BindDiagnostics(new SquidFactoryDiagnostics
         {
             Types = _types, Checking = _storage.Checking(), Assertion = _storage.AssertDisplay,
             Detail = _storage.RecordAssertionDetail,

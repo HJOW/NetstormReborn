@@ -306,7 +306,7 @@ cpppj/src/o/RawBridgeConnect.cpp	Netstorm.Core/Original/RawBridgeConnect.cs	0c06
 cpppj/src/o/RawBridgeConnect.h	Netstorm.Core/Original/RawBridgeConnect.cs	db8969da1348ceef52157cc341f52290fb504fa3	L1
 cpppj/src/o/RawBridgeEvents.cpp	Netstorm.Core/Original/RawBridgeEvent.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
 cpppj/src/o/RawBridgeLifecycle.cpp	Netstorm.Core/Original/RawBridgeLifecycle.cs	cff1c70c7ba3a193e612f8cd85e26627cdeab8db	L1
-cpppj/src/o/RawBuildingSpace.cpp	Netstorm.Core/Original/RawBuildingSpace.cs	f95a8db28ceae6c036fa0d65c1f7626bcc0c31a3	L1
+cpppj/src/o/RawBuildingSpace.cpp	Netstorm.Core/Original/RawBuildingSpace.cs	fecfb68486e8fc7e9cfefe592d19db6896ab088f	L1
 cpppj/src/o/RawCanonPlacement.h	Netstorm.Core/Original/RawCanonPlacement.cs	a5101d897cce87a26b68aefbb6d57f2427e10d91	L1
 cpppj/src/o/RawCanonPlacementGeometry.h	Netstorm.Core/Original/RawCanonPlacementGeometry.cs	6af09bc8d04543a1ac767a93d5c32f80b699736a	L1
 cpppj/src/o/RawCanonPlacementTerrain.cpp	Netstorm.Core/Original/RawCanonPlacementTerrain.cs	6e7fdd37215c74fa8e599729e8e0757ba514272c	L1
@@ -932,3 +932,7 @@ cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Display.cs	88103f8d8cd8aca6e6ee97de77cf66ae39d05762	port
 cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.Display.cs	88103f8d8cd8aca6e6ee97de77cf66ae39d05762	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceWorld.Display.cs	88103f8d8cd8aca6e6ee97de77cf66ae39d05762	port
+cpppj/src/o/RawBuildingSpace.cpp	Netstorm.Core/Original/RawBuildingSpace.Current.cs	fecfb68486e8fc7e9cfefe592d19db6896ab088f	port
+cpppj/src/o/RawBuildingSpace.h	Netstorm.Core/Original/RawBuildingSpace.Current.cs	fecfb68486e8fc7e9cfefe592d19db6896ab088f	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Creation.cs	fecfb68486e8fc7e9cfefe592d19db6896ab088f	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Creation.cs	fecfb68486e8fc7e9cfefe592d19db6896ab088f	port

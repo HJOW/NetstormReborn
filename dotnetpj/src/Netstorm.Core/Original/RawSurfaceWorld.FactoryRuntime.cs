@@ -11,14 +11,14 @@ public sealed partial class RawSurfaceWorld
     private void BindFactoryRuntime()
     {
         _factory!.BindFakeSurfaceType(_storage.GameAux().FakeSurfaceTypeBox);
-        _factoryRuntime = new()
+        var runtime = new SquidFactoryRuntimeBindings
         {
             Unpop = _unpop,
             FormDetach = sid => CurrentContainedUnpop().Detach(sid),
             ContentType = () => CurrentContainedUnpop().ContentFormType(),
             FormTransmit = (sid, flags) => (_runtime?.FormTransmit ?? throw new InvalidOperationException("현재 공통 Form Pop 전송 미연결"))(sid, flags),
         };
-        _factory!.BindRuntime(_factoryRuntime);
+        _factory!.BindRuntime(runtime); _factoryRuntime = runtime;
     }
 
     /// <summary>그때 살아 있는 실제 Session 종단을 선택하고 반납 뒤 같은 World 기본 종단으로 돌아간다.</summary>
