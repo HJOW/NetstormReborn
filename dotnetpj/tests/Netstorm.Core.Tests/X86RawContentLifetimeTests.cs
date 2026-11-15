@@ -147,7 +147,7 @@ public sealed class X86RawContentLifetimeTests
             }
             State = new ContentLifetimeState
             {
-                Cursor = cursor,
+                Cursor = unchecked((uint)cursor),
                 NuggetType = 154,
                 LocalOwner = owner,
                 Notice = 0x1234,

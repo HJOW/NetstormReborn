@@ -1,3 +1,6 @@
+using System.Buffers.Binary;
+
+// 같은 현재 owner와 가상표를 사용하는 Content 삭제 수명을 담는다.
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -6,8 +9,8 @@ namespace Netstorm.Core.Original;
 /// </summary>
 public sealed class ContentLifetimeState
 {
-    /// <summary>잡고 있는 내용물 번호(원본 패치 0055a2a8 / CD 0051b658). 0 이면 없음.</summary>
-    public int Cursor { get; set; }
+    /// <summary>0055a2a8/CD0051b658의 현재 커서 전체 DWORD다. 내용물 SID와 비교할 때 상위 WORD도 유지한다.</summary>
+    public uint Cursor { get; set; }
 
     /// <summary>너겟 종류 WORD(+18)와 비교하는 현재 타입 번호(원본 패치 005412c0). 기본 154.</summary>
     public uint NuggetType { get; set; } = 154;
@@ -25,7 +28,25 @@ public sealed class ContentLifetimeState
     /// 실제 세션이 현재 커서를 매 삭제 시 읽게 하는 경계. null 이면 <see cref="Cursor"/> 값형 입력을 쓴다
     /// (미연결 fixture 는 값형 입력만 쓴다).
     /// </summary>
-    public Func<int>? CurrentCursor { get; set; }
+    public Func<uint>? CurrentCursor { get; set; }
+
+    /// <summary>같은 Client의00540c70 전체 DWORD를 빌리는 owner다.</summary>
+    public UIntBox? SharedLocalOwner { get; set; }
+
+    /// <summary>커서 취소와 같은 실제 Client 권한의 현재값을 읽는다.</summary>
+    public Func<bool>? SharedBoss { get; set; }
+
+    /// <summary>005412c0의 같은 장기 너겟 타입 DWORD다. 알림과 지갑 뒤 다시 읽는다.</summary>
+    public UIntBox? SharedNuggetType { get; set; }
+
+    /// <summary>실제 장기 owner가 있으면 현재 전체 로컬 소유자를 읽고 독립 입력은 값형 필드를 사용한다.</summary>
+    public uint ReadLocalOwner() => SharedLocalOwner?.Value ?? LocalOwner;
+
+    /// <summary>중첩 커서 취소 뒤 실제 현재 권한을 읽는다.</summary>
+    public bool ReadBoss() => SharedBoss?.Invoke() ?? Boss;
+
+    /// <summary>현재 kind 비교와 각 비용 조회가 같은 장기 너겟 타입을 사용한다.</summary>
+    public uint ReadNuggetType() => SharedNuggetType?.Value ?? NuggetType;
 }
 
 /// <summary>
@@ -59,8 +80,8 @@ public sealed class ContentLifetimeHooks
 /// 순서는 원본 그대로 "커서 취소 검사 → 너겟 효과 → 공통 pre 깊이 반납"이며, 삭제 본체는 같은 공통 삭제기를 쓴다.
 /// 너겟 효과는 "로컬/원격 수입 알림 → 선지급 AI 지갑 → 현재 소유자·비용 재조회 뒤 SP 가산 → 위치 소리" 순서이고,
 /// 모든 콜백 사이에서 부모 소유자·타입 비용·로컬 소유자를 다시 읽는다.
-/// 기준 판본은 10.78 뿐이다(CD 10.72 는 공통 깊이 반납만 하고 너겟 효과가 없어서 옮기지 않았다).
-/// 근거: cpppj/src/o/ContentFormLifetime.cpp (W03 내용물 수명 조각, 2026-10-23).
+/// PATCH는 너겟 효과를 실행하고 CD는 커서 검사와 공통 깊이 반납만 실행한다.
+/// 근거: cpppj/src/o/ContentFormLifetime.cpp/.h의 현재 몸체. 실제 NativeStorage 장기 연결은 별도 작업이다.
 /// </summary>
 public sealed class RawContentLifetime
 {
@@ -129,10 +150,10 @@ public sealed class RawContentLifetime
 
     /// <summary>
     /// 내용물 수명을 만든다. 풀·타입 표·Form·삭제 처리기는 이 객체보다 오래 살아야 한다.
-    /// 서로 다른 풀의 모듈이나 10.78 이 아닌 타입 표는 쓰기 전에 거부한다.
+    /// 서로 다른 풀의 모듈이나 해당 판본과 길이가 다른 타입 표는 쓰기 전에 거부한다.
     /// </summary>
     /// <param name="pool">내용물 슬롯을 가진 풀.</param>
-    /// <param name="types">10.78 타입 표(188개). 콜백이 바꾼 값을 읽으므로 복사하지 않는다.</param>
+    /// <param name="types">판본별 TYPE 표(PATCH188·CD171)다. 콜백이 바꾼 비용·발자국을 읽으므로 복사하지 않는다.</param>
     /// <param name="forms">ContentForm 처리기. 같은 풀이어야 한다.</param>
     /// <param name="destroy">공통 삭제 본체. 같은 풀이어야 한다.</param>
     /// <param name="state">삭제 중 효과가 갱신하는 전역.</param>
@@ -154,17 +175,19 @@ public sealed class RawContentLifetime
         {
             throw new ArgumentException("Content 수명 SID 풀 불일치", nameof(pool));
         }
-        if (types.Count != OriginalConstructors.TypeCount)
+        int expected = pool.Edition == OriginalEdition.Patch1078 ? 188 : 171;
+        if (types.Count != expected)
         {
-            throw new ArgumentException($"Content 수명 타입 표가 {types.Count}개입니다 (10.78 은 {OriginalConstructors.TypeCount}개)", nameof(types));
+            throw new ArgumentException($"Content 수명 타입 판본/크기 오류: {types.Count}/{expected}", nameof(types));
         }
         _pool = pool;
         _types = types;
         _forms = forms;
         _destroy = destroy;
         _state = state;
-        _hooks = hooks;
-        _fallback = fallback ?? new SquidDestroyHooks();
+        // C++ 값 인자의 함수 사본을 보관하고 대리자가 빌리는 현재 owner 값은 계속 공유한다.
+        _hooks = new() { CancelCursor = hooks.CancelCursor, LocalNotice = hooks.LocalNotice, RemoteNotice = hooks.RemoteNotice, Wallet = hooks.Wallet, AddSp = hooks.AddSp, Sound = hooks.Sound };
+        _fallback = fallback is null ? new() : new() { Emit = fallback.Emit, Selected = fallback.Selected, SelectedRaw = fallback.SelectedRaw, UnpopForm = fallback.UnpopForm };
         _reward = reward;
     }
 
@@ -172,15 +195,15 @@ public sealed class RawContentLifetime
     public RawSidPool Pool => _pool;
 
     /// <summary>
-    /// ContentForm 타입 6 인지 확인한다. 반납된(dead) 슬롯도 타입 번호를 보존하므로 참일 수 있으며,
-    /// 실제 필드 접근은 각 분기가 free 를 따로 검사한다.
+    /// 사용중/dead 슬롯은 현재 Content 가상표로 판정하고 free 슬롯은 기존 타입 기록 조회 계약을 유지한다.
     /// </summary>
     /// <param name="form">확인할 Form 번호.</param>
     public bool IsContentForm(int form)
     {
-        // 범위·예측 머리 밖은 원본처럼 내용물이 아니다
-        return form >= FirstOrdinary && form < _pool.Capacity && form != RawSidPool.PredictableFirst
-            && _pool.Slot(form)[TypeOffset] == ContentType;
+        if (form < FirstOrdinary || form >= _pool.Capacity || form == RawSidPool.PredictableFirst) return false;
+        ReadOnlySpan<byte> raw = _pool.Slot(form);
+        if ((raw[StateOffset] & FreeBit) != 0) return raw[TypeOffset] == ContentType;
+        return BinaryPrimitives.ReadUInt32LittleEndian(raw) == (_pool.Edition == OriginalEdition.Patch1078 ? 0x512208u : 0x505b00u);
     }
 
     /// <summary>정렬되지 않은 WORD 를 리틀 엔디언으로 읽는다.</summary>
@@ -199,11 +222,11 @@ public sealed class RawContentLifetime
     /// <summary>효과마다 현재 전역 타입 번호로 현재 비용을 다시 읽는다.</summary>
     private float Cost()
     {
-        if (_state.NuggetType >= _types.Count)
+        if (_state.ReadNuggetType() >= _types.Count)
         {
-            throw new ArgumentOutOfRangeException(nameof(_state), _state.NuggetType, "Content 너겟 타입 번호 오류");
+            throw new ArgumentOutOfRangeException(nameof(_state), "Content 너겟 타입 번호 오류");
         }
-        float cost = _types[(int)_state.NuggetType].Cost;
+        float cost = _types[(int)_state.ReadNuggetType()].Cost;
         if (!float.IsFinite(cost))
         {
             throw new ArgumentException("Content 너겟 비용 유한값 필요");
@@ -255,7 +278,7 @@ public sealed class RawContentLifetime
         {
             throw new InvalidOperationException("Content preDestroy 슬롯 오류");
         }
-        int cursor = _state.CurrentCursor is not null ? _state.CurrentCursor() : _state.Cursor;
+        uint cursor = _state.CurrentCursor is not null ? _state.CurrentCursor() : _state.Cursor;
         if (cursor == form || Word(form, ParentOffset) == form)
         {
             if (_hooks.CancelCursor is null)
@@ -265,7 +288,7 @@ public sealed class RawContentLifetime
             _hooks.CancelCursor();
         }
         // 콜백이 바꾼 현재 종류·부모·소유자를 이후 분기에서 다시 읽는다
-        if ((uint)Word(form, KindOffset) == _state.NuggetType)
+        if (_pool.Edition == OriginalEdition.Patch1078 && (uint)Word(form, KindOffset) == _state.ReadNuggetType())
         {
             int parent = Word(form, ParentOffset);
             if (parent == 0 || parent >= _pool.Capacity)
@@ -274,7 +297,7 @@ public sealed class RawContentLifetime
             }
             if ((_pool.Slot(parent)[StateOffset] & DeadBit) == 0)
             {
-                if (Owner(parent) == _state.LocalOwner)
+                if (Owner(parent) == _state.ReadLocalOwner())
                 {
                     if (_hooks.LocalNotice is null)
                     {
@@ -282,7 +305,7 @@ public sealed class RawContentLifetime
                     }
                     _hooks.LocalNotice(_state.Notice);
                 }
-                else if (_state.Boss)
+                else if (_state.ReadBoss())
                 {
                     if (_hooks.RemoteNotice is null)
                     {
@@ -309,7 +332,7 @@ public sealed class RawContentLifetime
                     // 지갑 콜백 뒤 현재 소유자·비용·로컬 소유자를 다시 읽어 정확한 SP 가산 경로를 고른다
                     uint owner = Owner(parent);
                     float cost = Cost();
-                    bool local = owner == _state.LocalOwner;
+                    bool local = owner == _state.ReadLocalOwner();
                     if (_reward is not null)
                     {
                         _reward.AddSp(owner, cost);
