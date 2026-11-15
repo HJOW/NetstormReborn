@@ -23504,9 +23504,38 @@
       "bytes": 192525,
       "lines": 906,
       "fixtureCommit": "ffb4a819e",
-      "webCommit": "worktree",
+      "webCommit": "62afe58fb",
       "cpppjBasis": {
         "cpppj/src/client/RawPriestMenu.cpp": "a550c7f0f"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E541",
+      "id": "object-menu",
+      "path": "cpppj/tests/fixtures/object-menu-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 두 판본(originals 10.78·originalCD 10.72)의 객체 메뉴 세 몸체 base(004b1270)·damage(0044cbd0)·salvage(0044ca00) 각 478입력(판본당 239)에서 소유자·로컬·타입·모드·금지·flags2·비용·환불·개수·HP·콜백 변경 조합의 전체 효과 호출 순서",
+      "consumers": [
+        "webpj/tests/raw-object-menu.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-object-menu.js"
+      ],
+      "doc": "docs/webpj-raw-object-menu-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawObjectMenu.cpp"
+      ],
+      "scope": "10.78(originals) 717입력(base 239·damage 239·salvage 239) 사용, CD 10.72 판본 717입력은 웹 범위 밖",
+      "text": true,
+      "sha256": "dc3b598f70f9d1ad1733e2633534c080ad127dc3d5cc6e3af1c2bc9b0e0bc047",
+      "bytes": 299286,
+      "lines": 1435,
+      "fixtureCommit": "989d1345d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawObjectMenu.cpp": "c551d159d"
       }
     }
   ]

@@ -403,7 +403,7 @@ cpppj/src/client/RawNormalTerrainWorldBinding.cpp	port	www/core/raw-normal-terra
 cpppj/src/client/RawNsInfoContext.h	port			todo	[client-default]
 cpppj/src/client/RawObjectDump.cpp	exclude-host			-	[host-dev-files]
 cpppj/src/client/RawObjectHit.cpp	port	www/core/raw-object-hit.js	1f00a25a	port	[client-default] WB04-E408: 픽셀 선택498000의 첫TYPE·가상+78 재호출/-1·현재raw·물리SHP frameCheck/HP·signed카메라·opaque/200원색255·plain/+a4 순서. 원본 object-hit608행 반환/전체사건/40000BYTE Adler/raw불변 첫 대조 일치, guard/재진입 헤더·상대점 보존 포함3건 통과. 실제 공중3종 생성/검사 없음. 기준선 뒤 변경 없음. 남음:83VT 표와 RawCampaignFactoryDisplay/선택 입력/Session 연결
-cpppj/src/client/RawObjectMenu.cpp	port			todo	[client-default]
+cpppj/src/client/RawObjectMenu.cpp	port	www/core/raw-object-menu.js	225553df	port	[client-default] WB04-E541: 원문 10.78 004b1270 객체 메뉴(편집 Destroy·치트 세 항목·도움말·SetOwner·소유자 Player 하위 메뉴)·0044cbd0 Damageable 메뉴(raw 타입 snapshot 뒤 가상 개수→회수)·0044ca00 회수 항목(비용/flags2 조건·음수 환불 부호 반전·금지·설정 쓰기·Vortex/Inf·생략 타입)과 컨트롤/설정/Identity 연결. 원본 10.78 관측 object-menu 717입력(base/damage/salvage 각 239) 전부 첫 실행 대조 + 번역 NUL/한도·현재 전역 getter 우선 계약, 변형 26종 확인, tests/raw-object-menu.test.mjs. 기준선 뒤 cpppj 변경 없음. CD 10.72 분기는 웹 범위 밖.
 cpppj/src/client/RawObjectMenuInfo.cpp	port			todo	[client-default]
 cpppj/src/client/RawObjectMenuOpen.cpp	port			todo	[client-default]
 cpppj/src/client/RawObjectMenuSlots.cpp	port	www/render/object-menu-slots.js	1f00a25a	port	[client-default] WB04-E447 RawObjectMenuSlots: objectMenuSlots(vtable) — raw VT 값(부호 없는 32비트로 정규화)을 83개 표에서 직접 찾고 미등록 VT 는 임의 기본 메뉴로 바꾸지 않고 RangeError. 전용 PE fixture 없음; 기준선 뒤 변경 없음
