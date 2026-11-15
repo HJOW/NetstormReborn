@@ -11,6 +11,7 @@
 //  - createAi(...): 아래 RawAiCreate 가 PATCH 00417e50 의 색 변경 → 기존 brain → NoTemple → 실제 생성 → 부착 → 초기 갱신 순서를 감싼다.
 // 10.72(CD)는 범위 밖이다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-09 WB04-E164: AI 본체 생성/소멸 이식으로 추가)
 import { MISSION_AI_SETTINGS_SIZE } from './raw-mission-ai-settings.js';
+import { AiDifficulty, aiDifficultyFromValue, applyAiDifficulty, sanitizeAiForcedEnemy } from './ai-difficulty.js';
 
 // 원본 −10000.0f 비트, 실제 본체 크기, Player 한 기록 폭과 첫 지역 위치, 9기록 크기, 방향별 동맹표 칸 수이다. (2026-11-09 WB04-E164)
 const UNSET = 0xc61c4000;
@@ -254,7 +255,8 @@ export class RawAiCreate {
     #players;
     #hooks;
 
-    // 같은 현재 Player 기록의 참여/수명 처리기와 hooks = { changeColor(owner, color), firstRegion(owner), islandTemple(region), destroyTemple(temple, flags), construct(owner, settings, bytes)→token, initialUpdate(token, settings) } 를 빌린다. (2026-11-09 WB04-E164)
+    // 같은 현재 Player 기록의 참여/수명 처리기와 hooks = { changeColor(owner, color), firstRegion(owner), islandTemple(region), destroyTemple(temple, flags), construct(owner, settings, bytes)→token, initialUpdate(token, settings),
+    // difficulty?(owner, 정리된 600바이트 설정)→저장값 1 쉬움/2 보통/3 어려움(11차, 선택 사항) } 를 빌린다. (2026-11-09 WB04-E164)
     constructor(players, hooks) {
         if (!players) throw new TypeError('AiCreate 참여 처리기 누락');
         this.#players = players;
@@ -280,10 +282,17 @@ export class RawAiCreate {
         // 공급 누락으로 부착만 성공하지 않게 두 큰 몸체를 생성 전에 확인한다.
         require(hooks.construct, 'AI 실제 생성자 00416860 미복원');
         require(hooks.initialUpdate, 'AI 실제 초기 갱신 00414710 미복원');
-        const brain = hooks.construct(owner, settings, AI_BRAIN_BYTES);
+        // 10차 NB10: 강제 적 번호가 범위 밖이거나 자기 자신이면 자동 선택(0)으로 정리한 사본을 쓴다. (2026-11-15 WB04-E555)
+        let adjusted = sanitizeAiForcedEnemy(settings, owner) ?? settings;
+        // 11차: 보통이 아니면 정리 뒤 설정의 사본에 난이도 배율을 적용해 생성자와 초기 갱신에 같은 값을 넘긴다(입력 설정은 바꾸지 않는다). (2026-11-15 WB04-E555)
+        if (typeof hooks.difficulty === 'function') {
+            const level = aiDifficultyFromValue(hooks.difficulty(owner, adjusted));
+            if (level !== AiDifficulty.Normal) adjusted = applyAiDifficulty(adjusted, level);
+        }
+        const brain = hooks.construct(owner, adjusted, AI_BRAIN_BYTES);
         if (!brain) throw new Error('AI 실제 생성 소유자가 NULL 을 반환했습니다');
         this.#players.attachBrain(owner, brain);
-        hooks.initialUpdate(brain, settings);
+        hooks.initialUpdate(brain, adjusted);
         return brain;
     }
 }
