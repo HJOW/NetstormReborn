@@ -23388,7 +23388,7 @@
       "bytes": 1681,
       "lines": 44,
       "fixtureCommit": "c148400ba",
-      "webCommit": "worktree",
+      "webCommit": "0c7bd2272",
       "cpppjBasis": {
         "cpppj/src/client/GameMenuCommands.cpp": "8defb347c"
       }
@@ -23417,7 +23417,7 @@
       "bytes": 1836,
       "lines": 22,
       "fixtureCommit": "35df08ace",
-      "webCommit": "worktree",
+      "webCommit": "0c7bd2272",
       "cpppjBasis": {
         "cpppj/src/client/GameMenuCommands.cpp": "8defb347c"
       }
@@ -23446,9 +23446,38 @@
       "bytes": null,
       "lines": null,
       "fixtureCommit": "8defb347c",
-      "webCommit": "worktree",
+      "webCommit": "0c7bd2272",
       "cpppjBasis": {
         "cpppj/src/client/GameMenuCommands.cpp": "8defb347c"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E539",
+      "id": "game-menu-bar",
+      "path": "cpppj/tests/fixtures/game-menu-bar-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 가로 Game 메뉴막대 004cc210. editor/battle/cheat/mission/검산/기술 도움말/폭/Left/변형 9 DWORD 510입력에서 최종 검산 DWORD·생성순번·하위/번역/항목/폭/부착 전체 호출 순서",
+      "consumers": [
+        "webpj/tests/raw-game-menu-bar.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-game-menu-bar.js"
+      ],
+      "doc": "docs/webpj-raw-game-menu-bar-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawGameMenuBar.cpp"
+      ],
+      "scope": "10.78 510행 전부",
+      "text": true,
+      "sha256": "0a12386528be30938374d8f99124f07fbe5d4a5bbce848363762e9bb76bdcc94",
+      "bytes": 282658,
+      "lines": 511,
+      "fixtureCommit": "5adcf532b",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawGameMenuBar.cpp": "5adcf532b"
       }
     }
   ]
