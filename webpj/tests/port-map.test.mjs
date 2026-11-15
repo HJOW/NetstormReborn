@@ -115,6 +115,29 @@ test('이식 대응표: 기존 웹 모듈 대응과 3.6절 판정 기록', () =>
     assert.equal(reviewedBase('cpppj/src/platform/Utf8Path.cpp', map), null);
 });
 
+// 새 기준선에 등록한 기존 이식분과 아직 데이터만 있는 시간 동기화를 구분한다. (2026-11-15 WB04-E514)
+test('이식 대응표: 기존 모듈 재판정과 시간 동기화 부분 이식', () => {
+    const expected = {
+        'client/ClientHelpWord': ['www/core/client-help-word.js', 'port'],
+        'client/ClientTimeSource': ['www/core/client-time-source.js', 'port'],
+        'client/SystemNewsTime': ['www/core/system-news-time.js', 'port'],
+        'o/RawClockSynchronization': ['www/core/raw-clock-synchronization.js', 'partial'],
+        'o/RawDaisDeletion': ['www/core/raw-dais-deletion.js', 'port'],
+        'o/RawFactoryRegular': ['www/core/raw-factory-regular.js', 'port'],
+        'o/RawPacketCopy': ['www/core/raw-packet-copy.js', 'port'],
+        'o/RawResidenceRegular': ['www/core/raw-residence-regular.js', 'port'],
+        'o/RawRitualRegular': ['www/core/raw-ritual-regular.js', 'port'],
+    };
+    // 각 행은 현재 기준선으로 검토한 웹 모듈과 정확한 상태를 갖는다.
+    for (const [key, [web, status]] of Object.entries(expected)) {
+        const row = map.rows.find((item) => unitKey(item.cpp) === key);
+        assert.ok(row, key);
+        assert.deepEqual([row.web, row.status], [web, status], key);
+        assert.match(row.base, /^[0-9a-f]{8}$/, key);
+        assert.match(row.note, /WB04-E514/, key);
+    }
+});
+
 // 완전성: 기준선 단위와 행이 일대일이고 모든 웹 모듈이 대응된다(git 기록이 있을 때).
 test('이식 대응표: 기준선 단위 완전성과 웹 모듈 대응', { skip: !hasBaseline() && `git 기록에 기준선 ${BASELINE} 없음` }, () => {
     const units = listUnits();
