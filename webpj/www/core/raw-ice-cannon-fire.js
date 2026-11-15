@@ -6,9 +6,10 @@
 //    참이면 `|0x4000`(다음 칸이 끝이고 active 일 때만)을 붙여 돌려준다.
 //  - frame(fields): 같은 467330 공통 추적/공간/발사/완료를 쓰되 가상 step 만 위 step 이다. launch(fields): 공통 발사의 같은 투사체 생성(아이스 표시/속도 getter 는 state 가 담는다).
 //  - IceCannonFireProcess(SquidProcess): Kernel 슬롯 프로세스이다. runFrame 은 frame, onAttached 는 Form/Parent 기록.
-// 훅 iceHooks = { cooling(sid), context(sid)→8 DWORD 배열, mayTarget(context, target)→bool } 는 도달한 지점에서만 요구한다. 실제 GunProcess 연결(MakeIceCannonFireHostHooks/CreateIceCannonFire)은 RawGunProcess 이식 뒤로 둔다.
+// 훅 iceHooks = { cooling(sid), context(sid)→8 DWORD 배열, mayTarget(context, target)→bool } 는 도달한 지점에서만 요구한다. 실제 GunProcess 생성·완료 수명은 아래 Host 어댑터로 연결한다(WB04-E566).
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E114: RawIceCannonFire 이식으로 추가)
 import { SquidProcess } from './squid-process.js';
+import { GunProcess } from './raw-gun-process.js';
 import { GunAnimationFields } from './raw-gun-animation.js';
 import { RawCannonFire, readField, writeField } from './raw-cannon-fire.js';
 
@@ -148,4 +149,38 @@ export class IceCannonFireProcess extends SquidProcess {
 
     // 관찰/전송은 같은 실제 객체 상태를 사용한다. (2026-11-08 WB04-E114)
     get fields() { return this.#fields; }
+}
+
+// 아이스 발사 완료를 현재 GunProcess에 통지하고 같은 Host의 실제 발사 Form을 지운다. (2026-11-16 WB04-E566)
+export function makeIceCannonFireHostHooks(host, hooks = {}) {
+    return { ...hooks,
+        // 현재 Form의 실제 Gun을 찾아 원문 완료 인수를 전달한다.
+        notify: (form, event, info, value) => {
+            // 현재 Form이 가리키는 실제 GunProcess이다.
+            const gun = host.fromForm(form);
+            if (!(gun instanceof GunProcess)) throw new Error('아이스 발사 완료 GunProcess 없음');
+            gun.notify(event, info, value);
+        },
+        // 지정한 파생 프로세스만 현재 Host에서 삭제한다.
+        kill: (form, flags) => {
+            // 현재 아이스 발사 프로세스이다.
+            const fire = host.fromForm(form);
+            if (!(fire instanceof IceCannonFireProcess)) throw new Error('아이스 발사 완료 Process 없음');
+            host.kill(fire, flags);
+        },
+    };
+}
+
+// 현재 아이스 캐논 TYPE의 실제 Gun 부모에 발사 프로세스를 flags0x10으로 부착한다. (2026-11-16 WB04-E566)
+export function createIceCannonFire(host, logic, gunForm, target) {
+    if (host.pool !== logic.pool) throw new Error('아이스 발사 Host/Pool 불일치');
+    // 현재 Form이 가리키는 실제 GunProcess이다.
+    const gun = host.fromForm(gunForm);
+    if (!(gun instanceof GunProcess) || host.pool.slot(gun.parent)[10] !== logic.type) throw new Error('아이스 발사 factory 부모 오류');
+    // 생성자가 채우고 Host가 Form/부모를 확정할 필드 이미지이다.
+    const fields = new IceCannonFireFields();
+    logic.initialize(fields, gunForm, target);
+    // 현재 파생 애니메이션 또는 실제 부착 결과이다.
+    const animation = host.attach(new IceCannonFireProcess(logic, fields), host.animationProcessType(true), gun.parent, 0x10);
+    return animation instanceof IceCannonFireProcess ? animation : null;
 }

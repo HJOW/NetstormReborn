@@ -6,8 +6,10 @@
 //  - launch(fields): live HP 표적일 때만 arrow Missile 요청(속도 35·표시 81·효과 0·포구 -10000,-10000)을 훅에 넘긴다(생성 경계가 없으면 성공으로 우회하지 않고 거부). 요청의 현재 필드/전역은 표적점 훅 뒤에 다시 읽는다.
 //  - CrossbowAnimationProcess(SquidProcess): Kernel 슬롯 프로세스이다. runFrame 은 frame, onAttached 는 Form/Parent 기록.
 // state(CrossbowAnimationState)와 animationTypes[type]={directions,frameCount} 는 호출 시점에 읽는다. 훅 { center, targetPoint, unpop, repop, createProjectile, notify, kill } 는 도달한 지점에서만 요구한다.
-// 실제 GunProcess 연결(MakeCrossbowAnimationHostHooks/CreateCrossbowAnimation)은 RawGunProcess 이식 뒤로 둔다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E116: RawCrossbowAnimation 이식으로 추가)
+// 실제 GunProcess 생성·완료 수명은 아래 Host 어댑터로 연결한다(WB04-E566). 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E116: RawCrossbowAnimation 이식으로 추가)
 import { SquidProcess } from './squid-process.js';
+import { GunProcess } from './raw-gun-process.js';
+import { GunAnimationFields } from './raw-gun-animation.js';
 
 // 필드 위치(Form/Parent/위치/중심/내장 표/dirty/건/표적/시각/원위치)이다. (2026-11-08 WB04-E116)
 const FORM = 4;
@@ -238,4 +240,38 @@ export class CrossbowAnimationProcess extends SquidProcess {
 
     // 후속 관찰과 전송은 이 원본 이미지에 접근한다. (2026-11-08 WB04-E116)
     get fields() { return this.#fields; }
+}
+
+// 현재 GunProcess 완료 통지와 크로스보우 발사 프로세스 삭제를 같은 Host에 연결한다. (2026-11-16 WB04-E566)
+export function makeCrossbowAnimationHostHooks(host, hooks = {}) {
+    return { ...hooks,
+        // 현재 Form의 실제 Gun을 찾아 원문 완료 인수를 전달한다.
+        notify: (form, event, info, value) => {
+            // 현재 Form이 가리키는 실제 GunProcess이다.
+            const gun = host.fromForm(form);
+            if (!(gun instanceof GunProcess)) throw new Error('크로스보우 완료 GunProcess 조회 실패');
+            gun.notify(event, info, value);
+        },
+        // 지정한 파생 프로세스만 현재 Host에서 삭제한다.
+        kill: (form, flags) => {
+            // 현재 파생 애니메이션 또는 실제 부착 결과이다.
+            const animation = host.fromForm(form);
+            if (!(animation instanceof CrossbowAnimationProcess)) throw new Error('크로스보우 완료 animation 조회 실패');
+            host.kill(animation, flags);
+        },
+    };
+}
+
+// 현재 크로스보우 TYPE의 실제 Gun 부모에 발사 프로세스를 flags0x10으로 부착한다. (2026-11-16 WB04-E566)
+export function createCrossbowAnimation(host, logic, gunForm, target) {
+    if (host.pool !== logic.pool) throw new Error('크로스보우 Host/Pool 불일치');
+    // 현재 Form이 가리키는 실제 GunProcess이다.
+    const gun = host.fromForm(gunForm);
+    if (!(gun instanceof GunProcess) || host.pool.slot(gun.parent)[10] !== logic.type) throw new Error('크로스보우 factory 부모 오류');
+    // 생성자가 채우고 Host가 Form/부모를 확정할 필드 이미지이다.
+    const fields = new GunAnimationFields();
+    logic.initialize(fields, gunForm, target);
+    // 현재 파생 애니메이션 또는 실제 부착 결과이다.
+    const animation = host.attach(new CrossbowAnimationProcess(logic, fields), host.animationProcessType(true), gun.parent, 0x10);
+    return animation instanceof CrossbowAnimationProcess ? animation : null;
 }

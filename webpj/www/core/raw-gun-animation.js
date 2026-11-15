@@ -7,8 +7,9 @@
 //  - initializeReceivedGunAnimation / readGunAnimationProcessData / gunAnimationUsesFirePacket / writeGunAnimationProcessData: 수신 전용 생성자 네 종류, 선택 필드 복원, 가상 writer 선택, dirty 선택 직렬화이다(CD 가상 표는 10.72 라 제외).
 //  - GunAnimationProcess(SquidProcess): Kernel 슬롯 프로세스이다. runFrame 은 frame, onAttached 는 Form/Parent 기록, writePacket 은 공통 직렬화이다.
 // 훅 { center(sid)→[x,y], targetPoint(firing, target)→[x,y], unpop(sid,flags), repop(sid,flags), randomInteger(low,high), sound(sid,name), createProjectile(request), notify(form,event,info,value), kill(form,flags) } 는 도달한 지점에서만 요구한다.
-// 실제 GunProcess 생성 경계(factory/MakeGunAnimationHostHooks)는 RawGunProcess 이식 전이라 포함하지 않는다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E113: RawGunAnimation 이식으로 추가)
+// 실제 GunProcess 생성·완료 통지·삭제는 아래 Host 어댑터로 연결한다. 이 모듈은 DOM을 쓰지 않는다. (2026-11-08 WB04-E113, 2026-11-16 WB04-E566)
 import { SquidProcess } from './squid-process.js';
+import { GunProcess } from './raw-gun-process.js';
 
 // 썬 캐논 애니메이션 파생 종류이다(값은 원본 열거 순서). (2026-11-08 WB04-E113)
 export const GunAnimationKind = Object.freeze({ SunRotate: 0, SunFire: 1, SunRest: 2 });
@@ -423,4 +424,50 @@ export class GunAnimationProcess extends SquidProcess {
 
     // 검사/월드 사건이 같은 필드를 조회한다. (2026-11-08 WB04-E113)
     get fields() { return this.#fields; }
+}
+
+// 현재 GunProcess에 완료를 통지하고 실제 애니메이션 Form을 같은 Host로 지운다. 훅 묶음은 값 사본이다. (2026-11-16 WB04-E566)
+export function makeGunAnimationHostHooks(host, hooks = {}) {
+    return { ...hooks,
+        // 현재 Form의 실제 Gun을 찾아 원문 완료 인수를 전달한다.
+        notify: (form, event, info, value) => {
+            // 현재 Form이 가리키는 실제 GunProcess이다.
+            const gun = host.fromForm(form);
+            if (!(gun instanceof GunProcess)) throw new Error('GunAnimation 완료 GunProcess 조회 오류');
+            gun.notify(event, info, value);
+        },
+        // 지정한 파생 프로세스만 현재 Host에서 삭제한다.
+        kill: (form, flags) => {
+            // 현재 파생 애니메이션 또는 실제 부착 결과이다.
+            const animation = host.fromForm(form);
+            if (!(animation instanceof GunAnimationProcess)) throw new Error('GunAnimation 완료 process 조회 오류');
+            host.kill(animation, flags);
+        },
+    };
+}
+
+// 같은 풀의 현재 GunProcess 부모에 회전2·발사5·원위치8을 flags0x10으로 부착한다. (2026-11-16 WB04-E566)
+export function createGunAnimation(host, logic, stage, gunForm, target) {
+    if (host.pool !== logic.pool) throw new Error('GunAnimation/Host SID 풀 불일치');
+    // 현재 Form이 가리키는 실제 GunProcess이다.
+    const gun = host.fromForm(gunForm);
+    if (!(gun instanceof GunProcess)) throw new Error('GunAnimation factory GunProcess 오류');
+    if (host.pool.slot(gun.parent)[10] !== logic.sunCannonType()) throw new Error('GunAnimation 미복원 파생 factory');
+    // 원문 단계가 선택한 회전·발사·원위치 종류이다.
+    const kind = stage === 2 ? GunAnimationKind.SunRotate : stage === 5 ? GunAnimationKind.SunFire : GunAnimationKind.SunRest;
+    if (stage !== 2 && stage !== 5 && stage !== 8) throw new RangeError('GunAnimation factory 단계 오류');
+    // 생성자가 채우고 Host가 Form/부모를 확정할 필드 이미지이다.
+    const fields = new GunAnimationFields();
+    logic.initialize(fields, kind, gunForm, target);
+    // 현재 파생 애니메이션 또는 실제 부착 결과이다.
+    const animation = host.attach(new GunAnimationProcess(logic, fields, kind), host.animationProcessType(stage !== 2 && stage !== 8), gun.parent, 0x10);
+    return animation instanceof GunAnimationProcess ? animation : null;
+}
+
+// GunProcess의 생성 경계를 같은 월드의 실제 애니메이션 공장으로 교체한다. (2026-11-16 WB04-E566)
+export function makeGunAnimationProcessHooks(host, logic, hooks = {}) {
+    if (host.pool !== logic.pool) throw new Error('GunAnimation/Host SID 풀 불일치');
+    return { ...hooks, startAnimation: (stage, gunForm, target) => {
+        if (!createGunAnimation(host, logic, stage, gunForm, target)) throw new Error('GunAnimation 부모 삭제 중 factory 실패');
+    } };
 }

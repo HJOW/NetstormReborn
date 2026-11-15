@@ -10,8 +10,10 @@
 //  - 정적 helper: nearestDirection(angle) 20칸 비균등 방향표의 가장 가까운 칸, initialAngle(frame), fireFrame(angle, sprung), degrees(from, to), directionAngle(from, to, diagnostics).
 //  - ArcherAnimationProcess(SquidProcess): Kernel 슬롯 프로세스이다. runFrame 은 fire 이면 fire, 아니면 rotate. onAttached 는 Form/Parent 기록.
 // state(ArcherAnimationState)와 animationTypes[type]={directions,frameCount} 는 호출 시점에 읽는다. 훅 { common{center,targetPoint,unpop,repop,randomInteger,sound,createProjectile,notify,kill}, aimDirection(sid), notifySurface(sid) } 는 도달한 지점에서만 요구한다.
-// 실제 GunProcess 연결(MakeArcherAnimationHostHooks/CreateArcherAnimation 등)은 RawGunProcess/RawMissile 이식 뒤로 둔다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-E115: RawArcherAnimation 이식으로 추가)
+// 실제 GunProcess 생성·완료 수명과 Missile 공장은 아래 Host 어댑터로 연결한다. 이 모듈은 DOM을 쓰지 않는다. (2026-11-08 WB04-E115, 2026-11-16 WB04-E566)
 import { SquidProcess } from './squid-process.js';
+import { GunProcess } from './raw-gun-process.js';
+import { makeGunMissileHooks } from './raw-missile.js';
 import { normalizeBoardAngle } from './raw-board-angle.js';
 
 // 필드 위치(Form/Parent/위치/중심/내장 표/dirty/건/표적/시각/원위치·각·속도·가속도·단계)와 크기이다. (2026-11-08 WB04-E115)
@@ -428,4 +430,63 @@ export class ArcherAnimationProcess extends SquidProcess {
 
     // 원본 생성 후 각 초기화와 독립 관찰에 사용한다. (2026-11-08 WB04-E115)
     get fields() { return this.#fields; }
+}
+
+// 공통 훅을 값 사본으로 소유하며 현재 Gun 통지와 실제 Archer 삭제를 연결한다. (2026-11-16 WB04-E566)
+export function makeArcherAnimationHostHooks(host, hooks = {}) {
+    return { ...hooks, common: { ...hooks.common,
+        // 현재 Form의 실제 Gun을 찾아 원문 완료 인수를 전달한다.
+        notify: (form, event, info, value) => {
+            // 현재 Form이 가리키는 실제 GunProcess이다.
+            const gun = host.fromForm(form);
+            if (!(gun instanceof GunProcess)) throw new Error('Archer 완료 GunProcess 조회 오류');
+            gun.notify(event, info, value);
+        },
+        // 지정한 파생 프로세스만 현재 Host에서 삭제한다.
+        kill: (form, flags) => {
+            // 현재 파생 애니메이션 또는 실제 부착 결과이다.
+            const animation = host.fromForm(form);
+            if (!(animation instanceof ArcherAnimationProcess)) throw new Error('Archer 완료 process 조회 오류');
+            host.kill(animation, flags);
+        },
+    } };
+}
+
+// 실제 부모에 회전2·발사5를 부착하고 발사 각 초기화는 성공한 부착 뒤에만 수행한다. (2026-11-16 WB04-E566)
+export function createArcherAnimation(host, logic, stage, gunForm, target) {
+    if (host.pool !== logic.pool) throw new Error('Archer/Host SID 풀 불일치');
+    // 현재 Form이 가리키는 실제 GunProcess이다.
+    const gun = host.fromForm(gunForm);
+    if (!(gun instanceof GunProcess) || host.pool.slot(gun.parent)[10] !== logic.type || (stage !== 2 && stage !== 5)) throw new Error('Archer factory 단계/부모 오류');
+    // 생성자가 채우고 Host가 Form/부모를 확정할 필드 이미지이다.
+    const fields = new ArcherAnimationFields();
+    logic.initialize(fields, stage === 5, gunForm, target);
+    // 현재 파생 애니메이션 또는 실제 부착 결과이다.
+    const animation = host.attach(new ArcherAnimationProcess(logic, fields, stage === 5), host.animationProcessType(stage === 5), gun.parent, 0x10);
+    if (!(animation instanceof ArcherAnimationProcess)) return null;
+    if (stage === 5) logic.initializeFire(animation.fields);
+    return animation;
+}
+
+// 현재 부모 TYPE이 Archer이면 실제 공장을 선택하고 그 밖의 파생은 입력 fallback에 전달한다. (2026-11-16 WB04-E566)
+export function makeArcherAnimationProcessHooks(host, logic, hooks = {}) {
+    if (host.pool !== logic.pool) throw new Error('Archer/Gun SID 풀 불일치');
+    // 다른 파생의 생성 함수를 값으로 보존한다.
+    const fallback = hooks.startAnimation;
+    return { ...hooks, startAnimation: (stage, gunForm, target) => {
+        // 현재 Form이 가리키는 실제 GunProcess이다.
+        const gun = host.fromForm(gunForm);
+        if (!(gun instanceof GunProcess)) throw new Error('Archer factory GunProcess 조회 오류');
+        if (host.pool.slot(gun.parent)[10] === logic.type) {
+            if (!createArcherAnimation(host, logic, stage, gunForm, target)) throw new Error('Archer 삭제 중 factory 실패');
+            return;
+        }
+        if (typeof fallback !== 'function') throw new Error('Archer 외 부모 실제 animation 미복원');
+        fallback(stage, gunForm, target);
+    } };
+}
+
+// 동일 Host와 실제 Missile 처리기의 생성 공장을 Archer 공통 launch 훅에 연결한다. (2026-11-16 WB04-E566)
+export function makeArcherMissileHooks(host, missile, hooks = {}) {
+    return { ...hooks, common: makeGunMissileHooks(host, missile, { ...hooks.common }) };
 }

@@ -9,9 +9,11 @@
 //  - CannonFireProcess(SquidProcess): Kernel 슬롯 프로세스이다. runFrame 은 frame, onAttached 는 Form/Parent 기록.
 // state = CannonFireState{ now, kind, type, displayType, effectType, speed, delay, launchScale, scaledType, growlOffset, roarOffset, vanderType, floaterType, avoidanceCutoff, currentType? } 은 훅 뒤에도 다시 읽는다.
 // 훅(gunAnimation 훅과 같은 모양) { center, targetPoint, unpop, repop, sound, createProjectile, notify, kill } 와 beam { create(source,target), refresh(source), hit(source,target), random } 은 도달한 지점에서만 요구한다.
-// frames[type].frames 는 FrameCodeTable(codes[].side 글자 코드, run(글자))이다. 실제 GunProcess 연결(MakeCannonFireHostHooks/CreateCannonFire)은 RawGunProcess 이식 뒤로 둔다. 이 모듈은 DOM 을 쓰지 않는다.
+// frames[type].frames 는 FrameCodeTable(codes[].side 글자 코드, run(글자))이다. 실제 GunProcess 생성·완료 수명은 아래 Host 어댑터로 연결한다(WB04-E566). 이 모듈은 DOM 을 쓰지 않는다.
 // (2026-11-08 WB04-E114: RawCannonFire 이식으로 추가)
 import { SquidProcess } from './squid-process.js';
+import { GunProcess } from './raw-gun-process.js';
+import { GunAnimationFields } from './raw-gun-animation.js';
 
 // 실제 가상 단계표/생성자와 투사체 getter 를 고르는 복원 종류이다(원본 열거 순서). (2026-11-08 WB04-E114)
 export const CannonFireKind = Object.freeze({ Sun: 0, Thunder: 1, Vander: 2 });
@@ -320,4 +322,38 @@ export class CannonFireProcess extends SquidProcess {
 
     // 후속 관찰/전송이 같은 객체를 읽는다. (2026-11-08 WB04-E114)
     get fields() { return this.#fields; }
+}
+
+// 현재 GunProcess의 완료 통지와 실제 CannonFire 삭제를 연결하고 나머지 훅을 값 사본으로 보존한다. (2026-11-16 WB04-E566)
+export function makeCannonFireHostHooks(host, hooks = {}) {
+    return { ...hooks,
+        // 현재 Form의 실제 Gun을 찾아 원문 완료 인수를 전달한다.
+        notify: (form, event, info, value) => {
+            // 현재 Form이 가리키는 실제 GunProcess이다.
+            const gun = host.fromForm(form);
+            if (!(gun instanceof GunProcess)) throw new Error('캐논 발사 완료 GunProcess 조회 실패');
+            gun.notify(event, info, value);
+        },
+        // 지정한 파생 프로세스만 현재 Host에서 삭제한다.
+        kill: (form, flags) => {
+            // 현재 파생 애니메이션 또는 실제 부착 결과이다.
+            const animation = host.fromForm(form);
+            if (!(animation instanceof CannonFireProcess)) throw new Error('캐논 발사 완료 animation 조회 실패');
+            host.kill(animation, flags);
+        },
+    };
+}
+
+// 현재 TYPE의 실제 Gun 부모에 발사 프로세스를 flags0x10으로 부착한다. (2026-11-16 WB04-E566)
+export function createCannonFire(host, logic, gunForm, target) {
+    if (host.pool !== logic.pool) throw new Error('캐논 발사 Host/Pool 불일치');
+    // 현재 Form이 가리키는 실제 GunProcess이다.
+    const gun = host.fromForm(gunForm);
+    if (!(gun instanceof GunProcess) || host.pool.slot(gun.parent)[10] !== logic.type) throw new Error('캐논 발사 factory 부모 오류');
+    // 생성자가 채우고 Host가 Form/부모를 확정할 필드 이미지이다.
+    const fields = new GunAnimationFields();
+    logic.initialize(fields, gunForm, target);
+    // 현재 파생 애니메이션 또는 실제 부착 결과이다.
+    const animation = host.attach(new CannonFireProcess(logic, fields), host.animationProcessType(true), gun.parent, 0x10);
+    return animation instanceof CannonFireProcess ? animation : null;
 }

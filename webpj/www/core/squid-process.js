@@ -361,6 +361,9 @@ export class SquidProcessHost {
     // 판본의 프로세스 타입 번호 범위 끝이다(10.78: 같은 현재 0054116c 의 signed 상한 비트).
     get processTypeEnd() { return this.#state.processTypeEnd; }
 
+    // 실제 애니메이션 공장이 부착 직전에 같은 장기 발사/회전 TYPE을 읽는다. (2026-11-16 WB04-E566)
+    animationProcessType(fire) { return fire ? this.#state.fireAnimationType : this.#state.rotateAnimationType; }
+
     // form 의 실제 가상 표 기록값이다(10.78 ProcessForm).
     get formVtable() { return SQUID_FORM_VTABLES.process; }
 
