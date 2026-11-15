@@ -1959,7 +1959,8 @@
       "edition": "10.78",
       "required": true,
       "consumers": [
-        "webpj/tests/cpp-oracle-candidate.test.mjs"
+        "webpj/tests/cpp-oracle-candidate.test.mjs",
+        "webpj/tests/cpp-oracle.test.mjs"
       ],
       "modules": [
         "webpj/www/netstorm.js",
@@ -1991,7 +1992,8 @@
       "edition": "10.78",
       "required": true,
       "consumers": [
-        "webpj/tests/cpp-oracle-candidate.test.mjs"
+        "webpj/tests/cpp-oracle-candidate.test.mjs",
+        "webpj/tests/cpp-oracle.test.mjs"
       ],
       "modules": [
         "webpj/www/netstorm.js",

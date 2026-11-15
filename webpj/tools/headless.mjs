@@ -5,7 +5,7 @@
 // 단계표는 cpppj `--ui-script` 와 같은 [프레임, 동작, 인자] 이다(tests/fixtures/cpppj/*-scenarios.json). 지원 동작: click(라벨 또는 screen:x,y)·down·up·esc·key·snapshot·report.
 // 프레임 순서도 cpppj 와 같다: 그 프레임의 입력 → 프레임 처리(갱신·합성) → 그 프레임의 snapshot/report.
 // 사용:
-//   node webpj/tools/headless.mjs --scenarios webpj/tests/fixtures/cpppj/m1-scenarios.json [--id campaign] --out <폴더>
+//   node webpj/tools/headless.mjs --scenarios webpj/tests/fixtures/cpppj/candidate-225553df/m1-scenarios.json [--id campaign] --out <폴더>
 //     → <폴더>/<id>/<이름>.bmp(cpppj 캡처와 같은 32비트 BMP)와 <폴더>/<id>/report.txt 를 쓴다.
 //   검사·비교 도구는 runScenario() 를 불러 메모리에서 그림을 받는다.
 // 한계(2026-11-07): 영어만 지원한다(한국어는 Canvas 2D 글리프 래스터라이저가 필요). 메인 메뉴 장면(M1)만 다루며 미션 월드는 아직 없다.

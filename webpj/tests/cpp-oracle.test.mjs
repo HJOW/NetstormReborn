@@ -1,5 +1,5 @@
 // cpppj 오라클 비교 검사이다. 저장된 오라클만 읽고 cpppj 를 실행하지 않는다(수집은 tools/cpp-oracle.mjs).
-//  1) 메타: tests/fixtures/cpppj/m1/oracle.json 의 형식·cpppj 기준선 커밋·시나리오 파일 해시·그림/보고서 SHA-256 이 현재 파일과 같다.
+//  1) 메타: 현재 기준선의 oracle.json 형식·cpppj 커밋·시나리오 입력·그림/보고서 SHA-256 이 현재 파일과 같다.
 //  2) M1 비교: m1-scenarios.json 의 시나리오마다 웹을 무브라우저(tools/headless.mjs)로 실행해 오라클 그림·보고서와 비교하고,
 //     기록 영역 밖 픽셀 차이 0·영역 안 차이 = 기록 픽셀 수·보고서 칸 일치(또는 기록한 원인)를 확인한다.
 //  3) 도구: BMP/PNG 왕복, 영역별 차이 집계, cpppj 보고서 구간 해석.
@@ -16,9 +16,13 @@ import { backgroundClassifier, compareImages, compareScenario, judge, parseCppRe
 import { encodeCppBitmap, encodeIndexedPng, readBmp, readPng } from '../tools/image-files.mjs';
 
 // 오라클 폴더와 두 기록 파일의 절대 경로이다. (2026-11-07 WB02-H)
-const ORACLE_DIR = path.join(REPO_ROOT, 'webpj', 'tests', 'fixtures', 'cpppj', 'm1');
+const ORACLE_DIR = path.join(REPO_ROOT, 'webpj', 'tests', 'fixtures', 'cpppj', 'candidate-225553df', 'm1');
 const META_PATH = path.join(ORACLE_DIR, 'oracle.json');
-const SCENARIOS_PATH = path.join(REPO_ROOT, 'webpj', 'tests', 'fixtures', 'cpppj', 'm1-scenarios.json');
+const SCENARIOS_PATH = path.join(ORACLE_DIR, '..', 'm1-scenarios.json');
+
+// 옛 기준선의 수집물은 비교 이력을 위해 그대로 보존한다. (2026-11-15 WB04-E513)
+const HISTORICAL_ORACLE_DIR = path.join(REPO_ROOT, 'webpj', 'tests', 'fixtures', 'cpppj', 'm1');
+const HISTORICAL_SCENARIOS_PATH = path.join(HISTORICAL_ORACLE_DIR, '..', 'm1-scenarios.json');
 
 // 파일의 SHA-256 이다. (2026-11-07 WB02-H)
 function fileSha256(file) {
@@ -30,6 +34,23 @@ function fileSha256(file) {
 function textSha256(file) {
     return crypto.createHash('sha256').update(Buffer.from(fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n'), 'utf8')).digest('hex');
 }
+
+// 옛 기준선 오라클의 입력과 결과 파일이 보존됐는지 확인한다. (2026-11-15 WB04-E513)
+test('cpppj 오라클: 이전 기준선 수집물 보존', () => {
+    const meta = JSON.parse(fs.readFileSync(path.join(HISTORICAL_ORACLE_DIR, 'oracle.json'), 'utf8'));
+    const data = readScenarios(HISTORICAL_SCENARIOS_PATH);
+    assert.equal(meta.cpppjCommit, '1f00a25a');
+    assert.equal(meta.collectionInputsSha256, crypto.createHash('sha256').update(collectionInputs(data), 'utf8').digest('hex'));
+    assert.equal(data.scenarios.length, 8);
+    // 이전 시나리오마다 모든 캡처와 보고서의 해시를 검사한다.
+    for (const scenario of data.scenarios) {
+        const result = meta.results[scenario.id];
+        assert.ok(result, scenario.id);
+        // 각 화면의 바이너리는 저장된 원본 해시와 같아야 한다.
+        for (const snapshot of Object.values(result.snapshots)) assert.equal(fileSha256(path.join(HISTORICAL_ORACLE_DIR, snapshot.png)), snapshot.pngSha256);
+        assert.equal(textSha256(path.join(HISTORICAL_ORACLE_DIR, result.report.file)), result.report.sha256);
+    }
+});
 
 // 메타: 수집 조건과 파일 해시가 기록과 같다.
 test('cpppj 오라클: 메타·기준선 커밋·파일 해시', () => {

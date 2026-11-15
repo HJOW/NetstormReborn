@@ -26,8 +26,8 @@ export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url
 // 대응표 파일의 저장소 상대 경로이다. (2026-11-06 WB02-G)
 export const MAP_PATH = 'webpj/PORT_MAP.tsv';
 
-// 이식 기준선 cpppj 커밋(제품985·표시11.01)이다. LEFT_JOBS.webpj.md 3.6절의 결정이며 바꿀 때는 그 절과 함께 고친다. (2026-11-06 WB02-G)
-export const BASELINE = '1f00a25a';
+// 이식 기준선 cpppj 커밋(제품1313·표시11.01)이다. 판정과 오라클 근거는 LEFT_JOBS.webpj.md 3.6절에 있다. (2026-11-15 WB04-E513)
+export const BASELINE = '225553df';
 
 // 대응표가 다루는 cpppj 소스 폴더이다. platform/·app/ 은 원본에 없는 새 코드(콘솔·BMP·진입점)라 대응표에 넣지 않는다. (2026-11-06 WB02-G)
 export const SCOPES = Object.freeze(['cpppj/src/o', 'cpppj/src/client', 'cpppj/src/zacket']);
@@ -190,7 +190,7 @@ export function splitNote(note) {
 
 // 대응표 머리말이다. 열 설명과 갱신 방법을 적는다. (2026-11-06 WB02-G)
 const HEADER_COMMENT = [
-    `# webpj 이식 대응표(WB02-G, 2026-11-06). 기준선 cpppj ${BASELINE}(제품985)의 ${SCOPES.join('·')} 소스 단위(.cpp/.h/.inc 묶음)마다 한 행이다.`,
+    `# webpj 이식 대응표(WB02-G, 2026-11-06). 기준선 cpppj ${BASELINE}(제품1313)의 ${SCOPES.join('·')} 소스 단위(.cpp/.h/.inc 묶음)마다 한 행이다.`,
     '# 열: cpp(대표 파일)	class(분류, tools/port-map.mjs 규칙이 정함)	web(웹 모듈, `;` 구분)	base(웹과 대조·판정한 cpppj 커밋)	status(todo/partial/port/session/oracle, 제외는 -)	note([규칙ID] 사람 메모)',
     '# 분류를 바꿀 때는 이 파일이 아니라 tools/port-map.mjs 의 RULES 와 사유를 고치고 --write 로 다시 만든다. web·base·status·사람 메모는 --write 가 보존한다.',
     '# 상세 규칙과 판정 기록: docs/webpj-port-map-20261106.md, LEFT_JOBS.webpj.md 3.0·3.6절.',

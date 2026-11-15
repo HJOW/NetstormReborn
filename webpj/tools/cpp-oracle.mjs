@@ -1,5 +1,5 @@
 // cpppj 기준선 실행 파일로 오라클(논리 화면·관측 보고서)을 수집해 webpj/tests/fixtures/cpppj/ 아래에 저장하는 도구이다.
-// 시나리오 묶음(tests/fixtures/cpppj/m1-scenarios.json)의 단계표를 cpppj `--run <자료> --window --mute-audio --frames N --set ... --ui-script ... --ui-report ...` 로 실행한다.
+// 현재 기준선 시나리오 묶음(candidate-225553df/m1-scenarios.json)의 단계표를 cpppj `--run <자료> --window --mute-audio --frames N --set ... --ui-script ... --ui-report ...` 로 실행한다.
 //  - 시나리오마다 새 프로세스와 빈 사용자 루트(NETSTORM_USER_DATA, 임시 폴더)를 써서 설정·진행 파일이 결과에 섞이지 않게 한다.
 //  - 소리는 `--mute-audio`(장치는 열고 소리만 끔)로 끈다. `--no-audio`·NETSTORM_CPP_NO_AUDIO 는 소리 장치가 없는 상태라 Options 의 소리 항목이 비활성으로 그려져
 //    원본(소리 장치 있음)과 다른 화면이 되므로 쓰지 않는다(2026-11-07 첫 수집에서 확인). 환경에 NETSTORM_CPP_NO_AUDIO 가 있으면 지운다.
@@ -8,7 +8,7 @@
 //  - 메타 <출력>/oracle.json: cpppj 커밋·EXE SHA-256/크기·명령줄·자료 폴더 해시·웹 자료와의 같은 파일 대조·수집 PC/시각·파일별 SHA-256.
 // 창이 뜨는 실행이므로 AGENTS.md 의 실행 확인 규칙을 따른다(예외 PC: HJOW-Athlon·VM-W11-Codex·vm-debian-codex). npm test 는 이 도구를 부르지 않고 저장된 결과만 읽는다.
 // 사용(저장소 루트):
-//   node webpj/tools/cpp-oracle.mjs --exe extracted/webpj-oracle/1f00a25a/Netstorm.exe [--commit 1f00a25a] [--game assets/game-data] [--id campaign] [--out webpj/tests/fixtures/cpppj/m1]
+//   node webpj/tools/cpp-oracle.mjs --exe extracted/webpj-oracle/225553df/Netstorm.exe [--commit 225553df] [--game assets/game-data] [--id campaign] [--out webpj/tests/fixtures/cpppj/candidate-225553df/m1]
 // (2026-11-07 WB02-H: LEFT_JOBS.webpj.md 3.2절 순서2 ②의 cpppj 오라클 수집 요구로 추가)
 import crypto from 'node:crypto';
 import fs from 'node:fs';

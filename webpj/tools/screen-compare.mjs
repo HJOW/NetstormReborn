@@ -5,7 +5,7 @@
 // 메인 메뉴 스냅샷으로 '구름 차이'를 정밀 분류해 expected[스냅샷].background({ pixels, reason })와 맞춘다(backgroundClassifier 설명 참조).
 // 보고서는 cpppj `--ui-report` 의 같은 라벨 구간에서 COMPARED_REPORT_KEYS 칸만 웹 보고서와 비교한다. 원인을 기록한 차이는 expected[라벨].report 에 적는다.
 // 사용:
-//   node webpj/tools/screen-compare.mjs [--oracle webpj/tests/fixtures/cpppj/m1] [--id campaign] [--diff <폴더>]
+//   node webpj/tools/screen-compare.mjs [--oracle webpj/tests/fixtures/cpppj/candidate-225553df/m1] [--id campaign] [--diff <폴더>]
 //     → 시나리오마다 웹을 무브라우저로 실행해 저장된 오라클과 비교하고 결과를 출력한다. --diff 를 주면 차이 그림(같은 픽셀은 어둡게, 다른 픽셀은 자홍)을 PNG 로 쓴다.
 // 이 도구는 cpppj 를 실행하지 않는다. 오라클 수집은 tools/cpp-oracle.mjs 가 한다.
 // (2026-11-07 WB02-H: LEFT_JOBS.webpj.md 3.2절 순서2 ③의 화면/보고서 비교 요구로 추가)
@@ -19,7 +19,7 @@ import { encodeIndexedPng, readPng } from './image-files.mjs';
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
 // 기본 오라클 폴더(저장소 상대)이다. (2026-11-07 WB02-H)
-export const DEFAULT_ORACLE_DIR = 'webpj/tests/fixtures/cpppj/m1';
+export const DEFAULT_ORACLE_DIR = 'webpj/tests/fixtures/cpppj/candidate-225553df/m1';
 
 // 오라클 폴더 안의 시나리오 파일 이름과 메타 파일 이름이다. (2026-11-07 WB02-H)
 export const SCENARIOS_FILE = 'm1-scenarios.json';
