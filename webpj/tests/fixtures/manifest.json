@@ -23475,9 +23475,38 @@
       "bytes": 282658,
       "lines": 511,
       "fixtureCommit": "5adcf532b",
-      "webCommit": "worktree",
+      "webCommit": "f1031d048",
       "cpppjBasis": {
         "cpppj/src/client/RawGameMenuBar.cpp": "5adcf532b"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E540",
+      "id": "priestmenu",
+      "path": "cpppj/tests/fixtures/priestmenu-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 사제 건설 메뉴 00494870 Open 329입력(전체 메뉴 구성 호출 순서)·건설 선택 00461bd0 Select 64입력(두 금액 조회·NaN·float 축소·워크샾 테마)·테마 조회 Theme 256·프레임 상태 Frame 256",
+      "consumers": [
+        "webpj/tests/raw-priest-menu.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-priest-menu.js"
+      ],
+      "doc": "docs/webpj-raw-priest-menu-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawPriestMenu.cpp"
+      ],
+      "scope": "10.78 905행 전부(Open 329·Select 64·Theme 256·Frame 256)",
+      "text": true,
+      "sha256": "2dda11277f2b67f1a69447ea7cb1694e989a08ed513dbf9819e14bfbf3ce6208",
+      "bytes": 192525,
+      "lines": 906,
+      "fixtureCommit": "ffb4a819e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawPriestMenu.cpp": "a550c7f0f"
       }
     }
   ]
