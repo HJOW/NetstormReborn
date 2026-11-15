@@ -23620,9 +23620,38 @@
       "bytes": 272097,
       "lines": 293,
       "fixtureCommit": "8b2d2640d",
-      "webCommit": "worktree",
+      "webCommit": "2654cbc97",
       "cpppjBasis": {
         "cpppj/src/client/RawPlayerMenu.cpp": "6f25a98e6"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E545",
+      "id": "factory-menu",
+      "path": "cpppj/tests/fixtures/factory-menu-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: 10.78 Factory 우클릭 메뉴 Open 39입력(공통 +ac→현재 생산·지식·업그레이드의 전체 작성 순서·인자·동률 정렬)·마나 문자 4735c0 32입력·슬롯 454040 5입력",
+      "consumers": [
+        "webpj/tests/raw-factory-menu.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-factory-menu.js"
+      ],
+      "doc": "docs/webpj-raw-factory-menu-20261115.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawFactoryMenu.cpp"
+      ],
+      "scope": "10.78 76행 전부(Open 39·Mana 32·Slots 5)",
+      "text": true,
+      "sha256": "e69d2c8bc2ed31511f45591a2ae428db4265efb0c195b59b017341b397310899",
+      "bytes": 29663,
+      "lines": 77,
+      "fixtureCommit": "91842596a",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawFactoryMenu.cpp": "05df64c08"
       }
     }
   ]
