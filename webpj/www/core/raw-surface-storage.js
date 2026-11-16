@@ -20,7 +20,7 @@ import { createRawIslandStorage, resetRawIslandRecords } from './raw-island-runt
 import { RawProcessHostStorage } from './raw-process-host-storage.js';
 import { RawStateSidLists } from './raw-state-sid-lists.js';
 import { SidPool } from './sid-pool.js';
-import { RawTotalMadeStorage, SquidPostPopState } from './squid-postpop-state.js';
+import { RawTotalMadeStorage, SquidPostPopState, SquidPostPopList } from './squid-postpop-state.js';
 import { SquidHash } from './squid-hash.js';
 import { SquidOwnerMode } from './squid-owner.js';
 import { SquidDisplay, buildSquidFrameAssertionDetail } from './squid-display.js';
@@ -119,6 +119,9 @@ export class RawSurfaceStorage {
         this.pathSearchWork = new RawPathSearchStorage();
         // 실제 정적 SID 8목록/count 와 등록 20칸을 World/Session 전후에 보존한다.
         this.sidLists = new RawStateSidLists();
+        // 최근 간헐천5DWORD/count와 PE0053181c의 현재 방향9DWORD다. 전체 간헐천 목록과 분리한다(WB04-E603).
+        this.recentGeysers = new SquidPostPopList(); this.recentGeysers.entries = new Array(5).fill(0);
+        this.geyserPlayerDirections = new Uint32Array([16448, 4, 0, 6, 2, 7, 3, 5, 1]);
         // 현재 로컬/누적 로컬/전역 256 DWORD와 아래 공통 후처리 상태를 같은 장기 수명으로 보유한다.
         this.totalMade = new RawTotalMadeStorage();
         // 공장·후처리·소유자가 World 반납 뒤에도 같은 깊이/생산 장부 주소를 사용한다.
@@ -484,6 +487,8 @@ export class RawSurfaceStorage {
         }
         this.graph.stack.fill(0);
         resetRawGraphTable(this.graph);
+        // 일반 fresh 대여만 최근5칸/count를0으로 쓰며 준비 대여/반납·방향표는 보존한다(WB04-E603).
+        this.recentGeysers.entries.fill(0); this.recentGeysers.count = 0;
         // 일반 설치만 기존 새 목록 의미를 유지한다.
         this.sidLists.prepareGeneralWorld();
         // 일반 대여의 새 값 대입만 호환한다. 준비 대여/반납은 현재 공장 깊이·owner 목록을 보존한다.
