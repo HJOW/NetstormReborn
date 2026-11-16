@@ -77,8 +77,12 @@ export class RawCampaignSessionState {
     placement = createCanonPlacementPipelineState(); gameplayPlacement = createCanonPlacementPipelineState();
     buildingState = new ConstructionProcessState(); buildingEffectsState = new ConstructionEffectsState();
     farm = new FarmClusterState(); anchorState = new PlayerPlacementAnchorState();
-    // RawBombEffect/RawMissionAiSettings의 실제 값형 상태다(CD 전용 시작 SP는 웹 범위 밖).
+    // 실제 주문 검색/폭발/정기/수신의 값형 상태다. Native 장기 대여는 별도이며 준비 함수가 현재 권한/동맹을 공급한다.
+    devastationTargetState = { boss: 0 };
+    devastationBlastState = { boss: 0, growingRainBlockerType: 150, priestType: 158, alliances: new Uint32Array(81) };
+    devastationRegularState = { boss: 0, localOwner: 1, effect: { message: 0x5f, protocol: 1, length: 10 } };
     devastationEffectState = { boss: 0, firstType: 117, secondType: 118, processType: 57, spentCounter: 0, sharedSpentCounter: null };
+    // RawMissionAiSettings의 실제 값형 상태다(CD 전용 시작 SP는 웹 범위 밖).
     missionAiSettings = { stuffRefreshRate: 3, startingSp: 2500, checkingAsserts: 0 };
     // 같은 실제 시계의 경로/애니메이션·음향·피해/정기·반환 상태다.
     process; start; snap = true; retrying = false;

@@ -19,8 +19,10 @@ import { buildSquidFrameAssertionDetail } from './squid-display.js';
 
 // RawCampaignDevastation.inc1..9의 네 자격 함수가 허용하는 같은16VT다. 실제 주문/효과는 실행하지 않는다.
 const CONNECTED_BOMBS = new Set([0x503188, 0x5026a0, 0x502778, 0x502840, 0x502908, 0x502b70, 0x5029d0, 0x502aa8, 0x5030c0, 0x502448, 0x502370, 0x502510, 0x502ff8, 0x5025d8, 0x502e68, 0x502f30]);
+// 같은16VT 자격을 파편과 현재 주문 수신 앞단이 공유한다. 원문 DWORD 주소는 비교 값일 뿐 실행하지 않는다.
+export function connectedCampaignBombTable(table) { return CONNECTED_BOMBS.has(table >>> 0); }
 // 현재 raw가 같은16VT 중 하나인지 확인한다. 숫자 주소를 함수로 실행하지 않는다.
-function connectedBomb(raw) { return CONNECTED_BOMBS.has(vtableOf(raw)); }
+function connectedBomb(raw) { return connectedCampaignBombTable(vtableOf(raw)); }
 // Session391의 정확한 건물 캡처 자격이다. 일반 표시 자격과 서로 다른 TYPE 집합을 유지한다.
 function plainBuilding(raw) {
     const type = raw[10]; const table = vtableOf(raw);
