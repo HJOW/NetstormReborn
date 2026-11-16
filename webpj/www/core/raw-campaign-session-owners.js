@@ -1,5 +1,5 @@
 // RawCampaignSession::Impl의 캠페인 소유 자료를 실제 하위 생성자로 구성한다(225553df, WB04-E574).
-// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → connectGunAndCursorViews → connectHitBodies → connectGunBodies → connectParticles → connectTeleport → connectCombat → connectVortex → connectAssets → connectWorldRuntimeHooks → connectContentNotices → connectContentLifetime → connectProduction → 나머지 모듈/Load.
+// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → connectGunAndCursorViews → connectHitBodies → connectGunBodies → connectParticles → connectTeleport → connectCombat → connectVortex → connectAssets → connectWorldRuntimeHooks → connectContentNotices → connectContentLifetime → connectProduction → connectFactories → 나머지 모듈/Load.
 // 이 단계는 Session이 아니며 현재 Runtime에 공개하지 않는다. 외곽 Session과 Load는 아직 미구현이다.
 // Editor/LAN/메타/Native 장치는 이 캠페인 분기에 섞지 않는다. 반납은 하위 모듈을 정리한 부모가 마지막에 dispose로 한다.
 import { GameAssets } from '../assets/game-assets.js';
@@ -39,6 +39,7 @@ import { RawCampaignSessionAssets, copyCampaignAssetEffects } from './raw-campai
 import { RawCampaignSessionRuntime } from './raw-campaign-session-runtime.js';
 import { RawCampaignSessionContents } from './raw-campaign-session-contents.js';
 import { RawCampaignSessionProduction } from './raw-campaign-session-production.js';
+import { RawCampaignSessionFactories } from './raw-campaign-session-factories.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -151,6 +152,9 @@ export class RawCampaignSessionOwners {
     contentUnpopEvent = 0x02000039; contentBombBlocked = 0;
     // 같은 Player 기술/허용표와 실제 장기 Deck 메모리를 빌리는 생산/동기화 부모다.
     productionModules = null; technology = null; totalMade = null; productionDeck = null; production = null; productionSync = null;
+    // 현재 연구/업그레이드/입력과 실제 SharedRegular 예약·뒤 설치할 AI 생산 부모다.
+    factoryModules = null; factoryUpgradeCommand = null; factoryInput = null; factoryUpgradePending = null; aiFactoryProduction = null;
+    flyerDependType = 1;
     // 독립 typed 분기만 지역으로 소유하는 현재 값이다. Native 전역을 임의로 빌리지 않는다.
     piece = 107; dudeProviderIndex = 0; windFlyerType = 138; rainFlyerType = 144; sunFlyerType = 73;
     // 기반 자료 반납 및 생성자 내 Player/SP 구간의 한 번 실행 여부다.
@@ -338,6 +342,12 @@ export class RawCampaignSessionOwners {
         this.productionModules ??= new RawCampaignSessionProduction(this); this.productionModules.bind();
     }
 
+    // 생산 뒤 실제 연구·업그레이드 명령/진행과 입력을 구성하여 InstallContents를 마친다.
+    connectFactories() {
+        if (this.#disposed) throw new Error('반납한 Session Factory 결선');
+        this.factoryModules ??= new RawCampaignSessionFactories(this); this.factoryModules.bind();
+    }
+
     // 신전 상승도 공유하는 현재 Template의 Territory120BYTE 쓰기다. 편집기 파일/화면은 만들지 않는다.
     writeTerritory(slot, records) {
         if (this.#disposed) throw new Error('반납한 Session Territory 쓰기');
@@ -365,9 +375,9 @@ export class RawCampaignSessionOwners {
     dispose() {
         if (this.#disposed) return; this.#disposed = true;
         try {
-            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); this.vortexModules?.dispose(); this.teleportModules?.dispose(); this.combatModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
+            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); this.vortexModules?.dispose(); this.teleportModules?.dispose(); this.combatModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
         } finally {
-            try { try { this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); } finally { this.world?.dispose(); } } finally {
+            try { try { this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); } finally { this.world?.dispose(); } } finally {
                 try { this.vortexModules?.dispose(); } finally { try { this.teleportModules?.dispose(); } finally { try { this.combatModules?.dispose(); } finally { try { this.particleModules?.dispose(); } finally { try { this.gunModules?.dispose(); } finally { try { this.hitModules?.dispose(); } finally { try { this.gunViewModules?.dispose(); } finally { try { this.typeModules?.dispose(); } finally { try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } } } } } } } } } }
             }
         }
