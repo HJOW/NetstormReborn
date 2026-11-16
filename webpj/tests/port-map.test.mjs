@@ -57,6 +57,7 @@ test('이식 대응표: 단독 경로와 웹 제외 경계의 대표 분류', ()
         'o/RawFortDeckLoad': 'exclude-edit', // 기존 Editor Deck
         'o/RawFortTerritoryRecover': 'port', // 신전 상승도 공유하는004bd600 writer(E588), 회복 본체는 Editor 전용
         'o/RawFortSnapshotParent': 'port', // 캠페인 기술 획득·신전 상승·의식 완료도 전체 snapshot 부모를 공유(E627)
+        'o/RawFortSnapshotBasics': 'port', // 같은 캠페인 snapshot의 실제 TypeNames/Deck writer(E628)
         'o/RawFortWorldLoad': 'port', // 미션 적재
         'o/RawCampaignWorldLoad': 'port',
         'o/RawFortImage': 'port', // 로그인 sendFort 직렬화

@@ -63,6 +63,7 @@ import { RawCampaignSessionInstall, createCampaignTutorialRoles } from './raw-ca
 import { RawCampaignSessionAi, createCampaignAiState } from './raw-campaign-session-ai.js';
 import { RawCampaignSessionAiWorld } from './raw-campaign-session-ai-world.js';
 import { RawCampaignSessionAiProduction } from './raw-campaign-session-ai-production.js';
+import { snapshotCampaignFortBasicSection } from './raw-campaign-snapshot-basics.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -592,6 +593,12 @@ export class RawCampaignSessionOwners {
     readFortObjectStreams(objects, slot, start = 0, end = 20, sourceStorage = null) {
         if (this.#disposed) throw new Error('반납한 Session Objects 읽기');
         readCampaignFortObjectStreams(this, objects, slot, start, end, sourceStorage);
+    }
+
+    // 외곽 snapshot 부모가 같은 실제 Template/덱에 TypeNames 또는 Deck을 쓴다. 공개 loaded 관문은 외곽이 맡는다.
+    snapshotFortBasicSection(slot, names) {
+        if (this.#disposed) throw new Error('반납한 Session 기본 snapshot');
+        snapshotCampaignFortBasicSection(this, slot, names);
     }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.

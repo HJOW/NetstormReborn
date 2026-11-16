@@ -64,6 +64,7 @@ export const RULES = Object.freeze([
     { id: 'edit-island-add', class: 'exclude-edit', names: ['RawIslandAdd', 'RawIslandPlacement'], reason: '편집기의 섬 한 개 추가와 임시 청크 지도 배치 검사' },
     // 기술 획득/신전 상승의 외곽 callback도 같은 두 snapshot 부모를 호출한다. 편집기 UI와 구별한다(WB04-E627).
     { id: 'campaign-snapshot-parent', class: 'port', names: ['RawFortSnapshotParent'], reason: 'RawCampaignSession.cpp4321·4328·6090의 캠페인 신전 상승/의식 완료/기술 획득도 SnapshotBattle/SnapshotFort의 공통 부모를 호출한다' },
+    { id: 'campaign-snapshot-basics', class: 'port', names: ['RawFortSnapshotBasics'], reason: '같은 캠페인 snapshot의 Session5825..5845가 TypeNames/Deck writer를 실제 Template/생산 덱에 연결한다(E628)' },
     {
         id: 'edit-fort-save', class: 'exclude-edit',
         names: ['RawFortObjectSave', 'RawFortObjectsSave', 'RawFortRegionSave', 'RawFortContentSave', 'RawFortTerritorySave', 'RawFortSnapshotBasics', 'RawFortSnapshotParent', 'RawFortMoneySave', 'RawFortMissionSave', 'RawFortBadgesSave', 'RawFortCoreWrite', 'RawFortSpWrite', 'RawFortSubscriberWrite', 'RawDataManagerFileSave', 'RawMenuSaveFort', 'SaveFortNameDialog'],

@@ -24335,10 +24335,41 @@
       "bytes": 2144255,
       "lines": 2729,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "worktree",
+      "webCommit": "7872c2a5f",
       "cpppjBasis": {
         "cpppj/src/o/RawFortSnapshotParent.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortSnapshotParent.h": "fa7762f9e"
+      }
+    },
+    {
+      "id": "fort-snapshot-basics",
+      "path": "cpppj/tests/fixtures/fort-snapshot-basics-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE2060관측(FortSnapshotBasicsTests.cpp)",
+      "consumers": [
+        "webpj/tests/fort-snapshot-basics.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-snapshot-basics.js"
+      ],
+      "unit": "WB04-E628",
+      "doc": "docs/webpj-fort-snapshot-basics-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortSnapshotBasics.cpp",
+        "cpppj/src/o/RawFortSnapshotBasics.h"
+      ],
+      "scope": "TypeNames/Deck writer2060행: signed 이름 hash·현재 count/State·고정 stream/인라인 폭별 쓰기·진단/정상·부분 중단. Session 실제 Template/생산 덱 검사는 별도 조립 계약이며 외곽/전체 snapshot·Load는 잔여",
+      "text": true,
+      "sha256": "213a12fb950542dc8893791033928276309e046935ce6f8b74dded0fcded8051",
+      "bytes": 404991,
+      "lines": 2062,
+      "fixtureCommit": "972b16b26",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortSnapshotBasics.cpp": "972b16b26",
+        "cpppj/src/o/RawFortSnapshotBasics.h": "972b16b26"
       }
     }
   ]
