@@ -1,5 +1,5 @@
 // RawCampaignSession::Impl의 캠페인 소유 자료를 실제 하위 생성자로 구성한다(225553df, WB04-E574).
-// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → connectGunAndCursorViews → connectHitBodies → connectGunBodies → connectParticles → connectTeleport → connectCombat → connectVortex → connectAssets → connectWorldRuntimeHooks → connectContentNotices → 나머지 모듈/Load.
+// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → connectGunAndCursorViews → connectHitBodies → connectGunBodies → connectParticles → connectTeleport → connectCombat → connectVortex → connectAssets → connectWorldRuntimeHooks → connectContentNotices → connectContentLifetime → 나머지 모듈/Load.
 // 이 단계는 Session이 아니며 현재 Runtime에 공개하지 않는다. 외곽 Session과 Load는 아직 미구현이다.
 // Editor/LAN/메타/Native 장치는 이 캠페인 분기에 섞지 않는다. 반납은 하위 모듈을 정리한 부모가 마지막에 dispose로 한다.
 import { GameAssets } from '../assets/game-assets.js';
@@ -144,6 +144,10 @@ export class RawCampaignSessionOwners {
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
+    // 같은 내용물 수명/운반 부모와 원문 단일 Sound47 예약이다. 후속 생성자가 현재 커서·제단·연구·피해 모듈을 채운다.
+    contentForms = null; carrierContentNotice = null; containedUnpop = null; pendingPickupSound = null;
+    cursor = null; daisNotice = null; factoryResearch = null; damageablePost = null;
+    contentUnpopEvent = 0x02000039; contentBombBlocked = 0;
     // 독립 typed 분기만 지역으로 소유하는 현재 값이다. Native 전역을 임의로 빌리지 않는다.
     piece = 107; dudeProviderIndex = 0; windFlyerType = 138; rainFlyerType = 144; sunFlyerType = 73;
     // 기반 자료 반납 및 생성자 내 Player/SP 구간의 한 번 실행 여부다.
@@ -156,7 +160,7 @@ export class RawCampaignSessionOwners {
             this.coreDataGlobals = input.coreDataGlobals ?? new ClientCoreDataGlobals();
             this.playerRecords = input.playerRecords ?? new ClientPlayerRecords(); this.playerUse = this.playerRecords.acquire();
             // 값형 서비스의 소비 묶음/peer9 표는 복사하고, 함수와 실제 공유 owner의 참조는 유지한다.
-            this.services = { ...input, install: { ...input.install }, assets: copyCampaignAssetEffects(input.assets), deletion: { ...input.deletion }, playerContent: { ...input.playerContent }, sound: { ...input.sound }, priest: { ...input.priest, shield: { ...input.priest?.shield }, regen: { ...input.priest?.regen } }, player: { ...input.player }, ownership: { ...input.ownership }, ai: { ...input.ai }, hit: { ...input.hit, priest: { ...input.hit?.priest }, general: { ...input.hit?.general }, burning: { ...input.hit?.burning }, vortex: { ...input.hit?.vortex }, dudes: { ...input.hit?.dudes } }, archer: copyCampaignArcherEffects(input.archer), battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
+            this.services = { ...input, install: { ...input.install }, assets: copyCampaignAssetEffects(input.assets), deletion: { ...input.deletion }, playerContent: { ...input.playerContent }, contentLifetime: { ...input.contentLifetime }, carrierContent: { ...input.carrierContent }, sound: { ...input.sound }, priest: { ...input.priest, shield: { ...input.priest?.shield }, regen: { ...input.priest?.regen } }, player: { ...input.player }, ownership: { ...input.ownership }, ai: { ...input.ai }, hit: { ...input.hit, priest: { ...input.hit?.priest }, general: { ...input.hit?.general }, burning: { ...input.hit?.burning }, vortex: { ...input.hit?.vortex }, dudes: { ...input.hit?.dudes } }, archer: copyCampaignArcherEffects(input.archer), battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
             this.worldRedraw = input.kencloudGlobals ? input.kencloudGlobals.worldRedraw() : { value: 0 };
             this.paint = Object.assign(new RegionPaintState(), { sharedWorldRedraw: this.worldRedraw });
             const revision = this.gameplayGlobals.mapRevision(); this.votes = new RegionOwnershipState({ sharedWorldRedraw: this.worldRedraw, sharedMapRevision: revision });
@@ -317,6 +321,12 @@ export class RawCampaignSessionOwners {
     connectContentNotices() {
         if (this.#disposed) throw new Error('반납한 Session 내용물 통지 결선');
         this.contentModules ??= new RawCampaignSessionContents(this); this.contentModules.bindNotices();
+    }
+
+    // 통지 뒤 같은 Form6 수명·운반 통지·일반 Unpop/현재 부착·내용물 생성기를 등록한다.
+    connectContentLifetime() {
+        if (this.#disposed) throw new Error('반납한 Session 내용물 수명 결선');
+        this.contentModules ??= new RawCampaignSessionContents(this); this.contentModules.bindLifetime();
     }
 
     // 신전 상승도 공유하는 현재 Template의 Territory120BYTE 쓰기다. 편집기 파일/화면은 만들지 않는다.

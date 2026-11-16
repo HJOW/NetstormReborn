@@ -31,6 +31,11 @@ export class SoundProcess extends SquidProcess {
     #system; #current = 0; #sound; #alternate; #flags; #startTime = 0;
     // 생성자는 필드만 채우며 부착은 시스템의 실제 Host가 한다.
     constructor(system, sound, alternate, flags) { super(); this.#system = system; this.#sound = sound >>> 0; this.#alternate = alternate >>> 0; this.#flags = flags >>> 0; }
+    // 미부착 예약 객체에 생성 인자를 채운다. Session의 new40 예약→같은 Sound47 부착에 쓰며 이미 Host/PID를 가진 객체는 재사용하지 않는다(WB04-E597).
+    initializeUnattached(sound, alternate, flags) {
+        if (this.host || this.pid || this.form) throw new Error('Sound47 미부착 예약 객체만 초기화할 수 있습니다');
+        this.#sound = sound >>> 0; this.#alternate = alternate >>> 0; this.#flags = flags >>> 0; this.#current = 0; this.#startTime = 0;
+    }
     // 재생 callback 뒤 현재 부모TYPE와 프레임을 다시 읽는다.
     #markTypeFrame() { const system = this.#system; system.state.typeFrames[system.pool.slot(this.parent)[TYPE]] = system.state.frame; }
     // 선택된 보고가 정상 복귀하면 원문의 다음 작업을 계속한다.
