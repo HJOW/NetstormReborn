@@ -6,7 +6,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E604)
+### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E605)
 
 | 항목 | 현행 기준 |
 | --- | --- |
@@ -14,13 +14,13 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C·4-R 완료, 현재 단계 **4-D**의 D 구획 `RawCampaignSession` 조립, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 1,007단위(제외 153 별도) 중 **port 846(84.0%)·partial 39(3.9%)·todo 122(12.1%)**. 남은 161단위 / 34,340줄은 기존 기준선 84단위 / 28,203줄과 재기준선(4-R)에서 추가된 77단위 / 6,137줄이다(단계 배정은 0.2·0.3절). 앱 수명에 연결된 단위(`session`)는 아직 0이다 |
-| 마지막 작업 단위 | **WB04-E604** — 생성자1653의 실제 typed Dude 생성/최초Pop·Task/행동/Regular/Drop·해방/피해전후·신전/간헐천 삭제를 같은 World/현재 효과에 연결했다(신규13건 통과, [단위 문서](docs/webpj-session-damageable-20261116.md)). Native/World 게시·Load·실제 Session 도착/낙하 재대조는 잔여이며 다음은1654 ConnectIceTower다 |
-| 마지막 전체 검사 | 2026-11-16 WB04-E604 검증 완료: Node v22.23.3·v26.13.0 최종 전체 각각 **5,812건 통과, 실패·취소·건너뜀 0**. v24는 사용자 지시로 생략하고 호환을 가정한다 |
+| 마지막 작업 단위 | **WB04-E605** — 생성자1654의 실제 typed 아이스147/성장150과 같은 Regular 예약/부착·현재 Server/boss/loading·절삭Hash/WORD/후처리를 연결했다(신규9건 첫 실행 통과, [단위 문서](docs/webpj-session-ice-20261116.md)). Native/World 게시·Load·실제 Kernel 재성장 반복은 잔여이며 다음은1655 ConnectCarrierSteal이다 |
+| 마지막 전체 검사 | 2026-11-16 WB04-E605 검증 완료: Node v22.23.3·v26.13.0 최종 전체 각각 **5,821건 통과, 실패·취소·건너뜀 0**. v24는 사용자 지시로 생략하고 호환을 가정한다 |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 **다음 작업 (위에서부터):**
 
-1. **4-D D `RawCampaignSession 1`을 이어 간다.** 생성자 `.cpp` 1536행까지의 모듈 조립,1537의 typed 신전 상승([E589](docs/webpj-session-vortex-20261116.md)),1538..1610의 실제 자산/PostPop 결선([E590](docs/webpj-session-assets-20261116.md))을 마쳤다. 선행 Host/Factory·공유 상태/공간·표시 부모와 실제 Storage/World 송신은 [E594](docs/webpj-surface-transmission-20261116.md)까지 연결했다. **1611..1649행 `RawWorldRuntimeHooks` 값 구성**도 마쳤다([E595](docs/webpj-session-runtime-20261116.md)). **1650행 `InstallContents` 내부3020..3049의 통지 접두**도 마쳤다([E596](docs/webpj-session-content-notices-20261116.md)). **3050..3134행 ContentForm 수명/운반·Unpop/생성**도 마쳤다([E597](docs/webpj-session-content-lifetime-20261116.md)). **3135..3156행 기술/Deck·생산/동기화**도 연결했다([E598](docs/webpj-session-production-20261116.md)). **3157..3192행 Factory 연구/업그레이드/입력**까지 연결하여 typed InstallContents1650 조립을 마쳤다([E599](docs/webpj-session-factories-20261116.md)). **1651행 ConnectFlare**도 연결했다([E600](docs/webpj-session-flare-20261116.md)). Construction이 참조하는 **재생 실행/현재 라벨 부모**도 먼저 옮겼다([E601](docs/webpj-build-replay-runtime-20261116.md), FILE/Host/키는6단계 잔여). 환불/배치 취소 writer·수신 부모도 옮겼다([E602](docs/webpj-construction-failure-packets-20261116.md)). **1652 Construction**도 같은 World/SP/방송·장기 최근 목록/방향·현재 재생과 실제 기본 패킷에 연결했다([E603](docs/webpj-session-construction-20261116.md)). **1653 Damageable**도 같은 Dude/해방·전후처리·신전/간헐천 수명에 연결했다([E604](docs/webpj-session-damageable-20261116.md)). 다음은 **1654 IceTower/운반/주문·이동/건물 → 전체 모듈 생성**이다. 실제 World.BindRuntime은1825행이다. Native mutable 송신/기본 Form writer와 나머지 장기 실행기는 실제 Client 결선에서 함께 옮긴다. 이어 외곽 공개·같은 Template의 TypeNames → Objects/Contents·`Load`로 간다(3.1절 4-D D).
+1. **4-D D `RawCampaignSession 1`을 이어 간다.** 생성자 `.cpp` 1536행까지의 모듈 조립,1537의 typed 신전 상승([E589](docs/webpj-session-vortex-20261116.md)),1538..1610의 실제 자산/PostPop 결선([E590](docs/webpj-session-assets-20261116.md))을 마쳤다. 선행 Host/Factory·공유 상태/공간·표시 부모와 실제 Storage/World 송신은 [E594](docs/webpj-surface-transmission-20261116.md)까지 연결했다. **1611..1649행 `RawWorldRuntimeHooks` 값 구성**도 마쳤다([E595](docs/webpj-session-runtime-20261116.md)). **1650행 `InstallContents` 내부3020..3049의 통지 접두**도 마쳤다([E596](docs/webpj-session-content-notices-20261116.md)). **3050..3134행 ContentForm 수명/운반·Unpop/생성**도 마쳤다([E597](docs/webpj-session-content-lifetime-20261116.md)). **3135..3156행 기술/Deck·생산/동기화**도 연결했다([E598](docs/webpj-session-production-20261116.md)). **3157..3192행 Factory 연구/업그레이드/입력**까지 연결하여 typed InstallContents1650 조립을 마쳤다([E599](docs/webpj-session-factories-20261116.md)). **1651행 ConnectFlare**도 연결했다([E600](docs/webpj-session-flare-20261116.md)). Construction이 참조하는 **재생 실행/현재 라벨 부모**도 먼저 옮겼다([E601](docs/webpj-build-replay-runtime-20261116.md), FILE/Host/키는6단계 잔여). 환불/배치 취소 writer·수신 부모도 옮겼다([E602](docs/webpj-construction-failure-packets-20261116.md)). **1652 Construction**도 같은 World/SP/방송·장기 최근 목록/방향·현재 재생과 실제 기본 패킷에 연결했다([E603](docs/webpj-session-construction-20261116.md)). **1653 Damageable**도 같은 Dude/해방·전후처리·신전/간헐천 수명에 연결했다([E604](docs/webpj-session-damageable-20261116.md)). **1654 IceTower**도 같은 현재 권한/Host/후처리에 연결했다([E605](docs/webpj-session-ice-20261116.md)). 다음은 **1655 운반/주문·이동/건물 → 전체 모듈 생성**이다. 실제 World.BindRuntime은1825행이다. Native mutable 송신/기본 Form writer와 나머지 장기 실행기는 실제 Client 결선에서 함께 옮긴다. 이어 외곽 공개·같은 Template의 TypeNames → Objects/Contents·`Load`로 간다(3.1절 4-D D).
 2. 이어서 4-D D의 2~4번(로컬 연결·로그인, 프레임·카메라, 승패·종료)과 `GameWorld`, E 구획(`ClientMain`·`ClientCampaignTransport` 2단계·4-C 통합 시험·**L2 판정**)으로 간다.
 3. Session 허브가 서면 막혀 있던 A 구획(State/World 정리 4모듈·선택 정리)과 B 구획(Client 서비스 3모듈)을 연결한다. 재기준선 추가분의 4-D 몫(`RawSurface*` 29·전송/Native 수신기 15·메타 7·규칙/건설 11 등, 0.3절)은 각 결선 지점에서 함께 옮긴다.
 4. 3.8절 허브/적응 판정 4건은 5-C·8단계 항목에서 처리한다.
@@ -102,7 +102,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 956·adapt 51·exclude-mp 62·exclude-edit 58·exclude-host 32·exclude-legacy 1, 미분류 0**(E573·E588 캠페인 공유 함수 범위 복원). 상태: **port 846·partial 39·todo 122·제외(-) 153**, session/oracle 0. partial에는 기존 단위의 부분 이식 외에 0.5절의 초안 2개·E574 Session 기반 자료·E584·E585 Devastation 자격/타이머와 E595 Ritual 준비 함수·E601 건설 재생 실행/현재 라벨이 있다. 웹 소스는 `webpj/www`의 `.js`(자산 `data/` 제외) 131,483줄, 검사 파일 774개다(2026-11-16 재집계) |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 956·adapt 51·exclude-mp 62·exclude-edit 58·exclude-host 32·exclude-legacy 1, 미분류 0**(E573·E588 캠페인 공유 함수 범위 복원). 상태: **port 846·partial 39·todo 122·제외(-) 153**, session/oracle 0. partial에는 기존 단위의 부분 이식 외에 0.5절의 초안 2개·E574 Session 기반 자료·E584·E585 Devastation 자격/타이머와 E595 Ritual 준비 함수·E601 건설 재생 실행/현재 라벨이 있다. 웹 소스는 `webpj/www`의 `.js`(자산 `data/` 제외) 131,552줄, 검사 파일 775개다(2026-11-16 재집계) |
 | 이식 추적 | `webpj/tests/fixtures/manifest.json` **806항목**(original-x86 767·screenshot 13·source 10·independent 9·cpppj-oracle 5·original-binary 2, 2026-11-16 재확인). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
@@ -312,7 +312,8 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
   - Construction 선행: 환불/배치 취소 wire와 같은 Pool/Hash의 모든 matching abstract 삭제 완료([E602](docs/webpj-construction-failure-packets-20261116.md)). Session 송신/Native 수신기 결선은 잔여다. 건설 재생의 Raw Run/라벨·Client 현재 context/수명/라벨 부모 완료([E601](docs/webpj-build-replay-runtime-20261116.md)). FILE/Host/키는6단계 잔여다.
   - 생성자1652/ConnectConstruction2731..2774의 같은 World/SP/방송·장기 최근5칸/방향9DWORD·현재 재생·기본 mutable 패킷/후설치 건물·Graph·이동 소비자 완료([E603](docs/webpj-session-construction-20261116.md)). Native 장기 건설 owner/전체 World 게시는 잔여다.
   - 생성자1653/ConnectDamageable2626..2705의 같은 Dude/해방·피해전후/신전·간헐천 수명 결선 완료([E604](docs/webpj-session-damageable-20261116.md)). 실제 Session Load 뒤 Dude 도착/낙하·경로와 붕괴 캡처 재대조는 남았다.
-  - **다음:** 1654 IceTower/운반/주문·이동/건물 → 전체 모듈 생성 → 외곽 공개 → 같은 Template TypeNames → Objects/Contents → `Load` → 실제 Login(2번 항목)
+  - 생성자1654/ConnectIceTower2145..2173의 같은 실제 Regular 예약/부착·절삭Hash/WORD·현재 Server/boss/loading/후처리 결선 완료([E605](docs/webpj-session-ice-20261116.md)). World/Load 뒤 실제 Kernel 재성장 반복/삭제 관문 재대조는 남았다.
+  - **다음:** 1655 운반/주문·이동/건물 → 전체 모듈 생성 → 외곽 공개 → 같은 Template TypeNames → Objects/Contents → `Load` → 실제 Login(2번 항목)
 - [ ] **RawCampaignSession 2: 로컬 연결·로그인** — `LoadLocalConnection`/`PrepareLocalConnectionForState`/`ConnectLocalConnectionForState`/`PollLocalConnectionState`/`PumpLocalConnection`/송신 + **RawCampaignSessionLogin** 234줄(+182, 4-C 이월 `Impl::Login`, 현재 389줄)
 - [ ] **RawCampaignSession 3: 프레임·카메라·표시 입력** — `RunFrame`/`PrepareFrame`·카메라 홈/중심/명령(`CenterCameraOn`·`ViewHome`·`ViewYourPriest`·`RequestCameraCenter`/`CommitRequestedCamera`)·입자 뷰(5-A 연결)
 - [ ] **RawCampaignSession 4: 승패·종료·Editor 제외 정리** — `CheckMissionOutcome`·종료 수명(웹 제외인 Existing Editor 계열은 만들지 않는다)
