@@ -1,5 +1,5 @@
 // RawCampaignSession::Impl의 캠페인 소유 자료를 실제 하위 생성자로 구성한다(225553df, WB04-E574).
-// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → connectGunAndCursorViews → connectHitBodies → connectGunBodies → connectParticles → 나머지 모듈/Load.
+// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → connectGunAndCursorViews → connectHitBodies → connectGunBodies → connectParticles → connectTeleport → 나머지 모듈/Load.
 // 이 단계는 Session이 아니며 현재 Runtime에 공개하지 않는다. 외곽 Session과 Load는 아직 미구현이다.
 // Editor/LAN/메타/Native 장치는 이 캠페인 분기에 섞지 않는다. 반납은 하위 모듈을 정리한 부모가 마지막에 dispose로 한다.
 import { GameAssets } from '../assets/game-assets.js';
@@ -31,6 +31,7 @@ import { RawCampaignSessionGunViews, createCampaignCursorTables } from './raw-ca
 import { RawCampaignSessionHits } from './raw-campaign-session-hits.js';
 import { RawCampaignSessionGuns } from './raw-campaign-session-guns.js';
 import { RawCampaignSessionParticles, createCampaignParticleTables } from './raw-campaign-session-particles.js';
+import { RawCampaignSessionTeleport } from './raw-campaign-session-teleport.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -117,6 +118,8 @@ export class RawCampaignSessionOwners {
     // 파편의 실제 지역 색표/현재 캡처 옵션·다리 그림이며 건물/공장 캡처는 후속 생성 구간의 같은 슬롯이다.
     shrapnelMapTokens; shrapnelOwnerColors; bridgeDrawState; shrapnelCaptureState;
     bridgeDraw = null; shrapnelCapture = null; buildingCapture = null; factoryDraw = null;
+    // Teleport 접두와 Init/부착하지 않은 cdecl 반환값이다. 펜스 전체 몸체는 후속 설치 구간의 현재 슬롯이다.
+    teleportModules = null; unstartedBombTimers = []; unstartedPaths = []; fenceRebuild = null;
     // 후속 실제 Login의 현재 소유 슬롯이다. 이 단계는 Login을 생성하거나 Session을 공개하지 않는다.
     login = null;
     // 독립 typed 분기만 지역으로 소유하는 현재 값이다. Native 전역을 임의로 빌리지 않는다.
@@ -257,6 +260,12 @@ export class RawCampaignSessionOwners {
         this.particleModules ??= new RawCampaignSessionParticles(this); this.particleModules.bind();
     }
 
+    // 입자 뒤 현재 생성자 ABI와 같은 바람/약화 HP/TYPE 전역을 연결한다.
+    connectTeleport() {
+        if (this.#disposed) throw new Error('반납한 Session Teleport 결선');
+        this.teleportModules ??= new RawCampaignSessionTeleport(this); this.teleportModules.bind();
+    }
+
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
     get fullDeck() { return this.gameplayGlobals.fullDeck().value; }
     // 값 쓰기도 동일 장기 DWORD를 사용한다.
@@ -278,10 +287,10 @@ export class RawCampaignSessionOwners {
     dispose() {
         if (this.#disposed) return; this.#disposed = true;
         try {
-            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
+            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.teleportModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
         } finally {
             try { this.world?.dispose(); } finally {
-                try { this.particleModules?.dispose(); } finally { try { this.gunModules?.dispose(); } finally { try { this.hitModules?.dispose(); } finally { try { this.gunViewModules?.dispose(); } finally { try { this.typeModules?.dispose(); } finally { try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } } } } } } }
+                try { this.teleportModules?.dispose(); } finally { try { this.particleModules?.dispose(); } finally { try { this.gunModules?.dispose(); } finally { try { this.hitModules?.dispose(); } finally { try { this.gunViewModules?.dispose(); } finally { try { this.typeModules?.dispose(); } finally { try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } } } } } } } }
             }
         }
     }

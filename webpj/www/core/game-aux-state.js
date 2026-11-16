@@ -61,6 +61,8 @@ export const GAME_AUX_FIELDS = Object.freeze([
     // 생성·프레임·수신 공장이 같은 장기 DWORD를 매번 읽는 세 애니메이션 부모 TYPE이다. (2026-11-16 WB04-E567)
     ['sunArcherType', 0x00541174, 'u32', 71, 'sunArcher', '썬 디스크 발사기의 현재 TYPE'],
     ['sunCannonType', 0x00541258, 'u32', 128, 'sunCannon', '썬 캐논의 현재 TYPE'],
+    // 상태 타이머의 펜스 재구성이 같은 장기 DWORD를 재조회한다. (2026-11-16 WB04-E585)
+    ['sunFenceType', 0x00541278, 'u32', 136, 'sunFence', '썬 바리케이드의 현재 TYPE'],
     ['windArcherType', 0x00541288, 'u32', 140, 'windArcher', '크로스보우의 현재 TYPE'],
     // Path 수신 trace가 공통 로그 임계값과 구별해 읽는 현재 signed 수준이다. (2026-11-16 WB04-E568)
     ['pathTraceLevel', 0x00540c68, 'i32', 99, null, '경로 수신의 현재 로그 수준'],
