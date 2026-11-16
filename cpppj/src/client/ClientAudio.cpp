@@ -1,5 +1,6 @@
 // 클라이언트의 소리·음악 소유자. 원본 WinMain "init sound" 순서와 Interpret Options의 소리 부분을 복원된 계층에 잇는다.
 #include "client/ClientAudio.h"
+#include "o/ConfigInterface.h" // Client와 메뉴의 공통 음량 해석에 기존 ReadInt를 사용한다(2026-11-16).
 #include <cstring>
 #include <exception>
 #include <sstream>
@@ -34,6 +35,21 @@ SceneMusicHooks CompleteSceneBoundaries(std::function<double()> wallSeconds,Scen
     if (!hooks.thunderFlash) hooks.thunderFlash=[] {};
     return hooks;
 }
+}
+
+// 원본 00435220의 소리 옵션 ReadInt 순서다. 없는 키는 실행 파일 초기값을 보존하고 명시된 0도 그대로 읽는다.
+ClientAudioOptions ReadClientAudioOptions(o::ConfigInterface& config) {
+    ClientAudioOptions result;
+    // 값을 복사한 뒤 기존 설정 reader가 덮어쓴 값만 반환한다. 원래 Client 몸체를 공유한다(2026-11-16).
+    const auto read = [&config](const char* key, std::int32_t current) { config.ReadInt(key, current); return current; };
+    result.sound = read("sound", result.sound ? 1 : 0) != 0;
+    result.music = read("music", result.music ? 1 : 0) != 0;
+    result.quality = read("soundQuality", result.quality);
+    result.soundVolumeStep = read("soundVolume", result.soundVolumeStep);
+    result.musicVolumeStep = read("musicVolume", result.musicVolumeStep);
+    result.maxSimulSounds = read("maxSimulSounds", result.maxSimulSounds);
+    result.swapSpeakers = read("swapLeftRightSpeakers", result.swapSpeakers ? 1 : 0) != 0;
+    return result;
 }
 
 // 점프 표 004359d0·004359e0과 같은 값이다. `step - 1`을 부호 없이 3과 비교해 범위 밖은 모두 0이다.

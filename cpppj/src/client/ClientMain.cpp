@@ -693,21 +693,10 @@ ClientAudio& Client::WorldAudio() {
     throw std::logic_error("캠페인 음향 서비스 초기화 전 접근");
 }
 
-// 설정 키 이름은 원본 Interpret Options(00435220)가 FUN_00441270으로 읽는 문자열이다(sound·music·soundQuality·soundVolume·musicVolume·maxSimulSounds·swapLeftRightSpeakers).
-// 원본 ReadInt는 키가 있고 변수의 현재 값과 다를 때만 변수를 바꾼다. 그래서 변수는 읽기 전에 기본값(setup.cfg·options.cfg의 기본값)을 가져야 하며,
-// 0으로 시작해 읽으면 설정이 0인 경우(소리·음악 끄기)를 놓친다.
+// 같은 Client 설정을 기존 순서로 읽는다. 메뉴와 공유하는 해석 함수가 원본 초기값과 저장값의 우선순위를 보존한다.
+// 2026-11-16 최초 실행 교정에서 몸체를 ClientAudio로 옮겼으며 Client 전용 접근 범위는 유지한다.
 ClientAudioOptions Client::ReadAudioOptions() {
-    ClientAudioOptions result;
-    // 현재 값에서 시작해 설정이 있으면 그 값으로 바꿔 돌려준다(없으면 현재 값 그대로).
-    const auto read = [this](const char* key, std::int32_t current) { configuration_.ReadInt(key, current); return current; };
-    result.sound = read("sound", result.sound ? 1 : 0) != 0;
-    result.music = read("music", result.music ? 1 : 0) != 0;
-    result.quality = read("soundQuality", result.quality);
-    result.soundVolumeStep = read("soundVolume", result.soundVolumeStep);
-    result.musicVolumeStep = read("musicVolume", result.musicVolumeStep);
-    result.maxSimulSounds = read("maxSimulSounds", result.maxSimulSounds);
-    result.swapSpeakers = read("swapLeftRightSpeakers", result.swapSpeakers ? 1 : 0) != 0;
-    return result;
+    return ReadClientAudioOptions(configuration_);
 }
 
 // 옵션 메뉴가 소리 설정을 바꾼 뒤 부른다. 소리 묶음이 없으면(noAudio) 아무 일도 하지 않는다.

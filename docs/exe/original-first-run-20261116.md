@@ -2,6 +2,8 @@
 
 2026-11-16, **HJOW-Athlon**. 사용자 요청에 따라 메인 메뉴 전 안내창, Struggle For Freedom의 최초 잠금 상태, Options 기본값만 분석했다. **원본 분석과 인계는 완료했으며 cpppj·dotnetpj·webpj 제품 코드의 수정·검증은 후속 작업이다.** cpppj부터 반영하고, 확정된 동작을 dotnetpj와 webpj에도 적용한다.
 
+**후속 갱신:** 같은 날 [cpppj1314 최초 상태 반영·검증](cpp-first-run-1314-20261116.md)을 완료했다. 아래는 원본 분석 시점의 근거와 인계 기록이며, cpppj 기본값5·5·동일 설정 해석·GUI13회 결과는 후속 문서가 기준이다. DN/WB 반영과 analyzeManager 수정은 여전히 미완료다.
+
 ## 1. 기준 상태와 관찰 조건
 
 - 사용자 커밋 `4040c1029`는 `originals/d/options.cfg`와 `originals/fullscreenStateFile.dat`를 제거했다. 현재 두 파일이 없는 상태가 정상적인 처음 설치 상태다. 누락 오류로 취급하거나 이전 파일을 복원하지 않는다. 게임이 실행 후 설정을 새로 만드는 것은 정상이다.
@@ -60,7 +62,7 @@ Campaign → Struggle For Freedom에서 **1번만 밝은 글자로 선택 가능
 | 해상도 | **800×600** | 수정하지 않은 setup의 `SCREENW=800`·`SCREENH=600`. 관찰 세션의 1024×768은 도구 설정이므로 기본값이 아님 |
 | 전체화면 시작 요청 | 켜짐(`startInFullScreen=1`) | setup의 `workingFullScreenFlags=11`·`windowScreenFlags=10`. 원본 실제 전체화면 출력·재실행 정상 여부는 미확인; 클론은 AGENTS의 전체화면 재실행 오류 방지 요구를 계속 충족해야 함 |
 
-**기존 클론과 확인된 차이:** 삭제 직전 원본 옵션(`git show 4040c1029^:originals/d/options.cfg`)에는 `welcomeGiven=1`·1024×768·`soundVolume=3`·`musicVolume=2`가 저장되어 있었다. 이는 이전 사용자의 저장값이다. 실제 최초 메뉴는 **둘 다5**이며, 원본 PE의 `DAT_00531900`(파일 오프셋 `0x131900`)과 `DAT_00531904`(`0x131904`)의 초기 DWORD도 각각 `05 00 00 00`이다. 이 전역을 `FUN_00435220`이 해당 설정 키가 있을 때만 덮어쓴다. 반면 현행 `cpppj/src/client/ClientAudio.h`의 `ClientAudioOptions`는3·2, `webpj/www/platform/settings.js`의 fallback도3·2다. **cpppj부터 기본값을5·5로 고치고 DN/WB에 반영해야 한다.** 저장된3·2를 가진 기존 사용자는 그대로3·2를 유지해야 한다.
+**분석 당시 클론과 확인된 차이:** 삭제 직전 원본 옵션(`git show 4040c1029^:originals/d/options.cfg`)에는 `welcomeGiven=1`·1024×768·`soundVolume=3`·`musicVolume=2`가 저장되어 있었다. 이는 이전 사용자의 저장값이다. 실제 최초 메뉴는 **둘 다5**이며, 원본 PE의 `DAT_00531900`(파일 오프셋 `0x131900`)과 `DAT_00531904`(`0x131904`)의 초기 DWORD도 각각 `05 00 00 00`이다. 이 전역을 `FUN_00435220`이 해당 설정 키가 있을 때만 덮어쓴다. 당시 `cpppj/src/client/ClientAudio.h`의 `ClientAudioOptions`는3·2, `webpj/www/platform/settings.js`의 fallback도3·2였다. **cpppj는1314에서5·5로 교정했고 DN/WB 반영은 남았다.** 저장된3·2를 가진 기존 사용자는 그대로3·2를 유지해야 한다.
 
 언어는 원본 자동 생성 설정에서 `english`였다. 11.01에 추가된 Difficulty·Frame Rate·Language·AA/FSR 등의 정책은 기존 요구를 유지한다(예: 난이도 보통, AA/FSR 꺼짐). 원본에 없는 항목의 기본값을 이번 관찰로 검증했다고 기록하지 않는다. Server Diagnostic 항목의 원본 온라인 기능도 복구 대상에 넣지 않는다.
 

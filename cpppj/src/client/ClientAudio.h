@@ -16,6 +16,10 @@
 #include <string>
 #include <string_view>
 
+namespace netstorm::o { // 음향 설정을 읽을 때 빌리는 기존 원본 설정 계층이다.
+class ConfigInterface; // 설정 저장소를 소유하지 않고 기존 ReadInt 인터페이스만 참조한다.
+}
+
 namespace netstorm::client {
 // 옵션 음량 단계(soundVolume·musicVolume)를 장치에 넘기는 1/100 dB 음량으로 바꾼다.
 // 단계 1 → -4000, 2 → -2000, 3 → -1000, 4 → -500이고 5와 그 밖의 값(0·음수·6 이상)은 0(최대)이다.
@@ -25,7 +29,7 @@ namespace netstorm::client {
 // 이력: 2026-10-10 추가 — 클라이언트에 소리 옵션을 연결하면서(기계어를 직접 판독했고 x86 대조 도구는 아직 적용하지 않았다).
 std::int32_t VolumeFromStep(std::int32_t step);
 
-// Interpret Options가 읽는 소리 관련 설정을 한곳에 모은 값이다. 기본값은 원본 setup.cfg·options.cfg의 기본값이다.
+// Interpret Options가 읽는 소리 관련 설정을 한곳에 모은 값이다. 설정 키가 없으면 원본 실행 파일의 초기값을 사용한다.
 // 사용: Client가 설정 객체에서 읽어 채우고 ClientAudio::Initialize·Interpret에 넘긴다.
 // 이력: 2026-10-10 추가.
 struct ClientAudioOptions {
@@ -33,13 +37,18 @@ struct ClientAudioOptions {
     bool sound{true},music{true};
     // 장치 음질 0~3(설정 soundQuality, DAT_005318fc). 3은 22,050Hz 스테레오 16비트다.
     std::int32_t quality{3};
-    // 효과음·음악 음량 단계(설정 soundVolume 기본 3, musicVolume 기본 2). VolumeFromStep으로 장치 음량이 된다.
-    std::int32_t soundVolumeStep{3},musicVolumeStep{2};
+    // 효과음·음악 음량 단계는 모두 5가 최초값이며 VolumeFromStep으로 장치 음량이 된다.
+    // 원본 DAT_00531900·00531904의 초기 DWORD 5를 사용한다. 옛 사용자 옵션의 3·2를 기본값으로 쓰던 부분을 2026-11-16 교정했다.
+    std::int32_t soundVolumeStep{5},musicVolumeStep{5};
     // 동시에 재생하는 효과음의 한도(설정 maxSimulSounds, 기본 8). 0이면 한도가 없다.
     std::int32_t maxSimulSounds{8};
     // 좌우 스피커를 바꾼다(설정 swapLeftRightSpeakers, DAT_0054db8c).
     bool swapSpeakers{};
 };
+
+// 원본 초기값에 명시된 설정만 덮어쓴다. Client와 메뉴가 같은 해석을 쓰며 설정/음향 장치는 변경하지 않는다.
+// 2026-11-16 최초 실행 교정에서 기존 Client 전용 읽기 몸체를 공유하여 누락 음량 키의 표시 차이를 없앴다.
+ClientAudioOptions ReadClientAudioOptions(o::ConfigInterface& config);
 
 // 옵션 전역/장치와 음량·현재 곡의 순서를 실제 ClientAudio와 창 없는 집중 검사가 공유한다.
 struct ClientAudioInterpretHooks {

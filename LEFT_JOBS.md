@@ -1,8 +1,8 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품 1313 / 11.01 · 정리 2026-11-16(HJOW-Athlon) · 마지막 단위 1313(캠페인 자동 플레이 일괄 실행·제단 총기 피격 연결, 사용자 지시) · 다음 번호 1314(최초 실행 상태 반영) · 마지막 디컴파일 HJOW-Athlon · 사용자 요청으로 목표 일시 중지**
+**제품 1314 / 11.01 · 정리 2026-11-16(HJOW-Athlon) · 마지막 단위 1314(최초 실행 음량·메뉴 해석 교정과 저장/잠금 검증) · 다음 번호 1315 · 마지막 디컴파일 HJOW-Athlon · 최초 상태 후속 완료, 기존 보류 유지**
 
-현재 상태·남은 작업·유효한 규칙만 유지한다. 단위별 경과와 만료된 지시는 [1310 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310), 개별 구현·검증은 아래 근거 문서를 따른다. [dotnetpj](LEFT_JOBS.dotnetpj.md)·[webpj](LEFT_JOBS.webpj.md)는 각 인계 문서가 기준이다. 2026-11-16 사용자 요청으로 최초 실행 상태 분석 결과를 세 인계 문서에 함께 반영했다(제품 코드 수정 없음).
+현재 상태·남은 작업·유효한 규칙만 유지한다. 단위별 경과와 만료된 지시는 [1310 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310), 개별 구현·검증은 아래 근거 문서를 따른다. [dotnetpj](LEFT_JOBS.dotnetpj.md)·[webpj](LEFT_JOBS.webpj.md)는 각 인계 문서가 기준이다. 2026-11-16 최초 상태 분석을 세 인계 문서에 먼저 반영했고, 후속 사용자 요청으로 cpppj1314를 완료했다. 이번 CP 단위에서는 DN/WB 코드·인계 문서를 수정하지 않았다.
 
 <a id="now"></a>
 
@@ -12,7 +12,7 @@
 
 | 구분 | 상태와 다음 행동 |
 | --- | --- |
-| **최초 실행 상태 반영(다음 1314)** | **2026-11-16 원본 분석·공통 인계 완료, 제품 반영 대기.** 원본 `options.cfg`·전체화면 표식이 없는 상태가 정상 최초 설치다. 메뉴 전 Welcome→Welcome2, Struggle For Freedom 1번만 선택 가능·체크 없음, Options 기본값을 새 기준으로 삼아 **cpppj부터** 빈 사용자 루트/무옵션 데이터 사본에서 맞춘다. [0.6절](#first-run)·[관찰 결과/PNG](docs/exe/original-first-run-20261116.md). DN/WB도 cpppj 확정 뒤 반영한다. |
+| **최초 실행 상태1314** | **완료(2026-11-16).** 음량 기본값5·5와 메뉴/보고서의 동일 해석을 교정했다. Welcome→Welcome2→메뉴, 최초 캠페인 잠금·완료 입력별 체크/해금, Options·저장/재실행·전체화면 재실행을 **집중48건·제품GUI13회**로 확인했다. 기존 사용자3·2는 보존한다. [0.6절](#first-run)·[구현/검증](docs/exe/cpp-first-run-1314-20261116.md). DN/WB 반영과 analyzeManager 무옵션 지원은 잔여다. |
 | **M8 최종 배포 관문** | **1311 완료.** 확정1310의 Release·ZIP1,436항목·배포본5경로·QuickJS6건·외부 접속 감사를 통과했다([3절](#final-gate)). 사용자 지시(2026-11-14)에 따라 문서·로컬 커밋 뒤 목표를 **paused**로 전환하며 재개 지시를 기다린다. |
 | **테스트 자동 플레이 1312** | **완료(2026-11-14 사용자 요청).** 명령줄 전용 `--test-autoplay`·`--test-ally-ai`·`--test-enemy-ai`·`--test-start-sp`·`--test-enemy-start-sp`로 **캠페인·스커미시**에서 로컬 플레이어에도 원본 데모 분기와 같은 AI를 붙여 자동 플레이한다(무인자 일반 실행·options.cfg·메뉴에는 없음). 실제 1-1에서 아군 어려움·적 쉬움·SP 20000으로 **승리(`BadTeamDead`) 재현**, 스커미시 실행 확인. 사람이 지켜볼 수 있게 **관전 카메라**(`--test-follow-battle`, 프리셋 포함: 주요 전투 위치, 희생 의식 중에는 제단으로 이동)도 넣었다. 11차 동맹 AI 난이도 판정도 보정했다. **플레이 결과 재현이 필요한 AI는 먼저 [AI 에이전트용 사용 안내](docs/testing/cpp-autoplay-test-guide.md)를 읽고 [실행 도구](tools/cpp_campaign_autoplay.py)를 쓴다.** [구현 근거](docs/exe/cpp-campaign-test-play-20261114.md). **1313 일괄 실행(사용자 지시로 3-x·2-5 제외, 캠페인 1·2의 10개):** 승리5(1-1·1-2·1-5·2-2·2-3)·패배1(2-1)·미결4(1-3·1-4·1-6·2-4). 2-4는 **제단 총기 피격 미복원으로 비정상 종료 → 수정, 재실행 완주**. 남은 과제: 아군 AI 정체 원인(AI 본체 필드 관측 필요)·희생 의식 카메라 미관측·3-1 `다른 파생 실제 피해 미복원`(3-x 제외로 미수정). [결과 7절](docs/exe/cpp-campaign-test-play-20261114.md#7-캠페인-전체-자동-플레이-실행-1313-2026-11-14-후속). |
 | **CD10.72 복원 C3~C5** | **사용자 보류(2026-11-14). 재개 지시 전 진행하지 않는다.** 메뉴·CDDir 저장 후 재실행은1309에서 확인했다. 1310의 Start/AI 설정은 순수 몸체만 검증했고 실제 Session/Guide/SP/AI 생성자에는 미연결이다. 첫 튜토리얼 차단은 `RawMenuHtml.inc:3`의 PATCH 전용 HTML 검사다. [보류 인계·재개 지점](docs/exe/cpp-cd1072-deferred-20261114.md). |
@@ -56,7 +56,7 @@
 
 | 단계 | 상태 | 잔여 |
 | --- | --- | --- |
-| 1차 10.78 복원 | 비MP 활성 범위 마감, 최초 상태 제보 후속 추가(2026-11-16) | **무옵션 최초 실행 반영·검증은 다음1314**, 자연 완주·전체 동일성은 사용자 확인 |
+| 1차 10.78 복원 | 비MP 활성 범위 마감, 최초 상태 교정/검증1314 완료 | 자연 완주·전체 동일성은 사용자 확인, 넓은 미션 진입 검사의 별도 실패는4.2절 |
 | 2차 Windows10/11 | 호환 구현 마감 | 다른 모니터/DPI·Windows11/ARM 실기 |
 | 3차 LAN·Outpost | 구현·정적 대조 마감 | MP 실행은 사용자 확인 |
 | 4차 MCP·와이드 | 구현 마감, 최대1920×1080 | 구체적 누락 제보 시 재개 |
@@ -76,25 +76,25 @@
 
 | 항목 | 현재 기준 |
 | --- | --- |
-| 제품 | **1313 / 11.01**, 코드는 1312·1313 단위 커밋(이전 1310 `09f9f34d5`). 마지막 집중 검사는 `netstorm_campaign_test_play_tests`16건·`netstorm_ai_difficulty_tests`5건·`netstorm_cd_mission_start_tests`10건 통과, NetstormCpp·NetstormRoot Release 종료0. 단위별 결과는 근거 문서에 있다. |
+| 제품 | **1314 / 11.01**. 마지막 집중 검사는 사용자 저장소13·음향24·NativeMainMenu11 = **48건 통과**, NetstormCpp·NetstormRoot 및 집중3대상 Release 종료0. 제품 GUI13회 종료0. 넓은 mission_entry115건에는 **2검사·5단언 실패**가 남는다(4.2절). [1314 결과](docs/exe/cpp-first-run-1314-20261116.md). |
 | 실행·플레이 | 10.78 메뉴·미션·스커미시 플레이 가능. CD는 메뉴만 확인했고 튜토리얼/플레이 미완료다. 전체 원본 동일성은 미확정이다. |
-| ZIP·전체 검사 | **1311 M8 통과**, ZIP1,436항목·배포본5경로·QuickJS6/6(제품1310 기준). **1312·1313에서 제품 코드가 바뀌었으므로 배포 전 새 ZIP·M8 관문이 필요하다.** 전체34경로 진입의 마지막 기록은 제품644, 최신 전체 솔루션 통과 기록은 없다. |
+| ZIP·전체 검사 | **1311 M8 통과**, ZIP1,436항목·배포본5경로·QuickJS6/6(제품1310 기준). **1312~1314에서 제품 코드가 바뀌었으므로 배포 전 새 ZIP·M8 관문이 필요하다.** 전체34경로 진입의 마지막 기록은 제품644, 최신 전체 솔루션 통과 기록은 없다. |
 | 디컴파일 | Client 양판본2026-11-03·R전용2026-11-07, 모두 **HJOW-Athlon(192.168.0.94)**. 이후 원문 변경·재디컴파일 없음. [기록](docs/exe/cpp-decompilation-20261103.md). |
 | 보호 | AGENTS.md·originals·originalCD·기존 fixture·README 개요를 보존한다. 최근 CD 사본 실행 전후 originalCD 전체 해시는 불변이었다. |
 
 <a id="first-run"></a>
 
-### 0.6 최초 실행 상태 — 원본 분석 완료, 구현 대기(2026-11-16)
+### 0.6 최초 실행 상태 — cpppj1314 완료(2026-11-16)
 
-사용자 커밋 `4040c1029`로 `originals/d/options.cfg`·`originals/fullscreenStateFile.dat`가 제거됐다. **원래 처음 설치 시 없는 파일이므로 복원하지 않는다.** [상세 분석·캡처 6장·세 프로젝트 완료 기준](docs/exe/original-first-run-20261116.md)이 새 최초 상태의 기준이다. 기존 스크린샷의 완료 기록·옛 옵션을 기본값으로 삼지 않는다.
+사용자 커밋 `4040c1029`로 `originals/d/options.cfg`·`originals/fullscreenStateFile.dat`가 제거됐다. **원래 처음 설치 시 없는 파일이므로 복원하지 않는다.** [원본 분석](docs/exe/original-first-run-20261116.md)이 최초 기준이고 [cpppj1314 구현·제품 화면6장·검증](docs/exe/cpp-first-run-1314-20261116.md)이 이번 완료 근거다. 기존 스크린샷의 완료 기록·옛 옵션을 기본값으로 삼지 않는다.
 
 - **시작창(실제 관찰):** 메뉴 버튼 전 `NetStorm` Welcome(OK) → Welcome2(Play Early Missions / Main Menu). Welcome2가 열릴 때 `welcomeGiven=1`을 저장한다. 최초에는 Tips로 대체하지 않는다.
-- **Struggle For Freedom(실제 관찰):** 1번만 선택 가능, 2~6번 비활성, 모두 클리어 체크 없음. 2번 클릭 무반응도 확인했다. 각 행의 체크는 자기 `Done*`, 활성은 직전 `Done*`(1번은 상수1)다. 완료 후 체크·다음 행 해금은 원본 스크립트로 대조했으며 실제 클리어는 이번에 수행하지 않았다.
-- **Options:** 소리·음악·바람·가장자리 스크롤·Auto-Demo·시작 팁 켜짐, 스피커 교환 꺼짐, **효과음5·음악5**. 원본 PE 초기값도5·5다. **현행 `ClientAudioOptions`의3·2는 삭제된 옛 사용자 옵션에서 온 값이므로 다음1314에서 교정해야 한다.** setup 원래 해상도는 **800×600**, 전체화면 시작 요청은1(working11/window10)이다. 캡처용1024×768·창 모드는 분석 조건이므로 기본값으로 기록하지 않는다. 클론의 전체화면 재실행 오류 방지·폐기 온라인 검증 비활성은 유지한다.
-- **원본 보호/실행:** HJOW-Athlon, 마지막 전체 디컴파일 호스트와 일치. 이번 REA 부분 정적 분석도 같은 호스트이며 기존 디컴파일 소스는 변경하지 않았다. 보호1,817파일 전후 해시 동일, 두 삭제 파일 부재 유지, 관찰 사본/녹화 종료 확인. 제품 코드·기존 fixture는 바꾸지 않았다.
+- **Struggle For Freedom:** 원본과 제품 모두 1번만 선택 가능, 2~6번 비활성, 모두 체크 없음이며 2번 클릭 무반응을 확인했다. 자기 `Done*`는 체크, 직전 `Done*`는 해금(1번은 상수1)이다. 제품의 완료 입력1~6 누적 사본6회도 확인했으며 실제 미션 클리어로 기록하지 않는다.
+- **Options:** 소리·음악·바람·가장자리 스크롤·Auto-Demo·시작 팁 ON, 스피커 교환 OFF, **효과음5·음악5**다. `ClientAudioOptions`의 옛3·2를 교정했고 `ReadClientAudioOptions`의 같은 읽기 몸체를 Client·메뉴·보고서가 쓴다.800×600을 유지하며 기존 사용자3·2도 유지한다. 기본 전체화면 첫/재실행 flags139/139·종료0, 폐기 검증 비활성 유지. 원본 캡처용1024×768을 기본값으로 가져오지 않았다.
+- **보호/검증:** HJOW-Athlon, 마지막 전체 디컴파일 호스트와 일치하며 디컴파일 소스·기존 fixture 변경 없음. 보호1,817파일·실행 자료 사본1,392파일 불변, 관찰 게임 종료 확인. 관련 집중48건·제품GUI13회 통과. 넓은 mission_entry115건의 별도2검사5단언 실패는4.2절에 남긴다.
 
-- [x] 최초 상태 원본 분석·화면 근거·세 LEFT_JOBS 기록(이번 문서 단위).
-- [ ] **다음1314 cpppj 우선:** 빈 `NETSTORM_USER_DATA`와 옛 옵션 없는 데이터 사본에서 일반 시작·위 세 화면·자동 저장·재실행을 맞춘다. 이미 있는 Welcome/Checked/옵션 부품은 보존하고, 개인 설정이 들어간 배포/오라클 사본과 정상 최초 시작을 구별한다. 기존 사용자 설정·진행은 초기화하지 않는다.
+- [x] 최초 상태 원본 분석·화면 근거·세 LEFT_JOBS 기록(앞선 공통 문서 단위).
+- [x] **cpppj1314:** 빈 사용자 루트/무옵션 사본의 시작 안내·잠금·옵션과 저장/재실행·전체화면 재실행을 확인했다. 기존 사용자 설정·진행은 초기화하지 않는다. 별도 사용자 파일의 완료 입력 검증은 실제 승리와 구별한다.
 - [ ] **analyzeManager 공통 후속:** `SessionStore.CreateAsync`가 없는 `options.cfg`를 필수로 읽어 `start_session` 준비에 실패한다. 무옵션 입력을 지원하고 관찰 사본에만 표시/경로 설정을 생성하도록 수정한다. 원본에 옵션 파일을 다시 만들어 우회하지 않는다(상세 문서5절).
 - [ ] **DN/WB 적용:** cpppj 확정 커밋 뒤 같은 시작창·잠금/체크·해당 Options·저장 수명을 반영한다. DN은 빈 사용자 홈, WB는 두 localStorage 키가 없는 독립 저장소로 비교하며 웹 제외 기능은 유지한다. 각 인계 문서에도 미완료 항목으로 기록했다.
 
@@ -106,6 +106,7 @@
 
 | 묶음 | 요약·근거 |
 | --- | --- |
+| 최초 실행1314 | 원본 PE 기본 음량5·5, Client/메뉴/보고서의 같은 설정 해석, 사용자 음량·안내/진행 저장 보존. 집중48건·제품GUI13회·데이터 불변 확인. 넓은 미션 진입 검사의 별도 실패는4.2절. [구현·검증·제품 화면](docs/exe/cpp-first-run-1314-20261116.md). |
 | 비MP 복원·호환 | [UI](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션](docs/exe/cpp-mission-state-scope-20261106.md)·[수명/FILE](docs/exe/cpp-internal-lifetime-closure-20261106.md). |
 | LAN·Native·M7 | M6-a~n 정적 종결, 장기 소유자·희생 안내·오류 로그 연결. [M6 종결](docs/exe/cpp-m6n-reachability-closure-20261111.md)·[오류 로그](docs/exe/cpp-error-log-20261111.md). |
 | 한국어·시나리오 편집 | K1~K5·S1~S4 완료. [한국어](docs/exe/cpp-korean-k4-k5-closure-20261111.md)·[읽기 전용 설치/시나리오](docs/exe/cpp-scenario-s4-readonly-home-20261111.md). |
@@ -144,7 +145,7 @@
 
 ZIP: `extracted/cpp-m8-1310/NetstormReborn-11.01-cpppj.zip`(209,724,870바이트), SHA-256 `0a94b7f11a39bef8b1c702ddaa6a6ae70cc816224db16dea98ebbdf94485c66e`.
 
-**1311 관문 당시의 필수 AI 작업은 마쳤다. 이후 추가된 최초 실행 상태 반영은0.6절의 미완료 후속이며, CD·선택 작업의 기존 보류는 유지한다.** 향후 제품 코드가 바뀌면 새 ZIP과 관문이 필요하다. 과거 결과는 [1294~1297](docs/exe/cpp-m8-final-gate-1294-20261111.md)에 있다.
+**1311 관문과 이후 요청된 최초 상태1314 작업은 각각 완료했다. CD·선택 작업의 기존 보류는 유지한다.** 제품1314 배포 전에는 새 ZIP과 관문이 필요하다. 과거 결과는 [1294~1297](docs/exe/cpp-m8-final-gate-1294-20261111.md)에 있다.
 
 <a id="contracts"></a>
 
@@ -161,10 +162,11 @@ ZIP: `extracted/cpp-m8-1310/NetstormReborn-11.01-cpppj.zip`(209,724,870바이트
 
 <a id="baselines"></a>
 
-### 4.2 알려진 기존 실패 — 최신 전수 통과로 바꾸지 않는다
+### 4.2 알려진 실패와 기준선 — 최신 전수 통과로 바꾸지 않는다
 
 | 대상 | 마지막 확인 기준 |
 | --- | --- |
+| mission_entry(1314) | 전수115건 중 `MissionStartingParent_ReplacesWorldBetweenInitialCopyAndCommit`·`MissionStartingParent_BodyAndConnectionFailureKeepNativeBoundary` **2검사·5단언 실패**. 동일 로딩 깊이 owner 대여/미션 로그인 장치 경계이며 단독2검사도 같은5단언 실패다. 변경 전 기준선과 직접 비교하지 않아 기존 실패로 확정하지 않는다. 별도 원인 분석·수정 필요. 관련 NativeMainMenu11건과 최초 상태GUI13회는 통과했다. [1314 결과/원시](docs/exe/cpp-first-run-1314-20261116.md). |
 | pop_context | 1304 당시24건. |
 | world_generation | 1304~1305 당시 GeneratorBodyShadowAndPicking·AiCarrierActionsUseActualWorldContentsAndLifetime 실패 후 CampaignSharedKernel 구간 비정상 종료. SessionPickupWire10건은 별도 통과. |
 | guide_fort_request / file_directory | 1278 당시4건 / 1285 당시3건. |

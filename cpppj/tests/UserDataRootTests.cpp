@@ -3,6 +3,7 @@
 #include "TestSupport.h"
 #include "client/BitmapFont.h"
 #include "client/ClientMain.h"
+#include "client/ClientAudio.h" // 사용자 설정 유무에 따른 실제 음량 해석값을 함께 검증한다(2026-11-16).
 #include "client/HelpListDisk.h"
 #include "client/TellMapMenus.h"
 #include "o/RawSoloMapList.h"
@@ -122,6 +123,44 @@ TEST_CASE(ClientOptions_UserFileIsWrittenAndReadBackWithoutTouchingInstall) {
         second.Configuration().Startup({});
         CHECK(second.Configuration().GetInt("PhaseFiveProbe") == 77); // 사용자 파일에서 읽었다.
     }
+}
+
+// 무옵션 첫 실행과 안내/진행 저장 뒤 재실행은 최대 음량을 유지하고, 명시한 사용자 음량은 다음 실행에서도 보존한다.
+TEST_CASE(ClientOptions_FirstRunAudioDefaultsAndSavedProgressPreserveUserVolumes) {
+    const auto base = UserWork("first-run-audio");
+    const auto install = base / "install";
+    const platform::UserDataRoot userRoot(base / "Saved Games" / "Netstorm");
+    std::filesystem::create_directories(install / "d");
+    {
+        client::Client first(MakeOptions(install, userRoot));
+        first.Configuration().Startup({});
+        const auto audio = client::ReadClientAudioOptions(first.Configuration());
+        CHECK(audio.soundVolumeStep == 5 && audio.musicVolumeStep == 5);
+        CHECK(!first.Configuration().Configuration().Get("soundVolume") && !first.Configuration().Configuration().Get("musicVolume"));
+        CHECK(first.Configuration().GetInt("welcomeGiven") == 0 && first.Configuration().GetInt("DoneTheWarBegins") == 0);
+        CHECK(!std::filesystem::exists(userRoot.OptionsFile()));
+        first.Configuration().Set("welcomeGiven", "1");
+        first.Configuration().Set("DoneTheWarBegins", "1");
+        client::SaveClientOptionsInGameDirectory(first.Configuration(), install, first.StaticStrings()->FileNames(), userRoot.OptionsFile());
+    }
+    {
+        client::Client returning(MakeOptions(install, userRoot));
+        returning.Configuration().Startup({});
+        const auto audio = client::ReadClientAudioOptions(returning.Configuration());
+        CHECK(audio.soundVolumeStep == 5 && audio.musicVolumeStep == 5);
+        CHECK(returning.Configuration().GetInt("welcomeGiven") == 1 && returning.Configuration().GetInt("DoneTheWarBegins") == 1);
+        returning.Configuration().Set("soundVolume", "3");
+        returning.Configuration().Set("musicVolume", "2");
+        client::SaveClientOptionsInGameDirectory(returning.Configuration(), install, returning.StaticStrings()->FileNames(), userRoot.OptionsFile());
+    }
+    {
+        client::Client saved(MakeOptions(install, userRoot));
+        saved.Configuration().Startup({});
+        const auto audio = client::ReadClientAudioOptions(saved.Configuration());
+        CHECK(audio.soundVolumeStep == 3 && audio.musicVolumeStep == 2);
+        CHECK(saved.Configuration().GetInt("welcomeGiven") == 1 && saved.Configuration().GetInt("DoneTheWarBegins") == 1);
+    }
+    CHECK(!std::filesystem::exists(install / "d" / "options.cfg"));
 }
 
 // 사용자 파일이 없으면 설치의 옛 d\options.cfg를 읽고(이관), 둘 다 있으면 사용자 파일이 이긴다.

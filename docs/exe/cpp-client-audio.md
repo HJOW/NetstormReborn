@@ -25,7 +25,7 @@
 
 ### 읽은 설정 키와 음량 단계 표
 
-설정 읽기는 `00435220`이 `FUN_00441270`(= `ConfigInterface::ReadInt`)으로 읽는 이름이다: `sound`(`0054daa0`)·`music`(`00531880`)·`soundQuality`(`005318fc`)·`soundVolume`(`00531900`)·`musicVolume`(`00531904`)·`maxSimulSounds`(`005424a8`)·`swapLeftRightSpeakers`(`0054db8c`). 기본값은 setup.cfg·options.cfg의 `sound=1`·`music=1`·`soundQuality=3`·`maxSimulSounds=8`·`soundVolume=3`·`musicVolume=2`다.
+설정 읽기는 `00435220`이 `FUN_00441270`(= `ConfigInterface::ReadInt`)으로 읽는 이름이다: `sound`(`0054daa0`)·`music`(`00531880`)·`soundQuality`(`005318fc`)·`soundVolume`(`00531900`)·`musicVolume`(`00531904`)·`maxSimulSounds`(`005424a8`)·`swapLeftRightSpeakers`(`0054db8c`). 최초 기준은 `sound=1`·`music=1`·`soundQuality=3`·`maxSimulSounds=8`·**`soundVolume=5`·`musicVolume=5`**다. **2026-11-16 정정:** 이전 문서의3·2는 옛 `options.cfg`에 저장된 사용자 값이었다. 설정 없는 원본 메뉴와 PE의 두 초기 DWORD가 모두5임을 [최초 상태 분석](original-first-run-20261116.md)에서 확인했다. [cpppj1314](cpp-first-run-1314-20261116.md)는 `ReadClientAudioOptions`의 한 몸체를 Client·음량 메뉴·관찰 보고서가 공유하며 기존 사용자 저장값은 계속 우선한다.
 
 **`ReadInt`는 값이 변수의 현재 값과 다를 때만 변수를 바꾼다.** 처음 구현에서 변수를 0으로 시작해 읽어 설정이 `0`일 때(소리·음악 끄기)를 놓쳤고(옵션 메뉴 스모크가 잡았다), 필드의 기본값에서 시작하도록 고쳤다.
 

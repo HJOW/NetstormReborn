@@ -1210,8 +1210,8 @@ GameMenusHooks UberGump::CurrentGameMenuHooks() {
         case 0x5c78d4:return client_.GetScreen().Flags();
         case 0x5c7910:return 1; // 원본 DirectDraw 설치 관문 대신 Windows10/11 호환 전체화면 기능을 메뉴에 공개한다.
         case 0x5c7b14:return client_.WorldAudio().DeviceReady() ? 1U : 0U;
-        case 0x531900:return std::bit_cast<std::uint32_t>(client_.Configuration().GetInt("soundVolume"));
-        case 0x531904:return std::bit_cast<std::uint32_t>(client_.Configuration().GetInt("musicVolume"));
+        case 0x531900:return std::bit_cast<std::uint32_t>(ReadClientAudioOptions(client_.Configuration()).soundVolumeStep); // 현재 음향 해석값을 읽어 설정 키가 없는 최초 실행에도 Volume 5를 체크한다(2026-11-16).
+        case 0x531904:return std::bit_cast<std::uint32_t>(ReadClientAudioOptions(client_.Configuration()).musicVolumeStep); // 저장된 사용자 음량은 그대로 우선하며, 없는 키를 ConfigInt의 0으로 표시하지 않는다(2026-11-16).
         case 0x55b4b0:return client_.Paused() ? 1U : 0U; // 이소비자는원본깊이의양수여부만검사한다.
         case 0x59a8ac:return hideBuildings_;
         case 0x5c85a4:return client_.GameplayGlobals()->world.editor;
@@ -1432,8 +1432,10 @@ void UberGump::OpenMenu(std::string name) {
         }
     } else if (popup_ == "soundvolume" || popup_ == "musicvolume") {
         const std::string key = popup_ == "soundvolume" ? "soundVolume" : "musicVolume";
-        // 원본 음량 단계는 1~5다. 장치 연결 전에 설정 저장을 검사할 수 있다.
-        for (int i = 1; i <= 5; ++i) add("Volume " + std::to_string(i), "Volume", key + "=" + std::to_string(i), config.GetInt(key) == i);
+        const auto audio = ReadClientAudioOptions(client_.Configuration()); // 장치와 같은 기본값/저장값을 표시하며 설정에는 기본 키를 새로 쓰지 않는다(2026-11-16).
+        const auto current = popup_ == "soundvolume" ? audio.soundVolumeStep : audio.musicVolumeStep; // 선택한 음량 축만 비교한다.
+        // 원본의 1~5단계를 나열하고 현재 적용값 한 행만 체크한다. 장치가 없어도 같은 설정 해석을 사용한다.
+        for (int i = 1; i <= 5; ++i) add("Volume " + std::to_string(i), "Volume", key + "=" + std::to_string(i), current == i);
     } else if (popup_ == "help") {
         add("About NetStorm", "Tell", "About");
     } else if (popup_ == "game") {
@@ -2266,7 +2268,8 @@ std::string UberGump::Report(bool cameraOnly) const {
     out<<warnings_->Report();
     out.precision(12); out<<"time\t"<<client_.Time().game<<'\t'<<client_.Time().wall<<"\n";
     out << "fullscreenMarker\t" << client_.Files().TryRead("fullscreenStateFile.dat").has_value() << "\n";
-    out << "musicVolume\t" << client_.Configuration().GetInt("musicVolume") << "\nsoundVolume\t" << client_.Configuration().GetInt("soundVolume") << "\n";
+    const auto audio = ReadClientAudioOptions(client_.Configuration()); // 메뉴/장치와 같은 실제 음량을 보고하며 누락 키를 0으로 잘못 기록하지 않는다(2026-11-16).
+    out << "musicVolume\t" << audio.musicVolumeStep << "\nsoundVolume\t" << audio.soundVolumeStep << "\n";
     if (mission_) {
         out << "mission\t" << Field(mission_->Name()) << '\t' << Field(mission_->MissionType()) << '\t' << fortObjects_ << "\n";
         out<<"mission_progress\t"<<client_.Configuration().GetInt("Done"+mission_->Name())<<'\n'; // 실제안내Config명령과같은저장값을검사보고에서읽는다.
