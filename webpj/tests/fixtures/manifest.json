@@ -777,7 +777,7 @@
       "bytes": 1552384,
       "lines": null,
       "fixtureCommit": "2f80430a0",
-      "webCommit": "worktree",
+      "webCommit": "4acf1fe01",
       "cpppjBasis": {
         "cpppj/src/o/RawGameAuxState.h": "8defb347c",
         "cpppj/src/o/RawSquidContainedUnpop.h": "be567d46b",
@@ -4409,21 +4409,24 @@
         "webpj/tests/region-sid-lists.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-region-owner.js"
+        "webpj/www/core/raw-region-owner.js",
+        "webpj/www/core/raw-campaign-session-ai.js"
       ],
       "doc": "docs/webpj-region-sid-lists-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawRegionOwner.cpp"
+        "cpppj/src/o/RawRegionOwner.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp"
       ],
-      "scope": "1632행 중 10.78(originals) 816행 사용(originalCD 816행은 범위 밖)",
+      "scope": "1632행 중 10.78(originals) 816행 사용(originalCD 816행은 범위 밖) / E623: 같은 실제 Session의 지역/승패·AI 본체/초기/지갑 결선 집중 검사와 함께 재대조; 실제 미션 Check/자연 승리·공중3종 전용 생성은 실행하지 않음.",
       "text": true,
       "sha256": "138de15121defd70e2e2c02f528bfd8f1be70e7b6cc15e4cffa738f3ad704b00",
       "bytes": 76997,
       "lines": 1633,
-      "fixtureCommit": "cbafd5fe",
-      "webCommit": "4c032fbb",
+      "fixtureCommit": "cbafd5fec",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawRegionOwner.cpp": "cbafd5fe"
+        "cpppj/src/o/RawRegionOwner.cpp": "cbafd5fec",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
       }
     },
     {
@@ -12243,23 +12246,26 @@
         "webpj/tests/ai-brain.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-ai-brain.js"
+        "webpj/www/core/raw-ai-brain.js",
+        "webpj/www/core/raw-campaign-session-ai.js"
       ],
       "doc": "docs/webpj-ai-brain-20261109.md",
       "cpppjSources": [
         "cpppj/src/o/RawAiBrain.cpp",
-        "cpppj/src/o/RawAiCreate.cpp"
+        "cpppj/src/o/RawAiCreate.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp"
       ],
-      "scope": "10.78 실제 PE 160행 전부",
+      "scope": "10.78 실제 PE 160행 전부 / E623: 같은 실제 Session의 지역/승패·AI 본체/초기/지갑 결선 집중 검사와 함께 재대조; 실제 미션 Check/자연 승리·공중3종 전용 생성은 실행하지 않음.",
       "text": true,
       "sha256": "53aecd3e635d5743ea07091d863d6db7fb328daa8181b7a5769b78a233087fab",
       "bytes": 2657374,
       "lines": 161,
-      "fixtureCommit": "cf5e22ca",
-      "webCommit": "0c15aa05",
+      "fixtureCommit": "cf5e22ca7",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawAiBrain.cpp": "74a36237",
-        "cpppj/src/o/RawAiCreate.cpp": "76e3c453"
+        "cpppj/src/o/RawAiBrain.cpp": "74a362377",
+        "cpppj/src/o/RawAiCreate.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
       }
     },
     {
@@ -12303,21 +12309,24 @@
         "webpj/tests/ai-initial-update.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-ai-initial-update.js"
+        "webpj/www/core/raw-ai-initial-update.js",
+        "webpj/www/core/raw-campaign-session-ai.js"
       ],
       "doc": "docs/webpj-ai-initial-update-20261109.md",
       "cpppjSources": [
-        "cpppj/src/o/RawAiBrainInitialUpdate.cpp"
+        "cpppj/src/o/RawAiBrainInitialUpdate.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp"
       ],
-      "scope": "10.78 실제 PE 133행 전부",
+      "scope": "10.78 실제 PE 133행 전부 / E623: 같은 실제 Session의 지역/승패·AI 본체/초기/지갑 결선 집중 검사와 함께 재대조; 실제 미션 Check/자연 승리·공중3종 전용 생성은 실행하지 않음.",
       "text": true,
       "sha256": "8784606de578d467f5ab2fbedc05662044782accf770ce9eb9ba1b18665a059d",
       "bytes": 1207594,
       "lines": 134,
-      "fixtureCommit": "4124e75b",
-      "webCommit": "1fb7c48d",
+      "fixtureCommit": "4124e75b2",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawAiBrainInitialUpdate.cpp": "fc85f3c9"
+        "cpppj/src/o/RawAiBrainInitialUpdate.cpp": "fc85f3c94",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
       }
     },
     {
@@ -12332,21 +12341,24 @@
         "webpj/tests/ai-initial-update.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-ai-initial-update.js"
+        "webpj/www/core/raw-ai-initial-update.js",
+        "webpj/www/core/raw-campaign-session-ai.js"
       ],
       "doc": "docs/webpj-ai-initial-update-20261109.md",
       "cpppjSources": [
-        "cpppj/src/o/RawAiBrainInitialUpdate.cpp"
+        "cpppj/src/o/RawAiBrainInitialUpdate.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp"
       ],
-      "scope": "10.78 실제 PE 16행 전부",
+      "scope": "10.78 실제 PE 16행 전부 / E623: 같은 실제 Session의 지역/승패·AI 본체/초기/지갑 결선 집중 검사와 함께 재대조; 실제 미션 Check/자연 승리·공중3종 전용 생성은 실행하지 않음.",
       "text": true,
       "sha256": "e6ec842056c6df0dc8ec294dc5454775e36ccb2069f996936bf48ccaf2ba77c3",
       "bytes": 144425,
       "lines": 17,
-      "fixtureCommit": "fc85f3c9",
-      "webCommit": "1fb7c48d",
+      "fixtureCommit": "fc85f3c94",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawAiBrainInitialUpdate.cpp": "fc85f3c9"
+        "cpppj/src/o/RawAiBrainInitialUpdate.cpp": "fc85f3c94",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
       }
     },
     {
@@ -15146,21 +15158,24 @@
         "webpj/tests/mission-outcome.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-mission-outcome.js"
+        "webpj/www/core/raw-mission-outcome.js",
+        "webpj/www/core/raw-campaign-session-ai.js"
       ],
       "doc": "docs/webpj-mission-outcome-20261110.md",
       "cpppjSources": [
-        "cpppj/src/o/RawMissionOutcome.cpp"
+        "cpppj/src/o/RawMissionOutcome.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp"
       ],
-      "scope": "10.78 364행 전부(CD 10.72 364행은 웹 범위 밖)",
+      "scope": "10.78 364행 전부(CD 10.72 364행은 웹 범위 밖) / E623: 같은 실제 Session의 지역/승패·AI 본체/초기/지갑 결선 집중 검사와 함께 재대조; 실제 미션 Check/자연 승리·공중3종 전용 생성은 실행하지 않음.",
       "text": true,
       "sha256": "3059eb7c9ee92f98eec042032d608707e5d1db506d0a6e3e08b175909b1aab16",
       "bytes": 1220797,
       "lines": 729,
-      "fixtureCommit": "a5afdafb",
-      "webCommit": "d5134cff",
+      "fixtureCommit": "a5afdafbe",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawMissionOutcome.cpp": "da6c61ae"
+        "cpppj/src/o/RawMissionOutcome.cpp": "da6c61ae3",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
       }
     },
     {

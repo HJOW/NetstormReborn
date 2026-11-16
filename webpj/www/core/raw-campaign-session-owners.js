@@ -60,6 +60,7 @@ import { RawCampaignSessionTransmission } from './raw-campaign-session-transmiss
 import { RawCampaignSessionTerrain, createCampaignTerrainState } from './raw-campaign-session-terrain.js';
 import { prepareCampaignFortTypeNames, readCampaignFortObjectStreams } from './raw-campaign-session-streams.js';
 import { RawCampaignSessionInstall, createCampaignTutorialRoles } from './raw-campaign-session-install.js';
+import { RawCampaignSessionAi, createCampaignAiState } from './raw-campaign-session-ai.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -218,6 +219,9 @@ export class RawCampaignSessionOwners {
     pipeline = null; normal = null; finishPlacement = null; finish = null;
     // Template 설치/WorldRuntime과 같은 현재 tutorial TYPE 역할의 독립 typed 소유 구간이다.
     installModules = null; tutorialWorkshopType; tutorialArcherType; tutorialTypes;
+    // 같은 승패/AI 본체/참여와 현재 typed 전역이다. 연결 함수는 후속 Login이 나중에 채운다.
+    aiModules = null; regionOwner = null; outcome = null; outcomeState; aiWorkshops; aiExcludedType; aiMissionFallback;
+    participation = null; aiConstructor = null; aiInitial = null; aiCreate = null; aiWallet = null; connectionAssign = null; connectionAlliance = null;
     // 독립 typed 분기만 지역으로 소유하는 현재 값이다. Native 전역을 임의로 빌리지 않는다.
     piece = 107; dudeProviderIndex = 0; windFlyerType = 138; rainFlyerType = 144; sunFlyerType = 73;
     // 기반 자료 반납 및 생성자 내 Player/SP 구간의 한 번 실행 여부다.
@@ -230,7 +234,7 @@ export class RawCampaignSessionOwners {
             this.coreDataGlobals = input.coreDataGlobals ?? new ClientCoreDataGlobals();
             this.playerRecords = input.playerRecords ?? new ClientPlayerRecords(); this.playerUse = this.playerRecords.acquire();
             // 값형 서비스의 소비 묶음/peer9 표는 복사하고, 함수와 실제 공유 owner의 참조는 유지한다.
-            this.services = { ...input, install: { ...input.install }, editorPlayerUi: { ...input.editorPlayerUi }, construction: copyCampaignConstructionEffects(input.construction), damageablePre: { ...input.damageablePre }, damageablePost: { ...input.damageablePost }, assets: copyCampaignAssetEffects(input.assets), deletion: { ...input.deletion }, playerContent: { ...input.playerContent }, contentLifetime: { ...input.contentLifetime }, carrierContent: { ...input.carrierContent }, production: { ...input.production, effects: { ...input.production?.effects } }, sound: { ...input.sound }, motion: { ...input.motion, carrier: { ...input.motion?.carrier } }, priest: { ...input.priest, shield: { ...input.priest?.shield }, regen: { ...input.priest?.regen } }, player: { ...input.player }, ownership: { ...input.ownership }, ai: { ...input.ai }, hit: { ...input.hit, priest: { ...input.hit?.priest }, general: { ...input.hit?.general }, burning: { ...input.hit?.burning }, vortex: { ...input.hit?.vortex }, dudes: { ...input.hit?.dudes } }, archer: copyCampaignArcherEffects(input.archer), battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
+            this.services = { ...input, install: { ...input.install }, editorPlayerUi: { ...input.editorPlayerUi }, construction: copyCampaignConstructionEffects(input.construction), damageablePre: { ...input.damageablePre }, damageablePost: { ...input.damageablePost }, assets: copyCampaignAssetEffects(input.assets), deletion: { ...input.deletion }, playerContent: { ...input.playerContent }, contentLifetime: { ...input.contentLifetime }, carrierContent: { ...input.carrierContent }, production: { ...input.production, effects: { ...input.production?.effects } }, sound: { ...input.sound }, motion: { ...input.motion, carrier: { ...input.motion?.carrier } }, priest: { ...input.priest, shield: { ...input.priest?.shield }, regen: { ...input.priest?.regen } }, player: { ...input.player }, ownership: { ...input.ownership }, missionOutcome: { ...input.missionOutcome }, ai: { ...input.ai, participation: { ...input.ai?.participation } }, hit: { ...input.hit, priest: { ...input.hit?.priest }, general: { ...input.hit?.general }, burning: { ...input.hit?.burning }, vortex: { ...input.hit?.vortex }, dudes: { ...input.hit?.dudes } }, archer: copyCampaignArcherEffects(input.archer), battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
             this.worldRedraw = input.kencloudGlobals ? input.kencloudGlobals.worldRedraw() : { value: 0 };
             this.paint = Object.assign(new RegionPaintState(), { sharedWorldRedraw: this.worldRedraw });
             const revision = this.gameplayGlobals.mapRevision(); this.votes = new RegionOwnershipState({ sharedWorldRedraw: this.worldRedraw, sharedMapRevision: revision });
@@ -280,6 +284,7 @@ export class RawCampaignSessionOwners {
             this.state = new RawCampaignSessionState(this);
             Object.assign(this, createCampaignTerrainState());
             Object.assign(this, createCampaignTutorialRoles());
+            Object.assign(this, createCampaignAiState());
             Object.assign(this, createCampaignCursorTables(this));
             this.tables = new RawCampaignSessionTables(this);
         } catch (error) { this.dispose(); throw error; }
@@ -539,6 +544,18 @@ export class RawCampaignSessionOwners {
         this.installModules ??= new RawCampaignSessionInstall(this); this.installModules.bind(fort);
     }
 
+    // 최초 Template/Runtime 뒤 같은 지역/사제/Player 승패 부모를 만든다. 사건 검사는 실행하지 않는다.
+    connectOutcome() {
+        if (this.#disposed) throw new Error('반납한 Session 승패 결선');
+        this.aiModules ??= new RawCampaignSessionAi(this); this.aiModules.bindOutcome();
+    }
+
+    // 승패 부모 뒤 실제 AI 참여/본체/초기 갱신·HP 지갑만 연결한다. 전체 AI·Session은 후속 구간이다.
+    connectAiBrains() {
+        if (this.#disposed) throw new Error('반납한 Session AI 결선');
+        this.aiModules ??= new RawCampaignSessionAi(this); this.aiModules.bindBrains();
+    }
+
     // 신전 상승도 공유하는 현재 Template의 Territory120BYTE 쓰기다. 편집기 파일/화면은 만들지 않는다.
     writeTerritory(slot, records) {
         if (this.#disposed) throw new Error('반납한 Session Territory 쓰기');
@@ -577,10 +594,11 @@ export class RawCampaignSessionOwners {
     // C++ 기반 멤버의 역순 반납이다. 전체 Session 부모는 먼저 자기 모듈/현재 Runtime 공개를 닫아야 한다.
     dispose() {
         if (this.#disposed) return; this.#disposed = true;
+        this.aiModules?.releaseBrains();
         try {
-            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); this.vortexModules?.dispose(); this.teleportModules?.dispose(); this.combatModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
+            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.aiModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); this.vortexModules?.dispose(); this.teleportModules?.dispose(); this.combatModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
         } finally {
-            try { try { this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); } finally { this.world?.dispose(); } } finally {
+            try { try { this.aiModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); } finally { this.world?.dispose(); } } finally {
                 try { this.vortexModules?.dispose(); } finally { try { this.teleportModules?.dispose(); } finally { try { this.combatModules?.dispose(); } finally { try { this.particleModules?.dispose(); } finally { try { this.gunModules?.dispose(); } finally { try { this.hitModules?.dispose(); } finally { try { this.gunViewModules?.dispose(); } finally { try { this.typeModules?.dispose(); } finally { try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } } } } } } } } } }
             }
         }
