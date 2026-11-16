@@ -29,6 +29,15 @@ import { RunePostPopState } from './raw-rune-post-pop.js';
 import { SoundProcessState } from './sound-process.js';
 import { TempleRitualState } from './raw-temple-ritual.js';
 
+// RawCheckingFlag 복사 때 같은 현재 포인터 또는 지역 DWORD를 고르는 비공개 복사 장치다.
+const FLAG_COPIERS = new WeakMap();
+// 값형 struct에 플래그를 복사한다. 이후 원래 struct의 값 대입은 복사본의 포인터를 바꾸지 않는다.
+export function captureCampaignFlag(target, key) {
+    const copy = FLAG_COPIERS.get(target)?.get(key);
+    if (copy) return copy();
+    const value = target[key]; return () => Number(typeof value === 'function' ? value() : value) >>> 0;
+}
+
 // 실제 owner의 칸을 {value} 참조로 빌린다. 스칼라 스냅샷을 만들어 동기화하지 않는다.
 function reference(owner, key) { return { get value() { return owner[key]; }, set value(value) { owner[key] = value; } }; }
 // RawCheckingFlag의 명시 Bind/값 대입 의미다. 값 대입은 지역 입력으로 돌아가며 외부 DWORD를 쓰지 않는다.
@@ -38,6 +47,9 @@ function bindFlag(target, key, read) {
         get() { return Number(source ? source() : typeof local === 'function' ? local() : local) >>> 0; },
         set(value) { source = null; local = value; },
     });
+    // 복사 순간의 포인터/지역 입력을 캡처하며 전역 DWORD 자체는 호출 때 현재 값을 읽는다.
+    const copies = FLAG_COPIERS.get(target) ?? new Map(); FLAG_COPIERS.set(target, copies);
+    copies.set(key, () => { const selected = source; const value = local; return () => Number(selected ? selected() : typeof value === 'function' ? value() : value) >>> 0; });
 }
 // shared* 포인터를 지원하지 않는 기존 값형 JS 소비자에 같은 현재 읽기를 제공한다.
 // 지역 필드 대입은 C++ shared 포인터 뒤에 가려진 fallback만 바꾸며 owner를 덮어쓰지 않는다.

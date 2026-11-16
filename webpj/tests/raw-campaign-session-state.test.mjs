@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { SoundList } from '../www/audio/sound-list.js';
 import { RawCampaignSessionOwners } from '../www/core/raw-campaign-session-owners.js';
+import { captureCampaignFlag } from '../www/core/raw-campaign-session-state.js';
 import { RawGeyserMined } from '../www/core/raw-geyser-mined.js';
 import { RawGunTarget } from '../www/core/raw-gun-target.js';
 import { currentForcePlacement } from '../www/core/raw-canon-placement.js';
@@ -23,6 +24,14 @@ const files = { read() { throw new Error('공유 입력 결선의 VFS 읽기 금
 function scene(extra = {}) { return new RawCampaignSessionOwners(game, files, 'thewarbegins', { unixSeconds: () => 1700000000, soundNames: new SoundList(), ...extra }); }
 // 관측이 허용되지 않은 효과는 시험에서 선택 시 실패한다.
 function forbidden() { throw new Error('이 공유 입력 검사에서 선택되지 않아야 하는 효과'); }
+
+test('Session 플래그 복사: 같은 전역 포인터와 원래 struct의 후속 지역 대입을 구별한다', () => {
+    const o = scene(); try { o.initializePlayersAndSp(); const flag = o.gameplayGlobals.aiDebug().checking(); const copied = captureCampaignFlag(o.state.gunState, 'checking'); flag.value = 0x80000000; assert.equal(copied(), 0x80000000); o.state.gunState.checking = 7; const local = captureCampaignFlag(o.state.gunState, 'checking'); flag.value = 9; assert.equal(copied(), 9); assert.equal(local(), 7); o.state.gunState.checking = 11; assert.equal(local(), 7); assert.equal(o.state.gunState.checking, 11); } finally { o.dispose(); }
+});
+
+test('Session 플래그 복사: 미등록 지역 값도 unsigned DWORD의 복사 순간을 유지한다', () => {
+    const state = { flag: -1 }; const copy = captureCampaignFlag(state, 'flag'); state.flag = 0; assert.equal(copy(), 0xffffffff);
+});
 
 test('Session 공유 상태: Player/SP 전후 단계와 실제 경로/피해 참조를 유지한다', () => {
     const o = scene(); const s = o.state;
