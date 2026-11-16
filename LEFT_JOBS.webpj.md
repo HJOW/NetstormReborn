@@ -6,19 +6,19 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-17, 마지막 단위 WB04-E616)
+### 0.1 현재 값 (2026-11-17, 마지막 단위 WB04-E617)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C·4-R 완료, 현재 단계 **4-D**의 D 구획 `RawCampaignSession` 조립, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 1,007단위(제외 153 별도) 중 **port 846(84.0%)·partial 39(3.9%)·todo 122(12.1%)**. 남은 161단위 / 34,340줄은 기존 기준선 84단위 / 28,203줄과 재기준선(4-R)에서 추가된 77단위 / 6,137줄이다(단계 배정은 0.2·0.3절). 앱 수명에 연결된 단위(`session`)는 아직 0이다 |
-| 마지막 작업 단위 | **WB04-E616** — cpppj1314(`bd2941f4`) 최초 음량5·5를 Settings/Web Audio에 재반영했다. 독립 Chromium 저장소에서 클릭 시작→Welcome→Welcome2 즉시 저장→메뉴·Struggle 최초 잠금·두 음량5·사용자3·2 선택→재실행 Tips·완료 입력 체크/다음 해금 유지까지 확인했다([단위 문서](docs/webpj-first-run-20261116.md)). 다음은1815 Transmission 선행 RawDaisProcessData다 |
-| 마지막 전체 검사 | 2026-11-17 WB04-E616: Node v22.23.3·v26.13.0 최종 전체 각각 **5,906건 통과, 실패·취소·건너뜀 0**. v24는 사용자 지시로 생략하고 호환을 가정한다 |
+| 이식 진행도 | 대상 1,007단위(제외 153 별도) 중 **port 847(84.1%)·partial 39(3.9%)·todo 121(12.0%)**. 남은 160단위 / 34,233줄은 기존 기준선 84단위 / 28,203줄과 재기준선(4-R)에서 추가된 76단위 / 6,030줄이다(단계 배정은 0.2·0.3절). 앱 수명에 연결된 단위(`session`)는 아직 0이다 |
+| 마지막 작업 단위 | **WB04-E617** — RawDaisProcessData107줄의 원문40BYTE·빈 Process·6ah 수신/writer와 실제 Host/Kernel 수명을 옮겼다. 신규6건/전체5,912건 양버전 통과([단위 문서](docs/webpj-dais-process-data-20261117.md)). 다음은1815 Transmission 합성이다 |
+| 마지막 전체 검사 | 2026-11-17 WB04-E617: Node v22.23.3·v26.13.0 최종 전체 각각 **5,912건 통과, 실패·취소·건너뜀 0**. v24는 사용자 지시로 생략하고 호환을 가정한다 |
 | 마지막 e2e | 2026-11-17 E616 Chromium **2/2 통과**(초기 페이지·독립 저장소 최초 실행/기존 설정·진행 재실행). Welcome/Welcome2·Options5·5·사용자3·2·Struggle 잠금/체크를 실제 클릭, 처리되지 않은 예외0. 실제 미션/월드 검사는 아니다 |
 
-**재개 인계 (2026-11-16):** 사용자 목표 재개에 따라 E615의 일시 중지 상태를 해제하고 진행한다. 생성자1814까지의 독립 typed 삭제/Regular 조립은 완료했고 실제 World 게시1825·외곽 Session/Load·미션 플레이는 미완료다. cpppj1314 최초 상태를 우선 반영한 E616을 마쳤으며 다음은1815 Transmission 합성이다. 선행 RawDaisProcessData.cpp/.h(4-D todo, DaisProcess 포함)를 먼저 이식·대조한다. 공중3종 새 전용 생성/생산/행동 검사를 추가하지 않는 경계를 유지하며 Native 장기 수명/분배는 잔여다.
+**재개 인계 (2026-11-16):** 사용자 목표 재개에 따라 E615의 일시 중지 상태를 해제하고 진행한다. 생성자1814까지의 독립 typed 삭제/Regular 조립은 완료했고 실제 World 게시1825·외곽 Session/Load·미션 플레이는 미완료다. cpppj1314 최초 상태를 우선 반영한 E616을 마쳤으며 다음은1815 Transmission 합성이다. 선행 RawDaisProcessData.cpp/.h는 E617에서 이식·대조했다. 다음은 같은 현재 헤더/버퍼와 송신 합성이다. 공중3종 새 전용 생성/생산/행동 검사를 추가하지 않는 경계를 유지하며 Native 장기 수명/분배는 잔여다.
 
 **최초 실행 상태 웹 반영 완료(WB04-E616):** [원본 관찰](docs/exe/original-first-run-20261116.md)·[cpppj1314 확정](docs/exe/cpp-first-run-1314-20261116.md)·[웹 검증](docs/webpj-first-run-20261116.md)이 기준이다. 기존 사용자의 localStorage 설정·진행을 초기화하지 않는다. 웹 해상도/전체화면·Edit·MP/온라인 검증 제외를 유지하며, 실제 미션 완료 효과 연결은8단계 잔여다.
 
@@ -28,7 +28,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 **다음 작업 (위에서부터):**
 
-1. **4-D D `RawCampaignSession 1`을 이어 간다.** 생성자 `.cpp` 1536행까지의 모듈 조립,1537의 typed 신전 상승([E589](docs/webpj-session-vortex-20261116.md)),1538..1610의 실제 자산/PostPop 결선([E590](docs/webpj-session-assets-20261116.md))을 마쳤다. 선행 Host/Factory·공유 상태/공간·표시 부모와 실제 Storage/World 송신은 [E594](docs/webpj-surface-transmission-20261116.md)까지 연결했다. **1611..1649행 `RawWorldRuntimeHooks` 값 구성**도 마쳤다([E595](docs/webpj-session-runtime-20261116.md)). **1650행 `InstallContents` 내부3020..3049의 통지 접두**도 마쳤다([E596](docs/webpj-session-content-notices-20261116.md)). **3050..3134행 ContentForm 수명/운반·Unpop/생성**도 마쳤다([E597](docs/webpj-session-content-lifetime-20261116.md)). **3135..3156행 기술/Deck·생산/동기화**도 연결했다([E598](docs/webpj-session-production-20261116.md)). **3157..3192행 Factory 연구/업그레이드/입력**까지 연결하여 typed InstallContents1650 조립을 마쳤다([E599](docs/webpj-session-factories-20261116.md)). **1651행 ConnectFlare**도 연결했다([E600](docs/webpj-session-flare-20261116.md)). Construction이 참조하는 **재생 실행/현재 라벨 부모**도 먼저 옮겼다([E601](docs/webpj-build-replay-runtime-20261116.md), FILE/Host/키는6단계 잔여). 환불/배치 취소 writer·수신 부모도 옮겼다([E602](docs/webpj-construction-failure-packets-20261116.md)). **1652 Construction**도 같은 World/SP/방송·장기 최근 목록/방향·현재 재생과 실제 기본 패킷에 연결했다([E603](docs/webpj-session-construction-20261116.md)). **1653 Damageable**도 같은 Dude/해방·전후처리·신전/간헐천 수명에 연결했다([E604](docs/webpj-session-damageable-20261116.md)). **1654 IceTower**도 같은 현재 권한/Host/후처리에 연결했다([E605](docs/webpj-session-ice-20261116.md)). **1655 CarrierSteal**도 같은 Form6/현재 방송·이동/정지·예약에 연결했다([E606](docs/webpj-session-carrier-steal-20261116.md)). **1656..1658 BombPostPop/AcidZap/AcidFence**도 같은 실제 접두·수신·공간/피해에 연결했다([E607](docs/webpj-session-spells-20261116.md)). **1659..1664 CarrierRegular**도 같은 너겟/Host·실제 미리보기·현재 표면/낙하와 공유 task에 연결했다([E608](docs/webpj-session-carrier-regular-20261116.md)). **1665..1667 Sun/Wind/RainAviary**도 같은 현재 Host/역할/시계·설정과 후설치 Flyer에 결선했다([E609](docs/webpj-session-aviaries-20261116.md), 새 전용 공중3종 실행 없음). **1668 ArcSpire**도 같은 현재 공간/자산·피해/빔·프레임/공통 Regular에 결선했다([E610](docs/webpj-session-arc-spire-20261116.md)). **1669 Flyer**도 같은 Process/Frame/Target·후처리와 현재 SID 진단/방송에 결선했다([E611](docs/webpj-session-flyers-20261116.md), 공중3종 새 전용 실행 없음). **1670 Fence**도 같은 현재 공간/TYPE·표식/연결선·공유 예약과 수명에 결선했다([E612](docs/webpj-session-fence-20261116.md)). **1671..1679 GemReward/Buried**도 같은 현재 제외 목록/게임 난수·Deck 장치와 Host/공통 장부에 결선했다([E613](docs/webpj-session-gems-20261116.md)). **1680..1756 독립 typed 자산 삭제 래퍼/가상 분배**도 같은 현재 부모와 기존 fallback에 결선했다([E614](docs/webpj-session-deletion-20261116.md), Native 장기 분기는 잔여). **1757..1814 전체 Regular**도 같은 현재 몸체/함수 값과 실패 콘솔에 결선했다([E615](docs/webpj-session-regular-20261116.md), Native 장기 분기는 잔여). 다음은 **1815 Transmission 합성(선행 RawDaisProcessData) → 1816..1824 효과/로딩 깊이 → Runtime 게시1825·전체 모듈 생성**이다. 실제 World.BindRuntime은1825행이다. Native mutable 송신/기본 Form writer와 나머지 장기 실행기는 실제 Client 결선에서 함께 옮긴다. 이어 외곽 공개·같은 Template의 TypeNames → Objects/Contents·`Load`로 간다(3.1절 4-D D).
+1. **4-D D `RawCampaignSession 1`을 이어 간다.** 생성자 `.cpp` 1536행까지의 모듈 조립,1537의 typed 신전 상승([E589](docs/webpj-session-vortex-20261116.md)),1538..1610의 실제 자산/PostPop 결선([E590](docs/webpj-session-assets-20261116.md))을 마쳤다. 선행 Host/Factory·공유 상태/공간·표시 부모와 실제 Storage/World 송신은 [E594](docs/webpj-surface-transmission-20261116.md)까지 연결했다. **1611..1649행 `RawWorldRuntimeHooks` 값 구성**도 마쳤다([E595](docs/webpj-session-runtime-20261116.md)). **1650행 `InstallContents` 내부3020..3049의 통지 접두**도 마쳤다([E596](docs/webpj-session-content-notices-20261116.md)). **3050..3134행 ContentForm 수명/운반·Unpop/생성**도 마쳤다([E597](docs/webpj-session-content-lifetime-20261116.md)). **3135..3156행 기술/Deck·생산/동기화**도 연결했다([E598](docs/webpj-session-production-20261116.md)). **3157..3192행 Factory 연구/업그레이드/입력**까지 연결하여 typed InstallContents1650 조립을 마쳤다([E599](docs/webpj-session-factories-20261116.md)). **1651행 ConnectFlare**도 연결했다([E600](docs/webpj-session-flare-20261116.md)). Construction이 참조하는 **재생 실행/현재 라벨 부모**도 먼저 옮겼다([E601](docs/webpj-build-replay-runtime-20261116.md), FILE/Host/키는6단계 잔여). 환불/배치 취소 writer·수신 부모도 옮겼다([E602](docs/webpj-construction-failure-packets-20261116.md)). **1652 Construction**도 같은 World/SP/방송·장기 최근 목록/방향·현재 재생과 실제 기본 패킷에 연결했다([E603](docs/webpj-session-construction-20261116.md)). **1653 Damageable**도 같은 Dude/해방·전후처리·신전/간헐천 수명에 연결했다([E604](docs/webpj-session-damageable-20261116.md)). **1654 IceTower**도 같은 현재 권한/Host/후처리에 연결했다([E605](docs/webpj-session-ice-20261116.md)). **1655 CarrierSteal**도 같은 Form6/현재 방송·이동/정지·예약에 연결했다([E606](docs/webpj-session-carrier-steal-20261116.md)). **1656..1658 BombPostPop/AcidZap/AcidFence**도 같은 실제 접두·수신·공간/피해에 연결했다([E607](docs/webpj-session-spells-20261116.md)). **1659..1664 CarrierRegular**도 같은 너겟/Host·실제 미리보기·현재 표면/낙하와 공유 task에 연결했다([E608](docs/webpj-session-carrier-regular-20261116.md)). **1665..1667 Sun/Wind/RainAviary**도 같은 현재 Host/역할/시계·설정과 후설치 Flyer에 결선했다([E609](docs/webpj-session-aviaries-20261116.md), 새 전용 공중3종 실행 없음). **1668 ArcSpire**도 같은 현재 공간/자산·피해/빔·프레임/공통 Regular에 결선했다([E610](docs/webpj-session-arc-spire-20261116.md)). **1669 Flyer**도 같은 Process/Frame/Target·후처리와 현재 SID 진단/방송에 결선했다([E611](docs/webpj-session-flyers-20261116.md), 공중3종 새 전용 실행 없음). **1670 Fence**도 같은 현재 공간/TYPE·표식/연결선·공유 예약과 수명에 결선했다([E612](docs/webpj-session-fence-20261116.md)). **1671..1679 GemReward/Buried**도 같은 현재 제외 목록/게임 난수·Deck 장치와 Host/공통 장부에 결선했다([E613](docs/webpj-session-gems-20261116.md)). **1680..1756 독립 typed 자산 삭제 래퍼/가상 분배**도 같은 현재 부모와 기존 fallback에 결선했다([E614](docs/webpj-session-deletion-20261116.md), Native 장기 분기는 잔여). **1757..1814 전체 Regular**도 같은 현재 몸체/함수 값과 실패 콘솔에 결선했다([E615](docs/webpj-session-regular-20261116.md), Native 장기 분기는 잔여). 다음은 **1815 Transmission 합성(선행 RawDaisProcessData는 [E617](docs/webpj-dais-process-data-20261117.md) 완료) → 1816..1824 효과/로딩 깊이 → Runtime 게시1825·전체 모듈 생성**이다. 실제 World.BindRuntime은1825행이다. Native mutable 송신/기본 Form writer와 나머지 장기 실행기는 실제 Client 결선에서 함께 옮긴다. 이어 외곽 공개·같은 Template의 TypeNames → Objects/Contents·`Load`로 간다(3.1절 4-D D).
 2. 이어서 4-D D의 2~4번(로컬 연결·로그인, 프레임·카메라, 승패·종료)과 `GameWorld`, E 구획(`ClientMain`·`ClientCampaignTransport` 2단계·4-C 통합 시험·**L2 판정**)으로 간다.
 3. Session 허브가 서면 막혀 있던 A 구획(State/World 정리 4모듈·선택 정리)과 B 구획(Client 서비스 3모듈)을 연결한다. 재기준선 추가분의 4-D 몫(`RawSurface*` 29·전송/Native 수신기 15·메타 7·규칙/건설 11 등, 0.3절)은 각 결선 지점에서 함께 옮긴다.
 4. 3.8절 허브/적응 판정 4건은 5-C·8단계 항목에서 처리한다.
@@ -42,7 +42,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 1~3 M1·M2 선행 | WB02-G·H, 3-A~3-E | 대응표·오라클 기반, 월드 부품 E1~E264 | 완료(2026-11-10) | — |
 | 4 M2 | 4-A·4-B·4-C | 자료·설정·타입 표 / Fort·지형·섬 적재 / 패킷·로그인·내부 전송 | 완료(E265~E328, 4-C 3항목은 4-D 이월) | — |
 | 〃 | 4-R 재기준선 | cpppj 제품 985 → 1313 전환과 오라클 재수집 | 완료(E497~E514) | — |
-| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 37/52** | 17 / 13,385 + 63 / 4,714 |
+| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 38/53** | 17 / 13,385 + 62 / 4,607 |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 진행 중 44/46 | 3 / 533 |
 | 〃 | 5-B | 카메라·HUD·미니맵·커서 | 진행 중 9/13 | 5 / 1,039 + 4 / 407 |
 | 〃 | 5-C | 게임 화면 허브(Uber·메뉴 컨트롤)·미션 진입 명령 → **M2 판정**(L4a) | 0/6(메인 메뉴·타이틀 State 3단위 선행 완료) | 10 / 5,766 |
@@ -51,7 +51,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 8 M4 | 8 | 미션 수명·안내·대본·소리·채팅·도움말 잔여 | 0/9(SoundProcess 선행 완료) | 30 / 5,916 |
 | 9 M5 | 9 | 표시 품질(60/120)·브라우저/OS 확인·정적 배포 | 미착수 | 0 + 1 / 41 |
 | 10 후순위 | 10 | AGENTS 4~14차 중 웹 해당분(4차 WebMCP·와이드, 5차 localStorage, 6차 미션 문구, 7차 console 로깅, 10차 버그, 11차 난이도, 12차 스커미시+Outpost, 13차 기타 언어 — 3.7절) | 일부 선행(11차 난이도 계산 E554·E555, Outpost 목록 수명 E556), 5차 대부분 충족 | 0 + 7 / 776 |
-| **합계** | | | | **84 / 28,203 + 77 / 6,137 = 161 / 34,340** |
+| **합계** | | | | **84 / 28,203 + 76 / 6,030 = 160 / 34,233** |
 
 **남은 일의 성격:** ① **조립**(4-D·5-C) — `RawCampaignSession`(7,118줄)·`ClientMain`(2,133줄)·`GameWorld`(1,157줄)·`UberGump`(2,683줄)·`RawMenuControls`(1,605줄)·`RawButtonControls`(811줄) 같은 허브가 이미 옮긴 부품을 한 월드로 묶는다. 여기서 처음으로 L2(session-dump)·L4a(미션 화면) 비교가 가능해지고, 부품 단계에서 보이지 않던 순서·수명 결함이 드러날 것이다. 재기준선에서 추가된 장기 월드 저장소(`RawSurface*`)·Native 수신기 묶음도 이 결선에 붙는다. ② **client 바인딩**(6·7) — `RawCampaign*` 바인딩·게임 메뉴·커서처럼 `o/` 부품을 세션에 잇는 얇은 단위가 많다. ③ **웹 적응**(8) — 소리·음악·동영상은 Web Audio 등으로 바꿔야 하는 adapt 단위다.
 
@@ -61,8 +61,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 1,007단위 / 146,305줄 | 846 (84.0%) / 111,965줄 (76.5%) | 39 (3.9%) / 19,125줄 | 122 (12.1%) / 15,215줄 |
-| `o/` 월드·규칙 | 561단위 / 73,277줄 | 544 (97.0%) / 71,029줄 (96.9%) | 3 (0.5%) / 1,164줄 | 14 (2.5%) / 1,084줄 |
+| 전체 | 1,007단위 / 146,305줄 | 847 (84.1%) / 112,072줄 (76.6%) | 39 (3.9%) / 19,125줄 | 121 (12.0%) / 15,108줄 |
+| `o/` 월드·규칙 | 561단위 / 73,277줄 | 545 (97.1%) / 71,136줄 (97.1%) | 3 (0.5%) / 1,164줄 | 13 (2.3%) / 977줄 |
 | `client/` 세션·UI·표시 | 445단위 / 72,602줄 | 301 (67.6%) / 40,510줄 (55.8%) | 36 (8.1%) / 17,961줄 | 108 (24.3%) / 14,131줄 |
 | `zacket/` 내부 미션 전송 | 1단위 / 426줄 | 1 (100%) / 426줄 (100%) | 0 | 0 |
 
@@ -83,21 +83,21 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | I 건설·생산·경제·다리 | 16 / 1,483 | 1 / 48 | 15 / 1,435 |
 | J 전투·비행·투사체·방어 | 9 / 657 | 1 / 163 | 8 / 494 |
 | K AI | 2 / 55 | 1 / 28 | 1 / 27 |
-| L 신전·제단·의식·승패 | 6 / 485 | 2 / 236 | 4 / 249 |
+| L 신전·제단·의식·승패 | 5 / 378 | 2 / 236 | 3 / 142 |
 | M 미션 수명·안내·대본·튜토리얼 | 2 / 484 | 0 / 0 | 2 / 484 |
 | N 소리·음악·동영상 | 13 / 3,349 | 4 / 2,041 | 9 / 1,308 |
 | O 채팅·메시지 | 2 / 90 | 0 / 0 | 2 / 90 |
 | X 요구사항 전용(4~14차) | 3 / 652 | 1 / 212 | 2 / 440 |
 | Z 멀티플레이·LAN·Outpost | 6 / 842 | 0 / 0 | 6 / 842 |
-| **합계** | **161 / 34,340** | 39 / 19,125 | 122 / 15,215 |
+| **합계** | **160 / 34,233** | 39 / 19,125 | 121 / 15,108 |
 
-**재기준선에서 추가된 미완료 77단위의 단계 배정** (재기준선 판정 E498~E502의 후속 단계 기준, 단위 / 현재 줄):
+**재기준선에서 추가된 미완료 76단위의 단계 배정** (재기준선 판정 E498~E502의 후속 단계 기준, 단위 / 현재 줄):
 
-- **4-D — 63단위 / 4,714줄**
+- **4-D — 62단위 / 4,607줄**
   - 장기 월드 저장소 29단위 / 1,517줄([E498](docs/webpj-rebaseline-surface-20261115.md)) — Tutorial1 시작에 필요한 멤버만 4-D에서 옮기고 전투·의식 등 나머지는 소비자 단계(6·7)에서 연결한다: RawSurfaceAttack·RawSurfaceAssetDeletion·RawSurfaceAssetNotice·RawSurfaceBalloon·RawSurfaceBomb·RawSurfaceCarrier·RawSurfaceContent·RawSurfaceDaisDeletion·RawSurfaceDamageable·RawSurfaceDecoration·RawSurfaceDeletion·RawSurfaceDepend·RawSurfaceDudeRegular·RawSurfaceFactoryRegular·RawSurfaceFence·RawSurfaceFlare·RawSurfaceFrameRegular·RawSurfaceGump·RawSurfaceIce·RawSurfaceLifetime·RawSurfaceMana·RawSurfacePlayerRegular·RawSurfacePriest·RawSurfacePriestDeletion·RawSurfaceRegistryDeletion·RawSurfaceResidenceRegular·RawSurfaceReward·RawSurfaceRitual·RawSurfaceVortex
   - 전송·Native 수신기 14단위 / 1,077줄([E501](docs/webpj-rebaseline-transport-20261115.md)): RawPacketDelay·RawPacketFrame·ClientPacketSources·RawSquidReceive·RawSquidMutationReceive·RawSquidCompressedReceive·RawSquidVerification·RawPeerWorldSync·NativeLoginPacketReceivers·NativeGameplayPacketReceivers·NativeCarrierPacketReceivers·NativeConstructionPacketReceivers·ClientChatPacketReceiver·FortCoreDataLoad
   - 메타·전투 경계의 단독 도달 앞단 7단위 / 817줄([E502](docs/webpj-rebaseline-meta-20261115.md)): ClientMetaPacketReceivers·ClientChallengeGlobals·RawBattleCompletion·NativeMetaConnectedState·NativeBattleReturnState·ClientMetaSpriteRefresh·NativeMetaSpriteRefresh(두 Sprite 갱신은 5-C 화면 허브와 함께 확인)
-  - 규칙·건설 장치 10단위 / 901줄([E500](docs/webpj-rebaseline-gameplay-20261115.md)): ClientConstructionGlobals·ClientConstructionRegions·ClientConstructionRandomPlacement·ClientConstructionPlacement·ClientConstructionDevices·ClientConstructionGem(Tutorial1 필요분은 4-D, 입력·건설 나머지는 6)·RawCampaignVortex·RawDaisProcessData·RawManoSpell·AssetDeletionVtables
+  - 규칙·건설 장치 9단위 / 794줄([E500](docs/webpj-rebaseline-gameplay-20261115.md)): ClientConstructionGlobals·ClientConstructionRegions·ClientConstructionRandomPlacement·ClientConstructionPlacement·ClientConstructionDevices·ClientConstructionGem(Tutorial1 필요분은 4-D, 입력·건설 나머지는 6)·RawCampaignVortex·RawManoSpell·AssetDeletionVtables
   - 진단·Fort 저장 경계 2단위 / 303줄([E499](docs/webpj-rebaseline-boundaries-20261115.md)): SessionStateDump(웹 session-dump, 3.5절 1번)·NativeFortSaveVirtual
   - 시간 동기화 1단위 / 99줄: RawClockSynchronization(partial, 3.1절 4-D C)
 - **5-B — 4단위 / 407줄**([E502](docs/webpj-rebaseline-meta-20261115.md)·[E500](docs/webpj-rebaseline-gameplay-20261115.md)): HudNsInfoMeta·NativePlayerInfoInput·NativeNsInfoInput·HudPlayerButtonDraw
@@ -110,7 +110,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 956·adapt 51·exclude-mp 62·exclude-edit 58·exclude-host 32·exclude-legacy 1, 미분류 0**(E573·E588 캠페인 공유 함수 범위 복원). 상태: **port 846·partial 39·todo 122·제외(-) 153**, session/oracle 0. partial에는 기존 단위의 부분 이식 외에 0.5절의 초안 2개·E574 Session 기반 자료·E584·E585 Devastation 자격/타이머와 E595 Ritual 준비 함수·E601 건설 재생 실행/현재 라벨이 있다. 웹 소스는 `webpj/www`의 `.js`(자산 `data/` 제외) 132,657줄, 검사 파일 785개다(2026-11-16 재집계) |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 956·adapt 51·exclude-mp 62·exclude-edit 58·exclude-host 32·exclude-legacy 1, 미분류 0**(E573·E588 캠페인 공유 함수 범위 복원). 상태: **port 847·partial 39·todo 121·제외(-) 153**, session/oracle 0. partial에는 기존 단위의 부분 이식 외에 0.5절의 초안 2개·E574 Session 기반 자료·E584·E585 Devastation 자격/타이머와 E595 Ritual 준비 함수·E601 건설 재생 실행/현재 라벨이 있다. 웹 소스는 `webpj/www`의 `.js`(자산 `data/` 제외) 132,756줄, 검사 파일 786개다(2026-11-16 재집계) |
 | 이식 추적 | `webpj/tests/fixtures/manifest.json` **806항목**(original-x86 767·screenshot 13·source 10·independent 9·cpppj-oracle 5·original-binary 2, 2026-11-16 재확인). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
@@ -253,7 +253,7 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
 - **목록 밖 단위:** 다른 단계 몫을 끼워 넣지 않는다. 항목이 선행 미완료로 막히면 사유를 그 항목에 적고 같은 단계의 다음 항목으로 간다. 단계 전체가 막히면 사유를 0.1절 다음 작업에 적고, 선행이 갖춰진 이월 부품(6-P·7-P) 항목을 진행할 수 있다. 목록에 없던 단위가 꼭 필요하면 해당 단계 목록 끝에 항목을 추가하고 이유를 적는다.
 - **끝난 단계:** 단계 머리글이 `(m/m)`이 되면 그 체크 목록을 보관본으로 옮기고 2.3절 표에 한 줄을 더한다(0.5절 5번).
 
-#### 4-D Session 조립·Tutorial1 Load/Start (37/52)
+#### 4-D Session 조립·Tutorial1 Load/Start (38/53)
 
 **완료 기준(3.2절): L2** — Tutorial1 Load/Start 관측(보고서·session-dump·첫 프레임 논리 화면)이 cpppj와 같다. 임시 Player/AI/색 번호로 시작 성공을 만들지 않는다. 선행 4-B·4-C·4-R은 완료다.
 
@@ -280,6 +280,8 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
   - 막힘(E348 판정): `RawCampaignSession.h`의 서비스 형식과 `Client`·`GameWorld`·`RawButtonControls`를 요구하는 접합 코드 — D(RawCampaignSession) 뒤
 
 **C. Session 바인딩** (Tutorial1 Load/Start에 닿는 것만 먼저, 나머지는 6·7·8단계에서 연결)
+
+- [x] o **RawDaisProcessData** 107줄 — 생성자1815 DaisTransmission 합성의 선행 원문40BYTE·빈 Process·6ah 선택 수신/writer와 실제 Host/Kernel 수명을 옮겼다. cpppj 전용 시험/원본 fixture 없음: 소스 계약6건(모든 mask·parent/force1024조합·부분 실패·실제 Host) 통과. 실제 Session/Native6ah 수신 결선은 잔여다 → [E617](docs/webpj-dais-process-data-20261117.md)
 
 - [ ] o **RawClockSynchronization** 99줄(partial, 재기준선 단위)
   - 완료: 일반 등록·서버 초기화·연결·수신([E515](docs/webpj-clock-synchronization-receive-20261115.md)), CRT 표본 정렬을 합성 350건과 추가 3,500건으로 대조([E516](docs/webpj-clock-sort-20261115.md)), Poll 본체와 실제 cpppj 장면 24건 대조([E517](docs/webpj-clock-poll-20261115.md))
@@ -331,7 +333,7 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
   - 생성자1671..1679의 GemReward/Buried와 같은 현재 지역 상태/건설 제외 목록·게임 난수/실제 Deck 장치·Host 두 예약/공통 장부 결선 완료([E613](docs/webpj-session-gems-20261116.md)). 신규7건 교정 후 통과·관련17건 통과. 실제 World 분배/게시·Load·Native는 후속이다.
   - 생성자1680..1756의 독립 typed 피해→내용물→건설·사제 삭제 래퍼와 현재 VT/TYPE 수명 자격·파생 Pre/Post·최종 가상 삭제 분배 결선 완료([E614](docs/webpj-session-deletion-20261116.md)). 신규8건/관련16건 첫 통과. Native 진단/장기 수명·실제 World 게시/Load는 잔여다.
   - 생성자1757..1814의 독립 typed BuriedRegular·현재 Player/사제 후단과 실제 중첩 Regular·다리/장식/특수 주문·실패 콘솔 결선 완료([E615](docs/webpj-session-regular-20261116.md)). 신규7건 첫 통과·관련55건 통과. Native 장기 Regular와 실제 Runtime 게시/Load는 잔여다.
-  - **다음:** 1815 Transmission 합성(선행 RawDaisProcessData.cpp/.h의 DaisProcess/packet 이식) → 1816..1824 효과/로딩 깊이 → Runtime 게시1825·전체 모듈 생성 → 외곽 공개 → 같은 Template TypeNames → Objects/Contents → `Load` → 실제 Login(2번 항목)
+  - **다음:** 1815 Transmission 합성(선행 RawDaisProcessData는 [E617](docs/webpj-dais-process-data-20261117.md) 완료) → 1816..1824 효과/로딩 깊이 → Runtime 게시1825·전체 모듈 생성 → 외곽 공개 → 같은 Template TypeNames → Objects/Contents → `Load` → 실제 Login(2번 항목)
 - [ ] **RawCampaignSession 2: 로컬 연결·로그인** — `LoadLocalConnection`/`PrepareLocalConnectionForState`/`ConnectLocalConnectionForState`/`PollLocalConnectionState`/`PumpLocalConnection`/송신 + **RawCampaignSessionLogin** 234줄(+182, 4-C 이월 `Impl::Login`, 현재 389줄)
 - [ ] **RawCampaignSession 3: 프레임·카메라·표시 입력** — `RunFrame`/`PrepareFrame`·카메라 홈/중심/명령(`CenterCameraOn`·`ViewHome`·`ViewYourPriest`·`RequestCameraCenter`/`CommitRequestedCamera`)·입자 뷰(5-A 연결)
 - [ ] **RawCampaignSession 4: 승패·종료·Editor 제외 정리** — `CheckMissionOutcome`·종료 수명(웹 제외인 Existing Editor 계열은 만들지 않는다)
