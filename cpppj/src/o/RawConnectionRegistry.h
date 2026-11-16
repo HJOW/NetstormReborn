@@ -9,6 +9,7 @@
 namespace netstorm::o { //숫자 토큰은 호스트 포인터를32비트로 절삭하지 않는다.
 // 실제 Client가 선택한 Native 경로의 복귀형 진단이다. 독립 typed 전송의 기존 throw 계약과 분리한다.
 using ConnectionRegistryAssertion=std::function<void(std::string_view,std::string_view,std::uint32_t)>;
+struct TransportPollResult; //수신 callback의 실제 소비/sentinel 결과는 기존 RawTransportPolling에 정의한다.
 // 실제 Node 주소는 owner가 유지하며 표와 장치는 Session보다 오래 보관할 수 있다.
 class RawConnectionRegistry {
 public:
@@ -22,12 +23,14 @@ public:
     ConnectionCleanupGlobals Cleanup(); //같은 현재 동기화 토큰을 포함한 실제 표의 뷰다.
     ConnectionCleanupGlobals Cleanup(std::uint32_t& synchronization); //기존 직접 owner 검사는 동일 표에 명시 동기화를 빌릴 수 있다.
     std::uint32_t Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release,
-        std::function<void(std::span<std::uint8_t>)> send={},std::function<std::int32_t()> readiness={},std::function<void()> buffered={}); // 실제 노드/수명/가상 송신과 같은 socket 준비 조회를 묶는다. 기존 수명 전용 호출은 미선택 장치를 요구하지 않는다.
+        std::function<void(std::span<std::uint8_t>)> send={},std::function<std::int32_t()> readiness={},std::function<void()> buffered={},std::function<void()> flush={},std::function<TransportPollResult()> receive={}); // 실제 노드/수명/가상 송신·준비·flush·수신 장치를 묶는다. 기존 수명 전용 호출은 미선택 장치를 요구하지 않는다.
     std::int32_t SocketReadiness(std::uint32_t token) const; //004e1800의 실제 socket 장치를 token으로 조회하며 Player/Packet flags로 대체하지 않는다.
     bool SendMutable(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players) const; //004e2dc0의현재슬롯/Playerflag1/NULL관문뒤같은가상송신장치를호출한다.반환은장치호출여부이며전달성공값이아니다.
     bool SendMutableNative(std::int32_t id,std::span<std::uint8_t> packet,std::span<const std::uint8_t> players,const ConnectionRegistryAssertion& assertion) const; //004e2dc0의1e 진단 복귀 뒤 현재 실제 슬롯만 접근하며 새 pending/Player 조건을 넣지 않는다.
     std::uint32_t TokenFor(const PacketConnection& connection) const; // 실제 고정 노드 주소의 현재 token을 찾아 ID 재배치와 구별한다.
     void SendDirect(std::uint32_t token,std::span<std::uint8_t> packet) const; // 이미 선택된 this의 가상+4를 직접 호출하며 Player/번호 관문을 반복하지 않는다.
+    void FlushDirect(std::uint32_t token) const; //004e2920이 고른 현재 노드의 가상+0c를 같은 실제 owner에서 호출한다. 이전 미션의 살아 있는 노드도 새 coordinator의 소유 여부로 생략하지 않는다.
+    TransportPollResult ReceiveDirect(std::uint32_t token) const; //현재 전역 ID가 선택한 이전 Source 노드도 실제 가상 수신으로 진행해 정상 종료 통지를 소비한다.
     void StoreConnectPacket(std::int32_t id,std::span<std::uint8_t> packet,RawPacketDispatch& dispatch); //004e2620의 성공 후 기존 버퍼free/0→비NULL의 observer1·길이 재조회·복제·현재 칸 공개다. 빈 span은 NULL이다.
     void SendConnectPacket(std::int32_t id); //004e2f00의 비음수 ID/비영 버퍼→현재 가상+4→현재 버퍼free→칸0 순서다.
     bool Owns(std::uint32_t token) const; //해제 후 노드를 다시 읽지 않는 순수 존재 조회다.
@@ -58,6 +61,8 @@ private:
         std::function<void()> buffered; //실제같은node의공통4df470 비영입구이며현재ID로다른장치를고르지않는다.
         std::shared_ptr<void> deviceOwner; //실제Client Source만전역등록Node수명까지보유한다.World/Session/명목token이아니다.
         std::function<std::int32_t()> readiness; // 같은 실제 TCP/내부 socket의0/1/-1 준비 상태이며 현재 ID를 재선택하지 않는다.
+        std::function<void()> flush; //실제 노드 자신의 가상+0c이며 등록 당시 device와 선택된 함수의 수명을 호출 복귀까지 보존한다.
+        std::function<TransportPollResult()> receive; //실제 노드 자신의 수신/종료 통지이며 전체 backend Poll을 중첩하거나 다른 ID를 먼저 처리하지 않는다.
     };
     std::shared_ptr<void> PinBinding(const Binding& binding) const; //선택된실제node의owner와함수값복사를서로구별한다.
     std::function<std::shared_ptr<void>(const PacketConnection&)> devicePin_; //장기Client weak경로만소유하며World/Source를대기중보유하지않는다.

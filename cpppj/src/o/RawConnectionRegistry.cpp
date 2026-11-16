@@ -1,6 +1,7 @@
 // 같은 실제 연결을 등록/재배치/지연 반환하며 callback 예외의 prefix를 유지한다.
 #include "o/RawConnectionRegistry.h"
 #include "o/RawPacketCopy.h" //접속 초기 복제도 같은 전체4dece0 observer/길이/앞방향 복사 본체를 사용한다.
+#include "o/RawTransportPolling.h" //실제 노드 수신이 반환하는 소비/sentinel 값을 그대로 전달한다.
 #include <bit>
 #include <stdexcept>
 #include <utility>
@@ -50,11 +51,11 @@ void RawConnectionRegistry::RunDeviceScope(const std::function<void()>& operatio
 void RawConnectionRegistry::BindSynchronization(std::uint32_t& value,std::shared_ptr<void> lifetime) { synchronization_=&value;synchronizationOwner_=std::move(lifetime); }
 ConnectionCleanupGlobals RawConnectionRegistry::Cleanup() { return Cleanup(*synchronization_); }
 ConnectionCleanupGlobals RawConnectionRegistry::Cleanup(std::uint32_t& synchronization) { return {transceivers_,buffers_,pending_,synchronization,pendingCount_}; }
-std::uint32_t RawConnectionRegistry::Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release,std::function<void(std::span<std::uint8_t>)> send,std::function<std::int32_t()> readiness,std::function<void()> buffered) {
+std::uint32_t RawConnectionRegistry::Track(PacketConnection& connection,std::function<void()> destroy,std::function<void()> release,std::function<void(std::span<std::uint8_t>)> send,std::function<std::int32_t()> readiness,std::function<void()> buffered,std::function<void()> flush,std::function<TransportPollResult()> receive) {
     if (deviceShutdown_) throw std::logic_error("App최종종료뒤새Node등록거부");
     if (!destroy || !release) throw std::invalid_argument("실제 연결 close/free 장치 누락");
     for (const auto& entry:bindings_) if (entry.second.node==&connection) throw std::logic_error("현재 연결의 중복 주소 등록"); //한 노드의 살아 있는 토큰을 중복 발급하지 않는다.
-    if (!nextToken_) throw std::overflow_error("연결 opaque 토큰 소진");const auto token=nextToken_++;Binding binding{&connection,std::move(destroy),std::move(release),std::move(send),std::move(buffered),{},std::move(readiness)};if (retainDeviceOwners_) binding.deviceOwner=PinBinding(binding);bindings_.emplace(token,std::move(binding));return token; //실제owner선택/할당이성공한뒤에만Binding을공개하여등록실패의raw callback을남기지않는다.
+    if (!nextToken_) throw std::overflow_error("연결 opaque 토큰 소진");const auto token=nextToken_++;Binding binding{&connection,std::move(destroy),std::move(release),std::move(send),std::move(buffered),{},std::move(readiness),std::move(flush),std::move(receive)};if (retainDeviceOwners_) binding.deviceOwner=PinBinding(binding);bindings_.emplace(token,std::move(binding));return token; //실제owner선택/할당이성공한뒤에만Binding을공개하여등록실패의raw callback을남기지않는다.
 }
 // 기존 연결 guard는 다른 backend의 같은 현재 노드도 실제 socket 조회로 판단한다.
 std::int32_t RawConnectionRegistry::SocketReadiness(std::uint32_t token) const { const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.readiness) throw std::logic_error("현재 연결의 실제 socket 준비 장치 미연결");const auto binding=found->second;const auto owner=PinBinding(binding);const auto query=binding.readiness;return query(); }
@@ -75,6 +76,16 @@ bool RawConnectionRegistry::SendMutableNative(std::int32_t id,std::span<std::uin
 }
 std::uint32_t RawConnectionRegistry::TokenFor(const PacketConnection& connection) const { for (const auto& entry:bindings_) if (entry.second.node==&connection) return entry.first;throw std::out_of_range("직접 송신의 현재 노드 token 누락"); } // 실제 살아 있는 동일 주소만 선택하며 sender 번호로 다른 노드를 대신하지 않는다.
 void RawConnectionRegistry::SendDirect(std::uint32_t token,std::span<std::uint8_t> packet) const { const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.send) throw std::logic_error("직접 연결의 실제 가상 송신 장치 미연결");const auto binding=found->second;const auto owner=PinBinding(binding);const auto send=binding.send;send(packet); } // callback 중 해제에도 선택한 callable의 수명을 보유한다.
+// 같은 전역 표에 남은 이전 Source의 노드도 실제 장치와 함수 사본을 보유해 직접 호출한다.
+void RawConnectionRegistry::FlushDirect(std::uint32_t token) const {
+    const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.flush) throw std::logic_error("현재 연결의 실제 가상 flush 장치 미연결: token="+std::to_string(token));
+    const auto binding=found->second;const auto owner=PinBinding(binding);const auto flush=binding.flush;flush(); // callback이 자기 등록을 반납하거나 ID를 바꿔도 같은 선택 노드를 다시 읽지 않는다.
+}
+// 새 coordinator가 같은 전역 칸을 순회할 때도 옛 실제 끝의 type2 통지를 생략하지 않는다.
+TransportPollResult RawConnectionRegistry::ReceiveDirect(std::uint32_t token) const {
+    const auto found=bindings_.find(token);if (found==bindings_.end() || !found->second.receive) throw std::logic_error("현재 연결의 실제 가상 수신 장치 미연결: token="+std::to_string(token));
+    const auto binding=found->second;const auto owner=PinBinding(binding);const auto receive=binding.receive;return receive(); //자기 반납 뒤 원래 node를 재조회하지 않고 실제 하위 결과만 반환한다.
+}
 // 실제 접속 성공 뒤의 부분 효과만 수행하며 새 접속/Player 상태를 만들지 않는다.
 void RawConnectionRegistry::StoreConnectPacket(std::int32_t id,std::span<std::uint8_t> packet,RawPacketDispatch& dispatch) {
     if (id<0 || id>=static_cast<std::int32_t>(buffers_.size())) throw std::out_of_range("접속 초기 패킷의 실제22칸 범위");auto& slot=buffers_[static_cast<std::size_t>(id)];if (slot) { Release(slot);slot=0; } // 기존 복제 반납 뒤에만 새 observer/할당을 수행한다.

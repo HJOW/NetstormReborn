@@ -118,7 +118,7 @@ std::uint32_t LocalMissionTransport::Token(const o::PacketConnection& connection
 std::uint32_t LocalMissionTransport::Track(o::PacketConnection& connection) {
     auto* node=&connection;return registry_->Track(connection,[this,node] {
         hooks_.close(*node);if (node==&client_) { serverPeerLost_=true;clientOutput_.clear(); }else { clientPeerLost_=true;serverOutput_.clear(); }toServer_.clear();toClient_.clear();
-    },[this,node] { const bool client=node==&client_;hooks_.release(*node);if (client) clientPresent_=false;else { serverPresent_=false;pending_=false;owner_=0; } },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); },[this,node] { return (node==&client_ ? clientPresent_ && !clientPeerLost_ : serverPresent_ && !serverPeerLost_) ? 1:0; },[this,node] { node->flags|=2U;if (node==&server_) serverBuffered_=true;(node==&client_ ? clientOutput_:serverOutput_).clear(); }); // 같은 실제 내부 socket/가상 this를 ID 재선택/Player 재검사 없이 사용한다.
+    },[this,node] { const bool client=node==&client_;hooks_.release(*node);if (client) clientPresent_=false;else { serverPresent_=false;pending_=false;owner_=0; } },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); },[this,node] { return (node==&client_ ? clientPresent_ && !clientPeerLost_ : serverPresent_ && !serverPeerLost_) ? 1:0; },[this,node] { node->flags|=2U;if (node==&server_) serverBuffered_=true;(node==&client_ ? clientOutput_:serverOutput_).clear(); },[this,node] { if (!(node->flags&0x40U)) FlushEndpoint(node==&server_); },[this,node] { return ReceiveNode(*node); }); // 같은 실제 내부 socket/가상 this를 ID 재선택/Player 재검사 없이 사용한다. flush와 수신도 이 고정 노드의 실제 버퍼/종료 통지를 사용한다.
 }
 // 실제 RawPacketDispatch와 집합 분배가 같은 노드/수명 장치를 사용한다.
 o::PacketDispatchHooks LocalMissionTransport::WrappedHooks() {
@@ -231,7 +231,15 @@ void LocalMissionTransport::BeginPoll() {
 }
 // 실제 현재 자기 끝만 한 프레임 읽고 callback 뒤 주소를 보관하지 않는다.
 o::TransportPollResult LocalMissionTransport::ReceiveOne(std::int32_t id) {
-    if (!polling_) throw std::logic_error("내부 per-ID 수신의 Poll 대여 누락");auto* node=Connection(id);if (!node) return {};
+    if (!polling_) throw std::logic_error("내부 per-ID 수신의 Poll 대여 누락");auto* node=Connection(id);return node ? ReceiveNode(*node):o::TransportPollResult{};
+}
+// 이전 미션의 같은 가상 this를 빌릴 때만 수신 guard를 임시로 열고 현재 선택 노드 하나만 처리한다.
+o::TransportPollResult LocalMissionTransport::ReceiveNode(o::PacketConnection& connection) {
+    const auto id=std::bit_cast<std::int32_t>(connection.sender);auto* node=&connection;const auto token=Token(connection);if (!registry_->Owns(token)) return {};
+    struct PollScope { //직접 수신의 재진입을 막되 이미 진행 중인 정상 Poll의 guard는 유지한다.
+        bool& polling;bool entered; //기존 guard와 이번 호출이 새로 빌린 범위다.
+        ~PollScope() { if (entered) polling=false; } //정상/예외 모두 직접 수신의 대여만 반납한다.
+    } scope{polling_,!polling_};polling_=true;
     if (node->flags&0x40U) { RetireClosed();return {}; }
     const auto side=node==&server_ ? 1U:0U;
     if (node->flags&0x20U) { node->flags&=~0x20U;const std::array<std::uint8_t,4> connected{receiveVersion_[side],1,4,0};static_cast<void>(DispatchFrame(*node,connected)); } //004dfa40의 직접 통지는 observer 전처리를 거치지 않는다.

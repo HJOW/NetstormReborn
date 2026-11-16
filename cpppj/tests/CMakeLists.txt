@@ -2649,6 +2649,8 @@ target_compile_definitions(netstorm_cd_presence_tests PRIVATE ${_netstorm_menu_s
 
 # 실제 Client 시작 기록/로컬 미션 진입과 기존 CD/카메라 원문만 골라 검사한다.
 add_executable(netstorm_mission_entry_tests FocusedTestMain.cpp ClientLocalStateGlobalsTests.cpp CdPresenceTests.cpp CameraViewTests.cpp GumpInputTests.cpp FortPaletteTransitionTests.cpp LocalMissionStateTests.cpp MissionFrameGateTests.cpp MissionLifecycleTests.cpp NativeMainMenuStateTests.cpp NativeMainMenuStateNativeTests.cpp)
+target_sources(netstorm_tests PRIVATE MissionConnectionFlushTests.cpp) # 비MP 미션 교체에서 이전 Source 노드의 실제 flush·종료 수신과 호출 수명을 확인한다.
+target_sources(netstorm_mission_entry_tests PRIVATE MissionConnectionFlushTests.cpp)
 target_link_libraries(netstorm_mission_entry_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_mission_entry_tests)
 target_compile_definitions(netstorm_mission_entry_tests PRIVATE ${_netstorm_menu_session_definitions})

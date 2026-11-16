@@ -28,7 +28,7 @@ std::uint32_t EditorLocalTransport::Token(const o::PacketConnection& connection)
 std::uint32_t EditorLocalTransport::Track(o::PacketConnection& connection) {
     auto* node=&connection;return registry_->Track(connection,[this,node] { Need(hooks_.close)(*node);SocketClosed(*node); },[this,node] {
         const bool client=node==&client_;Need(hooks_.release)(*node);if (client) { clientAlive_=false;toClient_.clear(); }else { pendingAlive_=false;toPending_.clear(); }
-    },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); },[this,node] { return Alive(*node) && !PeerLost(*node) ? 1:0; },[this,node] { node->flags|=kBuffered;(node==&client_ ? clientOutput_:pendingOutput_).clear(); }); // 같은 내부 socket/가상 this를 ID 재선택 없이 조회한다.
+    },[this,node](auto packet) { static_cast<void>(SendPacket(std::bit_cast<std::int32_t>(node->sender),packet,packet,node)); },[this,node] { return Alive(*node) && !PeerLost(*node) ? 1:0; },[this,node] { node->flags|=kBuffered;(node==&client_ ? clientOutput_:pendingOutput_).clear(); },[this,node] { FlushNode(*node); },[this,node] { return ReceiveNode(*node); }); // 같은 내부 socket/가상 this를 ID 재선택 없이 조회하며 flush/수신도 같은 물리를 사용한다.
 }
 o::PacketDispatchHooks EditorLocalTransport::WrappedHooks() {
     o::PacketDispatchHooks result; //기존 분배기가 요구하는 실제 경계만 감싸며 observer/버전/길이 판단은 복제하지 않는다.
@@ -136,7 +136,16 @@ void EditorLocalTransport::BeginPoll() { if (polling_) throw std::logic_error("E
 void EditorLocalTransport::AcceptPending() { if (!polling_) throw std::logic_error("Editor accept의 Poll 대여 누락");Accept(); }
 // 현재 Registry가 선택한 자기 끝만 실제 한 번 받는다. 다른 backend를 재분배하지 않는다.
 o::TransportPollResult EditorLocalTransport::ReceiveOne(std::int32_t id) {
-    if (!polling_) throw std::logic_error("Editor per-ID 수신의 Poll 대여 누락");auto* node=Connection(id);if (!node) return {};const auto result=Receive(node==&pending_);return {result.consumed,result.again};
+    if (!polling_) throw std::logic_error("Editor per-ID 수신의 Poll 대여 누락");auto* node=Connection(id);return node ? ReceiveNode(*node):o::TransportPollResult{};
+}
+// 전체 Editor Poll을 중첩하지 않고 전역 순회가 이미 고른 실제 끝만 처리한다.
+o::TransportPollResult EditorLocalTransport::ReceiveNode(o::PacketConnection& connection) {
+    if (&connection!=&client_ && &connection!=&pending_) throw std::logic_error("Editor 직접 수신의 실제 끝 주소 불일치");
+    struct PollScope { //다른 Source에서 빌린 직접 수신도 같은 재진입 guard를 사용한다.
+        bool& polling;bool entered; //정상 외곽 Poll인지 이번 직접 대여인지 구별한다.
+        ~PollScope() { if (entered) polling=false; } //callback 예외에도 이번 직접 대여만 반납한다.
+    } scope{polling_,!polling_};polling_=true;
+    const auto result=Receive(&connection==&pending_);return {result.consumed,result.again};
 }
 // 정상/예외에서 동일한 재진입 guard만 반납한다.
 void EditorLocalTransport::EndPoll() noexcept { polling_=false; }
@@ -169,8 +178,12 @@ void EditorLocalTransport::AssignConnection(std::int32_t pending,std::int32_t ow
     registry_->Assign(pending,owner,serverMode_ ? 1U:0U,[this](auto token) { if (token!=pendingToken_) throw std::logic_error("기존 Editor 재배치의 다른 buffered 노드");pending_.flags|=kBuffered;pendingOutput_.clear(); }); //기존LocalMissionTransport와같은현재노드/백업분기/flag쓰기순서다.
 }
 void EditorLocalTransport::FlushOne(std::int32_t id) {
-    if (id<0 || id>=static_cast<std::int32_t>(o::kTransceiverSlots)) throw std::out_of_range("기존 Editor Source flush 정상 ID 범위");const auto* node=Connection(id);if (!node || (node->flags&kClosed)) return;
-    const bool client=node==&client_;auto& output=client ? clientOutput_:pendingOutput_;if (output.empty()) return;std::vector<std::uint8_t> frame(output.size()+4,std::uint8_t{0xff});frame[1]=4;frame[2]=static_cast<std::uint8_t>(frame.size());frame[3]=static_cast<std::uint8_t>(frame.size()>>8);std::copy(output.begin(),output.end(),frame.begin()+4);output.clear();(client ? toPending_:toClient_).push_back(std::move(frame)); //동기수신없이같은반대큐로확정한다.
+    if (id<0 || id>=static_cast<std::int32_t>(o::kTransceiverSlots)) throw std::out_of_range("기존 Editor Source flush 정상 ID 범위");if (const auto* node=Connection(id)) FlushNode(*node);
+}
+// 가상+0c의 this를 고정하며 정상 ID 부모와 이전 Source의 직접 호출이 같은 집합 작성기를 사용한다.
+void EditorLocalTransport::FlushNode(const o::PacketConnection& connection) {
+    if (connection.flags&kClosed) return;const bool client=&connection==&client_;if (!client && &connection!=&pending_) throw std::logic_error("Editor flush의 실제 끝 주소 불일치");
+    auto& output=client ? clientOutput_:pendingOutput_;if (output.empty()) return;std::vector<std::uint8_t> frame(output.size()+4,std::uint8_t{0xff});frame[1]=4;frame[2]=static_cast<std::uint8_t>(frame.size());frame[3]=static_cast<std::uint8_t>(frame.size()>>8);std::copy(output.begin(),output.end(),frame.begin()+4);output.clear();(client ? toPending_:toClient_).push_back(std::move(frame)); //동기수신없이같은반대큐로확정한다.
 }
 bool EditorLocalTransport::OwnsConnection(const o::PacketConnection& connection) const noexcept { return &connection==&listener_ || &connection==&client_ || &connection==&pending_; } //대기/반납 중에도 동일 물리 장치만 선택한다.
 o::RawPacketDispatch& EditorLocalTransport::Dispatch() { return dispatcher_.Dispatch(); } //기존등록/observer/version표의같은소유자다.

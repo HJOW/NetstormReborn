@@ -41,6 +41,8 @@ private:
     bool SendPacket(std::int32_t destination,std::span<const std::uint8_t> packet,std::span<std::uint8_t> writable,o::PacketConnection* direct=nullptr); // 일반 번호 선택과 가상 this의 직접 고정 끝 선택이 같은 observer/큐를 사용한다.
     o::PacketDispatchHooks WrappedHooks(); // 기존 분배의 close/release를 같은 연결 소유권 반납과 이어 준다.
     std::uint32_t Track(o::PacketConnection& connection); //같은 실제 노드의 close/free와 현재 Client 표를 연결한다.
+    void FlushNode(const o::PacketConnection& connection); //선택된 실제 끝의 buffered 집합만 확정하며 ID를 다시 조회하지 않는다.
+    o::TransportPollResult ReceiveNode(o::PacketConnection& connection); //이전 Source가 남긴 실제 끝도 자기 종료 통지/수신 장치에서 한 번 처리한다.
     std::uint32_t Token(const o::PacketConnection& connection) const; //현재 양끝의 숫자 식별자를 순수 조회한다.
     void Initialize(o::PacketConnection& connection,std::uint32_t sender); //004df2c0의 두 별도 시각 조회와 unbuffered 초기0x24를 쓴다.
     void Accept(); //004e02d0의 첫 빈 pending칸-1에 실제 한 accepted끝을 만든다.

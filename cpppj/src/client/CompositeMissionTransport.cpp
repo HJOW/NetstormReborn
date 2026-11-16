@@ -137,7 +137,7 @@ void CompositeMissionTransport::Flush() {
         case Backend::Internal:internal_->FlushOne(id);break;
         case Backend::Editor:editor_->FlushOne(id);break;
         case Backend::Missing:case Backend::Udp:break; // Editor unbuffered 큐에는 확정 대기 집합이 없고 송신 때 완성 프레임을 이미 보관한다.
-        default:throw std::logic_error("복합 전송이 소유하지 않은 현재 flush 노드");
+        default:registry_->FlushDirect(o::CurrentTransportToken(*registry_,id));break; //004e2920은 현재 전역 노드의 가상+0c를 호출하므로 이전 미션 Source의 살아 있는 노드도 같은 실제 장치로 보낸다.
         }
     }
 }
@@ -149,9 +149,9 @@ o::TransportPollResult CompositeMissionTransport::ReceiveOne(std::int32_t id) {
     case Backend::Internal:return internal_->ReceiveOne(id);
     case Backend::Editor:return editor_->ReceiveOne(id);
     case Backend::Missing:return {};
-    default: { // 같은 등록표의 다른 전송이 소유한 살아 있는 노드는 그 전송의 Poll이 자기 노드로서 처리한다(원문은 각 노드가 스스로 수신한다).
-        // 예: Test Battle 동안에도 남아 있는 Editor의 pending -1(양끝 중 닫힌 Editor client9의 peer)이다. 등록표에도 없는 별칭만 실제 오류다.
-        if (registry_->Owns(o::CurrentTransportToken(*registry_,id))) return {};
+    default: { // 같은 등록표의 이전 전송이 소유한 현재 노드도 원문처럼 그 노드의 실제 가상 수신 장치로 전달한다.
+        // 예: 새 미션의 이전 server1이나 Test Battle의 기존 Editor peer도 종료 통지를 실제 노드에서 소비해야 한다.
+        if (registry_->Owns(o::CurrentTransportToken(*registry_,id))) return registry_->ReceiveDirect(o::CurrentTransportToken(*registry_,id));
         throw std::logic_error("복합 전송이 소유하지 않은 현재 수신 노드: id="+std::to_string(id)+" token="+std::to_string(o::CurrentTransportToken(*registry_,id))+" 역할="+std::to_string(static_cast<int>(role_))+" tcp/udp/내부/편집="+(tcp_ ? "1":"0")+(udp_ ? "1":"0")+(internal_ ? "1":"0")+(editor_ ? "1":"0")+" 등록표="+DescribeRegistryTokens(*registry_)); // 원인 추적에 필요한 슬롯/토큰/역할/백엔드 구성을 오류 로그에 남긴다(M7 로그 구조).
     }
     }

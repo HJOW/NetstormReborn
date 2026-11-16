@@ -115,6 +115,7 @@ private:
     void RetireClosed(); //이전 폴링이 닫힘 sentinel로 남긴 실제 끝만 다음 폴링에서 반납한다.
     // 지정 끝의 실제 한 프레임을 꺼내 원문 단일 observer/분배를 수행한다.
     o::TransportPollResult ReceiveEndpoint(bool serverSide);
+    o::TransportPollResult ReceiveNode(o::PacketConnection& connection); //전역 표가 고른 같은 실제 끝의 접속/종료/한 프레임을 처리하며 다른 끝의 Poll을 앞당기지 않는다.
     // buffered 데이터의 실제 집합 헤더를 만들고 다른 끝의 수신 큐로 옮긴다.
     void FlushEndpoint(bool serverSide);
     std::span<const std::uint8_t> players_; //같은 현재 Player9 원문이며 active 사본을 만들지 않는다.
