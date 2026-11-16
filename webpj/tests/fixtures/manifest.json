@@ -7342,10 +7342,10 @@
       "sha256": "aafbea1ba70bc8485b858d5e4936ec0b8910030e83c5de9b4793d9ffdd708d8e",
       "bytes": 238650,
       "lines": 331,
-      "fixtureCommit": "6b4ffe65",
-      "webCommit": "d3543f77",
+      "fixtureCommit": "6b4ffe65f",
+      "webCommit": "d3543f77d",
       "cpppjBasis": {
-        "cpppj/src/o/RawFencePostPop.cpp": "e7427079"
+        "cpppj/src/o/RawFencePostPop.cpp": "e7427079d"
       }
     },
     {
@@ -8427,10 +8427,10 @@
       "sha256": "f32d6fae769eef91a6b853b10da261baadb7b793c9370c0715c01d2bc39c0e4c",
       "bytes": 28632,
       "lines": 100,
-      "fixtureCommit": "6b4ffe65",
-      "webCommit": "19f485b2",
+      "fixtureCommit": "6b4ffe65f",
+      "webCommit": "19f485b2e",
       "cpppjBasis": {
-        "cpppj/src/o/RawFenceLine.cpp": "6b4ffe65"
+        "cpppj/src/o/RawFenceLine.cpp": "6b4ffe65f"
       }
     },
     {
@@ -8456,10 +8456,10 @@
       "sha256": "f3e5be8c131684bc679dba1fb7d27f431ace773495800e92ced8fd7ac856155b",
       "bytes": 154009,
       "lines": 208,
-      "fixtureCommit": "b62491bf",
-      "webCommit": "19f485b2",
+      "fixtureCommit": "b62491bfe",
+      "webCommit": "19f485b2e",
       "cpppjBasis": {
-        "cpppj/src/o/RawFenceLifetime.cpp": "b62491bf"
+        "cpppj/src/o/RawFenceLifetime.cpp": "b62491bfe"
       }
     },
     {
@@ -8836,11 +8836,11 @@
       "sha256": "84c1247a20c3a7cc1321f0fa36b5a36553a13f1e01e3df41caa3444a1dc12fd1",
       "bytes": 2102432,
       "lines": 579,
-      "fixtureCommit": "233d223b",
-      "webCommit": "f8ccd3ca",
+      "fixtureCommit": "233d223bd",
+      "webCommit": "f8ccd3cab",
       "cpppjBasis": {
-        "cpppj/src/o/RawFenceRebuild.cpp": "233d223b",
-        "cpppj/src/o/RawFenceCreate.cpp": "233d223b"
+        "cpppj/src/o/RawFenceRebuild.cpp": "233d223bd",
+        "cpppj/src/o/RawFenceCreate.cpp": "233d223bd"
       }
     },
     {
@@ -8895,10 +8895,10 @@
       "sha256": "9dbf35a118c9b319062a3ef6a126142ab0e152c0b3951bc72fccff2a63294c27",
       "bytes": 165539,
       "lines": 260,
-      "fixtureCommit": "da2b3423",
-      "webCommit": "f8ccd3ca",
+      "fixtureCommit": "da2b3423e",
+      "webCommit": "f8ccd3cab",
       "cpppjBasis": {
-        "cpppj/src/o/RawFenceMarkerClear.cpp": "da2b3423"
+        "cpppj/src/o/RawFenceMarkerClear.cpp": "da2b3423e"
       }
     },
     {
@@ -9127,10 +9127,10 @@
       "sha256": "79cbc909b122529f0738a4c40b9cce847c40484fc25d23388301fc509dc646a4",
       "bytes": 1132816,
       "lines": 1905,
-      "fixtureCommit": "6b4ffe65",
-      "webCommit": "c54ecbdc",
+      "fixtureCommit": "6b4ffe65f",
+      "webCommit": "c54ecbdca",
       "cpppjBasis": {
-        "cpppj/src/o/RawFenceNeighbors.cpp": "6b4ffe65"
+        "cpppj/src/o/RawFenceNeighbors.cpp": "6b4ffe65f"
       }
     },
     {
@@ -9156,10 +9156,10 @@
       "sha256": "a87290020823e235540e7f38fe98cc43bafa363dd52edfc1995ccf79280dd9d4",
       "bytes": 1001162,
       "lines": 1373,
-      "fixtureCommit": "da2b3423",
-      "webCommit": "13e23d69",
+      "fixtureCommit": "da2b3423e",
+      "webCommit": "13e23d69c",
       "cpppjBasis": {
-        "cpppj/src/o/RawFenceRegular.cpp": "bad7cf5c"
+        "cpppj/src/o/RawFenceRegular.cpp": "bad7cf5c6"
       }
     },
     {
@@ -9185,10 +9185,10 @@
       "sha256": "e6ae4858b56e961af2a66d9a7f6f09eddb2434cc6279b5792bcd11f79b0e0e59",
       "bytes": 228627,
       "lines": 302,
-      "fixtureCommit": "bad7cf5c",
-      "webCommit": "13e23d69",
+      "fixtureCommit": "bad7cf5c6",
+      "webCommit": "13e23d69c",
       "cpppjBasis": {
-        "cpppj/src/o/RawFenceRegular.cpp": "bad7cf5c"
+        "cpppj/src/o/RawFenceRegular.cpp": "bad7cf5c6"
       }
     },
     {
