@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품 1315 / 11.01 · 정리 2026-11-17(HJOW-Athlon) · 마지막 단위 1318(시작 경로 고리 검사 실제 읽기 수 반영) · 다음 번호 1319 · 마지막 디컴파일 HJOW-Athlon · 사용자 재개 지시로 진행 중, 기존 CD·선택 보류 유지**
+**제품 1315 / 11.01 · 정리 2026-11-17(HJOW-Athlon) · 마지막 단위 1319(그림자·공유 커널 검사 계약 교정) · 다음 번호 1320 · 마지막 디컴파일 HJOW-Athlon · 사용자 재개 지시로 진행 중, 기존 CD·선택 보류 유지**
 
 현재 상태·남은 작업·유효한 규칙만 유지한다. 단위별 경과와 만료된 지시는 [1310 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310), 개별 구현·검증은 아래 근거 문서를 따른다. [dotnetpj](LEFT_JOBS.dotnetpj.md)·[webpj](LEFT_JOBS.webpj.md)는 각 인계 문서가 기준이다. 2026-11-16 최초 상태 분석을 세 인계 문서에 먼저 반영했고, 후속 사용자 요청으로 cpppj1314를 완료했다. 이번 CP 단위에서는 DN/WB 코드·인계 문서를 수정하지 않았다.
 
@@ -109,6 +109,7 @@
 
 | 묶음 | 요약·근거 |
 | --- | --- |
+| 표시/공유 커널 검사1319 | 제네레이터 그림자 대상색 기대1/1·외부 프로세스 보존/명시 정리4/4 통과. 검사 callback 접근 위반 해소, 제품/fixture 유지. [근거](docs/exe/cpp-world-test-contracts-1319-20261117.md). |
 | 시작 경로 검사1318 | 옛 값형25칸 기대를 현행 실제 존재조회/열기의37칸으로 교정, file_directory18/18 통과. 제품/원문fixture 유지. [근거](docs/exe/cpp-startup-name-test-1318-20261117.md). |
 | analyzeManager 최초 준비1317 | 옵션 파일이 없는 정상 입력 지원, 사본에만 관찰용 네 키 생성·원본/setup 보존. 단위114통과·MCP 기본 검사 통과. [근거](docs/exe/analyze-manager-first-run-1317-20261117.md). |
 | 미션 진입 검사1316 | 장기 표면과 같은 Template owner 공유로 교체 검사 복구, 집중2/2·전체115/115 통과. 제품/기대값 유지. [근거](docs/exe/cpp-mission-parent-tests-1316-20261117.md). |
@@ -175,7 +176,7 @@ ZIP: `extracted/cpp-m8-1310/NetstormReborn-11.01-cpppj.zip`(209,724,870바이트
 | --- | --- |
 | mission_entry(1316) | **해결: 전체115/115 통과**.검사 장치의 World 교체가 새 Template owner를 만들던 불일치였다.장기 owner 공유로 교정하고 제품 계약/기대값을 유지했다.[근거](docs/exe/cpp-mission-parent-tests-1316-20261117.md). |
 | pop_context | 1304 당시24건. |
-| world_generation | 1318의 허용 비MP 개별 관측: GeneratorBodyShadowAndPicking6단언·SharedKernel ActualForms1단언·PartialConstructor1단언 실패, FinalDrain은 종료 기대 실패 뒤0xC0000005, GameWorldSurvivesExplicitGlobalClear 통과. 별도 원인 분석 필요. AiCarrierActions의 옛 실패는 포로 내용물 검사이므로 이번 실행에서 제외했다. [관측](docs/exe/cpp-startup-name-test-1318-20261117.md). |
+| world_generation | **1319에서 제네레이터1/1·SharedKernel4/4 통과**. 그림자의 대상색 변환 인자 누락과 Session이 외부 Client 프로세스까지 지운다는 옛 검사 가정을 교정했다. 검사 종료 접근 위반 해소. AiCarrierActions의 옛 실패는 포로 내용물 검사이므로 이번 실행에서 제외했다. 전체 실행 통과로 확대하지 않는다. [근거](docs/exe/cpp-world-test-contracts-1319-20261117.md). |
 | guide_fort_request | 1278 당시4건. 1318에서 컴파일 갱신만 수행했다. |
 | file_directory(1318) | **해결: 전체18/18 통과**. 실제 파일 존재조회가 추가된37칸 소비를 검사에 반영, 제품/fixture 유지. [근거](docs/exe/cpp-startup-name-test-1318-20261117.md). |
 | menu_session·main_popup·file | 1277 기준선과 동일. menu_session6건은1268에서 직접 대조 없이 무관 진단으로 판단한 기록이다. |

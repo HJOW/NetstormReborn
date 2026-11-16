@@ -1024,7 +1024,8 @@ TEST_CASE(CampaignSession_GeneratorBodyShadowAndPicking) {
                 const auto frame=sprite.order.y==y ? 0U : 2U;const auto& shape=assets.game.Shapes().Blocks()[number-70].frames[frame];const auto image=assets.game.Shapes().Decode(number-70,frame);
                 std::vector<std::uint8_t> actual(1024*768,199),expected=actual;const ScreenRect clip{0,28,1024,768};
                 sprite.procedure->draw(actual,1024,768,clip);
-                DrawIndexedImage(expected,1024,768,image,point.x-8+shape.rect.left,point.y-4+shape.rect.top,clip,frame==2 ? &maps.shadow : nullptr);
+                DrawIndexedImage(expected,1024,768,image,point.x-8+shape.rect.left,point.y-4+shape.rect.top,clip,frame==2 ? &maps.shadow : nullptr,frame==2); // 그림자 마스크는 소스 잉크가 아닌 대상 배경색을 변환한다.
+                if (actual!=expected) { const auto mismatch=std::mismatch(actual.begin(),actual.end(),expected.begin());std::printf("제네레이터 표시 차이 TYPE%u frame%u camera%d,%d offset%zu actual%u expected%u\n",number,frame,camera.x,camera.y,static_cast<std::size_t>(mismatch.first-actual.begin()),*mismatch.first,*mismatch.second); } // 본체와 그림자 중 실제 다른 레이어를 구별하는 실패 진단이다.
                 CHECK(actual==expected);CHECK(std::any_of(actual.begin(),actual.end(),[](auto value) { return value!=199; }));
             }
             const auto& shape=assets.game.Shapes().Blocks()[number-70].frames[0];
@@ -1900,13 +1901,14 @@ TEST_CASE(CampaignSharedKernel_ActualFormsAndSingleClientFrame) {
         if (raw[10]<10 || raw[10]>=63 || (raw[11]&3U)) continue; // 원문 Attach는 기반2로 만든 뒤 실제 프로세스 TYPE10..62를 기록한다.
         const auto pid=Get(raw,18);CHECK(pid && client.GetKernel().Get(pid)==core.processes.FromForm(sid));++forms;
     }
-    CHECK(forms>0);client.GetKernel().Add(std::make_unique<SharedKernelProbe>([&] { visits.push_back(1); }));
-    client.GetKernel().Add(std::make_unique<SharedKernelProbe>([&] { visits.push_back(2); }));
+    CHECK(forms>0);const auto first=client.GetKernel().Add(std::make_unique<SharedKernelProbe>([&] { visits.push_back(1); }));
+    const auto second=client.GetKernel().Add(std::make_unique<SharedKernelProbe>([&] { visits.push_back(2); }));
     session->PrepareFrame({.25,.25,.25,1},false);CHECK(visits.empty() && core.processState.now==.25);
     client.GetKernel().RunFrame();CHECK(visits==std::vector<int>({1,2}));
     session->PrepareFrame({.25,.5,0,2},true);CHECK(visits==std::vector<int>({1,2}));
     client.GetKernel().RunFrame();CHECK(visits==std::vector<int>({1,2,1,2})); // 원문 Client 루프는 게임 시계 정지와 무관하게 Kernel을 한 번 실행한다.
-    session.reset();CHECK(client.GetKernel().Size()==0);
+    session.reset();CHECK(client.GetKernel().Size()==2 && client.GetKernel().Get(first) && client.GetKernel().Get(second)); // Session 소멸은 자기 Host의 프로세스만 반납하고 Client의 외부 관측자는 보존한다.
+    client.GetKernel().Remove(first);client.GetKernel().Remove(second);CHECK(client.GetKernel().Size()==0); // 관측자를 소유한 검사에서 명시적으로 정리한다.
 }
 
 // 전역 Clear는 호스트 GameWorld를 소멸하지 않으며 월드가 살아 있는 동안 Player/Pool을 유지한다.
@@ -1925,7 +1927,7 @@ TEST_CASE(CampaignSharedKernel_GameWorldSurvivesExplicitGlobalClear) {
     world.reset();CHECK(client.GetKernel().Size()==0);const auto next=client.PlayerRecords()->Acquire();CHECK(next!=nullptr);
 }
 
-// 원문 Clear가 남기는 앞 슬롯은 보존하고 최종 소멸은 PlayerLinks/서비스 소비자 사이에서 끝까지 반납한다.
+// 원문 Clear가 남기는 외부 앞 슬롯은 보존하고 호스트의 명시 최종 정리는 PlayerLinks/서비스 소비자 사이에서 끝낸다.
 TEST_CASE(CampaignSharedKernel_FinalDrainPrecedesPlayerAndServiceRelease) {
     bool lateDeleted{},earlyDeleted{},serviceReleased{};Client client(SessionLinksOptions());SessionServicesFixture external;
     auto services=SharedKernelServices(client,external);
@@ -1947,7 +1949,8 @@ TEST_CASE(CampaignSharedKernel_FinalDrainPrecedesPlayerAndServiceRelease) {
         }));
     }));
     CHECK(first==1 && late==2);session->World().ClearProcesses();CHECK(lateDeleted && !earlyDeleted && !serviceReleased && client.GetKernel().Size()==1);
-    session.reset();CHECK(earlyDeleted && serviceReleased && client.GetKernel().Size()==0);const auto next=client.PlayerRecords()->Acquire();CHECK(next!=nullptr);
+    session->ReleasePlayerLinks();session->World().DrainProcesses();CHECK(earlyDeleted && !serviceReleased && client.GetKernel().Size()==0); // 외부 관측자를 포함한 전역 정리는 Session 수명이 살아 있을 때 호스트가 명시한다.
+    session.reset();CHECK(serviceReleased && client.GetKernel().Size()==0);const auto next=client.PlayerRecords()->Acquire();CHECK(next!=nullptr);
 }
 
 // 기존 외부 프로세스가 있어도 정상 접합하며 부분 생성 실패는 해당 프로세스/Player 대여를 보존한다.
@@ -1961,7 +1964,8 @@ TEST_CASE(CampaignSharedKernel_PartialConstructorPreservesExistingProcess) {
     { const auto next=client.PlayerRecords()->Acquire();CHECK(next!=nullptr); } // 부분 생성의 대여 반납을 확인한 뒤 정상 Session이 다시 빌릴 수 있게 한다.
     auto session=SharedKernelSession(SharedKernelServices(client,external));CHECK(!deleted && client.GetKernel().Size()==1 && client.GetKernel().Get(id));
     session->Load();CHECK(!deleted && client.GetKernel().Size()>1 && &session->Core().kernel==&client.GetKernel());
-    session.reset();CHECK(deleted && client.GetKernel().Size()==0); // 정상 Session의 최종 전역 정리는 기존 프로세스까지 같은 실제 순서로 반납한다.
+    session.reset();CHECK(!deleted && client.GetKernel().Size()==1 && client.GetKernel().Get(id)); // 정상 Session도 외부 Client 프로세스의 소유권을 빼앗지 않는다.
+    client.GetKernel().Remove(id);CHECK(deleted && client.GetKernel().Size()==0); // 생성한 호스트가 명시 반납하며 지역 관측 값보다 오래 남기지 않는다.
 }
 
 // 실제 서버 abstract/134 도착이30과17을 만들고 같은 시각으로 HP/완료/공간/표시 종료를 실행한다.
