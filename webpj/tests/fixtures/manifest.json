@@ -24490,7 +24490,7 @@
       "bytes": 241382,
       "lines": 931,
       "fixtureCommit": "f3619bcd4",
-      "webCommit": "worktree",
+      "webCommit": "5b537bd70",
       "cpppjBasis": {
         "cpppj/src/o/RawFortRegionSave.cpp": "f3619bcd4",
         "cpppj/src/o/RawFortRegionSave.h": "f3619bcd4"
@@ -24521,10 +24521,103 @@
       "bytes": 3666833,
       "lines": 715,
       "fixtureCommit": "f3619bcd4",
-      "webCommit": "worktree",
+      "webCommit": "5b537bd70",
       "cpppjBasis": {
         "cpppj/src/o/RawFortObjectsSave.cpp": "f3619bcd4",
         "cpppj/src/o/RawFortObjectsSave.h": "f3619bcd4"
+      }
+    },
+    {
+      "id": "fort-territory-save",
+      "path": "cpppj/tests/fixtures/fort-territory-save-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE 관측(FortTerritorySaveTests.cpp)",
+      "consumers": [
+        "webpj/tests/fort-territory-save.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-territory-save.js"
+      ],
+      "unit": "WB04-E632",
+      "doc": "docs/webpj-fort-territory-save-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortTerritorySave.cpp",
+        "cpppj/src/o/RawFortTerritorySave.h"
+      ],
+      "scope": "기존120BYTE/한번special·현재noRegion·소유/지역/seed·생성뒤manager/current/진단뒤field·두stream/출력120BYTE와trace·정상/부분중단; 실제 Session 결선은 별도 조립 계약이며 전체 snapshot/외곽·Load는 잔여",
+      "text": true,
+      "sha256": "5eb22162e3f92549b465465dbc45f2d9f3e4a133f7c2e6cc52bfe2bdd308f546",
+      "bytes": 1039319,
+      "lines": 640,
+      "fixtureCommit": "c7459e61d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortTerritorySave.cpp": "c7459e61d",
+        "cpppj/src/o/RawFortTerritorySave.h": "c7459e61d"
+      }
+    },
+    {
+      "id": "fort-territory-query",
+      "path": "cpppj/tests/fixtures/fort-territory-query-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE 관측(FortTerritorySaveTests.cpp)",
+      "consumers": [
+        "webpj/tests/fort-territory-save.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-territory-save.js"
+      ],
+      "unit": "WB04-E632",
+      "doc": "docs/webpj-fort-territory-save-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortTerritorySave.cpp",
+        "cpppj/src/o/RawFortTerritorySave.h"
+      ],
+      "scope": "진입count·실제32BYTE의존재/현재·원래owner/signed지역·Fort/일반/아무지역의첫일치20162행; 실제 Session 결선은 별도 조립 계약이며 전체 snapshot/외곽·Load는 잔여",
+      "text": true,
+      "sha256": "13f36b8baa824decde5781206b3670a3cc9ff5c403818131e1430203bad7e3bf",
+      "bytes": 1315924,
+      "lines": 20164,
+      "fixtureCommit": "c7459e61d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortTerritorySave.cpp": "c7459e61d",
+        "cpppj/src/o/RawFortTerritorySave.h": "c7459e61d"
+      }
+    },
+    {
+      "id": "fort-territory-seed",
+      "path": "cpppj/tests/fixtures/fort-territory-seed-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE 관측(FortTerritorySaveTests.cpp)",
+      "consumers": [
+        "webpj/tests/fort-territory-save.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-territory-save.js"
+      ],
+      "unit": "WB04-E632",
+      "doc": "docs/webpj-fort-territory-save-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortTerritorySave.cpp",
+        "cpppj/src/o/RawFortTerritorySave.h"
+      ],
+      "scope": "최초BYTE0/1변경→난수254→현재BYTE3의원문폭·순번6bit/보존필드/현재변경·정상/부분중단188행; 실제 Session 결선은 별도 조립 계약이며 전체 snapshot/외곽·Load는 잔여",
+      "text": true,
+      "sha256": "9679d12103dbb19b859a34d08220d1678046f1c2580e7ab359ca4b7896918e10",
+      "bytes": 12985,
+      "lines": 190,
+      "fixtureCommit": "c7459e61d",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortTerritorySave.cpp": "c7459e61d",
+        "cpppj/src/o/RawFortTerritorySave.h": "c7459e61d"
       }
     }
   ]

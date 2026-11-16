@@ -68,6 +68,7 @@ export const RULES = Object.freeze([
     { id: 'campaign-content-save', class: 'port', names: ['RawFortContentSave'], reason: '캠페인 기술/객체 snapshot의 Session2566..2584·5899..5901가 같은 실제 ContentForm/finder/stream writer를 공유한다(E629)' },
     { id: 'campaign-object-save', class: 'port', names: ['RawFortObjectSave'], reason: '캠페인 snapshot의 Session2590..2623·6009..6028도 같은 단일 객체/청크 writer와 현재 월드 해시를 공유한다(E630)' },
     { id: 'campaign-objects-save', class: 'port', names: ['RawFortRegionSave', 'RawFortObjectsSave'], reason: '같은 캠페인 snapshot의 Session5869..5896가 전체 영역 순회/Temp·20영역/조건부Chaff 부모를 실제 Template·공간에 연결한다(E631)' },
+    { id: 'campaign-territory-save', class: 'port', names: ['RawFortTerritorySave'], reason: '같은 캠페인 snapshot의 Session5853..5866가 기존120BYTE·현재 섬/청크·공유 난수와 새 Territory 노드를 연결한다(E632)' },
     {
         id: 'edit-fort-save', class: 'exclude-edit',
         names: ['RawFortObjectSave', 'RawFortObjectsSave', 'RawFortRegionSave', 'RawFortContentSave', 'RawFortTerritorySave', 'RawFortSnapshotBasics', 'RawFortSnapshotParent', 'RawFortMoneySave', 'RawFortMissionSave', 'RawFortBadgesSave', 'RawFortCoreWrite', 'RawFortSpWrite', 'RawFortSubscriberWrite', 'RawDataManagerFileSave', 'RawMenuSaveFort', 'SaveFortNameDialog'],

@@ -67,6 +67,7 @@ import { snapshotCampaignFortBasicSection } from './raw-campaign-snapshot-basics
 import { writeCampaignFortTechnology } from './raw-campaign-content-save.js';
 import { writeCampaignFortObjectChunk } from './raw-campaign-object-save.js';
 import { writeCampaignFortObjects } from './raw-campaign-objects-save.js';
+import { writeCampaignFortTerritory } from './raw-campaign-territory-save.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -639,6 +640,18 @@ export class RawCampaignSessionOwners {
     snapshotFortObjects(slot) {
         if (!this.loaded) throw new Error('실제 Session 설치 전 Objects 저장');
         this.writeFortObjects(slot);
+    }
+
+    // 전체 snapshot의 현재 Runtime 읽기·섬/청크·공유 난수와 새 Territory 노드를 연결한다.
+    writeFortTerritory(slot) {
+        if (this.#disposed) throw new Error('반납한 Session Territory snapshot 쓰기');
+        writeCampaignFortTerritory(this, slot);
+    }
+
+    // 공개 설치 관문을 유지하며 신전 상승용120BYTE 일반 writer와 구별한다.
+    snapshotFortTerritory(slot) {
+        if (!this.loaded) throw new Error('실제 Session 설치 전 Territory 저장');
+        this.writeFortTerritory(slot);
     }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
