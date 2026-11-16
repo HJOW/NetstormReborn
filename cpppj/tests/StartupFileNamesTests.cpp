@@ -56,11 +56,11 @@ TEST_CASE(StartupFileNames_ReentrantReadKeepsLocalCopies) {
     },names);config.Startup(StartupInput(row));CHECK(reads==StartupReads(row));
 }
 
-// identity 포함7작성+기본파일6개(이름1/읽기2)=25칸 뒤 옵션저장/재적재도 같은 실제Client다.
+// identity 포함7작성+기본파일6개(이름1/존재조회2/실제열기2)=37칸 뒤 옵션저장/재적재도 같은 실제Client다.
 TEST_CASE(StartupFileNames_ActualClientUnicodeStartupSaveAndReload) {
     using namespace netstorm;const auto root=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"extracted/cpp-startup-names-732/tests"/std::to_string(std::chrono::steady_clock::now().time_since_epoch().count())/L"게임😀";
     for (const auto name:{"u.cfg","user.cfg","options.cfg","dev.cfg","guild.cfg","setup.cfg"}) WriteStartupFile(root/"d"/name); // demo는 만들거나 읽지 않는다.
-    client::ClientOptions options;options.gameDirectory=root;options.noAudio=true;client::Client instance(std::move(options));auto& names=instance.StaticStrings()->FileNames();o::ConfigInterface::StartupOptions startup;startup.commandLine="SCREENW=800";startup.identity="u";startup.installDir=platform::PathToUtf8(root);instance.Configuration().Startup(startup);
-    CHECK(names.Index()==5 && instance.Files().FileNameOwner().get()==&names);CHECK(instance.Configuration().GetInt("SCREENW")==800 && instance.Configuration().Configuration().Get("IdentityMarker")=="loaded");CHECK(!std::filesystem::exists(root/"d/demo.cfg"));
-    client::SaveClientOptionsInGameDirectory(instance.Configuration(),root,names);CHECK(names.Index()==9);const auto bytes=instance.Files().Read("d/options.cfg");CHECK(names.Index()==1 && o::ConfigText::FromBytes(bytes).GetRaw("InstallDir")==platform::PathToUtf8(root));
+    client::ClientOptions options;options.gameDirectory=root;options.noAudio=true;client::Client instance(std::move(options));auto& names=instance.StaticStrings()->FileNames();const auto initial=names.Index();o::ConfigInterface::StartupOptions startup;startup.commandLine="SCREENW=800";startup.identity="u";startup.installDir=platform::PathToUtf8(root);instance.Configuration().Startup(startup);
+    CHECK(names.Index()==(initial+37)%10 && instance.Files().FileNameOwner().get()==&names);CHECK(instance.Configuration().GetInt("SCREENW")==800 && instance.Configuration().Configuration().Get("IdentityMarker")=="loaded");CHECK(!std::filesystem::exists(root/"d/demo.cfg"));
+    client::SaveClientOptionsInGameDirectory(instance.Configuration(),root,names);CHECK(names.Index()==(initial+41)%10);const auto bytes=instance.Files().Read("d/options.cfg");CHECK(names.Index()==(initial+43)%10 && o::ConfigText::FromBytes(bytes).GetRaw("InstallDir")==platform::PathToUtf8(root));
 }
