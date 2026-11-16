@@ -152,6 +152,9 @@ export class RawSurfaceWorld {
     #assetOwner;
     // Host: 공유 Storage Host 대여(use)이거나 독립 Host(legacy)이다.
     #processUse = null;
+    // 이 World가 설치한 실제 처리기 묶음과 외곽 owner 장치다. 새 World의 현재 묶음과 구별한다.
+    #processRuntime = null;
+    #runtimePin = null;
     #legacyHost = null;
     #legacyReclaim = null;
     #host;
@@ -373,7 +376,7 @@ export class RawSurfaceWorld {
                 postPopDepth: () => book.depth,
                 assertion: (expression, file, line) => storage.assertDisplay(expression, file, line),
             });
-            this.#processUse = storage.processes.bind(runtime);
+            this.#processRuntime = runtime; this.#processUse = storage.processes.bind(runtime);
             this.#host = storage.processes.host;
         } else {
             this.#legacyHost = new SquidProcessHost(pool, types, this.#kernel, this.#baseDestroy, this.#processState, { regular: makeBridgeRegularHandler(pool, this.#events), asset: this.#formDispatch.hooks() });
@@ -454,6 +457,7 @@ export class RawSurfaceWorld {
     // 월드 모듈이 사라진 뒤 저장소 대여를 푼다: 현재 처리기 대여(공유 Host)·레거시 회수 대여 → 저장소 대여 순서이다(멱등). (2026-11-11 WB04-E299)
     dispose() {
         if (this.#disposed) return;
+        this.bindRuntimePin(null);
         this.#disposed = true;
         this.#drainCurrentProcessesForShutdown();
         // 프로세스 정리가 끝난 뒤 현재 Session 파생 후처리만 분리하며 장기 장부는 초기화하지 않는다.
@@ -538,9 +542,23 @@ export class RawSurfaceWorld {
         this.#runtime.loadingDepth(this.#loadState.loadingDepth);
     }
 
+    // 원문347..365의 현재 대여들에 같은 전체 Runtime callable을 전달한다. 장기 Native 전용 미설치 모듈은 만들지 않는다.
+    bindRuntimePin(pin = null) {
+        if (pin !== null && typeof pin !== 'function') throw new TypeError('월드 Runtime pin 함수 필요');
+        if (this.#disposed) { if (pin === null) return; throw new Error('반납한 월드 Runtime pin 결선'); }
+        const binding = this.#sessionContainedUnpop;
+        if (pin && binding && typeof binding.bindRuntimePin !== 'function') throw new TypeError('종속 Unpop 실제 Runtime pin 장치 미연결');
+        this.#runtimePin = pin;
+        // 자기 대여만 갱신하며 다른 World의 현재 장기 묶음을 재조회하거나 바꾸지 않는다.
+        for (const runtime of [this.#factoryRuntime, this.#displayRuntime, this.#popRuntime, this.#processRuntime]) if (runtime) runtime.pin = pin;
+        this.#legacyHost?.bindRuntimePin(pin); this.#postPop.bindRuntimePin(pin); binding?.bindRuntimePin?.(pin);
+    }
+
     // Session 은 엔진을 소유하고 월드는 현재 호출 동안만 pin 하여 생성 실패/반납 뒤 수명 밖 접근을 막는다(웹에서는 약한 참조 대신 명시 해제로 null 을 준다). (2026-11-11 WB04-E299)
     bindContainedUnpop(binding) {
         if (binding && binding.pool !== this.#storage.pool) throw new TypeError('종속 Unpop의 실제 SID 풀 불일치');
+        if (binding && this.#runtimePin && typeof binding.bindRuntimePin !== 'function') throw new TypeError('종속 Unpop 실제 Runtime pin 장치 미연결');
+        binding?.bindRuntimePin?.(this.#runtimePin);
         const use = this.#storage.bindContainedUnpop(binding);
         this.#containedUse?.release();
         this.#containedUse = use;

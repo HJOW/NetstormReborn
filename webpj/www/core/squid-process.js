@@ -11,6 +11,7 @@
 // 근거: cpppj `o/SquidProcess.cpp/.h`(기준선 1f00a25a, 원본 Baseprocess.cpp/Regular.cpp: 0041bd20 부착, 0041bf10 Kill, 0041c010 갱신, 004ae240/004ae2b0 form 통지,
 //       004ae2d0 FromForm, 004afb40/004afbe0 조회, 00496e80/00496f00 Regular 생성자, 00496cb0 Regular 실행). 원본 관측 fixture는 tests/squid-process.test.mjs 에서 대조한다.
 // CD 10.72 경로는 범위 밖이다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-08 WB04-D5c: Process 호스트 이식으로 추가)
+import { releaseRuntimePin } from './runtime-pin.js';
 import { BaseProcess } from './kernel.js';
 import { RawSquidDestroy, SQUID_DESTROY_EFFECT } from './squid-destroy.js';
 import { SquidFactory } from './squid-factory.js';
@@ -335,6 +336,8 @@ export class SquidProcessHost {
     #factory = null;
     // 장기 호스트의 현재 World 처리기 묶음 getter 이다. 직접 호스트는 null.
     #current;
+    // 별도 Kernel을 쓰는 독립 Host의 실제 전체 owner 장치다. 장기 Host는 현재 runtime.pin을 쓴다.
+    #directPin = null;
 
     // 직접 호스트를 만든다. 풀/Kernel/공통 삭제/상태는 호출자가 소유하며 호스트보다 오래 살아야 한다. asset 은 form 이 아닌 객체의 삭제 훅이다.
     // 장기 호스트는 `borrowing` 으로 만든다(destroy 를 null 로 두고 options.current 를 준다).
@@ -371,6 +374,9 @@ export class SquidProcessHost {
     // 같은 실제 풀이다(모듈을 연결할 때 다른 월드의 풀을 섞지 않도록 제공).
     get pool() { return this.#pool; }
 
+    // 독립 World의 기존 Host에도 같은 외곽 pin을 연결한다. 장기 Host의 다른 현재 대여는 건드리지 않는다.
+    bindRuntimePin(pin = null) { if (this.#current || (pin !== null && typeof pin !== 'function')) throw new TypeError('독립 ProcessHost Runtime pin 계약'); this.#directPin = pin; }
+
     // 판본의 프로세스 타입 번호 범위 끝이다(10.78: 같은 현재 0054116c 의 signed 상한 비트).
     get processTypeEnd() { return this.#state.processTypeEnd; }
 
@@ -390,13 +396,14 @@ export class SquidProcessHost {
     // 현재 대여(있으면)를 호출 동안 붙잡고 work(runtime|null)를 실행한다. 정상/예외 모두 끝난 뒤 반납한다. 직접 호스트는 runtime 이 null.
     #withCall(work) {
         const runtime = this.#current ? this.#current() : null;
-        const hold = runtime?.pin ? runtime.pin() : null;
+        const pin = runtime ? runtime.pin : this.#directPin;
+        const hold = pin ? pin() : null;
         if (runtime) runtime.activeCalls += 1;
         try {
             return work(runtime);
         } finally {
             if (runtime) runtime.activeCalls -= 1;
-            void hold; // 같은 동기 호출의 정상/예외 복귀까지 실제 전체 owner를 보관한다.
+            releaseRuntimePin(hold); // 같은 동기 호출의 정상/예외 복귀까지 실제 전체 owner를 보관한다.
         }
     }
 

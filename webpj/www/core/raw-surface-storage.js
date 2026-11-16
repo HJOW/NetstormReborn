@@ -8,6 +8,7 @@
 // E593의 Factory/표시/Unpop·건물·기본 종속 분리와 공통 후처리 상태도 Storage가 보유한다. Graph/Pop/후처리 등 나머지 실행기의 소유권 전환은 남았다.
 // E568의 실제 Path 검색기가 장기 거리표/큐도 빌린다. 남음: SID 소진 복구 할당 연결(SidPool.BindAllocation — 웹 풀은 소진을 거부만 한다, 3.6절 ③ 4-D), 실제 자산의 MakeRawSurfaceStorage(Client 자산 단위).
 // CD(10.72)의 시작 값/분기는 옮기지 않았다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-11 WB04-E298: 4-B RawSurfaceStorage 이식)
+import { releaseRuntimePin } from './runtime-pin.js';
 import { ChunkMap } from '../assets/territory.js';
 import { BoardTargetState } from './raw-board-target.js';
 import { BridgeConnectState } from './raw-bridge-connect.js';
@@ -228,7 +229,7 @@ export class RawSurfaceStorage {
             if (typeof call !== 'function') throw new Error(`표면 표시의 선택된 실제 ${name} 장치 미연결`);
             const result = call(...args);
             return name === 'view' ? { ...result, viewport: { ...result.viewport } } : result;
-        } finally { void hold; }
+        } finally { releaseRuntimePin(hold); }
     }
 
     // 원문 값형 view를 같은 현재 카메라에서 얻는다. 호출자가 반환 viewport를 바꿔도 원래 owner는 바뀌지 않는다.
@@ -241,7 +242,7 @@ export class RawSurfaceStorage {
         const current = this.#displayRuntime?.deref();
         if (current?.changed) {
             const hold = current.pin ? current.pin() : null;
-            try { current.changed(); } finally { void hold; }
+            try { current.changed(); } finally { releaseRuntimePin(hold); }
         }
     }
 
@@ -338,7 +339,7 @@ export class RawSurfaceStorage {
     #callPop(runtime, name, ...args) {
         if (!runtime || typeof runtime[name] !== 'function') throw new Error(`독립 Squid의 선택된 실제 ${name} 장치 미연결`);
         const hold = runtime.pin ? runtime.pin() : null;
-        try { const call = runtime[name]; return call(...args); } finally { void hold; }
+        try { const call = runtime[name]; return call(...args); } finally { releaseRuntimePin(hold); }
     }
 
     // 현재 물리 TYPE만 조회한다. JS 음수 .at 인덱스나 대체 레코드로 범위 오류를 숨기지 않는다.

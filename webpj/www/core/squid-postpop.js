@@ -10,6 +10,7 @@
 //  접두형은 prefix(sid, flags), Carrier 는 damageablePostPop(sid, flags) 도 가진다. 접두 함수: setIslandPrefix/setSurfacePrefix/setTeleportPrefix((sid, flags) => void), 다리 연결 장치 bridgeConnector((sid) => void).
 // 이 모듈은 DOM 을 쓰지 않는다. CD 10.72 판본 분기(검증 호출 순서·28/32/35 오프셋)는 옮기지 않았다. (2026-11-08 WB04-E41: SquidPostPop 처리기 본체 이식으로 추가)
 import { RawAssetPostPop } from './raw-asset-post-pop.js';
+import { releaseRuntimePin } from './runtime-pin.js';
 import { registerManaProvider } from './raw-mana-registration.js';
 import { SquidPop } from './squid-pop.js';
 import { runSquidPostPopParent } from './squid-postpop-parent.js';
@@ -99,6 +100,8 @@ export class SquidPostPop {
     #aiNotice = null;
     #selectionRecheck = null;
     #localOwner = null;
+    // 현재 파생/공통 후처리가 호출 범위 동안 보유할 실제 전체 Runtime 장치다.
+    #runtimePin = null;
     #manaDiagnostics = {};
     #defaultDevices = null;
     #defaultResourcePostPop = null;
@@ -156,6 +159,7 @@ export class SquidPostPop {
 
     // 현재 World/Session 의 파생 몸체 열네 종과 AI 통지/로컬 owner/선택 재검사/Teleport 접두 연결만 반납한다. 장기 장부·섬/표면 접두·기본 장치·기본 자원 후처리·Graph 는 보존한다(Native 전역 reset 이 아니다). (2026-11-10 WB04-E258)
     releaseRuntimeBindings() {
+        this.#runtimePin = null;
         this.#aiNotice = null;
         this.#selectionRecheck = null;
         this.#localOwner = null;
@@ -171,6 +175,9 @@ export class SquidPostPop {
 
     // AI 통지 뒤 현재 Client 로컬 owner 를 읽는 getter 이다. 독립 구성은 state.localOwner 를 쓴다.
     bindLocalOwner(owner) { this.#localOwner = owner; }
+
+    // 원문 BindRuntimePin처럼 실제 대여만 교체하고 장부/슬롯/깊이는 쓰지 않는다.
+    bindRuntimePin(pin = null) { if (pin !== null && typeof pin !== 'function') throw new TypeError('공통 후처리 Runtime pin 함수 필요'); this.#runtimePin = pin; }
 
     // 섬 받침(004421c0) 접두를 연결한다. 연결 계층이 Pop 을 거쳐 이 객체를 다시 부르므로 생성 뒤에 공급한다.
     setIslandPrefix(prefix) { this.#islandPrefix = prefix; }
@@ -292,19 +299,27 @@ export class SquidPostPop {
 
     // 독립 기존 fixture 의 후처리 호환 진입이다: 사전 검사 → 깊이 증가 → 분배 → 깊이 복귀 확인. 실제 PATCH Pop 은 별도 Activate 부모가 깊이와 진단을 맡는다.
     activate(sid, flags) {
-        this.validate(sid, flags);
-        const before = this.#state.depth;
-        this.#state.depth = (this.#state.depth + 1) >>> 0;
-        this.#dispatchPostPop(sid, flags);
-        if (this.#state.depth !== before) throw new Error('독립 후처리의 공통 깊이 불일치');
+        return this.#withRuntime(() => {
+            this.validate(sid, flags);
+            const before = this.#state.depth;
+            this.#state.depth = (this.#state.depth + 1) >>> 0;
+            this.#dispatchPostPop(sid, flags);
+            if (this.#state.depth !== before) throw new Error('독립 후처리의 공통 깊이 불일치');
+        });
     }
 
     // 실제 Activate 부모가 깊이를 올린 뒤 현재 가상 +20 으로 부르는 진입이다. 10.78 부모는 가상 몸체 앞에 전체 공통 사전 검사를 삽입하지 않는다.
-    postPopVirtual(sid, flags) { this.#dispatchPostPop(sid, flags); }
+    postPopVirtual(sid, flags) { return this.#withRuntime(() => this.#dispatchPostPop(sid, flags)); }
 
     // 실제 Pop 이 같은 풀과 해시/spot 을 읽는지 확인한다(다른 지도에 Graph 를 갱신하는 연결을 막는다).
     validateSpace(hash, spots) {
         if (this.#graph) this.#graph.validateSpace(hash, spots);
+    }
+
+    // 원문 세 공개 진입의 첫 효과부터 같은 전체 owner를 정상/예외 복귀까지 보유한다.
+    #withRuntime(work) {
+        const pin = this.#runtimePin; const hold = pin ? pin() : null;
+        try { return work(); } finally { releaseRuntimePin(hold); }
     }
 
     // 선택된 실제 파생 또는 공통 몸체를 호출한다. 깊이는 호출자가 소유하며 이 분배는 올리지 않는다.
@@ -350,6 +365,11 @@ export class SquidPostPop {
 
     // 공통 후처리(004b0d30)의 순서: 영역 무효화 → 그래프 생성/리셋 → 비용 → 공급/작업장 목록 → 소유자 조건 통계 → 선택 재검사 → 깊이 감소. 하위 실패 전의 효과는 되돌리지 않는다.
     postPop(sid, flags) {
+        return this.#withRuntime(() => this.#postPopBody(sid, flags));
+    }
+
+    // 같은 현재 장부/공간의 원문 공통 후처리 본문이다.
+    #postPopBody(sid, flags) {
         const state = this.#state;
         const pool = this.#pool;
         const diagnostics = this.#manaDiagnostics;

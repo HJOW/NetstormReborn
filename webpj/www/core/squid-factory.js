@@ -10,6 +10,7 @@
 // 웹 적응: cpppj 가 장기 주소로 빌리는 005ca8f0(사제 1/4 HP)·005412d0(사제 TYPE)·005412e8/ec(다이스 TYPE)·005412e0(fakeSurface TYPE)은 bindGameAux 로 같은 GameAuxState 를 빌려
 //           호출 시점마다 읽는다. HP 의 getNum 은 레코드 객체가 현재 표 배열에서 차지하는 위치로 계산한다(같은 레코드를 공유하지 않는 다른 표는 거부).
 // CD 10.72 경로는 범위 밖이다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-06 WB04-D4: SquidFactory 이식으로 추가)
+import { releaseRuntimePin } from './runtime-pin.js';
 import { SQUID_BASE_VTABLE } from './squid-vtables.js';
 import {
     typeConstructorAddress, constructorRecipe, applyConstructorRecipe, supportsConstructedVtable,
@@ -432,7 +433,7 @@ export class SquidFactory {
                 if (!supportsConstructedVtable(table)) throw new Error('Take 의 선택된 실제 VT+2c 미연결');
                 this.postTake(object(number));
             },
-        }); } finally { void runtimePin; }
+        }); } finally { releaseRuntimePin(runtimePin); }
     }
 
     // 004ad470: 공통 firstPop 의 직접 몸체다. TYPE/상태/VT 없이 extra(+40)의 abstract(1)/buried(8) 비트만 읽는다(쓰기 없음).
@@ -510,7 +511,7 @@ export class SquidFactory {
             const forms = new SquidForms(this.#pool, { transmit: transmit ?? (runtime ? runtime.formTransmit : this.#formTransmit) });
             this.#bindCurrentFormPop(forms);
             forms.pop(form, flags);
-        } finally { void runtimePin; }
+        } finally { releaseRuntimePin(runtimePin); }
     }
 
     // 공통 Form 부착 부모를 현재 TYPE genus·현재 contentFormType(없으면 6)·진단·공유 깊이로 실행한다.
@@ -526,7 +527,7 @@ export class SquidFactory {
                 assertion: this.#diagnostics.assertion,
             });
             forms.attach(form, parent, flags);
-        } finally { void runtimePin; }
+        } finally { releaseRuntimePin(runtimePin); }
     }
 
     // Form 공통 Unpop 을 현재 진단과 빌린 종속 분리로 실행한다.
@@ -535,6 +536,6 @@ export class SquidFactory {
         const runtimePin = runtime?.pin ? runtime.pin() : null;
         try {
             new SquidForms(this.#pool, { unpop: { detach: runtime ? runtime.formDetach : this.#formDetach, assertion: this.#diagnostics.assertion } }).unpop(sid);
-        } finally { void runtimePin; }
+        } finally { releaseRuntimePin(runtimePin); }
     }
 }

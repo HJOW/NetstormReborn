@@ -4,6 +4,7 @@
 // 현재 Session 최소 계약은 bindRuntimePin(callback)이다. 이 owner의 단독 대여/공개는 전체 Session 구성/Load나 State 자식 정리 증빙을 대신하지 않는다.
 // pin은 weak로 공개한 실제 전체 owner를 강하게 잡으며 caller는 try/finally에서 release해야 한다. UI/OS/원본 주소 역참조는 하지 않는다. (2026-11-16 WB04-E570)
 import { DwordBox } from './client-subscriber-globals.js';
+import { createRuntimePin } from './runtime-pin.js';
 import { ClientAiDebugGlobals, Int32Box } from './client-ai-debug-globals.js';
 import { ClientCameraGlobals } from './client-camera-globals.js';
 import { ClientCursorGlobals } from './client-cursor-globals.js';
@@ -155,7 +156,7 @@ export class ClientGameplayGlobals {
         if (!session || this.#current !== session || this.#runtimeOwnerSession !== session) throw new Error('선택한 현재 Runtime의 실제 owner 미공개');
         let owner = this.#runtimeOwner.deref(); if (!owner) throw new Error('선택한 현재 Runtime의 실제 owner 수명 종료');
         if (this.#calls === MAX_CALLS) throw new RangeError('현재 Runtime 배송 호출 수 넘침'); this.#calls += 1n;
-        return { get owner() { return owner; }, release: () => { if (owner) { this.#calls -= 1n; owner = null; } } };
+        return createRuntimePin(owner, () => { this.#calls -= 1n; });
     }
     // weak 공개만으로는 호출 중으로 세지 않고 같은 현재 전체 owner의 pin만 센다.
     runtimeCallActive(session) { return Boolean(session) && this.#runtimeOwnerSession === session && this.#calls !== 0n; }

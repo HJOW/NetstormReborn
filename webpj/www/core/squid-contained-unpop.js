@@ -6,6 +6,7 @@
 // 근거: cpppj `o/RawSquidContainedUnpop.cpp/.h`(d678fcad), `o/ContentNoticeVtables.inc`. 원본 x86 관측 표는 없고 cpppj 계약 검사(SquidContainedUnpopTests)를 옮긴다.
 // CD 10.72 경로는 범위 밖이다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-05 WB04-D2: Unpop 처리기의 contained 종단으로 추가)
 import { isSquidFormVtable, squidAssetVtable } from './squid-vtables.js';
+import { releaseRuntimePin } from './runtime-pin.js';
 
 // 원문 진단 파일 이름이다(10.78). (2026-11-05 WB04-D2)
 const SQUID_CPP = '\\Ns\\O\\Squid.cpp';
@@ -89,6 +90,8 @@ export class RawSquidContainedUnpop {
     #state;
     // 가상 호출·입력 큐·진단 장치이다.
     #hooks;
+    // 현재 Form getter/통지/UI가 실제 전체 owner를 보유하는 호출 범위 장치다.
+    #runtimePin = null;
 
     // 생성 때는 장치를 요구하거나 풀을 바꾸지 않는다.
     constructor(pool, state, hooks = {}) {
@@ -105,7 +108,13 @@ export class RawSquidContainedUnpop {
     get pool() { return this.#pool; }
 
     // 실제 부착 꼬리가 읽는 현재 내용물 Form TYPE 이다.
-    get contentFormType() { return this.#state.contentFormType() >>> 0; }
+    get contentFormType() { return this.#withRuntime(() => this.#state.contentFormType() >>> 0); }
+
+    // 원문 BindRuntimePin은 링크/슬롯을 쓰지 않고 같은 호출 수명만 교체한다.
+    bindRuntimePin(pin = null) { if (pin !== null && typeof pin !== 'function') throw new TypeError('종속 Unpop Runtime pin 함수 필요'); this.#runtimePin = pin; }
+
+    // 현재 callable과 owner를 정상/예외 복귀까지 보관한다. 중첩 하위도 각 원문 범위를 보유한다.
+    #withRuntime(work) { const pin = this.#runtimePin; const hold = pin ? pin() : null; try { return work(); } finally { releaseRuntimePin(hold); } }
 
     // Squid.cpp 진단을 부른다(정상 복귀하면 계속).
     #assert(expression, line) {
@@ -114,6 +123,11 @@ export class RawSquidContainedUnpop {
 
     // 004ac6b0: 각 원문 위치에서 현재 슬롯을 다시 읽으며 종속 체인에서 자신을 뺀다. 부모가 dead 이면 링크를 그대로 둔다.
     detach(sid) {
+        return this.#withRuntime(() => this.#detachBody(sid));
+    }
+
+    // 같은 원문 링크/부모 통지를 실행하며 실패 접두를 되돌리지 않는다.
+    #detachBody(sid) {
         const pool = this.#pool;
         const hooks = this.#hooks;
         if (!(pool.slot(sid)[11] & CONTAINED)) this.#assert('containedFlag', 0x3a3);
@@ -142,6 +156,11 @@ export class RawSquidContainedUnpop {
     // 004ad230: (10.78) 현재 진단이 비0 이고 메타맵이 아니며 자신이 dead 이고 boss 가 아니면 UI 검색 진단을 부른다.
     // 그 뒤 자신의 +6 종속 목록을 next 를 먼저 저장하며 따라가 Form(TYPE ≤ 0x45) 중 현재 GumpForm TYPE 이 있으면 현재 사건을 한 번 큐에 넣는다.
     notifyUi(sid) {
+        return this.#withRuntime(() => this.#notifyUiBody(sid));
+    }
+
+    // 같은 현재 종속 목록과 UI 사건의 원문 본문이다.
+    #notifyUiBody(sid) {
         const pool = this.#pool;
         const state = this.#state;
         const checking = typeof state.checking === 'function' ? state.checking() : 0;
@@ -167,7 +186,6 @@ export class RawSquidContainedUnpop {
 
     // 두 하위 종단을 원래 순서로 실행한다. 분리가 정상 반환하면 부모 dead 여부와 무관하게 UI 검색을 한다.
     unpop(sid) {
-        this.detach(sid);
-        this.notifyUi(sid);
+        return this.#withRuntime(() => { this.detach(sid); this.notifyUi(sid); });
     }
 }
