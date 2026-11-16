@@ -65,6 +65,7 @@ export const RULES = Object.freeze([
     // 기술 획득/신전 상승의 외곽 callback도 같은 두 snapshot 부모를 호출한다. 편집기 UI와 구별한다(WB04-E627).
     { id: 'campaign-snapshot-parent', class: 'port', names: ['RawFortSnapshotParent'], reason: 'RawCampaignSession.cpp4321·4328·6090의 캠페인 신전 상승/의식 완료/기술 획득도 SnapshotBattle/SnapshotFort의 공통 부모를 호출한다' },
     { id: 'campaign-snapshot-basics', class: 'port', names: ['RawFortSnapshotBasics'], reason: '같은 캠페인 snapshot의 Session5825..5845가 TypeNames/Deck writer를 실제 Template/생산 덱에 연결한다(E628)' },
+    { id: 'campaign-content-save', class: 'port', names: ['RawFortContentSave'], reason: '캠페인 기술/객체 snapshot의 Session2566..2584·5899..5901가 같은 실제 ContentForm/finder/stream writer를 공유한다(E629)' },
     {
         id: 'edit-fort-save', class: 'exclude-edit',
         names: ['RawFortObjectSave', 'RawFortObjectsSave', 'RawFortRegionSave', 'RawFortContentSave', 'RawFortTerritorySave', 'RawFortSnapshotBasics', 'RawFortSnapshotParent', 'RawFortMoneySave', 'RawFortMissionSave', 'RawFortBadgesSave', 'RawFortCoreWrite', 'RawFortSpWrite', 'RawFortSubscriberWrite', 'RawDataManagerFileSave', 'RawMenuSaveFort', 'SaveFortNameDialog'],

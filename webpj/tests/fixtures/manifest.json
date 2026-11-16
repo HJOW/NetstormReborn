@@ -24366,10 +24366,41 @@
       "bytes": 404991,
       "lines": 2062,
       "fixtureCommit": "972b16b26",
-      "webCommit": "worktree",
+      "webCommit": "1eda17133",
       "cpppjBasis": {
         "cpppj/src/o/RawFortSnapshotBasics.cpp": "972b16b26",
         "cpppj/src/o/RawFortSnapshotBasics.h": "972b16b26"
+      }
+    },
+    {
+      "id": "fort-content-save",
+      "path": "cpppj/tests/fixtures/fort-content-save-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE706관측(FortContentSaveTests.cpp)",
+      "consumers": [
+        "webpj/tests/fort-content-save.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-content-save.js"
+      ],
+      "unit": "WB04-E629",
+      "doc": "docs/webpj-fort-content-save-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortContentSave.cpp",
+        "cpppj/src/o/RawFortContentSave.h"
+      ],
+      "scope": "내용물 직렬화706행: 고정 개수 BYTE 주소/독립 finder·현재 후보/metadata·QA/목록 플래그/중첩·두 버퍼/stream/Form/trace·정상/부분 중단. 실제 Session 결선은 별도 조립 계약이며 Native 가상 대여/전체 snapshot·Load는 잔여",
+      "text": true,
+      "sha256": "1fb2d6cf9a44200ae2509d750d658671323964f1d6ebd3406d273d00436c0fd6",
+      "bytes": 357696,
+      "lines": 708,
+      "fixtureCommit": "db1af8532",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortContentSave.cpp": "db1af8532",
+        "cpppj/src/o/RawFortContentSave.h": "db1af8532"
       }
     }
   ]

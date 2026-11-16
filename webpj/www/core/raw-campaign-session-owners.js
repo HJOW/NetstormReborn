@@ -64,6 +64,7 @@ import { RawCampaignSessionAi, createCampaignAiState } from './raw-campaign-sess
 import { RawCampaignSessionAiWorld } from './raw-campaign-session-ai-world.js';
 import { RawCampaignSessionAiProduction } from './raw-campaign-session-ai-production.js';
 import { snapshotCampaignFortBasicSection } from './raw-campaign-snapshot-basics.js';
+import { writeCampaignFortTechnology } from './raw-campaign-content-save.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -599,6 +600,19 @@ export class RawCampaignSessionOwners {
     snapshotFortBasicSection(slot, names) {
         if (this.#disposed) throw new Error('반납한 Session 기본 snapshot');
         snapshotCampaignFortBasicSection(this, slot, names);
+    }
+
+    // 전체 snapshot 부모가 이미 만든 같은 stream에 실제 기술 Form만 쓴다. 별도 Technology 노드를 만들지 않는다.
+    writeFortTechnology(parent, stream) {
+        if (this.#disposed) throw new Error('반납한 Session 기술 쓰기');
+        writeCampaignFortTechnology(this, parent, stream);
+    }
+
+    // 공개 설치 관문 뒤 현재 기술 부모를 먼저 보관하고 실제 새 Technology 섹션을 한 번 만든다.
+    snapshotFortTechnology(slot) {
+        if (this.#disposed) throw new Error('반납한 Session 기술 snapshot');
+        if (!this.loaded || !Number.isInteger(slot) || slot < 0 || slot >= 9) throw new Error('실제 Technology snapshot의 설치/슬롯 계약 위반');
+        this.templateStorage.template(slot); const parent = this.player.currentTechnology(); const stream = this.templateStorage.createSection(slot, 'Technology'); this.writeFortTechnology(parent, stream);
     }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
