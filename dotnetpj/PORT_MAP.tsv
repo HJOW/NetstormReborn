@@ -960,3 +960,11 @@ cpppj/src/o/RawIceTower.cpp	Netstorm.Core/Original/RawGrowingIcePostPop.cs	f2ad7
 cpppj/src/o/RawIceTower.h	Netstorm.Core/Original/RawGrowingIcePostPop.cs	f2ad7f69f36de5a227afee7ea59e31471b34967f	L1
 cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawAssetPostPop.TailCurrent.cs	f2ad7f69f36de5a227afee7ea59e31471b34967f	L1
 cpppj/src/o/RawAssetPostPop.h	Netstorm.Core/Original/RawAssetPostPop.TailCurrent.cs	f2ad7f69f36de5a227afee7ea59e31471b34967f	L1
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Resources.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Resources.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawCarrierPostPop.cpp	Netstorm.Core/Original/RawSurfaceStorage.Resources.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawCarrierPostPop.h	Netstorm.Core/Original/RawSurfaceStorage.Resources.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawNuggetPostPop.cpp	Netstorm.Core/Original/RawSurfaceStorage.Resources.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawNuggetPostPop.h	Netstorm.Core/Original/RawSurfaceStorage.Resources.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawAssetPostPop.cpp	Netstorm.Core/Original/RawSurfaceStorage.Resources.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawAssetPostPop.h	Netstorm.Core/Original/RawSurfaceStorage.Resources.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
