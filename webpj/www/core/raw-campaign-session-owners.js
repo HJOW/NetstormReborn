@@ -58,6 +58,7 @@ import { RawCampaignSessionDeletion } from './raw-campaign-session-deletion.js';
 import { RawCampaignSessionRegular } from './raw-campaign-session-regular.js';
 import { RawCampaignSessionTransmission } from './raw-campaign-session-transmission.js';
 import { RawCampaignSessionTerrain, createCampaignTerrainState } from './raw-campaign-session-terrain.js';
+import { prepareCampaignFortTypeNames, readCampaignFortObjectStreams } from './raw-campaign-session-streams.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -532,6 +533,18 @@ export class RawCampaignSessionOwners {
     writeTerritory(slot, records) {
         if (this.#disposed) throw new Error('반납한 Session Territory 쓰기');
         writeCampaignTerritory(this.templateStorage, slot, records);
+    }
+
+    // 원문 TypeNames 부모의 현재 manager/stream·변환표·깊이를 연결한다. 지역 Template도 같은 변환표 owner를 쓴다.
+    prepareFortTypeNames(slot, sourceStorage = null) {
+        if (this.#disposed) throw new Error('반납한 Session TypeNames 읽기');
+        prepareCampaignFortTypeNames(this, slot, sourceStorage);
+    }
+
+    // 실제 로더가 읽으면서 즉시 만드는 원문 Objects/Contents 부모다. 기본20 Terr 뒤 Chaff도 같은 저장소에서 읽는다.
+    readFortObjectStreams(objects, slot, start = 0, end = 20, sourceStorage = null) {
+        if (this.#disposed) throw new Error('반납한 Session Objects 읽기');
+        readCampaignFortObjectStreams(this, objects, slot, start, end, sourceStorage);
     }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.

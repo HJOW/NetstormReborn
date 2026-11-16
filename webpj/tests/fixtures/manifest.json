@@ -567,13 +567,13 @@
         "cpppj/src/o/RawFortObjectStream.cpp",
         "cpppj/src/o/FortSerializationGlobals.h"
       ],
-      "scope": "값형 로더·내용물 적용(fort-object-load, WB03-AB)과 같은 609행의 원시 stream 경로 재생(fort-object-stream, WB04-E276)과 저장 전역 묶음/깊이 상자를 빌린 상태로의 재생(fort-serialization-globals, WB04-E279). 필수 생성/Pop/finder/소유자 장치가 없어 실제 월드 미연결",
+      "scope": "값형 로더·내용물 적용(fort-object-load, WB03-AB)과 같은 609행의 원시 stream 경로 재생(fort-object-stream, WB04-E276)과 저장 전역 묶음/깊이 상자를 빌린 상태로의 재생(fort-serialization-globals, WB04-E279). 필수 생성/Pop/finder/소유자 장치가 없어 실제 월드 미연결 / WB04-E621: 같은 Session Template/반환 stream·현재 변환표·TYPE/ContainedCreate를 연결한 reader와 기존 원본 대조 유지",
       "text": true,
       "sha256": "31fb91aabb4fe3c403e9a9780e0f14f211508cbbce6523cef1b53a5bdf439519",
       "bytes": 374142,
       "lines": 1219,
       "fixtureCommit": "ada85427f",
-      "webCommit": "be96d8992",
+      "webCommit": "c09072326",
       "cpppjBasis": {
         "cpppj/src/o/RawFortObjectLoad.cpp": "674e32020",
         "cpppj/src/o/RawFortObjectStream.cpp": "c18205179",
@@ -16414,7 +16414,7 @@
       "cpppjSources": [
         "cpppj/src/o/RawFortContentsLoad.cpp"
       ],
-      "scope": "668행 전부 사용",
+      "scope": "668행 전부 사용 / WB04-E621: 같은 Session Template/반환 stream·현재 변환표·TYPE/ContainedCreate를 연결한 reader와 기존 원본 대조 유지",
       "text": true,
       "sha256": "22851fa72e8905ac9465aadb64cb5669695dfd7d2847435fb0dcb25d4048948e",
       "bytes": 252643,
@@ -17127,7 +17127,7 @@
       "bytes": 51116,
       "lines": 67,
       "fixtureCommit": "fb1b29007",
-      "webCommit": "worktree",
+      "webCommit": "100473da8",
       "cpppjBasis": {
         "cpppj/src/zacket/LocalMissionTransport.cpp": "5756ffd5f"
       }
@@ -24151,7 +24151,7 @@
         "cpppj/src/client/FortTypeConversionStorage.cpp",
         "cpppj/src/client/FortTypeConversionStorage.h"
       ],
-      "scope": "원본664본문(332입력×두x87제어)과 중단38건의 별도cleanup. getter/같은 동기access 각각에 재대조하며 새 관측 수를 늘리지 않음. 실제 Template/owner 수명은 별도 통합 검사",
+      "scope": "원본664본문(332입력×두x87제어)과 중단38건의 별도cleanup. getter/같은 동기access 각각에 재대조하며 새 관측 수를 늘리지 않음. 실제 Template/owner 수명은 별도 통합 검사 / WB04-E621: 같은 Session Template/반환 stream·현재 변환표·TYPE/ContainedCreate를 연결한 reader와 기존 원본 대조 유지",
       "text": true,
       "sha256": "4c824ec764b85b73ef1d2387c7e6043611b767e983f66abc3f1a98da2d0ef86c",
       "bytes": 4788248,
