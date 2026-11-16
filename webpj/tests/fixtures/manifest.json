@@ -7284,10 +7284,10 @@
       "sha256": "76e346fc32bfe640f615ced94d4d497198e0abc483f17de8bfbdd9fbe6517bf4",
       "bytes": 93112,
       "lines": 581,
-      "fixtureCommit": "446713ea",
-      "webCommit": "d3543f77",
+      "fixtureCommit": "446713eab",
+      "webCommit": "d3543f77d",
       "cpppjBasis": {
-        "cpppj/src/o/RawBuriedPostPop.cpp": "eae6fd03"
+        "cpppj/src/o/RawBuriedPostPop.cpp": "eae6fd03e"
       }
     },
     {
@@ -7577,10 +7577,10 @@
       "sha256": "56da3fd0581263e9b9d1ba9e39cd60ac1158d5129cbe67ea8e730c873aa6c19d",
       "bytes": 1142749,
       "lines": 6554,
-      "fixtureCommit": "c25416f6",
-      "webCommit": "3480aea4",
+      "fixtureCommit": "c25416f6a",
+      "webCommit": "627f394c9",
       "cpppjBasis": {
-        "cpppj/src/o/RawPriestPreDestroy.cpp": "1e8e43d9"
+        "cpppj/src/o/RawPriestPreDestroy.cpp": "f9db0e533"
       }
     },
     {
@@ -9865,11 +9865,11 @@
       "sha256": "4aa9033630b83976e528f354bb0df89e4f4226911b0a3d5e9c2c810c0a94bd09",
       "bytes": 2424203,
       "lines": 1251,
-      "fixtureCommit": "a192ea5c",
-      "webCommit": "ec532f82",
+      "fixtureCommit": "a192ea5cc",
+      "webCommit": "ec532f82d",
       "cpppjBasis": {
-        "cpppj/src/o/RawDeckDraw.cpp": "a192ea5c",
-        "cpppj/src/o/RawGemReward.cpp": "a192ea5c"
+        "cpppj/src/o/RawDeckDraw.cpp": "a192ea5cc",
+        "cpppj/src/o/RawGemReward.cpp": "a192ea5cc"
       }
     },
     {
@@ -14186,10 +14186,10 @@
       "sha256": "c3200decd6f3028dcfcefb84429e37f05a6d162fedb969fd331e711fb0846a19",
       "bytes": 1608479,
       "lines": 1729,
-      "fixtureCommit": "e0169cba",
-      "webCommit": "01ae6446",
+      "fixtureCommit": "e0169cba4",
+      "webCommit": "01ae64463",
       "cpppjBasis": {
-        "cpppj/src/o/SquidDestroyLifecycle.cpp": "7ba0130b"
+        "cpppj/src/o/SquidDestroyLifecycle.cpp": "7ba0130b6"
       }
     },
     {
