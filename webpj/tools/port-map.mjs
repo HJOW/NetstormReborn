@@ -66,6 +66,7 @@ export const RULES = Object.freeze([
     { id: 'campaign-snapshot-parent', class: 'port', names: ['RawFortSnapshotParent'], reason: 'RawCampaignSession.cpp4321·4328·6090의 캠페인 신전 상승/의식 완료/기술 획득도 SnapshotBattle/SnapshotFort의 공통 부모를 호출한다' },
     { id: 'campaign-snapshot-basics', class: 'port', names: ['RawFortSnapshotBasics'], reason: '같은 캠페인 snapshot의 Session5825..5845가 TypeNames/Deck writer를 실제 Template/생산 덱에 연결한다(E628)' },
     { id: 'campaign-content-save', class: 'port', names: ['RawFortContentSave'], reason: '캠페인 기술/객체 snapshot의 Session2566..2584·5899..5901가 같은 실제 ContentForm/finder/stream writer를 공유한다(E629)' },
+    { id: 'campaign-object-save', class: 'port', names: ['RawFortObjectSave'], reason: '캠페인 snapshot의 Session2590..2623·6009..6028도 같은 단일 객체/청크 writer와 현재 월드 해시를 공유한다(E630)' },
     {
         id: 'edit-fort-save', class: 'exclude-edit',
         names: ['RawFortObjectSave', 'RawFortObjectsSave', 'RawFortRegionSave', 'RawFortContentSave', 'RawFortTerritorySave', 'RawFortSnapshotBasics', 'RawFortSnapshotParent', 'RawFortMoneySave', 'RawFortMissionSave', 'RawFortBadgesSave', 'RawFortCoreWrite', 'RawFortSpWrite', 'RawFortSubscriberWrite', 'RawDataManagerFileSave', 'RawMenuSaveFort', 'SaveFortNameDialog'],

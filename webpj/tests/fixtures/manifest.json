@@ -24397,10 +24397,72 @@
       "bytes": 357696,
       "lines": 708,
       "fixtureCommit": "db1af8532",
-      "webCommit": "worktree",
+      "webCommit": "25e6af70d",
       "cpppjBasis": {
         "cpppj/src/o/RawFortContentSave.cpp": "db1af8532",
         "cpppj/src/o/RawFortContentSave.h": "db1af8532"
+      }
+    },
+    {
+      "id": "fort-object-save",
+      "path": "cpppj/tests/fixtures/fort-object-save-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE3294관측(FortObjectSaveTests.cpp)",
+      "consumers": [
+        "webpj/tests/fort-object-save.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-object-save.js"
+      ],
+      "unit": "WB04-E630",
+      "doc": "docs/webpj-fort-object-save-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortObjectSave.cpp",
+        "cpppj/src/o/RawFortObjectSave.h"
+      ],
+      "scope": "단일 객체의 CRT 좌표/초기 필터·현재 scope/버전/필드·반환·raw50/전역/가상·두 버퍼/stream/trace·정상/부분 중단; 실제 Session 결선은 별도 조립 계약이며 전체 snapshot/Native·Load는 잔여",
+      "text": true,
+      "sha256": "150c9d80b53e88b1542458152d871b9f40fb9ff1d195025971e084c99156a953",
+      "bytes": 1773203,
+      "lines": 3296,
+      "fixtureCommit": "0e66d91ba",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortObjectSave.cpp": "0e66d91ba",
+        "cpppj/src/o/RawFortObjectSave.h": "0e66d91ba"
+      }
+    },
+    {
+      "id": "fort-chunk-save",
+      "path": "cpppj/tests/fixtures/fort-chunk-save-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE672관측(FortObjectSaveTests.cpp)",
+      "consumers": [
+        "webpj/tests/fort-object-save.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-object-save.js"
+      ],
+      "unit": "WB04-E630",
+      "doc": "docs/webpj-fort-object-save-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortObjectSave.cpp",
+        "cpppj/src/o/RawFortObjectSave.h"
+      ],
+      "scope": "청크 marker/미초기화 count 예약·고정 data+offset/WORD 감김·현재 후보/상한·두 버퍼/stream/trace·정상/부분 중단. 내부 marker MemStream 진입 trace 한 항목만 C++와 같이 제외하며 실제 bytes/진단/필드는 전부 비교; 실제 Session 결선은 별도 조립 계약이며 전체 snapshot/Native·Load는 잔여",
+      "text": true,
+      "sha256": "3935ce171bb664ae79147bb0d0e50de8aa186127b303c612494fe567c7b296ac",
+      "bytes": 3019773,
+      "lines": 674,
+      "fixtureCommit": "0e66d91ba",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortObjectSave.cpp": "0e66d91ba",
+        "cpppj/src/o/RawFortObjectSave.h": "0e66d91ba"
       }
     }
   ]

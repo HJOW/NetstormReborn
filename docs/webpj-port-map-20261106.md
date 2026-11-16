@@ -44,10 +44,11 @@
 | mp-zsend | exclude-mp | HtmlZsend | `$Zsend` 87h 송신, WB02-E 미연결 결정 |
 | edit-editor | exclude-edit | 이름에 `Editor`가 든 15단위 | UberEditor·섬 추가 창·작업본 파일·Test Battle·편집 복귀 등 |
 | edit-island-add | exclude-edit | RawIslandAdd·RawIslandPlacement | 편집기 섬 추가 |
-| edit-fort-save | exclude-edit | Fort Save/Write·snapshot 13단위 | Save as와 snapshot writer. 공통 자식은 Session 결선 때 도달을 다시 확인한다 |
+| edit-fort-save | exclude-edit | Fort Save/Write·snapshot 12단위 | Save as와 snapshot writer. 공통 자식은 Session 결선 때 도달을 다시 확인한다 |
 | campaign-snapshot-parent | port | RawFortSnapshotParent | E627: 캠페인 기술 획득·신전 상승·의식 완료의 SnapshotBattle/Session SnapshotFort도 같은 부모를 공유한다. 원문 네 진입을 이식하며 편집기 UI/파일 저장을 추가하지 않는다 |
 | campaign-snapshot-basics | port | RawFortSnapshotBasics | E628: 같은 Session snapshot5825..5845의 TypeNames/Deck writer. 실제 Template9/생산 덱의 고정 stream과 현재 State를 구별한다 |
 | campaign-content-save | port | RawFortContentSave | E629: 같은 Session2566..2584·5899..5901의 기술/객체 공용 내용물 writer. 실제 Form6·Robust·독립 finder와 보관한 stream을 사용한다 |
+| campaign-object-save | port | RawFortObjectSave | E630: 같은 Session2590..2623·6009..6028의 단일 객체/청크 writer. 현재 전역·typed 가상/공간과 실제 해시 finder를 같은 stream에 연결한다 |
 | edit-existing-fort | exclude-edit | Deck/DeckRestore/Subscriber 계열 5단위 | RawCampaignSession의 `ReadExistingFortDeck` 등 "기존Editor" 경로. 미션 적재는 RawCampaignWorldLoad/RawFortWorldLoad가 맡는다 |
 | shared-territory-write | port | RawFortTerritoryRecover의 WriteFortTerritoryRecords | E588: 캠페인 Vortex도 공유하는 쓰기. RecoverFortTerritory만 ExistingEditor 전용 제외다. TypeNames/Contents/변환표도 캠페인 공유로 앞 단위에서 복원했다 |
 | edit-new-fort | exclude-edit | RawNewFort·RawCampaignNewFort·NewFortManagerDevices | 새 맵 manager·보호 작업본. 987 뒤로 원격 Fort도 같은 생성을 쓴다 |

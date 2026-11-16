@@ -59,6 +59,7 @@ test('이식 대응표: 단독 경로와 웹 제외 경계의 대표 분류', ()
         'o/RawFortSnapshotParent': 'port', // 캠페인 기술 획득·신전 상승·의식 완료도 전체 snapshot 부모를 공유(E627)
         'o/RawFortSnapshotBasics': 'port', // 같은 캠페인 snapshot의 실제 TypeNames/Deck writer(E628)
         'o/RawFortContentSave': 'port', // 캠페인 기술과 객체의 같은 내용물 writer(E629)
+        'o/RawFortObjectSave': 'port', // 같은 캠페인 snapshot의 단일 객체/청크 writer(E630)
         'o/RawFortWorldLoad': 'port', // 미션 적재
         'o/RawCampaignWorldLoad': 'port',
         'o/RawFortImage': 'port', // 로그인 sendFort 직렬화

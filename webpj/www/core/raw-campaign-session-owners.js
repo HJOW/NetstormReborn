@@ -65,6 +65,7 @@ import { RawCampaignSessionAiWorld } from './raw-campaign-session-ai-world.js';
 import { RawCampaignSessionAiProduction } from './raw-campaign-session-ai-production.js';
 import { snapshotCampaignFortBasicSection } from './raw-campaign-snapshot-basics.js';
 import { writeCampaignFortTechnology } from './raw-campaign-content-save.js';
+import { writeCampaignFortObjectChunk } from './raw-campaign-object-save.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -613,6 +614,18 @@ export class RawCampaignSessionOwners {
         if (this.#disposed) throw new Error('반납한 Session 기술 snapshot');
         if (!this.loaded || !Number.isInteger(slot) || slot < 0 || slot >= 9) throw new Error('실제 Technology snapshot의 설치/슬롯 계약 위반');
         this.templateStorage.template(slot); const parent = this.player.currentTechnology(); const stream = this.templateStorage.createSection(slot, 'Technology'); this.writeFortTechnology(parent, stream);
+    }
+
+    // 실제 영역 부모가 이미 만든 같은 stream에 청크 검색/객체 저장 본문만 실행한다.
+    writeFortObjectChunkBody(stream, chunkX, chunkY) {
+        if (this.#disposed) throw new Error('반납한 Session 객체 청크 쓰기');
+        writeCampaignFortObjectChunk(this, stream, chunkX, chunkY);
+    }
+
+    // 공개 설치 관문을 유지하며 내부 영역 writer의 설치 중 접근과 구별한다.
+    writeFortObjectChunk(stream, chunkX, chunkY) {
+        if (!this.loaded) throw new Error('실제 Session 설치 전 객체 청크 저장');
+        this.writeFortObjectChunkBody(stream, chunkX, chunkY);
     }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
