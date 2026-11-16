@@ -89,6 +89,8 @@ export class RawCampaignSessionState {
     placement = createCanonPlacementPipelineState(); gameplayPlacement = createCanonPlacementPipelineState();
     buildingState = new ConstructionProcessState(); buildingEffectsState = new ConstructionEffectsState();
     farm = new FarmClusterState(); anchorState = new PlayerPlacementAnchorState();
+    // 지형 root와 군집이 같은 장기 군도/확장 DWORD를 빌리는 참조다.
+    terrainArchipelago; terrainSpan;
     // 실제 주문 검색/폭발/정기/수신의 값형 상태다. Native 장기 대여는 별도이며 준비 함수가 현재 권한/동맹을 공급한다.
     devastationTargetState = { boss: 0 };
     devastationBlastState = { boss: 0, growingRainBlockerType: 150, priestType: 158, alliances: new Uint32Array(81) };
@@ -152,7 +154,9 @@ export class RawCampaignSessionState {
         this.constructionState.place.sharedBridgeLife = () => 5;
         this.constructionState.notice.sharedDaisType = () => aux.daisType; this.constructionState.notice.sharedPriestType = () => aux.priestType;
         this.constructionState.place.patternTypesRead = this.constructionState.confirm.patternTypesRead = () => [o.piece, core.bridgeState.bridgeType, core.bridgeState.islandType, core.bridgeState.noIslandType, this.gunState.readThunderCannonType(), this.gunState.readRainCannonType(), aux.windArcherType, this.constructionState.confirm.patternTypes[7]];
-        this.farm.sharedArchipelago = () => aux.archipelago; this.farm.sharedArchipelagoSpan = () => aux.worldGeyserMargin; this.devastationEffectState.sharedSpentCounter = aux;
+        this.terrainArchipelago = reference(aux, 'archipelago'); this.terrainSpan = reference(aux, 'worldGeyserMargin');
+        this.farm.sharedArchipelago = Object.assign(() => this.terrainArchipelago.value, { box: this.terrainArchipelago });
+        this.farm.sharedArchipelagoSpan = Object.assign(() => this.terrainSpan.value, { box: this.terrainSpan }); this.devastationEffectState.sharedSpentCounter = aux;
         o.objectState.readFullDeck = this.constructionState.confirm.sharedFullDeck = () => o.fullDeck; this.anchorState.bindFullDeck(() => o.fullDeck);
         o.objectState.readFortKeepGenus = () => g.fortKeepGenus().value; this.damageableReleaseState.bindAllowedGenus(g.fortKeepGenus());
         this.connectionActivity = new RawConnectionActivity(o.connectionActivityGlobals.tables(), {
@@ -170,7 +174,8 @@ export class RawCampaignSessionState {
         this.archerState.angles = storage.angleDiagnostics(); this.gunTargetState.angles = this.archerState.angles; this.process.bindChecking(checking);
         // 각 RawCheckingFlag는 같은 현재 DWORD를 읽으며 값 대입 시 독립 입력으로 분리된다.
         for (const [state, key] of [[this.gunState, 'checking'], [this.gunTargetState, 'checking'], [o.rewardState, 'debugAsserts'], [this.missionAiSettings, 'checkingAsserts'], [this.soundState, 'debug'], [this.buildArrivalState, 'checking'], [this.geyserMinedState, 'checking'], [this.assetState, 'checkingForms'], [this.regularState, 'checkingForms'], [this.motionState.carrier, 'debug'], [this.motionState.cleanup, 'checking'], [this.generalDamageState, 'checking'], [this.burningState, 'checking'], [o.priestState.spawn, 'checkingPlacement'], [o.priestState.forcefieldRegular, 'debug'], [this.carrierDropState, 'checking']]) bindFlag(state, key, checking);
-        const diagnostics = { checking: 0, assertion: assertion(o, 'CanonDecoder') }; bindFlag(diagnostics, 'checking', checking); o.metadata.geometry.decoderDiagnostics = diagnostics;
+        // CanonDecoder의 checking() 계약으로 같은 현재 DWORD를 빌린다. 숫자 getter를 함수 자리에 넘기지 않는다.
+        const diagnostics = { checking: () => checking() >>> 0, assertion: assertion(o, 'CanonDecoder') }; o.metadata.geometry.decoderDiagnostics = diagnostics;
         // 네 실제 Canon 소비자는 같은 진단 객체를 빌린다.
         for (const state of [this.constructionState.request, this.constructionState.confirm, this.constructionState.place, this.constructionState.clear]) state.decoderDiagnostics = diagnostics;
         core.postPop.bindManaDiagnostics({ checking, assertion: assertion(o, '마나 공급원', true) });

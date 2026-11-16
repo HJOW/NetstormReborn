@@ -135,7 +135,7 @@ test('Session checking: 한 현재 signed DWORD·같은 Canon 진단과 값 대�
         o.initializePlayersAndSp(); const checking = o.gameplayGlobals.aiDebug().checking(); checking.value = -2147483648;
         // 생성자1104의 각 진단 칸은 현재 전체 비트를 읽는다.
         for (const [state, key] of [[s.gunState, 'checking'], [s.gunTargetState, 'checking'], [o.rewardState, 'debugAsserts'], [s.missionAiSettings, 'checkingAsserts'], [s.soundState, 'debug'], [s.buildArrivalState, 'checking'], [s.geyserMinedState, 'checking'], [s.assetState, 'checkingForms'], [s.regularState, 'checkingForms'], [s.motionState.carrier, 'debug'], [s.motionState.cleanup, 'checking'], [s.generalDamageState, 'checking'], [s.burningState, 'checking'], [o.priestState.spawn, 'checkingPlacement'], [o.priestState.forcefieldRegular, 'debug'], [s.carrierDropState, 'checking']]) assert.equal(state[key], 0x80000000, key);
-        assert.equal(s.process.checking, 0x80000000); assert.equal(o.metadata.geometry.decoderDiagnostics.checking, 0x80000000);
+        assert.equal(s.process.checking, 0x80000000); assert.equal(o.metadata.geometry.decoderDiagnostics.checking(), 0x80000000);
         // 네 decoder는 동일 진단 객체다.
         for (const state of [s.constructionState.request, s.constructionState.confirm, s.constructionState.place, s.constructionState.clear]) assert.equal(state.decoderDiagnostics, o.metadata.geometry.decoderDiagnostics);
         s.gunTargetState.checking = 0; assert.equal(checking.value, -2147483648); checking.value = 19; assert.equal(s.gunTargetState.checking, 0); assert.equal(s.gunState.checking, 19); assert.equal(s.soundState.isDebug(), 19); assert.equal(s.generalDamageState.isChecking(), true); assert.equal(s.burningState.isChecking(), true);

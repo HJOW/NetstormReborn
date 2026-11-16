@@ -92,7 +92,8 @@ export class RawPlayerGeyserBounds {
         const type = this.#state.puzzlePieceType >>> 0;
         const shape = record[0] & 63;
         if (type >= this.#types.length || shape >= TERRITORY_PATTERNS.length) throw new RangeError('Player 범위의 현재 영역 타입/패턴 물리 범위');
-        const decoder = new CanonDecoder(this.#frames[type], TERRITORY_PATTERNS[shape], (record[0] >> 6) * 2, 0, 0,
+        // 실제 World는 FrameCodeTable, 독립 원문 검사는 코드열을 빌린다. 현재 코드열을 복사하지 않고 조회한다.
+        const decoder = new CanonDecoder(this.#frames[type].codes ?? this.#frames[type], TERRITORY_PATTERNS[shape], (record[0] >> 6) * 2, 0, 0,
             () => this.#assertion(PLAYER_GEYSER_BOUNDS_ASSERTION.missingFrame), this.#state.decoderDiagnostics ?? null);
         // 원본 004bfd70 → 00425b90 의 같은 발자국 기반 결과이며 진단 뒤의 현재 발자국을 읽는다.
         const bounds = decoder.bounds(this.#types[type].footX, this.#types[type].footY);

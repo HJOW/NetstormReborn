@@ -775,7 +775,7 @@
       "bytes": 1552384,
       "lines": null,
       "fixtureCommit": "2f80430a0",
-      "webCommit": "worktree",
+      "webCommit": "4c9115da9",
       "cpppjBasis": {
         "cpppj/src/o/RawGameAuxState.h": "8defb347c",
         "cpppj/src/o/RawSquidContainedUnpop.h": "be567d46b",
@@ -6952,16 +6952,16 @@
         "cpppj/src/o/RawPlayerGeyserBounds.cpp",
         "cpppj/src/o/CanonDecoder.cpp"
       ],
-      "scope": "439행 전부 사용(10.78 PE 전용 관측)",
+      "scope": "439행 전부 사용(10.78 PE 전용 관측). E619 실제 Session 조립에서 FrameCodeTable.codes/독립 코드열의 같은 현재 Decoder 입력 교정과 기존 원본 대조 유지",
       "text": true,
       "sha256": "9803c4376774b817ff1cd67cdc75f6cc430c29115d0ecb6bea199013b576020c",
       "bytes": 43454,
       "lines": 440,
-      "fixtureCommit": "5326d2b1",
-      "webCommit": "3ba74d81",
+      "fixtureCommit": "5326d2b1b",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPlayerGeyserBounds.cpp": "2a8f937e",
-        "cpppj/src/o/CanonDecoder.cpp": "167866d9"
+        "cpppj/src/o/RawPlayerGeyserBounds.cpp": "3102fadd5",
+        "cpppj/src/o/CanonDecoder.cpp": "167866d9c"
       }
     },
     {
