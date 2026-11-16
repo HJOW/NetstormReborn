@@ -4423,7 +4423,7 @@
       "bytes": 76997,
       "lines": 1633,
       "fixtureCommit": "cbafd5fec",
-      "webCommit": "worktree",
+      "webCommit": "1f9f43276",
       "cpppjBasis": {
         "cpppj/src/o/RawRegionOwner.cpp": "cbafd5fec",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
@@ -12247,15 +12247,21 @@
       ],
       "modules": [
         "webpj/www/core/raw-ai-brain.js",
-        "webpj/www/core/raw-campaign-session-ai.js"
+        "webpj/www/core/raw-campaign-session-ai.js",
+        "webpj/www/core/raw-campaign-session-ai-world.js"
       ],
       "doc": "docs/webpj-ai-brain-20261109.md",
       "cpppjSources": [
         "cpppj/src/o/RawAiBrain.cpp",
         "cpppj/src/o/RawAiCreate.cpp",
-        "cpppj/src/client/RawCampaignSession.cpp"
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/o/RawAiObjectNotice.cpp",
+        "cpppj/src/o/RawAiWorldRegistration.cpp",
+        "cpppj/src/o/RawAiPreparation.cpp",
+        "cpppj/src/o/RawAiStrategySetup.cpp",
+        "cpppj/src/o/RawAiEconomy.cpp"
       ],
-      "scope": "10.78 실제 PE 160행 전부 / E623: 같은 실제 Session의 지역/승패·AI 본체/초기/지갑 결선 집중 검사와 함께 재대조; 실제 미션 Check/자연 승리·공중3종 전용 생성은 실행하지 않음.",
+      "scope": "10.78 실제 PE 160행 전부 / E623: 같은 실제 Session의 지역/승패·AI 본체/초기/지갑 결선 집중 검사와 함께 재대조; 실제 미션 Check/자연 승리·공중3종 전용 생성은 실행하지 않음. / E624: 같은 실제 본체 메모리를 공유하는 Session 객체 통지/World 등록·준비/전략·경제 결선. 이 fixture는 기존 본체 하위 대조이며 새 조립의 원본 관측으로 세지 않음.",
       "text": true,
       "sha256": "53aecd3e635d5743ea07091d863d6db7fb328daa8181b7a5769b78a233087fab",
       "bytes": 2657374,
@@ -12265,7 +12271,12 @@
       "cpppjBasis": {
         "cpppj/src/o/RawAiBrain.cpp": "74a362377",
         "cpppj/src/o/RawAiCreate.cpp": "382ec33fe",
-        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/o/RawAiObjectNotice.cpp": "ab68256c1",
+        "cpppj/src/o/RawAiWorldRegistration.cpp": "af9cc28ea",
+        "cpppj/src/o/RawAiPreparation.cpp": "af9cc28ea",
+        "cpppj/src/o/RawAiStrategySetup.cpp": "2444b0a8a",
+        "cpppj/src/o/RawAiEconomy.cpp": "2444b0a8a"
       }
     },
     {
@@ -12323,7 +12334,7 @@
       "bytes": 1207594,
       "lines": 134,
       "fixtureCommit": "4124e75b2",
-      "webCommit": "worktree",
+      "webCommit": "1f9f43276",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBrainInitialUpdate.cpp": "fc85f3c94",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
@@ -12355,7 +12366,7 @@
       "bytes": 144425,
       "lines": 17,
       "fixtureCommit": "fc85f3c94",
-      "webCommit": "worktree",
+      "webCommit": "1f9f43276",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBrainInitialUpdate.cpp": "fc85f3c94",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
@@ -15172,7 +15183,7 @@
       "bytes": 1220797,
       "lines": 729,
       "fixtureCommit": "a5afdafbe",
-      "webCommit": "worktree",
+      "webCommit": "1f9f43276",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionOutcome.cpp": "da6c61ae3",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
