@@ -115,7 +115,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 3. 원본/클론 게임(cpppj 오라클 수집 포함)·analyzeManager·별도 창 실행은 AGENTS.md의 확인/예외 규칙을 적용한다. 단위 검사나 정적 확인을 실제 실행으로 기록하지 않는다.
 4. 3.0절 방식으로 구현한다. 필요한 공유 장치가 없으면 먼저 이식하고, 빈 성공 함수·별도 근사 월드로 우회하지 않는다. 멀티플레이 분기는 1절의 경계 규칙을 따른다.
 5. 근거 커밋·연결 fixture/오라클(SHA/행 수)·검사와 최초 실패/교정·실제 연결/미연결·남은 경계·다음 시작점은 **단위 문서**에 남긴다. `PORT_MAP.tsv`의 web·base(정확히 8자리)·status·메모와 manifest(`node webpj/tools/fixture-manifest.mjs --write --only <아이디,…>`)를 갱신하고 `node webpj/tools/port-map.mjs` 오류 0을 확인한다. 이 문서는 **0.1절(머리글·진행도·마일스톤의 현재 단계·마지막 구현 커밋·다음 작업·마지막 전체 검사)·0.2절 진행 칸·0.3절 수치·0.4절 개수·3.1절의 해당 항목(`- [x]`와 단위 링크)·단계 머리글 `(n/m)`**만 고친다. 단계를 마치면 0.2절에서 다음 단계를 **진행 중**으로 바꾸고, 끝난 단계의 체크 목록은 보관본으로 옮겨 2.3절에 한 줄로 남긴다. 단위별 긴 설명과 기록 줄은 이 문서에 쌓지 않는다(7절). 이번 단위 파일만 이름으로 stage하고, 커밋 직전에 `git log --format=%s`로 그날 번호의 최대값(CP·DN·WB 공통 계열)을 다시 확인한 뒤 `YYYYMMDD-NN WB 요약`(끝에 Co-Authored-By 트레일러)으로 로컬 커밋한다. push하지 않는다.
-6. **검사:** 커밋 전 전체 `node --test "tests/*.test.mjs"`(webpj 폴더)를 Node v26과 v22 두 버전으로 돌린다(1절 Node 지원). 문서 갱신 보조 스크립트는 저장소에 없으므로 이 문서는 위 5번 칸을 손으로 고치거나 필요하면 스크립트를 새로 만든다.
+6. **검사:** 커밋 전 전체 `node --test "tests/*.test.mjs"`(webpj 폴더)를 Node v26과 v22 두 버전으로 돌린다(1절 Node 지원; 2026-11-16 사용자 지시에 따라 v24는 생략·호환 가정). 문서 갱신 보조 스크립트는 저장소에 없으므로 이 문서는 위 5번 칸을 손으로 고치거나 필요하면 스크립트를 새로 만든다.
 
 ### 0.6 단계와 무관한 AGENTS 요구 (2026-11-11 점검)
 
@@ -144,7 +144,7 @@ AGENTS.md가 세 클론 모두에 바로 요구하는 항목이다. 단계 진�
   - **경계 처리:** cpppj 함수 안의 멀티플레이 분기는 원본의 단독 판정(`inSingle`·demo·server 조건)을 그대로 옮긴다. 단독에서 도달하지 않는 분기는 조용한 성공이나 no-op로 바꾸지 않고 명시적인 웹 제외 오류로 둔다(`MainLoop`의 웹 제외 단계 사유와 같은 방식). 직접 단독 관문이 없다고 해서 도달 불가로 단정하지 않으며, 근거를 단위 문서에 남긴다.
   - cpppj가 3차 작업에서 공유 파일(로그인 부모·Session·Player/SP setter·패킷 분배 등)을 바꾸면 단독 경로에 영향이 있는지 3.6절로 확인한다.
 - **cpppj 기준 (2026-11-06 재정의):** 목표는 원본 10.78 싱글플레이 복원이며, 그 근거로 원본 기계어와 대조된 cpppj 기준선(`225553df`)을 옮긴다. cpppj의 파일·클래스·함수 경계와 이름, 부작용과 호출 순서, 정수 폭(BYTE/WORD 감김), float32 저장 지점, 목록 순서, 난수 소비를 보존한다. cpppj가 원본 메모리 배치(슬롯·전역 DWORD)를 쓰는 곳은 `DataView`/TypedArray로 같은 배치를 쓴다. cpppj의 미복원·부분 연결·명시 미연결·실패 경계는 임의로 채우지 않고 같은 지점의 명시 오류·진단으로 옮긴다. dotnetpj의 근사를 정답으로 복사하지 않는다. 기준선 이후의 cpppj 변경은 3.6절로만 반영하고 미커밋 변경은 쓰지 않는다.
-- **Node 지원 (2026-11-10 사용자 지시):** 웹 코드·시험은 Node v22·v24·v26 모두에서 통과해야 한다(`webpj/package.json` `engines` `>=22`). HJOW-Athlon의 기본 node는 v26, v22는 `C:\Program Files\nodejs22\node.exe`이고 v24는 설치돼 있지 않다. Node v26 최적화 JIT가 신호 NaN 비트를 바꾸므로 NaN 비트를 대조하는 시험 파일은 맨 위에 `import './nan-exact.mjs'`를 둔다(NaN 비교를 느슨하게 하지 않음).
+- **Node 지원 (2026-11-16 사용자 변경 지시):** 웹 코드·시험의 필수 실검사는 **Node v22·v26**이다(`webpj/package.json` `engines` `>=22`). **Node v24 검사는 생략하고 두 필수 버전이 통과하면 호환된다고 가정**한다. 이 가정을 v24 실검사 완료로 기록하지 않는다. HJOW-Athlon의 기본 node는 v26, v22는 `C:\Program Files\nodejs22\node.exe`다. Node v26 최적화 JIT가 신호 NaN 비트를 바꾸므로 NaN 비트를 대조하는 시험 파일은 맨 위에 `import './nan-exact.mjs'`를 둔다(NaN 비교를 느슨하게 하지 않음).
 - **바깥 링크 (2026-11-05 사용자 결정, 2026-11-07 WB03-AD 구현):** Tell/도움말 링크의 바깥 주소는 원본의 셸 실행 대신 **브라우저 새 탭/창으로 연다**. 치환이 끝난 `http:`/`https:`/`mailto:`만 열고 `file:`·미치환 자리표시 등은 이유와 함께 콘솔로 알린다. 조건과 판정은 [외부 접속 문서7절](docs/webpj-external-access-20261105.md)을 따른다. 개발 서버(`server.js`)는 다른 PC 접속을 제한하지 않는다(모든 인터페이스 수신 유지).
 - **구조:** `index.html` 수정은 최소화하고 `netstorm.js`가 앱 수명을 맡는다. `.css` 파일 없이 JS로 스타일을 지정한다. Canvas의8비트 인덱스/팔레트 합성과 최종 표시를 분리한다. 코어는 DOM/Canvas/Web Audio에 의존하지 않는다. 기존 CommonJS 서버와 `www/package.json`의 ES 모듈 경계, `www/{assets,core,render,ui,audio,platform}`를 유지한다. C++/C# 서버나 WebAssembly를 필수 런타임으로 추가하지 않는다.
 - **시작/수명:** 사용자 시작 입력 안에서 오디오를 활성화한다. 미션 재시작·메뉴 복귀·`destroy/init`의 타이머/선택/음악/이벤트 소유권을 구분한다. 숨겨진 탭은 진행을 정지하고 복귀 때 시계 기준을 다시 잡아 부재 시간을 따라잡지 않는다(웹 적응).
@@ -627,7 +627,7 @@ E465에서 `RawCameraPan`/`RawEdgeScroll`/`ClientCameraGlobals`의 "cpppj에도 
 # 저장소 루트에서 정적 개발 서버를 실행한다(공개 루트 webpj/www, 포트9803).
 npm --prefix webpj start
 # Node 내장 전체 검사. 부품 작업 중에는 관련 tests/*.test.mjs만 집중 실행할 수 있다(webpj 폴더에서 node --test "tests/*.test.mjs" 도 같다).
-# Node v22·v24·v26 모두에서 통과해야 한다(사용자 지시, 2026-11-10). HJOW-Athlon 의 기본 node 는 v26, Node 22 는 C:\Program Files\nodejs22\node.exe:
+# Node v22·v26을 실검사한다(2026-11-16 사용자 지시). v24 검사는 생략하고 두 버전 통과 시 호환을 가정한다. 기본 node는 v26, Node22 경로: C:\Program Files\nodejs22\node.exe:
 #   & "C:\Program Files\nodejs22\node.exe" --test "tests/*.test.mjs"   (webpj 폴더에서; Node 22 는 인자 없는 --test 의 탐색 범위가 달라 glob 을 준다)
 npm --prefix webpj test
 # 이식 추적 목록 검사(해시 비교·대응표 base 뒤 cpppj 근거 소스 변경 보고). 전체 --write 는 수 분~십수 분이 걸리므로 단위마다 --only 를 쓴다.
