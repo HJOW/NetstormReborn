@@ -6,7 +6,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-17, 마지막 단위 WB04-E619)
+### 0.1 현재 값 (2026-11-17, 마지막 단위 WB04-E620)
 
 | 항목 | 현행 기준 |
 | --- | --- |
@@ -14,11 +14,11 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C·4-R 완료, 현재 단계 **4-D**의 D 구획 `RawCampaignSession` 조립, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 1,007단위(제외 153 별도) 중 **port 847(84.1%)·partial 39(3.9%)·todo 121(12.0%)**. 남은 160단위 / 34,233줄은 기존 기준선 84단위 / 28,203줄과 재기준선(4-R)에서 추가된 76단위 / 6,030줄이다(단계 배정은 0.2·0.3절). 앱 수명에 연결된 단위(`session`)는 아직 0이다 |
-| 마지막 작업 단위 | **WB04-E619** — 생성자1825..1865의 실제 World Runtime 게시·같은 풀 배치/일반 지형·현재 군도/Player root와 소유자 후처리를 연결했다. 신규7건/집중33건 통과([단위 문서](docs/webpj-session-terrain-20261117.md)). 다음은 Template 설치·MakeRuntime·승패/AI와 외곽 조립이다 |
-| 마지막 전체 검사 | 2026-11-17 WB04-E619: Node v22.23.3·v26.13.0 최종 전체 각각 **5,927건 통과, 실패·취소·건너뜀 0**. v24는 사용자 지시로 생략하고 호환을 가정한다 |
+| 마지막 작업 단위 | **WB04-E620** — cpppj1320의 이전 미션 끝 flush/종료 수신을 내부 전송3모듈에 재반영하고 Edit/LAN3모듈은 웹 제외로 판정했다. 신규6건/집중59건 통과([단위 문서](docs/webpj-mission-transition-20261117.md)). 다음은 Template 설치·MakeRuntime·승패/AI와 외곽 조립이다 |
+| 마지막 전체 검사 | 2026-11-17 WB04-E620: Node v22.23.3·v26.13.0 최종 전체 각각 **5,933건 통과, 실패·취소·건너뜀 0**. v24는 사용자 지시로 생략하고 호환을 가정한다 |
 | 마지막 e2e | 2026-11-17 E616 Chromium **2/2 통과**(초기 페이지·독립 저장소 최초 실행/기존 설정·진행 재실행). Welcome/Welcome2·Options5·5·사용자3·2·Struggle 잠금/체크를 실제 클릭, 처리되지 않은 예외0. 실제 미션/월드 검사는 아니다 |
 
-**재개 인계 (2026-11-17):** 사용자 목표 재개에 따라 진행 중이다. E619에서 실제 World Runtime 게시1825와 배치/지형·소유자 후처리 조립을 마쳤다. 다음은 Template/월드 부모·승패/AI와 나머지 생성자 조립이다. 그 전에 cpppj1320의 내부 미션 전환 flush/종료 수신 변경을 별도 재반영 단위로 처리한다. 외곽 Session/Load·실제 미션 플레이는 미완료이며 공중3종 새 전용 생성/생산/행동 검사와 Native 장기 수명의 기존 경계를 유지한다.
+**재개 인계 (2026-11-17):** 사용자 목표 재개에 따라 진행 중이다. E619에서 실제 World Runtime 게시1825와 배치/지형·소유자 후처리 조립을 마쳤다. 다음은 Template/월드 부모·승패/AI와 나머지 생성자 조립이다. cpppj1320의 내부 미션 전환 flush/종료 수신도 E620에서 재반영했고 기존 Source의 실제 누적 패킷 전달과 종료 뒤 번호 재사용을 검사했다. 외곽 Session/Load·실제 미션 플레이는 미완료이며 공중3종 새 전용 생성/생산/행동 검사와 Native 장기 수명의 기존 경계를 유지한다.
 
 **최초 실행 상태 웹 반영 완료(WB04-E616):** [원본 관찰](docs/exe/original-first-run-20261116.md)·[cpppj1314 확정](docs/exe/cpp-first-run-1314-20261116.md)·[웹 검증](docs/webpj-first-run-20261116.md)이 기준이다. 기존 사용자의 localStorage 설정·진행을 초기화하지 않는다. 웹 해상도/전체화면·Edit·MP/온라인 검증 제외를 유지하며, 실제 미션 완료 효과 연결은8단계 잔여다.
 
@@ -110,7 +110,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 956·adapt 51·exclude-mp 62·exclude-edit 58·exclude-host 32·exclude-legacy 1, 미분류 0**(E573·E588 캠페인 공유 함수 범위 복원). 상태: **port 847·partial 39·todo 121·제외(-) 153**, session/oracle 0. partial에는 기존 단위의 부분 이식 외에 0.5절의 초안 2개·E574 Session 기반 자료·E584·E585 Devastation 자격/타이머와 E595 Ritual 준비 함수·E601 건설 재생 실행/현재 라벨이 있다. 웹 소스는 `webpj/www`의 `.js`(자산 `data/` 제외) 133,013줄, 검사 파일 788개다(2026-11-17 재집계) |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 956·adapt 51·exclude-mp 62·exclude-edit 58·exclude-host 32·exclude-legacy 1, 미분류 0**(E573·E588 캠페인 공유 함수 범위 복원). 상태: **port 847·partial 39·todo 121·제외(-) 153**, session/oracle 0. partial에는 기존 단위의 부분 이식 외에 0.5절의 초안 2개·E574 Session 기반 자료·E584·E585 Devastation 자격/타이머와 E595 Ritual 준비 함수·E601 건설 재생 실행/현재 라벨이 있다. 웹 소스는 `webpj/www`의 `.js`(자산 `data/` 제외) 133,041줄, 검사 파일 789개다(2026-11-17 재집계) |
 | 이식 추적 | `webpj/tests/fixtures/manifest.json` **806항목**(original-x86 767·screenshot 13·source 10·independent 9·cpppj-oracle 5·original-binary 2, 2026-11-16 재확인). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
@@ -335,8 +335,9 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
   - 생성자1757..1814의 독립 typed BuriedRegular·현재 Player/사제 후단과 실제 중첩 Regular·다리/장식/특수 주문·실패 콘솔 결선 완료([E615](docs/webpj-session-regular-20261116.md)). 신규7건 첫 통과·관련55건 통과. Native 장기 Regular와 실제 Runtime 게시/Load는 잔여다.
   - 생성자1815..1824의 같은 실제 Dais→Aviary→Construction→전투/자산 송신 합성·현재 헤더/버퍼·낙하/다리/로딩 깊이 결선 완료([E618](docs/webpj-session-transmission-20261117.md)). 신규8건/집중18건 통과. 공중3종 새 전용 실행 없음, 실제 Native 장기 설치/World 게시/Load는 잔여다.
   - 생성자1825..1865의 실제 World Runtime 게시·같은 풀의 전체 배치/일반 지형·현재 군도/Player root·소유자 후처리 조립 완료([E619](docs/webpj-session-terrain-20261117.md)). 신규7건/집중33건 통과. FrameCodeTable/Canon 진단의 실제 조립 형식을 교정했고 Native 장기 설치·외곽 공개/Load는 잔여다.
-  - **다음:** Template 설치·MakeRuntime·승패/AI·전체 모듈 생성 → 외곽 공개 → 같은 Template TypeNames → Objects/Contents → `Load` → 실제 Login(2번 항목). 선행 별도 재반영: cpppj1320의 기존 내부 미션 전환 flush/종료 수신(CompositeMissionTransport·RawConnectionRegistry·LocalMissionTransport)
+  - **다음:** Template 설치·MakeRuntime·승패/AI·전체 모듈 생성 → 외곽 공개 → 같은 Template TypeNames → Objects/Contents → `Load` → 실제 Login(2번 항목). cpppj1320의 선행 내부 미션 전환 재반영은 E620에서 마쳤다
 - [ ] **RawCampaignSession 2: 로컬 연결·로그인** — `LoadLocalConnection`/`PrepareLocalConnectionForState`/`ConnectLocalConnectionForState`/`PollLocalConnectionState`/`PumpLocalConnection`/송신 + **RawCampaignSessionLogin** 234줄(+182, 4-C 이월 `Impl::Login`, 현재 389줄)
+  - 선행 재반영: cpppj1320의 기존 내부 전송3모듈 flush/직접 수신을 연결했다. 이전 Source 종료 후 번호 재사용·실제 buffered 패킷 전달 등 신규6건/관련59건 통과([E620](docs/webpj-mission-transition-20261117.md)). 외곽 Session/실제 Login은 잔여다.
 - [ ] **RawCampaignSession 3: 프레임·카메라·표시 입력** — `RunFrame`/`PrepareFrame`·카메라 홈/중심/명령(`CenterCameraOn`·`ViewHome`·`ViewYourPriest`·`RequestCameraCenter`/`CommitRequestedCamera`)·입자 뷰(5-A 연결)
 - [ ] **RawCampaignSession 4: 승패·종료·Editor 제외 정리** — `CheckMissionOutcome`·종료 수명(웹 제외인 Existing Editor 계열은 만들지 않는다)
 - [ ] **GameWorld** 1,153줄(+5) — E300 판정에 따른 호스트 구역(4-D/5-A/5-B/6 배분)에서 4-D 몫

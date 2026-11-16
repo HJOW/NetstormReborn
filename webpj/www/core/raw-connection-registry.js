@@ -1,5 +1,5 @@
 // 연결 숫자 토큰·고정 연결표·수명 장치의 등록소를 옮긴 모듈이다(cpppj `o/RawConnectionRegistry.cpp/.h`, 10.78 기준선 110줄 + 기준선 뒤 145줄 중 웹 범위 부분).
-// 사용: const registry = new RawConnectionRegistry(); const token = registry.track(node, destroy, release[, send, readiness, buffered]);
+// 사용: const registry = new RawConnectionRegistry(); const token = registry.track(node, destroy, release[, send, readiness, buffered, flush, receive]);
 //   registry.register(id, token) / accept(token) / assign(pending, target, server, buffered) / disconnect(id) / closeAll() / endPlayers(server) / closePending() …
 //   Client 와 단독 미션의 두 연결 끝이 같은 등록소를 빌려 같은 22 연결·22 송신버퍼·32 pending 표와 동기화 토큰을 공유한다(`cleanup()` 이 같은 표 묶음의 보기를 돌려준다).
 // 숫자 토큰은 연결 객체 주소가 아니라 이 등록소가 발급하는 재사용하지 않는 식별자(0x6d000000 부터)이며, 표와 장치는 해제된 노드를 다시 읽지 않는다.
@@ -50,7 +50,7 @@ export class RawConnectionRegistry {
     constructor() {
         // 22 연결·22 송신버퍼·32 pending 표와 pending 개수 상자이다(동기화 상자는 아래 별도로 둔다).
         this.globals = createConnectionCleanupGlobals();
-        // 토큰 → { node, destroy, release, send, buffered, readiness } 이다. 현재 생존 연결만 두고 해제된 노드의 주소는 남기지 않는다. 삽입 순서가 토큰(증가) 순서이다.
+        // 토큰 → { node, destroy, release, send, buffered, readiness, flush, receive } 이다. 현재 생존 연결만 두고 해제된 노드의 주소는 남기지 않는다. 삽입 순서가 토큰(증가) 순서이다.
         this.bindings = new Map();
         // 다음 발급 토큰이다. unsigned 로 감겨 0 이 되면 소진으로 본다.
         this.nextToken = FIRST_CONNECTION_TOKEN;
@@ -76,10 +76,10 @@ export class RawConnectionRegistry {
     }
 
     // 실제 노드와 수명(destroy/release)·선택 가상 송신(send)·소켓 준비 조회(readiness)·공통 buffered 입구를 같은 토큰에 묶고 토큰을 돌려준다. 선택하지 않은 장치는 쓰는 위치에서만 요구한다. (2026-11-11 WB04-E308)
-    track(connection, destroy, release, send, readiness, buffered) {
+    track(connection, destroy, release, send, readiness, buffered, flush, receive) {
         if (this.deviceShutdown) throw new Error('App최종종료뒤새Node등록거부');
         if (typeof destroy !== 'function' || typeof release !== 'function') throw new TypeError('실제 연결 close/free 장치 누락');
-        const binding = { node: connection, destroy, release, send: optionalDevice(send, 'send'), buffered: optionalDevice(buffered, 'buffered'), readiness: optionalDevice(readiness, 'readiness') };
+        const binding = { node: connection, destroy, release, send: optionalDevice(send, 'send'), buffered: optionalDevice(buffered, 'buffered'), readiness: optionalDevice(readiness, 'readiness'), flush: optionalDevice(flush, 'flush'), receive: optionalDevice(receive, 'receive') };
         // 한 노드의 살아 있는 토큰을 중복 발급하지 않는다.
         for (const existing of this.bindings.values()) {
             if (existing.node === connection) throw new Error('현재 연결의 중복 주소 등록');
@@ -154,6 +154,20 @@ export class RawConnectionRegistry {
         const binding = this.bindings.get(token);
         if (!binding || !binding.send) throw new Error('직접 연결의 실제 가상 송신 장치 미연결');
         binding.send(packet);
+    }
+
+    // 같은 등록표에 남은 이전 Source의 고정 노드도 선택한 실제 가상 flush로 보낸다(1320 재반영).
+    flushDirect(token) {
+        const binding = this.bindings.get(token);
+        if (!binding || !binding.flush) throw new Error(`현재 연결의 실제 가상 flush 장치 미연결: token=${token}`);
+        const flush = binding.flush; flush(); // 자기 등록/외부 참조를 반납해도 선택한 함수는 호출 복귀까지 보유한다.
+    }
+
+    // 이전 Source의 type2 종료 통지도 같은 실제 끝에서 소비하고 하위 consumed/again을 그대로 돌려준다.
+    receiveDirect(token) {
+        const binding = this.bindings.get(token);
+        if (!binding || !binding.receive) throw new Error(`현재 연결의 실제 가상 수신 장치 미연결: token=${token}`);
+        const receive = binding.receive; return receive(); // callback 뒤 현재 ID나 해제된 node를 다시 읽지 않는다.
     }
 
     // 004e2a50: 현재 슬롯 연결의 주소 20BYTE 를 읽거나, 연결이 없으면 소켓 없이 같은 0.0.0.0:0 주소(첫 BYTE 2)를 만든다. 범위는 -32..21. (2026-11-11 WB04-E308)

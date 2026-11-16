@@ -8,6 +8,7 @@
 // 기준선 뒤 cpppj 변경 판정(LEFT_JOBS 3.6절): ② 반영 — Serve 의 `IsOpen()` 이면 다시 열지 않음(`f98d50d5`), 내부 → Editor → TCP 수락 순서(`6b700418`), `ConnectPeerText`(`f7210282`), `ReceiveOne` 의 Unknown 노드 처리(같은 등록소의 다른 owner 가 소유한 살아 있는 노드는 그 전송에게 맡기고 등록표에도 없는 별칭만 오류, `a40c0028`),
 //   `OwnsConnection`(`a76499e3`). 내부 끝은 생성자에서 만들어지므로 Poll 의 외곽 대여는 처음부터 시작된 상태라 `beginLateLocal`(LAN 서버 이전으로 내부 끝을 늦게 만들 때만 필요)은 옮기지 않았다.
 //   ① — `shared_from_this` pin/`Registration(type).Pin()` 의 shared_ptr 수명 보유는 GC 가 대신함. ③ — `BindCompositeCampaignTransport`(campaign-transport-services.js 에 이 단위 뒤 추가).
+// 1320의 ② 재반영(5756ffd5, WB04-E620): 위 옛 Unknown 수신 생략을 대체하여 이전 Source의 flush/수신도 등록소의 실제 고정 노드 장치로 전달한다.
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-12 WB04-E327: 4-C CompositeMissionTransport 이식)
 import { LocalMissionTransport } from './local-mission-transport.js';
 import { PacketRegistrationTable } from './packet-registration-table.js';
@@ -29,7 +30,7 @@ const PLAYERS = 9;
 const TRANSCEIVER_SLOTS = 22;
 const PENDING_SLOTS = 32;
 
-// 현재 토큰의 실제 하위 전송 구분이다. Unknown 은 같은 등록소의 다른 owner 노드라 이 조정자가 분배하지 않는다. (2026-11-12 WB04-E327)
+// 현재 토큰의 실제 하위 전송 구분이다. Unknown의 flush/수신은 등록소가 보유한 같은 실제 장치로 전달한다(1320 재반영).
 const BACKEND = Object.freeze({ Missing: 'Missing', Internal: 'Internal', Unknown: 'Unknown' });
 
 // 서버 권한 인자(boolean·{ value } 상자·함수)를 현재 값 조회 함수로 바꾼다. LocalMissionTransport 와 같은 형식만 받는다. (2026-11-12 WB04-E327)
@@ -140,17 +141,17 @@ export class CompositeMissionTransport {
         for (let id = 0; id < TRANSCEIVER_SLOTS; id += 1) {
             const selected = this.#select(id);
             if (selected === BACKEND.Internal) this.#internal.flushOne(id);
-            else if (selected === BACKEND.Unknown) throw new Error('복합 전송이 소유하지 않은 현재 flush 노드');
+            else if (selected === BACKEND.Unknown) this.#registry.flushDirect(currentTransportToken(this.#registry, id));
         }
     }
 
-    // 현재 ID 의 한 프레임만 실제 하위 전송에 요청한다. 같은 등록소의 다른 owner 가 가진 살아 있는 노드는 그 전송의 Poll 몫이라 빈 결과이고, 등록소에도 없는 별칭만 오류이다. (2026-11-12 WB04-E327: 기준선 뒤 Unknown 처리 반영)
+    // 현재 ID의 한 프레임을 요청한다. 이전 Source의 살아 있는 노드도 그 실제 수신 장치로 전달하고 없는 별칭만 거부한다(1320 재반영).
     #receiveOne(id) {
         const selected = this.#select(id);
         if (selected === BACKEND.Internal) return this.#internal.receiveOne(id);
         if (selected === BACKEND.Missing) return transportPollResult();
         const token = currentTransportToken(this.#registry, id);
-        if (this.#registry.owns(token)) return transportPollResult();
+        if (this.#registry.owns(token)) return this.#registry.receiveDirect(token);
         throw new Error(`복합 전송이 소유하지 않은 현재 수신 노드: id=${id} token=${token} 역할=${this.#role}`);
     }
 

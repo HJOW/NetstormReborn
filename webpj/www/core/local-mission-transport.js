@@ -370,7 +370,7 @@ export class LocalMissionTransport {
         throw new Error('로컬 전송의 다른 연결 주소');
     }
 
-    // 현재 실제 끝 하나의 수명(소멸·반납)·가상 송신(같은 노드 직접)·소켓 준비·공통 buffered 장치를 등록소에 묶고 토큰을 받는다. (2026-11-12 WB04-E324)
+    // 현재 끝의 수명·가상 송신/flush/수신·소켓 준비·buffered 장치를 등록소에 묶는다. 이전 Source도 같은 고정 노드의 실제 장치를 사용한다(1320 재반영).
     #track(node) {
         const isClient = node === this.#client;
         return this.#registry.track(node,
@@ -406,7 +406,11 @@ export class LocalMissionTransport {
                 node.flags |= 2;
                 if (!isClient) this.#serverBuffered = true;
                 (isClient ? this.#clientOutput : this.#serverOutput).clear();
-            });
+            },
+            // 가상 flush는 현재 고정 노드의 닫힘 표시/실제 송신 누적을 사용한다(1320 재반영).
+            () => { if (!(node.flags & CLOSED)) this.#flushEndpoint(!isClient); },
+            // 이전 미션 조정자가 현재 전역 ID를 방문해도 같은 고정 끝의 실제 종료 통지를 소비한다.
+            () => this.#receiveNode(node));
     }
 
     // 실제 분배와 집합 분배가 같은 노드/수명 장치를 쓰도록 감싼 분배 장치이다. 다른 backend(Editor/TCP)가 빌리는 외부 노드는 원래 장치에만 전달하고,
@@ -741,25 +745,34 @@ export class LocalMissionTransport {
     receiveOne(id) {
         if (!this.#polling) throw new Error('내부 per-ID 수신의 Poll 대여 누락');
         const node = this.connection(id);
-        if (!node) return transportPollResult();
-        if (node.flags & CLOSED) {
-            this.#retireClosed();
-            return transportPollResult();
-        }
-        const side = node === this.#server ? 1 : 0;
-        if (node.flags & 0x20) {
-            node.flags &= ~0x20;
-            this.dispatchFrame(node, Uint8Array.of(this.#receiveVersion[side], 1, 4, 0));
-        }
-        if (this.connection(id) !== node || (node.flags & CLOSED)) return transportPollResult();
-        if (node === this.#client ? this.#clientPeerLost : this.#serverPeerLost) {
-            if (!(node.flags & 0x10)) {
-                node.flags |= 0x10;
-                this.dispatchFrame(node, Uint8Array.of(this.#receiveVersion[side], 2, 4, 0));
+        return node ? this.#receiveNode(node) : transportPollResult();
+    }
+
+    // 이전 Source의 직접 수신일 때만 임시 Poll 관문을 빌리고 정상/예외 모두 자기 대여만 반납한다.
+    #receiveNode(node) {
+        const id = node.sender | 0; const token = this.#token(node);
+        if (!this.#registry.owns(token)) return transportPollResult();
+        const entered = !this.#polling; this.#polling = true;
+        try {
+            if (node.flags & CLOSED) {
+                this.#retireClosed();
+                return transportPollResult();
             }
-            return transportPollResult();
-        }
-        return this.#receiveEndpoint(node === this.#server);
+            const side = node === this.#server ? 1 : 0;
+            if (node.flags & 0x20) {
+                node.flags &= ~0x20;
+                this.dispatchFrame(node, Uint8Array.of(this.#receiveVersion[side], 1, 4, 0));
+            }
+            if (this.connection(id) !== node || (node.flags & CLOSED)) return transportPollResult();
+            if (node === this.#client ? this.#clientPeerLost : this.#serverPeerLost) {
+                if (!(node.flags & 0x10)) {
+                    node.flags |= 0x10;
+                    this.dispatchFrame(node, Uint8Array.of(this.#receiveVersion[side], 2, 4, 0));
+                }
+                return transportPollResult();
+            }
+            return this.#receiveEndpoint(node === this.#server);
+        } finally { if (entered) this.#polling = false; }
     }
 
     // 정상/예외 복귀 모두 현재 per-ID 폴링 대여를 끝낸다(고정 내부 노드는 물리 삭제가 없다). (2026-11-12 WB04-E324)

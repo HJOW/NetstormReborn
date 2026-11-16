@@ -6958,7 +6958,7 @@
       "bytes": 43454,
       "lines": 440,
       "fixtureCommit": "5326d2b1b",
-      "webCommit": "worktree",
+      "webCommit": "30ad615ca",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerGeyserBounds.cpp": "3102fadd5",
         "cpppj/src/o/CanonDecoder.cpp": "167866d9c"
@@ -17122,14 +17122,14 @@
       "cpppjSources": [
         "cpppj/src/zacket/LocalMissionTransport.cpp"
       ],
-      "scope": "66행 전부 재생(Zone 2·Login 24·Batch 30·BatchClosed 2·Install 6·InstallMutate 2). zlocal 두 끝의 open/connect/poll accept/재배치/송신/폴링/정리는 원본 관측 없이 cpppj 손 시험과 웹 계약 시험",
+      "scope": "66행 전부 재생(Zone 2·Login 24·Batch 30·BatchClosed 2·Install 6·InstallMutate 2). zlocal 두 끝의 open/connect/poll accept/재배치/송신/폴링/정리는 원본 관측 없이 cpppj 손 시험과 웹 계약 시험 / WB04-E620: cpppj1320의 이전 미션 끝 flush/종료 수신 재반영 뒤 기존66행과 실제 내부 전환 source 계약을 대조",
       "sha256": "34288e9109dd6d15df5231191b61f1f193c97d4a01d72a8aa59d812e3852368c",
       "bytes": 51116,
       "lines": 67,
       "fixtureCommit": "fb1b29007",
-      "webCommit": "3cbadabab",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/zacket/LocalMissionTransport.cpp": "50a5a1845"
+        "cpppj/src/zacket/LocalMissionTransport.cpp": "5756ffd5f"
       }
     },
     {

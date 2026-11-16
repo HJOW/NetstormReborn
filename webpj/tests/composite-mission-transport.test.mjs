@@ -186,7 +186,7 @@ test('복합 전송: send/sendMutable/flush/peer 는 현재 ID 의 실제 끝만
 
 // ---------------------------------------------------------------- 다른 owner 의 노드
 
-// 같은 등록소의 다른 전송이 가진 노드는 이 조정자가 분배하지 않는다: 조회/송신/flush 는 오류, 수신은 그 전송 몫이라 빈 결과, 방 종료는 건드리지 않는다.
+// 다른 owner의 조회/송신은 거부하지만 flush/수신은 그 실제 장치를 호출하고 방 종료는 자기 노드만 닫는다(1320 재반영).
 test('복합 전송: 같은 등록소의 다른 owner 노드는 Unknown 으로 구분한다', () => {
     const scene = makeScene();
     const other = new LocalMissionTransport(new Uint8Array(1620), true, effects().hooks, scene.registry);
@@ -202,8 +202,8 @@ test('복합 전송: 같은 등록소의 다른 owner 노드는 Unknown 으로 �
     assert.throws(() => transport.address(9), /다른 owner의 복합 연결 주소 조회/);
     assert.throws(() => transport.send(9, Uint8Array.of(1, 0x24, 5, 0, 0)), /소유하지 않은 현재 송신 노드/);
     assert.throws(() => transport.sendMutable(9, Uint8Array.of(1, 0x24, 5, 0, 0)), /소유하지 않은 현재 mutable 송신 노드/);
-    assert.throws(() => transport.flush(), /소유하지 않은 현재 flush 노드/);
-    // 살아 있는 남의 노드는 수신 순회에서 빈 결과로 넘어간다(원문은 각 노드가 스스로 수신).
+    assert.doesNotThrow(() => transport.flush());
+    // 다른 실제 끝에 현재 수신이 없으면 그 장치의 빈 결과를 그대로 받는다.
     assert.equal(transport.poll(), 0);
     // 방 종료는 자기 노드만 닫는다.
     transport.closeRoom();
