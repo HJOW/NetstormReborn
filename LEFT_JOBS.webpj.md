@@ -6,17 +6,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E583)
+### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E584)
 
 | 항목 | 현행 기준 |
 | --- | --- |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C 완료, 현재 단계 **4-D**, 0.2절) · M3~M5 미착수 |
-| 이식 진행도 | 대상 1,006단위(제외 154 별도) 중 **port 842(83.7%)·partial 34(3.4%)·todo 130(12.9%)**. 남은 164단위는 기존 기준선 85단위와 재기준선에서 추가된 79단위다(대응표·재기준선 규칙 key로 E565 재집계). 추가 partial 3개는 중단 시점 초안2개와 E574 Session 기반 자료다. 전체 Session 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
-| 마지막 작업 단위 | **WB04-E583** 파편 캡처1427의 선행 의존성인 RawBombBlastBindings45줄을 이식했다(신규9검사, [단위 문서](docs/webpj-bomb-blast-bindings-20261116.md)). 원본 추가 그림32행/실제16VT와 같은 World/HP/반경/공유 난수·hard 다리 삭제/끝 칸·전체 Blast Apply를 대조했다. Session 자체는 계속 partial이며 다음 생성자 시작점은1427이다 |
-| 다음 작업 | ⓪ 4-D D의 `RawCampaignSession` 1을 계속한다. E583 공용 Draw/폭발 바인딩 선행 이식 뒤1427의 소유자색 표→BridgeDraw/ShapeToBuffer 파편 캡처→CampaignParticles와 전체 모듈을 원문 순서로 연결한다. 외곽 공개와 같은 Template TypeNames→Objects/Contents·Load는 그 뒤다. ① 신규 미완료79단위·시간 동기화/Native 장치는 각 단계와 D/E에서, A 정리·B Client 서비스는 실제 Session 허브 뒤에 연결한다. ② D→E(Client·통합·L2) 순서이며 3.8절 허브/적응 판정4건은 잔여 |
-| 마지막 전체 검사 | 2026-11-16 WB04-E583: Node v22.23.3·v26.13.0 전체 각각 **5,548건 통과, 실패·취소·건너뜀 0** (v24 전체는 E513에서 4,973건 통과) |
+| 이식 진행도 | 대상 1,006단위(제외 154 별도) 중 **port 842(83.7%)·partial 35(3.5%)·todo 129(12.8%)**. 남은 164단위는 기존 기준선 85단위와 재기준선에서 추가된 79단위다(대응표·재기준선 규칙 key로 E565 재집계). 추가 partial 4개는 중단 시점 초안2개·E574 Session 기반 자료·E584 Devastation 자격이다. 전체 Session 완성 판정 전이다. 부품을 한 세션으로 묶는 조립이 남아 있다(0.2·0.3절) |
+| 마지막 작업 단위 | **WB04-E584** 생성자1427..1462의 소유자색·파편 캡처·실제 팔레트/Particles·카메라/Streak·EvilRay 장치를 결선했다(신규13검사, [단위 문서](docs/webpj-session-particles-20261116.md)). 실제 불꽃·빔의 같은 Host/첫 프레임 음향·종료도 대조했다. Session과 Devastation 자격은 partial이며 전체 Load·앱 연결 전이다 |
+| 다음 작업 | ⓪ 4-D D의 `RawCampaignSession` 1을 계속한다. E584 뒤1463의 TeleportPrefix/현재 TYPE 생성자 ABI→Archer/Missile·이동/건물·전체 모듈을 원문 순서로 연결한다. 외곽 공개와 같은 Template TypeNames→Objects/Contents·Load는 그 뒤다. ① 신규 미완료79단위·시간 동기화/Native 장치는 각 단계와 D/E에서, A 정리·B Client 서비스는 실제 Session 허브 뒤에 연결한다. ② D→E(Client·통합·L2) 순서이며 3.8절 허브/적응 판정4건은 잔여 |
+| 마지막 전체 검사 | 2026-11-16 WB04-E584: Node v22.23.3·v26.13.0 전체 각각 **5,561건 통과, 실패·취소·건너뜀 0** (v24 전체는 E513에서 4,973건 통과) |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 ### 0.2 단계 진행판
@@ -46,9 +46,9 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 | 범위 | 대상 | port | partial | todo |
 | --- | --- | --- | --- | --- |
-| 전체 | 1,006단위 / 146,232줄 | 842 (83.7%) / 111,687줄 (76.4%) | 34 (3.4%) | 130 (12.9%) |
+| 전체 | 1,006단위 / 146,232줄 | 842 (83.7%) / 111,687줄 (76.4%) | 35 (3.5%) | 129 (12.8%) |
 | `o/` 월드·규칙 | 560단위 / 73,204줄 | 541 (96.6%) / 70,758줄 (96.7%) | 3 (0.5%) / 1,164줄 (1.6%) | 16 (2.9%) / 1,282줄 (1.8%) |
-| `client/` 세션·UI·표시 | 445단위 / 72,602줄 | 300 (67.4%) / 40,503줄 (55.8%) | 31 (7.0%) | 114 (25.6%) |
+| `client/` 세션·UI·표시 | 445단위 / 72,602줄 | 300 (67.4%) / 40,503줄 (55.8%) | 32 (7.2%) | 113 (25.4%) |
 | `zacket/` 내부 미션 전송 | 1단위 / 426줄 | 1 (100%) / 426줄 (100%) | 0 | 0 |
 
 표의 port 줄 수는 현재 기준선 파일 전체의 규모이며 기존 행에 남은 ③ 후속 기능의 구현을 뜻하지 않는다. 분류(class)별로는 port 955(이식 대상)·adapt 51(웹 대체가 필요한 플랫폼 경계)·제외 154(exclude-mp 62·exclude-edit 59·exclude-host 32·exclude-legacy 1)이다.
@@ -60,7 +60,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 955·adapt 51·exclude-mp 62·exclude-edit 59·exclude-host 32·exclude-legacy 1, 미분류 0**(E573 캠페인 공용2단위 복원). 상태: **port 842·partial 34·todo 130·제외(-) 154**, session/oracle 0. 추가 partial 3개는 아래 중단 인계의 초안2개와 E574 Session 기반 자료다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 955·adapt 51·exclude-mp 62·exclude-edit 59·exclude-host 32·exclude-legacy 1, 미분류 0**(E573 캠페인 공용2단위 복원). 상태: **port 842·partial 35·todo 129·제외(-) 154**, session/oracle 0. 추가 partial 4개는 아래 중단 인계의 초안2개·E574 Session 기반 자료·E584 Devastation 자격이다. 웹 소스 줄 수·검사 파일 수는 E495 당시 각각 118,228줄·675개다 |
 | 이식 추적 | `webpj/tests/fixtures/manifest.json` **804항목**(original-x86 766·screenshot 13·source 10·independent 9·cpppj-oracle 5·original-binary 1, 2026-11-16 재집계). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
@@ -250,7 +250,7 @@ E1~E242 단위 문서 링크 색인은 [보관본의 2.2절](LEFT_JOBS.webpj.old
 - [x] client **RawBombBlastBindings**45줄 — Session1427의 추가 그림 캡처가 요구해7단계에서 앞당김 → [E583](docs/webpj-bomb-blast-bindings-20261116.md) 원본32행/16VT·실제 World/Hit/좌표/공유 난수/다리/Blast Apply 대조. 실제 파편/주문 Session 부모 연결은 D1에서
 
 **D. Session 본체 (`RawCampaignSession` 7,118줄, 기준선 `225553df`)** — 공개 API 경계로 분할한다(헤더712줄·`.cpp`6,406줄)
-- [ ] **RawCampaignSession 1: 구성·소유 상태·Load** — 생성자(Impl 상태)·`Load`·Player/동맹/기술/SP/Deck/AI 초기화·`RawSurfaceWorld`/`RawWorldCore` 접합(`bindSquidTransmission` ← `RawSquidTransmission.pop`, 4-B 이월: 저장 객체 `FortObjectLoad`/Money/Meta child 의 실제 적재·session-dump 대조) — 실제 owner/World·공유 입력·Player/SP·진단·테이블·섬/사제/Sound·Player/Template/소유권·Carrier/Balloon/TYPE 파생표·Gun/에너지/커서 표시·피해 상태/AI/Hit 효과·GunHit/투사체/Fence/Blocker까지 결선했다(partial, [기반 자료](docs/webpj-session-owners-20261116.md)·[현재 연결](docs/webpj-session-guns-20261116.md)). 다음1427 소유자색/파편 캡처/Particles·전체 모듈 생성·외곽 공개·Load·실제 Login은 잔여
+- [ ] **RawCampaignSession 1: 구성·소유 상태·Load** — 생성자(Impl 상태)·`Load`·Player/동맹/기술/SP/Deck/AI 초기화·`RawSurfaceWorld`/`RawWorldCore` 접합(`bindSquidTransmission` ← `RawSquidTransmission.pop`, 4-B 이월: 저장 객체 `FortObjectLoad`/Money/Meta child 의 실제 적재·session-dump 대조) — 실제 owner/World·공유 입력·Player/SP·진단·테이블·섬/사제/Sound·Player/Template/소유권·Carrier/Balloon/TYPE 파생표·Gun/에너지/커서 표시·피해 상태/AI/Hit 효과·GunHit/투사체/Fence/Blocker·소유자색/파편 캡처/Particles까지 결선했다(partial, [기반 자료](docs/webpj-session-owners-20261116.md)·[현재 연결](docs/webpj-session-particles-20261116.md)). 다음1463 TeleportPrefix/현재 TYPE 생성자 ABI·전체 모듈 생성·외곽 공개·Load·실제 Login은 잔여
 - [ ] **RawCampaignSession 2: 로컬 연결·로그인** — `LoadLocalConnection`/`PrepareLocalConnectionForState`/`ConnectLocalConnectionForState`/`PollLocalConnectionState`/`PumpLocalConnection`/송신 + **RawCampaignSessionLogin** 234줄(+182, 4-C 이월 `Impl::Login`)
 - [ ] **RawCampaignSession 3: 프레임·카메라·표시 입력** — `RunFrame`/`PrepareFrame`·카메라 홈/중심/명령(`CenterCameraOn`·`ViewHome`·`ViewYourPriest`·`RequestCameraCenter`/`CommitRequestedCamera`)·입자 뷰(5-A 연결)
 - [ ] **RawCampaignSession 4: 승패·종료·Editor 제외 정리** — `CheckMissionOutcome`·종료 수명(웹 제외인 Existing Editor 계열은 만들지 않는다)

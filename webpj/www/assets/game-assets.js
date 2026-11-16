@@ -6,9 +6,13 @@
 //    예: 'dude' 파일의 typename 은 'Man', 'edgeFarm'→'efarm', 'anim'→'Flare'(typename 'flare' 는 두 타입이 쓰지만 파일 이름 'flare' 가 먼저 선택됨). 없으면 Error.
 //  - frameIndex(type, cluster, layer): 클러스터 이름과 레이어를 SHP 의 원래 프레임 번호 `layer × 클러스터 수 + 클러스터 순번`으로 바꾼다(레이어별 연속 프레임 유지, GIF 번호로 다시 정렬하지 않음).
 //    중복 클러스터는 첫 일치이며 SHP 블록이나 프레임 수를 벗어나면 RangeError, 없는 클러스터는 Error 이다.
-// 사용: const assets = new GameAssets(table, shapes); const bridge = assets.find('bridge'); assets.frameIndex(bridge, 'A11', 0); assets.types()[i].block + 70 === 타입 번호.
+// 사용: const assets = new GameAssets(table, shapes, palette); const bridge = assets.find('bridge'); assets.frameIndex(bridge, 'A11', 0); assets.types()[i].block + 70 === 타입 번호.
 // 타입 정의를 읽지 못한 타입(definition null)은 typename 검색에서 건너뛰고 frameIndex 는 거부한다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-13 WB04-E385: 5-A GameAssets 이월분으로 추가, 기준선 뒤 cpppj 변경 없음)
 import { FIRST_ASSET_TYPE_NUMBER, TYPE_LOAD_ORDER } from './type-table.js';
+import { GamePalette } from './palette.js';
+
+// setup.cfg의 battlePal과 같은 기본 팔레트 경로다. 파일 읽기는 호출자의 동일 VFS 로더가 수행한다(WB04-E584).
+export const DEFAULT_GAME_PALETTE_PATH = 'd/gifcloud.col';
 
 // 사용자 입력 이름을 원본 ASCII 식별자 규칙으로 비교한다(비 ASCII 는 그대로). (2026-11-13 WB04-E385)
 const asciiLower = (text) => String(text).replace(/[A-Z]/g, (letter) => String.fromCharCode(letter.charCodeAt(0) + 32));
@@ -20,13 +24,17 @@ export class GameAssets {
     #table;
     #shapes;
     #types;
+    // 같은 게임의 실제 팔레트다. 팔레트가 필요 없는 기존 조회 호출자는 생략할 수 있다.
+    #palette;
 
-    // 타입 표와 SHP 를 연결한다. SHP 블록 수가 로딩 순서와 다르면 거부한다. 사용: new GameAssets(TypeTable.fromArchive(archive, decode), new ShapeDatabase(bytes)). (2026-11-13 WB04-E385)
-    constructor(table, shapes) {
+    // 타입 표·SHP와 선택한 실제 팔레트를 연결한다. SHP 블록 수가 로딩 순서와 다르면 거부한다. 팔레트 생략은 이름/SHP 조회에만 허용한다(E385, E584).
+    constructor(table, shapes, palette = null) {
         if (shapes.blocks.length !== TYPE_LOAD_ORDER.length) throw new Error('Shape block count does not match selected edition (use --cd for CD data)');
         if (table.definitions.length !== TYPE_LOAD_ORDER.length) throw new Error('타입 정의 수가 로딩 순서와 다릅니다.');
         this.#table = table;
         this.#shapes = shapes;
+        if (palette !== null && !(palette instanceof GamePalette)) throw new TypeError('GameAssets의 실제 GamePalette 필요');
+        this.#palette = palette;
         // 다른 판본의 추가 타입이나 디렉터리 정렬 순서를 섞지 않는다.
         this.#types = Object.freeze(TYPE_LOAD_ORDER.map((assetName, block) => Object.freeze({ assetName, definition: table.definitions[block], block })));
     }
@@ -65,4 +73,6 @@ export class GameAssets {
     // 연결한 SHP 데이터베이스와 타입 표이다. (2026-11-13 WB04-E385)
     get shapes() { return this.#shapes; }
     get typeTable() { return this.#table; }
+    // 같은 로더가 읽은 팔레트 객체를 빌린다. 입자 경로에서 누락을 빈 색표로 대체하지 않는다(WB04-E584).
+    get palette() { if (!this.#palette) throw new Error('GameAssets 실제 팔레트 미연결'); return this.#palette; }
 }

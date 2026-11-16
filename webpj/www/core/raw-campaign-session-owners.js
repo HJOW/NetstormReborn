@@ -1,5 +1,5 @@
 // RawCampaignSession::Impl의 캠페인 소유 자료를 실제 하위 생성자로 구성한다(225553df, WB04-E574).
-// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → connectGunAndCursorViews → connectHitBodies → connectGunBodies → 나머지 모듈/Load.
+// 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → connectGunAndCursorViews → connectHitBodies → connectGunBodies → connectParticles → 나머지 모듈/Load.
 // 이 단계는 Session이 아니며 현재 Runtime에 공개하지 않는다. 외곽 Session과 Load는 아직 미구현이다.
 // Editor/LAN/메타/Native 장치는 이 캠페인 분기에 섞지 않는다. 반납은 하위 모듈을 정리한 부모가 마지막에 dispose로 한다.
 import { GameAssets } from '../assets/game-assets.js';
@@ -30,6 +30,7 @@ import { RawCampaignSessionTypes, createCampaignTypeTables } from './raw-campaig
 import { RawCampaignSessionGunViews, createCampaignCursorTables } from './raw-campaign-session-gun-views.js';
 import { RawCampaignSessionHits } from './raw-campaign-session-hits.js';
 import { RawCampaignSessionGuns } from './raw-campaign-session-guns.js';
+import { RawCampaignSessionParticles, createCampaignParticleTables } from './raw-campaign-session-particles.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -90,7 +91,7 @@ export class RawCampaignSessionOwners {
     // 상위가 실제 가상80 분배를 연결하며, 미연결 시 선택된 호출에서 오류다.
     rewardCount = null; soundNames; level = null;
     // 같은 Impl의 공유 입력·현재 상태와 Player/SP 이후 진단 결선이다.
-    state; tables; priestModules = null; playerModules = null; typeModules = null; gunViewModules = null; hitModules = null; gunModules = null;
+    state; tables; priestModules = null; playerModules = null; typeModules = null; gunViewModules = null; hitModules = null; gunModules = null; particleModules = null;
     // 현재 Client의 같은 redraw 상자 또는 독립 Session의 지역0 상자다.
     worldRedraw;
     // 같은 장기 redraw/개정 상자를 빌리는 지역 도장/투표와 생성 시0인 TYPE별 두 벡터다.
@@ -113,6 +114,9 @@ export class RawCampaignSessionOwners {
     aiDamage = null; playerDamage = null; flyer = null; particles = null; motion = null; building = null;
     // 같은 실제 피해·투사체/배리어 기하와 기존 Gun 장애물 통지, 후속 자산 처리기의 현재 슬롯이다.
     gunHit = null; projectileGeometry = null; fenceTarget = null; gunBlocker = null; assetBindings = null;
+    // 파편의 실제 지역 색표/현재 캡처 옵션·다리 그림이며 건물/공장 캡처는 후속 생성 구간의 같은 슬롯이다.
+    shrapnelMapTokens; shrapnelOwnerColors; bridgeDrawState; shrapnelCaptureState;
+    bridgeDraw = null; shrapnelCapture = null; buildingCapture = null; factoryDraw = null;
     // 후속 실제 Login의 현재 소유 슬롯이다. 이 단계는 Login을 생성하거나 Session을 공개하지 않는다.
     login = null;
     // 독립 typed 분기만 지역으로 소유하는 현재 값이다. Native 전역을 임의로 빌리지 않는다.
@@ -148,6 +152,7 @@ export class RawCampaignSessionOwners {
             this.core = this.world.core();
             this.themes = new Uint32Array(this.core.types.length); this.elements = new Int32Array(this.core.types.length);
             Object.assign(this, createCampaignTypeTables(this.core.types.length));
+            Object.assign(this, createCampaignParticleTables());
             this.chunks = this.world.storage.chunks; this.islandBytes = this.world.storage.islands; this.dudePopulation = this.world.storage.sidLists.dudes; this.stamp = this.gameplayGlobals.terrainStamp();
             this.playerState = this.gameplayGlobals.player; this.globals = this.gameplayGlobals.world;
             this.cursorDrop = this.gameplayGlobals.cursor; this.energyState = this.gameplayGlobals.energy; this.contentFinder = this.gameplayGlobals.finder;
@@ -246,6 +251,12 @@ export class RawCampaignSessionOwners {
         this.gunModules ??= new RawCampaignSessionGuns(this); this.gunModules.bind();
     }
 
+    // Gun 뒤 같은 소유자색/보호 SHP 캡처·실제 팔레트·카메라/공유 난수의 입자 몸체를 연결한다.
+    connectParticles() {
+        if (this.#disposed) throw new Error('반납한 Session 입자 결선');
+        this.particleModules ??= new RawCampaignSessionParticles(this); this.particleModules.bind();
+    }
+
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
     get fullDeck() { return this.gameplayGlobals.fullDeck().value; }
     // 값 쓰기도 동일 장기 DWORD를 사용한다.
@@ -267,10 +278,10 @@ export class RawCampaignSessionOwners {
     dispose() {
         if (this.#disposed) return; this.#disposed = true;
         try {
-            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules) { this.world?.drainOwnedProcessesForShutdown(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
+            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
         } finally {
             try { this.world?.dispose(); } finally {
-                try { this.gunModules?.dispose(); } finally { try { this.hitModules?.dispose(); } finally { try { this.gunViewModules?.dispose(); } finally { try { this.typeModules?.dispose(); } finally { try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } } } } } }
+                try { this.particleModules?.dispose(); } finally { try { this.gunModules?.dispose(); } finally { try { this.hitModules?.dispose(); } finally { try { this.gunViewModules?.dispose(); } finally { try { this.typeModules?.dispose(); } finally { try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } } } } } } }
             }
         }
     }
