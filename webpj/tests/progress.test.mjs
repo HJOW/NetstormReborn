@@ -311,12 +311,12 @@ test('Netstorm 연결: 게임 데이터 쓰기 → 진행/설정 저장소, 설�
     assert.deepEqual(storedValues(storage), { DoneTheWarBegins: '1' });
     assert.equal(storage.map.has(SETTINGS_STORAGE_KEY), false);
     // 게임 데이터에 설정 키를 쓰면(대소문자 무시) 설정 저장소에 정리된 값으로 저장된다.
-    app._gameData.set('SOUNDVOLUME', 5);
-    assert.equal(app._settings.get('soundVolume'), 5);
-    assert.equal(JSON.parse(storage.map.get(SETTINGS_STORAGE_KEY)).values.soundVolume, 5);
+    app._gameData.set('SOUNDVOLUME', 3);
+    assert.equal(app._settings.get('soundVolume'), 3);
+    assert.equal(JSON.parse(storage.map.get(SETTINGS_STORAGE_KEY)).values.soundVolume, 3);
     // 잘못된 설정 값은 설정 저장소가 거부한다(저장된 값은 그대로).
     app._gameData.set('soundVolume', 99);
-    assert.equal(app._settings.get('soundVolume'), 5);
+    assert.equal(app._settings.get('soundVolume'), 3);
     // 설정을 옵션 메뉴 경로(settings.set)로 바꾸면 게임 데이터에도 반영되며 되돌아오는 통지로 진행 값을 만들지 않는다.
     app._settings.set('musicVolume', 4);
     assert.equal(app._gameData.get('musicVolume'), '4');
@@ -331,7 +331,7 @@ test('Netstorm 연결: 게임 데이터 쓰기 → 진행/설정 저장소, 설�
     // 새로고침: 같은 저장소로 만든 앱은 진행 값과 바뀐 설정을 모두 이어받는다.
     const reloaded = wiredApp(storage);
     assert.equal(reloaded._gameData.get('DoneTheWarBegins'), '1');
-    assert.equal(reloaded._gameData.get('soundVolume'), '5');
+    assert.equal(reloaded._gameData.get('soundVolume'), '3');
     assert.equal(reloaded._gameData.get('musicVolume'), '4');
     assert.equal(reloaded._gameData.get('sound'), '0');
 });

@@ -1,16 +1,16 @@
 // 원본 소리 장치(DirectSound)의 효과음·음악 재생을 Web Audio 로 옮긴 모듈이다.
 // 음량: 원본 옵션 단계(1~5)를 1/100 dB 감쇠로 바꾸고(1=-40dB, 2=-20dB, 3=-10dB, 4=-5dB, 그 밖=0dB) 그 값을 증폭률로 쓴다.
-//       기본값은 효과음 3(-10dB), 음악 2(-20dB)이다(원본 Interpret Options 의 soundVolume/musicVolume 기본).
+//       설정 없는 최초 실행의 기본값은 효과음·음악 모두 5(0dB)이다. 명시한 사용자 단계는 그대로 적용한다. (2026-11-16 WB04-E616)
 // 음악: 원본 음악 채널은 반복 플래그가 켜진 곡을 파일 끝에서 되감아 이어 재생하므로 AudioBufferSourceNode 의 loop 로 옮긴다.
 //       메인 메뉴 곡은 ser22.mus(RIFF WAV PCM)이다.
 // 원본 효과음 버퍼는 DSBCAPS_GLOBALFOCUS 없이 만들어 창이 포커스를 잃으면 들리지 않는다. 웹에서는 탭이 숨겨질 때 suspend 로 대응한다.
 // 복원 기준: cpppj ClientAudio.cpp(VolumeFromStep)·SoundMusic.cpp·SoundSceneMusic.cpp. (2026-10-23 WB03-M1)
 
-// 원본 기본 효과음 음량 단계이다(설정 soundVolume 기본 3). (2026-10-23 WB03-M1)
-export const DEFAULT_SOUND_VOLUME_STEP = 3;
+// 설정 없는 원본 최초 실행의 효과음 음량 단계이다. (2026-11-16 WB04-E616)
+export const DEFAULT_SOUND_VOLUME_STEP = 5;
 
-// 원본 기본 음악 음량 단계이다(설정 musicVolume 기본 2). (2026-10-23 WB03-M1)
-export const DEFAULT_MUSIC_VOLUME_STEP = 2;
+// 설정 없는 원본 최초 실행의 음악 음량 단계이다. (2026-11-16 WB04-E616)
+export const DEFAULT_MUSIC_VOLUME_STEP = 5;
 
 // 원본 소리 장치의 출력 표본 빈도(Hz)이다. 원본 효과음·음악 파일이 22,050Hz 이므로 같은 빈도로 문맥을 만들어 재표본을 줄인다.
 // 브라우저가 이 값을 거부하면 기본 빈도로 만든다. (2026-10-23 WB03-M1)

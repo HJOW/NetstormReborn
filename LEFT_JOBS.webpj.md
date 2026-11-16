@@ -6,7 +6,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E615)
+### 0.1 현재 값 (2026-11-17, 마지막 단위 WB04-E616)
 
 | 항목 | 현행 기준 |
 | --- | --- |
@@ -14,17 +14,17 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C·4-R 완료, 현재 단계 **4-D**의 D 구획 `RawCampaignSession` 조립, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 1,007단위(제외 153 별도) 중 **port 846(84.0%)·partial 39(3.9%)·todo 122(12.1%)**. 남은 161단위 / 34,340줄은 기존 기준선 84단위 / 28,203줄과 재기준선(4-R)에서 추가된 77단위 / 6,137줄이다(단계 배정은 0.2·0.3절). 앱 수명에 연결된 단위(`session`)는 아직 0이다 |
-| 마지막 작업 단위 | **WB04-E615** — 생성자1757..1814의 독립 typed Buried/Player·사제 후단·전체 Regular/다리·장식/특수 주문 분배와 실패 콘솔을 연결했다(신규7건/관련55건 통과, [단위 문서](docs/webpj-session-regular-20261116.md)). 문서·로컬 커밋 뒤 사용자 요청으로 일시 중지하며 다음은1815 Transmission 합성이다 |
-| 마지막 전체 검사 | 2026-11-16 WB04-E615 검증 완료: Node v22.23.3·v26.13.0 최종 전체 각각 **5,906건 통과, 실패·취소·건너뜀 0**. v24는 사용자 지시로 생략하고 호환을 가정한다 |
-| 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
+| 마지막 작업 단위 | **WB04-E616** — cpppj1314(`bd2941f4`) 최초 음량5·5를 Settings/Web Audio에 재반영했다. 독립 Chromium 저장소에서 클릭 시작→Welcome→Welcome2 즉시 저장→메뉴·Struggle 최초 잠금·두 음량5·사용자3·2 선택→재실행 Tips·완료 입력 체크/다음 해금 유지까지 확인했다([단위 문서](docs/webpj-first-run-20261116.md)). 다음은1815 Transmission 선행 RawDaisProcessData다 |
+| 마지막 전체 검사 | 2026-11-17 WB04-E616: Node v22.23.3·v26.13.0 최종 전체 각각 **5,906건 통과, 실패·취소·건너뜀 0**. v24는 사용자 지시로 생략하고 호환을 가정한다 |
+| 마지막 e2e | 2026-11-17 E616 Chromium **2/2 통과**(초기 페이지·독립 저장소 최초 실행/기존 설정·진행 재실행). Welcome/Welcome2·Options5·5·사용자3·2·Struggle 잠금/체크를 실제 클릭, 처리되지 않은 예외0. 실제 미션/월드 검사는 아니다 |
 
-**중단·재개 인계 (2026-11-16 사용자 요청):** WB04-E615의 검증·문서·로컬 커밋을 마친 뒤 목표를 일시 중지한다. 현재 생성자1814까지의 독립 typed 삭제/Regular 조립을 마쳤고 실제 World 게시1825·외곽 Session/Load·미션 플레이는 미완료다. 재개 첫 작업은1815 Transmission 합성이다. 선행 RawDaisProcessData.cpp/.h(4-D todo, 헤더21행의 DaisProcess 포함)를 이식·대조한 뒤 같은 현재 헤더/버퍼와 송신 합성을 연결한다. 공중3종 새 전용 생성/생산/행동 검사를 추가하지 않는 기존 경계를 유지하며 Native 장기 수명/분배는 여전히 잔여다.
+**재개 인계 (2026-11-16):** 사용자 목표 재개에 따라 E615의 일시 중지 상태를 해제하고 진행한다. 생성자1814까지의 독립 typed 삭제/Regular 조립은 완료했고 실제 World 게시1825·외곽 Session/Load·미션 플레이는 미완료다. cpppj1314 최초 상태를 우선 반영한 E616을 마쳤으며 다음은1815 Transmission 합성이다. 선행 RawDaisProcessData.cpp/.h(4-D todo, DaisProcess 포함)를 먼저 이식·대조한다. 공중3종 새 전용 생성/생산/행동 검사를 추가하지 않는 경계를 유지하며 Native 장기 수명/분배는 잔여다.
 
-**최초 실행 상태 공통 인계(2026-11-16 사용자 요청, 원본 분석 완료·WB 반영 대기):** 원본 `options.cfg`·전체화면 표식이 없는 상태(`4040c1029`)가 정상 최초 설치다. [원본 관찰/PNG 6장·세 프로젝트 기준](docs/exe/original-first-run-20261116.md)과 [cpppj 우선 작업](LEFT_JOBS.md#first-run)을 따른다. **cpppj부터 반영하고 확정 커밋 뒤 웹 해당분을 우선 대조한다.** 이 기록은 새 WB 구현 단위나 M1 재검증 완료가 아니며 기존 E615 중단 인계·미션 플레이 미완료 상태는 유지한다.
+**최초 실행 상태 웹 반영 완료(WB04-E616):** [원본 관찰](docs/exe/original-first-run-20261116.md)·[cpppj1314 확정](docs/exe/cpp-first-run-1314-20261116.md)·[웹 검증](docs/webpj-first-run-20261116.md)이 기준이다. 기존 사용자의 localStorage 설정·진행을 초기화하지 않는다. 웹 해상도/전체화면·Edit·MP/온라인 검증 제외를 유지하며, 실제 미션 완료 효과 연결은8단계 잔여다.
 
-- [ ] `netstorm.settings`·`netstorm.progress`가 모두 없는 **독립 저장소**에서 클릭하여 시작 → Welcome(OK) → Welcome2(Play Early Missions / Main Menu) → 메뉴를 확인한다. Welcome2가 열릴 때 `welcomeGiven=1` 저장, 이후 시작 팁 분기를 보존한다. 현재 시작창 부품이 있다는 이유로 전체 최초 상태 검증 완료로 세지 않는다.
-- [ ] Struggle For Freedom은 **1번만 활성·2~6번 잠김·전부 체크 없음**이어야 한다. 각 행의 자기 `Done*` 체크와 직전 `Done*` 해금을 구별하고, 완료 값 저장·새로고침 뒤 유지까지 비교한다. 기존 캡처의 전부 완료 상태를 기본값으로 넣지 않는다. 실제 미션 완료 효과 연결은 기존8단계 잔여이며 이번에 클리어한 것으로 기록하지 않는다.
-- [ ] 웹 해당 Options는 소리·음악·바람·가장자리 스크롤·Auto-Demo·시작 팁 ON, 스피커 교환 OFF, **효과음5·음악5**로 맞춘다. 현행 `www/platform/settings.js`의 fallback3·2는 옛 사용자 저장값이므로 cpppj 교정 뒤5·5로 바꾼다. 기존 사용자의 localStorage에 저장된 음량·진행은 초기화하지 않는다. 원본800×600·전체화면 시작 요청1 및 관찰 도구1024×768·창 모드는 웹 해상도/전체화면 옵션을 추가할 근거가 아니다. Edit·멀티플레이·온라인 검증 등 기존 웹 제외도 유지한다.
+- [x] 두 localStorage 키가 없는 독립 Chromium 저장소에서 클릭 시작→Welcome(OK)→Welcome2(Play Early Missions / Main Menu)→메뉴를 실제 클릭했다. Welcome2를 열 때 welcomeGiven=1 저장과 재실행 Tips 분기를 확인했다 → [E616](docs/webpj-first-run-20261116.md)
+- [x] Struggle For Freedom은1번만 활성·2~6번 잠김·전부 체크 없음이다. 잠긴2번 클릭 무반응, 검사 입력 DoneTheWarBegins 저장→재실행 뒤 자기 체크/다음 행 해금을 확인했다. 실제 미션 클리어 검증과 구별한다 → [E616](docs/webpj-first-run-20261116.md)
+- [x] 웹 Options 소리·음악·바람·가장자리 스크롤·Auto-Demo·시작 팁 ON, 스피커 교환 OFF·음량5·5다. Settings와 Web Audio fallback을 교정하고 기존3·2를 UI로 저장·재실행해 유지했다 → [E616](docs/webpj-first-run-20261116.md)
 
 **다음 작업 (위에서부터):**
 
@@ -522,7 +522,7 @@ cpppj는 AGENTS 1~14차 구현과 M8 최종 배포 관문(1311)을 마치고 제
 
 - **현행 기준선:** `225553df`(제품1313, E513). 기존 행별 판정과 아래 표의 미구현 ③ 항목은 계속 유효하다. 분류는 ① 웹 결과 영향 없음(구조 정리·진단·웹 제외 기능) ② 웹 반영 필요 ③ 아직 웹에 없는 후속 단계 몫이다. cpppj fixture가 바뀌었으면 해당 웹 검사를 먼저 다시 돌린다.
 - **기준선 이후의 변경:** 매 단위 착수 때 `node webpj/tools/port-map.mjs`의 `cpppj 변경` 줄을 본다(행 base 뒤 커밋을 단위별로 보고하고 안내를 붙인다). `exclude-*` 행은 ①로 기록만 하고, `port`/`adapt` 행은 ②/③을 판정해 ②는 `재반영`을 명시한 WB 단위로 반영한다. 판정을 마치면 그 행 base를 판정한 커밋으로 올리고 근거를 메모(①이라도)와 단위 문서에 남긴다. `fixture-manifest.mjs`도 같은 base 뒤 변경만 보고한다. 기준선 뒤 새로 생긴 파일은 `새 파일`로 보고되며 재기준선 때 분류한다.
-- **현재 보고 (2026-11-16, `port-map.mjs`):** `cpppj 변경` **1건** — RawCampaignSessionLogin(행 base `a328ac1f` 이후 32커밋, 이식 때 판정). 이미 옮긴 단위 중 바뀐 37단위는 재기준선 때 E503~E511에서 ①/②/③으로 판정해 ②는 재반영하고 행 base를 올렸다. 그래서 2026-11-11(155건)·2026-11-15(92단위) 판정 대기 목록과 커밋 성격별 잠정표는 만료됐다(보관본). 남은 ③은 아래 목록이다.
+- **현재 보고 (2026-11-16, `port-map.mjs`):** `cpppj 변경` **1건** — E616에서 cpppj1314의 ClientAudio·ClientMain·UberGump 3행을② 재반영/① 구조 정리로 판정해 base를 `bd2941f4`로 올렸다. 남은 것은 RawCampaignSessionLogin(행 base `a328ac1f` 이후 32커밋, 이식 때 판정). 이미 옮긴 단위 중 바뀐 37단위는 재기준선 때 E503~E511에서 ①/②/③으로 판정해 ②는 재반영하고 행 base를 올렸다. 그래서 2026-11-11(155건)·2026-11-15(92단위) 판정 대기 목록과 커밋 성격별 잠정표는 만료됐다(보관본). 남은 ③은 아래 목록이다.
 - **재기준선 결과 (4-R, E497~E514):** 기준선 뒤 `cpppj/src`의 `o/`·`client/`·`zacket/`이 301커밋·768파일(+26,257/−3,270줄) 바뀌었고 남은 허브가 가장 많이 바뀌어(RawCampaignSession 5,715→7,118줄, ClientMain 1,797→2,133줄, UberGump 2,207→2,683줄) HEAD 판을 바로 옮기기로 했다. 오라클 재빌드·M1 재대조(E497), 신규 176단위 분류(E498~E502·E512), 변경 37단위 판정(E503~E511), 대응표·manifest 전환(E513), 기존 웹 부품 상태 판정(E514)을 마쳤다. 기존 fixture의 실제 `cpppjBasis`와 행별 `base` 이력은 보존했다. 10차 버그 수정·6/13차 표시 부호화처럼 순서 10 몫인 변경은 ③으로 남겼다.
 - **판정을 마치고 반영 시점만 남은 ③ (아래 표):** 해당 단계에서 반영하면 이 표에서 지우고 대응표 메모를 고친다. Native/실제 연결과 아직 미구현인 후순위 기능을 포함한다. 행별 상세(기준 커밋·바뀐 함수·판정 이유)는 각 행 `PORT_MAP.tsv` 메모, 판정 문서([공통층 E259](docs/webpj-judge-common-20261110.md)·[Player·사제 E260](docs/webpj-judge-player-priest-20261110.md)·[섬·자원 E261](docs/webpj-judge-island-resource-20261110.md)·[건설·Dude E262](docs/webpj-judge-construction-dude-20261110.md)·[전투 E263](docs/webpj-judge-combat-20261110.md)·[기타 E264](docs/webpj-judge-misc-20261110.md)), [대응표 문서 5·9절](docs/webpj-port-map-20261106.md)과 [2026-11-11 보관](LEFT_JOBS.webpj.old.md#archive-webpj-20261111-through-wb04-e277) 3.6절 원래 표에 있다. 판정을 마친 ①·②는 PORT_MAP base·메모에 있다.
 

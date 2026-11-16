@@ -49,7 +49,7 @@ test('설정: 기본값·값 검증·토글·통지', () => {
     const changes = [];
     const settings = new Settings({ onChange: (key, value, previous) => changes.push([key, value, previous]) });
     // (2026-10-30 WB03-J: 시작 창이 쓰는 welcomeGiven·tipNumber 를 기본값 0 으로 추가했다. 원본 setup.cfg 기본값과 같다.)
-    assert.deepEqual(settings.snapshot(), { sound: 1, music: 1, playWind: 1, swapLeftRightSpeakers: 0, soundVolume: 3, musicVolume: 2, edgeScroll: 1, autoDemo: 1, tellTips: 1, welcomeGiven: 0, tipNumber: 0 });
+    assert.deepEqual(settings.snapshot(), { sound: 1, music: 1, playWind: 1, swapLeftRightSpeakers: 0, soundVolume: 5, musicVolume: 5, edgeScroll: 1, autoDemo: 1, tellTips: 1, welcomeGiven: 0, tipNumber: 0 });
     // 토글은 0/1 만 받고 참/거짓·'0'/'1' 도 받는다. 그 밖의 값은 거부한다.
     assert.equal(normalizeSetting('sound', true), 1);
     assert.equal(normalizeSetting('sound', '0'), 0);
@@ -70,7 +70,7 @@ test('설정: 기본값·값 검증·토글·통지', () => {
     assert.equal(settings.toggle('music'), 0);
     assert.equal(settings.toggle('music'), 1);
     assert.equal(settings.toggle('soundVolume'), null);
-    assert.deepEqual(changes, [['soundVolume', 4, 3], ['music', 0, 1], ['music', 1, 0]]);
+    assert.deepEqual(changes, [['soundVolume', 4, 5], ['music', 0, 1], ['music', 1, 0]]);
     // 알려진 모든 키가 정의되어 있다(옵션 메뉴가 쓰는 키 9개 + 시작 창이 쓰는 키 2개).
     assert.equal(Object.keys(SETTING_DEFINITIONS).length, 11);
     // 정수 설정(tipNumber)은 부호 있는 32비트 범위의 정수와 십진 문자열만 받는다. (2026-10-30 WB03-J)
@@ -103,12 +103,12 @@ test('설정: 저장·복원과 임시 값', () => {
     first.set('sound', 0);
     first.set('musicVolume', 5);
     first.set('soundVolume', 1, { persist: false });
-    assert.deepEqual(JSON.parse(storage.map.get(SETTINGS_STORAGE_KEY)), { version: SETTINGS_VERSION, values: { ...first.snapshot(), soundVolume: 3 } });
+    assert.deepEqual(JSON.parse(storage.map.get(SETTINGS_STORAGE_KEY)), { version: SETTINGS_VERSION, values: { ...first.snapshot(), soundVolume: 5 } });
     // 임시로 바꾼 음량은 저장되지 않았고, 다시 열면 저장된 값이 나온다.
     const second = new Settings({ storage });
     assert.equal(second.get('sound'), 0);
     assert.equal(second.get('musicVolume'), 5);
-    assert.equal(second.get('soundVolume'), 3);
+    assert.equal(second.get('soundVolume'), 5);
     assert.equal(second.loadProblem, null);
 });
 
@@ -124,7 +124,7 @@ test('설정: 손상·버전·차단된 저장소에서 기본값으로 계속',
     // 일부 값만 잘못되면 그 항목만 기본값이고 나머지는 받아들인다.
     const partial = new Settings({ storage: fakeStorage({ [SETTINGS_STORAGE_KEY]: JSON.stringify({ version: SETTINGS_VERSION, values: { sound: 0, soundVolume: 99, bogus: 1 } }) }) });
     assert.equal(partial.get('sound'), 0);
-    assert.equal(partial.get('soundVolume'), 3);
+    assert.equal(partial.get('soundVolume'), 5);
     assert.match(partial.loadProblem, /soundVolume/);
     assert.equal(partial.get('bogus'), undefined);
     // 읽기가 막힌 저장소: 기본값으로 시작하고 저장은 시도하지 않아도 값 변경은 된다.
@@ -409,8 +409,10 @@ test('원본 스크린샷 대조: Help 펼침 메뉴와 Music Volume 하위 목�
     assert.deepEqual([helpBounds.right - helpBounds.left, helpBounds.bottom - helpBounds.top], [125, 51]);
     const helpResult = compareWithScreenshot(renderPopup(help), helpBounds, 'mainMenu - Help.png', t);
     if (helpResult) assert.ok(helpResult.white.value >= 0.95, `Help 흰 글자 마스크 일치율 ${helpResult.white.value.toFixed(3)}`);
-    // Music Volume 행을 눌러 연 하위 목록(현재 단계 Volume 2 에 표시).
-    const { popup } = openOptions({ x: 551, y: 294 });
+    // 기존 사용자 Volume 2로 촬영한 스크린샷 조건을 명시한다. 최초 기본값 5와 구별한다. (WB04-E616)
+    const { popup, settings } = openOptions({ x: 551, y: 294 });
+    settings.set('musicVolume', 2);
+    popup.open(buildOptionsItems(settings, { includeAll: true }), { x: 551, y: 294 });
     const point = rowPoint(popup.levels[0].list, 'Music Volume');
     popup.pointerDown(point.x, point.y);
     const childBounds = popup.levels[1].list.bounds();
@@ -531,6 +533,10 @@ function fakeAudioContext() {
 // AudioSystem: 소리 끄기는 이후 효과음을 막고, 음악 끄기는 멈추되 곡을 기억해 다시 켜면 이어 재생하며, 음량 단계는 바로 증폭률이 된다. (2026-10-29 WB03-F)
 test('AudioSystem: 소리·음악 켜기/끄기와 음량 단계', async () => {
     const context = fakeAudioContext();
+    // 명시한 단계가 없으면 원본 최초 실행과 같은 감쇠 없음(5·5)이다. (WB04-E616)
+    const defaults = new AudioSystem(context);
+    assert.equal(defaults.soundGain.gain.value, 1);
+    assert.equal(defaults.musicGain.gain.value, 1);
     const audio = new AudioSystem(context, { soundVolumeStep: 3, musicVolumeStep: 2 });
     await audio.loadSound('button.wav', new Uint8Array(4));
     await audio.loadMusic('ser22.mus', new Uint8Array(4));

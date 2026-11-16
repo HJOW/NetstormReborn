@@ -20,16 +20,16 @@ export const INTEGER_MIN = -2147483648;
 export const INTEGER_MAX = 2147483647;
 
 // 설정 키 정의이다. kind 는 'toggle'(0/1)·'volume'(1~5)·'integer'(부호 있는 32비트 정수), fallback 은 기본값이다.
-// 기본값은 원본 옵션 해석(Interpret Options)의 기본 변수와 스크린샷의 기본 체크 상태를 따른다:
-//  - 소리·음악·바람 소리·가장자리 스크롤·자동 데모·시작 팁은 켜짐, 좌우 스피커 교환은 꺼짐, 효과음 음량 3, 음악 음량 2. (2026-10-29 WB03-F)
+// 기본값은 options.cfg 없는 원본 최초 실행과 cpppj1314의 해석값을 따른다:
+//  - 소리·음악·바람 소리·가장자리 스크롤·자동 데모·시작 팁은 켜짐, 좌우 스피커 교환은 꺼짐, 효과음·음악 음량은 모두 5. 기존 저장값은 load에서 우선한다. (2026-11-16 WB04-E616)
 //  - welcomeGiven(첫 실행 환영 창을 이미 보여 줬는가, 원본 setup.cfg 기본 0)과 tipNumber(다음에 보일 시작 팁 번호, 원본 setup.cfg 기본 0)는 시작 창이 쓴다. (2026-10-30 WB03-J)
 export const SETTING_DEFINITIONS = Object.freeze({
     sound: Object.freeze({ kind: 'toggle', fallback: 1 }),
     music: Object.freeze({ kind: 'toggle', fallback: 1 }),
     playWind: Object.freeze({ kind: 'toggle', fallback: 1 }),
     swapLeftRightSpeakers: Object.freeze({ kind: 'toggle', fallback: 0 }),
-    soundVolume: Object.freeze({ kind: 'volume', fallback: 3 }),
-    musicVolume: Object.freeze({ kind: 'volume', fallback: 2 }),
+    soundVolume: Object.freeze({ kind: 'volume', fallback: 5 }),
+    musicVolume: Object.freeze({ kind: 'volume', fallback: 5 }),
     edgeScroll: Object.freeze({ kind: 'toggle', fallback: 1 }),
     autoDemo: Object.freeze({ kind: 'toggle', fallback: 1 }),
     tellTips: Object.freeze({ kind: 'toggle', fallback: 1 }),

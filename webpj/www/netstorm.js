@@ -350,7 +350,7 @@ function readQueryParams() {
 //  - fetch: 자산을 받을 fetch 함수(기본은 루트 문서 window 의 fetch). 검사에서 가짜 함수를 넘길 수 있다.
 //  - scaling: 'sharp' | 'nearest' | 'smooth'. 8비트 화면의 확대 방식(기본 ?scaling, 없으면 sharp).
 //  - audio: false 면 소리를 쓰지 않는다(기본 true, ?mute 가 있으면 false).
-//  - soundVolume / musicVolume: 원본 음량 단계 1~5(기본 3 / 2).
+//  - soundVolume / musicVolume: 원본 음량 단계 1~5(최초 기본값 5 / 5, 기존 저장값 우선).
 //  - prepare: async (app) => void. 내장 자산 적재 뒤 실행하는 추가 준비 훅. 예외를 던지면 ERROR 상태가 된다.
 //  - onStateChange: (새 상태, 이전 상태) => void. 상태가 바뀔 때 호출된다.
 //  - onMenuCommand: (명령, 라벨) => void. 메인 메뉴 버튼이 실행됐을 때 호출된다(다음 화면은 아직 없음).
