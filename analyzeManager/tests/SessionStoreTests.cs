@@ -39,6 +39,50 @@ public sealed class SessionStoreTests : IDisposable
         Assert.Equal(session.Id, store.Load(session.Id).Id);
     }
 
+    /// <summary>최초 설치의 옵션 부재를 허용하고 원본 기본값·환영·진행 상태를 관찰용 키와 분리한다.</summary>
+    [Fact]
+    public async Task MissingOptionsCreatesOnlyObservationOverridesAndPreservesSource()
+    {
+        var store = new SessionStore(_root);
+        string sourceOptions = Path.Combine(_root, "originals", "d", "options.cfg");
+        string sourceSetup = Path.Combine(_root, "originals", "d", "setup.cfg");
+        File.Delete(sourceOptions);
+        var setup = ConfigFile.Load(sourceSetup);
+        setup.Set("sound", "1");
+        setup.Set("music", "1");
+        setup.Set("tellTips", "1");
+        File.WriteAllBytes(sourceSetup, setup.Encode());
+        byte[] originalSetup = File.ReadAllBytes(sourceSetup);
+        AnalysisSession session = await store.CreateAsync("최초 설치 옵션 부재", CancellationToken.None);
+        string destination = Path.GetDirectoryName(store.GamePath(session))!;
+        ConfigFile options = ConfigFile.Load(Path.Combine(destination, "d", "options.cfg"));
+        Assert.Equal("prepared", session.Phase);
+        Assert.False(File.Exists(sourceOptions));
+        Assert.Equal(originalSetup, File.ReadAllBytes(sourceSetup));
+        Assert.Equal(destination, options.Get("InstallDir"));
+        Assert.Equal("0", options.Get("startInFullScreen"));
+        Assert.Equal("1024", options.Get("SCREENW"));
+        Assert.Equal("768", options.Get("SCREENH"));
+        // 생성 옵션에는 화면/경로 네 키만 있어야 하며 게임 기본값과 사용자 진행 키를 강제하지 않는다.
+        Assert.Equal(4, options.Text.Split('\n', StringSplitOptions.RemoveEmptyEntries).Count(line => !string.IsNullOrWhiteSpace(line)));
+        foreach (string key in new[] { "welcomeGiven", "DoneTheWarBegins", "soundVolume", "musicVolume", "sound", "music", "tellTips" })
+            Assert.Null(options.Get(key)); // 부재 값은 원본 실행 파일과 setup에서 해석한다.
+        ConfigFile copiedSetup = ConfigFile.Load(Path.Combine(destination, "d", "setup.cfg"));
+        Assert.Equal("1", copiedSetup.Get("sound"));
+        Assert.Equal("1", copiedSetup.Get("music"));
+        Assert.Equal("1", copiedSetup.Get("tellTips"));
+    }
+
+    /// <summary>필수 setup 파일의 누락까지 빈 옵션으로 숨기지 않고 준비 실패를 기록한다.</summary>
+    [Fact]
+    public async Task MissingSetupStillFailsPreparation()
+    {
+        var store = new SessionStore(_root);
+        File.Delete(Path.Combine(_root, "originals", "d", "setup.cfg"));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => store.CreateAsync("필수 설정 누락", CancellationToken.None));
+        Assert.Equal("prepare_failed", Assert.Single(store.Sessions()).Phase);
+    }
+
     /// <summary>실제 게임 없이 종료한 복사본의 검증이 작업 맵과 설정을 보존하는지 확인한다.</summary>
     [Fact]
     public async Task PreparedRestartPreservesSavedMapAndOptions()

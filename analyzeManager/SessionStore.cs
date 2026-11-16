@@ -100,7 +100,8 @@ public sealed partial class SessionStore
             foreach (string name in new[] { "options.cfg", "setup.cfg" })
             {
                 string file = Path.Combine(destination, "d", name);
-                ConfigFile config = ConfigFile.Load(file);
+                // options.cfg가 없는 최초 설치에서는 관찰용 키만 새로 만들고 setup의 게임 기본값을 복제하지 않는다.
+                ConfigFile config = name == "options.cfg" && !File.Exists(file) ? new ConfigFile("\n") : ConfigFile.Load(file);
                 config.Set("InstallDir", destination);
                 config.Set("startInFullScreen", "0");
                 config.Set("SCREENW", "1024");

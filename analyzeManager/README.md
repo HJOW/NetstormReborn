@@ -2,6 +2,8 @@
 
 게임 제어 CLI/MCP는 Windows에서 원본 NetStorm의 복사본을 실행·조작하고 화면 증거와 관찰 메모를 남긴다. 별도 YouTube 전용 portable 빌드는 Windows·Linux 등에서 영상을 읽으며 원본 게임을 실행하지 않는다. 외부 AI가 다음 행동을 선택하며 도구 안에 별도 AI 모델은 포함하지 않는다.
 
+최초 설치처럼 `d/options.cfg`가 없어도 사본 준비가 가능하다. 관찰 사본에만 창 모드·1024×768·설치 경로를 설정하며 원본의 설정 부재·환영창·진행 상태·기본 음량은 보존한다. `setup.cfg`는 필수다([검증](../docs/exe/analyze-manager-first-run-1317-20261117.md)).
+
 **분석·녹화 FPS(2026-10-03):** 자동 분석·`guide`·`record-play`는 새 세션 기본 **30FPS**, 선택 **60FPS**다. `call start_session --fps 60`, `guide --session ID --fps 60`, `record-play --session ID --fps 60`으로 선택한다. 자동 분석 CLI JSON/MCP에도 `fps: 60`을 전달할 수 있다. 세션에 저장된 FPS는 변화 감지와 사용자 녹화 창이 이어받는다. [세 방식의 설정](../docs/analyze-manager.md#세-방식의-3060fps-설정-2026-10-03).
 
 자동 분석의 `start_session`은 세션 전체의 영상·소리·입력을 독립 숨김 프로세스로 녹화한다. CLI/MCP 연결 종료 뒤에도 게임이 살아 있으면 이어지고 `end_session`에서 파일 마감을 확인한다. `game_status.automaticRecording`에 프레임 수·오류가 있으며 파일은 세션의 `recording/`에 남는다. `guide`·`record-play`를 열면 자동 녹화를 마감하고 버튼으로 시작하는 사용자 녹화로 전환한다. 사용자 창을 닫으면 자동 녹화는 재시작하지 않는다.
