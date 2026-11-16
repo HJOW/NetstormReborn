@@ -66,6 +66,7 @@ import { RawCampaignSessionAiProduction } from './raw-campaign-session-ai-produc
 import { snapshotCampaignFortBasicSection } from './raw-campaign-snapshot-basics.js';
 import { writeCampaignFortTechnology } from './raw-campaign-content-save.js';
 import { writeCampaignFortObjectChunk } from './raw-campaign-object-save.js';
+import { writeCampaignFortObjects } from './raw-campaign-objects-save.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -626,6 +627,18 @@ export class RawCampaignSessionOwners {
     writeFortObjectChunk(stream, chunkX, chunkY) {
         if (!this.loaded) throw new Error('실제 Session 설치 전 객체 청크 저장');
         this.writeFortObjectChunkBody(stream, chunkX, chunkY);
+    }
+
+    // 영역/Temp/Chaff가 같은 Template와 공간을 사용하는 전체 내부 Objects 부모다.
+    writeFortObjects(slot) {
+        if (this.#disposed) throw new Error('반납한 Session 전체 Objects 쓰기');
+        writeCampaignFortObjects(this, slot);
+    }
+
+    // 공개 설치 계약을 유지하고 실제 전체 부모를 중복 생성하지 않는다.
+    snapshotFortObjects(slot) {
+        if (!this.loaded) throw new Error('실제 Session 설치 전 Objects 저장');
+        this.writeFortObjects(slot);
     }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.

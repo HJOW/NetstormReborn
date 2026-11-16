@@ -24428,7 +24428,7 @@
       "bytes": 1773203,
       "lines": 3296,
       "fixtureCommit": "0e66d91ba",
-      "webCommit": "worktree",
+      "webCommit": "516245f39",
       "cpppjBasis": {
         "cpppj/src/o/RawFortObjectSave.cpp": "0e66d91ba",
         "cpppj/src/o/RawFortObjectSave.h": "0e66d91ba"
@@ -24459,10 +24459,72 @@
       "bytes": 3019773,
       "lines": 674,
       "fixtureCommit": "0e66d91ba",
-      "webCommit": "worktree",
+      "webCommit": "516245f39",
       "cpppjBasis": {
         "cpppj/src/o/RawFortObjectSave.cpp": "0e66d91ba",
         "cpppj/src/o/RawFortObjectSave.h": "0e66d91ba"
+      }
+    },
+    {
+      "id": "fort-region-save",
+      "path": "cpppj/tests/fixtures/fort-region-save-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE930관측(FortRegionSaveTests.cpp)",
+      "consumers": [
+        "webpj/tests/fort-objects-save.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-region-save.js"
+      ],
+      "unit": "WB04-E631",
+      "doc": "docs/webpj-fort-objects-save-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortRegionSave.cpp",
+        "cpppj/src/o/RawFortRegionSave.h"
+      ],
+      "scope": "Territory/Chaff: 최초height→scope쓰기·현재폭/높이 조회순서·signed BYTE/고정인자/셀·정상/부분중단·scope와trace 전체; 실제 Session 결선은 별도 조립 계약이며 전체 snapshot/외곽·Load는 잔여",
+      "text": true,
+      "sha256": "5d50f51052e7cfcd39697062fdcfd959fa4d8edb3ef951c0e736cba7ddc25d3b",
+      "bytes": 241382,
+      "lines": 931,
+      "fixtureCommit": "f3619bcd4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortRegionSave.cpp": "f3619bcd4",
+        "cpppj/src/o/RawFortRegionSave.h": "f3619bcd4"
+      }
+    },
+    {
+      "id": "fort-objects-parent",
+      "path": "cpppj/tests/fixtures/fort-objects-parent-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE714관측(FortObjectsSaveTests.cpp)",
+      "consumers": [
+        "webpj/tests/fort-objects-save.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-objects-save.js"
+      ],
+      "unit": "WB04-E631",
+      "doc": "docs/webpj-fort-objects-save-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortObjectsSave.cpp",
+        "cpppj/src/o/RawFortObjectsSave.h"
+      ],
+      "scope": "전체Objects: 현재manager/owner/version·20영역/Temp/현재선택/조건부rename·Chaff·21stream/출력/trace·정상/부분중단48; 실제 Session 결선은 별도 조립 계약이며 전체 snapshot/외곽·Load는 잔여",
+      "text": true,
+      "sha256": "df0dc804a10b5f6f802bb8b4501c05b99148e9112325caddc5e98eea79eaf232",
+      "bytes": 3666833,
+      "lines": 715,
+      "fixtureCommit": "f3619bcd4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortObjectsSave.cpp": "f3619bcd4",
+        "cpppj/src/o/RawFortObjectsSave.h": "f3619bcd4"
       }
     }
   ]
