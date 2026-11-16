@@ -9,7 +9,7 @@
 
 ## webpj
 
-AGENTS.md, LEFT_JOBS.webpj.md 를 읽고 LEFT_JOBS.webpj.md 에 기재된 작업들을 모두 완료한다. LEFT_JOBS.webpj.md 에 기재된 작업단위가 하나씩 완료될 때마다 문서 내용을 갱신하고 git 에 커밋을 한다. (커밋 메시지는 AGENTS.md 에 기재된 관련 사항을 따른다.) 동시에 cpppj 도 진행 중이므로 cpppj 와 직접적으로 관련된 파일은 수정하지 않는다.
+AGENTS.md, LEFT_JOBS.webpj.md 를 읽고 LEFT_JOBS.webpj.md 에 기재된 작업들을 모두 완료한다. LEFT_JOBS.webpj.md 에 기재된 작업단위가 하나씩 완료될 때마다 문서 내용을 갱신하고 git 에 커밋을 한다. (커밋 메시지는 AGENTS.md 에 기재된 관련 사항을 따른다.)
 
 # 참고사항
 
