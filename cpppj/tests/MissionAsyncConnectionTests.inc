@@ -8,6 +8,7 @@ struct MissionAsyncScene {
     std::shared_ptr<ClientLocalStateGlobals> state{std::make_shared<ClientLocalStateGlobals>()}; // Native 다섯 블록과 기한의 단일 owner다.
     std::shared_ptr<ClientGameplayGlobals> gameplay{std::make_shared<ClientGameplayGlobals>()}; // 현재 Player/카메라/권한은 Session과 같은 주소다.
     std::shared_ptr<RawSurfaceStorage> surface{MakeRawSurfaceStorage(assets.game,gameplay->Authority(),gameplay->GameAux())}; // 부분 반납 뒤에도 대여 해제를 확인한다.
+    std::shared_ptr<CampaignTemplateStorage> templates{std::make_shared<CampaignTemplateStorage>()}; // 실제 Client처럼 World를 교체해도 같은 직렬화 깊이와 Template owner를 유지한다.
     std::shared_ptr<MissionFortLoadRequest> request{std::make_shared<MissionFortLoadRequest>()}; // 실제86BYTE 복사본과 반납 후 인자를 보관한다.
     std::array<ScreenColor,256> palette{};std::array<std::uint32_t,256> logical{}; // 실제 BGRX와 원문 RGB DWORD를 구별한 선택 색이다.
     std::uint32_t redraw{},pauseDepth{};std::size_t packets{},closed{},frameReads{}; // 실제 콜백/게임 프레임 준비만 관측한다.
@@ -21,7 +22,7 @@ struct MissionAsyncScene {
     }
     void CreateWorld(std::function<void(MissionAsyncScene&)> progress=[](auto&) {}) { // 같은 장기 owner를 빌리는 새 deferred World를 만든다. 호출자는 이전 World를 먼저 반납한다.
         if (world) throw std::logic_error("집중 검사의 이전 World 대여 미반납");
-        surface->ownerMode.battle=true;gameplay->WorldCells()=256;auto services=devices.Make(state,true);services.gameplayGlobals=gameplay;services.surfaceStorage=surface;services.cameraCommit=netstorm::test::camera::CommitScreenless;services.missionFortRequest=request; // 실제 State7의 전투 모드가 Zone/로더보다 앞선다.
+        surface->ownerMode.battle=true;gameplay->WorldCells()=256;auto services=devices.Make(state,true);services.gameplayGlobals=gameplay;services.surfaceStorage=surface;services.templateStorage=templates;services.cameraCommit=netstorm::test::camera::CommitScreenless;services.missionFortRequest=request; // 실제 State7의 전투 모드와 같은 장기 Template 대여가 Zone/로더보다 앞선다.
         services.localLogin->initializeRenderer=[this] { CHECK(request->consumed);gameplay->Camera().InitializeNativeRenderer(1024,768,256,redraw,gameplay->MapRevision()); };
         services.localLogin->uiMode=[this](auto mode) { modes.push_back(mode);if (mode==3) CHECK(closed>0 && state->State().current[0]==13); };
         services.localLogin->closeProgress=[this] { ++closed; };services.localLogin->battlePalette=[this] { CHECK(world && !world->Session().HasCursorRuntimeForState());world->SetPalette(palette);palette.fill({0,0,0,0}); };

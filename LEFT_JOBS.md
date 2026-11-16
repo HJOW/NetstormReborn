@@ -1,6 +1,6 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품 1315 / 11.01 · 정리 2026-11-17(HJOW-Athlon) · 마지막 단위 1315(한국어 유닛 정보 빈 창 교정) · 다음 번호 1316 · 마지막 디컴파일 HJOW-Athlon · 사용자 재개 지시로 진행 중, 기존 CD·선택 보류 유지**
+**제품 1315 / 11.01 · 정리 2026-11-17(HJOW-Athlon) · 마지막 단위 1316(미션 교체 검사 장기 Template owner 복구) · 다음 번호 1317 · 마지막 디컴파일 HJOW-Athlon · 사용자 재개 지시로 진행 중, 기존 CD·선택 보류 유지**
 
 현재 상태·남은 작업·유효한 규칙만 유지한다. 단위별 경과와 만료된 지시는 [1310 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310), 개별 구현·검증은 아래 근거 문서를 따른다. [dotnetpj](LEFT_JOBS.dotnetpj.md)·[webpj](LEFT_JOBS.webpj.md)는 각 인계 문서가 기준이다. 2026-11-16 최초 상태 분석을 세 인계 문서에 먼저 반영했고, 후속 사용자 요청으로 cpppj1314를 완료했다. 이번 CP 단위에서는 DN/WB 코드·인계 문서를 수정하지 않았다.
 
@@ -13,7 +13,8 @@
 | 구분 | 상태와 다음 행동 |
 | --- | --- |
 | **한국어 유닛 정보1315** | **완료(2026-11-17 제보).** 내부 주제 접미사 `Type`의 `종류` 오역을 교정했다. 실제 한국어 사제 우클릭 정보·F1과 영어 대조 실행, 정보 앵커76개·관련40검사 통과. 번역표 변경은 게임 재시작 후 반영된다. [원인/검증/화면](docs/exe/cpp-korean-unit-help-1315-20261117.md). |
-| **다음 AI 작업** | 별도 미션 진입 검사 실패(4.2절)부터 분석·수정하고, analyzeManager 무옵션 공통 후속과 최신 ZIP·M8 관문을 진행한다. DN/WB 자체 구현은 각 프로젝트 인계 문서 범위다. |
+| **미션 진입 검사1316** | **완료.** 검사 장치가 World 교체마다 새 Template owner를 만들던 문제를 실제 Client와 같은 장기 owner 공유로 교정했다. 기대값/제품 코드 유지, 집중2/2·전체115/115 통과. [근거](docs/exe/cpp-mission-parent-tests-1316-20261117.md). |
+| **다음 AI 작업** | analyzeManager 무옵션 공통 후속·오래된 검사 실패 기준선 재분류·최신 ZIP/M8 관문을 진행한다. DN/WB 자체 구현은 각 프로젝트 인계 문서 범위다. |
 | **최초 실행 상태1314** | **완료(2026-11-16).** 음량 기본값5·5와 메뉴/보고서의 동일 해석을 교정했다. Welcome→Welcome2→메뉴, 최초 캠페인 잠금·완료 입력별 체크/해금, Options·저장/재실행·전체화면 재실행을 **집중48건·제품GUI13회**로 확인했다. 기존 사용자3·2는 보존한다. [0.6절](#first-run)·[구현/검증](docs/exe/cpp-first-run-1314-20261116.md). DN/WB 반영과 analyzeManager 무옵션 지원은 잔여다. |
 | **M8 최종 배포 관문** | **1311 완료.** 확정1310의 Release·ZIP1,436항목·배포본5경로·QuickJS6건·외부 접속 감사를 통과했다([3절](#final-gate)). 2026-11-14 일시 중지 뒤 **2026-11-17 사용자 지시로 목표를 재개했다.** 제품1315의 새 관문은 잔여다. |
 | **테스트 자동 플레이 1312** | **완료(2026-11-14 사용자 요청).** 명령줄 전용 `--test-autoplay`·`--test-ally-ai`·`--test-enemy-ai`·`--test-start-sp`·`--test-enemy-start-sp`로 **캠페인·스커미시**에서 로컬 플레이어에도 원본 데모 분기와 같은 AI를 붙여 자동 플레이한다(무인자 일반 실행·options.cfg·메뉴에는 없음). 실제 1-1에서 아군 어려움·적 쉬움·SP 20000으로 **승리(`BadTeamDead`) 재현**, 스커미시 실행 확인. 사람이 지켜볼 수 있게 **관전 카메라**(`--test-follow-battle`, 프리셋 포함: 주요 전투 위치, 희생 의식 중에는 제단으로 이동)도 넣었다. 11차 동맹 AI 난이도 판정도 보정했다. **플레이 결과 재현이 필요한 AI는 먼저 [AI 에이전트용 사용 안내](docs/testing/cpp-autoplay-test-guide.md)를 읽고 [실행 도구](tools/cpp_campaign_autoplay.py)를 쓴다.** [구현 근거](docs/exe/cpp-campaign-test-play-20261114.md). **1313 일괄 실행(사용자 지시로 3-x·2-5 제외, 캠페인 1·2의 10개):** 승리5(1-1·1-2·1-5·2-2·2-3)·패배1(2-1)·미결4(1-3·1-4·1-6·2-4). 2-4는 **제단 총기 피격 미복원으로 비정상 종료 → 수정, 재실행 완주**. 남은 과제: 아군 AI 정체 원인(AI 본체 필드 관측 필요)·희생 의식 카메라 미관측·3-1 `다른 파생 실제 피해 미복원`(3-x 제외로 미수정). [결과 7절](docs/exe/cpp-campaign-test-play-20261114.md#7-캠페인-전체-자동-플레이-실행-1313-2026-11-14-후속). |
@@ -78,7 +79,7 @@
 
 | 항목 | 현재 기준 |
 | --- | --- |
-| 제품 | **1315 / 11.01**(번역 자산 교정, EXE는1314와 동일). 한국어 관련40건·실제 정보/F1 및 영어 대조3회 통과. 직전 최초 상태 집중 검사는 사용자 저장소13·음향24·NativeMainMenu11 = **48건 통과**, NetstormCpp·NetstormRoot 및 집중3대상 Release 종료0. 제품 GUI13회 종료0. 넓은 mission_entry115건에는 **2검사·5단언 실패**가 남는다(4.2절). [1314 결과](docs/exe/cpp-first-run-1314-20261116.md). |
+| 제품 | **1315 / 11.01**(번역 자산 교정, EXE는1314와 동일).한국어 관련40건·실제 정보/F1 및 영어 대조3회 통과.1316의 미션 진입 전체115/115 통과(검사 장치 교정).직전 최초 상태 집중48건·제품GUI13회 통과.NetstormCpp·NetstormRoot 및 집중3대상 Release 종료0.[1314 결과](docs/exe/cpp-first-run-1314-20261116.md). |
 | 실행·플레이 | 10.78 메뉴·미션·스커미시 플레이 가능. CD는 메뉴만 확인했고 튜토리얼/플레이 미완료다. 전체 원본 동일성은 미확정이다. |
 | ZIP·전체 검사 | **1311 M8 통과**, ZIP1,436항목·배포본5경로·QuickJS6/6(제품1310 기준). **1312~1315에서 제품 코드/번역 자산이 바뀌었으므로 배포 전 새 ZIP·M8 관문이 필요하다.** 전체34경로 진입의 마지막 기록은 제품644, 최신 전체 솔루션 통과 기록은 없다. |
 | 디컴파일 | Client 양판본2026-11-03·R전용2026-11-07, 모두 **HJOW-Athlon(192.168.0.94)**. 이후 원문 변경·재디컴파일 없음. [기록](docs/exe/cpp-decompilation-20261103.md). |
@@ -108,6 +109,7 @@
 
 | 묶음 | 요약·근거 |
 | --- | --- |
+| 미션 진입 검사1316 | 장기 표면과 같은 Template owner 공유로 교체 검사 복구, 집중2/2·전체115/115 통과. 제품/기대값 유지. [근거](docs/exe/cpp-mission-parent-tests-1316-20261117.md). |
 | 한국어 유닛 정보1315 | `Type` 내부 접미사 오역 교정, 실제 우클릭 정보/F1·영어 대조, 정보 앵커76개·관련40검사 통과. [원인·검증](docs/exe/cpp-korean-unit-help-1315-20261117.md). |
 | 최초 실행1314 | 원본 PE 기본 음량5·5, Client/메뉴/보고서의 같은 설정 해석, 사용자 음량·안내/진행 저장 보존. 집중48건·제품GUI13회·데이터 불변 확인. 넓은 미션 진입 검사의 별도 실패는4.2절. [구현·검증·제품 화면](docs/exe/cpp-first-run-1314-20261116.md). |
 | 비MP 복원·호환 | [UI](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션](docs/exe/cpp-mission-state-scope-20261106.md)·[수명/FILE](docs/exe/cpp-internal-lifetime-closure-20261106.md). |
@@ -169,7 +171,7 @@ ZIP: `extracted/cpp-m8-1310/NetstormReborn-11.01-cpppj.zip`(209,724,870바이트
 
 | 대상 | 마지막 확인 기준 |
 | --- | --- |
-| mission_entry(1314) | 전수115건 중 `MissionStartingParent_ReplacesWorldBetweenInitialCopyAndCommit`·`MissionStartingParent_BodyAndConnectionFailureKeepNativeBoundary` **2검사·5단언 실패**. 동일 로딩 깊이 owner 대여/미션 로그인 장치 경계이며 단독2검사도 같은5단언 실패다. 변경 전 기준선과 직접 비교하지 않아 기존 실패로 확정하지 않는다. 별도 원인 분석·수정 필요. 관련 NativeMainMenu11건과 최초 상태GUI13회는 통과했다. [1314 결과/원시](docs/exe/cpp-first-run-1314-20261116.md). |
+| mission_entry(1316) | **해결: 전체115/115 통과**.검사 장치의 World 교체가 새 Template owner를 만들던 불일치였다.장기 owner 공유로 교정하고 제품 계약/기대값을 유지했다.[근거](docs/exe/cpp-mission-parent-tests-1316-20261117.md). |
 | pop_context | 1304 당시24건. |
 | world_generation | 1304~1305 당시 GeneratorBodyShadowAndPicking·AiCarrierActionsUseActualWorldContentsAndLifetime 실패 후 CampaignSharedKernel 구간 비정상 종료. SessionPickupWire10건은 별도 통과. |
 | guide_fort_request / file_directory | 1278 당시4건 / 1285 당시3건. |
