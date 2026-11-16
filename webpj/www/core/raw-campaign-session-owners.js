@@ -33,6 +33,7 @@ import { RawCampaignSessionGuns } from './raw-campaign-session-guns.js';
 import { RawCampaignSessionParticles, createCampaignParticleTables } from './raw-campaign-session-particles.js';
 import { RawCampaignSessionTeleport } from './raw-campaign-session-teleport.js';
 import { RawCampaignSessionCombat, copyCampaignArcherEffects } from './raw-campaign-session-combat.js';
+import { writeCampaignTerritory } from './raw-campaign-territory-write.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -273,6 +274,12 @@ export class RawCampaignSessionOwners {
     connectCombat() {
         if (this.#disposed) throw new Error('반납한 Session Archer 결선');
         this.combatModules ??= new RawCampaignSessionCombat(this); this.combatModules.bind();
+    }
+
+    // 신전 상승도 공유하는 현재 Template의 Territory120BYTE 쓰기다. 편집기 파일/화면은 만들지 않는다.
+    writeTerritory(slot, records) {
+        if (this.#disposed) throw new Error('반납한 Session Territory 쓰기');
+        writeCampaignTerritory(this.templateStorage, slot, records);
     }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.

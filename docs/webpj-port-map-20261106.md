@@ -45,7 +45,8 @@
 | edit-editor | exclude-edit | 이름에 `Editor`가 든 15단위 | UberEditor·섬 추가 창·작업본 파일·Test Battle·편집 복귀 등 |
 | edit-island-add | exclude-edit | RawIslandAdd·RawIslandPlacement | 편집기 섬 추가 |
 | edit-fort-save | exclude-edit | Fort Save/Write·snapshot 16단위 | Save as와 snapshot writer. Battle snapshot·CoreData 기록은 일반 전투와 공유 |
-| edit-existing-fort | exclude-edit | TypeNames/Contents/Deck/DeckRestore/TerritoryRecover/Subscriber 계열·FortTypeConversionStorage 9단위 | RawCampaignSession의 `ReadExistingFortDeck` 등 "기존Editor" 경로. 미션 적재는 RawCampaignWorldLoad/RawFortWorldLoad가 맡는다 |
+| edit-existing-fort | exclude-edit | Deck/DeckRestore/Subscriber 계열 5단위 | RawCampaignSession의 `ReadExistingFortDeck` 등 "기존Editor" 경로. 미션 적재는 RawCampaignWorldLoad/RawFortWorldLoad가 맡는다 |
+| shared-territory-write | port | RawFortTerritoryRecover의 WriteFortTerritoryRecords | E588: 캠페인 Vortex도 공유하는 쓰기. RecoverFortTerritory만 ExistingEditor 전용 제외다. TypeNames/Contents/변환표도 캠페인 공유로 앞 단위에서 복원했다 |
 | edit-new-fort | exclude-edit | RawNewFort·RawCampaignNewFort·NewFortManagerDevices | 새 맵 manager·보호 작업본. 987 뒤로 원격 Fort도 같은 생성을 쓴다 |
 | edit-fort-name | exclude-edit | RawFortCurrentName·FortCurrentNameDevices | Editor 현재 Fort 이름·원격 Fort 경로 |
 | edit-map-list | exclude-edit | FortSelection·SoloMapCatalog·RawSoloMapList·TellMapMenus | 편집/커스텀 맵 목록(WB03-I 제외) |

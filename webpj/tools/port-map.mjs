@@ -67,9 +67,11 @@ export const RULES = Object.freeze([
         names: ['RawFortObjectSave', 'RawFortObjectsSave', 'RawFortRegionSave', 'RawFortContentSave', 'RawFortTerritorySave', 'RawFortSnapshotBasics', 'RawFortSnapshotParent', 'RawFortMoneySave', 'RawFortMissionSave', 'RawFortBadgesSave', 'RawFortCoreWrite', 'RawFortSpWrite', 'RawFortSubscriberWrite', 'RawDataManagerFileSave', 'RawMenuSaveFort', 'SaveFortNameDialog'],
         reason: 'Fort 저장(Save as)·snapshot writer. Battle snapshot·CoreData 기록은 일반 전투(MP)와 공유한다',
     },
+    // 신전 상승도004bd600을 호출한다. 같은 파일의004b5ec0 회복만 ExistingEditor 전용으로 남긴다. (2026-11-16 WB04-E588)
+    { id: 'shared-territory-write', class: 'port', names: ['RawFortTerritoryRecover'], reason: 'RawCampaignVortex.inc:24의 단독 신전 상승도 WriteFortTerritoryRecords를 공유한다. RecoverFortTerritory는 편집기 전용으로 제외' },
     {
         id: 'edit-existing-fort', class: 'exclude-edit',
-        names: ['RawFortDeckLoad', 'RawDeckRestore', 'RawFortTerritoryRecover', 'RawFortSubscriberLoad', 'RawSubscriberIdGenerate', 'RawFortSubscriberChange'],
+        names: ['RawFortDeckLoad', 'RawDeckRestore', 'RawFortSubscriberLoad', 'RawSubscriberIdGenerate', 'RawFortSubscriberChange'],
         reason: '기존 Fort Editor 설치의 Deck·Subscriber·지형 회복. RawFortContentsLoad는 일반 Objects에서도 공유한다(E275). TypeNames와 변환표 owner도 캠페인3484→3218→3345가 공유하므로 E573에서 이식 대상으로 복원했다',
     },
     // 실제 캠페인 저장 객체도 같은 TypeNames/변환표를 거친다. Editor 전용이라는 앞 판정을 호출 사슬 근거로 교정한다. (WB04-E573)

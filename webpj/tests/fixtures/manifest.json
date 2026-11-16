@@ -24195,6 +24195,40 @@
         "cpppj/src/client/RawBombBlastBindings.cpp": "44a48b1e9",
         "cpppj/src/client/RawBombBlastBindings.h": "380cb7dd2"
       }
+    },
+    {
+      "id": "fort-territory-write",
+      "path": "cpppj/tests/fixtures/fort-territory-recover-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "tools/decomp_fort_territory_recover.py의 원본10.78 004bd600 writer200행(전체974행 중 선택)",
+      "consumers": [
+        "webpj/tests/fort-territory-write.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-territory-write.js",
+        "webpj/www/core/raw-campaign-territory-write.js"
+      ],
+      "unit": "WB04-E588",
+      "doc": "docs/webpj-fort-territory-write-20261116.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortTerritoryRecover.cpp",
+        "cpppj/src/o/RawFortTerritoryRecover.h",
+        "cpppj/src/client/RawCampaignSession.cpp"
+      ],
+      "scope": "writer200행의 결과·전체 주변 raw·호출 trace 직접 대조. RecoverFortTerritory774행은 ExistingEditor 전용으로 제외. Session 실제 Template 통합은 별도 소스 계약 검사. 새 원본 실행 없음.",
+      "text": true,
+      "sha256": "120da4096de32e509054bae7b3f18495d5cf17f8cb0996dea0b94477fa181ff8",
+      "bytes": 3933125,
+      "lines": 975,
+      "fixtureCommit": "a9af29da7",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortTerritoryRecover.cpp": "a9af29da7",
+        "cpppj/src/o/RawFortTerritoryRecover.h": "a9af29da7",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
+      }
     }
   ]
 }
