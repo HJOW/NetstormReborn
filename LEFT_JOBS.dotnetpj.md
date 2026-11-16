@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.568 · 갱신 2026-11-17(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.569 = [R4-1](#r4-detail) · cpppj 기준 제품 1314 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
+**기준 단위 0.569 · 갱신 2026-11-17(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.570 = [R4-1](#r4-detail) · cpppj 기준 제품 1314 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-15) 직전의 이 문서 전체(단위 기록 0.453~0.545 93건, R4 진행판의 묶음별 경과, 0.3의 단위별 검사·fixture 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261115-through-0545)에 바이트 그대로 보관했고, 그 이전 보관본 6개와 0.452 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -50,7 +50,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 단위 | **0.568(2026-11-17, HJOW-Athlon):** [Native 장기 자원 장치·너겟/간헐천 실제 부모](docs/dotnet-surface-resources-20261117.md). 신규6검사. 자원 장치 설치·확보/구성·운반체/간헐천/너겟 장기 본문과 Host 기본 공장 묶음. HostSession 별도 풀 전환·나머지 파생 전체는 잔여 |
+| 마지막 구현 단위 | **0.569(2026-11-17, HJOW-Athlon):** [Native 장기 Host 기본 삭제/전송·공통 분배](docs/dotnet-surface-process-20261117.md). 신규6검사. 기본 선택 설치·기본 삭제기·기본 훅(전송/선택 해제)·분배기 Host+의존/Gump 결합과 가상 삭제기. 파생 전용 몸체·Content 결합·HostSession 별도 풀 전환은 잔여 |
 | 검사 기준선 | **0.568 회귀: Assets366/366·Core신규6/6·Core전체2717/2718(1건 NETSTORM_DATA 실제 자료 루트 필요)**. 기대값/제품 코드는 유지. Release 빌드 0경고·0오류. TRX 미보관(집중·전체 단건 실행). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)도 유지 |
 | PORT_MAP | `PORT_MAP.tsv` **970행(L1 445·port 520)**, cpppj 418단위에 대응. 행은 파일 전체 완료를 뜻하지 않는다 |
 | fixture | 연결 **319개**(원본 x86 대조 자료, `cpp-fixture-manifest.tsv`) |
@@ -63,7 +63,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 ### 0.4 남은 작업 — 순서대로
 
-**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.568에서 Native 장기 자원 장치·확보/구성·운반체/간헐천/너겟 실제 부모를 맞췄다. 다음은 Native 장기 Host 기본 삭제/전송·파생 종단과 HostSession 별도 풀 전환·피해/해방·삭제/배치 상위 결선이다.** 실제 Client Registry 전송 장치 설치 중 자원 범위는 완료, 나머지 파생 내용물·현재 finder TYPE와 나머지 파생 설치, 현재 HostSession의 별도 풀 전환 및 피해/해방·삭제/배치 상위 결선은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
+**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.569에서 Native 장기 Host 기본 삭제/전송(기본 선택·기본 삭제기·기본 훅·분배기 Host+의존/Gump·가상 삭제기)을 맞췄다. 다음은 파생 전용 삭제 몸체·Content 결합과 HostSession 별도 풀 전환·피해/해방·삭제/배치 상위 결선이다.** 파생 종단·Content Lifetime·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
 
 
 **최초 실행 상태 공통 인계(2026-11-16 사용자 요청, 분석 완료·DN 구현 대기):** 원본 `options.cfg`·전체화면 표식의 삭제(`4040c1029`)는 정상 처음 설치 상태다. [원본 관찰/화면 6장과 공통 완료 기준](docs/exe/original-first-run-20261116.md), [cpppj 우선 작업](LEFT_JOBS.md#first-run)을 따른다. **cpppj부터 반영하고 확정 커밋 뒤 DN 새 경로에도 반영한다.** 이 문서 갱신은0.568 구현 완료나 기존 L4a의 최초 상태 검증 완료를 뜻하지 않는다.
@@ -304,6 +304,7 @@ dotnetpj 작업에서는 cpppj·LEFT_JOBS.md를 수정하지 않는다. 아래 �
 - [x] `o/RawAssetPostPop` 신전 현재 진단 복귀·Player 전체 기록/owner 재조회·signed 중복 목록·물리 프레임·섬/현재 삭제/내용물 관문 — 0.565. 원본936행과 기존 자산818행 대조. Native 장기 장치/나머지 파생·호스트 조립은 잔여.
 - [x] `o/RawAssetPostPop` 나머지 현재 전용 몸체 분배/바리케이드와 두 펜스 부모·너겟/성장형 최초 부모 실제 가상 진입 — 0.567. 원문 신규후처리600행·기존 바리케이드48행. Native 장기 설치/파생 전체는 잔여.
 - [x] `client/RawSurfaceStorage` Native 장기 자원 장치·확보/구성·운반체/간헐천/너겟 실제 부모와 Host 기본 공장 묶음 — 0.568. Host 기본 삭제/전송·파생 종단과 HostSession 별도 풀 전환·상위 결선은 잔여.
+- [x] `client/RawSurfaceStorage` Native 장기 Host 기본 삭제/전송·공통 분배 — 0.569. 기본 선택·기본 삭제기·기본 훅(전송/해제)·분배기 Host+의존/Gump·가상 삭제기. 파생 전용 몸체·Content 결합·HostSession 별도 풀 전환은 잔여.
 
 **A 자료·파일·설정 — 30단위 / 2,572줄**
 
@@ -1112,6 +1113,7 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 | 0.566 (11-15) | 전체 회귀·821개 미대응 단위의 단계 배정/머리글 수량 감사 | [검증 문서](docs/dotnet-regression-inventory-20261115.md) | 새 경로 R4-1(Native 장치/파생·호스트 잔여) |
 | 0.567 (11-15) | 현재 펜스/자산 꼬리와 너겟/성장형 최초 부모·원문 후처리600행 | [단위 문서](docs/dotnet-asset-tail-current-20261115.md) | 새 경로 R4-1(Native 장치/파생·호스트 잔여) |
 | 0.568 (11-17) | Native 장기 자원 장치·확보/구성·운반체/간헐천/너겟 실제 부모와 Host 기본 공장 묶음 | [단위 문서](docs/dotnet-surface-resources-20261117.md) | 새 경로 R4-1(Host 기본 삭제/전송·파생 종단·별도 풀 전환 잔여) |
+| 0.569 (11-17) | Native 장기 Host 기본 삭제/전송·공통 분배(기본 선택·기본 삭제기·기본 훅·분배기 Host+의존/Gump·가상 삭제기) | [단위 문서](docs/dotnet-surface-process-20261117.md) | 새 경로 R4-1(파생 전용 몸체·Content 결합·별도 풀 전환 잔여) |
 | 0.478~0.499 (11-12~14) | L2 기준선 확장 — 6번째~26번째 경로의 cpp 기준선·dn 덤프와 구조 대조, 담긴 섬 판정(0.484), 34경로 같은 시드 일괄 수집·도구(0.499) | [L2 일괄](docs/dotnet-l2-batch-20261114.md), 같은 보관본 | 새 경로 R4(M1 판정 자료) |
 | 0.453~0.477 (11-12) | 지형 바인딩 조립·Generate 라이브·난수 단일 스트림·시작 1회 reseed(0.453~0.465), Pop 공간 등록·요새 객체 적재·그래프 재구성(0.466~0.470), 장부·전투섬·첫 지역 귀속 확정과 Player 월드 갈고리(0.471~0.477) | 같은 보관본 | 새 경로 R4 |
 | 기간·단위 | 완료 범위 | 근거 문서 | 처리 |
