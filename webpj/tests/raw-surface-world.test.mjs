@@ -26,6 +26,7 @@ import { RawSurfaceWorld } from '../www/core/raw-surface-world.js';
 import { typeConstructorAddress } from '../www/core/squid-constructors.js';
 import { REPO_ROOT } from './helpers.mjs';
 import { realPlayerAssets } from './player-scene-support.mjs';
+import { observeSquidPop } from './surface-wire-support.mjs';
 import { adler32, floatToBits, get, put, readRows } from './raw-support.mjs';
 
 // 실제 표면 타입 번호와 정상/단단한 K 다리·끝 칸의 원본 프레임 번호이다. (2026-11-11 WB04-E299)
@@ -299,10 +300,13 @@ test('월드: Runtime 이 같은 풀·전송·현재 Form 분배를 공유', () 
     const originalHooks = core.forms.hooks();
     let selected = 0;
     const depths = [];
+    // 실제 공용 writer가 낸 패킷을 Form 전송 관측과 별도로 기록한다.
+    const squidPackets = [];
     let writes = 0;
     let sends = 0;
     let regulars = 0;
     const hooks = {
+        squidPacket: (packet) => { squidPackets.push(Uint8Array.from(packet)); },
         assets: { ...core.surfaces.hooks(), selected: () => selected },
         destroy: (sid, flags, effects) => core.virtualDestroy.destroy(sid, flags, effects),
         regular: (sid, event, count, payload) => { assert.deepEqual([event, count, payload], [77, 0, 0.25]); regulars += 1; return 0; },
@@ -326,6 +330,7 @@ test('월드: Runtime 이 같은 풀·전송·현재 Form 분배를 공유', () 
     world.pop(object, 25, 25, 9);
     world.finishLoad();
     assert.equal(world.objects().length, 1);
+    assert.equal(squidPackets.length, 1); assert.equal(get(squidPackets[0], 4, 2), object);
     assert.equal(world.objects()[0].sid, object);
     assert.equal(world.objects()[0].object.x, 25);
     assert.deepEqual(depths, [1, 1, 0]);
@@ -764,22 +769,21 @@ test('월드: 저장 게임 관문은 마지막 칸의 소유자 전파를 막�
     assert.deepEqual(owners(true), [3, 0, 0, 0, 0, 0, 0, 0, 0]);
 });
 
-// 종속 Unpop 엔진과 객체 송신기는 월드 수명 안에서만 연결/해제된다. 송신기는 모든 실제 Pop 을 한 번씩 받는다. (2026-11-11 WB04-E299)
+// 종속 Unpop과 공용 송신기는 같은 현재 World를 쓴다. 관찰만 해제한 뒤에도 실제 writer는 계속 동작한다. (2026-11-11 WB04-E299)
 test('월드: 종속 Unpop 연결과 객체 송신기', () => {
     const world = new Inputs().make();
     assert.throws(() => world.bindContainedUnpop({ pool: {} }), TypeError);
     world.bindContainedUnpop({ pool: world.core().pool, unpop: () => {}, detach: () => {}, contentFormType: 6 });
     world.bindContainedUnpop(null);
-    assert.throws(() => world.bindSquidTransmission(1), TypeError);
     const requests = [];
-    world.bindSquidTransmission((sid, flags) => { requests.push([sid, flags]); });
+    const popObservation = observeSquidPop(world, requests);
     world.load(seeds());
     const popped = new Set(requests.map((item) => item[0]));
     // 서버 SID 객체는 모두 적어도 한 번 송신기를 거치고, 예측 가능한 지역 SID(받침/종유석/연결 조각)는 송신하지 않는다.
     for (const item of world.objects()) assert.equal(popped.has(item.sid), item.sid >= 15000, `sid ${item.sid}`);
     assert.ok(popped.size >= 11);
     const loaded = requests.length;
-    world.bindSquidTransmission(null);
+    popObservation.release();
     world.unpop(world.find(32, 29, BRIDGE), 0);
     world.repop(world.find(32, 29, BRIDGE) || 15010, 0x40);
     assert.equal(requests.length, loaded);
@@ -817,7 +821,10 @@ function syntheticInputs() {
 // 기본 runtime 훅 묶음이다. 호출 기록은 log 에 쌓이며 옵션으로 개별 훅을 바꾼다. (2026-11-11 WB04-E299)
 function runtimeHooks(world, log, override = {}) {
     const core = world.core();
+    // 원문 자산 송신을 기록하되 기존 Form/효과 로그와 섞지 않는다.
+    const packets = [];
     return {
+        packetEvidence: packets, squidPacket: (packet) => { packets.push(Uint8Array.from(packet)); },
         assets: { ...core.surfaces.hooks(), selected: () => 0 },
         destroy: (sid, flags, effects) => core.virtualDestroy.destroy(sid, flags, effects),
         regular: makeBridgeRegularHandler(core.pool, core.bridgeEvents),
@@ -1343,7 +1350,7 @@ test('월드: Pop 전송 flags 와 Repop 좌표 보존', () => {
     const world = input.make();
     const core = world.core();
     const requests = [];
-    world.bindSquidTransmission((sid, flags) => { requests.push([sid, flags]); });
+    const popObservation = observeSquidPop(world, requests);
     const object = world.create(synthetic);
     core.owner.set(object, 1);
     world.pop(object, 32, 29, 9);

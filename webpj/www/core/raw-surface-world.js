@@ -6,7 +6,7 @@
 //   공통 삭제 → 가상 삭제 → 표면 수명 → 다리 사건 → Form 분배 → Process Host(공유 Storage Host 대여 또는 독립 Host) → 감시 Form → (패치) 다리 붕괴.
 // E593에서 공장/표시/Unpop/건물/기본 종속 분리·공통 깊이도 Storage 한 객체를 빌린다. 나머지 Graph/Pop/후처리/소유자 등 지역 실행기는 후속 소유권 전환 대상이다.
 // 모든 실제 물리는 Storage 가 소유하고 월드는 대여(`SurfaceUse`)와 짧은 처리기만 소유한다. 웹에는 소멸자가 없어 `dispose()` 가 반납(Process 대여 반납 → 저장소 대여 반납)이다. 생성자가 예외로 끝나면 대여는 반납된다.
-// 아직 연결하지 않은 것: 객체 송신(RawSquidTransmission, 4-C 패킷 단위 — 월드에 squidPacket 방송이 있으면 훅으로 위임), 진단 보고(`Report()` 개발자 출력), 실제 자산에서 만드는 저장소. CD(10.72) 분기는 옮기지 않았다.
+// E594에서 같은 Storage/Host/GameAux의 실제 Pop·대상 송신/ProcessForm·삭제 writer를 연결했다. Native mutable Client 송신과 기본 Form 직렬화는 잔여다. 아직 연결하지 않은 것: 진단 보고(`Report()` 개발자 출력), 실제 자산에서 만드는 저장소. CD(10.72) 분기는 옮기지 않았다.
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-11 WB04-E299: 4-B RawSurfaceWorld 이식)
 import { DEFAULT_BRIDGE_DECAY_MODE } from './bridge-decay.js';
 import { RawBridgeConnect } from './raw-bridge-connect.js';
@@ -143,8 +143,10 @@ export class RawSurfaceWorld {
     #formDispatch;
     #dependencies;
     #bridgeDecay = null;
-    // 객체 송신기(4-C RawSquidTransmission 이 연결할 `(sid, flags)` 함수; 연결 전에는 단독 월드 기본값으로 아무것도 쓰지 않는다).
+    // 같은 Storage의 실제 송신기와 World 수명 동안만 빌리는 typed 방송/대상/현재 Host 장치다.
     #squidTransmission = null;
+    #popRuntime = null;
+    #popUse = null;
     #containedUnpop;
     #sessionContainedUnpop = null;
     #assetOwner;
@@ -178,6 +180,8 @@ export class RawSurfaceWorld {
             this.#drainCurrentProcessesForShutdown();
             this.#factoryUse?.release();
             this.#factoryRuntime = null;
+            this.#popUse?.release();
+            this.#popRuntime = null;
             this.#containedUse?.release();
             this.#sessionContainedUnpop = null;
             this.#displayUse?.release();
@@ -257,8 +261,8 @@ export class RawSurfaceWorld {
         this.#postPop.setSurfacePrefix((sid, flags) => this.#surface.prefix(sid, flags));
         this.#unpop = storage.unpop;
         this.#pop = new SquidPop(pool, hash, spots, { display: this.#display, postPop: this.#postPop });
-        // 일반 Pop 의 객체 송신은 현재 연결된 송신기를 호출한다. 단독 월드(방송이 없는 구성)의 기본값은 쓰기 없음이며 송신 결과는 다른 곳에서 읽히지 않는다.
-        this.#pop.bindTransmission((sid, flags) => { if (this.#squidTransmission) this.#squidTransmission(sid, flags); });
+        // 방송 장치가 없는 독립 World도 같은 실제 writer를 실행한 뒤 현재 송신 대여를 선택한다.
+        this.#pop.bindTransmission((sid, flags) => storage.transmitPop(sid, flags));
         this.#pop.bindDiagnostics({ checking, types, metamap: () => storage.ownerMode.challenge, trace: (level, text) => storage.traceGraph(level, text), assertion });
         this.#containedUnpop = storage.containedUnpop;
         this.#buildingState = storage.buildingSpaceState;
@@ -281,6 +285,29 @@ export class RawSurfaceWorld {
             },
         };
         this.#factoryUse = this.#factory.bindRuntime(this.#factoryRuntime);
+        this.#popRuntime = {
+            broadcast: (packet) => {
+                if (!this.#runtimeBound) return;
+                const send = this.#runtime.squidPacket;
+                if (typeof send !== 'function') throw new Error('현재 월드의 Squid 방송 장치 미연결');
+                send(packet);
+            },
+            connected: (target) => {
+                if (!this.#runtimeBound || typeof this.#runtime.squidConnected !== 'function') throw new Error('현재 대상별 Player 연결 관문 미연결');
+                return this.#runtime.squidConnected(target);
+            },
+            send: (target, packet) => {
+                if (!this.#runtimeBound || typeof this.#runtime.squidSend !== 'function') throw new Error('현재 대상별 Squid 송신 장치 미연결');
+                this.#runtime.squidSend(target, packet);
+            },
+            processPacket: (form, packet, argument) => {
+                if (!this.#host) throw new Error('ProcessForm의 실제 Host 미설치');
+                return this.#host.writeFormPacket(form, argument, packet, storage.gameAux.squidTransmission);
+            },
+            transmit: (sid, flags) => this.#squidTransmission.pop(sid, flags),
+        };
+        this.#popUse = storage.bindPopRuntime(this.#popRuntime);
+        this.#squidTransmission = storage.transmission;
         this.#frame = new SquidFrame(pool, types, makeSquidFrameHooks(pool, types, this.#display, this.#unpop, this.#pop));
         this.#owner = new SquidOwner(pool, types, book, storage.ownerMode);
         this.#owner.bindDiagnostics({ types, assertion });
@@ -435,6 +462,8 @@ export class RawSurfaceWorld {
         if (this.#legacyReclaim) this.#legacyReclaim.release();
         this.#factoryUse?.release();
         this.#factoryRuntime = null;
+        this.#popUse?.release();
+        this.#popRuntime = null;
         this.#containedUse?.release();
         this.#sessionContainedUnpop = null;
         this.#displayUse?.release();
@@ -454,10 +483,10 @@ export class RawSurfaceWorld {
         };
     }
 
-    // 4-C 의 객체 송신기(RawSquidTransmission.pop)를 설치한다. 첫 객체 Pop 전에 한 번만 허용하며 함수 또는 null 이다. (2026-11-11 WB04-E299)
-    bindSquidTransmission(transmission) {
-        if (transmission !== null && typeof transmission !== 'function') throw new TypeError('Squid 송신기는 (sid, flags) 함수여야 합니다.');
-        this.#squidTransmission = transmission;
+    // 실제 삭제도 Pop과 같은 공용 004ac260의 현재 +58 writer/진단/양수 관문으로 보낸다.
+    transmitDeletion(sid, flags) {
+        if (!this.#squidTransmission) throw new Error('현재 판본의 실제 삭제 전송기 미설치');
+        this.#squidTransmission.transmit(sid, -1, -2, 0, flags);
     }
 
     // 미니맵도 Session 이 아닌 동일 물리 소유자를 직접 빌린다. (2026-11-11 WB04-E299)
@@ -504,7 +533,7 @@ export class RawSurfaceWorld {
         this.#formDispatch.setAssets(hooks.assets, hooks.destroy);
         this.#host.setRegularHandler(hooks.regular);
         this.#host.setFormTransmit(hooks.transmit);
-        this.#runtime = hooks;
+        this.#runtime = { ...hooks };
         this.#runtimeBound = true;
         this.#runtime.loadingDepth(this.#loadState.loadingDepth);
     }

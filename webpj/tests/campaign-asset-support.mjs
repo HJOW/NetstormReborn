@@ -118,7 +118,10 @@ export class AssetScene {
         this.bindings = this.make();
         this.bindings.activatePostPop();
         this.core.postPop.setBody('carrier', this.carrier);
+        // 실제 공용 Squid writer의 패킷을 별도로 관측하며 기존 Form/효과 로그는 그 계약대로 유지한다.
+        this.squidPackets = [];
         this.world.bindRuntime({
+            squidPacket: (packet) => { this.squidPackets.push(Uint8Array.from(packet)); },
             assets: { emit: (event) => { this.events.push(`delete:${event.effect}:${event.sid}:${event.flags}`); }, selected: () => 0 },
             // 파생 가상 삭제 요청은 대상과 flags 만 관찰하고 처리한 것으로 돌려준다(실제 삭제 수명은 피해/수명 연결의 몫이다).
             destroy: (sid, flags) => { this.events.push(`destroy:${sid}:${flags.toString(16)}`); return true; },

@@ -43,7 +43,10 @@ export class CampaignCursorScene {
         this.lifetime = new RawCampaignLifetimeBindings(this.world, this.forms, this.lifeState, { cancelCursor: () => this.cursor.cancelForState() }, this.hp, { pool: this.core.pool, notify: (p, f, r) => this.events.push(['player', p, f, r]) });
         this.contained = new RawContainedCreate(this.core.pool, { containedType: () => 6, bridgeType: () => this.core.bridgeState.bridgeType }, makeContainedCreateHooks(this.core.pool, this.core.factory, { notifySurface: (sid) => this.core.building.notifySurface(sid), attach: (sid, parent, flags) => this.forms.attach(sid, parent, flags) }));
         // 실제 수명과 공간을 사용하며 이 장면은 공통 미리보기 자산의 Pre/Post만 선택한다.
-        this.world.bindRuntime({ assets: this.core.surfaces.hooks(), destroy: (sid, flags, hooks) => this.core.virtualDestroy.destroy(sid, flags, hooks), regular: forbidden('커서 외부 Regular 실행'),
+        // 실제 공용 Squid writer의 패킷을 별도로 관측하며 기존 Form/효과 로그는 그 계약대로 유지한다.
+        this.squidPackets = [];
+        this.world.bindRuntime({
+            squidPacket: (packet) => { this.squidPackets.push(Uint8Array.from(packet)); }, assets: this.core.surfaces.hooks(), destroy: (sid, flags, hooks) => this.core.virtualDestroy.destroy(sid, flags, hooks), regular: forbidden('커서 외부 Regular 실행'),
             transmit: { writeData: forbidden('커서 외부 전송 자료'), transmit: forbidden('커서 외부 전송') }, walkerFall: forbidden('커서 보행자 추락'), bridgeEffect: forbidden('커서 다리 효과'), loadingDepth: () => {}, formTransmit: (sid, flags) => this.events.push(['form', sid, flags]) });
         this.constructionState = new RawCampaignConstructionState(); this.constructionState.place.localPlayer = this.constructionState.notice.localPlayer = 1;
         const recent = new SquidPostPopList(); recent.entries.length = 5; recent.entries.fill(0); const all = new SquidPostPopList(); all.entries.length = 100; all.entries.fill(0);

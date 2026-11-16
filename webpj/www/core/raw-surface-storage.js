@@ -29,6 +29,7 @@ import { SquidUnpop } from './squid-unpop.js';
 import { RawBuildingSpace } from './squid-space.js';
 import { RawSquidContainedUnpop, commonContainedParent, commonContainedPrevious, commonContainedSetPrevious } from './squid-contained-unpop.js';
 import { RawContentParentNotice } from './content-parent-notice.js';
+import { RawSquidTransmission } from './raw-squid-transmission.js';
 import { finishSquidPoolReset } from './raw-squid-pool-reset.js';
 
 // 기존 실제 월드의 SID 풀 크기(다음 대여에서 재확보하지 않음)와 원본 256×256 spot 배열의 바이트 수, 사제 owner 상태 DWORD 수(플레이어 8 + 1)이다. (2026-11-11 WB04-E298)
@@ -86,6 +87,9 @@ export class RawSurfaceStorage {
     #displayDevices = {};
     #currentContainedUnpop = null;
     #contentCommand = null;
+    // 같은 GameAux 공통 예약을 쓰는 장기 송신기와 현재 typed World의 짧은 송신 대여다.
+    #transmission = null;
+    #popRuntime = null;
 
     // types/frames/shapes 는 같은 길이의 입력 표이며 복사해 보관한다. authority/gameAux 는 Client 와 공유하는 장기 owner 이다. (2026-11-11 WB04-E298)
     constructor(types, frames, shapes, { source = null, authority = null, gameAux = null } = {}) {
@@ -316,6 +320,53 @@ export class RawSurfaceStorage {
             this.#factory = factory;
         }
         return this.#factory;
+    }
+
+    // 실제 현재 Pop writer만 약하게 빌린다. 등록은 생성/송신/ACK를 실행하지 않으며 이전 release가 새 대여를 지우지 않는다.
+    bindPopRuntime(runtime) {
+        const current = this.#popRuntime?.deref();
+        if (!runtime || (current && current !== runtime) || typeof runtime.transmit !== 'function') throw new TypeError('동일 실제 Pop writer 대여 필요');
+        const reference = new WeakRef(runtime);
+        this.#popRuntime = reference;
+        return { release: () => { if (this.#popRuntime === reference) this.#popRuntime = null; } };
+    }
+
+    // 선택된 현재 송신 장치를 호출 전체 동안 pin한다. 장치 누락은 그 경로에 도달한 위치에서 거부한다.
+    #callPop(runtime, name, ...args) {
+        if (!runtime || typeof runtime[name] !== 'function') throw new Error(`독립 Squid의 선택된 실제 ${name} 장치 미연결`);
+        const hold = runtime.pin ? runtime.pin() : null;
+        try { const call = runtime[name]; return call(...args); } finally { void hold; }
+    }
+
+    // 현재 물리 TYPE만 조회한다. JS 음수 .at 인덱스나 대체 레코드로 범위 오류를 숨기지 않는다.
+    #transmissionType(number) {
+        if (!Number.isInteger(number) || number < 0 || number >= this.types.length) throw new RangeError('Squid 송신의 현재 TYPE 범위');
+        return this.types[number];
+    }
+
+    // 같은 Factory/HP·TYPE·진단·2048BYTE 예약의 한 송신기다. Native mutable 장치/기본 Form writer 설치는 상위 Client 결선에 남는다.
+    get transmission() {
+        if (!this.#transmission) this.#transmission = new RawSquidTransmission(this.pool, this.#gameAux.squidTransmission, {
+            type: (number) => this.#transmissionType(number), defaultType: () => this.links.bridgeType,
+            maxHp: (number) => this.factory.readSelectedHitPoints(this.#transmissionType(number), this.types),
+            trace: (level, text) => this.traceGraph(level, text), assertion: (expression, file, line) => this.assertDisplay(expression, file, line),
+            connected: (target) => this.#callPop(this.#popRuntime?.deref(), 'connected', target),
+            broadcast: (packet) => this.#callPop(this.#popRuntime?.deref(), 'broadcast', packet),
+            send: (target, packet) => this.#callPop(this.#popRuntime?.deref(), 'send', target, packet),
+            processPacket: (form, packet, argument) => {
+                const current = this.#popRuntime?.deref();
+                if (current?.processPacket) return this.#callPop(current, 'processPacket', form, packet, argument);
+                return this.processes.host.writeFormPacket(form, argument, packet, this.#gameAux.squidTransmission);
+            },
+        });
+        return this.#transmission;
+    }
+
+    // 실제 공간/장부 처리 뒤 같은 현재 writer로 전송한다. 대여가 없으면 장기 송신 본문을 직접 선택한다.
+    transmitPop(sid, flags) {
+        const current = this.#popRuntime?.deref();
+        if (current?.transmit) this.#callPop(current, 'transmit', sid, flags);
+        else this.transmission.pop(sid, flags);
     }
 
     // 현재 실제 월드가 물리를 빌렸는지 읽는다. (2026-11-11 WB04-E298)

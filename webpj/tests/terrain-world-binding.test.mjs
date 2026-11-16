@@ -12,6 +12,7 @@ import { makeTerrainStampWorldHooks } from '../www/core/raw-terrain-world-bindin
 import { typeConstructorAddress } from '../www/core/squid-constructors.js';
 import { realPlayerAssets } from './player-scene-support.mjs';
 import { get } from './raw-support.mjs';
+import { observeSquidPop } from './surface-wire-support.mjs';
 
 // 원본 isle 타입과 이번 연결 검사에서 만들 한 지면의 좌표, 문자 'x' 이다. (2026-11-11 WB04-E301)
 const ISLE = 97;
@@ -110,7 +111,7 @@ test('지형 월드 연결: 네 훅은 실제 월드 몸체로 간다', () => {
     const diagnostics = [];
     const hooks = makeTerrainStampWorldHooks(scene.world, scene.state, (kind) => { diagnostics.push(kind); }, scene.effects());
     const requests = [];
-    scene.world.bindSquidTransmission((sid, flags) => { requests.push([sid, flags]); });
+    observeSquidPop(scene.world, requests);
     scene.world.beginLoad();
     // 생성 flags 2 는 예측 가능한 지역 번호 범위(15000 미만), 0 은 서버 번호이다.
     const local = hooks.create(ISLE, 2);

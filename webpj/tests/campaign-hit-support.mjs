@@ -56,7 +56,10 @@ export class CampaignHitScene extends AssetScene {
     }
     // 실제 공통 충돌 자산의 삭제·정기와 사제 낙하를 World 수명에 연결한다. 나머지 파생 삭제는 아직 허용하지 않는다. (2026-11-16 WB04-E564)
     bindHitRuntime() {
+        // 실제 공용 Squid writer의 패킷을 별도로 관측하며 기존 Form/효과 로그는 그 계약대로 유지한다.
+        this.squidPackets = [];
         this.world.bindRuntime({
+            squidPacket: (packet) => { this.squidPackets.push(Uint8Array.from(packet)); },
             assets: this.hits.destroyHooks({ emit: (event) => {
                 if (event.effect !== SQUID_DESTROY_EFFECT.transmit) throw new Error('다른 실제 자산 삭제 수명 미연결');
                 this.events.push(`delete:${event.sid}:${event.flags}`);
