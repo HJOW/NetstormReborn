@@ -173,6 +173,9 @@ export class GameAuxState {
     // 원문0052ede6/7/8의 현재3e 생성자 헤더/길이WORD다. 같은 물리4BYTE를 장기 보관한다. (2026-11-16 WB04-E569)
     #constructionRequest = Uint8Array.of(0x3e, 1, 25, 0);
     #constructionRequestHeader = this.#constructionRequest.subarray(0, 2);
+    // 원문00532690/91·005325b8/b9의 Dais6ah/건설37h 현재 message·protocol BYTE다. (WB04-E618)
+    #daisProcessHeader = Uint8Array.of(0x6a, 1);
+    #constructionHeader = Uint8Array.of(0x37, 1);
     // 실제 공통 전송 버퍼와 압축/헤더 상태를 한 번만 소유하고 각 소비자에게 같은 객체를 빌린다. (2026-11-16 WB04-E567)
     #squidTransmission = createSquidTransmissionState();
     // 새 Client에서 한 번 만든 같은 미션 설정 물리다. 일반/준비 대여·반납과 reset은 재생성하거나0으로 지우지 않는다. (WB04-E572)
@@ -193,6 +196,10 @@ export class GameAuxState {
 
     // 로컬 예측 배치와 실제 요청 생성자가 같은 현재 BYTE 두 개와 길이WORD를 읽는다. (2026-11-16 WB04-E569)
     get constructionRequestHeader() { return this.#constructionRequestHeader; }
+    // Dais 일반/강제 writer가 같은 현재 BYTE를 읽으며 일반 월드 reset으로 바꾸지 않는다. (WB04-E618)
+    get daisProcessHeader() { return this.#daisProcessHeader; }
+    // 실제 건설 writer의 현재 헤더 두BYTE다. 다른 요청3eh 헤더와 구별한다. (WB04-E618)
+    get constructionHeader() { return this.#constructionHeader; }
     get constructionRequestLength() { return new DataView(this.#constructionRequest.buffer).getUint16(2, true); }
     set constructionRequestLength(value) { if (!Number.isInteger(value) || value < 0 || value > 65535) throw new RangeError('건설 요청 길이WORD 범위'); new DataView(this.#constructionRequest.buffer).setUint16(2, value, true); }
 

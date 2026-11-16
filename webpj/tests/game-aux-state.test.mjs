@@ -34,6 +34,22 @@ test('GameAuxState: 건설 요청의 현재 헤더/WORD는 보호 PE와 같고 �
     assert.throws(() => { aux.constructionRequestLength = -1; }, RangeError); assert.throws(() => { aux.constructionRequestLength = 65536; }, RangeError); assert.throws(() => { aux.constructionRequestLength = 1.5; }, RangeError); assert.equal(new GameAuxState().constructionRequestLength, 25);
 });
 
+// Dais/건설의 현재 헤더는 보호 PE 초기값과 같고 일반 reset 뒤에도 같은2BYTE다. (WB04-E618)
+test('GameAuxState: Dais/건설 현재 헤더·보호 PE·reset/별도 owner 수명', () => {
+    const aux = new GameAuxState(); const dais = aux.daisProcessHeader; const construction = aux.constructionHeader; // 실제 장기 헤더 참조다.
+    assert.deepEqual([...dais], [0x6a, 1]); assert.deepEqual([...construction], [0x37, 1]);
+    if (fs.existsSync(ORIGINAL_EXE)) {
+        const bytes = fs.readFileSync(ORIGINAL_EXE); const read = peReader(bytes); // 보호 PE는 읽기 전용이다.
+        assert.equal(sha256(bytes), ORIGINAL_EXE_SHA256);
+        assert.deepEqual([...read(0x00532690, 2).bytes], [...dais]); assert.deepEqual([...read(0x005325b8, 2).bytes], [...construction]);
+    }
+    dais[0] = 0xea; construction[1] = 3; aux.resetForGeneralWorld();
+    assert.equal(aux.daisProcessHeader, dais); assert.equal(aux.constructionHeader, construction);
+    assert.deepEqual([...aux.daisProcessHeader], [0xea, 1]); assert.deepEqual([...aux.constructionHeader], [0x37, 3]);
+    const other = new GameAuxState(); // 새 Client의 별도 초기 상태다.
+    assert.notEqual(other.daisProcessHeader, dais); assert.deepEqual([...other.daisProcessHeader], [0x6a, 1]); assert.deepEqual([...other.constructionHeader], [0x37, 1]);
+});
+
 // 두 현재 애니메이션 헤더와 공통 전송 owner는 일반 월드 초기화 뒤에도 같은 물리이다. (2026-11-16 WB04-E567)
 test('GameAuxState: 애니메이션 현재 헤더·공유 전송은 보호 PE 초기값이며 일반 reset과 별개로 유지된다', () => {
     // 원문의 현재 BYTE 헤더와 실제 공통 버퍼 객체다.
