@@ -3,6 +3,7 @@
 // 서식 코드(%s, %d, ~색상, ~[아이콘], <c>, $ButtonInstant)는 영어 원문과 같은 순서로 유지한다.
 // 건물·유닛 이름은 docs/korean-unit-names.md의 명칭 규칙을 따른다.
 // 없는 키는 영어 원문을 그대로 표시한다(설치 프로그램 문구와 내부 타입 이름은 번역하지 않았다).
+// Type은 유닛 정보의 내부 주제 접미사(priestType 등)이므로 번역하지 않는다.
 
 ***
 EVERYONE
@@ -1813,7 +1814,7 @@ No help information available
 ***
 Type
 ---
-종류
+Type
 ===
 
 ***

@@ -10,9 +10,11 @@
 #include "client/LanguageOptions.h"
 #include "client/ProductPresentation.h" // 11.01 패치 크레딧 한국어 항목 시험(K4).
 #include "client/QuickHelpHtml.h"
+#include "client/QuickHelpControl.h" // 실제 유닛 정보 명령이 만든 주제를 번역 도움말과 대조한다.
 #include "client/TellFileMenus.h"
 #include "o/BaseFile.h"
 #include "o/OriginalText.h"
+#include "o/Xlat.h" // 저장소의 실제 용어표를 정보 요청에도 그대로 적용한다.
 #include "platform/Utf8Path.h"
 #include <algorithm>
 #include <filesystem>
@@ -122,6 +124,29 @@ TEST_CASE(KoreanIntegration_RealHelpAll128TopicsAndLargestBodyKeepKoreanTail) { 
     CHECK(topics.size()==128);
     for (const auto& topic:topics) { const auto body=KoreanHelpBody(display,topic);CHECK(body.size()<8192);for (std::size_t at=0;at<body.size();++at) { if (static_cast<std::uint8_t>(body[at])!=netstorm::o::kExtendedTextLead) continue;CHECK(netstorm::o::DecodeExtendedSequence({reinterpret_cast<const std::uint8_t*>(body.data()),body.size()},at));at+=netstorm::o::kExtendedTextLength-1; } } // 마지막한글도중간BYTE에서잘리지않아야한다.
     const auto large=KoreanHelpBody(display,"battleOptionsHelp");CHECK(HasExtendedDisplayText(large));CHECK(KoreanDecode(large).find("멀티플레이어 빠른 시작으로 돌아가기")!=std::string::npos); // 8086BYTE원자료의끝안내까지남아야한다.
+}
+
+// 우클릭 정보의 TYPE 요청부터 실제 한국어 본문까지 연결해 내부 주제 접미사의 오역을 검출한다.
+TEST_CASE(KoreanIntegration_UnitInformationRequestsKeepAllTypeAnchors) {
+    using namespace netstorm::client;
+    const auto translation=ReadKoreanTranslationFile({KoreanRepo()});CHECK(translation.has_value());if (!translation) return;
+    const netstorm::o::XlatTable table(*translation);
+    const auto bytes=netstorm::o::ReadFileBytes(KoreanRepo()/"assets/lang/korean/d/help.korean");
+    const std::string raw(bytes.begin(),bytes.end()),display=DecodeQuickHelpDisplaySource(raw);
+    const std::regex anchor("<a name=\"([^\"]*[Tt]ype)\">");std::size_t checked{}; // 유닛·건물·자원 주제를 원본 이름 그대로 순회한다.
+    // 번역표를 거친 실제 사건 분배 결과로 본문을 선택하며 기대 주제를 직접 주입하지 않는다.
+    for (std::sregex_iterator entry(raw.begin(),raw.end(),anchor),end;entry!=end;++entry) {
+        const auto expected=(*entry)[1].str(),stem=expected.substr(0,expected.size()-4);std::string requested;
+        QuickHelpWindowNode window;window.width=450;window.height=350;QuickHelpHistory history;QuickHelpPopupState popup;
+        QuickHelpEventHooks hooks;hooks.local=[](auto) { return std::array<float,2>{1,1}; };
+        hooks.typeName=[&](auto type) { CHECK(type==71);return stem; };
+        hooks.translate=[&](auto text) { return KoreanDisplay(table.Translate(text,7)); };
+        hooks.request=[&](auto type,auto topic) { CHECK(type==71);requested=topic; };
+        CHECK(DispatchQuickHelpWindow(window,{0x02000017,0,71},history,popup,hooks)==1);
+        CHECK(requested==expected);
+        CHECK(HasExtendedDisplayText(KoreanHelpBody(display,requested)));++checked;
+    }
+    CHECK(checked>=40);
 }
 
 TEST_CASE(KoreanIntegration_TellFileMenuInvalidationReloadsLocalizedTitles) { // 기존등록Config가언어전환후영어제목을계속노출하지않는다.
