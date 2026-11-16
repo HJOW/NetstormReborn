@@ -125,6 +125,8 @@ export class RegularProcess extends SquidProcess {
     #event = 0;
     #payload = 0;
     #count = 0;
+    // 실제 일반/공유 생성자가 선택한 writer 종류다. 부착 TYPE를 나중에 바꿔도 이 값으로 분배한다(WB04-E591).
+    #shared = false;
 
     // 호스트의 실행 몸체가 시각/payload/횟수를 직접 쓰는 접근자를 만든다.
     static {
@@ -132,6 +134,7 @@ export class RegularProcess extends SquidProcess {
             setTime: (process, value) => { process.#time = value; },
             setPayload: (process, value) => { process.#payload = Math.fround(value); },
             incrementCount: (process) => { process.#count = (process.#count + 1) >>> 0; },
+            setShared: (process, value) => { process.#shared = Boolean(value); },
         };
     }
 
@@ -160,6 +163,9 @@ export class RegularProcess extends SquidProcess {
     // 다음 실행 시각이다.
     get time() { return this.#time; }
 
+    // 같은 Regular 객체에 부착 전에 기록한 실제 writer 종류다(원문 Shared).
+    get shared() { return this.#shared; }
+
     // Dude task 변경(패치 00450670/CD 004e8e70)의 event/count0/다음 double 시각 직접 쓰기를 같은 기존 Regular 에 적용한다. payload/Form/부착은 보존한다.
     resetTask(event, time) {
         this.#event = event >>> 0;
@@ -171,7 +177,7 @@ export class RegularProcess extends SquidProcess {
     // 사용: new RegularProcess(0, 0)로 예약 → initializeDetached(event, payload) → host.attachRegular.
     initializeDetached(event, payload) {
         if (this.host !== null || this.form !== 0 || this.pid !== 0) throw new Error('부착한 Regular의 예약 재생성 금지');
-        this.#time = 0; this.#event = event >>> 0; this.#payload = Math.fround(payload); this.#count = 0;
+        this.#time = 0; this.#event = event >>> 0; this.#payload = Math.fround(payload); this.#count = 0; this.#shared = false;
     }
 
     // Carrier 426db0 의 생성 이후 +10/+14 쓰기이다. 다른 필드는 재초기화하지 않고 실제 기한만 덮어쓴다.
@@ -307,8 +313,8 @@ export class SquidProcessState {
 // 필드: destroy(현재 World 의 RawSquidDestroy, SID 풀 정체성 검증), regular(부모의 가상 Regular 사건 (parent, event, count, payload) → float), asset({ emit, selected, unpopForm? }),
 // transmit({ writeData(process, parentChanged) → int32, transmit(length) }), postPopDepth(() → 현재 공통 Pop 깊이), assertion((expression, file, line)), factory(같은 풀의 SquidFactory).
 // activeCalls 는 선택된 호스트 효과가 진행 중인 호출 수이며 진행 중 반납을 거부하는 데 쓴다. (2026-11-08 WB04-D5c)
-export function createProcessHostRuntime({ destroy = null, regular = null, asset = {}, transmit = {}, postPopDepth = null, assertion = null, factory = null } = {}) {
-    return { destroy, regular, asset, transmit, activeCalls: 0, postPopDepth, assertion, factory };
+export function createProcessHostRuntime({ destroy = null, regular = null, asset = {}, transmit = {}, postPopDepth = null, assertion = null, factory = null, pin = null } = {}) {
+    return { destroy, regular, asset, transmit, activeCalls: 0, postPopDepth, assertion, factory, pin };
 }
 
 // 객체 Form 과 커널 프로세스의 부착·통지·수명을 연결하는 호스트이다.
@@ -384,11 +390,13 @@ export class SquidProcessHost {
     // 현재 대여(있으면)를 호출 동안 붙잡고 work(runtime|null)를 실행한다. 정상/예외 모두 끝난 뒤 반납한다. 직접 호스트는 runtime 이 null.
     #withCall(work) {
         const runtime = this.#current ? this.#current() : null;
+        const hold = runtime?.pin ? runtime.pin() : null;
         if (runtime) runtime.activeCalls += 1;
         try {
             return work(runtime);
         } finally {
             if (runtime) runtime.activeCalls -= 1;
+            void hold; // 같은 동기 호출의 정상/예외 복귀까지 실제 전체 owner를 보관한다.
         }
     }
 
@@ -419,14 +427,16 @@ export class SquidProcessHost {
         return this.#current ? this.#runtime().asset : this.#asset;
     }
 
-    // 직렬화/송신 경계이다. 각 소비 위치에서 현재 경계를 얻는다.
+    // 현재 World에 네 장치 중 하나라도 있으면 그 표를 쓰고, 없으면 장기 기본 표를 쓴다(원문 Transmission, WB04-E591).
     #transmission() {
-        return (this.#current ? this.#runtime().transmit : this.#transmit) ?? {};
+        if (this.#current) { const current = this.#current(); const transmit = current?.transmit; if (transmit && (transmit.writeData || transmit.writeFullData || transmit.packet || transmit.transmit)) return transmit; }
+        return this.#transmit ?? {};
     }
 
     // 원문 진단 장치이다(현재 대여의 것 또는 독립 상태의 것). 없으면 호출자가 그 위치에서 오류를 낸다.
     #assertionDevice() {
-        return this.#current ? this.#runtime().assertion : this.#state.assertion;
+        if (this.#current) { const current = this.#current(); if (current) return current.assertion; }
+        return this.#state.assertion;
     }
 
     // 같은 수명의 직접 호스트에만 Form 공장을 연결한다. 장기 호스트는 현재 대여의 factory 를 소비 위치에서 조회한다.
@@ -619,6 +629,7 @@ export class SquidProcessHost {
     // 이미 확보한 예약을 현재 생성자 번호로 부착한다. SharedRegular 의 원문 진단(basePostPop == 0, Regular.cpp 0x70) 뒤에도 현재 번호를 다시 읽고,
     // 부착이 돌아온 뒤 현재 시각을 읽어 쓴다(caller 의 추가 계수/기한 쓰기는 유지).
     attachRegular(process, parent, shared = false, flags = LOCAL_MASK) {
+        if (process instanceof RegularProcess) regularFriend.setShared(process, shared);
         if (shared) {
             this.#withCall(() => {
                 const runtime = this.#current ? this.#runtime() : null;
@@ -645,8 +656,47 @@ export class SquidProcessHost {
 
     // 미션 runtime 의 실제 직렬화기를 연결한다. 기존 프로세스도 다음 Pop 에서 이 경계를 읽는다.
     setFormTransmit(transmit) {
-        if (this.#current) this.#runtime().transmit = transmit;
-        else this.#transmit = transmit;
+        const value = { ...transmit }; // C++ 값형 함수 표처럼 설치 뒤 입력 객체의 재대입과 구별한다.
+        if (this.#current) this.#runtime().transmit = value;
+        else this.#transmit = value;
+    }
+
+    // 같은 장기 Host의 기본 직렬화/진단만 최초 한 번 보관한다. World 대여·Kernel 실행은 만들지 않는다(원문98..100, WB04-E591).
+    bindDefaultFormTransmission(transmit, assertion) {
+        if (!this.#current || this.#transmit?.writeData || !transmit || ['writeData', 'writeFullData', 'packet', 'transmit'].some((name) => typeof transmit[name] !== 'function') || typeof assertion !== 'function') throw new TypeError('장기ProcessForm의실제기본직렬화장치계약');
+        this.#transmit = { ...transmit }; this.#state.assertion = assertion;
+    }
+
+    // 004ae360의 현재 부모 진단→실제 PID→일반/공유 Regular 또는 실제 파생 writer 순서다(원문 SquidProcess.cpp231..251, WB04-E591).
+    // packet은 같은 공통 예약을 빌린 Uint8Array이며 transmission은 현재 RawSquidTransmissionState다. 양수 크기만 복사한다.
+    writeFormPacket(form, argument, packet, transmission) {
+        return this.#withCall((runtime) => {
+            const parent = commonContainedParent(this.#pool, form);
+            if (parent >= 5 && parent < 15000) {
+                const assertion = runtime?.assertion || this.#state.assertion;
+                if (typeof assertion !== 'function') throw new Error('ProcessForm writer의 부모 SID 진단 미연결');
+                assertion('!getParent().isClientSid()', '\\Ns\\O\\Squid.cpp', 0xac2);
+            }
+            const process = this.fromForm(form);
+            if (!process) throw new Error('ProcessForm writer의 실제 PID 객체 누락');
+            if (process instanceof RegularProcess) {
+                if (!process.shared || !transmission.clientSidAllowed) return 0;
+                if (packet.length < 28) throw new RangeError('SharedRegular의 실제28BYTE 버퍼 범위');
+                const header = { ...transmission.sharedRegular }; const view = new DataView(packet.buffer, packet.byteOffset, packet.byteLength);
+                packet[0] = header.protocol & 0x7f; packet[1] = header.message; view.setUint16(2, Math.max(4, header.length & 0xffff), true);
+                view.setUint16(6, process.parent, true); view.setFloat64(8, process.time, true); view.setUint32(16, process.event, true); view.setFloat32(20, process.payload, true); view.setUint32(24, process.count, true); return 28;
+            }
+            const device = { ...this.#transmission() };
+            if (typeof device.writeFullData !== 'function') throw new Error('ProcessForm의 실제 전체 파생 writer 미연결');
+            const size = device.writeFullData(process, argument >>> 0) | 0;
+            if (size > 0) {
+                if (typeof device.packet !== 'function') throw new Error('ProcessForm의 실제 작성 버퍼 미연결');
+                const bytes = device.packet(size);
+                if (!(bytes instanceof Uint8Array) || size > bytes.length || size > packet.length) throw new RangeError('ProcessForm의 실제 패킷 복사 범위');
+                if (bytes.buffer !== packet.buffer || bytes.byteOffset !== packet.byteOffset) packet.set(bytes.subarray(0, size));
+            }
+            return size;
+        });
     }
 
     // 0041c010/CD 0048f8d0: 현재 부모를 읽고 live Form Unpop(0)→같은 부모 Attach(flags 0)을 수행한다. 파생 onAttached 를 다시 부르지 않으며 서버 전송이 필요하면 현재 전송 경계를 쓴다.
