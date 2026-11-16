@@ -17,6 +17,7 @@ import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
 import { GunProcessState } from '../www/core/raw-gun-process.js';
 import { PriestDamageState } from '../www/core/raw-priest-damage.js';
 import { ConstructionProcessState } from '../www/core/raw-construction-process.js';
+import { CAMPAIGN_TUTORIAL_TYPES, createCampaignTutorialRoles } from '../www/core/raw-campaign-session-install.js';
 import { createPlacementState, currentForcePlacement } from '../www/core/raw-canon-placement.js';
 import { RawMissionSettingsPacket, receiveCurrentMissionSettingsPacket } from '../www/core/raw-mission-settings-packet.js';
 
@@ -25,6 +26,19 @@ const ORIGINAL_EXE = path.join(REPO_ROOT, 'originals', 'Netstorm.exe');
 
 // 원본 10.78 실행 파일의 SHA-256 이다(현재 저장소 보호 원본). 다른 판본으로 대조하지 않도록 확인한다. (2026-11-05 WB04-C2)
 const ORIGINAL_EXE_SHA256 = 'a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236';
+
+// 독립 typed Session 역할도 보호 PE의 같은 현재 TYPE 기본값이며 Map/필드는 각 owner가 따로 소유한다(WB04-E622).
+test('Session tutorial 역할: 보호 PE의15주소·기본 사제 기술과 인스턴스 독립', () => {
+    const roles = createCampaignTutorialRoles(); const other = createCampaignTutorialRoles();
+    if (fs.existsSync(ORIGINAL_EXE)) {
+        const bytes = fs.readFileSync(ORIGINAL_EXE); const read = peReader(bytes); assert.equal(sha256(bytes), ORIGINAL_EXE_SHA256);
+        // 각 원문 주소는 실제 PE 섹션 표로 변환해 읽는다.
+        for (const [address, type] of CAMPAIGN_TUTORIAL_TYPES) assert.equal(read(address, 4).bytes.readUInt32LE(0), type);
+        assert.equal(read(0x5411ac, 4).bytes.readUInt32LE(0), roles.tutorialWorkshopType); assert.equal(read(0x541174, 4).bytes.readUInt32LE(0), roles.tutorialArcherType);
+    }
+    roles.tutorialTypes.set(0x541258, 77); roles.tutorialArcherType = 100;
+    assert.notEqual(roles.tutorialTypes, other.tutorialTypes); assert.equal(other.tutorialTypes.get(0x541258), 128); assert.equal(other.tutorialArcherType, 71);
+});
 
 // 실제 로컬 건설이 매번 읽는 생성자4BYTE는 PE 초기값과 같고 일반 월드 reset으로 바뀌지 않는다. (WB04-E569)
 test('GameAuxState: 건설 요청의 현재 헤더/WORD는 보호 PE와 같고 장기 물리를 유지한다', () => {
