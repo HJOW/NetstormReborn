@@ -1325,13 +1325,13 @@
       "sha256": "d304cecad36bc85a910c9ea09f9eab5e6aed341909dce055f5f3ce81e34b7e20",
       "bytes": 1573181,
       "lines": 1993,
-      "fixtureCommit": "5edb2b6d",
-      "webCommit": "31193204",
+      "fixtureCommit": "5edb2b6d1",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawSquidDestroy.cpp": "f2215dc5",
-        "cpppj/src/o/RawSquidDestroy.h": "886f2d23",
-        "cpppj/src/o/RawBridgeLifecycle.cpp": "5879152b",
-        "cpppj/src/o/SquidUnpop.cpp": "739b04e5"
+        "cpppj/src/o/RawSquidDestroy.cpp": "417f22d29",
+        "cpppj/src/o/RawSquidDestroy.h": "417f22d29",
+        "cpppj/src/o/RawBridgeLifecycle.cpp": "712e7224b",
+        "cpppj/src/o/SquidUnpop.cpp": "2c6ab7cc1"
       }
     },
     {
@@ -1544,11 +1544,11 @@
       "sha256": "5e93ca7e6d29e75b3bc47f92a295570c4ea7163dab7d3a2ecd7058d83d56c4c8",
       "bytes": 220690,
       "lines": 1037,
-      "fixtureCommit": "0d163f6e",
-      "webCommit": "2a2e08e4",
+      "fixtureCommit": "0d163f6eb",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/DerivedConstructors.inc": "f7675661",
-        "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
+        "cpppj/src/o/DerivedConstructors.inc": "f7675661a",
+        "cpppj/src/o/SquidFactory.cpp": "be567d46b"
       }
     },
     {
@@ -1574,10 +1574,10 @@
       "sha256": "8bbc69366eae3d6ae4ba1a333eeb988c2ea1bdc558379c427adb3677bed1e26a",
       "bytes": 148872,
       "lines": 589,
-      "fixtureCommit": "e6259e97",
-      "webCommit": "2a2e08e4",
+      "fixtureCommit": "e6259e975",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawSquidCreation.cpp": "e6259e97"
+        "cpppj/src/o/RawSquidCreation.cpp": "e6259e975"
       }
     },
     {
@@ -1603,10 +1603,10 @@
       "sha256": "9f40fe7ddf0b219f3eafbca0f5dc7a740efa89ed07ac1585ba625bddc2098302",
       "bytes": 325827,
       "lines": 721,
-      "fixtureCommit": "e1a617ac",
-      "webCommit": "2a2e08e4",
+      "fixtureCommit": "e1a617acd",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawSquidTake.cpp": "e1a617ac"
+        "cpppj/src/o/RawSquidTake.cpp": "e1a617acd"
       }
     },
     {
@@ -1635,7 +1635,7 @@
       "bytes": 146005,
       "lines": 577,
       "fixtureCommit": "21da88755",
-      "webCommit": "b6194813a",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "be567d46b",
         "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a59"
@@ -1664,10 +1664,10 @@
       "sha256": "f7962700854608e7783a01d1bac0abd1a9220defce9eb918098f2334d93d62c6",
       "bytes": 8250,
       "lines": 513,
-      "fixtureCommit": "cf4bdec8",
-      "webCommit": "2a2e08e4",
+      "fixtureCommit": "cf4bdec84",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
+        "cpppj/src/o/SquidFactory.cpp": "be567d46b"
       }
     },
     {
@@ -1695,10 +1695,10 @@
       "sha256": "3a95581e93b42548eaba0618c576d97750633a6d6caa075835ab84e5d669d379",
       "bytes": 164662,
       "lines": 1649,
-      "fixtureCommit": "078ea3e8",
-      "webCommit": "2a2e08e4",
+      "fixtureCommit": "078ea3e8c",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/SquidFactory.cpp": "cf4bdec8"
+        "cpppj/src/o/SquidFactory.cpp": "be567d46b"
       }
     },
     {
@@ -1727,11 +1727,11 @@
       "sha256": "abb2c721cf93f3aca230a4bf6772e952d3e37434090f8784297ce47f608159ab",
       "bytes": 975424,
       "lines": 7469,
-      "fixtureCommit": "f7675661",
-      "webCommit": "2a2e08e4",
+      "fixtureCommit": "f7675661a",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
-        "cpppj/src/o/DerivedConstructors.inc": "f7675661"
+        "cpppj/src/o/SquidFactory.cpp": "be567d46b",
+        "cpppj/src/o/DerivedConstructors.inc": "f7675661a"
       }
     },
     {
@@ -1761,12 +1761,12 @@
       "sha256": "76c693fe249b31249fbd011cc5cafadd32d6aa7f016952cc63b2acdda275585b",
       "bytes": 862447,
       "lines": 8423,
-      "fixtureCommit": "a86150db",
-      "webCommit": "31193204",
+      "fixtureCommit": "a86150dba",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/SquidFactory.cpp": "cf4bdec8",
-        "cpppj/src/o/SquidUnpop.cpp": "739b04e5",
-        "cpppj/src/o/RawSquidUnpopParent.cpp": "ea848459"
+        "cpppj/src/o/SquidFactory.cpp": "be567d46b",
+        "cpppj/src/o/SquidUnpop.cpp": "2c6ab7cc1",
+        "cpppj/src/o/RawSquidUnpopParent.cpp": "ea848459b"
       }
     },
     {
@@ -2113,7 +2113,7 @@
       "bytes": 107011,
       "lines": 1161,
       "fixtureCommit": "804b87a59",
-      "webCommit": "7b3258415",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a59",
         "cpppj/src/o/SquidReward.cpp": "2b0484195",
@@ -2209,7 +2209,7 @@
       "bytes": 819581,
       "lines": 361,
       "fixtureCommit": "a3fa05969",
-      "webCommit": "worktree",
+      "webCommit": "b8157694e",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "417f22d29",
         "cpppj/src/o/RawBaseProcessAttach.cpp": "877cc129d",
@@ -2298,7 +2298,7 @@
       "bytes": 518003,
       "lines": 1837,
       "fixtureCommit": "e2dd58a8d",
-      "webCommit": "worktree",
+      "webCommit": "b8157694e",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "417f22d29"
       }
@@ -2329,7 +2329,7 @@
       "bytes": 141552,
       "lines": 389,
       "fixtureCommit": "a5afdafbe",
-      "webCommit": "worktree",
+      "webCommit": "b8157694e",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "417f22d29",
         "cpppj/src/o/Kernel.cpp": "c6536398b"
@@ -2359,7 +2359,7 @@
       "bytes": 159901,
       "lines": 377,
       "fixtureCommit": "ada85427f",
-      "webCommit": "worktree",
+      "webCommit": "b8157694e",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "417f22d29"
       }
@@ -2417,7 +2417,7 @@
       "bytes": 32988,
       "lines": 1233,
       "fixtureCommit": "9dd15ef22",
-      "webCommit": "worktree",
+      "webCommit": "b8157694e",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "417f22d29"
       }
@@ -2446,7 +2446,7 @@
       "bytes": 3735,
       "lines": 65,
       "fixtureCommit": "9dd15ef22",
-      "webCommit": "worktree",
+      "webCommit": "b8157694e",
       "cpppjBasis": {
         "cpppj/src/o/SquidProcess.cpp": "417f22d29"
       }
@@ -6189,11 +6189,11 @@
       "sha256": "1009c82b63b6b655bde417aeecf287fd43099b3a75295cd28ac6b474cdd4b638",
       "bytes": 2413945,
       "lines": 14540,
-      "fixtureCommit": "4118523c",
-      "webCommit": "69ceaae1",
+      "fixtureCommit": "4118523cc",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawBridgeDecay.cpp": "cc328596",
-        "cpppj/src/o/Bridge.cpp": "11b04c8e"
+        "cpppj/src/o/RawBridgeDecay.cpp": "cc328596e",
+        "cpppj/src/o/Bridge.cpp": "11b04c8e0"
       }
     },
     {
@@ -9897,11 +9897,11 @@
       "sha256": "695a553d2ee0c6a4eff4bb77e6cb0aa1f7d5d1545923a04796425edeb57e4988",
       "bytes": 15275,
       "lines": 129,
-      "fixtureCommit": "7198298b",
-      "webCommit": "bb8ebe44",
+      "fixtureCommit": "7198298b7",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawObjectConversion.cpp": "5d714fe8",
-        "cpppj/src/o/SquidFactory.cpp": "be567d46"
+        "cpppj/src/o/RawObjectConversion.cpp": "5d714fe8a",
+        "cpppj/src/o/SquidFactory.cpp": "be567d46b"
       }
     },
     {

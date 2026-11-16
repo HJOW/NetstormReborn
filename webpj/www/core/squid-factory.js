@@ -167,6 +167,9 @@ export class SquidFactory {
     #aux = null;
     // Take 의 자산 VT+48 이 부르는 같은 풀의 공간 해제 처리기이다.
     #unpop;
+    // 선택된 Take 위치에서만 장기 공간 부모를 조회하며, 짧은 현재 World 대여는 약하게 보관한다.
+    #currentUnpop = null;
+    #runtime = null;
     // Form 진입이 빌린 공유 postPop 깊이 소유자({value})·현재 contentFormType getter·Pop 전송·종속 분리이다.
     #formPostPopDepth = null;
     #formContentType = null;
@@ -187,6 +190,24 @@ export class SquidFactory {
 
     // 같은 풀을 쓰는지 확인하기 위한 실제 풀이다.
     get pool() { return this.#pool; }
+
+    // 실제 장기 Unpop 조회기를 보관한다. 설치만으로 공간 부모를 만들거나 실행하지 않는다.
+    bindUnpop(unpop) {
+        if (typeof unpop !== 'function') throw new TypeError('Factory의 실제 Unpop 조회기 누락');
+        this.#currentUnpop = unpop;
+    }
+
+    // 같은 Pool의 현재 World만 빌린다. 반환 release는 C++ 약한 대여의 만료를 명시하며 이전 대여가 새 대여를 지우지 않는다.
+    bindRuntime(runtime) {
+        const current = this.#runtime?.deref();
+        if (!runtime || (current && current !== runtime) || !runtime.unpop || runtime.unpop.pool !== this.#pool ||
+            typeof runtime.formDetach !== 'function' || typeof runtime.contentType !== 'function' || typeof runtime.formTransmit !== 'function') {
+            throw new TypeError('Factory의 같은 실제 World 대여/가상 경계 필요');
+        }
+        const reference = new WeakRef(runtime);
+        this.#runtime = reference;
+        return { release: () => { if (this.#runtime === reference) this.#runtime = null; } };
+    }
 
     // 현재 TYPE 표(188칸, 복사 없이 빌림)·원문 진단·Take 상세 writer·checking DWORD 공급자를 연결한다. 실행 중 다시 연결해도 진행 중인 장치는 끝까지 쓴다.
     bindDiagnostics({ types = null, assertion = null, detail = null, checking = () => 0 } = {}) {
@@ -362,6 +383,8 @@ export class SquidFactory {
 
     // 004af610: 실제 Take 부모를 연결한다. 현재 VT 가 Form 이면 Form Unpop, 지원 자산이면 SquidUnpop.unpop(…, 현재 TYPE, 0)을 부르며 free 목록/카운터는 바꾸지 않는다.
     take(type, sid) {
+        const runtime = this.#runtime?.deref();
+        const runtimePin = runtime?.pin ? runtime.pin() : null;
         const pool = this.#pool;
         // DWORD 토큰을 물리 범위로 확인한다.
         const object = (number) => {
@@ -369,7 +392,7 @@ export class SquidFactory {
             return number;
         };
         const raw = (number) => pool.physical(object(number));
-        return takeRawSquid(type, sid, {
+        try { return takeRawSquid(type, sid, {
             capacity: () => pool.capacity,
             slot: (number) => object(number),
             state: (number) => raw(number)[STATE],
@@ -395,8 +418,9 @@ export class SquidFactory {
                     return;
                 }
                 if (!supportsConstructedVtable(table)) throw new Error('Take 의 선택된 실제 VT+48 미연결');
-                if (!this.#unpop) throw new Error('Take 의 선택된 실제 공간 해제 연결이 없습니다.');
-                this.#unpop.unpop(object(number), this.#typeRecord(raw(number)[TYPE]), 0);
+                const selected = runtime ? runtime.unpop : this.#currentUnpop ? this.#currentUnpop() : this.#unpop;
+                if (!selected) throw new Error('Take 의 선택된 실제 공간 해제 연결이 없습니다.');
+                selected.unpop(object(number), this.#typeRecord(raw(number)[TYPE]), 0);
             },
             storeState: (number, value) => { raw(number)[STATE] = value; },
             storeType: (number, value) => { raw(number)[TYPE] = value; },
@@ -408,7 +432,7 @@ export class SquidFactory {
                 if (!supportsConstructedVtable(table)) throw new Error('Take 의 선택된 실제 VT+2c 미연결');
                 this.postTake(object(number));
             },
-        });
+        }); } finally { void runtimePin; }
     }
 
     // 004ad470: 공통 firstPop 의 직접 몸체다. TYPE/상태/VT 없이 extra(+40)의 abstract(1)/buried(8) 비트만 읽는다(쓰기 없음).
@@ -480,25 +504,37 @@ export class SquidFactory {
 
     // 현재 진단/깊이와 실제 VT+20 의 공통 Form Pop 을 실행한다. transmit 을 주면 그 전송을 쓴다.
     popForm(form, flags, transmit = null) {
-        const forms = new SquidForms(this.#pool, { transmit: transmit ?? this.#formTransmit });
-        this.#bindCurrentFormPop(forms);
-        forms.pop(form, flags);
+        const runtime = this.#runtime?.deref();
+        const runtimePin = runtime?.pin ? runtime.pin() : null;
+        try {
+            const forms = new SquidForms(this.#pool, { transmit: transmit ?? (runtime ? runtime.formTransmit : this.#formTransmit) });
+            this.#bindCurrentFormPop(forms);
+            forms.pop(form, flags);
+        } finally { void runtimePin; }
     }
 
     // 공통 Form 부착 부모를 현재 TYPE genus·현재 contentFormType(없으면 6)·진단·공유 깊이로 실행한다.
     attachForm(form, parent, flags = 0, transmit = null) {
-        const forms = new SquidForms(this.#pool, { transmit: transmit ?? this.#formTransmit });
-        this.#bindCurrentFormPop(forms);
-        forms.bindAttach({
-            genus: (number) => this.#typeRecord(number).flags2 >>> 0,
-            contentType: this.#formContentType ?? (() => 6),
-            assertion: this.#diagnostics.assertion,
-        });
-        forms.attach(form, parent, flags);
+        const runtime = this.#runtime?.deref();
+        const runtimePin = runtime?.pin ? runtime.pin() : null;
+        try {
+            const forms = new SquidForms(this.#pool, { transmit: transmit ?? (runtime ? runtime.formTransmit : this.#formTransmit) });
+            this.#bindCurrentFormPop(forms);
+            forms.bindAttach({
+                genus: (number) => this.#typeRecord(number).flags2 >>> 0,
+                contentType: runtime ? runtime.contentType : this.#formContentType ?? (() => 6),
+                assertion: this.#diagnostics.assertion,
+            });
+            forms.attach(form, parent, flags);
+        } finally { void runtimePin; }
     }
 
     // Form 공통 Unpop 을 현재 진단과 빌린 종속 분리로 실행한다.
     unpopForm(sid) {
-        new SquidForms(this.#pool, { unpop: { detach: this.#formDetach, assertion: this.#diagnostics.assertion } }).unpop(sid);
+        const runtime = this.#runtime?.deref();
+        const runtimePin = runtime?.pin ? runtime.pin() : null;
+        try {
+            new SquidForms(this.#pool, { unpop: { detach: runtime ? runtime.formDetach : this.#formDetach, assertion: this.#diagnostics.assertion } }).unpop(sid);
+        } finally { void runtimePin; }
     }
 }

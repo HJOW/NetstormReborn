@@ -127,6 +127,9 @@ export class RawSurfaceWorld {
     #unpop;
     #pop;
     #factory;
+    // Factory가 약하게 빌리는 현재 공간/Form 장치와 명시 만료 증빙이다. 장기 Factory 전환 뒤에도 World 수명만 가진다.
+    #factoryRuntime = null;
+    #factoryUse = null;
     #building;
     #frame;
     #owner;
@@ -174,6 +177,8 @@ export class RawSurfaceWorld {
         } catch (error) {
             // 구성이 도중에 실패하면 자기 대여만 반납한다(앞선 Native 잔류는 건드리지 않음).
             this.#drainCurrentProcessesForShutdown();
+            this.#factoryUse?.release();
+            this.#factoryRuntime = null;
             this.#storageUse.release();
             throw error;
         }
@@ -283,18 +288,23 @@ export class RawSurfaceWorld {
         this.#building.bindNotifyDiagnostics(checking, assertion);
         this.#pop.setBuildingSpace(this.#building);
         this.#unpop.setBuildingSpace(this.#building);
-        this.#factory = new SquidFactory(pool, types, { unpop: this.#unpop });
+        this.#factory = new SquidFactory(pool, types);
         this.#factory.bindDiagnostics({ types, assertion, detail: (text) => storage.recordAssertionDetail(text), checking });
-        this.#factory.bindFormDetach((sid) => {
-            const current = this.#sessionContainedUnpop;
-            if (current) current.detach(sid);
-            else this.#containedUnpop.detach(sid);
-        });
         this.#factory.bindFormPopDepth({ get value() { return book.depth; }, set value(next) { book.depth = next >>> 0; } });
-        this.#factory.bindFormAttach(() => (this.#sessionContainedUnpop ? this.#sessionContainedUnpop.contentFormType : 6), (sid, flags) => {
-            if (!this.#runtime?.formTransmit) throw new Error('현재 공통 Form Pop 전송 미연결');
-            this.#runtime.formTransmit(sid, flags);
-        });
+        this.#factoryRuntime = {
+            unpop: this.#unpop,
+            formDetach: (sid) => {
+                const current = this.#sessionContainedUnpop;
+                if (current) current.detach(sid);
+                else this.#containedUnpop.detach(sid);
+            },
+            contentType: () => (this.#sessionContainedUnpop ? this.#sessionContainedUnpop.contentFormType : 6),
+            formTransmit: (sid, flags) => {
+                if (!this.#runtime?.formTransmit) throw new Error('현재 공통 Form Pop 전송 미연결');
+                this.#runtime.formTransmit(sid, flags);
+            },
+        };
+        this.#factoryUse = this.#factory.bindRuntime(this.#factoryRuntime);
         this.#factory.bindGameAux(aux);
         this.#frame = new SquidFrame(pool, types, makeSquidFrameHooks(pool, types, this.#display, this.#unpop, this.#pop));
         this.#owner = new SquidOwner(pool, types, book, storage.ownerMode);
@@ -446,6 +456,8 @@ export class RawSurfaceWorld {
         this.#drainCurrentProcessesForShutdown();
         if (this.#processUse) this.#processUse.release();
         if (this.#legacyReclaim) this.#legacyReclaim.release();
+        this.#factoryUse?.release();
+        this.#factoryRuntime = null;
         this.#storageUse.release();
     }
 
