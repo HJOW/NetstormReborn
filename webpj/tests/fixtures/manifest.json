@@ -12248,7 +12248,8 @@
       "modules": [
         "webpj/www/core/raw-ai-brain.js",
         "webpj/www/core/raw-campaign-session-ai.js",
-        "webpj/www/core/raw-campaign-session-ai-world.js"
+        "webpj/www/core/raw-campaign-session-ai-world.js",
+        "webpj/www/core/raw-campaign-session-ai-production.js"
       ],
       "doc": "docs/webpj-ai-brain-20261109.md",
       "cpppjSources": [
@@ -12261,7 +12262,7 @@
         "cpppj/src/o/RawAiStrategySetup.cpp",
         "cpppj/src/o/RawAiEconomy.cpp"
       ],
-      "scope": "10.78 실제 PE 160행 전부 / E623: 같은 실제 Session의 지역/승패·AI 본체/초기/지갑 결선 집중 검사와 함께 재대조; 실제 미션 Check/자연 승리·공중3종 전용 생성은 실행하지 않음. / E624: 같은 실제 본체 메모리를 공유하는 Session 객체 통지/World 등록·준비/전략·경제 결선. 이 fixture는 기존 본체 하위 대조이며 새 조립의 원본 관측으로 세지 않음.",
+      "scope": "10.78 실제 PE 160행 전부 / E623: 같은 실제 Session의 지역/승패·AI 본체/초기/지갑 결선 집중 검사와 함께 재대조; 실제 미션 Check/자연 승리·공중3종 전용 생성은 실행하지 않음. / E624: 같은 실제 본체 메모리를 공유하는 Session 객체 통지/World 등록·준비/전략·경제 결선. 이 fixture는 기존 본체 하위 대조이며 새 조립의 원본 관측으로 세지 않음. / E625: 같은 실제 Session AI 배치/생산·다리 후보/탐색 결선; FrameCodeTable의 현재 codes와 기존 배열 입력을 함께 대조. 새 부모 검사는 직접 fixture 소비자가 아니며 보호 자산 재고/모양도 별도 확인.",
       "text": true,
       "sha256": "53aecd3e635d5743ea07091d863d6db7fb328daa8181b7a5769b78a233087fab",
       "bytes": 2657374,
@@ -12384,21 +12385,24 @@
         "webpj/tests/ai-bridge-candidates.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-ai-bridge-candidates.js"
+        "webpj/www/core/raw-ai-bridge-candidates.js",
+        "webpj/www/core/raw-campaign-session-ai-production.js"
       ],
       "doc": "docs/webpj-ai-bridge-candidates-planning-20261109.md",
       "cpppjSources": [
-        "cpppj/src/o/RawAiBridgeCandidates.cpp"
+        "cpppj/src/o/RawAiBridgeCandidates.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp"
       ],
-      "scope": "10.78 실제 PE 210행 전부",
+      "scope": "10.78 실제 PE 210행 전부 / E625: 같은 실제 Session AI 배치/생산·다리 후보/탐색 결선; FrameCodeTable의 현재 codes와 기존 배열 입력을 함께 대조. 새 부모 검사는 직접 fixture 소비자가 아니며 보호 자산 재고/모양도 별도 확인.",
       "text": true,
       "sha256": "acf30dfc323f9a38fcc4df328bc44729a6e291fdc6df66a9497acb505a092204",
       "bytes": 1194171,
       "lines": 211,
-      "fixtureCommit": "fca3ae92",
-      "webCommit": "96fc459c",
+      "fixtureCommit": "fca3ae92c",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawAiBridgeCandidates.cpp": "55ef3103"
+        "cpppj/src/o/RawAiBridgeCandidates.cpp": "55ef31038",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
       }
     },
     {
@@ -12413,21 +12417,24 @@
         "webpj/tests/ai-bridge-candidates.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-ai-bridge-candidates.js"
+        "webpj/www/core/raw-ai-bridge-candidates.js",
+        "webpj/www/core/raw-campaign-session-ai-production.js"
       ],
       "doc": "docs/webpj-ai-bridge-candidates-planning-20261109.md",
       "cpppjSources": [
-        "cpppj/src/o/RawAiBridgeCandidates.cpp"
+        "cpppj/src/o/RawAiBridgeCandidates.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp"
       ],
-      "scope": "10.78 실제 PE 399행 전부",
+      "scope": "10.78 실제 PE 399행 전부 / E625: 같은 실제 Session AI 배치/생산·다리 후보/탐색 결선; FrameCodeTable의 현재 codes와 기존 배열 입력을 함께 대조. 새 부모 검사는 직접 fixture 소비자가 아니며 보호 자산 재고/모양도 별도 확인.",
       "text": true,
       "sha256": "a615658b0d1059ac2948661d71d29ee2e02ab870f28af0eb42b4697b1c2b38cc",
       "bytes": 39180,
       "lines": 400,
-      "fixtureCommit": "55ef3103",
-      "webCommit": "96fc459c",
+      "fixtureCommit": "55ef31038",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawAiBridgeCandidates.cpp": "55ef3103"
+        "cpppj/src/o/RawAiBridgeCandidates.cpp": "55ef31038",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
       }
     },
     {
@@ -12616,21 +12623,24 @@
         "webpj/tests/ai-bridge-search.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-ai-bridge-search.js"
+        "webpj/www/core/raw-ai-bridge-search.js",
+        "webpj/www/core/raw-campaign-session-ai-production.js"
       ],
       "doc": "docs/webpj-ai-bridge-search-strategies-20261109.md",
       "cpppjSources": [
-        "cpppj/src/o/RawAiBridgeSearch.cpp"
+        "cpppj/src/o/RawAiBridgeSearch.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp"
       ],
-      "scope": "10.78 실제 PE 208행 전부",
+      "scope": "10.78 실제 PE 208행 전부 / E625: 같은 실제 Session AI 배치/생산·다리 후보/탐색 결선; FrameCodeTable의 현재 codes와 기존 배열 입력을 함께 대조. 새 부모 검사는 직접 fixture 소비자가 아니며 보호 자산 재고/모양도 별도 확인.",
       "text": true,
       "sha256": "80d8ff50cb11e86abdf3d66a5c802241db72d40cfea9f99e75ea9e14f7166ee6",
       "bytes": 80073,
       "lines": 209,
-      "fixtureCommit": "de78dbaa",
-      "webCommit": "7f85731e",
+      "fixtureCommit": "de78dbaa9",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa"
+        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa9",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
       }
     },
     {
@@ -12645,21 +12655,24 @@
         "webpj/tests/ai-bridge-search.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-ai-bridge-search.js"
+        "webpj/www/core/raw-ai-bridge-search.js",
+        "webpj/www/core/raw-campaign-session-ai-production.js"
       ],
       "doc": "docs/webpj-ai-bridge-search-strategies-20261109.md",
       "cpppjSources": [
-        "cpppj/src/o/RawAiBridgeSearch.cpp"
+        "cpppj/src/o/RawAiBridgeSearch.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp"
       ],
-      "scope": "10.78 실제 PE 416행 전부",
+      "scope": "10.78 실제 PE 416행 전부 / E625: 같은 실제 Session AI 배치/생산·다리 후보/탐색 결선; FrameCodeTable의 현재 codes와 기존 배열 입력을 함께 대조. 새 부모 검사는 직접 fixture 소비자가 아니며 보호 자산 재고/모양도 별도 확인.",
       "text": true,
       "sha256": "aca492f5d1e840c91b9e730e28fceb7eb23c2ae7672fa20e41f7b6c86c97085a",
       "bytes": 12809,
       "lines": 417,
-      "fixtureCommit": "de78dbaa",
-      "webCommit": "7f85731e",
+      "fixtureCommit": "de78dbaa9",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa"
+        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa9",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
       }
     },
     {
@@ -12674,21 +12687,24 @@
         "webpj/tests/ai-bridge-search.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-ai-bridge-search.js"
+        "webpj/www/core/raw-ai-bridge-search.js",
+        "webpj/www/core/raw-campaign-session-ai-production.js"
       ],
       "doc": "docs/webpj-ai-bridge-search-strategies-20261109.md",
       "cpppjSources": [
-        "cpppj/src/o/RawAiBridgeSearch.cpp"
+        "cpppj/src/o/RawAiBridgeSearch.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp"
       ],
-      "scope": "10.78 실제 PE 640행 전부",
+      "scope": "10.78 실제 PE 640행 전부 / E625: 같은 실제 Session AI 배치/생산·다리 후보/탐색 결선; FrameCodeTable의 현재 codes와 기존 배열 입력을 함께 대조. 새 부모 검사는 직접 fixture 소비자가 아니며 보호 자산 재고/모양도 별도 확인.",
       "text": true,
       "sha256": "4d5061a5f3a49b6a0a123300f215fffa37d8fe7f750249a29de78cef97a6dbd7",
       "bytes": 40435,
       "lines": 641,
-      "fixtureCommit": "de78dbaa",
-      "webCommit": "7f85731e",
+      "fixtureCommit": "de78dbaa9",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa"
+        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa9",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
       }
     },
     {
@@ -12703,21 +12719,24 @@
         "webpj/tests/ai-bridge-search.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-ai-bridge-search.js"
+        "webpj/www/core/raw-ai-bridge-search.js",
+        "webpj/www/core/raw-campaign-session-ai-production.js"
       ],
       "doc": "docs/webpj-ai-bridge-search-strategies-20261109.md",
       "cpppjSources": [
-        "cpppj/src/o/RawAiBridgeSearch.cpp"
+        "cpppj/src/o/RawAiBridgeSearch.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp"
       ],
-      "scope": "10.78 실제 PE 72장면/288호출 전부",
+      "scope": "10.78 실제 PE 72장면/288호출 전부 / E625: 같은 실제 Session AI 배치/생산·다리 후보/탐색 결선; FrameCodeTable의 현재 codes와 기존 배열 입력을 함께 대조. 새 부모 검사는 직접 fixture 소비자가 아니며 보호 자산 재고/모양도 별도 확인.",
       "text": true,
       "sha256": "5a48f482a424e99a06e671df95f11e347d786ae5db81dfdb018c641ae68de8eb",
       "bytes": 2042823,
       "lines": 73,
-      "fixtureCommit": "de78dbaa",
-      "webCommit": "7f85731e",
+      "fixtureCommit": "de78dbaa9",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa"
+        "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa9",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
       }
     },
     {

@@ -94,7 +94,7 @@ export class RawCampaignSessionAiWorld {
             assertion: (text) => need(o.services.ai.assertion, '전략 준비 진단')(text), demo: () => o.services.missionOutcome.demo() !== 0,
         }; this.setupHooks = setup;
         o.aiStrategySetup = new RawAiStrategySetup(o.aiMemory, o.player, o.aiPreparation, o.priests.carrier, o.contained, o.contentFinder, c.types, o.random, o.alliances,
-            { localOwner: () => o.playerState.battleOwner, noRegion: () => o.noRegion, templeProduct: () => o.templeProduct, bridgeType: () => o.gameplayGlobals.gameAux().bridgeType, mapLimit: () => o.cursorManaGlobals.mapLimit, now: () => c.processState.now }, setup);
+            { localOwner: () => o.playerState.battleOwner, noRegion: () => o.noRegion, templeProduct: () => o.templeProduct, bridgeType: () => o.contentBridgeType, mapLimit: () => o.cursorManaGlobals.mapLimit, now: () => c.processState.now }, setup);
         o.aiEconomy = new RawAiEconomy(o.aiMemory, o.sp, () => c.processState.now, { demo: () => o.services.missionOutcome.demo() !== 0, captured: (owner) => this.priestCaptured(owner) });
         this.#ready = true;
     }

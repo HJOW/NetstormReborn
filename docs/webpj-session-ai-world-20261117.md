@@ -48,5 +48,7 @@
 
 원본/cpppj 게임 창·자연 플레이/포획/희생/승리·공중3종 새 전용
 생성/생산/행동·Native 장기 설치는 실행하지 않았다.
+후속 E625 실제 다리 재고/모양 연결에서 전략 준비의 다리 역할 조회를
+ContainedCreateState의 값형82 칸으로 교정했다([교정 문서](webpj-session-ai-production-20261117.md)).
 다음은 ConnectAi2880의 배치/콜렉터·다리 탐색/시설 생산/건설 선택과 후속
 ConnectAiRuntime이다. 이후 외곽 Session/Load·Login·앱 수명과 L2로 이어 간다.

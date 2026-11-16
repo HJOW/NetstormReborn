@@ -104,7 +104,8 @@ export class RawAiBridgeSearch {
     #decoder(point, pattern, directionValue) {
         const type = this.#bridge() >>> 0;
         if (type >= this.#frames.length || pattern >= BRIDGE_PATTERNS.length) throw new RangeError('AI 다리 검색 현재TYPE/패턴 범위');
-        return new CanonDecoder(this.#frames[type], BRIDGE_PATTERNS[pattern], signed(directionValue), point.x, point.y);
+        // 실제 Session의 FrameCodeTable과 원본 독립 대조의 코드 배열이 같은 현재 코드 원문을 전달하게 한다.
+        return new CanonDecoder(this.#frames[type].codes ?? this.#frames[type], BRIDGE_PATTERNS[pattern], signed(directionValue), point.x, point.y);
     }
 
     // 0040f400: caller 가 이미 비운 64 BYTE grid 를 다시 비우지 않고 실제 칸과 끝점 개수만 갱신한다. raw 는 0xbc BYTE 전체이다. (2026-11-09 WB04-E178)
