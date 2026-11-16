@@ -4,6 +4,7 @@
 //   core() 는 이 월드의 실제 모듈 묶음(풀·해시·spot·TYPE·프레임·셰이프·장부·소유자 모드·공장·소유자·프레임·Pop·Unpop·후처리·표시·건물 공간·Graph·이웃·삭제·가상 삭제·표면 수명·다리 사건·Form 분배·감시·Host·상태·Kernel·표면 종류)이다.
 // 구성 순서(원문 보존): 저장소 선택·검사(대여 전) → 장부/삭제/모드 상태 → Graph → 표시 → 후처리 → Unpop/Pop → 종속 Unpop → 건물 공간 → 공장 → (패치) 전송 → 프레임 → 소유자 → 이웃 → 다리 연결(objects) → 표면 후처리 →
 //   공통 삭제 → 가상 삭제 → 표면 수명 → 다리 사건 → Form 분배 → Process Host(공유 Storage Host 대여 또는 독립 Host) → 감시 Form → (패치) 다리 붕괴.
+// E593에서 공장/표시/Unpop/건물/기본 종속 분리·공통 깊이도 Storage 한 객체를 빌린다. 나머지 Graph/Pop/후처리/소유자 등 지역 실행기는 후속 소유권 전환 대상이다.
 // 모든 실제 물리는 Storage 가 소유하고 월드는 대여(`SurfaceUse`)와 짧은 처리기만 소유한다. 웹에는 소멸자가 없어 `dispose()` 가 반납(Process 대여 반납 → 저장소 대여 반납)이다. 생성자가 예외로 끝나면 대여는 반납된다.
 // 아직 연결하지 않은 것: 객체 송신(RawSquidTransmission, 4-C 패킷 단위 — 월드에 squidPacket 방송이 있으면 훅으로 위임), 진단 보고(`Report()` 개발자 출력), 실제 자산에서 만드는 저장소. CD(10.72) 분기는 옮기지 않았다.
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-11 WB04-E299: 4-B RawSurfaceWorld 이식)
@@ -21,21 +22,14 @@ import { scheduleBridgeFallChecked } from './raw-bridge-fall-parent.js';
 import { DependFormHost } from './depend-form-host.js';
 import { RawSquidDestroy, SQUID_DESTROY_EFFECT } from './squid-destroy.js';
 import { SquidDeletionState, SquidDestroyLifecycle } from './squid-destroy-lifecycle.js';
-import { SquidDisplay } from './squid-display.js';
-import { SquidFactory } from './squid-factory.js';
 import { SquidFormDispatch } from './squid-form-dispatch.js';
 import { SquidFrame } from './squid-frame.js';
 import { makeSquidFrameHooks } from './squid-frame-binding.js';
 import { SquidOwner } from './squid-owner.js';
 import { SquidPop } from './squid-pop.js';
 import { SquidPostPop } from './squid-postpop.js';
-import { SquidPostPopState } from './squid-postpop-state.js';
 import { SquidProcessHost, createProcessHostRuntime } from './squid-process.js';
-import { RawBuildingSpace } from './squid-space.js';
-import { SquidUnpop } from './squid-unpop.js';
-import { RawSquidContainedUnpop, commonContainedParent, commonContainedPrevious, commonContainedSetPrevious } from './squid-contained-unpop.js';
 import { makeAssetOwnerDispatch } from './raw-asset-owner.js';
-import { RawContentParentNotice } from './content-parent-notice.js';
 import { RAW_POP_RESULT } from './squid-pop.js';
 
 // free/dead/void/contained 상태를 동시에 거르는 기존 마스크, 슬롯 필드 위치(TYPE·상태·프레임 DWORD·좌표 float·소유자 BYTE)이다. (2026-11-11 WB04-E299)
@@ -113,6 +107,11 @@ export class RawSurfaceWorld {
     #deletionSelected = null;
     #deletionBound = false;
     #displayHooks = {};
+    // 표시 실행기는 Storage가 보유하고 현재 World의 값형 view/장치만 이 대여 동안 빌린다.
+    #displayView = { cameraX: 0, cameraY: 0, zoom: 65536, viewport: { left: 0, top: 0, right: 640, bottom: 480 } };
+    #displayRuntime = null;
+    #displayUse = null;
+    #containedUse = null;
     #changed = false;
     #effectRequests = 0;
     #walkerFalls = 0;
@@ -127,7 +126,7 @@ export class RawSurfaceWorld {
     #unpop;
     #pop;
     #factory;
-    // Factory가 약하게 빌리는 현재 공간/Form 장치와 명시 만료 증빙이다. 장기 Factory 전환 뒤에도 World 수명만 가진다.
+    // Factory가 약하게 빌리는 현재 공간/Form 장치와 명시 만료 증빙이다. 장기 Factory가 빌리며 World 수명만 가진다.
     #factoryRuntime = null;
     #factoryUse = null;
     #building;
@@ -179,6 +178,10 @@ export class RawSurfaceWorld {
             this.#drainCurrentProcessesForShutdown();
             this.#factoryUse?.release();
             this.#factoryRuntime = null;
+            this.#containedUse?.release();
+            this.#sessionContainedUnpop = null;
+            this.#displayUse?.release();
+            this.#displayRuntime = null;
             this.#storageUse.release();
             throw error;
         }
@@ -197,12 +200,8 @@ export class RawSurfaceWorld {
         const aux = storage.gameAux;
         const authority = storage.authority;
         this.#terrainType = terrain;
-        this.#bookkeeping = new SquidPostPopState();
+        this.#bookkeeping = storage.postPopState;
         const book = this.#bookkeeping;
-        book.bindTotalMade(storage.totalMade);
-        book.bindTotalCost(auxBox(aux, 'totalCost'));
-        book.bindProviders(storage.sidLists.providers);
-        book.bindFactories(storage.sidLists.factories);
         this.#deletion = new SquidDeletionState();
         this.#deletion.sharedLostX = auxBox(aux, 'lostX');
         this.#deletion.sharedLostY = auxBox(aux, 'lostY');
@@ -244,53 +243,30 @@ export class RawSurfaceWorld {
         this.#graph.bindTrace((level, text) => storage.traceGraph(level, text));
         this.#graph.bindDetachState(() => book.graphsEnabled, () => this.#deletion.rebuildGraph);
         this.#graph.bindClock(() => storage.readGraphClock());
-        const sink = {
+        this.#displayRuntime = {
+            changed: () => { this.#changed = true; }, view: () => this.#displayView,
             suppressed: () => Boolean(this.#displayHooks.suppressed && this.#displayHooks.suppressed()),
             invalidate: (rect, flags) => { this.#changed = true; if (this.#displayHooks.invalidate) this.#displayHooks.invalidate(rect, flags); },
-            checking,
         };
-        this.#display = new SquidDisplay(types, shapes, sink, { cameraX: 0, cameraY: 0, zoom: 65536, viewport: { left: 0, top: 0, right: 640, bottom: 480 } });
+        this.#displayUse = storage.bindDisplayRuntime(this.#displayRuntime);
+        this.#display = storage.display;
         this.#postPop = new SquidPostPop(pool, types, book, this.#graph, (sid) => this.#connect.connect(sid));
         this.#postPop.bindCurrentTypes(types);
         this.#postPop.bindManaDiagnostics({ checking, assertion });
         this.#postPop.setIslandPrefix((sid, flags) => this.#connect.islandPostPopPrefix(sid, flags));
         this.#postPop.setSurfacePrefix((sid, flags) => this.#surface.prefix(sid, flags));
-        this.#unpop = new SquidUnpop(pool, hash, spots, this.#display);
+        this.#unpop = storage.unpop;
         this.#pop = new SquidPop(pool, hash, spots, { display: this.#display, postPop: this.#postPop });
-        this.#unpop.bindDiagnostics({ checking, types, assertion });
         // 일반 Pop 의 객체 송신은 현재 연결된 송신기를 호출한다. 단독 월드(방송이 없는 구성)의 기본값은 쓰기 없음이며 송신 결과는 다른 곳에서 읽히지 않는다.
         this.#pop.bindTransmission((sid, flags) => { if (this.#squidTransmission) this.#squidTransmission(sid, flags); });
         this.#pop.bindDiagnostics({ checking, types, metamap: () => storage.ownerMode.challenge, trace: (level, text) => storage.traceGraph(level, text), assertion });
-        // 월드 기본 종속 Unpop 종단은 같은 물리와 장기 진단 장치만 빌린다.
-        const containedHooks = {
-            parent: (sid) => commonContainedParent(pool, sid),
-            previous: (sid) => commonContainedPrevious(pool, sid),
-            setPrevious: (sid, previous) => commonContainedSetPrevious(pool, sid, previous),
-            parentNotice: (parent, form, reason) => new RawContentParentNotice(pool).notice(parent, form, reason),
-            assertion,
-        };
-        this.#containedUnpop = new RawSquidContainedUnpop(pool, {
-            contentFormType: () => 6,
-            gumpFormType: () => 3,
-            uiEvent: () => 0x02000039,
-            checking,
-            inMetamapMode: () => storage.ownerMode.challenge,
-            boss: () => authority.boss,
-        }, containedHooks);
-        this.#unpop.bindContainedUnpop((sid) => {
-            const current = this.#sessionContainedUnpop;
-            if (current) current.unpop(sid);
-            else this.#containedUnpop.unpop(sid);
-        });
-        this.#buildingState = { islandType: terrain, bridgeType: links.bridgeType, checking };
-        this.#building = new RawBuildingSpace(pool, hash, types, this.#buildingState);
-        this.#building.bindCurrentBridgeType(() => links.bridgeType);
-        this.#building.bindNotifyDiagnostics(checking, assertion);
+        this.#containedUnpop = storage.containedUnpop;
+        this.#buildingState = storage.buildingSpaceState;
+        this.#buildingState.islandType = terrain;
+        this.#buildingState.bridgeType = links.bridgeType;
+        this.#building = storage.building;
         this.#pop.setBuildingSpace(this.#building);
-        this.#unpop.setBuildingSpace(this.#building);
-        this.#factory = new SquidFactory(pool, types);
-        this.#factory.bindDiagnostics({ types, assertion, detail: (text) => storage.recordAssertionDetail(text), checking });
-        this.#factory.bindFormPopDepth({ get value() { return book.depth; }, set value(next) { book.depth = next >>> 0; } });
+        this.#factory = storage.factory;
         this.#factoryRuntime = {
             unpop: this.#unpop,
             formDetach: (sid) => {
@@ -298,14 +274,13 @@ export class RawSurfaceWorld {
                 if (current) current.detach(sid);
                 else this.#containedUnpop.detach(sid);
             },
-            contentType: () => (this.#sessionContainedUnpop ? this.#sessionContainedUnpop.contentFormType : 6),
+            contentType: () => (this.#sessionContainedUnpop ? this.#sessionContainedUnpop.contentFormType : this.#containedUnpop.contentFormType),
             formTransmit: (sid, flags) => {
                 if (!this.#runtime?.formTransmit) throw new Error('현재 공통 Form Pop 전송 미연결');
                 this.#runtime.formTransmit(sid, flags);
             },
         };
         this.#factoryUse = this.#factory.bindRuntime(this.#factoryRuntime);
-        this.#factory.bindGameAux(aux);
         this.#frame = new SquidFrame(pool, types, makeSquidFrameHooks(pool, types, this.#display, this.#unpop, this.#pop));
         this.#owner = new SquidOwner(pool, types, book, storage.ownerMode);
         this.#owner.bindDiagnostics({ types, assertion });
@@ -454,10 +429,16 @@ export class RawSurfaceWorld {
         if (this.#disposed) return;
         this.#disposed = true;
         this.#drainCurrentProcessesForShutdown();
+        // 프로세스 정리가 끝난 뒤 현재 Session 파생 후처리만 분리하며 장기 장부는 초기화하지 않는다.
+        this.#postPop.releaseRuntimeBindings();
         if (this.#processUse) this.#processUse.release();
         if (this.#legacyReclaim) this.#legacyReclaim.release();
         this.#factoryUse?.release();
         this.#factoryRuntime = null;
+        this.#containedUse?.release();
+        this.#sessionContainedUnpop = null;
+        this.#displayUse?.release();
+        this.#displayRuntime = null;
         this.#storageUse.release();
     }
 
@@ -531,6 +512,9 @@ export class RawSurfaceWorld {
     // Session 은 엔진을 소유하고 월드는 현재 호출 동안만 pin 하여 생성 실패/반납 뒤 수명 밖 접근을 막는다(웹에서는 약한 참조 대신 명시 해제로 null 을 준다). (2026-11-11 WB04-E299)
     bindContainedUnpop(binding) {
         if (binding && binding.pool !== this.#storage.pool) throw new TypeError('종속 Unpop의 실제 SID 풀 불일치');
+        const use = this.#storage.bindContainedUnpop(binding);
+        this.#containedUse?.release();
+        this.#containedUse = use;
         this.#sessionContainedUnpop = binding ?? null;
     }
 
@@ -740,6 +724,7 @@ export class RawSurfaceWorld {
     // 카메라/viewport 와 현재 Renderer 의 표시 전달 경로를 갱신한다. (2026-11-11 WB04-E299)
     setDisplay(view, hooks) {
         this.#display.setView(view);
+        this.#displayView = { ...view, viewport: { ...view.viewport } };
         this.#displayHooks = hooks ?? {};
     }
 

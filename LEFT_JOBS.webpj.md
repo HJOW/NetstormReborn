@@ -6,7 +6,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E592)
+### 0.1 현재 값 (2026-11-16, 마지막 단위 WB04-E593)
 
 | 항목 | 현행 기준 |
 | --- | --- |
@@ -14,13 +14,13 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C·4-R 완료, 현재 단계 **4-D**의 D 구획 `RawCampaignSession` 조립, 0.2절) · M3~M5 미착수 |
 | 이식 진행도 | 대상 1,007단위(제외 153 별도) 중 **port 845(83.9%)·partial 36(3.6%)·todo 126(12.5%)**. 남은 162단위 / 34,373줄은 기존 기준선 84단위 / 28,203줄과 재기준선(4-R)에서 추가된 78단위 / 6,170줄이다(단계 배정은 0.2·0.3절). 앱 수명에 연결된 단위(`session`)는 아직 0이다 |
-| 마지막 작업 단위 | **WB04-E592** — Factory의 실제 현재 World 대여·공간 조회와 호출 전체 pin을 연결했다(약한 대여/명시 반납·Take 현재/중첩 선택·Form 부모·World 종료, 신규11건/관련89건 통과, [단위 문서](docs/webpj-factory-runtime-20261116.md)). 장기 Factory/공유 postPopState의 Storage 소유권 전환 후 같은 송신 부모로 이어간다 |
-| 마지막 전체 검사 | 2026-11-16 WB04-E592: Node v22.23.3·v26.13.0 최종 전체 각각 **5,651건 통과, 실패·취소·건너뜀 0**. v24는 사용자 지시로 생략하고 호환을 가정한다 |
+| 마지막 작업 단위 | **WB04-E593** — Factory·공유 장부/깊이·표시/Unpop·건물/기본 종속 분리를 같은 Storage 장기 소유로 전환했다(실제 현재 view/6회 조회·dirty 뒤 재조회·약한 World/Session 대여·기본 부모 복귀, 신규17건/관련140건 통과, [단위 문서](docs/webpj-surface-factory-lifetime-20261116.md)). 같은 Factory/Host/GameAux의 실제 Squid 송신 연결이 다음이다 |
+| 마지막 전체 검사 | 2026-11-16 WB04-E593: Node v22.23.3·v26.13.0 최종 전체 각각 **5,668건 통과, 실패·취소·건너뜀 0**. v24는 사용자 지시로 생략하고 호환을 가정한다 |
 | 마지막 e2e | WB02-H의 Chromium 초기 페이지 스모크 **1/1 통과**. 별도 임시 Playwright 스크립트로 시작→Welcome 닫기→Help 클릭→General Help 창→Credits 세 행을 실제 클릭 확인(오류 0). 미션/월드 검사가 아니다 |
 
 **다음 작업 (위에서부터):**
 
-1. **4-D D `RawCampaignSession 1`을 이어 간다.** 생성자 `.cpp` 1537행 `InstallVortexDeparture`의 공용 부모 `RawVortexDeparture`와 공유 Template writer는 E587·E588에서 마쳤다. E589에서 `RawCampaignVortex.inc`의 독립 typed 설치/공유 helper를 연결했다(Native 장기 대여는 남음). E590에서1538..1610의 거주 구역/자산 효과와 실제 PostPop 등록을 연결했다. E591에서 필수 ProcessForm Host writer를 먼저 마쳤다(옛 LAN 전용 판정 정정). E592에서 실제 Factory 현재 World 대여/pin을 연결했다. 다음은 공유 postPopState·Factory의 Storage 장기 소유권 → 같은 장기 전송 상태/Host를 쓰는 Storage·World 송신 부모 →1611행 `RawWorldRuntimeHooks` → 이동/건물 → 전체 모듈 생성이다. 필요한 재기준선 부품을 먼저 옮기고, 그 뒤 외곽 공개·같은 Template의 TypeNames → Objects/Contents·`Load`로 이어간다(3.1절 4-D D).
+1. **4-D D `RawCampaignSession 1`을 이어 간다.** 생성자 `.cpp` 1537행 `InstallVortexDeparture`의 공용 부모 `RawVortexDeparture`와 공유 Template writer는 E587·E588에서 마쳤다. E589에서 `RawCampaignVortex.inc`의 독립 typed 설치/공유 helper를 연결했다(Native 장기 대여는 남음). E590에서1538..1610의 거주 구역/자산 효과와 실제 PostPop 등록을 연결했다. E591에서 필수 ProcessForm Host writer를 먼저 마쳤다(옛 LAN 전용 판정 정정). E592에서 실제 Factory 현재 World 대여/pin을 연결했다. E593에서 공유 postPopState·Factory/표시/Unpop·건물/기본 종속 분리를 같은 Storage 장기 소유로 전환했다. 다음은 같은 장기 전송 상태/Host/Factory를 쓰는 Storage·World 송신 부모 →1611행 `RawWorldRuntimeHooks` → 이동/건물 → 전체 모듈 생성이다. 필요한 재기준선 부품을 먼저 옮기고, 그 뒤 외곽 공개·같은 Template의 TypeNames → Objects/Contents·`Load`로 이어간다(3.1절 4-D D).
 2. 이어서 4-D D의 2~4번(로컬 연결·로그인, 프레임·카메라, 승패·종료)과 `GameWorld`, E 구획(`ClientMain`·`ClientCampaignTransport` 2단계·4-C 통합 시험·**L2 판정**)으로 간다.
 3. Session 허브가 서면 막혀 있던 A 구획(State/World 정리 4모듈·선택 정리)과 B 구획(Client 서비스 3모듈)을 연결한다. 재기준선 추가분의 4-D 몫(`RawSurface*` 29·전송/Native 수신기 15·메타 7·규칙/건설 11 등, 0.3절)은 각 결선 지점에서 함께 옮긴다.
 4. 3.8절 허브/적응 판정 4건은 5-C·8단계 항목에서 처리한다.
@@ -34,7 +34,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 1~3 M1·M2 선행 | WB02-G·H, 3-A~3-E | 대응표·오라클 기반, 월드 부품 E1~E264 | 완료(2026-11-10) | — |
 | 4 M2 | 4-A·4-B·4-C | 자료·설정·타입 표 / Fort·지형·섬 적재 / 패킷·로그인·내부 전송 | 완료(E265~E328, 4-C 3항목은 4-D 이월) | — |
 | 〃 | 4-R 재기준선 | cpppj 제품 985 → 1313 전환과 오라클 재수집 | 완료(E497~E514) | — |
-| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 34/49** | 17 / 13,385 + 64 / 4,747 |
+| 〃 | **4-D** | Session 조립·Tutorial1 Load/Start → **L2** | **진행 중 35/50** | 17 / 13,385 + 64 / 4,747 |
 | 5 M2 | 5-A | 렌더러·Draw·시각 시스템 연결 | 진행 중 44/46 | 3 / 533 |
 | 〃 | 5-B | 카메라·HUD·미니맵·커서 | 진행 중 9/13 | 5 / 1,039 + 4 / 407 |
 | 〃 | 5-C | 게임 화면 허브(Uber·메뉴 컨트롤)·미션 진입 명령 → **M2 판정**(L4a) | 0/6(메인 메뉴·타이틀 State 3단위 선행 완료) | 10 / 5,766 |
@@ -102,7 +102,7 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 956·adapt 51·exclude-mp 62·exclude-edit 58·exclude-host 32·exclude-legacy 1, 미분류 0**(E573·E588 캠페인 공유 함수 범위 복원). 상태: **port 845·partial 36·todo 126·제외(-) 153**, session/oracle 0. partial에는 기존 단위의 부분 이식 외에 0.5절의 초안 2개·E574 Session 기반 자료·E584·E585 Devastation 자격/타이머가 있다. 웹 소스는 `webpj/www`의 `.js`(자산 `data/` 제외) 130,218줄, 검사 파일 762개다(2026-11-16 재집계) |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 956·adapt 51·exclude-mp 62·exclude-edit 58·exclude-host 32·exclude-legacy 1, 미분류 0**(E573·E588 캠페인 공유 함수 범위 복원). 상태: **port 845·partial 36·todo 126·제외(-) 153**, session/oracle 0. partial에는 기존 단위의 부분 이식 외에 0.5절의 초안 2개·E574 Session 기반 자료·E584·E585 Devastation 자격/타이머가 있다. 웹 소스는 `webpj/www`의 `.js`(자산 `data/` 제외) 130,388줄, 검사 파일 763개다(2026-11-16 재집계) |
 | 이식 추적 | `webpj/tests/fixtures/manifest.json` **806항목**(original-x86 767·screenshot 13·source 10·independent 9·cpppj-oracle 5·original-binary 2, 2026-11-16 재확인). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
@@ -245,7 +245,7 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
 - **목록 밖 단위:** 다른 단계 몫을 끼워 넣지 않는다. 항목이 선행 미완료로 막히면 사유를 그 항목에 적고 같은 단계의 다음 항목으로 간다. 단계 전체가 막히면 사유를 0.1절 다음 작업에 적고, 선행이 갖춰진 이월 부품(6-P·7-P) 항목을 진행할 수 있다. 목록에 없던 단위가 꼭 필요하면 해당 단계 목록 끝에 항목을 추가하고 이유를 적는다.
 - **끝난 단계:** 단계 머리글이 `(m/m)`이 되면 그 체크 목록을 보관본으로 옮기고 2.3절 표에 한 줄을 더한다(0.5절 5번).
 
-#### 4-D Session 조립·Tutorial1 Load/Start (34/49)
+#### 4-D Session 조립·Tutorial1 Load/Start (35/50)
 
 **완료 기준(3.2절): L2** — Tutorial1 Load/Start 관측(보고서·session-dump·첫 프레임 논리 화면)이 cpppj와 같다. 임시 Player/AI/색 번호로 시작 성공을 만들지 않는다. 선행 4-B·4-C·4-R은 완료다.
 
@@ -288,6 +288,7 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
 
 - [x] o **ProcessForm 공용 writer 부모** — 단독 RawSurfaceWorld.cpp176..179가 요구하는 WriteFormPacket/현재·장기 기본 전송 표/Regular writer 선택과 실제 pin·호출 수를 먼저 연결했다. 신규15건·관련45건 통과. Source의 NoWorld 기본 Lifecycle/FormFactory와 상위 Storage/World 송신은 잔여다 → [E591](docs/webpj-process-form-writer-20261116.md)
 - [x] o **Factory 현재 World 대여 부모** — 같은 Pool/현재 Unpop·종속 분리·내용물 TYPE·전송·호출 전체 pin과 명시 반납을 실제 World에 연결했다. 신규11건·관련89건 통과. 공유 postPopState/Factory의 Storage 장기 소유권 전환은 다음이다 → [E592](docs/webpj-factory-runtime-20261116.md)
+- [x] client **장기 Factory/공유 상태와 실제 기본 부모** — Factory·공통 장부/깊이·Display/Unpop/Building/기본 종속 분리를 Storage 한 객체로 전환하고 현재 World·Session 대여를 연결했다. 신규17건·관련140건 통과. 실제 Squid 송신/Native 기본 Form writer와 나머지 실행기 소유권은 잔여다 → [E593](docs/webpj-surface-factory-lifetime-20261116.md)
 
 **D. Session 본체** (`RawCampaignSession` 7,118줄 = 헤더 712줄 + `.cpp` 6,406줄, 기준선 `225553df`) — 공개 API 경계로 나눈다
 
@@ -298,7 +299,7 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
   - 공유 쓰기 선행: `WriteEditorTerritory`3489..3505 실제 Template9/현재 노드 수명 결선([E588](docs/webpj-fort-territory-write-20261116.md)). 편집기 회복 함수는 제외다.
   - Vortex 생성자1537의 typed 상승/수신·공유 명령/큐/WORD 통지 결선([E589](docs/webpj-session-vortex-20261116.md)). Native 장기 Construction/Storage·외곽 Runtime/Load/Login은 잔여다.
   - 자산 생성자1538..1610의 실제 AssetBindings/PostPop 등록·거주 구역/예약 피해·가상80·Gun/Factory 효과 결선([E590](docs/webpj-session-assets-20261116.md)). 첫 저장 객체/전체 Kernel6699·Native는 잔여다.
-  - 전송 선행: ProcessForm Host writer/현재·기본 전송 표/실제 pin 결선([E591](docs/webpj-process-form-writer-20261116.md)), Factory 실제 World 대여/호출 전체 pin([E592](docs/webpj-factory-runtime-20261116.md)). 공유 postPopState/Factory의 Storage 소유권 전환 → 실제 Squid 송신 →1611 Runtime 순서다.
+  - 전송 선행: ProcessForm Host writer/현재·기본 전송 표/실제 pin 결선([E591](docs/webpj-process-form-writer-20261116.md)), Factory 실제 World 대여/호출 전체 pin([E592](docs/webpj-factory-runtime-20261116.md)). 공유 postPopState/Factory·표시/Unpop의 Storage 소유권 전환([E593](docs/webpj-surface-factory-lifetime-20261116.md))까지 마쳤으며 다음은 실제 Squid 송신 →1611 Runtime 순서다.
   - **다음:** 같은 장기 상태/Host의 Storage·World 송신 부모 →1611행 `RawWorldRuntimeHooks` → 이동/건물 → 전체 모듈 생성 → 외곽 공개 → 같은 Template TypeNames → Objects/Contents → `Load` → 실제 Login(2번 항목)
 - [ ] **RawCampaignSession 2: 로컬 연결·로그인** — `LoadLocalConnection`/`PrepareLocalConnectionForState`/`ConnectLocalConnectionForState`/`PollLocalConnectionState`/`PumpLocalConnection`/송신 + **RawCampaignSessionLogin** 234줄(+182, 4-C 이월 `Impl::Login`, 현재 389줄)
 - [ ] **RawCampaignSession 3: 프레임·카메라·표시 입력** — `RunFrame`/`PrepareFrame`·카메라 홈/중심/명령(`CenterCameraOn`·`ViewHome`·`ViewYourPriest`·`RequestCameraCenter`/`CommitRequestedCamera`)·입자 뷰(5-A 연결)
@@ -534,7 +535,7 @@ cpppj는 AGENTS 1~14차 구현과 M8 최종 배포 관문(1311)을 마치고 제
 - `RawMonitorTime`(상태 E335, 본체 `StepMonitorTime`·`SubmitTemporaryChatFormat`은 [E526](docs/webpj-monitor-time-20261115.md) 완료; Client Config writer·실제 Chat manager 부모는 4-D 조립)
 - `RawPacketCopies.duplicate`/`adopt`의 실제 소비자(State+80 가변 Zone 복제, Session 조립)
 
-**5-B** — `SquidDisplay` `BindView`/`CurrentView`: 웹 `setView` 값 복사를 getter로 교체(E259)
+**5-B 선행 완료(E593)** — `SquidDisplay` `BindView`/`CurrentView`와 Storage 현재 World/Client getter를 연결했다. 프레임 카메라/Renderer 상위 결선은 5-B 잔여다([단위 문서](docs/webpj-surface-factory-lifetime-20261116.md))
 
 **6**
 

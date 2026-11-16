@@ -137,9 +137,10 @@ test('Factory Runtime: Form 진입 세 곳의 pin 예외는 어떤 prefix도 쓰
     }
 });
 
-test('Factory Runtime: 실제 World 종료는 현재 공간 대여를 반납하고 과거 World를 기본 부모로 남기지 않는다', () => {
+test('Factory Runtime: 실제 World 종료 뒤 같은 장기 공장의 기본 공간 부모로 돌아간다', () => {
     const data = realCaptureAssets(); const game = new GameAssets(data.table, data.database);
     const o = new RawCampaignSessionOwners(game, { read: forbidden }, 'thewarbegins', { unixSeconds: () => 1700000000, soundNames: new SoundList() });
     const factory = o.core.factory; const target = o.world.create(75, 0); factory.take(75, target); o.dispose();
-    assert.throws(() => factory.take(75, target), /공간 해제 연결/);
+    assert.equal(factory, o.world.storage.factory);
+    assert.equal(factory.take(75, target), target);
 });

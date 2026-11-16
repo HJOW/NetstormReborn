@@ -99,6 +99,8 @@ export class SquidDisplay {
     #shapes;
     #sink;
     #view;
+    // 실제 Client/World의 현재 카메라를 각 원문 읽기 위치에서 조회한다. 없으면 독립 값형 view를 쓴다.
+    #currentView = null;
 
     // 타입 번호 체계가 다른 목록의 혼용을 막는다. (2026-11-08 WB04-E59)
     constructor(types, shapes, sink, view) {
@@ -115,6 +117,15 @@ export class SquidDisplay {
         if (!(zoom > 0) || viewport.left > viewport.right || viewport.top > viewport.bottom) throw new RangeError('표시 카메라/viewport 오류');
         this.#view = { cameraX: view.cameraX, cameraY: view.cameraY, zoom, viewport: { ...viewport } };
     }
+
+    // 장기 표시기가 현재 카메라를 빌리게 한다. null은 독립 값형 카메라로 돌아가며 설치는 조회를 실행하지 않는다.
+    bindView(view) {
+        if (view !== null && typeof view !== 'function') throw new TypeError('표시의 현재 카메라 조회기 누락');
+        this.#currentView = view;
+    }
+
+    // 진단/dirty 효과가 바꾼 다음 카메라 읽기도 같은 현재 장치에서 구한다.
+    #readView() { return this.#currentView ? this.#currentView() : this.#view; }
 
     // 프레임 연결부가 같은 타입 목록을 쓰는지 구성 때 확인한다: 길이와 표시·공간 재등록이 쓰는 필드를 비교한다. (2026-11-08 WB04-E59)
     validateFrameBinding(types) {
@@ -190,14 +201,13 @@ export class SquidDisplay {
         if (!shape.loaded) return { left: 0, top: 0, right: 0, bottom: 0 };
         if (frame < 0 || frame >= shape.frames.length) throw new RangeError('표시 프레임 범위 오류');
         const header = shape.frames[frame];
-        const { cameraX, cameraY, zoom } = this.#view;
-        const left = coordinate(project(x, 16, cameraX) - scale(header.hotspotX, zoom));
-        const top = coordinate(project(y, 11, cameraY) - scale(header.hotspotY, zoom));
+        const left = coordinate(project(x, 16, this.#readView().cameraX) - scale(header.hotspotX, this.#readView().zoom));
+        const top = coordinate(project(y, 11, this.#readView().cameraY) - scale(header.hotspotY, this.#readView().zoom));
         return {
             left,
             top,
-            right: coordinate(left + scale(header.width, zoom) + 1),
-            bottom: coordinate(top + scale(header.height, zoom) + 1)
+            right: coordinate(left + scale(header.width, this.#readView().zoom) + 1),
+            bottom: coordinate(top + scale(header.height, this.#readView().zoom) + 1)
         };
     }
 
@@ -218,7 +228,7 @@ export class SquidDisplay {
             const rect = this.bounds(type, frame, floatOf(read(bytes, 14)), floatOf(read(bytes, 18)));
             rect.top = coordinate(rect.top + GEYSER_VERTICAL_INSET);
             rect.bottom = coordinate(rect.bottom - GEYSER_VERTICAL_INSET);
-            const clipped = clip(rect, this.#view.viewport);
+            const clipped = clip(rect, this.#readView().viewport);
             if (nonempty(clipped)) this.#sink.invalidate(clipped, 0);
             return;
         }
@@ -237,7 +247,7 @@ export class SquidDisplay {
             const rect = this.bounds(read(bytes, 10, 1), read(bytes, 36) | 0, floatOf(read(bytes, 14)), floatOf(read(bytes, 18)));
             rect.right = coordinate(rect.right + 10);
             rect.bottom = coordinate(rect.bottom + 10);
-            const clipped = clip(rect, this.#view.viewport);
+            const clipped = clip(rect, this.#readView().viewport);
             if (nonempty(clipped)) this.#sink.invalidate(clipped, 0);
             return;
         }
@@ -253,7 +263,7 @@ export class SquidDisplay {
                 rect.top = coordinate(rect.top + insets[1]);
                 rect.right = coordinate(rect.right - insets[2]);
                 rect.bottom = coordinate(rect.bottom - insets[3]);
-                const clipped = clip(rect, this.#view.viewport);
+                const clipped = clip(rect, this.#readView().viewport);
                 if (nonempty(clipped)) this.#sink.invalidate(clipped, 0);
                 return;
             }
@@ -308,7 +318,7 @@ export class SquidDisplay {
     //   그림자 레이어(flags1 0x40000, frameCount 만큼 뒤의 물리 프레임)를 순서대로 변경 표에 보낸다. (2026-11-08 WB04-E59)
     #mark(type, frame, x, y, marker) {
         if (this.#sink.suppressed()) return;
-        const main = clip(this.bounds(type, frame, x, y), this.#view.viewport);
+        const main = clip(this.bounds(type, frame, x, y), this.#readView().viewport);
         if (marker) {
             if (main.right - main.left < 19) {
                 main.left = coordinate(main.left - 9);
@@ -321,7 +331,7 @@ export class SquidDisplay {
         // 자른 뒤 확장한 범위는 다시 viewport 로 자르지 않는다(Dirty/Draw 단계가 화면을 처리한다).
         if (nonempty(main)) this.#sink.invalidate(main, marker);
         if ((this.#types[type].flags1 & SHADOW) !== 0) {
-            const shadow = clip(this.bounds(type, frame + this.#shapes[type].frameCount, x, y), this.#view.viewport);
+            const shadow = clip(this.bounds(type, frame + this.#shapes[type].frameCount, x, y), this.#readView().viewport);
             if (nonempty(shadow)) this.#sink.invalidate(shadow, marker);
         }
     }

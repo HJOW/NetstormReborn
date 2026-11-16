@@ -147,6 +147,25 @@ export class SquidPostPopState {
 
     bindFactories(list) { this.#sharedFactories = list; }
 
+    // 일반 World Acquire의 값 대입을 같은 장기 상태 주소에서 호환한다. 장기 장부/비용/목록 연결은 유지하고 준비 대여는 호출하지 않는다.
+    resetForGeneralWorld() {
+        this.suppressed = false;
+        this.sharedSuppressed = null;
+        this.graphsEnabled = false;
+        this.pendingPlacement = false;
+        this.localOwner = 0;
+        this.invalidGraph = 254;
+        this.aiAttached.fill(false);
+        this.productionDirty = 0;
+        this.depth = 0;
+        this.#totalCost = 0;
+        this.#ownTotalMade = new RawTotalMadeStorage();
+        this.providers = new SquidPostPopList();
+        this.factories = new SquidPostPopList();
+        // 이전 Player 대여를 버린 새 값형 목록으로 바꾸되 9행 배열 주소는 보존한다.
+        for (let owner = 0; owner < this.ownerFactories.length; owner += 1) this.ownerFactories[owner] = new SquidPostPopList();
+    }
+
     // 현재 선택된 세 표(같은 현재 물리를 직접 읽고 쓰며 사본 동기화를 하지 않는다)이다.
     localCounts() { return (this.#sharedTotalMade ?? this.#ownTotalMade).localCounts; }
 
