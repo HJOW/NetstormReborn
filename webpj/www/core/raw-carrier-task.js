@@ -40,7 +40,7 @@ function scheduleTime(delay, now) {
     const delayNaN = (rawDelay & FLOAT_EXPONENT) === FLOAT_EXPONENT && (rawDelay & FLOAT_FRACTION) !== 0;
     if (!delayNaN) {
         if (currentNaN) return bitsDouble(current | DOUBLE_QUIET);
-        return delay + now;
+        return Math.fround(delay) + now; // C++ 인자 float의 저장을 유한 지연에도 적용한 뒤 현재 double 시각에 더한다(WB04-E608).
     }
     // FLD 가 먼저 float signaling NaN 을 quiet 으로 바꾸고 double 로 넓힌다.
     const expanded = (BigInt(rawDelay & FLOAT_SIGN) << 32n) | DOUBLE_EXPONENT | DOUBLE_QUIET | (BigInt(rawDelay & FLOAT_FRACTION) << 29n);
