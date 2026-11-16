@@ -12268,7 +12268,7 @@
       "bytes": 2657374,
       "lines": 161,
       "fixtureCommit": "cf5e22ca7",
-      "webCommit": "worktree",
+      "webCommit": "fb6b65cde",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBrain.cpp": "74a362377",
         "cpppj/src/o/RawAiCreate.cpp": "382ec33fe",
@@ -12399,7 +12399,7 @@
       "bytes": 1194171,
       "lines": 211,
       "fixtureCommit": "fca3ae92c",
-      "webCommit": "worktree",
+      "webCommit": "fb6b65cde",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgeCandidates.cpp": "55ef31038",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
@@ -12431,7 +12431,7 @@
       "bytes": 39180,
       "lines": 400,
       "fixtureCommit": "55ef31038",
-      "webCommit": "worktree",
+      "webCommit": "fb6b65cde",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgeCandidates.cpp": "55ef31038",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
@@ -12637,7 +12637,7 @@
       "bytes": 80073,
       "lines": 209,
       "fixtureCommit": "de78dbaa9",
-      "webCommit": "worktree",
+      "webCommit": "fb6b65cde",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa9",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
@@ -12669,7 +12669,7 @@
       "bytes": 12809,
       "lines": 417,
       "fixtureCommit": "de78dbaa9",
-      "webCommit": "worktree",
+      "webCommit": "fb6b65cde",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa9",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
@@ -12701,7 +12701,7 @@
       "bytes": 40435,
       "lines": 641,
       "fixtureCommit": "de78dbaa9",
-      "webCommit": "worktree",
+      "webCommit": "fb6b65cde",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa9",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
@@ -12733,7 +12733,7 @@
       "bytes": 2042823,
       "lines": 73,
       "fixtureCommit": "de78dbaa9",
-      "webCommit": "worktree",
+      "webCommit": "fb6b65cde",
       "cpppjBasis": {
         "cpppj/src/o/RawAiBridgeSearch.cpp": "de78dbaa9",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
@@ -24308,6 +24308,37 @@
       "cpppjBasis": {
         "cpppj/src/client/CampaignDamageableRegularTables.inc": "7cd3d5608",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "fort-snapshot-parent",
+      "path": "cpppj/tests/fixtures/fort-snapshot-parent-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE2728관측(1364입력 × 두 x87 정밀도), FortSnapshotParentTests.cpp",
+      "consumers": [
+        "webpj/tests/fort-snapshot-parent.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-snapshot-parent.js"
+      ],
+      "unit": "WB04-E627",
+      "doc": "docs/webpj-fort-snapshot-parent-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortSnapshotParent.cpp",
+        "cpppj/src/o/RawFortSnapshotParent.h"
+      ],
+      "scope": "Fort/Battle 전체 snapshot 부모와 현재칸 두 wrapper. 정상/부분 중단378·고정 this/현재 getter·기술 부모/Create stream·8DWORD/240BYTE/전체 trace2728행. 실제 Session/Template/child 직렬화 연결은 잔여",
+      "text": true,
+      "sha256": "96d7f6deb4769a4a818c572c8bd930e8fe63d1ee5f89fb5df634c6b138825cd0",
+      "bytes": 2144255,
+      "lines": 2729,
+      "fixtureCommit": "fa7762f9e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortSnapshotParent.cpp": "fa7762f9e",
+        "cpppj/src/o/RawFortSnapshotParent.h": "fa7762f9e"
       }
     }
   ]

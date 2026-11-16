@@ -44,7 +44,8 @@
 | mp-zsend | exclude-mp | HtmlZsend | `$Zsend` 87h 송신, WB02-E 미연결 결정 |
 | edit-editor | exclude-edit | 이름에 `Editor`가 든 15단위 | UberEditor·섬 추가 창·작업본 파일·Test Battle·편집 복귀 등 |
 | edit-island-add | exclude-edit | RawIslandAdd·RawIslandPlacement | 편집기 섬 추가 |
-| edit-fort-save | exclude-edit | Fort Save/Write·snapshot 16단위 | Save as와 snapshot writer. Battle snapshot·CoreData 기록은 일반 전투와 공유 |
+| edit-fort-save | exclude-edit | Fort Save/Write·snapshot 15단위 | Save as와 snapshot writer. 공통 자식은 Session 결선 때 도달을 다시 확인한다 |
+| campaign-snapshot-parent | port | RawFortSnapshotParent | E627: 캠페인 기술 획득·신전 상승·의식 완료의 SnapshotBattle/Session SnapshotFort도 같은 부모를 공유한다. 원문 네 진입을 이식하며 편집기 UI/파일 저장을 추가하지 않는다 |
 | edit-existing-fort | exclude-edit | Deck/DeckRestore/Subscriber 계열 5단위 | RawCampaignSession의 `ReadExistingFortDeck` 등 "기존Editor" 경로. 미션 적재는 RawCampaignWorldLoad/RawFortWorldLoad가 맡는다 |
 | shared-territory-write | port | RawFortTerritoryRecover의 WriteFortTerritoryRecords | E588: 캠페인 Vortex도 공유하는 쓰기. RecoverFortTerritory만 ExistingEditor 전용 제외다. TypeNames/Contents/변환표도 캠페인 공유로 앞 단위에서 복원했다 |
 | edit-new-fort | exclude-edit | RawNewFort·RawCampaignNewFort·NewFortManagerDevices | 새 맵 manager·보호 작업본. 987 뒤로 원격 Fort도 같은 생성을 쓴다 |
@@ -66,7 +67,7 @@ LEFT_JOBS 1절 경계("원본 싱글플레이도 같은 프로세스의 내부 �
 - **State 정리:** `RawMetaZoneCleanup`·`RawClockSyncReset`·`RawStateZoneReset`은 단독 State 정리에서도 부른다.
 - **HUD Chat/Console:** `ChatWindow`·`RawChat*`·`ClientChat*`·`RawChatManagerPrefix`는 cpppj 비멀티 UI 범위(929)에 든다. 원격 송수신 분기는 경계 규칙으로 옮긴다.
 - **기타:** `RawBattleLeave`(단독 LeaveBattle), `SendMoneyInput`(캠페인 AI 동맹), `RawPlayerMenu`, `ClientNsInfoGlobals`.
-- **확인 보류 메모:** `RawRitualChoice`·`RitualChoiceInput`은 CMake 주석상 MP 사전 구현이지만 의식 보상 선택이 단독에서도 도달할 수 있어 port로 두고 WB10에서 확인한다. `RawFactoryPostPop`의 아웃포스트 분기, `RawFortSnapshotParent`(edit-fort-save)의 단독 의식 뒤 호출(RawRitualRefresh) 여부도 해당 단위에서 확인한다.
+- **확인 보류 메모:** `RawRitualChoice`·`RitualChoiceInput`은 CMake 주석상 MP 사전 구현이지만 의식 보상 선택이 단독에서도 도달할 수 있어 port로 두고 WB10에서 확인한다. `RawFactoryPostPop`의 아웃포스트 분기는 후순위 스커미시에서 확인한다. `RawFortSnapshotParent`의 단독 의식 뒤 공유 호출은 E627에서 확인·이식했으며 자식 직렬화의 실제 Session 결선은 잔여다.
 
 ### 3.2 집계
 

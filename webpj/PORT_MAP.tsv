@@ -870,7 +870,7 @@ cpppj/src/o/RawFortPriestPreparation.cpp	port	www/core/raw-fort-priest-preparati
 cpppj/src/o/RawFortRandomPlacement.cpp	port	www/core/raw-fort-random-placement.js	f7f58f5a	port	[o-default] WB04-E285: 0040db90 Fort 단일 랜덤 배치(spot·edgeFarm 존재·공간·지역·지면 교체 Unpop→Retype→HP→Repop(64)·임의 프레임 후보 256·owner/force/덮어쓰기)·MayReplace 모서리 단락 평가·Retype(void+foot assert). 기준선 뒤 f7f58f5a 의 현재 지면/edgeFarm TYPE 전역 접근자는 FortRandomPlacementState 의 shared* 함수와 같은 의미(3.6절 ①). 검증은 RawFarmCluster 와 함께 farmcluster 원본 104행 재생. tests/farm-cluster.test.mjs
 cpppj/src/o/RawFortRegionSave.cpp	exclude-edit			-	[edit-fort-save]
 cpppj/src/o/RawFortSnapshotBasics.cpp	exclude-edit			-	[edit-fort-save]
-cpppj/src/o/RawFortSnapshotParent.cpp	exclude-edit			-	[edit-fort-save]
+cpppj/src/o/RawFortSnapshotParent.cpp	port	www/core/raw-fort-snapshot-parent.js	225553df	port	[campaign-snapshot-parent] WB04-E627: 외곽 Session4321·4328·6090의 신전 상승/의식 완료/기술 획득도 같은 SnapshotBattle/Session SnapshotFort→원문 부모를 호출하므로 편집기 전용 제외를 교정. 고정 this/현재 getter·기술 부모 선행 캡처/Create stream·두 모드 재조회/정상·부분 중단의 네 진입 전체를 원본2728관측(중단378 포함)과 대조. 신규3건 통과. 자식 직렬화/실제 Template·Session callback 결선은 잔여이며 Save as UI/디스크 저장은 제외 유지. docs/webpj-fort-snapshot-parent-20261117.md. 기준선 뒤 변경0
 cpppj/src/o/RawFortSpWrite.cpp	exclude-edit			-	[edit-fort-save]
 cpppj/src/o/RawFortSubscriberChange.cpp	exclude-edit			-	[edit-existing-fort]
 cpppj/src/o/RawFortSubscriberLoad.cpp	exclude-edit			-	[edit-existing-fort]

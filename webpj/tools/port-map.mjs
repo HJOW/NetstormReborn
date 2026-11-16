@@ -62,6 +62,8 @@ export const RULES = Object.freeze([
     { id: 'mp-zsend', class: 'exclude-mp', names: ['HtmlZsend'], reason: 'HTML $Zsend 의 87h 패킷을 11번 연결로 송신. WB02-E 에서 미연결로 결정' },
     { id: 'edit-editor', class: 'exclude-edit', pattern: /Editor/, reason: '이름에 Editor 가 든 편집기 전용 장치(UberEditor·섬 추가 창·작업본 파일·Test Battle 등)' },
     { id: 'edit-island-add', class: 'exclude-edit', names: ['RawIslandAdd', 'RawIslandPlacement'], reason: '편집기의 섬 한 개 추가와 임시 청크 지도 배치 검사' },
+    // 기술 획득/신전 상승의 외곽 callback도 같은 두 snapshot 부모를 호출한다. 편집기 UI와 구별한다(WB04-E627).
+    { id: 'campaign-snapshot-parent', class: 'port', names: ['RawFortSnapshotParent'], reason: 'RawCampaignSession.cpp4321·4328·6090의 캠페인 신전 상승/의식 완료/기술 획득도 SnapshotBattle/SnapshotFort의 공통 부모를 호출한다' },
     {
         id: 'edit-fort-save', class: 'exclude-edit',
         names: ['RawFortObjectSave', 'RawFortObjectsSave', 'RawFortRegionSave', 'RawFortContentSave', 'RawFortTerritorySave', 'RawFortSnapshotBasics', 'RawFortSnapshotParent', 'RawFortMoneySave', 'RawFortMissionSave', 'RawFortBadgesSave', 'RawFortCoreWrite', 'RawFortSpWrite', 'RawFortSubscriberWrite', 'RawDataManagerFileSave', 'RawMenuSaveFort', 'SaveFortNameDialog'],
