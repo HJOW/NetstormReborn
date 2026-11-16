@@ -1,0 +1,1975 @@
+{
+  "unit": 1321,
+  "product": 1320,
+  "version": "11.01",
+  "host": "HJOW-Athlon",
+  "decompileChanged": false,
+  "productChanged": false,
+  "registeredTests": 1175,
+  "selectedTests": 325,
+  "initialPassed": 324,
+  "initialFailed": [
+    "SquidUnpop_VtableMetadata_MatchesActualCommonDisplayPaths"
+  ],
+  "correctedTest": "SquidUnpop_VtableMetadata_MatchesActualCommonDisplayPaths",
+  "correctedTestPassed": true,
+  "fixtureFiles": 988,
+  "fixturesUnchanged": true,
+  "buildExit": 0,
+  "gameExecutions": 0,
+  "multiplayerExecutions": 0,
+  "productExeSha256": "f45c229693cfa4edf116a7cc461f5dbc3e8325f71974ba8903678afe41a453e3",
+  "rawPath": "extracted/cpp-pop-tests-1321",
+  "cases": [
+    {
+      "name": "SquidPop_X86Fixture_ReplaysActualRawRegistrationLifecycle",
+      "source": "PopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPop_Vtables_RejectsUnrestoredPostPopOverrides",
+      "source": "PopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPop_SelectedGuards_PreserveOriginalPartialWrites",
+      "source": "PopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidSpatial_Coordinates_PreservesFractionalBoundaryInBothEditions",
+      "source": "PopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_EarlyReturnsDoNotReadTypeOrDevices",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_InvalidCoordinateLogsBeforeStoreAndUsesCurrentType",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_MiniMapPreservesInputBoundsAndReadsCurrentLoopType",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_InvalidStartDiagnosesWithCheckingOffAndResumesCellZero",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_GridDiagnosticKeepsCandidateAndLogsCurrentNames",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_MissingSideDeviceKeepsEarlierSpots",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_FrameFailureOccursAfterSpotsBeforeHash",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_OverlapReturnsBeforeUnknownVirtualAndFrame",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_NextDiagnosticKeepsSavedHeadAndCurrentIslandBranch",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_UpdateControlsCurrentFirstPopAndFlags",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_FinalContainedDiagnosticKeepsCompletedEffects",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_ActualAdapterTransmittingDiagnosticRunsAfterVoidClear",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_ActualWorldFrameFailurePreservesCoordinatesAndSpots",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPopParent_ActualClientWorldDiagnosticAndTraceShareCurrentOwner",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PopWorldBounds_ActualParentClampsUnorderedAndRechecksLimitAfterMiniMap",
+      "source": "SquidPopParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidActivate_VoidDiagnosticRepairsCurrentStateBeforeTransmittingCheck",
+      "source": "SquidActivateTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidActivate_ZeroSidDiagnosticResumesSamePhysicalSlot",
+      "source": "SquidActivateTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidActivate_InvalidPhysicalSidFailsAfterOriginalDiagnostic",
+      "source": "SquidActivateTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidActivate_CurrentDepthDiagnosticReturnsWithoutAutomaticRepair",
+      "source": "SquidActivateTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidActivate_AbortingDepthDiagnosticKeepsCompletedEffects",
+      "source": "SquidActivateTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidActivate_BalancedDepthWrapDoesNotReadDiagnostic",
+      "source": "SquidActivateTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidActivate_PostFailurePreservesIncrementWithoutFinalDiagnostic",
+      "source": "SquidActivateTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidActivate_DiagnosticSelfRebindReadsNextCurrentCallback",
+      "source": "SquidActivateTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidActivate_ActualCommonPostPopKeepsStatisticsBeforeCurrentDiagnostic",
+      "source": "SquidActivateTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidActivate_ActualWorldUsesCurrentClientDiagnosticWithCheckingOff",
+      "source": "SquidActivateTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuildingSpace_X86Fixture_ReplaysWholeBuildingPopAndUnpop",
+      "source": "BuildingSpaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuildingSpace_BindingAndNativeDiagnostic_AreEditionSpecific",
+      "source": "BuildingSpaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPostPop_X86_CostListsTotalsAndActiveLifecycle",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPostPop_FirstRegistrationAndProviderDuplicate_PreserveOriginalCounters",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPostPop_UnsupportedEffectsAndCorruptList_KeepEarlierSpaceWrites",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPostPop_BridgePrefix_X86_FlagsAndExtra",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPostPop_BridgeRequiresConnectorAndRunsBeforeSuppressedCommon",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_BridgeNoSelectedFlagSkipsRawAndDevice",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_BridgeMissingConnectorKeepsFirstBitAndLife",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_BridgeFlag4ReadsOnlyCurrentAbstractGate",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_BridgeReturnKeepsCallbackCurrentSlot",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_BridgeCallableSurvivesSelfUnbinding",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_BridgeVirtualVtableAndExplicitPreflightDiffer",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_BridgeThrownEffectKeepsPrefixAndCallbackWrites",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_NoFirstUsesActualVtableWithoutDeviceOrTypeGate",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_DispatchNonFirstSkipsMissingPrefixAndPhysicalType",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_DispatchFirstRequiresSelectedPrefixBeforeCommon",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_DispatchKeepsSelectedCallableDuringSelfUnbinding",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_MissingSelectedPrefixFailsBeforeCommon",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_SelectedPrefixKeepsPhysicalMutationsBeforeCommon",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_CallableSurvivesSelfUnbinding",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_ThrownPrefixKeepsEffectsAndDepth",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_LateCommonFailureKeepsSelectedCreationAndCurrentTypeCounts",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_ExplicitPreflightRemainsSeparate",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_CdDoesNotUsePatchPrefix",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidPostPop_TypeCost_LoadsFloatAndRejectsString",
+      "source": "PostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "frame_display_binding_updates_old_new_pixels_and_repop_level",
+      "source": "FrameDisplayTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "frame_display_binding_preserves_shadow_marker_and_suppression",
+      "source": "FrameDisplayTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "frame_display_binding_rejects_bad_current_frame_and_missing_shape",
+      "source": "FrameDisplayTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "frame_display_binding_rejects_mismatched_connections",
+      "source": "FrameDisplayTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "frame_display_shp_size_preserves_double_frames_and_cd_range_rules",
+      "source": "FrameDisplayTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "set_frame_patch_x86_levels_and_effects",
+      "source": "SetFrameTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "set_frame_cd_x86_levels_and_effects",
+      "source": "SetFrameTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "set_frame_1037_x86_levels_and_effects",
+      "source": "SetFrameTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "set_frame_rejects_missing_hooks_and_invalid_flags",
+      "source": "SetFrameTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "set_frame_real_unpop_and_pop_move_hash_level_on_next_change",
+      "source": "SetFrameTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RiftShapeAccess_ValidFrameDoesNotReadDiagnosticDevices",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RiftShapeAccess_RangeErrorKeepsSelectedTypeAndSavedArguments",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RiftShapeAccess_NullShapeRepairsWithoutFrameDetail",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RiftShapeAccess_FreedHeaderDiagnosticDoesNotRepeatPredicateAfterReturn",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RiftShapeAccess_DoubleFrameCountUsesSignedDwordWrap",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RiftShapeAccess_FrameDetailFailureStopsBeforeAssertionAndPhysicalRead",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RiftShapeAccess_AbortingAssertionKeepsEarlierDetail",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RiftShapeAccess_DiagnosticSelfRebindKeepsCurrentCallableAlive",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "CurrentTypeBindings_PostPopKeepsLoadedCostAndUsesCurrentRegistrationFlags",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "CurrentTypeBindings_RejectsWrongLengthWithoutLosingLiveArray",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "CurrentTypeBindings_NeighborFootprintDistinguishesOwnedAndBorrowedRows",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "CurrentTypeBindings_GraphAddReadsCurrentSurfaceAndFootprint",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "CurrentTypeBindings_ActualWorldPostPopKeepsLoadedCostBeforeCurrentAiNotice",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RiftShapeAccess_ActualWorldUsesSelectedShapeAfterCurrentDiagnostic",
+      "source": "RiftShapeAccessTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_X86_AllocatedSidPostPopAndProjectedPop",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_X86_DetachGeneralIslandBridgeUnpopAndRelease",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_X86_DetachUsesPositionHeadGraphAndSourceFrame",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_X86_GlobalRebuildAndExhaustedAllocation",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_X86_RecoveryInsideAddDetachPopAndPostPop",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_RecoveryPreviewRejectsOtherVoidAndOutOfRangeTypeBeforePop",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_RebuildRejectsDamageAndFastAllocateDoesNotReadPool",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_PositionHeadEarlyReturnAndPreflightPreserveSource",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_RegionX86_ThreeBinariesAndNormalBridgeIslandPop",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "GraphReferenceChecking_ActualRegionReplaysExistingNativeGeometry",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_ProjectedPreviewAndActualPopKeepDifferentFailureEffects",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_RegionThenAddFailureRetainsEarlierPopMutation",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_RefreshesFramesMapAndRawMembershipBetweenCalls",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_DetachPreflightRejectsBeforePoolSpaceOrGraphMutation",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_NonSurfaceFractionalRegionPreservesPositionAndNeighbor",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_CorruptCandidatesAndMismatchedConnectionsRejectBeforeMutation",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_SharedStorageAndExplicitSnapshotHaveSeparateOwnership",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "RawGraph_SharedPostDestroyValidationKeepsCloneAndCommitSeparate",
+      "source": "RawGraphTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "GraphLiveChecking_ReplaysNativeParentsAndCallbackMutations",
+      "source": "GraphLiveCheckingTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "GraphLiveChecking_ReplaysNativeFreeCandidateAfterTrace",
+      "source": "GraphLiveCheckingTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "GraphLiveChecking_ActualWorldUsesFullPoolAndStorageTrace",
+      "source": "GraphLiveCheckingTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "GraphDetachLive_ReplaysNativeCurrentStateAndValueSource",
+      "source": "GraphDetachLiveTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "GraphDetachLive_RegionSetterContinuesAfterFreeAndRetype",
+      "source": "GraphDetachLiveTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "GraphDetachLive_ActualWorldBindsCurrentModesAndStorageClock",
+      "source": "GraphDetachLiveTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "neighbor_patch_x86_first_and_bridge_event",
+      "source": "NeighborTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "neighbor_cd_x86_first_and_bridge_event",
+      "source": "NeighborTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "neighbor_1037_x86_first_and_bridge_event",
+      "source": "NeighborTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "neighbor_first_stops_before_unvisited_damage_and_does_not_mutate",
+      "source": "NeighborTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidDisplayParent_NativeWholeParent696",
+      "source": "SquidDisplayParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidDisplayParent_NativeNumberAndThreeErrorArguments696",
+      "source": "SquidDisplayParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidDisplayParent_SelectedDevicesAndStableBorrowedFields",
+      "source": "SquidDisplayParentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPopCurrent_SuppressedReturnsBeforeSlotOrTypeAndWrapsDepth",
+      "source": "PostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPopCurrent_RegionDisabledBranchDoesNotRecheckGraphs",
+      "source": "PostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPopCurrent_RegionCallbackDisablesAddBeforeLedger",
+      "source": "PostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPopCurrent_DestroyDiagnosticResumesWithCurrentType",
+      "source": "PostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPopCurrent_AbortingDiagnosticKeepsDepthAndEarlierRegion",
+      "source": "PostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPopCurrent_NoGraphSurfaceUsesResetBeforeCost",
+      "source": "PostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPopCurrent_CurrentTypeAndSavedGenusHaveIndependentRoles",
+      "source": "PostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPopCurrent_AbstractExtraSkipsLedgerButStillFinishesGraph",
+      "source": "PostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPopCurrent_SelectionFailureKeepsAllEarlierStatisticsAndDepth",
+      "source": "PostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPopCurrent_ActualManaDiagnosticRetainsSavedFactoryGenusAndCurrentOwner",
+      "source": "PostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPopCurrent_OwnerReadPrecedesCurrentLocalOwnerGetter",
+      "source": "PostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "MouseSelectionRecheck_ZeroTypeDoesNotRequireFinder",
+      "source": "MouseSelectionRecheckTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "MouseSelectionRecheck_MissingResultPreservesCurrentMutation",
+      "source": "MouseSelectionRecheckTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "MouseSelectionRecheck_CurrentDifferentSelectionBlocksAfterFind",
+      "source": "MouseSelectionRecheckTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "MouseSelectionRecheck_PausedSelectStillClearsOrdinaryFound",
+      "source": "MouseSelectionRecheckTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "MouseSelectionRecheck_OrdinaryFoundIsActuallySelectedBeforeClear",
+      "source": "MouseSelectionRecheckTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "MouseSelectionRecheck_RedirectedSelectUsesOriginalFoundExtra",
+      "source": "MouseSelectionRecheckTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuildingNotifyCurrent_Native2264RawTraceAndGlobals",
+      "source": "BuildingNotifyCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuildingNotifyCurrent_OnlySelectedAssertionRequiresDevice",
+      "source": "BuildingNotifyCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuildingNotifyCurrent_CurrentAndIndependentTypeContracts",
+      "source": "BuildingNotifyCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuildingNotifyCurrent_RebindingKeepsInvokedCallableAlive",
+      "source": "BuildingNotifyCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuildingNotifyCurrent_SideWritesPrecedeReturningDiagnostic",
+      "source": "BuildingNotifyCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuildingNotifyCurrent_DiagnosticFailurePreservesSideAndCallbackWrites",
+      "source": "BuildingNotifyCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuildingNotifyCurrent_CdDoesNotDereferenceUnusedSidOrDevice",
+      "source": "BuildingNotifyCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuildingNotifyCurrent_ActualWorldUsesCurrentTypeCheckingAndClientDevice",
+      "source": "BuildingNotifyCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FencePostPop_Native330",
+      "source": "FencePostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FencePostPop_RequiredBoundariesAndPartialWrites",
+      "source": "FencePostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetTailCurrent_FenceDoesNotRunExplicitPreflight",
+      "source": "FencePostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetTailCurrent_FenceNoFirstReadsNeitherVtableNorType",
+      "source": "FencePostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetTailCurrent_FenceNeighborMutationUsesPhysicalOwnerWrite",
+      "source": "FencePostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetTailCurrent_FenceConnectionMutationKeepsFullDwordAndLife",
+      "source": "FencePostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetTailCurrent_FenceMissingClearKeepsPairReservationsAndOwner",
+      "source": "FencePostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetTailCurrent_FenceMissingFinalReserveKeepsConnectionDword",
+      "source": "FencePostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "NuggetPostPop_NativeAllocationsRandomAndFallback",
+      "source": "NuggetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldLifecycle_ReplaysOriginals",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_ForcefieldNativePrefixes384Rows",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_ForcefieldNoFirstSkipsUnboundDevicesAndRaw",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_ForcefieldTwoFailedReservesSkipConstructor",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_ForcefieldMissingConstructorKeepsReserveMutation",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_ForcefieldSecondReserveFailureKeepsFirstRegular",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_ForcefieldFirstConstructorMutationKeepsSecond",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_ForcefieldVirtualUsesVtableAndDirectCommon",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_ForcefieldCdKeepsConstructionAndObjectPreflight",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PostPrefixCurrent_ForcefieldMissingReserveStopsBeforeCommon",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldLifecycle_ReplaysCd",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldLifecycle_ReplaysExtra1037",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldLifecycle_ComposesSpaceProcessesAndSelfDeletion",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldLifecycle_RequiresBindingAndDiagnosesInvalidEvents",
+      "source": "ForcefieldLifecycleTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuriedPostPop_Native580",
+      "source": "BuriedPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuriedPostPop_RequiredBoundariesAndPartialWrites",
+      "source": "BuriedPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuriedRuneCurrent_BuriedNoFirstStillReadsPhysicalQa",
+      "source": "BuriedPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuriedRuneCurrent_BuriedChooseBeforePhysicalStoreAndCurrentBridgeNotice",
+      "source": "BuriedPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuriedRuneCurrent_BuriedMissingNoticePreservesQaBeforeReservations",
+      "source": "BuriedPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuriedRuneCurrent_BuriedBridgeComparisonKeepsFullDword",
+      "source": "BuriedPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuriedRuneCurrent_BuriedFailedFirstAllocationStillReachesSecondConstructor",
+      "source": "BuriedPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuriedRuneCurrent_BuriedMissingConstructorFailsAfterSuccessfulAllocation",
+      "source": "BuriedPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuriedRuneCurrent_BuriedExplicitValidateRemainsSeparate",
+      "source": "BuriedPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "BuriedRuneCurrent_BuriedQaReadRejectsOnlyPhysicalSidBeforeBase",
+      "source": "BuriedPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeSpawn_PatchNativeCreationAndInitialPop",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeSpawn_CdNativeCreationAndInitialPop",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_NoFirstSkipsRawPopulationAndFrameDevices",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_ActualVtableAcceptsDifferentTypeAndPhysicalSlot",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_MissingBridgeNoticeKeepsQaBeforePopulation",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_BridgeNoticeMutationUsesCurrentTypeAndNoIFrame",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_BridgeComparisonUsesFullDword",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_FullAndSignedNegativeCapacitySkipStorage",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_CapturedIndexStoreThenCurrentCountIncrement",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_NegativeIndexFailsOnlyAtSelectedStore",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_ShortPhysicalArrayFailsAfterQa",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_MissingFrameKeepsQaAndPopulation",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_CurrentTypeReadPrecedesMissingFrameDevice",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_MissingBaseKeepsFrameAndRegistration",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_ExplicitValidateAndCdConstructorStaySeparate",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_FirstPhysicalSidFailurePrecedesBase",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_SpawnCurrentSignedGateDoesNotReadStorageOrType",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_SpawnReadsBlockedAfterCurrentCapacity",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_SpawnMissingPopKeepsGenericCreationOwnerAndFrame",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "DudeParentCurrent_SpawnNegativeCountReachesActualFactoryAndSelectedPop",
+      "source": "DudeSpawnTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FieryTailLifetime_Native027f",
+      "source": "FieryTailLifetimeTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "StreakLifetime_NativeConstructorAndSharedPalette",
+      "source": "FieryTailLifetimeTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_LifetimeCapturesTypeBeforeRegistryAndParticleAllocation",
+      "source": "FieryTailLifetimeTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_LifetimeReadsSharedTypeForEachCreation",
+      "source": "FieryTailLifetimeTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_TailTypeOwnerPersistsAcrossGeneralWorldPreparation",
+      "source": "FieryTailLifetimeTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionArrival_ReplaysPatch",
+      "source": "ConstructionArrivalTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionArrival_ReplaysCd",
+      "source": "ConstructionArrivalTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionArrival_RequiresCurrentWorldAndEffects",
+      "source": "ConstructionArrivalTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "TeleportCurrent_ArrivalReadsSameCurrentStreakTypeAtDeletion",
+      "source": "ConstructionArrivalTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ManaBoltArrival_ReplaysActualFinderAndArrival",
+      "source": "ConstructionArrivalTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_NonFirstSkipsInvalidGlobalsAndAllDevices",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_OrdinaryLetterNeedsOnlyReachedConnection",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_LoadingStoresPhysicalFrameBeforeLateDeviceFailure",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_RequiredFrameDiagnosisReturnsMinusOneWithoutRetry",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_OrientationDiagnosisRereadsAndContinuesAfterMismatch",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_LoadingRereadsCoordinatesAfterWestDiagnosis",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_CreateThenCaptureTypeBeforeOwnerAndReadFieldsAfterOwner",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_InvalidCurrentTypeFailsAfterCreationBeforeOwner",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_FootprintDecrementWrapsBeforeCoordinateAddition",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_MissingUpperLeftDiagnosisReturnsThenConnects",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_SupportDetailUsesLiveMapTypeAndCurrentSignedTypeWas",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_SupportEffectsSurviveMissingLateDiagnosis",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_TypeWasOwnerSurvivesGeneralWorldReset",
+      "source": "IslandCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "island_postpop_matches_originals_x86",
+      "source": "IslandPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "island_postpop_matches_original_cd_x86",
+      "source": "IslandPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "island_postpop_matches_original_1037_x86",
+      "source": "IslandPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "island_postpop_validates_hooks_maps_and_missing_upper_left",
+      "source": "IslandPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "island_postpop_shared_saved_game_reads_current_owner_gate",
+      "source": "IslandPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "island_postpop_cd_uses_separate_owner_surface_map",
+      "source": "IslandPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "island_postpop_real_raw_modules_build_support_and_propagate_owner",
+      "source": "IslandPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "bridge_connect_patch_x86_walk_link_owner",
+      "source": "BridgeConnectTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "bridge_connect_cd_x86_walk_link_owner",
+      "source": "BridgeConnectTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "bridge_connect_1037_x86_walk_link_owner",
+      "source": "BridgeConnectTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "bridge_connect_preview_append_is_visible_before_next_creation",
+      "source": "BridgeConnectTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "bridge_connect_rejects_missing_hooks_and_invalid_inputs",
+      "source": "BridgeConnectTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "IslandCurrent_BridgeCommonFailureRetainsEarlierStalagEffects",
+      "source": "BridgeConnectTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "bridge_connect_walk_reads_live_chain_between_next_calls",
+      "source": "BridgeConnectTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "bridge_connect_real_raw_modules_capture_neutral_island",
+      "source": "BridgeConnectTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopCurrent_PatchPrefixReadsPhysicalSlotWithoutValidate",
+      "source": "PriestPostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopCurrent_PatchSignedListUsesFirstCountAndCurrentReads",
+      "source": "PriestPostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopCurrent_RegenNumeratorReadsCurrentPriestTypeDword",
+      "source": "PriestPostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopCurrent_PatchPrefixRequiresOnlyReachedHooks",
+      "source": "PriestPostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopCurrent_PatchVirtualEntryDispatchesByVtableOnly",
+      "source": "PriestPostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopCurrent_PatchTailRequiresOnlyReachedEffects",
+      "source": "PriestPostPopCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "priest_postpop_patch_prefix_x86",
+      "source": "PriestPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "priest_postpop_cd_prefix_x86",
+      "source": "PriestPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "priest_postpop_1037_prefix_x86",
+      "source": "PriestPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "priest_postpop_prefix_rejects_invalid_bindings_before_effects",
+      "source": "PriestPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "priest_postpop_allocation_failure_skips_hp_lookup_and_creation",
+      "source": "PriestPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "priest_postpop_prefix_binds_real_process_host_and_owner",
+      "source": "PriestPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestOwnerState_DataOnlyResetKeepsListSlotZeroAndInvalidDiagnostics",
+      "source": "PriestPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestOwnerState_PostPopWritesCurrentSharedTableAfterEffects",
+      "source": "PriestPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopTail_ReplaysOriginals",
+      "source": "PriestPostPopTailTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopTail_ReplaysCd",
+      "source": "PriestPostPopTailTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopTail_ReplaysExtra1037",
+      "source": "PriestPostPopTailTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopTail_ComposesProcessBooksAndShieldLifetimeRequests",
+      "source": "PriestPostPopTailTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopTail_RejectsInvalidBindings",
+      "source": "PriestPostPopTailTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "PriestPostPopTail_SkipsUnneededInvalidCoordinateAndFrameReads",
+      "source": "PriestPostPopTailTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_OrdinaryNativeRowsKeepCompleteExpectedOutput",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_UnselectedDevicesAreOptional",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_FailedReservationSkipsMissingConstructor",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_MissingConstructorFollowsSuccessfulReservation",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_LateFrameFailureRetainsReservationsAndCommon",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_CurrentTypeAndBossFollowCommonCallback",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_WarningPrecedesMissingDestroy",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_NoDuplicateSkipsMissingDiagnostics",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_TwoCountsReadCurrentTypeAndRetainSavedFrame",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_SecondRunUsesCurrentFramesWithSavedFirst",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_CountFailureFollowsCommon",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryParentCurrent_PhysicalTypeReadIsReachedAfterCommon",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryGlobalsCurrent_FirstTimerKeepsFullDwordAndCurrentValue",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryGlobalsCurrent_ConstructorChangesNextTimerGlobal",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryGlobalsCurrent_FailedReservationChangesNextTimerGlobal",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryGlobalsCurrent_CommonChangesFrameExclusionBeforeCount",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryGlobalsCurrent_OwnedNumbersRetainIndependentCopy",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactoryGlobalsCurrent_FrameExclusionKeepsFullDword",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "FactorySetterCurrent_MissingDisplayFailsAfterLevelWrittenPrefix",
+      "source": "FactoryPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_ResidenceAndGeyserNative376Rows",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_NoFirstFlagSkipsUnboundFrontDevices",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_MissingSurfaceStopsBeforeListAndRegular",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_OnlyNonzeroSurfaceOwnerRequiresSetter",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_FailedAllocationsSkipMissingConstructorAndExtraGate",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_LateNotifyFailureRetainsListReservationsAndNibble",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_NotifyChangesCurrentFrameNibbleAndAnimation",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_OwnerCallbackKeepsPhysicalFreeContainedSlot",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_SignedFullListSkipsUnneededStorage",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_NegativeStoreRejectsOnlyAtPhysicalWrite",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_BoundListStoresBeforeIncrementAndKeepsDuplicates",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_MissingGeyserRegistrationRetainsList",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_GeyserExtraGateSkipsUnboundFront",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_GeyserRegistrationChangesCurrentTypeCost",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_GeyserMissingRepopRetainsUnpopAndFrame",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_GeyserBadCurrentTypeFollowsRegistration",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_GeyserNoIslandSkipsUnboundSpaceDevices",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_GeyserLiveFinderFollowsEffectsBetweenCandidates",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_GeyserWordSetterNotifiesCurrentBridgeBeforeRegular",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "AssetParentsCurrent_GeyserMissingBridgeNoticeRetainsWord",
+      "source": "AssetPostPopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidUnpop_X86Fixture_ReplaysRawUnpopTakeReleaseAndFirstPop",
+      "source": "UnpopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidUnpop_VtableMetadata_MatchesActualCommonDisplayPaths",
+      "source": "UnpopTests.cpp",
+      "initialExitCode": 1,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidUnpop_Guards_PreservePartialEffectsAtSelectedBoundaries",
+      "source": "UnpopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidUnpop_CdMissingChain_AndTakePreservePoolAccounting",
+      "source": "UnpopTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidDisplay_X86_ActiveDirtyBoundsAndRawLifecycle",
+      "source": "DisplayTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidDisplay_RendererAdapter_PaintsOldAndNewRawPositions",
+      "source": "DisplayTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidDisplay_ShpMetrics_ReadSeparatePrefixAndRejectPlainVfx",
+      "source": "DisplayTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "SquidDisplay_InvalidFrameAndEdition_RejectBeforeRawMutation",
+      "source": "DisplayTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionPlace_ReplaysOriginals",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionPlace_ReplaysCd",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionPlace_ReplaysExtra1037",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionPlace_ChargesStoredSpAndPlacesRealObjects",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionPlace_SetsBridgeQualityAndTakesServerSids",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionPlace_RejectsBadInputsBeforeEffects",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionPlace_CurrentChargeGateFollowsLocalPlayerShortCircuit",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionPlace_SharedBossRecheckedAfterMoneyRead",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionPlace_SharedServerControlsTakeIndependently",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "CanonConsumers_ConstructionPlaceBeforeSideEffects",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "NuggetTypeNumber_ConstructionChargesAndRefundsUseCurrentOwner",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ConstructionPlace_CurrentBaseAndSelectedRecordPreserveOriginalChargeOrder",
+      "source": "ConstructionPlaceTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "InventoryAboutMenu_Native1296",
+      "source": "InventoryAboutMenuTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "InventoryAboutMenu_NativeClasses2592",
+      "source": "InventoryAboutMenuTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "NuggetMenuCurrent_RefundReadsCurrentNumbersAfterCost",
+      "source": "InventoryAboutMenuTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "NuggetMenuCurrent_SuppressedClassReadsOwnerAfterEditorGate",
+      "source": "InventoryAboutMenuTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldRegularCurrent_UnknownEventSkipsRawAndUnselectedDevices",
+      "source": "ForcefieldRegularCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldRegularCurrent_AdvanceOnlyAndCallbackCanReleaseHandler",
+      "source": "ForcefieldRegularCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldRegularCurrent_CurrentDwordAndRawFloatsReachTypedFinder",
+      "source": "ForcefieldRegularCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldRegularCurrent_MissingDestroyPreservesCompletedFindEffect",
+      "source": "ForcefieldRegularCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldRegularCurrent_DestroyCallbackCanReleaseHandler",
+      "source": "ForcefieldRegularCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldRegularCurrent_DiagnosticReadsCurrentCheckingAndReturnsAfterRelease",
+      "source": "ForcefieldRegularCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldRegularCurrent_MissingSelectedDiagnosticFailsWithoutRawMutation",
+      "source": "ForcefieldRegularCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "ForcefieldRegularCurrent_CdKeepsPreflightAndNoDiagnosticForUnknownEvent",
+      "source": "ForcefieldRegularCurrentTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "LoadedCostTable_PatchSnapshotSurvivesCurrentNanAndReadsCurrentRegistrationFlags",
+      "source": "LoadedCostTableTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "LoadedCostTable_PostAndRewardShareLoadedCostsWithoutChangingCurrentHp",
+      "source": "LoadedCostTableTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "LoadedCostTable_NewExecutorsKeepOriginalLoaderInsteadOfMutatedFloat",
+      "source": "LoadedCostTableTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "LoadedCostTable_InvalidRebindKeepsPreviousCacheAndEmptyRestoresOwnedSnapshot",
+      "source": "LoadedCostTableTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "rawGeyserMined_native_word_random_and_empty_spawn",
+      "source": "GeyserMinedTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "rawGeyserMined_real_packet_factory_destroy_and_space",
+      "source": "GeyserMinedTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "rawGeyserMined_shared_boss_rechecked_after_sound",
+      "source": "GeyserMinedTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    },
+    {
+      "name": "NuggetTypeNumber_MiningReadsOwnerChangedBySound",
+      "source": "GeyserMinedTests.cpp",
+      "initialExitCode": 0,
+      "finalExitCode": 0
+    }
+  ]
+}

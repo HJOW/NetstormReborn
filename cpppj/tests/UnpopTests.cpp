@@ -144,7 +144,7 @@ TEST_CASE(SquidUnpop_VtableMetadata_MatchesActualCommonDisplayPaths) {
         const auto edition=row[0]=="originals" ? OriginalEdition::Patch1078 : OriginalEdition::Cd1072;
         const auto vtable=static_cast<std::uint32_t>(std::stoul(row[1])); const auto mask=std::stoul(row[5]);
         const bool mana=edition==OriginalEdition::Patch1078 && (vtable==0x50c3b0 || vtable==0x509810); // 별도 원문으로 복원한 마나103/볼트105 표시다. 기존 fixture의 공통 mask는 바꾸지 않는다.
-        const bool meta=edition==OriginalEdition::Patch1078 && vtable==0x50c9f0U; //보호 PE의 메타88=4787c0/8c=4ad670 JMP88에 맞춰 기존 지원표 기대값만 갱신한다. 검사 실행은 제외한다.
+        const bool meta=edition==OriginalEdition::Patch1078 && (vtable==0x50c9f0U || vtable==0x50cc08U); // 메타·일반 Sprite의 공통88=4787c0/8c=4ad670 JMP88 지원을 함께 대조한다. 2c6ab7cc1의 일반 Sprite 추가를 기대값에 반영하며 실제 메타 장치는 호출하지 않는다.
         CHECK(SquidUnpop::SupportsDisplay(edition,vtable,0)==(((mask&1)!=0) || mana || meta));
         const auto alternate=static_cast<std::uint32_t>(std::stoul(row[3]));
         const bool vortex=edition==OriginalEdition::Patch1078 ?
