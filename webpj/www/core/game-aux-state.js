@@ -63,6 +63,10 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['sunCannonType', 0x00541258, 'u32', 128, 'sunCannon', '썬 캐논의 현재 TYPE'],
     // 상태 타이머의 펜스 재구성이 같은 장기 DWORD를 재조회한다. (2026-11-16 WB04-E585)
     ['sunFenceType', 0x00541278, 'u32', 136, 'sunFence', '썬 바리케이드의 현재 TYPE'],
+    // 직접 피해 주문 등 여러 소비자가 같은 장기 효과 TYPE를 현재 위치에서 읽는다.
+    ['windFlyerType', 0x00541280, 'u32', 138, 'windFlyer', '현재 더스트 데빌 TYPE'],
+    ['gravityEffectType', 0x00541310, 'u32', 174, 'GravitationEffect', '현재 그라비테이션 효과 TYPE'],
+    ['meteorEffectType', 0x0054131c, 'u32', 177, 'MeteorEffect', '현재 미티어 효과 TYPE'],
     // 상태WORD 변경 뒤 표면 통지를 선택하는 같은 장기 DWORD다. (2026-11-16 WB04-E589)
     ['stateNotifyType', 0x005411a0, 'u32', 82, 'bridge', '상태 변경의 현재 표면 통지 TYPE'],
     ['windArcherType', 0x00541288, 'u32', 140, 'windArcher', '크로스보우의 현재 TYPE'],

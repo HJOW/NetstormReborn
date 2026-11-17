@@ -70,3 +70,22 @@ test('Session 파괴 효과: 트리즌·힐·하드너의 현재 World 연결', 
     assert.throws(() => treason.role(BOMB_TREASON_ROLE.Flare), /반납/);
     assert.throws(() => heal.burstType(), /반납/);
 });
+
+// 주문을 발동하지 않고 실제 장기 효과 TYPE와 카메라의 현재 값을 확인한다.
+test('Session 직접 피해 주문: 현재 효과 TYPE와 카메라 연결', () => {
+    const o = scene(); let state, hooks;
+    try {
+        o.connectDevastationStatus(); o.connectDevastationSummons();
+        assert.throws(() => o.connectDevastationStrike(), /순서/);
+        o.connectDevastationEffects(); o.connectDevastationStrike();
+        state = o.devastationModules.strikeState; hooks = o.devastationModules.strikeHooks;
+        assert.equal(o.devastationModules.strikeReady, true); assert.equal(o.bombStrike.pool, o.core.pool);
+        const aux = o.gameplayGlobals.gameAux(); aux.gravityEffectType = 175; aux.meteorEffectType = 178;
+        assert.equal(state.firstEffectType, 175); assert.equal(state.hailEffectType, 178);
+        o.gameplayGlobals.camera().snapshot().setPixels(16, 11);
+        assert.deepEqual(hooks.project(2, 3), [16, 22]);
+        assert.equal(o.loaded, false); assert.throws(() => o.connectDevastationStrike(), /순서/);
+    } finally { o.dispose(); }
+    assert.throws(() => hooks.project(2, 3), /반납/);
+    assert.throws(() => state.firstEffectType, /반납/);
+});

@@ -11,15 +11,19 @@ import { currentAllocationBytes } from './current-allocation-bytes.js';
 import { RawBombTreason, BOMB_TREASON_ROLE } from './raw-bomb-treason.js';
 import { RawBombHeal } from './raw-bomb-heal.js';
 import { RawBombHardener } from './raw-bomb-hardener.js';
+import { RawBombStrike } from './raw-bomb-strike.js';
+import { projectCameraCoordinates } from '../render/camera-view.js';
 
 // 실제 Session의 TYPE·World·상태 주문을 한 번 구성한다.
 export class RawCampaignSessionDevastation {
     // 같은 owner와 설치 시작·정상 복귀·반납 관문이다.
-    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #effectsStarted = false; #effectsReady = false; #disposed = false;
+    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #effectsStarted = false; #effectsReady = false; #strikeStarted = false; #strikeReady = false; #disposed = false;
     // 현재 상태 주문 효과를 후속 시전 분배기에 빌린다.
     statusHooks = null;
     // 기존 실제 하위에 연결한 트리즌과 힐 효과를 현재 수명에서 보관한다.
     treasonHooks = null; healHooks = null;
+    // 직접 피해 주문이 빌리는 현재 상태와 값형 효과 연결이다.
+    strikeState = null; strikeHooks = null;
     // 구성 시 World나 난수는 변경하지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 완료 전 또는 반납된 함수 값의 실행을 거부한다.
@@ -146,6 +150,32 @@ export class RawCampaignSessionDevastation {
         this.treasonHooks = treason; this.healHooks = heal; this.#effectsReady = true;
     }
 
+    // 현재 장기 역할·공유 난수와 실제 피해·입자·카메라를 직접 피해 주문에 연결한다.
+    bindStrike() {
+        const o = this.#owner, c = o.core, self = this;
+        if (this.#disposed || !this.#effectsReady || this.#strikeStarted || o.bombStrike) throw new Error('Session 직접 피해 주문 설치 순서 오류');
+        this.#strikeStarted = true;
+        const hit = o.hits.damageHooks({}).damage;
+        const state = {
+            get boss() { self.#live(); return o.state.assetState.readBoss(); },
+            get specialType() { self.#live(); return o.gameplayGlobals.gameAux().windFlyerType; },
+            get firstEffectType() { self.#live(); return o.gameplayGlobals.gameAux().gravityEffectType; },
+            get hailEffectType() { self.#live(); return o.gameplayGlobals.gameAux().meteorEffectType; },
+        };
+        const hooks = {
+            create: (type, flags) => { this.#live(); return c.factory.create(type, flags); },
+            pop: (sid, unused, x, y, flags) => { this.#live(); o.world.pop(sid, x, y, flags); },
+            destroy: (sid, unused, flags) => { this.#live(); o.world.destroy(sid, flags); },
+            damage: (sid, unused, amount, owner, parent) => { this.#live(); if (typeof hit !== 'function') throw new Error('라이트닝 주문 실제 피해 미연결'); hit(sid, amount, owner, parent); },
+            sound: (x, y) => { this.#live(); if (typeof o.services.sound.playOnceAt !== 'function') throw new Error('라이트닝 주문 실제 위치 음향 미연결'); o.services.sound.playOnceAt(x, y, o.soundNames.lookup('thunderCrack.wav'), 0, 0); },
+            beam: (source, target) => { this.#live(); o.particles.addBeam(source, target, 'shortZap.wav'); },
+            project: (x, y) => { this.#live(); const p = o.gameplayGlobals.camera().snapshot().pixels; return projectCameraCoordinates(p.x, p.y, x, y); },
+            column: (sid, from, to, life) => { this.#live(); o.particles.addScreenBolt(sid, from, to, life); },
+        };
+        o.bombStrike = new RawBombStrike(c.pool, c.types, o.random, state, hooks);
+        this.strikeState = state; this.strikeHooks = hooks; this.#strikeReady = true;
+    }
+
     // World가 프로세스를 비운 뒤 같은 함수 값의 재진입을 차단한다.
     dispose() { this.#disposed = true; }
     // 이 앞단만의 정상 설치 여부이며 전체 주문 설치는 아니다.
@@ -154,4 +184,6 @@ export class RawCampaignSessionDevastation {
     get summonsReady() { return this.#summonsReady; }
     // 이 효과 세 종류만 설치했으며 전체 주문 설치와 구별한다.
     get effectsReady() { return this.#effectsReady; }
+    // 직접 피해 주문 설치만 완료했으며 표적 검색은 아직 별도다.
+    get strikeReady() { return this.#strikeReady; }
 }
