@@ -66,6 +66,8 @@ export const GAME_AUX_FIELDS = Object.freeze([
     // 상태WORD 변경 뒤 표면 통지를 선택하는 같은 장기 DWORD다. (2026-11-16 WB04-E589)
     ['stateNotifyType', 0x005411a0, 'u32', 82, 'bridge', '상태 변경의 현재 표면 통지 TYPE'],
     ['windArcherType', 0x00541288, 'u32', 140, 'windArcher', '크로스보우의 현재 TYPE'],
+    // 주문과 다른 비행 소비자가 장기 보조 owner의 같은 번호를 읽는다.
+    ['rainFlyerType', 0x00541298, 'u32', 144, 'rainFlyer', '현재 맨 오 워 TYPE'],
     // Path 수신 trace가 공통 로그 임계값과 구별해 읽는 현재 signed 수준이다. (2026-11-16 WB04-E568)
     ['pathTraceLevel', 0x00540c68, 'i32', 99, null, '경로 수신의 현재 로그 수준'],
     ['fieryTailProcessType', 0x0054109c, 'u32', 11, 'fieryTailSystemProcessType', '불꽃 꼬리 생성자의 부착 TYPE'],
@@ -167,6 +169,8 @@ export class GameAuxState {
     #values = new Map(GAME_AUX_FIELDS.map((field) => [field.name, field.initial]));
     // 세계 장식 네 TYPE 의 실제 DWORD 저장소이다(빌려 주는 같은 배열).
     #decorations = Uint32Array.from(WORLD_DECORATION_FIELDS, (field) => field.initial);
+    // 세 주문의 현재 TYPE DWORD는 Session 교체를 넘어 같은 배열을 유지한다.
+    #manoSpellTypes = Uint32Array.of(179, 180, 181);
     // 현재 메시지/프로토콜 두 BYTE이며 World 교체/일반 초기화로 다시 만들지 않는다. (2026-11-16 WB04-E567)
     #rotateAnimationHeader = Uint8Array.of(0x3c, 1);
     #fireAnimationHeader = Uint8Array.of(0x3b, 1);
@@ -189,6 +193,9 @@ export class GameAuxState {
 
     // 세계 장식 네 TYPE 의 실제 저장소(Uint32Array 4칸)를 빌려 준다. 원소 쓰기는 원본 메모리처럼 32비트로 감긴다.
     get worldDecorationTypes() { return this.#decorations; }
+
+    // 원문 00541324/328/32c의 현재 세 주문 TYPE를 빌려 준다.
+    get manoSpellTypes() { return this.#manoSpellTypes; }
 
     // 원문 00540468/69·0054046e/6f의 현재 메시지/프로토콜 BYTE를 직접 빌려 준다. (2026-11-16 WB04-E567)
     get rotateAnimationHeader() { return this.#rotateAnimationHeader; }

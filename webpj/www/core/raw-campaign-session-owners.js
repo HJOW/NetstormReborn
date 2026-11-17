@@ -284,6 +284,8 @@ export class RawCampaignSessionOwners {
     motionRuntimeModules = null; geyserMined = null; carrierMining = null; carrierTransfer = null;
     // 파괴 주문의 현재 TYPE 표와 상태 주문 앞단이다.
     devastationModules = null; devastationRegularTypes = null; devastationEffectTypes = null; bombStatus = null;
+    // 소환 주문 두 종류가 빌리는 현재 spawns와 각 주문의 지역 수명이다.
+    windSpellCounts = null; windSpellState = { processType: 59, spells: Uint32Array.of(171, 172, 173), counts: null }; windSpell = null; manoSpell = null;
     // 원문 지역 상태의 TYPE 초기값과 같은 현재 동맹 표다.
     bombStatusState = { altar: 164, outpost: 126, priest: 158, fence: 136, flare: 106, alliances: null };
     // 같은 실제 이동 본체를 빌리는 사제 공황 결선의 수명이다.
@@ -867,6 +869,12 @@ export class RawCampaignSessionOwners {
     connectDevastationStatus() {
         if (this.#disposed) throw new Error('반납한 Session 파괴 주문');
         this.devastationModules ??= new RawCampaignSessionDevastation(this); this.devastationModules.bindStatus();
+    }
+
+    // 상태 주문과 Wind 생산기 뒤 같은 Session의 소환 주문을 연결한다.
+    connectDevastationSummons() {
+        if (this.#disposed || !this.devastationModules) throw new Error('Session 소환 주문 설치 전/반납');
+        this.devastationModules.bindSummons();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
