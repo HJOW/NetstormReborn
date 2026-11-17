@@ -2143,7 +2143,7 @@ void UberGump::Compose() {
         if (state_.phase!=ClientPhase::LoadingMission) rawButtons_->Menus()->CloseMissionLoading();
         std::vector<std::string> originalLabels;originalLabels.reserve(labels_.size());
         // 원본 돌 버튼의 63바이트 라벨은 UTF-8가 아닌 기존 게임 글꼴 바이트를 사용한다.
-        for (const auto& label:labels_) originalLabels.push_back(FontBytes(state_.phase==ClientPhase::MainMenu && IsExtendedLanguageNumber(static_cast<std::uint32_t>(client_.LanguageNumber())) ? client_.Translate(label) : label)); //한국어 메인 버튼만 기존 돌 UI/D2Coding으로 표시하며 영어 라벨/원본 자산은 유지한다.
+        for (const auto& label:labels_) originalLabels.push_back(FontBytes(state_.phase==ClientPhase::MainMenu && IsExtendedLanguageNumber(static_cast<std::uint32_t>(client_.LanguageNumber())) ? client_.Translate(label) : label)); // 한국어 버튼은 기존 돌 UI와 공통 외부 글꼴로 표시하며 영어 라벨/원본 자산을 유지한다.
         if (popup_.empty()) rawButtons_->SetControls(regions,originalLabels,width,height,{buttonTextureType_,buttonTextureFrame_,
             static_cast<std::int16_t>(buttonTextureMetrics_.width),static_cast<std::int16_t>(buttonTextureMetrics_.height),buttonColors},world_!=nullptr || (rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current()) || client_.HtmlWindowGlobals()->window.instances!=0,client_.HtmlWindowGlobals()->window.instances!=0,
             state_.phase==ClientPhase::MainMenu && client_.Assets().Edition()==o::OriginalEdition::Patch1078 ? std::optional<std::int32_t>{-83} : std::nullopt,

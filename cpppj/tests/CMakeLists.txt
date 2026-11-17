@@ -3668,6 +3668,8 @@ netstorm_apply_compiler_options(netstorm_screen_resolution_tests)
 # 6차 한국어: 한글 확장 시퀀스 부호화의 계약을 게임 없이 확인한다(938).
 target_sources(netstorm_tests PRIVATE KoreanTextTests.cpp)
 add_executable(netstorm_korean_text_tests FocusedTestMain.cpp KoreanTextTests.cpp)
+target_sources(netstorm_korean_text_tests PRIVATE EmbeddedBitmapFontTests.cpp) # 갈무리11 원형 픽셀·두 굵기·정수 배율·손상 거부를 같은 제품 라이브러리로 검사한다.
+target_sources(netstorm_tests PRIVATE EmbeddedBitmapFontTests.cpp) # 전체 검사에서도 같은 글꼴 회귀를 유지한다.
 target_link_libraries(netstorm_korean_text_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_korean_text_tests)
 

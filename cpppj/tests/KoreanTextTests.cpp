@@ -3,6 +3,7 @@
 #include "client/BitmapFont.h"
 #include "client/ClientMain.h"
 #include "client/KoreanResources.h"
+#include "client/KoreanFontSettings.h" // 제품과 같은 family·일반/굵은 외부 파일 상수를 사용한다.
 #include "client/LanguageOptions.h"
 #include "o/Xlat.h"
 #include <algorithm>
@@ -86,27 +87,22 @@ TEST_CASE(KoreanText_MalformedSequencesStayPlainBytesAndOtherCharactersStillReje
 }
 
 namespace { // 한글 글꼴 검사용 경로다.
-// 저장소의 D2Coding 파일(가장 새 버전)을 찾는다. 없으면 빈 경로다.
-std::filesystem::path D2CodingFile() {
-    const auto directory = std::filesystem::path(__FILE__).parent_path().parent_path().parent_path() / "fonts";
-    std::filesystem::path newest;
-    for (const auto& entry : std::filesystem::directory_iterator(directory)) { // 이름순으로 가장 뒤인 D2Coding*.ttc가 최신 버전이다.
-        const auto name = entry.path().filename().string();
-        if (name.starts_with("D2Coding") && entry.path().extension() == ".ttc" && entry.path() > newest) newest = entry.path();
-    }
-    return newest;
+// 공통 설정의 일반/굵은 한국어 글꼴 파일을 저장소 fonts/에서 찾는다.
+std::filesystem::path KoreanFontFile(bool bold = false) {
+    return std::filesystem::path(__FILE__).parent_path().parent_path().parent_path() / "fonts" /
+        (bold ? netstorm::client::kKoreanFontBoldFile : netstorm::client::kKoreanFontRegularFile);
 }
 }
 
 // 한글 확장 글리프는 요청할 때 만들어지고 모노스페이스 폭이 같으며 잉크가 있고, 측정/설정 해제가 라틴 글꼴과 독립적이다.
 TEST_CASE(KoreanFont_HangulGlyphsAreGeneratedMeasuredAndMonospaced) {
     using namespace netstorm::client;
-    const auto file = D2CodingFile();
+    const auto file = KoreanFontFile();
     CHECK(!file.empty() && std::filesystem::is_regular_file(file));
     auto font = BitmapFont::Generate("Arial", 14, 700, FontStyle::Normal);
     CHECK(!font->HasExtended() && font->ExtendedGlyph(0xac00) == nullptr && font->ExtendedAdvance() == 0); // 설정 전에는 확장 문자를 지원하지 않는다.
     const int latinA = font->Measure("A");
-    font->ConfigureExtended({"D2Coding", file, 14, 700, false, false, false});
+    font->ConfigureExtended({kKoreanFontFamily, file, 14, 700, false, false, false});
     CHECK(font->HasExtended());
     const int advance = font->ExtendedAdvance();
     CHECK(advance >= 10 && advance <= 20); // 14픽셀 높이의 한글 한 글자 폭이다.
@@ -136,11 +132,11 @@ TEST_CASE(KoreanFont_FontStoreAppliesExtendedFaceToEverySlot) {
     FontStore store(files, "Arial", [](const auto&) {});
     store.SetUserCacheDirectory(root / "cache");
     CHECK(!store.Get().HasExtended());
-    store.SetExtendedFace("D2Coding", D2CodingFile());
+    store.SetExtendedFace(kKoreanFontFamily, KoreanFontFile(), KoreanFontFile(true));
     const auto& normal = store.Get(0, FontStyle::Normal);
     CHECK(normal.HasExtended() && normal.ExtendedAdvance() > 0); // 이미 만든 글꼴도 다시 설정된다.
     const auto& small = store.Get(6, FontStyle::Normal); // 높이 12 슬롯이다.
-    CHECK(small.HasExtended() && small.ExtendedAdvance() > 0 && small.ExtendedAdvance() < normal.ExtendedAdvance()); // 작은 슬롯이 더 좁다.
+    CHECK(small.HasExtended() && small.ExtendedAdvance() == 12 && normal.ExtendedAdvance() == 12); // 작은 슬롯도 11픽셀 획을 축소하지 않고 원래 한글 칸을 유지한다.
     store.SetExtendedFace("", {});
     CHECK(!store.Get(0, FontStyle::Normal).HasExtended());
 }
@@ -185,13 +181,14 @@ TEST_CASE(KoreanTranslation_RepositoryFileIsFoundParsedAndEncodable) {
     CHECK(compared >= 30);
 }
 
-// 한글 글꼴 탐색은 fonts 폴더의 D2Coding*.ttc 중 이름순 마지막(최신) 파일을 고른다.
-TEST_CASE(KoreanResources_FontFileFindsNewestD2Coding) {
+// 한글 글꼴 탐색은 공통 설정의 정확한 일반/굵은 파일을 고르고 없는 디렉터리는 빈 경로를 반환한다.
+TEST_CASE(KoreanResources_FontFileFindsConfiguredFaces) {
     using namespace netstorm::client;
     const auto repo = std::filesystem::path(__FILE__).parent_path().parent_path().parent_path();
     const auto found = FindKoreanFontFile({repo / "originals", repo});
-    CHECK(!found.empty() && found.parent_path() == repo / "fonts" && found.filename().string().starts_with("D2Coding"));
-    CHECK(found == D2CodingFile()); // 같은 규칙의 시험용 탐색과 같은 결과다.
+    CHECK(found == repo / "fonts" / kKoreanFontRegularFile && std::filesystem::is_regular_file(found));
+    CHECK(FindKoreanFontFile({repo / "originals", repo}, true) == repo / "fonts" / kKoreanFontBoldFile);
+    CHECK(found == KoreanFontFile()); // 검사 경로도 제품의 공통 설정을 사용한다.
     CHECK(FindKoreanFontFile({repo / "cpppj" / "src"}).empty()); // fonts가 없는 폴더만 주면 빈 경로다.
 }
 

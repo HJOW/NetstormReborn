@@ -1,5 +1,7 @@
 // 원본 Screen.cpp 004a3240 ↔ CD 00425980, 004a2e40 ↔ CD 00425570, 004a39f0 ↔ CD 00425d10.
 #include "client/BitmapFont.h"
+#include "client/EmbeddedBitmapFont.h" // GDI가 거부하는 비트맵 전용 TTF도 원래 단색 픽셀로 그린다.
+#include "client/KoreanFontSettings.h" // 굵은 글꼴에 없는 문자는 같은 한국어 설정의 일반 파일에서 찾는다.
 #include "client/NativeFontCacheFile.h" // 현재 FILE과 같은 생성 글리프의 순차 캐시 reader/writer다.
 #include "o/RawFileName.h" // 원문(-2,d,-3,literal)의 같은 이름고리를 사용한다.
 #include "o/OriginalText.h" // 6차: 확장 문자(한글) 시퀀스를 글자 폭 측정에서 한 글자로 읽는다.
@@ -195,6 +197,45 @@ void BitmapFont::ConfigureExtended(ExtendedFontSpec spec) { extended_ = std::mov
 const FontGlyph* BitmapFont::ExtendedGlyph(std::uint32_t codePoint) const {
     if (!HasExtended() || codePoint > 0xffff) return nullptr;
     if (const auto found = extendedGlyphs_.find(codePoint); found != extendedGlyphs_.end()) return &found->second;
+    if (const auto font = EmbeddedBitmapFont::Load(extended_.fontFile)) {
+        auto bitmap = font->Glyph(codePoint);
+        if (!bitmap && extended_.fontFile.filename() == kKoreanFontBoldFile) { // 제공된 굵은 파일에는 옛 호환 자모42자 등 일부 문자가 없다.
+            if (const auto regular = EmbeddedBitmapFont::Load(extended_.fontFile.parent_path() / kKoreanFontRegularFile))
+                bitmap = regular->Glyph(codePoint); // 같은 갈무리11의 원형을 사용하며 시스템 대체나 합성 굵기를 적용하지 않는다.
+        }
+        if (!bitmap) return nullptr; // 없는 문자를 GDI의 다른 글꼴로 대체하지 않는다.
+        const int scale = std::max(1, (extended_.height + bitmap->ppem / 2) / bitmap->ppem);
+        if (scale > 16) throw std::runtime_error("외부 비트맵 글꼴의 정수 확대 범위 초과");
+        const int shift = std::max(0, ascent_ - bitmap->bearingY * scale);
+        const int left = std::min(0, bitmap->bearingX * scale);
+        const int slant = extended_.italic ? bitmap->height * scale / 4 : 0;
+        const int cell = bitmap->advance * scale;
+        const int width = std::max(cell, bitmap->bearingX * scale + bitmap->width * scale + slant) - left + 2;
+        const int height = std::max({height_, shift + bitmap->height * scale, ascent_ + 2}) + 1;
+        if (cell <= 0 || width > 4096 || height > 4096) throw std::runtime_error("외부 비트맵 글리프의 크기 범위 오류");
+        std::vector<std::uint8_t> pixels(std::size_t(width) * height, kFontBackground);
+        for (int y = 0; y < bitmap->height * scale; ++y) { // 정수 배율로 같은 원본 행을 반복하여 획 두께를 유지한다.
+            const int shear = extended_.italic ? (bitmap->height * scale - 1 - y) / 4 : 0;
+            for (int x = 0; x < bitmap->width * scale; ++x) { // 보간·ClearType 없이 단색 원본 픽셀만 복제한다.
+                if (bitmap->pixels[std::size_t(y / scale) * bitmap->width + x / scale])
+                    pixels[std::size_t(y + shift) * width + x + bitmap->bearingX * scale - left + shear] = kFontInk;
+            }
+        }
+        for (const bool underline : {false, true}) { // 두 스타일을 함께 요청한 경우에도 각각의 선을 보존한다.
+            if (!(underline ? extended_.underline : extended_.strikeout)) continue;
+            const int row = underline ? ascent_ + 1 : std::max(0, ascent_ - 5 * scale);
+            std::fill_n(pixels.begin() + std::size_t(row) * width - left, cell, kFontInk);
+        }
+        auto shape = EncodeGlyph(pixels.data(), width, width, height);
+        if (left && Read32(shape, 24) != 0x7fffffffU) { // 음수 bearing도 실제 VFX 위치에 보존한다.
+            Put(shape, 24, Read32(shape, 24) + static_cast<std::uint32_t>(left));
+            Put(shape, 32, Read32(shape, 32) + static_cast<std::uint32_t>(left));
+        }
+        FontGlyph glyph;
+        glyph.advance = cell; glyph.drawAdvance = cell; glyph.bearing = left;
+        glyph.shape = std::make_unique<ShapeDatabase>(std::move(shape));
+        return &extendedGlyphs_.emplace(codePoint, std::move(glyph)).first->second;
+    }
     EnsurePrivateFontFile(extended_.fontFile);
     constexpr int canvasWidth = 512, canvasHeight = 256;
     FontGdi gdi;
@@ -350,13 +391,14 @@ const BitmapFont& FontStore::Get(int slot, FontStyle style) {
     }
     if (!extendedFace_.empty() && !font->HasExtended()) { // 6차: 한글 글꼴을 같은 높이/굵기/스타일로 맞춘다.
         const int weight = style == FontStyle::Bold ? kWeights[slot] + (slot == 0 ? 100 : 700) : kWeights[slot];
-        font->ConfigureExtended({extendedFace_, extendedFontFile_, kHeights[slot], weight, style == FontStyle::Italic, style == FontStyle::Underline, style == FontStyle::Strikeout});
+        const auto& file = weight >= 700 && !extendedBoldFontFile_.empty() ? extendedBoldFontFile_ : extendedFontFile_;
+        font->ConfigureExtended({extendedFace_, file, kHeights[slot], weight, style == FontStyle::Italic, style == FontStyle::Underline, style == FontStyle::Strikeout});
     }
     return *font;
 }
 // 6차: 한글 글꼴을 설정하고 이미 만든 글꼴에도 적용한다(다음 Get에서 명세를 다시 맞춘다).
-void FontStore::SetExtendedFace(std::string face, std::filesystem::path fontFile) {
-    extendedFace_ = std::move(face); extendedFontFile_ = std::move(fontFile);
+void FontStore::SetExtendedFace(std::string face, std::filesystem::path fontFile, std::filesystem::path boldFontFile) {
+    extendedFace_ = std::move(face); extendedFontFile_ = std::move(fontFile); extendedBoldFontFile_ = std::move(boldFontFile);
     for (auto& row : fonts_) for (auto& font : row) if (font) font->ConfigureExtended({}); // 기존 명세를 비워 다음 Get이 새 글꼴로 다시 설정하게 한다.
 }
 }

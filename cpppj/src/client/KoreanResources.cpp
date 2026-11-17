@@ -1,5 +1,6 @@
-// 6차 한국어 지원: 한국어 번역표와 D2Coding 글꼴 파일 탐색 구현이다.
+// 한국어 번역표와 일반/굵은 외부 글꼴 파일 탐색 구현이다.
 #include "client/KoreanResources.h"
+#include "client/KoreanFontSettings.h" // 런타임·배포가 같은 JSON에서 생성한 글꼴 파일명 상수를 사용한다.
 #include "o/BaseFile.h"
 #include "o/OriginalText.h"
 #include <array>
@@ -22,22 +23,16 @@ std::vector<std::filesystem::path> CloneDataRoots(const std::filesystem::path& g
     }
     return roots;
 }
-// D2Coding 글꼴은 업데이트 때 같은 폴더에 새 버전이 추가되므로 이름순 마지막을 최신으로 본다.
-std::filesystem::path FindKoreanFontFile(const std::vector<std::filesystem::path>& roots) {
+// 일반/굵은 글꼴을 정확한 파일명으로 고른다. 다른 글꼴의 구버전이나 이름순으로 대체하지 않는다.
+std::filesystem::path FindKoreanFontFile(const std::vector<std::filesystem::path>& roots, bool bold) {
     for (const auto& root : roots) { // 가까운 폴더의 fonts를 먼저 본다.
         std::error_code error;
-        const auto directory = root / "fonts";
-        if (!std::filesystem::is_directory(directory, error)) continue;
-        std::filesystem::path newest;
-        for (const auto& entry : std::filesystem::directory_iterator(directory, error)) { // 폴더 안의 D2Coding*.ttc 중 이름순 마지막을 고른다.
-            const auto name = entry.path().filename().string();
-            if (name.starts_with("D2Coding") && entry.path().extension() == ".ttc" && entry.path() > newest) newest = entry.path();
-        }
-        if (!newest.empty()) return newest;
+        const auto file = root / "fonts" / (bold ? kKoreanFontBoldFile : kKoreanFontRegularFile);
+        if (std::filesystem::is_regular_file(file, error)) return file;
     }
     return {};
 }
-// 11차 일본어: Noto Sans JP 가변 글꼴은 이름순 마지막(NotoSansJP*.ttf)을 쓴다. 한국어 D2Coding과 같은 탐색 규칙이다.
+// 일본어 Noto Sans JP는 기존의 이름순 마지막(NotoSansJP*.ttf) 탐색 규칙을 유지한다.
 std::filesystem::path FindJapaneseFontFile(const std::vector<std::filesystem::path>& roots) {
     for (const auto& root : roots) { // 가까운 폴더의 fonts를 먼저 본다.
         std::error_code error;const auto directory = root / "fonts";

@@ -11,6 +11,16 @@
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
 
+# 한국어 글꼴 선택을 JSON 한 곳에서 관리하고 런타임이 쓰는 상수를 생성한다(배포/ZIP 검사도 같은 JSON을 읽는다).
+set(NETSTORM_KOREAN_FONT_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/../assets/korean-font.json")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${NETSTORM_KOREAN_FONT_CONFIG}")
+file(READ "${NETSTORM_KOREAN_FONT_CONFIG}" NETSTORM_KOREAN_FONT_JSON)
+foreach(NETSTORM_KOREAN_KEY family regular bold license) # 글꼴명·일반/굵은 파일·라이선스를 함께 갱신한다.
+    string(JSON NETSTORM_KOREAN_${NETSTORM_KOREAN_KEY} GET "${NETSTORM_KOREAN_FONT_JSON}" ${NETSTORM_KOREAN_KEY})
+endforeach()
+configure_file(client/KoreanFontSettings.cpp.in "${CMAKE_CURRENT_BINARY_DIR}/generated/KoreanFontSettings.cpp" @ONLY)
+target_sources(netstorm PRIVATE "${CMAKE_CURRENT_BINARY_DIR}/generated/KoreanFontSettings.cpp" client/KoreanFontSettings.h client/EmbeddedBitmapFont.cpp client/EmbeddedBitmapFont.h)
+
 target_sources(netstorm PRIVATE client/NativeMetaBattleDescription.h client/NativeMetaBattleDescription.cpp client/ClientMetaBattleDescription.h client/ClientMetaBattleDescription.cpp o/RawStateMetaBattleDescription.h o/RawStateMetaBattleDescription.cpp) #1132:일반/메타의 같은71h observer·State 부모와 전체 설명 수신/실제88·특정 전투 표시를 연결한다.
 
 target_sources(netstorm PRIVATE client/NativeMetaSpriteRefresh.h client/NativeMetaSpriteRefresh.cpp client/ClientMetaSpriteRefresh.h client/ClientMetaSpriteRefresh.cpp) #1131:메타88/8c 전체 영역 보정·실제 Form 이름표 갱신을 현재 World에 연결한다.
@@ -106,7 +116,7 @@ target_sources(netstorm PRIVATE client/RotationKeyInput.cpp client/RotationKeyIn
 target_sources(netstorm PRIVATE client/LanguageRequest.cpp client/LanguageRequest.h) #원문 언어 요청/현재 Client 큐와 Gump 알림 경로다.
 target_sources(netstorm PRIVATE o/RawXlat.cpp o/RawXlat.h) #10.78 최초 다중 번역 장부와 원문 파일 바이트 수명이다.
 target_sources(netstorm PRIVATE client/LanguageOptions.cpp client/LanguageOptions.h) #언어 옵션의 원문 이름/감지와 두 용어표 읽기 순서다.
-target_sources(netstorm PRIVATE client/KoreanResources.cpp client/KoreanResources.h) #6차 한국어: 클론이 추가한 xlat.korean과 D2Coding 글꼴 파일 탐색이다.
+target_sources(netstorm PRIVATE client/KoreanResources.cpp client/KoreanResources.h) # 한국어 번역표와 공통 설정의 외부 일반/굵은 글꼴 탐색이다.
 target_sources(netstorm PRIVATE client/FsrConstants.cpp client/FsrConstants.h) #7차 FSR 1.0: AMD 공식 헤더(third_party/fsr1)의 CPU 경로로 EASU/RCAS 상수를 계산한다.
 set_source_files_properties(client/FsrConstants.cpp PROPERTIES INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}/../third_party/fsr1") # 서드파티 헤더 위치는 이 파일에만 알린다.
 # 7차 FSR 1.0: Direct3D 11 후처리 출력기. 런타임 HLSL 컴파일에 쓸 AMD 헤더 두 개를 빌드 때 C++ 바이트 배열로 바꿔 실행 파일에 넣는다.
