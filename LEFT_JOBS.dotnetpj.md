@@ -63,7 +63,14 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 ### 0.4 남은 작업 — 순서대로
 
-**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.606에서 L2 실행 환경을 복구하고 3경로를 재측정해 격차 3뿌리(요새 Pop 미발화·농지 미배치·Prefix 산물 부재)를 특정했다. 다음은 격차별 R4-2 잔여(요새 일반 Pop 지원 타입부터)다.** 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
+**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.606에서 L2 실행 환경을 복구하고 3경로를 재측정해 격차 3뿌리(요새 Pop 미발화·농지 미배치·Prefix 산물 부재)를 특정했다.** 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
+
+**0.607 중단 인계(2026-11-17 사용자 중단 지시, 미완):** 요새 일반 Pop 결선을 구현했으나 검증이 끝나지 않았다. 이어서 할 일은 아래 순서대로 한다.
+
+1. 현황: `HostSession.cs`의 요새 Pop 훅이 화신·사제·보호막·Player는 공통 Pop으로, 다리·섬·표면과 양쪽 표시 지원 표를 모두 만족하는 공통 타입은 `TerrainPopObject`로 등록하고, 나머지는 `FortPopSkips`에 기록만 남긴다(전용 파생 R6 대기·지원표 밖·장치 미연결 구별). 판정은 `RawPostPop.RequiresDedicatedPostPop`(`RawPostPop.Dispatch.cs`에 0.607에서 추가, 분배 본문의 분기 순서와 같은 가상표 판정)과 `OriginalPopDisplay/OriginalUnpopDisplay.Supports` 조합이다. `TerrainPopObject`가 `BindTransmission`(단독 임무 송신 기록, `TerrainPopTransmissions`)·기록형 Assertion(`pop-assert`)을 쓰며, 섬 후처리 연결의 `SetFrame`은 세션 `SquidFrame`+`RawUnpop` 실행기로 연결했다. Release 빌드는 0경고·0오류다.
+2. 검사 상태: 신규 `HostSessionFortPopTests` 2건 중 스킵 경로 1건 통과, `FortGeneralPopRegistersSupportedTypes` 1건 실패(90행 `TotalCost != totalsBeforeFort` 단언). 기존 전체는 통과한다(Client 전체 1264/1265, 실패는 신규 단언 1건뿐). 실패 원인은 요새 Pop이 발화하는데도 장부 총계가 0으로 남기 때문이다. 유력 가설은 (a) 실제로 Pop된 타입들의 비용이 모두 0이거나, (b) `ValidateBaseCore`의 `extra & 9` 관문·`AiAttached`·`PendingPlacement` 중 하나가 조용히 집계 경로를 막거나, (c) 덤프가 읽는 장부와 Pop이 쓰는 장부가 다른 경우다. `TerrainPopCalls`의 type 목록과 해당 타입 `Cost`를 대조해 가설을 가른 뒤, (a)이면 단언을 총계 대신 `TotalMade` 누적으로 바꾸고, (b·c)이면 결선을 고친다.
+3. L2 재측정: `extracted/dn-gl-run/`의 dn 호스트는 0.607 이전 빌드이므로, 코드 수정 뒤 `dotnet build`로 다시 빌드하고 같은 디렉터리에 복사한 뒤(`opengl32.dll`·`libgallium_wgl.dll`·`Netstorm.Client.Host.exe.local` 유지) `GALLIUM_DRIVER=llvmpipe` 환경에서 `python -X utf8 dotnetpj/tools/l2_compare.py --capture --host-exe extracted/dn-gl-run/Netstorm.Client.Host.exe --out extracted/dotnet-l2-0606 --mission thewarbegins`를 다시 실행한다. Mesa 실행 환경 세부사항(7z SHA-256·KnownDLL 리다이렉션·cursors 복사·`--host-exe` 옵션)은 [0.606 문서](docs/dotnet-l2-0606-20261117.md)에 있다. 성공 기준은 owner·frame·graph·totals 행의 일치 수 증가다.
+4. 정리: `extracted/`의 일회성 스크립트(`swap_fort_hook.py`·`wire_frame.py`·`fix_fort_hook.py`·`finalize_0607.py`·`dedup*.py`·`dbg*.py`·`procdump-run.txt`)는 인계용이 아니므로 삭제한다. `mesa/`·`dn-gl-run/`·`dotnet-l2-0606/`·`procdump64.exe`·Mesa 7z는 다음 L2 실행에 필요하므로 둔다.
 
 <a id="korean-font-change"></a>
 

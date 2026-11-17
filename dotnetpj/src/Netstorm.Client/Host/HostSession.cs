@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using Netstorm.Assets;
 using Netstorm.Client.Automation;
 using Netstorm.Core.Display;
@@ -966,9 +967,14 @@ public sealed partial class HostSession
 
     /// <summary>지형 Pop 호출 기록이다. 순서대로 호출 원문을 둔다. 0.602에서 추가됐다.</summary>
     private readonly List<string> _terrainPopCalls = [];
+    /// <summary>단독 임무에서 네트워크 또래 없이 송신한 지형 Pop 기록이다. 덤프에는 영향을 주지 않는다. 0.607에서 추가됐다.</summary>
+    private readonly List<(int Sid, uint Flags)> _terrainPopTransmissions = [];
 
     /// <summary>지형 Pop 호출 기록이다. R4-2 스탬프 실측 발화의 측정 바탕이며 풀 바이트·덤프에 영향을 주지 않는다. 0.602에서 추가됐다.</summary>
     public IReadOnlyList<string> TerrainPopCalls => _terrainPopCalls;
+
+    /// <summary>단독 임무에서 네트워크 또래 없이 송신한 지형 Pop 기록이다. 덤프에는 영향을 주지 않는다. 0.607에서 추가됐다.</summary>
+    public IReadOnlyList<(int Sid, uint Flags)> TerrainPopTransmissions => _terrainPopTransmissions;
 
     /// <summary>지형 Pop 호출 한 줄을 같은 형식으로 만든다. 비트 단위 좌표와 섬 후처리 연결 여부를 둔다.</summary>
     /// <param name="sid">등록한 오브젝트 번호다.</param>
@@ -1017,7 +1023,6 @@ public sealed partial class HostSession
     /// <summary>세션 섬 후처리 상태다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
     /// <remarks>0.604에서 R4-2 적재 깊이 흐름용으로 추가했다. 적재 깊이에 따라 Prefix 프레임 선택이 발화한다.</remarks>
     private IslandPostPopState? _islandPostPopState;
-
     /// <summary>세션 적재 깊이를 섬 후처리와 공유하는 상자다. SetWorldLoadingDepth가 값을 둔다.</summary>
     /// <remarks>0.604에서 R4-2 적재 깊이 흐름용으로 추가했다. 원본 Storage/Template 깊이 DWORD와 같은 구실이다.</remarks>
     private readonly UIntBox _islandLoadingDepth = new();
@@ -1037,6 +1042,12 @@ public sealed partial class HostSession
     /// <summary>세션 지형 Pop의 공통 후처리 분배기다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
     /// <remarks>0.603에서 R4-2 Prefix 실측 발화용으로 추가했다. 공간 등록 뒤 섬·표면 접두와 장부 집계를 같은 호출에서 실행한다.</remarks>
     private RawPostPop? _terrainPostPop;
+
+    /// <summary>세션 지형의 공간 해제 몸체다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
+    private RawUnpop? _terrainUnpop;
+
+    /// <summary>세션 지형의 프레임 지정 몸체다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
+    private SquidFrame? _terrainFrames;
 
     /// <summary>세션 섬 후처리 진단의 기록이다. 미연결·누락 효과를 검사에서 확인한다.</summary>
     /// <remarks>0.601에서 추가했다. 원본 진단 복귀 뒤에도 계속 진행하므로 기록만 남긴다.</remarks>
@@ -1094,7 +1105,7 @@ public sealed partial class HostSession
             Create = (type, flags) => _terrainFactory!.Create(type, (SidAllocation)flags),
             SetOwner = _islandOwner.Set,
             Pop = (sid, x, y, flags) => TerrainPopObject(sid, x, y, flags),
-            SetFrame = (_, _, _) => throw new InvalidOperationException("세션 연결 프레임 미연결(R6)"),
+            SetFrame = (sid, frame, flags) => (_terrainFrames ?? throw new InvalidOperationException("세션 연결 프레임 미연결")).Set(sid, frame, flags),
             NotifySurface = sid => (_fortBuilding ?? throw new InvalidOperationException("세션 연결 표면 통지 미연결(R6)")).NotifySurface(sid),
         });
         // 세션 지형 Pop의 공통 후처리 분배기다. 섬·표면 접두를 같은 세션 장치에 잇고 그 밖의 파생은 R6에서 잇는다.
@@ -1112,11 +1123,28 @@ public sealed partial class HostSession
             Types = types,
             Checking = new RawCheckingFlag(() => AiChecking.Read()),
             Trace = (level, text) => _islandPostPopDiagnostics.Add($"pop-trace:{level}:{text}"),
-            Assertion = (expression, file, line) => throw new InvalidOperationException($"지형 Pop 원본 진단: {expression} {file}:{line}"),
+            Assertion = (expression, file, line) => _islandPostPopDiagnostics.Add($"pop-assert:{expression} {file}:{line}"),
         });
+        _terrainPop.BindTransmission((sid, flags) => _terrainPopTransmissions.Add((sid, flags)));
         if (_fortBuilding is not null)
         {
             _terrainPop.SetBuildingSide(_fortBuilding);
+        }
+        _terrainUnpop = new RawUnpop(Pool, _terrainHash, _terrainSpots, _terrainDisplay);
+        _terrainUnpop.BindDiagnostics(new SquidUnpopDiagnostics
+        {
+            Checking = new RawCheckingFlag(() => AiChecking.Read()),
+            Types = types,
+            Assertion = (expression, file, line) => _islandPostPopDiagnostics.Add($"unpop-assert:{expression} {file}:{line}"),
+        });
+        if (_fortBuilding is not null)
+        {
+            _terrainUnpop.SetBuildingSide(_fortBuilding);
+        }
+        _terrainFrames = new SquidFrame(Pool, types, SquidFrameBinding.MakeSquidFrameHooks(Pool, types, _terrainDisplay, _terrainUnpop, _terrainPop));
+        if (Pool.Edition == OriginalEdition.Patch1078)
+        {
+            _terrainFrames.BindCurrentTypes(types);
         }
         _islandPostPopState = new IslandPostPopState { SharedLoadingDepth = _islandLoadingDepth };
         _islandPostPop = new RawIslandPostPop(
@@ -1319,15 +1347,23 @@ public sealed partial class HostSession
             VirtualCount = _ => throw new InvalidOperationException("Fort 가상 개수 미연결(R6)"),
             Pop = (sid, x, y, flags) =>
             {
-                // 현재 개발 호스트가 실제 결선한 두 몸체만 선택한다. 일반 적재는 R4-2에서 같은 장기 공간에 연결한다.
+                // 실제 몸체가 있는 화신·사제·보호막은 공통 Pop으로 등록한다.
                 if (_priests is not null && (_livePostPop!.HandlesPriest(sid) || _livePostPop.HandlesForcefield(sid)))
                 {
                     PopWorldObject(sid, x, y, flags);
                     return;
                 }
-                // 요새 객체 Pop의 공간 등록은 R6 postPop·표시·그래프 장치와 함께 잇는다.
-                // 실측 결과 thewarbegins 요새 객체에 Pop 지원표 밖 가상 표(71·75·78·89·122 등)가 있어
-                // 지금 공간 등록을 수행하면 파생 등록 효과 미지원으로 멈춘다. 생성·소유자·HP·프레임은 live로 둔다.
+                if (_livePop is not null && _livePostPop is not null && _livePostPop.HandlesPlayer(sid))
+                {
+                    PopWorldObject(sid, x, y, flags);
+                    return;
+                }
+                // 다리·섬·표면과 공통 지원 타입은 지형 분배 Pop으로 등록한다. 전용 파생이 필요한 종류는 기록만 남긴다.
+                if (TryPopFortTerrain(sid, x, y, flags))
+                {
+                    return;
+                }
+                _fortPopSkipped.Add(FormatFortPopSkip(sid, flags, _terrainPostPop is null || _terrainPop is null ? "missing-devices" : "dedicated-r6"));
             },
             Destroy = (_, _) => throw new InvalidOperationException("Fort 파괴 미연결(R6)"),
             CreateContent = _fortContained.Create,
@@ -1344,6 +1380,53 @@ public sealed partial class HostSession
     /// <param name="fort">객체를 읽을 FortTemplate다.</param>
     /// <param name="slot">미션 Template 칸 번호다. 1~8이면 기본 소유자로 쓴다.</param>
     /// <remarks>2026-11-12 0.467에서 요새 객체 live 적재용으로 추가했다. Generate 뒤 Objects 순서에서 부른다.</remarks>
+    /// <summary>지형 분배 Pop으로 잇지 않고 기록만 남긴 요새 Pop 호출이다. R6 파생 본체 대기 목록이다. 0.607에서 추가됐다.</summary>
+    private readonly List<string> _fortPopSkipped = [];
+
+    /// <summary>지형 분배 Pop으로 잇지 않고 기록만 남긴 요새 Pop 호출이다. R6 파생 본체 대기 목록이며 풀 바이트에 영향을 주지 않는다. 0.607에서 추가됐다.</summary>
+    public IReadOnlyList<string> FortPopSkips => _fortPopSkipped;
+
+    /// <summary>요새 객체를 다리·섬·표면 분배 또는 공통 후처리로 등록한다. 전용 파생이 필요하면 거짓을 돌려준다.</summary>
+    /// <param name="sid">등록할 오브젝트 번호다.</param>
+    /// <param name="x">등록할 월드 가로 좌표다.</param>
+    /// <param name="y">등록할 월드 세로 좌표다.</param>
+    /// <param name="flags">Pop 호출 플래그다.</param>
+    /// <returns>지형 분배 Pop으로 등록했으면 참이다. 전용 파생(R6)이나 장치 미연결이면 거짓이다.</returns>
+    /// <remarks>0.607에서 R4-2 요새 일반 Pop 결선용으로 추가했다. 분배 본문의 분기 순서와 같은 판정이며 풀·공간을 바꾸기 전에 가린다.</remarks>
+    private bool TryPopFortTerrain(int sid, float x, float y, uint flags)
+    {
+        // 분배 장치나 그래프 관문이 없으면 기록 경로로 돌린다.
+        if (_terrainPostPop is null || _terrainPop is null)
+        {
+            return false;
+        }
+        uint vtable = BinaryPrimitives.ReadUInt32LittleEndian(Pool.Slot(sid));
+        // 전용 파생 후처리가 필요한 종류는 R6 본체를 기다린다.
+        if (RawPostPop.RequiresDedicatedPostPop(Pool, sid))
+        {
+            return false;
+        }
+        // 다리·섬·표면 분기와 공통 지원 표만 지형 분배로 등록한다. 그 밖은 지원표 거부로 기록한다.
+        if (!_terrainPostPop.HandlesBridge(sid) && !_terrainPostPop.HandlesIsland(sid) && !_terrainPostPop.HandlesSurface(sid)
+            && !OriginalPopDisplay.Supports(Pool.Edition, vtable, flags))
+        {
+            return false;
+        }
+        TerrainPopObject(sid, x, y, flags);
+        return true;
+    }
+
+    /// <summary>요새 Pop 건너뜀 한 줄을 같은 형식으로 만든다.</summary>
+    /// <param name="sid">건너뛴 오브젝트 번호다.</param>
+    /// <param name="flags">Pop 호출 플래그다.</param>
+    /// <param name="reason">건너뛴 이유다. 파생 본체 대기는 dedicated-r6, 장치 미연결은 missing-devices다.</param>
+    /// <returns>기록 한 줄이다.</returns>
+    private string FormatFortPopSkip(int sid, uint flags, string reason)
+    {
+        ReadOnlySpan<byte> raw = Pool.Slot(sid);
+        return $"skip sid={sid} type={raw[RawSidPool.TypeOffset]} vtable={BinaryPrimitives.ReadUInt32LittleEndian(raw):X8} flags={flags:X8} {reason}";
+    }
+
     public void LoadFortObjects(FortTemplate fort, uint slot)
     {
         ArgumentNullException.ThrowIfNull(fort);
@@ -1353,6 +1436,7 @@ public sealed partial class HostSession
         }
         _fortLoader.Load(fort, unchecked((int)slot));
     }
+
 
     /// <summary>같은 실제 Player·Pop·정기 프로세스를 조립하고 월드 적재에 넘길 갈고리를 반환한다.</summary>
     /// <returns>세션 수명 동안 같은 Player 몸체와 함께 쓰는 갈고리다.</returns>
@@ -1434,11 +1518,28 @@ public sealed partial class HostSession
             Types = _terrainPopTypes,
             Checking = new RawCheckingFlag(() => AiChecking.Read()),
             Trace = (level, text) => _islandPostPopDiagnostics.Add($"pop-trace:{level}:{text}"),
-            Assertion = (expression, file, line) => throw new InvalidOperationException($"지형 Pop 원본 진단: {expression} {file}:{line}"),
+            Assertion = (expression, file, line) => _islandPostPopDiagnostics.Add($"pop-assert:{expression} {file}:{line}"),
         });
+        _terrainPop.BindTransmission((sid, flags) => _terrainPopTransmissions.Add((sid, flags)));
         if (_fortBuilding is not null)
         {
             _terrainPop.SetBuildingSide(_fortBuilding);
+        }
+        _terrainUnpop = new RawUnpop(Pool, _terrainHash, _terrainSpots, _terrainDisplay);
+        _terrainUnpop.BindDiagnostics(new SquidUnpopDiagnostics
+        {
+            Checking = new RawCheckingFlag(() => AiChecking.Read()),
+            Types = _terrainPopTypes,
+            Assertion = (expression, file, line) => _islandPostPopDiagnostics.Add($"unpop-assert:{expression} {file}:{line}"),
+        });
+        if (_fortBuilding is not null)
+        {
+            _terrainUnpop.SetBuildingSide(_fortBuilding);
+        }
+        _terrainFrames = new SquidFrame(Pool, _terrainPopTypes, SquidFrameBinding.MakeSquidFrameHooks(Pool, _terrainPopTypes, _terrainDisplay, _terrainUnpop, _terrainPop));
+        if (Pool.Edition == OriginalEdition.Patch1078)
+        {
+            _terrainFrames.BindCurrentTypes(_terrainPopTypes);
         }
         TerrainBookkeeping.GraphsEnabled = true;
     }

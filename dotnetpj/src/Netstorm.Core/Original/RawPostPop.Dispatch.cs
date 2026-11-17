@@ -29,6 +29,34 @@ public sealed partial class RawPostPop
     /// <summary>공통 성공 대신 실제 장기 전용 몸체를 요구하는 기타 PATCH 가상표다.</summary>
     private static readonly uint[] PatchResourceTables = [0x508cc8, 0x502c38, 0x502cf0, 0x502db0, 0x507770, 0x509148, 0x509210, 0x5040c0, 0x504198, 0x50a748, 0x50e888, 0x509470];
 
+    /// <summary>
+    /// 가상표만으로 전용 파생 후처리가 필요한지 가린다. 묶인 파생 몸체와 무관하게 분기 선택을 미리 본다.
+    /// 다리·섬·표면은 포함하지 않으며, 공통 후처리로 끝나지 않는 화신·사제·보호막·운반체·피해·전용 자산·순간이동만 가린다.
+    /// </summary>
+    /// <param name="pool">조회할 슬롯 풀이다.</param>
+    /// <param name="sid">가릴 오브젝트 번호다.</param>
+    /// <returns>전용 파생 몸체가 필요하면 참이다. 거짓이면 공통 후처리로 끝나거나 지원표에서 거부된다.</returns>
+    /// <remarks>0.607에서 R4-2 요새 일반 Pop 결선용으로 추가했다. 분배 본문의 분기 순서와 같은 판정이다.</remarks>
+    public static bool RequiresDedicatedPostPop(RawSidPool pool, int sid)
+    {
+        ArgumentNullException.ThrowIfNull(pool);
+        uint vtable = Read(pool.Slot(sid), 0, 4);
+        bool patch = pool.Edition == OriginalEdition.Patch1078;
+        // 화신·사제·보호막은 전용 몸체가 맡는다.
+        if (vtable == (patch ? 0x0050ee08u : 0x005002a8u)) return true;
+        if (vtable == 0x0050f210u || vtable == 0x005003e0u) return true;
+        if (patch ? vtable == ForcefieldLifecycle.PatchVtable
+            : (pool.Slot(sid)[RawSidPool.TypeOffset] == ForcefieldLifecycle.Type && vtable == ForcefieldLifecycle.CdVtable)) return true;
+        // 운반체·피해 몸체는 전용 Carrier 후처리가 맡는다.
+        uint[] carriers = patch ? PatchCarrierTables : CdCarrierTables;
+        uint[] damageables = patch ? PatchDamageableTables : CdDamageableTables;
+        if (carriers.Contains(vtable) || damageables.Contains(vtable)) return true;
+        // 전용 자산·순간이동은 전용 몸체가 맡는다.
+        if (RawAssetPostPop.HasDedicatedVtable(pool.Edition, vtable)) return true;
+        if (patch && vtable == 0x005070c0u) return true;
+        return false;
+    }
+
     /// <summary>실제 섬 접두를 연결하고 null이면 현재 연결만 반납한다.</summary>
     public void SetIslandPrefix(Action<int, uint>? prefix) => _islandPrefix = prefix;
     /// <summary>실제 표면 접두를 연결하고 null이면 현재 연결만 반납한다.</summary>
