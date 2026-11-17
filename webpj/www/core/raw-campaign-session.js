@@ -6,6 +6,7 @@ import { learnCampaignNewTechnology } from './raw-campaign-callbacks.js';
 import { refreshLocalRitualData } from './raw-ritual-refresh.js';
 import { createCampaignAi, crankCampaignAiMoney, setCampaignAiParameter, prepareCampaignAi, initializeCampaignAi, makeCampaignAi } from './raw-campaign-session-ai-public.js';
 import { RawCampaignSessionAiActions } from './raw-campaign-session-ai-actions.js';
+import { RawCampaignSessionLoginFront } from './raw-campaign-session-login-front.js';
 
 // Impl990..1865의 이미 이식한 생성 순서다. 각 단계는 같은 owner의 실제 하위 모듈을 한 번 만든다.
 const CONSTRUCTOR_STEPS = Object.freeze([
@@ -19,7 +20,7 @@ const CONSTRUCTOR_STEPS = Object.freeze([
 // 외곽 주소를 게시하고 같은 Impl만 소유한다. Client 앱 수명 연결은4D-6·4D-7에서 수행한다.
 export class RawCampaignSession {
     // 실제 Impl 소유자와 외곽 반납 관문이다. 외부에는 원시 owner를 공개하지 않는다.
-    #owner = null; #disposed = false;
+    #owner = null; #login = null; #disposed = false;
 
     // 모든 Impl 모듈이 구성된 뒤 외곽 callback을 연결하고 마지막에 현재 Session을 게시한다.
     constructor(game, files, fort, mission, services = {}) {
@@ -73,6 +74,38 @@ export class RawCampaignSession {
     }
     // 생성과 실제 설치 완료를 구별한다.
     get loaded() { return this.#live().loaded; }
+    // 실제 Login 소유자를 만든 뒤 미션 시작을 실행한다. 수신 등록 누락은 실제 Load 뒤 선택 위치에서 중단한다.
+    #beginLocalConnection(parentRunning) {
+        const o = this.#live();
+        if (o.loaded || this.#login || !o.services.localLogin) throw new Error('실제 로컬 Login의 새 수명/장치 계약 오류');
+        const login = new RawCampaignSessionLoginFront(o, o.services.localLogin);
+        try {
+            login.bindServer(() => { this.load(); throw new Error('실제 게임 명령 수신 등록 미연결'); });
+            login.bindClient(); login.registerReceivers();
+        } catch (error) { login.dispose(); throw error; }
+        this.#login = login; login.begin(parentRunning);
+    }
+    // 독립 미션의 같은 상태8 시작을 실행한다.
+    startLocalConnection() { this.#beginLocalConnection(false); }
+    // 외부 State7 부모의 공통 확정을 중첩하지 않고 실제 후반만 준비한다.
+    prepareLocalConnectionForState() { this.#beginLocalConnection(true); }
+    // 원본의 로컬 로그인 상태만 Poll하고 큰 부모 상태는 호출자에게 남긴다.
+    pollLocalConnectionState() {
+        const o = this.#live(); if (!this.#login) return false;
+        if (![8, 9, 10, 13, 14].includes(o.localStateGlobals.state().next[0])) return false;
+        this.#login.state.poll(); return true;
+    }
+    // 현재 Login의 실제 송신·시계·수신만 진행한다.
+    pumpLocalConnection() { this.#live(); if (this.#login) this.#login.pump(); }
+    // 원본처럼 설치·상태14·현재 Player와 연결 비트를 모두 확인한다.
+    localConnectionReady() {
+        const o = this.#live(); if (!this.#login || !o.loaded || o.localStateGlobals.state().phase[0] !== 14 || !o.playerState.playerKnown) return false;
+        const owner = o.playerState.battleOwner; return owner < 9 && (o.players[owner * 180 + 0x50] & 1) !== 0;
+    }
+    // 현재 확정된 원본 상태와 실제 수신 기록을 조회한다.
+    localConnectionPhase() { const o = this.#live(); return this.#login ? o.localStateGlobals.state().phase[0] : 0; }
+    // 기록은 호출자에게 복사본으로 돌려 같은 실제 목록의 임의 변경을 막는다.
+    localConnectionPackets() { this.#live(); return this.#login ? this.#login.wireTypes.slice() : []; }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }
     // 현재 Player 참여와 AI 소유자 수명을 빌린다.
@@ -199,6 +232,6 @@ export class RawCampaignSession {
         const o = this.#live();
         if (o.gameplayGlobals.runtimeCallActive(this)) throw new Error('실제 Runtime 배송 종료 전 외곽 Session 반납');
         try { this.bindRuntimePin(null); this.detachConnectionTransport(); }
-        finally { this.#disposed = true; o.dispose(); }
+        finally { try { this.#login?.dispose(); } finally { this.#disposed = true; o.dispose(); } }
     }
 }

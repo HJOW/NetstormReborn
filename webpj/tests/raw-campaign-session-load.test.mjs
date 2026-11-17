@@ -34,7 +34,7 @@ function scene(overrides = {}, savedFort = fort) {
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => trace.push('config'), refreshWindowTitle: () => trace.push('title'), resetCamera: () => trace.push('camera'), ...overrides.install },
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
-        templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology,
+        templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
         player: { log: () => trace.push('log') }, construction: overrides.construction, missionOutcome: overrides.missionOutcome,
         ai: { assertion: forbidden('AI 진단'), ...overrides.ai },
@@ -53,6 +53,21 @@ test('CampaignSession Tutorial 1: 실제 저장 객체·Graph와 커서까지 Lo
         assert.throws(() => s.load(), /반복|중복/); assert.equal(s.loaded, true);
     } finally { s.dispose(); }
     assert.throws(() => s.load(), /반납/);
+});
+
+// 실제 외곽 Session은 내부 27h의 월드 설치를 같은 load()에 전달하고 미완성 명령 등록에서 멈춘다.
+test('CampaignSession Tutorial 1: 로컬 로그인에서 실제 외곽 Load까지', () => {
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {} };
+    const { s } = scene({ localLogin });
+    try {
+        assert.equal(s.localConnectionReady(), false); assert.equal(s.pollLocalConnectionState(), false);
+        s.startLocalConnection(); assert.equal(s.localConnectionPhase(), 8); assert.equal(s.loaded, false);
+        s.pumpLocalConnection(); assert.equal(s.pollLocalConnectionState(), true); assert.equal(s.localConnectionPhase(), 10);
+        assert.throws(() => s.pumpLocalConnection(), /실제 게임 명령 수신 등록 미연결/);
+        assert.equal(s.loaded, true); assert.ok(s.localConnectionPackets().includes(0x27)); assert.equal(s.localConnectionReady(), false);
+        assert.throws(() => s.startLocalConnection(), /새 수명/);
+    } finally { s.dispose(); }
+    assert.throws(() => s.pumpLocalConnection(), /반납/);
 });
 
 // 원본 기본 AI 설정의 같은 600BYTE 입력에 명시 이름·기술·초기 SP만 지정한다.
