@@ -204,6 +204,13 @@ public sealed partial class RawSurfaceStorage
             return;
         }
 
+        // 실제 제단 Post의 단일 tail jump와 피해 후처리는 같은 장기 본체를 공유한다.
+        if (method == 0x00448b60u || method == 0x0044b9e0u)
+        {
+            DamageablePost().PostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
         throw new InvalidOperationException($"장기 자산의 전용 삭제 몸체 미연결: 0x{method:X8}");
     }
 

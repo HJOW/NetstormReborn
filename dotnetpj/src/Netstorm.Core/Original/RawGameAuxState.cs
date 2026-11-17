@@ -252,6 +252,18 @@ public sealed partial class RawGameAuxState
     /// <summary>005410d0의현재24이며 Dude 이동/정기/통지가 같은 장기 주소를 빌린다.</summary>
     public UIntBox DudePathTypeBox { get; } = new() { Value = 24u };
 
+    /// <summary>00541280의 현재 더스트 데빌 TYPE이며 비행/드롭 판정이 함께 읽는다. 0.576에서 추가됐다.</summary>
+    public UIntBox WindFlyerTypeBox { get; } = new() { Value = 138u };
+
+    /// <summary>00541298의 현재 맨 오 워 TYPE이며 비행/삭제가 공유한다. 0.576에서 추가됐다.</summary>
+    public UIntBox RainFlyerTypeBox { get; } = new() { Value = 144u };
+
+    /// <summary>005326c0의 실제 현재 피해 사건 번호이며 장기 Handle이 현재 비교 위치에서 빌린다. 0.576에서 추가됐다.</summary>
+    public uint DamageRegularEvent { get => DamageRegularEventBox.Value; set => DamageRegularEventBox.Value = value; }
+
+    /// <summary>같은 피해 사건 번호 DWORD를 빌리는 공유 owner다. 0.576에서 추가됐다.</summary>
+    public UIntBox DamageRegularEventBox { get; } = new() { Value = 6699u };
+
 
     /// <summary>005412e8의 현재 제단 TYPE이며 보상/HP가 같은 주소에서 읽는다. 0.571에서 추가됐다.</summary>
     public UIntBox AltarTypeBox { get; } = new() { Value = 164u };
