@@ -15,6 +15,7 @@ import { decodeOriginalText } from '../assets/text-encoding.js';
 import { registerDeveloperCommandPacket } from './raw-developer-command-packet.js';
 import { registerMissionSettingsPacket } from './raw-mission-settings-packet.js';
 import { observePathData } from './raw-path-data.js';
+import { DaisProcess, readDaisProcessData } from './raw-dais-process-data.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -232,7 +233,29 @@ export class RawCampaignSession {
         if (!o.buildingEffects) throw new Error('섬 정리 수신의 실제 건설 효과 미설치');
         o.assetModules.prepareBuilding(o.core.processState.now); o.buildingEffects.dropIsland(x, y, flags, owner);
     }
-    // Carrier 등록의 동맹·개발자·설정·위치·카메라·섬 정리·경로 앞부분만 원본 순서대로 등록한다.
+    // 6ah는 신규 Form에만 같은 DaisProcess를 부착하고 기존 Form의 현재 PID 필드만 갱신한다.
+    #receiveDaisPacket(packet) {
+        const o = this.#live(), c = o.core; if (c.pool.edition !== 'patch1078') throw new TypeError('Dais 수신의 PATCH 판본 불일치');
+        if (packet.length < 8) throw new RangeError('Dais 수신의 Form DWORD 물리 부족');
+        const form = new DataView(packet.buffer, packet.byteOffset, packet.byteLength).getUint32(4, true);
+        if (form > 65535 || form >= c.pool.capacity) throw new RangeError('Dais 수신의 Form DWORD 물리 범위');
+        const free = (c.pool.slot(form)[11] & 1) !== 0;
+        if (packet.length < 9) throw new RangeError('Dais 수신의 현재 mask BYTE 물리 부족');
+        const mask = packet[8], assertion = (expression, line) => o.world.storage.assertDisplay(expression, '..\\o\\_p_daisprocessdata.cpp', line);
+        if (free) {
+            if (mask !== 0xff) assertion('*(( char *)((char *)zacket+8) ) == (char)0xFFFFFFFF', 0x36);
+            const pending = new DaisProcess();
+            try {
+                const parent = readDaisProcessData(pending.fields, packet, true), type = o.gameplayGlobals.gameAux().daisProcessType;
+                if (parent > 65535 || parent >= c.pool.capacity) throw new RangeError('Dais 수신의 parent DWORD 물리 범위');
+                c.processes.attach(pending, type, parent, 0x10, form);
+            } finally { if (!c.kernel.find(pending)) pending.destroy(); }
+            return;
+        }
+        if (mask & 1) assertion('(*(char *)(( (char *)zacket+8) ) & 1) == 0', 0x3e);
+        const current = c.processes.fromForm(form); readDaisProcessData(current instanceof DaisProcess ? current.fields : null, packet, false);
+    }
+    // Carrier 등록의 동맹·개발자·설정·위치·카메라·섬 정리·경로·Dais 앞부분만 원본 순서대로 등록한다.
     registerCarrierCommandPrefix(dispatch) {
         const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 Carrier 수신 등록');
         this.registerAllianceNegotiationCommands(dispatch);
@@ -249,6 +272,8 @@ export class RawCampaignSession {
         dispatch.observePacket(0x30, (packet, sending) => observePathData(packet, sending, (expression, file, line) => storage.assertDisplay(expression, file, line)));
         dispatch.version(0x30, 1, 0); dispatch.requireLength(0x30, 0xffff);
         dispatch.register(0x30, (_sender, _connection, packet) => { this.#live(); if (!o.motion?.paths) throw new Error('Path 수신의 실제 이동 본체 미연결'); o.motion.paths.receivePacket(packet); });
+        dispatch.observe(0x6a, null); dispatch.version(0x6a, 1, 0); dispatch.requireLength(0x6a, 0xffff);
+        dispatch.register(0x6a, (_sender, _connection, packet) => this.#receiveDaisPacket(packet));
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }

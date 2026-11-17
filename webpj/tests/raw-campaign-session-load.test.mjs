@@ -18,6 +18,7 @@ import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
 import { ClientLocalStateGlobals } from '../www/core/client-local-state-globals.js';
+import { DaisProcess, writeDaisProcessData } from '../www/core/raw-dais-process-data.js';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 import { loadOriginalForts, readData } from './helpers.mjs';
 
@@ -134,6 +135,26 @@ test('CampaignSession Tutorial 1: Carrier 앞단 설정과 카메라 수신', ()
         const reserved = new Uint8Array(18); reserved.set([1, 0x33, 18, 0, 5, 0]); assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), reserved), true);
     } finally { s.dispose(); }
     assert.throws(() => s.registerCarrierCommandPrefix(dispatch), /반납/);
+});
+
+// 일반 Form 부모에만 Process를 붙여 6ah 신규·기존 수신을 확인하며 사제 행동이나 희생은 실행하지 않는다.
+test('CampaignSession Tutorial 1: Dais 데이터의 실제 Process 신규·갱신', () => {
+    const { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); const c = s.core(), parent = c.factory.create(6, 2);
+        let form = 15001;
+        // 같은 Pool의 실제 비어 있는 서버 Form을 찾는다.
+        while (form < c.pool.capacity && !(c.pool.slot(form)[11] & 1)) form += 1;
+        assert.ok(form < c.pool.capacity); const source = new DaisProcess(), packet = new Uint8Array(32);
+        new DataView(source.fields.bytes.buffer).setBigUint64(32, 0x7ff0123456789abcn, true);
+        const length = writeDaisProcessData(source.fields, packet, form, parent, true); source.destroy();
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet.subarray(0, length)), true);
+        const current = c.processes.fromForm(form); assert.ok(current instanceof DaisProcess); assert.equal(current.parent, parent); assert.equal(c.pool.slot(form)[10], 58);
+        assert.equal(new DataView(current.fields.bytes.buffer).getBigUint64(32, true), 0x7ff0123456789abcn);
+        const update = new Uint8Array(17), view = new DataView(update.buffer); update.set([1, 0x6a, 17, 0]); view.setUint32(4, form, true); update[8] = 2; view.setBigUint64(9, 0x3ff4000000000000n, true);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), update), true); assert.equal(c.processes.fromForm(form), current);
+        assert.equal(new DataView(current.fields.bytes.buffer).getBigUint64(32, true), 0x3ff4000000000000n);
+    } finally { s.dispose(); }
 });
 
 // 원본 기본 AI 설정의 같은 600BYTE 입력에 명시 이름·기술·초기 SP만 지정한다.

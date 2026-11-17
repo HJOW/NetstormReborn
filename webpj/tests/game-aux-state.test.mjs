@@ -202,7 +202,7 @@ test('GameAuxState: 초기값이 원본10.78 PE 의 .data/BSS 와 같다', (t) =
     }
     assert.deepEqual(mismatches, []);
     // 필드85개(double4개의8바이트 전체 포함)와 장식4칸이다.
-    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [85, 4]);
+    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [86, 4]);
 });
 
 // TYPE 번호 칸: 웹 타입 표에서 같은 번호의 이름이 표의 대응 이름과 같다(자산 70~, 프로세스 10~, 내장 Form 1·2·3·6). 프로세스 상한 63 은 마지막 프로세스(62)+1 이다.
@@ -213,7 +213,7 @@ test('GameAuxState: TYPE 번호가 웹 타입 표의 이름과 맞는다', () =>
     const nameOf = (number) => (number >= FIRST_ASSET_TYPE_NUMBER ? TYPE_LOAD_ORDER[number - FIRST_ASSET_TYPE_NUMBER] : number >= 10 ? PROCESS_TYPE_NAMES[number - 10] : builtin[number]);
     const typed = [...GAME_AUX_FIELDS.filter((field) => field.typeName !== null).map((field) => [field.name, field.initial, field.typeName]),
         ...WORLD_DECORATION_FIELDS.map((field) => [`decoration@${field.address.toString(16)}`, field.initial, field.typeName])];
-    assert.equal(typed.length, 54);
+    assert.equal(typed.length, 55);
     for (const [name, number, typeName] of typed) assert.equal(nameOf(number), typeName, `${name}=${number}`);
     assert.equal(new GameAuxState().processTypeEnd, 10 + PROCESS_TYPE_NAMES.length);
 });

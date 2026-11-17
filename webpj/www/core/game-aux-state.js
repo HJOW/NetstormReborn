@@ -118,6 +118,8 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['gunProcessType', 0x005410f8, 'u32', 34, 'gunProcessType', '총 프로세스 신규 생성/전체 수신 TYPE'],
     ['fireAnimationProcessType', 0x005410fc, 'u32', 35, 'fireAnimProcessType', '발사 애니메이션 프로세스 TYPE(전체 발사 수신 부모가 조회)'],
     ['rotateAnimationProcessType', 0x00541100, 'u32', 36, 'rotateAnimProcessType', '회전 애니메이션 프로세스 TYPE(발사와 별개인 장기 DWORD)'],
+    // Dais 데이터 수신은 자산 TYPE165가 아닌 같은 장기 Process TYPE을 사용한다.
+    ['daisProcessType', 0x00541158, 'u32', 58, 'daisProcessType', 'DaisProcess 수신 부착 TYPE'],
     ['altarType', 0x005412e8, 'u32', 164, 'altar', '현재 제단 TYPE'],
     ['daisType', 0x005412ec, 'u32', 165, 'dais', '현재 다이스 TYPE'],
     ['priestType', 0x005412d0, 'u32', 158, 'priest', '현재 사제 TYPE'],
