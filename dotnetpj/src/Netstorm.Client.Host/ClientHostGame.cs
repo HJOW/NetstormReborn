@@ -366,11 +366,12 @@ public sealed class ClientHostGame : Game
             byte[] shpRaw = _startup.Files.ReadAllBytes("d/_shapes.shp");
             var shpDb = new Netstorm.Assets.ShapeDatabase(shpRaw);
             List<SquidDisplayShape> popShapes = TerrainDisplayShapes.Build(worldDefinitions, shpDb);
-            session.BuildTerrainPopDevices(types.Types, popShapes);
-            // 요새 객체 적재 장치. 지형 Pop과 같은 해시·spots·표시를 공유한다(cpppj RawCampaignWorldRuntime, 0.467).
-            session.BuildFortObjectDevices(types.Types, session.WorldFrames);
             // NativeStorage 일원화(0.596): 미션 표를 장기 저장소에 넣어 공장 일원화의 바탕을 둔다. 저장소는 독립 사본을 소유한다.
             InstallMissionStorageTables(storage, types.Types, session.WorldFrames, popShapes);
+            session.BuildTerrainPopDevices(types.Types, popShapes, storage.FactoryExecutor());
+            // 요새 객체 적재 장치. 지형 Pop과 같은 해시·spots·표시를 공유한다(cpppj RawCampaignWorldRuntime, 0.467).
+            // 공장·실행기 일원화(0.597): 두 장치의 생성 공장을 저장소 공장으로 통일한다. 표는 0.596에서 저장소에 넣었다.
+            session.BuildFortObjectDevices(types.Types, session.WorldFrames, storage.FactoryExecutor());
             // 월드 그래프 재구성 장치. 같은 해시·spots·프레임 표를 공유한다(cpppj RawCampaignWorldRuntime 65·83행, 0.470).
             session.BuildWorldGraphDevices(types.Types);
             // 같은 Player·공통 Pop·프로세스에 실제 사제/보호막 후처리를 등록한다.

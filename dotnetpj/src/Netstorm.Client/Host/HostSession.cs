@@ -806,8 +806,10 @@ public sealed partial class HostSession
     /// <summary>지형 도장 Pop의 공장·공간·표시 장치를 세션에 연결한다. 연결 전에는 도장 효과가 중립(기록만)으로 동작한다.</summary>
     /// <param name="types">같은 실제 TYPE 표다. 패치판 188개·CD판 171개여야 한다.</param>
     /// <param name="shapes">같은 순서의 표시 셰이프 목록이다. 타입 개수와 같아야 한다.</param>
-    /// <remarks>2026-11-12 0.466에서 지형 Pop 공간 등록 라이브 연결용으로 추가했다. 근거: cpppj MakeTerrainStampWorldHooks(core.factory·core.hash·core.shapes→FrameSize)의 세션 결선이다.</remarks>
-    public void BuildTerrainPopDevices(IReadOnlyList<OriginalTypeRecord> types, List<SquidDisplayShape> shapes)
+    /// <param name="factory">빌릴 외부 공장. null이면 세션 전용으로 만든다. 넘기면 같은 풀 소속이어야 하며 소유자의 바인딩 그대로 쓴다.</param>
+    /// <remarks>2026-11-12 0.466에서 지형 Pop 공간 등록 라이브 연결용으로 추가했다. 근거: cpppj MakeTerrainStampWorldHooks(core.factory·core.hash·core.shapes→FrameSize)의 세션 결선이다.
+    /// 0.597에서 저장소 공장 전환용으로 외부 공장 빌림을 추가했다.</remarks>
+    public void BuildTerrainPopDevices(IReadOnlyList<OriginalTypeRecord> types, List<SquidDisplayShape> shapes, RawSquidFactory? factory = null)
     {
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(shapes);
@@ -815,8 +817,15 @@ public sealed partial class HostSession
         {
             throw new ArgumentException("지형 Pop 타입·셰이프 목록 크기 오류", nameof(types));
         }
-        _terrainFactory = new RawSquidFactory(Pool, types);
-        BindFactoryHitPoints(_terrainFactory, types);
+        if (factory is not null && !ReferenceEquals(factory.Pool, Pool))
+        {
+            throw new ArgumentException("지형 Pop 외부 공장의 풀 불일치", nameof(factory));
+        }
+        _terrainFactory = factory ?? new RawSquidFactory(Pool, types);
+        if (factory is null)
+        {
+            BindFactoryHitPoints(_terrainFactory, types);
+        }
         _terrainHash = new RawSquidHash();
         _terrainSpots = new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells];
         _terrainDisplay = new SquidDisplay(
@@ -991,10 +1000,12 @@ public sealed partial class HostSession
     /// <summary>요새 객체 적재의 공장·공간·HP·내용물 장치를 세션에 연결한다. 지형 Pop 장치 뒤에 연결해야 한다(같은 해시·spots·표시를 공유한다).</summary>
     /// <param name="types">같은 실제 TYPE 표다. 패치판 188개여야 한다.</param>
     /// <param name="frames">같은 실제 프레임 표다. 타입 개수와 같아야 한다.</param>
+    /// <param name="factory">빌릴 외부 공장. null이면 세션 전용으로 만든다. 넘기면 같은 풀 소속이어야 하며 소유자의 바인딩 그대로 쓴다.</param>
     /// <remarks>2026-11-12 0.467에서 요새 객체 live 적재용으로 추가했다. 근거: cpppj RawCampaignWorldRuntime.cpp 43~53행(객체 갈고리+MakeFortObjectLoadHooks+RawFortObjectLoad)의 세션 결선이다.
     /// SetState·FinishOwner는 기록만 하며(R6 공장 후처리·거주 배치에서 잇는다), Destroy·VirtualCount·내용물 부착은 미션 적재(Fort=false)에서 도달하지 않으므로 명시 경계로 둔다.
-    /// 2026-11-12 0.475에서 소유자 지정 몸체를 Player 월드 갈고리와 공유하려고 `_playerOwner` 필드에 보관한다.</remarks>
-    public void BuildFortObjectDevices(IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames)
+    /// 2026-11-12 0.475에서 소유자 지정 몸체를 Player 월드 갈고리와 공유하려고 `_playerOwner` 필드에 보관한다.
+    /// 0.597에서 저장소 공장 전환용으로 외부 공장 빌림을 추가했다.</remarks>
+    public void BuildFortObjectDevices(IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames, RawSquidFactory? factory = null)
     {
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(frames);
@@ -1006,8 +1017,15 @@ public sealed partial class HostSession
         {
             throw new InvalidOperationException("요새 객체 장치는 지형 Pop 장치 뒤에 연결해야 한다");
         }
-        _fortFactory = new RawSquidFactory(Pool, types);
-        BindFactoryHitPoints(_fortFactory, types);
+        if (factory is not null && !ReferenceEquals(factory.Pool, Pool))
+        {
+            throw new ArgumentException("요새 객체 외부 공장의 풀 불일치", nameof(factory));
+        }
+        _fortFactory = factory ?? new RawSquidFactory(Pool, types);
+        if (factory is null)
+        {
+            BindFactoryHitPoints(_fortFactory, types);
+        }
         RewardState.SharedPriestType = GameAux.PriestTypeBox;
         RewardState.SharedDaisType = GameAux.DaisTypeBox;
         RewardState.SharedPriestQuarterHp = GameAux.PriestQuarterHpBox;
