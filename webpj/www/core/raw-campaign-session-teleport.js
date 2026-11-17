@@ -3,7 +3,8 @@
 import { createCursorManaProcess } from './raw-cursor-mana.js';
 import { createCursorRangeProcess } from './raw-cursor-range.js';
 import { BombEffectTimerProcess } from './raw-bomb-effect-timer.js';
-import { runFenceTypeParent, FENCE_TYPE_OPERATION } from './raw-fence-type-parent.js';
+import { FENCE_TYPE_OPERATION } from './raw-fence-type-parent.js';
+import { dispatchCampaignFence } from './raw-campaign-fence-dispatch.js';
 
 // 선택된 cdecl의 서로 다른 인수/반환 수명을 보존한다. 전체 Session/Load 공개는 상위의 몫이다.
 export class RawCampaignSessionTeleport {
@@ -58,17 +59,7 @@ export class RawCampaignSessionTeleport {
             unpop: (sid, flags) => o.world.unpop(sid, flags),
             repop: (sid, flags) => o.world.repop(sid, flags),
             refresh: (sid) => c.display.update(c.pool.slot(sid), 0),
-            fence: (sid) => runFenceTypeParent(c.pool.slot(sid), sid, () => o.gameplayGlobals.gameAux().sunFenceType, () => o.state.gunState.checking, FENCE_TYPE_OPERATION.rebuild, {
-                assertion: (expression, _file, line) => {
-                    const assertion = o.services.ai?.assertion;
-                    if (typeof assertion !== 'function') throw new Error(`펜스 타입 원문 진단 장치 미연결 ${line}`);
-                    assertion(expression);
-                },
-                body: (target) => {
-                    if (!o.fenceRebuild) throw new Error('실제 펜스 Rebuild 설치 전 호출');
-                    o.fenceRebuild.rebuild(target);
-                },
-            }),
+            fence: (sid) => dispatchCampaignFence(o, sid, FENCE_TYPE_OPERATION.rebuild),
         });
     }
 
