@@ -315,4 +315,36 @@ public sealed partial class RawSurfaceStorage
 
         return _flyerPre;
     }
+
+    /// <summary>일반 거주 구역의 장기 50칸 목록을 압축한 뒤 공통 Post를 실행한다. 0.580에서 추가됐다.</summary>
+    /// <param name="sid">삭제할 거주 구역 번호다.</param>
+    /// <param name="flags">삭제에 적용되는 플래그 비트다.</param>
+    public void ResidencePostDestroy(int sid, uint flags)
+    {
+        // 현재 extra9 관문은 목록을 읽기 전에 적용한다.
+        if ((Pool.Slot(sid)[40] & 9u) == 0)
+        {
+            SidLists.Residences.RemoveAll(unchecked((uint)sid));
+        }
+
+        CommonDeletion().PostDestroy(sid, flags);
+    }
+
+    /// <summary>기존 30칸 population 제거 본체를 같은 장기 목록에 연결한다. 0.580에서 추가됐다.</summary>
+    /// <param name="sid">삭제할 Dude 번호다.</param>
+    /// <param name="flags">삭제에 적용되는 플래그 비트다.</param>
+    public void DudePostDestroy(int sid, uint flags)
+    {
+        if (_edition != OriginalEdition.Patch1078)
+        {
+            throw new ArgumentException("Native Dude 후처리 판본 오류", nameof(sid));
+        }
+
+        if ((Pool.Slot(sid)[40] & 9u) == 0)
+        {
+            SidLists.Dudes.RemoveAll(unchecked((uint)sid));
+        }
+
+        CommonDeletion().PostDestroy(sid, flags);
+    }
 }

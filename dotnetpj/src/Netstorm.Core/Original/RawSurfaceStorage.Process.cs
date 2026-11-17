@@ -259,6 +259,20 @@ public sealed partial class RawSurfaceStorage
             return;
         }
 
+        // 같은 실제 50칸 거주 구역 목록을 압축한 뒤 공통 Post다.
+        if (method == 0x0049a4a0u)
+        {
+            ResidencePostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 기존 30칸 population 제거 본문을 같은 장기 목록에 연결한다.
+        if (method == 0x00450920u)
+        {
+            DudePostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
         // 다리·섬·무인도 고유 삭제는 같은 장기 표면 수명으로 분배한다.
         if (method == 0x004221b0u || method == 0x00422300u || method == 0x00442240u || method == 0x00442640u)
         {
