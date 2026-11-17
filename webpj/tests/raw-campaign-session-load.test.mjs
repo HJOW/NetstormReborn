@@ -97,6 +97,18 @@ test('CampaignSession Tutorial 1: 세계 간헐천 전체 생성과 AI 등록', 
     } finally { s.dispose(); }
 });
 
+// 단일 미션은 비미션 보충을 원본 진단에서 중단하며 앞에 객체를 만들지 않는다.
+test('CampaignSession Tutorial 1: 비미션 너겟의 단일 미션 진단', () => {
+    const { s, queue } = scene({ construction: { wallSeconds: () => 1 } }), diagnostics = [];
+    try {
+        s.load(); const before = s.world().objects(), pending = queue.size;
+        s.world().storage.bindDisplayDiagnostics({ value: '' }, (expression, file, line) => { diagnostics.push([expression, file, line]); throw new Error('단일 미션 진단'); });
+        assert.throws(() => s.placeBattleNuggets({ left: 1, top: 1, right: 50, bottom: 50 }, 1), /단일 미션 진단/);
+        assert.deepEqual(diagnostics, [['!inSingle', '\\Ns\\O\\Addrandom.cpp', 0xb4]]);
+        assert.deepEqual(s.world().objects(), before); assert.equal(queue.size, pending); assert.equal(s.loaded, true);
+    } finally { s.dispose(); }
+});
+
 // 실제 기술 부모에 같은 종류를 한 번만 넣고 반복 획득에도 현재 Battle snapshot과 안내를 수행한다.
 test('CampaignSession Tutorial 1: 실제 기술 획득과 반복 snapshot', () => {
     const storage = new CampaignTemplateStorage(), events = [];
