@@ -13,15 +13,19 @@ import { LocalMissionProgress, RawLocalMissionState } from './raw-local-mission-
 import { ClientHelpWord } from './client-help-word.js';
 import { RawFortImage } from './raw-fort-image.js';
 import { MissionLoginPlayerCounts, RawMissionLoginTimer } from './raw-mission-login-timer.js';
+import { RawMissionLogin } from './raw-mission-login.js';
+import { setPlayerSpAmount } from './raw-fort-money-load.js';
 
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
 export class RawCampaignSessionLoginFront {
     // 실제 부모·장치와 내부 전송 수명, 반납 관문이다.
-    #owner; #effects; #internal = null; #disposed = false; #wall = 0; #localTitle = 0; #timeout = 0; #localRequestPhase = 0;
+    #owner; #effects; #internal = null; #disposed = false; #wall = 0; #localTitle = 0; #timeout = 0; #localRequestPhase = 0; #beginSeed = 0; #battleSeed = 0;
     // 원문의 독립 초기 지역 입력과 현재 수신 종류 기록이다.
     pendingStamp = 0; overrideFlags = 0; wireTypes = [];
     // 현재 연결표와 패킷 분배기 및 같은 옵션/패킷/시계 처리기를 소유자와 함께 공개한다.
     transport; options; metadata; forts; settings; clockSynchronization; state; timer;
+    // 실제 참여 소유자 준비 뒤 생성하는 로그인 서버와 후속 클라이언트다.
+    server = null; client = null;
     // 원문 독립 fixture의 현재 UI 및 입력 모드 값이다.
     uiMode = 0; inputMode = 0;
 
@@ -203,6 +207,66 @@ export class RawCampaignSessionLoginFront {
             createInitialGeysers: o.createWorldGeysers ?? undefined, resetCamera: o.services.install.resetCamera,
             serverAssertion: () => this.#assertion('server'),
         };
+    }
+    // 서버 로그인은 같은 Player·Core·권한·시계와 장기 타입/디버그 전역을 읽고 쓴다.
+    #serverGlobals() {
+        const o = this.#live(), self = this, local = o.localStateGlobals, aux = o.gameplayGlobals.gameAux(), core = o.coreDataGlobals;
+        return {
+            get server() { return o.core.processState.server; }, get boss() { return o.state.assetState.readBoss(); },
+            get simulconnect() { return local.simulconnect().value; }, get missionWorld() { return o.objectState.mission; },
+            get missionPost() { return o.globals.missionPost; }, get metamap() { return o.core.ownerMode.challenge; }, player: o.playerState,
+            get mySubscriber() { return o.globals.mySubscriber; },
+            get fortCount() { return o.playerRecords.fortCount().value; }, set fortCount(value) { o.playerRecords.fortCount().value = value; },
+            get lastLoginPlayer() { return o.playerRecords.lastLoginPlayer().value; }, set lastLoginPlayer(value) { o.playerRecords.lastLoginPlayer().value = value; },
+            get predictableCount() { return o.core.pool.predictableCursor; },
+            get begin() { return local.begin().value; }, set begin(value) { local.begin().value = value; },
+            get beginSeed() { return self.#beginSeed; }, set beginSeed(value) { self.#beginSeed = value >>> 0; },
+            get battleSeed() { return self.#battleSeed; }, set battleSeed(value) { self.#battleSeed = value >>> 0; },
+            sharedBattleSeed: { get value() { return aux.resourcePoolBits; }, set value(value) { aux.storeResourcePoolBits(value); } },
+            get debugBurst() { return local.debugBurst().value; }, get debugPacketHeader() { return aux.packet0cHeader(); },
+            get debugPacketInitialLength() { return aux.packet0cInitialLength; },
+            get clockStamp() { return o.gameplayGlobals.battleClockStamp().value; }, set clockStamp(value) { o.gameplayGlobals.battleClockStamp().value = value; },
+            get baseClock() { return o.gameplayGlobals.battleClockOrigin().value; }, set baseClock(value) { o.gameplayGlobals.battleClockOrigin().value = value; },
+            get captureEnd() { return local.captureEnd().value; }, set captureEnd(value) { local.captureEnd().value = value; },
+            get currentCoreData() { return core.current; }, set currentCoreData(value) { core.current = value; },
+            cachedCoreData: core.cached(), zoneAddress: local.zone(), battleOptions: o.battleOptions,
+            get savedGame() { return local.savedGame().value; }, get inBattle() { return o.state.assetState.inBattle; },
+        };
+    }
+    // 실제 장기 Core 복원과 선택된 Chat 재초기화를 같은 Player에 적용한다.
+    #restoreCoreData(owner) {
+        const o = this.#live(), local = o.localStateGlobals;
+        o.coreDataGlobals.restore(o.playerState, () => Number(o.core.ownerMode.challenge), {
+            missionPost: () => Number(o.globals.missionPost), savedGame: () => Number(local.savedGame().value), checking: () => Number(o.state.gunState.checking),
+        }, owner, { assertion: (expression) => this.#assertion(expression), initializeChat: this.#effects.initializeChat });
+    }
+    // 실제 참여 부모가 준비된 다음 서버 패킷 몸체를 한 번 생성한다. 수신기 등록과 월드 설치는 후속이다.
+    bindServer(install = null) {
+        const o = this.#live(); if (this.server || !o.participation || (install !== null && typeof install !== 'function')) throw new Error('서버 Login의 실제 참여/설치 또는 중복 결선 오류');
+        const effects = this.#effects;
+        this.server = new RawMissionLogin(o.players, o.participation, this.#serverGlobals(), {
+            disconnect: (id) => this.#transport('close')(id),
+            pendingReply: (connection, packet) => {
+                const id = connection.sender | 0; if (this.#transport('connection')(id) !== connection) throw new Error('거부 응답의 현재 연결 정체성 불일치');
+                this.#send(id, packet, false);
+            },
+            peerAddress: (owner) => this.#transport('peerAddress')(owner | 0),
+            send: (target, packet) => this.#send(target, packet, true), broadcast: (packet) => o.tables.broadcast.send(packet),
+            flush: () => this.#transport('flush')(), wallSeconds: effects.wallSeconds, clock: effects.clock, spBits: (owner) => o.sp.get(owner),
+            applyOptions: (packet) => { if (!this.client) throw new Error('현재 Login 클라이언트 옵션 수신기 미연결'); this.client.options(0, packet); },
+            clearTypes: () => this.options.clearTypes(), sendPlayer: (owner, target) => this.metadata.sendPlayer(owner, target),
+            sendFortMetadata: (target) => this.metadata.sendMetadata(target), loadCurrentFort: (owner) => this.#reloadFort(owner),
+            sendFort: (owner, target, count) => this.forts.sendFort(owner, target, count),
+            loadWorld: () => { if (!install) throw new Error('현재 Session Load 설치 미연결'); install(); },
+            sendSettings: (target) => this.settings.send(target), restoreCoreData: (owner) => this.#restoreCoreData(owner),
+            loadFortImage: () => { throw new Error('원격 Fort는 웹 일반 멀티플레이 범위 밖'); },
+            synchronizePeer: () => { throw new Error('원격 월드 동기화는 후속 단계'); },
+            makeBattleIsland: () => { throw new Error('스커미시 전투섬 생성은 후속 단계'); },
+            assertion: (expression) => this.#assertion(expression),
+            setSp: (owner, amount) => setPlayerSpAmount(owner | 0, amount | 0, o.sp, { clientActive: () => o.playerState.playerKnown, localOwner: () => o.playerState.battleOwner, editor: () => o.globals.editor }, () => this.#need('refresh', '현재 SP 갱신')()),
+            cleanupReconnectClients: () => { throw new Error('비미션 재접속 정리는 후속 단계'); }, checkingAssertions: () => o.state.gunState.checking, log: effects.log,
+        });
+        return this.server;
     }
     // 원문 상태8은 현재 블록과 내부 주소를 확인하고 실제 전송에 접속을 맡긴다.
     #connect(address, port) {

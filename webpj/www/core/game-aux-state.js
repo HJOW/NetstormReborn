@@ -190,6 +190,8 @@ export class GameAuxState {
     #missionSettings = Uint32Array.from(MISSION_SETTING_FIELDS, (field) => field.initial);
     // 원문 005451f8의 타입 사용 목록이며 명시 ClearTypes까지 Session 교체로 지우지 않는다.
     #typeUse = new Uint8Array(256);
+    // 0052ed54/55의 디버그 패킷 헤더와 00544c24의 최초 BSS 길이 WORD다.
+    #packet0cHeader = Uint8Array.of(0x0c, 1); #packet0cLength = new Uint16Array(1);
 
     // 필드 값을 읽는다(접근자 공통 구현).
     #read(name) { return this.#values.get(name); }
@@ -224,6 +226,11 @@ export class GameAuxState {
 
     // 로그인 초기화와 69h 수신이 같은 256BYTE를 직접 빌린다.
     typeUse() { return this.#typeUse; }
+
+    // 버전 조회와 로그인 디버그 burst가 같은 현재 헤더와 길이를 사용한다.
+    packet0cHeader() { return this.#packet0cHeader; }
+    get packet0cInitialLength() { return this.#packet0cLength[0]; }
+    set packet0cInitialLength(value) { this.#packet0cLength[0] = value; }
 
     // 자원 DWORD 를 unsigned 비트로 읽는다(로그인/폭탄의 unsigned 조회).
     get resourcePoolBits() { return this.#read('resourcePool') >>> 0; }

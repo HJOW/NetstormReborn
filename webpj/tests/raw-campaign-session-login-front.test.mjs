@@ -22,6 +22,13 @@ function devices(trace) {
     return { configInt: (key, fallback) => { trace.push(key); return fallback; }, wallSeconds: () => { trace.push('시각'); return 100.5; }, log: (message) => trace.push(message) };
 }
 
+// 실제 Tutorial 1 자산과 원래 생성 순서로 Player 참여 부모만 준비한다.
+function loginServerOwner() {
+    const archive = new TaffArchive(readData(ARCHIVE_PATH)), entry = loadOriginalForts(archive).find((candidate) => /thewarbegins.fort$/i.test(candidate.source));
+    const fort = parseFort(entry.bytes, createFortTypes(TypeTable.fromArchive(archive, decodeOriginalText))), o = campaignOwners();
+    try { o.connectWorldInstall(fort); o.connectOutcome(); o.connectAiBrains(); return o; } catch (error) { o.dispose(); throw error; }
+}
+
 // Zone이 실제 Player 이름·Core 슬롯·권한을 변경하고 미등록 수신기의 서버 열기는 거부한다.
 test('Session Login 앞단: 같은 현재 저장소에 Zone 설치와 이름 정제', () => {
     const o = campaignOwners(), trace = [], front = new RawCampaignSessionLoginFront(o, devices(trace));
@@ -321,5 +328,45 @@ test('Session Login 타이머: State13의 실제 공유 기한 연결', () => {
         o.localStateGlobals.state().current[0] = 13; front.state.run();
         assert.equal(o.localStateGlobals.loginEnd().value, 130.5); assert.equal(front.inputMode, 0);
         assert.ok(trace.includes('login status timer start\n'));
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 실제 참여 부모가 없는 앞단은 서버 송신 성공을 합성하지 않는다.
+test('Session Login 서버: 실제 참여 부모 없이 결선 거부', () => {
+    const o = campaignOwners(), front = new RawCampaignSessionLoginFront(o, devices([]));
+    try { assert.throws(() => front.bindServer(), /실제 참여/); assert.equal(front.server, null); } finally { front.dispose(); o.dispose(); }
+});
+
+// Begin·Ready·Reply는 같은 장기 전역을 읽고 전체 mutable 패킷을 현재 전송에 건넨다.
+test('Session Login 서버: 현재 Player와 공유 seed·디버그 송신', () => {
+    const o = loginServerOwner(), trace = [], packets = [], front = new RawCampaignSessionLoginFront(o, { ...devices(trace), observePacket: () => {} });
+    try {
+        const server = front.bindServer(), aux = o.gameplayGlobals.gameAux(), local = o.localStateGlobals;
+        assert.equal(server.participation, o.participation); assert.throws(() => front.bindServer(), /중복/);
+        front.transport.sendMutable = (target, packet) => packets.push({ target, packet: packet.slice() });
+        assert.deepEqual([...aux.packet0cHeader()], [0x0c, 1]); assert.equal(aux.packet0cInitialLength, 0);
+        aux.storeResourcePoolBits(0xdeadbeef); aux.packet0cHeader().set([0x0d, 3]); aux.packet0cInitialLength = 9; local.debugBurst().value = 1;
+        server.sendBegin(1); assert.equal(packets.length, 4); assert.equal(packets[0].packet[1], 0x29);
+        assert.equal(new DataView(packets[0].packet.buffer).getUint32(30, true), 0xdeadbeef);
+        // 디버그 writer의 세 예약은 같은 현재 헤더와 payload 순서를 쓴다.
+        for (const item of packets.slice(1)) {
+            assert.equal(item.packet.length, 63012); assert.deepEqual([...item.packet.subarray(0, 4)], [3, 0x0d, 9, 0]);
+            assert.equal(new DataView(item.packet.buffer).getUint32(8, true), 63000); assert.equal(item.packet[12 + 257], 1);
+        }
+        packets.length = 0; o.players[180 + 0x50] = 0x40; o.players[3 * 180 + 0x50] = 0x40;
+        server.sendReady(9); assert.equal(new DataView(packets[0].packet.buffer).getUint32(4, true), 10); assert.ok(trace.includes('Ready 송신 target9 mask10\n'));
+        local.captureEnd().value = 150.5; server.sendReply(1, 1); assert.equal(new DataView(packets[1].packet.buffer).getFloat64(10, true), 50);
+        aux.resetForGeneralWorld(); assert.deepEqual([...aux.packet0cHeader()], [0x0d, 3]); assert.equal(aux.packet0cInitialLength, 9);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 비미션 Core 복원은 false를 숫자 0으로 전달해 불필요한 Chat 초기화를 호출하지 않는다.
+test('Session Login 서버: 현재 Core 복원과 저장 여부 관문', () => {
+    const o = loginServerOwner(), front = new RawCampaignSessionLoginFront(o, devices([]));
+    try {
+        const server = front.bindServer(), core = Uint8Array.from({ length: 10 }, (_, index) => index + 10);
+        o.globals.missionPost = false; o.localStateGlobals.savedGame().value = false; o.coreDataGlobals.storeMetadata(1, 7, core);
+        server.hooks.restoreCoreData(1);
+        assert.deepEqual(o.players.subarray(180 + 0x6c, 180 + 0x6c + 10), core);
     } finally { front.dispose(); o.dispose(); }
 });
