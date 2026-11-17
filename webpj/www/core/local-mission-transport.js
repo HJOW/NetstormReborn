@@ -263,7 +263,7 @@ export function installLocalMissionZone(zone, players, player, globals, hooks, p
             put(players, record + 0x50, (read(players, record + 0x50) | 8) >>> 0);
         }
         copy(players, record + 12, text(zone, offset + 9));
-        need(hooks.storeName)(read(zone, offset + 1), binary(text(players, record + 12)));
+        need(hooks.storeName)(read(zone, offset + 1), binary(text(players, record + 12)), players.subarray(record + 12)); // 원문 이름 정리기가 같은 Player 저장소를 직접 수정할 수 있다.
         put(players, record + 0x2c, read(zone, offset + 1));
         if (!read(players, record + 0x2c)) need(hooks.assertion)('p->subscriberId');
         copy(players, record + 0x30, text(zone, offset + 41));
