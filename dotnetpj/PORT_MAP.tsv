@@ -1014,3 +1014,8 @@ cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.Fe
 cpppj/src/o/RawFenceCreate.h	Netstorm.Core/Original/RawFenceCreate.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawFenceCreate.cpp	Netstorm.Core/Original/RawFenceCreate.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.FenceCreate.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFencePostPop.h	Netstorm.Core/Original/RawFencePostPop.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFencePostPop.cpp	Netstorm.Core/Original/RawFencePostPop.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFenceRegular.h	Netstorm.Core/Original/RawFenceRegular.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFenceRegular.cpp	Netstorm.Core/Original/RawFenceRegular.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.FencePostPop.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
