@@ -29,6 +29,7 @@ public sealed class SquidRewardTypes
 /// <summary>
 /// 보상 계산이 읽거나 갱신하는 판본별 전역과 AI 지갑(원본 SquidRewardState, 10.78 패치판).
 /// 실제 세션의 공유 전역(Percent·GeyserPool·PriestQuarterHp 장기 주소 빌리기)은 R4 세션 조립 때 연결하며, 이 단위는 값형 전역으로 L1을 대조한다.
+/// 0.571에서 장기 공유 주소(Percent·GeyserPool·FixedSp·HalfHealth·타입 번호) 별칭 읽기를 추가했다.
 /// </summary>
 public sealed class SquidRewardState
 {
@@ -70,6 +71,74 @@ public sealed class SquidRewardState
     public UIntBox? SharedPriestType { get; set; }
     /// <summary>현재 HP 플래그 예외 TYPE 주소다.</summary>
     public UIntBox? SharedDaisType { get; set; }
+    /// <summary>현재 제단 TYPE 주소다. 0.571에서 추가됐다.</summary>
+    public UIntBox? SharedAltarType { get; set; }
+    /// <summary>현재 일반 레인 바리케이드 TYPE 주소다. 0.571에서 추가됐다.</summary>
+    public UIntBox? SharedSilentType { get; set; }
+    /// <summary>현재 성장형 레인 바리케이드 TYPE 주소다. 0.571에서 추가됐다.</summary>
+    public UIntBox? SharedAliasType { get; set; }
+    /// <summary>현재 너겟 TYPE 주소다. 0.571에서 추가됐다.</summary>
+    public UIntBox? SharedNuggetType { get; set; }
+    /// <summary>같은 장기 보상 비율 DWORD를 빌리는 owner다. 0.571에서 추가됐다.</summary>
+    public UIntBox? SharedPercent { get; set; }
+    /// <summary>같은 장기 자원 signed DWORD를 빌리는 owner다. 0.571에서 추가됐다.</summary>
+    public IntBox? SharedGeyserPool { get; set; }
+    /// <summary>같은 장기 fort 모드를 읽는 경계다. 0.571에서 추가됐다.</summary>
+    public Func<bool>? SharedFixedSpA { get; set; }
+    /// <summary>같은 장기 editor DWORD를 빌리는 owner다. 0.571에서 추가됐다.</summary>
+    public UIntBox? SharedFixedSpB { get; set; }
+    /// <summary>같은 장기 전투 모드를 읽는 경계다. 0.571에서 추가됐다.</summary>
+    public Func<bool>? SharedHalfHealth { get; set; }
+
+    /// <summary>현재 보상 비율을 원문 위치에서 읽는다. 0.571에서 추가됐다.</summary>
+    public uint ReadPercent() => SharedPercent?.Value ?? Percent;
+
+    /// <summary>삭제 효과 뒤에도 같은 현재 자원을 읽는다. 0.571에서 추가됐다.</summary>
+    public int ReadGeyserPool() => SharedGeyserPool?.Value ?? GeyserPool;
+
+    /// <summary>같은 장기 자원 DWORD에 쓰고 독립 값과 구별한다. 0.571에서 추가됐다.</summary>
+    /// <param name="value">쓸 값이다.</param>
+    public void WriteGeyserPool(int value)
+    {
+        if (SharedGeyserPool is { } box)
+        {
+            box.Value = value;
+        }
+        else
+        {
+            GeyserPool = value;
+        }
+    }
+
+    /// <summary>SP 가산 관문의 현재 fort 모드를 조회한다. 0.571에서 추가됐다.</summary>
+    public bool ReadFixedSpA() => SharedFixedSpA?.Invoke() ?? FixedSpA;
+
+    /// <summary>SP 고정/정책 setter의 현재 editor를 조회한다. 0.571에서 추가됐다.</summary>
+    public bool ReadFixedSpB() => SharedFixedSpB is { } box ? box.Value != 0u : FixedSpB;
+
+    /// <summary>환불의 HP 절반 관문에서 현재 모드를 읽는다. 0.571에서 추가됐다.</summary>
+    public bool ReadHalfHealth() => SharedHalfHealth?.Invoke() ?? HalfHealthMode;
+
+    /// <summary>현재 보상 제외·개수 보정·다이스 최대HP의 제단 번호다. 0.571에서 추가됐다.</summary>
+    public uint ReadAltarType() => SharedAltarType?.Value ?? Types.None;
+
+    /// <summary>삭제 보상 제외와 성장형 비용 별칭을 같은 현재 번호로 판단한다. 0.571에서 추가됐다.</summary>
+    public uint ReadSilentType() => SharedSilentType?.Value ?? Types.Silent;
+
+    /// <summary>가상Count 뒤의 현재 성장형 제외를 조회한다. 0.571에서 추가됐다.</summary>
+    public uint ReadAliasType() => SharedAliasType?.Value ?? Types.Alias;
+
+    /// <summary>현재 너겟만 환불 단가의 1/4 배율을 생략한다. 0.571에서 추가됐다.</summary>
+    public uint ReadNuggetType() => SharedNuggetType?.Value ?? Types.FullValue;
+
+    /// <summary>최대HP 조회 시점의 현재 사제 TYPE 번호를 읽는다. 0.571에서 추가됐다.</summary>
+    public uint ReadPriestType() => SharedPriestType?.Value ?? Types.Priest;
+
+    /// <summary>현재 HP 예외/개수 보정의 다이스 번호다. 0.571에서 추가됐다.</summary>
+    public uint ReadDaisType() => SharedDaisType?.Value ?? Types.Dais;
+
+    /// <summary>원문 최대HP 조회 시점의 현재 약화 값을 읽는다. 0.571에서 추가됐다.</summary>
+    public bool ReadPriestQuarterHp() => SharedPriestQuarterHp?.Value ?? PriestQuarterHp;
 
     /// <summary>소유자별 AI 지갑(1~8). 0 번은 쓰지 않는다.</summary>
     public int[] AiWallet { get; } = new int[RawPostPopState.OwnerCount];
@@ -341,9 +410,9 @@ public sealed class RawSquidReward
         return RawRiftHitPoints.ReadSelected(_pool.Edition, () => selected[(int)type], new()
         {
             Checking = _state.Checking,
-            Quarter = new RawCheckingFlag(() => quarter?.Value ?? _state.PriestQuarterHp),
-            Priest = () => priest?.Value ?? _state.Types.Priest,
-            Dais = () => dais?.Value ?? _state.Types.Dais,
+            Quarter = new RawCheckingFlag(() => _state.ReadPriestQuarterHp()),
+            Priest = () => _state.ReadPriestType(),
+            Dais = () => _state.ReadDaisType(),
         }, new()
         {
             Number = () => RawRiftHitPoints.CurrentRiftTypeNumber((int)type, selected, CurrentTypes),
@@ -371,7 +440,7 @@ public sealed class RawSquidReward
         {
             return TypeHitPoints(raw[TypeOffset]);
         }
-        return (raw[ExtraOffset] & 1) != 0 ? TypeHitPoints(_state.Types.None) : 0;
+        return (raw[ExtraOffset] & 1) != 0 ? TypeHitPoints(_state.ReadAltarType()) : 0;
     }
 
     /// <summary>
@@ -386,7 +455,7 @@ public sealed class RawSquidReward
         {
             throw new ArgumentOutOfRangeException(nameof(type), type, "보상 비용 타입 번호 범위 오류");
         }
-        int n = type == _state.Types.None || type == _state.Types.Dais ? Wrap((long)count - 1) : count;
+        int n = type == _state.ReadAltarType() || type == _state.ReadDaisType() ? Wrap((long)count - 1) : count;
         if (n < 0)
         {
             return 0;
@@ -416,7 +485,7 @@ public sealed class RawSquidReward
         {
             throw new ArgumentOutOfRangeException(nameof(type), type, "보상 환불 타입 번호 범위 오류");
         }
-        int n = type == _state.Types.None || type == _state.Types.Dais ? Wrap((long)count - 1) : count;
+        int n = type == _state.ReadAltarType() || type == _state.ReadDaisType() ? Wrap((long)count - 1) : count;
         double sum = 0.0;
         if (n >= 0)
         {
@@ -432,7 +501,7 @@ public sealed class RawSquidReward
             }
         }
         // 누적값에 배율을 곱한 뒤 결과만 float 로 절삭한다
-        return (float)(type != _state.Types.FullValue ? sum * SalvageScale : sum);
+        return (float)(type != _state.ReadNuggetType() ? sum * SalvageScale : sum);
     }
 
     /// <summary>
@@ -443,7 +512,7 @@ public sealed class RawSquidReward
     /// <param name="count">계산에 쓸 개수.</param>
     public int SalvageRefund(int sid, uint type, int count)
     {
-        if (type == _state.Types.Alias)
+        if (type == _state.ReadAliasType())
         {
             return 0;
         }
@@ -456,7 +525,7 @@ public sealed class RawSquidReward
         int hp = unchecked((int)Dword(raw, HpOffset));
         int max = MaxHitPoints(sid);
         // 절반 미만이면 환불 없음. 나머지 나눗셈은 0 방향 절삭이다
-        if (_state.HalfHealthMode && hp < max / 2)
+        if (_state.ReadHalfHealth() && hp < max / 2)
         {
             return 0;
         }
@@ -484,15 +553,15 @@ public sealed class RawSquidReward
             throw new ArgumentOutOfRangeException(nameof(recipient), recipient, "보상 수신자 번호는 0~8 이어야 합니다");
         }
         uint type = raw[TypeOffset];
-        if (type == _state.Types.None || (!salvage && type == _state.Types.Silent))
+        if (type == _state.ReadAltarType() || (!salvage && type == _state.ReadSilentType()))
         {
             return default;
         }
         // 가상 개수는 원본처럼 호출마다 다시 묻는다. 계산은 상태를 바꾸지 않는다
         int cost = CostCurve(type, Count(sid));
-        if (raw[TypeOffset] == _state.Types.Alias)
+        if (raw[TypeOffset] == _state.ReadAliasType())
         {
-            cost = CostCurve(_state.Types.Silent, Count(sid));
+            cost = CostCurve(_state.ReadSilentType(), Count(sid));
         }
         if (cost == 0)
         {
@@ -500,7 +569,7 @@ public sealed class RawSquidReward
         }
         int refund = salvage
             ? SalvageRefund(sid, raw[TypeOffset], Count(sid))
-            : unchecked((int)unchecked(_state.Percent * (uint)cost)) / 100;
+            : unchecked((int)unchecked(_state.ReadPercent() * (uint)cost)) / 100;
         if (recipient == 0)
         {
             refund = 0;
@@ -562,7 +631,7 @@ public sealed class RawSquidReward
     public void AddSp(uint owner, float delta)
     {
         float sp = BitConverter.UInt32BitsToSingle(_store.Get(owner));
-        bool fixedMode = _state.FixedSpA || _state.FixedSpB;
+        bool fixedMode = _state.ReadFixedSpA() || _state.ReadFixedSpB();
         if (fixedMode)
         {
             delta = (float)(PatchFixedSp - (double)sp);
@@ -596,7 +665,7 @@ public sealed class RawSquidReward
         {
             AddSp(recipient, (float)plan.Refund);
         }
-        _state.GeyserPool = Wrap((long)_state.GeyserPool + plan.Cost - plan.Refund);
+        _state.WriteGeyserPool(Wrap((long)_state.ReadGeyserPool() + plan.Cost - plan.Refund));
         return plan;
     }
 }

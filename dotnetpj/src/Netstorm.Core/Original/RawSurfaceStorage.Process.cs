@@ -2,6 +2,7 @@
 // cpppj/src/client/RawSurfaceWorld.h 의 RawSurfaceProcessDevices 구조와
 // cpppj/src/client/RawSurfaceStorage.cpp 의 BindProcessDevices/CurrentProcessSelection/BaseDestroy 와
 // DefaultProcessAssetHooks/ProcessFormDispatch 장기 본문을 이식한다. 0.569에서 추가됐다. (R4-1 잔여 중 Host 기본 삭제/전송)
+// 0.571에서 ContentLifetime 결합을 추가했다.
 using Netstorm.Core.Bridges;
 
 namespace Netstorm.Core.Original;
@@ -155,18 +156,187 @@ public sealed partial class RawSurfaceStorage
         return hooks;
     }
 
-    /// <summary>현재 VT의 실제 Pre/Post/부모 통지를 같은 장기 삭제 부모에 분배한다. 0.569에서 추가됐다.</summary>
+    /// <summary>현재 VT의 실제 Pre/Post/부모 통지를 같은 장기 삭제 부모에 분배한다. 0.569에서 추가됐다. 0.573에서 VT 라우팅 골격으로 바꿨다.</summary>
     /// <param name="event">분배할 삭제 효과다.</param>
     private void EmitDefaultAssetEffect(SquidDestroyEvent @event)
     {
-        // 파생 종단(Dais/Damageable/거주 구역/비행체 등 20여 실제 몸체)은 다음 단위에서 잇는다.
-        // Native 판본 계약만 먼저 확인하고 도달 위치에서 명시 실패한다.
         if (!UsesNativeTransmissionDevices())
         {
             throw new InvalidOperationException("장기 자산 가상 효과의 Native 판본 계약");
         }
 
-        throw new InvalidOperationException("장기 자산의 전용 삭제 몸체 미연결");
+        NativeAssetDeletionEntry entry = CurrentAssetDeletionEntry(@event.Sid);
+        if (@event.Effect == SquidDestroyEffect.ReleaseDependent)
+        {
+            // 실제 77VT의 빈 ret8이며 상태·TYPE·통지 인자를 추가로 읽지 않는다.
+            if (entry.Notice == 0x0041c100u)
+            {
+                return;
+            }
+
+            // 실제 세 VT는 두 인자를 무시하며 서버 관문 없이 현재 가상10(flags0)을 부른다.
+            if (entry.Notice == 0x0048f0a0u)
+            {
+                DestroyAsset(@event.Sid, 0);
+                return;
+            }
+
+            throw new InvalidOperationException($"장기 자산의 전용 부모 삭제 통지 미연결: 0x{entry.Notice:X8}");
+        }
+
+        bool pre = @event.Effect == SquidDestroyEffect.PreDestroy;
+        if (!pre && @event.Effect != SquidDestroyEffect.PostDestroy)
+        {
+            throw new InvalidOperationException("장기 자산의 가상 삭제 효과 종류 오류");
+        }
+
+        uint method = pre ? entry.Pre : entry.Post;
+        // 공통 삭제 몸체는 장기 본체를 공유한다. 나머지는 다음 단위에서 잇는다.
+        if (method == 0x004b0950u)
+        {
+            CommonDeletion().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        if (method == 0x004b0840u)
+        {
+            CommonDeletion().PostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 제단 Post의 단일 tail jump와 피해 후처리는 같은 장기 본체를 공유한다.
+        if (method == 0x00448b60u || method == 0x0044b9e0u)
+        {
+            DamageablePost().PostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 Damageable 가상 전처리와 너겟 단일 점프 thunk는 같은 장기 본체를 공유한다.
+        if (method == 0x0044b4b0u || method == 0x00484f80u)
+        {
+            DamageablePre().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 Point Blast의 자연 관문은 같은 장기 본체를 공유한다.
+        if (method == 0x0041e960u)
+        {
+            BombPre().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 그림자 우선 삭제와 같은 Carrier 기본 전처리를 같은 장기 본체에서 실행한다.
+        if (method == 0x0042ae80u)
+        {
+            BalloonBody().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // Outpost는 실제 두 목록 제거 뒤에만 현재 투표/부모를 선택한다.
+        if (method == 0x00455840u)
+        {
+            OutpostPreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 간헐천 고유 수명 접두는 같은 장기 본체를 공유한다.
+        if (method == 0x00485580u)
+        {
+            GeyserLifetime().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 간헐천 고유 수명 후미는 같은 장기 본체를 공유한다.
+        if (method == 0x00485540u)
+        {
+            GeyserLifetime().PostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 펜스 고유 수명 전처리는 같은 장기 이웃/정리/두 Regular 뒤 실제 Damageable 부모를 공유한다. 0.587에서 추가됐다.
+        if (method == 0x00457990u)
+        {
+            FenceLifetime().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 완성형 파괴 뒤 성장형 생성과 받침 정리 뒤 공통 후처리를 같은 장기 본체에서 실행한다.
+        if (method == 0x0048edf0u)
+        {
+            IceTower().PostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 성장형 받침 정리와 공통 후처리를 같은 장기 본체에서 실행한다.
+        if (method == 0x0048eb80u)
+        {
+            IceTower().GrowingPostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 오벨리스크의 단일 jmp는 현재 공통Pre와 동일한 인자/순서를 사용한다.
+        if (method == 0x0041f910u)
+        {
+            CommonDeletion().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 다섯 Carrier VT는 같은 장기 finder/보충 부모를 사용한다.
+        if (method == 0x00426890u)
+        {
+            CarrierPre().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 네 실제 신전은 같은 전체 장기 부모를 선택한다.
+        if (method == 0x004dca50u)
+        {
+            Action<int, uint>? preBody = _vortexPre;
+            if (preBody is null)
+            {
+                throw new InvalidOperationException("장기 신전의 실제 삭제 전처리 미결합");
+            }
+
+            preBody(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 세 VT만 같은 WORD 대상 정리·Damageable 부모를 선택한다.
+        if (method == 0x0045e7e0u)
+        {
+            FlyerPre().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 현재 사제 목록/보호막 조회와 실제 Carrier 부모를 공유한다.
+        if (method == 0x004919b0u)
+        {
+            PriestPre().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 같은 실제 50칸 거주 구역 목록을 압축한 뒤 공통 Post다.
+        if (method == 0x0049a4a0u)
+        {
+            ResidencePostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 기존 30칸 population 제거 본문을 같은 장기 목록에 연결한다.
+        if (method == 0x00450920u)
+        {
+            DudePostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 다리·섬·무인도 고유 삭제는 같은 장기 표면 수명으로 분배한다.
+        if (method == 0x004221b0u || method == 0x00422300u || method == 0x00442240u || method == 0x00442640u)
+        {
+            (SurfaceLifetime().Hooks().Emit ?? throw new InvalidOperationException("장기 표면 수명 분배의 자산 효과 경계 미연결"))(@event);
+            return;
+        }
+
+        throw new InvalidOperationException($"장기 자산의 전용 삭제 몸체 미연결: 0x{method:X8}");
     }
 
     /// <summary>같은 Pool의 현재 공장/TYPE와 가상 삭제를 World 밖에서도 사용하는 장기 감시 본체다. 0.569에서 추가됐다.</summary>
@@ -215,11 +385,12 @@ public sealed partial class RawSurfaceStorage
                 (sid, flags, hooks) => VirtualDestroy().Destroy(sid, flags, hooks));
             // 현재 World가 없어도 같은 실제 Host를 결합한다.
             forms.Bind(Processes().Host());
-            // Native 뒤에는 같은 장기 의존/Gump Form도 결합한다. Content 결합은 다음 단위에서 잇는다.
+            // Native 뒤에는 같은 장기 의존/Gump/Content 수명 Form도 결합한다.
             if (UsesNativeTransmissionDevices())
             {
                 forms.Bind(DependForms());
                 forms.Bind(GumpForms());
+                forms.Bind(ContentLifetime());
             }
 
             _processForms = forms;
