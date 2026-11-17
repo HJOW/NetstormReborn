@@ -1070,7 +1070,7 @@ cpppj/src/o/RawSquidNeighbors.cpp	port	www/core/raw-squid-neighbors.js	1f00a25a	
 cpppj/src/o/RawSquidPoolReset.cpp	port	www/core/raw-squid-pool-reset.js	1f00a25a	port	[o-default] WB04-E37: 004af170 월드 Pool 정리 부모. fixture squid-pool-reset 12행 중 10.78 6행(originalCD 제외). Client 대여 거부/Board·Dais 실패점 재조회는 소비자 단위에서
 cpppj/src/o/RawSquidPopParent.cpp	port	www/core/raw-squid-pop-parent.js	1f00a25a	port	[o-default] WB04-E1: 004b02d0 공통 Pop 부모. fixture pop-world-bounds 260행(Point.isValid·float 저장·NaN 단락)
 cpppj/src/o/RawSquidPostPopParent.cpp	port	www/core/squid-postpop-parent.js	1f00a25a	port	[o-default] WB04-E24: 004b0d30 공통 postPop 부모(suppressed·영역/그래프·진단 복귀·장부 효과·깊이). 원본 관측 없이 PE 정적 계약 11건(실제 SquidPostPop 마나 진단 연결 1건은 본체 단위에서)
-cpppj/src/o/RawSquidReceive.cpp	port			todo	[rebaseline-port]
+cpppj/src/o/RawSquidReceive.cpp	port	www/core/raw-squid-receive.js	8ee7666b	port	[rebaseline-port] WB04-E722: PATCH35BYTE 일반 수신/선택 효과와 현재 Pool 검증 비교 이식. 일반 타입 집중3건, Session/2ch·Native는 4D-3d/4D-8 잔여; docs/webpj-squid-receive-20261118.md
 cpppj/src/o/RawSquidRegion.cpp	port	www/core/raw-squid-region.js	9cb0547f	port	[o-default] WB04-E2: 004acd20 setter + 3.6②→반영: 기준선 뒤 9cb0547f 가 추가한 004acda0 getter(GetSquidRegion)를 getSquidRegion 으로 이식
 cpppj/src/o/RawSquidSelection.cpp	port	www/core/raw-squid-selection.js	1f00a25a	port	[o-default] WB04-E58: 선택 비트 41c0b0/44b2b0·사정거리 종류 474240·내용물 표시 입구 426080. fixture squid-selection 5600행 전부. 실제 표시 갱신(+88)·Regular 등록은 소비자 단위
 cpppj/src/o/RawSquidTake.cpp	port	www/core/squid-factory.js	1f00a25a	port	[o-default] WB04-D4(004af610)
