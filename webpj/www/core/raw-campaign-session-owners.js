@@ -654,6 +654,24 @@ export class RawCampaignSessionOwners {
         this.buildingModules ??= new RawCampaignSessionBuilding(this); this.buildingModules.bind();
     }
 
+    // 원문의 ConnectMotion을 같은 World에서 순서대로 설치하며 실패한 앞부분을 보존한다.
+    connectMotion() {
+        if (this.#disposed || this.motion) throw new Error('Session 이동 전체 설치 전제/중복/반납 오류');
+        this.connectMotionArrivals(); this.connectMotionInputs(); this.connectCarrierRouting(); this.connectMotionRuntime();
+        this.connectPriestPanic(); this.connectRitualPriest(); this.connectRitualTemple(); this.connectRitualDais();
+        this.connectRitualAltar(); this.connectDaisLifecycle(); this.connectDaisNotice(); this.connectSalvage(); this.connectCarrierMove();
+        this.connectAiMovementAll(); this.connectPathTransmission(); this.connectBridgeCarriers();
+    }
+
+    // ConnectAiMovement의 현재 이름·행동·Runtime을 원문 순서로 한 번 설치한다.
+    connectAiMovementAll() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 전체 이동 설치 전/반납');
+        this.connectAiMovement(); this.connectAiResourceChoice(); this.connectAiCarrierActions(); this.connectAiBuildSearch();
+        this.connectAiGroundTarget(); this.connectAiDropTargets(); this.connectAiDropEvaluation(); this.connectAiDropScan();
+        this.connectAiDropSelection(); this.connectAiDryGeometry(); this.connectAiFakeDrySpots(); this.connectAiDropActions();
+        this.connectAiPriestActions(); this.connectAiBridgeStrategies(); this.connectAiRuntime();
+    }
+
     // 같은 건설 설치 뒤 ConnectMotion 앞단의 도착 세 장치만 연결한다. 전체 경로 설치는 후속이다.
     connectMotionArrivals() {
         if (this.#disposed) throw new Error('반납한 Session 도착 결선');

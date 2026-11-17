@@ -16,6 +16,34 @@ function scene(temple = false, extra = {}) {
     } catch (error) { o.dispose(); throw error; }
 }
 
+// 원문의 전체 설치 진입이 실제 한 World의 모든 후속 장치를 만든다.
+test('Session 이동 전체 설치: 같은 World와 중복 관문', () => {
+    const o = campaignOwners({ carrierRequest: () => {}, deletion: { selected: () => 0 } });
+    try {
+        assert.throws(() => o.connectAiMovementAll(), /설치 전/);
+        o.connectWorldInstall({ sections: Array.from({ length: 35 }, () => new Uint8Array(0)) });
+        o.connectOutcome(); o.connectAiBrains(); o.connectAiWorld(); o.connectAiProduction(); o.connectBuilding(); o.connectMotion();
+        assert.equal(o.motion.paths.pool, o.core.pool); assert.equal(o.aiPriestActions.pool, o.core.pool);
+        assert.ok(o.aiRuntime); assert.ok(o.motionRuntimeModules.pathTransmission); assert.ok(o.bridgeCarriers);
+        assert.equal(o.loaded, false); assert.throws(() => o.connectMotion(), /중복/);
+    } finally { o.dispose(); }
+    assert.throws(() => o.connectMotion(), /반납/);
+});
+
+// 설치 중 실패해도 이미 생성된 실제 접두는 남고 뒷부분은 실행되지 않는다.
+test('Session 이동 전체 설치: 중간 오류의 접두 보존', () => {
+    const o = campaignOwners({ carrierRequest: () => {}, deletion: { selected: () => 0 } });
+    try {
+        o.connectWorldInstall({ sections: Array.from({ length: 35 }, () => new Uint8Array(0)) });
+        o.connectOutcome(); o.connectAiBrains(); o.connectAiWorld(); o.connectAiProduction(); o.connectBuilding();
+        o.connectAiDropScan = () => { throw new Error('검사 중간 오류'); };
+        assert.throws(() => o.connectMotion(), /검사 중간 오류/);
+        assert.ok(o.motion); assert.ok(o.aiDropEvaluation); assert.equal(o.aiDropScan, null);
+        assert.equal(o.aiRuntime, null); assert.equal(o.bridgeCarriers, null); assert.equal(o.loaded, false);
+        assert.throws(() => o.connectMotion(), /중복/);
+    } finally { o.dispose(); }
+});
+
 test('사제 의식: 설치 순서·실제 Pool·반복 및 반납', () => {
     const early = campaignOwners(), partial = new RawCampaignSessionRitual(early);
     try { assert.throws(() => partial.bind(), /순서/); } finally { early.dispose(); partial.dispose(); }
