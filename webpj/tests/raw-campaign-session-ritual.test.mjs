@@ -87,6 +87,32 @@ test('제단 의식: 실제 몸체와 공유 Regular 예약 및 설치 순서', 
     assert.throws(() => module.altarHooks.boss(), /반납/);
 });
 
+// 실제 월드 Pop의 제단 정기와 로그인 종료 시각 대여를 확인한다.
+test('다이스 수명: 제단 Pop의 같은 Host 예약과 현재 로그인 시각', () => {
+    const o = scene(true);
+    try {
+        o.connectRitualDais();
+        assert.throws(() => o.connectDaisLifecycle(), /순서/);
+        o.connectRitualAltar(); o.connectDaisLifecycle();
+        assert.equal(o.daisLifecycle.pool, o.core.pool);
+        o.loginEnd = 19.5;
+        assert.equal(o.ritualModules.lifecycleState.gameTime, 19.5);
+        const altar = o.world.create(164);
+        o.world.pop(altar, 32, 32, 1);
+        const task = o.core.processes.findEvent(altar, 21);
+        assert.ok(task); assert.equal(task.shared, false);
+        assert.equal(o.ritualModules.pendingRegular, null);
+        const dais = o.world.create(165);
+        o.core.owner.set(dais, 1);
+        o.world.pop(dais, 40, 40, 2);
+        const record = new DataView(o.players.buffer, o.players.byteOffset, o.players.byteLength);
+        assert.equal(record.getUint32(0xb4 + 0x94, true), dais);
+        assert.equal(record.getUint32(0xb4 + 0x98, true), dais);
+        assert.throws(() => o.connectDaisLifecycle(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

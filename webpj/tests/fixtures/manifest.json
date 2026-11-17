@@ -18702,7 +18702,8 @@
       ],
       "modules": [
         "webpj/www/core/raw-dais-lifecycle.js",
-        "webpj/www/core/raw-dais-deletion.js"
+        "webpj/www/core/raw-dais-deletion.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-dais-lifecycle-20261113.md",
       "cpppjSources": [
@@ -18717,7 +18718,7 @@
       "bytes": 1329913,
       "lines": 1929,
       "fixtureCommit": "db9b626c0",
-      "webCommit": "0b4c278df",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisLifecycle.cpp": "4ee213870",
         "cpppj/src/o/RawDaisDeletion.cpp": "21bb25505"

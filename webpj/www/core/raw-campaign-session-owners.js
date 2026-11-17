@@ -668,6 +668,12 @@ export class RawCampaignSessionOwners {
         this.ritualModules.bindAltar();
     }
 
+    // 제단 설치 뒤 다이스 수명 후처리를 같은 월드에 등록한다.
+    connectDaisLifecycle() {
+        if (this.#disposed || !this.ritualModules) throw new Error('Session 다이스 수명 설치 전/반납');
+        this.ritualModules.bindDaisLifecycle();
+    }
+
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
     drawTempleFrames(sid, frame) {
         if (this.#disposed) throw new Error('반납한 Session 신전 그림');

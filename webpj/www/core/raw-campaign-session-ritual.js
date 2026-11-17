@@ -17,6 +17,8 @@ import { currentNuggetType } from './raw-path-cleanup.js';
 import { RawFrameAdvance } from './raw-frame-advance.js';
 import { RawAltarSacrifice, makeAltarSacrificeHooks } from './raw-altar-sacrifice.js';
 import { AltarSacrificeState } from './raw-ritual-regular.js';
+import { DaisLifecycleState, RawDaisLifecycle } from './raw-dais-lifecycle.js';
+import { rawPathSurfaceAt } from './raw-path-surface.js';
 
 // 원문 ConnectRitual의 사제 앞단과 후속 의식이 공유할 Regular 예약 수명이다.
 export class RawCampaignSessionRitual {
@@ -30,6 +32,8 @@ export class RawCampaignSessionRitual {
     pendingSound = null; daisHooks = null; sacrificeHooks = null;
     // 제단 정기의 현재 저항 값과 같은 월드에 연결한 효과다.
     altarState = null; altarHooks = null;
+    // 다이스 최초 배치와 삭제가 공유하는 현재 시각·효과다.
+    lifecycleState = null; lifecycleHooks = null; #daisRegistered = false;
     // 구성만으로 현재 객체나 난수를 변경하지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 의식 함수가 이전 World에 접근하지 못하도록 한다.
@@ -169,8 +173,38 @@ export class RawCampaignSessionRitual {
         o.altarSacrifice = new RawAltarSacrifice(c.pool, c.hash, c.types, c.frames, c.neighbors, o.runePostPop, o.templeRitual, o.priests.carrier, o.daisRegular, advance, c.processes, o.damageablePre, o.daisState, state, bound);
         this.altarState = state; this.altarHooks = bound;
     }
+    // 제단 뒤 다이스 최초 Pop과 삭제 후처리를 같은 Player·월드에 등록한다.
+    bindDaisLifecycle() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.altarState || this.lifecycleState || o.daisLifecycle) throw new Error('Session 다이스 수명 설치 순서 오류');
+        const state = new DaisLifecycleState(o.state.carrierState);
+        state.bindGameTime(o.localStateGlobals.loginEnd());
+        const hooks = {
+            suppressed: () => { this.#live(); return o.globals.missionPost; },
+            boss: () => { this.#live(); return o.state.assetState.readBoss(); },
+            count: (sid) => { this.#live(); return o.assetModules.virtualCount(sid); },
+            setFrame: (sid, frame, flags) => { this.#live(); c.frame.set(sid, frame, flags); },
+            unpop: (sid, flags) => { this.#live(); o.world.unpop(sid, flags); },
+            repop: (sid, flags) => { this.#live(); o.world.repop(sid, flags); },
+            create: (type, flags) => { this.#live(); return c.factory.create(type, flags); },
+            setOwner: (sid, owner) => { this.#live(); c.owner.set(sid, owner); },
+            pop: (sid, x, y, flags) => { this.#live(); o.world.pop(sid, x, y, flags); },
+            reserveRegular: () => this.reserveRegular(),
+            addRegular: (sid, event, payload) => this.addRegular(sid, event, payload, 46),
+            surface: (x, y) => { this.#live(); return rawPathSurfaceAt(c.hash, x, y); },
+            hasIsland: (sid) => { this.#live(); const flags = c.types[c.pool.slot(sid)[10]].flags2 >>> 0; return (flags & 2) !== 0 && (flags & 0x1000000) === 0; },
+            islandNumber: (sid) => { this.#live(); const raw = c.pool.slot(sid), flags = c.types[raw[10]].flags2 >>> 0; if (!(flags & 0x1000006)) throw new Error('다이스 원본 섬 번호 genus 진단'); return (flags & 4) ? 127 : raw[8] | (raw[9] << 8); },
+            option: (key) => { this.#live(); if (!o.services.construction.configInt) throw new Error('다이스 현재 설정 조회 미연결'); return o.services.construction.configInt(key, 0) !== 0; },
+            chat: (key) => { this.#live(); if (!o.services.priest.shield.tell) throw new Error('홈섬 밖 제단의 실제 Tell 소비자 미연결'); o.services.priest.shield.tell(key); },
+            destroy: (sid, flags) => { this.#live(); o.world.destroy(sid, flags); },
+            damageablePostDestroy: (sid, flags) => { this.#live(); o.damageableModules.preparePost(); o.damageablePost.postDestroy(sid, flags); },
+        };
+        const body = new RawDaisLifecycle(c.pool, c.hash, c.types, c.neighbors, o.templeRitual, o.altarSacrifice, o.carrier, o.damageablePre, o.daisState, this.altarState, state, hooks);
+        c.postPop.setBody('dais', body); this.#daisRegistered = true;
+        o.daisLifecycle = body; this.lifecycleState = state; this.lifecycleHooks = hooks;
+    }
     // 실제 Host를 비운 뒤 미부착 예약과 함수 대여를 반납한다.
-    dispose() { if (this.#disposed) return; this.#disposed = true; this.pendingRegular = null; this.pendingSound = null; if (this.#runeRegistered) { this.#owner.core.postPop.setBody('rune', null); this.#runeRegistered = false; } }
+    dispose() { if (this.#disposed) return; this.#disposed = true; this.pendingRegular = null; this.pendingSound = null; if (this.#daisRegistered) { this.#owner.core.postPop.setBody('dais', null); this.#daisRegistered = false; } if (this.#runeRegistered) { this.#owner.core.postPop.setBody('rune', null); this.#runeRegistered = false; } }
     // 이 앞단의 완료이며 나머지 의식 및 Load 완료는 아니다.
     get ready() { return this.#ready; }
     // 신전과 룬만의 설치 상태이며 다이스와 전체 Load는 포함하지 않는다.
