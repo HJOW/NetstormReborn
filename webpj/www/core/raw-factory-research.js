@@ -4,7 +4,7 @@
 //  - input(4547d0 의 03000080): packedArgument 의 상위 signed WORD 가 선택한 종류이며 0 이면 도움말(researchHelp), 슬롯이 남아 있으면 현재 시각을 읽어 패킷을 만들고 learn 뒤 채널 9 로 송신한다.
 //  - receive(453d70): 서버 연구 수신(부모 free/dead 면 무시, kind 0 + mode 1 은 업그레이드 수신, 현재 TYPE 의 flags2 0x4000·sender==owner·비 아웃포스트일 때만 권한 확인 뒤 learn).
 //  - notice(453b50 → 475220): 플레어·중복 예측 삭제·현재 dirty/Deck 갱신 순서를 보존한다. 효과가 값을 바꿀 수 있으므로 kind 와 후속 flags 는 효과 뒤에 읽는다.
-// RegisterFactoryResearchCommand(패킷 0x58 분배기 등록)는 RawPacketDispatch(미이식) 이식 뒤로 미룬다. 실제 하위(검색·삭제·생성·송신·도움말·플레어·재계산·진단·업그레이드 수신·입력 로그)는 선택한 위치에서만 요구한다.
+// registerFactoryResearchCommand는 패킷 0x58의 실제 분배기 등록이다. 하위(검색·삭제·생성·송신·도움말·플레어·재계산·진단·업그레이드 수신·입력 로그)는 선택한 위치에서만 요구한다.
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-10 WB04-E217: Factory 연구 이식으로 추가)
 
 // 원본 58h 의 실제 선언/송신 길이, 메뉴 연구 명령의 수정키 제외 값, 두 실제 Factory VT 이다. (2026-11-10 WB04-E217)
@@ -54,6 +54,12 @@ export function writeFactoryResearchCommand(parent, kind, now, packet) {
     doubleView.setFloat64(0, now, true);
     putBytes(packet, 8, doubleView.getBigUint64(0, true), 8);
     return FACTORY_RESEARCH_PACKET_BYTES;
+}
+
+// 58h의 빈 관찰기·버전·고정 길이와 같은 연구 몸체를 등록한다. 준비 장치는 수신 직전에만 호출한다.
+export function registerFactoryResearchCommand(dispatch, research, prepare = null) {
+    dispatch.observe(0x58, () => {}); dispatch.version(0x58, 1, 0); dispatch.requireLength(0x58, FACTORY_RESEARCH_PACKET_BYTES);
+    dispatch.register(0x58, (sender, _connection, packet) => { if (prepare) prepare(); research.receive(sender, packet); });
 }
 
 // Factory 연구 처리기이다. pool 은 10.78 SidPool, types 는 188칸 TYPE 표(flags2), state = { loadingDepth(), productionDirty: { value }, boss(), now(), outpostType() } 현재 전역(효과 뒤에도 최신 값을 다시 읽음),

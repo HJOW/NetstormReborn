@@ -5,6 +5,7 @@
 //    이미 로그인/무효 owner 는 거부 응답→연결 해제를 수행한다.
 //  - setAlliance(00490ea0): 자기 bit 를 포함한 +0x54 mask 와 현재 한 행 9칸만 쓰고, playerKnown 이면 채널 0x40/0x80 을 지우고 양방향 동맹이 모두 참인 Player 를 0x40, 숨김이면 0x80 에 다시 등록한다.
 //  - addAlly(0048f6a0): 지정 방향의 한 bit/한 cell 만 켜며 battle 이면 현재 mask 를 서버(9)에 요청한다. receiveAlliance(00491220): 같은 수신 packet 의 자기 bit→Player mask→방향표/Chat→broadcast 순서.
+//  - removeAlly 및 77h/79h/6fh 수신은 현재 방향 mask·Chat 안내·별도 Draw 기한을 원문 순서로 갱신한다. 동맹 입력은 후속이다.
 //  - attachBrain(004911a0)/removeBrain(00413ae0/00413b20): 실제 생성 소유자가 전달한 opaque32 brain 을 +0xb0 에 기록하고 flags 0x20 을 켜며(기존 brain 은 assert 만 보고 덮어씀),
 //    제거는 파괴→반납→+0xb0=0 이고 flags 0x20 은 원본대로 지우지 않는다. 가짜 brain 생성/등록은 제공하지 않는다.
 //  - removeBrainForState/returnBrainForState/brainReturnedForState: State cleanup 의 owner 1..8 위치에서 정상 복귀한 뒤에만 발급되는 **이동 전용 증빙(BrainResetPass)**을 같은 모듈이 한 번만 소비하며
@@ -48,6 +49,12 @@ export class AllianceRequestState {
 
 // Player 한 기록 폭·개수와 통신/동맹/brain/구독자 필드 위치(10.78)이다. (2026-11-08 WB04-E5)
 const STRIDE = 0xb4, COUNT = 9, FLAGS = 0x50, ALLIES = 0x54, BRAIN = 0xb0, SUBSCRIBER = 0x2c;
+// 동맹 Tell이 사용하는 원본 Player 1..8 색 접두다.
+const ALLIANCE_TELL_COLORS = Object.freeze(['~l', '~r', '~w', '~u', '~s', '~y', '~d', '~a']);
+// 현재 원문 BYTE만 선택 위치에서 읽어 선행 중계 효과를 보존한다.
+function alliancePacketByte(packet, offset) { if (offset >= packet.length) throw new RangeError('동맹 협상의 현재 packet BYTE 물리 부족'); return packet[offset]; }
+// Player 1..8은 지정 색을, 그 밖은 원본 기본 색을 사용한다.
+function allianceTellColor(owner) { return owner >= 1 && owner <= 8 ? ALLIANCE_TELL_COLORS[owner - 1] : '~q'; }
 
 // 증빙 발급/소비를 모듈 안에서만 하도록 정적 블록에서 채우는 함수이다. (2026-11-08 WB04-E5)
 let issuePass;
@@ -197,6 +204,57 @@ export class RawPlayerParticipation {
         if (battle) {
             if (this.#metamap()) require(this.#hooks.assertion, 'assertion')(PLAYER_PARTICIPATION_ASSERTION.metamapMode);
             require(this.#hooks.sendAlliance, 'sendAlliance')(9, owner, this.#read(owner, ALLIES));
+        }
+    }
+
+    // 0048f710: 현재 mask를 먼저 지우고 진단·방향표·전투 중 실제 동맹 요청을 차례로 수행한다.
+    removeAlly(owner, target) {
+        owner >>>= 0; target >>>= 0;
+        this.#put(owner, ALLIES, (this.#read(owner, ALLIES) & ~(1 << (target & 31))) >>> 0);
+        if (this.#metamap()) require(this.#hooks.assertion, 'assertion')(PLAYER_PARTICIPATION_ASSERTION.metamapMode);
+        const battle = this.#battle(), cell = owner * COUNT + target;
+        if (cell >= this.#allies.length) throw new RangeError('동맹 해제의 현재 방향표 물리 범위');
+        this.#allies[cell] = 0;
+        if (battle) {
+            if (this.#metamap()) require(this.#hooks.assertion, 'assertion')(PLAYER_PARTICIPATION_ASSERTION.metamapMode);
+            require(this.#hooks.sendAlliance, 'sendAlliance')(9, owner, this.#read(owner, ALLIES));
+        }
+    }
+
+    // 77h는 최초 requester를 보관하고 서버 중계 뒤 현재 대상·무시 목록·이름을 확인한다.
+    receiveAllianceRequest(packet, hooks) {
+        const boss = require(hooks.boss, 'boss')(), requester = alliancePacketByte(packet, 4);
+        if (boss) require(hooks.broadcast, 'broadcast')(packet);
+        if (alliancePacketByte(packet, 5) === this.#localOwner() && !require(hooks.ignoredSubscriber, 'ignoredSubscriber')(this.#read(requester, SUBSCRIBER))) {
+            const color = allianceTellColor(alliancePacketByte(packet, 4)), name = this.#name(requester);
+            require(hooks.tell, 'tell')(`AllianceRequested(${color},${name},${alliancePacketByte(packet, 4)})`);
+        }
+    }
+
+    // 79h는 최초 두 Player와 색을 보관하고 서버의 양방향 해제·중계 뒤 현재 로컬 안내를 선택한다.
+    receiveBrokenAlliance(packet, hooks) {
+        const first = alliancePacketByte(packet, 4), second = alliancePacketByte(packet, 5);
+        const firstColor = allianceTellColor(first), secondColor = allianceTellColor(second);
+        if (require(hooks.boss, 'boss')()) { this.removeAlly(first, second); this.removeAlly(second, first); require(hooks.broadcast, 'broadcast')(packet); }
+        const local = this.#localOwner();
+        if (local === first) { require(hooks.tell, 'tell')(`AllianceBroken(${this.#name(second)},${secondColor})`); return; }
+        if (local === second) { require(hooks.tell, 'tell')(`AllianceBroken(${this.#name(first)},${firstColor})`); return; }
+        require(hooks.status, 'status')(8, first, second);
+    }
+
+    // 6fh는 현재 거부·동의 플래그와 실제 게임 시각의 별도 무승부 기한을 처리한다.
+    receiveDraw(packet, deadline, hooks) {
+        if (!alliancePacketByte(packet, 5)) {
+            if (this.#read(this.#localOwner(), FLAGS) & 0x80) require(hooks.tell, 'tell')('DrawNotAccepted');
+            // Tell 이후 각 현재 Player의 동의 비트만 지운다.
+            for (let owner = 1; owner < COUNT; owner += 1) this.#put(owner, FLAGS, this.#read(owner, FLAGS) & ~0x80);
+            return;
+        }
+        const owner = alliancePacketByte(packet, 4); this.#put(owner, FLAGS, this.#read(owner, FLAGS) | 0x80);
+        require(hooks.status, 'status')(6, alliancePacketByte(packet, 4), 0);
+        if (require(hooks.boss, 'boss')()) {
+            require(hooks.broadcast, 'broadcast')(packet);
+            if (alliancePacketByte(packet, 5)) deadline.value = require(hooks.gameSeconds, 'gameSeconds')() + 20;
         }
     }
 

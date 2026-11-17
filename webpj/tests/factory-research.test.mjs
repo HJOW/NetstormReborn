@@ -2,7 +2,7 @@
 //  - 원본 관측 factory-research-x86.tsv 216행(Learn 32·Input 72·Receive 16·Notice 96): 입력(검색 결과·남은 슬롯·attach flags·kind·수정키·sender·부모 상태/TYPE flags2·권한·내용물 flags/reason/loading)에서
 //    반환·productionDirty 카운터·전체 호출 순서(find·slots·destroy·create·send 16바이트·help 메시지 원문 hex·flare·refresh·assert 메시지 원문 hex)를 대조한다. 게임 하위는 명시 경계로 둔다.
 //  - 계약: 실제 VT 판정(Factory/아웃포스트/그 밖)·짧은 패킷/미공급 업그레이드 수신의 거부·플레어 누락 시 dirty 불변·입력 로그가 슬롯과 시각을 바꿔도 처음 양수 판단 유지.
-//  - 패킷 0x58 분배기 등록(`RegisterFactoryResearchCommand`)과 그 시험(FactoryResearch_PacketDispatchAndMissingEffects 의 분배 부분)은 RawPacketDispatch 이식 뒤로 미룬다(PORT_MAP 메모).
+//  - 패킷 0x58 분배기 등록과 준비 장치·같은 실제 연구 수신의 순서도 검증한다.
 // 실제 게임·브라우저 실행이 아니다. (2026-11-10 WB04-E217: Factory 연구 이식과 함께 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -10,7 +10,8 @@ import path from 'node:path';
 import { REPO_ROOT } from './helpers.mjs';
 import { readRows, put } from './raw-support.mjs';
 import { SidPool } from '../www/core/sid-pool.js';
-import { RawFactoryResearch, writeFactoryResearchCommand } from '../www/core/raw-factory-research.js';
+import { RawFactoryResearch, registerFactoryResearchCommand, writeFactoryResearchCommand } from '../www/core/raw-factory-research.js';
+import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 
 // 원본 관측 행이다. 없으면 해당 검사를 건너뛴다. (2026-11-10 WB04-E217)
 const rows = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'factory-research-x86.tsv'));
@@ -75,6 +76,18 @@ class ResearchScene {
     // 현재 장면의 연구 처리기이다. (2026-11-10 WB04-E217)
     research() { return new RawFactoryResearch(this.pool, this.types, this.state(), this.hooks); }
 }
+
+// 실제 분배 표가 준비 효과 뒤 같은 Pool의 연구 수신을 호출하며 잘못된 길이는 전달하지 않는다.
+test('Factory 연구: 58h 실제 분배와 준비 순서', () => {
+    const scene = new ResearchScene(), research = scene.research();
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    registerFactoryResearchCommand(dispatch, research, () => scene.add('준비'));
+    const entry = dispatch.registration(0x58), packet = new Uint8Array(16); writeFactoryResearchCommand(50, 128, 12.5, packet);
+    assert.equal(entry.version, 1); assert.equal(entry.mismatch, 0); assert.equal(entry.length, 16); assert.equal(typeof entry.observer, 'function');
+    assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+    assert.equal(scene.trace, '준비;find,0;slots,2;find,0;create,50,128,0,16,0,0');
+    scene.trace = ''; packet[2] = 15; assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true); assert.equal(scene.trace, '');
+});
 
 test('Factory 연구: 원본 10.78 216입력의 반환·dirty·호출 순서와 16바이트 송신이 같다', { skip: !rows && '원본 fixture 없음' }, () => {
     const counts = { Learn: 0, Input: 0, Receive: 0, Notice: 0 };
