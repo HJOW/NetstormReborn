@@ -18,6 +18,8 @@ import { setPlayerSpAmount } from './raw-fort-money-load.js';
 import { registerDeveloperCommandPacket } from './raw-developer-command-packet.js';
 import { registerStateMetaBattleDescription } from './raw-state-meta-battle-description.js';
 import { registerConnectionActivity } from './raw-connection-activity.js';
+import { registerChatPacket } from '../ui/raw-chat-relay.js';
+import { registerBattleLeavePacket } from './raw-battle-leave.js';
 
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
 export class RawCampaignSessionLoginFront {
@@ -331,6 +333,29 @@ export class RawCampaignSessionLoginFront {
             registerStateMetaBattleDescription(dispatch, () => this.client.state.outpost, this.#effects.metaBattleDescription,
                 (expression) => storage.assertDisplay(expression, '\\Ns\\O\\_p_packets.cpp', 0xae3));
             registerConnectionActivity(dispatch, o.state.connectionActivity);
+            const mask = { get value() { return o.chatGlobals.receivedMask; }, set value(value) { o.chatGlobals.receivedMask = value >>> 0; } };
+            registerChatPacket(dispatch, mask, {
+                address: (sender) => this.transport.registry.address(sender | 0),
+                read: (address) => {
+                    this.#live();
+                    if (address === 0x594fbc) return Number(o.core.ownerMode.battle);
+                    if (address === 0x540bc0) return Number(o.core.processState.server);
+                    if (address === 0x540c74) return o.globals.mySubscriber;
+                    throw new RangeError('Chat 중계의 실제 Session 전역 없음');
+                },
+                receive: (packet) => { this.#live(); if (typeof o.services.chatReceive !== 'function') throw new Error('Chat 중계의 실제 UI 수신 미연결'); o.services.chatReceive(packet); },
+                assertion: (line) => console.error(`Chat 패킷 원본 진단: ${line}`),
+            });
+            registerBattleLeavePacket(dispatch, o.players);
+            dispatch.observe(0x3d, () => {}); dispatch.version(0x3d, 1, 0);
+            dispatch.register(0x3d, (_sender, _connection, packet) => { this.#live(); o.participation.receiveAlliance(packet, (outbound) => o.tables.broadcast.send(outbound)); });
+            dispatch.observe(0x78, null); dispatch.version(0x78, 1, 0); dispatch.requireLength(0x78, 6);
+            dispatch.register(0x78, (_sender, _connection, packet) => {
+                this.#live(); if (packet.length < 6) throw new RangeError('동맹 통지의 실제 6BYTE 미만 입력');
+                const owner = packet[4], target = packet[5];
+                if (o.state.assetState.readBoss()) { o.participation.addAlly(owner, target); o.participation.addAlly(target, owner); o.tables.broadcast.send(packet); }
+                this.#need('status', '동맹 통지')(7, owner, target);
+            });
         } catch (error) { this.dispose(); throw error; }
     }
     // 원문 상태8은 현재 블록과 내부 주소를 확인하고 실제 전송에 접속을 맡긴다.

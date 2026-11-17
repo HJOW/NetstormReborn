@@ -412,13 +412,45 @@ test('Session Login 등록: 실제 분배기의 로그인 수신기와 현재 �
     try {
         assert.throws(() => front.registerReceivers(), /서버\/클라이언트/);
         front.bindServer(); front.bindClient(); front.registerReceivers();
-        // 현재 연결 활동까지의 원본 등록은 모두 같은 분배 표에 존재한다.
-        for (const type of [0x31, 0x27, 0x63, 0x29, 0x67, 0x2b, 0x2a, 0x28, 0x81, 0x84, 0x6e, 0x72, 0x32, 0x71, 0x64]) {
+        // 현재 원본 로그인 등록은 모두 같은 분배 표에 존재한다.
+        for (const type of [0x31, 0x27, 0x63, 0x29, 0x67, 0x2b, 0x2a, 0x28, 0x81, 0x84, 0x6e, 0x72, 0x32, 0x71, 0x64, 0x41, 0x52, 0x3d, 0x78]) {
             const entry = front.transport.dispatch.registration(type); assert.equal(typeof entry.receive, 'function', type.toString(16)); assert.equal(entry.version, 1);
         }
         const packet = new Uint8Array(32); new DataView(packet.buffer).setUint32(16, 0x12345678, true);
         front.transport.dispatch.registration(0x32).receive(0, null, packet);
         assert.equal(o.gameplayGlobals.gameAux().missionSettings()[3], 0x12345678); assert.throws(() => front.registerReceivers(), /중복/);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// Chat은 현재 공유 마스크와 UI를 사용하고 52h는 같은 Player의 종료 비트만 합친다.
+test('Session Login 등록: 현재 Chat 수신과 Player 종료 통지', () => {
+    const o = loginServerOwner(), front = new RawCampaignSessionLoginFront(o, devices([])), received = [];
+    try {
+        front.bindServer(); front.bindClient(); front.registerReceivers(); o.services.chatReceive = (packet) => received.push(packet);
+        o.core.ownerMode.battle = true; o.core.processState.server = false;
+        const packet = new Uint8Array(40); packet[10] = 0; packet[12] = 4; packet.set(Buffer.from('032\n'), 15);
+        front.transport.dispatch.registration(0x41).receive(9, null, packet);
+        assert.equal(o.chatGlobals.receivedMask, 32); assert.equal(packet[18], 0); assert.deepEqual(received, [packet]);
+        const offset = 2 * 180 + 0x50; o.players.set([0x81, 0x22, 0x33, 0x44], offset);
+        front.transport.dispatch.registration(0x52).receive(2, null, new Uint8Array(5));
+        assert.deepEqual([...o.players.subarray(offset, offset + 4)], [0x85, 0x22, 0x33, 0x44]);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 동맹은 실제 공유 Player/방향표와 방송을 갱신한 뒤 현재 안내 장치에 넘긴다.
+test('Session Login 등록: 실제 동맹 수신과 호스트 안내', () => {
+    const o = loginServerOwner(), sent = [], status = [], front = new RawCampaignSessionLoginFront(o, { ...devices([]), status: (...values) => status.push(values) });
+    try {
+        front.bindServer(); front.bindClient(); front.registerReceivers(); o.playerState.battleOwner = 1; o.playerState.playerKnown = 0;
+        o.players[2 * 180 + 0x50] = 1; o.services.battlePeers[2] = (packet) => sent.push(packet.slice());
+        const alliance = Uint8Array.of(1, 0x3d, 9, 0, 1, 4, 0, 0, 0);
+        front.transport.dispatch.registration(0x3d).receive(2, null, alliance);
+        assert.equal(alliance[5], 6); assert.equal(o.alliances[1 * 9 + 1], 1); assert.equal(o.alliances[1 * 9 + 2], 1);
+        assert.deepEqual(sent[0], alliance);
+        o.state.assetState.writeBoss(true); o.core.ownerMode.battle = false; const notice = Uint8Array.of(1, 0x78, 6, 0, 2, 3);
+        front.transport.dispatch.registration(0x78).receive(2, null, notice);
+        assert.equal(o.alliances[2 * 9 + 3], 1); assert.equal(o.alliances[3 * 9 + 2], 1);
+        assert.deepEqual(sent[1], notice); assert.deepEqual(status, [[7, 2, 3]]);
     } finally { front.dispose(); o.dispose(); }
 });
 
