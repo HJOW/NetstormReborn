@@ -3441,21 +3441,26 @@
         "webpj/tests/small-bodies.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-carrier-mining.js"
+        "webpj/www/core/raw-carrier-mining.js",
+        "webpj/www/core/raw-campaign-session-motion-runtime.js"
       ],
       "doc": "docs/webpj-small-bodies-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawCarrierMining.cpp"
+        "cpppj/src/o/RawCarrierMining.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawCampaignSession.h"
       ],
-      "scope": "864행 전부 사용",
+      "scope": "864행 전부 사용 / E643: 실제Session3889..3929 채취/전달/현재TYPE/이동본체 결선. 신규5조립검사는 직접소비자가 아니며 경로송신/Load는후속(docs/webpj-session-motion-runtime-20261117.md)",
       "text": true,
       "sha256": "b2a0bcaf272a6ae890313bc832e6a24a51847ddef5d1961ddb0ef42d6e1b9c77",
       "bytes": 105618,
       "lines": 865,
-      "fixtureCommit": "850ae867",
-      "webCommit": "86219607",
+      "fixtureCommit": "850ae8679",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawCarrierMining.cpp": "850ae867"
+        "cpppj/src/o/RawCarrierMining.cpp": "850ae8679",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.h": "bda77381e"
       }
     },
     {
@@ -8428,21 +8433,26 @@
         "webpj/tests/carrier-transfer.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-carrier-transfer.js"
+        "webpj/www/core/raw-carrier-transfer.js",
+        "webpj/www/core/raw-campaign-session-motion-runtime.js"
       ],
       "doc": "docs/webpj-carrier-bodies-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawCarrierTransfer.cpp"
+        "cpppj/src/o/RawCarrierTransfer.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawCampaignSession.h"
       ],
-      "scope": "10.78 전용 단일 판본 1110행 전부 사용(64비트 정밀도 열은 범위 밖)",
+      "scope": "10.78 전용 단일 판본 1110행 전부 사용(64비트 정밀도 열은 범위 밖) / E643: 실제Session3889..3929 채취/전달/현재TYPE/이동본체 결선. 신규5조립검사는 직접소비자가 아니며 경로송신/Load는후속(docs/webpj-session-motion-runtime-20261117.md)",
       "text": true,
       "sha256": "11ea45cdc7567e5fa85fe229428c9232c11863ff092637315cadaad23a919fd9",
       "bytes": 1082972,
       "lines": 1111,
-      "fixtureCommit": "d00175c9",
-      "webCommit": "6fae5622",
+      "fixtureCommit": "d00175c9d",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawCarrierTransfer.cpp": "0d82e448"
+        "cpppj/src/o/RawCarrierTransfer.cpp": "079f170e3",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.h": "bda77381e"
       }
     },
     {
@@ -9676,7 +9686,7 @@
       "bytes": 1576206,
       "lines": 2246,
       "fixtureCommit": "b7932e867",
-      "webCommit": "worktree",
+      "webCommit": "1f408a785",
       "cpppjBasis": {
         "cpppj/src/o/RawBoardTarget.cpp": "b7932e867",
         "cpppj/src/o/RawCarrierTarget.cpp": "b7932e867",
@@ -9711,7 +9721,7 @@
       "bytes": 117318,
       "lines": 2041,
       "fixtureCommit": "b7932e867",
-      "webCommit": "worktree",
+      "webCommit": "1f408a785",
       "cpppjBasis": {
         "cpppj/src/o/RawBoardTarget.cpp": "b7932e867",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
@@ -9745,7 +9755,7 @@
       "bytes": 1565352,
       "lines": 1808,
       "fixtureCommit": "562c41c91",
-      "webCommit": "worktree",
+      "webCommit": "1f408a785",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierEscape.cpp": "8b467ca03",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
@@ -9779,7 +9789,7 @@
       "bytes": 1546934,
       "lines": 722,
       "fixtureCommit": "87c37af67",
-      "webCommit": "worktree",
+      "webCommit": "1f408a785",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierChoice.cpp": "8b467ca03",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
@@ -9813,7 +9823,7 @@
       "bytes": 522589,
       "lines": 4802,
       "fixtureCommit": "cd6c03ae2",
-      "webCommit": "worktree",
+      "webCommit": "1f408a785",
       "cpppjBasis": {
         "cpppj/src/o/RawPathRetarget.cpp": "cd6c03ae2",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
@@ -10136,21 +10146,26 @@
         "webpj/tests/geyser-mined.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-geyser-mined.js"
+        "webpj/www/core/raw-geyser-mined.js",
+        "webpj/www/core/raw-campaign-session-motion-runtime.js"
       ],
       "doc": "docs/webpj-contained-geyser-mined-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawGeyserMined.cpp"
+        "cpppj/src/o/RawGeyserMined.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawCampaignSession.h"
       ],
-      "scope": "10.78(originals) 1156행 사용, originalCD 1156행은 범위 밖",
+      "scope": "10.78(originals) 1156행 사용, originalCD 1156행은 범위 밖 / E643: 실제Session3889..3929 채취/전달/현재TYPE/이동본체 결선. 신규5조립검사는 직접소비자가 아니며 경로송신/Load는후속(docs/webpj-session-motion-runtime-20261117.md)",
       "text": true,
       "sha256": "29abf72063278eecebd954401b6af4a2e67fe8ad236e51bb60ce3db141bfd5aa",
       "bytes": 553540,
       "lines": 2313,
       "fixtureCommit": "5c2d0a1e5",
-      "webCommit": "466e55c65",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawGeyserMined.cpp": "0d82e448d"
+        "cpppj/src/o/RawGeyserMined.cpp": "0d82e448d",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.h": "bda77381e"
       }
     },
     {
