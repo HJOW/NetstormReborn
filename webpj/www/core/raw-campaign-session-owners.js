@@ -215,6 +215,8 @@ export class RawCampaignSessionOwners {
     aiDropActions = null;
     // 사제 AI의 탐색·이동·생산 행동 처리기다.
     aiPriestActions = null;
+    // AI 다리 경로가 읽는 원본 시작·끝·목표 표식 TYPE 초기값이다.
+    aiBridgeStartType = 113; aiBridgeEndType = 119; aiBridgeTargetType = 117;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -798,6 +800,12 @@ export class RawCampaignSessionOwners {
     connectAiPriestActions() {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 사제 행동 설치 전/반납');
         this.motionRuntimeModules.bindAiPriestActions();
+    }
+
+    // 같은 세션의 현재 저장소로 AI 다리 경로와 호출자 scratch를 제공한다.
+    aiBridgePath(endpointScratch = null) {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 다리 경로 설치 전/반납');
+        return this.motionRuntimeModules.aiBridgePath(endpointScratch);
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

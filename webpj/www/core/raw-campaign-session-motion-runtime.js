@@ -27,6 +27,7 @@ import { RawAiDryGeometry } from './raw-ai-dry-geometry.js';
 import { RawAiFakeDrySpots, AI_FAKE_DRY_LOG } from './raw-ai-fake-dry-spots.js';
 import { RawAiDropActions, AI_DROP_ACTION_LOG } from './raw-ai-drop-actions.js';
 import { RawAiPriestActions, aiPriestInRitual, aiAltarContainsEnemy } from './raw-ai-priest-actions.js';
+import { RawAiBridgePath } from './raw-ai-bridge-path.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -456,6 +457,34 @@ export class RawCampaignSessionMotionRuntime {
         };
         o.aiPriestActions = new RawAiPriestActions(o.aiMemory, c.pool, globals, hooks);
         this.aiPriestActionHooks = hooks;
+    }
+    // 현재 전역과 선택적 호출자 scratch를 빌리는 AI 다리 경로를 만든다.
+    aiBridgePath(endpointScratch = null) {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.aiPriestActionHooks) throw new Error('Session AI 다리 경로 설치 순서 오류');
+        const globals = { now: () => c.processState.now, mapLimit: () => o.cursorManaGlobals.mapLimit, bridgeType: () => o.world.storage.links.bridgeType,
+            logKind: () => o.gameplayGlobals.aiDebug().read(0x52f3cc), startMarker: () => o.aiBridgeStartType, endMarker: () => o.aiBridgeEndType, targetMarker: () => o.aiBridgeTargetType };
+        const hooks = {
+            initialize: (token, source, target) => { this.#live(); new RawAiBridgePath(o.aiMemory, c.pool, o.contentFinder, globals, {}).initialize(token, source, target); },
+            prepare: (token) => { this.#live(); return o.aiBridgeCandidates.prepare(token); },
+            search: (token) => {
+                this.#live(); let scratch = endpointScratch;
+                if (!scratch) { if (!o.services.ai.bridgeScratchBytes) throw new Error('실제 AI 검색 caller8BYTE 입력 미연결'); const raw = new Uint8Array(8); o.services.ai.bridgeScratchBytes(raw); const view = new DataView(raw.buffer); scratch = { x: view.getFloat32(0, true), y: view.getFloat32(4, true), xBits: view.getUint32(0, true), yBits: view.getUint32(4, true) }; }
+                return o.aiBridgeSearch.search(token, scratch);
+            },
+            start: (token, target) => { this.#live(); return o.aiBridgeCandidates.start(token, target, o.aiDropScanBounds); },
+            deploy: (token, type, point, pattern, direction) => { this.#live(); o.aiCollectors.deployWithNotice(token, type, point.x, point.y, pattern, direction); },
+            marker: (token, type, point) => { this.#live(); o.aiDeployment.place(token, type, point.x, point.y, 0, 0); },
+            technology: (owner) => { this.#live(); return o.aiProductionModules.technology(owner); },
+            destroy: (sid, flags) => { this.#live(); o.world.destroy(sid, flags); },
+            refresh: (token, parent) => { this.#live(); o.aiStrategySetup.refreshBridges(token, parent); },
+            log: (token, kind, message) => {
+                this.#live(); if (!o.services.player.log) throw new Error('AI 다리 현재 로그 장치 미연결');
+                const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+                o.services.player.log(kind, `AI${view.getInt32(0x260, true)}: ${message}\n`);
+            },
+        };
+        return new RawAiBridgePath(o.aiMemory, c.pool, o.contentFinder, globals, hooks);
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

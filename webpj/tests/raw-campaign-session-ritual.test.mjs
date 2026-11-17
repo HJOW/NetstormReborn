@@ -409,6 +409,22 @@ test('AI 사제 행동: 선행 관문과 사제 없는 본체', () => {
     } finally { if (token) o.aiMemory.free(token); o.dispose(); }
 });
 
+// AI 다리 경로는 선행 행동 뒤 동일한 Pool과 본체를 빌린다.
+test('AI 다리 경로: 선행 관문과 초기화', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    let token = 0;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget(); o.connectAiDropTargets(); o.connectAiDropEvaluation(); o.connectAiDropScan(); o.connectAiDropSelection(); o.connectAiDryGeometry(); o.connectAiFakeDrySpots(); o.connectAiDropActions();
+        assert.throws(() => o.aiBridgePath(), /순서/);
+        o.connectAiPriestActions(); const path = o.aiBridgePath({ x: 0, y: 0 });
+        assert.equal(path.pool, o.core.pool); assert.deepEqual([o.aiBridgeStartType, o.aiBridgeEndType, o.aiBridgeTargetType], [113, 119, 117]);
+        token = o.aiMemory.allocate(0xb08); const before = o.random.state;
+        path.initialize(token, { x: 12, y: 13 }, { x: 14, y: 15 }); assert.equal(o.random.state, before);
+        assert.equal(o.loaded, false);
+    } finally { if (token) o.aiMemory.free(token); o.dispose(); }
+    assert.throws(() => o.aiBridgePath(), /반납/);
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {
