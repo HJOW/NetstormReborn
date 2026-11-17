@@ -9,15 +9,18 @@ import { RawMissionLoginPackets } from './raw-mission-login-packets.js';
 import { RawMissionServerPackets } from './raw-mission-server-packets.js';
 import { RawMissionSettingsPacket } from './raw-mission-settings-packet.js';
 import { RawClockSynchronization } from './raw-clock-synchronization.js';
+import { LocalMissionProgress, RawLocalMissionState } from './raw-local-mission-state.js';
 
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
 export class RawCampaignSessionLoginFront {
     // 실제 부모·장치와 내부 전송 수명, 반납 관문이다.
-    #owner; #effects; #internal = null; #disposed = false;
+    #owner; #effects; #internal = null; #disposed = false; #wall = 0; #localTitle = 0;
     // 원문의 독립 초기 지역 입력과 현재 수신 종류 기록이다.
     pendingStamp = 0; overrideFlags = 0; wireTypes = [];
     // 현재 연결표와 패킷 분배기 및 같은 옵션/패킷/시계 처리기를 소유자와 함께 공개한다.
-    transport; options; metadata; forts; settings; clockSynchronization;
+    transport; options; metadata; forts; settings; clockSynchronization; state;
+    // 원문 독립 fixture의 현재 UI 및 입력 모드 값이다.
+    uiMode = 0; inputMode = 0;
 
     // Player 초기화 뒤 옵션 기본값과 현재 전송을 순서대로 준비한다.
     constructor(owner, effects = {}) {
@@ -77,6 +80,7 @@ export class RawCampaignSessionLoginFront {
                     registry.sendDirect(registry.tokenFor(connection), packet);
                 },
             });
+            this.state = new RawLocalMissionState(local.state(), this.#stateGlobals(), this.#stateHooks());
         } catch (error) {
             if (this.#effects.transport) this.transport.detachSession(); else this.#internal.dispose();
             this.#disposed = true; throw error;
@@ -91,6 +95,67 @@ export class RawCampaignSessionLoginFront {
     #transport(name) { this.#live(); const device = this.transport[name]; if (typeof device !== 'function') throw new Error(`Login 전송 ${name} 미연결`); return device; }
     // 현재 실제 Session 진단을 호출한다.
     #assertion(expression) { const o = this.#live(); if (typeof o.services.ai?.assertion !== 'function') throw new Error('Login 진단 장치 누락'); o.services.ai.assertion(expression); }
+    // 같은 장기 State/권한/Player 및 현재 게임·벽시각의 실제 속성을 빌린다.
+    #stateGlobals() {
+        const o = this.#live(), self = this, local = o.localStateGlobals;
+        const title = o.services.htmlWindowGlobals ? o.services.htmlWindowGlobals.text.background : null;
+        return {
+            get server() { return o.core.processState.server; }, set server(value) { o.core.processState.server = value; },
+            get boss() { return o.state.assetState.readBoss(); }, set boss(value) { o.state.assetState.writeBoss(value); },
+            get inBattle() { return o.state.assetState.inBattle; }, set inBattle(value) { o.state.assetState.inBattle = Boolean(value); },
+            get missionPost() { return o.globals.missionPost; }, get missionWorld() { return o.objectState.mission; },
+            get savedGame() { return local.savedGame().value; }, set savedGame(value) { local.savedGame().value = value; },
+            get simulconnect() { return local.simulconnect().value; }, get metamap() { return o.core.ownerMode.challenge; }, player: o.playerState,
+            get zonePending() { return local.zonePending().value; }, set zonePending(value) { local.zonePending().value = value; },
+            get gameTicks() { return local.gameTicks().value; }, set gameTicks(value) { local.gameTicks().value = value; },
+            get sourceType() { return local.sourceType().value; }, set sourceType(value) { local.sourceType().value = value; },
+            get cdPresent() { return local.cdPresent().value; }, set cdPresent(value) { local.cdPresent().value = value; },
+            get metaRefresh() { return local.metaRefresh().value; }, set metaRefresh(value) { local.metaRefresh().value = value; },
+            get metaRebuild() { return local.metaRebuild().value; }, set metaRebuild(value) { local.metaRebuild().value = value; },
+            get titleInitial() { return title ? title[0] : self.#localTitle; }, set titleInitial(value) { if (title) title[0] = value; else self.#localTitle = value & 0xff; },
+            get battleByte() { return local.battleByte().value; },
+            get connectEnd() { return local.connectEnd().value; }, set connectEnd(value) { local.connectEnd().value = value; },
+            get activityEnd() { return local.activityEnd().value; }, set activityEnd(value) { local.activityEnd().value = value; },
+            get gameSeconds() { return o.core.processState.now; }, get wallCached() { return self.#wall; },
+        };
+    }
+    // 현재 UI 장치가 선택된 위치에서만 실제 전환을 요청한다.
+    #setUiMode(mode) {
+        const o = this.#live(); this.uiMode = mode;
+        if (o.services.adoptInitializedPlayers || this.#effects.uiMode || this.#effects.battlePalette || this.#effects.startingProgress) this.#need('uiMode', 'Login UI 모드')(mode);
+        else this.#need('refresh', 'Login UI 갱신')();
+    }
+    // 원문 상태8은 현재 블록과 내부 주소를 확인하고 실제 전송에 접속을 맡긴다.
+    #connect(address, port) {
+        const o = this.#live(), current = o.localStateGlobals.state().current;
+        if (!(address instanceof Uint8Array) || address.length !== 20 || current[0] !== 8) throw new Error('현재 State8/주소20BYTE 접속 계약 오류');
+        if (o.services.generalBattleStart?.textAddress || current[33]) throw new Error('일반 또는 저장 재접속 주소 처리는 후속 단계');
+        this.#transport('connect')(address, port);
+    }
+    // 원문 StateHooks 중 실제 장기 owner와 연결된 앞단이다. Fort 파일·로그인 송신·타이머는 후속이다.
+    #stateHooks() {
+        const o = this.#live(), local = o.localStateGlobals;
+        return {
+            logState: (phase) => this.#need('log', 'State 로그')(`로컬 미션 상태 ${phase >>> 0}\n`), wallSeconds: this.#effects.wallSeconds,
+            initializeRenderer: this.#effects.initializeRenderer, progress: this.#effects.progress,
+            connectServer: (address, port) => this.#connect(address, port),
+            connectionStatus: (id) => this.#transport('status')(id), connectionOpen: (id) => this.#transport('isOpen')(id),
+            closeConnection: (id) => this.#transport('close')(id), renameConnection: (pending, owner) => this.#transport('assign')(pending, owner),
+            logConnection: (line, value) => this.#need('log', '연결 진단')(`연결 진단 ${line}:${value}\n`),
+            serverConnection: () => this.transport.registry.cleanup().transceivers[9],
+            attachCommander: this.#effects.attachCommander ?? ((token) => this.clockSynchronization.attach(this.transport.dispatch, token)),
+            installMapHandlers: () => this.clockSynchronization.initializeServer(this.transport.dispatch),
+            connectedProgress: () => {
+                if (this.#effects.progress) this.#effects.progress(o.globals.missionPost ? LocalMissionProgress.MissionTransferring : local.savedGame().value ? LocalMissionProgress.ReconnectTransferring : LocalMissionProgress.Transferring, 0);
+                else this.#need('refresh', '로그인 전송 안내')();
+            },
+            fortAvailable: (owner) => (owner >>> 0) < 9 && new DataView(o.headers.buffer, o.headers.byteOffset, o.headers.byteLength).getUint32((owner >>> 0) * 20, true) !== 0,
+            fortCore: (owner) => o.templateState.get(owner), touchFort: (owner) => o.templateState.changed(owner),
+            localAddress: () => this.#transport('address')(9), uiMode: (mode) => this.#setUiMode(mode),
+            refreshFort: o.services.install.refreshWindowTitle,
+            inputMode: (mode) => { this.inputMode = Number(mode); this.#need('refresh', '입력 모드')(); },
+        };
+    }
     // 현재 6eh 관찰 로그 뒤 원문의 mutable 또는 읽기 전용 송신을 선택한다.
     #send(target, packet, mutable) {
         this.#live();

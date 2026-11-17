@@ -174,3 +174,37 @@ test('Session Login 시계: 토큰 표본 송신과 다른 주소 거부', () =>
         assert.equal(sent.length, 1);
     } finally { registry.forget(token); front.dispose(); o.dispose(); }
 });
+
+// 상태14의 공통 확정은 실제 Client의 다섯 장기 블록을 직접 쓴다.
+test('Session Login 상태: 같은 Client 블록에 상태14 확정', () => {
+    const o = campaignOwners(), trace = [], front = new RawCampaignSessionLoginFront(o, devices(trace));
+    try {
+        const blocks = o.localStateGlobals.state(); blocks.current[0] = 14; blocks.current[9] = 0x12345678; blocks.phase[0] = 9;
+        front.state.run();
+        assert.equal(blocks.old[0], 9); assert.equal(blocks.phase[0], 14); assert.equal(blocks.phase[9], 0x12345678);
+        assert.equal(blocks.current[0], 0); assert.equal(blocks.next[0], 0); assert.ok(trace.includes('로컬 미션 상태 14\n'));
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 실제 서버가 열리지 않은 상태8은 선행 기한만 남기고 접속을 성공시키지 않는다.
+test('Session Login 상태: 미등록 서버의 상태8 접속 실패 접두', () => {
+    const o = campaignOwners(), trace = [], front = new RawCampaignSessionLoginFront(o, devices(trace));
+    try {
+        const blocks = o.localStateGlobals.state(); blocks.current[0] = 8;
+        assert.throws(() => front.state.run(), /로컬 클라이언트 새 접속/);
+        assert.equal(o.localStateGlobals.connectEnd().value, 130.5); assert.equal(blocks.current[0], 8); assert.equal(blocks.phase[0], 0);
+        assert.equal(front.transport.lifetime.hasClientConnection, false); assert.ok(trace.includes('로컬 미션 상태 8\n'));
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 상태9의 실제 만료는 원문처럼 출처와 next만 바꾸고 공통 확정을 건너뛴다.
+test('Session Login 상태: 현재 벽시각 만료의 원문 조기 반환', () => {
+    const o = campaignOwners(), front = new RawCampaignSessionLoginFront(o, devices([]));
+    try {
+        const blocks = o.localStateGlobals.state(); blocks.current[0] = 9; blocks.phase[0] = 8;
+        o.localStateGlobals.connectEnd().value = 50; o.localStateGlobals.sourceType().value = 77;
+        front.state.run();
+        assert.equal(o.localStateGlobals.sourceType().value, 0); assert.equal(blocks.next[0], 3);
+        assert.equal(blocks.current[0], 9); assert.equal(blocks.phase[0], 8);
+    } finally { front.dispose(); o.dispose(); }
+});
