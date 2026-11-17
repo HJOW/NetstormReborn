@@ -21,7 +21,8 @@ import { RawBombActivation } from './raw-bomb-activation.js';
 import { RegularProcess } from './squid-process.js';
 import { RawBombRegular } from './raw-bomb-regular.js';
 import { RawFrameAdvance } from './raw-frame-advance.js';
-import { finalizeBombEffectPacket } from './raw-bomb-effect.js';
+import { RawBombEffect, finalizeBombEffectPacket } from './raw-bomb-effect.js';
+import { bombTimerParent } from './raw-bomb-timer-packet.js';
 
 // 같은 현재 가상 표를 기준으로 주문 자격 하위를 선택한다.
 const MANO_TABLES = new Set([0x5026a0, 0x502778, 0x502840]);
@@ -31,7 +32,7 @@ const WIND_TABLES = new Set([0x5025d8, 0x502e68, 0x502f30]);
 // 실제 Session의 TYPE·World·상태 주문을 한 번 구성한다.
 export class RawCampaignSessionDevastation {
     // 같은 owner와 설치 시작·정상 복귀·반납 관문이다.
-    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #effectsStarted = false; #effectsReady = false; #strikeStarted = false; #strikeReady = false; #targetsStarted = false; #targetsReady = false; #activationStarted = false; #activationReady = false; #regularStarted = false; #regularReady = false; #disposed = false;
+    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #effectsStarted = false; #effectsReady = false; #strikeStarted = false; #strikeReady = false; #targetsStarted = false; #targetsReady = false; #activationStarted = false; #activationReady = false; #regularStarted = false; #regularReady = false; #effectStarted = false; #effectReady = false; #disposed = false;
     // 현재 상태 주문 효과를 후속 시전 분배기에 빌린다.
     statusHooks = null;
     // 기존 실제 하위에 연결한 트리즌과 힐 효과를 현재 수명에서 보관한다.
@@ -44,6 +45,8 @@ export class RawCampaignSessionDevastation {
     activationHooks = null;
     // 정기 주문의 확보·검색·송수신과 해제 연결이다.
     regularHooks = null;
+    // 효과 수신이 값으로 빌리는 실제 시전 종료·타이머·분배 연결이다.
+    effectHooks = null;
     // 구성 시 World나 난수는 변경하지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 완료 전 또는 반납된 함수 값의 실행을 거부한다.
@@ -272,8 +275,56 @@ export class RawCampaignSessionDevastation {
         this.regularHooks = hooks; this.#regularReady = true;
     }
 
+    // 같은 시전 프로세스·대상 효과·상태 타이머에 효과 패킷 수신을 연결한다.
+    bindEffect() {
+        const o = this.#owner, c = o.core;
+        if (this.#disposed || !this.#regularReady || this.#effectStarted || o.devastationEffect) throw new Error('Session 주문 효과 설치 순서 오류');
+        this.#effectStarted = true;
+        const hooks = {
+            stopCast: (carrier) => {
+                this.#live(); let cast;
+                // 현재 첫 시전 사건을 반복 재조회하고 실제 Kernel 반납을 확인한다.
+                while ((cast = c.processes.findEvent(carrier, 0x493))) {
+                    const pid = c.kernel.find(cast); c.processes.kill(cast, 0);
+                    if (c.processes.isRegistered(pid, cast)) throw new Error('Devastation 시전 종료의 실제 권한/삭제 실패');
+                }
+            },
+            allocate: (bytes) => {
+                this.#live();
+                if (!o.devastationEffectMemory) o.devastationEffectMemory = new Uint8Array(bytes);
+                else { if (bytes !== 40 || o.pendingBombTimerStorage || o.pendingBombTimer) throw new Error('상태 타이머 확보 순서 오류'); o.pendingBombTimerStorage = new Uint8Array(bytes); }
+                return true;
+            },
+            apply: (parent, table, target) => {
+                this.#live(); table >>>= 0; if (!connectedCampaignBombTable(table)) throw new TypeError('주문 효과 표 오류');
+                o.runtimeModules.prepareDevastation();
+                if (MANO_TABLES.has(table)) return;
+                if (table === 0x503188) o.bombTreason.apply(parent, target);
+                else if (STRIKE_TABLES.has(table)) o.bombStrike.apply(parent, target);
+                else if (table === 0x5030c0) o.bombHardener.apply(parent, target);
+                else if (table === 0x502448) o.bombHeal.apply(parent, target);
+                else if (table === 0x502370) o.devastationBlast.apply(parent, target);
+                else if (table !== 0x5025d8) o.bombStatus.apply(parent, target);
+            },
+            construct: (delay, unused, members, flags) => {
+                this.#live(); if (!o.pendingBombTimerStorage || o.pendingBombTimer) throw new Error('상태 타이머 생성 메모리 누락');
+                o.pendingBombTimer = o.teleportModules.makeBombTimer(delay, members, flags); o.pendingBombTimerStorage = null; return 1;
+            },
+            argument: (x, y) => { this.#live(); if (x || y) throw new Error('상태 타이머 예약 인자 오류'); return bombTimerParent(c.pool, c.types, o.state.assetState.currentResidences().items()); },
+            attach: (token, type, parent, form, flags) => {
+                this.#live(); if (token !== 1 || !o.pendingBombTimer || parent < 0 || parent > 65535 || form < 0 || form > 65535) throw new Error('상태 타이머 예약 객체/인자 오류');
+                const process = o.pendingBombTimer; o.pendingBombTimer = null; c.processes.attach(process, type, parent, flags, form);
+            },
+            sound: (values) => { this.#live(); if (typeof o.services.sound.play !== 'function') throw new Error('Devastation 실제 효과음 미연결'); o.services.sound.play(...values); },
+            destroy: (sid, table, flags) => { this.#live(); if (!connectedCampaignBombTable(table)) throw new TypeError('주문 삭제 표 오류'); o.world.destroy(sid, flags); },
+            release: () => { this.#live(); if (!o.devastationEffectMemory) throw new Error('Devastation 효과 배열 해제 순서 오류'); o.devastationEffectMemory = null; },
+        };
+        o.devastationEffect = new RawBombEffect(c.pool, o.devastationEffectTypes, o.state.devastationEffectState, hooks);
+        o.runtimeModules.prepareDevastation(); this.effectHooks = hooks; this.#effectReady = true;
+    }
+
     // World가 프로세스를 비운 뒤 같은 함수 값의 재진입을 차단한다.
-    dispose() { this.#disposed = true; this.#owner.pendingDevastationRegular = null; this.#owner.devastationSearchMemory = null; }
+    dispose() { this.#disposed = true; this.#owner.pendingDevastationRegular = null; this.#owner.devastationSearchMemory = null; this.#owner.devastationEffectMemory = null; this.#owner.pendingBombTimerStorage = null; this.#owner.pendingBombTimer = null; }
     // 이 앞단만의 정상 설치 여부이며 전체 주문 설치는 아니다.
     get ready() { return this.#ready; }
     // 주문 결선 완료는 전체 파괴 주문 설치 완료와 구별한다.
@@ -288,4 +339,6 @@ export class RawCampaignSessionDevastation {
     get activationReady() { return this.#activationReady; }
     // 정기 주문 설치만 완료했으며 효과 수신은 별도다.
     get regularReady() { return this.#regularReady; }
+    // 효과 수신 설치만 완료했으며 Meltdown과 전체 Load는 별도다.
+    get effectReady() { return this.#effectReady; }
 }

@@ -52,15 +52,27 @@ export class RawCampaignSessionTeleport {
         });
     }
 
-    // Devastation.inc17..23의 실제 장치를 연결한 빈 타이머다. Init/부착/Frame은 실행하지 않는다.
-    makeEmptyBombTimer() {
+    // 같은 World와 펜스 분배기를 두 종류의 상태 타이머에 빌려 준다.
+    #bombTimerHooks() {
         const o = this.#owner; const c = o.core;
-        return new BombEffectTimerProcess(c.pool, c.types, () => c.processState.now, {
+        return {
             unpop: (sid, flags) => o.world.unpop(sid, flags),
             repop: (sid, flags) => o.world.repop(sid, flags),
             refresh: (sid) => c.display.update(c.pool.slot(sid), 0),
             fence: (sid) => dispatchCampaignFence(o, sid, FENCE_TYPE_OPERATION.rebuild),
-        });
+        };
+    }
+
+    // Devastation.inc17..23의 실제 장치를 연결한 빈 타이머다. Init/부착/Frame은 실행하지 않는다.
+    makeEmptyBombTimer() {
+        const c = this.#owner.core;
+        return new BombEffectTimerProcess(c.pool, c.types, () => c.processState.now, this.#bombTimerHooks());
+    }
+
+    // 현재 게임 시각과 대상 목록을 복사한 지연 상태 타이머를 생성한다.
+    makeBombTimer(delay, members, flags) {
+        const c = this.#owner.core;
+        return BombEffectTimerProcess.withTimer(c.pool, c.types, () => c.processState.now, delay, members, flags, this.#bombTimerHooks());
     }
 
     // World 프로세스를 먼저 정리한 부모가 미부착 결과를 motion/입자보다 먼저 반납한다.

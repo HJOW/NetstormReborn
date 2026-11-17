@@ -6,6 +6,8 @@ import { SidPool } from '../www/core/sid-pool.js';
 import { dispatchCampaignFence } from '../www/core/raw-campaign-fence-dispatch.js';
 import { FENCE_TYPE_OPERATION } from '../www/core/raw-fence-type-parent.js';
 import { BOMB_TREASON_ROLE } from '../www/core/raw-bomb-treason.js';
+import { RegularProcess } from '../www/core/squid-process.js';
+import { bombTimerParent } from '../www/core/raw-bomb-timer-packet.js';
 
 // 같은 실제 기반 owner에서 저장 미션을 Load하지 않고 이동까지 설치한다.
 function scene() {
@@ -150,4 +152,30 @@ test('Session 주문 정기: 검색 확보와 연결별 송신 길이', () => {
         assert.equal(o.loaded, false); assert.throws(() => o.connectDevastationRegular(), /순서/);
     } finally { o.dispose(); }
     assert.throws(() => hooks.allocate(400), /반납/);
+});
+
+// 피해나 상태 효과 없이 시전 정리와 지연 타이머의 실제 수명을 확인한다.
+test('Session 주문 효과: 시전 종료와 타이머 예약', () => {
+    const o = scene(); let hooks;
+    try {
+        o.connectDevastationStatus(); o.connectDevastationSummons(); o.connectDevastationEffects(); o.connectDevastationStrike(); o.connectDevastationTargets(); o.connectDevastationActivation();
+        assert.throws(() => o.connectDevastationEffect(), /순서/);
+        o.connectDevastationRegular(); o.connectDevastationEffect(); hooks = o.devastationModules.effectHooks;
+        assert.equal(o.devastationModules.effectReady, true); assert.equal(o.devastationEffect.pool, o.core.pool);
+        const parent = o.world.create(117), host = o.core.processes;
+        const cast = host.attachRegular(new RegularProcess(0x493, 0), parent);
+        const other = host.attachRegular(new RegularProcess(0x494, 0), parent);
+        assert.ok(cast && other); hooks.stopCast(parent);
+        assert.equal(host.findEvent(parent, 0x493), null); assert.equal(host.findEvent(parent, 0x494), other);
+        assert.equal(hooks.allocate(0), true); assert.equal(hooks.allocate(40), true);
+        o.core.processState.now = 20; assert.equal(hooks.construct(5, 0, [], 2), 1);
+        const timer = o.pendingBombTimer; assert.equal(timer.fields.endTime, 25); assert.equal(timer.fields.flags, 2);
+        assert.equal(hooks.argument(0, 0), bombTimerParent(o.core.pool, o.core.types, o.state.assetState.currentResidences().items()));
+        assert.throws(() => hooks.argument(1, 0), /인자 오류/);
+        hooks.attach(1, 57, parent, 0, 0); assert.equal(o.pendingBombTimer, null); assert.ok(o.core.kernel.find(timer));
+        hooks.release(); assert.equal(o.devastationEffectMemory, null);
+        assert.throws(() => hooks.apply(parent, 0, parent), /표 오류/);
+        assert.equal(o.loaded, false); assert.throws(() => o.connectDevastationEffect(), /순서/);
+    } finally { o.dispose(); }
+    assert.throws(() => hooks.stopCast(0), /반납/);
 });
