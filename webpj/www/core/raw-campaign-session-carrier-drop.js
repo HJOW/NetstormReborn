@@ -3,6 +3,8 @@ import { RawObjectCommand } from './raw-object-command.js';
 import { RawCarrierDropPoint } from './raw-carrier-drop-point.js';
 import { captureCampaignFlag } from './raw-campaign-session-state.js';
 import { projectCameraCoordinates } from '../render/camera-view.js';
+import { RawCarrierDrop } from './raw-carrier-drop.js';
+import { RawContainedLookup } from './raw-contained-lookup.js';
 
 // SP DWORD의 현재 비트를 계산 없이 float로 읽는다.
 function spFloat(bits) { const view = new DataView(new ArrayBuffer(4)); view.setUint32(0, bits, true); return view.getFloat32(0, true); }
@@ -10,7 +12,7 @@ function spFloat(bits) { const view = new DataView(new ArrayBuffer(4)); view.set
 // 실제 소유권·피해·배치 장치와 운반 투하 지역 상태를 관리한다.
 export class RawCampaignSessionCarrierDrop {
     // 같은 Session과 설치 시작·완료·반납 관문이다.
-    #owner; #started = false; #ready = false; #requestStarted = false; #requestReady = false; #disposed = false;
+    #owner; #started = false; #ready = false; #requestStarted = false; #requestReady = false; #receiveStarted = false; #receiveReady = false; #disposed = false;
     // 공통 명령과 투하점이 빌리는 값형 상태 및 효과 표다.
     commandState = null; commandHooks = null; pointState = { mapLimit: 256, invalidPoint: [0, 0] }; pointHooks = null;
     // 실제 Cast/Drop이 완성될 때 값으로 빌릴 요청 효과 표다.
@@ -89,10 +91,51 @@ export class RawCampaignSessionCarrierDrop {
         this.dropHooks = hooks; this.#requestReady = true;
     }
 
+    // 같은 요청 표에 서버 수신의 건설·내용물·소유권 경계를 채워 실제 본체를 설치한다.
+    bindReceive() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.#requestReady || this.#receiveStarted || o.carrierDrop) throw new Error('Session 운반 투하 수신 설치 순서 오류');
+        this.#receiveStarted = true; const hooks = this.dropHooks;
+        Object.assign(hooks, {
+            queue: (command, type, flags) => { this.#live(); if (typeof o.services.assets.queueCommand !== 'function') throw new Error('Cast/Drop 실제 입력 큐 미연결'); o.services.assets.queueCommand(command >>> 0, type | 0, flags | 0); },
+            badOwner: (type, owner) => { this.#live(); o.assetModules.prepareConstruction(); o.construction.refund(type, owner); },
+            money: (owner) => { this.#live(); return spFloat(o.sp.get(owner)); },
+            refund: (type, owner, point, argument, direction) => { this.#live(); o.assetModules.prepareConstruction(); o.construction.chargeShortfall(type, owner, point[0], point[1], argument, direction); },
+            movement: (type) => { this.#live(); return o.priests.movementProcessType(type); },
+            removeMovement: (parent, type, ordinal, remove) => { this.#live(); new RawContainedLookup(c.pool, (form, flags) => o.world.destroy(form, flags)).find(parent, type, ordinal, Boolean(remove)); },
+            detach: (parent, flags) => { this.#live(); o.world.unpop(parent, flags); },
+            unpop: (parent, flags) => { this.#live(); o.world.repop(parent, flags); },
+            destroy: (content, flags) => { this.#live(); o.world.destroy(content, flags); },
+            create: (type, flags) => {
+                this.#live(); if (!Number.isInteger(type) || type < 0 || type >= c.types.length) throw new RangeError('Cast/Drop 생성 TYPE 범위');
+                if ((c.types[type].flags2 & 0x100) && ![168, 117, 118, 171, 172, 173].includes(type)) throw new Error('다른 주문 연결은 멀티플레이 단계로 이월');
+                return o.world.create(type, flags);
+            },
+            owner: (sid, owner) => { this.#live(); c.owner.set(sid, owner); },
+            argument: (sid, value) => { this.#live(); const raw = c.pool.allocated(sid); raw[12] = value & 255; raw[13] = (value >>> 8) & 255; },
+            pop: (sid, point, flags) => { this.#live(); o.world.pop(sid, point[0], point[1], flags); },
+            activate: (sender, connection, packet) => { this.#live(); o.runtimeModules.receiveDevastationActivation(packet); },
+            broadcast: (packet) => { this.#live(); o.tables.broadcast.send(packet); },
+            place: (type, point, owner, argument, direction, flags, time, quality) => {
+                this.#live(); o.assetModules.prepareConstruction(); const bits = new DataView(new ArrayBuffer(8)); bits.setFloat64(0, time, true);
+                return o.construction.request({ type, x: point[0], y: point[1], player: owner, argument, direction, flags, timeLow: bits.getUint32(0, true), timeHigh: bits.getUint32(4, true), quality });
+            },
+            standing: (parent) => {
+                this.#live(); const owner = c.pool.slot(parent)[34]; if (owner >= 9) throw new RangeError('Cast/Drop 현재 Player 범위');
+                return owner !== 0 && new DataView(o.players.buffer, o.players.byteOffset, o.players.byteLength).getUint32(owner * 180 + 0xb0, true) !== 0;
+            },
+            escape: (parent, delay, event) => { this.#live(); const escape = o.services.motion.carrier.escape; if (typeof escape !== 'function') throw new Error('Cast/Drop 실제 회피 미연결'); escape(parent, delay, event >>> 0); },
+        });
+        o.carrierDrop = new RawCarrierDrop(c.pool, c.types, o.contentFinder, o.state.carrierDropState, hooks);
+        this.prepare(); this.#receiveReady = true;
+    }
+
     // 실제 World를 닫을 때 기존 함수 값과 미완료 앞단을 함께 반납한다.
     dispose() { this.#disposed = true; }
     // 앞단 설치만 완료했으며 Cast/Drop 전체 수신은 후속이다.
     get ready() { return this.#ready; }
     // 요청 효과 표만 준비했으며 서버 수신과 전체 설치는 후속이다.
     get requestReady() { return this.#requestReady; }
+    // 요청·수신을 모두 설치했으며 실제 미션 Load는 별도다.
+    get receiveReady() { return this.#receiveReady; }
 }

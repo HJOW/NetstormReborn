@@ -55,3 +55,26 @@ test('Session 운반 투하 요청: 프로세스 체인과 현재 카메라', ()
     } finally { o.dispose(); }
     assert.throws(() => hooks.project([0, 0]), /반납/);
 });
+
+// 실제 투하를 실행하지 않고 서버 수신의 인자 폭과 현재 Player 상태를 검증한다.
+test('Session 운반 투하 전체: 서버 효과와 현재 상태', () => {
+    const o = scene(); let hooks, originalRequest;
+    try {
+        o.connectDevastation(); o.connectCarrierDrop(); hooks = o.carrierDropModules.dropHooks;
+        assert.equal(o.carrierDropModules.receiveReady, true); assert.equal(o.carrierDrop.pool, o.core.pool);
+        const queue = []; o.services.assets.queueCommand = (...args) => queue.push(args);
+        hooks.queue(0x030000b2, 0xffffffff, 0x80000000); assert.deepEqual(queue, [[0x030000b2, -1, -2147483648]]);
+        const sid = o.core.pool.allocate(2), raw = o.core.pool.allocated(sid); raw[34] = 2;
+        hooks.argument(sid, 0x12345678); assert.deepEqual([raw[12], raw[13]], [0x78, 0x56]);
+        const players = new DataView(o.players.buffer, o.players.byteOffset, o.players.byteLength);
+        assert.equal(hooks.standing(sid), false); players.setUint32(2 * 180 + 0xb0, 1, true);
+        assert.equal(hooks.standing(sid), true); players.setUint32(2 * 180 + 0xb0, 0, true);
+        const requests = []; originalRequest = o.construction.request; o.construction.request = (value) => { requests.push(value); return true; };
+        assert.equal(hooks.place(82, [4, 5], 2, 6, 7, 8, 1.5, 9), true);
+        assert.deepEqual(requests[0], { type: 82, x: 4, y: 5, player: 2, argument: 6, direction: 7, flags: 8, timeLow: 0, timeHigh: 0x3ff80000, quality: 9 });
+        assert.throws(() => hooks.create(999, 0), /TYPE 범위/); assert.throws(() => o.receiveCarrierDrop(1, new Uint8Array(0)), /패킷 길이/);
+        assert.throws(() => hooks.activate(0, 0, new Uint8Array(0)), /부모 WORD 부족/);
+        assert.equal(o.loaded, false); assert.throws(() => o.connectCarrierDrop(), /중복/);
+    } finally { if (originalRequest) o.construction.request = originalRequest; o.dispose(); }
+    assert.throws(() => hooks.money(1), /반납/);
+});

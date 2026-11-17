@@ -964,6 +964,24 @@ export class RawCampaignSessionOwners {
         this.carrierDropModules.bindRequest();
     }
 
+    // 요청 효과 뒤 서버 수신과 실제 Cast/Drop 본체를 설치한다.
+    connectCarrierDropReceive() {
+        if (this.#disposed || !this.carrierDropModules) throw new Error('Session 운반 투하 수신 설치 전/반납');
+        this.carrierDropModules.bindReceive();
+    }
+
+    // 원문의 운반 투하 전체 설치 순서를 같은 Session에서 실행한다.
+    connectCarrierDrop() {
+        if (this.#disposed || this.carrierDrop) throw new Error('Session 운반 투하 전체 설치 전제/중복/반납 오류');
+        this.connectCarrierDropFront(); this.connectCarrierDropRequest(); this.connectCarrierDropReceive();
+    }
+
+    // 서버 요청 수신 직전에 현재 권한과 지도 상태를 준비한다.
+    receiveCarrierDrop(sender, packet) {
+        if (this.#disposed || !this.carrierDrop) throw new Error('Session 운반 투하 수신 전/반납');
+        this.prepareCarrierDrop(); this.carrierDrop.receive(sender, packet);
+    }
+
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
     drawTempleFrames(sid, frame) {
         if (this.#disposed) throw new Error('반납한 Session 신전 그림');
