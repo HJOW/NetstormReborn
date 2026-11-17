@@ -225,6 +225,13 @@ public sealed partial class RawSurfaceStorage
             return;
         }
 
+        // Outpost는 실제 두 목록 제거 뒤에만 현재 투표/부모를 선택한다.
+        if (method == 0x00455840u)
+        {
+            OutpostPreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
         // 실제 오벨리스크의 단일 jmp는 현재 공통Pre와 동일한 인자/순서를 사용한다.
         if (method == 0x0041f910u)
         {
