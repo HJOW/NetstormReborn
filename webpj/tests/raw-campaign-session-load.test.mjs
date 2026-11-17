@@ -320,3 +320,15 @@ test('CampaignSession Tutorial 1: 총 애니메이션 Process 수신', () => {
         }
     } finally { s.dispose(); }
 });
+
+// 실제 Session 분배기의 두 원격 삭제 등록을 확인하고 비대상 빈 입력만 전달한다.
+test('CampaignSession Tutorial 1: 원격 삭제 등록과 빈 수신', () => {
+    const { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        assert.equal(dispatch.registration(0x53).length, 6); assert.equal(dispatch.registration(0x62).length, 0xffff);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), Uint8Array.of(1, 0x53, 6, 0, 0, 0)), true);
+        const none = Uint8Array.of(1, 0x62, 8, 0, 255, 255, 255, 255);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), none), true);
+    } finally { s.dispose(); }
+});

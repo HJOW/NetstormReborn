@@ -24,6 +24,7 @@ import { WindAviaryProcessFields, RawWindAviaryState } from './raw-wind-aviary-s
 import { SunAviaryProcess, SunAviaryProcessFields } from './raw-sun-aviary-process.js';
 import { RainAviaryProcess, RainAviaryProcessFields } from './raw-rain-aviary-process.js';
 import { readAviaryProcessData } from './raw-aviary-process-data.js';
+import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids } from './raw-squid-remote-deletion.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -359,7 +360,7 @@ export class RawCampaignSession {
         else readAviaryProcessData(current instanceof SunAviaryProcess || current instanceof RainAviaryProcess ? current.fields.bytes : new Uint8Array(0), packet);
     }
 
-    // Carrier 등록의 동맹부터 아비어리 수신까지 확인한 앞부분을 원본 순서대로 등록한다.
+    // Carrier 등록의 동맹부터 원격 삭제 수신까지 확인한 앞부분을 원본 순서대로 등록한다.
     registerCarrierCommandPrefix(dispatch) {
         const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 Carrier 수신 등록');
         this.registerAllianceNegotiationCommands(dispatch);
@@ -399,6 +400,12 @@ export class RawCampaignSession {
             dispatch.observe(type, null); dispatch.version(type, 1, 0); dispatch.requireLength(type, 0xffff);
             dispatch.register(type, (_sender, _connection, packet) => this.#receiveAviaryPacket(type, packet));
         }
+        // 원격 삭제는 현재 Pool과 World의 실제 flags 0 삭제를 사용한다.
+        dispatch.observe(0x53, () => {}); dispatch.version(0x53, 1, 0); dispatch.requireLength(0x53, 6);
+        dispatch.register(0x53, (_sender, _connection, packet) => { this.#live(); receiveRemoteDeletedSquid(o.core.pool, packet, (sid, flags) => o.world.destroy(sid, flags)); });
+        dispatch.observePacket(0x62, (packet, sending) => observeRemoteDeletedSquids(packet, sending, (expression, file, line) => o.world.storage.assertDisplay(expression, file, line)));
+        dispatch.version(0x62, 1, 0); dispatch.requireLength(0x62, 0xffff);
+        dispatch.register(0x62, (_sender, _connection, packet) => { this.#live(); receiveRemoteDeletedSquids(o.core.pool, packet, (sid, flags) => o.world.destroy(sid, flags)); });
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }

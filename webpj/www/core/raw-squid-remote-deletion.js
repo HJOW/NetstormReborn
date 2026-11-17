@@ -1,0 +1,43 @@
+// PATCH 53h/62h 원격 삭제와 62h 송신 관찰기이다(cpppj RawSquidMutationReceive.cpp).
+// 사용: receiveRemoteDeletedSquid(pool, packet, destroy) 또는 receiveRemoteDeletedSquids(pool, packet, destroy), observeRemoteDeletedSquids(packet, sending, assertion).
+
+// 선택한 효과만 호출 시점에 요구한다.
+function need(effect) { if (typeof effect !== 'function') throw new Error('객체 변경 수신의 선택된 실제 장치 미연결'); return effect; }
+// 현재 패킷의 해당 WORD만 물리 폭을 확인해 읽는다.
+function word(packet, at) {
+    if (!(packet instanceof Uint8Array) || at < 0 || at + 2 > packet.length) throw new RangeError('원격 삭제의 현재 WORD 물리 부족');
+    return packet[at] | (packet[at + 1] << 8);
+}
+// 현재 count DWORD를 다시 읽어 callback이 바꾼 다음 반복 상한을 보존한다.
+function count(packet) {
+    if (!(packet instanceof Uint8Array) || packet.length < 8) throw new RangeError('원격 다중 삭제의 현재 count DWORD 물리 부족');
+    return new DataView(packet.buffer, packet.byteOffset, packet.byteLength).getInt32(4, true);
+}
+// 세 경로가 같은 PATCH Pool을 사용한다.
+function requirePool(pool) { if (pool?.edition !== 'patch1078') throw new TypeError('원격 삭제의 PATCH 판본 불일치'); }
+
+// 53h는 SID 0과 물리 상한 밖만 건너뛰고, 현재 슬롯이 free가 아니면 flags 0으로 삭제한다.
+export function receiveRemoteDeletedSquid(pool, packet, destroy) {
+    requirePool(pool); const sid = word(packet, 4);
+    if (!sid || sid >= pool.capacity) return;
+    if (!(pool.slot(sid)[11] & 1)) need(destroy)(sid, 0);
+}
+
+// 62h는 전체를 선검사하지 않고 각 현재 SID와 호출 뒤의 현재 count를 원본 순서로 읽는다.
+export function receiveRemoteDeletedSquids(pool, packet, destroy) {
+    requirePool(pool); let limit = count(packet); if (limit <= 0) return;
+    let index = 0;
+    // 앞선 실제 삭제를 유지하며 각 WORD만 소비 위치에서 읽는다.
+    do {
+        const sid = word(packet, 8 + index * 2);
+        if (!(pool.slot(sid)[11] & 1)) need(destroy)(sid, 0);
+        limit = count(packet); index += 1;
+    } while (index < limit);
+}
+
+// 송신 관찰기는 count -1만 진단하고 진단 복귀 뒤 현재 하위 WORD로 길이를 쓴다.
+export function observeRemoteDeletedSquids(packet, sending, assertion) {
+    if (!sending) return;
+    if (count(packet) === -1) need(assertion)('count != (int)-1', '\\Ns\\O\\_p_packets.cpp', 0x9ac);
+    const length = ((word(packet, 4) + 4) * 2) & 0xffff; packet[2] = length & 0xff; packet[3] = length >>> 8;
+}
