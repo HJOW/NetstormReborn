@@ -19,7 +19,11 @@ import { DaisProcess, readDaisProcessData } from './raw-dais-process-data.js';
 import { receiveSessionSquid } from './raw-campaign-session-squid.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
-import { findAttachedProcess } from './raw-wind-aviary-process.js';
+import { findAttachedProcess, WindAviaryProcess } from './raw-wind-aviary-process.js';
+import { WindAviaryProcessFields, RawWindAviaryState } from './raw-wind-aviary-state.js';
+import { SunAviaryProcess, SunAviaryProcessFields } from './raw-sun-aviary-process.js';
+import { RainAviaryProcess, RainAviaryProcessFields } from './raw-rain-aviary-process.js';
+import { readAviaryProcessData } from './raw-aviary-process-data.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -325,7 +329,37 @@ export class RawCampaignSession {
         if (!o.flyer) throw new Error('86h 명령의 현재 Flyer 기한 본체 미연결'); o.flyer.command(current.fields, command);
     }
 
-    // Carrier 등록의 동맹부터 총 애니메이션 수신까지 확인한 앞부분을 원본 순서대로 등록한다.
+    // 아비어리 데이터는 새 Form만 부착하고 기존 Form은 현재 PID의 필드만 갱신한다.
+    #receiveAviaryPacket(message, packet) {
+        const o = this.#live(), c = o.core;
+        if (![0x38, 0x73, 0x74].includes(message)) throw new RangeError('미지원 아비어리 수신 종류');
+        if (packet.length < 9) throw new RangeError('아비어리 수신의 실제9BYTE 머리 부족');
+        const number = new DataView(packet.buffer, packet.byteOffset, packet.byteLength).getUint32(4, true);
+        if (!number || number > 65535 || number >= c.pool.capacity) throw new RangeError('아비어리 수신의 명시 Form SID 물리 범위');
+        const file = message === 0x38 ? 'c:\\ns\\o\\_p_sunaviaryprocessdata.cpp' : message === 0x73 ? 'c:\\ns\\o\\_p_rainaviaryprocessdata.cpp' : 'c:\\ns\\o\\_p_windaviaryprocessdata.cpp';
+        const assertion = (expression, line) => o.world.storage.assertDisplay(expression, file, line);
+        const parentSid = (value) => { if (value > 65535 || value >= c.pool.capacity) throw new RangeError('아비어리 수신의 DWORD 부모 SID 물리 범위'); return value; };
+        if (c.pool.slot(number)[11] & 1) {
+            if (packet[8] !== 0xff) assertion('*(( char *)((char *)zacket+8) ) == (char)0xFFFFFFFF', message === 0x74 ? 0x4e : 0x3c);
+            const logic = message === 0x38 ? o.sunAviary : message === 0x73 ? o.rainAviary : o.windAviary;
+            if (!logic) throw new Error('아비어리의 실제 생성 본체 미연결');
+            const fields = message === 0x38 ? new SunAviaryProcessFields() : message === 0x73 ? new RainAviaryProcessFields() : new WindAviaryProcessFields();
+            const pending = message === 0x38 ? new SunAviaryProcess(logic, fields) : message === 0x73 ? new RainAviaryProcess(logic, fields) : new WindAviaryProcess(logic, fields);
+            try {
+                if (message === 0x74) RawWindAviaryState.initialize(fields, c.processState.server, c.processState.now); else logic.initialize(fields);
+                const parent = message === 0x74 ? RawWindAviaryState.readProcess(fields, packet) : readAviaryProcessData(fields.bytes, packet);
+                const type = message === 0x38 ? o.sunAviaryType : message === 0x73 ? o.rainAviaryType : o.windAviaryType;
+                c.processes.attach(pending, type, parentSid(parent), 0x10, number);
+            } finally { if (!c.kernel.find(pending)) pending.destroy(); }
+            return;
+        }
+        if (packet[8] & 1) assertion('(*(char *)(( (char *)zacket+8) ) & 1) == 0', message === 0x74 ? 0x56 : 0x44);
+        const current = c.processes.fromForm(number);
+        if (message === 0x74) RawWindAviaryState.readProcess(current instanceof WindAviaryProcess ? current.fields : new Uint8Array(0), packet);
+        else readAviaryProcessData(current instanceof SunAviaryProcess || current instanceof RainAviaryProcess ? current.fields.bytes : new Uint8Array(0), packet);
+    }
+
+    // Carrier 등록의 동맹부터 아비어리 수신까지 확인한 앞부분을 원본 순서대로 등록한다.
     registerCarrierCommandPrefix(dispatch) {
         const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 Carrier 수신 등록');
         this.registerAllianceNegotiationCommands(dispatch);
@@ -359,6 +393,11 @@ export class RawCampaignSession {
         for (const type of [0x3b, 0x3c]) {
             dispatch.observe(type, null); dispatch.version(type, 1, 0); dispatch.requireLength(type, 0xffff);
             dispatch.register(type, (_sender, _connection, packet) => { this.#live(); if (!o.combat) throw new Error('애니메이션 수신의 실제 전투 본체 미연결'); o.combat.receiveAnimationPacket(type, packet); });
+        }
+        // 세 아비어리 데이터도 각각 같은 현재 Session의 Host에 전달한다.
+        for (const type of [0x38, 0x73, 0x74]) {
+            dispatch.observe(type, null); dispatch.version(type, 1, 0); dispatch.requireLength(type, 0xffff);
+            dispatch.register(type, (_sender, _connection, packet) => this.#receiveAviaryPacket(type, packet));
         }
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
