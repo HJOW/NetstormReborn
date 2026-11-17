@@ -25,6 +25,7 @@ import { RawAiDropScan } from './raw-ai-drop-scan.js';
 import { RawAiDropSelection, AI_DROP_SELECTION_LOG } from './raw-ai-drop-selection.js';
 import { RawAiDryGeometry } from './raw-ai-dry-geometry.js';
 import { RawAiFakeDrySpots, AI_FAKE_DRY_LOG } from './raw-ai-fake-dry-spots.js';
+import { RawAiDropActions, AI_DROP_ACTION_LOG } from './raw-ai-drop-actions.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -65,6 +66,8 @@ export class RawCampaignSessionMotionRuntime {
     aiDryGeometryHooks = null;
     // 가짜 부족 좌표 갱신이 빌리는 평가·목록·표식 효과다.
     aiFakeDryHooks = null;
+    // 실제 AI 배치 행동이 빌리는 선택·생산·검사 효과다.
+    aiDropActionHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -386,6 +389,43 @@ export class RawCampaignSessionMotionRuntime {
         };
         o.aiFakeDrySpots = new RawAiFakeDrySpots(o.aiMemory, c.pool, globals, hooks);
         this.aiFakeDryHooks = hooks;
+    }
+    // 선택과 부족 좌표 준비 뒤 같은 생산·후보 목록으로 배치 행동을 구성한다.
+    bindAiDropActions() {
+        this.#live(); const o = this.#owner, c = o.core, s = o.state;
+        if (!this.aiFakeDryHooks || this.aiDropActionHooks || o.aiDropActions) throw new Error('Session AI 배치 행동 설치 순서 오류');
+        const globals = { now: () => c.processState.now, mapLimit: () => o.cursorManaGlobals.mapLimit, checking: () => s.gunState.checking };
+        const hooks = {
+            product: (token, type) => { this.#live(); return o.aiStrategySetup.findProduct(token, type); },
+            select: (token) => { this.#live(); o.aiDropSelection.select(token); },
+            scan: (token, type, direction) => { this.#live(); return o.aiDropScan.scan(token, type, direction); },
+            canAfford: (token, type) => { this.#live(); return o.aiDeployment.canAfford(token, type); },
+            mayPlace: (query) => { this.#live(); o.assetModules.prepareConstruction(); return o.constructionModules.mayPlace(query); },
+            deploy: (token, type, point, argument, direction) => { this.#live(); o.aiCollectors.deployWithNotice(token, type, point.x, point.y, argument, direction); },
+            fake: (token) => { this.#live(); o.aiFakeDrySpots.extend(token); },
+            seed: (token) => { this.#live(); o.aiDrySpots.seed(token, o.random); },
+            remove: (token, index) => { this.#live(); o.aiDropScan.remove(token, index); },
+            assertion: (text, line) => { this.#live(); if (!o.services.ai.assertion) throw new Error(`AI 배치 행동 원본 진단 미연결 ${line}`); o.services.ai.assertion(text); },
+            log: (token, notice) => {
+                this.#live(); if (!o.services.player.log) throw new Error('AI 배치 행동 실제 로그 미연결');
+                const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+                const name = c.types[notice.type]?.name, point = `(${notice.x},${notice.y})`;
+                let message;
+                switch (notice.action) {
+                case AI_DROP_ACTION_LOG.lostAbility: message = `Lost ability to build ${name}\n`; break;
+                case AI_DROP_ACTION_LOG.scanComplete: message = `Drop Scan Complete ${name} Rot=${notice.direction}.\n`; break;
+                case AI_DROP_ACTION_LOG.partialScan: message = 'Building with scan only partly done.\n'; break;
+                case AI_DROP_ACTION_LOG.cannotAfford: message = `Can't afford ${name}\n`; break;
+                case AI_DROP_ACTION_LOG.badChoice: message = `Bad choice ${name} at ${point}\n`; break;
+                case AI_DROP_ACTION_LOG.laying: message = `Laying ${name} at ${point}\n`; break;
+                case AI_DROP_ACTION_LOG.target: message = `My target is the ${notice.type}/${name} at ${point}\n`; break;
+                default: throw new RangeError('AI 배치 행동 로그 종류');
+                }
+                o.services.player.log(o.gameplayGlobals.aiDebug().read(0x52f3d4), `AI${view.getInt32(0x260, true)}: ${message}\n`);
+            },
+        };
+        o.aiDropActions = new RawAiDropActions(o.aiMemory, c.pool, c.types, o.random, globals, hooks);
+        this.aiDropActionHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

@@ -379,6 +379,21 @@ test('AI 부족 좌표 갱신: 선행 관문과 빈 본체', () => {
     } finally { if (token) o.aiMemory.free(token); o.dispose(); }
 });
 
+// 배치 행동은 선행 갱신기와 같은 Pool·생산 가능 판정을 사용한다.
+test('AI 배치 행동: 선행 관문과 현재 생산 비용', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    let token = 0;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget(); o.connectAiDropTargets(); o.connectAiDropEvaluation(); o.connectAiDropScan(); o.connectAiDropSelection(); o.connectAiDryGeometry();
+        assert.throws(() => o.connectAiDropActions(), /순서/);
+        o.connectAiFakeDrySpots(); o.connectAiDropActions();
+        assert.equal(o.aiDropActions.pool, o.core.pool);
+        token = o.aiMemory.allocate(0xb08);
+        assert.equal(o.motionRuntimeModules.aiDropActionHooks.canAfford(token, 80), o.aiDeployment.canAfford(token, 80));
+        assert.throws(() => o.connectAiDropActions(), /순서/); assert.equal(o.loaded, false);
+    } finally { if (token) o.aiMemory.free(token); o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

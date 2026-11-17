@@ -211,6 +211,8 @@ export class RawCampaignSessionOwners {
     aiDryGeometry = null; aiDryMarkerType = 104;
     // 현재 AI의 가짜 부족 좌표를 갱신하는 처리기다.
     aiFakeDrySpots = null;
+    // 선택한 실제 후보를 생산하는 AI 배치 행동 처리기다.
+    aiDropActions = null;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -782,6 +784,12 @@ export class RawCampaignSessionOwners {
     connectAiFakeDrySpots() {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 부족 좌표 갱신 설치 전/반납');
         this.motionRuntimeModules.bindAiFakeDrySpots();
+    }
+
+    // 부족 좌표 갱신 뒤 현재 생산·후보를 사용하는 배치 행동을 설치한다.
+    connectAiDropActions() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 배치 행동 설치 전/반납');
+        this.motionRuntimeModules.bindAiDropActions();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
