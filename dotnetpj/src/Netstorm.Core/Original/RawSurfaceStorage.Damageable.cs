@@ -3,6 +3,7 @@
 // 0.576에서 추가됐다. (R4-1 잔여 중 개별 삭제 몸체 Damageable 우선)
 // 0.578에서 전처리·해방·폭탄 본체를 이었다.
 // 0.579에서 운반체·비행체 전처리 본체를 이었다.
+// 0.583에서 간헐천 고유 수명 본체를 이었다.
 namespace Netstorm.Core.Original;
 
 /// <summary>첫 실제 모듈 전 현재 finder/허용 genus owner와 현재 장치를 연결하는 묶음이다.</summary>
@@ -314,6 +315,46 @@ public sealed partial class RawSurfaceStorage
         }
 
         return _flyerPre;
+    }
+
+    /// <summary>같은 지면 목록/기본 프레임/현재 편집 모드를 사용하는 실제 간헐천 고유 수명이다. 0.583에서 추가됐다.</summary>
+    private RawGeyserLifetime? _geyserLifetime;
+
+    /// <summary>같은 지면 목록/기본 프레임/현재 편집 모드를 사용하는 실제 간헐천 고유 수명이다. 0.583에서 추가됐다.</summary>
+    public RawGeyserLifetime GeyserLifetime()
+    {
+        // 실제 editor/finder owner 결합 뒤에만 구성한다.
+        DamageablePreDestroyState state = DamageablePreGlobals();
+        if (_geyserLifetime is null)
+        {
+            var hooks = new GeyserLifetimeHooks
+            {
+                DefaultFrame = sid =>
+                {
+                    uint number = Pool.Slot(sid)[10];
+                    if (number >= Types.Count)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(sid), "Native 간헐천 현재 기본 프레임 TYPE 범위");
+                    }
+
+                    return unchecked((uint)Types[(int)number].DefaultFrame);
+                },
+                Update = sid => DisplayExecutor().Update(Pool.Slot(sid)),
+                RegisterAi = (sid, operation) => (_resourceDevices.GeyserRegistration ?? throw new InvalidOperationException("장기 간헐천의 실제 Player 등록 미연결"))(sid, operation),
+                DamageablePre = (sid, flags) => DamageablePre().PreDestroy(sid, flags),
+                DamageablePost = (sid, flags) => DamageablePost().PostDestroy(sid, flags),
+                DropIsland = (x, y, flags, owner) => (_damageableDevices.DropIsland ?? throw new InvalidOperationException("장기 간헐천의 실제 받침 정리 미연결"))(x, y, flags, owner),
+            };
+            var body = new RawGeyserLifetime(
+                Pool,
+                SidLists.Geysers,
+                _rewardDevices.Editor ?? throw new InvalidOperationException("장기 간헐천의 실제 editor owner 미연결"),
+                hooks);
+            body.EnableNativeBody();
+            _geyserLifetime = body;
+        }
+
+        return _geyserLifetime;
     }
 
     /// <summary>일반 거주 구역의 장기 50칸 목록을 압축한 뒤 공통 Post를 실행한다. 0.580에서 추가됐다.</summary>

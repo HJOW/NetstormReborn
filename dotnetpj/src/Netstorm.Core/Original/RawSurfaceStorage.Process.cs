@@ -232,6 +232,20 @@ public sealed partial class RawSurfaceStorage
             return;
         }
 
+        // 실제 간헐천 고유 수명 접두는 같은 장기 본체를 공유한다.
+        if (method == 0x00485580u)
+        {
+            GeyserLifetime().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 간헐천 고유 수명 후미는 같은 장기 본체를 공유한다.
+        if (method == 0x00485540u)
+        {
+            GeyserLifetime().PostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
         // 실제 오벨리스크의 단일 jmp는 현재 공통Pre와 동일한 인자/순서를 사용한다.
         if (method == 0x0041f910u)
         {

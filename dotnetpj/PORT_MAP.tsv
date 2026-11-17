@@ -993,3 +993,6 @@ cpppj/src/client/RawSurfacePriestDeletion.cpp	Netstorm.Core/Original/RawSurfaceS
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Priest.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawOutpostLifecycle.cpp	Netstorm.Core/Original/RawSurfaceStorage.Outpost.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Outpost.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawGeyserLifetime.h	Netstorm.Core/Original/RawGeyserLifetime.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawGeyserLifetime.cpp	Netstorm.Core/Original/RawGeyserLifetime.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/RawSurfaceDamageable.cpp	Netstorm.Core/Original/RawSurfaceStorage.Damageable.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
