@@ -25,8 +25,11 @@ public sealed class BridgeConnectState
     /// <summary>섬 아래 종유석 타입 번호다. 2026-11-07 R4 지형·섬 생성 2차 이식에서 추가됐다.</summary>
     public uint StalagType { get; set; }
 
-    /// <summary>섬 받침 위의 표면 칸 타입 번호다. 2026-11-07 R4 지형·섬 생성 2차 이식에서 추가됐다.</summary>
-    public uint NoIslandType { get; set; }
+    /// <summary>섬 받침 위의 표면 칸 타입 번호다. 2026-11-07 R4 지형·섬 생성 2차 이식에서 추가됐다. 0.575에서 상자 공유로 바꿨다.</summary>
+    public uint NoIslandType { get => NoIslandTypeBox.Value; set => NoIslandTypeBox.Value = value; }
+
+    /// <summary>같은 noIsland 타입 DWORD를 빌리는 공유 owner다. 0.575에서 추가됐다.</summary>
+    public UIntBox NoIslandTypeBox { get; } = new() { Value = 157u };
 
     /// <summary>단어 쓰기가 표면 알림을 부르는 다리 타입 번호다. 2026-11-07 R4 지형·섬 생성 2차 이식에서 추가됐다.</summary>
     public uint BridgeType { get; set; }

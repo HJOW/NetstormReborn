@@ -252,6 +252,7 @@ public sealed partial class RawGameAuxState
     /// <summary>005410d0의현재24이며 Dude 이동/정기/통지가 같은 장기 주소를 빌린다.</summary>
     public UIntBox DudePathTypeBox { get; } = new() { Value = 24u };
 
+
     /// <summary>005412e8의 현재 제단 TYPE이며 보상/HP가 같은 주소에서 읽는다. 0.571에서 추가됐다.</summary>
     public UIntBox AltarTypeBox { get; } = new() { Value = 164u };
 

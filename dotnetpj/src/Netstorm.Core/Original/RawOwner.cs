@@ -5,11 +5,17 @@ namespace Netstorm.Core.Original;
 /// </summary>
 public sealed class SquidOwnerMode
 {
-    /// <summary>현재(편집) 모드. 켜져 있으면 작업장 목록을 고친다.</summary>
-    public bool Fort { get; set; }
+    /// <summary>현재(편집) 모드. 켜져 있으면 작업장 목록을 고친다. 0.575에서 상자 공유로 바꿨다.</summary>
+    public bool Fort { get => FortBox.Value; set => FortBox.Value = value; }
 
-    /// <summary>전투 모드. 편집 모드와 같이 켜져 있어야 작업장 목록을 고친다.</summary>
-    public bool Battle { get; set; }
+    /// <summary>같은 fort 모드 bool을 빌리는 공유 owner다. 0.575에서 추가됐다.</summary>
+    public BoolBox FortBox { get; } = new();
+
+    /// <summary>전투 모드. 편집 모드와 같이 켜져 있어야 작업장 목록을 고친다. 0.575에서 상자 공유로 바꿨다.</summary>
+    public bool Battle { get => BattleBox.Value; set => BattleBox.Value = value; }
+
+    /// <summary>같은 전투 모드 bool을 빌리는 공유 owner다. 0.575에서 추가됐다.</summary>
+    public BoolBox BattleBox { get; } = new();
 
     /// <summary>도전 모드. 켜지면 유효 소유자 번호가 1~39로 바뀐다(원본 CL_NUM_CHAL_PLAYERS).</summary>
     public bool Challenge { get => ChallengeStorage.Value; set => ChallengeStorage.Value = value; }

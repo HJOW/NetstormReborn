@@ -135,7 +135,7 @@ public sealed class RawSurfaceAssetDeletionTests
         Assert.Contains("효과 종류 오류", error.Message);
     }
 
-    /// <summary>미연결 몸체는 원문 진입점 주소를 함께 실패한다.</summary>
+    /// <summary>미연결 몸체는 원문 진입점 주소를 함께 실패한다. 0.575에서 공통 전/후는 장기 본체로 분배한다.</summary>
     [Fact]
     public void UnconnectedBodiesCarryNativeAddresses()
     {
@@ -147,13 +147,10 @@ public sealed class RawSurfaceAssetDeletionTests
             ClearSelection = () => { },
         });
         var hooks = storage.DefaultProcessAssetHooks();
-        // 공통 전처리는 다음 단위의 몸체 연결까지 주소로 실패한다.
+        // 공통 전/후는 장치 없이는 장기 본체 진입에서 실패한다.
         int common = AssetWithVtable(storage, 0x00501dd0u);
         var pre = Assert.Throws<InvalidOperationException>(() => hooks.Emit!(new Netstorm.Core.Original.SquidDestroyEvent(Netstorm.Core.Original.SquidDestroyEffect.PreDestroy, common, 0, 0)));
-        Assert.Contains("004B0950", pre.Message);
-        // 공통 후처리도 같은 표의 다른 주소를 읽는다.
-        var post = Assert.Throws<InvalidOperationException>(() => hooks.Emit!(new Netstorm.Core.Original.SquidDestroyEvent(Netstorm.Core.Original.SquidDestroyEffect.PostDestroy, common, 0, 0)));
-        Assert.Contains("004B0840", post.Message);
+        Assert.Contains("실제 Client 장치 미연결", pre.Message);
         // 새장 통지는 부모 삭제 분기에서 주소로 실패한다.
         int aviary = AssetWithVtable(storage, 0x00509930u);
         var notice = Assert.Throws<InvalidOperationException>(() => storage.NotifyAssetDependency(aviary, common, 0));

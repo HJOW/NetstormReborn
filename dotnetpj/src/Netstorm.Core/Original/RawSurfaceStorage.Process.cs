@@ -191,6 +191,19 @@ public sealed partial class RawSurfaceStorage
         }
 
         uint method = pre ? entry.Pre : entry.Post;
+        // 공통 삭제 몸체는 장기 본체를 공유한다. 나머지는 다음 단위에서 잇는다.
+        if (method == 0x004b0950u)
+        {
+            CommonDeletion().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        if (method == 0x004b0840u)
+        {
+            CommonDeletion().PostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
         throw new InvalidOperationException($"장기 자산의 전용 삭제 몸체 미연결: 0x{method:X8}");
     }
 
