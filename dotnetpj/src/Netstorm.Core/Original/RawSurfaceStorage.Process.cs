@@ -181,6 +181,13 @@ public sealed partial class RawSurfaceStorage
                 return;
             }
 
+            // 실제 가상34의 세 홈 통지는 같은 장기 물리 저장소와 현재 Host에 연결한다.
+            if (entry.Notice == 0x0045b4a0u || entry.Notice == 0x0045b5b0u || entry.Notice == 0x0045b680u)
+            {
+                NotifyAviaryHome(@event.Sid, entry.Notice);
+                return;
+            }
+
             throw new InvalidOperationException($"장기 자산의 전용 부모 삭제 통지 미연결: 0x{entry.Notice:X8}");
         }
 
@@ -257,6 +264,34 @@ public sealed partial class RawSurfaceStorage
         if (method == 0x00457990u)
         {
             FenceLifetime().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 제단의 현재 다이스/추상 룬 정리 뒤 실제 부모다. 본체 이식 전까지 호스트 장치에 잇는다. 0.593에서 추가됐다.
+        if (method == 0x0044a4d0u)
+        {
+            DaisAltarPre(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 다이스의 현재 제단/604/참여 상태와 실제 부모다. 본체 이식 전까지 호스트 장치에 잇는다. 0.593에서 추가됐다.
+        if (method == 0x0044afd0u)
+        {
+            DaisPreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 Player SID 두 쌍을 정리한 뒤 전체 Damageable이다. 본체 이식 전까지 호스트 장치에 잇는다. 0.593에서 추가됐다.
+        if (method == 0x00449580u)
+        {
+            DaisPostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 공통 Pre 앞뒤에 실제 현재 Player SID/flags를 다시 읽고 쓴다. 본체 이식 전까지 호스트 장치에 잇는다. 0.593에서 추가됐다.
+        if (method == 0x004906c0u)
+        {
+            PlayerPreDestroy(@event.Sid, @event.Flags);
             return;
         }
 

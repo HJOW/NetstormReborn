@@ -10,6 +10,27 @@ public readonly record struct NativeAssetDeletionEntry(uint Table, uint Pre, uin
 /// <summary>World 없이 같은 장기 Pool/전역으로 자산 삭제 효과를 분배한다.</summary>
 public sealed partial class RawSurfaceStorage
 {
+    /// <summary>장기 다이스·제단 고유 삭제의 실제 호스트 장치 묶음이다. 0.593에서 추가됐다.</summary>
+    public sealed class RawSurfaceDaisLifecycle
+    {
+        /// <summary>0x0044a4d0 제단 전처리다. 다이스 가상 삭제와 추상 룬 정리는 본체가 맡는다. 0.593에서 추가됐다.</summary>
+        public Action<int, uint>? AltarPre { get; set; }
+
+        /// <summary>0x0044afd0 다이스 전처리다. 제단 완료와 사제 중지는 본체가 맡는다. 0.593에서 추가됐다.</summary>
+        public Action<int, uint>? DaisPre { get; set; }
+
+        /// <summary>0x00449580 다이스 후처리다. Player SID 쌍 정리는 본체가 맡는다. 0.593에서 추가됐다.</summary>
+        public Action<int, uint>? DaisPost { get; set; }
+
+        /// <summary>원문 함수 묶음처럼 값만 복사하며 장치를 실행하지 않는다. 0.593에서 추가됐다.</summary>
+        internal RawSurfaceDaisLifecycle Copy() => new()
+        {
+            AltarPre = AltarPre,
+            DaisPre = DaisPre,
+            DaisPost = DaisPost,
+        };
+    }
+
     /// <summary>보호 PE에서 읽은 83개 생성자 VT의 고정 라우팅표다. 주소는 가상 선택용 정수이며 호스트 함수로 실행하지 않는다. 0.573에서 추가됐다.</summary>
     private static readonly NativeAssetDeletionEntry[] NativeAssetDeletionEntries =
     [
@@ -104,8 +125,17 @@ public sealed partial class RawSurfaceStorage
     /// <summary>장기 신전의 실제 삭제 전처리를 선택하는 장치다. 0.573에서 추가됐다.</summary>
     private Action<int, uint>? _vortexPre;
 
-    /// <summary>Outpost가 두 목록 제거 뒤 선택하는 실제 영역 갱신 장치다. 0.573에서 추가됐다.</summary>
+    /// <summary>장기 Outpost가 두 목록 제거 뒤 선택하는 실제 영역 갱신 장치다. 0.573에서 추가됐다.</summary>
     private Action<float, float>? _regionChanged;
+
+    /// <summary>장기 다이스·제단 고유 삭제의 실제 호스트 장치다. 본체 이식 전까지 HostSession이 공급한다. 0.593에서 추가됐다.</summary>
+    private RawSurfaceDaisLifecycle _daisDevices = new();
+
+    /// <summary>장기 Player 고유 전처리의 실제 호스트 장치다. 본체 이식 전까지 HostSession이 공급한다. 0.593에서 추가됐다.</summary>
+    private Action<int, uint>? _playerPre;
+
+    /// <summary>장기 비행장 홈 통지의 실제 호스트 장치다. 본체 이식 전까지 HostSession이 공급한다. 0.593에서 추가됐다.</summary>
+    private Action<int, uint>? _aviaryHome;
 
     /// <summary>최초 메뉴에서 약한 실제 장치만 연결하고 이미 선택된 함수의 수명은 각 호출이 보유한다. 0.573에서 추가됐다.</summary>
     /// <param name="vortexOwner">장기 신전의 실제 가상 소유자 장치다.</param>
@@ -126,6 +156,80 @@ public sealed partial class RawSurfaceStorage
         _vortexPre = vortexPre;
         _regionChanged = regionChanged;
     }
+
+    /// <summary>첫 다이스·제단 고유 삭제 전에 실제 호스트 장치 묶음만 연결한다. 0.593에서 추가됐다.</summary>
+    /// <param name="devices">설치할 실제 장기 다이스·제단 호스트 장치 묶음이다.</param>
+    public void BindDaisLifecycle(RawSurfaceDaisLifecycle devices)
+    {
+        ArgumentNullException.ThrowIfNull(devices);
+        // Native 전송 뒤, 첫 대여 전에만 실제 호스트 장치를 보관한다.
+        if (!UsesNativeTransmissionDevices() || _borrowed
+            || _daisDevices.AltarPre is not null || _daisDevices.DaisPre is not null || _daisDevices.DaisPost is not null
+            || devices.AltarPre is null || devices.DaisPre is null || devices.DaisPost is null)
+        {
+            throw new ArgumentException("장기 다이스·제단의 실제 최초 호스트 장치 중복/누락", nameof(devices));
+        }
+
+        _daisDevices = devices.Copy();
+    }
+
+    /// <summary>첫 Player 고유 전처리 전에 실제 호스트 장치만 연결한다. 0.593에서 추가됐다.</summary>
+    /// <param name="playerPre">설치할 실제 장기 Player 전처리 장치다.</param>
+    public void BindPlayerPre(Action<int, uint> playerPre)
+    {
+        ArgumentNullException.ThrowIfNull(playerPre);
+        // Native 전송 뒤, 첫 대여 전에만 실제 호스트 장치를 보관한다.
+        if (!UsesNativeTransmissionDevices() || _borrowed || _playerPre is not null)
+        {
+            throw new ArgumentException("장기 Player 전처리의 실제 최초 호스트 장치 중복/누락", nameof(playerPre));
+        }
+
+        _playerPre = playerPre;
+    }
+
+    /// <summary>첫 비행장 홈 통지 전에 실제 호스트 장치만 연결한다. 0.593에서 추가됐다.</summary>
+    /// <param name="aviaryHome">설치할 실제 장기 비행장 홈 통지 장치다. 통지 주소를 함께 받는다.</param>
+    public void BindAviaryHome(Action<int, uint> aviaryHome)
+    {
+        ArgumentNullException.ThrowIfNull(aviaryHome);
+        // Native 전송 뒤, 첫 대여 전에만 실제 호스트 장치를 보관한다.
+        if (!UsesNativeTransmissionDevices() || _borrowed || _aviaryHome is not null)
+        {
+            throw new ArgumentException("장기 비행장 홈 통지의 실제 최초 호스트 장치 중복/누락", nameof(aviaryHome));
+        }
+
+        _aviaryHome = aviaryHome;
+    }
+
+    /// <summary>0x0044a4d0 제단 전처리를 실제 호스트 장치에 분배한다. 본체 이식 뒤에는 RawDaisDeletion에 잇는다. 0.593에서 추가됐다.</summary>
+    /// <param name="sid">전처리할 슬롯 번호.</param>
+    /// <param name="flags">전처리 플래그.</param>
+    public void DaisAltarPre(int sid, uint flags) =>
+        (_daisDevices.AltarPre ?? throw new InvalidOperationException("장기 다이스·제단의 실제 제단 전처리 미결합: 0x0044A4D0"))(sid, flags);
+
+    /// <summary>0x0044afd0 다이스 전처리를 실제 호스트 장치에 분배한다. 본체 이식 뒤에는 RawDaisDeletion에 잇는다. 0.593에서 추가됐다.</summary>
+    /// <param name="sid">전처리할 슬롯 번호.</param>
+    /// <param name="flags">전처리 플래그.</param>
+    public void DaisPreDestroy(int sid, uint flags) =>
+        (_daisDevices.DaisPre ?? throw new InvalidOperationException("장기 다이스·제단의 실제 다이스 전처리 미결합: 0x0044AFD0"))(sid, flags);
+
+    /// <summary>0x00449580 다이스 후처리를 실제 호스트 장치에 분배한다. 본체 이식 뒤에는 RawDaisDeletion에 잇는다. 0.593에서 추가됐다.</summary>
+    /// <param name="sid">후처리할 슬롯 번호.</param>
+    /// <param name="flags">후처리 플래그.</param>
+    public void DaisPostDestroy(int sid, uint flags) =>
+        (_daisDevices.DaisPost ?? throw new InvalidOperationException("장기 다이스·제단의 실제 다이스 후처리 미결합: 0x00449580"))(sid, flags);
+
+    /// <summary>0x004906c0 Player 전처리를 실제 호스트 장치에 분배한다. 본체 이식 뒤에는 RawPlayerWorld에 잇는다. 0.593에서 추가됐다.</summary>
+    /// <param name="sid">전처리할 슬롯 번호.</param>
+    /// <param name="flags">전처리 플래그.</param>
+    public void PlayerPreDestroy(int sid, uint flags) =>
+        (_playerPre ?? throw new InvalidOperationException("장기 Player 전처리의 실제 호스트 장치 미결합: 0x004906C0"))(sid, flags);
+
+    /// <summary>실제 가상34의 세 홈 통지를 실제 호스트 장치에 분배한다. 본체 이식 뒤에는 NotifyAviaryHome에 잇는다. 0.593에서 추가됐다.</summary>
+    /// <param name="home">홈 자산 번호.</param>
+    /// <param name="method">가상34 통지 주소(0x0045b4a0·0x0045b5b0·0x0045b680).</param>
+    public void NotifyAviaryHome(int home, uint method) =>
+        (_aviaryHome ?? throw new InvalidOperationException($"장기 비행장 홈 통지의 실제 호스트 장치 미결합: 0x{method:X8}"))(home, method);
 
     /// <summary>현재 83자산의 통지만 소비하며 다른 Form은 기존 실제 Host 분배로 남긴다. 0.573에서 추가됐다.</summary>
     /// <param name="receiver">통지를 받는 자산 번호다.</param>
