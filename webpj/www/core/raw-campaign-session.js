@@ -18,6 +18,8 @@ import { observePathData } from './raw-path-data.js';
 import { DaisProcess, readDaisProcessData } from './raw-dais-process-data.js';
 import { receiveSessionSquid } from './raw-campaign-session-squid.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
+import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
+import { findAttachedProcess } from './raw-wind-aviary-process.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -279,7 +281,51 @@ export class RawCampaignSession {
         o.assetBindings.prepareFrame(c.processState.now); o.assetBindings.gun.readData(current.fields, packet, { value: 0 });
     }
 
-    // Carrier 등록의 동맹·개발자·설정·위치·카메라·섬 정리·경로·Dais 앞부분만 원본 순서대로 등록한다.
+    // 39h는 임시 객체로 부모 테마를 선택한 뒤 같은 Host의 명시 Form에 실제 객체를 부착한다.
+    #receiveFlyerPacket(packet) {
+        const o = this.#live(), c = o.core;
+        if (packet.length < 9) throw new RangeError('비행 수신의 실제9BYTE 머리 부족');
+        const number = new DataView(packet.buffer, packet.byteOffset, packet.byteLength).getUint32(4, true);
+        if (!number || number > 65535 || number >= c.pool.capacity) throw new RangeError('비행 수신의 명시 Form SID 물리 범위');
+        const assertion = (expression, line) => o.world.storage.assertDisplay(expression, 'c:\\ns\\o\\_p_baseflyerprocessdata.cpp', line);
+        const parentSid = (value) => { if (value > 65535 || value >= c.pool.capacity) throw new RangeError('비행 수신의 DWORD 부모 SID 물리 범위'); return value; };
+        if (c.pool.slot(number)[11] & 1) {
+            if (packet[8] !== 0xff) assertion('*(( char *)((char *)zacket+8) ) == (char)0xFFFFFFFF', 0x60);
+            if (!o.flyer) throw new Error('비행 수신의 실제 비행 본체 미연결');
+            const probeFields = new FlyerProcessFields(); let probe = new FlyerProcess(o.flyer, probeFields), pending = null;
+            try {
+                RawFlyerProcess.initializeReceived(probeFields, 2);
+                const firstParent = parentSid(RawFlyerProcess.readData(probeFields, packet)), type = c.pool.slot(firstParent)[10];
+                if (type >= c.types.length) throw new RangeError('비행 수신의 현재 부모 TYPE 물리 범위');
+                const fields = new FlyerProcessFields(); pending = new FlyerProcess(o.flyer, fields); RawFlyerProcess.initializeReceived(fields, c.types[type].theme);
+                RawFlyerProcess.destructFields(probeFields); probe.destroy(); probe = null;
+                const parent = parentSid(RawFlyerProcess.readData(fields, packet));
+                c.processes.attach(pending, o.gameplayGlobals.gameAux().flyerProcessType, parent, 0x10, number);
+            } finally {
+                if (probe) { RawFlyerProcess.destructFields(probeFields); probe.destroy(); }
+                if (pending && !c.kernel.find(pending)) { RawFlyerProcess.destructFields(pending.fields); pending.destroy(); }
+            }
+            return;
+        }
+        if (packet[8] & 1) assertion('(*(char *)(( (char *)zacket+8) ) & 1) == 0', 0x76);
+        const current = c.processes.fromForm(number); if (!(current instanceof FlyerProcess)) throw new Error('비행 수신의 현재 PID/outer 미발견');
+        RawFlyerProcess.readData(current.fields, packet);
+    }
+
+    // 86h는 선택된 세 명령만 현재 부모의 첫 비행 Form/PID에 전달한다.
+    #receiveFlyerCommand(packet) {
+        const o = this.#live(), c = o.core, data = new DataView(packet.buffer, packet.byteOffset, packet.byteLength), command = data.getUint32(12, true);
+        const line = command === 1 ? 0xda : command === 2 ? 0xe4 : command === 3 ? 0xee : 0;
+        if (!line) return;
+        const type = o.gameplayGlobals.gameAux().flyerProcessType, parent = data.getUint32(4, true);
+        if (parent > 65535 || parent >= c.pool.capacity) throw new RangeError('비행명령의 실제 DWORD 부모 SID 물리 범위');
+        const form = findAttachedProcess(c.pool, parent, type);
+        if (!form) o.world.storage.assertDisplay('processSid', '\\Ns\\O\\Flyer.cpp', line);
+        const current = c.processes.fromForm(form); if (!(current instanceof FlyerProcess)) throw new Error('비행명령의 현재 Form PID에 대한 실제 Flyer outer 미연결');
+        if (!o.flyer) throw new Error('86h 명령의 현재 Flyer 기한 본체 미연결'); o.flyer.command(current.fields, command);
+    }
+
+    // Carrier 등록의 동맹부터 비행 수신·명령까지 확인한 앞부분을 원본 순서대로 등록한다.
     registerCarrierCommandPrefix(dispatch) {
         const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 Carrier 수신 등록');
         this.registerAllianceNegotiationCommands(dispatch);
@@ -304,6 +350,11 @@ export class RawCampaignSession {
         // 총 Process 전체 수신은 같은 Host의 명시 Form과 현재 PID를 쓴다.
         dispatch.observe(0x3a, null); dispatch.version(0x3a, 1, 0); dispatch.requireLength(0x3a, 0xffff);
         dispatch.register(0x3a, (_sender, _connection, packet) => this.#receiveGunPacket(packet));
+        // 비행 데이터와 직접 명령은 같은 현재 Process Host를 사용한다.
+        dispatch.observe(0x39, null); dispatch.version(0x39, 1, 0); dispatch.requireLength(0x39, 0xffff);
+        dispatch.register(0x39, (_sender, _connection, packet) => this.#receiveFlyerPacket(packet));
+        dispatch.observe(0x86, () => {}); dispatch.version(0x86, 1, 0); dispatch.requireLength(0x86, 20);
+        dispatch.registerDirect(0x86, (_sender, _connection, packet) => this.#receiveFlyerCommand(packet));
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }
