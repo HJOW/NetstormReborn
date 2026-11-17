@@ -674,6 +674,12 @@ export class RawCampaignSessionOwners {
         this.ritualModules.bindDaisLifecycle();
     }
 
+    // 다이스 수명 뒤 같은 내용물 분배기의 부모 통지를 설치한다.
+    connectDaisNotice() {
+        if (this.#disposed || !this.ritualModules) throw new Error('Session 다이스 통지 설치 전/반납');
+        this.ritualModules.bindDaisNotice();
+    }
+
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
     drawTempleFrames(sid, frame) {
         if (this.#disposed) throw new Error('반납한 Session 신전 그림');

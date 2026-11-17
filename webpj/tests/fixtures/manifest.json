@@ -14849,7 +14849,8 @@
         "webpj/tests/dais-content-notice.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-dais-content-notice.js"
+        "webpj/www/core/raw-dais-content-notice.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-dais-content-notice-20261110.md",
       "cpppjSources": [
@@ -14860,10 +14861,10 @@
       "sha256": "abc3bd27d30a92d17db9e42f57ba97fba2c92503ac4691a0febc8d22474b8eb9",
       "bytes": 506376,
       "lines": 1445,
-      "fixtureCommit": "db9b626c",
-      "webCommit": "3dacf1d2",
+      "fixtureCommit": "db9b626c0",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawDaisContentNotice.cpp": "efcd13e4"
+        "cpppj/src/o/RawDaisContentNotice.cpp": "efcd13e47"
       }
     },
     {

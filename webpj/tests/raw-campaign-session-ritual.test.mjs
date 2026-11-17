@@ -113,6 +113,31 @@ test('다이스 수명: 제단 Pop의 같은 Host 예약과 현재 로그인 시
     } finally { o.dispose(); }
 });
 
+// 내용물 통지의 실제 전역 조회와 명령 큐를 확인하며 사제 포획을 재현하지 않는다.
+test('다이스 통지: 현재 전역·입력 큐와 제거 이유 경계', () => {
+    const commands = [];
+    const o = scene(true, { assets: { queueCommand: (...args) => commands.push(args) } });
+    const module = o.ritualModules;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar();
+        assert.throws(() => o.connectDaisNotice(), /순서/);
+        o.connectDaisLifecycle(); o.connectDaisNotice();
+        assert.equal(o.daisNotice.pool, o.core.pool);
+        o.priestState.movement.priest = 157;
+        assert.equal(module.noticeState.priestType(), 157);
+        assert.equal(module.noticeState.localOwner(), o.playerState.battleOwner);
+        assert.equal(module.noticeState.bridgeType(), o.core.bridgeState.bridgeType);
+        module.noticeHooks.stopVoice(module.noticeState.cue(), 0, 0);
+        assert.deepEqual(commands, [[0x020000d7, 0, 0]]);
+        const dais = o.world.create(165);
+        o.daisNotice.notice(dais, 0, 2);
+        assert.equal(commands.length, 1);
+        assert.throws(() => o.connectDaisNotice(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+    assert.throws(() => module.noticeState.priestType(), /반납/);
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

@@ -19,6 +19,10 @@ import { RawAltarSacrifice, makeAltarSacrificeHooks } from './raw-altar-sacrific
 import { AltarSacrificeState } from './raw-ritual-regular.js';
 import { DaisLifecycleState, RawDaisLifecycle } from './raw-dais-lifecycle.js';
 import { rawPathSurfaceAt } from './raw-path-surface.js';
+import { RawDaisContentNotice } from './raw-dais-content-notice.js';
+
+// 다이스 내용물 통지가 중지할 원본 음성 명령 번호다.
+const DAIS_CAPTURE_VOICE_COMMAND = 0x020000d7;
 
 // 원문 ConnectRitual의 사제 앞단과 후속 의식이 공유할 Regular 예약 수명이다.
 export class RawCampaignSessionRitual {
@@ -34,6 +38,8 @@ export class RawCampaignSessionRitual {
     altarState = null; altarHooks = null;
     // 다이스 최초 배치와 삭제가 공유하는 현재 시각·효과다.
     lifecycleState = null; lifecycleHooks = null; #daisRegistered = false;
+    // 내용물 부모 통지가 읽는 현재 Session 전역과 효과다.
+    noticeState = null; noticeHooks = null;
     // 구성만으로 현재 객체나 난수를 변경하지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 의식 함수가 이전 World에 접근하지 못하도록 한다.
@@ -202,6 +208,25 @@ export class RawCampaignSessionRitual {
         const body = new RawDaisLifecycle(c.pool, c.hash, c.types, c.neighbors, o.templeRitual, o.altarSacrifice, o.carrier, o.damageablePre, o.daisState, this.altarState, state, hooks);
         c.postPop.setBody('dais', body); this.#daisRegistered = true;
         o.daisLifecycle = body; this.lifecycleState = state; this.lifecycleHooks = hooks;
+    }
+    // 다이스 부모의 내용물 통지를 기존 내용물 분배기와 같은 월드에 설치한다.
+    bindDaisNotice() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.lifecycleState || this.noticeState || o.daisNotice) throw new Error('Session 다이스 통지 설치 순서 오류');
+        const state = {
+            priestType: () => { this.#live(); return o.priestState.movement.priest; },
+            localOwner: () => { this.#live(); return o.playerState.battleOwner; },
+            cue: () => { this.#live(); return DAIS_CAPTURE_VOICE_COMMAND; },
+            bridgeType: () => { this.#live(); return c.bridgeState.bridgeType; },
+        };
+        const hooks = {
+            unpop: (sid, flags) => { this.#live(); o.world.unpop(sid, flags); },
+            repop: (sid, flags) => { this.#live(); o.world.repop(sid, flags); },
+            stopVoice: (cue, first, second) => { this.#live(); if (!o.services.assets.queueCommand) throw new Error('다이스 실제 입력 명령 큐 미연결'); o.services.assets.queueCommand(cue, first | 0, second | 0); },
+            notifySurface: (sid) => { this.#live(); c.building.notifySurface(sid); },
+        };
+        o.daisNotice = new RawDaisContentNotice(c.pool, c.frames, o.runePostPop, state, hooks);
+        this.noticeState = state; this.noticeHooks = hooks;
     }
     // 실제 Host를 비운 뒤 미부착 예약과 함수 대여를 반납한다.
     dispose() { if (this.#disposed) return; this.#disposed = true; this.pendingRegular = null; this.pendingSound = null; if (this.#daisRegistered) { this.#owner.core.postPop.setBody('dais', null); this.#daisRegistered = false; } if (this.#runeRegistered) { this.#owner.core.postPop.setBody('rune', null); this.#runeRegistered = false; } }
