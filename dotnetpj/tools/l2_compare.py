@@ -118,7 +118,7 @@ def compare(cpp_path, dn_path):
     }
 
 
-def capture(engine, mission, demo, directory, seed):
+def capture(engine, mission, demo, directory, seed, host_exe=None):
     """한 엔진을 새 사용자 루트로 실행하고90프레임의 관측을 남긴다. 공격 명령은 보내지 않는다."""
     output = directory / engine
     output.mkdir(parents=True, exist_ok=True)
@@ -135,6 +135,8 @@ def capture(engine, mission, demo, directory, seed):
     executable = ROOT / ("cpppj/build/bin/Release/Netstorm.exe" if engine == "cpp" else
                          "dotnetpj/src/Netstorm.Client.Host/bin/Release/net10.0/Netstorm.Client.Host.exe")
     data = ROOT / "extracted/dotnet-oracle-data"
+    if engine == "dn" and host_exe is not None:
+        executable = Path(host_exe)
     args = [str(executable)]
     if engine == "cpp":
         args += ["--run", str(data)]
@@ -165,6 +167,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--capture", action="store_true", help="예외PC에서 실제 게임 창을 실행한다")
     parser.add_argument("--mission", action="append", choices=MISSIONS, help="생략하면34경로 모두")
+    parser.add_argument("--host-exe", type=Path, default=None,
+                        help="dn 실행 파일 경로. 생략하면 빌드 산출물을 쓴다(소프트웨어 GL이 필요한 headless PC에서는 mesa를 곁들인 복사본을 지정한다)")
     parser.add_argument("--out", type=Path, default=ROOT / "extracted/dotnet-l2-0499")
     parser.add_argument("--seed", type=int, default=1760000000)
     args = parser.parse_args()
@@ -185,7 +189,7 @@ def main():
                 # 데모는 새 호스트의 진입점이 아직 없으므로 cpp 기준선만 수집한다.
                 for engine in (("cpp",) if demo else ("cpp", "dn")):
                     if args.capture and not (directory / engine / "f090.tsv").exists():
-                        capture(engine, mission, demo, directory, args.seed)
+                        capture(engine, mission, demo, directory, args.seed, args.host_exe)
                 if demo:
                     read_dump(directory / "cpp/f090.tsv")
                     result = {"l2_equal": False, "pending": "새 호스트 StartDemo 진입 미연결"}
