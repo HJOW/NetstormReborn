@@ -24333,21 +24333,22 @@
         "webpj/tests/fort-snapshot-parent.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-fort-snapshot-parent.js"
+        "webpj/www/core/raw-fort-snapshot-parent.js",
+        "webpj/www/core/raw-campaign-snapshot.js"
       ],
-      "unit": "WB04-E627",
+      "unit": "WB04-E627 / WB04-E636",
       "doc": "docs/webpj-fort-snapshot-parent-20261117.md",
       "cpppjSources": [
         "cpppj/src/o/RawFortSnapshotParent.cpp",
         "cpppj/src/o/RawFortSnapshotParent.h"
       ],
-      "scope": "Fort/Battle 전체 snapshot 부모와 현재칸 두 wrapper. 정상/부분 중단378·고정 this/현재 getter·기술 부모/Create stream·8DWORD/240BYTE/전체 trace2728행. 실제 Session/Template/child 직렬화 연결은 잔여",
+      "scope": "Fort/Battle 전체 snapshot 부모와 현재칸 두 wrapper. 정상/부분 중단378·고정 this/현재 getter·기술 부모/Create stream·8DWORD/240BYTE/전체 trace2728행. 실제 Session/Template/child 직렬화 연결은 잔여 / E636 전체 Session 부모 결선(최소 owner 계약/실제 설치 전 거부). 실제 Load/정상 snapshot 통합은4D-2h 뒤 재대조",
       "text": true,
       "sha256": "96d7f6deb4769a4a818c572c8bd930e8fe63d1ee5f89fb5df634c6b138825cd0",
       "bytes": 2144255,
       "lines": 2729,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "7872c2a5f",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawFortSnapshotParent.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortSnapshotParent.h": "fa7762f9e"
@@ -24643,21 +24644,22 @@
         "webpj/tests/fort-snapshot-writers.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-fort-money-save.js"
+        "webpj/www/core/raw-fort-money-save.js",
+        "webpj/www/core/raw-campaign-snapshot.js"
       ],
-      "unit": "WB04-E633",
+      "unit": "WB04-E633 / WB04-E636",
       "doc": "docs/webpj-fort-snapshot-writers-20261117.md",
       "cpppjSources": [
         "cpppj/src/o/RawFortMoneySave.cpp",
         "cpppj/src/o/RawFortMoneySave.h"
       ],
-      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여",
+      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여 / E636 전체 Session 부모 결선(최소 owner 계약/실제 설치 전 거부). 실제 Load/정상 snapshot 통합은4D-2h 뒤 재대조",
       "text": true,
       "sha256": "8e00dee550343283727a3c3b8188a509ed00533545883f4223106fa39a11beb3",
       "bytes": 483479,
       "lines": 1106,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "03af4007a",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawFortMoneySave.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortMoneySave.h": "fa7762f9e"
@@ -24674,21 +24676,22 @@
         "webpj/tests/fort-snapshot-writers.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-fort-mission-save.js"
+        "webpj/www/core/raw-fort-mission-save.js",
+        "webpj/www/core/raw-campaign-snapshot.js"
       ],
-      "unit": "WB04-E633",
+      "unit": "WB04-E633 / WB04-E636",
       "doc": "docs/webpj-fort-snapshot-writers-20261117.md",
       "cpppjSources": [
         "cpppj/src/o/RawFortMissionSave.cpp",
         "cpppj/src/o/RawFortMissionSave.h"
       ],
-      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여",
+      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여 / E636 전체 Session 부모 결선(최소 owner 계약/실제 설치 전 거부). 실제 Load/정상 snapshot 통합은4D-2h 뒤 재대조",
       "text": true,
       "sha256": "ead46e5bd2408705cce7f79de814b767e03af872e0d0682e85409eb4803c9966",
       "bytes": 131723,
       "lines": 231,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "03af4007a",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawFortMissionSave.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortMissionSave.h": "fa7762f9e"
@@ -24705,21 +24708,22 @@
         "webpj/tests/fort-snapshot-writers.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-fort-badges-save.js"
+        "webpj/www/core/raw-fort-badges-save.js",
+        "webpj/www/core/raw-campaign-snapshot.js"
       ],
-      "unit": "WB04-E633",
+      "unit": "WB04-E633 / WB04-E636",
       "doc": "docs/webpj-fort-snapshot-writers-20261117.md",
       "cpppjSources": [
         "cpppj/src/o/RawFortBadgesSave.cpp",
         "cpppj/src/o/RawFortBadgesSave.h"
       ],
-      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여",
+      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여 / E636 전체 Session 부모 결선(최소 owner 계약/실제 설치 전 거부). 실제 Load/정상 snapshot 통합은4D-2h 뒤 재대조",
       "text": true,
       "sha256": "ec75999aa1489573f259d3c5257a7ed6fb954f6c57f6afc2f8d08c439eadda2f",
       "bytes": 5045581,
       "lines": 1353,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "03af4007a",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawFortBadgesSave.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortBadgesSave.h": "fa7762f9e"

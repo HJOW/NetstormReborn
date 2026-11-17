@@ -69,6 +69,7 @@ import { writeCampaignFortObjectChunk } from './raw-campaign-object-save.js';
 import { writeCampaignFortObjects } from './raw-campaign-objects-save.js';
 import { writeCampaignFortTerritory } from './raw-campaign-territory-save.js';
 import { refreshCampaignPlayerCore, writeCampaignFortCoreData } from './raw-campaign-core-write.js';
+import { snapshotCampaignTemplate } from './raw-campaign-snapshot.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -665,6 +666,32 @@ export class RawCampaignSessionOwners {
     writeFortCoreDataBody(slot) {
         if (this.#disposed) throw new Error('반납한 Session CoreData 쓰기');
         writeCampaignFortCoreData(this, slot);
+    }
+
+    // 전체 Fort 부모는 설치 관문 뒤 같은 Template/현재 child만 사용한다. Editor 우회는 제공하지 않는다.
+    snapshotFort(slot) {
+        if (this.#disposed) throw new Error('반납한 Session 전체 Fort snapshot');
+        if (!this.loaded) throw new Error('실제 Session 설치 전 전체 Fort 저장');
+        this.snapshotFortBody(slot);
+    }
+
+    // Battle은 자체 부모 순서를 사용하며 Fort 전용 TypeNames/Badges를 추가하지 않는다.
+    snapshotBattle(slot) {
+        if (this.#disposed) throw new Error('반납한 Session 전체 Battle snapshot');
+        if (!this.loaded) throw new Error('실제 Session 설치 전 전체 Battle 저장');
+        this.snapshotTemplateBody(slot, true);
+    }
+
+    // 외곽 callback에서 호출하는 같은 Fort 본문이다. 설치 중 Editor 예외는 웹 범위 밖이다.
+    snapshotFortBody(slot) {
+        if (this.#disposed) throw new Error('반납한 Session 전체 Fort snapshot 본문');
+        this.snapshotTemplateBody(slot, false);
+    }
+
+    // 같은 실제 저장소의 전체 부모 결선이며 loaded를 임의로 변경하지 않는다.
+    snapshotTemplateBody(slot, battle) {
+        if (this.#disposed) throw new Error('반납한 Session 전체 snapshot 본문');
+        snapshotCampaignTemplate(this, slot, battle);
     }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
