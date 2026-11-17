@@ -1,7 +1,7 @@
 // webpj 자산 준비 도구이다. 클론 공용 원본 자산 폴더(assets/game-data)에서 웹 실행에 필요한 파일을
 // 웹 공개 루트(webpj/www/data)로 변환 없이 그대로 복사하고, 경로·용도 묶음·크기·SHA-256 을 기록한 manifest.json 을 만든다.
 // 원본 파일을 바이트 그대로 복사하므로 Git 에서는 같은 blob 을 공유해 저장소 크기가 늘지 않는다.
-// 한국어 지원 자산(프로젝트 fonts/ 의 D2Coding woff2·라이선스, webpj/translations/ 의 번역표)도 같은 방식으로 복사한다. 자산마다 source(저장소 루트 기준 원본 경로)를 따로 적을 수 있다.
+// 한국어 지원 자산(프로젝트 fonts/ 의 갈무리11 woff2·라이선스, webpj/translations/ 의 번역표)도 같은 방식으로 복사한다. 자산마다 source(저장소 루트 기준 원본 경로)를 따로 적을 수 있다.
 // 사용법(저장소 루트 기준):
 //   node webpj/tools/prepare-assets.js          복사 + 매니페스트 작성
 //   node webpj/tools/prepare-assets.js --check  복사본·매니페스트가 원본과 같은지 검사만 한다(다르면 종료 코드 1)
@@ -12,6 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { KOREAN_FONT_PATHS } = require('../www/assets/korean-font-config.js');
 
 // webpj 폴더의 절대 경로이다. (2026-10-23 WB03-M1)
 const WEBPJ_ROOT = path.resolve(__dirname, '..');
@@ -35,7 +36,7 @@ const MANIFEST_FORMAT = 1;
 const BUNDLES = Object.freeze({
     menu: '메인 메뉴 표시 전에 받아야 하는 필수 자산',
     'menu-music': '메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)',
-    korean: '한국어 지원(D2Coding 글꼴 woff2·UI 번역표 xlat.korean·Tell 본문 tell.korean·캠페인 목록 offical*.korean·용어표 config.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N, WB03-O)',
+    korean: '한국어 지원(갈무리11 글꼴 woff2·UI 번역표 xlat.korean·Tell 본문 tell.korean·캠페인 목록 offical*.korean·용어표 config.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N, WB03-O)',
 });
 
 // 원본 글꼴 캐시 파일 목록(슬롯 0~6 × 스타일 중 원본에 존재하는 조합, 파일 이름 규칙은 www/assets/font-set.js 와 같다)이다.
@@ -79,9 +80,9 @@ const ASSET_FILES = Object.freeze([
     { path: 'netstorm.tarc', bundle: 'menu', use: '데이터 아카이브 TAFF(메뉴 대화상자 본문 tell.english·용어표 config.english·미션 스크립트·타입 정의, 246개 엔트리)' },
     { path: 'd/setup.cfg', bundle: 'menu', use: '게임 기본 설정(스타일 코드 H2·Text·CText, 경로 지정값 missionSpec·guideSpec, 인코딩된 원본 파일)' },
     { path: 'music/ser22.mus', bundle: 'menu-music', use: '메인 메뉴(전투 밖) 음악, RIFF WAV PCM' },
-    { path: 'fonts/D2Coding.woff2', source: 'fonts/D2Coding.woff2', bundle: 'korean', use: '한국어 UI 글꼴 D2Coding 보통체(woff2, 사용자 제공, FontFace 로 등록해 Canvas 로 글리프를 만듦)' },
-    { path: 'fonts/D2CodingBold.woff2', source: 'fonts/D2CodingBold.woff2', bundle: 'korean', use: '한국어 UI 글꼴 D2Coding 굵은체(woff2, 굵은 글꼴 슬롯·굵게 스타일)' },
-    { path: 'fonts/D2Coding-License.txt', source: 'fonts/D2Coding-License.txt', bundle: 'korean', use: 'D2Coding 글꼴 사용 허가(SIL Open Font License 1.1). 글꼴과 함께 배포한다.' },
+    { path: KOREAN_FONT_PATHS.regular, source: KOREAN_FONT_PATHS.regular, bundle: 'korean', use: '한국어 UI 글꼴 갈무리11 보통체(woff2)' },
+    { path: KOREAN_FONT_PATHS.bold, source: KOREAN_FONT_PATHS.bold, bundle: 'korean', use: '한국어 UI 글꼴 갈무리11 굵은체(woff2)' },
+    { path: KOREAN_FONT_PATHS.license, source: KOREAN_FONT_PATHS.license, bundle: 'korean', use: '갈무리11 글꼴 사용 허가. 글꼴과 함께 배포한다.' },
     { path: 'd/xlat.korean', source: 'webpj/translations/xlat.korean', bundle: 'korean', use: '한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메인 메뉴 버튼·Help·Options 펼침 메뉴 라벨, 일반 도움말 창 Back·OK' },
     ...KOREAN_LANGUAGE_FILES.map(({ name, use }) => ({ path: `d/${name}`, source: `webpj/translations/${name}`, bundle: 'korean', use })),
 ]);

@@ -1,7 +1,7 @@
 // 한국어 지원(WB03-N)을 검사한다: 번역표(XlatTable)·한국어 번역 파일, 유니코드 글꼴(UnicodeGlyphFont·UnicodeFontProvider),
 // 글꼴 묶음(FontSet)의 글꼴 고르기, 글자 그리기, 한국어 메인 메뉴 버튼·펼침 메뉴, 한국어 자산 묶음 조립을 확인한다.
 // 브라우저의 Canvas 글자 그리기는 Node 에 없으므로 가짜 래스터라이저(고정 크기 상자)로 배치·측정·그리기 규칙을 검사하고,
-// 실제 D2Coding 글리프는 브라우저 검사(임시 CDP 스크립트)로 확인한다. (2026-10-31 WB03-N)
+// 실제 갈무리11 글리프는 Chromium 검사(e2e/korean-font.spec.js)로 확인한다. (2026-10-31 WB03-N)
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -9,7 +9,7 @@ import path from 'node:path';
 import { DATA_ROOT, REPO_ROOT, readData, readDataMap } from './helpers.mjs';
 import { XlatTable } from '../www/assets/xlat.js';
 import { decodeOriginalText, encodeUtf16Units, encodeWindows1252 } from '../www/assets/text-encoding.js';
-import { COVERAGE_THRESHOLD, EM_PER_SLOT_HEIGHT, UnicodeFontProvider, UnicodeGlyphFont } from '../www/assets/unicode-font.js';
+import { COVERAGE_THRESHOLD, EM_PER_SLOT_HEIGHT, KOREAN_SMALL_EM_SIZE, UnicodeFontProvider, UnicodeGlyphFont } from '../www/assets/unicode-font.js';
 import { FontSet } from '../www/assets/font-set.js';
 import { BitmapFont } from '../www/assets/bitmap-font.js';
 import { KOREAN_ASSET_PATHS, KOREAN_BUNDLE, KOREAN_LANGUAGE_PATHS, buildKoreanSupport } from '../www/assets/korean-assets.js';
@@ -39,9 +39,9 @@ function fakeRasterizer() {
     };
 }
 
-// 글꼴 슬롯 0(높이 14)의 한글 글자 크기이다. 가짜 래스터라이저에서 한글 전진 폭이 이 값이고 영문·공백은 절반(반올림)이다. 슬롯 높이 14 → em 13. (2026-10-31 WB03-N)
-const EM = 13;
-assert.equal(Math.round(14 * EM_PER_SLOT_HEIGHT), EM);
+// 글꼴 슬롯 0(높이 14)의 한글 글자 크기이다. 가짜 래스터라이저에서 한글 전진 폭이 이 값이고 영문·공백은 절반(반올림)이다. 슬롯 높이 14 → em 11. (2026-10-31 WB03-N)
+const EM = 11;
+assert.equal(KOREAN_SMALL_EM_SIZE, EM);
 
 // 메뉴 묶음 파일(원본 글꼴 포함)이다. (2026-10-31 WB03-N)
 const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
@@ -194,7 +194,7 @@ test('UnicodeFontProvider: 슬롯·스타일별 글꼴 사양과 원본 글꼴 �
     const provider = new UnicodeFontProvider(fakeRasterizer());
     const reference = BitmapFont.parse(menuFiles.get('d/!Arial.normal.14.700.chfnt'));
     const slot0 = provider.get(0, 0, reference);
-    assert.equal(slot0.spec.emSize, Math.round(14 * EM_PER_SLOT_HEIGHT));
+    assert.equal(slot0.spec.emSize, KOREAN_SMALL_EM_SIZE);
     assert.equal(slot0.spec.bold, false, '슬롯 0 은 굵기 700 이지만 한글은 보통체');
     assert.equal(slot0.height, reference.height);
     assert.equal(slot0.ascent, reference.ascent);
@@ -389,8 +389,8 @@ test('buildKoreanSupport: 래스터라이저에 보통체·굵은체 woff2 를 �
         partial.delete(KOREAN_ASSET_PATHS[key]);
         await assert.rejects(() => buildKoreanSupport(partial, { createRasterizer: () => fakeRasterizer() }), new RegExp(KOREAN_ASSET_PATHS[key].replace('.', '\\.')));
     }
-    // 읽기 쉬운지 확인용: 실제 글꼴 파일은 1MB 이상이다.
-    assert.ok(readData(KOREAN_ASSET_PATHS.regular).length > 1_000_000);
+    // 읽기 쉬운지 확인용: 실제 글꼴 파일은 비어 있지 않은 WOFF2 자산이다.
+    assert.ok(readData(KOREAN_ASSET_PATHS.regular).length > 100_000);
 });
 
 // 영어 자원은 한국어 지원 없이도 그대로 동작한다(기존 동작 유지). (2026-10-31 WB03-N)
@@ -452,7 +452,7 @@ function fakeDocument() {
 test('createCanvasGlyphRasterizer: 글꼴 등록·글자 그림 자르기·위치·전진 폭·정리', async () => {
     const env = fakeDocument();
     const rasterizer = await createCanvasGlyphRasterizer({ document: env.document, regular: Uint8Array.of(1), bold: Uint8Array.of(2) });
-    assert.deepEqual(env.faces.map((face) => [face.family, face.descriptors.weight, face.data[0], face.loaded]), [['D2Coding', '400', 1, true], ['D2Coding', '700', 2, true]]);
+    assert.deepEqual(env.faces.map((face) => [face.family, face.descriptors.weight, face.data[0], face.loaded]), [['Galmuri11', '400', 1, true], ['Galmuri11', '700', 2, true]]);
     assert.equal(env.added.length, 2);
     const spec = { emSize: 13, bold: false, italic: false, ascent: 11, height: 14 };
     const hangul = rasterizer.glyph(0xac00, spec);
@@ -462,8 +462,8 @@ test('createCanvasGlyphRasterizer: 글꼴 등록·글자 그림 자르기·위�
     // 영문은 em 의 절반(6.5 → 7)으로 전진한다. 굵게·기울임은 글꼴 문자열에 반영된다.
     const latin = rasterizer.glyph(0x41, { ...spec, bold: true, italic: true });
     assert.equal(latin.advance, 7);
-    assert.equal(env.calls[env.calls.length - 1].font, 'italic 700 13px "D2Coding"');
-    assert.equal(env.calls[0].font, '400 13px "D2Coding"');
+    assert.equal(env.calls[env.calls.length - 1].font, 'italic 700 13px "Galmuri11"');
+    assert.equal(env.calls[0].font, '400 13px "Galmuri11"');
     // 공백은 그림이 없고 전진 폭만 있다. 이전 글자의 그림이 남아 있으면 안 된다.
     const space = rasterizer.glyph(0x20, spec);
     assert.deepEqual({ advance: space.advance, width: space.width, height: space.height, length: space.coverage.length }, { advance: 7, width: 0, height: 0, length: 0 });
@@ -546,7 +546,7 @@ test('Netstorm 적재: 언어별 묶음 선택과 한국어 실패 대체', asyn
     assert.equal(korean._state, 'clickToStart');
     assert.equal(korean._resources.translate('Options'), '옵션');
     assert.ok(korean._resources.fonts.unicode instanceof UnicodeFontProvider);
-    assert.ok(koreanUrls.some((url) => url.endsWith('/fonts/D2Coding.woff2')) && koreanUrls.some((url) => url.endsWith('/d/xlat.korean')));
+    assert.ok(koreanUrls.some((url) => url.endsWith('/fonts/Galmuri11.woff2')) && koreanUrls.some((url) => url.endsWith('/d/xlat.korean')));
     assert.deepEqual(korean._loadProgress, { loaded: sizeOf('menu') + sizeOf(KOREAN_BUNDLE), total: sizeOf('menu') + sizeOf(KOREAN_BUNDLE) });
     // 한국어 언어 자료(tell·offical*·config)가 게임 데이터에 합쳐져 한국어 Tell 본문과 용어가 조회된다(2026-10-31 WB03-O).
     assert.ok(korean._gameData.tellSection('Welcome').includes('님버스'));
@@ -559,7 +559,7 @@ test('Netstorm 적재: 언어별 묶음 선택과 한국어 실패 대체', asyn
     assert.equal(english._state, 'clickToStart');
     assert.equal(english._resources.translate('Options'), 'Options');
     assert.equal(english._resources.fonts.unicode, null);
-    assert.ok(!englishUrls.some((url) => /D2Coding|xlat\.korean/.test(url)));
+    assert.ok(!englishUrls.some((url) => /Galmuri11|xlat\.korean/.test(url)));
     assert.ok(english._gameData.tellSection('Welcome').includes('Nimbus'));
     assert.deepEqual(english._loadProgress, { loaded: sizeOf('menu'), total: sizeOf('menu') });
     // 한국어 글꼴을 받지 못하면 경고만 남기고 영어 메뉴로 클릭 대기에 간다(게임이 멈추지 않는다).
@@ -567,7 +567,7 @@ test('Netstorm 적재: 언어별 묶음 선택과 한국어 실패 대체', asyn
     const warnings = [];
     console.warn = (...args) => warnings.push(args);
     try {
-        const failed = build('korean', diskFetch([], /D2Coding\.woff2$/));
+        const failed = build('korean', diskFetch([], /Galmuri11\.woff2$/));
         await failed._load();
         assert.equal(failed._state, 'clickToStart');
         assert.equal(failed._resources.translate('Options'), 'Options');

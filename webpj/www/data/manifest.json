@@ -6,7 +6,7 @@
   "bundles": {
     "menu": "메인 메뉴 표시 전에 받아야 하는 필수 자산",
     "menu-music": "메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)",
-    "korean": "한국어 지원(D2Coding 글꼴 woff2·UI 번역표 xlat.korean·Tell 본문 tell.korean·캠페인 목록 offical*.korean·용어표 config.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N, WB03-O)"
+    "korean": "한국어 지원(갈무리11 글꼴 woff2·UI 번역표 xlat.korean·Tell 본문 tell.korean·캠페인 목록 offical*.korean·용어표 config.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N, WB03-O)"
   },
   "files": [
     {
@@ -250,28 +250,28 @@
       "use": "메인 메뉴(전투 밖) 음악, RIFF WAV PCM"
     },
     {
-      "path": "fonts/D2Coding.woff2",
-      "source": "fonts/D2Coding.woff2",
+      "path": "fonts/Galmuri11.woff2",
+      "source": "fonts/Galmuri11.woff2",
       "bundle": "korean",
-      "size": 1486740,
-      "sha256": "5066dd00cb1d53cb5aed7880d5b8c513412359085d6d0c67d032347d0471ca8b",
-      "use": "한국어 UI 글꼴 D2Coding 보통체(woff2, 사용자 제공, FontFace 로 등록해 Canvas 로 글리프를 만듦)"
+      "size": 505400,
+      "sha256": "8bad9322b3340bfb5cb26cb00f4752bf4c8e7d1b526bb07205f4af458eebed31",
+      "use": "한국어 UI 글꼴 갈무리11 보통체(woff2)"
     },
     {
-      "path": "fonts/D2CodingBold.woff2",
-      "source": "fonts/D2CodingBold.woff2",
+      "path": "fonts/Galmuri11-Bold.woff2",
+      "source": "fonts/Galmuri11-Bold.woff2",
       "bundle": "korean",
-      "size": 1580004,
-      "sha256": "1d0ab8e4496c5c95d115b49901d9d6a495a0b4140ca130180220c14b91f5911a",
-      "use": "한국어 UI 글꼴 D2Coding 굵은체(woff2, 굵은 글꼴 슬롯·굵게 스타일)"
+      "size": 166352,
+      "sha256": "0cfd6ce25b9f531fab677a604d96bc062cc139166880a086da3b4d72b1bb2492",
+      "use": "한국어 UI 글꼴 갈무리11 굵은체(woff2)"
     },
     {
-      "path": "fonts/D2Coding-License.txt",
-      "source": "fonts/D2Coding-License.txt",
+      "path": "fonts/Galmuri11-LICENSE.txt",
+      "source": "fonts/Galmuri11-LICENSE.txt",
       "bundle": "korean",
-      "size": 4006,
-      "sha256": "5755b8a0eefddc5e728b1d1090a08fbfef9656baed3104644cca7f86d112530e",
-      "use": "D2Coding 글꼴 사용 허가(SIL Open Font License 1.1). 글꼴과 함께 배포한다."
+      "size": 4360,
+      "sha256": "86a3ee9495f942f0243f18c103da9faca27adb88142613edb8bb852e56c892c1",
+      "use": "갈무리11 글꼴 사용 허가. 글꼴과 함께 배포한다."
     },
     {
       "path": "d/xlat.korean",

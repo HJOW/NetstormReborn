@@ -1,4 +1,4 @@
-// 유니코드 글꼴(한국어 D2Coding)의 글자를 원본 비트맵 글꼴(BitmapFont)과 같은 모양의 글리프로 바꿔 주는 모듈이다.
+// 유니코드 글꼴(한국어 갈무리11)의 글자를 원본 비트맵 글꼴(BitmapFont)과 같은 모양의 글리프로 바꿔 주는 모듈이다.
 // 원본 글꼴 캐시(.chfnt)는 영어(Windows-1252) 글자만 있으므로, 한국어 UI 문구는 이 글꼴로 그린다.
 //  - 글자 하나를 래스터라이저(브라우저는 platform/glyph-rasterizer.js 의 Canvas 2D)로 받아 알파 값을 문턱으로 잘라 색 번호 FONT_INK_INDEX(100) 한 가지로 만든다.
 //    그 결과 글자 그리기(render/glyph-text.js)가 영어 글리프와 똑같이 그림자·외곽선·본문 패스의 색 표로 칠한다(8비트 화면에 맞는 단색 글리프).
@@ -14,15 +14,16 @@ import { FONT_INK_INDEX } from '../render/glyph-text.js';
 // 알파(0~255)가 이 값 이상이면 글자 픽셀로 본다. 작은 크기에서 가는 획이 끊기지 않으면서 번지지 않는 값이다. (2026-10-31 WB03-N)
 export const COVERAGE_THRESHOLD = 110;
 
-// 글꼴 슬롯의 논리 높이에 곱해 글자 크기(em, 픽셀)를 정하는 비율이다. 슬롯 높이 14 에서 em 13(한글 13×13, 영문 7폭), 높이 12 에서 11 이 된다.
-// D2Coding 줄 높이(hhea 850+230)를 줄 높이 14 에 맞추는 GDI 방식(em 12)은 한글 획이 서로 붙어 읽기 어려웠고, 브라우저에서 1~3배 확대 화면을 비교해
-// 13 이 줄 높이(기준선 11 + 아래 3) 안에서 획 간격이 가장 또렷했다. (2026-10-31 WB03-N)
+// 큰 슬롯의 논리 높이에 곱해 글자 크기(em, 픽셀)를 정하는 비율이다. 원본 슬롯과 줄 높이를 유지한다.
 export const EM_PER_SLOT_HEIGHT = 13 / 14;
+
+// 작은 슬롯에서 사용할 갈무리11의 원래 픽셀 크기이다. 비정수 확대에서 획이 뭉치는 것을 방지한다.
+export const KOREAN_SMALL_EM_SIZE = 11;
 
 // 글자 크기의 최솟값(픽셀)이다. 너무 작으면 글자가 뭉개져 읽을 수 없다. (2026-10-31 WB03-N)
 const MIN_EM_SIZE = 6;
 
-// 밑줄을 기준선 아래 몇 줄에 긋는지, 취소선을 기준선 위 em 의 얼마에 긋는지이다(D2Coding x 높이 0.526 의 절반 부근). (2026-10-31 WB03-N)
+// 밑줄을 기준선 아래 몇 줄에 긋는지, 취소선을 기준선 위 em 의 얼마에 긋는지이다(작은 글자에서 중앙 부근). (2026-10-31 WB03-N)
 const UNDERLINE_BELOW_BASELINE = 1;
 const STRIKEOUT_EM_RATIO = 0.26;
 
@@ -140,11 +141,11 @@ export class UnicodeFontProvider {
         if (cached) return cached;
         const slotHeight = FONT_SLOT_HEIGHTS[slot];
         if (!slotHeight) throw new RangeError(`유니코드 글꼴을 만들 수 없는 슬롯입니다: ${slot}`);
-        const emSize = Math.max(MIN_EM_SIZE, Math.round(slotHeight * EM_PER_SLOT_HEIGHT));
+        const emSize = slotHeight <= 14 ? KOREAN_SMALL_EM_SIZE : Math.max(MIN_EM_SIZE, Math.round(slotHeight * EM_PER_SLOT_HEIGHT));
         const spec = {
             emSize,
             // 굵은체는 굵게 스타일(2)일 때만 쓴다. 슬롯 0·3 의 굵기 700 은 영어 Arial 의 획을 위한 것이고, 한글을 12~14픽셀 단색으로 그릴 때는
-            // 굵은체의 획이 뭉쳐 읽기 어려워 보통체를 쓴다(그림자 패스가 굵게 보이게 한다). (2026-10-31 WB03-N)
+            // 작은 글자의 가독성을 위해 보통체를 쓴다(그림자 패스가 굵게 보이게 한다). (2026-10-31 WB03-N)
             bold: style === STYLE_BOLD,
             italic: style === STYLE_ITALIC,
             underline: style === STYLE_UNDERLINE,

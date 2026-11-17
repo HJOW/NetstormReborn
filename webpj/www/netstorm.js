@@ -8,7 +8,7 @@
 // (2026-10-23 WB01: 실행 골격 최초 작성)
 // (2026-10-23 WB03-M1: 원본 자산 적재·메인 메뉴·소리·원본 커서 연결)
 // (2026-10-28 WB02-D: 데이터 아카이브(TAFF)·설정·Tell 섹션 조회(GameData) 연결, 메인 메뉴의 Edit 버튼 제거)
-// (2026-10-31 WB03-N: 언어가 한국어면 D2Coding 글꼴·번역표 묶음을 받아 메인 메뉴·펼침 메뉴 라벨을 한국어로 그린다)
+// (2026-10-31 WB03-N: 언어가 한국어면 갈무리11 글꼴·번역표 묶음을 받아 메인 메뉴·펼침 메뉴 라벨을 한국어로 그린다)
 import { AssetLoader } from './assets/asset-loader.js';
 import { GameData } from './assets/game-data.js';
 import { loadTerrainScene } from './assets/terrain-scene.js';
@@ -23,6 +23,7 @@ import {
     buildMenuResources,
 } from './assets/menu-assets.js';
 import { KOREAN_BUNDLE, buildKoreanSupport } from './assets/korean-assets.js';
+import { KOREAN_FONT_FAMILY } from './assets/korean-font-config.js';
 import { AudioSystem, createAudioContext } from './audio/audio-system.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
@@ -117,9 +118,8 @@ const TEXTS = Object.freeze({
     }),
 });
 
-// Canvas 글자에 쓰는 글꼴 목록이다. 원본 영어 글꼴과 D2Coding 웹 글꼴은 WB02 에서 적재하므로
-// 지금은 시스템에 설치된 글꼴로 대체하는 임시 설정이다. (2026-10-23 WB01)
-const FONT_FAMILY = '"D2Coding", "Malgun Gothic", "Segoe UI", monospace';
+// 시작·로딩 안내 Canvas 글꼴 목록이다. 한국어 글꼴이 등록되기 전에는 뒤의 시스템 글꼴로 대체한다.
+const FONT_FAMILY = `"${KOREAN_FONT_FAMILY}", "Malgun Gothic", "Segoe UI", monospace`;
 
 // 게임 Canvas 가 포커스를 가졌을 때 브라우저의 기본 동작(스크롤 등)을 막을 키 코드 집합이다.
 // 게임 루트가 입력을 소유하는 범위로만 한정하며, Tab 은 키보드 이동을 막지 않도록 제외한다. (2026-10-23 WB01)
@@ -720,7 +720,7 @@ export class Netstorm {
         return loader.entries(bundle).reduce((sum, entry) => sum + entry.size, 0);
     }
 
-    // 한국어 묶음(D2Coding 글꼴 woff2·번역표)을 받아 한국어 지원을 만든다. 실패하면(파일 누락·글꼴 등록 실패) 경고만 남기고 null 을 돌려줘 영어 메뉴로 계속한다.
+    // 한국어 묶음(갈무리11 글꼴 woff2·번역표)을 받아 한국어 지원을 만든다. 실패하면(파일 누락·글꼴 등록 실패) 경고만 남기고 null 을 돌려줘 영어 메뉴로 계속한다.
     // 한국어는 영어 자료로 대체할 수 있는 선택 기능이라 게임 전체를 멈추지 않는 웹 적응이다(원본에는 한국어가 없다). (2026-10-31 WB03-N)
     async _loadKorean(loader, menuTotal, koreanTotal) {
         try {

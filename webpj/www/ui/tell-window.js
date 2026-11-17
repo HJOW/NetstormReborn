@@ -5,7 +5,7 @@
 // 본문이 화면보다 길면 Fit 이 스크롤바를 켠다(원본: 슬라이더·스크롤 허용 켜기 → 스크롤 위치 0 요청). 본문 글자를 끌거나 스크롤바·마우스 휠로 움직인다.
 // 본문의 링크(`<a href>`)를 누르면 대화상자를 닫고 링크를 분배한다(원본 HtmlWindowGump::Handle 의 tagEvent: 부모를 먼저 Kill 한 뒤 링크 처리). 분배는 호스트(onLink)가 한다.
 // 두 열 메뉴는 이후 단위에서 옮긴다(해당 경로에 닿으면 onUnsupported 로 알림).
-// 한국어 모드에서는 본문·단추·목록 글자를 유니코드 글꼴 코드(FontSet.encode)로 만들어 D2Coding 으로 그린다(단추 라벨은 한국어 Tell 파일의 문구다).
+// 한국어 모드에서는 본문·단추·목록 글자를 유니코드 글꼴 코드(FontSet.encode)로 만들어 갈무리11 으로 그린다(단추 라벨은 한국어 Tell 파일의 문구다).
 // (2026-10-28 WB03-D: 메인 메뉴 다음 화면(Credits 먼저)을 원본과 같은 배치로 그리기 위해 추가, 2026-10-31 WB03-K: 링크 훅과 본문 스크롤바 추가, 2026-10-31 WB03-O: 한국어 글자 부호화)
 import { createTextContext } from '../render/glyph-text.js';
 import { GumpBackgroundFlags, drawGumpBackground, planGumpBackground } from '../render/gump-visual.js';

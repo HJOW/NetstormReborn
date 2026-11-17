@@ -1,6 +1,6 @@
 // 원본 Gump 글꼴 선택/기본 문맥/현재 위치와 실제 glyph→GumpPixelTarget을 연결한다(cpppj client/GumpTextDraw.cpp/.h).
 // 사용: new GumpTextDraw(fonts, makeGumpGlyphPixelHooks(target, colors)).draw(bytesWithNul, point, context).
-// 10.78 전용이다. 원문의4BYTE 한글 확장은 기존 웹 정책대로 UTF-16/D2Coding 입력으로 대체한다. (2026-11-14 WB04-E406)
+// 10.78 전용이다. 원문의4BYTE 한글 확장은 기존 웹 정책대로 UTF-16/갈무리11 입력으로 대체한다. (2026-11-14 WB04-E406)
 import { logicalHeightOfSlot } from '../assets/font-set.js';
 import { drawBitmapGlyphText } from './glyph-text.js';
 

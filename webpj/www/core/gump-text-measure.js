@@ -1,6 +1,6 @@
 // 원문4a3df0의 폭 표 합산·signed 길이·출력 쓰기/alias 순서를 이식한다(cpppj client/GumpText.cpp). (2026-11-14 WB04-E414)
 // 사용: measureGumpText(bytes,widths256,fontHeight,context,out,length). out.width/height는 같은 저장소의 접근자로 alias할 수 있다.
-// 웹 UTF16/D2Coding 입력은 폭 조회 함수를 공급하며 원문의4BYTE 확장 부호화는 기존 웹 정책대로 쓰지 않는다.
+// 웹 UTF16/갈무리11 입력은 폭 조회 함수를 공급하며 원문의4BYTE 확장 부호화는 기존 웹 정책대로 쓰지 않는다.
 export function measureGumpText(bytes, widths, fontHeight, context, output, length = -1) {
     length |= 0; let count = 0;
     if (length === -1) { const end = bytes.indexOf(0); if (end === -1) throw new RangeError('Gump 글자 범위에 NUL 종료 필요'); count = end; }

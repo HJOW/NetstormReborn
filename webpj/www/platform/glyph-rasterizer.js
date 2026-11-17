@@ -1,4 +1,4 @@
-// 브라우저에서 한국어 D2Coding 글자를 Canvas 2D 로 그려 알파 그림으로 돌려주는 래스터라이저 모듈이다.
+// 브라우저에서 한국어 갈무리11 글자를 Canvas 2D 로 그려 알파 그림으로 돌려주는 래스터라이저 모듈이다.
 // 글꼴은 CSS 파일 없이 FontFace API 로 등록한다(웹 판본은 CSS 파일을 만들지 않는 방침). 알파 그림을 색 번호 글리프로 바꾸는 일은
 // assets/unicode-font.js 가 하며, 이 모듈은 "글자 하나 → 정수 전진 폭 + 잘라낸 알파 그림" 만 맡는다.
 // 인터페이스는 assets/unicode-font.js 머리 주석을 따른다: glyph(codePoint, spec) → { advance, left, top, width, height, coverage }.
@@ -6,7 +6,8 @@
 
 // 글꼴 등록 이름이다. 같은 이름의 시스템 글꼴이 있어도 FontFace 로 등록한 파일이 우선한다.
 // netstorm.js 의 FONT_FAMILY 도 이 이름을 가장 먼저 부르므로, 등록 뒤에는 로딩·클릭 안내 화면도 같은 글꼴로 나온다. (2026-10-31 WB03-N)
-export const GLYPH_FONT_FAMILY = 'D2Coding';
+import { KOREAN_FONT_FAMILY } from '../assets/korean-font-config.js';
+export const GLYPH_FONT_FAMILY = KOREAN_FONT_FAMILY;
 
 // 글자 그림 주변에 더하는 여백(픽셀)이다. 기울임·굵은 글씨로 칸 밖으로 삐져나오는 부분을 담는다. (2026-10-31 WB03-N)
 const CANVAS_MARGIN_EM = 1;
