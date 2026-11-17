@@ -139,9 +139,17 @@ public sealed class RawSurfaceProcessCurrentTests
         var transmitError = Assert.Throws<InvalidOperationException>(() => hooks.Emit!(new Netstorm.Core.Original.SquidDestroyEvent(Netstorm.Core.Original.SquidDestroyEffect.Transmit, 0, 0, 0)));
         Assert.Contains("가상+58", transmitError.Message);
         Assert.Equal(1, cleared);
-        // 그 밖의 자산 효과는 파생 종단 미연결로 명시 실패한다.
-        var dedicated = Assert.Throws<InvalidOperationException>(() => hooks.Emit!(new Netstorm.Core.Original.SquidDestroyEvent(Netstorm.Core.Original.SquidDestroyEffect.PreDestroy, 0, 0, 0)));
+        // 그 밖의 자산 효과는 파생 종단 미연결로 명시 실패한다. 0.573에서 VT 라우팅 뒤 주소가 함께 나온다.
+        int asset = storage.FactoryExecutor().Create(74);
+        Span<byte> assetRaw = storage.Pool.RawSlot(asset);
+        uint common = 0x00501dd0u;
+        assetRaw[0] = (byte)common;
+        assetRaw[1] = (byte)(common >> 8);
+        assetRaw[2] = (byte)(common >> 16);
+        assetRaw[3] = (byte)(common >> 24);
+        var dedicated = Assert.Throws<InvalidOperationException>(() => hooks.Emit!(new Netstorm.Core.Original.SquidDestroyEvent(Netstorm.Core.Original.SquidDestroyEffect.PreDestroy, asset, 0, 0)));
         Assert.Contains("전용 삭제 몸체 미연결", dedicated.Message);
+        Assert.Contains("004B0950", dedicated.Message);
         // 공장 Unpop 경계는 같은 풀의 실제 공장을 쓴다.
         Assert.NotNull(hooks.UnpopForm);
     }

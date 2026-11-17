@@ -979,3 +979,5 @@ cpppj/src/o/SquidReward.h	Netstorm.Core/Original/RawSquidReward.cs	bd2941f45080b
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Types.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/SquidReward.h	Netstorm.Core/Original/RawSurfaceStorage.Types.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/RawSurfaceAssetDeletion.cpp	Netstorm.Core/Original/RawSurfaceStorage.AssetDeletion.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.AssetDeletion.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port

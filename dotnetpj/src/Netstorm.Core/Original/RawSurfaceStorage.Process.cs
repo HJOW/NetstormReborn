@@ -156,18 +156,42 @@ public sealed partial class RawSurfaceStorage
         return hooks;
     }
 
-    /// <summary>현재 VT의 실제 Pre/Post/부모 통지를 같은 장기 삭제 부모에 분배한다. 0.569에서 추가됐다.</summary>
+    /// <summary>현재 VT의 실제 Pre/Post/부모 통지를 같은 장기 삭제 부모에 분배한다. 0.569에서 추가됐다. 0.573에서 VT 라우팅 골격으로 바꿨다.</summary>
     /// <param name="event">분배할 삭제 효과다.</param>
     private void EmitDefaultAssetEffect(SquidDestroyEvent @event)
     {
-        // 파생 종단(Dais/Damageable/거주 구역/비행체 등 20여 실제 몸체)은 다음 단위에서 잇는다.
-        // Native 판본 계약만 먼저 확인하고 도달 위치에서 명시 실패한다.
         if (!UsesNativeTransmissionDevices())
         {
             throw new InvalidOperationException("장기 자산 가상 효과의 Native 판본 계약");
         }
 
-        throw new InvalidOperationException("장기 자산의 전용 삭제 몸체 미연결");
+        NativeAssetDeletionEntry entry = CurrentAssetDeletionEntry(@event.Sid);
+        if (@event.Effect == SquidDestroyEffect.ReleaseDependent)
+        {
+            // 실제 77VT의 빈 ret8이며 상태·TYPE·통지 인자를 추가로 읽지 않는다.
+            if (entry.Notice == 0x0041c100u)
+            {
+                return;
+            }
+
+            // 실제 세 VT는 두 인자를 무시하며 서버 관문 없이 현재 가상10(flags0)을 부른다.
+            if (entry.Notice == 0x0048f0a0u)
+            {
+                ProcessFormDispatch().Destroy(@event.Sid, 0);
+                return;
+            }
+
+            throw new InvalidOperationException($"장기 자산의 전용 부모 삭제 통지 미연결: 0x{entry.Notice:X8}");
+        }
+
+        bool pre = @event.Effect == SquidDestroyEffect.PreDestroy;
+        if (!pre && @event.Effect != SquidDestroyEffect.PostDestroy)
+        {
+            throw new InvalidOperationException("장기 자산의 가상 삭제 효과 종류 오류");
+        }
+
+        uint method = pre ? entry.Pre : entry.Post;
+        throw new InvalidOperationException($"장기 자산의 전용 삭제 몸체 미연결: 0x{method:X8}");
     }
 
     /// <summary>같은 Pool의 현재 공장/TYPE와 가상 삭제를 World 밖에서도 사용하는 장기 감시 본체다. 0.569에서 추가됐다.</summary>
