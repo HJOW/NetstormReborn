@@ -13,17 +13,28 @@ import { RawBombHeal } from './raw-bomb-heal.js';
 import { RawBombHardener } from './raw-bomb-hardener.js';
 import { RawBombStrike } from './raw-bomb-strike.js';
 import { projectCameraCoordinates } from '../render/camera-view.js';
+import { RawBombTargets } from './raw-bomb-targets.js';
+import { RawBombBlast } from './raw-bomb-blast.js';
+import { makeCampaignBombBlastHooks } from './raw-bomb-blast-bindings.js';
+import { connectedCampaignBombTable } from './raw-campaign-session-particles.js';
+
+// 같은 현재 가상 표를 기준으로 주문 자격 하위를 선택한다.
+const MANO_TABLES = new Set([0x5026a0, 0x502778, 0x502840]);
+const STRIKE_TABLES = new Set([0x502908, 0x502b70, 0x5029d0, 0x502aa8]);
+const WIND_TABLES = new Set([0x5025d8, 0x502e68, 0x502f30]);
 
 // 실제 Session의 TYPE·World·상태 주문을 한 번 구성한다.
 export class RawCampaignSessionDevastation {
     // 같은 owner와 설치 시작·정상 복귀·반납 관문이다.
-    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #effectsStarted = false; #effectsReady = false; #strikeStarted = false; #strikeReady = false; #disposed = false;
+    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #effectsStarted = false; #effectsReady = false; #strikeStarted = false; #strikeReady = false; #targetsStarted = false; #targetsReady = false; #disposed = false;
     // 현재 상태 주문 효과를 후속 시전 분배기에 빌린다.
     statusHooks = null;
     // 기존 실제 하위에 연결한 트리즌과 힐 효과를 현재 수명에서 보관한다.
     treasonHooks = null; healHooks = null;
     // 직접 피해 주문이 빌리는 현재 상태와 값형 효과 연결이다.
     strikeState = null; strikeHooks = null;
+    // 검색기가 값으로 빌리는 현재 반경·자격 분배기다.
+    targetHooks = null;
     // 구성 시 World나 난수는 변경하지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 완료 전 또는 반납된 함수 값의 실행을 거부한다.
@@ -176,6 +187,31 @@ export class RawCampaignSessionDevastation {
         this.strikeState = state; this.strikeHooks = hooks; this.#strikeReady = true;
     }
 
+    // 현재 TYPE 사거리와 같은 실제 폭발·각 주문 자격을 검색기에 연결한다.
+    bindTargets() {
+        const o = this.#owner, c = o.core;
+        if (this.#disposed || !this.#strikeReady || this.#targetsStarted || o.devastationTargets || o.devastationBlast) throw new Error('Session 주문 표적 설치 순서 오류');
+        this.#targetsStarted = true;
+        const hooks = {
+            radius: (parent, table) => { this.#live(); if (!connectedCampaignBombTable(table)) throw new TypeError('주문 반경 표 오류'); return o.devastationTargets.defaultRadius(parent); },
+            eligible: (parent, table, target) => {
+                this.#live(); table >>>= 0; if (!connectedCampaignBombTable(table)) throw new TypeError('주문 자격 표 오류');
+                o.runtimeModules.prepareDevastation();
+                if (table === 0x503188) return o.bombTreason.mayTarget(parent, target);
+                if (MANO_TABLES.has(table)) return o.manoSpell.mayTarget(parent, target);
+                if (STRIKE_TABLES.has(table)) return o.bombStrike.mayTarget(parent, target) !== 0;
+                if (table === 0x5030c0) return o.bombHardener.mayTarget(target) !== 0;
+                if (table === 0x502448) return o.bombHeal.mayTarget(target) !== 0;
+                if (WIND_TABLES.has(table)) return o.windSpell.mayTarget(parent);
+                return table === 0x502370 ? o.devastationBlast.mayTarget(target) : o.bombStatus.mayTarget(parent, target);
+            },
+            assertion: (line) => { throw new Error(`원본 Devastation 권한 진단 ${line}`); },
+        };
+        o.devastationTargets = new RawBombTargets(c.pool, c.hash, c.types, o.state.devastationTargetState, hooks);
+        o.devastationBlast = new RawBombBlast(c.pool, c.types, c.frames, o.devastationTargets, o.state.devastationBlastState, makeCampaignBombBlastHooks(o.world, o.hits, o.devastationTargets));
+        this.targetHooks = hooks; this.#targetsReady = true;
+    }
+
     // World가 프로세스를 비운 뒤 같은 함수 값의 재진입을 차단한다.
     dispose() { this.#disposed = true; }
     // 이 앞단만의 정상 설치 여부이며 전체 주문 설치는 아니다.
@@ -186,4 +222,6 @@ export class RawCampaignSessionDevastation {
     get effectsReady() { return this.#effectsReady; }
     // 직접 피해 주문 설치만 완료했으며 표적 검색은 아직 별도다.
     get strikeReady() { return this.#strikeReady; }
+    // 검색·폭발 설치만 완료했으며 활성화와 전체 주문은 별도다.
+    get targetsReady() { return this.#targetsReady; }
 }

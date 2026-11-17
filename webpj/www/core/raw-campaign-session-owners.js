@@ -289,7 +289,7 @@ export class RawCampaignSessionOwners {
     // 현재 힐 버스트 TYPE와 세 대상 효과의 Session 수명이다.
     healBurstType = 176; bombTreason = null; bombHeal = null; bombHardener = null;
     // 네 직접 피해 주문이 같은 현재 장치와 난수를 빌리는 수명이다.
-    bombStrike = null;
+    bombStrike = null; devastationBlast = null;
     // 원문 지역 상태의 TYPE 초기값과 같은 현재 동맹 표다.
     bombStatusState = { altar: 164, outpost: 126, priest: 158, fence: 136, flare: 106, alliances: null };
     // 같은 실제 이동 본체를 빌리는 사제 공황 결선의 수명이다.
@@ -891,6 +891,12 @@ export class RawCampaignSessionOwners {
     connectDevastationStrike() {
         if (this.#disposed || !this.devastationModules) throw new Error('Session 직접 피해 주문 설치 전/반납');
         this.devastationModules.bindStrike();
+    }
+
+    // 직접 피해 주문 뒤 같은 실제 표적 검색과 폭발을 연결한다.
+    connectDevastationTargets() {
+        if (this.#disposed || !this.devastationModules) throw new Error('Session 주문 표적 설치 전/반납');
+        this.devastationModules.bindTargets();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

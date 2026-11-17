@@ -89,3 +89,23 @@ test('Session 직접 피해 주문: 현재 효과 TYPE와 카메라 연결', () 
     assert.throws(() => hooks.project(2, 3), /반납/);
     assert.throws(() => state.firstEffectType, /반납/);
 });
+
+// 상태 주문의 자격만 확인하며 현재 TYPE 사거리와 같은 폭발 좌표 장치를 사용한다.
+test('Session 주문 표적: 현재 사거리와 상태 자격 분배', () => {
+    const o = scene(); let hooks;
+    try {
+        o.connectDevastationStatus(); o.connectDevastationSummons(); o.connectDevastationEffects();
+        assert.throws(() => o.connectDevastationTargets(), /순서/);
+        o.connectDevastationStrike(); o.connectDevastationTargets(); hooks = o.devastationModules.targetHooks;
+        assert.equal(o.devastationModules.targetsReady, true);
+        assert.equal(o.devastationTargets.pool, o.core.pool); assert.equal(o.devastationBlast.pool, o.core.pool);
+        const parent = o.world.create(117), altar = o.world.create(164);
+        o.core.types[117].range = 5.75; assert.equal(hooks.radius(parent, 0x502510), 5);
+        o.core.types[117].range = 8.25; assert.equal(hooks.radius(parent, 0x502510), 8);
+        assert.equal(hooks.eligible(parent, 0x502510, altar), true);
+        assert.throws(() => hooks.radius(parent, 0), /표 오류/);
+        assert.throws(() => hooks.eligible(parent, 0, altar), /표 오류/);
+        assert.equal(o.loaded, false); assert.throws(() => o.connectDevastationTargets(), /순서/);
+    } finally { o.dispose(); }
+    assert.throws(() => hooks.radius(0, 0x502510), /반납/);
+});
