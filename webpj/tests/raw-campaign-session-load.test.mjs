@@ -41,7 +41,7 @@ function scene(overrides = {}, savedFort = fort) {
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
         gameplayGlobals: overrides.gameplayGlobals, localStateGlobals: overrides.localStateGlobals, cameraScreenSize: overrides.cameraScreenSize,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
-        player: { log: () => trace.push('log') }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
+        player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
         ai: { assertion: forbidden('AI 진단'), ...overrides.ai },
     });
     return { s, trace, queue };
@@ -253,4 +253,18 @@ test('CampaignSession Load: 실패 접두를 유지하고 완료를 가장하지
     const { s } = scene({ install: { translateYou: forbidden('번역') } });
     try { assert.throws(() => s.load(), /번역/); assert.equal(s.loaded, false); assert.throws(() => s.load(), /반복|중복/); }
     finally { s.dispose(); }
+});
+
+// 일반 Form의 검증 패킷을 같은 Session 분배기와 공유 검증 DWORD에 연결한다.
+test('CampaignSession Tutorial 1: 공통 객체 검증 수신과 현재 전역', () => {
+    const gameplay = new ClientGameplayGlobals(), logs = [], { s } = scene({ gameplayGlobals: gameplay, playerLog: (level, message) => logs.push([level, message]) });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); const c = s.core(), sid = c.factory.create(6, 2), before = c.pool.slot(sid), aux = gameplay.gameAux();
+        const entry = dispatch.registration(0x2c); assert.equal(entry.length, 35); assert.equal(entry.version, 1); assert.equal(typeof entry.receive, 'function');
+        aux.verifySid = sid; const packet = new Uint8Array(35); packet.set([1, 0x2c, 35, 0]);
+        new DataView(packet.buffer).setUint16(4, sid, true); packet[16] = before[10] + 1; packet[17] = before[11] & 1; packet[18] = before[34];
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true); assert.equal(aux.verifySid, 0); assert.deepEqual(c.pool.slot(sid), before);
+        assert.equal(logs.length, 1); assert.equal(logs[0][0], 0x1d); assert.match(logs[0][1], /VERIFY .*: type /);
+    } finally { s.dispose(); }
 });

@@ -16,6 +16,7 @@ import { registerDeveloperCommandPacket } from './raw-developer-command-packet.j
 import { registerMissionSettingsPacket } from './raw-mission-settings-packet.js';
 import { observePathData } from './raw-path-data.js';
 import { DaisProcess, readDaisProcessData } from './raw-dais-process-data.js';
+import { receiveSessionSquid } from './raw-campaign-session-squid.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -274,6 +275,9 @@ export class RawCampaignSession {
         dispatch.register(0x30, (_sender, _connection, packet) => { this.#live(); if (!o.motion?.paths) throw new Error('Path 수신의 실제 이동 본체 미연결'); o.motion.paths.receivePacket(packet); });
         dispatch.observe(0x6a, null); dispatch.version(0x6a, 1, 0); dispatch.requireLength(0x6a, 0xffff);
         dispatch.register(0x6a, (_sender, _connection, packet) => this.#receiveDaisPacket(packet));
+        // 공통 객체 수신은 현재 Session의 같은 Pool과 장기 전역을 사용한다.
+        dispatch.observe(0x2c, null); dispatch.version(0x2c, 1, 0); dispatch.requireLength(0x2c, 35);
+        dispatch.register(0x2c, (_sender, _connection, packet) => receiveSessionSquid(this.#live(), packet));
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }

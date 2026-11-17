@@ -3,6 +3,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SidPool } from '../www/core/sid-pool.js';
 import { receiveRawSquid } from '../www/core/raw-squid-receive.js';
+import { receiveSessionSquid } from '../www/core/raw-campaign-session-squid.js';
+import { GameAuxState } from '../www/core/game-aux-state.js';
+import { ClientLocalStateGlobals } from '../www/core/client-local-state-globals.js';
+import { ClientCoreDataGlobals } from '../www/core/client-core-data-globals.js';
 
 // 같은 SID·기본 필드의 35BYTE 패킷을 만든다.
 function packetFor(sid) {
@@ -51,4 +55,29 @@ test('공통 객체 수신: 선택 장치 누락과 물리 길이 관문', () =>
     const before = pool.slot(sid); assert.throws(() => receiveRawSquid(pool, packet, state, {}), /take/);
     assert.equal(state.typeWas, 80); assert.deepEqual(pool.slot(sid), before);
     assert.throws(() => receiveRawSquid(pool, packet.subarray(0, 34), state, {}), /35BYTE/);
+});
+
+// 일반 타입의 현재 기술 장부·Player 이름·경고 표식과 배치 호출을 함께 확인한다.
+test('Session 객체 수신: 현재 기술 장부와 Player 경고', () => {
+    const pool = new SidPool(24000, { server: true }), sid = pool.allocate(), raw = pool.physical(sid), packet = packetFor(sid), events = [];
+    const types = Array.from({ length: 188 }, () => ({ flags1: 0, techBitIndex: -1, name: 'Generic' })); types[80].techBitIndex = 3;
+    const aux = new GameAuxState(), local = new ClientLocalStateGlobals(), coreData = new ClientCoreDataGlobals(), players = new Uint8Array(9 * 180);
+    players.set(Buffer.from('Bob\0'), 180 + 12);
+    const o = {
+        core: { pool, types, bridgeState: { bridgeType: 82 }, building: { notifySurface: () => { throw new Error('예상하지 않은 다리 통지'); } },
+            factory: { take: (type) => { new DataView(raw.buffer, raw.byteOffset, raw.byteLength).setUint32(0, 0x501ea0, true); raw[10] = type; return sid; }, firstPopFlags: () => 0x40 } },
+        gameplayGlobals: { gameAux: () => aux }, localStateGlobals: local, coreDataGlobals: coreData, players,
+        ownership: { setOwner: (_sid, owner) => { raw[34] = owner; } }, objectNames: { baseName: () => 'Unit' },
+        services: { player: {}, factoryTell: (text) => events.push(['안내', text]) },
+        world: { storage: { assertDisplay: () => { throw new Error('예상하지 않은 진단'); } }, pop: (...args) => events.push(['배치', ...args]) },
+    };
+    receiveSessionSquid(o, packet);
+    assert.equal(local.playerNoMakeWarnings()[80], 2); assert.equal(new DataView(players.buffer).getUint32(180 + 0x54, true) & 0x400, 0x400);
+    assert.equal(aux.supportTypeWas, 0); assert.deepEqual(events, [['안내', 'PlayerNoMake(Bob,Unit)'], ['배치', sid, 2.5, 3.25, 0x48]]);
+    // 같은 기술 비트가 존재하면 새 Player 안내와 표식을 만들지 않는다.
+    new DataView(coreData.records().buffer).setUint32(16 + 10, 8, true); local.playerNoMakeWarnings()[80] = 0;
+    new DataView(players.buffer).setUint32(180 + 0x54, 0, true); events.length = 0;
+    receiveSessionSquid(o, packet);
+    assert.equal(local.playerNoMakeWarnings()[80], 0); assert.equal(new DataView(players.buffer).getUint32(180 + 0x54, true), 0);
+    assert.deepEqual(events, [['배치', sid, 2.5, 3.25, 0x48]]);
 });
