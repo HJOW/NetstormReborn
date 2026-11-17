@@ -8,6 +8,14 @@ import { createCampaignAi, crankCampaignAiMoney, setCampaignAiParameter, prepare
 import { RawCampaignSessionAiActions } from './raw-campaign-session-ai-actions.js';
 import { RawCampaignSessionLoginFront } from './raw-campaign-session-login-front.js';
 import { registerFactoryResearchCommand } from './raw-factory-research.js';
+import { registerConstructionData } from './raw-packet-dispatch.js';
+import { receiveConstructionReject } from './raw-construction-failure-packets.js';
+import { battleIncomeAmount, battleIncomePeriod } from './raw-battle-option-slots.js';
+
+// 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
+function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
+// 현재 단정도를 분산 SP 저장소의 DWORD로 바꾼다.
+function spBits(value) { const data = new DataView(new ArrayBuffer(4)); data.setFloat32(0, value, true); return data.getUint32(0, true); }
 
 // Impl990..1865의 이미 이식한 생성 순서다. 각 단계는 같은 owner의 실제 하위 모듈을 한 번 만든다.
 const CONSTRUCTOR_STEPS = Object.freeze([
@@ -111,6 +119,58 @@ export class RawCampaignSession {
     registerFactoryResearchCommands(dispatch) {
         const o = this.#live(); if (!o.loaded || !o.factoryResearch) throw new Error('미설치 Session의 연구 수신 등록');
         registerFactoryResearchCommand(dispatch, o.factoryResearch);
+    }
+    // 현재 분산 SP의 실수값을 읽는다.
+    sp(owner) { return spFloat(this.#live().sp.get(owner)); }
+    // 현재 분산 SP에 같은 단정도 값을 기록한다.
+    setSp(owner, value) { this.#live().sp.set(owner, spBits(value)); }
+    // 현재 모드와 같은 보상 본체를 사용해 지정 Player에 SP를 가산한다.
+    #addMoney(owner, amount) {
+        const o = this.#live(); o.rewardState.fixedSpA = o.core.ownerMode.fort; o.rewardState.fixedSpB = Boolean(o.globals.editor);
+        o.rewardState.aiMirrorDisabled = o.core.ownerMode.challenge; o.hp.addSp(owner, Math.fround(amount));
+    }
+    // 6ch 수신은 잔액 관문·가산·안내·서버 방송을 원본 순서대로 처리한다.
+    #receiveConstructionMoney(packet) {
+        const o = this.#live(); if (!(packet instanceof Uint8Array) || packet.length < 11) throw new RangeError('SP 통지의 실제 11BYTE 부족');
+        const amount = () => new DataView(packet.buffer, packet.byteOffset, packet.byteLength).getInt32(7, true);
+        const notice = (kind, player, value) => {
+            const status = o.services.localLogin?.status; if (typeof status !== 'function') throw new Error('SP 통지의 실제 MessageBoard 장치 미연결');
+            status(kind, player, value >>> 0);
+        };
+        if (!packet[6]) {
+            if (o.core.processState.server && packet[5] !== o.playerState.battleOwner) {
+                const source = packet[5], available = source > 0 && source < 9 ? this.sp(source) : 0;
+                if (available < amount()) { o.assetModules.prepareConstruction(); o.construction.chargeShortfall(0, packet[5], -10000, -10000, 0, 0); return; }
+            }
+            if (packet[5] !== o.playerState.battleOwner) this.#addMoney(packet[5], (-amount()) | 0);
+        }
+        if (packet[6] === 2) {
+            if (!battleIncomePeriod(o.battleOptions)) return; const current = amount();
+            if (current !== battleIncomeAmount(o.battleOptions)) return; notice(18, packet[5], current);
+        }
+        this.#addMoney(packet[4], amount());
+        if (packet[4] === o.playerState.battleOwner && !packet[6]) notice(4, packet[5], amount());
+        if (o.core.processState.server) o.tables.broadcast.send(packet);
+    }
+    // 설치된 건설·회수·승천·취소·SP 수신을 같은 실제 Session 분배 표에 등록한다.
+    registerConstructionCommands(dispatch) {
+        const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 건설 수신 등록');
+        o.construction.register(dispatch, () => o.assetModules.prepareConstruction());
+        if (!o.buildingData) throw new Error('실제 건설 상태 수신 본체 미설치');
+        dispatch.requireLength(0x37, 0xffff); registerConstructionData(dispatch, o.buildingData);
+        dispatch.observe(0x54, null); dispatch.version(0x54, 1, 0); dispatch.requireLength(0x54, 8);
+        dispatch.register(0x54, (sender, _connection, packet) => { this.#live(); o.salvageCommand.receive(sender, packet); });
+        dispatch.observe(0x51, null); dispatch.version(0x51, 1, 0); dispatch.requireLength(0x51, 8);
+        dispatch.register(0x51, (sender, _connection, packet) => { this.#live(); o.vortexDeparture.receive(sender | 0, packet); });
+        dispatch.observe(0x2f, null); dispatch.version(0x2f, 1, 0); dispatch.requireLength(0x2f, 15);
+        dispatch.register(0x2f, (_sender, _connection, packet) => {
+            this.#live(); o.assetModules.prepareConstruction(); const c = o.core;
+            receiveConstructionReject(packet, { pool: c.pool, hash: c.hash, types: c.types, frames: o.metadata.frames,
+                patternTypes: o.state.constructionState.clear.patternTypes, get noIslandType() { return c.bridgeState.noIslandType; }, diagnostics: o.metadata.geometry.decoderDiagnostics },
+            (sid, flags) => o.world.destroy(sid, flags));
+        });
+        dispatch.observe(0x6c, null); dispatch.version(0x6c, 1, 0); dispatch.requireLength(0x6c, 11);
+        dispatch.register(0x6c, (_sender, _connection, packet) => this.#receiveConstructionMoney(packet));
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }
