@@ -26,6 +26,7 @@ import { RawAiDropSelection, AI_DROP_SELECTION_LOG } from './raw-ai-drop-selecti
 import { RawAiDryGeometry } from './raw-ai-dry-geometry.js';
 import { RawAiFakeDrySpots, AI_FAKE_DRY_LOG } from './raw-ai-fake-dry-spots.js';
 import { RawAiDropActions, AI_DROP_ACTION_LOG } from './raw-ai-drop-actions.js';
+import { RawAiPriestActions, aiPriestInRitual, aiAltarContainsEnemy } from './raw-ai-priest-actions.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -68,6 +69,8 @@ export class RawCampaignSessionMotionRuntime {
     aiFakeDryHooks = null;
     // 실제 AI 배치 행동이 빌리는 선택·생산·검사 효과다.
     aiDropActionHooks = null;
+    // 사제 AI가 같은 월드의 탐색·이동·회수를 호출하는 장치다.
+    aiPriestActionHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -426,6 +429,33 @@ export class RawCampaignSessionMotionRuntime {
         };
         o.aiDropActions = new RawAiDropActions(o.aiMemory, c.pool, c.types, o.random, globals, hooks);
         this.aiDropActionHooks = hooks;
+    }
+    // 배치 행동 뒤 현재 사제의 탐색·이동·회수 경계를 연결한다.
+    bindAiPriestActions() {
+        this.#live(); const o = this.#owner, c = o.core, s = o.state;
+        if (!this.aiDropActionHooks || this.aiPriestActionHooks || o.aiPriestActions) throw new Error('Session AI 사제 행동 설치 순서 오류');
+        const globals = { now: () => c.processState.now, mapLimit: () => o.cursorManaGlobals.mapLimit, daisType: () => s.runeState.readDaisType() };
+        const hooks = {
+            scan: (token, budget) => { this.#live(); o.aiBuildSearch.scan(token, budget); },
+            vulnerable: (sid) => { this.#live(); return o.aiCollectors.vulnerable(sid); },
+            busy: (sid) => { this.#live(); return Boolean(c.processes.findEvent(sid, 0x493)); },
+            path: (sid) => { this.#live(); return o.aiMovement.movementForm(sid); },
+            maxHitPoints: (sid) => { this.#live(); return o.hp.maxHitPoints(sid); },
+            ritual: (sid) => { this.#live(); return aiPriestInRitual(c.pool, c.frames, sid); },
+            altarEnemy: (enemy, dais) => { this.#live(); return aiAltarContainsEnemy(c.pool, dais, enemy, s.runeState.readAltarType(), (x, y, type) => o.world.find(x, y, type)); },
+            target: (token, actor, target, sacrifice) => { this.#live(); o.aiMovement.toTarget(token, actor, target, sacrifice); },
+            distance: (point, sid) => { this.#live(); return aiDistanceToFootprint(point, c.neighbors.footprint(sid)); },
+            select: (token) => { this.#live(); return o.aiBuildChoice.select(token); },
+            home: (token, sid) => { this.#live(); o.aiMovement.home(token, sid); },
+            collect: (token, sid) => { this.#live(); o.aiResourceChoice.collectOrHome(token, sid); },
+            deploy: (token, type, point) => { this.#live(); o.aiCollectors.deployWithNotice(token, type, point.x, point.y, 0, 0); },
+            begin: (token, request) => { this.#live(); o.aiBuildSearch.initialize(token, request.type, request.bounds, request.avoid, request.owner); },
+            point: (token, sid, point) => { this.#live(); o.aiMovement.toPoint(token, sid, point, 0); },
+            enemyLowFunds: (token) => { this.#live(); return o.aiBuildChoice.enemyLowFunds(token); },
+            salvage: (sid) => { this.#live(); o.salvageCommand.request(sid); },
+        };
+        o.aiPriestActions = new RawAiPriestActions(o.aiMemory, c.pool, globals, hooks);
+        this.aiPriestActionHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

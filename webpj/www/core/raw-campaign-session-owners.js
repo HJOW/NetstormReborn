@@ -213,6 +213,8 @@ export class RawCampaignSessionOwners {
     aiFakeDrySpots = null;
     // 선택한 실제 후보를 생산하는 AI 배치 행동 처리기다.
     aiDropActions = null;
+    // 사제 AI의 탐색·이동·생산 행동 처리기다.
+    aiPriestActions = null;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -790,6 +792,12 @@ export class RawCampaignSessionOwners {
     connectAiDropActions() {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 배치 행동 설치 전/반납');
         this.motionRuntimeModules.bindAiDropActions();
+    }
+
+    // 배치 행동 뒤 현재 사제의 행동 처리기를 설치한다.
+    connectAiPriestActions() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 사제 행동 설치 전/반납');
+        this.motionRuntimeModules.bindAiPriestActions();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

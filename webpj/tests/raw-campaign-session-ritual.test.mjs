@@ -394,6 +394,21 @@ test('AI 배치 행동: 선행 관문과 현재 생산 비용', () => {
     } finally { if (token) o.aiMemory.free(token); o.dispose(); }
 });
 
+// 사제 행동은 설치 순서와 같은 Pool을 지키며 사제 0에서 동작을 생략한다.
+test('AI 사제 행동: 선행 관문과 사제 없는 본체', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    let token = 0;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget(); o.connectAiDropTargets(); o.connectAiDropEvaluation(); o.connectAiDropScan(); o.connectAiDropSelection(); o.connectAiDryGeometry(); o.connectAiFakeDrySpots();
+        assert.throws(() => o.connectAiPriestActions(), /순서/);
+        o.connectAiDropActions(); o.connectAiPriestActions();
+        assert.equal(o.aiPriestActions.pool, o.core.pool);
+        token = o.aiMemory.allocate(0xb08); const before = o.random.state;
+        o.aiPriestActions.act(token, 0); assert.equal(o.random.state, before);
+        assert.throws(() => o.connectAiPriestActions(), /순서/); assert.equal(o.loaded, false);
+    } finally { if (token) o.aiMemory.free(token); o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {
