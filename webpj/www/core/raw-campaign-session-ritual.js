@@ -14,6 +14,9 @@ import { grantForeignRitualSp, grantForeignRitualType } from './raw-foreign-ritu
 import { readPlayerSpAmount, setPlayerSpAmount } from './raw-fort-money-load.js';
 import { typeNumber } from '../assets/type-table.js';
 import { currentNuggetType } from './raw-path-cleanup.js';
+import { RawFrameAdvance } from './raw-frame-advance.js';
+import { RawAltarSacrifice, makeAltarSacrificeHooks } from './raw-altar-sacrifice.js';
+import { AltarSacrificeState } from './raw-ritual-regular.js';
 
 // 원문 ConnectRitual의 사제 앞단과 후속 의식이 공유할 Regular 예약 수명이다.
 export class RawCampaignSessionRitual {
@@ -25,6 +28,8 @@ export class RawCampaignSessionRitual {
     templeHooks = null; runeHooks = null;
     // 희생에서 사용할 지연 소리의 미부착 객체와 실제 효과 표다.
     pendingSound = null; daisHooks = null; sacrificeHooks = null;
+    // 제단 정기의 현재 저항 값과 같은 월드에 연결한 효과다.
+    altarState = null; altarHooks = null;
     // 구성만으로 현재 객체나 난수를 변경하지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 의식 함수가 이전 World에 접근하지 못하도록 한다.
@@ -135,6 +140,34 @@ export class RawCampaignSessionRitual {
         };
         o.sacrificeRequest = new RawPriestSacrificeRequest(c.pool, () => currentNuggetType(s.motionState.cleanup), () => o.playerState.battleOwner, this.sacrificeHooks);
         o.runtimeModules.prepareRitual(); this.#daisReady = true;
+    }
+    // 다이스 설치 뒤 제단 정기와 사제 해방을 같은 Pool·Host·난수에 연결한다.
+    bindAltar() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.#daisReady || this.altarState || o.altarSacrifice) throw new Error('Session 제단 의식 설치 순서 오류');
+        const advance = new RawFrameAdvance(c.pool, c.frames, c.frame);
+        const state = new AltarSacrificeState();
+        const hooks = {
+            assertion: (expression, _file, line) => { this.#live(); if (!o.services.ai.assertion) throw new Error(`제단 해방 실제 진단 장치 미연결 ${line}`); o.services.ai.assertion(expression); },
+            boss: () => { this.#live(); return o.state.assetState.readBoss(); },
+            notifySurface: (sid) => { this.#live(); c.building.notifySurface(sid); },
+            count: (sid) => { this.#live(); return o.assetModules.virtualCount(sid); },
+            destroy: (sid, flags) => { this.#live(); o.world.destroy(sid, flags); },
+            reserveShared: () => this.reserveRegular(),
+            playAt: (x, y, name, flags) => { this.#live(); if (!o.services.sound.playOnceAt) throw new Error('제단 실제 위치 음향 미연결'); o.services.sound.playOnceAt(x, y, o.soundNames.lookup(name), flags, 0); },
+            playGlobal: (name, loop, volume, pan, priority, limit) => { this.#live(); if (!o.services.sound.play) throw new Error('제단 실제 전역 음향 미연결'); o.services.sound.play(o.soundNames.lookup(name), loop, volume, pan, priority, limit); },
+            removeAnimation: (sid) => { this.#live(); if (!o.ritualExplosion) throw new Error('제단 실제 폭발 효과 미연결'); o.ritualExplosion(sid); },
+            unpop: (sid, flags) => { this.#live(); o.world.unpop(sid, flags); },
+            repop: (sid, flags) => { this.#live(); o.world.repop(sid, flags); },
+            setOwner: (sid, owner) => { this.#live(); o.ownership.setOwner(sid, owner); },
+            pop: (sid, x, y, flags) => { this.#live(); o.world.pop(sid, x, y, flags); },
+            escapeEffect: (sid, distance, event) => { this.#live(); if (!o.carrierEscape) throw new Error('제단 해방 실제 회피 설치 전 호출'); o.carrierEscape.run(sid, distance, event); },
+            refreshOwner: (owner) => { this.#live(); o.priestParticipation.refresh(owner); },
+        };
+        const bound = makeAltarSacrificeHooks(c.pool, c.frame, c.processes, c.factory, o.assetBindings.regular, o.random, hooks);
+        bound.addShared = (sid, event, payload) => this.addRegular(sid, event, payload, 61);
+        o.altarSacrifice = new RawAltarSacrifice(c.pool, c.hash, c.types, c.frames, c.neighbors, o.runePostPop, o.templeRitual, o.priests.carrier, o.daisRegular, advance, c.processes, o.damageablePre, o.daisState, state, bound);
+        this.altarState = state; this.altarHooks = bound;
     }
     // 실제 Host를 비운 뒤 미부착 예약과 함수 대여를 반납한다.
     dispose() { if (this.#disposed) return; this.#disposed = true; this.pendingRegular = null; this.pendingSound = null; if (this.#runeRegistered) { this.#owner.core.postPop.setBody('rune', null); this.#runeRegistered = false; } }

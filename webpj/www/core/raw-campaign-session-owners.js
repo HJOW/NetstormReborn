@@ -662,6 +662,12 @@ export class RawCampaignSessionOwners {
         this.ritualModules.bindDais();
     }
 
+    // 다이스 뒤 제단 정기와 해방 처리기를 같은 월드에 설치한다.
+    connectRitualAltar() {
+        if (this.#disposed || !this.ritualModules) throw new Error('Session 제단 의식 설치 전/반납');
+        this.ritualModules.bindAltar();
+    }
+
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
     drawTempleFrames(sid, frame) {
         if (this.#disposed) throw new Error('반납한 Session 신전 그림');

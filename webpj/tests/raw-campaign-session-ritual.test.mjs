@@ -62,6 +62,31 @@ test('다이스 의식: 같은 현재 장부·동맹·사제 TYPE과 설치 순�
     } finally { o.dispose(); }
 });
 
+// 제단은 같은 Pool과 예약 객체를 공유하고 선행 결선 및 반납을 확인한다.
+test('제단 의식: 실제 몸체와 공유 Regular 예약 및 설치 순서', () => {
+    const early = scene(true);
+    try { assert.throws(() => early.connectRitualAltar(), /순서/); } finally { early.dispose(); }
+    const o = scene(true);
+    const module = o.ritualModules;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar();
+        assert.equal(o.altarSacrifice.pool, o.core.pool);
+        assert.equal(module.altarState.escapePercent, 40);
+        assert.equal(module.altarHooks.boss(), o.state.assetState.readBoss());
+        assert.equal(module.altarHooks.reserveShared(), true);
+        const reserved = module.pendingRegular;
+        assert.throws(() => module.altarHooks.reserveShared(), /중첩/);
+        const altar = o.world.create(164);
+        module.altarHooks.addShared(altar, 20, Math.fround(0.08));
+        assert.equal(o.core.processes.findEvent(altar, 20), reserved);
+        assert.equal(reserved.shared, true);
+        assert.equal(module.pendingRegular, null);
+        assert.throws(() => o.connectRitualAltar(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+    assert.throws(() => module.altarHooks.boss(), /반납/);
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

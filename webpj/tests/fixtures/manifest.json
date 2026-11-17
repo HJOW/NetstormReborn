@@ -18665,7 +18665,7 @@
       "bytes": 2022850,
       "lines": 2867,
       "fixtureCommit": "5bdb5bedf",
-      "webCommit": "e777ccfdd",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawAltarSacrifice.cpp": "21bb25505",
         "cpppj/src/o/RawRitualRegular.cpp": "21bb25505",
@@ -18680,7 +18680,8 @@
       "modules": [
         "webpj/www/core/raw-altar-sacrifice.js",
         "webpj/www/core/raw-ritual-regular.js",
-        "webpj/www/core/raw-dais-deletion.js"
+        "webpj/www/core/raw-dais-deletion.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-altar-sacrifice-20261113.md",
       "cpppjSources": [
