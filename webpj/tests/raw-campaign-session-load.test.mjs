@@ -34,7 +34,7 @@ function scene(overrides = {}, savedFort = fort) {
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => trace.push('config'), refreshWindowTitle: () => trace.push('title'), resetCamera: () => trace.push('camera'), ...overrides.install },
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
-        templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology,
+        templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
         player: { log: () => trace.push('log') }, construction: overrides.construction, missionOutcome: overrides.missionOutcome,
         ai: { assertion: forbidden('AI 진단'), ...overrides.ai },
@@ -55,6 +55,14 @@ test('CampaignSession Tutorial 1: 실제 저장 객체·Graph와 커서까지 Lo
     assert.throws(() => s.load(), /반납/);
 });
 
+// 원본 기본 AI 설정의 같은 600BYTE 입력에 명시 이름·기술·초기 SP만 지정한다.
+function localAiProfile() {
+    const profile = new Uint8Array(600).fill(0xa7);
+    new RawMissionAiSettings({ stuffRefreshRate: 3, startingSp: 2500 }, { get: forbidden('AI 설정') }).initialize(profile);
+    profile.set(new TextEncoder().encode('Explicit\0'), 0); profile.set(new TextEncoder().encode('sunCannon\0'), 30); new DataView(profile.buffer).setUint32(0x22c, 777, true);
+    return profile;
+}
+
 // 실제 두 Player 지역에 생성한 간헐천이 같은 AI 장부에 등록되고 AI를 반납한다.
 test('CampaignSession Tutorial 1: 로컬 간헐천과 실제 AI 등록', () => {
     const records = new ClientPlayerRecords(), notices = [];
@@ -64,15 +72,28 @@ test('CampaignSession Tutorial 1: 로컬 간헐천과 실제 AI 등록', () => {
     };
     const { s } = scene(options);
     try {
-        s.load(); const profile = new Uint8Array(600).fill(0xa7);
-        new RawMissionAiSettings({ stuffRefreshRate: 3, startingSp: 2500 }, { get: forbidden('AI 설정') }).initialize(profile);
-        profile.set(new TextEncoder().encode('Explicit\0'), 0); profile.set(new TextEncoder().encode('sunCannon\0'), 30); new DataView(profile.buffer).setUint32(0x22c, 777, true);
-        const token = s.createAi(2, profile); records.records()[180 + 0x50] = 2; assert.equal(s.prepareAi(2), true);
+        s.load(); const token = s.createAi(2, localAiProfile()); records.records()[180 + 0x50] = 2; assert.equal(s.prepareAi(2), true);
         const raw = s.aiMemory().bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength), before = view.getUint32(0x32c, true);
         const count = s.world().objects().filter(({ object }) => object.type === 122).length; s.generateLocalGeysers();
         assert.equal(view.getUint32(0x32c, true), before + 6); assert.equal(s.world().objects().filter(({ object }) => object.type === 122).length, count + 6);
         assert.equal(records.records()[180 + 0x50], 2); assert.equal(records.records()[360 + 0x50] & 0x22, 0x20); assert.equal(s.participation().brain(2), token);
         assert.equal(notices.filter((item) => item === 'refresh').length, 6); s.removeAi(2); assert.equal(s.participation().brain(2), 0);
+    } finally { s.dispose(); }
+});
+
+// 전체 생성은 로컬 생성 뒤 현재 옵션의 세계 배치까지 같은 World·AI 장부에 반영한다.
+test('CampaignSession Tutorial 1: 세계 간헐천 전체 생성과 AI 등록', () => {
+    const records = new ClientPlayerRecords(), options = new Uint8Array(87), notices = []; options[18] = 1;
+    const { s } = scene({
+        playerRecords: records, missionOptions: options, construction: { wallSeconds: () => 1, configInt: () => 0, refresh: () => notices.push('refresh') }, missionOutcome: { demo: () => 0 },
+        ai: { allocationBytes: (bytes) => bytes.fill(0x71), participation: { clearChat: () => notices.push('clear'), addChat: () => notices.push('add') } },
+    });
+    try {
+        s.load(); const token = s.createAi(2, localAiProfile()); records.records()[180 + 0x50] = 2; assert.equal(s.prepareAi(2), true);
+        const raw = s.aiMemory().bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength), before = view.getUint32(0x32c, true);
+        const count = s.world().objects().filter(({ object }) => object.type === 122).length; s.generateWorldGeysers();
+        assert.equal(view.getUint32(0x32c, true), before + 17); assert.equal(s.world().objects().filter(({ object }) => object.type === 122).length, count + 17);
+        assert.equal(s.participation().brain(2), token); assert.ok(notices.includes('refresh')); s.removeAi(2); assert.equal(s.participation().brain(2), 0);
     } finally { s.dispose(); }
 });
 
