@@ -296,3 +296,27 @@ test('CampaignSession Tutorial 1: 총 데이터의 실제 Process 신규·갱신
         assert.equal(c.kernel.size, count); assert.equal(c.pool.slot(unused)[11] & 1, 1);
     } finally { s.dispose(); }
 });
+
+// 일반 Form을 부모로 발사·회전 데이터만 수신하며 프레임과 발사는 실행하지 않는다.
+test('CampaignSession Tutorial 1: 총 애니메이션 Process 수신', () => {
+    const gameplay = new ClientGameplayGlobals(), { s } = scene({ gameplayGlobals: gameplay });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); const c = s.core(), parent = c.factory.create(6, 2), aux = gameplay.gameAux(); aux.sunCannonType = 6;
+        // 두 메시지는 현재 Host에 서로 다른 신규 Form을 부착한다.
+        for (const [message, processType] of [[0x3b, aux.fireAnimationProcessType], [0x3c, aux.rotateAnimationProcessType]]) {
+            let form = 15001;
+            // 현재 비어 있는 서버 Form을 찾는다.
+            while (form < c.pool.capacity && !(c.pool.slot(form)[11] & 1)) form += 1;
+            assert.ok(form < c.pool.capacity); const packet = new Uint8Array(25), view = new DataView(packet.buffer);
+            packet.set([1, message, 25, 0]); view.setUint32(4, form, true); packet[8] = 0xff; view.setUint32(9, parent, true);
+            view.setUint16(13, parent, true); view.setUint16(15, 321, true); view.setFloat64(17, 12.5, true);
+            const entry = dispatch.registration(message); assert.equal(entry.length, 0xffff); assert.equal(entry.version, 1);
+            assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+            const current = c.processes.fromForm(form); assert.equal(current.parent, parent); assert.equal(c.pool.slot(form)[10], processType);
+            assert.equal(current.fields.target, 321); assert.equal(current.fields.time, 12.5);
+            const update = new Uint8Array(11), changed = new DataView(update.buffer); update.set([1, message, 11, 0]); changed.setUint32(4, form, true); update[8] = 4; changed.setUint16(9, 123, true);
+            assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), update), true); assert.equal(c.processes.fromForm(form), current); assert.equal(current.fields.target, 123);
+        }
+    } finally { s.dispose(); }
+});

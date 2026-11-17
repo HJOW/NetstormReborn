@@ -325,7 +325,7 @@ export class RawCampaignSession {
         if (!o.flyer) throw new Error('86h 명령의 현재 Flyer 기한 본체 미연결'); o.flyer.command(current.fields, command);
     }
 
-    // Carrier 등록의 동맹부터 비행 수신·명령까지 확인한 앞부분을 원본 순서대로 등록한다.
+    // Carrier 등록의 동맹부터 총 애니메이션 수신까지 확인한 앞부분을 원본 순서대로 등록한다.
     registerCarrierCommandPrefix(dispatch) {
         const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 Carrier 수신 등록');
         this.registerAllianceNegotiationCommands(dispatch);
@@ -355,6 +355,11 @@ export class RawCampaignSession {
         dispatch.register(0x39, (_sender, _connection, packet) => this.#receiveFlyerPacket(packet));
         dispatch.observe(0x86, () => {}); dispatch.version(0x86, 1, 0); dispatch.requireLength(0x86, 20);
         dispatch.registerDirect(0x86, (_sender, _connection, packet) => this.#receiveFlyerCommand(packet));
+        // 발사·회전 데이터는 같은 실제 전투 바인딩의 현재 Host 수신기로 전달한다.
+        for (const type of [0x3b, 0x3c]) {
+            dispatch.observe(type, null); dispatch.version(type, 1, 0); dispatch.requireLength(type, 0xffff);
+            dispatch.register(type, (_sender, _connection, packet) => { this.#live(); if (!o.combat) throw new Error('애니메이션 수신의 실제 전투 본체 미연결'); o.combat.receiveAnimationPacket(type, packet); });
+        }
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }
