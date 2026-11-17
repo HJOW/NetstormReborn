@@ -1012,11 +1012,13 @@ public sealed partial class HostSession
     /// <param name="types">같은 실제 TYPE 표다. 패치판 188개여야 한다.</param>
     /// <param name="frames">같은 실제 프레임 표다. 타입 개수와 같아야 한다.</param>
     /// <param name="factory">빌릴 외부 공장. null이면 세션 전용으로 만든다. 넘기면 같은 풀 소속이어야 하며 소유자의 바인딩 그대로 쓴다.</param>
+    /// <param name="building">빌릴 외부 건물 공간. null이면 세션 전용으로 만든다. 넘기면 같은 풀·해시 소속이어야 한다.</param>
     /// <remarks>2026-11-12 0.467에서 요새 객체 live 적재용으로 추가했다. 근거: cpppj RawCampaignWorldRuntime.cpp 43~53행(객체 갈고리+MakeFortObjectLoadHooks+RawFortObjectLoad)의 세션 결선이다.
     /// SetState·FinishOwner는 기록만 하며(R6 공장 후처리·거주 배치에서 잇는다), Destroy·VirtualCount·내용물 부착은 미션 적재(Fort=false)에서 도달하지 않으므로 명시 경계로 둔다.
     /// 2026-11-12 0.475에서 소유자 지정 몸체를 Player 월드 갈고리와 공유하려고 `_playerOwner` 필드에 보관한다.
-    /// 0.597에서 저장소 공장 전환용으로 외부 공장 빌림을 추가했다.</remarks>
-    public void BuildFortObjectDevices(IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames, RawSquidFactory? factory = null)
+    /// 0.597에서 저장소 공장 전환용으로 외부 공장 빌림을 추가했다.
+    /// 0.599에서 저장소 건물 공간 전환용으로 외부 건물 공간 빌림을 추가했다.</remarks>
+    public void BuildFortObjectDevices(IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames, RawSquidFactory? factory = null, RawBuildingSpace? building = null)
     {
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(frames);
@@ -1031,6 +1033,10 @@ public sealed partial class HostSession
         if (factory is not null && !ReferenceEquals(factory.Pool, Pool))
         {
             throw new ArgumentException("요새 객체 외부 공장의 풀 불일치", nameof(factory));
+        }
+        if (building is not null && (!ReferenceEquals(building.Pool, Pool) || !ReferenceEquals(building.Hash, _terrainHash)))
+        {
+            throw new ArgumentException("요새 객체 외부 건물 공간의 풀·해시 불일치", nameof(building));
         }
         _fortFactory = factory ?? new RawSquidFactory(Pool, types);
         if (factory is null)
@@ -1057,7 +1063,7 @@ public sealed partial class HostSession
         };
         RawContainedCreate.ConnectFactory(Pool, _fortFactory, containedHooks);
         _fortContained = new RawContainedCreate(Pool, new ContainedCreateState(), containedHooks);
-        _fortBuilding = new RawBuildingSpace(Pool, _terrainHash, types,
+        _fortBuilding = building ?? new RawBuildingSpace(Pool, _terrainHash, types,
             new BuildingSpaceState { IslandType = TerrainGlobals.IslandType, BridgeType = 82 });
         _fortPop = new RawPop(Pool, _terrainHash, _terrainSpots);
         _fortPop.SetBuildingSide(_fortBuilding);

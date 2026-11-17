@@ -370,8 +370,10 @@ public sealed class ClientHostGame : Game
             InstallMissionStorageTables(storage, types.Types, session.WorldFrames, popShapes);
             session.BuildTerrainPopDevices(types.Types, popShapes, storage.FactoryExecutor(), storage.Hash, storage.Spots);
             // 요새 객체 적재 장치. 지형 Pop과 같은 해시·spots·표시를 공유한다(cpppj RawCampaignWorldRuntime, 0.467).
-            // 공장·실행기 일원화(0.597): 두 장치의 생성 공장을 저장소 공장으로 통일한다. 표는 0.596에서 저장소에 넣었다.
-            session.BuildFortObjectDevices(types.Types, session.WorldFrames, storage.FactoryExecutor());
+            // 공장·실행기 일원화(0.597·0.599): 두 장치의 생성 공장과 건물 공간을 저장소 실행기로 통일한다. 표는 0.596에서 저장소에 넣었다.
+            // 건물 공간의 섬 타입은 세션 지형 값으로 맞춘다(HasIsland 판정에 쓴다).
+            storage.BuildingSpaceState.IslandType = session.TerrainGlobals.IslandType;
+            session.BuildFortObjectDevices(types.Types, session.WorldFrames, storage.FactoryExecutor(), storage.BuildingExecutor());
             // 월드 그래프 재구성 장치. 같은 해시·spots·프레임 표를 공유한다(cpppj RawCampaignWorldRuntime 65·83행, 0.470).
             session.BuildWorldGraphDevices(types.Types);
             // 같은 Player·공통 Pop·프로세스에 실제 사제/보호막 후처리를 등록한다.

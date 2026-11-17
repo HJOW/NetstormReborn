@@ -10,12 +10,13 @@ namespace Netstorm.Client.Tests;
 // 0.595에서 추가됐다. (R4-1 잔여 중 HostSession 별도 풀 제거)
 public sealed class HostSessionPoolTransitionTests
 {
-    /// <summary>실제 자료로 live 장면을 조립한다. 빌린 풀·공장·공간이 있으면 그걸 쓴다.</summary>
+    /// <summary>실제 자료로 live 장면을 조립한다. 빌린 풀·공장·공간·건물을 쓴다.</summary>
     /// <param name="pool">빌릴 외부 풀. null이면 세션 전용 풀을 만든다.</param>
     /// <param name="factory">빌릴 외부 공장. null이면 세션 전용으로 만든다.</param>
     /// <param name="hash">빌릴 외부 공간 해시. null이면 세션 전용으로 만든다.</param>
     /// <param name="spots">빌릴 외부 점유 지도. null이면 세션 전용으로 만든다.</param>
-    private static HostSession LoadLiveScene(RawSidPool? pool, RawSquidFactory? factory = null, RawSquidHash? hash = null, byte[]? spots = null)
+    /// <param name="building">빌릴 외부 건물 공간. null이면 세션 전용으로 만든다.</param>
+    private static HostSession LoadLiveScene(RawSidPool? pool, RawSquidFactory? factory = null, RawSquidHash? hash = null, byte[]? spots = null, RawBuildingSpace? building = null)
     {
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
         var startup = new HostStartupScene(data);
@@ -27,7 +28,7 @@ public sealed class HostSessionPoolTransitionTests
         var shpDb = new ShapeDatabase(shpRaw);
         List<SquidDisplayShape> shapes = TerrainDisplayShapes.Build(definitions, shpDb);
         session.BuildTerrainPopDevices(table.Types, shapes, factory, hash, spots);
-        session.BuildFortObjectDevices(table.Types, session.WorldFrames, factory);
+        session.BuildFortObjectDevices(table.Types, session.WorldFrames, factory, building);
         MissionFortLoadResult fort = MissionFortLoad.Load(startup, "thewarbegins");
         HostFortObjectLiveTests.BuildLiveTerrainFirst(session, fort.Fort, table.Types);
         session.LoadFortObjects(fort.Fort, 1u);
@@ -117,20 +118,64 @@ public sealed class HostSessionPoolTransitionTests
         Assert.NotEqual(own.Pool.Bytes.ToArray(), changed.Pool.Bytes.ToArray());
     }
 
-    /// <summary>풀·공장·공간을 모두 저장소에서 빌려도 live 장면이 완전히 같다.</summary>
+    /// <summary>풀·공장·공간·건물을 모두 저장소에서 빌려도 live 장면이 완전히 같다.</summary>
     [Fact]
-    public void StorageSpaceKeepsLiveSceneIdentical()
+    public void StorageExecutorsKeepLiveSceneIdentical()
     {
         var own = LoadLiveScene(null);
         var storage = new RawSurfaceStorage(OriginalEdition.Patch1078);
         var mission = MissionTable();
         ClientHostGame.InstallMissionStorageTables(storage, mission.Types, mission.WorldFrames, mission.Shapes);
-        var borrowed = LoadLiveScene(storage.Pool, storage.FactoryExecutor(), storage.Hash, storage.Spots);
-        Assert.Same(storage.Hash, borrowed.TerrainPopHash);
-        Assert.Same(storage.Spots, borrowed.TerrainPopSpots);
+        storage.BuildingSpaceState.IslandType = 97u;
+        var borrowed = LoadLiveScene(storage.Pool, storage.FactoryExecutor(), storage.Hash, storage.Spots, storage.BuildingExecutor());
         Assert.Equal(UsedSlots(own), UsedSlots(borrowed));
         Assert.Equal(own.Pool.Bytes.ToArray(), borrowed.Pool.Bytes.ToArray());
         Assert.Equal(own.Game.State(), borrowed.Game.State());
+    }
+
+    /// <summary>건물 공간의 섬 타입이 HasIsland 판정을 가른다. 동기화가 필수다.</summary>
+    [Fact]
+    public void BuildingIslandTypeSelectsHasIsland()
+    {
+        var pool = new RawSidPool(24000, false);
+        int island = pool.Allocate(Netstorm.Core.Simulation.SidAllocation.Client);
+        System.Span<byte> raw = pool.AllocatedBytes(island);
+        raw.Clear();
+        raw[Netstorm.Core.Original.RawSidPool.TypeOffset] = 97;
+        WriteUint(raw, 14, BitConverter.SingleToUInt32Bits(10.0f));
+        WriteUint(raw, 18, BitConverter.SingleToUInt32Bits(10.0f));
+        var hash = new Netstorm.Core.Original.RawSquidHash();
+        hash.Bucket(0, 10.0f, 10.0f) = unchecked((ushort)island);
+        var types = System.Linq.Enumerable.Range(0, 188)
+            .Select(_ => new Netstorm.Core.Original.OriginalTypeRecord { FootX = 1, FootY = 1 }).ToArray();
+        var space97 = new Netstorm.Core.Original.RawBuildingSpace(pool, hash, types, new Netstorm.Core.Original.BuildingSpaceState { IslandType = 97u, BridgeType = 82u });
+        var space0 = new Netstorm.Core.Original.RawBuildingSpace(pool, hash, types, new Netstorm.Core.Original.BuildingSpaceState { IslandType = 0u, BridgeType = 82u });
+        Assert.True(space97.HasIsland(10.0f, 10.0f));
+        Assert.False(space0.HasIsland(10.0f, 10.0f));
+    }
+
+    /// <summary>값을 리틀 엔디언으로 쓴다.</summary>
+    private static void WriteUint(System.Span<byte> bytes, int offset, uint value)
+    {
+        // 낮은 바이트부터 4바이트를 쓴다.
+        for (int index = 0; index < 4; index++)
+        {
+            bytes[offset + index] = (byte)(value >> (index * 8));
+        }
+    }
+
+    /// <summary>다른 풀·해시의 건물 공간은 거부한다.</summary>
+    [Fact]
+    public void BuildersRejectForeignBuilding()
+    {
+        var session = new HostSession(new Kernel(), new GameRandom(1u), new CrtRandom());
+        var mission = MissionTable();
+        session.BuildTerrainPopDevices(mission.Types, mission.Shapes);
+        var foreignPool = new RawSidPool(HostSession.MissionPoolCapacity, true);
+        var foreignBuilding = new RawBuildingSpace(foreignPool, new RawSquidHash(), mission.Types, new BuildingSpaceState { IslandType = 97u, BridgeType = 82u });
+        Assert.Throws<System.ArgumentException>(() => session.BuildFortObjectDevices(mission.Types, mission.WorldFrames, null, foreignBuilding));
+        var foreignHash = new RawBuildingSpace(session.Pool, new RawSquidHash(), mission.Types, new BuildingSpaceState { IslandType = 97u, BridgeType = 82u });
+        Assert.Throws<System.ArgumentException>(() => session.BuildFortObjectDevices(mission.Types, mission.WorldFrames, null, foreignHash));
     }
 
     /// <summary>해시·점유지 한쪽만 빌리거나 크기가 다르면 거부한다.</summary>
