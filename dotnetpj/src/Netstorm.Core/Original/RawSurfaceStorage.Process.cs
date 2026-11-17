@@ -232,6 +232,33 @@ public sealed partial class RawSurfaceStorage
             return;
         }
 
+        // 실제 다섯 Carrier VT는 같은 장기 finder/보충 부모를 사용한다.
+        if (method == 0x00426890u)
+        {
+            CarrierPre().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 네 실제 신전은 같은 전체 장기 부모를 선택한다.
+        if (method == 0x004dca50u)
+        {
+            Action<int, uint>? preBody = _vortexPre;
+            if (preBody is null)
+            {
+                throw new InvalidOperationException("장기 신전의 실제 삭제 전처리 미결합");
+            }
+
+            preBody(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 세 VT만 같은 WORD 대상 정리·Damageable 부모를 선택한다.
+        if (method == 0x0045e7e0u)
+        {
+            FlyerPre().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
         // 다리·섬·무인도 고유 삭제는 같은 장기 표면 수명으로 분배한다.
         if (method == 0x004221b0u || method == 0x00422300u || method == 0x00442240u || method == 0x00442640u)
         {

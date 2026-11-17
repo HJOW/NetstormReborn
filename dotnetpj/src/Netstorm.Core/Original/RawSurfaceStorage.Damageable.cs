@@ -1,7 +1,8 @@
 // 실제 피해가능 객체 전/후처리·해방과 간헐천 고유 수명의 전역/본체를 같은 장기 물리에 연결한다.
-// cpppj/src/client/RawSurfaceDamageable.cpp 의 BindDamageableDevices/DamageablePreGlobals/DamageableReleaseGlobals/DamageablePostGlobals/DamageableRelease/DamageablePre/DamageablePost/BombPre 장기 본문을 이식한다.
+// cpppj/src/client/RawSurfaceDamageable.cpp 의 BindDamageableDevices/DamageablePreGlobals/DamageableReleaseGlobals/DamageablePostGlobals/DamageableRelease/DamageablePre/DamageablePost/BombPre/BindCarrierReplenishment/CarrierPre/FlyerPre 장기 본문을 이식한다.
 // 0.576에서 추가됐다. (R4-1 잔여 중 개별 삭제 몸체 Damageable 우선)
-// 0.578에서 전처리·해방·폭탄 본문을 이었다.
+// 0.578에서 전처리·해방·폭탄 본체를 이었다.
+// 0.579에서 운반체·비행체 전처리 본체를 이었다.
 namespace Netstorm.Core.Original;
 
 /// <summary>첫 실제 모듈 전 현재 finder/허용 genus owner와 현재 장치를 연결하는 묶음이다.</summary>
@@ -56,6 +57,15 @@ public sealed partial class RawSurfaceStorage
 
     /// <summary>같은 장기 허용 genus를 실제 소비자가 공유하는 상태다. 0.576에서 추가됐다.</summary>
     private readonly DamageableReleaseState _damageableReleaseState = new();
+
+    /// <summary>실제 Client 보충 부모를 최초 연결만 하며 호출하지 않는다. 0.579에서 추가됐다.</summary>
+    private Action? _carrierReplenishment;
+
+    /// <summary>현재 finder·Damageable과 보충 부모를 같은 장기 물리에서 사용하는 실제 운반체 전처리다. 0.579에서 추가됐다.</summary>
+    private RawCarrierPreDestroy? _carrierPre;
+
+    /// <summary>현재 WORD 대상 삭제 뒤 같은 장기 Damageable 전처리를 실행하는 실제 전처리다. 0.579에서 추가됐다.</summary>
+    private RawFlyerPreDestroy? _flyerPre;
 
     /// <summary>실제 현재 모드/목록/사건의 장기 owner다. 0.576에서 추가됐다.</summary>
     private readonly DamageablePostDestroyState _damageablePostState = new();
@@ -252,5 +262,57 @@ public sealed partial class RawSurfaceStorage
         }
 
         return _bombPre;
+    }
+
+    /// <summary>실제 Client 보충 부모를 최초 연결만 하며 권한/지도/모드 관문을 앞당겨 실행하지 않는다. 0.579에서 추가됐다.</summary>
+    /// <param name="replenish">연결할 실제 Client 보충 부모다.</param>
+    public void BindCarrierReplenishment(Action replenish)
+    {
+        ArgumentNullException.ThrowIfNull(replenish);
+        // Native 전송 뒤, 첫 운반체 본체/대여 전에만 실제 Client 보충 부모를 보관한다.
+        if (!UsesNativeTransmissionDevices() || _borrowed || _carrierPre is not null || _carrierReplenishment is not null)
+        {
+            throw new ArgumentException("장기 Carrier 보충 부모의 최초 Native 계약", nameof(replenish));
+        }
+
+        _carrierReplenishment = replenish;
+    }
+
+    /// <summary>현재 finder·Damageable과 보충 부모를 같은 장기 물리에서 사용하는 전처리 본체다. 0.579에서 추가됐다.</summary>
+    public RawCarrierPreDestroy CarrierPre()
+    {
+        // 구성되지 않은 장치를 물리 포인터로 대신하지 않는다.
+        _ = DamageablePreGlobals();
+        if (_carrierPre is null)
+        {
+            var hooks = new CarrierPreDestroyHooks
+            {
+                ValidateDamageable = (sid, flags) => DamageablePre().Validate(sid, flags),
+                DamageablePre = (sid, flags) => DamageablePre().PreDestroy(sid, flags),
+                DependentFound = () => (_carrierReplenishment ?? throw new InvalidOperationException("장기 Carrier 내용물의 실제 너겟 보충 부모 미결합"))(),
+            };
+            var body = new RawCarrierPreDestroy(Pool, _damageableDevices.Finder ?? throw new InvalidOperationException("장기 Damageable 실제 finder 미연결"), hooks);
+            body.EnableNativeBody();
+            _carrierPre = body;
+        }
+
+        return _carrierPre;
+    }
+
+    /// <summary>현재 WORD 대상 삭제 뒤 같은 장기 Damageable 전처리를 실행한다. 0.579에서 추가됐다.</summary>
+    public RawFlyerPreDestroy FlyerPre()
+    {
+        // 장치의 최초 결합만 확인하고 게임 값이나 현재 대상을 읽지 않는다.
+        DamageablePreDestroyState state = DamageablePreGlobals();
+        if (_flyerPre is null)
+        {
+            _flyerPre = new RawFlyerPreDestroy(Pool, new FlyerPreDestroyHooks
+            {
+                Destroy = (target, flags) => DestroyAsset(target, flags),
+                Damageable = (sid, flags) => DamageablePre().PreDestroy(sid, flags),
+            });
+        }
+
+        return _flyerPre;
     }
 }
