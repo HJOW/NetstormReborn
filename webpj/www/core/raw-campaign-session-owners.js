@@ -1,6 +1,6 @@
 // RawCampaignSession::Impl의 캠페인 소유 자료를 실제 하위 생성자로 구성한다(225553df, WB04-E574).
 // 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → connectGunAndCursorViews → connectHitBodies → connectGunBodies → connectParticles → connectTeleport → connectCombat → connectVortex → connectAssets → connectWorldRuntimeHooks → connectContentNotices → connectContentLifetime → connectProduction → connectFactories → connectFlare → connectConstruction → connectDamageable → connectIceTower → connectCarrierSteal → connectBombPostPop → connectAcidZap → connectAcidFence → connectCarrierRegular → connectSunAviary → connectWindAviary → connectRainAviary → 나머지 모듈/Load.
-// 이 단계는 외곽 Session이 아니다. connectTerrain에서 World 내부 훅만 게시하며 Client Session 공개와 Load는 아직 미구현이다.
+// 이 클래스는 Impl 부품이다. connectTerrain은 World 내부 훅만 게시하고 외곽 공개는 raw-campaign-session.js가 맡는다. Load는 후속이다.
 // Editor/LAN/메타/Native 장치는 이 캠페인 분기에 섞지 않는다. 반납은 하위 모듈을 정리한 부모가 마지막에 dispose로 한다.
 import { GameAssets } from '../assets/game-assets.js';
 import { FrameCodeTable } from '../assets/terrain-tiles.js';
@@ -171,6 +171,8 @@ export class RawCampaignSessionOwners {
     contained = null; sunAviary = null; rainAviary = null; windAviary = null; fencePostPop = null; altarSacrifice = null; templeRitual = null;
     // 후속 실제 Login의 현재 소유 슬롯이다. 이 단계는 Login을 생성하거나 Session을 공개하지 않는다.
     login = null;
+    // 외곽이 구성 완료 뒤 연결하는 현재 Core/세계 간헐천/로컬 의식 callback과 건설 pin 슬롯이다.
+    writeCurrentFortCore = null; createWorldGeysers = null; refreshLocalRitual = null; constructionRuntimePin = null; constructionRuntime = null;
     // 생성자1611의 값형 World 훅과 뒤 생성자에서 채우는 실제 의식/내용물/주문 포인터다.
     runtimeModules = null; worldHooks = null; daisState = null; daisRegular = null; ritualExplosion = null;
     contentNotice = null; priestTakenNotice = null; devastationTargets = null; devastationEffect = null;

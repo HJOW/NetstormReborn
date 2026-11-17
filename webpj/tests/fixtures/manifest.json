@@ -3156,7 +3156,7 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E11",
+      "unit": "WB04-E11 / WB04-E638",
       "id": "ritual-refresh",
       "path": "cpppj/tests/fixtures/ritual-refresh-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 의식 뒤 로컬 갱신의 두 현재 owner load·세 자식 호출·각 중단 부분 효과",
@@ -3164,21 +3164,22 @@
         "webpj/tests/state-resets.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-ritual-refresh.js"
+        "webpj/www/core/raw-ritual-refresh.js",
+        "webpj/www/core/raw-campaign-session.js"
       ],
       "doc": "docs/webpj-state-resets-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawRitualRefresh.cpp"
       ],
-      "scope": "54행 전부 사용",
+      "scope": "54행 전부 사용 / E638 실제 외곽 생성자가 같은 Core/CoreData/현재 owner/두 snapshot callback을 연결. 의식 실행은 하지 않으며 실제 Load 뒤 통합은 후속",
       "text": true,
       "sha256": "c2c7499fd73144f50ac90f2b02183f3cf4e7752cf006bf33a69274097e871126",
       "bytes": 1543,
       "lines": 55,
-      "fixtureCommit": "4e66a874",
-      "webCommit": "59c1baa5",
+      "fixtureCommit": "4e66a8743",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawRitualRefresh.cpp": "4e66a874"
+        "cpppj/src/o/RawRitualRefresh.cpp": "4e66a8743"
       }
     },
     {
@@ -3267,7 +3268,7 @@
       "bytes": 11396,
       "lines": 46,
       "fixtureCommit": "67cce4922",
-      "webCommit": "worktree",
+      "webCommit": "f9ec00bad",
       "cpppjBasis": {
         "cpppj/src/o/RawNewTechnology.cpp": "67cce4922"
       }
@@ -10009,7 +10010,7 @@
       "bytes": 76167,
       "lines": 821,
       "fixtureCommit": "80eda37e7",
-      "webCommit": "worktree",
+      "webCommit": "f9ec00bad",
       "cpppjBasis": {
         "cpppj/src/o/RawWorldGeyserBounds.cpp": "2ef238cf6"
       }
@@ -10041,7 +10042,7 @@
       "bytes": 1401138,
       "lines": 355,
       "fixtureCommit": "f87b03083",
-      "webCommit": "worktree",
+      "webCommit": "f9ec00bad",
       "cpppjBasis": {
         "cpppj/src/o/RawWorldGeyser.cpp": "2ef238cf6",
         "cpppj/src/o/RawWorldGeyserBounds.cpp": "2ef238cf6"
