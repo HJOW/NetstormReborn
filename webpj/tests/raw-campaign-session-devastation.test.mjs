@@ -130,3 +130,24 @@ test('Session 주문 활성화: 현재 시각의 실제 Regular 예약', () => {
     } finally { o.dispose(); }
     assert.throws(() => hooks.allocate(40), /반납/);
 });
+
+// 실제 피해 없이 정기의 검색 메모리 수명과 단독·연결 송신 길이를 확인한다.
+test('Session 주문 정기: 검색 확보와 연결별 송신 길이', () => {
+    const o = scene(); let hooks;
+    try {
+        o.connectDevastationStatus(); o.connectDevastationSummons(); o.connectDevastationEffects(); o.connectDevastationStrike(); o.connectDevastationTargets();
+        assert.throws(() => o.connectDevastationRegular(), /순서/);
+        o.connectDevastationActivation(); o.connectDevastationRegular(); hooks = o.devastationModules.regularHooks;
+        assert.equal(o.devastationModules.regularReady, true); assert.equal(o.devastationRegular.pool, o.core.pool);
+        assert.equal(hooks.allocate(400), true); assert.equal(o.devastationSearchMemory.length, 400);
+        assert.throws(() => hooks.allocate(400), /확보 순서/); hooks.release(400); assert.equal(o.devastationSearchMemory, null);
+        assert.throws(() => hooks.release(400), /해제 순서/);
+        const packet = new Uint8Array(210); packet[2] = 10; packet[6] = 1;
+        hooks.broadcast(packet); assert.equal(packet[2], 10);
+        let sent = null; o.playerState.battleOwner = 1; o.players[2 * 180 + 0x50] = 1;
+        o.services.battlePeers[2] = (bytes) => { sent = Array.from(bytes); };
+        hooks.broadcast(packet); assert.equal(packet[2], 12); assert.equal(sent.length, 12);
+        assert.equal(o.loaded, false); assert.throws(() => o.connectDevastationRegular(), /순서/);
+    } finally { o.dispose(); }
+    assert.throws(() => hooks.allocate(400), /반납/);
+});

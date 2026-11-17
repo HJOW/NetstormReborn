@@ -291,7 +291,7 @@ export class RawCampaignSessionOwners {
     // 네 직접 피해 주문이 같은 현재 장치와 난수를 빌리는 수명이다.
     bombStrike = null; devastationBlast = null;
     // 주문 활성화와 부착 전 실제 Regular 예약의 Session 수명이다.
-    devastationActivation = null; pendingDevastationRegular = null;
+    devastationActivation = null; pendingDevastationRegular = null; devastationSearchMemory = null;
     // 원문 지역 상태의 TYPE 초기값과 같은 현재 동맹 표다.
     bombStatusState = { altar: 164, outpost: 126, priest: 158, fence: 136, flare: 106, alliances: null };
     // 같은 실제 이동 본체를 빌리는 사제 공황 결선의 수명이다.
@@ -905,6 +905,12 @@ export class RawCampaignSessionOwners {
     connectDevastationActivation() {
         if (this.#disposed || !this.devastationModules) throw new Error('Session 주문 활성화 설치 전/반납');
         this.devastationModules.bindActivation();
+    }
+
+    // 활성화 뒤 같은 검색·패킷 방송을 사용하는 정기 주문을 설치한다.
+    connectDevastationRegular() {
+        if (this.#disposed || !this.devastationModules) throw new Error('Session 주문 정기 설치 전/반납');
+        this.devastationModules.bindRegular();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

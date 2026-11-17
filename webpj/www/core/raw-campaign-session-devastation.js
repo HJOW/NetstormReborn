@@ -19,6 +19,9 @@ import { makeCampaignBombBlastHooks } from './raw-bomb-blast-bindings.js';
 import { connectedCampaignBombTable } from './raw-campaign-session-particles.js';
 import { RawBombActivation } from './raw-bomb-activation.js';
 import { RegularProcess } from './squid-process.js';
+import { RawBombRegular } from './raw-bomb-regular.js';
+import { RawFrameAdvance } from './raw-frame-advance.js';
+import { finalizeBombEffectPacket } from './raw-bomb-effect.js';
 
 // 같은 현재 가상 표를 기준으로 주문 자격 하위를 선택한다.
 const MANO_TABLES = new Set([0x5026a0, 0x502778, 0x502840]);
@@ -28,7 +31,7 @@ const WIND_TABLES = new Set([0x5025d8, 0x502e68, 0x502f30]);
 // 실제 Session의 TYPE·World·상태 주문을 한 번 구성한다.
 export class RawCampaignSessionDevastation {
     // 같은 owner와 설치 시작·정상 복귀·반납 관문이다.
-    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #effectsStarted = false; #effectsReady = false; #strikeStarted = false; #strikeReady = false; #targetsStarted = false; #targetsReady = false; #activationStarted = false; #activationReady = false; #disposed = false;
+    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #effectsStarted = false; #effectsReady = false; #strikeStarted = false; #strikeReady = false; #targetsStarted = false; #targetsReady = false; #activationStarted = false; #activationReady = false; #regularStarted = false; #regularReady = false; #disposed = false;
     // 현재 상태 주문 효과를 후속 시전 분배기에 빌린다.
     statusHooks = null;
     // 기존 실제 하위에 연결한 트리즌과 힐 효과를 현재 수명에서 보관한다.
@@ -39,6 +42,8 @@ export class RawCampaignSessionDevastation {
     targetHooks = null;
     // 활성화 수신이 소유하는 비용·예약 효과 표다.
     activationHooks = null;
+    // 정기 주문의 확보·검색·송수신과 해제 연결이다.
+    regularHooks = null;
     // 구성 시 World나 난수는 변경하지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 완료 전 또는 반납된 함수 값의 실행을 거부한다.
@@ -239,8 +244,36 @@ export class RawCampaignSessionDevastation {
         this.activationHooks = hooks; this.#activationReady = true;
     }
 
+    // 현재 검색과 방송을 사용해 지역 주문 정기의 실제 효과 경계를 연결한다.
+    bindRegular() {
+        const o = this.#owner, c = o.core;
+        if (this.#disposed || !this.#activationReady || this.#regularStarted || o.devastationRegular) throw new Error('Session 주문 정기 설치 순서 오류');
+        this.#regularStarted = true;
+        if (o.world.storage.usesNativeTransmissionDevices?.()) throw new Error('Native 장기 주문 정기는 4D-8에서 연결');
+        const hooks = {
+            notice: (carrier, count, event) => { this.#live(); o.flare.spawn(carrier, count | 0, event); },
+            frame: (sid, frame, flags) => { this.#live(); c.frame.set(sid, frame | 0, flags); },
+            animate: (sid, delta, flags) => { this.#live(); new RawFrameAdvance(c.pool, c.frames, c.frame).advance(sid, delta | 0, flags); },
+            allocate: (bytes) => { this.#live(); if (bytes !== 400 || o.devastationSearchMemory) throw new Error('Devastation 검색 배열 확보 순서 오류'); o.devastationSearchMemory = new Uint8Array(bytes); return true; },
+            targets: (parent, storage) => { this.#live(); const result = { storage, capacity: storage.length | 0, count: 0 }; o.devastationTargets.find(parent, result); return result.count >>> 0; },
+            broadcast: (packet) => {
+                this.#live();
+                // 실제 연결된 비로컬 참가자가 있을 때만 현재 패킷 길이를 확정한다.
+                for (let owner = 1; owner < 9; owner += 1) {
+                    if ((o.players[owner * 180 + 0x50] & 1) && o.services.battlePeers[owner] && owner !== o.playerState.battleOwner) { finalizeBombEffectPacket(packet, true); break; }
+                }
+                const length = packet[2] | (packet[3] << 8); if (length > packet.length) throw new RangeError('Devastation 실제 송신 범위');
+                o.tables.broadcast.send(packet.subarray(0, length));
+            },
+            receive: (sender, connection, packet) => { this.#live(); o.runtimeModules.receiveDevastationEffect(packet); },
+            release: (bytes) => { this.#live(); if (bytes !== 400 || !o.devastationSearchMemory) throw new Error('Devastation 검색 배열 해제 순서 오류'); o.devastationSearchMemory = null; },
+        };
+        o.devastationRegular = new RawBombRegular(c.pool, o.devastationRegularTypes, o.state.devastationRegularState, hooks);
+        this.regularHooks = hooks; this.#regularReady = true;
+    }
+
     // World가 프로세스를 비운 뒤 같은 함수 값의 재진입을 차단한다.
-    dispose() { this.#disposed = true; this.#owner.pendingDevastationRegular = null; }
+    dispose() { this.#disposed = true; this.#owner.pendingDevastationRegular = null; this.#owner.devastationSearchMemory = null; }
     // 이 앞단만의 정상 설치 여부이며 전체 주문 설치는 아니다.
     get ready() { return this.#ready; }
     // 주문 결선 완료는 전체 파괴 주문 설치 완료와 구별한다.
@@ -253,4 +286,6 @@ export class RawCampaignSessionDevastation {
     get targetsReady() { return this.#targetsReady; }
     // 활성화 수신만 설치했으며 정기와 효과 분배는 별도다.
     get activationReady() { return this.#activationReady; }
+    // 정기 주문 설치만 완료했으며 효과 수신은 별도다.
+    get regularReady() { return this.#regularReady; }
 }
