@@ -2,6 +2,7 @@
 // cpppj/src/client/RawSurfaceReward.cpp 의 BindRewardDevices/RewardState/Reward 와
 // cpppj/src/client/RawSurfaceContent.cpp 의 ContentLifetime 장기 본문을 이식한다.
 // 0.571에서 추가됐다. (R4-1 잔여 중 Reward·ContentLifetime 결합)
+// 0.572에서 물리 배열 미러 별칭을 연결했다.
 namespace Netstorm.Core.Original;
 
 /// <summary>같은 실제 SP/모드 owner를 처리기보다 오래 보관하는 보상 장치 묶음이다.</summary>
@@ -105,8 +106,8 @@ public sealed partial class RawSurfaceStorage
                 RewardState(),
                 _rewardDevices.Sp,
                 new SquidRewardHooks { RefreshSp = _rewardDevices.RefreshSp });
-            // 실제 PATCH 월드의 주소 고정 TYPE 표 별칭(BindCurrentTypes 배열/뷰)과 최초 로딩 정수 비용표(BindLoadedCosts)는 미연결 잔여로 두고 생성 시 사본을 쓴다.
-            // Storage.Types가 List라 ArraySegment 물리 뷰를 직접 빌릴 수 없으므로 별도 배열 미러가 필요하다.
+            // 실제 PATCH 월드의 주소 고정 TYPE 표 별칭은 같은 장기 물리 배열 미러로 빌린다. 최초 로딩 정수 비용표(BindLoadedCosts)와 FortSaveVirtual Level은 잔여다.
+            reward.BindCurrentTypes(PhysicalTypes());
             reward.BindHitPointDiagnostics(AssertDisplay);
             reward.BindPatchWallet(_rewardDevices.CreditWallet ?? throw new InvalidOperationException("장기 HP/보상의 실제 지갑 장치 미연결"));
             _reward = reward;
