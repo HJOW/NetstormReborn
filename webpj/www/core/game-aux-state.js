@@ -188,6 +188,8 @@ export class GameAuxState {
     #squidTransmission = createSquidTransmissionState();
     // 새 Client에서 한 번 만든 같은 미션 설정 물리다. 일반/준비 대여·반납과 reset은 재생성하거나0으로 지우지 않는다. (WB04-E572)
     #missionSettings = Uint32Array.from(MISSION_SETTING_FIELDS, (field) => field.initial);
+    // 원문 005451f8의 타입 사용 목록이며 명시 ClearTypes까지 Session 교체로 지우지 않는다.
+    #typeUse = new Uint8Array(256);
 
     // 필드 값을 읽는다(접근자 공통 구현).
     #read(name) { return this.#values.get(name); }
@@ -219,6 +221,9 @@ export class GameAuxState {
 
     // 32h 수신/송신과 Session의 강제 배치/무적/동맹 사격이 공유하는7칸 현재DWORD 배열이다. (WB04-E572)
     missionSettings() { return this.#missionSettings; }
+
+    // 로그인 초기화와 69h 수신이 같은 256BYTE를 직접 빌린다.
+    typeUse() { return this.#typeUse; }
 
     // 자원 DWORD 를 unsigned 비트로 읽는다(로그인/폭탄의 unsigned 조회).
     get resourcePoolBits() { return this.#read('resourcePool') >>> 0; }

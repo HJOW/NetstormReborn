@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { campaignOwners } from './campaign-session-support.mjs';
 import { makeLocalMissionZone } from '../www/core/local-mission-transport.js';
 import { RawCampaignSessionLoginFront } from '../www/core/raw-campaign-session-login-front.js';
+import { addTechnologyTypes } from '../www/core/raw-technology-types-packet.js';
 
 // 원본 설정·벽시각의 호출 순서를 기록하며 실제 전송은 내부 두 끝을 사용한다.
 function devices(trace) {
@@ -57,5 +58,29 @@ test('Session Login 앞단: 빈 이름은 원본 보기 길이 부족을 보존'
         const packet = makeLocalMissionZone(); packet.storage.set(Uint8Array.of(63, 0), 24);
         assert.throws(() => front.installZone(packet.bytes()), /빈 이름 대체 범위/);
         assert.equal(o.players[192], 0); assert.equal(front.transport.lifetime.port, 0);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 옵션의 결과와 69h 사용표가 같은 실제 장기 owner를 직접 갱신한다.
+test('Session Login 옵션: 현재 마나·간헐천 비용·타입 목록 공유', () => {
+    const o = campaignOwners(), front = new RawCampaignSessionLoginFront(o, devices([])), aux = o.gameplayGlobals.gameAux();
+    try {
+        front.options.applyDerived();
+        assert.equal(o.gameplayGlobals.manaRadius().value, 30); assert.equal(o.energyState.radiusSquared, 900);
+        assert.equal(o.core.types[o.geyserType].cost, 3000); assert.equal(aux.refundPercent, 50);
+        const types = aux.typeUse(); addTechnologyTypes(Uint8Array.of(72, 0), types); assert.equal(types[0], 72);
+        front.options.clearTypes(); assert.ok(types.every((value) => value === 0));
+        types[1] = 133; aux.resetForGeneralWorld(); assert.equal(aux.typeUse(), types); assert.equal(types[1], 133);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// NaN 비트를 JS 숫자 왕복으로 정규화하지 않고 같은 단정도 저장소에 기록한다.
+test('Session Login 옵션: 현재 마나 반경의 NaN 비트 보존', () => {
+    const o = campaignOwners(), front = new RawCampaignSessionLoginFront(o, devices([]));
+    try {
+        const ranges = o.gameplayGlobals.manaRanges(), bits = new Uint32Array(ranges.buffer, ranges.byteOffset, ranges.length);
+        bits[3] = 0x7f812345; front.options.updateRange();
+        assert.equal(o.gameplayGlobals.manaRadius().bits, 0x7fc12345); assert.equal(o.energyState.radiusSquaredBits, 0x7fc12345);
+        assert.ok(Number.isNaN(o.gameplayGlobals.manaRadius().value)); assert.ok(Number.isNaN(o.energyState.radiusSquared));
     } finally { front.dispose(); o.dispose(); }
 });

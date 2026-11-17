@@ -3,7 +3,7 @@
 import { bindInternalCampaignTransport } from './campaign-transport-services.js';
 import { createCampaignLoginServices, requireLoginService } from './campaign-login-services.js';
 import { installLocalMissionZone, LocalMissionTransport } from './local-mission-transport.js';
-import { resetMissionBattleOptions } from './raw-mission-battle-options.js';
+import { RawMissionBattleOptions, resetMissionBattleOptions } from './raw-mission-battle-options.js';
 import { sanitizeMissionPlayerName } from './raw-mission-client-packets.js';
 
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
@@ -12,8 +12,8 @@ export class RawCampaignSessionLoginFront {
     #owner; #effects; #internal = null; #disposed = false;
     // 원문의 독립 초기 지역 입력과 현재 수신 종류 기록이다.
     pendingStamp = 0; overrideFlags = 0; wireTypes = [];
-    // 현재 연결표와 패킷 분배기를 소유자와 함께 공개한다.
-    transport;
+    // 현재 연결표와 패킷 분배기 및 같은 옵션 처리기를 소유자와 함께 공개한다.
+    transport; options;
 
     // Player 초기화 뒤 옵션 기본값과 현재 전송을 순서대로 준비한다.
     constructor(owner, effects = {}) {
@@ -28,6 +28,19 @@ export class RawCampaignSessionLoginFront {
         } else {
             this.#internal = new LocalMissionTransport(owner.players, () => owner.core.processState.server, this.#device(), owner.services.connectionRegistry ?? null);
             this.transport = bindInternalCampaignTransport(this.#internal);
+        }
+        try {
+            const aux = owner.gameplayGlobals.gameAux(), ranges = owner.gameplayGlobals.manaRanges(), energy = owner.energyState;
+            this.options = new RawMissionBattleOptions({
+                options: owner.battleOptions, types: owner.core.types, typeUse: aux.typeUse(),
+                rangeTable: new Uint32Array(ranges.buffer, ranges.byteOffset, ranges.length), selectedType: () => owner.geyserType,
+                range: owner.gameplayGlobals.manaRadius(),
+                rangeSquared: { get bits() { return energy.radiusSquaredBits; }, set bits(value) { energy.radiusSquaredBits = value; } },
+                value: { get value() { return aux.refundPercent; }, set value(value) { aux.refundPercent = value; } },
+            });
+        } catch (error) {
+            if (this.#effects.transport) this.transport.detachSession(); else this.#internal.dispose();
+            this.#disposed = true; throw error;
         }
     }
 

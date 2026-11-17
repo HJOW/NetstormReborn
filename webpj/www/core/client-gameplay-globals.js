@@ -51,6 +51,9 @@ class FloatBox {
     get value() { return this.#value[0]; }
     // 모든 명시 쓰기는 단정도로 저장한다.
     set value(value) { this.#value[0] = value; }
+    // NaN 페이로드도 보존하며 같은 단정도 물리의 원문 비트를 읽고 쓴다.
+    get bits() { return new DataView(this.#value.buffer).getUint32(0, true); }
+    set bits(value) { new DataView(this.#value.buffer).setUint32(0, value >>> 0, true); }
 }
 // 공유 owner의 실제 속성을 현재 시점에 읽고 쓰는 참조 상자다.
 function propertyReference(owner, name, normalize = (value) => value) {

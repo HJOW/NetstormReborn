@@ -63,6 +63,9 @@ export class EnergySupplyState {
     get radiusSquared() { return this.#radius[0]; }
     // 단정도 저장 지점에서 반올림한다.
     set radiusSquared(value) { this.#radius[0] = value; }
+    // 로그인 옵션과 공급 계산이 같은 단정도 비트 저장소를 빌린다.
+    get radiusSquaredBits() { return new DataView(this.#radius.buffer).getUint32(0, true); }
+    set radiusSquaredBits(value) { new DataView(this.#radius.buffer).setUint32(0, value >>> 0, true); }
 }
 
 // pool, types(188개 { footX, footY, flags2, theme }), providers(SquidPostPopList), selected(독립 목록 entries/count), alliances(81 DWORD, 공급 소유자*9+요청 소유자), mapLimit() 정수 getter,
