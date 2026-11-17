@@ -405,3 +405,34 @@ test('Session Login 클라이언트: 서버 옵션 적용과 로컬 Fort 개정'
         client.fort(fort); assert.equal(o.revision, (before + 1) >>> 0);
     } finally { front.dispose(); o.dispose(); }
 });
+
+// 원본 로그인 등록의 현재 분배 표가 같은 서버·클라이언트와 설정을 사용한다.
+test('Session Login 등록: 실제 분배기의 로그인 수신기와 현재 설정', () => {
+    const o = loginServerOwner(), front = new RawCampaignSessionLoginFront(o, devices([]));
+    try {
+        assert.throws(() => front.registerReceivers(), /서버\/클라이언트/);
+        front.bindServer(); front.bindClient(); front.registerReceivers();
+        // 현재 연결 활동까지의 원본 등록은 모두 같은 분배 표에 존재한다.
+        for (const type of [0x31, 0x27, 0x63, 0x29, 0x67, 0x2b, 0x2a, 0x28, 0x81, 0x84, 0x6e, 0x72, 0x32, 0x71, 0x64]) {
+            const entry = front.transport.dispatch.registration(type); assert.equal(typeof entry.receive, 'function', type.toString(16)); assert.equal(entry.version, 1);
+        }
+        const packet = new Uint8Array(32); new DataView(packet.buffer).setUint32(16, 0x12345678, true);
+        front.transport.dispatch.registration(0x32).receive(0, null, packet);
+        assert.equal(o.gameplayGlobals.gameAux().missionSettings()[3], 0x12345678); assert.throws(() => front.registerReceivers(), /중복/);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 등록된 실제 서버를 열고 State8·9가 같은 내부 연결에 로그인 패킷을 대기시킨다.
+test('Session Login 등록: 내부 서버 접속과 State9 로그인 송신 대기', () => {
+    const o = loginServerOwner(), front = new RawCampaignSessionLoginFront(o, { ...devices([]), refresh: () => {} });
+    try {
+        front.bindServer(); front.bindClient(); front.registerReceivers(); o.globals.mySubscriber = 1;
+        front.installZone(makeLocalMissionZone().bytes());
+        assert.equal(front.transport.lifetime.isOpen, true); assert.equal(front.transport.lifetime.port, 6799);
+        const blocks = o.localStateGlobals.state(); blocks.current[0] = 8; front.state.run();
+        assert.equal(front.transport.lifetime.hasClientConnection, true); assert.ok(front.transport.registry.cleanup().transceivers[9]);
+        assert.equal(blocks.phase[0], 8); assert.equal(blocks.next[0], 9);
+        front.state.poll(); assert.equal(blocks.phase[0], 10); assert.equal(blocks.next[0], 10);
+        front.transport.flush(); assert.equal(front.transport.lifetime.queuedFrames, 1);
+    } finally { front.dispose(); o.dispose(); }
+});

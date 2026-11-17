@@ -4,22 +4,25 @@ import { bindInternalCampaignTransport } from './campaign-transport-services.js'
 import { createCampaignLoginServices, requireLoginService } from './campaign-login-services.js';
 import { installLocalMissionZone, LocalMissionTransport, makeLocalMissionLogin } from './local-mission-transport.js';
 import { RawMissionBattleOptions, resetMissionBattleOptions } from './raw-mission-battle-options.js';
-import { RawMissionClientPackets, sanitizeMissionPlayerName } from './raw-mission-client-packets.js';
+import { RawMissionClientPackets, registerMissionClientPackets, sanitizeMissionPlayerName } from './raw-mission-client-packets.js';
 import { RawMissionLoginPackets } from './raw-mission-login-packets.js';
-import { RawMissionServerPackets } from './raw-mission-server-packets.js';
-import { RawMissionSettingsPacket } from './raw-mission-settings-packet.js';
+import { RawMissionServerPackets, registerMissionMetadata } from './raw-mission-server-packets.js';
+import { RawMissionSettingsPacket, registerMissionSettingsPacket } from './raw-mission-settings-packet.js';
 import { RawClockSynchronization } from './raw-clock-synchronization.js';
 import { LocalMissionProgress, RawLocalMissionState } from './raw-local-mission-state.js';
 import { ClientHelpWord } from './client-help-word.js';
 import { RawFortImage } from './raw-fort-image.js';
 import { MissionLoginPlayerCounts, RawMissionLoginTimer } from './raw-mission-login-timer.js';
-import { RawMissionLogin } from './raw-mission-login.js';
+import { RawMissionLogin, registerMissionLogin } from './raw-mission-login.js';
 import { setPlayerSpAmount } from './raw-fort-money-load.js';
+import { registerDeveloperCommandPacket } from './raw-developer-command-packet.js';
+import { registerStateMetaBattleDescription } from './raw-state-meta-battle-description.js';
+import { registerConnectionActivity } from './raw-connection-activity.js';
 
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
 export class RawCampaignSessionLoginFront {
     // 실제 부모·장치와 내부 전송 수명, 반납 관문이다.
-    #owner; #effects; #internal = null; #disposed = false; #wall = 0; #localTitle = 0; #timeout = 0; #localRequestPhase = 0; #beginSeed = 0; #battleSeed = 0;
+    #owner; #effects; #internal = null; #disposed = false; #registered = false; #wall = 0; #localTitle = 0; #timeout = 0; #localRequestPhase = 0; #beginSeed = 0; #battleSeed = 0;
     // 원문의 독립 초기 지역 입력과 현재 수신 종류 기록이다.
     pendingStamp = 0; overrideFlags = 0; wireTypes = [];
     // 현재 연결표와 패킷 분배기 및 같은 옵션/패킷/시계 처리기를 소유자와 함께 공개한다.
@@ -314,6 +317,21 @@ export class RawCampaignSessionLoginFront {
             restoreCoreData: (owner) => this.#restoreCoreData(owner),
         });
         return this.client;
+    }
+    // 서버·클라이언트 준비 뒤 원본 순서의 로그인 수신기와 관찰기를 같은 전송에 등록한다.
+    registerReceivers() {
+        const o = this.#live(); if (!this.server || !this.client || this.#registered) throw new Error('Login 수신기의 서버/클라이언트 전제 또는 중복 등록 오류');
+        this.#registered = true; const dispatch = this.transport.dispatch, storage = o.world.storage;
+        try {
+            registerDeveloperCommandPacket(dispatch, (text) => {
+                this.#live(); if (typeof o.executeDeveloperCommand !== 'function') throw new Error('실제 개발자 명령 해석기 미연결'); o.executeDeveloperCommand(text);
+            }, (expression, file, line) => storage.assertDisplay(expression, file, line));
+            registerMissionLogin(dispatch, this.server); registerMissionClientPackets(dispatch, this.client);
+            registerMissionMetadata(dispatch, this.metadata); registerMissionSettingsPacket(dispatch, this.settings);
+            registerStateMetaBattleDescription(dispatch, () => this.client.state.outpost, this.#effects.metaBattleDescription,
+                (expression) => storage.assertDisplay(expression, '\\Ns\\O\\_p_packets.cpp', 0xae3));
+            registerConnectionActivity(dispatch, o.state.connectionActivity);
+        } catch (error) { this.dispose(); throw error; }
     }
     // 원문 상태8은 현재 블록과 내부 주소를 확인하고 실제 전송에 접속을 맡긴다.
     #connect(address, port) {
