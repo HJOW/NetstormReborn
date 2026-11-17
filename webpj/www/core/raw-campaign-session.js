@@ -17,6 +17,7 @@ import { registerMissionSettingsPacket } from './raw-mission-settings-packet.js'
 import { observePathData } from './raw-path-data.js';
 import { DaisProcess, readDaisProcessData } from './raw-dais-process-data.js';
 import { receiveSessionSquid } from './raw-campaign-session-squid.js';
+import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -256,6 +257,28 @@ export class RawCampaignSession {
         if (mask & 1) assertion('(*(char *)(( (char *)zacket+8) ) & 1) == 0', 0x3e);
         const current = c.processes.fromForm(form); readDaisProcessData(current instanceof DaisProcess ? current.fields : null, packet, false);
     }
+    // 3ah는 새 총 Process만 명시 Form에 부착하고 기존 PID의 부모와 예약을 보존한다.
+    #receiveGunPacket(packet) {
+        const o = this.#live(), c = o.core;
+        if (packet.length < 9) throw new RangeError('총 수신의 실제9BYTE 머리 부족');
+        const number = new DataView(packet.buffer, packet.byteOffset, packet.byteLength).getUint32(4, true);
+        if (!number || number > 65535 || number >= c.pool.capacity) throw new RangeError('총 수신의 명시 Form SID 물리 범위');
+        const assertion = (expression, line) => o.world.storage.assertDisplay(expression, 'c:\\ns\\o\\_p_gunprocessdata.cpp', line);
+        if (c.pool.slot(number)[11] & 1) {
+            if (packet[8] !== 0xff) assertion('*(( char *)((char *)zacket+8) ) == (char)0xFFFFFFFF', 0x4e);
+            o.assetBindings.prepareFrame(c.processState.now); const logic = o.assetBindings.gun, fields = new GunProcessFields(), pending = new GunProcess(logic, fields);
+            try {
+                logic.initializeReceived(fields); const parent = { value: 0 }; logic.readData(fields, packet, parent);
+                if (parent.value > 65535 || parent.value >= c.pool.capacity) throw new RangeError('총 수신의 DWORD 부모 SID 물리 범위');
+                c.processes.attach(pending, o.gameplayGlobals.gameAux().gunProcessType, parent.value, 0x10, number);
+            } finally { if (!c.kernel.find(pending)) pending.destroy(); }
+            return;
+        }
+        if (packet[8] & 1) assertion('(*(char *)(( (char *)zacket+8) ) & 1) == 0', 0x56);
+        const current = c.processes.fromForm(number); if (!(current instanceof GunProcess)) throw new Error('총 수신의 현재 PID/outer 객체 미발견');
+        o.assetBindings.prepareFrame(c.processState.now); o.assetBindings.gun.readData(current.fields, packet, { value: 0 });
+    }
+
     // Carrier 등록의 동맹·개발자·설정·위치·카메라·섬 정리·경로·Dais 앞부분만 원본 순서대로 등록한다.
     registerCarrierCommandPrefix(dispatch) {
         const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 Carrier 수신 등록');
@@ -278,6 +301,9 @@ export class RawCampaignSession {
         // 공통 객체 수신은 현재 Session의 같은 Pool과 장기 전역을 사용한다.
         dispatch.observe(0x2c, null); dispatch.version(0x2c, 1, 0); dispatch.requireLength(0x2c, 35);
         dispatch.register(0x2c, (_sender, _connection, packet) => receiveSessionSquid(this.#live(), packet));
+        // 총 Process 전체 수신은 같은 Host의 명시 Form과 현재 PID를 쓴다.
+        dispatch.observe(0x3a, null); dispatch.version(0x3a, 1, 0); dispatch.requireLength(0x3a, 0xffff);
+        dispatch.register(0x3a, (_sender, _connection, packet) => this.#receiveGunPacket(packet));
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }

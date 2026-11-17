@@ -19,6 +19,7 @@ import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-disp
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
 import { ClientLocalStateGlobals } from '../www/core/client-local-state-globals.js';
 import { DaisProcess, writeDaisProcessData } from '../www/core/raw-dais-process-data.js';
+import { GunProcess } from '../www/core/raw-gun-process.js';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 import { loadOriginalForts, readData } from './helpers.mjs';
 
@@ -266,5 +267,32 @@ test('CampaignSession Tutorial 1: 공통 객체 검증 수신과 현재 전역',
         new DataView(packet.buffer).setUint16(4, sid, true); packet[16] = before[10] + 1; packet[17] = before[11] & 1; packet[18] = before[34];
         assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true); assert.equal(aux.verifySid, 0); assert.deepEqual(c.pool.slot(sid), before);
         assert.equal(logs.length, 1); assert.equal(logs[0][0], 0x1d); assert.match(logs[0][1], /VERIFY .*: type /);
+    } finally { s.dispose(); }
+});
+
+// 일반 Form 부모에만 총 Process를 붙이고 기존 PID의 필드를 갱신한다. 발사·유닛 행동은 실행하지 않는다.
+test('CampaignSession Tutorial 1: 총 데이터의 실제 Process 신규·갱신', () => {
+    const { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); const c = s.core(), parent = c.factory.create(6, 2);
+        let form = 15001;
+        // 같은 Pool의 비어 있는 서버 Form을 선택한다.
+        while (form < c.pool.capacity && !(c.pool.slot(form)[11] & 1)) form += 1;
+        assert.ok(form < c.pool.capacity); const packet = new Uint8Array(31), view = new DataView(packet.buffer);
+        packet.set([1, 0x3a, 31, 0]); view.setUint32(4, form, true); packet[8] = 0xff; view.setUint32(9, parent, true);
+        view.setFloat64(13, 12.5, true); view.setUint16(21, 321, true); view.setUint32(23, 5, true); view.setInt32(27, -5, true);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        const current = c.processes.fromForm(form); assert.ok(current instanceof GunProcess); assert.equal(current.parent, parent); assert.equal(c.pool.slot(form)[10], 34);
+        assert.deepEqual([current.fields.time, current.fields.target, current.fields.stage, current.fields.group], [12.5, 321, 5, -5]);
+        const update = new Uint8Array(13), changed = new DataView(update.buffer); update.set([1, 0x3a, 13, 0]); changed.setUint32(4, form, true); update[8] = 0x10; changed.setInt32(9, 7, true);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), update), true); assert.equal(c.processes.fromForm(form), current); assert.equal(current.fields.group, 7); assert.equal(current.parent, parent);
+        const registration = dispatch.registration(0x3a); assert.equal(registration.length, 0xffff); assert.equal(registration.version, 1);
+        let unused = form + 1;
+        // 실패할 신규 수신은 실제 빈 Form과 Kernel 수명을 유지한다.
+        while (unused < c.pool.capacity && !(c.pool.slot(unused)[11] & 1)) unused += 1;
+        assert.ok(unused < c.pool.capacity); const count = c.kernel.size, short = new Uint8Array(9);
+        short.set([1, 0x3a, 9, 0]); new DataView(short.buffer).setUint32(4, unused, true); short[8] = 0xff;
+        assert.throws(() => dispatch.dispatch(new PacketConnection({ sender: 1 }), short), /dirty 필드 부족/);
+        assert.equal(c.kernel.size, count); assert.equal(c.pool.slot(unused)[11] & 1, 1);
     } finally { s.dispose(); }
 });
