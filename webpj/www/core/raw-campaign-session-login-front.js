@@ -113,6 +113,8 @@ export class RawCampaignSessionLoginFront {
     #transport(name) { this.#live(); const device = this.transport[name]; if (typeof device !== 'function') throw new Error(`Login 전송 ${name} 미연결`); return device; }
     // 현재 실제 Session 진단을 호출한다.
     #assertion(expression) { const o = this.#live(); if (typeof o.services.ai?.assertion !== 'function') throw new Error('Login 진단 장치 누락'); o.services.ai.assertion(expression); }
+    // 현재 Login이 보관한 실제 MessageBoard 장치에 안내를 전달한다.
+    showStatus(kind, owner, value) { this.#live(); this.#need('status', '동맹 안내')(kind, owner, value); }
     // 같은 장기 State/권한/Player 및 현재 게임·벽시각의 실제 속성을 빌린다.
     #stateGlobals() {
         const o = this.#live(), self = this, local = o.localStateGlobals;

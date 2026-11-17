@@ -90,6 +90,49 @@ class ParticipationScene {
     effects() { return this.trace || '-'; }
 }
 
+// 77h는 중계가 바꾼 packet과 최초 requester의 현재 Player를 원문 위치에서 각각 읽는다.
+test('Player 동맹 협상: 요청 중계 뒤 현재 대상과 최초 Player', () => {
+    const scene = new ParticipationScene(new Array(13).fill('0')), runtime = scene.runtime(), packet = Uint8Array.of(1, 0x77, 6, 0, 2, 1), trace = [];
+    scene.state.localOwner = 1;
+    runtime.receiveAllianceRequest(packet, {
+        boss: () => { trace.push('boss'); return true; }, broadcast: (bytes) => { trace.push('중계'); bytes[4] = 3; },
+        ignoredSubscriber: (subscriber) => { trace.push(`무시:${subscriber}`); return false; }, tell: (text) => trace.push(text),
+    });
+    assert.deepEqual(trace, ['boss', '중계', '무시:102', 'AllianceRequested(~w,P2,3)']);
+    const prior = []; assert.throws(() => runtime.receiveAllianceRequest(new Uint8Array(4), { boss: () => { prior.push('boss'); return false; } }), RangeError);
+    assert.deepEqual(prior, ['boss']);
+});
+
+// 동맹 해제는 mask를 먼저 쓰고 물리 방향표 검사와 실제 전송을 원문 순서로 처리한다.
+test('Player 동맹 협상: 방향 해제와 부분 실패', () => {
+    const scene = new ParticipationScene(new Array(13).fill('0')), runtime = scene.runtime(), at = 180 + 0x54;
+    scene.state.battle = true; put(scene.players, at, 0x16); scene.allies[1 * 9 + 2] = 1;
+    runtime.removeAlly(1, 2); assert.equal(new DataView(scene.players.buffer).getUint32(at, true), 0x12);
+    assert.equal(scene.allies[1 * 9 + 2], 0); assert.equal(scene.trace, 'S,9,1,18');
+    scene.state.battle = false; put(scene.players, at, 0xffffffff); assert.throws(() => runtime.removeAlly(1, 255), RangeError);
+    assert.equal(new DataView(scene.players.buffer).getUint32(at, true), 0x7fffffff);
+});
+
+// 79h와 6fh는 중계·안내 뒤 바뀐 현재 로컬 및 동의 값을 사용한다.
+test('Player 동맹 협상: 해제 안내와 무승부 기한', () => {
+    const scene = new ParticipationScene(new Array(13).fill('0')), runtime = scene.runtime(), trace = [];
+    scene.state.localOwner = 1; put(scene.players, 1 * 180 + 0x54, 6); put(scene.players, 2 * 180 + 0x54, 6);
+    scene.allies[1 * 9 + 2] = 1; scene.allies[2 * 9 + 1] = 1;
+    runtime.receiveBrokenAlliance(Uint8Array.of(1, 0x79, 6, 0, 1, 2), {
+        boss: () => true, broadcast: () => { trace.push('중계'); scene.state.localOwner = 2; }, tell: (text) => trace.push(text),
+    });
+    assert.equal(scene.allies[1 * 9 + 2], 0); assert.equal(scene.allies[2 * 9 + 1], 0); assert.deepEqual(trace, ['중계', 'AllianceBroken(P1,~l)']);
+    scene.state.localOwner = 1; put(scene.players, 1 * 180 + 0x50, 0x81); put(scene.players, 2 * 180 + 0x50, 0x82);
+    const deadline = { value: 7 }, decline = Uint8Array.of(1, 0x6f, 6, 0, 1, 0);
+    runtime.receiveDraw(decline, deadline, { tell: (text) => trace.push(text) });
+    assert.equal(scene.players[1 * 180 + 0x50], 1); assert.equal(scene.players[2 * 180 + 0x50], 2); assert.equal(trace.at(-1), 'DrawNotAccepted');
+    const accept = Uint8Array.of(1, 0x6f, 6, 0, 2, 1);
+    runtime.receiveDraw(accept, deadline, { status: (...args) => trace.push(args), boss: () => true, broadcast: (bytes) => { bytes[5] = 0; } });
+    assert.equal(deadline.value, 7); assert.equal(scene.players[2 * 180 + 0x50], 0x82); assert.deepEqual(trace.at(-1), [6, 2, 0]);
+    accept[5] = 1; runtime.receiveDraw(accept, deadline, { status: () => {}, boss: () => true, broadcast: () => {}, gameSeconds: () => 42.5 });
+    assert.equal(deadline.value, 62.5);
+});
+
 // 전체 기록 1620 BYTE·행렬 324 BYTE·모든 효과를 고유 입력 608개에서 대조한다.
 test('RawPlayerParticipation: 원본10.78 로그인·동맹·AI 부착/해제 608행', { skip: !participationRows && '원본 fixture 없음' }, () => {
     let count = 0;

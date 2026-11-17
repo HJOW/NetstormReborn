@@ -37,7 +37,7 @@ function scene(overrides = {}, savedFort = fort) {
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
-        player: { log: () => trace.push('log') }, construction: overrides.construction, missionOutcome: overrides.missionOutcome,
+        player: { log: () => trace.push('log') }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
         ai: { assertion: forbidden('AI 진단'), ...overrides.ai },
     });
     return { s, trace, queue };
@@ -96,6 +96,20 @@ test('CampaignSession Tutorial 1: 건설 수신과 실제 SP 통지', () => {
         packet[6] = 2; assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true); assert.equal(s.sp(1), 200); assert.equal(notices.length, 2);
     } finally { s.dispose(); }
     assert.throws(() => s.registerConstructionCommands(dispatch), /반납/);
+});
+
+// 직접 수신 등록은 실제 Session의 Player와 현재 Tell 장치를 사용한다.
+test('CampaignSession Tutorial 1: 동맹 요청 직접 수신', () => {
+    const records = new ClientPlayerRecords(), tells = [], { s } = scene({ playerRecords: records, factoryTell: (text) => tells.push(text) });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /미설치/); s.load(); s.registerAllianceNegotiationCommands(dispatch);
+        // 원본 세 종류는 직접 수신과 6BYTE 길이를 공유한다.
+        for (const type of [0x77, 0x79, 0x6f]) { const entry = dispatch.registration(type); assert.equal(typeof entry.directReceive, 'function'); assert.equal(entry.length, 6); }
+        const players = records.records(); players.set(Buffer.from('Bob\0'), 2 * 180 + 12); new DataView(players.buffer, players.byteOffset, players.byteLength).setUint32(2 * 180 + 44, 123, true);
+        dispatch.invokeDirect(0x77, 2, null, Uint8Array.of(1, 0x77, 6, 0, 2, 1)); assert.deepEqual(tells, ['AllianceRequested(~r,Bob,2)']);
+    } finally { s.dispose(); }
+    assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
 });
 
 // 원본 기본 AI 설정의 같은 600BYTE 입력에 명시 이름·기술·초기 SP만 지정한다.

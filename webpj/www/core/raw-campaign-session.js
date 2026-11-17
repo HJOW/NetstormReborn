@@ -11,6 +11,7 @@ import { registerFactoryResearchCommand } from './raw-factory-research.js';
 import { registerConstructionData } from './raw-packet-dispatch.js';
 import { receiveConstructionReject } from './raw-construction-failure-packets.js';
 import { battleIncomeAmount, battleIncomePeriod } from './raw-battle-option-slots.js';
+import { decodeOriginalText } from '../assets/text-encoding.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -171,6 +172,36 @@ export class RawCampaignSession {
         });
         dispatch.observe(0x6c, null); dispatch.version(0x6c, 1, 0); dispatch.requireLength(0x6c, 11);
         dispatch.register(0x6c, (_sender, _connection, packet) => this.#receiveConstructionMoney(packet));
+    }
+    // 각 수신 시 현재 Session의 무시 목록·Tell·안내·방송과 게임 시계를 빌린다.
+    #allianceDevices() {
+        const o = this.#live(), tell = o.services.factoryTell;
+        return {
+            boss: () => o.state.assetState.readBoss(), ignoredSubscriber: (subscriber) => o.chatGlobals.ignored.includes(subscriber),
+            tell: (text) => { if (typeof tell !== 'function') throw new Error('동맹 협상의 실제 Tell 미연결'); tell(decodeOriginalText(Uint8Array.from(text, (letter) => letter.charCodeAt(0)))); },
+            status: (kind, owner, value) => {
+                if (this.#login) this.#login.showStatus(kind, owner, value);
+                else { const status = o.services.localLogin?.status; if (typeof status !== 'function') throw new Error('동맹 협상의 실제 MessageBoard 미연결'); status(kind, owner, value); }
+            },
+            broadcast: (packet) => o.tables.broadcast.send(packet), gameSeconds: () => o.core.processState.now,
+        };
+    }
+    // Carrier 등록의 첫 77h·79h·6fh를 같은 Player와 현재 협상 장치에 연결한다.
+    registerAllianceNegotiationCommands(dispatch) {
+        const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 동맹 수신 등록');
+        // 원문 순서대로 동일한 6BYTE 직접 수신 metadata를 기록한다.
+        for (const type of [0x77, 0x79, 0x6f]) {
+            dispatch.observe(type, () => {}); dispatch.version(type, 1, 0); dispatch.requireLength(type, 6);
+            dispatch.registerDirect(type, (_sender, _connection, packet) => {
+                this.#live(); const hooks = this.#allianceDevices();
+                if (type === 0x77) o.participation.receiveAllianceRequest(packet, hooks);
+                else if (type === 0x79) o.participation.receiveBrokenAlliance(packet, hooks);
+                else {
+                    const aux = o.gameplayGlobals.gameAux();
+                    o.participation.receiveDraw(packet, { get value() { return aux.scheduledDrawDeadline; }, set value(value) { aux.scheduledDrawDeadline = value; } }, hooks);
+                }
+            });
+        }
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }
