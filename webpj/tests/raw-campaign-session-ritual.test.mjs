@@ -179,6 +179,28 @@ test('운반 이동: 설치 순서와 경로 요청 패킷', () => {
     } finally { o.dispose(); }
 });
 
+// AI의 비서버 이동은 사용자 이동과 같은 현재 헤더를 사용한다.
+test('AI 이동: 같은 명령 헤더와 현재 전송', () => {
+    const sent = [];
+    const o = scene(true, { carrierRequest: (target, packet) => sent.push([target, [...packet]]), deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0), names: { language: () => 0, substitute: (text) => text } } });
+    let token = 0;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage();
+        assert.throws(() => o.connectAiMovement(), /순서/);
+        o.connectCarrierMove(); o.connectAiMovement();
+        assert.equal(o.aiMovement.pool, o.core.pool);
+        token = o.aiMemory.allocate(0xb08);
+        const priest = o.world.create(158);
+        o.gameplayGlobals.authority().boss = false;
+        o.motionRuntimeModules.moveState.request.message = 0x42;
+        o.aiMovement.toPoint(token, priest, { x: 4, y: 5 }, 0);
+        assert.equal(sent.length, 1);
+        assert.deepEqual(sent[0][1].slice(0, 6), [1, 0x42, 18, 0, priest & 255, priest >>> 8]);
+        assert.throws(() => o.connectAiMovement(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { if (token) o.aiMemory.free(token); o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

@@ -11,6 +11,8 @@ import { CarrierMoveState, RawCarrierMove } from './raw-carrier-move.js';
 import { findAttachedProcess } from './raw-wind-aviary-process.js';
 import { RawPathProcess } from './raw-path-process.js';
 import { RawSquidFinder } from './raw-squid-finder.js';
+import { RawAiMovement, aiDistanceToFootprint } from './raw-ai-movement.js';
+import { RawSquidName } from './raw-squid-name.js';
 
 // 선택한 자리에서만 원문의 미연결 함수 경계를 요구한다.
 function fillMissing(table, key) { if (!table[key]) table[key] = () => { throw new Error(`Session 이동 본체의 실제 ${key} 미연결`); }; }
@@ -26,6 +28,8 @@ export class RawCampaignSessionMotionRuntime {
     minedHooks = null; miningHooks = null; transferHooks = null;
     // 운반 이동 요청의 현재 패킷 헤더와 같은 월드의 효과다.
     moveState = null; moveHooks = null;
+    // AI와 사용자 이동이 공유할 현재 명령 헤더 및 AI 효과다.
+    aiMoveHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -111,6 +115,35 @@ export class RawCampaignSessionMotionRuntime {
         };
         o.carrierMove = new RawCarrierMove(c.pool, c.types, () => c.ownerMode.fort, state, hooks);
         this.moveState = state; this.moveHooks = hooks;
+    }
+    // 운반 이동 뒤 AI의 좌표·대상 이동을 같은 명령 헤더와 경로에 연결한다.
+    bindAiMovement() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.moveState || this.aiMoveHooks || o.aiMovement) throw new Error('Session AI 이동 설치 순서 오류');
+        const names = { ...o.services.ai.names, level: (sid) => { this.#live(); return o.assetModules.virtualCount(sid); } };
+        const objectNames = new RawSquidName(c.pool, c.types, names);
+        // 현재 AI 본체의 소유자와 로그 종류를 읽어 원문 접두를 만든다.
+        const log = (token, message) => {
+            this.#live(); if (!o.services.player.log) throw new Error('AI 이동 현재 로그 장치 미연결');
+            const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+            o.services.player.log(o.gameplayGlobals.aiDebug().read(0x52f3d8), `AI${view.getInt32(0x260, true)}: ${message}\n`);
+        };
+        const hooks = {
+            movement: (kind) => { this.#live(); return o.priests.movementProcessType(kind); },
+            lookup: (parent, kind, index, remove) => { this.#live(); return new RawContainedLookup(c.pool, (sid, flags) => o.world.destroy(sid, flags)).find(parent, kind, index, remove); },
+            footprint: (sid) => { this.#live(); return c.neighbors.footprint(sid); },
+            send: (target, packet) => { this.#live(); if (!o.services.carrierRequest) throw new Error('AI 실제 이동 요청 송신 미연결'); o.services.carrierRequest(target, packet); },
+            sacrifice: (actor, target) => { this.#live(); o.sacrificeRequest.begin(actor, target); },
+            target: (actor, target, replace, helper) => { this.#live(); return o.carrierTarget.startTarget(actor, target, replace, helper); },
+            start: (request) => { this.#live(); return o.carrierRoutingModules.startMotion(request); },
+            name: (sid) => { this.#live(); return objectNames.name(sid); },
+            distance: (point, sid) => { this.#live(); return aiDistanceToFootprint(point, c.neighbors.footprint(sid)); },
+            logTarget: (token, source, target) => log(token, `Move ${source} to ${target}`),
+            logPoint: (token, name, x, y) => log(token, `Move ${name} to (${x},${y})`),
+        };
+        o.objectNames = objectNames;
+        o.aiMovement = new RawAiMovement(o.aiMemory, c.pool, () => o.state.assetState.readBoss(), o.boardTarget, this.moveState, hooks);
+        this.aiMoveHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

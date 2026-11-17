@@ -189,6 +189,8 @@ export class RawCampaignSessionOwners {
     salvageCommand = null;
     // 같은 World의 운반체 이동 요청과 수신 처리기다.
     carrierMove = null;
+    // 같은 AI 본체가 사용하는 이동 처리기와 가상 객체 이름이다.
+    aiMovement = null; objectNames = null;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -694,6 +696,12 @@ export class RawCampaignSessionOwners {
     connectCarrierMove() {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session 운반 이동 설치 전/반납');
         this.motionRuntimeModules.bindCarrierMove();
+    }
+
+    // 운반 이동 뒤 동일한 명령 헤더를 AI 이동에 연결한다.
+    connectAiMovement() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 이동 설치 전/반납');
+        this.motionRuntimeModules.bindAiMovement();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
