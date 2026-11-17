@@ -71,6 +71,8 @@ export const RULES = Object.freeze([
     { id: 'campaign-territory-save', class: 'port', names: ['RawFortTerritorySave'], reason: '같은 캠페인 snapshot의 Session5853..5866가 기존120BYTE·현재 섬/청크·공유 난수와 새 Territory 노드를 연결한다(E632)' },
     // 전체 캠페인 snapshot도 같은 Money/Mission/Badges/CoreData 자식을 호출한다(WB04-E633, 4D-1a).
     { id: 'campaign-snapshot-writers', class: 'port', names: ['RawFortMoneySave', 'RawFortMissionSave', 'RawFortBadgesSave', 'RawFortCoreWrite'], reason: 'RawCampaignSession.cpp5924..5982의 캠페인 공용 전체 snapshot 자식이다. 편집기 Save as UI/파일 저장과 구별한다(E633)' },
+    // Battle snapshot의 CoreData가 같은 인라인 SP writer를 공유한다(WB04-E634, 4D-1b 선행).
+    { id: 'campaign-core-sp-write', class: 'port', names: ['RawFortSpWrite'], reason: 'RawCampaignSession.cpp4504..4507의 공용 CoreData child이며 같은 실제 stream/게임 난수로 SP를 직렬화한다(E634)' },
     {
         id: 'edit-fort-save', class: 'exclude-edit',
         names: ['RawFortObjectSave', 'RawFortObjectsSave', 'RawFortRegionSave', 'RawFortContentSave', 'RawFortTerritorySave', 'RawFortSnapshotBasics', 'RawFortSnapshotParent', 'RawFortMoneySave', 'RawFortMissionSave', 'RawFortBadgesSave', 'RawFortCoreWrite', 'RawFortSpWrite', 'RawFortSubscriberWrite', 'RawDataManagerFileSave', 'RawMenuSaveFort', 'SaveFortNameDialog'],

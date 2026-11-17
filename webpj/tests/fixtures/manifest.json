@@ -24645,7 +24645,7 @@
       "bytes": 483479,
       "lines": 1106,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "worktree",
+      "webCommit": "03af4007a",
       "cpppjBasis": {
         "cpppj/src/o/RawFortMoneySave.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortMoneySave.h": "fa7762f9e"
@@ -24676,7 +24676,7 @@
       "bytes": 131723,
       "lines": 231,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "worktree",
+      "webCommit": "03af4007a",
       "cpppjBasis": {
         "cpppj/src/o/RawFortMissionSave.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortMissionSave.h": "fa7762f9e"
@@ -24707,7 +24707,7 @@
       "bytes": 5045581,
       "lines": 1353,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "worktree",
+      "webCommit": "03af4007a",
       "cpppjBasis": {
         "cpppj/src/o/RawFortBadgesSave.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortBadgesSave.h": "fa7762f9e"
@@ -24738,7 +24738,7 @@
       "bytes": 201111,
       "lines": 339,
       "fixtureCommit": "2ede40273",
-      "webCommit": "worktree",
+      "webCommit": "03af4007a",
       "cpppjBasis": {
         "cpppj/src/o/RawFortCoreWrite.cpp": "2ede40273",
         "cpppj/src/o/RawFortCoreWrite.h": "2ede40273"
@@ -24769,7 +24769,7 @@
       "bytes": 13449,
       "lines": 23,
       "fixtureCommit": "2ede40273",
-      "webCommit": "worktree",
+      "webCommit": "03af4007a",
       "cpppjBasis": {
         "cpppj/src/o/RawFortCoreWrite.cpp": "2ede40273",
         "cpppj/src/o/RawFortCoreWrite.h": "2ede40273"
@@ -24800,10 +24800,41 @@
       "bytes": 24235,
       "lines": 37,
       "fixtureCommit": "2ede40273",
-      "webCommit": "worktree",
+      "webCommit": "03af4007a",
       "cpppjBasis": {
         "cpppj/src/o/RawFortCoreWrite.cpp": "2ede40273",
         "cpppj/src/o/RawFortCoreWrite.h": "2ede40273"
+      }
+    },
+    {
+      "id": "fort-sp-write",
+      "path": "cpppj/tests/fixtures/fort-sp-write-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE 관측(FortSpWriteTests.cpp)",
+      "consumers": [
+        "webpj/tests/fort-sp-write.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-sp-write.js"
+      ],
+      "unit": "WB04-E634",
+      "doc": "docs/webpj-fort-sp-write-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortSpWrite.cpp",
+        "cpppj/src/o/RawFortSpWrite.h"
+      ],
+      "scope": "float32/_ftol 하위DWORD·같은512회 난수·세 실제 할당/stream 별칭·폭별 인라인 쓰기/진단·부분중단198행 전체 raw/trace. Session 결선은4D-1b 잔여",
+      "text": true,
+      "sha256": "602f3d42b77816832294470e0c2a10788a155c32ab135b33e7cd104499d3825c",
+      "bytes": 2138588,
+      "lines": 199,
+      "fixtureCommit": "d207940cd",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortSpWrite.cpp": "d207940cd",
+        "cpppj/src/o/RawFortSpWrite.h": "d207940cd"
       }
     }
   ]
