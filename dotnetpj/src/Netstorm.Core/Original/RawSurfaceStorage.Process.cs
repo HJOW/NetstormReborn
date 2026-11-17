@@ -259,6 +259,13 @@ public sealed partial class RawSurfaceStorage
             return;
         }
 
+        // 현재 사제 목록/보호막 조회와 실제 Carrier 부모를 공유한다.
+        if (method == 0x004919b0u)
+        {
+            PriestPre().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
         // 같은 실제 50칸 거주 구역 목록을 압축한 뒤 공통 Post다.
         if (method == 0x0049a4a0u)
         {

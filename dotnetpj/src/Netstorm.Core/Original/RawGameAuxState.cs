@@ -255,6 +255,12 @@ public sealed partial class RawGameAuxState
     /// <summary>00541280의 현재 더스트 데빌 TYPE이며 비행/드롭 판정이 함께 읽는다. 0.576에서 추가됐다.</summary>
     public UIntBox WindFlyerTypeBox { get; } = new() { Value = 138u };
 
+    /// <summary>005412f4의 현재 보호막 역할이며 사제 보호막 조회와 생성이 같은 현재 DWORD를 읽는다. 0.581에서 추가됐다.</summary>
+    public uint PriestForcefieldType { get => PriestForcefieldTypeBox.Value; set => PriestForcefieldTypeBox.Value = value; }
+
+    /// <summary>같은 보호막 역할 DWORD를 빌리는 공유 owner다. 0.581에서 추가됐다.</summary>
+    public UIntBox PriestForcefieldTypeBox { get; } = new() { Value = 167u };
+
     /// <summary>00541298의 현재 맨 오 워 TYPE이며 비행/삭제가 공유한다. 0.576에서 추가됐다.</summary>
     public UIntBox RainFlyerTypeBox { get; } = new() { Value = 144u };
 
