@@ -195,6 +195,8 @@ export class RawCampaignSessionOwners {
     aiResourceChoice = null;
     // AI가 같은 자원·경로를 사용하는 운반 행동 처리기다.
     aiCarrierActions = null;
+    // AI가 같은 TYPE·spot과 배치 검사를 사용하는 탐색기다.
+    aiBuildSearch = null;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -718,6 +720,12 @@ export class RawCampaignSessionOwners {
     connectAiCarrierActions() {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 운반 행동 설치 전/반납');
         this.motionRuntimeModules.bindAiCarrierActions();
+    }
+
+    // AI 운반 행동 뒤 현재 월드의 배치 탐색을 설치한다.
+    connectAiBuildSearch() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 배치 탐색 설치 전/반납');
+        this.motionRuntimeModules.bindAiBuildSearch();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

@@ -17,6 +17,10 @@ import { RawAiResourceChoice } from './raw-ai-resource-choice.js';
 import { countContained } from './raw-contained-finder.js';
 import { nuggetTypeNow } from './raw-carrier-arrival.js';
 import { RawAiCarrierActions, findContainedGenus, daisApproachPoint } from './raw-ai-carrier-actions.js';
+import { RawAiBuildSearch } from './raw-ai-build-search.js';
+
+// 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
+const AI_SEARCH_TYPE_BASE = 0x6b000000;
 
 // 선택한 자리에서만 원문의 미연결 함수 경계를 요구한다.
 function fillMissing(table, key) { if (!table[key]) table[key] = () => { throw new Error(`Session 이동 본체의 실제 ${key} 미연결`); }; }
@@ -38,6 +42,8 @@ export class RawCampaignSessionMotionRuntime {
     aiResourceHooks = null;
     // AI 운반 행동이 사용하는 현재 월드 조회·명령 효과다.
     aiCarrierHooks = null;
+    // AI 배치 탐색이 빌리는 현재 시계·배치 검사다.
+    aiSearchHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -212,6 +218,17 @@ export class RawCampaignSessionMotionRuntime {
         const globals = { now: () => c.processState.now, boss: () => s.assetState.readBoss(), checking: () => s.gunState.checking, invalidGraph: () => c.bookkeeping.invalidGraph >>> 0 };
         o.aiCarrierActions = new RawAiCarrierActions(o.aiMemory, c.pool, c.types, globals, hooks);
         this.aiCarrierHooks = hooks;
+    }
+    // AI 운반 행동 뒤 같은 spot·TYPE과 게임 배치 파이프라인을 탐색에 연결한다.
+    bindAiBuildSearch() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.aiCarrierHooks || this.aiSearchHooks || o.aiBuildSearch) throw new Error('Session AI 배치 탐색 설치 순서 오류');
+        const hooks = {
+            wall: o.services.construction.wallSeconds,
+            mayPlace: (query) => { this.#live(); o.assetModules.prepareConstruction(); return o.constructionModules.mayPlace(query); },
+        };
+        o.aiBuildSearch = new RawAiBuildSearch(o.aiMemory, c.types, c.spots, AI_SEARCH_TYPE_BASE, hooks);
+        this.aiSearchHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

@@ -244,6 +244,24 @@ test('AI 운반 행동: 선행 관문과 빈 본체', () => {
     } finally { if (token) o.aiMemory.free(token); o.dispose(); }
 });
 
+// 배치 탐색은 동일 AI 본체에 현재 TYPE 핸들과 영역을 작성한다.
+test('AI 배치 탐색: 선행 관문과 실제 본체 쓰기', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    let token = 0;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice();
+        assert.throws(() => o.connectAiBuildSearch(), /순서/);
+        o.connectAiCarrierActions(); o.connectAiBuildSearch();
+        token = o.aiMemory.allocate(0xb08);
+        o.aiBuildSearch.initialize(token, 80, { left: 1, top: 1, right: 5, bottom: 4 }, { x: 0, y: 0 }, 1);
+        const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+        assert.equal(view.getUint32(0x574, true), 80);
+        assert.equal(view.getUint32(0x574 + 0x18, true), 0x6b000000 + 80 * 500);
+        assert.throws(() => o.connectAiBuildSearch(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { if (token) o.aiMemory.free(token); o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {
