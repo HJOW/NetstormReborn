@@ -826,6 +826,12 @@ export class RawCampaignSessionOwners {
         this.motionRuntimeModules.bindAiRuntime();
     }
 
+    // AI 행동 설치 뒤 경로 직렬화기를 기존 Process 송신에 합성한다.
+    connectPathTransmission() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session 경로 송신 설치 전/반납');
+        this.motionRuntimeModules.bindPathTransmission();
+    }
+
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
     drawTempleFrames(sid, frame) {
         if (this.#disposed) throw new Error('반납한 Session 신전 그림');

@@ -31,6 +31,7 @@ import { RawAiBridgePath } from './raw-ai-bridge-path.js';
 import { RawAiBridgePlanning } from './raw-ai-bridge-planning.js';
 import { RawAiBridgeStrategies, AI_BRIDGE_STRATEGY_LOG } from './raw-ai-bridge-strategies.js';
 import { RawAiRuntime } from './raw-ai-runtime.js';
+import { createPathDataHeader } from './raw-path-data.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -79,6 +80,8 @@ export class RawCampaignSessionMotionRuntime {
     aiBridgeStrategyHooks = null;
     // AI 전체 프레임이 사용하는 현재 행동과 진단 장치다.
     aiRuntimeHooks = null;
+    // 독립 typed 세션의 경로 헤더·16384바이트 버퍼와 설치된 송신기다.
+    pathHeader = createPathDataHeader(); pathBuffer = new Uint8Array(16384); pathTransmission = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -559,6 +562,21 @@ export class RawCampaignSessionMotionRuntime {
         const globals = { battle: () => c.ownerMode.battle, timing: () => o.aiTiming, dryLog: () => o.gameplayGlobals.aiDebug().read(0x52f3dc) };
         o.aiRuntime = new RawAiRuntime(o.aiMemory, o.players, globals, hooks);
         this.aiRuntimeHooks = hooks;
+    }
+    // 기존 프로세스 송신 합성의 마지막에 실제 경로 writer를 설치한다.
+    bindPathTransmission() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.aiRuntimeHooks || this.pathTransmission) throw new Error('Session 경로 송신 설치 순서 오류');
+        if (o.world.storage.usesNativeTransmissionDevices?.()) throw new Error('Session Native 경로 송신 장기 헤더 미연결');
+        const send = (length) => {
+            this.#live();
+            if (!Number.isInteger(length) || length <= 0 || length > this.pathBuffer.length) throw new RangeError('세션 Path 송신 길이 오류');
+            if (typeof o.services.pathPacket !== 'function') throw new Error('세션 Path 실제 송신 미연결');
+            o.services.pathPacket(this.pathBuffer.subarray(0, length));
+        };
+        const path = o.motion.paths.transmission(this.pathHeader, this.pathBuffer, send);
+        c.processes.setFormTransmit(o.transmissionModules.transmission(path));
+        this.pathTransmission = path;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

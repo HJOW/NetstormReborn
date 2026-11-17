@@ -3,6 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { campaignOwners } from './campaign-session-support.mjs';
 import { RawCampaignSessionRitual } from '../www/core/raw-campaign-session-ritual.js';
+import { RawPathProcess } from '../www/core/raw-path-process.js';
 
 // 실제 설치 순서를 사용하며 저장 미션 Load는 실행하지 않는다.
 function scene(temple = false, extra = {}) {
@@ -462,6 +463,31 @@ test('AI 프레임: 설치 순서와 현재 저장소 결선', () => {
         assert.equal(o.loaded, false);
     } finally { if (token) o.aiMemory.free(token); o.dispose(); }
     assert.throws(() => o.connectAiRuntime(), /반납/);
+});
+
+// 같은 Host에 부착한 실제 Path가 새 송신 합성을 통해 30h 패킷을 보낸다.
+test('Session 경로 송신: 설치 순서와 실제 Process 부착', () => {
+    const sent = [], o = scene(true, { carrierRequest: () => {}, pathPacket: (packet) => sent.push(Uint8Array.from(packet)), deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    let wire;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget(); o.connectAiDropTargets(); o.connectAiDropEvaluation(); o.connectAiDropScan(); o.connectAiDropSelection(); o.connectAiDryGeometry(); o.connectAiFakeDrySpots(); o.connectAiDropActions(); o.connectAiPriestActions(); o.connectAiBridgeStrategies();
+        assert.throws(() => o.connectPathTransmission(), /순서/);
+        o.connectAiRuntime(); o.connectPathTransmission(); wire = o.motionRuntimeModules.pathTransmission;
+        assert.throws(() => o.connectPathTransmission(), /순서/);
+        const parent = o.world.create(158), type = o.priests.movementProcessType(158);
+        const pending = o.motion.paths.createByConstructor(o.core.types[type].constructorAddress);
+        assert.ok(pending instanceof RawPathProcess);
+        pending.runtime.setPath([{ x: 10, y: 20 }, { x: 11, y: 20 }], [0, 0]); pending.prepare(0, 1, 90);
+        const path = RawPathProcess.attach(o.core.processes, pending, parent, 0);
+        assert.ok(path); assert.equal(sent.length, 1); assert.equal(sent[0][0], 1); assert.equal(sent[0][1], 0x30);
+        const packet = new DataView(sent[0].buffer, sent[0].byteOffset, sent[0].byteLength);
+        assert.equal(packet.getUint16(4, true), path.form); assert.equal(packet.getUint16(6, true), parent);
+        assert.throws(() => wire.transmit(0), /길이/);
+        assert.throws(() => wire.transmit(o.motionRuntimeModules.pathBuffer.length + 1), /길이/);
+        assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+    assert.throws(() => o.connectPathTransmission(), /반납/);
+    assert.throws(() => wire.transmit(1), /반납/);
 });
 
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
