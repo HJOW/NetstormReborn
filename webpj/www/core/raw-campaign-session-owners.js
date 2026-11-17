@@ -244,7 +244,7 @@ export class RawCampaignSessionOwners {
     // 같은 실제 이동 본체를 빌리는 사제 공황 결선의 수명이다.
     panicModules = null;
     // 사제 의식 프레임과 실제 Regular 예약의 지역 수명이다.
-    ritualModules = null; ritualActions = null; ritualLookup = null; runePostPop = null;
+    ritualModules = null; ritualActions = null; ritualLookup = null; runePostPop = null; sacrificeRequest = null;
     // 같은 일반/전체 송신 분배·현재 패킷 버퍼와 다리/로딩 깊이 후단을 소유한다.
     transmissionModules = null;
     // 실제 World 게시 뒤 같은 풀의 일반 배치·지형·소유자 후처리 모듈과 선언부의 추가 목록이다.
@@ -654,6 +654,12 @@ export class RawCampaignSessionOwners {
     connectRitualTemple() {
         if (this.#disposed || !this.ritualModules) throw new Error('Session 신전 의식 설치 전/반납');
         this.ritualModules.bindTemple();
+    }
+
+    // 신전과 룬 뒤 다이스 및 사제 희생 요청을 설치한다.
+    connectRitualDais() {
+        if (this.#disposed || !this.ritualModules) throw new Error('Session 다이스 의식 설치 전/반납');
+        this.ritualModules.bindDais();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

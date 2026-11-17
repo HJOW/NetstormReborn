@@ -3412,7 +3412,8 @@
         "webpj/tests/small-bodies.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-priest-sacrifice-request.js"
+        "webpj/www/core/raw-priest-sacrifice-request.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-small-bodies-20261108.md",
       "cpppjSources": [
@@ -3423,10 +3424,10 @@
       "sha256": "b0ee93daba823701bab57a5a74314251436be61ddfc7e080b02a6bc90146856f",
       "bytes": 6061,
       "lines": 129,
-      "fixtureCommit": "f591fc05",
-      "webCommit": "86219607",
+      "fixtureCommit": "f591fc054",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPriestSacrificeRequest.cpp": "f591fc05"
+        "cpppj/src/o/RawPriestSacrificeRequest.cpp": "f591fc054"
       }
     },
     {
@@ -10029,7 +10030,8 @@
         "webpj/www/core/raw-foreign-ritual-reward.js",
         "webpj/www/core/raw-fort-money-load.js",
         "webpj/www/core/sp-store.js",
-        "webpj/www/core/client-core-data-globals.js"
+        "webpj/www/core/client-core-data-globals.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-foreign-ritual-reward-sp-20261113.md",
       "cpppjSources": [
@@ -10041,7 +10043,7 @@
       "bytes": 279988,
       "lines": 505,
       "fixtureCommit": "1a3ccedb7",
-      "webCommit": "4ee1417b2",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawForeignRitualReward.cpp": "1a3ccedb7"
       }
@@ -18561,7 +18563,7 @@
       "bytes": 274069,
       "lines": 669,
       "fixtureCommit": "5bdb5bedf",
-      "webCommit": "0b4c278df",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisRegular.cpp": "21bb25505",
         "cpppj/src/o/RawRitualRegular.cpp": "21bb25505"
@@ -18574,7 +18576,8 @@
       ],
       "modules": [
         "webpj/www/core/raw-dais-regular.js",
-        "webpj/www/core/raw-ritual-regular.js"
+        "webpj/www/core/raw-ritual-regular.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-dais-regular-20261113.md",
       "cpppjSources": [
@@ -18593,7 +18596,7 @@
       "bytes": 2485473,
       "lines": 2965,
       "fixtureCommit": "db9b626c0",
-      "webCommit": "0b4c278df",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisRegular.cpp": "21bb25505",
         "cpppj/src/o/RawRitualRegular.cpp": "21bb25505",
@@ -18611,7 +18614,8 @@
         "webpj/www/core/raw-dais-regular.js",
         "webpj/www/core/raw-ritual-regular.js",
         "webpj/www/core/raw-altar-sacrifice.js",
-        "webpj/www/core/raw-dais-deletion.js"
+        "webpj/www/core/raw-dais-deletion.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-dais-regular-20261113.md",
       "cpppjSources": [
