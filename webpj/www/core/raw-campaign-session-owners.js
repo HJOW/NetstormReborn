@@ -71,6 +71,7 @@ import { writeCampaignFortTerritory } from './raw-campaign-territory-save.js';
 import { refreshCampaignPlayerCore, writeCampaignFortCoreData } from './raw-campaign-core-write.js';
 import { snapshotCampaignTemplate } from './raw-campaign-snapshot.js';
 import { generateCampaignLocalGeysers, generateCampaignWorldGeysers, placeCampaignBattleNuggets, learnCampaignNewTechnology } from './raw-campaign-callbacks.js';
+import { RawCampaignSessionBuilding, createCampaignBuildingTables, drawCampaignTempleFrames } from './raw-campaign-session-building.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -152,6 +153,8 @@ export class RawCampaignSessionOwners {
     gunMode = null; gunTarget = null; energySupply = null; cursorMana = null; cursorRange = null;
     // 같은 실제 AI 통지와 후속 피격 콜백이 호출 때 선택하는 모듈 슬롯이다.
     aiDamage = null; playerDamage = null; flyer = null; particles = null; motion = null; building = null;
+    // Load의 첫 건설 모듈과 같은 현재30/17 수신/밀어내기 효과다. 생성자 자체는 설치하지 않는다.
+    buildingModules = null; buildingData = null; buildingEffects = null;
     // 같은 실제 피해·투사체/배리어 기하와 기존 Gun 장애물 통지, 후속 자산 처리기의 현재 슬롯이다.
     gunHit = null; projectileGeometry = null; fenceTarget = null; gunBlocker = null; assetBindings = null;
     // 파편의 실제 지역 색표/현재 캡처 옵션·다리 그림이며 건물/공장 캡처는 후속 생성 구간의 같은 슬롯이다.
@@ -275,6 +278,7 @@ export class RawCampaignSessionOwners {
             this.themes = new Uint32Array(this.core.types.length); this.elements = new Int32Array(this.core.types.length);
             Object.assign(this, createCampaignTypeTables(this.core.types.length));
             Object.assign(this, createCampaignParticleTables());
+            Object.assign(this, createCampaignBuildingTables());
             this.chunks = this.world.storage.chunks; this.islandBytes = this.world.storage.islands; this.dudePopulation = this.world.storage.sidLists.dudes; this.stamp = this.gameplayGlobals.terrainStamp();
             this.playerState = this.gameplayGlobals.player; this.globals = this.gameplayGlobals.world;
             this.cursorDrop = this.gameplayGlobals.cursor; this.energyState = this.gameplayGlobals.energy; this.contentFinder = this.gameplayGlobals.finder;
@@ -586,6 +590,25 @@ export class RawCampaignSessionOwners {
         this.aiProductionModules ??= new RawCampaignSessionAiProduction(this); this.aiProductionModules.bind();
     }
 
+    // 생성자 전체가 준비된 뒤 Load가 같은 실제 건설 캡처/프로세스/decoder를 설치한다.
+    connectBuilding() {
+        if (this.#disposed) throw new Error('반납한 Session 건설 결선');
+        this.buildingModules ??= new RawCampaignSessionBuilding(this); this.buildingModules.bind();
+    }
+
+    // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
+    drawTempleFrames(sid, frame) {
+        if (this.#disposed) throw new Error('반납한 Session 신전 그림');
+        drawCampaignTempleFrames(this, sid, frame);
+    }
+
+    // 수신 위치의 실제 현재 checking 복사와 기존 간헐천 처리기를 연결한다.
+    receiveGeyserMined(packet) {
+        if (this.#disposed) throw new Error('반납한 Session 간헐천 수신');
+        if (!this.buildingModules) throw new Error('Session 건설 수신 결선 전 호출');
+        this.buildingModules.receiveGeyserMined(packet);
+    }
+
     // 신전 상승도 공유하는 현재 Template의 Territory120BYTE 쓰기다. 편집기 파일/화면은 만들지 않는다.
     writeTerritory(slot, records) {
         if (this.#disposed) throw new Error('반납한 Session Territory 쓰기');
@@ -743,9 +766,9 @@ export class RawCampaignSessionOwners {
         if (this.#disposed) return; this.#disposed = true;
         this.aiModules?.releaseBrains();
         try {
-            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); this.vortexModules?.dispose(); this.teleportModules?.dispose(); this.combatModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
+            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.buildingModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); this.vortexModules?.dispose(); this.teleportModules?.dispose(); this.combatModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
         } finally {
-            try { try { this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); } finally { this.world?.dispose(); } } finally {
+            try { try { this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.buildingModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); } finally { this.world?.dispose(); } } finally {
                 try { this.vortexModules?.dispose(); } finally { try { this.teleportModules?.dispose(); } finally { try { this.combatModules?.dispose(); } finally { try { this.particleModules?.dispose(); } finally { try { this.gunModules?.dispose(); } finally { try { this.hitModules?.dispose(); } finally { try { this.gunViewModules?.dispose(); } finally { try { this.typeModules?.dispose(); } finally { try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } } } } } } } } } }
             }
         }

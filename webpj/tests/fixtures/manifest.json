@@ -3177,7 +3177,7 @@
       "bytes": 1543,
       "lines": 55,
       "fixtureCommit": "4e66a8743",
-      "webCommit": "worktree",
+      "webCommit": "36e58993c",
       "cpppjBasis": {
         "cpppj/src/o/RawRitualRefresh.cpp": "4e66a8743"
       }
@@ -8925,7 +8925,7 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E84",
+      "unit": "WB04-E84 / WB04-E639",
       "id": "dais-draw",
       "path": "cpppj/tests/fixtures/dais-draw-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 다이스 TYPE 169 추가 그림 요청의 signed idiv 부호/감김 결과와 소비자 요청(두 x87 정밀도 768행 동일)",
@@ -8933,21 +8933,22 @@
         "webpj/tests/dais-draw.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-dais-draw.js"
+        "webpj/www/core/raw-dais-draw.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-dais-draw-auxiliary-draw-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawDaisDraw.cpp"
       ],
-      "scope": "10.78 전용 단일 판본 768행 전부 사용",
+      "scope": "10.78 전용 단일 판본 768행 전부 사용 / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "6786affdceaadcd1cf13b0914822a58e0eb4d90fc0ca2499d7081cdb2a37bc91",
       "bytes": 78670,
       "lines": 769,
-      "fixtureCommit": "e2dfe0d0",
-      "webCommit": "41c4d9db",
+      "fixtureCommit": "e2dfe0d00",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawDaisDraw.cpp": "e2dfe0d0"
+        "cpppj/src/o/RawDaisDraw.cpp": "e2dfe0d00"
       }
     },
     {
@@ -11169,7 +11170,7 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E132",
+      "unit": "WB04-E132 / WB04-E639",
       "id": "constructionprocess",
       "path": "cpppj/tests/fixtures/constructionprocess-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 건설 프로세스 Start/Run/Complete/Destroy의 외부 요청 순서·프로세스 필드·부모 슬롯 전체와 17가지 경계 변동(세 판본 2868행)",
@@ -11177,28 +11178,29 @@
         "webpj/tests/construction-process.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-construction-process.js"
+        "webpj/www/core/raw-construction-process.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-construction-process-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawConstructionProcess.cpp"
       ],
-      "scope": "10.78(originals) 956행 사용, originalCD·original1037 은 범위 밖",
+      "scope": "10.78(originals) 956행 사용, originalCD·original1037 은 범위 밖 / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "c0d70a7107329b0107166691c316d4c42d7deee5b771fb3ab6c9176c16080773",
       "bytes": 830816,
       "lines": 2870,
-      "fixtureCommit": "f4688206",
-      "webCommit": "6164085a",
+      "fixtureCommit": "f46882068",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawConstructionProcess.cpp": "a942a75a"
+        "cpppj/src/o/RawConstructionProcess.cpp": "5f4b9d304"
       }
     },
     {
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E132",
+      "unit": "WB04-E132 / WB04-E639",
       "id": "constructionformparent",
       "path": "cpppj/tests/fixtures/construction-form-parent-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 건설 Run 접두의 현재 checking/Form 조회·연결 진단·진단 복귀 결과와 사건 문자열(64행, 10.78 전용)",
@@ -11206,21 +11208,22 @@
         "webpj/tests/construction-process.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-construction-process.js"
+        "webpj/www/core/raw-construction-process.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-construction-process-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawConstructionProcess.cpp"
       ],
-      "scope": "10.78 전용 단일 판본 64행 전부 사용",
+      "scope": "10.78 전용 단일 판본 64행 전부 사용 / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "5f7ef95ab43e877604a143a96343cc2505a59c3b283347629afb729a810e1290",
       "bytes": 4630,
       "lines": 65,
-      "fixtureCommit": "72012e83",
-      "webCommit": "6164085a",
+      "fixtureCommit": "72012e830",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawConstructionProcess.cpp": "a942a75a"
+        "cpppj/src/o/RawConstructionProcess.cpp": "5f4b9d304"
       }
     },
     {
@@ -11314,7 +11317,7 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E135",
+      "unit": "WB04-E135 / WB04-E639",
       "id": "constructioneffects",
       "path": "cpppj/tests/fixtures/constructioneffects-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 건설 유닛 밀어내기와 섬 실패 정리의 발자국/finder/spot/genus/관계 표/방송/assert 보고(세 판본 3534행)",
@@ -11322,21 +11325,22 @@
         "webpj/tests/construction-effects.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-construction-effects.js"
+        "webpj/www/core/raw-construction-effects.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-construction-effects-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawConstructionEffects.cpp"
       ],
-      "scope": "10.78(originals) 1178행 사용, originalCD 1178행은 10.72, original1037 1178행은 10.37",
+      "scope": "10.78(originals) 1178행 사용, originalCD 1178행은 10.72, original1037 1178행은 10.37 / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "e4700757b9e4e12a2bdfc09325e3bfd387d684343bed80f22efa12e8ac6c4091",
       "bytes": 847328,
       "lines": 3536,
-      "fixtureCommit": "d1b13bac",
-      "webCommit": "07806ebe",
+      "fixtureCommit": "d1b13bac5",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawConstructionEffects.cpp": "4717dff5"
+        "cpppj/src/o/RawConstructionEffects.cpp": "4717dff55"
       }
     },
     {
@@ -11551,7 +11555,7 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E141",
+      "unit": "WB04-E141 / WB04-E639",
       "id": "constructiondata",
       "path": "cpppj/tests/fixtures/constructiondata-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 건설 상태 메시지 0x37의 쓰기/읽기/수신/전송 래퍼와 변동(세 판본 5340행)",
@@ -11559,21 +11563,22 @@
         "webpj/tests/construction-data.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-construction-data.js"
+        "webpj/www/core/raw-construction-data.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-construction-data-20261109.md",
       "cpppjSources": [
         "cpppj/src/o/RawConstructionData.cpp"
       ],
-      "scope": "10.78(originals) 1780행 사용, originalCD 1780행은 10.72, original1037 1780행은 10.37",
+      "scope": "10.78(originals) 1780행 사용, originalCD 1780행은 10.72, original1037 1780행은 10.37 / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "aa57418290ff1a6f815439a77bf447ff045c6bef2eae46a8b3130504594afd9f",
       "bytes": 2711331,
       "lines": 5342,
-      "fixtureCommit": "5b99a6ea",
-      "webCommit": "04d214d2",
+      "fixtureCommit": "5b99a6eaa",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawConstructionData.cpp": "a942a75a"
+        "cpppj/src/o/RawConstructionData.cpp": "a942a75ac"
       }
     },
     {
@@ -13027,7 +13032,7 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E184",
+      "unit": "WB04-E184 / WB04-E639",
       "id": "burningarchercapture",
       "path": "cpppj/tests/fixtures/burning-archer-capture-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 71/128 의 +78/+a4 캡처 그림 제출(현재 프레임·출력 WORD·extra 별 그림/포구 디스크 요청)(10.78 88행)",
@@ -13035,21 +13040,22 @@
         "webpj/tests/burning-lifetime-draw.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-burning-lifetime-draw.js"
+        "webpj/www/core/raw-burning-lifetime-draw.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-burning-lifetime-draw-20261109.md",
       "cpppjSources": [
         "cpppj/src/o/RawBurningLifetimeDraw.cpp"
       ],
-      "scope": "10.78 실제 PE 88행 전부",
+      "scope": "10.78 실제 PE 88행 전부 / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "27fc2c6de576fc6550d5b9f0250c073918f21850e0f32bd6139d6fc4ac1862ee",
       "bytes": 2822,
       "lines": 89,
-      "fixtureCommit": "961f6be5",
-      "webCommit": "1932f1cb",
+      "fixtureCommit": "961f6be53",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawBurningLifetimeDraw.cpp": "961f6be5"
+        "cpppj/src/o/RawBurningLifetimeDraw.cpp": "961f6be53"
       }
     },
     {
@@ -13628,7 +13634,7 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E199",
+      "unit": "WB04-E199 / WB04-E639",
       "id": "shapetobuffer",
       "path": "cpppj/tests/fixtures/shape-to-buffer-x86.tsv",
       "producer": "cpppj 독립 PE 관측: ShapeToBuffer 004a7db0 보호 Dude main·SHP/plain RLE 메타데이터·전체 버퍼(현재 raw/배율/기준점/상태 입력, 10.78 80행·CD 84행)",
@@ -13637,21 +13643,22 @@
       ],
       "modules": [
         "webpj/www/render/raw-shape-to-buffer.js",
-        "webpj/www/render/squid-renderer.js"
+        "webpj/www/render/squid-renderer.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-shape-to-buffer-20261109.md",
       "cpppjSources": [
         "cpppj/src/client/RawShapeToBuffer.cpp"
       ],
-      "scope": "10.78 80입력 전부(originalCD 84행은 범위 밖)",
+      "scope": "10.78 80입력 전부(originalCD 84행은 범위 밖) / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "99361986f4c00fee75839e3862b8f4dbfd92cd33c4f2d69b3beec695fff97ebd",
       "bytes": 100503,
       "lines": 165,
-      "fixtureCommit": "ab9361f1",
-      "webCommit": "89e7b739",
+      "fixtureCommit": "ab9361f11",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d17"
+        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d170"
       }
     },
     {
@@ -13719,7 +13726,7 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E202",
+      "unit": "WB04-E202 / WB04-E639",
       "id": "factorycapture",
       "path": "cpppj/tests/fixtures/factory-capture-x86.tsv",
       "producer": "cpppj 독립 PE 관측: Factory/아웃포스트 두 VT 의 ShapeToBuffer 기본 그림 +78·추가 그림 +a4 메타데이터와 전체 plain RLE 버퍼(Level 0..7·extra 2/3/10·frame·TYPE 기준점 옵션·배율 3종, 10.78 200행)",
@@ -13728,28 +13735,29 @@
       ],
       "modules": [
         "webpj/www/core/raw-factory-draw.js",
-        "webpj/www/render/raw-shape-to-buffer.js"
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-derived-capture-20261109.md",
       "cpppjSources": [
         "cpppj/src/o/RawFactoryDraw.cpp"
       ],
-      "scope": "10.78 200입력 전부(머리 행 제외)",
+      "scope": "10.78 200입력 전부(머리 행 제외) / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "32585f459ba4896ebffb6c0321394b8cd8ec0c0ba8b5ed9031c100d19c0104d5",
       "bytes": 6482293,
       "lines": 201,
-      "fixtureCommit": "e6c41d17",
-      "webCommit": "9586dcca",
+      "fixtureCommit": "e6c41d170",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawFactoryDraw.cpp": "16ca2d8b"
+        "cpppj/src/o/RawFactoryDraw.cpp": "16ca2d8bc"
       }
     },
     {
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E202",
+      "unit": "WB04-E202 / WB04-E639",
       "id": "thundercannoncapture",
       "path": "cpppj/tests/fixtures/thunder-cannon-capture-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 썬더 캐논 TYPE 131/VT 0x50bad0 의 37프레임 × extra 0/2/3 × 소유자 0/1/8 ShapeToBuffer 메타데이터와 전체 픽셀(TYPE 기준점 −2/3, 10.78 333행, 두 정밀도 일치)",
@@ -13758,28 +13766,29 @@
       ],
       "modules": [
         "webpj/www/core/raw-thunder-cannon-capture.js",
-        "webpj/www/render/raw-shape-to-buffer.js"
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-derived-capture-20261109.md",
       "cpppjSources": [
         "cpppj/src/o/RawThunderCannonCapture.cpp"
       ],
-      "scope": "10.78 333입력 전부",
+      "scope": "10.78 333입력 전부 / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "a3b6b3be0465e1fff09e898b1ced54ebed9a65fb189026aa9474b70f033f28e7",
       "bytes": 8341264,
       "lines": 334,
-      "fixtureCommit": "16ca2d8b",
-      "webCommit": "9586dcca",
+      "fixtureCommit": "16ca2d8bc",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawThunderCannonCapture.cpp": "16ca2d8b"
+        "cpppj/src/o/RawThunderCannonCapture.cpp": "16ca2d8bc"
       }
     },
     {
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E202",
+      "unit": "WB04-E202 / WB04-E639",
       "id": "sunaviarycapture",
       "path": "cpppj/tests/fixtures/sun-aviary-capture-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 훨리베이스 TYPE 72/VT 0x509930 의 32프레임 생산/추가/매몰/그림자 경계 × extra × 소유자 ShapeToBuffer 메타데이터와 전체 픽셀(TYPE 기준점 −2/3, 10.78 384행, 두 정밀도 일치)",
@@ -13788,28 +13797,29 @@
       ],
       "modules": [
         "webpj/www/core/raw-sun-aviary-capture.js",
-        "webpj/www/render/raw-shape-to-buffer.js"
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-derived-capture-20261109.md",
       "cpppjSources": [
         "cpppj/src/o/RawSunAviaryCapture.cpp"
       ],
-      "scope": "10.78 384입력 전부",
+      "scope": "10.78 384입력 전부 / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "3777792bda24138c1be404474a78ec531a01a9963d0a6f3fd7a2b40999d0f268",
       "bytes": 6912732,
       "lines": 385,
-      "fixtureCommit": "078e4c84",
-      "webCommit": "9586dcca",
+      "fixtureCommit": "078e4c84b",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawSunAviaryCapture.cpp": "078e4c84"
+        "cpppj/src/o/RawSunAviaryCapture.cpp": "078e4c84b"
       }
     },
     {
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E202",
+      "unit": "WB04-E202 / WB04-E639",
       "id": "geysercapture",
       "path": "cpppj/tests/fixtures/geyser-capture-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 간헐천 TYPE 122/VT 0x50da88 의 51프레임 × extra 0/2/3 × 소유자 0/1/8 ShapeToBuffer 고정 본체·현재 그림 메타데이터와 전체 픽셀(TYPE 기준점 −2/3, 10.78 459행, 두 x87 정밀도 일치)",
@@ -13818,28 +13828,29 @@
       ],
       "modules": [
         "webpj/www/core/raw-geyser-capture.js",
-        "webpj/www/render/raw-shape-to-buffer.js"
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-derived-capture-20261109.md",
       "cpppjSources": [
         "cpppj/src/o/RawGeyserCapture.cpp"
       ],
-      "scope": "10.78 459입력 전부",
+      "scope": "10.78 459입력 전부 / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "ddc9e3afe1aee3a566896de584f5320863902382e1eb8a8e50726e1972959d86",
       "bytes": 5077839,
       "lines": 460,
-      "fixtureCommit": "87c3f91f",
-      "webCommit": "9586dcca",
+      "fixtureCommit": "87c3f91ff",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawGeyserCapture.cpp": "ce5a3884"
+        "cpppj/src/o/RawGeyserCapture.cpp": "ce5a38842"
       }
     },
     {
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E203",
+      "unit": "WB04-E203 / WB04-E639",
       "id": "templedraw",
       "path": "cpppj/tests/fixtures/temple-draw-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 윈드·레인·썬더 신전의 기본 프레임 4acfe0 반환과 전용 추가 Draw 4dcf10/4dcd00/4dd0f0 의 그림/소리 제출 순서(raw 50바이트 입력, 10.78 264행)",
@@ -13848,30 +13859,31 @@
       ],
       "modules": [
         "webpj/www/core/raw-temple-draw.js",
-        "webpj/www/core/raw-rain-vortex-draw.js"
+        "webpj/www/core/raw-rain-vortex-draw.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-temple-mana-draw-20261109.md",
       "cpppjSources": [
         "cpppj/src/o/RawTempleDraw.cpp",
         "cpppj/src/o/RawRainVortexDraw.cpp"
       ],
-      "scope": "10.78 264입력 전부",
+      "scope": "10.78 264입력 전부 / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "18ee694cd715e13e64e97b30abd2b920ecaa36ba684febf1ac9d894077179f3d",
       "bytes": 34070,
       "lines": 265,
-      "fixtureCommit": "6e5a4fc8",
-      "webCommit": "65db68c4",
+      "fixtureCommit": "6e5a4fc81",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawTempleDraw.cpp": "6e5a4fc8",
-        "cpppj/src/o/RawRainVortexDraw.cpp": "20e055e3"
+        "cpppj/src/o/RawTempleDraw.cpp": "6e5a4fc81",
+        "cpppj/src/o/RawRainVortexDraw.cpp": "20e055e3f"
       }
     },
     {
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E203",
+      "unit": "WB04-E203 / WB04-E639",
       "id": "raindraw",
       "path": "cpppj/tests/fixtures/rain-draw-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 레인 신전 가상 Draw 004dcd00/CD 0044fe00 의 현재 프레임·WORD 상태별 그림/소리 제출 순서(10.78 116행·CD 116행)",
@@ -13879,19 +13891,20 @@
         "webpj/tests/rain-draw.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-rain-vortex-draw.js"
+        "webpj/www/core/raw-rain-vortex-draw.js",
+        "webpj/www/core/raw-campaign-session-building.js"
       ],
       "doc": "docs/webpj-temple-mana-draw-20261109.md",
       "cpppjSources": [
         "cpppj/src/o/RawRainVortexDraw.cpp"
       ],
-      "scope": "10.78 116입력 전부(originalCD 116행은 범위 밖)",
+      "scope": "10.78 116입력 전부(originalCD 116행은 범위 밖) / E639 같은 기존 Session owner의 건설/캡처/Host 결선. 새 검사는 직접 fixture 소비자가 아니며 전체 Load 통합은4D-2h 뒤",
       "text": true,
       "sha256": "d2a7881326a3d6bd9d551c3c3c97e72074f471db9e9f3f07ea8d06ad4e920fe2",
       "bytes": 5743,
       "lines": 233,
       "fixtureCommit": "20e055e3f",
-      "webCommit": "65db68c43",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawRainVortexDraw.cpp": "20e055e3f"
       }
