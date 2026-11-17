@@ -12,15 +12,16 @@ import { RawClockSynchronization } from './raw-clock-synchronization.js';
 import { LocalMissionProgress, RawLocalMissionState } from './raw-local-mission-state.js';
 import { ClientHelpWord } from './client-help-word.js';
 import { RawFortImage } from './raw-fort-image.js';
+import { MissionLoginPlayerCounts, RawMissionLoginTimer } from './raw-mission-login-timer.js';
 
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
 export class RawCampaignSessionLoginFront {
     // 실제 부모·장치와 내부 전송 수명, 반납 관문이다.
-    #owner; #effects; #internal = null; #disposed = false; #wall = 0; #localTitle = 0;
+    #owner; #effects; #internal = null; #disposed = false; #wall = 0; #localTitle = 0; #timeout = 0; #localRequestPhase = 0;
     // 원문의 독립 초기 지역 입력과 현재 수신 종류 기록이다.
     pendingStamp = 0; overrideFlags = 0; wireTypes = [];
     // 현재 연결표와 패킷 분배기 및 같은 옵션/패킷/시계 처리기를 소유자와 함께 공개한다.
-    transport; options; metadata; forts; settings; clockSynchronization; state;
+    transport; options; metadata; forts; settings; clockSynchronization; state; timer;
     // 원문 독립 fixture의 현재 UI 및 입력 모드 값이다.
     uiMode = 0; inputMode = 0;
 
@@ -83,6 +84,11 @@ export class RawCampaignSessionLoginFront {
                 },
             });
             this.state = new RawLocalMissionState(local.state(), this.#stateGlobals(), this.#stateHooks());
+            this.timer = new RawMissionLoginTimer(this.#timerState(), new MissionLoginPlayerCounts(owner.players), {
+                savedGame: () => local.savedGame().value, server: () => owner.core.processState.server,
+                mission: () => owner.objectState.mission, missionPost: () => owner.globals.missionPost,
+                initialGeysers: () => owner.state.assetState.readBoss(), checkingAssertions: () => Boolean(owner.state.gunState.checking),
+            }, this.#timerHooks());
         } catch (error) {
             if (this.#effects.transport) this.transport.detachSession(); else this.#internal.dispose();
             this.#disposed = true; throw error;
@@ -164,6 +170,40 @@ export class RawCampaignSessionLoginFront {
         if (o.services.adoptInitializedPlayers || this.#effects.uiMode || this.#effects.battlePalette || this.#effects.closeProgress || this.#effects.startingProgress) this.#need('closeProgress', '로그인 진행 창 닫기')();
         else this.#need('refresh', '로그인 진행 갱신')();
     }
+    // 로그인 타이머가 같은 장기 기한·Begin·스크립트·Client 시계를 직접 빌린다.
+    #timerState() {
+        const o = this.#live(), self = this, local = o.localStateGlobals, request = this.#effects.requestPhase;
+        return {
+            get end() { return local.loginEnd().value; }, set end(value) { local.loginEnd().value = value; },
+            get timeout() { return self.#timeout; }, set timeout(value) { self.#timeout = value | 0; },
+            get begin() { return local.begin().value; }, set begin(value) { local.begin().value = value; },
+            get scriptBreak() { return local.scriptBreak().value; }, set scriptBreak(value) { local.scriptBreak().value = value; },
+            get requestPhase() { return request ? request.value : self.#localRequestPhase; },
+            set requestPhase(value) { if (request) request.value = value >>> 0; else self.#localRequestPhase = value >>> 0; },
+            get clock() { return o.gameplayGlobals.battleClockOrigin().value; }, set clock(value) { o.gameplayGlobals.battleClockOrigin().value = value; },
+        };
+    }
+    // 미션 또는 현재 Player 미확정이면 원문 재접속 저장은 파일 접근 전에 자연 반환한다.
+    #saveReconnect() {
+        const o = this.#live(); if (o.globals.missionPost || !o.playerState.playerKnown) return;
+        throw new Error('비미션 재접속 저장은 웹 후속 단계');
+    }
+    // 현재 Player/연결·사제/시계와 선택된 UI 효과를 실제 타이머에 연결한다.
+    #timerHooks() {
+        const o = this.#live(), effects = this.#effects, local = o.localStateGlobals;
+        return {
+            configInt: (key) => this.#need('configInt', '로그인 타이머 설정')(key, 30), wallSeconds: effects.wallSeconds, clock: effects.clock,
+            broadcast: (packet) => { if (effects.observePacket) this.#need('log', '타이머 방송')(`Timer broadcast local${o.state.assetState.localOwner}\n`); o.tables.broadcast.send(packet); },
+            priestRefresh: (owner) => o.priestParticipation.refresh(owner), connection: (id) => id === 9 && this.#transport('exists')(9),
+            remoteStatus: (id) => o.state.connectionActivity.receive(id), saveReconnect: () => this.#saveReconnect(),
+            closeProgress: () => { if (effects.closeTimerProgress) effects.closeTimerProgress(); else this.#closeProgress(); },
+            log: (_kind, text) => this.#need('log', '로그인 타이머 기록')(text), abortBattle: effects.abortBattle,
+            progress: () => { const body = this.timer.progressText(this.#need('frameWallSeconds', '로그인 진행 시각')(), this.#need('translate', '로그인 진행 번역')); local.loginProgressSerial().value = this.#need('showTimerProgress', '로그인 진행 창')(body); },
+            initializeGeneral: () => { throw new Error('스커미시 일반 전투 초기화는 후속 단계'); },
+            createInitialGeysers: o.createWorldGeysers ?? undefined, resetCamera: o.services.install.resetCamera,
+            serverAssertion: () => this.#assertion('server'),
+        };
+    }
     // 원문 상태8은 현재 블록과 내부 주소를 확인하고 실제 전송에 접속을 맡긴다.
     #connect(address, port) {
         const o = this.#live(), current = o.localStateGlobals.state().current;
@@ -171,7 +211,7 @@ export class RawCampaignSessionLoginFront {
         if (o.services.generalBattleStart?.textAddress || current[33]) throw new Error('일반 또는 저장 재접속 주소 처리는 후속 단계');
         this.#transport('connect')(address, port);
     }
-    // 원문 StateHooks 중 실제 장기 owner와 연결된 앞단이다. 타이머와 시작 공통 부모는 후속이다.
+    // 원문 StateHooks 중 실제 장기 owner와 연결된 앞단이다. 시작 공통 부모는 후속이다.
     #stateHooks() {
         const o = this.#live(), local = o.localStateGlobals;
         return {
@@ -192,7 +232,7 @@ export class RawCampaignSessionLoginFront {
             fortAvailable: (owner) => (owner >>> 0) < 9 && new DataView(o.headers.buffer, o.headers.byteOffset, o.headers.byteLength).getUint32((owner >>> 0) * 20, true) !== 0,
             loadCurrentFort: () => this.#reloadFort(o.playerState.templateOwner),
             fortCore: (owner) => o.templateState.get(owner), touchFort: (owner) => o.templateState.changed(owner),
-            localAddress: () => this.#transport('address')(9), uiMode: (mode) => this.#setUiMode(mode),
+            localAddress: () => this.#transport('address')(9), uiMode: (mode) => this.#setUiMode(mode), loginTimer: (start) => this.timer.run(start),
             refreshFort: o.services.install.refreshWindowTitle,
             inputMode: (mode) => { this.inputMode = Number(mode); this.#need('refresh', '입력 모드')(); },
         };

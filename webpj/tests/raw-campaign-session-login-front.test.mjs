@@ -273,3 +273,53 @@ test('Session Login 파일: State13의 누락 Fort 선택과 실제 읽기', () 
         assert.ok(trace.includes('제목'));
     } finally { front.dispose(); o.dispose(); }
 });
+
+// 타이머 시작은 같은 Client 기한에 예약하고 집계는 현재 Player 기록을 다시 읽는다.
+test('Session Login 타이머: 현재 Player 집계와 공유 기한 예약', () => {
+    const o = campaignOwners(), trace = [], front = new RawCampaignSessionLoginFront(o, devices(trace));
+    try {
+        const view = new DataView(o.players.buffer, o.players.byteOffset); view.setUint32(180 + 0x2c, 7, true);
+        assert.equal(front.timer.players.subscribers(), 1); front.timer.run(true);
+        assert.equal(o.localStateGlobals.loginEnd().value, 130.5); assert.equal(front.timer.state.timeout, 30);
+        view.setUint32(180 + 0x2c, 0, true); assert.equal(front.timer.players.subscribers(), 0);
+        assert.deepEqual(trace, ['login status timer start\n', 'loginTimeout', '시각']);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 비서버의 실제 연결이 사라지면 같은 요청 phase·기한과 시계를 사용해 중단한다.
+test('Session Login 타이머: 현재 연결 부재의 중단 순서', () => {
+    const o = campaignOwners(), trace = [], request = { value: 0 };
+    const front = new RawCampaignSessionLoginFront(o, { ...devices(trace), requestPhase: request, clock: () => 321, abortBattle: () => trace.push('중단'), refresh: () => trace.push('갱신') });
+    try {
+        o.core.processState.server = false; o.localStateGlobals.begin().value = 1; o.localStateGlobals.scriptBreak().value = 0;
+        front.timer.run(true); front.timer.run(false);
+        assert.equal(o.gameplayGlobals.battleClockOrigin().value, 321); assert.equal(o.localStateGlobals.loginEnd().value, 0);
+        assert.equal(o.localStateGlobals.begin().value, 0); assert.equal(o.localStateGlobals.scriptBreak().value, 1); assert.equal(request.value, 4);
+        assert.deepEqual(trace.slice(-2), ['중단', '갱신']);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 빈 월드의 미션 로그인 완료 관문은 저장 파일 장치 없이 같은 사제 상태와 예약을 정리한다.
+test('Session Login 타이머: 미션 저장 생략과 현재 사제 상태 정리', () => {
+    const o = campaignOwners(), trace = [], front = new RawCampaignSessionLoginFront(o, { ...devices(trace), clock: () => 11, refresh: () => trace.push('갱신') });
+    try {
+        front.timer.run(true); front.timer.run(false);
+        assert.equal(o.localStateGlobals.loginEnd().value, 0); assert.equal(o.localStateGlobals.begin().value, 0); assert.equal(o.localStateGlobals.scriptBreak().value, 0);
+        assert.deepEqual([...o.priestState.priests.currentOwnerState()].slice(1, 9), Array(8).fill(2)); assert.ok(trace.includes('갱신'));
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// State13은 현재 연결이 열렸을 때만 같은 로그인 타이머를 시작한다.
+test('Session Login 타이머: State13의 실제 공유 기한 연결', () => {
+    const archive = new TaffArchive(readData(ARCHIVE_PATH)), bytes = archive.read('\\d\\thewarbegins.fort'), trace = [];
+    const o = campaignOwners({ install: { refreshWindowTitle: () => trace.push('제목') } });
+    const front = new RawCampaignSessionLoginFront(o, { ...devices(trace), refresh: () => trace.push('갱신') });
+    try {
+        o.templateStorage.installFile(1, {}, bytes, 'd/thewarbegins.fort');
+        new DataView(o.headers.buffer, o.headers.byteOffset, o.headers.byteLength).setUint32(20 + 8, 1, true); // 실제 미션 파일의 읽기 전용 표식이다.
+        front.transport.isOpen = () => true;
+        o.localStateGlobals.state().current[0] = 13; front.state.run();
+        assert.equal(o.localStateGlobals.loginEnd().value, 130.5); assert.equal(front.inputMode, 0);
+        assert.ok(trace.includes('login status timer start\n'));
+    } finally { front.dispose(); o.dispose(); }
+});
