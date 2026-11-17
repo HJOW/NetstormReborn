@@ -388,4 +388,46 @@ public sealed partial class RawSurfaceStorage
 
         CommonDeletion().PostDestroy(sid, flags);
     }
+
+    /// <summary>두 실제 VT의 그림자 생성·표시·삭제와 공통 깊이를 같은 본체에 연결한다. 0.584에서 추가됐다.</summary>
+    private RawBalloonBody? _balloonBody;
+
+    /// <summary>두 실제 VT의 그림자 생성·표시·삭제와 공통 깊이를 같은 본체에 연결한다. 0.584에서 추가됐다.</summary>
+    public RawBalloonBody BalloonBody()
+    {
+        // 실제 Client 장치 결합 뒤에만 구성하며 자연 관문은 앞당기지 않는다.
+        _ = DamageablePreGlobals();
+        if (_balloonBody is null)
+        {
+            var hooks = new BalloonBodyHooks
+            {
+                Frames = type =>
+                {
+                    if (type >= Frames.Count)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(type), "장기 벌룬 현재 TYPE 프레임 범위");
+                    }
+
+                    return Frames[(int)type].Codes.Count;
+                },
+                Create = (type, flags) => CreateAsset(type, flags),
+                Pop = (sid, x, y, flags) => PopAsset(sid, x, y, flags),
+                Unpop = (sid, flags) => UnpopAsset(sid, flags),
+                Destroy = (sid, flags) => DestroyAsset(sid, flags),
+                Check = sid => (_resourceDevices.CarrierCheck ?? throw new InvalidOperationException("장기 벌룬 현재 Carrier check 미연결"))(sid),
+                AllocateRegular = () => AllocateResourceRegular(),
+                ConstructRegular = (parent, @event, payload) => ConstructResourceRegular(parent, @event, payload),
+            };
+            _balloonBody = new RawBalloonBody(
+                Pool,
+                Types,
+                Spots,
+                () => Authority().Boss,
+                ResourceCarrierPostPop(),
+                CarrierPre(),
+                hooks);
+        }
+
+        return _balloonBody;
+    }
 }

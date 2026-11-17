@@ -225,6 +225,13 @@ public sealed partial class RawSurfaceStorage
             return;
         }
 
+        // 그림자 우선 삭제와 같은 Carrier 기본 전처리를 같은 장기 본체에서 실행한다.
+        if (method == 0x0042ae80u)
+        {
+            BalloonBody().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
         // Outpost는 실제 두 목록 제거 뒤에만 현재 투표/부모를 선택한다.
         if (method == 0x00455840u)
         {

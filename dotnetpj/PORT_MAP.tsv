@@ -996,3 +996,6 @@ cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Outp
 cpppj/src/o/RawGeyserLifetime.h	Netstorm.Core/Original/RawGeyserLifetime.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawGeyserLifetime.cpp	Netstorm.Core/Original/RawGeyserLifetime.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceDamageable.cpp	Netstorm.Core/Original/RawSurfaceStorage.Damageable.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawBalloonBody.h	Netstorm.Core/Original/RawBalloonBody.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawBalloonBody.cpp	Netstorm.Core/Original/RawBalloonBody.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/RawSurfaceBalloon.cpp	Netstorm.Core/Original/RawSurfaceStorage.Damageable.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
