@@ -1028,6 +1028,12 @@ export class RawCampaignSessionOwners {
         this.cursorModules ??= new RawCampaignSessionCursor(this); this.cursorModules.bindFront();
     }
 
+    // 커서 앞단 뒤 같은 에너지·배치·카메라 함수 표를 연결한다.
+    connectCursorPlacement() {
+        if (this.#disposed || !this.cursorModules) throw new Error('Session 커서 배치 설치 전/반납');
+        this.cursorModules.bindPlacement();
+    }
+
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
     drawTempleFrames(sid, frame) {
         if (this.#disposed) throw new Error('반납한 Session 신전 그림');

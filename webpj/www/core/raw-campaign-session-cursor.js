@@ -2,11 +2,13 @@
 import { SquidForms } from './squid-forms.js';
 import { bindCursorManaLifecycle } from './raw-cursor-mana.js';
 import { bindCursorRangeLifecycle } from './raw-cursor-range.js';
+import { RawContainedLookup } from './raw-contained-lookup.js';
+import { projectCameraCoordinates } from '../render/camera-view.js';
 
 // 같은 Session의 커서 함수 표와 반납 수명이다. 커서 본체 설치는 후속이다.
 export class RawCampaignSessionCursor {
     // 원본 owner와 부분 설치·반납 관문이다.
-    #owner; #started = false; #ready = false; #disposed = false;
+    #owner; #started = false; #ready = false; #placementReady = false; #disposed = false;
     // 후속 커서 본체가 값으로 복사할 실제 게임 함수 표다.
     game = null;
 
@@ -51,8 +53,31 @@ export class RawCampaignSessionCursor {
         this.game = game; this.#ready = true;
     }
 
+    // 현재 에너지·배치·카메라와 건설 운반을 커서 본체가 빌릴 함수 표에 연결한다.
+    bindPlacement() {
+        this.#live(); const o = this.#owner, c = o.core, game = this.game, placement = game.placement;
+        if (this.#placementReady || o.cursor) throw new Error('Session 커서 배치 중복 연결');
+        placement.describe = (text, x, y, type, owner) => { this.#live(); const result = o.energySupply.evaluate(text.value, x, y, type, owner); text.value = result.output; return result.value; };
+        placement.source = game.lifecycle.source;
+        placement.region = (sid) => { this.#live(); const graph = o.anchor.graphFor(sid); return graph === 254 ? 0 : (graph + 1) | 0; };
+        placement.mayPlace = (query) => {
+            this.#live(); const result = o.constructionModules.mayPlace(query);
+            if (!o.cursor) throw new Error('커서 배치의 실제 본체 미설치');
+            o.cursor.placement.obstruction = o.state.gameplayPlacement.placement.blockedRelation; return result ? 1 : 0;
+        };
+        placement.processEvent = game.lifecycle.processEvent;
+        placement.project = (x, y) => { this.#live(); const p = o.gameplayGlobals.camera().snapshot().pixels, result = projectCameraCoordinates(p.x, p.y, x, y); return { x: result[0], y: result[1] }; };
+        game.removeRange = (parent, type) => {
+            this.#live(); new RawContainedLookup(c.pool, (target, flags) => { if (!o.world.destroy(target, flags)) throw new Error('회전 사정거리 실제 가상 삭제 거부'); }).find(parent, type, 0, true);
+        };
+        game.moveBuilder = (owner, target, low, high) => { this.#live(); o.buildingMover.move(owner, target, low, high); };
+        this.#placementReady = true;
+    }
+
     // 반납 뒤 함수 표가 같은 World에 다시 들어가지 못하게 한다.
     dispose() { this.#disposed = true; }
     // 앞단 정상 복귀이며 커서 본체나 실제 Load 완료를 뜻하지 않는다.
     get frontReady() { return this.#ready; }
+    // 배치 함수 표 정상 복귀이며 실제 커서 본체 설치와는 구별한다.
+    get placementReady() { return this.#placementReady; }
 }
