@@ -25,6 +25,7 @@ import { SunAviaryProcess, SunAviaryProcessFields } from './raw-sun-aviary-proce
 import { RainAviaryProcess, RainAviaryProcessFields } from './raw-rain-aviary-process.js';
 import { readAviaryProcessData } from './raw-aviary-process-data.js';
 import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids } from './raw-squid-remote-deletion.js';
+import { beginSquidVerification, receiveFreeSquidVerification } from './raw-squid-verification.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -360,7 +361,22 @@ export class RawCampaignSession {
         else readAviaryProcessData(current instanceof SunAviaryProcess || current instanceof RainAviaryProcess ? current.fields.bytes : new Uint8Array(0), packet);
     }
 
-    // Carrier 등록의 동맹부터 원격 삭제 수신까지 확인한 앞부분을 원본 순서대로 등록한다.
+    // 4ah/4bh는 같은 Client의 검증 DWORD와 현재 TYPE·로그를 공유한다.
+    #receiveVerification(packet, freePacket) {
+        const o = this.#live(), c = o.core, aux = o.gameplayGlobals.gameAux();
+        const state = {
+            get sid() { return aux.verifySid; }, set sid(value) { aux.verifySid = value; },
+            get previous() { return aux.previousVerifySid; }, set previous(value) { aux.previousVerifySid = value; },
+        };
+        const hooks = {
+            assertion: (expression, file, line) => o.world.storage.assertDisplay(expression, file, line),
+            typeName: (sid) => { const type = c.pool.slot(sid)[10]; if (type >= c.types.length) throw new RangeError('검증 간격의 현재 TYPE 물리 범위'); return c.types[type].name.split('\0', 1)[0]; },
+            log: o.services.player.log,
+        };
+        if (freePacket) receiveFreeSquidVerification(c.pool, packet, state, hooks); else beginSquidVerification(c.pool, packet, state, hooks);
+    }
+
+    // Carrier 등록의 동맹부터 객체 검증 수신까지 확인한 앞부분을 원본 순서대로 등록한다.
     registerCarrierCommandPrefix(dispatch) {
         const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 Carrier 수신 등록');
         this.registerAllianceNegotiationCommands(dispatch);
@@ -406,6 +422,11 @@ export class RawCampaignSession {
         dispatch.observePacket(0x62, (packet, sending) => observeRemoteDeletedSquids(packet, sending, (expression, file, line) => o.world.storage.assertDisplay(expression, file, line)));
         dispatch.version(0x62, 1, 0); dispatch.requireLength(0x62, 0xffff);
         dispatch.register(0x62, (_sender, _connection, packet) => { this.#live(); receiveRemoteDeletedSquids(o.core.pool, packet, (sid, flags) => o.world.destroy(sid, flags)); });
+        // free 검증과 검증 시작은 같은 장기 두 DWORD를 사용한다.
+        for (const [type, length] of [[0x4a, 7], [0x4b, 6]]) {
+            dispatch.observe(type, null); dispatch.version(type, 1, 0); dispatch.requireLength(type, length);
+            dispatch.register(type, (_sender, _connection, packet) => this.#receiveVerification(packet, type === 0x4a));
+        }
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }

@@ -130,6 +130,7 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['nuggetType', 0x005412c0, 'u32', 154, 'nugget', '현재 너겟 TYPE'],
     // 공통 객체 수신과 검증 로그가 공유하는 현재 검증 SID다.
     ['verifySid', 0x0054d4d8, 'u32', 0, null, '공통 객체 수신의 현재 검증 SID'],
+    ['previousVerifySid', 0x0054d4dc, 'u32', 0, null, '객체 검증의 이전 SID 순회 위치'],
     ['supportTypeWas', 0x0054d4e4, 'u32', 0, null, '받침 상세가 읽는 이전 TYPE'],
     ['firstTimerFactoryType', 0x005411ac, 'u32', 85, 'sunFactory', 'Factory 최초 event2 가 읽는 TYPE'],
     ['secondTimerFactoryType', 0x005411b4, 'u32', 87, 'rainFactory', 'Factory 최초 event1 이 읽는 TYPE'],

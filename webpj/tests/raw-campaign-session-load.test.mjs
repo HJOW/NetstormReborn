@@ -332,3 +332,21 @@ test('CampaignSession Tutorial 1: 원격 삭제 등록과 빈 수신', () => {
         assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), none), true);
     } finally { s.dispose(); }
 });
+
+// 실제 Session의 같은 빈 Form SID로 검증 시작·free 응답과 두 장기 DWORD를 확인한다.
+test('CampaignSession Tutorial 1: 객체 검증 등록과 공유 상태', () => {
+    const gameplay = new ClientGameplayGlobals(), { s } = scene({ gameplayGlobals: gameplay });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); const c = s.core(), aux = gameplay.gameAux(); let sid = 15001;
+        // 사용하지 않은 서버 슬롯을 고르고 실제 free TYPE을 그대로 보낸다.
+        while (sid < c.pool.capacity && !(c.pool.slot(sid)[11] & 1)) sid += 1;
+        assert.ok(sid < c.pool.capacity); const view = c.pool.slot(sid), begin = new Uint8Array(6), free = new Uint8Array(7);
+        begin.set([1, 0x4b, 6, 0]); new DataView(begin.buffer).setUint16(4, sid, true);
+        free.set([1, 0x4a, 7, 0]); new DataView(free.buffer).setUint16(4, sid, true); free[6] = view[10];
+        assert.equal(dispatch.registration(0x4a).length, 7); assert.equal(dispatch.registration(0x4b).length, 6);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), begin), true); assert.deepEqual([aux.verifySid, aux.previousVerifySid], [sid, sid]);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), free), true); assert.deepEqual([aux.verifySid, aux.previousVerifySid], [0, sid]);
+        assert.deepEqual(c.pool.slot(sid), view);
+    } finally { s.dispose(); }
+});
