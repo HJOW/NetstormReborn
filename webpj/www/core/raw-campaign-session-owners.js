@@ -191,6 +191,8 @@ export class RawCampaignSessionOwners {
     carrierMove = null;
     // 같은 AI 본체가 사용하는 이동 처리기와 가상 객체 이름이다.
     aiMovement = null; objectNames = null;
+    // AI가 같은 Player·월드에서 간헐천을 선택하는 처리기다.
+    aiResourceChoice = null;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -702,6 +704,12 @@ export class RawCampaignSessionOwners {
     connectAiMovement() {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 이동 설치 전/반납');
         this.motionRuntimeModules.bindAiMovement();
+    }
+
+    // AI 이동 뒤 현재 간헐천과 신전 자원 선택을 설치한다.
+    connectAiResourceChoice() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 자원 선택 설치 전/반납');
+        this.motionRuntimeModules.bindAiResourceChoice();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

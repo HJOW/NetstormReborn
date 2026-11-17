@@ -201,6 +201,28 @@ test('AI 이동: 같은 명령 헤더와 현재 전송', () => {
     } finally { if (token) o.aiMemory.free(token); o.dispose(); }
 });
 
+// AI 자원 선택은 현재 본체·그래프·내용물 저장소를 그대로 사용한다.
+test('AI 자원 선택: 선행 관문과 신전 없는 현재 좌표', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    let token = 0;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove();
+        assert.throws(() => o.connectAiResourceChoice(), /순서/);
+        o.connectAiMovement(); o.connectAiResourceChoice();
+        assert.equal(o.aiResourceChoice.pool, o.core.pool);
+        token = o.aiMemory.allocate(0xb08);
+        const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+        view.setFloat32(0x268, 12.5, true); view.setFloat32(0x26c, 7.25, true);
+        const point = o.aiResourceChoice.homeCenter(token);
+        assert.deepEqual([point.x, point.y], [12.5, 7.25]);
+        const priest = o.world.create(158);
+        assert.equal(o.motionRuntimeModules.aiResourceHooks.crystals(priest), 0);
+        assert.equal(o.motionRuntimeModules.aiResourceHooks.graph(priest), o.anchor.graphFor(priest));
+        assert.throws(() => o.connectAiResourceChoice(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { if (token) o.aiMemory.free(token); o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

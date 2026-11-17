@@ -13,6 +13,9 @@ import { RawPathProcess } from './raw-path-process.js';
 import { RawSquidFinder } from './raw-squid-finder.js';
 import { RawAiMovement, aiDistanceToFootprint } from './raw-ai-movement.js';
 import { RawSquidName } from './raw-squid-name.js';
+import { RawAiResourceChoice } from './raw-ai-resource-choice.js';
+import { countContained } from './raw-contained-finder.js';
+import { nuggetTypeNow } from './raw-carrier-arrival.js';
 
 // 선택한 자리에서만 원문의 미연결 함수 경계를 요구한다.
 function fillMissing(table, key) { if (!table[key]) table[key] = () => { throw new Error(`Session 이동 본체의 실제 ${key} 미연결`); }; }
@@ -30,6 +33,8 @@ export class RawCampaignSessionMotionRuntime {
     moveState = null; moveHooks = null;
     // AI와 사용자 이동이 공유할 현재 명령 헤더 및 AI 효과다.
     aiMoveHooks = null;
+    // AI 자원 선택이 사용하는 현재 월드 조회와 로그 효과다.
+    aiResourceHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -144,6 +149,29 @@ export class RawCampaignSessionMotionRuntime {
         o.objectNames = objectNames;
         o.aiMovement = new RawAiMovement(o.aiMemory, c.pool, () => o.state.assetState.readBoss(), o.boardTarget, this.moveState, hooks);
         this.aiMoveHooks = hooks;
+    }
+    // AI 이동 뒤 현재 간헐천 목록·신전·운반 내용물의 선택을 연결한다.
+    bindAiResourceChoice() {
+        this.#live(); const o = this.#owner, c = o.core, s = o.state;
+        if (!this.aiMoveHooks || this.aiResourceHooks || o.aiResourceChoice) throw new Error('Session AI 자원 선택 설치 순서 오류');
+        // 현재 AI 소유자와 선택한 로그 번호를 원본 문자열에 전달한다.
+        const log = (token, kind, text) => {
+            this.#live(); if (!o.services.player.log) throw new Error('AI 자원 선택 실제 로그 미연결');
+            const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+            o.services.player.log(kind, `AI${view.getInt32(0x260, true)}: ${text}\n\n`);
+        };
+        const hooks = {
+            center: (sid) => { this.#live(); const point = c.neighbors.center(sid); return { x: point[0], y: point[1] }; },
+            graph: (sid) => { this.#live(); return o.anchor.graphFor(sid); },
+            crystals: (sid) => { this.#live(); return countContained(c.pool, o.priestState.contained, sid, 0x20, nuggetTypeNow(s.motionState.carrier)); },
+            target: (token, actor, target) => { this.#live(); o.aiMovement.toTarget(token, actor, target, 0); },
+            home: (token, actor) => { this.#live(); o.aiMovement.home(token, actor); },
+            captureLog: (token, actor) => log(token, 29, `PriestGetter==${actor}`),
+            disconnectedLog: (token, geyser) => log(token, o.gameplayGlobals.aiDebug().read(0x52f3e4), `Put disconnectd geyser ${geyser} back into yetToConnect list.`),
+            assertion: (text) => { this.#live(); if (!o.services.ai.assertion) throw new Error('AI 간헐천 원본 진단 미연결'); o.services.ai.assertion(text); },
+        };
+        o.aiResourceChoice = new RawAiResourceChoice(o.aiMemory, c.pool, c.types, () => c.bookkeeping.invalidGraph >>> 0, hooks);
+        this.aiResourceHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }
