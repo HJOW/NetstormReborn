@@ -22,6 +22,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 **최근 완료 요약:** 최초 실행 상태 웹 반영(E616 — 두 localStorage 키가 없는 독립 Chromium 저장소에서 Welcome/Welcome2·Struggle For Freedom 잠금/체크·Options 기본값을 실제 클릭으로 확인, 기존 사용자 설정·진행은 보존)과 cpppj1320 내부 미션 전환의 flush/종료 수신 재반영(E620)을 마쳤다. 세부 체크는 [2026-11-17 보관](LEFT_JOBS.webpj.old.md#archive-webpj-20261117-through-wb04-e632) 0.1절, 근거는 [원본 관찰](docs/exe/original-first-run-20261116.md)·[웹 검증](docs/webpj-first-run-20261116.md)·[미션 전환](docs/webpj-mission-transition-20261117.md)이다. 실제 미션 완료 효과 연결은 8단계 잔여다.
 
+**한국어 글꼴 변경 인계(2026-11-17):** 세 프로젝트의 갈무리11 전환·한국어 글꼴명 상수 분리를 문서에 반영했다. 실제 소스/자산 변경과 화면 검증은 아직 하지 않았으며 [0.7절](#korean-font-change)의 독립 후속 작업이다. E647의 완료 범위·현재 세션 이식 단계·목표 일시 중지 상태는 그대로다.
+
 **다음 작업 (위에서부터):**
 
 1. **4D-2c ConnectMotion 뒷부분** — E647의 다이스 뒤 제단 수명·Salvage·CarrierMove·경로 송신 합성·BridgeCarriers를 설치한다. 3961이 요구하는 ConnectAiMovement는4D-2d와 함께 필요한 부품만 앞당긴다. 4D-1b·1c 정상 미션 통합은4D-2h·4D-10에서 재대조하며 실제 loaded=false를 유지한다.
@@ -125,13 +127,24 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ### 0.6 단계와 무관한 AGENTS 요구 (2026-11-11 점검, 2026-11-17 요약)
 
-AGENTS.md가 세 클론 모두에 바로 요구하는 항목은 **모두 반영됐다**: 버전 11.01 표기·Credits 세 번째 항목 `Netstorm 11.01 Patch Credits`와 창 제목 `NetStorm 11.01 Patch Credits`·HJOW 개발과 AI 사용 내용(WB03-AC, 한국어 행 이름 `NetStorm 11.01 패치 크레딧` 확정), 카피라이트 `Copyright 2026 HJOW`(WB03-AE, [제품11.01](docs/webpj-product-1101-20261105.md) 6절, `tests/product.test.mjs` 단언), 메인 메뉴 전 "클릭하여 시작"(WB01), 외부 도메인/IP 접속 문서화와 클라이언트 유효성 검사 비활성화(WB02-E, [외부 접속](docs/webpj-external-access-20261105.md): 런타임 요청은 같은 출처 `./data/`뿐), 한국어 `fonts/` D2Coding woff2 사용, 에셋의 `webpj/www` 복사(`prepare-assets` → `www/data`). 점검 표 원문은 보관본 0.6절에 있다.
+AGENTS.md가 세 클론 모두에 바로 요구하는 항목은 **기존 지정 기준으로 반영됐다**: 버전 11.01 표기·Credits 세 번째 항목 `Netstorm 11.01 Patch Credits`와 창 제목 `NetStorm 11.01 Patch Credits`·HJOW 개발과 AI 사용 내용(WB03-AC, 한국어 행 이름 `NetStorm 11.01 패치 크레딧` 확정), 카피라이트 `Copyright 2026 HJOW`(WB03-AE, [제품11.01](docs/webpj-product-1101-20261105.md) 6절, `tests/product.test.mjs` 단언), 메인 메뉴 전 "클릭하여 시작"(WB01), 외부 도메인/IP 접속 문서화와 클라이언트 유효성 검사 비활성화(WB02-E, [외부 접속](docs/webpj-external-access-20261105.md): 런타임 요청은 같은 출처 `./data/`뿐), 한국어 `fonts/` D2Coding woff2 사용, 에셋의 `webpj/www` 복사(`prepare-assets` → `www/data`). **2026-11-17 사용자 지시로 한국어 글꼴 목표가 갈무리11로 바뀌었으며 교체·상수 분리는 0.7절의 미완료 작업이다.** 점검 표 원문은 보관본 0.6절에 있다.
 
 남은 조건부 일:
 
 - 새 외부 요청(13차 CDN 글꼴 등)을 만드는 단위는 [외부 접속 문서](docs/webpj-external-access-20261105.md)와 `tests/external-access.test.mjs` 감사를 함께 고친다.
 - `fonts/`의 Noto Sans·Noto Sans JP는 TTF뿐이라 쓰게 되면 Google Fonts CDN 대상이다(13차, 3.7절·4절 "다른 언어 글꼴"). 일본어 Patch Credits 본문을 추가할 때 카피라이트 줄도 넣는다(원본 비교 모드의 10.78 두 행 Credits는 그대로).
 - Credits AI 문구는 4절 "Credits AI 문구" 결정(현행 유지 후 나중에 수정)을 따른다.
+
+<a id="korean-font-change"></a>
+
+### 0.7 한국어 글꼴 변경 — 갈무리11(2026-11-17 사용자 지시, 구현 대기)
+
+작은 게임 글씨에서 D2Coding이 깨져 보인다는 제보로 갈무리11을 사용한다([공통 기준](LEFT_JOBS.md#korean-font-change)). **이번에는 인수인계 문서만 반영했고 실제 글꼴 교체·상수 분리·자산 재생성·브라우저 검증은 하지 않았다.** 기존 D2Coding 사용 지시는 이 전환 목표로 대체하며 현재 실행 자료는 계속 D2Coding이다.
+
+- [ ] **글꼴명 공통 상수:** `KOREAN_FONT_FAMILY` 같은 공통 상수에 FontFace 등록 이름을 한 번만 정의하고 `platform/glyph-rasterizer.js`의 `GLYPH_FONT_FAMILY`와 `netstorm.js`의 `FONT_FAMILY`를 포함한 로딩/클릭 안내·Canvas 출력이 이를 참조하도록 한다. 일반/굵은 파일 경로·라이선스도 같은 설정에 모으고 자산 준비와 관련 검사를 맞춘다. 기존 상수가 나뉘어 있는 상태를 단순 문자열 교체로 남기지 않으며 새 상수에는 설명/사용법을 한국어 주석으로 단다.
+- [ ] **제공 WOFF2 사용:** `fonts/Galmuri11.woff2`·`fonts/Galmuri11-Bold.woff2`·`fonts/Galmuri11-LICENSE.txt`를 `webpj/www/data/fonts/`에 복사한다. `tools/prepare-assets.js`, `assets/korean-assets.js`의 경로, FontFace의 400/700 등록, 생성 manifest/해시를 함께 갱신한다. 한국어 글꼴은 같은 출처의 제공 WOFF2를 사용하며 CDN을 추가할 필요가 없다.
+- [ ] **작은 글씨 출력:** `assets/unicode-font.js`의 D2Coding용 em 비율·폭·기준선·줄 높이·알파 문턱을 갈무리11의 픽셀 크기에 맞춰 검토한다. 메뉴·도움말·브리핑·혼합 제목에서 일반/굵은 획·깨짐·잘림·줄바꿈과 측정/그리기의 일치를 확인한다. 영어 `.chfnt`의 기존 계약을 유지한다.
+- [ ] **검증/배포:** 글꼴 등록 이름·경로·굵기/로딩 실패/영어 대체를 검사하는 `tests/korean.test.mjs` 등 관련 검사와 자산/외부 접속 감사를 맞추고 실제 브라우저의 작은 글씨를 확인한다. 정적 배포 자료에 두 WOFF2와 라이선스가 포함되는지 확인하고 문서 인계와 구현/화면 검증 완료를 구별해 갱신한다.
 
 ## 1. 범위와 유지되는 결정
 
@@ -153,7 +166,7 @@ AGENTS.md가 세 클론 모두에 바로 요구하는 항목은 **모두 반영�
 - **시작/수명:** 사용자 시작 입력 안에서 오디오를 활성화한다. 미션 재시작·메뉴 복귀·`destroy/init`의 타이머/선택/음악/이벤트 소유권을 구분한다. 숨겨진 탭은 진행을 정지하고 복귀 때 시계 기준을 다시 잡아 부재 시간을 따라잡지 않는다(웹 적응).
 - **화면/시간:** 영어4:3부터 비교하며 게임 영역의4:3·16:9·16:10, 입력 역변환·픽셀 비율을 다룬다. 현재768높이/1024·1228·1366너비는 임시 화면 정책이다. `requestAnimationFrame`은 표시 기회이고 게임 틱이 아니다. 요소별 원본 간격을 먼저 맞추고60/120프레임은 후순위로 둔다. 가장자리 스크롤은 미션이 입력을 받으며 포인터가 게임 영역 안에 있을 때만 동작하고 이탈/포커스 상실 시 멈춘다.
 - **자산/저장:** 기본 소스는 `assets/game-data`·`fonts`·`webpj/translations`이며 실행 자료는 `webpj/www/data`에 준비한다. 느슨한 파일→TAFF 조회·타입/프레임/팔레트 의미·manifest 출처/해시를 보존한다. 웹 실행에서 보호 원본이나 로컬 설치를 요구하지 않는다. 설정/진행은 버전이 있는 JSON으로 localStorage에 두고(`netstorm.settings`·`netstorm.progress`, AGENTS 5차의 웹 처리와 같음) 저장 불가/손상 때도 계속할 수 있게 한다. 큰 저장소 도입은 실제 필요가 생길 때 판단한다.
-- **언어:** 영어 원본 `.chfnt`, 한국어는 사용자 지시대로 `fonts/D2Coding.woff2`·`D2CodingBold.woff2`를 복사해 사용한다. TTC 추출로 되돌리지 않는다. 한국어 파일/섹션/주제가 없으면 영어로 대체한다. 번역 문구 검수는 **개발자가 발견하는 대로 요청**한다(2026-11-01). 메뉴/도움말 번역 완료를 미션 한국어 완료로 세지 않는다. 명칭은 AGENTS.md와 [공유 명칭](docs/korean-unit-names.md)을 따른다. 미션 브리핑·안내의 한국어는 cpppj 한국어 확정본과 같은 원문을 쓰는 것을 기본값으로 한다(3.5절 2번). 일본어 등 다른 언어는 순서 10(13차)에서 추가하며 woff2가 없는 글꼴은 Google Fonts CDN을 쓴다.
+- **언어:** 영어 원본 `.chfnt`, 한국어는 2026-11-17 사용자 지시대로 `fonts/Galmuri11.woff2`·`Galmuri11-Bold.woff2`로 전환하고 family 이름을 공통 상수로 분리한다([0.7절](#korean-font-change), 문서 반영 완료·구현 대기, 현재 실행 자료는 D2Coding). 제공된 WOFF2를 복사해 사용한다. 한국어 파일/섹션/주제가 없으면 영어로 대체한다. 번역 문구 검수는 **개발자가 발견하는 대로 요청**한다(2026-11-01). 메뉴/도움말 번역 완료를 미션 한국어 완료로 세지 않는다. 명칭은 AGENTS.md와 [공유 명칭](docs/korean-unit-names.md)을 따른다. 미션 브리핑·안내의 한국어는 cpppj 한국어 확정본과 같은 원문을 쓰는 것을 기본값으로 한다(3.5절 2번). 일본어 등 다른 언어는 순서 10(13차)에서 추가하며 woff2가 없는 글꼴은 Google Fonts CDN을 쓴다.
 - **사용자 확인 경계:** [공통 인계0.3·1.1·3절](LEFT_JOBS.md)에 맞춰 **모든 자연 완주·전체 동일성·실제 사제 포획/희생·특정 적 공격·승리 재현/자동 공략은 사용자 확인 또는 별도 요청 대상**이다. 구현·정적 대조·허용된 부품 검사는 계속하되 이 항목만 남으면 다음 단계로 간다. 공중3종(훨리기그·맨오워·더스트 데빌)은 정적/코드 이식만 하며 새 전용 생산/생성/우클릭/행동 관측·검사를 추가하지 않는다.
 - **보호/분담:** AGENTS.md·보호 원본/CD를 수정하지 않는다. **공통 인계 LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md와 dotnetpj 파일은 WB 단위에서 수정·커밋하지 않는다**(2026-11-06 사용자 주의). **cpppj 동시 작업 여부는 사용자가 목표를 제시할 때 명시한다. 별다른 언급이 없으면 cpppj 동시 작업이 없는 것으로 보고 필요한 cpppj 소스 수정도 할 수 있다**(2026-11-17 사용자 지시, 2026-11-16 수정 허용 지시를 이어받음). 동시 작업이 명시되면 그 지시를 따른다. 어느 경우든 완료 기능을 보존하고 관련 기존 검사를 확인한다. stage할 파일은 이름으로 지정한다. README 등 공통 파일은 기존 사용자 결정대로 일괄 갱신 때 반영한다. 새 문서/코드는 UTF-8, 새 상수·함수·자료형·클래스·멤버·반복문에는 설명/사용법을 먼저, 추가/수정 시점과 이유를 뒤에 쓰는 한국어 주석을 단다.
 
@@ -655,7 +668,7 @@ E465에서 `RawCameraPan`/`RawEdgeScroll`/`ClientCameraGlobals`의 "cpppj에도 
 | Tell/언어 | `<background>`는 이름만 보관(`nsisles` 자료/사용 근거 미확정). 현재 미션·`{@미션.키}`·브리핑/안내 `.korean`·스크립트 도움말 Back은 4-D·8에서 연결. 한국어 영어대체/긴 줄/고DPI도 해당 화면과 확인 |
 | 메뉴 확장 | 두 열 메뉴는 범위 내 실제 소비자가 필요할 때 원본 계약으로 이식. `%{userSpec}`·User Made Campaigns는 제외이며 새 과제로 돌리지 않음 |
 | 입력/오디오/환경 | 실제 스피커 청취·모든 브라우저/GUI Linux·고DPI/모니터 이동은 미확인. 일부 Edge/Chromium 기록을 전체 플랫폼 지원으로 쓰지 않음 |
-| 다른 언어 글꼴 | AGENTS 글꼴 규칙: `fonts/`의 Noto Sans·Noto Sans JP는 TTF뿐이라 webpj는 Google Fonts CDN을 쓴다. 웹의 현재 범위(영어·한국어)는 D2Coding woff2만 쓰므로 아직 소비자가 없다. 13차(3.7절)에서 다른 언어를 추가하는 단위가 CDN 글꼴 요청을 [외부 접속 문서](docs/webpj-external-access-20261105.md)의 허용 목록과 `tests/external-access.test.mjs` 소스 감사에 함께 반영한다(현재 감사는 `./data/` 같은 출처 요청만 허용). cpppj 일본어 UI는 외부 `NotoSansJP-*`를 쓰며 가변 글꼴 기본 인스턴스가 Thin이라 굵기 확인이 남아 있다([공통 인계](LEFT_JOBS.md) 0.3절) |
+| 다른 언어 글꼴 | AGENTS 글꼴 규칙: `fonts/`의 Noto Sans·Noto Sans JP는 TTF뿐이라 webpj는 Google Fonts CDN을 쓴다. 한국어는 제공된 갈무리11 WOFF2로 전환 예정(0.7절, 현재 D2Coding WOFF2)이며 다른 언어 CDN의 현재 소비자는 없다. 13차(3.7절)에서 다른 언어를 추가하는 단위가 CDN 글꼴 요청을 [외부 접속 문서](docs/webpj-external-access-20261105.md)의 허용 목록과 `tests/external-access.test.mjs` 소스 감사에 함께 반영한다(현재 감사는 `./data/` 같은 출처 요청만 허용). cpppj 일본어 UI는 외부 `NotoSansJP-*`를 쓰며 가변 글꼴 기본 인스턴스가 Thin이라 굵기 확인이 남아 있다([공통 인계](LEFT_JOBS.md) 0.3절) |
 | README webpj 상태 | 2026-11-16 정리에서 README.md·README.en.md의 webpj 상태를 WB04-E584 기준(검사 5,561건, 대응표 1,006단위 중 port 842, 재기준선 완료, 세션 본체 결선 진행 중)으로 고쳤다. README는 공통 문서이므로 WB 단위에서 고치지 않고 다음 일괄 갱신 때 반영한다 |
 | Credits AI 문구 | 2026-11-05 사용자 결정: 현행 문구(`OpenAI Codex, ChatGPT and Anthropic Claude Code`, 한국어 동일 취지)를 **유지하고 나중에 수정**한다. cpppj/dotnetpj 문구(Codex·ChatGPT만)와 다르며, 수정 지시가 오면 `www/assets/product.js`의 영어/한국어 섹션과 `tests/product.test.mjs`의 문구 검사를 함께 고친다. 한국어 행 이름 `NetStorm 11.01 패치 크레딧`은 확정. 카피라이트 줄 추가는 이 결정과 별개이며 WB03-AE에서 반영했다 |
 
