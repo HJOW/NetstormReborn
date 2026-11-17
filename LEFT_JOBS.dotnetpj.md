@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.603 · 갱신 2026-11-17(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.604 = [R4-2](#r4-detail) · cpppj 기준 제품 1314 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
+**기준 단위 0.604 · 갱신 2026-11-17(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.605 = [R4-2](#r4-detail) · cpppj 기준 제품 1314 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-15) 직전의 이 문서 전체(단위 기록 0.453~0.545 93건, R4 진행판의 묶음별 경과, 0.3의 단위별 검사·fixture 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261115-through-0545)에 바이트 그대로 보관했고, 그 이전 보관본 6개와 0.452 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -50,11 +50,11 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 단위 | **0.603(2026-11-17, HJOW-Athlon):** [섬 후처리 Prefix 실측 발화](docs/dotnet-session-postpop-fire-20261117.md). 신규3검사. H 스탬프·F 섬 생성·중첩 Pop 기록·실제 지형 생성 결정성. 프레임 선택 깊이 흐름·농지·그래프·장부 대조는 잔여 |
-| 검사 기준선 | **0.603 집중: Client 전체1257/1257·Core(Fence\|CppPortMap\|Surface\|Dais)470/470·Assets366/366 통과, Release 빌드 0경고·0오류.** 신규3검사(`HostSessionTerrainPostPopFireTests`). Core 전체 회귀는 시간이 걸려 이번 단위에서는 돌리지 않았다(마지막 전체 측정 0.589 직전 2842/2846에서 PortMap 중복 해소 뒤 자료 부재 3건만 남음). TRX 미보관(집중 실행). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)도 유지 |
+| 마지막 구현 단위 | **0.604(2026-11-17, HJOW-Athlon):** [적재 깊이 흐름 연결](docs/dotnet-session-loading-depth-20261117.md). 신규2검사. 깊이 1 프레임 선택 발화·깊이 0 유지 대조. 농지·그래프·장부 대조는 잔여 |
+| 검사 기준선 | **0.604 집중: Client 전체1259/1259·Core(Fence\|CppPortMap\|Surface\|Dais)470/470·Assets366/366 통과, Release 빌드 0경고·0오류.** 신규2검사(`HostSessionLoadingDepthTests`). Core 전체 회귀는 시간이 걸려 이번 단위에서는 돌리지 않았다(마지막 전체 측정 0.589 직전 2842/2846에서 PortMap 중복 해소 뒤 자료 부재 3건만 남음). TRX 미보관(집중 실행). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)도 유지 |
 | PORT_MAP | `PORT_MAP.tsv` **1021행(L1 445·port 571)**, cpppj 438단위에 대응. 행은 파일 전체 완료를 뜻하지 않는다 |
 | fixture | 연결 **319개**(원본 x86 대조 자료, `cpp-fixture-manifest.tsv`) |
-| L2 기준선 | 0.603: 분배 발화로 슬롯 바이트가 바뀔 수 있으나 M1 판정 잔여와 함께 일괄 대조하므로 재수집하지 않았다. **일치0/34**, 데모dn3 미연결 유지. 직전 자료 `extracted/dotnet-l2-0567/`, [이번 결과](docs/dotnet-session-postpop-fire-20261117.md)·[일괄 도구](docs/dotnet-l2-batch-20261114.md) |
+| L2 기준선 | 0.604: 깊이 흐름 연결이며 깊이 0 기본 흐름은 풀 바이트 중립(기존 결정성 검사 유지)으로 덤프 불변이므로 재수집하지 않았다. **일치0/34**, 데모dn3 미연결 유지. 직전 자료 `extracted/dotnet-l2-0567/`, [이번 결과](docs/dotnet-session-loading-depth-20261117.md)·[일괄 도구](docs/dotnet-l2-batch-20261114.md) |
 | cpppj 기준 | 제품 **1314 / 11.01**(M8 최종 관문 1311 완료+최초 실행 1314, CD 10.72 복원은 사용자 보류, cpppj 목표 일시 중지). 영향 분류는 0.379(1247→1300 전수)·0.499(1304~1310)·0.530(1312·1313)까지 마쳤다([1.2](#resync-scope)). `reflected-commit`/floor는 올리지 않았다 |
 | 오라클 | `cpppj/build/bin/Release/Netstorm.exe`. cpppj `src`가 바뀌면 PowerShell로 다시 빌드한다. 데이터 사본 `extracted/dotnet-oracle-data/`·캡처 `extracted/dotnet-oracle-captures/`·기준선 `extracted/dotnet-r0-baseline/`은 이 PC에만 있다(Git 제외) |
 | 디컴파일 | dotnetpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`). 이식 근거는 cpppj 소스·fixture·문서다 |
@@ -63,7 +63,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 ### 0.4 남은 작업 — 순서대로
 
-**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.603에서 섬 후처리 Prefix 실측 발화(연결 스택·지형 공용 후처리 분배·H 스탬프·F 섬 생성·중첩 Pop 기록)를 맞췄다. 다음은 적재 깊이 흐름 연결(Prefix 프레임 선택 발화)과 농지 파이프라인·그래프 번호·장부 대조다.** 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
+**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.604에서 적재 깊이 흐름 연결(깊이 1 프레임 선택 발화·깊이 0 유지 대조)을 맞췄다. 다음은 농지 파이프라인과 그래프 번호·장부 대조다.** 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
 
 <a id="korean-font-change"></a>
 
@@ -1188,7 +1188,8 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 | 0.600 (11-17) | R4-1 마감 감사와 R4-2 진입 조건(공통층 마감 확정·R6 장치 대기 명시) | [단위 문서](docs/dotnet-r4-1-close-20261117.md) | 새 경로 R4-2(Pop 공간 등록 switch-on) |
 | 0.601 (11-17) | 세션 섬 후처리 서비스(섬 후처리 결선·3×3 스탬프·누락 진단) | [단위 문서](docs/dotnet-session-island-postpop-20261117.md) | 새 경로 R4-2(호출 기록은 0.602에서 연결, `Prefix` 발화 잔여) |
 | 0.602 (11-17) | 지형 Pop 호출 기록 연결(호출 원문 기록·섬 준비 상태·실제 지형 생성 호출열 결정성) | [단위 문서](docs/dotnet-session-terrain-pop-calls-20261117.md) | 새 경로 R4-2(호출 기록 연결 완료, 발화는 0.603에서 연결) |
-| 0.603 (11-17) | 섬 후처리 Prefix 실측 발화(연결 스택·지형 공용 후처리 분배·H 스탬프·F 섬 생성·중첩 Pop 기록) | [단위 문서](docs/dotnet-session-postpop-fire-20261117.md) | 새 경로 R4-2(프레임 선택 깊이 흐름·농지·그래프·장부 대조 잔여) |
+| 0.603 (11-17) | 섬 후처리 Prefix 실측 발화(연결 스택·지형 공용 후처리 분배·H 스탬프·F 섬 생성·중첩 Pop 기록) | [단위 문서](docs/dotnet-session-postpop-fire-20261117.md) | 새 경로 R4-2(깊이 흐름은 0.604에서 연결, 농지·그래프·장부 대조 잔여) |
+| 0.604 (11-17) | 적재 깊이 흐름 연결(깊이 1 프레임 선택 발화·깊이 0 유지 대조) | [단위 문서](docs/dotnet-session-loading-depth-20261117.md) | 새 경로 R4-2(농지 파이프라인·그래프 번호·장부 대조 잔여) |
 | 0.478~0.499 (11-12~14) | L2 기준선 확장 — 6번째~26번째 경로의 cpp 기준선·dn 덤프와 구조 대조, 담긴 섬 판정(0.484), 34경로 같은 시드 일괄 수집·도구(0.499) | [L2 일괄](docs/dotnet-l2-batch-20261114.md), 같은 보관본 | 새 경로 R4(M1 판정 자료) |
 | 0.453~0.477 (11-12) | 지형 바인딩 조립·Generate 라이브·난수 단일 스트림·시작 1회 reseed(0.453~0.465), Pop 공간 등록·요새 객체 적재·그래프 재구성(0.466~0.470), 장부·전투섬·첫 지역 귀속 확정과 Player 월드 갈고리(0.471~0.477) | 같은 보관본 | 새 경로 R4 |
 | 기간·단위 | 완료 범위 | 근거 문서 | 처리 |

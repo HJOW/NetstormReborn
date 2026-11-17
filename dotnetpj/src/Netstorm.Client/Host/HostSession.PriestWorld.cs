@@ -85,10 +85,12 @@ public sealed partial class HostSession
         return bound;
     }
 
-    /// <summary>로더의 동일 깊이를 사제 Owner·보호막·Carrier·중립 회복에 전달한다.</summary>
+    /// <summary>로더의 동일 깊이를 사제 Owner·보호막·Carrier·중립 회복과 섬 후처리 프레임 선택에 전달한다.</summary>
+    /// <remarks>0.604에서 섬 후처리 공유 깊이 상자도 함께 둔다. 적재 중 표면 Pop이 서·북 칸으로 프레임을 고른다.</remarks>
     public void SetWorldLoadingDepth(uint depth)
     {
         _worldLoadingDepth = depth;
+        _islandLoadingDepth.Value = depth;
         _priests?.SetLoadingDepth(depth);
     }
 

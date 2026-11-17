@@ -1014,6 +1014,14 @@ public sealed partial class HostSession
     /// <remarks>0.601에서 R4-2 적재 중 postPop용으로 추가했다. 지면·받침 소유자 스탬프의 실제 몸체다.</remarks>
     private RawIslandPostPop? _islandPostPop;
 
+    /// <summary>세션 섬 후처리 상태다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>0.604에서 R4-2 적재 깊이 흐름용으로 추가했다. 적재 깊이에 따라 Prefix 프레임 선택이 발화한다.</remarks>
+    private IslandPostPopState? _islandPostPopState;
+
+    /// <summary>세션 적재 깊이를 섬 후처리와 공유하는 상자다. SetWorldLoadingDepth가 값을 둔다.</summary>
+    /// <remarks>0.604에서 R4-2 적재 깊이 흐름용으로 추가했다. 원본 Storage/Template 깊이 DWORD와 같은 구실이다.</remarks>
+    private readonly UIntBox _islandLoadingDepth = new();
+
     /// <summary>세션 섬 후처리와 연결 순회가 공유하는 소유자 지정 몸체다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
     /// <remarks>0.603에서 R4-2 Prefix 실측 발화용으로 추가했다. 섬 후처리와 다리 연결이 같은 Owner를 공유한다.</remarks>
     private SquidOwner? _islandOwner;
@@ -1050,7 +1058,8 @@ public sealed partial class HostSession
     /// <param name="types">같은 실제 TYPE 표다. 패치판 188개여야 한다.</param>
     /// <param name="frames">같은 실제 프레임 표다. 타입 개수와 같아야 한다.</param>
     /// <remarks>0.601에서 R4-2 적재 중 postPop용으로 추가했다. 섬 연결 순회는 R6에서 잇는다.
-    /// 0.603에서 연결 순회·지형 공통 후처리 분배를 함께 연결했다. 지형 Pop 호출은 같은 호출에서 접두·장부까지 실행한다.</remarks>
+    /// 0.603에서 연결 순회·지형 공통 후처리 분배를 함께 연결했다. 지형 Pop 호출은 같은 호출에서 접두·장부까지 실행한다.
+    /// 0.604에서 적재 깊이 흐름을 함께 연결했다. SetWorldLoadingDepth가 바뀌면 섬 후처리의 프레임 선택 관문이 같은 값을 읽는다.</remarks>
     public void BuildIslandPostPopDevices(IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames)
     {
         ArgumentNullException.ThrowIfNull(types);
@@ -1109,13 +1118,14 @@ public sealed partial class HostSession
         {
             _terrainPop.SetBuildingSide(_fortBuilding);
         }
+        _islandPostPopState = new IslandPostPopState { SharedLoadingDepth = _islandLoadingDepth };
         _islandPostPop = new RawIslandPostPop(
             Pool,
             new SessionHashLevelView(_terrainHash),
             types,
             frames,
             BridgeState,
-            new IslandPostPopState(),
+            _islandPostPopState,
             new IslandPostPopHooks
             {
                 Objects = new BridgeConnectHooks
