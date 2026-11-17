@@ -26,7 +26,8 @@
 #include "client/ScreenResolutions.h" //해상도 변경이 허용 목록(원본 3개+호환 추가)을 공유한다.
 #include "client/LanguageOptions.h" //원문 언어 이름/OS 영어 변형과 용어표 재조회 순서를 공유한다.
 #include "client/LanguageRequest.h" //SetLanguage는같은현재언어/설정/입력큐와공유카운터를사용한다.
-#include "client/KoreanResources.h" //6차: 한국어 번역표와 D2Coding 글꼴 파일 탐색이다.
+#include "client/KoreanResources.h" // 한국어 번역표와 일반/굵은 외부 글꼴 파일 탐색이다.
+#include "client/KoreanFontSettings.h" // 한국어 family는 JSON에서 생성한 공통 상수로만 지정한다.
 #include "client/DisplayTextInput.h" // IME/MCP 확정 문자와 기존 BYTE 큐를 안전하게 연결한다.
 #include "client/GpuPresenter.h" //7차: 후처리 장치 가용성 확인이다.
 #include "platform/PortableStartup.h" //6차: 실행 파일 폴더로 클론 데이터(lang, fonts) 위치를 찾는다.
@@ -392,7 +393,7 @@ int Client::Run() {
     configuration_.ReadString("fontFaceName", fontFace);
     fonts_ = std::make_unique<FontStore>(files_, FontFaceFromUtf8(fontFace));
     if (options_.userData) fonts_->SetUserCacheDirectory(options_.userData->Cache()); // 5차: 글꼴 캐시를 설치 폴더가 아닌 사용자 Cache에 둔다.
-    ApplyExtendedFontForLanguage(); // 11차 일본어: 현재 언어에 맞는 외부 글꼴을 설정한다(한국어/기타는 D2Coding, 일본어는 Noto Sans JP). // 6차 한국어: 한글 글리프는 D2Coding 파일(없으면 같은 이름의 시스템 글꼴)로 요청 때 만든다.
+    ApplyExtendedFontForLanguage(); // 한국어/대체 출력은 공통 설정의 일반·굵은 글꼴, 일본어는 기존 Noto Sans JP를 사용한다.
     fonts_->Get();
     // "init screen mode": startInFullScreen이면 workingFullScreenFlags, 아니면 windowScreenFlags.
     std::uint32_t flags = static_cast<std::uint32_t>(configuration_.GetInt("workingFullScreenFlags"));
@@ -794,11 +795,11 @@ void Client::LoadKoreanTranslations() {
     auto text=ReadLanguageTranslationFile(CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path()),OriginalLanguageName(static_cast<std::uint32_t>(currentLanguage_))); // 휴대 배포의 lang 또는 개발 저장소의 assets/lang에서 찾는다(한국어/일본어 공통).
     if (text) koreanTranslations_.emplace(std::move(*text));
 }
-// 11차 일본어: 현재 언어가 일본어이면 Noto Sans JP, 그 밖에는 D2Coding을 확장 글리프 글꼴로 설정한다. 글꼴은 exe가 아닌 fonts 폴더의 파일을 쓴다.
+// 일본어는 기존 Noto Sans JP, 그 밖의 확장 문자는 공통 한국어 설정을 사용한다. 두 굵기 모두 exe 밖 fonts/에서 읽는다.
 void Client::ApplyExtendedFontForLanguage() {
     if (!fonts_) return;const auto roots=CloneDataRoots(options_.gameDirectory,platform::CurrentExecutableFile().parent_path());
     if (currentLanguage_==static_cast<std::int32_t>(kJapaneseLanguageNumber)) fonts_->SetExtendedFace("Noto Sans JP",FindJapaneseFontFile(roots));
-    else fonts_->SetExtendedFace("D2Coding",FindKoreanFontFile(roots));
+    else fonts_->SetExtendedFace(kKoreanFontFamily,FindKoreanFontFile(roots),FindKoreanFontFile(roots,true));
 }
 // 원문441790의 시작/등록 메시지 재적재를 공유한다. 빈 명령줄은 처음 실행 인자를 재사용하지 않는다.
 void Client::LoadNativeConfiguration(std::string_view commandLine,bool detectLanguage) {

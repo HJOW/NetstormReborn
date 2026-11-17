@@ -85,6 +85,9 @@ $CppRoot = $PSScriptRoot
 # 저장소 최상위 폴더다. originals 와 LICENSE 를 여기서 찾는다. (2026-10-23 신규)
 $RepoRoot = Split-Path -Parent $CppRoot
 
+# 런타임 상수 생성·ZIP 검사가 함께 읽는 한국어 글꼴 설정이다. 다음 글꼴 교체는 이 JSON 한 곳에서 한다.
+$KoreanFontSettings = Get-Content -LiteralPath (Join-Path $CppRoot 'assets/korean-font.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+
 # 압축파일 안에서 모든 항목을 감싸는 최상위 폴더 이름이다. 풀 때 현재 폴더가 어지러워지지 않게 한다. (2026-10-23 신규)
 $PackageRootName = 'NetstormReborn-cpppj'
 
@@ -446,7 +449,7 @@ function New-ReadmeText {
         '  Netstorm-SavedMode.bat  저장된 화면 모드로 실행',
         '  third-party\fsr1\   AMD FidelityFX FSR 1.0 헤더/라이선스(MIT)와 출처 설명',
         '  third-party\quickjs-ng\  Netstorm.exe에 정적으로 들어간 QuickJS-ng JavaScript 엔진의 라이선스(MIT)와 출처',
-        '  fonts\              한국어 글꼴(D2Coding)과 라이선스',
+        ('  fonts\              한국어 글꼴({0})과 라이선스' -f $KoreanFontSettings.family),
         '  lang\               한국어 번역표와 본문44개(lang\korean). 옵션 > 언어(Language)에서 한국어를 고릅니다.',
         '  game\               게임 데이터 (원본 Netstorm 10.78)',
         '    netstorm.tarc, d\, sound\, music\, MOVIE\ (영상 원천이 있을 때)',
@@ -475,7 +478,7 @@ function New-ReadmeText {
         '3. Requires Windows 10/11 x64. The Visual C++ runtime DLLs are bundled in this folder.',
         '4. game\Netstorm.exe is the original executable. The clone only reads its icon/cursor resources; do not run it directly.',
         '5. Delete %USERPROFILE%\Saved Games\Netstorm\Saves\options.cfg and fullscreenStateFile.dat to reset settings.',
-        '6. Korean: fonts\ (D2Coding) and lang\korean\xlat.korean and all 43 Korean bodies are bundled; pick Options > Language > Korean.',
+        ('6. Korean: fonts\ ({0}, regular and bold) and lang\korean\xlat.korean and all 43 Korean bodies are bundled; pick Options > Language > Korean.' -f $KoreanFontSettings.family),
         '7. Optional Anti-Aliasing and AMD FidelityFX Super Resolution 1.0 (MIT, see third-party\fsr1\) are in Options (off by default); 2560x1440/3840x2160 appear when a Direct3D 11 device exists.',
         '8. The rebuilt LAN server R.exe is bundled. Multiplayer remains under development and has not been verified.',
         '9. The QuickJS-ng JavaScript engine (MIT, see third-party\quickjs-ng\) is built into Netstorm.exe. It currently only runs a startup self-check (Netstorm.exe --quickjs-selftest) and exposes no game, file or network access to scripts.')
@@ -870,16 +873,13 @@ try {
         if (-not (Test-Path -LiteralPath $quickJsFile -PathType Leaf)) { throw "QuickJS-ng 자료를 찾을 수 없습니다: ${quickJsFile}" }
         Add-FileItem -Items $items -Entry ($PackageRootName + '/third-party/quickjs-ng/' + $quickJsName) -Source $quickJsFile
     }
-    # 6차 한국어: D2Coding 글꼴(저장소 fonts 의 가장 새 .ttc 하나)과 라이선스, 한국어 번역표를 실행 파일 옆 fonts\, lang\ 에 넣는다.
-    # 클론은 실행 파일 폴더에서 이 두 폴더를 찾아 한글 글리프와 번역을 읽는다. (2026-11-06 신규)
+    # 공통 JSON의 일반/굵은 한국어 글꼴과 라이선스를 exe 옆 fonts/에 넣는다. 글꼴 바이트는 exe에 내장하지 않는다.
     $fontsDir = Join-Path $RepoRoot 'fonts'
-    $koreanFonts = @(Get-ChildItem -LiteralPath $fontsDir -Filter 'D2Coding*.ttc' -File -ErrorAction SilentlyContinue | Sort-Object Name)
-    if (-not $koreanFonts.Count) { throw "한국어 글꼴(D2Coding*.ttc)을 찾을 수 없습니다: ${fontsDir}" }
-    $koreanFont = $koreanFonts[$koreanFonts.Count - 1]
-    Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/' + $koreanFont.Name) -Source $koreanFont.FullName
-    $fontLicense = Join-Path $fontsDir 'D2Coding-License.txt' # 저장소 fonts의 D2Coding 라이선스 이름이다(과거 License.txt에서 바뀌어 조용히 빠지던 결함을 M8 점검에서 발견해 교정).
-    if (-not (Test-Path -LiteralPath $fontLicense -PathType Leaf)) { throw "D2Coding 글꼴 라이선스를 찾을 수 없습니다: ${fontLicense}" }
-    Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/D2Coding-License.txt') -Source $fontLicense
+    foreach ($koreanFontName in @($KoreanFontSettings.regular, $KoreanFontSettings.bold, $KoreanFontSettings.license)) { # 실제 두 굵기와 허가 문서가 모두 있어야 배포한다.
+        $koreanFontPath = Join-Path $fontsDir $koreanFontName
+        if (-not (Test-Path -LiteralPath $koreanFontPath -PathType Leaf)) { throw "한국어 글꼴 자료를 찾을 수 없습니다: ${koreanFontPath}" }
+        Add-FileItem -Items $items -Entry ($PackageRootName + '/fonts/' + $koreanFontName) -Source $koreanFontPath
+    }
     # 11차 일본어: Noto Sans JP 글꼴(가장 새 NotoSansJP*.ttf 하나)과 라이선스, 일본어 번역표를 exe 옆 fonts\, lang\ 에 넣는다. 글꼴은 exe에 내장하지 않는다. (2026-11-11 신규)
     $japaneseFonts = @(Get-ChildItem -LiteralPath $fontsDir -Filter 'NotoSansJP*.ttf' -File -ErrorAction SilentlyContinue | Sort-Object Name)
     if (-not $japaneseFonts.Count) { throw "일본어 글꼴(NotoSansJP*.ttf)을 찾을 수 없습니다: ${fontsDir}" }

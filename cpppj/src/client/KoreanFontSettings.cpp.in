@@ -1,0 +1,9 @@
+// cpppj/assets/korean-font.json에서 생성한다. 이 상수 파일에는 글꼴 바이트를 포함하지 않는다.
+#include "client/KoreanFontSettings.h"
+
+namespace netstorm::client { // 한국어 파일 탐색·출력이 공유하는 읽기 전용 상수 정의다.
+const char kKoreanFontFamily[] = "@NETSTORM_KOREAN_family@"; // 실제 family 이름이다.
+const char kKoreanFontRegularFile[] = "@NETSTORM_KOREAN_regular@"; // 일반 TTF의 파일명이다.
+const char kKoreanFontBoldFile[] = "@NETSTORM_KOREAN_bold@"; // 굵은 TTF의 파일명이다.
+const char kKoreanFontLicenseFile[] = "@NETSTORM_KOREAN_license@"; // 글꼴 허가 문서 파일명이다.
+}
