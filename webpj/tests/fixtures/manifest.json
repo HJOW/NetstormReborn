@@ -7913,7 +7913,7 @@
       "bytes": 293550,
       "lines": 601,
       "fixtureCommit": "ab3ef43d3",
-      "webCommit": "worktree",
+      "webCommit": "9dd4b3db7",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestPanic.cpp": "ab3ef43d3"
       }
@@ -8107,7 +8107,8 @@
         "webpj/tests/priest-ritual-frame.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-priest-ritual-frame.js"
+        "webpj/www/core/raw-priest-ritual-frame.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-priest-ritual-fort-prep-20261108.md",
       "cpppjSources": [
@@ -8118,10 +8119,10 @@
       "sha256": "f9b7cb8cf07feb33ab4e045c832555192ca600b499812d95e2fd7fe808b9710f",
       "bytes": 135254,
       "lines": 1051,
-      "fixtureCommit": "4ed94013",
-      "webCommit": "8f0647e8",
+      "fixtureCommit": "4ed940133",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPriestRitualFrame.cpp": "4ed94013"
+        "cpppj/src/o/RawPriestRitualFrame.cpp": "4ed940133"
       }
     },
     {
@@ -8136,7 +8137,8 @@
         "webpj/tests/priest-ritual-actions.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-priest-ritual-actions.js"
+        "webpj/www/core/raw-priest-ritual-actions.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-priest-ritual-fort-prep-20261108.md",
       "cpppjSources": [
@@ -8147,10 +8149,10 @@
       "sha256": "95fddc7b02742d80d62159da55b893881bf597346c6f6c52feef4748b11ea72c",
       "bytes": 237189,
       "lines": 1753,
-      "fixtureCommit": "b76adf95",
-      "webCommit": "8f0647e8",
+      "fixtureCommit": "b76adf95c",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPriestRitualActions.cpp": "b76adf95"
+        "cpppj/src/o/RawPriestRitualActions.cpp": "b76adf95c"
       }
     },
     {
