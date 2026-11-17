@@ -132,6 +132,34 @@ export class RawCampaignSession {
     selectAiBuildType(owner) { return this.#aiActions().selectBuildType(owner); }
     // 현재 AI 적의 자금 부족 조건을 조회한다.
     aiEnemyLowFunds(owner) { return this.#aiActions().enemyLowFunds(owner); }
+    // 현재 AI 사제의 전체 행동을 실행한다.
+    manageAiPriest(owner, priest) { return this.#aiActions().managePriest(owner, priest); }
+    // 현재 AI 표적 점수를 조회한다.
+    scoreAiTarget(owner, target) { return this.#aiActions().scoreTarget(owner, target); }
+    // 실제 총기 표적 점수와 대상 출력을 조회한다.
+    scoreAiGun(owner, type, x, y, direction, result) { return this.#aiActions().scoreGun(owner, type, x, y, direction, result); }
+    // 실제 장애물 점수와 대상 출력을 조회한다.
+    scoreAiBlockers(owner, type, x, y, direction, result) { return this.#aiActions().scoreBlockers(owner, type, x, y, direction, result); }
+    // 현재 배치 점수와 대상 출력을 조회한다.
+    scoreAiDrop(owner, type, x, y, direction, target) { return this.#aiActions().scoreDrop(owner, type, x, y, direction, target); }
+    // 최고 배치 후보를 호출자의 상자에 반영한다.
+    considerAiDrop(owner, type, x, y, direction, bestPoint, bestScore, target) { return this.#aiActions().considerDrop(owner, type, x, y, direction, bestPoint, bestScore, target); }
+    // 현재 배치 후보 스캔을 진행한다.
+    advanceAiDropScan(owner, type, direction) { return this.#aiActions().advanceDropScan(owner, type, direction); }
+    // 선택한 AI 배치 후보를 제거한다.
+    removeAiDropChoice(owner, index) { return this.#aiActions().removeDropChoice(owner, index); }
+    // 현재 AI 배치 TYPE을 선택한다.
+    selectAiDropType(owner) { return this.#aiActions().selectDropType(owner); }
+    // 현재 AI 배치 행동을 실행한다.
+    manageAiDrops(owner) { return this.#aiActions().manageDrops(owner); }
+    // 현재 실제 객체 이름을 조회한다.
+    objectName(parent) { return this.#aiActions().objectName(parent); }
+    // 설치된 이름 장치에서 기본 이름을 조회한다.
+    objectBaseName(parent) { return this.#aiActions().objectBaseName(parent); }
+    // 현재 Player의 AI 본체를 명시 해제한다.
+    removeAi(owner) { this.#aiActions().remove(owner); }
+    // 현재 Session의 AI 메모리 소유자를 빌린다.
+    aiMemory() { return this.#aiActions().memory(); }
     // 외곽 callback이 같은 현재 기술 부모/안내 본문을 선택한다.
     learnNewTechnology(type) { learnCampaignNewTechnology(this.#live(), type); }
     // 전체 저장의 설치 관문도 기존 실제 owner가 유지한다.

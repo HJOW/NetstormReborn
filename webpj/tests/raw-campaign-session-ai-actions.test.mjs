@@ -64,3 +64,41 @@ test('Session AI 행동: 이동과 건설 탐색 전달', () => {
     assert.deepEqual(calls.find((call) => call[0] === 'target'), ['target', 123, 8, 9, 0]);
     assert.equal(actions.startBuildSearch(2, 71), false); assert.equal(actions.selectBuildType(2), 0);
 });
+
+// 표적·배치 평가의 결과 상자를 실제 소비자가 직접 수정한다.
+test('Session AI 행동: 사제·배치 점수와 현재 출력 상자', () => {
+    const { owner, actions, calls } = scene(), target = { value: 4 }, bestPoint = { x: 0, y: 0 }, bestScore = { value: -1 };
+    owner.aiPriestActions = { act: (token, priest) => calls.push(['priest', token, priest]) };
+    owner.aiDropTargets = {
+        score: (token, sid) => { calls.push(['score', token, sid]); return 17; },
+        gun: (token, type, point, direction, box) => { calls.push(['gun', token, type, point, direction]); box.value = 9; return 19; },
+        blockers: (token, type, point, direction, box) => { calls.push(['blockers', token, type, point, direction]); box.value = 8; return 23; },
+    };
+    owner.aiDropEvaluation = {
+        evaluate: (token, type, point, direction, box) => { calls.push(['evaluate', token, type, point, direction]); box.value = 7; return 29; },
+        consider: (token, type, point, direction, best, score, box) => { calls.push(['consider', token, type, point, direction]); best.x = point.x; score.value = 31; box.value = 6; return true; },
+    };
+    owner.aiDropScan = { scan: () => true, remove: (token, index) => calls.push(['remove', token, index]) };
+    owner.aiDropSelection = { select: (token) => calls.push(['select', token]) }; owner.aiDropActions = { run: (token) => calls.push(['drops', token]) };
+    assert.equal(actions.managePriest(1, 0), true); assert.equal(actions.scoreTarget(1, 11), 17);
+    assert.equal(actions.scoreGun(1, 71, 1.1, 2.2, -1, target), 19); assert.equal(target.value, 9);
+    assert.equal(actions.scoreBlockers(1, 71, 1, 2, 2, target), 23); assert.equal(target.value, 8);
+    assert.equal(actions.scoreDrop(1, 71, 1, 2, 2, target), 29); assert.equal(target.value, 7);
+    assert.equal(actions.considerDrop(1, 71, 1.1, 2, 2, bestPoint, bestScore, target), true);
+    assert.equal(bestPoint.x, Math.fround(1.1)); assert.equal(bestScore.value, 31); assert.equal(target.value, 6);
+    assert.equal(actions.advanceDropScan(1, 71, 2), true); assert.equal(actions.removeDropChoice(1, 0xffffffff), true);
+    assert.equal(actions.selectDropType(1), true); assert.equal(actions.manageDrops(1), true);
+    assert.deepEqual(calls.find((call) => call[0] === 'remove'), ['remove', 123, -1]);
+    target.value = 42; assert.equal(actions.scoreGun(2, 71, 0, 0, 0, target), 0); assert.equal(target.value, 42);
+    assert.deepEqual(calls[0], ['priest', 123, 0]);
+});
+
+// 기본 이름과 본체 반납은 미션 설치보다 이름·참여 장치의 현재 수명을 따른다.
+test('Session AI 행동: 이름·본체 소유권 관문', () => {
+    const { owner, actions, calls } = scene(); owner.loaded = false;
+    assert.throws(() => actions.objectName(1), /설치/); assert.throws(() => actions.objectBaseName(1), /미설치/);
+    owner.objectNames = { name: () => 'name', baseName: (sid) => `base${sid}` };
+    owner.participation.removeBrain = (id) => calls.push(['removeBrain', id]); owner.aiMemory = {};
+    assert.equal(actions.objectBaseName(4), 'base4'); actions.remove(2); assert.deepEqual(calls, [['removeBrain', 2]]);
+    assert.equal(actions.memory(), owner.aiMemory); owner.loaded = true; assert.equal(actions.objectName(4), 'name');
+});

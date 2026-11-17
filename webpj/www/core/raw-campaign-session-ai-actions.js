@@ -65,4 +65,32 @@ export class RawCampaignSessionAiActions {
     selectBuildType(owner) { const token = this.#brain(owner); return token ? this.#owner.aiBuildChoice.select(token) : 0; }
     // 현재 적의 낮은 자금 조건을 조회한다.
     enemyLowFunds(owner) { const token = this.#brain(owner); return token ? this.#owner.aiBuildChoice.enemyLowFunds(token) : false; }
+    // 실제 사제 행동을 한 번 실행하며 사제 0도 그대로 전달한다.
+    managePriest(owner, priest) { const token = this.#brain(owner); if (!token) return false; this.#owner.aiPriestActions.act(token, priest); return true; }
+    // 현재 실제 표적의 AI 점수를 조회한다.
+    scoreTarget(owner, target) { const token = this.#brain(owner); return token ? this.#owner.aiDropTargets.score(token, target) : 0; }
+    // 실제 총기 탐색의 점수와 호출자의 대상 출력을 갱신한다.
+    scoreGun(owner, type, x, y, direction, result) { const token = this.#brain(owner); return token ? this.#owner.aiDropTargets.gun(token, type >>> 0, { x: Math.fround(x), y: Math.fround(y) }, direction | 0, result) : 0; }
+    // 실제 장애물 점수와 호출자의 대상 출력을 갱신한다.
+    scoreBlockers(owner, type, x, y, direction, result) { const token = this.#brain(owner); return token ? this.#owner.aiDropTargets.blockers(token, type >>> 0, { x: Math.fround(x), y: Math.fround(y) }, direction | 0, result) : 0; }
+    // 실제 배치 TYPE의 현재 점수와 대상 출력을 계산한다.
+    scoreDrop(owner, type, x, y, direction, target) { const token = this.#brain(owner); return token ? this.#owner.aiDropEvaluation.evaluate(token, type >>> 0, { x: Math.fround(x), y: Math.fround(y) }, direction | 0, target) : 0; }
+    // 호출자의 최고 좌표·점수·대상에 후보 승인 결과를 반영한다.
+    considerDrop(owner, type, x, y, direction, bestPoint, bestScore, target) { const token = this.#brain(owner); return token ? this.#owner.aiDropEvaluation.consider(token, type >>> 0, { x: Math.fround(x), y: Math.fround(y) }, direction | 0, bestPoint, bestScore, target) : false; }
+    // 현재 본체의 실제 배치 후보 스캔을 재개한다.
+    advanceDropScan(owner, type, direction) { const token = this.#brain(owner); return token ? this.#owner.aiDropScan.scan(token, type >>> 0, direction | 0) : false; }
+    // 선택한 현재 배치 후보를 목록에서 제거한다.
+    removeDropChoice(owner, index) { const token = this.#brain(owner); if (!token) return false; this.#owner.aiDropScan.remove(token, index | 0); return true; }
+    // 실제 배치 TYPE과 회전을 선택한다.
+    selectDropType(owner) { const token = this.#brain(owner); if (!token) return false; this.#owner.aiDropSelection.select(token); return true; }
+    // 실제 배치 행동 전체를 한 번 진행한다.
+    manageDrops(owner) { const token = this.#brain(owner); if (!token) return false; this.#owner.aiDropActions.run(token); return true; }
+    // 현재 가상표의 실제 객체 이름을 조회한다.
+    objectName(parent) { this.#loaded(); return this.#owner.objectNames.name(parent); }
+    // 이름 장치가 이미 있으면 설치 전에도 기본 이름을 조회한다.
+    objectBaseName(parent) { if (!this.#owner.objectNames) throw new Error('현재 기본 객체 이름 장치 미설치'); return this.#owner.objectNames.baseName(parent); }
+    // 명시 AI 해제의 오류를 호출자에 전파한다.
+    remove(owner) { this.#owner.participation.removeBrain(owner); }
+    // 같은 AI 본체 메모리 소유자를 빌린다.
+    memory() { return this.#owner.aiMemory; }
 }

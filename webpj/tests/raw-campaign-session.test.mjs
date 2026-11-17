@@ -34,7 +34,8 @@ test('CampaignSession 공개 AI: 같은 옵션과 Load 전 관문', () => {
         assert.throws(() => s.crankAiMoney(), /미설치/); s.setAiParameter(0); assert.throws(() => s.prepareAi(1), /설치/);
         assert.throws(() => s.initializeAi(1), /설치/); assert.throws(() => s.refreshAiBridges(1), /설치/);
         assert.throws(() => s.computeAiDryCandidate({ x: 1, y: 1 }, { x: 2, y: 2 }), /설치/); assert.throws(() => s.aiMovementForm(8), /설치/);
-        assert.throws(() => s.startAiBuildSearch(1, 71), /설치/); assert.equal(s.loaded, false);
+        assert.throws(() => s.startAiBuildSearch(1, 71), /설치/); assert.throws(() => s.scoreAiTarget(1, 8), /설치/);
+        assert.throws(() => s.objectBaseName(8), /미설치/); assert.ok(s.aiMemory()); assert.equal(s.loaded, false);
     } finally { s.dispose(); }
     assert.throws(() => s.alliances(), /반납/);
 });
