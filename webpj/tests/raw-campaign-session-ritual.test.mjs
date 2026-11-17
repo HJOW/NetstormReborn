@@ -364,6 +364,21 @@ test('AI 부족 좌표 기하: 선행 관문과 실제 월드', () => {
     assert.throws(() => module.aiDryGeometryHooks.surface(12, 13), /반납/);
 });
 
+// 부족 좌표 갱신기는 빈 본체에서 월드와 난수를 변경하지 않는다.
+test('AI 부족 좌표 갱신: 선행 관문과 빈 본체', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    let token = 0;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget(); o.connectAiDropTargets(); o.connectAiDropEvaluation(); o.connectAiDropScan(); o.connectAiDropSelection();
+        assert.throws(() => o.connectAiFakeDrySpots(), /순서/);
+        o.connectAiDryGeometry(); o.connectAiFakeDrySpots();
+        assert.equal(o.aiFakeDrySpots.pool, o.core.pool);
+        token = o.aiMemory.allocate(0xb08); const before = o.random.state;
+        o.aiFakeDrySpots.extend(token); assert.equal(o.random.state, before);
+        assert.throws(() => o.connectAiFakeDrySpots(), /순서/); assert.equal(o.loaded, false);
+    } finally { if (token) o.aiMemory.free(token); o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

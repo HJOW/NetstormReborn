@@ -24,6 +24,7 @@ import { RawAiDropEvaluation } from './raw-ai-drop-evaluation.js';
 import { RawAiDropScan } from './raw-ai-drop-scan.js';
 import { RawAiDropSelection, AI_DROP_SELECTION_LOG } from './raw-ai-drop-selection.js';
 import { RawAiDryGeometry } from './raw-ai-dry-geometry.js';
+import { RawAiFakeDrySpots, AI_FAKE_DRY_LOG } from './raw-ai-fake-dry-spots.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -62,6 +63,8 @@ export class RawCampaignSessionMotionRuntime {
     aiDropSelectionHooks = null;
     // 부족 좌표 탐색의 현재 지도와 표식 생성·삭제 효과다.
     aiDryGeometryHooks = null;
+    // 가짜 부족 좌표 갱신이 빌리는 평가·목록·표식 효과다.
+    aiFakeDryHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -360,6 +363,29 @@ export class RawCampaignSessionMotionRuntime {
         };
         o.aiDryGeometry = new RawAiDryGeometry(c.pool, globals, hooks);
         this.aiDryGeometryHooks = hooks;
+    }
+    // 현재 공급 거리와 기하를 같은 AI 부족 좌표 목록에 연결한다.
+    bindAiFakeDrySpots() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.aiDryGeometryHooks || this.aiFakeDryHooks || o.aiFakeDrySpots) throw new Error('Session AI 부족 좌표 갱신 설치 순서 오류');
+        const globals = { manaRadius: () => o.cursorManaGlobals.radiusLimit, mapLimit: () => o.cursorManaGlobals.mapLimit, debug: () => o.gameplayGlobals.aiDebug().read(0x52f3dc) };
+        const hooks = {
+            score: (token, point, index) => { this.#live(); return o.aiDropEvaluation.dryDistance(token, point, index); },
+            center: (sid) => { this.#live(); const point = c.neighbors.center(sid); return { x: point[0], y: point[1] }; },
+            candidate: (source, target) => { this.#live(); return o.aiDryGeometry.candidate(source, target); },
+            add: (token, point, type) => { this.#live(); return o.aiDrySpots.add(token, point.x, point.y, type); },
+            remove: (token, index) => { this.#live(); o.aiDrySpots.remove(token, index); },
+            seed: (token) => { this.#live(); o.aiDrySpots.seed(token, o.random); },
+            mark: (point) => { this.#live(); o.aiDryGeometry.mark(point); },
+            log: (token, action, x, y) => {
+                this.#live(); if (!o.services.player.log) throw new Error('AI 부족 좌표 갱신 실제 로그 미연결');
+                const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+                const text = action === AI_FAKE_DRY_LOG.added ? 'Added fake dry spot at (' : 'Fake Discarded at (';
+                o.services.player.log(o.gameplayGlobals.aiDebug().read(0x52f3dc), `AI${view.getInt32(0x260, true)}: ${text}${x},${y})\n\n`);
+            },
+        };
+        o.aiFakeDrySpots = new RawAiFakeDrySpots(o.aiMemory, c.pool, globals, hooks);
+        this.aiFakeDryHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }
