@@ -1008,3 +1008,6 @@ cpppj/src/o/RawFenceLine.cpp	Netstorm.Core/Original/RawFenceLine.cs	bd2941f45080
 cpppj/src/o/RawFenceMarkerClear.h	Netstorm.Core/Original/RawFenceMarkerClear.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawFenceMarkerClear.cpp	Netstorm.Core/Original/RawFenceMarkerClear.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.FenceClear.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFenceRebuild.h	Netstorm.Core/Original/RawFenceRebuild.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFenceRebuild.cpp	Netstorm.Core/Original/RawFenceRebuild.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.FenceRebuild.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
