@@ -6,25 +6,25 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-17, 마지막 단위 WB04-E639)
+### 0.1 현재 값 (2026-11-17, 마지막 단위 WB04-E640)
 
 | 항목 | 현행 기준 |
 | --- | --- |
-| 작업 상태 | **2026-11-17 사용자 목표 지시로 재개해 진행 중**. E639 ConnectBuilding·건설 캡처/수신까지 완료했다. 정상 통합은 Load 선행이며 다음은4D-2b ConnectMotion 앞부분이다 |
+| 작업 상태 | **2026-11-17 사용자 요청으로 E640 마무리 후 목표 일시 중지**. ConnectMotion 도착3장치까지 완료했다. 정상 통합은 Load 선행이며 재개 시4D-2b 3806..3929 운반·경로 조립부터 진행한다 |
 | 실행·플레이 | 클릭하여 시작→원본 자산 메인 메뉴·캠페인/데모 선택 목록·도움말/옵션·Credits 세 항목(11.01 Patch Credits 포함)과 개발용 지형 미리보기(`?map=`)까지 동작한다. **실제 미션 플레이는 아직 불가**다. 옮긴 월드 부품은 아직 앱 수명에 연결하지 않았고(`PORT_MAP` session 0), `MissionBegin`/`StartDemo`는 미션 월드에 연결되지 않았다 |
 | 원본과의 동일성 | 메뉴는 **cpppj 오라클(L4a) M1 8장면**(Welcome·메인 메뉴 8버튼·Campaign·Demo·Credits·Help/Options 펼침 메뉴·General Help, 영어 4:3, 원본 비교 모드)이 기록한 원인 밖 픽셀 차이 0이다(구름 배경 등 원인 기록은 4절). Fort/지형·그림·SID와 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산과 대조했다. 실제 미션의 L2/L3·전체 화면/음향·자연 완주는 미검증이다 |
 | 마일스톤 | **M1 완료** · **M2 진행 중**(순서3·4-A~4-C·4-R 완료, 현재 단계 **4-D**의 계획 단계 **4D-2 Load 모듈 설치**, 3.1절) · M3~M5 미착수 |
-| 4-D 진행 | 체크 **47/85**. cpppj `RawCampaignSession.cpp` 6,406줄 중 **typed 조립 완료 3,690줄(57.6%)**, 4-D 몫 남음 1,664줄(26.0%)·단독 도달 판정 269줄·다른 단계 481줄·웹 제외 302줄(3.1절 구간 지도). 완료 구간 안의 Native(10.78 Client) 분기(4D-8)와 웹 Client의 Session 소유(4D-6·4D-7)는 별도 계획 단계다. 4-D에 배정된 남은 85단위 / 18,414줄, 계획10단계는 약45~65작업 단위로 예상한다. 공용 자식 writer5단위/366줄은 E633·E634, 현재 Core/CoreData58줄은 E635, 전체 snapshot 부모71줄은 E636·외곽 callback 대상70줄은 E637 결선 완료(정상 통합은 Load 선행). 외곽 생성/공개22줄은 E638·건설/공통 신전 그림118줄은 E639 완료 |
+| 4-D 진행 | 체크 **47/85**. cpppj `RawCampaignSession.cpp` 6,406줄 중 **typed 조립 완료 3,714줄(58.0%)**, 4-D 몫 남음 1,640줄(25.6%)·단독 도달 판정 269줄·다른 단계 481줄·웹 제외 302줄(3.1절 구간 지도). 완료 구간 안의 Native(10.78 Client) 분기(4D-8)와 웹 Client의 Session 소유(4D-6·4D-7)는 별도 계획 단계다. 4-D에 배정된 남은 85단위 / 18,414줄, 계획10단계는 약45~65작업 단위로 예상한다. 공용 자식 writer5단위/366줄은 E633·E634, 현재 Core/CoreData58줄은 E635, 전체 snapshot 부모71줄은 E636·외곽 callback 대상70줄은 E637 결선 완료(정상 통합은 Load 선행). 외곽 생성/공개22줄은 E638·건설/공통 신전 그림118줄은 E639·ConnectMotion 도착24줄은 E640 완료 |
 | 이식 진행도 | 대상 1,019단위(제외 141 별도) 중 **port 860(84.4%)·partial 39(3.8%)·todo 120(11.8%)**. 남은 159단위 / 34,223줄(2026-11-17 현재 cpppj 소스로 재집계)은 기존 기준선 84단위와 재기준선(4-R)에서 추가된 75단위다(단계 배정은 0.2·0.3절). 앱 수명에 연결된 단위(`session`)는 아직 0이다 |
-| 마지막 작업 단위 | **WB04-E639** — 같은 실제 owner에 건설 Data/Process/Effects·캡처·간헐천 수신109줄과 필요한 공통 신전 그림9줄을 연결했다. 실제30/47·HP350/700→700/700·재등록/정리·픽셀/색표/플래그 등 신규8건·집중37건 통과([단위 문서](docs/webpj-session-building-20261117.md)). loaded=false 유지, 전체 미션 Load/빌더 이동은 후속이다 |
-| 마지막 전체 검사 | 2026-11-17 WB04-E639: Node v22.23.3·v26.13.0 최종 전체 각각 **6,035건 통과, 실패·취소·건너뜀 0**. 신규 건설8검사·관련 집중37건과 기존 원본 소비 검사 포함. v24는 사용자 지시로 생략하고 호환을 가정한다 |
+| 마지막 작업 단위 | **WB04-E640** — 실제 같은 owner에 ConstructionArrival/ManaBolt Arrival/Regular24줄을 결선했다. 실제 건설30/17·마나46/61 교체/event1·현재 카메라/시각·대상소실/예측대기/예약수명 신규7건·집중34건 통과([단위 문서](docs/webpj-session-arrivals-20261117.md)). loaded=false, 전체 경로/Load는 후속이다 |
+| 마지막 전체 검사 | 2026-11-17 WB04-E640: Node v22.23.3·v26.13.0 최종 전체 각각 **6,042건 통과, 실패·취소·건너뜀 0**. 신규 도착7검사·관련 집중34건과 기존 원본 소비 검사 포함. v24는 사용자 지시로 생략하고 호환을 가정한다 |
 | 마지막 e2e | 2026-11-17 E616 Chromium **2/2 통과**(초기 페이지·독립 저장소 최초 실행/기존 설정·진행 재실행). Welcome/Welcome2·Options5·5·사용자3·2·Struggle 잠금/체크를 실제 클릭, 처리되지 않은 예외0. 실제 미션/월드 검사는 아니다 |
 
 **최근 완료 요약:** 최초 실행 상태 웹 반영(E616 — 두 localStorage 키가 없는 독립 Chromium 저장소에서 Welcome/Welcome2·Struggle For Freedom 잠금/체크·Options 기본값을 실제 클릭으로 확인, 기존 사용자 설정·진행은 보존)과 cpppj1320 내부 미션 전환의 flush/종료 수신 재반영(E620)을 마쳤다. 세부 체크는 [2026-11-17 보관](LEFT_JOBS.webpj.old.md#archive-webpj-20261117-through-wb04-e632) 0.1절, 근거는 [원본 관찰](docs/exe/original-first-run-20261116.md)·[웹 검증](docs/webpj-first-run-20261116.md)·[미션 전환](docs/webpj-mission-transition-20261117.md)이다. 실제 미션 완료 효과 연결은 8단계 잔여다.
 
 **다음 작업 (위에서부터):**
 
-1. **4D-2b ConnectMotion 앞부분** — 3782..3929의 MotionBindings·ConstructionArrival/ManaBolt Arrival/Regular·Carrier/Path/Bridge/Board/PlayerAnchor를 같은 owner에 설치한다. 4D-2a는 E639 완료다. 4D-1b·1c 정상 미션 통합은4D-2h·4D-10에서 재대조하며 실제 loaded=false를 유지한다.
+1. **4D-2b ConnectMotion 앞부분** — E640의 도착3장치3782..3805 뒤, 3806..3929의 MotionBindings·Carrier/Path/Bridge/Board/PlayerAnchor를 같은 owner에 설치한다. 4D-2a는 E639 완료다. 4D-1b·1c 정상 미션 통합은4D-2h·4D-10에서 재대조하며 실제 loaded=false를 유지한다.
 2. 그다음 3.1절 4-D 계획 순서(4D-2 `Load()` → 4D-3 Login·4-C 통합 시험 → … → 4D-10 L2)로 간다. 각 항목에 cpppj 근거 줄·함께 옮길 단위·검증 시험을 적어 두었다.
 3. 4-D 항목이 선행 미이식으로 막히면 3.1절 진행 방법(사유 기록 후 다음 항목, 단계 전체가 막히면 5-A·5-B 병행)을 따른다.
 4. 3.8절 허브/적응 판정 4건은 5-C·8단계 항목에서 처리한다.
@@ -108,8 +108,8 @@ webpj(HTML + JavaScript 웹 클론)의 **현재 진행 상황·남은 작업(단
 | 항목 | 현행 기준 |
 | --- | --- |
 | cpppj 기준선 | **`225553df`(제품1313·표시 11.01).** 이식 원본은 기준선 판(`git show 225553df:경로`)이고, 이후 변경은 3.6절로 판정한다. cpppj 소스가 같은 마지막 변경 `979d65b5d`와 대조했다. **오라클 실행 파일**은 별도 빌드 `extracted/webpj-oracle/225553df/Netstorm.exe`(SHA-256 `5b52d96d…b77eb46`, Git 제외·HJOW-Athlon 전용)다. 이전 제품985 실행 파일과 오라클도 보존한다 |
-| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 968·adapt 51·exclude-mp 62·exclude-edit 46·exclude-host 32·exclude-legacy 1, 미분류 0**(E573·E588·E627~E634 캠페인 공유 함수 범위 복원). 상태: **port 860·partial 39·todo 120·제외(-) 141**, session/oracle 0. partial에는 기존 단위의 부분 이식 외에 0.5절의 초안 2개·E574 Session 기반 자료·E584·E585 Devastation 자격/타이머와 E595 Ritual 준비 함수·E601 건설 재생 실행/현재 라벨이 있다. 웹 소스는 `webpj/www`의 `.js`(자산 `data/` 제외) 135,111줄, 검사 파일 809개다(2026-11-17 재집계) |
-| 이식 추적 | `webpj/tests/fixtures/manifest.json` **823항목**(original-x86 784·screenshot 13·source 10·independent 9·cpppj-oracle 5·original-binary 2, 2026-11-17 E639 갱신). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
+| 이식 범위 | **`webpj/PORT_MAP.tsv` 1,160단위**(기준선 `o/`607·`client/`552·`zacket/`1). 분류: **port 968·adapt 51·exclude-mp 62·exclude-edit 46·exclude-host 32·exclude-legacy 1, 미분류 0**(E573·E588·E627~E634 캠페인 공유 함수 범위 복원). 상태: **port 860·partial 39·todo 120·제외(-) 141**, session/oracle 0. partial에는 기존 단위의 부분 이식 외에 0.5절의 초안 2개·E574 Session 기반 자료·E584·E585 Devastation 자격/타이머와 E595 Ritual 준비 함수·E601 건설 재생 실행/현재 라벨이 있다. 웹 소스는 `webpj/www`의 `.js`(자산 `data/` 제외) 135,190줄, 검사 파일 810개다(2026-11-17 재집계) |
+| 이식 추적 | `webpj/tests/fixtures/manifest.json` **823항목**(original-x86 784·screenshot 13·source 10·independent 9·cpppj-oracle 5·original-binary 2, 2026-11-17 E640 갱신). 항목별 추가 이력은 단위 문서와 보관본에 있다 |
 | 디컴파일 | webpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`, 2026-11-15). 근거는 cpppj 소스·fixture이며 착수 때 디컴파일 호스트를 확인하지 않는다 |
 
 ### 0.5 매 단위 착수/종료
@@ -264,8 +264,8 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
 
 | 구분 | 줄 (비율) | 기준선 `.cpp` 구간 | 처리 |
 | --- | --- | --- | --- |
-| typed 조립 완료 | 3,690 (57.6%) | 1..1883 머리·필드·생성자, 1884..2904 Connect* 묶음(ConnectFlare~ConnectAi), 3020..3226 InstallContents·Factory·stream reader, 3345..3360·3392..3506 TypeNames·섬 population·MakeRuntime·Territory writer, 3654..3776 PrepareBuilding/신전 그림/ConnectBuilding/GeyserMined, 4158..4160 전송 반납, 4318..4330·4333..4335 외곽 생성/소멸 앞단, 4447..4482·4488..4509 현재 Core/CoreData, 4822 pin·6381..6382 World/Core 조회, 5650..5687·5761..5772·6080..6099 외곽 callback 대상, 5903..5910·5920..5982 전체 snapshot 부모, 5825..5902·6003..6028 저장 writer | E574~E639. 이 구간 안의 Native 분기는 4D-8g |
-| 4-D 몫 남음 | 1,664 (26.0%) | 4D-1 18(Load/State 재대조) · 4D-2 547 · 4D-3 475 · 4D-4 127 · 4D-5 80 · 4D-6 234 · 4D-8 183 | 아래 계획 |
+| typed 조립 완료 | 3,714 (58.0%) | 1..1883 머리·필드·생성자, 1884..2904 Connect* 묶음(ConnectFlare~ConnectAi), 3020..3226 InstallContents·Factory·stream reader, 3345..3360·3392..3506 TypeNames·섬 population·MakeRuntime·Territory writer, 3654..3776 PrepareBuilding/신전 그림/ConnectBuilding/GeyserMined, 3782..3805 ConnectMotion 도착3장치, 4158..4160 전송 반납, 4318..4330·4333..4335 외곽 생성/소멸 앞단, 4447..4482·4488..4509 현재 Core/CoreData, 4822 pin·6381..6382 World/Core 조회, 5650..5687·5761..5772·6080..6099 외곽 callback 대상, 5903..5910·5920..5982 전체 snapshot 부모, 5825..5902·6003..6028 저장 writer | E574~E640. 이 구간 안의 Native 분기는 4D-8g |
+| 4-D 몫 남음 | 1,640 (25.6%) | 4D-1 18(Load/State 재대조) · 4D-2 523 · 4D-3 475 · 4D-4 127 · 4D-5 80 · 4D-6 234 · 4D-8 183 | 아래 계획 |
 | 단독 도달 판정 | 269 (4.2%) | 4209..4279 전투 이탈·무승부·재접속·서버 이전(4D-5c), 4620..4642 메타 결과 통지(4D-7c), 5032..5147 개발자 명령·6400..6406 AI 디버그 명령·5773..5824 AddRandomObjects/CreateAt/DestroyAt(8단계 점 명령·대본 소비자와 함께) | 판정 뒤 이식 또는 웹 제외 오류 |
 | 다른 단계 | 481 (7.5%) | 4552..4563·4742..4815 게임 메뉴·다리 품질(6), 4957..4975·5583..5649 운반/객체/사제 명령(6), 6126..6315 사제·지식·의식·기술·객체 메뉴·선택(6·7), 3227..3286·5688..5746 스커미시·중앙섬(10) | 해당 단계 |
 | 웹 제외 | 302 (4.7%) | Existing Editor 적재·Checkpoint·회복(3287..3344·3361..3391·3507..3543·3570..3575·4352..4446·4483..4487·4510..4522), 일반 전투 재접속·자원(4100..4113·5747..5760), Save as(5911..5919·5983..6002) | 만들지 않는다(1절 경계 처리) |
@@ -275,7 +275,7 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
 | 단계 | 내용 | Session `.cpp` 남은 줄 | 함께 옮길 단위 / 줄 | 예상 작업 단위 |
 | --- | --- | --- | --- | --- |
 | 4D-1 (검증 선행 대기) | 외곽 Session 공개·전체 snapshot | 18(Load/State 재대조) | 공용 자식5 / 366 완료(E633·E634), 현재 Core58줄 완료(E635)·전체 snapshot71줄(E636)·callback 대상70줄(E637) 결선(정상 통합은 Load 뒤) | 3~5 |
-| **4D-2** (진행 중) | `Load()` 모듈 설치(typed) | 547 | 7 / 509 | 8~12 |
+| **4D-2** (진행 중) | `Load()` 모듈 설치(typed) | 523 | 7 / 509 | 8~12 |
 | 4D-3 | Login·로컬 연결(typed)·4-C 통합 시험 | 475 | 11 / 1,498 | 6~9 |
 | 4D-4 | 프레임·카메라·Tutorial 게이트 | 127 | — | 2~3 |
 | 4D-5 | 승패·종료·State 반납 | 80 | 7 / 626 | 3~4 |
@@ -284,7 +284,7 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
 | 4D-8 | Native(10.78 Client) 분기 전환 | 183 + 완료 구간의 Native 분기 | 45 / 3,488 | 10~15 |
 | 4D-9 | 웹 session-dump·오라클 시나리오 | — | 1 / 204 | 2 |
 | 4D-10 | 재대조·L2 판정 | — | — | 2~4 |
-| **합계** | | **1,664** | **84 / 11,296 + `RawCampaignSession*` 7,118 = 85 / 18,414**(4D-1 교정분 별도) | **약 45~65** |
+| **합계** | | **1,640** | **84 / 11,296 + `RawCampaignSession*` 7,118 = 85 / 18,414**(4D-1 교정분 별도) | **약 45~65** |
 
 **진행 방법:**
 
@@ -309,7 +309,7 @@ E329~E495의 체크 항목과 단위 링크는 [2026-11-15 보관](LEFT_JOBS.web
 **4D-2 `Load()` 모듈 설치 (typed)** (진행 중, 다음 시작점4D-2b) — cpppj `Load()` 4344..4351의 순서는 ConnectBuilding → ConnectMotion → `runtime->Load()` → ConnectDevastation → ConnectCarrierDrop → ConnectPriestPrayer → MakeBuilder → ConnectGameplayPlacement → ConnectCursor → `loaded`이다. 실제 Client의 Login 콜백(4184)도 같은 `Load()`를 부른다. 하위 `o/` 모듈은 RawManoSpell을 빼고 모두 이식돼 있다.
 
 - [x] **4D-2a ConnectBuilding** 3668..3771 · ReceiveGeyserMined 3772..3776 — 건설 Data/Process/Effects·FactoryDraw·ShapeToBuffer·GeyserMined → [E639](docs/webpj-session-building-20261117.md) 실제 같은 owner/World/Host·캡처/색표/플래그·30/47·HP 반/완료·수신8검사. ConstructionArrival/ManaBolt는 실제 원문3788·3796·3805이므로 다음2b로 범위 교정
-- [ ] **4D-2b ConnectMotion 앞부분** 3782..3929 — RawCampaignMotionBindings(E568)의 실제 설치, ConstructionArrival·ManaBolt Arrival/Regular(3788·3796·3805, 2a 범위 교정), Carrier Move/Mining/Choice/Escape/Transfer/Target/Pickup, PathRetarget, BridgeCarriers, BoardTarget, PlayerPlacementAnchor
+- [ ] **4D-2b ConnectMotion 앞부분** 3782..3929 — RawCampaignMotionBindings(E568)의 실제 설치, ConstructionArrival·ManaBolt Arrival/Regular(3788·3796·3805, 2a 범위 교정), Carrier Move/Mining/Choice/Escape/Transfer/Target/Pickup, PathRetarget, BridgeCarriers, BoardTarget, PlayerPlacementAnchor → [E640](docs/webpj-session-arrivals-20261117.md) typed 도착3장치3782..3805 완료(신규7·집중34검사). 다음3806..3929 운반·경로, 체크 유지
 - [ ] **4D-2c ConnectMotion 뒷부분** 3930..3981 — RawCampaignPanic 12 · RawCampaignRitual 161*(ConnectDaisLifecycle·ConnectRitual, E595 PrepareRitual 뒤 나머지) · Salvage 명령(RawSalvageCommand)
 - [ ] **4D-2d AI 행동 Runtime** — ConnectAiMovement/ConnectAiRuntime/AiBridgePath/AI 조회/StartMotion 2905..3019(ConnectMotion 3961이 설치)와 AI 공개 전달 4834..4956
 - [ ] **4D-2e 파괴·주문** — RawManoSpell 76(재기준선 todo) · RawCampaignDevastation 163*(E584 파편 자격·E585 타이머 펜스 뒤 나머지) · RawCampaignMeltdown 20(ConnectDevastation 끝에서 설치)

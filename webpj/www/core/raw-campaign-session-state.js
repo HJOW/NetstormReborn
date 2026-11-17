@@ -13,6 +13,8 @@ import { RawConnectionActivity } from './raw-connection-activity.js';
 import { ConstructionArrivalState } from './raw-construction-arrival.js';
 import { ConstructionEffectsState } from './raw-construction-effects.js';
 import { ConstructionProcessState } from './raw-construction-process.js';
+import { ManaBoltArrivalState } from './raw-mana-bolt-arrival.js';
+import { ManaBoltRegularState } from './raw-mana-bolt-regular.js';
 import { DamageableBurningState } from './raw-damageable-burning.js';
 import { DamageableHitState } from './raw-damageable-hit.js';
 import { DamageablePostDestroyState } from './raw-damageable-post-destroy.js';
@@ -102,6 +104,8 @@ export class RawCampaignSessionState {
     process; start; snap = true; retrying = false;
     archerState = new ArcherAnimationState(); missileState = new MissileState(); soundState = new SoundProcessState();
     buildArrivalState = new ConstructionArrivalState(); assetState = new AssetPostPopState(); regularState = new AssetRegularState();
+    // typed 마나의 지역 간격/배치 간격이며 프로세스 번호만 같은 장기 GameAux를 빌린다.
+    manaArrivalState = new ManaBoltArrivalState(); manaRegularState = new ManaBoltRegularState();
     generalDamageState; burningState = new DamageableBurningState(); carrierDropState = carrierDropState();
     // 원문666의 충돌/Flare 억제이며 같은 로그인 기한 double을 빌린다.
     impactState;
@@ -126,6 +130,9 @@ export class RawCampaignSessionState {
     #bindShared() {
         const o = this.#owner; const g = o.gameplayGlobals; const aux = g.gameAux(); const authority = g.authority(); const core = o.core;
         const boss = () => authority.boss; const server = () => authority.server; const nugget = () => aux.nuggetType; const geyser = () => o.geyserType;
+        this.manaArrivalState.currentRegularType = () => aux.regularProcessType; this.manaArrivalState.currentSharedRegularType = () => aux.sharedRegularProcessType;
+        const camera = g.camera().snapshot(); // contentCamera는 분수 월드 비트를 원래 snapshot 주소에서 읽는 const 참조다.
+        o.contentCamera = Object.freeze({ get 0() { return camera.data.getUint32(0, true); }, get 1() { return camera.data.getUint32(4, true); } });
         o.rewardState.bindGameAux(aux); o.rewardState.share('halfHealthMode', core.ownerMode, 'battle'); o.rewardState.share('priestType', o.priestState.movement, 'priest');
         this.runeState.sharedRuneType = () => aux.runeType; this.ritualState.sharedRuneType = reference(aux, 'runeType'); this.runeState.sharedSuppressedDuration = () => o.globals.missionPost;
         this.runeState.sharedAltarType = () => aux.altarType; this.runeState.sharedDaisType = () => aux.daisType;

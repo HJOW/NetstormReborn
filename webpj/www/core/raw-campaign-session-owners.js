@@ -72,6 +72,7 @@ import { refreshCampaignPlayerCore, writeCampaignFortCoreData } from './raw-camp
 import { snapshotCampaignTemplate } from './raw-campaign-snapshot.js';
 import { generateCampaignLocalGeysers, generateCampaignWorldGeysers, placeCampaignBattleNuggets, learnCampaignNewTechnology } from './raw-campaign-callbacks.js';
 import { RawCampaignSessionBuilding, createCampaignBuildingTables, drawCampaignTempleFrames } from './raw-campaign-session-building.js';
+import { RawCampaignSessionArrivals } from './raw-campaign-session-arrivals.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -227,6 +228,8 @@ export class RawCampaignSessionOwners {
     deletionModules = null; daisLifecycle = null;
     // 같은 현재 전체 Regular/보상 처리기와 뒤 생성자가 채울 사제·마나·주문 슬롯이다.
     regularModules = null; buriedRegular = null; priestRitualFrame = null; priestPrayer = null; manaRegular = null; devastationRegular = null;
+    // ConnectMotion 앞단의 도착 장치/미부착 Regular와 같은 장기 카메라 두 DWORD의 const 참조다.
+    arrivalModules = null; buildArrival = null; manaArrival = null; localManaArrival = null; localManaRegular = null; manaPendingRegular = null; contentCamera;
     // 같은 일반/전체 송신 분배·현재 패킷 버퍼와 다리/로딩 깊이 후단을 소유한다.
     transmissionModules = null;
     // 실제 World 게시 뒤 같은 풀의 일반 배치·지형·소유자 후처리 모듈과 선언부의 추가 목록이다.
@@ -596,6 +599,12 @@ export class RawCampaignSessionOwners {
         this.buildingModules ??= new RawCampaignSessionBuilding(this); this.buildingModules.bind();
     }
 
+    // 같은 건설 설치 뒤 ConnectMotion 앞단의 도착 세 장치만 연결한다. 전체 경로 설치는 후속이다.
+    connectMotionArrivals() {
+        if (this.#disposed) throw new Error('반납한 Session 도착 결선');
+        this.arrivalModules ??= new RawCampaignSessionArrivals(this); this.arrivalModules.bind();
+    }
+
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
     drawTempleFrames(sid, frame) {
         if (this.#disposed) throw new Error('반납한 Session 신전 그림');
@@ -766,9 +775,9 @@ export class RawCampaignSessionOwners {
         if (this.#disposed) return; this.#disposed = true;
         this.aiModules?.releaseBrains();
         try {
-            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.buildingModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); this.vortexModules?.dispose(); this.teleportModules?.dispose(); this.combatModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
+            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.arrivalModules?.dispose(); this.buildingModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); this.vortexModules?.dispose(); this.teleportModules?.dispose(); this.combatModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
         } finally {
-            try { try { this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.buildingModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); } finally { this.world?.dispose(); } } finally {
+            try { try { this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.arrivalModules?.dispose(); this.buildingModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); } finally { this.world?.dispose(); } } finally {
                 try { this.vortexModules?.dispose(); } finally { try { this.teleportModules?.dispose(); } finally { try { this.combatModules?.dispose(); } finally { try { this.particleModules?.dispose(); } finally { try { this.gunModules?.dispose(); } finally { try { this.hitModules?.dispose(); } finally { try { this.gunViewModules?.dispose(); } finally { try { this.typeModules?.dispose(); } finally { try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } } } } } } } } } }
             }
         }
