@@ -100,6 +100,9 @@ public sealed class OriginalTypeRecord
     /// <summary>.type 파일에서 읽은 타입인가. 추가: F1 타입 표(2026-11-02).</summary>
     public bool FromAsset { get; set; }
 
+    /// <summary>현재 사거리(TYPE+44, 칸 단위 float). 펜스 이웃이 방향 검색 범위를 만들 때 읽는다. 0.588에서 추가됐다. (R4-1 펜스 이웃)</summary>
+    public float Range { get; set; }
+
     /// <summary>현재 값의 복사본을 만든다. 삭제 수명주기가 타입 입력을 고정할 때 쓴다(추가: W03 삭제·수명 셋째 조각, 2026-10-21).</summary>
     public OriginalTypeRecord Clone()
     {
@@ -131,6 +134,7 @@ public sealed class OriginalTypeRecord
             ContainerListFlags = ContainerListFlags,
             ContentListFlags = ContentListFlags,
             FromAsset = FromAsset,
+            Range = Range,
         };
     }
 }
