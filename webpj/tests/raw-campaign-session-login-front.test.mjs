@@ -14,6 +14,8 @@ import { parseFort } from '../www/assets/fort.js';
 import { RawFortImage } from '../www/core/raw-fort-image.js';
 import { loadOriginalForts, readData } from './helpers.mjs';
 import { PacketConnection } from '../www/core/raw-packet-dispatch.js';
+import { readLocalMissionLogin } from '../www/core/local-mission-transport.js';
+import { SECTION_NAMES } from '../www/assets/fort.js';
 
 // 원본 설정·벽시각의 호출 순서를 기록하며 실제 전송은 내부 두 끝을 사용한다.
 function devices(trace) {
@@ -206,5 +208,68 @@ test('Session Login 상태: 현재 벽시각 만료의 원문 조기 반환', ()
         front.state.run();
         assert.equal(o.localStateGlobals.sourceType().value, 0); assert.equal(blocks.next[0], 3);
         assert.equal(blocks.current[0], 9); assert.equal(blocks.phase[0], 8);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 실제 Fort 원문의 길이 필드와 각 섹션 payload를 별도로 읽는다.
+function fortImageSections(bytes) {
+    const result = []; let offset = 2;
+    // 고정 35개 섹션을 원문 길이 순서대로 읽는다.
+    for (const name of SECTION_NAMES) {
+        const length = bytes[offset] | (bytes[offset + 1] << 8); assert.ok(length >= 2 && offset + length <= bytes.length, name);
+        result.push(bytes.slice(offset + 2, offset + length)); offset += length;
+    }
+    return result;
+}
+
+// State9은 실제 선택 Fort의 다섯 섹션만 지역 이미지로 읽고 현재 전송에 건넨다.
+test('Session Login 파일: State9의 실제 선택 Fort 로그인 이미지', () => {
+    const archive = new TaffArchive(readData(ARCHIVE_PATH)), bytes = archive.read('\\d\\thewarbegins.fort'), trace = [], sent = [];
+    const o = campaignOwners({ missionFortFileSelect: (name) => { trace.push(`선택:${name}`); return { fileName: 'd/thewarbegins.fort', read: () => { trace.push('읽기'); return Uint8Array.from(bytes); } }; } });
+    const front = new RawCampaignSessionLoginFront(o, { ...devices(trace), refresh: () => trace.push('갱신') });
+    try {
+        o.globals.mySubscriber = 42; o.handle.set(Buffer.from('Tester\0')); o.localStateGlobals.connectEnd().value = 200;
+        front.transport.status = () => 1; front.transport.isOpen = () => true; front.transport.send = (target, packet) => sent.push({ target, packet: packet.slice() });
+        const blocks = o.localStateGlobals.state(); blocks.current[0] = 9; blocks.phase[0] = 8; front.state.run();
+        assert.equal(sent.length, 1); assert.equal(sent[0].target, 9);
+        const login = readLocalMissionLogin(sent[0].packet); assert.equal(login.subscriber, 42); assert.equal(login.handle, 'Tester');
+        const original = fortImageSections(bytes), actual = fortImageSections(login.fortImage);
+        // 원문의 고정 네 섹션과 현재 Terr00만 남긴다.
+        for (let index = 0; index < SECTION_NAMES.length; index += 1) {
+            const keep = ['Subscriber', 'Territory', 'TypeNames', 'CoreData', 'Terr00'].includes(SECTION_NAMES[index]);
+            assert.deepEqual(actual[index], keep ? original[index] : new Uint8Array(0), SECTION_NAMES[index]);
+        }
+        assert.deepEqual(trace.slice(0, 5), ['로컬 미션 상태 9\n', '시각', '선택:thewarbegins', '읽기', '갱신']);
+        assert.equal(o.templateStorage.ownedImages(), 0); assert.equal(blocks.phase[0], 10); assert.equal(blocks.next[0], 10);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 독립 Session은 파일 선택기를 부르지 않고 현재 manager 전체 이미지를 사용한다.
+test('Session Login 파일: 독립 State9은 현재 Fort manager 이미지 사용', () => {
+    const archive = new TaffArchive(readData(ARCHIVE_PATH)), entry = loadOriginalForts(archive).find((candidate) => /thewarbegins.fort$/i.test(candidate.source));
+    const fort = parseFort(entry.bytes, createFortTypes(TypeTable.fromArchive(archive, decodeOriginalText)));
+    const o = campaignOwners(), sent = [], front = new RawCampaignSessionLoginFront(o, { ...devices([]), refresh: () => {} });
+    try {
+        o.templateStorage.install(1, fort, 'thewarbegins'); o.localStateGlobals.connectEnd().value = 200;
+        front.transport.status = () => 1; front.transport.isOpen = () => true; front.transport.send = (_target, packet) => sent.push(packet.slice());
+        o.localStateGlobals.state().current[0] = 9; front.state.run();
+        const expected = new RawFortImage('patch1078', o.templateStorage.template(1), { typeCount: () => o.core.types.length }).save().bytes();
+        assert.deepEqual(readLocalMissionLogin(sent[0]).fortImage, expected); assert.equal(o.templateStorage.ownedImages(), 1);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// State13은 현재 manager가 없을 때만 선택한 Fort 파일을 실제 부모로 읽는다.
+test('Session Login 파일: State13의 누락 Fort 선택과 실제 읽기', () => {
+    const archive = new TaffArchive(readData(ARCHIVE_PATH)), bytes = archive.read('\\d\\thewarbegins.fort'), trace = [];
+    const o = campaignOwners({
+        missionFortFileSelect: (name) => { trace.push(`선택:${name}`); return { fileName: 'd/thewarbegins.fort', read: () => { trace.push('읽기'); return Uint8Array.from(bytes); } }; },
+        missionFortLoad: { readOnly: () => true }, install: { refreshWindowTitle: () => trace.push('제목') },
+    });
+    const front = new RawCampaignSessionLoginFront(o, { ...devices(trace), refresh: () => trace.push('갱신') });
+    try {
+        front.transport.isOpen = () => false; o.localStateGlobals.state().current[0] = 13; front.state.run();
+        assert.equal(o.templateStorage.ownedImages(), 1); assert.equal(o.templateStorage.name(1), 'd/thewarbegins.fort');
+        assert.equal(trace.filter((event) => event === '선택:thewarbegins').length, 1); assert.equal(trace.filter((event) => event === '읽기').length, 1);
+        assert.ok(trace.includes('제목'));
     } finally { front.dispose(); o.dispose(); }
 });

@@ -2,7 +2,7 @@
 // 전체 패킷·상태 조립과 Begin/Pump는 후속 단계이며 이 객체 생성만으로 접속하지 않는다.
 import { bindInternalCampaignTransport } from './campaign-transport-services.js';
 import { createCampaignLoginServices, requireLoginService } from './campaign-login-services.js';
-import { installLocalMissionZone, LocalMissionTransport } from './local-mission-transport.js';
+import { installLocalMissionZone, LocalMissionTransport, makeLocalMissionLogin } from './local-mission-transport.js';
 import { RawMissionBattleOptions, resetMissionBattleOptions } from './raw-mission-battle-options.js';
 import { sanitizeMissionPlayerName } from './raw-mission-client-packets.js';
 import { RawMissionLoginPackets } from './raw-mission-login-packets.js';
@@ -10,6 +10,8 @@ import { RawMissionServerPackets } from './raw-mission-server-packets.js';
 import { RawMissionSettingsPacket } from './raw-mission-settings-packet.js';
 import { RawClockSynchronization } from './raw-clock-synchronization.js';
 import { LocalMissionProgress, RawLocalMissionState } from './raw-local-mission-state.js';
+import { ClientHelpWord } from './client-help-word.js';
+import { RawFortImage } from './raw-fort-image.js';
 
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
 export class RawCampaignSessionLoginFront {
@@ -125,6 +127,43 @@ export class RawCampaignSessionLoginFront {
         if (o.services.adoptInitializedPlayers || this.#effects.uiMode || this.#effects.battlePalette || this.#effects.startingProgress) this.#need('uiMode', 'Login UI 모드')(mode);
         else this.#need('refresh', 'Login UI 갱신')();
     }
+    // 실제 선택기는 경로와 지연 읽기를 함께 반환하며 독립 입력만 기존 파일 이름을 사용한다.
+    #selectFortFile() {
+        const o = this.#live();
+        if (o.services.missionFortFileSelect) return o.services.missionFortFileSelect(o.missionFortName);
+        const name = o.services.missionFortFileName || o.missionFortName;
+        return { fileName: name, read: () => o.services.missionFortRead ? o.services.missionFortRead(name) : o.assets.files.read(`d/${name}.fort`) };
+    }
+    // 선택된 경로의 읽기와 현재 TYPE/owner/제목을 같은 Template 부모에 빌린다.
+    #fortFileHooks(selected) {
+        const o = this.#live(), hooks = { ...o.services.missionFortLoad };
+        hooks.read = () => { if (typeof selected?.read !== 'function') throw new Error('선택된 미션 파일 읽기 미연결'); return selected.read(); };
+        hooks.sameName = (first, second) => ClientHelpWord.equalsIgnoreCase(String(first).split('\0', 1)[0], String(second).split('\0', 1)[0]);
+        if (!hooks.wrongName) hooks.wrongName = () => this.#need('log', 'Template 이름 진단')('Template.cpp 진단 386: 기존 manager 파일 이름 불일치\n');
+        hooks.typeCount = () => o.core.types.length; hooks.currentSlot = () => o.playerState.templateOwner;
+        hooks.refreshTitle = o.services.install.refreshWindowTitle; return hooks;
+    }
+    // 기존 manager의 이름 비교와 읽기 순서를 실제 Template 파일 부모에 위임한다.
+    #reloadFort(owner) {
+        const o = this.#live(); if ((owner >>> 0) >= 9) throw new RangeError('현재 미션 Template의 실제9슬롯 범위');
+        const selected = this.#selectFortFile(); if (!selected?.fileName) throw new Error('미션 파일 선택기의 실제 파일 이름 누락');
+        o.templateStorage.loadFile(owner, {}, selected.fileName, this.#fortFileHooks(selected));
+    }
+    // 실제 선택 파일은 지역 Template를 읽어 다섯 섹션만 송신하며 독립 입력은 현재 manager 이미지를 사용한다.
+    #sendLogin() {
+        const o = this.#live(); let image;
+        if (o.services.missionFortFileSelect) {
+            const selected = this.#selectFortFile();
+            image = o.templateStorage.readLoginImage(selected.fileName, this.#fortFileHooks(selected), o.localStateGlobals.battleTerritory().value);
+        } else image = new RawFortImage('patch1078', o.templateStorage.template(o.playerState.templateOwner), { typeCount: () => o.core.types.length }).save();
+        const packet = makeLocalMissionLogin(o.globals.mySubscriber, o.handle, image.bytes()); this.#send(9, packet.bytes(), false);
+    }
+    // 실제 Client의 진행 창은 별도 수명이며 독립 부분 장치에서만 갱신으로 닫는다.
+    #closeProgress() {
+        const o = this.#live();
+        if (o.services.adoptInitializedPlayers || this.#effects.uiMode || this.#effects.battlePalette || this.#effects.closeProgress || this.#effects.startingProgress) this.#need('closeProgress', '로그인 진행 창 닫기')();
+        else this.#need('refresh', '로그인 진행 갱신')();
+    }
     // 원문 상태8은 현재 블록과 내부 주소를 확인하고 실제 전송에 접속을 맡긴다.
     #connect(address, port) {
         const o = this.#live(), current = o.localStateGlobals.state().current;
@@ -132,7 +171,7 @@ export class RawCampaignSessionLoginFront {
         if (o.services.generalBattleStart?.textAddress || current[33]) throw new Error('일반 또는 저장 재접속 주소 처리는 후속 단계');
         this.#transport('connect')(address, port);
     }
-    // 원문 StateHooks 중 실제 장기 owner와 연결된 앞단이다. Fort 파일·로그인 송신·타이머는 후속이다.
+    // 원문 StateHooks 중 실제 장기 owner와 연결된 앞단이다. 타이머와 시작 공통 부모는 후속이다.
     #stateHooks() {
         const o = this.#live(), local = o.localStateGlobals;
         return {
@@ -145,11 +184,13 @@ export class RawCampaignSessionLoginFront {
             serverConnection: () => this.transport.registry.cleanup().transceivers[9],
             attachCommander: this.#effects.attachCommander ?? ((token) => this.clockSynchronization.attach(this.transport.dispatch, token)),
             installMapHandlers: () => this.clockSynchronization.initializeServer(this.transport.dispatch),
+            sendLogin: () => this.#sendLogin(), closeProgress: () => this.#closeProgress(),
             connectedProgress: () => {
                 if (this.#effects.progress) this.#effects.progress(o.globals.missionPost ? LocalMissionProgress.MissionTransferring : local.savedGame().value ? LocalMissionProgress.ReconnectTransferring : LocalMissionProgress.Transferring, 0);
                 else this.#need('refresh', '로그인 전송 안내')();
             },
             fortAvailable: (owner) => (owner >>> 0) < 9 && new DataView(o.headers.buffer, o.headers.byteOffset, o.headers.byteLength).getUint32((owner >>> 0) * 20, true) !== 0,
+            loadCurrentFort: () => this.#reloadFort(o.playerState.templateOwner),
             fortCore: (owner) => o.templateState.get(owner), touchFort: (owner) => o.templateState.changed(owner),
             localAddress: () => this.#transport('address')(9), uiMode: (mode) => this.#setUiMode(mode),
             refreshFort: o.services.install.refreshWindowTitle,
