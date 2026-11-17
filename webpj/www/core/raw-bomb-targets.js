@@ -53,7 +53,8 @@ function need(hook) {
     return hook;
 }
 
-// 주문 대상 검색 실행기이다. 사용: new RawBombTargets(pool, hash, types, ranges, { boss }, { radius, eligible, assertion }); targets.find(sid, { storage: new Uint32Array(100), capacity: 100, count: 0 }). (2026-11-08 WB04-E54)
+// 주문 대상 검색 실행기이다. ranges를 생략한 5인자 생성자는 현재 TYPE의 range를 매번 읽는다.
+// 사용: new RawBombTargets(pool, hash, types, state, hooks) 또는 명시 ranges를 넣는 6인자 형태다. (WB04-E54·E681)
 export class RawBombTargets {
     #pool;
     #hash;
@@ -62,9 +63,10 @@ export class RawBombTargets {
     #state;
     #hooks;
 
-    // 현재 10.78 풀/188TYPE/반경 표/해시만 받는다. 훅은 생성 시점의 사본을 쓴다. (2026-11-08 WB04-E54)
+    // 같은 현재 TYPE 또는 명시 반경 표를 빌리며 훅은 생성 시점의 사본을 쓴다.
     constructor(pool, hash, types, ranges, state, hooks) {
-        if (pool?.edition !== 'patch1078' || types?.length !== TYPE_COUNT || ranges?.length !== types.length || typeof state !== 'object' || state === null) throw new TypeError('Bomb 대상 판본/TYPE 오류');
+        if (arguments.length === 5 && ranges?.length === undefined) { hooks = state; state = ranges; ranges = null; }
+        if (pool?.edition !== 'patch1078' || types?.length !== TYPE_COUNT || (ranges !== null && ranges?.length !== types.length) || typeof state !== 'object' || state === null) throw new TypeError('Bomb 대상 판본/TYPE 오류');
         this.#pool = pool;
         this.#hash = hash;
         this.#types = types;
@@ -97,8 +99,8 @@ export class RawBombTargets {
     // 41e3c0: 현재 TYPE 의 실제 반경을 정수화한다(caller 의 가상 분배를 대체하지 않는다). (2026-11-08 WB04-E54)
     defaultRadius(parent) {
         const kind = this.#pool.slot(parent)[TYPE_OFFSET];
-        if (kind >= this.#ranges.length) throw new RangeError('Bomb 반경 현재 TYPE 범위');
-        return truncate(this.#ranges[kind]);
+        if (kind >= this.#types.length) throw new RangeError('Bomb 반경 현재 TYPE 범위');
+        return truncate(this.#ranges === null ? this.#types[kind].range : this.#ranges[kind]);
     }
 
     // 41e460: 대상 검색과 폭발이 같은 원본 중심 계산을 재사용한다. (2026-11-08 WB04-E54)

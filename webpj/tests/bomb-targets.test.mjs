@@ -204,3 +204,18 @@ test('bomb-targets: 미도달 자격은 요구하지 않고 실제 선택 경계
     assert.throws(() => new RawBombTargets({ edition: 'original1037' }, scene.hash, scene.types, scene.ranges, scene.state, hooks), TypeError);
     assert.throws(() => new RawBombTargets(scene.pool, scene.hash, scene.types, scene.ranges.slice(1), scene.state, hooks), TypeError);
 });
+
+// 별도 반경 표가 없는 생성자는 현재 TYPE과 그 사거리를 매번 다시 읽는다.
+test('bomb-targets: 현재 TYPE 사거리와 명시 반경 표의 독립 경로', () => {
+    const scene = new TargetScene();
+    scene.prepare('0,1,1084227584,1112211456,1112670208,100,0,1,0,0');
+    const current = new RawBombTargets(scene.pool, scene.hash, scene.types, scene.state, {});
+    const explicit = new RawBombTargets(scene.pool, scene.hash, scene.types, scene.ranges, scene.state, {});
+    const explicitWithoutHooks = new RawBombTargets(scene.pool, scene.hash, scene.types, scene.ranges, scene.state);
+    scene.types[168].range = 7.75; assert.equal(current.defaultRadius(50), 7); assert.equal(explicit.defaultRadius(50), 5);
+    assert.equal(explicitWithoutHooks.defaultRadius(50), 5);
+    scene.types[168].range = -3.9; assert.equal(current.defaultRadius(50), -3);
+    scene.raw(50)[10] = 169; scene.types[169].range = 12.5; scene.ranges[169] = 4;
+    assert.equal(current.defaultRadius(50), 12); assert.equal(explicit.defaultRadius(50), 4);
+    scene.raw(50)[10] = 188; assert.throws(() => current.defaultRadius(50), RangeError);
+});
