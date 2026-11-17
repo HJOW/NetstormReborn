@@ -5,13 +5,13 @@ import { campaignOwners } from './campaign-session-support.mjs';
 import { RawCampaignSessionRitual } from '../www/core/raw-campaign-session-ritual.js';
 
 // 실제 설치 순서를 사용하며 저장 미션 Load는 실행하지 않는다.
-function scene() {
+function scene(temple = false) {
     const o = campaignOwners({ sound: { playOnceAt: () => 0 } });
     try {
         o.connectWorldInstall({ sections: Array.from({ length: 35 }, () => new Uint8Array(0)) });
         o.connectOutcome(); o.connectAiBrains(); o.connectAiWorld(); o.connectAiProduction(); o.connectBuilding();
         o.connectMotionArrivals(); o.connectMotionInputs(); o.connectCarrierRouting(); o.connectMotionRuntime(); o.connectPriestPanic(); o.connectRitualPriest();
-        return o;
+        if (temple) o.connectRitualTemple(); return o;
     } catch (error) { o.dispose(); throw error; }
 }
 
@@ -24,6 +24,28 @@ test('사제 의식: 설치 순서·실제 Pool·반복 및 반납', () => {
         assert.throws(() => o.connectRitualPriest(), /순서/);
     } finally { o.dispose(); }
     assert.throws(() => module.reserveRegular(), /반납/);
+});
+
+test('신전 의식: 같은 Pool·현재 사제 TYPE/권한과 반복 설치 관문', () => {
+    const o = scene(true);
+    try {
+        const state = o.state.ritualState;
+        assert.equal(o.templeRitual.pool, o.core.pool); assert.equal(o.runePostPop.pool, o.core.pool);
+        o.priestState.movement.priest = 157; assert.equal(state.currentPriestType, 157);
+        assert.equal(state.currentBoss, o.state.assetState.readBoss());
+        assert.equal(o.ritualModules.templeReady, true); assert.equal(o.loaded, false);
+        assert.throws(() => o.connectRitualTemple(), /반복/);
+    } finally { o.dispose(); }
+});
+
+test('룬 후처리: 실제 등록 몸체의 최초 Pop은 같은 Host에 304를 예약한다', () => {
+    const o = scene(true);
+    try {
+        const rune = o.world.create(166); o.world.pop(rune, 32, 32, 1);
+        const task = o.core.processes.findEvent(rune, 0x304);
+        assert.ok(task); assert.equal(task.shared, false); assert.equal(task.payload, Math.fround(0.01));
+        assert.equal(o.ritualModules.pendingRegular, null);
+    } finally { o.dispose(); }
 });
 
 test('의식 예약: 실제 동일 객체와 중첩·미예약 관문, 공유 Host 시각', () => {

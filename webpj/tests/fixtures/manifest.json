@@ -7401,7 +7401,8 @@
         "webpj/tests/rune-post-pop.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-rune-post-pop.js"
+        "webpj/www/core/raw-rune-post-pop.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-rune-factory-post-pop-20261108.md",
       "cpppjSources": [
@@ -7412,10 +7413,10 @@
       "sha256": "784669b8c4c20b725b3e23492bc76e4b1a4ab21042dfb9850378907bafd35e99",
       "bytes": 598782,
       "lines": 1921,
-      "fixtureCommit": "552656c0",
-      "webCommit": "a42a5faf",
+      "fixtureCommit": "552656c0c",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawRunePostPop.cpp": "e043bb4a"
+        "cpppj/src/o/RawRunePostPop.cpp": "21bb25505"
       }
     },
     {
@@ -18530,7 +18531,7 @@
       "bytes": 3273217,
       "lines": 6721,
       "fixtureCommit": "552656c0c",
-      "webCommit": "5b973c2bd",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawTempleRitual.cpp": "21bb25505"
       },
@@ -18541,7 +18542,8 @@
         "webpj/tests/temple-ritual.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-temple-ritual.js"
+        "webpj/www/core/raw-temple-ritual.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-temple-ritual-20261113.md",
       "cpppjSources": [
