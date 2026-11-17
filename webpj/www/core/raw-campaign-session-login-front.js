@@ -4,7 +4,7 @@ import { bindInternalCampaignTransport } from './campaign-transport-services.js'
 import { createCampaignLoginServices, requireLoginService } from './campaign-login-services.js';
 import { installLocalMissionZone, LocalMissionTransport, makeLocalMissionLogin } from './local-mission-transport.js';
 import { RawMissionBattleOptions, resetMissionBattleOptions } from './raw-mission-battle-options.js';
-import { sanitizeMissionPlayerName } from './raw-mission-client-packets.js';
+import { RawMissionClientPackets, sanitizeMissionPlayerName } from './raw-mission-client-packets.js';
 import { RawMissionLoginPackets } from './raw-mission-login-packets.js';
 import { RawMissionServerPackets } from './raw-mission-server-packets.js';
 import { RawMissionSettingsPacket } from './raw-mission-settings-packet.js';
@@ -222,7 +222,7 @@ export class RawCampaignSessionLoginFront {
             get begin() { return local.begin().value; }, set begin(value) { local.begin().value = value; },
             get beginSeed() { return self.#beginSeed; }, set beginSeed(value) { self.#beginSeed = value >>> 0; },
             get battleSeed() { return self.#battleSeed; }, set battleSeed(value) { self.#battleSeed = value >>> 0; },
-            sharedBattleSeed: { get value() { return aux.resourcePoolBits; }, set value(value) { aux.storeResourcePoolBits(value); } },
+            sharedBattleSeed: { get value() { return aux.resourcePoolBits; }, set value(value) { aux.storeResourcePoolBits(value >>> 0); } },
             get debugBurst() { return local.debugBurst().value; }, get debugPacketHeader() { return aux.packet0cHeader(); },
             get debugPacketInitialLength() { return aux.packet0cInitialLength; },
             get clockStamp() { return o.gameplayGlobals.battleClockStamp().value; }, set clockStamp(value) { o.gameplayGlobals.battleClockStamp().value = value; },
@@ -267,6 +267,53 @@ export class RawCampaignSessionLoginFront {
             cleanupReconnectClients: () => { throw new Error('비미션 재접속 정리는 후속 단계'); }, checkingAssertions: () => o.state.gunState.checking, log: effects.log,
         });
         return this.server;
+    }
+    // 클라이언트 수신기와 서버가 같은 Player·Core·seed·상태 블록을 직접 공유한다.
+    #clientGlobals() {
+        const o = this.#live(), self = this, local = o.localStateGlobals, blocks = local.state(), aux = o.gameplayGlobals.gameAux(), core = o.coreDataGlobals;
+        return {
+            get server() { return o.core.processState.server; }, get boss() { return o.state.assetState.readBoss(); },
+            get missionPost() { return o.globals.missionPost; }, get savedGame() { return local.savedGame().value; },
+            get metamap() { return o.core.ownerMode.challenge; }, get inBattle() { return o.state.assetState.inBattle; }, get editor() { return o.globals.editor; },
+            get outpost() { if (o.services.challengeGlobals) throw new Error('메타 CS 상태는 웹 범위 밖'); return 0; }, player: o.playerState,
+            get beginSeed() { return self.#beginSeed; }, set beginSeed(value) { self.#beginSeed = value >>> 0; },
+            get battleSeed() { return self.#battleSeed; }, set battleSeed(value) { self.#battleSeed = value >>> 0; },
+            sharedBattleSeed: { get value() { return aux.resourcePoolBits; }, set value(value) { aux.storeResourcePoolBits(value >>> 0); } },
+            get revision() { return o.revision; }, set revision(value) { o.revision = value; },
+            get optionValue() { return aux.refundPercent; }, set optionValue(value) { aux.refundPercent = value; },
+            get begin() { return local.begin().value; }, set begin(value) { local.begin().value = value; },
+            get clockStamp() { return o.gameplayGlobals.battleClockStamp().value; }, set clockStamp(value) { o.gameplayGlobals.battleClockStamp().value = value; },
+            get baseClock() { return o.gameplayGlobals.battleClockOrigin().value; }, set baseClock(value) { o.gameplayGlobals.battleClockOrigin().value = value; },
+            get phase() { return blocks.phase[0]; }, get currentState() { return blocks.current[0]; }, set currentState(value) { blocks.current[0] = value; },
+            get currentAux() { return blocks.current[14]; }, set currentAux(value) { blocks.current[14] = value; },
+            get pendingState() { return blocks.next[0]; }, set pendingState(value) { blocks.next[0] = value; },
+            get sourceTicks() { return local.sourceType().value; }, set sourceTicks(value) { local.sourceType().value = value; },
+            get coreDataActive() { return core.active; }, set coreDataActive(value) { core.active = value; },
+            get captureEnd() { return local.captureEnd().value; }, set captureEnd(value) { local.captureEnd().value = value; },
+            get loginEnd() { return local.loginEnd().value; },
+            get currentCoreData() { return core.current; }, set currentCoreData(value) { core.current = value; },
+            cachedCoreData: core.cached(), zoneAddress: local.zone(), battleOptions: o.battleOptions, currentHandle: o.handle, hidden: o.hiddenPlayers,
+        };
+    }
+    // 서버 준비 뒤 클라이언트의 실제 패킷 몸체를 같은 현재 owner에 연결한다. 수신기 등록은 후속이다.
+    bindClient() {
+        const o = this.#live(), effects = this.#effects;
+        if (!this.server || this.client) throw new Error('클라이언트 Login의 실제 서버 전제 또는 중복 결선 오류');
+        this.client = new RawMissionClientPackets(o.players, o.participation, o.sp, this.#clientGlobals(), {
+            clock: effects.clock, wallSeconds: effects.wallSeconds, runState: () => this.state.run(), resetCamera: o.services.install.resetCamera, refreshSp: effects.refresh,
+            observerAssertion: (expression, file, line) => o.world.storage.assertDisplay(expression, file, line),
+            outpostOptions: effects.metaBattleOptions, reconnectUi: effects.reconnectUi,
+            localFort: () => { throw new Error('일반 전투 Fort는 웹 후속 스커미시 단계'); },
+            openFortImage: () => { throw new Error('원격 Fort는 웹 일반 멀티플레이 범위 밖'); },
+            readFortImage: () => { throw new Error('원격 Fort는 웹 일반 멀티플레이 범위 밖'); },
+            buildFort: () => { throw new Error('스커미시 전투섬 생성은 후속 단계'); },
+            updateRange: () => this.options.updateRange(), requiredEnergy: () => this.options.typeCost(),
+            setEnergyType: (value) => this.options.setSelectedTypeCost(value), readOptionValue: () => this.options.currentValue(),
+            addChat: o.services.ai.participation.addChat, playerUiBusy: effects.playerUiBusy, playerNotice: effects.playerNotice,
+            send: (target, packet) => this.#send(target, packet, false), sendReady: (target) => this.server.sendReady(target),
+            restoreCoreData: (owner) => this.#restoreCoreData(owner),
+        });
+        return this.client;
     }
     // 원문 상태8은 현재 블록과 내부 주소를 확인하고 실제 전송에 접속을 맡긴다.
     #connect(address, port) {

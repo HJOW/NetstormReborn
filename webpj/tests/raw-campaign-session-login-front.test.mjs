@@ -370,3 +370,38 @@ test('Session Login 서버: 현재 Core 복원과 저장 여부 관문', () => {
         assert.deepEqual(o.players.subarray(180 + 0x6c, 180 + 0x6c + 10), core);
     } finally { front.dispose(); o.dispose(); }
 });
+
+// 클라이언트는 실제 서버가 준비된 뒤 한 번만 생성한다.
+test('Session Login 클라이언트: 서버 전제와 중복 결선 거부', () => {
+    const o = loginServerOwner(), front = new RawCampaignSessionLoginFront(o, devices([]));
+    try {
+        assert.throws(() => front.bindClient(), /실제 서버 전제/); front.bindServer();
+        const client = front.bindClient(); assert.equal(client.participation, o.participation); assert.throws(() => front.bindClient(), /중복/);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 수신 seed의 최상위 비트도 서버가 보는 같은 자원 DWORD에 보존한다.
+test('Session Login 클라이언트: 현재 Core와 상위 비트 seed 공유', () => {
+    const o = loginServerOwner(), front = new RawCampaignSessionLoginFront(o, devices([])), sent = [];
+    try {
+        const server = front.bindServer(), client = front.bindClient(), packet = new Uint8Array(34), view = new DataView(packet.buffer);
+        view.setUint32(4, 1, true); packet.set(Uint8Array.of(1, 2, 3, 4, 5, 6), 8); view.setUint32(22, 0x12345678, true); view.setUint32(30, 0xdeadbeef, true);
+        client.loginBegin(packet); assert.equal(o.gameplayGlobals.gameAux().resourcePoolBits, 0xdeadbeef);
+        assert.equal(o.coreDataGlobals.current.buffer, o.players.buffer); assert.deepEqual([...o.localStateGlobals.zone()], [1, 2, 3, 4, 5, 6]);
+        front.transport.sendMutable = (_target, bytes) => sent.push(bytes.slice()); server.sendBegin(1);
+        const echoed = new DataView(sent[0].buffer); assert.equal(echoed.getUint32(22, true), 0x12345678); assert.equal(echoed.getUint32(30, true), 0xdeadbeef);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 서버의 옵션 적용과 로컬 Fort 수신은 실제 공유 전역을 갱신한다.
+test('Session Login 클라이언트: 서버 옵션 적용과 로컬 Fort 개정', () => {
+    const o = loginServerOwner(), front = new RawCampaignSessionLoginFront(o, devices([]));
+    try {
+        const server = front.bindServer(), client = front.bindClient(), packet = new Uint8Array(94); packet.set(o.battleOptions, 7);
+        server.hooks.applyOptions(packet);
+        assert.equal(o.gameplayGlobals.manaRadius().value, 30); assert.equal(o.energyState.radiusSquared, 900);
+        assert.equal(o.core.types[o.geyserType].cost, 3000); assert.equal(o.gameplayGlobals.gameAux().refundPercent, 50);
+        const fort = new Uint8Array(17), before = o.revision; new DataView(fort.buffer).setUint32(4, o.playerState.battleOwner, true);
+        client.fort(fort); assert.equal(o.revision, (before + 1) >>> 0);
+    } finally { front.dispose(); o.dispose(); }
+});
