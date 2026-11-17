@@ -5,6 +5,9 @@ import { createCampaignLoginServices, requireLoginService } from './campaign-log
 import { installLocalMissionZone, LocalMissionTransport } from './local-mission-transport.js';
 import { RawMissionBattleOptions, resetMissionBattleOptions } from './raw-mission-battle-options.js';
 import { sanitizeMissionPlayerName } from './raw-mission-client-packets.js';
+import { RawMissionLoginPackets } from './raw-mission-login-packets.js';
+import { RawMissionServerPackets } from './raw-mission-server-packets.js';
+import { RawMissionSettingsPacket } from './raw-mission-settings-packet.js';
 
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
 export class RawCampaignSessionLoginFront {
@@ -12,8 +15,8 @@ export class RawCampaignSessionLoginFront {
     #owner; #effects; #internal = null; #disposed = false;
     // 원문의 독립 초기 지역 입력과 현재 수신 종류 기록이다.
     pendingStamp = 0; overrideFlags = 0; wireTypes = [];
-    // 현재 연결표와 패킷 분배기 및 같은 옵션 처리기를 소유자와 함께 공개한다.
-    transport; options;
+    // 현재 연결표와 패킷 분배기 및 같은 옵션/패킷 처리기를 소유자와 함께 공개한다.
+    transport; options; metadata; forts; settings;
 
     // Player 초기화 뒤 옵션 기본값과 현재 전송을 순서대로 준비한다.
     constructor(owner, effects = {}) {
@@ -38,6 +41,32 @@ export class RawCampaignSessionLoginFront {
                 rangeSquared: { get bits() { return energy.radiusSquaredBits; }, set bits(value) { energy.radiusSquaredBits = value; } },
                 value: { get value() { return aux.refundPercent; }, set value(value) { aux.refundPercent = value; } },
             });
+            const local = owner.localStateGlobals;
+            this.metadata = new RawMissionServerPackets(owner.players, {
+                get server() { return owner.core.processState.server; }, get metamap() { return owner.core.ownerMode.challenge; },
+                get localOwner() { return owner.playerState.battleOwner; }, get centralCreated() { return local.centralCreated().value; },
+                get archipelago() { return aux.archipelagoPercent; }, zoneAddress: local.zone(),
+            }, {
+                send: (target, packet) => this.#send(target, packet, true),
+                peerAddress: (ownerId) => this.#transport('peerAddress')(ownerId | 0), log: this.#effects.log,
+                assertion: (expression) => this.#assertion(expression), creatingIslands: this.#effects.creatingIslands,
+                setArchipelago: (value) => { aux.archipelagoPercent = value; }, setCentralCreated: (value) => { local.centralCreated().value = value; },
+                layout: () => owner.battleOptions[5], predictableCount: () => owner.core.pool.predictableCursor,
+                randomCentral: () => { throw new Error('스커미시 중앙섬 생성은 후속 단계'); },
+                surroundedCentral: () => { throw new Error('스커미시 특수 중앙섬 생성은 후속 단계'); },
+            });
+            this.forts = new RawMissionLoginPackets(owner.players, {
+                current: (slot) => {
+                    this.#live(); if (slot >= 9) return null;
+                    const headers = owner.headers, pointer = new DataView(headers.buffer, headers.byteOffset, headers.byteLength).getUint32(slot * 20, true);
+                    return pointer ? owner.templateStorage.template(slot) : null;
+                }, initialLength: () => 4,
+            }, { typeCount: () => owner.core.types.length }, {
+                log: () => this.#need('log', 'Fort 송신')('로컬 Fort 전송\n'),
+                send: (target, packet) => this.#send(target, packet, true),
+            });
+            const values = aux.missionSettings();
+            this.settings = new RawMissionSettingsPacket({ current: (field) => values[field], setCurrent: (field, value) => { values[field] = value; }, send: (target, packet) => this.#send(target, packet, false) });
         } catch (error) {
             if (this.#effects.transport) this.transport.detachSession(); else this.#internal.dispose();
             this.#disposed = true; throw error;
@@ -48,6 +77,20 @@ export class RawCampaignSessionLoginFront {
     #need(name, where) { return requireLoginService(this.#effects, name, where); }
     // 반납 뒤 낡은 전송과 현재 Session을 다시 쓰지 않는다.
     #live() { if (this.#disposed) throw new Error('반납한 Session Login 앞단'); return this.#owner; }
+    // 호출 시 선택된 현재 전송 장치만 요구한다.
+    #transport(name) { this.#live(); const device = this.transport[name]; if (typeof device !== 'function') throw new Error(`Login 전송 ${name} 미연결`); return device; }
+    // 현재 실제 Session 진단을 호출한다.
+    #assertion(expression) { const o = this.#live(); if (typeof o.services.ai?.assertion !== 'function') throw new Error('Login 진단 장치 누락'); o.services.ai.assertion(expression); }
+    // 현재 6eh 관찰 로그 뒤 원문의 mutable 또는 읽기 전용 송신을 선택한다.
+    #send(target, packet, mutable) {
+        this.#live();
+        if (this.#effects.observePacket && packet[1] === 0x6e) {
+            if (packet.length < 8) throw new RangeError('Ready 송신 마스크 물리 부족');
+            const mask = new DataView(packet.buffer, packet.byteOffset, packet.byteLength).getUint32(4, true);
+            this.#need('log', 'Ready 송신')(`Ready 송신 target${target | 0} mask${mask}\n`);
+        }
+        this.#transport(mutable ? 'sendMutable' : 'send')(target | 0, packet);
+    }
     // 내부 패킷 분배기가 실제 시계·수신 기록·연결 반납을 사용한다.
     #device() {
         return {
