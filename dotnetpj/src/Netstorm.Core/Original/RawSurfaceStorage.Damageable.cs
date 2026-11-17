@@ -1,6 +1,7 @@
-// 실제 피해가능 객체 후처리와 간헐천 고유 수명의 전역/본체를 같은 장기 물리에 연결한다.
-// cpppj/src/client/RawSurfaceDamageable.cpp 의 BindDamageableDevices/DamageablePostGlobals/DamageablePost 장기 본문을 이식한다.
+// 실제 피해가능 객체 전/후처리·해방과 간헐천 고유 수명의 전역/본체를 같은 장기 물리에 연결한다.
+// cpppj/src/client/RawSurfaceDamageable.cpp 의 BindDamageableDevices/DamageablePreGlobals/DamageableReleaseGlobals/DamageablePostGlobals/DamageableRelease/DamageablePre/DamageablePost/BombPre 장기 본문을 이식한다.
 // 0.576에서 추가됐다. (R4-1 잔여 중 개별 삭제 몸체 Damageable 우선)
+// 0.578에서 전처리·해방·폭탄 본문을 이었다.
 namespace Netstorm.Core.Original;
 
 /// <summary>첫 실제 모듈 전 현재 finder/허용 genus owner와 현재 장치를 연결하는 묶음이다.</summary>
@@ -91,6 +92,8 @@ public sealed partial class RawSurfaceStorage
         _damageablePostState.SharedSilentSurfaceType = GameAux().RainBlockerTypeBox;
         _damageablePostState.SharedDudePopulation = SidLists.Dudes;
         _damageablePostState.SharedDamageEvent = GameAux().DamageRegularEventBox;
+        _damageablePreState.SharedPriestType = GameAux().PriestTypeBox;
+        _damageableReleaseState.SharedAllowedGenus = _damageableDevices.AllowedGenus;
     }
 
     /// <summary>같은 사제 TYPE의 장기 전역 뷰다. 0.576에서 추가됐다.</summary>
@@ -165,5 +168,89 @@ public sealed partial class RawSurfaceStorage
         }
 
         return _damageablePost;
+    }
+
+    /// <summary>같은 현재 TYPE/내용물과 실제 Factory/Owner/Pop의 해방 몸체다. 0.578에서 추가됐다.</summary>
+    private RawDamageableRelease? _damageableRelease;
+
+    /// <summary>실제 Native 효과 순서와 현재 권한/Bridge TYPE를 사용하는 전처리 본체다. 0.578에서 추가됐다.</summary>
+    private RawDamageablePreDestroy? _damageablePre;
+
+    /// <summary>실제 Point Blast의 자연 관문 뒤 현재 소리와 공통 부모를 같은 장기 본체에서 선택한다. 0.578에서 추가됐다.</summary>
+    private RawBombPreDestroy? _bombPre;
+
+    /// <summary>같은 현재 TYPE/내용물과 실제 Factory/Owner/Pop의 해방 몸체다. 0.578에서 추가됐다.</summary>
+    public RawDamageableRelease DamageableRelease()
+    {
+        // finder 역참조보다 먼저 실제 owner 결합을 확인한다.
+        DamageableReleaseState state = DamageableReleaseGlobals();
+        if (_damageableRelease is null)
+        {
+            var hooks = new DamageableReleaseHooks
+            {
+                SpawnPriest = _damageableDevices.SpawnPriest,
+                Create = (type, flags) => CreateAsset(type, flags),
+                SetOwner = (sid, owner) => SetAssetOwner(sid, owner),
+                Pop = (sid, x, y, flags) => PopAsset(sid, x, y, flags),
+                NotifySurface = sid => BuildingExecutor().NotifySurface(sid),
+            };
+            _damageableRelease = new RawDamageableRelease(
+                Pool,
+                Types,
+                Spots,
+                _damageableDevices.Finder ?? throw new InvalidOperationException("장기 Damageable 실제 finder 미연결"),
+                state,
+                hooks);
+        }
+
+        return _damageableRelease;
+    }
+
+    /// <summary>실제 Native 효과 순서와 현재 권한/Bridge TYPE를 사용하는 전처리 본체다. 0.578에서 추가됐다.</summary>
+    public RawDamageablePreDestroy DamageablePre()
+    {
+        // 구성되지 않은 장치를 물리 포인터로 대신하지 않는다.
+        DamageablePreDestroyState state = DamageablePreGlobals();
+        if (_damageablePre is null)
+        {
+            var hooks = new DamageablePreDestroyHooks
+            {
+                Collapse = _damageableDevices.Collapse,
+                Explosion = _damageableDevices.Explosion,
+                Sound = _damageableDevices.Sound,
+                ReleaseContained = sid => DamageableRelease().ReleaseNative(sid, () => OwnerMode.Battle, () => Links.BridgeType),
+                ValidateBase = (sid, flags) => CommonDeletion().ValidatePre(sid, flags),
+                Base = (sid, flags) => CommonDeletion().PreDestroy(sid, flags),
+            };
+            var body = new RawDamageablePreDestroy(
+                Pool,
+                Spots,
+                _damageableDevices.Finder ?? throw new InvalidOperationException("장기 Damageable 실제 finder 미연결"),
+                state,
+                hooks);
+            body.EnableNativeBody();
+            _damageablePre = body;
+        }
+
+        return _damageablePre;
+    }
+
+    /// <summary>실제 Point Blast의 자연 관문 뒤 현재 소리와 공통 부모를 같은 장기 본체에서 선택한다. 0.578에서 추가됐다.</summary>
+    public RawBombPreDestroy BombPre()
+    {
+        // 동일 finder/실제 Client 효과의 최초 결합만 확인하며 값을 초기화하지 않는다.
+        DamageablePreDestroyState state = DamageablePreGlobals();
+        if (_bombPre is null)
+        {
+            var hooks = new BombPreDestroyHooks
+            {
+                Explosion = sid => (_damageableDevices.Explosion ?? throw new InvalidOperationException("장기 Damageable 실제 폭발 장치 미연결"))(sid),
+                Sound = (x, y) => (_damageableDevices.Sound ?? throw new InvalidOperationException("장기 Damageable 실제 소리 장치 미연결"))(new DamageableSoundEvent(DamageableSound.Explosion, x, y)),
+                Base = (sid, flags) => CommonDeletion().PreDestroy(sid, flags),
+            };
+            _bombPre = new RawBombPreDestroy(Pool, hooks);
+        }
+
+        return _bombPre;
     }
 }

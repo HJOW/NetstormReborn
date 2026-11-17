@@ -211,6 +211,27 @@ public sealed partial class RawSurfaceStorage
             return;
         }
 
+        // 실제 Damageable 가상 전처리와 너겟 단일 점프 thunk는 같은 장기 본체를 공유한다.
+        if (method == 0x0044b4b0u || method == 0x00484f80u)
+        {
+            DamageablePre().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 Point Blast의 자연 관문은 같은 장기 본체를 공유한다.
+        if (method == 0x0041e960u)
+        {
+            BombPre().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 실제 오벨리스크의 단일 jmp는 현재 공통Pre와 동일한 인자/순서를 사용한다.
+        if (method == 0x0041f910u)
+        {
+            CommonDeletion().PreDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
         // 다리·섬·무인도 고유 삭제는 같은 장기 표면 수명으로 분배한다.
         if (method == 0x004221b0u || method == 0x00422300u || method == 0x00442240u || method == 0x00442640u)
         {

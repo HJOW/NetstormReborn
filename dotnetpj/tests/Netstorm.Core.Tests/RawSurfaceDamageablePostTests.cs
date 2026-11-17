@@ -270,15 +270,16 @@ public sealed class RawSurfaceDamageablePostTests
         Assert.Equal(-100, storage.GameAux().TotalCost);
     }
 
-    /// <summary>피해 전처리는 다음 단위의 몸체 연결까지 주소로 실패한다.</summary>
+    /// <summary>전처리 본체가 생긴 뒤에도 미연결 몸체는 주소를 함께 실패한다.</summary>
     [Fact]
-    public void DamageablePreStillNeedsBody()
+    public void UnconnectedPreStillCarriesAddress()
     {
         var storage = Storage(withSource: true);
         BindAll(storage);
-        int asset = AssetWithVtable(storage, 0x0050b6e8u);
+        // 0x005076b8의 전처리는 Dais 몸체로 아직 잇지 않았다.
+        int asset = AssetWithVtable(storage, 0x005076b8u);
         var hooks = storage.DefaultProcessAssetHooks();
         var error = Assert.Throws<InvalidOperationException>(() => hooks.Emit!(new Netstorm.Core.Original.SquidDestroyEvent(Netstorm.Core.Original.SquidDestroyEffect.PreDestroy, asset, 0, 0)));
-        Assert.Contains("0044B4B0", error.Message);
+        Assert.Contains("0044A4D0", error.Message);
     }
 }
