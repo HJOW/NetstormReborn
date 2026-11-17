@@ -223,6 +223,27 @@ test('AI 자원 선택: 선행 관문과 신전 없는 현재 좌표', () => {
     } finally { if (token) o.aiMemory.free(token); o.dispose(); }
 });
 
+// 수집자와 목표가 없는 AI 본체는 월드나 난수 변경 없이 자연 종료한다.
+test('AI 운반 행동: 선행 관문과 빈 본체', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    let token = 0;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement();
+        assert.throws(() => o.connectAiCarrierActions(), /순서/);
+        o.connectAiResourceChoice(); o.connectAiCarrierActions();
+        assert.equal(o.aiCarrierActions.pool, o.core.pool);
+        token = o.aiMemory.allocate(0xb08);
+        const before = o.random.state;
+        o.aiCarrierActions.act(token);
+        assert.equal(o.random.state, before);
+        o.players[180 + 0x50] = 0x22;
+        assert.equal(o.motionRuntimeModules.aiCarrierHooks.enemyAvailable(1), true);
+        assert.throws(() => o.motionRuntimeModules.aiCarrierHooks.dropRequest(0), /설치 전/);
+        assert.throws(() => o.connectAiCarrierActions(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { if (token) o.aiMemory.free(token); o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

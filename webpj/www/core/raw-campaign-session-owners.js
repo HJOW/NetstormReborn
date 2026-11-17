@@ -193,6 +193,8 @@ export class RawCampaignSessionOwners {
     aiMovement = null; objectNames = null;
     // AI가 같은 Player·월드에서 간헐천을 선택하는 처리기다.
     aiResourceChoice = null;
+    // AI가 같은 자원·경로를 사용하는 운반 행동 처리기다.
+    aiCarrierActions = null;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -710,6 +712,12 @@ export class RawCampaignSessionOwners {
     connectAiResourceChoice() {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 자원 선택 설치 전/반납');
         this.motionRuntimeModules.bindAiResourceChoice();
+    }
+
+    // AI 자원 선택 뒤 현재 운반 행동을 설치한다.
+    connectAiCarrierActions() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 운반 행동 설치 전/반납');
+        this.motionRuntimeModules.bindAiCarrierActions();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
