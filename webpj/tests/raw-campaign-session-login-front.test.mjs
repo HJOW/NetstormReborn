@@ -468,3 +468,37 @@ test('Session Login 등록: 내부 서버 접속과 State9 로그인 송신 대�
         front.transport.flush(); assert.equal(front.transport.lifetime.queuedFrames, 1);
     } finally { front.dispose(); o.dispose(); }
 });
+
+// 독립 시작은 현재 Zone·시계·State8·연결 장치를 준비하고 Pump는 실제 수락만 진행한다.
+test('Session Login 시작: 독립 Zone과 현재 전송 Pump', () => {
+    const o = loginServerOwner(), trace = [], front = new RawCampaignSessionLoginFront(o, { ...devices(trace), refresh: () => {} });
+    try {
+        assert.throws(() => front.begin(), /수신 등록/); front.bindServer(); front.bindClient(); front.registerReceivers();
+        o.globals.missionPost = true; front.begin();
+        assert.equal(o.globals.mySubscriber, 1); assert.equal(o.playerState.playerKnown, 0);
+        assert.equal(o.localStateGlobals.state().phase[0], 8); assert.equal(o.localStateGlobals.state().next[0], 9);
+        assert.equal(front.transport.lifetime.hasClientConnection, true); assert.equal(typeof front.transport.dispatch.registration(5).receive, 'function');
+        assert.equal(o.services.ai.localTransport(), false); o.localStateGlobals.simulconnect().value = true; assert.equal(o.services.ai.localTransport(), true);
+        const order = [], flush = front.transport.flush, poll = front.transport.poll, clockPoll = front.clockSynchronization.poll.bind(front.clockSynchronization);
+        front.transport.flush = () => { order.push('송신'); flush(); }; front.clockSynchronization.poll = () => { order.push('시계'); clockPoll(); };
+        front.transport.poll = () => { order.push('수신'); return poll(); };
+        front.pump(); assert.equal(front.transport.lifetime.queuedFrames, 0); assert.deepEqual(order, ['송신', '시계', '수신']);
+        const sent = []; front.transport.send = (target, packet) => sent.push([target, packet.slice()]);
+        o.connectionAlliance(9, 2, 0xdeadbeef); assert.deepEqual(sent, [[9, Uint8Array.of(1, 0x3d, 9, 0, 2, 0xef, 0xbe, 0xad, 0xde)]]);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 실제 요청의 Zone을 소비한 뒤 상태7 공통 확정과 즉시8을 진행한다.
+test('Session Login 시작: 요청 소비와 상태7 UI 순서', () => {
+    const o = loginServerOwner(), trace = [], blocks = o.localStateGlobals.state(), next = new Uint32Array(36);
+    const request = { next, zone: makeLocalMissionZone().bytes().slice(), consumed: false, starting: null };
+    const front = new RawCampaignSessionLoginFront(o, { ...devices(trace), initializeRenderer: () => trace.push('렌더러'),
+        uiMode: (mode) => trace.push(`UI${mode}`), startingProgress: () => trace.push('진행'), battlePalette: () => trace.push('팔레트') });
+    try {
+        next[0] = 7; next[32] = 1; o.services.missionFortRequest = request; o.globals.missionPost = true;
+        front.bindServer(); front.bindClient(); front.registerReceivers(); front.begin();
+        assert.equal(request.consumed, true); assert.equal(request.zone.length, 0); assert.equal(blocks.phase[0], 8); assert.equal(blocks.next[0], 9);
+        assert.equal(blocks.old[0], 7); assert.equal(blocks.phase[1], 20); assert.equal(o.localStateGlobals.activityEnd().value, 110.5);
+        assert.deepEqual(trace.filter((item) => ['렌더러', 'UI2', '진행', '팔레트'].includes(item)), ['렌더러', 'UI2', '진행', '팔레트']);
+    } finally { front.dispose(); o.dispose(); }
+});

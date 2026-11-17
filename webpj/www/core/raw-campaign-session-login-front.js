@@ -1,8 +1,8 @@
 // Session Login 생성자의 옵션/내부 전송 앞단과 InstallZone을 실제 Session 저장소에 연결한다.
-// 전체 패킷·상태 조립과 Begin/Pump는 후속 단계이며 이 객체 생성만으로 접속하지 않는다.
+// 실제 로그인 왕복과 외곽 Session 소유는 후속 단계이며 이 객체 생성만으로 접속하지 않는다.
 import { bindInternalCampaignTransport } from './campaign-transport-services.js';
 import { createCampaignLoginServices, requireLoginService } from './campaign-login-services.js';
-import { installLocalMissionZone, LocalMissionTransport, makeLocalMissionLogin } from './local-mission-transport.js';
+import { installLocalMissionZone, LocalMissionTransport, makeLocalMissionLogin, makeLocalMissionZone } from './local-mission-transport.js';
 import { RawMissionBattleOptions, resetMissionBattleOptions } from './raw-mission-battle-options.js';
 import { RawMissionClientPackets, registerMissionClientPackets, sanitizeMissionPlayerName } from './raw-mission-client-packets.js';
 import { RawMissionLoginPackets } from './raw-mission-login-packets.js';
@@ -20,6 +20,7 @@ import { registerStateMetaBattleDescription } from './raw-state-meta-battle-desc
 import { registerConnectionActivity } from './raw-connection-activity.js';
 import { registerChatPacket } from '../ui/raw-chat-relay.js';
 import { registerBattleLeavePacket } from './raw-battle-leave.js';
+import { resetAmbientSoundDeadline } from './raw-ambient-sound.js';
 
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
 export class RawCampaignSessionLoginFront {
@@ -357,6 +358,55 @@ export class RawCampaignSessionLoginFront {
                 this.#need('status', '동맹 통지')(7, owner, target);
             });
         } catch (error) { this.dispose(); throw error; }
+    }
+    // 원본 Begin의 미션 Zone과 현재 연결 장치를 설치하고 준비된 State7 또는 독립 State8을 실행한다.
+    begin(parentRunning = false) {
+        const o = this.#live(), local = o.localStateGlobals, blocks = local.state(), effects = this.#effects;
+        if (!this.#registered) throw new Error('Login 시작의 실제 수신 등록 전제 누락');
+        if (!o.services.subscriberGlobals) { o.globals.loginSubscriber = o.services.missionSubscriber ?? 1; o.globals.mySubscriber = o.globals.loginSubscriber; }
+        o.connectionAssign = (pending, owner) => {
+            this.#transport('assign')(pending, owner);
+            if (!Number.isInteger(owner) || owner < 0 || owner >= o.services.battlePeers.length) throw new RangeError('Login 재배치의 실제 peer 범위');
+            o.services.battlePeers[owner] = this.#transport('peer')(owner);
+        };
+        o.connectionAlliance = (target, owner, mask) => {
+            const packet = Uint8Array.of(1, 0x3d, 9, 0, owner & 0xff, 0, 0, 0, 0);
+            new DataView(packet.buffer).setUint32(5, mask >>> 0, true); this.#send(target, packet, false);
+        };
+        o.services.ai.localTransport = () => { this.#live(); return local.simulconnect().value; };
+        o.services.carrierRequest = (target, packet) => this.#send(target, packet, false);
+        const request = o.services.missionFortRequest;
+        if (o.services.adoptInitializedPlayers && !request) throw new Error('실제 Client 미션의 State7 요청 누락');
+        if (request) {
+            if (request.consumed || request.next?.length !== 36 || request.next[0] !== 7 || request.next[32] !== 1 || !(request.zone instanceof Uint8Array) || request.zone.length !== 86) throw new Error('현재 Init Fort 요청/이미지 계약 위반');
+            if (request.starting) { if (blocks.current[0] !== 7 || blocks.current[32] !== 1) throw new Error('정리 뒤 실제 현재 State7/Zone 계약 위반'); }
+            else blocks.current.set(request.next);
+        }
+        const startingTail = Boolean(o.services.adoptInitializedPlayers || effects.uiMode || effects.battlePalette || effects.startingProgress);
+        if (parentRunning && (!startingTail || !request || !request.starting || blocks.current[0] !== 7)) throw new Error('외부 State7 부모의 준비된 실제 앞단 누락');
+        if (startingTail && !request) blocks.current[0] = 7;
+        const starting = () => {
+            if (!request || !request.starting) this.#stateGlobals().titleInitial = 0;
+            this.installZone(request ? request.zone : makeLocalMissionZone().bytes());
+            if (request) { request.zone = new Uint8Array(0); request.consumed = true; blocks.current[32] = 0; blocks.next[32] = 0; }
+            this.clockSynchronization.initializeServer(this.transport.dispatch);
+            if (o.services.adoptInitializedPlayers || effects.initializeRenderer) this.#need('initializeRenderer', 'State7 Renderer')();
+            o.playerState.playerKnown = 0;
+            if (startingTail) {
+                this.#setUiMode(2);
+                resetAmbientSoundDeadline({ set deadline(value) { local.activityEnd().value = value; } }, effects.wallSeconds);
+                blocks.immediate[1] = 20; this.state.request(8); this.#need('startingProgress', 'State7 진행 창')(); this.#need('battlePalette', 'State7 팔레트')();
+            }
+        };
+        if (parentRunning) starting();
+        else if (startingTail) this.state.runStarting(starting);
+        else { starting(); blocks.current[0] = 8; this.state.run(); }
+    }
+    // 현재 벽시각을 기록하고 송신·시계·수신과 독립 타이머를 원본 순서대로 처리한다.
+    pump() {
+        const o = this.#live(); this.#wall = this.#need('wallSeconds', 'Login Pump')();
+        this.#transport('flush')(); this.clockSynchronization.poll(); this.#transport('poll')();
+        if (!this.#effects.frameLoginTimer && o.localStateGlobals.loginEnd().value !== 0) this.timer.run(false);
     }
     // 원문 상태8은 현재 블록과 내부 주소를 확인하고 실제 전송에 접속을 맡긴다.
     #connect(address, port) {
