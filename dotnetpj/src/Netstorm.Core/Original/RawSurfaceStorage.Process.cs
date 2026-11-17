@@ -211,6 +211,13 @@ public sealed partial class RawSurfaceStorage
             return;
         }
 
+        // 다리·섬·무인도 고유 삭제는 같은 장기 표면 수명으로 분배한다.
+        if (method == 0x004221b0u || method == 0x00422300u || method == 0x00442240u || method == 0x00442640u)
+        {
+            (SurfaceLifetime().Hooks().Emit ?? throw new InvalidOperationException("장기 표면 수명 분배의 자산 효과 경계 미연결"))(@event);
+            return;
+        }
+
         throw new InvalidOperationException($"장기 자산의 전용 삭제 몸체 미연결: 0x{method:X8}");
     }
 
