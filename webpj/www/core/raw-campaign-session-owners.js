@@ -70,6 +70,7 @@ import { writeCampaignFortObjects } from './raw-campaign-objects-save.js';
 import { writeCampaignFortTerritory } from './raw-campaign-territory-save.js';
 import { refreshCampaignPlayerCore, writeCampaignFortCoreData } from './raw-campaign-core-write.js';
 import { snapshotCampaignTemplate } from './raw-campaign-snapshot.js';
+import { generateCampaignLocalGeysers, generateCampaignWorldGeysers, placeCampaignBattleNuggets, learnCampaignNewTechnology } from './raw-campaign-callbacks.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -249,7 +250,7 @@ export class RawCampaignSessionOwners {
             this.coreDataGlobals = input.coreDataGlobals ?? new ClientCoreDataGlobals();
             this.playerRecords = input.playerRecords ?? new ClientPlayerRecords(); this.playerUse = this.playerRecords.acquire();
             // 값형 서비스의 소비 묶음/peer9 표는 복사하고, 함수와 실제 공유 owner의 참조는 유지한다.
-            this.services = { ...input, install: { ...input.install }, editorPlayerUi: { ...input.editorPlayerUi }, construction: copyCampaignConstructionEffects(input.construction), damageablePre: { ...input.damageablePre }, damageablePost: { ...input.damageablePost }, assets: copyCampaignAssetEffects(input.assets), deletion: { ...input.deletion }, playerContent: { ...input.playerContent }, contentLifetime: { ...input.contentLifetime }, carrierContent: { ...input.carrierContent }, production: { ...input.production, effects: { ...input.production?.effects } }, sound: { ...input.sound }, motion: { ...input.motion, carrier: { ...input.motion?.carrier } }, priest: { ...input.priest, shield: { ...input.priest?.shield }, regen: { ...input.priest?.regen } }, player: { ...input.player }, ownership: { ...input.ownership }, missionOutcome: { ...input.missionOutcome }, ai: { ...input.ai, participation: { ...input.ai?.participation } }, hit: { ...input.hit, priest: { ...input.hit?.priest }, general: { ...input.hit?.general }, burning: { ...input.hit?.burning }, vortex: { ...input.hit?.vortex }, dudes: { ...input.hit?.dudes } }, archer: copyCampaignArcherEffects(input.archer), battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
+            this.services = { ...input, install: { ...input.install }, editorPlayerUi: { ...input.editorPlayerUi }, construction: copyCampaignConstructionEffects(input.construction), damageablePre: { ...input.damageablePre }, damageablePost: { ...input.damageablePost }, assets: copyCampaignAssetEffects(input.assets), deletion: { ...input.deletion }, playerContent: { ...input.playerContent }, contentLifetime: { ...input.contentLifetime }, carrierContent: { ...input.carrierContent }, production: { ...input.production, effects: { ...input.production?.effects } }, sound: { ...input.sound }, motion: { ...input.motion, carrier: { ...input.motion?.carrier } }, priest: { ...input.priest, shield: { ...input.priest?.shield }, regen: { ...input.priest?.regen } }, player: { ...input.player }, ownership: { ...input.ownership }, newTechnology: { ...input.newTechnology }, missionOutcome: { ...input.missionOutcome }, ai: { ...input.ai, participation: { ...input.ai?.participation } }, hit: { ...input.hit, priest: { ...input.hit?.priest }, general: { ...input.hit?.general }, burning: { ...input.hit?.burning }, vortex: { ...input.hit?.vortex }, dudes: { ...input.hit?.dudes } }, archer: copyCampaignArcherEffects(input.archer), battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
             this.worldRedraw = input.kencloudGlobals ? input.kencloudGlobals.worldRedraw() : { value: 0 };
             this.paint = Object.assign(new RegionPaintState(), { sharedWorldRedraw: this.worldRedraw });
             const revision = this.gameplayGlobals.mapRevision(); this.votes = new RegionOwnershipState({ sharedWorldRedraw: this.worldRedraw, sharedMapRevision: revision });
@@ -692,6 +693,30 @@ export class RawCampaignSessionOwners {
     snapshotTemplateBody(slot, battle) {
         if (this.#disposed) throw new Error('반납한 Session 전체 snapshot 본문');
         snapshotCampaignTemplate(this, slot, battle);
+    }
+
+    // 실제 설치 뒤 로컬 간헐천의 같은 Player/상태/공간을 준비한다.
+    generateLocalGeysers() {
+        if (this.#disposed) throw new Error('반납한 Session 로컬 간헐천 생성');
+        generateCampaignLocalGeysers(this);
+    }
+
+    // 전체 세계 간헐천은 같은 장기 옵션과 공간/난수를 사용하는 실제 부모에 위임한다.
+    generateWorldGeysers() {
+        if (this.#disposed) throw new Error('반납한 Session 세계 간헐천 생성');
+        generateCampaignWorldGeysers(this);
+    }
+
+    // Impl의 placeBattleNuggets callback 슬롯과 구별하는 실제 배치 본문이다. 외곽이 이 메서드를 연결한다.
+    placeBattleNuggetsBody(rectangle, quantity) {
+        if (this.#disposed) throw new Error('반납한 Session 너겟 보충 배치');
+        placeCampaignBattleNuggets(this, rectangle, quantity);
+    }
+
+    // 현재 기술 부모/실제 내용물·두 snapshot·안내의 원문 순서를 사용한다.
+    learnNewTechnology(type) {
+        if (this.#disposed) throw new Error('반납한 Session 기술 획득');
+        learnCampaignNewTechnology(this, type);
     }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.

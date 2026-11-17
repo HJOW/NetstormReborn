@@ -3246,7 +3246,7 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E13",
+      "unit": "WB04-E13 / WB04-E637",
       "id": "new-technology",
       "path": "cpppj/tests/fixtures/new-technology-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 기술 획득 부모의 전체 callback 순서와 중단 뒤 두 Config 부분 효과",
@@ -3254,21 +3254,22 @@
         "webpj/tests/technology-color.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-new-technology.js"
+        "webpj/www/core/raw-new-technology.js",
+        "webpj/www/core/raw-campaign-callbacks.js"
       ],
       "doc": "docs/webpj-technology-color-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawNewTechnology.cpp"
       ],
-      "scope": "45행 전부 사용",
+      "scope": "45행 전부 사용 / E637 실제 Session callback 결선과 NB04/NB29 선택 스위치. 새 결선 검사는 최소 owner 계약이며 직접 fixture 소비자가 아니다. 정상 미션 통합은4D-2h 뒤",
       "text": true,
       "sha256": "8361d908c62f03b317c00e2ed4d21a0bff4ae919e34af1b4b0af2edf36a0fca1",
       "bytes": 11396,
       "lines": 46,
-      "fixtureCommit": "67cce492",
-      "webCommit": "febcbf8c",
+      "fixtureCommit": "67cce4922",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawNewTechnology.cpp": "67cce492"
+        "cpppj/src/o/RawNewTechnology.cpp": "67cce4922"
       }
     },
     {
@@ -9987,7 +9988,7 @@
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E107",
+      "unit": "WB04-E107 / WB04-E637",
       "id": "world-geyser-bounds",
       "path": "cpppj/tests/fixtures/world-geyser-bounds-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 세계 간헐천 전체/분할 사각형 16바이트·공유 여백 DWORD·예산·청크/간격 호출 순서·모드·크기(820행)",
@@ -9995,28 +9996,29 @@
         "webpj/tests/world-geyser.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-world-geyser-bounds.js"
+        "webpj/www/core/raw-world-geyser-bounds.js",
+        "webpj/www/core/raw-campaign-callbacks.js"
       ],
       "doc": "docs/webpj-world-geyser-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawWorldGeyserBounds.cpp"
       ],
-      "scope": "10.78 전용 단일 판본 820행 전부 사용",
+      "scope": "10.78 전용 단일 판본 820행 전부 사용 / E637 실제 Session callback 결선과 NB04/NB29 선택 스위치. 새 결선 검사는 최소 owner 계약이며 직접 fixture 소비자가 아니다. 정상 미션 통합은4D-2h 뒤",
       "text": true,
       "sha256": "275d968ce263959d60847f4523aac3008ce021946226086e74f7cda1d993fa7c",
       "bytes": 76167,
       "lines": 821,
-      "fixtureCommit": "80eda37e",
-      "webCommit": "a1c50b59",
+      "fixtureCommit": "80eda37e7",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawWorldGeyserBounds.cpp": "80eda37e"
+        "cpppj/src/o/RawWorldGeyserBounds.cpp": "2ef238cf6"
       }
     },
     {
       "kind": "original-x86",
       "edition": "10.78",
       "required": false,
-      "unit": "WB04-E107",
+      "unit": "WB04-E107 / WB04-E637",
       "id": "world-geyser",
       "path": "cpppj/tests/fixtures/world-geyser-x86.tsv",
       "producer": "cpppj 독립 PE 관측: 전체 세계 간헐천 생성 부모의 로그/로컬/장식/요청 순서와 전체 인자·옵션 87바이트·Player 1620바이트·장식 타입·demo(354행)",
@@ -10025,23 +10027,24 @@
       ],
       "modules": [
         "webpj/www/core/raw-world-geyser.js",
-        "webpj/www/core/raw-world-geyser-bounds.js"
+        "webpj/www/core/raw-world-geyser-bounds.js",
+        "webpj/www/core/raw-campaign-callbacks.js"
       ],
       "doc": "docs/webpj-world-geyser-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawWorldGeyser.cpp",
         "cpppj/src/o/RawWorldGeyserBounds.cpp"
       ],
-      "scope": "10.78 전용 단일 판본 354행 전부 사용",
+      "scope": "10.78 전용 단일 판본 354행 전부 사용 / E637 실제 Session callback 결선과 NB04/NB29 선택 스위치. 새 결선 검사는 최소 owner 계약이며 직접 fixture 소비자가 아니다. 정상 미션 통합은4D-2h 뒤",
       "text": true,
       "sha256": "0a6eea6bc24ba4156dd311caf2902583310be4b9033fe4ecf97f3b8fbf9e8183",
       "bytes": 1401138,
       "lines": 355,
-      "fixtureCommit": "f87b0308",
-      "webCommit": "a1c50b59",
+      "fixtureCommit": "f87b03083",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawWorldGeyser.cpp": "f87b0308",
-        "cpppj/src/o/RawWorldGeyserBounds.cpp": "80eda37e"
+        "cpppj/src/o/RawWorldGeyser.cpp": "2ef238cf6",
+        "cpppj/src/o/RawWorldGeyserBounds.cpp": "2ef238cf6"
       }
     },
     {
@@ -24348,7 +24351,7 @@
       "bytes": 2144255,
       "lines": 2729,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "worktree",
+      "webCommit": "a0e6e553c",
       "cpppjBasis": {
         "cpppj/src/o/RawFortSnapshotParent.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortSnapshotParent.h": "fa7762f9e"
@@ -24659,7 +24662,7 @@
       "bytes": 483479,
       "lines": 1106,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "worktree",
+      "webCommit": "a0e6e553c",
       "cpppjBasis": {
         "cpppj/src/o/RawFortMoneySave.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortMoneySave.h": "fa7762f9e"
@@ -24691,7 +24694,7 @@
       "bytes": 131723,
       "lines": 231,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "worktree",
+      "webCommit": "a0e6e553c",
       "cpppjBasis": {
         "cpppj/src/o/RawFortMissionSave.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortMissionSave.h": "fa7762f9e"
@@ -24723,7 +24726,7 @@
       "bytes": 5045581,
       "lines": 1353,
       "fixtureCommit": "fa7762f9e",
-      "webCommit": "worktree",
+      "webCommit": "a0e6e553c",
       "cpppjBasis": {
         "cpppj/src/o/RawFortBadgesSave.cpp": "fa7762f9e",
         "cpppj/src/o/RawFortBadgesSave.h": "fa7762f9e"

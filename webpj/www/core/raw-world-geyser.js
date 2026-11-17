@@ -7,6 +7,7 @@
 //    · 옵션 18 == 1: 밀도 getter 를 한 번 호출(결과 미사용)한 뒤 밀도 −1→b/2, 0→b, 1→(b/2)×3, 2→b<<1 로 수량을 정하고 half = 수량/2 로 전체 범위에 한 번(허공 인수=demo, 지형 인수=demo==0), 나머지(예산−half)를 허공만으로 한 번 더 요청한다.
 //  - worldGeyserDensity(selection): 옵션 0~3 을 밀도 −1/0/1/2 로 읽고 표 밖은 오류이다. timeSeed(seconds): 벽시각 시드 `(value>>4) + value×33`(value = 시각×1013 의 ftol 하위 DWORD, DWORD 감김)이며 RawFortFinishOwner::TimeSeed 와 같은 식이다.
 // state = { battle(live), options(87바이트, 9/18 을 반복 중 재조회), decorationTypes(live 4개) }, hooks = { log, local, configInt(key, default), wallSeconds, budget, density, spacing, demo, whole, partition(cell, grid),
+// state.shuffleEvenCells가 참이면 NB04 수정으로 별도 시간 난수의 구역 순열을 쓴다. 생략하면 원문 순서다(WB04-E637).
 // decorate(random, rectangle, region, quantity, type, force), populate(quantity, random, rectangle, { excludePlayers, allowLand, allowVoid }) }. 도달한 하위가 없으면 앞선 효과를 유지한 채 오류이다. 이 모듈은 DOM 을 쓰지 않는다.
 // (2026-11-08 WB04-E107: 세계 간헐천 생성 부모 이식으로 추가)
 import { GameRandom } from './random.js';
@@ -97,8 +98,17 @@ export class RawWorldGeyser {
         const edge = (corner + 1) | 0;
         const center = Math.trunc(edge / 2);
         if (state.options[18] === 2) {
+            const order = [1, 2, 3, 4, 5, 6, 7, 8, 9]; // NB04 스위치가 없으면 최초 원문 구역 순서다(WB04-E637).
+            if (state.shuffleEvenCells) {
+                const ordering = new GameRandom(timeSeed(need(hooks.wallSeconds)())); // 배치 난수와 독립인 시간 시드다.
+                // Fisher-Yates로 각 구역을 한 번씩 방문하며 배치 난수의 소비는 바꾸지 않는다.
+                for (let index = order.length - 1; index > 0; index--) {
+                    const selected = ordering.next(index + 1);
+                    [order[index], order[selected]] = [order[selected], order[index]];
+                }
+            }
             // 원본은 분할 시작을 선택한 뒤 옵션 18 이 바뀌어도 아홉 요청을 끝낸다.
-            for (let cell = 1; cell <= 9; cell += 1) {
+            for (const cell of order) {
                 const middle = cell === 5;
                 const cornerCell = cell === 1 || cell === 3 || cell === 7 || cell === 9;
                 const rectangle = need(hooks.partition)(cell, 3);
