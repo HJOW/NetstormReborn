@@ -999,3 +999,6 @@ cpppj/src/client/RawSurfaceDamageable.cpp	Netstorm.Core/Original/RawSurfaceStora
 cpppj/src/o/RawBalloonBody.h	Netstorm.Core/Original/RawBalloonBody.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawBalloonBody.cpp	Netstorm.Core/Original/RawBalloonBody.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceBalloon.cpp	Netstorm.Core/Original/RawSurfaceStorage.Damageable.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFenceLifetime.h	Netstorm.Core/Original/RawFenceLifetime.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFenceLifetime.cpp	Netstorm.Core/Original/RawFenceLifetime.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.Fence.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
