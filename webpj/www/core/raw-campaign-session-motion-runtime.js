@@ -21,6 +21,7 @@ import { RawAiBuildSearch } from './raw-ai-build-search.js';
 import { GunGroundTargetGlobals, RawGunGroundTarget } from './raw-gun-ground-target.js';
 import { RawAiDropTargets } from './raw-ai-drop-targets.js';
 import { RawAiDropEvaluation } from './raw-ai-drop-evaluation.js';
+import { RawAiDropScan } from './raw-ai-drop-scan.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -53,6 +54,8 @@ export class RawCampaignSessionMotionRuntime {
     aiDropTargetHooks = null;
     // AI 배치 평가가 사용하는 공급·배치·부족 좌표 효과다.
     aiDropEvaluationHooks = null;
+    // AI 배치 스캔의 실제 발자국·후보 평가 장치다.
+    aiDropScanHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -294,6 +297,19 @@ export class RawCampaignSessionMotionRuntime {
         const globals = { manaRadius: () => o.cursorManaGlobals.radiusLimit, probeType: () => o.aiManaProbeType };
         o.aiDropEvaluation = new RawAiDropEvaluation(o.aiMemory, c.pool, c.types, o.aiDropTargets, globals, hooks);
         this.aiDropEvaluationHooks = hooks;
+    }
+    // 배치 평가 뒤 같은 표면·spot·난수에서 AI 후보를 순회한다.
+    bindAiDropScan() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.aiDropEvaluationHooks || this.aiDropScanHooks || o.aiDropScan) throw new Error('Session AI 배치 스캔 설치 순서 오류');
+        const hooks = {
+            free: (type, x, y) => { this.#live(); return o.aiBuildSearch.freeFootprint(type, x, y); },
+            consider: (token, type, point, direction, best, target) => { this.#live(); return o.aiDropEvaluation.considerStored(token, type, point, direction, best, target); },
+            assertion: (text, line) => { this.#live(); if (!o.services.ai.assertion) throw new Error(`AI 배치 스캔 원본 진단 미연결 ${line}`); o.services.ai.assertion(text); },
+        };
+        const globals = { bridgeType: () => c.bridgeState.bridgeType, bounds: () => o.aiDropScanBounds };
+        o.aiDropScan = new RawAiDropScan(o.aiMemory, c.pool, c.types, c.frames, c.spots, c.hash.view(0), o.alliances, o.random, globals, hooks);
+        this.aiDropScanHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

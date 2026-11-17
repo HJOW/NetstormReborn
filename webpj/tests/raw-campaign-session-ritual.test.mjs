@@ -312,6 +312,23 @@ test('AI 배치 평가: 선행 관문과 빈 부족 좌표', () => {
     } finally { if (token) o.aiMemory.free(token); o.dispose(); }
 });
 
+// 후보 스캔은 현재 표면 Pool과 원본 초기 영역을 공유한다.
+test('AI 배치 스캔: 선행 관문과 일반 표면', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget(); o.connectAiDropTargets();
+        assert.throws(() => o.connectAiDropScan(), /순서/);
+        o.connectAiDropEvaluation(); o.connectAiDropScan();
+        assert.equal(o.aiDropScan.pool, o.core.pool);
+        assert.deepEqual(o.aiDropScanBounds, { left: 10, top: 10, right: 246, bottom: 246 });
+        const surface = o.world.create(80), cell = { x: 12, y: 13 }, before = o.random.state;
+        assert.equal(o.aiDropScan.adjustBridge(surface, cell), false);
+        assert.deepEqual(cell, { x: 12, y: 13 }); assert.equal(o.random.state, before);
+        assert.throws(() => o.connectAiDropScan(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {
