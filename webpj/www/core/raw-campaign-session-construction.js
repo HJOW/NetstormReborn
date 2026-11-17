@@ -7,6 +7,7 @@ import { writeRemoteTellPacket } from './raw-remote-tell-packet.js';
 import { RawContainedLookup } from './raw-contained-lookup.js';
 import { RawPriestLookup } from './raw-priest-lookup.js';
 import { RawBoardApproach } from './raw-board-approach.js';
+import { RawCanonPlacementPipeline } from './raw-canon-placement-pipeline.js';
 import { decodeOriginalText } from '../assets/text-encoding.js';
 import { formatWarningMessage } from '../ui/message-gump.js';
 
@@ -76,10 +77,19 @@ export class RawCampaignSessionConstruction {
         this.#ready = true;
     }
 
+    // 일반 지형 파이프라인과 분리된 게임 배치 판정기를 같은 현재 월드에 설치한다.
+    bindGameplayPlacement() {
+        this.#live(); const o = this.#owner, c = o.core, state = o.state.gameplayPlacement;
+        if (o.gameplayPipeline) throw new Error('실제 게임 배치 중복 연결');
+        state.geometry = { ...o.metadata.geometry }; state.permission.useAlliances = 1;
+        state.anchor.bindFullDeck(() => o.state.anchorState.currentIgnoreRestrictions);
+        o.gameplayPipeline = new RawCanonPlacementPipeline(c.pool, c.hash, { types: c.types, frames: o.metadata.frames, shapes: c.shapes, hotspots: o.metadata.hotspots, spots: c.spots, islands: c.hash.view(0), regions: o.gameplayRegions }, c.bookkeeping, o.additional, o.contentFinder, state);
+    }
+
     // 현재 실제 파이프라인에 Player/방향 동맹/Graph·섬 기록을 원문 소비 위치로 공급한다.
     mayPlace(query) {
         this.#live(); const o = this.#owner; const c = o.core; const pipeline = need(o.gameplayPipeline, '게임 요청의 전체 MayPlace 미설치'); const state = o.state.gameplayPlacement;
-        state.placement.localPlayer = o.playerState.battleOwner | 0; state.permission.editor = o.globals.editor; state.permission.graphReady = o.state.anchorState.graphReady; state.permission.alliances = o.alliances; state.anchor = o.state.anchorState;
+        state.placement.localPlayer = o.playerState.battleOwner | 0; state.permission.editor = o.globals.editor; state.permission.graphReady = o.state.anchorState.graphReady; state.permission.alliances = o.alliances; Object.assign(state.anchor, o.state.anchorState);
         state.collision.clientMode = c.processState.server ? 1 : 0; state.collision.ignoredGenus = o.state.buildingState.read('pushGenus'); state.geometry.patternTypes = o.state.constructionState.confirm.patternTypes; state.relations.islandCount = o.islands.count;
         const raw = new DataView(o.islandBytes.buffer, o.islandBytes.byteOffset, o.islandBytes.byteLength);
         // 앞선 효과 뒤 같은 현재32BYTE 섬 기록의 제한/존재만 순서대로 읽는다.
