@@ -239,7 +239,7 @@ export class RawCampaignSessionOwners {
     contentForms = null; carrierContentNotice = null; containedUnpop = null; pendingPickupSound = null;
     cursor = null; daisNotice = null; factoryResearch = null; damageablePost = null;
     // 게임 커서의 현재 함수 표와 반납 수명이다. 본체 설치는 후속이다.
-    cursorModules = null;
+    cursorModules = null; cursorViewport = { cameraX: 0, cameraY: 0, left: 0, top: 0, right: 0, bottom: 0 };
     contentUnpopEvent = 0x02000039; contentBombBlocked = 0;
     // 같은 Player 기술/허용표와 실제 장기 Deck 메모리를 빌리는 생산/동기화 부모다.
     productionModules = null; technology = null; totalMade = null; productionDeck = null; production = null; productionSync = null;
@@ -1032,6 +1032,18 @@ export class RawCampaignSessionOwners {
     connectCursorPlacement() {
         if (this.#disposed || !this.cursorModules) throw new Error('Session 커서 배치 설치 전/반납');
         this.cursorModules.bindPlacement();
+    }
+
+    // 커서 함수 표 뒤 같은 실제 본체와 팔레트·화면 영역을 설치한다.
+    connectCursorBody() {
+        if (this.#disposed || !this.cursorModules) throw new Error('Session 커서 본체 설치 전/반납');
+        this.cursorModules.bindBody();
+    }
+
+    // 원문의 커서 전체 설치를 앞단·배치·본체 순서대로 실행한다.
+    connectCursor() {
+        if (this.#disposed || this.cursor) throw new Error('Session 커서 전체 설치 중복/반납');
+        this.connectCursorFront(); this.connectCursorPlacement(); this.connectCursorBody();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

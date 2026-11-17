@@ -4,11 +4,12 @@ import { bindCursorManaLifecycle } from './raw-cursor-mana.js';
 import { bindCursorRangeLifecycle } from './raw-cursor-range.js';
 import { RawContainedLookup } from './raw-contained-lookup.js';
 import { projectCameraCoordinates } from '../render/camera-view.js';
+import { RawCampaignCursor } from './raw-campaign-cursor.js';
 
 // 같은 Session의 커서 함수 표와 반납 수명이다. 커서 본체 설치는 후속이다.
 export class RawCampaignSessionCursor {
     // 원본 owner와 부분 설치·반납 관문이다.
-    #owner; #started = false; #ready = false; #placementReady = false; #disposed = false;
+    #owner; #started = false; #ready = false; #placementReady = false; #bodyStarted = false; #bodyReady = false; #disposed = false;
     // 후속 커서 본체가 값으로 복사할 실제 게임 함수 표다.
     game = null;
 
@@ -74,10 +75,40 @@ export class RawCampaignSessionCursor {
         this.#placementReady = true;
     }
 
+    // 현재 Session의 커서 본체와 실제 팔레트·화면 영역을 원문 순서로 설치한다.
+    bindBody() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.#placementReady || this.#bodyStarted || o.cursor) throw new Error('Session 커서 본체 설치 순서/중복 오류');
+        this.#bodyStarted = true;
+        const data = {
+            world: o.world, assets: o.assets.game, geometry: o.state.gameplayPlacement.geometry, frames: o.metadata.frames,
+            forms: o.contentForms, contained: o.contained, reward: o.hp, random: o.random, construction: o.construction,
+            drop: o.cursorDrop, grid: o.state.gameplayPlacement.preview.blocked, sp: o.sp,
+            playerKnown: { get value() { return o.playerState.playerKnown; } }, windType: () => o.state.gunTargetState.windArcherType,
+            rangeProcessType: () => o.cursorRangeGlobals.processType, camera: o.contentCamera,
+            cameraView: o.gameplayGlobals.camera().snapshot(), currentState: o.gameplayGlobals.cursorGlobals(),
+        };
+        o.cursor = new RawCampaignCursor(data, this.game);
+        if (o.services.ownerColorTables) o.cursor.display.bindOwnerColors(o.services.ownerColorTables);
+        const colors = o.services.colorSortInput, screenPalette = o.services.screenPalette;
+        if (colors || screenPalette) {
+            if (!colors || typeof screenPalette !== 'function') throw new Error('캠페인 커서의 같은 ColorSort/현재 화면 색 서비스 미연결');
+            o.cursor.setPalette(screenPalette(), colors.logical, colors.mapsReady ? colors.maps : null);
+        } else {
+            const rgb = o.assets.game.palette.rgb, palette = new Uint8Array(1024);
+            // 같은 파일의 RGB를 Screen.palette의 BGRX 물리 순서로 옮긴다.
+            for (let index = 0; index < 256; index += 1) { palette[index * 4] = rgb[index * 3 + 2]; palette[index * 4 + 1] = rgb[index * 3 + 1]; palette[index * 4 + 2] = rgb[index * 3]; }
+            palette.fill(0, 0, 4); palette.set([255, 255, 255, 0], 255 * 4); o.cursor.setPalette(palette);
+        }
+        o.cursor.setView(o.cursorViewport); this.#bodyReady = true;
+    }
+
     // 반납 뒤 함수 표가 같은 World에 다시 들어가지 못하게 한다.
     dispose() { this.#disposed = true; }
     // 앞단 정상 복귀이며 커서 본체나 실제 Load 완료를 뜻하지 않는다.
     get frontReady() { return this.#ready; }
     // 배치 함수 표 정상 복귀이며 실제 커서 본체 설치와는 구별한다.
     get placementReady() { return this.#placementReady; }
+    // 커서 본체의 팔레트·뷰까지 정상 설치된 상태다. 전체 Load는 별도다.
+    get bodyReady() { return this.#bodyReady; }
 }
