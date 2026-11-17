@@ -240,6 +240,19 @@ public sealed partial class RawGameAuxState
     /// <summary>005410d0의현재24이며 Dude 이동/정기/통지가 같은 장기 주소를 빌린다.</summary>
     public UIntBox DudePathTypeBox { get; } = new() { Value = 24u };
 
+    /// <summary>005412c0의 현재 너겟 TYPE이며 보상 환불의 전액 단가 관문이다. 같은 장기 owner를 후속 운반/채집 소비자가 빌린다. 0.570에서 추가됐다.</summary>
+    public uint NuggetType
+    {
+        get => _nuggetTypeBox.Value;
+        set => _nuggetTypeBox.Value = value;
+    }
+
+    /// <summary>같은 너겟 TYPE DWORD의 공유 owner다. Content 상태가 이 주소를 별칭으로 빌린다. 0.570에서 추가됐다.</summary>
+    public UIntBox NuggetTypeBox => _nuggetTypeBox;
+
+    /// <summary>같은 너겟 TYPE DWORD를 빌리는 상자다. 최초 154를 한 번만 소유하고 Session 재대여로 덮어쓰지 않는다. 0.570에서 추가됐다.</summary>
+    private readonly UIntBox _nuggetTypeBox = new() { Value = 154u };
+
     /// <summary>0052ed78/79/7c의 현재 1bh 생성자 바이트·바이트·워드이며 수신 등록 메타데이터와 별개다. 직접 Join도 같은 현재 생성자 헤더를 읽고 등록표로 대체하지 않는다.</summary>
     /// <remarks>2026-11-11 0.355에서 cpppj HEAD의 JoinTestBattle 생성자 헤더(`battleStartPeerHeader_`)를 반영했다. 월드·세션 교체로 초기화하지 않는다.</remarks>
     public FormPacketHeader BattleStartPeerHeader { get; set; } = new(0x1b, 1, 38);
