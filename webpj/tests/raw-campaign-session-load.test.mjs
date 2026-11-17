@@ -15,6 +15,7 @@ import { SoundList } from '../www/audio/sound-list.js';
 import { CampaignTemplateStorage } from '../www/core/campaign-template-storage.js';
 import { ClientPlayerRecords } from '../www/core/client-player-records.js';
 import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
+import { RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 import { loadOriginalForts, readData } from './helpers.mjs';
 
@@ -68,6 +69,16 @@ test('CampaignSession Tutorial 1: 로컬 로그인에서 실제 외곽 Load까�
         assert.throws(() => s.startLocalConnection(), /새 수명/);
     } finally { s.dispose(); }
     assert.throws(() => s.pumpLocalConnection(), /반납/);
+});
+
+// 외곽 등록은 설치 전에 닫고 Load 뒤 같은 Session 연구 본체만 분배기에 연결한다.
+test('CampaignSession Tutorial 1: 설치된 연구 수신 등록', () => {
+    const { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        assert.throws(() => s.registerFactoryResearchCommands(dispatch), /미설치/); s.load(); s.registerFactoryResearchCommands(dispatch);
+        const entry = dispatch.registration(0x58); assert.equal(typeof entry.receive, 'function'); assert.equal(entry.length, 16); assert.equal(entry.version, 1);
+    } finally { s.dispose(); }
+    assert.throws(() => s.registerFactoryResearchCommands(dispatch), /반납/);
 });
 
 // 원본 기본 AI 설정의 같은 600BYTE 입력에 명시 이름·기술·초기 SP만 지정한다.

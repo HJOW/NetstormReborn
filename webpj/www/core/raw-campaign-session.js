@@ -7,6 +7,7 @@ import { refreshLocalRitualData } from './raw-ritual-refresh.js';
 import { createCampaignAi, crankCampaignAiMoney, setCampaignAiParameter, prepareCampaignAi, initializeCampaignAi, makeCampaignAi } from './raw-campaign-session-ai-public.js';
 import { RawCampaignSessionAiActions } from './raw-campaign-session-ai-actions.js';
 import { RawCampaignSessionLoginFront } from './raw-campaign-session-login-front.js';
+import { registerFactoryResearchCommand } from './raw-factory-research.js';
 
 // Impl990..1865의 이미 이식한 생성 순서다. 각 단계는 같은 owner의 실제 하위 모듈을 한 번 만든다.
 const CONSTRUCTOR_STEPS = Object.freeze([
@@ -106,6 +107,11 @@ export class RawCampaignSession {
     localConnectionPhase() { const o = this.#live(); return this.#login ? o.localStateGlobals.state().phase[0] : 0; }
     // 기록은 호출자에게 복사본으로 돌려 같은 실제 목록의 임의 변경을 막는다.
     localConnectionPackets() { this.#live(); return this.#login ? this.#login.wireTypes.slice() : []; }
+    // 설치된 같은 Session의 연구 본체를 현재 분배기에 등록한다.
+    registerFactoryResearchCommands(dispatch) {
+        const o = this.#live(); if (!o.loaded || !o.factoryResearch) throw new Error('미설치 Session의 연구 수신 등록');
+        registerFactoryResearchCommand(dispatch, o.factoryResearch);
+    }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }
     // 현재 Player 참여와 AI 소유자 수명을 빌린다.
