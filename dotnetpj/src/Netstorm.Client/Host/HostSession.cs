@@ -937,7 +937,8 @@ public sealed partial class HostSession
     /// <param name="y">등록할 월드 y 좌표.</param>
     /// <param name="flags">Pop 호출 플래그.</param>
     /// <remarks>2026-11-12 0.466의 도장 Pop 몸체를 0.601에서 섬 후처리와 공유하도록 꺼냈다. 동작은 같다.
-    /// 0.602에서 호출 기록을 남긴다. 기록은 풀 바이트·덤프에 영향을 주지 않으며 R4-2 스탬프 실측 발화의 측정 바탕이다.</remarks>
+    /// 0.602에서 호출 기록을 남긴다. 기록은 풀 바이트·덤프에 영향을 주지 않으며 R4-2 스탬프 실측 발화의 측정 바탕이다.
+    /// 0.603에서 분배 Pop으로 교체해 공간 등록 뒤 섬·표면 접두와 장부 집계를 같은 호출에서 실행한다.</remarks>
     private void TerrainPopObject(int sid, float x, float y, uint flags)
     {
         // Pop 장치가 없으면 기록만 한다(드라이런 중립).
@@ -1013,6 +1014,22 @@ public sealed partial class HostSession
     /// <remarks>0.601에서 R4-2 적재 중 postPop용으로 추가했다. 지면·받침 소유자 스탬프의 실제 몸체다.</remarks>
     private RawIslandPostPop? _islandPostPop;
 
+    /// <summary>세션 섬 후처리와 연결 순회가 공유하는 소유자 지정 몸체다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>0.603에서 R4-2 Prefix 실측 발화용으로 추가했다. 섬 후처리와 다리 연결이 같은 Owner를 공유한다.</remarks>
+    private SquidOwner? _islandOwner;
+
+    /// <summary>세션 섬 연결 순회가 읽는 이웃 탐색기다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>0.603에서 R4-2 Prefix 실측 발화용으로 추가했다. 같은 풀·해시·점유지·타입·프레임을 공유한다.</remarks>
+    private RawSquidNeighbors? _islandNeighbors;
+
+    /// <summary>세션 섬 후처리 Prefix와 Connect가 공유하는 다리 연결 몸체다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>0.603에서 R4-2 Prefix 실측 발화용으로 추가했다. `RawSurfaceStorage.ConnectionsExecutor`와 같은 구실이다.</remarks>
+    private RawBridgeConnect? _islandConnections;
+
+    /// <summary>세션 지형 Pop의 공통 후처리 분배기다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>0.603에서 R4-2 Prefix 실측 발화용으로 추가했다. 공간 등록 뒤 섬·표면 접두와 장부 집계를 같은 호출에서 실행한다.</remarks>
+    private RawPostPop? _terrainPostPop;
+
     /// <summary>세션 섬 후처리 진단의 기록이다. 미연결·누락 효과를 검사에서 확인한다.</summary>
     /// <remarks>0.601에서 추가했다. 원본 진단 복귀 뒤에도 계속 진행하므로 기록만 남긴다.</remarks>
     private readonly List<string> _islandPostPopDiagnostics = [];
@@ -1023,10 +1040,17 @@ public sealed partial class HostSession
     /// <summary>세션 소유의 섬 후처리 몸체다. 0.601에서 추가됐다.</summary>
     public RawIslandPostPop IslandPostPop => _islandPostPop ?? throw new InvalidOperationException("세션 섬 후처리 미연결");
 
+    /// <summary>세션 섬 연결 순회 몸체다. 0.603에서 추가됐다.</summary>
+    public RawBridgeConnect IslandConnections => _islandConnections ?? throw new InvalidOperationException("세션 섬 연결 미연결");
+
+    /// <summary>세션 지형 Pop의 공통 후처리 분배기다. 0.603에서 추가됐다.</summary>
+    public RawPostPop TerrainPostPop => _terrainPostPop ?? throw new InvalidOperationException("세션 지형 공통 후처리 미연결");
+
     /// <summary>세션 섬 후처리 장치를 연결한다. 지형 Pop 장치 뒤에 연결해야 한다(같은 풀·해시·표시를 공유한다).</summary>
     /// <param name="types">같은 실제 TYPE 표다. 패치판 188개여야 한다.</param>
     /// <param name="frames">같은 실제 프레임 표다. 타입 개수와 같아야 한다.</param>
-    /// <remarks>0.601에서 R4-2 적재 중 postPop용으로 추가했다. 섬 연결 순회는 R6에서 잇는다.</remarks>
+    /// <remarks>0.601에서 R4-2 적재 중 postPop용으로 추가했다. 섬 연결 순회는 R6에서 잇는다.
+    /// 0.603에서 연결 순회·지형 공통 후처리 분배를 함께 연결했다. 지형 Pop 호출은 같은 호출에서 접두·장부까지 실행한다.</remarks>
     public void BuildIslandPostPopDevices(IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames)
     {
         ArgumentNullException.ThrowIfNull(types);
@@ -1049,6 +1073,42 @@ public sealed partial class HostSession
             Types = types,
             Assertion = (expression, file, line) => throw new InvalidOperationException($"섬 후처리 Owner 원본 진단: {expression} {file}:{line}"),
         });
+        _islandOwner = owner;
+        // 세션 소유의 이웃 탐색기와 다리 연결 스택을 같은 풀·해시·표로 묶는다. 섬 후처리 Prefix와 Connect가 같은 저장소를 공유한다.
+        _islandNeighbors = new RawSquidNeighbors(Pool, _terrainHash, _terrainSpots, types, new RiftFrameCodeTables(frames));
+        if (Pool.Edition == OriginalEdition.Patch1078)
+        {
+            _islandNeighbors.BindCurrentTypes(types);
+        }
+        _islandConnections = new RawBridgeConnect(Pool, _islandNeighbors, BridgeState, new BridgeConnectHooks
+        {
+            Create = (type, flags) => _terrainFactory!.Create(type, (SidAllocation)flags),
+            SetOwner = _islandOwner.Set,
+            Pop = (sid, x, y, flags) => TerrainPopObject(sid, x, y, flags),
+            SetFrame = (_, _, _) => throw new InvalidOperationException("세션 연결 프레임 미연결(R6)"),
+            NotifySurface = sid => (_fortBuilding ?? throw new InvalidOperationException("세션 연결 표면 통지 미연결(R6)")).NotifySurface(sid),
+        });
+        // 세션 지형 Pop의 공통 후처리 분배기다. 섬·표면 접두를 같은 세션 장치에 잇고 그 밖의 파생은 R6에서 잇는다.
+        _terrainPostPop = new RawPostPop(Pool, types, TerrainBookkeeping, null, sid => _islandConnections.Connect(sid));
+        if (Pool.Edition == OriginalEdition.Patch1078)
+        {
+            _terrainPostPop.BindCurrentTypes(types);
+        }
+        _terrainPostPop.SetIslandPrefix((sid, flags) => _islandConnections.IslandPostPopPrefix(sid, flags));
+        _terrainPostPop.SetSurfacePrefix((sid, flags) => _islandPostPop!.Prefix(sid, flags));
+        // 같은 해시·점유지·표시를 공유하는 분배 Pop으로 교체한다. 공간 등록 뒤 접두·장부가 같은 호출에서 실행된다.
+        _terrainPop = new RawPop(Pool, _terrainHash, _terrainSpots, _terrainDisplay, _terrainPostPop);
+        _terrainPop.BindDiagnostics(new SquidPopDiagnostics
+        {
+            Types = types,
+            Checking = new RawCheckingFlag(() => AiChecking.Read()),
+            Trace = (level, text) => _islandPostPopDiagnostics.Add($"pop-trace:{level}:{text}"),
+            Assertion = (expression, file, line) => throw new InvalidOperationException($"지형 Pop 원본 진단: {expression} {file}:{line}"),
+        });
+        if (_fortBuilding is not null)
+        {
+            _terrainPop.SetBuildingSide(_fortBuilding);
+        }
         _islandPostPop = new RawIslandPostPop(
             Pool,
             new SessionHashLevelView(_terrainHash),
@@ -1064,7 +1124,7 @@ public sealed partial class HostSession
                     SetOwner = owner.Set,
                     Pop = (sid, x, y, flags) => TerrainPopObject(sid, x, y, flags),
                 },
-                Connect = _ => throw new InvalidOperationException("세션 섬 연결 순회 미연결(R6)"),
+                Connect = sid => _islandConnections!.Connect(sid),
                 FindTypeAt = (x, y, type) => FindTerrainObjectAt(types, x, y, type),
                 UpdateDisplay = sid => _terrainDisplay!.Update(Pool.Slot(sid)),
                 IncompleteSupport = (missing, noIsland, noStalag) => _islandPostPopDiagnostics.Add($"incomplete:{missing}:{noIsland}:{noStalag}"),
