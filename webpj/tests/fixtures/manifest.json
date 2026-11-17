@@ -678,7 +678,7 @@
       "bytes": 674895,
       "lines": 1777,
       "fixtureCommit": "5879152b2",
-      "webCommit": "worktree",
+      "webCommit": "a4c51b7c3",
       "cpppjBasis": {
         "cpppj/src/o/RawSquidFinder.cpp": "f58fec2e3",
         "cpppj/src/o/RawSquidFinder.h": "225f2322c",
@@ -7022,7 +7022,7 @@
       "bytes": 11959995,
       "lines": 4796,
       "fixtureCommit": "e6afe25a9",
-      "webCommit": "worktree",
+      "webCommit": "a4c51b7c3",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerPlacementAnchor.cpp": "2d166e07a",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
@@ -8380,7 +8380,7 @@
       "bytes": 5666122,
       "lines": 2658,
       "fixtureCommit": "318bfd148",
-      "webCommit": "worktree",
+      "webCommit": "a4c51b7c3",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierPickup.cpp": "046222826",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
@@ -9660,23 +9660,28 @@
       ],
       "modules": [
         "webpj/www/core/raw-board-target.js",
-        "webpj/www/core/raw-carrier-target.js"
+        "webpj/www/core/raw-carrier-target.js",
+        "webpj/www/core/raw-campaign-session-carrier-routing.js"
       ],
       "doc": "docs/webpj-carrier-target-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawBoardTarget.cpp",
-        "cpppj/src/o/RawCarrierTarget.cpp"
+        "cpppj/src/o/RawCarrierTarget.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawCampaignSession.h"
       ],
-      "scope": "10.78 전용 단일 판본 2245행 전부 사용(기하 1020행은 실제 CPU 열을 기대값으로 대체)",
+      "scope": "10.78 전용 단일 판본 2245행 전부 사용(기하 1020행은 실제 CPU 열을 기대값으로 대체) / E642: 같은실제Session3845..3888의 Board/후보/대상/회피/재탐색 결선. 신규4조립검사는 직접소비자가 아니며 전체Motion/Load는후속(docs/webpj-session-carrier-routing-20261117.md)",
       "text": true,
       "sha256": "7ec562c25de1439cf420ddeb6f6f18207ced85dc78f2abbc996c604b52423e45",
       "bytes": 1576206,
       "lines": 2246,
-      "fixtureCommit": "b7932e86",
-      "webCommit": "acf8cacd",
+      "fixtureCommit": "b7932e867",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawBoardTarget.cpp": "b7932e86",
-        "cpppj/src/o/RawCarrierTarget.cpp": "b7932e86"
+        "cpppj/src/o/RawBoardTarget.cpp": "b7932e867",
+        "cpppj/src/o/RawCarrierTarget.cpp": "b7932e867",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.h": "bda77381e"
       }
     },
     {
@@ -9691,21 +9696,26 @@
         "webpj/tests/carrier-target.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-board-target.js"
+        "webpj/www/core/raw-board-target.js",
+        "webpj/www/core/raw-campaign-session-carrier-routing.js"
       ],
       "doc": "docs/webpj-carrier-target-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawBoardTarget.cpp"
+        "cpppj/src/o/RawBoardTarget.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawCampaignSession.h"
       ],
-      "scope": "10.78 전용 2040행 전부 사용(입력 1020개 × 두 제어 워드)",
+      "scope": "10.78 전용 2040행 전부 사용(입력 1020개 × 두 제어 워드) / E642: 같은실제Session3845..3888의 Board/후보/대상/회피/재탐색 결선. 신규4조립검사는 직접소비자가 아니며 전체Motion/Load는후속(docs/webpj-session-carrier-routing-20261117.md)",
       "text": true,
       "sha256": "d3b55267077f3ed7416b6923bf96cefdfa96264aa2a7968827514c531196043c",
       "bytes": 117318,
       "lines": 2041,
-      "fixtureCommit": "b7932e86",
-      "webCommit": "acf8cacd",
+      "fixtureCommit": "b7932e867",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawBoardTarget.cpp": "b7932e86"
+        "cpppj/src/o/RawBoardTarget.cpp": "b7932e867",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.h": "bda77381e"
       }
     },
     {
@@ -9720,21 +9730,26 @@
         "webpj/tests/carrier-escape.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-carrier-escape.js"
+        "webpj/www/core/raw-carrier-escape.js",
+        "webpj/www/core/raw-campaign-session-carrier-routing.js"
       ],
       "doc": "docs/webpj-carrier-escape-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawCarrierEscape.cpp"
+        "cpppj/src/o/RawCarrierEscape.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawCampaignSession.h"
       ],
-      "scope": "10.78 전용 단일 판본 1807행 전부 사용",
+      "scope": "10.78 전용 단일 판본 1807행 전부 사용 / E642: 같은실제Session3845..3888의 Board/후보/대상/회피/재탐색 결선. 신규4조립검사는 직접소비자가 아니며 전체Motion/Load는후속(docs/webpj-session-carrier-routing-20261117.md)",
       "text": true,
       "sha256": "b2fc27887a3b5478e5a761161ac3fa5ec483908dfb6fee3ef5197ed897748c9f",
       "bytes": 1565352,
       "lines": 1808,
-      "fixtureCommit": "562c41c9",
-      "webCommit": "4609f6e3",
+      "fixtureCommit": "562c41c91",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawCarrierEscape.cpp": "8b467ca0"
+        "cpppj/src/o/RawCarrierEscape.cpp": "8b467ca03",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.h": "bda77381e"
       }
     },
     {
@@ -9749,21 +9764,26 @@
         "webpj/tests/carrier-choice.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-carrier-choice.js"
+        "webpj/www/core/raw-carrier-choice.js",
+        "webpj/www/core/raw-campaign-session-carrier-routing.js"
       ],
       "doc": "docs/webpj-carrier-choice-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawCarrierChoice.cpp"
+        "cpppj/src/o/RawCarrierChoice.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawCampaignSession.h"
       ],
-      "scope": "10.78 전용 단일 판본 721행 전부 사용(53비트 열 사용)",
+      "scope": "10.78 전용 단일 판본 721행 전부 사용(53비트 열 사용) / E642: 같은실제Session3845..3888의 Board/후보/대상/회피/재탐색 결선. 신규4조립검사는 직접소비자가 아니며 전체Motion/Load는후속(docs/webpj-session-carrier-routing-20261117.md)",
       "text": true,
       "sha256": "a13058b4167cd2a692cce579511e24e707f8b85a2c3fbd9c77df3de283c52af0",
       "bytes": 1546934,
       "lines": 722,
-      "fixtureCommit": "87c37af6",
-      "webCommit": "281f39d0",
+      "fixtureCommit": "87c37af67",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawCarrierChoice.cpp": "8b467ca0"
+        "cpppj/src/o/RawCarrierChoice.cpp": "8b467ca03",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.h": "bda77381e"
       }
     },
     {
@@ -9778,21 +9798,26 @@
         "webpj/tests/path-retarget.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-path-retarget.js"
+        "webpj/www/core/raw-path-retarget.js",
+        "webpj/www/core/raw-campaign-session-carrier-routing.js"
       ],
       "doc": "docs/webpj-path-retarget-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawPathRetarget.cpp"
+        "cpppj/src/o/RawPathRetarget.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawCampaignSession.h"
       ],
-      "scope": "10.78 전용 단일 판본 4801행 전부 사용",
+      "scope": "10.78 전용 단일 판본 4801행 전부 사용 / E642: 같은실제Session3845..3888의 Board/후보/대상/회피/재탐색 결선. 신규4조립검사는 직접소비자가 아니며 전체Motion/Load는후속(docs/webpj-session-carrier-routing-20261117.md)",
       "text": true,
       "sha256": "89b1fc34c732d83eb35ec98095b89883003737faffaa002686eee10e6d6fb122",
       "bytes": 522589,
       "lines": 4802,
-      "fixtureCommit": "cd6c03ae",
-      "webCommit": "53445e08",
+      "fixtureCommit": "cd6c03ae2",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPathRetarget.cpp": "cd6c03ae"
+        "cpppj/src/o/RawPathRetarget.cpp": "cd6c03ae2",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.h": "bda77381e"
       }
     },
     {
