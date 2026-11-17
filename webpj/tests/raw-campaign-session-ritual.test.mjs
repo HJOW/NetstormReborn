@@ -279,6 +279,21 @@ test('AI 지상 표적: 선행 관문과 현재 전역', () => {
     } finally { o.dispose(); }
 });
 
+// 배치 표적은 같은 객체 TYPE의 현재 공격 속성만 조회한다.
+test('AI 배치 표적: 선행 관문과 현재 TYPE 속성', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch();
+        assert.throws(() => o.connectAiDropTargets(), /순서/);
+        o.connectAiGroundTarget(); o.connectAiDropTargets();
+        const target = o.world.create(80);
+        o.hitTypes[80].damagePerSecond = 12.5;
+        assert.equal(o.motionRuntimeModules.aiDropTargetHooks.rate(target), 12.5);
+        assert.throws(() => o.connectAiDropTargets(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

@@ -19,6 +19,7 @@ import { nuggetTypeNow } from './raw-carrier-arrival.js';
 import { RawAiCarrierActions, findContainedGenus, daisApproachPoint } from './raw-ai-carrier-actions.js';
 import { RawAiBuildSearch } from './raw-ai-build-search.js';
 import { GunGroundTargetGlobals, RawGunGroundTarget } from './raw-gun-ground-target.js';
+import { RawAiDropTargets } from './raw-ai-drop-targets.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -47,6 +48,8 @@ export class RawCampaignSessionMotionRuntime {
     aiSearchHooks = null;
     // 지상 표적이 읽는 현재 소유자와 진단 전역이다.
     aiGroundGlobals = null;
+    // AI 배치 표적 평가가 사용하는 실제 총기·객체 효과다.
+    aiDropTargetHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -248,6 +251,24 @@ export class RawCampaignSessionMotionRuntime {
         globals.assertion = (text, line) => { this.#live(); if (!o.services.ai.assertion) throw new Error(`AI 지상 검색 원본 진단 미연결 ${line}`); o.services.ai.assertion(text); };
         o.aiGroundTarget = new RawGunGroundTarget(c.pool, c.hash, c.types, o.gunTypes, o.gunTarget, s.gunTargetState, globals);
         this.aiGroundGlobals = globals;
+    }
+    // AI 지상 검색 뒤 같은 총기·장애물과 현재 객체 정보로 배치 표적을 평가한다.
+    bindAiDropTargets() {
+        this.#live(); const o = this.#owner, c = o.core, s = o.state;
+        if (!this.aiGroundGlobals || this.aiDropTargetHooks || o.aiDropTargets) throw new Error('Session AI 배치 표적 설치 순서 오류');
+        const globals = { altarType: () => s.runeState.readAltarType(), directionalType: () => s.constructionState.confirm.patternTypes[7] };
+        const hooks = {
+            captive: (sid) => { this.#live(); return findContainedGenus(c.pool, o.priestState.contained, c.types, sid, 0x20, 0x200000, 0); },
+            rate: (sid) => { this.#live(); const type = c.pool.slot(sid)[10]; if (!o.hitTypes[type]) throw new RangeError('AI 배치 표적 현재 TYPE 범위'); return o.hitTypes[type].damagePerSecond; },
+            maxHitPoints: (sid) => { this.#live(); return o.hp.maxHitPoints(sid); },
+            ground: (x, y, type, owner) => { this.#live(); return o.aiGroundTarget.find(x, y, type, owner); },
+            gun: (x, y, type, direction, owner) => { this.#live(); return o.gunTarget.findTarget(x, y, type, direction, owner); },
+            blockers: (owner, point, capacity) => { this.#live(); return o.gunBlocker.collect(owner, point, capacity); },
+            center: (sid) => { this.#live(); const point = c.neighbors.center(sid); return { x: point[0], y: point[1] }; },
+            assertion: (text, line) => { this.#live(); if (!o.services.ai.assertion) throw new Error(`AI 배치 표적 원본 진단 미연결 ${line}`); o.services.ai.assertion(text); },
+        };
+        o.aiDropTargets = new RawAiDropTargets(o.aiMemory, c.pool, c.types, globals, hooks);
+        this.aiDropTargetHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }
