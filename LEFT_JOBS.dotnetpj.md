@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.599 · 갱신 2026-11-17(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.600 = [R4-2](#r4-detail) · cpppj 기준 제품 1314 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
+**기준 단위 0.600 · 갱신 2026-11-17(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.601 = [R4-2](#r4-detail) · cpppj 기준 제품 1314 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-15) 직전의 이 문서 전체(단위 기록 0.453~0.545 93건, R4 진행판의 묶음별 경과, 0.3의 단위별 검사·fixture 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261115-through-0545)에 바이트 그대로 보관했고, 그 이전 보관본 6개와 0.452 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -50,11 +50,11 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 단위 | **0.599(2026-11-17, HJOW-Athlon):** [저장소 건물 공간 전환](docs/dotnet-hostsession-building-20261117.md). 신규2검사. 건물 공간 통일·live 바이트 동일·섬 타입 입증. R4-2 적재 중 postPop이 다음 |
-| 검사 기준선 | **0.599 집중: Client(HostSession 계열)27/27·Core(Fence\|CppPortMap\|Surface\|Dais)470/470·Assets366/366 통과, Release 빌드 0경고·0오류. Core 전체는 0.589 직전 측정 2842/2846에서 PortMap 중복 해소 뒤 자료 부재 3건(Burning originalCD 2건·PlayerTechnology NETSTORM_DATA 1건)만 남으며 전체 회귀는 다시 돌리지 않았다. Client 전체 1236/1247의 11건 실패는 기존과 같은 사전 존재(환경) 집합이다**. 기대값/제품 코드는 유지. TRX 미보관(집중 실행). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)도 유지 |
+| 마지막 구현 단위 | **0.600(2026-11-17, HJOW-Athlon):** [R4-1 마감 감사와 R4-2 진입 조건](docs/dotnet-r4-1-close-20261117.md). 제품 변경 없음. 공통층 마감 확정·R6 장치 대기 명시·R4-2 첫 단계 정의 |
+| 검사 기준선 | **0.600 집중: Client(HostSession 계열)27/27·Core(Fence\|CppPortMap\|Surface\|Dais)470/470·Assets366/366 통과(재실행 확인, 제품 변경 없음), Release 빌드 0경고·0오류. Core 전체는 0.589 직전 측정 2842/2846에서 PortMap 중복 해소 뒤 자료 부재 3건(Burning originalCD 2건·PlayerTechnology NETSTORM_DATA 1건)만 남으며 전체 회귀는 다시 돌리지 않았다. Client 전체 1236/1247의 11건 실패는 기존과 같은 사전 존재(환경) 집합이다**. 기대값/제품 코드는 유지. TRX 미보관(집중 실행). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)도 유지 |
 | PORT_MAP | `PORT_MAP.tsv` **1021행(L1 445·port 571)**, cpppj 438단위에 대응. 행은 파일 전체 완료를 뜻하지 않는다 |
 | fixture | 연결 **319개**(원본 x86 대조 자료, `cpp-fixture-manifest.tsv`) |
-| L2 기준선 | 0.599: 건물 전환 뒤에도 덤프 불변이므로 재수집하지 않았다. **일치0/34**, 데모dn3 미연결 유지. 직전 자료 `extracted/dotnet-l2-0567/`, [이번 결과](docs/dotnet-hostsession-building-20261117.md)·[일괄 도구](docs/dotnet-l2-batch-20261114.md) |
+| L2 기준선 | 0.600: 감사 단위이며 덤프 불변이므로 재수집하지 않았다. **일치0/34**, 데모dn3 미연결 유지. 직전 자료 `extracted/dotnet-l2-0567/`, [이번 결과](docs/dotnet-r4-1-close-20261117.md)·[일괄 도구](docs/dotnet-l2-batch-20261114.md) |
 | cpppj 기준 | 제품 **1314 / 11.01**(M8 최종 관문 1311 완료+최초 실행 1314, CD 10.72 복원은 사용자 보류, cpppj 목표 일시 중지). 영향 분류는 0.379(1247→1300 전수)·0.499(1304~1310)·0.530(1312·1313)까지 마쳤다([1.2](#resync-scope)). `reflected-commit`/floor는 올리지 않았다 |
 | 오라클 | `cpppj/build/bin/Release/Netstorm.exe`. cpppj `src`가 바뀌면 PowerShell로 다시 빌드한다. 데이터 사본 `extracted/dotnet-oracle-data/`·캡처 `extracted/dotnet-oracle-captures/`·기준선 `extracted/dotnet-r0-baseline/`은 이 PC에만 있다(Git 제외) |
 | 디컴파일 | dotnetpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`). 이식 근거는 cpppj 소스·fixture·문서다 |
@@ -63,7 +63,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 ### 0.4 남은 작업 — 순서대로
 
-**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.599에서 저장소 건물 공간 전환(건물 공간 통일·live 바이트 동일·섬 타입 입증)을 맞췄다. 다음은 R4-2 적재 중 postPop 결선이다.** 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
+**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.600에서 R4-1 마감 감사(공통층 마감 확정·R6 장치 대기 명시·R4-2 첫 단계 정의)를 마쳤다. 다음은 R4-2 첫 단계(Pop 공간 등록 switch-on)다.** 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
 
 
 **최초 실행 상태 공통 인계(2026-11-16 사용자 요청, 분석 완료·DN 구현 대기):** 원본 `options.cfg`·전체화면 표식의 삭제(`4040c1029`)는 정상 처음 설치 상태다. [원본 관찰/화면 6장과 공통 완료 기준](docs/exe/original-first-run-20261116.md), [cpppj 우선 작업](LEFT_JOBS.md#first-run)을 따른다. **cpppj부터 반영하고 확정 커밋 뒤 DN 새 경로에도 반영한다.** 이 문서 갱신은0.568 구현 완료나 기존 L4a의 최초 상태 검증 완료를 뜻하지 않는다.
@@ -333,7 +333,8 @@ dotnetpj 작업에서는 cpppj·LEFT_JOBS.md를 수정하지 않는다. 아래 �
 - [x] `client/ClientHostGame` 미션 표 저장소 설치와 공장 일원화 바탕 — 0.596. 표 3종 독립 사본 설치·풀 불변·검사 공개. 저장소 공장 전환은 잔여.
 - [x] `client/ClientHostGame`·`HostSession` 저장소 공장 전환 — 0.597. 장치 빌더 외부 공장 인자·호출자 결선·live 바이트 동일·주도 입증. 실행기 일원화(장기 Host·Display·Unpop 결선)는 잔여.
 - [x] `client/ClientHostGame`·`HostSession` 저장소 공간 공유 — 0.598. 외부 해시·점유지 인자·호출자 결선·live 바이트 동일. 공간 실행기 일원화(장기 Building·Unpop·Pop·Display·Graph 결선)는 잔여.
-- [x] `client/ClientHostGame`·`HostSession` 저장소 건물 공간 전환 — 0.599. 외부 건물 공간 인자·섬 타입 동기화·호출자 결선·live 바이트 동일·HasIsland 입증. R4-2 적재 중 postPop 결선이 다음.
+- [x] `client/ClientHostGame`·`HostSession` 저장소 건물 공간 전환 — 0.599. 외부 건물 공간 인자·섬 타입 동기화·호출자 결선·live 바이트 동일·HasIsland 입증.
+- [x] R4-1 마감 감사 — 0.600. 제품 변경 없음. 공통층 마감 확정, 개별 몸체 3종·실행기 5종이 R6 장치 대기임을 코드 근거로 명시, R4-2 첫 단계(Pop 공간 등록 switch-on) 정의.
 - [x] `client/ClientHostGame` HostSession 별도 풀 제거와 호출자 결선 — 0.595. 미션 저장소 소유·풀 빌림·live 장면 풀 바이트 동일 실측. 공장·실행기 일원화는 잔여.
 
 **A 자료·파일·설정 — 30단위 / 2,572줄**
@@ -1174,6 +1175,7 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 | 0.597 (11-17) | 저장소 공장 전환(세션 공장→저장소 공장·live 바이트 동일·주도 입증) | [단위 문서](docs/dotnet-hostsession-factory-20261117.md) | 새 경로 R4-1(실행기 일원화 잔여) |
 | 0.598 (11-17) | 저장소 공간 공유(해시·점유지 공유·live 바이트 동일) | [단위 문서](docs/dotnet-hostsession-space-20261117.md) | 새 경로 R4-1(공간 실행기 일원화 잔여) |
 | 0.599 (11-17) | 저장소 건물 공간 전환(건물 공간 통일·live 바이트 동일·섬 타입 입증) | [단위 문서](docs/dotnet-hostsession-building-20261117.md) | 새 경로 R4-2(적재 중 postPop 잔여) |
+| 0.600 (11-17) | R4-1 마감 감사와 R4-2 진입 조건(공통층 마감 확정·R6 장치 대기 명시) | [단위 문서](docs/dotnet-r4-1-close-20261117.md) | 새 경로 R4-2(Pop 공간 등록 switch-on) |
 | 0.478~0.499 (11-12~14) | L2 기준선 확장 — 6번째~26번째 경로의 cpp 기준선·dn 덤프와 구조 대조, 담긴 섬 판정(0.484), 34경로 같은 시드 일괄 수집·도구(0.499) | [L2 일괄](docs/dotnet-l2-batch-20261114.md), 같은 보관본 | 새 경로 R4(M1 판정 자료) |
 | 0.453~0.477 (11-12) | 지형 바인딩 조립·Generate 라이브·난수 단일 스트림·시작 1회 reseed(0.453~0.465), Pop 공간 등록·요새 객체 적재·그래프 재구성(0.466~0.470), 장부·전투섬·첫 지역 귀속 확정과 Player 월드 갈고리(0.471~0.477) | 같은 보관본 | 새 경로 R4 |
 | 기간·단위 | 완료 범위 | 근거 문서 | 처리 |
