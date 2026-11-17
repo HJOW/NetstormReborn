@@ -1396,6 +1396,53 @@ public sealed partial class HostSession
     /// <summary>월드 그래프를 다시 구성하고 세션 표 저장소로 결과를 옮긴다. 장치 연결 전에 호출하면 거부한다.</summary>
     /// <param name="mode">참이면 전체 초기화 재구성, 거짓이면 무효 번호 수집이다.</param>
     /// <remarks>2026-11-12 0.470에서 그래프 live 재구성용으로 추가했다. 적재 흐름의 territory·campaign 갈고리가 mode 거짓으로 부른다. 난수를 소비하지 않으며 슬롯 그래프 바이트·표·스택만 바꾼다.</remarks>
+    /// <summary>세션 지형 공용 후처리와 Pop에 월드 그래프 엔진을 연결한다. 섬 후처리·그래프 장치 뒤에 연결해야 한다.</summary>
+    /// <param name="requireBuildingSide">참이면 건물 옆면이 없을 때 거부한다. 거짓이면 요새 장치 없이도 결선한다.</param>
+    /// <remarks>0.605에서 R4-2 그래프 per-Pop 번호 부여용으로 추가했다. 같은 해시·점유지·표시·장부를 공유하는 분배 Pop을 그래프 엔진과 함께 다시 묶고 공용 후처리의 그래프 관문을 연다.
+    /// 섬·표면 접두와 다리 연결은 같은 세션 장치를 그대로 잇는다. 건물 옆면은 요새 장치가 있을 때만 잇는다.</remarks>
+    public void WireTerrainPostPopGraph(bool requireBuildingSide = false)
+    {
+        if (_terrainPostPop is null || _terrainPop is null || _terrainHash is null || _terrainSpots is null
+            || _terrainDisplay is null || _terrainPopTypes is null || _worldGraph is null
+            || _islandConnections is null || _islandPostPop is null)
+        {
+            throw new InvalidOperationException("지형 그래프 결선은 섬 후처리·그래프 장치 뒤에 연결해야 한다");
+        }
+        if (requireBuildingSide && _fortBuilding is null)
+        {
+            throw new InvalidOperationException("지형 그래프 결선에 건물 공간 장치가 없다");
+        }
+        if (Pool.Edition == OriginalEdition.Patch1078)
+        {
+            _worldGraph.BindCurrentTypes(_terrainPopTypes);
+        }
+        _worldGraph.BindDiagnostics(new GraphDiagnostics
+        {
+            Checking = new RawCheckingFlag(() => AiChecking.Read()),
+            Assertion = (expression, file, line) => throw new InvalidOperationException($"세션 그래프 원본 진단: {expression} {file}:{line}"),
+        });
+        _terrainPostPop = new RawPostPop(Pool, _terrainPopTypes, TerrainBookkeeping, _worldGraph, sid => _islandConnections.Connect(sid));
+        if (Pool.Edition == OriginalEdition.Patch1078)
+        {
+            _terrainPostPop.BindCurrentTypes(_terrainPopTypes);
+        }
+        _terrainPostPop.SetIslandPrefix((sid, flags) => _islandConnections.IslandPostPopPrefix(sid, flags));
+        _terrainPostPop.SetSurfacePrefix((sid, flags) => _islandPostPop.Prefix(sid, flags));
+        _terrainPop = new RawPop(Pool, _terrainHash, _terrainSpots, _terrainDisplay, _terrainPostPop);
+        _terrainPop.BindDiagnostics(new SquidPopDiagnostics
+        {
+            Types = _terrainPopTypes,
+            Checking = new RawCheckingFlag(() => AiChecking.Read()),
+            Trace = (level, text) => _islandPostPopDiagnostics.Add($"pop-trace:{level}:{text}"),
+            Assertion = (expression, file, line) => throw new InvalidOperationException($"지형 Pop 원본 진단: {expression} {file}:{line}"),
+        });
+        if (_fortBuilding is not null)
+        {
+            _terrainPop.SetBuildingSide(_fortBuilding);
+        }
+        TerrainBookkeeping.GraphsEnabled = true;
+    }
+
     public void RebuildWorldGraph(bool mode)
     {
         if (_worldGraph is null)

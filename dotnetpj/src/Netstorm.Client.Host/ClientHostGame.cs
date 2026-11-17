@@ -374,10 +374,12 @@ public sealed class ClientHostGame : Game
             // 건물 공간의 섬 타입은 세션 지형 값으로 맞춘다(HasIsland 판정에 쓴다).
             storage.BuildingSpaceState.IslandType = session.TerrainGlobals.IslandType;
             session.BuildFortObjectDevices(types.Types, session.WorldFrames, storage.FactoryExecutor(), storage.BuildingExecutor());
-            // R4-2 적재 중 postPop용 섬 후처리 서비스 설치. 호출 연결은 다음 단위에서 잇는다.
+            // R4-2 적재 중 postPop용 섬 후처리 서비스 설치. 호출 연결·깊이 흐름은 0.602~0.604에서 이었다.
             session.BuildIslandPostPopDevices(types.Types, session.WorldFrames);
             // 월드 그래프 재구성 장치. 같은 해시·spots·프레임 표를 공유한다(cpppj RawCampaignWorldRuntime 65·83행, 0.470).
             session.BuildWorldGraphDevices(types.Types);
+            // R4-2 그래프 per-Pop 번호 부여. 같은 호출의 공간 등록 뒤 영역 무효화·표면 추가와 ResetGraph가 실행된다.
+            session.WireTerrainPostPopGraph();
             // 같은 Player·공통 Pop·프로세스에 실제 사제/보호막 후처리를 등록한다.
             _missionAudio ??= new HostMissionAudio(_startup, Window.Handle, _options.MuteAudio, () => _clock.NowSeconds);
             if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("현재 미션 연소 장치는 Windows 전용이다");
