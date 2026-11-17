@@ -277,6 +277,12 @@ public sealed partial class RawGameAuxState
     /// <summary>005412a4의 현재 레인 바리케이드 TYPE이며 보상/일반 삭제가 공유한다. 0.571에서 추가됐다.</summary>
     public UIntBox RainBlockerTypeBox { get; } = new() { Value = 147u };
 
+    /// <summary>005411c0의 현재 내부 표식 TYPE이며 펜스 생성/삭제가 공유한다. 0.589에서 추가됐다. (R4-1 펜스 정리 효과)</summary>
+    public UIntBox FenceMarkerTypeBox { get; } = new() { Value = 90u };
+
+    /// <summary>00541300의 현재 화면 포스 필드 TYPE이며 펜스 생성/연결선 정리가 공유한다. 0.589에서 추가됐다. (R4-1 펜스 정리 효과)</summary>
+    public UIntBox FenceShieldTypeBox { get; } = new() { Value = 170u };
+
     /// <summary>005412b0의 현재 성장형 TYPE이며 비용 별칭/환불 제외를 선택한다. 0.571에서 추가됐다.</summary>
     public UIntBox GrowingRainBlockerTypeBox { get; } = new() { Value = 150u };
 

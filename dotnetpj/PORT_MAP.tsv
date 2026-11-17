@@ -416,7 +416,6 @@ cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/FortStreamCursors.cs	86003
 cpppj/src/o/RawFortWorldLoad.h	Netstorm.Core/Original/RawFortWorldLoad.cs	2a8f937e141ff4c68d760259bb4cb6fb9ff226cc	L1
 cpppj/src/o/RawFrameChoose.cpp	Netstorm.Core/Original/RawFrameChoose.cs	df7902e70c389c825a65b8ba70a48de6891905ad	L1
 cpppj/src/o/RawFrameChoose.h	Netstorm.Core/Original/RawFrameChoose.cs	df7902e70c389c825a65b8ba70a48de6891905ad	L1
-cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.cs	30523aaf2d90489101b737d142fdf046c042cdb3	port
 cpppj/src/o/RawGraph.cpp	Netstorm.Core/Original/RawGraph.cs	0ba6de1e6215cc1d3e6b7612d4f5ca151524c461	L1
 cpppj/src/o/RawIslandAdd.cpp	Netstorm.Core/Original/RawIslandAdd.cs	afe4ce5b45b8c786adba014946185cfec5799ae7	L1
 cpppj/src/o/RawIslandAdd.h	Netstorm.Core/Original/RawIslandAdd.cs	afe4ce5b45b8c786adba014946185cfec5799ae7	L1
@@ -995,7 +994,6 @@ cpppj/src/o/RawOutpostLifecycle.cpp	Netstorm.Core/Original/RawSurfaceStorage.Out
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Outpost.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawGeyserLifetime.h	Netstorm.Core/Original/RawGeyserLifetime.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawGeyserLifetime.cpp	Netstorm.Core/Original/RawGeyserLifetime.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
-cpppj/src/client/RawSurfaceDamageable.cpp	Netstorm.Core/Original/RawSurfaceStorage.Damageable.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawBalloonBody.h	Netstorm.Core/Original/RawBalloonBody.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawBalloonBody.cpp	Netstorm.Core/Original/RawBalloonBody.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceBalloon.cpp	Netstorm.Core/Original/RawSurfaceStorage.Damageable.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
@@ -1005,3 +1003,8 @@ cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.Fe
 cpppj/src/o/RawFenceNeighbors.h	Netstorm.Core/Original/RawFenceNeighbors.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawFenceNeighbors.cpp	Netstorm.Core/Original/RawFenceNeighbors.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.FenceNeighbors.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFenceLine.h	Netstorm.Core/Original/RawFenceLine.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFenceLine.cpp	Netstorm.Core/Original/RawFenceLine.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFenceMarkerClear.h	Netstorm.Core/Original/RawFenceMarkerClear.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFenceMarkerClear.cpp	Netstorm.Core/Original/RawFenceMarkerClear.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.FenceClear.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
