@@ -253,6 +253,20 @@ public sealed partial class RawSurfaceStorage
             return;
         }
 
+        // 완성형 파괴 뒤 성장형 생성과 받침 정리 뒤 공통 후처리를 같은 장기 본체에서 실행한다.
+        if (method == 0x0048edf0u)
+        {
+            IceTower().PostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
+        // 성장형 받침 정리와 공통 후처리를 같은 장기 본체에서 실행한다.
+        if (method == 0x0048eb80u)
+        {
+            IceTower().GrowingPostDestroy(@event.Sid, @event.Flags);
+            return;
+        }
+
         // 실제 오벨리스크의 단일 jmp는 현재 공통Pre와 동일한 인자/순서를 사용한다.
         if (method == 0x0041f910u)
         {
