@@ -425,6 +425,19 @@ test('AI 다리 경로: 선행 관문과 초기화', () => {
     assert.throws(() => o.aiBridgePath(), /반납/);
 });
 
+// 다리 전략은 선행 행동과 같은 후보·Pool을 사용한다.
+test('AI 다리 전략: 선행 관문과 빈 사각형', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget(); o.connectAiDropTargets(); o.connectAiDropEvaluation(); o.connectAiDropScan(); o.connectAiDropSelection(); o.connectAiDryGeometry(); o.connectAiFakeDrySpots(); o.connectAiDropActions();
+        assert.throws(() => o.connectAiBridgeStrategies(), /순서/);
+        o.connectAiPriestActions(); o.connectAiBridgeStrategies();
+        assert.equal(o.aiBridgeStrategies.pool, o.core.pool); assert.equal(o.aiBridgeDisabled, false);
+        assert.equal(o.aiBridgePlanning.rectangleFree(12, 13, 11, 13), true);
+        assert.throws(() => o.connectAiBridgeStrategies(), /순서/); assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

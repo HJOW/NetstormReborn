@@ -28,6 +28,8 @@ import { RawAiFakeDrySpots, AI_FAKE_DRY_LOG } from './raw-ai-fake-dry-spots.js';
 import { RawAiDropActions, AI_DROP_ACTION_LOG } from './raw-ai-drop-actions.js';
 import { RawAiPriestActions, aiPriestInRitual, aiAltarContainsEnemy } from './raw-ai-priest-actions.js';
 import { RawAiBridgePath } from './raw-ai-bridge-path.js';
+import { RawAiBridgePlanning } from './raw-ai-bridge-planning.js';
+import { RawAiBridgeStrategies, AI_BRIDGE_STRATEGY_LOG } from './raw-ai-bridge-strategies.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -72,6 +74,8 @@ export class RawCampaignSessionMotionRuntime {
     aiDropActionHooks = null;
     // 사제 AI가 같은 월드의 탐색·이동·회수를 호출하는 장치다.
     aiPriestActionHooks = null;
+    // AI 다리 전략의 현재 그래프·목록·경로 장치다.
+    aiBridgeStrategyHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -485,6 +489,38 @@ export class RawCampaignSessionMotionRuntime {
             },
         };
         return new RawAiBridgePath(o.aiMemory, c.pool, o.contentFinder, globals, hooks);
+    }
+    // 같은 후보·난수·지도와 다리 경로로 네 전략을 구성한다.
+    bindAiBridgeStrategies() {
+        this.#live(); const o = this.#owner, c = o.core, s = o.state;
+        if (!this.aiPriestActionHooks || this.aiBridgeStrategyHooks || o.aiBridgePlanning || o.aiBridgeStrategies) throw new Error('Session AI 다리 전략 설치 순서 오류');
+        o.aiBridgePlanning = new RawAiBridgePlanning(o.aiBridgeCandidates, o.random, () => c.processState.now, (sid) => { this.#live(); return o.anchor.graphFor(sid); });
+        const globals = { now: () => c.processState.now, mapLimit: () => o.cursorManaGlobals.mapLimit, invalidGraph: () => c.bookkeeping.invalidGraph >>> 0,
+            checking: () => s.gunState.checking !== 0, disabled: () => o.aiBridgeDisabled, geyserLog: () => o.gameplayGlobals.aiDebug().read(0x52f3e4) };
+        const hooks = {
+            technology: (owner) => { this.#live(); return o.aiProductionModules.technology(owner); },
+            refresh: (token, parent) => { this.#live(); o.aiStrategySetup.refreshBridges(token, parent); },
+            graph: (sid) => { this.#live(); return o.anchor.graphFor(sid); },
+            center: (sid) => { this.#live(); const point = c.neighbors.center(sid); return { x: point[0], y: point[1] }; },
+            connected: (token, sid) => { this.#live(); return o.aiBridgePlanning.connected(token, sid); },
+            delay: (token) => { this.#live(); o.aiBridgePlanning.delayRetry(token); },
+            home: (token) => { this.#live(); return o.aiResourceChoice.homeCenter(token); },
+            reclassify: (token) => { this.#live(); o.aiResourceChoice.reclassifyDisconnected(token); },
+            select: (token, point, excluded, required) => { this.#live(); return o.aiResourceChoice.select(token, 0x348, point, excluded, required); },
+            randomStart: (token, bounds) => { this.#live(); return o.aiBridgePlanning.randomStart(token, bounds); },
+            advance: (token, target) => { this.#live(); return this.aiBridgePath().advance(token, target); },
+            extend: (token, source, target) => { this.#live(); return this.aiBridgePath().extend(token, source, target); },
+            rectangle: (left, top, right, bottom) => { this.#live(); return o.aiBridgePlanning.rectangleFree(left, top, right, bottom); },
+            assertion: (text) => { this.#live(); if (!o.services.ai.assertion) throw new Error('AI 다리 전략 현재 진단 미연결'); o.services.ai.assertion(text); },
+            log: (token, kind, event, sid) => {
+                this.#live(); const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+                if (!view.getUint32(0xb00, true)) return; if (!o.services.player.log) throw new Error('AI 다리 전략 현재 로그 미연결');
+                const message = event === AI_BRIDGE_STRATEGY_LOG.requeued ? `Put given-up-on geyser ${sid} back into the yetToConnect list.\n` : event === AI_BRIDGE_STRATEGY_LOG.abandoned ? `Gave up on geyser ${sid}.\n` : `Trying geyser ${sid}.\n`;
+                o.services.player.log(kind, `AI${view.getInt32(0x260, true)}: ${message}\n`);
+            },
+        };
+        o.aiBridgeStrategies = new RawAiBridgeStrategies(o.aiMemory, c.pool, c.types, o.random, globals, hooks);
+        this.aiBridgeStrategyHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

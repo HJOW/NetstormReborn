@@ -217,6 +217,8 @@ export class RawCampaignSessionOwners {
     aiPriestActions = null;
     // AI 다리 경로가 읽는 원본 시작·끝·목표 표식 TYPE 초기값이다.
     aiBridgeStartType = 113; aiBridgeEndType = 119; aiBridgeTargetType = 117;
+    // AI 다리 계획·전략과 원본 디버그 중단 초기값이다.
+    aiBridgePlanning = null; aiBridgeStrategies = null; aiBridgeDisabled = false;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -806,6 +808,12 @@ export class RawCampaignSessionOwners {
     aiBridgePath(endpointScratch = null) {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 다리 경로 설치 전/반납');
         return this.motionRuntimeModules.aiBridgePath(endpointScratch);
+    }
+
+    // 사제 행동 뒤 같은 월드의 AI 다리 계획과 전략을 설치한다.
+    connectAiBridgeStrategies() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 다리 전략 설치 전/반납');
+        this.motionRuntimeModules.bindAiBridgeStrategies();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
