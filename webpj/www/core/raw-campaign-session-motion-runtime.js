@@ -20,6 +20,7 @@ import { RawAiCarrierActions, findContainedGenus, daisApproachPoint } from './ra
 import { RawAiBuildSearch } from './raw-ai-build-search.js';
 import { GunGroundTargetGlobals, RawGunGroundTarget } from './raw-gun-ground-target.js';
 import { RawAiDropTargets } from './raw-ai-drop-targets.js';
+import { RawAiDropEvaluation } from './raw-ai-drop-evaluation.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -50,6 +51,8 @@ export class RawCampaignSessionMotionRuntime {
     aiGroundGlobals = null;
     // AI 배치 표적 평가가 사용하는 실제 총기·객체 효과다.
     aiDropTargetHooks = null;
+    // AI 배치 평가가 사용하는 공급·배치·부족 좌표 효과다.
+    aiDropEvaluationHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -269,6 +272,28 @@ export class RawCampaignSessionMotionRuntime {
         };
         o.aiDropTargets = new RawAiDropTargets(o.aiMemory, c.pool, c.types, globals, hooks);
         this.aiDropTargetHooks = hooks;
+    }
+    // 표적 평가 뒤 에너지 공급과 부족 좌표를 같은 AI 본체에 연결한다.
+    bindAiDropEvaluation() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.aiDropTargetHooks || this.aiDropEvaluationHooks || o.aiDropEvaluation) throw new Error('Session AI 배치 평가 설치 순서 오류');
+        // 현재 AI owner와 선택한 종류로 원본 진단 로그를 남긴다.
+        const log = (token, kind, text) => {
+            this.#live(); if (!o.services.player.log) throw new Error('AI 배치 평가 실제 로그 미연결');
+            const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+            o.services.player.log(kind, `AI${view.getInt32(0x260, true)}: ${text}\n\n`);
+        };
+        const hooks = {
+            collect: (box, x, y, type, owner, theme) => { this.#live(); box.text = o.energySupply.collect(x, y, type, owner, theme); },
+            mayPlace: (query) => { this.#live(); o.assetModules.prepareConstruction(); return o.constructionModules.mayPlace(query); },
+            energy: (box, x, y, type, owner) => { this.#live(); const result = o.energySupply.evaluate(box.text, x, y, type, owner); box.text = result.output; return result.value; },
+            dry: (token, x, y, type) => { this.#live(); return o.aiDrySpots.add(token, x, y, type); },
+            unsupported: (token, type) => { this.#live(); if (!c.types[type]) throw new RangeError('AI 배치 평가 TYPE 범위'); log(token, 29, `I don't know how to make evaluations for ${c.types[type].name}`); },
+            dryLog: (token, x, y) => log(token, o.gameplayGlobals.aiDebug().read(0x52f3dc), `Dry Spot at (${x},${y})`),
+        };
+        const globals = { manaRadius: () => o.cursorManaGlobals.radiusLimit, probeType: () => o.aiManaProbeType };
+        o.aiDropEvaluation = new RawAiDropEvaluation(o.aiMemory, c.pool, c.types, o.aiDropTargets, globals, hooks);
+        this.aiDropEvaluationHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

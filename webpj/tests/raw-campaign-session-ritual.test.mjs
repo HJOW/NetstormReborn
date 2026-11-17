@@ -294,6 +294,24 @@ test('AI 배치 표적: 선행 관문과 현재 TYPE 속성', () => {
     } finally { o.dispose(); }
 });
 
+// 부족 좌표가 없는 AI 본체는 실제 공급 장치 호출 없이 점수 0이다.
+test('AI 배치 평가: 선행 관문과 빈 부족 좌표', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    let token = 0;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget();
+        assert.throws(() => o.connectAiDropEvaluation(), /순서/);
+        o.connectAiDropTargets(); o.connectAiDropEvaluation();
+        assert.equal(o.aiDropEvaluation.pool, o.core.pool);
+        token = o.aiMemory.allocate(0xb08);
+        const index = { value: 9 };
+        assert.equal(o.aiDropEvaluation.dryDistance(token, { x: 4, y: 5 }, index), 0);
+        assert.equal(index.value, 9);
+        assert.throws(() => o.connectAiDropEvaluation(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { if (token) o.aiMemory.free(token); o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {
