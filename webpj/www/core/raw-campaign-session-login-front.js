@@ -8,6 +8,7 @@ import { sanitizeMissionPlayerName } from './raw-mission-client-packets.js';
 import { RawMissionLoginPackets } from './raw-mission-login-packets.js';
 import { RawMissionServerPackets } from './raw-mission-server-packets.js';
 import { RawMissionSettingsPacket } from './raw-mission-settings-packet.js';
+import { RawClockSynchronization } from './raw-clock-synchronization.js';
 
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
 export class RawCampaignSessionLoginFront {
@@ -15,8 +16,8 @@ export class RawCampaignSessionLoginFront {
     #owner; #effects; #internal = null; #disposed = false;
     // 원문의 독립 초기 지역 입력과 현재 수신 종류 기록이다.
     pendingStamp = 0; overrideFlags = 0; wireTypes = [];
-    // 현재 연결표와 패킷 분배기 및 같은 옵션/패킷 처리기를 소유자와 함께 공개한다.
-    transport; options; metadata; forts; settings;
+    // 현재 연결표와 패킷 분배기 및 같은 옵션/패킷/시계 처리기를 소유자와 함께 공개한다.
+    transport; options; metadata; forts; settings; clockSynchronization;
 
     // Player 초기화 뒤 옵션 기본값과 현재 전송을 순서대로 준비한다.
     constructor(owner, effects = {}) {
@@ -67,6 +68,15 @@ export class RawCampaignSessionLoginFront {
             });
             const values = aux.missionSettings();
             this.settings = new RawMissionSettingsPacket({ current: (field) => values[field], setCurrent: (field, value) => { values[field] = value; }, send: (target, packet) => this.#send(target, packet, false) });
+            const registry = this.transport.registry;
+            this.clockSynchronization = new RawClockSynchronization(local.clockSynchronization(), local.clockSamples(), {
+                gameSeconds: this.#effects.gameSeconds, wallSeconds: this.#effects.wallSeconds,
+                send: (token, packet) => registry.sendDirect(token, packet),
+                reply: (connection, packet, address) => {
+                    if (address && (address.length !== connection.address.length || address.some((byte, index) => byte !== connection.address[index]))) throw new Error('현재 내부 연결과 다른 시간 응답 주소는 웹 범위 밖');
+                    registry.sendDirect(registry.tokenFor(connection), packet);
+                },
+            });
         } catch (error) {
             if (this.#effects.transport) this.transport.detachSession(); else this.#internal.dispose();
             this.#disposed = true; throw error;

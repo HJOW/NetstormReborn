@@ -13,6 +13,7 @@ import { createFortTypes } from '../www/assets/type-flags.js';
 import { parseFort } from '../www/assets/fort.js';
 import { RawFortImage } from '../www/core/raw-fort-image.js';
 import { loadOriginalForts, readData } from './helpers.mjs';
+import { PacketConnection } from '../www/core/raw-packet-dispatch.js';
 
 // 원본 설정·벽시각의 호출 순서를 기록하며 실제 전송은 내부 두 끝을 사용한다.
 function devices(trace) {
@@ -140,4 +141,36 @@ test('Session Login 패킷: 실제 Tutorial 1 Fort 이미지 송신', () => {
         assert.equal(packet[1], 0x2a); assert.equal(view.getUint16(2, true), 4); assert.equal(view.getUint32(8, true), 42); assert.equal(packet[16], 7);
         assert.equal(view.getUint32(12, true), expected.length); assert.deepEqual(packet.subarray(17, 17 + expected.length), expected); assert.ok(trace.includes('로컬 Fort 전송\n'));
     } finally { front.dispose(); o.dispose(); }
+});
+
+// 시간 응답은 같은 Client 표본과 고정 연결 토큰을 이용한다.
+test('Session Login 시계: 같은 Client 표본 초기화와 고정 연결 응답', () => {
+    const o = campaignOwners(), trace = [], front = new RawCampaignSessionLoginFront(o, { ...devices(trace), gameSeconds: () => 12.25 }), sent = [];
+    const registry = front.transport.registry, connection = new PacketConnection(), token = registry.track(connection, () => {}, () => {}, (packet) => sent.push(packet.slice()));
+    try {
+        const local = o.localStateGlobals, samples = local.clockSamples(), globals = local.clockSynchronization();
+        samples.sent = 3; samples.received = 4; samples.next = 19; samples.samples[0][3] = 0xa5;
+        front.clockSynchronization.initializeServer(front.transport.dispatch);
+        assert.deepEqual([samples.sent, samples.received, samples.next, samples.samples[0][3], globals.replyMode], [0, 0, 19, 0xa5, 1]);
+        const packet = new Uint8Array(32); packet[1] = 5; packet[2] = 32;
+        front.clockSynchronization.receive(connection, packet);
+        assert.equal(sent.length, 1); assert.equal(new DataView(sent[0].buffer).getFloat64(16, true), 12.25);
+        assert.equal(typeof front.transport.dispatch.registration(5).receive, 'function');
+    } finally { registry.forget(token); front.dispose(); o.dispose(); }
+});
+
+// Commander는 실제 토큰에 현재 표본을 보내며 바뀐 주소의 응답은 거부한다.
+test('Session Login 시계: 토큰 표본 송신과 다른 주소 거부', () => {
+    const o = campaignOwners(), trace = [], sent = [], connection = new PacketConnection({ flags: 0x20, address: new Uint8Array(20).fill(1) });
+    const front = new RawCampaignSessionLoginFront(o, { ...devices(trace), gameSeconds: () => { connection.address[0] = 2; return 8; } });
+    const registry = front.transport.registry, token = registry.track(connection, () => {}, () => {}, (packet) => sent.push(packet.slice()));
+    try {
+        const local = o.localStateGlobals, globals = local.clockSynchronization(), samples = local.clockSamples();
+        front.clockSynchronization.attach(front.transport.dispatch, token); front.clockSynchronization.poll();
+        assert.equal(globals.connection, token); assert.equal(samples.sent, 1); assert.equal(sent.length, 1); assert.equal(sent[0][1], 5);
+        assert.equal(new DataView(sent[0].buffer).getFloat64(8, true), 100.5);
+        front.clockSynchronization.initializeServer(front.transport.dispatch);
+        assert.throws(() => front.clockSynchronization.receive(connection, new Uint8Array(32)), /다른 시간 응답 주소/);
+        assert.equal(sent.length, 1);
+    } finally { registry.forget(token); front.dispose(); o.dispose(); }
 });
