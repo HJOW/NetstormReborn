@@ -36,8 +36,14 @@ public sealed partial class RawGameAuxState
     /// <summary>장기 PostPop/삭제가 같은 signed 비용 DWORD를 직접 빌린다.</summary>
     public IntBox TotalCostBox { get; } = new();
 
-    /// <summary>00595088의 보상·로컬 간헐천이 직접 공유하는 부호 있는 물리 값이다.</summary>
-    public int ResourcePool { get; set; }
+    /// <summary>00595088의 보상·로컬 간헐천이 직접 공유하는 부호 있는 물리 값이다. 0.571에서 상자 공유로 바꿨다.</summary>
+    public int ResourcePool { get => _resourcePoolBox.Value; set => _resourcePoolBox.Value = value; }
+
+    /// <summary>같은 자원 signed DWORD를 빌리는 공유 owner다. 0.571에서 추가됐다.</summary>
+    public IntBox ResourcePoolBox => _resourcePoolBox;
+
+    /// <summary>같은 자원 DWORD를 빌리는 상자다. 0.571에서 추가됐다.</summary>
+    private readonly IntBox _resourcePoolBox = new();
 
     /// <summary>로그인·폭탄의 부호 없는 조회에 쓰는 명시 비트 변환이다.</summary>
     /// <returns>같은 DWORD의 비트다.</returns>
@@ -53,8 +59,14 @@ public sealed partial class RawGameAuxState
         ResourcePool = unchecked((int)value);
     }
 
-    /// <summary>005424bc의 보상·로그인·전투 옵션이 공유하는 초기 25 DWORD다.</summary>
-    public uint RefundPercent { get; set; } = 25u;
+    /// <summary>005424bc의 보상·로그인·전투 옵션이 공유하는 초기 25 DWORD다. 0.571에서 상자 공유로 바꿨다.</summary>
+    public uint RefundPercent { get => _refundPercentBox.Value; set => _refundPercentBox.Value = value; }
+
+    /// <summary>같은 보상 비율 DWORD를 빌리는 공유 owner다. 0.571에서 추가됐다.</summary>
+    public UIntBox RefundPercentBox => _refundPercentBox;
+
+    /// <summary>같은 보상 비율 DWORD를 빌리는 상자다. 최초 25를 한 번만 소유한다. 0.571에서 추가됐다.</summary>
+    private readonly UIntBox _refundPercentBox = new() { Value = 25u };
 
     /// <summary>005453e4의 줍기 뒤 관문이 읽는 같은 DWORD의 raw 값이다.</summary>
     public int AllowAnyCapture { get; set; }
@@ -239,6 +251,15 @@ public sealed partial class RawGameAuxState
 
     /// <summary>005410d0의현재24이며 Dude 이동/정기/통지가 같은 장기 주소를 빌린다.</summary>
     public UIntBox DudePathTypeBox { get; } = new() { Value = 24u };
+
+    /// <summary>005412e8의 현재 제단 TYPE이며 보상/HP가 같은 주소에서 읽는다. 0.571에서 추가됐다.</summary>
+    public UIntBox AltarTypeBox { get; } = new() { Value = 164u };
+
+    /// <summary>005412a4의 현재 레인 바리케이드 TYPE이며 보상/일반 삭제가 공유한다. 0.571에서 추가됐다.</summary>
+    public UIntBox RainBlockerTypeBox { get; } = new() { Value = 147u };
+
+    /// <summary>005412b0의 현재 성장형 TYPE이며 비용 별칭/환불 제외를 선택한다. 0.571에서 추가됐다.</summary>
+    public UIntBox GrowingRainBlockerTypeBox { get; } = new() { Value = 150u };
 
     /// <summary>005412c0의 현재 너겟 TYPE이며 보상 환불의 전액 단가 관문이다. 같은 장기 owner를 후속 운반/채집 소비자가 빌린다. 0.570에서 추가됐다.</summary>
     public uint NuggetType

@@ -146,13 +146,33 @@ public sealed class RawSurfaceProcessCurrentTests
         Assert.NotNull(hooks.UnpopForm);
     }
 
-    /// <summary>분배기는 World 없이 같은 실제 Host와 의존/Gump Form을 결합하고 재사용한다.</summary>
+    /// <summary>분배기는 World 없이 같은 실제 Host·의존/Gump/Content 수명 Form을 결합하고 재사용한다. 0.571에서 Content 결합을 추가했다.</summary>
     [Fact]
     public void ProcessDispatchBindsHostDependGumpAndReuses()
     {
-        var storage = Storage();
+        var types = Enumerable.Range(0, 188).Select(index => new Netstorm.Core.Original.OriginalTypeRecord
+        {
+            ConstructorAddress = Netstorm.Core.Original.OriginalConstructors.Address(index),
+            Flags1 = Netstorm.Core.Original.OriginalTypeRecord.HasHitPoints,
+            MaxHitPoints = 1001,
+            FootX = 1,
+            FootY = 1,
+        }).ToArray();
+        var frames = Enumerable.Range(0, 188).Select(_ => new Netstorm.Core.Original.RiftTypeFrames([])).ToArray();
+        var shapes = Enumerable.Range(0, 188).Select(_ => new Netstorm.Core.Original.SquidDisplayShape()).ToArray();
+        var storage = new Netstorm.Core.Original.RawSurfaceStorage(Netstorm.Core.Original.OriginalEdition.Patch1078, types, frames, shapes, assetSource: new StubSource(types));
+        storage.GameAux().SquidTransmission.Compress = 0;
+        storage.GameAux().SquidTransmission.ClientSidAllowed = 1;
+        storage.BindDisplayDevices(new Netstorm.Core.Original.RawSurfaceDisplayBindings
+        {
+            View = () => new Netstorm.Core.Original.SquidDisplayView { Zoom = 65536, Viewport = new Netstorm.Core.Display.DisplayRect(0, 0, 1024, 768) },
+            Suppressed = () => false,
+            Invalidate = (_, _) => { },
+        });
         storage.BindTransmissionDevices(Transmission());
         storage.BindProcessDevices(Devices());
+        storage.BindContentDevices(ContentDevices());
+        storage.BindRewardDevices(RewardDevices());
         Netstorm.Core.Original.RawSquidFormDispatch first = storage.ProcessFormDispatch();
         // 같은 장기 물리를 다음 World에서도 유지한다.
         Assert.Same(first, storage.ProcessFormDispatch());
@@ -164,6 +184,37 @@ public sealed class RawSurfaceProcessCurrentTests
         Assert.Same(storage.DependForms(), storage.DependForms());
         Assert.Same(storage.GumpForms(), storage.GumpForms());
     }
+
+    /// <summary>실제 최초 자산 표를 빌리는 독립 원천이다. 0.571에서 추가됐다.</summary>
+    private sealed class StubSource(System.Collections.Generic.IReadOnlyList<Netstorm.Core.Original.OriginalTypeRecord> types) : Netstorm.Core.Original.IRawSurfaceAssetSource
+    {
+        /// <summary>실제 최초 로딩 표다.</summary>
+        public System.Collections.Generic.IReadOnlyList<Netstorm.Core.Original.OriginalTypeRecord> LoadedTypes { get; } = types;
+    }
+
+    /// <summary>실제 별칭 주소와 네 효과를 묶은 Content 장치다. 0.571에서 추가됐다.</summary>
+    private static Netstorm.Core.Original.RawSurfaceContentDevices ContentDevices() => new()
+    {
+        Cursor = new Netstorm.Core.Original.UIntBox() { Value = 0 },
+        LocalOwner = new Netstorm.Core.Original.UIntBox() { Value = 1 },
+        ContentType = new Netstorm.Core.Original.UIntBox() { Value = 6 },
+        Effects = new Netstorm.Core.Original.ContentLifetimeHooks
+        {
+            CancelCursor = () => { },
+            LocalNotice = _ => { },
+            RemoteNotice = _ => { },
+            Sound = (_, _) => { },
+        },
+    };
+
+    /// <summary>실제 SP 저장소와 editor 상자를 묶은 보상 장치다. 0.571에서 추가됐다.</summary>
+    private static Netstorm.Core.Original.RawSurfaceRewardDevices RewardDevices() => new()
+    {
+        Sp = new Netstorm.Core.Original.RawSpStore(new Netstorm.Core.Original.GameRandom(1), () => 1u),
+        Editor = new Netstorm.Core.Original.UIntBox(),
+        RefreshSp = () => { },
+        CreditWallet = (_, _) => { },
+    };
 
     /// <summary>가상 삭제는 같은 장기 이웃/Graph를 빌리고 분배기는 같은 기본 삭제기를 공유한다.</summary>
     [Fact]

@@ -2,6 +2,7 @@
 // cpppj/src/client/RawSurfaceWorld.h 의 RawSurfaceProcessDevices 구조와
 // cpppj/src/client/RawSurfaceStorage.cpp 의 BindProcessDevices/CurrentProcessSelection/BaseDestroy 와
 // DefaultProcessAssetHooks/ProcessFormDispatch 장기 본문을 이식한다. 0.569에서 추가됐다. (R4-1 잔여 중 Host 기본 삭제/전송)
+// 0.571에서 ContentLifetime 결합을 추가했다.
 using Netstorm.Core.Bridges;
 
 namespace Netstorm.Core.Original;
@@ -215,11 +216,12 @@ public sealed partial class RawSurfaceStorage
                 (sid, flags, hooks) => VirtualDestroy().Destroy(sid, flags, hooks));
             // 현재 World가 없어도 같은 실제 Host를 결합한다.
             forms.Bind(Processes().Host());
-            // Native 뒤에는 같은 장기 의존/Gump Form도 결합한다. Content 결합은 다음 단위에서 잇는다.
+            // Native 뒤에는 같은 장기 의존/Gump/Content 수명 Form도 결합한다.
             if (UsesNativeTransmissionDevices())
             {
                 forms.Bind(DependForms());
                 forms.Bind(GumpForms());
+                forms.Bind(ContentLifetime());
             }
 
             _processForms = forms;
