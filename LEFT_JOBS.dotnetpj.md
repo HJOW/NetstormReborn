@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.593 · 갱신 2026-11-17(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.594 = [R4-1](#r4-detail) · cpppj 기준 제품 1314 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
+**기준 단위 0.594 · 갱신 2026-11-17(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.595 = [R4-1](#r4-detail) · cpppj 기준 제품 1314 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-15) 직전의 이 문서 전체(단위 기록 0.453~0.545 93건, R4 진행판의 묶음별 경과, 0.3의 단위별 검사·fixture 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261115-through-0545)에 바이트 그대로 보관했고, 그 이전 보관본 6개와 0.452 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -50,11 +50,11 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 단위 | **0.593(2026-11-17, HJOW-Athlon):** [피해/해방 상위 분배의 Dais·Player·Aviary 장치 경계](docs/dotnet-surface-dais-lifecycle-20261117.md). 신규5검사. 미연결 7주소 분배 연결·장치 전달·Emit 라우팅. HostSession 별도 풀 전환은 잔여 |
-| 검사 기준선 | **0.593 집중: Core(Fence\|CppPortMap\|Surface\|Dais)470/470·Assets366/366 통과, Release 빌드 0경고·0오류. Core 전체는 0.589 직전 측정 2842/2846에서 PortMap 중복 해소 뒤 자료 부재 3건(Burning originalCD 2건·PlayerTechnology NETSTORM_DATA 1건)만 남으며 전체 회귀는 다시 돌리지 않았다. Client 전체 1222/1233의 11건 실패는 0.589에서 작업 트리를 치워도 동일함을 확인한 사전 존재(환경) 실패다**. 기대값/제품 코드는 유지. TRX 미보관(집중 실행). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)도 유지 |
+| 마지막 구현 단위 | **0.594(2026-11-17, HJOW-Athlon):** [HostSession 외부 풀 빌림](docs/dotnet-hostsession-pool-20261117.md). 신규3검사. 풀 빌림 이음새·덤프 중립·계약 거부. 별도 풀 제거·세션 수명 일원화는 잔여 |
+| 검사 기준선 | **0.594 집중: Client(HostSession·SessionStateDump·HostWorldTypeFill)16/16·Core(Fence\|CppPortMap\|Surface\|Dais)470/470·Assets366/366 통과, Release 빌드 0경고·0오류. Core 전체는 0.589 직전 측정 2842/2846에서 PortMap 중복 해소 뒤 자료 부재 3건(Burning originalCD 2건·PlayerTechnology NETSTORM_DATA 1건)만 남으며 전체 회귀는 다시 돌리지 않았다. Client 전체 1222/1233의 11건 실패는 0.589에서 작업 트리를 치워도 동일함을 확인한 사전 존재(환경) 실패다**. 기대값/제품 코드는 유지. TRX 미보관(집중 실행). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)도 유지 |
 | PORT_MAP | `PORT_MAP.tsv` **1021행(L1 445·port 571)**, cpppj 438단위에 대응. 행은 파일 전체 완료를 뜻하지 않는다 |
 | fixture | 연결 **319개**(원본 x86 대조 자료, `cpp-fixture-manifest.tsv`) |
-| L2 기준선 | 0.593: HostSession 미결선으로 덤프 불변이므로 재수집하지 않았다. **일치0/34**, 데모dn3 미연결 유지. 직전 자료 `extracted/dotnet-l2-0567/`, [이번 결과](docs/dotnet-surface-dais-lifecycle-20261117.md)·[일괄 도구](docs/dotnet-l2-batch-20261114.md) |
+| L2 기준선 | 0.594: HostSession 미결선으로 덤프 불변이므로 재수집하지 않았다. **일치0/34**, 데모dn3 미연결 유지. 직전 자료 `extracted/dotnet-l2-0567/`, [이번 결과](docs/dotnet-hostsession-pool-20261117.md)·[일괄 도구](docs/dotnet-l2-batch-20261114.md) |
 | cpppj 기준 | 제품 **1314 / 11.01**(M8 최종 관문 1311 완료+최초 실행 1314, CD 10.72 복원은 사용자 보류, cpppj 목표 일시 중지). 영향 분류는 0.379(1247→1300 전수)·0.499(1304~1310)·0.530(1312·1313)까지 마쳤다([1.2](#resync-scope)). `reflected-commit`/floor는 올리지 않았다 |
 | 오라클 | `cpppj/build/bin/Release/Netstorm.exe`. cpppj `src`가 바뀌면 PowerShell로 다시 빌드한다. 데이터 사본 `extracted/dotnet-oracle-data/`·캡처 `extracted/dotnet-oracle-captures/`·기준선 `extracted/dotnet-r0-baseline/`은 이 PC에만 있다(Git 제외) |
 | 디컴파일 | dotnetpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`). 이식 근거는 cpppj 소스·fixture·문서다 |
@@ -63,7 +63,7 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 ### 0.4 남은 작업 — 순서대로
 
-**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.593에서 피해/해방 상위 분배의 Dais·Player·Aviary 장치 경계(미연결 7주소 분배 연결·장치 전달·Emit 라우팅)를 맞췄다. 다음은 HostSession 별도 풀 전환이다.** 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
+**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.594에서 HostSession 외부 풀 빌림(풀 빌림 이음새·덤프 중립·계약 거부)을 맞췄다. 다음은 별도 풀 제거·세션 수명 일원화(호출자 결선·L2 대조)다.** 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
 
 
 **최초 실행 상태 공통 인계(2026-11-16 사용자 요청, 분석 완료·DN 구현 대기):** 원본 `options.cfg`·전체화면 표식의 삭제(`4040c1029`)는 정상 처음 설치 상태다. [원본 관찰/화면 6장과 공통 완료 기준](docs/exe/original-first-run-20261116.md), [cpppj 우선 작업](LEFT_JOBS.md#first-run)을 따른다. **cpppj부터 반영하고 확정 커밋 뒤 DN 새 경로에도 반영한다.** 이 문서 갱신은0.568 구현 완료나 기존 L4a의 최초 상태 검증 완료를 뜻하지 않는다.
@@ -329,6 +329,7 @@ dotnetpj 작업에서는 cpppj·LEFT_JOBS.md를 수정하지 않는다. 아래 �
 - [x] `o/RawFenceCreate` 장기 펜스 표식·포스 필드 생성 본체와 재생성 실제 생성 결선 — 0.591. 원문 포팅·장기 결선·finder 연결(생성). 개별 삭제 몸체(FencePostPop·FenceRegular)·HostSession 별도 풀 전환·피해/해방 상위 결선은 잔여.
 - [x] `o/RawFencePostPop`·`o/RawFenceRegular` 장기 펜스 후처리·정기 처리 본체와 저장소 결선 — 0.592. 원문 포팅·장기 결선·finder 연결(후처리·정기 처리). Damageable Handle은 R6 손상 정기 라우팅이 없어 호스트 공급 장치로 빌림. HostSession 별도 풀 전환·피해/해방 상위 결선은 잔여.
 - [x] `client/RawSurfaceAssetDeletion`·`RawSurfaceAssetNotice` 피해/해방 상위 분배의 Dais·Player·Aviary 장치 경계 — 0.593. 기존 VT표의 미연결 7주소(0x0044a4d0·0x0044afd0·0x00449580·0x004906c0·통지 3종)를 호스트 공급 장치 경계에 연결. 본체 3종(DaisDeletion·PlayerPre·AviaryHome)은 R6 장치 대기. HostSession 별도 풀 전환은 잔여.
+- [x] `client/RawSurfaceStorage` HostSession 외부 풀 빌림 이음새 — 0.594. 생성자 선택적 풀 인자·판본/크기 검증·덤프 중립. 별도 풀 제거·세션 수명 일원화(호출자 결선·L2 대조)는 잔여.
 
 **A 자료·파일·설정 — 30단위 / 2,572줄**
 
@@ -1162,6 +1163,7 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 | 0.591 (11-17) | 펜스 생성 몸체와 재생성 실제 생성 결선(표식 방향/태그/QA/Pop 순서·포스 필드 J/K 첫 프레임과 owner 선택) | [단위 문서](docs/dotnet-surface-fence-create-20261117.md) | 새 경로 R4-1(개별 몸체·별도 풀 전환·피해/해방 잔여) |
 | 0.592 (11-17) | 펜스 후처리·정기 처리 본체와 저장소 결선(flags 1 접두 순서·사건 0 프레임 전진과 이중 조회·사건 1/2/3 분기와 빈 x87 NaN) | [단위 문서](docs/dotnet-surface-fence-postpop-20261117.md) | 새 경로 R4-1(별도 풀 전환·피해/해방 잔여) |
 | 0.593 (11-17) | 피해/해방 상위 분배의 Dais·Player·Aviary 장치 경계(미연결 7주소 분배 연결·장치 전달·Emit 라우팅) | [단위 문서](docs/dotnet-surface-dais-lifecycle-20261117.md) | 새 경로 R4-1(별도 풀 전환 잔여) |
+| 0.594 (11-17) | HostSession 외부 풀 빌림(풀 빌림 이음새·덤프 중립·계약 거부) | [단위 문서](docs/dotnet-hostsession-pool-20261117.md) | 새 경로 R4-1(수명 일원화 잔여) |
 | 0.478~0.499 (11-12~14) | L2 기준선 확장 — 6번째~26번째 경로의 cpp 기준선·dn 덤프와 구조 대조, 담긴 섬 판정(0.484), 34경로 같은 시드 일괄 수집·도구(0.499) | [L2 일괄](docs/dotnet-l2-batch-20261114.md), 같은 보관본 | 새 경로 R4(M1 판정 자료) |
 | 0.453~0.477 (11-12) | 지형 바인딩 조립·Generate 라이브·난수 단일 스트림·시작 1회 reseed(0.453~0.465), Pop 공간 등록·요새 객체 적재·그래프 재구성(0.466~0.470), 장부·전투섬·첫 지역 귀속 확정과 Player 월드 갈고리(0.471~0.477) | 같은 보관본 | 새 경로 R4 |
 | 기간·단위 | 완료 범위 | 근거 문서 | 처리 |

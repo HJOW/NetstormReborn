@@ -54,7 +54,7 @@ public sealed partial class HostSession
     /// <summary>덤프와 세션이 함께 읽는 CRT 난수다. 호출자가 소유한다.</summary>
     public CrtRandom Crt { get; }
 
-    /// <summary>세션이 소유한 오브젝트 풀이다. 싱글 플레이는 로컬이 서버다.</summary>
+    /// <summary>세션이 쓰는 오브젝트 풀이다. 빌린 풀이 없으면 세션 전용으로 만든다. 싱글 플레이는 로컬이 서버다. 0.594에서 외부 풀 빌림을 추가했다.</summary>
     public RawSidPool Pool { get; }
 
     /// <summary>세션이 소유한 Player 9기록 원문이다. Start 순서에서 RawPlayerParticipation과 같은 버퍼를 쓴다.</summary>
@@ -107,9 +107,11 @@ public sealed partial class HostSession
     /// <param name="poolCapacity">풀 슬롯 수. 0 이하면 미션 기본값이다.</param>
     /// <param name="sharedSp">호스트가 시작 때 초기화한 공유 SP 저장소. null이면 세션 전용으로 만들고 첫 Set 때 초기화한다.</param>
     /// <param name="sharedCrtBox">호스트가 시작 때 reseed한 공유 CRT 상자. null이면 세션 전용 상자를 쓴다.</param>
+    /// <param name="pool">빌릴 외부 오브젝트 풀. null이면 세션 전용으로 만든다. NativeStorage 전환 전까지 개발 호스트의 별도 풀을 유지하며, 넘긴 풀의 수명은 호출자가 세션보다 길게 둔다.</param>
     /// <remarks>2026-11-12 0.464에서 cpppj 공유 SP 경로와 같은 시작 1회 초기화를 잇려고 공유 빌림을 추가했다. 미션별 reseed는 원본에 없다.
-    /// 2026-11-12 0.476에서 세션 설치 의미로 Graph 저장소를 ResetTable 초기 상태에 둔다(근거 cpppj RawSurfaceStorage.Acquire의 Graph ResetTable, o/RawGraphStorage.cpp). 0번 예약이 없으면 Rebuild의 임시 번호 0이 기존 graph-0과 충돌해 큰 맵에서 번호가 소진된다.</remarks>
-    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null)
+    /// 2026-11-12 0.476에서 세션 설치 의미로 Graph 저장소를 ResetTable 초기 상태에 둔다(근거 cpppj RawSurfaceStorage.Acquire의 Graph ResetTable, o/RawGraphStorage.cpp). 0번 예약이 없으면 Rebuild의 임시 번호 0이 기존 graph-0과 충돌해 큰 맵에서 번호가 소진된다.
+    /// 0.594에서 NativeStorage 풀 전환의 첫 단계로 외부 풀 빌림을 추가했다. 별도 풀 제거·세션 수명 일원화는 다음 단위다.</remarks>
+    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null)
     {
         ArgumentNullException.ThrowIfNull(kernel);
         ArgumentNullException.ThrowIfNull(game);
@@ -118,7 +120,20 @@ public sealed partial class HostSession
         Game = game;
         Crt = crt;
         Gameplay = sharedGameplay ?? new ClientGameplayGlobals();
-        Pool = new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity, true, () => Gameplay.Authority.Server);
+        Pool = pool ?? new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity, true, () => Gameplay.Authority.Server);
+        if (pool is not null)
+        {
+            // 빌린 풀은 미션 덤프와 같은 크기·판본이어야 한다. poolCapacity는 빌린 풀이 있을 때 쓰지 않는다.
+            if (pool.Edition != OriginalEdition.Patch1078)
+            {
+                throw new ArgumentException("개발 호스트가 빌리는 외부 풀의 판본 오류", nameof(pool));
+            }
+
+            if (pool.Capacity != MissionPoolCapacity)
+            {
+                throw new ArgumentException("개발 호스트가 빌리는 외부 풀의 크기 오류", nameof(pool));
+            }
+        }
         Sp = sharedSp ?? new RawSpStore(Game, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
         TerrainCrt = sharedCrtBox ?? new();
         TerrainBookkeeping = new RawPostPopState(TotalMade);
