@@ -108,6 +108,30 @@ export class RawCampaignSession {
     computeAiDryCandidate(source, target) { return this.#aiActions().computeDryCandidate(source, target); }
     // 같은 AI 본체의 가짜 부족 좌표를 갱신한다.
     extendAiFakeDrySpots(owner) { return this.#aiActions().extendFakeDrySpots(owner); }
+    // 현재 이동체의 실제 경로 Form을 조회한다.
+    aiMovementForm(actor) { return this.#aiActions().movementForm(actor); }
+    // 현재 이동체의 실제 경로를 중단한다.
+    stopAiMovement(actor) { this.#aiActions().stopMovement(actor); }
+    // 현재 AI의 대상 이동 명령을 실행한다.
+    moveAiToObject(owner, actor, target, sacrifice) { return this.#aiActions().moveToObject(owner, actor, target, sacrifice); }
+    // 현재 AI의 좌표 이동 명령을 실행한다.
+    moveAiToPoint(owner, actor, point, sacrifice) { return this.#aiActions().moveToPoint(owner, actor, point, sacrifice); }
+    // 현재 AI 이동체의 신전 복귀를 실행한다.
+    returnAiHome(owner, actor) { return this.#aiActions().returnHome(owner, actor); }
+    // 현재 운반자의 수집 또는 귀환을 판단한다.
+    collectAiOrReturnHome(owner, actor) { return this.#aiActions().collectOrHome(owner, actor); }
+    // 끊어진 AI 간헐천 목록을 재분류한다.
+    recheckAiGeysers(owner) { return this.#aiActions().recheckGeysers(owner); }
+    // 현재 AI의 전체 운반 행동을 실행한다.
+    manageAiCarriers(owner) { return this.#aiActions().manageCarriers(owner); }
+    // 현재 AI 본체의 경계와 회피 좌표로 건설 탐색을 시작한다.
+    startAiBuildSearch(owner, type) { return this.#aiActions().startBuildSearch(owner, type); }
+    // 현재 AI 건설 탐색을 진행한다.
+    advanceAiBuildSearch(owner, budgeted) { return this.#aiActions().advanceBuildSearch(owner, budgeted); }
+    // 현재 AI의 다음 건설 TYPE을 조회한다.
+    selectAiBuildType(owner) { return this.#aiActions().selectBuildType(owner); }
+    // 현재 AI 적의 자금 부족 조건을 조회한다.
+    aiEnemyLowFunds(owner) { return this.#aiActions().enemyLowFunds(owner); }
     // 외곽 callback이 같은 현재 기술 부모/안내 본문을 선택한다.
     learnNewTechnology(type) { learnCampaignNewTechnology(this.#live(), type); }
     // 전체 저장의 설치 관문도 기존 실제 owner가 유지한다.

@@ -39,3 +39,28 @@ test('Session AI 행동: 설치·소유자·빈 본체 관문', () => {
     assert.throws(() => actions.deploy(9, 71, 0, 0, 0, 0), /owner1\.\.8/);
     owner.loaded = false; assert.throws(() => actions.seedDrySpot(1), /설치/); assert.throws(() => actions.computeDryCandidate({}, {}), /설치/);
 });
+
+// 이동·수집과 건설 선택은 현재 본체를 공유하며 검색 시작에 원래 좌표 비트를 넘긴다.
+test('Session AI 행동: 이동과 건설 탐색 전달', () => {
+    const { owner, actions, calls } = scene(), raw = new Uint8Array(0xb08), view = new DataView(raw.buffer);
+    view.setUint32(0x260, 3, true); view.setFloat32(0x270, 1, true); view.setFloat32(0x274, 2, true);
+    view.setFloat32(0x278, 10, true); view.setFloat32(0x27c, 20, true); view.setUint32(0x2b0, 0x7fa12345, true); view.setFloat32(0x2b4, 6.5, true);
+    owner.aiMemory = { bytes: (token) => { assert.equal(token, 123); return raw; } };
+    // 효과를 소비하는 실제 부품의 호출 순서와 인자만 관찰한다.
+    const record = (name, result) => (...args) => { calls.push([name, ...args]); return result; };
+    owner.aiMovement = { movementForm: record('form', 27), stop: record('stop'), toTarget: record('target'), toPoint: record('point'), home: record('home') };
+    owner.aiResourceChoice = { collectOrHome: record('collect'), reclassifyDisconnected: record('geysers') };
+    owner.aiCarrierActions = { act: record('carriers') }; owner.aiBuildSearch = { initialize: record('initialize'), scan: record('scan') };
+    owner.aiBuildChoice = { select: record('select', 88), enemyLowFunds: record('low', true) };
+    assert.equal(actions.movementForm(8), 27); actions.stopMovement(8); assert.equal(actions.moveToObject(1, 8, 9, 0x100000000), true);
+    assert.equal(actions.moveToPoint(1, 8, { x: 1.1, y: 2.2 }, 0), true); assert.equal(actions.returnHome(1, 8), true);
+    assert.equal(actions.collectOrHome(1, 8), true); assert.equal(actions.recheckGeysers(1), true); assert.equal(actions.manageCarriers(1), true);
+    assert.equal(actions.startBuildSearch(1, 71), true); assert.equal(actions.advanceBuildSearch(1, 1), true);
+    assert.equal(actions.selectBuildType(1), 88); assert.equal(actions.enemyLowFunds(1), true);
+    const init = calls.find((call) => call[0] === 'initialize');
+    assert.deepEqual(init.slice(1, 4), [123, 71, { left: 1, top: 2, right: 10, bottom: 20 }]);
+    assert.equal(init[4].xBits, 0x7fa12345); assert.ok(Number.isNaN(init[4].x)); assert.equal(init[4].y, 6.5); assert.equal(init[5], 3);
+    assert.deepEqual(calls.find((call) => call[0] === 'point'), ['point', 123, 8, { x: Math.fround(1.1), y: Math.fround(2.2) }, 0]);
+    assert.deepEqual(calls.find((call) => call[0] === 'target'), ['target', 123, 8, 9, 0]);
+    assert.equal(actions.startBuildSearch(2, 71), false); assert.equal(actions.selectBuildType(2), 0);
+});
