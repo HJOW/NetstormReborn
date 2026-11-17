@@ -259,6 +259,33 @@ public sealed class ClientHostGame : Game
         _previousMouse = Mouse.GetState();
     }
 
+    /// <summary>미션 표를 장기 저장소에 독립 사본으로 넣어 공장 일원화의 바탕을 둔다. 풀 바이트는 바꾸지 않는다.</summary>
+    /// <param name="storage">미션 수명 동안 소유하는 장기 저장소다.</param>
+    /// <param name="types">미션 TYPE 표다. 저장소는 복제본을 소유한다.</param>
+    /// <param name="frames">미션 프레임 표다. 저장소는 복제본을 소유한다.</param>
+    /// <param name="shapes">미션 셰이프 표다. 저장소는 복제본을 소유한다.</param>
+    /// <remarks>0.596에서 NativeStorage 일원화용으로 추가했다. 세션 장치와 같은 입력을 같은 순서로 넣으며 공장 전환(다음 단위) 전까지 저장소 공장은 쓰지 않는다. 검사에서 같은 입력을 직접 넣을 수 있게 공개한다.</remarks>
+    public static void InstallMissionStorageTables(RawSurfaceStorage storage, IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames, IReadOnlyList<SquidDisplayShape> shapes)
+    {
+        ArgumentNullException.ThrowIfNull(storage);
+        ArgumentNullException.ThrowIfNull(types);
+        ArgumentNullException.ThrowIfNull(frames);
+        ArgumentNullException.ThrowIfNull(shapes);
+        if (frames.Count != types.Count || shapes.Count != types.Count)
+        {
+            throw new ArgumentException("미션 저장소 표 크기 불일치", nameof(types));
+        }
+
+        if (storage.Types.Count != 0 || storage.Frames.Count != 0 || storage.Shapes.Count != 0)
+        {
+            throw new InvalidOperationException("미션 저장소 표 중복 설치");
+        }
+
+        storage.Types.AddRange(types.Select(type => type.Clone()));
+        storage.Frames.AddRange(frames.Select(frame => new RiftTypeFrames(frame.Codes)));
+        storage.Shapes.AddRange(shapes.Select(shape => shape.Clone()));
+    }
+
     /// <summary>--mission 진입의 세션 데이터 조립이다. 요새 적재·목록·SP·AI·참가자를 묶고 소유한다.</summary>
     /// <param name="mission">들어갈 미션 이름.</param>
     /// <param name="handle">미션 1번의 핸들.</param>
@@ -342,6 +369,8 @@ public sealed class ClientHostGame : Game
             session.BuildTerrainPopDevices(types.Types, popShapes);
             // 요새 객체 적재 장치. 지형 Pop과 같은 해시·spots·표시를 공유한다(cpppj RawCampaignWorldRuntime, 0.467).
             session.BuildFortObjectDevices(types.Types, session.WorldFrames);
+            // NativeStorage 일원화(0.596): 미션 표를 장기 저장소에 넣어 공장 일원화의 바탕을 둔다. 저장소는 독립 사본을 소유한다.
+            InstallMissionStorageTables(storage, types.Types, session.WorldFrames, popShapes);
             // 월드 그래프 재구성 장치. 같은 해시·spots·프레임 표를 공유한다(cpppj RawCampaignWorldRuntime 65·83행, 0.470).
             session.BuildWorldGraphDevices(types.Types);
             // 같은 Player·공통 Pop·프로세스에 실제 사제/보호막 후처리를 등록한다.
