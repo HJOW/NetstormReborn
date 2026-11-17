@@ -32,6 +32,8 @@ import { RawAiBridgePlanning } from './raw-ai-bridge-planning.js';
 import { RawAiBridgeStrategies, AI_BRIDGE_STRATEGY_LOG } from './raw-ai-bridge-strategies.js';
 import { RawAiRuntime } from './raw-ai-runtime.js';
 import { createPathDataHeader } from './raw-path-data.js';
+import { RawBridgeCarriers } from './raw-bridge-carriers.js';
+import { captureCampaignFlag } from './raw-campaign-session-state.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -82,6 +84,8 @@ export class RawCampaignSessionMotionRuntime {
     aiRuntimeHooks = null;
     // 독립 typed 세션의 경로 헤더·16384바이트 버퍼와 설치된 송신기다.
     pathHeader = createPathDataHeader(); pathBuffer = new Uint8Array(16384); pathTransmission = null;
+    // 다리 대피 처리기와 같은 World에 빌려주는 붕괴 효과다.
+    bridgeCarriers = null; bridgeDecayHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -577,6 +581,31 @@ export class RawCampaignSessionMotionRuntime {
         const path = o.motion.paths.transmission(this.pathHeader, this.pathBuffer, send);
         c.processes.setFormTransmit(o.transmissionModules.transmission(path));
         this.pathTransmission = path;
+    }
+    // 현재 Graph·경로·시계와 음향을 같은 World의 다리 수명에 연결한다.
+    bindBridgeCarriers() {
+        this.#live(); const o = this.#owner, c = o.core, s = o.state;
+        if (!this.pathTransmission || this.bridgeCarriers) throw new Error('Session 다리 대피 설치 순서 오류');
+        const checking = captureCampaignFlag(s.gunState, 'checking');
+        const hooks = {
+            graphFor: (sid) => { this.#live(); return o.anchor.graphFor(sid); },
+            movementType: (type) => { this.#live(); return o.priests.movementProcessType(type); },
+            movementForm: (sid, type) => { this.#live(); return new RawContainedLookup(c.pool, (target, flags) => o.world.destroy(target, flags)).find(sid, type); },
+            start: (sid, destination) => { this.#live(); return o.carrierRoutingModules.startMotion({ parent: sid, destination, replaceStart: 0, helper: 0, tailWord: 0, tailByte: 0, reserved: 0 }) !== null; },
+            valid: (point) => { this.#live(); return o.carrierFalling.validPoint(point.x, point.y); },
+            wontWalkOffEdge: (type) => { this.#live(); const movement = o.priestState.movement; return [movement.priest, movement.windWalker, movement.rainWalker, movement.bulf, movement.empty].includes(type); },
+            assertion: (line) => { this.#live(); throw new Error(`원본 다리/Carrier 대피 진단 ${line}`); },
+        };
+        const carriers = new RawBridgeCarriers(c.pool, c.hash, c.types, () => o.gameplayGlobals.authority().boss, checking,
+            () => o.priestState.movement.priest, () => o.priestState.movement.rainWalker, () => o.bridgeAvoidLife, hooks);
+        const decay = {
+            editor: () => { this.#live(); return o.globals.editor; },
+            carriers: (sid) => { this.#live(); carriers.check(sid); },
+            sound: (sid) => { this.#live(); if (typeof o.services.sound.playOnceAt !== 'function') throw new Error('실제 다리 균열 위치 소리 미연결'); const raw = c.pool.slot(sid), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength); o.services.sound.playOnceAt(view.getFloat32(14, true), view.getFloat32(18, true), o.soundNames.lookup('bridgeCrack.wav'), 0, 0); },
+            time: (time) => { this.#live(); o.particles.prepareBridgeClock(time.game, time.number >>> 0); s.soundState.frame = time.number >>> 0; },
+        };
+        o.world.bindBridgeDecay(decay.editor, decay.carriers, decay.sound, decay.time);
+        this.bridgeCarriers = o.bridgeCarriers = carriers; this.bridgeDecayHooks = decay;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

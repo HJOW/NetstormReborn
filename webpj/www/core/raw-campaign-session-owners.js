@@ -223,6 +223,8 @@ export class RawCampaignSessionOwners {
     aiRuntime = null;
     // 원본 실행 시간 측정 전역의 Session 초기값이다.
     aiTiming = 1;
+    // 다리 위 이동체의 대피 처리기와 원본 수명 경계다.
+    bridgeCarriers = null; bridgeAvoidLife = 7;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -830,6 +832,12 @@ export class RawCampaignSessionOwners {
     connectPathTransmission() {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session 경로 송신 설치 전/반납');
         this.motionRuntimeModules.bindPathTransmission();
+    }
+
+    // 경로 송신 뒤 같은 World의 다리 붕괴와 이동체 대피를 연결한다.
+    connectBridgeCarriers() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session 다리 대피 설치 전/반납');
+        this.motionRuntimeModules.bindBridgeCarriers();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

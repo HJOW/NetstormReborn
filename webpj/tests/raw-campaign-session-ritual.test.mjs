@@ -490,6 +490,27 @@ test('Session 경로 송신: 설치 순서와 실제 Process 부착', () => {
     assert.throws(() => wire.transmit(1), /반납/);
 });
 
+// 다리 수명은 같은 World의 시계·실제 음향과 대피 처리기를 사용한다.
+test('Session 다리 대피: 설치 순서와 현재 시각·음향', () => {
+    const sounds = [], o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, sound: { playOnceAt: (...args) => sounds.push(args) }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    let decay;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget(); o.connectAiDropTargets(); o.connectAiDropEvaluation(); o.connectAiDropScan(); o.connectAiDropSelection(); o.connectAiDryGeometry(); o.connectAiFakeDrySpots(); o.connectAiDropActions(); o.connectAiPriestActions(); o.connectAiBridgeStrategies(); o.connectAiRuntime();
+        assert.throws(() => o.connectBridgeCarriers(), /순서/);
+        o.connectPathTransmission(); o.connectBridgeCarriers(); decay = o.motionRuntimeModules.bridgeDecayHooks;
+        assert.throws(() => o.connectBridgeCarriers(), /순서/);
+        assert.equal(o.bridgeAvoidLife, 7); assert.equal(o.bridgeCarriers, o.motionRuntimeModules.bridgeCarriers);
+        o.world.scanBridgeDecay({ game: 3, wall: 3, delta: 0, number: 17 }, true);
+        assert.equal(o.state.soundState.frame, 17);
+        const bridge = o.world.create(82), raw = o.core.pool.allocated(bridge), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+        view.setFloat32(14, 12.5, true); view.setFloat32(18, 23.25, true);
+        decay.carriers(bridge); decay.sound(bridge);
+        assert.deepEqual(sounds, [[12.5, 23.25, o.soundNames.lookup('bridgeCrack.wav'), 0, 0]]);
+        assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+    assert.throws(() => decay.sound(0), /반납/);
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {
