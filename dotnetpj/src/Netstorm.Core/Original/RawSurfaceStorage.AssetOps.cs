@@ -45,13 +45,46 @@ public sealed partial class RawSurfaceStorage
     /// <param name="owner">새 소유자 번호다.</param>
     public void SetAssetOwner(int sid, uint owner)
     {
-        // 신전 가상 소유자 분배(0x004dca50)는 VortexOwner 장치와 판별자가 필요하므로 잔여로 두고 공통 분배만 연결한다.
+        // 표면 특수부모 뒤 실제 현재 신전 가상74를 분배한다.
         Action<int, uint> set = RawAssetOwner.MakeAssetOwnerDispatch(
             Pool,
             Links,
             PostPopState.ProductionDirtyBox,
-            (id, player) => OwnerExecutor().Set(id, player));
+            (id, player) =>
+            {
+                if (UsesNativeTransmissionDevices() && HandlesRawVortexOwner(id))
+                {
+                    Action<int, uint>? body = _vortexOwner;
+                    if (body is null)
+                    {
+                        throw new InvalidOperationException("장기 신전의 실제 가상 소유자 미결합");
+                    }
+
+                    body(id, player);
+                    return;
+                }
+
+                OwnerExecutor().Set(id, player);
+            });
         set(sid, owner);
         NoteChanged();
+    }
+
+    /// <summary>같은 장기 신전 가상 소유자 분배 대상인지 현재 VT로만 판정한다. 0.586에서 추가됐다.</summary>
+    /// <param name="sid">확인할 객체 번호다.</param>
+    private bool HandlesRawVortexOwner(int sid)
+    {
+        ReadOnlySpan<byte> raw = Pool.Slot(sid);
+        uint table = (uint)(raw[0] | (raw[1] << 8) | (raw[2] << 16) | (raw[3] << 24));
+        // 네 실제 신전 가상 표만 같은 전체 장기 부모를 선택한다.
+        foreach (uint candidate in new uint[] { 0x005196f0u, 0x005197a8u, 0x00519860u, 0x00519918u })
+        {
+            if (table == candidate)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
