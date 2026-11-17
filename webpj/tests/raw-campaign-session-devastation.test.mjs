@@ -5,6 +5,7 @@ import { campaignOwners } from './campaign-session-support.mjs';
 import { SidPool } from '../www/core/sid-pool.js';
 import { dispatchCampaignFence } from '../www/core/raw-campaign-fence-dispatch.js';
 import { FENCE_TYPE_OPERATION } from '../www/core/raw-fence-type-parent.js';
+import { BOMB_TREASON_ROLE } from '../www/core/raw-bomb-treason.js';
 
 // 같은 실제 기반 owner에서 저장 미션을 Load하지 않고 이동까지 설치한다.
 function scene() {
@@ -43,4 +44,29 @@ test('Session 펜스 분배: 진단 뒤 현재 슬롯 재조회', () => {
     raw[10] = 2; dispatchCampaignFence(owner, sid, FENCE_TYPE_OPERATION.rebuild);
     raw[10] = 2; dispatchCampaignFence(owner, sid, FENCE_TYPE_OPERATION.refresh);
     assert.deepEqual(calls, ['assert', ['rebuild', sid], 'assert', ['refresh', sid]]);
+});
+
+// 일반 다리 대상에서 세 주문의 같은 풀과 현재 역할·효과 입력을 검증한다.
+test('Session 파괴 효과: 트리즌·힐·하드너의 현재 World 연결', () => {
+    const o = scene(); let treason, heal;
+    try {
+        o.connectDevastationStatus();
+        assert.throws(() => o.connectDevastationEffects(), /순서/);
+        o.connectDevastationSummons(); o.connectDevastationEffects();
+        assert.equal(o.devastationModules.effectsReady, true);
+        treason = o.devastationModules.treasonHooks; heal = o.devastationModules.healHooks;
+        const pool = o.core.pool, target = pool.allocate(2), raw = pool.allocated(target);
+        raw[10] = 82;
+        assert.equal(o.bombTreason.pool, pool); assert.equal(o.bombHeal.pool, pool); assert.equal(o.bombHardener.pool, pool);
+        assert.equal(o.bombHeal.mayTarget(target), (o.core.types[82].flags2 & 0x81574204) >>> 0);
+        assert.equal(o.bombHardener.mayTarget(target), (o.core.types[82].flags2 & 4) >>> 0);
+        assert.equal(heal.hasHitPoints(target), o.hp.hasHitPoints(target));
+        const aux = o.gameplayGlobals.gameAux(); aux.emptyGeyserType = 85;
+        assert.equal(treason.role(BOMB_TREASON_ROLE.EmptyGeyser), 85);
+        o.healBurstType = 177; o.state.gunTargetState.sunFenceType = 137;
+        assert.equal(heal.burstType(), 177); assert.equal(heal.fenceType(), 137);
+        assert.equal(o.loaded, false); assert.throws(() => o.connectDevastationEffects(), /순서/);
+    } finally { o.dispose(); }
+    assert.throws(() => treason.role(BOMB_TREASON_ROLE.Flare), /반납/);
+    assert.throws(() => heal.burstType(), /반납/);
 });

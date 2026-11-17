@@ -8,13 +8,18 @@ import { RawManoSpell } from './raw-mano-spell.js';
 import { WindAviaryProcessFields } from './raw-wind-aviary-state.js';
 import { WindAviaryProcess, findAttachedProcess } from './raw-wind-aviary-process.js';
 import { currentAllocationBytes } from './current-allocation-bytes.js';
+import { RawBombTreason, BOMB_TREASON_ROLE } from './raw-bomb-treason.js';
+import { RawBombHeal } from './raw-bomb-heal.js';
+import { RawBombHardener } from './raw-bomb-hardener.js';
 
 // 실제 Session의 TYPE·World·상태 주문을 한 번 구성한다.
 export class RawCampaignSessionDevastation {
     // 같은 owner와 설치 시작·정상 복귀·반납 관문이다.
-    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #disposed = false;
+    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #effectsStarted = false; #effectsReady = false; #disposed = false;
     // 현재 상태 주문 효과를 후속 시전 분배기에 빌린다.
     statusHooks = null;
+    // 기존 실제 하위에 연결한 트리즌과 힐 효과를 현재 수명에서 보관한다.
+    treasonHooks = null; healHooks = null;
     // 구성 시 World나 난수는 변경하지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 완료 전 또는 반납된 함수 값의 실행을 거부한다.
@@ -96,10 +101,57 @@ export class RawCampaignSessionDevastation {
         this.#summonsReady = true;
     }
 
+    // 같은 풀·소유권·받침과 현재 펜스에 트리즌·힐·하드너를 연결한다.
+    bindEffects() {
+        const o = this.#owner, c = o.core;
+        if (this.#disposed || !this.#summonsReady || this.#effectsStarted || o.bombTreason || o.bombHeal || o.bombHardener) throw new Error('Session 파괴 효과 설치 순서 오류');
+        this.#effectsStarted = true;
+        const treason = {
+            role: (role) => {
+                this.#live(); const aux = o.gameplayGlobals.gameAux();
+                switch (role) {
+                    case BOMB_TREASON_ROLE.NoIsland: return c.bridgeState.noIslandType;
+                    case BOMB_TREASON_ROLE.EmptyGeyser: return aux.emptyGeyserType;
+                    case BOMB_TREASON_ROLE.Fence: return aux.sunFenceType;
+                    case BOMB_TREASON_ROLE.Bridge: return c.bridgeState.bridgeType;
+                    case BOMB_TREASON_ROLE.Connector: return c.bridgeState.connectorType;
+                    case BOMB_TREASON_ROLE.Flare: return aux.bombFlareType;
+                    default: throw new RangeError('트리즌 현재 역할 범위');
+                }
+            },
+            owner: (sid, unused, owner) => { this.#live(); o.ownership.setOwner(sid, owner); },
+            refresh: (sid) => { this.#live(); c.display.update(c.pool.slot(sid), 0); },
+            fence: (sid, rebuild) => { this.#live(); dispatchCampaignFence(o, sid, rebuild ? FENCE_TYPE_OPERATION.rebuild : FENCE_TYPE_OPERATION.refresh); },
+            find: (x, y, type) => { this.#live(); return o.world.find(x, y, type); },
+            support: (x, y, owner) => { this.#live(); o.world.setSupportOwner(x, y, owner); },
+            assertion: (expression, file, line) => { this.#live(); o.world.storage.assertDisplay(expression, file, line); },
+            trace: (level, message) => { this.#live(); o.world.storage.traceGraph(level, message); },
+            flare: (sid, count, event, type, direction) => { this.#live(); o.flare.spawnDirection(sid, count, event, type, direction); },
+        };
+        o.bombTreason = new RawBombTreason(c.pool, c.hash, c.types, c.frames, treason);
+        const heal = {
+            hasHitPoints: (sid) => { this.#live(); return o.hp.hasHitPoints(sid); },
+            maximumHitPoints: (sid) => { this.#live(); return o.hp.maxHitPoints(sid); },
+            fenceType: () => { this.#live(); return o.state.gunTargetState.sunFenceType; },
+            burstType: () => { this.#live(); return o.healBurstType; },
+            fence: (sid) => { this.#live(); dispatchCampaignFence(o, sid, FENCE_TYPE_OPERATION.rebuild); },
+            unpop: (sid, unused, flags) => { this.#live(); o.world.unpop(sid, flags); },
+            repop: (sid, unused, flags) => { this.#live(); o.world.repop(sid, flags); },
+            refresh: (sid) => { this.#live(); c.display.update(c.pool.slot(sid), 0); },
+            create: (type, flags) => { this.#live(); return c.factory.create(type, flags); },
+            pop: (sid, unused, x, y, flags) => { this.#live(); o.world.pop(sid, x, y, flags); },
+        };
+        o.bombHeal = new RawBombHeal(c.pool, c.types, heal);
+        o.bombHardener = new RawBombHardener(c.pool, c.types, c.frames, o.random, c.frame, (sid, count, event) => { this.#live(); o.flare.spawn(sid, count, event); });
+        this.treasonHooks = treason; this.healHooks = heal; this.#effectsReady = true;
+    }
+
     // World가 프로세스를 비운 뒤 같은 함수 값의 재진입을 차단한다.
     dispose() { this.#disposed = true; }
     // 이 앞단만의 정상 설치 여부이며 전체 주문 설치는 아니다.
     get ready() { return this.#ready; }
     // 주문 결선 완료는 전체 파괴 주문 설치 완료와 구별한다.
     get summonsReady() { return this.#summonsReady; }
+    // 이 효과 세 종류만 설치했으며 전체 주문 설치와 구별한다.
+    get effectsReady() { return this.#effectsReady; }
 }
