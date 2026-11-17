@@ -301,7 +301,9 @@ export class RawAssetPostPop {
                 if (kind === KIND.gunSun && !state.loadingDepth && clientPop) this.#gunAssertion('duringLoad || !(popFlags &( pfDONT_TRANSMIT|pfCLIENT_POP)) && !isClientSid()', 0x32a);
                 if (kind === KIND.gunArcher && !state.fortMode && clientPop) this.#gunAssertion('inFortMode || ( !(popFlags &( pfDONT_TRANSMIT|pfCLIENT_POP)) && !isClientSid() )', 0x3c8);
                 // 판정 장치가 checking 을 꺼도 이미 고른 실패 진단은 취소하지 않는다.
-                if (state.checkingForms() && !need(hooks.checkForms)(sid)) this.#gunAssertion('checkForms()', GUN_CHECK_LINES[kind]);
+                // Session의 현재 진단 DWORD와 독립 검사의 함수 입력을 모두 원문처럼 다시 읽는다.
+                const checkingForms = typeof state.checkingForms === 'function' ? state.checkingForms() : state.checkingForms;
+                if (checkingForms && !need(hooks.checkForms)(sid)) this.#gunAssertion('checkForms()', GUN_CHECK_LINES[kind]);
             }
             if (kind === KIND.gunSun && state.loadingDepth && (this.#type(sid).flags1 & 0x1000)) write(this.#slot(sid), FRAME_OFFSET, read(pool.slot(sid), WORD_OFFSET, 2), 4);
         }

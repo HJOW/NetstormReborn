@@ -1,6 +1,6 @@
 // RawCampaignSession 외곽 생성자4318..4330과 소멸자 앞단의 typed 조립이다(225553df, WB04-E638).
 // 사용: new RawCampaignSession(game, files, fort, mission, services) → 후속 Load → dispose.
-// 아직 Load/Login/State 반납 증빙은 구현하지 않는다. 생성 자체는 미션을 시작하거나 loaded를 켜지 않는다.
+// 생성 자체는 미션을 시작하거나 loaded를 켜지 않는다. Login/State 반납 증빙은 후속이다.
 import { RawCampaignSessionOwners } from './raw-campaign-session-owners.js';
 import { learnCampaignNewTechnology } from './raw-campaign-callbacks.js';
 import { refreshLocalRitualData } from './raw-ritual-refresh.js';
@@ -64,7 +64,14 @@ export class RawCampaignSession {
     world() { return this.#live().world; }
     // C++ Core의 값형 aggregate를 돌려주되 Pool/권한/장부의 실제 참조는 그대로 빌린다(6382).
     core() { return { ...this.#live().core }; }
-    // 생성과 실제 설치 완료를 구별한다. 이 단계는 항상 false다.
+    // 원문의 설치 순서로 같은 실제 월드와 모든 모듈을 연결한다. 오류 시 앞선 효과를 되돌리지 않는다.
+    load() {
+        const o = this.#live();
+        o.connectBuilding(); o.connectMotion(); o.runtime.load();
+        o.connectDevastation(); o.connectCarrierDrop(); o.connectPriestPrayer(); o.connectBuilder();
+        o.connectGameplayPlacement(); o.connectCursor(); o.loaded = true;
+    }
+    // 생성과 실제 설치 완료를 구별한다.
     get loaded() { return this.#live().loaded; }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }
