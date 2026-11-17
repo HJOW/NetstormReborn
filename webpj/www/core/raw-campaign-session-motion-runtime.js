@@ -30,6 +30,7 @@ import { RawAiPriestActions, aiPriestInRitual, aiAltarContainsEnemy } from './ra
 import { RawAiBridgePath } from './raw-ai-bridge-path.js';
 import { RawAiBridgePlanning } from './raw-ai-bridge-planning.js';
 import { RawAiBridgeStrategies, AI_BRIDGE_STRATEGY_LOG } from './raw-ai-bridge-strategies.js';
+import { RawAiRuntime } from './raw-ai-runtime.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -76,6 +77,8 @@ export class RawCampaignSessionMotionRuntime {
     aiPriestActionHooks = null;
     // AI 다리 전략의 현재 그래프·목록·경로 장치다.
     aiBridgeStrategyHooks = null;
+    // AI 전체 프레임이 사용하는 현재 행동과 진단 장치다.
+    aiRuntimeHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -521,6 +524,41 @@ export class RawCampaignSessionMotionRuntime {
         };
         o.aiBridgeStrategies = new RawAiBridgeStrategies(o.aiMemory, c.pool, c.types, o.random, globals, hooks);
         this.aiBridgeStrategyHooks = hooks;
+    }
+    // 현재 세션의 AI 행동을 원본 프레임 순서로 연결한다.
+    bindAiRuntime() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.aiBridgeStrategyHooks || this.aiRuntimeHooks || o.aiRuntime) throw new Error('Session AI 프레임 설치 순서 오류');
+        // 본체의 로그 플래그와 소유자를 매 호출 다시 읽는다.
+        const log = (token, kind, message) => {
+            this.#live(); const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+            if (!view.getUint32(0xb00, true)) return;
+            if (!o.services.player.log) throw new Error('AI 전체프레임 현재 로그 미연결');
+            o.services.player.log(kind, `AI${view.getInt32(0x260, true)}: ${message}\n`);
+        };
+        const hooks = {
+            initialize: (token) => { this.#live(); o.aiStrategySetup.initialize(token); },
+            prepare: (token) => { this.#live(); o.aiPreparation.update(token); },
+            selectGoal: (token) => { this.#live(); o.aiStrategySetup.selectGoal(token); },
+            collectors: (token) => { this.#live(); o.aiCollectors.ensure(token); },
+            factories: (token) => { this.#live(); o.aiFactoryProduction.manage(token); },
+            dryScan: (token) => { this.#live(); return o.aiDrySpots.scan(token); },
+            dryNotice: (token, kind, fake) => log(token, kind, fake ? 'Killed Fake Dry Spot\n' : 'Killed Dry Spot\n'),
+            priest: (token, sid) => { this.#live(); if (sid > 65535 || sid >= c.pool.capacity) throw new RangeError('AI 전체프레임 현재 사제 SID 범위'); o.aiPriestActions.act(token, sid); },
+            drops: (token) => { this.#live(); o.aiDropActions.run(token); },
+            bridges: (token) => { this.#live(); o.aiBridgeStrategies.update(token); },
+            carriers: (token) => { this.#live(); o.aiCarrierActions.act(token); },
+            economy: (token) => { this.#live(); o.aiEconomy.reconcile(token); },
+            money: (owner) => { this.#live(); const bits = new DataView(new ArrayBuffer(4)); bits.setUint32(0, o.sp.get(owner), true); return bits.getFloat32(0, true); },
+            wall: o.services.construction.wallSeconds,
+            took: (token, elapsed) => log(token, 29, `Took ${elapsed.toFixed(1).padStart(2, '0')} seconds.\n`),
+            assertion: (text) => { this.#live(); if (!o.services.ai.assertion) throw new Error('AI 전체프레임 현재 진단 미연결'); o.services.ai.assertion(text); },
+            destruct: (token) => { this.#live(); o.aiConstructor.destruct(token); },
+            free: (token) => { this.#live(); o.aiConstructor.freeBody(token); },
+        };
+        const globals = { battle: () => c.ownerMode.battle, timing: () => o.aiTiming, dryLog: () => o.gameplayGlobals.aiDebug().read(0x52f3dc) };
+        o.aiRuntime = new RawAiRuntime(o.aiMemory, o.players, globals, hooks);
+        this.aiRuntimeHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

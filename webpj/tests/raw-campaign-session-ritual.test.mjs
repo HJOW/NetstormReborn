@@ -438,6 +438,32 @@ test('AI 다리 전략: 선행 관문과 빈 사각형', () => {
     } finally { o.dispose(); }
 });
 
+// 전체 프레임은 같은 Player와 현재 로그·행동 장치를 사용한다.
+test('AI 프레임: 설치 순서와 현재 저장소 결선', () => {
+    const logs = [], o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, player: { log: (...args) => logs.push(args) }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    let token = 0;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget(); o.connectAiDropTargets(); o.connectAiDropEvaluation(); o.connectAiDropScan(); o.connectAiDropSelection(); o.connectAiDryGeometry(); o.connectAiFakeDrySpots(); o.connectAiDropActions(); o.connectAiPriestActions();
+        assert.throws(() => o.connectAiRuntime(), /순서/);
+        o.connectAiBridgeStrategies(); o.connectAiRuntime();
+        assert.throws(() => o.connectAiRuntime(), /순서/);
+        const hooks = o.motionRuntimeModules.aiRuntimeHooks;
+        token = o.aiMemory.allocate(0xb08); const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+        view.setInt32(0x260, 2, true); hooks.dryNotice(token, 17, true); assert.equal(logs.length, 0);
+        view.setUint32(0xb00, 1, true); hooks.dryNotice(token, 17, true); hooks.took(token, 1.25);
+        assert.deepEqual(logs, [[17, 'AI2: Killed Fake Dry Spot\n\n'], [29, 'AI2: Took 1.3 seconds.\n\n']]);
+        assert.throws(() => hooks.priest(token, o.core.pool.capacity), /SID 범위/);
+        view.setUint32(0x258, 1, true);
+        // 전체 프레임의 현재 타이밍 조회만 독립적으로 실행하도록 행동 효과를 대체한다.
+        for (const key of ['prepare', 'selectGoal', 'collectors', 'factories', 'priest', 'drops', 'bridges', 'carriers', 'economy']) hooks[key] = () => {};
+        hooks.dryScan = () => 0; hooks.money = () => 0; hooks.wall = () => 1;
+        assert.equal(o.aiRuntime.tick(token), true);
+        o.core.ownerMode.battle = false; o.aiRuntime.frame();
+        assert.equal(o.loaded, false);
+    } finally { if (token) o.aiMemory.free(token); o.dispose(); }
+    assert.throws(() => o.connectAiRuntime(), /반납/);
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {
