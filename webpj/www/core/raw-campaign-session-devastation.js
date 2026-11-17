@@ -22,7 +22,7 @@ import { RegularProcess } from './squid-process.js';
 import { RawBombRegular } from './raw-bomb-regular.js';
 import { RawFrameAdvance } from './raw-frame-advance.js';
 import { RawBombEffect, finalizeBombEffectPacket } from './raw-bomb-effect.js';
-import { bombTimerParent } from './raw-bomb-timer-packet.js';
+import { bombTimerParent, receiveBombTimerPacket } from './raw-bomb-timer-packet.js';
 
 // 같은 현재 가상 표를 기준으로 주문 자격 하위를 선택한다.
 const MANO_TABLES = new Set([0x5026a0, 0x502778, 0x502840]);
@@ -321,6 +321,25 @@ export class RawCampaignSessionDevastation {
         };
         o.devastationEffect = new RawBombEffect(c.pool, o.devastationEffectTypes, o.state.devastationEffectState, hooks);
         o.runtimeModules.prepareDevastation(); this.effectHooks = hooks; this.#effectReady = true;
+    }
+
+    // 현재 free Form에 타이머 패킷을 읽고 같은 Host의 지정 SID로 부착한다.
+    receiveTimer(packet) {
+        this.#live(); const o = this.#owner, c = o.core;
+        const state = { boss: o.state.assetState.readBoss(), get processType() { return o.bombTimerType; } };
+        const hooks = {
+            assertion: (line) => { throw new Error(`원본 상태 타이머 수신 진단 ${line}`); },
+            create: (type, x, y) => {
+                this.#live(); if (type !== 57 || x || y || o.pendingBombTimer) throw new Error('상태 타이머 수신 factory 계약 오류');
+                o.pendingBombTimer = o.teleportModules.makeBombTimer(0, [], 0); return 1;
+            },
+            read: (token, bytes) => { this.#live(); if (token !== 1 || !o.pendingBombTimer) throw new Error('상태 타이머 수신 객체 누락'); o.pendingBombTimer.readPacket(bytes); },
+            attach: (token, type, parent, form, flags) => {
+                this.#live(); if (token !== 1 || !o.pendingBombTimer) throw new Error('상태 타이머 수신 부착 객체 누락');
+                const process = o.pendingBombTimer; o.pendingBombTimer = null; c.processes.attach(process, type, parent, flags, form);
+            },
+        };
+        receiveBombTimerPacket(c.pool, state, packet, hooks);
     }
 
     // World가 프로세스를 비운 뒤 같은 함수 값의 재진입을 차단한다.

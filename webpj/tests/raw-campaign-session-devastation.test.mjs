@@ -124,7 +124,7 @@ test('Session 주문 활성화: 현재 시각의 실제 Regular 예약', () => {
         const parent = o.world.create(117), packet = new Uint8Array(6);
         packet[4] = parent & 255; packet[5] = parent >>> 8;
         o.playerState.battleOwner = o.core.pool.slot(parent)[34]; o.core.processState.now = 42.5;
-        o.devastationActivation.receive(packet);
+        o.runtimeModules.receiveDevastationActivation(packet);
         const regular = o.core.processes.findEvent(parent, 0);
         assert.ok(regular); assert.equal(regular.payload, Math.fround(0.1)); assert.equal(regular.time, 42.5);
         assert.equal(regular.shared, false); assert.equal(o.pendingDevastationRegular, null);
@@ -178,4 +178,34 @@ test('Session 주문 효과: 시전 종료와 타이머 예약', () => {
         assert.equal(o.loaded, false); assert.throws(() => o.connectDevastationEffect(), /순서/);
     } finally { o.dispose(); }
     assert.throws(() => hooks.stopCast(0), /반납/);
+});
+
+// 전체 설치의 순서와 같은 장기 상태만 확인하며 개별 주문 행동은 실행하지 않는다.
+test('Session 파괴 주문 전체: 설치 순서와 현재 상태 수명', () => {
+    const o = scene(); let state;
+    try {
+        o.connectDevastation(); state = o.meltdownModules.state;
+        assert.equal(o.devastationModules.effectReady, true); assert.equal(o.meltdownModules.ready, true);
+        assert.ok(o.devastationActivation && o.devastationRegular && o.devastationEffect && o.meltdown);
+        assert.equal(state.alliances, o.alliances); o.playerState.battleOwner = 3; assert.equal(state.localOwner(), 3);
+        assert.equal(o.loaded, false); assert.throws(() => o.connectDevastation(), /중복/);
+    } finally { o.dispose(); }
+    assert.throws(() => state.localOwner(), /반납/);
+});
+
+// 상태 타이머 패킷을 빈 Form에 읽고 지정된 같은 Host에 부착한다.
+test('Session 상태 타이머 수신: 지정 Form과 현재 필드', () => {
+    const o = scene();
+    try {
+        o.connectDevastation(); o.gameplayGlobals.authority().boss = false;
+        const parent = o.world.create(117), pool = o.core.pool, form = pool.allocate(0);
+        pool.release(form);
+        const packet = new Uint8Array(22), view = new DataView(packet.buffer);
+        view.setUint16(4, form, true); view.setUint16(6, parent, true); view.setFloat64(8, 37.25, true); view.setUint32(18, 2, true);
+        o.receiveBombTimer(packet);
+        const timer = o.core.processes.fromForm(form);
+        assert.ok(timer); assert.equal(timer.fields.endTime, 37.25); assert.equal(timer.fields.flags, 2);
+        assert.equal(timer.parent, parent); assert.equal(o.pendingBombTimer, null);
+        assert.throws(() => o.receiveBombTimer(packet), /진단/);
+    } finally { o.dispose(); }
 });

@@ -103,12 +103,23 @@ export class RawCampaignSessionRuntime {
         s.devastationBlastState.alliances.set(o.alliances);
     }
 
-    // 같은420bf0 앞단이다. free/dead 조기는 실제 수신 몸체가 처리하며 다른 살아 있는 VT를 주문으로 가장하지 않는다.
-    receiveDevastationEffect(packet) {
-        this.#live(); const o = this.#owner;
+    // 두 주문 패킷이 공유하는 부모 WORD와 현재 가상 표 관문이다.
+    #checkDevastationPacket(packet) {
+        const o = this.#owner;
         if (packet.length < 6) throw new TypeError('Devastation 패킷 부모 WORD 부족');
         const parent = packet[4] | (packet[5] << 8); const raw = o.core.pool.slot(parent);
         if (!(raw[11] & 3) && !connectedCampaignBombTable(dword(raw, 0))) throw new Error('다른 주문 Session 연결은 미복원');
+    }
+
+    // 같은 활성화 패킷 관문 뒤 현재 비용과 실제 Regular 예약을 실행한다.
+    receiveDevastationActivation(packet) {
+        this.#live(); this.#checkDevastationPacket(packet); this.prepareDevastation();
+        module(this.#owner, 'devastationActivation', '현재 주문 활성화 수신 몸체 미설치').receive(packet);
+    }
+
+    // 같은420bf0 앞단이다. free/dead 조기는 실제 수신 몸체가 처리하며 다른 살아 있는 VT를 주문으로 가장하지 않는다.
+    receiveDevastationEffect(packet) {
+        this.#live(); const o = this.#owner; this.#checkDevastationPacket(packet);
         this.prepareDevastation(); module(o, 'devastationEffect', '현재 주문 효과 수신 몸체 미설치').receive(packet);
     }
 
