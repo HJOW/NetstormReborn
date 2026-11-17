@@ -29,6 +29,7 @@ public sealed class HostSessionPoolTransitionTests
         List<SquidDisplayShape> shapes = TerrainDisplayShapes.Build(definitions, shpDb);
         session.BuildTerrainPopDevices(table.Types, shapes, factory, hash, spots);
         session.BuildFortObjectDevices(table.Types, session.WorldFrames, factory, building);
+        session.BuildIslandPostPopDevices(table.Types, session.WorldFrames);
         MissionFortLoadResult fort = MissionFortLoad.Load(startup, "thewarbegins");
         HostFortObjectLiveTests.BuildLiveTerrainFirst(session, fort.Fort, table.Types);
         session.LoadFortObjects(fort.Fort, 1u);

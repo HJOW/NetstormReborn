@@ -924,30 +924,162 @@ public sealed partial class HostSession
                 return sid;
             },
             SetOwner = owner.Set,
-            Pop = (sid, x, y, flags) =>
-            {
-                // Pop 장치가 없으면 기록만 한다(드라이런 중립).
-                if (_terrainPop is null || _terrainDisplay is null || _terrainPopTypes is null)
-                {
-                    return;
-                }
-                ReadOnlySpan<byte> raw = Pool.Slot(sid);
-                byte number = raw[RawSidPool.TypeOffset];
-                if (number >= _terrainPopTypes.Count)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(sid), "Pop 타입 번호 범위 오류");
-                }
-                // 원본 SHP 크기로 해시 단계를 정한다. 패치판은 +36 DWORD, CD판은 +34 BYTE 프레임을 읽는다.
-                int frame = Pool.Edition == OriginalEdition.Patch1078
-                    ? unchecked((int)(raw[36] | ((uint)raw[37] << 8) | ((uint)raw[38] << 16) | ((uint)raw[39] << 24)))
-                    : raw[34];
-                float[] size = _terrainDisplay.FrameSize(Pool.Edition, raw, frame);
-                _terrainPop.Pop(sid, _terrainPopTypes[number], size[0], size[1], x, y, flags);
-            },
+            Pop = (sid, x, y, flags) => TerrainPopObject(sid, x, y, flags),
             SetRegion = (sid, region) => RawSquidRegion.SetSquidRegion(Pool, types, sid, unchecked((uint)region), unchecked((uint)TerrainGlobals.NoRegion), TerrainDiagnostics.Region),
             ChunkRegion = (x, y) => unchecked((sbyte)World.At(x, y).Island),
             Assertion = TerrainDiagnostics.Stamp,
         };
+    }
+
+    /// <summary>지형 Pop 공간 등록의 실제 효과를 수행한다. 도장 후처리와 섬 후처리가 같은 몸체를 공유한다.</summary>
+    /// <param name="sid">등록할 오브젝트 번호다.</param>
+    /// <param name="x">등록할 월드 x 좌표.</param>
+    /// <param name="y">등록할 월드 y 좌표.</param>
+    /// <param name="flags">Pop 호출 플래그.</param>
+    /// <remarks>2026-11-12 0.466의 도장 Pop 몸체를 0.601에서 섬 후처리와 공유하도록 꺼냈다. 동작은 같다.</remarks>
+    private void TerrainPopObject(int sid, float x, float y, uint flags)
+    {
+        // Pop 장치가 없으면 기록만 한다(드라이런 중립).
+        if (_terrainPop is null || _terrainDisplay is null || _terrainPopTypes is null)
+        {
+            return;
+        }
+        ReadOnlySpan<byte> raw = Pool.Slot(sid);
+        byte number = raw[RawSidPool.TypeOffset];
+        if (number >= _terrainPopTypes.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(sid), "Pop 타입 번호 범위 오류");
+        }
+        // 원본 SHP 크기로 해시 단계를 정한다. 패치판은 +36 DWORD, CD판은 +34 BYTE 프레임을 읽는다.
+        int frame = Pool.Edition == OriginalEdition.Patch1078
+            ? unchecked((int)(raw[36] | ((uint)raw[37] << 8) | ((uint)raw[38] << 16) | ((uint)raw[39] << 24)))
+            : raw[34];
+        float[] size = _terrainDisplay.FrameSize(Pool.Edition, raw, frame);
+        _terrainPop.Pop(sid, _terrainPopTypes[number], size[0], size[1], x, y, flags);
+    }
+
+    /// <summary>세션 공간 해시의 0단계 머리를 섬 후처리 지도에 빌리는 보기다. 월드·저장소보다 오래 살 수 없다.</summary>
+    /// <remarks>0.601에서 추가했다. `RawSurfaceWorld`의 같은 보기와 같은 읽기 계약이다.</remarks>
+    private sealed class SessionHashLevelView(RawSquidHash hash) : IReadOnlyList<ushort>
+    {
+        /// <summary>지도 한 변의 칸 수(256×256)다.</summary>
+        public int Count => hash.Entries(0).Length;
+
+        /// <summary>해당 칸의 머리 번호를 읽는다.</summary>
+        /// <param name="index">읽을 칸 번호다.</param>
+        public ushort this[int index] => hash.Entries(0)[index];
+
+        /// <summary>머리를 순서대로 열거한다.</summary>
+        public IEnumerator<ushort> GetEnumerator()
+        {
+            for (int index = 0; index < Count; index++)
+            {
+                yield return this[index];
+            }
+        }
+
+        /// <summary>머리를 순서대로 열거한다.</summary>
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    /// <summary>세션 소유의 섬 후처리 몸체다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>0.601에서 R4-2 적재 중 postPop용으로 추가했다. 지면·받침 소유자 스탬프의 실제 몸체다.</remarks>
+    private RawIslandPostPop? _islandPostPop;
+
+    /// <summary>세션 섬 후처리 진단의 기록이다. 미연결·누락 효과를 검사에서 확인한다.</summary>
+    /// <remarks>0.601에서 추가했다. 원본 진단 복귀 뒤에도 계속 진행하므로 기록만 남긴다.</remarks>
+    private readonly List<string> _islandPostPopDiagnostics = [];
+
+    /// <summary>세션 섬 후처리의 진단 기록이다. 0.601에서 추가됐다.</summary>
+    public IReadOnlyList<string> IslandPostPopDiagnostics => _islandPostPopDiagnostics;
+
+    /// <summary>세션 소유의 섬 후처리 몸체다. 0.601에서 추가됐다.</summary>
+    public RawIslandPostPop IslandPostPop => _islandPostPop ?? throw new InvalidOperationException("세션 섬 후처리 미연결");
+
+    /// <summary>세션 섬 후처리 장치를 연결한다. 지형 Pop 장치 뒤에 연결해야 한다(같은 풀·해시·표시를 공유한다).</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 패치판 188개여야 한다.</param>
+    /// <param name="frames">같은 실제 프레임 표다. 타입 개수와 같아야 한다.</param>
+    /// <remarks>0.601에서 R4-2 적재 중 postPop용으로 추가했다. 섬 연결 순회는 R6에서 잇는다.</remarks>
+    public void BuildIslandPostPopDevices(IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        ArgumentNullException.ThrowIfNull(frames);
+        if (types.Count != OriginalConstructors.TypeCount || frames.Count != types.Count)
+        {
+            throw new ArgumentException("섬 후처리 타입·프레임 목록 크기 오류", nameof(types));
+        }
+        if (_terrainFactory is null || _terrainHash is null || _terrainSpots is null || _terrainDisplay is null || _terrainPop is null)
+        {
+            throw new InvalidOperationException("섬 후처리 장치는 지형 Pop 장치 뒤에 연결해야 한다");
+        }
+        if (_islandPostPop is not null)
+        {
+            throw new InvalidOperationException("세션 섬 후처리 중복 연결");
+        }
+        var owner = new SquidOwner(Pool, types, TerrainBookkeeping, OwnerMode);
+        owner.BindDiagnostics(new SquidOwnerDiagnostics
+        {
+            Types = types,
+            Assertion = (expression, file, line) => throw new InvalidOperationException($"섬 후처리 Owner 원본 진단: {expression} {file}:{line}"),
+        });
+        _islandPostPop = new RawIslandPostPop(
+            Pool,
+            new SessionHashLevelView(_terrainHash),
+            types,
+            frames,
+            BridgeState,
+            new IslandPostPopState(),
+            new IslandPostPopHooks
+            {
+                Objects = new BridgeConnectHooks
+                {
+                    Create = (type, flags) => _terrainFactory!.Create(type, (SidAllocation)flags),
+                    SetOwner = owner.Set,
+                    Pop = (sid, x, y, flags) => TerrainPopObject(sid, x, y, flags),
+                },
+                Connect = _ => throw new InvalidOperationException("세션 섬 연결 순회 미연결(R6)"),
+                FindTypeAt = (x, y, type) => FindTerrainObjectAt(types, x, y, type),
+                UpdateDisplay = sid => _terrainDisplay!.Update(Pool.Slot(sid)),
+                IncompleteSupport = (missing, noIsland, noStalag) => _islandPostPopDiagnostics.Add($"incomplete:{missing}:{noIsland}:{noStalag}"),
+                Assertion = (expression, file, line) => _islandPostPopDiagnostics.Add($"{expression} {file}:{line}"),
+                Detail = text => _islandPostPopDiagnostics.Add(text),
+            });
+    }
+
+    /// <summary>현재 좌표의 typed 점을 같은 일반 finder로 찾는다. 원문 4b1fa0과 같은 순서다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다.</param>
+    /// <param name="x">찾을 월드 x 좌표.</param>
+    /// <param name="y">찾을 월드 y 좌표.</param>
+    /// <param name="type">찾을 타입 번호다.</param>
+    /// <remarks>0.601에서 추가했다. `RawDaisDeletion.FindTypeAt`과 같은 절삭·시작 단계·첫 일치 규칙이다.</remarks>
+    private int FindTerrainObjectAt(IReadOnlyList<OriginalTypeRecord> types, float x, float y, uint type)
+    {
+        if (!float.IsFinite(x) || !float.IsFinite(y))
+        {
+            throw new ArgumentOutOfRangeException(nameof(x), "섬 후처리의 typed 조회 비유한 좌표");
+        }
+        if (type >= (uint)types.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(type), "섬 후처리의 typed 조회 TYPE 범위 오류");
+        }
+        if (x < -2147483648.0 || x >= 2147483648.0 || y < -2147483648.0 || y >= 2147483648.0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(x), "섬 후처리의 typed 조회 절삭 범위 오류");
+        }
+        int cellX = (int)x;
+        int cellY = (int)y;
+        var finder = new RawSquidFinder(Pool, _terrainHash!, types);
+        for (int sid = finder.Begin(new SquidSearchArea(cellX, cellY, cellX, cellY), (types[(int)type].Flags2 & 6u) == 0 ? 1u : 0u);
+            sid != 0;
+            sid = finder.Next())
+        {
+            if (Pool.Slot(sid)[RawSidPool.TypeOffset] == type)
+            {
+                return sid;
+            }
+        }
+
+        return 0;
     }
 
     /// <summary>요새 내용물 Form 부착의 세션 소유 몸체다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
