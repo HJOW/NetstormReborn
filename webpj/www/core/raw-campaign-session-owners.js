@@ -958,6 +958,12 @@ export class RawCampaignSessionOwners {
         this.carrierDropModules.prepare();
     }
 
+    // 공통 명령과 투하점 뒤 실제 요청 효과를 준비한다.
+    connectCarrierDropRequest() {
+        if (this.#disposed || !this.carrierDropModules) throw new Error('Session 운반 투하 요청 설치 전/반납');
+        this.carrierDropModules.bindRequest();
+    }
+
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
     drawTempleFrames(sid, frame) {
         if (this.#disposed) throw new Error('반납한 Session 신전 그림');

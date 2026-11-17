@@ -32,3 +32,26 @@ test('Session 운반 투하 앞단: 공통 명령과 현재 지도·진단 뷰',
     } finally { o.dispose(); }
     assert.throws(() => module.prepare(), /반납/);
 });
+
+// 프로세스 체인의 다음 링크와 미연결 화면 경계만 확인하고 투하는 실행하지 않는다.
+test('Session 운반 투하 요청: 프로세스 체인과 현재 카메라', () => {
+    const o = scene(); let hooks;
+    try {
+        o.connectDevastation(); o.connectCarrierDropFront(); o.connectCarrierDropRequest(); hooks = o.carrierDropModules.dropHooks;
+        assert.equal(o.carrierDropModules.requestReady, true); assert.equal(o.carrierDrop, null);
+        const pool = o.core.pool, parent = pool.allocate(2), first = pool.allocate(2), second = pool.allocate(2);
+        const a = pool.physical(parent), b = pool.physical(first), c = pool.physical(second);
+        new DataView(a.buffer, a.byteOffset, a.byteLength).setUint16(6, first, true);
+        new DataView(b.buffer, b.byteOffset, b.byteLength).setUint16(4, second, true); b[10] = 30; c[10] = 31;
+        const seen = []; hooks.attached(parent, (sid) => { seen.push(sid); if (sid === first) { b[4] = 0; b[5] = 0; } });
+        assert.deepEqual(seen, [first, second]);
+        new DataView(b.buffer, b.byteOffset, b.byteLength).setUint16(4, second, true);
+        new DataView(c.buffer, c.byteOffset, c.byteLength).setUint16(4, first, true);
+        assert.throws(() => hooks.attached(parent, () => {}), /체인 손상/);
+        o.gameplayGlobals.camera().snapshot().setPixels(16, 11); assert.deepEqual(hooks.project([2, 3]), [16, 22]);
+        assert.equal(hooks.baseMenu(parent, 0, 0), 0); assert.throws(() => hooks.select(0, 0, 1), /선택 수명/);
+        assert.throws(() => hooks.popup(1, [0, 0], 0), /Gump 미연결/);
+        assert.equal(o.loaded, false); assert.throws(() => o.connectCarrierDropRequest(), /순서/);
+    } finally { o.dispose(); }
+    assert.throws(() => hooks.project([0, 0]), /반납/);
+});
