@@ -3456,7 +3456,7 @@
       "bytes": 105618,
       "lines": 865,
       "fixtureCommit": "850ae8679",
-      "webCommit": "worktree",
+      "webCommit": "c0e0c606c",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierMining.cpp": "850ae8679",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
@@ -7900,21 +7900,22 @@
         "webpj/tests/priest-panic.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-priest-panic.js"
+        "webpj/www/core/raw-priest-panic.js",
+        "webpj/www/core/raw-campaign-session-panic.js"
       ],
       "doc": "docs/webpj-priest-small-parts-20261108.md",
       "cpppjSources": [
         "cpppj/src/o/RawPriestPanic.cpp"
       ],
-      "scope": "10.78 전용 단일 판본 600행 전부 사용",
+      "scope": "10.78 전용 단일 판본 600행 전부 사용; E644 Session 연결은 별도 집중 검사로 확인",
       "text": true,
       "sha256": "2edee42327cb649db426ff16470992fb6512bd44864c559b8a45d0ca4b631ffa",
       "bytes": 293550,
       "lines": 601,
-      "fixtureCommit": "ab3ef43d",
-      "webCommit": "dade628c",
+      "fixtureCommit": "ab3ef43d3",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPriestPanic.cpp": "ab3ef43d"
+        "cpppj/src/o/RawPriestPanic.cpp": "ab3ef43d3"
       }
     },
     {
@@ -8448,7 +8449,7 @@
       "bytes": 1082972,
       "lines": 1111,
       "fixtureCommit": "d00175c9d",
-      "webCommit": "worktree",
+      "webCommit": "c0e0c606c",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierTransfer.cpp": "079f170e3",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
@@ -10161,7 +10162,7 @@
       "bytes": 553540,
       "lines": 2313,
       "fixtureCommit": "5c2d0a1e5",
-      "webCommit": "worktree",
+      "webCommit": "c0e0c606c",
       "cpppjBasis": {
         "cpppj/src/o/RawGeyserMined.cpp": "0d82e448d",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
