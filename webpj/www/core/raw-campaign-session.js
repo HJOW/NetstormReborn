@@ -4,7 +4,7 @@
 import { RawCampaignSessionOwners } from './raw-campaign-session-owners.js';
 import { learnCampaignNewTechnology } from './raw-campaign-callbacks.js';
 import { refreshLocalRitualData } from './raw-ritual-refresh.js';
-import { createCampaignAi, crankCampaignAiMoney, setCampaignAiParameter, prepareCampaignAi, initializeCampaignAi } from './raw-campaign-session-ai-public.js';
+import { createCampaignAi, crankCampaignAiMoney, setCampaignAiParameter, prepareCampaignAi, initializeCampaignAi, makeCampaignAi } from './raw-campaign-session-ai-public.js';
 
 // Impl990..1865의 이미 이식한 생성 순서다. 각 단계는 같은 owner의 실제 하위 모듈을 한 번 만든다.
 const CONSTRUCTOR_STEPS = Object.freeze([
@@ -73,6 +73,8 @@ export class RawCampaignSession {
     battleOption(offset) { const options = this.#live().battleOptions; if (!Number.isInteger(offset) || offset < 0 || offset >= options.length) throw new RangeError('Session 전투 옵션 범위'); return options[offset]; }
     // 설치된 미션의 Player에 실제 AI를 생성한다.
     createAi(owner, settings) { return createCampaignAi(this.#live(), owner, settings); }
+    // 일반 AI 설정과 객체 이전을 현재 Session에서 실행한다.
+    makeAi(owner) { makeCampaignAi(this.#live(), owner); }
     // 현재 생존 AI 지갑에 원본 직접 명령을 실행한다.
     crankAiMoney() { crankCampaignAiMoney(this.#live()); }
     // packed 입력의 선택된 AI 필드에 원본 직접 명령을 실행한다.
