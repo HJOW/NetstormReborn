@@ -66,6 +66,7 @@ public sealed class ClientHostGame : Game
 
     /// <summary>--mission 진입으로 조립한 현재 미션 세션이다. 없으면 메뉴만 돈다.</summary>
     private HostSession? _missionSession;
+    private RawSurfaceStorage? _missionStorage;
 
     /// <summary>HTML과 상위 메뉴가 공유할 원본 80칸 스크립트 문자열 고리.</summary>
     private readonly ScriptStringRing _scriptStrings = new();
@@ -275,7 +276,9 @@ public sealed class ClientHostGame : Game
         MissionPlayers players = MissionPlayers.Load(key => script.Get(key), fort.Fort, types, 6500);
         // 독립 일반 월드의 fresh 설치에서만 정적 목록의 기존 배열을 초기화한다.
         _sidLists.PrepareGeneralWorld();
-        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists);
+        // NativeStorage 전환(0.595): 미션 풀을 장기 저장소에서 빌린다. 세션이 저장소를 소유하고 풀 바이트·덤프는 별도 풀과 같다(근거 cpppj RawCampaignSession.cpp 991행).
+        var storage = new RawSurfaceStorage(OriginalEdition.Patch1078);
+        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool);
         // 적재 실패에서도 이 호출이 만든 외부 연소장치만 반납한다.
         HostMissionBurning? pendingBurning = null;
         try
@@ -432,6 +435,7 @@ public sealed class ClientHostGame : Game
             // 단일 미션의 첫 지역(+0x78)은 소용돌이→섬 소유자→첫 지역 사슬이 적재 중 기록한다(R6: 신전 Pop·postPop 표시와 함께).
             // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
             _missionSession = session;
+            _missionStorage = storage;
             _missionBurning = pendingBurning;
             return session;
         }
