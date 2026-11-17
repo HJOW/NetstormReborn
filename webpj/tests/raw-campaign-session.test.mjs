@@ -24,6 +24,19 @@ function session(extra = {}, fort = { sections: Array.from({ length: 35 }, () =>
     });
 }
 
+// 외곽의 공개 보기는 같은 장기 옵션·참여 상태이며 미션 설치를 가장하지 않는다.
+test('CampaignSession 공개 AI: 같은 옵션과 Load 전 관문', () => {
+    const options = new Uint8Array(87), s = session({ missionOptions: options });
+    try {
+        s.hiddenPlayers()[2] = 17; assert.equal(options[0x40], 17); options[6] = 3; assert.equal(s.battleOption(6), 3);
+        assert.equal(s.alliances(), s.alliances()); assert.equal(s.participation(), s.participation());
+        assert.throws(() => s.battleOption(87), /범위/); assert.throws(() => s.createAi(1, new Uint8Array(600)), /설치/);
+        assert.throws(() => s.crankAiMoney(), /미설치/); s.setAiParameter(0); assert.throws(() => s.prepareAi(1), /설치/);
+        assert.throws(() => s.initializeAi(1), /설치/); assert.equal(s.loaded, false);
+    } finally { s.dispose(); }
+    assert.throws(() => s.alliances(), /반납/);
+});
+
 // cpppj TwoActualSessions의 Load 전 생성/공개·동일 전역 재사용 범위다. Load 뒤 비교는4D-2h·4D-10에 남긴다.
 test('CampaignSharedGameplay_TwoActualSessionsPublishAndRetireSameGlobals: 실제 외곽 생성 범위', () => {
     const subscriberGlobals = new ClientSubscriberGlobals(), gameplayGlobals = new ClientGameplayGlobals(subscriberGlobals), playerRecords = new ClientPlayerRecords();

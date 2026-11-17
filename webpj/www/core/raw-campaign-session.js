@@ -4,6 +4,7 @@
 import { RawCampaignSessionOwners } from './raw-campaign-session-owners.js';
 import { learnCampaignNewTechnology } from './raw-campaign-callbacks.js';
 import { refreshLocalRitualData } from './raw-ritual-refresh.js';
+import { createCampaignAi, crankCampaignAiMoney, setCampaignAiParameter, prepareCampaignAi, initializeCampaignAi } from './raw-campaign-session-ai-public.js';
 
 // Impl990..1865의 이미 이식한 생성 순서다. 각 단계는 같은 owner의 실제 하위 모듈을 한 번 만든다.
 const CONSTRUCTOR_STEPS = Object.freeze([
@@ -62,6 +63,24 @@ export class RawCampaignSession {
     core() { return { ...this.#live().core }; }
     // 생성과 실제 설치 완료를 구별한다. 이 단계는 항상 false다.
     get loaded() { return this.#live().loaded; }
+    // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
+    alliances() { return this.#live().alliances; }
+    // 현재 Player 참여와 AI 소유자 수명을 빌린다.
+    participation() { return this.#live().participation; }
+    // 같은 옵션 저장소의 숨김 Player 바이트를 빌린다.
+    hiddenPlayers() { return this.#live().hiddenPlayers; }
+    // 현재 87바이트 옵션의 유효한 위치를 조회한다.
+    battleOption(offset) { const options = this.#live().battleOptions; if (!Number.isInteger(offset) || offset < 0 || offset >= options.length) throw new RangeError('Session 전투 옵션 범위'); return options[offset]; }
+    // 설치된 미션의 Player에 실제 AI를 생성한다.
+    createAi(owner, settings) { return createCampaignAi(this.#live(), owner, settings); }
+    // 현재 생존 AI 지갑에 원본 직접 명령을 실행한다.
+    crankAiMoney() { crankCampaignAiMoney(this.#live()); }
+    // packed 입력의 선택된 AI 필드에 원본 직접 명령을 실행한다.
+    setAiParameter(packed) { setCampaignAiParameter(this.#live(), packed); }
+    // 현재 Player의 AI 준비 행동을 한 번 진행한다.
+    prepareAi(owner) { return prepareCampaignAi(this.#live(), owner); }
+    // 현재 Player의 초기 전략이 준비되었는지 확인한다.
+    initializeAi(owner) { return initializeCampaignAi(this.#live(), owner); }
     // 외곽 callback이 같은 현재 기술 부모/안내 본문을 선택한다.
     learnNewTechnology(type) { learnCampaignNewTechnology(this.#live(), type); }
     // 전체 저장의 설치 관문도 기존 실제 owner가 유지한다.
