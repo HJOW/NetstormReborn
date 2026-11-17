@@ -68,6 +68,7 @@ import { writeCampaignFortTechnology } from './raw-campaign-content-save.js';
 import { writeCampaignFortObjectChunk } from './raw-campaign-object-save.js';
 import { writeCampaignFortObjects } from './raw-campaign-objects-save.js';
 import { writeCampaignFortTerritory } from './raw-campaign-territory-save.js';
+import { refreshCampaignPlayerCore, writeCampaignFortCoreData } from './raw-campaign-core-write.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -652,6 +653,18 @@ export class RawCampaignSessionOwners {
     snapshotFortTerritory(slot) {
         if (!this.loaded) throw new Error('실제 Session 설치 전 Territory 저장');
         this.writeFortTerritory(slot);
+    }
+
+    // 같은 현재 Core 포인터·기술 finder·실제 Pool의 다이스 가상80으로 Core를 갱신한다.
+    refreshCurrentPlayerCore() {
+        if (this.#disposed) throw new Error('반납한 Session 현재 Core 갱신');
+        refreshCampaignPlayerCore(this);
+    }
+
+    // 원문 manager/모드 관문 뒤 실제 Player/Client seed·공유 난수를 같은 CoreData stream에 연결한다.
+    writeFortCoreDataBody(slot) {
+        if (this.#disposed) throw new Error('반납한 Session CoreData 쓰기');
+        writeCampaignFortCoreData(this, slot);
     }
 
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
