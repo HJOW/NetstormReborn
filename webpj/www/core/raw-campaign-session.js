@@ -12,6 +12,9 @@ import { registerConstructionData } from './raw-packet-dispatch.js';
 import { receiveConstructionReject } from './raw-construction-failure-packets.js';
 import { battleIncomeAmount, battleIncomePeriod } from './raw-battle-option-slots.js';
 import { decodeOriginalText } from '../assets/text-encoding.js';
+import { registerDeveloperCommandPacket } from './raw-developer-command-packet.js';
+import { registerMissionSettingsPacket } from './raw-mission-settings-packet.js';
+import { observePathData } from './raw-path-data.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -90,7 +93,7 @@ export class RawCampaignSession {
         if (o.loaded || this.#login || !o.services.localLogin) throw new Error('실제 로컬 Login의 새 수명/장치 계약 오류');
         const login = new RawCampaignSessionLoginFront(o, o.services.localLogin);
         try {
-            login.bindServer(() => { this.load(); throw new Error('실제 게임 명령 수신 등록 미연결'); });
+            login.bindServer(() => { this.load(); this.registerCarrierCommandPrefix(login.transport.dispatch); throw new Error('나머지 게임 명령 수신 등록 미연결'); });
             login.bindClient(); login.registerReceivers();
         } catch (error) { login.dispose(); throw error; }
         this.#login = login; login.begin(parentRunning);
@@ -202,6 +205,50 @@ export class RawCampaignSession {
                 }
             });
         }
+    }
+    // 33h의 서버 SID만 현재 World에서 Unpop·원문 frame 저장·Pop한다.
+    #receivePosition(packet) {
+        const o = this.#live(); if (packet.length < 6) throw new RangeError('위치 수신의 WORD SID 부족');
+        const sid = packet[4] | (packet[5] << 8), c = o.core;
+        if (sid >= 5 && sid < 15000) return;
+        if (c.pool.slot(sid)[11] & 7) return;
+        o.world.unpop(sid, 0); const raw = c.pool.allocated(sid), data = new DataView(packet.buffer, packet.byteOffset, packet.byteLength);
+        new DataView(raw.buffer, raw.byteOffset, raw.byteLength).setUint32(36, data.getUint32(14, true), true);
+        const x = Math.fround(data.getInt32(6, true) / 65536), y = Math.fround(data.getInt32(10, true) / 65536);
+        o.world.pop(sid, x, y, 0);
+    }
+    // 34h는 현재 화면 크기와 같은 Client 카메라 목표·갱신 전역에만 요청한다.
+    #receiveCamera(packet) {
+        const o = this.#live(), data = new DataView(packet.buffer, packet.byteOffset, packet.byteLength);
+        const y = data.getFloat32(8, true), x = data.getFloat32(4, true);
+        if (typeof o.services.cameraScreenSize !== 'function') throw new Error('카메라 수신의 현재 논리 화면 크기 장치 미연결');
+        const size = o.services.cameraScreenSize(); o.gameplayGlobals.camera().requestCenter(x, y, size.x, size.y, o.localStateGlobals.metaRebuild());
+    }
+    // 35h는 현재 게임 시각으로 건설 효과를 준비한 뒤 실제 섬 정리를 호출한다.
+    #receiveDropIsland(packet) {
+        const o = this.#live(), data = new DataView(packet.buffer, packet.byteOffset, packet.byteLength);
+        const x = Math.fround(data.getInt32(4, true) / 65536), owner = data.getUint32(16, true), flags = data.getUint32(12, true);
+        const y = Math.fround(data.getInt32(8, true) / 65536);
+        if (!o.buildingEffects) throw new Error('섬 정리 수신의 실제 건설 효과 미설치');
+        o.assetModules.prepareBuilding(o.core.processState.now); o.buildingEffects.dropIsland(x, y, flags, owner);
+    }
+    // Carrier 등록의 동맹·개발자·설정·위치·카메라·섬 정리·경로 앞부분만 원본 순서대로 등록한다.
+    registerCarrierCommandPrefix(dispatch) {
+        const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 Carrier 수신 등록');
+        this.registerAllianceNegotiationCommands(dispatch);
+        registerDeveloperCommandPacket(dispatch, (text) => {
+            this.#live(); if (typeof o.executeDeveloperCommand !== 'function') throw new Error('실제 개발자 명령 해석기 미연결'); o.executeDeveloperCommand(text);
+        }, (expression, file, line) => o.world.storage.assertDisplay(expression, file, line));
+        registerMissionSettingsPacket(dispatch, o.gameplayGlobals.gameAux().missionSettings());
+        // 원본 세 고정 길이의 현재 등록 metadata를 순서대로 설정한다.
+        for (const [type, length] of [[0x33, 18], [0x34, 12], [0x35, 20]]) { dispatch.observe(type, null); dispatch.version(type, 1, 0); dispatch.requireLength(type, length); }
+        dispatch.register(0x33, (_sender, _connection, packet) => this.#receivePosition(packet));
+        dispatch.register(0x34, (_sender, _connection, packet) => this.#receiveCamera(packet));
+        dispatch.register(0x35, (_sender, _connection, packet) => this.#receiveDropIsland(packet));
+        const storage = o.world.storage;
+        dispatch.observePacket(0x30, (packet, sending) => observePathData(packet, sending, (expression, file, line) => storage.assertDisplay(expression, file, line)));
+        dispatch.version(0x30, 1, 0); dispatch.requireLength(0x30, 0xffff);
+        dispatch.register(0x30, (_sender, _connection, packet) => { this.#live(); if (!o.motion?.paths) throw new Error('Path 수신의 실제 이동 본체 미연결'); o.motion.paths.receivePacket(packet); });
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }

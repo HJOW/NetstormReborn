@@ -16,6 +16,8 @@ import { CampaignTemplateStorage } from '../www/core/campaign-template-storage.j
 import { ClientPlayerRecords } from '../www/core/client-player-records.js';
 import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
+import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
+import { ClientLocalStateGlobals } from '../www/core/client-local-state-globals.js';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 import { loadOriginalForts, readData } from './helpers.mjs';
 
@@ -36,6 +38,7 @@ function scene(overrides = {}, savedFort = fort) {
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
+        gameplayGlobals: overrides.gameplayGlobals, localStateGlobals: overrides.localStateGlobals, cameraScreenSize: overrides.cameraScreenSize,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
         player: { log: () => trace.push('log') }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
         ai: { assertion: forbidden('AI 진단'), ...overrides.ai },
@@ -64,7 +67,7 @@ test('CampaignSession Tutorial 1: 로컬 로그인에서 실제 외곽 Load까�
         assert.equal(s.localConnectionReady(), false); assert.equal(s.pollLocalConnectionState(), false);
         s.startLocalConnection(); assert.equal(s.localConnectionPhase(), 8); assert.equal(s.loaded, false);
         s.pumpLocalConnection(); assert.equal(s.pollLocalConnectionState(), true); assert.equal(s.localConnectionPhase(), 10);
-        assert.throws(() => s.pumpLocalConnection(), /실제 게임 명령 수신 등록 미연결/);
+        assert.throws(() => s.pumpLocalConnection(), /나머지 게임 명령 수신 등록 미연결/);
         assert.equal(s.loaded, true); assert.ok(s.localConnectionPackets().includes(0x27)); assert.equal(s.localConnectionReady(), false);
         assert.throws(() => s.startLocalConnection(), /새 수명/);
     } finally { s.dispose(); }
@@ -110,6 +113,27 @@ test('CampaignSession Tutorial 1: 동맹 요청 직접 수신', () => {
         dispatch.invokeDirect(0x77, 2, null, Uint8Array.of(1, 0x77, 6, 0, 2, 1)); assert.deepEqual(tells, ['AllianceRequested(~r,Bob,2)']);
     } finally { s.dispose(); }
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
+});
+
+// Carrier 앞단은 같은 Client 설정과 카메라 목표를 사용하고 예약 SID 위치 통지를 건너뛴다.
+test('CampaignSession Tutorial 1: Carrier 앞단 설정과 카메라 수신', () => {
+    const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals();
+    const { s } = scene({ gameplayGlobals: gameplay, localStateGlobals: local, cameraScreenSize: () => ({ x: 800, y: 600 }) });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        assert.throws(() => s.registerCarrierCommandPrefix(dispatch), /미설치/); s.load(); s.registerCarrierCommandPrefix(dispatch);
+        // 원본 앞단의 등록과 길이를 같은 분배 표에서 확인한다.
+        for (const type of [0x77, 0x79, 0x6f, 0x31, 0x32, 0x33, 0x34, 0x35, 0x30]) assert.equal(typeof dispatch.registration(type).receive, 'function');
+        assert.equal(dispatch.registration(0x33).length, 18); assert.equal(dispatch.registration(0x34).length, 12); assert.equal(dispatch.registration(0x35).length, 20);
+        const revision = local.metaRebuild().value, camera = Uint8Array.of(1, 0x34, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0), view = new DataView(camera.buffer);
+        view.setFloat32(4, 10, true); view.setFloat32(8, 20, true);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), camera), true);
+        assert.deepEqual([...gameplay.camera().target().pixels], [-240, -80]); assert.equal(local.metaRebuild().value, (revision + 1) >>> 0);
+        const settings = new Uint8Array(32); settings.set([1, 0x32, 32, 0]); new DataView(settings.buffer).setUint32(4, 0x12345678, true);
+        dispatch.dispatch(new PacketConnection({ sender: 1 }), settings); assert.equal(gameplay.gameAux().missionSettings()[0], 0x12345678);
+        const reserved = new Uint8Array(18); reserved.set([1, 0x33, 18, 0, 5, 0]); assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), reserved), true);
+    } finally { s.dispose(); }
+    assert.throws(() => s.registerCarrierCommandPrefix(dispatch), /반납/);
 });
 
 // 원본 기본 AI 설정의 같은 600BYTE 입력에 명시 이름·기술·초기 SP만 지정한다.
