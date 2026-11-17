@@ -205,6 +205,8 @@ export class RawCampaignSessionOwners {
     aiManaProbeType = 71; aiDropEvaluation = null;
     // AI 배치 스캔의 원본 초기 영역과 같은 월드 탐색기다.
     aiDropScanBounds = { left: 10, top: 10, right: 246, bottom: 246 }; aiDropScan = null;
+    // AI 배치 후보에서 현재 기술 종류를 고르는 선택기다.
+    aiDropSelection = null;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -758,6 +760,12 @@ export class RawCampaignSessionOwners {
     connectAiDropScan() {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 배치 스캔 설치 전/반납');
         this.motionRuntimeModules.bindAiDropScan();
+    }
+
+    // 스캔 뒤 현재 기술과 후보를 사용하는 배치 선택기를 설치한다.
+    connectAiDropSelection() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 배치 선택 설치 전/반납');
+        this.motionRuntimeModules.bindAiDropSelection();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

@@ -329,6 +329,24 @@ test('AI 배치 스캔: 선행 관문과 일반 표면', () => {
     } finally { o.dispose(); }
 });
 
+// 배치 선택은 현재 방향 TYPE과 공용 본체를 사용하고 설치 순서를 지킨다.
+test('AI 배치 선택: 선행 관문과 현재 방향 종류', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget(); o.connectAiDropTargets(); o.connectAiDropEvaluation();
+        assert.throws(() => o.connectAiDropSelection(), /순서/);
+        o.connectAiDropScan(); o.connectAiDropSelection();
+        assert.equal(o.aiDropSelection.pool, o.core.pool);
+        const current = o.state.constructionState.confirm.patternTypesRead()[4];
+        assert.equal(o.aiDropSelection.directional(current), true);
+        o.state.gunState.thunderCannonType = 132;
+        assert.equal(o.aiDropSelection.directional(132), true);
+        assert.equal(o.aiDropSelection.directional(0xffffffff), false);
+        assert.throws(() => o.connectAiDropSelection(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

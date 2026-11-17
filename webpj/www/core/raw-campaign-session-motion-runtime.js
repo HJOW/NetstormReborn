@@ -22,6 +22,7 @@ import { GunGroundTargetGlobals, RawGunGroundTarget } from './raw-gun-ground-tar
 import { RawAiDropTargets } from './raw-ai-drop-targets.js';
 import { RawAiDropEvaluation } from './raw-ai-drop-evaluation.js';
 import { RawAiDropScan } from './raw-ai-drop-scan.js';
+import { RawAiDropSelection, AI_DROP_SELECTION_LOG } from './raw-ai-drop-selection.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -56,6 +57,8 @@ export class RawCampaignSessionMotionRuntime {
     aiDropEvaluationHooks = null;
     // AI 배치 스캔의 실제 발자국·후보 평가 장치다.
     aiDropScanHooks = null;
+    // AI 배치 선택이 사용하는 현재 기술과 후보 처리 장치다.
+    aiDropSelectionHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -310,6 +313,31 @@ export class RawCampaignSessionMotionRuntime {
         const globals = { bridgeType: () => c.bridgeState.bridgeType, bounds: () => o.aiDropScanBounds };
         o.aiDropScan = new RawAiDropScan(o.aiMemory, c.pool, c.types, c.frames, c.spots, c.hash.view(0), o.alliances, o.random, globals, hooks);
         this.aiDropScanHooks = hooks;
+    }
+    // 후보 스캔 뒤 현재 기술 내용물과 네 방향 TYPE으로 배치 대상을 선택한다.
+    bindAiDropSelection() {
+        this.#live(); const o = this.#owner, c = o.core, s = o.state;
+        if (!this.aiDropScanHooks || this.aiDropSelectionHooks || o.aiDropSelection) throw new Error('Session AI 배치 선택 설치 순서 오류');
+        const directional = Array(4);
+        // 원본의 네 전역은 값 복사 대신 매 조회마다 현재 TYPE을 읽는다.
+        for (let index = 0; index < 4; index += 1) Object.defineProperty(directional, index, { get: () => s.constructionState.confirm.patternTypesRead()[index + 4] });
+        const hooks = {
+            technology: (owner) => { this.#live(); return o.aiProductionModules.technology(owner); },
+            count: (parent) => { this.#live(); return countContained(c.pool, o.priestState.contained, parent, 8, 0); },
+            blocker: (parent) => { this.#live(); return findContainedGenus(c.pool, o.priestState.contained, c.types, parent, 8, 0x4000000, 0); },
+            nth: (parent, index) => { this.#live(); const sid = o.priests.carrier.findContained(parent, 8, 0, index); if (!sid) return 0; const raw = c.pool.slot(sid); return raw[18] | (raw[19] << 8); },
+            mayPlace: (query) => { this.#live(); o.assetModules.prepareConstruction(); return o.constructionModules.mayPlace(query); },
+            remove: (token, index) => { this.#live(); o.aiDropScan.remove(token, index); },
+            log: (token, action, type, direction) => {
+                this.#live(); if (!o.services.player.log) throw new Error('AI 배치 선택 실제 로그 미연결');
+                const raw = o.aiMemory.bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+                const kind = action === AI_DROP_SELECTION_LOG.hated ? 29 : o.gameplayGlobals.aiDebug().read(0x52f3d4);
+                const message = action === AI_DROP_SELECTION_LOG.hated ? 'I hated the last one...' : action === AI_DROP_SELECTION_LOG.retried ? 'That worked. Lets try it again!' : `Scanning ${c.types[type].name} at rotation ${direction}.\n`;
+                o.services.player.log(kind, `AI${view.getInt32(0x260, true)}: ${message}\n`);
+            },
+        };
+        o.aiDropSelection = new RawAiDropSelection(o.aiMemory, c.pool, c.types, directional, o.random, () => c.processState.now, hooks);
+        this.aiDropSelectionHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }
