@@ -807,9 +807,12 @@ public sealed partial class HostSession
     /// <param name="types">같은 실제 TYPE 표다. 패치판 188개·CD판 171개여야 한다.</param>
     /// <param name="shapes">같은 순서의 표시 셰이프 목록이다. 타입 개수와 같아야 한다.</param>
     /// <param name="factory">빌릴 외부 공장. null이면 세션 전용으로 만든다. 넘기면 같은 풀 소속이어야 하며 소유자의 바인딩 그대로 쓴다.</param>
+    /// <param name="hash">빌릴 외부 공간 해시. null이면 세션 전용으로 만든다. 넘기면 요새 장치와 같은 인스턴스를 공유한다.</param>
+    /// <param name="spots">빌릴 외부 점유 지도. null이면 세션 전용으로 만든다. 해시와 함께 넘겨야 하며 WorldCells² 크기여야 한다.</param>
     /// <remarks>2026-11-12 0.466에서 지형 Pop 공간 등록 라이브 연결용으로 추가했다. 근거: cpppj MakeTerrainStampWorldHooks(core.factory·core.hash·core.shapes→FrameSize)의 세션 결선이다.
-    /// 0.597에서 저장소 공장 전환용으로 외부 공장 빌림을 추가했다.</remarks>
-    public void BuildTerrainPopDevices(IReadOnlyList<OriginalTypeRecord> types, List<SquidDisplayShape> shapes, RawSquidFactory? factory = null)
+    /// 0.597에서 저장소 공장 전환용으로 외부 공장 빌림을 추가했다.
+    /// 0.598에서 저장소 공간 공유용으로 외부 해시·점유지 빌림을 추가했다.</remarks>
+    public void BuildTerrainPopDevices(IReadOnlyList<OriginalTypeRecord> types, List<SquidDisplayShape> shapes, RawSquidFactory? factory = null, RawSquidHash? hash = null, byte[]? spots = null)
     {
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(shapes);
@@ -821,13 +824,21 @@ public sealed partial class HostSession
         {
             throw new ArgumentException("지형 Pop 외부 공장의 풀 불일치", nameof(factory));
         }
+        if ((hash is null) != (spots is null))
+        {
+            throw new ArgumentException("지형 Pop 외부 해시·점유지는 함께 빌린다", nameof(hash));
+        }
+        if (spots is not null && spots.Length != RawSquidHash.WorldCells * RawSquidHash.WorldCells)
+        {
+            throw new ArgumentException("지형 Pop 외부 점유지 크기 오류", nameof(spots));
+        }
         _terrainFactory = factory ?? new RawSquidFactory(Pool, types);
         if (factory is null)
         {
             BindFactoryHitPoints(_terrainFactory, types);
         }
-        _terrainHash = new RawSquidHash();
-        _terrainSpots = new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells];
+        _terrainHash = hash ?? new RawSquidHash();
+        _terrainSpots = spots ?? new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells];
         _terrainDisplay = new SquidDisplay(
             Pool.Edition,
             types,

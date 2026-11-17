@@ -10,10 +10,12 @@ namespace Netstorm.Client.Tests;
 // 0.595에서 추가됐다. (R4-1 잔여 중 HostSession 별도 풀 제거)
 public sealed class HostSessionPoolTransitionTests
 {
-    /// <summary>실제 자료로 live 장면을 조립한다. 빌린 풀·공장이 있으면 그걸 쓴다.</summary>
+    /// <summary>실제 자료로 live 장면을 조립한다. 빌린 풀·공장·공간이 있으면 그걸 쓴다.</summary>
     /// <param name="pool">빌릴 외부 풀. null이면 세션 전용 풀을 만든다.</param>
     /// <param name="factory">빌릴 외부 공장. null이면 세션 전용으로 만든다.</param>
-    private static HostSession LoadLiveScene(RawSidPool? pool, RawSquidFactory? factory = null)
+    /// <param name="hash">빌릴 외부 공간 해시. null이면 세션 전용으로 만든다.</param>
+    /// <param name="spots">빌릴 외부 점유 지도. null이면 세션 전용으로 만든다.</param>
+    private static HostSession LoadLiveScene(RawSidPool? pool, RawSquidFactory? factory = null, RawSquidHash? hash = null, byte[]? spots = null)
     {
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
         var startup = new HostStartupScene(data);
@@ -24,7 +26,7 @@ public sealed class HostSessionPoolTransitionTests
         byte[] shpRaw = startup.Files.ReadAllBytes("d/_shapes.shp");
         var shpDb = new ShapeDatabase(shpRaw);
         List<SquidDisplayShape> shapes = TerrainDisplayShapes.Build(definitions, shpDb);
-        session.BuildTerrainPopDevices(table.Types, shapes, factory);
+        session.BuildTerrainPopDevices(table.Types, shapes, factory, hash, spots);
         session.BuildFortObjectDevices(table.Types, session.WorldFrames, factory);
         MissionFortLoadResult fort = MissionFortLoad.Load(startup, "thewarbegins");
         HostFortObjectLiveTests.BuildLiveTerrainFirst(session, fort.Fort, table.Types);
@@ -113,6 +115,36 @@ public sealed class HostSessionPoolTransitionTests
 
         var changed = LoadLiveScene(storage.Pool, storage.FactoryExecutor());
         Assert.NotEqual(own.Pool.Bytes.ToArray(), changed.Pool.Bytes.ToArray());
+    }
+
+    /// <summary>풀·공장·공간을 모두 저장소에서 빌려도 live 장면이 완전히 같다.</summary>
+    [Fact]
+    public void StorageSpaceKeepsLiveSceneIdentical()
+    {
+        var own = LoadLiveScene(null);
+        var storage = new RawSurfaceStorage(OriginalEdition.Patch1078);
+        var mission = MissionTable();
+        ClientHostGame.InstallMissionStorageTables(storage, mission.Types, mission.WorldFrames, mission.Shapes);
+        var borrowed = LoadLiveScene(storage.Pool, storage.FactoryExecutor(), storage.Hash, storage.Spots);
+        Assert.Same(storage.Hash, borrowed.TerrainPopHash);
+        Assert.Same(storage.Spots, borrowed.TerrainPopSpots);
+        Assert.Equal(UsedSlots(own), UsedSlots(borrowed));
+        Assert.Equal(own.Pool.Bytes.ToArray(), borrowed.Pool.Bytes.ToArray());
+        Assert.Equal(own.Game.State(), borrowed.Game.State());
+    }
+
+    /// <summary>해시·점유지 한쪽만 빌리거나 크기가 다르면 거부한다.</summary>
+    [Fact]
+    public void BuildersRejectMismatchedSpace()
+    {
+        var session = new HostSession(new Kernel(), new GameRandom(1u), new CrtRandom());
+        var mission = MissionTable();
+        List<SquidDisplayShape> shapes = mission.Shapes;
+        var hash = new RawSquidHash();
+        // 한쪽만 넘기면 거부한다.
+        Assert.Throws<System.ArgumentException>(() => session.BuildTerrainPopDevices(mission.Types, shapes, null, hash, null));
+        Assert.Throws<System.ArgumentException>(() => session.BuildTerrainPopDevices(mission.Types, shapes, null, null, new byte[RawSquidHash.WorldCells * RawSquidHash.WorldCells]));
+        Assert.Throws<System.ArgumentException>(() => session.BuildTerrainPopDevices(mission.Types, shapes, null, hash, new byte[8]));
     }
 
     /// <summary>미션 표 3종을 실제 자료에서 읽는다.</summary>

@@ -368,7 +368,7 @@ public sealed class ClientHostGame : Game
             List<SquidDisplayShape> popShapes = TerrainDisplayShapes.Build(worldDefinitions, shpDb);
             // NativeStorage 일원화(0.596): 미션 표를 장기 저장소에 넣어 공장 일원화의 바탕을 둔다. 저장소는 독립 사본을 소유한다.
             InstallMissionStorageTables(storage, types.Types, session.WorldFrames, popShapes);
-            session.BuildTerrainPopDevices(types.Types, popShapes, storage.FactoryExecutor());
+            session.BuildTerrainPopDevices(types.Types, popShapes, storage.FactoryExecutor(), storage.Hash, storage.Spots);
             // 요새 객체 적재 장치. 지형 Pop과 같은 해시·spots·표시를 공유한다(cpppj RawCampaignWorldRuntime, 0.467).
             // 공장·실행기 일원화(0.597): 두 장치의 생성 공장을 저장소 공장으로 통일한다. 표는 0.596에서 저장소에 넣었다.
             session.BuildFortObjectDevices(types.Types, session.WorldFrames, storage.FactoryExecutor());
