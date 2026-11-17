@@ -207,6 +207,8 @@ export class RawCampaignSessionOwners {
     aiDropScanBounds = { left: 10, top: 10, right: 246, bottom: 246 }; aiDropScan = null;
     // AI 배치 후보에서 현재 기술 종류를 고르는 선택기다.
     aiDropSelection = null;
+    // 부족 좌표의 실제 기하와 원본 초기 디버그 표식 TYPE이다.
+    aiDryGeometry = null; aiDryMarkerType = 104;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -766,6 +768,12 @@ export class RawCampaignSessionOwners {
     connectAiDropSelection() {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 배치 선택 설치 전/반납');
         this.motionRuntimeModules.bindAiDropSelection();
+    }
+
+    // 배치 선택 뒤 같은 지면과 객체를 사용하는 부족 좌표 기하를 설치한다.
+    connectAiDryGeometry() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 부족 좌표 기하 설치 전/반납');
+        this.motionRuntimeModules.bindAiDryGeometry();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

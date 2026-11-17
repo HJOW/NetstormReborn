@@ -347,6 +347,23 @@ test('AI 배치 선택: 선행 관문과 현재 방향 종류', () => {
     } finally { o.dispose(); }
 });
 
+// 부족 좌표 기하는 현재 지면과 같은 Pool의 상태 WORD를 사용한다.
+test('AI 부족 좌표 기하: 선행 관문과 실제 월드', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    const module = o.motionRuntimeModules;
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch(); o.connectAiGroundTarget(); o.connectAiDropTargets(); o.connectAiDropEvaluation(); o.connectAiDropScan();
+        assert.throws(() => o.connectAiDryGeometry(), /순서/);
+        o.connectAiDropSelection(); o.connectAiDryGeometry();
+        assert.equal(o.aiDryGeometry.pool, o.core.pool); assert.equal(o.aiDryMarkerType, 104);
+        assert.equal(module.aiDryGeometryHooks.surface(12, 13), o.core.hash.cell(0, 12, 13));
+        const sid = o.world.create(80); module.aiDryGeometryHooks.word(sid, 0x1234);
+        assert.deepEqual(Array.from(o.core.pool.slot(sid).subarray(12, 14)), [0x34, 0x12]);
+        assert.throws(() => o.connectAiDryGeometry(), /순서/); assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+    assert.throws(() => module.aiDryGeometryHooks.surface(12, 13), /반납/);
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

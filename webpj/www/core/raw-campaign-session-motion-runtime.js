@@ -23,6 +23,7 @@ import { RawAiDropTargets } from './raw-ai-drop-targets.js';
 import { RawAiDropEvaluation } from './raw-ai-drop-evaluation.js';
 import { RawAiDropScan } from './raw-ai-drop-scan.js';
 import { RawAiDropSelection, AI_DROP_SELECTION_LOG } from './raw-ai-drop-selection.js';
+import { RawAiDryGeometry } from './raw-ai-dry-geometry.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -59,6 +60,8 @@ export class RawCampaignSessionMotionRuntime {
     aiDropScanHooks = null;
     // AI 배치 선택이 사용하는 현재 기술과 후보 처리 장치다.
     aiDropSelectionHooks = null;
+    // 부족 좌표 탐색의 현재 지도와 표식 생성·삭제 효과다.
+    aiDryGeometryHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -338,6 +341,25 @@ export class RawCampaignSessionMotionRuntime {
         };
         o.aiDropSelection = new RawAiDropSelection(o.aiMemory, c.pool, c.types, directional, o.random, () => c.processState.now, hooks);
         this.aiDropSelectionHooks = hooks;
+    }
+    // 배치 선택 뒤 같은 지면과 월드 객체를 부족 좌표 기하에 연결한다.
+    bindAiDryGeometry() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!this.aiDropSelectionHooks || this.aiDryGeometryHooks || o.aiDryGeometry) throw new Error('Session AI 부족 좌표 기하 설치 순서 오류');
+        const globals = {
+            get bounds() { return o.aiDropScanBounds; },
+            get debug() { return o.gameplayGlobals.aiDebug().read(0x52f3dc); },
+            get markerType() { return o.aiDryMarkerType; },
+        };
+        const hooks = {
+            surface: (x, y) => { this.#live(); return c.hash.cell(0, x, y); },
+            create: (type, flags) => { this.#live(); return o.world.create(type, flags); },
+            word: (sid, value) => { this.#live(); const raw = c.pool.allocated(sid); raw[12] = value & 255; raw[13] = (value >>> 8) & 255; if (raw[10] === c.bridgeState.bridgeType) c.building.notifySurface(sid); },
+            pop: (sid, point, flags) => { this.#live(); o.world.pop(sid, point.x, point.y, flags); },
+            destroy: (sid, flags) => { this.#live(); o.world.destroy(sid, flags); },
+        };
+        o.aiDryGeometry = new RawAiDryGeometry(c.pool, globals, hooks);
+        this.aiDryGeometryHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }
