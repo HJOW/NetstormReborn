@@ -9,6 +9,7 @@ import { RawCampaignMotionState } from './raw-campaign-motion-bindings.js';
 import { createCanonPlacementPipelineState } from './raw-canon-placement-pipeline.js';
 import { CarrierPostPopState } from './raw-carrier-post-pop.js';
 import { CarrierTransferState } from './raw-carrier-transfer.js';
+import { CarrierPickupState } from './raw-carrier-pickup.js';
 import { RawConnectionActivity } from './raw-connection-activity.js';
 import { ConstructionArrivalState } from './raw-construction-arrival.js';
 import { ConstructionEffectsState } from './raw-construction-effects.js';
@@ -82,6 +83,8 @@ export class RawCampaignSessionState {
     runeState = new RunePostPopState(); ritualState = new TempleRitualState();
     damageablePostState = new DamageablePostDestroyState(); damageableReleaseState = new DamageableReleaseState();
     carrierTransferState = new CarrierTransferState(); contentLifetimeState = new ContentLifetimeState(); carrierState = new CarrierPostPopState();
+    // 원문4f 요청/현재 명령과 Session에서 켜는 NB18 안전 관문이다.
+    carrierPickupState = new CarrierPickupState();
     // RawGeyserMined는 값형 상태를 받는다. TYPE/권한의 현재 읽기는 아래에서 같은 owner로 연결한다.
     geyserMinedState = { boss: true, checking: 0, nuggetType: 154, emptyGeyserType: 84, isleType: 97, bridgeType: 82 };
     // 실제 경로/건설·배치·시작/AI의 상태다.

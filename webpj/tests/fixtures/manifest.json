@@ -663,22 +663,27 @@
       "producer": "cpppj 원본 일반 사각형 탐색기 Begin(004b16d0)/Next(004b1810) x86 관측(세 PE)",
       "modules": [
         "webpj/www/core/raw-squid-finder.js",
-        "webpj/www/core/squid-hash.js"
+        "webpj/www/core/squid-hash.js",
+        "webpj/www/core/raw-campaign-session-motion.js"
       ],
       "cpppjSources": [
         "cpppj/src/o/RawSquidFinder.cpp",
-        "cpppj/src/o/RawSquidFinder.h"
+        "cpppj/src/o/RawSquidFinder.h",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawCampaignSession.h"
       ],
-      "scope": "10.78 Find 584행(커서·동적 입력). Pre/Post 다리 삭제 훅 24행은 WB04-D/E, CD/10.37 행은 웹 범위 밖",
+      "scope": "10.78 Find 584행(커서·동적 입력). Pre/Post 다리 삭제 훅 24행은 WB04-D/E, CD/10.37 행은 웹 범위 밖 / E641: Session3806..3844의 같은 Pool 기준점/현재공간·일반자원줍기 결선. NB18은 실제Session만true, 원본소비검사 기본false 유지. 신규조립5건은 직접소비자가 아님(docs/webpj-session-motion-inputs-20261117.md)",
       "text": true,
       "sha256": "f67209295fcedf4e44283ca8a099a48b220a2a4ea556f5cf8cd9a77db224ad16",
       "bytes": 674895,
       "lines": 1777,
-      "fixtureCommit": "5879152b",
-      "webCommit": "0563c07f",
+      "fixtureCommit": "5879152b2",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawSquidFinder.cpp": "f58fec2e",
-        "cpppj/src/o/RawSquidFinder.h": "225f2322"
+        "cpppj/src/o/RawSquidFinder.cpp": "f58fec2e3",
+        "cpppj/src/o/RawSquidFinder.h": "225f2322c",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.h": "bda77381e"
       }
     },
     {
@@ -7002,21 +7007,26 @@
         "webpj/tests/player-placement-anchor.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-player-placement-anchor.js"
+        "webpj/www/core/raw-player-placement-anchor.js",
+        "webpj/www/core/raw-campaign-session-motion.js"
       ],
       "doc": "docs/webpj-player-geyser-anchor-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawPlayerPlacementAnchor.cpp"
+        "cpppj/src/o/RawPlayerPlacementAnchor.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawCampaignSession.h"
       ],
-      "scope": "10.78(originals) 1598행 전부 사용(originalCD·original1037 각 1598행은 범위 밖)",
+      "scope": "10.78(originals) 1598행 전부 사용(originalCD·original1037 각 1598행은 범위 밖) / E641: Session3806..3844의 같은 Pool 기준점/현재공간·일반자원줍기 결선. NB18은 실제Session만true, 원본소비검사 기본false 유지. 신규조립5건은 직접소비자가 아님(docs/webpj-session-motion-inputs-20261117.md)",
       "text": true,
       "sha256": "2f21f734822ec3b3fd8875ca329c049f549c602becdb7d395aed799cbdf0192d",
       "bytes": 11959995,
       "lines": 4796,
-      "fixtureCommit": "e6afe25a",
-      "webCommit": "3ba74d81",
+      "fixtureCommit": "e6afe25a9",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawPlayerPlacementAnchor.cpp": "2d166e07"
+        "cpppj/src/o/RawPlayerPlacementAnchor.cpp": "2d166e07a",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.h": "bda77381e"
       }
     },
     {
@@ -8355,21 +8365,26 @@
         "webpj/tests/carrier-pickup.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-carrier-pickup.js"
+        "webpj/www/core/raw-carrier-pickup.js",
+        "webpj/www/core/raw-campaign-session-motion.js"
       ],
       "doc": "docs/webpj-carrier-bodies-20261108.md",
       "cpppjSources": [
-        "cpppj/src/o/RawCarrierPickup.cpp"
+        "cpppj/src/o/RawCarrierPickup.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawCampaignSession.h"
       ],
-      "scope": "10.78 전용 단일 판본 2657행 전부 사용",
+      "scope": "10.78 전용 단일 판본 2657행 전부 사용 / E641: Session3806..3844의 같은 Pool 기준점/현재공간·일반자원줍기 결선. NB18은 실제Session만true, 원본소비검사 기본false 유지. 신규조립5건은 직접소비자가 아님(docs/webpj-session-motion-inputs-20261117.md)",
       "text": true,
       "sha256": "2245911a825393ecf233e261f486b47efce2ce941339fc5dd123023f0a02441e",
       "bytes": 5666122,
       "lines": 2658,
-      "fixtureCommit": "318bfd14",
-      "webCommit": "6fae5622",
+      "fixtureCommit": "318bfd148",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawCarrierPickup.cpp": "318bfd14"
+        "cpppj/src/o/RawCarrierPickup.cpp": "046222826",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.h": "bda77381e"
       }
     },
     {

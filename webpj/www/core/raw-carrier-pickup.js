@@ -29,6 +29,8 @@ export class CarrierPickupState {
     request = { message: 0x4f, protocol: 1, length: 9 };
     command = 0x030000b1;
     silentType = 168;
+    // 내용물을 든 운반체의 사제 줍기 거부 스위치다. 원문 관측용 기본값은 꺼두고 실제 Session이 켠다(NB18).
+    refuseHeldPriest = false;
 }
 
 // 선택된 실제 효과 누락을 빈 동작으로 바꾸지 않는다. (2026-11-08 WB04-E73)
@@ -95,6 +97,12 @@ export class RawCarrierPickup {
         return this.#types[type].flags2 >>> 0;
     }
 
+    // NB18: 사제 대상과 기존 mask1 내용물이 모두 있을 때 요청/수신을 같은 조건으로 거부한다.
+    #refusesHeldPriest(parent, target) {
+        if (!this.#state.refuseHeldPriest || !(this.#genus(target) & 0x200000)) return false;
+        return need(this.#hooks.find)(parent, 1, 0, 0) !== 0;
+    }
+
     // 생성 효과가 free/void 등을 바꾸어도 원본처럼 현재 물리 BYTE 의 dead 비트만 바꾼다. (2026-11-08 WB04-E73)
     #dead(sid, value) {
         const raw = this.#pool.physical(sid);
@@ -107,6 +115,7 @@ export class RawCarrierPickup {
         const raw = this.#pool.slot(parent);
         const found = need(hooks.candidate)(parent, floatOf(read(raw, X_OFFSET)), floatOf(read(raw, Y_OFFSET)))[0];
         if (!found || !this.#boss()) return;
+        if (this.#refusesHeldPriest(parent, found)) return;
         // 원본은 후보 슬롯을 그대로 보며 genus 확인 뒤 권한을 다시 읽는다.
         const target = this.#pool.physical(found);
         if (!this.#single()) this.#genus(found);
@@ -146,6 +155,7 @@ export class RawCarrierPickup {
             if (!this.#boss()) return;
         }
         if ((this.#pool.slot(target)[STATE_OFFSET] & FREE_OR_DEAD) || (this.#pool.slot(parent)[STATE_OFFSET] & FREE_OR_DEAD) || this.#pool.slot(target)[TYPE_OFFSET] !== packet[8]) return;
+        if (this.#refusesHeldPriest(parent, target)) return;
         if (this.#genus(target) & REVEAL_GENUS) target = need(hooks.reveal)(target);
         need(hooks.queue)(this.#state.command >>> 0, target, read(packet, 4, 2));
         if (this.#genus(target) & DISCARD_GENUS) this.discard(parent);
