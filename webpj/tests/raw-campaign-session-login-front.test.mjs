@@ -23,9 +23,9 @@ function devices(trace) {
 }
 
 // 실제 Tutorial 1 자산과 원래 생성 순서로 Player 참여 부모만 준비한다.
-function loginServerOwner() {
+function loginServerOwner(extra = {}) {
     const archive = new TaffArchive(readData(ARCHIVE_PATH)), entry = loadOriginalForts(archive).find((candidate) => /thewarbegins.fort$/i.test(candidate.source));
-    const fort = parseFort(entry.bytes, createFortTypes(TypeTable.fromArchive(archive, decodeOriginalText))), o = campaignOwners();
+    const fort = parseFort(entry.bytes, createFortTypes(TypeTable.fromArchive(archive, decodeOriginalText))), o = campaignOwners(extra);
     try { o.connectWorldInstall(fort); o.connectOutcome(); o.connectAiBrains(); return o; } catch (error) { o.dispose(); throw error; }
 }
 
@@ -500,5 +500,22 @@ test('Session Login 시작: 요청 소비와 상태7 UI 순서', () => {
         assert.equal(request.consumed, true); assert.equal(request.zone.length, 0); assert.equal(blocks.phase[0], 8); assert.equal(blocks.next[0], 9);
         assert.equal(blocks.old[0], 7); assert.equal(blocks.phase[1], 20); assert.equal(o.localStateGlobals.activityEnd().value, 110.5);
         assert.deepEqual(trace.filter((item) => ['렌더러', 'UI2', '진행', '팔레트'].includes(item)), ['렌더러', 'UI2', '진행', '팔레트']);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// 실제 27h가 서버에 도달하고 같은 연결·Player를 사용한 뒤 미연결 월드 설치에서 중단한다.
+test('Session Login 서버: 실제 내부 큐의 로그인 수신과 월드 설치 경계', () => {
+    const archive = new TaffArchive(readData(ARCHIVE_PATH)), bytes = archive.read('\\d\\thewarbegins.fort'), trace = [];
+    const o = loginServerOwner({ missionFortFileSelect: () => ({ fileName: 'thewarbegins', read: () => Uint8Array.from(bytes) }),
+        missionFortLoad: { readOnly: () => true }, install: { refreshWindowTitle: () => trace.push('제목') } });
+    const front = new RawCampaignSessionLoginFront(o, { ...devices(trace), clock: () => 1234, refresh: () => trace.push('갱신') });
+    try {
+        front.bindServer(); front.bindClient(); front.registerReceivers(); o.globals.missionPost = true;
+        front.begin(); front.pump(); front.state.poll();
+        assert.equal(o.localStateGlobals.state().phase[0], 10);
+        assert.throws(() => front.pump(), /현재 Session Load 설치 미연결/);
+        assert.ok(front.wireTypes.includes(0x27)); assert.equal(front.transport.lifetime.owner(), 1); assert.ok(front.transport.lifetime.queuedFrames > 0);
+        assert.equal(o.playerState.playerKnown, 1); assert.equal(o.players[180 + 0x50] & 3, 3);
+        assert.equal(o.templateStorage.ownedImages(), 1); assert.equal(o.templateStorage.name(1), 'thewarbegins'); assert.ok(!trace.includes('제목'));
     } finally { front.dispose(); o.dispose(); }
 });
