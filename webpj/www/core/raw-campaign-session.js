@@ -5,6 +5,7 @@ import { RawCampaignSessionOwners } from './raw-campaign-session-owners.js';
 import { learnCampaignNewTechnology } from './raw-campaign-callbacks.js';
 import { refreshLocalRitualData } from './raw-ritual-refresh.js';
 import { createCampaignAi, crankCampaignAiMoney, setCampaignAiParameter, prepareCampaignAi, initializeCampaignAi, makeCampaignAi } from './raw-campaign-session-ai-public.js';
+import { RawCampaignSessionAiActions } from './raw-campaign-session-ai-actions.js';
 
 // Impl990..1865의 이미 이식한 생성 순서다. 각 단계는 같은 owner의 실제 하위 모듈을 한 번 만든다.
 const CONSTRUCTOR_STEPS = Object.freeze([
@@ -50,6 +51,8 @@ export class RawCampaignSession {
 
     // 반납한 외곽 주소가 낡은 Impl이나 다음 세대의 전역을 다시 사용하지 못하게 한다.
     #live() { if (this.#disposed || !this.#owner) throw new Error('반납한 외곽 Session'); return this.#owner; }
+    // 호출 시 살아 있는 같은 owner로 AI 행동 전달기를 구성한다.
+    #aiActions() { return new RawCampaignSessionAiActions(this.#live()); }
     // 두 독립 if마다 현재 모드/owner를 다시 읽는다. manager 부재의 선행 생략을 추가하지 않는다.
     #snapshotCurrent() {
         const o = this.#live();
@@ -83,6 +86,28 @@ export class RawCampaignSession {
     prepareAi(owner) { return prepareCampaignAi(this.#live(), owner); }
     // 현재 Player의 초기 전략이 준비되었는지 확인한다.
     initializeAi(owner) { return initializeCampaignAi(this.#live(), owner); }
+    // 현재 기술 부모의 AI 다리 재고를 보충한다.
+    refreshAiBridges(owner) { return this.#aiActions().refreshBridges(owner); }
+    // 호출자 scratch로 AI 다리 경로를 한 번 진행한다.
+    advanceAiBridge(owner, target, scratch) { return this.#aiActions().advanceBridge(owner, target, scratch); }
+    // 같은 본체의 AI 경제 정리를 진행한다.
+    reconcileAiEconomy(owner) { return this.#aiActions().reconcileEconomy(owner); }
+    // 선택된 생산물을 현재 월드에 배치한다.
+    deployAi(owner, type, x, y, argument, direction) { return this.#aiActions().deploy(owner, type, x, y, argument, direction); }
+    // 같은 본체의 수집자 확보 행동을 진행한다.
+    ensureAiCollectors(owner) { return this.#aiActions().ensureCollectors(owner); }
+    // 같은 본체의 시설 생산 행동을 진행한다.
+    manageAiFactories(owner) { return this.#aiActions().manageFactories(owner); }
+    // 현재 부족 좌표 목록에 배치 후보를 기록한다.
+    recordAiDrySpot(owner, x, y, type) { return this.#aiActions().recordDrySpot(owner, x, y, type); }
+    // 부족 좌표 목록 한 항목을 재검사한다.
+    recheckAiDrySpots(owner) { return this.#aiActions().recheckDrySpots(owner); }
+    // 같은 난수로 부족 좌표 후보를 선택한다.
+    seedAiDrySpot(owner) { return this.#aiActions().seedDrySpot(owner); }
+    // 실제 표면과 경계에서 가짜 부족 좌표를 계산한다.
+    computeAiDryCandidate(source, target) { return this.#aiActions().computeDryCandidate(source, target); }
+    // 같은 AI 본체의 가짜 부족 좌표를 갱신한다.
+    extendAiFakeDrySpots(owner) { return this.#aiActions().extendFakeDrySpots(owner); }
     // 외곽 callback이 같은 현재 기술 부모/안내 본문을 선택한다.
     learnNewTechnology(type) { learnCampaignNewTechnology(this.#live(), type); }
     // 전체 저장의 설치 관문도 기존 실제 owner가 유지한다.
