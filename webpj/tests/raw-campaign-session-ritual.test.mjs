@@ -161,6 +161,24 @@ test('회수 명령: 현재 금지와 실제 송신 패킷', () => {
     } finally { o.dispose(); }
 });
 
+// 운반 이동은 같은 Graph·현재 경로를 조회해 실제 내부 전송으로 보낸다.
+test('운반 이동: 설치 순서와 경로 요청 패킷', () => {
+    const sent = [];
+    const o = scene(true, { carrierRequest: (target, packet) => sent.push([target, [...packet]]), deletion: { selected: () => 0 } });
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice();
+        assert.throws(() => o.connectCarrierMove(), /순서/);
+        o.connectSalvage(); o.connectCarrierMove();
+        assert.equal(o.carrierMove.pool, o.core.pool);
+        const priest = o.world.create(158);
+        o.carrierMove.request(priest, { x: 4, y: 5 }, 0);
+        assert.equal(sent.length, 1); assert.equal(sent[0][0], 9);
+        assert.deepEqual(sent[0][1].slice(0, 6), [1, 0x40, 18, 0, priest & 255, priest >>> 8]);
+        assert.throws(() => o.connectCarrierMove(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

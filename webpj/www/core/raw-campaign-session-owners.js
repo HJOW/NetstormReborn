@@ -187,6 +187,8 @@ export class RawCampaignSessionOwners {
     contentNotice = null; priestTakenNotice = null; devastationTargets = null; devastationEffect = null;
     // 회수 요청과 서버 수신의 같은 월드 처리기다.
     salvageCommand = null;
+    // 같은 World의 운반체 이동 요청과 수신 처리기다.
+    carrierMove = null;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -686,6 +688,12 @@ export class RawCampaignSessionOwners {
     connectSalvage() {
         if (this.#disposed || !this.ritualModules) throw new Error('Session 회수 명령 설치 전/반납');
         this.ritualModules.bindSalvage();
+    }
+
+    // 회수 명령 뒤 운반체 이동의 현재 선택·경로·전송을 설치한다.
+    connectCarrierMove() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session 운반 이동 설치 전/반납');
+        this.motionRuntimeModules.bindCarrierMove();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

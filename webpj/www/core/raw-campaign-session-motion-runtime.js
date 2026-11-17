@@ -7,6 +7,10 @@ import { RawContainedLookup } from './raw-contained-lookup.js';
 import { RawCampaignMotionBindings } from './raw-campaign-motion-bindings.js';
 import { startSelectionContentPreview } from './raw-squid-selection.js';
 import { typeNumber, typeString } from '../assets/type-table.js';
+import { CarrierMoveState, RawCarrierMove } from './raw-carrier-move.js';
+import { findAttachedProcess } from './raw-wind-aviary-process.js';
+import { RawPathProcess } from './raw-path-process.js';
+import { RawSquidFinder } from './raw-squid-finder.js';
 
 // 선택한 자리에서만 원문의 미연결 함수 경계를 요구한다.
 function fillMissing(table, key) { if (!table[key]) table[key] = () => { throw new Error(`Session 이동 본체의 실제 ${key} 미연결`); }; }
@@ -20,6 +24,8 @@ export class RawCampaignSessionMotionRuntime {
     // 현재6BYTE 헤더의 지역 수명과 같은 채취/전달 함수 표다.
     miningHeader = { message: 0x5b, protocol: 1, length: 6 };
     minedHooks = null; miningHooks = null; transferHooks = null;
+    // 운반 이동 요청의 현재 패킷 헤더와 같은 월드의 효과다.
+    moveState = null; moveHooks = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -73,6 +79,38 @@ export class RawCampaignSessionMotionRuntime {
         fillMissing(e.path, 'stepSound');
         o.motion = new RawCampaignMotionBindings(o.world, o.priests, o.islands, o.contained, o.anchor, o.hp, o.metadata.frames, s.motionState, s.start, s.process, e);
         this.#ready = true;
+    }
+    // 의식과 회수 뒤 현재 선택·경로·운반 대상에 이동 요청과 수신을 연결한다.
+    bindCarrierMove() {
+        this.#live(); const o = this.#owner, c = o.core;
+        if (!o.salvageCommand || this.moveState || o.carrierMove) throw new Error('Session 운반 이동 설치 순서 오류');
+        const state = new CarrierMoveState(), send = o.services.carrierRequest;
+        const hooks = {
+            selected: () => { this.#live(); if (!o.services.deletion.selected) throw new Error('이동 요청의 현재 선택 조회 미연결'); return o.services.deletion.selected(); },
+            select: (sid, force, activate) => { this.#live(); const selection = o.activeSelection?.deref()?.selection; if (!selection) throw new Error('이동 요청의 현재 선택 수명 미연결'); selection.select(sid, force, activate); },
+            assertion: (line) => { this.#live(); throw new Error(`원본 Carrier.cpp 이동 진단 ${line}`); },
+            connected: (a, b) => { this.#live(); return o.anchor.graphAt(a.x, a.y) === o.anchor.graphAt(b.x, b.y); },
+            movement: (kind) => { this.#live(); return o.priests.movementProcessType(kind); },
+            path: (parent, kind) => { this.#live(); const form = findAttachedProcess(c.pool, parent, kind); if (!form) return null; const process = c.processes.fromForm(form); if (!(process instanceof RawPathProcess)) throw new Error('이동 요청의 현재 종속/Host 경로 불일치'); return process.runtime; },
+            send: (target, packet) => { this.#live(); if (!send) throw new Error('이동 요청 실제 송신 미연결'); send(target, packet); },
+            regular: (parent, event) => { this.#live(); return Boolean(c.processes.findEvent(parent, event)); },
+            candidate: (parent, point) => { this.#live(); return o.motion.carrierArrival.pickupCandidate(parent, point.x, point.y); },
+            returnPlace: (point) => { this.#live(); return o.motion.cleanup.returnPlaceAt(point.x, point.y, 0); },
+            target: (parent, place) => { this.#live(); o.carrierTarget.startTarget(parent, place, 0, 0); },
+            genusAt: (point, genus) => {
+                this.#live(); const finder = new RawSquidFinder(c.pool, c.hash, c.types);
+                const area = { left: Math.trunc(point.x), top: Math.trunc(point.y), right: Math.trunc(point.x), bottom: Math.trunc(point.y) };
+                // 원본 finder의 첫 현재 genus 일치 후보를 반환한다.
+                for (let sid = finder.begin(area, (genus & 6) === 0 ? 1 : 0); sid; sid = finder.next()) if (c.types[c.pool.slot(sid)[10]].flags2 & genus) return sid;
+                return 0;
+            },
+            geyser: (parent, geyser) => { this.#live(); return o.carrierTarget.goGeyser(parent, geyser)?.runtime ?? null; },
+            altarAllowed: (dais, priest) => { this.#live(); return o.sacrificeRequest.allowed(dais, priest); },
+            sacrifice: (priest, dais) => { this.#live(); o.sacrificeRequest.begin(priest, dais); },
+            start: (request) => { this.#live(); return o.carrierRoutingModules.startMotion(request)?.runtime ?? null; },
+        };
+        o.carrierMove = new RawCarrierMove(c.pool, c.types, () => c.ownerMode.fort, state, hooks);
+        this.moveState = state; this.moveHooks = hooks;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }

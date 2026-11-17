@@ -3425,7 +3425,7 @@
       "bytes": 6061,
       "lines": 129,
       "fixtureCommit": "f591fc054",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestSacrificeRequest.cpp": "f591fc054"
       }
@@ -5416,7 +5416,7 @@
       "bytes": 2675715,
       "lines": 3459,
       "fixtureCommit": "82b754e44",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawSalvageCommand.cpp": "82b754e44"
       }
@@ -7416,7 +7416,7 @@
       "bytes": 598782,
       "lines": 1921,
       "fixtureCommit": "552656c0c",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawRunePostPop.cpp": "21bb25505"
       }
@@ -8123,7 +8123,7 @@
       "bytes": 135254,
       "lines": 1051,
       "fixtureCommit": "4ed940133",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestRitualFrame.cpp": "4ed940133"
       }
@@ -8153,7 +8153,7 @@
       "bytes": 237189,
       "lines": 1753,
       "fixtureCommit": "b76adf95c",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawPriestRitualActions.cpp": "b76adf95c"
       }
@@ -9646,7 +9646,8 @@
         "webpj/tests/carrier-move.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-carrier-move.js"
+        "webpj/www/core/raw-carrier-move.js",
+        "webpj/www/core/raw-campaign-session-motion-runtime.js"
       ],
       "doc": "docs/webpj-carrier-move-20261108.md",
       "cpppjSources": [
@@ -9657,10 +9658,10 @@
       "sha256": "e59f542e07dd2248bfba155c7957bd51297706a7074687d939956d00dc5c346a",
       "bytes": 630169,
       "lines": 983,
-      "fixtureCommit": "f3e45255",
-      "webCommit": "1c797936",
+      "fixtureCommit": "f3e45255a",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawCarrierMove.cpp": "9388cd63"
+        "cpppj/src/o/RawCarrierMove.cpp": "9388cd633"
       }
     },
     {
@@ -10044,7 +10045,7 @@
       "bytes": 279988,
       "lines": 505,
       "fixtureCommit": "1a3ccedb7",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawForeignRitualReward.cpp": "1a3ccedb7"
       }
@@ -14863,7 +14864,7 @@
       "bytes": 506376,
       "lines": 1445,
       "fixtureCommit": "db9b626c0",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisContentNotice.cpp": "efcd13e47"
       }
@@ -18535,7 +18536,7 @@
       "bytes": 3273217,
       "lines": 6721,
       "fixtureCommit": "552656c0c",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawTempleRitual.cpp": "21bb25505"
       },
@@ -18565,7 +18566,7 @@
       "bytes": 274069,
       "lines": 669,
       "fixtureCommit": "5bdb5bedf",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisRegular.cpp": "21bb25505",
         "cpppj/src/o/RawRitualRegular.cpp": "21bb25505"
@@ -18598,7 +18599,7 @@
       "bytes": 2485473,
       "lines": 2965,
       "fixtureCommit": "db9b626c0",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisRegular.cpp": "21bb25505",
         "cpppj/src/o/RawRitualRegular.cpp": "21bb25505",
@@ -18667,7 +18668,7 @@
       "bytes": 2022850,
       "lines": 2867,
       "fixtureCommit": "5bdb5bedf",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawAltarSacrifice.cpp": "21bb25505",
         "cpppj/src/o/RawRitualRegular.cpp": "21bb25505",
@@ -18720,7 +18721,7 @@
       "bytes": 1329913,
       "lines": 1929,
       "fixtureCommit": "db9b626c0",
-      "webCommit": "worktree",
+      "webCommit": "b68f381e7",
       "cpppjBasis": {
         "cpppj/src/o/RawDaisLifecycle.cpp": "4ee213870",
         "cpppj/src/o/RawDaisDeletion.cpp": "21bb25505"
