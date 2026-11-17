@@ -24552,7 +24552,7 @@
       "bytes": 1039319,
       "lines": 640,
       "fixtureCommit": "c7459e61d",
-      "webCommit": "worktree",
+      "webCommit": "3a3ac6bc5",
       "cpppjBasis": {
         "cpppj/src/o/RawFortTerritorySave.cpp": "c7459e61d",
         "cpppj/src/o/RawFortTerritorySave.h": "c7459e61d"
@@ -24583,7 +24583,7 @@
       "bytes": 1315924,
       "lines": 20164,
       "fixtureCommit": "c7459e61d",
-      "webCommit": "worktree",
+      "webCommit": "3a3ac6bc5",
       "cpppjBasis": {
         "cpppj/src/o/RawFortTerritorySave.cpp": "c7459e61d",
         "cpppj/src/o/RawFortTerritorySave.h": "c7459e61d"
@@ -24614,10 +24614,196 @@
       "bytes": 12985,
       "lines": 190,
       "fixtureCommit": "c7459e61d",
-      "webCommit": "worktree",
+      "webCommit": "3a3ac6bc5",
       "cpppjBasis": {
         "cpppj/src/o/RawFortTerritorySave.cpp": "c7459e61d",
         "cpppj/src/o/RawFortTerritorySave.h": "c7459e61d"
+      }
+    },
+    {
+      "id": "fort-money-save",
+      "path": "cpppj/tests/fixtures/fort-money-save-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE 관측",
+      "consumers": [
+        "webpj/tests/fort-snapshot-writers.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-money-save.js"
+      ],
+      "unit": "WB04-E633",
+      "doc": "docs/webpj-fort-snapshot-writers-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortMoneySave.cpp",
+        "cpppj/src/o/RawFortMoneySave.h"
+      ],
+      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여",
+      "text": true,
+      "sha256": "8e00dee550343283727a3c3b8188a509ed00533545883f4223106fa39a11beb3",
+      "bytes": 483479,
+      "lines": 1106,
+      "fixtureCommit": "fa7762f9e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortMoneySave.cpp": "fa7762f9e",
+        "cpppj/src/o/RawFortMoneySave.h": "fa7762f9e"
+      }
+    },
+    {
+      "id": "fort-mission-save",
+      "path": "cpppj/tests/fixtures/fort-mission-save-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE 관측",
+      "consumers": [
+        "webpj/tests/fort-snapshot-writers.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-mission-save.js"
+      ],
+      "unit": "WB04-E633",
+      "doc": "docs/webpj-fort-snapshot-writers-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortMissionSave.cpp",
+        "cpppj/src/o/RawFortMissionSave.h"
+      ],
+      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여",
+      "text": true,
+      "sha256": "ead46e5bd2408705cce7f79de814b767e03af872e0d0682e85409eb4803c9966",
+      "bytes": 131723,
+      "lines": 231,
+      "fixtureCommit": "fa7762f9e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortMissionSave.cpp": "fa7762f9e",
+        "cpppj/src/o/RawFortMissionSave.h": "fa7762f9e"
+      }
+    },
+    {
+      "id": "fort-badges-save",
+      "path": "cpppj/tests/fixtures/fort-badges-save-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE 관측",
+      "consumers": [
+        "webpj/tests/fort-snapshot-writers.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-badges-save.js"
+      ],
+      "unit": "WB04-E633",
+      "doc": "docs/webpj-fort-snapshot-writers-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortBadgesSave.cpp",
+        "cpppj/src/o/RawFortBadgesSave.h"
+      ],
+      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여",
+      "text": true,
+      "sha256": "ec75999aa1489573f259d3c5257a7ed6fb954f6c57f6afc2f8d08c439eadda2f",
+      "bytes": 5045581,
+      "lines": 1353,
+      "fixtureCommit": "fa7762f9e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortBadgesSave.cpp": "fa7762f9e",
+        "cpppj/src/o/RawFortBadgesSave.h": "fa7762f9e"
+      }
+    },
+    {
+      "id": "fort-core-write",
+      "path": "cpppj/tests/fixtures/fort-core-write-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE 관측",
+      "consumers": [
+        "webpj/tests/fort-snapshot-writers.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-core-write.js"
+      ],
+      "unit": "WB04-E633",
+      "doc": "docs/webpj-fort-snapshot-writers-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortCoreWrite.cpp",
+        "cpppj/src/o/RawFortCoreWrite.h"
+      ],
+      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여",
+      "text": true,
+      "sha256": "5d87a16ad853181b699d3bba206d7dfdc80dc141aeb8cf15a237923c91f3e49c",
+      "bytes": 201111,
+      "lines": 339,
+      "fixtureCommit": "2ede40273",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortCoreWrite.cpp": "2ede40273",
+        "cpppj/src/o/RawFortCoreWrite.h": "2ede40273"
+      }
+    },
+    {
+      "id": "fort-core-write-extra",
+      "path": "cpppj/tests/fixtures/fort-core-write-extra-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE 관측",
+      "consumers": [
+        "webpj/tests/fort-snapshot-writers.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-core-write.js"
+      ],
+      "unit": "WB04-E633",
+      "doc": "docs/webpj-fort-snapshot-writers-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortCoreWrite.cpp",
+        "cpppj/src/o/RawFortCoreWrite.h"
+      ],
+      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여",
+      "text": true,
+      "sha256": "19c69aeedae078f61a2f6c308e596a3753107e586e6dc8f3b45f987bac649cca",
+      "bytes": 13449,
+      "lines": 23,
+      "fixtureCommit": "2ede40273",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortCoreWrite.cpp": "2ede40273",
+        "cpppj/src/o/RawFortCoreWrite.h": "2ede40273"
+      }
+    },
+    {
+      "id": "fort-core-write-callbacks",
+      "path": "cpppj/tests/fixtures/fort-core-write-callbacks-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 최초 독립 PE 관측",
+      "consumers": [
+        "webpj/tests/fort-snapshot-writers.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-core-write.js"
+      ],
+      "unit": "WB04-E633",
+      "doc": "docs/webpj-fort-snapshot-writers-20261117.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortCoreWrite.cpp",
+        "cpppj/src/o/RawFortCoreWrite.h"
+      ],
+      "scope": "캠페인 공용 저장 자식의 전체 raw/현재 상태/호출 순서·부분 중단 대조. 실제 전체 Session snapshot 결선은4D-1b 잔여",
+      "text": true,
+      "sha256": "fcf39b23ea35a1f24470796933c9d77d1ce2ba7e66a65074c2ad7ea9c5b81361",
+      "bytes": 24235,
+      "lines": 37,
+      "fixtureCommit": "2ede40273",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortCoreWrite.cpp": "2ede40273",
+        "cpppj/src/o/RawFortCoreWrite.h": "2ede40273"
       }
     }
   ]
