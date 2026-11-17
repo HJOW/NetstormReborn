@@ -27,6 +27,8 @@ import { SquidFrame } from './squid-frame.js';
 import { makeSquidFrameHooks } from './squid-frame-binding.js';
 import { SquidOwner } from './squid-owner.js';
 import { SquidPop } from './squid-pop.js';
+import { attachCommonForm, popCommonForm } from './squid-forms.js';
+import { commonContainedSetParent, commonContainedSetPreviousAtTable } from './squid-contained-unpop.js';
 import { SquidPostPop } from './squid-postpop.js';
 import { SquidProcessHost, createProcessHostRuntime } from './squid-process.js';
 import { makeAssetOwnerDispatch } from './raw-asset-owner.js';
@@ -624,6 +626,32 @@ export class RawSurfaceWorld {
     // 현재 raw 프레임의 실제 SHP 크기가 공간 등록에 쓰인다. (2026-11-11 WB04-E299)
     pop(sid, x, y, flags = 0) {
         this.#popObject(sid, x, y, flags);
+    }
+
+    // 004ad330의 진단·좌표·내용물 UI 뒤 같은 World의 공통 부착과 가상 후처리를 실행한다.
+    attachBaseAsset(sid, parent, flags) {
+        const storage = this.#storage, pool = storage.pool;
+        if (pool.edition !== 'patch1078') throw new Error('자산 종속 수신의 PATCH 가상 몸체 계약');
+        const assertion = (expression, file, line) => storage.assertDisplay(expression, file, line);
+        assertion('0', '\\Ns\\O\\Squid.cpp', 0x72a);
+        const raw = pool.physical(sid), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+        view.setUint32(18, 0, true); view.setFloat32(14, parent, true);
+        (this.#sessionContainedUnpop ?? this.#containedUnpop).notifyUi(sid);
+        const hooks = {
+            assertion,
+            genus: (type) => { if (type >= storage.types.length) throw new RangeError('자산 종속 수신의 현재 TYPE 범위'); return storage.types[type].flags2; },
+            contentType: () => (this.#sessionContainedUnpop ?? this.#containedUnpop).contentFormType,
+            setParent: (form, _table, into) => commonContainedSetParent(pool, form, into),
+            setPrevious: (form, table, previous) => commonContainedSetPreviousAtTable(pool, form, table, previous),
+            // 공통 Form Pop도 현재 송신기와 같은 PostPop 깊이·가상 본체를 사용한다.
+            pop: (form, popFlags) => popCommonForm(pool, form, popFlags, {
+                assertion, server: () => pool.isServer, depth: () => this.#postPop.activationDepth.value,
+                setDepth: (value) => { this.#postPop.activationDepth.value = value; },
+                postPop: (object, _table, value) => this.#postPop.postPopVirtual(object, value),
+                transmit: (object, _x, _y, _z, value) => { if (!this.#squidTransmission) throw new Error('종속 자산의 실제 Squid 전송 미연결'); this.#squidTransmission.pop(object, value); },
+            }),
+        };
+        attachCommonForm(pool, sid, parent, flags, hooks); this.#changed = true;
     }
 
     // 현재 raw 타입의 실제 공간/표시 해제 몸체를 호출한다. (2026-11-11 WB04-E299)

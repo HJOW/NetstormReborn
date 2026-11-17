@@ -81,3 +81,21 @@ test('Session 객체 수신: 현재 기술 장부와 Player 경고', () => {
     assert.equal(local.playerNoMakeWarnings()[80], 0); assert.equal(new DataView(players.buffer).getUint32(180 + 0x54, true), 0);
     assert.deepEqual(events, [['배치', sid, 2.5, 3.25, 0x48]]);
 });
+
+// 공통 객체의 종속 플래그는 진단 복귀 뒤 같은 World 부착에 부모 WORD와 첫 Pop flags를 전달한다.
+test('Session 객체 수신: 종속 자산의 실제 World 부착 전달', () => {
+    const pool = new SidPool(24000, { server: true }), sid = pool.allocate(), raw = pool.physical(sid), packet = packetFor(sid), events = [];
+    const types = Array.from({ length: 188 }, () => ({ flags1: 0, techBitIndex: -1, name: 'Generic' }));
+    packet[17] = 0x18; packet[18] = 0; new DataView(packet.buffer).setUint16(6, 123, true);
+    const o = {
+        core: { pool, types, bridgeState: { bridgeType: 82 }, building: {}, factory: {
+            take: (type) => { new DataView(raw.buffer, raw.byteOffset, raw.byteLength).setUint32(0, 0x501ea0, true); raw[10] = type; return sid; },
+            firstPopFlags: () => 0x40,
+        } },
+        gameplayGlobals: { gameAux: () => new GameAuxState() }, localStateGlobals: new ClientLocalStateGlobals(),
+        ownership: { setOwner: (_sid, owner) => { raw[34] = owner; } }, services: { player: {} },
+        world: { storage: { assertDisplay: (expression, _file, line) => events.push(['진단', expression, line]) }, attachBaseAsset: (...args) => events.push(['부착', ...args]) },
+    };
+    receiveSessionSquid(o, packet);
+    assert.deepEqual(events, [['진단', '!(s->isContained())', 0xc5], ['부착', sid, 123, 0x48]]);
+});

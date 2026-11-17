@@ -50,7 +50,7 @@ export function receiveSessionSquid(o, packet) {
             const view = dword(o.players, owner * 180 + 0x54); view.setUint32(0, view.getUint32(0, true) | 0x400, true);
         },
         pop: (sid, x, y, flags) => o.world.pop(sid, x, y, flags),
-        containedPop: () => { throw new Error('객체 수신의 실제 BaseAsset 부착 미연결'); },
+        containedPop: (sid, parent, flags) => o.world.attachBaseAsset(sid, parent, flags),
         typeName: (sid) => typeRecord(c.pool.slot(sid)[10]).name.split('\0', 1)[0],
         log: o.services.player.log,
     };

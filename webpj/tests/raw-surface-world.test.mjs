@@ -1381,3 +1381,21 @@ test('월드: Graph 추적은 장기 Client 장치로 간다', () => {
     assert.ok(traces.every(([level, text]) => level === 32 && /graphs in use/.test(text)));
     world.dispose();
 });
+
+// 일반 합성 자산의 진단·좌표·현재 UI 통지·공통 부착과 공유 깊이를 확인한다.
+test('월드: 종속 자산 부착의 현재 Pool과 UI 순서', () => {
+    const { input, synthetic } = syntheticInputs(), storage = new RawSurfaceStorage(input.types, input.frames, input.shapes), events = [];
+    storage.bindDisplayDiagnostics({ value: null }, (expression, _file, line) => events.push(['진단', expression, line]));
+    const world = input.make({ storage }), core = world.core(), parent = world.create(synthetic), child = world.create(synthetic);
+    try {
+        world.bindContainedUnpop({ pool: core.pool, contentFormType: 6, unpop: () => {}, detach: () => {}, notifyUi: (sid) => {
+            const raw = core.pool.slot(sid), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+            events.push(['UI', sid, view.getFloat32(14, true), view.getUint32(18, true), get(core.pool.slot(parent), 6, 2)]);
+        } });
+        world.attachBaseAsset(child, parent, 0x10);
+        assert.deepEqual(events[0], ['진단', '0', 0x72a]); assert.deepEqual(events[1], ['UI', child, parent, 0, 0]);
+        assert.equal(get(core.pool.slot(parent), 6, 2), child); assert.equal(get(core.pool.slot(child), 14, 2), parent);
+        assert.equal(core.pool.slot(child)[11] & 0x0c, 8); assert.equal(core.postPop.activationDepth.value, 0);
+        assert.ok(events.some(([kind, expression]) => kind === '진단' && expression === 'isForm()'));
+    } finally { world.dispose(); }
+});
