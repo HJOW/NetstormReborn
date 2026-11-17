@@ -109,3 +109,24 @@ test('Session 주문 표적: 현재 사거리와 상태 자격 분배', () => {
     } finally { o.dispose(); }
     assert.throws(() => hooks.radius(0, 0x502510), /반납/);
 });
+
+// 대상 효과를 실행하지 않고 활성화 수신이 같은 Host에 예약하는 순서만 확인한다.
+test('Session 주문 활성화: 현재 시각의 실제 Regular 예약', () => {
+    const o = scene(); let hooks;
+    try {
+        o.connectDevastationStatus(); o.connectDevastationSummons(); o.connectDevastationEffects(); o.connectDevastationStrike();
+        assert.throws(() => o.connectDevastationActivation(), /순서/);
+        o.connectDevastationTargets(); o.connectDevastationActivation(); hooks = o.devastationModules.activationHooks;
+        assert.equal(o.devastationModules.activationReady, true); assert.equal(o.devastationActivation.pool, o.core.pool);
+        assert.throws(() => hooks.allocate(39), /확보 순서/);
+        const parent = o.world.create(117), packet = new Uint8Array(6);
+        packet[4] = parent & 255; packet[5] = parent >>> 8;
+        o.playerState.battleOwner = o.core.pool.slot(parent)[34]; o.core.processState.now = 42.5;
+        o.devastationActivation.receive(packet);
+        const regular = o.core.processes.findEvent(parent, 0);
+        assert.ok(regular); assert.equal(regular.payload, Math.fround(0.1)); assert.equal(regular.time, 42.5);
+        assert.equal(regular.shared, false); assert.equal(o.pendingDevastationRegular, null);
+        assert.equal(o.loaded, false); assert.throws(() => o.connectDevastationActivation(), /순서/);
+    } finally { o.dispose(); }
+    assert.throws(() => hooks.allocate(40), /반납/);
+});

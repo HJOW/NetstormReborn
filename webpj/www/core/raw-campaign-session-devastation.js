@@ -17,6 +17,8 @@ import { RawBombTargets } from './raw-bomb-targets.js';
 import { RawBombBlast } from './raw-bomb-blast.js';
 import { makeCampaignBombBlastHooks } from './raw-bomb-blast-bindings.js';
 import { connectedCampaignBombTable } from './raw-campaign-session-particles.js';
+import { RawBombActivation } from './raw-bomb-activation.js';
+import { RegularProcess } from './squid-process.js';
 
 // 같은 현재 가상 표를 기준으로 주문 자격 하위를 선택한다.
 const MANO_TABLES = new Set([0x5026a0, 0x502778, 0x502840]);
@@ -26,7 +28,7 @@ const WIND_TABLES = new Set([0x5025d8, 0x502e68, 0x502f30]);
 // 실제 Session의 TYPE·World·상태 주문을 한 번 구성한다.
 export class RawCampaignSessionDevastation {
     // 같은 owner와 설치 시작·정상 복귀·반납 관문이다.
-    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #effectsStarted = false; #effectsReady = false; #strikeStarted = false; #strikeReady = false; #targetsStarted = false; #targetsReady = false; #disposed = false;
+    #owner; #started = false; #ready = false; #summonsStarted = false; #summonsReady = false; #effectsStarted = false; #effectsReady = false; #strikeStarted = false; #strikeReady = false; #targetsStarted = false; #targetsReady = false; #activationStarted = false; #activationReady = false; #disposed = false;
     // 현재 상태 주문 효과를 후속 시전 분배기에 빌린다.
     statusHooks = null;
     // 기존 실제 하위에 연결한 트리즌과 힐 효과를 현재 수명에서 보관한다.
@@ -35,6 +37,8 @@ export class RawCampaignSessionDevastation {
     strikeState = null; strikeHooks = null;
     // 검색기가 값으로 빌리는 현재 반경·자격 분배기다.
     targetHooks = null;
+    // 활성화 수신이 소유하는 비용·예약 효과 표다.
+    activationHooks = null;
     // 구성 시 World나 난수는 변경하지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 완료 전 또는 반납된 함수 값의 실행을 거부한다.
@@ -212,8 +216,31 @@ export class RawCampaignSessionDevastation {
         this.targetHooks = hooks; this.#targetsReady = true;
     }
 
+    // 현재 비용·소유자와 같은 프로세스 Host에 주문 활성화 수신을 연결한다.
+    bindActivation() {
+        const o = this.#owner, c = o.core;
+        if (this.#disposed || !this.#targetsReady || this.#activationStarted || o.devastationActivation) throw new Error('Session 주문 활성화 설치 순서 오류');
+        this.#activationStarted = true;
+        const hooks = {
+            cost: (type) => { this.#live(); return o.hp.typeCostUnits(type); },
+            subtract: (owner, amount) => { this.#live(); o.hp.addSp(owner, amount); },
+            assertion: (line) => { throw new Error(`원본 Devastation genus 진단 ${line}`); },
+            allocate: (bytes) => {
+                this.#live(); if (bytes !== 40 || o.pendingDevastationRegular) throw new Error('Devastation 주기 확보 순서 오류');
+                o.pendingDevastationRegular = new RegularProcess(0, 0.1); return true;
+            },
+            construct: (event, parent, payload) => {
+                this.#live(); if (!o.pendingDevastationRegular || event !== 0 || payload !== Math.fround(0.1)) throw new Error('Devastation SharedRegular 확보 누락');
+                const process = o.pendingDevastationRegular; o.pendingDevastationRegular = null;
+                const attached = c.processes.attach(process, 61, parent, 0x50); if (attached) attached.resetTask(event, c.processState.now);
+            },
+        };
+        o.devastationActivation = new RawBombActivation(c.pool, c.types, () => o.playerState.battleOwner, hooks);
+        this.activationHooks = hooks; this.#activationReady = true;
+    }
+
     // World가 프로세스를 비운 뒤 같은 함수 값의 재진입을 차단한다.
-    dispose() { this.#disposed = true; }
+    dispose() { this.#disposed = true; this.#owner.pendingDevastationRegular = null; }
     // 이 앞단만의 정상 설치 여부이며 전체 주문 설치는 아니다.
     get ready() { return this.#ready; }
     // 주문 결선 완료는 전체 파괴 주문 설치 완료와 구별한다.
@@ -224,4 +251,6 @@ export class RawCampaignSessionDevastation {
     get strikeReady() { return this.#strikeReady; }
     // 검색·폭발 설치만 완료했으며 활성화와 전체 주문은 별도다.
     get targetsReady() { return this.#targetsReady; }
+    // 활성화 수신만 설치했으며 정기와 효과 분배는 별도다.
+    get activationReady() { return this.#activationReady; }
 }
