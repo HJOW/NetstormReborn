@@ -262,6 +262,23 @@ test('AI 배치 탐색: 선행 관문과 실제 본체 쓰기', () => {
     } finally { if (token) o.aiMemory.free(token); o.dispose(); }
 });
 
+// 지상 표적 장치는 현재 권한과 진단 전역을 빌리며 공격을 실행하지 않는다.
+test('AI 지상 표적: 선행 관문과 현재 전역', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions();
+        assert.throws(() => o.connectAiGroundTarget(), /순서/);
+        o.connectAiBuildSearch(); o.connectAiGroundTarget();
+        assert.equal(o.aiGroundTarget.pool, o.core.pool);
+        const globals = o.motionRuntimeModules.aiGroundGlobals;
+        o.aiGroundExcludedType = 73; o.flyerDependType = 2;
+        o.gameplayGlobals.authority().boss = false;
+        assert.equal(globals.excludedType, 73); assert.equal(globals.dependType, 2); assert.equal(globals.boss, false);
+        assert.throws(() => o.connectAiGroundTarget(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

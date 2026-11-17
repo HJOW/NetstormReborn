@@ -197,6 +197,8 @@ export class RawCampaignSessionOwners {
     aiCarrierActions = null;
     // AI가 같은 TYPE·spot과 배치 검사를 사용하는 탐색기다.
     aiBuildSearch = null;
+    // AI 배치가 사용하는 지상 표적 조회와 제외 TYPE이다.
+    aiGroundTarget = null; aiGroundExcludedType = 72;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -726,6 +728,12 @@ export class RawCampaignSessionOwners {
     connectAiBuildSearch() {
         if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 배치 탐색 설치 전/반납');
         this.motionRuntimeModules.bindAiBuildSearch();
+    }
+
+    // AI 배치 탐색 뒤 같은 총기 월드의 지상 표적 조회를 설치한다.
+    connectAiGroundTarget() {
+        if (this.#disposed || !this.motionRuntimeModules) throw new Error('Session AI 지상 표적 설치 전/반납');
+        this.motionRuntimeModules.bindAiGroundTarget();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

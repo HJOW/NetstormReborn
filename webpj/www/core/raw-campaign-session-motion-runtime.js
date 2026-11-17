@@ -18,6 +18,7 @@ import { countContained } from './raw-contained-finder.js';
 import { nuggetTypeNow } from './raw-carrier-arrival.js';
 import { RawAiCarrierActions, findContainedGenus, daisApproachPoint } from './raw-ai-carrier-actions.js';
 import { RawAiBuildSearch } from './raw-ai-build-search.js';
+import { GunGroundTargetGlobals, RawGunGroundTarget } from './raw-gun-ground-target.js';
 
 // 현재 TYPE 표의 500바이트 간격을 재현하는 불투명 탐색 핸들 기준이다.
 const AI_SEARCH_TYPE_BASE = 0x6b000000;
@@ -44,6 +45,8 @@ export class RawCampaignSessionMotionRuntime {
     aiCarrierHooks = null;
     // AI 배치 탐색이 빌리는 현재 시계·배치 검사다.
     aiSearchHooks = null;
+    // 지상 표적이 읽는 현재 소유자와 진단 전역이다.
+    aiGroundGlobals = null;
     // 구성 자체로 실제 객체/프로세스/난수를 만들지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 owner가 다음 세대의 전역이나 Pool을 사용하는 것을 막는다.
@@ -229,6 +232,22 @@ export class RawCampaignSessionMotionRuntime {
         };
         o.aiBuildSearch = new RawAiBuildSearch(o.aiMemory, c.types, c.spots, AI_SEARCH_TYPE_BASE, hooks);
         this.aiSearchHooks = hooks;
+    }
+    // AI 배치 탐색 뒤 같은 총기 표와 현재 월드로 지상 표적 조회를 연결한다.
+    bindAiGroundTarget() {
+        this.#live(); const o = this.#owner, c = o.core, s = o.state;
+        if (!this.aiSearchHooks || this.aiGroundGlobals || o.aiGroundTarget) throw new Error('Session AI 지상 표적 설치 순서 오류');
+        const globals = new GunGroundTargetGlobals();
+        Object.defineProperties(globals, {
+            excludedType: { get: () => o.aiGroundExcludedType },
+            dependType: { get: () => o.flyerDependType },
+            metamap: { get: () => c.ownerMode.challenge },
+            boss: { get: () => s.assetState.readBoss() },
+        });
+        globals.sharedChecking = () => s.gunState.checking;
+        globals.assertion = (text, line) => { this.#live(); if (!o.services.ai.assertion) throw new Error(`AI 지상 검색 원본 진단 미연결 ${line}`); o.services.ai.assertion(text); };
+        o.aiGroundTarget = new RawGunGroundTarget(c.pool, c.hash, c.types, o.gunTypes, o.gunTarget, s.gunTargetState, globals);
+        this.aiGroundGlobals = globals;
     }
     // 실제 Host가 먼저 비워진 뒤 지역 함수의 대여를 반납한다. 장기 목록/시계를 재설정하지 않는다.
     dispose() { this.#disposed = true; }
