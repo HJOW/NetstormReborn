@@ -5403,7 +5403,8 @@
         "webpj/tests/salvage-ritual-technology.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/raw-salvage-command.js"
+        "webpj/www/core/raw-salvage-command.js",
+        "webpj/www/core/raw-campaign-session-ritual.js"
       ],
       "doc": "docs/webpj-salvage-ritual-technology-20261108.md",
       "cpppjSources": [
@@ -5414,10 +5415,10 @@
       "sha256": "ecf9bff0c09a7e6fb38a016da38ac012c82b6012ab9f19c21880d8eaeeb6b308",
       "bytes": 2675715,
       "lines": 3459,
-      "fixtureCommit": "82b754e4",
-      "webCommit": "8bb36c0a",
+      "fixtureCommit": "82b754e44",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/RawSalvageCommand.cpp": "82b754e4"
+        "cpppj/src/o/RawSalvageCommand.cpp": "82b754e44"
       }
     },
     {

@@ -138,6 +138,29 @@ test('다이스 통지: 현재 전역·입력 큐와 제거 이유 경계', () =
     assert.throws(() => module.noticeState.priestType(), /반납/);
 });
 
+// 회수 요청은 현재 소유자/금지를 읽고 삭제 대신 내부 전송만 한다.
+test('회수 명령: 현재 금지와 실제 송신 패킷', () => {
+    const sent = [], tells = [];
+    const o = scene(true, { carrierRequest: (target, packet) => sent.push([target, [...packet]]), priest: { shield: { tell: (key) => tells.push(key) } } });
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle();
+        assert.throws(() => o.connectSalvage(), /순서/);
+        o.connectDaisNotice(); o.connectSalvage();
+        // 제단은 다이스를 찾으므로 다른 건물로 요청한다.
+        const building = o.world.create(70);
+        o.core.owner.set(building, o.playerState.battleOwner);
+        o.gameplayGlobals.denySalvage().value = 1;
+        o.salvageCommand.request(building);
+        assert.deepEqual(tells, ['DenySalvage']); assert.equal(sent.length, 0);
+        o.gameplayGlobals.denySalvage().value = 0;
+        o.salvageCommand.request(building);
+        assert.deepEqual(sent, [[9, [1, 0x54, 8, 0, building & 255, building >>> 8, 0x20, 0]]]);
+        assert.equal(o.core.pool.slot(building)[11] & 1, 0);
+        assert.throws(() => o.connectSalvage(), /순서/);
+        assert.equal(o.loaded, false);
+    } finally { o.dispose(); }
+});
+
 test('다이스 효과: 동일 Sound47 예약·지연 시각과 Tell 명령 경계', () => {
     const o = scene(true);
     try {

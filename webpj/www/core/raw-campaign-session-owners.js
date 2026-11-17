@@ -185,6 +185,8 @@ export class RawCampaignSessionOwners {
     // 생성자1611의 값형 World 훅과 뒤 생성자에서 채우는 실제 의식/내용물/주문 포인터다.
     runtimeModules = null; worldHooks = null; daisState = null; daisRegular = null; ritualExplosion = null;
     contentNotice = null; priestTakenNotice = null; devastationTargets = null; devastationEffect = null;
+    // 회수 요청과 서버 수신의 같은 월드 처리기다.
+    salvageCommand = null;
     // InstallContents가 같은 World에 등록하는 통지/수명 포인터와 독립 typed 분기의 실제 초기 사건 값이다.
     contentModules = null; gumpForms = null; playerContent = null; contentFormState = null; lifetime = null;
     contentGumpType = 3; contentEvent = 0x02000031;
@@ -678,6 +680,12 @@ export class RawCampaignSessionOwners {
     connectDaisNotice() {
         if (this.#disposed || !this.ritualModules) throw new Error('Session 다이스 통지 설치 전/반납');
         this.ritualModules.bindDaisNotice();
+    }
+
+    // 의식 뒤 현재 회수 명령과 내부 전송을 설치한다.
+    connectSalvage() {
+        if (this.#disposed || !this.ritualModules) throw new Error('Session 회수 명령 설치 전/반납');
+        this.ritualModules.bindSalvage();
     }
 
     // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.

@@ -20,6 +20,7 @@ import { AltarSacrificeState } from './raw-ritual-regular.js';
 import { DaisLifecycleState, RawDaisLifecycle } from './raw-dais-lifecycle.js';
 import { rawPathSurfaceAt } from './raw-path-surface.js';
 import { RawDaisContentNotice } from './raw-dais-content-notice.js';
+import { RawSalvageCommand } from './raw-salvage-command.js';
 
 // 다이스 내용물 통지가 중지할 원본 음성 명령 번호다.
 const DAIS_CAPTURE_VOICE_COMMAND = 0x020000d7;
@@ -40,6 +41,8 @@ export class RawCampaignSessionRitual {
     lifecycleState = null; lifecycleHooks = null; #daisRegistered = false;
     // 내용물 부모 통지가 읽는 현재 Session 전역과 효과다.
     noticeState = null; noticeHooks = null;
+    // 회수 명령이 현재 세션을 읽는 상태와 송신 효과다.
+    salvageState = null; salvageHooks = null;
     // 구성만으로 현재 객체나 난수를 변경하지 않는다.
     constructor(owner) { this.#owner = owner; }
     // 반납한 의식 함수가 이전 World에 접근하지 못하도록 한다.
@@ -227,6 +230,34 @@ export class RawCampaignSessionRitual {
         };
         o.daisNotice = new RawDaisContentNotice(c.pool, c.frames, o.runePostPop, state, hooks);
         this.noticeState = state; this.noticeHooks = hooks;
+    }
+    // 의식 설치 뒤 회수 요청과 서버 수신을 같은 월드와 전송에 연결한다.
+    bindSalvage() {
+        this.#live(); const o = this.#owner, c = o.core, s = o.state;
+        if (!this.noticeState || this.salvageState || o.salvageCommand) throw new Error('Session 회수 명령 설치 순서 오류');
+        const request = { message: 0x54, protocol: 1, length: 8 };
+        const state = {
+            get localOwner() { return o.playerState.battleOwner; },
+            get denySalvage() { return o.gameplayGlobals.denySalvage().value; },
+            get checking() { return s.gunState.checking; },
+            get mission() { return o.globals.missionPost; },
+            get boss() { return s.assetState.readBoss(); },
+            get altarType() { return s.runeState.readAltarType(); },
+            get daisType() { return s.runeState.readDaisType(); },
+            get nuggetType() { return currentNuggetType(s.motionState.cleanup); },
+            request,
+        };
+        const send = o.services.carrierRequest;
+        const hooks = {
+            daisAt: (sid) => { this.#live(); return o.altarSacrifice.daisAt(sid); },
+            tell: (key) => { this.#live(); if (!o.services.priest.shield.tell) throw new Error('회수 금지의 실제 Tell 소비자 미연결'); o.services.priest.shield.tell(key); },
+            assertion: (line) => { this.#live(); throw new Error(`원본 회수 명령 진단 ${line}`); },
+            send: (target, packet) => { this.#live(); if (!send) throw new Error('회수 명령 실제 송신 미연결'); send(target, packet); },
+            refund: (sid, owner, salvage) => { this.#live(); o.hp.refund(sid, owner, salvage); },
+            destroy: (sid, flags) => { this.#live(); o.world.destroy(sid, flags); },
+        };
+        o.salvageCommand = new RawSalvageCommand(c.pool, c.types, state, hooks);
+        this.salvageState = state; this.salvageHooks = hooks;
     }
     // 실제 Host를 비운 뒤 미부착 예약과 함수 대여를 반납한다.
     dispose() { if (this.#disposed) return; this.#disposed = true; this.pendingRegular = null; this.pendingSound = null; if (this.#daisRegistered) { this.#owner.core.postPop.setBody('dais', null); this.#daisRegistered = false; } if (this.#runeRegistered) { this.#owner.core.postPop.setBody('rune', null); this.#runeRegistered = false; } }
