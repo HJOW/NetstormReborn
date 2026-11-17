@@ -177,7 +177,7 @@ public sealed partial class RawSurfaceStorage
             // 실제 세 VT는 두 인자를 무시하며 서버 관문 없이 현재 가상10(flags0)을 부른다.
             if (entry.Notice == 0x0048f0a0u)
             {
-                ProcessFormDispatch().Destroy(@event.Sid, 0);
+                DestroyAsset(@event.Sid, 0);
                 return;
             }
 
