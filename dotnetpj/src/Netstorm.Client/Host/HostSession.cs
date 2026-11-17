@@ -936,12 +936,15 @@ public sealed partial class HostSession
     /// <param name="x">등록할 월드 x 좌표.</param>
     /// <param name="y">등록할 월드 y 좌표.</param>
     /// <param name="flags">Pop 호출 플래그.</param>
-    /// <remarks>2026-11-12 0.466의 도장 Pop 몸체를 0.601에서 섬 후처리와 공유하도록 꺼냈다. 동작은 같다.</remarks>
+    /// <remarks>2026-11-12 0.466의 도장 Pop 몸체를 0.601에서 섬 후처리와 공유하도록 꺼냈다. 동작은 같다.
+    /// 0.602에서 호출 기록을 남긴다. 기록은 풀 바이트·덤프에 영향을 주지 않으며 R4-2 스탬프 실측 발화의 측정 바탕이다.</remarks>
     private void TerrainPopObject(int sid, float x, float y, uint flags)
     {
         // Pop 장치가 없으면 기록만 한다(드라이런 중립).
         if (_terrainPop is null || _terrainDisplay is null || _terrainPopTypes is null)
         {
+            // 호출 자체를 기록하는 반복문이다. 중립 호출도 순서대로 남긴다.
+            _terrainPopCalls.Add(FormatTerrainPopCall(sid, x, y, flags, -1, "neutral"));
             return;
         }
         ReadOnlySpan<byte> raw = Pool.Slot(sid);
@@ -955,7 +958,31 @@ public sealed partial class HostSession
             ? unchecked((int)(raw[36] | ((uint)raw[37] << 8) | ((uint)raw[38] << 16) | ((uint)raw[39] << 24)))
             : raw[34];
         float[] size = _terrainDisplay.FrameSize(Pool.Edition, raw, frame);
-        _terrainPop.Pop(sid, _terrainPopTypes[number], size[0], size[1], x, y, flags);
+        RawPopResult result = _terrainPop.Pop(sid, _terrainPopTypes[number], size[0], size[1], x, y, flags);
+        // 실제 등록 결과를 기록하는 반복문이다. 풀 바이트에는 영향을 주지 않는다.
+        _terrainPopCalls.Add(FormatTerrainPopCall(sid, x, y, flags, number, result.ToString()));
+    }
+
+    /// <summary>지형 Pop 호출 기록이다. 순서대로 호출 원문을 둔다. 0.602에서 추가됐다.</summary>
+    private readonly List<string> _terrainPopCalls = [];
+
+    /// <summary>지형 Pop 호출 기록이다. R4-2 스탬프 실측 발화의 측정 바탕이며 풀 바이트·덤프에 영향을 주지 않는다. 0.602에서 추가됐다.</summary>
+    public IReadOnlyList<string> TerrainPopCalls => _terrainPopCalls;
+
+    /// <summary>지형 Pop 호출 한 줄을 같은 형식으로 만든다. 비트 단위 좌표와 섬 후처리 연결 여부를 둔다.</summary>
+    /// <param name="sid">등록한 오브젝트 번호다.</param>
+    /// <param name="x">등록한 월드 가로 좌표다.</param>
+    /// <param name="y">등록한 월드 세로 좌표다.</param>
+    /// <param name="flags">Pop 호출 플래그다.</param>
+    /// <param name="type">Pop 타입 번호다. 중립 호출은 -1이다.</param>
+    /// <param name="outcome">호출 결과다. 중립은 neutral, 실제 등록은 RawPopResult 이름이다.</param>
+    /// <returns>기록 한 줄이다.</returns>
+    private string FormatTerrainPopCall(int sid, float x, float y, uint flags, int type, string outcome)
+    {
+        uint xbits = BitConverter.SingleToUInt32Bits(x);
+        uint ybits = BitConverter.SingleToUInt32Bits(y);
+        string island = _islandPostPop is null ? "island:missing" : "island:ready";
+        return $"pop sid={sid} x={xbits:X8} y={ybits:X8} flags={flags:X8} type={type} {outcome} {island}";
     }
 
     /// <summary>세션 공간 해시의 0단계 머리를 섬 후처리 지도에 빌리는 보기다. 월드·저장소보다 오래 살 수 없다.</summary>
