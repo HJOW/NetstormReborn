@@ -32,7 +32,7 @@ function scene(overrides = {}, savedFort = fort) {
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => trace.push('config'), refreshWindowTitle: () => trace.push('title'), resetCamera: () => trace.push('camera'), ...overrides.install },
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
-        templateStorage: overrides.templateStorage, fortMission: overrides.fortMission, production: overrides.production,
+        templateStorage: overrides.templateStorage, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
         player: { log: () => trace.push('log') }, ai: { assertion: forbidden('AI 진단') },
     });
@@ -50,6 +50,23 @@ test('CampaignSession Tutorial 1: 실제 저장 객체·Graph와 커서까지 Lo
         assert.throws(() => s.load(), /반복|중복/); assert.equal(s.loaded, true);
     } finally { s.dispose(); }
     assert.throws(() => s.load(), /반납/);
+});
+
+// 실제 기술 부모에 같은 종류를 한 번만 넣고 반복 획득에도 현재 Battle snapshot과 안내를 수행한다.
+test('CampaignSession Tutorial 1: 실제 기술 획득과 반복 snapshot', () => {
+    const storage = new CampaignTemplateStorage(), events = [];
+    const options = {
+        templateStorage: storage, fortMission: { current: () => 0 }, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } },
+        newTechnology: { name: (type) => game.types()[type - 70].definition.name, configure: (key, value) => events.push([key, value]), format: (pattern, type) => pattern.replace('%d', String(type)), tell: (name) => events.push(['tell', name]) },
+    };
+    const { s } = scene(options), type = game.typeTable.find('sunCannon');
+    try {
+        s.load(); assert.equal(type, 128); s.learnNewTechnology(type);
+        const first = fortSection(storage.template(1), 'Technology').slice(), firstMoney = fortSection(storage.template(1), 'Money').slice();
+        assert.deepEqual([...first], [1, 128, 4]); s.learnNewTechnology(type);
+        assert.deepEqual(fortSection(storage.template(1), 'Technology'), first); assert.notDeepEqual(fortSection(storage.template(1), 'Money'), firstMoney);
+        assert.deepEqual(events, [['global.newTechName', 'suncannon'], ['global.newTechPic', '<!`"128.*`">'], ['tell', 'NewTech'], ['global.newTechName', 'suncannon'], ['global.newTechPic', '<!`"128.*`">'], ['tell', 'NewTech']]);
+    } finally { s.dispose(); }
 });
 
 // 실제 Battle snapshot의 저장 자식과 재적재 객체를 같은 자료로 비교한다. SID는 비교하지 않는다.
