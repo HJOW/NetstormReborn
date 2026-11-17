@@ -1,6 +1,6 @@
 // RawCampaignSession::Impl의 캠페인 소유 자료를 실제 하위 생성자로 구성한다(225553df, WB04-E574).
 // 사용: owner 생성 → initializePlayersAndSp → connectPlayerTablesAndPackets → connectIslandsAndPriests → connectPlayersAndOwnership → connectBodiesAndTypeTables → connectGunAndCursorViews → connectHitBodies → connectGunBodies → connectParticles → connectTeleport → connectCombat → connectVortex → connectAssets → connectWorldRuntimeHooks → connectContentNotices → connectContentLifetime → connectProduction → connectFactories → connectFlare → connectConstruction → connectDamageable → connectIceTower → connectCarrierSteal → connectBombPostPop → connectAcidZap → connectAcidFence → connectCarrierRegular → connectSunAviary → connectWindAviary → connectRainAviary → 나머지 모듈/Load.
-// 이 단계는 외곽 Session이 아니다. connectTerrain에서 World 내부 훅만 게시하며 Client Session 공개와 Load는 아직 미구현이다.
+// 이 클래스는 Impl 부품이다. connectTerrain은 World 내부 훅만 게시하고 외곽 공개는 raw-campaign-session.js가 맡는다. Load는 후속이다.
 // Editor/LAN/메타/Native 장치는 이 캠페인 분기에 섞지 않는다. 반납은 하위 모듈을 정리한 부모가 마지막에 dispose로 한다.
 import { GameAssets } from '../assets/game-assets.js';
 import { FrameCodeTable } from '../assets/terrain-tiles.js';
@@ -68,6 +68,11 @@ import { writeCampaignFortTechnology } from './raw-campaign-content-save.js';
 import { writeCampaignFortObjectChunk } from './raw-campaign-object-save.js';
 import { writeCampaignFortObjects } from './raw-campaign-objects-save.js';
 import { writeCampaignFortTerritory } from './raw-campaign-territory-save.js';
+import { refreshCampaignPlayerCore, writeCampaignFortCoreData } from './raw-campaign-core-write.js';
+import { snapshotCampaignTemplate } from './raw-campaign-snapshot.js';
+import { generateCampaignLocalGeysers, generateCampaignWorldGeysers, placeCampaignBattleNuggets, learnCampaignNewTechnology } from './raw-campaign-callbacks.js';
+import { RawCampaignSessionBuilding, createCampaignBuildingTables, drawCampaignTempleFrames } from './raw-campaign-session-building.js';
+import { RawCampaignSessionArrivals } from './raw-campaign-session-arrivals.js';
 import { RegionPaintState } from './raw-region-paint.js';
 import { RegionOwnershipState } from './raw-region-ownership.js';
 import { CrtRandom, GameRandom, GameRandomSeed } from './random.js';
@@ -149,6 +154,8 @@ export class RawCampaignSessionOwners {
     gunMode = null; gunTarget = null; energySupply = null; cursorMana = null; cursorRange = null;
     // 같은 실제 AI 통지와 후속 피격 콜백이 호출 때 선택하는 모듈 슬롯이다.
     aiDamage = null; playerDamage = null; flyer = null; particles = null; motion = null; building = null;
+    // Load의 첫 건설 모듈과 같은 현재30/17 수신/밀어내기 효과다. 생성자 자체는 설치하지 않는다.
+    buildingModules = null; buildingData = null; buildingEffects = null;
     // 같은 실제 피해·투사체/배리어 기하와 기존 Gun 장애물 통지, 후속 자산 처리기의 현재 슬롯이다.
     gunHit = null; projectileGeometry = null; fenceTarget = null; gunBlocker = null; assetBindings = null;
     // 파편의 실제 지역 색표/현재 캡처 옵션·다리 그림이며 건물/공장 캡처는 후속 생성 구간의 같은 슬롯이다.
@@ -168,6 +175,8 @@ export class RawCampaignSessionOwners {
     contained = null; sunAviary = null; rainAviary = null; windAviary = null; fencePostPop = null; altarSacrifice = null; templeRitual = null;
     // 후속 실제 Login의 현재 소유 슬롯이다. 이 단계는 Login을 생성하거나 Session을 공개하지 않는다.
     login = null;
+    // 외곽이 구성 완료 뒤 연결하는 현재 Core/세계 간헐천/로컬 의식 callback과 건설 pin 슬롯이다.
+    writeCurrentFortCore = null; createWorldGeysers = null; refreshLocalRitual = null; constructionRuntimePin = null; constructionRuntime = null;
     // 생성자1611의 값형 World 훅과 뒤 생성자에서 채우는 실제 의식/내용물/주문 포인터다.
     runtimeModules = null; worldHooks = null; daisState = null; daisRegular = null; ritualExplosion = null;
     contentNotice = null; priestTakenNotice = null; devastationTargets = null; devastationEffect = null;
@@ -219,6 +228,8 @@ export class RawCampaignSessionOwners {
     deletionModules = null; daisLifecycle = null;
     // 같은 현재 전체 Regular/보상 처리기와 뒤 생성자가 채울 사제·마나·주문 슬롯이다.
     regularModules = null; buriedRegular = null; priestRitualFrame = null; priestPrayer = null; manaRegular = null; devastationRegular = null;
+    // ConnectMotion 앞단의 도착 장치/미부착 Regular와 같은 장기 카메라 두 DWORD의 const 참조다.
+    arrivalModules = null; buildArrival = null; manaArrival = null; localManaArrival = null; localManaRegular = null; manaPendingRegular = null; contentCamera;
     // 같은 일반/전체 송신 분배·현재 패킷 버퍼와 다리/로딩 깊이 후단을 소유한다.
     transmissionModules = null;
     // 실제 World 게시 뒤 같은 풀의 일반 배치·지형·소유자 후처리 모듈과 선언부의 추가 목록이다.
@@ -247,7 +258,7 @@ export class RawCampaignSessionOwners {
             this.coreDataGlobals = input.coreDataGlobals ?? new ClientCoreDataGlobals();
             this.playerRecords = input.playerRecords ?? new ClientPlayerRecords(); this.playerUse = this.playerRecords.acquire();
             // 값형 서비스의 소비 묶음/peer9 표는 복사하고, 함수와 실제 공유 owner의 참조는 유지한다.
-            this.services = { ...input, install: { ...input.install }, editorPlayerUi: { ...input.editorPlayerUi }, construction: copyCampaignConstructionEffects(input.construction), damageablePre: { ...input.damageablePre }, damageablePost: { ...input.damageablePost }, assets: copyCampaignAssetEffects(input.assets), deletion: { ...input.deletion }, playerContent: { ...input.playerContent }, contentLifetime: { ...input.contentLifetime }, carrierContent: { ...input.carrierContent }, production: { ...input.production, effects: { ...input.production?.effects } }, sound: { ...input.sound }, motion: { ...input.motion, carrier: { ...input.motion?.carrier } }, priest: { ...input.priest, shield: { ...input.priest?.shield }, regen: { ...input.priest?.regen } }, player: { ...input.player }, ownership: { ...input.ownership }, missionOutcome: { ...input.missionOutcome }, ai: { ...input.ai, participation: { ...input.ai?.participation } }, hit: { ...input.hit, priest: { ...input.hit?.priest }, general: { ...input.hit?.general }, burning: { ...input.hit?.burning }, vortex: { ...input.hit?.vortex }, dudes: { ...input.hit?.dudes } }, archer: copyCampaignArcherEffects(input.archer), battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
+            this.services = { ...input, install: { ...input.install }, editorPlayerUi: { ...input.editorPlayerUi }, construction: copyCampaignConstructionEffects(input.construction), damageablePre: { ...input.damageablePre }, damageablePost: { ...input.damageablePost }, assets: copyCampaignAssetEffects(input.assets), deletion: { ...input.deletion }, playerContent: { ...input.playerContent }, contentLifetime: { ...input.contentLifetime }, carrierContent: { ...input.carrierContent }, production: { ...input.production, effects: { ...input.production?.effects } }, sound: { ...input.sound }, motion: { ...input.motion, carrier: { ...input.motion?.carrier } }, priest: { ...input.priest, shield: { ...input.priest?.shield }, regen: { ...input.priest?.regen } }, player: { ...input.player }, ownership: { ...input.ownership }, newTechnology: { ...input.newTechnology }, missionOutcome: { ...input.missionOutcome }, ai: { ...input.ai, participation: { ...input.ai?.participation } }, hit: { ...input.hit, priest: { ...input.hit?.priest }, general: { ...input.hit?.general }, burning: { ...input.hit?.burning }, vortex: { ...input.hit?.vortex }, dudes: { ...input.hit?.dudes } }, archer: copyCampaignArcherEffects(input.archer), battlePeers: Array.isArray(input.battlePeers) ? input.battlePeers.slice() : input.battlePeers ?? new Array(9).fill(null) }; this.missionFortName = String(mission);
             this.worldRedraw = input.kencloudGlobals ? input.kencloudGlobals.worldRedraw() : { value: 0 };
             this.paint = Object.assign(new RegionPaintState(), { sharedWorldRedraw: this.worldRedraw });
             const revision = this.gameplayGlobals.mapRevision(); this.votes = new RegionOwnershipState({ sharedWorldRedraw: this.worldRedraw, sharedMapRevision: revision });
@@ -270,6 +281,7 @@ export class RawCampaignSessionOwners {
             this.themes = new Uint32Array(this.core.types.length); this.elements = new Int32Array(this.core.types.length);
             Object.assign(this, createCampaignTypeTables(this.core.types.length));
             Object.assign(this, createCampaignParticleTables());
+            Object.assign(this, createCampaignBuildingTables());
             this.chunks = this.world.storage.chunks; this.islandBytes = this.world.storage.islands; this.dudePopulation = this.world.storage.sidLists.dudes; this.stamp = this.gameplayGlobals.terrainStamp();
             this.playerState = this.gameplayGlobals.player; this.globals = this.gameplayGlobals.world;
             this.cursorDrop = this.gameplayGlobals.cursor; this.energyState = this.gameplayGlobals.energy; this.contentFinder = this.gameplayGlobals.finder;
@@ -581,6 +593,31 @@ export class RawCampaignSessionOwners {
         this.aiProductionModules ??= new RawCampaignSessionAiProduction(this); this.aiProductionModules.bind();
     }
 
+    // 생성자 전체가 준비된 뒤 Load가 같은 실제 건설 캡처/프로세스/decoder를 설치한다.
+    connectBuilding() {
+        if (this.#disposed) throw new Error('반납한 Session 건설 결선');
+        this.buildingModules ??= new RawCampaignSessionBuilding(this); this.buildingModules.bind();
+    }
+
+    // 같은 건설 설치 뒤 ConnectMotion 앞단의 도착 세 장치만 연결한다. 전체 경로 설치는 후속이다.
+    connectMotionArrivals() {
+        if (this.#disposed) throw new Error('반납한 Session 도착 결선');
+        this.arrivalModules ??= new RawCampaignSessionArrivals(this); this.arrivalModules.bind();
+    }
+
+    // 건설과 Renderer가 같은 전용 신전 프레임/음향 본문을 공유한다.
+    drawTempleFrames(sid, frame) {
+        if (this.#disposed) throw new Error('반납한 Session 신전 그림');
+        drawCampaignTempleFrames(this, sid, frame);
+    }
+
+    // 수신 위치의 실제 현재 checking 복사와 기존 간헐천 처리기를 연결한다.
+    receiveGeyserMined(packet) {
+        if (this.#disposed) throw new Error('반납한 Session 간헐천 수신');
+        if (!this.buildingModules) throw new Error('Session 건설 수신 결선 전 호출');
+        this.buildingModules.receiveGeyserMined(packet);
+    }
+
     // 신전 상승도 공유하는 현재 Template의 Territory120BYTE 쓰기다. 편집기 파일/화면은 만들지 않는다.
     writeTerritory(slot, records) {
         if (this.#disposed) throw new Error('반납한 Session Territory 쓰기');
@@ -654,6 +691,68 @@ export class RawCampaignSessionOwners {
         this.writeFortTerritory(slot);
     }
 
+    // 같은 현재 Core 포인터·기술 finder·실제 Pool의 다이스 가상80으로 Core를 갱신한다.
+    refreshCurrentPlayerCore() {
+        if (this.#disposed) throw new Error('반납한 Session 현재 Core 갱신');
+        refreshCampaignPlayerCore(this);
+    }
+
+    // 원문 manager/모드 관문 뒤 실제 Player/Client seed·공유 난수를 같은 CoreData stream에 연결한다.
+    writeFortCoreDataBody(slot) {
+        if (this.#disposed) throw new Error('반납한 Session CoreData 쓰기');
+        writeCampaignFortCoreData(this, slot);
+    }
+
+    // 전체 Fort 부모는 설치 관문 뒤 같은 Template/현재 child만 사용한다. Editor 우회는 제공하지 않는다.
+    snapshotFort(slot) {
+        if (this.#disposed) throw new Error('반납한 Session 전체 Fort snapshot');
+        if (!this.loaded) throw new Error('실제 Session 설치 전 전체 Fort 저장');
+        this.snapshotFortBody(slot);
+    }
+
+    // Battle은 자체 부모 순서를 사용하며 Fort 전용 TypeNames/Badges를 추가하지 않는다.
+    snapshotBattle(slot) {
+        if (this.#disposed) throw new Error('반납한 Session 전체 Battle snapshot');
+        if (!this.loaded) throw new Error('실제 Session 설치 전 전체 Battle 저장');
+        this.snapshotTemplateBody(slot, true);
+    }
+
+    // 외곽 callback에서 호출하는 같은 Fort 본문이다. 설치 중 Editor 예외는 웹 범위 밖이다.
+    snapshotFortBody(slot) {
+        if (this.#disposed) throw new Error('반납한 Session 전체 Fort snapshot 본문');
+        this.snapshotTemplateBody(slot, false);
+    }
+
+    // 같은 실제 저장소의 전체 부모 결선이며 loaded를 임의로 변경하지 않는다.
+    snapshotTemplateBody(slot, battle) {
+        if (this.#disposed) throw new Error('반납한 Session 전체 snapshot 본문');
+        snapshotCampaignTemplate(this, slot, battle);
+    }
+
+    // 실제 설치 뒤 로컬 간헐천의 같은 Player/상태/공간을 준비한다.
+    generateLocalGeysers() {
+        if (this.#disposed) throw new Error('반납한 Session 로컬 간헐천 생성');
+        generateCampaignLocalGeysers(this);
+    }
+
+    // 전체 세계 간헐천은 같은 장기 옵션과 공간/난수를 사용하는 실제 부모에 위임한다.
+    generateWorldGeysers() {
+        if (this.#disposed) throw new Error('반납한 Session 세계 간헐천 생성');
+        generateCampaignWorldGeysers(this);
+    }
+
+    // Impl의 placeBattleNuggets callback 슬롯과 구별하는 실제 배치 본문이다. 외곽이 이 메서드를 연결한다.
+    placeBattleNuggetsBody(rectangle, quantity) {
+        if (this.#disposed) throw new Error('반납한 Session 너겟 보충 배치');
+        placeCampaignBattleNuggets(this, rectangle, quantity);
+    }
+
+    // 현재 기술 부모/실제 내용물·두 snapshot·안내의 원문 순서를 사용한다.
+    learnNewTechnology(type) {
+        if (this.#disposed) throw new Error('반납한 Session 기술 획득');
+        learnCampaignNewTechnology(this, type);
+    }
+
     // 생산/객체/기준점이 공유하는 현재 FullDeck DWORD다.
     get fullDeck() { return this.gameplayGlobals.fullDeck().value; }
     // 값 쓰기도 동일 장기 DWORD를 사용한다.
@@ -676,9 +775,9 @@ export class RawCampaignSessionOwners {
         if (this.#disposed) return; this.#disposed = true;
         this.aiModules?.releaseBrains();
         try {
-            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); this.vortexModules?.dispose(); this.teleportModules?.dispose(); this.combatModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
+            if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.arrivalModules?.dispose(); this.buildingModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); this.vortexModules?.dispose(); this.teleportModules?.dispose(); this.combatModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
         } finally {
-            try { try { this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); } finally { this.world?.dispose(); } } finally {
+            try { try { this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.arrivalModules?.dispose(); this.buildingModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); } finally { this.world?.dispose(); } } finally {
                 try { this.vortexModules?.dispose(); } finally { try { this.teleportModules?.dispose(); } finally { try { this.combatModules?.dispose(); } finally { try { this.particleModules?.dispose(); } finally { try { this.gunModules?.dispose(); } finally { try { this.hitModules?.dispose(); } finally { try { this.gunViewModules?.dispose(); } finally { try { this.typeModules?.dispose(); } finally { try { this.playerModules?.dispose(); } finally { try { this.priestModules?.dispose(); } finally { try { this.playerUse?.release(); } finally { this.gameplayUse?.release(); } } } } } } } } } } }
             }
         }

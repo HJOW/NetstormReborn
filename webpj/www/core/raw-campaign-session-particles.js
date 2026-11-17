@@ -23,8 +23,8 @@ const CONNECTED_BOMBS = new Set([0x503188, 0x5026a0, 0x502778, 0x502840, 0x50290
 export function connectedCampaignBombTable(table) { return CONNECTED_BOMBS.has(table >>> 0); }
 // 현재 raw가 같은16VT 중 하나인지 확인한다. 숫자 주소를 함수로 실행하지 않는다.
 function connectedBomb(raw) { return connectedCampaignBombTable(vtableOf(raw)); }
-// Session391의 정확한 건물 캡처 자격이다. 일반 표시 자격과 서로 다른 TYPE 집합을 유지한다.
-function plainBuilding(raw) {
+// 건설/파편이 공유하는 Session391의 정확한 건물 캡처 자격이다. 일반 표시 자격과 다른 TYPE 집합을 유지한다.
+export function isPlainBuildingCapture(raw) {
     const type = raw[10]; const table = vtableOf(raw);
     return isPlainWorkshopCapture(raw) || (type >= 75 && type <= 77 && table === 0x501ea0) || ((type === 78 || type === 147) && table === 0x50e940) || (type === 79 && table === 0x50ea08) || (type === 139 && table === 0x509aa0) || (type === 142 && table === 0x50ead0) || (type === 149 && table === 0x50e668) || (type === 164 && table === 0x5076b8) || (type === 95 && table === 0x506e50) || (type === 157 && table === 0x506f08);
 }
@@ -103,7 +103,7 @@ export class RawCampaignSessionParticles {
     // 기존의 정확한 건물/유닛 전용 캡처를 현재 선택하며, 나머지는 원문의 Flyer/Bridge/16VT만 허용한다.
     capture(sid) {
         const o = this.#owner; const raw = o.core.pool.slot(sid);
-        if (isPatchTemple(raw) || isPatchDais(raw) || isBurningArcherCapture(raw) || plainBuilding(raw) || isPlainUnitCapture(raw) || isThunderCannonCapture(raw) || isSunAviaryCapture(raw) || isGeyserCapture(raw) || o.factoryDraw?.handles(sid)) {
+        if (isPatchTemple(raw) || isPatchDais(raw) || isBurningArcherCapture(raw) || isPlainBuildingCapture(raw) || isPlainUnitCapture(raw) || isThunderCannonCapture(raw) || isSunAviaryCapture(raw) || isGeyserCapture(raw) || o.factoryDraw?.handles(sid)) {
             if (!o.buildingCapture) throw new Error('실제 건물/유닛 캡처 설치 전 호출'); return o.buildingCapture.capture(sid);
         }
         if (!flyer(raw) && !(raw[10] === o.core.bridgeState.bridgeType && vtableOf(raw) === 0x5034c8) && !connectedBomb(raw)) throw new Error(`다른 실제 파편 source의 전용 색표/추가 그림 미복원 TYPE${raw[10]}`);

@@ -44,11 +44,15 @@ export function worldGeyserSpacing(selection) {
 }
 
 // flags50/지역/AI 를 세는 다른 Player 관문과 합치지 않는다. battle 이 아니면 0 명이다. (2026-11-08 WB04-E107)
-export function worldGeyserBudget(battle, players, options) {
+// assumedPlayers는 비전투 스커미시 인원, monotone은 NB29 수정 선택이다. 기본값은 원본 관측 동작을 유지한다(WB04-E637).
+export function worldGeyserBudget(battle, players, options, assumedPlayers = 0, monotone = false) {
     if (players.length !== PLAYER_BYTES || options.length !== OPTION_BYTES) throw new RangeError('세계 간헐천 예산의 PATCH Player/옵션 물리 범위');
     let count = 0;
     // 실제 Player 1~8 의 현재 +2c 를 먼저 읽고 필요한 숨김 BYTE 만 검사한다.
     if (battle) for (let owner = 1; owner <= 8; owner += 1) if (word(players, owner * PLAYER_STRIDE + PRESENCE_AT) && options[HIDDEN_AT + owner - 1] === 0) count += 1;
+    // 스커미시 인원은 비전투 모드에서만 쓰고 DWORD/최대8명을 유지한다. NB29 수정 스위치의 기본은 원문이다(WB04-E637).
+    if (!battle && (assumedPlayers >>> 0)) count = Math.min(assumedPlayers >>> 0, 8);
+    if (monotone && count > 6) return 6 * count;
     return (12 - count) * count;
 }
 
