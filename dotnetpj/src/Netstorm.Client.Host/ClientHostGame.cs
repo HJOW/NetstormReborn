@@ -156,7 +156,11 @@ public sealed class ClientHostGame : Game
         _spGlobals.Store.Initialize();
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
-        IsFixedTimeStep = true;
+        // 고정 시각 모드(L2·L3 결정론 수집)에서는 따라잡기 Update를 끄고 그리기당 한 번씩만 틱한다.
+        // 근거: MonoGame 고정 단계는 벽시계가 느리면 Draw당 Update를 여러 번 호출해 미션 시계·난수 소비가 실행 환경에 종속된다.
+        // timeline-0631 관측에서 같은 시드·같은 바이너리의 DN 덤프가 따라잡기(+2틱)로 어긋남을 확인했다. 제품 기본값(고정 끔)은 그대로 둔다.
+        // 2026-11-19 0.631에서 R4-2 미션 틱 결정론용으로 추가했다.
+        IsFixedTimeStep = options.FixedFrameMs == 0;
         TargetElapsedTime = TimeSpan.FromSeconds(1.0 / options.FramesPerSecond);
         IsMouseVisible = true;
         // 글자 입력은 WM_CHAR처럼 아래 코드에 그대로 넣는다
@@ -244,7 +248,7 @@ public sealed class ClientHostGame : Game
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen, _textEntry);
             _driver.BindControlLocator(_mainMenu);
             _driver.BindInputHandler(_menuInput.Dispatch);
-            // 미션 월드가 없을 때의 world 0 덤프(머리·난수·Kernel)부터 맞춘다. 게임 시각은 세션 시계 미연결 상태라 0이다.
+            // 미션 월드가 없을 때의 world 0 덤프(머리·난수·Kernel)부터 맞춘다. world 1에서는 세션의 실제 미션 시각을 쓴다(0.631).
             // 근거: cpppj SessionStateDump.cpp의 DumpSessionState(world 0 부분). (2026-11-10 L2·L3 장치에서 추가했다)
             var sessionDump = new HostSessionDump(_kernel, _gameRandom, _crtRandom, () => _driver.Frame, () => 0ul);
             // --mission 진입이면 세션 데이터를 조립해 world 1 덤프에 연결한다. 월드 본체 조립은 다음 단위다.

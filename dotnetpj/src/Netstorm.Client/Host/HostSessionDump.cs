@@ -21,7 +21,7 @@ public sealed class HostSessionDump
     /// <summary>덤프에 적는 현재 프레임 번호 읽기다.</summary>
     private readonly Func<ulong> _frame;
 
-    /// <summary>덤프에 적는 현재 게임 시각 double 비트 읽기다. 세션 시계 미연결 상태에서는 0(0.0)이다.</summary>
+    /// <summary>덤프에 적는 현재 게임 시각 double 비트 읽기다. world 0(미션 없음)에서만 쓰며 세션이 있으면 세션의 실제 미션 시각을 쓴다.</summary>
     private readonly Func<ulong> _gameTimeBits;
 
     /// <summary>덤프 판본 이름(originals 또는 originalCD)이다. 호스트는 10.78만 다루므로 기본 originals다.</summary>
@@ -62,7 +62,9 @@ public sealed class HostSessionDump
 
     /// <summary>미션 세션을 연결하거나 끊는다. 세션의 Kernel·난수와 덤프 장치는 같은 객체를 써야 한다.</summary>
     /// <param name="session">연결할 세션. null이면 world 0으로 돌아간다.</param>
-    /// <remarks>2026-11-12 0.392에서 world 1 덤프를 위해 추가했다. 미션 시작 흐름 연결은 다음 단위다.</remarks>
+    /// <remarks>2026-11-12 0.392에서 world 1 덤프를 위해 추가했다. 미션 시작 흐름 연결은 다음 단위다.
+    /// 2026-11-19 0.631에서 미션 시계 결선용으로 고쳤다. 세션이 있으면 게임 시각에 세션의 실제 미션 시각(ProcessTime)을 쓴다.
+    /// 근거: cpppj SessionStateDump.cpp의 client.Time().game이며 DN의 미션 경로에 같은 역할의 시계가 없어 0만 나가고 있었다(timeline-0631에서 frame 90 시각 0.0 확인).</remarks>
     public void BindSession(HostSession? session) => _session = session;
 
     /// <summary>그 프레임의 그리기 뒤 현재 world 0 상태를 인자 경로에 쓴다. 난수·Kernel을 전진시키지 않는다.</summary>
@@ -95,7 +97,7 @@ public sealed class HostSessionDump
             return;
         }
         string world1 = SessionStateDump.FormatWorld1(
-            _edition, _frame(), _gameTimeBits(), _session.Game.State(), _session.TerrainCrt.Value,
+            _edition, _frame(), BitConverter.DoubleToUInt64Bits(_session.ProcessTime.Value), _session.Game.State(), _session.TerrainCrt.Value,
             _session.Kernel.Size(), _session.Kernel.Capacity(), processes, _session.DumpPool(),
             _session.DumpPlayers(), _session.DumpSp(), _session.DumpGraph(), _session.DumpTotals(), _session.DumpTotalMade());
         // cpppj 덤프와 같은 ASCII·LF 바이트로 쓴다.

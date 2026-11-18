@@ -174,6 +174,26 @@ public sealed class HostPlayerWorldLiveTests
         Assert.Equal(0, session.Kernel.Size());
     }
 
+    /// <summary>world 1 덤프의 게임 시각이 세션의 실제 미션 시각인지 확인한다.</summary>
+    /// <remarks>2026-11-19 0.631에서 미션 시계 결선용으로 추가했다. 근거: cpppj SessionStateDump.cpp의 client.Time().game이다.</remarks>
+    [Fact]
+    public void DumpWritesMissionTimeFromProcessTime()
+    {
+        var (session, _) = LoadPlayerScene();
+        session.BuildPlayerWorldHooks();
+        session.ProcessTime.Value = 2.25;
+        string output = Path.GetTempFileName();
+        try
+        {
+            var dump = new HostSessionDump(session.Kernel, session.Game, session.Crt, () => 90ul, () => 0ul);
+            dump.BindSession(session);
+            dump.Write(output);
+            string[] lines = File.ReadAllLines(output);
+            Assert.Contains($"frame\t90\t{BitConverter.DoubleToUInt64Bits(2.25)}", lines);
+        }
+        finally { File.Delete(output); }
+    }
+
     /// <summary>로컬이 아닌 화신은 기술부모를 등록하되 로컬 전용 정기 프로세스를 만들지 않는지 확인한다.</summary>
     [Fact]
     public void OtherOwnerRegistersTechnologyWithoutLocalRegular()
