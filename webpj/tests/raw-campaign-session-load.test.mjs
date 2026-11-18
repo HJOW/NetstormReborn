@@ -7,7 +7,8 @@ import { CampaignSessionAssets } from '../www/core/raw-campaign-session-owners.j
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawSurfaceStorage } from '../www/core/raw-surface-storage.js';
 import { Kernel } from '../www/core/kernel.js';
-import { InputQueue } from '../www/core/input-queue.js';
+import { InputCode, InputQueue } from '../www/core/input-queue.js';
+import { CampaignUserInput } from '../www/core/campaign-user-input.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
 import { fortSection, parseFort } from '../www/assets/fort.js';
@@ -733,6 +734,14 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
             { selectCursor: (number) => cursors.push(number) }, { selectCursor: (number) => cursors.push(number), assertion: forbidden('운반 입력 진단') });
         assert.throws(() => world.bindUserInput(), /새 수명/); world.select(priest.sid); assert.equal(world.selected(), priest.sid); assert.equal(gameplay.selection.mode, 5); assert.equal(cursors.at(-1), 0x12);
         const count = cursors.length; world.updateMovementCursor(); assert.equal(cursors.length, count + 1); assert.equal(cursors.at(-1), 0x12);
+        const currentMouse = { ...gameplay.selection.mouse }, reads = [], input = new CampaignUserInput(world, { readInt: (name, current) => { reads.push([name, current]); return { value: name === 'cursorSnapToGrid' ? 1 : -1 }; } });
+        const beforeOutside = cursors.length; input.updateCursor({ code: InputCode.outside, x: 4, y: 7 }); assert.deepEqual(gameplay.selection.mouse, { x: 4, y: 7 }); assert.equal(cursors.length, beforeOutside); assert.deepEqual(reads, []);
+        input.updateCursor({ code: 0, ...currentMouse }); assert.equal(cursors.length, beforeOutside + 1); assert.equal(cursors.at(-1), 0x12); assert.deepEqual(reads, []);
+        const cursor = session.cursor(), drop = session.cursorDropSettings(), update = cursor.update, calls = [];
+        try {
+            drop.lockDepth = 0; cursor.update = (x, y) => calls.push([x, y]); input.updateCursor({ code: 0, x: 25, y: 35 });
+            assert.deepEqual(reads, [['cursorSnapToGrid', 0], ['cursorShowCannotPlace', 0]]); assert.equal(cursor.snapToGrid.value, 1); assert.equal(cursor.placement.placementFlags, 0xffffffff); assert.deepEqual(calls, [[25, 35]]);
+        } finally { drop.lockDepth = 1; cursor.update = update; gameplay.selection.mouse.x = currentMouse.x; gameplay.selection.mouse.y = currentMouse.y; }
         const event = { button: 2 }, menus = []; assert.equal(world.openSelectionMenu(priest.sid, event, false, (sid, current) => { menus.push([sid, current]); return 37; }), 37);
         assert.deepEqual(menus, [[priest.sid, event]]); assert.equal(world.selected(), priest.sid);
         const before = session.localConnectionPackets(); world.moveFromMinimap(90, 108); session.pumpLocalConnection();

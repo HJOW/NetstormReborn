@@ -171,6 +171,8 @@ export class CampaignGameWorld {
     }
     // 실제 선택의 세 인자를 원본처럼 유지하고 다음 화면 갱신을 요청한다.
     select(sid) { this.#live(); if (!this.#input) throw new Error('실제 선택 장치 미설치'); this.#selection.select(sid, 0, 1); this.#changed = true; }
+    // 실제 폴링의 화면 정수 좌표를 같은 Client 선택 전역에 기록한다.
+    setMousePoint(x, y) { this.#live(); this.#gameplay.selection.mouse.x = x | 0; this.#gameplay.selection.mouse.y = y | 0; }
     // 현재 마우스와 선택 전역을 사용하는 강조 모드다.
     highlight(mode) { this.#live(); if (!this.#input) throw new Error('실제 선택/강조 장치 미설치'); this.#input.highlight.highlight(mode); }
     // 같은 선택 처리기의 운반체 또는 아처 메뉴 입구에서 현재 공통 메뉴를 호출한다.
