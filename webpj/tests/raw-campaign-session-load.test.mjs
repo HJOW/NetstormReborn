@@ -12,6 +12,7 @@ import { CampaignUserInput } from '../www/core/campaign-user-input.js';
 import { clearClientUserSelection } from '../www/core/client-user-selection-cleanup.js';
 import { resetClientClockSynchronization, resetClientStateZone, resetClientStateWorldStorage, resetClientSquidPool, clearClientMetaZoneRecords } from '../www/core/client-state-storage-cleanup.js';
 import { StateWorldCleanupEffect } from '../www/core/raw-state-world-cleanup.js';
+import { ClientStateRuntimeRetirement } from '../www/core/client-state-runtime-retirement.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
 import { fortSection, parseFort } from '../www/assets/fort.js';
@@ -128,6 +129,36 @@ test('Client 메타 구역 정리: 현재 Session 마커 삭제와 Runtime 반�
         data.setUint32(76, sid, true); clearClientMetaZoneRecords(context);
         assert.equal(data.getUint32(76, true), 0); assert.ok(s.core().pool.slot(sid)[11] & 1);
         assert.equal(gameplay.runtimeCallActive(s), false);
+    } finally { s.dispose(); }
+});
+
+// 같은 Runtime의 Player·AI·Kernel 증빙을 모두 확인한 뒤 외곽 소유자를 반납한다.
+test('Client State Runtime 반납: 실제 Session 자식 증빙과 소유자', () => {
+    const gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), coreData = new ClientCoreDataGlobals(), kernel = new Kernel();
+    const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    storage.processes.bindDevices(kernel, { game: 0 }); players.bindCoreData(coreData);
+    const { s } = scene({ gameplayGlobals: gameplay, surfaceStorage: storage, playerRecords: players, coreDataGlobals: coreData, processKernel: kernel });
+    try {
+        s.load(); const runtime = {}; gameplay.bindRuntimeOwner(s, runtime);
+        const retirement = new ClientStateRuntimeRetirement({ gameplay, storage, players, kernel, coreData, currentStorage: storage });
+        assert.equal(s.playerRecords(), players.records()); assert.equal(s.connectionCallbackActive(), false);
+        assert.throws(() => retirement.resetAi(0), /owner1\.\.8/);
+        const pin = gameplay.pinCurrentRuntime(s);
+        try { assert.equal(s.connectionCallbackActive(), true); assert.throws(() => retirement.clearKernel(), /콜백 실행 중/); } finally { pin.release(); }
+        gameplay.player.playerKnown = 0; coreData.active = 0; coreData.current = null;
+        assert.throws(() => retirement.retire(() => {}), /Player 링크 증빙/);
+        retirement.clearPlayerLinks();
+        // 중립 Player를 제외한 여덟 AI를 각각 정리한다.
+        for (let owner = 1; owner < 9; owner += 1) retirement.resetAi(owner);
+        assert.throws(() => retirement.retire(() => {}), /Kernel Clear 증빙/);
+        retirement.clearKernel(); assert.throws(() => retirement.clearKernel(), /중복 생성/);
+        assert.throws(() => retirement.retire(() => {}), /대여를 반납하지 않음/);
+        retirement.retire(() => s.dispose()); assert.equal(gameplay.borrowed(), false); assert.equal(storage.borrowed, false);
+        const bytes = players.records(), view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+        view.setUint32(180 + 0xb0, 9, true); assert.throws(() => retirement.resetAi(1), /brain의 실제 Runtime/);
+        view.setUint32(180 + 0xb0, 0, true); retirement.resetAi(1); retirement.clearPlayerLinks(); retirement.clearKernel();
+        assert.doesNotThrow(() => retirement.retire());
     } finally { s.dispose(); }
 });
 

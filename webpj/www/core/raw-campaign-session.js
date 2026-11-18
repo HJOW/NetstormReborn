@@ -132,6 +132,13 @@ export class RawCampaignSession {
     world() { return this.#live().world; }
     // C++ Core의 값형 aggregate를 돌려주되 Pool/권한/장부의 실제 참조는 그대로 빌린다(6382).
     core() { return { ...this.#live().core }; }
+    // 현재 Session이 빌린 같은 Player 물리이며 복사하지 않는다.
+    playerRecords() { return this.#live().players; }
+    // Runtime 배송 또는 외부 전송 콜백 중에는 공유 State를 정리하지 않는다.
+    connectionCallbackActive() {
+        const o = this.#live(); if (o.gameplayGlobals.runtimeCallActive(this)) return true;
+        return Boolean(o.services.localLogin?.transport?.callbacksActive?.());
+    }
     // 같은 실제 풀의 HP 판정과 최대 HP 처리기를 빌린다.
     hitPoints() { return this.#live().hp; }
     // State 종료 위치에서 같은 실제 Process Host를 정리하고 정상 복귀 증빙을 발급한다.
