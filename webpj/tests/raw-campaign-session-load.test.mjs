@@ -14,6 +14,7 @@ import { resetClientClockSynchronization, resetClientStateZone, resetClientState
 import { StateWorldCleanupEffect } from '../www/core/raw-state-world-cleanup.js';
 import { ClientStateRuntimeRetirement } from '../www/core/client-state-runtime-retirement.js';
 import { cancelClientStateCursor } from '../www/core/client-state-world-cleanup.js';
+import { bindClientStateWorldGlobals } from '../www/core/client-state-world-globals.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
 import { fortSection, parseFort } from '../www/assets/fort.js';
@@ -82,6 +83,25 @@ function scene(overrides = {}, savedFort = fort) {
     });
     return { s, trace, queue };
 }
+
+// State 주소 접근은 실제 장기 전역을 공유하며 읽기 전용과 bool 경계를 지킨다.
+test('Client State 전역: 연결 활동·Client DWORD와 모드 별칭', () => {
+    const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals(), activity = new ClientConnectionActivityGlobals();
+    const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    const context = { gameplay, local, activity, storage, currentStorage: storage }, globals = bindClientStateWorldGlobals(context);
+    // 22칸의 마지막 값은 인접 Zone stamp를 건드리지 않는다.
+    activity.activeStamp().value = 11; globals.write32(0x5c853c, 0xfedcba98);
+    assert.equal(globals.read32(0x5c853c), 0xfedcba98); assert.equal(activity.frames()[21], 0xfedcba98); assert.equal(activity.activeStamp().value, 11);
+    globals.write32(0x542534, 0x80000001); assert.equal(local.cachedPeerIndex().value, 0x80000001); local.cachedPeerIndex().value = 17; assert.equal(globals.read32(0x542534), 17);
+    globals.write32(0x54db14, 0xffffffff); assert.equal(gameplay.fullDeck().value, 0xffffffff);
+    globals.write32(0x594fb8, 1); assert.equal(storage.ownerMode.fort, true); assert.equal(gameplay.player.fortMode, true);
+    globals.write32(0x594fbc, 1); assert.equal(storage.ownerMode.battle, true); assert.equal(storage.links.battle, true);
+    globals.write32(0x540bc0, 0); globals.write32(0x5c85d4, 1); assert.equal(gameplay.server().value, false); assert.equal(local.savedGame().value, true);
+    assert.throws(() => globals.write32(0x594fb8, 2), /정상0\/1/); assert.equal(storage.ownerMode.fort, true);
+    assert.throws(() => globals.write32(0x540c70, 1), /미등록/); assert.throws(() => globals.read32(0x5c8540), /미등록/);
+    assert.throws(() => bindClientStateWorldGlobals({ ...context, gameplay: new ClientGameplayGlobals() }), /owner 필요/);
+});
 
 // 실제 장기 Client·표면의 선택된 물리만 정리하고 World 대여 관문을 지킨다.
 test('Client State 저장소 정리: 장기 전역과 대여 관문', () => {

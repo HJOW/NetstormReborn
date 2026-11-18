@@ -4,14 +4,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-18, 마지막 단위 WB04-E809)
+### 0.1 현재 값 (2026-11-18, 마지막 단위 WB04-E810)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E809는 State의 설치 전·후 커서 취소 경계를 연결했다. [E809](docs/webpj-client-state-cursor-cancel-20261118.md) |
-| 전체 회귀 | E809 Node v26.13.0 6,300건 통과, E803 Node v22.23.3 6,296건 통과(실패·취소·건너뜀 0). v22 전체 검사 뒤 v26 회귀 6/8회. |
+| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E810은 State 전역 DWORD의 일부를 실제 장기 소유자에 연결했다. [E810](docs/webpj-client-state-world-globals-20261118.md) |
+| 전체 회귀 | E810 Node v26.13.0 6,301건 통과, E803 Node v22.23.3 6,296건 통과(실패·취소·건너뜀 0). v22 전체 검사 뒤 v26 회귀 7/8회. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
@@ -41,12 +41,12 @@
 
 ### 0.3 이식량
 
-기준선 `225553df`의 이식 대상 1,019단위는 **port 871(85.5%)·partial 47·todo 101**다. 제외 141단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
+기준선 `225553df`의 이식 대상 1,019단위는 **port 871(85.5%)·partial 48·todo 100**다. 제외 141단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
 
 | 범위 | port / 대상 | partial | todo |
 | --- | --- | --- | --- |
 | `o/` 월드·규칙 | 563 / 573 | 3 | 7 |
-| `client/` 세션·UI·표시 | 307 / 445 | 44 | 94 |
+| `client/` 세션·UI·표시 | 307 / 445 | 45 | 93 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
 남은 148단위 중 기존 기준선은 78단위/27,946줄, 재기준선 추가분은 70단위/5,604줄이다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
@@ -140,7 +140,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 **4D-5 승패·종료·State 반납**
 
 - [ ] **4D-5a 종료 수명** — 승패 조회 경계와 AI·Player/Deck·Process 자식 반납 증빙, 일반 종료 순서·오류 진단을 확인했다. 실제 Client/앱 State 반납, Native 건설·지속 실패와 승패 수명을 확인한다(4000..4057, 4588, 4816..4833). [E786](docs/webpj-session-state-withdraw-20261118.md) · [E789](docs/webpj-session-process-shutdown-error-20261118.md)
-- [ ] **4D-5b Client State 정리** — ClientStateWorldGlobals·ClientStateWorldCleanup·ClientStateStorageCleanup·ClientStateRuntimeRetirement와 ClientUserSelectionCleanup의 실제 Client/State 연결. 선택 정리·저장소·Runtime 반납과 State 커서 취소 경계는 E805~E809에서 이식했다. 4D-6·4D-7 소유자 선행이며 RawMenuControls·ClientAudio 몫은 각 소비 단계에서 연결한다. [E808](docs/webpj-client-state-runtime-retirement-20261118.md) · [E809](docs/webpj-client-state-cursor-cancel-20261118.md)
+- [ ] **4D-5b Client State 정리** — ClientStateWorldGlobals의 나머지 전역·폭과 ClientStateWorldCleanup·ClientStateStorageCleanup·ClientStateRuntimeRetirement·ClientUserSelectionCleanup의 실제 Client/State 연결. 선택 정리·저장소·Runtime 반납·State 커서 취소 및 일부 DWORD 경계는 E805~E810에서 이식했다. 4D-6·4D-7 소유자 선행이며 RawMenuControls·ClientAudio 몫은 각 소비 단계에서 연결한다. [E809](docs/webpj-client-state-cursor-cancel-20261118.md) · [E810](docs/webpj-client-state-world-globals-20261118.md)
 - [ ] **4D-5c 이탈·전투 판정** — 4209..4279의 단독 도달과 RawBattleCompletion·NativeBattleReturnState의 웹 범위를 판정한다.
 
 **4D-6 GameWorld·Client 서비스**
