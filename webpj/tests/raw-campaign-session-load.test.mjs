@@ -627,6 +627,34 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
 });
 
+// State Player 링크 정리는 실제 Deck을 반납하고 같은 Session의 증빙만 소비한다.
+test('CampaignSession TheWarBegins: State Player 링크와 실제 Deck 반납', () => {
+    const players = new ClientPlayerRecords(), otherPlayers = new ClientPlayerRecords(), production = { allocationBytes: (bytes) => bytes.fill(0) };
+    const first = scene({ playerRecords: players, production }), second = scene({ playerRecords: otherPlayers, production });
+    try {
+        assert.equal(first.s.production().contains(71), false);
+        const rows = players.records(), data = new DataView(rows.buffer, rows.byteOffset, rows.byteLength), owners = [];
+        // 실제 Player+68의 Deck 포인터가 연결된 행을 찾는다.
+        for (let owner = 0; owner < 9; owner += 1) if (data.getUint32(owner * 180 + 0x68, true)) owners.push(owner);
+        assert.equal(owners.length, 1); const base = owners[0] * 180, token = data.getUint32(base + 0x68, true);
+        assert.equal(players.productionDeckMemory().has(token), true);
+        data.setUint32(base + 0x9c, 1234, true); data.setUint32(base + 8, 7, true); data.setUint32(base + 0xa0, 0x12345678, true);
+        const pass = first.s.clearPlayerLinksForState();
+        assert.equal(players.productionDeckMemory().has(token), false); assert.equal(data.getUint32(base + 0x68, true), 0);
+        assert.equal(data.getUint32(base + 0x9c, true), 0); assert.equal(data.getUint32(base + 8, true), 0); assert.equal(data.getUint32(base + 0xa0, true), 0x12345678);
+        assert.throws(() => second.s.returnPlayerLinksForState(pass), /같은 실제 Deck/);
+        const other = otherPlayers.records(), otherData = new DataView(other.buffer, other.byteOffset, other.byteLength);
+        otherData.setUint32(0x9c, 3, true); otherData.setUint32(8, 4, true); otherData.setUint32(0x68, 0xdead, true); otherData.setUint32(180 + 0x9c, 5, true);
+        assert.throws(() => second.s.clearPlayerLinksForState(), /반납 블록 누락/);
+        assert.equal(otherData.getUint32(0x9c, true), 0); assert.equal(otherData.getUint32(8, true), 0); assert.equal(otherData.getUint32(0x68, true), 0xdead);
+        assert.equal(otherData.getUint32(180 + 0x9c, true), 5); otherData.setUint32(0x68, 0, true);
+        first.s.returnPlayerLinksForState(pass);
+        assert.throws(() => first.s.returnPlayerLinksForState(pass), /같은 실제 Deck/); assert.throws(() => first.s.releasePlayerLinks(), /반복 정리 금지/);
+        assert.throws(() => first.s.production().contains(71), /반납된 Player 링크/);
+    } finally { first.s.dispose(); second.s.dispose(); }
+    assert.throws(() => first.s.clearPlayerLinksForState(), /반납/);
+});
+
 // State AI 정리 증빙은 발급한 같은 Session의 소유자만 한 번 소비한다.
 test('CampaignSession TheWarBegins: State AI 정리와 반납 증빙', () => {
     const first = scene(), second = scene();

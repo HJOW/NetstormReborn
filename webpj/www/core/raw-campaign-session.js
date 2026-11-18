@@ -55,6 +55,7 @@ import { RawTutorialLater } from './raw-tutorial-later.js';
 import { RawPriestLookup } from './raw-priest-lookup.js';
 import { drawCampaignTempleFrames } from './raw-campaign-session-building.js';
 import { drawRainVortex } from './raw-rain-vortex-draw.js';
+import { cleanupPlayerLinks } from './raw-player-links-cleanup.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -724,6 +725,27 @@ export class RawCampaignSession {
     alliances() { return this.#live().alliances; }
     // 현재 Player 참여와 AI 소유자 수명을 빌린다.
     participation() { return this.#live().participation; }
+    // 현재 Session의 실제 생산 판정과 Deck 소유자를 빌린다.
+    production() { return this.#live().production; }
+    // 현재 Player 링크를 원본 순서로 정리하며 선택된 Deck만 같은 소유자에 반납한다.
+    releasePlayerLinks() {
+        const o = this.#live();
+        if (o.productionDeck?.playerLinksReturnedForState()) throw new Error('Native 반납된 Session Player 링크의 반복 정리 금지');
+        cleanupPlayerLinks({ players: () => this.#live().playerRecords.records(), release: (token) => {
+            const current = this.#live(); if (!current.productionDeck) throw new Error('실제 Session Player 링크의 Deck 소유자 미연결');
+            current.productionDeck.release(token);
+        } });
+    }
+    // 실제 Player 링크 정리의 정상 복귀 뒤 같은 Deck 소유자의 State 증빙을 발급한다.
+    clearPlayerLinksForState() {
+        const o = this.#live(); if (!o.productionDeck) throw new Error('State Player 링크의 실제 Deck 모듈 누락');
+        return o.productionDeck.cleanupPlayerLinksForState(() => this.#live().playerRecords.records());
+    }
+    // 같은 Deck이 발급한 Player 링크 정리 증빙을 한 번 소비한다.
+    returnPlayerLinksForState(pass) {
+        const o = this.#live(); if (!o.productionDeck) throw new Error('State Player 링크의 실제 Deck 모듈 누락');
+        o.productionDeck.returnPlayerLinksForState(pass);
+    }
     // State 종료가 지정한 실제 Player AI를 정리하고 해당 소유자의 정상 복귀 증빙을 발급한다.
     resetAiForState(owner) {
         const o = this.#live(); if (!o.participation) throw new Error('State resetAi의 실제 참여 모듈 누락');
