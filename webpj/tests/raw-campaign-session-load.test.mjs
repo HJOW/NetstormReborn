@@ -627,6 +627,24 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
 });
 
+// State Process 정리 증빙은 실제 공유 Host를 비운 뒤 같은 대여에서만 소비한다.
+test('CampaignSession TheWarBegins: State Process 정리와 Host 반납', () => {
+    const first = scene(), second = scene(), legacy = scene({ processKernel: new Kernel() });
+    try {
+        const core = first.s.core(), parent = core.factory.create(6, 2), before = core.kernel.size;
+        core.processes.addRegular(parent, 6700, 0.25); assert.ok(core.kernel.size > before);
+        assert.throws(() => first.s.returnProcessBindingsForState({}), TypeError);
+        assert.throws(() => legacy.s.clearProcessesForState(), /현재 대여 없는/);
+        const pass = first.s.clearProcessesForState(); assert.equal(core.kernel.size, 0);
+        assert.throws(() => second.s.returnProcessBindingsForState(pass), /증빙|대여|Host/);
+        assert.equal(first.s.world().processBindingsReturned, false); first.s.returnProcessBindingsForState(pass);
+        assert.equal(first.s.world().processBindingsReturned, true);
+        assert.throws(() => first.s.clearProcessesForState(), /현재 대여 없는/);
+        assert.throws(() => first.s.returnProcessBindingsForState(pass), /단일 실제 대여/);
+    } finally { first.s.dispose(); second.s.dispose(); legacy.s.dispose(); }
+    assert.throws(() => first.s.clearProcessesForState(), /반납/);
+});
+
 // State Player 링크 정리는 실제 Deck을 반납하고 같은 Session의 증빙만 소비한다.
 test('CampaignSession TheWarBegins: State Player 링크와 실제 Deck 반납', () => {
     const players = new ClientPlayerRecords(), otherPlayers = new ClientPlayerRecords(), production = { allocationBytes: (bytes) => bytes.fill(0) };

@@ -129,6 +129,13 @@ export class RawCampaignSession {
     world() { return this.#live().world; }
     // C++ Core의 값형 aggregate를 돌려주되 Pool/권한/장부의 실제 참조는 그대로 빌린다(6382).
     core() { return { ...this.#live().core }; }
+    // State 종료 위치에서 같은 실제 Process Host를 정리하고 정상 복귀 증빙을 발급한다.
+    clearProcessesForState() { return this.#live().world.clearProcessesForState(); }
+    // 현재 Host의 증빙을 소비한 뒤에만 Native 건설 장치 대여를 반납한다.
+    returnProcessBindingsForState(pass) {
+        const o = this.#live(); o.world.returnProcessBindingsForState(pass);
+        if (o.constructionRuntime) { o.constructionRuntime = null; o.construction = null; }
+    }
     // 같은 현재 시각과 Player를 준비한 뒤 실제 건설 표시·진행 프로세스를 시작한다.
     startConstruction(parent, duration) {
         const o = this.#live(); if (!o.loaded || !o.building) throw new Error('미설치 Session의 실제 건설 시작');
