@@ -296,7 +296,7 @@ public sealed partial class RawPostPop : IRawPopPostPop
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     public bool HandlesDerived(int sid) => HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid)
         || HandlesPlayer(sid) || HandlesPriest(sid) || HandlesForcefield(sid)
-        || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid);
+        || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid);
 
     /// <summary>
     /// 실제 Player 최초 기록·예약 몸체를 같은 풀에만 명시 등록한다. null이면 등록을 해제한다.
@@ -391,6 +391,7 @@ public sealed partial class RawPostPop : IRawPopPostPop
         if (HandlesPriest(sid)) _priestPostPop!.Validate(sid);
         if (HandlesForcefield(sid)) _forcefieldPostPop!.Validate(sid);
         if (HandlesAsset(sid)) _assetPostPop!.Validate(sid, flags);
+        if (HandlesFactory(sid)) _factoryPostPop!.Validate(sid, flags);
         // Player는 현재 9기록·SID와 조건부 예약을 가진 실제 몸체가 검사한다
         if (HandlesPlayer(sid))
         {

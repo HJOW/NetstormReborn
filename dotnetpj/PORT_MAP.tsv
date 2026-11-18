@@ -1035,3 +1035,7 @@ cpppj/src/o/RawRegionOwnership.h	Netstorm.Core/Original/RawRegionOwnership.cs	e0
 cpppj/src/o/RawRegionOwnership.cpp	Netstorm.Core/Original/RawRegionOwnership.cs	e079c26952667da76e8a485a90184aff77fa3b6f	L1
 cpppj/src/o/RawVortexOwner.h	Netstorm.Core/Original/RawVortexOwner.cs	784e34ccb0e64d8e8fbff0e1d4e275d50db30f3b	L1
 cpppj/src/o/RawVortexOwner.cpp	Netstorm.Core/Original/RawVortexOwner.cs	784e34ccb0e64d8e8fbff0e1d4e275d50db30f3b	L1
+cpppj/src/o/RawFactoryPostPop.h	Netstorm.Core/Original/RawFactoryPostPop.cs	e8b605b9bd432c691f73c468c7ef3444ab857be2	L1
+cpppj/src/o/RawFactoryPostPop.cpp	Netstorm.Core/Original/RawFactoryPostPop.cs	e8b605b9bd432c691f73c468c7ef3444ab857be2	L1
+cpppj/src/o/RawSquidLevel.h	Netstorm.Core/Original/RawSquidLevel.cs	e8b605b9bd432c691f73c468c7ef3444ab857be2	L1
+cpppj/src/o/RawSquidLevel.cpp	Netstorm.Core/Original/RawSquidLevel.cs	e8b605b9bd432c691f73c468c7ef3444ab857be2	L1

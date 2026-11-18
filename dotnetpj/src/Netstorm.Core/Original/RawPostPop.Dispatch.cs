@@ -18,6 +18,8 @@ public sealed partial class RawPostPop
     private RawCarrierPostPop? _carrierPostPop;
     /// <summary>같은 풀의 전용 자산 전체 후처리다.</summary>
     private RawAssetPostPop? _assetPostPop;
+    /// <summary>같은 풀의 실제 공장 후처리다. 연결 전에는 공장 분배를 건너뛴다. 2026-11-19 0.624에서 R4-2 공장 정기 트리거용으로 추가했다.</summary>
+    private RawFactoryPostPop? _factoryPostPop;
     /// <summary>PATCH 직접 Carrier00427720을 호출하는 세 가상표다.</summary>
     private static readonly uint[] PatchCarrierTables = [0x503d80, 0x503e50, 0x50e568];
     /// <summary>CD 직접 Carrier004e6360을 호출하는 두 가상표다.</summary>
@@ -92,6 +94,20 @@ public sealed partial class RawPostPop
     }
     /// <summary>자산 몸체가 지원하는 실제 가상표만 조회한다.</summary>
     public bool HandlesAsset(int sid) => _assetPostPop is not null && _assetPostPop.Handles(sid);
+    /// <summary>같은 실제 풀의 공장 후처리 몸체를 등록한다. null이면 등록을 해제한다.</summary>
+    /// <param name="body">등록할 공장 몸체다. null이면 해제한다.</param>
+    /// <exception cref="ArgumentException">공장 Pop/후처리 풀 불일치다.</exception>
+    /// <remarks>2026-11-19 0.624에서 R4-2 공장 정기 트리거용으로 추가했다. 근거: cpppj o/SquidPostPop.cpp 121행의 SetFactoryPostPop이다.</remarks>
+    public void SetFactoryPostPop(RawFactoryPostPop? body)
+    {
+        if (body is not null && !ReferenceEquals(body.Pool, _pool)) throw new ArgumentException("공장 Pop/후처리 풀 불일치", nameof(body));
+        _factoryPostPop = body;
+    }
+    /// <summary>공장 몸체가 지원하는 실제 가상표만 조회한다.</summary>
+    /// <param name="sid">오브젝트 슬롯 번호다.</param>
+    /// <returns>공장 부류이면 참이다.</returns>
+    /// <remarks>2026-11-19 0.624에서 R4-2 공장 정기 트리거용으로 추가했다. 근거: cpppj o/SquidPostPop.cpp 126행의 HandlesFactory다.</remarks>
+    public bool HandlesFactory(int sid) => _factoryPostPop is not null && _factoryPostPop.Handles(sid);
     /// <summary>실제 PATCH 장기 자원 분배만 설치하며 게임 조회/후처리는 실행하지 않는다.</summary>
     public void BindDefaultResourcePostPop(Action<int, uint> body)
     {
@@ -101,7 +117,7 @@ public sealed partial class RawPostPop
     public void ReleaseRuntimeBindings()
     {
         _runtimePin = null; _aiNotice = null; _selectionRecheck = null; _localOwner = null; _teleportPrefix = null;
-        _priestPostPop = null; _forcefieldPostPop = null; _carrierPostPop = null; _assetPostPop = null; _playerPostPop = null;
+        _priestPostPop = null; _forcefieldPostPop = null; _carrierPostPop = null; _assetPostPop = null; _factoryPostPop = null; _playerPostPop = null;
     }
     /// <summary>선택한 실제 가상 몸체 전체를 현재 Runtime pin 안에서 실행한다. 미구현 몸체는 도달 위치에서 실패한다.</summary>
     private void DispatchPostPop(int sid, uint flags)
@@ -126,6 +142,9 @@ public sealed partial class RawPostPop
                 if (carrier) selected.PostPop(sid, flags); else selected.DamageablePostPop(sid, flags); return;
             }
             if (HandlesAsset(sid)) { RawAssetPostPop selected = _assetPostPop!; selected.PostPop(sid, flags); return; }
+            // Factory도 Damageable와 공통 장부를 내부에서 실행하므로 중복 호출하지 않는다.
+            // 2026-11-19 0.624에서 R4-2 공장 정기 트리거용으로 추가했다. 근거: cpppj o/SquidPostPop.cpp 374~379행이다.
+            if (HandlesFactory(sid)) { RawFactoryPostPop selected = _factoryPostPop!; selected.PostPop(sid, flags); return; }
             if (HandlesBridge(sid)) BridgePrefix(_pool, sid, flags, _bridgeConnector);
             else if (HandlesIsland(sid))
             {

@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-19 · 마지막 구현 0.623 · 다음 구현 0.624 · 현재 단계 R4-2 · cpppj 제품 1322 / 11.01 · 전체 목표 미완료**
+**2026-11-19 · 마지막 구현 0.624 · 다음 구현 0.625 · 현재 단계 R4-2 · cpppj 제품 1322 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 0.613까지의 단위별 경과, 구현·검사 상세, 파일 계열별 체크 목록과 옛 집계는 [정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -13,15 +13,15 @@
 | 기존 배포 `Netstorm.Game` (`Netstorm.exe`) | 메인 메뉴와 캠페인 1-1·1-2를 플레이할 수 있다. 한국어 선택, 와이드 시야 확장, 테두리 없는 전체화면을 제공한다. 실행 오류만 수정하는 동결 상태다. | RGBA 합성·자체 UI·근사 `BattleSession`으로 동작한다. |
 | 새 경로 `Netstorm.Client` + `Netstorm.Client.Host` | 타이틀·메뉴·도움말·Options·Credits·캠페인 선택·Edit 목록과 이름 창이 동작한다. 개발용 `--mission <키> --handle <이름>`으로 일반 31미션의 시작 상태 일부를 조립한다. 월드 표시·입력·규칙의 실제 경로가 남아 있어 플레이 불가다. | 1024×768 메뉴 **12장면**의 논리 BMP가 cpppj와 바이트 일치했다(0.381~0.388). L2는 **0/34**, 데모 3경로는 DN 진입 미연결이며 L3·L4b·L5는 미착수다. |
 
-- **마지막 구현 0.620.** `RawVortexOwner` 본체 이식과 L1 전수 재생(원본·CD 각 864행). 외부 효과가 바꾼 좌표 재읽기 1건을 교정했고, CD 슬롯은 앞 36바이트로 대조했다. 세션 Generate 연결은 잇지 않아 0.619의 L2 3경로 기준선을 유지한다. 이전 0.619의 세션 지역 결선 L1 3건과 0.618의 본체·전수 8건, 0.614의 농지 152·69·67 타입·소유자 100% 일치는 각 단위 결과다. [0.620](docs/dotnet-canon-0620-20261119.md) · [0.619](docs/dotnet-canon-0619-20261119.md) · [0.618](docs/dotnet-canon-0618-20261118.md) · [0.614](docs/dotnet-canon-0614-20261118.md) · [0.613](docs/dotnet-canon-0613-20261118.md) · [0.612](docs/dotnet-canon-0612-20261118.md) · [0.611](docs/dotnet-canon-0611-20261118.md)
+- **마지막 구현 0.624.** `RawFactoryPostPop` 본체 이식과 L1 전수 재생(원본·CD 일반 Factory 각 186행, 전체 996행 중 wrapper 포함 `NativeBody` 통과). 값 사본·CD wrapper 표·억제 플래그 5건을 교정했고 CD 슬롯은 앞 36바이트로 대조했다. 세션 Generate 연결은 잇지 않아 0.623의 L2 기준선을 유지한다. [0.624](docs/dotnet-canon-0624-20261119.md) · [0.623](docs/dotnet-canon-0623-20261119.md) · [0.622](docs/dotnet-canon-0622-20261119.md)
 - **검사 기준선.** 0.608 Client 전체 1,267/1,267, 0.609 확대 집중 170/171(`PlayerTechnology` 자료 루트 미설정 1건). 0.566 전체 회귀 Assets 366·Client 1,233·Core 2,664 모두 통과는 당시 결과다. 0.614 집중 6건(`HostSessionFarmPlacementTests` 3·`HostSessionFarmHookTests` 3) 통과. 0.615 집중 3건(`TerrainStampFrameTests`) 통과. 0.616 집중 1건(`GroundTypeTableTests`) 통과. 0.617 도구 검증(`export_cpp_frametable.py` 종료 0: 317·172·1 일치). 0.618 집중 8건(`RegionPaintTests` 3·`RegionOwnershipTests` 5, fixture 484+1320행 전수) 통과. 0.619 집중 3건(`HostSessionRegionOwnershipTests`) 통과와 회귀 17건(Core 8·Client 9) 통과. 0.620 집중 3건(`X86RawVortexOwnerTests`, 원본·CD 각 864행 전수) 통과와 관련 11건(Region 본체 8·Client 세션 3) 통과. 0.621 집중 6건(`HostSessionRegionVortexTests`) 통과와 Client 전체 1,281 통과, L2 3경로 재측정(0.619와 지표 동일·첫 지역 R6 대기 확정). 0.622 관련 9건(`HostSessionRegionOwnershipTests` 3·`HostSessionRegionVortexTests` 6) 통과와 Client 전체 1,283 통과, L2 3경로 재측정(`thewarbegins` owner 497→1699·`tutorial1` 140→766·`bc1menu76` 213→762, 첫 지역 사원 경로 일치·AI 경로 잔여). 0.623 대조 단위(코드 변경 없음): L2 `surrounded` 수집과 첫 지역 9행 일치(사원 4행 전파·무사원 5행 127 유지), 잔여 격차는 농지 가장자리(R6·R11 투표 입력)·거주 구역 전파(R4-2·R6)로 특정. [0.608](docs/dotnet-farm-0608-20261118.md) · [0.609](docs/dotnet-canon-0609-20261118.md) · [0.566](docs/dotnet-regression-inventory-20261115.md)
 - **L2 기준선.** 일반 31경로의 양쪽 덤프와 데모 3경로의 cpp 덤프를 확보했다. 가장 최근 재측정은 0.623의 `surrounded`다. 보관 위치는 `extracted/dotnet-l2-0623/`(직전 `0622` 3경로, `0621`, `0619`, `0614`, `0608`, 전체 대조 `0567`)이다. 공장 정기 트리거·AI·정기 처리·cpp 전용 슬롯·농지 가장자리·거주 구역 전파가 남았다. [일괄 수집](docs/dotnet-l2-batch-20261114.md) · [격차 분석](docs/dotnet-l2-0606-20261117.md) · [3경로 재측정](docs/dotnet-canon-0623-20261119.md)
 
 <a id="now"></a><a id="09-바로-다음-작업"></a><a id="r4-board"></a>
 
-### 0.1 다음 구현 0.624
+### 0.1 다음 구현 0.625
 
-1. 지역 소유자 확정의 다음 조각을 잇는다. 0.623에서 `surrounded` 혼합 경로의 첫 지역 9행 일치를 확인했다. 공장 정기 트리거(R6 공장 파생)·실제 outpost 목록(R11)·AI 뇌 첫 지역(R4-5, `bc1menu76`의 사원 없는 6행)이 남았다. 연결 뒤 L2 3경로 재수집으로 소유자·첫 지역 일치율을 확인한다. [0.623 결과](docs/dotnet-canon-0623-20261119.md)
+1. 공장 정기 트리거의 세션 연결을 잇는다. 0.624에서 공장 본체와 L1 전수(원본·CD 각 186행, 전체 996행)를 고정했다. `TryPopFortTerrain` 공장 분기·`SetFactoryPostPop` 등록·정기 `Regular` 실제 예약 결선 뒤 L2 3경로 재수집으로 소유자·첫 지역 일치율을 확인한다. [0.624 결과](docs/dotnet-canon-0624-20261119.md)
 2. R4-2의 나머지 차이(농지 프레임·그래프 per-Pop·장부·지역·AI·정기 처리)를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을 확인한다. [R4 체크](#r4-detail)
 
 <a id="first-run"></a>
@@ -79,6 +79,7 @@ AGENTS.md의 현행 지정은 갈무리11이다. cpppj 1322의 외부 비트맵 
 - [x] **R4-2 신전 가상 Owner 세션 결선(0.621).** `SetFortObjectOwner`(적재 SetOwner 분배)와 `DispatchRegionTempleOwner`(Pop 성공 뒤 실제 좌표 분배, 근거 cpppj `RawAssetPostPop.cpp` 91행)를 잇고 `RegionVortex`·`RegionIslandAt`을 노출했다. L1 6건 통과. 실행 진단으로 사원이 Pop되지 않아(`TryPopFortTerrain` 거짓·슬롯 void 유지, 전용 파생 R6 대기) 섬·첫 지역 전파가 관문에 걸림을 확정했다. 첫 지역·소유자 추가 이동은 R6 사원 Pop 뒤에 일어난다. [0.621](docs/dotnet-canon-0621-20261119.md)
 - [x] **R4-2 사원 Pop 파생 연결(0.622).** 전용 자산 본체(`RawAssetPostPop`, 12갈고리)를 세션 지형 분배에 등록하고 사원 Pop을 열었다. 공유 목록 결선(`SidLists.Outposts` 100칸·`Temples` 20칸, 기존 용량 0 공집합 수정)도 함께 고쳤다. L1 9건 통과와 Client 전체 1,283 통과, L2 3경로 재측정(owner 497→1699·140→766·213→762, 첫 지역 사원 경로 일치·사원 정기 +2·+1·+1·장부 집계). `bc1menu76`의 사원 없는 6행은 AI 뇌 경로(R4-5) 잔여다. [0.622](docs/dotnet-canon-0622-20261119.md)
 - [x] **R4-3 혼합 경로 첫 지역 대조(0.623).** `surrounded`(사원 4개+무사원 5칸)의 첫 지역 9행 일치를 L2 덤프로 확인했다(사원 행 전파·무사원 행 127 유지, 양쪽 사원 sid 일치). 코드 변경 없는 대조 단위다. 잔여 격차는 농지 가장자리 432칸(R6·R11 투표 입력)·거주 구역 5칸(R4-2·R6 전파)·그래프 215/255로 특정했다. [0.623](docs/dotnet-canon-0623-20261119.md)
+- [x] **R4-2 공장 후처리 본체(0.624).** `RawFactoryPostPop`(Hooks/Types/본체)과 `RawSquidLevel`을 이식했다. cpp fixture 전수 재생 24건 통과(일반 Factory 원본·CD 각 186행, wrapper 포함 전체 996행). 세션 Generate 연결(공장 정기 트리거·아웃포스트 목록 결선)은 0.625에서 검증한다. [0.624](docs/dotnet-canon-0624-20261119.md)
 - [ ] **R4-2 적재 Pop 전체 상태 일치.** 농지 프레임 일치, 요새 전용 파생 Pop과 지원표 밖 처리, 지역 칠하기/소유자 세션 연결, 표시 등록·스탬프·그래프 번호·장부 `totals`/`totalmade`를 덤프와 대조한다. cpp 근거는 `RawNormalTerrainWorldBinding`·`RawRegionPaint`·`RawRegionOwnership`·`Islandbuilder`·`SquidPostPop`이다.
 - [ ] **R4-3 신전·소용돌이 → Player 첫 지역.** 신전 Pop → 소용돌이 → 섬 소유자 → Player `+0x78` 연결은 0.622에서 닫았고(`thewarbegins`·`tutorial1` 경로값 일치), `surrounded` 혼합 경로 9행 일치도 0.623에서 확인했다(사원 4행 전파·무사원 5행 127 유지). AI 뇌 경로(`bc1menu76` 잔여, R4-5)가 남았다.
 - [ ] **R4-4 정기 처리·프로세스 초기 등록.** Kernel/Regular/Process·`UpdateAmbientWind`를 연결하고 초기 덤프를 비교한다. `RawAssetRegular`, Player·Dais·Dude·Disc·장식 정기 처리가 입력이다.
