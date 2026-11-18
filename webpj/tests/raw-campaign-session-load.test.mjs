@@ -61,16 +61,22 @@ test('CampaignSession Tutorial 1: 실제 저장 객체·Graph와 커서까지 Lo
     assert.throws(() => s.load(), /반납/);
 });
 
-// 실제 외곽 Session은 내부 27h의 월드 설치를 같은 load()에 전달하고 미완성 명령 등록에서 멈춘다.
-test('CampaignSession Tutorial 1: 로컬 로그인에서 실제 외곽 Load까지', () => {
-    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {} };
-    const { s } = scene({ localLogin });
+// 실제 외곽 Session은 내부 로그인에서 같은 월드와 수신기를 설치하고 Player·Ready까지 왕복한다.
+test('CampaignSession Tutorial 1: 로컬 로그인과 실제 게임 수신 등록 왕복', () => {
+    const events = [];
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: (...args) => events.push(['notice', ...args]) };
+    const { s } = scene({ localLogin, ai: { participation: { addChat: (...args) => events.push(['chat', ...args]), clearChat: (...args) => events.push(['clearChat', ...args]) } } });
     try {
         assert.equal(s.localConnectionReady(), false); assert.equal(s.pollLocalConnectionState(), false);
         s.startLocalConnection(); assert.equal(s.localConnectionPhase(), 8); assert.equal(s.loaded, false);
         s.pumpLocalConnection(); assert.equal(s.pollLocalConnectionState(), true); assert.equal(s.localConnectionPhase(), 10);
-        assert.throws(() => s.pumpLocalConnection(), /나머지 게임 명령 수신 등록 미연결/);
-        assert.equal(s.loaded, true); assert.ok(s.localConnectionPackets().includes(0x27)); assert.equal(s.localConnectionReady(), false);
+        s.pumpLocalConnection();
+        assert.equal(s.loaded, true); assert.equal(s.localConnectionPhase(), 14); assert.equal(s.localConnectionReady(), true);
+        assert.deepEqual(s.localConnectionPackets(), [0x27, 0x29, 0x67, 0x2b, 0x2b, 0x2b, 0x28, 0x81, 0x84, 0x2a, 0x32, 0x6e]);
+        assert.equal(events.filter(([kind]) => kind === 'clearChat').length, 6);
+        assert.equal(events.filter(([kind]) => kind === 'notice').length, 6);
+        assert.deepEqual(events[0], ['chat', 1, 'You', 0x20]);
+        s.pumpLocalConnection(); assert.equal(s.localConnectionReady(), true);
         assert.throws(() => s.startLocalConnection(), /새 수명/);
     } finally { s.dispose(); }
     assert.throws(() => s.pumpLocalConnection(), /반납/);

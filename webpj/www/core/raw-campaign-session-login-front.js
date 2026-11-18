@@ -1,5 +1,5 @@
-// Session Login 생성자의 옵션/내부 전송 앞단과 InstallZone을 실제 Session 저장소에 연결한다.
-// 실제 로그인 왕복과 외곽 Session 소유는 후속 단계이며 이 객체 생성만으로 접속하지 않는다.
+// Session Login의 옵션·내부 전송·InstallZone과 서버/클라이언트 패킷을 실제 Session 저장소에 연결한다.
+// Tutorial 1의 내부 Ready 왕복은 확인했으며 앱 Client 수명 연결은 후속이다. 이 객체 생성만으로 접속하지 않는다.
 import { bindInternalCampaignTransport } from './campaign-transport-services.js';
 import { createCampaignLoginServices, requireLoginService } from './campaign-login-services.js';
 import { installLocalMissionZone, LocalMissionTransport, makeLocalMissionLogin, makeLocalMissionZone } from './local-mission-transport.js';

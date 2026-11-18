@@ -116,13 +116,18 @@ export class RawCampaignSession {
     }
     // 생성과 실제 설치 완료를 구별한다.
     get loaded() { return this.#live().loaded; }
-    // 실제 Login 소유자를 만든 뒤 미션 시작을 실행한다. 수신 등록 누락은 실제 Load 뒤 선택 위치에서 중단한다.
+    // 실제 Login 소유자를 만들고 27h 수신 시 같은 Session의 Load·게임 수신 등록을 원본 순서로 실행한다.
     #beginLocalConnection(parentRunning) {
         const o = this.#live();
         if (o.loaded || this.#login || !o.services.localLogin) throw new Error('실제 로컬 Login의 새 수명/장치 계약 오류');
         const login = new RawCampaignSessionLoginFront(o, o.services.localLogin);
         try {
-            login.bindServer(() => { this.load(); this.registerCarrierCommandPrefix(login.transport.dispatch); throw new Error('나머지 게임 명령 수신 등록 미연결'); });
+            login.bindServer(() => {
+                this.load();
+                this.registerCarrierCommandPrefix(login.transport.dispatch);
+                this.registerConstructionCommands(login.transport.dispatch);
+                this.registerFactoryResearchCommands(login.transport.dispatch);
+            });
             login.bindClient(); login.registerReceivers();
         } catch (error) { login.dispose(); throw error; }
         this.#login = login; login.begin(parentRunning);
@@ -432,7 +437,7 @@ export class RawCampaignSession {
         });
     }
 
-    // Carrier 등록의 동맹부터 내용물 수신까지 확인한 앞부분을 원본 순서대로 등록한다.
+    // Carrier 등록의 전체 typed 수신기를 원본 순서대로 등록한다. 기존 공개 이름은 호출자 호환을 위해 유지한다.
     registerCarrierCommandPrefix(dispatch) {
         const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 Carrier 수신 등록');
         this.registerAllianceNegotiationCommands(dispatch);
