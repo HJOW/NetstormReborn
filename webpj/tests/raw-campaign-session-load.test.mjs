@@ -30,6 +30,8 @@ import { createMissionStartState } from '../www/core/raw-mission-start.js';
 import { MissionScript } from '../www/core/mission-script.js';
 import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
+import { ClientConnectionGlobals } from '../www/core/client-connection-globals.js';
+import { installClientPacketDefaults } from '../www/core/client-campaign-transport.js';
 import { ClientUserSelectionGlobals } from '../www/core/client-user-selection-globals.js';
 import { RawUserHighlight } from '../www/core/raw-user-highlight.js';
 import { ClientLocalStateGlobals } from '../www/core/client-local-state-globals.js';
@@ -599,6 +601,33 @@ test('CampaignSession TheWarBegins: 비미션 너겟의 단일 미션 진단', (
         assert.deepEqual(diagnostics, [['!inSingle', '\\Ns\\O\\Addrandom.cpp', 0xb4]]);
         assert.deepEqual(s.world().objects(), before); assert.equal(queue.size, pending); assert.equal(s.loaded, true);
     } finally { s.dispose(); }
+});
+
+// 공개 기술 표시는 실제 생산 부모의 중복 방지와 같은 Battle snapshot을 사용한다.
+test('CampaignSession TheWarBegins: Client 기본 69h와 실제 기술 부모', () => {
+    const storage = new CampaignTemplateStorage(), gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), registry = new ClientConnectionGlobals();
+    const { s } = scene({ gameplayGlobals: gameplay, playerRecords: players, templateStorage: storage, fortMission: { current: () => 0 }, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } } });
+    const runtime = { session: () => s }, dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); gameplay.bindRuntimeOwner(s, runtime);
+        const surface = { gameAux: () => gameplay.gameAux(), assertDisplay: (...args) => s.world().storage.assertDisplay(...args) };
+        installClientPacketDefaults({ gameplayGlobals: () => gameplay, surfaceStorage: () => surface, connectionGlobals: () => registry, playerRecords: () => players }, dispatch);
+        const packet = Uint8Array.of(1, 0x69, 7, 0, 2, 128, 0);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.equal(gameplay.runtimeCallActive(s), false); assert.equal(gameplay.gameAux().typeUse()[0], 128);
+        s.snapshotBattle(1); assert.deepEqual([...fortSection(storage.template(1), 'Technology')], [1, 128, 4]);
+    } finally { s.dispose(); }
+});
+
+// 공개 기술 표시는 실제 생산 부모의 중복 방지와 같은 Battle snapshot을 사용한다.
+test('CampaignSession TheWarBegins: 공개 기술 표시와 실제 생산 부모', () => {
+    const storage = new CampaignTemplateStorage();
+    const { s } = scene({ templateStorage: storage, fortMission: { current: () => 0 }, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } } });
+    try {
+        s.load(); s.indicateTechnology(128); s.indicateTechnology(128); s.snapshotBattle(1);
+        assert.deepEqual([...fortSection(storage.template(1), 'Technology')], [1, 128, 4]);
+    } finally { s.dispose(); }
+    assert.throws(() => s.indicateTechnology(128), /반납/);
 });
 
 // 실제 기술 부모에 같은 종류를 한 번만 넣고 반복 획득에도 현재 Battle snapshot과 안내를 수행한다.

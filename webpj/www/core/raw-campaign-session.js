@@ -119,6 +119,8 @@ export class RawCampaignSession {
     world() { return this.#live().world; }
     // C++ Core의 값형 aggregate를 돌려주되 Pool/권한/장부의 실제 참조는 그대로 빌린다(6382).
     core() { return { ...this.#live().core }; }
+    // 현재 Player의 실제 기술 부모에 kind를 표시하며 중복 여부는 생산 본체가 판정한다.
+    indicateTechnology(type) { const o = this.#live(); if (!o.production) throw new Error('현재 기술표시의 실제 생산/Player 부모 미설치'); o.production.indicateTechnology(type); }
     // 설치된 같은 Pool과 UI 상태를 사용하는 선택을 만들고 이동·낙하가 현재 선택을 약하게 빌리게 한다.
     makeUserSelection(state, input = {}) {
         const o = this.#live(), c = o.core;

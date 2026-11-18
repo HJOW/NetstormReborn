@@ -14,6 +14,7 @@ import { CompositeTransportRole } from '../www/core/composite-mission-transport.
 import { ClientConnectionGlobals } from '../www/core/client-connection-globals.js';
 import { RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { observeBombEffectPacket } from '../www/core/raw-bomb-effect.js';
+import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
 
 // 패킷 한 칸을 만든다: 크기만큼 0 으로 채우고 지정한 (오프셋, 값, 폭) 필드를 리틀엔디언으로 쓴다. (2026-11-12 WB04-E328)
 function packetOf(size, fields = [], fill = 0) {
@@ -158,6 +159,7 @@ function makeClient({ initialized = true } = {}) {
     const diagnostics = [];
     const writes = [];
     const settings = new Uint32Array(7);
+    const typeUse = new Uint8Array(256);
     const header = [0x0c, 0x85];
     const state = { milliseconds: 5000, initialLength: 0, server: { value: true } };
     const sentMutable = [];
@@ -166,7 +168,7 @@ function makeClient({ initialized = true } = {}) {
     const client = {
         edition: 'patch1078',
         playerRecords: () => ({ initialized: () => initialized, records: () => records }),
-        gameplayGlobals: () => ({ server: () => state.server, gameAux: () => ({ missionSettings: () => settings }) }),
+        gameplayGlobals: () => ({ server: () => state.server, gameAux: () => ({ missionSettings: () => settings, typeUse: () => typeUse }) }),
         gameClockOwner: () => ({ wallSeconds: (ms) => ms / 1000 }),
         clientMilliseconds: () => state.milliseconds,
         connectionGlobals: () => registry,
@@ -218,8 +220,8 @@ test('Client 기본 등록 표: 설치된 version/policy/길이/관찰기/수신
     for (const type of [0x2a, 0x2b, 0x67, 0x81]) assert.equal(typeof dispatch.registration(type).packetObserver, 'function');
     assert.equal(typeof dispatch.registration(0x32).observer, 'function');
     assert.equal(typeof dispatch.registration(0x32).receive, 'function');
-    // 경로·압축 관찰기도 수신기는 설치하지 않는다. 나머지 Client 수신기 묶음은 후속이다.
-    for (const type of [0x02, 0x30, 0x41, 0x69, 0x7a]) assert.equal(dispatch.registration(type).receive, null);
+    // 경로·압축 관찰기는 수신기를 설치하지 않는다. 채팅과 연결 종료는 후속이다.
+    for (const type of [0x02, 0x30, 0x41, 0x7a]) assert.equal(dispatch.registration(type).receive, null);
 });
 
 // 장기 기본 경로·압축 관찰기는 Session 등록을 반납한 뒤에도 같은 진단을 사용한다.
@@ -238,6 +240,30 @@ test('Client 기본 등록 표: 경로·압축 관찰기의 수명과 진단', (
     original[0](badPath, 1); original[1](badCompressed, 1);
     assert.deepEqual(scene.diagnostics.slice(-2), [['nodeCount != (short)-1', '\\Ns\\O\\_p_packets.cpp', 0x716], ['dataLength != (unsigned char)-1', '\\Ns\\O\\_p_packets.cpp', 0xb83]]);
     assert.deepEqual([declared(badPath), declared(badCompressed)], [23, 264]);
+});
+
+// 각 표시 시 현재 Session을 다시 선택하고 실제 Runtime pin을 정상·예외 복귀에 반납한다.
+test('Client 기본 등록 표: 69h 기술 목록과 현재 Runtime 수명', () => {
+    const scene = makeClient(), game = new ClientGameplayGlobals(), use = game.acquire(), calls = [], owner = {};
+    scene.client.gameplayGlobals = () => game;
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    installClientPacketDefaults(scene.client, dispatch);
+    const entry = dispatch.registration(0x69), current = game.gameAux().typeUse();
+    assert.deepEqual([entry.version, entry.mismatch, entry.length, typeof entry.receive], [1, 0, 0xffff, 'function']);
+    entry.receive(0, null, Uint8Array.of(1, 0x69, 6, 0, 1, 0));
+    assert.throws(() => entry.receive(0, null, Uint8Array.of(1, 0x69, 7, 0, 2, 128, 0)), /현재 게임 Runtime 미연결/);
+    assert.equal(current[0], 128); current.fill(0);
+    const session = { bindRuntimePin: () => {}, indicateTechnology: (type) => { assert.equal(game.runtimeCallActive(session), true); calls.push(type); } };
+    use.publish(session); game.bindRuntimeOwner(session, owner);
+    try {
+        entry.directReceive(0, null, Uint8Array.of(1, 0x69, 8, 0, 3, 128, 129, 0));
+        assert.deepEqual(calls, [128, 129]); assert.equal(game.runtimeCallActive(session), false);
+        session.indicateTechnology = () => { assert.equal(game.runtimeCallActive(session), true); throw new Error('표시 실패'); };
+        assert.throws(() => entry.receive(0, null, Uint8Array.of(1, 0x69, 6, 0, 1, 0)), /표시 실패/);
+        assert.equal(game.runtimeCallActive(session), false);
+        const sentinel = packetOf(8, [[4, 255, 1]]); entry.packetObserver(sentinel, 1);
+        assert.deepEqual(scene.diagnostics.pop(), ['len != (unsigned char)-1', '\\Ns\\O\\_p_packets.cpp', 0xa5f]); assert.equal(declared(sentinel), 260);
+    } finally { use.withdraw(session); use.release(); }
 });
 
 // 관찰기들이 장기 Client 진단(storage.assertDisplay)을 쓰고 송신에서만 길이를 확정한다.
