@@ -526,3 +526,19 @@ test('CampaignSession Tutorial 1: 의식과 Meltdown 수신 등록', () => {
         raw.set(saved);
     } finally { s.dispose(); }
 });
+
+// 개발자 패킷의 설정 분기는 같은 Session의 장기 GameAux를 바꾼다.
+test('CampaignSession Tutorial 1: 개발자 설정 패킷 수신', () => {
+    const gameplay = new ClientGameplayGlobals(), { s } = scene({ gameplayGlobals: gameplay });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        const text = 'shm 1', packet = new Uint8Array(9 + text.length);
+        packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+        packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.equal(gameplay.gameAux().missionSettings()[1], 1);
+        const missing = new Uint8Array(11); missing.set([1, 0x31, 11, 0, 3, 0, 0, 0, 100, 112, 0]);
+        assert.throws(() => dispatch.dispatch(new PacketConnection({ sender: 1 }), missing), /나머지 해석기 미연결/);
+    } finally { s.dispose(); }
+});
