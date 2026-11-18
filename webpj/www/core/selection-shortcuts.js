@@ -1,5 +1,5 @@
 // 원본 P/R 키의 사제 선택(004d9884..004d98e1)과 N 키의 다음 이동 유닛 선택(004da880)을 옮긴 모듈이다(cpppj `client/PriestSelectionShortcut.cpp/.h`, `client/NextUnitSelection.cpp/.h`, 10.78 전용).
-//  - selectPriestByKey(state, hooks): 조회 전에 현재 선택 SID 를 캡처한다 → localOwner 로 살아 있는 사제/운반체/제단 참여 조회(find) → 후보가 캡처한 선택과 다르면 반복 카운터를 0 으로 → 같고 카운터가 비0 이면 현재 localOwner·viewCommand 를
+//  - selectPriestByKey(state, hooks): 건설 조각이 들려 있으면 먼저 취소하고 조회 전에 현재 선택 SID 를 캡처한다 → localOwner 로 살아 있는 사제/운반체/제단 참여 조회(find) → 후보가 캡처한 선택과 다르면 반복 카운터를 0 으로 → 같고 카운터가 비0 이면 현재 localOwner·viewCommand 를
 //    읽어 일반 명령 큐에 (명령, owner, owner)로 예약하고 끝 → 그 밖에는 select(후보, 0, 1) 후 현재 카운터를 하나 증가(32비트 감김). 카운터는 Client 수명의 원문 005caf40 DWORD 이며 bool 이나 프레임별 상태가 아니다.
 //  - selectNextMovingUnit(pool, types, state, add, hooks): 현재 선택이 free 면 0 으로 보고, 소유자(+34, 캡처한 전체 DWORD)와 이동 가능 TYPE(flags2 0x30000)을 만족하는 다음 슬롯을 예약 1 다음부터 free 만 건너뛰며 한 번 순환 검색한다.
 //    없으면 반환, 있으면 select(후보, 0, 1) → center(후보)(첫 선택 성공 여부와 무관) → 정지면 끝 → Shift(add)가 비0 이면 후보가 이동 가능하고 현재 선택이 살아 있는 이동 유닛일 때 multiple(후보, 1) 후 끝, 그 밖에는 select(후보, 0, 1) 한 번 더.
@@ -12,9 +12,10 @@ function need(device, message) {
     return device;
 }
 
-// state = { selected, repeated }(현재 선택 DWORD 와 반복 카운터, 읽고 쓰는 속성), hooks = { localOwner(), viewCommand(), find(owner), select(sid, 0, 1), queue(command, first, second) }. (2026-11-08 WB04-E22)
+// state = { selected, repeated }(현재 선택 DWORD 와 반복 카운터, 읽고 쓰는 속성), hooks = { pieceHeld?(), cancelPiece?(), localOwner(), viewCommand(), find(owner), select(sid, 0, 1), queue(command, first, second) }. (2026-11-08 WB04-E22)
 export function selectPriestByKey(state, hooks) {
     const message = '사제 선택 단축키 장치 미연결';
+    if (hooks.pieceHeld && hooks.cancelPiece && hooks.pieceHeld()) hooks.cancelPiece(); // NB20: 취소 뒤 현재 선택을 읽는다.
     const owner = need(hooks.localOwner, message)();
     // 조회가 현재 selected 를 바꿔도 비교는 조회 전에 캡처한 SID 이다.
     const previous = state.selected >>> 0;

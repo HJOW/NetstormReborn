@@ -767,6 +767,15 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
         assert.equal(input.event({ code: InputCode.rightButton, x: -1, y: -1 }), null); world.select(priest.sid); assert.equal(world.selected(), priest.sid);
         const event = { button: 2 }, menus = []; assert.equal(world.openSelectionMenu(priest.sid, event, false, (sid, current) => { menus.push([sid, current]); return 37; }), 37);
         assert.deepEqual(menus, [[priest.sid, event]]); assert.equal(world.selected(), priest.sid);
+        const originalCancel = cursor.cancel, previousPreview = drop.preview; let cancellations = 0;
+        try {
+            drop.lockDepth = 0; drop.preview = 123; cursor.cancel = () => { cancellations += 1; drop.lockDepth = 1; drop.preview = 0; gameplay.selection.selected = 0; };
+            input.event({ code: 0x70, x: 0, y: 0 }); assert.equal(cancellations, 1); assert.equal(world.selected(), priest.sid); assert.equal(gameplay.selection.priestSelections, 1);
+        } finally { cursor.cancel = originalCancel; drop.lockDepth = 1; drop.preview = previousPreview; }
+        input.event({ code: 0x72, x: 0, y: 0 }); assert.deepEqual(keyQueue.pop(false), { code: 0x020000b8, x: 1, y: 1 });
+        const core = session.core(), localMovers = session.world().objects().filter(({ object }) => object.owner === 1 && (core.types[object.type].flags2 & 0x30000));
+        assert.ok(localMovers.length > 0); assert.ok(localMovers.every(({ object }) => object.type === 158));
+        input.event({ code: 0x6e, x: 0, y: 0 }); assert.equal(world.selected(), priest.sid);
         const before = session.localConnectionPackets(); world.moveFromMinimap(90, 108); session.pumpLocalConnection();
         assert.equal(world.selected(), 0); assert.equal(gameplay.selection.mode, 0); assert.equal(cursors.at(-1), 1);
         const after = cursors.length; world.updateMovementCursor(); assert.equal(cursors.length, after);

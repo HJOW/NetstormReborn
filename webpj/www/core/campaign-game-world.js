@@ -10,6 +10,8 @@ import { RawCursorPosition } from './raw-cursor-position.js';
 import { RawCarrierDropPoint } from './raw-carrier-drop-point.js';
 import { RawSquidFinder } from './raw-squid-finder.js';
 import { RawUserPick } from './raw-user-pick.js';
+import { selectNextMovingUnit, selectPriestByKey } from './selection-shortcuts.js';
+import { gameMenuCommandValue } from './game-menu-commands.js';
 import { createCameraHomeState } from './camera-home.js';
 import { RawCampaignSession } from './raw-campaign-session.js';
 import { RawCampaignFactoryDisplay } from '../render/raw-campaign-factory-display.js';
@@ -201,6 +203,34 @@ export class CampaignGameWorld {
     cursorRotationMode() { this.#live(); return this.#gameplay.cursorGlobals().rotationMode().value >>> 0; }
     // 현재 마우스와 선택 전역을 사용하는 강조 모드다.
     highlight(mode) { this.#live(); if (!this.#input) throw new Error('실제 선택/강조 장치 미설치'); this.#input.highlight.highlight(mode); }
+    // 현재 SID의 위치·발자국을 읽어 같은 즉시 카메라 적용 장치로 이동한다.
+    centerOnObject(sid) {
+        const session = this.#live(); this.#cameraHome.width = this.#width; this.#cameraHome.height = this.#height;
+        session.centerCameraOn(sid, this.#cameraHome, () => this.#commitCamera());
+    }
+    // 같은 풀에서 다음 이동 유닛을 선택하고 원본 다중 선택과 카메라 순서를 유지한다.
+    selectNextUnit(add) {
+        const session = this.#live(); if (!this.#input) throw new Error('다음 유닛 선택의 실제 월드/입력 없음');
+        const core = session.core(), state = this.#gameplay.selection;
+        selectNextMovingUnit(core.pool, core.types, state, add, {
+            localOwner: () => session.localOwner(), paused: () => this.#services.paused ? this.#services.paused() : 0,
+            select: (sid, force, activate) => this.#selection.select(sid, force, activate), center: (sid) => this.centerOnObject(sid),
+            multiple: (sid, value) => this.#selection.toggleMultiple(sid, value),
+        });
+        this.#changed = true;
+    }
+    // 같은 사제 참여 조회·반복 카운터·큐와 커서 취소를 사용하는 P/R 선택이다.
+    selectPriest(queue) {
+        const session = this.#live(); if (!this.#input) throw new Error('사제 단축키의 실제 월드/입력 없음');
+        const current = this.#gameplay.selection, state = { get selected() { return current.selected; }, get repeated() { return current.priestSelections; }, set repeated(value) { current.priestSelections = value >>> 0; } };
+        selectPriestByKey(state, {
+            localOwner: () => session.localOwner(), find: (owner) => session.findPriestParticipation(owner),
+            select: (sid, force, activate) => this.#selection.select(sid, force, activate),
+            viewCommand: () => { const value = gameMenuCommandValue(0x005429d4); if (value === null) throw new Error('사제 보기 명령 누락'); return value; }, queue,
+            pieceHeld: () => { const drop = session.cursorDropSettings(); return drop.lockDepth === 0 && drop.preview !== 0; }, cancelPiece: () => session.cursor().cancel(),
+        });
+        this.#changed = true;
+    }
     // 같은 선택 처리기의 운반체 또는 아처 메뉴 입구에서 현재 공통 메뉴를 호출한다.
     openSelectionMenu(sid, event, archer, common) {
         this.#live(); if (!this.#input) throw new Error('실제 객체 메뉴 선택 장치 미설치');

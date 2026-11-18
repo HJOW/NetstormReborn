@@ -31,8 +31,7 @@ export class CampaignUserInput {
         const selection = {
             paused: () => this.#paused(), command: (address) => { const value = gameMenuCommandValue(address); if (value === null) throw new Error('선택 키의 현재 메뉴 명령 누락'); return value; },
             localOwner: () => this.#world.session().localOwner(), queue,
-            next: (add) => { if (typeof this.#services.selectNext !== 'function') throw new Error('다음 유닛 선택 장치 미연결'); this.#services.selectNext(add); },
-            priest: () => { if (typeof this.#services.selectPriest !== 'function') throw new Error('사제 선택 장치 미연결'); this.#services.selectPriest(queue); },
+            next: (add) => this.#world.selectNextUnit(add), priest: () => this.#world.selectPriest(queue),
         };
         if (dispatchSelectionKeyInput(event, selection)) return null;
         const key = (event.code >>> InputCode.virtualKeyShift) & 255;

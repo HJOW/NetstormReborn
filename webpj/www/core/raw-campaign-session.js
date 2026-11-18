@@ -891,6 +891,8 @@ export class RawCampaignSession {
         const first = data.getUint32(owner * 180 + 0x7c, true), sid = first || data.getUint32(owner * 180 + 0x84, true);
         if (sid) this.centerCameraOn(sid, state, apply);
     }
+    // 현재 Player의 실제 사제 또는 대체 참여 대상 SID를 조회한다.
+    findPriestParticipation(owner) { return this.#live().priestParticipation.find(owner); }
     // 현재 참여 조회가 고른 사제 또는 대체 대상의 위치로 이동한다.
     viewYourPriest(owner, state, apply) {
         const sid = this.#live().priestParticipation.find(owner);

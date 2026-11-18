@@ -185,6 +185,16 @@ test('사제 선택 P/R 키: 부분 실패와 현재 DWORD 감김', () => {
     assert.equal(wrap.repeated, 0);
 });
 
+// 건설 조각 취소가 사제 조회와 현재 선택 캡처보다 먼저 실행된다.
+test('사제 선택 P/R 키: 든 건설 조각 취소와 현재 선택 재조회', () => {
+    const state = { selected: 50, repeated: 1 }, calls = [];
+    const hooks = { pieceHeld: () => { calls.push('held'); return true; }, cancelPiece: () => { calls.push('cancel'); state.selected = 51; },
+        localOwner: () => { calls.push('owner'); return 1; }, find: () => { calls.push('find'); return 51; }, viewCommand: () => 0x020000b8,
+        select: () => calls.push('select'), queue: (code, first, second) => calls.push([code, first, second]) };
+    selectPriestByKey(state, hooks); assert.deepEqual(calls, ['held', 'cancel', 'owner', 'find', 'owner', [0x020000b8, 1, 1]]);
+    calls.length = 0; delete hooks.cancelPiece; state.selected = 51; selectPriestByKey(state, hooks); assert.equal(calls.includes('held'), false);
+});
+
 // 첫 선택/가운데/정지/후속 선택의 순서와 순환/free/dead/전체 owner 비교를 실제 원문 기대값에 대조한다.
 test('다음 유닛 N 키: 원본10.78 410행(첫 선택·가운데·정지·후속 선택·순환·free·dead·owner)', { skip: !nextRows && '원본 fixture 없음' }, () => {
     const pool = new SidPool(24000, { server: true });
