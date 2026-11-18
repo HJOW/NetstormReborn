@@ -10,7 +10,7 @@ import { Kernel } from '../www/core/kernel.js';
 import { InputCode, InputQueue } from '../www/core/input-queue.js';
 import { CampaignUserInput } from '../www/core/campaign-user-input.js';
 import { clearClientUserSelection } from '../www/core/client-user-selection-cleanup.js';
-import { resetClientClockSynchronization, resetClientStateZone, resetClientStateWorldStorage } from '../www/core/client-state-storage-cleanup.js';
+import { resetClientClockSynchronization, resetClientStateZone, resetClientStateWorldStorage, resetClientSquidPool, clearClientMetaZoneRecords } from '../www/core/client-state-storage-cleanup.js';
 import { StateWorldCleanupEffect } from '../www/core/raw-state-world-cleanup.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
@@ -94,6 +94,7 @@ test('Client State 저장소 정리: 장기 전역과 대여 관문', () => {
     try {
         resetClientStateWorldStorage(context, E.Clear43b540); assert.deepEqual(storage.links.ownerColors, [0, 1, 2, 3, 4, 5, 6, 7, 8]);
         assert.throws(() => resetClientStateWorldStorage(context, E.Clear4ab940), /대여 반납 필요/);
+        assert.throws(() => resetClientSquidPool(context), /대여 반납 필요/);
     } finally { use.release(); }
     const wrong = new ClientGameplayGlobals(); assert.throws(() => resetClientStateWorldStorage({ ...context, gameplay: wrong }, E.Clear43b540), /owner 불일치/);
     storage.sidLists.factories.count = 4; gameplay.selection.multipleCount = 3; storage.totalMade.localCounts[0] = 5; storage.totalMade.localCounts[255] = 9;
@@ -105,6 +106,29 @@ test('Client State 저장소 정리: 장기 전역과 대여 관문', () => {
     assert.deepEqual([storage.hash.cell(0, 2, 3), local.playerNoMakeWarnings()[0], storage.spots[1], storage.islands[0], storage.chunks.at(0, 0).island, storage.graph.records[1].surfaces], [0, 0, 0, 0, 127, 0]);
     assert.deepEqual(storage.bridgeDecayScan, { first: 15000, last: 23001, cursor: 15000, next: 21.25 });
     assert.throws(() => resetClientStateWorldStorage(context, 0xffffffff), /미지원/);
+    local.metaZoneRecords()[0] = 7; clearClientMetaZoneRecords(context);
+    assert.equal(local.metaFirstReset().value, 0); assert.equal(local.metaZoneRecords()[0], 0);
+    clearClientMetaZoneRecords(context); assert.equal(gameplay.borrowed(), false);
+    const sid = storage.pool.allocate(); storage.pool.release(sid); storage.boardTargetState.invalid.x = 1; storage.boardTargetState.invalid.y = 2;
+    resetClientSquidPool(context); assert.deepEqual(storage.boardTargetState.invalid, { x: -10000, y: -10000 });
+    assert.ok(storage.pool.deletions(false).every(({ sid: number, type }) => number === 0 && type === 0));
+});
+
+// 메타 구역 마커가 있을 때만 실제 현재 Session과 Runtime 고정을 요구한다.
+test('Client 메타 구역 정리: 현재 Session 마커 삭제와 Runtime 반납', () => {
+    const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals(), runtime = {};
+    const { s } = scene({ gameplayGlobals: gameplay, deletion: { emit: () => {} } });
+    try {
+        s.load(); gameplay.bindRuntimeOwner(s, runtime); const storage = s.world().storage;
+        const context = { gameplay, local, storage, currentStorage: storage }, records = local.metaZoneRecords(), data = new DataView(records.buffer);
+        clearClientMetaZoneRecords(context); const sid = s.world().create(94, 0); assert.ok(sid);
+        data.setUint32(0, 1, true); data.setUint32(76, 0x10000, true);
+        assert.throws(() => clearClientMetaZoneRecords(context), /SID의 현재 Pool 물리 범위/);
+        assert.equal(data.getUint32(76, true), 0x10000); assert.equal(gameplay.runtimeCallActive(s), false);
+        data.setUint32(76, sid, true); clearClientMetaZoneRecords(context);
+        assert.equal(data.getUint32(76, true), 0); assert.ok(s.core().pool.slot(sid)[11] & 1);
+        assert.equal(gameplay.runtimeCallActive(s), false);
+    } finally { s.dispose(); }
 });
 
 // Session이 없을 때도 빈 선택을 정리하고 실제 다중 선택 효과에서만 같은 Session을 요구한다.
