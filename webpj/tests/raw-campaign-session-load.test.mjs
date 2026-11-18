@@ -13,6 +13,7 @@ import { clearClientUserSelection } from '../www/core/client-user-selection-clea
 import { resetClientClockSynchronization, resetClientStateZone, resetClientStateWorldStorage, resetClientSquidPool, clearClientMetaZoneRecords } from '../www/core/client-state-storage-cleanup.js';
 import { StateWorldCleanupEffect } from '../www/core/raw-state-world-cleanup.js';
 import { ClientStateRuntimeRetirement } from '../www/core/client-state-runtime-retirement.js';
+import { cancelClientStateCursor } from '../www/core/client-state-world-cleanup.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
 import { fortSection, parseFort } from '../www/assets/fort.js';
@@ -825,6 +826,8 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
 // 실제 World 입력은 같은 카메라·선택·운반 요청을 조립한다.
 test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => {
     const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), cursors = [], traces = []; let worldPaused = false;
+    let initialCancels = 0; cancelClientStateCursor(gameplay, () => { initialCancels += 1; }); assert.equal(initialCancels, 1);
+    assert.throws(() => cancelClientStateCursor(gameplay), /외부 장치 누락/);
     gameplay.camera().initializeNativeRenderer(640, 480, 256, { value: 0 }, { value: 0 });
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
     const services = {
@@ -839,6 +842,8 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
     const world = new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', services, { x: 640, y: 480 });
     try {
         const session = world.session(); assert.throws(() => world.select(1), /미설치/); assert.throws(() => world.bindUserInput(), /설치 전/);
+        assert.throws(() => session.cancelCursorForState(), /커서 실행기 미설치/);
+        cancelClientStateCursor(gameplay, () => { initialCancels += 1; }); assert.equal(initialCancels, 2);
         assert.throws(() => world.openSelectionMenu(1, {}, false, () => 0), /미설치/); assert.doesNotThrow(() => world.updateMovementCursor());
         world.startLocalConnection(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection(); assert.equal(world.completeLocalConnection(), true);
         const priest = session.world().objects().find(({ object }) => object.type === 158 && object.owner === 1); assert.ok(priest);
@@ -906,6 +911,9 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
         assert.equal(session.sp(1), 3000); assert.deepEqual(session.localConnectionPackets(), beforeCancel);
         assert.equal(world.selected(), priest.sid); assert.equal(gameplay.selection.priestSelections, 1);
         input.event({ code: 0x72, x: 0, y: 0 }); assert.deepEqual(keyQueue.pop(false), { code: 0x020000b8, x: 1, y: 1 });
+        assert.equal(session.makePriestMenu({ tell: forbidden('건설 실패 안내') }).selectBuild(85, priest.sid), true);
+        const statePreview = drop.preview; assert.ok(statePreview); cancelClientStateCursor(gameplay, forbidden('설치된 커서 대체'));
+        assert.equal(drop.preview, 0); assert.ok(session.core().pool.slot(statePreview)[11] & 1);
         const core = session.core(), localMovers = session.world().objects().filter(({ object }) => object.owner === 1 && (core.types[object.type].flags2 & 0x30000));
         assert.ok(localMovers.length > 0); assert.ok(localMovers.every(({ object }) => object.type === 158));
         input.event({ code: 0x6e, x: 0, y: 0 }); assert.equal(world.selected(), priest.sid);

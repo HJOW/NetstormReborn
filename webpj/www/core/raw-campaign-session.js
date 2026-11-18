@@ -938,6 +938,8 @@ export class RawCampaignSession {
     findTechnology(owner, type) { return this.#live().technology.find(owner, type); }
     // 전체 설치 성공과 구분하여 같은 실제 커서 몸체 존재만 확인한다.
     hasCursorRuntimeForState() { return Boolean(this.#live().cursor); }
+    // 설치 중인 실제 커서도 같은 State 전용 취소를 사용하며 Prepare를 추가하지 않는다.
+    cancelCursorForState() { const cursor = this.#live().cursor; if (!cursor) throw new Error('State 취소의 실제 커서 실행기 미설치'); cursor.cancelForState(); }
     // 설치된 Session의 실제 커서와 현재 배치 상태를 빌린다.
     cursor() { const o = this.#live(); if (!o.loaded || !o.cursor) throw new Error('설치 전 실제 커서 요청'); return o.cursor; }
     // 커서 수명과 배치 명령이 함께 쓰는 현재 저장소다.
