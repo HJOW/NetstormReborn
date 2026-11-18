@@ -162,6 +162,13 @@ export class RawCampaignSession {
     sp(owner) { return spFloat(this.#live().sp.get(owner)); }
     // 현재 분산 SP에 같은 단정도 값을 기록한다.
     setSp(owner, value) { this.#live().sp.set(owner, spBits(value)); }
+    // requestCarrierMove(parent SID, { x, y }, sacrifice=0): 설치된 Session의 현재 선택·연결·내부 전송에 실제 이동 요청을 전달한다.
+    requestCarrierMove(parent, destination, sacrifice = 0) {
+        const o = this.#live();
+        if (!o.loaded || !o.carrierMove) throw new Error('미설치 Session의 이동 명령');
+        const point = { x: Math.fround(destination.x), y: Math.fround(destination.y) };
+        o.carrierMove.request(parent, point, sacrifice);
+    }
     // 현재 모드와 같은 보상 본체를 사용해 지정 Player에 SP를 가산한다.
     #addMoney(owner, amount) {
         const o = this.#live(); o.rewardState.fixedSpA = o.core.ownerMode.fort; o.rewardState.fixedSpB = Boolean(o.globals.editor);

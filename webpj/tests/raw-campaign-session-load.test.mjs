@@ -26,6 +26,8 @@ import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
 import { ClientLocalStateGlobals } from '../www/core/client-local-state-globals.js';
 import { DaisProcess, writeDaisProcessData } from '../www/core/raw-dais-process-data.js';
 import { GunProcess } from '../www/core/raw-gun-process.js';
+import { findAttachedProcess } from '../www/core/raw-wind-aviary-process.js';
+import { RawPathProcess } from '../www/core/raw-path-process.js';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 import { loadOriginalForts, readData } from './helpers.mjs';
 
@@ -132,6 +134,42 @@ test('CampaignSession TheWarBegins: 로컬 로그인과 실제 게임 수신 등
         assert.throws(() => s.startLocalConnection(), /새 수명/);
     } finally { s.dispose(); }
     assert.throws(() => s.pumpLocalConnection(), /반납/);
+});
+
+// 로그인된 실제 내부 전송은 사제 이동 요청을 지연 송신해 같은 Host의 경로로 연결한다.
+test('CampaignSession TheWarBegins: 실제 로그인 전송의 사제 이동 요청', () => {
+    const received = [];
+    // 관찰기는 실제 내부 전송이 수신한 이동 패킷과 송신자만 복사한다.
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
+        observePacket: (sender, _boss, _local, packet) => { if (packet[1] === 0x40) received.push([sender, packet.slice()]); } };
+    const { s } = scene({ localLogin, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    try {
+        assert.throws(() => s.requestCarrierMove(50, { x: 90, y: 108 }), /미설치/);
+        s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+        assert.equal(s.localConnectionReady(), true);
+        const priest = s.world().objects().find(({ object }) => object.type === 158 && object.owner === 1);
+        assert.ok(priest);
+        const core = s.core(), before = s.localConnectionPackets(), destination = { x: 90, y: 108 }, movement = 54;
+        assert.equal(findAttachedProcess(core.pool, priest.sid, movement), 0);
+        s.requestCarrierMove(priest.sid, destination);
+        assert.deepEqual(s.localConnectionPackets(), before); assert.equal(findAttachedProcess(core.pool, priest.sid, movement), 0);
+        s.pumpLocalConnection();
+        assert.equal(s.localConnectionPackets().at(-1), 0x40);
+        assert.equal(received.length, 1); assert.equal(received[0][0], 1);
+        const packet = received[0][1], packetView = new DataView(packet.buffer, packet.byteOffset, packet.byteLength);
+        assert.deepEqual([...packet.subarray(0, 4)], [1, 0x40, 18, 0]); assert.equal(packetView.getUint16(4, true), priest.sid);
+        assert.equal(packetView.getFloat32(6, true), destination.x); assert.equal(packetView.getFloat32(10, true), destination.y); assert.equal(packetView.getUint32(14, true), 0);
+        const form = findAttachedProcess(core.pool, priest.sid, movement), path = core.processes.fromForm(form);
+        assert.ok(form); assert.ok(path instanceof RawPathProcess);
+        const view = new DataView(path.runtime.bytes.buffer, path.runtime.bytes.byteOffset, path.runtime.bytes.byteLength);
+        const storedDestination = { x: view.getFloat32(0x186dc, true), y: view.getFloat32(0x186e0, true) };
+        assert.deepEqual(storedDestination, { x: 89.5, y: 107.5 });
+        const packets = s.localConnectionPackets();
+        // 원본 float 인자에서 같은 값이 되는 미세한 double 차이도 중복 목적지로 처리한다.
+        s.requestCarrierMove(priest.sid, { x: storedDestination.x + 1e-7, y: storedDestination.y }); s.pumpLocalConnection();
+        assert.deepEqual(s.localConnectionPackets(), packets); assert.equal(findAttachedProcess(core.pool, priest.sid, movement), form);
+    } finally { s.dispose(); }
+    assert.throws(() => s.requestCarrierMove(50, { x: 90, y: 108 }), /반납/);
 });
 
 // 원본 캠페인 Fort 두 종류를 실제 내부 전송으로 설치하고 각각 독립된 로그인 수명을 확인한다.
