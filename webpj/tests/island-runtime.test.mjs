@@ -269,6 +269,37 @@ test('섬 자료 조회: 부재 진단 뒤 현재 owner와 경계 비트', () =>
     assert.equal(calls, 4); assert.throws(() => rawIslandOwner(records, 0), /부재 진단/);
 });
 
+// 첫 지역의 읽기와 쓰기는 각각 현재 Player base를 다시 조회한다.
+test('섬 런타임: 현재 Player getter의 지연 조회와 교체', () => {
+    const scene = new IslandRuntimeScene();
+    const runtime = new RawIslandRuntime(scene.pool, scene.hash, scene.records, scene.modes, scene.residences, scene.revision, scene.changed, scene.hooks());
+    runtime.reset(); runtime.add(1, 0); runtime.setBounds(0, { left: 1, top: 1, right: 2, bottom: 2 });
+    const before = new Uint8Array(9 * PLAYER_STRIDE), after = new Uint8Array(9 * PLAYER_STRIDE);
+    put(before, PLAYER_STRIDE + PLAYER_FIELD, 127); put(after, PLAYER_STRIDE + PLAYER_FIELD, 127);
+    let reads = 0; runtime.bindCurrentPlayers(() => (++reads === 1 ? before : after));
+    assert.equal(reads, 0); runtime.setOwner(0, 1);
+    assert.equal(reads, 2); assert.equal(get(before, PLAYER_STRIDE + PLAYER_FIELD), 127); assert.equal(get(after, PLAYER_STRIDE + PLAYER_FIELD), 0);
+    runtime.bindPlayerRecords(before); runtime.setOwner(0, 1);
+    assert.equal(reads, 2); assert.equal(get(before, PLAYER_STRIDE + PLAYER_FIELD), 0);
+    assert.throws(() => runtime.bindCurrentPlayers(null), /getter/);
+    runtime.bindCurrentPlayers(() => new Uint8Array(10)); assert.throws(() => runtime.setOwner(0, 1), /현재 9 Player/);
+});
+
+// 진단 위치 장치는 원문의 식과 각 호출 지점의 행 번호를 받는다.
+test('섬 런타임: 원문 진단 식과 행 번호', () => {
+    const scene = new IslandRuntimeScene(), diagnostics = [];
+    const runtime = new RawIslandRuntime(scene.pool, scene.hash, scene.records, scene.modes, scene.residences, scene.revision, scene.changed, {
+        setResidenceOwner: () => {}, assertionAt: (expression, line) => diagnostics.push([expression, line]),
+    });
+    runtime.reset(); runtime.delete(-1); runtime.temple(-1); runtime.setTemple(-1, 1); runtime.owner(-1);
+    assert.throws(() => runtime.boundsBits(-1), /물리 기록/); runtime.setBoundsBits(-1, [0, 0, 0, 0]); runtime.setOwner(-1, 1);
+    runtime.add(1, 0); runtime.setOwner(0, 0);
+    assert.deepEqual(diagnostics, [
+        ['exists( islandId )', 0x285], ['exists( islandId )', 0x2dd], ['exists( islandId )', 0x2f2], ['exists( islandId )', 0x2fb],
+        ['exists( islandId )', 0x2ba], ['exists( islandId )', 0x2c0], ['exists( islandId )', 0x28f], ['bcr.isValid()', 0x2a4],
+    ]);
+});
+
 test('섬 런타임: 물리 100기록 경계·필수 효과·Player 기록 크기를 거부한다', () => {
     const scene = new IslandRuntimeScene();
     scene.prepare(rows[0] ?? ['originals', 'Reset', '3,1,1,2,1,2,0,2,0,0,0,0,9,0,0', '0']);

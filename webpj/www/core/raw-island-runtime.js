@@ -4,11 +4,11 @@
 //    rawIslandExists/Owner/Bounds/BoundsBits는 World 없이 같은 현재 기록을 조회하고 부재 진단 뒤 변경도 반영한다.
 //  - createFortFinishOwnerState(): 섬/Fort 소유자 처리가 공유하는 모드 상태 { chaffMode, special, fort, playerRegions[9](초기 127), invalidRegion(127), residenceType(89) } 이다(이후 RawFortFinishOwner 가 같은 구조를 쓴다).
 //  - new RawIslandRuntime(pool, hash, records, modes, residences, worldRedraw, mapRevision, hooks, worldExtent = 256): worldRedraw/mapRevision 은 실제 공유 DWORD 를 빌리는 { value } 상자(0059a8b0 은 owner 변경 때 증가, 패치 005949d4 는 1 저장),
-//    hooks = { setResidenceOwner(sid, owner)(거주 구역 가상 owner 실행, 같은 raw 풀 갱신), assertion('MissingIsland' | 'InvalidBounds')(원본 진단 뒤 원문처럼 계속) } 둘 다 필수이다.
+//    hooks = { setResidenceOwner(sid, owner), assertion(reason) 또는 assertionAt(expression, line) } 이며 선택한 진단에서 원문처럼 계속한다.
 //  - reset()/count/exists(i)/add(owner, territory)/delete(i)/matches(i, owner, territory)/temple(i)·setTemple/owner(i)/bounds(i)·setBounds·boundsBits/bytes/pool/bindPlayerRecords(players): 원본 getter/setter 이다.
 //    존재하지 않는 섬의 getter/setter 는 진단 뒤 현재 존재를 다시 읽어 계속한다(bounds getter 는 물리 100개 안에서 원본처럼 읽는다). count 는 삭제로 줄이지 않고 빈 구간을 재사용하지 않는다.
 //  - setOwner(i, owner): 허용 모드(Fort 이면서 special 이 아니면 즉시 반환)에서 owner → worldRedraw 증가 → mapRevision=1 → 현재 경계 검사(진단)→ 현재 등록 거주 구역 목록(매 반복 count/SID/type/좌표/표면 WORD 재조회)에서 경계 안의 거주 구역에 표면 owner 전파 → Player 첫 지역(127 이면 이 섬 번호) 순서이다.
-//    bindPlayerRecords 로 실제 9 Player BYTE(0xb4 간격, +0x78 첫 지역 DWORD)를 공유하면 modes.playerRegions 사본은 쓰지 않는다.
+//    bindPlayerRecords 또는 bindCurrentPlayers로 실제 9 Player BYTE(0xb4 간격, +0x78 첫 지역 DWORD)를 공유하면 modes.playerRegions 사본은 쓰지 않는다.
 // 10.72(CD)의 조용한 getter/setter·bounds unordered 조건·Player 간격 0xac 는 범위 밖이다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-09 WB04-E161: 섬 런타임 이식으로 추가)
 import { rawPathSurfaceAt } from './raw-path-surface.js';
 
@@ -124,12 +124,13 @@ export class RawIslandRuntime {
     #hooks;
     #worldExtent;
     #players = null;
+    #currentPlayers = null;
 
     // 실제 3204바이트 저장소와 필수 하위 효과·기존 모드/Player/목록을 확인한다. (2026-11-09 WB04-E161)
     constructor(pool, hash, records, modes, residences, worldRedraw, mapRevision, hooks, worldExtent = 256) {
         if (pool?.edition !== 'patch1078') throw new TypeError('섬 런타임은 10.78 SidPool 만 받습니다.');
         if (!(records instanceof Uint8Array) || records.length !== ISLAND_STORAGE_BYTES || !hash || !modes || !residences || !worldRedraw || !mapRevision
-            || typeof hooks?.setResidenceOwner !== 'function' || typeof hooks.assertion !== 'function') {
+            || typeof hooks?.setResidenceOwner !== 'function' || (typeof hooks.assertion !== 'function' && typeof hooks.assertionAt !== 'function')) {
             throw new TypeError('IslandRuntime 실제 기록/필수 효과 누락');
         }
         this.#pool = pool;
@@ -139,7 +140,7 @@ export class RawIslandRuntime {
         this.#residences = residences;
         this.#worldRedraw = worldRedraw;
         this.#mapRevision = mapRevision;
-        this.#hooks = { setResidenceOwner: hooks.setResidenceOwner, assertion: hooks.assertion };
+        this.#hooks = { setResidenceOwner: hooks.setResidenceOwner, assertion: hooks.assertion, assertionAt: hooks.assertionAt };
         this.#worldExtent = worldExtent | 0;
     }
 
@@ -177,9 +178,15 @@ export class RawIslandRuntime {
     }
 
     // missing 진단 뒤 현재 exists 를 다시 읽어 callback 의 원본 상태 변경도 보존한다. (2026-11-09 WB04-E161)
-    #require(island) {
-        if (!this.exists(island)) this.#hooks.assertion('MissingIsland');
+    #require(island, line) {
+        if (!this.exists(island)) this.#assert('MissingIsland', line);
         return this.exists(island) !== 0;
+    }
+
+    // 위치 장치가 있으면 원문 식과 행을 전달하고 그렇지 않으면 기존 진단 enum을 쓴다.
+    #assert(reason, line) {
+        if (typeof this.#hooks.assertionAt === 'function') this.#hooks.assertionAt(reason === 'InvalidBounds' ? 'bcr.isValid()' : 'exists( islandId )', line);
+        else this.#hooks.assertion(reason);
     }
 
     // 원본 Add 의 EAX 는 이전 count 이며 현재 끝에 원래 owner BYTE/현재 owner DWORD/지역 BYTE/존재 1 만 쓴다(나머지 신전/경계/padding 은 유지). (2026-11-09 WB04-E161)
@@ -196,7 +203,7 @@ export class RawIslandRuntime {
     }
 
     // 삭제는 기록만 초기화하고 count/원래 번호 재사용 정책을 변경하지 않는다. (2026-11-09 WB04-E161)
-    delete(island) { if (this.#require(island)) resetRecord(this.#records, island); }
+    delete(island) { if (this.#require(island, 0x285)) resetRecord(this.#records, island); }
 
     // 일반 모드는 signed 원래 owner/지역 BYTE, special/chaff 는 nonzero 현재 owner/지역 BYTE 로 판단한다. 현재 owner 가 바뀌어도 일반 모드의 원래 owner BYTE 는 유지된다. (2026-11-09 WB04-E161)
     matches(island, owner, territory) {
@@ -208,15 +215,15 @@ export class RawIslandRuntime {
     }
 
     // 현재 신전 DWORD 를 조회한다(패치의 missing 진단 뒤에도 없으면 0). 타입이나 번호 세대 해석을 추가하지 않는다. (2026-11-09 WB04-E161)
-    temple(island) { return this.#require(island) ? this.#read(RawIslandRuntime.#record(island)) : 0; }
-    setTemple(island, temple) { if (this.#require(island)) this.#write(RawIslandRuntime.#record(island), temple); }
+    temple(island) { return this.#require(island, 0x2dd) ? this.#read(RawIslandRuntime.#record(island)) : 0; }
+    setTemple(island, temple) { if (this.#require(island, 0x2f2)) this.#write(RawIslandRuntime.#record(island), temple); }
 
     // 현재 owner DWORD 를 조회한다(원래 owner BYTE 와 합치지 않는다). (2026-11-09 WB04-E161)
-    owner(island) { return rawIslandOwner(this.#records, island, () => this.#hooks.assertion('MissingIsland')); }
+    owner(island) { return rawIslandOwner(this.#records, island, () => this.#assert('MissingIsland', 0x2fb)); }
 
     // 원본은 missing 진단 뒤에도 물리 기록의 네 float 를 읽는다. 물리 100개 밖은 메모리 경계로 진단한다. boundsBits 는 NaN 페이로드까지 같은 원본 비트이다. (2026-11-09 WB04-E161)
     boundsBits(island) {
-        return rawIslandBoundsBits(this.#records, island, () => this.#hooks.assertion('MissingIsland'));
+        return rawIslandBoundsBits(this.#records, island, () => this.#assert('MissingIsland', 0x2ba));
     }
     bounds(island) {
         const [left, top, right, bottom] = this.boundsBits(island).map(floatOf);
@@ -225,7 +232,7 @@ export class RawIslandRuntime {
 
     // 존재할 때만 원본 float 비트를 그대로 대입한다(패치의 missing 진단 보존). setBoundsBits 는 비트 배열[left, top, right, bottom]을 그대로 쓴다. (2026-11-09 WB04-E161)
     setBoundsBits(island, bits) {
-        if (!this.#require(island)) return;
+        if (!this.#require(island, 0x2c0)) return;
         const record = RawIslandRuntime.#record(island);
         for (let index = 0; index < 4; index += 1) this.#write(record + 16 + index * 4, bits[index]);
     }
@@ -245,38 +252,54 @@ export class RawIslandRuntime {
     // 실제 후보 검사는 bounds 의 양끝을 포함한다. (2026-11-09 WB04-E161)
     static #contains(bounds, x, y) { return bounds.left <= x && x <= bounds.right && bounds.top <= y && y <= bounds.bottom; }
 
-    // 현재 owner 의 Player 첫 지역 DWORD 를 읽는다(공유 기록이 있으면 그 현재 값을, 없으면 모드의 사본을). (2026-11-09 WB04-E161)
+    // 현재 getter가 있으면 Player base를 조회하고 크기를 확인한다. 독립 입력은 기존 기록 또는 null이다.
+    #currentPlayerRecords() {
+        if (!this.#currentPlayers) return this.#players;
+        const players = this.#currentPlayers();
+        if (!(players instanceof Uint8Array) || players.length !== 9 * PLAYER_STRIDE) throw new RangeError('IslandRuntime 실제 현재 9 Player 크기 오류');
+        return players;
+    }
+
+    // 각 읽기에서 현재 Player base를 선택해 원문 첫 지역을 조회한다.
     #firstRegion(owner) {
-        if (this.#players === null) {
+        const players = this.#currentPlayerRecords();
+        if (players === null) {
             if (owner >= this.#modes.playerRegions.length) throw new RangeError('IslandRuntime Player 첫 지역 범위 오류');
             return this.#modes.playerRegions[owner];
         }
         const field = owner * PLAYER_STRIDE + PLAYER_FIRST_REGION;
-        return (this.#players[field] | (this.#players[field + 1] << 8) | (this.#players[field + 2] << 16) | (this.#players[field + 3] << 24)) | 0;
+        return (players[field] | (players[field + 1] << 8) | (players[field + 2] << 16) | (players[field + 3] << 24)) | 0;
     }
 
     // 공유 기록 모드에서는 첫 지역 필드 네 바이트만 저장한다. 다른 Player 메모리와 독립 상태는 보존한다. (2026-11-09 WB04-E161)
     #setFirstRegion(owner, region) {
-        if (this.#players === null) { this.#modes.playerRegions[owner] = region; return; }
+        const players = this.#currentPlayerRecords();
+        if (players === null) { this.#modes.playerRegions[owner] = region; return; }
         const field = owner * PLAYER_STRIDE + PLAYER_FIRST_REGION;
-        for (let index = 0; index < 4; index += 1) this.#players[field + index] = (region >>> (index * 8)) & 0xff;
+        for (let index = 0; index < 4; index += 1) players[field + index] = (region >>> (index * 8)) & 0xff;
     }
 
     // 실제 9 Player BYTE 의 첫 지역 DWORD 를 직접 공유한다. 잘못된 물리 크기는 쓰기 전에 거부하고 연결 뒤 modes.playerRegions 사본은 쓰지 않는다. (2026-11-09 WB04-E161)
     bindPlayerRecords(players) {
         if (!(players instanceof Uint8Array) || players.length !== 9 * PLAYER_STRIDE) throw new RangeError('IslandRuntime 실제 9 Player 크기 오류');
-        this.#players = players;
+        this.#players = players; this.#currentPlayers = null;
+    }
+
+    // 장기 Client의 현재 Player getter만 연결하며 등록 시 조회하지 않는다.
+    bindCurrentPlayers(players) {
+        if (typeof players !== 'function') throw new TypeError('IslandRuntime 현재 Player getter 미결합');
+        this.#currentPlayers = players;
     }
 
     // owner 변경의 각 전역 쓰기/현재 목록/가상 효과/Player 첫 지역을 원본 순서로 처리한다. (2026-11-09 WB04-E161)
     setOwner(island, owner) {
-        if (!this.#require(island) || (this.#modes.fort && !this.#modes.special)) return;
+        if (!this.#require(island, 0x28f) || (this.#modes.fort && !this.#modes.special)) return;
         const record = RawIslandRuntime.#record(island);
         this.#write(record + 8, owner);
         this.#worldRedraw.value = (this.#worldRedraw.value + 1) >>> 0;
         this.#mapRevision.value = 1;
         const bounds = { left: floatOf(this.#read(record + 16)), top: floatOf(this.#read(record + 20)), right: floatOf(this.#read(record + 24)), bottom: floatOf(this.#read(record + 28)) };
-        if (!this.#validBounds(bounds)) this.#hooks.assertion('InvalidBounds');
+        if (!this.#validBounds(bounds)) this.#assert('InvalidBounds', 0x2a4);
         const residences = this.#residences;
         // 원본은 목록 count/SID/type/좌표와 표면 WORD 를 매 반복 다시 읽고 free/dead 필터를 추가하지 않는다.
         for (let index = 0; (index | 0) < (residences.count | 0); index += 1) {
