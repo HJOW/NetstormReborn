@@ -88,4 +88,27 @@ public sealed class HostSessionFactoryTests
         Assert.Throws<InvalidOperationException>(() => session.FactoryPostPop);
         Assert.Empty(session.FactoryWarnings);
     }
+
+    /// <summary>세션 공장 Pop은 타이머 종류에서 정기 예약을 두 건 부착한다.</summary>
+    [Fact]
+    public void FactoryRegularFiresInSession()
+    {
+        (HostSession session, _) = BuildFactoryScene();
+        session.TerrainBookkeeping.Suppressed = true;
+        int sid = session.Pool.Allocate(SidAllocation.Client);
+        Span<byte> raw = session.Pool.AllocatedBytes(sid);
+        raw.Fill(0);
+        Put(raw, 0, 0x00509148u);
+        raw[10] = 85;
+        raw[11] = 0;
+        raw[40] = 0;
+        Put(raw, 14, BitConverter.SingleToUInt32Bits(50.75f));
+        Put(raw, 18, BitConverter.SingleToUInt32Bits(52.5f));
+        Put(raw, 36, 7u);
+        uint depth = session.PostPopDepth;
+        session.PostPopDepth = depth + 1;
+        session.FactoryPostPop.PostPop(sid, 1u);
+        Assert.Equal(depth, session.PostPopDepth);
+        Assert.Empty(session.FactoryWarnings);
+    }
 }
