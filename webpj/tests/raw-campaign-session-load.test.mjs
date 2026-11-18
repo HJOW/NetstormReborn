@@ -121,10 +121,12 @@ test('CampaignSession TheWarBegins: 로컬 로그인과 실제 게임 수신 등
     const { s } = scene({ localLogin, playerRecords: players, gameplayGlobals: gameplay, ai: { participation: { addChat: (...args) => events.push(['chat', ...args]), clearChat: (...args) => events.push(['clearChat', ...args]) } } });
     try {
         assert.equal(s.localConnectionReady(), false); assert.equal(s.pollLocalConnectionState(), false);
+        assert.equal(s.localConnectionPhase(), 0); assert.deepEqual(s.localConnectionPackets(), []); assert.equal(players.records()[180 + 0x50] & 0x43, 0);
         s.startLocalConnection(); assert.equal(s.localConnectionPhase(), 8); assert.equal(s.loaded, false);
         s.pumpLocalConnection(); assert.equal(s.pollLocalConnectionState(), true); assert.equal(s.localConnectionPhase(), 10);
         s.pumpLocalConnection();
         assert.equal(s.loaded, true); assert.equal(s.localConnectionPhase(), 14); assert.equal(s.localConnectionReady(), true);
+        assert.equal(s.localOwner(), 1); assert.equal(s.playerKnown(), 1); assert.equal(gameplay.world.mySubscriber, 1);
         assert.deepEqual(s.localConnectionPackets(), [0x27, 0x29, 0x67, 0x2b, 0x2b, 0x2b, 0x28, 0x81, 0x84, 0x2a, 0x32, 0x6e]);
         assert.equal(events.filter(([kind]) => kind === 'clearChat').length, 6);
         assert.equal(events.filter(([kind]) => kind === 'notice').length, 6);
@@ -138,6 +140,23 @@ test('CampaignSession TheWarBegins: 로컬 로그인과 실제 게임 수신 등
         assert.equal(gameplay.energy.radiusSquared, 900); assert.equal(s.core().types[122].cost, 3000);
         const packets = s.localConnectionPackets();
         s.pumpLocalConnection(); assert.equal(s.localConnectionReady(), true); assert.deepEqual(s.localConnectionPackets(), packets);
+        const core = s.core(), priest = s.world().objects().find(({ object }) => object.type === 158 && object.owner === 1);
+        assert.ok(priest); assert.deepEqual([core.destroy.preDepth, core.destroy.postDepth, core.bookkeeping.depth], [0, 0, 0]);
+        const destination = { x: 90, y: 108 }, money = s.sp(1); assert.equal(findAttachedProcess(core.pool, priest.sid, 54), 0);
+        s.requestCarrierMove(priest.sid, destination); assert.equal(findAttachedProcess(core.pool, priest.sid, 54), 0);
+        s.pumpLocalConnection(); assert.equal(s.localConnectionPackets().at(-1), 0x40);
+        const form = findAttachedProcess(core.pool, priest.sid, 54), path = core.processes.fromForm(form);
+        assert.ok(path instanceof RawPathProcess); const start = core.processState.now, end = path.runtime.time(path.runtime.count - 1);
+        // 같은 로그인과 실제 Kernel을 유지하며 원본처럼 사제 경로의 자연 종료까지 시각만 전진시킨다.
+        for (let frame = 0; frame < 1000 && core.processState.now < end + 0.25; frame += 1) {
+            const now = start + frame * 0.025; s.pumpLocalConnection();
+            s.runFrame({ game: now, wall: 100.25 + now - start, delta: frame ? 0.025 : 0, number: frame }, false);
+            if (!core.processes.fromForm(form)) break;
+        }
+        assert.equal(core.processes.fromForm(form), null);
+        const arrived = s.world().objects().find(({ sid }) => sid === priest.sid);
+        assert.deepEqual([arrived.object.x, arrived.object.y], [90, 108]); assert.equal(s.sp(1), money);
+        assert.deepEqual([core.destroy.preDepth, core.destroy.postDepth, core.bookkeeping.depth], [0, 0, 0]);
         assert.throws(() => s.startLocalConnection(), /새 수명/);
     } finally { s.dispose(); }
     assert.throws(() => s.pumpLocalConnection(), /반납/);
