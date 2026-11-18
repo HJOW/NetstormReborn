@@ -471,8 +471,8 @@ test('CampaignSession TheWarBegins: Dude 부모와 통지의 실제 월드 수�
     assert.throws(() => s.dudeBehavior(), /반납/); assert.throws(() => s.dudes(), /반납/);
 });
 
-// 실제 지도에서 통행 가능한 칸을 찾아 Dude 통지가 같은 경로를 재사용하는지 확인한다.
-test('CampaignSession TheWarBegins: Dude 통지의 실제 경로 시작과 동일 목적지', () => {
+// 실제 지도에서 Dude 통지의 경로 재사용·속도 시간표·도착 삭제를 확인한다.
+test('CampaignSession TheWarBegins: Dude 통지의 경로와 속도 및 도착', () => {
     const { s } = scene();
     try {
         s.load(); const core = s.core(); let source = null;
@@ -492,6 +492,27 @@ test('CampaignSession TheWarBegins: Dude 통지의 실제 경로 시작과 동�
         const form = findAttachedProcess(core.pool, dude, 24), path = core.processes.fromForm(form);
         assert.ok(path instanceof RawPathProcess); const before = Uint8Array.from(path.runtime.bytes);
         assert.equal(notice.move(dude, target, true), true); assert.equal(core.processes.fromForm(form), path); assert.deepEqual(path.runtime.bytes, before);
+        const slow = Array.from({ length: path.runtime.count }, (_, index) => ({ point: path.runtime.point(index), direction: path.runtime.direction(index), time: path.runtime.time(index) }));
+        core.processes.kill(path, 0); assert.equal(notice.move(dude, target, true), true);
+        const fastForm = findAttachedProcess(core.pool, dude, 24), fast = core.processes.fromForm(fastForm); assert.ok(fast instanceof RawPathProcess);
+        assert.equal(fast.runtime.count, slow.length); let moving = 0;
+        // 직진 구간의 시간은 최초 속도 1.5와 정수 복원 뒤 빠른 속도 2를 따른다.
+        for (let index = 1; index < slow.length; index += 1) {
+            const point = fast.runtime.point(index), previous = slow[index - 1].point;
+            assert.deepEqual(point, slow[index].point); assert.equal(fast.runtime.direction(index), slow[index].direction);
+            if ((point.x !== previous.x || point.y !== previous.y) && slow[index].direction === slow[index - 1].direction) {
+                const distance = Math.hypot(point.x - previous.x, point.y - previous.y);
+                assert.ok(Math.abs(slow[index].time - slow[index - 1].time - distance * 0.6666666865348816) < 1e-10);
+                assert.ok(Math.abs(fast.runtime.time(index) - fast.runtime.time(index - 1) - distance * 0.5) < 1e-10); moving += 1;
+            }
+        }
+        assert.ok(moving); const raw = core.pool.allocated(dude); new DataView(raw.buffer, raw.byteOffset, raw.byteLength).setUint16(12, 0x5107, true);
+        assert.ok(core.processes.addRegular(dude, 0x5107, 5, 0x50)); const began = core.processState.now; let steps = 0;
+        // 현재 경로만 전진하며 도착 삭제 뒤 반환된 프로세스를 다시 사용하지 않는다.
+        while (core.processes.fromForm(fastForm) && steps < 2000) {
+            core.processState.now = began + (++steps) * 0.025; core.processes.fromForm(fastForm).runFrame();
+        }
+        assert.ok(steps > 0 && steps < 2000); assert.equal(core.processes.fromForm(fastForm), null); assert.equal(core.pool.slot(dude)[11] & 3, 3);
     } finally { s.dispose(); }
 });
 
