@@ -640,8 +640,8 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         gameplayGlobals: gameplay, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
         deletion: { selected: () => 0 }, install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {} },
         ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
-        sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
-        player: { log: () => {} }, ai: { assertion: forbidden('AI 진단'), participation: { addChat: () => {}, clearChat: () => {} } },
+        sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
+        missionOutcome: { demo: () => 0 }, player: { log: () => {} }, ai: { assertion: forbidden('AI 진단'), participation: { addChat: () => {}, clearChat: () => {} } },
         surfaceDisplay: { suppressed: () => false, invalidate: (...args) => dirty.push(args) }, soundViewChanged: (view) => views.push({ ...view }),
         cameraCommit: (context) => { commits.push(context); const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
     };
@@ -654,6 +654,7 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         assert.ok(world.factoryDisplay() instanceof RawCampaignFactoryDisplay); assert.equal(session.loaded, false); assert.equal(world.connecting, false);
         assert.deepEqual(world.mapView(), { left: 0, top: 28, right: 640, bottom: 480 });
         assert.equal(world.completeLocalConnection(), false); assert.deepEqual(world.objects(), []);
+        assert.throws(() => world.clearSelection(), /미설치/); assert.throws(() => world.bindUserSelection(), /설치 전/);
         const palette = new Uint8Array(1024); palette.set([255, 255, 255, 0], 8); palette.set([0, 255, 255, 0], 12);
         const expectedPalette = palette.slice(), factoryPalettes = [], factory = world.factoryDisplay(), factorySetPalette = factory.setPalette.bind(factory);
         factory.setPalette = (...args) => { factoryPalettes.push(args[0].slice()); factorySetPalette(...args); };
@@ -673,6 +674,14 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         const priestView = viewsNow.find((entry) => entry.id === priest.sid), hp = session.hitPoints();
         assert.deepEqual([priestView.x, priestView.y, priestView.frame, priestView.initialFrame], [priest.object.x, priest.object.y, Math.max(priest.object.frame, 0), Math.max(priest.object.frame, 0)]);
         assert.equal(priestView.mobile, true); assert.equal(priestView.maxHitPoints, hp.maxHitPoints(priest.sid));
+        const highlights = [], selection = world.bindUserSelection({ paused: () => 0, dump: () => {}, highlight: (mode) => highlights.push(mode), assertion: forbidden('선택 진단'), previewAssertion: forbidden('미리보기 진단') });
+        assert.throws(() => world.bindUserSelection(), /새 수명/);
+        assert.equal(selection.select(priest.sid, 0, 0), priest.sid); assert.equal(world.selected(), priest.sid);
+        world.refreshCampaignObjects(); assert.equal(world.selected(), priest.sid); world.resetSelection(); assert.equal(world.selected(), 0);
+        gameplay.selection.selected = 0x10001; world.refreshCampaignObjects(); assert.equal(world.selected(), 0);
+        gameplay.selection.selected = priest.sid; world.clearSelection(); assert.equal(world.selected(), 0); assert.deepEqual(highlights.slice(-2), [0, 0]);
+        gameplay.selection.selected = priest.sid; session.core().surfaces.hooks().emit({ effect: 'clearSelection', sid: priest.sid });
+        assert.equal(world.selected(), 0); assert.equal(highlights.at(-1), 0);
         const raw = session.core().pool.physical(priest.sid), bytes = new DataView(raw.buffer, raw.byteOffset, raw.byteLength), oldHp = bytes.getInt32(26, true);
         const oldX = bytes.getFloat32(14, true), oldFrame = bytes.getInt32(36, true);
         try {
