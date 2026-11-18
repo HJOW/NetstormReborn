@@ -3,6 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { RawCampaignSession } from '../www/core/raw-campaign-session.js';
+import { synchronizeProductionControlContents } from '../www/core/client-production-sync.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from '../www/core/raw-production-maintenance.js';
 import { countContained } from '../www/core/raw-contained-finder.js';
 import { CampaignSessionAssets } from '../www/core/raw-campaign-session-owners.js';
@@ -1756,6 +1757,21 @@ test('CampaignSession 생산 유지: 미적재 관문과 반납 수명', () => {
     const maintenance = s.makeProductionMaintenance(globals, panel, () => 1, () => {});
     maintenance.run(); assert.equal(globals.stockUntil.length, 0); assert.equal(globals.sequence, 0);
     s.dispose(); assert.throws(() => maintenance.run(), /반납/);
+});
+
+// 현재 대여 중인 실제 Session은 미적재 관문을 지킨 뒤 같은 생산 동기화를 실행한다.
+test('Client 생산 동기화: 실제 Session 설치 관문과 같은 Deck', () => {
+    const gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords();
+    const { s } = scene({ gameplayGlobals: gameplay, playerRecords: players, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } } });
+    const context = { gameplay, players, storage: s.world().storage };
+    try {
+        assert.throws(() => synchronizeProductionControlContents(context), /설치 전 생산 패널/);
+        s.load(); synchronizeProductionControlContents(context);
+        const owner = gameplay.player.templateOwner, records = players.records();
+        const token = new DataView(records.buffer, records.byteOffset + owner * 180 + 0x68, 4).getUint32(0, true);
+        assert.ok(token); assert.equal(players.productionDeckMemory().bytes(token).length, 352);
+        synchronizeProductionControlContents(context); assert.equal(new DataView(records.buffer, records.byteOffset + owner * 180 + 0x68, 4).getUint32(0, true), token);
+    } finally { s.dispose(); }
 });
 
 // 중간 외부 장치 오류는 loaded를 켜지 않고 원문의 앞선 설치를 보존한다.

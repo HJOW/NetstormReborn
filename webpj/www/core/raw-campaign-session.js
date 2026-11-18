@@ -311,6 +311,15 @@ export class RawCampaignSession {
         o.production.refresh(o.playerState.templateOwner); o.productionSync.synchronize();
         return true;
     }
+    // 현재 Session의 같은 Deck과 내용물 동기화를 설치 관문 뒤 직접 실행한다.
+    synchronizeProductionContents() {
+        const o = this.#live(); if (!o.loaded || !o.productionSync) throw new Error('설치 전 생산 패널 갱신'); o.productionSync.synchronize();
+    }
+    // 실제 내용물을 같은 Session의 생성·부착 경로로 만든다.
+    createContained(parent, type, argument, flags, attachFlags, quality) {
+        const o = this.#live(); if (!o.loaded || !o.contained) throw new Error('설치 전 실제 내용물 생성 요청');
+        return o.contained.create(parent, type, argument, flags, attachFlags, quality);
+    }
     // 생산 패널과 같은 현재 내용물 검색 전역을 반환한다.
     productionFinder() { return this.#live().contentFinder; }
     // 실제 Session의 현재 기술·설정·시계·생성 장치를 생산 패널 유지 본체에 빌려준다.
