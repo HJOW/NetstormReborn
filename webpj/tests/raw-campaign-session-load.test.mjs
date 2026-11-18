@@ -10,6 +10,8 @@ import { Kernel } from '../www/core/kernel.js';
 import { InputCode, InputQueue } from '../www/core/input-queue.js';
 import { CampaignUserInput } from '../www/core/campaign-user-input.js';
 import { clearClientUserSelection } from '../www/core/client-user-selection-cleanup.js';
+import { resetClientClockSynchronization, resetClientStateZone, resetClientStateWorldStorage } from '../www/core/client-state-storage-cleanup.js';
+import { StateWorldCleanupEffect } from '../www/core/raw-state-world-cleanup.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
 import { fortSection, parseFort } from '../www/assets/fort.js';
@@ -78,6 +80,32 @@ function scene(overrides = {}, savedFort = fort) {
     });
     return { s, trace, queue };
 }
+
+// 실제 장기 Client·표면의 선택된 물리만 정리하고 World 대여 관문을 지킨다.
+test('Client State 저장소 정리: 장기 전역과 대여 관문', () => {
+    const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals();
+    const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    const context = { gameplay, local, storage, currentStorage: null, gameTime: () => 11.25 }, E = StateWorldCleanupEffect;
+    local.synchronizationConnection().value = 4; local.synchronizationReplyMode().value = 5; local.gameTicks().value = 6;
+    resetClientClockSynchronization(local); assert.deepEqual([local.synchronizationConnection().value, local.synchronizationReplyMode().value, local.gameTicks().value], [0, 0, 0]);
+    local.zoneWords().set([0xffffffff, 0xaabbccdd]); resetClientStateZone(local); assert.deepEqual([...local.zoneWords()], [0, 0xaabb0000]);
+    storage.links.ownerColors.fill(99); const use = storage.acquirePrepared();
+    try {
+        resetClientStateWorldStorage(context, E.Clear43b540); assert.deepEqual(storage.links.ownerColors, [0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        assert.throws(() => resetClientStateWorldStorage(context, E.Clear4ab940), /대여 반납 필요/);
+    } finally { use.release(); }
+    const wrong = new ClientGameplayGlobals(); assert.throws(() => resetClientStateWorldStorage({ ...context, gameplay: wrong }, E.Clear43b540), /owner 불일치/);
+    storage.sidLists.factories.count = 4; gameplay.selection.multipleCount = 3; storage.totalMade.localCounts[0] = 5; storage.totalMade.localCounts[255] = 9;
+    storage.hash.setCell(0, 2, 3, 7); local.playerNoMakeWarnings()[0] = 2; storage.spots[1] = 3; storage.islands[0] = 5;
+    storage.chunks.at(0, 0).island = 3; storage.graph.records[1].surfaces = 9;
+    // 각 효과는 원본 State의 해당 저장소만 대상으로 호출한다.
+    for (const effect of [E.Clear472830, E.Clear4c2450, E.Clear4b2b50, E.Clear4328a0, E.Clear4ab940, E.Reset568b60, E.Reset54c8a0, E.ResetGraph, E.Reset422490]) resetClientStateWorldStorage(context, effect);
+    assert.deepEqual([storage.sidLists.factories.count, gameplay.selection.multipleCount, storage.totalMade.localCounts[0], storage.totalMade.localCounts[255]], [0, 0, 0, 9]);
+    assert.deepEqual([storage.hash.cell(0, 2, 3), local.playerNoMakeWarnings()[0], storage.spots[1], storage.islands[0], storage.chunks.at(0, 0).island, storage.graph.records[1].surfaces], [0, 0, 0, 0, 127, 0]);
+    assert.deepEqual(storage.bridgeDecayScan, { first: 15000, last: 23001, cursor: 15000, next: 21.25 });
+    assert.throws(() => resetClientStateWorldStorage(context, 0xffffffff), /미지원/);
+});
 
 // Session이 없을 때도 빈 선택을 정리하고 실제 다중 선택 효과에서만 같은 Session을 요구한다.
 test('Client 선택 정리: 빈 메뉴와 실제 Session의 같은 선택 전역', () => {
