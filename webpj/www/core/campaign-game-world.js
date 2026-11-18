@@ -7,6 +7,9 @@ import { TypeFlag2 } from '../assets/type-flags.js';
 import { SQUID_DESTROY_EFFECT } from './squid-destroy.js';
 import { RawUserHighlight } from './raw-user-highlight.js';
 import { RawCursorPosition } from './raw-cursor-position.js';
+import { RawCarrierDropPoint } from './raw-carrier-drop-point.js';
+import { RawSquidFinder } from './raw-squid-finder.js';
+import { RawUserPick } from './raw-user-pick.js';
 import { createCameraHomeState } from './camera-home.js';
 import { RawCampaignSession } from './raw-campaign-session.js';
 import { RawCampaignFactoryDisplay } from '../render/raw-campaign-factory-display.js';
@@ -31,6 +34,8 @@ export class CampaignGameWorld {
     #palette = null; #pendingPalette = null; #colorSortLogical = []; #colorSortMaps = null;
     // 선택 입력 부분은 같은 Session과 장기 선택 전역을 빌린다.
     #selection = null; #input = null;
+    // Client가 설치하기 전에는 원본 초기값 0인 현재 건물 숨김 조회다.
+    #hideBuildings = () => 0;
 
     // 화면 크기와 자산을 확인하고 실제 Session과 표시기를 만든다. 로그인은 호출자가 나중에 시작한다.
     constructor(assets, files, fort, mission, services, viewport) {
@@ -168,6 +173,22 @@ export class CampaignGameWorld {
         });
         this.bindUserSelection({ ...selectionHooks, highlight: (mode) => highlight.highlight(mode) });
         this.#input = { carrier, highlight };
+    }
+    // 현재 Client의 건물 숨김 DWORD 조회기를 빌린다.
+    bindHideBuildings(current) { this.#live(); if (typeof current !== 'function') throw new TypeError('건물 숨김의 현재 조회기 누락'); this.#hideBuildings = current; this.#changed = true; }
+    // 화면 영역 안에서 같은 실제 해시·카메라·픽셀 판정으로 현재 후보를 찾는다.
+    pick(x, y, force = 0) {
+        const session = this.#live(), view = this.mapView();
+        if (y < view.top || x < view.left || y >= view.bottom || x >= view.right) return 0;
+        const core = session.core(), finder = new RawSquidFinder(core.pool, core.hash, core.types);
+        const hooks = {
+            paused: () => this.#services.paused ? this.#services.paused() : 0, localOwner: () => session.localOwner(),
+            metamap: () => core.ownerMode.challenge ? 1 : 0, hideBuildings: () => this.#hideBuildings(), project: (px, py) => this.#project(px, py),
+            begin: (point, radiusX, radiusY) => { const snap = RawCarrierDropPoint.snap(point), cx = snap[0] | 0, cy = snap[1] | 0; return finder.begin({ left: cx - radiusX, top: cy - radiusY, right: cx + radiusX, bottom: cy + radiusY }, 0); },
+            next: () => finder.next(), center: (sid) => core.neighbors.center(sid),
+            hit: (sid, px, py) => { const camera = this.#gameplay.camera().snapshot().pixels; return this.#factoryDisplay.hit(sid, px, py, [camera.x, camera.y], session.localOwner(), (object, bx, by) => session.drawBridgeAdditional(object, bx, by)); },
+        };
+        return new RawUserPick(core.pool, core.types, hooks).pick(x, y, force);
     }
     // 실제 선택의 세 인자를 원본처럼 유지하고 다음 화면 갱신을 요청한다.
     select(sid) { this.#live(); if (!this.#input) throw new Error('실제 선택 장치 미설치'); this.#selection.select(sid, 0, 1); this.#changed = true; }

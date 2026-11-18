@@ -29,6 +29,7 @@ import { RawCampaignMissionStartBindings } from '../www/core/raw-campaign-missio
 import { RawCampaignTutorialOneBindings } from '../www/core/raw-campaign-tutorial-one-bindings.js';
 import { CampaignGameWorld } from '../www/core/campaign-game-world.js';
 import { RawCampaignFactoryDisplay } from '../www/render/raw-campaign-factory-display.js';
+import { projectCameraCoordinates } from '../www/render/camera-view.js';
 import { cursorDisplayLogicalPalette } from '../www/render/raw-campaign-cursor-display.js';
 import { buildPaletteColorTable } from '../www/core/palette-colors.js';
 import { createMissionFrameGateState, RawMissionFrameGate } from '../www/core/raw-mission-frame-gate.js';
@@ -710,11 +711,11 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
 
 // 실제 World 입력은 같은 카메라·선택·운반 요청을 조립한다.
 test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => {
-    const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), cursors = [];
+    const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), cursors = []; let worldPaused = false;
     gameplay.camera().initializeNativeRenderer(640, 480, 256, { value: 0 }, { value: 0 });
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
     const services = {
-        gameplayGlobals: gameplay, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
+        gameplayGlobals: gameplay, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'), paused: () => worldPaused,
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {} },
         ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
         sound: { wallSeconds: () => 0, play: () => {}, playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
@@ -728,6 +729,14 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
         assert.throws(() => world.openSelectionMenu(1, {}, false, () => 0), /미설치/); assert.doesNotThrow(() => world.updateMovementCursor());
         world.startLocalConnection(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection(); assert.equal(world.completeLocalConnection(), true);
         const priest = session.world().objects().find(({ object }) => object.type === 158 && object.owner === 1); assert.ok(priest);
+        const cameraPixels = gameplay.camera().snapshot().pixels, screen = projectCameraCoordinates(cameraPixels.x, cameraPixels.y, priest.object.x, priest.object.y);
+        let hideReads = 0; world.bindHideBuildings(() => { hideReads += 1; return 0; });
+        assert.equal(world.pick(-1, -1), 0); worldPaused = true; assert.equal(world.pick(screen[0], screen[1]), 0); worldPaused = false;
+        const display = world.factoryDisplay(), originalHit = display.hit; let hitCalls = 0;
+        try {
+            display.hit = function (...args) { hitCalls += 1; return originalHit.apply(this, args); };
+            assert.equal(world.pick(screen[0] - 16, screen[1] - 11), priest.sid); assert.ok(hideReads > 0); assert.ok(hitCalls > 0);
+        } finally { display.hit = originalHit; }
         const origin = gameplay.camera().snapshot().world;
         gameplay.selection.mouse.x = Math.round((90 - origin.x) * 16 - 16); gameplay.selection.mouse.y = Math.round((108 - origin.y) * 11 - 11);
         world.bindUserInput({ paused: () => 0, dump: () => {}, assertion: forbidden('선택 진단'), previewAssertion: forbidden('미리보기 진단') },
