@@ -1,14 +1,22 @@
 // 31h 개발자 명령 중 현재 미션 설정과 즉시 건설 전역을 조작한다(원본 ExecuteDeveloperCommand).
 // 사용: executeDeveloperSettings(text, gameAux, trace) → 처리한 명령이면 true, 다른 명령이면 false.
 
-// 첫 토큰 뒤의 원본 %d 입력을 읽는다. 정수 범위 밖의 미정 변환은 명시 오류로 둔다.
-export function firstDeveloperInteger(rest) {
-    const match = /^[\t\n\v\f\r ]*([+-]?\d+)/.exec(rest);
-    if (!match) return null;
-    const value = BigInt(match[1]);
-    if (value < -2147483648n || value > 2147483647n) throw new RangeError('개발자 명령 정수의 실제 signed DWORD 범위');
-    return Number(value);
+// 첫 토큰 뒤의 연속 %d 입력을 차례로 읽는다. 정수 범위 밖의 미정 변환은 명시 오류로 둔다.
+export function readDeveloperIntegers(rest, count) {
+    const result = []; let remaining = rest;
+    // 앞 변환이 멈춘 위치에서 다음 정수 변환을 시작한다.
+    for (let index = 0; index < count; index += 1) {
+        const match = /^[\t\n\v\f\r ]*([+-]?\d+)/.exec(remaining);
+        if (!match) break;
+        const value = BigInt(match[1]);
+        if (value < -2147483648n || value > 2147483647n) throw new RangeError('개발자 명령 정수의 실제 signed DWORD 범위');
+        result.push(Number(value)); remaining = remaining.slice(match[0].length);
+    }
+    return result;
 }
+
+// 원본 단일 %d 변환의 실패를 null로 돌려준다.
+export function firstDeveloperInteger(rest) { return readDeveloperIntegers(rest, 1)[0] ?? null; }
 
 // 첫 NUL 앞에서 원본 255BYTE 명령 토큰과 나머지 입력을 분리한다.
 export function parseDeveloperCommand(text) {

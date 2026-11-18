@@ -556,3 +556,20 @@ test('CampaignSession Tutorial 1: 개발자 Player 진단 패킷', () => {
         assert.ok(logs.some(([level, text]) => level === 29 && text === 'id:1 A Logged in\n'));
     } finally { s.dispose(); }
 });
+
+// 동맹 명령은 같은 Player 참여 상태의 방향 비트와 표를 갱신한다.
+test('CampaignSession Tutorial 1: 개발자 동맹 변경 패킷', () => {
+    const sends = [], playerRecords = new ClientPlayerRecords(), { s } = scene({ playerRecords, ai: { participation: { sendAlliance: (...args) => sends.push(args) } } });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        const players = playerRecords.records(), view = new DataView(players.buffer, players.byteOffset, players.byteLength);
+        const allies = playerRecords.alliances(); view.setUint32(180 + 0x54, view.getUint32(180 + 0x54, true) & ~4, true); allies[11] = 0;
+        const text = 'cally 1 2', packet = new Uint8Array(9 + text.length);
+        packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+        packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.equal(view.getUint32(180 + 0x54, true) & 4, 4); assert.equal(allies[11], 1);
+        assert.equal(sends.length, 1); assert.equal(sends[0][0], 9); assert.equal(sends[0][1], 1); assert.equal(sends[0][2] & 4, 4);
+    } finally { s.dispose(); }
+});

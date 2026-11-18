@@ -32,3 +32,13 @@ test('개발자 동맹 진단: 현재 비트와 입력 경계', () => {
     players.fill(65, 180 + 12, 180 + 44);
     assert.throws(() => executeDeveloperPlayers('dally 1', players, () => {}), /NUL 부족/);
 });
+
+// 원본 패치에서는 해제 별칭도 추가 함수를 사용하며 불완전한 인자는 호출하지 않는다.
+test('개발자 동맹 변경: 두 별칭과 정수 변환', () => {
+    const players = new Uint8Array(9 * 180), calls = [], add = (...args) => calls.push(args);
+    assert.equal(executeDeveloperPlayers('sally 1 2', players, null, add), true);
+    assert.equal(executeDeveloperPlayers('cally -1 8', players, null, add), true);
+    assert.equal(executeDeveloperPlayers('setally 1x 2', players, null, add), true);
+    assert.deepEqual(calls, [[1, 2], [0xffffffff, 8]]);
+    assert.throws(() => executeDeveloperPlayers('setally 1 2', players), /참여 장치 미연결/);
+});

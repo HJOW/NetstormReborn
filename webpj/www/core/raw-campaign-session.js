@@ -75,7 +75,7 @@ export class RawCampaignSession {
             o.executeDeveloperCommand = (text) => {
                 const current = this.#live();
                 const trace = (level, message) => current.world.storage.traceGraph(level, message);
-                if (!executeDeveloperSettings(text, current.gameplayGlobals.gameAux(), trace) && !executeDeveloperPlayers(text, current.players, trace)) throw new Error('개발자 명령의 나머지 해석기 미연결');
+                if (!executeDeveloperSettings(text, current.gameplayGlobals.gameAux(), trace) && !executeDeveloperPlayers(text, current.players, trace, (owner, target) => current.participation.addAlly(owner, target))) throw new Error('개발자 명령의 나머지 해석기 미연결');
             };
             o.refreshLocalRitual = () => {
                 const current = this.#live();
