@@ -6,6 +6,7 @@ import { RawCampaignSession } from '../www/core/raw-campaign-session.js';
 import { synchronizeProductionControlContents } from '../www/core/client-production-sync.js';
 import { runClientBridgeDecay } from '../www/core/client-bridge-decay.js';
 import { pollClientBattleCompletion } from '../www/core/client-battle-completion.js';
+import { pollClientConnectionHealth } from '../www/core/client-connection-health.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from '../www/core/raw-production-maintenance.js';
 import { ProductionControlContext } from '../www/core/production-control-context.js';
 import { ClientColorSortInput } from '../www/core/client-color-sort-input.js';
@@ -712,6 +713,27 @@ test('CampaignSession TheWarBegins: 로그인 타이머의 프레임 분리', ()
         const completed = events.length; s.runConnectionLoginTimer(); assert.equal(events.length, completed);
     } finally { s.dispose(); }
     assert.throws(() => s.runConnectionLoginTimer(), /반납/);
+});
+
+// 같은 장기 Client 연결 감시가 활동 방송 뒤 같은 Session 타이머를 실행한다.
+test('CampaignSession TheWarBegins: Client 연결 감시와 프레임 타이머 순서', () => {
+    const local = new ClientLocalStateGlobals(), activity = new ClientConnectionActivityGlobals(), gameplay = new ClientGameplayGlobals();
+    const connections = new ClientConnectionGlobals(local), players = new ClientPlayerRecords(), events = [], peers = Array(9).fill(null);
+    peers[2] = (packet) => events.push(['heartbeat', [...packet]]);
+    const localLogin = { frameLoginTimer: true, configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234,
+        log: () => {}, refresh: () => events.push(['refresh']), playerUiBusy: () => false, playerNotice: () => {} };
+    const { s } = scene({ localLogin, localStateGlobals: local, connectionActivityGlobals: activity, connectionRegistry: connections,
+        gameplayGlobals: gameplay, playerRecords: players, battlePeers: peers, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    const client = { edition: () => 'patch1078', gameplayGlobals: () => gameplay, localStateGlobals: () => local, connectionActivityGlobals: () => activity,
+        connectionGlobals: () => connections, playerRecords: () => players, wallSeconds: () => 100, time: () => ({ wall: 100, number: 17 }) };
+    const world = { session: () => s };
+    try {
+        s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection(); assert.equal(s.localConnectionReady(), true);
+        assert.ok(local.loginEnd().value > 0); players.records()[2 * 180 + 0x50] |= 1; activity.heartbeatEnd().value = 100; events.length = 0;
+        pollClientConnectionHealth(client, () => world);
+        assert.deepEqual(events[0], ['heartbeat', [1, 0x64, 5, 0, 0]]); assert.ok(events.some(([kind]) => kind === 'refresh'));
+        assert.equal(activity.heartbeatEnd().value, 103); assert.equal(local.loginEnd().value, 0);
+    } finally { s.dispose(); }
 });
 
 // 같은 실제 Login의 서버 송신과 Player 방송은 원본 활동 패킷을 전달한다.

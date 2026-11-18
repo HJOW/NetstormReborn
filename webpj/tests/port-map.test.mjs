@@ -92,11 +92,11 @@ test('이식 대응표: 후보 신규 단위 경로별 분류', () => {
     assert.equal(classified.size, 176);
     assert.equal(entries.length, classified.size);
     assert.deepEqual(Object.fromEntries(rules.map((rule) => [rule.class, rule.keys.length])), {
-        port: 100, adapt: 7, 'exclude-edit': 7, 'exclude-mp': 57, 'exclude-host': 5,
+        port: 101, adapt: 7, 'exclude-edit': 7, 'exclude-mp': 56, 'exclude-host': 5,
     });
     // 후보의 각 경로가 의도한 규칙에 먼저 일치하는지 확인한다.
     for (const [key, expected] of classified) assert.equal(classify(key)?.class, expected, key);
-    assert.deepEqual(['client/NativeFortSaveVirtual', 'client/ClientMetaSpriteRefresh', 'client/NativeMetaSpriteRefresh', 'client/SkirmishSetup', 'client/ClientTimeSource'].map((key) => classify(key)?.class), ['port', 'port', 'port', 'port', 'adapt']);
+    assert.deepEqual(['client/NativeFortSaveVirtual', 'client/ClientMetaSpriteRefresh', 'client/NativeMetaSpriteRefresh', 'client/SkirmishSetup', 'client/UberReconnect', 'client/ClientTimeSource'].map((key) => classify(key)?.class), ['port', 'port', 'port', 'port', 'port', 'adapt']);
     // 두 기준선을 읽을 수 있으면 목록이 추가 단위 전체와 정확히 같은지 확인한다.
     const previous = listUnits('1f00a25a');
     const candidate = listUnits('225553df');

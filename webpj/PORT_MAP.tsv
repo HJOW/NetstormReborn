@@ -539,7 +539,7 @@ cpppj/src/client/UberGumpCamera.cpp	port	www/ui/uber-gump-camera.js	2e5e1c67	por
 cpppj/src/client/UberHud.inc	port			todo	[client-default]
 cpppj/src/client/UberLan.inc	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/UberMeta.inc	exclude-mp			-	[rebaseline-mp]
-cpppj/src/client/UberReconnect.inc	exclude-mp			-	[rebaseline-mp]
+cpppj/src/client/UberReconnect.inc	port	www/core/client-connection-health.js	225553df	partial	[rebaseline-port] WB04-E854: 단독 Client 연결 감시와 로그인 타이머 순서 결선. 재접속·LAN은 웹 제외, 앱 수명 및 나머지 단독 경계는 잔여; docs/webpj-client-connection-health-20261119.md
 cpppj/src/client/UberRootGump.cpp	port			todo	[client-default]
 cpppj/src/client/UberScenario.inc	exclude-edit			-	[rebaseline-edit]
 cpppj/src/client/UrlInput.cpp	port	www/core/url-input.js	1f00a25a	port	[client-default] WB04-E20: 4d7b09 URL 일반 입력(두 번째 DWORD 문자열 토큰). fixture url-input 10.78 96행 전부. 메타 resolver 연결은 해당 단위에서
