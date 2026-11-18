@@ -301,6 +301,7 @@
     <None Include="../../../cpppj/tests/fixtures/regionownership-x86.tsv" Link="X86/regionownership-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/vortex-owner-x86.tsv" Link="X86/vortex-owner-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/factorypostpop-x86.tsv" Link="X86/factorypostpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/factory-regular-current-x86.tsv" Link="X86/factory-regular-current-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
     <!-- 실제 배치 칸 순회와 로컬 미리보기의 세판본 원본 관찰을 공유한다. -->
