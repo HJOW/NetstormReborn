@@ -1,6 +1,6 @@
 // 지연 로그인 캠페인의 GameWorld 앞단을 같은 Session·카메라·자산 표시기와 묶는다.
 // 사용: new CampaignGameWorld(assets, files, fort, mission, services, { x, y }) → startLocalConnection() → 같은 session의 로그인 진행 → dispose().
-// 화면 이벤트·프레임과 브라우저 앱 수명은 후속이며 이 생성자만으로 플레이할 수 없다.
+// 화면 이벤트와 브라우저 앱 수명은 후속이며 이 생성자만으로 플레이할 수 없다.
 import { ClientGameplayGlobals } from './client-gameplay-globals.js';
 import { FIRST_ASSET_TYPE_NUMBER } from '../assets/type-table.js';
 import { TypeFlag2 } from '../assets/type-flags.js';
@@ -31,6 +31,8 @@ export class CampaignGameWorld {
     #gameplay; #session = null; #factoryDisplay = null; #width; #height; #services; #cameraHome = createCameraHomeState();
     // 로그인 대기·화면 변경 및 외곽 반납 상태다.
     #connecting = false; #changed = false; #disposed = false;
+    // 독립 Step과 외부 시계의 마지막 실제 프레임 시각이다.
+    #surfaceTime = { game: 0, wall: 0, delta: 0, number: 0 };
     // 현재 실제 자산 보기와 그 보기를 구성하는 같은 자산 저장소다.
     #assets; #objects = [];
     // 현재 파일 팔레트·ColorSort 대여와 커서 설치 전까지 보유하는 색 사본이다.
@@ -119,6 +121,30 @@ export class CampaignGameWorld {
         const session = this.#live(); if (!this.#connecting || !session.localConnectionReady()) return false;
         if (this.#pendingPalette) { session.cursor().setPalette(this.#pendingPalette, this.#colorSortLogical, this.#colorSortMaps); this.#pendingPalette = null; }
         this.refreshCampaignObjects(); this.#connecting = false; return true;
+    }
+    // 접속이 끝난 뒤 실제 전송과 Session Kernel을 같은 프레임에 실행한다.
+    runFrame() {
+        const session = this.#live(); if (this.#connecting) return;
+        const stopped = Boolean(this.#services.paused?.());
+        if (this.#services.frameTime) {
+            this.#surfaceTime = { ...this.#services.frameTime() }; this.#surfaceView();
+            session.pumpLocalConnection(); session.runFrame(this.#surfaceTime, stopped); this.refreshCampaignObjects();
+        } else if (this.#services.elapsed && !stopped) this.step(this.#services.elapsed());
+    }
+    // Client 단일 Kernel 전에 시각·표시 영역만 준비하고 Kernel을 직접 돌리지 않는다.
+    prepareKernelFrame() {
+        const session = this.#live(); if (typeof this.#services.frameTime !== 'function') throw new Error('실제 Client Kernel 프레임의 Session/시각 공급자 누락');
+        if (this.#connecting) return;
+        this.#surfaceTime = { ...this.#services.frameTime() }; this.#surfaceView(); session.prepareFrame(this.#surfaceTime, Boolean(this.#services.paused?.()));
+    }
+    // 단일 Kernel 뒤 현재 객체 보기만 다시 읽는다.
+    finishKernelFrame() { this.#live(); if (!this.#connecting) this.refreshCampaignObjects(); }
+    // 독립 실행에서는 시간차를 누적하고 실제 로그인 전송·Session Kernel을 진행한다.
+    step(seconds) {
+        const session = this.#live(); if (this.#connecting) return;
+        if (!Number.isFinite(seconds) || seconds < 0) throw new RangeError('월드 시간차 범위 오류');
+        this.#surfaceTime.game += seconds; this.#surfaceTime.delta = seconds; this.#surfaceTime.number += 1;
+        this.#surfaceView(); this.#surfaceTime.wall += seconds; session.pumpLocalConnection(); session.runFrame(this.#surfaceTime, false); this.refreshCampaignObjects();
     }
     // 현재 화면 색을 표시기에 적용하고 아직 없는 커서의 원래 색은 값으로 보유한다.
     setPalette(palette, colorSortLogical = [], colorMaps = null) {

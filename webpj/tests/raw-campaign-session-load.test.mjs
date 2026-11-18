@@ -1011,14 +1011,16 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
 
 // 지연 GameWorld는 같은 Session·카메라·표시기를 소유하고 실제 로컬 로그인을 준비한다.
 test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비', () => {
-    const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), commits = [], views = [], dirty = [];
+    const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), commits = [], views = [], dirty = [], sounds = [];
+    let frameTime = { game: 0.125, wall: 100.125, delta: 0.125, number: 1 }, worldPaused = false, frameRequests = 0;
     gameplay.camera().initializeNativeRenderer(640, 480, 256, { value: 0 }, { value: 0 });
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
     const services = {
         gameplayGlobals: gameplay, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
+        frameTime: () => { frameRequests += 1; return frameTime; }, paused: () => worldPaused,
         deletion: { selected: () => 0 }, install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {} },
         ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
-        sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
+        sound: { wallSeconds: () => 0, play: (...args) => { sounds.push(args); return 1; }, playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
         missionOutcome: { demo: () => 0 }, player: { log: () => {} }, ai: { assertion: forbidden('AI 진단'), participation: { addChat: () => {}, clearChat: () => {} } },
         surfaceDisplay: { suppressed: () => false, invalidate: (...args) => dirty.push(args) }, soundViewChanged: (view) => views.push({ ...view }),
         cameraCommit: (context) => { commits.push(context); const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
@@ -1041,11 +1043,18 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         world.setPalette(palette); assert.deepEqual(factoryPalettes, [expectedPalette]); palette.fill(0);
         assert.equal(world.takeChanged(), true); assert.equal(world.takeChanged(), false);
         world.startLocalConnection(); assert.equal(world.connecting, true); assert.equal(world.completeLocalConnection(), false);
+        world.runFrame(); world.prepareKernelFrame(); world.finishKernelFrame(); world.step(-1); assert.equal(frameRequests, 0);
         session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
         assert.equal(session.localConnectionReady(), true); assert.equal(session.loaded, true); assert.ok(session.world().objects().length > 1000);
         const cursor = session.cursor(), cursorPalettes = [], cursorSetPalette = cursor.setPalette.bind(cursor);
         cursor.setPalette = (...args) => { cursorPalettes.push(args[0].slice()); cursorSetPalette(...args); };
         assert.equal(world.completeLocalConnection(), true); assert.equal(world.connecting, false); assert.equal(world.completeLocalConnection(), false);
+        const frameVisits = [], core = session.core(), probe = core.kernel.add({ runFrame: () => frameVisits.push(core.processState.now) });
+        world.prepareKernelFrame(); assert.equal(core.processState.now, 0.125); assert.deepEqual(frameVisits, []);
+        core.kernel.runFrame(); world.finishKernelFrame(); assert.deepEqual(frameVisits, [0.125]);
+        frameTime = { game: 0.25, wall: 100.25, delta: 0.125, number: 2 }; worldPaused = true; world.runFrame(); assert.deepEqual(frameVisits, [0.125]);
+        worldPaused = false; world.runFrame(); assert.deepEqual(frameVisits, [0.125, 0.25]); core.kernel.remove(probe);
+        assert.throws(() => world.step(-1), /시간차 범위/); assert.throws(() => world.step(NaN), /시간차 범위/);
         assert.deepEqual(cursorPalettes, [expectedPalette]);
         const named = buildPaletteColorTable(cursorDisplayLogicalPalette(expectedPalette)); assert.deepEqual([...cursor.display.textColors()], [named.basic[7], named.basic[5]]);
         world.setPalette(expectedPalette); assert.equal(cursorPalettes.length, 2); assert.deepEqual(cursorPalettes[1], expectedPalette); assert.equal(factoryPalettes.length, 2);
@@ -1078,7 +1087,7 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         const cursors = [], carrier = session.makeCarrierInput({ multiple: () => 0, selectCursor: (number) => cursors.push(number), assertion: forbidden('운반 입력 진단') }); oldCarrier = carrier;
         carrier.highlight(priest.sid, { x: 90, y: 108 }, 0); carrier.highlight(priest.sid, { x: 90, y: 108 }, 1); assert.deepEqual(cursors, [0x12, 0x12]);
         assert.equal(selection.select(priest.sid, 0, 0), priest.sid); const packets = session.localConnectionPackets();
-        carrier.commit(priest.sid, { x: 90, y: 108 }); assert.equal(world.selected(), 0); session.pumpLocalConnection();
+        carrier.commit(priest.sid, { x: 90, y: 108 }); assert.equal(world.selected(), 0); assert.ok(sounds.length > 0); session.pumpLocalConnection();
         assert.equal(session.localConnectionPackets().length, packets.length + 1); assert.equal(session.localConnectionPackets().at(-1), 0x40);
     } finally { world.dispose(); }
     assert.equal(gameplay.borrowed(), false); assert.throws(() => world.session(), /반납/);
@@ -1195,7 +1204,7 @@ test('CampaignGameWorld TheWarBegins: 세 운반 유닛의 선택·호버·클�
         gameplay.camera().initializeNativeRenderer(1024, 768, 256, { value: 0 }, { value: 0 });
         const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
             observePacket: (_sender, _boss, _local, packet) => { if (packet[1] === 0x40) received.push(packet.slice()); } };
-        const services = { gameplayGlobals: gameplay, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'), paused: () => false,
+        const services = { gameplayGlobals: gameplay, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'), paused: () => false, elapsed: () => 0.025,
             install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {} },
             ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
             sound: { wallSeconds: () => 0, play: () => {}, playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
@@ -1206,6 +1215,7 @@ test('CampaignGameWorld TheWarBegins: 세 운반 유닛의 선택·호버·클�
         try {
             const session = world.session(); world.startLocalConnection(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
             assert.equal(world.completeLocalConnection(), true); const core = session.core();
+            assert.throws(() => world.prepareKernelFrame(), /시각 공급자 누락/);
             const parent = startPoint ? session.world().create(kind, 2) : session.world().objects().find(({ object }) => object.type === kind && object.owner === 1).sid;
             if (startPoint) { session.world().pop(parent, ...startPoint, 0); core.owner.set(parent, 1); }
             world.bindUserInput({ paused: () => 0, dump: () => {}, assertion: forbidden('선택 진단'), previewAssertion: forbidden('미리보기 진단') },
@@ -1224,14 +1234,15 @@ test('CampaignGameWorld TheWarBegins: 세 운반 유닛의 선택·호버·클�
             assert.deepEqual([...received[0].subarray(0, 4)], [1, 0x40, 18, 0]); assert.equal(packet.getUint16(4, true), parent);
             assert.deepEqual([packet.getFloat32(6, true), packet.getFloat32(10, true)], [destination.x, destination.y]);
             const form = findAttachedProcess(core.pool, parent, movement), path = core.processes.fromForm(form); assert.ok(path instanceof RawPathProcess);
-            const begin = core.processState.now, end = path.runtime.time(path.runtime.count - 1); let frame = 0;
-            // 목적지와 결과는 직접 쓰지 않고 같은 Kernel을 연속 시간으로 실행한다.
+            const end = path.runtime.time(path.runtime.count - 1); let frame = 0;
+            // 목적지와 결과는 직접 쓰지 않고 실제 GameWorld의 연속 프레임을 실행한다.
             for (; frame < 3000 && core.processState.now < end + 0.5; frame += 1) {
-                const now = begin + frame * 0.025; session.pumpLocalConnection(); session.runFrame({ game: now, wall: 100 + now - begin, delta: frame ? 0.025 : 0, number: frame }, false);
+                if (kind === 158) world.runFrame(); else world.step(frame ? 0.025 : 0);
                 if (!core.processes.fromForm(form)) break;
             }
             const arrived = session.world().objects().find(({ sid }) => sid === parent);
             assert.ok(frame > 1); assert.equal(core.processes.fromForm(form), null); assert.deepEqual([arrived.object.x, arrived.object.y], [destination.x, destination.y]);
+            const displayed = world.objects().find((item) => item.id === parent); assert.deepEqual([displayed.x, displayed.y], [destination.x, destination.y]);
             assert.equal(session.sp(1), money); assert.deepEqual([core.bookkeeping.depth, core.destroy.preDepth, core.destroy.postDepth], [0, 0, 0]);
         } finally { world.dispose(); }
     }

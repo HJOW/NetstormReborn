@@ -4,21 +4,21 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E835)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E836)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E835는 같은 Client 장기 저장소의 다리 스캔과 현재 Session 칸 전달을 연결했다. 다음은 GameWorld 프레임과 HUD 수명이다. [E835](docs/webpj-client-bridge-decay-20261119.md) |
-| 전체 회귀 | E835 Node v26.13.0·v22.23.3 전체 각각 6,333건 통과(실패·취소·건너뜀 0). 두 버전을 순차 실행했으며 v22 전체 검사 뒤 v26 회귀 0/8회. fixture 824개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
+| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E836은 GameWorld 프레임과 단일 Kernel 준비·후처리를 연결하고 실제 세 운반 유닛의 자연 도착을 확인했다. 다음은 실제 Client·앱과 HUD 수명이다. [E836](docs/webpj-game-world-frame-20261119.md) |
+| 전체 회귀 | E836 Node v26.13.0 전체 6,333건 통과(실패·취소·건너뜀 0). E835 Node v22.23.3 전체 6,333건 통과 뒤 v26 회귀 1/8회. fixture 824개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
 
 1. **4D-3 Login.** 남은 명령·전송 장치와 World 입력을 경유하는 통합 시험을 서로 구분해 추적한다. 실제 Client 진행 창·Poll은 4D-6, Native 수신기는 4D-8에서 연결한다.
 2. **4D-1 후속.** Fort 모드 snapshot 실제 통합을 확인한다. 비미션 너겟 정상 생성은 12차 스커미시 Session에서 검증한다.
-3. **4D-4~4D-10.** 프레임·게이트 → 종료/반납 → GameWorld·Client → Native 장기 저장소 → 덤프 → Tutorial1 L2 순으로 진행한다. 다음 입력 작업은 상위 메뉴·브라우저 사건 연결과 실제 다중 유닛 이동 검증이다.
+3. **4D-4~4D-10.** 프레임·게이트 → 종료/반납 → GameWorld·Client → Native 장기 저장소 → 덤프 → Tutorial1 L2 순으로 진행한다. GameWorld 프레임을 연결한 뒤 다음 입력 작업은 상위 메뉴·브라우저 사건 연결과 실제 다중 유닛 이동 검증이다.
 
 ### 0.2 단계 진행판
 
@@ -130,11 +130,11 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 - [ ] **4D-3c 전송 앞단** — E820에서 공통 `RawPacketFrame`을 로컬 전송에 연결하고 E821에서 시간 표본과 GameClock 보정의 공유를 검사했다. 실제 Client 시계 소유·`RawClockSynchronization`의 전체 외곽 수명과 Native baseline, 소켓 지연 FIFO의 웹 제외 경계 및 `ClientPacketSources`를 확인한다. [E820](docs/webpj-packet-frame-20261119.md) · [E821](docs/webpj-clock-synchronization-20261119.md)
 - [ ] **4D-3d Squid 수신** — E822~E823에서 `RawPeerWorldSync` 본체와 World·Login 서버 콜백을 연결했다. 실제 원격 로그인은 웹 범위 밖이며 ReceiveSquid·Dais·Gun·Aviary·Flyer의 미연결/Native 경계(5148..5261)가 남았다. 공통 객체·종속 부착·변경/삭제·검증·공유 Regular·압축의 typed 수신은 반영했다. [E823](docs/webpj-peer-world-session-20261119.md) · [압축](docs/webpj-compressed-squid-receive-20261118.md)
 - [ ] **4D-3e Login 콜백·명령 등록** — Carrier·건설·연구 typed 등록을 확인했다. RegisterCarrierCommands 5262..5436의 Native 분기와 미연결 명령, 31h 개발자 명령의 실제 Client 장치·단독 도달을 확인한다. [E750](docs/webpj-session-login-ready-20261118.md) · [E766](docs/webpj-developer-devices-20261118.md)
-- [ ] **4D-3f 통합 시험** — 같은 Session의 Login/옵션/사제 자연 도착, 일반·데모 Start와 AI 동맹, 세 운반 유닛의 World 선택→호버→클릭→전송/Session Kernel 자연 도착, 1-1 워크샾의 전체 Kernel 자연 완공과 연구 58h·생산 기술 동기화·플레어 자연 수명 및 중복 연구를 확인했다. 전체 World 프레임과 실제 유닛 생산은 입력/생산 장치 연결과 함께 확인한다. [E826](docs/webpj-world-carrier-input-20261119.md) · [E827](docs/webpj-workshop-kernel-completion-20261119.md) · [E828](docs/webpj-workshop-research-sync-20261119.md) · [E830](docs/webpj-workshop-research-flare-20261119.md)
+- [ ] **4D-3f 통합 시험** — 같은 Session의 Login/옵션/사제 자연 도착, 일반·데모 Start와 AI 동맹, 세 운반 유닛의 World 선택→호버→클릭→전송/Session Kernel 자연 도착, 1-1 워크샾의 전체 Kernel 자연 완공과 연구 58h·생산 기술 동기화·플레어 자연 수명 및 중복 연구, GameWorld 프레임의 세 유닛 자연 도착을 확인했다. 실제 Client/앱 프레임과 유닛 생산은 입력/생산 장치 연결과 함께 확인한다. [E826](docs/webpj-world-carrier-input-20261119.md) · [E827](docs/webpj-workshop-kernel-completion-20261119.md) · [E828](docs/webpj-workshop-research-sync-20261119.md) · [E830](docs/webpj-workshop-research-flare-20261119.md) · [E836](docs/webpj-game-world-frame-20261119.md)
 
 **4D-4 프레임·카메라·Tutorial 게이트**
 
-- [ ] **4D-4a 카메라·프레임** — Session의 PrepareFrame/RunFrame, 공유 카메라 요청·적용, 초기/Home/사제 시점, 입자 뷰·커서 경계는 확인했다. 전체 Renderer·GameWorld를 연결하고 프레임 순서를 대조한다(3982..3999, 4523..4551, 4564..4587). [E775](docs/webpj-session-camera-request-20261118.md) · [E777](docs/webpj-session-particle-view-20261118.md)
+- [ ] **4D-4a 카메라·프레임** — Session의 PrepareFrame/RunFrame, 공유 카메라 요청·적용, 초기/Home/사제 시점, 입자 뷰·커서 경계와 GameWorld 프레임·단일 Kernel 준비/후처리를 확인했다. 실제 Client·전체 Renderer에 연결하고 프레임 순서를 대조한다(3982..3999, 4523..4551, 4564..4587). [E775](docs/webpj-session-camera-request-20261118.md) · [E777](docs/webpj-session-particle-view-20261118.md)
 - [ ] **4D-4b Tutorial 게이트·표시 장치** — Tutorial 1~6 판정·공통 게이트와 신전의 현재 슬롯 재조회는 연결했다. 실제 UI·앱, 다리 수명 숫자·Renderer, 승패 판정 소비 경계가 남았다(3659..3667, 6033..6075, 6115..6125). [E781](docs/webpj-session-temple-draw-20261118.md) · [E782](docs/webpj-session-tutorial-gate-20261118.md)
 
 **4D-5 승패·종료·State 반납**
@@ -145,7 +145,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 **4D-6 GameWorld·Client 서비스**
 
-- [ ] **4D-6a GameWorld** — 지연 Session 소유·Login 시작/완료·현재 자산·팔레트·선택 효과까지 확인했다. 실제 Client 소유·Poll/진행 안내·종료·전체 삭제·프레임/Renderer를 연결한다. 입력은 6단계에서 이어간다. [E790](docs/webpj-campaign-game-world-front-20261118.md) · [E793](docs/webpj-campaign-game-world-selection-20261118.md)
+- [ ] **4D-6a GameWorld** — 지연 Session 소유·Login 시작/완료·현재 자산·팔레트·선택 효과까지 확인했다. GameWorld 프레임 및 단일 Kernel 준비·후처리는 확인했다. 실제 Client 소유·Poll/진행 안내·종료·전체 삭제·Renderer를 연결한다. 입력은 6단계에서 이어간다. [E790](docs/webpj-campaign-game-world-front-20261118.md) · [E793](docs/webpj-campaign-game-world-selection-20261118.md)
 - [ ] **4D-6b Client 서비스** — CampaignClientServices·CampaignUserInputServices·CampaignCursorClientEffects. Session 서비스 형식과 GameWorld가 선행한다.
 - [ ] **4D-6c Session 공개 조회·장치** — Start의 조회·기술·사제, 건설 운반, 생산 소유자, 커서·에너지·배치까지 확인했다. Dude·이동 시작과 남은 조회/장치를 연결한다(4590..4619, 4643..4741, 6029..6032, 6076..6079, 6100..6114, 6316..6399).
 
