@@ -542,6 +542,14 @@ export class RawCampaignSession {
             current.services.factoryTell(decodeOriginalText(Uint8Array.from(text, (letter) => letter.charCodeAt(0))));
         }, (expression, file, line) => storage.assertDisplay(expression, file, line));
         dispatch.register(0x5b, (_sender, _connection, packet) => this.#live().buildingModules.receiveGeyserMined(packet));
+        // 운반 명령 네 종류는 현재 Session의 해당 본체와 원본 패킷 길이를 사용한다. (2026-11-18 WB04-E737)
+        for (const [type, length] of [[0x40, 18], [0x4f, 9], [0x50, 9], [0x60, 10]]) {
+            dispatch.observe(type, null); dispatch.version(type, 1, 0); dispatch.requireLength(type, length);
+        }
+        dispatch.register(0x40, (sender, _connection, packet) => this.#live().carrierMove.receive(sender, packet));
+        dispatch.register(0x4f, (sender, _connection, packet) => this.#live().carrierPickup.receive(sender, 0, packet));
+        dispatch.register(0x50, (sender, _connection, packet) => this.#live().receiveCarrierDrop(sender, packet));
+        dispatch.register(0x60, (sender, _connection, packet) => this.#live().carrierSteal.receive(sender, 0, packet));
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }

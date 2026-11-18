@@ -460,3 +460,24 @@ test('CampaignSession Tutorial 1: 원격 Tell과 간헐천 채집 등록', () =>
         assert.equal(c.pool.slot(sid)[11] & 1, 1);
     } finally { s.dispose(); }
 });
+
+// 반환된 대상의 네 운반 명령은 같은 Session에서 안전하게 수신을 끝낸다.
+test('CampaignSession Tutorial 1: 운반 명령 네 종류 등록', () => {
+    const { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        const c = s.core(); c.processState.server = true; c.processState.boss = true;
+        let sid = c.pool.layout.serverFirst;
+        // 선택한 슬롯이 네 수신기의 공통 free 관문에 걸리도록 한다.
+        while (sid < c.pool.capacity && !(c.pool.slot(sid)[11] & 1)) sid += 1;
+        assert.ok(sid < c.pool.capacity);
+        // 각 패킷을 해당 원본 고정 길이로 보내며 같은 슬롯이 빈 상태로 남는지 확인한다.
+        for (const [type, length] of [[0x40, 18], [0x4f, 9], [0x50, 9], [0x60, 10]]) {
+            const packet = new Uint8Array(length), view = new DataView(packet.buffer);
+            packet.set([1, type, length, 0]); view.setUint16(4, sid, true); view.setUint16(6, sid, true);
+            assert.equal(dispatch.registration(type).length, length);
+            assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+            assert.equal(c.pool.slot(sid)[11] & 1, 1);
+        }
+    } finally { s.dispose(); }
+});
