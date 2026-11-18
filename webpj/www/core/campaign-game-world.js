@@ -16,6 +16,7 @@ import { createCameraHomeState } from './camera-home.js';
 import { RawCampaignSession } from './raw-campaign-session.js';
 import { RawCampaignFactoryDisplay } from '../render/raw-campaign-factory-display.js';
 import { cursorDisplayLogicalPalette } from '../render/raw-campaign-cursor-display.js';
+import { traceSpecialPointer } from '../ui/special-pointer-trace.js';
 
 // 원본 기본 지도 영역에서 상단 게임 메뉴가 차지하는 논리 픽셀 높이다.
 const MENU_HEIGHT = 28;
@@ -194,6 +195,20 @@ export class CampaignGameWorld {
     }
     // 실제 선택의 세 인자를 원본처럼 유지하고 다음 화면 갱신을 요청한다.
     select(sid) { this.#live(); if (!this.#input) throw new Error('실제 선택 장치 미설치'); this.#selection.select(sid, 0, 1); this.#changed = true; }
+    // 일반 좌클릭 선택 뒤 현재 특수 권한으로 같은 지점의 진단을 수행한다.
+    selectFromPointer(sid, force, control, event) {
+        const session = this.#live(); if (!this.#input) throw new Error('일반 좌클릭의 실제 선택 장치 미설치');
+        this.#selection.select(sid, force, 1);
+        const core = session.core(), finder = new RawSquidFinder(core.pool, core.hash, core.types);
+        traceSpecialPointer(control, this.#gameplay.player.special, event, {
+            project: (x, y) => this.#project(x, y),
+            begin: (point) => { const p = RawCursorPosition.truncatePoint(point); return finder.begin({ left: p[0], top: p[1], right: p[0], bottom: p[1] }, 0); },
+            trace: (number) => { if (typeof this.#services.traceObject !== 'function') throw new Error('현재 지점의 실제 객체 진단 미연결'); this.#services.traceObject(number); },
+            next: () => finder.next(),
+        });
+        if (session.editor() && this.#gameplay.selection.selected) throw new Error('웹 제외 편집 좌클릭 미연결');
+        this.#changed = true;
+    }
     // 실제 폴링의 화면 정수 좌표를 같은 Client 선택 전역에 기록한다.
     setMousePoint(x, y) { this.#live(); this.#gameplay.selection.mouse.x = x | 0; this.#gameplay.selection.mouse.y = y | 0; }
     // 현재 강조 모드와 특수 선택 권한은 같은 Client 전역에서 읽는다.

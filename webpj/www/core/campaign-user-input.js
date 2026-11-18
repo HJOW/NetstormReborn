@@ -1,5 +1,5 @@
 // 실제 캠페인 World의 현재 마우스 폴링과 커서 옵션을 처리한다.
-// 사용: new CampaignUserInput(world, config, services).updateCursor({ code, x, y }) / event(사건). 일반 좌클릭과 브라우저 장치 연결은 후속이다.
+// 사용: new CampaignUserInput(world, config, services).updateCursor({ code, x, y }) / event(사건). 브라우저 장치 연결은 후속이다.
 import { InputCode } from './input-queue.js';
 import { queueProductionShortcut, PRODUCTION_BRIDGE_COMMAND, PRODUCTION_REPEAT_COMMAND } from './production-shortcuts.js';
 import { dispatchSelectionKeyInput } from './client-input-commands.js';
@@ -53,7 +53,10 @@ export class CampaignUserInput {
                 else this.#world.moveSelected(event.x, event.y, (x, y) => this.#queue(0x02000044, x, y));
                 return null;
             }
-            throw new Error('사용자 입력의 좌클릭 사건 분배 미연결');
+            if (this.#world.inputMode() === 1 || this.#world.inputMode() === 6) throw new Error('웹 제외 편집/항해 좌클릭 미연결');
+            const control = (event.code & InputCode.control) !== 0, force = control && this.#world.specialSelection() ? 1 : 0;
+            this.#world.selectFromPointer(this.#world.pick(event.x, event.y, force), force, control, event);
+            return null;
         }
         return null;
     }

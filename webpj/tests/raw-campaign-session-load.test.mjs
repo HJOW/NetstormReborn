@@ -711,7 +711,7 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
 
 // 실제 World 입력은 같은 카메라·선택·운반 요청을 조립한다.
 test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => {
-    const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), cursors = []; let worldPaused = false;
+    const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), cursors = [], traces = []; let worldPaused = false;
     gameplay.camera().initializeNativeRenderer(640, 480, 256, { value: 0 }, { value: 0 });
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
     const services = {
@@ -720,7 +720,7 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
         ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
         sound: { wallSeconds: () => 0, play: () => {}, playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
         missionOutcome: { demo: () => 0 }, player: { log: () => {} }, ai: { assertion: forbidden('AI 진단'), participation: { addChat: () => {}, clearChat: () => {} } },
-        surfaceDisplay: { suppressed: () => false, invalidate: () => {} },
+        surfaceDisplay: { suppressed: () => false, invalidate: () => {} }, traceObject: (sid) => traces.push(sid),
         cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
     };
     const world = new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', services, { x: 640, y: 480 });
@@ -770,7 +770,11 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
         assert.equal(world.selected(), 0); world.select(priest.sid);
         assert.equal(input.event({ code: InputCode.rightButton, x: 0, y: 0 }), null); assert.equal(world.selected(), 0); assert.equal(world.inputMode(), 0);
         assert.equal(input.event({ code: InputCode.rightButton, x: screen[0] - 16, y: screen[1] - 11 }), priest.sid); assert.equal(world.selected(), 0);
-        assert.equal(input.event({ code: InputCode.rightButton, x: -1, y: -1 }), null); world.select(priest.sid); assert.equal(world.selected(), priest.sid);
+        assert.equal(input.event({ code: InputCode.rightButton, x: -1, y: -1 }), null);
+        input.event({ code: InputCode.leftButton, x: screen[0] - 16, y: screen[1] - 11 }); assert.equal(world.selected(), priest.sid);
+        input.event({ code: InputCode.rightButton, x: 0, y: 0 }); gameplay.player.special = 1;
+        input.event({ code: (InputCode.leftButton | InputCode.control) >>> 0, x: screen[0] - 16, y: screen[1] - 11 });
+        assert.equal(world.selected(), priest.sid); assert.ok(traces.includes(priest.sid)); gameplay.player.special = 0;
         const event = { button: 2 }, menus = []; assert.equal(world.openSelectionMenu(priest.sid, event, false, (sid, current) => { menus.push([sid, current]); return 37; }), 37);
         assert.deepEqual(menus, [[priest.sid, event]]); assert.equal(world.selected(), priest.sid);
         const originalCancel = cursor.cancel, previousPreview = drop.preview; let cancellations = 0;

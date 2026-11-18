@@ -13,6 +13,7 @@ test('이동 모드 좌클릭은 후보 조회 뒤 Shift 선택 또는 이동을
         pick: (...args) => { calls.push(['pick', ...args]); return 77; },
         extendSelection: (...args) => calls.push(['extend', ...args]),
         moveSelected: (x, y, destination) => { calls.push(['move', x, y]); destination(-2, 3); },
+        selectFromPointer: (...args) => calls.push(['select', ...args]),
     };
     const input = new CampaignUserInput(world, { readInt: () => ({ value: 0 }) }, {
         paused: () => false, queue: { pushCommand: (...args) => calls.push(['queue', ...args]) },
@@ -23,5 +24,7 @@ test('이동 모드 좌클릭은 후보 조회 뒤 Shift 선택 또는 이동을
     input.event({ code: (InputCode.leftButton | InputCode.control) >>> 0, x: 56, y: 78 });
     assert.deepEqual(calls.splice(0), [['pick', 56, 78, 0], ['move', 56, 78], ['queue', 0x02000044, -2, 3]]);
     mode = 0;
-    assert.throws(() => input.event({ code: InputCode.leftButton, x: 0, y: 0 }), /좌클릭 사건 분배 미연결/);
+    const event = { code: (InputCode.leftButton | InputCode.control) >>> 0, x: 0, y: 0 };
+    input.event(event); assert.deepEqual(calls.splice(0), [['pick', 0, 0, 0], ['select', 77, 0, true, event]]);
+    mode = 1; assert.throws(() => input.event(event), /웹 제외 편집\/항해/);
 });
