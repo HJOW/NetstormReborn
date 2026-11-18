@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.610 · 갱신 2026-11-18(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.611 = 파이프라인 미리보기 해소와 농지 MayPlace 실결선·L2 재측정 · cpppj 기준 제품 1314 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
+**기준 단위 0.611 · 갱신 2026-11-18(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.612 = 농지 MayPlace 실결선·L2 재측정 · cpppj 기준 제품 1314 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-15) 직전의 이 문서 전체(단위 기록 0.453~0.545 93건, R4 진행판의 묶음별 경과, 0.3의 단위별 검사·fixture 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261115-through-0545)에 바이트 그대로 보관했고, 그 이전 보관본 6개와 0.452 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -50,8 +50,8 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 단위 | **0.610(2026-11-18, HJOW-Athlon):** [앵커·서라운딩 이식과 파이프라인 본체](docs/dotnet-canon-0610-20261118.md). 앵커·서라운딩 L1 8건 통과, 파이프라인 본체 빌드 0/0, 전체 MayPlace 3건은 미리보기 배열만 불일치로 원인 격리. R4 진행 중·M1 0/34·새 경로 플레이 불가 유지 |
-| 검사 기준선 | **0.610 집중: 앵커 4건·서라운딩 4건 통과, 파이프라인 본체 빌드 0/0, 전체 MayPlace 3건은 미리보기 배열만 불일치로 원인 격리(TRX `mayplace0610e`, 허용·차단·지역·raw·hash·고정 일치).** 캐논 11건(0.609) 유지, 확대 171건 중 170건 통과·1건 환경 실패 유지. Release 빌드 0경고·0오류. TRX 보관(`anchor0610b`·`surround0610b`·`mayplace0610d/e`). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)·0.608 Client1267/1267·0.609 캐논 9건도 유지 |
+| 마지막 구현 단위 | **0.611(2026-11-18, HJOW-Athlon):** [파이프라인 미리보기 해소](docs/dotnet-canon-0611-20261118.md). 패턴표 복사 방향 수정으로 전체 MayPlace 3건 전수 일치. R4 진행 중·M1 0/34·새 경로 플레이 불가 유지 |
+| 검사 기준선 | **0.611 집중: 전체 MayPlace 3건 전수 통과(TRX `mayplace0611`, 패치·CD·1037 각 144행, 허용·차단·지역·원본·해시·고정·미리보기 전부 일치, 약 20분).** 앵커 4건·서라운딩 4건·캐논 11건(0.609) 유지, 확대 171건 중 170건 통과·1건 환경 실패 유지. Release 빌드 0경고·0오류(기존 xUnit2020 안내 유지). TRX 보관(`anchor0610b`·`surround0610b`·`mayplace0610d/e`·`mayplace0611`). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)·0.608 Client1267/1267·0.609 캐논 9건·0.610 앵커·서라운딩 8건도 유지 |
 | PORT_MAP | `PORT_MAP.tsv` **1031행(L1 455·port 571)**, cpppj 443단위에 대응. 행은 파일 전체 완료를 뜻하지 않는다 |
 | fixture | 연결 **324개**(원본 x86 대조 자료, `cpp-fixture-manifest.tsv`) |
 | L2 기준선 | 0.608: 되돌린 트리로 3경로 재수집해 0.607과 대조했다(슬롯 전체 바이트·일치 수·bounds·난수 동일, 프레임 번호 1행만 실행별 타이밍 지터). 덤프 `extracted/dotnet-l2-0608/`(경로별 보관). **일치0/34**, 데모dn3 미연결 유지. 격차 3뿌리는 [0.606 분석](docs/dotnet-l2-0606-20261117.md) 그대로이며 농지 1뿌리는 [0.608 검증](docs/dotnet-farm-0608-20261118.md)으로 R6-3 이관이 확정됐다. 직전 3경로 자료 `extracted/dotnet-l2-0607/`, 전체 자료 `extracted/dotnet-l2-0567/`, [일괄 도구](docs/dotnet-l2-batch-20261114.md) |
@@ -63,7 +63,14 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 ### 0.4 남은 작업 — 순서대로
 
-**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.610에서 앵커·서라운딩을 이식하고 L1 8건으로 대조했으며 파이프라인 본체를 빌드했다**(HJOW-Athlon, [단위 문서](docs/dotnet-canon-0610-20261118.md)). 전체 MayPlace 3건은 미리보기 배열만 불일치로 원인을 격리하고 농지 실결선·L2는 0.611에서 잇는다. 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
+**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.611에서 파이프라인 미리보기 불일치를 해소하고 전체 MayPlace 3건을 전수 일치시켰다**(HJOW-Athlon, [단위 문서](docs/dotnet-canon-0611-20261118.md)). 농지 실결선·L2는 0.612에서 잇는다. 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
+
+**0.611 완료(2026-11-18, HJOW-Athlon):** 패턴표 복사 방향 수정으로 파이프라인 미리보기를 해소하고 전체 MayPlace 3건을 전수 일치시켰다. 테스트 준비 코드 1행 수정이 중심이다.
+
+1. 원인: `CanonMayPlaceTests`가 패턴 전역 8개를 `AsSpan().CopyTo(새 배열)`로 복사해 패턴표가 0으로 남았다. 비패턴 경로로 떨어져 미리보기 Bounds가 L19·T20(1×1)으로 줄고 차단 배열이 전부 0이 됐다.
+2. 검사: `Array.Copy(새 배열, state.Geometry.PatternTypes, 8)`로 바로잡은 뒤 전체 MayPlace 3건 전수 통과(TRX `mayplace0611`, 허용·차단·지역·원본·해시·고정·미리보기 전부 일치, 약 20분). 진단용 `CanonMayPlaceDiagTests`는 원인 확정 뒤 삭제했다.
+3. fixture·맵: 추가·변경 없음(1031행·L1 455·fixture 324개 유지).
+4. 정리: 농지 MayPlace 실결선·L2 3경로 재수집은 0.612에서 잇는다. 일회성 진단·추적 파일은 만들지 않았다.
 
 **0.610 완료(2026-11-18, HJOW-Athlon):** R6-3 앵커·서라운딩과 파이프라인 본체를 이식·결선하고 L1으로 검증했다. `RawPlayerPlacementAnchor`·`RawCanonPlacementSurrounding`·`RawCanonPlacementPipeline` 본체와 앵커·서라운딩 L1 8건이 중심이다.
 
@@ -667,7 +674,7 @@ dotnetpj 작업에서는 cpppj·LEFT_JOBS.md를 수정하지 않는다. 아래 �
 - [ ] `client/RawProduction*` 2단위 566줄: RawProductionControls 393, RawProductionMaintenance 173
 - [ ] `client/ClientConstruction*` 5단위 523줄: ClientConstructionGlobals 253, ClientConstructionRegions 123, ClientConstructionRandomPlacement 57, ClientConstructionPlacement 54, ClientConstructionDevices 36
 - [x] `o/RawCanon*` 2단위 251줄: RawCanonPlacementRelations 148, RawCanonPlacementPermission 103 — 0.609(L1 9건·지형 메이커 2종·CD 하네스 명시, 파이프라인은 잔여)
-- [ ] `o/RawCanon*` 1단위 117줄: RawCanonPlacementPipeline 117
+- [x] `o/RawCanon*` 1단위 117줄: RawCanonPlacementPipeline 117 — 0.611(전체 MayPlace 3건 전수 일치, 패턴표 복사 방향 수정)
 - [ ] `o/RawProduction*` 2단위 368줄: RawProductionDeck 260, RawProductionSync 108
 - [ ] `o/RawBridge*` 3단위 274줄: RawBridgeDecay 138, RawBridgeCarriers 99, RawBridgeDraw 37 (RawBridgeFallParent는 R4-1에서 0.548 완료)
 - [ ] `o/RawMana*` 3단위 206줄: RawManaBoltRegular 89, RawManaBoltArrival 73, RawManaDraw 44
@@ -1225,6 +1232,7 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 | 0.608 (11-18) | 농지 배치 결선 시도와 MayPlace 검증(선택 집합 21/152로 true 기각·결선 되돌림, 운반체 결선 유지·Client 전체1267/1267·L2 0.607과 동일) | [단위 문서](docs/dotnet-farm-0608-20261118.md) | 새 경로 R4-2(농지는 R6-3 파이프라인 대기 확정, 그래프·첫 지역·AI·정기 처리 잔여) |
 | 0.609 (11-18) | 캐논 배치 권한·관계 이식과 지형 메이커·CD 하네스 명시(L1 9건·농지 2건 포함 11건 통과·확대 회귀 170/171·빌드 0/0) | [단위 문서](docs/dotnet-canon-0609-20261118.md) | 새 경로 R6-3(파이프라인·앵커·서라운딩·농지 실결선·L2 재수집은 0.610 잔여) |
 | 0.610 (11-18) | 앵커·서라운딩 이식과 파이프라인 본체(L1 8건 통과·본체 빌드 0/0·전체 MayPlace 3건은 미리보기만 불일치로 격리) | [단위 문서](docs/dotnet-canon-0610-20261118.md) | 새 경로 R6-3(미리보기 해소·농지 실결선·L2 재수집은 0.611 잔여, R4~R11 잔여는 단계별 목록 유지) |
+| 0.611 (11-18) | 파이프라인 미리보기 해소와 전체 MayPlace 전수 일치(패턴표 복사 방향 수정·테스트 1행·진단 파일 정리) | [단위 문서](docs/dotnet-canon-0611-20261118.md) | 새 경로 R6-3(농지 실결선·L2 재수집은 0.612 잔여, R4~R11 잔여는 단계별 목록 유지) |
 | 0.478~0.499 (11-12~14) | L2 기준선 확장 — 6번째~26번째 경로의 cpp 기준선·dn 덤프와 구조 대조, 담긴 섬 판정(0.484), 34경로 같은 시드 일괄 수집·도구(0.499) | [L2 일괄](docs/dotnet-l2-batch-20261114.md), 같은 보관본 | 새 경로 R4(M1 판정 자료) |
 | 0.453~0.477 (11-12) | 지형 바인딩 조립·Generate 라이브·난수 단일 스트림·시작 1회 reseed(0.453~0.465), Pop 공간 등록·요새 객체 적재·그래프 재구성(0.466~0.470), 장부·전투섬·첫 지역 귀속 확정과 Player 월드 갈고리(0.471~0.477) | 같은 보관본 | 새 경로 R4 |
 | 기간·단위 | 완료 범위 | 근거 문서 | 처리 |

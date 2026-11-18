@@ -87,7 +87,7 @@ public sealed class CanonMayPlaceTests
         }
 
         var state = new CanonPlacementPipelineState();
-        state.Geometry.PatternTypes.AsSpan().CopyTo(new uint[] { 107, 82, 94, 157, 131, 129, 140, 142 });
+        Array.Copy(new uint[] { 107, 82, 94, 157, 131, 129, 140, 142 }, state.Geometry.PatternTypes, 8);
         state.Relations.IslandCount = 128;
         var books = new RawPostPopState();
         var additional = new RawPostPopList();
