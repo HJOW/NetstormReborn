@@ -550,6 +550,14 @@ export class RawCampaignSession {
         dispatch.register(0x4f, (sender, _connection, packet) => this.#live().carrierPickup.receive(sender, 0, packet));
         dispatch.register(0x50, (sender, _connection, packet) => this.#live().receiveCarrierDrop(sender, packet));
         dispatch.register(0x60, (sender, _connection, packet) => this.#live().carrierSteal.receive(sender, 0, packet));
+        // AcidZap과 주문 수신은 같은 Session의 현재 주문 상태와 Host를 사용한다. (2026-11-18 WB04-E738)
+        for (const [type, length] of [[0x61, 11], [0x5c, 6], [0x5f, 0xffff], [0x7d, 0xffff]]) {
+            dispatch.observe(type, null); dispatch.version(type, 1, 0); dispatch.requireLength(type, length);
+        }
+        dispatch.register(0x61, (sender, _connection, packet) => this.#live().acidZap.receive(sender, 0, packet));
+        dispatch.register(0x5c, (_sender, _connection, packet) => this.#live().runtimeModules.receiveDevastationActivation(packet));
+        dispatch.register(0x5f, (_sender, _connection, packet) => this.#live().runtimeModules.receiveDevastationEffect(packet));
+        dispatch.register(0x7d, (_sender, _connection, packet) => this.#live().receiveBombTimer(packet));
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }

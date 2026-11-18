@@ -481,3 +481,25 @@ test('CampaignSession Tutorial 1: 운반 명령 네 종류 등록', () => {
         }
     } finally { s.dispose(); }
 });
+
+// 주문 패킷은 현재 Session의 빈 대상 관문과 타이머 권한 진단으로 전달된다.
+test('CampaignSession Tutorial 1: AcidZap과 주문 수신 등록', () => {
+    const { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        const c = s.core(); let sid = c.pool.layout.serverFirst;
+        // 반환된 슬롯으로 각 실제 본문의 빈 대상 관문을 확인한다.
+        while (sid < c.pool.capacity && !(c.pool.slot(sid)[11] & 1)) sid += 1;
+        assert.ok(sid < c.pool.capacity);
+        // 효과를 발생시키지 않는 빈 대상 패킷 세 종류를 분배한다.
+        for (const [type, length] of [[0x61, 11], [0x5c, 6], [0x5f, 6]]) {
+            const packet = new Uint8Array(length); packet.set([1, type, length, 0]); new DataView(packet.buffer).setUint16(4, sid, true);
+            assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        }
+        assert.equal(dispatch.registration(0x61).length, 11); assert.equal(dispatch.registration(0x5c).length, 6);
+        assert.equal(dispatch.registration(0x5f).length, 0xffff); assert.equal(dispatch.registration(0x7d).length, 0xffff);
+        c.processState.boss = true;
+        const timer = new Uint8Array(6); timer.set([1, 0x7d, 6, 0]); new DataView(timer.buffer).setUint16(4, sid, true);
+        assert.throws(() => dispatch.dispatch(new PacketConnection({ sender: 1 }), timer), /타이머 수신 진단/);
+    } finally { s.dispose(); }
+});
