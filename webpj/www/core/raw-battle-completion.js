@@ -86,4 +86,54 @@ export class RawBattleCompletion {
         }
         return subscribers > 1 && (offlineFlagged === alive || nonWatching === offlineNonWatching || offlineTeam === subscribers - 1);
     }
+
+    // 0044ac30: 現在の診断・待機・無勝負・結果確定を原本順に処理する。
+    frame(frame, hooks = {}) {
+        const g = this.globals, h = this.hooks;
+        const expressions = ['p->firstTempleSid == p->debugFirstTempleSid', 'p->inProcessTempleSid == p->debugInProcessTempleSid', 'p->firstAltarSid == p->debugFirstAltarSid', 'p->inProcessAltarSid == p->debugInProcessAltarSid'];
+        // メニューやミ션でも、各 Player の四組を現在値で診断する。
+        for (let owner = 1; owner < 9; owner += 1) {
+            // 診断から復帰したら次の組を現在の Player から読み直す。
+            for (let pair = 0; pair < expressions.length; pair += 1) if (this.read(owner, 0x7c + pair * 8) !== this.read(owner, 0x80 + pair * 8)) need(hooks.assertion)(expressions[pair], '.\\Dais.cpp', 0x69e + pair);
+        }
+        if (!g.battle || g.missionPost || !need(h.serverConnection)() || frame.phase !== 14) return;
+        if (frame.captureEnd !== 0) { const wall = need(hooks.wallSeconds)(); if (wall >= frame.captureEnd) frame.captureEnd = 0; }
+        if ((frame.settleFrames << 24 >> 24) < 5) { frame.settleFrames = (frame.settleFrames + 1) & 255; return; }
+        let finished;
+        if (!this.teamFinished()) finished = this.flagFinished(1);
+        else {
+            finished = true;
+            if (frame.server) {
+                let logged = 0;
+                // チーム終了時だけ現在ログイン済みの行を数える。
+                for (let owner = 1; owner < 9; owner += 1) if (this.read(owner, 0x2c) && (this.read(owner, 0x50) & 1)) logged += 1;
+                if (logged > 1) finished = false;
+            }
+        }
+        if (g.boss && !finished) finished = this.unloggedFinished(frame.localOwner);
+        if (!finished) {
+            if (frame.drawDeadline === 0 || !(frame.gameSeconds >= frame.drawDeadline)) return;
+            if (this.flagFinished(0)) return;
+            frame.drawDeadline = 0;
+            if (!g.boss) need(hooks.assertion)('boss', '.\\Dais.cpp', 0x70e);
+            need(hooks.rejectDraw)(); return;
+        }
+        if (need(hooks.currentDialog)()) return;
+        if (this.teamFinished()) {
+            // 現在の各 Player 記録で無勝負ビットだけを外す。
+            for (let owner = 1; owner < 9; owner += 1) {
+                const players = h.currentPlayers ? h.currentPlayers() : frame.players;
+                if (!(players instanceof Uint8Array) || players.length !== 9 * 180) throw new RangeError('Draw 해제의 현재 Player9 물리 범위');
+                const view = new DataView(players.buffer, players.byteOffset, players.byteLength), offset = owner * 180 + 0x50;
+                view.setUint32(offset, (view.getUint32(offset, true) & ~0x80) >>> 0, true);
+            }
+        }
+        need(hooks.deleteSavedState)(); frame.settleFrames = 0;
+        if (!need(h.priestDead)(frame.localOwner)) frame.result = this.flagFinished(1) ? 5 : 1;
+        else {
+            if (!Number.isInteger(frame.localOwner) || frame.localOwner < 0 || frame.localOwner >= 9) throw new RangeError('전투 결과의 현재 관전자 BYTE 물리 범위');
+            frame.result = g.options[62 + frame.localOwner] ? 6 : 2;
+        }
+        need(hooks.queueMainMenu)();
+    }
 }

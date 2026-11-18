@@ -79,3 +79,75 @@ test('전투 종료: cpppj 판정기 합성 상태 4096건과 조회 순서', ()
     }
     assert.equal(createHash('sha256').update(rows.join('')).digest('hex'), 'd68863e7b9725c579d1862e83fe50d30fa4dd17aa402605f7634be50e7b560f4');
 });
+
+// 일반 프레임이 공유하는 변경 가능한 결과와 시간을 준비한다.
+function frameScene() {
+    const s = scene(), events = [];
+    const frame = { players: s.globals.players, server: false, phase: 14, localOwner: 1, captureEnd: 0, drawDeadline: 0, settleFrames: 5, result: 99, gameSeconds: 10 };
+    const hooks = { wallSeconds: () => { events.push('wall'); return 10; }, assertion: (...args) => events.push(['assert', ...args]), currentDialog: () => { events.push('dialog'); return 0; }, deleteSavedState: () => events.push('delete'), rejectDraw: () => events.push('reject'), queueMainMenu: () => events.push('menu') };
+    return { ...s, frame, frameHooks: hooks, events };
+}
+
+// 비전투에서도 진단은 실행되고 대기 BYTE는 signed 비교 뒤 감긴다.
+test('전투 종료 프레임: 진단·캡처 기한·signed 대기', () => {
+    const { globals, write, gate, frame, frameHooks, events, calls } = frameScene();
+    globals.battle = false; write(1, 0x7c, 12);
+    gate.frame(frame, frameHooks);
+    assert.deepEqual(events, [['assert', 'p->firstTempleSid == p->debugFirstTempleSid', '.\\Dais.cpp', 0x69e]]); assert.deepEqual(calls, []);
+    write(1, 0x80, 12); globals.battle = true; events.length = 0; frame.captureEnd = 9; frame.settleFrames = 255;
+    gate.frame(frame, frameHooks);
+    assert.equal(frame.captureEnd, 0); assert.equal(frame.settleFrames, 0); assert.deepEqual(events, ['wall']); assert.deepEqual(calls, ['server']);
+});
+
+// 팀 종료의 확정은 현재 무승부 비트 제거 뒤 저장 삭제·결과·메뉴 순서다.
+test('전투 종료 프레임: 팀 승리와 모달 차단', () => {
+    const { globals: g, write, gate, frame, frameHooks, events } = frameScene();
+    write(1, 0x2c, 1); write(2, 0x2c, 2); write(1, 0x50, 0x181); write(2, 0x50, 0x81);
+    g.alliances[1 * 9 + 2] = 1; g.alliances[2 * 9 + 1] = 1;
+    frameHooks.currentDialog = () => 1; gate.frame(frame, frameHooks);
+    assert.equal(frame.result, 99); assert.equal(frame.settleFrames, 5); assert.deepEqual(events, []);
+    frameHooks.currentDialog = () => { events.push('dialog'); return 0; }; gate.frame(frame, frameHooks);
+    const view = new DataView(g.players.buffer); assert.equal(view.getUint32(180 + 0x50, true), 0x101); assert.equal(view.getUint32(360 + 0x50, true), 1);
+    assert.equal(frame.result, 1); assert.equal(frame.settleFrames, 0); assert.deepEqual(events, ['dialog', 'delete', 'menu']);
+});
+
+// 결과가 나지 않은 게임의 무승부 기한은 NaN에서 발동하지 않고 만료 시 거절한다.
+test('전투 종료 프레임: 무승부 기한과 거절 순서', () => {
+    const { globals: g, write, gate, frame, frameHooks, events } = frameScene();
+    write(1, 0x2c, 1); write(2, 0x2c, 2); write(1, 0x50, 1); write(2, 0x50, 1); g.boss = false;
+    frame.drawDeadline = Number.NaN; gate.frame(frame, frameHooks); assert.ok(Number.isNaN(frame.drawDeadline)); assert.deepEqual(events, []);
+    frame.drawDeadline = 10; gate.frame(frame, frameHooks);
+    assert.equal(frame.drawDeadline, 0); assert.deepEqual(events, [['assert', 'boss', '.\\Dais.cpp', 0x70e], 'reject']);
+});
+
+// cpppj 프레임을 실행한 4096개 상태의 결과·flags·효과 순서 해시와 대조한다.
+test('전투 종료 프레임: cpppj 합성 상태 4096건과 효과 순서', () => {
+    const rows = [];
+    // 원본 관측 도구와 같은 seed로 입력과 현재 장치를 준비한다.
+    for (let sample = 0; sample < 4096; sample += 1) {
+        let random = sample + 0x14b37, trace = 0;
+        // DWORD 난수와 효과 순서의 감김을 보존한다.
+        const next = () => { random = (Math.imul(random, 1664525) + 1013904223) >>> 0; return random >>> 16; };
+        const mark = (value) => { trace = (Math.imul(trace, 33) + value) >>> 0; };
+        const players = new Uint8Array(9 * 180), options = new Uint8Array(87), alliances = new Uint32Array(81), dead = [];
+        // 같은 순서로 각 Player의 현재 기록을 생성한다.
+        for (let owner = 1; owner < 9; owner += 1) {
+            players[owner * 180 + 0x2c] = next() % 4 !== 0 ? owner : 0;
+            players[owner * 180 + 0x50] = (next() % 2 !== 0 ? 1 : 0) | (next() % 2 !== 0 ? 0x80 : 0);
+            options[0x3e + owner] = Number(next() % 5 === 0); dead[owner] = next() % 2 !== 0;
+        }
+        // 방향별 동맹과 일부 진단 불일치를 같은 위치에 설정한다.
+        for (let index = 0; index < 81; index += 1) alliances[index] = Number(next() % 4 === 0);
+        if (sample % 17 === 0) players[180 + 0x7c] = 1;
+        const globals = { players, options, alliances, battle: sample % 10 !== 0, missionPost: sample % 11 === 0, boss: (sample & 1) !== 0, scriptBreak: Number(sample % 13 === 0), loginEnd: Number(sample % 7 === 0) };
+        const hooks = { serverConnection: () => { mark(10); return sample % 9 !== 0; }, priestDead: (owner) => { mark(owner); return dead[owner]; } };
+        const frame = { players, server: sample % 3 === 0, phase: sample % 8 === 0 ? 4 : 14, localOwner: sample % 8 + 1, captureEnd: sample % 5 === 0 ? 8 : 0, drawDeadline: sample % 7 === 0 ? 5 : 0, settleFrames: sample % 4 === 0 ? 255 : sample % 4 === 1 ? 4 : 5, result: 99, gameSeconds: 10 };
+        const devices = { wallSeconds: () => { mark(30); return 10; }, assertion: (_expression, _file, line) => mark(line), currentDialog: () => { mark(31); return Number(sample % 7 === 1); }, deleteSavedState: () => mark(32), rejectDraw: () => mark(33), queueMainMenu: () => mark(34) };
+        new RawBattleCompletion(globals, hooks).frame(frame, devices);
+        const flags = [];
+        // 처리 뒤 실제 Player flags BYTE를 관측한다.
+        for (let owner = 1; owner < 9; owner += 1) flags.push(players[owner * 180 + 0x50]);
+        rows.push(`${sample} ${frame.result} ${frame.settleFrames} ${frame.captureEnd} ${frame.drawDeadline} ${trace} ${flags.join(' ')}\n`);
+    }
+    assert.equal(createHash('sha256').update(rows.join('')).digest('hex'), '966e5ea23cdda8a3e888db611a89f38d4e17fc4460391b9d4798acc84355b7d2');
+});
