@@ -538,7 +538,21 @@ test('CampaignSession Tutorial 1: 개발자 설정 패킷 수신', () => {
         packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
         assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
         assert.equal(gameplay.gameAux().missionSettings()[1], 1);
-        const missing = new Uint8Array(11); missing.set([1, 0x31, 11, 0, 3, 0, 0, 0, 100, 112, 0]);
+        const missing = new Uint8Array(11); missing.set([1, 0x31, 11, 0, 3, 0, 0, 0, 122, 122, 0]);
         assert.throws(() => dispatch.dispatch(new PacketConnection({ sender: 1 }), missing), /나머지 해석기 미연결/);
+    } finally { s.dispose(); }
+});
+
+// 실제 31h 분배는 같은 Player 기록과 현재 추적 소비자를 사용한다.
+test('CampaignSession Tutorial 1: 개발자 Player 진단 패킷', () => {
+    const playerRecords = new ClientPlayerRecords(), logs = [], { s } = scene({ playerRecords });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); s.world().storage.bindGraphTrace((...args) => logs.push(args));
+        const players = playerRecords.records(), view = new DataView(players.buffer, players.byteOffset, players.byteLength);
+        players.set([65, 0], 180 + 12); view.setUint32(180 + 0x50, 0x23, true);
+        const packet = new Uint8Array(11); packet.set([1, 0x31, 11, 0, 3, 0, 0, 0, 100, 112, 0]);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.ok(logs.some(([level, text]) => level === 29 && text === 'id:1 A Logged in\n'));
     } finally { s.dispose(); }
 });
