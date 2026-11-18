@@ -17,6 +17,7 @@ import { cancelClientStateCursor } from '../www/core/client-state-world-cleanup.
 import { bindClientStateWorldGlobals } from '../www/core/client-state-world-globals.js';
 import { ClientKencloudGlobals } from '../www/core/client-kencloud-globals.js';
 import { ClientNsInfoGlobals } from '../www/core/client-ns-info-globals.js';
+import { ClientRandomGlobals } from '../www/core/random.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
 import { fortSection, parseFort } from '../www/assets/fort.js';
@@ -91,8 +92,8 @@ test('Client State 전역: 연결 활동·Client DWORD와 모드 별칭', () => 
     const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals(), activity = new ClientConnectionActivityGlobals();
     const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
     const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
-    const nsInfo = new ClientNsInfoGlobals(), kencloud = new ClientKencloudGlobals();
-    const context = { gameplay, local, activity, storage, nsInfo, kencloud, currentStorage: storage }, globals = bindClientStateWorldGlobals(context);
+    const nsInfo = new ClientNsInfoGlobals(), kencloud = new ClientKencloudGlobals(), players = new ClientPlayerRecords(), templates = new CampaignTemplateStorage(), random = new ClientRandomGlobals();
+    const context = { gameplay, local, activity, storage, nsInfo, kencloud, players, templates, random, currentStorage: storage }, globals = bindClientStateWorldGlobals(context);
     // 22칸의 마지막 값은 인접 Zone stamp를 건드리지 않는다.
     activity.activeStamp().value = 11; globals.write32(0x5c853c, 0xfedcba98);
     assert.equal(globals.read32(0x5c853c), 0xfedcba98); assert.equal(activity.frames()[21], 0xfedcba98); assert.equal(activity.activeStamp().value, 11);
@@ -111,6 +112,13 @@ test('Client State 전역: 연결 활동·Client DWORD와 모드 별칭', () => 
     globals.write32(0x5c848c, 0x7fc01234); globals.write32(0x5c8490, 0x80000000);
     assert.equal(globals.read32(0x5c848c), 0x7fc01234); assert.equal(globals.read32(0x5c8490), 0x80000000);
     globals.write32(0x5467b8, 42); globals.write32(0x59a8b0, 9); assert.equal(nsInfo.zone, 42); assert.equal(kencloud.worldRedraw().value, 9);
+    random.fortCoreSeed = 0xabcd1234; globals.write16(0x5c89b4, 0x5678); assert.equal(random.fortCoreSeed, 0xabcd5678);
+    assert.throws(() => globals.write16(0x5c89b6, 1), /미등록/); assert.equal(globals.players().length, 0);
+    players.initialize(() => {}); assert.equal(globals.players(), players.records());
+    const headers = templates.headers(); new DataView(headers.buffer, headers.byteOffset).setUint32(20, 0x87654321, true);
+    assert.equal(globals.templateManager(1), 0x87654321); assert.throws(() => globals.templateManager(9), /슬롯 범위/);
+    const cost = globals.typeDefault(85); cost.value = 1 / 3; assert.equal(storage.types[85].cost, Math.fround(1 / 3));
+    storage.types[85].cost = 17; assert.equal(cost.value, 17); assert.throws(() => globals.typeDefault(188), /TYPE 범위/);
     assert.throws(() => globals.write32(0x594fb8, 2), /정상0\/1/); assert.equal(storage.ownerMode.fort, true);
     assert.throws(() => globals.write32(0x540c70, 1), /미등록/); assert.throws(() => globals.read32(0x5c8540), /미등록/);
     assert.throws(() => bindClientStateWorldGlobals({ ...context, gameplay: new ClientGameplayGlobals() }), /owner 필요/);

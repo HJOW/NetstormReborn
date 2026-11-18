@@ -89,7 +89,7 @@ export class ClientRandomGlobals {
     game = new GameRandom(INITIAL_GAME_RANDOM_STATE);
     // 원본 005c89a8 난수 모드 DWORD 이다. 0 만 고정 시드를 고른다.
     gameMode = 0;
-    // 원본 005c89b4 Fort 핵심 시드 DWORD 이다. 원본 정리는 하위 WORD 만 지운다(소비자 연결은 후속 단위).
+    // 원본 005c89b4 Fort 핵심 시드 DWORD 이다. State 정리는 같은 칸의 하위 WORD 만 지운다.
     fortCoreSeed = 0;
     // 원본 005c89a4 Subscriber ID 최초 시드 여부 DWORD 이다(소비자 연결은 후속 단위).
     subscriberIdInitialized = 0;

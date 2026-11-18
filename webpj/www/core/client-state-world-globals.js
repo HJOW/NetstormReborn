@@ -9,7 +9,7 @@ function stateBoolean(value) {
 
 // 같은 권한·보조 전역·표면을 확인하고 직접 접근 callback을 반환한다. 바인딩 자체는 값을 바꾸지 않는다.
 export function bindClientStateWorldGlobals(context) {
-    const { gameplay, local, activity, storage, currentStorage, nsInfo, kencloud } = context;
+    const { gameplay, local, activity, storage, currentStorage, nsInfo, kencloud, players, templates, random } = context;
     if (storage.pool.edition !== 'patch1078' || storage.authority !== gameplay.authority() || storage.gameAux !== gameplay.gameAux() || (currentStorage && currentStorage !== storage)) {
         throw new TypeError('State 전역의 같은 실제 Client/표면/권한 owner 필요');
     }
@@ -84,6 +84,23 @@ export function bindClientStateWorldGlobals(context) {
             if (boxes.has(address)) { boxes.get(address)().value = value; return; }
             const entry = values.get(address); if (entry?.set) { entry.set(value); return; }
             throw new RangeError('State 직접 쓰기의 미등록 Native DWORD 주소');
+        },
+        // Fort 핵심 시드의 하위 WORD만 바꾸고 상위 16비트를 보존한다.
+        write16(address, value) {
+            if (address !== 0x5c89b4) throw new RangeError('State 직접 쓰기의 미등록 Native WORD 주소');
+            random.fortCoreSeed = ((random.fortCoreSeed & 0xffff0000) | (value & 0xffff)) >>> 0;
+        },
+        // 매 호출마다 현재 Player 물리를 다시 빌린다.
+        players() { return players.records(); },
+        // 현재 Template 9개 헤더의 첫 DWORD를 지정 슬롯에서 읽는다.
+        templateManager(slot) {
+            if (!Number.isInteger(slot) || slot < 0 || slot >= 9) throw new RangeError('State Template9의 슬롯 범위');
+            const headers = templates.headers(); return new DataView(headers.buffer, headers.byteOffset, headers.byteLength).getUint32(slot * 20, true);
+        },
+        // 지정 TYPE의 실제 float 비용을 빌려 원본처럼 단정도로 저장한다.
+        typeDefault(type) {
+            if (!Number.isInteger(type) || type < 0 || type >= storage.types.length) throw new RangeError('State 현재 TYPE 범위');
+            const record = storage.types[type]; return { get value() { return record.cost; }, set value(value) { record.cost = Math.fround(value); } };
         },
     };
 }
