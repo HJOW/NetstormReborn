@@ -615,10 +615,12 @@ test('CampaignSession TheWarBegins: Init 요청의 Zone으로 실제 로그인',
 // 실제 Client State7 부모가 같은 장기 물리에서 새 GameWorld를 설치하고 State8 연결을 진행한다.
 test('CampaignGameWorld TheWarBegins: 실제 State7 부모와 지연 내부 로그인', () => {
     const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals(), cloud = new ClientKencloudGlobals(), html = new ClientHtmlWindowGlobals(), players = new ClientPlayerRecords(), queue = new InputQueue(), events = [];
+    const activity = new ClientConnectionActivityGlobals(), connections = new ClientConnectionGlobals(local);
     const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
     const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
     gameplay.camera().initializeNativeRenderer(1024, 768, 256, { value: 0 }, { value: 0 });
-    const time = { game: 0, wall: 100 }, client = { edition: () => 'patch1078', surfaceStorage: () => storage, localStateGlobals: () => local, gameplayGlobals: () => gameplay, kencloudGlobals: () => cloud, htmlWindowGlobals: () => html, time: () => time, wallSeconds: () => 100,
+    const time = { game: 0, wall: 100, number: 17 }, client = { edition: () => 'patch1078', surfaceStorage: () => storage, localStateGlobals: () => local, gameplayGlobals: () => gameplay, kencloudGlobals: () => cloud, htmlWindowGlobals: () => html, time: () => time, wallSeconds: () => 100,
+        connectionActivityGlobals: () => activity, connectionGlobals: () => connections, playerRecords: () => players,
         menu: () => ({ showLoginProgress: (kind) => events.push(kind), showLoginWaiting: () => 1 }), translate: (text) => text, encodeDisplayText: encodeOriginalText, decodeDisplayText: decodeWindows1252 };
     const request = createMissionFortLoadRequest(), state = local.state();
     writeMissionFortRequest('thewarbegins', { next: state.next, sequence: local.zonePending(), localAddress: Uint8Array.of(122, 108, 111, 99, 97, 108, 44, 42, 0), port: 6799 }, {
@@ -626,10 +628,11 @@ test('CampaignGameWorld TheWarBegins: 실제 State7 부모와 지연 내부 로�
     });
     request.next.set(state.next); request.sequence = local.zonePending().value; new DataView(request.zone.buffer, request.zone.byteOffset).setUint32(16, 7, true);
     state.next[2] = 0x12345678; state.phase[0] = 4; const previous = state.phase.slice();
-    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
+    const localLogin = { frameLoginTimer: true, configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
         initializeRenderer: () => events.push('renderer'), uiMode: (mode) => events.push(`mode${mode}`), startingProgress: () => events.push('progress'), battlePalette: () => events.push('palette') };
     bindCampaignLoginProgressServices(client, { menus: () => ({ closeMissionLoading: () => events.push('close'), closeHtmlSerial: (serial) => { events.push('closeTimer'); serial.value = 0; } }) }, localLogin);
-    const services = { gameplayGlobals: gameplay, localStateGlobals: local, surfaceStorage: storage, playerRecords: players, missionFortRequest: request, missionSubscriber: 7, localLogin,
+    const services = { gameplayGlobals: gameplay, localStateGlobals: local, surfaceStorage: storage, playerRecords: players, connectionActivityGlobals: activity, connectionRegistry: connections,
+        connectionFrameNumber: () => time.number, missionFortRequest: request, missionSubscriber: 7, localLogin,
         unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'), install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {} },
         ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
         sound: { wallSeconds: () => 100, play: () => 1, playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
@@ -645,7 +648,8 @@ test('CampaignGameWorld TheWarBegins: 실제 State7 부모와 지연 내부 로�
         assert.equal(state.phase[0], 8); assert.equal(state.next[0], 9); assert.equal(request.consumed, true); assert.equal(world.session().loaded, false);
         world.session().pollLocalConnectionState(); world.session().pumpLocalConnection(); assert.equal(world.completeLocalConnection(), true); assert.equal(world.session().localConnectionReady(), true);
         assert.ok(events.includes('progress') && events.includes('palette') && events.includes('mode2'));
-        assert.ok(events.includes('MissionTransferring') && events.includes('close') && events.includes('closeTimer'));
+        assert.ok(events.includes('MissionTransferring') && events.includes('close')); assert.ok(local.loginEnd().value > 0); assert.equal(events.includes('closeTimer'), false);
+        pollClientConnectionHealth(client, () => world); assert.equal(local.loginEnd().value, 0); assert.ok(events.includes('closeTimer')); assert.equal(activity.heartbeatEnd().value, 103);
     } finally { world?.dispose(); }
     assert.equal(gameplay.borrowed(), false); assert.equal(storage.borrowed, false);
 });
