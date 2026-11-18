@@ -1567,6 +1567,44 @@ public sealed partial class HostSession
         _terrainPostPop.SetCarrierPostPop(_terrainCarrierPostPop);
     }
 
+    /// <summary>농지 단일 배치의 월드 효과 여섯 갈고리를 세션 장치에 연결한다. 배치·생성·HP 다섯 갈고리는 파이프라인·공장·보상 실결선기에 위임한다.</summary>
+    /// <param name="islands">바인딩과 같은 섬 런타임이다. 지역 소유자를 같은 목록에서 읽는다.</param>
+    /// <param name="placement">같은 월드의 실제 배치 파이프라인이다.</param>
+    /// <param name="hp">같은 월드의 실제 HP 조회다.</param>
+    /// <returns>월드 효과가 연결된 훅 묶음이다.</returns>
+    /// <exception cref="InvalidOperationException">농지 배치의 지형 장치 미연결.</exception>
+    /// <exception cref="ArgumentException">농지 월드훅 SID 풀 불일치.</exception>
+    /// <remarks>2026-11-18 0.613에서 R4-2 농지 잔여의 MayPlace 실결선용으로 추가했다. 근거: cpppj/src/client/RawNormalTerrainWorldBinding.cpp 11행의 MakeNormalTerrainFarmWorldHooks다.</remarks>
+    public FortRandomPlacementHooks MakeFarmWorldHooks(RawIslandRuntime islands, RawCanonPlacementPipeline placement, RawSquidReward hp)
+    {
+        ArgumentNullException.ThrowIfNull(islands);
+        ArgumentNullException.ThrowIfNull(placement);
+        ArgumentNullException.ThrowIfNull(hp);
+        RawSquidFactory factory = _terrainFactory ?? throw new InvalidOperationException("농지 배치 지형 공장 미연결");
+        RawUnpop unpop = _terrainUnpop ?? throw new InvalidOperationException("농지 배치 지형 공간 해제 미연결");
+        IReadOnlyList<OriginalTypeRecord> types = _terrainPopTypes ?? throw new InvalidOperationException("농지 배치 지형 TYPE 미연결");
+        SquidOwner owner = _islandOwner ?? throw new InvalidOperationException("농지 배치 섬 소유자 미연결");
+        if (!ReferenceEquals(Pool, islands.Pool()) || !ReferenceEquals(Pool, placement.Pool) || !ReferenceEquals(Pool, factory.Pool) || !ReferenceEquals(Pool, hp.Pool))
+        {
+            throw new ArgumentException("농지 월드훅 SID 풀 불일치");
+        }
+
+        FortRandomPlacementHooks hooks = RawFortRandomPlacement.MakeFortRandomPlacementHooks(Pool, placement, factory, hp, new FortRandomPlacementHooks());
+        hooks.ChunkRegion = (x, y) => unchecked((sbyte)World.At(x, y).Island);
+        hooks.RegionOwner = region => islands.Owner(region);
+        hooks.SetOwner = RawBridgeConnect.MakeOwnerDispatch(Pool, BridgeState, owner.Set);
+        hooks.Unpop = (sid, flags) => unpop.Unpop(sid, types[Pool.Slot(sid)[RawSidPool.TypeOffset]], flags);
+        hooks.Repop = (sid, flags) =>
+        {
+            ReadOnlySpan<byte> raw = Pool.Slot(sid);
+            float x = BitConverter.UInt32BitsToSingle(BinaryPrimitives.ReadUInt32LittleEndian(raw[14..]));
+            float y = BitConverter.UInt32BitsToSingle(BinaryPrimitives.ReadUInt32LittleEndian(raw[18..]));
+            TerrainPopObject(sid, x, y, flags);
+        };
+        hooks.Pop = (sid, x, y, flags) => TerrainPopObject(sid, x, y, flags);
+        return hooks;
+    }
+
     public void RebuildWorldGraph(bool mode)
     {
         if (_worldGraph is null)

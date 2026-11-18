@@ -359,6 +359,11 @@ public sealed class RawNormalTerrainWorldBinding
     /// <summary>현재 원본 모드의 선택과 분리하여 같은 실제 TYPE·지역·생성자 연결을 확인한다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
     public void RequireStorage() => RawNormalTerrainChecks.RequireStorage(_globals, _placement, _stamp, _types, _pool);
 
+    /// <summary>묶은 섬 목록을 빌려준다. 농지 배치 훅이 바인딩과 같은 섬 소유자를 읽는 데 쓴다.</summary>
+    /// <returns>바인딩이 소유한 섬 런타임이다.</returns>
+    /// <remarks>2026-11-18 0.613에서 R4-2 농지 잔여의 MayPlace 실결선용으로 추가했다.</remarks>
+    public RawIslandRuntime Islands => _islands;
+
     /// <summary>묶은 조각 타입·프레임·진단으로 영역 디코더를 돌려 유효 칸 수를 센다. 2026-11-07 F2d 정상 바인딩 껍데기 이식에서 추가됐다.</summary>
     /// <param name="record">셀·회전을 담은 6바이트 기록이다.</param>
     /// <returns>빈·누락 프레임을 건너뛰고 센 유효 칸 수다.</returns>
