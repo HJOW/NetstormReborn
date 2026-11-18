@@ -30,6 +30,8 @@ import { createMissionStartState } from '../www/core/raw-mission-start.js';
 import { MissionScript } from '../www/core/mission-script.js';
 import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
+import { ClientUserSelectionGlobals } from '../www/core/client-user-selection-globals.js';
+import { RawUserHighlight } from '../www/core/raw-user-highlight.js';
 import { ClientLocalStateGlobals } from '../www/core/client-local-state-globals.js';
 import { DaisProcess, writeDaisProcessData } from '../www/core/raw-dais-process-data.js';
 import { GunProcess } from '../www/core/raw-gun-process.js';
@@ -50,12 +52,12 @@ const forbidden = (name) => () => { throw new Error(`외부 장치 미연결: ${
 function scene(overrides = {}, savedFort = fort) {
     const trace = [], queue = new InputQueue();
     const s = new RawCampaignSession(game, { read: forbidden('파일') }, savedFort, overrides.missionName ?? 'thewarbegins', {
-        unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'), deletion: { selected: () => 0 },
+        unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'), deletion: { selected: () => 0, ...overrides.deletion },
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => trace.push('config'), refreshWindowTitle: () => trace.push('title'), resetCamera: () => trace.push('camera'), ...overrides.install },
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
-        gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, cameraScreenSize: overrides.cameraScreenSize, developerQueue: overrides.developerQueue,
+        gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, cameraScreenSize: overrides.cameraScreenSize, developerQueue: overrides.developerQueue, motion: overrides.motion,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
         player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
         ai: { assertion: forbidden('AI 진단'), ...overrides.ai },
@@ -74,6 +76,46 @@ test('CampaignSession TheWarBegins: 실제 저장 객체·Graph와 커서까지 
         assert.throws(() => s.load(), /반복|중복/); assert.equal(s.loaded, true);
     } finally { s.dispose(); }
     assert.throws(() => s.load(), /반납/);
+});
+
+// 실제 선택 표시와 로컬 전송·경로·Kernel을 같은 Session에서 사제·골렘·벌룬에 연결한다.
+test('CampaignSession TheWarBegins: 선택 해제와 세 운반 유닛의 실제 이동', () => {
+    // 각 유닛은 독립 Session과 현재 선택 상태를 사용한다.
+    for (const [kind, movement, startPoint, destination] of [[158, 54, null, { x: 90, y: 108 }], [133, 40, [94, 108], { x: 90, y: 108 }], [111, 42, [98, 122], { x: 102, y: 122 }]]) {
+        const ui = new ClientUserSelectionGlobals(), state = ui.selectionState(), highlight = new RawUserHighlight(ui.highlightState(), {}), received = [], dumps = [];
+        let demo = 0, selection;
+        const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
+            observePacket: (_sender, _boss, _local, packet) => { if (packet[1] === 0x40) received.push(packet.slice()); } };
+        const steps = [];
+        const { s } = scene({ localLogin, deletion: { selected: () => state.selected }, missionOutcome: { demo: () => demo }, sound: { playOnceAt: () => {} }, motion: { path: { stepSound: (...args) => steps.push(args) } }, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+        try {
+            assert.throws(() => s.makeUserSelection(state), /설치 전/);
+            s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+            assert.equal(s.localConnectionReady(), true); const core = s.core();
+            const parent = startPoint ? s.world().create(kind, 2) : s.world().objects().find(({ object }) => object.type === kind && object.owner === 1).sid;
+            if (startPoint) { s.world().pop(parent, ...startPoint, 0); core.owner.set(parent, 1); }
+            selection = s.makeUserSelection(state, { paused: () => 0, enabled: () => 1, dump: (sid) => dumps.push(sid), highlight: (mode) => highlight.highlight(mode), assertion: forbidden('선택 진단'), previewAssertion: forbidden('미리보기 진단') });
+            assert.equal(selection.select(parent, 0, 0), parent); assert.equal(state.selected, parent); assert.equal(core.pool.slot(parent)[40] & 4, 4); assert.deepEqual(dumps, [parent]);
+            demo = 1; assert.equal(selection.select(0, 0, 1), 0); assert.equal(state.selected, parent); demo = 0;
+            assert.equal(findAttachedProcess(core.pool, parent, movement), 0); const money = s.sp(1);
+            s.requestCarrierMove(parent, destination); assert.equal(state.selected, 0); assert.equal(core.pool.slot(parent)[40] & 4, 0); assert.equal(received.length, 0);
+            s.pumpLocalConnection(); assert.equal(received.length, 1); const packet = new DataView(received[0].buffer, received[0].byteOffset, received[0].byteLength);
+            assert.deepEqual([...received[0].subarray(0, 4)], [1, 0x40, 18, 0]); assert.equal(packet.getUint16(4, true), parent); assert.deepEqual([packet.getFloat32(6, true), packet.getFloat32(10, true)], [destination.x, destination.y]);
+            const form = findAttachedProcess(core.pool, parent, movement), path = core.processes.fromForm(form); assert.ok(path instanceof RawPathProcess);
+            const bytes = new DataView(path.runtime.bytes.buffer, path.runtime.bytes.byteOffset, path.runtime.bytes.byteLength);
+            s.requestCarrierMove(parent, { x: bytes.getFloat32(0x186dc, true), y: bytes.getFloat32(0x186e0, true) }); s.pumpLocalConnection(); assert.equal(received.length, 1);
+            const begin = core.processState.now, end = path.runtime.time(path.runtime.count - 1);
+            // 목적지와 결과를 직접 쓰지 않고 실제 프레임으로 자연 종료를 기다린다.
+            for (let frame = 0; frame < 3000 && core.processState.now < end + 0.25; frame += 1) {
+                const now = begin + frame * 0.025; s.pumpLocalConnection(); s.runFrame({ game: now, wall: 100 + now - begin, delta: frame ? 0.025 : 0, number: frame }, false);
+                if (!core.processes.fromForm(form)) break;
+            }
+            assert.equal(core.processes.fromForm(form), null); const arrived = s.world().objects().find(({ sid }) => sid === parent);
+            assert.deepEqual([arrived.object.x, arrived.object.y], [destination.x, destination.y]); assert.equal(s.sp(1), money);
+            assert.deepEqual([core.destroy.preDepth, core.destroy.postDepth, core.bookkeeping.depth], [0, 0, 0]);
+        } finally { s.dispose(); }
+        assert.throws(() => selection.select(0, 0, 1), /반납/);
+    }
 });
 
 // 실제 Client의 Player/Core/Subscriber 소유자를 공유한 로그인은 현재 Core 포인터를 같은 Player 행으로 갱신한다.

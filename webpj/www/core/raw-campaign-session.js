@@ -41,6 +41,10 @@ import { SquidFactory } from './squid-factory.js';
 import { isFormConstructorVtable } from './squid-forms.js';
 import { SQUID_FORM_VTABLES } from './squid-vtables.js';
 import { beginSquidVerification, receiveFreeSquidVerification } from './raw-squid-verification.js';
+import { RawUserSelection } from './raw-user-selection.js';
+import { RawSquidSelection, selectionUsesRange, startSelectionContentPreview } from './raw-squid-selection.js';
+import { createCursorManaProcess } from './raw-cursor-mana.js';
+import { createCursorRangeProcess } from './raw-cursor-range.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -55,6 +59,8 @@ const CONSTRUCTOR_STEPS = Object.freeze([
     'CarrierSteal', 'BombPostPop', 'AcidZap', 'AcidFence', 'CarrierRegular', 'SunAviary', 'WindAviary', 'RainAviary',
     'ArcSpire', 'Flyer', 'Fence', 'GemReward', 'WorldDeletion', 'WorldRegular', 'WorldTransmission', 'Terrain',
 ]);
+// 선택이 살아 있는 동안 현재 Session의 약한 링크도 함께 유지하는 내부 키다.
+const SELECTION_LIFETIME = Symbol('selectionLifetime');
 
 // 외곽 주소를 게시하고 같은 Impl만 소유한다. Client 앱 수명 연결은4D-6·4D-7에서 수행한다.
 export class RawCampaignSession {
@@ -112,6 +118,32 @@ export class RawCampaignSession {
     world() { return this.#live().world; }
     // C++ Core의 값형 aggregate를 돌려주되 Pool/권한/장부의 실제 참조는 그대로 빌린다(6382).
     core() { return { ...this.#live().core }; }
+    // 설치된 같은 Pool과 UI 상태를 사용하는 선택을 만들고 이동·낙하가 현재 선택을 약하게 빌리게 한다.
+    makeUserSelection(state, input = {}) {
+        const o = this.#live(), c = o.core;
+        if (!o.loaded) throw new Error('설치 전 실제 Session 선택 요청');
+        const live = () => this.#live(), refresh = (sid) => { live(); c.display.update(c.pool.slot(sid)); };
+        const marks = new RawSquidSelection(c.pool, refresh), previewAssertion = input.previewAssertion;
+        const hooks = {
+            ...input,
+            blocked: () => { live(); if (!o.services.missionOutcome.demo) throw new Error('선택의 현재 Guide demo 조회 미연결'); return o.services.missionOutcome.demo() !== 0 ? 1 : 0; },
+            localOwner: () => { live(); return o.playerState.battleOwner; }, editor: () => { live(); return o.globals.editor; },
+            dais: () => { live(); return o.state.runeState.readDaisType(); }, manaProcess: () => { live(); return o.cursorManaGlobals.processType; }, rangeProcess: () => { live(); return o.cursorRangeGlobals.processType; },
+            refresh, selectNotice: (sid, on) => { live(); marks.mark(sid, on); },
+            processNotice: (form, event, info, value) => { live(); const process = c.processes.fromForm(form); if (!process) throw new Error('선택의 실제 ProcessForm/Kernel 미일치'); process.notify(event, info, value); },
+            showMana: (parent, form) => { live(); if (form > 65535) throw new RangeError('선택 마나 Form WORD 오류'); createCursorManaProcess(c.processes, o.cursorMana, parent, form); },
+            showRange: (parent, form) => { live(); if (form > 65535) throw new RangeError('선택 사정거리 Form WORD 오류'); createCursorRangeProcess(c.processes, o.cursorRange, parent, form); },
+            rangeType: (type) => { live(); if (type >= c.types.length) throw new RangeError('선택 사정거리 TYPE 오류'); return selectionUsesRange(c.types[type]) ? 1 : 0; },
+            content: (parent) => { live(); return o.priests.carrier.findContained(parent, 1, 0, 0); },
+            altar: (parent) => { live(); const raw = c.pool.slot(parent), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength); return o.world.find(view.getFloat32(14, true), view.getFloat32(18, true), o.state.runeState.readAltarType()); },
+            moving: (parent) => { live(); return c.processes.findEvent(parent, 0x493) ? 1 : 0; },
+            movementPreview: (parent) => { live(); startSelectionContentPreview(c.pool, parent, o.objectState.loadingDepth, (sid, event, payload) => { live(); c.processes.addRegular(sid, event, payload); }, previewAssertion); },
+            sound: (x, y, name, flags) => { live(); if (!o.services.sound.playOnceAt) throw new Error('선택 실제 위치 소리 미연결'); o.services.sound.playOnceAt(spFloat(x), spFloat(y), o.soundNames.lookup(name), flags, 0); },
+        };
+        const selection = new RawUserSelection(c.pool, c.types, state, hooks), link = { selection };
+        Object.defineProperty(selection, SELECTION_LIFETIME, { value: link });
+        o.activeSelection = new WeakRef(link); return selection;
+    }
     // 원문의 설치 순서로 같은 실제 월드와 모든 모듈을 연결한다. 오류 시 앞선 효과를 되돌리지 않는다.
     load() {
         const o = this.#live();
