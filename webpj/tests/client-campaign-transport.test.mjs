@@ -211,15 +211,33 @@ test('Client 기본 등록 표: 설치된 version/policy/길이/관찰기/수신
     assert.equal(dispatch.registration(0x42).receive(1, null, new Uint8Array(12)), undefined);
     // 표 밖 종류는 건드리지 않는다.
     for (const type of [0x01, 0x20, 0x40]) assert.deepEqual([dispatch.registration(type).version, dispatch.registration(type).receive], [0, null]);
-    // 0x0b·0x32·0x7b·0x3f·0x5f·0x7d·미션 송신 관찰기 4종.
-    for (const [type, version, length] of [[0x0b, 1, 0xffff], [0x32, 1, 32], [0x7b, 1, 0xffff], [0x3f, 1, 0xffff], [0x5f, 1, 0xffff], [0x7d, 1, 0xffff]]) {
+    // 0x0b·0x32·0x7b·0x3f·0x30·0x7a·0x5f·0x7d·미션 송신 관찰기 4종.
+    for (const [type, version, length] of [[0x0b, 1, 0xffff], [0x32, 1, 32], [0x7b, 1, 0xffff], [0x3f, 1, 0xffff], [0x30, 1, 0xffff], [0x7a, 1, 0xffff], [0x5f, 1, 0xffff], [0x7d, 1, 0xffff]]) {
         assert.deepEqual([dispatch.registration(type).version, dispatch.registration(type).length], [version, length], `종류 0x${type.toString(16)}`);
     }
     for (const type of [0x2a, 0x2b, 0x67, 0x81]) assert.equal(typeof dispatch.registration(type).packetObserver, 'function');
     assert.equal(typeof dispatch.registration(0x32).observer, 'function');
     assert.equal(typeof dispatch.registration(0x32).receive, 'function');
-    // 아직 옮기지 않은 묶음은 설치하지 않는다(Native 고정 수신기·채팅·연결 종료·기술 목록·경로 자료·압축 Squid).
+    // 경로·압축 관찰기도 수신기는 설치하지 않는다. 나머지 Client 수신기 묶음은 후속이다.
     for (const type of [0x02, 0x30, 0x41, 0x69, 0x7a]) assert.equal(dispatch.registration(type).receive, null);
+});
+
+// 장기 기본 경로·압축 관찰기는 Session 등록을 반납한 뒤에도 같은 진단을 사용한다.
+test('Client 기본 등록 표: 경로·압축 관찰기의 수명과 진단', () => {
+    const scene = makeScene(), transport = makeClientCampaignTransport(scene.client, CompositeTransportRole.InternalMission, scene.world), dispatch = transport.dispatch;
+    const original = [dispatch.registration(0x30).packetObserver, dispatch.registration(0x7a).packetObserver];
+    const lease = transport.bindSession({ name: 'Session' });
+    dispatch.observePacket(0x30, () => {}); dispatch.observePacket(0x7a, () => {}); lease.detach();
+    assert.deepEqual([dispatch.registration(0x30).packetObserver, dispatch.registration(0x7a).packetObserver], original);
+    // 수신은 짧은 패킷을 읽지 않으며 송신은 같은 버퍼의 선언 길이를 변경한다.
+    for (const type of [0x30, 0x7a]) dispatch.registration(type).packetObserver(new Uint8Array(0), 0);
+    const path = packetOf(24, [[13, 7, 2]]), compressed = packetOf(16, [[8, 6, 1]]);
+    original[0](path, 1); original[1](compressed, 1);
+    assert.deepEqual([declared(path), declared(compressed)], [31, 15]);
+    const badPath = packetOf(24, [[13, 0xffff, 2]]), badCompressed = packetOf(16, [[8, 0xff, 1]]);
+    original[0](badPath, 1); original[1](badCompressed, 1);
+    assert.deepEqual(scene.diagnostics.slice(-2), [['nodeCount != (short)-1', '\\Ns\\O\\_p_packets.cpp', 0x716], ['dataLength != (unsigned char)-1', '\\Ns\\O\\_p_packets.cpp', 0xb83]]);
+    assert.deepEqual([declared(badPath), declared(badCompressed)], [23, 264]);
 });
 
 // 관찰기들이 장기 Client 진단(storage.assertDisplay)을 쓰고 송신에서만 길이를 확정한다.
