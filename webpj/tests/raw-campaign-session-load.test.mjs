@@ -40,7 +40,7 @@ function scene(overrides = {}, savedFort = fort) {
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
-        gameplayGlobals: overrides.gameplayGlobals, localStateGlobals: overrides.localStateGlobals, cameraScreenSize: overrides.cameraScreenSize,
+        gameplayGlobals: overrides.gameplayGlobals, localStateGlobals: overrides.localStateGlobals, cameraScreenSize: overrides.cameraScreenSize, developerQueue: overrides.developerQueue,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
         player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
         ai: { assertion: forbidden('AI 진단'), ...overrides.ai },
@@ -614,5 +614,19 @@ test('CampaignSession Tutorial 1: 개발자 HP 입력 오류 패킷', () => {
         packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
         assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
         assert.deepEqual(logs, [[29, 'bad command.\n']]);
+    } finally { s.dispose(); }
+});
+
+// 전투 패널 명령은 같은 GameAux 설정을 바꾸고 현재 입력 큐 장치를 호출한다.
+test('CampaignSession Tutorial 1: 개발자 패널 크기 패킷', () => {
+    const gameplay = new ClientGameplayGlobals(), queued = [], { s } = scene({ gameplayGlobals: gameplay, developerQueue: (...args) => queued.push(args) });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); const text = 'cr 2 4', packet = new Uint8Array(9 + text.length);
+        packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+        packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.deepEqual([...gameplay.gameAux().missionSettings()].slice(5), [2, 4]);
+        assert.deepEqual(queued, [[0x02000065, 2, 4]]);
     } finally { s.dispose(); }
 });

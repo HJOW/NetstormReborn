@@ -25,3 +25,22 @@ test('개발자 설정: 누락·범위·음수 입력', () => {
     assert.equal(run('fmt -1'), true); assert.equal(aux.missionSettings()[4], 0);
     assert.deepEqual(calls, [[29, 'bad command\n']]);
 });
+
+// 추적 설정은 원본 바이트를 넘기고 패널 크기는 제한 뒤 현재 명령을 큐에 넣는다.
+test('개발자 설정: tracelevel과 전투 패널 크기', () => {
+    const aux = new GameAuxState(), calls = [], services = {
+        install: { setConfig: (name, value) => calls.push(['config', name, [...value]]) },
+        developerQueue: (...args) => calls.push(['queue', ...args]),
+    };
+    assert.equal(executeDeveloperSettings('stl \xff', aux, null, services), true);
+    assert.deepEqual(calls.shift(), ['config', 'tracelevel', [255, 0]]);
+    aux.developerCombatResizeCommand = 0x02000066;
+    executeDeveloperSettings('cr 5 4', aux, null, services);
+    assert.deepEqual([...aux.missionSettings()].slice(5), [3, 4]); assert.equal(aux.missionSettings()[0], 0);
+    assert.deepEqual(calls.shift(), ['queue', 0x02000066, 3, 4]);
+    executeDeveloperSettings('cr 1', aux, null, services);
+    assert.deepEqual([...aux.missionSettings()].slice(5), [3, 10]);
+    assert.throws(() => executeDeveloperSettings('cr 2 2', aux, null), /입력 큐 미연결/);
+    assert.deepEqual([...aux.missionSettings()].slice(5), [2, 2]);
+    assert.throws(() => executeDeveloperSettings('stl', aux, null, services), /미정 문자열/);
+});

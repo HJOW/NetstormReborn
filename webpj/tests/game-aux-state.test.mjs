@@ -202,7 +202,7 @@ test('GameAuxState: 초기값이 원본10.78 PE 의 .data/BSS 와 같다', (t) =
     }
     assert.deepEqual(mismatches, []);
     // 필드85개(double4개의8바이트 전체 포함)와 장식4칸이다.
-    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [88, 4]);
+    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [89, 4]);
 });
 
 // TYPE 번호 칸: 웹 타입 표에서 같은 번호의 이름이 표의 대응 이름과 같다(자산 70~, 프로세스 10~, 내장 Form 1·2·3·6). 프로세스 상한 63 은 마지막 프로세스(62)+1 이다.

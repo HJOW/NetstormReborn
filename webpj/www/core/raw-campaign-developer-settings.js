@@ -1,5 +1,5 @@
 // 31h 개발자 명령 중 현재 미션 설정과 즉시 건설 전역을 조작한다(원본 ExecuteDeveloperCommand).
-// 사용: executeDeveloperSettings(text, gameAux, trace) → 처리한 명령이면 true, 다른 명령이면 false.
+// 사용: executeDeveloperSettings(text, gameAux, trace, services) → 처리한 명령이면 true, 다른 명령이면 false.
 
 // 첫 토큰 뒤의 연속 %d 입력을 차례로 읽는다. 정수 범위 밖의 미정 변환은 명시 오류로 둔다.
 export function readDeveloperIntegers(rest, count) {
@@ -27,7 +27,7 @@ export function parseDeveloperCommand(text) {
 }
 
 // 같은 GameAux의 일곱 설정과 quick 전역을 원본 분기 순서로 변경한다. (2026-11-18 WB04-E740)
-export function executeDeveloperSettings(text, gameAux, trace) {
+export function executeDeveloperSettings(text, gameAux, trace, services = {}) {
     const { key, rest } = parseDeveloperCommand(text), values = gameAux.missionSettings();
     // 원본 로그를 선택한 분기에서만 실제 Client 추적 장치로 전달한다.
     const log = (message) => { if (typeof trace !== 'function') throw new Error('개발자 명령의 실제 추적 장치 미연결'); trace(29, message); };
@@ -48,5 +48,19 @@ export function executeDeveloperSettings(text, gameAux, trace) {
     if (key === 'quickvortex' || key === 'qv') { gameAux.quickVortex = Number(required() !== 0); return true; }
     if (key === 'quickbuild' || key === 'qb') { gameAux.quickBuild = Number((firstDeveloperInteger(rest) ?? 1) !== 0); return true; }
     if (key === 'roundtotile' || key === 'rtt') return true;
+    if (key === 'settracelevel' || key === 'stl') {
+        const token = /^[\t\n\v\f\r ]*([^\t\n\v\f\r ]+)/.exec(rest);
+        if (!token) throw new TypeError('개발자 tracelevel의 원문 미정 문자열 입력');
+        if (typeof services.install?.setConfig !== 'function') throw new Error('개발자 tracelevel 실제 Config 미연결');
+        const value = token[1].slice(0, 255);
+        services.install.setConfig('tracelevel', Uint8Array.from(`${value}\0`, (letter) => letter.charCodeAt(0))); return true;
+    }
+    if (key === 'combatgumpcolsrows' || key === 'cr') {
+        const parsed = readDeveloperIntegers(rest, 2), columns = parsed.length === 2 ? parsed[0] : 3, rows = parsed.length === 2 ? parsed[1] : 10;
+        values[5] = Math.max(1, Math.min(3, columns)); values[6] = Math.max(1, Math.min(16, rows));
+        if (values[5] * values[6] > 8) values[0] = 0;
+        if (typeof services.developerQueue !== 'function') throw new Error('개발자 cr의 실제 입력 큐 미연결');
+        services.developerQueue(gameAux.developerCombatResizeCommand, values[5], values[6]); return true;
+    }
     return false;
 }
