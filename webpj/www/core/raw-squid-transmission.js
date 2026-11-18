@@ -2,7 +2,7 @@
 // 사용: const state = createSquidTransmissionState(); const wire = new RawSquidTransmission(pool, state, { type, defaultType, maxHp, broadcast, trace, assertion, connected, send, processPacket, broadcastMutable, sendMutable }); wire.pop(sid, flags); wire.sendTo(sid, target, writerArgument);
 //   pool = 현재 슬롯을 조회하는 SID 풀(10.78 전용), state = 월드 대여/반납에서 초기화하지 않는 공통 버퍼/헤더/압축 전역, hooks = 직렬화에 필요한 현재 조회와 송신 장치(선택한 장치는 도달한 위치에서만 요구하고 없으면 거부).
 // 흐름(Transmit): 클라이언트 SID(5..14999) 진단(임시 허용 관문이 꺼져 있을 때) → 선택자 -2 이면 현재 +58(공통 삭제), 아니면 현재 +54(공통 35BYTE 갱신/압축/빈 writer/두 Form/ProcessForm) → 반환 크기가 2048 이상이면 진단 → 양수면 대상 -1 은 방송, 나머지는 연결 관문 뒤 대상 송신.
-// 기준선 뒤 cpppj 변경(1cd2b05a5·b8cadde14·be567d46b, 3.6절 ②): 대상 지정 송신(SendTo)·ProcessForm writer·공통 삭제 선택자·mutable 방송/송신·같은 owner 모드를 반영했다. 압축 수신 복호기(RawSquidCompressedReceive)·월드 동기화(RawPeerWorldSync)는 대응표 밖 신규 파일이라 재기준선 때 다룬다.
+// 기준선 뒤 cpppj 변경(1cd2b05a5·b8cadde14·be567d46b, 3.6절 ②): 대상 지정 송신(SendTo)·ProcessForm writer·공통 삭제 선택자·mutable 방송/송신·같은 owner 모드를 반영했다. 압축 수신과 월드 동기화 본체는 별도 모듈이다.
 // CD(10.72)는 옮기지 않았다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-11 WB04-E313: 4-C RawSquidTransmission 이식)
 import { RawFormPacket, createFormDeletionStamp, createFormPacketHeaders } from './raw-form-packet.js';
 import { supportsConstructedVtable } from './squid-constructors.js';
