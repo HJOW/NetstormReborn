@@ -4,14 +4,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E859)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E860)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E859는 Client 임시 문자열의 실제 고리·예약을 이식했다. 다음은 정수 서식과 실제 앱 메뉴·프레임 루프·스커미시 결과·저장 장치 및 나머지 공개 조회다. [E859](docs/webpj-client-static-strings-20261119.md) |
-| 전체 회귀 | E859 Node v26.13.0과 v22.23.3 전체 각 6,376건 통과(실패·취소·건너뜀 0). v22 전체 검사 뒤 v26 회귀 0/8회. fixture 824개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
+| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E860은 임시 고리 정수 서식·별칭을 Windows CRT와 대조했다. 다음은 실제 Client 고리 수명과 앱 메뉴·프레임 루프·스커미시 결과·저장 장치 및 나머지 공개 조회다. [E860](docs/webpj-client-static-integer-20261119.md) |
+| 전체 회귀 | E860 Node v26.13.0 전체 6,378건 통과(실패·취소·건너뜀 0). E859 Node v22.23.3 전체 6,376건 통과 뒤 v26 회귀 1/8회. fixture 824개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
@@ -152,7 +152,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 **4D-7 ClientMain·Client 전역**
 
 - [ ] **4D-7a ClientMain 단독 조립** — 장기 Template/Storage/Session과 Client 전역, RawSurfaceStorage 장치(기준선 ClientMain 442..533), ConfigInterface의 미션 연결. Native는 4D-8과 함께 적용한다.
-- [ ] **4D-7b 메인 루프 단독 단계** — E852에서 로그인 타이머 프레임 호출, E853에서 연결 활동 패킷의 실제 전송·수신을 공개하고 E854에서 Client 연결 감시 뒤 타이머 순서를 실제 Session에 연결했다. E859에서 Client 임시 문자열 고리와 예약을 이식했다. 실제 앱 프레임, 전투 자원 프레임·재접속 저장의 단독 도달, ClientDiagnostics·고리 정수 서식/수명과 console 로깅 경계를 확인한다. [E852](docs/webpj-session-login-frame-timer-20261119.md) · [E853](docs/webpj-session-heartbeat-20261119.md) · [E854](docs/webpj-client-connection-health-20261119.md) · [E859](docs/webpj-client-static-strings-20261119.md)
+- [ ] **4D-7b 메인 루프 단독 단계** — E852에서 로그인 타이머 프레임 호출, E853에서 연결 활동 패킷의 실제 전송·수신을 공개하고 E854에서 Client 연결 감시 뒤 타이머 순서를 실제 Session에 연결했다. E859~E860에서 Client 임시 문자열 고리·정수 서식과 별칭을 이식했다. 실제 앱 프레임, 전투 자원 프레임·재접속 저장의 단독 도달, ClientDiagnostics·고리의 실제 Client 수명과 console 로깅 경계를 확인한다. [E852](docs/webpj-session-login-frame-timer-20261119.md) · [E853](docs/webpj-session-heartbeat-20261119.md) · [E854](docs/webpj-client-connection-health-20261119.md) · [E859](docs/webpj-client-static-strings-20261119.md) · [E860](docs/webpj-client-static-integer-20261119.md)
 - [ ] **4D-7c 메타 단독 앞단** — ClientMetaPacketReceivers·ClientChallengeGlobals·NativeMetaConnectedState, MetaMenuType/NotifyPlayerResults(4620..4642)의 도달을 판정한다. ClientMetaSpriteRefresh·NativeMetaSpriteRefresh는 5-C와 확인한다.
 - [ ] **4D-7d Client 렌더러 프레임 전역** — 채팅·HTML·점 명령 전역은 이식했다. ClientRendererFrameGlobals의 실제 owner를 5-A에서 연결한다. [E496](docs/webpj-renderer-cloud-queue-20261115.md)
 
