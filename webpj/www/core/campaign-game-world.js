@@ -244,6 +244,20 @@ export class CampaignGameWorld {
             this.#input.carrier.highlight(state.selected, { x: point[0], y: point[1] }, 0);
         }
     }
+    // 이동 모드의 Shift 클릭은 실제 다중 선택 처리기에 전달한다.
+    extendSelection(sid, force) {
+        this.#live(); if (!this.#input) throw new Error('다중 선택의 실제 월드/입력 없음');
+        this.#selection.extendSelection(sid, force); this.#changed = true;
+    }
+    // 클릭 좌표를 역투영·절삭하고 명령 큐, 다중 선택, 현재 기본 선택 순서로 이동한다.
+    moveSelected(x, y, destination) {
+        this.#live(); if (!this.#input) throw new Error('실제 클릭 명령 장치 미설치');
+        const point = RawCursorPosition.truncatePoint(this.#project(x, y));
+        if (destination) destination(point[0] | 0, point[1] | 0);
+        this.#selection.moveMultiple(floatBits(point[0]), floatBits(point[1]), (sid, px, py) => this.#input.carrier.commit(sid, { x: bitsFloat(px), y: bitsFloat(py) }));
+        const selected = this.#gameplay.selection.selected;
+        this.#input.carrier.commit(selected, { x: point[0], y: point[1] }); this.#changed = true; return selected !== 0;
+    }
     // 미니맵 좌표의 이동 명령 뒤 같은 강조를 해제한다.
     moveFromMinimap(x, y) {
         this.#live(); if (!this.#input) throw new Error('실제 미니맵 선택 장치 없음');

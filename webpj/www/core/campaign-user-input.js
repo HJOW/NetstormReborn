@@ -1,5 +1,5 @@
 // 실제 캠페인 World의 현재 마우스 폴링과 커서 옵션을 처리한다.
-// 사용: new CampaignUserInput(world, config, services).updateCursor({ code, x, y }) / event(사건). 좌클릭과 브라우저 장치 연결은 후속이다.
+// 사용: new CampaignUserInput(world, config, services).updateCursor({ code, x, y }) / event(사건). 일반 좌클릭과 브라우저 장치 연결은 후속이다.
 import { InputCode } from './input-queue.js';
 import { queueProductionShortcut, PRODUCTION_BRIDGE_COMMAND, PRODUCTION_REPEAT_COMMAND } from './production-shortcuts.js';
 import { dispatchSelectionKeyInput } from './client-input-commands.js';
@@ -21,7 +21,7 @@ export class CampaignUserInput {
     #paused() { if (typeof this.#services.paused !== 'function') throw new Error('사용자 입력의 현재 정지 장치 미연결'); return this.#services.paused(); }
     // 생산·선택 명령은 같은 40칸 입력 큐에 signed 인자를 보존해 예약한다.
     #queue(command, first, second) { const queue = this.#services.queue; if (!queue || typeof queue.pushCommand !== 'function') throw new Error('사용자 입력의 실제 명령 큐 미연결'); queue.pushCommand(command, first | 0, second | 0); }
-    // 정지·활성 커서·생산·선택 키와 우클릭을 원본 순서로 처리한다. 좌클릭은 후속까지 명시 거부한다.
+    // 정지·활성 커서·생산·선택 키와 마우스를 원본 순서로 처리한다. 나머지 좌클릭은 명시 거부한다.
     event(event) {
         if ((event.code & InputCode.release) || this.#paused()) return null;
         this.readCursorOptions();
@@ -45,7 +45,16 @@ export class CampaignUserInput {
             if (!session.core().ownerMode.challenge || !session.playerKnown()) this.#world.resetSelection();
             return null;
         }
-        if (mouse === InputCode.leftButton) throw new Error('사용자 입력의 좌클릭 사건 분배 미연결');
+        if (mouse === InputCode.leftButton) {
+            if (this.#world.inputMode() === 2 || this.#world.inputMode() === 5) {
+                const force = (event.code & InputCode.control) && this.#world.specialSelection() ? 1 : 0;
+                const picked = this.#world.pick(event.x, event.y, force);
+                if (event.code & InputCode.shift) this.#world.extendSelection(picked, force);
+                else this.#world.moveSelected(event.x, event.y, (x, y) => this.#queue(0x02000044, x, y));
+                return null;
+            }
+            throw new Error('사용자 입력의 좌클릭 사건 분배 미연결');
+        }
         return null;
     }
     // 현재 화면점을 먼저 보관하고 창 밖·잠금·활성 커서 순서로 원본 폴링을 분배한다.

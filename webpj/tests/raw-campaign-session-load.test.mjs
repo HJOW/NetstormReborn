@@ -761,7 +761,13 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
         } finally { cursor.handleInput = handleInput; }
         input.event({ code: 0x71, x: 0, y: 0 }); assert.deepEqual(keyQueue.pop(false), { code: 0x020000f4, x: 0, y: 0 });
         input.event({ code: 0x68, x: 0, y: 0 }); assert.deepEqual(keyQueue.pop(false), { code: 0x020000ae, x: 0, y: 0 });
-        assert.throws(() => input.event({ code: InputCode.leftButton, x: 0, y: 0 }), /좌클릭 사건 분배 미연결/);
+        // Shift 빈 지점은 현재 선택을 유지하고 일반 클릭은 큐 통지 뒤 실제 운반 패킷을 보낸다.
+        input.event({ code: (InputCode.leftButton | InputCode.shift) >>> 0, x: -1, y: -1 }); assert.equal(world.selected(), priest.sid);
+        const beforeClick = session.localConnectionPackets();
+        input.event({ code: InputCode.leftButton, ...currentMouse });
+        assert.deepEqual(keyQueue.pop(false), { code: 0x02000044, x: 90, y: 108 });
+        session.pumpLocalConnection(); assert.equal(session.localConnectionPackets().length, beforeClick.length + 1); assert.equal(session.localConnectionPackets().at(-1), 0x40);
+        assert.equal(world.selected(), 0); world.select(priest.sid);
         assert.equal(input.event({ code: InputCode.rightButton, x: 0, y: 0 }), null); assert.equal(world.selected(), 0); assert.equal(world.inputMode(), 0);
         assert.equal(input.event({ code: InputCode.rightButton, x: screen[0] - 16, y: screen[1] - 11 }), priest.sid); assert.equal(world.selected(), 0);
         assert.equal(input.event({ code: InputCode.rightButton, x: -1, y: -1 }), null); world.select(priest.sid); assert.equal(world.selected(), priest.sid);
