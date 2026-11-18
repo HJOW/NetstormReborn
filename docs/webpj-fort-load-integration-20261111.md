@@ -1,6 +1,6 @@
 # webpj 4-B 적재 통합 시험 — WB04-E304 (2026-11-11, 4-B 마감)
 
-3.1절 4-B 의 마지막 항목 **적재 통합 시험**이다. 코드 모듈은 더하지 않고, 4-B 에서 옮긴 부품(실제 풀·해시·Graph 를 가진 `RawSurfaceWorld`, `RawIslandBuilder`/`RawIslandRuntime`, 정상 지형 `RawNormalTerrainWorldBinding`, Fort 적재 부모 `RawFortWorldLoad`와 연결 훅)을 **실제 Tutorial 1(`\d\thewarbegins.fort`)** 로 함께 돌려 결과를 독립 기대값과 대조한다. 게임·브라우저·cpppj 실행은 하지 않았다.
+3.1절 4-B 의 마지막 항목 **적재 통합 시험**이다. 코드 모듈은 더하지 않고, 4-B 에서 옮긴 부품(실제 풀·해시·Graph 를 가진 `RawSurfaceWorld`, `RawIslandBuilder`/`RawIslandRuntime`, 정상 지형 `RawNormalTerrainWorldBinding`, Fort 적재 부모 `RawFortWorldLoad`와 연결 훅)을 **실제 캠페인 1-1 TheWarBegins(`\d\thewarbegins.fort`)** 로 함께 돌려 결과를 독립 기대값과 대조한다. 게임·브라우저·cpppj 실행은 하지 않았다.
 
 ## 1. 검사 (`tests/fort-load-integration.test.mjs` 1건)
 
@@ -16,5 +16,7 @@
 - **cpppj `session-dump` 와의 숫자 대조**: 기준선 오라클 실행 파일(`1f00a25a`)에는 session-dump 가 없고(3.5절 1번), 기대값 표는 cpppj 가 아니라 독립 Python 재현이다. cpppj 현재 빌드의 `--ui-script` session-dump 를 쓰려면 재기준선·시나리오 형식(4-D)이 필요하다.
 
 ## 3. 4-B 마감
+
+**E752 정정:** 이 시험의 입력은 Tutorial1이 아니라 TheWarBegins다. Tutorial1은 BridgeTheGap을 사용하므로 해당 지형·섬의 독립 대조는 재검증이 필요하다.
 
 4-B 는 35/35 로 마감한다(E274~E304). 체크 목록은 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261111-4b-through-wb04-e304)으로 옮겼다. 다음 단계는 4-C(패킷·로그인·내부 미션 전송)이다.

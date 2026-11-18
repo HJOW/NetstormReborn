@@ -1,6 +1,6 @@
 # WB04-E751 미션 로그인 실제 공유 상태 통합 검사
 
-E750에서 열린 Tutorial 1 내부 로그인 경로를 cpppj의 세 통합 검사와 대조했다. 원본 Fort와 실제 Session·내부 전송을 쓰며 브라우저 앱이나 실제 게임 창은 실행하지 않았다.
+E750에서 열린 TheWarBegins(캠페인 1-1) 내부 로그인 경로를 cpppj의 세 통합 검사와 대조했다. 원본 Fort와 실제 Session·내부 전송을 쓰며 브라우저 앱이나 실제 게임 창은 실행하지 않았다.
 
 - `CampaignSession_LocalLoginActualHandshakeAndWorldLoad`: phase 8→9→10→13→14, Player subscriber 1과 flags `0x43`, 채팅·알림·갱신, 12개 수신 패킷의 순서와 다음 Pump에서 추가 수신이 없음을 확인했다. `67h` 뒤 옵션 22개, 에너지 반경 제곱 900 및 TYPE 122 비용 3000도 같은 실제 소유자에서 대조했다.
 - `CampaignSession_ActualLoginUsesClientCurrentCoreSlot`: 외부 Client의 Subscriber·Player·CoreData를 같은 Session에 빌려 실제 로그인 뒤 Core 현재 뷰가 Player 1의 `+0x6c`를 가리키고 active가 0임을 확인했다.
