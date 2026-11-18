@@ -254,4 +254,55 @@ public sealed class HostSessionFactoryTests
         Assert.Equal(0.05, session.ProcessTime.Value);
         Assert.Equal(expected, BinaryPrimitives.ReadInt32LittleEndian(session.Pool.Slot(sid)[36..]));
     }
+
+    /// <summary>요새 적재 SetState는 장기 레벨 상위 3비트에 쓰고 기본 표시를 갱신한다.</summary>
+    /// <remarks>2026-11-19 0.630에서 R4-2 공장 초기 레벨용으로 추가했다. 근거: cpppj RawCampaignAssetBindings.cpp 190행의 SetState다.</remarks>
+    [Fact]
+    public void FortSetStateWritesLevelBits()
+    {
+        (HostSession session, _) = BuildFactoryScene();
+        int sid = session.Pool.Allocate(SidAllocation.Client);
+        Span<byte> raw = session.Pool.AllocatedBytes(sid);
+        raw.Fill(0);
+        Put(raw, 0, 0x00509148u);
+        raw[10] = 85;
+        raw[11] = 0x1F;
+        session.SetFortObjectLevel(sid, 2);
+        Assert.Equal(2u, session.FortLevel.Get(sid));
+        Assert.Equal(unchecked((byte)((0x1F & 31u) | (2u << 5))), session.Pool.Slot(sid)[11]);
+        session.SetFortObjectLevel(sid, 0);
+        Assert.Equal(0u, session.FortLevel.Get(sid));
+    }
+
+    /// <summary>장치가 없으면 요새 레벨 저장이 명시 예외로 멈춘다.</summary>
+    [Fact]
+    public void FortSetStateRejectsUnbuilt()
+    {
+        var session = new HostSession(new Kernel(), new GameRandom(1u), new CrtRandom());
+        Assert.Throws<InvalidOperationException>(() => session.FortLevel);
+        Assert.Throws<InvalidOperationException>(() => session.SetFortObjectLevel(1, 0));
+    }
+
+    /// <summary>레벨을 올리면 공장 정기 사건2가 해당 글자 구간에서 프레임을 고른다.</summary>
+    /// <remarks>2026-11-19 0.630에서 추가했다. 앞 3건 정렬(cpp 11,7,10) 중 레벨 경로를 닫는다.</remarks>
+    [Fact]
+    public void FactoryRegularEvent2UsesStoredLevel()
+    {
+        (HostSession session, _) = BuildFactoryScene();
+        session.TerrainBookkeeping.Suppressed = true;
+        int sid = PrepareFactorySid(session);
+        session.SetFortObjectLevel(sid, 2);
+        int first = session.WorldFrames[85].Run((byte)'C').First;
+        int size = session.WorldFrames[85].Run((byte)'C').Count;
+        Assert.True(size > 0, "공장 레벨2의 실제 프레임 구간이 비었다");
+        uint before = session.Game.State();
+        RegularHandler? handler = session.PlayerProcesses.Regular();
+        Assert.NotNull(handler);
+        float result = handler(sid, 2, 0, 8.0f);
+        Assert.Equal(8.0f, result);
+        var probe = new GameRandom(before);
+        uint offset = probe.Next(unchecked((uint)size));
+        int expected = unchecked((int)unchecked((uint)first + offset));
+        Assert.Equal(expected, BinaryPrimitives.ReadInt32LittleEndian(session.Pool.Slot(sid)[36..]));
+    }
 }

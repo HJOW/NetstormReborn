@@ -1220,6 +1220,10 @@ public sealed partial class HostSession
     /// <remarks>2026-11-12 0.467에서 추가했다. 원문 진단 복귀 뒤에도 계속 진행하므로 기록만 남긴다.</remarks>
     private readonly List<string> _fortAttachDiagnostics = [];
 
+    /// <summary>요새 객체 적재의 공장 레벨 저장 몸체다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.630에서 R4-2 공장 초기 레벨용으로 추가했다. 요새 적재 SetState와 공장 업그레이드 SetState가 같은 장기 레벨 몸체를 공유한다. 근거: cpppj RawCampaignAssetBindings.cpp 52·190행의 level 조립과 RawCampaignWorldRuntime.cpp 44행의 setState 결선이다.</remarks>
+    private RawSquidLevel? _fortLevel;
+
     /// <summary>요새 객체 적재의 세션 소유 공장이다. BuildFortObjectDevices로 연결하기 전에는 null이다.</summary>
     /// <remarks>2026-11-12 0.467에서 요새 객체 live 적재용으로 추가했다. 지형 공장과 같은 풀을 쓰며 서버 할당(0)도 처리한다.</remarks>
     private RawSquidFactory? _fortFactory;
@@ -1276,7 +1280,8 @@ public sealed partial class HostSession
     /// <param name="factory">빌릴 외부 공장. null이면 세션 전용으로 만든다. 넘기면 같은 풀 소속이어야 하며 소유자의 바인딩 그대로 쓴다.</param>
     /// <param name="building">빌릴 외부 건물 공간. null이면 세션 전용으로 만든다. 넘기면 같은 풀·해시 소속이어야 한다.</param>
     /// <remarks>2026-11-12 0.467에서 요새 객체 live 적재용으로 추가했다. 근거: cpppj RawCampaignWorldRuntime.cpp 43~53행(객체 갈고리+MakeFortObjectLoadHooks+RawFortObjectLoad)의 세션 결선이다.
-    /// SetState·FinishOwner는 기록만 하며(R6 공장 후처리·거주 배치에서 잇는다), Destroy·VirtualCount·내용물 부착은 미션 적재(Fort=false)에서 도달하지 않으므로 명시 경계로 둔다.
+    /// FinishOwner는 기록만 하며(R6 거주 배치에서 잇는다), Destroy·VirtualCount·내용물 부착은 미션 적재(Fort=false)에서 도달하지 않으므로 명시 경계로 둔다.
+    /// 2026-11-19 0.630에서 SetState를 장기 레벨 몸체에 이었다. 근거: cpppj RawCampaignAssetBindings.cpp 190행이다.
     /// 2026-11-12 0.475에서 소유자 지정 몸체를 Player 월드 갈고리와 공유하려고 `_playerOwner` 필드에 보관한다.
     /// 0.597에서 저장소 공장 전환용으로 외부 공장 빌림을 추가했다.
     /// 0.599에서 저장소 건물 공간 전환용으로 외부 건물 공간 빌림을 추가했다.</remarks>
@@ -1330,6 +1335,8 @@ public sealed partial class HostSession
         _fortPop = new RawPop(Pool, _terrainHash, _terrainSpots);
         _fortPop.SetBuildingSide(_fortBuilding);
         _fortState = new FortObjectLoadState { Mission = true, ChaffMode = true };
+        _fortLevel = new RawSquidLevel(Pool, types, SquidLevelDiagnostics.MakeSquidLevelAssertion(Pool.Edition,
+            (expression, file, line) => throw new InvalidOperationException($"요새 레벨 원본 진단: {expression} {file}:{line}")));
         _playerOwner = new SquidOwner(Pool, types, TerrainBookkeeping, OwnerMode);
         // 실제 World와 같은 TYPE를 빌리고 선택된 원문 진단을 현재 호스트 오류 기록으로 전달한다.
         _playerOwner.BindDiagnostics(new SquidOwnerDiagnostics
@@ -1345,7 +1352,9 @@ public sealed partial class HostSession
         var hooks = new FortObjectLoadHooks
         {
             NotifySurface = sid => _fortBuilding.NotifySurface(sid),
-            SetState = (_, _) => { },
+            // 요새 파일의 공장 초기 레벨을 같은 장기 레벨 몸체에 저장하고 기본 표시를 갱신한다.
+            // 2026-11-19 0.630에서 R4-2 공장 초기 레벨용으로 이었다. 근거: cpppj RawCampaignAssetBindings.cpp 190행의 SetState와 RawCampaignWorldRuntime.cpp 44행의 setState 결선이다.
+            SetState = (sid, value) => SetFortObjectLevel(sid, value),
             // 요새 적재의 소유자 지정은 신전을 만나면 가상 Owner로 분배한다. 도장·사제 경로는 공통 경로를 쓴다.
             // 2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 바꿨다. 근거: cpppj RawCampaignSession.cpp 3257행의 setOwner 조립이다.
             SetOwner = SetFortObjectOwner,
@@ -1394,6 +1403,23 @@ public sealed partial class HostSession
         RawFortObjectLoad.MakeFortObjectLoadHooks(Pool, _fortFactory, _fortHp, _fortContained, hooks);
         _fortLoader = new RawFortObjectLoad(Pool, _terrainHash, types, frames, Game, _fortState, hooks);
     }
+
+    /// <summary>요새 파일의 공장 초기 레벨을 저장하고 기본 표시를 갱신한다.</summary>
+    /// <param name="sid">레벨을 쓸 슬롯 번호다.</param>
+    /// <param name="value">쓸 레벨 값이다. 0~7이어야 한다.</param>
+    /// <remarks>2026-11-19 0.630에서 R4-2 공장 초기 레벨용으로 추가했다. 근거: cpppj RawCampaignAssetBindings.cpp 190행의 SetState(공장 가상84 저장 뒤 가상88 표시 갱신)다. 공장 업그레이드·정기 경로와 같은 몸체를 공유한다.</remarks>
+    public void SetFortObjectLevel(int sid, uint value)
+    {
+        RawSquidLevel level = _fortLevel ?? throw new InvalidOperationException("요새 레벨 몸체 미연결");
+        SquidDisplay display = _terrainDisplay ?? throw new InvalidOperationException("요새 레벨 표시 미연결");
+        level.Set(sid, value);
+        display.Update(Pool.Slot(sid));
+    }
+
+    /// <summary>요새 적재·공장 업그레이드가 공유하는 장기 레벨 몸체다.</summary>
+    /// <returns>연결 뒤 장기 레벨 몸체다.</returns>
+    /// <remarks>2026-11-19 0.630에서 추가했다. L1에서 적재 레벨 저장 경로를 대조할 때 쓴다.</remarks>
+    public RawSquidLevel FortLevel => _fortLevel ?? throw new InvalidOperationException("요새 레벨 몸체 미연결");
 
     /// <summary>적재한 FortTemplate의 객체를 실제 로더로 풀에 만든다. 장치 연결 전에 호출하면 거부한다.</summary>
     /// <param name="fort">객체를 읽을 FortTemplate다.</param>
