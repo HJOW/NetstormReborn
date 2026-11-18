@@ -627,6 +627,33 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
 });
 
+// 일반 종료는 Player 링크와 Deck을 Process 소멸 전에 정리한다.
+test('CampaignSession TheWarBegins: 일반 종료의 Player 링크와 Process 순서', () => {
+    const players = new ClientPlayerRecords(), production = { allocationBytes: (bytes) => bytes.fill(0) };
+    const { s } = scene({ playerRecords: players, production }), core = s.core(), rows = players.records();
+    const data = new DataView(rows.buffer, rows.byteOffset, rows.byteLength), observed = [];
+    try {
+        s.production().contains(71); const owner = s.localOwner(), base = owner * 180, token = data.getUint32(base + 0x68, true);
+        assert.ok(token); assert.equal(players.productionDeckMemory().has(token), true);
+        data.setUint32(base + 0x9c, 1234, true); data.setUint32(base + 8, 7, true);
+        const parent = core.factory.create(6, 2), regular = core.processes.addRegular(parent, 6700, 0.25); assert.ok(regular);
+        regular.destroy = () => observed.push([data.getUint32(base + 0x9c, true), data.getUint32(base + 8, true), data.getUint32(base + 0x68, true), players.productionDeckMemory().has(token)]);
+        s.dispose(); assert.deepEqual(observed, [[0, 0, 0, false]]);
+        assert.equal(core.kernel.size, 0); assert.equal(players.productionDeckMemory().has(token), false);
+    } finally { s.dispose(); }
+    const badPlayers = new ClientPlayerRecords(), gameplay = new ClientGameplayGlobals(), bad = scene({ playerRecords: badPlayers, gameplayGlobals: gameplay });
+    const badRows = badPlayers.records(), badData = new DataView(badRows.buffer, badRows.byteOffset, badRows.byteLength), errors = [];
+    const originalError = console.error; let destroyed = false;
+    try {
+        badData.setUint32(0x9c, 3, true); badData.setUint32(8, 4, true); badData.setUint32(0x68, 0xdead, true);
+        const badCore = bad.s.core(), parent = badCore.factory.create(6, 2), regular = badCore.processes.addRegular(parent, 6700, 0.25);
+        regular.destroy = () => { destroyed = true; }; console.error = (...args) => errors.push(args);
+        bad.s.dispose(); assert.equal(destroyed, true); assert.equal(gameplay.borrowed(), false);
+        assert.equal(badData.getUint32(0x9c, true), 0); assert.equal(badData.getUint32(8, true), 0); assert.equal(badData.getUint32(0x68, true), 0xdead);
+        assert.equal(errors.length, 1); assert.match(errors[0][0], /Player 링크 정리 실패/);
+    } finally { console.error = originalError; bad.s.dispose(); }
+});
+
 // 모든 State 자식 증빙을 반납한 경우에만 공유 Client 상태를 보존한다.
 test('CampaignSession TheWarBegins: State 자식 증빙과 공유 상태 반납', () => {
     const prepared = new ClientGameplayGlobals(), incomplete = new ClientGameplayGlobals();

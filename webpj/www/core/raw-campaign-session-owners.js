@@ -31,6 +31,7 @@ import { RawCampaignSessionGunViews, createCampaignCursorTables } from './raw-ca
 import { RawCampaignSessionHits } from './raw-campaign-session-hits.js';
 import { RawCampaignSessionGuns } from './raw-campaign-session-guns.js';
 import { RawCampaignSessionParticles, createCampaignParticleTables } from './raw-campaign-session-particles.js';
+import { cleanupPlayerLinks } from './raw-player-links-cleanup.js';
 import { RawCampaignSessionTeleport } from './raw-campaign-session-teleport.js';
 import { RawCampaignSessionCombat, copyCampaignArcherEffects } from './raw-campaign-session-combat.js';
 import { writeCampaignTerritory } from './raw-campaign-territory-write.js';
@@ -1215,10 +1216,22 @@ export class RawCampaignSessionOwners {
     // 같은 boolean 상자에 쓰고 복사본을 동기화하지 않는다.
     set contentSavedGame(value) { this.localStateGlobals.savedGame().value = value; }
 
+    // 현재 Player 링크를 원본 순서로 정리하며 선택된 Deck은 같은 실제 소유자에 반납한다.
+    releasePlayerLinks() {
+        if (this.productionDeck?.playerLinksReturnedForState()) throw new Error('Native 반납된 Session Player 링크의 반복 정리 금지');
+        cleanupPlayerLinks({ players: () => this.playerRecords.records(), release: (token) => {
+            if (!this.productionDeck) throw new Error('실제 Session Player 링크의 Deck 소유자 미연결');
+            this.productionDeck.release(token);
+        } });
+    }
+
     // C++ 기반 멤버의 역순 반납이다. 전체 Session 부모는 먼저 자기 모듈/현재 Runtime 공개를 닫아야 한다.
     dispose() {
         if (this.#disposed) return; this.#disposed = true;
         this.aiModules?.releaseBrains();
+        // 실제 AI 정리 뒤, Host와 모듈보다 먼저 Player 링크를 반납한다. 실패해도 나머지 종료는 계속한다.
+        try { if (this.#playersReady && (!this.productionDeck || !this.productionDeck.playerLinksReturnedForState())) this.releasePlayerLinks(); }
+        catch (error) { console.error('실제 Session Player 링크 정리 실패:', error); }
         try {
             if (this.priestModules || this.playerModules || this.typeModules || this.gunViewModules || this.hitModules || this.gunModules || this.particleModules) { this.world?.drainOwnedProcessesForShutdown(); this.aiProductionModules?.dispose(); this.aiWorldModules?.dispose(); this.aiModules?.dispose(); this.ritualModules?.dispose(); this.panicModules?.dispose(); this.motionRuntimeModules?.dispose(); this.carrierRoutingModules?.dispose(); this.motionModules?.dispose(); this.arrivalModules?.dispose(); this.buildingModules?.dispose(); this.installModules?.dispose(); this.terrainModules?.dispose(); this.transmissionModules?.dispose(); this.regularModules?.dispose(); this.deletionModules?.dispose(); this.gemModules?.dispose(); this.fenceModules?.dispose(); this.flyerModules?.dispose(); this.arcSpireModules?.dispose(); this.aviaryModules?.dispose(); this.carrierRegularModules?.dispose(); this.spellModules?.dispose(); this.carrierStealModules?.dispose(); this.iceModules?.dispose(); this.damageableModules?.dispose(); this.constructionModules?.dispose(); this.flareModules?.dispose(); this.factoryModules?.dispose(); this.productionModules?.dispose(); this.contentModules?.dispose(); this.runtimeModules?.dispose(); this.assetModules?.dispose(); this.vortexModules?.dispose(); this.teleportModules?.dispose(); this.combatModules?.dispose(); this.particleModules?.dispose(); this.gunModules?.dispose(); this.hitModules?.dispose(); this.gunViewModules?.dispose(); this.typeModules?.dispose(); this.playerModules?.dispose(); this.priestModules?.dispose(); }
         } finally {
