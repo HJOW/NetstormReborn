@@ -724,6 +724,16 @@ export class RawCampaignSession {
     alliances() { return this.#live().alliances; }
     // 현재 Player 참여와 AI 소유자 수명을 빌린다.
     participation() { return this.#live().participation; }
+    // State 종료가 지정한 실제 Player AI를 정리하고 해당 소유자의 정상 복귀 증빙을 발급한다.
+    resetAiForState(owner) {
+        const o = this.#live(); if (!o.participation) throw new Error('State resetAi의 실제 참여 모듈 누락');
+        return o.participation.removeBrainForState(owner);
+    }
+    // 같은 참여 모듈에서 발급한 AI 정리 증빙만 한 번 소비한다.
+    returnAiForState(pass) {
+        const o = this.#live(); if (!o.participation) throw new Error('State AI 반납의 실제 참여 모듈 누락');
+        o.participation.returnBrainForState(pass);
+    }
     // 현재 Session의 사제 처리기와 같은 공유 목록을 빌린다.
     priests() { return this.#live().priests; }
     // 공통 미션 프레임이 현재 세션의 실제 승패 판정기를 호출한다.

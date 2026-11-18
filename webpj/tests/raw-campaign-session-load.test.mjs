@@ -627,6 +627,24 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
 });
 
+// State AI 정리 증빙은 발급한 같은 Session의 소유자만 한 번 소비한다.
+test('CampaignSession TheWarBegins: State AI 정리와 반납 증빙', () => {
+    const first = scene(), second = scene();
+    try {
+        assert.throws(() => first.s.resetAiForState(0), /owner1\.\.8/); assert.throws(() => first.s.resetAiForState(9), /owner1\.\.8/);
+        const pass = first.s.resetAiForState(1);
+        assert.throws(() => second.s.returnAiForState(pass), /같은 실제 AI 모듈/);
+        assert.equal(first.s.participation().brainReturnedForState(1), false); first.s.returnAiForState(pass);
+        assert.equal(first.s.participation().brainReturnedForState(1), true); assert.throws(() => first.s.returnAiForState(pass), /이미 소비/);
+        // 비활성 상태의 나머지 일곱 Player도 각각 자기 증빙을 발급하고 반납한다.
+        for (let owner = 2; owner < 9; owner += 1) {
+            const current = first.s.resetAiForState(owner); first.s.returnAiForState(current);
+            assert.equal(first.s.participation().brainReturnedForState(owner), true);
+        }
+    } finally { first.s.dispose(); second.s.dispose(); }
+    assert.throws(() => first.s.resetAiForState(1), /반납/);
+});
+
 // 공통 튜토리얼 입력은 승패를 실행하지 않는 관찰 장치와 실제 Session 판정기를 연결한다.
 test('CampaignSession TheWarBegins: 튜토리얼 공통 게이트와 실제 판정기', () => {
     const { s } = scene(), state = createMissionFrameGateState(), mission = createMissionStartState(), calls = [];
