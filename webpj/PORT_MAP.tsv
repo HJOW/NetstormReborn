@@ -245,7 +245,7 @@ cpppj/src/client/MovieTimer.cpp	adapt	www/core/movie-timer.js	1f00a25a	port	[ada
 cpppj/src/client/MultiplayerOptionsWindow.h	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeBattleInfoInput.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeBattleInfoMenus.cpp	exclude-mp			-	[rebaseline-mp]
-cpppj/src/client/NativeBattleReturnState.cpp	port			todo	[rebaseline-port]
+cpppj/src/client/NativeBattleReturnState.cpp	port	www/core/native-battle-return-state.js	225553df	port	[rebaseline-port] WB04-E847: State6 결과/출처·배경·음악·이전 Battle 통지·외부 Fort 경계와 후반 결과 안내. Fort/멀티플레이 UI는 웹 제외, 스커미시 결과 앱 연결 잔여; docs/webpj-battle-return-state-20261119.md
 cpppj/src/client/NativeCameraRig.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeCarrierPacketReceivers.cpp	port			todo	[rebaseline-port]
 cpppj/src/client/NativeConstructionPacketReceivers.cpp	port			todo	[rebaseline-port]
