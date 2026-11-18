@@ -81,7 +81,7 @@ function scene(overrides = {}, savedFort = fort) {
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => trace.push('config'), refreshWindowTitle: () => trace.push('title'), resetCamera: () => trace.push('camera'), ...overrides.install },
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
-        templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
+        templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, fortBadges: overrides.fortBadges, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
         gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, cameraCommit: overrides.cameraCommit, developerQueue: overrides.developerQueue, motion: overrides.motion, randomGlobals: overrides.randomGlobals, spGlobals: overrides.spGlobals,
         developerHeapTrace: overrides.developerHeapTrace, developerQueryDirectDraw: overrides.developerQueryDirectDraw, developerRecordLabel: overrides.developerRecordLabel,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
@@ -1687,6 +1687,31 @@ test('CampaignSession TheWarBegins: 실제 Battle snapshot과 재적재', () => 
         // SID는 적재 순서에 좌우되므로 표시 자료의 다중집합을 비교한다.
         const keys = (objects) => objects.map(({ object }) => `${object.type},${object.owner},${object.frame},${object.x},${object.y}`).sort();
         assert.equal(second.s.loaded, true); assert.equal(before.length, 1875); assert.deepEqual(keys(after), keys(before));
+    } finally { second.s.dispose(); }
+});
+
+// 실제 Session의 Fort 모드 전역을 명시하고 저장 자식과 재적재를 확인한다.
+test('CampaignSession TheWarBegins: 실제 Fort 모드 snapshot', () => {
+    const storage = new CampaignTemplateStorage(), badges = new Uint8Array(28 * 220), gameplay = new ClientGameplayGlobals();
+    new DataView(badges.buffer).setUint32(0, 7, true); new DataView(badges.buffer).setUint32(216, 3, true);
+    const options = { templateStorage: storage, gameplayGlobals: gameplay, fortBadges: { records: () => badges }, fortMission: { current: () => 0 }, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } } };
+    const first = scene(options); let saved, before;
+    try {
+        first.s.core().ownerMode.fort = true; first.s.core().ownerMode.battle = false; gameplay.player.fortMode = true; first.s.world().storage.links.battle = false;
+        first.s.load(); first.s.indicateTechnology(128); before = first.s.world().objects(); first.s.snapshotFort(1);
+        const value = storage.template(1);
+        assert.ok(fortSection(value, 'Terr00').length > 1); assert.equal(fortSection(value, 'Territory').length, 120);
+        assert.deepEqual([...fortSection(value, 'Badges')], [1, 7, 3]); assert.deepEqual([...fortSection(value, 'Technology')], [1, 128, 4]);
+        assert.equal(fortSection(value, 'Money').length, 4); assert.ok(fortSection(value, 'TypeNames').length > 0);
+        saved = { ...value, sections: value.sections.map((bytes) => bytes.slice()) };
+    } finally { first.s.dispose(); }
+    const secondGameplay = new ClientGameplayGlobals(), second = scene({ ...options, gameplayGlobals: secondGameplay, templateStorage: new CampaignTemplateStorage() }, saved);
+    try {
+        second.s.core().ownerMode.fort = true; second.s.core().ownerMode.battle = false; secondGameplay.player.fortMode = true; second.s.world().storage.links.battle = false;
+        second.s.load(); const after = second.s.world().objects();
+        // SID는 재적재 순서에 좌우되므로 타입·소유자·프레임·좌표 다중집합을 비교한다.
+        const keys = (objects) => objects.map(({ object }) => `${object.type},${object.owner},${object.frame},${object.x},${object.y}`).sort();
+        assert.equal(before.length, 1875); assert.deepEqual(keys(after), keys(before));
     } finally { second.s.dispose(); }
 });
 
