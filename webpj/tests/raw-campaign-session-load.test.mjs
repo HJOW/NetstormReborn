@@ -18,6 +18,7 @@ import { bindClientStateWorldGlobals } from '../www/core/client-state-world-glob
 import { ClientKencloudGlobals } from '../www/core/client-kencloud-globals.js';
 import { ClientNsInfoGlobals } from '../www/core/client-ns-info-globals.js';
 import { ClientRandomGlobals } from '../www/core/random.js';
+import { ClientSpGlobals } from '../www/core/client-sp-globals.js';
 import { ScrambledSpStore } from '../www/core/sp-store.js';
 import { RawChatChannels } from '../www/core/raw-chat-channels.js';
 import { QuickHelpPopupState } from '../www/ui/quick-help-popup-state.js';
@@ -81,7 +82,7 @@ function scene(overrides = {}, savedFort = fort) {
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
-        gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, cameraCommit: overrides.cameraCommit, developerQueue: overrides.developerQueue, motion: overrides.motion,
+        gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, cameraCommit: overrides.cameraCommit, developerQueue: overrides.developerQueue, motion: overrides.motion, randomGlobals: overrides.randomGlobals, spGlobals: overrides.spGlobals,
         developerHeapTrace: overrides.developerHeapTrace, developerQueryDirectDraw: overrides.developerQueryDirectDraw, developerRecordLabel: overrides.developerRecordLabel,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
         player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
@@ -220,6 +221,45 @@ test('Client State 부모: 적재된 실제 Session 정리', () => {
         assert.deepEqual(events, ['kill', 'cleanup', 'uber', 'retire']);
         assert.equal(local.reconnectSaveEnd().value, 52); assert.equal(players.records().length, 9 * 180);
     } finally { s.dispose(); }
+});
+
+// 로그인과 미션 시작으로 만든 실제 AI까지 같은 State 부모에서 반납한다.
+test('Client State 부모: 로그인과 AI 미션 시작 뒤 정리', () => {
+    const files = new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]);
+    const gameData = GameData.build({ files, language: 'english' });
+    gameData.configuration.assign('missionSpec="d/{local.1}.english"\nfortSpec="d/{local.1}.fort"\n[END]\n');
+    const script = new MissionScript(gameData, 'GuardMyBack');
+    const input = parseFort(script.readFortImage(script.fortName()), createFortTypes(TypeTable.fromArchive(archive, decodeOriginalText)));
+    const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals(), activity = new ClientConnectionActivityGlobals();
+    const players = new ClientPlayerRecords(), coreData = new ClientCoreDataGlobals(), kernel = new Kernel(), random = new ClientRandomGlobals();
+    const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    const clock = { game: 12 }; storage.processes.bindDevices(kernel, clock); players.bindCoreData(coreData);
+    const connections = new ClientConnectionGlobals(local), templates = new CampaignTemplateStorage(), popupState = new QuickHelpPopupState();
+    const spGlobals = new ClientSpGlobals(random, () => 1700000000), sp = spGlobals.store(); sp.initialize();
+    const chat = new RawChatChannels(new Uint8Array(4800), () => 0), events = [];
+    const audio = { popMute: () => {}, writeSongEndBits: () => {}, startScene: () => {}, sounds: () => ({ stopLoops: () => {} }) };
+    const client = { paused: () => false, popGamePause: () => {}, resetGameClock: () => { clock.game = 0; }, wallSeconds: () => 42, interpretStateOptions: () => {} };
+    const context = { gameplay, local, activity, storage, currentStorage: storage, players, coreData, kernel, random, connections, templates, sp, chat, audio, client,
+        popupState, nsInfo: new ClientNsInfoGlobals(), kencloud: new ClientKencloudGlobals(), gameTime: () => clock.game };
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100.25, clock: () => 100250, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const ai = { allocationBytes: (bytes) => bytes.fill(0xa7), defaultName: () => 'AI', participation: { addChat: () => {}, clearChat: () => {} } };
+    const { s } = scene({ missionName: script.fortName(), localLogin, ai, gameplayGlobals: gameplay, surfaceStorage: storage, playerRecords: players, coreDataGlobals: coreData, processKernel: kernel, randomGlobals: random, spGlobals }, input);
+    try {
+        s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+        assert.equal(s.localConnectionReady(), true); gameplay.bindRuntimeOwner(s, {});
+        const gate = createMissionFrameGateState(), state = createMissionStartState();
+        const effects = { settingsBytes: (_owner, bytes) => bytes.fill(0xa7), gameSeconds: () => 123.5, refreshSp: () => {}, refreshCommandGump: () => {}, resetCamera: () => {}, randomGeysers: forbidden('예상하지 않은 간헐천') };
+        new RawCampaignMissionStartBindings(s, script, gate, state, s.missionStartSettings(), s.missionAiSettings(), effects).start();
+        assert.equal(gate.started, 1); assert.ok(s.participation().brain(2)); assert.equal(s.sp(1), 1200);
+        s.cursor().setEffects({ placement: { invalidate: () => {} }, lifecycle: { selectCursor: () => {}, highlight: () => {} } });
+        const devices = { cancelInitialCursor: () => {}, refreshSp: () => {}, selectCursor: () => {}, killGumps: () => events.push('kill'), cleanupGumps: () => events.push('cleanup'),
+            replaceUber: () => events.push('uber'), retireRuntime: () => { events.push('retire'); s.dispose(); } };
+        cleanupClientStateWorld(0, context, devices);
+        assert.equal(gameplay.borrowed(), false); assert.equal(storage.borrowed, false);
+        assert.equal(new DataView(Uint32Array.of(sp.get(1)).buffer).getFloat32(0, true), 0);
+        assert.deepEqual(events, ['kill', 'cleanup', 'uber', 'retire']);
+    } finally { s.dispose(); script.dispose(); }
 });
 
 // 실제 장기 Client·표면의 선택된 물리만 정리하고 World 대여 관문을 지킨다.
