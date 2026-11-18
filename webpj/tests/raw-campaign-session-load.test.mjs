@@ -14,6 +14,9 @@ import { TypeTable } from '../www/assets/type-table.js';
 import { SoundList } from '../www/audio/sound-list.js';
 import { CampaignTemplateStorage } from '../www/core/campaign-template-storage.js';
 import { ClientPlayerRecords } from '../www/core/client-player-records.js';
+import { ClientCoreDataGlobals } from '../www/core/client-core-data-globals.js';
+import { ClientSubscriberGlobals } from '../www/core/client-subscriber-globals.js';
+import { captureMissionFortZone, createMissionFortLoadRequest, writeMissionFortRequest } from '../www/core/mission-fort-request.js';
 import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
@@ -39,7 +42,7 @@ function scene(overrides = {}, savedFort = fort) {
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => trace.push('config'), refreshWindowTitle: () => trace.push('title'), resetCamera: () => trace.push('camera'), ...overrides.install },
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
-        templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
+        templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
         gameplayGlobals: overrides.gameplayGlobals, localStateGlobals: overrides.localStateGlobals, cameraScreenSize: overrides.cameraScreenSize, developerQueue: overrides.developerQueue,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
         player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
@@ -61,11 +64,49 @@ test('CampaignSession Tutorial 1: 실제 저장 객체·Graph와 커서까지 Lo
     assert.throws(() => s.load(), /반납/);
 });
 
+// 실제 Client의 Player/Core/Subscriber 소유자를 공유한 로그인은 현재 Core 포인터를 같은 Player 행으로 갱신한다.
+test('CampaignSession Tutorial 1: 공유 Client Core의 실제 로그인 재선택', () => {
+    const subscriber = new ClientSubscriberGlobals(), gameplay = new ClientGameplayGlobals(subscriber);
+    const players = new ClientPlayerRecords(), coreData = new ClientCoreDataGlobals(); players.bindCoreData(coreData);
+    subscriber.mySubscriber().value = subscriber.loginSubscriber().value;
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const { s } = scene({ localLogin, playerRecords: players, coreDataGlobals: coreData, subscriberGlobals: subscriber, gameplayGlobals: gameplay,
+        ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    try {
+        coreData.current = null;
+        s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+        assert.equal(s.localConnectionReady(), true); assert.equal(subscriber.mySubscriber().value, 1);
+        const rows = players.records();
+        assert.equal(coreData.players, rows); assert.equal(coreData.current.buffer, rows.buffer);
+        assert.equal(coreData.current.byteOffset - rows.byteOffset, 180 + 0x6c); assert.equal(coreData.active, 0);
+    } finally { s.dispose(); }
+});
+
+// Init의 실제 Zone 이미지와 subscriber를 세션이 소비하고 다시 생성하지 않는지 확인한다.
+test('CampaignSession Tutorial 1: Init 요청의 Zone으로 실제 로그인', () => {
+    const request = createMissionFortLoadRequest(), sequence = { value: 0 };
+    writeMissionFortRequest('thewarbegins', { next: request.next, sequence, localAddress: Uint8Array.of(122, 108, 111, 99, 97, 108, 44, 42, 0), port: 6799 }, {
+        selectFort: (name) => { request.fort = name; }, duplicate: (packet) => captureMissionFortZone(request, packet),
+    });
+    request.sequence = sequence.value; new DataView(request.zone.buffer, request.zone.byteOffset).setUint32(16, 7, true);
+    const players = new ClientPlayerRecords(), gameplay = new ClientGameplayGlobals();
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const { s } = scene({ localLogin, playerRecords: players, gameplayGlobals: gameplay, missionFortRequest: request, missionSubscriber: 7,
+        ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    try {
+        assert.equal(request.consumed, false); assert.equal(request.zone.length, 86);
+        s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+        assert.equal(s.localConnectionReady(), true); assert.equal(gameplay.world.mySubscriber, 7);
+        assert.equal(new DataView(players.records().buffer, players.records().byteOffset).getUint32(180 + 0x2c, true), 7);
+        assert.equal(request.consumed, true); assert.equal(request.zone.length, 0); assert.equal(request.next[0], 7); assert.equal(request.sequence, 1);
+    } finally { s.dispose(); }
+});
+
 // 실제 외곽 Session은 내부 로그인에서 같은 월드와 수신기를 설치하고 Player·Ready까지 왕복한다.
 test('CampaignSession Tutorial 1: 로컬 로그인과 실제 게임 수신 등록 왕복', () => {
-    const events = [];
-    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: (...args) => events.push(['notice', ...args]) };
-    const { s } = scene({ localLogin, ai: { participation: { addChat: (...args) => events.push(['chat', ...args]), clearChat: (...args) => events.push(['clearChat', ...args]) } } });
+    const events = [], logs = [], gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords();
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: (text) => logs.push(text), refresh: () => events.push(['refresh']), playerUiBusy: () => false, playerNotice: (...args) => events.push(['notice', ...args]) };
+    const { s } = scene({ localLogin, playerRecords: players, gameplayGlobals: gameplay, ai: { participation: { addChat: (...args) => events.push(['chat', ...args]), clearChat: (...args) => events.push(['clearChat', ...args]) } } });
     try {
         assert.equal(s.localConnectionReady(), false); assert.equal(s.pollLocalConnectionState(), false);
         s.startLocalConnection(); assert.equal(s.localConnectionPhase(), 8); assert.equal(s.loaded, false);
@@ -75,8 +116,16 @@ test('CampaignSession Tutorial 1: 로컬 로그인과 실제 게임 수신 등�
         assert.deepEqual(s.localConnectionPackets(), [0x27, 0x29, 0x67, 0x2b, 0x2b, 0x2b, 0x28, 0x81, 0x84, 0x2a, 0x32, 0x6e]);
         assert.equal(events.filter(([kind]) => kind === 'clearChat').length, 6);
         assert.equal(events.filter(([kind]) => kind === 'notice').length, 6);
-        assert.deepEqual(events[0], ['chat', 1, 'You', 0x20]);
-        s.pumpLocalConnection(); assert.equal(s.localConnectionReady(), true);
+        assert.ok(events.some(([kind]) => kind === 'refresh'));
+        assert.ok(events.some((event) => event[0] === 'chat' && event[1] === 1 && event[2] === 'You' && event[3] === 0x20));
+        assert.equal(new DataView(players.records().buffer, players.records().byteOffset).getUint32(180 + 0x2c, true), 1);
+        assert.equal(players.records()[180 + 0x50] & 0x43, 0x43);
+        assert.deepEqual(logs.filter((line) => line.startsWith('로컬 미션 상태 ')), ['로컬 미션 상태 8\n', '로컬 미션 상태 9\n', '로컬 미션 상태 10\n', '로컬 미션 상태 13\n', '로컬 미션 상태 14\n']);
+        // 실제 67h 수신 뒤 원본 기본값과 파생 에너지 설정을 같은 소유자에서 읽는다.
+        assert.deepEqual(Array.from({ length: 22 }, (_, index) => s.battleOption(index)), [0, 2, 2, 0, 3, 0, 2, 1, 1, 0, 0, 1, 0, 1, 1, 2, 2, 1, 2, 2, 0, 0]);
+        assert.equal(gameplay.energy.radiusSquared, 900); assert.equal(s.core().types[122].cost, 3000);
+        const packets = s.localConnectionPackets();
+        s.pumpLocalConnection(); assert.equal(s.localConnectionReady(), true); assert.deepEqual(s.localConnectionPackets(), packets);
         assert.throws(() => s.startLocalConnection(), /새 수명/);
     } finally { s.dispose(); }
     assert.throws(() => s.pumpLocalConnection(), /반납/);
