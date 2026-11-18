@@ -393,6 +393,9 @@ public sealed class ClientHostGame : Game
                 SetResidenceOwner = (_, _) => throw new InvalidOperationException("시작 흐름은 Residence owner를 요청하지 않는다"),
                 Assertion = _ => throw new InvalidOperationException("시작 흐름의 Runtime 진단은 원본 분류와 불일치한다"),
             });
+            // 농지 군집 배치 실결선. Generate 현장의 빈 place를 실제 파이프라인·단일·군집으로 잇는다.
+            // 근거: cpppj RawCampaignSession.cpp 1826~1858행과 RawNormalTerrainWorldBinding.cpp 36~40행이다. (2026-11-18 0.614)
+            session.BuildFarmPlacementDevices(types.Types, worldDefinitions, popShapes);
             var worldOrder = new List<string>();
             RawCampaignWorldLoad worldLoad = session.BuildWorldLoad(
                 new IslandRuntimeHooks
@@ -445,8 +448,8 @@ public sealed class ClientHostGame : Game
                     Generate = (state, region) =>
                     {
                         worldOrder.Add($"generate:{region}");
-                        // 실제 지형 생성 라이브 연결. 공간 Pop·군집 배치는 다음 단위다.
-                        terrainBinding.GenerateOriginal(state.Owner, state.Bounds, region, session.Game, session.TerrainCrt, session.BuildTerrainStampHooks(types.Types), (_, _, _) => { });
+                        // 실제 지형 생성과 농지 군집 배치 실결선. 빈 place 대신 세션 군집을 실행한다.
+                        terrainBinding.GenerateOriginal(state.Owner, state.Bounds, region, session.Game, session.TerrainCrt, session.BuildTerrainStampHooks(types.Types), (area, farmRegion, quantity) => session.PlaceFarm(area, farmRegion, quantity));
                     },
                     CurrentTemplate = slot =>
                     {

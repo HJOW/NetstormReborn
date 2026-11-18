@@ -788,6 +788,10 @@ public sealed partial class HostSession
     /// <remarks>2026-11-12 0.466에서 추가했다. BuildTerrainStampHooks에 준 표와 같은 인스턴스를 둔다.</remarks>
     private IReadOnlyList<OriginalTypeRecord>? _terrainPopTypes;
 
+    /// <summary>지형 Pop이 읽는 세션 표시 셰이프 목록이다. 농지 파이프라인 자료가 같은 인스턴스를 빌린다.</summary>
+    /// <remarks>2026-11-18 0.614에서 R4-2 농지 실결선용으로 추가했다. BuildTerrainPopDevices가 보관하며 파이프라인 수명보다 길게 둔다.</remarks>
+    private IReadOnlyList<SquidDisplayShape>? _terrainPopShapes;
+
     /// <summary>세션 Pop 표시의 빈 싱크다. SHP 크기 조회 경로에서는 호출되지 않는다.</summary>
     /// <remarks>2026-11-12 0.466에서 추가했다. 실제 표시는 R5에서 잇는다.</remarks>
     private sealed class NullTerrainDisplaySink : SquidDisplaySink
@@ -849,6 +853,7 @@ public sealed partial class HostSession
         _terrainDisplay.ValidateFrameBinding(Pool.Edition, types);
         _terrainPop = new RawPop(Pool, _terrainHash, _terrainSpots);
         _terrainPopTypes = types;
+        _terrainPopShapes = shapes;
     }
 
     /// <summary>지형 Pop 공간 해시를 검사·대조용으로 빌려준다. 장치를 연결하기 전에는 null이다.</summary>
@@ -1603,6 +1608,177 @@ public sealed partial class HostSession
         };
         hooks.Pop = (sid, x, y, flags) => TerrainPopObject(sid, x, y, flags);
         return hooks;
+    }
+
+    /// <summary>농지 파이프라인이 읽는 세션 소유 상태다. BuildFarmPlacementDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.614에서 R4-2 농지 실결선용으로 추가했다. 같은 인스턴스를 파이프라인이 빌리며 수명은 세션이 진다.</remarks>
+    private CanonPlacementPipelineState? _farmPipelineState;
+
+    /// <summary>농지 파이프라인의 별도 추가 목록이다. BuildFarmPlacementDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.614에서 추가했다. 적재 스코프에서는 비어 있으며 R6의 실제 앵커 추가 연결은 다음 단위에서 잇는다.</remarks>
+    private RawPostPopList? _farmAdditional;
+
+    /// <summary>농지 파이프라인의 내용물 찾기 상태다. BuildFarmPlacementDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.614에서 추가했다. 적재 스코프에서는 기본값이며 실제 boss 결선은 R6에서 잇는다.</remarks>
+    private ContainedFinderState? _farmContained;
+
+    /// <summary>농지 파이프라인의 섬 지역 목록이다. BuildFarmPlacementDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.614에서 추가했다. 농지 타입(121)은 소용돌이 제한을 읽지 않으므로 비어 있으며 R4-6의 실제 제한·존재 결선은 다음 단위에서 잇는다.</remarks>
+    private List<CanonPlacementIslandRegion>? _farmRegions;
+
+    /// <summary>농지 파이프라인이 읽는 타입별 프레임 자료다. BuildFarmPlacementDevices가 정의에서 만든다.</summary>
+    /// <remarks>2026-11-18 0.614에서 추가했다. 자산 번호 70+적재 순서의 FrameTable과 기본 프레임을 둔다.</remarks>
+    private PriestPlainCanonType[]? _farmFrames;
+
+    /// <summary>농지 파이프라인이 읽는 타입별 핫스폿 자료다. BuildFarmPlacementDevices가 타입 표에서 만든다.</summary>
+    /// <remarks>2026-11-18 0.614에서 추가했다. TYPE 정의 기준점과 같은 값을 둔다.</remarks>
+    private PriestTypeHotspot[]? _farmHotspots;
+
+    /// <summary>농지 파이프라인 입력 묶음이다. BuildFarmPlacementDevices가 세션 장치를 공유해 만든다.</summary>
+    /// <remarks>2026-11-18 0.614에서 추가했다. 같은 인스턴스를 파이프라인이 빌린다.</remarks>
+    private CanonPlacementPipelineData? _farmPipelineData;
+
+    /// <summary>농지 단일 배치의 실제 판단 파이프라인이다. BuildFarmPlacementDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.614에서 추가했다. 근거: cpppj RawCampaignSession.cpp 1827행의 적재 파이프라인 조립이다.</remarks>
+    private RawCanonPlacementPipeline? _farmPipeline;
+
+    /// <summary>농지 단일 배치 몸체다. BuildFarmPlacementDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.614에서 추가했다. MakeFarmWorldHooks의 여섯 갈고리와 실결선 다섯 갈고리를 공유한다.</remarks>
+    private RawFortRandomPlacement? _farmSingle;
+
+    /// <summary>농지 군집 몸체다. BuildFarmPlacementDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.614에서 추가했다. 근거: cpppj RawNormalTerrainWorldBinding.cpp 38행의 farms_ 조립이다.</remarks>
+    private RawFarmCluster? _farmCluster;
+
+    /// <summary>농지 파이프라인·단일·군집을 세션 장치에 연결한다. Generate 현장의 빈 place를 실제 배치로 바꾼다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <param name="definitions">로딩 순서와 같은 타입 정의 목록이다. 프레임·패턴 번호를 만든다.</param>
+    /// <param name="shapes">같은 순서의 표시 셰이프 목록이다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">농지 배치의 지형·요새·바인딩 장치 미연결.</exception>
+    /// <exception cref="ArgumentException">농지 파이프라인 자료·풀 불일치.</exception>
+    /// <remarks>2026-11-18 0.614에서 R4-2 농지 잔여의 Generate 실결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1826~1858행과 RawNormalTerrainWorldBinding.cpp 36~40행이다. 동맹·충돌·추가·내용물의 실제 게임 값과 섬 제한·존재·첫 지역·정기 처리는 R4-6·R6에서 잇는다.</remarks>
+    public void BuildFarmPlacementDevices(IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeDefinition> definitions, IReadOnlyList<SquidDisplayShape> shapes)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        ArgumentNullException.ThrowIfNull(definitions);
+        ArgumentNullException.ThrowIfNull(shapes);
+        if (_farmPipeline is not null || _farmSingle is not null || _farmCluster is not null)
+        {
+            throw new InvalidOperationException("농지 배치 장치 중복 연결");
+        }
+        RawSquidHash hash = _terrainHash ?? throw new InvalidOperationException("농지 배치 공간 해시 미연결");
+        byte[] spots = _terrainSpots ?? throw new InvalidOperationException("농지 배치 점유지 미연결");
+        IReadOnlyList<OriginalTypeRecord> popTypes = _terrainPopTypes ?? throw new InvalidOperationException("농지 배치 지형 TYPE 미연결");
+        IReadOnlyList<SquidDisplayShape> popShapes = _terrainPopShapes ?? throw new InvalidOperationException("농지 배치 표시 셰이프 미연결");
+        if (!ReferenceEquals(types, popTypes) || !ReferenceEquals(shapes, popShapes))
+        {
+            throw new ArgumentException("농지 배치 TYPE·셰이프는 지형 Pop 장치와 같은 인스턴스여야 한다");
+        }
+        RawNormalTerrainWorldBinding binding = TerrainBinding ?? throw new InvalidOperationException("농지 배치 지형 바인딩 미연결");
+        RawSquidReward hp = _fortHp ?? throw new InvalidOperationException("농지 배치 HP·보상 미연결");
+        uint expected = Pool.Edition == OriginalEdition.Patch1078 ? 188u : 171u;
+        if ((uint)types.Count != expected || shapes.Count != types.Count)
+        {
+            throw new ArgumentException("농지 배치 타입·셰이프 크기 오류");
+        }
+        if (RiftTypeTable.FirstAssetTypeNumber + definitions.Count > WorldFrames.Length)
+        {
+            throw new ArgumentException("농지 배치 정의가 프레임 표 폭을 넘는다");
+        }
+        var frames = new PriestPlainCanonType[types.Count];
+        // 모든 타입 번호마다 빈 프레임 표를 먼저 둔다.
+        for (int index = 0; index < frames.Length; ++index)
+        {
+            frames[index] = new PriestPlainCanonType();
+        }
+        // 자산 순서대로 프레임 코드와 기본 프레임을 채운다.
+        for (int asset = 0; asset < definitions.Count; ++asset)
+        {
+            int number = RiftTypeTable.FirstAssetTypeNumber + asset;
+            frames[number].Frames = definitions[asset].FrameTable();
+            frames[number].DefaultFrame = definitions[asset].SpecialFrames.DefaultFrame;
+        }
+        var hotspots = new PriestTypeHotspot[types.Count];
+        // 모든 타입 번호마다 TYPE 정의 기준점을 넣는다.
+        for (int index = 0; index < hotspots.Length; ++index)
+        {
+            hotspots[index] = new PriestTypeHotspot(types[index].HotspotX, types[index].HotspotY);
+        }
+        var state = new CanonPlacementPipelineState();
+        // 원문 패턴 전역 8개를 로딩 순서에서 찾는다. 0.613 테스트의 고정 107·82·94·157·131·129·140·142와 같은 값이어야 한다.
+        string[] patterns = ["puzzlePiece", "bridge", "island", "noIsland", "thunderCannon", "rainCannon", "windArcher", "windBlocker"];
+        IReadOnlyList<string> order = RiftTypeLoadOrder.Get(Pool.Edition);
+        // 패턴 이름마다 70+적재 순서를 구한다.
+        for (int index = 0; index < patterns.Length; ++index)
+        {
+            int found = -1;
+            // 로딩 순서에서 첫 일치를 찾는다.
+            for (int slot = 0; slot < order.Count; ++slot)
+            {
+                if (RiftTypeDefinition.AsciiEqual(order[slot], patterns[index]))
+                {
+                    found = slot;
+                    break;
+                }
+            }
+            if (found < 0)
+            {
+                throw new InvalidOperationException("농지 배치 패턴 타입을 찾을 수 없다: " + patterns[index]);
+            }
+            state.Geometry.PatternTypes[index] = unchecked((uint)(RiftTypeTable.FirstAssetTypeNumber + found));
+        }
+        // 적재 스코프 농지(소유자 0)의 MayPlace가 그래프 미활성으로 거부되지 않게 한다. 동맹·충돌 실제 값은 R6에서 잇는다.
+        state.Permission.GraphReady = 1;
+        state.Permission.UseAlliances = 1;
+        state.Anchor.GraphReady = 1;
+        state.Anchor.FenceType = 90;
+        state.Anchor.WindArcherType = 140;
+        state.Placement.LocalPlayer = 1;
+        var additional = new RawPostPopList();
+        var contained = new ContainedFinderState();
+        var regions = new List<CanonPlacementIslandRegion>();
+        var data = new CanonPlacementPipelineData
+        {
+            Types = types,
+            Frames = frames,
+            Shapes = shapes,
+            Hotspots = hotspots,
+            Spots = spots,
+            Islands = hash.BorrowEntries(0),
+            Regions = regions,
+        };
+        var pipeline = new RawCanonPlacementPipeline(Pool, hash, data, TerrainBookkeeping, additional, contained, state);
+        FortRandomPlacementHooks hooks = MakeFarmWorldHooks(binding.Islands, pipeline, hp);
+        var single = new RawFortRandomPlacement(Pool, hash, spots, types, WorldFrames, Game, PlacementState, hooks);
+        var clusterHooks = new FarmClusterHooks { Assertion = _ => { } };
+        RawFarmCluster.MakeFarmClusterPlacementHook(Pool, single, clusterHooks);
+        var cluster = new RawFarmCluster(Pool, World, binding.Islands, PlacementState, TerrainFarm, clusterHooks);
+        _farmFrames = frames;
+        _farmHotspots = hotspots;
+        _farmPipelineState = state;
+        _farmAdditional = additional;
+        _farmContained = contained;
+        _farmRegions = regions;
+        _farmPipelineData = data;
+        _farmPipeline = pipeline;
+        _farmSingle = single;
+        _farmCluster = cluster;
+    }
+
+    /// <summary>농지 배치 파이프라인을 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>같은 월드의 실제 배치 파이프라인이다.</returns>
+    /// <remarks>2026-11-18 0.614에서 추가했다. MayPlace 동기화의 실제 게임 값(R4-6·R6) 연결 전에는 적재 스코프 기본값으로 동작한다.</remarks>
+    public RawCanonPlacementPipeline FarmPipeline => _farmPipeline ?? throw new InvalidOperationException("농지 배치 파이프라인 미연결");
+
+    /// <summary>군집 사각형·지역·수량을 실제 단일 배치로 실행한다. Generate 현장의 place 효과다.</summary>
+    /// <param name="area">군집 사각형이다.</param>
+    /// <param name="region">군집 지역이다.</param>
+    /// <param name="quantity">성공 목표 수량이다.</param>
+    /// <remarks>2026-11-18 0.614에서 추가했다. 근거: cpppj RawNormalTerrainWorldBinding.cpp 190행의 farms_-&gt;Place 호출이다.</remarks>
+    public void PlaceFarm(FortRandomRectangle area, int region, uint quantity)
+    {
+        RawFarmCluster cluster = _farmCluster ?? throw new InvalidOperationException("농지 군집 미연결");
+        cluster.Place(area, region, quantity);
     }
 
     public void RebuildWorldGraph(bool mode)
