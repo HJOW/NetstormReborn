@@ -24,7 +24,7 @@ import { WindAviaryProcessFields, RawWindAviaryState } from './raw-wind-aviary-s
 import { SunAviaryProcess, SunAviaryProcessFields } from './raw-sun-aviary-process.js';
 import { RainAviaryProcess, RainAviaryProcessFields } from './raw-rain-aviary-process.js';
 import { readAviaryProcessData } from './raw-aviary-process-data.js';
-import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids, receiveContentSquid } from './raw-squid-remote-deletion.js';
+import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids, receiveContentSquid, receiveDependencySquid } from './raw-squid-remote-deletion.js';
 import { setRawSquidWord } from './raw-squid-word.js';
 import { SquidFactory } from './squid-factory.js';
 import { isFormConstructorVtable } from './squid-forms.js';
@@ -472,6 +472,20 @@ export class RawCampaignSession {
         // 내용물 데이터는 현재 Form 가상 표에 따라 실제 부착을 선택한다. (2026-11-18 WB04-E731)
         dispatch.observe(0x2d, null); dispatch.version(0x2d, 1, 0); dispatch.requireLength(0x2d, 18);
         dispatch.register(0x2d, (_sender, _connection, packet) => this.#receiveContent(packet));
+        // 감시 Form은 현재 타입과 가상 표를 확인해 같은 공장에 부착한다. (2026-11-18 WB04-E732)
+        dispatch.observe(0x65, null); dispatch.version(0x65, 1, 0); dispatch.requireLength(0x65, 13);
+        dispatch.register(0x65, (_sender, _connection, packet) => {
+            const current = this.#live(), core = current.core;
+            receiveDependencySquid(core.pool, packet, {
+                dependType: () => current.gameplayGlobals.gameAux().dependFormType,
+                take: (type, sid) => core.factory.take(type, sid),
+                dependencyAttach: (sid, parent, flags) => {
+                    const raw = core.pool.slot(sid);
+                    if (new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getUint32(0, true) !== SQUID_FORM_VTABLES.depend) throw new Error('감시 수신의 현재 가상74 미연결');
+                    core.factory.attachForm(sid, parent, flags);
+                },
+            });
+        });
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }

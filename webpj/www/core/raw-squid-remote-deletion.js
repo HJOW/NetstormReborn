@@ -67,3 +67,16 @@ export function receiveContentSquid(pool, packet, hooks) {
     }
     need(hooks.attach)(object, word(packet, 14), flags);
 }
+
+// 65h 감시 Form의 필드를 현재 슬롯에 기록한 다음 부모에 부착한다. (2026-11-18 WB04-E732)
+export function receiveDependencySquid(pool, packet, hooks) {
+    if (pool?.edition !== 'patch1078' || !(packet instanceof Uint8Array) || packet.length < 13) throw new TypeError('감시 수신의 PATCH13BYTE 계약');
+    const object = need(hooks.take)(need(hooks.dependType)(), word(packet, 4));
+    const raw = pool.physical(object);
+    const view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+    raw[11] = packet[8];
+    view.setUint16(18, word(packet, 9), true);
+    view.setUint16(20, word(packet, 11), true);
+    raw[11] |= 4;
+    need(hooks.dependencyAttach)(object, word(packet, 6), 0);
+}

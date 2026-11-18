@@ -369,3 +369,25 @@ test('CampaignSession Tutorial 1: 일반 Form 내용물 수신', () => {
         assert.equal(new DataView(parentRaw.buffer, parentRaw.byteOffset, parentRaw.byteLength).getUint16(6, true), form);
     } finally { s.dispose(); }
 });
+
+// 실제 분배기가 현재 Session 공장에 감시 Form을 생성하고 부모에 부착한다.
+test('CampaignSession Tutorial 1: 감시 Form 수신', () => {
+    const { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        const c = s.core(), parent = c.factory.create(6);
+        let form = c.pool.layout.serverFirst;
+        // 같은 서버 Pool의 비어 있는 슬롯을 고른다.
+        while (form < c.pool.capacity && !(c.pool.slot(form)[11] & 1)) form += 1;
+        assert.ok(form < c.pool.capacity);
+        const packet = new Uint8Array(13), view = new DataView(packet.buffer);
+        packet.set([1, 0x65, 13, 0]); view.setUint16(4, form, true); view.setUint16(6, parent, true);
+        view.setUint16(9, 12, true); view.setUint16(11, 34, true);
+        c.processState.server = false;
+        assert.equal(dispatch.registration(0x65).length, 13);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        const child = c.pool.slot(form), fields = new DataView(child.buffer, child.byteOffset, child.byteLength);
+        assert.equal(child[10], 1); assert.equal(fields.getUint16(16, true), parent);
+        assert.deepEqual([fields.getUint16(18, true), fields.getUint16(20, true)], [12, 34]);
+    } finally { s.dispose(); }
+});

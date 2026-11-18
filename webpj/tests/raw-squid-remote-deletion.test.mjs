@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SidPool } from '../www/core/sid-pool.js';
-import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids, receiveContentSquid } from '../www/core/raw-squid-remote-deletion.js';
+import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids, receiveContentSquid, receiveDependencySquid } from '../www/core/raw-squid-remote-deletion.js';
 
 // 단일 삭제는 예약 SID를 별도로 차단하지 않으며 범위 밖과 free만 건너뛴다.
 test('원격 삭제 53h: 현재 Pool과 flags 0', () => {
@@ -78,4 +78,19 @@ test('내용물 2dh: 부착 누락의 부분 효과', () => {
         firstPop: () => assert.fail('이미 사용 중인 슬롯은 첫 Pop을 호출하지 않는다.'),
     }), /선택된 실제 장치/);
     assert.equal(new DataView(pool.physical(sid).buffer, pool.physical(sid).byteOffset).getUint16(18, true), 77);
+});
+
+// 감시 수신은 첫 Pop 없이 필드를 쓴 뒤 가상 부착을 호출하며 실패 시 쓴 값을 유지한다.
+test('감시 65h: 필드와 부착 순서 및 부분 효과', () => {
+    const pool = new SidPool(24000, { server: true }), sid = pool.allocate(), packet = new Uint8Array(13), view = new DataView(packet.buffer), calls = [];
+    view.setUint16(4, sid, true); view.setUint16(6, 42, true); packet[8] = 0x20; view.setUint16(9, 123, true); view.setUint16(11, 456, true);
+    const hooks = { dependType: () => 1, take: (type, selected) => { calls.push(['take', type, selected]); return sid; }, dependencyAttach: (...args) => calls.push(['attach', ...args]) };
+    receiveDependencySquid(pool, packet, hooks);
+    const raw = pool.slot(sid), fields = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+    assert.deepEqual([raw[11], fields.getUint16(18, true), fields.getUint16(20, true)], [0x24, 123, 456]);
+    assert.deepEqual(calls, [['take', 1, sid], ['attach', sid, 42, 0]]);
+    delete hooks.dependencyAttach; packet[8] = 0x40;
+    assert.throws(() => receiveDependencySquid(pool, packet, hooks), /선택된 실제 장치/);
+    assert.equal(pool.slot(sid)[11], 0x44);
+    assert.throws(() => receiveDependencySquid(pool, packet.subarray(0, 12), hooks), /PATCH13BYTE/);
 });
