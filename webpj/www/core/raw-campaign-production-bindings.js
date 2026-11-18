@@ -4,7 +4,7 @@
 //   production.refreshCurrent() 는 현재 templateOwner 의 Deck 을, production.refresh(owner) 는 명시 owner 의 Deck 을 원문(0044f7c0) 순서로 재계산하고 같은 토큰을 돌려준다.
 //   production.appendFactoryProducts(factory, deckToken) 는 004752b0(mode 0)의 실제 생산 포함과 distinct 종류별 남은 자리 반환이다(허용표 조회도 생략하지 않는다).
 //   production.factoryCapacity(factory) · production.contains(type)(0044f970 의 현재 Deck 조회, 재계산 없음) · production.indicateTechnology(type)(004929e0) · production.allowed(type) · production.pool · production.deck.
-// core 는 월드 Core 뷰의 { pool, types(188칸), bookkeeping(공통 장부, `factories` 목록), ownerMode({ fort, battle }) } 이고, state 는 사용 때마다 현재 값을 읽는 { mission, fullDeck, freeTechnologyType, templeProduct }
+// core 는 월드 Core 뷰의 { pool, types(188칸), bookkeeping(공통 장부의 현재 `currentFactories()` 목록), ownerMode({ fort, battle }) } 이고, state 는 사용 때마다 현재 값을 읽는 { mission, fullDeck, freeTechnologyType, templeProduct }
 //   (PATCH 00594fa0·0054db14·005412bc·0054126c; 속성 getter 로 장기 소유자의 현재 값을 빌릴 수 있다). 호출자가 판정값을 복사해 두지 않는다.
 // Player/Deck/Carrier/Create 는 같은 core.pool 을 공유해야 하며 모든 참조는 연결보다 오래 살아야 한다. GUI 표시나 설정 결과를 상수 성공으로 대체하지 않는다.
 // 기준선 뒤 cpppj 변경 없음(기준선 `225553df` 와 HEAD 소스 동일, 2026-11-15 확인). 이 모듈은 DOM 을 쓰지 않는다.
@@ -138,7 +138,7 @@ export class RawCampaignProductionBindings {
         put(raw, DECK_CHANCE, 0);
         if (typeof this.#effects.configInt !== 'function') throw new Error('생산재계산getTeleportTechFree실제설정미연결');
         if (this.#effects.configInt('getTeleportTechFree')) this.#deck.activate(token, state.freeTechnologyType, 1);
-        const factories = core.bookkeeping.factories;
+        const factories = core.bookkeeping.currentFactories();
         // 같은 공통 PostPop/삭제가 변경하는 현재 Factory 개수와 DWORD 목록을 매 반복 읽는다.
         for (let index = 0; index < factories.readCount(); index += 1) {
             const current = this.#factory(factories.storage()[index]);

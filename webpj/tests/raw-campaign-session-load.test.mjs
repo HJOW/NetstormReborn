@@ -755,12 +755,13 @@ function runWorkshopConstruction(natural) {
     const files = new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]);
     const gameData = GameData.build({ files, language: 'english' });
     gameData.configuration.assign('missionSpec="d/{local.1}.english"\nfortSpec="d/{local.1}.fort"\n[END]\n');
-    const script = new MissionScript(gameData, 'TheWarBegins'), events = [], packets = [], mouse = { x: 0, y: 0 }; let wall = 100;
+    const script = new MissionScript(gameData, 'TheWarBegins'), events = [], packets = [], researchPackets = [], mouse = { x: 0, y: 0 }; let wall = 100;
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => wall, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
-        observePacket: (sender, _boss, _local, packet) => { if (packet[1] === 0x3e) packets.push([sender, packet.slice()]); } };
+        observePacket: (sender, _boss, _local, packet) => { if (packet[1] === 0x3e) packets.push([sender, packet.slice()]); if (packet[1] === 0x58) researchPackets.push(packet.slice()); } };
     const ai = { allocationBytes: (bytes) => bytes.fill(0xa7), bridgeScratchBytes: (bytes) => bytes.fill(0), defaultName: () => 'AI', names: { language: () => 1, translate: (text) => text, substitute: (text) => text }, participation: { addChat: () => {}, clearChat: () => {} } };
     let session;
-    const { s } = scene({ localLogin, ai, carrierRequest: (target, packet) => session.sendLocalPacket(target, packet), missionOutcome: { demo: () => 0 }, construction: { refresh: () => events.push(['construction-refresh']), wallSeconds: () => wall }, motion: { path: { stepSound: (...args) => events.push(['step', ...args]) } },
+    const { s } = scene({ localLogin, ai, carrierRequest: (target, packet) => session.sendLocalPacket(target, packet), missionOutcome: { demo: () => 0 }, production: { allocationBytes: (bytes) => bytes.fill(0xa7), effects: { configInt: () => 0 } },
+        construction: { refresh: () => events.push(['construction-refresh']), wallSeconds: () => wall }, motion: { path: { stepSound: (...args) => events.push(['step', ...args]) } },
         sound: { wallSeconds: () => wall, playOnceAt: (...args) => events.push(['sound', ...args]), play: (...args) => { events.push(['sound', ...args]); return 1; },
             playLoopAt: (x, y, current, sound) => { events.push(['loop', x, y, current, sound]); return current || 1; }, stop: (handle) => events.push(['stop', handle]) } });
     session = s;
@@ -819,6 +820,20 @@ function runWorkshopConstruction(natural) {
             }
             assert.equal(findAttachedProcess(core.pool, workshop, 17), 0); assert.equal(findAttachedProcess(core.pool, workshop, 47), 0);
             assert.ok(events.some((event) => event[0] === 'loop')); assert.ok(events.some((event) => event[0] === 'stop'));
+            assert.equal(s.production().contains(128), false); const prior = s.localConnectionPackets().length;
+            assert.equal(s.selectFactoryKnowledge(workshop, 0x03000080, ((128 << 16) | workshop) >>> 0), 1);
+            const predicted = s.priests().carrier.findContained(workshop, 16, 128, 0);
+            assert.ok(predicted >= 5 && predicted < 15000); assert.equal(s.production().contains(128), true); assert.equal(s.localConnectionPackets().length, prior);
+            s.pumpLocalConnection(); const actual = s.priests().carrier.findContained(workshop, 16, 128, 0);
+            assert.ok(actual >= 15000 && actual !== predicted); assert.equal(researchPackets.length, 1);
+            assert.deepEqual([...researchPackets[0].subarray(0, 8)], [1, 0x58, 16, 0, workshop & 255, workshop >>> 8, 128, 0]);
+            assert.ok(core.pool.slot(predicted)[11] & 1); assert.equal(s.production().appendFactoryProducts(workshop, 0), 1);
+            const dirty = core.bookkeeping.productionDirty; assert.notEqual(dirty, 0);
+            core.ownerMode.challenge = true; assert.equal(s.updateProductionContents(), false); assert.equal(core.bookkeeping.productionDirty, dirty);
+            core.ownerMode.challenge = false; assert.equal(s.updateProductionContents(), true); assert.equal(core.bookkeeping.productionDirty, 0);
+            const technology = s.currentTechnologyParent(); assert.ok(technology); const product = s.priests().carrier.findContained(technology, 8, 128, 0);
+            assert.ok(product >= 5 && product < 15000); assert.equal(core.pool.slot(product)[20], 8); assert.equal(core.pool.slot(product)[30], 3);
+            assert.equal(s.updateProductionContents(), false);
             return;
         }
         // 다른 AI·미션 프로세스는 실행하지 않고 실제 사제 경로만 도착까지 진행한다.

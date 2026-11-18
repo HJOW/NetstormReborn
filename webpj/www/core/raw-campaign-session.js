@@ -290,6 +290,25 @@ export class RawCampaignSession {
         const o = this.#live(); if (!o.loaded || !o.factoryResearch) throw new Error('미설치 Session의 연구 수신 등록');
         registerFactoryResearchCommand(dispatch, o.factoryResearch);
     }
+    // 현재 Factory 가상 표를 확인하고 같은 입력 본체에 원문 명령과 인자를 전달한다.
+    commandFactory(parent, code, parameter) {
+        const o = this.#live();
+        if (!o.loaded || !o.factoryResearch?.handlesNotice(parent) || !o.factoryInput) throw new Error('실제 Factory 입력의 미설치/가상 표 오류');
+        return o.factoryInput.input(parent, code, parameter);
+    }
+    // 지식 메뉴의 선택은 같은 Factory 입력 경로를 사용한다.
+    selectFactoryKnowledge(parent, code, parameter) { return this.commandFactory(parent, code, parameter); }
+    // 설치된 현재 기술 부모의 실제 SID를 반환한다.
+    currentTechnologyParent() { return this.#live().player.currentTechnology(); }
+    // 실제 생산 dirty 관문을 통과하면 같은 Deck을 갱신하고 기술 내용물을 동기화한다.
+    updateProductionContents() {
+        const o = this.#live(), mode = o.core.ownerMode;
+        if (!o.loaded || (!mode.fort && !mode.battle && !mode.challenge)) return false;
+        if (mode.challenge || !o.player.currentTechnology() || !o.core.bookkeeping.productionDirty) return false;
+        o.core.bookkeeping.productionDirty = 0;
+        o.production.refresh(o.playerState.templateOwner); o.productionSync.synchronize();
+        return true;
+    }
     // 현재 분산 SP의 실수값을 읽는다.
     sp(owner) { return spFloat(this.#live().sp.get(owner)); }
     // 현재 분산 SP에 같은 단정도 값을 기록한다.
