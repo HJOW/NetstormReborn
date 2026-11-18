@@ -1365,23 +1365,17 @@ public sealed partial class HostSession
                     PopWorldObject(sid, x, y, flags);
                     return;
                 }
-                // 신전(소용돌이)은 지역 투표 목록에 등록하고 즉시 투표·도장한다. 일반 Pop 분배는 기존 경로를 유지한다.
-                if (_regionOwnership is not null && _regionTemples is not null)
+                // 신전(소용돌이)은 지역 투표 목록에 등록한다. 일반 Pop 분배는 기존 경로를 유지한다.
+                if (IsRegionTempleType(types, sid))
                 {
-                    uint number = Pool.Slot(sid)[RawSidPool.TypeOffset];
-                    if (number < (uint)types.Count && (types[(int)number].Flags2 & TypeFlag2.Vortex) != 0)
-                    {
-                        RegisterRegionTemple(sid, x, y);
-                    }
+                    RegisterRegionTemple(sid, x, y);
                 }
                 // 다리·섬·표면과 공통 지원 타입은 지형 분배 Pop으로 등록한다. 전용 파생이 필요한 종류는 기록만 남긴다.
                 if (TryPopFortTerrain(sid, x, y, flags))
                 {
                     // Pop 성공 뒤 실제 좌표의 소유자를 분배한다. 적재 SetOwner(좌표 0·void)와 달리 섬 소유자·첫 지역을 전파한다.
                     // 2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 이었다. 근거: cpppj RawAssetPostPop.cpp 91행이다.
-                    // 사원은 전용 파생(R6) 전에는 Pop되지 않아 분배가 관문에 걸린다. Pop이 열리면 같은 위치에서 동작한다.
-                    uint number = Pool.Slot(sid)[RawSidPool.TypeOffset];
-                    if (number < (uint)types.Count && (types[(int)number].Flags2 & TypeFlag2.Vortex) != 0)
+                    if (IsRegionTempleType(types, sid))
                     {
                         DispatchRegionTempleOwner(sid);
                     }
@@ -1411,13 +1405,30 @@ public sealed partial class HostSession
     /// <summary>지형 분배 Pop으로 잇지 않고 기록만 남긴 요새 Pop 호출이다. R6 파생 본체 대기 목록이며 풀 바이트에 영향을 주지 않는다. 0.607에서 추가됐다.</summary>
     public IReadOnlyList<string> FortPopSkips => _fortPopSkipped;
 
+    /// <summary>요새 객체가 소용돌이(신전) 종류인지 가린다. 지역 투표·가상 Owner 분배 대상만 고른다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다.</param>
+    /// <param name="sid">가릴 오브젝트 번호다.</param>
+    /// <returns>지역 장치가 연결됐고 신전 종류이면 참이다.</returns>
+    /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. 적재 갈고리와 분배 관문이 같은 판정을 공유한다.</remarks>
+    private bool IsRegionTempleType(IReadOnlyList<OriginalTypeRecord> types, int sid)
+    {
+        if (_regionOwnership is null || _regionTemples is null || _regionVortex is null)
+        {
+            return false;
+        }
+
+        uint number = Pool.Slot(sid)[RawSidPool.TypeOffset];
+        return number < (uint)types.Count && (types[(int)number].Flags2 & TypeFlag2.Vortex) != 0;
+    }
+
     /// <summary>요새 객체를 다리·섬·표면 분배 또는 공통 후처리로 등록한다. 전용 파생이 필요하면 거짓을 돌려준다.</summary>
     /// <param name="sid">등록할 오브젝트 번호다.</param>
     /// <param name="x">등록할 월드 가로 좌표다.</param>
     /// <param name="y">등록할 월드 세로 좌표다.</param>
     /// <param name="flags">Pop 호출 플래그다.</param>
     /// <returns>지형 분배 Pop으로 등록했으면 참이다. 전용 파생(R6)이나 장치 미연결이면 거짓이다.</returns>
-    /// <remarks>0.607에서 R4-2 요새 일반 Pop 결선용으로 추가했다. 분배 본문의 분기 순서와 같은 판정이며 풀·공간을 바꾸기 전에 가린다.</remarks>
+    /// <remarks>0.607에서 R4-2 요새 일반 Pop 결선용으로 추가했다. 분배 본문의 분기 순서와 같은 판정이며 풀·공간을 바꾸기 전에 가린다.
+    /// 2026-11-19 0.622에서 전용 자산 본체가 연결된 신전을 지형 분배로 이었다. 근거: cpppj RawCampaignAssetBindings.cpp 181행의 SetAssetPostPop 등록이다.</remarks>
     private bool TryPopFortTerrain(int sid, float x, float y, uint flags)
     {
         // 분배 장치나 그래프 관문이 없으면 기록 경로로 돌린다.
@@ -1426,6 +1437,12 @@ public sealed partial class HostSession
             return false;
         }
         uint vtable = BinaryPrimitives.ReadUInt32LittleEndian(Pool.Slot(sid));
+        // 전용 자산 본체가 연결된 신전은 지형 분배 Pop으로 등록한다. 다른 전용 파생은 R6 본체를 기다린다.
+        if (_vortexAssetPostPop is not null && _terrainDisplay is not null && _terrainPopTypes is { Count: > 0 } popTypes && IsRegionTempleType(popTypes, sid))
+        {
+            TerrainPopObject(sid, x, y, flags);
+            return true;
+        }
         // 전용 파생 후처리가 필요한 종류는 R6 본체를 기다린다.
         if (RawPostPop.RequiresDedicatedPostPop(Pool, sid))
         {
@@ -1810,12 +1827,28 @@ public sealed partial class HostSession
     private RegionOwnershipState? _regionOwnershipState;
 
     /// <summary>지역 투표가 읽는 세션 소유 별도(outpost) 목록이다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
-    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 단독 미션 적재 스코프에서는 비어 있다.</remarks>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 2026-11-19 0.622에서 세션 공유 100칸 목록으로 바꿨다. 근거: cpppj o/RawAssetPostPop.h 59행의 Outposts()와 0055a708 헤더다.</remarks>
     private RawPostPopList? _regionAdditional;
 
     /// <summary>지역 투표가 읽는 세션 소유 신전 목록이다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
-    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 요새 적재 중 신전 배치를 만나면 등록한다.</remarks>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 요새 적재 중 신전 배치를 만나면 등록한다. 2026-11-19 0.622에서 세션 공유 20칸 목록으로 바꿨다. 근거: cpppj o/RawAssetPostPop.h 55행의 Temples()와 005e1898 헤더다.</remarks>
     private RawPostPopList? _regionTemples;
+
+    /// <summary>사원 전용 후처리가 쓰는 세션 소유 자산 상태다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. 신전·별도 목록은 세션 공유 목록을 빌리고 로딩 깊이는 SetWorldLoadingDepth가 동기화한다.</remarks>
+    private AssetPostPopState? _vortexAssetState;
+
+    /// <summary>사원 전용 후처리가 쓰는 세션 소유 운반체 몸체다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. 피해 후처리의 공통 장부와 지면 갱신을 잇는다.</remarks>
+    private RawCarrierPostPop? _vortexAssetCarrier;
+
+    /// <summary>사원 전용 후처리가 쓰는 세션 소유 자산 본체다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. 지형 분배 Pop의 자산 갈고리로 등록한다.</remarks>
+    private RawAssetPostPop? _vortexAssetPostPop;
+
+    /// <summary>사원 전용 후처리가 요청한 충격음 횟수다. Generate 범위의 실제 재생은 R6 음향에서 잇는다.</summary>
+    /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. L2는 음소거이므로 덤프에 영향을 주지 않는다.</remarks>
+    private uint _vortexAssetSoundRequests;
 
     /// <summary>지역 투표가 읽는 세션 소유 타입별 테마 표다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
     /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 같은 인스턴스를 투표가 빌린다.</remarks>
@@ -1883,8 +1916,9 @@ public sealed partial class HostSession
         ushort[] surfaces = hash.BorrowEntries(0);
         var paintState = new RegionPaintState();
         var ownershipState = new RegionOwnershipState();
-        var additional = new RawPostPopList();
-        var temples = new RawPostPopList();
+        // 섬 소유권 투표가 읽는 별도·신전 목록은 세션 공유 목록이다. 근거: cpppj RawCampaignAssetBindings.cpp 163행의 assets.Outposts()/Temples()다.
+        var additional = SidLists.Outposts;
+        var temples = SidLists.Temples;
         var regionThemes = new uint[types.Count];
         // 모든 타입 번호마다 현재 테마 값을 넣는 반복문이다. 투표의 kind→테마 판정이 읽는다.
         for (int i = 0; i < regionThemes.Length; ++i)
@@ -1927,6 +1961,7 @@ public sealed partial class HostSession
         _regionPaint = paint;
         _regionOwnership = ownership;
         BuildRegionVortexDevices(types, terrain, ownership);
+        BuildRegionVortexPostPopDevices(types);
     }
 
     /// <summary>지역 투표 몸체를 빌려준다. 연결하기 전에는 예외다.</summary>
@@ -1940,9 +1975,14 @@ public sealed partial class HostSession
     public RawRegionPaint RegionPaint => _regionPaint ?? throw new InvalidOperationException("지역 도장 미연결");
 
     /// <summary>지역 신전 목록을 빌려준다. 연결하기 전에는 예외다.</summary>
-    /// <returns>요새 적재 중 등록한 신전 목록이다.</returns>
-    /// <remarks>2026-11-18 0.619에서 추가했다. 단독 미션 적재 스코프에서는 요새 신전만 들어간다.</remarks>
+    /// <returns>요새 적재 중 등록한 신전 목록이다. 세션 공유 20칸 목록이다.</returns>
+    /// <remarks>2026-11-18 0.619에서 추가했다. 2026-11-19 0.622에서 세션 공유 목록으로 바꿨다.</remarks>
     public RawPostPopList RegionTemples => _regionTemples ?? throw new InvalidOperationException("지역 신전 목록 미연결");
+
+    /// <summary>지역 투표가 읽는 별도(outpost) 목록을 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>섬 소유권 투표가 읽는 세션 공유 100칸 목록이다.</returns>
+    /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. 근거: cpppj o/RawAssetPostPop.h 59행의 Outposts()다.</remarks>
+    public RawPostPopList RegionAdditional => _regionAdditional ?? throw new InvalidOperationException("지역 별도 목록 미연결");
 
     /// <summary>신전 배치를 지역 투표 목록에 등록하고 즉시 투표·도장한다. Generate 뒤 Objects 적재에서 신전을 만나면 부른다.</summary>
     /// <param name="sid">등록할 신전 슬롯 번호다.</param>
@@ -1999,10 +2039,119 @@ public sealed partial class HostSession
         _regionVortex = new RawVortexOwner(Pool, baseOwner, PlayerRecords, additional, _regionVortexRevision, hooks);
     }
 
+    /// <summary>사원 전용 후처리 자산 본체를 세션에 연결하고 지형 분배 Pop의 자산 갈고리로 등록한다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">자산 후처리의 지형 분배·공통 Owner·프로세스·지형 바인딩이 미연결이다.</exception>
+    /// <exception cref="ArgumentException">자산 후처리의 TYPE·풀 불일치다.</exception>
+    /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. 근거: cpppj RawCampaignAssetBindings.cpp 149~164행의 PostHooks 조립과 181행의 SetAssetPostPop 등록이다. 신전 종류만 분배가 열리며 사제·운반체·피해·Gun·거주 구역·간헐천·너겟·바리케이드는 전용 파생(R6)에서 잇는다.</remarks>
+    private void BuildRegionVortexPostPopDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_vortexAssetPostPop is not null)
+        {
+            throw new InvalidOperationException("사원 자산 후처리 장치 중복 연결");
+        }
+
+        if (!ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("자산 후처리 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        RawPostPop terrainPostPop = _terrainPostPop ?? throw new InvalidOperationException("자산 후처리 지형 분배 미연결");
+        RawNormalTerrainWorldBinding binding = TerrainBinding ?? throw new InvalidOperationException("자산 후처리 지형 바인딩 미연결");
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("자산 후처리 정기 프로세스 미연결");
+        var assetState = new AssetPostPopState
+        {
+            SharedTemples = SidLists.Temples,
+            SharedOutposts = SidLists.Outposts,
+            SharedResidences = IslandResidences,
+        };
+        assetState.LoadingDepth = _worldLoadingDepth;
+        var carrierState = new CarrierPostPopState
+        {
+            SharedBoss = () => Gameplay.Authority.Boss,
+            SharedLoadingDepth = () => _worldLoadingDepth,
+            SharedGeyserType = () => GameAux.GeyserType,
+        };
+        var carrierHooks = RawCarrierPostPop.MakeCarrierPostPopHooks(
+            Pool,
+            terrainPostPop,
+            static _ => { },
+            (x, y, owner) => throw new InvalidOperationException("신전 지면 소유자 갱신 미연결(R6)"));
+        var carrier = new RawCarrierPostPop(Pool, types, carrierState, carrierHooks);
+        if (Pool.Edition == OriginalEdition.Patch1078)
+        {
+            carrier.BindCurrentTypes(types);
+        }
+
+        var hooks = new AssetPostPopHooks
+        {
+            ReserveRegular = static () => true,
+            AddRegular = (sid, ev, payload) => { processes.AddRegular(sid, ev, payload); },
+            TypeDword = TempleTypeDword,
+            PlayImpactSound = _ => { _vortexAssetSoundRequests++; },
+            ClearPlacement = () => { },
+            IslandNumber = (x, y) => RegionIslandAt(x, y),
+            IslandExists = island => binding.Islands.Exists(island) != 0,
+            IslandTemple = island => unchecked((int)binding.Islands.Temple(island)),
+            RegisterTemple = (island, sid) => binding.Islands.Temple(island, unchecked((uint)sid)),
+            RegionNumber = (x, y) => World.At((int)x / 16, (int)y / 16).Island,
+            Destroy = (sid, flags) => throw new InvalidOperationException("신전 swept 삭제 미연결(R6)"),
+            HasContent = (sid, slot) => throw new InvalidOperationException("신전 내용물 조회 미연결(R6)"),
+            CreateSlot = (sid, slot) => throw new InvalidOperationException("신전 내용물 생성 미연결(R6)"),
+            RefreshProduction = () => { _regionVortexRefreshes++; },
+            Assertion = (expression, file, line) => throw new InvalidOperationException($"사원 자산 후처리 원본 진단: {expression} {file}:{line}"),
+            // cpppj PostHooks의 setOwner는 같은 소유자 지정 분배다. 도장 갈고리와 달리 가상 Owner를 거친다.
+            SetOwner = SetFortObjectOwner,
+        };
+        var body = new RawAssetPostPop(Pool, types, terrainPostPop, carrier, assetState, hooks);
+        body.BindPlayerRecords(PlayerRecords, () => unchecked((uint)MissionPlayer.BattleOwner));
+        _vortexAssetState = assetState;
+        _vortexAssetCarrier = carrier;
+        _vortexAssetPostPop = body;
+        terrainPostPop.SetAssetPostPop(body);
+    }
+
+    /// <summary>신전 슬롯의 타입 DWORD를 읽는다. 프레임 RUN은 실제 표에서, 충격음 토큰은 0으로 둔다.</summary>
+    /// <param name="sid">조회할 슬롯 번호다.</param>
+    /// <param name="offset">읽을 타입 DWORD 오프셋이다. 0x74·0x130·0x134만 쓴다.</param>
+    /// <returns>해당 오프셋의 DWORD다.</returns>
+    /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. 근거: cpppj RawCampaignAssetBindings.cpp 162행의 typeDword 조립이다. 충격음 실제 재생은 R6 음향에서 잇는다.</remarks>
+    private uint TempleTypeDword(int sid, uint offset)
+    {
+        uint number = Pool.Slot(sid)[RawSidPool.TypeOffset];
+        if (number >= (uint)WorldFrames.Length)
+        {
+            throw new ArgumentOutOfRangeException(nameof(sid), "신전 타입 프레임 표 범위 오류");
+        }
+
+        if (offset == 0x130)
+        {
+            return unchecked((uint)WorldFrames[(int)number].Run((byte)'A').First);
+        }
+
+        if (offset == 0x134)
+        {
+            return unchecked((uint)WorldFrames[(int)number].Run((byte)'B').First);
+        }
+
+        return 0u;
+    }
+
     /// <summary>같은 월드의 실제 신전 가상 Owner 몸체를 빌려준다. 연결하기 전에는 예외다.</summary>
     /// <returns>요새 적재의 소유자 지정이 신전을 만나면 쓰는 가상 몸체다.</returns>
     /// <remarks>2026-11-19 0.621에서 추가했다. 도장의 SetOwner 갈고리는 이 몸체를 거치지 않는다.</remarks>
     public RawVortexOwner RegionVortex => _regionVortex ?? throw new InvalidOperationException("지역 가상 Owner 미연결");
+
+    /// <summary>사원 전용 후처리 자산 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>지형 분배 Pop의 자산 갈고리로 등록한 본체다.</returns>
+    /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. 신전 종류만 분배가 열리며 다른 전용 파생은 R6에서 잇는다.</remarks>
+    public RawAssetPostPop RegionVortexPostPop => _vortexAssetPostPop ?? throw new InvalidOperationException("사원 자산 후처리 미연결");
+
+    /// <summary>사원 전용 후처리가 요청한 충격음 횟수다.</summary>
+    /// <returns>연결 뒤 누적 횟수다. 실제 재생이 아니라 요청만 센다.</returns>
+    /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. Generate 범위의 실제 재생은 R6 음향에서 잇는다.</remarks>
+    public uint RegionVortexSoundRequests => _vortexAssetSoundRequests;
 
     /// <summary>현재 좌표의 지면 지역 번호를 조회한다. 가상 Owner의 섬 번호와 같은 getter다.</summary>
     /// <param name="x">조회할 가로 좌표다.</param>

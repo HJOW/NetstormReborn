@@ -23,8 +23,11 @@ public sealed class HostSessionRegionOwnershipTests
         var shapes = TerrainDisplayShapes.Build(definitions, new ShapeDatabase(shpRaw));
         session.BuildTerrainPopDevices(table.Types, shapes);
         session.BuildFortObjectDevices(table.Types, session.WorldFrames);
+        session.BuildIslandPostPopDevices(table.Types, session.WorldFrames);
+        session.BuildPlayerWorldHooks();
         // 가상 Owner의 섬 갈고리가 읽는 바인딩이다. 섬이 비어 있어 두 갈고리는 호출되지 않는다.
         // 2026-11-19 0.621에서 지역 가상 Owner 결선용으로 이었다.
+        // 2026-11-19 0.622에서 사원 자산 후처리 결선용으로 섬 후처리·플레이어 월드를 이었다.
         session.BuildTerrainBinding(table.Types, session.TerrainDiagnostics, new IslandRuntimeHooks
         {
             SetResidenceOwner = (_, _) => { },
@@ -41,7 +44,12 @@ public sealed class HostSessionRegionOwnershipTests
         session.BuildRegionOwnershipDevices(types, () => 1u);
         Assert.True(ReferenceEquals(session.Pool, session.RegionOwnership.Pool));
         Assert.NotNull(session.RegionPaint);
-        Assert.Empty(session.RegionTemples.Entries);
+        // 신전·별도 목록은 세션 공유 목록(20칸·100칸)을 빌리며 시작 개수는 0이다.
+        // 2026-11-19 0.622에서 공유 목록 결선용으로 바꿨다.
+        Assert.Same(session.SidLists.Temples, session.RegionTemples);
+        Assert.Same(session.SidLists.Outposts, session.RegionAdditional);
+        Assert.Equal(0u, session.RegionTemples.Count);
+        Assert.Equal(0u, session.RegionAdditional.Count);
         Assert.Throws<InvalidOperationException>(() => session.BuildRegionOwnershipDevices(types, () => 1u));
     }
 
@@ -61,6 +69,8 @@ public sealed class HostSessionRegionOwnershipTests
         Assert.Throws<InvalidOperationException>(() => session.RegionOwnership);
         Assert.Throws<InvalidOperationException>(() => session.RegionPaint);
         Assert.Throws<InvalidOperationException>(() => session.RegionTemples);
+        Assert.Throws<InvalidOperationException>(() => session.RegionAdditional);
+        Assert.Throws<InvalidOperationException>(() => session.RegionVortexPostPop);
     }
 
     /// <summary>지형 Pop 장치와 다른 인스턴스를 넘기면 거부한다.</summary>

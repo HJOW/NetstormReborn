@@ -24,6 +24,8 @@ public sealed class HostSessionRegionVortexTests
         var shapes = TerrainDisplayShapes.Build(definitions, new ShapeDatabase(shpRaw));
         session.BuildTerrainPopDevices(table.Types, shapes);
         session.BuildFortObjectDevices(table.Types, session.WorldFrames);
+        session.BuildIslandPostPopDevices(table.Types, session.WorldFrames);
+        session.BuildPlayerWorldHooks();
         // 섬이 비어 있어 거주 구역 전파를 부르지 않으므로 두 갈고리는 호출되지 않는다.
         session.BuildTerrainBinding(table.Types, session.TerrainDiagnostics, new IslandRuntimeHooks
         {
@@ -56,15 +58,24 @@ public sealed class HostSessionRegionVortexTests
         return (uint)(bytes[offset] | (bytes[offset + 1] << 8) | (bytes[offset + 2] << 16) | (bytes[offset + 3] << 24));
     }
 
-    /// <summary>같은 장치에서는 가상 Owner 몸체·revision·갱신·진단이 연결된다.</summary>
+    /// <summary>같은 장치에서는 가상 Owner 몸체·자산 후처리·revision·갱신·진단이 연결된다.</summary>
     [Fact]
     public void BuildsVortexDevices()
     {
         (HostSession session, _) = BuildVortexScene();
         Assert.True(ReferenceEquals(session.Pool, session.RegionVortex.Pool));
+        Assert.NotNull(session.RegionVortexPostPop);
         Assert.Equal(0u, session.RegionVortexRevision);
         Assert.Equal(0u, session.RegionVortexRefreshes);
+        Assert.Equal(0u, session.RegionVortexSoundRequests);
         Assert.Empty(session.RegionVortexDiagnostics);
+        // 자산 후처리의 신전 판정은 같은 가상 표를 읽는다.
+        int sid = session.Pool.Allocate(SidAllocation.Client);
+        Put(session.Pool.AllocatedBytes(sid), 0, 0x00519860u);
+        Assert.True(session.RegionVortexPostPop.Handles(sid));
+        int plain = session.Pool.Allocate(SidAllocation.Client);
+        session.Pool.AllocatedBytes(plain).Fill(0);
+        Assert.False(session.RegionVortexPostPop.Handles(plain));
     }
 
     /// <summary>요새 적재의 신전 소유자 지정은 가상 Owner로 분배되고 없는 섬은 보고 뒤 계속한다.</summary>
