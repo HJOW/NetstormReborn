@@ -513,6 +513,10 @@ public sealed class ClientHostGame : Game
             // R4-2 공장 프레임 집계용 실제 공유 시각 전진과 커널 실행. 메뉴에는 미션 세션이 없어 닿지 않는다(0.629).
             double step = _options.FixedFrameMs != 0 ? _options.FixedFrameMs / 1000.0 : gameTime.ElapsedGameTime.TotalSeconds;
             _missionSession.AdvanceMissionFrame(step);
+            // R4-4 주변 바람 진행. cpppj ClientMain 602~603행의 순서(세션 틱 뒤·커널 전)와 같이 같은 게임 난수를 매 프레임 소비한다.
+            // 메뉴에는 미션 저장소가 없어 닿지 않으며 제품 기본(고정 끔)의 벽시계 틱에서도 같은 순서로 소비한다.
+            // 2026-11-19 0.632에서 R4-4 정기 처리용으로 추가했다.
+            _missionStorage?.UpdateAmbientWind(_gameRandom);
         }
         _missionAudio?.SetFrame(unchecked((uint)_driver.Frame));
         _missionBurning?.PrepareFrame(_clock.NowSeconds, unchecked((uint)_driver.Frame));
