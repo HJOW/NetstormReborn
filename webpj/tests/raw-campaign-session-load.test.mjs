@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import { RawCampaignSession } from '../www/core/raw-campaign-session.js';
 import { synchronizeProductionControlContents } from '../www/core/client-production-sync.js';
 import { runClientBridgeDecay } from '../www/core/client-bridge-decay.js';
+import { pollClientBattleCompletion } from '../www/core/client-battle-completion.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from '../www/core/raw-production-maintenance.js';
 import { ProductionControlContext } from '../www/core/production-control-context.js';
 import { ClientColorSortInput } from '../www/core/client-color-sort-input.js';
@@ -636,6 +637,48 @@ test('CampaignSession TheWarBegins: 실제 로그인과 일반 전투 종료 관
         local.scriptBreak().value = 1; assert.equal(s.battleFinished(), false);
     } finally { s.dispose(); }
     assert.throws(() => s.battleFinished(), /반납/);
+});
+
+// World가 없는 메뉴에서도 같은 Player의 진단만 실행하고 Session을 요구하지 않는다.
+test('Client 전투 종료 프레임: World 없는 메뉴의 현재 Player 진단', () => {
+    const gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), local = new ClientLocalStateGlobals(), connections = new ClientConnectionGlobals(local), calls = [];
+    const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    players.initialize(() => {}); storage.bindDisplayDiagnostics({ value: '' }, (...args) => calls.push(args));
+    const rows = players.records(), view = new DataView(rows.buffer, rows.byteOffset, rows.byteLength);
+    view.setUint32(180 + 0x7c, 12, true); view.setUint32(180 + 0x80, 0, true);
+    const client = { edition: () => 'patch1078', gameplayGlobals: () => gameplay, localStateGlobals: () => local, surfaceStorage: () => storage,
+        playerRecords: () => players, connectionGlobals: () => connections, time: () => ({ game: 0 }), wallSeconds: () => 100 };
+    pollClientBattleCompletion(client);
+    assert.deepEqual(calls, [['p->firstTempleSid == p->debugFirstTempleSid', '.\\Dais.cpp', 0x69e]]);
+    assert.equal(gameplay.borrowed(), false); assert.equal(gameplay.gameAux().battleFinishFrames, 0);
+});
+
+// 실제 Client 장기 소유자와 내부 로그인 뒤 같은 입력 고리에 전투 종료를 예약한다.
+test('Client 전투 종료 프레임: 실제 소유자와 내부 로그인 결과', () => {
+    const gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), local = new ClientLocalStateGlobals(), connections = new ClientConnectionGlobals(local), queue = new InputQueue();
+    const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    const time = { game: 20, wall: 100 }, events = [], resultState = { value: 99 };
+    const client = { edition: () => 'patch1078', gameplayGlobals: () => gameplay, localStateGlobals: () => local, surfaceStorage: () => storage,
+        playerRecords: () => players, connectionGlobals: () => connections, input: () => queue, time: () => time, wallSeconds: () => 100 };
+    const devices = { resultState, currentDialog: () => { events.push('dialog'); return 0; }, deleteSavedState: () => events.push('delete'), rejectDraw: forbidden('무승부') };
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const { s } = scene({ gameplayGlobals: gameplay, playerRecords: players, localStateGlobals: local, connectionRegistry: connections, surfaceStorage: storage, localLogin, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    try {
+        pollClientBattleCompletion(client); assert.equal(gameplay.gameAux().battleFinishFrames, 0);
+        s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+        assert.equal(s.localConnectionReady(), true); assert.notEqual(connections.cleanup().transceivers[9], 0);
+        gameplay.world.missionPost = false; local.scriptBreak().value = 0; local.loginEnd().value = 0;
+        const rows = players.records(), view = new DataView(rows.buffer, rows.byteOffset, rows.byteLength), alliances = players.alliances();
+        view.setUint32(180 + 0x2c, 1, true); view.setUint32(2 * 180 + 0x2c, 2, true);
+        rows[180 + 0x50] = 0x23; rows[2 * 180 + 0x50] = 0x22; alliances[1 * 9 + 2] = 1; alliances[2 * 9 + 1] = 1;
+        gameplay.gameAux().battleFinishFrames = 4; pollClientBattleCompletion(client, devices);
+        assert.equal(gameplay.gameAux().battleFinishFrames, 5); assert.deepEqual(events, []);
+        pollClientBattleCompletion(client, devices);
+        assert.equal(gameplay.gameAux().battleFinishFrames, 0); assert.equal(resultState.value, 1); assert.deepEqual(events, ['dialog', 'delete']);
+        assert.deepEqual(queue.pop(false), { code: 0x020000c5, x: 1, y: 1 });
+    } finally { s.dispose(); }
 });
 
 // 로그인된 실제 내부 전송은 사제 이동 요청을 지연 송신해 같은 Host의 경로로 연결한다.

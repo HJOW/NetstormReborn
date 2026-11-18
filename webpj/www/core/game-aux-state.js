@@ -6,8 +6,13 @@
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-05 WB04-C2, 2026-11-16 WB04-E567: 애니메이션 TYPE·헤더·공통 전송 owner 연결)
 import { createSquidTransmissionState } from './raw-squid-transmission.js';
 
-// 필드 폭 종류이다: u32(부호 없는 DWORD), i32(signed DWORD), f32(float), f64(double), bool(원본 0/1 바이트). (2026-11-05 WB04-C2)
+// 필드 폭 종류이다: u8(부호 없는 BYTE), u32(부호 없는 DWORD), i32(signed DWORD), f32(float), f64(double), bool(원본 0/1 바이트). (2026-11-05 WB04-C2)
 const KIND_CHECKS = Object.freeze({
+    // 0~255 정수만 받는다.
+    u8: (value) => {
+        if (!Number.isInteger(value) || value < 0 || value > 255) throw new RangeError('부호 없는 BYTE 범위 오류');
+        return value;
+    },
     // 0~0xffffffff 정수만 받는다.
     u32: (value) => {
         if (!Number.isInteger(value) || value < 0 || value > 0xffffffff) throw new RangeError('부호 없는 DWORD 범위 오류');
@@ -47,6 +52,7 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['spellDeadline', 0x005950d0, 'f64', 0, null, '주문 재생성의 별도 게임 시각 기한'],
     ['incomePrimed', 0x00595124, 'u32', 0, null, '최초 SP 기한의 지급 준비 상태'],
     ['scheduledDrawDeadline', 0x00595358, 'f64', 0, null, 'Draw/Dais 부모가 읽는 게임 기한'],
+    ['battleFinishFrames', 0x0055a44c, 'u8', 0, null, '일반 전투 종료 프레임의 signed 비교·BYTE 대기'],
     ['totalCost', 0x0059508c, 'i32', 0, null, 'Pop/삭제 장부의 signed 비용'],
     ['resourcePool', 0x00595088, 'i32', 0, null, '보상/지역 간헐천이 공유하는 signed 자원'],
     ['refundPercent', 0x005424bc, 'u32', 25, null, '보상/로그인/전투 옵션이 공유하는 환불 비율'],
@@ -169,7 +175,7 @@ const CLEANUP_LOST_POSITION = -10000;
 let readField;
 let writeField;
 
-// 게임 보조 전역 소유자이다. GAME_AUX_FIELDS 의 각 이름이 같은 이름의 읽기/쓰기 속성이며, 쓰기는 원본 폭을 검사한다(u32/i32 범위·f32 반올림·bool).
+// 게임 보조 전역 소유자이다. GAME_AUX_FIELDS 의 각 이름이 같은 이름의 읽기/쓰기 속성이며, 쓰기는 원본 폭을 검사한다(u8/u32/i32 범위·f32 반올림·bool).
 // 사용: const aux = new GameAuxState(); aux.priestType === 158; aux.totalCost = -5; aux.worldDecorationTypes[3]. (2026-11-05 WB04-C2)
 export class GameAuxState {
     // 비공개 저장소에 닿는 공통 읽기/쓰기 함수를 만든다(접근자 생성용).

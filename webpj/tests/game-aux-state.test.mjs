@@ -159,10 +159,11 @@ test('GameAuxState: Session 선행 건설·운반·미션 입력을 일반/준�
 });
 
 // 필드 폭의 바이트 수이다. (2026-11-05 WB04-C2)
-const WIDTH = Object.freeze({ u32: 4, i32: 4, f32: 4, f64: 8, bool: 1 });
+const WIDTH = Object.freeze({ u8: 1, u32: 4, i32: 4, f32: 4, f64: 8, bool: 1 });
 
 // 바이트를 필드 폭에 맞춰 값으로 해석한다. (2026-11-05 WB04-C2)
 function decode(kind, raw) {
+    if (kind === 'u8') return raw[0];
     if (kind === 'u32') return raw.readUInt32LE(0);
     if (kind === 'i32') return raw.readInt32LE(0);
     if (kind === 'f32') return raw.readFloatLE(0);
@@ -203,8 +204,17 @@ test('GameAuxState: 초기값이 원본10.78 PE 의 .data/BSS 와 같다', (t) =
         if (value !== aux.manoSpellTypes[index]) mismatches.push(`주문@${address.toString(16)}: ${value} ≠ ${aux.manoSpellTypes[index]}`);
     }
     assert.deepEqual(mismatches, []);
-    // 필드92개와 장식4칸이다.
-    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [92, 4]);
+    // 필드93개와 장식4칸이다.
+    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [93, 4]);
+});
+
+// 전투 종료 대기 BYTE는 일반 월드 초기화로 지우지 않으며 원본 폭만 허용한다.
+test('GameAuxState: 전투 종료 대기 BYTE의 범위와 수명', () => {
+    const aux = new GameAuxState(); aux.battleFinishFrames = 255; aux.resetForGeneralWorld();
+    assert.equal(aux.battleFinishFrames, 255);
+    assert.throws(() => { aux.battleFinishFrames = 256; }, RangeError);
+    assert.throws(() => { aux.battleFinishFrames = -1; }, RangeError);
+    assert.equal(aux.battleFinishFrames, 255);
 });
 
 // TYPE 번호 칸: 웹 타입 표에서 같은 번호의 이름이 표의 대응 이름과 같다(자산 70~, 프로세스 10~, 내장 Form 1·2·3·6). 프로세스 상한 63 은 마지막 프로세스(62)+1 이다.
