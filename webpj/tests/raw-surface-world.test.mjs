@@ -790,6 +790,22 @@ test('월드: 종속 Unpop 연결과 객체 송신기', () => {
     world.dispose();
 });
 
+// 실제 월드와 같은 송신기·Client 전역으로 참가자에게 현재 자산을 동기화한다.
+test('월드: 참가자 동기화가 실제 대상 송신과 전역을 공유', () => {
+    const world = new Inputs().make(), sent = [], connected = [];
+    world.bindRuntime(runtimeHooks(world, [], { squidConnected: (target) => { connected.push(target); return true; },
+        squidSend: (target, packet) => sent.push([target, Uint8Array.from(packet)]) }));
+    try {
+        world.load(seeds()); const state = world.storage.gameAux.squidTransmission;
+        world.synchronizePeer(3);
+        assert.ok(sent.length > 0); assert.equal(sent.length, connected.length);
+        assert.ok(sent.every(([target, packet]) => target === 3 && packet.length > 0));
+        assert.ok(connected.every((target) => target === 3));
+        assert.deepEqual([state.syncTarget, state.clientSidAllowed, state.sameOwnerEnabled], [3, 0, 0]);
+    } finally { world.dispose(); }
+    assert.throws(() => world.synchronizePeer(3), /전송기 미설치/);
+});
+
 // 다리 붕괴 장치는 한 번만 연결하고 모든 장치 함수가 필요하다. (2026-11-11 WB04-E299)
 test('월드: 다리 붕괴 장치 연결 계약', () => {
     const world = new Inputs().make();

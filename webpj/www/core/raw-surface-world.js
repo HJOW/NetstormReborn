@@ -14,6 +14,7 @@ import { RawBridgeDecay, RawBridgeDecayScan } from './raw-bridge-decay.js';
 import { RawBridgeEvents, makeBridgeNeighborHooks, makeBridgeRegularHandler } from './raw-bridge-events.js';
 import { RawGraph } from './raw-graph.js';
 import { RawIslandPostPop } from './raw-island-post-pop.js';
+import { RawPeerWorldSync } from './raw-peer-world-sync.js';
 import { RawSquidDestroyDispatch } from './raw-squid-destroy-dispatch.js';
 import { RawSquidNeighbors } from './raw-squid-neighbors.js';
 import { RawSurfaceLifecycle } from './raw-surface-lifecycle.js';
@@ -487,6 +488,16 @@ export class RawSurfaceWorld {
             virtualDestroy: this.#virtualDestroy, surfaces: this.#lifecycle, bridgeEvents: this.#events, forms: this.#formDispatch, dependencies: this.#dependencies,
             processes: this.#host, processState: this.#processState, kernel: this.#kernel, bridgeState: storage.links,
         };
+    }
+
+    // 같은 월드의 송신기·공유 Regular TYPE·공간 가상 장치로 참가자 동기화를 수행한다.
+    synchronizePeer(owner) {
+        if (this.#disposed || !this.#squidTransmission) throw new Error('현재 월드의 실제 Squid 전송기 미설치');
+        const storage = this.#storage, aux = storage.gameAux;
+        new RawPeerWorldSync(storage.pool, storage.types, aux.squidTransmission, this.#squidTransmission, {
+            sharedRegularType: () => aux.sharedRegularProcessType,
+            unpop: (sid, flags) => this.unpop(sid, flags), repop: (sid, flags) => this.repop(sid, flags),
+        }).synchronize(owner);
     }
 
     // 실제 삭제도 Pop과 같은 공용 004ac260의 현재 +58 writer/진단/양수 관문으로 보낸다.

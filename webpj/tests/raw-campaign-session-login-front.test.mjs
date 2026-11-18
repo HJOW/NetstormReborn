@@ -518,6 +518,16 @@ test('Session Login 시작: 요청 소비와 상태7 UI 순서', () => {
     } finally { front.dispose(); o.dispose(); }
 });
 
+// 서버 콜백은 같은 실제 World와 장기 송신 전역에 참가자 번호를 전달한다.
+test('Session Login 서버: 같은 월드의 참가자 동기화 호출', () => {
+    const o = loginServerOwner(), front = new RawCampaignSessionLoginFront(o, devices([]));
+    try {
+        front.bindServer(); const state = o.world.storage.gameAux.squidTransmission;
+        front.server.hooks.synchronizePeer(3);
+        assert.deepEqual([state.syncTarget, state.clientSidAllowed, state.sameOwnerEnabled], [3, 0, 0]);
+    } finally { front.dispose(); o.dispose(); }
+});
+
 // 실제 27h가 서버에 도달하고 같은 연결·Player를 사용한 뒤 미연결 월드 설치에서 중단한다.
 test('Session Login 서버: 실제 내부 큐의 로그인 수신과 월드 설치 경계', () => {
     const archive = new TaffArchive(readData(ARCHIVE_PATH)), bytes = archive.read('\\d\\thewarbegins.fort'), trace = [];

@@ -268,7 +268,7 @@ export class RawCampaignSessionLoginFront {
             loadWorld: () => { if (!install) throw new Error('현재 Session Load 설치 미연결'); install(); },
             sendSettings: (target) => this.settings.send(target), restoreCoreData: (owner) => this.#restoreCoreData(owner),
             loadFortImage: () => { throw new Error('원격 Fort는 웹 일반 멀티플레이 범위 밖'); },
-            synchronizePeer: () => { throw new Error('원격 월드 동기화는 후속 단계'); },
+            synchronizePeer: (owner) => o.world.synchronizePeer(owner),
             makeBattleIsland: () => { throw new Error('스커미시 전투섬 생성은 후속 단계'); },
             assertion: (expression) => this.#assertion(expression),
             setSp: (owner, amount) => setPlayerSpAmount(owner | 0, amount | 0, o.sp, { clientActive: () => o.playerState.playerKnown, localOwner: () => o.playerState.battleOwner, editor: () => o.globals.editor }, () => this.#need('refresh', '현재 SP 갱신')()),
