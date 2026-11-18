@@ -834,6 +834,27 @@ function runWorkshopConstruction(natural) {
             const technology = s.currentTechnologyParent(); assert.ok(technology); const product = s.priests().carrier.findContained(technology, 8, 128, 0);
             assert.ok(product >= 5 && product < 15000); assert.equal(core.pool.slot(product)[20], 8); assert.equal(core.pool.slot(product)[30], 3);
             assert.equal(s.updateProductionContents(), false);
+            // 같은 실제 클라이언트 풀에서 연구 플레어만 찾아 현재 수명을 관찰한다.
+            const liveFlares = () => {
+                const result = [];
+                // 원본 클라이언트 SID 범위에서 활성 플레어의 현재 슬롯만 읽는다.
+                for (let sid = 5; sid < 15000; sid += 1) { const raw = core.pool.slot(sid); if (!(raw[11] & 3) && raw[10] === 106) result.push(sid); }
+                return result;
+            };
+            const initial = liveFlares(); assert.equal(initial.length, 12); let peak = initial.length;
+            // 연구 효과는 같은 워크샾보다 한 단계 뒤의 실제 깊이로 만들어진다.
+            for (const flare of initial) { const raw = core.pool.slot(flare); assert.equal(raw[34], 0); assert.ok(raw[40] & 8); assert.equal(raw[35], (core.pool.slot(workshop)[35] - 1) & 255); }
+            const researchTime = core.processState.now, researchWall = wall;
+            // 실제 Session Kernel을 진행해 후속 플레어 생성과 자연 삭제를 기다린다.
+            for (let step = 1; step <= 360; step += 1) {
+                const now = researchTime + step / 60; wall = researchWall + step / 60;
+                s.runFrame({ game: now, wall, delta: 1 / 60, number: 10000 + step }, false); peak = Math.max(peak, liveFlares().length);
+            }
+            assert.ok(peak > initial.length); assert.equal(liveFlares().length, 0); assert.equal(s.sp(1), 2200);
+            assert.equal(s.production().contains(128), true); assert.equal(s.priests().carrier.findContained(workshop, 16, 128, 0), actual);
+            assert.equal(s.selectFactoryKnowledge(workshop, 0x03000080, ((128 << 16) | workshop) >>> 0), 1); s.pumpLocalConnection();
+            assert.equal(researchPackets.length, 2); assert.equal(liveFlares().length, 0); assert.equal(s.priests().carrier.findContained(workshop, 16, 128, 0), actual);
+            assert.equal(core.bookkeeping.depth, 0); assert.equal(core.destroy.preDepth, 0); assert.equal(core.destroy.postDepth, 0);
             return;
         }
         // 다른 AI·미션 프로세스는 실행하지 않고 실제 사제 경로만 도착까지 진행한다.
