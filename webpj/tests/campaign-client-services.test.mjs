@@ -1,7 +1,8 @@
 // 캠페인 Start Client 장치의 선택 순서와 현재 대상 재조회를 검사한다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, prepareCampaignMissionStarting, captureCampaignMissionStarting, runCampaignMissionStarting } from '../www/core/campaign-client-services.js';
+import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, bindCampaignClientInputServices, prepareCampaignMissionStarting, captureCampaignMissionStarting, runCampaignMissionStarting } from '../www/core/campaign-client-services.js';
+import { InputQueue } from '../www/core/input-queue.js';
 import { GameData, ARCHIVE_PATH, SETUP_PATH } from '../www/assets/game-data.js';
 import { encodeOriginalText, decodeWindows1252 } from '../www/assets/text-encoding.js';
 import { RawChatChannels } from '../www/core/raw-chat-channels.js';
@@ -18,6 +19,21 @@ import { GamePalette } from '../www/assets/palette.js';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 import { createMissionFortLoadRequest, writeMissionFortRequest, captureMissionFortZone } from '../www/core/mission-fort-request.js';
 import { restoreLocalMissionStarting } from '../www/core/raw-local-mission-state.js';
+
+// 실제 입력 고리의 명령 정규화, signed 인수 및 가득 찬 큐 동작을 그대로 쓴다.
+test('캠페인 Client 입력 서비스: 현재 큐와 원본 명령 고리', () => {
+    const first = new InputQueue(), second = new InputQueue(), services = {}; let current = first;
+    bindCampaignClientInputServices({ input: () => current }, services);
+    services.developerQueue(0xffffffff, 0xffffffff, 0x80000000);
+    assert.deepEqual(first.pop(false), { code: 0x0300ffff, x: -1, y: -2147483648 });
+    current = second;
+    // 39개를 채운 뒤 넘친 명령은 원본 큐가 버린다.
+    for (let index = 0; index < 40; index += 1) services.developerQueue(index, index, index);
+    assert.equal(first.empty, true); assert.equal(second.size, 39);
+    // 각 명령은 현재 큐의 FIFO 순서를 유지한다.
+    for (let index = 0; index < 39; index += 1) assert.deepEqual(second.pop(false), { code: 0x02000000 | index, x: index, y: index });
+    assert.equal(second.empty, true);
+});
 
 // UI·시계·World 대상은 각 효과가 호출되는 시점의 실제 공급자에서 다시 조회한다.
 test('캠페인 Client Start 효과: 현재 시계·화면·World 경계', () => {

@@ -51,6 +51,11 @@ export function bindCampaignAiClientServices(client, ai) {
     ai.defaultName = () => encodeDisplay(client, client.configuration().pathSpec('defaultAiName'));
 }
 
+// 개발자 명령과 신전 이탈이 같은 Client의 현재 입력 큐에 signed 좌표로 예약되게 한다.
+export function bindCampaignClientInputServices(client, services) {
+    services.developerQueue = (code, first, second) => client.input().pushCommand(code >>> 0, first | 0, second | 0);
+}
+
 // 현재 State7과 요청의 실제 Zone을 검사한 뒤 기본 분모와 정리 전 지역 값을 캡처한다.
 export function captureCampaignMissionStarting(client, request) {
     const local = client.localStateGlobals(), state = local.state();

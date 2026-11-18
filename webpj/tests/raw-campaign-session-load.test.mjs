@@ -48,7 +48,7 @@ import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { RawCampaignMissionStartBindings } from '../www/core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from '../www/core/raw-campaign-tutorial-one-bindings.js';
 import { CampaignGameWorld } from '../www/core/campaign-game-world.js';
-import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, prepareCampaignMissionStarting, captureCampaignMissionStarting, runCampaignMissionStarting } from '../www/core/campaign-client-services.js';
+import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, bindCampaignClientInputServices, prepareCampaignMissionStarting, captureCampaignMissionStarting, runCampaignMissionStarting } from '../www/core/campaign-client-services.js';
 import { RawCampaignFactoryDisplay } from '../www/render/raw-campaign-factory-display.js';
 import { projectCameraCoordinates } from '../www/render/camera-view.js';
 import { cursorDisplayLogicalPalette } from '../www/render/raw-campaign-cursor-display.js';
@@ -2316,7 +2316,9 @@ test('CampaignSession TheWarBegins: 개발자 HP 입력 오류 패킷', () => {
 
 // 전투 패널 명령은 같은 GameAux 설정을 바꾸고 현재 입력 큐 장치를 호출한다.
 test('CampaignSession TheWarBegins: 개발자 패널 크기 패킷', () => {
-    const gameplay = new ClientGameplayGlobals(), queued = [], { s } = scene({ gameplayGlobals: gameplay, developerQueue: (...args) => queued.push(args) });
+    const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), services = {};
+    bindCampaignClientInputServices({ input: () => queue }, services);
+    const { s } = scene({ gameplayGlobals: gameplay, developerQueue: services.developerQueue });
     const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
     try {
         s.load(); s.registerCarrierCommandPrefix(dispatch); const text = 'cr 2 4', packet = new Uint8Array(9 + text.length);
@@ -2324,7 +2326,7 @@ test('CampaignSession TheWarBegins: 개발자 패널 크기 패킷', () => {
         packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
         assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
         assert.deepEqual([...gameplay.gameAux().missionSettings()].slice(5), [2, 4]);
-        assert.deepEqual(queued, [[0x02000065, 2, 4]]);
+        assert.deepEqual(queue.pop(false), { code: 0x02000065, x: 2, y: 4 }); assert.equal(queue.empty, true);
     } finally { s.dispose(); }
 });
 
