@@ -37,6 +37,7 @@ import { installClientPacketDefaults } from '../www/core/client-campaign-transpo
 import { ClientUserSelectionGlobals } from '../www/core/client-user-selection-globals.js';
 import { RawUserHighlight } from '../www/core/raw-user-highlight.js';
 import { ClientLocalStateGlobals } from '../www/core/client-local-state-globals.js';
+import { createCameraHomeState } from '../www/core/camera-home.js';
 import { DaisProcess, writeDaisProcessData } from '../www/core/raw-dais-process-data.js';
 import { GunProcess } from '../www/core/raw-gun-process.js';
 import { findAttachedProcess } from '../www/core/raw-wind-aviary-process.js';
@@ -623,6 +624,35 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
         dispatch.invokeDirect(0x77, 2, null, Uint8Array.of(1, 0x77, 6, 0, 2, 1)); assert.deepEqual(tells, ['AllianceRequested(~r,Bob,2)']);
     } finally { s.dispose(); }
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
+});
+
+// 초기 시야·Home·사제 조회는 현재 Session의 실제 풀과 로딩 깊이를 사용한다.
+test('CampaignSession TheWarBegins: 초기 카메라와 현재 사제 위치', () => {
+    const records = new ClientPlayerRecords(), storage = new CampaignTemplateStorage(), local = new ClientLocalStateGlobals();
+    const { s } = scene({ playerRecords: records, templateStorage: storage, localStateGlobals: local });
+    try {
+        s.load(); const core = s.core(), priest = s.world().objects().find(({ object }) => object.type === 158 && object.owner === s.localOwner());
+        assert.ok(priest); const raw = core.pool.allocated(priest.sid), state = createCameraHomeState(), applied = [];
+        raw[40] = 0; s.world().setLoadingDepth(4); state.suppressionDepth = 99;
+        s.resetCamera(state, (x, y) => {
+            assert.equal(state.suppressionDepth, 5); assert.equal(storage.serializationGlobals.loadingDepth, 5); applied.push([x, y]);
+        });
+        assert.equal(applied.length, 1); assert.equal(state.suppressionDepth, 4); assert.equal(storage.serializationGlobals.loadingDepth, 4);
+        assert.equal(core.processes.findEvent(priest.sid, 0x491), null);
+        assert.throws(() => s.resetCamera(state, () => { throw new Error('화면 적용 실패'); }), /화면 적용 실패/);
+        assert.equal(state.suppressionDepth, 4); assert.equal(storage.serializationGlobals.loadingDepth, 4);
+        s.world().setLoadingDepth(0); s.viewYourPriest(s.localOwner(), state, (x, y) => applied.push([x, y]));
+        assert.equal(applied.length, 2); assert.ok(core.processes.findEvent(priest.sid, 0x491));
+        const players = records.records(), data = new DataView(players.buffer, players.byteOffset, players.byteLength), offset = s.localOwner() * 180;
+        data.setUint32(offset + 0x7c, priest.sid, true); data.setUint32(offset + 0x84, 0, true);
+        s.viewHome(state, (x, y) => applied.push([x, y])); assert.equal(applied.length, 3);
+        const alternative = s.world().objects().find(({ sid }) => sid !== priest.sid); assert.ok(alternative);
+        data.setUint32(offset + 0x84, alternative.sid, true);
+        const status = raw[11]; raw[11] |= 2; s.viewHome(state, () => assert.fail('dead Home 대상은 재선택하지 않는다')); raw[11] = status;
+        data.setUint32(offset + 0x7c, 0, true); data.setUint32(offset + 0x84, priest.sid, true);
+        s.viewHome(state, (x, y) => applied.push([x, y])); assert.equal(applied.length, 4);
+        assert.throws(() => s.centerCameraOn(65536, state, () => {}), /SID 범위/); s.centerCameraOn(0, state, () => assert.fail());
+    } finally { s.dispose(); }
 });
 
 // 카메라 요청은 실제 적용 장치가 실행되기 전까지 현재 화면을 바꾸지 않는다.

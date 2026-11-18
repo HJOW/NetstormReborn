@@ -48,6 +48,7 @@ import { campaignPeerAddressText } from './campaign-transport-services.js';
 import { RawSquidSelection, selectionUsesRange, startSelectionContentPreview } from './raw-squid-selection.js';
 import { createCursorManaProcess } from './raw-cursor-mana.js';
 import { createCursorRangeProcess } from './raw-cursor-range.js';
+import { CameraHome } from './camera-home.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -730,6 +731,48 @@ export class RawCampaignSession {
         const o = this.#live();
         if (typeof o.services.cameraCommit !== 'function') throw new Error('Session의 실제 즉시 카메라 적용 장치 미연결');
         o.services.cameraCommit({ camera: o.gameplayGlobals.camera(), worldRedraw: o.worldRedraw, width, height });
+    }
+    // 초기 카메라가 같은 현재 소유자·모드·로딩 깊이와 화면 장치를 사용하도록 조립한다.
+    #cameraHome(state, apply) {
+        const o = this.#live(), core = o.core;
+        state.localPlayer = o.playerState.battleOwner; state.fort = core.ownerMode.fort;
+        state.battle = core.ownerMode.battle; state.challenge = core.ownerMode.challenge; state.suppressionDepth = o.objectState.loadingDepth;
+        return new CameraHome(core.pool, core.types, state, (x, y) => {
+            const current = this.#live(), camera = current.gameplayGlobals.camera();
+            camera.centerImmediately(x, y, state.width, state.height, current.worldRedraw, current.localStateGlobals.metaRebuild(), () => {
+                if (typeof apply !== 'function') throw new Error('중심 이동의 명시497960 소비자 미연결');
+                apply(camera.target().pixels[0], camera.target().pixels[1]);
+            });
+        }, {
+            suppressionDepth: () => this.#live().objectState.loadingDepth,
+            setSuppressionDepth: (depth) => this.#live().world.setLoadingDepth(depth),
+            contentPreview: (parent) => {
+                const current = this.#live();
+                startSelectionContentPreview(current.core.pool, parent, current.objectState.loadingDepth,
+                    (sid, event, payload) => this.#live().core.processes.addRegular(sid, event, payload), undefined);
+            },
+        });
+    }
+    // 현재 세션 사제와 모드를 사용해 초기 시야를 선택한다.
+    resetCamera(state, apply) { this.#cameraHome(state, apply).reset(); }
+    // 명시 SID의 현재 좌표와 TYPE 발자국으로 카메라를 즉시 이동한다.
+    centerCameraOn(sid, state, apply) {
+        const o = this.#live(); if (!sid) return;
+        if (!Number.isInteger(sid) || sid < 0 || sid > 65535 || sid >= o.core.pool.capacity) throw new RangeError('카메라 중심 이동의 현재 SID 범위');
+        this.#cameraHome(state, apply).centerOn(sid);
+    }
+    // 현재 Player의 첫 Home SID를 우선하며 0일 때만 두 번째 SID를 사용한다.
+    viewHome(state, apply) {
+        const o = this.#live(), owner = o.playerState.battleOwner;
+        if (owner >= 9) throw new RangeError('ViewHome의 현재 로컬 Player 범위');
+        const players = o.players, data = new DataView(players.buffer, players.byteOffset, players.byteLength);
+        const first = data.getUint32(owner * 180 + 0x7c, true), sid = first || data.getUint32(owner * 180 + 0x84, true);
+        if (sid) this.centerCameraOn(sid, state, apply);
+    }
+    // 현재 참여 조회가 고른 사제 또는 대체 대상의 위치로 이동한다.
+    viewYourPriest(owner, state, apply) {
+        const sid = this.#live().priestParticipation.find(owner);
+        if (sid) this.centerCameraOn(sid, state, apply);
     }
     // 미션 시작이 현재 로컬 Player와 알려진 상태를 매번 읽는다.
     localOwner() { return this.#live().playerState.battleOwner; }
