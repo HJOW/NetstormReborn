@@ -4,8 +4,8 @@
 //   dispatch.dispatch(connection, packet) 은 닫힌 연결/버전 종료/콜백 뒤 소멸이면 false, 무시한 패킷/성공이면 true 를 돌려준다. 콜백에 전달한 버퍼는 호출 동안만 유효하다.
 // 등록 API 는 변경 전에 등록 표의 `touch(type)` 로 현재 대여의 변경 칸을 기록한다(PacketRegistrationTable). 같은 표를 여러 backend 가 공유하며 시계·기록·연결 수명 효과(hooks)는 backend 고유이다.
 // 기준선 뒤 cpppj 에서 늘어난 즉시 직접 호출(`registerDirect`/`invokeDirect`: NULL 연결을 허용하는 내부 호출)과 선택 장치(`sent` 송신 기록, `players` 현재 Player9 조회)·`packetPlayerActive` 를 옮겼다.
-// 옮기지 않은 것: 고정 Native 수신기(CanonicalPacketReceiver)와 실제 소켓 지연 FIFO(delayQueue)는 LAN/실소켓 전송이라 웹 범위 밖이며(1절), 타입 4 집합 패킷은 공통 프레임 부모(후속 RawPacketFrame)가 필요해 기준선처럼
-// 거부한다. 지연 표시가 있는 연결에 수신기가 있으면 거부한다. CD(10.72)는 옮기지 않았다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-11 WB04-E306: 4-C RawPacketDispatch 이식)
+// 타입 4 집합은 공통 RawPacketFrame에서 처리한다. 고정 Native 수신기(CanonicalPacketReceiver)는 후속이며 소켓 지연 FIFO는 웹 범위 밖이다.
+// 지연 표시가 있는 연결에 수신기가 있으면 거부한다. CD(10.72)는 옮기지 않았다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-11 WB04-E306: 4-C RawPacketDispatch 이식)
 import { PacketRegistrationTable } from './packet-registration-table.js';
 
 // 10.78 의 마지막 지원 타입이다. (2026-11-11 WB04-E306)
@@ -190,7 +190,7 @@ export class RawPacketDispatch {
             else connection.received = now;
             if (type > 9) this.#hooks.record(connection, packet, declaredLength(packet));
             // 기록 경계가 등록을 바꾸면 현재 슬롯의 수신기를 한 번 선택한다.
-            this.#deliver(type, connection, packet);
+            this.deliverReceiver(type, connection, packet);
             if (!connection.depth && (connection.flags & CLOSED)) {
                 this.#hooks.close(connection);
                 this.#hooks.release(connection);
@@ -202,16 +202,16 @@ export class RawPacketDispatch {
         }
     }
 
-    // 4df740 이 효과 전에 저장한 type 의 현재 수신기를 선택해 호출한다: 수신기가 없으면 아무 일도 하지 않고, 지연 표시가 있는 연결(실소켓 FIFO)은 웹에 없어 거부한다.
+    // 4df740 이 효과 전에 저장한 type 의 현재 수신기를 선택해 호출한다: 수신기가 없으면 0을 반환하고, 지연 표시가 있는 연결(실소켓 FIFO)은 웹에 없어 거부한다.
     // 즉시 콜백 중에는 연결 깊이를 올리고 정상/예외 종료에서 복구하며 호출 중 표가 바뀌어도 이미 읽은 함수를 끝까지 쓴다. (2026-11-11 WB04-E306)
-    #deliver(type, connection, packet) {
+    deliverReceiver(type, connection, packet) {
         const entry = this.#registrations.entry(type);
-        if (!entry.receive && !entry.directReceive) return;
+        if (!entry.receive && !entry.directReceive) return 0;
         if (connection.delayed) throw new Error('지연 표시가 있는 연결의 실제 FIFO 미연결');
         const pin = entry.pin();
         try {
             const receive = entry.receive;
-            if (!receive) return;
+            if (!receive) return 0;
             connection.depth += 1;
             try {
                 receive(connection.sender, connection, packet);
@@ -221,6 +221,7 @@ export class RawPacketDispatch {
         } finally {
             pin.release();
         }
+        return 0;
     }
 
     // 원문 함수 포인터 호출처럼 검증/observer·기록/시각/연결 깊이·닫힘을 추가하지 않고 등록 owner 핀만 유지한다. 직접 수신기는 선택한(null 가능) 연결로,

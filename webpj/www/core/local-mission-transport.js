@@ -10,10 +10,11 @@
 // 이름(handle·Player 이름)은 "바이트 = 문자 코드" 이진 문자열로 주고받는다(raw-mission-client-packets.js 와 같은 관례). 종료된 CD 파일 확인 요청 0x7f/응답 0x80 은 AGENTS 의 클라이언트 유효성 검사 비활성화 요구로
 // 송수신하지 않는다(cpppj 와 같음). TCP/SPX/OS 소켓 전체를 복원하는 클래스가 아니며 simulconnect 전역을 바꾸지 않는다.
 // 기준선 뒤 cpppj 변경 판정(LEFT_JOBS 3.6절, 단위 문서 2절): ② 반영 = 송신 선택을 현재 Registry 노드로(pending/owner 숫자 사본 대신)·가상 송신 장치의 직접 노드 송신·`players` 현재 Player9 조회·`sent` 송신 기록·
-//   Track 의 소켓 준비/공통 buffered 장치·재배치 관문의 현재 노드 확인·`owner()` 의 현재 양수 칸 재조회·0x87 의 비NULL 빈 관찰기·`ownsConnection`/`rebindHooks`. ① = 집합 프레임 분배의 공통 부모(RawPacketFrame) 이동(지연 FIFO 만 다르며 웹 제외).
+//   Track 의 소켓 준비/공통 buffered 장치·재배치 관문의 현재 노드 확인·`owner()` 의 현재 양수 칸 재조회·0x87 의 비NULL 빈 관찰기·`ownsConnection`/`rebindHooks`와 공통 RawPacketFrame 사용(지연 FIFO는 웹 제외).
 //   ③ 4-D = 생성자의 접속 통지 수신기 등록(RegisterConnectPacketReceiver, 실제 TCP 초기 패킷 복제와 고정 Native 수신기에 기댐). CD(10.72)는 옮기지 않았다.
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-12 WB04-E324: 4-C zacket/LocalMissionTransport 이식으로 추가)
 import { PacketConnection, RawPacketDispatch, packetPlayerActive } from './raw-packet-dispatch.js';
+import { dispatchPacketFrame } from './raw-packet-frame.js';
 import { RawConnectionRegistry } from './raw-connection-registry.js';
 import { PENDING_CONNECTION_SLOTS, TRANSCEIVER_SLOTS } from './raw-connection-cleanup.js';
 import { currentTransportToken, transportPollResult } from './raw-transport-polling.js';
@@ -629,86 +630,10 @@ export class LocalMissionTransport {
         for (let id = 0; id < TRANSCEIVER_SLOTS; id += 1) this.flushOne(id);
     }
 
-    // 지연 없는 실제 수신 프레임의 단일/집합 분기이다. 단일은 같은 분배기에 맡기고, 집합(kind 4)은 원본 순서 now → 버전 정책 → 기록 → observer(0) → receive 로 내부 패킷마다 분배한다.
-    // 반환은 연결이 계속 쓸 수 있으면 true 이다(닫힘/종료/소멸이면 false). 길이 오류는 terminate 뒤 false, 중첩 집합과 지연 표시 연결은 미복원이라 거부한다. (2026-11-12 WB04-E324)
+    // 같은 등록 표와 노드 수명 장치로 공통 단일/집합 프레임을 분배한다.
     dispatchFrame(connection, frame) {
-        if (frame.length >= HEADER && isRetiredCdValidationPacket(frame[1])) return !(connection.flags & CLOSED);
-        if (frame.length < HEADER || frame[1] !== BATCH_TYPE) return this.#dispatch.dispatch(connection, frame);
-        if (connection.flags & CLOSED) return false;
-        if (connection.delayed) throw new Error('로컬 집합의 지연 분배 미복원');
-        const hooks = this.#hooks;
-        const total = read(frame, 2, 2);
-        let cursor = HEADER;
-        if (total > frame.length) {
-            hooks.terminate(connection);
-            return false;
-        }
-        // 현재 집합의 원문 순서를 보존하고 콜백 뒤 다음 등록/연결 필드를 다시 읽는다.
-        while (cursor < total) {
-            if (total - cursor < HEADER) {
-                hooks.terminate(connection);
-                return false;
-            }
-            const length = read(frame, cursor + 2, 2);
-            if (!length || length > total - cursor) {
-                hooks.terminate(connection);
-                return false;
-            }
-            const packet = frame.subarray(cursor, cursor + length);
-            cursor += length;
-            if (!this.#dispatch.validate(packet)) continue;
-            // 집합 내부에서도 폐기된 검증의 기록/observer/수신기를 호출하지 않는다.
-            if (isRetiredCdValidationPacket(packet[1])) continue;
-            if (packet[1] === BATCH_TYPE) throw new Error('로컬 중첩 집합 패킷 미복원');
-            const type = packet[1];
-            const now = hooks.now();
-            if (type === 6) connection.heartbeat = now;
-            else connection.received = now;
-            const registration = this.#dispatch.registration(type);
-            const incoming = packet[0] & 0x7f;
-            if (incoming !== registration.version) {
-                const lower = incoming < registration.version;
-                if (registration.mismatch & (lower ? 8 : 4)) {
-                    hooks.terminate(connection);
-                    return false;
-                }
-                if (registration.mismatch & (lower ? 2 : 1)) continue;
-            }
-            // 집합의 기록도 실제 전체 Runtime 정리보다 먼저 대여를 올린다.
-            const recordPin = registration.pin();
-            try {
-                hooks.record(connection, packet, length);
-                this.#dispatch.registration(type).notifyObserver(packet, 0);
-                const receiverEntry = this.#dispatch.registration(type);
-                const pin = receiverEntry.pin();
-                try {
-                    const receive = receiverEntry.receive;
-                    if (receive) {
-                        connection.depth += 1;
-                        try {
-                            receive(connection.sender, connection, packet);
-                        } finally {
-                            connection.depth -= 1;
-                        }
-                    }
-                } finally {
-                    pin.release();
-                }
-            } finally {
-                recordPin.release();
-            }
-        }
-        if (cursor !== total) {
-            hooks.terminate(connection);
-            return false;
-        }
-        if (!connection.depth && (connection.flags & CLOSED)) {
-            const wrapped = this.#wrappedHooks();
-            wrapped.close(connection);
-            wrapped.release(connection);
-            return false;
-        }
-        return true;
+        const hooks = this.#hooks, wrapped = this.#wrappedHooks();
+        return dispatchPacketFrame(this.#dispatch, connection, frame, { ...hooks, close: wrapped.close, release: wrapped.release });
     }
 
     // 지정 끝의 실제 한 프레임을 꺼내(콜백 동안 이 함수가 소유) 마지막 수신 version 을 기록하고, 단일 observer(0)(004dfc00, 집합과 폐기된 검증은 제외) 뒤 분배한다. (2026-11-12 WB04-E324)
