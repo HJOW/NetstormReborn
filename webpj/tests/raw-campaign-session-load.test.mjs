@@ -772,6 +772,22 @@ test('CampaignSession TheWarBegins: 개발자 Player 진단 패킷', () => {
     } finally { s.dispose(); }
 });
 
+// 실제 31h 수신이 같은 월드 저장소의 스캔 주기와 현재 시각을 갱신한다.
+test('CampaignSession TheWarBegins: 개발자 다리 스캔 주기 패킷', () => {
+    const logs = [], { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); const storage = s.world().storage;
+        storage.bindGraphClock(() => 12.25); storage.bindGraphTrace((...args) => logs.push(args));
+        const text = 'sbkp 1.2', packet = new Uint8Array(9 + text.length);
+        packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+        packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.equal(storage.bridgeDecayPeriod, Math.fround(1.2));
+        assert.deepEqual(storage.bridgeDecayScan, { first: 15000, last: 23001, cursor: 15000, next: 12.25 + Math.fround(1.2) });
+        assert.deepEqual(logs, [[29, 'bkPERIOD now 1.200000\nresetting bridge killer\n']]);
+    } finally { s.dispose(); }
+});
+
 // 동맹 명령은 같은 Player 참여 상태의 방향 비트와 표를 갱신한다.
 test('CampaignSession TheWarBegins: 개발자 동맹 변경 패킷', () => {
     const sends = [], playerRecords = new ClientPlayerRecords(), { s } = scene({ playerRecords, ai: { participation: { sendAlliance: (...args) => sends.push(args) } } });
