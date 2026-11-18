@@ -1033,3 +1033,5 @@ cpppj/src/o/RawRegionPaint.h	Netstorm.Core/Original/RawRegionPaint.cs	e079c26952
 cpppj/src/o/RawRegionPaint.cpp	Netstorm.Core/Original/RawRegionPaint.cs	e079c26952667da76e8a485a90184aff77fa3b6f	L1
 cpppj/src/o/RawRegionOwnership.h	Netstorm.Core/Original/RawRegionOwnership.cs	e079c26952667da76e8a485a90184aff77fa3b6f	L1
 cpppj/src/o/RawRegionOwnership.cpp	Netstorm.Core/Original/RawRegionOwnership.cs	e079c26952667da76e8a485a90184aff77fa3b6f	L1
+cpppj/src/o/RawVortexOwner.h	Netstorm.Core/Original/RawVortexOwner.cs	784e34ccb0e64d8e8fbff0e1d4e275d50db30f3b	L1
+cpppj/src/o/RawVortexOwner.cpp	Netstorm.Core/Original/RawVortexOwner.cs	784e34ccb0e64d8e8fbff0e1d4e275d50db30f3b	L1
