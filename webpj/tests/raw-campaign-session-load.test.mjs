@@ -761,7 +761,10 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
         } finally { cursor.handleInput = handleInput; }
         input.event({ code: 0x71, x: 0, y: 0 }); assert.deepEqual(keyQueue.pop(false), { code: 0x020000f4, x: 0, y: 0 });
         input.event({ code: 0x68, x: 0, y: 0 }); assert.deepEqual(keyQueue.pop(false), { code: 0x020000ae, x: 0, y: 0 });
-        assert.throws(() => input.event({ code: InputCode.leftButton, x: 0, y: 0 }), /마우스 사건 분배 미연결/);
+        assert.throws(() => input.event({ code: InputCode.leftButton, x: 0, y: 0 }), /좌클릭 사건 분배 미연결/);
+        assert.equal(input.event({ code: InputCode.rightButton, x: 0, y: 0 }), null); assert.equal(world.selected(), 0); assert.equal(world.inputMode(), 0);
+        assert.equal(input.event({ code: InputCode.rightButton, x: screen[0] - 16, y: screen[1] - 11 }), priest.sid); assert.equal(world.selected(), 0);
+        assert.equal(input.event({ code: InputCode.rightButton, x: -1, y: -1 }), null); world.select(priest.sid); assert.equal(world.selected(), priest.sid);
         const event = { button: 2 }, menus = []; assert.equal(world.openSelectionMenu(priest.sid, event, false, (sid, current) => { menus.push([sid, current]); return 37; }), 37);
         assert.deepEqual(menus, [[priest.sid, event]]); assert.equal(world.selected(), priest.sid);
         const before = session.localConnectionPackets(); world.moveFromMinimap(90, 108); session.pumpLocalConnection();

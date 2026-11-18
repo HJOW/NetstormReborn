@@ -194,6 +194,9 @@ export class CampaignGameWorld {
     select(sid) { this.#live(); if (!this.#input) throw new Error('실제 선택 장치 미설치'); this.#selection.select(sid, 0, 1); this.#changed = true; }
     // 실제 폴링의 화면 정수 좌표를 같은 Client 선택 전역에 기록한다.
     setMousePoint(x, y) { this.#live(); this.#gameplay.selection.mouse.x = x | 0; this.#gameplay.selection.mouse.y = y | 0; }
+    // 현재 강조 모드와 특수 선택 권한은 같은 Client 전역에서 읽는다.
+    inputMode() { this.#live(); return this.#gameplay.selection.mode >>> 0; }
+    specialSelection() { this.#live(); return this.#gameplay.player.special >>> 0; }
     // 현재 Client 커서의 원본 회전 모드 DWORD다.
     cursorRotationMode() { this.#live(); return this.#gameplay.cursorGlobals().rotationMode().value >>> 0; }
     // 현재 마우스와 선택 전역을 사용하는 강조 모드다.

@@ -1,5 +1,5 @@
 // 실제 캠페인 World의 현재 마우스 폴링과 커서 옵션을 처리한다.
-// 사용: new CampaignUserInput(world, config, services).updateCursor({ code, x, y }) / event(사건). 마우스 사건과 브라우저 장치 연결은 후속이다.
+// 사용: new CampaignUserInput(world, config, services).updateCursor({ code, x, y }) / event(사건). 좌클릭과 브라우저 장치 연결은 후속이다.
 import { InputCode } from './input-queue.js';
 import { queueProductionShortcut, PRODUCTION_BRIDGE_COMMAND, PRODUCTION_REPEAT_COMMAND } from './production-shortcuts.js';
 import { dispatchSelectionKeyInput } from './client-input-commands.js';
@@ -21,7 +21,7 @@ export class CampaignUserInput {
     #paused() { if (typeof this.#services.paused !== 'function') throw new Error('사용자 입력의 현재 정지 장치 미연결'); return this.#services.paused(); }
     // 생산·선택 명령은 같은 40칸 입력 큐에 signed 인자를 보존해 예약한다.
     #queue(command, first, second) { const queue = this.#services.queue; if (!queue || typeof queue.pushCommand !== 'function') throw new Error('사용자 입력의 실제 명령 큐 미연결'); queue.pushCommand(command, first | 0, second | 0); }
-    // 정지·활성 커서·생산·선택 키를 원본 순서로 처리한다. 마우스 본체는 후속까지 명시 거부한다.
+    // 정지·활성 커서·생산·선택 키와 우클릭을 원본 순서로 처리한다. 좌클릭은 후속까지 명시 거부한다.
     event(event) {
         if ((event.code & InputCode.release) || this.#paused()) return null;
         this.readCursorOptions();
@@ -38,7 +38,15 @@ export class CampaignUserInput {
         const key = (event.code >>> InputCode.virtualKeyShift) & 255;
         if (key >= 8) return null;
         const mouse = (event.code & 0x03ffffff) >>> 0;
-        if (mouse === InputCode.leftButton || mouse === InputCode.rightButton) throw new Error('사용자 입력의 마우스 사건 분배 미연결');
+        if (mouse === InputCode.rightButton) {
+            if (this.#world.inputMode() !== 0) { this.#world.highlight(0); this.#world.resetSelection(); return null; }
+            const session = this.#world.session(), force = (event.code & InputCode.control) && (this.#world.specialSelection() || session.editor()) ? 1 : 0;
+            const picked = this.#world.pick(event.x, event.y, force);
+            if (picked) { if (session.editor()) throw new Error('웹 제외 편집 객체 메뉴 미연결'); return picked; }
+            if (!session.core().ownerMode.challenge || !session.playerKnown()) this.#world.resetSelection();
+            return null;
+        }
+        if (mouse === InputCode.leftButton) throw new Error('사용자 입력의 좌클릭 사건 분배 미연결');
         return null;
     }
     // 현재 화면점을 먼저 보관하고 창 밖·잠금·활성 커서 순서로 원본 폴링을 분배한다.
