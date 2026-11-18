@@ -13,7 +13,7 @@ import { readRows, put, get, floatToBits } from './raw-support.mjs';
 import { SidPool } from '../www/core/sid-pool.js';
 import { SquidHash } from '../www/core/squid-hash.js';
 import { SquidPostPopList } from '../www/core/squid-postpop-state.js';
-import { ISLAND_STORAGE_BYTES, RawIslandRuntime, createFortFinishOwnerState, createRawIslandStorage, resetRawIslandRecords } from '../www/core/raw-island-runtime.js';
+import { ISLAND_STORAGE_BYTES, RawIslandRuntime, createFortFinishOwnerState, createRawIslandStorage, resetRawIslandRecords, rawIslandExists, rawIslandOwner, rawIslandBounds, rawIslandBoundsBits } from '../www/core/raw-island-runtime.js';
 
 // 원본 관측 행이다. 없으면 해당 검사를 건너뛴다. (2026-11-09 WB04-E161)
 const allRows = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'islandruntime-x86.tsv')) ?? [];
@@ -243,6 +243,30 @@ test('섬 런타임: 별도 3204바이트 장기 배열을 실행기가 계속 �
     const before = Uint8Array.from(storage);
     assert.ok(throws(() => resetRawIslandRecords(storage.subarray(0, ISLAND_STORAGE_BYTES - 1))));
     assert.deepEqual(storage, before);
+});
+
+// World 없는 조회는 원본 signed count와 존재 DWORD 전체, 물리 경계를 유지한다.
+test('섬 자료 조회: World 없이 존재 DWORD와 signed 범위', () => {
+    const records = createRawIslandStorage(); put(records, 0, 2); put(records, 8, 0x80000001); put(records, 40, 0xffffffff);
+    const before = records.slice();
+    assert.deepEqual([rawIslandExists(records, 0), rawIslandExists(records, 1), rawIslandExists(records, -1), rawIslandExists(records, 2)], [0x80000001, 0xffffffff, 0, 0]);
+    assert.deepEqual(records, before); put(records, 0, 0xffffffff); assert.equal(rawIslandExists(records, 0), 0);
+    put(records, 0, 100); assert.equal(rawIslandExists(records, 100), 0); put(records, 0, 101);
+    assert.throws(() => rawIslandExists(records, 100), /물리 기록/);
+    assert.throws(() => rawIslandExists(records.subarray(1), -1), /3204BYTE/);
+});
+
+// 진단이 같은 기록을 바꾸면 Owner와 Bounds는 복귀 뒤의 필드를 읽는다.
+test('섬 자료 조회: 부재 진단 뒤 현재 owner와 경계 비트', () => {
+    const records = createRawIslandStorage(); let calls = 0;
+    assert.equal(rawIslandOwner(records, 0, () => { calls += 1; put(records, 0, 1); put(records, 8, 1); put(records, 12, 0x80000001); }), 0x80000001);
+    put(records, 8, 0);
+    const bits = rawIslandBoundsBits(records, 0, () => { calls += 1; put(records, 20, 0x80000000); put(records, 24, 0x3f800001); put(records, 28, 0x7fc12345); put(records, 32, 0xff800000); });
+    assert.deepEqual(bits, [0x80000000, 0x3f800001, 0x7fc12345, 0xff800000]);
+    const bounds = rawIslandBounds(records, 0, () => {}); assert.ok(Object.is(bounds.left, -0)); assert.ok(Number.isNaN(bounds.right)); assert.equal(bounds.bottom, -Infinity);
+    assert.equal(rawIslandOwner(records, -1, () => { calls += 1; }), 0);
+    assert.throws(() => rawIslandBoundsBits(records, -1, () => { calls += 1; }), /물리 기록/);
+    assert.equal(calls, 4); assert.throws(() => rawIslandOwner(records, 0), /부재 진단/);
 });
 
 test('섬 런타임: 물리 100기록 경계·필수 효과·Player 기록 크기를 거부한다', () => {

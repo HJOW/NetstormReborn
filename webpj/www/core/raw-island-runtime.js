@@ -1,6 +1,7 @@
 // 실제 100개/32바이트 섬 목록(IslandList 00568b60)과 현재 owner 변경 효과를 같은 pool/해시/목록/Player 상태에서 실행하는 모듈이다(cpppj `o/RawIslandRuntime.cpp/.h`, 10.78: 패치 0046edf0..0046f320).
 //  - 저장소: 4바이트 count DWORD + 100개 × 32바이트 기록(+0 신전 DWORD·+4 존재 DWORD·+8 현재 owner DWORD·+12 지역 BYTE·+13 원래 owner BYTE·+16..+28 경계 float 네 개). createRawIslandStorage()는 3204바이트 장기 배열을 만든다.
 //    resetRawIslandRecords(records): 100행의 지정 필드(DWORD 3개·BYTE 2개·float 4개)와 마지막 count 만 쓴다(padding 2바이트와 다른 필드는 보존, 크기가 3204가 아니면 쓰기 전에 거부).
+//    rawIslandExists/Owner/Bounds/BoundsBits는 World 없이 같은 현재 기록을 조회하고 부재 진단 뒤 변경도 반영한다.
 //  - createFortFinishOwnerState(): 섬/Fort 소유자 처리가 공유하는 모드 상태 { chaffMode, special, fort, playerRegions[9](초기 127), invalidRegion(127), residenceType(89) } 이다(이후 RawFortFinishOwner 가 같은 구조를 쓴다).
 //  - new RawIslandRuntime(pool, hash, records, modes, residences, worldRedraw, mapRevision, hooks, worldExtent = 256): worldRedraw/mapRevision 은 실제 공유 DWORD 를 빌리는 { value } 상자(0059a8b0 은 owner 변경 때 증가, 패치 005949d4 는 1 저장),
 //    hooks = { setResidenceOwner(sid, owner)(거주 구역 가상 owner 실행, 같은 raw 풀 갱신), assertion('MissingIsland' | 'InvalidBounds')(원본 진단 뒤 원문처럼 계속) } 둘 다 필수이다.
@@ -32,6 +33,51 @@ export function createFortFinishOwnerState() {
 // 실제 필드의 낮은 바이트부터 쓰며 정렬·구조체 padding 을 가정하지 않는다. (2026-11-09 WB04-E161)
 function writeField(records, offset, value, width = 4) {
     for (let byte = 0; byte < width; byte += 1) records[offset + byte] = (value >>> (byte * 8)) & 0xff;
+}
+
+// 실제 기록의 비정렬 DWORD를 낮은 바이트부터 읽는다.
+function readField(records, offset) {
+    return (records[offset] | (records[offset + 1] << 8) | (records[offset + 2] << 16) | (records[offset + 3] << 24)) >>> 0;
+}
+
+// World 없이도 같은 3204바이트와 원본 signed 인덱스의 물리 범위를 확인한다.
+function checkIslandInput(records, island) {
+    if (!(records instanceof Uint8Array) || records.length !== ISLAND_STORAGE_BYTES) throw new TypeError('Island 조회의 실제 3204BYTE 범위 오류');
+    if (!Number.isInteger(island) || island < -0x80000000 || island > 0x7fffffff) throw new RangeError('Island 조회의 signed 번호 범위 오류');
+}
+
+// 현재 signed count 관문 뒤 존재 DWORD 전체를 반환한다. World와 Player는 필요하지 않다.
+export function rawIslandExists(records, island) {
+    checkIslandInput(records, island);
+    if (island < 0 || island >= (readField(records, 0) | 0)) return 0;
+    if (island >= RECORDS) throw new RangeError('IslandRuntime 물리 기록 범위 오류');
+    return readField(records, 4 + island * STRIDE + 4);
+}
+
+// 부재 진단 뒤 존재와 현재 owner를 다시 읽는다.
+export function rawIslandOwner(records, island, missing) {
+    if (!rawIslandExists(records, island)) {
+        if (typeof missing !== 'function') throw new Error('Island Owner 실제 부재 진단 미결합');
+        missing();
+    }
+    return rawIslandExists(records, island) ? readField(records, 4 + island * STRIDE + 8) : 0;
+}
+
+// 부재 진단 뒤에도 같은 물리 기록의 네 float 비트를 읽는다.
+export function rawIslandBoundsBits(records, island, missing) {
+    if (!rawIslandExists(records, island)) {
+        if (typeof missing !== 'function') throw new Error('Island Bounds 실제 부재 진단 미결합');
+        missing();
+    }
+    if (island < 0 || island >= RECORDS) throw new RangeError('IslandRuntime 물리 기록 범위 오류');
+    const record = 4 + island * STRIDE;
+    return [readField(records, record + 16), readField(records, record + 20), readField(records, record + 24), readField(records, record + 28)];
+}
+
+// 실제 경계의 float 값을 반환하며 비트 보존이 필요하면 rawIslandBoundsBits를 사용한다.
+export function rawIslandBounds(records, island, missing) {
+    const [left, top, right, bottom] = rawIslandBoundsBits(records, island, missing).map(floatOf);
+    return { left, top, right, bottom };
 }
 
 // Delete 와 전체 Reset 은 같은 한 기록 몸체를 쓰며 물리 밖 입력은 쓰기 전에 거부한다. (2026-11-09 WB04-E161)
@@ -127,8 +173,7 @@ export class RawIslandRuntime {
 
     // 원본 signed 범위 검사와 존재 DWORD 반환을 보존한다(범위 밖은 0). (2026-11-09 WB04-E161)
     exists(island) {
-        if (island < 0 || island >= (this.count | 0)) return 0;
-        return this.#read(RawIslandRuntime.#record(island) + 4);
+        return rawIslandExists(this.#records, island);
     }
 
     // missing 진단 뒤 현재 exists 를 다시 읽어 callback 의 원본 상태 변경도 보존한다. (2026-11-09 WB04-E161)
@@ -167,13 +212,11 @@ export class RawIslandRuntime {
     setTemple(island, temple) { if (this.#require(island)) this.#write(RawIslandRuntime.#record(island), temple); }
 
     // 현재 owner DWORD 를 조회한다(원래 owner BYTE 와 합치지 않는다). (2026-11-09 WB04-E161)
-    owner(island) { return this.#require(island) ? this.#read(RawIslandRuntime.#record(island) + 8) : 0; }
+    owner(island) { return rawIslandOwner(this.#records, island, () => this.#hooks.assertion('MissingIsland')); }
 
     // 원본은 missing 진단 뒤에도 물리 기록의 네 float 를 읽는다. 물리 100개 밖은 메모리 경계로 진단한다. boundsBits 는 NaN 페이로드까지 같은 원본 비트이다. (2026-11-09 WB04-E161)
     boundsBits(island) {
-        this.exists(island) || this.#hooks.assertion('MissingIsland');
-        const record = RawIslandRuntime.#record(island);
-        return [this.#read(record + 16), this.#read(record + 20), this.#read(record + 24), this.#read(record + 28)];
+        return rawIslandBoundsBits(this.#records, island, () => this.#hooks.assertion('MissingIsland'));
     }
     bounds(island) {
         const [left, top, right, bottom] = this.boundsBits(island).map(floatOf);
