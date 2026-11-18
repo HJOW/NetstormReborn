@@ -424,3 +424,20 @@ test('CampaignSession Tutorial 1: 공유 Regular 수신', () => {
         assert.ok(process); assert.deepEqual([process.time, process.payload, process.count], [123.5, 1.25, 7]);
     } finally { s.dispose(); }
 });
+
+// 압축 검증 패킷은 같은 소유자 캐시와 공통 객체 검증 상태를 통과한다.
+test('CampaignSession Tutorial 1: 압축 객체 수신', () => {
+    const gameplay = new ClientGameplayGlobals(), logs = [], { s } = scene({ gameplayGlobals: gameplay, playerLog: (...args) => logs.push(args) });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        const c = s.core(), sid = c.factory.create(6, 2), before = c.pool.slot(sid), aux = gameplay.gameAux();
+        aux.verifySid = sid; const packet = new Uint8Array(12), view = new DataView(packet.buffer);
+        packet.set([1, 0x7a, 12, 0]); view.setUint16(4, sid, true); view.setUint16(6, 0x130, true);
+        packet[8] = 3; packet[9] = before[10] + 1; packet[10] = before[11] & 1; packet[11] = before[34];
+        assert.equal(dispatch.registration(0x7a).length, 0xffff);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.equal(aux.verifySid, 0); assert.equal(aux.squidTransmission.lastOwner, before[34]);
+        assert.deepEqual(c.pool.slot(sid), before); assert.match(logs.at(-1)[1], /VERIFY .*: type /);
+    } finally { s.dispose(); }
+});

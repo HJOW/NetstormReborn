@@ -17,6 +17,7 @@ import { registerMissionSettingsPacket } from './raw-mission-settings-packet.js'
 import { observePathData } from './raw-path-data.js';
 import { DaisProcess, readDaisProcessData } from './raw-dais-process-data.js';
 import { receiveSessionSquid } from './raw-campaign-session-squid.js';
+import { decodeCompressedSquid, observeCompressedSquid } from './raw-squid-compressed-receive.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
 import { findAttachedProcess, WindAviaryProcess } from './raw-wind-aviary-process.js';
@@ -517,6 +518,19 @@ export class RawCampaignSession {
         // 공유 예약은 현재 Process Host에 패킷의 시각과 횟수를 그대로 전달한다. (2026-11-18 WB04-E734)
         dispatch.observe(0x7e, null); dispatch.version(0x7e, 1, 0); dispatch.requireLength(0x7e, 28);
         dispatch.register(0x7e, (_sender, _connection, packet) => this.#live().core.processes.receiveSharedRegular(packet));
+        // 압축 객체는 같은 전송 캐시와 TYPE에서 풀어 공통 객체 수신기로 전달한다. (2026-11-18 WB04-E735)
+        dispatch.observePacket(0x7a, (packet, sending) => observeCompressedSquid(packet, sending, (expression, file, line) => storage.assertDisplay(expression, file, line)));
+        dispatch.version(0x7a, 1, 0); dispatch.requireLength(0x7a, 0xffff);
+        dispatch.register(0x7a, (_sender, _connection, packet) => {
+            const current = this.#live(), core = current.core;
+            const image = decodeCompressedSquid(packet, current.gameplayGlobals.gameAux().squidTransmission, {
+                assertion: (expression, file, line) => current.world.storage.assertDisplay(expression, file, line),
+                defaultType: () => core.bridgeState.bridgeType,
+                type: (type) => { if (type >= core.types.length) throw new RangeError('압축 객체의 현재 TYPE 물리 범위'); return core.types[type]; },
+                maximumHp: (selected) => core.factory.readSelectedHitPoints(selected, core.types),
+            });
+            receiveSessionSquid(current, image);
+        });
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }
