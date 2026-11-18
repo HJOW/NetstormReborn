@@ -18,6 +18,7 @@ import { bindClientStateWorldGlobals } from '../www/core/client-state-world-glob
 import { ClientKencloudGlobals } from '../www/core/client-kencloud-globals.js';
 import { ClientNsInfoGlobals } from '../www/core/client-ns-info-globals.js';
 import { ClientRandomGlobals } from '../www/core/random.js';
+import { QuickHelpPopupState } from '../www/ui/quick-help-popup-state.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
 import { fortSection, parseFort } from '../www/assets/fort.js';
@@ -92,8 +93,8 @@ test('Client State 전역: 연결 활동·Client DWORD와 모드 별칭', () => 
     const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals(), activity = new ClientConnectionActivityGlobals();
     const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
     const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
-    const nsInfo = new ClientNsInfoGlobals(), kencloud = new ClientKencloudGlobals(), players = new ClientPlayerRecords(), templates = new CampaignTemplateStorage(), random = new ClientRandomGlobals();
-    const context = { gameplay, local, activity, storage, nsInfo, kencloud, players, templates, random, currentStorage: storage }, globals = bindClientStateWorldGlobals(context);
+    const nsInfo = new ClientNsInfoGlobals(), kencloud = new ClientKencloudGlobals(), players = new ClientPlayerRecords(), templates = new CampaignTemplateStorage(), random = new ClientRandomGlobals(), popupState = new QuickHelpPopupState();
+    const context = { gameplay, local, activity, storage, nsInfo, kencloud, players, templates, random, popupState, currentStorage: storage }, globals = bindClientStateWorldGlobals(context);
     // 22칸의 마지막 값은 인접 Zone stamp를 건드리지 않는다.
     activity.activeStamp().value = 11; globals.write32(0x5c853c, 0xfedcba98);
     assert.equal(globals.read32(0x5c853c), 0xfedcba98); assert.equal(activity.frames()[21], 0xfedcba98); assert.equal(activity.activeStamp().value, 11);
@@ -124,6 +125,8 @@ test('Client State 전역: 연결 활동·Client DWORD와 모드 별칭', () => 
     globals.write64Bits(0x5c8610, 0x4024000000000000n); assert.equal(local.reconnectSaveEnd().value, 10);
     assert.throws(() => globals.write64Bits(0x565e68, 0n), /음향 장치 미연결/); assert.throws(() => globals.write64Bits(0, 0n), /미등록/);
     let songBits = null; bindClientStateWorldGlobals({ ...context, audio: { writeSongEndBits: (bits) => { songBits = bits; } } }).write64Bits(0x565e68, nanBits); assert.equal(songBits, nanBits);
+    popupState.mark(7, Uint8Array.of(65, 66)); globals.write32(0x5ca938, 0);
+    assert.equal(globals.read32(0x5ca938), 0); assert.deepEqual([...popupState.argumentBytes()], [65, 66]);
     assert.throws(() => globals.write32(0x594fb8, 2), /정상0\/1/); assert.equal(storage.ownerMode.fort, true);
     assert.throws(() => globals.write32(0x540c70, 1), /미등록/); assert.throws(() => globals.read32(0x5c8540), /미등록/);
     assert.throws(() => bindClientStateWorldGlobals({ ...context, gameplay: new ClientGameplayGlobals() }), /owner 필요/);

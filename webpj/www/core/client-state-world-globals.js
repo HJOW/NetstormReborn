@@ -9,7 +9,7 @@ function stateBoolean(value) {
 
 // 같은 권한·보조 전역·표면을 확인하고 직접 접근 callback을 반환한다. 바인딩 자체는 값을 바꾸지 않는다.
 export function bindClientStateWorldGlobals(context) {
-    const { gameplay, local, activity, storage, currentStorage, nsInfo, kencloud, players, templates, random, audio } = context;
+    const { gameplay, local, activity, storage, currentStorage, nsInfo, kencloud, players, templates, random, audio, popupState } = context;
     if (storage.pool.edition !== 'patch1078' || storage.authority !== gameplay.authority() || storage.gameAux !== gameplay.gameAux() || (currentStorage && currentStorage !== storage)) {
         throw new TypeError('State 전역의 같은 실제 Client/표면/권한 owner 필요');
     }
@@ -39,6 +39,7 @@ export function bindClientStateWorldGlobals(context) {
         [0x5c85a4, { get: () => gameplay.world.editor, set: (v) => { gameplay.world.editor = v; } }],
         [0x5c85d4, { get: () => Number(local.savedGame().value), set: (v) => { local.savedGame().value = stateBoolean(v); } }],
         [0x5c8758, { get: () => local.state().phase[0] }],
+        [0x5ca938, { get: () => popupState.command, set: (v) => { popupState.command = v; } }],
     ]);
     const aux = gameplay.gameAux();
     // GameAux의 DWORD는 원래 signed/unsigned 저장 폭과 읽기 전용 주소를 유지한다.
