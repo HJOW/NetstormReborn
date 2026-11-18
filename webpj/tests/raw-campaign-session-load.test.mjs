@@ -587,3 +587,19 @@ test('CampaignSession Tutorial 1: 개발자 그래프 진단 패킷', () => {
         assert.deepEqual(logs, [[29, 'graph index: 0 numSurface: 7 inUse: 1\n']]);
     } finally { s.dispose(); }
 });
+
+// 개발자 삭제 패킷은 같은 Session의 반환된 슬롯을 삭제하지 않는다.
+test('CampaignSession Tutorial 1: 개발자 빈 객체 삭제 패킷', () => {
+    const { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); const c = s.core(); let sid = c.pool.layout.serverFirst;
+        // 현재 Pool에서 반환된 서버 슬롯을 선택한다.
+        while (sid < c.pool.capacity && !(c.pool.slot(sid)[11] & 1)) sid += 1;
+        assert.ok(sid < c.pool.capacity);
+        const text = `de ${sid}`, packet = new Uint8Array(9 + text.length);
+        packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+        packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.equal(c.pool.slot(sid)[11] & 1, 1);
+    } finally { s.dispose(); }
+});

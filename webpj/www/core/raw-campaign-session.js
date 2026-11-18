@@ -24,6 +24,7 @@ import { receiveRitualChoice } from './raw-ritual-choice.js';
 import { executeDeveloperSettings } from './raw-campaign-developer-settings.js';
 import { executeDeveloperPlayers } from './raw-campaign-developer-players.js';
 import { executeDeveloperReports } from './raw-campaign-developer-reports.js';
+import { executeDeveloperObjects } from './raw-campaign-developer-objects.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
 import { findAttachedProcess, WindAviaryProcess } from './raw-wind-aviary-process.js';
@@ -76,7 +77,7 @@ export class RawCampaignSession {
             o.executeDeveloperCommand = (text) => {
                 const current = this.#live();
                 const trace = (level, message) => current.world.storage.traceGraph(level, message);
-                if (!executeDeveloperSettings(text, current.gameplayGlobals.gameAux(), trace) && !executeDeveloperPlayers(text, current.players, trace, (owner, target) => current.participation.addAlly(owner, target)) && !executeDeveloperReports(text, current.core, current.world.storage.graph, trace)) throw new Error('개발자 명령의 나머지 해석기 미연결');
+                if (!executeDeveloperSettings(text, current.gameplayGlobals.gameAux(), trace) && !executeDeveloperPlayers(text, current.players, trace, (owner, target) => current.participation.addAlly(owner, target)) && !executeDeveloperReports(text, current.core, current.world.storage.graph, trace) && !executeDeveloperObjects(text, current, trace)) throw new Error('개발자 명령의 나머지 해석기 미연결');
             };
             o.refreshLocalRitual = () => {
                 const current = this.#live();
