@@ -25,6 +25,7 @@ import { ClientSubscriberGlobals } from '../www/core/client-subscriber-globals.j
 import { captureMissionFortZone, createMissionFortLoadRequest, writeMissionFortRequest } from '../www/core/mission-fort-request.js';
 import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { RawCampaignMissionStartBindings } from '../www/core/raw-campaign-mission-start-bindings.js';
+import { RawCampaignTutorialOneBindings } from '../www/core/raw-campaign-tutorial-one-bindings.js';
 import { createMissionFrameGateState, RawMissionFrameGate } from '../www/core/raw-mission-frame-gate.js';
 import { createMissionStartState } from '../www/core/raw-mission-start.js';
 import { MissionScript } from '../www/core/mission-script.js';
@@ -624,6 +625,27 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
         dispatch.invokeDirect(0x77, 2, null, Uint8Array.of(1, 0x77, 6, 0, 2, 1)); assert.deepEqual(tells, ['AllianceRequested(~r,Bob,2)']);
     } finally { s.dispose(); }
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
+});
+
+// 공통 튜토리얼 입력은 승패를 실행하지 않는 관찰 장치와 실제 Session 판정기를 연결한다.
+test('CampaignSession TheWarBegins: 튜토리얼 공통 게이트와 실제 판정기', () => {
+    const { s } = scene(), state = createMissionFrameGateState(), mission = createMissionStartState(), calls = [];
+    const script = { get: forbidden('대본 조회') }, start = { startBody: forbidden('Start 조회') };
+    const frame = { gameSeconds: () => 42, paused: () => false, dialogsClear: () => true, knowledgeOpen: () => false, guideOpen: () => false, blockingGumpOpen: () => false,
+        endDemo: forbidden('데모 종료'), pause: forbidden('정지'), resume: forbidden('재개') };
+    const effects = { frame, tell: forbidden('안내'), closeTransient: forbidden('창 닫기') };
+    try {
+        s.load(); assert.equal(typeof s.checkMissionOutcome, 'function'); assert.equal(typeof s.missionPriestDead, 'function');
+        state.tutorialNumber = 1; state.started = 0; state.lockFrames = 0;
+        const tutorial = new RawCampaignTutorialOneBindings(s, script, start, state, mission, effects);
+        tutorial.frame(); assert.equal(state.stage, 0x41); assert.deepEqual(calls, []);
+        // 제한된 승패 장면은 실행하지 않고 공통 프레임의 호출 순서만 관찰한다.
+        s.checkMissionOutcome = () => calls.push('outcome'); state.started = 1;
+        tutorial.event({ code: 0x020000ae, x: 0, y: 0 });
+        assert.deepEqual(calls, ['outcome']); assert.equal(state.stage, 0x42); assert.equal(state.lockFrames, 10);
+        delete s.checkMissionOutcome;
+    } finally { s.dispose(); }
+    assert.throws(() => s.checkMissionOutcome(), /반납/); assert.throws(() => s.missionPriestDead(1), /반납/);
 });
 
 // 신전 그림 콜백 뒤에도 같은 현재 슬롯의 프레임을 다시 읽는다.

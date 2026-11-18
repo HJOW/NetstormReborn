@@ -726,6 +726,10 @@ export class RawCampaignSession {
     participation() { return this.#live().participation; }
     // 현재 Session의 사제 처리기와 같은 공유 목록을 빌린다.
     priests() { return this.#live().priests; }
+    // 공통 미션 프레임이 현재 세션의 실제 승패 판정기를 호출한다.
+    checkMissionOutcome() { this.#live().outcome.check(); }
+    // 안내 표시가 현재 Player의 사제 생존 상태를 같은 판정기에서 조회한다.
+    missionPriestDead(owner) { return this.#live().outcome.priestDead(owner); }
     // 같은 현재 신전 슬롯과 프레임·위치 없는 상승 소리 장치로 레인 신전을 그린다.
     drawRainTemple(sid, frame) {
         const o = this.#live(), raw = o.core.pool.physical(sid);
