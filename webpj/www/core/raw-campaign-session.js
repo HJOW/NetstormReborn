@@ -8,6 +8,8 @@ import { createCampaignAi, crankCampaignAiMoney, setCampaignAiParameter, prepare
 import { RawCampaignSessionAiActions } from './raw-campaign-session-ai-actions.js';
 import { RawCampaignSessionLoginFront } from './raw-campaign-session-login-front.js';
 import { registerFactoryResearchCommand } from './raw-factory-research.js';
+import { RawProductionMaintenance } from './raw-production-maintenance.js';
+import { selectBridgePattern } from './raw-canon-type.js';
 import { registerConstructionData } from './raw-packet-dispatch.js';
 import { receiveConstructionReject } from './raw-construction-failure-packets.js';
 import { battleIncomeAmount, battleIncomePeriod } from './raw-battle-option-slots.js';
@@ -309,7 +311,34 @@ export class RawCampaignSession {
         o.production.refresh(o.playerState.templateOwner); o.productionSync.synchronize();
         return true;
     }
-    // 현재 분산 SP의 실수값을 읽는다.
+    // 생산 패널과 같은 현재 내용물 검색 전역을 반환한다.
+    productionFinder() { return this.#live().contentFinder; }
+    // 실제 Session의 현재 기술·설정·시계·생성 장치를 생산 패널 유지 본체에 빌려준다.
+    makeProductionMaintenance(globals, panel, wallSeconds, refresh) {
+        const o = this.#live();
+        // 모든 콜백은 Session 반납 뒤의 저장소 접근을 거부한다.
+        const live = () => this.#live();
+        const readPlayer = (owner, offset) => {
+            const current = live(); if (!Number.isInteger(owner) || owner < 0 || owner >= 9) throw new RangeError('생산 유지 현재 Player 범위');
+            return new DataView(current.players.buffer, current.players.byteOffset + owner * 0xb4 + offset, 4).getUint32(0, true);
+        };
+        const reads = {
+            active: () => { const current = live(), mode = current.core.ownerMode; return current.loaded && (mode.fort || mode.battle) && !mode.challenge; },
+            technology: () => live().player.currentTechnology(), templateTechnology: () => { const current = live(); return current.player.technology(current.playerState.templateOwner); },
+            temple: () => { const current = live(); return readPlayer(current.playerState.templateOwner, 0x7c); }, editor: () => live().globals.editor,
+            generatorTimer: () => live().gameplayGlobals.gameAux().missionSettings()[0], stockRate: () => live().battleOptions[2],
+            artificial: (parent) => { const current = live(), owner = current.core.pool.slot(parent)[34]; return owner !== 0 && readPlayer(owner, 0xb0) !== 0; },
+        };
+        const hooks = {
+            wallSeconds, gameSeconds: () => live().core.processState.now, money: () => { const current = live(); return current.playerState.playerKnown ? spFloat(current.sp.get(current.playerState.battleOwner)) : 0; },
+            touchDeck: () => { const current = live(); current.productionDeck.get(current.playerState.templateOwner); },
+            pattern: () => selectBridgePattern(live().random.next(10000) | 0),
+            create: (...args) => { live().contained.create(...args); }, destroy: (sid) => { live().world.destroy(sid, 0); },
+            allowed: (type) => live().production.allowed(type), cost: (type) => live().hp.typeCostUnits(type), refresh,
+        };
+        return new RawProductionMaintenance(o.core.pool, o.core.types.length, o.contentFinder, globals, panel, reads, hooks);
+    }
+    // 현재 분산 SP의 실수값을 읽고 설정할 때 같은 비트 표현을 사용한다.
     sp(owner) { return spFloat(this.#live().sp.get(owner)); }
     // 현재 분산 SP에 같은 단정도 값을 기록한다.
     setSp(owner, value) { this.#live().sp.set(owner, spBits(value)); }

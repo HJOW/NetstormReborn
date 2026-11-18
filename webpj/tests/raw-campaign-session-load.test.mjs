@@ -3,6 +3,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { RawCampaignSession } from '../www/core/raw-campaign-session.js';
+import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from '../www/core/raw-production-maintenance.js';
+import { countContained } from '../www/core/raw-contained-finder.js';
 import { CampaignSessionAssets } from '../www/core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawSurfaceStorage } from '../www/core/raw-surface-storage.js';
@@ -855,6 +857,18 @@ function runWorkshopConstruction(natural) {
             assert.equal(s.selectFactoryKnowledge(workshop, 0x03000080, ((128 << 16) | workshop) >>> 0), 1); s.pumpLocalConnection();
             assert.equal(researchPackets.length, 2); assert.equal(liveFlares().length, 0); assert.equal(s.priests().carrier.findContained(workshop, 16, 128, 0), actual);
             assert.equal(core.bookkeeping.depth, 0); assert.equal(core.destroy.preDepth, 0); assert.equal(core.destroy.postDepth, 0);
+            // 현재 생산 패널은 같은 Session의 실제 기술 부모에 다리 조각을 공급한다.
+            const maintenanceGlobals = new ProductionMaintenanceGlobals(), panel = new ProductionMaintenancePanel(), refreshes = [];
+            maintenanceGlobals.stockEnabled = 0; maintenanceGlobals.forcedPattern = 12;
+            const finder = s.productionFinder(), existing = countContained(core.pool, finder, technology, 0x40, 0);
+            panel.slots = existing + 1; const maintenance = s.makeProductionMaintenance(maintenanceGlobals, panel, () => wall, (mask) => refreshes.push(mask));
+            maintenance.run(); assert.equal(countContained(core.pool, finder, technology, 0x40, 0), existing + 1);
+            assert.equal(maintenanceGlobals.sequence, 1); assert.equal(panel.oldMoney, 2200); assert.deepEqual(refreshes, [1, 2]);
+            const bridge = s.priests().carrier.findContained(technology, 0x40, 82, existing); assert.ok(bridge);
+            assert.equal(new DataView(core.pool.slot(bridge).buffer, core.pool.slot(bridge).byteOffset).getUint16(12, true), 12);
+            maintenance.run(); assert.equal(countContained(core.pool, finder, technology, 0x40, 0), existing + 1); assert.equal(maintenanceGlobals.sequence, 1);
+            s.setSp(1, 2100); core.ownerMode.challenge = true; maintenance.run(); assert.equal(panel.oldMoney, 2200);
+            core.ownerMode.challenge = false; maintenance.run(); assert.equal(panel.oldMoney, 2100); assert.equal(maintenanceGlobals.sequence, 1);
             return;
         }
         // 다른 AI·미션 프로세스는 실행하지 않고 실제 사제 경로만 도착까지 진행한다.
@@ -1734,6 +1748,14 @@ test('CampaignSession TheWarBegins: 실제 Fort 모드 snapshot', () => {
         const keys = (objects) => objects.map(({ object }) => `${object.type},${object.owner},${object.frame},${object.x},${object.y}`).sort();
         assert.equal(before.length, 1875); assert.deepEqual(keys(after), keys(before));
     } finally { second.s.dispose(); }
+});
+
+// 미적재 관문과 Session 반납 뒤 콜백 수명을 실제 생산 유지 객체로 확인한다.
+test('CampaignSession 생산 유지: 미적재 관문과 반납 수명', () => {
+    const { s } = scene(), globals = new ProductionMaintenanceGlobals(), panel = new ProductionMaintenancePanel();
+    const maintenance = s.makeProductionMaintenance(globals, panel, () => 1, () => {});
+    maintenance.run(); assert.equal(globals.stockUntil.length, 0); assert.equal(globals.sequence, 0);
+    s.dispose(); assert.throws(() => maintenance.run(), /반납/);
 });
 
 // 중간 외부 장치 오류는 loaded를 켜지 않고 원문의 앞선 설치를 보존한다.
