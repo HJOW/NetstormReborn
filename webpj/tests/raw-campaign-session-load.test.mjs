@@ -7,6 +7,7 @@ import { synchronizeProductionControlContents } from '../www/core/client-product
 import { runClientBridgeDecay } from '../www/core/client-bridge-decay.js';
 import { pollClientBattleCompletion } from '../www/core/client-battle-completion.js';
 import { pollClientConnectionHealth } from '../www/core/client-connection-health.js';
+import { ClientTraceGlobals, traceClientObject } from '../www/core/client-diagnostics.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from '../www/core/raw-production-maintenance.js';
 import { ProductionControlContext } from '../www/core/production-control-context.js';
 import { ClientColorSortInput } from '../www/core/client-color-sort-input.js';
@@ -515,6 +516,18 @@ test('CampaignSession TheWarBegins: Dude 통지의 경로와 속도 및 도착',
             core.processState.now = began + (++steps) * 0.025; core.processes.fromForm(fastForm).runFrame();
         }
         assert.ok(steps > 0 && steps < 2000); assert.equal(core.processes.fromForm(fastForm), null); assert.equal(core.pool.slot(dude)[11] & 3, 3);
+    } finally { s.dispose(); }
+});
+
+// 실제 Fort 사제의 선택 진단이 같은 Pool과 Client 로그를 사용한다.
+test('CampaignSession TheWarBegins: Client 객체 진단의 실제 사제', () => {
+    const gameplay = new ClientGameplayGlobals(), { s } = scene({ gameplayGlobals: gameplay }), lines = [], diagnostics = new ClientTraceGlobals();
+    try {
+        s.load(); const priest = s.world().objects().find(({ object }) => object.type === 158 && object.owner === 1); assert.ok(priest);
+        const client = { surfaceStorage: () => s.world().storage, gameplayGlobals: () => gameplay };
+        traceClientObject(client, diagnostics, priest.sid, { info: (line) => lines.push(line) });
+        assert.ok(lines.some((line) => line.includes('Base type='))); assert.ok(lines.some((line) => line.includes('Main(')));
+        assert.equal(diagnostics.depth.value, 0); assert.equal(diagnostics.log.indent, 0);
     } finally { s.dispose(); }
 });
 
