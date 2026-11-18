@@ -922,6 +922,8 @@ export class RawCampaignSession {
     addTechnology(owner, list) { this.#live().technology.addList(owner, list); }
     // 현재 Player의 기술 내용을 같은 실제 부모에서 찾는다.
     findTechnology(owner, type) { return this.#live().technology.find(owner, type); }
+    // 전체 설치 성공과 구분하여 같은 실제 커서 몸체 존재만 확인한다.
+    hasCursorRuntimeForState() { return Boolean(this.#live().cursor); }
     // 설치된 Session의 실제 커서와 현재 배치 상태를 빌린다.
     cursor() { const o = this.#live(); if (!o.loaded || !o.cursor) throw new Error('설치 전 실제 커서 요청'); return o.cursor; }
     // 커서 수명과 배치 명령이 함께 쓰는 현재 저장소다.

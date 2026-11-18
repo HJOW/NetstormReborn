@@ -1,12 +1,13 @@
 // 지연 로그인 캠페인의 GameWorld 앞단을 같은 Session·카메라·자산 표시기와 묶는다.
 // 사용: new CampaignGameWorld(assets, files, fort, mission, services, { x, y }) → startLocalConnection() → 같은 session의 로그인 진행 → dispose().
-// 입력·프레임·팔레트 전달과 브라우저 앱 수명은 후속이며 이 생성자만으로 플레이할 수 없다.
+// 입력·프레임과 브라우저 앱 수명은 후속이며 이 생성자만으로 플레이할 수 없다.
 import { ClientGameplayGlobals } from './client-gameplay-globals.js';
 import { FIRST_ASSET_TYPE_NUMBER } from '../assets/type-table.js';
 import { TypeFlag2 } from '../assets/type-flags.js';
 import { createCameraHomeState } from './camera-home.js';
 import { RawCampaignSession } from './raw-campaign-session.js';
 import { RawCampaignFactoryDisplay } from '../render/raw-campaign-factory-display.js';
+import { cursorDisplayLogicalPalette } from '../render/raw-campaign-cursor-display.js';
 
 // 원본 기본 지도 영역에서 상단 게임 메뉴가 차지하는 논리 픽셀 높이다.
 const MENU_HEIGHT = 28;
@@ -19,6 +20,8 @@ export class CampaignGameWorld {
     #connecting = false; #changed = false; #disposed = false;
     // 현재 실제 자산 보기와 그 보기를 구성하는 같은 자산 저장소다.
     #assets; #objects = [];
+    // 현재 파일 팔레트·ColorSort 대여와 커서 설치 전까지 보유하는 색 사본이다.
+    #palette = null; #pendingPalette = null; #colorSortLogical = []; #colorSortMaps = null;
 
     // 화면 크기와 자산을 확인하고 실제 Session과 표시기를 만든다. 로그인은 호출자가 나중에 시작한다.
     constructor(assets, files, fort, mission, services, viewport) {
@@ -37,7 +40,8 @@ export class CampaignGameWorld {
                 palette[index * 4] = rgb[index * 3 + 2]; palette[index * 4 + 1] = rgb[index * 3 + 1]; palette[index * 4 + 2] = rgb[index * 3];
             }
             const colors = services?.colorSortInput;
-            this.#factoryDisplay.setPalette(palette, colors?.mapsReady ? colors.logical : [], colors?.mapsReady ? colors.maps : null);
+            this.#palette = palette.slice(); this.#colorSortLogical = colors?.mapsReady ? colors.logical : []; this.#colorSortMaps = colors?.mapsReady ? colors.maps : null;
+            this.#factoryDisplay.setPalette(palette, this.#colorSortLogical, this.#colorSortMaps);
             if (!services?.localLogin) throw new Error('실제 Client 지연 로그인 장치 누락');
         } catch (error) {
             this.#factoryDisplay = null;
@@ -80,18 +84,34 @@ export class CampaignGameWorld {
     }
     // 외곽이 Session을 공개한 뒤 같은 World의 비동기 로컬 연결을 시작한다.
     startLocalConnection() {
-        const session = this.#live(); if (this.#connecting || session.loaded) throw new Error('비동기 World 로그인 새 수명 계약 오류');
+        const session = this.#live(); if (this.#connecting || session.hasCursorRuntimeForState()) throw new Error('비동기 World 로그인 새 수명 계약 오류');
         this.#connecting = true; session.startLocalConnection();
     }
     // 이전 World를 반납한 State 부모가 같은 Session의 후반 로그인을 준비한다.
     prepareLocalConnectionForState() {
-        const session = this.#live(); if (this.#connecting || session.loaded) throw new Error('부모 State7 World 로그인 새 수명 계약 오류');
+        const session = this.#live(); if (this.#connecting || session.hasCursorRuntimeForState()) throw new Error('부모 State7 World 로그인 새 수명 계약 오류');
         this.#connecting = true; session.prepareLocalConnectionForState();
     }
     // 실제 Ready 뒤 현재 슬롯의 표시·선택용 보기를 갱신하고 한 번만 로그인 관문을 연다.
     completeLocalConnection() {
         const session = this.#live(); if (!this.#connecting || !session.localConnectionReady()) return false;
+        if (this.#pendingPalette) { session.cursor().setPalette(this.#pendingPalette, this.#colorSortLogical, this.#colorSortMaps); this.#pendingPalette = null; }
         this.refreshCampaignObjects(); this.#connecting = false; return true;
+    }
+    // 현재 화면 색을 표시기에 적용하고 아직 없는 커서의 원래 색은 값으로 보유한다.
+    setPalette(palette, colorSortLogical = [], colorMaps = null) {
+        const session = this.#live(), logical = cursorDisplayLogicalPalette(palette), physical = new Uint8Array(1024);
+        // 논리 RGBX를 같은 색 번호의 화면 BGRX로 복사한다.
+        for (let index = 0; index < 256; index += 1) {
+            const color = logical[index], at = index * 4;
+            physical[at] = (color >>> 16) & 255; physical[at + 1] = (color >>> 8) & 255; physical[at + 2] = color & 255; physical[at + 3] = color >>> 24;
+        }
+        this.#palette = physical;
+        if (colorSortLogical.length !== 0 && colorSortLogical.length !== 256) throw new TypeError('World 고정 ColorSort 256색 계약');
+        this.#colorSortLogical = colorSortLogical; this.#colorSortMaps = colorMaps;
+        if (session.hasCursorRuntimeForState()) { session.cursor().setPalette(physical, colorSortLogical, colorMaps); this.#pendingPalette = null; }
+        else this.#pendingPalette = physical.slice();
+        this.#factoryDisplay?.setPalette(physical, colorSortLogical, colorMaps); this.#changed = true;
     }
     // 같은 실제 자산 슬롯의 좌표·프레임·체력을 읽어 원본 월드 표시 보기를 갱신한다.
     refreshCampaignObjects() {
