@@ -61,7 +61,7 @@ function scene(overrides = {}, savedFort = fort) {
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
-        gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, developerQueue: overrides.developerQueue, motion: overrides.motion,
+        gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, cameraCommit: overrides.cameraCommit, developerQueue: overrides.developerQueue, motion: overrides.motion,
         developerHeapTrace: overrides.developerHeapTrace, developerQueryDirectDraw: overrides.developerQueryDirectDraw, developerRecordLabel: overrides.developerRecordLabel,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
         player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
@@ -623,6 +623,32 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
         dispatch.invokeDirect(0x77, 2, null, Uint8Array.of(1, 0x77, 6, 0, 2, 1)); assert.deepEqual(tells, ['AllianceRequested(~r,Bob,2)']);
     } finally { s.dispose(); }
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
+});
+
+// 카메라 요청은 실제 적용 장치가 실행되기 전까지 현재 화면을 바꾸지 않는다.
+test('CampaignSession TheWarBegins: 공유 카메라 요청과 적용 경계', () => {
+    const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals(), calls = [];
+    const camera = gameplay.camera(), initialRedraw = { value: 0 }, initialRevision = { value: 0 };
+    camera.initializeNativeRenderer(640, 480, 256, initialRedraw, initialRevision);
+    const { s } = scene({ gameplayGlobals: gameplay, localStateGlobals: local, cameraCommit: (context) => {
+        calls.push(context); const pixels = context.camera.target().pixels;
+        context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]);
+    } });
+    try {
+        const beforeRenderer = camera.rendererView().bytes.slice(), beforeSnapshot = camera.snapshot().bytes.slice();
+        local.metaRebuild().value = 0xffffffff; assert.equal(s.cameraGlobals(), camera);
+        s.requestCameraCenter(100.25, 101.75, 640, 480);
+        assert.deepEqual([...camera.target().pixels], [1284, 879]); assert.equal(local.metaRebuild().value, 0);
+        assert.deepEqual(camera.rendererView().bytes, beforeRenderer); assert.deepEqual(camera.snapshot().bytes, beforeSnapshot);
+        assert.equal(calls.length, 0); s.commitRequestedCamera(640, 480);
+        assert.equal(calls.length, 1); assert.equal(calls[0].camera, camera); assert.equal(typeof calls[0].worldRedraw.value, 'number');
+        assert.equal(calls[0].width, 640); assert.equal(calls[0].height, 480);
+        assert.notDeepEqual(camera.rendererView().bytes, beforeRenderer); assert.notDeepEqual(camera.snapshot().bytes, beforeSnapshot);
+    } finally { s.dispose(); }
+    assert.throws(() => s.cameraGlobals(), /반납/); assert.throws(() => s.requestCameraCenter(0, 0, 640, 480), /반납/);
+    const missing = scene();
+    try { assert.throws(() => missing.s.commitRequestedCamera(640, 480), /적용 장치 미연결/); }
+    finally { missing.s.dispose(); }
 });
 
 // Carrier 앞단은 같은 Client 설정과 카메라 목표를 사용하고 예약 SID 위치 통지를 건너뛴다.

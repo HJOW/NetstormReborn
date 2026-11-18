@@ -383,7 +383,7 @@ export class RawCampaignSession {
         const o = this.#live(), data = new DataView(packet.buffer, packet.byteOffset, packet.byteLength);
         const y = data.getFloat32(8, true), x = data.getFloat32(4, true);
         if (typeof o.services.cameraScreenSize !== 'function') throw new Error('카메라 수신의 현재 논리 화면 크기 장치 미연결');
-        const size = o.services.cameraScreenSize(); o.gameplayGlobals.camera().requestCenter(x, y, size.x, size.y, o.localStateGlobals.metaRebuild());
+        const size = o.services.cameraScreenSize(); this.requestCameraCenter(x, y, size.x, size.y);
     }
     // 35h는 현재 게임 시각으로 건설 효과를 준비한 뒤 실제 섬 정리를 호출한다.
     #receiveDropIsland(packet) {
@@ -719,6 +719,18 @@ export class RawCampaignSession {
     participation() { return this.#live().participation; }
     // 현재 Session의 사제 처리기와 같은 공유 목록을 빌린다.
     priests() { return this.#live().priests; }
+    // 현재 Client가 소유한 같은 카메라 전역을 빌린다.
+    cameraGlobals() { return this.#live().gameplayGlobals.camera(); }
+    // 원본 497f20처럼 목표와 재구성 번호만 갱신하고 현재 화면은 적용하지 않는다.
+    requestCameraCenter(x, y, width, height) {
+        const o = this.#live(); o.gameplayGlobals.camera().requestCenter(x, y, width, height, o.localStateGlobals.metaRebuild());
+    }
+    // 원본 497960의 화면·커서 장치를 실제 호출자에게 위임한다.
+    commitRequestedCamera(width, height) {
+        const o = this.#live();
+        if (typeof o.services.cameraCommit !== 'function') throw new Error('Session의 실제 즉시 카메라 적용 장치 미연결');
+        o.services.cameraCommit({ camera: o.gameplayGlobals.camera(), worldRedraw: o.worldRedraw, width, height });
+    }
     // 미션 시작이 현재 로컬 Player와 알려진 상태를 매번 읽는다.
     localOwner() { return this.#live().playerState.battleOwner; }
     // 로컬 Player의 확정 여부를 같은 현재 저장소에서 읽는다.
