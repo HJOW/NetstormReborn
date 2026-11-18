@@ -32,6 +32,7 @@ import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-disp
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
 import { ClientConnectionGlobals } from '../www/core/client-connection-globals.js';
 import { ClientChatWindowGlobals } from '../www/core/client-chat-window-globals.js';
+import { ClientConnectionActivityGlobals } from '../www/core/client-connection-activity-globals.js';
 import { installClientPacketDefaults } from '../www/core/client-campaign-transport.js';
 import { ClientUserSelectionGlobals } from '../www/core/client-user-selection-globals.js';
 import { RawUserHighlight } from '../www/core/raw-user-highlight.js';
@@ -60,7 +61,7 @@ function scene(overrides = {}, savedFort = fort) {
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
-        gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, cameraScreenSize: overrides.cameraScreenSize, developerQueue: overrides.developerQueue, motion: overrides.motion,
+        gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, developerQueue: overrides.developerQueue, motion: overrides.motion,
         developerHeapTrace: overrides.developerHeapTrace, developerQueryDirectDraw: overrides.developerQueryDirectDraw, developerRecordLabel: overrides.developerRecordLabel,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
         player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
@@ -606,13 +607,13 @@ test('CampaignSession TheWarBegins: 비미션 너겟의 단일 미션 진단', (
 
 // 공개 기술 표시는 실제 생산 부모의 중복 방지와 같은 Battle snapshot을 사용한다.
 test('CampaignSession TheWarBegins: Client 기본 69h와 실제 기술 부모', () => {
-    const storage = new CampaignTemplateStorage(), gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), registry = new ClientConnectionGlobals(), chat = new ClientChatWindowGlobals();
+    const storage = new CampaignTemplateStorage(), gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), registry = new ClientConnectionGlobals(), chat = new ClientChatWindowGlobals(), local = new ClientLocalStateGlobals(), activity = new ClientConnectionActivityGlobals();
     const { s } = scene({ gameplayGlobals: gameplay, playerRecords: players, templateStorage: storage, fortMission: { current: () => 0 }, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } } });
     const runtime = { session: () => s }, dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
     try {
         s.load(); gameplay.bindRuntimeOwner(s, runtime);
         const surface = { gameAux: () => gameplay.gameAux(), assertDisplay: (...args) => s.world().storage.assertDisplay(...args) };
-        installClientPacketDefaults({ gameplayGlobals: () => gameplay, surfaceStorage: () => surface, connectionGlobals: () => registry, playerRecords: () => players, chatWindowGlobals: () => chat }, dispatch);
+        installClientPacketDefaults({ gameplayGlobals: () => gameplay, surfaceStorage: () => surface, connectionGlobals: () => registry, playerRecords: () => players, chatWindowGlobals: () => chat, localStateGlobals: () => local, connectionActivityGlobals: () => activity }, dispatch);
         const packet = Uint8Array.of(1, 0x69, 7, 0, 2, 128, 0);
         assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
         assert.equal(gameplay.runtimeCallActive(s), false); assert.equal(gameplay.gameAux().typeUse()[0], 128);
@@ -960,6 +961,42 @@ test('CampaignSession TheWarBegins: 개발자 설정 패킷 수신', () => {
         const missing = new Uint8Array(11); missing.set([1, 0x31, 11, 0, 3, 0, 0, 0, 122, 122, 0]);
         assert.throws(() => dispatch.dispatch(new PacketConnection({ sender: 1 }), missing), /나머지 해석기 미연결/);
     } finally { s.dispose(); }
+});
+
+// Client 기본 종료 통지가 현재 실제 Session의 Player 방송까지 같은 기록으로 전달된다.
+test('CampaignSession TheWarBegins: Client 연결 종료와 실제 Player 방송', () => {
+    const gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), registry = new ClientConnectionGlobals();
+    const local = new ClientLocalStateGlobals(), activity = new ClientConnectionActivityGlobals(), chat = new ClientChatWindowGlobals(), calls = [];
+    const { s } = scene({ gameplayGlobals: gameplay, playerRecords: players, connectionRegistry: registry, localStateGlobals: local, connectionActivityGlobals: activity });
+    const runtime = { session: () => s }, dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); gameplay.bindRuntimeOwner(s, runtime); gameplay.server().value = true; s.core().processState.server = true;
+        const bytes = players.records(), view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+        view.setUint32(180 + 0x50, 1, true); view.setUint32(2 * 180 + 0x50, 0x43, true); view.setUint32(2 * 180 + 0x2c, 7, true); bytes.set([66, 0], 2 * 180 + 12);
+        registry.disconnect = (id) => calls.push(['disconnect', id]); registry.sendMutable = (target, packet) => calls.push(['send', target, packet[1], packet[0x32]]);
+        const surface = { gameAux: () => gameplay.gameAux(), assertDisplay: (...args) => s.world().storage.assertDisplay(...args) };
+        installClientPacketDefaults({ gameplayGlobals: () => gameplay, surfaceStorage: () => surface, connectionGlobals: () => registry, playerRecords: () => players, chatWindowGlobals: () => chat, localStateGlobals: () => local, connectionActivityGlobals: () => activity }, dispatch);
+        activity.frames()[2] = 45; dispatch.registration(2).directReceive(2, null, new Uint8Array());
+        assert.equal(view.getUint32(2 * 180 + 0x50, true), 0x102); assert.equal(activity.frames()[2], 0);
+        assert.deepEqual(calls, [['disconnect', 2], ['send', 1, 0x2b, 2]]); assert.equal(gameplay.runtimeCallActive(s), false);
+    } finally { s.dispose(); }
+});
+
+// 실제 Session의 연결 실패 정리와 Player 방송은 같은 현재 기록을 사용한다.
+test('CampaignSession TheWarBegins: 연결 실패 정리와 현재 Player 방송', () => {
+    const players = new ClientPlayerRecords(), registry = new ClientConnectionGlobals(), sent = [];
+    const { s } = scene({ playerRecords: players, connectionRegistry: registry });
+    try {
+        s.load(); const core = s.core(), bytes = players.records(), view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+        view.setUint32(180 + 0x50, 0x49, true); view.setUint32(2 * 180 + 0x50, 1, true); view.setUint32(3 * 180 + 0x50, 1, true);
+        view.setUint32(180 + 0x2c, 7, true); bytes.set([65, 0], 180 + 12);
+        s.saveServerFailure(); assert.equal(view.getUint32(180 + 0x50, true), 0x108);
+        core.processState.server = true;
+        registry.sendMutable = (target, packet, current) => { assert.equal(current, bytes); sent.push([target, packet.slice()]); view.setUint32(3 * 180 + 0x50, 0, true); };
+        s.broadcastConnectionPlayer(1);
+        assert.equal(sent.length, 1); assert.equal(sent[0][0], 2); assert.equal(sent[0][1][1], 0x2b); assert.equal(sent[0][1][0x32], 1);
+    } finally { s.dispose(); }
+    assert.throws(() => s.saveServerFailure(), /반납/);
 });
 
 // 실제 31h 분배는 같은 Player 기록과 현재 추적 소비자를 사용한다.

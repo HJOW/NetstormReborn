@@ -43,6 +43,8 @@ import { isFormConstructorVtable } from './squid-forms.js';
 import { SQUID_FORM_VTABLES } from './squid-vtables.js';
 import { beginSquidVerification, receiveFreeSquidVerification } from './raw-squid-verification.js';
 import { RawUserSelection } from './raw-user-selection.js';
+import { RawMissionServerPackets } from './raw-mission-server-packets.js';
+import { campaignPeerAddressText } from './campaign-transport-services.js';
 import { RawSquidSelection, selectionUsesRange, startSelectionContentPreview } from './raw-squid-selection.js';
 import { createCursorManaProcess } from './raw-cursor-mana.js';
 import { createCursorRangeProcess } from './raw-cursor-range.js';
@@ -121,6 +123,35 @@ export class RawCampaignSession {
     core() { return { ...this.#live().core }; }
     // 현재 Player의 실제 기술 부모에 kind를 표시하며 중복 여부는 생산 본체가 판정한다.
     indicateTechnology(type) { const o = this.#live(); if (!o.production) throw new Error('현재 기술표시의 실제 생산/Player 부모 미설치'); o.production.indicateTechnology(type); }
+    // 서버 표식이 있는 Player의 연결 비트부터 정리하고 미션/미확정 Player는 저장 장치 없이 반환한다.
+    saveServerFailure() {
+        const o = this.#live(), view = new DataView(o.players.buffer, o.players.byteOffset, o.players.byteLength);
+        // 원본의 고정 Player 1..8을 순서대로 갱신한다.
+        for (let owner = 1; owner < 9; owner += 1) {
+            const at = owner * 180 + 0x50, flags = view.getUint32(at, true);
+            if (flags & 8) view.setUint32(at, ((flags & 0xffffffbe) | 0x100) >>> 0, true);
+        }
+        if (o.globals.missionPost || !o.playerState.playerKnown) return;
+        throw new Error('비미션 재접속 저장은 웹 범위 밖');
+    }
+    // 현재 Player와 연결표를 사용해 접속 중인 각 대상에게 실제 2bh 상태를 보낸다.
+    broadcastConnectionPlayer(owner) {
+        const o = this.#live(), c = o.core;
+        if (!c.processState.server) o.world.storage.assertDisplay('server', '\\Ns\\O\\Player.cpp', 0x1ec);
+        const registry = o.services.connectionRegistry;
+        if (!registry) throw new Error('Player 상태 방송의 실제 Registry 없음');
+        const packets = new RawMissionServerPackets(o.players, {
+            get server() { return c.processState.server; }, get metamap() { return c.ownerMode.challenge; },
+            get localOwner() { return o.playerState.battleOwner; }, get centralCreated() { return o.localStateGlobals.centralCreated().value; },
+            get archipelago() { return o.gameplayGlobals.gameAux().archipelagoPercent; }, zoneAddress: o.localStateGlobals.zone(),
+        }, {
+            assertion: (expression) => { if (typeof o.services.ai.assertion !== 'function') throw new Error('Player 상태 writer 진단 미연결'); o.services.ai.assertion(expression); },
+            peerAddress: (target) => campaignPeerAddressText(registry.address(target | 0)),
+            send: (target, packet) => registry.sendMutable(target, packet, o.players),
+        });
+        // 각 송신 뒤 다음 대상의 현재 flags를 다시 읽는다.
+        for (let target = 1; target < 9; target += 1) if (o.players[target * 180 + 0x50] & 1) packets.sendPlayer(owner, target);
+    }
     // 설치된 같은 Pool과 UI 상태를 사용하는 선택을 만들고 이동·낙하가 현재 선택을 약하게 빌리게 한다.
     makeUserSelection(state, input = {}) {
         const o = this.#live(), c = o.core;

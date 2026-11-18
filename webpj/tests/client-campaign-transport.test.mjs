@@ -16,6 +16,8 @@ import { RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { observeBombEffectPacket } from '../www/core/raw-bomb-effect.js';
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
 import { ClientChatWindowGlobals } from '../www/core/client-chat-window-globals.js';
+import { ClientLocalStateGlobals } from '../www/core/client-local-state-globals.js';
+import { ClientConnectionActivityGlobals } from '../www/core/client-connection-activity-globals.js';
 
 // 패킷 한 칸을 만든다: 크기만큼 0 으로 채우고 지정한 (오프셋, 값, 폭) 필드를 리틀엔디언으로 쓴다. (2026-11-12 WB04-E328)
 function packetOf(size, fields = [], fill = 0) {
@@ -162,6 +164,7 @@ function makeClient({ initialized = true } = {}) {
     const settings = new Uint32Array(7);
     const typeUse = new Uint8Array(256);
     const chat = new ClientChatWindowGlobals();
+    const local = new ClientLocalStateGlobals(), activity = new ClientConnectionActivityGlobals();
     const header = [0x0c, 0x85];
     const state = { milliseconds: 5000, initialLength: 0, server: { value: true }, battle: false, subscriber: 100, menu: null };
     const sentMutable = [];
@@ -175,6 +178,7 @@ function makeClient({ initialized = true } = {}) {
         clientMilliseconds: () => state.milliseconds,
         connectionGlobals: () => registry,
         chatWindowGlobals: () => chat, currentSubscriber: () => state.subscriber, menu: () => state.menu,
+        localStateGlobals: () => local, connectionActivityGlobals: () => activity,
         packetRecordOwner: () => ({ write: (outgoing, connection, packet, length) => { writes.push([outgoing, connection.sender, packet.length, length]); } }),
         surfaceStorage: () => ({
             assertDisplay: (expression, file, line) => { diagnostics.push([expression, file, line]); },
@@ -183,7 +187,7 @@ function makeClient({ initialized = true } = {}) {
         }),
         log: (text) => { log.push(text); },
     };
-    return { client, records, registry, log, diagnostics, writes, settings, header, state, sentMutable, chat };
+    return { client, records, registry, log, diagnostics, writes, settings, header, state, sentMutable, chat, local, activity };
 }
 
 // 열여덟 행 표: 종류·길이·C3 수신기·mutable 관찰기 구분이 원문과 같고 서로 겹치지 않는다.
@@ -224,8 +228,32 @@ test('Client 기본 등록 표: 설치된 version/policy/길이/관찰기/수신
     for (const type of [0x2a, 0x2b, 0x67, 0x81]) assert.equal(typeof dispatch.registration(type).packetObserver, 'function');
     assert.equal(typeof dispatch.registration(0x32).observer, 'function');
     assert.equal(typeof dispatch.registration(0x32).receive, 'function');
-    // 경로·압축 관찰기는 수신기를 설치하지 않는다. 연결 종료는 후속이다.
-    for (const type of [0x02, 0x30, 0x7a]) assert.equal(dispatch.registration(type).receive, null);
+    // 경로·압축 관찰기는 수신기를 설치하지 않는다.
+    for (const type of [0x30, 0x7a]) assert.equal(dispatch.registration(type).receive, null);
+});
+
+// 2번 통지는 같은 Client 상태를 쓰고 Session 하위에만 현재 Runtime pin을 건다.
+test('Client 기본 등록 표: 연결 종료와 현재 Runtime 수명', () => {
+    const scene = makeClient(), game = new ClientGameplayGlobals(), use = game.acquire(), calls = [], owner = {};
+    scene.client.gameplayGlobals = () => game; scene.registry.tokenFor = () => 77; scene.registry.disconnect = (id) => calls.push(['disconnect', id]);
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    installClientPacketDefaults(scene.client, dispatch);
+    const entry = dispatch.registration(2), session = {
+        bindRuntimePin: () => {},
+        broadcastConnectionPlayer: (id) => { assert.equal(game.runtimeCallActive(session), true); calls.push(['broadcast', id]); },
+        saveServerFailure: () => { assert.equal(game.runtimeCallActive(session), true); calls.push(['failure']); game.server().value = true; },
+    };
+    assert.equal(typeof entry.directReceive, 'function'); assert.equal(entry.version, 0); assert.equal(entry.length, 0xffff);
+    use.publish(session); game.bindRuntimeOwner(session, owner);
+    try {
+        game.server().value = true; scene.local.clockSynchronization().connection = 77; scene.activity.frames()[2] = 91;
+        const view = new DataView(scene.records.buffer); view.setUint32(2 * 180 + 0x50, 0x43, true);
+        entry.directReceive(2, {}, new Uint8Array());
+        assert.equal(scene.local.clockSynchronization().connection, 0); assert.equal(view.getUint32(2 * 180 + 0x50, true), 0x102);
+        assert.equal(scene.activity.frames()[2], 0); assert.deepEqual(calls, [['disconnect', 2], ['broadcast', 2]]);
+        game.server().value = false; entry.directReceive(9, null, new Uint8Array());
+        assert.deepEqual(calls, [['disconnect', 2], ['broadcast', 2], ['failure']]); assert.equal(game.runtimeCallActive(session), false);
+    } finally { use.withdraw(session); use.release(); }
 });
 
 // 41h는 같은 장기 마스크를 사용하며 Chat 창이 있을 때만 현재 메뉴를 조회한다.

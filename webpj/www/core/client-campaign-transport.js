@@ -11,7 +11,7 @@
 //   (0x0b·0x0c·0x55·0x56·0x57·0x16·0x1c·0x85·0x7b)·0x0b 버전 조회 수신기(4b3af0)·0x32 현재 설정 수신기(44dc20)·미션 송신 관찰기 4종(2a/2b/67/81)·0x3f/0x5f/0x7d 길이 관찰기(`1916bd66`·`ede61f05`·`5318a9b2`·`a76499e3` 등).
 //   ① — `shared_ptr` 수명 보유(TransportGlobals 의 세 소유권)와 `PacketSources().Publish`(Source 경로 공개)는 GC 가 대신함.
 //   웹 제외 — 훅 `delay`(`PacketDelays`, 실소켓 지연 FIFO)·`MissionNetwork`/Meta 인자(`network`·`meta`)·`RebindWorld` 재진입·Meta 계열 수신기(0x0f 루트 응답·0x1d 도전 로그인·0x26 지오메트리·0x66 서버 탐색·0x71 전투 설명·0x7c 게임 로그인·0x7b 주소 수신기·0x1a/0x1b 전투 시작).
-//   ③ 4-D / 후속 — 고정 Native 수신기를 장기 기본 표에 설치하는 묶음(`InstallNative{Login,Gameplay,Carrier,Construction}PacketReceivers` 14·26·15·12F, 연결 종료 2번 004b6660)은
+//   ③ 4-D / 후속 — 고정 Native 수신기를 장기 기본 표에 설치하는 묶음(`InstallNative{Login,Gameplay,Carrier,Construction}PacketReceivers` 14·26·15·12F)은
 //   대응표 밖 신규 파일이거나 아직 옮기지 않은 모듈이 필요해 이 단위에서 설치하지 않는다(PORT_MAP 메모의 "남음"). 원문에서 고정 Native 수신기로 등록하는 빈 C3 수신기(004437f0)는 웹에 canonical 등록이 없어 일반 직접 수신기(`registerDirect`)로 등록한다.
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-12 WB04-E328: 4-C ClientCampaignTransport 1단계 이식)
 import { CompositeMissionTransport } from './composite-mission-transport.js';
@@ -25,6 +25,7 @@ import { observeCompressedSquid } from './raw-squid-compressed-receive.js';
 import { registerTechnologyTypesPacket } from './raw-technology-types-packet.js';
 import { releaseRuntimePin } from './runtime-pin.js';
 import { installClientChatPacketReceiver } from './client-chat-packet-receiver.js';
+import { installClientConnectionEndedReceiver } from './client-connection-ended-receiver.js';
 
 // Client 원문 기본 등록 한 행의 필드 설명: type(0040b4b0 의 패킷 종류)·length(0052ec40 의 고정 길이 WORD, 0xffff 는 가변)·c3Receiver(4437f0 의 비NULL 빈 수신기만 설치하고 관찰 전용 receiver 에는 손대지 않음)·
 // mutableObserver(실제 this 버퍼를 읽는 일곱 원문 관찰기와 비NULL 빈 40b380 을 구별). (2026-11-12 WB04-E328)
@@ -160,6 +161,7 @@ function versionQueryReceiver(client) {
 // 아직 옮기지 않은 묶음은 모듈 머리글의 ③ 목록과 같다. (2026-11-12 WB04-E328)
 export function installClientPacketDefaults(client, dispatch) {
     installClientChatPacketReceiver(client, dispatch);
+    installClientConnectionEndedReceiver(client, dispatch);
     installClientMissionSendObservers(client, dispatch);
     const storage = client.surfaceStorage();
     const game = client.gameplayGlobals(), aux = game.gameAux();
