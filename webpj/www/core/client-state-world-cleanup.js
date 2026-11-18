@@ -1,8 +1,10 @@
 // State 정리의 커서 취소를 현재 Session 또는 같은 Client의 실제 초기 커서에 연결한다.
 // 사용: cancelClientStateCursor(gameplay, cancelWithoutRuntime). 빠진 선택 경계는 도달할 때 거부한다.
-import { StateWorldCleanupEffect } from './raw-state-world-cleanup.js';
+import { cleanupStateWorld, StateWorldCleanupEffect } from './raw-state-world-cleanup.js';
 import { clearClientUserSelection } from './client-user-selection-cleanup.js';
 import { clearClientMetaZoneRecords, resetClientClockSynchronization, resetClientSquidPool, resetClientStateWorldStorage, resetClientStateZone } from './client-state-storage-cleanup.js';
+import { bindClientStateWorldGlobals } from './client-state-world-globals.js';
+import { ClientStateRuntimeRetirement } from './client-state-runtime-retirement.js';
 import { resetPriestOwnerState } from './raw-priest-post-pop.js';
 import { setPlayerSpAmount } from './raw-fort-money-load.js';
 import { initializeClientPlayerRecords } from './client-player-runtime.js';
@@ -75,4 +77,13 @@ export function makeClientStateWorldHooks(context, devices, runtime) {
             }
         },
     };
+}
+
+// 원문 State 정리 부모에 같은 장기 전역·효과·Runtime 소유자를 조립한다.
+export function cleanupClientStateWorld(reason, context, devices = {}) {
+    const { gameplay, storage } = context;
+    if (!storage) throw new TypeError('전체 State 정리의 실제 표면 owner 필요');
+    if (gameplay.borrowed() && gameplay.requireSession().connectionCallbackActive()) throw new Error('패킷 콜백 실행 중 전체 State 정리 재진입');
+    const globals = bindClientStateWorldGlobals(context), runtime = new ClientStateRuntimeRetirement(context);
+    cleanupStateWorld(reason, globals, makeClientStateWorldHooks(context, devices, runtime));
 }

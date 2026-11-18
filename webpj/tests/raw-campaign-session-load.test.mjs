@@ -13,7 +13,7 @@ import { clearClientUserSelection } from '../www/core/client-user-selection-clea
 import { resetClientClockSynchronization, resetClientStateZone, resetClientStateWorldStorage, resetClientSquidPool, clearClientMetaZoneRecords } from '../www/core/client-state-storage-cleanup.js';
 import { StateWorldCleanupEffect } from '../www/core/raw-state-world-cleanup.js';
 import { ClientStateRuntimeRetirement } from '../www/core/client-state-runtime-retirement.js';
-import { cancelClientStateCursor, makeClientStateWorldHooks } from '../www/core/client-state-world-cleanup.js';
+import { cancelClientStateCursor, cleanupClientStateWorld, makeClientStateWorldHooks } from '../www/core/client-state-world-cleanup.js';
 import { bindClientStateWorldGlobals } from '../www/core/client-state-world-globals.js';
 import { ClientKencloudGlobals } from '../www/core/client-kencloud-globals.js';
 import { ClientNsInfoGlobals } from '../www/core/client-ns-info-globals.js';
@@ -165,6 +165,35 @@ test('Client State 효과: 실제 장기 소유자와 선택된 외부 장치', 
     assert.throws(() => hooks.effect(E.KillGumps), /외부 장치 누락/); assert.throws(() => hooks.effect(0xffffffff), /미등록 Effect/);
 });
 
+// 첫 메뉴의 전체 State 부모는 실제 장기 물리를 순서대로 정리한다.
+test('Client State 부모: Session 없는 실제 장기 소유자 정리', () => {
+    const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals(), activity = new ClientConnectionActivityGlobals();
+    const players = new ClientPlayerRecords(), coreData = new ClientCoreDataGlobals(), kernel = new Kernel(), random = new ClientRandomGlobals();
+    const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    const clock = { game: 12 }; storage.processes.bindDevices(kernel, clock); players.bindCoreData(coreData); players.initialize(() => {});
+    const connections = new ClientConnectionGlobals(local), templates = new CampaignTemplateStorage(), popupState = new QuickHelpPopupState();
+    const sp = new ScrambledSpStore(random.game, () => 1); sp.bindTrackingOffset({ value: 0 }); sp.initialize();
+    const chat = new RawChatChannels(new Uint8Array(4800), () => 0), events = [];
+    const audio = { popMute: () => events.push('mute'), writeSongEndBits: (bits) => events.push(['song', bits]),
+        startScene: (battle) => events.push(['music', battle]), sounds: () => ({ stopLoops: () => events.push('stop') }) };
+    const client = { paused: () => false, popGamePause: () => events.push('resume'), resetGameClock: () => { clock.game = 0; events.push('clock'); },
+        wallSeconds: () => 42, interpretStateOptions: () => events.push('options') };
+    const context = { gameplay, local, activity, storage, currentStorage: storage, players, coreData, kernel, random, connections, templates, sp, chat, audio, client,
+        popupState, nsInfo: new ClientNsInfoGlobals(), kencloud: new ClientKencloudGlobals(), gameTime: () => clock.game };
+    const devices = { cancelInitialCursor: () => events.push('cursor'), refreshSp: () => events.push('sp'), selectCursor: () => events.push('selectCursor'),
+        killGumps: () => events.push('kill'), cleanupGumps: () => events.push('cleanup'), replaceUber: () => events.push('uber') };
+    activity.frames().fill(9); local.zoneWords().set([0xffffffff, 0xaabbccdd]); popupState.mark(7, Uint8Array.of(65));
+    random.fortCoreSeed = 0xabcd1234; storage.spots[12] = 9;
+    cleanupClientStateWorld(0, context, devices);
+    assert.ok(activity.frames().every((value) => value === 0)); assert.deepEqual([...local.zoneWords()], [0, 0xaabb0000]);
+    assert.equal(popupState.command, 0); assert.deepEqual([...popupState.argumentBytes()], [65]);
+    assert.equal(random.fortCoreSeed, 0xabcd0000); assert.equal(storage.spots[12], 0); assert.equal(local.reconnectSaveEnd().value, 52);
+    assert.equal(storage.borrowed, false); assert.equal(gameplay.borrowed(), false); assert.equal(gameplay.server().value, false);
+    assert.ok(events.includes('cursor') && events.includes('kill') && events.includes('cleanup') && events.includes('uber') && events.includes('options'));
+    assert.ok(events.some((entry) => Array.isArray(entry) && entry[0] === 'song' && entry[1] === 0n));
+});
+
 // 실제 장기 Client·표면의 선택된 물리만 정리하고 World 대여 관문을 지킨다.
 test('Client State 저장소 정리: 장기 전역과 대여 관문', () => {
     const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals();
@@ -228,7 +257,8 @@ test('Client State Runtime 반납: 실제 Session 자식 증빙과 소유자', (
         assert.equal(s.playerRecords(), players.records()); assert.equal(s.connectionCallbackActive(), false);
         assert.throws(() => retirement.resetAi(0), /owner1\.\.8/);
         const pin = gameplay.pinCurrentRuntime(s);
-        try { assert.equal(s.connectionCallbackActive(), true); assert.throws(() => retirement.clearKernel(), /콜백 실행 중/); } finally { pin.release(); }
+        try { assert.equal(s.connectionCallbackActive(), true); assert.throws(() => retirement.clearKernel(), /콜백 실행 중/);
+            assert.throws(() => cleanupClientStateWorld(0, { gameplay, storage }), /콜백 실행 중/); } finally { pin.release(); }
         gameplay.player.playerKnown = 0; coreData.active = 0; coreData.current = null;
         assert.throws(() => retirement.retire(() => {}), /Player 링크 증빙/);
         retirement.clearPlayerLinks();
