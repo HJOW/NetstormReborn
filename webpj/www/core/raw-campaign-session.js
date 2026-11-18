@@ -49,6 +49,7 @@ import { RawSquidSelection, selectionUsesRange, startSelectionContentPreview } f
 import { createCursorManaProcess } from './raw-cursor-mana.js';
 import { createCursorRangeProcess } from './raw-cursor-range.js';
 import { CameraHome } from './camera-home.js';
+import { RawTutorialOne } from './raw-tutorial-one.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -720,6 +721,20 @@ export class RawCampaignSession {
     participation() { return this.#live().participation; }
     // 현재 Session의 사제 처리기와 같은 공유 목록을 빌린다.
     priests() { return this.#live().priests; }
+    // 튜토리얼 1의 단계 판정을 현재 장부·Player·SP·간헐천과 같은 게이트에 연결한다.
+    makeTutorialOne(gate) {
+        const o = this.#live(); if (!o.loaded) throw new Error('설치 전 Early1 실제 판정 연결');
+        const live = () => this.#live();
+        const state = {
+            get stage() { return gate.state.stage; }, get localPlayer() { return live().playerState.battleOwner; },
+            get battleShown() { return live().playerState.playerKnown; }, get homeCommand() { return live().tutorialHomeCommand; },
+            get reclaimCommand() { return live().tutorialReclaimCommand; },
+        };
+        return new RawTutorialOne(state, o.players, o.world.storage.recentGeysers, {
+            builtForGenus: (genus) => live().totalMade.builtForGenus(genus), graphFor: (sid) => live().anchor.graphFor(sid),
+            money: (owner) => this.sp(owner), advance: () => gate.advance(), spawnGeysers: () => this.generateLocalGeysers(),
+        });
+    }
     // 현재 Client가 소유한 같은 카메라 전역을 빌린다.
     cameraGlobals() { return this.#live().gameplayGlobals.camera(); }
     // 원본 497f20처럼 목표와 재구성 번호만 갱신하고 현재 화면은 적용하지 않는다.

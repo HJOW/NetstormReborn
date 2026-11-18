@@ -25,7 +25,7 @@ import { ClientSubscriberGlobals } from '../www/core/client-subscriber-globals.j
 import { captureMissionFortZone, createMissionFortLoadRequest, writeMissionFortRequest } from '../www/core/mission-fort-request.js';
 import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { RawCampaignMissionStartBindings } from '../www/core/raw-campaign-mission-start-bindings.js';
-import { createMissionFrameGateState } from '../www/core/raw-mission-frame-gate.js';
+import { createMissionFrameGateState, RawMissionFrameGate } from '../www/core/raw-mission-frame-gate.js';
 import { createMissionStartState } from '../www/core/raw-mission-start.js';
 import { MissionScript } from '../www/core/mission-script.js';
 import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
@@ -624,6 +624,29 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
         dispatch.invokeDirect(0x77, 2, null, Uint8Array.of(1, 0x77, 6, 0, 2, 1)); assert.deepEqual(tells, ['AllianceRequested(~r,Bob,2)']);
     } finally { s.dispose(); }
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
+});
+
+// 튜토리얼 1의 단계 조건은 현재 Session 제작 집계와 SP를 읽는다.
+test('CampaignSession TheWarBegins: 튜토리얼 1 현재 집계와 자금 판정', () => {
+    const records = new ClientPlayerRecords(), { s } = scene({ playerRecords: records }), state = createMissionFrameGateState();
+    const hooks = Object.fromEntries(['checkOutcome', 'dialogsClear', 'knowledgeOpen', 'guideOpen', 'blockingGumpOpen', 'tellStage', 'tellAt', 'endDemo', 'tutorial', 'pause', 'resume'].map((name) => [name, forbidden(name)]));
+    hooks.gameSeconds = () => 42; hooks.paused = () => false; const gate = new RawMissionFrameGate(state, hooks);
+    try {
+        assert.throws(() => s.makeTutorialOne(gate), /설치 전/); s.load();
+        const early = s.makeTutorialOne(gate), counts = s.core().bookkeeping.localSecondaryCounts(); counts.fill(0);
+        state.stage = 0x41; state.lockFrames = 0; assert.equal(early.handle(0x02000008), 1); assert.equal(state.stage, 0x41);
+        early.handle(0x020000ae); assert.equal(state.stage, 0x42); assert.equal(state.lockFrames, 10); assert.equal(state.nextStageSeconds, 42.5);
+        state.stage = 0x42; state.lockFrames = 0; const bridge = s.core().types.findIndex((type, index) => index >= 70 && (type.flags2 & 4)); assert.ok(bridge >= 70);
+        counts[bridge] = 7; early.handle(0); assert.equal(state.stage, 0x42);
+        counts[bridge] = 8; early.handle(0); assert.equal(state.stage, 0x43);
+        const priest = s.world().objects().find(({ object }) => object.type === 158 && object.owner === s.localOwner()); assert.ok(priest);
+        const players = records.records(); new DataView(players.buffer, players.byteOffset, players.byteLength).setUint32(s.localOwner() * 180 + 0x7c, priest.sid, true);
+        const recent = s.world().storage.recentGeysers; recent.setCount(0); recent.append(priest.sid);
+        state.stage = 0x44; state.lockFrames = 0; early.handle(0); assert.equal(state.stage, 0x45);
+        state.stage = 0x45; state.lockFrames = 0; s.setSp(s.localOwner(), 199); early.handle(0); assert.equal(state.stage, 0x45);
+        s.setSp(s.localOwner(), 200); early.handle(0); assert.equal(state.stage, 0x46);
+    } finally { s.dispose(); }
+    assert.throws(() => s.makeTutorialOne(gate), /반납/);
 });
 
 // 입자와 커서는 같은 현재 카메라·표시 영역을 사용한다.

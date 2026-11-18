@@ -320,6 +320,8 @@ export class RawCampaignSessionOwners {
     transmissionModules = null;
     // 실제 World 게시 뒤 같은 풀의 일반 배치·지형·소유자 후처리 모듈과 선언부의 추가 목록이다.
     terrainModules = null; terrainGlobals; randomPlacement; additional = new SquidPostPopList();
+    // 튜토리얼 1이 읽는 원본 Home·회수 명령 전역의 초기 DWORD다.
+    tutorialHomeCommand = 0x020000ae; tutorialReclaimCommand = 0x02000008;
     pipeline = null; normal = null; finishPlacement = null; finish = null;
     // Template 설치/WorldRuntime과 같은 현재 tutorial TYPE 역할의 독립 typed 소유 구간이다.
     installModules = null; tutorialWorkshopType; tutorialArcherType; tutorialTypes;
