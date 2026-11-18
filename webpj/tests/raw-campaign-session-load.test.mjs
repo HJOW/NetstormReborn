@@ -649,11 +649,13 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
     assert.throws(() => new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', { ...services, localLogin: null }, { x: 640, y: 480 }), /지연 로그인 장치/);
     assert.equal(gameplay.borrowed(), false);
     const world = new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', services, { x: 640, y: 480 });
+    let oldCarrier;
     try {
         const session = world.session(); assert.equal(gameplay.requireSession(), session); assert.equal(world.cameraGlobals(), gameplay.camera());
         assert.ok(world.factoryDisplay() instanceof RawCampaignFactoryDisplay); assert.equal(session.loaded, false); assert.equal(world.connecting, false);
         assert.deepEqual(world.mapView(), { left: 0, top: 28, right: 640, bottom: 480 });
         assert.equal(world.completeLocalConnection(), false); assert.deepEqual(world.objects(), []);
+        assert.throws(() => session.makeCarrierInput(), /설치 전/);
         assert.throws(() => world.clearSelection(), /미설치/); assert.throws(() => world.bindUserSelection(), /설치 전/);
         const palette = new Uint8Array(1024); palette.set([255, 255, 255, 0], 8); palette.set([0, 255, 255, 0], 12);
         const expectedPalette = palette.slice(), factoryPalettes = [], factory = world.factoryDisplay(), factorySetPalette = factory.setPalette.bind(factory);
@@ -695,8 +697,14 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         const pixels = gameplay.camera().rendererView().pixels, sprites = world.factoryDisplay().sprites(world.mapView(), pixels.x, pixels.y, session.localOwner());
         assert.ok(sprites.length > 0); assert.ok(sprites.every((sprite) => typeof sprite.procedure.draw === 'function'));
         assert.equal(world.takeChanged(), true); assert.equal(world.takeChanged(), false); assert.throws(() => world.startLocalConnection(), /새 수명/);
+        const cursors = [], carrier = session.makeCarrierInput({ multiple: () => 0, selectCursor: (number) => cursors.push(number), assertion: forbidden('운반 입력 진단') }); oldCarrier = carrier;
+        carrier.highlight(priest.sid, { x: 90, y: 108 }, 0); carrier.highlight(priest.sid, { x: 90, y: 108 }, 1); assert.deepEqual(cursors, [0x12, 0x12]);
+        assert.equal(selection.select(priest.sid, 0, 0), priest.sid); const packets = session.localConnectionPackets();
+        carrier.commit(priest.sid, { x: 90, y: 108 }); assert.equal(world.selected(), 0); session.pumpLocalConnection();
+        assert.equal(session.localConnectionPackets().length, packets.length + 1); assert.equal(session.localConnectionPackets().at(-1), 0x40);
     } finally { world.dispose(); }
     assert.equal(gameplay.borrowed(), false); assert.throws(() => world.session(), /반납/);
+    assert.throws(() => oldCarrier.highlight(5, { x: 90, y: 108 }, 1), /반납/);
 });
 
 // Process 정리 오류는 진단하고 나머지 수명 반납을 계속한다.

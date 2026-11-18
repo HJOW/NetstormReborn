@@ -43,6 +43,7 @@ import { isFormConstructorVtable } from './squid-forms.js';
 import { SQUID_FORM_VTABLES } from './squid-vtables.js';
 import { beginSquidVerification, receiveFreeSquidVerification } from './raw-squid-verification.js';
 import { RawUserSelection } from './raw-user-selection.js';
+import { RawCampaignSessionCarrierInput } from './raw-campaign-session-carrier-input.js';
 import { RawMissionServerPackets } from './raw-mission-server-packets.js';
 import { campaignPeerAddressText } from './campaign-transport-services.js';
 import { RawSquidSelection, selectionUsesRange, startSelectionContentPreview } from './raw-squid-selection.js';
@@ -79,6 +80,8 @@ export class RawCampaignSession {
     #owner = null; #login = null; #disposed = false;
     // 사제 메뉴는 여러 번 생성돼도 같은 현재 원본 설정을 공유한다.
     #priestMenuState = createPriestMenuState();
+    // 같은 Session의 운반체 입력 전역과 음향 장부다.
+    #carrierInput = new RawCampaignSessionCarrierInput(() => this.#live());
 
     // 모든 Impl 모듈이 구성된 뒤 외곽 callback을 연결하고 마지막에 현재 Session을 게시한다.
     constructor(game, files, fort, mission, services = {}) {
@@ -205,6 +208,8 @@ export class RawCampaignSession {
         Object.defineProperty(selection, SELECTION_LIFETIME, { value: link });
         o.activeSelection = new WeakRef(link); return selection;
     }
+    // 같은 Session의 실제 운반체 입력을 만들며 UI 효과는 호출자가 제공한다.
+    makeCarrierInput(input = {}) { return this.#carrierInput.make(input); }
     // 원문의 설치 순서로 같은 실제 월드와 모든 모듈을 연결한다. 오류 시 앞선 효과를 되돌리지 않는다.
     load() {
         const o = this.#live();
