@@ -1346,7 +1346,9 @@ public sealed partial class HostSession
         {
             NotifySurface = sid => _fortBuilding.NotifySurface(sid),
             SetState = (_, _) => { },
-            SetOwner = SetWorldObjectOwner,
+            // 요새 적재의 소유자 지정은 신전을 만나면 가상 Owner로 분배한다. 도장·사제 경로는 공통 경로를 쓴다.
+            // 2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 바꿨다. 근거: cpppj RawCampaignSession.cpp 3257행의 setOwner 조립이다.
+            SetOwner = SetFortObjectOwner,
             HasHitPoints = _fortHp.HasHitPoints,
             MaxHitPoints = _fortHp.MaxHitPoints,
             VirtualCount = _ => throw new InvalidOperationException("Fort 가상 개수 미연결(R6)"),
@@ -1375,6 +1377,15 @@ public sealed partial class HostSession
                 // 다리·섬·표면과 공통 지원 타입은 지형 분배 Pop으로 등록한다. 전용 파생이 필요한 종류는 기록만 남긴다.
                 if (TryPopFortTerrain(sid, x, y, flags))
                 {
+                    // Pop 성공 뒤 실제 좌표의 소유자를 분배한다. 적재 SetOwner(좌표 0·void)와 달리 섬 소유자·첫 지역을 전파한다.
+                    // 2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 이었다. 근거: cpppj RawAssetPostPop.cpp 91행이다.
+                    // 사원은 전용 파생(R6) 전에는 Pop되지 않아 분배가 관문에 걸린다. Pop이 열리면 같은 위치에서 동작한다.
+                    uint number = Pool.Slot(sid)[RawSidPool.TypeOffset];
+                    if (number < (uint)types.Count && (types[(int)number].Flags2 & TypeFlag2.Vortex) != 0)
+                    {
+                        DispatchRegionTempleOwner(sid);
+                    }
+
                     return;
                 }
                 _fortPopSkipped.Add(FormatFortPopSkip(sid, flags, _terrainPostPop is null || _terrainPop is null ? "missing-devices" : "dedicated-r6"));
@@ -1826,12 +1837,29 @@ public sealed partial class HostSession
     /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1266~1267행의 ownership 조립이다.</remarks>
     private RawRegionOwnership? _regionOwnership;
 
+    /// <summary>같은 월드의 실제 신전 가상 소유자 몸체다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 추가했다. 요새 적재의 소유자 지정이 신전을 만나면 섬·지역·Player 기록을 갱신한다. 근거: cpppj RawCampaignOwnership.cpp 54~60행의 소유권 조립이다.</remarks>
+    private RawVortexOwner? _regionVortex;
+
+    /// <summary>신전 가상 Owner가 패치 생산 갱신 뒤에 증가시키는 세션 소유 revision이다. 덤프에는 직접 나가지 않는다.</summary>
+    /// <remarks>2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 추가했다. CD판에서는 쓰지 않는다.</remarks>
+    private readonly UIntBox _regionVortexRevision = new();
+
+    /// <summary>신전 가상 Owner가 요청한 생산 갱신 횟수다. Generate 범위의 UI 갱신은 R6에서 잇는다.</summary>
+    /// <remarks>2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 추가했다. L1에서 호출 순서만 확인한다.</remarks>
+    private uint _regionVortexRefreshes;
+
+    /// <summary>신전 가상 Owner가 존재하지 않는 섬을 만나 보고한 진단이다. 보고 뒤에도 계속 진행한다.</summary>
+    /// <remarks>2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 추가했다. 근거: cpppj RawVortexOwnerDiagnostic.cpp의 보고 뒤 계속이다.</remarks>
+    private readonly List<string> _regionVortexDiagnostics = [];
+
     /// <summary>지역 칠하기·소유권 투표 장치를 세션에 연결한다. 요새 객체 적재의 신전 배치가 투표를 일으킨다.</summary>
     /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
     /// <param name="themeMode">패치 theammode 읽기다. 없으면 1(켜짐)을 쓴다.</param>
-    /// <exception cref="InvalidOperationException">지역 투표의 지형 장치가 미연결이다.</exception>
+    /// <exception cref="InvalidOperationException">지역 투표의 지형 장치·공통 Owner·지형 바인딩이 미연결이다.</exception>
     /// <exception cref="ArgumentException">지역 투표의 TYPE·풀 불일치다.</exception>
-    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1266~1267행의 ownership 조립과 RawCampaignOwnership.cpp 49~53행의 paint·ownership·terrain 결선이다. 공장 후처리·신전 경로의 실제 트리거는 R4-6·R6에서 잇는다.</remarks>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1266~1267행의 ownership 조립과 RawCampaignOwnership.cpp 49~53행의 paint·ownership·terrain 결선이다. 공장 후처리·신전 경로의 실제 트리거는 R4-6·R6에서 잇는다.
+    /// 2026-11-19 0.621에서 신전 가상 Owner 결선을 같은 장치에 이었다. 근거: cpppj RawCampaignOwnership.cpp 54~60행이다. 도장의 SetOwner 갈고리는 재귀를 피하려고 가상 Owner를 거치지 않는다.</remarks>
     public void BuildRegionOwnershipDevices(IReadOnlyList<OriginalTypeRecord> types, Func<uint>? themeMode = null)
     {
         ArgumentNullException.ThrowIfNull(types);
@@ -1898,6 +1926,7 @@ public sealed partial class HostSession
         _regionTerrain = terrain;
         _regionPaint = paint;
         _regionOwnership = ownership;
+        BuildRegionVortexDevices(types, terrain, ownership);
     }
 
     /// <summary>지역 투표 몸체를 빌려준다. 연결하기 전에는 예외다.</summary>
@@ -1937,6 +1966,99 @@ public sealed partial class HostSession
         raw[21] = unchecked((byte)(yb >> 24));
         temples.Append(sid);
         ownership.Update(x, y);
+    }
+
+    /// <summary>신전 가상 Owner 장치를 세션에 연결한다. 요새 적재의 소유자 지정이 신전을 만나면 섬·지역·Player 기록을 갱신한다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <param name="terrain">지역 번호를 조회하는 같은 getter 지형 몸체다.</param>
+    /// <param name="ownership">같은 월드의 실제 지역 투표 몸체다.</param>
+    /// <exception cref="InvalidOperationException">가상 Owner의 공통 Owner·지형 바인딩이 미연결이다.</exception>
+    /// <remarks>2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 추가했다. 근거: cpppj RawCampaignOwnership.cpp 54~60행의 소용돌이→섬 소유자→첫 지역 사슬이다. 별도(outpost) 목록은 같은 투표의 추가 목록을 빌리며 실제 목록 생산자는 R11에서 잇는다.</remarks>
+    private void BuildRegionVortexDevices(IReadOnlyList<OriginalTypeRecord> types, RawCanonPlacementTerrain terrain, RawRegionOwnership ownership)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        ArgumentNullException.ThrowIfNull(terrain);
+        ArgumentNullException.ThrowIfNull(ownership);
+        if (_regionVortex is not null)
+        {
+            throw new InvalidOperationException("지역 가상 Owner 장치 중복 연결");
+        }
+
+        SquidOwner baseOwner = _playerOwner ?? throw new InvalidOperationException("지역 가상 Owner 공통 Owner 미연결");
+        RawNormalTerrainWorldBinding binding = TerrainBinding ?? throw new InvalidOperationException("지역 가상 Owner 지형 바인딩 미연결");
+        RawPostPopList additional = _regionAdditional ?? throw new InvalidOperationException("지역 가상 Owner 별도 목록 미연결");
+        var hooks = new VortexOwnerHooks
+        {
+            IslandNumber = (x, y) => RegionIslandAt(x, y),
+            IslandExists = island => binding.Islands.Exists(island) != 0,
+            SetIslandOwner = (island, owner) => binding.Islands.Owner(island, owner),
+            RegionOwnership = (x, y) => ownership.Update(x, y),
+            RefreshProduction = () => { _regionVortexRefreshes++; },
+            MissingIsland = (sid, island, owner) => _regionVortexDiagnostics.Add($"vortex-missing island={island} owner={owner} sid={sid}"),
+        };
+        _regionVortex = new RawVortexOwner(Pool, baseOwner, PlayerRecords, additional, _regionVortexRevision, hooks);
+    }
+
+    /// <summary>같은 월드의 실제 신전 가상 Owner 몸체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>요새 적재의 소유자 지정이 신전을 만나면 쓰는 가상 몸체다.</returns>
+    /// <remarks>2026-11-19 0.621에서 추가했다. 도장의 SetOwner 갈고리는 이 몸체를 거치지 않는다.</remarks>
+    public RawVortexOwner RegionVortex => _regionVortex ?? throw new InvalidOperationException("지역 가상 Owner 미연결");
+
+    /// <summary>현재 좌표의 지면 지역 번호를 조회한다. 가상 Owner의 섬 번호와 같은 getter다.</summary>
+    /// <param name="x">조회할 가로 좌표다.</param>
+    /// <param name="y">조회할 세로 좌표다.</param>
+    /// <returns>지면 지역 번호다.</returns>
+    /// <remarks>2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 추가했다. 근거: cpppj RawCampaignOwnership.cpp 64행의 IslandNumber다. 원본 float 절삭을 사용하며 배치 순회에는 쓰지 않는다.</remarks>
+    public int RegionIslandAt(float x, float y)
+    {
+        RawCanonPlacementTerrain terrain = _regionTerrain ?? throw new InvalidOperationException("지역 getter 지형 미연결");
+        return unchecked((int)terrain.RegionAt((int)x, (int)y));
+    }
+
+    /// <summary>신전 가상 Owner가 패치 생산 갱신 뒤에 증가시킨 revision이다.</summary>
+    /// <returns>현재 DWORD다. CD판에서는 바뀌지 않는다.</returns>
+    /// <remarks>2026-11-19 0.621에서 추가했다. 덤프에는 직접 나가지 않는다.</remarks>
+    public uint RegionVortexRevision => _regionVortexRevision.Value;
+
+    /// <summary>신전 가상 Owner가 요청한 생산 갱신 횟수다.</summary>
+    /// <returns>연결 뒤 누적 횟수다.</returns>
+    /// <remarks>2026-11-19 0.621에서 추가했다. Generate 범위의 UI 갱신은 R6에서 잇는다.</remarks>
+    public uint RegionVortexRefreshes => _regionVortexRefreshes;
+
+    /// <summary>신전 가상 Owner가 존재하지 않는 섬을 만나 보고한 진단이다.</summary>
+    /// <returns>보고 뒤에도 계속 진행한 기록이다.</returns>
+    /// <remarks>2026-11-19 0.621에서 추가했다. 근거: cpppj RawVortexOwnerDiagnostic.cpp의 보고 뒤 계속이다.</remarks>
+    public IReadOnlyList<string> RegionVortexDiagnostics => _regionVortexDiagnostics;
+
+    /// <summary>요새 객체 적재의 소유자 지정을 실제 가상 Owner 또는 기존 공통 부모에 전달한다. 도장·사제 경로는 쓰지 않는다.</summary>
+    /// <param name="sid">소유자를 정할 객체 번호다.</param>
+    /// <param name="player">새 소유자 번호다.</param>
+    /// <remarks>2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 추가했다. 근거: cpppj RawCampaignOwnership.cpp 78~80행의 SetOwner 분배다. 도장의 SetOwner 갈고리는 소유자 투표의 재귀를 피하려고 기존 공통 경로를 그대로 쓴다.</remarks>
+    public void SetFortObjectOwner(int sid, uint player)
+    {
+        if (_regionVortex is not null && RawVortexOwner.HandlesRawVortexOwner(Pool, sid))
+        {
+            _regionVortex.Set(sid, player);
+            return;
+        }
+
+        SetWorldObjectOwner(sid, player);
+    }
+
+    /// <summary>Pop 시점 실제 좌표의 신전 소유자를 가상 Owner로 분배한다. 적재 갈고리에서 실제 좌표와 함께 부른다.</summary>
+    /// <param name="sid">분배할 신전 슬롯 번호다.</param>
+    /// <exception cref="InvalidOperationException">가상 Owner 미연결·미복원 신전 가상 표다.</exception>
+    /// <remarks>2026-11-19 0.621에서 R4-2 지역 소유자 확정용으로 추가했다. 근거: cpppj RawAssetPostPop.cpp 287행의 신전 목록 등록 뒤 91행의 SetOwner 분배다. 적재 SetOwner(좌표 0)와 달리 실제 좌표로 섬 소유자·첫 지역을 전파한다.</remarks>
+    public void DispatchRegionTempleOwner(int sid)
+    {
+        RawVortexOwner vortex = _regionVortex ?? throw new InvalidOperationException("지역 가상 Owner 미연결");
+        if (!RawVortexOwner.HandlesRawVortexOwner(Pool, sid))
+        {
+            throw new InvalidOperationException("미복원 신전 가상 Owner 표");
+        }
+
+        int ownerOffset = Pool.Edition == OriginalEdition.Patch1078 ? FortFinishOwnerShape.PatchOwnerOffset : FortFinishOwnerShape.CdOwnerOffset;
+        vortex.Set(sid, Pool.Slot(sid)[ownerOffset]);
     }
 
     public void RebuildWorldGraph(bool mode)

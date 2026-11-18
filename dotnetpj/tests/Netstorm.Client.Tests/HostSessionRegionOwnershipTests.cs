@@ -23,6 +23,13 @@ public sealed class HostSessionRegionOwnershipTests
         var shapes = TerrainDisplayShapes.Build(definitions, new ShapeDatabase(shpRaw));
         session.BuildTerrainPopDevices(table.Types, shapes);
         session.BuildFortObjectDevices(table.Types, session.WorldFrames);
+        // 가상 Owner의 섬 갈고리가 읽는 바인딩이다. 섬이 비어 있어 두 갈고리는 호출되지 않는다.
+        // 2026-11-19 0.621에서 지역 가상 Owner 결선용으로 이었다.
+        session.BuildTerrainBinding(table.Types, session.TerrainDiagnostics, new IslandRuntimeHooks
+        {
+            SetResidenceOwner = (_, _) => { },
+            Assertion = _ => { },
+        });
         return (session, table.Types);
     }
 
