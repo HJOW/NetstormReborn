@@ -1029,3 +1029,7 @@ cpppj/src/o/RawCanonPlacementSurrounding.h	Netstorm.Core/Original/RawCanonPlacem
 cpppj/src/o/RawCanonPlacementSurrounding.cpp	Netstorm.Core/Original/RawCanonPlacementSurrounding.cs	5244a3695ea3a95d3652b9372d0ba2c1f86cc495	L1
 cpppj/src/o/RawCanonPlacementPipeline.h	Netstorm.Core/Original/RawCanonPlacementPipeline.cs	5244a3695ea3a95d3652b9372d0ba2c1f86cc495	L1
 cpppj/src/o/RawCanonPlacementPipeline.cpp	Netstorm.Core/Original/RawCanonPlacementPipeline.cs	5244a3695ea3a95d3652b9372d0ba2c1f86cc495	L1
+cpppj/src/o/RawRegionPaint.h	Netstorm.Core/Original/RawRegionPaint.cs	e079c26952667da76e8a485a90184aff77fa3b6f	L1
+cpppj/src/o/RawRegionPaint.cpp	Netstorm.Core/Original/RawRegionPaint.cs	e079c26952667da76e8a485a90184aff77fa3b6f	L1
+cpppj/src/o/RawRegionOwnership.h	Netstorm.Core/Original/RawRegionOwnership.cs	e079c26952667da76e8a485a90184aff77fa3b6f	L1
+cpppj/src/o/RawRegionOwnership.cpp	Netstorm.Core/Original/RawRegionOwnership.cs	e079c26952667da76e8a485a90184aff77fa3b6f	L1
