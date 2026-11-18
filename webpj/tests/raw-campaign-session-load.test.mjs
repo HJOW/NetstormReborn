@@ -696,6 +696,20 @@ test('CampaignSession TheWarBegins: State Player 링크와 실제 Deck 반납', 
     assert.throws(() => first.s.clearPlayerLinksForState(), /반납/);
 });
 
+// 실제 할당된 AI도 행동 프레임 없이 정리하고 같은 소유자에게 증빙을 반납한다.
+test('CampaignSession TheWarBegins: 실제 AI State 정리와 메모리 반납', () => {
+    const records = new ClientPlayerRecords(), notices = [];
+    const { s } = scene({ playerRecords: records, ai: { allocationBytes: (bytes) => bytes.fill(0x71), participation: { clearChat: () => notices.push('clear'), addChat: () => notices.push('add') } } });
+    try {
+        s.load(); const token = s.createAi(2, localAiProfile()), memory = s.aiMemory();
+        assert.equal(s.participation().brain(2), token); assert.equal(memory.contains(token), true);
+        const pass = s.resetAiForState(2); assert.equal(s.participation().brain(2), 0); assert.equal(memory.contains(token), false);
+        assert.ok(memory.frees.includes(token)); assert.equal(s.participation().brainReturnedForState(2), false);
+        s.returnAiForState(pass); assert.equal(s.participation().brainReturnedForState(2), true);
+        assert.throws(() => s.resetAiForState(2), /반복 reset 금지/);
+    } finally { s.dispose(); }
+});
+
 // State AI 정리 증빙은 발급한 같은 Session의 소유자만 한 번 소비한다.
 test('CampaignSession TheWarBegins: State AI 정리와 반납 증빙', () => {
     const first = scene(), second = scene();
