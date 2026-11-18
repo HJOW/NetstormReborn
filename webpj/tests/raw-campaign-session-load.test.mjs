@@ -573,3 +573,17 @@ test('CampaignSession Tutorial 1: 개발자 동맹 변경 패킷', () => {
         assert.equal(sends.length, 1); assert.equal(sends[0][0], 9); assert.equal(sends[0][1], 1); assert.equal(sends[0][2] & 4, 4);
     } finally { s.dispose(); }
 });
+
+// 개발자 그래프 진단은 같은 Session의 현재 그래프 기록을 출력한다.
+test('CampaignSession Tutorial 1: 개발자 그래프 진단 패킷', () => {
+    const logs = [], { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); s.world().storage.bindGraphTrace((...args) => logs.push(args));
+        const record = s.world().storage.graph.records[0]; record.surfaces = 7; record.inUse = 1;
+        const text = 'dg 0', packet = new Uint8Array(9 + text.length);
+        packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+        packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.deepEqual(logs, [[29, 'graph index: 0 numSurface: 7 inUse: 1\n']]);
+    } finally { s.dispose(); }
+});
