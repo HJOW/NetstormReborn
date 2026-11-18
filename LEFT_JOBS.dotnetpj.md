@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-18 · 마지막 구현 0.616 · 다음 구현 0.617 · 현재 단계 R4-2 · cpppj 제품 1322 / 11.01 · 전체 목표 미완료**
+**2026-11-18 · 마지막 구현 0.617 · 다음 구현 0.618 · 현재 단계 R4-2 · cpppj 제품 1322 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 0.613까지의 단위별 경과, 구현·검사 상세, 파일 계열별 체크 목록과 옛 집계는 [정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -14,14 +14,14 @@
 | 새 경로 `Netstorm.Client` + `Netstorm.Client.Host` | 타이틀·메뉴·도움말·Options·Credits·캠페인 선택·Edit 목록과 이름 창이 동작한다. 개발용 `--mission <키> --handle <이름>`으로 일반 31미션의 시작 상태 일부를 조립한다. 월드 표시·입력·규칙의 실제 경로가 남아 있어 플레이 불가다. | 1024×768 메뉴 **12장면**의 논리 BMP가 cpppj와 바이트 일치했다(0.381~0.388). L2는 **0/34**, 데모 3경로는 DN 진입 미연결이며 L3·L4b·L5는 미착수다. |
 
 - **마지막 구현 0.614.** `BuildFarmPlacementDevices`·`PlaceFarm` 추가와 `ClientHostGame` Generate 실결선. 세션 농지 배치 L1 3건 통과, 대표 3경로 L2에서 cpp 농지 선택 집합과 타입·소유자 100% 일치(152/152·69/69·67/67, 프레임 0/152 잔여). 이전 0.613의 월드훅 3건과 0.612의 어댑터 2건, 0.611의 전체 MayPlace 3건 전수 일치는 각 단위 결과다. [0.614](docs/dotnet-canon-0614-20261118.md) · [0.613](docs/dotnet-canon-0613-20261118.md) · [0.612](docs/dotnet-canon-0612-20261118.md) · [0.611](docs/dotnet-canon-0611-20261118.md)
-- **검사 기준선.** 0.608 Client 전체 1,267/1,267, 0.609 확대 집중 170/171(`PlayerTechnology` 자료 루트 미설정 1건). 0.566 전체 회귀 Assets 366·Client 1,233·Core 2,664 모두 통과는 당시 결과다. 0.614 집중 6건(`HostSessionFarmPlacementTests` 3·`HostSessionFarmHookTests` 3) 통과. 0.615 집중 3건(`TerrainStampFrameTests`) 통과. 0.616 집중 1건(`GroundTypeTableTests`) 통과. [0.608](docs/dotnet-farm-0608-20261118.md) · [0.609](docs/dotnet-canon-0609-20261118.md) · [0.566](docs/dotnet-regression-inventory-20261115.md)
+- **검사 기준선.** 0.608 Client 전체 1,267/1,267, 0.609 확대 집중 170/171(`PlayerTechnology` 자료 루트 미설정 1건). 0.566 전체 회귀 Assets 366·Client 1,233·Core 2,664 모두 통과는 당시 결과다. 0.614 집중 6건(`HostSessionFarmPlacementTests` 3·`HostSessionFarmHookTests` 3) 통과. 0.615 집중 3건(`TerrainStampFrameTests`) 통과. 0.616 집중 1건(`GroundTypeTableTests`) 통과. 0.617 도구 검증(`export_cpp_frametable.py` 종료 0: 317·172·1 일치). [0.608](docs/dotnet-farm-0608-20261118.md) · [0.609](docs/dotnet-canon-0609-20261118.md) · [0.566](docs/dotnet-regression-inventory-20261115.md)
 - **L2 기준선.** 일반 31경로의 양쪽 덤프와 데모 3경로의 cpp 덤프를 확보했다. 가장 최근 재측정은 0.614의 `thewarbegins`·`tutorial1`·`bc1menu76` 3경로다. 보관 위치는 `extracted/dotnet-l2-0614/`(직전 `0608`, 전체 대조 `0567`)이다. 농지 프레임·그래프 번호·장부·소유자 스탬프·cpp 전용 슬롯·정기 처리·AI·Player 첫 지역이 남았다. [일괄 수집](docs/dotnet-l2-batch-20261114.md) · [격차 분석](docs/dotnet-l2-0606-20261117.md) · [3경로 재측정](docs/dotnet-canon-0614-20261118.md)
 
 <a id="now"></a><a id="09-바로-다음-작업"></a><a id="r4-board"></a>
 
-### 0.1 다음 구현 0.617
+### 0.1 다음 구현 0.618
 
-1. cpp 섬별 스탬프 입력을 덤프해 DN과 대조한다. 0.616에서 DN 테이블은 파일과 일치하고 J-분류도 94% 일치하나, cpp 덤프는 서쪽 섬 J-기준점 280·동쪽 섬 244로 갈린다. cpp 도구 체인(g++ 부재)으로 isle `FrameTable`과 섬별 `GenerateOriginal` 입력(코드·매핑·프레임 벡터)을 뽑는 것이 직접 경로다. [0.616 결과](docs/dotnet-canon-0616-20261118.md)
+1. DN 미구현 지역 칠하기·소유자(`RawRegionPaint`·`RawRegionOwnership`)를 세션 Generate 경로에 연결한다. 0.617에서 소유자 격차(DN 전 셀 0 대 cpp 서쪽 1·동쪽 2)의 직접 원인이 DN 미구현으로 확정됐고, 슬롯 지역 WORD 자체는 1353/1353 일치하므로 배분 단계만 이으면 된다. [0.617 결과](docs/dotnet-canon-0617-20261118.md)
 2. R4-2의 나머지 차이(그래프 per-Pop·장부·지역·첫 지역·AI·정기 처리)를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을 확인한다. [R4 체크](#r4-detail)
 
 <a id="first-run"></a>
