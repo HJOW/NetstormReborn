@@ -26,6 +26,8 @@ import { captureMissionFortZone, createMissionFortLoadRequest, writeMissionFortR
 import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { RawCampaignMissionStartBindings } from '../www/core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from '../www/core/raw-campaign-tutorial-one-bindings.js';
+import { CampaignGameWorld } from '../www/core/campaign-game-world.js';
+import { RawCampaignFactoryDisplay } from '../www/render/raw-campaign-factory-display.js';
 import { createMissionFrameGateState, RawMissionFrameGate } from '../www/core/raw-mission-frame-gate.js';
 import { createMissionStartState } from '../www/core/raw-mission-start.js';
 import { MissionScript } from '../www/core/mission-script.js';
@@ -625,6 +627,40 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
         dispatch.invokeDirect(0x77, 2, null, Uint8Array.of(1, 0x77, 6, 0, 2, 1)); assert.deepEqual(tells, ['AllianceRequested(~r,Bob,2)']);
     } finally { s.dispose(); }
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
+});
+
+// 지연 GameWorld는 같은 Session·카메라·표시기를 소유하고 실제 로컬 로그인을 준비한다.
+test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비', () => {
+    const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), commits = [], views = [], dirty = [];
+    gameplay.camera().initializeNativeRenderer(640, 480, 256, { value: 0 }, { value: 0 });
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const services = {
+        gameplayGlobals: gameplay, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
+        deletion: { selected: () => 0 }, install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {} },
+        ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
+        sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
+        player: { log: () => {} }, ai: { assertion: forbidden('AI 진단'), participation: { addChat: () => {}, clearChat: () => {} } },
+        surfaceDisplay: { suppressed: () => false, invalidate: (...args) => dirty.push(args) }, soundViewChanged: (view) => views.push({ ...view }),
+        cameraCommit: (context) => { commits.push(context); const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
+    };
+    assert.throws(() => new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', services, { x: 0, y: 480 }), /화면 크기/);
+    assert.throws(() => new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', { ...services, localLogin: null }, { x: 640, y: 480 }), /지연 로그인 장치/);
+    assert.equal(gameplay.borrowed(), false);
+    const world = new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', services, { x: 640, y: 480 });
+    try {
+        const session = world.session(); assert.equal(gameplay.requireSession(), session); assert.equal(world.cameraGlobals(), gameplay.camera());
+        assert.ok(world.factoryDisplay() instanceof RawCampaignFactoryDisplay); assert.equal(session.loaded, false); assert.equal(world.connecting, false);
+        assert.deepEqual(world.mapView(), { left: 0, top: 28, right: 640, bottom: 480 });
+        world.startLocalConnection(); assert.equal(world.connecting, true);
+        session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
+        assert.equal(session.localConnectionReady(), true); assert.equal(session.loaded, true); assert.ok(session.world().objects().length > 1000);
+        assert.ok(commits.length > 0); assert.equal(commits[0].camera, gameplay.camera()); assert.ok(views.length > 0); assert.ok(dirty.length > 0);
+        assert.deepEqual([views[0].left, views[0].top, views[0].right, views[0].bottom], [0, 28, 640, 480]);
+        const pixels = gameplay.camera().rendererView().pixels, sprites = world.factoryDisplay().sprites(world.mapView(), pixels.x, pixels.y, session.localOwner());
+        assert.ok(sprites.length > 0); assert.ok(sprites.every((sprite) => typeof sprite.procedure.draw === 'function'));
+        assert.equal(world.takeChanged(), true); assert.equal(world.takeChanged(), false); assert.throws(() => world.startLocalConnection(), /새 수명/);
+    } finally { world.dispose(); }
+    assert.equal(gameplay.borrowed(), false); assert.throws(() => world.session(), /반납/);
 });
 
 // Process 정리 오류는 진단하고 나머지 수명 반납을 계속한다.
