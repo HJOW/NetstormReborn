@@ -10,6 +10,9 @@ import path from 'node:path';
 import { REPO_ROOT } from './helpers.mjs';
 import { ClientRandomGlobals, CrtRandom, FIXED_RANDOM_SEED, GameRandom, GameRandomSeed, INITIAL_GAME_RANDOM_STATE } from '../www/core/random.js';
 import { GameClock } from '../www/core/game-clock.js';
+import { ClientLocalStateGlobals } from '../www/core/client-local-state-globals.js';
+import { resetClockSynchronization } from '../www/core/raw-clock-sync-reset.js';
+import { RawClockSynchronization } from '../www/core/raw-clock-synchronization.js';
 import { BaseProcess, Kernel, PROCESS_CAPACITY } from '../www/core/kernel.js';
 import { CrtRandom as TerrainCrtRandom, seedGameRandoms } from '../www/assets/terrain-tiles.js';
 
@@ -193,6 +196,36 @@ test('GameClock: Reset·중첩 정지·밀리초 감김', () => {
     assert.equal(wrapped.frame.game, 4);
     assert.throws(() => wrapped.capture(-1), RangeError);
     assert.throws(() => new GameClock(2 ** 32), RangeError);
+});
+
+// 게임 시계는 같은 Client DWORD를 매번 읽고 벽 시각에는 보정을 적용하지 않는다.
+test('GameClock: 실제 Client 동기화 보정과 DWORD 감김', () => {
+    const local = new ClientLocalStateGlobals(), clock = new GameClock(1000);
+    clock.bindSynchronizationTicks(local.gameTicks());
+    local.gameTicks().value = 250;
+    assert.deepEqual(clock.capture(2000), { game: 0.75, wall: 1, delta: 0.75, number: 1 });
+    local.gameTicks().value = 0xfffffff0;
+    assert.equal(clock.gameSeconds(2000), 1.016);
+    clock.pause(2000); local.gameTicks().value = 500;
+    assert.equal(clock.gameSeconds(4000), 1.016); assert.equal(clock.wallSeconds(4000), 3);
+    clock.resume(4000); assert.equal(clock.gameSeconds(5000), 2.016);
+    resetClockSynchronization(local.clockSynchronization());
+    assert.equal(clock.gameSeconds(5000), 2.516);
+    const wrapped = new GameClock(1000); wrapped.bindSynchronizationTicks(local.gameTicks()); local.gameTicks().value = 2000;
+    assert.equal(wrapped.gameSeconds(2000), 4294966.296);
+    assert.throws(() => clock.bindSynchronizationTicks(null), /DWORD 상자/);
+    const deferred = new GameClock(0); deferred.bindSynchronizationTicks({ get value() { throw new Error('보정 읽기'); } });
+    assert.throws(() => deferred.gameSeconds(1000), /보정 읽기/);
+});
+
+// 시간 표본의 실제 Poll과 State 정리가 같은 보정 상자를 통해 게임 시계에 반영된다.
+test('GameClock: 시간 표본 Poll과 Client 정리의 공유 보정', () => {
+    const local = new ClientLocalStateGlobals(), clock = new GameClock(0), globals = local.clockSynchronization(), data = local.clockSamples();
+    clock.bindSynchronizationTicks(local.gameTicks()); globals.connection = 1;
+    const sample = new DataView(data.samples[0].buffer); sample.setFloat64(8, 10, true); sample.setFloat64(16, 10, true); sample.setFloat64(24, 10.5, true);
+    new RawClockSynchronization(globals, data, { wallSeconds: () => 11 }).poll();
+    assert.equal(globals.gameTicks, 250); assert.equal(clock.gameSeconds(1000), 0.75); assert.equal(clock.wallSeconds(1000), 1);
+    resetClockSynchronization(globals); assert.equal(clock.gameSeconds(1000), 1);
 });
 
 // 콜백으로 실행 내용을 정하는 검사용 프로세스이다. (2026-11-05 WB04-C1)

@@ -18,6 +18,8 @@ function milliseconds(value) {
 export class GameClock {
     // 시작 밀리초 원점이다.
     #origin;
+    // Client의 현재 동기화 보정 DWORD 상자이며 독립 시계에는 없다.
+    #synchronizationTicks = null;
     // 중첩 정지 깊이이다.
     #pauseDepth = 0;
     // 첫 정지 때 저장한 게임 시각(초)이다.
@@ -38,9 +40,17 @@ export class GameClock {
         return Math.floor(elapsed / 1000) + (elapsed % 1000) * MILLISECOND_SECONDS;
     }
 
-    // 00460cd0: 정지 중이면 저장한 게임 시각, 아니면 벽 시각에서 누적 정지 시간을 뺀 값이다.
+    // 같은 Client의 보정 DWORD를 빌려 이후 게임 시각 조회마다 현재 값을 사용한다.
+    bindSynchronizationTicks(ticks) {
+        if (!ticks || typeof ticks !== 'object' || !('value' in ticks)) throw new TypeError('게임 시계의 동기화 DWORD 상자 필요');
+        this.#synchronizationTicks = ticks;
+    }
+
+    // 00460cd0: 정지 중이면 저장한 시각, 아니면 보정 DWORD를 감산한 밀리초에서 누적 정지 시간을 뺀다.
     gameSeconds(now) {
-        return this.#pauseDepth !== 0 ? this.#pausedGame : this.wallSeconds(now) - this.#pausedTotal;
+        if (this.#pauseDepth !== 0) return this.#pausedGame;
+        const elapsed = (milliseconds(now) - this.#origin - (this.#synchronizationTicks?.value ?? 0)) >>> 0;
+        return Math.floor(elapsed / 1000) + (elapsed % 1000) * MILLISECOND_SECONDS - this.#pausedTotal;
     }
 
     // 00460df0: 첫 정지에서만 게임 시각을 저장하고 깊이를 늘린다.
