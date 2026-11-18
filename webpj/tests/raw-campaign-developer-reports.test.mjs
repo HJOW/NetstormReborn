@@ -8,6 +8,21 @@ function core() {
     return { types: [{ name: 'Zero', flags1: 0, zOrder: 0 }, { name: 'One', flags1: 0xffffffff, zOrder: -2 }, { name: 'Two', flags1: 3, zOrder: 4 }], shapes: [{ frameCount: 0 }, { frameCount: 5 }, { frameCount: 6 }] };
 }
 
+// 도움말은 별칭과 대소문자를 처리하고 32행을 각각 같은 수준으로 출력한다.
+test('개발자 도움말: 원문 출력 순서와 추적 오류 전파', () => {
+    const calls = [];
+    assert.equal(executeDeveloperReports('? ignored', core(), {}, (...args) => calls.push(args)), true);
+    assert.equal(calls.length, 32);
+    assert.ok(calls.every(([level, line]) => level === 29 && line.endsWith('\n')));
+    assert.equal(calls[0][1], 'setOwner(so) sid newowner - sets the owner of sid via server.\n');
+    assert.equal(calls[8][1], 'create(c) type frame - create type of frame at bc=<20,20>.\n');
+    assert.equal(calls[31][1], 'getPriest(gp) - sticks a enemy priest next to your priest\n');
+    let count = 0;
+    assert.throws(() => executeDeveloperReports('HELP', core(), {}, () => { if (++count === 3) throw new Error('추적 실패'); }), /추적 실패/);
+    assert.equal(count, 3);
+    assert.throws(() => executeDeveloperReports('help', core(), {}), /추적 장치 미연결/);
+});
+
 // 전체 타입 출력은 콜백 뒤 현재 다음 행을 읽고 실제 별칭 순서를 유지한다.
 test('개발자 타입 진단: 현재 행과 원본 별칭', () => {
     const data = core(), calls = [];

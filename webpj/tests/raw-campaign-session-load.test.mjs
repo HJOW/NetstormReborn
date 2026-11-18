@@ -653,3 +653,18 @@ test('CampaignSession Tutorial 1: 개발자 생성과 분산 패킷', () => {
         assert.deepEqual(created.slice(1).map(({ object }) => [object.x, object.y]), [[3, 3], [6, 3], [9, 3], [12, 3], [15, 3], [18, 3], [21, 3], [24, 3], [27, 3], [30, 3]]);
     } finally { s.dispose(); }
 });
+
+// 실제 31h 분배기는 도움말을 같은 월드의 추적 장치에 순서대로 전달한다.
+test('CampaignSession Tutorial 1: 개발자 도움말 패킷', () => {
+    const logs = [], { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); s.world().storage.bindGraphTrace((...args) => logs.push(args));
+        const text = 'help', packet = new Uint8Array(9 + text.length);
+        packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+        packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.equal(logs.length, 32);
+        assert.deepEqual(logs[0], [29, 'setOwner(so) sid newowner - sets the owner of sid via server.\n']);
+        assert.deepEqual(logs[31], [29, 'getPriest(gp) - sticks a enemy priest next to your priest\n']);
+    } finally { s.dispose(); }
+});
