@@ -626,6 +626,31 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
 });
 
+// 입자와 커서는 같은 현재 카메라·표시 영역을 사용한다.
+test('CampaignSession TheWarBegins: 입자 뷰와 커서 영역', () => {
+    const gameplay = new ClientGameplayGlobals(), camera = gameplay.camera(), dirty = [], cursorViews = [];
+    camera.initializeNativeRenderer(640, 480, 256, { value: 0 }, { value: 0 });
+    const { s } = scene({ gameplayGlobals: gameplay });
+    const display = { invalidate: (...args) => dirty.push(args) }, view = { cameraX: 40, cameraY: 60, left: 3, top: 4, right: 640, bottom: 480 };
+    try {
+        s.setParticleView(view, display); assert.deepEqual(camera.snapshot().pixels, { x: 40, y: 60 });
+        assert.deepEqual([...camera.target().pixels], [40, 60]); assert.equal(dirty.length, 1);
+        s.load(); const cursor = s.cursor(), setView = cursor.setView.bind(cursor);
+        cursor.setView = (next) => { cursorViews.push({ ...next }); setView(next); };
+        s.setParticleView(view, display); assert.deepEqual(cursorViews, [view]); assert.equal(dirty.length, 1);
+        s.setParticleView({ ...view, cameraX: 99, cameraY: 88 }, display, false);
+        assert.deepEqual(camera.snapshot().pixels, { x: 40, y: 60 }); assert.deepEqual([...camera.target().pixels], [40, 60]); assert.equal(dirty.length, 1);
+        camera.applyPixelsToRendererAndSnapshot(41, 60); s.setParticleView(view, display, false); assert.equal(dirty.length, 2);
+        const priest = s.world().objects().find(({ object }) => object.type === 158 && object.owner === s.localOwner()); assert.ok(priest);
+        s.particles().add(11, priest.sid);
+        const core = s.core(), form = findAttachedProcess(core.pool, priest.sid, 11), effect = core.processes.fromForm(form); assert.ok(effect);
+        s.prepareFrame({ game: 2, wall: 2, delta: 0, number: 1 }, true); effect.runFrame();
+        const clip = { left: 0, top: 0, right: 4096, bottom: 2816 }, sprites = s.particleSprites(clip);
+        assert.equal(sprites.length, 1); assert.equal(sprites[0].database, null); assert.equal(typeof sprites[0].procedure.draw, 'function');
+    } finally { s.dispose(); }
+    assert.throws(() => s.particles(), /반납/);
+});
+
 // 초기 시야·Home·사제 조회는 현재 Session의 실제 풀과 로딩 깊이를 사용한다.
 test('CampaignSession TheWarBegins: 초기 카메라와 현재 사제 위치', () => {
     const records = new ClientPlayerRecords(), storage = new CampaignTemplateStorage(), local = new ClientLocalStateGlobals();

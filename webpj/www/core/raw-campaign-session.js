@@ -774,6 +774,21 @@ export class RawCampaignSession {
         const sid = this.#live().priestParticipation.find(owner);
         if (sid) this.centerCameraOn(sid, state, apply);
     }
+    // 현재 화면 영역과 dirty 장치를 입자·커서에 전달하고 요청된 경우 같은 카메라 픽셀을 적용한다.
+    setParticleView(view, display, updateCamera = true) {
+        const o = this.#live();
+        if (updateCamera) {
+            const camera = o.gameplayGlobals.camera(); camera.requestPixels(view.cameraX, view.cameraY);
+            camera.applyPixelsToRendererAndSnapshot(view.cameraX, view.cameraY);
+        }
+        o.cursorViewport = { cameraX: 0, cameraY: 0, left: view.left, top: view.top, right: view.right, bottom: view.bottom };
+        if (o.cursor) o.cursor.setView(view);
+        o.particles.setView(view, display);
+    }
+    // 같은 입자 표시 목록에서 지정 영역의 정렬 항목을 수집한다.
+    particleSprites(clip) { return this.#live().particles.sprites(clip); }
+    // 별도 모형을 만들지 않고 실제 입자 소유자를 빌린다.
+    particles() { return this.#live().particles; }
     // 미션 시작이 현재 로컬 Player와 알려진 상태를 매번 읽는다.
     localOwner() { return this.#live().playerState.battleOwner; }
     // 로컬 Player의 확정 여부를 같은 현재 저장소에서 읽는다.
