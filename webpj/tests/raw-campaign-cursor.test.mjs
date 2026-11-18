@@ -10,7 +10,8 @@ import { RawCursorPosition } from '../www/core/raw-cursor-position.js';
 import { RegularProcess } from '../www/core/squid-process.js';
 import { readData } from './helpers.mjs';
 import { GamePalette, buildScreenPalette } from '../www/assets/palette.js';
-import { bindCampaignCursorGumps } from '../www/core/campaign-cursor-client-effects.js';
+import { bindCampaignCursorGumps, makeCampaignCursorClientEffects } from '../www/core/campaign-cursor-client-effects.js';
+import { FontSet, ALL_FONT_PATHS } from '../www/assets/font-set.js';
 
 // 같은 실제 풀에서 현재 살아 있는 TYPE만 번호 순서대로 관찰한다.
 function live(s, type) { const found = []; for (let sid = 5; sid < s.core.pool.capacity; sid += 1) { const raw = s.core.pool.slot(sid); if (!(raw[11] & 3) && raw[10] === type) found.push(sid); } return found; }
@@ -34,6 +35,18 @@ test('CampaignCursor 실제 취득·마우스·취소: Form·Canon·미리보기
     // 생성된 임시 자산 모두 실제 가상 삭제가 같은 SID 풀에 반납한다.
     for (const sid of previews) if (sid) assert.ok(s.core.pool.slot(sid)[11] & 1);
     assert.equal(s.sp.get(1), floatToBits(5000)); assert.equal(s.sent.length, 0);
+});
+
+// 실제 커서 수명이 Client 글꼴·마우스·화면 장치를 사용해 취득과 취소를 수행한다.
+test('CampaignCursor 실제 Client 글꼴과 화면 장치: 취득과 취소', () => {
+    const s = new CampaignCursorScene(), fonts = new FontSet(new Map(ALL_FONT_PATHS.map((name) => [name, readData(name)]))), events = [];
+    const client = { fonts: () => fonts, translate: (text) => text, getRenderer: () => ({ invalidate: (...args) => events.push(['dirty', ...args]) }),
+        getCursor: () => ({ set: (value) => events.push(['cursor', value]) }), poll: () => ({ x: 320, y: 240 }) };
+    const controls = { pickGump: () => 0, dispatchGump: () => 0, gumpParentSid: () => 0, handleGump: () => 0,
+        requestClosePopups: () => events.push(['close']), menus: () => ({ showSp: (...args) => events.push(['sp', ...args]) }) };
+    s.cursor.setEffects(makeCampaignCursorClientEffects(client, controls, s.ui())); const form = s.form(); s.cursor.take(form, 0x100); s.point();
+    assert.equal(s.drop.preview, form); assert.ok(s.cursor.lifecycle.costTextWidth > 0); s.cursor.cancel();
+    assert.equal(s.drop.preview, 0); assert.ok(events.some(([kind]) => kind === 'dirty')); assert.ok(events.some(([kind]) => kind === 'cursor'));
 });
 
 test('CampaignCursor 실제 장치: 도달한 dirty 누락 거부·교체 즉시 적용과 값형 함수 사본', () => {

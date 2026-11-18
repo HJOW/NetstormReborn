@@ -1,5 +1,9 @@
 // 커서의 현재 Gump 조회·수신·부모와 팝업 종료 장치를 같은 컨트롤에 연결한다.
 // 사용: bindCampaignCursorGumps(effects, controls). 두 객체는 커서 효과보다 오래 살아야 한다.
+import { InputCode } from './input-queue.js';
+import { makeClientCursorPrepareHooks } from './client-cursor-state-cleanup.js';
+import { GumpText } from '../render/gump-text.js';
+import { decodeGumpTextContext } from '../render/gump-text-draw.js';
 
 // 원본 Gump의 조각 허용 조회와 조각 수신 명령이다.
 const CURSOR_GUI_FLAGS = 0x0200005f;
@@ -20,4 +24,35 @@ export function bindCampaignCursorGumps(effects, controls) {
     effects.drop.guiReceive = (token, form) => { controls.handleGump(token, CURSOR_GUI_RECEIVE, form, 0); };
     // 기존 종료 훅이 없을 때만 팝업의 지연 Kill을 요청한다.
     if (!effects.lifecycle.closePopups) effects.lifecycle.closePopups = () => { controls.requestClosePopups(); };
+}
+
+// 현재 Client의 화면·번역·글꼴·마우스와 선택된 진단 장치를 값형 효과에 연결한다.
+export function makeCampaignCursorClientEffects(client, controls, effects = {}) {
+    const result = { ...effects, placement: { ...effects.placement }, drop: { ...effects.drop }, lifecycle: { ...effects.lifecycle } };
+    bindCampaignCursorGumps(result, controls);
+    // 실제 건설 기록이 선택된 경우 같은 Client 진단 장치를 호출한다.
+    result.drop.record = (...args) => {
+        if (typeof client.recordDeveloperBuildPlacement !== 'function') throw new Error('커서의 실제 건설 기록 장치 미연결');
+        client.recordDeveloperBuildPlacement(...args);
+    };
+    // 비용 표시 대상은 호출 시점의 메뉴를 읽는다.
+    result.drop.showSp = (cost, x, y, reference) => {
+        const menus = controls.menus(); if (!menus) throw new Error('커서 비용 표시의 실제 Gump 트리 미연결');
+        menus.showSp(cost, x, y, reference);
+    };
+    // 원본 DWORD 커서 번호를 signed 값으로 전달한다.
+    result.lifecycle.selectCursor = (number) => client.getCursor().set(number | 0);
+    // 현재 언어 번역을 웹 글꼴이 소비할 문자열로 돌려준다.
+    result.lifecycle.translate = (key) => client.translate(key);
+    // 현재 FontSet의 인코딩과 8DWORD 문맥으로 NUL 종료 텍스트를 측정한다.
+    result.lifecycle.measure = (text, words) => {
+        const fonts = client.fonts(), encoded = fonts.encode(String(text).split('\0', 1)[0]);
+        const terminated = new encoded.constructor(encoded.length + 1); terminated.set(encoded);
+        const size = new GumpText(fonts).measure(terminated, decodeGumpTextContext(words));
+        return [size.width, size.height];
+    };
+    // 현재 마우스 위치를 같은 Client 입력 장치에서 읽는다.
+    result.lifecycle.mouse = () => { const point = client.poll(InputCode.leftButton); return { x: point.x, y: point.y }; };
+    result.placement.invalidate = makeClientCursorPrepareHooks(client).invalidate;
+    return result;
 }
