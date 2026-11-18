@@ -47,6 +47,7 @@ import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { RawCampaignMissionStartBindings } from '../www/core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from '../www/core/raw-campaign-tutorial-one-bindings.js';
 import { CampaignGameWorld } from '../www/core/campaign-game-world.js';
+import { makeCampaignMissionStartEffects } from '../www/core/campaign-client-services.js';
 import { RawCampaignFactoryDisplay } from '../www/render/raw-campaign-factory-display.js';
 import { projectCameraCoordinates } from '../www/render/camera-view.js';
 import { cursorDisplayLogicalPalette } from '../www/render/raw-campaign-cursor-display.js';
@@ -1092,6 +1093,31 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
     } finally { world.dispose(); }
     assert.equal(gameplay.borrowed(), false); assert.throws(() => world.session(), /반납/);
     assert.throws(() => oldCarrier.highlight(5, { x: 90, y: 108 }, 1), /반납/);
+});
+
+// 실제 로그인된 GameWorld와 같은 Session에 Client Start 장치를 연결한다.
+test('CampaignGameWorld TheWarBegins: 실제 Client Start 효과와 미션 시작', () => {
+    const files = new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]);
+    const gameData = GameData.build({ files, language: 'english' });
+    gameData.configuration.assign('missionSpec="d/{local.1}.english"\nfortSpec="d/{local.1}.fort"\n[END]\n');
+    const script = new MissionScript(gameData, 'TheWarBegins'), gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), events = [];
+    gameplay.camera().initializeNativeRenderer(1024, 768, 256, { value: 0 }, { value: 0 });
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const services = { gameplayGlobals: gameplay, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
+        install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {} },
+        ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
+        sound: { wallSeconds: () => 100, play: () => 1, playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
+        missionOutcome: { demo: () => 0 }, player: { log: () => {} }, ai: { assertion: forbidden('AI 진단'), allocationBytes: (bytes) => bytes.fill(0xa7), defaultName: () => 'AI', participation: { addChat: () => {}, clearChat: () => {} } },
+        surfaceDisplay: { suppressed: () => false, invalidate: () => {} }, cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); events.push('camera'); } };
+    const world = new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', services, { x: 1024, y: 768 });
+    try {
+        const session = world.session(); world.startLocalConnection(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection(); assert.equal(world.completeLocalConnection(), true);
+        const beforeCameras = events.length, time = { game: 123.5 }, client = { time: () => time, renderer: () => ({ invalidateAll: () => events.push('renderer') }), menu: () => ({ refresh: () => events.push('menu') }) };
+        const effects = makeCampaignMissionStartEffects(client, world, () => events.push('gump')), gate = createMissionFrameGateState(), state = createMissionStartState();
+        new RawCampaignMissionStartBindings(session, script, gate, state, session.missionStartSettings(), session.missionAiSettings(), effects).start();
+        assert.equal(session.sp(1), 3000); assert.equal(gate.started, 1); assert.equal(gate.startSeconds, 123.5); assert.equal(state.sequence, 1);
+        assert.deepEqual(events.slice(beforeCameras, beforeCameras + 3), ['renderer', 'menu', 'gump']); assert.ok(events.length > beforeCameras + 3);
+    } finally { world.dispose(); script.dispose(); }
 });
 
 // 실제 World 입력은 같은 카메라·선택·운반 요청을 조립한다.
