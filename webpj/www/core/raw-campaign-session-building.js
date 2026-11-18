@@ -31,7 +31,7 @@ function typeString(owner, type, key) { return owner.assets.game.types()[type - 
 
 // 같은 전용 신전 몸체/현재 프레임과 조건부 상승 음향을 Renderer와 캡처가 공유한다.
 export function drawCampaignTempleFrames(owner, sid, frame) {
-    const c = owner.core, raw = c.pool.slot(sid);
+    const c = owner.core, raw = c.pool.physical(sid); // 원문 span처럼 그림 콜백 뒤에도 같은 현재 슬롯을 다시 읽는다.
     if (isRainVortex(raw)) {
         drawRainVortex(raw, c.frames[raw[10]], { frame, ascendSound: () => { need(owner.services.sound.play, '레인 신전 상승음')(owner.soundNames.lookup('templeAscend.wav'), 0, 0, 0, 0, 0); } }); return;
     }

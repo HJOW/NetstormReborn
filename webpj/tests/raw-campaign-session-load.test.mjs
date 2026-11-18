@@ -626,6 +626,25 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
 });
 
+// 신전 그림 콜백 뒤에도 같은 현재 슬롯의 프레임을 다시 읽는다.
+test('CampaignSession TheWarBegins: 신전 현재 프레임과 상승 소리', () => {
+    const sounds = [], { s } = scene({ sound: { play: (...args) => sounds.push(args) } });
+    try {
+        s.load(); const core = s.core(), rain = s.world().create(124, 2), raw = core.pool.allocated(rain);
+        const data = new DataView(raw.buffer, raw.byteOffset, raw.byteLength), frames = [];
+        data.setUint32(36, 4, true); raw[12] = 0; raw[13] = 0;
+        s.drawTemple(rain, (number) => { frames.push(number); if (frames.length === 1) data.setUint32(36, 7, true); });
+        assert.deepEqual(frames, [0, 7]); frames.length = 0; data.setUint32(36, 4, true);
+        s.drawRainTemple(rain, (number) => { frames.push(number); if (frames.length === 1) data.setUint32(36, 7, true); });
+        assert.deepEqual(frames, [0, 7]); frames.length = 0; data.setUint32(36, 0, true); raw[12] = 1;
+        s.drawRainTemple(rain, (number) => frames.push(number));
+        assert.deepEqual(frames, [0, 0, core.frames[124].run(0x43).first]);
+        assert.equal(sounds.length, 1); assert.deepEqual(sounds[0].slice(1), [0, 0, 0, 0, 0]);
+        s.drawBridgeAdditional(999999, 3, 4); // 수명 숫자가 꺼진 원본 경로는 SID를 읽지 않는다.
+    } finally { s.dispose(); }
+    assert.throws(() => s.drawBridgeAdditional(1, 0, 0), /반납/);
+});
+
 // 튜토리얼 4~6의 허용·제작·기술 사건 판정은 현재 Session 저장소를 사용한다.
 test('CampaignSession TheWarBegins: 튜토리얼 4~6 현재 옵션과 제작 판정', () => {
     const gameplay = new ClientGameplayGlobals(), state = createMissionFrameGateState(), mission = createMissionStartState();

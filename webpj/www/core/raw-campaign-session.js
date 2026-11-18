@@ -53,6 +53,8 @@ import { RawTutorialOne } from './raw-tutorial-one.js';
 import { RawTutorialTwo } from './raw-tutorial-two.js';
 import { RawTutorialLater } from './raw-tutorial-later.js';
 import { RawPriestLookup } from './raw-priest-lookup.js';
+import { drawCampaignTempleFrames } from './raw-campaign-session-building.js';
+import { drawRainVortex } from './raw-rain-vortex-draw.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -724,6 +726,19 @@ export class RawCampaignSession {
     participation() { return this.#live().participation; }
     // 현재 Session의 사제 처리기와 같은 공유 목록을 빌린다.
     priests() { return this.#live().priests; }
+    // 같은 현재 신전 슬롯과 프레임·위치 없는 상승 소리 장치로 레인 신전을 그린다.
+    drawRainTemple(sid, frame) {
+        const o = this.#live(), raw = o.core.pool.physical(sid);
+        drawRainVortex(raw, o.core.frames[raw[10]], { frame, ascendSound: () => {
+            const current = this.#live(), play = current.services.sound.play;
+            if (typeof play !== 'function') throw new Error('레인 신전 상승음 실제 재생 미연결');
+            play(current.soundNames.lookup('templeAscend.wav'), 0, 0, 0, 0, 0);
+        } });
+    }
+    // 현재 세션의 공통 신전 가상 그림을 선택한다.
+    drawTemple(sid, frame) { drawCampaignTempleFrames(this.#live(), sid, frame); }
+    // 현재 다리의 추가 그림 경계와 같은 수명 숫자 표시 상태를 사용한다.
+    drawBridgeAdditional(sid, x, y) { this.#live().bridgeDraw.additional(sid, x, y); }
     // 튜토리얼 1의 단계 판정을 현재 장부·Player·SP·간헐천과 같은 게이트에 연결한다.
     makeTutorialOne(gate) {
         const o = this.#live(); if (!o.loaded) throw new Error('설치 전 Early1 실제 판정 연결');
