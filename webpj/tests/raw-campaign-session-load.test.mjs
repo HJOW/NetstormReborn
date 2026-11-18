@@ -1,6 +1,7 @@
 // 실제 TheWarBegins 저장 자료의 Session Load를 검사한다. 플레이·포획·희생·공중 유닛 전용 행동은 실행하지 않는다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { RawCampaignSession } from '../www/core/raw-campaign-session.js';
 import { InputQueue } from '../www/core/input-queue.js';
 import { GameAssets } from '../www/assets/game-assets.js';
@@ -11,6 +12,7 @@ import { TaffArchive } from '../www/assets/taff.js';
 import { decodeOriginalText } from '../www/assets/text-encoding.js';
 import { createFortTypes } from '../www/assets/type-flags.js';
 import { TypeTable } from '../www/assets/type-table.js';
+import { layoutFort, pieceFrameCodes } from '../www/assets/territory.js';
 import { SoundList } from '../www/audio/sound-list.js';
 import { CampaignTemplateStorage } from '../www/core/campaign-template-storage.js';
 import { ClientPlayerRecords } from '../www/core/client-player-records.js';
@@ -182,6 +184,37 @@ test('CampaignSession: 출하 미션 32종의 Fort 선택과 내부 로그인', 
             } catch (error) { error.message = `${name} / ${fortName}: ${error.message}`; throw error; } finally { s.dispose(); }
         } finally { script.dispose(); }
     }
+});
+
+// 실제 Tutorial1의 BridgeTheGap 전체 Session 지형을 독립 65,536바이트 마스크와 비교한다.
+test('CampaignSession Tutorial1: BridgeTheGap 실제 Session 지형', () => {
+    const source = loadOriginalForts(archive).find((item) => item.source.toLowerCase() === 'tarc:\\d\\bridgethegap.fort');
+    assert.ok(source);
+    const input = parseFort(source.bytes, createFortTypes(TypeTable.fromArchive(archive, decodeOriginalText))), sounds = [];
+    const { s } = scene({ missionName: 'BridgeTheGap', sound: { playOnceAt: (...args) => sounds.push(args) } }, input);
+    try {
+        s.load(); const pool = s.core().pool, mask = new Uint8Array(65536).fill(255); let count = 0;
+        // 같은 풀의 실제 지면과 edgeFarm에서 현재 영역 번호를 마스크에 쓴다.
+        for (const item of s.world().objects()) {
+            const raw = pool.slot(item.sid); if (raw[10] !== 97 && raw[10] !== 121) continue;
+            const region = new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getUint16(8, true);
+            mask[item.object.y * 256 + item.object.x] = region; count += 1;
+        }
+        assert.equal(count, 763);
+        assert.equal(createHash('sha256').update(mask).digest('hex'), 'e16dd045520434a91d8ba43d078c7a11f56f3b8a87303ab8a6b2fa2496882584');
+        const storage = s.world().storage, islands = new DataView(storage.islands.buffer, storage.islands.byteOffset), layout = layoutFort(input, pieceFrameCodes(data.table));
+        assert.equal(islands.getUint32(0, true), 1); assert.equal(layout.islands.islands.length, 1);
+        // 각 축의 16개 청크에서 실제 섬·방향·영역 레코드·순번을 타입 모델과 대조한다.
+        for (let x = 0; x < 16; x += 1) {
+            // 같은 열의 모든 행을 순서대로 검사한다.
+            for (let y = 0; y < 16; y += 1) {
+                const actual = storage.chunks.at(x, y), expected = layout.map.at(x, y);
+                // BYTE 방향과 문자 방향을 같은 문자로 정규화한다.
+                const side = (value) => typeof value === 'number' ? String.fromCharCode(value) : value;
+                assert.deepEqual([actual.island, side(actual.side), Array.from(actual.record), actual.ordinal], [expected.island, side(expected.side), Array.from(expected.record), expected.ordinal], `${x},${y}`);
+            }
+        }
+    } finally { s.dispose(); }
 });
 
 // 외곽 등록은 설치 전에 닫고 Load 뒤 같은 Session 연구 본체만 분배기에 연결한다.

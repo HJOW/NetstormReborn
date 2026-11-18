@@ -17,6 +17,6 @@
 
 ## 3. 4-B 마감
 
-**E752 정정:** 이 시험의 입력은 Tutorial1이 아니라 TheWarBegins다. Tutorial1은 BridgeTheGap을 사용하므로 해당 지형·섬의 독립 대조는 재검증이 필요하다.
+**E752 정정:** 이 시험의 입력은 Tutorial1이 아니라 TheWarBegins다. Tutorial1은 BridgeTheGap을 사용한다. [E753 재검증](webpj-tutorial1-terrain-recheck-20261118.md)에서 해당 지형·섬과 256청크의 독립 대조를 완료했다.
 
 4-B 는 35/35 로 마감한다(E274~E304). 체크 목록은 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261111-4b-through-wb04-e304)으로 옮겼다. 다음 단계는 4-C(패킷·로그인·내부 미션 전송)이다.

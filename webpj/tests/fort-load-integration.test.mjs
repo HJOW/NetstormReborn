@@ -1,8 +1,8 @@
-// 4-B 적재 통합 시험(WB04-E304): 실제 Tutorial 1(`\d\thewarbegins.fort`)의 Territory 로 실제 월드·정상 지형·섬 목록·Builder 부모를 돌려 지형과 섬 적재 결과를 독립 기대값과 대조한다.
-//  - 지형: 적재가 만든 지면(97)/edgeFarm(121) 객체의 칸과 지역 번호로 65,536바이트 마스크(y × 256 + x, 빈 칸 255)를 만들면 독립 Python 재현(`terrain-expected.tsv`)·문서의 SHA-256, 지면 칸 수 1505, 영역별 954/551 과 같다.
+// 4-B 적재 통합 시험: TheWarBegins와 실제 Tutorial1의 BridgeTheGap Territory로 월드·정상 지형·섬과 Builder를 독립 기대값에 대조한다.
+//  - 지형: 지면(97)/edgeFarm(121)의 칸과 지역 번호로 만든 65,536바이트 마스크를 독립 Python 재현(`terrain-expected.tsv`)의 SHA-256·영역별 칸 수와 비교한다.
 //  - 섬/청크: 실제 `RawIslandBuilder` 가 놓은 청크 256칸(섬·방향·record·순번)과 섬 목록이 타입 모델 `IslandBuilder`(layoutFort)의 결과와 같다.
 //  - 후처리: Graph 0 재구성, 깊이 1 복귀, 후처리 순서(generate → 저장 후처리 4종 → graph0), 모든 객체가 같은 풀의 실제 슬롯.
-// 저장 객체/Money/Meta child 는 호출 순서만 기록하는 어댑터이다: Tutorial 1 의 저장 객체를 실제 child 로 적재하려면 파생 후처리 몸체와 Session 소유 장치가 필요해 4-D 의 Session 조립·session-dump 비교(L2)에서 확인한다.
+// 저장 객체/Money/Meta child 는 호출 순서만 기록하는 어댑터이다: 각 맵의 저장 객체를 실제 child 로 적재하려면 파생 후처리 몸체와 Session 소유 장치가 필요해 4-D 의 Session 조립·session-dump 비교(L2)에서 확인한다.
 // cpppj 쪽 값은 실행하지 않고 독립 기대값 표와 문서의 값만 읽는다. 실제 게임·브라우저 실행이 아니다. (2026-11-11 WB04-E304)
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
@@ -35,11 +35,11 @@ import { readData } from './helpers.mjs';
 import { realPlayerAssets } from './player-scene-support.mjs';
 import { get } from './raw-support.mjs';
 
-// 두 공식 맵 중 Tutorial 1 의 독립 기대값이다(docs/exe/terrain-and-bridges.md · terrain-expected.tsv): 마스크 SHA-256, 지면 칸 수와 영역별 칸 수. (2026-11-11 WB04-E304)
-const FORT_NAME = '\\d\\thewarbegins.fort';
-const MASK_SHA256 = 'b24af563875ef935aa1053d521a6abf8490c4ddea840ac1845b43223fd0436d1';
-const CELLS = 1505;
-const REGION_CELLS = { 0: 954, 1: 551 };
+// 두 실제 Fort의 독립 지형 마스크·칸 수·영역 및 타입 모델에서 확인할 섬 수이다. (2026-11-18 WB04-E753)
+const FORT_CASES = Object.freeze([
+    { name: 'TheWarBegins', path: '\\d\\thewarbegins.fort', mask: 'b24af563875ef935aa1053d521a6abf8490c4ddea840ac1845b43223fd0436d1', cells: 1505, regions: { 0: 954, 1: 551 }, islands: 2 },
+    { name: 'BridgeTheGap', path: '\\d\\bridgethegap.fort', mask: 'e16dd045520434a91d8ba43d078c7a11f56f3b8a87303ab8a6b2fa2496882584', cells: 763, regions: { 0: 763 }, islands: 1 },
+]);
 
 // 실제 타입 번호이다: 지면 isle(97)·edgeFarm(121)·puzzlePiece(107). (2026-11-11 WB04-E304)
 const ISLE = 97;
@@ -49,11 +49,11 @@ const PIECE = 107;
 // SHA-256 16진 문자열이다. (2026-11-11 WB04-E304)
 const sha256 = (bytes) => crypto.createHash('sha256').update(bytes).digest('hex');
 
-// 실제 판독용 타입 표/프레임 코드/Tutorial 1 의 Territory 120BYTE 를 읽는다. (2026-11-11 WB04-E304)
-function loadTutorial() {
+// 실제 판독용 타입 표/프레임 코드와 선택한 Fort의 Territory 120BYTE를 읽는다. (2026-11-11 WB04-E304)
+function loadFort(path) {
     const archive = new TaffArchive(readData('netstorm.tarc'));
     const table = TypeTable.fromArchive(archive, decodeOriginalText);
-    const fort = parseFort(archive.read(FORT_NAME), createFortTypes(table));
+    const fort = parseFort(archive.read(path), createFortTypes(table));
     return { table, fort, pieceCodes: pieceFrameCodes(table) };
 }
 
@@ -82,7 +82,7 @@ function makeWorld(table) {
     return { world: new RawSurfaceWorld(types, frames, shapes, links, ISLE), types };
 }
 
-// 기대값에 쓰지 않는 하위 효과는 호출 순서만 기록하는 어댑터로 대신한다(Tutorial 1 의 저장 객체 적재는 4-D). (2026-11-11 WB04-E304)
+// 기대값에 쓰지 않는 하위 효과는 호출 순서만 기록하는 어댑터로 대신한다(저장 객체의 실제 적재는 4-D). (2026-11-11 WB04-E304)
 function recordingChildren(core, effects) {
     const noop = () => {};
     return {
@@ -93,9 +93,9 @@ function recordingChildren(core, effects) {
     };
 }
 
-// 실제 Tutorial 1 을 적재해 지형 마스크와 섬/청크를 독립 기대값과 대조한다. (2026-11-11 WB04-E304)
-test('4-B 적재 통합: 실제 Tutorial 1 의 지형 마스크·섬·청크', () => {
-    const { table, fort, pieceCodes } = loadTutorial();
+// 각 실제 Fort를 독립 실행해 지형 마스크와 섬/청크를 같은 기준으로 대조한다.
+for (const expected of FORT_CASES) test(`4-B 적재 통합: ${expected.name} 지형 마스크·섬·청크`, () => {
+    const { table, fort, pieceCodes } = loadFort(expected.path);
     assert.equal(fort.territory.length, 120);
     const { world } = makeWorld(table);
     const core = world.core();
@@ -157,12 +157,13 @@ test('4-B 적재 통합: 실제 Tutorial 1 의 지형 마스크·섬·청크', (
         counts[region] = (counts[region] ?? 0) + 1;
         cells += 1;
     }
-    assert.equal(cells, CELLS);
-    assert.deepEqual(counts, REGION_CELLS);
-    assert.equal(sha256(mask), MASK_SHA256);
+    assert.equal(cells, expected.cells);
+    assert.deepEqual(counts, expected.regions);
+    assert.equal(sha256(mask), expected.mask);
     // 섬/청크: 실제 Builder 의 청크 256칸과 섬 수가 타입 모델 결과와 같다.
     const layout = layoutFort(fort, pieceCodes);
-    assert.equal(islands.count, 2);
+    assert.equal(islands.count, expected.islands);
+    assert.equal(islands.count, layout.islands.islands.length);
     // 16×16 청크 전체를 같은 좌표끼리 비교한다.
     for (let x = 0; x < 16; x += 1) {
         // 한 열의 16개 청크이다.
