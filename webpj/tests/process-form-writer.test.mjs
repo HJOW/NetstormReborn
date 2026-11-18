@@ -24,6 +24,37 @@ function derived(o, owner) { const process = new SquidProcess(); o.core.processe
 // writer가 실제 목적지를 빌렸는지 확인하는 고정 초기 바이트다.
 function packet(length = 40) { return Uint8Array.from({ length }, (_, n) => 0x80 + n); }
 
+// 수신 패킷의 시각과 횟수는 현재 시각으로 덮지 않고 같은 부모에 붙인다.
+test('공유 Regular 수신: 패킷 필드와 실제 Host 부착', () => {
+    const o = scene();
+    try {
+        const sid = parent(o), bytes = packet(28), view = new DataView(bytes.buffer);
+        view.setUint16(4, 0xffff, true); view.setUint16(6, sid, true); view.setFloat64(8, 42.25, true);
+        view.setUint32(16, 0x12345678, true); view.setFloat32(20, -1.5, true); view.setUint32(24, 0x89abcdef, true);
+        o.core.processState.now = 999;
+        const process = o.core.processes.receiveSharedRegular(bytes);
+        assert.ok(process); assert.equal(process.parent, sid); assert.equal(process.shared, true);
+        assert.deepEqual([process.time, process.event, process.payload, process.count], [42.25, 0x12345678, -1.5, 0x89abcdef]);
+        assert.equal(o.core.processes.findEvent(sid, 0x12345678), process);
+        assert.throws(() => o.core.processes.receiveSharedRegular(bytes.subarray(0, 27)), /PATCH28BYTE/);
+    } finally { o.dispose(); }
+});
+
+// 수신한 신호 NaN은 숫자 변환에 따른 quiet 비트 변경 없이 재송신한다.
+test('공유 Regular 수신: float32 원본 비트 재송신', () => {
+    const o = scene();
+    try {
+        const sid = parent(o), bytes = packet(28), view = new DataView(bytes.buffer), wire = createSquidTransmissionState();
+        view.setUint16(6, sid, true); view.setBigUint64(8, 0x7ff0123456789abcn, true); view.setUint32(16, 7, true);
+        view.setUint32(20, 0x7f812345, true); view.setUint32(24, 0, true);
+        const process = o.core.processes.receiveSharedRegular(bytes), output = packet(28);
+        wire.clientSidAllowed = 1;
+        assert.equal(o.core.processes.writeFormPacket(process.form, 0, output, wire), 28);
+        assert.equal(new DataView(output.buffer).getBigUint64(8, true), 0x7ff0123456789abcn);
+        assert.equal(new DataView(output.buffer).getUint32(20, true), 0x7f812345);
+    } finally { o.dispose(); }
+});
+
 test('ProcessForm writer: 일반 Regular와 허용되지 않은 공유 Regular는 버퍼/파생 장치를 읽지 않고0이다', () => {
     const o = scene();
     try { const sid = parent(o); const regular = o.core.processes.addRegular(sid, 7, 1.25); const shared = o.core.processes.addSharedRegular(sid, 8, -1.25); const wire = createSquidTransmissionState(); const bytes = packet(); const before = bytes.slice(); o.core.processes.setFormTransmit({ writeFullData: forbidden, packet: forbidden }); assert.equal(regular.shared, false); assert.equal(shared.shared, true); assert.equal(o.core.processes.writeFormPacket(regular.form, 0, bytes, wire), 0); assert.equal(o.core.processes.writeFormPacket(shared.form, 0, bytes, wire), 0); assert.deepEqual(bytes, before); wire.clientSidAllowed = 1; assert.equal(o.core.processes.writeFormPacket(regular.form, 0, new Uint8Array(0), wire), 0); } finally { o.dispose(); }

@@ -514,6 +514,9 @@ export class RawCampaignSession {
                 },
             });
         });
+        // 공유 예약은 현재 Process Host에 패킷의 시각과 횟수를 그대로 전달한다. (2026-11-18 WB04-E734)
+        dispatch.observe(0x7e, null); dispatch.version(0x7e, 1, 0); dispatch.requireLength(0x7e, 28);
+        dispatch.register(0x7e, (_sender, _connection, packet) => this.#live().core.processes.receiveSharedRegular(packet));
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }

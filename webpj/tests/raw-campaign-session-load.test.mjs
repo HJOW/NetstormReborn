@@ -409,3 +409,18 @@ test('CampaignSession Tutorial 1: 일반 삭제 수신', () => {
         assert.equal(logs.length, 1); assert.match(logs[0][1], /^destroying /);
     } finally { s.dispose(); }
 });
+
+// 공유 예약 수신은 현재 Session의 Host와 같은 부모 체인을 사용한다.
+test('CampaignSession Tutorial 1: 공유 Regular 수신', () => {
+    const { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        const c = s.core(), parent = c.factory.create(6), packet = new Uint8Array(28), view = new DataView(packet.buffer);
+        packet.set([1, 0x7e, 28, 0]); view.setUint16(6, parent, true); view.setFloat64(8, 123.5, true);
+        view.setUint32(16, 0x12345678, true); view.setFloat32(20, 1.25, true); view.setUint32(24, 7, true);
+        assert.equal(dispatch.registration(0x7e).length, 28);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        const process = c.processes.findEvent(parent, 0x12345678);
+        assert.ok(process); assert.deepEqual([process.time, process.payload, process.count], [123.5, 1.25, 7]);
+    } finally { s.dispose(); }
+});

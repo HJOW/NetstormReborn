@@ -125,6 +125,8 @@ export class RegularProcess extends SquidProcess {
     #time = 0;
     #event = 0;
     #payload = 0;
+    // 수신한 float32 원본 비트는 산술 갱신 전까지 직렬화에서 보존한다.
+    #payloadBits = null;
     #count = 0;
     // 실제 일반/공유 생성자가 선택한 writer 종류다. 부착 TYPE를 나중에 바꿔도 이 값으로 분배한다(WB04-E591).
     #shared = false;
@@ -133,7 +135,9 @@ export class RegularProcess extends SquidProcess {
     static {
         regularFriend = {
             setTime: (process, value) => { process.#time = value; },
-            setPayload: (process, value) => { process.#payload = Math.fround(value); },
+            setPayload: (process, value) => { process.#payload = Math.fround(value); process.#payloadBits = null; },
+            setPayloadBits: (process, value) => { process.#payloadBits = value >>> 0; },
+            payloadBits: (process) => process.#payloadBits,
             incrementCount: (process) => { process.#count = (process.#count + 1) >>> 0; },
             setShared: (process, value) => { process.#shared = Boolean(value); },
         };
@@ -178,7 +182,7 @@ export class RegularProcess extends SquidProcess {
     // 사용: new RegularProcess(0, 0)로 예약 → initializeDetached(event, payload) → host.attachRegular.
     initializeDetached(event, payload) {
         if (this.host !== null || this.form !== 0 || this.pid !== 0) throw new Error('부착한 Regular의 예약 재생성 금지');
-        this.#time = 0; this.#event = event >>> 0; this.#payload = Math.fround(payload); this.#count = 0; this.#shared = false;
+        this.#time = 0; this.#event = event >>> 0; this.#payload = Math.fround(payload); this.#payloadBits = null; this.#count = 0; this.#shared = false;
     }
 
     // Carrier 426db0 의 생성 이후 +10/+14 쓰기이다. 다른 필드는 재초기화하지 않고 실제 기한만 덮어쓴다.
@@ -633,6 +637,20 @@ export class SquidProcessHost {
         return this.attachRegular(new RegularProcess(event, payload), parent, true);
     }
 
+    // 7eh 공유 예약은 패킷의 시각·횟수를 먼저 복원하고 일반 생성자 진단 없이 부착한다. (2026-11-18 WB04-E734)
+    receiveSharedRegular(packet) {
+        if (this.#pool.edition !== 'patch1078' || !(packet instanceof Uint8Array) || packet.length < 28) throw new TypeError('공유 Regular 수신의 PATCH28BYTE 계약');
+        const view = new DataView(packet.buffer, packet.byteOffset, packet.byteLength);
+        const parent = view.getUint16(6, true);
+        const process = new RegularProcess(view.getUint32(16, true), view.getFloat32(20, true));
+        regularFriend.setPayloadBits(process, view.getUint32(20, true));
+        regularFriend.setTime(process, view.getFloat64(8, true));
+        process.setInitialCount(view.getUint32(24, true));
+        regularFriend.setShared(process, true);
+        friend.fields(process).parent = parent;
+        return this.attach(process, this.#state.sharedRegularType, parent, LOCAL_MASK);
+    }
+
     // 이미 확보한 예약을 현재 생성자 번호로 부착한다. SharedRegular 의 원문 진단(basePostPop == 0, Regular.cpp 0x70) 뒤에도 현재 번호를 다시 읽고,
     // 부착이 돌아온 뒤 현재 시각을 읽어 쓴다(caller 의 추가 계수/기한 쓰기는 유지).
     attachRegular(process, parent, shared = false, flags = LOCAL_MASK) {
@@ -691,7 +709,10 @@ export class SquidProcessHost {
                 if (packet.length < 28) throw new RangeError('SharedRegular의 실제28BYTE 버퍼 범위');
                 const header = { ...transmission.sharedRegular }; const view = new DataView(packet.buffer, packet.byteOffset, packet.byteLength);
                 packet[0] = header.protocol & 0x7f; packet[1] = header.message; view.setUint16(2, Math.max(4, header.length & 0xffff), true);
-                view.setUint16(6, process.parent, true); view.setFloat64(8, process.time, true); view.setUint32(16, process.event, true); view.setFloat32(20, process.payload, true); view.setUint32(24, process.count, true); return 28;
+                view.setUint16(6, process.parent, true); view.setFloat64(8, process.time, true); view.setUint32(16, process.event, true);
+                const payloadBits = regularFriend.payloadBits(process);
+                if (payloadBits === null) view.setFloat32(20, process.payload, true); else view.setUint32(20, payloadBits, true);
+                view.setUint32(24, process.count, true); return 28;
             }
             const device = { ...this.#transmission() };
             if (typeof device.writeFullData !== 'function') throw new Error('ProcessForm의 실제 전체 파생 writer 미연결');
