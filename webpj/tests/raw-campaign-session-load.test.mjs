@@ -9,6 +9,7 @@ import { RawSurfaceStorage } from '../www/core/raw-surface-storage.js';
 import { Kernel } from '../www/core/kernel.js';
 import { InputCode, InputQueue } from '../www/core/input-queue.js';
 import { CampaignUserInput } from '../www/core/campaign-user-input.js';
+import { clearClientUserSelection } from '../www/core/client-user-selection-cleanup.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
 import { fortSection, parseFort } from '../www/assets/fort.js';
@@ -77,6 +78,35 @@ function scene(overrides = {}, savedFort = fort) {
     });
     return { s, trace, queue };
 }
+
+// Session이 없을 때도 빈 선택을 정리하고 실제 다중 선택 효과에서만 같은 Session을 요구한다.
+test('Client 선택 정리: 빈 메뉴와 실제 Session의 같은 선택 전역', () => {
+    const gameplay = new ClientGameplayGlobals(), assets = new CampaignSessionAssets(game, { read: forbidden('파일') });
+    const metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    const owner = gameplay.selection; owner.selected = 0xfedcba98; owner.mouseType = 0x89abcdef; owner.multipleCount = -7;
+    clearClientUserSelection(gameplay, storage); assert.equal(owner.selected, 0); assert.equal(owner.multipleCount, 0); assert.equal(owner.mouseType, 0x89abcdef);
+    owner.enabled = 0; owner.mode = 5; owner.selected = 42; owner.multipleCount = -3;
+    clearClientUserSelection(gameplay, storage, forbidden('비활성 커서')); assert.deepEqual([owner.mode, owner.selected, owner.multipleCount], [5, 42, -3]);
+    owner.enabled = 1; owner.mode = 4; owner.mouseType = 71;
+    assert.throws(() => clearClientUserSelection(gameplay, storage, () => { throw new Error('커서 실패'); }), /커서 실패/);
+    assert.deepEqual([owner.multipleCount, owner.selected, owner.mode, owner.mouseType], [0, 0, 0, 0]);
+    const { s } = scene({ gameplayGlobals: gameplay, surfaceStorage: storage });
+    try {
+        s.load(); const core = s.core(), sid = s.world().create(94, 0), raw = core.pool.allocated(sid), cursors = [];
+        assert.ok(sid, '정리할 실제 객체가 생성되어야 한다');
+        raw[40] |= 4; owner.enabled = 1; owner.multiple[0] = sid; owner.multipleCount = 1; owner.selected = sid; owner.mode = 2; owner.mouseType = 71;
+        assert.equal(raw[11] & 3, 0, `생성한 대상 상태 ${raw[11]}`);
+        const other = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game });
+        const otherRaw = other.pool.physical(sid); otherRaw[11] = 0;
+        assert.throws(() => clearClientUserSelection(gameplay, other), /Session\/Pool 불일치/);
+        assert.deepEqual([owner.multipleCount, owner.selected, owner.mode], [1, sid, 2]);
+        clearClientUserSelection(gameplay, storage, (value) => cursors.push(value));
+        assert.equal(raw[40] & 4, 0); assert.deepEqual([owner.multipleCount, owner.selected, owner.mode, owner.mouseType], [0, 0, 0, 0]);
+        assert.deepEqual(cursors, [1]);
+    } finally { s.dispose(); }
+    owner.mouseType = 0x89abcdef; clearClientUserSelection(gameplay, storage); assert.equal(owner.mouseType, 0x89abcdef);
+});
 
 // 실제 건설 표시·진행 프로세스만 실행해 완공 시 HP와 상태를 확인한다.
 test('CampaignSession TheWarBegins: 실제 건설 진행과 완료', () => {
