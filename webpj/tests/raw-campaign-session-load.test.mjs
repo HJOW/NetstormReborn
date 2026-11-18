@@ -70,6 +70,56 @@ function scene(overrides = {}, savedFort = fort) {
     return { s, trace, queue };
 }
 
+// 실제 건설 표시·진행 프로세스만 실행해 완공 시 HP와 상태를 확인한다.
+test('CampaignSession TheWarBegins: 실제 건설 진행과 완료', () => {
+    const events = [], { s } = scene({ construction: { refresh: () => events.push('refresh') }, sound: { play: () => 1, playOnceAt: () => 1 } });
+    try {
+        assert.throws(() => s.startConstruction(1, 0.6), /미설치/);
+        s.load(); const core = s.core(), priest = s.world().objects().find(({ object }) => object.type === 158 && object.owner === 1);
+        assert.ok(priest); const target = s.world().create(76, 0); core.owner.set(target, 1);
+        const raw = core.pool.allocated(target); raw[40] |= 1; new DataView(raw.buffer, raw.byteOffset, raw.byteLength).setUint32(26, 1, true);
+        s.world().pop(target, priest.object.x, priest.object.y, 0); s.startConstruction(target, 0.6);
+        const form = findAttachedProcess(core.pool, target, 30), visualForm = findAttachedProcess(core.pool, target, 17);
+        const process = core.processes.fromForm(form), visual = core.processes.fromForm(visualForm);
+        assert.ok(process && visual); assert.equal(process.fields.end, process.fields.start + Math.fround(0.6));
+        const start = process.fields.start, end = process.fields.end;
+        s.prepareFrame({ game: start, wall: 100, delta: 0, number: 1 }, true); process.runFrame();
+        assert.equal(core.pool.slot(target)[40] & 1, 1);
+        // 다른 미션 프로세스는 실행하지 않고 같은 실제 건설 진행만 종료 시각까지 진행한다.
+        s.prepareFrame({ game: end + 0.001, wall: 101, delta: end - start, number: 2 }, true); process.runFrame();
+        assert.equal(core.processes.fromForm(form), null); assert.equal(core.pool.slot(target)[40] & 1, 0);
+        assert.equal(new DataView(core.pool.slot(target).buffer, core.pool.slot(target).byteOffset).getUint32(26, true), core.types[76].maxHitPoints);
+        visual.runFrame(); assert.equal(core.processes.fromForm(visualForm), null); assert.ok(events.includes('refresh'));
+    } finally { s.dispose(); }
+});
+
+// 실제 건설 운반 경로의 도착은 같은 대상의 진행·표시를 부착한다.
+test('CampaignSession TheWarBegins: 건설 운반 도착과 실제 진행 부착', () => {
+    const { s } = scene({ construction: { refresh: () => {} }, sound: { play: () => 1, playOnceAt: () => 1 } });
+    try {
+        assert.throws(() => s.startConstructionMovement({ parent: 1 }), /미설치/);
+        s.load(); const core = s.core(), priest = s.world().objects().find(({ object }) => object.type === 158 && object.owner === 1);
+        assert.ok(priest); const x = priest.object.x, y = priest.object.y, target = s.world().create(76, 0);
+        core.owner.set(target, 1); const raw = core.pool.allocated(target); raw[40] |= 1;
+        new DataView(raw.buffer, raw.byteOffset, raw.byteLength).setUint32(26, 1, true); s.world().pop(target, x, y, 0);
+        const builder = s.world().create(134, 2); core.owner.set(builder, 1); s.world().pop(builder, x, y, 0);
+        const path = s.startConstructionMovement({ parent: builder, destination: { x, y }, replaceStart: 1, helper: 0, tailWord: 0, tailByte: 0, reserved: 0 });
+        assert.ok(path); const pid = core.kernel.find(path);
+        // 다른 미션 프로세스 없이 실제 경로가 도착해 자기 삭제될 때까지 진행한다.
+        for (let frame = 0; frame < 2000 && core.kernel.get(pid); frame += 1) { core.processState.now = frame * 0.02; path.runFrame(); }
+        assert.equal(core.kernel.get(pid), null); assert.ok(core.pool.slot(builder)[11] & 3);
+        const form = findAttachedProcess(core.pool, target, 30), visual = findAttachedProcess(core.pool, target, 17);
+        assert.ok(form && visual); const process = core.processes.fromForm(form), drawing = core.processes.fromForm(visual); assert.ok(process && drawing);
+        const start = process.fields.start, end = process.fields.end; assert.equal(end, start + Math.fround(0.6));
+        s.prepareFrame({ game: start, wall: 100, delta: 0, number: 1 }, true); process.runFrame();
+        assert.equal(core.pool.slot(target)[40] & 1, 1);
+        s.prepareFrame({ game: end + 0.001, wall: 101, delta: end - start, number: 2 }, true); process.runFrame();
+        assert.equal(core.processes.fromForm(form), null); assert.equal(core.pool.slot(target)[40] & 1, 0);
+        assert.equal(new DataView(core.pool.slot(target).buffer, core.pool.slot(target).byteOffset).getUint32(26, true), core.types[76].maxHitPoints);
+        drawing.runFrame(); assert.equal(core.processes.fromForm(visual), null);
+    } finally { s.dispose(); }
+});
+
 // 실제 120BYTE 섬과 저장 객체를 적재한 다음에만 loaded를 공개한다.
 test('CampaignSession TheWarBegins: 실제 저장 객체·Graph와 커서까지 Load', () => {
     const { s, trace, queue } = scene();
