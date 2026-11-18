@@ -236,6 +236,16 @@ export class GameData {
         return this.configuration.substitute(text);
     }
 
+    // 임시 local 설정에 최대 세 인자를 넣고 본문 전체를 현재 설정으로 치환한다.
+    substituteLocal(source, argument1 = null, argument2 = null, argument3 = null) {
+        const local = new Config(this.registry, 'local');
+        try {
+            // 원본처럼 인자가 있는 위치의 줄만 등록한다.
+            [argument1, argument2, argument3].forEach((argument, index) => { if (argument !== null) local.append(`${index + 1}="${argument}"`); });
+            return this.configuration.substitute(source);
+        } finally { local.dispose(); }
+    }
+
     // 원본 004410f0(경로 지정값): 임시 `local` 객체에 인자(1~3번)를 넣고 키를 치환한 값을 돌려준다. 키가 없으면 빈 문자열이다.
     // 사용: pathSpec('missionSpec', 'tell') → `\D\tell.english`. (2026-10-28 WB02-D)
     pathSpec(key, argument1 = null, argument2 = null, argument3 = null) {

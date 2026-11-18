@@ -33,7 +33,7 @@ import { GamePalette } from '../www/assets/palette.js';
 import { fortSection, parseFort } from '../www/assets/fort.js';
 import { ARCHIVE_PATH, GameData, SETUP_PATH } from '../www/assets/game-data.js';
 import { TaffArchive } from '../www/assets/taff.js';
-import { decodeOriginalText } from '../www/assets/text-encoding.js';
+import { decodeOriginalText, decodeWindows1252, encodeOriginalText } from '../www/assets/text-encoding.js';
 import { createFortTypes } from '../www/assets/type-flags.js';
 import { TypeTable } from '../www/assets/type-table.js';
 import { layoutFort, pieceFrameCodes } from '../www/assets/territory.js';
@@ -47,7 +47,7 @@ import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { RawCampaignMissionStartBindings } from '../www/core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from '../www/core/raw-campaign-tutorial-one-bindings.js';
 import { CampaignGameWorld } from '../www/core/campaign-game-world.js';
-import { makeCampaignMissionStartEffects } from '../www/core/campaign-client-services.js';
+import { makeCampaignMissionStartEffects, bindCampaignAiClientServices } from '../www/core/campaign-client-services.js';
 import { RawCampaignFactoryDisplay } from '../www/render/raw-campaign-factory-display.js';
 import { projectCameraCoordinates } from '../www/render/camera-view.js';
 import { cursorDisplayLogicalPalette } from '../www/render/raw-campaign-cursor-display.js';
@@ -244,14 +244,17 @@ test('Client State 부모: 로그인과 AI 미션 시작 뒤 정리', () => {
     const clock = { game: 12 }; storage.processes.bindDevices(kernel, clock); players.bindCoreData(coreData);
     const connections = new ClientConnectionGlobals(local), templates = new CampaignTemplateStorage(), popupState = new QuickHelpPopupState();
     const spGlobals = new ClientSpGlobals(random, () => 1700000000), sp = spGlobals.store(); sp.initialize();
-    const chat = new RawChatChannels(new Uint8Array(4800), () => 0), events = [];
+    const chatBytes = new Uint8Array(4800), chat = new RawChatChannels(chatBytes, () => 0), events = [], difficultySelections = [];
     const audio = { popMute: () => {}, writeSongEndBits: () => {}, startScene: () => {}, sounds: () => ({ stopLoops: () => {} }) };
     const client = { paused: () => false, popGamePause: () => {}, resetGameClock: () => { clock.game = 0; }, wallSeconds: () => 42, interpretStateOptions: () => {} };
     const context = { gameplay, local, activity, storage, currentStorage: storage, players, coreData, kernel, random, connections, templates, sp, chat, audio, client,
         popupState, nsInfo: new ClientNsInfoGlobals(), kencloud: new ClientKencloudGlobals(), gameTime: () => clock.game };
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100.25, clock: () => 100250, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
-    const ai = { allocationBytes: (bytes) => bytes.fill(0xa7), defaultName: () => 'AI', participation: { addChat: () => {}, clearChat: () => {} } };
-    const { s } = scene({ missionName: script.fortName(), localLogin, ai, gameplayGlobals: gameplay, surfaceStorage: storage, playerRecords: players, coreDataGlobals: coreData, processKernel: kernel, randomGlobals: random, spGlobals }, input);
+    const ai = { allocationBytes: (bytes) => bytes.fill(0xa7) };
+    gameData.setInt('difficulty', 1);
+    bindCampaignAiClientServices({ configuration: () => gameData, languageNumber: () => 1, translate: (text) => text, encodeDisplayText: encodeOriginalText, decodeDisplayText: decodeWindows1252, chatChannels: () => chat }, ai);
+    const difficulty = ai.difficulty; ai.difficulty = (owner, enemy) => { const value = difficulty(owner, enemy); difficultySelections.push([owner, enemy, value]); return value; };
+    const { s } = scene({ missionName: script.fortName(), localLogin, ai, missionOutcome: { demo: () => 0 }, gameplayGlobals: gameplay, surfaceStorage: storage, playerRecords: players, coreDataGlobals: coreData, processKernel: kernel, randomGlobals: random, spGlobals }, input);
     try {
         assert.equal(s.productionContext().sp, spGlobals);
         s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
@@ -260,6 +263,7 @@ test('Client State 부모: 로그인과 AI 미션 시작 뒤 정리', () => {
         const effects = { settingsBytes: (_owner, bytes) => bytes.fill(0xa7), gameSeconds: () => 123.5, refreshSp: () => {}, refreshCommandGump: () => {}, resetCamera: () => {}, randomGeysers: forbidden('예상하지 않은 간헐천') };
         new RawCampaignMissionStartBindings(s, script, gate, state, s.missionStartSettings(), s.missionAiSettings(), effects).start();
         assert.equal(gate.started, 1); assert.ok(s.participation().brain(2)); assert.equal(s.sp(1), 1200);
+        assert.ok(difficultySelections.some(([, enemy, value]) => enemy && value === 1)); assert.ok(chatBytes.some((value) => value !== 0));
         s.cursor().setEffects({ placement: { invalidate: () => {} }, lifecycle: { selectCursor: () => {}, highlight: () => {} } });
         const devices = { cancelInitialCursor: () => {}, refreshSp: () => {}, selectCursor: () => {}, killGumps: () => events.push('kill'), cleanupGumps: () => events.push('cleanup'),
             replaceUber: () => events.push('uber'), retireRuntime: () => { events.push('retire'); s.dispose(); } };
