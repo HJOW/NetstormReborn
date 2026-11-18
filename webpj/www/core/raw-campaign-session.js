@@ -290,6 +290,12 @@ export class RawCampaignSession {
     }
     // 현재 Login의 실제 송신·시계·수신만 진행한다.
     pumpLocalConnection() { this.#live(); if (this.#login) this.#login.pump(); }
+    // 실제 Login과 현재 Player 연결을 사용해 5바이트 활동 패킷을 송신한다.
+    sendConnectionHeartbeat(broadcast) {
+        const o = this.#live(); if (!this.#login) throw new Error('활동 송신의 실제 Login 없음');
+        const packet = Uint8Array.of(1, 0x64, 5, 0, 0);
+        if (broadcast) o.tables.broadcast.send(packet); else this.#login.send(9, packet);
+    }
     // Client 프레임은 같은 Login 타이머를 실행하며 기한 0은 타이머 본체가 처리한다.
     runConnectionLoginTimer() { this.#live(); if (this.#login) this.#login.timer.run(false); }
     // 설치된 같은 로컬 Login에 원본 패킷을 넣고 후속 Pump에서 수신한다.

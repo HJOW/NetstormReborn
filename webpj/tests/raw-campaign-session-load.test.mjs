@@ -91,7 +91,7 @@ function scene(overrides = {}, savedFort = fort) {
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, fortBadges: overrides.fortBadges, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
-        ownerColorTables: overrides.ownerColorTables, gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, cameraCommit: overrides.cameraCommit, developerQueue: overrides.developerQueue, motion: overrides.motion, randomGlobals: overrides.randomGlobals, spGlobals: overrides.spGlobals,
+        ownerColorTables: overrides.ownerColorTables, gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionFrameNumber: overrides.connectionFrameNumber, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, cameraCommit: overrides.cameraCommit, developerQueue: overrides.developerQueue, motion: overrides.motion, randomGlobals: overrides.randomGlobals, spGlobals: overrides.spGlobals,
         developerHeapTrace: overrides.developerHeapTrace, developerQueryDirectDraw: overrides.developerQueryDirectDraw, developerRecordLabel: overrides.developerRecordLabel,
         battlePeers: overrides.battlePeers, sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
         player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
@@ -712,6 +712,26 @@ test('CampaignSession TheWarBegins: 로그인 타이머의 프레임 분리', ()
         const completed = events.length; s.runConnectionLoginTimer(); assert.equal(events.length, completed);
     } finally { s.dispose(); }
     assert.throws(() => s.runConnectionLoginTimer(), /반납/);
+});
+
+// 같은 실제 Login의 서버 송신과 Player 방송은 원본 활동 패킷을 전달한다.
+test('CampaignSession TheWarBegins: 연결 활동 패킷의 서버 송신과 방송', () => {
+    const received = [], broadcasts = [], peers = Array(9).fill(null), local = new ClientLocalStateGlobals(), activity = new ClientConnectionActivityGlobals();
+    peers[2] = (packet) => broadcasts.push([...packet]);
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234,
+        log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
+        observePacket: (_sender, _boss, _local, packet) => { if (packet[1] === 0x64) received.push([...packet]); } };
+    const { s } = scene({ localLogin, localStateGlobals: local, battlePeers: peers, connectionActivityGlobals: activity, connectionFrameNumber: () => 17, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    try {
+        assert.throws(() => s.sendConnectionHeartbeat(false), /Login 없음/);
+        s.loadLocalConnection(); assert.equal(s.localConnectionReady(), true);
+        s.sendConnectionHeartbeat(false); assert.deepEqual(received, []); s.pumpLocalConnection();
+        assert.deepEqual(received, [[1, 0x64, 5, 0, 0]]); assert.ok(activity.frames().includes(17));
+        s.playerRecords()[2 * 180 + 0x50] |= 1; s.sendConnectionHeartbeat(true);
+        assert.deepEqual(broadcasts, [[1, 0x64, 5, 0, 0]]);
+        s.playerRecords()[2 * 180 + 0x50] &= 0xfe; s.sendConnectionHeartbeat(true); assert.equal(broadcasts.length, 1);
+    } finally { s.dispose(); }
+    assert.throws(() => s.sendConnectionHeartbeat(false), /반납/);
 });
 
 // 같은 실제 로그인·Player·동맹·사제 상태를 일반 전투 종료 판정이 조회한다.
