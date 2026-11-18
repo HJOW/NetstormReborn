@@ -457,7 +457,7 @@ test('CampaignSession TheWarBegins: 실제 로그인 뒤 사제 메뉴와 커서
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
         observePacket: (sender, _boss, _local, packet) => { if (packet[1] === 0x3e) packets.push([sender, packet.slice()]); } };
     const ai = { allocationBytes: (bytes) => bytes.fill(0xa7), defaultName: () => 'AI', participation: { addChat: () => {}, clearChat: () => {} } };
-    const { s } = scene({ localLogin, ai, construction: { refresh: () => events.push(['construction-refresh']) },
+    const { s } = scene({ localLogin, ai, construction: { refresh: () => events.push(['construction-refresh']) }, motion: { path: { stepSound: (...args) => events.push(['step', ...args]) } },
         sound: { playOnceAt: (...args) => events.push(['sound', ...args]), play: (...args) => { events.push(['sound', ...args]); return 1; } } });
     try {
         assert.throws(() => s.cursor(), /설치 전/); assert.throws(() => s.makePriestMenu(), /설치 전/);
@@ -495,6 +495,30 @@ test('CampaignSession TheWarBegins: 실제 로그인 뒤 사제 메뉴와 커서
         assert.equal(packets.length, 1); assert.equal(packets[0][0], 1); assert.deepEqual([...packets[0][1].subarray(0, 5)], [1, 0x3e, 25, 0, 85]);
         const workshops = s.world().objects().filter(({ object }) => object.type === 85 && object.owner === 1 && object.x === target.x && object.y === target.y);
         assert.equal(workshops.length, 1); assert.equal(s.core().pool.slot(workshops[0].sid)[40] & 1, 1);
+        const core = s.core(), workshop = workshops[0].sid, pathForm = findAttachedProcess(core.pool, priest.sid, 54), path = core.processes.fromForm(pathForm);
+        assert.ok(path instanceof RawPathProcess); const begin = core.processState.now, arrival = path.runtime.time(path.runtime.count - 1);
+        // 다른 AI·미션 프로세스는 실행하지 않고 실제 사제 경로만 도착까지 진행한다.
+        for (let frame = 0; frame < 3000 && core.processes.fromForm(pathForm); frame += 1) {
+            const now = begin + frame * 0.025; if (now > arrival + 2) break;
+            s.prepareFrame({ game: now, wall: 100 + now - begin, delta: frame ? 0.025 : 0, number: frame }, true); path.runFrame();
+        }
+        assert.equal(core.processes.fromForm(pathForm), null);
+        const retry = core.processes.findEvent(workshop, 6700); assert.ok(retry);
+        const retryTime = Math.max(core.processState.now, retry.time) + 0.001;
+        s.prepareFrame({ game: retryTime, wall: 200, delta: 0, number: 3001 }, true); retry.runFrame();
+        const form = findAttachedProcess(core.pool, workshop, 30), visual = findAttachedProcess(core.pool, workshop, 17);
+        assert.ok(form && visual); const construction = core.processes.fromForm(form), drawing = core.processes.fromForm(visual);
+        const start = construction.fields.start, end = construction.fields.end;
+        assert.equal(end - start, 10); assert.ok(findAttachedProcess(core.pool, workshop, 47));
+        s.prepareFrame({ game: start, wall: 200, delta: 0, number: 3001 }, true); construction.runFrame();
+        assert.equal(core.pool.slot(workshop)[40] & 1, 1);
+        s.prepareFrame({ game: start + 5, wall: 200.5, delta: 5, number: 3002 }, true); construction.runFrame();
+        const hp = new DataView(core.pool.slot(workshop).buffer, core.pool.slot(workshop).byteOffset).getUint32(26, true);
+        assert.ok(hp > 0 && hp < core.types[85].maxHitPoints);
+        s.prepareFrame({ game: end + 0.001, wall: 201, delta: 5, number: 3003 }, true); construction.runFrame();
+        assert.equal(core.processes.fromForm(form), null); assert.equal(core.pool.slot(workshop)[40] & 1, 0);
+        assert.equal(new DataView(core.pool.slot(workshop).buffer, core.pool.slot(workshop).byteOffset).getUint32(26, true), core.types[85].maxHitPoints);
+        assert.equal(findAttachedProcess(core.pool, workshop, 47), 0); drawing.runFrame(); assert.equal(core.processes.fromForm(visual), null);
     } finally { s.dispose(); script.dispose(); }
 });
 
