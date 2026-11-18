@@ -441,3 +441,22 @@ test('CampaignSession Tutorial 1: 압축 객체 수신', () => {
         assert.deepEqual(c.pool.slot(sid), before); assert.match(logs.at(-1)[1], /VERIFY .*: type /);
     } finally { s.dispose(); }
 });
+
+// 원격 Tell은 현재 소비자에 전달하고 빈 간헐천 슬롯은 부작용 없이 건너뛴다.
+test('CampaignSession Tutorial 1: 원격 Tell과 간헐천 채집 등록', () => {
+    const messages = [], { s } = scene({ factoryTell: (text) => messages.push(text) });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        const tell = new Uint8Array(14); tell.set([1, 0x70, 14, 0, 6, 0, 0, 0, 72, 101, 108, 108, 111, 0]);
+        assert.equal(dispatch.registration(0x70).length, 0xffff);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), tell), true); assert.deepEqual(messages, ['Hello']);
+        const c = s.core(); let sid = c.pool.layout.serverFirst;
+        // 채집 대상이 이미 반환된 빈 슬롯을 찾는다.
+        while (sid < c.pool.capacity && !(c.pool.slot(sid)[11] & 1)) sid += 1;
+        assert.ok(sid < c.pool.capacity); const mined = new Uint8Array(6); mined.set([1, 0x5b, 6, 0]); new DataView(mined.buffer).setUint16(4, sid, true);
+        assert.equal(dispatch.registration(0x5b).version, 1);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), mined), true);
+        assert.equal(c.pool.slot(sid)[11] & 1, 1);
+    } finally { s.dispose(); }
+});

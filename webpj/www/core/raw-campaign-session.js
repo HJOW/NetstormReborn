@@ -18,6 +18,8 @@ import { observePathData } from './raw-path-data.js';
 import { DaisProcess, readDaisProcessData } from './raw-dais-process-data.js';
 import { receiveSessionSquid } from './raw-campaign-session-squid.js';
 import { decodeCompressedSquid, observeCompressedSquid } from './raw-squid-compressed-receive.js';
+import { registerGeyserMined } from './raw-geyser-mined.js';
+import { registerRemoteTellPacket } from './raw-remote-tell-packet.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
 import { findAttachedProcess, WindAviaryProcess } from './raw-wind-aviary-process.js';
@@ -531,6 +533,15 @@ export class RawCampaignSession {
             });
             receiveSessionSquid(current, image);
         });
+        // 기존 채집 등록의 metadata를 설정한 뒤 같은 Session의 현재 확인 상태를 사용하는 수신기로 교체한다. (2026-11-18 WB04-E736)
+        registerGeyserMined(dispatch, o.geyserMined);
+        // 원격 Tell의 원본 바이트는 실제 화면 소비자의 문자열 경계에서 해독한다.
+        registerRemoteTellPacket(dispatch, (text) => {
+            const current = this.#live();
+            if (typeof current.services.factoryTell !== 'function') throw new Error('원격 Tell의 실제 현재 cf730 미연결');
+            current.services.factoryTell(decodeOriginalText(Uint8Array.from(text, (letter) => letter.charCodeAt(0))));
+        }, (expression, file, line) => storage.assertDisplay(expression, file, line));
+        dispatch.register(0x5b, (_sender, _connection, packet) => this.#live().buildingModules.receiveGeyserMined(packet));
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }
