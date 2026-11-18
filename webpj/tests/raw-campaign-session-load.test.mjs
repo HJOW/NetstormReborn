@@ -613,6 +613,31 @@ test('CampaignSession TheWarBegins: 로컬 로그인과 실제 게임 수신 등
     assert.throws(() => s.pumpLocalConnection(), /반납/);
 });
 
+// 같은 실제 로그인·Player·동맹·사제 상태를 일반 전투 종료 판정이 조회한다.
+test('CampaignSession TheWarBegins: 실제 로그인과 일반 전투 종료 관문', () => {
+    const gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), local = new ClientLocalStateGlobals();
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const { s } = scene({ gameplayGlobals: gameplay, playerRecords: players, localStateGlobals: local, localLogin, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    try {
+        assert.equal(s.battleFinished(), false);
+        gameplay.world.missionPost = false; s.core().ownerMode.battle = true; local.scriptBreak().value = 0;
+        assert.throws(() => s.battleFinished(), /실제 서버 연결 조회 미연결/);
+        gameplay.world.missionPost = true;
+        s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+        assert.equal(s.localConnectionReady(), true); assert.equal(s.battleFinished(), false);
+        gameplay.world.missionPost = false; local.scriptBreak().value = 0; local.loginEnd().value = 0;
+        const rows = players.records(), view = new DataView(rows.buffer, rows.byteOffset, rows.byteLength), alliances = players.alliances();
+        view.setUint32(180 + 0x2c, 1, true); view.setUint32(2 * 180 + 0x2c, 2, true);
+        rows[180 + 0x50] = 0x23; rows[2 * 180 + 0x50] = 0x23;
+        assert.equal(s.missionPriestDead(1), false); assert.equal(s.missionPriestDead(2), false); assert.equal(s.battleFinished(), false);
+        alliances[1 * 9 + 2] = 1; assert.equal(s.battleFinished(), false);
+        alliances[2 * 9 + 1] = 1; assert.equal(s.battleFinished(), true);
+        alliances[2 * 9 + 1] = 0; rows[2 * 180 + 0x50] = 1; assert.equal(s.missionPriestDead(2), true); assert.equal(s.battleFinished(), true);
+        local.scriptBreak().value = 1; assert.equal(s.battleFinished(), false);
+    } finally { s.dispose(); }
+    assert.throws(() => s.battleFinished(), /반납/);
+});
+
 // 로그인된 실제 내부 전송은 사제 이동 요청을 지연 송신해 같은 Host의 경로로 연결한다.
 test('CampaignSession TheWarBegins: 실제 로그인 전송의 사제 이동 요청', () => {
     const received = [];

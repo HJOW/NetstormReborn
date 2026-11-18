@@ -2,6 +2,7 @@
 // 사용: new RawCampaignSession(game, files, fort, mission, services) → 후속 Load → dispose.
 // 생성 자체는 미션을 시작하거나 loaded를 켜지 않는다. Login/State 반납 증빙은 후속이다.
 import { RawCampaignSessionOwners } from './raw-campaign-session-owners.js';
+import { RawBattleCompletion } from './raw-battle-completion.js';
 import { learnCampaignNewTechnology } from './raw-campaign-callbacks.js';
 import { refreshLocalRitualData } from './raw-ritual-refresh.js';
 import { createCampaignAi, crankCampaignAiMoney, setCampaignAiParameter, prepareCampaignAi, initializeCampaignAi, makeCampaignAi } from './raw-campaign-session-ai-public.js';
@@ -838,6 +839,21 @@ export class RawCampaignSession {
     checkMissionOutcome() { this.#live().outcome.check(); }
     // 안내 표시가 현재 Player의 사제 생존 상태를 같은 판정기에서 조회한다.
     missionPriestDead(owner) { return this.#live().outcome.priestDead(owner); }
+    // 같은 Session의 현재 Player·동맹·로그인·사제로 일반 전투 종료 여부만 계산한다.
+    battleFinished() {
+        const o = this.#live(), local = o.localStateGlobals;
+        const globals = {
+            players: o.players, options: o.battleOptions, alliances: o.alliances,
+            get battle() { return o.core.ownerMode.battle; }, get missionPost() { return o.globals.missionPost; },
+            get boss() { return o.state.assetState.readBoss(); }, get scriptBreak() { return local.scriptBreak().value; }, get loginEnd() { return local.loginEnd().value; },
+        };
+        const hooks = {
+            currentPlayers: () => o.players,
+            serverConnection: () => { if (!o.login || typeof o.login.transport.exists !== 'function') throw new Error('종료 관문의 실제 서버 연결 조회 미연결'); return o.login.transport.exists(9); },
+            priestDead: (owner) => o.outcome.priestDead(owner),
+        };
+        return new RawBattleCompletion(globals, hooks).finished();
+    }
     // 같은 현재 신전 슬롯과 프레임·위치 없는 상승 소리 장치로 레인 신전을 그린다.
     drawRainTemple(sid, frame) {
         const o = this.#live(), raw = o.core.pool.physical(sid);
