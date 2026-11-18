@@ -10,6 +10,7 @@ import { RawCursorPosition } from '../www/core/raw-cursor-position.js';
 import { RegularProcess } from '../www/core/squid-process.js';
 import { readData } from './helpers.mjs';
 import { GamePalette, buildScreenPalette } from '../www/assets/palette.js';
+import { bindCampaignCursorGumps } from '../www/core/campaign-cursor-client-effects.js';
 
 // 같은 실제 풀에서 현재 살아 있는 TYPE만 번호 순서대로 관찰한다.
 function live(s, type) { const found = []; for (let sid = 5; sid < s.core.pool.capacity; sid += 1) { const raw = s.core.pool.slot(sid); if (!(raw[11] & 3) && raw[10] === type) found.push(sid); } return found; }
@@ -62,8 +63,10 @@ test('CampaignCursor 정지 마우스 Gump: 현재 UI 토큰 재조회·준비 �
 });
 
 test('CampaignCursor 실제 GUI Drop: 같은 Form 재부착·수신과 game 프로세스 통지를 사용한다', () => {
-    const s = new CampaignCursorScene(); const target = s.world.create(97, 2); const effects = s.ui(); effects.placement.gumpAt = () => 77; effects.placement.accept = () => 77; effects.placement.parent = () => target;
-    effects.drop.guiFlags = () => 0; effects.drop.guiParent = () => target; effects.drop.guiReceive = (gump, form) => s.events.push(['receive', gump, form]); effects.drop.closeGump = () => { throw new Error('UI close는 사용하면 안 됨'); };
+    const s = new CampaignCursorScene(); const target = s.world.create(97, 2); const effects = s.ui();
+    bindCampaignCursorGumps(effects, { pickGump: () => 77, dispatchGump: () => 77, gumpParentSid: () => target,
+        handleGump: (gump, command, form) => { if (command === 0x0200005e) s.events.push(['receive', gump, form]); return 0; }, requestClosePopups: () => {} });
+    effects.drop.closeGump = () => { throw new Error('UI close는 사용하면 안 됨'); };
     s.cursor.setEffects(effects); const form = s.form(); s.cursor.take(form, 0x100); s.point(); s.drop.cursorGump = 123; s.cursor.drop();
     assert.equal(new SquidForms(s.core.pool).parent(form), target); assert.ok(s.events.some((row) => row[0] === 'receive' && row[1] === 77 && row[2] === form)); assert.ok(s.events.some((row) => row[0] === 'process-event' && row[1] === 123 && row[2] === 3)); assert.equal(s.drop.preview, 0); assert.equal(s.drop.cursorGump, 0);
 });
