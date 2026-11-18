@@ -724,6 +724,7 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
     const world = new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', services, { x: 640, y: 480 });
     try {
         const session = world.session(); assert.throws(() => world.select(1), /미설치/); assert.throws(() => world.bindUserInput(), /설치 전/);
+        assert.throws(() => world.openSelectionMenu(1, {}, false, () => 0), /미설치/); assert.doesNotThrow(() => world.updateMovementCursor());
         world.startLocalConnection(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection(); assert.equal(world.completeLocalConnection(), true);
         const priest = session.world().objects().find(({ object }) => object.type === 158 && object.owner === 1); assert.ok(priest);
         const origin = gameplay.camera().snapshot().world;
@@ -731,8 +732,12 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
         world.bindUserInput({ paused: () => 0, dump: () => {}, assertion: forbidden('선택 진단'), previewAssertion: forbidden('미리보기 진단') },
             { selectCursor: (number) => cursors.push(number) }, { selectCursor: (number) => cursors.push(number), assertion: forbidden('운반 입력 진단') });
         assert.throws(() => world.bindUserInput(), /새 수명/); world.select(priest.sid); assert.equal(world.selected(), priest.sid); assert.equal(gameplay.selection.mode, 5); assert.equal(cursors.at(-1), 0x12);
+        const count = cursors.length; world.updateMovementCursor(); assert.equal(cursors.length, count + 1); assert.equal(cursors.at(-1), 0x12);
+        const event = { button: 2 }, menus = []; assert.equal(world.openSelectionMenu(priest.sid, event, false, (sid, current) => { menus.push([sid, current]); return 37; }), 37);
+        assert.deepEqual(menus, [[priest.sid, event]]); assert.equal(world.selected(), priest.sid);
         const before = session.localConnectionPackets(); world.moveFromMinimap(90, 108); session.pumpLocalConnection();
         assert.equal(world.selected(), 0); assert.equal(gameplay.selection.mode, 0); assert.equal(cursors.at(-1), 1);
+        const after = cursors.length; world.updateMovementCursor(); assert.equal(cursors.length, after);
         assert.equal(session.localConnectionPackets().length, before.length + 1); assert.equal(session.localConnectionPackets().at(-1), 0x40);
     } finally { world.dispose(); }
     assert.equal(gameplay.borrowed(), false); assert.throws(() => world.highlight(0), /반납/);

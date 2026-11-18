@@ -155,13 +155,15 @@ export class CampaignGameWorld {
             appendMultiple: (sid) => state.appendMultiple(sid), removeMultiple: (sid) => state.removeMultiple(sid), writeEnabled: (value) => { state.enabled = value >>> 0; } });
         return this.#selection;
     }
+    // 현재 카메라 snapshot을 사용해 정수 화면 좌표를 원본 월드 좌표로 역투영한다.
+    #project(x, y) { const view = this.#gameplay.camera().snapshot().data; return RawCursorPosition.screenToWorld(x, y, [view.getUint32(0, true), view.getUint32(4, true)]); }
     // 같은 Session의 운반 입력·강조·선택을 현재 카메라와 하나의 선택 전역에 조립한다.
     bindUserInput(selectionHooks = {}, highlightHooks = {}, carrierHooks = {}) {
         const session = this.#live(); if (this.#input || this.#selection) throw new Error('실제 월드 입력의 새 수명 계약');
         const state = this.#gameplay.selection; let highlight;
         const carrier = session.makeCarrierInput({ ...carrierHooks, highlight: (mode) => highlight.highlight(mode), multiple: () => state.multipleCount > 0 ? 1 : 0 });
         highlight = new RawUserHighlight(state.highlightState(), { ...highlightHooks,
-            project: (x, y) => { const view = this.#gameplay.camera().snapshot().data; const point = RawCursorPosition.screenToWorld(x, y, [view.getUint32(0, true), view.getUint32(4, true)]); return point.map(floatBits); },
+            project: (x, y) => this.#project(x, y).map(floatBits),
             move: (sid, x, y, force) => carrier.highlight(sid, { x: bitsFloat(x), y: bitsFloat(y) }, force),
         });
         this.bindUserSelection({ ...selectionHooks, highlight: (mode) => highlight.highlight(mode) });
@@ -171,6 +173,19 @@ export class CampaignGameWorld {
     select(sid) { this.#live(); if (!this.#input) throw new Error('실제 선택 장치 미설치'); this.#selection.select(sid, 0, 1); this.#changed = true; }
     // 현재 마우스와 선택 전역을 사용하는 강조 모드다.
     highlight(mode) { this.#live(); if (!this.#input) throw new Error('실제 선택/강조 장치 미설치'); this.#input.highlight.highlight(mode); }
+    // 같은 선택 처리기의 운반체 또는 아처 메뉴 입구에서 현재 공통 메뉴를 호출한다.
+    openSelectionMenu(sid, event, archer, common) {
+        this.#live(); if (!this.#input) throw new Error('실제 객체 메뉴 선택 장치 미설치');
+        return archer ? this.#selection.archerMenu(sid, event, common) : this.#selection.carrierMenu(sid, event, common);
+    }
+    // 현재 마우스 위치는 역투영 뒤 정수 절삭하여 선택된 운반체의 이동 커서를 다시 평가한다.
+    updateMovementCursor() {
+        this.#live(); const state = this.#gameplay.selection;
+        if (this.#input && (state.mode === 2 || state.mode === 5)) {
+            const point = RawCursorPosition.truncatePoint(this.#project(state.mouse.x, state.mouse.y));
+            this.#input.carrier.highlight(state.selected, { x: point[0], y: point[1] }, 0);
+        }
+    }
     // 미니맵 좌표의 이동 명령 뒤 같은 강조를 해제한다.
     moveFromMinimap(x, y) {
         this.#live(); if (!this.#input) throw new Error('실제 미니맵 선택 장치 없음');
