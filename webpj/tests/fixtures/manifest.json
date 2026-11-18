@@ -785,7 +785,7 @@
       "bytes": 1552384,
       "lines": null,
       "fixtureCommit": "2f80430a0",
-      "webCommit": "worktree",
+      "webCommit": "579449f8f",
       "cpppjBasis": {
         "cpppj/src/o/RawGameAuxState.h": "8defb347c",
         "cpppj/src/o/RawSquidContainedUnpop.h": "be567d46b",
@@ -1646,7 +1646,7 @@
       "bytes": 146005,
       "lines": 577,
       "fixtureCommit": "21da88755",
-      "webCommit": "worktree",
+      "webCommit": "579449f8f",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "be567d46b",
         "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a59"
@@ -17106,7 +17106,7 @@
       "bytes": 35353,
       "lines": 165,
       "fixtureCommit": "05d7cb57d",
-      "webCommit": "worktree",
+      "webCommit": "579449f8f",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionSettingsPacket.cpp": "ae0e58b3a"
       }
@@ -24976,6 +24976,35 @@
         "cpppj/src/o/RawFortSpWrite.h": "d207940cd",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
         "cpppj/src/client/RawCampaignSession.h": "bda77381e"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E831",
+      "id": "production-idle",
+      "path": "cpppj/tests/fixtures/production-idle-x86.tsv",
+      "producer": "원본 10.78 43ef10 생산 유지의 독립 x86 관측 86행. 입력과 패널·내용물 150BYTE·188개 타이머·추첨 순번·효과 순서",
+      "consumers": [
+        "webpj/tests/raw-production-maintenance.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-production-maintenance.js"
+      ],
+      "doc": "docs/webpj-production-maintenance-20261119.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawProductionMaintenance.cpp"
+      ],
+      "scope": "10.78 원본 관측 86입력 전부",
+      "text": true,
+      "sha256": "d8b5ac6f180d70225b16a726a6b36d75069545206aa1b579882ff013bcc3ec91",
+      "bytes": 295465,
+      "lines": 87,
+      "fixtureCommit": "071d1c0e4",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawProductionMaintenance.cpp": "49729df64"
       }
     }
   ]
