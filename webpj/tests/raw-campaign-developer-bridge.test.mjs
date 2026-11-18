@@ -40,3 +40,22 @@ test('개발자 다리 주기: 추적 순서·실패 접두·현재 시각', () 
     executeDeveloperBridge('sbkp 4', state, () => { state.bridgeDecayPeriod = 7; state.readGraphClock = () => 20.5; });
     assert.deepEqual(state.bridgeDecayScan, { first: 15000, last: 23001, cursor: 15000, next: 27.5 });
 });
+
+// Windows UCRT의 %f 결과 비트와 중간값·비정규·오버플로 경계를 대조한다.
+test('개발자 다리 주기: 긴 입력을 단정도로 한 번만 반올림', () => {
+    const cases = [
+        ['0x1.0000010000000001p0', 0x3f800001], ['0x1.000001p0', 0x3f800000], ['0x1.000000ffffffffp0', 0x3f800000],
+        ['-0x1.0000010000000001p0', 0xbf800001], ['1.0000000596046447753906251', 0x3f800001],
+        ['1.000000059604644775390625', 0x3f800000], ['1.0000000596046447753906249', 0x3f800000],
+        ['0x1p-150', 0], ['0x1.00000000000001p-150', 1], ['-0x1p-150', 0x80000000],
+        ['0x1.fffffep-127', 0x00800000], ['0x1.fffffcp-127', 0x007fffff],
+        ['0x1.fffffep127', 0x7f7fffff], ['0x1.ffffffp127', 0x7f800000], ['0x1.fffffeffffffffp127', 0x7f7fffff],
+        ['1e-46', 0], ['1e-45', 1], ['3.4028235e38', 0x7f7fffff], ['3.4028236e38', 0x7f800000],
+    ];
+    const state = storage(), view = new DataView(new ArrayBuffer(4));
+    // 각 입력은 실제 명령의 저장값을 관측하며 기대 비트는 UCRT에서 별도로 얻는다.
+    for (const [input, expected] of cases) {
+        executeDeveloperBridge(`sbkp ${input}`, state, () => {}); view.setFloat32(0, state.bridgeDecayPeriod, true);
+        assert.equal(view.getUint32(0, true), expected, input);
+    }
+});
