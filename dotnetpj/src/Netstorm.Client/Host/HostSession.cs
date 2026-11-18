@@ -1856,6 +1856,10 @@ public sealed partial class HostSession
     /// <remarks>2026-11-19 0.625에서 R4-2 공장 정기 트리거용으로 추가했다. 지형 분배 Pop의 공장 갈고리로 등록하며 세션 공유 목록·운반체·프레임을 빌린다.</remarks>
     private RawFactoryPostPop? _factoryPostPop;
 
+    /// <summary>공장 정기 분배 전에 사용하던 공통 정기 분배기다. 사제 월드 결선이 이 사슬을 감싸므로 해제 순서는 사제가 먼저다.</summary>
+    /// <remarks>2026-11-19 0.629에서 R4-2 공장 정기 분배용으로 추가했다. 공장 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
+    private RegularHandler? _beforeFactoryRegular;
+
     /// <summary>공장 중복 삭제 직전의 원본 경고 기록이다. 세션 연결 뒤에만 쌓이며 덤프에는 나가지 않는다.</summary>
     /// <remarks>2026-11-19 0.625에서 R4-2 공장 정기 트리거용으로 추가했다. 원본 로그를 L1에서 대조할 때 쓴다.</remarks>
     private readonly List<string> _factoryWarnings = [];
@@ -2169,6 +2173,78 @@ public sealed partial class HostSession
         var body = new RawFactoryPostPop(Pool, hash, types, WorldFrames, terrainPostPop, carrier, state, hooks);
         _factoryPostPop = body;
         terrainPostPop.SetFactoryPostPop(body);
+        _beforeFactoryRegular = processes.Regular();
+        processes.SetRegularHandler(RegularHandlerWithFactory(_beforeFactoryRegular));
+    }
+
+    /// <summary>공장 가상표 부모를 공장 정기 본체에 분배하고 나머지는 이전 처리기로 넘긴다.</summary>
+    /// <param name="fallback">공장이 맡지 않는 부모의 기존 처리기다. 없으면 payload를 돌려준다.</param>
+    /// <returns>같은 풀의 현재 가상표로 분배하는 처리기다.</returns>
+    /// <remarks>2026-11-19 0.629에서 R4-2 공장 정기 분배용으로 추가했다. 사제 월드는 이 사슬을 이전 처리기로 감싸므로 두 순서를 합성한다.</remarks>
+    private RegularHandler RegularHandlerWithFactory(RegularHandler? fallback) => (sid, ev, count, payload) =>
+    {
+        if (_factoryPostPop is not null && _factoryPostPop.Handles(sid))
+        {
+            return RunFactoryRegularSession(sid, ev, count, payload, fallback);
+        }
+
+        return fallback?.Invoke(sid, ev, count, payload) ?? payload;
+    };
+
+    /// <summary>같은 장기 풀·프레임·난수의 현재 조회로 공장 정기 사건을 실행한다.</summary>
+    /// <param name="sid">처리할 공장 부모 번호다.</param>
+    /// <param name="event">사건 번호다.</param>
+    /// <param name="count">개수다.</param>
+    /// <param name="payload">전달 값이다.</param>
+    /// <param name="fallback">선택된 조기 반환 이외의 이전 처리기다.</param>
+    /// <returns>원문과 같은 반환 값이다.</returns>
+    /// <remarks>2026-11-19 0.629에서 R4-2 공장 정기 분배용으로 추가했다. 근거: cpppj client/RawSurfaceFactoryRegular.cpp 27~36행의 FactoryRegular 조립이다. 레벨은 현재 가상80 상위 3비트, 큰 착공·완성·플레어 효과는 R6에서 잇는다.</remarks>
+    private float RunFactoryRegularSession(int sid, uint @event, uint count, float payload, RegularHandler? fallback)
+    {
+        var hooks = new FactoryRegularHooks
+        {
+            Level = parent => Pool.Slot(parent)[RawSidPool.StateOffset] >> 5,
+            FirstFrame = (parent, level) => FactoryCurrentRun(parent, level).First,
+            FrameCount = (parent, level) => FactoryCurrentRun(parent, level).Count,
+            Random = limit =>
+            {
+                if (limit == 0)
+                {
+                    Game.Next(1u);
+                    throw new InvalidOperationException("공장 실제 같은 게임 난수 0범위");
+                }
+
+                return Game.Next(limit);
+            },
+            Frame = (parent, value, flags) => (_terrainFrames ?? throw new InvalidOperationException("세션 연결 프레임 미연결")).Set(parent, value, flags),
+            Advance = (parent, delta, flags) => new RawFrameAdvance(Pool, WorldFrames, _terrainFrames ?? throw new InvalidOperationException("세션 연결 프레임 미연결")).Advance(parent, delta, flags),
+            Begin = (_, _) => throw new InvalidOperationException("호스트 공장 착공 실제 몸체 미연결(R6)"),
+            Finish = _ => throw new InvalidOperationException("호스트 공장 완성 실제 몸체 미연결(R6)"),
+            Flare = (_, _, _) => throw new InvalidOperationException("호스트 공장 플레어 실제 몸체 미연결(R6)"),
+            Damageable = (parent, code, times, value) => fallback?.Invoke(parent, code, times, value) ?? value,
+        };
+        return RawFactoryRegular.Run(Pool, sid, @event, count, payload, hooks);
+    }
+
+    /// <summary>레벨 조회 뒤에만 현재 TYPE·글자 구간을 읽고 물리 범위를 확인한다.</summary>
+    /// <param name="sid">조회할 공장 부모 번호다.</param>
+    /// <param name="level">현재 가상80 레벨이다.</param>
+    /// <returns>현재 타입의 글자 구간이다.</returns>
+    /// <remarks>2026-11-19 0.629에서 R4-2 공장 정기 분배용으로 추가했다. 근거: cpppj client/RawSurfaceFactoryRegular.cpp 20~22행의 CurrentFactoryRun이다.</remarks>
+    private RiftTypeFrames.LetterRun FactoryCurrentRun(int sid, int level)
+    {
+        if (level < 0 || level >= 16)
+        {
+            throw new ArgumentOutOfRangeException(nameof(level), "공장 현재 상태 프레임 물리 범위 오류");
+        }
+
+        ReadOnlySpan<byte> raw = Pool.Slot(sid);
+        if (raw[RawSidPool.TypeOffset] >= WorldFrames.Length)
+        {
+            throw new ArgumentOutOfRangeException(nameof(sid), "공장 현재 프레임 타입 물리 범위 오류");
+        }
+
+        return WorldFrames[raw[RawSidPool.TypeOffset]].Run(unchecked((byte)('A' + level)));
     }
 
     /// <summary>신전 슬롯의 타입 DWORD를 읽는다. 프레임 RUN은 실제 표에서, 충격음 토큰은 0으로 둔다.</summary>

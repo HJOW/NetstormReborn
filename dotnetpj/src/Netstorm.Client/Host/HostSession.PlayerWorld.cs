@@ -25,8 +25,22 @@ public sealed partial class HostSession
     /// <summary>원문 할당 관문에서 확보해 다음 부착에 넘기는 실제 객체다.</summary>
     private RegularProcess? _reservedPlayerRegular;
 
-    /// <summary>R4 초기 시각을 담는 실제 공유 상자다. 프레임 시계 갱신은 R6에서 결선한다.</summary>
+    /// <summary>R4 초기 시각을 담는 실제 공유 상자다. 프레임 시계 갱신은 0.629의 미션 틱에서 전진한다.</summary>
     public DoubleBox ProcessTime { get; } = new();
+
+    /// <summary>R4-2 공장 프레임 집계용으로 실제 공유 시각을 전진시키고 커널을 한 번 실행한다.</summary>
+    /// <param name="seconds">전진할 초다. 고정 프레임 모드에서는 프레임 밀리초를 초로 나눈 값이다.</param>
+    /// <remarks>2026-11-19 0.629에서 R4-4 공장 프레임·정기 집계용으로 추가했다. 메뉴에는 미션 세션이 없어 닿지 않으며 전체 R6 틱 결선은 R6에서 잇는다.</remarks>
+    public void AdvanceMissionFrame(double seconds)
+    {
+        if (!double.IsFinite(seconds) || seconds < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(seconds), "미션 프레임 전진 초 오류");
+        }
+
+        ProcessTime.Value += seconds;
+        Kernel.RunFrame();
+    }
 
     /// <summary>화신의 실제 부모 체인·커널 등록을 처리하는 호스트다.</summary>
     public SquidProcessHost PlayerProcesses { get; private set; } = null!;

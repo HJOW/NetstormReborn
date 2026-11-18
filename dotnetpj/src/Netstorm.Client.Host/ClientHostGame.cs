@@ -504,6 +504,12 @@ public sealed class ClientHostGame : Game
         _editor?.Poll();
         _menuInput?.Tick();
         _driver.BeginFrame();
+        if (_missionSession is not null)
+        {
+            // R4-2 공장 프레임 집계용 실제 공유 시각 전진과 커널 실행. 메뉴에는 미션 세션이 없어 닿지 않는다(0.629).
+            double step = _options.FixedFrameMs != 0 ? _options.FixedFrameMs / 1000.0 : gameTime.ElapsedGameTime.TotalSeconds;
+            _missionSession.AdvanceMissionFrame(step);
+        }
         _missionAudio?.SetFrame(unchecked((uint)_driver.Frame));
         _missionBurning?.PrepareFrame(_clock.NowSeconds, unchecked((uint)_driver.Frame));
         PumpKeyboard();
