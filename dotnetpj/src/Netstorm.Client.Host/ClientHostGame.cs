@@ -107,6 +107,10 @@ public sealed class ClientHostGame : Game
     /// <summary>미션 프로세스보다 오래 사는 실제 소리 표·장치·재생기다.</summary>
     private HostMissionAudio? _missionAudio;
 
+    /// <summary>같은 Client 수명의 주변음 기한·종류·강제값이다. 메뉴·미션 경로가 같은 난수를 프레임마다 소비한다.</summary>
+    /// <remarks>2026-11-19 0.633에서 R4-4 정기 처리용으로 추가했다. 근거: cpppj ClientMain 602행의 매 프레임 UpdateAmbientSound와 ClientLocalStateGlobals 146~147행의 최초 BSS 0이다. 실제 재생·모달·번쩍임은 R6 음향에서 잇는다.</remarks>
+    private readonly AmbientSoundState _ambientSound = new();
+
     /// <summary>같은 미션 연소의 실제SHP/팔레트/소리 대여가 프로세스보다 오래 살아 있게 한다.</summary>
     private HostMissionBurning? _missionBurning;
 
@@ -513,6 +517,16 @@ public sealed class ClientHostGame : Game
             // R4-2 공장 프레임 집계용 실제 공유 시각 전진과 커널 실행. 메뉴에는 미션 세션이 없어 닿지 않는다(0.629).
             double step = _options.FixedFrameMs != 0 ? _options.FixedFrameMs / 1000.0 : gameTime.ElapsedGameTime.TotalSeconds;
             _missionSession.AdvanceMissionFrame(step);
+            // R4-4 주변음 진행. cpppj ClientMain 602행의 순서(세션 틱 뒤·바람 앞)와 같이 같은 게임 난수를 먼저 소비한다.
+            // 실제 재생·모달·번쩍임은 R6 음향에서 이으며 여기서는 난수·기한·종류 진행만 한다. 메뉴에는 미션 경로가 없어 닿지 않는다.
+            // 2026-11-19 0.633에서 R4-4 정기 처리용으로 추가했다.
+            RawAmbientSound.Step(_ambientSound, _gameRandom, new AmbientSoundHooks
+            {
+                WallSeconds = () => _clock.NowSeconds,
+                Sound = (_, _, _, _, _, _) => { },
+                CurrentDialog = () => 0u,
+                Flash = _ => { },
+            });
             // R4-4 주변 바람 진행. cpppj ClientMain 602~603행의 순서(세션 틱 뒤·커널 전)와 같이 같은 게임 난수를 매 프레임 소비한다.
             // 메뉴에는 미션 저장소가 없어 닿지 않으며 제품 기본(고정 끔)의 벽시계 틱에서도 같은 순서로 소비한다.
             // 2026-11-19 0.632에서 R4-4 정기 처리용으로 추가했다.
