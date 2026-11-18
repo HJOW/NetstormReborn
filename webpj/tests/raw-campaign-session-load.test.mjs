@@ -22,6 +22,7 @@ import { ClientStateRuntimeRetirement } from '../www/core/client-state-runtime-r
 import { cancelClientStateCursor, cleanupClientStateWorld, makeClientStateWorldHooks } from '../www/core/client-state-world-cleanup.js';
 import { bindClientStateWorldGlobals } from '../www/core/client-state-world-globals.js';
 import { ClientKencloudGlobals } from '../www/core/client-kencloud-globals.js';
+import { ClientHtmlWindowGlobals } from '../www/core/client-html-window-globals.js';
 import { ClientNsInfoGlobals } from '../www/core/client-ns-info-globals.js';
 import { ClientRandomGlobals } from '../www/core/random.js';
 import { ClientSpGlobals } from '../www/core/client-sp-globals.js';
@@ -47,7 +48,7 @@ import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { RawCampaignMissionStartBindings } from '../www/core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from '../www/core/raw-campaign-tutorial-one-bindings.js';
 import { CampaignGameWorld } from '../www/core/campaign-game-world.js';
-import { makeCampaignMissionStartEffects, bindCampaignAiClientServices } from '../www/core/campaign-client-services.js';
+import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, prepareCampaignMissionStarting } from '../www/core/campaign-client-services.js';
 import { RawCampaignFactoryDisplay } from '../www/render/raw-campaign-factory-display.js';
 import { projectCameraCoordinates } from '../www/render/camera-view.js';
 import { cursorDisplayLogicalPalette } from '../www/render/raw-campaign-cursor-display.js';
@@ -512,13 +513,17 @@ test('CampaignSession TheWarBegins: Init 요청의 Zone으로 실제 로그인',
         selectFort: (name) => { request.fort = name; }, duplicate: (packet) => captureMissionFortZone(request, packet),
     });
     request.sequence = sequence.value; new DataView(request.zone.buffer, request.zone.byteOffset).setUint32(16, 7, true);
-    const players = new ClientPlayerRecords(), gameplay = new ClientGameplayGlobals();
+    const players = new ClientPlayerRecords(), gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals(), cloud = new ClientKencloudGlobals(), html = new ClientHtmlWindowGlobals();
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
-    const { s } = scene({ localLogin, playerRecords: players, gameplayGlobals: gameplay, missionFortRequest: request, missionSubscriber: 7,
+    const { s } = scene({ localLogin, localStateGlobals: local, playerRecords: players, gameplayGlobals: gameplay, missionFortRequest: request, missionSubscriber: 7,
         ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
     try {
         assert.equal(request.consumed, false); assert.equal(request.zone.length, 86);
-        s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+        local.state().next.set(request.next); local.zonePending().value = request.sequence; html.text.background[0] = 88;
+        prepareCampaignMissionStarting({ edition: () => 'patch1078', localStateGlobals: () => local, gameplayGlobals: () => gameplay, kencloudGlobals: () => cloud, htmlWindowGlobals: () => html }, request);
+        assert.equal(request.starting.zonePending, 1); assert.equal(local.state().current[0], 7); assert.equal(html.text.background[0], 0);
+        local.state().current[2] = 0x12345678;
+        s.startLocalConnection(); assert.equal(local.state().current[2], 0x12345678); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
         assert.equal(s.localConnectionReady(), true); assert.equal(gameplay.world.mySubscriber, 7);
         assert.equal(new DataView(players.records().buffer, players.records().byteOffset).getUint32(180 + 0x2c, true), 7);
         assert.equal(request.consumed, true); assert.equal(request.zone.length, 0); assert.equal(request.next[0], 7); assert.equal(request.sequence, 1);
