@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.607 · 갱신 2026-11-18(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.608 = R4-2 잔여(농지·그래프·첫 지역·AI·정기 처리) · cpppj 기준 제품 1322 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
+**기준 단위 0.608 · 갱신 2026-11-18(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.609 = R6-3 캐논 파이프라인 이식(농지 MayPlace 실결선) · cpppj 기준 제품 1322 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-15) 직전의 이 문서 전체(단위 기록 0.453~0.545 93건, R4 진행판의 묶음별 경과, 0.3의 단위별 검사·fixture 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261115-through-0545)에 바이트 그대로 보관했고, 그 이전 보관본 6개와 0.452 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -50,11 +50,11 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 | 항목 | 값 |
 | --- | --- |
-| 마지막 구현 단위 | **0.606(2026-11-17, VM-W11-Codex):** [L2 재측정과 격차 분석](docs/dotnet-l2-0606-20261117.md). Mesa 실행 환경 복구·오라클 재빌드·3경로 대조. 격차 3뿌리 특정(요새 Pop·농지·전용 슬롯). 31경로 전체·R4-2 잔여는 계속 |
-| 검사 기준선 | **0.607 집중: Client 전체1265/1265 통과(신규 `HostSessionFortPopTests` 2건 포함, 실패하던 총계 단언을 TotalMade 누적으로 확정), Release 빌드 0경고·0오류.** Assets 선별70건 통과. Core 전체 회귀는 이번 단위에서 돌리지 않았다(마지막 전체 측정 0.589 직전 2842/2846에서 PortMap 중복 해소 뒤 자료 부재 3건만 남음). TRX 미보관(집중 실행). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)도 유지 |
+| 마지막 구현 단위 | **0.608(2026-11-18, HJOW-Athlon):** [농지 배치 결선 시도와 MayPlace 검증](docs/dotnet-farm-0608-20261118.md). MayPlace-true 기각·결선 되돌림, 세션 운반체 결선 유지. R4 진행 중·M1 0/34·새 경로 플레이 불가 유지 |
+| 검사 기준선 | **0.608 집중: Client 전체1267/1267 통과(신규 `HostSessionTerrainCarrierTests` 2건 포함, 운반체 분배 결선 검증), Release 빌드 0경고·0오류.** Assets 선별70건 통과(0.607). Core 전체 회귀는 이번 단위에서 돌리지 않았다(마지막 전체 측정 0.589 직전 2842/2846에서 PortMap 중복 해소 뒤 자료 부재 3건만 남음). TRX 미보관(집중 실행). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)도 유지 |
 | PORT_MAP | `PORT_MAP.tsv` **1021행(L1 445·port 571)**, cpppj 438단위에 대응. 행은 파일 전체 완료를 뜻하지 않는다 |
 | fixture | 연결 **319개**(원본 x86 대조 자료, `cpp-fixture-manifest.tsv`) |
-| L2 기준선 | 0.607: HJOW-Athlon 실측 3경로 재수집(thewarbegins·tutorial1·bc1menu76, 같은 시드). thewarbegins dn 1856→1885·cpp전용 85→56·소유자 464→497(요새 지원 타입 등록 효과). **일치0/34**, 데모dn3 미연결 유지. 격차 3뿌리는 [0.606 분석](docs/dotnet-l2-0606-20261117.md) 그대로이며 요새 일반 Pop 1뿌리의 지원 타입 부분을 닫았다([0.607 문서](docs/dotnet-fort-general-pop-20261118.md)). 덤프 `extracted/dotnet-l2-0607/`(경로별 보관, summary.json은 마지막 경로만 남음). 직전 전체 자료 `extracted/dotnet-l2-0567/`, [일괄 도구](docs/dotnet-l2-batch-20261114.md) |
+| L2 기준선 | 0.608: 되돌린 트리로 3경로 재수집해 0.607과 대조했다(슬롯 전체 바이트·일치 수·bounds·난수 동일, 프레임 번호 1행만 실행별 타이밍 지터). 덤프 `extracted/dotnet-l2-0608/`(경로별 보관). **일치0/34**, 데모dn3 미연결 유지. 격차 3뿌리는 [0.606 분석](docs/dotnet-l2-0606-20261117.md) 그대로이며 농지 1뿌리는 [0.608 검증](docs/dotnet-farm-0608-20261118.md)으로 R6-3 이관이 확정됐다. 직전 3경로 자료 `extracted/dotnet-l2-0607/`, 전체 자료 `extracted/dotnet-l2-0567/`, [일괄 도구](docs/dotnet-l2-batch-20261114.md) |
 | cpppj 기준 | 제품 **1314 / 11.01**(M8 최종 관문 1311 완료+최초 실행 1314, CD 10.72 복원은 사용자 보류, cpppj 목표 일시 중지). 영향 분류는 0.379(1247→1300 전수)·0.499(1304~1310)·0.530(1312·1313)까지 마쳤다([1.2](#resync-scope)). `reflected-commit`/floor는 올리지 않았다 |
 | 오라클 | `cpppj/build/bin/Release/Netstorm.exe`. cpppj `src`가 바뀌면 PowerShell로 다시 빌드한다. 데이터 사본 `extracted/dotnet-oracle-data/`·캡처 `extracted/dotnet-oracle-captures/`·기준선 `extracted/dotnet-r0-baseline/`은 이 PC에만 있다(Git 제외) |
 | 디컴파일 | dotnetpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`). 이식 근거는 cpppj 소스·fixture·문서다 |
@@ -63,7 +63,14 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 ### 0.4 남은 작업 — 순서대로
 
-**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.607에서 요새 일반 Pop 결선 검증을 완료했다**(HJOW-Athlon, [단위 문서](docs/dotnet-fort-general-pop-20261118.md)). L2 실행 환경을 복구하고 3경로를 재측정해 thewarbegins 격차를 줄였다(cpp전용 85→56·소유자 +33). 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
+**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.608에서 농지 배치 결선을 시도하고 MayPlace-true를 기각했다**(HJOW-Athlon, [단위 문서](docs/dotnet-farm-0608-20261118.md)). 실제 MayPlace(R6 캐논 파이프라인)가 필요하다는 0.605 판단을 증거로 확정하고 제품 코드는 0.607 상태로 되돌렸다. 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
+
+**0.608 완료(2026-11-18, HJOW-Athlon):** R4-2 농지 잔여를 이식·결선하고 L2로 검증했다. MayPlace-true stand-in은 선택 집합 대조(21/152 일치)에서 기각되어 결선을 전부 되돌렸다.
+
+1. 결선: `HostSession`에 농지 군집·단일 배치(`RawFarmCluster`+`RawFortRandomPlacement`, L1済) 연결과 `ClientHostGame` Generate 갈고리 연결을 추가했다. MayPlace는 적재 스코프 한시 판단(`=> true`+호출 기록)으로 두었다.
+2. 검증과 기각: L2 선택 집합 대조에서 dn 144셀과 cpp 152셀이 21셀만 겹치고, dn 선택 일부는 121 셰이프 범위 밖 프레임(관측 최대 208 대 173)을 가져 Repop 표시 조회가 미복원으로 멈췄다. 리전별 개수(dn 99/45 대 cpp 101/51)는 맞아 영역·수량·시드는 정합하고 개별 허용/거부가 다르다. MayPlace-true로는 재현 불가이므로 결선을 되돌렸다.
+3. 유지분: 세션 지형 공용 후처리 운반체 결선(`SetCarrierPostPop`, cpppj `RawCampaignSession.cpp` 1856행·`RawNormalTerrainWorldBinding.cpp` 40행 대응)은 R4-1 장기 장치로 남겼다. 신규 `HostSessionTerrainCarrierTests` 2건 포함 Client 전체 1267/1267 통과. L2 3경로를 되돌린 트리로 재수집해 0.607과 대조했다(슬롯 전체 바이트와 일치 수·bounds·난수 동일, 프레임 번호 1행만 실행별 타이밍 지터. 덤프 `extracted/dotnet-l2-0608/`).
+4. 정리: 일회성 진단 검사·스크립트·추적 파일(`Diag*Tests.cs`, `extracted/cmp_*.py`, `diag-*.txt`)은 모두 삭제했다. `extracted/dotnet-l2-0607/`·`extracted/dotnet-l2-0608/`은 다음 L2 실행에 필요하므로 둔다.
 
 **0.607 완료(2026-11-18, HJOW-Athlon):** 0.607 중단 인계(2026-11-17 사용자 중단 지시)의 4항목을 모두 닫았다.
 
@@ -1200,6 +1207,7 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 | 0.605 (11-17) | 그래프 per-Pop 결선(늦은 바인딩·그래프 관문·ResetGraph 발화·실제 지형 생성 결정성) | [단위 문서](docs/dotnet-session-terrain-graph-20261117.md) | 새 경로 R4-2(농지는 R6 파이프라인 대기, L2 대조는 0.606에서 재개) |
 | 0.606 (11-17) | L2 재측정과 격차 분석(Mesa 실행 환경 복구·신 오라클·3경로 대조·격차 3뿌리 특정) | [단위 문서](docs/dotnet-l2-0606-20261117.md) | 새 경로 R4-2(요새 일반 Pop 지원 타입부터, 31경로 전체·첫 지역·AI·정기 처리 잔여) |
 | 0.607 (11-18) | 요새 일반 Pop 결선 검증 완료(지원 타입 등록 확정·실패 단언을 TotalMade 누적으로·3경로 재측정 thewarbegins 개선·Client 전체1265/1265) | [단위 문서](docs/dotnet-fort-general-pop-20261118.md) | 새 경로 R4-2(비용 요새 8종은 R6 파생 대기, 농지·그래프·첫 지역·AI·정기 처리 잔여) |
+| 0.608 (11-18) | 농지 배치 결선 시도와 MayPlace 검증(선택 집합 21/152로 true 기각·결선 되돌림, 운반체 결선 유지·Client 전체1267/1267·L2 0.607과 동일) | [단위 문서](docs/dotnet-farm-0608-20261118.md) | 새 경로 R4-2(농지는 R6-3 파이프라인 대기 확정, 그래프·첫 지역·AI·정기 처리 잔여) |
 | 0.478~0.499 (11-12~14) | L2 기준선 확장 — 6번째~26번째 경로의 cpp 기준선·dn 덤프와 구조 대조, 담긴 섬 판정(0.484), 34경로 같은 시드 일괄 수집·도구(0.499) | [L2 일괄](docs/dotnet-l2-batch-20261114.md), 같은 보관본 | 새 경로 R4(M1 판정 자료) |
 | 0.453~0.477 (11-12) | 지형 바인딩 조립·Generate 라이브·난수 단일 스트림·시작 1회 reseed(0.453~0.465), Pop 공간 등록·요새 객체 적재·그래프 재구성(0.466~0.470), 장부·전투섬·첫 지역 귀속 확정과 Player 월드 갈고리(0.471~0.477) | 같은 보관본 | 새 경로 R4 |
 | 기간·단위 | 완료 범위 | 근거 문서 | 처리 |

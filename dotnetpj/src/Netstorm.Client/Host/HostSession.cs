@@ -1512,6 +1512,7 @@ public sealed partial class HostSession
         }
         _terrainPostPop.SetIslandPrefix((sid, flags) => _islandConnections.IslandPostPopPrefix(sid, flags));
         _terrainPostPop.SetSurfacePrefix((sid, flags) => _islandPostPop.Prefix(sid, flags));
+        BindTerrainCarrierPostPop();
         _terrainPop = new RawPop(Pool, _terrainHash, _terrainSpots, _terrainDisplay, _terrainPostPop);
         _terrainPop.BindDiagnostics(new SquidPopDiagnostics
         {
@@ -1542,6 +1543,28 @@ public sealed partial class HostSession
             _terrainFrames.BindCurrentTypes(_terrainPopTypes);
         }
         TerrainBookkeeping.GraphsEnabled = true;
+    }
+
+    /// <summary>세션 지형 공용 후처리와 같은 풀을 쓰는 운반체·피해 몸체다. WireTerrainPostPopGraph에서 연결한다.</summary>
+    /// <remarks>2026-11-18 0.608에서 R4-2 농지 배치 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1856행의 MakeNormalTerrainFarmWorldHooks와 RawNormalTerrainWorldBinding.cpp 40행의 SetCarrierPostPop 결선이다.
+    /// 농지 지면 교체(타입 121, Damageable 가상표)의 Repop이 공통 경로 대신 전용 Damageable 몸체로 분배되게 한다.</remarks>
+    private RawCarrierPostPop? _terrainCarrierPostPop;
+
+    /// <summary>지형 분배 Pop의 운반체·피해 파생을 실제 몸체에 연결한다. 농지 Repop의 Damageable 분배가 미복원으로 멈추지 않게 한다.</summary>
+    /// <remarks>2026-11-18 0.608에서 추가했다. 검증·공통 몸체는 같은 공용 후처리(@base)에 위임하며, +0xCC 확인·지면 갱신은 농지 스코프에서 도달할 수 없어 미연결로 둔다(도달하면 실패로 드러난다).</remarks>
+    private void BindTerrainCarrierPostPop()
+    {
+        if (_terrainPostPop is null || _terrainPopTypes is null)
+        {
+            throw new InvalidOperationException("지형 운반체 몸체는 지형 공용 후처리 뒤에 연결해야 한다");
+        }
+        var hooks = RawCarrierPostPop.MakeCarrierPostPopHooks(
+            Pool,
+            _terrainPostPop,
+            _ => throw new InvalidOperationException("지형 운반체 +0xCC 확인 미연결(Damageable 직접 호출 경로에서 도달 불가)"),
+            (_, _, _) => throw new InvalidOperationException("지형 지면 소유자 갱신 미연결(농지 121에는 갱신 비트가 없다)"));
+        _terrainCarrierPostPop = new RawCarrierPostPop(Pool, _terrainPopTypes, new CarrierPostPopState(), hooks);
+        _terrainPostPop.SetCarrierPostPop(_terrainCarrierPostPop);
     }
 
     public void RebuildWorldGraph(bool mode)
