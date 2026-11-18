@@ -788,6 +788,24 @@ test('CampaignSession TheWarBegins: 개발자 다리 스캔 주기 패킷', () =
     } finally { s.dispose(); }
 });
 
+// 캠페인 31h Subscriber 명령은 공유 Client 이름과 ID를 읽고 Fort를 변경하지 않는다.
+test('CampaignSession TheWarBegins: 개발자 Subscriber 진단 패킷', () => {
+    const subscriber = new ClientSubscriberGlobals(), gameplay = new ClientGameplayGlobals(subscriber), logs = [];
+    subscriber.mySubscriber().value = 0xfffffffe; subscriber.handle().set([65, 66, 0]);
+    const { s } = scene({ subscriberGlobals: subscriber, gameplayGlobals: gameplay });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); s.world().storage.bindGraphTrace((...args) => logs.push(args));
+        subscriber.mySubscriber().value = 0xfffffffe; subscriber.handle().set([65, 66, 0]); // Load 이후 현재 공유 칸을 변경한다.
+        const text = 'ssi 3 Name', packet = new Uint8Array(9 + text.length);
+        packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+        packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.equal(subscriber.mySubscriber().value, 0xfffffffe); assert.deepEqual([...subscriber.handle().subarray(0, 3)], [65, 66, 0]);
+        assert.deepEqual(logs, [[29, 'subid = -2 handle = AB\n']]);
+    } finally { s.dispose(); }
+});
+
 // 동맹 명령은 같은 Player 참여 상태의 방향 비트와 표를 갱신한다.
 test('CampaignSession TheWarBegins: 개발자 동맹 변경 패킷', () => {
     const sends = [], playerRecords = new ClientPlayerRecords(), { s } = scene({ playerRecords, ai: { participation: { sendAlliance: (...args) => sends.push(args) } } });
