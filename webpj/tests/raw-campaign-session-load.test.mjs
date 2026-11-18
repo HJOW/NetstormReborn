@@ -3,6 +3,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { RawCampaignSession } from '../www/core/raw-campaign-session.js';
+import { CampaignSessionAssets } from '../www/core/raw-campaign-session-owners.js';
+import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
+import { RawSurfaceStorage } from '../www/core/raw-surface-storage.js';
+import { Kernel } from '../www/core/kernel.js';
 import { InputQueue } from '../www/core/input-queue.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
@@ -48,7 +52,7 @@ function scene(overrides = {}, savedFort = fort) {
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
-        gameplayGlobals: overrides.gameplayGlobals, localStateGlobals: overrides.localStateGlobals, cameraScreenSize: overrides.cameraScreenSize, developerQueue: overrides.developerQueue,
+        gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, cameraScreenSize: overrides.cameraScreenSize, developerQueue: overrides.developerQueue,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
         player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
         ai: { assertion: forbidden('AI 진단'), ...overrides.ai },
@@ -168,8 +172,40 @@ test('CampaignSession TheWarBegins: 실제 로그인 전송의 사제 이동 요
         // 원본 float 인자에서 같은 값이 되는 미세한 double 차이도 중복 목적지로 처리한다.
         s.requestCarrierMove(priest.sid, { x: storedDestination.x + 1e-7, y: storedDestination.y }); s.pumpLocalConnection();
         assert.deepEqual(s.localConnectionPackets(), packets); assert.equal(findAttachedProcess(core.pool, priest.sid, movement), form);
+        const start = core.processState.now, arrival = path.runtime.time(path.runtime.count - 1), beforeSp = s.sp(1);
+        s.runFrame({ game: start, wall: 100, delta: 0, number: 0 }, true);
+        assert.equal(findAttachedProcess(core.pool, priest.sid, movement), form);
+        // 실제 Kernel을 일정 간격으로 진행하며 경로가 자연스럽게 끝나는 순간까지만 검사한다.
+        for (let frame = 0; frame < 1000 && core.processes.fromForm(form); frame += 1) {
+            const now = start + frame * 0.025;
+            if (now > arrival + 2) break;
+            s.pumpLocalConnection(); s.runFrame({ game: now, wall: 100 + now - start, delta: frame ? 0.025 : 0, number: frame }, false);
+        }
+        assert.equal(core.processes.fromForm(form), null);
+        const arrived = s.world().objects().find(({ sid }) => sid === priest.sid);
+        assert.deepEqual([arrived.object.x, arrived.object.y], [90, 108]); assert.equal(s.sp(1), beforeSp);
     } finally { s.dispose(); }
     assert.throws(() => s.requestCarrierMove(50, { x: 90, y: 108 }), /반납/);
+});
+
+// 공유 Client 시각은 입력 스냅샷이 덮어쓰지 않으며 준비와 정지 실행은 Kernel을 돌리지 않는다.
+test('CampaignSession: 공유 시각과 준비·정지·단일 Kernel 실행', () => {
+    const gameplay = new ClientGameplayGlobals(), assets = new CampaignSessionAssets(game, { read: forbidden('파일') });
+    const metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    const kernel = new Kernel(), clock = { game: 17.25 }, visits = []; storage.processes.bindDevices(kernel, clock);
+    const { s } = scene({ gameplayGlobals: gameplay, surfaceStorage: storage, processKernel: kernel }), core = s.core();
+    try {
+        s.load();
+        const probe = core.kernel.add({ runFrame: () => visits.push(core.processState.now) });
+        s.prepareFrame({ game: 1, wall: 100, delta: 0, number: 1 }, false);
+        assert.equal(clock.game, 17.25); assert.equal(core.processState.now, 17.25); assert.deepEqual(visits, []);
+        s.runFrame({ game: 2, wall: 100, delta: 0, number: 2 }, true);
+        assert.equal(clock.game, 17.25); assert.deepEqual(visits, []);
+        clock.game = 17.5; s.runFrame({ game: 3, wall: 100.25, delta: 0.25, number: 3 }, false);
+        assert.equal(clock.game, 17.5); assert.deepEqual(visits, [17.5]); core.kernel.remove(probe);
+    } finally { s.dispose(); }
+    assert.throws(() => s.prepareFrame({ game: 0, wall: 0, delta: 0, number: 0 }, true), /반납/);
 });
 
 // 원본 캠페인 Fort 두 종류를 실제 내부 전송으로 설치하고 각각 독립된 로그인 수명을 확인한다.

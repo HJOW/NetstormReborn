@@ -169,6 +169,23 @@ export class RawCampaignSession {
         const point = { x: Math.fround(destination.x), y: Math.fround(destination.y) };
         o.carrierMove.request(parent, point, sacrifice);
     }
+    // 현재 시각을 같은 건설·에셋·전투·입자·음향·AI·월드에 원본 순서로 공급한다.
+    prepareFrame(time, paused) {
+        const o = this.#live(), current = { ...time };
+        o.flyerPaused = paused;
+        if (o.world.storage.processes.hasDevices()) current.game = o.core.processState.now;
+        else o.core.processState.now = current.game;
+        o.assetModules.prepareBuilding(current.game); o.assetBindings.prepareFrame(current.game);
+        o.combat.prepareFrame(current); o.particles.prepareFrame(current.game, current.number >>> 0);
+        o.state.soundState.frame = current.number >>> 0;
+        if (!paused) { if (!o.aiRuntime) throw new Error('실제 Session 자동 AI 프레임 설치 전 호출'); o.aiRuntime.frame(); }
+        o.world.prepareFrame(current);
+    }
+    // 다리 붕괴 검사와 준비를 수행한 뒤 정지하지 않은 Kernel만 한 번 실행한다.
+    runFrame(time, paused) {
+        const o = this.#live(); o.world.scanBridgeDecay(time, paused); this.prepareFrame(time, paused);
+        if (!paused) o.core.kernel.runFrame();
+    }
     // 현재 모드와 같은 보상 본체를 사용해 지정 Player에 SP를 가산한다.
     #addMoney(owner, amount) {
         const o = this.#live(); o.rewardState.fixedSpA = o.core.ownerMode.fort; o.rewardState.fixedSpB = Boolean(o.globals.editor);
