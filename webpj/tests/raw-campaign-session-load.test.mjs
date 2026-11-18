@@ -24,6 +24,9 @@ import { ClientCoreDataGlobals } from '../www/core/client-core-data-globals.js';
 import { ClientSubscriberGlobals } from '../www/core/client-subscriber-globals.js';
 import { captureMissionFortZone, createMissionFortLoadRequest, writeMissionFortRequest } from '../www/core/mission-fort-request.js';
 import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
+import { RawCampaignMissionStartBindings } from '../www/core/raw-campaign-mission-start-bindings.js';
+import { createMissionFrameGateState } from '../www/core/raw-mission-frame-gate.js';
+import { createMissionStartState } from '../www/core/raw-mission-start.js';
 import { MissionScript } from '../www/core/mission-script.js';
 import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
@@ -226,6 +229,42 @@ test('CampaignSession: GuardMyBack과 DissolvedAlliance 실제 Fort 로그인', 
             const received = s.localConnectionPackets(); assert.equal(received[0], 0x27, name); assert.equal(received.at(-1), 0x6e, name);
             assert.ok(received.includes(0x29) && received.includes(0x28) && received.includes(0x67), name);
         } finally { s.dispose(); }
+    }
+});
+
+// 실제 GuardMyBack 대본·Fort·로그인에서 같은 Session의 시작 자금과 AI를 설치한다.
+test('CampaignSession GuardMyBack: 실제 로그인 뒤 미션 시작과 동맹', () => {
+    const files = new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]);
+    const gameData = GameData.build({ files, language: 'english' });
+    gameData.configuration.assign('missionSpec="d/{local.1}.english"\nfortSpec="d/{local.1}.fort"\n[END]\n');
+    // 일반 미션과 데모는 각각 독립된 실제 Session에서 시작한다.
+    for (const demo of [0, 1]) {
+        const script = new MissionScript(gameData, 'GuardMyBack'), events = [], packets = [], allocations = [];
+        const input = parseFort(script.readFortImage(script.fortName()), createFortTypes(TypeTable.fromArchive(archive, decodeOriginalText)));
+        const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100.25, clock: () => 100250, log: () => {}, refresh: () => events.push('login'), playerUiBusy: () => false, playerNotice: () => {},
+            observePacket: (_sender, _boss, _local, packet) => { if (packet[1] === 0x3d) packets.push(packet.slice()); } };
+        const ai = { allocationBytes: (bytes) => bytes.fill(0xa7), defaultName: () => 'AI', participation: { addChat: () => events.push('chat'), clearChat: () => events.push('chat') } };
+        const { s } = scene({ missionName: script.fortName(), localLogin, ai }, input);
+        try {
+            s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+            assert.equal(s.localConnectionReady(), true); assert.equal(s.sp(1), 0);
+            const gate = createMissionFrameGateState(), state = createMissionStartState(); gate.demo = demo;
+            const effects = { settingsBytes: (owner, bytes) => { allocations.push(owner); bytes.fill(0xa7); }, gameSeconds: () => 123.5, refreshSp: () => events.push('sp'), refreshCommandGump: () => events.push('commands'),
+                resetCamera: () => events.push('camera'), randomGeysers: forbidden('예상하지 않은 간헐천') };
+            const start = new RawCampaignMissionStartBindings(s, script, gate, state, s.missionStartSettings(), s.missionAiSettings(), effects);
+            start.start();
+            assert.equal(gate.started, 1); assert.equal(state.sequence, 1); assert.equal(gate.startSeconds, 123.5); assert.equal(gate.demoEndSeconds, 483.5);
+            assert.equal(s.sp(1), 1200); assert.ok(s.findTechnology(1, 133));
+            assert.equal(s.missionStartSettings().shared.ordinaryGeysers.value, 1); assert.ok(allocations.length >= 3);
+            assert.ok(s.participation().brain(2)); assert.ok(s.participation().brain(3)); assert.ok(s.participation().brain(4));
+            assert.equal(Boolean(s.participation().brain(1)), demo !== 0); assert.deepEqual(events.filter((item) => ['sp', 'commands', 'camera'].includes(item)), ['sp', 'commands', 'camera']);
+            assert.equal(packets.length, 0); s.pumpLocalConnection(); assert.ok(packets.length > 0); assert.ok(events.includes('chat'));
+            // 지연 송신된 동맹 패킷은 실제 9바이트 형식이다.
+            for (const packet of packets) assert.deepEqual([...packet.subarray(0, 4)], [1, 0x3d, 9, 0]);
+            assert.equal(s.localConnectionReady(), true);
+            // AI가 참가한 각 Player의 자신에 대한 동맹 비트를 같은 장부에서 확인한다.
+            for (const owner of [2, 3, 4]) assert.equal(s.alliances()[owner * 9 + owner], 1);
+        } finally { s.dispose(); script.dispose(); }
     }
 });
 

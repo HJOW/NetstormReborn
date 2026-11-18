@@ -49,7 +49,7 @@ function makeStartScene(overrides = {}) {
     const aiCalls = [];
     const session = {
         core: () => ({ pool }),
-        priests: () => ({ priests: () => ({ priests: list }) }),
+        priests: () => ({ priests: { priests: list } }),
         localOwner: () => 1,
         playerKnown: () => 1,
         editor: () => 0,

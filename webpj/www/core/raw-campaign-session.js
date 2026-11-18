@@ -616,6 +616,24 @@ export class RawCampaignSession {
     alliances() { return this.#live().alliances; }
     // 현재 Player 참여와 AI 소유자 수명을 빌린다.
     participation() { return this.#live().participation; }
+    // 현재 Session의 사제 처리기와 같은 공유 목록을 빌린다.
+    priests() { return this.#live().priests; }
+    // 미션 시작이 현재 로컬 Player와 알려진 상태를 매번 읽는다.
+    localOwner() { return this.#live().playerState.battleOwner; }
+    // 로컬 Player의 확정 여부를 같은 현재 저장소에서 읽는다.
+    playerKnown() { return this.#live().playerState.playerKnown; }
+    // 현재 편집 모드를 같은 전역에서 읽는다.
+    editor() { return this.#live().globals.editor; }
+    // 미션 시작과 AI 설정이 쓰는 같은 장기 상태를 각각 빌린다.
+    missionStartSettings() { return this.#live().state.missionStart; }
+    // 미션 AI 생성이 쓰는 현재 설정 전역을 빌린다.
+    missionAiSettings() { return this.#live().state.missionAiSettings; }
+    // 같은 Player 기술 부모의 내용물을 원본 삭제 경로로 비운다.
+    clearTechnology(owner) { this.#live().technology.clear(owner); }
+    // 원본 이름 목록을 해석해 같은 Player 기술 부모에 추가한다.
+    addTechnology(owner, list) { this.#live().technology.addList(owner, list); }
+    // 현재 Player의 기술 내용을 같은 실제 부모에서 찾는다.
+    findTechnology(owner, type) { return this.#live().technology.find(owner, type); }
     // 같은 옵션 저장소의 숨김 Player 바이트를 빌린다.
     hiddenPlayers() { return this.#live().hiddenPlayers; }
     // 현재 87바이트 옵션의 유효한 위치를 조회한다.

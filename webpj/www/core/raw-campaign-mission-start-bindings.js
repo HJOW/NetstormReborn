@@ -5,7 +5,7 @@
 //   start.start() 는 `prepareWorld`(12차 스커미시만) → 원본 004c2b20 한 객체를 실행하고, 마지막 실제 효과가 성공한 뒤 같은 gate.started 만 쓴다.
 //   start.createAi(owner) 는 원본 004c2d40: 호출자가 채운 600BYTE 에 기본값 → 공통(-1) → owner 설정을 누적한 뒤 같은 Session 의 실제 AI 생성/초기 갱신을 실행한다.
 //   start.startBody() · start.gate() · start.findLivePriest(owner)(원본 004921f0, 포획 참여 fallback 과 구분) · start.testPlay() (항상 null, 아래 참고).
-// session 계약(실제 `RawCampaignSession` 이식 전의 최소 덕타입, 4-D 구획 D 에서 같은 이름으로 구현한다): { core() → { pool }, priests() → { priests() → 사제 목록 상태 }, localOwner(), playerKnown(), editor(),
+// session 계약: { core() → { pool }, priests() → { priests: 사제 목록 상태 }, localOwner(), playerKnown(), editor(),
 //   setSp(owner, float), clearTechnology(owner), addTechnology(owner, 목록 문자열), createAi(owner, 600BYTE) → 토큰 }.
 // script 계약: `MissionScript`(mission-script.js)의 { loaded, get(키) → 문자열|null, set(키, 값), sectionNames(접두) }.
 // AI 설정의 문자열 값은 원본 BYTE 를 문자 하나로 담은 문자열이다(키가 `name` 으로 끝나면 표시 부호화, 그 밖은 원문 부호화). 표시 부호화(`DisplayTextInput`, 6·13차 한국어/일본어)는 순서 10 몫이라
@@ -56,7 +56,7 @@ export class RawCampaignMissionStartBindings {
         this.#script = script;
         this.#gate = gate;
         this.#effects = effects;
-        this.#priests = new RawPriestLookup(session.core().pool, session.priests().priests());
+        this.#priests = new RawPriestLookup(session.core().pool, session.priests().priests);
         this.#settings = new RawMissionAiSettings(aiGlobals, this.#aiHooks());
         this.#start = new RawMissionStart(gate, state, globals, this.#startHooks());
         this.#start.bindCurrentInputs({ localOwner: () => session.localOwner(), playerKnown: () => session.playerKnown(), editor: () => session.editor() });
