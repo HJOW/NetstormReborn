@@ -6,7 +6,7 @@ import { executeDeveloperObjects } from '../www/core/raw-campaign-developer-obje
 // 같은 슬롯과 선택 효과를 기록하는 독립 Session 입력이다.
 function scene() {
     const calls = [], slots = Array.from({ length: 32 }, () => new Uint8Array(50));
-    const pool = { capacity: slots.length, slot: (sid) => slots[sid] }, owner = {
+    const pool = { edition: 'patch1078', capacity: slots.length, slot: (sid) => slots[sid], allocated: (sid) => slots[sid] }, owner = {
         core: { pool, processState: { server: true } },
         world: { unpop: (...args) => calls.push(['unpop', ...args]), repop: (...args) => calls.push(['repop', ...args]), destroy: (...args) => calls.push(['destroy', ...args]) },
         ownership: { setOwner: (...args) => calls.push(['owner', ...args]) },
@@ -36,4 +36,22 @@ test('개발자 객체: 클라이언트 강조와 조회 경계', () => {
     s.calls.length = 0; executeDeveloperObjects('de 2147483648', s.owner, s.trace); executeDeveloperObjects('dump', s.owner, s.trace);
     assert.deepEqual(s.calls, []); assert.throws(() => executeDeveloperObjects('dump 32', s.owner, s.trace), /SID 물리 범위/);
     assert.equal(executeDeveloperObjects('other', s.owner, s.trace), false);
+});
+
+// HP와 추상 상태는 Unpop 뒤 현재 슬롯에 쓰고 Repop을 호출한다.
+test('개발자 객체: HP·추상 상태와 피해 전달', () => {
+    const s = scene(), raw = s.slots[5];
+    s.owner.hp = { maxHitPoints: () => 100 };
+    s.owner.world.storage = { assertDisplay: (...args) => { s.calls.push(['assert', ...args]); raw[40] = 0xfe; } };
+    s.owner.developerDamage = (...args) => s.calls.push(['damage', ...args]);
+    executeDeveloperObjects('slhp 5 -33', s.owner, s.trace);
+    assert.equal(new DataView(raw.buffer).getInt32(26, true), -33);
+    assert.deepEqual(s.calls, [['unpop', 5, 0], ['repop', 5, 0], ['highlight', 2.5, 7.5], ['trace', 29, 'sid 5 changed to -33 hp.  (max for type = 100)\n']]);
+    s.calls.length = 0; executeDeveloperObjects('sa 5 1', s.owner, s.trace);
+    assert.equal(raw[40], 0xff);
+    assert.deepEqual(s.calls, [['unpop', 5, 0], ['assert', 'isVoid()', 'c:\\ns\\o\\squid.h', 0x282], ['repop', 5, 0]]);
+    s.calls.length = 0; executeDeveloperObjects('ad 5 -1', s.owner, s.trace);
+    assert.deepEqual(s.calls, [['damage', 5, 0xffffffff, 0, 0]]);
+    s.calls.length = 0; executeDeveloperObjects('ad -1 4', s.owner, s.trace); executeDeveloperObjects('slhp 5', s.owner, s.trace);
+    assert.deepEqual(s.calls, [['trace', 29, 'bad command\n'], ['trace', 29, 'bad command.\n']]);
 });

@@ -1,6 +1,7 @@
 // 31h의 객체 조회·소유자 변경·삭제를 현재 Session 월드에 전달한다.
 // 사용: executeDeveloperObjects(text, owner, trace) → 처리한 명령이면 true, 다른 명령이면 false.
 import { parseDeveloperCommand, readDeveloperIntegers } from './raw-campaign-developer-settings.js';
+import { setRawSquidHitPoints } from './raw-squid-word.js';
 
 // 원본 signed 입력을 현재 Pool의 물리 SID로 검사한다.
 function sid(pool, value) {
@@ -36,6 +37,29 @@ export function executeDeveloperObjects(text, owner, trace) {
             owner.world.unpop(target, 0); owner.ownership.setOwner(target, player >>> 0); owner.world.repop(target, 8); return true;
         }
         highlight(owner, target); log(`requested owner on ${values[0]} set to ${player}\n`); return true;
+    }
+    if (key === 'setlocalhitpoints' || key === 'slhp') {
+        const values = readDeveloperIntegers(rest, 2);
+        if (values.length !== 2) { log('bad command.\n'); return true; }
+        const target = sid(core.pool, values[0]);
+        owner.world.unpop(target, 0); setRawSquidHitPoints(core.pool, target, values[1]); owner.world.repop(target, 0); highlight(owner, target);
+        const raw = core.pool.slot(target), current = new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getInt32(26, true);
+        log(`sid ${values[0]} changed to ${current} hp.  (max for type = ${owner.hp.maxHitPoints(target)})\n`); return true;
+    }
+    if (key === 'setabstract' || key === 'sa') {
+        const values = readDeveloperIntegers(rest, 2);
+        if (values.length !== 2) { log('bad command.\n'); return true; }
+        const target = sid(core.pool, values[0]); owner.world.unpop(target, 0);
+        let raw = core.pool.allocated(target);
+        if (!(raw[11] & 4)) owner.world.storage.assertDisplay('isVoid()', 'c:\\ns\\o\\squid.h', 0x282);
+        raw = core.pool.allocated(target); raw[40] = (raw[40] ^ ((raw[40] ^ values[1]) & 1)) & 0xff;
+        owner.world.repop(target, 0); return true;
+    }
+    if (key === 'applydamage' || key === 'ad') {
+        const values = readDeveloperIntegers(rest, 2);
+        if (values.length !== 2 || values[0] < 0) { log('bad command\n'); return true; }
+        if (typeof owner.developerDamage !== 'function') throw new Error('개발자 피해의 실제 가상98 미연결');
+        owner.developerDamage(sid(core.pool, values[0]), values[1] >>> 0, 0, 0); return true;
     }
     if (key === 'destroy' || key === 'de') {
         if (!core.processState.server) return true;

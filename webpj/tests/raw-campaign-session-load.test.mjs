@@ -603,3 +603,16 @@ test('CampaignSession Tutorial 1: 개발자 빈 객체 삭제 패킷', () => {
         assert.equal(c.pool.slot(sid)[11] & 1, 1);
     } finally { s.dispose(); }
 });
+
+// 불완전한 개발자 HP 명령은 월드 변경 전에 같은 추적 장치로 오류를 알린다.
+test('CampaignSession Tutorial 1: 개발자 HP 입력 오류 패킷', () => {
+    const logs = [], { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); s.world().storage.bindGraphTrace((...args) => logs.push(args));
+        const text = 'slhp 5', packet = new Uint8Array(9 + text.length);
+        packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+        packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.deepEqual(logs, [[29, 'bad command.\n']]);
+    } finally { s.dispose(); }
+});
