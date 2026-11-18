@@ -350,3 +350,22 @@ test('CampaignSession Tutorial 1: 객체 검증 등록과 공유 상태', () => 
         assert.deepEqual(c.pool.slot(sid), view);
     } finally { s.dispose(); }
 });
+
+// 일반 Form 부모와 내용물 TYPE 0만 사용해 2dh가 같은 Pool의 정렬 부착에 도달하는지 확인한다.
+test('CampaignSession Tutorial 1: 일반 Form 내용물 수신', () => {
+    const { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        const c = s.core(), parent = c.factory.create(6);
+        assert.ok(parent >= c.pool.layout.serverFirst);
+        let form = c.pool.layout.serverFirst;
+        // 현재 비어 있는 서버 슬롯을 고른다.
+        while (form < c.pool.capacity && !(c.pool.slot(form)[11] & 1)) form += 1;
+        assert.ok(form < c.pool.capacity); const packet = new Uint8Array(18), view = new DataView(packet.buffer);
+        packet.set([1, 0x2d, 18, 0]); view.setUint16(4, form, true); view.setUint16(14, parent, true); packet[17] = 0x10;
+        assert.equal(dispatch.registration(0x2d).length, 18); assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        const child = c.pool.slot(form), childView = new DataView(child.buffer, child.byteOffset, child.byteLength), parentRaw = c.pool.slot(parent);
+        assert.equal(child[10], 6); assert.equal(child[11] & 8, 8); assert.equal(childView.getUint16(16, true), parent);
+        assert.equal(new DataView(parentRaw.buffer, parentRaw.byteOffset, parentRaw.byteLength).getUint16(6, true), form);
+    } finally { s.dispose(); }
+});

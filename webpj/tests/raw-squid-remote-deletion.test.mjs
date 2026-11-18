@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SidPool } from '../www/core/sid-pool.js';
-import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids } from '../www/core/raw-squid-remote-deletion.js';
+import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids, receiveContentSquid } from '../www/core/raw-squid-remote-deletion.js';
 
 // 단일 삭제는 예약 SID를 별도로 차단하지 않으며 범위 밖과 free만 건너뛴다.
 test('원격 삭제 53h: 현재 Pool과 flags 0', () => {
@@ -32,4 +32,50 @@ test('원격 삭제 62h: 송신 관찰기의 현재 count와 WORD 길이', () =>
     observeRemoteDeletedSquids(packet, false); assert.equal(view.getUint16(2, true), 0);
     observeRemoteDeletedSquids(packet, true, (...args) => { calls.push(args); view.setInt32(4, 3, true); });
     assert.deepEqual(calls, [['count != (int)-1', '\\Ns\\O\\_p_packets.cpp', 0x9ac]]); assert.equal(view.getUint16(2, true), 14);
+});
+
+// 일반 Form 자료의 현재 Pool 필드와 첫 Pop·부착 순서를 확인한다.
+test('내용물 2dh: 현재 필드·첫 Pop·부착', () => {
+    const pool = new SidPool(24000, { server: true }), sid = pool.allocate(), raw = pool.physical(sid), packet = new Uint8Array(18), view = new DataView(packet.buffer), calls = [];
+    packet.set([1, 0x2d, 18, 0]); view.setUint16(4, sid, true); view.setUint16(6, 0x1234, true);
+    view.setUint16(8, 11, true); view.setUint16(10, 22, true); view.setUint16(12, 33, true); view.setUint16(14, 44, true); packet[16] = 0x7a; packet[17] = 0x10;
+    receiveContentSquid(pool, packet, {
+        contentType: () => 6, take: (type, selected) => { calls.push(['take', type, selected]); return sid; },
+        word: (object, value) => { calls.push(['word', object, value]); }, firstPop: (object) => { calls.push(['firstPop', object]); return 0x40; },
+        attach: (object, parent, flags) => calls.push(['attach', object, parent, flags]),
+    });
+    const result = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+    assert.deepEqual([result.getUint16(18, true), result.getUint16(20, true), result.getUint16(24, true), raw[23], raw[11]], [11, 22, 33, 0x7a, 4]);
+    assert.deepEqual(calls, [['take', 6, sid], ['word', sid, 0x1234], ['firstPop', sid], ['attach', sid, 44, 0x48]]);
+});
+
+// 패킷에 첫 Pop 표식이 없어도 Take 전의 슬롯이 비어 있었다면 초기화한다.
+test('내용물 2dh: Take 전의 빈 상태에 따른 첫 Pop', () => {
+    const pool = new SidPool(24000, { server: true });
+    const sid = pool.layout.serverFirst;
+    const packet = Uint8Array.of(1, 0x2d, 18, 0, sid & 0xff, sid >>> 8, 0, 0, 0, 0, 0, 0, 0, 0, 44, 0, 0, 0);
+    let attachment;
+    receiveContentSquid(pool, packet, {
+        contentType: () => 6,
+        take: () => pool.allocate(),
+        word: () => {},
+        firstPop: (object) => {
+            assert.equal(object, sid);
+            assert.equal(pool.slot(object)[11], 4);
+            return 0x40;
+        },
+        attach: (...args) => { attachment = args; },
+    });
+    assert.deepEqual(attachment, [sid, 44, 0x48]);
+});
+
+// 선택한 실제 부착이 없으면 그 전의 필드 쓰기는 되돌리지 않는다.
+test('내용물 2dh: 부착 누락의 부분 효과', () => {
+    const pool = new SidPool(24000, { server: true }), sid = pool.allocate(), packet = new Uint8Array(18), view = new DataView(packet.buffer);
+    view.setUint16(4, sid, true); view.setUint16(8, 77, true); packet[17] = 0;
+    assert.throws(() => receiveContentSquid(pool, packet, {
+        contentType: () => 6, take: () => sid, word: () => {},
+        firstPop: () => assert.fail('이미 사용 중인 슬롯은 첫 Pop을 호출하지 않는다.'),
+    }), /선택된 실제 장치/);
+    assert.equal(new DataView(pool.physical(sid).buffer, pool.physical(sid).byteOffset).getUint16(18, true), 77);
 });

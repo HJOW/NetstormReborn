@@ -24,7 +24,11 @@ import { WindAviaryProcessFields, RawWindAviaryState } from './raw-wind-aviary-s
 import { SunAviaryProcess, SunAviaryProcessFields } from './raw-sun-aviary-process.js';
 import { RainAviaryProcess, RainAviaryProcessFields } from './raw-rain-aviary-process.js';
 import { readAviaryProcessData } from './raw-aviary-process-data.js';
-import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids } from './raw-squid-remote-deletion.js';
+import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids, receiveContentSquid } from './raw-squid-remote-deletion.js';
+import { setRawSquidWord } from './raw-squid-word.js';
+import { SquidFactory } from './squid-factory.js';
+import { isFormConstructorVtable } from './squid-forms.js';
+import { SQUID_FORM_VTABLES } from './squid-vtables.js';
 import { beginSquidVerification, receiveFreeSquidVerification } from './raw-squid-verification.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
@@ -376,7 +380,45 @@ export class RawCampaignSession {
         if (freePacket) receiveFreeSquidVerification(c.pool, packet, state, hooks); else beginSquidVerification(c.pool, packet, state, hooks);
     }
 
-    // Carrier 등록의 동맹부터 객체 검증 수신까지 확인한 앞부분을 원본 순서대로 등록한다.
+    // 2dh는 현재 내용물 TYPE과 실제 Form 가상 표에 맞는 부착 본체를 고른다. (2026-11-18 WB04-E731)
+    #receiveContent(packet) {
+        const o = this.#live(), c = o.core;
+        // 현재 슬롯의 가상 표를 선택할 때마다 다시 읽는다.
+        const table = (sid) => {
+            const raw = c.pool.slot(sid);
+            return new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getUint32(0, true);
+        };
+        receiveContentSquid(c.pool, packet, {
+            // 현재 파인더의 내용물 타입으로 같은 공장의 슬롯을 가져온다.
+            contentType: () => o.contentFinder.containedType,
+            take: (type, sid) => c.factory.take(type, sid),
+            // 공용 WORD 설정기가 선택한 경우에만 지면 변경을 알린다.
+            word: (sid, value) => setRawSquidWord(c.pool, sid, value, c.bridgeState.bridgeType, (current) => c.building.notifySurface(current)),
+            // Form은 기본 플래그 1을 반환하고 자산은 현재 슬롯의 추가 상태를 읽는다.
+            firstPop: (sid) => {
+                const current = table(sid);
+                if (isFormConstructorVtable(current)) return 1;
+                if (!SquidFactory.supportsConstructedVtable(current)) throw new Error('내용물 수신의 현재 가상30 미연결');
+                return c.factory.firstPopFlags(sid);
+            },
+            // 첫 Pop 처리 뒤 현재 가상 표에 맞는 부착 함수를 고른다.
+            attach: (sid, parent, flags) => {
+                const current = table(sid);
+                if (current === SQUID_FORM_VTABLES.content) {
+                    o.contentForms.attach(sid, parent, flags);
+                    return;
+                }
+                if (isFormConstructorVtable(current)) {
+                    c.factory.attachForm(sid, parent, flags);
+                    return;
+                }
+                if (!SquidFactory.supportsConstructedVtable(current)) throw new Error('내용물 수신의 현재 가상50 미연결');
+                o.world.attachBaseAsset(sid, parent, flags);
+            },
+        });
+    }
+
+    // Carrier 등록의 동맹부터 내용물 수신까지 확인한 앞부분을 원본 순서대로 등록한다.
     registerCarrierCommandPrefix(dispatch) {
         const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 Carrier 수신 등록');
         this.registerAllianceNegotiationCommands(dispatch);
@@ -427,6 +469,9 @@ export class RawCampaignSession {
             dispatch.observe(type, null); dispatch.version(type, 1, 0); dispatch.requireLength(type, length);
             dispatch.register(type, (_sender, _connection, packet) => this.#receiveVerification(packet, type === 0x4a));
         }
+        // 내용물 데이터는 현재 Form 가상 표에 따라 실제 부착을 선택한다. (2026-11-18 WB04-E731)
+        dispatch.observe(0x2d, null); dispatch.version(0x2d, 1, 0); dispatch.requireLength(0x2d, 18);
+        dispatch.register(0x2d, (_sender, _connection, packet) => this.#receiveContent(packet));
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }

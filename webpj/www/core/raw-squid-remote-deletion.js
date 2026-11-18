@@ -1,5 +1,6 @@
-// PATCH 53h/62h 원격 삭제와 62h 송신 관찰기이다(cpppj RawSquidMutationReceive.cpp).
+// PATCH 53h/62h 원격 삭제, 62h 송신 관찰기, 2dh 내용물 수신을 처리한다(cpppj RawSquidMutationReceive.cpp).
 // 사용: receiveRemoteDeletedSquid(pool, packet, destroy) 또는 receiveRemoteDeletedSquids(pool, packet, destroy), observeRemoteDeletedSquids(packet, sending, assertion).
+// 내용물은 receiveContentSquid(pool, packet, { contentType, take, word, firstPop, attach })로 실제 슬롯에 반영한다.
 
 // 선택한 효과만 호출 시점에 요구한다.
 function need(effect) { if (typeof effect !== 'function') throw new Error('객체 변경 수신의 선택된 실제 장치 미연결'); return effect; }
@@ -13,7 +14,7 @@ function count(packet) {
     if (!(packet instanceof Uint8Array) || packet.length < 8) throw new RangeError('원격 다중 삭제의 현재 count DWORD 물리 부족');
     return new DataView(packet.buffer, packet.byteOffset, packet.byteLength).getInt32(4, true);
 }
-// 세 경로가 같은 PATCH Pool을 사용한다.
+// 두 원격 삭제 수신은 같은 PATCH Pool을 사용한다.
 function requirePool(pool) { if (pool?.edition !== 'patch1078') throw new TypeError('원격 삭제의 PATCH 판본 불일치'); }
 
 // 53h는 SID 0과 물리 상한 밖만 건너뛰고, 현재 슬롯이 free가 아니면 flags 0으로 삭제한다.
@@ -40,4 +41,29 @@ export function observeRemoteDeletedSquids(packet, sending, assertion) {
     if (!sending) return;
     if (count(packet) === -1) need(assertion)('count != (int)-1', '\\Ns\\O\\_p_packets.cpp', 0x9ac);
     const length = ((word(packet, 4) + 4) * 2) & 0xffff; packet[2] = length & 0xff; packet[3] = length >>> 8;
+}
+
+// 2dh 내용물 수신은 Take 전 상태를 기억하고 현재 Pool의 필드·첫 Pop·부착을 원본 순서로 처리한다. (2026-11-18 WB04-E731)
+export function receiveContentSquid(pool, packet, hooks) {
+    if (pool?.edition !== 'patch1078' || !(packet instanceof Uint8Array) || packet.length < 18) throw new TypeError('내용물 수신의 PATCH18BYTE 계약');
+    const incoming = word(packet, 4);
+    const oldState = pool.slot(incoming)[11];
+    const object = need(hooks.take)(need(hooks.contentType)(), incoming);
+    need(hooks.word)(object, word(packet, 6));
+
+    const raw = pool.physical(object);
+    const view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+    view.setUint16(18, word(packet, 8), true);
+    view.setUint16(20, word(packet, 10), true);
+    view.setUint16(24, word(packet, 12), true);
+    raw[23] = packet[16];
+
+    const received = packet[17];
+    raw[11] = received | 4;
+    let flags = 8;
+    if ((received & 0x10) || (oldState & 1)) {
+        flags = (need(hooks.firstPop)(object) | 8) >>> 0;
+        raw[11] &= 0xef;
+    }
+    need(hooks.attach)(object, word(packet, 14), flags);
 }
