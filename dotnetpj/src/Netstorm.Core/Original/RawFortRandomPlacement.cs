@@ -1,5 +1,7 @@
 namespace Netstorm.Core.Original;
 
+using Netstorm.Core.Simulation;
+
 /// <summary>
 /// 배치 파이프라인 조회에 쓰는 원본 쿼리다
 /// (cpppj <c>o/RawCanonPlacement.h</c>의 <c>CanonPlacementQuery</c>).
@@ -492,6 +494,35 @@ public sealed class RawFortRandomPlacement
             throw new ArgumentException("Fort 종료·단일 배치 SID 풀이 다릅니다");
         }
         hooks.Place = (random, request) => placement.Place(random, request);
+        return hooks;
+    }
+
+    /// <summary>이미 복원한 전체 공간 검사와 실제 공장/HP 조회를 조립한다.</summary>
+    /// <param name="pool">검사할 풀이다. 네 몸체가 같은 풀을 써야 한다.</param>
+    /// <param name="placement">같은 월드의 실제 배치 파이프라인이다.</param>
+    /// <param name="factory">같은 월드의 실제 공장이다.</param>
+    /// <param name="hp">같은 월드의 실제 HP 조회다.</param>
+    /// <param name="hooks">물을 훅 묶음이다. 배치·생성·HP 다섯 갈고리만 실제 구현으로 바꾼다.</param>
+    /// <returns>실제 검사가 연결된 훅 묶음이다.</returns>
+    /// <exception cref="ArgumentException">Fort 배치 어댑터 pool 불일치.</exception>
+    /// <remarks>2026-11-18 0.612에서 R4-2 농지 잔여의 MayPlace 실결선용으로 추가했다. 근거: cpppj/src/o/RawFortRandomPlacement.cpp 130행.</remarks>
+    public static FortRandomPlacementHooks MakeFortRandomPlacementHooks(RawSidPool pool, RawCanonPlacementPipeline placement, RawSquidFactory factory, RawSquidReward hp, FortRandomPlacementHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(pool);
+        ArgumentNullException.ThrowIfNull(placement);
+        ArgumentNullException.ThrowIfNull(factory);
+        ArgumentNullException.ThrowIfNull(hp);
+        ArgumentNullException.ThrowIfNull(hooks);
+        if (!ReferenceEquals(pool, placement.Pool) || !ReferenceEquals(pool, factory.Pool) || !ReferenceEquals(pool, hp.Pool))
+        {
+            throw new ArgumentException("Fort 배치 어댑터 pool 불일치");
+        }
+
+        hooks.MayPlace = query => placement.MayPlace(query);
+        hooks.Create = (type, flags) => factory.Create(type, (SidAllocation)flags);
+        hooks.Construct = (sid, type) => factory.Construct(type, sid);
+        hooks.HasHitPoints = hp.HasHitPoints;
+        hooks.TypeHitPoints = hp.TypeHitPoints;
         return hooks;
     }
 
