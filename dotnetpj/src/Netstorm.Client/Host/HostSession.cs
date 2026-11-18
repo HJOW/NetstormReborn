@@ -1443,6 +1443,12 @@ public sealed partial class HostSession
             TerrainPopObject(sid, x, y, flags);
             return true;
         }
+        // 공장 본체가 연결된 Factory/wrapper는 지형 분배 Pop으로 등록한다. 공통 깊이는 공장 몸체가 한 번 줄인다.
+        if (_factoryPostPop is not null && _factoryPostPop.Handles(sid))
+        {
+            TerrainPopObject(sid, x, y, flags);
+            return true;
+        }
         // 전용 파생 후처리가 필요한 종류는 R6 본체를 기다린다.
         if (RawPostPop.RequiresDedicatedPostPop(Pool, sid))
         {
@@ -1846,6 +1852,14 @@ public sealed partial class HostSession
     /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. 지형 분배 Pop의 자산 갈고리로 등록한다.</remarks>
     private RawAssetPostPop? _vortexAssetPostPop;
 
+    /// <summary>공장 정기 트리거가 쓰는 세션 소유 공장 본체다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.625에서 R4-2 공장 정기 트리거용으로 추가했다. 지형 분배 Pop의 공장 갈고리로 등록하며 세션 공유 목록·운반체·프레임을 빌린다.</remarks>
+    private RawFactoryPostPop? _factoryPostPop;
+
+    /// <summary>공장 중복 삭제 직전의 원본 경고 기록이다. 세션 연결 뒤에만 쌓이며 덤프에는 나가지 않는다.</summary>
+    /// <remarks>2026-11-19 0.625에서 R4-2 공장 정기 트리거용으로 추가했다. 원본 로그를 L1에서 대조할 때 쓴다.</remarks>
+    private readonly List<string> _factoryWarnings = [];
+
     /// <summary>사원 전용 후처리가 요청한 충격음 횟수다. Generate 범위의 실제 재생은 R6 음향에서 잇는다.</summary>
     /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. L2는 음소거이므로 덤프에 영향을 주지 않는다.</remarks>
     private uint _vortexAssetSoundRequests;
@@ -2110,6 +2124,51 @@ public sealed partial class HostSession
         _vortexAssetCarrier = carrier;
         _vortexAssetPostPop = body;
         terrainPostPop.SetAssetPostPop(body);
+        BuildFactoryPostPopDevices(types);
+    }
+
+    /// <summary>공장 정기 트리거 본체를 세션에 연결하고 지형 분배 Pop의 공장 갈고리로 등록한다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">공장 후처리의 지형 분배·운반체·프레임·프로세스·상태가 미연결이다.</exception>
+    /// <exception cref="ArgumentException">공장 후처리의 TYPE·풀 불일치다.</exception>
+    /// <remarks>2026-11-19 0.625에서 R4-2 공장 정기 트리거용으로 추가했다. 근거: cpppj RawCampaignAssetBindings.cpp 73·81~88행의 Factory 조립과 182행의 SetFactoryPostPop 등록이다. 정기 예약은 실제 프로세스에 부착하고 중복 경고만 기록한다.</remarks>
+    private void BuildFactoryPostPopDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_factoryPostPop is not null)
+        {
+            throw new InvalidOperationException("공장 후처리 장치 중복 연결");
+        }
+
+        if (!ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("공장 후처리 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        RawPostPop terrainPostPop = _terrainPostPop ?? throw new InvalidOperationException("공장 후처리 지형 분배 미연결");
+        RawCarrierPostPop carrier = _vortexAssetCarrier ?? throw new InvalidOperationException("공장 후처리 운반체 미연결");
+        AssetPostPopState state = _vortexAssetState ?? throw new InvalidOperationException("공장 후처리 공유 상태 미연결");
+        SquidFrame frames = _terrainFrames ?? throw new InvalidOperationException("공장 후처리 프레임 미연결");
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("공장 후처리 정기 프로세스 미연결");
+        RawRegionOwnership ownership = _regionOwnership ?? throw new InvalidOperationException("공장 아웃포스트 소유권 미연결");
+        RawSquidHash hash = _terrainHash ?? throw new InvalidOperationException("공장 중복 검사 해시 미연결");
+        // 모든 공장 갈고리를 실제 세션 장치에 연결하는 반복문이다. 도달하지 않은 가상80·상태 장치는 기본 getter를 쓴다.
+        var hooks = new FactoryPostPopHooks
+        {
+            ReserveRegular = static () => true,
+            AddRegular = (sid, ev, payload) =>
+            {
+                processes.AddRegular(sid, ev, payload);
+            },
+            WarnDuplicate = (sid, x, y) => _factoryWarnings.Add($"factory-warning sid={sid} x={x} y={y}"),
+            Destroy = (_, _) => throw new InvalidOperationException("공장 swept 삭제 미연결(R6)"),
+            RegionOwnership = (x, y) => ownership.Update(x, y),
+            UpdateState = sid => _terrainDisplay!.Update(Pool.Slot(sid)),
+        };
+        hooks = RawFactoryPostPop.MakeFactoryPostPopHooks(Pool, frames, hooks);
+        var body = new RawFactoryPostPop(Pool, hash, types, WorldFrames, terrainPostPop, carrier, state, hooks);
+        _factoryPostPop = body;
+        terrainPostPop.SetFactoryPostPop(body);
     }
 
     /// <summary>신전 슬롯의 타입 DWORD를 읽는다. 프레임 RUN은 실제 표에서, 충격음 토큰은 0으로 둔다.</summary>
@@ -2147,6 +2206,16 @@ public sealed partial class HostSession
     /// <returns>지형 분배 Pop의 자산 갈고리로 등록한 본체다.</returns>
     /// <remarks>2026-11-19 0.622에서 R4-2 사원 Pop 파생용으로 추가했다. 신전 종류만 분배가 열리며 다른 전용 파생은 R6에서 잇는다.</remarks>
     public RawAssetPostPop RegionVortexPostPop => _vortexAssetPostPop ?? throw new InvalidOperationException("사원 자산 후처리 미연결");
+
+    /// <summary>공장 정기 트리거 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>지형 분배 Pop의 공장 갈고리로 등록한 본체다.</returns>
+    /// <remarks>2026-11-19 0.625에서 R4-2 공장 정기 트리거용으로 추가했다. 일반 Factory와 아웃포스트 wrapper를 모두 처리한다.</remarks>
+    public RawFactoryPostPop FactoryPostPop => _factoryPostPop ?? throw new InvalidOperationException("공장 후처리 미연결");
+
+    /// <summary>공장 중복 경고 기록을 빌려준다. 연결 뒤에도 비어 있을 수 있다.</summary>
+    /// <returns>중복 워크샾 삭제 직전의 원본 경고 기록이다.</returns>
+    /// <remarks>2026-11-19 0.625에서 R4-2 공장 정기 트리거용으로 추가했다. L1에서 호출 순서와 좌표를 대조할 때 쓴다.</remarks>
+    public IReadOnlyList<string> FactoryWarnings => _factoryWarnings;
 
     /// <summary>사원 전용 후처리가 요청한 충격음 횟수다.</summary>
     /// <returns>연결 뒤 누적 횟수다. 실제 재생이 아니라 요청만 센다.</returns>
