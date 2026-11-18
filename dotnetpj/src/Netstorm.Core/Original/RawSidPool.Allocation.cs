@@ -46,7 +46,7 @@ public sealed partial class RawSidPool
     }
 
     /// <summary>DWORD를 WORD로 좁히기 전에 현재 물리 범위만 확인한다. 진단이나 삭제가 재확보한 현재 풀을 매번 읽는다.</summary>
-    private int AllocationOffset(uint sid) => sid < Capacity ? (int)sid * Stride : throw new ArgumentOutOfRangeException(nameof(sid), sid, "SID 할당의 실제 물리 범위");
+    private int AllocationOffset(uint sid) => sid < Capacity ? (int)sid * SlotStride : throw new ArgumentOutOfRangeException(nameof(sid), sid, "SID 할당의 실제 물리 범위");
 
     /// <summary>현재 슬롯의 상태 BYTE다. 예약/free 여부에 별도 관문을 추가하지 않는다.</summary>
     private byte AllocationState(uint sid) => _bytes[AllocationOffset(sid) + StateOffset];
@@ -59,9 +59,9 @@ public sealed partial class RawSidPool
         uint sid;
         if ((flags & SidAllocation.Predictable) != 0)
         {
-            int head = PredictableFirst * Stride;
+            int head = PredictableFirstValue * SlotStride;
             if ((_bytes[head + StateOffset] & FreeBit) == 0) AssertAllocation("predictableHead->isFree()", 0xf0);
-            sid = unchecked((uint)PredictableFirst + PredictableCursor);
+            sid = unchecked((uint)PredictableFirstValue + PredictableCursor);
             if (unchecked((int)sid) >= Capacity) AssertAllocation("sid < numSquids", 0xf2);
             if ((AllocationState(sid) & FreeBit) == 0) AssertAllocation("me->isFree()", 0xf4);
             if (IsServer)
@@ -70,7 +70,7 @@ public sealed partial class RawSidPool
                 uint next = (uint)ReadNext(AllocationOffset(sid));
                 if ((AllocationState(next) & FreeBit) == 0) AssertAllocation("checkMe->isFree()", 0xfa);
                 ushort selected = (ushort)ReadNext(AllocationOffset(sid));
-                if (selected == PredictableFirst) AssertAllocation("n != getSid()", 0x123, @"c:\ns\o\squid.h");
+                if (selected == PredictableFirstValue) AssertAllocation("n != getSid()", 0x123, @"c:\ns\o\squid.h");
                 WriteNext(head, selected);
             }
         }
@@ -111,7 +111,7 @@ public sealed partial class RawSidPool
             WriteNext(Heads[list], next);
         }
         int offset = AllocationOffset(sid);
-        Array.Clear(_bytes, offset, Stride); _bytes[offset + StateOffset] = VoidBit;
+        Array.Clear(_bytes, offset, SlotStride); _bytes[offset + StateOffset] = VoidBit;
         if ((flags & SidAllocation.Predictable) != 0) PredictableCursor = unchecked(PredictableCursor + 1);
         FreeCount = unchecked(FreeCount - 1);
         return (ushort)sid;

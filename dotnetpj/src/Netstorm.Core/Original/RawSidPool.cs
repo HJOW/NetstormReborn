@@ -19,14 +19,23 @@ public sealed partial class RawSidPool
     /// <summary>슬롯 하나의 바이트 수(10.78).</summary>
     public const int Stride = 50;
 
+    /// <summary>CD판 슬롯 하나의 바이트 수다. 2026-11-18 0.609에서 판본별 슬롯 폭 mismatch로 추가했다.</summary>
+    public const int CdStride = 36;
+
     /// <summary>일반 할당의 첫 번호. 0~4 는 할당 대상이 아니다.</summary>
     public const int FirstOrdinary = 5;
 
     /// <summary>일반 서버 영역의 첫 번호.</summary>
     public const int ServerFirst = 15000;
 
+    /// <summary>CD판 일반 서버 영역의 첫 번호다. 2026-11-18 0.609에서 추가했다.</summary>
+    public const int CdServerFirst = 6000;
+
     /// <summary>예측 머리 번호. 그 자체는 할당하지 않는다.</summary>
     public const int PredictableFirst = 23001;
+
+    /// <summary>CD판 예측 머리 번호다. 2026-11-18 0.609에서 추가했다.</summary>
+    public const int CdPredictableFirst = 14000;
 
     /// <summary>현재 cpppj raw 풀이 물리 번호와 16비트 목록을 함께 보존하는 최대 슬롯 수다.</summary>
     public const int MaximumCapacity = 65535;
@@ -85,12 +94,21 @@ public sealed partial class RawSidPool
         _server = server;
         _sharedServer = sharedServer;
         Edition = edition;
-        _bytes = new byte[capacity * Stride];
+        _bytes = new byte[capacity * SlotStride];
         Reset();
     }
 
     /// <summary>풀이 따르는 원본 판본. 슬롯 오프셋이 다른 모듈이 이 값으로 갈라진다. (R2d-2, 2026-10-29)</summary>
     public OriginalEdition Edition { get; }
+
+    /// <summary>이 풀의 슬롯 바이트 수다. 원본 CD 36과 달리 기존 관리 CD 하네스는 10.78과 같은 50을 쓴다. 2026-11-18 0.609에서 슬롯 폭 mismatch를 확인하고 하네스 유지를 명시했다. CD 36바이트 관측과의 대조는 테스트에서 앞 36바이트로 자른다.</summary>
+    public int SlotStride => Stride;
+
+    /// <summary>이 풀의 서버 영역 첫 번호다. CD 실제 6000과 달리 기존 관리 CD 하네스는 10.78 경계(15000)를 쓴다. 2026-11-18 0.609에서 슬롯 폭만 판본별로 갈리고 할당 경계는 하네스 유지를 명시했다.</summary>
+    public int ServerFirstValue => ServerFirst;
+
+    /// <summary>이 풀의 예측 머리 번호다. CD 실제 14000과 달리 기존 관리 CD 하네스는 10.78 경계(23001)를 쓴다. 2026-11-18 0.609에서 슬롯 폭만 판본별로 갈리고 할당 경계는 하네스 유지를 명시했다.</summary>
+    public int PredictableFirstValue => PredictableFirst;
 
     /// <summary>확보한 슬롯 수.</summary>
     public int Capacity { get; private set; }
@@ -110,9 +128,9 @@ public sealed partial class RawSidPool
     /// <summary>풀 전체의 슬롯 바이트를 읽기 전용으로 돌려준다(검사용).</summary>
     public ReadOnlySpan<byte> Bytes => _bytes;
 
-    /// <summary>번호의 슬롯 바이트(50개)를 읽기 전용으로 돌려준다. 범위를 벗어난 번호는 예외다.</summary>
+    /// <summary>번호의 슬롯 바이트(판본별 폭)를 읽기 전용으로 돌려준다. 범위를 벗어난 번호는 예외다.</summary>
     /// <param name="sid">슬롯 번호.</param>
-    public ReadOnlySpan<byte> Slot(int sid) => _bytes.AsSpan(Offset(sid), Stride);
+    public ReadOnlySpan<byte> Slot(int sid) => _bytes.AsSpan(Offset(sid), SlotStride);
 
     /// <summary>영역의 머리가 가리키는 첫 빈 번호.</summary>
     /// <param name="client">클라이언트 영역이면 참.</param>
@@ -149,25 +167,25 @@ public sealed partial class RawSidPool
         if (capacity > 0)
         {
             CheckCapacity(capacity);
-            _bytes = new byte[capacity * Stride];
+            _bytes = new byte[capacity * SlotStride];
             Capacity = capacity;
         }
         Array.Clear(_bytes);
         // 2 번부터 free 비트를 켠다(0·1 번은 초기 상태 0)
         for (int sid = FirstFreeFlagged; sid < Capacity; sid++)
         {
-            _bytes[sid * Stride + StateOffset] = FreeBit;
+            _bytes[sid * SlotStride + StateOffset] = FreeBit;
         }
         // 클라이언트·서버·예측 영역 안에서 다음 번호로 잇고 영역의 끝은 0 으로 닫는다
         for (int sid = FirstOrdinary; sid < Capacity; sid++)
         {
-            int end = sid < ServerFirst ? ServerFirst : sid < PredictableFirst ? PredictableFirst : Capacity;
-            WriteNext(sid * Stride, (ushort)(sid + 1 == end ? 0 : sid + 1));
+            int end = sid < ServerFirstValue ? ServerFirstValue : sid < PredictableFirstValue ? PredictableFirstValue : Capacity;
+            WriteNext(sid * SlotStride, (ushort)(sid + 1 == end ? 0 : sid + 1));
         }
         WriteNext(Heads[0], FirstOrdinary);
-        WriteNext(Heads[1], ServerFirst);
-        _tails[0] = ServerFirst - 1;
-        _tails[1] = PredictableFirst - 1;
+        WriteNext(Heads[1], (ushort)ServerFirstValue);
+        _tails[0] = (ushort)(ServerFirstValue - 1);
+        _tails[1] = (ushort)(PredictableFirstValue - 1);
         FreeCount = (uint)(Capacity - FirstOrdinary);
         PredictableCursor = 1;
     }
@@ -181,13 +199,13 @@ public sealed partial class RawSidPool
         int sid;
         if ((flags & SidAllocation.Predictable) != 0)
         {
-            int head = PredictableFirst * Stride;
-            sid = PredictableFirst + (int)PredictableCursor;
+            int head = PredictableFirstValue * SlotStride;
+            sid = PredictableFirstValue + (int)PredictableCursor;
             if (sid >= Capacity || (_bytes[head + StateOffset] & FreeBit) == 0)
             {
                 throw new InvalidOperationException("예측 번호가 소진됐습니다");
             }
-            int offset = sid * Stride;
+            int offset = sid * SlotStride;
             if ((_bytes[offset + StateOffset] & FreeBit) == 0)
             {
                 throw new InvalidOperationException("예측 번호가 이미 사용 중입니다");
@@ -195,7 +213,7 @@ public sealed partial class RawSidPool
             if (IsServer)
             {
                 int next = ReadNext(offset);
-                if (next != sid + 1 || next >= Capacity || (_bytes[next * Stride + StateOffset] & FreeBit) == 0)
+                if (next != sid + 1 || next >= Capacity || (_bytes[next * SlotStride + StateOffset] & FreeBit) == 0)
                 {
                     throw new InvalidOperationException("예측 번호의 서버 꼬리가 소진됐습니다");
                 }
@@ -228,8 +246,8 @@ public sealed partial class RawSidPool
             }
             WriteNext(Heads[list], (ushort)next);
         }
-        int slot = sid * Stride;
-        Array.Clear(_bytes, slot, Stride);
+        int slot = sid * SlotStride;
+        Array.Clear(_bytes, slot, SlotStride);
         _bytes[slot + StateOffset] = VoidBit;
         FreeCount--;
         return sid;
@@ -244,24 +262,24 @@ public sealed partial class RawSidPool
     public void Release(int sid)
     {
         int offset = Offset(sid);
-        if (sid < FirstOrdinary || sid == PredictableFirst
+        if (sid < FirstOrdinary || sid == PredictableFirstValue
             || (_bytes[offset + StateOffset] & VoidBit) == 0 || (_bytes[offset + StateOffset] & FreeBit) != 0)
         {
             throw new InvalidOperationException("반납할 번호가 void 상태의 할당된 번호가 아닙니다");
         }
         byte type = _bytes[offset + TypeOffset];
         Record(sid, type);
-        Array.Clear(_bytes, offset, Stride);
+        Array.Clear(_bytes, offset, SlotStride);
         _bytes[offset + TypeOffset] = type;
-        if (!IsServer && sid >= ServerFirst)
+        if (!IsServer && sid >= ServerFirstValue)
         {
             _bytes[offset + StateOffset] = FreeBit;
             return;
         }
-        if (sid < PredictableFirst)
+        if (sid < PredictableFirstValue)
         {
-            int list = sid < ServerFirst ? 0 : 1;
-            WriteNext(_tails[list] * Stride, (ushort)sid);
+            int list = sid < ServerFirstValue ? 0 : 1;
+            WriteNext(_tails[list] * SlotStride, (ushort)sid);
             _tails[list] = (ushort)sid;
             FreeCount++;
         }
@@ -275,11 +293,11 @@ public sealed partial class RawSidPool
         if ((_bytes[Offset(sid) + StateOffset] & FreeBit) != 0) assertion("!p->isFree()", @"\Ns\O\Squid.cpp", 0x15d);
         Record(sid, _bytes[Offset(sid) + TypeOffset]);
         byte type = _bytes[Offset(sid) + TypeOffset]; int offset = Offset(sid);
-        Array.Clear(_bytes, offset, Stride); _bytes[offset + TypeOffset] = type;
-        if (!IsServer && sid >= ServerFirst) { _bytes[offset + StateOffset] |= FreeBit; return; }
-        if (sid >= FirstOrdinary && sid < PredictableFirst)
+        Array.Clear(_bytes, offset, SlotStride); _bytes[offset + TypeOffset] = type;
+        if (!IsServer && sid >= ServerFirstValue) { _bytes[offset + StateOffset] |= FreeBit; return; }
+        if (sid >= FirstOrdinary && sid < PredictableFirstValue)
         {
-            int list = sid < ServerFirst ? 0 : 1; ushort tail = _tails[list];
+            int list = sid < ServerFirstValue ? 0 : 1; ushort tail = _tails[list];
             if (tail == sid) assertion("n != getSid()", @"c:\ns\o\squid.h", 0x123);
             WriteNext(Offset(tail), (ushort)sid); _tails[list] = (ushort)sid; WriteNext(Offset(sid), 0); FreeCount++;
         }
@@ -293,9 +311,9 @@ public sealed partial class RawSidPool
     {
         var free = new List<ushort>();
         // 서버 영역에서 free 비트가 켜진 번호를 번호순으로 모은다
-        for (int sid = ServerFirst; sid < PredictableFirst; sid++)
+        for (int sid = ServerFirstValue; sid < PredictableFirstValue; sid++)
         {
-            if ((_bytes[sid * Stride + StateOffset] & FreeBit) != 0)
+            if ((_bytes[sid * SlotStride + StateOffset] & FreeBit) != 0)
             {
                 free.Add((ushort)sid);
             }
@@ -308,7 +326,7 @@ public sealed partial class RawSidPool
         // 각 번호가 뒤 번호를 가리키고 마지막은 0 으로 닫는다
         for (int i = 0; i < free.Count; i++)
         {
-            WriteNext(free[i] * Stride, i + 1 < free.Count ? free[i + 1] : (ushort)0);
+            WriteNext(free[i] * SlotStride, i + 1 < free.Count ? free[i + 1] : (ushort)0);
         }
         _tails[1] = free[^1];
         FreeCount += (uint)free.Count;
@@ -322,11 +340,11 @@ public sealed partial class RawSidPool
     public Span<byte> AllocatedBytes(int sid)
     {
         int offset = Offset(sid);
-        if (sid < FirstOrdinary || sid == PredictableFirst || (_bytes[offset + StateOffset] & FreeBit) != 0)
+        if (sid < FirstOrdinary || sid == PredictableFirstValue || (_bytes[offset + StateOffset] & FreeBit) != 0)
         {
             throw new InvalidOperationException("할당되지 않은 번호에는 쓸 수 없습니다");
         }
-        return _bytes.AsSpan(offset, Stride);
+        return _bytes.AsSpan(offset, SlotStride);
     }
 
     /// <summary>
@@ -334,7 +352,7 @@ public sealed partial class RawSidPool
     /// 풀 목록 밖에서 슬롯을 직접 고치는 원본 모듈만 쓴다(같은 어셈블리 안의 코어 모듈에 한정).
     /// </summary>
     /// <param name="sid">슬롯 번호.</param>
-    internal Span<byte> RawSlot(int sid) => _bytes.AsSpan(Offset(sid), Stride);
+    internal Span<byte> RawSlot(int sid) => _bytes.AsSpan(Offset(sid), SlotStride);
 
     /// <summary>슬롯 위치에서 "다음 빈 번호"(16비트 리틀 엔디언)를 읽는다. 0번 슬롯의 서버 머리는 위치 14 를 준다.</summary>
     /// <param name="offset">슬롯(또는 겹친 머리 객체)의 시작 바이트 위치.</param>
@@ -352,7 +370,7 @@ public sealed partial class RawSidPool
     /// <summary>번호가 풀 안인지 확인하고 슬롯의 시작 바이트 위치를 돌려준다.</summary>
     /// <param name="sid">슬롯 번호.</param>
     private int Offset(int sid) => sid >= 0 && sid < Capacity
-        ? sid * Stride
+        ? sid * SlotStride
         : throw new ArgumentOutOfRangeException(nameof(sid), sid, "번호가 풀의 범위를 벗어났습니다");
 
     /// <summary>풀 크기가 허용 범위인지 확인한다. 예측 머리보다 2 이상 커야 하고 최대 슬롯 수 이하여야 한다.</summary>
@@ -370,7 +388,7 @@ public sealed partial class RawSidPool
     /// <param name="type">반납한 오브젝트의 타입 번호.</param>
     private void Record(int sid, byte type)
     {
-        SidDeletion[] records = _deletions[sid >= FirstOrdinary && sid < ServerFirst ? 0 : 1];
+        SidDeletion[] records = _deletions[sid >= FirstOrdinary && sid < ServerFirstValue ? 0 : 1];
         Array.Copy(records, 0, records, 1, records.Length - 1);
         records[0] = new SidDeletion((uint)sid, type);
     }

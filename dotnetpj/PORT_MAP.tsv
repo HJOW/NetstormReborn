@@ -1019,3 +1019,7 @@ cpppj/src/o/RawFencePostPop.cpp	Netstorm.Core/Original/RawFencePostPop.cs	bd2941
 cpppj/src/o/RawFenceRegular.h	Netstorm.Core/Original/RawFenceRegular.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawFenceRegular.cpp	Netstorm.Core/Original/RawFenceRegular.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.FencePostPop.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawCanonPlacementPermission.h	Netstorm.Core/Original/RawCanonPlacementPermission.cs	d541ed4dae3bc91226f609b1b955b2925dece0ec	L1
+cpppj/src/o/RawCanonPlacementPermission.cpp	Netstorm.Core/Original/RawCanonPlacementPermission.cs	d541ed4dae3bc91226f609b1b955b2925dece0ec	L1
+cpppj/src/o/RawCanonPlacementRelations.h	Netstorm.Core/Original/RawCanonPlacementRelations.cs	d541ed4dae3bc91226f609b1b955b2925dece0ec	L1
+cpppj/src/o/RawCanonPlacementRelations.cpp	Netstorm.Core/Original/RawCanonPlacementRelations.cs	d541ed4dae3bc91226f609b1b955b2925dece0ec	L1

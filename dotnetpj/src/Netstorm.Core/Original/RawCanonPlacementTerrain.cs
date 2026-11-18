@@ -408,4 +408,51 @@ public sealed class RawCanonPlacementTerrain
     /// <param name="value">바이트 값이다.</param>
     /// <returns>부호 확장한 비트값이다.</returns>
     private static uint SignedByte(byte value) => unchecked((uint)(int)(sbyte)value);
+
+    /// <summary>
+    /// 후보·주변 지오메트리를 실제 지형 몸체에 연결한다. R6-3 캐논 배치 요구사항 전용 결선이다.
+    /// </summary>
+    /// <param name="pool">같은 풀의 실제 Player 조회다. 다른 풀의 몸체와 섞으면 거부한다.</param>
+    /// <param name="terrain">같은 풀의 실제 지형 몸체다.</param>
+    /// <param name="query">묶을 배치 조회다. Begin/Finish가 같은 입력을 쓴다.</param>
+    /// <returns>지형에 묶인 기하 훅 묶음이다.</returns>
+    /// <remarks>2026-11-18 0.609에서 추가했다. 근거: cpppj/src/o/RawCanonPlacementTerrain.cpp 128행.</remarks>
+    public static CanonPlacementGeometryHooks MakeCanonTerrainGeometryHooks(RawSidPool pool, RawCanonPlacementTerrain terrain, CanonPlacementQuery query)
+    {
+        ArgumentNullException.ThrowIfNull(pool);
+        ArgumentNullException.ThrowIfNull(terrain);
+        if (!ReferenceEquals(pool, terrain.Pool))
+        {
+            throw new ArgumentException("일반 배치 지형/기하 SID 풀 불일치", nameof(pool));
+        }
+        return new CanonPlacementGeometryHooks
+        {
+            BeginRegions = _ => terrain.Begin(query),
+            BeginShape = (_, cell) => terrain.BeginShape(query, cell),
+            EndShape = (_, _) => terrain.EndShape(query),
+            FinishRegions = _ => terrain.Finish(query),
+        };
+    }
+
+    /// <summary>
+    /// 후보 충돌 효과를 실제 지형 몸체에 연결한다. R6-3 캐논 배치 요구사항 전용 결선이다.
+    /// </summary>
+    /// <param name="pool">같은 풀의 실제 Player 조회다. 다른 풀의 몸체와 섞으면 거부한다.</param>
+    /// <param name="terrain">같은 풀의 실제 지형 몸체다.</param>
+    /// <param name="hooks">물을 훅 묶음이다. 후보 지형 효과만 실제 구현으로 바꾼다.</param>
+    /// <returns>후보 지형 효과가 연결된 훅 묶음이다.</returns>
+    /// <remarks>2026-11-18 0.609에서 추가했다. 근거: cpppj/src/o/RawCanonPlacementTerrain.cpp 136행.</remarks>
+    public static CanonPlacementCollisionHooks MakeCanonTerrainCollisionHooks(RawSidPool pool, RawCanonPlacementTerrain terrain, CanonPlacementCollisionHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(pool);
+        ArgumentNullException.ThrowIfNull(terrain);
+        ArgumentNullException.ThrowIfNull(hooks);
+        if (!ReferenceEquals(pool, terrain.Pool))
+        {
+            throw new ArgumentException("일반 배치 지형/충돌 SID 풀 불일치", nameof(pool));
+        }
+        CanonPlacementCollisionHooks result = hooks.Copy();
+        result.InspectCandidateTerrain = (query, sid) => terrain.Candidate(query, sid);
+        return result;
+    }
 }
