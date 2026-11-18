@@ -627,6 +627,29 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
 });
 
+// 모든 State 자식 증빙을 반납한 경우에만 공유 Client 상태를 보존한다.
+test('CampaignSession TheWarBegins: State 자식 증빙과 공유 상태 반납', () => {
+    const prepared = new ClientGameplayGlobals(), incomplete = new ClientGameplayGlobals();
+    const first = scene({ gameplayGlobals: prepared }), second = scene({ gameplayGlobals: incomplete });
+    try {
+        const process = first.s.clearProcessesForState(); first.s.returnProcessBindingsForState(process);
+        const players = first.s.clearPlayerLinksForState(); first.s.returnPlayerLinksForState(players);
+        // 각 Player의 실제 AI 정리 증빙을 개별로 발급하고 소비한다.
+        for (let owner = 1; owner < 9; owner += 1) first.s.returnAiForState(first.s.resetAiForState(owner));
+        prepared.player.playerKnown = 7; prepared.cursor.preview = 123; prepared.world.editor = 9;
+        assert.equal(prepared.requireSession(), first.s); first.s.dispose();
+        assert.deepEqual([prepared.player.playerKnown, prepared.cursor.preview, prepared.world.editor], [7, 123, 9]);
+        assert.equal(prepared.borrowed(), false); assert.throws(() => prepared.requireSession(), /미연결/);
+        const partialProcess = second.s.clearProcessesForState(); second.s.returnProcessBindingsForState(partialProcess);
+        const partialPlayers = second.s.clearPlayerLinksForState(); second.s.returnPlayerLinksForState(partialPlayers);
+        // 여덟 번째 Player 증빙만 누락된 경우에는 일반 반납이어야 한다.
+        for (let owner = 1; owner < 8; owner += 1) second.s.returnAiForState(second.s.resetAiForState(owner));
+        incomplete.player.playerKnown = 7; incomplete.cursor.preview = 123; incomplete.world.editor = 9;
+        second.s.dispose(); assert.deepEqual([incomplete.player.playerKnown, incomplete.cursor.preview, incomplete.world.editor], [0, 0, 0]);
+        assert.equal(incomplete.borrowed(), false);
+    } finally { first.s.dispose(); second.s.dispose(); }
+});
+
 // State Process 정리 증빙은 실제 공유 Host를 비운 뒤 같은 대여에서만 소비한다.
 test('CampaignSession TheWarBegins: State Process 정리와 Host 반납', () => {
     const first = scene(), second = scene(), legacy = scene({ processKernel: new Kernel() });

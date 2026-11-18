@@ -56,6 +56,7 @@ import { RawPriestLookup } from './raw-priest-lookup.js';
 import { drawCampaignTempleFrames } from './raw-campaign-session-building.js';
 import { drawRainVortex } from './raw-rain-vortex-draw.js';
 import { cleanupPlayerLinks } from './raw-player-links-cleanup.js';
+import { withdrawGameplayForState } from './client-gameplay-globals.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -1065,12 +1066,27 @@ export class RawCampaignSession {
             transport.detachSession();
         }
     }
-    // State 증빙/Withdraw의 앞단만 옮긴다. 일반 Impl 반납은 기존 owner가 끝까지 수행한다.
+    // 실제 Process·Player 링크와 여덟 AI가 각각 같은 소유자에게 반납됐는지 확인한다.
+    #stateChildrenReturned() {
+        const o = this.#live();
+        if (!o.participation || !o.productionDeck || !o.productionDeck.playerLinksReturnedForState() || !o.world.processBindingsReturned) return false;
+        // 중립 0을 제외한 여덟 Player가 모두 독립 증빙을 보유해야 한다.
+        for (let owner = 1; owner < 9; owner += 1) if (!o.participation.brainReturnedForState(owner)) return false;
+        return true;
+    }
+    // 자식 State 증빙이 모두 있으면 공유 상태를 보존하고, 그 외에는 일반 수명으로 반납한다.
     dispose() {
         if (this.#disposed) return;
         const o = this.#live();
         if (o.gameplayGlobals.runtimeCallActive(this)) throw new Error('실제 Runtime 배송 종료 전 외곽 Session 반납');
-        try { this.bindRuntimePin(null); this.detachConnectionTransport(); }
+        try {
+            this.bindRuntimePin(null); this.detachConnectionTransport();
+            let stateReturned = false;
+            try { stateReturned = this.#stateChildrenReturned(); }
+            catch (error) { console.error('실제 Session State 반납 증빙 오류:', error); }
+            if (stateReturned) withdrawGameplayForState(o.gameplayUse, this);
+            else o.gameplayUse.withdraw(this);
+        }
         finally { try { this.#login?.dispose(); } finally { o.login = null; this.#disposed = true; o.dispose(); } }
     }
 }
