@@ -9,6 +9,7 @@ import { RawCampaignSessionAiActions } from './raw-campaign-session-ai-actions.j
 import { RawCampaignSessionLoginFront } from './raw-campaign-session-login-front.js';
 import { registerFactoryResearchCommand } from './raw-factory-research.js';
 import { RawProductionMaintenance } from './raw-production-maintenance.js';
+import { ProductionControlContext } from './production-control-context.js';
 import { selectBridgePattern } from './raw-canon-type.js';
 import { registerConstructionData } from './raw-packet-dispatch.js';
 import { receiveConstructionReject } from './raw-construction-failure-packets.js';
@@ -319,6 +320,10 @@ export class RawCampaignSession {
     createContained(parent, type, argument, flags, attachFlags, quality) {
         const o = this.#live(); if (!o.loaded || !o.contained) throw new Error('설치 전 실제 내용물 생성 요청');
         return o.contained.create(parent, type, argument, flags, attachFlags, quality);
+    }
+    // 생산 UI가 같은 장기 물리·Player·전투 옵션과 선택적 SP/색표를 참조한다.
+    productionContext() {
+        const o = this.#live(); return new ProductionControlContext(o.world.storage, o.gameplayGlobals, o.playerRecords, o.battleOptions, o.services.spGlobals ?? null, o.services.ownerColorTables ?? null);
     }
     // 생산 패널과 같은 현재 내용물 검색 전역을 반환한다.
     productionFinder() { return this.#live().contentFinder; }

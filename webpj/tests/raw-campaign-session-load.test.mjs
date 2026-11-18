@@ -5,6 +5,8 @@ import { createHash } from 'node:crypto';
 import { RawCampaignSession } from '../www/core/raw-campaign-session.js';
 import { synchronizeProductionControlContents } from '../www/core/client-production-sync.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from '../www/core/raw-production-maintenance.js';
+import { ProductionControlContext } from '../www/core/production-control-context.js';
+import { ClientColorSortInput } from '../www/core/client-color-sort-input.js';
 import { countContained } from '../www/core/raw-contained-finder.js';
 import { CampaignSessionAssets } from '../www/core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
@@ -85,7 +87,7 @@ function scene(overrides = {}, savedFort = fort) {
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, fortBadges: overrides.fortBadges, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
-        gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, cameraCommit: overrides.cameraCommit, developerQueue: overrides.developerQueue, motion: overrides.motion, randomGlobals: overrides.randomGlobals, spGlobals: overrides.spGlobals,
+        ownerColorTables: overrides.ownerColorTables, gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, cameraCommit: overrides.cameraCommit, developerQueue: overrides.developerQueue, motion: overrides.motion, randomGlobals: overrides.randomGlobals, spGlobals: overrides.spGlobals,
         developerHeapTrace: overrides.developerHeapTrace, developerQueryDirectDraw: overrides.developerQueryDirectDraw, developerRecordLabel: overrides.developerRecordLabel,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
         player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
@@ -249,6 +251,7 @@ test('Client State 부모: 로그인과 AI 미션 시작 뒤 정리', () => {
     const ai = { allocationBytes: (bytes) => bytes.fill(0xa7), defaultName: () => 'AI', participation: { addChat: () => {}, clearChat: () => {} } };
     const { s } = scene({ missionName: script.fortName(), localLogin, ai, gameplayGlobals: gameplay, surfaceStorage: storage, playerRecords: players, coreDataGlobals: coreData, processKernel: kernel, randomGlobals: random, spGlobals }, input);
     try {
+        assert.equal(s.productionContext().sp, spGlobals);
         s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
         assert.equal(s.localConnectionReady(), true); gameplay.bindRuntimeOwner(s, {});
         const gate = createMissionFrameGateState(), state = createMissionStartState();
@@ -1761,9 +1764,12 @@ test('CampaignSession 생산 유지: 미적재 관문과 반납 수명', () => {
 
 // 현재 대여 중인 실제 Session은 미적재 관문을 지킨 뒤 같은 생산 동기화를 실행한다.
 test('Client 생산 동기화: 실제 Session 설치 관문과 같은 Deck', () => {
-    const gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords();
-    const { s } = scene({ gameplayGlobals: gameplay, playerRecords: players, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } } });
-    const context = { gameplay, players, storage: s.world().storage };
+    const gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), options = new Uint8Array(87), colorInput = new ClientColorSortInput();
+    colorInput.captureWithPrimary(game.palette.logical); colorInput.ownerTables.initialize(colorInput.primary, 188, 82, { value: 0 }); const colors = colorInput.ownerTables;
+    const { s } = scene({ gameplayGlobals: gameplay, playerRecords: players, ownerColorTables: colors, missionOptions: options, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } } });
+    const context = s.productionContext(); assert.ok(context instanceof ProductionControlContext);
+    assert.equal(context.gameplay, gameplay); assert.equal(context.players, players); assert.equal(context.storage, s.world().storage); assert.equal(context.options, options);
+    assert.equal(context.sp, null); assert.equal(context.ownerColorTables, colors); options[1] = 7; assert.equal(context.options[1], 7);
     try {
         assert.throws(() => synchronizeProductionControlContents(context), /설치 전 생산 패널/);
         s.load(); synchronizeProductionControlContents(context);
@@ -1772,6 +1778,7 @@ test('Client 생산 동기화: 실제 Session 설치 관문과 같은 Deck', () 
         assert.ok(token); assert.equal(players.productionDeckMemory().bytes(token).length, 352);
         synchronizeProductionControlContents(context); assert.equal(new DataView(records.buffer, records.byteOffset + owner * 180 + 0x68, 4).getUint32(0, true), token);
     } finally { s.dispose(); }
+    assert.throws(() => s.productionContext(), /반납/); assert.equal(context.options, options);
 });
 
 // 중간 외부 장치 오류는 loaded를 켜지 않고 원문의 앞선 설치를 보존한다.

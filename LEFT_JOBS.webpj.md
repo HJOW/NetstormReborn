@@ -4,14 +4,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E833)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E834)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E833은 Client 생산 동기화의 무월드·현재 Session 경로를 연결했다. 다음은 HUD와 Client의 실제 수명이다. [E833](docs/webpj-client-production-sync-20261119.md) |
-| 전체 회귀 | E833 Node v26.13.0 전체 6,330건 통과(실패·취소·건너뜀 0). E827 Node v22.23.3 전체 6,321건 통과 뒤 v26 회귀 6/8회. fixture 824개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
+| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E834는 생산 UI 문맥에 같은 Client 저장소·옵션·SP·색표를 연결했다. 다음은 다리 스캔의 Client 접합과 HUD 수명이다. [E834](docs/webpj-production-context-20261119.md) |
+| 전체 회귀 | E834 Node v26.13.0 전체 6,330건 통과(실패·취소·건너뜀 0). E827 Node v22.23.3 전체 6,321건 통과 뒤 v26 회귀 7/8회. fixture 824개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
@@ -32,24 +32,24 @@
 | 5 | 5-A 렌더러·Draw | 44/46 | 3 / 533 |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 9/13 | 9 / 1,446 |
 | 5 | 5-C 화면 허브·미션 진입 | 0/6 → M2 | 10 / 5,770 |
-| 6 | 입력·게임 메뉴·경제·건설 | 1/8 → M3 | 9 / 973 |
+| 6 | 입력·게임 메뉴·경제·건설 | 1/8 → M3 | 8 / 955 |
 | 7 | 전투·의식·AI | 0/6 | 3 / 97 |
 | 8 | 미션 수명·대본·오디오·도움말 | 0/9 → M4 | 30 / 5,979 |
 | 9 | 표시 품질·브라우저/OS·배포 | 미착수 → M5 | 1 / 41 |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 6 / 749 |
-| **합계** | | | **146 / 33,331** |
+| **합계** | | | **145 / 33,313** |
 
 ### 0.3 이식량
 
-기준선 `225553df`의 이식 대상 1,019단위는 **port 873(85.7%)·partial 50·todo 96**다. 제외 141단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
+기준선 `225553df`의 이식 대상 1,019단위는 **port 874(85.8%)·partial 50·todo 95**다. 제외 141단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
 
 | 범위 | port / 대상 | partial | todo |
 | --- | --- | --- | --- |
 | `o/` 월드·규칙 | 563 / 573 | 5 | 5 |
-| `client/` 세션·UI·표시 | 309 / 445 | 45 | 91 |
+| `client/` 세션·UI·표시 | 310 / 445 | 45 | 90 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
-남은 146단위 중 기존 기준선은 76단위/27,727줄, 재기준선 추가분은 70단위/5,604줄이다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
+남은 145단위 중 기존 기준선은 75단위/27,709줄, 재기준선 추가분은 70단위/5,604줄이다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
 
 ### 0.4 기준선과 자료
 
@@ -205,7 +205,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 - [ ] **게임 메뉴** — RawGameMenus의 ESC 가로/하위 메뉴·명령·Player 메뉴의 실제 수명.
 - [ ] **객체 우클릭 메뉴** — CampaignObjectMenuClient의 건물·운반체·특수 대상 메뉴와 소유자 명령 연결.
 - [ ] **사제·운반·경로 바인딩** — 캠페인 Session 운반 입력과 일반 사제 이동은 E794에서 확인했다. MetaMap·CampaignUserInputServices·앱과 저장 미션 thewarbegins/masterofwhirligigs의 전체 초기화·경로 루프를 대조한다. [E794](docs/webpj-session-carrier-input-20261118.md)
-- [ ] **건설·생산·경제** — RawProductionMaintenance 본체는 원본 86행으로 대조했고 같은 Session의 기술·SP·시계·내용물에 연결해 실제 다리 공급을 확인했다. ClientProductionSync는 무월드와 실제 Session 양쪽의 같은 Deck 경로를 연결했다. HUD의 주기 호출과 ClientBridgeDecay·ProductionControlContext 및 4-D에 남은 건설 장치의 입력 소비자가 남았다. [E831](docs/webpj-production-maintenance-20261119.md) · [E832](docs/webpj-session-production-maintenance-20261119.md) · [E833](docs/webpj-client-production-sync-20261119.md) 실제 wire 배치/확정, SP·덱/생산, 다리 붕괴, RawBuildReplay·ClientBuildReplay의 FILE/최신 rec·Host·F7/Ctrl+F6를 확인한다. [건설 기록 재생](docs/webpj-build-replay-runtime-20261116.md)
+- [ ] **건설·생산·경제** — RawProductionMaintenance 본체는 원본 86행으로 대조했고 같은 Session의 기술·SP·시계·내용물에 연결해 실제 다리 공급을 확인했다. ClientProductionSync는 무월드와 실제 Session 양쪽의 같은 Deck 경로를 연결했다. ProductionControlContext는 같은 Client 장기 소유자와 옵션을 공유한다. HUD의 주기 호출과 ClientBridgeDecay 및 4-D에 남은 건설 장치의 입력 소비자가 남았다. [E831](docs/webpj-production-maintenance-20261119.md) · [E832](docs/webpj-session-production-maintenance-20261119.md) · [E833](docs/webpj-client-production-sync-20261119.md) · [E834](docs/webpj-production-context-20261119.md) 실제 wire 배치/확정, SP·덱/생산, 다리 붕괴, RawBuildReplay·ClientBuildReplay의 FILE/최신 rec·Host·F7/Ctrl+F6를 확인한다. [건설 기록 재생](docs/webpj-build-replay-runtime-20261116.md)
 - [ ] **공장·지식 메뉴와 기술** — ThemeTechnologyCommand에서 연구·업그레이드·지식 메뉴와 기술 명령을 연결한다.
 - [ ] **M3 / L3** — Tutorial1 이동·수확·건설·생산의 입력 단계표로 cpppj 상태·화면을 대조한다. Tutorial1·2와 캠페인 1-1·1-2의 브라우저 검증까지 진행한다.
 
