@@ -1105,6 +1105,56 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
     assert.equal(gameplay.borrowed(), false); assert.throws(() => world.highlight(0), /반납/);
 });
 
+// 실제 로그인된 World 입력부터 같은 Kernel의 자연 도착까지 세 운반 유닛을 검증한다.
+test('CampaignGameWorld TheWarBegins: 세 운반 유닛의 선택·호버·클릭과 자연 이동', () => {
+    // 각 종류는 독립된 실제 Session과 선택·전송 수명을 사용한다.
+    for (const [kind, movement, startPoint, destination] of [[158, 54, null, { x: 90, y: 108 }], [133, 40, [94, 108], { x: 90, y: 108 }], [111, 42, [98, 122], { x: 102, y: 122 }]]) {
+        const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), cursors = [], received = [];
+        gameplay.camera().initializeNativeRenderer(1024, 768, 256, { value: 0 }, { value: 0 });
+        const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
+            observePacket: (_sender, _boss, _local, packet) => { if (packet[1] === 0x40) received.push(packet.slice()); } };
+        const services = { gameplayGlobals: gameplay, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'), paused: () => false,
+            install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {} },
+            ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
+            sound: { wallSeconds: () => 0, play: () => {}, playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
+            motion: { path: { stepSound: () => {} } }, missionOutcome: { demo: () => 0 }, player: { log: () => {} }, ai: { assertion: forbidden('AI 진단'), participation: { addChat: () => {}, clearChat: () => {} } },
+            surfaceDisplay: { suppressed: () => false, invalidate: () => {} },
+            cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); } };
+        const world = new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', services, { x: 1024, y: 768 });
+        try {
+            const session = world.session(); world.startLocalConnection(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
+            assert.equal(world.completeLocalConnection(), true); const core = session.core();
+            const parent = startPoint ? session.world().create(kind, 2) : session.world().objects().find(({ object }) => object.type === kind && object.owner === 1).sid;
+            if (startPoint) { session.world().pop(parent, ...startPoint, 0); core.owner.set(parent, 1); }
+            world.bindUserInput({ paused: () => 0, dump: () => {}, assertion: forbidden('선택 진단'), previewAssertion: forbidden('미리보기 진단') },
+                { selectCursor: (value) => cursors.push(value) }, { selectCursor: (value) => cursors.push(value), assertion: forbidden('운반 입력 진단') });
+            const raw = core.pool.slot(parent), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength), origin = gameplay.camera().snapshot().world;
+            const screen = (x, y) => [Math.round((x - origin.x) * 16 - 16), Math.round((y - origin.y) * 11 - 11)];
+            world.setMousePoint(...screen(view.getFloat32(14, true), view.getFloat32(18, true))); world.select(parent);
+            assert.equal(world.selected(), parent); assert.equal(world.inputMode(), 5); assert.equal(core.pool.slot(parent)[40] & 4, 4);
+            const target = screen(destination.x, destination.y), before = session.localConnectionPackets().length, money = session.sp(1), clicked = [];
+            world.setMousePoint(...target); world.updateMovementCursor(); assert.equal(cursors.at(-1), 18);
+            assert.equal(world.moveSelected(...target, (x, y) => clicked.push([x, y])), true);
+            assert.deepEqual(clicked, [[destination.x, destination.y]]); assert.equal(world.selected(), 0); assert.equal(world.inputMode(), 0);
+            assert.equal(findAttachedProcess(core.pool, parent, movement), 0); assert.equal(session.localConnectionPackets().length, before);
+            session.pumpLocalConnection(); assert.equal(received.length, 1); assert.equal(session.localConnectionPackets().length, before + 1); assert.equal(session.localConnectionPackets().at(-1), 0x40);
+            const packet = new DataView(received[0].buffer, received[0].byteOffset, received[0].byteLength);
+            assert.deepEqual([...received[0].subarray(0, 4)], [1, 0x40, 18, 0]); assert.equal(packet.getUint16(4, true), parent);
+            assert.deepEqual([packet.getFloat32(6, true), packet.getFloat32(10, true)], [destination.x, destination.y]);
+            const form = findAttachedProcess(core.pool, parent, movement), path = core.processes.fromForm(form); assert.ok(path instanceof RawPathProcess);
+            const begin = core.processState.now, end = path.runtime.time(path.runtime.count - 1); let frame = 0;
+            // 목적지와 결과는 직접 쓰지 않고 같은 Kernel을 연속 시간으로 실행한다.
+            for (; frame < 3000 && core.processState.now < end + 0.5; frame += 1) {
+                const now = begin + frame * 0.025; session.pumpLocalConnection(); session.runFrame({ game: now, wall: 100 + now - begin, delta: frame ? 0.025 : 0, number: frame }, false);
+                if (!core.processes.fromForm(form)) break;
+            }
+            const arrived = session.world().objects().find(({ sid }) => sid === parent);
+            assert.ok(frame > 1); assert.equal(core.processes.fromForm(form), null); assert.deepEqual([arrived.object.x, arrived.object.y], [destination.x, destination.y]);
+            assert.equal(session.sp(1), money); assert.deepEqual([core.bookkeeping.depth, core.destroy.preDepth, core.destroy.postDepth], [0, 0, 0]);
+        } finally { world.dispose(); }
+    }
+});
+
 // Process 정리 오류는 진단하고 나머지 수명 반납을 계속한다.
 test('CampaignSession TheWarBegins: 일반 종료의 Process 정리 오류', () => {
     const gameplay = new ClientGameplayGlobals(), { s } = scene({ gameplayGlobals: gameplay }), core = s.core(), errors = [];
